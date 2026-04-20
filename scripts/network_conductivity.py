@@ -89,10 +89,24 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
         top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
 
-        # Fallback for thin electrodes: widen boundaries if too few particles
+        # Fallback L1: thin electrodes / strict boundary → 15%/85% of plate_z
         if len(bottom_ids) < 3 or len(top_ids) < 3:
             z_bottom = plate_z * 0.15
             z_top = plate_z * 0.85
+            bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
+            top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
+
+        # Fallback L2: when plate_z overshoots the actual particle range
+        # (mesh_info.json absent → plate_z uses atom max z+r which overshoots
+        # the true top plane by one AM radius), anchor the 15/85% split to the
+        # OBSERVED z-range of target particles. Prevents silent percolation=0
+        # for thick electrodes where top_ids empties under plate_z-based bounds.
+        if len(bottom_ids) < 3 or len(top_ids) < 3:
+            z_vals = [atoms_raw[aid]['z'] for aid in target_ids]
+            z_min_obs = min(z_vals); z_max_obs = max(z_vals)
+            span = z_max_obs - z_min_obs
+            z_bottom = z_min_obs + span * 0.15
+            z_top = z_max_obs - span * 0.15
             bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
             top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
 

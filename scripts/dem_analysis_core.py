@@ -32,15 +32,21 @@ def calc_porosity(atoms, plate_z, box_xy=0.05):
 
 
 def get_plate_z(results_dir, atoms, scale):
-    """Get plate_z from mesh_info.json, or estimate from atoms."""
+    """Get plate_z from mesh_info.json, or estimate from atoms.
+    Fallback: max of particle CENTERS (no +radius). Adding the radius on top
+    of the highest center overshoots the actual plate plane, which in turn
+    makes z_top = plate_z - r_se×boundary_factor land ABOVE every SE center.
+    That silently empties top_se → percolation falsely = 0 for thick
+    electrodes that lack mesh_info.json (observed for results/260418_165025_e7453f,
+    input_9, etc. at ~4/20 16:45).
+    """
     mesh_file = os.path.join(results_dir, 'mesh_info.json')
     if os.path.exists(mesh_file):
         with open(mesh_file) as f:
             info = json.load(f)
         return info['plate_z'], 'mesh'
-    # Fallback: estimate from atom positions
-    z_max = max(a['z'] + a['radius'] for a in atoms.values())
-    return z_max, 'estimated'
+    z_max = max(a['z'] for a in atoms.values())
+    return z_max, 'estimated_center'
 
 
 # ─── Interface Area ────────────────────────────────────────────────────────
@@ -221,10 +227,23 @@ def calc_percolation(atoms, contacts, se_types, plate_z, boundary_factor=2.0, bo
     bottom_se = {aid for aid in se_ids if atoms[aid]['z'] <= z_bottom}
     top_se = {aid for aid in se_ids if atoms[aid]['z'] >= z_top}
 
-    # Fallback: if boundary too strict, widen to 15% / 85%
+    # Fallback L1: if boundary too strict, widen to 15% / 85% of plate_z
     if len(bottom_se) < 3 or len(top_se) < 3:
         z_bottom = plate_z * 0.15
         z_top = plate_z * 0.85
+        bottom_se = {aid for aid in se_ids if atoms[aid]['z'] <= z_bottom}
+        top_se = {aid for aid in se_ids if atoms[aid]['z'] >= z_top}
+
+    # Fallback L2: if plate_z overshoots the actual particle range
+    # (common when mesh_info.json is absent), anchor boundaries to the
+    # observed SE z-range instead of plate_z. Without this, thick electrodes
+    # silently report percolation=0% whenever plate_z ≠ actual top plane.
+    if len(bottom_se) < 3 or len(top_se) < 3:
+        z_vals = np.array([atoms[aid]['z'] for aid in se_ids])
+        z_min_obs, z_max_obs = z_vals.min(), z_vals.max()
+        span = z_max_obs - z_min_obs
+        z_bottom = z_min_obs + span * 0.15
+        z_top = z_max_obs - span * 0.15
         bottom_se = {aid for aid in se_ids if atoms[aid]['z'] <= z_bottom}
         top_se = {aid for aid in se_ids if atoms[aid]['z'] >= z_top}
 
