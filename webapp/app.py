@@ -140,6 +140,40 @@ def list_cases():
         cases.append(meta)
     return cases
 
+# Keys mirrored from the physics-mode solution for dual-column display.
+# When the dual JSON is present, these are copied with a '_physics' suffix.
+_NET_PHYSICS_MIRROR_KEYS = ['sigma_full', 'sigma_full_mScm',
+                            'sigma_bulk_net', 'sigma_bulk_net_mScm',
+                            'electronic_sigma_full_mScm', 'thermal_sigma_full_mScm',
+                            'R_brug_over_full', 'bulk_resistance_fraction']
+
+
+def _merge_dual_into_metrics(results_dir, met_data):
+    """If network_conductivity_dual.json exists (contact-mode=both run),
+    copy physics-mode fields into met_data with '_physics' suffix, plus
+    a compact nested 'network_dual' block for webapp display."""
+    dual_path = os.path.join(results_dir, 'network_conductivity_dual.json')
+    if not os.path.exists(dual_path):
+        return met_data
+    try:
+        with open(dual_path) as _df:
+            dual = json.load(_df)
+    except Exception:
+        return met_data
+    rH = dual.get('hertzian') or {}
+    rP = dual.get('physics') or {}
+    ratio = dual.get('ratio_physics_over_hertzian') or {}
+    for k in _NET_PHYSICS_MIRROR_KEYS:
+        if rP.get(k) is not None:
+            met_data[f'{k}_physics'] = rP[k]
+    met_data['network_dual'] = {
+        'hertzian': {k: rH.get(k) for k in _NET_PHYSICS_MIRROR_KEYS},
+        'physics':  {k: rP.get(k) for k in _NET_PHYSICS_MIRROR_KEYS},
+        'ratio_physics_over_hertzian': ratio,
+    }
+    return met_data
+
+
 def run_pipeline(case_id, mode, type_map, scale=1000):
     """Run the DEM analysis pipeline for a case."""
     # Clear pyc cache to ensure latest code runs
@@ -568,6 +602,7 @@ def analyze(case_id):
                 for k in _NET_MERGE_KEYS:
                     if k in net_data and net_data[k] is not None:
                         met_data[k] = net_data[k]
+                met_data = _merge_dual_into_metrics(results_dir, met_data)
                 met_data['network_solver_status'] = 'success'
                 with open(met_json, 'w') as _mf:
                     json.dump(met_data, _mf, indent=2, default=str)
@@ -608,7 +643,8 @@ def analyze(case_id):
                     _t0 = _time.time()
                     net_cmd = ['python3', os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
                                atoms_csv, contacts_csv, '-o', results_dir,
-                               '-t', meta['type_map'], '-s', str(meta.get('scale', 1000))]
+                               '-t', meta['type_map'], '-s', str(meta.get('scale', 1000)),
+                               '--contact-mode', 'both']
                     print(f"  [Network] CMD: {' '.join(net_cmd)}")
                     net_result = subprocess.run(net_cmd, capture_output=True, text=True, timeout=None)
                     _elapsed = _time.time() - _t0
@@ -632,10 +668,11 @@ def analyze(case_id):
                         for k in _NET_MERGE_KEYS:
                             if k in net_data and net_data[k] is not None:
                                 met_data[k] = net_data[k]
+                        met_data = _merge_dual_into_metrics(results_dir, met_data)
                         met_data['network_solver_status'] = net_status
                         with open(met_json, 'w') as _mf:
                             json.dump(met_data, _mf, indent=2, default=str)
-                        print(f"  [Network] Merged keys into full_metrics.json")
+                        print(f"  [Network] Merged keys into full_metrics.json (incl. physics dual)")
                     elif net_status == 'success':
                         net_status = 'no_output'
             except Exception as e:
@@ -723,7 +760,8 @@ def retry_network(case_id):
                     _t0 = _time.time()
                     net_cmd = ['python3', os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
                                atoms_csv, contacts_csv, '-o', results_dir,
-                               '-t', meta.get('type_map', '1:AM,2:SE'), '-s', str(meta.get('scale', 1000))]
+                               '-t', meta.get('type_map', '1:AM,2:SE'), '-s', str(meta.get('scale', 1000)),
+                               '--contact-mode', 'both']
                     net_result = subprocess.run(net_cmd, capture_output=True, text=True, timeout=None)
                     _elapsed = _time.time() - _t0
                     print(f"  [Network Retry] Finished in {_elapsed:.1f}s, rc={net_result.returncode}")
@@ -751,6 +789,7 @@ def retry_network(case_id):
                               'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full']:
                             if k in net_data and net_data[k] is not None:
                                 met_data[k] = net_data[k]
+                        met_data = _merge_dual_into_metrics(results_dir, met_data)
                         met_data['network_solver_status'] = net_status
                         # AM-AM contact mechanics backfill (retry path)
                         try:
