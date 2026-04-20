@@ -983,7 +983,7 @@ def single(case_id):
                 if str(row[0]).startswith('── 응력'):
                     insert_idx = idx
                     break
-            net_rows = [['── Network Solver ──', '']]
+            net_rows = [['── Network Solver (Hertzian, DEM-native) ──', '']]
             if metrics and metrics.get('sigma_full_mScm'):
                 net_rows.append(['σ_ionic (mS/cm)', round(metrics['sigma_full_mScm'], 4)])
                 if metrics.get('sigma_bruggeman_mScm'):
@@ -1005,6 +1005,31 @@ def single(case_id):
                     net_rows.append(['Electronic Active AM (%)', f"{metrics['electronic_active_fraction']*100:.1f}"])
                 if metrics.get('thermal_sigma_full_mScm'):
                     net_rows.append(['σ_thermal (mS/cm equiv)', round(metrics['thermal_sigma_full_mScm'], 3)])
+
+                # ── Physics (Plastic film, Tabor+volume, 0 free params) ──
+                # Populated when network_conductivity.py ran with --contact-mode both
+                sfH = metrics.get('sigma_full_mScm')
+                sfP = metrics.get('sigma_full_mScm_physics')
+                if sfP is not None:
+                    net_rows.append(['── Physics (Plastic film, Tabor+volume) ──', ''])
+                    net_rows.append(['σ_ionic [physics] (mS/cm)', round(sfP, 4)])
+                    if sfH and sfH > 0:
+                        net_rows.append(['σ_ionic ratio (physics/Hertzian)',
+                                         f"{sfP / sfH:.2f}×"])
+                    sfeP = metrics.get('electronic_sigma_full_mScm_physics')
+                    if sfeP is not None:
+                        net_rows.append(['σ_electronic [physics] (mS/cm)', round(sfeP, 2)])
+                    sftP = metrics.get('thermal_sigma_full_mScm_physics')
+                    if sftP is not None:
+                        net_rows.append(['σ_thermal [physics] (mS/cm equiv)', round(sftP, 3)])
+                elif metrics.get('network_dual'):
+                    # Dual block exists but no direct _physics key — unusual, surface status
+                    net_rows.append(['── Physics (Plastic film) ──', ''])
+                    net_rows.append(['상태', '⚠ dual JSON 있음, physics σ 비어있음'])
+                else:
+                    # No physics run yet — hint to the user
+                    net_rows.append(['── Physics (Plastic film) ──', ''])
+                    net_rows.append(['상태', '미실행 — "Network Solver 재실행" 클릭'])
             else:
                 # No results — show status/error from meta
                 ns = meta.get('network_solver_status', 'unknown')
