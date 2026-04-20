@@ -160,21 +160,39 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
     mesh_files = sorted(globmod.glob(os.path.join(case_dir, '*.stl')))
     input_files = sorted(globmod.glob(os.path.join(case_dir, 'input*.liggghts')))
 
+    # Pre-parsed CSV fallback: webapp/uploads may have only atoms.csv/contacts.csv
+    # (archive-migrated cases retain CSVs but not original LIGGGHTS dumps).
+    pre_atoms_csv = os.path.join(case_dir, 'atoms.csv')
+    pre_contacts_csv = os.path.join(case_dir, 'contacts.csv')
+    pre_mesh_info = os.path.join(case_dir, 'mesh_info.json')
+    has_pre_parsed = os.path.exists(pre_atoms_csv) and os.path.exists(pre_contacts_csv)
+
     if not atom_files or not contact_files:
-        return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다.'}
+        if not has_pre_parsed:
+            return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다 (CSV fallback도 없음).'}
 
     log = []
 
-    # Step 1: Parse (atom + contact + mesh)
-    cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
-    cmd += atom_files + contact_files + mesh_files + input_files + ['-o', results_dir]
-    result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
-    log.append({'step': 'Parse', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
-    if result.returncode != 0:
-        return {'error': f'Parse failed: {result.stderr}', 'log': log}
-
+    # Step 1: Parse (atom + contact + mesh) — skip if CSV already exists
     atoms_csv = os.path.join(results_dir, 'atoms.csv')
     contacts_csv = os.path.join(results_dir, 'contacts.csv')
+
+    if atom_files and contact_files:
+        # Normal path: parse LIGGGHTS dumps
+        cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+        cmd += atom_files + contact_files + mesh_files + input_files + ['-o', results_dir]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        log.append({'step': 'Parse', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        if result.returncode != 0:
+            return {'error': f'Parse failed: {result.stderr}', 'log': log}
+    else:
+        # CSV fallback: copy pre-parsed CSVs into results_dir
+        import shutil as _sh
+        _sh.copy2(pre_atoms_csv, atoms_csv)
+        _sh.copy2(pre_contacts_csv, contacts_csv)
+        if os.path.exists(pre_mesh_info):
+            _sh.copy2(pre_mesh_info, os.path.join(results_dir, 'mesh_info.json'))
+        log.append({'step': 'Parse (CSV fallback)', 'stdout': 'CSVs copied from case_dir', 'stderr': '', 'rc': 0})
 
     if mode == 'bimodal':
         # Step 2: Bimodal contact analysis
