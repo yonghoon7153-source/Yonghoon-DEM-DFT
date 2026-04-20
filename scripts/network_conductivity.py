@@ -364,7 +364,7 @@ def solve_network(network_data, mode='full', return_field=False):
 
     n_nodes = L_csr.shape[0]
     try:
-        if n_nodes > 200000:
+        if n_nodes > 30000:
             # Large network: use iterative CG solver (memory-efficient)
             print(f"  Using iterative CG solver ({n_nodes} nodes)...")
             try:
