@@ -196,17 +196,23 @@ def main():
               f"{(r['tau_Lap_eff'] or 0):>6.2f} {(r['Le_over_D'] or 0):>6.2f} "
               f"{(r['tau_sq_Lap_eff'] or 0):>6.1f}")
 
-    print("\n=== LITERATURE COMPARISON (φ_SE match, dedup by name) ===")
-    # Dedup: keep one record per unique 'name' (prefer archive over results if duplicate)
-    seen_names = {}
+    print("\n=== LITERATURE COMPARISON (φ_SE match, dedup by case_id+φ) ===")
+    # Previous dedup by 'name' was broken — meta.json names can collide across
+    # archive vs results with different DEM data. Dedup now by (name, φ_SE rounded)
+    # tuple so collision cases are treated separately. Also prefer archive over
+    # results when there's still ambiguity (archive = canonical).
+    seen = {}
     for r in records:
         n = r.get('name')
-        if not n or not r.get('phi_SE') or not r.get('tau_sq_Lap_eff'):
+        phi = r.get('phi_SE')
+        if not n or not phi or not r.get('tau_sq_Lap_eff'):
             continue
-        if n not in seen_names:
-            seen_names[n] = r
-    dedup_records = list(seen_names.values())
-    print(f"  (deduplicated to {len(dedup_records)} unique case names)")
+        key = (n, round(phi, 2))  # name + coarse φ → distinct data points
+        prefer_archive = '/archive/' in (r.get('path') or '') or 'archive' in (r.get('case_id') or '')
+        if key not in seen or prefer_archive:
+            seen[key] = r
+    dedup_records = list(seen.values())
+    print(f"  (deduplicated to {len(dedup_records)} records on (name, φ_SE) tuples)")
 
     print(f"\n{'ref':28s} {'φ_SE_ref':>9s} {'τ²_ref':>7s}  "
           f"{'closest case':>25s} {'φ_SE':>6s} {'τ²':>6s} {'Δφ':>6s} {'err%':>6s}")
@@ -227,8 +233,17 @@ def main():
         for i, (r, dphi) in enumerate(closest3):
             err = 100 * (r['tau_sq_Lap_eff'] - tau2_ref) / tau2_ref
             prefix = f"  {name:26s} {phi_ref:>9.3f} {tau2_ref:>7.2f}  " if i == 0 else " " * 46
+            # Try to get path from full record (not stored in dedup; look up)
+            origin = ''
+            for full_r in records:
+                if (full_r.get('case_id') == r.get('case_id')
+                        or (full_r.get('name') == r.get('name')
+                            and abs((full_r.get('phi_SE') or 0) - r['phi_SE']) < 0.001)):
+                    # Look up from json.load
+                    pass
             print(f"{prefix}{r['name'][:24]:>25s} {r['phi_SE']:>6.3f} "
-                  f"{r['tau_sq_Lap_eff']:>6.1f} {dphi:>6.3f} {err:>+6.0f}")
+                  f"{r['tau_sq_Lap_eff']:>6.1f} {dphi:>6.3f} {err:>+6.0f}  "
+                  f"id={r.get('case_id', '?')[:18]}")
 
 
 if __name__ == '__main__':
