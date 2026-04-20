@@ -1,12 +1,16 @@
 """
 Batch runner: network conductivity solver for all cases.
 Reads type_map from meta.json, runs network_conductivity.py on each.
+
+Default contact_mode='both' — emits both Hertzian and physics (Tabor+volume)
+solutions per case. Use --contact-mode hertzian/physics to restrict.
 """
 import os
 import json
 import sys
 import subprocess
 import time
+import argparse
 
 WEBAPP_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'webapp')
 RESULTS_DIR = os.path.join(WEBAPP_DIR, 'results')
@@ -87,8 +91,19 @@ def infer_type_map(type_map_str):
 
 
 def main():
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--contact-mode', choices=['hertzian', 'physics', 'both'],
+                    default='both',
+                    help="Contact-area model for the resistor network (default: both)")
+    ap.add_argument('--force', action='store_true',
+                    help="Re-run even if dual JSON already exists")
+    ap.add_argument('--dump-raw-dir', type=str, default=None,
+                    help="Parent dir for per-case raw edges/nodes/solution dump")
+    args = ap.parse_args()
+
     cases = find_cases()
     print(f"Found {len(cases)} cases with atoms+contacts+metrics")
+    print(f"contact_mode: {args.contact_mode}")
     print()
 
     results = []
@@ -98,42 +113,67 @@ def main():
         type_map = infer_type_map(case['type_map'])
         print(f"[{i+1}/{len(cases)}] {case['name']} (type_map={type_map})")
 
-        # Skip if already computed
-        out_file = os.path.join(case['dir'], 'network_conductivity.json')
-        if os.path.exists(out_file):
-            with open(out_file) as f:
-                existing = json.load(f)
-            if existing.get('sigma_full') is not None:
-                print(f"  → Already computed: σ_full={existing['sigma_full']:.6f}")
-                existing['name'] = case['name']
-                existing['case_id'] = case['id']
-                results.append(existing)
-                continue
+        dual_file = os.path.join(case['dir'], 'network_conductivity_dual.json')
+        # Skip criterion: dual JSON exists AND contains both modes
+        if not args.force and os.path.exists(dual_file):
+            try:
+                with open(dual_file) as f:
+                    dual = json.load(f)
+                if dual.get('hertzian') and dual.get('physics'):
+                    print(f"  → Already computed dual — skip (use --force to redo)")
+                    rH = dual['hertzian']; rP = dual['physics']
+                    rH.update({'name': case['name'], 'case_id': case['id'],
+                               'sigma_full_physics': rP.get('sigma_full'),
+                               'sigma_full_mScm_physics': rP.get('sigma_full_mScm')})
+                    results.append(rH)
+                    continue
+            except Exception:
+                pass
 
         cmd = [
             sys.executable, SCRIPT,
             case['atoms'], case['contacts'],
             '-o', case['dir'],
             '-t', type_map,
-            '-s', '1000'
+            '-s', '1000',
+            '--contact-mode', args.contact_mode,
         ]
+        if args.dump_raw_dir:
+            # Per-case subdir so different cases don't collide
+            per_case = os.path.join(args.dump_raw_dir, str(case['id']).replace('/', '_'))
+            cmd += ['--dump-raw-dir', per_case]
 
         t0 = time.time()
         try:
             proc = subprocess.run(cmd, capture_output=True, text=True)
             elapsed = time.time() - t0
 
+            # Pick result file to report summary from
+            legacy_file = os.path.join(case['dir'], 'network_conductivity.json')
+            dual_file   = os.path.join(case['dir'], 'network_conductivity_dual.json')
+            out_file = dual_file if os.path.exists(dual_file) else legacy_file
+
             if proc.returncode == 0 and os.path.exists(out_file):
                 with open(out_file) as f:
-                    res = json.load(f)
+                    out_blob = json.load(f)
+                # Normalize: if dual, use Hertzian as "primary" + append physics fields
+                if 'hertzian' in out_blob and 'physics' in out_blob:
+                    res = dict(out_blob['hertzian'])
+                    rP = out_blob['physics']
+                    res['sigma_full_physics']       = rP.get('sigma_full')
+                    res['sigma_full_mScm_physics']  = rP.get('sigma_full_mScm')
+                    res['ratio_physics_over_hertzian'] = out_blob.get('ratio_physics_over_hertzian')
+                else:
+                    res = out_blob
                 res['name'] = case['name']
                 res['case_id'] = case['id']
                 results.append(res)
-                sigma = res.get('sigma_full_mScm', 'N/A')
+                sigma  = res.get('sigma_full_mScm', 'N/A')
+                sigmaP = res.get('sigma_full_mScm_physics', '-')
                 r_brug = res.get('R_brug_over_full', 'N/A')
                 el = res.get('electronic_sigma_full_mScm', '-')
                 th = res.get('thermal_sigma_full_mScm', '-')
-                print(f"  → ionic={sigma}, electronic={el}, thermal={th} mS/cm | R_brug={r_brug}× ({elapsed:.1f}s)")
+                print(f"  → ionic[H]={sigma} | ionic[P]={sigmaP} | el={el} | th={th} mS/cm  R_brug={r_brug}× ({elapsed:.1f}s)")
             else:
                 print(f"  → FAILED: {proc.stderr[-200:] if proc.stderr else 'unknown'}")
                 errors.append(case['name'])
@@ -147,15 +187,23 @@ def main():
     print(f"{'='*60}")
 
     if results:
-        print(f"\n{'Name':30s} {'σ_full':>10s} {'σ_bulk_net':>10s} {'R_brug':>8s} {'bulk%':>6s}")
-        print('-' * 70)
+        print(f"\n{'Name':30s} {'σ[H] mS/cm':>11s} {'σ[P] mS/cm':>11s} {'P/H':>6s} {'R_brug':>8s} {'bulk%':>6s}")
+        print('-' * 80)
         for r in sorted(results, key=lambda x: x.get('sigma_full_mScm', 0) or 0):
             name = r.get('name', '?')[:28]
-            sf = r.get('sigma_full_mScm')
-            sb = r.get('sigma_bulk_net_mScm')
-            rb = r.get('R_brug_over_full')
-            bf = r.get('bulk_resistance_fraction')
-            print(f"  {name:28s} {sf:10.5f} {sb:10.5f} {rb:8.2f} {bf:6.1%}" if sf else f"  {name:28s} {'N/A':>10s}")
+            sfH = r.get('sigma_full_mScm')
+            sfP = r.get('sigma_full_mScm_physics')
+            rb  = r.get('R_brug_over_full')
+            bf  = r.get('bulk_resistance_fraction')
+            ratio = (sfP / sfH) if (sfH and sfP and sfH > 0) else None
+            if sfH is not None:
+                print(f"  {name:28s} {sfH:11.5f} "
+                      f"{(sfP if sfP is not None else 0):11.5f} "
+                      f"{(ratio if ratio else 0):6.2f} "
+                      f"{(rb if rb else 0):8.2f} "
+                      f"{(bf if bf else 0):6.1%}")
+            else:
+                print(f"  {name:28s} {'N/A':>11s}")
 
     if errors:
         print(f"\nFailed cases: {errors}")
