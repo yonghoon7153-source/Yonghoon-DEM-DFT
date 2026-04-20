@@ -107,12 +107,17 @@ def main():
                     help='Write per-case CSV to this path')
     ap.add_argument('--min-phi', type=float, default=0.0,
                     help='Only include cases with phi_se ≥ this')
+    ap.add_argument('--min-perc', type=float, default=50.0,
+                    help='Only include cases with percolation_pct ≥ this '
+                         '(default 50%%). Non-percolating cases produce garbage '
+                         'τ_Dijkstra via fallback path; filter them out.')
     args = ap.parse_args()
 
     paths = find_full_metrics(args.roots)
     print(f"Found {len(paths)} full_metrics.json files", file=sys.stderr)
 
     rows = []
+    excluded_perc = []
     for p in paths:
         try:
             with open(p) as f:
@@ -124,9 +129,24 @@ def main():
         t = compute_tau(m)
         t['case'] = case
         t['path'] = p
+        t['percolation_pct'] = m.get('percolation_pct', 100.0)
         if t['phi_se'] is not None and t['phi_se'] < args.min_phi:
             continue
+        # Percolation filter: non-percolating cases produce garbage τ_Dijkstra
+        # via dem_analysis_core.py's fallback path (uses isolated component
+        # lowest-z as source → partial paths → inflated τ).
+        if t['percolation_pct'] is not None and t['percolation_pct'] < args.min_perc:
+            excluded_perc.append((case, t['percolation_pct']))
+            continue
         rows.append(t)
+
+    if excluded_perc:
+        print(f"\n[EXCLUDED] {len(excluded_perc)} cases with percolation < {args.min_perc}%:",
+              file=sys.stderr)
+        for c, pct in excluded_perc[:20]:
+            print(f"  {c:35s}  perc = {pct:.1f}%", file=sys.stderr)
+        if len(excluded_perc) > 20:
+            print(f"  ... and {len(excluded_perc)-20} more", file=sys.stderr)
 
     # Filter cases where we can compute the key ratio
     good = [r for r in rows if r['ratio_Lg_over_D'] is not None]
@@ -183,12 +203,18 @@ def main():
         print(f"  n={s['n']}  min={s['min']:.2f}  p25={s['p25']:.2f}  median={s['median']:.2f}  "
               f"mean={s['mean']:.2f}  p75={s['p75']:.2f}  max={s['max']:.2f}")
         m = s['median']
-        if 1.0 <= m <= 1.5:
-            verdict = "≈1× : Dijkstra ≈ Laplace geometric τ. Even better than 'lower bound' claim."
-        elif 1.5 < m <= 3.5:
-            verdict = "2–3× : CURRENT NARRATIVE CONFIRMED (Dijkstra is lower bound, GB separate)."
+        if 0.7 <= m <= 1.3:
+            verdict = (f"≈1× ({m:.2f}) : Dijkstra ≈ Laplace geometric τ. "
+                       f"STRONGER than 'lower bound' — use as surrogate.")
+        elif 1.3 < m <= 3.5:
+            verdict = (f"{m:.2f}× : CURRENT NARRATIVE CONFIRMED "
+                       f"(Dijkstra = lower bound, GB separate).")
         elif 3.5 < m <= 10:
-            verdict = "5–10× : Narrative NEEDS REVISION (Dijkstra not a simple lower bound)."
+            verdict = (f"{m:.2f}× : Narrative NEEDS REVISION "
+                       f"(Dijkstra not a simple lower bound).")
+        elif m < 0.7:
+            verdict = (f"{m:.2f}× < 0.7 : Dijkstra OVER-estimates τ vs Laplace. "
+                       f"Unusual — check sample size / sampling bias.")
         else:
             verdict = f"Ratio {m:.1f}× — unusual; investigate."
         print(f"  VERDICT: {verdict}")
