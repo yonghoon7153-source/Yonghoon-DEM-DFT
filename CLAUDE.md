@@ -27,6 +27,18 @@ tools/                       # Python CLI tools
   kb_search.py               # Search across db/ and kb/ with evidence citations
   kb_index.py                # Auto-index new data, rebuild search index
   kb_export.py               # Export tables/figures for paper writing
+  crop_interface.py          # VESTA z-crop of adhesion interface xyz
+  plot_wad_stats.py          # Seed convergence + Wad histogram + paired (SI fig)
+  plot_ncm_convergence.py    # 1L vs 5L NCM thickness (SI fig)
+  plot_method_comparison.py  # v5/v8/5L method bar chart (SI fig)
+  plot_gap_wad_correlation.py # Interface gap vs Wad scatter (SI fig)
+  plot_br_content_trend.py   # Br content vs B0/E/Wad trend (SI fig)
+  plot_master_summary.py     # 4-panel paper headline figure
+  analyze_halogen_bonds.py   # X-O bond count z-profile (needs xyz)
+  li_layer_partition.py      # Li 1st/2nd/3rd layer classification (needs xyz)
+  br_swap_test.py            # Br↔Cl substitution causal test (needs UMA)
+  run_all.sh                 # Run all data-ready plots
+output/                      # Generated plots and JSON summaries
 tests/                       # Tests for tools
 ```
 
@@ -57,6 +69,7 @@ Two versions:
 2. **Add new data:** Edit JSON in db/, then `python tools/kb_index.py --rebuild`
 3. **Export for paper:** `python tools/kb_export.py --table eos` or `--table elastic`
 4. **Browse knowledge:** Read markdown files in kb/
+5. **Generate SI figures:** `bash tools/run_all.sh` — outputs to `output/`
 
 ## Conventions
 - Energies in eV (or Ry where QE native)
