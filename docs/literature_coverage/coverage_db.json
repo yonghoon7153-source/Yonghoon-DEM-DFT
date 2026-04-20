@@ -1642,6 +1642,155 @@
           "CONNECTS Mohayman 2025 DFT upper bound (30 GPa) to our experimental working value (24 GPa) with 20% polycrystalline correction factor"
         ]
       }
+    },
+    {
+      "id": "koerver_2018_ees",
+      "citation": "Koerver, Zhang, de Biasi, Schweidler, Kondrakov, Kolling, Brezesinski, Hartmann, Zeier, Janek. Chemo-mechanical expansion of lithium electrode materials — on the route to mechanically optimized all-solid-state batteries. Energy Environ. Sci. 2018, 11, 2142-2158.",
+      "doi_or_url": "10.1039/c8ee00907d",
+      "tier": 1,
+      "kind": "systematic_chemomechanical_expansion_3_methods_XRD_OCV_pressure_plus_Table1_elastic_constants",
+      "status": "COMPLETE — 17 pages + Table 1 + Fig 2/3/4/5 + experimental methods",
+      "chemistry_match_with_ours": "STRONG (NCM-811 + beta-Li3PS4 primary; NCM family covered systematically)",
+      "pressure_match_with_ours": "EXCELLENT (445 MPa assembly vs 300 MPa ours, 70 MPa operating)",
+      "headline_findings": [
+        "Three systematic methods: XRD unit cell, OCV vs pressure, operando stress measurement",
+        "Table 1 GOLD: complete elastic constants for ALL common CAMs + SEs + anodes",
+        "Li6PS5X (Cl/Br/I): E=22-30 GPa, nu=0.33-0.37, G=8-11, K=28-30 GPa — brackets our lab 24 GPa",
+        "NCM-811 delta V/V = -6% delithiation, LCO +2% (unique), NCM-622 ~-4%",
+        "Fig 5 proof: NCM:LCO 55:45 wt% blend achieves Delta sigma_11 ~ 0 (zero-strain)",
+        "Plasticity of SE acknowledged as slow and perhaps not effective enough — our plastic framework real",
+        "Good SSBs require minimum porosity to absorb stress — matches our 13-17% target"
+      ],
+      "three_measurement_approaches_fig1": {
+        "a_XRD": "a,b,c = f(c(Li)) — lattice parameters vs SOC",
+        "b_OCV_pressure": "(dE/dp)_T = -(1/nF)*Delta_rVm — thermodynamic reaction volume",
+        "c_operando_stress": "Delta_p = -epsilon_vol * K — pressure change in constrained cell"
+      },
+      "unit_cell_delta_V_over_V_at_full_delithiation_fig2a": {
+        "LCO": "+2% (EXPANSION — unique exception)",
+        "NCM_111": "~-2%",
+        "NCM_523": "~-3%",
+        "NCM_622": "~-4%",
+        "NCM_811": "~-6% (largest contraction)",
+        "NCA": "~-6%"
+      },
+      "partial_molar_volume_Li_fig2b_cm3_per_mol": {
+        "Li_metal_reference": 12.97,
+        "LFP_FP_two_phase": 11.62,
+        "Silicon_alpha_Li15Si4": 8.85,
+        "LTO_zero_strain": 0,
+        "In_InLi_phase_transition": 7.89,
+        "In_InLi_experimental_OCV_derived": 11.81,
+        "LCO_range": [-2, 6],
+        "NCM_811_NCA_at_low_x_Li": "> 12.97 (bonding change)"
+      },
+      "OCV_pressure_slopes": {
+        "In_InLi_dE_dp_mV_per_MPa": 0.122,
+        "LCO_dE_dp_mV_per_MPa": 0.102,
+        "typical_range": "~1 mV / 100 MPa",
+        "eq3": "(dE_oc/dp)_T = -(1/nF) * Delta_rVm",
+        "anisotropy_note": "uniaxial != hydrostatic, orientation non-random -> 50% discrepancy"
+      },
+      "Table_1_elastic_constants_CRITICAL_REFERENCE": {
+        "note": "Complete mechanical property table for CAM + SE + anode",
+        "CAM_GPa": {
+          "LiCoO2": {"E": 191.0, "nu": 0.24, "G": 80, "K": 122.4, "ref": "Sakamoto"},
+          "NCM_111": {"E": 199.0, "nu": 0.25, "G": 78, "K": 132.6, "ref": "Sakamoto"},
+          "LiFePO4": {"E": 117.8, "nu": 0.30, "G": 45.5, "K": 98.2, "ref": "Ceder"},
+          "LiMn2O4": {"E": 194.0, "nu": 0.26, "G": 77.0, "K": 134.7, "ref": "K.J. Kim"}
+        },
+        "SE_GPa": {
+          "xLi2S_P2S5": {"E": "14-23", "nu": "0.27-0.37", "G": "5-9", "K": "13-21"},
+          "gamma_Li3PS4": {"E": 36.9, "nu": 0.26, "G": 14.1, "K": 31.9},
+          "beta_Li3PS4": {"E": 28.9, "nu": 0.27, "G": 11.3, "K": 21.4},
+          "LGPS": {"E": 37.2, "nu": 0.30, "G": 14.3, "K": 31.0},
+          "Li7P3S11": {"E": 21.9, "nu": 0.36, "G": 8.1, "K": 23.9},
+          "Li6PS5X_Cl_Br_I": {"E": "22-30", "nu": "0.33-0.37", "G": "8-11", "K": "28-30", "ref": "Ong DFT"},
+          "LLZO": {"E": 150.3, "nu": 0.26, "G": 60.0, "K": 102.8},
+          "LiPON": {"E": 77.0, "nu": 0.25, "G": 31.0, "K": 51.3}
+        },
+        "Anode_GPa": {
+          "Lithium": {"E": 4.9, "nu": 0.42, "G": 4.2, "K": 11.0},
+          "Indium": {"E": 12.6, "nu": 0.45, "G": 4.4, "K": 42.2},
+          "LTO": {"E": 181.0, "nu": 0.25, "G": 73.1, "K": 125.1},
+          "Graphite": {"E": 32.0, "nu": 0.31, "G": 12.0, "K": 28.1},
+          "alpha_Silicon": {"E": 96.0, "nu": 0.29, "G": 62.0, "K": 90.0}
+        },
+        "Monroe_Newman_criterion": "SE requires G > 8.5 GPa to suppress Li dendrites",
+        "note_on_LPSCl_for_our_lab": "E=22-30 GPa brackets lab 24 GPa and Mohayman DFT 30 GPa; Sakuda exp 24 GPa consistent"
+      },
+      "operando_stress_Fig4_per_cycle": {
+        "LTO_SE_LCO_sigma11_MPa": 0.06,
+        "LTO_SE_NCM811_sigma11_MPa": -0.06,
+        "Li_SE_NCM811_sigma11_MPa": 1.5,
+        "LiC6_SE_NCM811_sigma11_MPa": 0.6,
+        "amplification_by_anode": "Li/graphite 10-20x larger than LTO",
+        "design_rule": "Use LTO anode to isolate CAM stress"
+      },
+      "pressure_buildup_model_vs_measured": {
+        "model": "Delta_p = -epsilon_vol * K (Eq 11)",
+        "LCO_LTO_calculated_MPa": 14.4,
+        "NCM_LTO_calculated_MPa": -65.9,
+        "measured_LCO_LTO_MPa": 0.06,
+        "measured_NCM_LTO_MPa": -0.06,
+        "gap_factor": "~240x lower experimentally than calculated",
+        "explanation": "plastic SE deformation + pore filling absorb most stress",
+        "hydrostatic_approximation_Eq12": "p = E/(1-2nu) * epsilon_0",
+        "final_p_LCO_LTO_MPa": 10,
+        "final_p_NCM_LTO_MPa": -42.7
+      },
+      "chemomechanical_balancing_Fig5": {
+        "concept": "blend positive + negative Vm CAMs",
+        "tested_blend_wt": "NCM-811 : LCO = 55 : 45",
+        "composite_with_SE_wt": "38 : 32 : 30 (NCM:LCO:SE)",
+        "result_stress": "Delta sigma_11 ~ 0 (cancellation)",
+        "voltage_profile": "two-step combined",
+        "delamination": "NOT observed (SEM+EDX Fig S7-S8)",
+        "significance": "first experimental proof of mechanical balancing in SSB cathode"
+      },
+      "experimental_protocol": {
+        "SE_primary": "beta-Li3PS4 (crystalline BASF)",
+        "CAMs": ["NCM-811", "NCA-801505", "LCO (LiNb0.5Ta0.5O3 coated)"],
+        "CAM_SE_ratio_wt": "70:30",
+        "assembly_force_kN": 35,
+        "assembly_pressure_MPa": 445,
+        "operating_pressure_MPa": 70,
+        "frame_pressure_MPa": "60 +/- 8",
+        "temperature_C": 25,
+        "OCV_pressures_tested_MPa": [55, 94, 143, 192],
+        "cycling": "5 cycles 0.1C + 5 cycles 0.25C + open-end 0.1C",
+        "voltage_limits_V": {"NCM_NCA_blend": 4.3, "LCO_only": 4.2},
+        "cathode_mg": 12,
+        "SE_separator_mg": 60,
+        "SE_thickness_um": 400
+      },
+      "implications_for_our_plastic_framework": {
+        "1_plasticity_acknowledged_real_imperfect": "Koerver: 'plastic deformation slow, perhaps not effective enough' — validates our approach, limits its claims",
+        "2_minimum_porosity_requirement": "Our 13-17% porosity matches 'minimum porosity to absorb stress'",
+        "3_elastic_model_over_predicts_240x": "Pure elastic over-predicts stress; plastic + porosity absorb majority — our plastic_coverage.py captures right physics",
+        "4_NCM622_dV_expected": "-4% volumetric strain at full delithiation (between NCM-523 and NCM-811)",
+        "5_operating_pressure_convergence": "All Koerver/Minnmann-group: 40-70 MPa operating after 300-450 MPa assembly",
+        "6_zero_strain_blending_future": "NCM+LCO blend test in our DEM with volume flags"
+      },
+      "crosslinks_to_our_DB": {
+        "ref_8": "Koerver 2017 Chem Mater (our DB entry 7) — precursor",
+        "ref_11": "Zhang 2017 JMCA cyclic expansion",
+        "ref_33": "Sakuda 2013 Sci Rep (our DB entry 11)",
+        "ref_66": "Zhang 2017 ACS AMI (our DB entry 8)",
+        "ref_89": "Ong DFT Li6PS5X elastic constants — source for Table 1 LPSCl"
+      },
+      "comparability_with_ours": {
+        "process_match": "EXCELLENT (cold-press 445 MPa assembly, 70 MPa operating)",
+        "chemistry_match": "STRONG (NCM-811 + beta-Li3PS4, NCM family systematic)",
+        "metric_match": "CHEMOMECHANICAL (complementary to our structural scaling law)",
+        "usefulness_for_us": [
+          "PROVIDES systematic NCM family delta_V/V for our NCM-622 DEM (~-4% expected)",
+          "SUPPLIES complete elastic tensor for Li6PS5X (brackets our lab 24 GPa)",
+          "VALIDATES our hooke/hysteresis + reduced E approach via acknowledged SE plasticity",
+          "CONFIRMS minimum porosity requirement matches our DEM 13-17%",
+          "OFFERS zero-strain cathode design (NCM+LCO blending) as future extension"
+        ]
+      }
     }
   ]
 }

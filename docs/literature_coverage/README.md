@@ -391,8 +391,91 @@ DOI: 10.1038/srep02261
 
 **Bridges DFT-to-experiment:** Mohayman DFT (30 GPa) − GB/porosity correction (~20%) = Sakuda measured (24 GPa) = our lab assumption (24 GPa).
 
+### 12. Koerver 2018 EES (Tier 1, chemomechanical expansion + elastic constants GOLD) ⭐
+**Kind: systematic 3-method chemomechanical study (XRD + OCV(p) + operando stress) + complete Table 1 elastic constants.**
+
+DOI: 10.1039/c8ee00907d
+
+**Three measurement approaches (Fig 1):**
+- (a) XRD: a,b,c = f(c(Li))
+- (b) OCV(p): (∂E/∂p)_T = −(1/nF)·Δ_rV_m
+- (c) Operando stress: Δp = −ε_vol·K
+
+**NCM family ΔV/V at full delithiation (Fig 2a):**
+| Material | ΔV/V |
+|---|---|
+| LCO | +2% (EXPANSION) |
+| NCM-111 | ~−2% |
+| NCM-523 | ~−3% |
+| **NCM-622** | **~−4%** (ours) |
+| NCM-811 | ~−6% |
+| NCA | ~−6% |
+
+**Table 1 — Elastic constants (GPa) — COMPLETE REFERENCE:**
+
+CAMs:
+| | E | ν | G | K |
+|---|---|---|---|---|
+| LiCoO₂ | 191 | 0.24 | 80 | 122 |
+| NCM-111 | 199 | 0.25 | 78 | 133 |
+| LiFePO₄ | 118 | 0.30 | 46 | 98 |
+| LiMn₂O₄ | 194 | 0.26 | 77 | 135 |
+
+SEs (우리 관심):
+| | E | ν | G | K |
+|---|---|---|---|---|
+| **Li₆PS₅X (Cl,Br,I)** | **22-30** | **0.33-0.37** | **8-11** | **28-30** |
+| β-Li₃PS₄ | 28.9 | 0.27 | 11.3 | 21.4 |
+| γ-Li₃PS₄ | 36.9 | 0.26 | 14.1 | 31.9 |
+| LGPS | 37.2 | 0.30 | 14.3 | 31.0 |
+| Li₇P₃S₁₁ | 21.9 | 0.36 | 8.1 | 23.9 |
+| LLZO | 150 | 0.26 | 60 | 103 |
+| LiPON | 77 | 0.25 | 31 | 51 |
+
+→ **LPSCl 22-30 GPa brackets Sakuda exp 24, Mohayman DFT 30, our lab 24**
+
+Anodes:
+| | E | ν | G | K |
+|---|---|---|---|---|
+| Li | 4.9 | 0.42 | 4.2 | 11 |
+| In | 12.6 | 0.45 | 4.4 | 42 |
+| LTO | 181 | 0.25 | 73 | 125 |
+| Graphite | 32 | 0.31 | 12 | 28 |
+
+**Operando stress (Fig 4, per cycle):**
+| Cell | σ₁₁ (MPa) |
+|---|---|
+| LTO\|SE\|LCO | +0.06 |
+| LTO\|SE\|NCM-811 | −0.06 |
+| Li\|SE\|NCM-811 | +1.5 (Li dominates) |
+| LiC₆\|SE\|NCM-811 | +0.6 (graphite dominates) |
+
+**Pressure buildup model vs measured (Eq 11):**
+- LCO/LTO calculated: **+14.4 MPa** vs measured +0.06 MPa (**240× gap**)
+- NCM/LTO calculated: **−65.9 MPa** vs measured −0.06 MPa
+
+→ **plastic SE deformation + pore filling absorb ~99% of calculated stress** (our plastic framework validated)
+
+**Fig 5 — Zero-strain blending experimental proof:**
+- NCM-811 : LCO = 55:45 wt% blend → Δσ₁₁ ≈ 0 (cancellation)
+- Composite 38:32:30 wt (NCM:LCO:SE)
+- No delamination (SEM Fig S7-S8)
+
+**Experimental protocol:**
+- Assembly: 35 kN = **445 MPa** (우리 300 MPa 급)
+- Operating: **70 MPa** (Koerver 2017 64 MPa 대비 유사)
+- SE: β-Li₃PS₄, CAM:SE = 70:30 wt
+- OCV pressure test: 55, 94, 143, 192 MPa
+- Cycling: 4.3 V vs Li+/Li, 0.1C
+
+**핵심 직접 인용 (cite용):**
+> "plastic deformation of SE will never work perfectly, slow and perhaps not effective enough"
+>
+> "Good SSBs may require a minimum porosity in the electrode composites to avoid too strong changes in stress"
+
+→ 우리 plastic_coverage.py framework + 13-17% porosity target 둘 다 문헌 지지.
+
 ## Pending entries (priority order)
-- Tier 1: Koerver 2018 EES (chemomechanical expansion + operating pressure sweep)
 - Tier 1: Nam 2018 JPS (dry vs slurry process, NCM622/argyrodite)
 - Tier 2: Jackson 2017 review (plastic contact mechanics theory cite)
 - Tier 2: Minnmann 2024 JES (modern NCM/LPSCl tomography)
