@@ -148,6 +148,207 @@ _NET_PHYSICS_MIRROR_KEYS = ['sigma_full', 'sigma_full_mScm',
                             'R_brug_over_full', 'bulk_resistance_fraction']
 
 
+def _pct_delta(h, p):
+    """Format Δ% between Hertzian and physics values. '+X.X%' / '-X.X%' / '0%'."""
+    try:
+        if h is None or p is None or float(h) == 0:
+            return '0%'
+        d = (float(p) / float(h) - 1.0) * 100.0
+        if abs(d) < 0.05:
+            return '0%'
+        sign = '+' if d >= 0 else ''
+        return f"{sign}{d:.1f}%"
+    except Exception:
+        return '0%'
+
+
+def _dual_row(label, h_val, p_val, fmt=None):
+    """[label, Hertzian, Physics, Δ%] row. If p_val is None, Physics=Hertzian."""
+    if fmt is None:
+        fmt = lambda x: x
+    h_disp = fmt(h_val) if h_val is not None else '—'
+    p_disp = fmt(p_val) if p_val is not None else h_disp
+    return [label, h_disp, p_disp, _pct_delta(h_val, p_val)]
+
+
+def _same_row(label, val):
+    """[label, val, val, '0%'] — metric not affected by contact mode."""
+    return [label, val, val, '0%']
+
+
+def transform_network_summary_4col(tables, metrics, meta):
+    """Convert network_summary table to 4-column (지표 | Hertzian | Physics | Δ%)
+    and inject Network Solver + AM-AM sections from full_metrics.json.
+
+    Shared helper for /single/<case_id> and /archive/view/<folder> routes."""
+    if 'network_summary' not in tables:
+        return
+    tbl = tables['network_summary']
+
+    # Step 1: expand existing rows to 4 cols (default Physics = Hertzian, Δ = 0%)
+    tbl['columns'] = ['지표', 'Hertzian (DEM-native)', 'Physics (Tabor+volume)', 'Δ (%)']
+    expanded = []
+    for row in tbl['data']:
+        if not row:
+            continue
+        label = row[0] if len(row) > 0 else ''
+        if isinstance(label, str) and label.startswith('──'):
+            expanded.append([label, '', '', ''])
+        elif len(row) >= 4:
+            expanded.append(list(row))  # already 4-col
+        else:
+            value = row[1] if len(row) > 1 else ''
+            expanded.append([label, value, value, '0%'])
+    tbl['data'] = expanded
+    data = tbl['data']
+
+    # Step 2: section headers if missing
+    has_headers = any(isinstance(r[0], str) and r[0].startswith('──') for r in data)
+    if not has_headers:
+        section_map = {
+            'Porosity(%)': '── 구조 ──',
+            'AM-SE Total(μm²)': '── 계면 ──',
+            'SE-SE CN mean': '── 이온경로: 연결성 ──',
+            'Tortuosity mean': '── 이온경로: 경로 효율 ──',
+            'Path Hop Area mean(μm²)': '── 이온경로: 경로 품질 ──',
+            'Ionic Active AM(%)': '── 활성도 ──',
+            'Stress CV(%)': '── 응력 ──',
+        }
+        new_data = []
+        for r in data:
+            lbl = str(r[0])
+            if lbl in section_map:
+                new_data.append([section_map[lbl], '', '', ''])
+            new_data.append(r)
+        tbl['data'] = new_data
+        data = tbl['data']
+
+    # Step 3: populate Physics values for metrics where data exists
+    # (coverage metrics get populated by merge_coverage_into_metrics in pipeline)
+    def _find_row(label_match):
+        for r in data:
+            if str(r[0]) == label_match:
+                return r
+        return None
+
+    if metrics:
+        # Coverage metrics — physics values injected from full_metrics.json
+        cov_map = {
+            'Coverage AM(%)':   ('am_se_coverage_elastic_pct', 'am_se_coverage_physics_pct'),
+            'Coverage AM_P(%)': ('am_p_se_coverage_elastic_pct', 'am_p_se_coverage_physics_pct'),
+            'Coverage AM_S(%)': ('am_s_se_coverage_elastic_pct', 'am_s_se_coverage_physics_pct'),
+        }
+        for row_label, (h_key, p_key) in cov_map.items():
+            r = _find_row(row_label)
+            if r is None:
+                continue
+            # h value is already in row[1] from analyze_contacts.py. If the '_elastic' / '_physics'
+            # keys exist in metrics, use them; else leave Hertzian value unchanged
+            h_val = metrics.get(h_key, r[1])
+            p_val = metrics.get(p_key)
+            if p_val is not None:
+                try:
+                    h_num = float(h_val) if not isinstance(h_val, (int, float)) else h_val
+                    p_num = float(p_val)
+                    r[1] = round(h_num, 1)
+                    r[2] = round(p_num, 1)
+                    r[3] = _pct_delta(h_num, p_num)
+                except Exception:
+                    pass
+
+    # Step 4: inject Network Solver section (σ rows with physics)
+    has_net_section = any(isinstance(r[0], str) and r[0].startswith('── Network Solver') for r in data)
+    if not has_net_section:
+        insert_idx = len(data)
+        for idx, r in enumerate(data):
+            if isinstance(r[0], str) and r[0].startswith('── 응력'):
+                insert_idx = idx
+                break
+        net_rows = [['── Network Solver (DEM-native vs Tabor+volume physics) ──', '', '', '']]
+        if metrics and metrics.get('sigma_full_mScm'):
+            net_rows.append(_dual_row('σ_ionic (mS/cm)',
+                                      metrics.get('sigma_full_mScm'),
+                                      metrics.get('sigma_full_mScm_physics'),
+                                      fmt=lambda x: round(x, 4)))
+            if metrics.get('sigma_bruggeman_mScm'):
+                v = round(metrics['sigma_bruggeman_mScm'], 4)
+                net_rows.append(_same_row('σ_Bruggeman (mS/cm)', v))
+            if metrics.get('R_brug_over_full'):
+                v = f"{metrics['R_brug_over_full']:.1f}×"
+                net_rows.append(_same_row('Contact-free / Full', v))
+            if metrics.get('bulk_resistance_fraction'):
+                v = round((1 - metrics['bulk_resistance_fraction']) * 100, 1)
+                net_rows.append(_same_row('Constriction 비율(%)', v))
+            if metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm'):
+                sig_brug = 3.0 * metrics['sigma_ratio']
+                ratio = sig_brug / metrics['sigma_full_mScm'] if metrics['sigma_full_mScm'] > 0 else 0
+                v = f"{ratio:.1f}×"
+                net_rows.append(_same_row('σ_brug / σ_ionic', v))
+            if metrics.get('electronic_sigma_full_mScm'):
+                net_rows.append(_dual_row('σ_electronic (mS/cm)',
+                                          metrics.get('electronic_sigma_full_mScm'),
+                                          metrics.get('electronic_sigma_full_mScm_physics'),
+                                          fmt=lambda x: round(x, 2)))
+            if metrics.get('electronic_percolating_fraction') is not None:
+                v = f"{metrics['electronic_percolating_fraction']*100:.1f}"
+                net_rows.append(_same_row('AM Percolation (%)', v))
+            if metrics.get('electronic_active_fraction') is not None:
+                v = f"{metrics['electronic_active_fraction']*100:.1f}"
+                net_rows.append(_same_row('Electronic Active AM (%)', v))
+            if metrics.get('thermal_sigma_full_mScm'):
+                net_rows.append(_dual_row('σ_thermal (mS/cm equiv)',
+                                          metrics.get('thermal_sigma_full_mScm'),
+                                          metrics.get('thermal_sigma_full_mScm_physics'),
+                                          fmt=lambda x: round(x, 3)))
+        else:
+            ns = (meta or {}).get('network_solver_status', 'unknown')
+            ns_err = (meta or {}).get('network_solver_error', '')
+            if ns in ('failed', 'error', 'timeout', 'no_input', 'no_output'):
+                net_rows.append(_same_row('상태', f"❌ {ns}"))
+                if ns_err:
+                    net_rows.append(_same_row('에러', ns_err[:200]))
+            elif ns == 'running':
+                net_rows.append(_same_row('상태', '⏳ 실행중...'))
+            elif ns == 'waiting':
+                net_rows.append(_same_row('상태', '⏳ 대기중'))
+            elif ns == 'not_run':
+                net_rows.append(_same_row('상태', '미실행'))
+            else:
+                ms = metrics.get('network_solver_status', '') if metrics else ''
+                net_rows.append(_same_row('상태', f"{ms or ns or '결과 없음'}"))
+        for i, r in enumerate(net_rows):
+            data.insert(insert_idx + i, r)
+
+    # Step 5: inject AM-AM contact mechanics section (invariant under contact_mode)
+    has_am_am = any(isinstance(r[0], str) and r[0].startswith('── AM-AM 접촉 역학') for r in data)
+    if not has_am_am and metrics:
+        am_insert_idx = len(data)
+        for idx, r in enumerate(data):
+            if isinstance(r[0], str) and r[0].startswith('── 응력'):
+                am_insert_idx = idx
+                break
+        am_rows = [['── AM-AM 접촉 역학 ──', '', '', '']]
+        if metrics.get('am_am_cn') is not None:
+            am_rows.append(_same_row('AM-AM CN mean', round(metrics['am_am_cn'], 2)))
+        if metrics.get('am_am_n_contacts') is not None:
+            am_rows.append(_same_row('AM-AM 접촉 수', metrics['am_am_n_contacts']))
+        if metrics.get('am_am_mean_area') is not None:
+            am_rows.append(_same_row('평균 접촉 면적(µm²)', round(metrics['am_am_mean_area'], 4)))
+        if metrics.get('am_am_mean_contact_radius') is not None:
+            am_rows.append(_same_row('접촉 반경(µm)', round(metrics['am_am_mean_contact_radius'], 4)))
+        if metrics.get('am_am_mean_delta') is not None:
+            am_rows.append(_same_row('침투 깊이 δ(µm)', round(metrics['am_am_mean_delta'], 4)))
+        if metrics.get('am_am_mean_force') is not None:
+            am_rows.append(_same_row('법선력(µN)', round(metrics['am_am_mean_force'], 2)))
+        if metrics.get('am_am_mean_pressure') is not None:
+            am_rows.append(_same_row('접촉 압력(MPa)', round(metrics['am_am_mean_pressure'], 1)))
+        if metrics.get('am_am_mean_hop') is not None:
+            am_rows.append(_same_row('Hop 거리(µm)', round(metrics['am_am_mean_hop'], 2)))
+        if len(am_rows) > 1:
+            for i, r in enumerate(am_rows):
+                data.insert(am_insert_idx + i, r)
+
+
 def _merge_dual_into_metrics(results_dir, met_data):
     """If network_conductivity_dual.json exists (contact-mode=both run),
     copy physics-mode fields into met_data with '_physics' suffix, plus
@@ -907,44 +1108,21 @@ def single(case_id):
                 'data': df.values.tolist()
             }
 
-    # Inject section headers into network_summary if missing
-    if 'network_summary' in tables:
-        data = tables['network_summary']['data']
-        has_headers = any(str(row[0]).startswith('──') for row in data)
-        if not has_headers:
-            section_map = {
-                'Porosity(%)': '── 구조 ──',
-                'AM-SE Total(μm²)': '── 계면 ──',
-                'SE-SE CN mean': '── 이온경로: 연결성 ──',
-                'Tortuosity mean': '── 이온경로: 경로 효율 ──',
-                'Path Hop Area mean(μm²)': '── 이온경로: 경로 품질 ──',
-                'Ionic Active AM(%)': '── 활성도 ──',
-                'Stress CV(%)': '── 응력 ──',
-            }
-            new_data = []
-            for row in data:
-                label = str(row[0])
-                if label in section_map:
-                    new_data.append([section_map[label], ''])
-                new_data.append(row)
-            tables['network_summary']['data'] = new_data
-
-    # Load full_metrics.json for header info
+    # Load full_metrics.json (needed for placeholder patching + physics injection)
     metrics = {}
     metrics_path = os.path.join(results_dir, 'full_metrics.json')
     if os.path.exists(metrics_path):
         with open(metrics_path) as f:
             metrics = json.load(f)
 
-    # Patch network_summary with values from full_metrics.json
+    # Patch placeholder '-' values from full_metrics.json BEFORE 4-col transform
+    # (transform copies row[1] → row[2], so placeholders must be filled first)
     if 'network_summary' in tables and metrics:
-        # SE Cluster: plain number → large/total format
         n_large = metrics.get('n_large_components')
         if n_large is not None:
             for row in tables['network_summary']['data']:
                 if str(row[0]) == 'SE Cluster 수' and '≥10' not in str(row[1]):
                     row[1] = f"{n_large}(≥10) / {row[1]}"
-        # Fill placeholder '-' values from full_metrics
         placeholder_map = {
             'GB Density(hops/μm)': 'gb_density_mean',
             'Path Hop Area mean(μm²)': 'path_hop_area_mean',
@@ -957,131 +1135,20 @@ def single(case_id):
                 val = metrics.get(placeholder_map[label])
                 if val is not None:
                     row[1] = val
-            # Legacy label migration (pre-v2.0 cached results)
             if label == 'σ_eff/σ_bulk':
                 row[0] = 'σ_brug/σ_grain (Bruggeman)'
-
-        # Inject σ_Bruggeman if missing (for pre-v2.0 cached results)
-        has_brug_abs = any(str(row[0]) == 'σ_Bruggeman (mS/cm)' for row in tables['network_summary']['data'])
-        if not has_brug_abs and metrics and metrics.get('sigma_ratio'):
+        has_brug_abs = any(str(row[0]) == 'σ_Bruggeman (mS/cm)'
+                           for row in tables['network_summary']['data'])
+        if not has_brug_abs and metrics.get('sigma_ratio'):
             sigma_brug_mScm = round(3.0 * metrics['sigma_ratio'], 4)
-            # Insert BEFORE σ_brug/σ_grain row
             for idx, row in enumerate(tables['network_summary']['data']):
                 if 'σ_brug/σ_grain' in str(row[0]):
-                    tables['network_summary']['data'].insert(idx, ['σ_Bruggeman (mS/cm)', sigma_brug_mScm])
+                    tables['network_summary']['data'].insert(
+                        idx, ['σ_Bruggeman (mS/cm)', sigma_brug_mScm])
                     break
 
-    # Inject network solver results (no re-analysis needed)
-    if 'network_summary' in tables:
-        data = tables['network_summary']['data']
-        # Check if already has Network Solver section
-        has_net_section = any(str(row[0]).startswith('── Network Solver') for row in data)
-        if not has_net_section:
-            # Find insert point: before "── 응력 ──" or at end
-            insert_idx = len(data)
-            for idx, row in enumerate(data):
-                if str(row[0]).startswith('── 응력'):
-                    insert_idx = idx
-                    break
-            net_rows = [['── Network Solver (Hertzian, DEM-native) ──', '']]
-            if metrics and metrics.get('sigma_full_mScm'):
-                net_rows.append(['σ_ionic (mS/cm)', round(metrics['sigma_full_mScm'], 4)])
-                if metrics.get('sigma_bruggeman_mScm'):
-                    net_rows.append(['σ_Bruggeman (mS/cm)', round(metrics['sigma_bruggeman_mScm'], 4)])
-                if metrics.get('R_brug_over_full'):
-                    net_rows.append(['Contact-free / Full', f"{metrics['R_brug_over_full']:.1f}×"])
-                if metrics.get('bulk_resistance_fraction'):
-                    net_rows.append(['Constriction 비율(%)', round((1 - metrics['bulk_resistance_fraction']) * 100, 1)])
-                # σ_brug / σ_ionic ratio
-                if metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm'):
-                    sigma_brug_ms = 3.0 * metrics['sigma_ratio']
-                    brug_over_ionic = sigma_brug_ms / metrics['sigma_full_mScm'] if metrics['sigma_full_mScm'] > 0 else 0
-                    net_rows.append(['σ_brug / σ_ionic', f"{brug_over_ionic:.1f}×"])
-                if metrics.get('electronic_sigma_full_mScm'):
-                    net_rows.append(['σ_electronic (mS/cm)', round(metrics['electronic_sigma_full_mScm'], 2)])
-                if metrics.get('electronic_percolating_fraction') is not None:
-                    net_rows.append(['AM Percolation (%)', f"{metrics['electronic_percolating_fraction']*100:.1f}"])
-                if metrics.get('electronic_active_fraction') is not None:
-                    net_rows.append(['Electronic Active AM (%)', f"{metrics['electronic_active_fraction']*100:.1f}"])
-                if metrics.get('thermal_sigma_full_mScm'):
-                    net_rows.append(['σ_thermal (mS/cm equiv)', round(metrics['thermal_sigma_full_mScm'], 3)])
-
-                # ── Physics (Plastic film, Tabor+volume, 0 free params) ──
-                # Populated when network_conductivity.py ran with --contact-mode both
-                sfH = metrics.get('sigma_full_mScm')
-                sfP = metrics.get('sigma_full_mScm_physics')
-                if sfP is not None:
-                    net_rows.append(['── Physics (Plastic film, Tabor+volume) ──', ''])
-                    net_rows.append(['σ_ionic [physics] (mS/cm)', round(sfP, 4)])
-                    if sfH and sfH > 0:
-                        net_rows.append(['σ_ionic ratio (physics/Hertzian)',
-                                         f"{sfP / sfH:.2f}×"])
-                    sfeP = metrics.get('electronic_sigma_full_mScm_physics')
-                    if sfeP is not None:
-                        net_rows.append(['σ_electronic [physics] (mS/cm)', round(sfeP, 2)])
-                    sftP = metrics.get('thermal_sigma_full_mScm_physics')
-                    if sftP is not None:
-                        net_rows.append(['σ_thermal [physics] (mS/cm equiv)', round(sftP, 3)])
-                elif metrics.get('network_dual'):
-                    # Dual block exists but no direct _physics key — unusual, surface status
-                    net_rows.append(['── Physics (Plastic film) ──', ''])
-                    net_rows.append(['상태', '⚠ dual JSON 있음, physics σ 비어있음'])
-                else:
-                    # No physics run yet — hint to the user
-                    net_rows.append(['── Physics (Plastic film) ──', ''])
-                    net_rows.append(['상태', '미실행 — "Network Solver 재실행" 클릭'])
-            else:
-                # No results — show status/error from meta
-                ns = meta.get('network_solver_status', 'unknown')
-                ns_err = meta.get('network_solver_error', '')
-                if ns in ('failed', 'error', 'timeout', 'no_input', 'no_output'):
-                    net_rows.append(['상태', f"❌ {ns}"])
-                    if ns_err:
-                        # Truncate long error messages
-                        net_rows.append(['에러', ns_err[:200]])
-                elif ns == 'running':
-                    net_rows.append(['상태', '⏳ 실행중...'])
-                elif ns == 'waiting':
-                    net_rows.append(['상태', '⏳ 대기중 (다른 케이스 실행중)'])
-                elif ns == 'not_run':
-                    net_rows.append(['상태', '미실행'])
-                else:
-                    # Check if network_solver_status is in metrics instead
-                    ms = metrics.get('network_solver_status', '') if metrics else ''
-                    net_rows.append(['상태', f"{ms or ns or '결과 없음'}"])
-            for i, r in enumerate(net_rows):
-                data.insert(insert_idx + i, r)
-
-        # Inject AM-AM contact mechanics section
-        has_am_am_section = any(str(row[0]).startswith('── AM-AM 접촉 역학') for row in data)
-        if not has_am_am_section and metrics:
-            # Insert before "── 응력 ──" or at end
-            am_insert_idx = len(data)
-            for idx, row in enumerate(data):
-                if str(row[0]).startswith('── 응력'):
-                    am_insert_idx = idx
-                    break
-            am_rows = [['── AM-AM 접촉 역학 ──', '']]
-            if metrics.get('am_am_cn') is not None:
-                am_rows.append(['AM-AM CN mean', round(metrics['am_am_cn'], 2)])
-            if metrics.get('am_am_n_contacts') is not None:
-                am_rows.append(['AM-AM 접촉 수', metrics['am_am_n_contacts']])
-            if metrics.get('am_am_mean_area') is not None:
-                am_rows.append(['평균 접촉 면적(µm²)', round(metrics['am_am_mean_area'], 4)])
-            if metrics.get('am_am_mean_contact_radius') is not None:
-                am_rows.append(['접촉 반경(µm)', round(metrics['am_am_mean_contact_radius'], 4)])
-            if metrics.get('am_am_mean_delta') is not None:
-                am_rows.append(['침투 깊이 δ(µm)', round(metrics['am_am_mean_delta'], 4)])
-            if metrics.get('am_am_mean_force') is not None:
-                am_rows.append(['법선력(µN)', round(metrics['am_am_mean_force'], 2)])
-            if metrics.get('am_am_mean_pressure') is not None:
-                am_rows.append(['접촉 압력(MPa)', round(metrics['am_am_mean_pressure'], 1)])
-            if metrics.get('am_am_mean_hop') is not None:
-                am_rows.append(['Hop 거리(µm)', round(metrics['am_am_mean_hop'], 2)])
-            # Only add if there's at least one data row beyond the header
-            if len(am_rows) > 1:
-                for i, r in enumerate(am_rows):
-                    data.insert(am_insert_idx + i, r)
+    # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
+    transform_network_summary_4col(tables, metrics, meta)
 
     # Load input_params.json
     input_params = {}
@@ -2339,29 +2406,7 @@ def archive_view(folder):
         with open(metrics_path) as f:
             metrics = json.load(f)
 
-    # Section headers
-    if 'network_summary' in tables:
-        data = tables['network_summary']['data']
-        has_headers = any(str(row[0]).startswith('──') for row in data)
-        if not has_headers:
-            section_map = {
-                'Porosity(%)': '── 구조 ──',
-                'AM-SE Total(μm²)': '── 계면 ──',
-                'SE-SE CN mean': '── 이온경로: 연결성 ──',
-                'Tortuosity mean': '── 이온경로: 경로 효율 ──',
-                'Path Hop Area mean(μm²)': '── 이온경로: 경로 품질 ──',
-                'Ionic Active AM(%)': '── 활성도 ──',
-                'Stress CV(%)': '── 응력 ──',
-            }
-            new_data = []
-            for row in data:
-                label = str(row[0])
-                if label in section_map:
-                    new_data.append([section_map[label], ''])
-                new_data.append(row)
-            tables['network_summary']['data'] = new_data
-
-    # Patch placeholder values
+    # Patch placeholder '-' values from full_metrics.json BEFORE 4-col transform
     if 'network_summary' in tables and metrics:
         n_large = metrics.get('n_large_components')
         if n_large is not None:
@@ -2381,36 +2426,8 @@ def archive_view(folder):
                 if val is not None:
                     row[1] = val
 
-    # Inject AM-AM contact mechanics section (archive route)
-    if 'network_summary' in tables and metrics:
-        data = tables['network_summary']['data']
-        has_am_am_section = any(str(row[0]).startswith('── AM-AM 접촉 역학') for row in data)
-        if not has_am_am_section:
-            am_insert_idx = len(data)
-            for idx, row in enumerate(data):
-                if str(row[0]).startswith('── 응력'):
-                    am_insert_idx = idx
-                    break
-            am_rows = [['── AM-AM 접촉 역학 ──', '']]
-            if metrics.get('am_am_cn') is not None:
-                am_rows.append(['AM-AM CN mean', round(metrics['am_am_cn'], 2)])
-            if metrics.get('am_am_n_contacts') is not None:
-                am_rows.append(['AM-AM 접촉 수', metrics['am_am_n_contacts']])
-            if metrics.get('am_am_mean_area') is not None:
-                am_rows.append(['평균 접촉 면적(µm²)', round(metrics['am_am_mean_area'], 4)])
-            if metrics.get('am_am_mean_contact_radius') is not None:
-                am_rows.append(['접촉 반경(µm)', round(metrics['am_am_mean_contact_radius'], 4)])
-            if metrics.get('am_am_mean_delta') is not None:
-                am_rows.append(['침투 깊이 δ(µm)', round(metrics['am_am_mean_delta'], 4)])
-            if metrics.get('am_am_mean_force') is not None:
-                am_rows.append(['법선력(µN)', round(metrics['am_am_mean_force'], 2)])
-            if metrics.get('am_am_mean_pressure') is not None:
-                am_rows.append(['접촉 압력(MPa)', round(metrics['am_am_mean_pressure'], 1)])
-            if metrics.get('am_am_mean_hop') is not None:
-                am_rows.append(['Hop 거리(µm)', round(metrics['am_am_mean_hop'], 2)])
-            if len(am_rows) > 1:
-                for i, r in enumerate(am_rows):
-                    data.insert(am_insert_idx + i, r)
+    # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
+    transform_network_summary_4col(tables, metrics, meta)
 
     input_params = {}
     params_path = os.path.join(results_dir, 'input_params.json')
