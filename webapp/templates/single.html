@@ -459,10 +459,40 @@ const METRIC_TIPS = {
     meaning: '취약 AM은 하나의 SE-AM 접촉이 끊기면 즉시 ionic dead가 됩니다. 이 비율이 높으면 사이클링 중 접촉 손실에 의한 용량 감소 위험이 큽니다.'
   },
   'AM-SE CN mean': {
-    title: 'AM-SE Coordination Number',
+    title: 'AM-SE Coordination Number (전체 평균)',
     formula: 'CN = AM 입자 하나가 접촉하고 있는 SE 입자의 수 (평균)',
-    desc: '활물질(AM) 입자가 평균적으로 몇 개의 SE 입자와 접촉하는지를 나타냅니다.',
-    meaning: 'AM-SE CN이 높을수록 이온 공급 경로가 다양하여 안정적입니다. CN ≥ 3이면 한두 개 접촉이 끊겨도 활성 상태를 유지할 수 있습니다.'
+    desc: '활물질(AM) 입자가 평균적으로 몇 개의 SE 입자와 접촉하는지를 나타냅니다. bimodal에서는 AM_P와 AM_S의 가중평균.',
+    meaning: 'AM-SE CN이 높을수록 이온 공급 경로가 다양하여 안정적입니다. CN ≥ 3이면 한두 개 접촉이 끊겨도 활성 상태를 유지. 주의: bimodal은 AM_P/AM_S 분리값을 봐야 물리가 보임 (크기비 차이).'
+  },
+  '  ├ AM_P-SE CN mean': {
+    title: 'AM_P-SE CN (1차 입자 전용)',
+    formula: 'CN_AM_P-SE = AM_P(primary, 큰 입자) 하나 당 접촉 SE 입자 수',
+    desc: '1차 입자는 크기가 커서 표면적이 크고 interstitial filling regime에 있음. 이론 상한 CN_max ≈ 12·(R_AM/r_SE)²·sin²(30°).',
+    meaning: '일반적으로 AM_S보다 높음. COMSOL Butler-Volmer에서 per-particle i₀는 이 CN × cov(AM_P)에 비례. 작으면 이온 공급 부족 → 과전압 상승.'
+  },
+  '  ├ AM_S-SE CN mean': {
+    title: 'AM_S-SE CN (2차 입자 전용)',
+    formula: 'CN_AM_S-SE = AM_S(secondary, 작은 입자) 하나 당 접촉 SE 입자 수',
+    desc: '2차 입자는 크기가 작아 SE와 near-monodisperse regime (size ratio ~1-2)에서 많이 봄. RCP 극한에서 CN ~ 6-12.',
+    meaning: '입자 수(N_AM_S)가 보통 훨씬 많아 전체 CN 평균을 지배함. AM_S-SE CN이 AM_P-SE CN보다 크게 작으면 bimodal 효과 강함 → COMSOL 분리 모델 필수.'
+  },
+  '  └ AM-SE CN (surface-weighted)': {
+    title: 'Surface-Area-Weighted AM-SE CN',
+    formula: 'CN_eff = Σ(N_i · R_i² · CN_i) / Σ(N_i · R_i²) — 입자 표면적 가중 평균',
+    desc: '입자 수 평균(count-weighted)이 아닌 표면적 가중 평균. 이온 전도 관점에서 더 물리적 (큰 입자가 더 많은 SE와 접촉할 기회).',
+    meaning: 'COMSOL/scaling law에서 단일 CN 값 써야 할 때 이 값이 더 정확. count-mean은 AM_S(수가 많음)에 편향됨. bimodal 분석·COMSOL 연동 시 권장.'
+  },
+  '  ├ AM_P Vulnerable(%)': {
+    title: 'AM_P Vulnerable (1차 입자 취약 비율)',
+    formula: 'AM_P 중 SE 접촉 0개 또는 1개인 비율 (%)',
+    desc: '큰 1차 입자가 SE와 충분히 연결 안 된 비율.',
+    meaning: '1차 입자 vulnerable이 높으면 bulk 용량 손실이 큼 (1차 입자는 용량 대부분 차지). cycling 중 chemomechanical gap 발생 시 가장 먼저 영향.'
+  },
+  '  └ AM_S Vulnerable(%)': {
+    title: 'AM_S Vulnerable (2차 입자 취약 비율)',
+    formula: 'AM_S 중 SE 접촉 0개 또는 1개인 비율 (%)',
+    desc: '작은 2차 입자가 SE와 충분히 연결 안 된 비율.',
+    meaning: '2차 입자 vulnerable이 높아도 개별 영향은 작지만, 입자 수가 많아 전체 용량에 누적 영향.'
   },
   'σ_brug/σ_grain (Bruggeman)': {
     title: 'Bruggeman 추정 비율 (σ_brug/σ_grain)',

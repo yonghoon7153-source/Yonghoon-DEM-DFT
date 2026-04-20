@@ -509,7 +509,9 @@ def calc_overlap_ratio(atoms, contacts):
 # ─── AM Isolation Risk ───────────────────────────────────────────────────
 
 def calc_am_isolation_risk(atoms, contacts, type_map):
-    """AM particles connected to only 1 SE = vulnerable (single point of failure)."""
+    """AM particles connected to only 1 SE = vulnerable (single point of failure).
+    Returns aggregated AM-SE CN + per-AM-type breakdown (AM_P-SE, AM_S-SE) for bimodal.
+    """
     am_types = [k for k, v in type_map.items() if 'AM' in v]
     se_types = [k for k, v in type_map.items() if v == 'SE']
 
@@ -532,13 +534,51 @@ def calc_am_isolation_risk(atoms, contacts, type_map):
     single_se = sum(1 for aid in am_ids if am_se_count.get(aid, 0) == 1)
     counts = [am_se_count.get(aid, 0) for aid in am_ids]
 
-    return {
+    result = {
         'no_se_pct': float(no_se / n_am * 100),
         'single_se_pct': float(single_se / n_am * 100),
         'vulnerable_pct': float((no_se + single_se) / n_am * 100),
         'am_se_cn_mean': float(np.mean(counts)),
         'am_se_cn_std': float(np.std(counts)),
     }
+
+    # ─── Per-AM-type breakdown (bimodal: AM_P-SE vs AM_S-SE) ────────────────
+    # Physics: bimodal systems have size-dependent CN regimes. Large AM (P) sit
+    # in interstitial-filling, small AM (S) sit near-monodisperse with SE. COMSOL
+    # Butler-Volmer + solid diffusion require per-AM-type kinetics, so we expose
+    # CN and surface-weighted effective CN separately.
+    for lbl in set(type_map.values()):
+        if 'AM' not in lbl:
+            continue
+        type_ids_for_lbl = [k for k, v in type_map.items() if v == lbl]
+        am_lbl_ids = [aid for aid, a in atoms.items() if a['type'] in type_ids_for_lbl]
+        if not am_lbl_ids:
+            continue
+        counts_lbl = np.array([am_se_count.get(aid, 0) for aid in am_lbl_ids])
+        no_se_lbl = int(np.sum(counts_lbl == 0))
+        single_lbl = int(np.sum(counts_lbl == 1))
+        result[f'{lbl}_se_cn_mean'] = float(np.mean(counts_lbl))
+        result[f'{lbl}_se_cn_std'] = float(np.std(counts_lbl))
+        result[f'{lbl}_se_cn_median'] = float(np.median(counts_lbl))
+        result[f'{lbl}_se_cn_max'] = int(np.max(counts_lbl))
+        result[f'{lbl}_n_particles'] = len(am_lbl_ids)
+        result[f'{lbl}_vulnerable_pct'] = float((no_se_lbl + single_lbl) / len(am_lbl_ids) * 100)
+
+    # Surface-area-weighted effective AM-SE CN (for COMSOL pseudo-P2D)
+    # CN_eff = Sum(N_i * R_i^2 * CN_i) / Sum(N_i * R_i^2)
+    weighted_num = 0.0
+    weighted_den = 0.0
+    for aid in am_ids:
+        r = atoms[aid]['radius']
+        cn_aid = am_se_count.get(aid, 0)
+        weighted_num += r * r * cn_aid
+        weighted_den += r * r
+    if weighted_den > 0:
+        result['am_se_cn_surface_weighted'] = float(weighted_num / weighted_den)
+    else:
+        result['am_se_cn_surface_weighted'] = 0.0
+
+    return result
 
 
 # ─── Effective Ionic Conductivity ─────────────────────────────────────────

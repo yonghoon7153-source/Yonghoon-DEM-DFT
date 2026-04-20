@@ -218,9 +218,17 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     am_risk = results.get('am_isolation_risk')
     if am_risk:
         rows.append({'지표': 'AM-SE CN mean', '값': round(am_risk['am_se_cn_mean'], 2)})
+        # Per-AM-type breakdown (bimodal only: expose AM_P-SE and AM_S-SE separately)
+        if 'AM_P_se_cn_mean' in am_risk and 'AM_S_se_cn_mean' in am_risk:
+            rows.append({'지표': '  ├ AM_P-SE CN mean', '값': round(am_risk['AM_P_se_cn_mean'], 2)})
+            rows.append({'지표': '  ├ AM_S-SE CN mean', '값': round(am_risk['AM_S_se_cn_mean'], 2)})
+            rows.append({'지표': '  └ AM-SE CN (surface-weighted)', '값': round(am_risk['am_se_cn_surface_weighted'], 2)})
     rows.append({'지표': 'Ionic Active AM(%)', '값': round(ionic['active_pct'], 1)})
     if am_risk:
         rows.append({'지표': 'AM Vulnerable(%)', '값': round(am_risk['vulnerable_pct'], 1)})
+        if 'AM_P_vulnerable_pct' in am_risk and 'AM_S_vulnerable_pct' in am_risk:
+            rows.append({'지표': '  ├ AM_P Vulnerable(%)', '값': round(am_risk['AM_P_vulnerable_pct'], 1)})
+            rows.append({'지표': '  └ AM_S Vulnerable(%)', '값': round(am_risk['AM_S_vulnerable_pct'], 1)})
     # ── 이온전도 ──
     if eff_cond:
         rows.append({'지표': '── 이온전도 ──', '값': ''})
@@ -371,6 +379,14 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     if am_risk:
         metrics['am_vulnerable_pct'] = am_risk['vulnerable_pct']
         metrics['am_se_cn_mean'] = am_risk['am_se_cn_mean']
+        # Per-AM-type AM-SE CN (bimodal): for COMSOL Butler-Volmer per-phase
+        for key in ['AM_P_se_cn_mean', 'AM_P_se_cn_std', 'AM_P_se_cn_median', 'AM_P_se_cn_max',
+                    'AM_P_n_particles', 'AM_P_vulnerable_pct',
+                    'AM_S_se_cn_mean', 'AM_S_se_cn_std', 'AM_S_se_cn_median', 'AM_S_se_cn_max',
+                    'AM_S_n_particles', 'AM_S_vulnerable_pct',
+                    'am_se_cn_surface_weighted']:
+            if key in am_risk:
+                metrics[key] = am_risk[key]
     eff_cond = results.get('effective_conductivity')
     if eff_cond:
         metrics['sigma_ratio'] = eff_cond['sigma_ratio']
