@@ -811,7 +811,12 @@ if __name__ == '__main__':
         with open(mesh_file) as f:
             plate_z = json.load(f)['plate_z']
     else:
-        plate_z = max(a['z'] + a['radius'] for a in atoms_raw.values())
+        # Fallback: use max z of particle CENTERS (NOT z+radius). Adding the
+        # radius overshoots the actual plate plane by one particle radius,
+        # which makes z_top = plate_z - r_se×2 land above every SE center →
+        # silent percolation=0 (observed for results/ cases missing
+        # mesh_info.json). See dem_analysis_core.get_plate_z for matching fix.
+        plate_z = max(a['z'] for a in atoms_raw.values())
 
     box_x, box_y = 0.05, 0.05
     ip_path = os.path.join(args.output, 'input_params.json')
