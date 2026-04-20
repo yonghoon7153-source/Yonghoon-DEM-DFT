@@ -1751,13 +1751,21 @@ def serve_3d_data(case_id):
         'y_min': 0, 'y_max': round(_box_y * scale, 1),
         'z_min': 0,
     }
-    # plate_z from mesh_info
+    # box.z_max = tight fit to actual particles (ignores stale mesh_info plate_z
+    # which can drift from the real packed height after DEM re-analysis).
+    particle_z_top = max(p['z'] + p['r'] for p in particles) if particles else 0
     mesh_file = os.path.join(results_dir, 'mesh_info.json')
     if os.path.exists(mesh_file):
-        with open(mesh_file) as f:
-            box['z_max'] = round(json.load(f)['plate_z'] * scale, 1)
+        try:
+            with open(mesh_file) as f:
+                plate_z_mesh = json.load(f)['plate_z'] * scale
+            # Use whichever is smaller — avoids oversized bounding box when
+            # mesh_info.plate_z is a stale pre-compaction value
+            box['z_max'] = round(min(plate_z_mesh, particle_z_top), 1)
+        except Exception:
+            box['z_max'] = round(particle_z_top, 1)
     else:
-        box['z_max'] = round(max(p['z'] + p['r'] for p in particles), 1)
+        box['z_max'] = round(particle_z_top, 1)
 
     # Percolation data from full_metrics
     percolation = {'top_reachable': [], 'bottom_se': [], 'top_se': []}
@@ -2525,12 +2533,17 @@ def serve_archive_3d_data(folder):
         'y_min': 0, 'y_max': round(_box_y * scale, 1),
         'z_min': 0,
     }
+    particle_z_top = max(p['z'] + p['r'] for p in particles) if particles else 0
     mesh_file = os.path.join(target, 'mesh_info.json')
     if os.path.exists(mesh_file):
-        with open(mesh_file) as f:
-            box['z_max'] = round(json.load(f)['plate_z'] * scale, 1)
+        try:
+            with open(mesh_file) as f:
+                plate_z_mesh = json.load(f)['plate_z'] * scale
+            box['z_max'] = round(min(plate_z_mesh, particle_z_top), 1)
+        except Exception:
+            box['z_max'] = round(particle_z_top, 1)
     else:
-        box['z_max'] = round(max(p['z'] + p['r'] for p in particles), 1)
+        box['z_max'] = round(particle_z_top, 1)
 
     percolation = {'top_reachable': [], 'bottom_se': [], 'top_se': []}
     perc_path = os.path.join(target, 'percolation_sets.json')
