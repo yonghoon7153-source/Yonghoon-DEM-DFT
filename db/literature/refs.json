@@ -259,6 +259,45 @@
       "relevance_to_our_work": "MOST SIMILAR published paper. Both use MLIP + direct interface + multiple construction methods + composition effect. Key differences: (1) they use SMD (force-based, Jarzynski), we use separation (energy-based); (2) they vary stoichiometry, we vary Br substitution; (3) their system Cu/TaN (semiconductor), ours SE/NCM (battery); (4) they train their own MLIP (SevenNet), we use UMA/MACE off-the-shelf.",
       "what_to_show_advisor": "Section 2 METHODS (pages 11167-11169) — shows EXACTLY how detailed MLIP adhesion methods should be. Particularly: (1) Section 2.1 Training Set (detailed DFT params + MQA protocol), (2) Section 2.2 MLIP Training (SevenNet config, RMSE), (3) Section 2.3 Interface Construction (3 methods with specific protocols), (4) Section 2.4 SMD (spring k, velocity, Jarzynski). Methods span FULL 3 pages! This justifies our ~25-line methods as actually CONCISE compared to published standard.",
       "supports_our_methodology": "Published Dec 2025 in respected ACS journal. Korean group (SNU Seungwu Han). Validates: (1) MLIP direct interface is standard modern approach, (2) multiple interface construction methods is expected practice, (3) methods section of 2-3 pages is normal for MLIP adhesion papers. Our methods section is comparable or even shorter.",
+      "adoptable_ideas": {
+        "figures_to_emulate": {
+          "Fig_12_bond_counting": "Number of Cu-X bonds vs height histogram per interface type. WE CAN DO: halogen (Cl/Br)-O bond count vs height at SE/NCM interface — would visualize why Br interfaces bond differently than Cl. Use OVITO or ASE neighbor analysis with cutoff ~3.5 Å.",
+          "Fig_14_force_curves": "Force/Area vs separation distance with Wad bar chart inset. WE CAN DO: Energy vs separation curve from our separation method, with Wad bar chart inset comparing 5 compositions. Simple, compact, high-impact.",
+          "Fig_13_bond_evolution": "Bond count vs time during SMD. Not directly applicable (we don't use SMD) but analogous: plot E(z) vs z for our 20 registries to show distribution, with mean curve highlighted."
+        },
+        "analysis_techniques": {
+          "substitution_test": "Section 3.3.3: 10% atom substitution to isolate bonding contribution. WE CAN DO: artificially swap 1 Br→Cl or Cl→Br at interface and recompute Wad to isolate halogen-specific bonding. Direct causal test for 'why does Br change Wad?'",
+          "UMAP_training_validation": "Figure S19: UMAP of MLIP training set vs our structures to prove OOD-safety. WE CAN DO: download UMA training set fingerprints (if available) or use descriptor similarity to show our SE/NCM interface structures are in-distribution. Directly addresses Q3 in reviewer_qa_methods.",
+          "strain_localization": "Use atomic strain coloring (von Mises) to show where deformation concentrates. WE CAN DO: OVITO-based strain visualization comparing Li5.4 vs Li6 interfaces — would explain vacancy effect mechanism."
+        },
+        "writing_style": {
+          "conclusions_structure": "(1) System + method summary, (2) Key finding #1 with mechanism, (3) Key finding #2 with caveat (saturation), (4) Extension/implication, (5) Broader impact for design. WE CAN ADOPT exact structure for our Conclusions section.",
+          "mechanism_discussion": "Section 3.3 explicitly ties Wad to atomic-scale bonding structure (Cu-Ta bonds, intermixing, dislocation activity). WE SHOULD ADOPT: tie our Wad trends to halogen-O bond counts, Li-O distances, interfacial Li density.",
+          "SI_content_list": "Associated Content block lists ~15 SI items systematically. WE CAN ADOPT this format for our SI: EOS tables, strain values, seed convergence plots, 5L NCM results, gap distributions, 100-seed statistics."
+        },
+        "specific_numbers_to_cite": {
+          "MLIP_RMSE_benchmark": "SevenNet RMSE 4.5 meV/atom, 0.3 eV/Å force — cite as 'typical MLIP accuracy benchmark' when discussing UMA reliability",
+          "interface_size_justification": "3200-3840 atoms for their Cu/TaN → our 624-atom (Li6) / 248-atom (Li5.4) interfaces are SMALLER but justified by periodic registry sampling",
+          "configurations_per_condition": "3 SMD per condition (total 18 simulations) → our 20 xy-shifts per composition (total 100) is MORE statistically robust"
+        },
+        "acknowledgments_precedent": "Their ACK lists KISTI (KSC-2024-CRE-0215) and KIAS computing centers. WE CAN ADOPT identical format for our KISTI Nurion/Neuron usage — proves computing infrastructure is comparable.",
+        "reference_papers_they_cite": {
+          "Jarzynski_1997": "Nonequilibrium Equality for Free Energy Differences — only needed if we adopt SMD",
+          "Park_Schulten_2004": "PMF from SMD — only needed if we adopt SMD",
+          "Deringer_2019_MLIP": "MLIP review — we can cite to motivate MLIP use",
+          "Hong_2023_training": "Applications and training sets of ML potentials — cite for UMA training philosophy",
+          "Batzner_NequIP_2022": "E(3)-equivariant GNN — cite when discussing UMA architecture (UMA is also E(3)-equivariant)"
+        }
+      },
+      "priority_adoptions_for_our_paper": [
+        "1. COPY Figure 14-style force/energy vs separation plot with Wad bar chart inset (compact, publication-ready)",
+        "2. COPY Conclusions structure: system+method → finding#1 → finding#2 with caveat → extension → design impact",
+        "3. COPY SI associated content itemized list format",
+        "4. COPY acknowledgments KISTI grant format",
+        "5. CITE Deringer 2019 and Batzner 2022 to strengthen MLIP methods paragraph",
+        "6. ADD halogen-O bond counting analysis (Fig 12 analog) if time permits — strong mechanism evidence",
+        "7. MENTION UMAP training-set validation as SI item if UMA training data accessible"
+      ],
       "tags": ["adhesion", "MLIP", "interface_construction", "SMD", "SevenNet", "composition_effect", "amorphous", "semiconductor", "Korea"]
     }
   ]

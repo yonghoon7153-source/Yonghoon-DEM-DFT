@@ -1,0 +1,109 @@
+# Choi 2025 — Adoption Guide for Our Paper
+
+**Paper**: Choi, Kim, Lee, Son, Han, *ACS Appl. Electron. Mater.* 2025, 7, 11165-11179
+**Why**: Most similar published paper (MLIP + direct interface + composition effect).
+**Goal**: List items we can directly adopt/emulate.
+
+---
+
+## 1. Figures to Emulate
+
+### Fig 14-style: Force/Energy vs Separation + Wad Inset ⭐⭐⭐
+- 3 panels (for 3 conditions), each: main curve + small Wad bar chart inset
+- Compact, publication-ready, high data density
+- **OUR VERSION**: E(z) vs z from separation method for 5 comps, 20 registries each (mean ± std band), with Wad bar chart inset
+
+### Fig 12-style: Bond Count vs Height ⭐⭐
+- Histogram of atom-pair bonds (Cu-Ta, Cu-N) vs z-position
+- **OUR VERSION**: Halogen(Cl/Br)-O bond count vs z at SE/NCM interface → directly shows Br effect on interfacial bonding
+- Tool: ASE neighbor list with cutoff ~3.5 Å, bin by z
+
+### Fig S19-style: UMAP of Training Set vs Our Structures ⭐
+- Proves MLIP is in-distribution (OOD-safety defense)
+- **OUR VERSION**: UMAP of UMA training descriptors vs our interface structures (if accessible)
+
+---
+
+## 2. Analysis Techniques to Borrow
+
+### Substitution Test (Section 3.3.3) ⭐⭐⭐
+- They swap 10% atoms → re-SMD → compare Wad
+- **OUR VERSION**: artificially swap 1 Br↔Cl at interface, recompute Wad
+- Direct causal test: "is Br effect bonding-specific or just vacancy?"
+
+### Strain Localization Mapping ⭐⭐
+- Color atoms by von Mises stress → show where deformation concentrates
+- **OUR VERSION**: OVITO strain coloring for Li5.4 vs Li6 interfaces → visualize vacancy effect
+
+---
+
+## 3. Writing Style to Copy
+
+### Conclusions Structure ⭐⭐⭐
+Exact template from Choi 2025:
+1. **Summary**: "MLIP has been employed to investigate adhesion at X interfaces under varying Y"
+2. **Finding #1 with mechanism**: "Our results indicate X enhances adhesion by fostering Y bonding"
+3. **Finding #2 with caveat (saturation)**: "Notably, X reaches a saturation point, constraining further improvement"
+4. **Extension strategy**: "We further identify Z as a means to strengthen..."
+5. **Broader impact**: "Overall, our findings emphasize the interplay between X/Y/Z, providing guidance for design of W"
+
+### Mechanism-Driven Discussion
+- Always tie Wad trends to **atomic-scale bonding evidence** (bond counts, distances, densities)
+- Not just "Br increases Wad" but "Br increases halogen-O bond density by X% in the first interfacial layer"
+
+### SI Associated Content Format ⭐⭐
+Itemized list (~15 items) like:
+- "Computed bulk moduli (B) of X and Y structures from DFT and MLIP"
+- "Peak forces and Wad from SMD simulations of... with different..."
+- "Side-view snapshots of... interfaces"
+- We adopt: EOS tables, strain values, seed convergence, 5L NCM, 100-seed stats, gap distributions
+
+---
+
+## 4. Acknowledgments Format ⭐⭐
+Their version:
+> "The computations were carried out at Korea Institute of Science and Technology Information (KISTI) National Supercomputing Center (KSC-2024-CRE-XXXX)"
+
+**OUR VERSION**: identical format with our KSC grant number (Nurion/Neuron).
+
+---
+
+## 5. References to Cite from Choi 2025
+
+| Ref | Why cite |
+|-----|----------|
+| Deringer 2019 (Adv. Mater.) | MLIP review — motivate MLIP use in methods |
+| Batzner 2022 (Nat. Commun.) | E(3)-equivariant GNN — cite when discussing UMA architecture |
+| Hong 2023 (Sci. Technol. Adv. Mater.) | MLIP training sets — cite for UMA training philosophy |
+| Xu 2025 (Chem. Phys. Rev.) | ML in surfaces/interfaces review — establishes field context |
+
+---
+
+## 6. Priority Rankings for Our Paper
+
+| Priority | Item | Effort |
+|----------|------|--------|
+| ⭐⭐⭐ | Fig 14-style E(z) + Wad inset | Low — already have data |
+| ⭐⭐⭐ | Conclusions structure template | Low — rewriting |
+| ⭐⭐⭐ | Halogen-O bond counting analysis | Medium — need ASE script |
+| ⭐⭐ | SI content itemized list | Low |
+| ⭐⭐ | KISTI acknowledgments format | Trivial |
+| ⭐⭐ | Deringer/Batzner citations | Trivial |
+| ⭐ | UMAP training validation | High — need UMA training data access |
+| ⭐ | Substitution test (swap Br↔Cl) | Medium |
+| ⭐ | Strain localization mapping | Medium — need OVITO pipeline |
+
+---
+
+## 7. What NOT to Copy
+- **SMD/Jarzynski**: our separation method is fine, don't add unnecessary complexity
+- **Train own MLIP**: UMA/MACE off-the-shelf is sufficient; don't derail into SevenNet training
+- **3100-atom deposition**: unnecessary for our coherent-interface study
+- **Amorphous phase construction**: ours is crystalline, keep it simple
+
+---
+
+## Bottom Line
+Adopt: **figure style, conclusions structure, bond-counting analysis, ACK format, 2-3 citations**.
+Skip: **SMD, own MLIP training, amorphous deposition**.
+Result: paper reads like standard MLIP adhesion work in respected journal, defending our methods choice.
