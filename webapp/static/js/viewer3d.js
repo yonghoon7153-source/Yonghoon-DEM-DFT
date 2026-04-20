@@ -269,12 +269,14 @@ function buildScene(scene, camera, controls, data, state) {
   const bbEdges = new THREE.EdgesGeometry(bbGeo);
   const bbLine = new THREE.LineSegments(bbEdges, bbMat);
   bbLine.position.set(cx, cy, cz);
+  bbLine.userData.isDecoration = true;
   scene.add(bbLine);
 
   /* grid at bottom (Y=0 in Three.js = Z=0 in data) */
   const gridSize = Math.max(bw, bd) * 1.2;
   const grid = new THREE.GridHelper(gridSize, 20, 0xcccccc, 0xe0e0e0);
   grid.position.set(cx, box.z_min, cz);
+  grid.userData.isDecoration = true;
   scene.add(grid);
 
   /* axis labels (Z-up convention) */
@@ -343,6 +345,7 @@ function addAxisLabels(scene, box) {
     const sprite = new THREE.Sprite(mat);
     sprite.position.set(...l.pos);
     sprite.scale.set(20, 8, 1);
+    sprite.userData.isDecoration = true;
     scene.add(sprite);
   });
 }
@@ -565,8 +568,19 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         controls.target.copy(state.defaultTarget);
         controls.update();
       } else if (action === 'screenshot') {
+        // Hide decoration objects (bbox, grid, axis labels) for clean screenshot
+        const hiddenDecorations = [];
+        scene.traverse((obj) => {
+          if (obj.userData && obj.userData.isDecoration && obj.visible) {
+            obj.visible = false;
+            hiddenDecorations.push(obj);
+          }
+        });
         renderer.render(scene, camera);
         const dataUrl = renderer.domElement.toDataURL('image/png');
+        // Restore decorations
+        hiddenDecorations.forEach(obj => { obj.visible = true; });
+        renderer.render(scene, camera);
         // Save to server figures folder
         const apiBase = state.dataUrl.replace('/3d-data', '').replace('/force-chains', '');
         const saveUrl = apiBase + '/save-screenshot';
@@ -719,11 +733,13 @@ function showPathOnlyView(renderer, scene, camera, state) {
   const bbEdges = new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd));
   const bbLine = new THREE.LineSegments(bbEdges, new THREE.LineBasicMaterial({color: 0x999999}));
   bbLine.position.set(cx, cy, cz);
+  bbLine.userData.isDecoration = true;
   s2.add(bbLine);
 
   // Grid
   const grid = new THREE.GridHelper(Math.max(bw,bd)*1.2, 20, 0xcccccc, 0xe0e0e0);
   grid.position.set(cx, box.z_min, cz);
+  grid.userData.isDecoration = true;
   s2.add(grid);
 
   // Path tubes
@@ -775,8 +791,19 @@ function showPathOnlyView(renderer, scene, camera, state) {
 
   // Screenshot
   document.getElementById('path-screenshot-btn').addEventListener('click', () => {
+    // Hide decorations (bbox, grid) for clean screenshot
+    const hiddenDecorations = [];
+    s2.traverse((obj) => {
+      if (obj.userData && obj.userData.isDecoration && obj.visible) {
+        obj.visible = false;
+        hiddenDecorations.push(obj);
+      }
+    });
     r2.render(s2, c2);
     const dataUrl = r2.domElement.toDataURL('image/png');
+    // Restore decorations
+    hiddenDecorations.forEach(obj => { obj.visible = true; });
+    r2.render(s2, c2);
     const fname = `li_ion_path_${catLabel.toLowerCase()}_tau${pathData.tortuosity}.png`;
     const apiBase = state.dataUrl.replace('/3d-data', '').replace('/force-chains', '');
     const saveUrl = apiBase + '/save-screenshot';
