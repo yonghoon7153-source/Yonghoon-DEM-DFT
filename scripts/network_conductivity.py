@@ -257,6 +257,8 @@ def solve_network(network_data, mode='full', return_field=False):
     box_y = network_data['box_y']
 
     if not bottom or not top or not edges:
+        if return_field:
+            return None, None, None
         return None, None
 
     # Build networkx graph to find percolating component
@@ -275,6 +277,8 @@ def solve_network(network_data, mode='full', return_field=False):
 
     if not perc_nodes:
         print("  No percolating component found")
+        if return_field:
+            return None, None, None
         return None, None
 
     # Filter to percolating nodes only
