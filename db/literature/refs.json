@@ -211,6 +211,19 @@
       "year": 2013,
       "key_content": "LGPS PDOS analysis separating ionic and electronic conduction.",
       "tags": ["LGPS", "electronic", "PDOS", "DFT"]
+    },
+    {
+      "id": "ransom2023",
+      "authors": "Ransom, B.; Ramdas, A.; Lomeli, E.; Fidawi, J.; Sendek, A.; Devereaux, T.; Reed, E. J.; Schindler, P.",
+      "title": "Electrolyte Coatings for High Adhesion Interfaces in Solid-State Batteries from First Principles",
+      "journal": "ACS Appl. Mater. Interfaces",
+      "volume": 15,
+      "pages": "44394-44403",
+      "year": 2023,
+      "doi": "10.1021/acsami.3c04452",
+      "key_content": "Adhesion parameter from single-material slab cleavage energies (NOT direct interface calc). Screened 19,481 Li compounds for coatings. Uses surface energy γ_e, γ_c, γ_ec and contact angle θ to derive adhesion parameter. Wad approximated from individual surface energies — NO interface construction needed. Validated against direct DFT interface calculations in SI. Key equation: γ_e = γ_ec + γ_c cos θ. Good adhesion: max(γ_e) - min(γ_c) ≤ 0. Applied to LLXO, LPS, LBS electrolyte systems with LiCoO2, LiFePO4, LiMnO2 cathodes.",
+      "relevance_to_our_work": "Their approach avoids interface construction entirely (surface energies only). We use direct interface calculation with MLIP. Their method is faster (single-slab DFT) but less direct. Could validate our γ_SE inverse correlation finding (R=0.83). Key difference: they screen coatings, we compare SE compositions.",
+      "tags": ["adhesion", "DFT", "surface_energy", "screening", "coatings", "solid_electrolyte", "interface"]
     }
   ]
 }
