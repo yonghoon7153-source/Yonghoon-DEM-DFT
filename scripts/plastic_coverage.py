@@ -42,6 +42,12 @@ H_REAL_SE     = 0.85e9    # Pa, LPSCl hardness (Tabor H ≈ 2.8 σ_y)
 #   1/E* = (1-ν₁²)/E₁ + (1-ν₂²)/E₂
 _inv_Estar = (1 - POISSON_AM**2) / E_REAL_AM + (1 - POISSON_SE**2) / E_REAL_SE
 E_STAR_AM_SE = 1.0 / _inv_Estar     # ≈ 22.4 GPa
+E_STAR_AM_SE_REAL = E_STAR_AM_SE    # alias: 'physics' mode uses real E (same value here)
+
+# Plastic film thickness (for volume-conservation in 'physics' mode)
+# Sulfide glass plastic flow: film thickness ~few nm (Sakuda 2013 discussion).
+# Anchored 5 nm as physical minimum for LPSCl at RT pressure sintering.
+H_FILM_MIN = 5.0e-9   # 5 nm
 
 # Plastic regime thresholds on δ/R* derived from Hertzian + Tabor
 #   P_max = (2E*/π) · √(δ/R*)         [Hertzian peak contact pressure]
@@ -204,16 +210,14 @@ def film_area_from_overlap(delta: float, R_star: float,
     mode:
       'hertzian'  — pure elastic Hertzian (π R* δ). Underestimates plastic.
       'liggghts'  — use LIGGGHTS-reported contactArea directly. DEM-native.
-      'capped'    — physics model with geometric cap a² ≤ R_min² (recommended).
-    k_spread: literature-calibrated plastic spreading factor ('capped' mode only).
-      1.00 = raw DEM (geometric cap only)
-      1.33 = Lee 2024 hand-mixed 3D match (30.6% 2D → 39% 3D)
-      1.50 = Bielefeld 20% porosity match (computational 49%)
-      1.65 = Minnmann 2021 chemistry-exact (NCM-622/LPSCl ~60%)
-      1.88 = Bielefeld 5% porosity optimistic (~78%)
-    Applied multiplicatively to plastic area pre-cap:
-      A_plastic_spread = A_plastic_raw * k_spread^2
-    Geometric cap still applies after spreading (no over-saturation).
+      'capped'    — geometric cap a² ≤ R_min². k_spread scales pre-cap (legacy).
+      'physics'   — literature-anchored, no free parameters. Uses:
+                    * Tabor: A_plastic = F_real / H  (where F_real from E_real)
+                    * Volume conservation: A ≤ V_overlap / h_film_min
+                    * Geometric hemisphere cap: A ≤ 2π R_min²
+                    All constants anchored by DB entries #11 (Sakuda), #12 (Koerver Table 1).
+    k_spread: only applies to 'capped' mode (legacy post-hoc calibration).
+      1.00 = raw DEM | 1.65 = Minnmann 2021 match (recommended for 'capped')
     """
     dr = delta / R_star if R_star > 0 else 0.0
     if dr <= 0:
@@ -232,6 +236,39 @@ def film_area_from_overlap(delta: float, R_star: float,
         if ligg_area is not None and ligg_area > 0:
             return ligg_area, regime
         return elastic_area, regime
+
+    if mode == "physics":
+        # Literature-first physics model — NO free parameters.
+        # Constants from DB entries (Sakuda 2013 #11, Koerver 2018 Table 1 #12).
+        # E_real: Young's modulus of LPSCl (24 GPa experimental consensus)
+        # H: Tabor hardness (0.85 GPa, sulfide glass range 0.5-1.0 per Sakuda)
+        # h_film_min: min plastic film thickness (5 nm, sulfide flow characteristic)
+        # Cap (hemisphere): 2π R_min² — lateral spread limit
+        # Rationale: DEM overlap (δ/R) is E-independent geometric data. Compute
+        # real contact force using E_real (not reduced E_eff used in DEM),
+        # then apply Tabor hardness relation A = F/H. Volume conservation
+        # prevents unphysical thin films. Hemisphere cap prevents wraparound.
+        if dr < DR_YIELD_ONSET:
+            return elastic_area, "elastic"
+
+        # Real Hertzian force (using E_real, bypassing DEM's reduced E_eff)
+        F_real = (4.0/3.0) * E_STAR_AM_SE_REAL * np.sqrt(R_star) * (delta ** 1.5)
+
+        # Tabor plastic contact area: A = F/H
+        A_tabor = F_real / H_REAL_SE
+
+        # Volume-conservation constraint
+        # V_overlap (lens): (π/6) δ² (3R* - δ) ≈ π R* δ² /2 for small δ
+        V_overlap = (np.pi / 6.0) * (delta ** 2) * (3.0 * R_star - delta)
+        A_volume = V_overlap / H_FILM_MIN if H_FILM_MIN > 0 else float('inf')
+
+        # Geometric cap: hemisphere of smallest particle (lateral spread ≤ 2πR²)
+        r_min_eff = R_min if R_min else R_star
+        A_geom = 2.0 * np.pi * (r_min_eff ** 2)
+
+        A_plastic = min(A_tabor, A_volume, A_geom)
+        regime = "plastic" if dr >= DR_FULLY_PLASTIC else "transition"
+        return A_plastic, regime
 
     # Default: 'capped' physics model
     # Geometric ceiling: film radius² can't exceed smaller particle's projected area
@@ -509,10 +546,12 @@ def main_inspect(contact_path: str, n_show: int = 5) -> None:
 
 
 def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE,
+              mode: str = "capped",
               k_spread_list: list = None,
               dump_raw_csv: str = None) -> None:
     """Step 2: compute plastic coverage for one case (latest snapshot).
-    k_spread_list: if provided, sweep multiple k values.
+    mode: 'capped' | 'physics' | 'hertzian' | 'liggghts' (see film_area_from_overlap)
+    k_spread_list: if provided, sweep multiple k values (only affects 'capped' mode).
     dump_raw_csv: if provided, write per-contact CSV to this path (Option C).
     se_type: -1 means auto-detect from meta.json or atom file."""
     atom_f, contact_f = _find_case_files(case_dir)
@@ -527,9 +566,11 @@ def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE,
     print(f"  atom    : {os.path.basename(atom_f)}")
     print(f"  contact : {os.path.basename(contact_f)}")
     print(f"  se_type : {se_type}")
-    if k_spread_list:
+    print(f"  mode    : {mode}")
+    if k_spread_list and mode == "capped":
         print(f"  k_spread: {k_spread_list}")
     res = compute_coverage(atom_f, contact_f, se_type=se_type,
+                           mode=mode,
                            dump_contacts=bool(dump_raw_csv),
                            k_spread_list=k_spread_list)
     # Don't print full contact list (could be huge)
@@ -553,10 +594,12 @@ def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE,
 def main_batch(root: str, pattern: str = "post_*",
                se_type: int = SE_ATOM_TYPE,
                csv_out: str = "plastic_coverage.csv",
+               mode: str = "capped",
                k_spread_list: list = None,
                dump_raw_dir: str = None) -> None:
     """Step 3: batch over all cases matching pattern under root, write CSV.
-    k_spread_list: if provided, CSV includes plastic_cov_mean_kX for each k.
+    mode: 'capped' | 'physics' | 'hertzian' | 'liggghts'
+    k_spread_list: if provided, CSV includes plastic_cov_mean_kX (only 'capped').
     dump_raw_dir: if provided, write per-case raw δ/R CSVs to this dir (Option C)."""
     if k_spread_list is None:
         k_spread_list = [1.0]
@@ -565,7 +608,9 @@ def main_batch(root: str, pattern: str = "post_*",
 
     dirs = sorted(glob.glob(os.path.join(root, pattern)))
     print(f"=== Batch plastic coverage: {len(dirs)} directories ===")
-    print(f"  k_spread sweep: {k_spread_list}")
+    print(f"  mode          : {mode}")
+    if mode == "capped":
+        print(f"  k_spread sweep: {k_spread_list}")
     print(f"  raw CSV dir   : {dump_raw_dir or '(skipped)'}")
     results = []
     for d in dirs:
@@ -583,6 +628,7 @@ def main_batch(root: str, pattern: str = "post_*",
                 eff_se_type = detect_se_type(atom_f, case_dir=d)
             dump_contacts = bool(dump_raw_dir)
             res = compute_coverage(atom_f, contact_f, se_type=eff_se_type,
+                                   mode=mode,
                                    dump_contacts=dump_contacts,
                                    k_spread_list=k_spread_list)
             res["se_type_used"] = eff_se_type
@@ -614,7 +660,7 @@ def main_batch(root: str, pattern: str = "post_*",
     # Write CSV with ALL columns (k sweep + percentiles)
     if results:
         import csv
-        base_keys = ["case", "n_am", "n_am_with_contact", "n_contacts_am_se",
+        base_keys = ["case", "mode", "n_am", "n_am_with_contact", "n_contacts_am_se",
                      "delta_over_R_mean", "delta_over_R_std",
                      "delta_over_R_p01", "delta_over_R_p05", "delta_over_R_p25",
                      "delta_over_R_p50", "delta_over_R_p75", "delta_over_R_p90",
@@ -653,8 +699,11 @@ if __name__ == "__main__":
     p2.add_argument("case_dir")
     p2.add_argument("--se-type", type=str, default=str(SE_ATOM_TYPE),
                     help="SE atom type (integer) or 'auto' to detect from meta.json / atoms")
+    p2.add_argument("--mode", choices=["capped", "physics", "hertzian", "liggghts"],
+                    default="capped",
+                    help="Plastic film model: 'capped' (k_spread calibration), 'physics' (Tabor+volume, 0 free params, recommended)")
     p2.add_argument("--k-spread", type=str, default="1.0,1.3,1.5,1.65,1.8",
-                    help="Comma-separated k_spread values (default: all 5 literature anchors)")
+                    help="Comma-separated k_spread values (only applies to 'capped' mode)")
     p2.add_argument("--dump-raw-csv", type=str, default=None,
                     help="Write per-contact CSV to this path (Option C)")
 
@@ -663,9 +712,12 @@ if __name__ == "__main__":
     p3.add_argument("--pattern", default="post_*")
     p3.add_argument("--se-type", type=str, default=str(SE_ATOM_TYPE),
                     help="SE atom type (integer) or 'auto' to detect per-case (recommended for mixed archive)")
+    p3.add_argument("--mode", choices=["capped", "physics", "hertzian", "liggghts"],
+                    default="capped",
+                    help="Plastic film model. 'physics' = Tabor + volume conservation (no free params)")
     p3.add_argument("--csv-out", default="plastic_coverage.csv")
     p3.add_argument("--k-spread", type=str, default="1.0,1.3,1.5,1.65,1.8",
-                    help="Comma-separated k_spread values (default: all 5 literature anchors)")
+                    help="Comma-separated k_spread values (only applies to 'capped' mode)")
     p3.add_argument("--dump-raw-dir", type=str, default=None,
                     help="Dir to write per-case raw δ/R CSVs (Option C)")
 
@@ -683,10 +735,12 @@ if __name__ == "__main__":
         main_inspect(args.contact_file, args.n_show)
     elif args.cmd == "case":
         main_case(args.case_dir, _parse_se_type(args.se_type),
+                  mode=args.mode,
                   k_spread_list=_parse_k_spread(args.k_spread),
                   dump_raw_csv=args.dump_raw_csv)
     elif args.cmd == "batch":
         main_batch(args.root, args.pattern, _parse_se_type(args.se_type), args.csv_out,
+                   mode=args.mode,
                    k_spread_list=_parse_k_spread(args.k_spread),
                    dump_raw_dir=args.dump_raw_dir)
     else:
