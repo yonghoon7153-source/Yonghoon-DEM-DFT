@@ -824,22 +824,12 @@ function showPathOnlyView(renderer, scene, camera, state) {
     document.getElementById('pv-zs').value = Math.max(30, Math.min(350, 380 - Math.round(dist)));
   });
 
-  // Screenshot — always prompts user with "Save As" dialog
+  // Screenshot — always prompts user with "Save As" dialog.
+  // Tortuosity path visualization KEEPS bbox/grid/axes (needed for spatial
+  // context of the Li+ path); only the main 3D viewer screenshot hides them.
   document.getElementById('path-screenshot-btn').addEventListener('click', async () => {
-    // Hide decorations (bbox, grid) for clean screenshot
-    const hiddenDecorations = [];
-    s2.traverse((obj) => {
-      if (obj.userData && obj.userData.isDecoration && obj.visible) {
-        obj.visible = false;
-        hiddenDecorations.push(obj);
-      }
-    });
     r2.render(s2, c2);
     const dataUrl = r2.domElement.toDataURL('image/png');
-    // Restore decorations
-    hiddenDecorations.forEach(obj => { obj.visible = true; });
-    r2.render(s2, c2);
-
     const fname = `li_ion_path_${catLabel.toLowerCase()}_tau${pathData.tortuosity}.png`;
     await saveWithDialog(dataUrl, fname, document.getElementById('path-screenshot-btn'),
                          'PNG 다운로드');
