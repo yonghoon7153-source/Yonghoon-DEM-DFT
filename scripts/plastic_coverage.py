@@ -453,6 +453,41 @@ def _find_case_files(case_dir: str) -> tuple[str | None, str | None]:
     return atom_f, contact_f  # may be None, None — caller handles
 
 
+def detect_se_type(atom_path: str, case_dir: str = None) -> int:
+    """Auto-detect SE atom type. Priority:
+      1. meta.json type_map: find the key mapped to 'SE'
+      2. input_params.json r_SE presence (not used directly but confirms bimodal)
+      3. Fallback: max type number in atoms file (3 for bimodal, 2 for standard)
+    """
+    # Priority 1: meta.json (webapp-style)
+    if case_dir:
+        meta_path = os.path.join(case_dir, "meta.json")
+        if os.path.exists(meta_path):
+            try:
+                with open(meta_path) as f:
+                    meta = json.load(f)
+                tm = meta.get("type_map", "")
+                if tm:
+                    # format: "1:AM_P,2:AM_S,3:SE" or "1:AM_S,2:SE"
+                    for pair in tm.split(","):
+                        if ":" in pair:
+                            k, v = pair.split(":", 1)
+                            if v.strip().upper() == "SE":
+                                return int(k.strip())
+            except Exception:
+                pass
+
+    # Priority 3: scan atoms file for max type
+    try:
+        atoms = parse_atoms_auto(atom_path)
+        if atoms:
+            types = set(a["type"] for a in atoms.values())
+            return max(types)  # SE is always last type by convention
+    except Exception:
+        pass
+    return 2  # default standard mode
+
+
 def main_inspect(contact_path: str, n_show: int = 5) -> None:
     """Step 1: verify contact dump column mapping. Print first n contacts + stats."""
     contacts = parse_contacts_auto(contact_path)
@@ -478,11 +513,16 @@ def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE,
               dump_raw_csv: str = None) -> None:
     """Step 2: compute plastic coverage for one case (latest snapshot).
     k_spread_list: if provided, sweep multiple k values.
-    dump_raw_csv: if provided, write per-contact CSV to this path (Option C)."""
+    dump_raw_csv: if provided, write per-contact CSV to this path (Option C).
+    se_type: -1 means auto-detect from meta.json or atom file."""
     atom_f, contact_f = _find_case_files(case_dir)
     if not atom_f or not contact_f:
         print(f"!! No atom/contact dump or CSV found in {case_dir}")
         return
+    # Auto-detect se_type if requested
+    if se_type is None or se_type < 0:
+        se_type = detect_se_type(atom_f, case_dir=case_dir)
+        print(f"  [auto-detect] se_type = {se_type}")
     print(f"=== Plastic coverage for {case_dir} ===")
     print(f"  atom    : {os.path.basename(atom_f)}")
     print(f"  contact : {os.path.basename(contact_f)}")
@@ -537,10 +577,15 @@ def main_batch(root: str, pattern: str = "post_*",
             continue
         try:
             case_name = os.path.basename(d)
+            # Per-case se_type: if caller passed se_type=-1 (auto), detect now
+            eff_se_type = se_type
+            if eff_se_type is None or eff_se_type < 0:
+                eff_se_type = detect_se_type(atom_f, case_dir=d)
             dump_contacts = bool(dump_raw_dir)
-            res = compute_coverage(atom_f, contact_f, se_type=se_type,
+            res = compute_coverage(atom_f, contact_f, se_type=eff_se_type,
                                    dump_contacts=dump_contacts,
                                    k_spread_list=k_spread_list)
+            res["se_type_used"] = eff_se_type
             # Write raw per-contact CSV (Option C) BEFORE stripping contacts from res
             if dump_raw_dir and "contacts" in res:
                 raw_csv = os.path.join(dump_raw_dir, f"raw_delta_r_{case_name}.csv")
@@ -606,7 +651,8 @@ if __name__ == "__main__":
 
     p2 = sub.add_parser("case", help="coverage for single case directory")
     p2.add_argument("case_dir")
-    p2.add_argument("--se-type", type=int, default=SE_ATOM_TYPE)
+    p2.add_argument("--se-type", type=str, default=str(SE_ATOM_TYPE),
+                    help="SE atom type (integer) or 'auto' to detect from meta.json / atoms")
     p2.add_argument("--k-spread", type=str, default="1.0,1.3,1.5,1.65,1.8",
                     help="Comma-separated k_spread values (default: all 5 literature anchors)")
     p2.add_argument("--dump-raw-csv", type=str, default=None,
@@ -615,22 +661,32 @@ if __name__ == "__main__":
     p3 = sub.add_parser("batch", help="coverage for all cases under a root")
     p3.add_argument("root")
     p3.add_argument("--pattern", default="post_*")
-    p3.add_argument("--se-type", type=int, default=SE_ATOM_TYPE)
+    p3.add_argument("--se-type", type=str, default=str(SE_ATOM_TYPE),
+                    help="SE atom type (integer) or 'auto' to detect per-case (recommended for mixed archive)")
     p3.add_argument("--csv-out", default="plastic_coverage.csv")
     p3.add_argument("--k-spread", type=str, default="1.0,1.3,1.5,1.65,1.8",
                     help="Comma-separated k_spread values (default: all 5 literature anchors)")
     p3.add_argument("--dump-raw-dir", type=str, default=None,
                     help="Dir to write per-case raw δ/R CSVs (Option C)")
 
+    def _parse_se_type(s):
+        """Accept int or 'auto' (returns -1 sentinel for auto-detection)."""
+        if s and str(s).lower() == "auto":
+            return -1
+        try:
+            return int(s)
+        except (ValueError, TypeError):
+            return SE_ATOM_TYPE
+
     args = ap.parse_args()
     if args.cmd == "inspect":
         main_inspect(args.contact_file, args.n_show)
     elif args.cmd == "case":
-        main_case(args.case_dir, args.se_type,
+        main_case(args.case_dir, _parse_se_type(args.se_type),
                   k_spread_list=_parse_k_spread(args.k_spread),
                   dump_raw_csv=args.dump_raw_csv)
     elif args.cmd == "batch":
-        main_batch(args.root, args.pattern, args.se_type, args.csv_out,
+        main_batch(args.root, args.pattern, _parse_se_type(args.se_type), args.csv_out,
                    k_spread_list=_parse_k_spread(args.k_spread),
                    dump_raw_dir=args.dump_raw_dir)
     else:
