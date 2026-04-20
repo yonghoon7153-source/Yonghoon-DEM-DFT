@@ -363,24 +363,55 @@ def solve_network(network_data, mode='full', return_field=False):
     L_csr.eliminate_zeros()
 
     n_nodes = L_csr.shape[0]
+    # 3-stage robust solve: CG → CG with ILU preconditioner → spsolve fallback.
+    # Silent-None bug root cause was: pure CG can return info != 0 (not
+    # converged) yet leave V nearly zeros, so V_source ≈ 0 triggered our
+    # "V_source ≤ 0" bail-out even though the network was perfectly
+    # percolating (e.g. input_9 with SE_perc = 99%).
+    V = None
+    solve_method = None
     try:
         if n_nodes > 30000:
-            # Large network: use iterative CG solver (memory-efficient)
-            print(f"  Using iterative CG solver ({n_nodes} nodes)...")
+            print(f"  Large network: {n_nodes} nodes — trying CG solver first...")
             try:
-                V, info = cg(L_csr, b, tol=1e-8, maxiter=5000)
+                V, info = cg(L_csr, b, tol=1e-8, maxiter=10000)
             except TypeError:
-                # older scipy: tol → atol
-                V, info = cg(L_csr, b, atol=1e-8, maxiter=5000)
-            if info != 0:
-                print(f"  CG solver warning: info={info} (0=success, >0=not converged, <0=error)")
+                V, info = cg(L_csr, b, atol=1e-8, maxiter=10000)
+            V_src_trial = V[source_idx] if V is not None else 0.0
+            if info == 0 and V_src_trial > 1e-12:
+                solve_method = "cg"
+            else:
+                # CG failed or gave noisy V — try ILU-preconditioned CG
+                print(f"  CG didn't converge (info={info}, V_src={V_src_trial:.3e}). "
+                      f"Trying ILU-preconditioned CG...")
+                try:
+                    from scipy.sparse.linalg import spilu, LinearOperator
+                    ilu = spilu(L_csr.tocsc(), drop_tol=1e-4, fill_factor=10)
+                    M = LinearOperator(L_csr.shape, ilu.solve)
+                    try:
+                        V, info = cg(L_csr, b, M=M, tol=1e-8, maxiter=5000)
+                    except TypeError:
+                        V, info = cg(L_csr, b, M=M, atol=1e-8, maxiter=5000)
+                    V_src_trial = V[source_idx] if V is not None else 0.0
+                    if info == 0 and V_src_trial > 1e-12:
+                        solve_method = "cg+ilu"
+                    else:
+                        raise RuntimeError(f"ILU-CG failed (info={info}, V_src={V_src_trial:.3e})")
+                except Exception as ilu_err:
+                    print(f"  ILU-CG failed: {ilu_err}. Falling back to direct spsolve...")
+                    V = spsolve(L_csr, b)
+                    solve_method = "spsolve_fallback"
         else:
             V = spsolve(L_csr, b)
+            solve_method = "spsolve"
     except Exception as e:
         print(f"  Network solve failed: {e}")
         if return_field:
             return None, None, None
         return None, None
+
+    if solve_method:
+        print(f"  Solve: {solve_method}")
 
     V_source = V[source_idx]
     V_sink = V[sink_idx]  # = 0
