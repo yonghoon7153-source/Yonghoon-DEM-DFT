@@ -781,7 +781,8 @@ def retry_network(case_id):
 
 @app.route('/single/<case_id>')
 def single(case_id):
-    """View single case results."""
+    """View single case results.
+    Falls back to archive/<folder>/<case_id>/ if results/ is empty (archive-migrated cases)."""
     case_dir = get_case_dir(case_id)
     results_dir = get_results_dir(case_id)
     meta_file = os.path.join(case_dir, 'meta.json')
@@ -792,6 +793,25 @@ def single(case_id):
     with open(meta_file) as f:
         meta = json.load(f)
     meta['id'] = case_id
+
+    # ── Archive fallback: if results/ is empty, find case in archive/ ──
+    def _results_has_data(d):
+        if not os.path.isdir(d): return False
+        return any(os.path.exists(os.path.join(d, n + '.csv'))
+                   for n in ['atom_statistics', 'contact_summary', 'coordination_summary', 'network_summary']) \
+            or os.path.exists(os.path.join(d, 'full_metrics.json'))
+
+    archive_path = None  # relative path under archive/ if fallback triggered
+    if not _results_has_data(results_dir):
+        archive_root = app.config.get('ARCHIVE_FOLDER')
+        if archive_root and os.path.isdir(archive_root):
+            for dirpath, dirs, _ in os.walk(archive_root):
+                if case_id in dirs:
+                    candidate = os.path.join(dirpath, case_id)
+                    if _results_has_data(candidate):
+                        results_dir = candidate
+                        archive_path = os.path.relpath(candidate, archive_root)
+                        break
 
     # Collect figures
     figures = []
@@ -980,7 +1000,7 @@ def single(case_id):
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
-                         input_params=input_params)
+                         input_params=input_params, archive_path=archive_path)
 
 @app.route('/group', methods=['GET', 'POST'])
 def group():
