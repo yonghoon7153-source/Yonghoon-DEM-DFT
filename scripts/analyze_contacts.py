@@ -244,7 +244,7 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         with open(met_path) as _mf:
             _met = json.load(_mf)
         if _met.get('sigma_full_mScm'):
-            rows.append({'지표': '── Network Solver ──', '값': ''})
+            rows.append({'지표': '── Network Solver (Hertzian DEM-native) ──', '값': ''})
             rows.append({'지표': 'σ_ionic (mS/cm)', '값': round(_met['sigma_full_mScm'], 4)})
             if _met.get('R_brug_over_full'):
                 rows.append({'지표': 'R_brug (과대추정 배수)', '값': f"{_met['R_brug_over_full']:.1f}×"})
@@ -254,6 +254,22 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
                 rows.append({'지표': 'σ_electronic (mS/cm)', '값': round(_met['electronic_sigma_full_mScm'], 2)})
             if _met.get('thermal_sigma_full_mScm'):
                 rows.append({'지표': 'σ_thermal (mS/cm equiv)', '값': round(_met['thermal_sigma_full_mScm'], 3)})
+
+            # ── Physics-mode (Tabor+volume, literature-anchored, 0 free params) ──
+            if _met.get('sigma_full_mScm_physics') is not None:
+                rows.append({'지표': '── Physics (Plastic film, Tabor+volume) ──', '값': ''})
+                sfP = _met['sigma_full_mScm_physics']
+                rows.append({'지표': 'σ_ionic [physics] (mS/cm)', '값': round(sfP, 4)})
+                sfH = _met.get('sigma_full_mScm') or 0
+                if sfH > 0:
+                    rows.append({'지표': 'σ_ionic ratio (physics/Hertzian)',
+                                 '값': f"{sfP / sfH:.2f}×"})
+                if _met.get('electronic_sigma_full_mScm_physics') is not None:
+                    rows.append({'지표': 'σ_electronic [physics] (mS/cm)',
+                                 '값': round(_met['electronic_sigma_full_mScm_physics'], 2)})
+                if _met.get('thermal_sigma_full_mScm_physics') is not None:
+                    rows.append({'지표': 'σ_thermal [physics] (mS/cm equiv)',
+                                 '값': round(_met['thermal_sigma_full_mScm_physics'], 3)})
     # ── 응력 ──
     stress = results.get('stress')
     if stress:

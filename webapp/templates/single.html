@@ -508,10 +508,34 @@ const METRIC_TIPS = {
     meaning: 'Network Solver σ_ionic이 ground truth. 이 값은 참고용 상한.'
   },
   'σ_ionic (mS/cm)': {
-    title: 'Ionic Conductivity (Kirchhoff Network Solver)',
-    formula: 'Kirchhoff solver: R = R_bulk + R_constriction (Holm 1967) per edge\nσ_grain = 3.0 mS/cm (LPSCl grain interior)',
-    desc: 'DEM-native resistor network solver로 계산한 유효 이온 전도도. Ground truth.',
-    meaning: 'Bruggeman 추정 대비 3~10× 낮은 실측값. 접촉 저항(constriction)이 핵심 원인.'
+    title: 'Ionic Conductivity (Kirchhoff, Hertzian contact area)',
+    formula: 'Kirchhoff solver: R = R_bulk + R_constriction (Holm 1967) per edge\nA_contact = LIGGGHTS-reported Hertzian area\nσ_grain = 3.0 mS/cm (LPSCl grain interior)',
+    desc: 'DEM-native (Hertzian) contact-area 기반 이온 전도도. E_eff로 calibrate된 기존 기준값.',
+    meaning: 'Physics(Tabor+volume) σ_ionic과 비교하면 plastic 소성변형이 σ에 미치는 영향이 보임.\n일반적으로 physics가 3~7× 더 높음 — 실제 소성 film 형성을 반영.'
+  },
+  'σ_ionic [physics] (mS/cm)': {
+    title: 'Ionic Conductivity — Physics mode (Tabor + volume conservation)',
+    formula: 'Same Kirchhoff solver, but A_contact = min(F/H, V_overlap/h_film, 2πR²_min)\nF = (4/3)·E*_real·√R*·δ^1.5 (real Hertzian force using E_real=24 GPa)\nH = 0.85 GPa (LPSCl Tabor hardness, Koerver 2018)\nh_film = 5 nm (Sakuda 2013 sulfide flow)\nZero free parameters.',
+    desc: 'Literature-anchored 소성 film 면적 기반 이온 전도도. DEM의 E_eff 보정 없이 실제 E로 force 복원.',
+    meaning: 'Hertzian 대비 5–7× 높음이 일반적. 이 값이 실제 측정 σ (Lee 39%·Minnmann 60%·Bielefeld 49–78% coverage 매치) 와 일치하면 reviewer-proof.\nσ_ionic [physics] / σ_ionic [Hertzian] 비율이 각 case의 소성 증폭 지표.'
+  },
+  'σ_ionic ratio (physics/Hertzian)': {
+    title: 'Plastic Amplification Ratio (physics / Hertzian)',
+    formula: 'ratio = σ_ionic[physics] / σ_ionic[Hertzian]',
+    desc: '같은 DEM 결과에 Hertzian vs 소성 film 모델을 적용했을 때의 σ 증폭 배수.',
+    meaning: '1×: 소성 거의 없음 (저압 또는 작은 overlap).\n3–7×: 전형적인 380 MPa sintering 조건.\n> 10×: saturated, fully plastic regime — particulate 고밀도 case.\n이 비율은 v29 scaling law 재fit의 prefactor 보정에 직접 쓰임.'
+  },
+  'σ_electronic [physics] (mS/cm)': {
+    title: 'Electronic Conductivity — Physics mode',
+    formula: 'Same AM-AM network + Tabor+volume A_contact',
+    desc: 'AM-AM 접촉도 소성변형의 영향을 받음 (NCM도 일부 plastic). σ_electronic[physics] ≥ σ_electronic[Hertzian].',
+    meaning: 'AM-AM 접촉 개선은 전자 rate limiting 완화로 이어짐. 단 NCM은 훨씬 단단해서 ratio가 이온보다 작음.'
+  },
+  'σ_thermal [physics] (mS/cm equiv)': {
+    title: 'Thermal Conductivity — Physics mode',
+    formula: 'Same thermal network + Tabor+volume A_contact',
+    desc: '열 전도도 네트워크 — 소성 면적 증가로 phonon 전달 경로 확장.',
+    meaning: '배터리 열관리에 중요. 소성 반영 시 2–5× 증폭이 일반적.'
   },
   'Contact-free / Full': {
     title: 'Contact-free Overestimation Ratio',
