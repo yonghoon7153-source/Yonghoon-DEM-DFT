@@ -276,7 +276,20 @@ def solve_network(network_data, mode='full', return_field=False):
             perc_nodes |= comp
 
     if not perc_nodes:
-        print("  No percolating component found")
+        # Diagnostic: WHY did percolation fail?
+        n_comp = nx.number_connected_components(G_nx)
+        comp_sizes = sorted(
+            (len(c) for c in nx.connected_components(G_nx)),
+            reverse=True)[:5]
+        reaches_bot = sum(1 for c in nx.connected_components(G_nx)
+                         if len(c & bottom) > 0)
+        reaches_top = sum(1 for c in nx.connected_components(G_nx)
+                         if len(c & top) > 0)
+        print(f"  No percolating component. DIAGNOSTIC:")
+        print(f"    n_target_nodes={len(nodes)}, n_graph_nodes={G_nx.number_of_nodes()}, n_edges={G_nx.number_of_edges()}")
+        print(f"    bottom={len(bottom)}, top={len(top)}  (plate_z={plate_z:.4f})")
+        print(f"    n_components={n_comp}, top-5 sizes={comp_sizes}")
+        print(f"    components reaching bottom={reaches_bot}, top={reaches_top} (need overlap for percolation)")
         if return_field:
             return None, None, None
         return None, None
