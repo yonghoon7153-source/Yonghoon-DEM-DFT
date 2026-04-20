@@ -16,6 +16,7 @@ python3 tools/plot_method_comparison.py
 python3 tools/plot_gap_wad_correlation.py
 python3 tools/plot_br_content_trend.py
 python3 tools/plot_master_summary.py
+python3 tools/plot_coating_fom.py
 
 echo
 echo "=== Output files ==="

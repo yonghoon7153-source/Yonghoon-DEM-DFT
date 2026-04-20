@@ -34,6 +34,7 @@ tools/                       # Python CLI tools
   plot_gap_wad_correlation.py # Interface gap vs Wad scatter (SI fig)
   plot_br_content_trend.py   # Br content vs B0/E/Wad trend (SI fig)
   plot_master_summary.py     # 4-panel paper headline figure
+  plot_coating_fom.py        # Coating figure-of-merit (E vs Wad scatter)
   analyze_halogen_bonds.py   # X-O bond count z-profile (needs xyz)
   li_layer_partition.py      # Li 1st/2nd/3rd layer classification (needs xyz)
   br_swap_test.py            # Br↔Cl substitution causal test (needs UMA)
