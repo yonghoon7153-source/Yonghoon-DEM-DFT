@@ -99,6 +99,10 @@ def main():
                     help="Re-run even if dual JSON already exists")
     ap.add_argument('--dump-raw-dir', type=str, default=None,
                     help="Parent dir for per-case raw edges/nodes/solution dump")
+    ap.add_argument('--case-timeout', type=int, default=None,
+                    help="Per-case timeout in seconds (default: no timeout — "
+                         "pathological cases may take hours but will eventually finish "
+                         "thanks to CG iterative solver). Set to e.g. 600 to cap.")
     args = ap.parse_args()
 
     cases = find_cases()
@@ -145,7 +149,8 @@ def main():
 
         t0 = time.time()
         try:
-            proc = subprocess.run(cmd, capture_output=True, text=True)
+            proc = subprocess.run(cmd, capture_output=True, text=True,
+                                   timeout=args.case_timeout)
             elapsed = time.time() - t0
 
             # Pick result file to report summary from
@@ -178,7 +183,8 @@ def main():
                 print(f"  → FAILED: {proc.stderr[-200:] if proc.stderr else 'unknown'}")
                 errors.append(case['name'])
         except subprocess.TimeoutExpired:
-            print(f"  → TIMEOUT (>300s)")
+            elapsed = time.time() - t0
+            print(f"  → TIMEOUT (>{args.case_timeout}s, killed after {elapsed:.0f}s)")
             errors.append(case['name'])
 
     # Summary
