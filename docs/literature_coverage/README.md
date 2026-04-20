@@ -288,12 +288,115 @@ grain boundaries + porosity → **directly validates our C_blend(τ) need**.
 - CAM 60-70 vol% target matches Bielefeld optimum
 - Dynamic coverage framework (from Koerver 2017) is the field's consensus
 
+### 9. Minnmann 2021 JES (Tier 1, chemistry-EXACT anchor) ⭐
+**Kind: experimental EIS-TLM tortuosity for NCM-622/LPSCl — the closest match to our system.**
+
+DOI: 10.1149/1945-7111/abf8d7 (Editors' Choice, Open Access)
+
+| Property (42 vol% CAM composite) | Value |
+|---|---|
+| Pressure | 380 MPa × 3 min RT (vs our 300 MPa) |
+| R_el / R_ion | 107 Ω / 360 Ω |
+| Thickness | 470 μm |
+| σ_el,eff / σ_ion,eff | 5.6×10⁻⁴ / 1.7×10⁻⁴ S/cm |
+| **τ²_ion / τ_ion** | **4.3 / 2.07** |
+| Porosity | 14% (range 13-17%) |
+
+**Chemistry-exact match:**
+- NCM-622 (BASF, 3 μm) + Li₆PS₅Cl (NEI Corp, σ=1.6 mS/cm coarse, 1.2 mS/cm fine)
+- σ_e(NCM-622) = 10 mS/cm
+
+**Cross-validation with v29:**
+- Bruggeman form: σ_eff = 1.6 × 0.42 / 4.3 = **0.156 mS/cm** (predicted)
+- Minnmann measured: **0.17 mS/cm** → error **8%** ✓
+- Experimental τ_ion=2.07 ≈ our C_blend(τ) sigmoid center **τ_c=2.04** (diff 1.5%)
+
+**Volume fraction sweep (Fig 2):**
+| CAM vol% | τ²_ion | τ²_el | σ_ion,eff | σ_el,eff |
+|---|---|---|---|---|
+| 25 | 5.76 | 120 | 3e-4 | 2.1e-5 |
+| 42 | 4.3 | 7.4 | 1.7e-4 | 5.6e-4 |
+| 53 | 15.3 | — | — | — |
+| 61 | 130 | 4.3 | 1e-6 | 1e-2 |
+
+**Fine SE benefit (61 vol% CAM, Fig 6):**
+- coarse SE τ²=130 → fine SE τ²=34 (3.8× improvement)
+- SE particle size = dominant tortuosity driver at high CAM
+
+**Design rules:**
+- CAM ≥ 60 vol% with σ_e(CAM) ≥ 10 mS/cm → carbon-free viable
+- For 61 vol% CAM with τ²=34 to reach σ_eff=0.4 mS/cm → need σ_SE ≥ 47 mS/cm (currently unreachable)
+
+### 10. Mohayman 2025 ACS Appl Eng Mater (Tier 1, LPSCl mechanical DFT)
+**Kind: first-principles (VASP GGA-PBE) mechanical properties of Li6PS5Cl.**
+
+DOI: 10.1021/acsaenm.5c00184
+
+Stoichiometric LPSCl:
+| Property | Value |
+|---|---|
+| Young's modulus Y | **30.08 GPa** |
+| Bulk modulus B | 18.07 GPa |
+| Shear modulus G | 12.3 GPa |
+| B/G ratio | **1.47 (BRITTLE**, Pugh criterion 1.75) |
+| Tensile strength σ_max | 3.3 GPa (ideal crystal) |
+
+**Full elastic tensor (GPa):** C11=35.84, C12=11.12, C13=11.52, C33=32.30, C44=13.15, C55=13.81, C66=13.21
+
+**Li concentration effect (Table S1):** Y drops from 30 GPa (stoichiometric) to 17 GPa (70% Li). B/G rises from 1.47 to 2.2 at 70% or 130% Li → **more ductile at cycling interfaces**.
+
+**Cross-link to our framework:**
+- DFT ideal crystal Y=30 GPa → our polycrystalline + GB + 14% porosity → **24 GPa effective** (20% reduction, consistent)
+- B/G=1.47 "technically brittle" — reconciled via Sakuda 2013 room-temperature pressure sintering mechanism
+- Off-stoichiometric ductility explains Koerver 2017 chemomechanical cycling observations
+
+### 11. Sakuda 2013 Sci Rep (Tier 1, LPS experimental mechanical + RT sintering) ⭐
+**Kind: experimental ultrasonic Young's modulus + density-vs-pressure for Li2S-P2S5 glasses.**
+
+DOI: 10.1038/srep02261
+
+**Critical confirmation:** 75Li₂S·25P₂S₅ glass **Y = 24 GPa** (ultrasonic pulse) — **EXACT MATCH to our lab assumption**.
+
+| Composition | Y (GPa) |
+|---|---|
+| 50Li2S·50P2S5 | 18 |
+| 60Li2S·40P2S5 | ~22 |
+| **75Li2S·25P2S5** | **24** |
+| 80Li2S·20P2S5 | 25 |
+| 75Na2S·25P2S5 | 18 (ionic radius comparison) |
+
+**Density vs pressure (Fig 2a), cold press at 25°C:**
+| Pressure | Rel density |
+|---|---|
+| 74 MPa | 61% |
+| 200 MPa | 80% |
+| **300 MPa** | **87%** (= 13% porosity) |
+| 360 MPa | 90% |
+| 500 MPa | 95% |
+
+**σ_ion vs pressure (Fig 4):** saturates at 3.1×10⁻⁴ S/cm at 360 MPa (~91% of bulk hot-pressed 3.4×10⁻⁴).
+
+**Room-temperature pressure sintering mechanism:**
+- Li-S bonds: lower dissociation energy + more covalent than Li-O
+- Glass structure + low Tg → Li⁺ and PS₄³⁻ rotate/diffuse at grain boundaries under stress
+- SEM (Fig 2d, 3a): grain boundaries disappear at 360 MPa
+- **Justifies our DEM hooke/hysteresis + reduced E_eff approach** — it captures macroscopic RT-pressure-sintering
+
+**Three-way porosity agreement at 300-380 MPa:**
+| Source | Porosity |
+|---|---|
+| Our DEM (reduced-E) | 13-17% |
+| Sakuda 2013 (300 MPa cold press) | 13% |
+| Minnmann 2021 (380 MPa cold press) | 14% (range 13-17%) |
+
+**Bridges DFT-to-experiment:** Mohayman DFT (30 GPa) − GB/porosity correction (~20%) = Sakuda measured (24 GPa) = our lab assumption (24 GPa).
+
 ## Pending entries (priority order)
-- Tier 1: Strauss 2018 ACS Energy Lett (NCM622/argyrodite size vs inactive fraction — chemistry-exact COVERAGE anchor)
-- Tier 2: Minnmann/Neumann (NCM/LPSCl 3D FIB-SEM)
-- Tier 2: Shi 2020 JMCA (porosity-coverage correlation)
-- Tier 3: Minnmann 2021 JECS (rate vs coverage)
-- Tier 4: Review papers for cross-checks
+- Tier 1: Koerver 2018 EES (chemomechanical expansion + operating pressure sweep)
+- Tier 1: Nam 2018 JPS (dry vs slurry process, NCM622/argyrodite)
+- Tier 2: Jackson 2017 review (plastic contact mechanics theory cite)
+- Tier 2: Minnmann 2024 JES (modern NCM/LPSCl tomography)
+- Tier 3: Kato 2018 JPCL (thick electrode scaling)
 
 ## Open issue: 2D-to-3D conversion
 For randomly sectioned spheres touching SE:
