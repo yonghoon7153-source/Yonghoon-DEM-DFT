@@ -284,6 +284,30 @@ def transform_network_summary_4col(tables, metrics, meta):
                 ratio = sig_brug / metrics['sigma_full_mScm'] if metrics['sigma_full_mScm'] > 0 else 0
                 v = f"{ratio:.1f}×"
                 net_rows.append(_same_row('σ_brug / σ_ionic', v))
+
+            # ── τ 3종 비교 (Dijkstra vs Laplace geom vs Laplace eff) ──
+            # Derivation only, no re-analysis needed; uses σ_grain = 3.0 mS/cm (LPSCl bulk).
+            import math as _math
+            phi_se = metrics.get('phi_se')
+            sig_full = metrics.get('sigma_full_mScm')
+            sig_bulk = metrics.get('sigma_bulk_net_mScm')
+            tau_dij = metrics.get('tortuosity_mean')
+            SIGMA_GRAIN_MS = 3.0  # bulk LPSCl [mS/cm]
+            if phi_se and sig_full and sig_full > 0:
+                # τ_Lap_eff = √(φ_SE × σ_grain / σ_full) ← COMSOL input (GB 포함)
+                tau_lap_eff = _math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full)
+                tau_lap_geom = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_bulk)
+                                if sig_bulk and sig_bulk > 0 else None)
+                net_rows.append(['── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──', '', '', ''])
+                if tau_dij:
+                    net_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
+                if tau_lap_geom:
+                    net_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
+                net_rows.append(_same_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)', round(tau_lap_eff, 2)))
+                if tau_dij and tau_dij > 0:
+                    net_rows.append(_same_row('τ_Lap_eff / τ_Dij',
+                                              f"{tau_lap_eff / tau_dij:.2f}×"))
+
             if metrics.get('electronic_sigma_full_mScm'):
                 net_rows.append(_dual_row('σ_electronic (mS/cm)',
                                           metrics.get('electronic_sigma_full_mScm'),

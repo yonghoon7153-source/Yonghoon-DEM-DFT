@@ -381,10 +381,34 @@ const METRIC_TIPS = {
     meaning: '상단(SE pellet)에서 이온이 도달할 수 있는 SE의 비율입니다. Percolation보다 넓은 개념으로, 하단에 직접 닿지 않아도 AM과 접촉하여 활성 역할을 하는 SE를 포함합니다.'
   },
   'Tortuosity mean': {
-    title: 'Tortuosity (굴곡도)',
-    formula: 'τ = L_path / L_direct\nL_path = shortest path 실제 거리\nL_direct = 출발점-도착점 z 방향 직선 거리',
-    desc: '이온이 전극을 관통하는 최단 경로의 실제 길이와 직선 거리의 비율입니다. τ=1이면 완전 직선, 값이 클수록 구불구불한 경로입니다.',
-    meaning: '굴곡도가 낮을수록 이온이 빠르게 이동합니다. τ < 1.5이면 우수, τ > 2이면 경로가 매우 비효율적입니다. 실제 유효 이온 전도도는 σ_eff ∝ σ_bulk / τ² 관계이므로 τ의 영향은 제곱으로 커집니다.'
+    title: 'Tortuosity (굴곡도) — Dijkstra geodesic',
+    formula: 'τ_Dij = L_path / L_direct\nL_path = shortest path 실제 거리 (Dijkstra 최단경로)\nL_direct = 출발점-도착점 z 방향 직선 거리',
+    desc: 'Dijkstra 단일 최단경로 기반. 기하학적 우회만 반영 (GB 저항 제외).\n수천 case screening 용 cheap surrogate.\n\n※ COMSOL / EIS 비교는 τ_Lap_eff 섹션 참조.',
+    meaning: 'τ_Dij < 1.5 우수, τ_Dij > 2 구불구불한 경로.\n실제 유효 이온 전도도는 σ_eff ∝ σ_bulk/τ² 관계 — 단 COMSOL 입력은 Dijkstra 아니라 τ_Lap_eff (GB constriction 포함) 사용 권장. τ_Dij 만 쓰면 실제 저항의 ~3× 과소평가.'
+  },
+  'τ_Dij (Dijkstra, 기하만)': {
+    title: 'τ_Dij — Dijkstra geodesic tortuosity',
+    formula: 'τ_Dij = (최단경로 길이) / (직선 거리)',
+    desc: 'SE-SE 접촉 그래프에서 bottom→top 최단경로 (Dijkstra algorithm). 기하만 반영, GB 저항 제외.',
+    meaning: 'Cheap geometric surrogate. 내부 screening / scaling law feature 로 사용. EIS 측정값과 직접 비교 불가.'
+  },
+  'τ_Lap_geom (Laplace, GB 제외)': {
+    title: 'τ_Lap_geom — Laplace bulk-only tortuosity',
+    formula: 'τ_Lap_geom = √(φ_SE × σ_grain / σ_bulk_net)',
+    desc: 'Kirchhoff 회로망 CONTACT_FREE 모드 (R_bulk only, 접촉 저항 제외). 병렬 경로 모두 합산.',
+    meaning: '참고 지표. 일반적으로 τ_Dij 의 0.8배 정도 (병렬 경로 덕분에 조금 낮음). COMSOL 입력엔 부적합 (GB 구성력 누락).'
+  },
+  'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)': {
+    title: 'τ_Lap_eff — Laplace effective tortuosity (COMSOL input)',
+    formula: 'τ_Lap_eff = √(φ_SE × σ_grain / σ_full)\n(σ_grain = 3.0 mS/cm, LPSCl bulk MLIP-MD value)',
+    desc: 'Kirchhoff 회로망 FULL 모드 (R_bulk + R_constriction 전부 포함).\n모든 저항 (기하 + GB 병목 + 병렬 경로) 반영한 effective tortuosity — EIS 측정값과 동일 레벨.\n\n⭐ COMSOL 의 σ_catholyte / τ_effective 입력에 사용하는 값.',
+    meaning: 'Minnmann 2021 EIS τ_ion = 2.07 (42 vol% CAM) 와 우리 DEM τ_Lap_eff = 2.10 (input_particulate_11, 42.7 vol% SE) 이 1.4% 오차로 일치 — parameter-free external validation. 이 값을 COMSOL 에 넣어야 정확한 catholyte 전도 모델 작동.'
+  },
+  'τ_Lap_eff / τ_Dij': {
+    title: 'τ_Lap_eff / τ_Dij — Dijkstra surrogate factor',
+    formula: 'ratio = τ_Lap_eff / τ_Dij',
+    desc: 'Dijkstra geodesic 이 COMSOL-comparable effective τ 대비 얼마나 낮은지. 일반적으로 1.5–2.0 배.',
+    meaning: 'n=56 case median 이 1.76×. 즉 τ_Dij 에 1.76 곱하면 τ_Lap_eff 에 근사. GB constriction 의 τ 기여도를 보여주는 지표. 값이 1 에 가까우면 GB 없음 (순수 SE pellet), 2 이상이면 composite 전형.'
   },
   'Tortuosity median': {
     title: 'Tortuosity 중앙값',
