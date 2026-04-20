@@ -266,7 +266,14 @@ def film_area_from_overlap(delta: float, R_star: float,
         r_min_eff = R_min if R_min else R_star
         A_geom = 2.0 * np.pi * (r_min_eff ** 2)
 
-        A_plastic = min(A_tabor, A_volume, A_geom)
+        # Plastic area from Tabor/volume/geometry caps
+        A_cap = min(A_tabor, A_volume, A_geom)
+        # PHYSICAL LOWER BOUND: plastic area must be ≥ elastic area.
+        # Material that has yielded cannot have LESS contact area than if it
+        # had only deformed elastically. In the elastic-plastic transition
+        # (DR_YIELD_ONSET < δ/R* < DR_FULLY_PLASTIC), A_tabor can still be
+        # below A_hertzian — clamp to avoid non-physical shrinkage.
+        A_plastic = max(elastic_area, A_cap)
         regime = "plastic" if dr >= DR_FULLY_PLASTIC else "transition"
         return A_plastic, regime
 
