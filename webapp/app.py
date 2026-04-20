@@ -805,13 +805,23 @@ def single(case_id):
     if not _results_has_data(results_dir):
         archive_root = app.config.get('ARCHIVE_FOLDER')
         if archive_root and os.path.isdir(archive_root):
+            # Try case_id (timestamp) first, then meta.name/label/case_id/case_name
+            # (webapp manages cases by timestamp but archive dirs use display names)
+            search_keys = [case_id]
+            for k in ('name', 'label', 'case_id', 'case_name'):
+                v = meta.get(k)
+                if isinstance(v, str) and v and v not in search_keys:
+                    search_keys.append(v)
             for dirpath, dirs, _ in os.walk(archive_root):
-                if case_id in dirs:
-                    candidate = os.path.join(dirpath, case_id)
-                    if _results_has_data(candidate):
-                        results_dir = candidate
-                        archive_path = os.path.relpath(candidate, archive_root)
-                        break
+                for key in search_keys:
+                    if key in dirs:
+                        candidate = os.path.join(dirpath, key)
+                        if _results_has_data(candidate):
+                            results_dir = candidate
+                            archive_path = os.path.relpath(candidate, archive_root)
+                            break
+                if archive_path:
+                    break
 
     # Collect figures
     figures = []
