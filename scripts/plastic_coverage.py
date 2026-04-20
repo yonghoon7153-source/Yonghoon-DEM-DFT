@@ -118,12 +118,22 @@ def parse_contact_dump(path: str) -> list[dict]:
 def film_area_from_overlap(delta: float, R_star: float,
                             R_min: float = None,
                             ligg_area: float = None,
-                            mode: str = "capped") -> tuple[float, str]:
+                            mode: str = "capped",
+                            k_spread: float = 1.0) -> tuple[float, str]:
     """Return (contact film area in m², regime label).
     mode:
       'hertzian'  — pure elastic Hertzian (π R* δ). Underestimates plastic.
       'liggghts'  — use LIGGGHTS-reported contactArea directly. DEM-native.
       'capped'    — physics model with geometric cap a² ≤ R_min² (recommended).
+    k_spread: literature-calibrated plastic spreading factor ('capped' mode only).
+      1.00 = raw DEM (geometric cap only)
+      1.33 = Lee 2024 hand-mixed 3D match (30.6% 2D → 39% 3D)
+      1.50 = Bielefeld 20% porosity match (computational 49%)
+      1.65 = Minnmann 2021 chemistry-exact (NCM-622/LPSCl ~60%)
+      1.88 = Bielefeld 5% porosity optimistic (~78%)
+    Applied multiplicatively to plastic area pre-cap:
+      A_plastic_spread = A_plastic_raw * k_spread^2
+    Geometric cap still applies after spreading (no over-saturation).
     """
     dr = delta / R_star if R_star > 0 else 0.0
     if dr <= 0:
@@ -146,28 +156,39 @@ def film_area_from_overlap(delta: float, R_star: float,
     # Default: 'capped' physics model
     # Geometric ceiling: film radius² can't exceed smaller particle's projected area
     cap_a2 = (R_min * R_min) if R_min else (R_star * R_star)
+    k2 = k_spread * k_spread
 
     if dr < DR_YIELD_ONSET:
         return elastic_area, "elastic"
 
     if dr < DR_FULLY_PLASTIC:
-        # Smooth transition: interpolate elastic → capped plastic
+        # Smooth transition: interpolate elastic → capped plastic (with k_spread)
         f = (dr - DR_YIELD_ONSET) / (DR_FULLY_PLASTIC - DR_YIELD_ONSET)
-        plastic_a2 = min(R_star * R_star * dr / DR_FULLY_PLASTIC, cap_a2)
+        plastic_a2_raw = R_star * R_star * dr / DR_FULLY_PLASTIC
+        plastic_a2 = min(plastic_a2_raw * k2, cap_a2)
         return (1 - f) * elastic_area + f * np.pi * plastic_a2, "transition"
 
-    # Fully plastic: area grows linearly with dr BEYOND threshold, but capped
+    # Fully plastic: area grows linearly with dr BEYOND threshold, spread × k², capped
     scale = dr / DR_FULLY_PLASTIC
-    plastic_a2 = min(R_star * R_star * scale, cap_a2)
+    plastic_a2_raw = R_star * R_star * scale
+    plastic_a2 = min(plastic_a2_raw * k2, cap_a2)
     return np.pi * plastic_a2, "plastic"
 
 
 def compute_coverage(atom_path: str, contact_path: str,
                      se_type: int = SE_ATOM_TYPE,
                      mode: str = "capped",
-                     dump_contacts: bool = False) -> dict:
+                     dump_contacts: bool = False,
+                     k_spread_list: list = None) -> dict:
     """Compute elastic + plastic coverage per AM particle for a single snapshot.
-    If dump_contacts=True, includes per-contact list (for network solver input)."""
+    dump_contacts=True: per-contact list (for network solver input + raw CSV dump).
+    k_spread_list: list of k_spread values for sweep (default [1.0]).
+      Recommended for paper: [1.0, 1.3, 1.5, 1.65, 1.8]
+      Output includes plastic_cov_mean_kX for each k + literature anchor match.
+    """
+    if k_spread_list is None:
+        k_spread_list = [1.0]
+
     atoms    = parse_atom_dump(atom_path)
     contacts = parse_contact_dump(contact_path)
 
@@ -180,7 +201,7 @@ def compute_coverage(atom_path: str, contact_path: str,
             am_surface[aid] = 4.0 * np.pi * a["r"] ** 2  # full sphere surface
 
     elastic_sum  = defaultdict(float)
-    plastic_sum  = defaultdict(float)
+    plastic_sum_by_k = {k: defaultdict(float) for k in k_spread_list}
     regime_count = defaultdict(int)
     delta_stats  = []
     per_contact: list[dict] = []   # only populated if dump_contacts
@@ -196,6 +217,7 @@ def compute_coverage(atom_path: str, contact_path: str,
 
         am_atom = a2 if is_se1 else a1
         am_id   = c["id2"] if is_se1 else c["id1"]
+        am_type = am_atom["type"]
         se_atom = a1 if is_se1 else a2
         se_id   = c["id1"] if is_se1 else c["id2"]
 
@@ -209,33 +231,50 @@ def compute_coverage(atom_path: str, contact_path: str,
         delta_stats.append(dr)
 
         elastic_area = np.pi * R_star * delta  # Hertzian baseline
-        plastic_area, regime = film_area_from_overlap(
-            delta, R_star, R_min=R_min,
-            ligg_area=c.get("contactArea"), mode=mode)
+
+        # Compute plastic area for each k_spread value
+        plastic_by_k = {}
+        regime = None
+        for k in k_spread_list:
+            pa, rg = film_area_from_overlap(
+                delta, R_star, R_min=R_min,
+                ligg_area=c.get("contactArea"), mode=mode, k_spread=k)
+            plastic_by_k[k] = pa
+            if regime is None:
+                regime = rg  # regime labels are k-independent (based on δ/R only)
 
         elastic_sum[am_id] += elastic_area
-        plastic_sum[am_id] += plastic_area
+        for k in k_spread_list:
+            plastic_sum_by_k[k][am_id] += plastic_by_k[k]
         regime_count[regime] += 1
 
         if dump_contacts:
-            per_contact.append({
-                "am_id": am_id, "se_id": se_id,
+            rec = {
+                "am_id": am_id, "se_id": se_id, "am_type": am_type,
                 "R_am": am_atom["r"], "R_se": se_atom["r"],
                 "R_star": R_star, "R_min": R_min,
                 "delta": delta, "delta_over_R": dr,
                 "regime": regime,
                 "elastic_area": elastic_area,
                 "ligg_area":    c.get("contactArea", 0.0),
-                "plastic_area": plastic_area,
-                "amp":          plastic_area / elastic_area if elastic_area > 0 else 0.0,
-            })
+            }
+            for k in k_spread_list:
+                kstr = str(k).replace('.', '_')
+                rec[f"plastic_area_k{kstr}"] = plastic_by_k[k]
+            per_contact.append(rec)
 
+    # Per-AM coverage
     elastic_cov = []
-    plastic_cov = []
+    plastic_cov_by_k = {k: [] for k in k_spread_list}
     for aid, surf in am_surface.items():
         if aid in elastic_sum:
             elastic_cov.append(min(elastic_sum[aid] / surf, 1.0))
-            plastic_cov.append(min(plastic_sum[aid] / surf, 1.0))
+            for k in k_spread_list:
+                plastic_cov_by_k[k].append(min(plastic_sum_by_k[k][aid] / surf, 1.0))
+
+    # Percentile summary of δ/R distribution
+    dr_arr = np.asarray(delta_stats) if delta_stats else np.array([0.0])
+    pct = lambda p: float(np.percentile(dr_arr, p))
 
     out = {
         "mode":               mode,
@@ -243,19 +282,68 @@ def compute_coverage(atom_path: str, contact_path: str,
         "n_am_with_contact":  len(elastic_cov),
         "n_contacts_am_se":   sum(regime_count.values()),
         "regime_counts":      dict(regime_count),
-        "delta_over_R_mean":  float(np.mean(delta_stats))   if delta_stats else 0.0,
-        "delta_over_R_med":   float(np.median(delta_stats)) if delta_stats else 0.0,
-        "delta_over_R_max":   float(np.max(delta_stats))    if delta_stats else 0.0,
+        # δ/R distribution — full percentile set for correlation analysis
+        "delta_over_R_mean":  float(np.mean(dr_arr)),
+        "delta_over_R_std":   float(np.std(dr_arr)),
+        "delta_over_R_p01":   pct(1),
+        "delta_over_R_p05":   pct(5),
+        "delta_over_R_p25":   pct(25),
+        "delta_over_R_p50":   pct(50),
+        "delta_over_R_p75":   pct(75),
+        "delta_over_R_p90":   pct(90),
+        "delta_over_R_p95":   pct(95),
+        "delta_over_R_p99":   pct(99),
+        "delta_over_R_med":   pct(50),  # alias of p50 (backward compat)
+        "delta_over_R_max":   float(np.max(dr_arr)),
         "elastic_cov_mean":   float(np.mean(elastic_cov))   if elastic_cov else 0.0,
         "elastic_cov_med":    float(np.median(elastic_cov)) if elastic_cov else 0.0,
-        "plastic_cov_mean":   float(np.mean(plastic_cov))   if plastic_cov else 0.0,
-        "plastic_cov_med":    float(np.median(plastic_cov)) if plastic_cov else 0.0,
-        "cov_amplification":  (float(np.mean(plastic_cov) / np.mean(elastic_cov))
-                               if elastic_cov and np.mean(elastic_cov) > 0 else 0.0),
     }
+    # k_spread sweep results
+    for k in k_spread_list:
+        kstr = str(k).replace('.', '_')
+        cov_k = plastic_cov_by_k[k]
+        out[f"plastic_cov_mean_k{kstr}"] = float(np.mean(cov_k)) if cov_k else 0.0
+        out[f"plastic_cov_med_k{kstr}"]  = float(np.median(cov_k)) if cov_k else 0.0
+        amp = (np.mean(cov_k) / np.mean(elastic_cov)) if (cov_k and np.mean(elastic_cov) > 0) else 0.0
+        out[f"cov_amp_k{kstr}"] = float(amp)
+
+    # Backward compat: expose k=1.0 results under legacy keys
+    if 1.0 in k_spread_list:
+        out["plastic_cov_mean"] = out["plastic_cov_mean_k1_0"]
+        out["plastic_cov_med"]  = out["plastic_cov_med_k1_0"]
+        out["cov_amplification"] = out["cov_amp_k1_0"]
+
     if dump_contacts:
         out["contacts"] = per_contact
     return out
+
+
+def dump_raw_delta_r_csv(atom_path: str, contact_path: str, csv_out: str,
+                        se_type: int = SE_ATOM_TYPE, mode: str = "capped",
+                        k_spread_list: list = None) -> int:
+    """Option C: per-contact CSV dump for correlation analysis.
+    Columns: am_id, se_id, am_type, R_am, R_se, R_star, R_min,
+             delta, delta_over_R, regime, elastic_area, ligg_area,
+             plastic_area_k{values}
+    Returns number of contact rows written.
+    """
+    if k_spread_list is None:
+        k_spread_list = [1.0, 1.3, 1.5, 1.65, 1.8]
+    res = compute_coverage(atom_path, contact_path, se_type=se_type,
+                           mode=mode, dump_contacts=True,
+                           k_spread_list=k_spread_list)
+    if "error" in res:
+        return 0
+    records = res.get("contacts", [])
+    if not records:
+        return 0
+    import csv as _csv
+    keys = list(records[0].keys())
+    with open(csv_out, "w", newline="") as f:
+        w = _csv.DictWriter(f, fieldnames=keys)
+        w.writeheader()
+        w.writerows(records)
+    return len(records)
 
 
 # =============================================================
@@ -288,8 +376,12 @@ def main_inspect(contact_path: str, n_show: int = 5) -> None:
     print(f"  max = {deltas.max():.3e}")
 
 
-def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE) -> None:
-    """Step 2: compute plastic coverage for one case (latest snapshot)."""
+def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE,
+              k_spread_list: list = None,
+              dump_raw_csv: str = None) -> None:
+    """Step 2: compute plastic coverage for one case (latest snapshot).
+    k_spread_list: if provided, sweep multiple k values.
+    dump_raw_csv: if provided, write per-contact CSV to this path (Option C)."""
     atom_f    = _pick_latest(case_dir, "atom_*.liggghts")
     contact_f = _pick_latest(case_dir, "contact_*.liggghts")
     if not atom_f or not contact_f:
@@ -299,16 +391,46 @@ def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE) -> None:
     print(f"  atom    : {os.path.basename(atom_f)}")
     print(f"  contact : {os.path.basename(contact_f)}")
     print(f"  se_type : {se_type}")
-    res = compute_coverage(atom_f, contact_f, se_type=se_type)
-    print(json.dumps(res, indent=2))
+    if k_spread_list:
+        print(f"  k_spread: {k_spread_list}")
+    res = compute_coverage(atom_f, contact_f, se_type=se_type,
+                           dump_contacts=bool(dump_raw_csv),
+                           k_spread_list=k_spread_list)
+    # Don't print full contact list (could be huge)
+    if "contacts" in res:
+        res_print = {k: v for k, v in res.items() if k != "contacts"}
+    else:
+        res_print = res
+    print(json.dumps(res_print, indent=2))
+    # Dump raw CSV if requested
+    if dump_raw_csv and "contacts" in res:
+        import csv as _csv
+        recs = res["contacts"]
+        if recs:
+            with open(dump_raw_csv, "w", newline="") as f:
+                w = _csv.DictWriter(f, fieldnames=list(recs[0].keys()))
+                w.writeheader()
+                w.writerows(recs)
+            print(f"\nRaw per-contact CSV written: {dump_raw_csv} ({len(recs)} rows)")
 
 
 def main_batch(root: str, pattern: str = "post_*",
                se_type: int = SE_ATOM_TYPE,
-               csv_out: str = "plastic_coverage.csv") -> None:
-    """Step 3: batch over all cases matching pattern under root, write CSV."""
+               csv_out: str = "plastic_coverage.csv",
+               k_spread_list: list = None,
+               dump_raw_dir: str = None) -> None:
+    """Step 3: batch over all cases matching pattern under root, write CSV.
+    k_spread_list: if provided, CSV includes plastic_cov_mean_kX for each k.
+    dump_raw_dir: if provided, write per-case raw δ/R CSVs to this dir (Option C)."""
+    if k_spread_list is None:
+        k_spread_list = [1.0]
+    if dump_raw_dir:
+        os.makedirs(dump_raw_dir, exist_ok=True)
+
     dirs = sorted(glob.glob(os.path.join(root, pattern)))
     print(f"=== Batch plastic coverage: {len(dirs)} directories ===")
+    print(f"  k_spread sweep: {k_spread_list}")
+    print(f"  raw CSV dir   : {dump_raw_dir or '(skipped)'}")
     results = []
     for d in dirs:
         if not os.path.isdir(d):
@@ -319,35 +441,68 @@ def main_batch(root: str, pattern: str = "post_*",
             print(f"  SKIP {os.path.basename(d)} — missing dump")
             continue
         try:
-            res = compute_coverage(atom_f, contact_f, se_type=se_type)
+            case_name = os.path.basename(d)
+            dump_contacts = bool(dump_raw_dir)
+            res = compute_coverage(atom_f, contact_f, se_type=se_type,
+                                   dump_contacts=dump_contacts,
+                                   k_spread_list=k_spread_list)
+            # Write raw per-contact CSV (Option C) BEFORE stripping contacts from res
+            if dump_raw_dir and "contacts" in res:
+                raw_csv = os.path.join(dump_raw_dir, f"raw_delta_r_{case_name}.csv")
+                recs = res["contacts"]
+                if recs:
+                    import csv as _csv
+                    with open(raw_csv, "w", newline="") as f:
+                        w = _csv.DictWriter(f, fieldnames=list(recs[0].keys()))
+                        w.writeheader()
+                        w.writerows(recs)
+            # Strip contacts list from summary to keep memory down
+            if "contacts" in res:
+                del res["contacts"]
         except Exception as e:
             print(f"  FAIL {os.path.basename(d)}  {e}")
             continue
         res["case"] = os.path.basename(d)
         results.append(res)
+        amp_k1 = res.get('cov_amp_k1_0', res.get('cov_amplification', 0))
         print(f"  OK  {res['case']:30s}  "
               f"elastic={res['elastic_cov_mean']:.3f}  "
-              f"plastic={res['plastic_cov_mean']:.3f}  "
-              f"amp={res['cov_amplification']:.2f}x")
+              f"plastic_k1.0={res['plastic_cov_mean_k1_0']:.3f}  "
+              f"amp={amp_k1:.2f}x  "
+              f"dR_mean={res['delta_over_R_mean']:.3f}")
 
-    # Write CSV
+    # Write CSV with ALL columns (k sweep + percentiles)
     if results:
         import csv
-        keys = ["case", "n_am", "n_am_with_contact", "n_contacts_am_se",
-                "delta_over_R_mean", "delta_over_R_med", "delta_over_R_max",
-                "elastic_cov_mean", "elastic_cov_med",
-                "plastic_cov_mean", "plastic_cov_med",
-                "cov_amplification"]
+        base_keys = ["case", "n_am", "n_am_with_contact", "n_contacts_am_se",
+                     "delta_over_R_mean", "delta_over_R_std",
+                     "delta_over_R_p01", "delta_over_R_p05", "delta_over_R_p25",
+                     "delta_over_R_p50", "delta_over_R_p75", "delta_over_R_p90",
+                     "delta_over_R_p95", "delta_over_R_p99", "delta_over_R_max",
+                     "elastic_cov_mean", "elastic_cov_med"]
+        # k-specific columns
+        for k in k_spread_list:
+            kstr = str(k).replace('.', '_')
+            base_keys += [f"plastic_cov_mean_k{kstr}",
+                          f"plastic_cov_med_k{kstr}",
+                          f"cov_amp_k{kstr}"]
         with open(csv_out, "w", newline="") as f:
-            w = csv.DictWriter(f, fieldnames=keys)
+            w = csv.DictWriter(f, fieldnames=base_keys, extrasaction='ignore')
             w.writeheader()
             for r in results:
-                w.writerow({k: r.get(k, "") for k in keys})
-        print(f"\nWrote {csv_out} ({len(results)} rows)")
+                w.writerow({k: r.get(k, "") for k in base_keys})
+        print(f"\nWrote {csv_out} ({len(results)} rows, {len(base_keys)} cols)")
+
+
+def _parse_k_spread(s: str) -> list:
+    """Parse '1.0,1.3,1.5,1.65,1.8' → [1.0, 1.3, 1.5, 1.65, 1.8]"""
+    if not s:
+        return [1.0]
+    return [float(x.strip()) for x in s.split(',') if x.strip()]
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="DEM plastic coverage estimator")
+    ap = argparse.ArgumentParser(description="DEM plastic coverage estimator (k_spread sweep + Option C raw CSV)")
     sub = ap.add_subparsers(dest="cmd")
 
     p1 = sub.add_parser("inspect", help="verify contact dump parsing")
@@ -357,19 +512,31 @@ if __name__ == "__main__":
     p2 = sub.add_parser("case", help="coverage for single case directory")
     p2.add_argument("case_dir")
     p2.add_argument("--se-type", type=int, default=SE_ATOM_TYPE)
+    p2.add_argument("--k-spread", type=str, default="1.0,1.3,1.5,1.65,1.8",
+                    help="Comma-separated k_spread values (default: all 5 literature anchors)")
+    p2.add_argument("--dump-raw-csv", type=str, default=None,
+                    help="Write per-contact CSV to this path (Option C)")
 
     p3 = sub.add_parser("batch", help="coverage for all cases under a root")
     p3.add_argument("root")
     p3.add_argument("--pattern", default="post_*")
     p3.add_argument("--se-type", type=int, default=SE_ATOM_TYPE)
     p3.add_argument("--csv-out", default="plastic_coverage.csv")
+    p3.add_argument("--k-spread", type=str, default="1.0,1.3,1.5,1.65,1.8",
+                    help="Comma-separated k_spread values (default: all 5 literature anchors)")
+    p3.add_argument("--dump-raw-dir", type=str, default=None,
+                    help="Dir to write per-case raw δ/R CSVs (Option C)")
 
     args = ap.parse_args()
     if args.cmd == "inspect":
         main_inspect(args.contact_file, args.n_show)
     elif args.cmd == "case":
-        main_case(args.case_dir, args.se_type)
+        main_case(args.case_dir, args.se_type,
+                  k_spread_list=_parse_k_spread(args.k_spread),
+                  dump_raw_csv=args.dump_raw_csv)
     elif args.cmd == "batch":
-        main_batch(args.root, args.pattern, args.se_type, args.csv_out)
+        main_batch(args.root, args.pattern, args.se_type, args.csv_out,
+                   k_spread_list=_parse_k_spread(args.k_spread),
+                   dump_raw_dir=args.dump_raw_dir)
     else:
         ap.print_help()
