@@ -221,9 +221,16 @@
       "pages": "44394-44403",
       "year": 2023,
       "doi": "10.1021/acsami.3c04452",
-      "key_content": "Adhesion parameter from single-material slab cleavage energies (NOT direct interface calc). Screened 19,481 Li compounds for coatings. Uses surface energy γ_e, γ_c, γ_ec and contact angle θ to derive adhesion parameter. Wad approximated from individual surface energies — NO interface construction needed. Validated against direct DFT interface calculations in SI. Key equation: γ_e = γ_ec + γ_c cos θ. Good adhesion: max(γ_e) - min(γ_c) ≤ 0. Applied to LLXO, LPS, LBS electrolyte systems with LiCoO2, LiFePO4, LiMnO2 cathodes.",
-      "relevance_to_our_work": "Their approach avoids interface construction entirely (surface energies only). We use direct interface calculation with MLIP. Their method is faster (single-slab DFT) but less direct. Could validate our γ_SE inverse correlation finding (R=0.83). Key difference: they screen coatings, we compare SE compositions.",
-      "tags": ["adhesion", "DFT", "surface_energy", "screening", "coatings", "solid_electrolyte", "interface"]
+      "key_content": "Adhesion parameter from single-material slab cleavage energies (NOT direct interface calc). Screened 19,481 Li compounds for coatings. Uses surface energy γ_e, γ_c, γ_ec and contact angle θ to derive adhesion parameter. Key equation: γ_e = γ_ec + γ_c cos θ. Good adhesion: max(γ_e) - min(γ_c) ≤ 0. Applied to LLXO, LPS, LBS electrolyte systems.",
+      "SI_critical_points": {
+        "direct_interface_validation": "Table S1: Benchmarked 10 interfaces (6 electrolyte/coating + 4 Li/coating) against direct DFT interface. Quote: 'Due to artifacts from creating interfaces with small area slabs, we report the interfaces which were able to reach convergence in under 1 month of computing.'",
+        "performance": "Table S2: Confusion matrix — Precision 100% (5/5 good materials correctly flagged), Recall 55.6% (missed 4/9 good materials). Method is ~10^3 faster than direct interface.",
+        "infeasibility_quote": "Conclusion: 'time-consuming computational ionic relaxations of numerous surface terminations makes the determination of interfacial energies infeasible even for a small number of systems.'",
+        "equations": "γ_ec = (E_ec_slab - n_e*E_e_bulk - n_c*E_c_bulk) / (2*SA_ec); E_int = 2*(γ_ec - γ_e - γ_c)"
+      },
+      "relevance_to_our_work": "Their approach avoids interface construction entirely (surface energies only). We use direct interface with MLIP to overcome their stated infeasibility. Their 10 validation interfaces took 'under 1 month' each → we do 100 seeds × 5 comps = 500 interfaces with MLIP. Their method recall=55.6% (misses half of good materials), precision=100% (screening tool). Our method captures within-family Br trends that their approach misses (our γ_SE data shows comp1>comp2>comp3>comp4>comp5 which by their inverse rule predicts wrong within-family Wad ordering).",
+      "what_to_show_advisor": "SI Section 'Interfacial Energy Calculations and Adhesion Parameter Benchmarking' (p. S-4 to S-5): (1) Table S1 showing only 10 validated direct interfaces, (2) 1-month convergence time per interface, (3) Table S2 confusion matrix with 55.6% recall. Main text Conclusion (p. 44400): 'infeasible even for a small number of systems' — this is exactly what our MLIP approach overcomes.",
+      "tags": ["adhesion", "DFT", "surface_energy", "screening", "coatings", "solid_electrolyte", "interface", "validation", "benchmarking"]
     }
   ]
 }
