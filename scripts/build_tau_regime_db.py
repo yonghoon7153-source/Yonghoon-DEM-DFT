@@ -98,7 +98,14 @@ def load_case(root: str) -> dict | None:
     le_over_lg = _safe_div(tau_Lap_eff, tau_Lap_geom)
     lg_over_d = _safe_div(tau_Lap_geom, tau_Dij)
 
-    se_cn = m.get('se_se_cn_mean') or m.get('SE_SE_CN_mean')
+    # SE-SE CN key name: analyze_contacts writes as flat 'se_se_cn' (scalar mean)
+    # Fallback variants for robustness across versions.
+    se_cn = (m.get('se_se_cn')
+             or m.get('se_se_cn_mean')
+             or m.get('SE_SE_CN_mean'))
+    # Handle case where it's stored as dict {'mean': X}
+    if isinstance(se_cn, dict):
+        se_cn = se_cn.get('mean')
     perc = m.get('percolation_pct', 0)
     bulk_frac = m.get('bulk_resistance_fraction')
     constr_frac = (1 - bulk_frac) if bulk_frac is not None else None
@@ -189,8 +196,21 @@ def main():
               f"{(r['tau_Lap_eff'] or 0):>6.2f} {(r['Le_over_D'] or 0):>6.2f} "
               f"{(r['tau_sq_Lap_eff'] or 0):>6.1f}")
 
-    print("\n=== LITERATURE COMPARISON ===")
-    print(f"{'ref':30s} {'CAM %':>6s} {'φ_SE':>6s} {'τ²_ref':>7s} {'closest case (τ²)':>35s}")
+    print("\n=== LITERATURE COMPARISON (φ_SE match, dedup by name) ===")
+    # Dedup: keep one record per unique 'name' (prefer archive over results if duplicate)
+    seen_names = {}
+    for r in records:
+        n = r.get('name')
+        if not n or not r.get('phi_SE') or not r.get('tau_sq_Lap_eff'):
+            continue
+        if n not in seen_names:
+            seen_names[n] = r
+    dedup_records = list(seen_names.values())
+    print(f"  (deduplicated to {len(dedup_records)} unique case names)")
+
+    print(f"\n{'ref':28s} {'φ_SE_ref':>9s} {'τ²_ref':>7s}  "
+          f"{'closest case':>25s} {'φ_SE':>6s} {'τ²':>6s} {'Δφ':>6s} {'err%':>6s}")
+    print('-' * 98)
     anchors = [
         ('Minnmann 2021 42% CAM', 42, 0.44, 4.3),
         ('Wang 2023 70% CAM',     70, 0.26, 7.78),
@@ -198,15 +218,17 @@ def main():
         ('Dewald 2021 25% NCM',   25, 0.65, 2.4),
     ]
     for name, cam, phi_ref, tau2_ref in anchors:
-        # closest by phi_SE
-        with_tau2 = [(r, abs(r['phi_SE'] - phi_ref)) for r in records
-                     if r.get('phi_SE') and r.get('tau_sq_Lap_eff')]
+        with_tau2 = [(r, abs(r['phi_SE'] - phi_ref)) for r in dedup_records]
         if not with_tau2:
             continue
-        closest, _ = min(with_tau2, key=lambda x: x[1])
-        err = 100 * (closest['tau_sq_Lap_eff'] - tau2_ref) / tau2_ref
-        print(f"  {name:28s} {cam:>6d} {phi_ref:>6.2f} {tau2_ref:>7.2f}   "
-              f"{closest['name']:20s} (τ²={closest['tau_sq_Lap_eff']:.1f}, err {err:+.0f}%)")
+        # Show top-3 closest by φ_SE
+        with_tau2.sort(key=lambda x: x[1])
+        closest3 = with_tau2[:3]
+        for i, (r, dphi) in enumerate(closest3):
+            err = 100 * (r['tau_sq_Lap_eff'] - tau2_ref) / tau2_ref
+            prefix = f"  {name:26s} {phi_ref:>9.3f} {tau2_ref:>7.2f}  " if i == 0 else " " * 46
+            print(f"{prefix}{r['name'][:24]:>25s} {r['phi_SE']:>6.3f} "
+                  f"{r['tau_sq_Lap_eff']:>6.1f} {dphi:>6.3f} {err:>+6.0f}")
 
 
 if __name__ == '__main__':
