@@ -19,7 +19,7 @@ OUT.mkdir(exist_ok=True)
 # Per-composition Br count per f.u. (cubic: 4 fu; rhombo: 5 fu)
 DATA = {
     # id:      Br/fu   B0      E      Wad_paper  Wad_100s   family
-    "comp1":   (0.0,   26.2,   29.1,  1.277,     1.151,    "Li6"),
+    "comp1":   (0.0,   26.5,   29.1,  1.277,     1.151,    "Li6"),   # B0 v2 pipeline
     "comp2B":  (0.5,   25.8,   28.6,  1.183,     1.615,    "Li6"),
     "modelc":  (0.0,   21.7,   32.9,  None,      None,     "Li5.4"),
     "comp3":   (0.6,   20.8,   27.3,  2.103,     2.328,    "Li5.4"),

@@ -24,8 +24,10 @@ ORDER = ["comp3", "comp4", "comp5", "comp1", "comp2B"]
 COLORS = {"comp3": "#4FBDFF", "comp4": "#52B788", "comp5": "#F4A261",
           "comp1": "#9B5DE5", "comp2B": "#2A9D8F"}
 
-B0 = {"comp3": 20.8, "comp4": 20.8, "comp5": 22.9, "comp1": 26.2, "comp2B": 25.8,
+B0 = {"comp3": 20.8, "comp4": 20.8, "comp5": 22.9, "comp1": 26.5, "comp2B": 25.8,
       "modelc": 21.7}
+# comp1 = 26.5 from v2 pipeline (11 pts DFT, R2=0.999998, annealing champion)
+# v1 value = 26.2 (8 pts, Rietveld Li). v2 is paper value.
 E600 = {"comp3": (27.3, 0.4), "comp4": (26.4, 1.6), "comp5": (25.8, 0.8),
         "comp1": (29.1, 1.1), "comp2B": (28.6, 1.1), "modelc": (32.9, 0.9)}
 WAD_PAPER = {"comp3": (2.103, 0.245), "comp4": (1.970, 0.629),
