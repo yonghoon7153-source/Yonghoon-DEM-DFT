@@ -2908,7 +2908,8 @@ def plot_formx_decomposition(data_list, names, outdir):
     log_cn = np.array([1.5*np.log(cn[i]) if cn[i]>0 else 0 for i in range(n)])
     log_cov = np.array([0.25*np.log(coverage[i]) if coverage[i]>0 else 0 for i in range(n)])
     if _GLOBAL_IONIC_SIGMOID:
-        Ct, Cn, tc, k = _GLOBAL_IONIC_SIGMOID
+        # v29: tuple grew to 6 (adds best_k, best_tc). Only first 4 used here.
+        Ct, Cn, tc, k = _GLOBAL_IONIC_SIGMOID[:4]
     else:
         Ct, Cn, tc, k = 0.034, 0.019, TAU_C, TAU_K
     log_Csig = np.array([np.log(Ct) + (np.log(Cn)-np.log(Ct)) / (1+np.exp(-k*(tau[i]-tc))) for i in range(n)])
