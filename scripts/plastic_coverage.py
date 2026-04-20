@@ -112,6 +112,86 @@ def parse_contact_dump(path: str) -> list[dict]:
     return contacts
 
 
+def parse_atoms_csv(path: str) -> dict[int, dict]:
+    """Parse atoms.csv (output of parse_liggghts.py). Same schema as parse_atom_dump.
+    Expected columns: id, type, radius, x, y, z (order may vary)."""
+    import csv as _csv
+    atoms: dict[int, dict] = {}
+    with open(path, newline='') as f:
+        reader = _csv.DictReader(f)
+        for row in reader:
+            try:
+                aid = int(float(row.get("id", row.get("atom_id", 0))))
+                atoms[aid] = {
+                    "type":   int(float(row.get("type", 0))),
+                    "r":      float(row.get("radius", row.get("r", 0.0))),
+                    "pos":    np.array([float(row.get("x", 0)),
+                                        float(row.get("y", 0)),
+                                        float(row.get("z", 0))]),
+                }
+            except (ValueError, TypeError):
+                continue
+    return atoms
+
+
+def parse_contacts_csv(path: str) -> list[dict]:
+    """Parse contacts.csv (output of parse_liggghts.py). Same schema as parse_contact_dump.
+    Expected columns: id1, id2, fn_x, fn_y, fn_z, contact_area, delta (order may vary)."""
+    import csv as _csv
+    contacts: list[dict] = []
+    with open(path, newline='') as f:
+        reader = _csv.DictReader(f)
+        for row in reader:
+            try:
+                contacts.append({
+                    "id1":          int(float(row.get("id1", 0))),
+                    "id2":          int(float(row.get("id2", 0))),
+                    "force_normal": np.array([float(row.get("fn_x", 0)),
+                                              float(row.get("fn_y", 0)),
+                                              float(row.get("fn_z", 0))]),
+                    "contactArea":  float(row.get("contact_area", row.get("contactArea", 0))),
+                    "delta":        float(row.get("delta", 0)),
+                })
+            except (ValueError, TypeError):
+                continue
+    return contacts
+
+
+def parse_atoms_auto(path: str) -> dict:
+    """Auto-detect atoms file format (LIGGGHTS dump vs CSV)."""
+    if path.endswith(".csv") or path.endswith(".CSV"):
+        return parse_atoms_csv(path)
+    # Try sniffing: LIGGGHTS files have "ITEM:" header in first few lines
+    try:
+        with open(path) as f:
+            head = f.read(1024)
+        if "ITEM: ATOMS" in head or "ITEM:" in head:
+            return parse_atom_dump(path)
+        # Otherwise assume CSV (has 'id,type,radius' header)
+        if "id" in head.lower() and ("type" in head.lower() or "radius" in head.lower()):
+            return parse_atoms_csv(path)
+    except Exception:
+        pass
+    # Fallback: try LIGGGHTS
+    return parse_atom_dump(path)
+
+
+def parse_contacts_auto(path: str) -> list:
+    """Auto-detect contacts file format (LIGGGHTS dump vs CSV)."""
+    if path.endswith(".csv") or path.endswith(".CSV"):
+        return parse_contacts_csv(path)
+    try:
+        with open(path) as f:
+            head = f.read(1024)
+        if "ITEM: ENTRIES" in head or "ITEM:" in head:
+            return parse_contact_dump(path)
+        if "id1" in head.lower() and "delta" in head.lower():
+            return parse_contacts_csv(path)
+    except Exception:
+        pass
+    return parse_contact_dump(path)
+
+
 # =============================================================
 #   Plastic coverage computation
 # =============================================================
@@ -189,8 +269,8 @@ def compute_coverage(atom_path: str, contact_path: str,
     if k_spread_list is None:
         k_spread_list = [1.0]
 
-    atoms    = parse_atom_dump(atom_path)
-    contacts = parse_contact_dump(contact_path)
+    atoms    = parse_atoms_auto(atom_path)
+    contacts = parse_contacts_auto(contact_path)
 
     if not atoms or not contacts:
         return {"error": "empty atom or contact dump", "atom_path": atom_path}
@@ -356,9 +436,26 @@ def _pick_latest(dirpath: str, pattern: str) -> str | None:
     return files[-1] if files else None
 
 
+def _find_case_files(case_dir: str) -> tuple[str | None, str | None]:
+    """Resolve (atom_path, contact_path) in a case dir, supporting both
+    LIGGGHTS dumps (atom_*.liggghts + contact_*.liggghts) and
+    pre-parsed CSVs (atoms.csv + contacts.csv). CSV fallback enables
+    archive-migrated cases where raw dumps are no longer present."""
+    atom_f    = _pick_latest(case_dir, "atom_*.liggghts")
+    contact_f = _pick_latest(case_dir, "contact_*.liggghts")
+    if atom_f and contact_f:
+        return atom_f, contact_f
+    # CSV fallback
+    atoms_csv    = os.path.join(case_dir, "atoms.csv")
+    contacts_csv = os.path.join(case_dir, "contacts.csv")
+    if os.path.exists(atoms_csv) and os.path.exists(contacts_csv):
+        return atoms_csv, contacts_csv
+    return atom_f, contact_f  # may be None, None — caller handles
+
+
 def main_inspect(contact_path: str, n_show: int = 5) -> None:
     """Step 1: verify contact dump column mapping. Print first n contacts + stats."""
-    contacts = parse_contact_dump(contact_path)
+    contacts = parse_contacts_auto(contact_path)
     print(f"=== Contact dump inspection: {contact_path} ===")
     print(f"Total contacts parsed: {len(contacts)}")
     if not contacts:
@@ -382,10 +479,9 @@ def main_case(case_dir: str, se_type: int = SE_ATOM_TYPE,
     """Step 2: compute plastic coverage for one case (latest snapshot).
     k_spread_list: if provided, sweep multiple k values.
     dump_raw_csv: if provided, write per-contact CSV to this path (Option C)."""
-    atom_f    = _pick_latest(case_dir, "atom_*.liggghts")
-    contact_f = _pick_latest(case_dir, "contact_*.liggghts")
+    atom_f, contact_f = _find_case_files(case_dir)
     if not atom_f or not contact_f:
-        print(f"!! No atom/contact dump found in {case_dir}")
+        print(f"!! No atom/contact dump or CSV found in {case_dir}")
         return
     print(f"=== Plastic coverage for {case_dir} ===")
     print(f"  atom    : {os.path.basename(atom_f)}")
@@ -435,10 +531,9 @@ def main_batch(root: str, pattern: str = "post_*",
     for d in dirs:
         if not os.path.isdir(d):
             continue
-        atom_f    = _pick_latest(d, "atom_*.liggghts")
-        contact_f = _pick_latest(d, "contact_*.liggghts")
+        atom_f, contact_f = _find_case_files(d)
         if not atom_f or not contact_f:
-            print(f"  SKIP {os.path.basename(d)} — missing dump")
+            print(f"  SKIP {os.path.basename(d)} — missing dump/CSV")
             continue
         try:
             case_name = os.path.basename(d)
