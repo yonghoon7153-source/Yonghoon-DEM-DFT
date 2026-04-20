@@ -233,23 +233,33 @@
       "tags": ["adhesion", "DFT", "surface_energy", "screening", "coatings", "solid_electrolyte", "interface", "validation", "benchmarking"]
     },
     {
-      "id": "cu_tan_mlip_2025",
-      "authors": "Cu/amorphous-TaxN MLIP paper authors",
-      "title": "Atomistic Insights into Cu/amorphous-TaxN Interfacial Adhesion via Machine Learning Interatomic Potentials: Effects of Stoichiometry and Interface Construction",
-      "journal": "arXiv",
+      "id": "choi2025",
+      "authors": "Choi, J. M.; Kim, J.; Lee, J.-H.; Son, W.-J.; Han, S.",
+      "title": "Atomistic Insights into Cu/Amorphous-TaxN Interfacial Adhesion via Machine Learning Interatomic Potentials: Effects of Stoichiometry and Interface Construction",
+      "journal": "ACS Appl. Electron. Mater.",
+      "volume": 7,
+      "pages": "11165-11179",
       "year": 2025,
-      "doi": "arXiv:2509.20662",
-      "key_content": "Direct MLIP adhesion calculation (NOT surface energy approximation). SMD (steered molecular dynamics) to measure peak force + work of adhesion + separation distance. Three interface construction methods compared: (1) static relaxation, (2) high-temperature annealing, (3) simulated Cu deposition. Ta stoichiometry varied to study composition effects on adhesion. Amorphous TaxN system (no grain boundaries).",
-      "relevance_to_our_work": "MOST SIMILAR PAPER to our approach. Both: (1) MLIP-based direct interface, (2) multiple interface construction methods compared (we did v5/v8/5L/v6/v7, they did static/anneal/deposition), (3) composition effect study (stoichiometry vs Br substitution). Key difference: they use SMD (force-based), we use separation method (energy-based). Their system Cu/TaN vs our SE/NCM.",
-      "methods_comparison": {
-        "interface_construction": "Both compared multiple: 3 methods them, ~5 methods us (v5, v8, 5L, v6, v7)",
-        "MLIP": "Both MLIP-based",
-        "adhesion_measurement": "Them: SMD peak force + Wad | Us: separation method Wad=(E_sep-E_int)/A",
-        "sampling": "Them: single interface per construction | Us: 20-100 xy-shift seeds",
-        "composition_effect": "Them: Ta stoichiometry Ta/N=2,4 | Us: 5 argyrodite compositions (Br 0-5)"
+      "doi": "10.1021/acsaelm.5c02157",
+      "affiliation": "Seoul National University (Seungwu Han group)",
+      "key_content": "MLIP-based direct interface adhesion study for Cu/a-TaxN (x=1,2,4). Uses SevenNet (NequIP E(3)-equivariant GNN) trained on 7984 DFT structures (RMSE 4.5 meV/atom, 0.3 eV/A force). Three interface construction methods: relaxed (static), annealed (1000K 1ns), deposited (Cu deposition 7.7ns). SMD (steered molecular dynamics) with Jarzynski equality to compute Wad. Examined stoichiometry effect (Ta/N=1,2,4).",
+      "detailed_methods": {
+        "DFT": "VASP, PBE, 450 eV cutoff, 2x2x2 k-grid for ~10Å cells, 1e-6 eV convergence",
+        "MLIP_training": "SevenNet package, NequIP architecture, channel=32, layers=3, lmax=3, cutoff=5.5Å",
+        "training_data": "7984 structures, 9:1 train/val split, 843,910 training points",
+        "interface_size": "40.92 Å lateral (16x16 FCC Cu(111)), 3840-3200 atoms",
+        "interface_construction": {
+          "relaxed": "ideal sharp, static relax only",
+          "annealed": "1000K for 1ns then quench to 300K (-10 K/ps)",
+          "deposited": "3100 Cu atoms deposited on a-TaxN slab, 7.7 ns total"
+        },
+        "SMD": "Spring constant k=0.01 eV/Å²/atom, pulling velocity v=0.01 Å/ps, 3 independent SMD per condition (configs sampled every 100 ps during 300K equilibration)",
+        "Wad_calculation": "Wad = final plateau of U_PMF from Jarzynski equality"
       },
-      "supports_our_methodology": "Publication in Sept 2025 validates that MLIP direct interface adhesion + multiple construction methods + composition comparison is a recognized modern approach. Our work applies same methodology to solid-state battery interfaces.",
-      "tags": ["adhesion", "MLIP", "interface_construction", "SMD", "composition_effect", "amorphous", "semiconductor"]
+      "relevance_to_our_work": "MOST SIMILAR published paper. Both use MLIP + direct interface + multiple construction methods + composition effect. Key differences: (1) they use SMD (force-based, Jarzynski), we use separation (energy-based); (2) they vary stoichiometry, we vary Br substitution; (3) their system Cu/TaN (semiconductor), ours SE/NCM (battery); (4) they train their own MLIP (SevenNet), we use UMA/MACE off-the-shelf.",
+      "what_to_show_advisor": "Section 2 METHODS (pages 11167-11169) — shows EXACTLY how detailed MLIP adhesion methods should be. Particularly: (1) Section 2.1 Training Set (detailed DFT params + MQA protocol), (2) Section 2.2 MLIP Training (SevenNet config, RMSE), (3) Section 2.3 Interface Construction (3 methods with specific protocols), (4) Section 2.4 SMD (spring k, velocity, Jarzynski). Methods span FULL 3 pages! This justifies our ~25-line methods as actually CONCISE compared to published standard.",
+      "supports_our_methodology": "Published Dec 2025 in respected ACS journal. Korean group (SNU Seungwu Han). Validates: (1) MLIP direct interface is standard modern approach, (2) multiple interface construction methods is expected practice, (3) methods section of 2-3 pages is normal for MLIP adhesion papers. Our methods section is comparable or even shorter.",
+      "tags": ["adhesion", "MLIP", "interface_construction", "SMD", "SevenNet", "composition_effect", "amorphous", "semiconductor", "Korea"]
     }
   ]
 }
