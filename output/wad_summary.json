@@ -1,0 +1,64 @@
+{
+  "per_composition": {
+    "comp3": {
+      "n_seeds": 5,
+      "mean": 2.3609999999999998,
+      "std": 0.37220585702000986,
+      "median": 2.242,
+      "min": 1.918,
+      "max": 3.033,
+      "family": "Li5.4"
+    },
+    "comp4": {
+      "n_seeds": 5,
+      "mean": 2.2022,
+      "std": 0.29674190806153417,
+      "median": 2.207,
+      "min": 1.827,
+      "max": 2.694,
+      "family": "Li5.4"
+    },
+    "comp5": {
+      "n_seeds": 5,
+      "mean": 2.0372,
+      "std": 0.3987552632881477,
+      "median": 1.873,
+      "min": 1.757,
+      "max": 2.819,
+      "family": "Li5.4"
+    },
+    "comp1": {
+      "n_seeds": 20,
+      "mean": 1.15285,
+      "std": 0.39246977909133335,
+      "median": 1.045,
+      "min": 0.555,
+      "max": 1.85,
+      "family": "Li6"
+    },
+    "comp2B": {
+      "n_seeds": 20,
+      "mean": 1.7821500000000001,
+      "std": 1.184069350798339,
+      "median": 1.5345,
+      "min": 0.676,
+      "max": 6.428,
+      "family": "Li6"
+    }
+  },
+  "ordering": [
+    "comp3",
+    "comp4",
+    "comp5",
+    "comp1",
+    "comp2B"
+  ],
+  "paired_Li6": {
+    "pair": "comp2B - comp1",
+    "mean_delta": 0.6293,
+    "std_delta": 1.0801493461554288,
+    "se_mean": 0.24780325493805513,
+    "n": 20,
+    "n_positive": 15
+  }
+}

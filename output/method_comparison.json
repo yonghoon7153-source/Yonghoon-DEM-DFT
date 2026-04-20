@@ -1,0 +1,103 @@
+{
+  "v5 paper (5 seeds)": {
+    "comp3": {
+      "mean": 2.103,
+      "std": 0.245
+    },
+    "comp4": {
+      "mean": 1.97,
+      "std": 0.629
+    },
+    "comp5": {
+      "mean": 1.651,
+      "std": 0.284
+    },
+    "comp1": {
+      "mean": 1.277,
+      "std": 0.383
+    },
+    "comp2B": {
+      "mean": 1.183,
+      "std": 0.362
+    }
+  },
+  "v5 100-seed": {
+    "comp3": {
+      "mean": 2.328,
+      "std": 0.49
+    },
+    "comp4": {
+      "mean": 2.25,
+      "std": 0.437
+    },
+    "comp5": {
+      "mean": 2.28,
+      "std": 0.335
+    },
+    "comp1": {
+      "mean": 1.151,
+      "std": 0.245
+    },
+    "comp2B": {
+      "mean": 1.615,
+      "std": 0.417
+    }
+  },
+  "v8 bulk anneal": {
+    "comp3": {
+      "mean": 1.02,
+      "std": 0.335
+    },
+    "comp4": {
+      "mean": 0.927,
+      "std": 0.301
+    },
+    "comp5": {
+      "mean": 1.086,
+      "std": 0.739
+    },
+    "comp1": {
+      "mean": 0.758,
+      "std": 0.148
+    },
+    "comp2B": {
+      "mean": 1.091,
+      "std": 0.42
+    }
+  },
+  "5L unified (20 seeds)": {
+    "comp3": {
+      "mean": 2.826,
+      "std": 0.604
+    },
+    "comp4": {
+      "mean": 2.383,
+      "std": 0.805
+    },
+    "comp5": {
+      "mean": 2.061,
+      "std": 0.824
+    },
+    "comp1": {
+      "mean": 2.674,
+      "std": 0.882
+    },
+    "comp2B": {
+      "mean": 2.718,
+      "std": 1.121
+    }
+  },
+  "expt_aJ": {
+    "comp3": 316,
+    "comp4": 298,
+    "comp5": 249,
+    "comp1": 194,
+    "comp2B": 180
+  },
+  "notes": {
+    "v5_paper": "R=0.9999 with expt, selected 5 seeds per family",
+    "v5_100seed": "Full 100-seed statistics, no selection",
+    "v8_bulk_anneal": "SE annealed in bulk PBC then stacked; cross-family preserved",
+    "5L_unified": "NCM 7x7x5 + FixAtoms bottom 3L; cross-family FAILS"
+  }
+}
