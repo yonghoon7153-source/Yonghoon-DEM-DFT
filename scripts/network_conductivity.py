@@ -29,6 +29,16 @@ import sys
 from scipy import sparse
 from scipy.sparse.linalg import spsolve, cg
 
+# Plastic-physics contact-area model (used when contact_mode='physics')
+# See docs: scripts/plastic_coverage.py → film_area_from_overlap()
+_THIS_DIR = os.path.dirname(os.path.abspath(__file__))
+if _THIS_DIR not in sys.path:
+    sys.path.insert(0, _THIS_DIR)
+try:
+    from plastic_coverage import film_area_from_overlap as _film_area
+except Exception:
+    _film_area = None  # graceful fallback if numpy/import issue
+
 
 # LPSCl argyrodite grain interior conductivity (NOT pellet value)
 SIGMA_BULK_DEFAULT = 3.0e-3  # S/cm (grain interior, ionic)
@@ -43,12 +53,16 @@ K_SE_THERMAL = 0.7e-2   # W/(cm·K) ≈ 0.7 W/(m·K), LPSCl (Ketter 2025)
 
 def build_network(atoms_raw, contacts_raw, target_types, scale,
                   plate_z, box_x=0.05, box_y=0.05, boundary_factor=2.0,
-                  mode='ionic', type_map=None, results_dir=None):
+                  mode='ionic', type_map=None, results_dir=None,
+                  contact_mode='hertzian'):
     """
     Build resistor network from DEM data.
     mode='ionic': SE-SE network only (uses percolation_sets.json for boundaries)
     mode='electronic': AM-AM network only
     mode='thermal': ALL contacts (AM-AM, AM-SE, SE-SE)
+    contact_mode='hertzian'  : use LIGGGHTS-reported contact_area directly (DEM-native)
+    contact_mode='physics'   : use plastic-film area from δ/R* Tabor+volume model
+                               (literature-anchored, 0 free params — see plastic_coverage.py)
     Returns nodes, edges, bottom/top boundary sets.
     """
     if mode == 'thermal':
@@ -87,23 +101,25 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     if type_map:
         se_type_set = {k for k, v in type_map.items() if v == 'SE'}
 
-    # Build contact area map
-    contact_area_map = {}
+    # Build contact map (area + delta). Delta is required for physics contact_mode
+    # so each edge can recompute A_plastic from overlap geometry.
+    contact_map = {}  # pair → {'ca': Hertzian area, 'delta': overlap}
     for c in contacts_raw:
         id1, id2 = c['id1'], c['id2']
         if id1 in atoms_raw and id2 in atoms_raw:
             if mode == 'thermal':
-                # All contacts for thermal
                 pair = (min(id1, id2), max(id1, id2))
                 ca = c.get('contact_area', 0)
-                if ca > 0:
-                    contact_area_map[pair] = ca
+                delta_c = c.get('delta', 0)
+                if ca > 0 or delta_c > 0:
+                    contact_map[pair] = {'ca': ca, 'delta': delta_c}
             else:
                 if atoms_raw[id1]['type'] in target_types and atoms_raw[id2]['type'] in target_types:
                     pair = (min(id1, id2), max(id1, id2))
                     ca = c.get('contact_area', 0)
-                    if ca > 0:
-                        contact_area_map[pair] = ca
+                    delta_c = c.get('delta', 0)
+                    if ca > 0 or delta_c > 0:
+                        contact_map[pair] = {'ca': ca, 'delta': delta_c}
 
     # Build edges with physical resistances
     # All distances in μm, areas in μm², resistivity in Ω·μm
@@ -111,9 +127,11 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     # But we normalize: set ρ=1, then σ_eff comes out as ratio to σ_bulk
 
     edges = []
-    for pair, ca_sim in contact_area_map.items():
+    for pair, cdat in contact_map.items():
         id1, id2 = pair
         a1, a2 = atoms_raw[id1], atoms_raw[id2]
+        ca_sim = cdat['ca']
+        delta_sim = cdat['delta']
 
         # Hop distance (μm) with periodic boundary
         dx = abs(a1['x'] - a2['x'])
@@ -123,13 +141,38 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         dy = min(dy, box_y - dy)
         d_ij = np.sqrt(dx**2 + dy**2 + dz**2) * scale  # μm
 
-        # Contact area (μm²) and contact radius (μm)
-        A_contact = ca_sim * scale**2  # μm²
-        a_contact = np.sqrt(A_contact / np.pi)  # μm
+        # Particle radii (sim units → μm)
+        r1_sim = a1['radius']
+        r2_sim = a2['radius']
+        r1 = r1_sim * scale
+        r2 = r2_sim * scale
 
-        # Particle radii (μm)
-        r1 = a1['radius'] * scale
-        r2 = a2['radius'] * scale
+        # Hertzian area (LIGGGHTS-reported, sim→μm²)
+        A_hertzian = ca_sim * scale**2  # μm²
+
+        # Physics (plastic-film) area: Tabor+volume, literature-anchored
+        # Compute in sim units then scale to μm²
+        if delta_sim > 0 and r1_sim > 0 and r2_sim > 0:
+            R_star_sim = (r1_sim * r2_sim) / (r1_sim + r2_sim)
+            R_min_sim = min(r1_sim, r2_sim)
+            delta_over_R = delta_sim / R_star_sim if R_star_sim > 0 else 0.0
+            if _film_area is not None:
+                A_phys_sim, regime = _film_area(
+                    delta_sim, R_star_sim,
+                    R_min=R_min_sim, ligg_area=ca_sim,
+                    mode='physics')
+                A_physics = A_phys_sim * scale**2  # μm²
+            else:
+                A_physics = A_hertzian  # fallback if import failed
+                regime = 'hertzian_fallback'
+        else:
+            delta_over_R = 0.0
+            A_physics = A_hertzian
+            regime = 'no_delta'
+
+        # Select active area for this run
+        A_contact = A_physics if contact_mode == 'physics' else A_hertzian
+        a_contact = np.sqrt(A_contact / np.pi) if A_contact > 0 else 0.0
 
         # Thermal mode: material-specific conductivity weighting
         # k_AM ≈ 4.0 W/m·K, k_SE ≈ 0.7 W/m·K
@@ -166,6 +209,14 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
             'R_total': R_bulk + R_constriction,
             'd_ij': d_ij,
             'A_contact': A_contact,
+            # Raw-dump fields (both modes carry both areas for comparison)
+            'A_hertzian': A_hertzian,
+            'A_physics':  A_physics,
+            'delta':       delta_sim,
+            'delta_over_R': delta_over_R,
+            'regime':      regime,
+            'r1': r1, 'r2': r2,
+            'type1': a1['type'], 'type2': a2['type'],
         })
 
     return {
@@ -177,20 +228,24 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         'box_x': box_x,
         'box_y': box_y,
         'scale': scale,
+        'contact_mode': contact_mode,
     }
 
 
-def solve_network(network_data, mode='full'):
+def solve_network(network_data, mode='full', return_field=False):
     """
     Solve resistor network for effective conductance.
 
     mode: 'full' (R_bulk + R_constriction),
           'bulk_only' (R_bulk, R_constriction=0),
           'constriction_only' (R_constriction, R_bulk=0)
+    return_field: if True, also return per-node voltages and per-edge currents
+                  (used by dump_network_raw for reviewer-auditable output).
 
     Returns:
         G_eff: effective conductance (normalized, ρ=1)
         sigma_ratio: σ_eff / σ_bulk
+        field (optional): {'node_V': {id: V}, 'edge_records': [{...}]}
     """
     nodes = network_data['nodes']
     edges = network_data['edges']
@@ -319,12 +374,16 @@ def solve_network(network_data, mode='full'):
             V = spsolve(L_csr, b)
     except Exception as e:
         print(f"  Network solve failed: {e}")
+        if return_field:
+            return None, None, None
         return None, None
 
     V_source = V[source_idx]
     V_sink = V[sink_idx]  # = 0
 
     if V_source <= 0:
+        if return_field:
+            return None, None, None
         return None, None
 
     # G_eff = I / ΔV = 1.0 / V_source  (since I=1, V_sink=0)
@@ -339,25 +398,137 @@ def solve_network(network_data, mode='full'):
     # σ_ratio = σ_eff / σ_bulk = G_eff × T / A  (dimensionless when ρ=1)
     sigma_ratio = G_eff * T_um / A_um2
 
+    if return_field:
+        # Per-node voltages (percolating component only)
+        node_V = {nid: float(V[id_to_idx[nid]]) for nid in all_ids}
+        # Per-edge currents I = G·(V_i - V_j) for the chosen mode
+        edge_records = []
+        for e in perc_edges:
+            i, j = id_to_idx[e['id1']], id_to_idx[e['id2']]
+            if mode == 'full':
+                R = e['R_total']
+            elif mode == 'bulk_only':
+                R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
+            elif mode == 'constriction_only':
+                R = e['R_constriction']
+            else:
+                R = e['R_total']
+            g = 1.0 / R if R > 0 else 0.0
+            dV = V[i] - V[j]
+            I_edge = g * dV
+            edge_records.append({
+                'id1': e['id1'], 'id2': e['id2'],
+                'type1': e['type1'], 'type2': e['type2'],
+                'delta': e['delta'], 'delta_over_R': e['delta_over_R'],
+                'regime': e['regime'],
+                'r1': e['r1'], 'r2': e['r2'], 'd_ij': e['d_ij'],
+                'A_hertzian': e['A_hertzian'], 'A_physics': e['A_physics'],
+                'A_used':    e['A_contact'],
+                'R_bulk': e['R_bulk'], 'R_constr': e['R_constriction'],
+                'R_total': e['R_total'],
+                'V1': float(V[i]), 'V2': float(V[j]),
+                'I':  float(I_edge),
+                'abs_I': float(abs(I_edge)),
+            })
+        field = {
+            'node_V': node_V,
+            'edge_records': edge_records,
+            'V_source': float(V_source),
+            'G_eff':    float(G_eff),
+            'sigma_ratio': float(sigma_ratio),
+            'n_perc_nodes': len(all_ids),
+            'n_perc_edges': len(perc_edges),
+        }
+        return G_eff, sigma_ratio, field
+
     return G_eff, sigma_ratio
+
+
+def dump_network_raw(dump_dir, atoms_raw, net, field_full, tag='hertzian'):
+    """Write per-node/per-edge raw CSV + solution JSON for reviewer audit.
+    dump_dir/
+      edges_<tag>.csv    — one row per percolating edge
+      nodes_<tag>.csv    — one row per percolating node
+      solution_<tag>.json — summary (σ, V_source, top-10 hot edges)
+    """
+    if not field_full:
+        return
+    os.makedirs(dump_dir, exist_ok=True)
+    import csv as _csv
+
+    # edges.csv
+    erecs = field_full.get('edge_records', [])
+    if erecs:
+        # Rank edges by |I| for hot-spot analysis
+        ranked = sorted(range(len(erecs)), key=lambda i: erecs[i]['abs_I'], reverse=True)
+        for rank, idx in enumerate(ranked):
+            erecs[idx]['hotspot_rank'] = rank + 1
+        edge_csv = os.path.join(dump_dir, f'edges_{tag}.csv')
+        with open(edge_csv, 'w', newline='') as f:
+            w = _csv.DictWriter(f, fieldnames=list(erecs[0].keys()))
+            w.writeheader()
+            w.writerows(erecs)
+
+    # nodes.csv
+    nvs = field_full.get('node_V', {})
+    if nvs:
+        node_csv = os.path.join(dump_dir, f'nodes_{tag}.csv')
+        with open(node_csv, 'w', newline='') as f:
+            w = _csv.writer(f)
+            w.writerow(['id', 'type', 'x', 'y', 'z', 'radius', 'V'])
+            for nid, V in nvs.items():
+                a = atoms_raw.get(nid)
+                if a is None:
+                    continue
+                w.writerow([nid, a.get('type'), a.get('x'), a.get('y'),
+                            a.get('z'), a.get('radius'), V])
+
+    # solution.json: σ, V_source, top-10 hot edges, basic stats
+    top10 = []
+    if erecs:
+        for r in erecs[:10] if erecs else []:
+            pass  # placeholder (erecs not re-sorted here)
+        top10_ranked = sorted(erecs, key=lambda r: r['abs_I'], reverse=True)[:10]
+        top10 = [{k: r[k] for k in ('id1', 'id2', 'type1', 'type2',
+                                     'delta_over_R', 'A_hertzian', 'A_physics',
+                                     'A_used', 'abs_I', 'hotspot_rank')
+                  if k in r} for r in top10_ranked]
+    summary = {
+        'tag': tag,
+        'sigma_ratio': field_full.get('sigma_ratio'),
+        'G_eff':        field_full.get('G_eff'),
+        'V_source':     field_full.get('V_source'),
+        'n_perc_nodes': field_full.get('n_perc_nodes'),
+        'n_perc_edges': field_full.get('n_perc_edges'),
+        'contact_mode': net.get('contact_mode', 'unknown'),
+        'top10_hot_edges': top10,
+    }
+    with open(os.path.join(dump_dir, f'solution_{tag}.json'), 'w') as f:
+        json.dump(summary, f, indent=2)
 
 
 def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       plate_z, box_x=0.05, box_y=0.05,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
-                      type_map=None):
+                      type_map=None, contact_mode='hertzian',
+                      dump_raw_dir=None, dump_tag=None):
     """
     Run full decomposition analysis:
     1. FULL (R_bulk + R_constriction): physical ground truth
     2. CONTACT_FREE (R_constriction=0): ideal contact upper bound
     3. CONSTRICTION_ONLY (R_bulk=0): spreading resistance limit
 
+    contact_mode: 'hertzian' (default, LIGGGHTS area) or 'physics' (Tabor+volume)
+    dump_raw_dir: if set, write edges/nodes CSV + solution JSON here
+    dump_tag: file suffix for raw dump (e.g. 'hertzian_ionic', 'physics_ionic')
+
     Also computes analytical Bruggeman prediction (σ = σ₀ × φ^1.5) for comparison.
     """
-    print(f"  Building resistor network ({len(target_types)} target types)...")
+    print(f"  Building resistor network ({len(target_types)} target types, "
+          f"contact_mode={contact_mode})...")
     net = build_network(atoms_raw, contacts_raw, target_types, scale,
                         plate_z, box_x, box_y, results_dir=results_dir,
-                        type_map=type_map)
+                        type_map=type_map, contact_mode=contact_mode)
 
     if net is None:
         print("  No network found")
@@ -379,7 +550,12 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
 
     # === Run 1: FULL ===
     print("  Solving FULL network (bulk + constriction)...")
-    G_full, sigma_full = solve_network(net, mode='full')
+    if dump_raw_dir:
+        G_full, sigma_full, _field = solve_network(net, mode='full', return_field=True)
+        if _field and dump_tag:
+            dump_network_raw(dump_raw_dir, atoms_raw, net, _field, tag=dump_tag)
+    else:
+        G_full, sigma_full = solve_network(net, mode='full')
 
     # === Run 2: CONTACT-FREE (ideal contacts, upper bound) ===
     print("  Solving CONTACT_FREE network (R_constriction=0)...")
@@ -420,6 +596,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
 
     # Results
     results = {
+        'contact_mode': contact_mode,
         'n_nodes': n_nodes,
         'n_edges': n_edges,
         'n_bottom': n_bottom,
@@ -467,6 +644,73 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     return results
 
 
+def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
+                       scale, plate_z, box_x, box_y, output_dir,
+                       contact_mode='hertzian', dump_raw_dir=None):
+    """Run ionic + electronic + thermal decomposition under a fixed contact_mode.
+    Returns the merged ionic-centric results dict.
+    """
+    tag_ionic = f"{contact_mode}_ionic"
+    tag_el    = f"{contact_mode}_electronic"
+    tag_th    = f"{contact_mode}_thermal"
+
+    print("\n" + "="*60)
+    print(f"IONIC CONDUCTIVITY (SE-SE network) — contact_mode={contact_mode}")
+    print("="*60)
+    results = run_decomposition(atoms_raw, contacts_raw, target_types, scale,
+                                plate_z, box_x, box_y, sigma_bulk=SIGMA_BULK_DEFAULT,
+                                results_dir=output_dir, type_map=type_map,
+                                contact_mode=contact_mode,
+                                dump_raw_dir=dump_raw_dir, dump_tag=tag_ionic)
+
+    results_el = None
+    if am_types:
+        print("\n" + "="*60)
+        print(f"ELECTRONIC CONDUCTIVITY (AM-AM network) — contact_mode={contact_mode}")
+        print("="*60)
+        try:
+            results_el = run_decomposition(atoms_raw, contacts_raw, am_types, scale,
+                                           plate_z, box_x, box_y,
+                                           sigma_bulk=SIGMA_AM_ELECTRONIC,
+                                           type_map=type_map,
+                                           contact_mode=contact_mode,
+                                           dump_raw_dir=dump_raw_dir, dump_tag=tag_el)
+        except Exception as e:
+            print(f"  Electronic solver failed: {e}")
+
+    results_th = None
+    try:
+        print("\n" + "="*60)
+        print(f"THERMAL CONDUCTIVITY (ALL contacts) — contact_mode={contact_mode}")
+        print("="*60)
+        all_types = list(type_map.keys())
+        results_th = run_decomposition(atoms_raw, contacts_raw, all_types, scale,
+                                       plate_z, box_x, box_y, sigma_bulk=K_SE_THERMAL,
+                                       type_map=type_map,
+                                       contact_mode=contact_mode,
+                                       dump_raw_dir=dump_raw_dir, dump_tag=tag_th)
+    except Exception as e:
+        print(f"  Thermal solver failed: {e}")
+
+    # Merge electronic + thermal into ionic-centric dict (matches legacy schema)
+    if results:
+        if results_el:
+            results['electronic_sigma_full']      = results_el.get('sigma_full')
+            results['electronic_sigma_full_mScm'] = results_el.get('sigma_full_mScm')
+            results['electronic_R_brug']          = results_el.get('R_brug_over_full')
+            results['electronic_bulk_frac']       = results_el.get('bulk_resistance_fraction')
+            results['electronic_n_nodes']         = results_el.get('n_nodes')
+            results['electronic_n_edges']         = results_el.get('n_edges')
+            results['electronic_active_fraction']      = results_el.get('active_fraction')
+            results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
+        if results_th:
+            results['thermal_sigma_full']      = results_th.get('sigma_full')
+            results['thermal_sigma_full_mScm'] = results_th.get('sigma_full_mScm')
+            results['thermal_R_brug']          = results_th.get('R_brug_over_full')
+            results['thermal_bulk_frac']       = results_th.get('bulk_resistance_fraction')
+    return results
+
+
 if __name__ == '__main__':
     import argparse
     sys.path.insert(0, os.path.dirname(__file__))
@@ -478,6 +722,13 @@ if __name__ == '__main__':
     parser.add_argument('-o', '--output', required=True, help='Output directory')
     parser.add_argument('-t', '--type-map', default='1:AM_S,2:SE', help='Type map')
     parser.add_argument('-s', '--scale', type=int, default=1000, help='Scale factor')
+    parser.add_argument('--contact-mode', choices=['hertzian', 'physics', 'both'],
+                        default='both',
+                        help="Contact area model: 'hertzian' (DEM-native LIGGGHTS area), "
+                             "'physics' (Tabor+volume, literature-anchored), "
+                             "'both' (run each and emit *_hertzian/*_physics + dual JSON)")
+    parser.add_argument('--dump-raw-dir', type=str, default=None,
+                        help='If set, write per-edge/per-node raw CSV + solution JSON here')
     args = parser.parse_args()
 
     # Parse type map
@@ -487,14 +738,12 @@ if __name__ == '__main__':
         type_map[int(k)] = v.strip()
 
     target_types = [k for k, v in type_map.items() if v == 'SE']
-    am_types = [k for k, v in type_map.items() if 'AM' in v]
+    am_types     = [k for k, v in type_map.items() if 'AM' in v]
 
-    # Load data
-    atoms_raw, _ = load_atoms_raw(args.atoms_csv)
+    atoms_raw, _    = load_atoms_raw(args.atoms_csv)
     contacts_raw, _ = load_contacts_raw(args.contacts_csv)
     print(f"Loaded {len(atoms_raw)} atoms, {len(contacts_raw)} contacts")
 
-    # Get plate_z
     mesh_file = os.path.join(args.output, 'mesh_info.json')
     if os.path.exists(mesh_file):
         with open(mesh_file) as f:
@@ -502,7 +751,6 @@ if __name__ == '__main__':
     else:
         plate_z = max(a['z'] + a['radius'] for a in atoms_raw.values())
 
-    # Get box dimensions
     box_x, box_y = 0.05, 0.05
     ip_path = os.path.join(args.output, 'input_params.json')
     if os.path.exists(ip_path):
@@ -513,58 +761,50 @@ if __name__ == '__main__':
 
     print(f"box={box_x}×{box_y}, plate_z={plate_z:.6f}, scale={args.scale}")
 
-    # === IONIC (SE-SE network) ===
-    print("\n" + "="*50)
-    print("IONIC CONDUCTIVITY (SE-SE network)")
-    print("="*50)
-    results = run_decomposition(atoms_raw, contacts_raw, target_types, args.scale,
-                                plate_z, box_x, box_y, sigma_bulk=SIGMA_BULK_DEFAULT,
-                                results_dir=args.output, type_map=type_map)
+    modes_to_run = (['hertzian', 'physics'] if args.contact_mode == 'both'
+                    else [args.contact_mode])
+    per_mode_results = {}
+    for cm in modes_to_run:
+        res = _run_all_networks(atoms_raw, contacts_raw, target_types, am_types,
+                                 type_map, args.scale, plate_z, box_x, box_y,
+                                 args.output, contact_mode=cm,
+                                 dump_raw_dir=args.dump_raw_dir)
+        per_mode_results[cm] = res
+        if res:
+            out_path = os.path.join(args.output, f'network_conductivity_{cm}.json')
+            with open(out_path, 'w') as f:
+                json.dump(res, f, indent=2)
+            print(f"\nResults saved: {out_path}")
 
-    # === ELECTRONIC (AM-AM, z-coordinate boundaries) ===
-    results_el = None
-    if am_types:
-        print("\n" + "="*50)
-        print("ELECTRONIC CONDUCTIVITY (AM-AM network)")
-        print("="*50)
-        try:
-            results_el = run_decomposition(atoms_raw, contacts_raw, am_types, args.scale,
-                                           plate_z, box_x, box_y, sigma_bulk=SIGMA_AM_ELECTRONIC,
-                                           type_map=type_map)
-        except Exception as e:
-            print(f"  Electronic solver failed: {e}")
+    # Dual-view JSON (when both modes ran): elastic vs plastic side-by-side
+    if len(per_mode_results) == 2 and all(per_mode_results.values()):
+        rH = per_mode_results['hertzian']
+        rP = per_mode_results['physics']
+        def _ratio(a, b):
+            try:
+                return round(float(a) / float(b), 4) if (a and b and float(b) != 0) else None
+            except Exception:
+                return None
+        dual = {
+            'hertzian': rH,
+            'physics':  rP,
+            'ratio_physics_over_hertzian': {
+                'sigma_full':        _ratio(rP.get('sigma_full'),        rH.get('sigma_full')),
+                'sigma_constr_net':  _ratio(rP.get('sigma_constr_net'),  rH.get('sigma_constr_net')),
+                'electronic_sigma_full': _ratio(rP.get('electronic_sigma_full'),
+                                                rH.get('electronic_sigma_full')),
+                'thermal_sigma_full':    _ratio(rP.get('thermal_sigma_full'),
+                                                rH.get('thermal_sigma_full')),
+            }
+        }
+        dual_path = os.path.join(args.output, 'network_conductivity_dual.json')
+        with open(dual_path, 'w') as f:
+            json.dump(dual, f, indent=2)
+        print(f"Dual-view saved:  {dual_path}")
 
-    # === THERMAL (ALL contacts, z-coordinate boundaries) ===
-    results_th = None
-    try:
-        print("\n" + "="*50)
-        print("THERMAL CONDUCTIVITY (ALL contacts)")
-        print("="*50)
-        all_types = list(type_map.keys())
-        results_th = run_decomposition(atoms_raw, contacts_raw, all_types, args.scale,
-                                       plate_z, box_x, box_y, sigma_bulk=K_SE_THERMAL,
-                                       type_map=type_map)
-    except Exception as e:
-        print(f"  Thermal solver failed: {e}")
-
-    # Save results (ionic is primary)
-    if results:
-        if results_el:
-            results['electronic_sigma_full'] = results_el.get('sigma_full')
-            results['electronic_sigma_full_mScm'] = results_el.get('sigma_full_mScm')
-            results['electronic_R_brug'] = results_el.get('R_brug_over_full')
-            results['electronic_bulk_frac'] = results_el.get('bulk_resistance_fraction')
-            results['electronic_n_nodes'] = results_el.get('n_nodes')
-            results['electronic_n_edges'] = results_el.get('n_edges')
-            results['electronic_active_fraction'] = results_el.get('active_fraction')  # bottom-reachable AM
-            results['electronic_percolating_fraction'] = results_el.get('percolating_fraction')
-        if results_th:
-            results['thermal_sigma_full'] = results_th.get('sigma_full')
-            results['thermal_sigma_full_mScm'] = results_th.get('sigma_full_mScm')
-            results['thermal_R_brug'] = results_th.get('R_brug_over_full')
-            results['thermal_bulk_frac'] = results_th.get('bulk_resistance_fraction')
-
-        out_path = os.path.join(args.output, 'network_conductivity.json')
-        with open(out_path, 'w') as f:
-            json.dump(results, f, indent=2)
-        print(f"\nResults saved: {out_path}")
+    # Back-compat: legacy filename points to Hertzian result (existing webapp reads this)
+    if 'hertzian' in per_mode_results and per_mode_results['hertzian']:
+        legacy_path = os.path.join(args.output, 'network_conductivity.json')
+        with open(legacy_path, 'w') as f:
+            json.dump(per_mode_results['hertzian'], f, indent=2)
+        print(f"Legacy-compat:    {legacy_path}")
