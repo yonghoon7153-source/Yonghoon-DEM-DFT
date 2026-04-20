@@ -323,6 +323,64 @@ function createInstancedSpheres(particles, segments, color, opacity, transparent
   return mesh;
 }
 
+/* ── save-with-dialog helper ───────────────────────────────── *
+ * Uses File System Access API (showSaveFilePicker) when available
+ * to prompt native "Save As" dialog. Falls back to <a> download
+ * (auto-saves to Downloads folder) for browsers without the API.
+ *
+ * dataUrl     : image/png data URL from canvas.toDataURL()
+ * defaultName : suggested filename shown in dialog
+ * btn         : button element whose textContent is flashed to '✓ Saved'
+ * resetLabel  : original button text to restore after flash
+ */
+async function saveWithDialog(dataUrl, defaultName, btn, resetLabel) {
+  const flash = (msg) => {
+    if (btn) {
+      const orig = resetLabel || btn.textContent;
+      btn.textContent = msg;
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  };
+  // Convert dataURL to Blob
+  const byteStr = atob(dataUrl.split(',')[1]);
+  const ab = new ArrayBuffer(byteStr.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i);
+  const blob = new Blob([ab], { type: 'image/png' });
+
+  // Try File System Access API (prompts native Save As dialog)
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: defaultName,
+        types: [{ description: 'PNG image', accept: { 'image/png': ['.png'] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      flash('✓ Saved');
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') {
+        // User cancelled — do nothing
+        return;
+      }
+      console.warn('showSaveFilePicker failed, falling back:', e);
+    }
+  }
+  // Fallback: auto-download to browser's Downloads folder
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = defaultName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  flash('✓ Downloaded');
+}
+
+
 /* ── axis labels using sprite text ─────────────────────────── */
 function addAxisLabels(scene, box) {
   // Z-up: X→right, Y→depth(Three.js Z), Z→up(Three.js Y)
@@ -581,31 +639,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         // Restore decorations
         hiddenDecorations.forEach(obj => { obj.visible = true; });
         renderer.render(scene, camera);
-        // Save to server figures folder
-        const apiBase = state.dataUrl.replace('/3d-data', '').replace('/force-chains', '');
-        const saveUrl = apiBase + '/save-screenshot';
-        fetch(saveUrl, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({image: dataUrl, filename: 'electrode_3d.png'})
-        }).then(r => r.json()).then(data => {
-          if (data.success) {
-            btn.textContent = '✓ Saved';
-            setTimeout(() => btn.textContent = 'Screenshot', 1500);
-          } else {
-            // Fallback: download
-            const link = document.createElement('a');
-            link.download = 'electrode_3d.png';
-            link.href = dataUrl;
-            link.click();
-          }
-        }).catch(() => {
-          // Fallback: download
-          const link = document.createElement('a');
-          link.download = 'electrode_3d.png';
-          link.href = dataUrl;
-          link.click();
-        });
+        // Prompt user with Save As dialog (always asks destination)
+        saveWithDialog(dataUrl, 'electrode_3d.png', btn, 'Screenshot');
       } else if (action === 'pathOnly') {
         showPathOnlyView(renderer, scene, camera, state);
       }
@@ -789,8 +824,8 @@ function showPathOnlyView(renderer, scene, camera, state) {
     document.getElementById('pv-zs').value = Math.max(30, Math.min(350, 380 - Math.round(dist)));
   });
 
-  // Screenshot
-  document.getElementById('path-screenshot-btn').addEventListener('click', () => {
+  // Screenshot — always prompts user with "Save As" dialog
+  document.getElementById('path-screenshot-btn').addEventListener('click', async () => {
     // Hide decorations (bbox, grid) for clean screenshot
     const hiddenDecorations = [];
     s2.traverse((obj) => {
@@ -804,26 +839,10 @@ function showPathOnlyView(renderer, scene, camera, state) {
     // Restore decorations
     hiddenDecorations.forEach(obj => { obj.visible = true; });
     r2.render(s2, c2);
+
     const fname = `li_ion_path_${catLabel.toLowerCase()}_tau${pathData.tortuosity}.png`;
-    const apiBase = state.dataUrl.replace('/3d-data', '').replace('/force-chains', '');
-    const saveUrl = apiBase + '/save-screenshot';
-    fetch(saveUrl, {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({image: dataUrl, filename: fname})
-    }).then(r => r.json()).then(data => {
-      const btn = document.getElementById('path-screenshot-btn');
-      if (data.success) {
-        btn.textContent = '✓ Saved';
-        setTimeout(() => btn.textContent = 'PNG 다운로드', 1500);
-      } else {
-        const a = document.createElement('a');
-        a.download = fname; a.href = dataUrl; a.click();
-      }
-    }).catch(() => {
-      const a = document.createElement('a');
-      a.download = fname; a.href = dataUrl; a.click();
-    });
+    await saveWithDialog(dataUrl, fname, document.getElementById('path-screenshot-btn'),
+                         'PNG 다운로드');
   });
 
   // Animate
