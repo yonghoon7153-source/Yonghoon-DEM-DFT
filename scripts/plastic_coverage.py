@@ -268,12 +268,14 @@ def film_area_from_overlap(delta: float, R_star: float,
 
         # Plastic area from Tabor/volume/geometry caps
         A_cap = min(A_tabor, A_volume, A_geom)
-        # PHYSICAL LOWER BOUND: plastic area must be ≥ elastic area.
-        # Material that has yielded cannot have LESS contact area than if it
-        # had only deformed elastically. In the elastic-plastic transition
-        # (DR_YIELD_ONSET < δ/R* < DR_FULLY_PLASTIC), A_tabor can still be
-        # below A_hertzian — clamp to avoid non-physical shrinkage.
-        A_plastic = max(elastic_area, A_cap)
+        # PHYSICAL LOWER BOUND: plastic area must be ≥ both
+        #   (a) the pure-elastic Hertzian point-contact area (π R* δ), AND
+        #   (b) the LIGGGHTS-reported contact_area (DEM already accounts for its
+        #       internal hooke/hysteresis plasticity — refined physics model
+        #       cannot claim LESS contact area than the DEM baseline).
+        # Clamping to this max avoids non-physical Physics < Hertzian results.
+        dem_lower_bound = max(elastic_area, ligg_area or 0.0)
+        A_plastic = max(dem_lower_bound, A_cap)
         regime = "plastic" if dr >= DR_FULLY_PLASTIC else "transition"
         return A_plastic, regime
 
