@@ -776,11 +776,21 @@ def upload():
 
 @app.route('/analyze/<case_id>', methods=['POST'])
 def analyze(case_id):
-    """Run analysis pipeline for a case (background thread)."""
+    """Run analysis pipeline for a case (background thread).
+
+    Optional POST body: {"force_network": true}  → skips the network-result
+    backup/restore dance, forcing the solver to re-run from scratch. Use
+    this after solver algorithm updates (e.g. 3-stage CG/ILU/spsolve fix)
+    to refresh σ values on cases that were previously solved with the old
+    code path.
+    """
     case_dir = get_case_dir(case_id)
     meta_file = os.path.join(case_dir, 'meta.json')
     if not os.path.exists(meta_file):
         return jsonify({'error': '케이스를 찾을 수 없습니다.'}), 404
+
+    _req = request.get_json(silent=True) or {}
+    force_network = bool(_req.get('force_network', False))
 
     with open(meta_file) as f:
         meta = json.load(f)
@@ -801,12 +811,16 @@ def analyze(case_id):
         net_json_path = os.path.join(results_dir, 'network_conductivity.json')
 
         # ── Step 1: Backup network results before clearing ──
+        #   Skipped when force_network=True so the solver is forced to re-run
+        #   with the current code (e.g. after 3-stage CG/ILU/spsolve fix).
         import tempfile
         _net_backup = None
-        if os.path.exists(net_json_path):
+        if not force_network and os.path.exists(net_json_path):
             _net_backup = tempfile.mktemp(suffix='.json')
             shutil.copy2(net_json_path, _net_backup)
             print(f"  [Reanalysis] Network backup saved ({case_id})")
+        elif force_network:
+            print(f"  [Reanalysis] force_network=True → skipping network backup ({case_id})")
 
         # ── Step 2: Clear & re-run contact analysis ──
         if os.path.exists(results_dir):
@@ -814,7 +828,7 @@ def analyze(case_id):
         os.makedirs(results_dir, exist_ok=True)
         result = run_pipeline(case_id, meta['mode'], meta['type_map'], meta.get('scale', 1000))
 
-        # ── Step 3: Always restore network backup ──
+        # ── Step 3: Restore network backup (skipped on force) ──
         if _net_backup and os.path.exists(_net_backup):
             os.makedirs(results_dir, exist_ok=True)
             shutil.copy2(_net_backup, net_json_path)

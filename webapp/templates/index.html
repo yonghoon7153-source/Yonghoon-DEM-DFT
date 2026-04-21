@@ -67,7 +67,8 @@
       <span style="width:1px;height:20px;background:var(--border);margin:0 4px"></span>
       <button class="btn btn-sm btn-secondary sort-btn" onclick="sortCases('name')" id="sort-name">이름순</button>
       <button class="btn btn-sm btn-secondary sort-btn active" onclick="sortCases('date')" id="sort-date">최신순</button>
-      <button class="btn btn-sm btn-run" onclick="reanalyzeAll(this)">전체 재분석</button>
+      <button class="btn btn-sm btn-run" onclick="reanalyzeAll(this, false)">전체 재분석</button>
+      <button class="btn btn-sm" style="background:#d97706;color:#fff" onclick="reanalyzeAll(this, true)" title="Network solver 결과도 폐기하고 강제 재실행 (3-stage solver fix 적용)">전체 재분석 (NET 강제)</button>
       <button class="btn btn-sm" style="background:#c00;color:#fff" id="cancel-reanalyze-btn" onclick="cancelReanalyze()">전체 취소</button>
       <button class="btn btn-sm btn-archive" onclick="saveAllToArchive(this)">전체 보관함 저장</button>
     </div>
@@ -378,16 +379,19 @@ function showFiles(caseId) {
 // Reanalyze all cases (background, with polling)
 let _reanalyzeCancelled = false;
 
-async function reanalyzeAll(btn) {
+async function reanalyzeAll(btn, forceNetwork) {
   const ids = [{% for case in cases %}{% if case.has_results %}'{{ case.id }}',{% endif %}{% endfor %}];
   if (!ids.length) return;
+  forceNetwork = !!forceNetwork;
+  if (forceNetwork && !confirm(`Network solver 결과를 전부 폐기하고 ${ids.length}개 케이스 재실행합니다.\n시간이 오래 걸립니다 (병목 케이스당 수~수십분). 계속?`)) return;
   _reanalyzeCancelled = false;
   btn.disabled = true;
   document.getElementById('cancel-reanalyze-btn').style.display = '';
   localStorage.setItem('dem_reanalyze_ids', JSON.stringify(ids));
   localStorage.setItem('dem_reanalyze_idx', '0');
   localStorage.setItem('dem_reanalyze_active', 'true');
-  _runSeq(btn, ids, 0);
+  localStorage.setItem('dem_reanalyze_force_net', forceNetwork ? '1' : '0');
+  _runSeq(btn, ids, 0, forceNetwork);
 }
 
 async function cancelReanalyze() {
@@ -416,12 +420,19 @@ async function cancelReanalyze() {
   showToast('재분석 취소됨 — 새로고침 하세요');
 }
 
-async function _runSeq(btn, ids, startIdx) {
+async function _runSeq(btn, ids, startIdx, forceNetwork) {
+  forceNetwork = !!forceNetwork;
+  const origLabel = forceNetwork ? '전체 재분석 (NET 강제)' : '전체 재분석';
+  btn._origLabel = origLabel;
   for (let i = startIdx; i < ids.length; i++) {
     if (_reanalyzeCancelled) break;
-    btn.textContent = `${i+1}/${ids.length}...`;
+    btn.textContent = `${i+1}/${ids.length}${forceNetwork ? ' [NET]' : ''}...`;
     localStorage.setItem('dem_reanalyze_idx', String(i));
-    await fetch(`/analyze/${ids[i]}`, { method: 'POST' });
+    await fetch(`/analyze/${ids[i]}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ force_network: forceNetwork }),
+    });
     while (true) {
       if (_reanalyzeCancelled) break;
       await new Promise(r => setTimeout(r, 3000));
@@ -439,7 +450,8 @@ async function _runSeq(btn, ids, startIdx) {
   localStorage.removeItem('dem_reanalyze_active');
   localStorage.removeItem('dem_reanalyze_ids');
   localStorage.removeItem('dem_reanalyze_idx');
-  setTimeout(() => { btn.textContent = '전체 재분석'; btn.disabled = false; }, 3000);
+  localStorage.removeItem('dem_reanalyze_force_net');
+  setTimeout(() => { btn.textContent = btn._origLabel || '전체 재분석'; btn.disabled = false; }, 3000);
 }
 
 // Resume on page load
@@ -447,9 +459,12 @@ document.addEventListener('DOMContentLoaded', () => {
   if (localStorage.getItem('dem_reanalyze_active') === 'true') {
     const ids = JSON.parse(localStorage.getItem('dem_reanalyze_ids') || '[]');
     const idx = parseInt(localStorage.getItem('dem_reanalyze_idx') || '0');
+    const forceNet = localStorage.getItem('dem_reanalyze_force_net') === '1';
     if (ids.length > 0 && idx < ids.length) {
-      const btn = document.querySelector('[onclick*="reanalyzeAll"]');
-      if (btn) { btn.disabled = true; _runSeq(btn, ids, idx); }
+      // Match the exact button variant that originally started the run
+      const selector = forceNet ? '[onclick*="reanalyzeAll(this, true)"]' : '[onclick*="reanalyzeAll(this, false)"]';
+      const btn = document.querySelector(selector) || document.querySelector('[onclick*="reanalyzeAll"]');
+      if (btn) { btn.disabled = true; _runSeq(btn, ids, idx, forceNet); }
     }
   }
 });
