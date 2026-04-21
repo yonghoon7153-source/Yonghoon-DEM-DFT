@@ -399,6 +399,50 @@ def _merge_dual_into_metrics(results_dir, met_data):
     return met_data
 
 
+def _refresh_post_network_warnings(met_data):
+    """Refresh metrics['warnings'] for checks that depend on fields populated
+    by the network solver (electronic_active_fraction etc.). Called AFTER
+    network_conductivity.json is merged into full_metrics.json.
+
+    Preserves any existing warnings that were emitted by analyze_contacts.py
+    (keyed by 'type' to avoid duplicates) and appends network-dependent ones.
+
+    Respects met_data.disabled_warnings — entries whose type is in that list
+    are filtered out.
+    """
+    existing = list(met_data.get('warnings') or [])
+    known_types = {w.get('type') for w in existing if isinstance(w, dict)}
+    disabled = set(met_data.get('disabled_warnings') or [])
+
+    new_warnings = []
+
+    # Electronic Active AM (populated by network solver)
+    el_active = met_data.get('electronic_active_fraction')
+    if el_active is not None:
+        el_pct = el_active * 100
+        if el_pct < 10 and 'electronic_dead' not in known_types:
+            new_warnings.append({
+                'type': 'electronic_dead', 'severity': 'critical',
+                'msg': f"Electronic Active AM={el_pct:.0f}% (<10%): 도전재 필수! AM-AM percolation 없음"})
+        elif el_pct < 50 and 'electronic_low' not in known_types:
+            new_warnings.append({
+                'type': 'electronic_low', 'severity': 'critical',
+                'msg': f"Electronic Active AM={el_pct:.0f}% (<50%): 대량 dead AM, 도전재 강력 권장"})
+        elif el_pct < 80 and 'electronic_marginal' not in known_types:
+            new_warnings.append({
+                'type': 'electronic_marginal', 'severity': 'warning',
+                'msg': f"Electronic Active AM={el_pct:.0f}% (<80%): 일부 dead AM, 도전재 권장"})
+
+    merged = [w for w in (existing + new_warnings) if w.get('type') not in disabled]
+    if merged:
+        met_data['warnings'] = merged
+        met_data['warning_count'] = len(merged)
+    else:
+        met_data['warnings'] = []
+        met_data['warning_count'] = 0
+    return met_data
+
+
 def run_pipeline(case_id, mode, type_map, scale=1000):
     """Run the DEM analysis pipeline for a case."""
     # Clear pyc cache to ensure latest code runs
@@ -906,6 +950,7 @@ def analyze(case_id):
                     if k in net_data and net_data[k] is not None:
                         met_data[k] = net_data[k]
                 met_data = _merge_dual_into_metrics(results_dir, met_data)
+                met_data = _refresh_post_network_warnings(met_data)
                 met_data['network_solver_status'] = 'success'
                 with open(met_json, 'w') as _mf:
                     json.dump(met_data, _mf, indent=2, default=str)
@@ -972,6 +1017,7 @@ def analyze(case_id):
                             if k in net_data and net_data[k] is not None:
                                 met_data[k] = net_data[k]
                         met_data = _merge_dual_into_metrics(results_dir, met_data)
+                        met_data = _refresh_post_network_warnings(met_data)
                         met_data['network_solver_status'] = net_status
                         with open(met_json, 'w') as _mf:
                             json.dump(met_data, _mf, indent=2, default=str)
@@ -1093,6 +1139,7 @@ def retry_network(case_id):
                             if k in net_data and net_data[k] is not None:
                                 met_data[k] = net_data[k]
                         met_data = _merge_dual_into_metrics(results_dir, met_data)
+                        met_data = _refresh_post_network_warnings(met_data)
                         met_data['network_solver_status'] = net_status
                         # AM-AM contact mechanics backfill (retry path)
                         try:
