@@ -133,6 +133,24 @@
         "physical_lesson": "Any thin-regime correction must be non-monotone in composition — division/multiplication by a single factor fails. v32's THIN_X_GEOM = w_thin × geom_cap_% succeeds because geom_cap varies with composition, so the correction changes sign/magnitude per case. Future Structure forms need at minimum a composition-aware modulator."
       }
     },
+    "v32_integration_bug_double_correction": {
+      "date": "2026-04-21 late evening",
+      "issue": "Applying v32 correction on top of webapp's v29 FITTED predictions DEGRADES fit (R² 0.983 → 0.976, ±20% band 58/60 → 52/60).",
+      "root_cause": "v32 γ coefficients were calibrated against v29 DEFAULTS (R²=0.966 baseline). In the webapp pipeline, plot_ionic_scaling_fit first Nelder-Mead-fits v29 per-run → globals populated → _formx_v29_predict returns FITTED v29 predictions (R²=0.983 baseline). Applying v32 correction on top of the already-fitted baseline double-applies the residual, over-shooting previously well-fit cases.",
+      "evidence": {
+        "r2_v29_defaults":  0.966,
+        "r2_v29_fitted":    0.983,
+        "r2_v32_on_defaults": 0.983,
+        "r2_v32_on_fitted":   0.976
+      },
+      "fix_options_for_next_session": {
+        "A_refit_on_fitted_recommended": "Inside plot_ionic_scaling_fit, after v29 Nelder-Mead returns pred_formX, additionally run OLS fit of v32 γ on residuals of EXP(pred_formX). Run γ-LOOCV at the same time. Each invocation recomputes γ for the current dataset on top of the current v29 fit — consistent and self-regulating.",
+        "B_off_switch": "Add _USE_V32 global flag (CLI or env var). Set False to revert to current production (v29 FITTED only). Useful during debugging.",
+        "C_manual_rescaling": "Scale existing γ values by a constant factor (~0.5) derived from the R²-gap between defaults and fitted. Fastest but least principled."
+      },
+      "recommendation": "Option A. Refit γ per-run is < 50 ms overhead on 60 cases and guarantees consistency."
+    },
+
     "next_refit_candidates_E_F_G": {
       "motivation": "v33 Structure D failed. Keep exploring alternative forms while v32 stands as current best.",
       "structure_E_composition_aware_thin": {
