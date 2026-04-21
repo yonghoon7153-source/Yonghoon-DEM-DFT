@@ -428,6 +428,26 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
 
     if not atom_files or not contact_files:
         if not has_pre_parsed:
+            # ATOMS-ONLY mode: if atom_*.liggghts exists but no contacts,
+            # parse atoms alone and return — webapp will still serve 3D viewer.
+            if atom_files and not contact_files:
+                log = []
+                cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+                cmd += atom_files + mesh_files + input_files + ['-o', results_dir]
+                result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+                log.append({'step': 'Parse (atoms only)', 'stdout': result.stdout,
+                            'stderr': result.stderr, 'rc': result.returncode})
+                if result.returncode != 0:
+                    return {'error': f'Atoms parse failed: {result.stderr}', 'log': log}
+                # Minimal full_metrics so UI doesn't explode
+                atoms_only_meta = {
+                    'mode_note': 'atoms_only — 3D viewer enabled, contact-based metrics skipped',
+                    'has_contacts': False,
+                }
+                fm_path = os.path.join(results_dir, 'full_metrics.json')
+                with open(fm_path, 'w') as f:
+                    json.dump(atoms_only_meta, f, indent=2)
+                return {'success': True, 'log': log, 'atoms_only': True}
             return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다 (CSV fallback도 없음).'}
 
     log = []
