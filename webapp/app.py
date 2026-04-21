@@ -1775,13 +1775,21 @@ def serve_3d_data(case_id):
     # which can drift from the real packed height after DEM re-analysis).
     particle_z_top = max(p['z'] + p['r'] for p in particles) if particles else 0
     mesh_file = os.path.join(results_dir, 'mesh_info.json')
+    mesh_triangles = []
     if os.path.exists(mesh_file):
         try:
             with open(mesh_file) as f:
-                plate_z_mesh = json.load(f)['plate_z'] * scale
+                _mesh_data = json.load(f)
+            plate_z_mesh = _mesh_data['plate_z'] * scale
             # Use whichever is smaller — avoids oversized bounding box when
             # mesh_info.plate_z is a stale pre-compaction value
             box['z_max'] = round(min(plate_z_mesh, particle_z_top), 1)
+            # Pull triangles (raw sim units) and scale to display μm
+            for tri in _mesh_data.get('triangles', []):
+                mesh_triangles.append([
+                    [round(v[0] * scale, 3), round(v[1] * scale, 3), round(v[2] * scale, 3)]
+                    for v in tri
+                ])
         except Exception:
             box['z_max'] = round(particle_z_top, 1)
     else:
@@ -1817,6 +1825,7 @@ def serve_3d_data(case_id):
         'percolation': percolation,
         'paths': paths,
         'clusters': clusters,
+        'mesh_triangles': mesh_triangles,
     })
 
 @app.route('/toggle-warning/<case_id>', methods=['POST'])
@@ -2555,11 +2564,18 @@ def serve_archive_3d_data(folder):
     }
     particle_z_top = max(p['z'] + p['r'] for p in particles) if particles else 0
     mesh_file = os.path.join(target, 'mesh_info.json')
+    mesh_triangles = []
     if os.path.exists(mesh_file):
         try:
             with open(mesh_file) as f:
-                plate_z_mesh = json.load(f)['plate_z'] * scale
+                _mesh_data = json.load(f)
+            plate_z_mesh = _mesh_data['plate_z'] * scale
             box['z_max'] = round(min(plate_z_mesh, particle_z_top), 1)
+            for tri in _mesh_data.get('triangles', []):
+                mesh_triangles.append([
+                    [round(v[0] * scale, 3), round(v[1] * scale, 3), round(v[2] * scale, 3)]
+                    for v in tri
+                ])
         except Exception:
             box['z_max'] = round(particle_z_top, 1)
     else:
@@ -2586,6 +2602,7 @@ def serve_archive_3d_data(folder):
     return jsonify({
         'particles': particles, 'box': box,
         'percolation': percolation, 'paths': paths, 'clusters': clusters,
+        'mesh_triangles': mesh_triangles,
     })
 
 

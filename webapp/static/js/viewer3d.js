@@ -12,8 +12,9 @@ const COL = {
   SE_TOP_REACH: 0x34d399, SE_NON_REACH: 0xf87171,
   SE_BOTTOM: 0xfbbf24, SE_TOP: 0x22d3ee,
   PATH: 0xffd700, BG: 0xf5f5f5,
+  MESH: 0x4f9bff,  // bright blue — compaction plate
 };
-const OPA = { SE: 0.85 };
+const OPA = { SE: 0.85, MESH: 0.55 };
 
 /* ── control-panel HTML ────────────────────────────────────── */
 function buildControls(container) {
@@ -23,6 +24,7 @@ function buildControls(container) {
     <label><input type="checkbox" data-layer="AM_P" checked> AM_P</label>
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
     <label><input type="checkbox" data-layer="SE" checked> SE</label>
+    <label><input type="checkbox" data-layer="MESH" checked> Mesh (plate)</label>
     <hr>
     <label><input type="checkbox" id="path-toggle"> <span style="font-size:11px">Percolating Path</span></label>
     <div id="path-controls" style="display:none">
@@ -298,6 +300,38 @@ function buildScene(scene, camera, controls, data, state) {
   state.seParticles = groups.SE;
 
   Object.values(state.meshes).forEach(m => { if (m) scene.add(m); });
+
+  /* compaction-plate STL mesh (optional) */
+  if (data.mesh_triangles && data.mesh_triangles.length > 0) {
+    state.meshes.MESH = buildPlateMesh(data.mesh_triangles);
+    if (state.meshes.MESH) scene.add(state.meshes.MESH);
+  }
+}
+
+/* ── compaction-plate mesh from STL triangles ──────────────── */
+function buildPlateMesh(triangles) {
+  if (!triangles || !triangles.length) return null;
+  const positions = new Float32Array(triangles.length * 9);
+  let p = 0;
+  // Z-up: data (x,y,z) → Three.js (x,z,y)
+  triangles.forEach(tri => {
+    for (let i = 0; i < 3; i++) {
+      positions[p++] = tri[i][0];  // x
+      positions[p++] = tri[i][2];  // data z → Three.js y (up)
+      positions[p++] = tri[i][1];  // data y → Three.js z
+    }
+  });
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.computeVertexNormals();
+  const mat = new THREE.MeshPhongMaterial({
+    color: COL.MESH,
+    transparent: true,
+    opacity: OPA.MESH,
+    side: THREE.DoubleSide,
+    depthWrite: false,
+  });
+  return new THREE.Mesh(geo, mat);
 }
 
 /* ── instanced sphere builder ──────────────────────────────── */

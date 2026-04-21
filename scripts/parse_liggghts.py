@@ -68,16 +68,35 @@ def parse_contact_file(filepath):
 
 
 def parse_mesh_stl(filepath):
-    """Parse mesh STL -> plate z coordinate."""
+    """Parse ASCII STL -> (plate_z, triangles).
+
+    Returns:
+      plate_z   : mean z of all vertices (compaction-plate height in sim units)
+      triangles : list of [[x,y,z], [x,y,z], [x,y,z]] in raw sim units
+    """
     with open(filepath, 'r') as f:
         lines = f.readlines()
     zs = []
+    triangles = []
+    current_tri = []
     for line in lines:
-        if 'vertex' in line.lower():
+        stripped = line.strip().lower()
+        if stripped.startswith('vertex'):
             parts = line.split()
             if len(parts) >= 4:
-                zs.append(float(parts[3]))
-    return np.mean(zs) if zs else None
+                try:
+                    x, y, z = float(parts[1]), float(parts[2]), float(parts[3])
+                    zs.append(z)
+                    current_tri.append([x, y, z])
+                    if len(current_tri) == 3:
+                        triangles.append(current_tri)
+                        current_tri = []
+                except ValueError:
+                    current_tri = []
+        elif stripped.startswith('endfacet'):
+            current_tri = []
+    plate_z = float(np.mean(zs)) if zs else None
+    return plate_z, triangles
 
 
 def parse_input_script(filepath):
@@ -216,11 +235,17 @@ def main():
     if mesh_files:
         mesh_file = find_last_file(mesh_files)
         print(f"Parsing mesh file: {mesh_file}")
-        plate_z = parse_mesh_stl(mesh_file)
+        plate_z, triangles = parse_mesh_stl(mesh_file)
         if plate_z is not None:
+            payload = {
+                'plate_z': plate_z,
+                'source': os.path.basename(mesh_file),
+                'triangles': triangles,
+                'n_triangles': len(triangles),
+            }
             with open(os.path.join(args.output, 'mesh_info.json'), 'w') as f:
-                json.dump({'plate_z': plate_z, 'source': os.path.basename(mesh_file)}, f, indent=2)
-            print(f"  -> plate_z = {plate_z:.6f}")
+                json.dump(payload, f)
+            print(f"  -> plate_z = {plate_z:.6f}, {len(triangles)} triangles")
     else:
         print("No mesh STL files (will estimate thickness from atoms)")
 
