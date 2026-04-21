@@ -1,6 +1,96 @@
 {
-  "schema_version": "1.0",
-  "description": "Unified knowledge base for DEM cathode packing of our ASSB dataset. Combines (A) effective-modulus calibration rationale, (B) bimodal size-ratio packing theory, (C) the empirical regime map observed across 60 cases, and (D) the coupling between plastic deformation (E_eff) and geometric packing. Cross-references contact_mechanics_db.json (Tabor/Hertz/Holm formalism).",
+  "schema_version": "1.1",
+  "description": "Unified knowledge base for DEM cathode packing of our ASSB dataset. Combines (A) effective-modulus calibration rationale, (B) bimodal size-ratio packing theory, (C) the empirical regime map observed across 60 cases, (D) the coupling between plastic deformation (E_eff) and geometric packing, and (E) scaling-law evolution v29 → v30 (v1.1: outlier patterns + correction-term candidates). Cross-references contact_mechanics_db.json (Tabor/Hertz/Holm formalism).",
+
+  "scaling_law_evolution": {
+    "description": "Running log of the FORM X scaling-law refinement. Each section below records one version with its motivation, formula, fit statistics, remaining outliers, and insights that feed the next version.",
+    "v29_FINAL": {
+      "formula": "σ = C_blend(τ) · C_pf(p) · G(τ,p) · C_gb(sigmoid) × σ_grain × √(φ−0.20) × CN^(3/2) × cov^(2/5) × f_p^3",
+      "fit_stats_60_cases": {
+        "R²":         0.983,
+        "LOOCV":      0.979,
+        "band_20pct": "58/60 with fitted params; 53/60 with module defaults (0.966)"
+      },
+      "parameters": {
+        "TAU_C": 2.1, "TAU_K": 5.0,
+        "TC_BL": 2.044, "K_BL": 20.0,
+        "PC_PF": 0.598, "K_PF": 50.0,
+        "B_PF": -0.100, "B_LIN": -0.490, "B_GB": 0.043,
+        "PHI_C": 0.20
+      },
+      "strength": "Captures particulate monodisperse series (D0.5–D3, S) essentially within ±15% across all AM:SE ratios (62:38, 72:28, 82:18). Bottleneck-regime cases with hemisphere cap activation 10–17% are ALSO inliers — v29 handles plastic-dominated packing natively.",
+      "remaining_outliers_7": [
+        {"case": "input_1mAh_9",         "err_pct": 55.4, "thick_um": 18.8, "porosity": 22.1, "AM:SE": "85:15", "σ_actual": 0.0234, "cluster": "A_thin_85:15_overshoot"},
+        {"case": "input_1mAh_8_AMP",     "err_pct": 42.2, "thick_um": 18.9, "porosity": 24.5, "AM:SE": "85:15", "σ_actual": 0.0236, "cluster": "A_thin_85:15_overshoot"},
+        {"case": "input_1mAh_6",         "err_pct": 37.4, "thick_um": 20.3, "porosity": 19.1, "AM:SE": "80:20", "σ_actual": 0.0898, "cluster": "A/B_transition"},
+        {"case": "input_8mAh_real40_9",  "err_pct": 35.7, "thick_um": 146,  "porosity": 14.3, "AM:SE": "81.6:18.4", "σ_actual": 0.0908, "cluster": "C_real_PSD_overshoot"},
+        {"case": "input_1mAh_5_AMS",     "err_pct": -29.2, "thick_um": 19.0, "porosity": 16.3, "AM:SE": "80:20", "σ_actual": 0.1598, "cluster": "B_thin_80:20_undershoot"},
+        {"case": "input_6mAh_real_5",    "err_pct": 25.4, "thick_um": 115,  "porosity": 16.3, "AM:SE": "81.6:18.4", "σ_actual": 0.1528, "cluster": "C_real_PSD_overshoot"},
+        {"case": "input_6mAh_real_10",   "err_pct": 24.4, "thick_um": 115,  "porosity": 16.2, "AM:SE": "81.6:18.4", "σ_actual": 0.1193, "cluster": "C_real_PSD_overshoot"}
+      ],
+      "outlier_clusters": {
+        "A_thin_85:15_overshoot": {
+          "criterion": "thick < 25 μm AND AM:SE = 85:15",
+          "signature": "σ_actual very low (0.02–0.04), τ_Dij high (2.0–2.4), v29 systematically OVERSHOOTS by +37 to +55%",
+          "physical_cause_hypothesis": "At SE-lean 85:15 in thin electrode, SE network fragments faster than v29's φ^0.5 · CN^1.5 · f_p^3 kernel predicts — the actual σ collapses more sharply near percolation threshold than the scaling law allows.",
+          "members": ["input_1mAh_9", "input_1mAh_8_AMP", "input_1mAh_6 (80:20 borderline)"]
+        },
+        "B_thin_80:20_undershoot": {
+          "criterion": "thick < 25 μm AND AM:SE = 80:20",
+          "signature": "σ_actual moderate (0.15–0.19), τ_Dij 1.9–2.0, v29 UNDERSHOOTS by −16 to −29%",
+          "physical_cause_hypothesis": "At SE-richer 80:20 in thin electrode, the 'direct boundary-to-boundary SE pathway' boosts σ above the bulk-like prediction. v29's τ-only treatment cannot capture the absolute-thickness effect.",
+          "members": ["input_1mAh_5_AMS", "input_1mAh_4", "input_thin_6_S2", "input_1mAh_5", "input_thin_6_S1"]
+        },
+        "C_real_PSD_overshoot": {
+          "criterion": "'real' in case name AND thick > 100 μm",
+          "signature": "σ_actual 0.06–0.15, v29 overshoots by +17 to +36%",
+          "physical_cause_hypothesis": "Log-normal particle-size distribution (vs monodisperse) creates fine-particle tails that break some ionic paths. v29 fitted on monodisperse / bimodal-sharp distributions over-predicts σ when PSD is broad.",
+          "members": ["input_8mAh_real40_9", "input_6mAh_real_5", "input_6mAh_real_10", "input_6mAh_real40_9", "input_6mAh_real40_7", "input_8mAh_real40_7"]
+        }
+      },
+      "key_insight_1_direction_flip": "Clusters A and B both occupy thin-electrode regime but have OPPOSITE error direction — boundary effect amplifies σ at moderate SE (80:20) but degrades it at low SE (85:15). v30 correction term must capture this via thin × (φ − φ_ref) interaction, NOT a simple thin-only multiplier.",
+      "key_insight_2_physics_cap_decoupled": "Pearson r(|err|, geom_cap_%) = +0.10 → Physics-mode hemisphere-cap activation is NOT a predictor of v29 fit error. Bottleneck cases (particulate_10/11 with geom 15–17%) are fit within ±7%. Physics mode and scaling-law fit operate on orthogonal axes.",
+      "key_insight_3_particulate_immune": "All 10 particulate_* cases (D0.5/D1/D2/D2_E/S × 3 AM:SE) fit within ±15%. This is the v29 comfort zone — monodisperse compositions over full AM:SE range."
+    },
+    "_naming_note": "v30 / v30b-e / v31 were already used in prior exploration (see git log). Next free slot is v32. Future refits continue as v33, v34, ...",
+    "v32_in_progress": {
+      "motivation": "Close the 7 outliers of v29 in a SINGLE unified formula — no per-regime model switching. User directive (Apr 2026): exhaustive fitting of all available parameters before considering a 2-model approach.",
+      "naming_rationale": "v30–v31 were used in earlier β_ps phase-split experiments (reverted). v32 is the next free slot.",
+      "approach": "σ_v32 = σ_v29 × exp(Σ_i γ_i · feature_i). Multiplicative in linear σ, additive in log σ. Gammas fit by joint OLS + LOOCV-validated.",
+      "candidate_feature_zoo": {
+        "thin_regime_family": [
+          "THIN_WIDE = w_thin · (φ − 0.25)  [direction-flip capture]",
+          "THIN_TIGHT = w_thin              [boundary boost]",
+          "THIN_PHI = w_thin · φ",
+          "THIN_INV_T = 1 / T",
+          "THIN_TAU = w_thin · (τ − 1.5)"
+        ],
+        "psd_size_ratio_family": [
+          "PSD_CV_R = std(r_AM) / mean(r_AM)",
+          "PSD_RATIO = r_SE / r_AM_avg",
+          "REAL_FLAG = 1 if 'real' in name else 0"
+        ],
+        "global_deviation_family": [
+          "LOG_POR = log(porosity/17)",
+          "TAU_DIJ = τ − 1.5",
+          "CN_DEV = CN − 5"
+        ],
+        "physics_regime_caps": [
+          "GEOM_PCT    = geom cap activation (0–20%/20)",
+          "TABOR_PCT   = tabor cap (centred on 85%)",
+          "LIGG_LB_PCT = DEM-native lower-bound dominance (0–35%/35)",
+          "P50_DR      = median δ/R*",
+          "P50_DR_DEV  = p50 − 0.20"
+        ],
+        "interaction_family": [
+          "THIN_X_GEOM = w_thin × GEOM_PCT",
+          "THIN_X_LIGG = w_thin × LIGG_LB_PCT"
+        ]
+      },
+      "w_thin_definition": "w_thin = exp(−T/T_char), T_char = 30 μm. Smooth transition, 1 at T→0, ~0.04 at T=100 μm.",
+      "pending_execution": "scripts/v32_exhaustive_refit.py → ranks all single, pair, and triple combinations by LOOCV; greedy extension to k=4 and beyond."
+    }
+  },
 
   "dataset_naming_convention": {
     "source": "Internal naming used in webapp/uploads/*/meta.json",

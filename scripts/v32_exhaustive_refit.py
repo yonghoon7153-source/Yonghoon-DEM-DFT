@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-v30 exhaustive refit — systematic search for the best SINGLE-FORMULA
+v32 exhaustive refit — systematic search for the best SINGLE-FORMULA
 extension of v29 FORM X that closes the remaining outlier gaps
 (thin-electrode bimodal, real-PSD overshoot).
 
@@ -9,7 +9,7 @@ Strategy: start from v29 core
         × exp(β_pf·w_pf + β_lin·p·w_win + β_gb·w_gb)
 
 Add a multiplicative correction
-  σ_v30 = σ_v29 × exp(Σ_i  γ_i · feature_i(thick, PSD, phi, ...))
+  σ_v32 = σ_v29 × exp(Σ_i  γ_i · feature_i(thick, PSD, phi, ...))
 
 Features tried (every single, pair, and triple combination):
   1) THIN_WIDE     = σ_thin × (phi_SE − phi_ref)           captures A/B direction flip
@@ -29,8 +29,8 @@ Greedy forward selection: pick best single → best 2 → best 3 (bound by
 LOOCV plateau).
 
 Usage:
-  python3 scripts/v30_exhaustive_refit.py
-  python3 scripts/v30_exhaustive_refit.py --max-terms 4 --verbose
+  python3 scripts/v32_exhaustive_refit.py
+  python3 scripts/v32_exhaustive_refit.py --max-terms 4 --verbose
 """
 from __future__ import annotations
 import os, json, sys, itertools, argparse
@@ -145,7 +145,7 @@ def load_cases():
 def build_features(df: pd.DataFrame) -> dict:
     """Compute candidate correction features for every case.
     Each feature is a vector of length n — multiplicative correction
-    σ_v30 = σ_v29 × exp(Σ γ_i · feature_i)
+    σ_v32 = σ_v29 × exp(Σ γ_i · feature_i)
     """
     T = df['thick'].values
     phi = df['phi'].values
@@ -257,7 +257,7 @@ def loocv_r2(actual, predicted_fn, n):
 
 
 def fit_candidate(df, feature_names, features, base_pred):
-    """Fit σ_v30 = base_pred × exp(X @ γ) where X = stacked features.
+    """Fit σ_v32 = base_pred × exp(X @ γ) where X = stacked features.
     Returns dict with r2, loocv, aic, gammas, pred.
     """
     actual = df['sigma_actual'].values
@@ -406,16 +406,16 @@ def main():
         for f, g in zip(r['features'], r['gammas']):
             row[f'gamma_{f}'] = g
         rows_out.append(row)
-    out_csv = OUT / 'v30_refit_candidates.csv'
+    out_csv = OUT / 'v32_refit_candidates.csv'
     pd.DataFrame(rows_out).sort_values('loocv', ascending=False).to_csv(out_csv, index=False)
     print(f"\n→ {out_csv}")
 
     # Save best prediction per-case
     best = combo_results[0]
-    df['sigma_pred_v30'] = best['pred']
-    df['err_pct'] = 100 * (df['sigma_pred_v30'] - df['sigma_actual']) / df['sigma_actual']
+    df['sigma_pred_v32'] = best['pred']
+    df['err_pct'] = 100 * (df['sigma_pred_v32'] - df['sigma_actual']) / df['sigma_actual']
     df['abs_err_pct'] = df['err_pct'].abs()
-    out_pc = OUT / 'v30_best_per_case.csv'
+    out_pc = OUT / 'v32_best_per_case.csv'
     df.sort_values('abs_err_pct', ascending=False).to_csv(out_pc, index=False)
     print(f"→ {out_pc}")
 
