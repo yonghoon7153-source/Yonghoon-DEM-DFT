@@ -375,6 +375,34 @@ function createInstancedSpheres(particles, segments, color, opacity, transparent
   return mesh;
 }
 
+/* ── high-resolution screenshot helper ─────────────────────── *
+ * Temporarily resizes the renderer to `scale`× its current size (with
+ * pixelRatio=1 so dimensions are controlled exactly), renders once,
+ * grabs a PNG data URL, and restores the original viewport. Uses the
+ * `updateStyle=false` flag on setSize so the on-screen CSS size is
+ * untouched and nothing flickers for the user.
+ *
+ * Typical container ~1000×800 → scale=4 → 4000×3200 ≈ 13 MP PNG.
+ * File size is large (a few MB per shot) but suitable for paper figures.
+ */
+function captureHighRes(renderer, scene, camera, scale = 4) {
+  const origSize = new THREE.Vector2();
+  renderer.getSize(origSize);
+  const origPixelRatio = renderer.getPixelRatio();
+  const targetW = Math.round(origSize.x * scale);
+  const targetH = Math.round(origSize.y * scale);
+
+  renderer.setPixelRatio(1);
+  renderer.setSize(targetW, targetH, false);
+  renderer.render(scene, camera);
+  const dataUrl = renderer.domElement.toDataURL('image/png');
+
+  renderer.setPixelRatio(origPixelRatio);
+  renderer.setSize(origSize.x, origSize.y, false);
+  renderer.render(scene, camera);
+  return dataUrl;
+}
+
 /* ── save-with-dialog helper ───────────────────────────────── *
  * Uses File System Access API (showSaveFilePicker) when available
  * to prompt native "Save As" dialog. Falls back to <a> download
@@ -694,8 +722,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         const prevAlpha = renderer.getClearAlpha();
         scene.background = null;
         renderer.setClearColor(0x000000, 0);
-        renderer.render(scene, camera);
-        const dataUrl = renderer.domElement.toDataURL('image/png');
+        // 4× supersampled capture (publication-quality PNG)
+        const dataUrl = captureHighRes(renderer, scene, camera, 4);
         // Restore background + decorations
         scene.background = prevBg;
         renderer.setClearColor(prevClear, prevAlpha);
@@ -906,8 +934,8 @@ function showPathOnlyView(renderer, scene, camera, state) {
     const prevAlpha = r2.getClearAlpha();
     s2.background = null;
     r2.setClearColor(0x000000, 0);
-    r2.render(s2, c2);
-    const dataUrl = r2.domElement.toDataURL('image/png');
+    // 4× supersampled capture (publication-quality PNG)
+    const dataUrl = captureHighRes(r2, s2, c2, 4);
     s2.background = prevBg;
     r2.setClearColor(prevClear, prevAlpha);
     hidden.forEach(obj => { obj.visible = true; });
