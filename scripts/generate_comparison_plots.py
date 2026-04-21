@@ -1721,9 +1721,15 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
                           best_tcw, best_stw,
                           float(_w_gb_prod.mean()))                   # ⟨w_gb⟩
 
-    # Use FORM X v4 as primary
-    s_pred = np.exp(pred_formX)
-    r2 = r2_formX
+    # v29 FINAL predictions (as fitted) + v32 correction on top.
+    # R² and band stats are recomputed from s_pred at line ~2602, so no need
+    # to manually adjust — downstream sees v32 values everywhere.
+    s_pred_v29 = np.exp(pred_formX)
+    s_pred = np.array([
+        _formx_v32_predict(s_pred_v29[j], data_list[i])
+        for j, i in enumerate(valid_idx)
+    ])
+    r2 = r2_formX  # superseded below
     s_actual = np.array([sigma_net[i] for i in valid_idx])
 
     # === SINGLE-SOURCE-OF-TRUTH SANITY CHECK ===
@@ -2616,8 +2622,8 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     ax.set_yscale('log')
     ax.set_xlabel("σ_actual (Network solver, mS/cm)", fontsize=11)
     ax.set_ylabel("σ_predicted (Scaling law, mS/cm)", fontsize=11)
-    ax.set_title(f"Ionic v29 FINAL: C_blend(τ)·C_pf(p)·G(τ,p)·C_gb(sigmoid) × σ_grain × √(φ−0.2) × CN^(3/2) × cov^(2/5) × f_p³\n"
-                 f"τ-blend(k={best_k:.0f},τc={best_tc:.2f})  P:S(k={best_kp:.0f},pc={best_pc:.2f},β={beta_pf_prod:+.3f})  κ_A={kappa_area:+.3f}  R²={r2_formX:.3f} LOOCV={loocv_formX:.3f}",
+    ax.set_title(f"Ionic v32 = v29_FINAL × exp(−0.75·LIGG_LB + 1.62·w_thin·GEOM − 1.99·(p₅₀δR−0.2) + 0.35·r_SE/r_AM)\n"
+                 f"τ-blend(k={best_k:.0f},τc={best_tc:.2f})  P:S(k={best_kp:.0f},pc={best_pc:.2f},β={beta_pf_prod:+.3f})  κ_A={kappa_area:+.3f}  R²={r2:.3f} (v32-applied)  |  v29_base R²={r2_formX:.3f} LOOCV={loocv_formX:.3f}",
                  fontsize=8, fontweight='bold')
     ax.legend(fontsize=9, loc='upper left')
 
