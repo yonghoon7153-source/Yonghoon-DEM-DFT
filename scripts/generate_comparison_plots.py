@@ -1721,10 +1721,47 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
                           best_tcw, best_stw,
                           float(_w_gb_prod.mean()))                   # ⟨w_gb⟩
 
-    # v29 FINAL predictions (as fitted) + v32 correction on top.
-    # R² and band stats are recomputed from s_pred at line ~2602, so no need
-    # to manually adjust — downstream sees v32 values everywhere.
+    # v29 FINAL predictions (as fitted) — these already achieve R² ≈ 0.983.
     s_pred_v29 = np.exp(pred_formX)
+
+    # ── v32 per-run γ refit on residuals of FITTED v29 ──────────────────
+    # Bug fix 2026-04-22: previously _V32_GAMMAS (calibrated against v29
+    # defaults, R²=0.966) were applied on top of v29 FITTED (R²=0.983).
+    # Since v29 FITTED residuals are already small, the defaults-era γ
+    # over-corrected and degraded R² to 0.976 (band 58/60 → 52/60).
+    #
+    # Fix: OLS-refit γ against the CURRENT pred_formX residuals. Features
+    # come from _v32_features_for_case; skip cases with missing features.
+    # Per-run cost: < 50 ms on 60 cases (4×N matrix + lstsq).
+    global _V32_FITTED_GAMMAS
+    _V32_FITTED_GAMMAS = None  # reset before fit
+    try:
+        feat_order = list(_V32_GAMMAS.keys())   # LIGG_LB_PCT, THIN_X_GEOM, ...
+        X_rows, y_rows = [], []
+        for j, i in enumerate(valid_idx):
+            feats = _v32_features_for_case(data_list[i])
+            if feats is None:
+                continue
+            σ_net_i = sigma_net[i]
+            σ_v29_i = float(s_pred_v29[j])
+            if σ_net_i <= 0 or σ_v29_i <= 0:
+                continue
+            X_rows.append([feats.get(k, 0.0) for k in feat_order])
+            y_rows.append(np.log(σ_net_i) - np.log(σ_v29_i))
+        if len(X_rows) >= len(feat_order) + 2:
+            X_arr = np.array(X_rows)
+            y_arr = np.array(y_rows)
+            gammas, *_ = np.linalg.lstsq(X_arr, y_arr, rcond=None)
+            _V32_FITTED_GAMMAS = dict(zip(feat_order, (float(g) for g in gammas)))
+            print(f"  [v32 refit] n_cases_used={len(X_rows)} / {len(valid_idx)}")
+            for k, g in _V32_FITTED_GAMMAS.items():
+                print(f"    γ({k:13s}) = {g:+.4f}")
+    except Exception as _e:
+        print(f"  [v32 refit] skipped ({_e}); using hardcoded defaults")
+        _V32_FITTED_GAMMAS = None
+
+    # Apply v32 correction (uses _V32_FITTED_GAMMAS if populated above,
+    # else falls back to hardcoded _V32_GAMMAS).
     s_pred = np.array([
         _formx_v32_predict(s_pred_v29[j], data_list[i])
         for j, i in enumerate(valid_idx)
@@ -2799,6 +2836,13 @@ _V32_GAMMAS = {
 }
 _V32_T_CHAR = 30.0  # μm, thin-regime characteristic length
 
+# Set inside plot_ionic_scaling_fit after v29 Nelder-Mead converges, by
+# refitting γ on residuals of the FITTED v29 predictions. When populated,
+# _formx_v32_predict() uses these instead of the hardcoded defaults above,
+# avoiding the double-correction that degraded R² 0.983 → 0.976 when the
+# hardcoded (defaults-calibrated) γ were applied on top of v29 FITTED.
+_V32_FITTED_GAMMAS = None
+
 
 def _load_v32_regime_table():
     """Load dataset_summary.csv once (case_id → {p50_dr, geom_pct, liggghts_lb_pct}).
@@ -2875,13 +2919,18 @@ def _v32_features_for_case(data):
 
 def _formx_v32_predict(sigma_v29, data):
     """Apply v32 4-term correction to v29 prediction.
-    If regime features missing, returns v29 unchanged (silent passthrough)."""
+    If regime features missing, returns v29 unchanged (silent passthrough).
+
+    Uses _V32_FITTED_GAMMAS when populated (per-run refit by
+    plot_ionic_scaling_fit → avoids double-correction). Falls back to
+    the hardcoded _V32_GAMMAS when run standalone without a prior fit."""
     if sigma_v29 <= 0:
         return sigma_v29
     feats = _v32_features_for_case(data)
     if feats is None:
         return sigma_v29
-    log_corr = sum(_V32_GAMMAS[k] * feats.get(k, 0.0) for k in _V32_GAMMAS)
+    gammas = _V32_FITTED_GAMMAS if _V32_FITTED_GAMMAS is not None else _V32_GAMMAS
+    log_corr = sum(gammas[k] * feats.get(k, 0.0) for k in gammas)
     return sigma_v29 * np.exp(log_corr)
 
 
