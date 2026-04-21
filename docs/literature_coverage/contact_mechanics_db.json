@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "description": "Contact-mechanics theory database anchoring Tabor regime classification, plastic contact area, and volume-conservation constraints used in scripts/plastic_coverage.py (Physics mode) and scripts/network_conductivity.py.",
   "our_dem_method": {
     "approach": "effective-modulus (E_eff) calibration — standard DEM convention to absorb plastic + rate-dependent + cohesive contact effects into a single reduced stiffness (Cundall-Strack 1979; Thornton 1997).",
@@ -18,7 +18,31 @@
       "hertzian_mode_interpretation": "Use LIGGGHTS contact_area directly. δ_sim is E_eff-calibrated → A_liggghts is the internally-consistent plastic proxy.",
       "physics_mode_interpretation": "Recomputes F_real from δ_sim with E_real (not E_eff) and applies Tabor A = F/H. When δ_sim is already inflated by E_eff calibration, this adds a second plastic correction — treat as UPPER BOUND, not independent prediction. Lower-bounded by A_liggghts so never goes below Hertzian.",
       "recommended_defense_framing": "Primary: Hertzian (E_eff-calibrated DEM-native). Sensitivity: Physics (E_real + Tabor) as the upper bound of the σ band."
-    }
+    },
+    "why_delta_over_R_is_the_only_indicator": {
+      "central_claim": "δ/R* is the ONLY plastic-deformation indicator that survives E_eff calibration unchanged — every other DEM observable (force, contact pressure, energy) is scaled by E_eff and cannot be used at face value.",
+      "observable_audit": {
+        "delta_overlap": {"e_independent": true,   "reason": "pure kinematic quantity from particle centers and radii"},
+        "R_radius":     {"e_independent": true,   "reason": "fixed input geometry"},
+        "delta_over_R": {"e_independent": true,   "reason": "dimensionless ratio of two geometric observables — primary plastic proxy"},
+        "F_contact":    {"e_independent": false,  "reason": "F_sim = (4/3) E_eff √R δ^1.5  — scaled by E_eff → ~18× smaller than real F"},
+        "contact_pressure": {"e_independent": false, "reason": "F/A → inherits F pollution"},
+        "contact_energy":   {"e_independent": false, "reason": "integral of F·dδ → inherits F pollution"},
+        "contact_area_LIGGGHTS": {"e_independent": "partial", "reason": "A = π·R·δ_sim → inflated via δ only, not via any E-dependent force; interpretable as post-plastic-flow contact proxy under E_eff framework"}
+      },
+      "causal_chain_from_delta_to_sigma": [
+        {"step": 1, "name": "regime_classification",   "input": "δ/R*",       "output": "elastic | transition | plastic",              "logic": "Jackson-Green 2005 FEM thresholds (1.5% onset, 4% full plasticity)"},
+        {"step": 2, "name": "contact_area",            "input": "δ, R*, material constants", "output": "A",                             "logic": "Hertzian: A = π R δ from LIGGGHTS (E_eff-calibrated) | Physics: A = min(F_real/H, V/h_film, 2πR_min²) with F_real=(4/3)E_real√R·δ^1.5 lower-bounded by A_liggghts"},
+        {"step": 3, "name": "contact_radius",          "input": "A",          "output": "a = √(A/π)",                                   "logic": "Circular contact assumption"},
+        {"step": 4, "name": "constriction_resistance", "input": "a, σ_bulk",  "output": "R_constr = 1/(2σa)",                          "logic": "Holm 1967 / Maxwell 1873 spreading resistance"},
+        {"step": 5, "name": "bulk_resistance",         "input": "L_hop, A",   "output": "R_bulk = ρL/A",                               "logic": "Ohmic bulk through each sphere segment"},
+        {"step": 6, "name": "network_solve",           "input": "{R_i}",      "output": "σ_eff (ionic, electronic, thermal)",          "logic": "Kirchhoff Laplacian L·V=b solved via CG→ILU→spsolve (3-stage)"}
+      ],
+      "why_F_is_never_read_from_DEM": "LIGGGHTS outputs F_sim computed with E_eff (= 1.35 GPa here). Using F_sim directly for any plasticity metric would propagate the ~18× E-scaling artifact. Physics mode avoids this by RECOMPUTING F_real = (4/3)·E_real·√R·δ^1.5 from the measured δ_sim using the literature E_real — bypassing the DEM force entirely. The only δ-derived input is geometric, so the Tabor step is force-model-agnostic.",
+      "double_correction_caveat": "Even with F_real recomputation, Physics mode uses δ_sim (inflated 6.9× by E_eff calibration) in the F_real formula → F_real ∝ δ^1.5 → F_real ~ 18× the actual real-material value. A_tabor is correspondingly inflated. This is why Physics is labelled an UPPER BOUND and kept above A_liggghts by the lower-bound rule rather than replacing it.",
+      "why_hertzian_is_the_primary_mode": "A_liggghts carries the E_eff-calibrated plastic state internally consistent with the simulation that produced it. The porosity-regression calibration (E_eff=1.35 GPa ↔ experimental porosity at target P) is a single-parameter plastic absorption: whatever compaction experiments show, the simulation reproduces → contact areas reflect that state. No external Tabor reconstruction needed for self-consistency."
+    },
+    "method_section_one_liner": "DEM simulations use an effective Young's modulus E_eff=1.35 GPa, porosity-calibrated by linear regression against the experimental pellet at target compaction pressure, following the standard DEM convention of absorbing plastic and rate-dependent contact effects into a reduced stiffness (Cundall & Strack 1979; Thornton et al. 2013). Because DEM-reported forces are scaled by E_eff/E_real≈0.056, the only plastic-deformation indicator that remains E-independent is the normalized overlap δ/R*. All regime classification (elastic/transition/plastic via Jackson-Green 2005 thresholds) and contact-area computation therefore rely exclusively on δ/R*. The Hertzian analysis mode uses the LIGGGHTS-reported contact_area=π·R*·δ_sim (self-consistent within the E_eff frame) and serves as the primary estimator. The Physics analysis mode provides a sensitivity upper bound by recomputing F_real=(4/3)·E_real·√R*·δ^1.5 with E_real from literature (Sakuda 2013) and applying Tabor's plastic relation A=F_real/H with volume-conservation and hemisphere caps (lower-bounded by A_liggghts so it never falls below the DEM-native value). Contact radii a=√(A/π) feed Holm-Maxwell spreading resistance R_constr=1/(2σa) at every edge of a Kirchhoff resistor network, solved via a three-stage CG → ILU-preconditioned CG → direct LU fallback for robustness on ill-conditioned bottleneck cases."
   },
   "model_summary": {
     "tabor_number": "mu_T = (sigma_y^3 * R / (E_star^2 * F))^(1/6)  — indentation plasticity index. mu_T > 1 → elastic (Hertz), mu_T << 1 → fully plastic (Tabor A = F/H).",
