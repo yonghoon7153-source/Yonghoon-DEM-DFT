@@ -13,7 +13,7 @@ const COL = {
   SE_BOTTOM: 0xfbbf24, SE_TOP: 0x22d3ee,
   PATH: 0xffd700, BG: 0xf5f5f5,
   MESH: 0x4f9bff,          // bright blue — compaction plate
-  ATOMS_ONLY: 0xbbbbbb,    // light grey — process-view mode
+  ATOMS_ONLY: 0xe8e8e8,    // near-white, still contrasts #f5f5f5 bg (process view)
 };
 const OPA = { SE: 0.85, MESH: 0.55 };
 
@@ -302,6 +302,12 @@ function buildScene(scene, camera, controls, data, state) {
     state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.ATOMS_ONLY, 1.0, false);
     state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.ATOMS_ONLY, 1.0, false);
     state.meshes.SE   = createInstancedSpheres(groups.SE,   16, COL.ATOMS_ONLY, 1.0, false);
+    // Soften shading so shadow side doesn't go dark-grey — matches ParaView
+    // default preview look (flat, near-white)
+    scene.traverse(obj => {
+      if (obj.isAmbientLight)      obj.intensity = 0.9;
+      else if (obj.isDirectionalLight) obj.intensity = 0.25;
+    });
   } else {
     state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.AM_P, 1.0, false);
     state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.AM_S, 1.0, false);
