@@ -102,11 +102,11 @@ export function initElectrodeViewer(containerId, dataUrl) {
   if (!container) { console.error('viewer3d: container not found:', containerId); return; }
   container.classList.add('viewer-container');
 
-  /* renderer */
-  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  /* renderer (alpha:true so screenshots can use transparent background) */
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(container.clientWidth, container.clientHeight);
-  renderer.setClearColor(COL.BG);
+  renderer.setClearColor(COL.BG, 1);
   container.appendChild(renderer.domElement);
 
   /* scene, camera */
@@ -404,6 +404,7 @@ function addAxisLabels(scene, box) {
     sprite.position.set(...l.pos);
     sprite.scale.set(20, 8, 1);
     sprite.userData.isDecoration = true;
+    sprite.userData.isAxisLabel = true;
     scene.add(sprite);
   });
 }
@@ -634,9 +635,18 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
             hiddenDecorations.push(obj);
           }
         });
+        // Use transparent background so PNG overlays cleanly on any PPT slide color
+        const prevBg = scene.background;
+        const prevClear = new THREE.Color();
+        renderer.getClearColor(prevClear);
+        const prevAlpha = renderer.getClearAlpha();
+        scene.background = null;
+        renderer.setClearColor(0x000000, 0);
         renderer.render(scene, camera);
         const dataUrl = renderer.domElement.toDataURL('image/png');
-        // Restore decorations
+        // Restore background + decorations
+        scene.background = prevBg;
+        renderer.setClearColor(prevClear, prevAlpha);
         hiddenDecorations.forEach(obj => { obj.visible = true; });
         renderer.render(scene, camera);
         // Prompt user with Save As dialog (always asks destination)
@@ -743,10 +753,10 @@ function showPathOnlyView(renderer, scene, camera, state) {
 
   // Create separate Three.js scene for path
   const container = document.getElementById('path-viewer-container');
-  const r2 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  const r2 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
   r2.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   r2.setSize(container.clientWidth, container.clientHeight);
-  r2.setClearColor(0xf5f5f5);
+  r2.setClearColor(0xf5f5f5, 1);
   container.appendChild(r2.domElement);
 
   const s2 = new THREE.Scene();
@@ -769,12 +779,14 @@ function showPathOnlyView(renderer, scene, camera, state) {
   const bbLine = new THREE.LineSegments(bbEdges, new THREE.LineBasicMaterial({color: 0x999999}));
   bbLine.position.set(cx, cy, cz);
   bbLine.userData.isDecoration = true;
+  bbLine.userData.isBbox = true;
   s2.add(bbLine);
 
-  // Grid
+  // Grid (kept in screenshots — provides spatial reference)
   const grid = new THREE.GridHelper(Math.max(bw,bd)*1.2, 20, 0xcccccc, 0xe0e0e0);
   grid.position.set(cx, box.z_min, cz);
   grid.userData.isDecoration = true;
+  grid.userData.isGrid = true;
   s2.add(grid);
 
   // Path tubes
@@ -825,11 +837,29 @@ function showPathOnlyView(renderer, scene, camera, state) {
   });
 
   // Screenshot — always prompts user with "Save As" dialog.
-  // Tortuosity path visualization KEEPS bbox/grid/axes (needed for spatial
-  // context of the Li+ path); only the main 3D viewer screenshot hides them.
+  // Path screenshot keeps the GRID only (spatial reference); axis labels and
+  // bbox are hidden, and background is set to transparent so the PNG overlays
+  // any PPT slide color cleanly.
   document.getElementById('path-screenshot-btn').addEventListener('click', async () => {
+    const hidden = [];
+    s2.traverse((obj) => {
+      if (obj.userData && (obj.userData.isAxisLabel || obj.userData.isBbox) && obj.visible) {
+        obj.visible = false;
+        hidden.push(obj);
+      }
+    });
+    const prevBg = s2.background;
+    const prevClear = new THREE.Color();
+    r2.getClearColor(prevClear);
+    const prevAlpha = r2.getClearAlpha();
+    s2.background = null;
+    r2.setClearColor(0x000000, 0);
     r2.render(s2, c2);
     const dataUrl = r2.domElement.toDataURL('image/png');
+    s2.background = prevBg;
+    r2.setClearColor(prevClear, prevAlpha);
+    hidden.forEach(obj => { obj.visible = true; });
+    r2.render(s2, c2);
     const fname = `li_ion_path_${catLabel.toLowerCase()}_tau${pathData.tortuosity}.png`;
     await saveWithDialog(dataUrl, fname, document.getElementById('path-screenshot-btn'),
                          'PNG 다운로드');
