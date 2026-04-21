@@ -1,6 +1,25 @@
 {
-  "schema_version": "1.0",
+  "schema_version": "1.1",
   "description": "Contact-mechanics theory database anchoring Tabor regime classification, plastic contact area, and volume-conservation constraints used in scripts/plastic_coverage.py (Physics mode) and scripts/network_conductivity.py.",
+  "our_dem_method": {
+    "approach": "effective-modulus (E_eff) calibration — standard DEM convention to absorb plastic + rate-dependent + cohesive contact effects into a single reduced stiffness (Cundall-Strack 1979; Thornton 1997).",
+    "E_eff_GPa": 1.35,
+    "E_real_LPSCl_GPa": 24.0,
+    "E_eff_over_E_real": 0.056,
+    "calibration_target": "porosity matched to experimental pellet at target compaction pressure",
+    "calibration_method": "linear regression sweeping E_eff and picking the value that minimises porosity residual",
+    "rationale": [
+      "Real LPSCl undergoes plastic flow above yield (σ_y ≈ 0.30 GPa, Sakuda 2013) — DEM with E_real would hit elastic overlap only, missing real densification.",
+      "Softening E_eff allows DEM to reach the same equilibrium porosity at the same applied pressure P, with larger overlap δ_sim that effectively represents the post-plastic-flow contact state."
+    ],
+    "implications_for_analysis": {
+      "delta_sim_inflation_factor": "delta_sim / delta_real ≈ (E_real / E_eff)^(2/3) ≈ 6.9x",
+      "A_liggghts_inflation": "A = π·R·δ inflated by the same factor as δ (linear in δ for small-overlap Hertz) — already behaves as a plastic contact area proxy",
+      "hertzian_mode_interpretation": "Use LIGGGHTS contact_area directly. δ_sim is E_eff-calibrated → A_liggghts is the internally-consistent plastic proxy.",
+      "physics_mode_interpretation": "Recomputes F_real from δ_sim with E_real (not E_eff) and applies Tabor A = F/H. When δ_sim is already inflated by E_eff calibration, this adds a second plastic correction — treat as UPPER BOUND, not independent prediction. Lower-bounded by A_liggghts so never goes below Hertzian.",
+      "recommended_defense_framing": "Primary: Hertzian (E_eff-calibrated DEM-native). Sensitivity: Physics (E_real + Tabor) as the upper bound of the σ band."
+    }
+  },
   "model_summary": {
     "tabor_number": "mu_T = (sigma_y^3 * R / (E_star^2 * F))^(1/6)  — indentation plasticity index. mu_T > 1 → elastic (Hertz), mu_T << 1 → fully plastic (Tabor A = F/H).",
     "elastic_limit": "dr_yield_onset ≈ 1.5% (delta/R*) — below this Hertz is valid",
@@ -10,6 +29,51 @@
     "lower_bound_rule": "A_plastic >= max(A_elastic_hertz, A_liggghts) — physical contact must exceed pure-elastic prediction and the DEM-reported area (which already accounts for in-sim hooke/hysteresis plasticity)"
   },
   "entries": [
+    {
+      "id": "cundall_strack_1979_geotechnique",
+      "citation": "Cundall, P. A. & Strack, O. D. L. A discrete numerical model for granular assemblies. Géotechnique 29, 47-65 (1979).",
+      "doi_or_url": "https://doi.org/10.1680/geot.1979.29.1.47",
+      "tier": 1,
+      "type": "foundational_dem",
+      "key_concepts": [
+        "original DEM formulation",
+        "soft-particle contact with overlap-proportional force",
+        "precedent for using reduced effective stiffness to enable tractable timesteps"
+      ],
+      "relevance_to_our_model": {
+        "E_eff_justification": "Founding DEM paper establishes the overlap-based soft-contact formulation; the choice of spring stiffness is a modelling parameter, not a material property — legitimises E_eff calibration approach.",
+        "our_E_eff_value": "E_eff = 1.35 GPa (porosity-calibrated against experimental pellet)"
+      }
+    },
+    {
+      "id": "thornton_2013_powder_tech",
+      "citation": "Thornton, C., Cummins, S. J. & Cleary, P. W. An investigation of the comparative behaviour of alternative contact force models during elastic collisions. Powder Technology 233, 30-46 (2013).",
+      "doi_or_url": "https://doi.org/10.1016/j.powtec.2012.08.012",
+      "tier": 2,
+      "type": "dem_methodology",
+      "key_concepts": [
+        "comparison of hooke, hertz, hertz-hysteresis contact models",
+        "timestep-cost vs physical-fidelity trade-off",
+        "effective modulus calibration against experimental observables"
+      ],
+      "relevance_to_our_model": {
+        "E_eff_calibration_standard": "Explicitly treats the effective modulus as a free parameter calibrated against experimental benchmarks (here: porosity at applied pressure). Matches our porosity-regression approach for E_eff = 1.35 GPa."
+      }
+    },
+    {
+      "id": "potyondy_cundall_2004_ijrmms",
+      "citation": "Potyondy, D. O. & Cundall, P. A. A bonded-particle model for rock. Int. J. Rock Mech. Min. Sci. 41, 1329-1364 (2004).",
+      "doi_or_url": "https://doi.org/10.1016/j.ijrmms.2004.09.011",
+      "tier": 2,
+      "type": "dem_methodology",
+      "key_concepts": [
+        "macro-scale calibration of micro-scale DEM parameters",
+        "effective stiffness as target-property fitting parameter"
+      ],
+      "relevance_to_our_model": {
+        "calibration_philosophy": "Supports the linear-regression porosity-target methodology we used to set E_eff = 1.35 GPa — DEM micro-parameters are routinely calibrated from experimental macro-observables."
+      }
+    },
     {
       "id": "tabor_1951_hardness_of_metals",
       "citation": "Tabor, D. The Hardness of Metals. Oxford University Press, 1951.",
