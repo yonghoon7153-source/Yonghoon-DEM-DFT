@@ -2781,6 +2781,104 @@ def _ps_fraction(d):
     return 0.5
 
 
+# ──────────────────────────────────────────────────────────────
+# v32 correction (4-term, fit from Apr-2026 exhaustive refit)
+# Applied as  σ_v32 = σ_v29 × exp(Σ γ_i · feature_i)
+# ──────────────────────────────────────────────────────────────
+_V32_GAMMAS = {
+    'LIGG_LB_PCT': -0.750,  # DEM-native dominance (normalised /35)
+    'THIN_X_GEOM': +1.619,  # thin × hemisphere cap (normalised /20)
+    'P50_DR_DEV':  -1.992,  # median δ/R* deviation from 0.20
+    'PSD_RATIO':   +0.348,  # r_SE / r_AM_avg
+}
+_V32_T_CHAR = 30.0  # μm, thin-regime characteristic length
+
+
+def _load_v32_regime_table():
+    """Load dataset_summary.csv once (case_id → {p50_dr, geom_pct, liggghts_lb_pct}).
+    Returns {} if missing — v32 then falls back to v29 silently."""
+    import os
+    p = os.path.join('docs', 'figures', 'physics_regime', 'dataset_summary.csv')
+    if not os.path.exists(p):
+        return {}
+    try:
+        import csv
+        out = {}
+        with open(p) as f:
+            for row in csv.DictReader(f):
+                out[row.get('case_id', '')] = {
+                    'p50_dr':       float(row.get('p50_dr') or 0),
+                    'geom_pct':     float(row.get('geom') or 0),
+                    'liggghts_lb_pct': float(row.get('liggghts_lb') or 0),
+                }
+        return out
+    except Exception:
+        return {}
+
+
+_V32_REGIME_TABLE = None  # lazy-loaded
+
+
+def _v32_features_for_case(data):
+    """Compute v32 correction features from a single full_metrics dict.
+    Returns None if required fields missing (falls back to v29)."""
+    global _V32_REGIME_TABLE
+    if _V32_REGIME_TABLE is None:
+        _V32_REGIME_TABLE = _load_v32_regime_table()
+
+    import os, json
+    src = data.get("_source_path", "") or ""
+    # case_id = parent directory of full_metrics.json
+    case_id = os.path.basename(os.path.dirname(src)) if src else ""
+
+    # Thickness
+    T = _get(data, "thickness_um", 0) or 0
+    if T <= 0:
+        return None
+    w_thin = np.exp(-T / _V32_T_CHAR)
+
+    # Regime-cap features (p50_dr, geom_pct, liggghts_lb_pct)
+    reg = _V32_REGIME_TABLE.get(case_id, {})
+    p50_dr      = reg.get('p50_dr', 0.20)       # assume plastic threshold as default
+    geom_pct    = reg.get('geom_pct', 0)
+    liggghts_lb = reg.get('liggghts_lb_pct', 0)
+
+    # PSD ratio — load input_params.json (r_SE / r_AM_avg)
+    r_SE_r = r_AM_avg = 0
+    if src:
+        ip_path = os.path.join(os.path.dirname(src), 'input_params.json')
+        if os.path.exists(ip_path):
+            try:
+                ip = json.load(open(ip_path))
+                r_SE_r = ip.get('r_SE', 0) or 0
+                r_p = ip.get('r_AM_P')
+                r_s = ip.get('r_AM_S')
+                rvals = [v for v in (r_p, r_s) if v]
+                r_AM_avg = (sum(rvals) / len(rvals)) if rvals else 0
+            except Exception:
+                pass
+    psd_ratio = (r_SE_r / r_AM_avg) if r_AM_avg > 0 else 0.1
+
+    return {
+        'LIGG_LB_PCT': liggghts_lb / 35.0,
+        'THIN_X_GEOM': w_thin * (geom_pct / 20.0),
+        'P50_DR_DEV':  p50_dr - 0.20,
+        'PSD_RATIO':   psd_ratio,
+    }
+
+
+def _formx_v32_predict(sigma_v29, data):
+    """Apply v32 4-term correction to v29 prediction.
+    If regime features missing, returns v29 unchanged (silent passthrough)."""
+    if sigma_v29 <= 0:
+        return sigma_v29
+    feats = _v32_features_for_case(data)
+    if feats is None:
+        return sigma_v29
+    log_corr = sum(_V32_GAMMAS[k] * feats.get(k, 0.0) for k in _V32_GAMMAS)
+    return sigma_v29 * np.exp(log_corr)
+
+
 def plot_multiscale_sigma(data_list, names, outdir):
     """FORM X v29: delegates prediction to _formx_v29_predict (single source of
     truth with plot_ionic_scaling_fit). Reads fitted hyperparams from globals."""
@@ -2793,7 +2891,7 @@ def plot_multiscale_sigma(data_list, names, outdir):
 
     # Compute predictions via shared helper (matches fit by construction)
     p = _formx_v29_params()
-    sigma_ms = [
+    sigma_v29_raw = [
         _formx_v29_predict(
             phi_se[i], cn[i], tau[i], coverage[i], f_perc[i],
             _ps_fraction(data_list[i]),
@@ -2802,6 +2900,13 @@ def plot_multiscale_sigma(data_list, names, outdir):
             area_s=_get(data_list[i], "area_AM_S_SE_mean", 0.0),
             params=p,
         )
+        for i in range(len(data_list))
+    ]
+    # v32 correction applied on top of v29 — per-case features pulled from
+    # dataset_summary.csv (physics-regime caps) + input_params (PSD ratio).
+    # Cases without regime data fall back to v29 silently.
+    sigma_ms = [
+        _formx_v32_predict(sigma_v29_raw[i], data_list[i])
         for i in range(len(data_list))
     ]
 
@@ -2813,7 +2918,7 @@ def plot_multiscale_sigma(data_list, names, outdir):
     lw = _line_width(len(names))
 
     ax.plot(x, sigma_ms, 's-', color=RED, markersize=ms, linewidth=lw,
-            label="FORM X (mS/cm)")
+            label="FORM X v32 (mS/cm)")
     # ±22% error band (DEM stochastic variability)
     _ms_arr = np.array(sigma_ms)
     _ms_lo = _ms_arr * 0.78; _ms_hi = _ms_arr * 1.22
@@ -2835,8 +2940,9 @@ def plot_multiscale_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_ionic (mS/cm)", names)
     ax.legend(fontsize=9, loc='upper left')
-    ax.set_title(f"FORM X v29 FINAL: C_blend(τ)·C_pf(p)·G(τ,p)·C_gb(sigmoid) × σ_grain × √(φ−0.2) × CN^(3/2) × cov^(2/5) × f_p³",
-                 fontsize=9, fontweight='bold')
+    ax.set_title(
+        "FORM X v32 = v29_FINAL × exp(−0.75·LIGG_LB + 1.62·w_thin·GEOM − 1.99·(p₅₀δR−0.2) + 0.35·r_SE/r_AM)",
+        fontsize=8.5, fontweight='bold')
 
     # Unified y-axis: if user/webapp passed --y-max-sigma, use it for cross-run
     # visual comparison. Otherwise auto-scale to current data (tight view).
@@ -2853,8 +2959,8 @@ def plot_multiscale_sigma(data_list, names, outdir):
             ax.set_ylim(0, max(_candidates) * 1.10)
 
     _write_csv(outdir, 'multiscale_sigma.csv',
-               ['φ_SE', 'CN', 'τ', 'coverage', 'σ_FORMX(mS/cm)', 'σ_network(mS/cm)'],
-               names, phi_se, cn, tau, sigma_ms, sigma_net)
+               ['φ_SE', 'CN', 'τ', 'coverage', 'σ_v32(mS/cm)', 'σ_v29(mS/cm)', 'σ_network(mS/cm)'],
+               names, phi_se, cn, tau, coverage, sigma_ms, sigma_v29_raw, sigma_net)
     return _save(fig, outdir, "multiscale_sigma.png")
 
 
