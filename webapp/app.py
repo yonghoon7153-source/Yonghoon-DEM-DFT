@@ -416,22 +416,78 @@ def _refresh_post_network_warnings(met_data):
 
     new_warnings = []
 
-    # Electronic Active AM (populated by network solver)
+    def _add(tag, severity, msg):
+        if tag not in known_types:
+            new_warnings.append({'type': tag, 'severity': severity, 'msg': msg})
+
+    # ─── Electronic Active AM (AM-AM percolation, from network solver) ───
     el_active = met_data.get('electronic_active_fraction')
     if el_active is not None:
         el_pct = el_active * 100
-        if el_pct < 10 and 'electronic_dead' not in known_types:
-            new_warnings.append({
-                'type': 'electronic_dead', 'severity': 'critical',
-                'msg': f"Electronic Active AM={el_pct:.0f}% (<10%): 도전재 필수! AM-AM percolation 없음"})
-        elif el_pct < 50 and 'electronic_low' not in known_types:
-            new_warnings.append({
-                'type': 'electronic_low', 'severity': 'critical',
-                'msg': f"Electronic Active AM={el_pct:.0f}% (<50%): 대량 dead AM, 도전재 강력 권장"})
-        elif el_pct < 80 and 'electronic_marginal' not in known_types:
-            new_warnings.append({
-                'type': 'electronic_marginal', 'severity': 'warning',
-                'msg': f"Electronic Active AM={el_pct:.0f}% (<80%): 일부 dead AM, 도전재 권장"})
+        if el_pct < 10:
+            _add('electronic_dead', 'critical',
+                 f"Electronic Active AM={el_pct:.0f}% (<10%): 도전재 필수! AM-AM percolation 없음")
+        elif el_pct < 50:
+            _add('electronic_low', 'critical',
+                 f"Electronic Active AM={el_pct:.0f}% (<50%): 대량 dead AM, 도전재 강력 권장")
+        elif el_pct < 80:
+            _add('electronic_marginal', 'warning',
+                 f"Electronic Active AM={el_pct:.0f}% (<80%): 일부 dead AM, 도전재 권장")
+
+    # ─── σ_ionic (ionic conductivity from network solver) ───
+    sig = met_data.get('sigma_full_mScm')
+    if sig is not None:
+        if sig < 0.005:
+            _add('sigma_ionic_too_low', 'critical',
+                 f"σ_ionic={sig*1000:.2f} μS/cm (<5 μS/cm): 네트워크 거의 비전도 — 병목 극단 또는 솔버 이상")
+        elif sig < 0.03:
+            _add('sigma_ionic_low', 'warning',
+                 f"σ_ionic={sig:.3f} mS/cm (<0.03): 낮은 이온전도도 — bottleneck regime 의심")
+
+    # ─── τ_Lap_eff (effective tortuosity from network solver) ───
+    tau_le = met_data.get('tortuosity_lap_eff') or met_data.get('tau_lap_eff')
+    if tau_le is not None:
+        if tau_le > 15:
+            _add('tau_lap_eff_extreme', 'critical',
+                 f"τ_Lap_eff={tau_le:.1f} (>15): 극단 bottleneck regime, Wang 70% CAM 레짐 상당")
+        elif tau_le > 8:
+            _add('tau_lap_eff_high', 'warning',
+                 f"τ_Lap_eff={tau_le:.1f} (>8): bottleneck regime, scaling law ±20% 범위 밖 가능성")
+
+    # ─── Constriction dominance ───
+    cstr = met_data.get('constriction_pct') or met_data.get('constriction_fraction_pct')
+    if cstr is not None:
+        if cstr > 90:
+            _add('constriction_dominant', 'warning',
+                 f"Constriction 비율={cstr:.0f}% (>90%): 접촉 저항이 bulk 저항을 10배 이상 지배")
+
+    # ─── τ_Lap_eff / τ_Dij gap (geometric vs effective divergence) ───
+    tau_dij = met_data.get('tortuosity_mean') or met_data.get('tau_dij')
+    if tau_le is not None and tau_dij is not None and tau_dij > 0:
+        ratio = tau_le / tau_dij
+        if ratio > 10:
+            _add('tau_ratio_extreme', 'warning',
+                 f"τ_Lap_eff/τ_Dij={ratio:.1f}× (>10×): 기하 경로와 실제 전도도 경로 완전 분리")
+
+    # ─── Physics vs Hertzian divergence (sensitivity sanity) ───
+    sig_h = met_data.get('sigma_full_mScm')
+    sig_p = met_data.get('sigma_full_mScm_physics')
+    if sig_h and sig_p and sig_h > 0:
+        rel = abs(sig_p - sig_h) / sig_h
+        if rel > 0.5:
+            _add('physics_hertzian_divergence', 'warning',
+                 f"Physics σ / Hertzian σ = {sig_p/sig_h:.2f}× (|Δ|>50%): "
+                 "접촉 모델 민감도 큼 — upper bound 해석 권장")
+
+    # ─── Porosity range (post-compaction physicality) ───
+    poro = met_data.get('porosity')
+    if poro is not None:
+        if poro < 8:
+            _add('porosity_too_low', 'critical',
+                 f"Porosity={poro:.1f}% (<8%): 과압축 — 물리적 한계 근접")
+        elif poro > 30:
+            _add('porosity_too_high', 'warning',
+                 f"Porosity={poro:.1f}% (>30%): 압축 미완료 — DEM settling 재확인")
 
     merged = [w for w in (existing + new_warnings) if w.get('type') not in disabled]
     if merged:
