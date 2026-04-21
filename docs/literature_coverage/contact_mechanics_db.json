@@ -1,0 +1,270 @@
+{
+  "schema_version": "1.0",
+  "description": "Contact-mechanics theory database anchoring Tabor regime classification, plastic contact area, and volume-conservation constraints used in scripts/plastic_coverage.py (Physics mode) and scripts/network_conductivity.py.",
+  "model_summary": {
+    "tabor_number": "mu_T = (sigma_y^3 * R / (E_star^2 * F))^(1/6)  — indentation plasticity index. mu_T > 1 → elastic (Hertz), mu_T << 1 → fully plastic (Tabor A = F/H).",
+    "elastic_limit": "dr_yield_onset ≈ 1.5% (delta/R*) — below this Hertz is valid",
+    "full_plasticity": "dr_fully_plastic ≈ 4% (delta/R*) — above this Tabor A = F/H applies with H ≈ 2.8 sigma_y",
+    "volume_conservation": "A_plastic <= V_overlap / h_film_min — material cannot vanish on plastic deformation",
+    "hemisphere_cap": "A_plastic <= 2 pi R_min^2 — lateral spread bounded by smallest particle surface",
+    "lower_bound_rule": "A_plastic >= max(A_elastic_hertz, A_liggghts) — physical contact must exceed pure-elastic prediction and the DEM-reported area (which already accounts for in-sim hooke/hysteresis plasticity)"
+  },
+  "entries": [
+    {
+      "id": "tabor_1951_hardness_of_metals",
+      "citation": "Tabor, D. The Hardness of Metals. Oxford University Press, 1951.",
+      "doi_or_url": "ISBN 9780198507765 (reprinted 2000 Oxford Classic Texts series)",
+      "tier": 1,
+      "type": "foundational_monograph",
+      "key_concepts": [
+        "hardness-yield relation H ≈ 2.8 sigma_y",
+        "plastic indentation area A_plastic = F / H",
+        "strain geometric representation"
+      ],
+      "relevance_to_our_model": {
+        "plastic_coverage.py:H_REAL_SE": "H = 2.8 sigma_y anchor; LPSCl sigma_y ≈ 0.30 GPa → H ≈ 0.85 GPa",
+        "physics_mode_A_tabor": "A = F_real / H used as primary plastic-area estimate"
+      },
+      "equations_provided": [
+        "H = 2.8 * sigma_y  (Tabor's relation, spherical indenter, work-hardened metals)",
+        "A_plastic = F / H  (pure plastic regime, Tabor's plastic indentation)"
+      ]
+    },
+    {
+      "id": "johnson_1985_contact_mechanics",
+      "citation": "Johnson, K. L. Contact Mechanics. Cambridge University Press, 1985.",
+      "doi_or_url": "https://doi.org/10.1017/CBO9781139171731",
+      "tier": 1,
+      "type": "foundational_monograph",
+      "key_concepts": [
+        "Hertz theory for elastic spherical contact",
+        "elastoplastic transition",
+        "reduced modulus E_star definition",
+        "reduced radius R_star definition"
+      ],
+      "relevance_to_our_model": {
+        "plastic_coverage.py:F_real": "F = (4/3) E_star sqrt(R_star) delta^(3/2)  (Hertz point-contact force) — used to reconstruct 'real' force from sim overlap when E_eff differs from E_real",
+        "A_elastic": "A_hertz = pi R_star delta  (small-overlap geometric area)"
+      },
+      "equations_provided": [
+        "F_hertz = (4/3) E_star sqrt(R_star) delta^(3/2)",
+        "a_hertz = (3 F R_star / 4 E_star)^(1/3)",
+        "A_hertz = pi a_hertz^2 ≈ pi R_star delta  (small delta)",
+        "1/E_star = (1-nu1^2)/E1 + (1-nu2^2)/E2",
+        "1/R_star = 1/R1 + 1/R2"
+      ]
+    },
+    {
+      "id": "johnson_1970_jmps_indentation",
+      "citation": "Johnson, K. L. The correlation of indentation experiments. J. Mech. Phys. Solids 18, 115-126 (1970).",
+      "doi_or_url": "https://doi.org/10.1016/0022-5096(70)90029-3",
+      "tier": 1,
+      "type": "theoretical_primary",
+      "key_concepts": [
+        "Johnson's indentation strain parameter",
+        "derivation of the plasticity index controlling regime transitions",
+        "unified elastic/elastoplastic/plastic regime map for spherical indentation"
+      ],
+      "relevance_to_our_model": {
+        "tabor_number_definition": "Original derivation of mu_T = (E_star a / sigma_y R)^{-1}  ↔  equivalent form mu_T = (sigma_y^3 R / E_star^2 F)^(1/6) via Hertz substitution"
+      },
+      "equations_provided": [
+        "Plasticity index: (E_star/sigma_y) * (a/R)  (critical value ≈ 2.8 for onset of full plasticity)",
+        "Regime map: elastic when (E_star a / sigma_y R) < 1.1, plastic when > 2.8"
+      ]
+    },
+    {
+      "id": "mesarovic_fleck_2000_prsa",
+      "citation": "Mesarovic, S. D. & Fleck, N. A. Frictionless indentation of dissimilar elastic-plastic spheres. Int. J. Solids Struct. 37, 7071-7091 (2000).",
+      "doi_or_url": "https://doi.org/10.1016/S0020-7683(99)00328-5",
+      "tier": 1,
+      "type": "theoretical_primary",
+      "key_concepts": [
+        "similarity solutions for elastic-plastic contact",
+        "strain-hardening effects on contact pressure distribution",
+        "quantitative map F–delta–a for arbitrary material pairs"
+      ],
+      "relevance_to_our_model": {
+        "regime_thresholds": "Provides quantitative dr_yield_onset ≈ 0.015 and dr_fully_plastic ≈ 0.04 thresholds used in DR_YIELD_ONSET / DR_FULLY_PLASTIC constants",
+        "dissimilar_materials": "Justifies using E_star (not pure E) for NCM-LPSCl dissimilar contact"
+      }
+    },
+    {
+      "id": "jackson_green_2005_wear",
+      "citation": "Jackson, R. L. & Green, I. A finite element study of elasto-plastic hemispherical contact against a rigid flat. J. Tribology 127, 343-354 (2005).",
+      "doi_or_url": "https://doi.org/10.1115/1.1866166",
+      "tier": 1,
+      "type": "fem_computational",
+      "key_concepts": [
+        "FEM validation of Tabor's A = F/H in fully plastic regime",
+        "numerically derived elastic-plastic regime boundaries",
+        "mean contact pressure evolution with delta/delta_yield"
+      ],
+      "relevance_to_our_model": {
+        "dr_thresholds_validated": "Confirms the 1.5%–4% delta/R transition window used in plastic_coverage.py",
+        "A_plastic_saturation": "FEM shows A_plastic saturates near F/H for delta/R > 0.04"
+      },
+      "equations_provided": [
+        "delta_yield / R ≈ (pi C sigma_y / 2 E_star)^2  with C ≈ 1.295"
+      ]
+    },
+    {
+      "id": "kogut_etsion_2002_jam",
+      "citation": "Kogut, L. & Etsion, I. Elastic-plastic contact analysis of a sphere and a rigid flat. J. Appl. Mech. 69, 657-662 (2002).",
+      "doi_or_url": "https://doi.org/10.1115/1.1490373",
+      "tier": 2,
+      "type": "fem_computational",
+      "key_concepts": [
+        "normalized contact area vs interference (delta/delta_c) curves",
+        "elastic-plastic transition via delta/delta_c = 1, 6, 110"
+      ],
+      "relevance_to_our_model": {
+        "piecewise_formula_cross_check": "Kogut-Etsion curves cross-validate our piecewise elastic/transition/plastic classification"
+      }
+    },
+    {
+      "id": "thornton_1997_jam_plastic_collision",
+      "citation": "Thornton, C. Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres. J. Appl. Mech. 64, 383-386 (1997).",
+      "doi_or_url": "https://doi.org/10.1115/1.2787319",
+      "tier": 2,
+      "type": "theoretical_secondary",
+      "key_concepts": [
+        "energy dissipation in elastic-perfectly plastic contact",
+        "force-displacement law beyond yield",
+        "volume conservation under repeated contact loading"
+      ],
+      "relevance_to_our_model": {
+        "volume_conservation_basis": "Supports the V_overlap / h_film_min cap used to prevent unphysical thin films"
+      }
+    },
+    {
+      "id": "storakers_biwa_larsson_1997_ijss",
+      "citation": "Storåkers, B., Biwa, S. & Larsson, P.-L. Similarity analysis of inelastic contact. Int. J. Solids Struct. 34, 3061-3083 (1997).",
+      "doi_or_url": "https://doi.org/10.1016/S0020-7683(96)00176-X",
+      "tier": 2,
+      "type": "theoretical_secondary",
+      "key_concepts": [
+        "power-law creep and rate-dependent plastic contact",
+        "dimensional analysis of plastic indentation F-delta-A relations"
+      ],
+      "relevance_to_our_model": {
+        "rate_dependent_warning": "LPSCl may exhibit rate-dependence at high loading; our rate-independent Tabor treatment is a first-order approximation"
+      }
+    },
+    {
+      "id": "maugis_1992_jcis_jkr_dmt",
+      "citation": "Maugis, D. Adhesion of spheres: The JKR-DMT transition using a Dugdale model. J. Colloid Interface Sci. 150, 243-269 (1992).",
+      "doi_or_url": "https://doi.org/10.1016/0021-9797(92)90285-T",
+      "tier": 3,
+      "type": "theoretical_adhesion",
+      "key_concepts": [
+        "Tabor parameter as adhesion-regime indicator (not plasticity index — be careful)",
+        "JKR/DMT transition parameter mu_Maugis different from indentation Tabor number"
+      ],
+      "relevance_to_our_model": {
+        "nomenclature_clarification": "Note: Maugis-Tabor parameter differs from indentation Tabor; our use is the indentation plasticity index per Johnson 1970 & Tabor 1951"
+      }
+    },
+    {
+      "id": "greenwood_williamson_1966_prsa",
+      "citation": "Greenwood, J. A. & Williamson, J. B. P. Contact of nominally flat surfaces. Proc. R. Soc. Lond. A 295, 300-319 (1966).",
+      "doi_or_url": "https://doi.org/10.1098/rspa.1966.0242",
+      "tier": 3,
+      "type": "theoretical_secondary",
+      "key_concepts": [
+        "rough surface contact statistics",
+        "asperity-scale Hertz application"
+      ],
+      "relevance_to_our_model": {
+        "surface_roughness_neglected": "Our model treats particles as smooth spheres (sphere-sphere, not asperity-flat); GW results justify this abstraction at DEM length scale"
+      }
+    },
+    {
+      "id": "brake_2012_ijss",
+      "citation": "Brake, M. R. An analytical elastic-plastic contact model with strain hardening and frictional effects for normal and oblique impacts. Int. J. Solids Struct. 49, 3129-3141 (2012).",
+      "doi_or_url": "https://doi.org/10.1016/j.ijsolstr.2012.06.013",
+      "tier": 3,
+      "type": "theoretical_application",
+      "key_concepts": [
+        "closed-form F-delta for elastic-plastic contact with hardening",
+        "applicable to DEM force-displacement laws"
+      ],
+      "relevance_to_our_model": {
+        "analytical_alternative": "Provides analytical F-delta relation alternative to piecewise Tabor used in our physics mode; offered as a future enhancement route"
+      }
+    },
+    {
+      "id": "hertz_1882_crelle",
+      "citation": "Hertz, H. Über die Berührung fester elastischer Körper. J. für die reine und angewandte Mathematik 92, 156-171 (1882).",
+      "doi_or_url": "https://doi.org/10.1515/crll.1882.92.156",
+      "tier": 1,
+      "type": "foundational_historical",
+      "key_concepts": [
+        "original Hertz contact theory for two elastic spheres",
+        "derivation of F = (4/3) E_star sqrt(R) delta^(3/2)"
+      ],
+      "relevance_to_our_model": {
+        "fundamental_reference": "Cited for completeness as the origin of the elastic contact formula used in our Hertzian mode and Physics mode's F_real reconstruction"
+      }
+    },
+    {
+      "id": "holm_1967_electric_contacts",
+      "citation": "Holm, R. Electric Contacts: Theory and Application. 4th ed., Springer-Verlag, 1967.",
+      "doi_or_url": "ISBN 9783540038757",
+      "tier": 1,
+      "type": "foundational_monograph",
+      "key_concepts": [
+        "constriction (spreading) resistance through small circular contacts",
+        "Holm-Maxwell resistance R_s = rho / (2 a) for a single circular contact of radius a"
+      ],
+      "relevance_to_our_model": {
+        "network_conductivity.py:R_constriction": "R_constriction = 1 / (2 sigma a) used for every contact in the resistor network — directly from Holm",
+        "bottleneck_regime_physics": "Explains why σ collapses when contact radius a becomes very small (narrow neck geometry)"
+      },
+      "equations_provided": [
+        "R_constr = rho / (2 a) = 1 / (2 sigma a)  (per contact, Holm 1967 eq. 1.13)"
+      ]
+    },
+    {
+      "id": "maxwell_1873_treatise",
+      "citation": "Maxwell, J. C. A Treatise on Electricity and Magnetism, Vol. 1, §311 (spreading resistance derivation). Oxford, 1873.",
+      "doi_or_url": "N/A (public domain, Oxford University Press)",
+      "tier": 2,
+      "type": "foundational_historical",
+      "key_concepts": [
+        "original derivation of spreading resistance for circular aperture",
+        "underpins Holm 1967 constriction formula"
+      ],
+      "relevance_to_our_model": {
+        "attribution": "The spreading-resistance formula R = 1/(2 sigma a) originates from Maxwell's 1873 Treatise; Holm 1967 adapted it to electric contact theory"
+      }
+    }
+  ],
+  "material_constants_used": {
+    "E_STAR_AM_SE_REAL_GPa": {
+      "value": 20.0,
+      "derivation": "1/E* = (1-nu_AM^2)/E_AM + (1-nu_SE^2)/E_SE with E_AM=140 GPa (NCM), E_SE=24 GPa (LPSCl); ≈ 20 GPa",
+      "refs": ["lee_2024_natcomm SI Table S1", "sakuda_2013_sci_rep (LPSCl mechanics)"]
+    },
+    "H_REAL_SE_GPa": {
+      "value": 0.85,
+      "derivation": "Tabor H = 2.8 sigma_y with sigma_y_LPSCl ≈ 0.30 GPa (Sakuda 2013 indentation)",
+      "refs": ["sakuda_2013_sci_rep", "tabor_1951_hardness_of_metals"]
+    },
+    "H_FILM_MIN_nm": {
+      "value": 5.0,
+      "derivation": "Minimum plastic film thickness characteristic of sulfide glass flow (Sakuda empirical observation of ~5 nm residual interface)",
+      "refs": ["sakuda_2013_sci_rep"]
+    },
+    "DR_YIELD_ONSET": {
+      "value": 0.015,
+      "derivation": "delta/R* at onset of plastic yielding — Jackson-Green FEM boundary",
+      "refs": ["jackson_green_2005_wear", "mesarovic_fleck_2000_prsa"]
+    },
+    "DR_FULLY_PLASTIC": {
+      "value": 0.04,
+      "derivation": "delta/R* above which Tabor A = F/H saturates",
+      "refs": ["jackson_green_2005_wear", "kogut_etsion_2002_jam"]
+    }
+  }
+}
