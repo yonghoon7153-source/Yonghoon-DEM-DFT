@@ -837,13 +837,13 @@ function showPathOnlyView(renderer, scene, camera, state) {
   });
 
   // Screenshot — always prompts user with "Save As" dialog.
-  // Path screenshot keeps the GRID only (spatial reference); axis labels and
-  // bbox are hidden, and background is set to transparent so the PNG overlays
-  // any PPT slide color cleanly.
+  // Path screenshot hides only the X/Y/Z axis text labels; bounding box and
+  // grid are kept as spatial reference. Background is transparent so the PNG
+  // overlays any PPT slide color cleanly.
   document.getElementById('path-screenshot-btn').addEventListener('click', async () => {
     const hidden = [];
     s2.traverse((obj) => {
-      if (obj.userData && (obj.userData.isAxisLabel || obj.userData.isBbox) && obj.visible) {
+      if (obj.userData && obj.userData.isAxisLabel && obj.visible) {
         obj.visible = false;
         hidden.push(obj);
       }
