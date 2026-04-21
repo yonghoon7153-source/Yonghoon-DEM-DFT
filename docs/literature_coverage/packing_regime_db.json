@@ -1,0 +1,165 @@
+{
+  "schema_version": "1.0",
+  "description": "Unified knowledge base for DEM cathode packing of our ASSB dataset. Combines (A) effective-modulus calibration rationale, (B) bimodal size-ratio packing theory, (C) the empirical regime map observed across 60 cases, and (D) the coupling between plastic deformation (E_eff) and geometric packing. Cross-references contact_mechanics_db.json (Tabor/Hertz/Holm formalism).",
+
+  "dataset_naming_convention": {
+    "source": "Internal naming used in webapp/uploads/*/meta.json",
+    "suffix_meaning": {
+      "AMP":  "All-Primary  — every AM is the LARGE radius class (r_AM_P, typically 5–6 μm)",
+      "AMS":  "All-Secondary — every AM is the SMALL radius class (r_AM_S, typically 2 μm)",
+      "(no suffix)": "bimodal mix of AM_P + AM_S (P:S ratio per meta.ps_ratio)",
+      "thin": "reduced electrode thickness run",
+      "_S1 / _S2 / _S3": "SE-size strategy variant within one family (S1 = baseline, higher index = larger SE)",
+      "_real":  "realistic particle-size distribution (log-normal or experimental PSD), not monodisperse"
+    },
+    "areal_capacity_prefix": {
+      "1mAh":  "1  mAh/cm²  (thin electrode)",
+      "6mAh":  "6  mAh/cm²  (medium)",
+      "8mAh":  "8  mAh/cm²  (thick electrode, target)"
+    }
+  },
+
+  "particulate_series_map": {
+    "description": "The particulate_N series sweeps SE particle size (D) and AM:SE composition. N correlates with SE size AND composition via the mapping below. Verified by porosity fingerprinting against the user's own SE-size plot (Apr 2026).",
+    "variants": {
+      "D0.5 (SE r = 0.5 μm)": {
+        "r_SE_um": 0.5,
+        "r_SE_over_r_AM_avg": "1:6",
+        "packing_regime": "geometric",
+        "cases": { "62:38": "particulate_1" }
+      },
+      "D1 (SE r = 1.0 μm)": {
+        "r_SE_um": 1.0,
+        "r_SE_over_r_AM_avg": "1:3",
+        "packing_regime": "geometric_partial",
+        "cases": { "62:38": "particulate_4", "72:28": "particulate_5", "82:18": "particulate_6" }
+      },
+      "D2 (SE r = 2.0 μm)": {
+        "r_SE_um": 2.0,
+        "r_SE_over_r_AM_avg": "1:1.5",
+        "packing_regime": "plastic_dominated",
+        "cases": { "62:38": "particulate_7", "72:28": "particulate_8", "82:18": "particulate_9" }
+      },
+      "D2_Dif_E (SE r = 2.0 μm, softer E)": {
+        "r_SE_um": 2.0,
+        "r_SE_over_r_AM_avg": "1:1.5",
+        "E_variant": "E × 0.5 of default calibration",
+        "packing_regime": "plastic_extreme",
+        "cases": { "62:38": "particulate_10", "72:28": "particulate_11", "82:18": "particulate_12" }
+      },
+      "S series (SE r = 0.5 μm, single AM class)": {
+        "r_SE_um": 0.5,
+        "notes": "Single-type AM composition sweep",
+        "packing_regime": "geometric_with_self_packing",
+        "cases": { "62:38": "S_1", "72:28": "S_2", "82:18": "S_3" }
+      }
+    }
+  },
+
+  "effective_modulus_block": {
+    "description": "Why DEM simulation uses E_eff = 1.35 GPa instead of E_real ≈ 24 GPa (LPSCl)",
+    "E_eff_GPa": 1.35,
+    "E_real_LPSCl_GPa": 24.0,
+    "softening_ratio": 0.056,
+    "calibration_target": "porosity at target compaction pressure (linear regression against experimental pellet)",
+    "references": ["cundall_strack_1979_geotechnique", "thornton_2013_powder_tech", "potyondy_cundall_2004_ijrmms"],
+    "key_consequence": "δ_sim / δ_real ≈ (E_real/E_eff)^(2/3) ≈ 6.9× inflation of overlap; DEM-reported force is correspondingly scaled by E_eff and is NOT used downstream in our analysis — we read only δ (geometry-invariant) and recompute F_real with E_real in Physics mode.",
+    "cross_reference": "contact_mechanics_db.json → our_dem_method (full discussion)"
+  },
+
+  "bimodal_packing_theory_block": {
+    "description": "Classical size-ratio effect on packing fraction — controls D0.5 / D1 / D2 behaviour",
+    "random_close_pack_single_size": {"void_fraction": 0.36, "packed_fraction": 0.64},
+    "optimal_bimodal_packing": {
+      "condition": "r_small / r_large ≤ 1/7",
+      "achievable_void_fraction": "< 0.15",
+      "references": ["furnas_1928", "mcgeary_1961", "yu_standish_1991"]
+    },
+    "size_ratio_effects": {
+      "1:6 (D0.5)": "Small SE fits tetrahedral/octahedral gaps; geometric packing dominates",
+      "1:3 (D1)":   "Marginal — SE can still fit gaps but less efficiently",
+      "1:1.5 (D2)": "Similar-size regime — bimodal packing theory predicts ~30% void geometrically; observed much lower because plastic flow takes over"
+    }
+  },
+
+  "packing_regime_empirical_map": {
+    "description": "Empirical classification from the 60-case dataset",
+    "regimes": {
+      "geometric_regime": {
+        "criterion": "r_SE/r_AM ≤ 1:3 AND p50 δ/R* ≤ 0.2",
+        "signature": {
+          "porosity": "15–22% (adjustable by AM:SE ratio)",
+          "δ/R*_p50": "0.08–0.20",
+          "geom_cap_active": "< 2% of contacts",
+          "physics_mode_impact": "small (Δσ ≲ 10%)"
+        },
+        "examples": ["particulate_1 (D0.5)", "particulate_4/5/6 (D1)", "1mAh_8_AMP", "S_1/2/3"],
+        "mechanism": "SE fills AM interstices geometrically; plastic deformation minor",
+        "porosity_vs_AM_trend": "DECREASING (62:38 → 82:18) in small-SE cases due to SE self-packing — see se_self_packing_inversion below",
+        "ionic_transport": "sieve regime — wide, uniform contacts; σ_ionic high and stable"
+      },
+      "plastic_dominated_regime": {
+        "criterion": "r_SE/r_AM ≥ 1:2 AND p50 δ/R* ≥ 0.25",
+        "signature": {
+          "porosity": "5–10% at SE-rich, rising to 15–20% at AM-rich (INCREASING trend)",
+          "δ/R*_p50": "0.25–0.36",
+          "geom_cap_active": "10–17% of contacts",
+          "physics_mode_impact": "large (Δσ can reach +30–40%)"
+        },
+        "examples": ["particulate_7/8/9 (D2)", "particulate_10/11/12 (D2_Dif_E)"],
+        "mechanism": "Similar-size particles cannot geometrically fit — plastic flow under E_eff compensates by letting particles inter-penetrate; apparent porosity is artificially low because V_overlap reduces counted volume",
+        "porosity_vs_AM_trend": "INCREASING (expected) — more AM and less SE at 82:18 means more geometric voids that plastic can't close",
+        "ionic_transport": "bottleneck regime — extreme-overlap contacts dominate R_constr; hemisphere cap activates; τ_Lap_eff >> τ_Dij"
+      },
+      "transition_regime": {
+        "criterion": "1:3 < r_SE/r_AM < 1:2 OR 0.20 < p50 δ/R* < 0.25",
+        "signature": "mixed geometric + plastic — porosity monotonically rising; geom cap 4–8%; Δσ_physics 10–20%",
+        "examples": ["particulate_6mAh_real*", "1mAh_5/6/7"]
+      }
+    }
+  },
+
+  "se_self_packing_inversion": {
+    "description": "Why D0.5 and S (small-SE series) show INVERTED porosity trend vs AM content",
+    "observation": "D0.5/S porosity DECREASES as AM:SE moves 62:38 → 82:18, opposite to D1/D2",
+    "mechanism": {
+      "at_SE_rich_62:38": "Small SE supplied in excess of AM interstitial demand → excess SE forms its own loose-packed cluster with SE-SE voids → inflates total porosity",
+      "at_AM_rich_82:18": "SE supply matches interstitial demand exactly → optimal filling → minimal voids",
+      "turning_point": "Depends on r_SE/r_AM — smaller ratio shifts optimum toward AM-rich side (because less SE is needed to fill gaps)"
+    },
+    "references": ["furnas_1928_eichkurve", "mcgeary_1961_mixed_sphere", "yu_standish_1991_multicomponent"]
+  },
+
+  "porosity_sigma_decoupling": {
+    "description": "Key finding: porosity and ionic conductivity are NOT monotonically related — SE particle size controls the coupling strength",
+    "d0_5_case_study": {
+      "case": "particulate_1",
+      "porosity": 16.8,
+      "sigma_ionic_mScm": 0.53,
+      "interpretation": "High porosity + excellent σ. Small SE forms continuous thin-layer paths between AM surfaces; individual pore voids don't disrupt ionic connectivity."
+    },
+    "d2_case_study": {
+      "case": "particulate_7",
+      "porosity": 6.6,
+      "sigma_ionic_mScm": 0.64,
+      "interpretation": "Ultra-low porosity + still-high σ. Plastic-dominated compact structure creates many extreme-overlap contacts (p50 δ/R*=0.34, geom cap 13.6%) but redundant network topology keeps σ robust."
+    },
+    "general_law": "σ_ionic correlates with (a) number of continuous SE pathways, NOT (b) total void volume. Small-SE cases maximize (a) even at high porosity; similar-size cases achieve compactness via (b) but pay in bottleneck resistance."
+  },
+
+  "defense_narrative_catalogue": {
+    "description": "Ready-to-use one-liners for paper Methods / Discussion / Reviewer response",
+    "why_E_eff_is_valid": "DEM simulations calibrate E_eff against experimental porosity at target pressure, folding plastic + rate-dependent contact effects into a single reduced stiffness (Cundall–Strack 1979). Because our downstream analysis uses only the geometric overlap δ and recomputes F_real with literature E_real, the E_eff choice does not propagate into reported contact areas or conductivities.",
+    "why_D2_porosity_is_6_percent": "In D2 (r_SE/r_AM ≈ 1:1.5), classical bimodal packing theory predicts ~30% void geometrically. The observed 6.6% at 62:38 composition is attained through extensive plastic deformation: similar-size particles inter-penetrate under the 300 MPa target pressure, reducing apparent porosity without changing sphere count. The signature is p50 δ/R* = 0.34, with 13.6% of contacts bound by the hemisphere cap — evidence that plastic flow, not geometric rearrangement, is the densification mechanism.",
+    "why_D0_5_inverts": "D0.5 (r_SE/r_AM ≈ 1:6) exhibits the inverse porosity-composition trend because excess small SE at SE-rich compositions forms a loose self-packed domain with SE-SE voids, inflating the measured porosity. Shifting to AM-rich composition (82:18) reduces SE count to match interstitial demand, recovering classical bimodal packing efficiency.",
+    "why_physics_mode_matters_only_in_bottleneck": "Across 60 cases, Physics mode correction is small (Δσ ≲ 5%) in the sieve regime (liggghts_lb ≥ 20%, r_SE/r_AM small), where the LIGGGHTS-reported contact area already encodes the E_eff-calibrated plastic footprint. Physics mode delivers its main value in bottleneck cases (geom cap ≥ 10%), where Tabor A diverges unphysically at large δ and only the hemisphere cap 2πR_min² keeps A_plastic realistic. This places Physics mode in a well-defined sensitivity-upper-bound role rather than a rival primary estimator."
+  },
+
+  "cross_references": [
+    "contact_mechanics_db.json — Tabor/Hertz/Holm theory + 17 literature anchors + material constants",
+    "coverage_db.json — experimental coverage benchmarks (Lee 2024, Sakuda 2013, etc.)",
+    "scripts/physics_regime_histogram.py — per-case cap-attribution analysis",
+    "scripts/plastic_coverage.py — Physics mode implementation",
+    "scripts/network_conductivity.py — 3-stage Kirchhoff solver with contact-mode=both"
+  ]
+}
