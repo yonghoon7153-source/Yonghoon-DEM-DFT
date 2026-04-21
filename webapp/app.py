@@ -957,13 +957,38 @@ def analyze(case_id):
         # ── Step 1: Backup network results before clearing ──
         #   Skipped when force_network=True so the solver is forced to re-run
         #   with the current code (e.g. after 3-stage CG/ILU/spsolve fix).
+        #
+        #   BUG FIX (this commit): previously only network_conductivity.json was
+        #   backed up → every non-force reanalyze silently wiped the dual
+        #   results (*_dual.json, *_physics.json, raw edge/node dumps) causing
+        #   the Physics column to disappear from the UI. Now the entire set of
+        #   network-solver artefacts is snapshotted and restored.
         import tempfile
-        _net_backup = None
-        if not force_network and os.path.exists(net_json_path):
-            _net_backup = tempfile.mktemp(suffix='.json')
-            shutil.copy2(net_json_path, _net_backup)
-            print(f"  [Reanalysis] Network backup saved ({case_id})")
-        elif force_network:
+        _net_backup_dir = None
+        _NET_BACKUP_GLOBS = (
+            'network_conductivity.json',
+            'network_conductivity_dual.json',
+            'network_conductivity_hertzian.json',
+            'network_conductivity_physics.json',
+            'network_summary.csv',
+            'network_raw_*',            # per-contact edge dumps (hertzian_ionic/...)
+        )
+        if not force_network:
+            to_backup = []
+            for pat in _NET_BACKUP_GLOBS:
+                to_backup += globmod.glob(os.path.join(results_dir, pat))
+            if to_backup:
+                _net_backup_dir = tempfile.mkdtemp(prefix=f'net_bk_{case_id}_')
+                for src in to_backup:
+                    rel = os.path.relpath(src, results_dir)
+                    dst = os.path.join(_net_backup_dir, rel)
+                    os.makedirs(os.path.dirname(dst) or _net_backup_dir, exist_ok=True)
+                    if os.path.isdir(src):
+                        shutil.copytree(src, dst)
+                    else:
+                        shutil.copy2(src, dst)
+                print(f"  [Reanalysis] Network backup saved ({len(to_backup)} items) ({case_id})")
+        else:
             print(f"  [Reanalysis] force_network=True → skipping network backup ({case_id})")
 
         # ── Step 2: Clear & re-run contact analysis ──
@@ -973,10 +998,18 @@ def analyze(case_id):
         result = run_pipeline(case_id, meta['mode'], meta['type_map'], meta.get('scale', 1000))
 
         # ── Step 3: Restore network backup (skipped on force) ──
-        if _net_backup and os.path.exists(_net_backup):
+        if _net_backup_dir and os.path.isdir(_net_backup_dir):
             os.makedirs(results_dir, exist_ok=True)
-            shutil.copy2(_net_backup, net_json_path)
-            os.unlink(_net_backup)
+            for name in os.listdir(_net_backup_dir):
+                src = os.path.join(_net_backup_dir, name)
+                dst = os.path.join(results_dir, name)
+                if os.path.isdir(src):
+                    if os.path.exists(dst):
+                        shutil.rmtree(dst)
+                    shutil.copytree(src, dst)
+                else:
+                    shutil.copy2(src, dst)
+            shutil.rmtree(_net_backup_dir, ignore_errors=True)
             print(f"  [Reanalysis] Network backup restored ({case_id})")
 
         # ── Step 4: Handle contact analysis result ──
@@ -2345,10 +2378,17 @@ def _archive_root():
     return app.config['ARCHIVE_FOLDER']
 
 def _safe_path(rel):
-    """Prevent path traversal."""
+    """Prevent path traversal.
+
+    BUG FIX: the old `startswith(base)` check accepted siblings like
+    `<base_parent>/archive_evil/...` when the archive root is e.g.
+    `/app/archive` — `/app/archive_evil/secret` also starts with the
+    base string. Anchor the boundary to `base + os.sep` (or require
+    exact equality) so only true descendants are allowed.
+    """
     base = os.path.realpath(_archive_root())
     target = os.path.realpath(os.path.join(base, rel))
-    if not target.startswith(base):
+    if target != base and not target.startswith(base + os.sep):
         return None
     return target
 
