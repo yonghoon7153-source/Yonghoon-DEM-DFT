@@ -302,12 +302,12 @@ function buildScene(scene, camera, controls, data, state) {
     state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.ATOMS_ONLY, 1.0, false);
     state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.ATOMS_ONLY, 1.0, false);
     state.meshes.SE   = createInstancedSpheres(groups.SE,   16, COL.ATOMS_ONLY, 1.0, false);
-    // High ambient keeps overall tone near-white; a small directional
-    // component leaves enough rim contrast that each sphere reads as a
-    // distinct particle. Shadow side lands around #a0a0a0, not dark.
+    // Strong directional + low ambient: lit tops read near-white, shadow
+    // undersides go dark so spheres have clear rim definition (matches
+    // typical 3D-render reference: bright highlight + deep shadow).
     scene.traverse(obj => {
-      if (obj.isAmbientLight)      obj.intensity = 0.7;
-      else if (obj.isDirectionalLight) obj.intensity = 0.4;
+      if (obj.isAmbientLight)      obj.intensity = 0.3;
+      else if (obj.isDirectionalLight) obj.intensity = 0.9;
     });
   } else {
     state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.AM_P, 1.0, false);
