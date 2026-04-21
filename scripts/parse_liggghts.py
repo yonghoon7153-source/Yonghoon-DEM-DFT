@@ -99,12 +99,86 @@ def parse_mesh_stl(filepath):
     return plate_z, triangles
 
 
+def _eval_liggghts_expr(expr, variables):
+    """Evaluate a LIGGGHTS token that may contain ${var}, v_var, negatives, or
+    simple arithmetic. Returns float or None.
+
+    Supports:
+      42, -42, 0.025, 2.5e-3
+      ${xboxHalf}, -${xboxHalf}, v_xboxHalf
+      (${a}+${b})/2, -${x}*0.5
+    `variables` : dict {var_name: float}
+    """
+    import re, ast
+    if expr is None:
+        return None
+    s = str(expr).strip()
+    if not s:
+        return None
+    # Strip wrapping "units box" tail accidentally caught by splitter
+    if s.lower() in ('units', 'box'):
+        return None
+    # ${var} → value
+    s = re.sub(r'\$\{(\w+)\}',
+               lambda m: f'({variables[m.group(1)]})' if m.group(1) in variables else m.group(0),
+               s)
+    # v_var → value  (LIGGGHTS alternate substitution)
+    s = re.sub(r'\bv_(\w+)\b',
+               lambda m: f'({variables[m.group(1)]})' if m.group(1) in variables else m.group(0),
+               s)
+    # Only allow safe math: digits, operators, parens, dot, e/E (sci notation)
+    if not re.fullmatch(r'[\d+\-*/().eE\s]+', s):
+        return None
+    try:
+        # ast.literal_eval can't do arithmetic; compile a restricted eval
+        node = ast.parse(s, mode='eval')
+        for sub in ast.walk(node):
+            if isinstance(sub, (ast.Expression, ast.BinOp, ast.UnaryOp,
+                                ast.Constant, ast.Num, ast.Load,
+                                ast.Add, ast.Sub, ast.Mult, ast.Div,
+                                ast.USub, ast.UAdd)):
+                continue
+            return None
+        return float(eval(compile(node, '<expr>', 'eval'), {'__builtins__': {}}, {}))
+    except Exception:
+        return None
+
+
 def parse_input_script(filepath):
-    """Parse LIGGGHTS input script for material properties and ratios."""
+    """Parse LIGGGHTS input script for material properties and ratios.
+
+    Robust to:
+      • `${var}` and `v_var` substitution in region/create_box directives
+      • arithmetic expressions (-${xh}, ${a}/2)
+      • leading whitespace / indentation
+      • scientific notation and negative literals
+      • two-pass resolution (variables collected before region evaluation)
+    """
     params = {}
     with open(filepath, 'r') as f:
         content = f.read()
         lines = content.split('\n')
+
+    # First pass: collect variable definitions so they can be substituted
+    # into region / create_box arguments on the second pass.
+    variables = {}
+    for raw in lines:
+        line = raw.split('#', 1)[0].strip()
+        if not line.startswith('variable'):
+            continue
+        parts = line.split()
+        # variable NAME equal EXPR   (EXPR may span multiple tokens)
+        if len(parts) >= 4 and parts[2] == 'equal':
+            var_name = parts[1]
+            val = _eval_liggghts_expr(' '.join(parts[3:]), variables)
+            if val is not None:
+                variables[var_name] = val
+                if 'r_AM' in var_name or 'r_SE' in var_name:
+                    params[var_name] = val
+
+    # Expose the resolved variable table so downstream tools / debug can see it
+    if variables:
+        params['variables'] = {k: v for k, v in variables.items()}
 
     # Young's modulus: fix m1 all property/global youngsModulus peratomtype ...
     for line in lines:
@@ -138,40 +212,30 @@ def parse_input_script(filepath):
                 se_frac = weights[-1]
                 params['am_se_ratio'] = f"{am_frac*100:.1f}:{se_frac*100:.1f}"
 
-        # Radius variables
-        if line.startswith('variable') and 'equal' in line:
-            parts = line.split()
-            if len(parts) >= 4:
-                var_name = parts[1]
-                try:
-                    val = float(parts[3].replace('e-3', 'e-3'))
-                    if 'r_AM' in var_name or 'r_SE' in var_name:
-                        params[var_name] = val
-                except ValueError:
-                    pass
-
         # Box dimensions from region command: region REG block xlo xhi ylo yhi zlo zhi
+        # Now handles ${var}, v_var substitution + simple arithmetic.
         if line.startswith('region') and 'block' in line:
             parts = line.split()
-            block_idx = parts.index('block') if 'block' in parts else -1
-            if block_idx >= 0 and len(parts) >= block_idx + 7:
-                try:
-                    xlo, xhi = float(parts[block_idx+1]), float(parts[block_idx+2])
-                    ylo, yhi = float(parts[block_idx+3]), float(parts[block_idx+4])
-                    zlo, zhi = float(parts[block_idx+5]), float(parts[block_idx+6])
-                    params['box_x'] = round(xhi - xlo, 6)
-                    params['box_y'] = round(yhi - ylo, 6)
-                    params['box_z'] = round(zhi - zlo, 6)
-                except (ValueError, IndexError):
-                    pass
+            if 'block' in parts:
+                block_idx = parts.index('block')
+                if block_idx + 6 < len(parts):
+                    # Grab the 6 coordinate tokens; keep their structure so
+                    # things like "-${xh}" or "${a}/2" eval correctly.
+                    tokens = parts[block_idx + 1: block_idx + 7]
+                    coords = [_eval_liggghts_expr(t, variables) for t in tokens]
+                    if all(c is not None for c in coords):
+                        xlo, xhi, ylo, yhi, zlo, zhi = coords
+                        params['box_x'] = round(xhi - xlo, 6)
+                        params['box_y'] = round(yhi - ylo, 6)
+                        params['box_z'] = round(zhi - zlo, 6)
 
-        # Target pressure
+        # Target pressure  (numeric literal or ${var})
         if 'target_press' in line and 'equal' in line:
             parts = line.split()
-            try:
-                params['target_press_sim'] = float(parts[3])
-            except (ValueError, IndexError):
-                pass
+            if len(parts) >= 4 and parts[2] == 'equal':
+                val = _eval_liggghts_expr(' '.join(parts[3:]), variables)
+                if val is not None:
+                    params['target_press_sim'] = val
 
     return params
 
