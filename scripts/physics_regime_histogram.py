@@ -190,43 +190,140 @@ def get_case_name(case_id: str, case_dir: str) -> str:
     return case_id
 
 
+def discover_cases() -> list[str]:
+    """Every case_id under webapp/results with both atoms.csv and contacts.csv."""
+    out = []
+    base = 'webapp/results'
+    if not os.path.isdir(base):
+        return out
+    for cid in sorted(os.listdir(base)):
+        d = os.path.join(base, cid)
+        if os.path.isdir(d) \
+           and os.path.exists(os.path.join(d, 'atoms.csv')) \
+           and os.path.exists(os.path.join(d, 'contacts.csv')):
+            out.append(cid)
+    return out
+
+
+def plot_dataset_summary(summary_df, out_dir, sort_by='p50_dr'):
+    """Dataset-wide stacked-bar — one bar per case, sorted by median δ/R*."""
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    df = summary_df.copy()
+    if sort_by in df.columns:
+        df = df.sort_values(sort_by, ascending=True).reset_index(drop=True)
+
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(max(10, len(df) * 0.18), 9),
+                                    sharex=True, gridspec_kw={'height_ratios': [3, 1]})
+
+    x = np.arange(len(df))
+    bottom = np.zeros(len(df))
+    for lbl in CAP_LABELS:
+        if lbl not in df.columns:
+            continue
+        y = df[lbl].values
+        ax1.bar(x, y, bottom=bottom, color=CAP_COLORS[lbl],
+                edgecolor='white', linewidth=0.3, label=lbl, width=0.9)
+        bottom += y
+    ax1.set_ylabel('Contacts in each cap (%)')
+    ax1.set_ylim(0, 100)
+    ax1.set_title(f'Physics-mode cap attribution across {len(df)} cases '
+                  f'(sorted by median δ/R*)')
+    ax1.legend(loc='lower right', fontsize=8, framealpha=0.95, ncol=5)
+    ax1.grid(axis='y', alpha=0.2)
+
+    # Lower panel: median/p90/max δ/R* per case
+    ax2.plot(x, df['p50_dr'], color='#2563eb', marker='o', ms=3, label='p50 δ/R*')
+    ax2.plot(x, df['p90_dr'], color='#d97706', marker='s', ms=3, label='p90 δ/R*')
+    ax2.plot(x, df['max_dr'], color='#dc2626', marker='^', ms=3, label='max δ/R*')
+    ax2.axhline(DR_YIELD_ONSET,   color='k', ls='--', lw=0.6, label=f'yield onset ({DR_YIELD_ONSET:.3f})')
+    ax2.axhline(DR_FULLY_PLASTIC, color='k', ls=':',  lw=0.6, label=f'fully plastic ({DR_FULLY_PLASTIC:.3f})')
+    ax2.set_ylabel('δ/R*')
+    ax2.set_yscale('log')
+    ax2.legend(loc='upper left', fontsize=7, framealpha=0.95, ncol=3)
+    ax2.grid(axis='y', alpha=0.2)
+    ax2.set_xticks(x)
+    ax2.set_xticklabels(df['name'], rotation=90, fontsize=6)
+    ax2.set_xlabel('case (sorted by median δ/R*)')
+
+    plt.tight_layout()
+    p = os.path.join(out_dir, 'dataset_regime_summary.png')
+    fig.savefig(p, dpi=150)
+    plt.close(fig)
+    print(f'\n→ {p}')
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('cases', nargs='+', help='case_id(s) to analyse')
+    ap.add_argument('cases', nargs='*',
+                    help='case_id(s) to analyse (omit with --all)')
+    ap.add_argument('--all', action='store_true',
+                    help='Process every case under webapp/results/ with CSVs')
+    ap.add_argument('--no-per-case-plots', action='store_true',
+                    help='Skip per-case PNG generation (--all is fast-mode by default)')
     ap.add_argument('-o', '--out', default='docs/figures/physics_regime',
                     help='output directory for PNGs + CSV')
     args = ap.parse_args()
 
-    for cid in args.cases:
+    cases = list(args.cases)
+    if args.all:
+        cases = discover_cases()
+        if not args.cases and not args.no_per_case_plots:
+            # fast default for dataset-wide run
+            args.no_per_case_plots = True
+    if not cases:
+        ap.error('No cases given. Pass case_id(s) or use --all.')
+
+    os.makedirs(args.out, exist_ok=True)
+    summary_rows = []
+
+    for cid in cases:
         cdir = find_case_dir(cid)
         if not cdir:
             print(f'[SKIP] {cid} — no atoms.csv/contacts.csv found')
             continue
         name = get_case_name(cid, cdir)
-        print(f'\n=== {name}  ({cid}) ===')
         atoms_csv = os.path.join(cdir, 'atoms.csv')
         contacts_csv = os.path.join(cdir, 'contacts.csv')
 
         df = classify_contacts(atoms_csv, contacts_csv)
         n = len(df)
-        print(f'  n_contacts: {n:,}')
-        print(f'  δ/R* quantiles:  '
-              f'p50={df["dr"].quantile(0.5):.4f}  '
-              f'p90={df["dr"].quantile(0.9):.4f}  '
-              f'p99={df["dr"].quantile(0.99):.4f}  '
-              f'max={df["dr"].max():.4f}')
-        print(f'  Cap attribution:')
         vc = df['regime'].value_counts()
+        row = {
+            'case_id': cid,
+            'name': name,
+            'n_contacts': n,
+            'p50_dr': float(df['dr'].quantile(0.5)),
+            'p90_dr': float(df['dr'].quantile(0.9)),
+            'p99_dr': float(df['dr'].quantile(0.99)),
+            'max_dr': float(df['dr'].max()),
+        }
         for lbl in CAP_LABELS:
-            c = int(vc.get(lbl, 0))
-            if c:
-                print(f'    {lbl:12s}  {c:>8,d}  ({c/n*100:5.1f}%)')
+            row[lbl] = float(vc.get(lbl, 0)) / max(n, 1) * 100
+        summary_rows.append(row)
 
-        os.makedirs(args.out, exist_ok=True)
+        print(f'  {name:32s}  n={n:>7,}  '
+              f'p50={row["p50_dr"]:.3f}  '
+              f'tabor={row["tabor"]:4.1f}%  '
+              f'geom={row["geom"]:4.1f}%  '
+              f'liggghts_lb={row["liggghts_lb"]:4.1f}%')
+
+        # per-case CSV always (small)
         csv_path = os.path.join(args.out, f'{name}_regime.csv')
         df.to_csv(csv_path, index=False)
-        print(f'  → {csv_path}')
-        plot_case(df, name, args.out)
+        if not args.no_per_case_plots:
+            plot_case(df, name, args.out)
+
+    if summary_rows:
+        import pandas as pd
+        sdf = pd.DataFrame(summary_rows)
+        summary_csv = os.path.join(args.out, 'dataset_summary.csv')
+        sdf.to_csv(summary_csv, index=False)
+        print(f'\n→ {summary_csv}  ({len(sdf)} cases)')
+        if len(sdf) >= 2:
+            plot_dataset_summary(sdf, args.out)
 
 
 if __name__ == '__main__':
