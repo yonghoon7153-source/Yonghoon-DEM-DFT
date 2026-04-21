@@ -98,6 +98,23 @@
         "porosity_vs_AM_trend": "DECREASING (62:38 → 82:18) in small-SE cases due to SE self-packing — see se_self_packing_inversion below",
         "ionic_transport": "sieve regime — wide, uniform contacts; σ_ionic high and stable"
       },
+      "transition_boundary_D1_sweet_spot": {
+        "description": "D1 (r_SE/r_AM ≈ 1:3) sits exactly at the boundary between geometric and plastic regimes — neither mechanism is fully dominant. This is WHY D1 porosity is the most sensitive to composition changes in the dataset.",
+        "criterion": "r_SE/r_AM ≈ 1:3 (size ratio marginal)",
+        "key_finding": "D1 is the ONE variant where Yu–Standish bimodal packing theory applies undiluted: SE excess above the theoretical optimum fraction leads to self-packing clusters; SE deficit leads to interstitial under-fill. No plastic compensation bridges the gap.",
+        "optimal_SE_vol_fraction_Yu_Standish": 0.28,
+        "observed_deviations": {
+          "D1_at_62:38_(38%_SE)": "10 vol-pt excess → self-packing cluster → porosity 21.2% (highest in D1 row)",
+          "D1_at_72:28_(28%_SE)": "match to optimum → porosity 17.2% (closer to ideal)",
+          "D1_at_82:18_(18%_SE)": "10 vol-pt deficit → incomplete gap fill → porosity 16.1% (still above ideal)"
+        },
+        "contrast_with_neighbours": {
+          "D0.5_dilution_effect": "Smaller SE 0.5 μm tolerates excess — can fit into higher-order interstices, so self-packing voids are smaller",
+          "D2_plastic_compensation": "Similar-size SE 2 μm triggers mutual plastic deformation at r_ratio 1:1.5 — any geometric deficit is 'filled' by plastic flow, masking the composition effect on porosity"
+        },
+        "why_this_matters": "D1's strong porosity swing (21.2% → 16.1%) is textbook evidence that we have captured a clean bimodal packing transition. Reviewers who doubt our packing model should be shown the D1 column — it is the one case where DEM output reproduces classical packing theory without plastic contamination.",
+        "references": ["yu_standish_1991_multicomponent", "mcgeary_1961_mixed_sphere"]
+      },
       "plastic_dominated_regime": {
         "criterion": "r_SE/r_AM ≥ 1:2 AND p50 δ/R* ≥ 0.25",
         "signature": {
@@ -116,6 +133,12 @@
         "signature": "mixed geometric + plastic — porosity monotonically rising; geom cap 4–8%; Δσ_physics 10–20%",
         "examples": ["particulate_6mAh_real*", "1mAh_5/6/7"]
       }
+    },
+    "three_regime_cheat_sheet": {
+      "D0.5  (r_ratio 1:6)":   "PURE GEOMETRIC  — small SE fits everything; porosity insensitive to composition",
+      "D1    (r_ratio 1:3)":   "BOUNDARY       — Yu-Standish textbook regime; porosity maximally sensitive (21% → 16%)",
+      "D2    (r_ratio 1:1.5)": "PLASTIC        — E_eff-driven densification masks geometric deficit; porosity 6% at SE-rich",
+      "D2_Dif_E":              "PLASTIC+       — same size ratio but softer E → even deeper plastic regime, max bottleneck"
     }
   },
 
