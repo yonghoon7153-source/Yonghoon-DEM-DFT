@@ -198,25 +198,34 @@ def main():
     mesh_files = [f for f in args.files if f.lower().endswith('.stl')]
     input_files = [f for f in args.files if os.path.basename(f).lower().startswith('input') and f.endswith('.liggghts')]
 
-    if not atom_files:
-        print("ERROR: No atom files found", file=sys.stderr); sys.exit(1)
+    # atoms.csv already in output dir → skip atom parsing (user-supplied
+    # pre-parsed CSV, e.g. when the original atom_*.liggghts was deleted).
+    pre_atoms_csv = os.path.join(args.output, 'atoms.csv')
+    skip_atom_parse = (not atom_files) and os.path.exists(pre_atoms_csv)
+
+    if not atom_files and not skip_atom_parse:
+        print("ERROR: No atom files found and no pre-existing atoms.csv in output dir",
+              file=sys.stderr); sys.exit(1)
     atoms_only = not contact_files
     if atoms_only:
         print("INFO: No contact files supplied — running in ATOMS-ONLY mode "
               "(3D viewer enabled, contact-based metrics skipped).")
 
-    atom_file = find_last_file(atom_files)
+    if skip_atom_parse:
+        print(f"Using pre-existing atoms.csv at {pre_atoms_csv} (no atom_*.liggghts supplied)")
+    else:
+        atom_file = find_last_file(atom_files)
 
-    print(f"Parsing atom file: {atom_file}")
-    headers_a, rows_a = parse_atom_file(atom_file)
-    if not headers_a or not rows_a:
-        print("ERROR: Failed to parse atom file", file=sys.stderr); sys.exit(1)
-    print(f"  -> {len(rows_a)} atoms")
+        print(f"Parsing atom file: {atom_file}")
+        headers_a, rows_a = parse_atom_file(atom_file)
+        if not headers_a or not rows_a:
+            print("ERROR: Failed to parse atom file", file=sys.stderr); sys.exit(1)
+        print(f"  -> {len(rows_a)} atoms")
 
-    with open(os.path.join(args.output, 'atoms.csv'), 'w') as f:
-        f.write(','.join(headers_a) + '\n')
-        for row in rows_a:
-            f.write(','.join(row) + '\n')
+        with open(pre_atoms_csv, 'w') as f:
+            f.write(','.join(headers_a) + '\n')
+            for row in rows_a:
+                f.write(','.join(row) + '\n')
 
     if not atoms_only:
         contact_file = find_last_file(contact_files)

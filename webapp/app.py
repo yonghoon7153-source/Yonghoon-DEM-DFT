@@ -425,6 +425,16 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
     pre_contacts_csv = os.path.join(case_dir, 'contacts.csv')
     pre_mesh_info = os.path.join(case_dir, 'mesh_info.json')
     has_pre_parsed = os.path.exists(pre_atoms_csv) and os.path.exists(pre_contacts_csv)
+    has_pre_atoms_only = os.path.exists(pre_atoms_csv) and not os.path.exists(pre_contacts_csv)
+
+    # HYBRID mode: atoms.csv (no atom_*.liggghts) + contact_*.liggghts.
+    # User lost the atom dump but still has the pre-parsed atoms.csv and
+    # raw contact dump. Copy atoms.csv in first so parse_liggghts knows to
+    # skip atom parsing, then proceed to the normal full pipeline below.
+    if (has_pre_atoms_only and contact_files) and not atom_files:
+        import shutil as _sh
+        _sh.copy2(pre_atoms_csv, os.path.join(results_dir, 'atoms.csv'))
+        print(f"  [Hybrid] Copied pre-existing atoms.csv; will parse contacts from LIGGGHTS")
 
     if not atom_files or not contact_files:
         if not has_pre_parsed:
@@ -448,7 +458,31 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
                 with open(fm_path, 'w') as f:
                     json.dump(atoms_only_meta, f, indent=2)
                 return {'success': True, 'log': log, 'atoms_only': True}
-            return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다 (CSV fallback도 없음).'}
+            # Hybrid mode falls through to the full pipeline below — atoms.csv
+            # is already in results_dir, and parse_liggghts will skip atom parsing.
+            if has_pre_atoms_only and contact_files:
+                pass
+            # ATOMS-ONLY CSV mode: user uploaded atoms.csv only (LIGGGHTS dump
+            # was deleted). Copy CSV into results_dir so 3D viewer works.
+            elif has_pre_atoms_only:
+                import shutil as _sh
+                log = []
+                _sh.copy2(pre_atoms_csv, os.path.join(results_dir, 'atoms.csv'))
+                if os.path.exists(pre_mesh_info):
+                    _sh.copy2(pre_mesh_info, os.path.join(results_dir, 'mesh_info.json'))
+                log.append({'step': 'Parse (atoms.csv only)', 'stdout':
+                            'atoms.csv copied from case_dir (no contacts)',
+                            'stderr': '', 'rc': 0})
+                atoms_only_meta = {
+                    'mode_note': 'atoms_only_csv — 3D viewer enabled, contact-based metrics skipped',
+                    'has_contacts': False,
+                }
+                fm_path = os.path.join(results_dir, 'full_metrics.json')
+                with open(fm_path, 'w') as f:
+                    json.dump(atoms_only_meta, f, indent=2)
+                return {'success': True, 'log': log, 'atoms_only': True}
+            else:
+                return {'error': 'atom_*.liggghts 또는 contact_*.liggghts 파일을 찾을 수 없습니다 (CSV fallback도 없음).'}
 
     log = []
 
@@ -464,6 +498,16 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         log.append({'step': 'Parse', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
         if result.returncode != 0:
             return {'error': f'Parse failed: {result.stderr}', 'log': log}
+    elif has_pre_atoms_only and contact_files:
+        # Hybrid: atoms.csv (pre-copied into results_dir above) + contact_*.liggghts.
+        # parse_liggghts detects the existing atoms.csv and skips atom parsing.
+        cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+        cmd += contact_files + mesh_files + input_files + ['-o', results_dir]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        log.append({'step': 'Parse (hybrid: atoms.csv + contact LIGGGHTS)',
+                    'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+        if result.returncode != 0:
+            return {'error': f'Hybrid parse failed: {result.stderr}', 'log': log}
     else:
         # CSV fallback: copy pre-parsed CSVs into results_dir
         import shutil as _sh
