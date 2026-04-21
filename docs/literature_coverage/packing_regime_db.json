@@ -88,8 +88,87 @@
         ]
       },
       "w_thin_definition": "w_thin = exp(−T/T_char), T_char = 30 μm. Smooth transition, 1 at T→0, ~0.04 at T=100 μm.",
-      "pending_execution": "scripts/v32_exhaustive_refit.py → ranks all single, pair, and triple combinations by LOOCV; greedy extension to k=4 and beyond."
+      "executed_results": {
+        "date": "2026-04-21",
+        "baseline_v29_defaults_LOOCV": 0.9658,
+        "best_1_term": {"features": ["REAL_FLAG"], "LOOCV": 0.9713, "R²": 0.9717},
+        "best_2_term": {"features": ["LIGG_LB_PCT", "THIN_X_GEOM"], "LOOCV": 0.9744, "R²": 0.9773},
+        "best_3_term": {"features": ["LIGG_LB_PCT", "THIN_X_GEOM", "P50_DR_DEV"], "LOOCV": 0.9772, "R²": 0.9804, "band_20pct": "57/60", "gammas": {"LIGG_LB_PCT": -0.443, "THIN_X_GEOM": 1.278, "P50_DR_DEV": -0.854}},
+        "best_4_term": {"features": ["LIGG_LB_PCT", "THIN_X_GEOM", "P50_DR_DEV", "PSD_RATIO"], "LOOCV": 0.9789, "R²": 0.9828, "band_20pct": "56/60", "gammas": {"LIGG_LB_PCT": -0.750, "THIN_X_GEOM": 1.619, "P50_DR_DEV": -1.992, "PSD_RATIO": 0.348}},
+        "plateau_note": "ΔLOOCV diminishing: +0.006 → +0.003 → +0.003 → +0.002; 4+ terms drift into noise band"
+      },
+      "residual_outliers_after_v32_4term": [
+        {"case": "input_1mAh_9",        "err_pct": 36.6, "thick_um": 18.8, "phi": 0.22, "tau": 2.14, "σ_actual": 0.0234, "note": "v29 55% → v32 37% — partial recovery"},
+        {"case": "input_1mAh_6",        "err_pct": 28.8, "thick_um": 20.3, "phi": 0.29, "tau": 1.92, "σ_actual": 0.0898, "note": "v29 37% → v32 29% — partial recovery"},
+        {"case": "input_1mAh_1",        "err_pct": 21.9, "thick_um": 20.7, "phi": 0.38, "tau": 1.74, "σ_actual": 0.3073, "note": "v29 7% → v32 22% — OVER-CORRECTED (new outlier)"},
+        {"case": "input_8mAh_real40_9", "err_pct": 20.6, "thick_um": 146,  "phi": 0.30, "tau": 1.38, "σ_actual": 0.0908, "note": "v29 36% → v32 21% — partial recovery"}
+      ],
+      "critical_insight_over_correction": "v32 exp(Σ γ·feature) form OVER-CORRECTS input_1mAh_1 (v29 err 7% → v32 22%). The multiplicative-exp correction is too general — it amplifies σ across ALL thin cases regardless of whether they were already well-fit. This is evidence that the correction-form (multiplicative residual) is STRUCTURALLY limited, and a fresh re-design of the core formula (Structure D) is warranted.",
+      "overfitting_diagnosis": "R²-LOOCV gap = 0.004 (small, <0.5%). 60 cases / 4 extra params = 15:1 (reasonable). AIC-4term (-263) still preferred over AIC-3term (-257). Conclusion: not severe overfitting, but γ values ~|1-2| are large and Round-4 LOOCV band is narrow (0.976-0.979 across 14 combos) — suggests γ sensitive to data shuffle. Bootstrap CI recommended before locking."
+    },
+    "v33_structure_d_planned": {
+      "motivation": "v32's multiplicative-exp correction structurally over-corrects well-fit cases (1mAh_1 regression). Fresh re-design needed. User directive: 'v29 FINAL 에서 곱하는 것도 좋지만 새로운 형태의 식도 괜찮지 않을까?'",
+      "approach": "Dispose of v29's inherited sigmoid-blend machinery (C_blend, C_pf, C_gb, G(τ,p)) entirely. Rebuild from Kirkpatrick-scaling core + four clean physics-motivated corrections.",
+      "proposed_form": {
+        "latex_ish": "σ = σ_grain · (φ − φc)^α · CN^β · cov^γ · f_p^δ  ·  Θ_thin(T,φ) / Θ_PSD(CV_r)  ·  exp(κ · (p50_δR − 0.20))",
+        "division_not_multiplication": "Θ_thin and Θ_PSD enter as DENOMINATORS (1 + λ·factor) rather than exp terms. This better matches the physical picture: thin/dispersed-PSD cases see σ reduction, not selective amplification.",
+        "free_parameters": "{α, β, γ, δ, φc, λ_thin, T_char, λ_PSD, κ_plastic} — 9 params; compare to v29 + v32 combined ~11 params"
+      },
+      "expected_outcome": "Better handling of 1mAh_1-like inliers (no over-correction) while still closing thin-regime outliers through division form. May sacrifice ±0.005 LOOCV vs v32 in exchange for structural cleanness and interpretability.",
+      "implementation_note": "Write scripts/v33_structure_d.py next session. Run jointly-optimised Nelder-Mead on 9 params with LOOCV-guided bounds. Compare LOOCV vs v32 winner; if v33 ≥ v32 by any margin, prefer v33 for publication (cleaner derivation)."
     }
+  },
+
+  "session_schedule": {
+    "description": "Cross-session research roadmap. Items are appended as discoveries suggest new studies.",
+    "completed_2026_04_21": [
+      "Particulate / input_8_AMS re-upload + hybrid atoms.csv+contact.liggghts upload mode",
+      "force_network flag + per-case '재분석 (NET)' button + bulk refresh_warnings",
+      "Audit Phase 1: 3-stage solver, backup all physics files, _safe_path boundary fix",
+      "60-case physics_regime_histogram with dataset_summary.csv and regime map",
+      "packing_regime_db.json: effective modulus + bimodal packing + 3-regime map + D1 boundary insight",
+      "v29 outlier diagnostic with real _formx_v29_predict",
+      "v32 exhaustive refit (16 features × 4 rounds, LOOCV=0.9789)"
+    ],
+    "next_session_priorities": [
+      {"priority": "HIGH", "task": "v32 3-term lock (LOOCV=0.9772, 57/60, overall safer than 4-term)",
+       "action": "Write scripts/v32_final_predict.py wrapping v29 × exp(3-term correction) as a reusable function"},
+      {"priority": "HIGH", "task": "v33 Structure D prototype (division form)",
+       "action": "scripts/v33_structure_d.py — 9-param joint Nelder-Mead fit, compare LOOCV vs v32"},
+      {"priority": "MED", "task": "Bootstrap CI for v32 γ values (50 resamples) to check γ stability",
+       "action": "add bootstrap routine to v32_exhaustive_refit.py"},
+      {"priority": "MED", "task": "COMSOL per-AM interface area export",
+       "action": "scripts/export_am_interface_areas.py using plastic_coverage per-contact classification"}
+    ],
+    "post_fitting_studies": [
+      {"id": "PLASTIC_IMPACT_ON_PARAMETERS",
+       "trigger": "After v33 fitting is finalised",
+       "question": "Does our plastic-deformation treatment (E_eff calibration, Tabor caps, volume/hemisphere constraints) change the downstream scaling-law parameters (coverage, CN, φ_SE, τ, etc.) in a way that matters?",
+       "method": [
+         "Compare parameter values (coverage_AM, SE-SE CN, φ_SE, τ_Dij) between Hertzian mode vs Physics mode — same cases, two modes",
+         "For each parameter X: compute Δ(X_physics − X_hertzian) / X_hertzian across 60 cases",
+         "Correlate Δ with case regime (geometric / boundary / plastic) from packing_regime_empirical_map",
+         "If Δ significant: plastic deformation modifies structural descriptors → scaling law must use Physics-mode params",
+         "If Δ small: plastic is σ-level correction only (current stance is valid)"
+       ],
+       "expected_finding_hypotheses": {
+         "H1_coverage_increases_in_plastic": "A_plastic > A_hertzian in D2/bottleneck cases → coverage_AM_SE computed in Physics mode should be larger → may shift scaling-law cov^(2/5) term's effective exponent",
+         "H2_CN_unchanged": "SE-SE CN is topology-defined (contact occurrence) and should not change between modes",
+         "H3_tau_unchanged": "τ_Dij is geodesic (path length only) — structural, not energy-based — should not change"
+       },
+       "defence_implication": "If H1 confirmed, Methods section must state 'Coverage is computed with Physics-mode contact areas (upper-bound sensitivity analysis); Hertzian mode used as primary.' If H2/H3 confirmed, scaling law is plastic-deformation-agnostic at structural level; Physics is σ-layer refinement only.",
+       "scripts_needed": [
+         "scripts/compare_param_modes.py — scan both Hertzian and Physics-mode analyses for each case",
+         "Merge results with physics_regime_db regime labels"
+       ],
+       "record_destination": "Append findings to packing_regime_db.json → plastic_to_parameter_impact_study block"}
+    ],
+    "long_term_deliverables": [
+      "Defence (a) fit_constrained.py run → φc CI extraction",
+      "Defence (c) Kirchhoff → series-limit derivation (formal maths)",
+      "Fig. Sx bottleneck demo (input_particulate_10) — dataset_regime_summary visual asset",
+      "Paper Methods section: 'E_eff calibration + Tabor caps + v33 scaling law' narrative"
+    ]
   },
 
   "dataset_naming_convention": {
