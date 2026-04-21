@@ -44,6 +44,55 @@
     },
     "method_section_one_liner": "DEM simulations use an effective Young's modulus E_eff=1.35 GPa, porosity-calibrated by linear regression against the experimental pellet at target compaction pressure, following the standard DEM convention of absorbing plastic and rate-dependent contact effects into a reduced stiffness (Cundall & Strack 1979; Thornton et al. 2013). Because DEM-reported forces are scaled by E_eff/E_real≈0.056, the only plastic-deformation indicator that remains E-independent is the normalized overlap δ/R*. All regime classification (elastic/transition/plastic via Jackson-Green 2005 thresholds) and contact-area computation therefore rely exclusively on δ/R*. The Hertzian analysis mode uses the LIGGGHTS-reported contact_area=π·R*·δ_sim (self-consistent within the E_eff frame) and serves as the primary estimator. The Physics analysis mode provides a sensitivity upper bound by recomputing F_real=(4/3)·E_real·√R*·δ^1.5 with E_real from literature (Sakuda 2013) and applying Tabor's plastic relation A=F_real/H with volume-conservation and hemisphere caps (lower-bounded by A_liggghts so it never falls below the DEM-native value). Contact radii a=√(A/π) feed Holm-Maxwell spreading resistance R_constr=1/(2σa) at every edge of a Kirchhoff resistor network, solved via a three-stage CG → ILU-preconditioned CG → direct LU fallback for robustness on ill-conditioned bottleneck cases."
   },
+  "regime_insights_dataset_60": {
+    "description": "Empirical findings from per-contact cap-attribution analysis across the 60-case dataset (scripts/physics_regime_histogram.py --all, Apr 2026). Every finding is backed by dataset_summary.csv and visualised in dataset_regime_summary.png.",
+    "cap_binding_statistics": {
+      "tabor_dominance": "63–94% of contacts across all 60 cases → Physics mode's primary mechanism is active everywhere",
+      "elastic_lb": "0.0–0.3% → essentially zero; confirms all cases are post-yield (plastic regime) as intended by E_eff calibration",
+      "liggghts_lb": "3–34% → DEM-reported contact_area wins when DEM overlap already yielded a larger plastic footprint than Tabor F_real/H",
+      "geom_cap": "0.07–17.0% → hemisphere 2π R_min² binds only in extreme-δ contacts; AMS/bottleneck cases reach 10–17%, sieve cases <1%",
+      "volume_cap": "0.0% across 60/60 cases → h_film_min=5 nm is too permissive to bind in practice; retained as formal completeness safeguard only"
+    },
+    "physics_mode_value_by_regime": {
+      "sieve_regime_(liggghts_lb_≥_20%)": {
+        "examples": ["input_1mAh_8_AMP", "input_1mAh_8_AMS", "input_1mAh_9", "input_8mAh_8_AMP", "input_thin_9_S1"],
+        "p50_delta_over_R_range": "0.07–0.13",
+        "physics_vs_hertzian_interpretation": "DEM-native area already reflects physical plastic contact; Physics mode re-computation adds negligible correction (Δσ ≲ 5% typical). Recommendation: Hertzian sufficient, Physics redundant.",
+        "ionic_path": "sieve regime — wide, uniform contacts, σ_ionic relatively high"
+      },
+      "plastic_regime_(tabor_dominant,_geom_<5%)": {
+        "examples": ["input_particulate_1", "input_8mAh_1", "input_8mAh_2", "input_6mAh_real_3"],
+        "p50_delta_over_R_range": "0.13–0.20",
+        "physics_vs_hertzian_interpretation": "Core use case — Tabor A = F_real/H is the natural upgrade over pure-elastic Hertz while hemisphere cap rarely binds. Δσ typically 10–25%; Physics mode upgrades to upper bound.",
+        "ionic_path": "normal plastic regime — Tabor provides meaningful plastic correction"
+      },
+      "bottleneck_regime_(geom_≥_10%)": {
+        "examples": ["input_particulate_10", "input_particulate_11", "input_particulate_9_E05", "input_6mAh_real40_7", "input_6mAh_real_8"],
+        "p50_delta_over_R_range": "0.23–0.36",
+        "physics_vs_hertzian_interpretation": "Most demanding regime. Tabor A diverges unphysically at large δ, but hemisphere cap 2π R_min² activates for 10–17% of contacts and bounds A_plastic to the lateral surface of the smaller particle. Physics mode provides maximum information here — Δσ can reach +30–40%.",
+        "ionic_path": "severe bottleneck — narrow contacts dominate R_constr; τ_Lap_eff >> τ_Dij; σ_ionic collapses"
+      }
+    },
+    "key_decoupling_finding": {
+      "claim": "Porosity and bottleneck regime are decoupled for small-SE cases (D0.5, SE r=0.5μm)",
+      "example": "input_particulate_1: porosity=16.8%, σ_ionic=0.53 mS/cm (HIGH), geom_cap=0.07% (minimal bottleneck)",
+      "physical_explanation": "Small SE particles (r_SE/r_AM = 1:6 for D0.5) fit efficiently into tetrahedral/octahedral gaps between AM particles — even when porosity is high, SE forms continuous thin-layer ionic pathways between AM surfaces. Classical bimodal packing theory (Furnas 1928, McGeary 1961, Yu & Standish 1991) predicts this: with extreme size-ratio, the optimal SE volume fraction shifts to AM-rich composition.",
+      "implication": "SE-particle size controls whether porosity is a σ-limiting or σ-irrelevant variable. For D0.5, high porosity can coexist with excellent conductivity. For D1/D2 (r_SE/r_AM ≥ 1:3), porosity and σ are strongly coupled."
+    },
+    "se_self_packing_inversion": {
+      "observation": "D0.5 and S series show inverted porosity trend vs AM:SE — porosity DECREASES as AM:SE moves from 62:38 → 82:18, opposite to D1/D2 which increase.",
+      "data_points": {
+        "D0.5_at_62:38": "porosity ≈ 21% (abnormally high for SE-rich)",
+        "D0.5_at_82:18": "porosity ≈ 16% (normal)",
+        "D1_at_62:38":   "porosity ≈ 6–7% (lowest)",
+        "D1_at_82:18":   "porosity ≈ 17% (normal)"
+      },
+      "mechanism": "At SE-rich composition (62:38), D0.5 supplies far more SE than can be accommodated in AM interstices. The excess SE particles form their own loose-packed cluster — SE-SE interfaces with inherent voids — which inflates overall porosity. At AM-rich composition (82:18), SE amount matches interstitial demand exactly, giving optimal packing.",
+      "literature_refs": ["furnas_1928_eichkurve", "mcgeary_1961_mixed_sphere", "yu_standish_1991_multicomponent"],
+      "figure_spec_for_SI": "Plot porosity vs σ_ionic, coloured by SE variant (D0.5, D1, D2, S). Expected: D0.5/S cluster horizontally (wide porosity range at fixed σ), D1/D2 cluster diagonally (strong porosity-σ coupling)."
+    },
+    "defense_narrative_one_liner": "Hertzian-mode (E_eff-calibrated DEM-native) is adequate for sieve-regime cases (liggghts_lb ≥ 20%) where DEM already encodes plastic contact; Physics-mode (Tabor + hemisphere cap) delivers its main value in bottleneck-regime cases (geom_cap ≥ 10%) where the hemisphere constraint activates on extreme-overlap contacts and prevents the Hertzian force formula's unphysical extrapolation at large δ from propagating into A_plastic."
+  },
   "model_summary": {
     "tabor_number": "mu_T = (sigma_y^3 * R / (E_star^2 * F))^(1/6)  — indentation plasticity index. mu_T > 1 → elastic (Hertz), mu_T << 1 → fully plastic (Tabor A = F/H).",
     "elastic_limit": "dr_yield_onset ≈ 1.5% (delta/R*) — below this Hertz is valid",
