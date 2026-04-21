@@ -106,6 +106,48 @@
       "critical_insight_over_correction": "v32 exp(Σ γ·feature) form OVER-CORRECTS input_1mAh_1 (v29 err 7% → v32 22%). The multiplicative-exp correction is too general — it amplifies σ across ALL thin cases regardless of whether they were already well-fit. This is evidence that the correction-form (multiplicative residual) is STRUCTURALLY limited, and a fresh re-design of the core formula (Structure D) is warranted.",
       "overfitting_diagnosis": "R²-LOOCV gap = 0.004 (small, <0.5%). 60 cases / 4 extra params = 15:1 (reasonable). AIC-4term (-263) still preferred over AIC-3term (-257). Conclusion: not severe overfitting, but γ values ~|1-2| are large and Round-4 LOOCV band is narrow (0.976-0.979 across 14 combos) — suggests γ sensitive to data shuffle. Bootstrap CI recommended before locking."
     },
+    "v33_structure_d_executed": {
+      "date": "2026-04-21 evening",
+      "form": "σ = A·σ_grain · (φ−φc)^α · CN^β · cov^γ · f_p^δ / [(1+λ_thin·w_thin)(1+λ_PSD·CV_r)] · exp(κ·max(p50_δR−0.20, 0))",
+      "fitted_params": {
+        "A": 0.2095, "alpha": 0.6581, "beta": 0.8899, "gamma": 0.6511, "delta": 5.0000,
+        "phi_c": 0.2067, "lambda_thin": 0.5105, "T_char": 73.93, "lambda_PSD": 0.0755,
+        "kappa": -2.576
+      },
+      "fit_stats": {
+        "R²_log":       0.9790,
+        "LOOCV_log":    0.9677,
+        "band_20pct":   "53/60",
+        "residual_outliers_top10": 10,
+        "median_err_pct": 5.8
+      },
+      "diagnosis": {
+        "verdict": "INFERIOR to v32. Do not adopt as published form.",
+        "reasons": [
+          "LOOCV 0.9677 regressed to near v29-defaults (0.966) — multiplicative v32 still dominant",
+          "R² − LOOCV gap = 0.011 (vs v32's 0.004) → overfitting signature present",
+          "δ hit upper bound 5.0 — Nelder-Mead forced parameter to edge, indicates form mismatch",
+          "Direction-flip problem not solved: division `(1+λ·w_thin)` is monotone in thin regime, cannot simultaneously up-correct undershoot cases (1mAh_5_AMS) and down-correct overshoot cases (1mAh_9)",
+          "Pulled previously well-fit cases (1mAh_7, 8mAh_7, 8mAh_8, 8mAh_8_AMS) into undershoot outliers"
+        ],
+        "physical_lesson": "Any thin-regime correction must be non-monotone in composition — division/multiplication by a single factor fails. v32's THIN_X_GEOM = w_thin × geom_cap_% succeeds because geom_cap varies with composition, so the correction changes sign/magnitude per case. Future Structure forms need at minimum a composition-aware modulator."
+      }
+    },
+    "next_refit_candidates_E_F_G": {
+      "motivation": "v33 Structure D failed. Keep exploring alternative forms while v32 stands as current best.",
+      "structure_E_composition_aware_thin": {
+        "form": "σ = v32_core · exp(κ₁·w_thin·(φ−0.25) + κ₂·w_thin·(τ−1.8))",
+        "rationale": "Restore v32's direction-flip capture but rebuild from Kirkpatrick core (not full v29). Two thin-regime couplings (phi and tau) instead of one."
+      },
+      "structure_F_percolation_explicit": {
+        "form": "σ = σ_grain · (φ − φc)^t(τ) · G(contact_quality)",
+        "rationale": "Let the percolation exponent t(τ) become τ-dependent. G is constriction integral from physics-regime caps. Aligns with universality class physics."
+      },
+      "structure_G_bootstrap_of_v32_3term": {
+        "form": "v32_core × exp(only 3 best-LOOCV features with Bootstrap-CI-validated γ)",
+        "rationale": "Keep v32's 3-term form but drop γ's whose 95% CI includes 0 (noise). Parsimony check."
+      }
+    },
     "v33_structure_d_planned": {
       "motivation": "v32's multiplicative-exp correction structurally over-corrects well-fit cases (1mAh_1 regression). Fresh re-design needed. User directive: 'v29 FINAL 에서 곱하는 것도 좋지만 새로운 형태의 식도 괜찮지 않을까?'",
       "approach": "Dispose of v29's inherited sigmoid-blend machinery (C_blend, C_pf, C_gb, G(τ,p)) entirely. Rebuild from Kirkpatrick-scaling core + four clean physics-motivated corrections.",
