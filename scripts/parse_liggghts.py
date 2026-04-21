@@ -181,11 +181,12 @@ def main():
 
     if not atom_files:
         print("ERROR: No atom files found", file=sys.stderr); sys.exit(1)
-    if not contact_files:
-        print("ERROR: No contact files found", file=sys.stderr); sys.exit(1)
+    atoms_only = not contact_files
+    if atoms_only:
+        print("INFO: No contact files supplied — running in ATOMS-ONLY mode "
+              "(3D viewer enabled, contact-based metrics skipped).")
 
     atom_file = find_last_file(atom_files)
-    contact_file = find_last_file(contact_files)
 
     print(f"Parsing atom file: {atom_file}")
     headers_a, rows_a = parse_atom_file(atom_file)
@@ -198,16 +199,18 @@ def main():
         for row in rows_a:
             f.write(','.join(row) + '\n')
 
-    print(f"Parsing contact file: {contact_file}")
-    headers_c, rows_c = parse_contact_file(contact_file)
-    if not headers_c or not rows_c:
-        print("ERROR: Failed to parse contact file", file=sys.stderr); sys.exit(1)
-    print(f"  -> {len(rows_c)} contacts")
+    if not atoms_only:
+        contact_file = find_last_file(contact_files)
+        print(f"Parsing contact file: {contact_file}")
+        headers_c, rows_c = parse_contact_file(contact_file)
+        if not headers_c or not rows_c:
+            print("ERROR: Failed to parse contact file", file=sys.stderr); sys.exit(1)
+        print(f"  -> {len(rows_c)} contacts")
 
-    with open(os.path.join(args.output, 'contacts.csv'), 'w') as f:
-        f.write(','.join(headers_c) + '\n')
-        for row in rows_c:
-            f.write(','.join(row) + '\n')
+        with open(os.path.join(args.output, 'contacts.csv'), 'w') as f:
+            f.write(','.join(headers_c) + '\n')
+            for row in rows_c:
+                f.write(','.join(row) + '\n')
 
     # Mesh STL (optional)
     if mesh_files:
