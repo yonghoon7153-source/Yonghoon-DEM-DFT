@@ -12,7 +12,8 @@ const COL = {
   SE_TOP_REACH: 0x34d399, SE_NON_REACH: 0xf87171,
   SE_BOTTOM: 0xfbbf24, SE_TOP: 0x22d3ee,
   PATH: 0xffd700, BG: 0xf5f5f5,
-  MESH: 0x4f9bff,  // bright blue — compaction plate
+  MESH: 0x4f9bff,          // bright blue — compaction plate
+  ATOMS_ONLY: 0xbbbbbb,    // light grey — process-view mode
 };
 const OPA = { SE: 0.85, MESH: 0.55 };
 
@@ -293,10 +294,20 @@ function buildScene(scene, camera, controls, data, state) {
   });
   state.idIndex = idIndex;
 
-  /* instanced meshes */
-  state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.AM_P, 1.0, false);
-  state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.AM_S, 1.0, false);
-  state.meshes.SE = createInstancedSpheres(groups.SE, 12, COL.SE, OPA.SE, true);
+  /* instanced meshes.
+   * Atoms-only mode = process view (no type distinction) → all light grey.
+   * Full mode = per-type colouring (AM_P dark, AM_S mid-grey, SE yellow). */
+  const atomsOnly = !!data.atoms_only;
+  if (atomsOnly) {
+    state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.ATOMS_ONLY, 1.0, false);
+    state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.ATOMS_ONLY, 1.0, false);
+    state.meshes.SE   = createInstancedSpheres(groups.SE,   16, COL.ATOMS_ONLY, 1.0, false);
+  } else {
+    state.meshes.AM_P = createInstancedSpheres(groups.AM_P, 16, COL.AM_P, 1.0, false);
+    state.meshes.AM_S = createInstancedSpheres(groups.AM_S, 16, COL.AM_S, 1.0, false);
+    state.meshes.SE   = createInstancedSpheres(groups.SE,   12, COL.SE, OPA.SE, true);
+  }
+  state.atomsOnly = atomsOnly;
   state.seParticles = groups.SE;
 
   Object.values(state.meshes).forEach(m => { if (m) scene.add(m); });

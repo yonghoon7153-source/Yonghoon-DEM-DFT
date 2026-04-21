@@ -1742,6 +1742,19 @@ def serve_3d_data(case_id):
     if not os.path.exists(atoms_csv):
         return jsonify({'error': 'No atom data'}), 404
 
+    # atoms-only flag: no contacts.csv OR full_metrics.has_contacts=False
+    contacts_csv = os.path.join(results_dir, 'contacts.csv')
+    atoms_only_mode = not os.path.exists(contacts_csv)
+    fm_path = os.path.join(results_dir, 'full_metrics.json')
+    if os.path.exists(fm_path):
+        try:
+            with open(fm_path) as f:
+                _fm = json.load(f)
+            if _fm.get('has_contacts') is False:
+                atoms_only_mode = True
+        except Exception:
+            pass
+
     df = pd.read_csv(atoms_csv)
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -1826,6 +1839,7 @@ def serve_3d_data(case_id):
         'paths': paths,
         'clusters': clusters,
         'mesh_triangles': mesh_triangles,
+        'atoms_only': atoms_only_mode,
     })
 
 @app.route('/toggle-warning/<case_id>', methods=['POST'])
@@ -2533,6 +2547,18 @@ def serve_archive_3d_data(folder):
     if not os.path.exists(atoms_csv):
         return jsonify({'error': 'No atom data'}), 404
 
+    contacts_csv = os.path.join(target, 'contacts.csv')
+    atoms_only_mode = not os.path.exists(contacts_csv)
+    fm_path = os.path.join(target, 'full_metrics.json')
+    if os.path.exists(fm_path):
+        try:
+            with open(fm_path) as f:
+                _fm = json.load(f)
+            if _fm.get('has_contacts') is False:
+                atoms_only_mode = True
+        except Exception:
+            pass
+
     df = pd.read_csv(atoms_csv)
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
@@ -2603,6 +2629,7 @@ def serve_archive_3d_data(folder):
         'particles': particles, 'box': box,
         'percolation': percolation, 'paths': paths, 'clusters': clusters,
         'mesh_triangles': mesh_triangles,
+        'atoms_only': atoms_only_mode,
     })
 
 
