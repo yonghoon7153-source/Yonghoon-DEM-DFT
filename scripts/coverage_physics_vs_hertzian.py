@@ -88,10 +88,19 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         if id_to_t.get(aid) in am_types:
             am_surf[aid] = 4.0 * np.pi * r * r
 
-    # Scan AM-SE contacts: compute both A_hertzian and A_physics per AM
-    am_se_hertz = defaultdict(float)
-    am_se_phys  = defaultdict(float)
-    am_am_hertz = defaultdict(float)  # excluded from "free surface" in coverage formula
+    # Scan ALL contacts: compute both A_hertzian and A_physics per AM particle
+    # AND global sums (AM-SE total, SE-SE total, AM-AM total).
+    am_se_hertz = defaultdict(float)   # per-AM AM-SE Hertzian area (sim m²)
+    am_se_phys  = defaultdict(float)   # per-AM AM-SE Physics area (sim m²)
+    am_am_hertz = defaultdict(float)   # per-AM AM-AM area (for free-surface deduction)
+
+    # Per-AM-type buckets for totals (used by UI rows "AM-SE Total" etc.)
+    total_am_se_h = 0.0
+    total_am_se_p = 0.0
+    total_se_se_h = 0.0
+    total_se_se_p = 0.0
+    total_am_am_h = 0.0
+    total_am_am_p = 0.0
 
     for _, c in contacts_df.iterrows():
         i1, i2 = int(c['id1']), int(c['id2'])
@@ -113,14 +122,25 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
             except Exception:
                 pass
 
-        # Bucket by AM particle
-        if t1 in am_types and t2 in se_types:
-            am_se_hertz[i1] += A_ligg_sim
-            am_se_phys[i1]  += A_phys_sim
-        elif t2 in am_types and t1 in se_types:
-            am_se_hertz[i2] += A_ligg_sim
-            am_se_phys[i2]  += A_phys_sim
-        if t1 in am_types and t2 in am_types:
+        # Bucket by contact-type pair
+        am1 = t1 in am_types;  am2 = t2 in am_types
+        se1 = t1 in se_types;  se2 = t2 in se_types
+
+        if (am1 and se2) or (am2 and se1):
+            total_am_se_h += A_ligg_sim
+            total_am_se_p += A_phys_sim
+            if am1:
+                am_se_hertz[i1] += A_ligg_sim
+                am_se_phys[i1]  += A_phys_sim
+            else:
+                am_se_hertz[i2] += A_ligg_sim
+                am_se_phys[i2]  += A_phys_sim
+        elif se1 and se2:
+            total_se_se_h += A_ligg_sim
+            total_se_se_p += A_phys_sim
+        elif am1 and am2:
+            total_am_am_h += A_ligg_sim
+            total_am_am_p += A_phys_sim
             am_am_hertz[i1] += A_ligg_sim
             am_am_hertz[i2] += A_ligg_sim
 
@@ -192,8 +212,7 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                     m[f'{base}_mean_physics']    = round(s['physics_mean'], 3)
                     m[f'{base}_std_physics']     = round(s['physics_std'], 3)
                     m[f'{base}_delta_pct_physics'] = round(s['delta_mean_pct'], 2)
-                    # Aggregate total-AM coverage ("coverage_AM_mean_physics")
-                # Aggregate over all AM types
+                # Aggregate total-AM coverage ("coverage_AM_mean_physics")
                 all_h = [v for arrs in covs_by_type.values() for v in arrs['hertz']]
                 all_p = [v for arrs in covs_by_type.values() for v in arrs['phys']]
                 if all_h:
@@ -201,10 +220,29 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                     m['coverage_AM_delta_pct_physics'] = round(
                         float((np.mean(all_p) - np.mean(all_h)) /
                               max(np.mean(all_h), 1e-9) * 100), 2)
+                # Global area totals (Physics mode) — feeds UI rows
+                #   "AM-SE Total(μm²)" and "SE-SE Total(μm²)".
+                # Keys match the existing Hertzian keys + _physics suffix.
+                m['area_AM전체_SE_total_physics'] = round(total_am_se_p * area_conv, 2)
+                m['area_SE_SE_total_physics']    = round(total_se_se_p * area_conv, 2)
+                m['area_AM전체_AM_total_physics'] = round(total_am_am_p * area_conv, 2)
+                # Δ% (reference): only meaningful if Hertzian total > 0
+                if total_am_se_h > 0:
+                    m['area_AM전체_SE_total_delta_pct_physics'] = round(
+                        (total_am_se_p - total_am_se_h) / total_am_se_h * 100, 2)
+                if total_se_se_h > 0:
+                    m['area_SE_SE_total_delta_pct_physics'] = round(
+                        (total_se_se_p - total_se_se_h) / total_se_se_h * 100, 2)
                 with open(fm_path, 'w') as f:
                     json.dump(m, f, indent=2, default=str)
                 if verbose:
                     print(f'  → {fm_path}  (updated physics keys)')
+                    print(f'    AM-SE total: H={total_am_se_h*area_conv:,.1f}  '
+                          f'P={total_am_se_p*area_conv:,.1f}  '
+                          f'Δ={(total_am_se_p/total_am_se_h-1)*100 if total_am_se_h else 0:+.1f}%')
+                    print(f'    SE-SE total: H={total_se_se_h*area_conv:,.1f}  '
+                          f'P={total_se_se_p*area_conv:,.1f}  '
+                          f'Δ={(total_se_se_p/total_se_se_h-1)*100 if total_se_se_h else 0:+.1f}%')
             except Exception as e:
                 print(f'  [warn] failed to update full_metrics.json: {e}')
 

@@ -232,18 +232,24 @@ def transform_network_summary_4col(tables, metrics, meta):
         return None
 
     if metrics:
-        # Coverage metrics — physics values injected from full_metrics.json.
-        # Each entry maps the UI row label to (hertzian_key, physics_key);
-        # each key is a tuple of fallbacks so old and new schemas both work.
-        # New keys are written by scripts/coverage_physics_vs_hertzian.py;
-        # old '_elastic / _physics' keys remain for pre-Apr-2026 cases.
+        # Interface-area rows that have dual Hertzian/Physics values — both
+        # coverage percentages (per AM type) and total contact areas.
+        # Each entry maps the UI row label to (hertzian_keys, physics_keys);
+        # each key is a tuple of fallbacks so old and new schemas coexist.
+        # Physics values are written by scripts/coverage_physics_vs_hertzian.py.
         cov_map = {
+            # Coverage (% of AM surface covered by SE contacts)
             'Coverage AM(%)':   (('coverage_AM_mean',   'am_se_coverage_elastic_pct'),
                                  ('coverage_AM_mean_physics',   'am_se_coverage_physics_pct')),
             'Coverage AM_P(%)': (('coverage_AM_P_mean', 'am_p_se_coverage_elastic_pct'),
                                  ('coverage_AM_P_mean_physics', 'am_p_se_coverage_physics_pct')),
             'Coverage AM_S(%)': (('coverage_AM_S_mean', 'am_s_se_coverage_elastic_pct'),
                                  ('coverage_AM_S_mean_physics', 'am_s_se_coverage_physics_pct')),
+            # Global interface-area totals (μm²) — linear in A so large Δ
+            'AM-SE Total(μm²)': (('area_AM전체_SE_total',),
+                                 ('area_AM전체_SE_total_physics',)),
+            'SE-SE Total(μm²)': (('area_SE_SE_total',),
+                                 ('area_SE_SE_total_physics',)),
         }
         def _first_present(keys):
             for k in keys:
@@ -262,8 +268,13 @@ def transform_network_summary_4col(tables, metrics, meta):
                 try:
                     h_num = float(h_val) if not isinstance(h_val, (int, float)) else h_val
                     p_num = float(p_val)
-                    r[1] = round(h_num, 1)
-                    r[2] = round(p_num, 1)
+                    # Preserve original Hertzian cell formatting (analyze_contacts
+                    # already wrote it with case-appropriate precision). Only
+                    # inject the Physics value + Δ% columns. For totals this
+                    # keeps 2-decimal precision; for percentages the rounding
+                    # tolerance is wide enough.
+                    decimals = 2 if '총' in row_label or 'Total' in row_label else 1
+                    r[2] = round(p_num, decimals)
                     r[3] = _pct_delta(h_num, p_num)
                 except Exception:
                     pass
