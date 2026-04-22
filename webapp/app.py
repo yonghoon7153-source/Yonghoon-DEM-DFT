@@ -2666,6 +2666,13 @@ def archive_reanalyze(folder):
                '-t', type_map, '-s', str(scale)]
         subprocess.run(cmd, capture_output=True, text=True, timeout=600)
 
+        # Dual-mode (Hertzian vs Physics) coverage + path-hop metrics.
+        # Uses --case-dir because archive layouts can be nested under
+        # webapp/archive/<category>/<case>, so find_case_dir(basename) may fail.
+        cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+               '--case-dir', target]
+        subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+
         with open(status_file, 'w') as f:
             f.write('done')
 

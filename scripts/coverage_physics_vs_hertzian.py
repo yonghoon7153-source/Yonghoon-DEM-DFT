@@ -352,12 +352,54 @@ def process_one(cid: str, *, verbose: bool = False) -> dict | None:
     return compute_case(cid, case_dir, type_map, scale=scale, verbose=verbose)
 
 
+def process_dir(case_dir: Path, *, verbose: bool = False) -> dict | None:
+    """Alt entry point: operate directly on a case directory (archive reanalyze).
+
+    Reads meta.json from the case directory itself (no results/<cid> lookup).
+    """
+    if not (case_dir / 'atoms.csv').exists() or not (case_dir / 'contacts.csv').exists():
+        print(f'  [skip] {case_dir}: no atoms.csv/contacts.csv')
+        return None
+    meta_path = case_dir / 'meta.json'
+    if not meta_path.exists():
+        print(f'  [skip] {case_dir}: no meta.json')
+        return None
+    try:
+        meta = json.load(open(meta_path))
+    except Exception as e:
+        print(f'  [skip] {case_dir}: meta.json unreadable ({e})')
+        return None
+    type_map = parse_type_map(meta.get('type_map', ''))
+    scale = meta.get('scale', 1000)
+    if not type_map:
+        print(f'  [skip] {case_dir}: no type_map in meta.json')
+        return None
+    if verbose:
+        print(f'\n=== {meta.get("name", case_dir.name)}  ({case_dir}) ===')
+    return compute_case(case_dir.name, case_dir, type_map, scale=scale, verbose=verbose)
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('cases', nargs='*', help='case_id(s) to process')
     ap.add_argument('--all', action='store_true',
                     help='Process every case in webapp/results and webapp/archive')
+    ap.add_argument('--case-dir', default=None,
+                    help='Operate directly on a case directory (for archive '
+                         'folders not under webapp/results or webapp/archive/<cid>).')
     args = ap.parse_args()
+
+    # --case-dir short-circuit: one-shot mode for archive reanalyze
+    if args.case_dir:
+        case_dir = Path(args.case_dir).resolve()
+        s = process_dir(case_dir, verbose=True)
+        if s is None:
+            sys.exit(1)
+        for lbl, v in s.items():
+            print(f'  {lbl:5s}  H={v["hertzian_mean"]:5.2f}%  '
+                  f'P={v["physics_mean"]:5.2f}%  '
+                  f'Δ={v["delta_mean_pct"]:+6.2f}%  n={v["n"]}')
+        return
 
     cases: list[str] = []
     if args.all:
