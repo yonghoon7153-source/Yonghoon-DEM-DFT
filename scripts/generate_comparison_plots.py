@@ -1258,6 +1258,46 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
             sse += (ln_sigma[ii] - p_ii)**2
         return sse / ss_tot_local   # minimize
 
+    # ── v29 FITTED predictions + v32 per-run γ refit ──────────────────
+    # v29 is already-fitted (R² ≈ 0.983). v32 γ are OLS-refit against
+    # residuals of FITTED predictions so they play well with any v29
+    # parameter update. If regime-features unavailable (no
+    # dataset_summary.csv), predictions fall back to v29 silently.
+    s_pred_v29 = np.exp(pred_formX)
+    global _V32_FITTED_GAMMAS
+    _V32_FITTED_GAMMAS = None
+    try:
+        feat_order = list(_V32_GAMMAS.keys())
+        X_rows, y_rows = [], []
+        for j, i in enumerate(valid_idx):
+            feats = _v32_features_for_case(data_list[i])
+            if feats is None:
+                continue
+            σ_net_i = sigma_net[i]
+            σ_v29_i = float(s_pred_v29[j])
+            if σ_net_i <= 0 or σ_v29_i <= 0:
+                continue
+            X_rows.append([feats.get(k, 0.0) for k in feat_order])
+            y_rows.append(np.log(σ_net_i) - np.log(σ_v29_i))
+        if len(X_rows) >= len(feat_order) + 2:
+            X_arr = np.array(X_rows)
+            y_arr = np.array(y_rows)
+            gammas, *_ = np.linalg.lstsq(X_arr, y_arr, rcond=None)
+            _V32_FITTED_GAMMAS = dict(zip(feat_order, (float(g) for g in gammas)))
+            print(f"  [v32 refit] n_cases_used={len(X_rows)} / {len(valid_idx)}")
+            for k, g in _V32_FITTED_GAMMAS.items():
+                print(f"    γ({k:13s}) = {g:+.4f}")
+    except Exception as _e:
+        print(f"  [v32 refit] skipped ({_e}); using hardcoded defaults")
+        _V32_FITTED_GAMMAS = None
+
+    s_pred = np.array([
+        _formx_v32_predict(s_pred_v29[j], data_list[i])
+        for j, i in enumerate(valid_idx)
+    ])
+    r2 = r2_formX
+    s_actual = np.array([sigma_net[i] for i in valid_idx])
+
     # --- Residual diagnostic: find |err|>20% outliers and dump feature signature ---
     # Build per-index group label (e.g. "SE 0.5μm (1mAh_85:15)") + case hint from data source path
     def _case_label(idx):
