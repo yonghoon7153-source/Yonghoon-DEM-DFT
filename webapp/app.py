@@ -250,6 +250,13 @@ def transform_network_summary_4col(tables, metrics, meta):
                                  ('area_AM전체_SE_total_physics',)),
             'SE-SE Total(μm²)': (('area_SE_SE_total',),
                                  ('area_SE_SE_total_physics',)),
+            # Percolation-path hop metrics (SE-SE area-dependent)
+            'Path Hop Area mean(μm²)': (('path_hop_area_mean',),
+                                        ('path_hop_area_mean_physics',)),
+            'Path Bottleneck(μm²)':    (('path_hop_area_min_mean',),
+                                        ('path_hop_area_min_mean_physics',)),
+            'Path Conductance(μm²)':   (('path_conductance_mean',),
+                                        ('path_conductance_mean_physics',)),
         }
         def _first_present(keys):
             for k in keys:
@@ -273,7 +280,14 @@ def transform_network_summary_4col(tables, metrics, meta):
                     # inject the Physics value + Δ% columns. For totals this
                     # keeps 2-decimal precision; for percentages the rounding
                     # tolerance is wide enough.
-                    decimals = 2 if '총' in row_label or 'Total' in row_label else 1
+                    if 'Path Conductance' in row_label:
+                        decimals = 5
+                    elif 'Path' in row_label:
+                        decimals = 4
+                    elif '총' in row_label or 'Total' in row_label:
+                        decimals = 2
+                    else:
+                        decimals = 1
                     r[2] = round(p_num, decimals)
                     r[3] = _pct_delta(h_num, p_num)
                 except Exception:

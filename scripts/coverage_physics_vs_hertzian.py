@@ -68,6 +68,74 @@ def parse_type_map(s: str) -> dict:
     return tm
 
 
+def _recompute_path_metrics_physics(case_dir: Path,
+                                     pair_h: dict, pair_p: dict,
+                                     scale: float,
+                                     verbose: bool = False) -> dict:
+    """Re-evaluate path_hop_area_mean / min_mean / path_conductance in Physics mode.
+
+    Path topology (the sequence of SE ids along each shortest path) is fixed.
+    Only the per-hop contact area differs. We read se_clusters.json for the
+    existing paths and swap A_ligg → A_phys at each hop.
+    """
+    sc_path = case_dir / 'se_clusters.json'
+    if not sc_path.exists():
+        if verbose:
+            print(f'  [path phys] skip: {sc_path} missing')
+        return {}
+    try:
+        sc = json.load(open(sc_path))
+    except Exception as e:
+        if verbose:
+            print(f'  [path phys] skip: {e}')
+        return {}
+
+    area_conv = (scale * scale) * 1.0  # sim m² → μm² (consistent with caller)
+    # Note: analyze_contacts uses area_conv = 1/scale² * 1e12, which for
+    # scale=1000 gives 1e6. Our scale² is also 1e6 — they match.
+
+    hop_areas_p_all: list[float] = []
+    hop_mins_p_all: list[float] = []
+    conductances_p: list[float] = []
+
+    for cl in sc.get('clusters', []):
+        for p in cl.get('paths', []) or []:
+            ids = p.get('ids') or []
+            if len(ids) < 2:
+                continue
+            hop_p = []
+            sum_inv_p = 0.0
+            for k in range(len(ids) - 1):
+                key = (min(ids[k], ids[k+1]), max(ids[k], ids[k+1]))
+                A_p_sim = pair_p.get(key)
+                if A_p_sim is None:
+                    # SE-SE pair not seen (e.g. AM-SE hop in mixed paths) — skip
+                    continue
+                A_p_um2 = A_p_sim * area_conv
+                hop_p.append(A_p_um2)
+                if A_p_um2 > 0:
+                    sum_inv_p += 1.0 / A_p_um2
+            if not hop_p:
+                continue
+            hop_areas_p_all.append(float(np.mean(hop_p)))
+            hop_mins_p_all.append(float(min(hop_p)))
+            if sum_inv_p > 0:
+                conductances_p.append(1.0 / sum_inv_p)
+
+    out = {}
+    if hop_areas_p_all:
+        out['path_hop_area_mean_physics']     = round(float(np.mean(hop_areas_p_all)), 4)
+    if hop_mins_p_all:
+        out['path_hop_area_min_mean_physics'] = round(float(np.mean(hop_mins_p_all)), 4)
+    if conductances_p:
+        out['path_conductance_mean_physics']  = round(float(np.mean(conductances_p)), 6)
+    if verbose and out:
+        print(f'  [path phys] hop_mean={out.get("path_hop_area_mean_physics")}  '
+              f'bottleneck={out.get("path_hop_area_min_mean_physics")}  '
+              f'g_path={out.get("path_conductance_mean_physics")}')
+    return out
+
+
 def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0,
                  write_csv: bool = True, update_metrics: bool = True,
                  verbose: bool = False) -> dict:
@@ -93,6 +161,10 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
     am_se_hertz = defaultdict(float)   # per-AM AM-SE Hertzian area (sim m²)
     am_se_phys  = defaultdict(float)   # per-AM AM-SE Physics area (sim m²)
     am_am_hertz = defaultdict(float)   # per-AM AM-AM area (for free-surface deduction)
+
+    # SE-SE pair → (A_hertz_sim, A_phys_sim) for path hop recomputation (Physics mode)
+    se_pair_area_h: dict = {}
+    se_pair_area_p: dict = {}
 
     # Per-AM-type buckets for totals (used by UI rows "AM-SE Total" etc.)
     total_am_se_h = 0.0
@@ -138,6 +210,9 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         elif se1 and se2:
             total_se_se_h += A_ligg_sim
             total_se_se_p += A_phys_sim
+            key = (min(i1, i2), max(i1, i2))
+            se_pair_area_h[key] = A_ligg_sim
+            se_pair_area_p[key] = A_phys_sim
         elif am1 and am2:
             total_am_am_h += A_ligg_sim
             total_am_am_p += A_phys_sim
@@ -201,6 +276,13 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         if verbose:
             print(f'  → {csv_path}  ({len(df_out)} AM particles)')
 
+    # Recompute percolation-path metrics (Physics mode) using se_clusters.json
+    # Paths (graph edges) are topology-only — they do NOT change between modes;
+    # only the area at each hop differs. So we reuse the existing path lists
+    # and swap in A_physics per hop.
+    path_phys = _recompute_path_metrics_physics(
+        case_dir, se_pair_area_h, se_pair_area_p, scale, verbose=verbose)
+
     # Update full_metrics.json
     if update_metrics:
         fm_path = case_dir / 'full_metrics.json'
@@ -233,6 +315,10 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                 if total_se_se_h > 0:
                     m['area_SE_SE_total_delta_pct_physics'] = round(
                         (total_se_se_p - total_se_se_h) / total_se_se_h * 100, 2)
+                # Percolation-path metrics (Physics mode)
+                if path_phys:
+                    for k, v in path_phys.items():
+                        m[k] = v
                 with open(fm_path, 'w') as f:
                     json.dump(m, f, indent=2, default=str)
                 if verbose:
