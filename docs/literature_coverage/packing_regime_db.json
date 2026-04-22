@@ -163,6 +163,23 @@
         "R_brug_over_full":           -25.01,
         "R_bulk_fraction":             36.29
       },
+      "coverage_delta_pct_median_MORNING_UPDATE_2026_04_22": {
+        "_note": "Added after explicit H1 test via coverage_physics_vs_hertzian.py. EARLIER claim that 'all structural params are mode-agnostic' is WRONG for coverage. Coverage is LINEAR in A whereas σ is sub-linear (1/√A through R_constr), so coverage amplifies the mode difference far more than σ.",
+        "coverage_AM_P_median": 172.79,
+        "coverage_AM_P_mean":   176.30,
+        "coverage_AM_P_max":    220.34,
+        "coverage_AM_S_median": 185.86,
+        "coverage_AM_S_mean":   193.74,
+        "coverage_AM_S_max":    270.27,
+        "n_cases_AM_P": 39,
+        "n_cases_AM_S": 54,
+        "mean_delta_all_types_pct": 186.43,
+        "ratio_physics_over_hertzian": 2.86,
+        "extreme_cases": ["particulate_7 → Physics cov 99.5%", "particulate_10 → Physics cov 99.0%"],
+        "source_script": "scripts/coverage_physics_vs_hertzian.py",
+        "per_am_csv":    "webapp/results/<case_id>/coverage_per_am.csv  (COMSOL-ready)"
+      },
+      "revised_narrative": "Physics-mode plastic deformation changes BOTH σ-level AND surface-coverage-level descriptors, but through different mechanisms. σ_ionic changes +33% via reduced constriction resistance (A → √A scaling). Coverage changes +186% because it is LINEAR in A (cumulative AM-SE contact area / AM surface). φ_SE, τ_Dij, SE-SE CN, and porosity remain mode-agnostic (they do not use contact area). For COMSOL-style electrochemical simulations requiring active-interface area per AM particle, Physics-mode coverage must be used; for bulk-transport scaling laws, Hertzian coverage preserves internal consistency with the E_eff-calibrated DEM.",
       "sigma_full_delta_by_regime": {
         "geometric":        {"n": 10, "median_dpct": 33.35, "mean": 33.65, "max": 36.73},
         "transition":       {"n": 36, "median_dpct": 32.27, "mean": 28.49, "max": 39.15},
@@ -173,11 +190,12 @@
         "σ_bulk_net (contact-free upper bound) is IDENTICAL across modes (Δ=0 for all 59 cases). Contact area doesn't enter bulk resistance → expected and confirms numerical consistency.",
         "R_bulk_fraction increases +36% in Physics mode. Larger A_plastic → smaller R_constriction → R_bulk share of total resistance grows. Physics mechanism validated.",
         "R_Brug / R_full decreases −25% in Physics mode. Naive Bruggeman overestimates actual σ less severely when the actual σ is higher (Physics mode). Consistent.",
-        "Structural descriptors (φ_SE, porosity, thickness, SE-SE CN, τ_Dij, percolation %) are single-valued per case — computed ONCE by analyze_contacts from LIGGGHTS geometry, mode-agnostic by construction. H2 (CN unchanged) and H3 (τ unchanged) trivially satisfied."
+        "UPDATE (H1 confirmed): Coverage changes +186% median in Physics mode (≈2.86× multiplier). This is MUCH larger than σ changes (+33%) because coverage is linear in A whereas σ goes as 1/√A through constriction resistance. Previously-claimed 'all structural params mode-agnostic' is WRONG for coverage; it holds only for φ_SE / τ_Dij / CN / porosity (none of which use A)."
       ],
-      "coverage_H1_status": "PENDING. H1 (coverage changes in Physics mode) cannot be tested with current full_metrics because coverage is computed once using LIGGGHTS contact_area only. To test H1, scripts/plastic_coverage.py must be run in both 'hertzian' and 'physics' modes and results compared. Deferred to follow-up session.",
-      "methods_section_one_liner": "Physics-mode contact-area recomputation (Tabor A = F_real/H, bounded by hemisphere and volume-conservation caps) increases predicted σ_full by 33% (median across 59 cases) and scales with regime — 33% in geometric, 39% in plastic-dominated. The contact-free bulk upper bound σ_bulk_net is unchanged (Δ=0 for all cases), confirming the correction is purely Maxwell-Holm constriction-resistance driven. Structural descriptors (φ_SE, τ_Dij, CN) are mode-agnostic by construction, so scaling-law primary form uses Hertzian baseline and Physics is reported as an upper-bound sensitivity.",
-      "verdict": "Physics is σ-layer refinement only. Scaling-law primary remains Hertzian (internally consistent with E_eff DEM calibration). Physics mode provides a 23–45% sensitivity upper-bound band for SI."
+      "coverage_H1_status": "CONFIRMED (previously PENDING). Coverage is strongly mode-dependent: ~3× larger in Physics than Hertzian across all 60 cases. Per-AM CSV dumps in webapp/results/<case>/coverage_per_am.csv are ready for COMSOL electrochemically-active-area imports.",
+      "scaling_law_implication": "Current v29 uses cov^(2/5) with Hertzian cov. If Hertzian-cov is replaced with Physics-cov: cov_physics^0.4 / cov_hertzian^0.4 = 2.86^0.4 ≈ 1.51, implying σ_pred would grow +51% from this term alone. Observed σ only +33%, so other terms partially cancel the coverage increase. A proper Physics-mode refit would yield a different cov exponent (likely < 0.4) and/or modified C constant. Addressed as a follow-up v33 Structure E variant using Physics coverage as primary feature.",
+      "methods_section_one_liner": "Physics-mode contact-area recomputation (Tabor A = F_real/H, bounded by hemisphere and volume-conservation caps) increases predicted σ_full by 33% (median across 59 cases) and scales with regime — 33% in geometric, 39% in plastic-dominated. The contact-free bulk upper bound σ_bulk_net is unchanged (Δ=0 for all cases), confirming the σ correction is purely Maxwell-Holm constriction-resistance driven. Coverage (Σ A_AM_SE / AM free surface), being linear in A, increases +186% median. φ_SE, τ_Dij, SE-SE CN, and porosity are mode-agnostic. Primary scaling law uses Hertzian baseline; Physics is reported as an upper-bound sensitivity and Physics-mode per-AM coverage areas are supplied as COMSOL active-interface inputs.",
+      "verdict": "Physics modifies σ (+33%) via A → √A constriction scaling AND coverage (+186%) via linear A scaling. Structural-only descriptors (φ, τ, CN, porosity) remain mode-agnostic. Scaling-law primary = Hertzian (E_eff-internal-consistent); Physics = SI sensitivity + COMSOL input provider."
     },
 
     "next_refit_candidates_E_F_G": {
