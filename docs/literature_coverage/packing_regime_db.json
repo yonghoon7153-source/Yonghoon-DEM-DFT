@@ -151,6 +151,35 @@
       "recommendation": "Option A. Refit γ per-run is < 50 ms overhead on 60 cases and guarantees consistency."
     },
 
+    "plastic_to_parameter_impact_study": {
+      "date": "2026-04-22",
+      "n_cases": 59,
+      "question": "Does plastic-deformation treatment (E_eff calibration + Tabor caps) shift STRUCTURAL descriptors or only σ-level transport?",
+      "sigma_family_delta_pct_median": {
+        "sigma_full_mScm":             33.34,
+        "sigma_bulk_net_mScm":          0.00,
+        "electronic_sigma_full_mScm":  24.38,
+        "thermal_sigma_full_mScm":     23.27,
+        "R_brug_over_full":           -25.01,
+        "R_bulk_fraction":             36.29
+      },
+      "sigma_full_delta_by_regime": {
+        "geometric":        {"n": 10, "median_dpct": 33.35, "mean": 33.65, "max": 36.73},
+        "transition":       {"n": 36, "median_dpct": 32.27, "mean": 28.49, "max": 39.15},
+        "plastic_dominated": {"n": 13, "median_dpct": 39.27, "mean": 40.29, "max": 44.58}
+      },
+      "key_findings": [
+        "Physics mode boosts σ_full by +23–45% across ALL regimes (not just plastic-dominated). Plastic-dominated cluster shows larger +39% median vs geometric +33% — consistent with the hypothesis that Physics correction grows with δ/R*.",
+        "σ_bulk_net (contact-free upper bound) is IDENTICAL across modes (Δ=0 for all 59 cases). Contact area doesn't enter bulk resistance → expected and confirms numerical consistency.",
+        "R_bulk_fraction increases +36% in Physics mode. Larger A_plastic → smaller R_constriction → R_bulk share of total resistance grows. Physics mechanism validated.",
+        "R_Brug / R_full decreases −25% in Physics mode. Naive Bruggeman overestimates actual σ less severely when the actual σ is higher (Physics mode). Consistent.",
+        "Structural descriptors (φ_SE, porosity, thickness, SE-SE CN, τ_Dij, percolation %) are single-valued per case — computed ONCE by analyze_contacts from LIGGGHTS geometry, mode-agnostic by construction. H2 (CN unchanged) and H3 (τ unchanged) trivially satisfied."
+      ],
+      "coverage_H1_status": "PENDING. H1 (coverage changes in Physics mode) cannot be tested with current full_metrics because coverage is computed once using LIGGGHTS contact_area only. To test H1, scripts/plastic_coverage.py must be run in both 'hertzian' and 'physics' modes and results compared. Deferred to follow-up session.",
+      "methods_section_one_liner": "Physics-mode contact-area recomputation (Tabor A = F_real/H, bounded by hemisphere and volume-conservation caps) increases predicted σ_full by 33% (median across 59 cases) and scales with regime — 33% in geometric, 39% in plastic-dominated. The contact-free bulk upper bound σ_bulk_net is unchanged (Δ=0 for all cases), confirming the correction is purely Maxwell-Holm constriction-resistance driven. Structural descriptors (φ_SE, τ_Dij, CN) are mode-agnostic by construction, so scaling-law primary form uses Hertzian baseline and Physics is reported as an upper-bound sensitivity.",
+      "verdict": "Physics is σ-layer refinement only. Scaling-law primary remains Hertzian (internally consistent with E_eff DEM calibration). Physics mode provides a 23–45% sensitivity upper-bound band for SI."
+    },
+
     "next_refit_candidates_E_F_G": {
       "motivation": "v33 Structure D failed. Keep exploring alternative forms while v32 stands as current best.",
       "structure_E_composition_aware_thin": {
