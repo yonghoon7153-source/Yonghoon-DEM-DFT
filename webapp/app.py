@@ -311,16 +311,32 @@ def transform_network_summary_4col(tables, metrics, meta):
                 v = round(metrics['sigma_bruggeman_mScm'], 4)
                 net_rows.append(_same_row('σ_Bruggeman (mS/cm)', v))
             if metrics.get('R_brug_over_full'):
-                v = f"{metrics['R_brug_over_full']:.1f}×"
-                net_rows.append(_same_row('Contact-free / Full', v))
-            if metrics.get('bulk_resistance_fraction'):
-                v = round((1 - metrics['bulk_resistance_fraction']) * 100, 1)
-                net_rows.append(_same_row('Constriction 비율(%)', v))
+                # R_brug/R_full = σ_Bruggeman / σ_ionic. σ_Bruggeman is mode-
+                # agnostic but σ_ionic changes with Physics, so the ratio changes.
+                r_h = metrics.get('R_brug_over_full')
+                r_p = metrics.get('R_brug_over_full_physics', r_h)
+                net_rows.append(_dual_row('Contact-free / Full',
+                                          r_h, r_p,
+                                          fmt=lambda x: f"{x:.1f}×"))
+            if metrics.get('bulk_resistance_fraction') is not None:
+                # Constriction % = (1 - bulk_fraction) × 100. bulk_fraction shifts
+                # in Physics mode because σ_ionic moves while σ_bulk stays fixed.
+                bf_h = metrics.get('bulk_resistance_fraction')
+                bf_p = metrics.get('bulk_resistance_fraction_physics', bf_h)
+                cstr_h = (1 - bf_h) * 100 if bf_h is not None else None
+                cstr_p = (1 - bf_p) * 100 if bf_p is not None else None
+                net_rows.append(_dual_row('Constriction 비율(%)',
+                                          cstr_h, cstr_p,
+                                          fmt=lambda x: round(x, 1)))
             if metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm'):
                 sig_brug = 3.0 * metrics['sigma_ratio']
-                ratio = sig_brug / metrics['sigma_full_mScm'] if metrics['sigma_full_mScm'] > 0 else 0
-                v = f"{ratio:.1f}×"
-                net_rows.append(_same_row('σ_brug / σ_ionic', v))
+                sig_ion_h = metrics.get('sigma_full_mScm')
+                sig_ion_p = metrics.get('sigma_full_mScm_physics') or sig_ion_h
+                ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
+                ratio_p = sig_brug / sig_ion_p if sig_ion_p and sig_ion_p > 0 else ratio_h
+                net_rows.append(_dual_row('σ_brug / σ_ionic',
+                                          ratio_h, ratio_p,
+                                          fmt=lambda x: f"{x:.1f}×"))
 
             # ── τ 3종 비교 (Dijkstra vs Laplace geom vs Laplace eff) ──
             # Derivation only, no re-analysis needed; uses σ_grain = 3.0 mS/cm (LPSCl bulk).
@@ -332,7 +348,12 @@ def transform_network_summary_4col(tables, metrics, meta):
             SIGMA_GRAIN_MS = 3.0  # bulk LPSCl [mS/cm]
             if phi_se and sig_full and sig_full > 0:
                 # τ_Lap_eff = √(φ_SE × σ_grain / σ_full) ← COMSOL input (GB 포함)
-                tau_lap_eff = _math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full)
+                # σ_full IS mode-dependent, so τ_Lap_eff shifts in Physics mode.
+                # τ_Lap_geom uses σ_bulk_net (mode-agnostic) so it stays fixed.
+                sig_full_p = metrics.get('sigma_full_mScm_physics')
+                tau_lap_eff_h = _math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full)
+                tau_lap_eff_p = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full_p)
+                                 if sig_full_p and sig_full_p > 0 else tau_lap_eff_h)
                 tau_lap_geom = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_bulk)
                                 if sig_bulk and sig_bulk > 0 else None)
                 net_rows.append(['── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──', '', '', ''])
@@ -340,10 +361,15 @@ def transform_network_summary_4col(tables, metrics, meta):
                     net_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
                 if tau_lap_geom:
                     net_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
-                net_rows.append(_same_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)', round(tau_lap_eff, 2)))
+                net_rows.append(_dual_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
+                                          tau_lap_eff_h, tau_lap_eff_p,
+                                          fmt=lambda x: round(x, 2)))
                 if tau_dij and tau_dij > 0:
-                    net_rows.append(_same_row('τ_Lap_eff / τ_Dij',
-                                              f"{tau_lap_eff / tau_dij:.2f}×"))
+                    ratio_h = tau_lap_eff_h / tau_dij
+                    ratio_p = tau_lap_eff_p / tau_dij
+                    net_rows.append(_dual_row('τ_Lap_eff / τ_Dij',
+                                              ratio_h, ratio_p,
+                                              fmt=lambda x: f"{x:.2f}×"))
 
             if metrics.get('electronic_sigma_full_mScm'):
                 net_rows.append(_dual_row('σ_electronic (mS/cm)',
