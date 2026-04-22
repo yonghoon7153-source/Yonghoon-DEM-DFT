@@ -648,6 +648,14 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
         log.append({'step': 'Bimodal Contact Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
 
+        # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
+        # Writes coverage_AM_*_mean_physics, area_AM전체_SE_total_physics,
+        # area_SE_SE_total_physics into full_metrics.json + coverage_per_am.csv.
+        cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
+                    'stderr': result.stderr, 'rc': result.returncode})
+
         # Step 3: Basic figures
         cmd = ['python3', os.path.join(scripts, 'generate_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
@@ -680,6 +688,14 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
                '-t', type_map, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=3600)
         log.append({'step': 'Contact Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
+
+        # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
+        # Populates *_mean_physics and area_*_total_physics keys in
+        # full_metrics.json + coverage_per_am.csv (COMSOL-ready).
+        cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+        log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
+                    'stderr': result.stderr, 'rc': result.returncode})
 
         cmd = ['python3', os.path.join(scripts, 'generate_figures.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
