@@ -165,8 +165,12 @@ def calc_se_se_cn(atoms, contacts, se_types):
     }
 
 
-def calc_am_am_cn(atoms, contacts, am_types):
-    """AM-AM coordination number (for electronic percolation analysis)."""
+def calc_am_am_cn(atoms, contacts, am_types, scale=1000.0):
+    """AM-AM coordination number (for electronic percolation analysis).
+
+    `scale` is sim→real length ratio (default 1000 for mm-scale sim / μm real).
+    Contact areas are converted to μm² via area_conv = 1/scale² × 1e12.
+    """
     cn = defaultdict(int)
     am_am_areas = []
     for c in contacts:
@@ -180,14 +184,15 @@ def calc_am_am_cn(atoms, contacts, am_types):
     if not am_ids:
         return {'mean': 0, 'std': 0, 'n_am': 0, 'n_contacts': 0, 'mean_area': 0}
 
+    area_conv = 1.0 / (scale ** 2) * 1e12  # sim m² → real μm²
     values = np.array([cn.get(aid, 0) for aid in am_ids])
     return {
         'mean': float(np.mean(values)),
         'std': float(np.std(values)),
         'n_am': len(am_ids),
         'n_contacts': sum(values) // 2,
-        'mean_area': float(np.mean(am_am_areas)) if am_am_areas else 0,
-        'total_area': float(np.sum(am_am_areas)) if am_am_areas else 0,
+        'mean_area': float(np.mean(am_am_areas)) * area_conv if am_am_areas else 0,
+        'total_area': float(np.sum(am_am_areas)) * area_conv if am_am_areas else 0,
     }
 
 
@@ -765,7 +770,7 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     print(f"  SE-SE CN: {cn['mean']:.2f} ± {cn['std']:.2f}")
 
     # 4b. AM-AM CN
-    am_am_cn = calc_am_am_cn(atoms_raw, contacts_raw, am_types)
+    am_am_cn = calc_am_am_cn(atoms_raw, contacts_raw, am_types, scale=scale)
     if am_am_cn['mean'] > 0:
         print(f"  AM-AM CN: {am_am_cn['mean']:.2f} ± {am_am_cn['std']:.2f}")
 

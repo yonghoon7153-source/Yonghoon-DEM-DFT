@@ -420,7 +420,13 @@ def transform_network_summary_4col(tables, metrics, meta):
         if metrics.get('am_am_n_contacts') is not None:
             am_rows.append(_same_row('AM-AM 접촉 수', metrics['am_am_n_contacts']))
         if metrics.get('am_am_mean_area') is not None:
-            am_rows.append(_same_row('평균 접촉 면적(µm²)', round(metrics['am_am_mean_area'], 4)))
+            # AM-AM per-contact mean is linear in A → Physics mode amplifies it
+            # by the same Tabor+cap factor as AM-SE/SE-SE totals.
+            h = metrics.get('am_am_mean_area')
+            p = metrics.get('am_am_mean_area_physics', h)
+            am_rows.append(_dual_row('평균 접촉 면적(µm²)',
+                                     h, p,
+                                     fmt=lambda x: round(x, 4)))
         if metrics.get('am_am_mean_contact_radius') is not None:
             am_rows.append(_same_row('접촉 반경(µm)', round(metrics['am_am_mean_contact_radius'], 4)))
         if metrics.get('am_am_mean_delta') is not None:
