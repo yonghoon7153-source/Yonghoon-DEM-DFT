@@ -173,7 +173,6 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
     total_se_se_p = 0.0
     total_am_am_h = 0.0
     total_am_am_p = 0.0
-    n_am_am = 0
 
     for _, c in contacts_df.iterrows():
         i1, i2 = int(c['id1']), int(c['id2'])
@@ -217,7 +216,6 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         elif am1 and am2:
             total_am_am_h += A_ligg_sim
             total_am_am_p += A_phys_sim
-            n_am_am += 1
             am_am_hertz[i1] += A_ligg_sim
             am_am_hertz[i2] += A_ligg_sim
 
@@ -310,11 +308,6 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                 m['area_AM전체_SE_total_physics'] = round(total_am_se_p * area_conv, 2)
                 m['area_SE_SE_total_physics']    = round(total_se_se_p * area_conv, 2)
                 m['area_AM전체_AM_total_physics'] = round(total_am_am_p * area_conv, 2)
-                # Per-contact AM-AM mean (feeds UI row "평균 접촉 면적(μm²)"
-                # in the AM-AM 접촉 역학 section).
-                if n_am_am > 0:
-                    m['am_am_mean_area_physics'] = round(
-                        total_am_am_p * area_conv / n_am_am, 4)
                 # Δ% (reference): only meaningful if Hertzian total > 0
                 if total_am_se_h > 0:
                     m['area_AM전체_SE_total_delta_pct_physics'] = round(
