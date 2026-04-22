@@ -232,20 +232,32 @@ def transform_network_summary_4col(tables, metrics, meta):
         return None
 
     if metrics:
-        # Coverage metrics — physics values injected from full_metrics.json
+        # Coverage metrics — physics values injected from full_metrics.json.
+        # Each entry maps the UI row label to (hertzian_key, physics_key);
+        # each key is a tuple of fallbacks so old and new schemas both work.
+        # New keys are written by scripts/coverage_physics_vs_hertzian.py;
+        # old '_elastic / _physics' keys remain for pre-Apr-2026 cases.
         cov_map = {
-            'Coverage AM(%)':   ('am_se_coverage_elastic_pct', 'am_se_coverage_physics_pct'),
-            'Coverage AM_P(%)': ('am_p_se_coverage_elastic_pct', 'am_p_se_coverage_physics_pct'),
-            'Coverage AM_S(%)': ('am_s_se_coverage_elastic_pct', 'am_s_se_coverage_physics_pct'),
+            'Coverage AM(%)':   (('coverage_AM_mean',   'am_se_coverage_elastic_pct'),
+                                 ('coverage_AM_mean_physics',   'am_se_coverage_physics_pct')),
+            'Coverage AM_P(%)': (('coverage_AM_P_mean', 'am_p_se_coverage_elastic_pct'),
+                                 ('coverage_AM_P_mean_physics', 'am_p_se_coverage_physics_pct')),
+            'Coverage AM_S(%)': (('coverage_AM_S_mean', 'am_s_se_coverage_elastic_pct'),
+                                 ('coverage_AM_S_mean_physics', 'am_s_se_coverage_physics_pct')),
         }
-        for row_label, (h_key, p_key) in cov_map.items():
+        def _first_present(keys):
+            for k in keys:
+                if metrics.get(k) is not None:
+                    return metrics.get(k)
+            return None
+        for row_label, (h_keys, p_keys) in cov_map.items():
             r = _find_row(row_label)
             if r is None:
                 continue
-            # h value is already in row[1] from analyze_contacts.py. If the '_elastic' / '_physics'
-            # keys exist in metrics, use them; else leave Hertzian value unchanged
-            h_val = metrics.get(h_key, r[1])
-            p_val = metrics.get(p_key)
+            h_val = _first_present(h_keys)
+            if h_val is None:
+                h_val = r[1]  # keep whatever analyze_contacts already wrote
+            p_val = _first_present(p_keys)
             if p_val is not None:
                 try:
                     h_num = float(h_val) if not isinstance(h_val, (int, float)) else h_val
