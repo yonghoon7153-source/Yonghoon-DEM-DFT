@@ -1394,17 +1394,11 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
         print(f"  [v32 refit] skipped ({_e}); using hardcoded defaults")
         _V32_FITTED_GAMMAS = None
 
-    # Persist v29 + v32 fits to disk cache so sibling subprocesses
-    # (which cannot see this process's module globals) pick them up.
-    try:
-        if _GLOBAL_IONIC_SIGMOID and _GLOBAL_IONIC_POLY3 and _GLOBAL_PS_SIGMOID:
-            _write_v29_cache(names,
-                             _GLOBAL_IONIC_SIGMOID,
-                             _GLOBAL_IONIC_POLY3,
-                             _GLOBAL_PS_SIGMOID,
-                             _V32_FITTED_GAMMAS)
-    except Exception as _e:
-        print(f"  [v29 cache] skipped: {_e}")
+    # Cache write deferred to main() after the plot loop so we can key on
+    # args.names (case IDs) rather than the P:S-ratio label list passed
+    # here as `names`. P:S labels are not unique across cases (every 7:3
+    # case collides), which made the subset-match lookup trivially true
+    # in the wrong direction and trivially false in the right one.
 
     s_pred = np.array([
         _formx_v32_predict(s_pred_v29[j], data_list[i])
@@ -3749,6 +3743,20 @@ def main():
             info_entry['C_ion'] = round(_GLOBAL_C_ION, 6)
         plot_info[plot_name] = info_entry
         print(f"  [OK] {plot_name} -> {outpath}")
+
+    # Persist v29 + v32 fits to disk cache (keyed on args.names = case IDs,
+    # which are unique — unlike the P:S-ratio label list passed into the
+    # individual plot functions). Sibling subprocesses whose case list is a
+    # subset of these IDs will pick up these params on startup.
+    try:
+        if _GLOBAL_IONIC_SIGMOID and _GLOBAL_IONIC_POLY3 and _GLOBAL_PS_SIGMOID:
+            _write_v29_cache(args.names,
+                             _GLOBAL_IONIC_SIGMOID,
+                             _GLOBAL_IONIC_POLY3,
+                             _GLOBAL_PS_SIGMOID,
+                             _V32_FITTED_GAMMAS)
+    except Exception as _e:
+        print(f"  [v29 cache] skipped: {_e}")
 
     info_path = os.path.join(args.output, "plot_info.json")
     with open(info_path, "w", encoding="utf-8") as f:
