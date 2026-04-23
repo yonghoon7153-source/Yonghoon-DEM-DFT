@@ -470,6 +470,12 @@ def _merge_dual_into_metrics(results_dir, met_data):
         'physics':  {k: rP.get(k) for k in _NET_PHYSICS_MIRROR_KEYS},
         'ratio_physics_over_hertzian': ratio,
     }
+    # Stamp the Physics resistance model + timestamp so every caller (batch,
+    # per-case retry, archive reanalyze) propagates the same state to the UI.
+    phys_model = rP.get('resistance_model')
+    if phys_model:
+        met_data['physics_resistance_model'] = phys_model
+        met_data['physics_solver_at'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     return met_data
 
 
