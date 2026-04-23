@@ -8,6 +8,76 @@
   <p>LIGGGHTS 파일을 업로드하고 DEM 분석을 실행하세요</p>
 </div>
 
+<!-- Batch refresh: analyze_contacts + Network solver (Hertzian+Physics) + coverage -->
+<div class="card" style="border-left:4px solid #c14a00; margin-bottom:16px">
+  <div style="display:flex; align-items:center; gap:12px">
+    <div style="flex:1">
+      <b>일괄 재계산 (분석 요약 + Physics Network Solver)</b>
+      <div style="color:#aaa; font-size:12px; margin-top:4px">
+        모든 케이스에서 analyze_contacts, Network solver (both modes), Physics coverage를 다시 돌립니다.
+        RAW CSV는 유지하고 metric만 갱신. Solver physics 공식 변경 후 일괄 적용용.
+      </div>
+    </div>
+    <button id="btn-batch-phys" class="btn btn-outline" style="white-space:nowrap">
+      ▶ 전체 재계산
+    </button>
+    <span id="batch-phys-status" style="font-size:12px; color:#888; min-width:200px"></span>
+  </div>
+</div>
+
+<script>
+(function(){
+  const btn = document.getElementById('btn-batch-phys');
+  const statusEl = document.getElementById('batch-phys-status');
+  let pollTimer = null;
+
+  function poll() {
+    fetch('/batch-rerun-physics/status').then(r => r.json()).then(s => {
+      if (s.running) {
+        statusEl.textContent = `▶ ${s.done}/${s.total}  |  현재: ${s.current}  |  시작 ${s.started_at}`;
+        statusEl.style.color = '#4a9eff';
+      } else if (s.total > 0) {
+        statusEl.textContent = `✔ 완료 ${s.done}/${s.total}  |  실패 ${s.failures.length}  |  ${s.started_at} → ${s.finished_at}`;
+        statusEl.style.color = s.failures.length ? '#c14a00' : '#3b9';
+        if (s.failures.length) {
+          statusEl.title = s.failures.map(f => `${f.cid}: ${f.err}`).join('\n');
+        }
+        btn.disabled = false; btn.textContent = '▶ 전체 재계산';
+        clearInterval(pollTimer); pollTimer = null;
+      }
+    }).catch(() => {});
+  }
+
+  btn.addEventListener('click', () => {
+    if (!confirm('모든 케이스의 분석 요약 + Physics Network Solver를 재계산합니다.\n10~30분 걸릴 수 있습니다. 계속?')) return;
+    btn.disabled = true; btn.textContent = '⏳ 시작 중...';
+    statusEl.textContent = '요청 전송 중...';
+    fetch('/batch-rerun-physics', {method: 'POST'}).then(r => r.json()).then(j => {
+      if (j.success) {
+        btn.textContent = `⏳ 실행중 (${j.count} cases)`;
+        statusEl.textContent = `▶ 실행 시작 (${j.count} cases)`;
+        if (pollTimer) clearInterval(pollTimer);
+        pollTimer = setInterval(poll, 2000);
+        poll();
+      } else {
+        alert('실행 실패: ' + (j.error || 'unknown'));
+        btn.disabled = false; btn.textContent = '▶ 전체 재계산';
+      }
+    });
+  });
+
+  // On page load, check if already running (reconnect)
+  fetch('/batch-rerun-physics/status').then(r => r.json()).then(s => {
+    if (s.running) {
+      btn.disabled = true; btn.textContent = '⏳ 실행중';
+      pollTimer = setInterval(poll, 2000); poll();
+    } else if (s.total > 0) {
+      poll();  // show last completion status
+    }
+  });
+})();
+</script>
+
 <!-- Upload Section -->
 <div class="card upload-card">
   <h3>새 분석 케이스</h3>

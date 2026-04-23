@@ -1352,6 +1352,121 @@ def retry_network(case_id):
     thread.start()
     return jsonify({'success': True, 'status': 'started'})
 
+
+# Global status for the batch rerun (single-shot, last run wins).
+_batch_status = {'running': False, 'total': 0, 'done': 0,
+                 'current': '', 'failures': [], 'started_at': '', 'finished_at': ''}
+
+
+def _find_all_cases():
+    """Return list of (case_id, case_dir, results_dir, meta_path, atoms, contacts, source).
+    Covers both webapp/results and webapp/archive."""
+    out = []
+    scripts_dir = app.config['SCRIPTS_FOLDER']
+    # results/: case_id = directory name, results_dir = case_dir = webapp/results/<cid>
+    rroot = Path(app.config['RESULTS_FOLDER'])
+    if rroot.is_dir():
+        for d in sorted(rroot.iterdir()):
+            if not d.is_dir() or d.name in ('reports', 'group_plots'): continue
+            atoms = d / 'atoms.csv'; contacts = d / 'contacts.csv'; meta = d / 'meta.json'
+            if atoms.exists() and contacts.exists() and meta.exists():
+                out.append(dict(cid=d.name, case_dir=str(d), results_dir=str(d),
+                                meta=str(meta), atoms=str(atoms),
+                                contacts=str(contacts), source='results'))
+    # archive/: same layout, but nested under category folders
+    aroot = Path(app.config['ARCHIVE_FOLDER'])
+    if aroot.is_dir():
+        for meta in sorted(aroot.rglob('meta.json')):
+            d = meta.parent
+            atoms = d / 'atoms.csv'; contacts = d / 'contacts.csv'
+            if atoms.exists() and contacts.exists():
+                out.append(dict(cid=d.name, case_dir=str(d), results_dir=str(d),
+                                meta=str(meta), atoms=str(atoms),
+                                contacts=str(contacts), source='archive'))
+    return out
+
+
+@app.route('/batch-rerun-physics', methods=['POST'])
+def batch_rerun_physics():
+    """Re-run analyze_contacts + Network solver (both modes) + Physics coverage
+    on every case. Keeps raw CSVs, only refreshes the analysis summary and
+    solver output. Use after changing the solver resistance model."""
+    global _batch_status
+    if _batch_status['running']:
+        return jsonify({'success': False, 'error': 'Already running', 'status': _batch_status})
+
+    cases = _find_all_cases()
+    _batch_status = {'running': True, 'total': len(cases), 'done': 0,
+                     'current': '', 'failures': [],
+                     'started_at': datetime.now().strftime('%H:%M:%S'),
+                     'finished_at': ''}
+
+    def _worker():
+        scripts = app.config['SCRIPTS_FOLDER']
+        for c in cases:
+            _batch_status['current'] = c['cid']
+            try:
+                with open(c['meta']) as f: meta = json.load(f)
+                mode = meta.get('mode', 'standard')
+                type_map = meta.get('type_map', '1:AM,2:SE')
+                scale = str(meta.get('scale', 1000))
+
+                # 1) Refresh analyze_contacts summary (same script, same CSVs)
+                ac_script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
+                subprocess.run(['python3', os.path.join(scripts, ac_script),
+                                c['atoms'], c['contacts'], '-o', c['results_dir'],
+                                '-t', type_map, '-s', scale],
+                               capture_output=True, text=True, timeout=900)
+
+                # 2) Network solver (both modes — Hertzian + Physics)
+                with _network_solver_lock:
+                    subprocess.run(['python3', os.path.join(scripts, 'network_conductivity.py'),
+                                    c['atoms'], c['contacts'], '-o', c['results_dir'],
+                                    '-t', type_map, '-s', scale,
+                                    '--contact-mode', 'both'],
+                                   capture_output=True, text=True, timeout=1800)
+
+                # 3) Merge network output into full_metrics.json
+                net_json = os.path.join(c['results_dir'], 'network_conductivity.json')
+                met_json = os.path.join(c['results_dir'], 'full_metrics.json')
+                if os.path.exists(net_json) and os.path.exists(met_json):
+                    with open(net_json) as _nf: net_data = json.load(_nf)
+                    with open(met_json) as _mf: met_data = json.load(_mf)
+                    for k in ['sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
+                              'sigma_bulk_net_mScm', 'R_brug_over_full',
+                              'bulk_resistance_fraction', 'electronic_sigma_full_mScm',
+                              'electronic_R_brug', 'electronic_active_fraction',
+                              'electronic_percolating_fraction', 'thermal_sigma_full_mScm',
+                              'thermal_R_brug', 'sigma_bruggeman', 'sigma_bruggeman_mScm',
+                              'R_bruggeman_over_full']:
+                        if k in net_data and net_data[k] is not None:
+                            met_data[k] = net_data[k]
+                    met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
+                    met_data['network_solver_status'] = 'success'
+                    with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
+
+                # 4) Physics coverage refresh (uses --case-dir to hit this specific case dir)
+                subprocess.run(['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+                                '--case-dir', c['case_dir']],
+                               capture_output=True, text=True, timeout=600)
+
+                _batch_status['done'] += 1
+            except Exception as e:
+                _batch_status['failures'].append({'cid': c['cid'], 'err': str(e)[:200]})
+                _batch_status['done'] += 1
+        _batch_status['running'] = False
+        _batch_status['current'] = '(done)'
+        _batch_status['finished_at'] = datetime.now().strftime('%H:%M:%S')
+
+    threading.Thread(target=_worker, daemon=True).start()
+    return jsonify({'success': True, 'count': len(cases)})
+
+
+@app.route('/batch-rerun-physics/status')
+def batch_rerun_physics_status():
+    return jsonify(_batch_status)
+
+
 @app.route('/single/<case_id>')
 def single(case_id):
     """View single case results.
