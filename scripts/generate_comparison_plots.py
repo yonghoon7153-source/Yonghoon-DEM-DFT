@@ -1844,6 +1844,31 @@ def plot_multiscale_sigma(data_list, names, outdir):
     # v32 correction applied on top of v29 — per-case features pulled from
     # dataset_summary.csv (physics-regime caps) + input_params (PSD ratio).
     # Cases without regime data fall back to v29 silently.
+    #
+    # If plot_ionic_scaling_fit has not populated _V32_FITTED_GAMMAS yet
+    # (e.g. user requested multiscale without parity), do our own OLS
+    # refit here so we don't apply stale hardcoded γ that were fit on a
+    # different case population.
+    global _V32_FITTED_GAMMAS
+    if _V32_FITTED_GAMMAS is None:
+        try:
+            feat_order = list(_V32_GAMMAS.keys())
+            X_rows, y_rows = [], []
+            for i, d in enumerate(data_list):
+                feats = _v32_features_for_case(d)
+                if feats is None: continue
+                σn = sigma_net[i]; σv = sigma_v29_raw[i]
+                if σn <= 0 or σv <= 0: continue
+                X_rows.append([feats.get(k, 0.0) for k in feat_order])
+                y_rows.append(np.log(σn) - np.log(σv))
+            if len(X_rows) >= len(feat_order) + 2:
+                gammas, *_ = np.linalg.lstsq(np.array(X_rows), np.array(y_rows), rcond=None)
+                _V32_FITTED_GAMMAS = dict(zip(feat_order, (float(g) for g in gammas)))
+                print(f"  [multiscale→v32 refit] n={len(X_rows)}  "
+                      + "  ".join(f"γ({k})={g:+.3f}" for k, g in _V32_FITTED_GAMMAS.items()))
+        except Exception as _e:
+            print(f"  [multiscale→v32 refit] skipped: {_e}")
+
     sigma_ms = [
         _formx_v32_predict(sigma_v29_raw[i], data_list[i])
         for i in range(len(data_list))
