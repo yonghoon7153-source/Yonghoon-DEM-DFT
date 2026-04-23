@@ -1762,10 +1762,26 @@ def group_plots():
 
     # Build group sizes string: "3,5" means first 3 cases = group A, next 5 = group B
     # Build group names string
+    # Filter against ACTUAL surviving cases — if a case was deleted from disk,
+    # the main loop below silently drops it from input_files. Without mirroring
+    # that filter here, group_sizes would over-count by the number of missing
+    # cases and the vertical group separators drift by that amount.
+    surviving = set()
+    for cid in selected:
+        if cid.startswith('archive:'):
+            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], cid[len('archive:'):])
+        else:
+            case_path = get_results_dir(cid)
+        if os.path.exists(os.path.join(case_path, 'full_metrics.json')):
+            surviving.add(cid)
+
     group_sizes = []
     group_names_list = []
     for g in case_groups_raw:
-        group_sizes.append(str(len(g.get('cases', []))))
+        count = sum(1 for c in g.get('cases', []) if c in surviving)
+        if count == 0:
+            continue
+        group_sizes.append(str(count))
         group_names_list.append(g.get('name', '') or f"Case {chr(65 + len(group_names_list))}")
 
     global_rgb = request.form.get('global_rgb', '')
