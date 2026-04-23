@@ -35,7 +35,8 @@ WEBAPP = Path(__file__).parent.parent / 'webapp'
 
 
 def _cov_from(m, mode='hertz'):
-    """Return coverage fraction (0..1). `mode` in ('hertz','phys')."""
+    """Return coverage fraction (0..1). `mode` in ('hertz','phys').
+    Returns None if no relevant key present (so callers can filter)."""
     if mode == 'phys':
         keys = ('coverage_AM_P_mean_physics',
                 'coverage_AM_S_mean_physics',
@@ -46,7 +47,7 @@ def _cov_from(m, mode='hertz'):
                 'coverage_AM_mean')
     vs = [m.get(k) for k in keys]
     vs = [v for v in vs if v and v > 0]
-    return (sum(vs)/len(vs)/100) if vs else 0.20
+    return (sum(vs)/len(vs)/100) if vs else None
 
 
 def _predict_v29(row, cov_override, params):
@@ -90,12 +91,16 @@ def main():
     for _, r in df.iterrows():
         cid = r['case_id']
         fm = None
-        for p in Path('webapp/archive').rglob(f'{cid}/full_metrics.json'):
-            try:
-                fm = json.load(open(p))
-            except Exception:
-                pass
-            break
+        # Search both results/ (new cases) and archive/ (curated cases).
+        for base in ('results', 'archive'):
+            for p in Path(f'webapp/{base}').rglob(f'{cid}/full_metrics.json'):
+                try:
+                    fm = json.load(open(p))
+                except Exception:
+                    pass
+                break
+            if fm is not None:
+                break
         if fm is None:
             fm = {}
         cov_h_list.append(_cov_from(fm, 'hertz'))
@@ -109,7 +114,7 @@ def main():
     df['sigma_phys']  = sig_p_list
 
     # Keep only cases with both modes available
-    df = df.dropna(subset=['sigma_phys']).reset_index(drop=True)
+    df = df.dropna(subset=['sigma_phys', 'cov_phys', 'cov_hertz']).reset_index(drop=True)
     df = df[(df['sigma_phys'] > 1e-6) & (df['sigma_hertz'] > 1e-6)]
     df = df[(df['cov_phys'] > 0) & (df['cov_hertz'] > 0)].reset_index(drop=True)
     n = len(df)
