@@ -270,15 +270,25 @@ def sweep_d(best_interface_relaxed, n_ncm, new_calc,
     from ase.optimize import LBFGS
 
     pos0 = best_interface_relaxed.get_positions()
-    # Use Ni-based reference (Ni doesn't drift, gives stable geometric NCM top)
+    # NCM top reference: for (001) 1L Ni is at BOTTOM, so Ni-top != slab-top.
+    # Use all-NCM-atom max (stable if no relax; otherwise use top-O).
     sym0 = best_interface_relaxed.get_chemical_symbols()
-    ni_idx = [i for i in range(n_ncm) if sym0[i] == 'Ni']
-    if ni_idx:
-        ncm_zmax = pos0[ni_idx, 2].max()
-        print(f"  Using Ni-top as NCM reference: z={ncm_zmax:.2f} "
-              f"(vs all-atom max {pos0[:n_ncm,2].max():.2f})")
+    o_idx = [i for i in range(n_ncm) if sym0[i] == 'O']
+    if o_idx:
+        # Top O layer = physical top surface of slab
+        o_zmax = pos0[o_idx, 2].max()
+        all_zmax = pos0[:n_ncm, 2].max()
+        # Prefer all_zmax if consistent with o_zmax (no Li drift outlier)
+        if abs(all_zmax - o_zmax) < 1.5:
+            ncm_zmax = all_zmax
+            print(f"  NCM top reference: z={ncm_zmax:.2f} (all-atom max, O-top={o_zmax:.2f})")
+        else:
+            # Outlier Li drifted above → use O-top as stable reference
+            ncm_zmax = o_zmax
+            print(f"  NCM top reference: z={ncm_zmax:.2f} (O-top, outlier all-max={all_zmax:.2f} ignored)")
     else:
         ncm_zmax = pos0[:n_ncm, 2].max()
+        print(f"  NCM top reference: z={ncm_zmax:.2f} (all-atom max)")
     area = float(np.linalg.norm(
         np.cross(best_interface_relaxed.cell.array[0],
                  best_interface_relaxed.cell.array[1])))
