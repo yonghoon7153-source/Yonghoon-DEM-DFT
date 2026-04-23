@@ -137,6 +137,14 @@ def list_cases():
             meta['warning_count'] = m.get('warning_count', 0)
             meta['warning_msgs'] = [w['msg'] for w in m.get('warnings', [])]
             meta['network_solver_status'] = m.get('network_solver_status', meta.get('network_solver_status', ''))
+            # Physics solver resistance model. 'maxwell+film' = new upgraded
+            # formula; 'maxwell' = legacy point-contact only. Used by the
+            # case list to flag which cases still need a batch rerun.
+            phys_model = m.get('physics_resistance_model')
+            if not phys_model and 'sigma_full_mScm_physics' in m:
+                phys_model = 'maxwell'   # legacy Physics without the tag
+            meta['physics_resistance_model'] = phys_model or ''
+            meta['physics_solver_at'] = m.get('physics_solver_at', '')
         cases.append(meta)
     return cases
 
@@ -1447,6 +1455,13 @@ def batch_rerun_physics():
                     for src, dst in remap_pairs:
                         if src in net_data and net_data[src] is not None:
                             met_data[dst] = net_data[src]
+                    # Stamp the resistance model + timestamp so the UI can
+                    # flag which cases are on the upgraded (Maxwell+Film) vs
+                    # legacy (Maxwell-only) Physics solver.
+                    met_data['physics_resistance_model'] = net_data.get(
+                        'resistance_model', 'maxwell+film')
+                    met_data['physics_solver_at'] = datetime.now().strftime(
+                        '%Y-%m-%d %H:%M:%S')
                     met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
                     with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
 
@@ -1477,7 +1492,34 @@ def batch_rerun_physics():
 
 @app.route('/batch-rerun-physics/status')
 def batch_rerun_physics_status():
-    return jsonify(_batch_status)
+    # Scan all cases and summarise which resistance model each one is on.
+    # Gives the UI a "N/M upgraded" breakdown without the user having to
+    # open each case to check.
+    counts = {'maxwell+film': 0, 'maxwell': 0, 'unknown': 0, 'none': 0}
+    latest_at = ''
+    for c in _find_all_cases():
+        fm_path = os.path.join(c['results_dir'], 'full_metrics.json')
+        if not os.path.exists(fm_path):
+            counts['none'] += 1; continue
+        try:
+            with open(fm_path) as f: m = json.load(f)
+        except Exception:
+            counts['unknown'] += 1; continue
+        model = m.get('physics_resistance_model')
+        if model in ('maxwell+film', 'maxwell'):
+            counts[model] += 1
+        elif 'sigma_full_mScm_physics' in m:
+            # Has Physics σ but no model tag → legacy run (Maxwell-only).
+            counts['maxwell'] += 1
+        else:
+            counts['none'] += 1
+        ts = m.get('physics_solver_at', '')
+        if ts > latest_at: latest_at = ts
+    status = dict(_batch_status)
+    status['model_counts'] = counts
+    status['latest_physics_at'] = latest_at
+    status['total_cases'] = sum(counts.values())
+    return jsonify(status)
 
 
 @app.route('/single/<case_id>')

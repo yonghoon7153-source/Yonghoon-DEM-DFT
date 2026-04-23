@@ -260,6 +260,12 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         'box_y': box_y,
         'scale': scale,
         'contact_mode': contact_mode,
+        # Resistance-model tag: 'maxwell' (point-contact only) for Hertzian,
+        # 'maxwell+film' (point + surface film tube) for Physics. Used by the
+        # webapp to flag whether a case was run on the legacy or upgraded
+        # solver.
+        'resistance_model': ('maxwell+film' if contact_mode == 'physics'
+                             else 'maxwell'),
     }
 
 
@@ -676,6 +682,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     # Results
     results = {
         'contact_mode': contact_mode,
+        'resistance_model': ('maxwell+film' if contact_mode == 'physics'
+                             else 'maxwell'),
         'n_nodes': n_nodes,
         'n_edges': n_edges,
         'n_bottom': n_bottom,
