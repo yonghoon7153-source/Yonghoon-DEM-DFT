@@ -48,6 +48,57 @@ _GLOBAL_IONIC_POLY3 = None  # (a0, a1, a2, a3) for poly3 part of v9 BLEND
 _GLOBAL_PS_SIGMOID = None   # v19: (k_pf, pc_pf, beta1, beta2, w_pf_mean, pf_t_mean)
 _ALL_DATA = None  # all_data for _apply_style auto-detect
 
+# Disk cache of the fitted v29 + v32 params. Webapp spawns a separate
+# subprocess per plot set, so module globals do not survive across
+# calls. Writing the fitted values here lets plot_multiscale_sigma (run
+# in a different subprocess) reuse the same v29 that the parity plot
+# produced. Keyed by the sorted list of case names so a different case
+# selection invalidates stale entries automatically.
+import hashlib as _hashlib, tempfile as _tempfile
+_V29_CACHE_PATH = os.path.join(_tempfile.gettempdir(), 'dem_v29_v32_cache.json')
+
+
+def _cases_fingerprint(names):
+    """Stable hash of the sorted case-name tuple."""
+    return _hashlib.md5(
+        ','.join(sorted(str(n) for n in names)).encode('utf-8')
+    ).hexdigest()
+
+
+def _write_v29_cache(names, sigmoid, poly3, ps_sigmoid, v32_gammas=None):
+    import json as _json
+    payload = {
+        'fingerprint': _cases_fingerprint(names),
+        'sigmoid':  list(sigmoid),
+        'poly3':    list(poly3),
+        'ps_sigmoid': list(ps_sigmoid),
+        'v32_gammas': dict(v32_gammas) if v32_gammas else None,
+    }
+    try:
+        with open(_V29_CACHE_PATH, 'w') as f:
+            _json.dump(payload, f)
+        print(f"  [v29 cache] wrote {_V29_CACHE_PATH}  fp={payload['fingerprint'][:8]}")
+    except Exception as e:
+        print(f"  [v29 cache] write failed: {e}")
+
+
+def _load_v29_cache(names):
+    """Return (sigmoid, poly3, ps_sigmoid, v32_gammas) if cache matches, else None."""
+    import json as _json
+    if not os.path.exists(_V29_CACHE_PATH):
+        return None
+    try:
+        p = _json.load(open(_V29_CACHE_PATH))
+    except Exception:
+        return None
+    if p.get('fingerprint') != _cases_fingerprint(names):
+        return None
+    print(f"  [v29 cache] hit  fp={p['fingerprint'][:8]}")
+    return (tuple(p.get('sigmoid', [])),
+            tuple(p.get('poly3', [])),
+            tuple(p.get('ps_sigmoid', [])),
+            p.get('v32_gammas'))
+
 def _apply_style(ax, ylabel, names, data_list=None):
     """Apply common academic style with group separators.
     Auto-detect monomodal: if all P:S are same, use AM:SE as x-axis."""
@@ -1329,6 +1380,18 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     except Exception as _e:
         print(f"  [v32 refit] skipped ({_e}); using hardcoded defaults")
         _V32_FITTED_GAMMAS = None
+
+    # Persist v29 + v32 fits to disk cache so sibling subprocesses
+    # (which cannot see this process's module globals) pick them up.
+    try:
+        if _GLOBAL_IONIC_SIGMOID and _GLOBAL_IONIC_POLY3 and _GLOBAL_PS_SIGMOID:
+            _write_v29_cache(names,
+                             _GLOBAL_IONIC_SIGMOID,
+                             _GLOBAL_IONIC_POLY3,
+                             _GLOBAL_PS_SIGMOID,
+                             _V32_FITTED_GAMMAS)
+    except Exception as _e:
+        print(f"  [v29 cache] skipped: {_e}")
 
     s_pred = np.array([
         _formx_v32_predict(s_pred_v29[j], data_list[i])
@@ -3459,6 +3522,20 @@ def main():
 
     os.makedirs(args.output, exist_ok=True)
     plot_info = {}
+
+    # Try to pre-load fitted v29 + v32 params from disk cache. Webapp
+    # invokes this script multiple times per render (one subprocess per
+    # plot group / per plot subset), so module globals do not carry
+    # across calls. The parity plot writes the cache; every subsequent
+    # subprocess can now pick it up as long as the case list matches.
+    global _V32_FITTED_GAMMAS, _GLOBAL_IONIC_SIGMOID, _GLOBAL_IONIC_POLY3, _GLOBAL_PS_SIGMOID
+    _cached = _load_v29_cache(args.names)
+    if _cached:
+        _sig, _p3, _ps, _v32g = _cached
+        if _sig: _GLOBAL_IONIC_SIGMOID = _sig
+        if _p3:  _GLOBAL_IONIC_POLY3   = _p3
+        if _ps:  _GLOBAL_PS_SIGMOID    = _ps
+        if _v32g: _V32_FITTED_GAMMAS   = dict(_v32g)
 
     # Set global group info for _apply_style
     global _GROUP_INFO, _GLOBAL_RGB, _Y_MAX_SIGMA
