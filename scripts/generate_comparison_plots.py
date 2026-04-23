@@ -67,8 +67,10 @@ def _cases_fingerprint(names):
 
 def _write_v29_cache(names, sigmoid, poly3, ps_sigmoid, v32_gammas=None):
     import json as _json
+    name_list = sorted(str(n) for n in names)
     payload = {
         'fingerprint': _cases_fingerprint(names),
+        'case_names': name_list,
         'sigmoid':  list(sigmoid),
         'poly3':    list(poly3),
         'ps_sigmoid': list(ps_sigmoid),
@@ -77,13 +79,17 @@ def _write_v29_cache(names, sigmoid, poly3, ps_sigmoid, v32_gammas=None):
     try:
         with open(_V29_CACHE_PATH, 'w') as f:
             _json.dump(payload, f)
-        print(f"  [v29 cache] wrote {_V29_CACHE_PATH}  fp={payload['fingerprint'][:8]}")
+        print(f"  [v29 cache] wrote {_V29_CACHE_PATH}  fp={payload['fingerprint'][:8]}  n={len(name_list)}")
     except Exception as e:
         print(f"  [v29 cache] write failed: {e}")
 
 
 def _load_v29_cache(names):
-    """Return (sigmoid, poly3, ps_sigmoid, v32_gammas) if cache matches, else None."""
+    """Return (sigmoid, poly3, ps_sigmoid, v32_gammas) if cache covers current
+    case list (exact match OR current names are a subset of cached names),
+    else None. Subset match handles the webapp's multi-POST flow where the
+    parity plot fits on ALL groups and each per-group POST requests only
+    its own subset — they should still use the common fitted params."""
     import json as _json
     if not os.path.exists(_V29_CACHE_PATH):
         return None
@@ -91,9 +97,16 @@ def _load_v29_cache(names):
         p = _json.load(open(_V29_CACHE_PATH))
     except Exception:
         return None
-    if p.get('fingerprint') != _cases_fingerprint(names):
+    cached_names = set(p.get('case_names', []))
+    cur = set(str(n) for n in names)
+    exact = p.get('fingerprint') == _cases_fingerprint(names)
+    subset = bool(cached_names) and cur.issubset(cached_names)
+    if not (exact or subset):
+        print(f"  [v29 cache] miss (cur={len(cur)} cases, cached={len(cached_names)}; "
+              f"not a subset)")
         return None
-    print(f"  [v29 cache] hit  fp={p['fingerprint'][:8]}")
+    tag = 'exact' if exact else f'subset {len(cur)}⊆{len(cached_names)}'
+    print(f"  [v29 cache] hit [{tag}]  fp={p.get('fingerprint','?')[:8]}")
     return (tuple(p.get('sigmoid', [])),
             tuple(p.get('poly3', [])),
             tuple(p.get('ps_sigmoid', [])),
