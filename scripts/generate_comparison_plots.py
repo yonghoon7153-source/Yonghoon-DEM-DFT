@@ -1220,6 +1220,45 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     TAU_C_BL = best_tc
     TAU_K_BL = best_k
 
+    # ────────────────────────────────────────────────────────────────
+    # Export fitted v29 params to module globals.
+    # Downstream plots (plot_multiscale_sigma, etc.) read these via
+    # _formx_v29_params() → _formx_v29_predict() so they use the SAME
+    # Nelder-Mead-optimised v29 as the parity plot above. Without this
+    # export, _formx_v29_params() silently falls back to hardcoded
+    # defaults which diverge from the fit and produce apparent residuals
+    # (the "1mAh_80:20 7:3 under-prediction" was exactly this artifact).
+    # ────────────────────────────────────────────────────────────────
+    global _GLOBAL_IONIC_SIGMOID, _GLOBAL_IONIC_POLY3, _GLOBAL_PS_SIGMOID
+    # v5 sigmoid amplitude + blend params (TAU_C, TAU_K of v5 sigmoid are
+    # fixed shape constants, not fit).
+    _C_thick_fit = float(np.exp(b_v5[0]))
+    _C_thin_fit  = float(np.exp(b_v5[0] + b_v5[1]))
+    _GLOBAL_IONIC_SIGMOID = (_C_thick_fit, _C_thin_fit,
+                             2.1, 5.0,             # v5 sigmoid τ_c, k (fixed)
+                             best_k, best_tc)      # blend K_BL, TC_BL (fit)
+    _GLOBAL_IONIC_POLY3 = tuple(float(x) for x in b_p3)
+
+    # Recompute centering means so downstream predictions match fit output.
+    _gb_vec = np.array([max(gb_dens[i], 1e-6) for i in valid_idx])
+    _gb_log = np.log(_gb_vec)
+    _gb_log_med = float(np.median(_gb_log))
+    _w_pf_vec  = 1.0 / (1.0 + np.exp(-best_kp * (pf_prod - best_pc)))
+    _w_win_vec = np.exp(-0.5 * ((tau_arr - best_tcw) / max(best_stw, 0.05))**2)
+    _w_gb_vec  = 1.0 / (1.0 + np.exp(-4.0 * (_gb_log - _gb_log_med)))
+    _beta_gb_fit = float(getattr(_fit_at, '_beta_mix', 0.0))
+    _GLOBAL_PS_SIGMOID = (
+        best_kp, best_pc,                                # K_PF, PC_PF
+        beta_pf_prod, beta_win_prod, _beta_gb_fit,       # B_PF, B_LIN, B_GB
+        float(_w_pf_vec.mean()),                         # WPF_MEAN
+        float((pf_prod * _w_win_vec).mean()),            # LIN_MEAN
+        _gb_log_med,                                     # GB_LOG_MEAN
+        best_tcw, best_stw,                              # TAU_C_WIN, SIGMA_TAU_WIN
+        float(_w_gb_vec.mean()),                         # W_GB_MEAN
+    )
+    print(f"  [v29 export] globals set: C_thick={_C_thick_fit:.4f}, C_thin={_C_thin_fit:.4f}, "
+          f"K_BL={best_k:.2f}, TC_BL={best_tc:.2f}, K_PF={best_kp:.2f}, PC_PF={best_pc:.2f}")
+
     # === v12 DATA-NATIVE EXPONENT FIT (diagnostic only, does not replace v9) ===
     # Jointly optimize (α, β, γ, δ, φc, k_bl, τc) where:
     #   log σ = log(σ_grain) + α·log(φ-φc) + β·log(CN) + γ·log(cov) + δ·log(fp) + C_blend(τ)
@@ -1821,6 +1860,13 @@ def _formx_v32_predict(sigma_v29, data):
 def plot_multiscale_sigma(data_list, names, outdir):
     """FORM X v29: delegates prediction to _formx_v29_predict (single source of
     truth with plot_ionic_scaling_fit). Reads fitted hyperparams from globals."""
+    # Consistency warning: v29 globals are set by plot_ionic_scaling_fit. If
+    # they are still None, we fall back to hardcoded v29 defaults, which no
+    # longer match whatever γ the parity plot is showing.
+    if _GLOBAL_IONIC_SIGMOID is None:
+        print("  [multiscale] WARNING: v29 globals not set — include "
+              "'ionic_scaling_fit' in the plot list for consistent rendering.")
+
     phi_se = [_get(d, "phi_se") for d in data_list]
     cn = [_get(d, "se_se_cn", 0) for d in data_list]
     tau = [_get(d, "tortuosity_recommended", _get(d, "tortuosity_mean", 1)) for d in data_list]
