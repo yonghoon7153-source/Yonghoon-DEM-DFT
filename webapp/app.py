@@ -1457,29 +1457,53 @@ def batch_rerun_physics():
                                 '-t', type_map, '-s', scale],
                                capture_output=True, text=True, timeout=900)
 
-                # 2) Physics Network solver. Only the *_physics σ keys are
-                #    refreshed. Hertzian kept untouched (v29 calibration stays).
+                # 2) Network solver in BOTH modes. Idempotent for Hertzian
+                #    (our solver patch only adds R_film when contact_mode ==
+                #    'physics', so Hertzian σ is unchanged) but it guarantees
+                #    that network_conductivity_{hertzian,physics,dual}.json +
+                #    legacy network_conductivity.json are all rewritten fresh
+                #    — no stale pre-patch data slipping into the merge.
                 with _network_solver_lock:
                     subprocess.run(['python3', os.path.join(scripts, 'network_conductivity.py'),
                                     c['atoms'], c['contacts'], '-o', c['results_dir'],
                                     '-t', type_map, '-s', scale,
-                                    '--contact-mode', 'physics'],
+                                    '--contact-mode', 'both'],
                                    capture_output=True, text=True, timeout=1800)
 
-                # 3) Merge NEW *_physics keys INTO full_metrics.json. Previously
-                #    this read network_conductivity.json (legacy=Hertzian, OLD)
-                #    and then _merge_dual_into_metrics read a STALE dual.json
-                #    which overwrote the Physics values back to pre-patch ones.
-                #    Now we read the fresh network_conductivity_physics.json
-                #    directly, and refresh dual.json's physics half in place so
-                #    _merge_dual_into_metrics sees the new values too.
-                phys_json = os.path.join(c['results_dir'], 'network_conductivity_physics.json')
-                dual_json = os.path.join(c['results_dir'], 'network_conductivity_dual.json')
-                met_json = os.path.join(c['results_dir'], 'full_metrics.json')
-                if os.path.exists(phys_json) and os.path.exists(met_json):
-                    with open(phys_json) as _nf: phys_data = json.load(_nf)
+                # 3) Merge BOTH Hertzian and Physics keys back into full_metrics.json.
+                #    analyze_contacts.py rewrites the file from scratch in step 1,
+                #    so we MUST repopulate both baseline (sigma_full_mScm, etc.)
+                #    and _physics-suffixed keys here, or those fields end up as None.
+                hertz_json = os.path.join(c['results_dir'], 'network_conductivity_hertzian.json')
+                phys_json  = os.path.join(c['results_dir'], 'network_conductivity_physics.json')
+                legacy_json = os.path.join(c['results_dir'], 'network_conductivity.json')
+                met_json   = os.path.join(c['results_dir'], 'full_metrics.json')
+                hertz_data = {}
+                phys_data  = {}
+                if os.path.exists(hertz_json):
+                    try: hertz_data = json.load(open(hertz_json))
+                    except Exception: pass
+                elif os.path.exists(legacy_json):
+                    # Fallback: legacy file = Hertzian result
+                    try: hertz_data = json.load(open(legacy_json))
+                    except Exception: pass
+                if os.path.exists(phys_json):
+                    try: phys_data = json.load(open(phys_json))
+                    except Exception: pass
+                if os.path.exists(met_json) and (hertz_data or phys_data):
                     with open(met_json) as _mf: met_data = json.load(_mf)
-                    remap_pairs = [
+                    hertz_keys = ['sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
+                                  'sigma_bulk_net_mScm', 'R_brug_over_full',
+                                  'bulk_resistance_fraction', 'electronic_sigma_full_mScm',
+                                  'electronic_R_brug', 'electronic_active_fraction',
+                                  'electronic_percolating_fraction',
+                                  'thermal_sigma_full_mScm', 'thermal_R_brug',
+                                  'sigma_bruggeman', 'sigma_bruggeman_mScm',
+                                  'R_bruggeman_over_full']
+                    for k in hertz_keys:
+                        if k in hertz_data and hertz_data[k] is not None:
+                            met_data[k] = hertz_data[k]
+                    phys_remap = [
                         ('sigma_full',            'sigma_full_physics'),
                         ('sigma_full_mScm',       'sigma_full_mScm_physics'),
                         ('sigma_bulk_net',        'sigma_bulk_net_physics'),
@@ -1492,39 +1516,17 @@ def batch_rerun_physics():
                         ('thermal_sigma_full_mScm',
                                                   'thermal_sigma_full_mScm_physics'),
                     ]
-                    for src, dst in remap_pairs:
+                    for src, dst in phys_remap:
                         if src in phys_data and phys_data[src] is not None:
                             met_data[dst] = phys_data[src]
-                    # Refresh dual.json's physics half in place (Hertzian half
-                    # stays unchanged). Recompute phys/hertz ratios too.
-                    if os.path.exists(dual_json):
-                        try:
-                            with open(dual_json) as _df: dual = json.load(_df)
-                            dual['physics'] = phys_data
-                            rH = dual.get('hertzian') or {}
-                            def _ratio(a, b):
-                                try:
-                                    return round(float(a)/float(b), 4) if (a and b and float(b)!=0) else None
-                                except Exception:
-                                    return None
-                            dual['ratio_physics_over_hertzian'] = {
-                                'sigma_full':        _ratio(phys_data.get('sigma_full'),
-                                                            rH.get('sigma_full')),
-                                'sigma_constr_net':  _ratio(phys_data.get('sigma_constr_net'),
-                                                            rH.get('sigma_constr_net')),
-                                'electronic_sigma_full': _ratio(phys_data.get('electronic_sigma_full'),
-                                                                rH.get('electronic_sigma_full')),
-                                'thermal_sigma_full':    _ratio(phys_data.get('thermal_sigma_full'),
-                                                                rH.get('thermal_sigma_full')),
-                            }
-                            with open(dual_json, 'w') as f:
-                                json.dump(dual, f, indent=2)
-                        except Exception as _e:
-                            print(f"  [batch] dual.json refresh failed for {c['cid']}: {_e}")
-                    met_data['physics_resistance_model'] = phys_data.get(
-                        'resistance_model', 'maxwell+film')
-                    met_data['physics_solver_at'] = datetime.now().strftime(
-                        '%Y-%m-%d %H:%M:%S')
+                    if phys_data:
+                        met_data['physics_resistance_model'] = phys_data.get(
+                            'resistance_model', 'maxwell+film')
+                        met_data['physics_solver_at'] = datetime.now().strftime(
+                            '%Y-%m-%d %H:%M:%S')
+                    # --contact-mode=both writes network_conductivity_dual.json
+                    # freshly, so _merge_dual_into_metrics picks up consistent
+                    # Hertzian+Physics pair here without stale leftovers.
                     met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
                     with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
 
