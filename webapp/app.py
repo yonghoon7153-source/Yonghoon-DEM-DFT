@@ -1378,24 +1378,27 @@ _batch_status = {'running': False, 'total': 0, 'done': 0,
 
 
 def _find_all_cases():
-    """Return list of (case_id, case_dir, results_dir, meta_path, atoms, contacts, source).
-    Covers both webapp/results and webapp/archive, deduplicated by case_id
-    (results/ entry wins when the same cid exists in both)."""
+    """Return list of cases to batch-process.
+    Scans webapp/results/<cid>/ (meta.json lives in webapp/uploads/<cid>/ —
+    NOT in the same dir as atoms.csv) and webapp/archive/<category>/<name>/
+    (meta.json lives next to atoms.csv). Deduplicated by cid.
+    """
     out = []
     seen = set()
-    # results/ first so its entries win on duplicate cid.
+    uploads_root = Path(app.config['UPLOAD_FOLDER'])
     rroot = Path(app.config['RESULTS_FOLDER'])
     if rroot.is_dir():
         for d in sorted(rroot.iterdir()):
             if not d.is_dir() or d.name in ('reports', 'group_plots'): continue
-            atoms = d / 'atoms.csv'; contacts = d / 'contacts.csv'; meta = d / 'meta.json'
+            atoms = d / 'atoms.csv'; contacts = d / 'contacts.csv'
+            # meta.json is in uploads/<cid>/, not in results/<cid>/
+            meta = uploads_root / d.name / 'meta.json'
             if atoms.exists() and contacts.exists() and meta.exists():
                 if d.name in seen: continue
                 seen.add(d.name)
                 out.append(dict(cid=d.name, case_dir=str(d), results_dir=str(d),
                                 meta=str(meta), atoms=str(atoms),
                                 contacts=str(contacts), source='results'))
-    # archive/: only add if cid not already seen from results.
     aroot = Path(app.config['ARCHIVE_FOLDER'])
     if aroot.is_dir():
         for meta in sorted(aroot.rglob('meta.json')):
