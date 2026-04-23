@@ -91,21 +91,35 @@ def load_all_cases():
     return cases
 
 
-def predict_v32(data):
+def predict_v32(data, debug=False):
     """Full v32 pipeline: v29 base × v32 exp correction."""
     cfg = _formx_v29_params()
-    phi_se    = data.get('phi_se', 0)
-    cn        = data.get('se_se_cn', 0)
-    tau       = data.get('tortuosity_mean', 0)
-    cov       = data.get('am_se_coverage_elastic_pct', data.get('coverage_AM_mean', 0))
-    f_perc    = data.get('percolation_pct', 0) / 100.0 if data.get('percolation_pct', 0) > 1 else data.get('percolation_pct', 0)
+    phi_se    = data.get('phi_se', 0) or 0
+    cn        = data.get('se_se_cn', 0) or 0
+    tau       = data.get('tortuosity_mean', 0) or 0
+    # coverage lookup — try multiple historical key names
+    cov = 0
+    for k in ('am_se_coverage_elastic_pct', 'coverage_AM_mean',
+              'coverage_AM', 'am_se_coverage_pct'):
+        v = data.get(k)
+        if v is not None and v > 0:
+            cov = v
+            break
+    perc_raw  = data.get('percolation_pct', 0) or 0
+    f_perc    = perc_raw / 100.0 if perc_raw > 1 else perc_raw
     ps_frac   = _ps_fraction(data) or 0.7
-    gb_dens   = data.get('gb_density_mean', 0)
+    gb_dens   = data.get('gb_density_mean', 0) or 0
+    if debug:
+        print(f'    phi_se={phi_se}  cn={cn}  tau={tau}  cov={cov}  '
+              f'f_perc={f_perc}  p_frac={ps_frac}  gb={gb_dens}')
     try:
-        v29 = _formx_v29_predict(phi_se, cn, tau, cov, f_perc, ps_frac, gb_dens, cfg)
-    except Exception:
+        v29 = _formx_v29_predict(phi_se, cn, tau, cov, f_perc, ps_frac, gb_dens,
+                                 params=cfg)
+    except Exception as e:
+        if debug: print(f'    v29 raised: {e}')
         return None
     if v29 <= 0 or not np.isfinite(v29):
+        if debug: print(f'    v29 returned {v29} (non-positive)')
         return None
     v32 = _formx_v32_predict(v29, data)
     return v32
@@ -116,13 +130,20 @@ def main():
     print(f'Loaded {len(cases)} cases from {ARCHIVE}')
 
     rows = []
+    skipped_no_sigma = 0
+    skipped_v32_fail = 0
     for c in cases:
         m = c['metrics']
         sig_actual = m.get('sigma_full_mScm')
         if sig_actual is None or sig_actual <= 0:
+            skipped_no_sigma += 1
             continue
         sig_v32 = predict_v32(m)
         if sig_v32 is None or sig_v32 <= 0:
+            if skipped_v32_fail < 3:
+                print(f'  [v32 fail debug] {c["name"]}:')
+                predict_v32(m, debug=True)
+            skipped_v32_fail += 1
             continue
         err_pct = (sig_actual - sig_v32) / sig_v32 * 100
 
@@ -152,8 +173,11 @@ def main():
         rows.append(row)
 
     if not rows:
-        print('No cases with valid σ and v32 prediction.')
+        print(f'No cases with valid σ and v32 prediction. '
+              f'(skipped_no_sigma={skipped_no_sigma}, skipped_v32_fail={skipped_v32_fail})')
         return
+    print(f'  → {len(rows)} cases with valid prediction. '
+          f'(skipped_no_sigma={skipped_no_sigma}, skipped_v32_fail={skipped_v32_fail})')
 
     rows.sort(key=lambda r: -r['abs_err_pct'])
 
