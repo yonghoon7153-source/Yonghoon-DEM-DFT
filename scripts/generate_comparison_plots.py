@@ -3748,13 +3748,25 @@ def main():
     # which are unique — unlike the P:S-ratio label list passed into the
     # individual plot functions). Sibling subprocesses whose case list is a
     # subset of these IDs will pick up these params on startup.
+    #
+    # CRITICAL: only write when ionic_scaling_fit ran in this subprocess
+    # (which implies Nelder-Mead on the FULL requested case set). Per-group
+    # subprocesses would otherwise overwrite the parity cache with their
+    # own narrow subset, so only the first group plot after parity would
+    # hit — every subsequent group would miss because the cache would
+    # contain just one group's IDs.
+    wrote_parity = 'ionic_scaling_fit' in args.plots
     try:
-        if _GLOBAL_IONIC_SIGMOID and _GLOBAL_IONIC_POLY3 and _GLOBAL_PS_SIGMOID:
+        if (wrote_parity and _GLOBAL_IONIC_SIGMOID
+                and _GLOBAL_IONIC_POLY3 and _GLOBAL_PS_SIGMOID):
             _write_v29_cache(args.names,
                              _GLOBAL_IONIC_SIGMOID,
                              _GLOBAL_IONIC_POLY3,
                              _GLOBAL_PS_SIGMOID,
                              _V32_FITTED_GAMMAS)
+        elif not wrote_parity:
+            print(f"  [v29 cache] skip write (ionic_scaling_fit not in "
+                  f"this subprocess — preserves parity cache for siblings)")
     except Exception as _e:
         print(f"  [v29 cache] skipped: {_e}")
 
