@@ -44,21 +44,32 @@
     if (nm > 0) parts.push(`✗ ${nm} no-metrics`);
     return parts.join('  |  ');
   }
+  let lastDone = -1;
   function poll() {
     fetch('/batch-rerun-physics/status').then(r => r.json()).then(s => {
       if (s.running) {
-        statusEl.textContent = `▶ ${s.done}/${s.total}  |  현재: ${s.current}  |  시작 ${s.started_at}`;
+        statusEl.textContent = `▶ ${s.done}/${s.total}  |  현재: ${s.current}  |  ${summaryLine(s)}`;
         statusEl.style.color = '#4a9eff';
+        // Each time a case completes, auto-refresh the page so badges and
+        // analysis summary reflect the fresh full_metrics.json. Uses a
+        // throttle on `done` so we refresh at most once per case tick.
+        if (s.done > lastDone && lastDone >= 0) {
+          console.log(`[batch] ${lastDone} → ${s.done}, reloading page…`);
+          location.reload();
+          return;
+        }
+        lastDone = s.done;
       } else if (s.total > 0) {
-        statusEl.textContent = `✔ 완료 ${s.done}/${s.total}  |  실패 ${s.failures.length}  |  ${s.started_at} → ${s.finished_at}`;
+        statusEl.textContent = `✔ 완료 ${s.done}/${s.total}  |  실패 ${s.failures.length}  |  ${summaryLine(s)}`;
         statusEl.style.color = s.failures.length ? '#c14a00' : '#3b9';
         if (s.failures.length) {
           statusEl.title = s.failures.map(f => `${f.cid}: ${f.err}`).join('\n');
         }
         btn.disabled = false; btn.textContent = '▶ Physics 재계산';
         clearInterval(pollTimer); pollTimer = null;
+        // Final reload so the just-completed last case's badges land.
+        if (lastDone !== s.done) { lastDone = s.done; location.reload(); }
       } else {
-        // Idle state: show current model distribution
         statusEl.textContent = summaryLine(s);
         statusEl.style.color = '#888';
       }
