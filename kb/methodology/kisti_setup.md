@@ -1,155 +1,209 @@
 # KISTI Neuron — Software Installation & Environment Guide
 
-Observed setup for argyrodite DFT/MLIP workflow on KISTI Neuron (glogin01).
-Paths reflect user x3430a02 but pattern is identical for others.
+**Source:** extracted from `/scratch/x3430a02/kgy/setup_neuron.sh` (2026-04-06)
+Working environment for argyrodite DFT/MLIP workflow on KISTI Neuron.
 
 ---
 
-## 1. Host & Access
-- **Login node:** `glogin01.neuron.ksc.re.kr`
-- **Shell:** zsh (prompt shows `(uma) N% [x3430a02@glogin01 ...]`)
-- **Storage root:** `/scratch/x3430a02/kgy/` (personal scratch)
-- **Shared miniforge:** `/scratch/x3430a02/mjs0000/miniforge3/` (lab member Minseok Jo's install)
+## 1. Host specification
 
-## 2. Conda environments (already set up)
+| Item | Value |
+|------|-------|
+| **Login node** | `glogin01.neuron.ksc.re.kr` |
+| **GPU** | NVIDIA **A100 80GB PCIe** (compute capability 8.0, sm_80) |
+| **Default GPU** | `CUDA_VISIBLE_DEVICES=1` (GPU 0 reserved by other users) |
+| **Work dir** | `/scratch/x3430a02/kgy/` |
+| **Home dir** | `/home01/x3430a02/` |
 
-Shared base — activate on login:
+## 2. Module toolchain
+
+```bash
+module load gcc/11.5.0
+module load cuda/12.5                   # auto-redirects to 12.4.1
+module load cudampi/openmpi-4.1.8
+module load cmake/4.1.3                 # auto-redirects to 4.2.1
+module load fftw3/3.3.10
+module load libxc/7.0.0
+module load hdf5/1.12.0                 # auto-redirects to 2.0.0
+module load mkl/2025.3
+```
+
+**For GPU QE build only:**
+```bash
+module load nvhpc/25.11_cuda12
+module load cuda/12.5
+```
+
+## 3. Installed applications
+
+### QE 7.4.1
+
+| Variant | Path | Status | Notes |
+|---------|------|--------|-------|
+| **GPU** | `/scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x` | ✅ built | nvfortran / cc80 / nvhpc |
+| CPU | `/scratch/x3430a02/kgy/apps/qe-cpu/bin/pw.x` | ⚠️ built with issues | libxc linkage trouble (see setup.log) |
+
+Build commands (GPU):
+```bash
+cd $WORK/apps/qe-gpu
+./configure \
+    --with-cuda=$CUDA_HOME \
+    --with-cuda-runtime=12.5 \
+    --with-cuda-cc=80 \
+    --enable-openmp \
+    FC=nvfortran F90=nvfortran CC=nvc MPIF90=mpifort
+make -j8 pw pp
+```
+
+### LIGGGHTS-PUBLIC (DEM simulations)
+
+```
+/scratch/x3430a02/kgy/apps/LIGGGHTS-PUBLIC/src/lmp_mpi
+```
+Built without VTK (flags stripped from Makefile.mpi).
+
+### Conda environments
+
+Shared miniforge at `/scratch/x3430a02/mjs0000/miniforge3/`.
+
 ```bash
 source /scratch/x3430a02/mjs0000/miniforge3/etc/profile.d/conda.sh
 conda env list
-# base  /scratch/x3430a02/mjs0000/miniforge3
-# mace  /scratch/x3430a02/mjs0000/miniforge3/envs/mace
-# uma   /scratch/x3430a02/mjs0000/miniforge3/envs/uma
 ```
 
-### `uma` env (adhesion calculations, UMA MLIP)
-```bash
-conda activate uma
-# contains: ase, numpy, scipy, fairchem (uma-s-1p1)
-pip list | grep -iE "ase|fairchem|torch|pymatgen"
-```
-Used for v5 xy-shift adhesion, Li annealing, MLIP EOS screening.
+| Env | Purpose | Key packages |
+|-----|---------|-------------|
+| `base` | default | - |
+| `mace` | MACE-MP-0 | torch (cu121), mace-torch, ase, pymatgen |
+| `uma` | UMA MLIP | torch (cu121), fairchem-core, ase, pymatgen |
 
-### `mace` env (MACE-MP-0 screening)
+Create (if missing):
 ```bash
+# MACE
+conda create -n mace python=3.11 -y
 conda activate mace
-# contains: mace-torch (MACE-MP-0), ase, numpy
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+pip install mace-torch ase numpy scipy matplotlib pandas pymatgen
+
+# UMA
+conda create -n uma python=3.11 -y
+conda activate uma
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+pip install fairchem-core ase pymatgen numpy scipy matplotlib pandas huggingface-hub
 ```
-Used for halogen enumeration screening + 600K snapshot elastic.
 
-### Python 3.10, CUDA 12.9
+## 4. Environment (bashrc block)
 
----
+Appended to `~/.bashrc` by setup script:
 
-## 3. Quantum ESPRESSO (pre-compiled GPU build)
-
-```
-/scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x   # GPU-accelerated PWscf
-/scratch/x3430a02/kgy/apps/qe-cpu/bin/pw.x   # CPU fallback
-```
-Both in `$PATH`. Built with OpenMPI 4.1.8 + CUDA 12.9.1 + MKL 2025.3.
-
-Test:
 ```bash
-which pw.x
-pw.x -version
+# ===== Neuron Custom Environment =====
+export CUDA_VISIBLE_DEVICES=1
+
+module purge 2>/dev/null
+module load gcc/11.5.0
+module load cuda/12.5
+module load cudampi/openmpi-4.1.8
+module load cmake/4.1.3
+module load fftw3/3.3.10
+module load libxc/7.0.0
+module load hdf5/1.12.0
+module load mkl/2025.3
+
+export WORK=/scratch/x3430a02/kgy
+export PATH=$WORK/apps/qe-cpu/bin:$PATH
+export PATH=$WORK/apps/qe-gpu/bin:$PATH
+export PATH=$WORK/apps/LIGGGHTS-PUBLIC/src:$PATH
+export PSEUDO_DIR=$WORK/pseudo
+
+alias cds='cd /scratch/x3430a02/kgy'
+alias cdp='cd /scratch/x3430a02/kgy/projects'
+
+run_bg() { nohup "$@" > "${1##*/}.log" 2>&1 & echo "PID: $!"; }
+# ===== End Custom Environment =====
 ```
 
-### Compile notes (reference only, if re-building needed)
-- Modules loaded at build time (from `module list` at user's PATH):
-  - `openmpi/4.1.8/gcc/11.5.0/cuda/12.9.1`
-  - `cuda/12.9.1`
-  - `mkl/2025.3`
-  - `hdf5/2.0.0`
-  - `libxc/7.0.0`
-  - `fftw3/3.3.10`
-  - `cmake/4.2.1`
-  - `ucx/1.20.0`
-- QE configure with:
-  ```bash
-  ./configure \
-      CC=mpicc CXX=mpic++ FC=mpif90 \
-      --with-cuda=$CUDA_HOME \
-      --with-cuda-runtime=12.9 \
-      --with-cuda-cc=80 \
-      --enable-openmp \
-      --enable-parallel \
-      --with-scalapack=yes
-  ```
-
----
-
-## 4. Pseudopotentials
-
+Also symlinks:
 ```
-/scratch/x3430a02/kgy/manuscript_support/pseudo/
-```
-All SSSP-efficiency PBE UPF files (Li, P, S, Cl, Br, Ni, O).
-
-Referenced in QE input as:
-```
-ATOMIC_SPECIES
-  Li   6.9410   li_pbe_v1_4_uspp_F.UPF
-  P   30.9740   P_pbe-n-rrkjus_psl_1_0_0.UPF
-  S   32.0650   s_pbe_v1_4_uspp_F.UPF
-  Cl  35.4530   cl_pbe_v1_4_uspp_F.UPF
-  Br  79.9040   br_pbe_v1_4_uspp_F.UPF
-  Ni  58.6934   Ni.pbe-spn-rrkjus_psl_1_0_0.UPF
-  O   15.9994   O.pbe-n-rrkjus_psl_1_0_0.UPF
+~/apps     -> /scratch/x3430a02/kgy/apps
+~/pseudo   -> /scratch/x3430a02/kgy/pseudo
+~/projects -> /scratch/x3430a02/kgy/projects
 ```
 
----
+## 5. Project directory layout
 
-## 5. Running jobs on login node (current workflow)
-
-### GPU visibility
-```bash
-# On login node with attached GPUs (2 × H200 or A100 typical)
-nvidia-smi
-export CUDA_VISIBLE_DEVICES=0   # or 1
+```
+/scratch/x3430a02/kgy/
+├── apps/
+│   ├── qe-gpu/bin/pw.x
+│   ├── qe-cpu/bin/pw.x
+│   └── LIGGGHTS-PUBLIC/src/lmp_mpi
+├── pseudo/                            # SSSP efficiency PBE UPFs
+├── lpscl16_site_pref/                 # Model C site preference study
+├── manuscript_support/                # main paper calculations
+│   ├── pipeline_v2/                   # v2 (annealing) pipeline
+│   │   ├── comp1_v2/                  # DFT done
+│   │   └── modelC_lpsc16/             # DFT EOS (basin B redo in progress)
+│   ├── adhesion/                      # v5 xy-shift interfaces
+│   ├── *.xyz                          # structure files
+│   └── mlip_*_log.txt                 # MLIP calculation logs
+├── md_results/                        # LAMMPS/LIGGGHTS MD outputs
+├── projects/
+│   ├── manuscript_support/  -> symlink
+│   ├── SEI/
+│   └── simulation/
+├── SEI/                               # SEI-related calcs
+├── root_scripts/
+├── setup_neuron.sh                    # this setup script
+└── setup.log                          # setup execution log
 ```
 
-### Direct run pattern (as used in run_gpu*.sh)
+## 6. Standard run patterns
+
+### QE GPU (single-point or relax)
 ```bash
 QE=/scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x
-cd <working_dir>
+export CUDA_VISIBLE_DEVICES=1
 $QE -input relax.in > relax.out 2>&1
 ```
-Note: **no mpirun** for single-GPU runs. `pw.x` picks up GPU directly.
+**Note:** no `mpirun -np 1` needed; pw.x-gpu is single-process by design for single GPU.
 
-### Multi-GPU: split volumes
+### QE CPU (parallel)
 ```bash
-# GPU0: one subset
-export CUDA_VISIBLE_DEVICES=0; $QE -input v096/relax.in > v096/relax.out &
-# GPU1: another subset
-export CUDA_VISIBLE_DEVICES=1; $QE -input v102/relax.in > v102/relax.out &
-wait
+mpirun -np 8 pw.x -in input.in > output.out
 ```
 
-### Restart-safe wrapper (for walltime kills)
-See `run_gpu0_redo.sh`, `run_gpu1_redo.sh`:
-- Check `JOB DONE` → skip
-- If `tmp/<prefix>.save/` exists → prepend `restart_mode='restart'`
-- Otherwise fresh
-- Re-run on next invocation if killed
+### LIGGGHTS (DEM)
+```bash
+mpirun -np 8 lmp_mpi -in input.liggghts
+```
 
----
+### MLIP (MACE or UMA)
+```bash
+conda activate mace     # or uma
+python script.py
+```
 
-## 6. Login-node limitations (observed)
+### Background job (nohup)
+```bash
+nohup ./run.sh > run.log 2>&1 &
+# or using the helper alias:
+run_bg pw.x -in input.in
+```
 
-- Walltime limit **~several hours** then SIGKILL
-- No guaranteed GPU reservation (shared)
-- Use pattern: `while incomplete; do ./run.sh; done` (loop until done)
-- **Proper solution:** SLURM batch submission (below), but login-node repeats also work
+## 7. Login node limitations (observed)
 
----
+- **Walltime limit ~several hours** then SIGKILL
+- **Shared GPU** (A100); GPU 0 reserved for other users
+- For long DFT jobs: use restart-safe wrapper scripts (`run_gpu*_redo.sh` with `restart_mode='restart'` when `tmp/<prefix>.save/` exists)
+- Loop pattern (for walltime workaround): run → kill → restart → repeat until JOB DONE
 
-## 7. SLURM batch template (if/when used)
+## 8. SLURM batch (if used)
 
 ```bash
 #!/bin/bash
 #SBATCH -J modelC
-#SBATCH -p amd_a100_8         # check: sinfo -s
+#SBATCH -p amd_a100_8          # verify with: sinfo -s
 #SBATCH --gres=gpu:2
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=2
@@ -161,73 +215,77 @@ source /scratch/x3430a02/mjs0000/miniforge3/etc/profile.d/conda.sh
 conda activate uma
 
 QE=/scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x
-# ... (run logic identical to login-node scripts)
+# ... run logic identical to login-node scripts
 ```
 
 Check queue:
 ```bash
-sinfo -s              # partitions
-squeue -u $USER       # your jobs
+sinfo -s
+squeue -u $USER
 scontrol show partitions
 ```
 
----
+## 9. Pseudopotentials
 
-## 8. Common tasks quick-reference
+Location:
+```
+/scratch/x3430a02/kgy/pseudo/
+    li_pbe_v1_4_uspp_F.UPF
+    P_pbe-n-rrkjus_psl_1_0_0.UPF
+    s_pbe_v1_4_uspp_F.UPF
+    cl_pbe_v1_4_uspp_F.UPF
+    br_pbe_v1_4_uspp_F.UPF
+    Ni.pbe-spn-rrkjus_psl_1_0_0.UPF
+    O.pbe-n-rrkjus_psl_1_0_0.UPF
+```
+
+QE input reference:
+```
+ATOMIC_SPECIES
+  Li   6.9410   li_pbe_v1_4_uspp_F.UPF
+  P   30.9740   P_pbe-n-rrkjus_psl_1_0_0.UPF
+  S   32.0650   s_pbe_v1_4_uspp_F.UPF
+  Cl  35.4530   cl_pbe_v1_4_uspp_F.UPF
+  Br  79.9040   br_pbe_v1_4_uspp_F.UPF
+  Ni  58.6934   Ni.pbe-spn-rrkjus_psl_1_0_0.UPF
+  O   15.9994   O.pbe-n-rrkjus_psl_1_0_0.UPF
+```
+
+## 10. Common tasks quick-reference
 
 | Task | Command |
 |------|---------|
 | Activate UMA env | `conda activate uma` |
-| Start QE relax (GPU0) | `CUDA_VISIBLE_DEVICES=0 pw.x -input relax.in > relax.out 2>&1` |
+| Start QE relax (GPU1) | `CUDA_VISIBLE_DEVICES=1 pw.x -input relax.in > relax.out 2>&1` |
 | Check QE progress | `grep "iteration\|Total force\|JOB DONE" relax.out \| tail` |
 | GPU memory | `nvidia-smi --query-gpu=memory.used,memory.free --format=csv` |
 | Kill all pw.x | `pkill -9 -f pw.x` |
-| Continue after kill | `./run_gpu0_redo.sh` (auto-detects `tmp/<prefix>.save`) |
+| Continue after kill | `./run_gpu0_redo.sh` (auto restart from tmp) |
+| Quick dir nav | `cds` (work root) / `cdp` (projects) |
 
----
-
-## 9. Project directories
-
-```
-/scratch/x3430a02/kgy/manuscript_support/
-├── pseudo/                         # All PBE USPPs
-├── pipeline_v1/                    # v1 (Rietveld Li) data
-│   ├── comp1/ comp2/ comp3/ comp4/ comp5/
-│   └── modelc_lpsc16/
-├── pipeline_v2/                    # v2 (annealing champion) data
-│   ├── comp1_v2/                   # DFT done
-│   └── modelC_lpsc16/              # DFT EOS in progress
-├── adhesion/                       # v5 xy-shift interfaces
-│   ├── structures/*.xyz
-│   └── results/*.json
-└── post_processing/                # Bader, DOS, bonds, elastic
-```
-
----
-
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 **`command not found` in shell script**
-- Cause: `pw.x` not absolute path inside script
-- Fix: use `$QE=/scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x` variable
+→ pw.x not absolute path; use `QE=/scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x`
 
-**`ModuleNotFoundError: numpy`** on `python3`
-- Cause: running outside conda env
-- Fix: `conda activate uma` first
+**`ModuleNotFoundError: numpy` on `python3`**
+→ running outside conda env; `conda activate uma` first
 
 **ASE reader `IndexError` on restart-merged relax.out**
-- Cause: multiple ATOMIC_POSITIONS blocks from restart_mode confuse parser
-- Fix: regex extraction of final `Begin final coordinates ... End final coordinates` block
+→ multiple ATOMIC_POSITIONS blocks from restart_mode; use regex extraction of final `Begin final coordinates ... End final coordinates` block
 
 **QE BM3 fit B₀ 4× too high**
-- Cause: wrong Birch-Murnaghan formula using `f = (V0/V)^(2/3) - 1` without factor ½
-- Fix: `f = 0.5 * ((V0/V)^(2/3) - 1)` OR use standard form:
-  ```python
-  eta = (V0/V)**(2/3)
-  E = E0 + 9*V0*B0/16 * ((eta-1)**2 * (6-4*eta) + Bp * (eta-1)**3)
-  ```
+→ wrong Birch-Murnaghan formula; correct form:
+```python
+eta = (V0/V)**(2/3)
+E = E0 + 9*V0*B0/16 * ((eta-1)**2 * (6-4*eta) + Bp * (eta-1)**3)
+```
 
 **Volume-induced basin transitions during EOS scan**
-- Detect: compare `get_scaled_positions()` between adjacent volumes
-- If any atom Δfrac > 0.05 → basin change
-- Fix: re-run from reference basin champion coords (see `tools/` scripts or `run_gpu*_redo.sh` pattern)
+→ compare `get_scaled_positions()` between adjacent volumes; if any atom Δfrac > 0.05 = basin change; re-run from reference basin champion coords using `v101_champion_frac.txt` + regex-rewritten relax.in (see `run_gpu*_redo.sh` pattern)
+
+**Login-node job killed (walltime)**
+→ tmp/ preserved; relaunch with `restart_mode='restart'` (scripts auto-detect); loop until converged
+
+**libxc not found during QE CPU build**
+→ known issue in this environment; use GPU QE instead, which links nvhpc's own math libs
