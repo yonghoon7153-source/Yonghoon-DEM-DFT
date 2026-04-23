@@ -1466,13 +1466,18 @@ def batch_rerun_physics():
                                     '--contact-mode', 'physics'],
                                    capture_output=True, text=True, timeout=1800)
 
-                # 3) Merge *_physics / _dual keys INTO the full_metrics.json
-                #    produced by step 1. Preserves analyze_contacts output,
-                #    adds only the physics-specific fields + resistance-model tag.
-                net_json = os.path.join(c['results_dir'], 'network_conductivity.json')
+                # 3) Merge NEW *_physics keys INTO full_metrics.json. Previously
+                #    this read network_conductivity.json (legacy=Hertzian, OLD)
+                #    and then _merge_dual_into_metrics read a STALE dual.json
+                #    which overwrote the Physics values back to pre-patch ones.
+                #    Now we read the fresh network_conductivity_physics.json
+                #    directly, and refresh dual.json's physics half in place so
+                #    _merge_dual_into_metrics sees the new values too.
+                phys_json = os.path.join(c['results_dir'], 'network_conductivity_physics.json')
+                dual_json = os.path.join(c['results_dir'], 'network_conductivity_dual.json')
                 met_json = os.path.join(c['results_dir'], 'full_metrics.json')
-                if os.path.exists(net_json) and os.path.exists(met_json):
-                    with open(net_json) as _nf: net_data = json.load(_nf)
+                if os.path.exists(phys_json) and os.path.exists(met_json):
+                    with open(phys_json) as _nf: phys_data = json.load(_nf)
                     with open(met_json) as _mf: met_data = json.load(_mf)
                     remap_pairs = [
                         ('sigma_full',            'sigma_full_physics'),
@@ -1488,9 +1493,35 @@ def batch_rerun_physics():
                                                   'thermal_sigma_full_mScm_physics'),
                     ]
                     for src, dst in remap_pairs:
-                        if src in net_data and net_data[src] is not None:
-                            met_data[dst] = net_data[src]
-                    met_data['physics_resistance_model'] = net_data.get(
+                        if src in phys_data and phys_data[src] is not None:
+                            met_data[dst] = phys_data[src]
+                    # Refresh dual.json's physics half in place (Hertzian half
+                    # stays unchanged). Recompute phys/hertz ratios too.
+                    if os.path.exists(dual_json):
+                        try:
+                            with open(dual_json) as _df: dual = json.load(_df)
+                            dual['physics'] = phys_data
+                            rH = dual.get('hertzian') or {}
+                            def _ratio(a, b):
+                                try:
+                                    return round(float(a)/float(b), 4) if (a and b and float(b)!=0) else None
+                                except Exception:
+                                    return None
+                            dual['ratio_physics_over_hertzian'] = {
+                                'sigma_full':        _ratio(phys_data.get('sigma_full'),
+                                                            rH.get('sigma_full')),
+                                'sigma_constr_net':  _ratio(phys_data.get('sigma_constr_net'),
+                                                            rH.get('sigma_constr_net')),
+                                'electronic_sigma_full': _ratio(phys_data.get('electronic_sigma_full'),
+                                                                rH.get('electronic_sigma_full')),
+                                'thermal_sigma_full':    _ratio(phys_data.get('thermal_sigma_full'),
+                                                                rH.get('thermal_sigma_full')),
+                            }
+                            with open(dual_json, 'w') as f:
+                                json.dump(dual, f, indent=2)
+                        except Exception as _e:
+                            print(f"  [batch] dual.json refresh failed for {c['cid']}: {_e}")
+                    met_data['physics_resistance_model'] = phys_data.get(
                         'resistance_model', 'maxwell+film')
                     met_data['physics_solver_at'] = datetime.now().strftime(
                         '%Y-%m-%d %H:%M:%S')
