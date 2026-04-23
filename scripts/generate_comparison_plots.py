@@ -1533,7 +1533,17 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     ax.set_yscale('log')
     ax.set_xlabel("σ_actual (Network solver, mS/cm)", fontsize=11)
     ax.set_ylabel("σ_predicted (Scaling law, mS/cm)", fontsize=11)
-    ax.set_title(f"Ionic v32 = v29_FINAL × exp(−0.75·LIGG_LB + 1.62·w_thin·GEOM − 1.99·(p₅₀δR−0.2) + 0.35·r_SE/r_AM)\n"
+    # Title reads the ACTUAL γ being applied (refitted per-run if OLS converged,
+    # else hardcoded defaults). Previously the coefficients were baked into the
+    # text as -0.75/+1.62/-1.99/+0.35, which misled readers after a refit.
+    _g = _V32_FITTED_GAMMAS if _V32_FITTED_GAMMAS is not None else _V32_GAMMAS
+    _refit_tag = 'refit' if _V32_FITTED_GAMMAS is not None else 'default'
+    _title_formula = (f"Ionic v32 = v29_FINAL × exp("
+                      f"{_g['LIGG_LB_PCT']:+.2f}·LIGG_LB "
+                      f"{_g['THIN_X_GEOM']:+.2f}·w_thin·GEOM "
+                      f"{_g['P50_DR_DEV']:+.2f}·(p₅₀δR−0.2) "
+                      f"{_g['PSD_RATIO']:+.2f}·r_SE/r_AM)  [γ:{_refit_tag}]")
+    ax.set_title(f"{_title_formula}\n"
                  f"τ-blend(k={best_k:.0f},τc={best_tc:.2f})  P:S(k={best_kp:.0f},pc={best_pc:.2f},β={beta_pf_prod:+.3f})  κ_A={kappa_area:+.3f}  R²={r2:.3f} (v32-applied)  |  v29_base R²={r2_formX:.3f} LOOCV={loocv_formX:.3f}",
                  fontsize=8, fontweight='bold')
     ax.legend(fontsize=9, loc='upper left')
@@ -1869,8 +1879,15 @@ def plot_multiscale_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_ionic (mS/cm)", names)
     ax.legend(fontsize=9, loc='upper left')
+    # Dynamic title: show the γ actually used (refit or hardcoded default).
+    _g2 = _V32_FITTED_GAMMAS if _V32_FITTED_GAMMAS is not None else _V32_GAMMAS
+    _tag2 = 'refit' if _V32_FITTED_GAMMAS is not None else 'default'
     ax.set_title(
-        "FORM X v32 = v29_FINAL × exp(−0.75·LIGG_LB + 1.62·w_thin·GEOM − 1.99·(p₅₀δR−0.2) + 0.35·r_SE/r_AM)",
+        f"FORM X v32 = v29_FINAL × exp("
+        f"{_g2['LIGG_LB_PCT']:+.2f}·LIGG_LB "
+        f"{_g2['THIN_X_GEOM']:+.2f}·w_thin·GEOM "
+        f"{_g2['P50_DR_DEV']:+.2f}·(p₅₀δR−0.2) "
+        f"{_g2['PSD_RATIO']:+.2f}·r_SE/r_AM)  [γ:{_tag2}]",
         fontsize=8.5, fontweight='bold')
 
     # Unified y-axis: if user/webapp passed --y-max-sigma, use it for cross-run
