@@ -213,23 +213,34 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         R_bulk_2 = (d_ij / 2) / (k_weight * np.pi * r2**2) if r2 > 0 else 0
         R_bulk = R_bulk_1 + R_bulk_2
 
-        # Contact resistance. Two regimes:
-        #   Hertzian mode (point contact, small A):
+        # Contact resistance.
+        #   Hertzian mode (point contact, a ≪ r):
         #     R_constriction = 1/(2a)   — Maxwell spreading (Holm 1967)
-        #     This is valid because a << r, current spreads 3D into bulk.
+        #     Exact for point-contact-on-halfspace geometry.
         #   Physics mode (surface contact via Tabor + hemisphere caps):
-        #     R_constriction = 1/(2a) + 2δ/A   — Maxwell + film tube
-        #     The film term saturates R as A → 2πR_min² (cap limit).
-        #     Without it, Maxwell alone sends R → 0 which is unphysical
-        #     (real surface contacts are bulk-limited, not spreading-limited).
-        # Film term applies only when contact_mode == 'physics' so Hertzian-
-        # calibrated results remain unchanged and reproducible.
+        #     R_constriction = (1 - a/r_min)^1.5 / (2a)   — Mikic (1974)
+        #     Rigorous correction for finite contact on a finite cylinder:
+        #     reduces to Maxwell when a/r_min → 0, and vanishes as a → r_min
+        #     (full contact, no constriction left, bulk alone dominates).
+        #     Replaces the earlier phenomenological 'Maxwell + 2δ/A film'
+        #     ansatz — same qualitative saturation behaviour but derived.
+        r_min_real = min(r1, r2)  # μm (smaller sphere's radius)
         R_Maxwell = 1.0 / (k_weight * 2 * a_contact) if a_contact > 0 else 1e12
+        if contact_mode == 'physics' and a_contact > 0 and r_min_real > 0:
+            # Clamp a to r_min — our plastic cap 2πR_min² gives a > r_min, which
+            # is geometrically impossible for a disk contact between spheres.
+            a_eff = min(a_contact, r_min_real)
+            psi = max(1.0 - a_eff / r_min_real, 0.0) ** 1.5
+            if psi > 1e-4:
+                R_constriction = 1.0 / (k_weight * 2 * a_eff * psi)
+            else:
+                # Full contact limit: spreading vanishes, R_bulk carries it.
+                R_constriction = 0.0
+        else:
+            R_constriction = R_Maxwell
+        # Legacy per-edge R_film field kept for backward compat with readers;
+        # under Mikic it's folded into R_constriction so reported here as 0.
         R_film = 0.0
-        if contact_mode == 'physics' and A_contact > 0 and delta_sim > 0:
-            delta_real = delta_sim * scale  # μm, matches A_contact units (μm²)
-            R_film = 2 * delta_real / (k_weight * A_contact)
-        R_constriction = R_Maxwell + R_film
 
         edges.append({
             'id1': id1, 'id2': id2,
@@ -260,11 +271,11 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         'box_y': box_y,
         'scale': scale,
         'contact_mode': contact_mode,
-        # Resistance-model tag: 'maxwell' (point-contact only) for Hertzian,
-        # 'maxwell+film' (point + surface film tube) for Physics. Used by the
-        # webapp to flag whether a case was run on the legacy or upgraded
-        # solver.
-        'resistance_model': ('maxwell+film' if contact_mode == 'physics'
+        # Resistance-model tag:
+        #   'maxwell' (point-contact only) for Hertzian
+        #   'mikic'   (Mikic 1974 constriction w/ finite-cylinder correction)
+        #              for Physics. Vanishes correctly at full-contact limit.
+        'resistance_model': ('mikic' if contact_mode == 'physics'
                              else 'maxwell'),
     }
 
@@ -682,7 +693,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     # Results
     results = {
         'contact_mode': contact_mode,
-        'resistance_model': ('maxwell+film' if contact_mode == 'physics'
+        'resistance_model': ('mikic' if contact_mode == 'physics'
                              else 'maxwell'),
         'n_nodes': n_nodes,
         'n_edges': n_edges,

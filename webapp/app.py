@@ -138,12 +138,12 @@ def list_cases():
             meta['warning_msgs'] = [w['msg'] for w in m.get('warnings', [])]
             meta['network_solver_status'] = m.get('network_solver_status', meta.get('network_solver_status', ''))
             # Physics solver state — three explicit values for UI badges:
-            #   'maxwell+film' → upgraded (PHYS ✓, green)
-            #   'maxwell'      → legacy Physics σ, no tag (PHYS legacy, orange)
-            #   'no_physics'   → Physics solver never ran (PHYS ∅, gray)
+            #   'mikic' / 'maxwell+film' → upgraded (PHYS ✓, green)
+            #   'maxwell' or any legacy tag → PHYS legacy (orange)
+            #   missing physics σ → PHYS ∅ (gray)
             phys_model = m.get('physics_resistance_model')
-            if phys_model == 'maxwell+film':
-                pass
+            if phys_model in ('mikic', 'maxwell+film'):
+                pass  # upgraded state — keep as-is
             elif phys_model == 'maxwell' or 'sigma_full_mScm_physics' in m:
                 phys_model = 'maxwell'
             else:
@@ -1559,7 +1559,7 @@ def batch_rerun_physics_status():
     #   'maxwell'      → legacy Physics σ, needs rerun (PHYS legacy)
     #   'no_physics'   → Physics solver never ran (PHYS ∅)
     #   'no_metrics'   → full_metrics.json missing (shouldn't normally happen)
-    counts = {'maxwell+film': 0, 'maxwell': 0,
+    counts = {'upgraded': 0, 'maxwell': 0,
               'no_physics': 0, 'no_metrics': 0}
     latest_at = ''
     for c in _find_all_cases():
@@ -1571,8 +1571,8 @@ def batch_rerun_physics_status():
         except Exception:
             counts['no_metrics'] += 1; continue
         model = m.get('physics_resistance_model')
-        if model == 'maxwell+film':
-            counts['maxwell+film'] += 1
+        if model in ('mikic', 'maxwell+film'):
+            counts['upgraded'] += 1
         elif model == 'maxwell' or 'sigma_full_mScm_physics' in m:
             counts['maxwell'] += 1
         else:
