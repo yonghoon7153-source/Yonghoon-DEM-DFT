@@ -97,14 +97,12 @@ def predict_v32(data, debug=False):
     phi_se    = data.get('phi_se', 0) or 0
     cn        = data.get('se_se_cn', 0) or 0
     tau       = data.get('tortuosity_mean', 0) or 0
-    # coverage lookup — try multiple historical key names
-    cov = 0
-    for k in ('am_se_coverage_elastic_pct', 'coverage_AM_mean',
-              'coverage_AM', 'am_se_coverage_pct'):
-        v = data.get(k)
-        if v is not None and v > 0:
-            cov = v
-            break
+    # coverage lookup — follow generate_comparison_plots pattern:
+    #   mean of {AM_P_mean, AM_S_mean, AM_mean} (percentages) / 100 → fraction
+    cov_vals = [data.get(k, 0) or 0 for k in
+                ('coverage_AM_P_mean', 'coverage_AM_S_mean', 'coverage_AM_mean')]
+    cov_vals = [v for v in cov_vals if v > 0]
+    cov = (sum(cov_vals) / len(cov_vals) / 100.0) if cov_vals else 0.20
     perc_raw  = data.get('percolation_pct', 0) or 0
     f_perc    = perc_raw / 100.0 if perc_raw > 1 else perc_raw
     ps_frac   = _ps_fraction(data) or 0.7
