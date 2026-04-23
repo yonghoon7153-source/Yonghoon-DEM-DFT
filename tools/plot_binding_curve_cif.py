@@ -265,9 +265,10 @@ def screen_seeds(base_interface, n_ncm, n_seeds, new_calc, target_wad=None,
 
 def sweep_d(best_interface_relaxed, n_ncm, new_calc,
             d_min, d_max, n_d, relax=True, fmax=0.05, steps=60,
-            cif_dir=None, comp=None):
+            cif_dir=None, comp=None, fix_ncm=False):
     from ase.io import write
     from ase.optimize import LBFGS
+    from ase.constraints import FixAtoms
 
     pos0 = best_interface_relaxed.get_positions()
     # NCM top reference: for (001) 1L Ni is at BOTTOM, so Ni-top != slab-top.
@@ -326,6 +327,9 @@ def sweep_d(best_interface_relaxed, n_ncm, new_calc,
 
         if relax:
             a_r = a_d.copy()
+            if fix_ncm:
+                # Freeze NCM atoms (indices 0..n_ncm-1). SE free to relax Li-O etc.
+                a_r.set_constraint(FixAtoms(indices=list(range(n_ncm))))
             a_r.calc = new_calc()
             try:
                 LBFGS(a_r, logfile=None).run(fmax=fmax, steps=steps)
@@ -455,6 +459,9 @@ def main():
     ap.add_argument("--no-relax", action="store_true")
     ap.add_argument("--fmax", type=float, default=0.05)
     ap.add_argument("--steps", type=int, default=60)
+    ap.add_argument("--fix-ncm-sweep", action="store_true",
+                    help="During per-d relax, freeze NCM atoms (SE free to relax Li-O).\n"
+                         "Recommended for clean binding curves with pre-built NCM slab.")
 
     # I/O
     ap.add_argument("--out-dir", default="/data/work/binding_results")
@@ -534,6 +541,7 @@ def main():
             d_min=args.d_min, d_max=args.d_max, n_d=args.n_d,
             relax=(not args.no_relax), fmax=args.fmax, steps=args.steps,
             cif_dir=cif_dir, comp=comp,
+            fix_ncm=args.fix_ncm_sweep,
         )
         data["comp"] = comp
         data["source"] = src
