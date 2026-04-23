@@ -41,14 +41,17 @@ def find_amse(cid):
 
 
 def find_ps(cid):
-    for p in Path('webapp/archive').rglob(f'{cid}/meta.json'):
-        try:
-            return json.load(open(p)).get('ps_ratio', '')
-        except Exception:
-            pass
+    # full_metrics.json is the reliable source (meta.json often has empty ps_ratio)
     for p in Path('webapp/archive').rglob(f'{cid}/full_metrics.json'):
         try:
-            return json.load(open(p)).get('ps_ratio', '')
+            v = json.load(open(p)).get('ps_ratio', '')
+            if v: return v
+        except Exception:
+            pass
+    for p in Path('webapp/archive').rglob(f'{cid}/meta.json'):
+        try:
+            v = json.load(open(p)).get('ps_ratio', '')
+            if v: return v
         except Exception:
             pass
     return ''
