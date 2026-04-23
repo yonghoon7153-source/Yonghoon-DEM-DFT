@@ -137,13 +137,18 @@ def list_cases():
             meta['warning_count'] = m.get('warning_count', 0)
             meta['warning_msgs'] = [w['msg'] for w in m.get('warnings', [])]
             meta['network_solver_status'] = m.get('network_solver_status', meta.get('network_solver_status', ''))
-            # Physics solver resistance model. 'maxwell+film' = new upgraded
-            # formula; 'maxwell' = legacy point-contact only. Used by the
-            # case list to flag which cases still need a batch rerun.
+            # Physics solver state — three explicit values for UI badges:
+            #   'maxwell+film' → upgraded (PHYS ✓, green)
+            #   'maxwell'      → legacy Physics σ, no tag (PHYS legacy, orange)
+            #   'no_physics'   → Physics solver never ran (PHYS ∅, gray)
             phys_model = m.get('physics_resistance_model')
-            if not phys_model and 'sigma_full_mScm_physics' in m:
-                phys_model = 'maxwell'   # legacy Physics without the tag
-            meta['physics_resistance_model'] = phys_model or ''
+            if phys_model == 'maxwell+film':
+                pass
+            elif phys_model == 'maxwell' or 'sigma_full_mScm_physics' in m:
+                phys_model = 'maxwell'
+            else:
+                phys_model = 'no_physics'
+            meta['physics_resistance_model'] = phys_model
             meta['physics_solver_at'] = m.get('physics_solver_at', '')
         cases.append(meta)
     return cases
@@ -1368,26 +1373,31 @@ _batch_status = {'running': False, 'total': 0, 'done': 0,
 
 def _find_all_cases():
     """Return list of (case_id, case_dir, results_dir, meta_path, atoms, contacts, source).
-    Covers both webapp/results and webapp/archive."""
+    Covers both webapp/results and webapp/archive, deduplicated by case_id
+    (results/ entry wins when the same cid exists in both)."""
     out = []
-    scripts_dir = app.config['SCRIPTS_FOLDER']
-    # results/: case_id = directory name, results_dir = case_dir = webapp/results/<cid>
+    seen = set()
+    # results/ first so its entries win on duplicate cid.
     rroot = Path(app.config['RESULTS_FOLDER'])
     if rroot.is_dir():
         for d in sorted(rroot.iterdir()):
             if not d.is_dir() or d.name in ('reports', 'group_plots'): continue
             atoms = d / 'atoms.csv'; contacts = d / 'contacts.csv'; meta = d / 'meta.json'
             if atoms.exists() and contacts.exists() and meta.exists():
+                if d.name in seen: continue
+                seen.add(d.name)
                 out.append(dict(cid=d.name, case_dir=str(d), results_dir=str(d),
                                 meta=str(meta), atoms=str(atoms),
                                 contacts=str(contacts), source='results'))
-    # archive/: same layout, but nested under category folders
+    # archive/: only add if cid not already seen from results.
     aroot = Path(app.config['ARCHIVE_FOLDER'])
     if aroot.is_dir():
         for meta in sorted(aroot.rglob('meta.json')):
             d = meta.parent
             atoms = d / 'atoms.csv'; contacts = d / 'contacts.csv'
             if atoms.exists() and contacts.exists():
+                if d.name in seen: continue
+                seen.add(d.name)
                 out.append(dict(cid=d.name, case_dir=str(d), results_dir=str(d),
                                 meta=str(meta), atoms=str(atoms),
                                 contacts=str(contacts), source='archive'))
@@ -1501,27 +1511,30 @@ def batch_rerun_physics():
 
 @app.route('/batch-rerun-physics/status')
 def batch_rerun_physics_status():
-    # Scan all cases and summarise which resistance model each one is on.
-    # Gives the UI a "N/M upgraded" breakdown without the user having to
-    # open each case to check.
-    counts = {'maxwell+film': 0, 'maxwell': 0, 'unknown': 0, 'none': 0}
+    # Scan all cases (already deduplicated by _find_all_cases) and summarise
+    # which resistance model each one is on. Four states:
+    #   'maxwell+film' → new formula applied (PHYS ✓)
+    #   'maxwell'      → legacy Physics σ, needs rerun (PHYS legacy)
+    #   'no_physics'   → Physics solver never ran (PHYS ∅)
+    #   'no_metrics'   → full_metrics.json missing (shouldn't normally happen)
+    counts = {'maxwell+film': 0, 'maxwell': 0,
+              'no_physics': 0, 'no_metrics': 0}
     latest_at = ''
     for c in _find_all_cases():
         fm_path = os.path.join(c['results_dir'], 'full_metrics.json')
         if not os.path.exists(fm_path):
-            counts['none'] += 1; continue
+            counts['no_metrics'] += 1; continue
         try:
             with open(fm_path) as f: m = json.load(f)
         except Exception:
-            counts['unknown'] += 1; continue
+            counts['no_metrics'] += 1; continue
         model = m.get('physics_resistance_model')
-        if model in ('maxwell+film', 'maxwell'):
-            counts[model] += 1
-        elif 'sigma_full_mScm_physics' in m:
-            # Has Physics σ but no model tag → legacy run (Maxwell-only).
+        if model == 'maxwell+film':
+            counts['maxwell+film'] += 1
+        elif model == 'maxwell' or 'sigma_full_mScm_physics' in m:
             counts['maxwell'] += 1
         else:
-            counts['none'] += 1
+            counts['no_physics'] += 1
         ts = m.get('physics_solver_at', '')
         if ts > latest_at: latest_at = ts
     status = dict(_batch_status)
