@@ -1411,7 +1411,15 @@ def batch_rerun_physics():
 
     def _worker():
         scripts = app.config['SCRIPTS_FOLDER']
+        # Dedup (archive + results may both point to the same case).
+        seen = set(); dedup_cases = []
         for c in cases:
+            key = c['cid']
+            if key in seen: continue
+            seen.add(key); dedup_cases.append(c)
+        _batch_status['total'] = len(dedup_cases)
+
+        for c in dedup_cases:
             _batch_status['current'] = c['cid']
             try:
                 with open(c['meta']) as f: meta = json.load(f)
@@ -1419,9 +1427,22 @@ def batch_rerun_physics():
                 type_map = meta.get('type_map', '1:AM,2:SE')
                 scale = str(meta.get('scale', 1000))
 
-                # 1) Physics Network solver. Hertzian results are kept untouched
-                #    so the v29 calibration stays valid. Only the _physics σ
-                #    keys are refreshed with the Maxwell + film formula.
+                # Order matters. analyze_contacts writes full_metrics.json from
+                # scratch, so it MUST run before the physics merge — otherwise
+                # it wipes the physics_resistance_model / sigma_full_mScm_physics
+                # keys we just wrote. The τ_Lap_eff-style σ-derived metrics are
+                # rendered on-the-fly by the webapp template using the stored
+                # σ values, so order here does not affect that.
+
+                # 1) Structure summary (τ_Dij, CN, coverage_hertz, path_hop_hertz, ...)
+                ac_script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
+                subprocess.run(['python3', os.path.join(scripts, ac_script),
+                                c['atoms'], c['contacts'], '-o', c['results_dir'],
+                                '-t', type_map, '-s', scale],
+                               capture_output=True, text=True, timeout=900)
+
+                # 2) Physics Network solver. Only the *_physics σ keys are
+                #    refreshed. Hertzian kept untouched (v29 calibration stays).
                 with _network_solver_lock:
                     subprocess.run(['python3', os.path.join(scripts, 'network_conductivity.py'),
                                     c['atoms'], c['contacts'], '-o', c['results_dir'],
@@ -1429,16 +1450,14 @@ def batch_rerun_physics():
                                     '--contact-mode', 'physics'],
                                    capture_output=True, text=True, timeout=1800)
 
-                # 2) Merge only the *_physics / _dual keys into full_metrics.json.
-                #    Do NOT overwrite existing Hertzian keys.
+                # 3) Merge *_physics / _dual keys INTO the full_metrics.json
+                #    produced by step 1. Preserves analyze_contacts output,
+                #    adds only the physics-specific fields + resistance-model tag.
                 net_json = os.path.join(c['results_dir'], 'network_conductivity.json')
                 met_json = os.path.join(c['results_dir'], 'full_metrics.json')
                 if os.path.exists(net_json) and os.path.exists(met_json):
                     with open(net_json) as _nf: net_data = json.load(_nf)
                     with open(met_json) as _mf: met_data = json.load(_mf)
-                    # network_conductivity writes keys without suffix when run
-                    # in physics mode. Remap them to the *_physics slots so we
-                    # don't clobber the Hertzian baseline.
                     remap_pairs = [
                         ('sigma_full',            'sigma_full_physics'),
                         ('sigma_full_mScm',       'sigma_full_mScm_physics'),
@@ -1455,9 +1474,6 @@ def batch_rerun_physics():
                     for src, dst in remap_pairs:
                         if src in net_data and net_data[src] is not None:
                             met_data[dst] = net_data[src]
-                    # Stamp the resistance model + timestamp so the UI can
-                    # flag which cases are on the upgraded (Maxwell+Film) vs
-                    # legacy (Maxwell-only) Physics solver.
                     met_data['physics_resistance_model'] = net_data.get(
                         'resistance_model', 'maxwell+film')
                     met_data['physics_solver_at'] = datetime.now().strftime(
@@ -1465,15 +1481,8 @@ def batch_rerun_physics():
                     met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
                     with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
 
-                # 3) Refresh analysis summary — τ_Lap_eff etc. depend on σ, so
-                #    must re-run after the new Physics σ is in place.
-                ac_script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
-                subprocess.run(['python3', os.path.join(scripts, ac_script),
-                                c['atoms'], c['contacts'], '-o', c['results_dir'],
-                                '-t', type_map, '-s', scale],
-                               capture_output=True, text=True, timeout=900)
-
-                # 4) Physics coverage + path-physics metrics refresh.
+                # 4) Physics coverage + path-physics metrics (read-modify-write,
+                #    preserves everything above).
                 subprocess.run(['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                                 '--case-dir', c['case_dir']],
                                capture_output=True, text=True, timeout=600)
