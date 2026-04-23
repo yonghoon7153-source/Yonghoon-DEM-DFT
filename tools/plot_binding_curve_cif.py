@@ -519,9 +519,26 @@ def main():
             target_wad = DB_WAD_MEAN.get(comp)
             best, _ = screen_seeds(base, n_ncm, args.n_seeds, new_calc, target_wad,
                                    skip_relax=args.skip_base_relax)
-            best_relaxed = best["atoms_relaxed"]
             chosen_seed = best["seed"]
             chosen_wad = best["Wad"]
+            # NEW: if sweep is no-relax (rigid SP), start from ORIGINAL xyz
+            # with chosen seed's xy shift (avoid drift from screening relax).
+            if args.no_relax and not args.skip_base_relax:
+                print(f"  using ORIGINAL xyz with seed {chosen_seed} xy-shift "
+                      f"for clean rigid sweep (avoids screening drift)")
+                dx, dy = best["dx"], best["dy"]
+                a_clean = base.copy()
+                pos = a_clean.get_positions()
+                ncm_cell = a_clean.cell.array
+                ncm_inv = np.linalg.inv(ncm_cell)
+                se_frac = pos[n_ncm:] @ ncm_inv
+                se_frac[:, 0] = (se_frac[:, 0] + dx) % 1.0
+                se_frac[:, 1] = (se_frac[:, 1] + dy) % 1.0
+                pos[n_ncm:] = se_frac @ ncm_cell
+                a_clean.set_positions(pos)
+                best_relaxed = a_clean
+            else:
+                best_relaxed = best["atoms_relaxed"]
         else:
             if args.skip_base_relax:
                 print(f"  no screening, no relax: using input xyz as-is")
