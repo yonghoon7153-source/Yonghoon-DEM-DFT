@@ -1411,41 +1411,54 @@ def batch_rerun_physics():
                 type_map = meta.get('type_map', '1:AM,2:SE')
                 scale = str(meta.get('scale', 1000))
 
-                # 1) Refresh analyze_contacts summary (same script, same CSVs)
+                # 1) Physics Network solver. Hertzian results are kept untouched
+                #    so the v29 calibration stays valid. Only the _physics σ
+                #    keys are refreshed with the Maxwell + film formula.
+                with _network_solver_lock:
+                    subprocess.run(['python3', os.path.join(scripts, 'network_conductivity.py'),
+                                    c['atoms'], c['contacts'], '-o', c['results_dir'],
+                                    '-t', type_map, '-s', scale,
+                                    '--contact-mode', 'physics'],
+                                   capture_output=True, text=True, timeout=1800)
+
+                # 2) Merge only the *_physics / _dual keys into full_metrics.json.
+                #    Do NOT overwrite existing Hertzian keys.
+                net_json = os.path.join(c['results_dir'], 'network_conductivity.json')
+                met_json = os.path.join(c['results_dir'], 'full_metrics.json')
+                if os.path.exists(net_json) and os.path.exists(met_json):
+                    with open(net_json) as _nf: net_data = json.load(_nf)
+                    with open(met_json) as _mf: met_data = json.load(_mf)
+                    # network_conductivity writes keys without suffix when run
+                    # in physics mode. Remap them to the *_physics slots so we
+                    # don't clobber the Hertzian baseline.
+                    remap_pairs = [
+                        ('sigma_full',            'sigma_full_physics'),
+                        ('sigma_full_mScm',       'sigma_full_mScm_physics'),
+                        ('sigma_bulk_net',        'sigma_bulk_net_physics'),
+                        ('sigma_bulk_net_mScm',   'sigma_bulk_net_mScm_physics'),
+                        ('R_brug_over_full',      'R_brug_over_full_physics'),
+                        ('bulk_resistance_fraction',
+                                                  'bulk_resistance_fraction_physics'),
+                        ('electronic_sigma_full_mScm',
+                                                  'electronic_sigma_full_mScm_physics'),
+                        ('thermal_sigma_full_mScm',
+                                                  'thermal_sigma_full_mScm_physics'),
+                    ]
+                    for src, dst in remap_pairs:
+                        if src in net_data and net_data[src] is not None:
+                            met_data[dst] = net_data[src]
+                    met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
+                    with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
+
+                # 3) Refresh analysis summary — τ_Lap_eff etc. depend on σ, so
+                #    must re-run after the new Physics σ is in place.
                 ac_script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
                 subprocess.run(['python3', os.path.join(scripts, ac_script),
                                 c['atoms'], c['contacts'], '-o', c['results_dir'],
                                 '-t', type_map, '-s', scale],
                                capture_output=True, text=True, timeout=900)
 
-                # 2) Network solver (both modes — Hertzian + Physics)
-                with _network_solver_lock:
-                    subprocess.run(['python3', os.path.join(scripts, 'network_conductivity.py'),
-                                    c['atoms'], c['contacts'], '-o', c['results_dir'],
-                                    '-t', type_map, '-s', scale,
-                                    '--contact-mode', 'both'],
-                                   capture_output=True, text=True, timeout=1800)
-
-                # 3) Merge network output into full_metrics.json
-                net_json = os.path.join(c['results_dir'], 'network_conductivity.json')
-                met_json = os.path.join(c['results_dir'], 'full_metrics.json')
-                if os.path.exists(net_json) and os.path.exists(met_json):
-                    with open(net_json) as _nf: net_data = json.load(_nf)
-                    with open(met_json) as _mf: met_data = json.load(_mf)
-                    for k in ['sigma_full', 'sigma_full_mScm', 'sigma_bulk_net',
-                              'sigma_bulk_net_mScm', 'R_brug_over_full',
-                              'bulk_resistance_fraction', 'electronic_sigma_full_mScm',
-                              'electronic_R_brug', 'electronic_active_fraction',
-                              'electronic_percolating_fraction', 'thermal_sigma_full_mScm',
-                              'thermal_R_brug', 'sigma_bruggeman', 'sigma_bruggeman_mScm',
-                              'R_bruggeman_over_full']:
-                        if k in net_data and net_data[k] is not None:
-                            met_data[k] = net_data[k]
-                    met_data = _merge_dual_into_metrics(c['results_dir'], met_data)
-                    met_data['network_solver_status'] = 'success'
-                    with open(met_json, 'w') as f: json.dump(met_data, f, indent=2, default=str)
-
-                # 4) Physics coverage refresh (uses --case-dir to hit this specific case dir)
+                # 4) Physics coverage + path-physics metrics refresh.
                 subprocess.run(['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                                 '--case-dir', c['case_dir']],
                                capture_output=True, text=True, timeout=600)

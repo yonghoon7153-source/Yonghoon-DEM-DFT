@@ -213,17 +213,20 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         R_bulk_2 = (d_ij / 2) / (k_weight * np.pi * r2**2) if r2 > 0 else 0
         R_bulk = R_bulk_1 + R_bulk_2
 
-        # Contact resistance = Maxwell spreading + film tube through overlap.
-        # Maxwell (R = 1/(2a)) is valid for point-contact on a semi-infinite
-        # bulk (Holm 1967); it goes to zero as A → ∞, which is unphysical in
-        # Physics mode where A saturates at the hemisphere cap 2πR_min².
-        # We add the film/tube resistance through the overlap volume:
-        #   R_film = 2δ / A        (two-surface traversal, Ohm's law)
-        # This auto-triggers by area: small A → Maxwell dominates (unchanged);
-        # cap-saturated A → film takes over as the bulk-limited plateau.
+        # Contact resistance. Two regimes:
+        #   Hertzian mode (point contact, small A):
+        #     R_constriction = 1/(2a)   — Maxwell spreading (Holm 1967)
+        #     This is valid because a << r, current spreads 3D into bulk.
+        #   Physics mode (surface contact via Tabor + hemisphere caps):
+        #     R_constriction = 1/(2a) + 2δ/A   — Maxwell + film tube
+        #     The film term saturates R as A → 2πR_min² (cap limit).
+        #     Without it, Maxwell alone sends R → 0 which is unphysical
+        #     (real surface contacts are bulk-limited, not spreading-limited).
+        # Film term applies only when contact_mode == 'physics' so Hertzian-
+        # calibrated results remain unchanged and reproducible.
         R_Maxwell = 1.0 / (k_weight * 2 * a_contact) if a_contact > 0 else 1e12
         R_film = 0.0
-        if A_contact > 0 and delta_sim > 0:
+        if contact_mode == 'physics' and A_contact > 0 and delta_sim > 0:
             delta_real = delta_sim * scale  # μm, matches A_contact units (μm²)
             R_film = 2 * delta_real / (k_weight * A_contact)
         R_constriction = R_Maxwell + R_film

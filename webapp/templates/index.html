@@ -8,18 +8,18 @@
   <p>LIGGGHTS 파일을 업로드하고 DEM 분석을 실행하세요</p>
 </div>
 
-<!-- Batch refresh: analyze_contacts + Network solver (Hertzian+Physics) + coverage -->
+<!-- Batch refresh: Physics-mode solver + analyze (Hertzian baseline untouched) -->
 <div class="card" style="border-left:4px solid #c14a00; margin-bottom:16px">
   <div style="display:flex; align-items:center; gap:12px">
     <div style="flex:1">
-      <b>일괄 재계산 (분석 요약 + Physics Network Solver)</b>
+      <b>Physics 일괄 재계산 (Maxwell + Film → 분석요약)</b>
       <div style="color:#aaa; font-size:12px; margin-top:4px">
-        모든 케이스에서 analyze_contacts, Network solver (both modes), Physics coverage를 다시 돌립니다.
-        RAW CSV는 유지하고 metric만 갱신. Solver physics 공식 변경 후 일괄 적용용.
+        모든 케이스의 Physics σ를 새 공식으로 재계산하고, 그에 맞춰 분석요약(τ_Lap_eff 등)과 Physics coverage를 refresh.
+        <b>Hertzian 결과는 건드리지 않음</b> (v29 fit 보존). 10~20분 소요.
       </div>
     </div>
     <button id="btn-batch-phys" class="btn btn-outline" style="white-space:nowrap">
-      ▶ 전체 재계산
+      ▶ Physics 재계산
     </button>
     <span id="batch-phys-status" style="font-size:12px; color:#888; min-width:200px"></span>
   </div>
@@ -49,7 +49,7 @@
   }
 
   btn.addEventListener('click', () => {
-    if (!confirm('모든 케이스의 분석 요약 + Physics Network Solver를 재계산합니다.\n10~30분 걸릴 수 있습니다. 계속?')) return;
+    if (!confirm('모든 케이스의 Physics Network σ를 새 공식(Maxwell+Film)으로 재계산하고,\n분석요약(τ_Lap_eff 등)과 Physics coverage를 refresh합니다.\nHertzian 결과는 건드리지 않음. 10~20분. 계속?')) return;
     btn.disabled = true; btn.textContent = '⏳ 시작 중...';
     statusEl.textContent = '요청 전송 중...';
     fetch('/batch-rerun-physics', {method: 'POST'}).then(r => r.json()).then(j => {
