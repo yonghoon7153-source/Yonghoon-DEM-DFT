@@ -198,12 +198,15 @@ def relax_quick(atoms, new_calc, fmax=0.05, steps=50):
     return a
 
 
-def compute_wad(interface, n_ncm, new_calc):
-    """Relax → E_int, then separated (+30Å no relax) → E_sep. Wad = (E_sep-E_int)/A·16.0218."""
+def compute_wad(interface, n_ncm, new_calc, skip_relax=False):
+    """Relax → E_int (or skip_relax: use as-is), then separated → E_sep. Wad = (E_sep-E_int)/A·16.0218."""
     area = float(np.linalg.norm(
         np.cross(interface.cell.array[0], interface.cell.array[1])))
-    # Relax
-    a_int = relax_quick(interface, new_calc, fmax=0.05, steps=60)
+    # Relax (or skip)
+    if skip_relax:
+        a_int = interface.copy()
+    else:
+        a_int = relax_quick(interface, new_calc, fmax=0.05, steps=60)
     a_int.calc = new_calc()
     E_int = a_int.get_potential_energy()
     # Separated
@@ -220,9 +223,10 @@ def compute_wad(interface, n_ncm, new_calc):
     return Wad, E_int, E_sep, area, a_int
 
 
-def screen_seeds(base_interface, n_ncm, n_seeds, new_calc, target_wad=None):
+def screen_seeds(base_interface, n_ncm, n_seeds, new_calc, target_wad=None,
+                 skip_relax=False):
     """Generate n_seeds xy-shifted variants, compute Wad, pick best."""
-    print(f"  ── screening {n_seeds} seeds ──")
+    print(f"  ── screening {n_seeds} seeds (skip_relax={skip_relax}) ──")
     ncm_cell = base_interface.cell.array
     rng = np.random.RandomState(42)
     seeds = []
@@ -241,7 +245,7 @@ def screen_seeds(base_interface, n_ncm, n_seeds, new_calc, target_wad=None):
         pos[n_ncm:] = se_frac @ ncm_cell
         a.set_positions(pos)
 
-        Wad, E_int, E_sep, area, a_relaxed = compute_wad(a, n_ncm, new_calc)
+        Wad, E_int, E_sep, area, a_relaxed = compute_wad(a, n_ncm, new_calc, skip_relax=skip_relax)
         print(f"    seed={s} dxdy=({dx:.2f},{dy:.2f})  Wad={Wad:.3f}  E_int={E_int:.2f}")
         seeds.append({"seed": s, "dx": dx, "dy": dy, "Wad": Wad,
                       "E_int": E_int, "E_sep": E_sep, "area": area,
@@ -266,7 +270,15 @@ def sweep_d(best_interface_relaxed, n_ncm, new_calc,
     from ase.optimize import LBFGS
 
     pos0 = best_interface_relaxed.get_positions()
-    ncm_zmax = pos0[:n_ncm, 2].max()
+    # Use Ni-based reference (Ni doesn't drift, gives stable geometric NCM top)
+    sym0 = best_interface_relaxed.get_chemical_symbols()
+    ni_idx = [i for i in range(n_ncm) if sym0[i] == 'Ni']
+    if ni_idx:
+        ncm_zmax = pos0[ni_idx, 2].max()
+        print(f"  Using Ni-top as NCM reference: z={ncm_zmax:.2f} "
+              f"(vs all-atom max {pos0[:n_ncm,2].max():.2f})")
+    else:
+        ncm_zmax = pos0[:n_ncm, 2].max()
     area = float(np.linalg.norm(
         np.cross(best_interface_relaxed.cell.array[0],
                  best_interface_relaxed.cell.array[1])))
@@ -422,6 +434,9 @@ def main():
     # screening
     ap.add_argument("--n-seeds", type=int, default=20,
                     help="N xy-shift seeds to screen per comp (0 = use input as-is)")
+    ap.add_argument("--skip-base-relax", action="store_true",
+                    help="Use input xyz as-is for sweep base (no LBFGS relax). "
+                         "RECOMMENDED for pre-relaxed v5xy inputs.")
 
     # sweep
     ap.add_argument("--d-min", type=float, default=1.5)
@@ -485,14 +500,18 @@ def main():
 
         if args.n_seeds > 0:
             target_wad = DB_WAD_MEAN.get(comp)
-            best, _ = screen_seeds(base, n_ncm, args.n_seeds, new_calc, target_wad)
+            best, _ = screen_seeds(base, n_ncm, args.n_seeds, new_calc, target_wad,
+                                   skip_relax=args.skip_base_relax)
             best_relaxed = best["atoms_relaxed"]
             chosen_seed = best["seed"]
             chosen_wad = best["Wad"]
         else:
-            # Just relax input once, use that
-            print(f"  no screening: using input as-is (relax then sweep)")
-            best_relaxed = relax_quick(base, new_calc, fmax=0.05, steps=60)
+            if args.skip_base_relax:
+                print(f"  no screening, no relax: using input xyz as-is")
+                best_relaxed = base
+            else:
+                print(f"  no screening: using input as-is (relax then sweep)")
+                best_relaxed = relax_quick(base, new_calc, fmax=0.05, steps=60)
             chosen_seed = 0
             chosen_wad = None
 
