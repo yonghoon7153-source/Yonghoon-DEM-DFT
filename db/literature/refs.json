@@ -630,6 +630,223 @@
         "9. Voltage profile (Fig 8) — for electrochemical stability vs Li metal"
       ],
       "tags": ["Nd-doping", "rare-earth", "DFT", "VASP", "PBE", "fluoride-ion-battery", "BaSnF4", "heterovalent", "ionic-conductivity", "elastic", "Pugh-ratio", "NEB", "AIMD", "isolated-defect", "F-ion", "China", "SI-data-extracted"]
+    },
+    {
+      "id": "jia2025",
+      "authors": "Jia, Q.; Yao, Z.; Xiang, J.; Shi, J.; Zhou, Y.; Huang, J.; Zhang, H.; Zhang, X.; Yang, Y.; Tu, J.",
+      "title": "Rare Earth Metal Ion-Doped Halide Solid Electrolytes plus Ta5+ Substitution for Long Cycling All-Solid-State Batteries",
+      "journal": "Adv. Funct. Mater.",
+      "volume": 35,
+      "pages": "2426053",
+      "year": 2025,
+      "doi": "10.1002/adfm.202426053",
+      "affiliation": "Zhejiang Sci-Tech University + Zhejiang University (Tu Jiangping group)",
+      "key_content": "Systematic experimental study of 13 rare-earth (La/Ce/Pr/Nd/Sm/Eu/Gd/Tb/Dy/Ho/Er/Yb/Y) doping in Li2ZrCl6 (LZC, halide SE) at x=0.05/0.1/0.15. All RE doping ~doubles ionic conductivity. Dy unique: continues increasing to x=0.25 (1.42 mS/cm). Dual Dy+Ta co-doping: Li2.1Zr0.8Dy0.15Ta0.05Cl6 (LZDTC) achieves 1.67 mS/cm at RT (4× LZC). Ea: LZC 0.318 → LZDTC 0.272 eV. NCM811 cells: 500 cycles at 0.5C with 74% retention. Mechanism: dual substitution at Zr site changes Li-Cl bond length and Li site occupation (Li1: 42.8% LZC → 98% LZDTC) → reduced migration resistance.",
+      "system": "Li2ZrCl6 halide SE (P-31c, hexagonal, hcp Cl with Li/Zr in octahedral). Different from argyrodite but provides direct rare-earth doping benchmarks.",
+      "experimental_data": {
+        "table_S1_RE_ionic_radii_pm": "From La(101) to Y(90), Ce(101), Pr(99), Nd(98), Sm(96), Eu(95), Gd(94), Tb(92), Dy(91), Ho(90), Er(89), Yb(87), all > Zr4+(72)",
+        "Fig1a_conductivity_data": {
+          "LZC_baseline": 0.42,
+          "best_RE_at_x_0.1": "Dy ≈ 1.0 mS/cm",
+          "Nd_at_x_0.1": "~0.7-0.8 mS/cm (estimated from bar chart)",
+          "Dy_at_x_0.25": 1.42,
+          "general_trend": "σ max at x=0.1 for most RE; Dy continues increasing past x=0.1"
+        },
+        "ionic_conductivity_progression": {
+          "LZC": 0.42,
+          "LZTC_x0.05_Ta": "~0.5 (slight bump)",
+          "LZDC_x0.15_Dy": "~1.0",
+          "LZDTC_x0.15Dy_y0.05Ta": 1.67
+        },
+        "activation_energy_eV": {
+          "LZC": 0.318,
+          "LZTC": 0.304,
+          "LZDC": 0.293,
+          "LZDTC": 0.272
+        }
+      },
+      "doping_mechanisms_explained": {
+        "single_RE_doping": "M3+ → Zr4+ creates 1 Li+ per substitution for charge balance. Li2+xZr1-xMxCl6. Larger M3+ ionic radius → lattice expansion → wider Li migration channels.",
+        "lattice_expansion_role": "RE3+ ionic radius (87-101 pm) > Zr4+ (72 pm) → lattice expansion. Combined with extra Li+ → improved conductivity. Key: 'appropriate' expansion (not too much).",
+        "cation_polarization_factor_τ": "Sun et al. concept: τ = electron cloud expandability. Higher τ → weaker influence on halide framework → higher conductivity. Used to predict hcp structure stability for all 39 doped variants.",
+        "Dy_unique_behavior": "Conductivity continues rising from x=0.1 to x=0.25 (peaks at 1.42 mS/cm). Dy is mid-range RE radius (91 pm) — neither too large nor too small. Other RE peak at x=0.1.",
+        "Ta_co_doping_logic": "Ta5+ adjusts Li/vacancy ratio. Adding Ta5+ at Zr4+ site removes 1 Li+ per substitution (Li-1, vacancy +1). Combined with Dy3+ (Li+1) → tuneable Li concentration.",
+        "site_occupation_rearrangement": "**Critical mechanism**: 7Li NMR shows Li1 vs Li2 site occupation changes dramatically with doping. Li1 fraction: LZC 57% → LZTC 56% → LZDC 24% → LZDTC 98%. Li1 prefers when Li-Cl bond longer (less binding, faster migration)."
+      },
+      "BVSE_methodology": {
+        "tool": "softBV (bond valence site energy)",
+        "what_it_provides": "Li potential map → migration pathways → energy barriers",
+        "LZDTC_pathways": {
+          "interlayer": "LiA-LiB via [Li2-i1] or [Li1-i1]; LiA-LiA via [Li1-Li2]",
+          "intralayer": "Within LiB layer via vacancies",
+          "barriers_eV": {"Li1-i1": 0.80, "Li2-i1": 0.80, "Li1-Li2": 0.360},
+          "rate_limiting": "Lowest barrier = [Li1-Li2] channel at 0.360 eV"
+        },
+        "comparison_to_DFT_NEB": "BVSE is faster screening method (no DFT). For our argyrodite Nd-doping, we should ALSO do BVSE first (rapid 3D channel mapping) before doing expensive DFT NEB. Confirms which Li sites are connected and identifies bottleneck."
+      },
+      "7Li_NMR_methodology": {
+        "tool": "Bruker AVANCE NEO 600 MHz, MAS 10 kHz, 4mm HXY probe",
+        "data_obtained": "Li1/Li2 site occupation fraction via peak deconvolution",
+        "site_evolution": {
+          "LZC": {"Li1": 57.2, "Li2": 42.8},
+          "LZTC": {"Li1": 56.3, "Li2": 43.7},
+          "LZDC": {"Li1": 24.1, "Li2": 75.9},
+          "LZDTC": {"Li1": 98.0, "Li2": 2.0}
+        },
+        "interpretation": "Dy3+ doping pushes Li to Li2 site (75.9%). Adding Ta5+ flips it back to Li1 (98%). The site preference is driven by local ionic environment + bond length adjustments.",
+        "for_our_argyrodite": "Apply 7Li MAS NMR to Nd-doped Model C for Li site distribution among 48h Wyckoff. Our analog: Li 24g vs 48h occupation. Combine with DFT relaxed coords to assign chemical shifts."
+      },
+      "Rietveld_findings": {
+        "lattice_parameters_evolution": {
+          "LZC": {"a/b": 11.85, "c": 6.32, "V": 415},
+          "LZTC": "negligible change vs LZC (Ta minimal effect)",
+          "LZDC": "expanded (a/b ↑, c ↑)",
+          "LZDTC": {"a/b": 11.93, "c": 6.39, "V": 423}
+        },
+        "implication": "LZTC has negligible volume change → modest σ improvement. LZDC has expansion → σ boost. LZDTC most expanded → highest σ."
+      },
+      "relevance_to_our_Nd_argyrodite_work": {
+        "direct_data_for_us": "**Nd at x=0.1 in LZC gives σ ~0.7-0.8 mS/cm** (from Fig 1a estimate). Compares directly to our planned Nd in Model C (Li5.4PS4.4Cl1.6). Different host but same Nd ion behavior.",
+        "key_difference_in_doping_site": "Their work: Nd → Zr (cation site swap, host atom is +4 → +3 after Nd replacement). Our work: Nd → Li (cation site swap, host atom is +1 → +3 after Nd replacement). Charge compensation different: theirs adds 1 Li per Nd; ours removes 2 Li per Nd.",
+        "what_carries_over": [
+          "1. Dual-doping strategy (heterovalent compensation): we could add Ta5+ or other +5 cation if our P5+ can be doped to balance Li vacancy reduction from Nd doping",
+          "2. BVSE screening: rapid Li migration channel mapping before DFT NEB",
+          "3. 7Li NMR: site occupation distribution as function of doping",
+          "4. Bond length analysis: longer Li-Cl bonds → faster Li migration",
+          "5. Rietveld lattice parameter evolution as primary data"
+        ],
+        "what_to_compare_specifically": "If we publish ionic conductivity of Nd-doped Model C, we MUST compare to Jia 2025 LZDTC (1.67 mS/cm) and to Adeli's Li5.4PS4.4Cl1.6 (~10 mS/cm pristine). Argyrodite already 6× LZDTC for pristine — our Nd doping target should be: maintain or slightly enhance (not necessarily 4× boost like LZC).",
+        "thermodynamic_compatibility": "Their LZDTC stable with NCM811 cathode (CV showed clean window > 4 V). Our Nd-doped argyrodite will need same window for cathode side."
+      },
+      "ideas_to_borrow_for_our_paper": [
+        "1. **Bar chart figure** (Fig 1a-style): rare-earth doping σ comparison — if we test multiple lanthanides for argyrodite eventually",
+        "2. **Contour map** (Fig 2a): 2D plot of (x, y) co-doping concentrations vs σ — for Nd+Ta or Nd+Ge co-doping in argyrodite",
+        "3. **Arrhenius bar+ Ea figure** (Fig 2c style): combined σ + Ea on dual-axis bar chart for direct comparison",
+        "4. **Lattice parameter evolution** (Fig 3f style): a, c, V vs sample — show structural change with doping",
+        "5. **BVSE migration map + energy profile** (Fig 4 style): 3D Li potential map + 1D barrier profile",
+        "6. **NMR Li site occupation** (Fig 5e-g): Li1/Li2 site fraction + bond length + schematic mechanism diagram",
+        "7. **DRT analysis** (Fig 7d-f style): ex-situ EIS distribution function to track resistance evolution during cycling",
+        "8. **500-cycle long-term cycling** (Fig 6d): for our paper #2 (Nd doping), if we have battery measurements to add"
+      ],
+      "figure_7_analysis": {
+        "panels_a_b_c_XPS": {
+          "Cl_2p": {"pristine_2p3/2_eV": 199, "pristine_2p1/2_eV": 200, "after_500_cycles": "no shift, same peaks"},
+          "Zr_3d": {"pristine_3d5/2_eV": 183, "pristine_3d3/2_eV": 185, "after_500_cycles": "no shift, no oxidation/reduction"},
+          "Dy_3d": {"pristine_3d5/2_eV": 1297.9, "pristine_3d3/2_eV": 1335.3, "auger_overlap_eV": 1305.2, "after_500_cycles": "main peaks preserved despite Auger overlap"},
+          "interpretation": "All host atoms maintain chemical state after 500 cycles → no significant redox/decomposition. Strong stability evidence for paper claims.",
+          "for_our_paper": "Apply identical XPS pristine-vs-cycled comparison for Nd 3d, P 2p, S 2p, Cl 2p in our Nd-doped argyrodite. Detection of any peak shift would indicate decomposition. Standard format: 3 stacked panels (one per element), pristine on top, cycled below."
+        },
+        "panels_d_e_DRT": {
+          "concept": "Distribution of Relaxation Time (DRT) — mathematical transformation of EIS data from frequency to time domain. Decouples overlapping resistance components.",
+          "tau_regions": {
+            "Rc_contact": "τ ~ 10^-5 s (high-freq)",
+            "Ri_interface": "τ ~ 10^-4 to 10^-3 s (Rsei + Rcei combined)",
+            "Rct_charge_transfer": "τ ~ 10^-3 to 10^-1 s",
+            "Rmt_mass_transport": "τ ~ 10^-1 to 1 s (low-freq)"
+          },
+          "comparison_LZDTC_vs_LZC": "LZDTC shows smaller resistance growth across cycles vs LZC. Quantitative proof of LZDTC's superior cycling stability.",
+          "tools_for_analysis": "DRTtools (Python) or commercial software (e.g., ZView, EC-Lab DRT module)",
+          "for_our_paper": "If we test ASSB with Nd-doped argyrodite, apply DRT to decouple resistance contributions. Adopt 3D plot format (γ(τ) vs τ vs cycle number)."
+        },
+        "panel_f_resistance_evolution": {
+          "decomposed_components": ["Rc", "Rsei", "Rcei", "Rct", "Rmt"],
+          "trends": {
+            "Rsei": "Highest, gradually rises (LGPS/Li-In interface, NOT directly LZDTC issue)",
+            "Rcei": "Rises initially, stabilizes after ~10 cycles (cathode/electrolyte interface formation)",
+            "Rc_Rct_Rmt": "Low and stable across cycles"
+          },
+          "key_message": "Cathode/electrolyte interface (Rcei) stabilizes early — proof of self-limiting CEI formation. SEI side issue is LGPS-related, not main electrolyte. Main electrolyte LZDTC + cathode is stable.",
+          "for_our_paper": "Same decomposition for Nd-doped argyrodite + Li metal anode. Argument: 'Nd-rich SEI passivates rapidly, Rsei stabilizes within first 10 cycles → indicates self-limiting layer formation'."
+        }
+      },
+      "experimental_methods_we_could_adopt": {
+        "synthesis": "Two-step ball milling: 600 rpm 12h (initial mixing) + 500 rpm 36h (homogenization). Ball-to-powder ratio 10:1 then 80:1. Standard for halide SE.",
+        "characterization_essentials": [
+          "EIS at 1 Hz - 1 MHz, 100 mV amplitude → ionic conductivity",
+          "Cold-pressed pellets at 380 MPa (no heat treatment) → bulk conductivity",
+          "C-coated Al foil current collectors",
+          "XRD with Cu Kα, samples sealed with Kapton (air sensitive)",
+          "Rietveld via GSAS-II",
+          "BVSE via softBV using Rietveld-refined coordinates",
+          "FE-SEM (Zeiss Ultra 55) + EDS",
+          "XPS Kratos Axis Supra",
+          "7Li MAS NMR (Bruker 600 MHz, 10 kHz spinning, π/2=4 μs, recycle 5s)",
+          "DRT from EIS (frequency → time domain)"
+        ]
+      },
+      "SI_data": {
+        "table_S1_RE_ionic_radii_pm": {
+          "La3+": 103, "Ce3+": 101, "Pr3+": 99, "Nd3+": 98, "Sm3+": 96, "Eu3+": 95,
+          "Gd3+": 94, "Tb3+": 92, "Dy3+": 91, "Ho3+": 90, "Er3+": 89, "Yb3+": 87,
+          "Y3+": 90, "Zr4+": 72,
+          "Nd_vs_Zr": "Nd3+ (98) > Zr4+ (72) by 36% → significant lattice expansion expected"
+        },
+        "table_S2_Dy_series_conductivity": {
+          "Li2.05Zr0.95Dy0.05Cl6": {"impedance_Ω": 78.7, "sigma_mS_cm": 0.65},
+          "Li2.1Zr0.9Dy0.1Cl6":   {"impedance_Ω": 54.5, "sigma_mS_cm": 0.94},
+          "Li2.15Zr0.85Dy0.15Cl6":{"impedance_Ω": 47.1, "sigma_mS_cm": 1.01},
+          "Li2.2Zr0.8Dy0.2Cl6":   {"impedance_Ω": 51.4, "sigma_mS_cm": 1.14},
+          "Li2.25Zr0.75Dy0.25Cl6":{"impedance_Ω": 36.5, "sigma_mS_cm": 1.40},
+          "Li2.3Zr0.7Dy0.3Cl6":   {"impedance_Ω": 56.0, "sigma_mS_cm": 0.97},
+          "trend": "σ peaks at x=0.25 (1.40 mS/cm), drops at x=0.30 (over-doping)"
+        },
+        "table_S3_co_doping_full": {
+          "Li2.1Zr0.8Dy0.15Ta0.05Cl6": {"sigma_mS_cm": 1.67, "rank": "BEST"},
+          "Li2.2Zr0.7Dy0.25Ta0.05Cl6": {"sigma_mS_cm": 1.40, "rank": 2},
+          "Li2.025Zr0.825Dy0.1Ta0.075Cl6": {"sigma_mS_cm": 1.30, "rank": 3},
+          "Li2.05Zr0.85Dy0.1Ta0.05Cl6": {"sigma_mS_cm": 1.20, "rank": 4},
+          "Li2.15Zr0.795Dy0.2Ta0.05Cl6": {"sigma_mS_cm": 1.15, "rank": 5},
+          "Li2.05Zr0.75Dy0.15Ta0.1Cl6":  {"sigma_mS_cm": 1.08},
+          "Li2.075Zr0.875Dy0.1Ta0.025Cl6": {"sigma_mS_cm": 0.98},
+          "Li2.225Zr0.725Dy0.25Ta0.025Cl6": {"sigma_mS_cm": 0.92},
+          "Li2.075Zr0.775Dy0.15Ta0.075Cl6": {"sigma_mS_cm": 0.90},
+          "Li2.175Zr0.675Dy0.25Ta0.075Cl6": {"sigma_mS_cm": 0.81},
+          "Li2.125Zr0.825Dy0.15Ta0.025Cl6": {"sigma_mS_cm": 0.79},
+          "Li2Zr0.8Dy0.1Ta0.1Cl6": {"sigma_mS_cm": 0.72},
+          "Li2.1Zr0.7Dy0.2Ta0.1Cl6": {"sigma_mS_cm": 0.62},
+          "Li2.175Zr0.775Dy0.2Ta0.025Cl6": {"sigma_mS_cm": 0.60},
+          "Li2.125Zr0.725Dy0.2Ta0.075Cl6": {"sigma_mS_cm": 0.57},
+          "Li2.15Zr0.65Dy0.25Ta0.1Cl6": {"sigma_mS_cm": 0.43},
+          "key_insight": "Co-doping σ ranges 0.43 to 1.67 mS/cm (4× variation). Best y=0.05 Ta consistently. Worst y=0.1 Ta (over-substitution removes too many Li). Sweet spot: x=0.15 Dy + y=0.05 Ta."
+        },
+        "rietveld_data_tables_S4_S7": {
+          "all_space_group": "P-31c (hexagonal)",
+          "lattice_evolution": {
+            "LZC": {"a_Å": 6.3348, "c_Å": 11.9192, "V_Å3": 414.24, "Rwp_pct": 3.88, "Li1_frac": 0.572, "Li2_frac": 0.428},
+            "LZTC": {"a_Å": 6.3400, "c_Å": 11.9117, "V_Å3": 414.65, "Rwp_pct": 3.35, "Li1_frac": 0.563, "Li2_frac": 0.437, "Ta_at_Zr": 0.05},
+            "LZDC": {"a_Å": 6.3718, "c_Å": 11.9724, "V_Å3": 420.95, "Rwp_pct": 3.24, "Li1_frac": 0.241, "Li2_frac": 0.759, "Dy_at_Zr": 0.15},
+            "LZDTC": {"a_Å": 6.3654, "c_Å": 11.9738, "V_Å3": 420.16, "Rwp_pct": 2.79, "Li1_frac": 0.98, "Li2_frac": 0.02, "Dy_at_Zr": 0.15, "Ta_at_Zr": 0.05}
+          },
+          "wyckoff_positions": {
+            "Cl_12": "(~0.65, ~0.00, ~-0.38)",
+            "Zr_2_2c": "(0.667, 0.333, -0.25)",
+            "Li2_2_2a": "(0, 0, 0.25)",
+            "Li1_2_2d": "(0.333, 0.667, -0.25)"
+          },
+          "key_observation": "Li occupation FLIPS dramatically with doping: LZC has 57.2% Li1, LZDC has only 24.1% Li1, LZDTC pushes to 98% Li1. Site preference is sensitive to local environment + bond length adjustments. **This is the core mechanism.**",
+          "for_our_argyrodite": "Apply Rietveld-level structural refinement for our Nd-doped argyrodite. Track Wyckoff site occupation (24g vs 48h Li) as function of Nd content. Compare to MLIP/DFT-relaxed ab initio occupation for cross-validation."
+        }
+      },
+      "SI_figure_priority_for_our_work": {
+        "highest_priority": [
+          "Fig S7 (literature halide SE conductivity comparison) — provides competitive landscape; we need to show where our Nd-doped argyrodite sits vs LZDTC, LSPS, etc.",
+          "Fig S3 (Sun's cation polarization factor τ-ΦLi map) — methodology for predicting structure/conductivity. Could apply analogously to argyrodite RE doping space."
+        ],
+        "medium_priority": [
+          "Fig S2 (enlarged XRD peak shift with RE radius) — visualizes lattice expansion trend",
+          "Fig S9 (LZC vs LZDTC crystal structure side-by-side) — visualization template",
+          "Fig S10 (CV curves) — electrochemical window",
+          "Fig S6 (Nyquist at multiple T) — for our Arrhenius analysis template"
+        ],
+        "low_priority_skip_likely": [
+          "Fig S1 (raw Nyquist for all RE) — too detailed",
+          "Fig S4/S5 (Nyquist Dy/co-doping series) — already summarized in main figs",
+          "Fig S8 (SEM) — system-specific morphology",
+          "Fig S11/S12 (cycling curves) — system-specific battery data",
+          "Fig S13/S14 (Nyquist at V/cycles) — system-specific"
+        ]
+      },
+      "tags": ["rare-earth-doping", "Nd", "Dy", "Ta", "co-doping", "halide-SE", "Li2ZrCl6", "LZDTC", "BVSE", "7Li-NMR", "Rietveld", "experimental", "ASSB", "NCM811", "China", "ZSTU", "SI-data-extracted"]
     }
   ]
 }
