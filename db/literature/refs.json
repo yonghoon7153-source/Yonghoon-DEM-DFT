@@ -479,6 +479,46 @@
         "energy_stability": "All curves flat around -255 eV with thermal fluctuations only. No drift, no melting.",
         "implication_for_us": "Standard 'AIMD thermal stability' figure format. We can make analogous Fig for Nd-doped argyrodite at 300/500/700 K. Quick (~3-day AIMD per T) and high-impact for Reviewer reassurance."
       },
+      "figure_S29_analysis": {
+        "BaSnF4_path1": {
+          "initial_state": {"Ba1-F": 2.67, "Ba2-F": 2.67, "Ba-F-Ba_angle_deg": 118.84},
+          "saddle_point": {"Ba1-F": 2.47, "Ba2-F": 2.47, "Ba-F-Ba_angle_deg": 178.13, "geometry": "linear symmetric"},
+          "final_state": {"Ba1-F": 2.67, "Ba2-F": 2.67, "Ba-F-Ba_angle_deg": 118.13},
+          "barrier_eV": 0.71
+        },
+        "doped_path1": {
+          "initial_state": {"Nd-F": 2.36, "Ba2-F": 2.77, "Nd-F-Ba_angle_deg": 123.81},
+          "saddle_point": {"Nd-F": 2.24, "Ba2-F": 2.58, "Nd-F-Ba_angle_deg": 173.00, "geometry": "asymmetric"},
+          "final_state": {"Nd-F": 2.36, "Ba2-F": 2.77, "Nd-F-Ba_angle_deg": 124.47},
+          "barrier_eV": 0.18
+        },
+        "key_mechanism": "Saddle geometry asymmetry. Pristine BaSnF4 has SYMMETRIC saddle (linear Ba-F-Ba, both 2.47 Å) → both Ba atoms simultaneously increase hybridization with F → high simultaneous bond-breaking cost = 0.71 eV. Doped has ASYMMETRIC saddle (Nd-F=2.24, Ba-F=2.58 Å) → Nd-F barely hybridizes more (already short ionic bond) while Ba-F shortens but is weaker → distributed strain rather than peak strain → 0.18 eV barrier.",
+        "transferability_to_argyrodite": "Same logic applies if Nd substitutes Li in argyrodite: Li-S/Cl bonds are weaker than Nd-S/Cl. Asymmetric saddle in Li migration through Nd-modified site should give lower barrier. Conceptually: Nd 'pre-stretches' one side of the migration channel by anchoring strongly."
+      },
+      "figure_S30_S31_analysis": {
+        "S30_pristine_BaSnF4": "Both Ba1-F and F-Ba2 bonds show strong increase in hybridization at saddle (2.47 Å). Both bonds simultaneously become more covalent. F-2p × Ba-5p overlap intensifies symmetrically. High concurrent bond-strengthening = high barrier.",
+        "S31_doped_system": {
+          "Nd_F_bond": "DOS at initial (2.36 Å), saddle (2.24 Å), final (2.36 Å) — minimal hybridization change. Nd-5p contribution (cyan) tiny; Nd-F is largely IONIC, not covalent. Saddle compression doesn't trigger strong covalent bonding.",
+          "Ba_F_bond": "F-Ba2 (2.77 Å initial → 2.58 Å saddle → 2.77 Å final). Some hybridization increase at saddle, but smaller in absolute magnitude than pristine BaSnF4."
+        },
+        "publication_template": "These DOS plots are the GOLD STANDARD for explaining ion migration barriers via electronic structure. Format: 3 stacked panels (initial/saddle/final), 2 elements (host atom + migrating ion), with bond length annotated for each. Use this exact format for our Li migration NEB in Nd-doped argyrodite.",
+        "what_to_extract_for_paper": [
+          "1. Initial → saddle bond length compression (Δd in Å)",
+          "2. DOS overlap area change (proxy for hybridization, integrate near EF)",
+          "3. ASE/QE projwfc.x output: Nd 4f/5d, Li 1s/2s, S 3p, Cl 3p projections",
+          "4. Show Li-S vs Li-Cl asymmetry at Nd-perturbed sites"
+        ]
+      },
+      "figures_S2_S3_S5_S6_screening": {
+        "method": "For each Nd doping concentration, place additional charge-compensating F at 6 candidate interstitial sites (F1-F6). Run full structural relaxation. Pick lowest energy site as production model.",
+        "site_visualization": "Side view + top view of supercell with red dots marking candidate F-interstitial positions. Optimized structures shown side-by-side.",
+        "implication_for_argyrodite_Nd_doping": [
+          "Sample top-N candidate Li vacancy positions (analog to F interstitial sites)",
+          "Method: Take Model C 62-atom (27 Li + 5 P + 22 S + 8 Cl). For each Nd→Li substitution, identify which 2 of remaining 26 Li to remove for charge balance",
+          "Strategy: Use MLIP (UMA or MACE) to rapidly screen 50-100 candidate vacancy patterns. Pick lowest energy vacancy configuration. Validate with DFT.",
+          "Adapt this 6-site screening to ~10-20-site Li vacancy screening (more candidates due to Li 48h site multiplicity)"
+        ]
+      },
       "figure_S23_analysis": {
         "Bader_Ba_e": "+1.73 (constant across x = 0, 0.0625, 0.125, 0.25)",
         "Bader_Sn_e": "+1.50 (constant across x)",
