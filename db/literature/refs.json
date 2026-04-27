@@ -299,6 +299,176 @@
         "7. MENTION UMAP training-set validation as SI item if UMA training data accessible"
       ],
       "tags": ["adhesion", "MLIP", "interface_construction", "SMD", "SevenNet", "composition_effect", "amorphous", "semiconductor", "Korea"]
+    },
+    {
+      "id": "xiong2022",
+      "authors": "Xiong, L.; Wen, P.; Zhang, Y.; Liu, X.; Ning, J.; Wang, X.; Wang, H.; Yang, Z.",
+      "title": "Exploring efficient solid electrolyte based on Nd doped BaSnF4 for fluoride-ion batteries at atomic scale",
+      "journal": "J. Power Sources",
+      "volume": 518,
+      "pages": "230718",
+      "year": 2022,
+      "doi": "10.1016/j.jpowsour.2021.230718",
+      "affiliation": "Xiangtan University (Z. Yang group)",
+      "key_content": "First-principles DFT study of Nd-doped BaSnF4 (Ba(1-x)Nd(x)SnF(4+x), x=0, 0.02, 0.0625, 0.125, 0.25) for fluoride-ion battery solid electrolyte. Optimal composition Ba0.875Nd0.125SnF4.125 shows F-ion conductivity 5.35e-3 S/cm at 300K (vs BaSnF4 3.50e-4 S/cm = 15× enhancement). F-ion diffusion barrier reduced 0.71→0.18 eV via Nd-induced Ba-F coordination distortion. Heterovalent Nd3+→Ba2+ substitution with charge-compensating interstitial F- (auto-balance). B/G ratio 1.82→1.97 → improved ductility (Pugh criterion). Wide electrochemical window (4.86-5.66 V vs Ba, 6.38-7.57 V vs Nd). Excellent thermal stability (-120°C to 120°C, AIMD verified).",
+      "system": "BaSnF4 (P4/nmm tetragonal, layered Ba-Sn-Ba-F structure) for fluoride-ion battery electrolyte",
+      "supercells_studied": {
+        "x_0": "Ba2Sn2F8 (12 atoms unit cell)",
+        "x_0.02": "Ba49Nd1Sn50F201 (301 atoms supercell)",
+        "x_0.0625": "Ba15Nd1Sn16F65 (97 atoms supercell)",
+        "x_0.125": "Ba7Nd1Sn8F33 (49 atoms supercell)",
+        "x_0.25": "Ba3Nd1Sn4F17 (25 atoms supercell)"
+      },
+      "DFT_methodology": {
+        "code": "VASP",
+        "functional": "PBE-GGA + PAW",
+        "valence_e": "Ba 5s2p6, Sn 5s2p2, F 2s2p5, Nd 5s2p6 (4f as core/semicore)",
+        "ENCUT": 520,
+        "k_points": "10x10x4",
+        "force_conv": "0.03 eV/Å",
+        "spin_polarization": "NOT USED (paper claims 'Nd3+ has no open-shell d electrons' — questionable for 4f3)",
+        "DFT_plus_U": "NOT USED (no Hubbard correction on Nd 4f)",
+        "NEB": "CI-NEB with charge-compensated F-vacancy",
+        "AIMD": "Γ-only k-point, used for diffusivity (Eq. 1-3) and thermal stability"
+      },
+      "key_results": {
+        "lattice_constants_table1": {
+          "BaSnF4_calc": {"a": 4.424, "c": 11.395, "V": 223.020},
+          "BaSnF4_exp": {"a": 4.355, "c": 11.232, "V": 213.026, "deviation_pct": 1.58},
+          "Ba0.875Nd0.125SnF4.125": {"a": 4.432, "c": 11.427, "V": 224.280}
+        },
+        "band_gap_eV": {"range": [3.41, 3.69], "x_dependence": "narrow fluctuation, all insulating"},
+        "elastic_GPa": {
+          "BaSnF4": {"E": 84.95, "G": 33.50, "B": 61.00, "nu": 0.27, "B_over_G": 1.82},
+          "Ba0.875Nd0.125SnF4.125": {"B_over_G": 1.97, "verdict": "best ductility"},
+          "Pugh_criterion": "B/G > 1.75 = ductile, < 1.75 = brittle"
+        },
+        "diffusion": {
+          "BaSnF4_barrier_eV": 0.71,
+          "Ba0.875Nd0.125SnF4.125_barrier_eV": 0.18,
+          "BaSnF4_sigma_300K": 3.50e-4,
+          "Ba0.875Nd0.125SnF4.125_sigma_300K": 5.35e-3,
+          "enhancement_factor": 15.3,
+          "activation_energy_eV": {"BaSnF4": 0.23, "doped": 0.15}
+        },
+        "bond_lengths_Å": {
+          "Ba-F_pristine": 2.67,
+          "Ba-F_doped_range": [2.73, 2.85],
+          "Nd-F": 2.39,
+          "F-F_pristine": 3.14,
+          "F-F_doped": 3.32
+        }
+      },
+      "Nd_doping_mechanism": "Nd3+ (smaller, 1.81 Å vs Ba2+ 2.18 Å) replaces Ba2+ → Nd-F bond shorter (2.39 Å) and stronger (Nd-5p + F-2p hybridization) → distorts adjacent Ba-F polyhedron → Ba-F bond elongates (2.73-2.85 Å) → reduced Ba-F restriction → F-ion mobility increases.",
+      "structural_role": "Nd doping induces structural reconstruction of Ba-F tetrahedron, increasing disorder degree of barium-fluoride coordination polyhedron. Nd-F-Ba bonding angle changes 123.81° → 173° at saddle point (vs BaSnF4 179.52°).",
+      "relevance_to_our_work": "DIRECT precedent for Nd3+ doping in inorganic solid electrolyte at multiple concentrations (x=0.02 to 0.25). Validates: (1) using x=0.125 (~10% supercell) instead of experimental x=0.02 — pseudo-isolated defect model, (2) heterovalent doping with charge-compensating interstitial anions (F- in their case ↔ Li+ vacancies in our argyrodite case), (3) Nd induces local distortion that reduces ion-host coordination strength → mobility enhancement, (4) elastic property changes (Pugh ratio) follow trend of doping. KEY DIFFERENCE: their Nd substitutes Ba2+ (cation similar size), our Nd would substitute Li+ (cation similar charge for 2:1 ratio). Both treat 4f as quasi-core (no DFT+U, no spin polarization) — this is questionable for our work; we should use DFT+U (U=6 eV) + ISPIN=2 for proper 4f description.",
+      "methodology_critique": {
+        "spin_polarization_missing": "Nd3+ has 4f3 configuration with 3 unpaired electrons. Paper states 'Nd3+ has not open-shell d electrons' which conflates 4f and 5d. This is incorrect — 4f3 IS open-shell. Spin polarization should be ISPIN=2.",
+        "DFT_plus_U_missing": "PBE alone delocalizes 4f electrons → wrong band gap, wrong DOS positions of Nd 4f peaks. Paper reports band gap 3.41-3.69 eV but Nd 4f peak positions in DOS may be artifactual. Standard practice: DFT+U with U_eff=6 eV on Nd 4f (Loschen 2007, Topsakal 2014).",
+        "consequence": "Their reported electronic structure (band gap, DOS) may underestimate gap and misposition 4f peaks. Mechanical and structural results (lattice constants, bond lengths, formation energies, elastic constants, diffusion barriers via NEB) are likely reliable since they don't directly depend on 4f energy positions.",
+        "salvaged_results": "Trust: lattice/bonds/forces/elastic/NEB barriers/Bader (if reported). Distrust: band gap value/4f DOS position/electronic conductivity prediction."
+      },
+      "useful_strategies_for_our_paper": [
+        "1. Multiple x values tested (0.02, 0.0625, 0.125, 0.25) — covers dilute to concentrated regime, justifies x=0.125-0.25 as 'best ductility/mobility balance'",
+        "2. Charge compensation handled automatically by adding/removing anion at interstitial — same approach we'll use for Li in argyrodite",
+        "3. Bond length redistribution analysis (Ba-F shortest vs Nd-F shortest) — direct analog to our planned Li-S vs Nd-S/O comparison",
+        "4. AIMD for thermal stability validation — we should adopt same approach (NVT 300K, 50-100 ps, monitor lattice/total energy)",
+        "5. Phase stability via convex hull (CPLAP) → competing phases search — adopt for Nd-doped argyrodite",
+        "6. Pugh ratio (B/G) and ductility narrative — strong story for paper if our argyrodite shows B/G change",
+        "7. NEB with charge-compensated vacancy — methodology directly applicable to Li migration in Nd-doped Li5.4 argyrodite"
+      ],
+      "what_to_NOT_copy": [
+        "1. Skip 'no spin polarization' justification — for our 4f3 Nd we MUST use ISPIN=2",
+        "2. Skip 'no DFT+U' approach — we MUST use U_eff=6 eV on Nd 4f",
+        "3. Their conductivity number (5.35e-3 S/cm) is high but not directly comparable (different system, different chemistry)"
+      ],
+      "Nd_concentration_decision_for_our_argyrodite": {
+        "their_choice": "x=0.125 (Ba0.875Nd0.125SnF4.125 = 1 Nd in 8 Ba sites)",
+        "our_analog": "x=0.20 (Li5.4-3xNdxLi vacancy in Model C 62-atom cell = 1 Nd) — comparable supercell size",
+        "isolated_defect_validity": "Their Nd-Nd distance ~5-7 Å in 49-atom supercell still gave clean results. Our Nd-Nd through periodic image >12 Å in 62-atom rhombo cell will be even safer.",
+        "consistent_protocol": "Single Nd in unit cell + ISPIN=2 + DFT+U(6 eV) → cleaner than Xiong's setup despite our smaller supercell"
+      },
+      "SI_data": {
+        "section_1_spin_states": {
+          "their_argument": "Nd ground state [Xe]4f^4 6s^2; Nd3+ is [Xe]4f^3 5s^2 5p^6. They claim 'Nd does not lose d electrons when transferred to Nd3+, so it is highly unlikely Nd has open-shell d electrons, therefore different spin states at Nd center are impossible.'",
+          "critique": "The argument confuses 4f vs 5d. Nd3+ 4f^3 IS open-shell (3 unpaired f electrons → S=3/2, L=6, ground term 4I_9/2). Their reasoning is flawed. They effectively treat 4f as core, which mishandles 4f electronic structure but may give acceptable results for non-electronic properties (lattice, elastic, Bader).",
+          "their_refs_used": "[1] Chen et al. JAP 2012 (NdFeO3 4f role); [2] Feng et al. Acta Mater 2011 (Ln2Zr2O7 pyrochlore); [3] Ban et al. JMMM 1998 (Mossbauer Nd valence)"
+        },
+        "section_3_F_interstitial_screening": {
+          "method": "For each x value (0.02, 0.0625, 0.125, 0.25), tested 6 candidate F-interstitial positions (F1-F6). Selected lowest-energy site.",
+          "implication_for_us": "We need similar screening for Li-vacancy positions when doing Nd→Li substitution in argyrodite. With 27 Li sites, can sample top-N favorable vacancy locations using MLIP."
+        },
+        "section_5_phase_competing": {
+          "Ba_Sn_F_phases_table_S1": {
+            "BaF2": {"GGA_kJ": -11.66, "exp_kJ": -12.52},
+            "Ba2Sn": {"GGA_kJ": -1.89, "exp_kJ": -1.44},
+            "Ba3Sn5": -5.36,
+            "Ba5Sn3": {"GGA_kJ": -5.16, "exp_kJ": -5.92},
+            "BaSn": {"GGA_kJ": -1.47, "exp_kJ": -1.32},
+            "BaSn5": {"GGA_kJ": -2.18, "exp_kJ": -1.65},
+            "Sn2F6": -19.67,
+            "Sn3F8": -26.67,
+            "SnF2": {"GGA_kJ": -6.96, "exp_kJ": -7.22},
+            "SnF4": {"GGA_kJ": -11.91, "exp_kJ": -11.14}
+          },
+          "Nd_phases_table_S2": {
+            "Nd2Sn3": -4.01,
+            "NdSn2": {"GGA_kJ": -2.17, "exp_kJ": -2.05},
+            "NdSn3": {"GGA_kJ": -2.33, "exp_kJ": -2.75},
+            "Nd5Sn3": {"GGA_kJ": -6.45, "exp_kJ": -6.32},
+            "Nd5Sn4": {"GGA_kJ": -7.82, "exp_kJ": -6.65},
+            "Nd11Sn10": -18.25,
+            "NdF3": {"GGA_kJ": -16.58, "exp_kJ": -16.21}
+          },
+          "best_Nd_source": "Nd5Sn3 (most negative formation energy, most favorable for synthesis)",
+          "Nd_NO3_3_alternative": "Wide chemical potential range supports Nd(NO3)3 as feasible raw material",
+          "implication_for_us": "Adopt similar convex-hull / phase competition analysis for Nd2O3 → argyrodite. Competing phases: Nd2S3, NdCl3, NdOCl, Li3Nd, LiNdO2, Nd2O3 itself."
+        },
+        "section_6_full_elastic_table_S5_GPa": {
+          "x_0":     {"C11": 114, "C12": 20, "C13": 46, "C33": 93,  "C44": 33, "C66": 33},
+          "x_0.02":  {"C11": 153, "C12": 19, "C13": 26, "C33": 102, "C44": 23, "C66": 19},
+          "x_0.0625":{"C11": 114, "C12": 21, "C13": 46, "C33": 97,  "C44": 32, "C66": 34},
+          "x_0.125": {"C11": 113, "C12": 27, "C13": 49, "C33": 96,  "C44": 35, "C66": 35},
+          "x_0.25":  {"C11": 114, "C12": 28, "C13": 50, "C33": 110, "C44": 31, "C66": 37},
+          "anomaly": "x=0.02 shows large C11 jump (114→153 GPa, +34%) inconsistent with smooth trend at higher x. This is 1 Nd in 50 Ba (very dilute) → likely artifact of small concentration with single defect breaking symmetry. Or could be local atomic relaxation pattern unique to this concentration.",
+          "VRH_note": "Paper does Voigt-Reuss-Hill averaging via Eqs. 11-19 (standard) → reports E, G, B, ν in main Fig. 2"
+        },
+        "section_7_thermal_stability_AIMD": {
+          "system": "Ba0.875Nd0.125SnF4.125 (49 atoms)",
+          "T_range_K": [300, 400, 500, 600, 700, 800],
+          "MSD_results": "F shows mobility, Ba/Sn/Nd nearly stationary at all temperatures (paper Fig S21)",
+          "energy_drift": "Total potential energy stable across 300-800K (Fig S22) → thermal stability confirmed",
+          "Bader_invariance": "Bader charges of Ba and Sn unchanged with Nd doping (Fig S23a) → no redox; framework stable"
+        },
+        "section_8_diffusion_paths": {
+          "3_path_decomposition": "Path①: Ba-Ba atomic layer (highest barrier, RDS); Path②: Ba-Ba ↔ Ba-Sn transition; Path③: Ba-Sn atomic layer",
+          "BaSnF4_path1_barrier_eV": 0.71,
+          "Ba0.875Nd0.125SnF4.125_path1_barrier_eV": 0.18,
+          "Nd_F_bond_at_saddle": "Nd-F shortens 2.36 → 2.24 Å during diffusion (Fig 6)",
+          "Ba_F_bond_at_saddle": "Ba-F shortens 2.77 → 2.58 Å during diffusion",
+          "DOS_at_saddle": "Nd-5p × F-2p hybridization stronger at saddle → energy lowering"
+        },
+        "section_13_electrochemical_decomp": {
+          "Ba_anode_voltage_window_V": [4.86, 5.66],
+          "Nd_anode_voltage_window_V": [6.38, 7.57],
+          "Sn_anode_decomposition_steps": "0 V: BaSnF4 + SnF2 + NdF3; 0.80 V: Sn formation; 0.88 V: BaF2 appears; 8.58 V: full decomposition with 5 Sn",
+          "Nd_anode_decomposition_steps": "Many steps from 0 V to 7.57 V; final products mostly NdF3 + BaSnF4 + Sn",
+          "passivating_phases": "BaF2 (Eg ~10 eV), SnF2, NdF3 — all electronically insulating, serve as passivation layer",
+          "Fig_S50_decomp_band_gaps": "Ba0.875Nd0.125SnF4.125 ~3.5 eV; NdF3 wider; SnF2 wider; BaF2 widest — all passivating"
+        }
+      },
+      "ideas_to_borrow_for_argyrodite_Nd_paper": [
+        "1. SI Table S5-style full Cij(x) matrix for our Nd-doped argyrodite — show C11, C12, C13, C33, C44, C66 progression",
+        "2. SI Fig S15-style band structure + DOS for x=0/0.05/0.10/0.20 — track Nd 4f peak migration",
+        "3. SI Fig S22-style AIMD energy vs time at multiple T — prove thermal stability",
+        "4. SI Fig S50-style decomposition product band gap diagram — for SEI passivation argument",
+        "5. SI Section 5-style chemical potential phase analysis with 7 candidate Nd sources — adapt for Nd2O3 → argyrodite path",
+        "6. Bader invariance plot (Fig S23a) — show Li/P/S/Cl charges constant across x to argue framework integrity",
+        "7. NEB barrier comparison plot (Fig 4b style) — Li migration barrier vs x in argyrodite",
+        "8. Multi-temperature MSD (Fig S21) for Li mobility analysis",
+        "9. Voltage profile (Fig 8) — for electrochemical stability vs Li metal"
+      ],
+      "tags": ["Nd-doping", "rare-earth", "DFT", "VASP", "PBE", "fluoride-ion-battery", "BaSnF4", "heterovalent", "ionic-conductivity", "elastic", "Pugh-ratio", "NEB", "AIMD", "isolated-defect", "F-ion", "China", "SI-data-extracted"]
     }
   ]
 }
