@@ -354,23 +354,39 @@ def transform_network_summary_4col(tables, metrics, meta):
             # 5-case ratio row — each candidate area as multiple of A_final.
             # Reveals at a glance how lower bounds and upper caps relate to
             # the selected value (lower bounds <1, caps ≥1, binding case ≈1).
-            r = _find_row('A_5case ÷ A_final (H / L / T / V / G)')
-            if r is not None:
-                af = float(five.get('A_final_um2') or 0.0)
-                if af > 0:
-                    def _r(k):
-                        v = five.get(k)
-                        if v is None:
-                            return '—'
-                        try:
-                            return f"{float(v) / af:.2f}×"
-                        except Exception:
-                            return '—'
+            ratio_label = 'A_5case ÷ A_final (H / L / T / V / G)'
+            af = float(five.get('A_final_um2') or 0.0)
+            if af > 0:
+                def _r(k):
+                    v = five.get(k)
+                    if v is None:
+                        return '—'
+                    try:
+                        return f"{float(v) / af:.2f}×"
+                    except Exception:
+                        return '—'
+                ratio_str = (f"{_r('A_hertzian_um2')} / {_r('A_ligg_um2')} / "
+                             f"{_r('A_tabor_um2')} / {_r('A_volume_um2')} / "
+                             f"{_r('A_geom_um2')}")
+                r = _find_row(ratio_label)
+                if r is not None:
                     r[1] = '-'
-                    r[2] = (f"{_r('A_hertzian_um2')} / {_r('A_ligg_um2')} / "
-                            f"{_r('A_tabor_um2')} / {_r('A_volume_um2')} / "
-                            f"{_r('A_geom_um2')}")
+                    r[2] = ratio_str
                     r[3] = ''
+                else:
+                    # Cached table lacks the row — insert it right after the
+                    # last 5-case row so the ratio renders for older cases.
+                    target_label = 'AM-SE A_final(μm²)'
+                    insert_idx = None
+                    for i, row in enumerate(data):
+                        if isinstance(row, list) and row and row[0] == target_label:
+                            insert_idx = i + 1
+                            break
+                    new_row = [ratio_label, '-', ratio_str, '']
+                    if insert_idx is not None:
+                        data.insert(insert_idx, new_row)
+                    else:
+                        data.append(new_row)
 
     # Step 4: inject Network Solver section (σ rows with physics)
     has_net_section = any(isinstance(r[0], str) and r[0].startswith('── Network Solver') for r in data)
