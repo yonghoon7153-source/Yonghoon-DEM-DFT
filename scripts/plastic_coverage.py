@@ -303,9 +303,17 @@ def film_area_from_overlap(delta: float, R_star: float,
         #       internal hooke/hysteresis plasticity — refined physics model
         #       cannot claim LESS contact area than the DEM baseline).
         # Clamping to this max avoids non-physical Physics < Hertzian results.
-        dem_lower_bound = max(elastic_area, ligg_area or 0.0)
-        A_plastic = max(dem_lower_bound, A_cap)
-        binding = cap_binding if A_plastic == A_cap else 'lower'
+        ligg_val = ligg_area or 0.0
+        A_plastic = max(elastic_area, ligg_val, A_cap)
+        # Per-contact binding label = which of the five cases ended up
+        # selected. Uses strict equality on the chosen value so the label
+        # correctly attributes every contact to exactly one category.
+        if A_plastic == elastic_area and elastic_area >= ligg_val and elastic_area >= A_cap:
+            binding = 'hertzian'
+        elif A_plastic == ligg_val and ligg_val >= A_cap:
+            binding = 'liggghts'
+        else:
+            binding = cap_binding
         regime = "plastic" if dr >= DR_FULLY_PLASTIC else "transition"
         return _pack(A_plastic, regime,
                      A_ligg=ligg_area, A_tabor=A_tabor,

@@ -184,9 +184,17 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         'A_geom':     0.0,   # 2π R_min²      (upper cap 3)
         'A_final':    0.0,   # max(lower, min(caps)) — same as total_am_se_p
     }
-    am_se_binding_counts = {'tabor': 0, 'volume': 0, 'geom': 0,
-                            'lower': 0, 'elastic': 0, 'other': 0}
+    # Binding (= which of the 5 cases was selected per contact).
+    # Tracked twice: AM-SE only vs all contact pairs (total).
+    _binding_template = lambda: {
+        'hertzian': 0, 'liggghts': 0,
+        'tabor': 0, 'volume': 0, 'geom': 0,
+        'elastic': 0, 'other': 0,
+    }
+    am_se_binding_counts = _binding_template()
+    total_binding_counts = _binding_template()
     am_se_n_contacts = 0
+    total_n_contacts  = 0
 
     for _, c in contacts_df.iterrows():
         i1, i2 = int(c['id1']), int(c['id2'])
@@ -214,25 +222,21 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
         am1 = t1 in am_types;  am2 = t2 in am_types
         se1 = t1 in se_types;  se2 = t2 in se_types
 
+        # Track binding selection across ALL contacts (total) — independent
+        # of contact-type bucket so SE-SE / AM-AM also count.
+        if comp is not None:
+            total_n_contacts += 1
+            bk_t = comp.get('binding') or 'other'
+            if bk_t in total_binding_counts:
+                total_binding_counts[bk_t] += 1
+            else:
+                total_binding_counts['other'] += 1
+
         if (am1 and se2) or (am2 and se1):
             total_am_se_h += A_ligg_sim
             total_am_se_p += A_phys_sim
-            # 5-case decomposition (AM-SE only)
             if comp is not None:
                 am_se_n_contacts += 1
-                am_se_5case['A_hertzian'] += comp['A_hertzian'] or 0.0
-                am_se_5case['A_ligg']     += comp['A_ligg'] or 0.0
-                am_se_5case['A_tabor']    += comp['A_tabor'] or 0.0
-                # A_volume can be infinite for tiny δ; clamp to A_geom for sanity
-                _av = comp['A_volume']
-                if _av is None:
-                    pass
-                elif _av == float('inf'):
-                    am_se_5case['A_volume'] += comp['A_geom'] or 0.0
-                else:
-                    am_se_5case['A_volume'] += _av
-                am_se_5case['A_geom']  += comp['A_geom'] or 0.0
-                am_se_5case['A_final'] += A_phys_sim
                 bk = comp.get('binding') or 'other'
                 if bk in am_se_binding_counts:
                     am_se_binding_counts[bk] += 1
@@ -346,27 +350,26 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                 m['area_SE_SE_total_physics']    = round(total_se_se_p * area_conv, 2)
                 m['area_AM전체_AM_total_physics'] = round(total_am_am_p * area_conv, 2)
 
-                # ── AM-SE 5-case decomposition (Tabor / volume / geom + lower bounds)
-                # Lower bounds (Hertzian, LIGGGHTS) and upper caps (Tabor,
-                # volume, geom) summed across all AM-SE edges in μm². The
-                # selected (final) value is what `area_AM전체_SE_total_physics`
-                # already reports — included here for direct comparison.
+                # ── Per-contact binding distribution ──
+                # For each contact, exactly one of the five candidate areas
+                # is selected by max(lower_bounds, min(upper_caps)). We tally
+                # which case won across the population of contacts and
+                # report it as a percentage. Reported twice:
+                #   - AM-SE only (the contacts that drive the analysis-summary
+                #     interface metrics)
+                #   - Total (all SE-SE + AM-SE + AM-AM contact pairs)
                 if am_se_n_contacts > 0:
-                    m['area_AM_SE_total_5case'] = {
-                        'A_hertzian_um2': round(am_se_5case['A_hertzian'] * area_conv, 2),
-                        'A_ligg_um2':     round(am_se_5case['A_ligg']     * area_conv, 2),
-                        'A_tabor_um2':    round(am_se_5case['A_tabor']    * area_conv, 2),
-                        'A_volume_um2':   round(am_se_5case['A_volume']   * area_conv, 2),
-                        'A_geom_um2':     round(am_se_5case['A_geom']     * area_conv, 2),
-                        'A_final_um2':    round(am_se_5case['A_final']    * area_conv, 2),
-                        'n_contacts':     am_se_n_contacts,
-                    }
-                    # Which cap bound the contact, % of AM-SE edges
-                    total_b = sum(am_se_binding_counts.values()) or 1
-                    m['A_binding_share_pct'] = {
-                        k: round(100.0 * v / total_b, 1)
+                    m['A_binding_share_AM_SE_pct'] = {
+                        k: round(100.0 * v / am_se_n_contacts, 1)
                         for k, v in am_se_binding_counts.items()
                     }
+                    m['A_binding_AM_SE_n_contacts'] = am_se_n_contacts
+                if total_n_contacts > 0:
+                    m['A_binding_share_total_pct'] = {
+                        k: round(100.0 * v / total_n_contacts, 1)
+                        for k, v in total_binding_counts.items()
+                    }
+                    m['A_binding_total_n_contacts'] = total_n_contacts
                 # Δ% (reference): only meaningful if Hertzian total > 0
                 if total_am_se_h > 0:
                     m['area_AM전체_SE_total_delta_pct_physics'] = round(

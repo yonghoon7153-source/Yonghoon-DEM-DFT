@@ -207,11 +207,19 @@ def transform_network_summary_4col(tables, metrics, meta):
         return s.startswith('──') or (s.startswith('─') and s.endswith('─'))
 
     # Rows produced by older analyze_contacts.py runs that we no longer want
-    # to render (header + binding format have been redesigned).
+    # to render (header + binding format have been redesigned, area rows
+    # superseded by per-contact selection % distribution).
     _drop_labels = {
         '─ AM-SE 5-case (Tabor/volume/geom decomposition) ─',
         '── AM-SE 5-case (Tabor/volume/geom decomposition) ──',
         'A_binding (Tabor / vol / geom %)',
+        'A_5case ÷ A_final (H / L / T / V / G)',
+        'AM-SE A_Hertzian(μm²)',
+        'AM-SE A_LIGGGHTS(μm²)',
+        'AM-SE A_Tabor(μm²)',
+        'AM-SE A_volume(μm²)',
+        'AM-SE A_geom(μm²)',
+        'AM-SE A_final(μm²)',
     }
 
     expanded = []
@@ -322,71 +330,57 @@ def transform_network_summary_4col(tables, metrics, meta):
                 except Exception:
                     pass
 
-        # ── 5-case AM-SE decomposition rows ──
-        # film_area_from_overlap returns five candidate areas + which cap binds.
-        # The values were aggregated in coverage_physics_vs_hertzian.py and
-        # written to full_metrics.json under area_AM_SE_total_5case.
-        # We populate only the Physics column for these rows; the Hertzian and
-        # Δ% columns stay blank since the 5-case picture is physics-only.
-        five = metrics.get('area_AM_SE_total_5case') if metrics else None
-        if isinstance(five, dict):
-            mapping_5case = [
-                ('AM-SE A_Hertzian(μm²)', 'A_hertzian_um2'),
-                ('AM-SE A_LIGGGHTS(μm²)', 'A_ligg_um2'),
-                ('AM-SE A_Tabor(μm²)',    'A_tabor_um2'),
-                ('AM-SE A_volume(μm²)',   'A_volume_um2'),
-                ('AM-SE A_geom(μm²)',     'A_geom_um2'),
-                ('AM-SE A_final(μm²)',    'A_final_um2'),
+        # ── Per-contact 5-case binding distribution rows ──
+        # film_area_from_overlap labels each contact with the case (one of:
+        # hertzian, liggghts, tabor, volume, geom, elastic) that supplied the
+        # selected area. coverage_physics_vs_hertzian.py aggregates those
+        # labels into A_binding_share_AM_SE_pct (AM-SE only) and
+        # A_binding_share_total_pct (every contact pair). We render each as
+        # a single row: 'H/L/T/V/G %' formatted string in the Physics column.
+        def _fmt_share(share_dict):
+            if not isinstance(share_dict, dict):
+                return None
+            parts = [
+                share_dict.get('hertzian', 0.0),
+                share_dict.get('liggghts', 0.0),
+                share_dict.get('tabor',    0.0),
+                share_dict.get('volume',   0.0),
+                share_dict.get('geom',     0.0),
             ]
-            for label, key in mapping_5case:
-                r = _find_row(label)
-                if r is None:
-                    continue
-                v = five.get(key)
-                if v is None:
-                    continue
-                try:
-                    r[2] = round(float(v), 2)
-                except Exception:
-                    r[2] = v
+            return ' / '.join(f"{float(p):.1f}" for p in parts)
+
+        def _ensure_row(label, anchor_label, value):
+            """Update or insert a row by label, anchored after another row."""
+            r = _find_row(label)
+            if r is not None:
                 r[1] = '-'
+                r[2] = value
                 r[3] = ''
-            # 5-case ratio row — each candidate area as multiple of A_final.
-            # Reveals at a glance how lower bounds and upper caps relate to
-            # the selected value (lower bounds <1, caps ≥1, binding case ≈1).
-            ratio_label = 'A_5case ÷ A_final (H / L / T / V / G)'
-            af = float(five.get('A_final_um2') or 0.0)
-            if af > 0:
-                def _r(k):
-                    v = five.get(k)
-                    if v is None:
-                        return '—'
-                    try:
-                        return f"{float(v) / af:.2f}×"
-                    except Exception:
-                        return '—'
-                ratio_str = (f"{_r('A_hertzian_um2')} / {_r('A_ligg_um2')} / "
-                             f"{_r('A_tabor_um2')} / {_r('A_volume_um2')} / "
-                             f"{_r('A_geom_um2')}")
-                r = _find_row(ratio_label)
-                if r is not None:
-                    r[1] = '-'
-                    r[2] = ratio_str
-                    r[3] = ''
-                else:
-                    # Cached table lacks the row — insert it right after the
-                    # last 5-case row so the ratio renders for older cases.
-                    target_label = 'AM-SE A_final(μm²)'
-                    insert_idx = None
-                    for i, row in enumerate(data):
-                        if isinstance(row, list) and row and row[0] == target_label:
-                            insert_idx = i + 1
-                            break
-                    new_row = [ratio_label, '-', ratio_str, '']
-                    if insert_idx is not None:
-                        data.insert(insert_idx, new_row)
-                    else:
-                        data.append(new_row)
+                return
+            anchor_idx = None
+            for i, row in enumerate(data):
+                if isinstance(row, list) and row and row[0] == anchor_label:
+                    anchor_idx = i + 1
+                    break
+            new_row = [label, '-', value, '']
+            if anchor_idx is not None:
+                data.insert(anchor_idx, new_row)
+            else:
+                data.append(new_row)
+
+        amse_share = metrics.get('A_binding_share_AM_SE_pct') if metrics else None
+        total_share = metrics.get('A_binding_share_total_pct') if metrics else None
+        amse_str  = _fmt_share(amse_share)
+        total_str = _fmt_share(total_share)
+        # Anchor the binding rows after the SE-SE Total row so they sit at
+        # the bottom of the 계면 section — same place the legacy area rows
+        # appeared.
+        if amse_str is not None:
+            _ensure_row('Binding % — AM-SE (H/L/T/V/G)',
+                        'SE-SE Total(μm²)', amse_str)
+        if total_str is not None:
+            _ensure_row('Binding % — Total (H/L/T/V/G)',
+                        'Binding % — AM-SE (H/L/T/V/G)', total_str)
 
     # Step 4: inject Network Solver section (σ rows with physics)
     has_net_section = any(isinstance(r[0], str) and r[0].startswith('── Network Solver') for r in data)

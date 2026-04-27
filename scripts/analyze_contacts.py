@@ -191,24 +191,19 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         {'지표': 'AM-SE Total(μm²)', '값': round(results['interface'].get('AM전체-SE', {}).get('total_area', 0), 2)},
         {'지표': 'SE-SE Total(μm²)', '값': round(results['interface'].get('SE-SE', {}).get('total_area', 0), 2)},
     ]
-    # AM-SE 5-case decomposition placeholders (filled by webapp from full_metrics
-    # → area_AM_SE_total_5case after coverage_physics_vs_hertzian.py runs).
-    # The Hertzian ('값') column starts as '-' and the Physics column gets
-    # populated from the JSON keys when present.
-    # AM-SE 5-case decomposition rows (no section header — values are
-    # populated by webapp from area_AM_SE_total_5case keys after the
-    # coverage_physics_vs_hertzian.py post-processing pass).
+    # Per-contact 5-case binding-distribution rows. Populated by webapp
+    # from full_metrics keys A_binding_share_AM_SE_pct and
+    # A_binding_share_total_pct (see coverage_physics_vs_hertzian.py).
+    # Each row reports the share of contacts where each of the five
+    # candidate areas was selected:
+    #   H = Hertzian  (lower bound, π R*δ)
+    #   L = LIGGGHTS  (lower bound, DEM-internal)
+    #   T = Tabor     (upper cap, F/H)
+    #   V = volume    (upper cap, V_overlap/h_min)
+    #   G = geom      (upper cap, 2π R_min²)
     rows += [
-        {'지표': 'AM-SE A_Hertzian(μm²)', '값': '-'},
-        {'지표': 'AM-SE A_LIGGGHTS(μm²)', '값': '-'},
-        {'지표': 'AM-SE A_Tabor(μm²)',    '값': '-'},
-        {'지표': 'AM-SE A_volume(μm²)',   '값': '-'},
-        {'지표': 'AM-SE A_geom(μm²)',     '값': '-'},
-        {'지표': 'AM-SE A_final(μm²)',    '값': '-'},
-        # Cases-vs-A_final comparison row: each candidate as ×A_final.
-        # Lower bounds typically <1.0 (floors), caps typically ≥1.0 (ceilings).
-        # The binding case == 1.0 (whichever min(cap) was selected).
-        {'지표': 'A_5case ÷ A_final (H / L / T / V / G)', '값': '-'},
+        {'지표': 'Binding % — AM-SE (H/L/T/V/G)', '값': '-'},
+        {'지표': 'Binding % — Total (H/L/T/V/G)', '값': '-'},
     ]
     for lbl, v in results['coverage'].items():
         rows.append({'지표': f'Coverage {lbl}(%)', '값': round(v['mean'], 1)})
