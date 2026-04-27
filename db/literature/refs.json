@@ -827,6 +827,29 @@
           "for_our_argyrodite": "Apply Rietveld-level structural refinement for our Nd-doped argyrodite. Track Wyckoff site occupation (24g vs 48h Li) as function of Nd content. Compare to MLIP/DFT-relaxed ab initio occupation for cross-validation."
         }
       },
+      "Nd_specific_data_extracted_from_SI": {
+        "Fig_S1d_Nyquist_Nd_series": {
+          "Li2.05Zr0.95Nd0.05Cl6": {"Z_real_Ω": "~80", "sigma_estimated_mS_cm": "~0.55"},
+          "Li2.1Zr0.9Nd0.1Cl6":   {"Z_real_Ω": "~70", "sigma_estimated_mS_cm": "~0.70"},
+          "Li2.15Zr0.85Nd0.15Cl6":{"Z_real_Ω": "~60-65", "sigma_estimated_mS_cm": "~0.85"},
+          "behavior": "Monotonic σ increase from x=0.05 to 0.15. Unlike most RE (peak at x=0.10), Nd resembles Dy in continuing to increase with x. Suggests potential boost at higher x (not tested in this paper).",
+          "for_our_argyrodite": "Similar Nd-rich behavior expected if Nd → Li in argyrodite. Could explain why higher Nd loading (x=0.20 in Model C) maintains stable behavior."
+        },
+        "Fig_S2_XRD_shift": {
+          "observation": "Li2.1Zr0.9Nd0.1Cl6 shows clear lower-angle shift at 31-33° peak vs LZC reference",
+          "comparison_to_other_RE": "Magnitude similar to Sm, intermediate among the 7 RE shown (Ce, Pr, Nd, Sm, Eu, Gd, Tb)",
+          "interpretation": "Lattice expansion ~0.5-1% (typical for x=0.1 RE doping)",
+          "for_our_argyrodite": "Apply same XRD peak shift analysis around Bragg peaks involving Cl coordination. Compare to undoped Li5.4PS4.4Cl1.6 for direct lattice change quantification."
+        },
+        "Fig_S3_Sun_correlation_for_Nd": {
+          "Nd_tau_value": "~1.610 (mid-range; Dy ~1.620, La ~1.605)",
+          "Nd_PhiLi_at_x_0.10": "~2.34 (constant for all RE at given x)",
+          "predicted_sigma_zone": "Mid-tier conductivity (yellow-orange region in 3D surface)",
+          "ranking_among_RE": "τ-based: La < Ce ≈ Pr ≈ Nd ≈ Sm (low τ tier) < Eu, Gd, Tb (mid) < Dy, Ho, Er, Y, Yb (high τ tier)",
+          "implication": "Nd is intrinsically NOT the optimal RE for halide SE doping. Dy/Y/Yb are theoretically and experimentally better. BUT Nd's chemistry (4f^3, mid-radius) may be more suitable for argyrodite Li site than for LZC Zr site.",
+          "argument_for_using_Nd_anyway": "We chose Nd not because of conductivity boost but because of (1) availability/cost, (2) Nd-specific 4f electronic effects on band gap, (3) precedent in our experimental synthesis route."
+        }
+      },
       "SI_figure_priority_for_our_work": {
         "highest_priority": [
           "Fig S7 (literature halide SE conductivity comparison) — provides competitive landscape; we need to show where our Nd-doped argyrodite sits vs LZDTC, LSPS, etc.",
