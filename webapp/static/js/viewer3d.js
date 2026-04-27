@@ -41,6 +41,7 @@ function buildControls(container) {
     <label><input type="checkbox" id="force-chain-toggle"> <span style="font-size:11px">Force Chain</span></label>
     <hr>
     <button data-action="pathOnly">Path Only View</button>
+    <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>`;
   container.appendChild(div);
@@ -316,6 +317,9 @@ function buildScene(scene, camera, controls, data, state) {
   }
   state.atomsOnly = atomsOnly;
   state.seParticles = groups.SE;
+  state.amParticles = [...groups.AM_P, ...groups.AM_S];
+  state.amPParticles = groups.AM_P;
+  state.amSParticles = groups.AM_S;
 
   Object.values(state.meshes).forEach(m => { if (m) scene.add(m); });
 
@@ -733,6 +737,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         saveWithDialog(dataUrl, 'electrode_3d.png', btn, 'Screenshot');
       } else if (action === 'pathOnly') {
         showPathOnlyView(renderer, scene, camera, state);
+      } else if (action === 'amCloseup') {
+        showAMCloseupView(state);
       }
     });
   });
@@ -1006,4 +1012,246 @@ function showPathOnlyView(renderer, scene, camera, state) {
     r2.dispose();
     overlay.remove();
   });
+}
+
+/* ── AM Close-up View ───────────────────────────────────────
+ * Pops a modal that centers on a chosen AM particle and renders
+ * its local neighborhood (other AM + SE within a sphere of
+ * radius `R_target × radiusFactor`). Useful for slide figures
+ * showing one AM grain surrounded by SE & other AM particles.
+ *
+ * Default target = AM closest to box centroid (most "central").
+ * UI lets user:
+ *   - cycle target candidates (Prev / Next, ranked by centrality)
+ *   - adjust neighborhood radius (radiusFactor slider 2× - 8×)
+ *   - toggle AM_P / AM_S / SE visibility
+ *   - PNG download (4× supersampled, transparent bg)
+ */
+function showAMCloseupView(state) {
+  const amAll = state.amParticles || [];
+  if (!amAll.length) {
+    alert('AM particles not loaded.');
+    return;
+  }
+  const seAll = state.seParticles || [];
+  const box = state.data.box;
+  const cx0 = (box.x_min + box.x_max) / 2;
+  const cy0 = (box.y_min + box.y_max) / 2;
+  const cz0 = (box.z_min + box.z_max) / 2;
+
+  // Rank AM candidates by distance to box centroid (ascending)
+  // Largest particles first when distance ties (more visually impactful)
+  const ranked = amAll.map(p => {
+    const d2 = (p.x - cx0)**2 + (p.y - cy0)**2 + (p.z - cz0)**2;
+    return { p, d2 };
+  }).sort((a, b) => {
+    const da = a.d2, db = b.d2;
+    if (Math.abs(da - db) < 1e-6) return b.p.r - a.p.r;
+    return da - db;
+  });
+
+  let candIdx = 0;
+  let radiusFactor = 4.0;  // neighbor sphere radius = R_target × this
+
+  // Build modal HTML
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:760px;max-width:92vw">
+      <button class="path-modal-close">&times;</button>
+      <div style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">
+        AM Close-up — central particle + neighborhood
+      </div>
+      <div id="amcu-container" style="width:100%;height:520px;border-radius:8px;overflow:hidden;background:#f5f5f5;position:relative"></div>
+      <div id="amcu-info" style="text-align:center;margin-top:10px;font-size:12px;color:#444"></div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:12px;color:#444;flex-wrap:wrap">
+        <button id="amcu-prev" style="padding:2px 8px">◀ Prev</button>
+        <button id="amcu-next" style="padding:2px 8px">Next ▶</button>
+        <label style="display:inline-flex;align-items:center;gap:6px">
+          radius
+          <input type="range" id="amcu-radius" min="20" max="80" value="40" step="2" style="width:90px;vertical-align:middle">
+          <span id="amcu-radius-val" style="display:inline-block;width:30px;text-align:right">4.0×</span>
+        </label>
+        <label><input type="checkbox" id="amcu-am_p" checked> AM_P</label>
+        <label><input type="checkbox" id="amcu-am_s" checked> AM_S</label>
+        <label><input type="checkbox" id="amcu-se" checked> SE</label>
+      </div>
+      <div class="path-modal-actions">
+        <button id="amcu-screenshot">PNG 다운로드</button>
+        <button id="amcu-close">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const container = document.getElementById('amcu-container');
+  const r3 = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
+  r3.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  r3.setSize(container.clientWidth, container.clientHeight);
+  r3.setClearColor(0xf5f5f5, 1);
+  container.appendChild(r3.domElement);
+
+  const s3 = new THREE.Scene();
+  const c3 = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 10000);
+  const ctrl3 = new OrbitControls(c3, r3.domElement);
+  ctrl3.enableDamping = true;
+  ctrl3.dampingFactor = 0.12;
+
+  s3.add(new THREE.AmbientLight(0xffffff, 0.45));
+  const dl = new THREE.DirectionalLight(0xffffff, 0.85);
+  dl.position.set(1, 1.2, 1);
+  s3.add(dl);
+
+  // State holders for current scene contents — replaced on rebuild
+  let activeMeshes = [];
+  let centerHalo = null;
+
+  function clearScene() {
+    activeMeshes.forEach(m => {
+      s3.remove(m);
+      if (m.geometry) m.geometry.dispose();
+      if (m.material) m.material.dispose();
+    });
+    activeMeshes = [];
+    if (centerHalo) {
+      s3.remove(centerHalo);
+      centerHalo.geometry.dispose();
+      centerHalo.material.dispose();
+      centerHalo = null;
+    }
+  }
+
+  function build() {
+    clearScene();
+    const target = ranked[candIdx].p;
+    const tx = target.x, ty = target.y, tz = target.z;
+    const r_neighbor = target.r * radiusFactor;
+    const r2 = r_neighbor * r_neighbor;
+
+    // Filter neighbors by Euclidean distance to target center
+    const inRange = (arr) => arr.filter(p => {
+      const dx = p.x - tx, dy = p.y - ty, dz = p.z - tz;
+      return (dx*dx + dy*dy + dz*dz) <= r2;
+    });
+
+    const showAMP = document.getElementById('amcu-am_p').checked;
+    const showAMS = document.getElementById('amcu-am_s').checked;
+    const showSE  = document.getElementById('amcu-se').checked;
+
+    const neighAMP = showAMP ? inRange(state.amPParticles || []) : [];
+    const neighAMS = showAMS ? inRange(state.amSParticles || []) : [];
+    const neighSE  = showSE  ? inRange(seAll) : [];
+
+    // Always include the target itself, even when its type checkbox is off,
+    // so the user can still see what's being centered.
+    const tgtArr = [target];
+
+    if (neighAMP.length) {
+      const m = createInstancedSpheres(neighAMP, 16, COL.AM_P, 1.0, false);
+      if (m) { s3.add(m); activeMeshes.push(m); }
+    }
+    if (neighAMS.length) {
+      const m = createInstancedSpheres(neighAMS, 16, COL.AM_S, 1.0, false);
+      if (m) { s3.add(m); activeMeshes.push(m); }
+    }
+    if (neighSE.length) {
+      const m = createInstancedSpheres(neighSE, 14, COL.SE, 0.85, true);
+      if (m) { s3.add(m); activeMeshes.push(m); }
+    }
+    // Highlight target with a slightly brighter halo (regardless of type)
+    {
+      const m = createInstancedSpheres(tgtArr, 24,
+        target.type === 'AM_S' ? 0xb0b0b0 : 0x444444, 1.0, false);
+      if (m) { s3.add(m); activeMeshes.push(m); }
+    }
+    // Translucent halo around target showing the neighborhood radius
+    {
+      const haloGeo = new THREE.SphereGeometry(r_neighbor, 32, 24);
+      const haloMat = new THREE.MeshBasicMaterial({
+        color: 0x4f9bff, transparent: true, opacity: 0.06,
+        side: THREE.BackSide, depthWrite: false,
+      });
+      centerHalo = new THREE.Mesh(haloGeo, haloMat);
+      centerHalo.position.set(tx, tz, ty);  // Z-up swap
+      s3.add(centerHalo);
+    }
+
+    // Camera framing — fit the neighbor sphere
+    const tCam = new THREE.Vector3(tx, tz, ty);
+    ctrl3.target.copy(tCam);
+    const camDist = r_neighbor * 2.4;
+    c3.position.set(tx + camDist, tz + camDist * 0.55, ty + camDist);
+    ctrl3.update();
+
+    // Info text
+    const info = document.getElementById('amcu-info');
+    if (info) {
+      const total = neighAMP.length + neighAMS.length + neighSE.length;
+      info.innerHTML =
+        `target: <b>${target.type}</b> id=${target.id}, R=${target.r.toFixed(2)}μm, ` +
+        `pos=(${tx.toFixed(1)}, ${ty.toFixed(1)}, ${tz.toFixed(1)}) | ` +
+        `neighbors within ${r_neighbor.toFixed(1)}μm: ` +
+        `<span style="color:#222">AM_P=${neighAMP.length}</span>, ` +
+        `<span style="color:#888">AM_S=${neighAMS.length}</span>, ` +
+        `<span style="color:#bfa600">SE=${neighSE.length}</span>` +
+        ` (total ${total}) — candidate ${candIdx + 1}/${ranked.length}`;
+    }
+  }
+
+  build();
+
+  // Wire up controls
+  document.getElementById('amcu-prev').addEventListener('click', () => {
+    candIdx = (candIdx - 1 + ranked.length) % ranked.length;
+    build();
+  });
+  document.getElementById('amcu-next').addEventListener('click', () => {
+    candIdx = (candIdx + 1) % ranked.length;
+    build();
+  });
+  document.getElementById('amcu-radius').addEventListener('input', (e) => {
+    radiusFactor = parseInt(e.target.value, 10) / 10;
+    document.getElementById('amcu-radius-val').textContent = radiusFactor.toFixed(1) + '×';
+    build();
+  });
+  ['amcu-am_p', 'amcu-am_s', 'amcu-se'].forEach(id => {
+    document.getElementById(id).addEventListener('change', build);
+  });
+
+  // Screenshot
+  document.getElementById('amcu-screenshot').addEventListener('click', async () => {
+    const prevBg = s3.background;
+    const prevClear = new THREE.Color();
+    r3.getClearColor(prevClear);
+    const prevAlpha = r3.getClearAlpha();
+    s3.background = null;
+    r3.setClearColor(0x000000, 0);
+    const dataUrl = captureHighRes(r3, s3, c3, 4);
+    s3.background = prevBg;
+    r3.setClearColor(prevClear, prevAlpha);
+    r3.render(s3, c3);
+    const target = ranked[candIdx].p;
+    const fname = `am_closeup_${target.type}_id${target.id}.png`;
+    await saveWithDialog(dataUrl, fname,
+      document.getElementById('amcu-screenshot'), 'PNG 다운로드');
+  });
+
+  // Animate
+  let amcuAnimId;
+  function animLoop() {
+    amcuAnimId = requestAnimationFrame(animLoop);
+    ctrl3.update();
+    r3.render(s3, c3);
+  }
+  animLoop();
+
+  // Cleanup
+  function close() {
+    cancelAnimationFrame(amcuAnimId);
+    clearScene();
+    r3.dispose();
+    overlay.remove();
+  }
+  overlay.querySelector('.path-modal-close').addEventListener('click', close);
+  document.getElementById('amcu-close').addEventListener('click', close);
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
 }
