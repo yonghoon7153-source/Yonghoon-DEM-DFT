@@ -92,27 +92,44 @@ def true_loocv_per_batch(df_sub, label):
             'w20_in': w20_in, 'w20_loo': w20}
 
 
+def _predict_v34_regime(df, params, tau_split=1.5):
+    """v34 regime base (replicated locally to avoid import chain)."""
+    (b0, alpha, beta, gamma, delta, phi_c, mu,
+     b0_t, alpha_t, beta_t, gamma_t, delta_t, mu_t) = params
+    phi  = df['phi'].values
+    tau  = df['tau'].values
+    cn   = df['cn'].values
+    cov  = df['cov_phys'].values
+    f_p  = df['f_perc'].values
+    is_thick = (tau < tau_split).astype(float)
+    excess = np.maximum(phi - phi_c, 1e-6)
+    log_pred = (
+        b0 + np.log(SIGMA_GRAIN)
+        + alpha * np.log(excess) + beta * np.log(cn)
+        + gamma * np.log(cov) + delta * np.log(f_p)
+        + mu * np.log(tau)
+        + is_thick * (b0_t + alpha_t * np.log(excess) + beta_t * np.log(cn)
+                      + gamma_t * np.log(cov) + delta_t * np.log(f_p)
+                      + mu_t * np.log(tau))
+    )
+    return np.exp(log_pred)
+
+
 def predict_with_thick(df, params, mode='linear'):
     """Unified form: v34 regime base + thickness feature variants."""
     base = params[:13]
     extra = params[13:]
-    # v34 regime base
-    from physics_fit_v37_3way import predict_regime  # noqa
-    base_pred = predict_regime(df, base, tau_split=1.5)
+    base_pred = _predict_v34_regime(df, base, tau_split=1.5)
     th = df['thickness'].values
     if mode == 'linear':
-        # log σ += θ · log thickness
         return base_pred * (np.maximum(th, 1.0) ** extra[0])
     elif mode == 'quad':
-        # log σ += θ1·log th + θ2·log²th
         ln_th = np.log(np.maximum(th, 1.0))
         return base_pred * np.exp(extra[0] * ln_th + extra[1] * ln_th ** 2)
     elif mode == 'inverse':
-        # log σ += θ1·log th + θ2/th
         return base_pred * (np.maximum(th, 1.0) ** extra[0]) * \
                np.exp(extra[1] / np.maximum(th, 1.0))
     elif mode == 'th_x_tau':
-        # log σ += θ1·log th + θ2·log th · log tau
         ln_th = np.log(np.maximum(th, 1.0))
         ln_t = np.log(df['tau'].values)
         return base_pred * np.exp(extra[0] * ln_th + extra[1] * ln_th * ln_t)
@@ -121,7 +138,6 @@ def predict_with_thick(df, params, mode='linear'):
         ln_c = np.log(df['cov_phys'].values)
         return base_pred * np.exp(extra[0] * ln_th + extra[1] * ln_th * ln_c)
     elif mode == 'binary':
-        # log σ += θ · I(th ≥ 50)
         I = (th >= 50).astype(float)
         return base_pred * np.exp(extra[0] * I)
     return base_pred
