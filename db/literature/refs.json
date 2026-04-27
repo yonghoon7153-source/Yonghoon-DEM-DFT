@@ -565,6 +565,59 @@
         "energy_difference_eV": "F1 ≈ F3 > F2 (~0.3 eV difference, F2 is GS)",
         "implication_for_us": "Direct analog already documented for argyrodite: 4a/4c free anion + 16e bonded S + 48h Li. Site preference figure not directly cite-able for our work but methodology is standard."
       },
+      "figure_S50_decomposition_band_gaps": {
+        "Ba0.875Nd0.125SnF4.125": {"E_g_eV": 3.69, "role": "electrolyte"},
+        "NdF3": {"E_g_eV": 7.69, "role": "passivating phase"},
+        "SnF2": {"E_g_eV": 3.34, "role": "intermediate (less passivating)"},
+        "BaF2": {"E_g_eV": 6.59, "role": "passivating phase"},
+        "key_argument": "NdF3 (7.69 eV) and BaF2 (6.59 eV) — both decomposition products at extreme voltages — are wide-gap insulators that block electron transfer while allowing F-ion transport. This is the foundation of self-limiting SEI argument.",
+        "argyrodite_analog": "Our likely Nd-doped argyrodite SEI products: NdCl3 (~5 eV), Nd2O3 (~5.5 eV), LiCl (6.25 eV), LiF (13.6 eV), Li2O (5.29 eV). All wide-gap. Same passivation argument transferable. Compute these analytically or from Materials Project."
+      },
+      "figure_S44_Arrhenius": {
+        "method": "ln(σT) vs 1000/T linear fit, Ea from slope (k_B × slope)",
+        "BaSnF4_Ea_eV": 0.23,
+        "Ba0.875Nd0.125SnF4.125_Ea_eV": 0.15,
+        "Ea_reduction_pct": 35,
+        "implication_for_us": "Apply identical analysis to Li migration in Nd-doped argyrodite. Expected: Ea(Nd-doped) < Ea(Li5.4PS4.4Cl1.6, ~0.20-0.25 eV from literature). If yes, conductivity boost confirmed. Use AIMD MSD across 300/400/500/600/700/800 K → diffusivity D(T) → σ(T) via Nernst-Einstein → Arrhenius plot."
+      },
+      "figure_S14_lattice_vs_x": {
+        "lattice_a_Å": "nearly constant ~4.40 across x = 0 to 0.25",
+        "lattice_c_Å": "nearly constant ~11.4 across x",
+        "cell_volume_Å3": {
+          "x_0": 223,
+          "x_0.02": 200,
+          "x_0.0625": 223,
+          "x_0.125": 224,
+          "x_0.25": 226
+        },
+        "anomaly": "x=0.02 cell volume drops 10% (223→200 Å³) — likely artifact of single Nd defect in dilute supercell with small symmetry breakage. Recovers immediately at x≥0.06.",
+        "trend": "Net lattice/volume change with Nd doping is <2% for x≥0.06 (apart from anomaly).",
+        "implication_for_us": "1 Nd in Model C 62-atom cell (x=0.20) → expect <2% lattice change. NOT a structural concern. Report lattice expansion/contraction as reference but don't make it a major argument."
+      },
+      "figure_S19_formation_E_vs_x": {
+        "Nd5Sn3_at_point_D": {
+          "x_0.02": -0.5,
+          "x_0.0625": -1.5,
+          "x_0.125": -2.5,
+          "x_0.25": -5.0
+        },
+        "trend": "Linearly more negative with x (more Nd = more stable formation = more synthesizable)",
+        "Nd_chem_pot_range": "Δμ_Nd_min and Δμ_Nd_max shaded region — defines synthesis window",
+        "Nd_NO3_3_vs_Nd5Sn3": "Nd5Sn3 always more negative than Nd(NO3)3 across all x",
+        "implication_for_us": "Compute analogous formation energy of Nd-doped argyrodite vs Nd2O3 (or NdCl3) source as function of x. Show our x=0.20 lies in synthesizable regime. Strong methodology figure for paper."
+      },
+      "figure_S21_MSD_breakdown": {
+        "system": "Ba0.875Nd0.125SnF4.125",
+        "T_range_K": [300, 400, 500, 600, 700, 800],
+        "results": {
+          "F_MSD_Å2": {"300K": 3, "400K": 6, "500K": 8, "600K": 12, "700K": 14, "800K": 16},
+          "Ba_MSD_Å2": "all T ≈ 0 (immobile)",
+          "Sn_MSD_Å2": "all T ≈ 0 (immobile)",
+          "Nd_MSD_Å2": "all T ≈ 0 (immobile)"
+        },
+        "interpretation": "F-only conduction. Heavy framework atoms (Ba, Sn, Nd) remain locked while F diffuses. Pure ionic transport, no defect migration involving framework ions.",
+        "implication_for_us": "Apply EXACT same plot to Nd-doped argyrodite: Li/P/S/Cl/Nd MSD vs T. Expected: Li mobile, P/S/Cl/Nd framework stationary. PUBLICATION-READY proof of Li-only ion conduction. Use ASE Atoms.get_positions() during AIMD trajectory analysis."
+      },
       "ideas_to_borrow_for_argyrodite_Nd_paper": [
         "1. SI Table S5-style full Cij(x) matrix for our Nd-doped argyrodite — show C11, C12, C13, C33, C44, C66 progression",
         "2. SI Fig S15-style band structure + DOS for x=0/0.05/0.10/0.20 — track Nd 4f peak migration",
