@@ -526,6 +526,45 @@
         "DOS_panel_b": "BaSnF4 vs Ba0.875Nd0.125SnF4.125 nearly indistinguishable. VB structure preserved. CB shifts negligible.",
         "implication_for_us": "Adopt SAME figure structure: (a) Bader of Li/P/S/Cl vs Nd concentration → show framework charge invariance; (b) Total DOS comparison undoped vs doped → show electronic structure preserved EXCEPT for new 4f peak. The CONTRAST against Xiong's missing 4f is our methodological highlight."
       },
+      "figure_S16_analysis": {
+        "best_Nd_source_at_D": {
+          "Nd5Sn3": -6.0,
+          "Nd5Sn4": -6.0,
+          "Nd2Sn3": -5.6,
+          "NdSn3": -5.6,
+          "Nd11Sn10": -5.7,
+          "NdSn2": -5.5,
+          "NdF3": -1.5
+        },
+        "ranking": "Nd5Sn3 ≈ Nd5Sn4 > Nd2Sn3 ≈ NdSn3 > Nd11Sn10 > NdSn2 >> NdF3",
+        "chemical_potential_optimum": "Point D (F-rich, SnF4 boundary): ΔμBa=-19.60, ΔμSn=-11.91, ΔμF=0",
+        "worst_chemical_potential": "Point G (Sn-rich, Ba3SnF6 boundary)",
+        "implication_for_us": "Adopt analogous chemical-potential phase analysis for Nd2O3 → argyrodite. Test multiple Nd sources: Nd2O3, NdCl3, Nd2S3, NdF3, NdN. Identify optimal chemical potential window (Ar/H2/O-rich/poor variants). pymatgen PhaseDiagram + CPLAP analog."
+      },
+      "figure_S49_analysis": {
+        "voltage_windows_V": {
+          "Sn_anode": [0, 0.8],
+          "Ba_anode": [4.86, 5.66],
+          "Nd_anode": [6.38, 7.57]
+        },
+        "interpretation": "Ba and Nd give wide HIGH-voltage stability windows. Combined Ba0.875Nd0.125SnF4.125 electrolyte stable against Ba/Nd metal at unusual high voltages (>4.86 V) — but this is for fluoride-ion battery context (V vs Ba/Ba2+). Translation to Li context: stable window likely also high (~3-4 V vs Li/Li+).",
+        "implication_for_us": "Compute analogous voltage profiles for Nd-doped argyrodite vs Li metal anode. Use pymatgen's PhaseDiagram + GrandPotentialPhaseDiagram. Expected: Nd-doped argyrodite stable window WIDER than pristine Li5.4PS4.4Cl1.6 due to Nd-F (or Nd-Cl/Nd-O) hard ionic bonds resisting reduction."
+      },
+      "tables_S7_S8_analysis": {
+        "Ba_anode_decomposition_window": "4.86-5.66 V stable (no reaction). Below 4.86 V: produces increasingly more Ba metal + BaF2/NdF3/SnF2 mixture. Above 5.66 V: oxidative decomposition to BaSnF6 + SnF2/SnF4 + NdF3 + Ba.",
+        "Nd_anode_decomposition_window": "6.38-7.57 V stable. Below: extensive Nd metal uptake → Nd5Sn3/Nd5Sn4/NdSn2/Nd11Sn10 mixed phases. NdF3 always preserved.",
+        "key_observation": "**NdF3 is preserved in ALL decomposition reactions** (across all voltages, both electrodes). NdF3 acts as protective passivation phase that the electrolyte transforms toward at extreme voltages.",
+        "implication_for_argyrodite": "Same logic for our Nd-doped LPSCl: Nd2O3 (or NdCl3) should be preserved in decomposition reactions across Li metal voltage range. This forms SEI dominated by Nd2O3 + NdCl3 + Li2O — all wide-bandgap insulating phases that BLOCK electron transfer (passivation) while allowing Li+ transport. Direct paper-level claim: 'Nd-O/Nd-Cl ionic bonds are robust under Li metal reduction conditions, providing a self-limiting SEI mechanism.'"
+      },
+      "figure_S1_analysis": {
+        "F_site_definitions": {
+          "F1": "4f Wyckoff (Ba-Ba layer) — highest energy, most mobile",
+          "F2": "2c Wyckoff (Ba-Sn layer) — lowest energy, most stable, location for ion conduction",
+          "F3": "2b Wyckoff (Sn-Sn layer) — intermediate energy"
+        },
+        "energy_difference_eV": "F1 ≈ F3 > F2 (~0.3 eV difference, F2 is GS)",
+        "implication_for_us": "Direct analog already documented for argyrodite: 4a/4c free anion + 16e bonded S + 48h Li. Site preference figure not directly cite-able for our work but methodology is standard."
+      },
       "ideas_to_borrow_for_argyrodite_Nd_paper": [
         "1. SI Table S5-style full Cij(x) matrix for our Nd-doped argyrodite — show C11, C12, C13, C33, C44, C66 progression",
         "2. SI Fig S15-style band structure + DOS for x=0/0.05/0.10/0.20 — track Nd 4f peak migration",
