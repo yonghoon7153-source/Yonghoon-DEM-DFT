@@ -1,0 +1,146 @@
+{
+  "id": "modelc_nd_doped",
+  "formula_main_track": "Li_{5.4-3x}Nd_xP_S_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
+  "formula_control_track": "Li_{5.4+2x}P_{1-x}Nd_xS_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
+  "family": "Li5.4 + Nd2O3-doped",
+  "base": "Model C (Li5.4PS4.4Cl1.6)",
+  "doping_source": "Nd2O3",
+
+  "tracks": {
+    "main_Nd_to_Li": {
+      "label": "Track 1 (primary, chemically sensible)",
+      "formula": "Li_{5.4-3x}Nd_xPS_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
+      "scheme": "Nd3+ replaces Li+ at Li site. Charge compensation: -3 Li per Nd (1 for site replacement + 2 for charge balance). O substitutes S in PS4 (16e), Hard-Hard preference (Nd-O proximity).",
+      "x_target": 0.20,
+      "supercell_atoms": 120,
+      "composition_at_x_0.20": {
+        "Li": 48,
+        "P": 10,
+        "Nd": 2,
+        "S": 41,
+        "O": 3,
+        "Cl": 16
+      },
+      "charge_check": "48(+1) + 10(+5) + 2(+3) + 41(-2) + 3(-2) + 16(-1) = +106 - 106 = 0 ✓",
+      "rationale": "Size + charge match (Nd 0.88-0.98 Å vs Li 0.59-0.76 Å, ratio 1.3x). Vacancy compensation natural (Li5.4 family already has 0.6 vacancy/fu). PS4 framework preserved.",
+      "n_configurations": "Full enumeration (~500 unique after pruning)",
+      "compute_priority": "MAIN PAPER WORK"
+    },
+    "control_Nd_to_P": {
+      "label": "Track 2 (control, demonstrate instability)",
+      "formula": "Li_{5.4+2x}P_{1-x}Nd_xS_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
+      "scheme": "Nd3+ replaces P5+ at PS4 center. Charge compensation: +2 Li per Nd as interstitials. O substitutes S in PS4. PI-suggested scheme.",
+      "x_target": 0.20,
+      "supercell_atoms": 128,
+      "composition_at_x_0.20": {
+        "Li": 58,
+        "P": 8,
+        "Nd": 2,
+        "S": 41,
+        "O": 3,
+        "Cl": 16
+      },
+      "charge_check": "58(+1) + 8(+5) + 2(+3) + 41(-2) + 3(-2) + 16(-1) = +104 - 104 = 0 ✓",
+      "rationale_to_test": "Although chemically unfavorable (P 0.17 Å vs Nd 0.88 Å, 5.2x size mismatch), test computationally to quantify the cost. Argues 'we considered this scheme but data shows X eV less stable.'",
+      "n_configurations": "ONLY 2-3 representative configs (not full enumeration)",
+      "compute_priority": "SIDE/CONTROL — demonstrate instability via formation energy gap",
+      "expected_outcome": "ΔE_form(Nd→P) > ΔE_form(Nd→Li) by ~1-3 eV per Nd. Strong argument for Track 1 in paper."
+    }
+  },
+
+  "experimental_data_PI_provided": {
+    "synthesized_compositions_x": [0, 0.02, 0.04, 0.08],
+    "current_optimized": "x=0.02: Li5.44P0.98Nd0.02S4.37O0.03Cl1.6",
+    "electron_conductivity_mS_cm_at_14h": {
+      "LPSCl1.6_baseline": 3.45e-10,
+      "Nd2O3_x0.02": 2.33e-10,
+      "Nd2O3_x0.04": 3.67e-10,
+      "Nd2O3_x0.08": 5.32e-15,
+      "trend": "Lowest at x=0.02 (~32% reduction). x=0.08 drops 5 orders (questionable - measurement artifact or amorphization)"
+    },
+    "mechanical_properties_AFM": {
+      "LPSCl1.6": {"E_GPa": "20.3 ± 0.2", "adhesion_aJ": "356 ± 29"},
+      "Nd2O3_LPSCl1.6": {"E_GPa": "20.7 ± 0.2", "adhesion_aJ": "300 ± 9"},
+      "verdict": "Within error - DFT must verify with higher precision"
+    },
+    "x_target_chosen_DFT_reasoning": "x=0.20 in 120-atom cell required for integer stoichiometry. Experimental x=0.02 would need >600 atoms (infeasible). Use x=0.20 as 'concentrated isolated defect' approximation."
+  },
+
+  "paper_goals_5_targets": {
+    "1_bulk_electron_conductivity": {
+      "claim": "Nd 4f orbital reduces bulk e- conductivity",
+      "experimental_proof": "x=0.02 shows 32% e- conductivity decrease",
+      "DFT_method": "DFT+U(U=6 eV) + ISPIN=2 + projwfc.x for Nd 4f PDOS",
+      "deliverable": "PDOS plot showing Nd 4f^3 occupied peak position relative to Fermi"
+    },
+    "2_Li_SE_interface_decomposition": {
+      "claim": "Decomposition slower or less in Nd-doped",
+      "DFT_method": "Convex hull + reaction energy with Li metal anode",
+      "tools": "pymatgen PhaseDiagram",
+      "competing_phases": ["Li2S", "Li3P", "LiCl", "Nd2O3", "NdCl3", "LiNdO2", "Li2O"]
+    },
+    "3_interface_SEI_band_gap": {
+      "claim": "Nd-rich SEI has wide band gap, blocks e- transfer",
+      "phases_to_compute": {
+        "NdCl3": "lit ~5 eV",
+        "LiCl": "exp 6.25 eV",
+        "LiNdO2": "formation needs check",
+        "Nd2O3": "exp ~5.5 eV",
+        "Li3P": "exp 0.7 eV (problematic - electronic conductor)"
+      },
+      "key_argument": "Replacing Li3P (Eg=0.7) with Nd-rich phases (Eg>5) blocks electron tunneling"
+    },
+    "4_atomic_bonding_strength": {
+      "claim": "Nd-S, Nd-O, P-O bonds stronger than P-S",
+      "DFT_method": "COHP (LOBSTER) + ELF + PDOS overlap",
+      "HASB_predicted_strongest": "Nd-O (Hard-Hard), P-O (covalent strengthening)"
+    },
+    "5_youngs_modulus_change": {
+      "claim_dual": "E up (penetration suppression) AND/OR E down (contact)",
+      "experimental": "20.3 → 20.7 GPa (within error)",
+      "DFT_method": "Cij finite-strain (12 SCF) + MACE 30ps thermal",
+      "expected": "Nd alone: small E change. O sub: P-O strengthening → E up. Combined: net small E up"
+    }
+  },
+
+  "compute_plan_summary": {
+    "Track_1_Main_Nd_to_Li": {
+      "step_1_enumerate": "Full Nd-Li site sampling + Li vacancy patterns + O placement near Nd. ~500 unique configs after pruning.",
+      "step_2_MLIP_screen": "UMA relax all 500 (~5 hr)",
+      "step_3_top_DFT": "Top 20 DFT relax (DFT+U + ISPIN=2, ~5 days)",
+      "step_4_champion_postproc": "EOS + Bader + DOS + spin density + Cij (~4 days)",
+      "total_time_KISTI": "~10 days"
+    },
+    "Track_2_Control_Nd_to_P": {
+      "step_1_minimal_set": "2-3 representative Nd-P configs (different Nd-Nd distances)",
+      "step_2_DFT_verify": "Direct DFT+U relax (no MLIP screen, ~30 hr)",
+      "step_3_compare": "ΔE_form(Track 2) - ΔE_form(Track 1) → quantify P-sub instability",
+      "total_time_KISTI": "~2 days",
+      "deliverable_for_paper": "Single sentence: 'P-substitution scheme tested but found ~X eV less stable per Nd, confirming Li-substitution as the realistic doping pathway.'"
+    }
+  },
+
+  "DFT_settings": {
+    "functional": "PBE-GGA + DFT+U (Dudarev)",
+    "Hubbard_U_eV": {"Nd_4f": 6.0},
+    "spin_polarization": "ISPIN=2 (Nd3+ has 4f^3, 3 unpaired e-)",
+    "ecutwfc_Ry": 60,
+    "ecutrho_Ry": 480,
+    "k_grid": "6x6x3 SCF, 12x12x6 NSCF",
+    "code": "Quantum ESPRESSO (consistent with Pipeline #1)",
+    "pseudo": "SSSP USPP for Li/P/S/Cl/O. Nd PAW with 4f in valence (Nd_pv-equivalent)",
+    "validation": "HSE06 single-point cross-check on champion"
+  },
+
+  "pipeline_relationship": {
+    "current_paper_1": "Model C v2 + comp1-5 mechanical properties (in progress, Pipeline v1+v2)",
+    "next_paper_2": "Nd-doped Model C (this composition, extends Pipeline)",
+    "shared_workflow": "EOS, Bader, bond, elastic, DOS — same protocol",
+    "Nd_specific_additions": "DFT+U for 4f, COHP for Nd-X bonds, LiNdO2 SEI phase, spin density",
+    "estimated_start": "After paper #1 finalized (Model C v2 + comp2 v2 done)"
+  },
+
+  "references": ["xiong2022", "jia2025", "adeli2019", "deiseroth2006"],
+
+  "notes": "Two-track strategy: MAIN track Nd→Li (chemically sensible, full enumeration); CONTROL track Nd→P (PI's original scheme, only 2-3 configs to demonstrate instability). The control comparison strengthens paper by quantifying why Li-substitution is preferred. Future work after Pipeline #1 completion."
+}
