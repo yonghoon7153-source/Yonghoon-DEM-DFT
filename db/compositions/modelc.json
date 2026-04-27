@@ -52,7 +52,27 @@
       "n_points": 10,
       "R_squared": 0.999988,
       "volume_range": "v096-v105",
-      "status": "confirmed_final"
+      "status": "confirmed_final",
+      "pipeline": "v1 (Rietveld Li)"
+    },
+    "v2_dft_eos": {
+      "B0_GPa": 19.59,
+      "V0_A3": 1214.5,
+      "B0_prime_used": 4.31,
+      "B0_prime_free_fit": 2.92,
+      "n_points": 11,
+      "volume_range": "v096-v106",
+      "R_squared": 0.998,
+      "EOS_models_consistent": ["BM3(Bp=4.31)", "BM3 free", "Vinet", "Murnaghan"],
+      "all_models_B0_range_GPa": [19.58, 19.59],
+      "completed_date": "2026-04-26",
+      "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
+      "status": "confirmed_final",
+      "pipeline": "v2 (annealed champion)",
+      "delta_v1_v2_GPa": -2.1,
+      "delta_v1_v2_pct": -9.7,
+      "comparison": "v1 21.7 → v2 19.59 (10% softer). Annealed champion finds deeper basin with larger V0 (more relaxed) and lower B0 (more compliant). MLIP v2 prediction 20.0 GPa within 0.4 GPa of DFT.",
+      "narrative": "Model C ΔB0 (v1→v2) = -2.1 GPa is order-of-magnitude larger than comp1 ΔB0 (+0.3 GPa, Cl-only Li6). Vacancy free volume amplifies Li ordering sensitivity even when halogen sublattice is uniform."
     },
     "v106_basin_transition": {
       "delta_meV": -66.4,
