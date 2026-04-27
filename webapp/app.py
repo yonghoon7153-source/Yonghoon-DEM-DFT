@@ -306,6 +306,46 @@ def transform_network_summary_4col(tables, metrics, meta):
                 except Exception:
                     pass
 
+        # ── 5-case AM-SE decomposition rows ──
+        # film_area_from_overlap returns five candidate areas + which cap binds.
+        # The values were aggregated in coverage_physics_vs_hertzian.py and
+        # written to full_metrics.json under area_AM_SE_total_5case.
+        # We populate only the Physics column for these rows; the Hertzian and
+        # Δ% columns stay blank since the 5-case picture is physics-only.
+        five = metrics.get('area_AM_SE_total_5case') if metrics else None
+        if isinstance(five, dict):
+            mapping_5case = [
+                ('AM-SE A_Hertzian(μm²)', 'A_hertzian_um2'),
+                ('AM-SE A_LIGGGHTS(μm²)', 'A_ligg_um2'),
+                ('AM-SE A_Tabor(μm²)',    'A_tabor_um2'),
+                ('AM-SE A_volume(μm²)',   'A_volume_um2'),
+                ('AM-SE A_geom(μm²)',     'A_geom_um2'),
+                ('AM-SE A_final(μm²)',    'A_final_um2'),
+            ]
+            for label, key in mapping_5case:
+                r = _find_row(label)
+                if r is None:
+                    continue
+                v = five.get(key)
+                if v is None:
+                    continue
+                try:
+                    r[2] = round(float(v), 2)
+                except Exception:
+                    r[2] = v
+                r[1] = '-'
+                r[3] = ''
+            # Binding distribution row — formatted string
+            shares = metrics.get('A_binding_share_pct')
+            r = _find_row('A_binding (Tabor / vol / geom %)')
+            if r is not None and isinstance(shares, dict):
+                tabor_pct  = shares.get('tabor', 0)
+                volume_pct = shares.get('volume', 0)
+                geom_pct   = shares.get('geom', 0)
+                r[1] = '-'
+                r[2] = f"{tabor_pct:.1f} / {volume_pct:.1f} / {geom_pct:.1f}"
+                r[3] = ''
+
     # Step 4: inject Network Solver section (σ rows with physics)
     has_net_section = any(isinstance(r[0], str) and r[0].startswith('── Network Solver') for r in data)
     if not has_net_section:

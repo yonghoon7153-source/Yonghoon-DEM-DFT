@@ -191,6 +191,20 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
         {'지표': 'AM-SE Total(μm²)', '값': round(results['interface'].get('AM전체-SE', {}).get('total_area', 0), 2)},
         {'지표': 'SE-SE Total(μm²)', '값': round(results['interface'].get('SE-SE', {}).get('total_area', 0), 2)},
     ]
+    # AM-SE 5-case decomposition placeholders (filled by webapp from full_metrics
+    # → area_AM_SE_total_5case after coverage_physics_vs_hertzian.py runs).
+    # The Hertzian ('값') column starts as '-' and the Physics column gets
+    # populated from the JSON keys when present.
+    rows += [
+        {'지표': '─ AM-SE 5-case (Tabor/volume/geom decomposition) ─', '값': ''},
+        {'지표': 'AM-SE A_Hertzian(μm²)', '값': '-'},
+        {'지표': 'AM-SE A_LIGGGHTS(μm²)', '값': '-'},
+        {'지표': 'AM-SE A_Tabor(μm²)',    '값': '-'},
+        {'지표': 'AM-SE A_volume(μm²)',   '값': '-'},
+        {'지표': 'AM-SE A_geom(μm²)',     '값': '-'},
+        {'지표': 'AM-SE A_final(μm²)',    '값': '-'},
+        {'지표': 'A_binding (Tabor / vol / geom %)', '값': '-'},
+    ]
     for lbl, v in results['coverage'].items():
         rows.append({'지표': f'Coverage {lbl}(%)', '값': round(v['mean'], 1)})
     rows += [

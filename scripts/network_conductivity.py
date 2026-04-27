@@ -166,16 +166,31 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
 
         # Physics (plastic-film) area: Tabor+volume, literature-anchored
         # Compute in sim units then scale to μm²
+        # 5-case decomposition (when components available):
+        #   Lower bounds: A_hertzian (πR*δ), A_ligg (LIGGGHTS internal)
+        #   Upper caps:   A_tabor (F/H), A_volume (V/h_min), A_geom (2πR_min²)
+        #   Final:        A_physics = max(lower, min(caps))
+        A_components = None
         if delta_sim > 0 and r1_sim > 0 and r2_sim > 0:
             R_star_sim = (r1_sim * r2_sim) / (r1_sim + r2_sim)
             R_min_sim = min(r1_sim, r2_sim)
             delta_over_R = delta_sim / R_star_sim if R_star_sim > 0 else 0.0
             if _film_area is not None:
-                A_phys_sim, regime = _film_area(
+                A_phys_sim, regime, comp = _film_area(
                     delta_sim, R_star_sim,
                     R_min=R_min_sim, ligg_area=ca_sim,
-                    mode='physics')
+                    mode='physics', return_components=True)
                 A_physics = A_phys_sim * scale**2  # μm²
+                # Convert components to μm² (skip None entries)
+                A_components = {
+                    'A_hertzian_um2': comp['A_hertzian'] * scale**2,
+                    'A_ligg_um2':     None if comp['A_ligg'] is None else comp['A_ligg'] * scale**2,
+                    'A_tabor_um2':    None if comp['A_tabor'] is None else comp['A_tabor'] * scale**2,
+                    'A_volume_um2':   None if comp['A_volume'] is None else comp['A_volume'] * scale**2,
+                    'A_geom_um2':     None if comp['A_geom'] is None else comp['A_geom'] * scale**2,
+                    'A_final_um2':    A_physics,
+                    'binding':        comp['binding'],
+                }
             else:
                 A_physics = A_hertzian  # fallback if import failed
                 regime = 'hertzian_fallback'
@@ -254,6 +269,8 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
             # Raw-dump fields (both modes carry both areas for comparison)
             'A_hertzian': A_hertzian,
             'A_physics':  A_physics,
+            # 5-case Tabor/volume/geom decomposition (None when not in physics regime)
+            'A_components': A_components,
             'delta':       delta_sim,
             'delta_over_R': delta_over_R,
             'regime':      regime,

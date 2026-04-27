@@ -205,8 +205,14 @@ def film_area_from_overlap(delta: float, R_star: float,
                             R_min: float = None,
                             ligg_area: float = None,
                             mode: str = "capped",
-                            k_spread: float = 1.0) -> tuple[float, str]:
+                            k_spread: float = 1.0,
+                            return_components: bool = False):
     """Return (contact film area in m², regime label).
+
+    If ``return_components=True`` the third element is a dict with all
+    five candidate areas (Hertzian, LIGGGHTS, Tabor, volume, geometric
+    cap) plus which cap bound the result. Components for non-physics
+    modes are filled with the same scalars where applicable.
     mode:
       'hertzian'  — pure elastic Hertzian (π R* δ). Underestimates plastic.
       'liggghts'  — use LIGGGHTS-reported contactArea directly. DEM-native.
@@ -220,22 +226,38 @@ def film_area_from_overlap(delta: float, R_star: float,
       1.00 = raw DEM | 1.65 = Minnmann 2021 match (recommended for 'capped')
     """
     dr = delta / R_star if R_star > 0 else 0.0
-    if dr <= 0:
-        return 0.0, "none"
+    elastic_area = np.pi * R_star * delta if R_star > 0 else 0.0
 
-    elastic_area = np.pi * R_star * delta   # Hertzian point contact (small overlap)
+    def _pack(area, regime, *,
+              A_hertzian=None, A_ligg=None,
+              A_tabor=None, A_volume=None, A_geom=None,
+              binding=None):
+        if not return_components:
+            return area, regime
+        return area, regime, {
+            'A_final':    float(area),
+            'A_hertzian': float(elastic_area if A_hertzian is None else A_hertzian),
+            'A_ligg':     None if A_ligg is None or A_ligg <= 0 else float(A_ligg),
+            'A_tabor':    None if A_tabor is None else float(A_tabor),
+            'A_volume':   None if A_volume is None or A_volume == float('inf') else float(A_volume),
+            'A_geom':     None if A_geom is None else float(A_geom),
+            'binding':    binding,    # 'tabor'|'volume'|'geom'|'lower'|'elastic'|None
+            'regime':     regime,
+        }
+
+    if dr <= 0:
+        return _pack(0.0, "none")
 
     if mode == "hertzian":
         regime = ("elastic" if dr < DR_YIELD_ONSET else
                   "transition" if dr < DR_FULLY_PLASTIC else "plastic")
-        return elastic_area, regime
+        return _pack(elastic_area, regime, A_ligg=ligg_area)
 
     if mode == "liggghts":
         regime = ("elastic" if dr < DR_YIELD_ONSET else
                   "transition" if dr < DR_FULLY_PLASTIC else "plastic")
-        if ligg_area is not None and ligg_area > 0:
-            return ligg_area, regime
-        return elastic_area, regime
+        chosen = ligg_area if (ligg_area is not None and ligg_area > 0) else elastic_area
+        return _pack(chosen, regime, A_ligg=ligg_area)
 
     if mode == "physics":
         # Literature-first physics model — NO free parameters.
@@ -249,7 +271,7 @@ def film_area_from_overlap(delta: float, R_star: float,
         # then apply Tabor hardness relation A = F/H. Volume conservation
         # prevents unphysical thin films. Hemisphere cap prevents wraparound.
         if dr < DR_YIELD_ONSET:
-            return elastic_area, "elastic"
+            return _pack(elastic_area, "elastic", A_ligg=ligg_area, binding='elastic')
 
         # Real Hertzian force (using E_real, bypassing DEM's reduced E_eff)
         F_real = (4.0/3.0) * E_STAR_AM_SE_REAL * np.sqrt(R_star) * (delta ** 1.5)
@@ -268,6 +290,13 @@ def film_area_from_overlap(delta: float, R_star: float,
 
         # Plastic area from Tabor/volume/geometry caps
         A_cap = min(A_tabor, A_volume, A_geom)
+        # Identify which cap binds (smallest of the three upper bounds)
+        if A_cap == A_tabor:
+            cap_binding = 'tabor'
+        elif A_cap == A_volume:
+            cap_binding = 'volume'
+        else:
+            cap_binding = 'geom'
         # PHYSICAL LOWER BOUND: plastic area must be ≥ both
         #   (a) the pure-elastic Hertzian point-contact area (π R* δ), AND
         #   (b) the LIGGGHTS-reported contact_area (DEM already accounts for its
@@ -276,8 +305,11 @@ def film_area_from_overlap(delta: float, R_star: float,
         # Clamping to this max avoids non-physical Physics < Hertzian results.
         dem_lower_bound = max(elastic_area, ligg_area or 0.0)
         A_plastic = max(dem_lower_bound, A_cap)
+        binding = cap_binding if A_plastic == A_cap else 'lower'
         regime = "plastic" if dr >= DR_FULLY_PLASTIC else "transition"
-        return A_plastic, regime
+        return _pack(A_plastic, regime,
+                     A_ligg=ligg_area, A_tabor=A_tabor,
+                     A_volume=A_volume, A_geom=A_geom, binding=binding)
 
     # Default: 'capped' physics model
     # Geometric ceiling: film radius² can't exceed smaller particle's projected area
@@ -285,20 +317,21 @@ def film_area_from_overlap(delta: float, R_star: float,
     k2 = k_spread * k_spread
 
     if dr < DR_YIELD_ONSET:
-        return elastic_area, "elastic"
+        return _pack(elastic_area, "elastic", A_ligg=ligg_area)
 
     if dr < DR_FULLY_PLASTIC:
         # Smooth transition: interpolate elastic → capped plastic (with k_spread)
         f = (dr - DR_YIELD_ONSET) / (DR_FULLY_PLASTIC - DR_YIELD_ONSET)
         plastic_a2_raw = R_star * R_star * dr / DR_FULLY_PLASTIC
         plastic_a2 = min(plastic_a2_raw * k2, cap_a2)
-        return (1 - f) * elastic_area + f * np.pi * plastic_a2, "transition"
+        return _pack((1 - f) * elastic_area + f * np.pi * plastic_a2, "transition",
+                     A_ligg=ligg_area)
 
     # Fully plastic: area grows linearly with dr BEYOND threshold, spread × k², capped
     scale = dr / DR_FULLY_PLASTIC
     plastic_a2_raw = R_star * R_star * scale
     plastic_a2 = min(plastic_a2_raw * k2, cap_a2)
-    return np.pi * plastic_a2, "plastic"
+    return _pack(np.pi * plastic_a2, "plastic", A_ligg=ligg_area)
 
 
 def compute_coverage(atom_path: str, contact_path: str,
