@@ -215,10 +215,22 @@ def fit_v46(df, n_start=30):
                 err = np.log(df['sigma'].values + 1e-12) - np.log(pred + 1e-12)
                 if not np.all(np.isfinite(err)):
                     return 1e9
-                return float(np.mean(err ** 2))
+                base_loss = float(np.mean(err ** 2))
+                # Soft penalty for out-of-bounds (Nelder-Mead doesn't always
+                # enforce hard bounds even when passed; quadratic ramp keeps
+                # the optimizer inside the physically meaningful region).
+                penalty = 0.0
+                for v, (lo, hi) in zip(p, bounds):
+                    if v < lo:
+                        penalty += (lo - v) ** 2
+                    elif v > hi:
+                        penalty += (v - hi) ** 2
+                return base_loss + 100.0 * penalty
             except Exception:
                 return 1e9
+        # Pass bounds explicitly (Nelder-Mead supports it in scipy 1.7+).
         res = minimize(loss, x0, method='Nelder-Mead',
+                       bounds=bounds,
                        options={'maxiter': 12000, 'xatol': 1e-7, 'fatol': 1e-9})
         if best is None or res.fun < best.fun:
             best = res
