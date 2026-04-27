@@ -803,11 +803,13 @@ function showPathOnlyView(renderer, scene, camera, state) {
     unwrapped.push(new THREE.Vector3(x, p.z, y));
   }
   // Center path
+  let pathShiftX = 0, pathShiftZ = 0;  // exposed for SE context alignment
   if (unwrapped.length > 0) {
     let mnX=Infinity,mxX=-Infinity,mnZ=Infinity,mxZ=-Infinity;
     unwrapped.forEach(v=>{mnX=Math.min(mnX,v.x);mxX=Math.max(mxX,v.x);mnZ=Math.min(mnZ,v.z);mxZ=Math.max(mxZ,v.z);});
-    const sx=(box.x_min+box.x_max)/2-(mnX+mxX)/2, sz=(box.y_min+box.y_max)/2-(mnZ+mxZ)/2;
-    unwrapped.forEach(v=>{v.x+=sx;v.z+=sz;});
+    pathShiftX = (box.x_min+box.x_max)/2-(mnX+mxX)/2;
+    pathShiftZ = (box.y_min+box.y_max)/2-(mnZ+mxZ)/2;
+    unwrapped.forEach(v=>{v.x+=pathShiftX;v.z+=pathShiftZ;});
   }
 
   // Create modal with canvas
@@ -822,6 +824,16 @@ function showPathOnlyView(renderer, scene, camera, state) {
       <div id="path-viewer-container" style="width:100%;height:500px;border-radius:8px;overflow:hidden;background:#f5f5f5"></div>
       <div class="path-modal-info" style="text-align:center;margin-top:10px">
         Cluster #${cidx} | ${cluster.size} SE | τ = ${pathData.tortuosity} | Path: ${pathData.path_length} μm | Z: ${pathData.z_distance} μm
+      </div>
+      <div class="path-modal-context" style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:12px;color:#444">
+        <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer">
+          <input type="checkbox" id="path-se-context-toggle" checked> SE context
+        </label>
+        <label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer">
+          opacity
+          <input type="range" id="path-se-context-opacity" min="0" max="100" value="10" style="width:80px;vertical-align:middle">
+          <span id="path-se-context-opacity-val" style="display:inline-block;width:30px;text-align:right">0.10</span>
+        </label>
       </div>
       <div class="path-modal-actions">
         <button id="path-screenshot-btn">PNG 다운로드</button>
@@ -869,6 +881,22 @@ function showPathOnlyView(renderer, scene, camera, state) {
   grid.userData.isGrid = true;
   s2.add(grid);
 
+  // Translucent SE particles for spatial context (toggleable from modal UI).
+  // Drawn before path tubes so the path renders on top with depth.
+  // Shifted by (pathShiftX, pathShiftZ) so the cloud aligns with the centered path.
+  let seContextMesh = null;
+  if (state.seParticles && state.seParticles.length) {
+    seContextMesh = createInstancedSpheres(
+      state.seParticles, 16, COL.SE, 0.10, true
+    );
+    if (seContextMesh) {
+      seContextMesh.userData.isSEContext = true;
+      seContextMesh.position.set(pathShiftX, 0, pathShiftZ);
+      seContextMesh.renderOrder = -1;
+      s2.add(seContextMesh);
+    }
+  }
+
   // Path tubes
   for (let j = 0; j < unwrapped.length - 1; j++) {
     const seg = new THREE.TubeGeometry(new THREE.LineCurve3(unwrapped[j], unwrapped[j+1]), 1, 0.6, 6, false);
@@ -881,6 +909,24 @@ function showPathOnlyView(renderer, scene, camera, state) {
   };
   s2.add(mkS(unwrapped[0], 0x22D3EE));
   s2.add(mkS(unwrapped[unwrapped.length-1], 0xF87171));
+
+  // Wire up SE context toggle + opacity slider
+  const seToggle = document.getElementById('path-se-context-toggle');
+  const seOpaSlider = document.getElementById('path-se-context-opacity');
+  const seOpaVal = document.getElementById('path-se-context-opacity-val');
+  if (seToggle && seContextMesh) {
+    seToggle.addEventListener('change', (e) => {
+      seContextMesh.visible = e.target.checked;
+    });
+  }
+  if (seOpaSlider && seContextMesh) {
+    seOpaSlider.addEventListener('input', (e) => {
+      const o = parseInt(e.target.value, 10) / 100;
+      seContextMesh.material.opacity = o;
+      seContextMesh.material.needsUpdate = true;
+      if (seOpaVal) seOpaVal.textContent = o.toFixed(2);
+    });
+  }
 
   // Axis labels
   addAxisLabels(s2, box);
