@@ -289,6 +289,84 @@ def diagnose_residuals(df, base_pred, top_k=12):
               f'{row["p_frac"]:5.2f}  '
               f'{row["b_hertzian"]:5.1f}  {row["b_liggghts"]:5.1f}  '
               f'{row["b_tabor"]:5.1f}  {row["b_geom"]:5.1f}')
+    return idx
+
+
+def outlier_drop_curve(df, base_params, max_drop=10):
+    """Refit base after dropping top-k residual cases. Reports how R²
+    climbs as outliers are removed — if the curve rises sharply for
+    small k, the ceiling is a small-handful problem; if it rises
+    smoothly, the gap is distributed.
+    """
+    print('\n=== Outlier drop curve (refit base after dropping top-k residuals) ===')
+    print(f'{"k_drop":>6s}  {"n":>4s}  {"R²":>8s}  {"LOOCV":>8s}  {"w20":>8s}')
+    df_work = df.copy()
+    for k in range(0, max_drop + 1):
+        if k > 0:
+            base_pred = predict_base(df_work, base_params)
+            log_resid = np.log(df_work['sigma'].values + 1e-12) - np.log(base_pred + 1e-12)
+            worst_idx = np.argmax(np.abs(log_resid))
+            df_work = df_work.drop(df_work.index[worst_idx]).reset_index(drop=True)
+        # Refit base on the trimmed set
+        params_k = fit_base(df_work, n_start=8)
+        pred_k = predict_base(df_work, params_k)
+        r2_k, w20_k = metrics(df_work['sigma'].values, pred_k)
+        loocv_k = loocv_r2(df_work, pred_k)
+        print(f'{k:>6d}  {len(df_work):>4d}  {r2_k:8.4f}  {loocv_k:8.4f}  '
+              f'{w20_k:>3d}/{len(df_work)}')
+
+
+def stratified_tau_fit(df, base_params):
+    """Split cases into thin/moderate/thick by τ and fit each subset.
+    The R² ceiling can come from a single regime that the v29 form
+    handles poorly — this surfaces it.
+    """
+    print('\n=== Stratified fit by τ regime ===')
+    bins = [
+        ('thick     (τ < 1.5)',      df['tau'] < 1.5),
+        ('moderate  (1.5 ≤ τ < 2.5)',(df['tau'] >= 1.5) & (df['tau'] < 2.5)),
+        ('thin      (2.5 ≤ τ < 4)',  (df['tau'] >= 2.5) & (df['tau'] < 4)),
+        ('extreme   (τ ≥ 4)',         df['tau'] >= 4),
+    ]
+    print(f'{"regime":24s}  {"n":>4s}  {"R²":>8s}  {"LOOCV":>8s}  {"w20":>8s}')
+    for label, mask in bins:
+        sub = df[mask].reset_index(drop=True)
+        if len(sub) < 5:
+            print(f'{label:24s}  {len(sub):>4d}  (too few cases)')
+            continue
+        try:
+            params_sub = fit_base(sub, n_start=8)
+            pred_sub = predict_base(sub, params_sub)
+            r2, w20 = metrics(sub['sigma'].values, pred_sub)
+            loocv = loocv_r2(sub, pred_sub)
+            print(f'{label:24s}  {len(sub):>4d}  {r2:8.4f}  {loocv:8.4f}  '
+                  f'{w20:>3d}/{len(sub)}')
+        except Exception as e:
+            print(f'{label:24s}  {len(sub):>4d}  fit failed: {e}')
+
+
+def leverage_scan(df, base_params, k_top=10):
+    """Drop each case in turn, refit residual gamma, report R²
+    sensitivity. The cases whose removal moves R² the most are the
+    ones constraining the fit — useful for spotting bad data or
+    physics outliers.
+    """
+    print('\n=== Leverage scan (drop-one R² shift) ===')
+    base_pred_full = predict_base(df, base_params)
+    r2_full, _ = metrics(df['sigma'].values, base_pred_full)
+
+    impacts = []
+    for i in range(len(df)):
+        sub = df.drop(df.index[i]).reset_index(drop=True)
+        params_i = fit_base(sub, n_start=4)  # cheap multi-start
+        pred_i = predict_base(sub, params_i)
+        r2_i, _ = metrics(sub['sigma'].values, pred_i)
+        impacts.append((df.iloc[i]['name'], r2_i, r2_i - r2_full))
+    impacts.sort(key=lambda x: -abs(x[2]))
+
+    print(f'{"case":40s}  {"R² without it":>14s}  {"ΔR² vs full":>13s}')
+    for nm, r2_i, d in impacts[:k_top]:
+        print(f'{str(nm)[:40]:40s}  {r2_i:14.4f}  {d:+13.4f}')
 
 
 def main():
@@ -326,6 +404,11 @@ def main():
     s1 = fit_stage(df, 1, '+ 5-case binding share (H/L/T/V/G)', base_params)
     s2 = fit_stage(df, 2, '+ r_SE/r_AM particle ratio',          base_params)
     s3 = fit_stage(df, 3, '+ τ × binding interactions',          base_params)
+
+    # Robust diagnostics — surface where the 0.96 ceiling actually lives.
+    outlier_drop_curve(df, base_params, max_drop=10)
+    stratified_tau_fit(df, base_params)
+    leverage_scan(df, base_params, k_top=10)
 
     print('\n' + '=' * 75)
     print('=== SUMMARY ===')
