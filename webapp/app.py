@@ -200,12 +200,28 @@ def transform_network_summary_4col(tables, metrics, meta):
 
     # Step 1: expand existing rows to 4 cols (default Physics = Hertzian, Δ = 0%)
     tbl['columns'] = ['지표', 'Hertzian (DEM-native)', 'Physics (Tabor+volume)', 'Δ (%)']
+    def _is_section_header(label):
+        if not isinstance(label, str):
+            return False
+        s = label.strip()
+        return s.startswith('──') or (s.startswith('─') and s.endswith('─'))
+
+    # Rows produced by older analyze_contacts.py runs that we no longer want
+    # to render (header + binding format have been redesigned).
+    _drop_labels = {
+        '─ AM-SE 5-case (Tabor/volume/geom decomposition) ─',
+        '── AM-SE 5-case (Tabor/volume/geom decomposition) ──',
+        'A_binding (Tabor / vol / geom %)',
+    }
+
     expanded = []
     for row in tbl['data']:
         if not row:
             continue
         label = row[0] if len(row) > 0 else ''
-        if isinstance(label, str) and label.startswith('──'):
+        if isinstance(label, str) and label.strip() in _drop_labels:
+            continue
+        if _is_section_header(label):
             expanded.append([label, '', '', ''])
         elif len(row) >= 4:
             expanded.append(list(row))  # already 4-col
@@ -335,16 +351,26 @@ def transform_network_summary_4col(tables, metrics, meta):
                     r[2] = v
                 r[1] = '-'
                 r[3] = ''
-            # Binding distribution row — formatted string
-            shares = metrics.get('A_binding_share_pct')
-            r = _find_row('A_binding (Tabor / vol / geom %)')
-            if r is not None and isinstance(shares, dict):
-                tabor_pct  = shares.get('tabor', 0)
-                volume_pct = shares.get('volume', 0)
-                geom_pct   = shares.get('geom', 0)
-                r[1] = '-'
-                r[2] = f"{tabor_pct:.1f} / {volume_pct:.1f} / {geom_pct:.1f}"
-                r[3] = ''
+            # 5-case ratio row — each candidate area as multiple of A_final.
+            # Reveals at a glance how lower bounds and upper caps relate to
+            # the selected value (lower bounds <1, caps ≥1, binding case ≈1).
+            r = _find_row('A_5case ÷ A_final (H / L / T / V / G)')
+            if r is not None:
+                af = float(five.get('A_final_um2') or 0.0)
+                if af > 0:
+                    def _r(k):
+                        v = five.get(k)
+                        if v is None:
+                            return '—'
+                        try:
+                            return f"{float(v) / af:.2f}×"
+                        except Exception:
+                            return '—'
+                    r[1] = '-'
+                    r[2] = (f"{_r('A_hertzian_um2')} / {_r('A_ligg_um2')} / "
+                            f"{_r('A_tabor_um2')} / {_r('A_volume_um2')} / "
+                            f"{_r('A_geom_um2')}")
+                    r[3] = ''
 
     # Step 4: inject Network Solver section (σ rows with physics)
     has_net_section = any(isinstance(r[0], str) and r[0].startswith('── Network Solver') for r in data)
