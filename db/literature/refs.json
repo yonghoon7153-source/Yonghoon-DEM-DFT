@@ -457,6 +457,35 @@
           "Fig_S50_decomp_band_gaps": "Ba0.875Nd0.125SnF4.125 ~3.5 eV; NdF3 wider; SnF2 wider; BaF2 widest — all passivating"
         }
       },
+      "figure_S15_analysis": {
+        "band_gaps_eV": {"x_0": 3.69, "x_0.02": 3.45, "x_0.0625": 3.41, "x_0.125": 3.69, "x_0.25": 3.57},
+        "trend": "Non-monotonic. Lowest at intermediate x=0.02-0.0625, recovers at x=0.125, dips again at x=0.25",
+        "PDOS_decomposition": "F-2p dominates valence band. Ba-5p deeper (-3 to -4 eV). Sn-5p near VBM. **Nd-5p shown but Nd-4f NOT projected** (cyan line nearly flat) — paper hides 4f either by treating as core or omitting projection.",
+        "critical_observation": "Without DFT+U + 4f projection, the 4f peak position is invisible. This obscures the most important electronic structure question: where is the Nd 4f^3 occupied state vs Fermi level? Our work must use PROJWFC.x with explicit 4f wavefunction inclusion.",
+        "implication_for_us": "When we plot PDOS for Nd-doped argyrodite, MUST project explicitly onto Nd 4f (not just 5p/5d/6s) to show 4f localization. Use spin-resolved PDOS to capture 3 unpaired e-."
+      },
+      "figure_S20_analysis": {
+        "B_GPa": "~60 across all x (flat, slight increase at x=0.25)",
+        "G_GPa": "~32 across all x (slight dip at x=0.02, then flat)",
+        "E_GPa": "~84 across all x (slight dip at x=0.02, then flat)",
+        "nu": "~0.27 across all x (essentially constant)",
+        "B_over_G_evolution": "Driven by slight G decrease (shear softening), not by B increase. 'Improved ductility' = 'softer in shear'. Direct read: B/G change is in the 0.05-0.15 range, marginal.",
+        "x_0.02_anomaly": "G and E both dip at x=0.02 (single Nd in dilute supercell breaking local symmetry). x=0.0625-0.25 settle into stable trend.",
+        "implication_for_us": "Expect SIMILAR nearly-flat elastic vs Nd doping in argyrodite (Nd 1-2 atoms in 62-atom cell will perturb mechanical properties only mildly). Report Cij(x) but emphasize that the more dramatic effects are bonding (COHP) and diffusion (NEB) rather than bulk elastic."
+      },
+      "figure_S22_analysis": {
+        "T_range_K": "300, 400, 500, 600, 700, 800",
+        "duration_ps": 100,
+        "energy_stability": "All curves flat around -255 eV with thermal fluctuations only. No drift, no melting.",
+        "implication_for_us": "Standard 'AIMD thermal stability' figure format. We can make analogous Fig for Nd-doped argyrodite at 300/500/700 K. Quick (~3-day AIMD per T) and high-impact for Reviewer reassurance."
+      },
+      "figure_S23_analysis": {
+        "Bader_Ba_e": "+1.73 (constant across x = 0, 0.0625, 0.125, 0.25)",
+        "Bader_Sn_e": "+1.50 (constant across x)",
+        "interpretation": "Nd doping does NOT trigger redox of host framework atoms. Ba and Sn maintain their +2 ionicity. Only Nd-F bond locally formed; rest of crystal electronically unchanged.",
+        "DOS_panel_b": "BaSnF4 vs Ba0.875Nd0.125SnF4.125 nearly indistinguishable. VB structure preserved. CB shifts negligible.",
+        "implication_for_us": "Adopt SAME figure structure: (a) Bader of Li/P/S/Cl vs Nd concentration → show framework charge invariance; (b) Total DOS comparison undoped vs doped → show electronic structure preserved EXCEPT for new 4f peak. The CONTRAST against Xiong's missing 4f is our methodological highlight."
+      },
       "ideas_to_borrow_for_argyrodite_Nd_paper": [
         "1. SI Table S5-style full Cij(x) matrix for our Nd-doped argyrodite — show C11, C12, C13, C33, C44, C66 progression",
         "2. SI Fig S15-style band structure + DOS for x=0/0.05/0.10/0.20 — track Nd 4f peak migration",
