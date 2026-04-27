@@ -209,43 +209,47 @@ def fit_residual_features(df, base_pred, feature_names):
 
 
 def fit_stage(df, stage, label, base_params=None):
-    """Stage 0 = base-only. Stages 1+ add features incrementally."""
+    """Stage 0 = base-only. Stages 1+ add features incrementally.
+
+    Stages 2+ require r_SE/r_AM, so we restrict to rows that have both
+    when those features are active to avoid SVD failure on degenerate
+    columns.
+    """
     if base_params is None:
         base_params = fit_base(df)
-    base_pred = predict_base(df, base_params)
 
+    df_stage = df.copy()
     feature_names = []
     if stage >= 1:
         # Drop b_volume (≈ 0 in most cases) to break sum-to-100 collinearity.
         feature_names += ['b_hertzian', 'b_liggghts', 'b_tabor', 'b_geom']
     if stage >= 2:
-        # r_SE / r_AM_S (use AM_S since most have it)
-        if 'r_ratio' not in df.columns:
-            df = df.copy()
-            r_ratio = []
-            for _, r in df.iterrows():
-                rs = r['r_SE']
-                ra = r['r_AM_S'] or r['r_AM_P']
-                r_ratio.append((rs / ra) if (rs and ra) else 0.0)
-            df['r_ratio'] = r_ratio
+        # r_SE / r_AM_S — restrict to rows with both available
+        def _ratio(r):
+            rs = r['r_SE']
+            ra = r['r_AM_S'] or r['r_AM_P']
+            if rs and ra and ra > 0:
+                return rs / ra
+            return None
+        df_stage['r_ratio'] = df_stage.apply(_ratio, axis=1)
+        df_stage = df_stage[df_stage['r_ratio'].notna()].reset_index(drop=True)
         feature_names += ['r_ratio']
     if stage >= 3:
-        # Interaction: τ × tabor_share / 100 (tortuosity-binding coupling)
-        df = df.copy()
-        df['tau_tabor'] = df['tau'].values * df['b_tabor'].values / 100.0
-        df['tau_geom']  = df['tau'].values * df['b_geom'].values / 100.0
+        df_stage['tau_tabor'] = df_stage['tau'].values * df_stage['b_tabor'].values / 100.0
+        df_stage['tau_geom']  = df_stage['tau'].values * df_stage['b_geom'].values / 100.0
         feature_names += ['tau_tabor', 'tau_geom']
 
     # Drop features that are all zero / constant (degenerate)
-    feature_names = [f for f in feature_names if f in df.columns
-                     and df[f].std() > 1e-9]
+    feature_names = [f for f in feature_names if f in df_stage.columns
+                     and df_stage[f].std() > 1e-9]
 
-    coef, pred = fit_residual_features(df, base_pred, feature_names)
-    r2, w20 = metrics(df['sigma'].values, pred)
-    loocv = loocv_r2(df, base_pred, feature_names, coef)
+    base_pred = predict_base(df_stage, base_params)
+    coef, pred = fit_residual_features(df_stage, base_pred, feature_names)
+    r2, w20 = metrics(df_stage['sigma'].values, pred)
+    loocv = loocv_r2(df_stage, base_pred, feature_names, coef)
 
     print(f'\n── Stage {stage} — {label} ──')
-    print(f'  n={len(df)}   R²={r2:.4f}   LOOCV={loocv:.4f}   w20={w20}/{len(df)}')
+    print(f'  n={len(df_stage)}   R²={r2:.4f}   LOOCV={loocv:.4f}   w20={w20}/{len(df_stage)}')
     print('  base:', '  '.join(f'{n}={v:+.3f}' for n, v in zip(
         ('α','β','γ','δ','φc','μ','b0'), base_params)))
     if feature_names:
@@ -254,11 +258,37 @@ def fit_stage(df, stage, label, base_params=None):
             print(f'    {f:14s} = {g:+.4f}')
     return {
         'stage': stage, 'label': label,
-        'r2': r2, 'loocv': loocv, 'w20': w20, 'n': len(df),
+        'r2': r2, 'loocv': loocv, 'w20': w20, 'n': len(df_stage),
         'base_params': list(base_params),
         'features':    feature_names,
         'gamma':       list(coef),
     }
+
+
+def diagnose_residuals(df, base_pred, top_k=12):
+    """Print the top-k cases by absolute log-space residual.
+
+    The R² ceiling at 0.96 with all v29 features collapsed strongly
+    suggests a small number of cases are dragging the fit. Listing the
+    biggest offenders should reveal whether they share a regime
+    (thin / extreme p_frac / outlier τ) — which then suggests the
+    feature class to add next.
+    """
+    log_resid = np.log(df['sigma'].values + 1e-12) - np.log(base_pred + 1e-12)
+    idx = np.argsort(-np.abs(log_resid))
+    print('\n=== Top residual cases (|log_residual| sorted) ===')
+    print(f'{"name":36s}  {"σ_act":>8s}  {"σ_pred":>8s}  {"resid":>8s}  '
+          f'{"τ":>5s}  {"φ":>5s}  {"CN":>5s}  {"p":>5s}  '
+          f'{"H%":>5s}  {"L%":>5s}  {"T%":>5s}  {"G%":>5s}')
+    for i in idx[:top_k]:
+        row = df.iloc[i]
+        print(f'{str(row["name"])[:36]:36s}  '
+              f'{row["sigma"]:8.4f}  {base_pred[i]:8.4f}  '
+              f'{log_resid[i]:+8.3f}  '
+              f'{row["tau"]:5.2f}  {row["phi"]:5.3f}  {row["cn"]:5.2f}  '
+              f'{row["p_frac"]:5.2f}  '
+              f'{row["b_hertzian"]:5.1f}  {row["b_liggghts"]:5.1f}  '
+              f'{row["b_tabor"]:5.1f}  {row["b_geom"]:5.1f}')
 
 
 def main():
@@ -287,6 +317,11 @@ def main():
     r2_base, w20_base = metrics(df['sigma'].values, base_pred)
     loocv_base = loocv_r2(df, base_pred)
     print(f'  Stage 0: R²={r2_base:.4f}  LOOCV={loocv_base:.4f}  w20={w20_base}/{len(df)}')
+
+    # Print biggest base residuals — these reveal what physics the fit
+    # is currently missing, since adding random parameters to the v29
+    # form has hit a ceiling.
+    diagnose_residuals(df, base_pred, top_k=12)
 
     s1 = fit_stage(df, 1, '+ 5-case binding share (H/L/T/V/G)', base_params)
     s2 = fit_stage(df, 2, '+ r_SE/r_AM particle ratio',          base_params)
