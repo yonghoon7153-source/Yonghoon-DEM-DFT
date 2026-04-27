@@ -9,3 +9,4 @@ output/*.tmp
 *.swo
 *~
 *.zip
+runs/
