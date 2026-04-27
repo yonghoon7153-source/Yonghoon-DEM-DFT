@@ -808,15 +808,9 @@ function showPathOnlyView(renderer, scene, camera, state) {
     }
     unwrapped.push(new THREE.Vector3(x, p.z, y));
   }
-  // Center path
-  let pathShiftX = 0, pathShiftZ = 0;  // exposed for SE context alignment
-  if (unwrapped.length > 0) {
-    let mnX=Infinity,mxX=-Infinity,mnZ=Infinity,mxZ=-Infinity;
-    unwrapped.forEach(v=>{mnX=Math.min(mnX,v.x);mxX=Math.max(mxX,v.x);mnZ=Math.min(mnZ,v.z);mxZ=Math.max(mxZ,v.z);});
-    pathShiftX = (box.x_min+box.x_max)/2-(mnX+mxX)/2;
-    pathShiftZ = (box.y_min+box.y_max)/2-(mnZ+mxZ)/2;
-    unwrapped.forEach(v=>{v.x+=pathShiftX;v.z+=pathShiftZ;});
-  }
+  // Path is kept at its original (unwrapped) coordinates so that the bbox,
+  // axis labels (X/Y/Z), and SE context cloud all share the same frame.
+  // The unwrap above already removes periodic jumps; no extra centering.
 
   // Create modal with canvas
   const overlay = document.createElement('div');
@@ -889,7 +883,7 @@ function showPathOnlyView(renderer, scene, camera, state) {
 
   // Translucent SE particles for spatial context (toggleable from modal UI).
   // Drawn before path tubes so the path renders on top with depth.
-  // Shifted by (pathShiftX, pathShiftZ) so the cloud aligns with the centered path.
+  // No position offset — path/bbox/axes/SE all share original coordinate frame.
   let seContextMesh = null;
   if (state.seParticles && state.seParticles.length) {
     seContextMesh = createInstancedSpheres(
@@ -897,7 +891,6 @@ function showPathOnlyView(renderer, scene, camera, state) {
     );
     if (seContextMesh) {
       seContextMesh.userData.isSEContext = true;
-      seContextMesh.position.set(pathShiftX, 0, pathShiftZ);
       seContextMesh.renderOrder = -1;
       s2.add(seContextMesh);
     }
