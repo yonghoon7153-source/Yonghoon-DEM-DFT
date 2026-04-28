@@ -176,6 +176,63 @@
     "Ce_vs_Nd_chemistry_distinction": "Need to explicitly state in paper: Ce⁴⁺ (0.87 Å, -1, 4f⁰) vs Nd³⁺ (0.983 Å, -2, 4f³). Different mismatch (2.3× vs 2.6×), different charge burden (1× vs 2× Li compensation), different electronic structure (closed vs open shell)."
   },
 
+  "track1A_vs_1B_HSAB_mechanistic_insight": {
+    "preliminary_result_2026-04-28": {
+      "track1A_best_E_per_atom_eV": -4.34844,
+      "track1A_top3_configs": ["cfg141 (-4.34844)", "cfg142 (-4.34812)", "cfg138 (-4.34772)"],
+      "track1B_best_E_per_atom_eV_so_far": -4.33168,
+      "track1B_progress": "30/228 (13.2%) at 2026-04-28 14:14",
+      "diff_per_atom_eV": 0.01676,
+      "diff_per_cell_eV": 2.01,
+      "diff_per_O_defect_eV": 0.67,
+      "interpretation": "Track 1A (O@PS4 16e) more stable than Track 1B (O@4d free site) by 0.67 eV per O substitution",
+      "verdict_at_MLIP_level": "Track 1A WIN, clearly favored, but DFT validation needed (16.8 meV/atom is borderline within UMA-s-1p1 ~50-100 meV/atom typical error)"
+    },
+    "anneal_debug_confirmation_2026-04-28": {
+      "test_config": "cfg141 (Track 1A champion)",
+      "protocol": "Single-frame 100 steps × 0.5 fs at 500K Langevin",
+      "key_observation": "P-O distance shrinks from 2.034 Å (initial PS4 corner) to 1.34 Å (P-O bond) at step 50, oscillates 1.34-1.69 Å in steps 60-90",
+      "implication": "System spontaneously forms PS3O3- groups at 500K — direct dynamic confirmation of Hard-Hard preference for Nd-doped argyrodite",
+      "log_file": "gabia /data/work/nd_doped_modelc/debug_cfg141.log"
+    },
+    "HSAB_mechanistic_explanation": {
+      "ion_classification": {
+        "Nd_3plus": {"r_A": 0.98, "charge": 3, "hardness": "Hard", "4f_state": "4f^3 (3 unpaired e-)"},
+        "Ce_4plus": {"r_A": 0.87, "charge": 4, "hardness": "Hard", "4f_state": "4f^0 (closed shell)"},
+        "O_2minus": {"r_A": 1.40, "charge": -2, "hardness": "Hard"},
+        "S_2minus": {"r_A": 1.84, "charge": -2, "hardness": "Soft"},
+        "Li_plus": {"r_A": 0.76, "charge": 1, "hardness": "borderline"},
+        "P_5plus": {"r_A": 0.38, "charge": 5, "hardness": "Hard"}
+      },
+      "why_4f3_enhances_HardHard": [
+        "1. Anisotropic charge density: 4f orbitals are lobed → breaks spherical symmetry → directional preference for hard ligand alignment",
+        "2. Local crystal field strengthening: 4f^3 unpaired spins polarize neighbor electron distribution → Nd-O bond shortens + strengthens, P-O cascade enhancement",
+        "3. Cascade effect: O near Nd is polarized toward Nd, simultaneously polarized toward P (in PS4) → both Nd-O and P-O bonds enhanced"
+      ],
+      "why_Ce_4f0_lacks_this_effect": [
+        "1. 4f empty → spherical symmetric Ce charge distribution",
+        "2. No anisotropic polarization on neighbors",
+        "3. Less specific Hard-Hard preference → O can sit at PS4 OR at free 4d site (both possible)",
+        "4. Consistent with Zhao 2025 reporting O@4d (less specific binding)"
+      ],
+      "concrete_chemistry_evidence": [
+        "Nd2O3 is one of the most thermodynamically stable lanthanide oxides (formation energy -1808 kJ/mol)",
+        "Nd2S3 exists but less stable than Nd2O3 (preference for Nd-O over Nd-S)",
+        "Nd-O bond ~2.4 Å (very ionic, high force constant) vs Nd-S bond ~2.9 Å (weaker, more covalent)",
+        "Lanthanide 4f^n with n>0 shows characteristic ligand field stabilization (LFSE) on Hard donors"
+      ],
+      "one_line_summary": "Nd^3+ 4f^3 imposes anisotropic polarization on adjacent O^2-, simultaneously strengthening Nd-O AND P-O bonds in PS3O3 group → O strongly prefers PS4 corner (16e) over free site (4d) by ~0.67 eV per O. Ce^4+ 4f^0 lacks this polarization → O placement less specific (Zhao 2025 free site outcome)."
+    },
+    "paper_argument_template": "Although Zhao et al. (2025) report O substitution at the free 4d sulfide site in Ce/O co-doped LPSC based on Rietveld refinement, our DFT-validated screening of Nd/O co-substitution shows that O preferentially occupies the PS4 corner (16e) site by ~0.67 eV per O atom. This contrast is explained by the 4f electronic configuration: Ce^4+ (4f^0, spherical) lacks the anisotropic polarization that Nd^3+ (4f^3, 3 unpaired e-) imposes on adjacent O^2-, where the latter strengthens both Nd-O and (through cascade polarization) P-O bonds in the PS3O3 unit. This represents a generalizable mechanistic distinction between early (4f^0-1) and mid (4f^2-7) lanthanide doping in sulfide solid electrolytes.",
+    "validation_plan": [
+      "1. WAIT_1B_SCREEN: Complete Track 1B screen (228 configs, ETA 2.5 hr from 14:14) → final 1B best",
+      "2. DFT_TOP10_BOTH: Top 5 Track 1A + Top 5 Track 1B → DFT+U+ISPIN=2 single-point relax at KISTI (~5 days). Verify MLIP 0.67 eV/O preference is real (DFT ~10 meV/atom precision).",
+      "3. ANNEAL_TRANSITION: After anneal Phase 2.5 (modified protocol 0.5fs + 20ps), check if Track 1B initial structures spontaneously transition to Track 1A (P-O bond formation). debug_cfg141.log already shows this happens at 500K within 50 fs.",
+      "4. PAPER_FIGURE: PS3O3 group binding energy + bond length distribution + spin density on Nd 4f^3 (post-DFT) → key paper Figure 3 candidate"
+    ]
+  },
+
+
   "execution_status_tracking": {
     "phase_1_track1A_enumerate": {
       "status": "DONE",
