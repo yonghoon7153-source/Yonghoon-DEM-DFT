@@ -138,14 +138,14 @@ def _bounds_v29_full():
     ]
 
 
-def fit_F(df, with_beta_T):
+def fit_F(df, with_beta_T, n_start=25):
     bounds = _bounds_v29_full()
     if with_beta_T:
         bounds = bounds + [(-3.0, 3.0)]
 
     rng = np.random.default_rng(42)
     best = None
-    for s in range(25):
+    for s in range(n_start):
         x0 = [rng.uniform(*b) for b in bounds]
         def loss(p):
             try:
@@ -182,14 +182,16 @@ def loocv_F(df, with_beta_T):
     n = len(df); pred_loo = np.empty(n)
     for i in range(n):
         sub = df.drop(df.index[i]).reset_index(drop=True)
-        params = fit_F(sub, with_beta_T)
+        # Inner LOOCV uses n_start=4 to keep total runtime tractable
+        # (76 folds × 25 starts would take ~6 hours per variant).
+        params = fit_F(sub, with_beta_T, n_start=4)
         held = df.iloc[[i]]
         if with_beta_T:
             pred_loo[i] = predict_v29_full(held, params[:-1], beta_T=params[-1])[0]
         else:
             pred_loo[i] = predict_v29_full(held, params)[0]
         if (i + 1) % 10 == 0:
-            print(f'    progress: {i+1}/{n}')
+            print(f'    progress: {i+1}/{n}', flush=True)
     a = np.log(df['sigma'].values + 1e-12); p = np.log(pred_loo + 1e-12)
     ss_res = np.sum((a-p)**2); ss_tot = np.sum((a - a.mean())**2)
     return 1 - ss_res / ss_tot if ss_tot > 0 else 0.0
