@@ -870,6 +870,67 @@
         ]
       },
       "tags": ["rare-earth-doping", "Nd", "Dy", "Ta", "co-doping", "halide-SE", "Li2ZrCl6", "LZDTC", "BVSE", "7Li-NMR", "Rietveld", "experimental", "ASSB", "NCM811", "China", "ZSTU", "SI-data-extracted"]
+    },
+    {
+      "id": "zhao2025",
+      "authors": "Zhao, M.; Zhang, J.; Pu, L.; Huang, L.; Jin, J.; Wen, Z.",
+      "title": "Ce/O Co-Substitution Strategy Enhanced Stability of Sulfide Electrolyte for All-Solid-State Lithium Metal Batteries",
+      "journal": "Small Methods",
+      "year": 2025,
+      "affiliation": "ShanghaiTech / Shanghai Institute of Ceramics CAS / Hunan University",
+      "system": "Li_{5.4+x}P_{1-x}Ce_xS_{4.4-2x}O_{2x}Cl_{1.6} (x = 0, 0.01, 0.02, 0.03, 0.04, 0.05); base = Li5.4PS4.4Cl1.6 (same as our Model C)",
+      "claim": "Ce⁴⁺ substitutes P⁵⁺ at 4b site; O²⁻ substitutes S²⁻ in PS4 tetrahedra (16e). Optimal x=0.02 gives σ=7.13 mS/cm, CCD=1.3 mA/cm², 5000 h cycling, lattice a=9.787→9.864 Å.",
+      "relevance_to_our_work": "Park (BML) raised this as a CHALLENGE to our Nd→P infeasibility conclusion (Track 2 control). Same base composition (Li5.4PS4.4Cl1.6), same heterovalent lanthanide+O co-substitution logic, but claims P-site substitution works experimentally. Detailed SI analysis (see zhao2025_critique.md) shows the P-site claim is WEAKLY SUPPORTED and the data is consistent with Ce@Li-site instead — i.e., supports our Nd→Li (Track 1) conclusion rather than refuting it.",
+      "critical_weaknesses": {
+        "1_chemistry_difference_from_Nd": "Ce⁴⁺ (0.87 Å, charge -1, 4f⁰ closed shell) vs Nd³⁺ (0.983 Å, charge -2, 4f³ open shell). Charge compensation burden 2× different; 4f shell electronic disturbance fundamentally different. Direct extrapolation invalid.",
+        "2_no_DFT_verification": "Zero DFT calculations in paper. P-site assignment relies entirely on Rietveld (Table S1, S2). Z=58 Ce overweights X-ray scattering, making 4b vs Li site assignment ambiguous without neutron/EXAFS. No formation energy comparison.",
+        "3_charge_balance_only_with_Ce4plus": "Zhao formula Li_{5.4+x}P_{1-x}Ce_xS_{4.4-2x}O_{2x}Cl_{1.6} balances ONLY with Ce⁴⁺ (Sum=+10.4 vs −10.4). With Ce³⁺ (more stable in sulfide), Sum=+10.4-x vs -10.4 → MISMATCH. Paper has NO Ce 3d XPS to verify oxidation state. CeS₂ formation at high x suggests Ce reduction.",
+        "4_O_position_contradicts_main_text": "Table S2 places O on 4d (free S²⁻ site, occ 0.0247), NOT 16e (PS4 corner). Main text claims 'O substitutes S in PS4 tetrahedra'. Direct internal contradiction. P-O bond strengthening mechanism collapses.",
+        "5_O1s_XPS_no_PSO3_peak": "Figure S1 (O 1s XPS) shows ONLY Li-O-P (~532 eV, dominant) and P-O-P (~530 eV, minor) peaks. NO peak at PS3O³⁻ position (~531 eV). Direct spectroscopic refutation of PS4-internal O substitution claim.",
+        "6_Raman_PS4_unchanged": "Figure S6 shows PS4³⁻ ν₁ at ~420 cm⁻¹ position/shape unchanged x=0 vs x=0.02. If O substituted in PS4 (PS3O³⁻), expect: peak splitting (T_d → C_3v), high-energy shift (+30-50 cm⁻¹ from P-O>P-S force constant), new ~950 cm⁻¹ P-O stretch. None observed.",
+        "7_Ce_occupancy_3point6x_nominal": "Refined Ce occ = 0.0720 vs nominal x=0.02 → 3.6× over-detection. Suggests local clustering (non-uniform), Rietveld over-fit (Z=58 heavy), or actual Ce content deviation from nominal. Quantitative P-site occupancy unreliable.",
+        "8_O_occupancy_62pct_nominal": "Refined O occ = 0.0247 vs nominal 0.04 → 38% missing. Suggests surface POₓ or LiOH/Li2O byproduct rather than crystallographic substitution.",
+        "9_LiCl_impurity_confounder": "Table S1/S2: LiCl impurity 6.024% (LPSC) → 3.237% (LPSC-0.02). LiCl is insulator (~10⁻⁸ S/cm). Volume fraction effect alone could explain ~3% σ improvement (vs reported +4.5%). Conductivity gain partially attributable to batch quality, not substitution.",
+        "10_sigma_x_nonmonotonic": "σ trend: 6.82→5.50↓→7.13↑→6.32→5.97→5.27 mS/cm. x=0.01 drops 19%, only x=0.02 recovers+improves. Physically unreasonable for monotonic doping effect. Likely batch-to-batch noise.",
+        "11_Ea_anomaly_x05": "E_a at x=0.05 = 0.188 eV — 35% lower than x=0.02 (0.266). Most disordered sample with fastest Li motion is anomalous, suggests CeS₂ secondary phase + percolative path artifact.",
+        "12_self_reported_inferior_to_SnO": "Table S3 (their own comparison): LPSC-Sn/O (same base) = 8.7 mS/cm > LPSC-Ce/O 7.13 mS/cm. Ce doping novelty weak.",
+        "13_Li_occupancy_inconsistency": "Li1 (48h) Occ: LPSC=1.0080, LPSC-0.02=15.9853 (15.86× different). Indicates inconsistent normalization convention or refinement error between tables.",
+        "14_EIS_no_bulk_GB_separation": "Figure S5: single semicircle fitting. Cannot separate bulk Li conduction from grain boundary. σ improvement mechanism undetermined.",
+        "15_CeS2_secondary_phase_admission": "Paper itself reports CeS₂ formation at high x, attributing it to 'ionic radius mismatch between Ce⁴⁺ and P⁵⁺'. Direct admission that radius mismatch limits P-substitution — supports our phase separation argument for Nd (which has LARGER mismatch)."
+      },
+      "honest_formula_derivation": {
+        "Zhao_assumed": "CeO₂ + Ce⁴⁺ + P-site → Li_{5.4+x}P_{1-x}Ce_xS_{4.4-2x}O_{2x}Cl_{1.6} (3 assumptions)",
+        "case_2": "CeO₂ + Ce⁴⁺ + Li-site → Li_{5.4-4x}Ce_xPS_{4.4-2x}O_{2x}Cl_{1.6} (2 assumptions)",
+        "case_3": "Ce₂O₃ + Ce³⁺ + P-site → Li_{5.4+2x}P_{1-x}Ce_xS_{4.4-1.5x}O_{1.5x}Cl_{1.6} (1 assumption)",
+        "case_4_most_natural": "Ce₂O₃ + Ce³⁺ + Li-site → Li_{5.4-3x}Ce_xPS_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
+        "punchline": "Case 4 is IDENTICAL in structure to our Nd Track 1 formula. If Zhao's data were interpreted via natural lanthanide chemistry (Ce³⁺ stable in sulfide, lanthanide too large for P site), they would have written our formula. Their P-site narrative is choice, not necessity."
+      },
+      "concentration_argument_for_Nd": {
+        "Zhao_x": 0.02,
+        "our_DFT_x": 0.20,
+        "ratio": "10×",
+        "why_our_conclusion_extends_to_dilute": [
+          "(a) Per-defect cost dominated by local size mismatch (Nd 0.98 vs P 0.38 = 2.6×), concentration-insensitive at first order. Nd-Nd interaction ~1-2 eV vs ~7 eV total.",
+          "(b) Aliovalent doping: dilute LESS favorable (no neighbor Li-interstitial sharing for Coulomb compensation). Our x=0.20 = lower bound; dilute even worse.",
+          "(c) Boltzmann factor: ΔE ~5-7 eV at 298 K → exp(-200) ≈ 0. Concentration-independent equilibrium occupation = 0%.",
+          "(d) ΔΔE = ΔE(Track2) - ΔE(Track1) cancels systematic errors. Same supercell, same settings → robust comparison."
+        ],
+        "recommended_extra_calc": "Single-Nd in 240-atom supercell (x=0.10) for Track 1 and Track 2 (~10 days KISTI). Demonstrate concentration scaling for reviewer."
+      },
+      "our_paper_advantage_table": {
+        "DFT_verification": {"Zhao": "0 calcs", "Ours": "DFT+U + ISPIN=2, 500+ configs"},
+        "site_assignment": {"Zhao": "Rietveld only", "Ours": "Track 1/2 ΔE_form quantified"},
+        "O_position": {"Zhao": "main/SI contradiction (16e vs 4d)", "Ours": "Both enumerated, stable site determined"},
+        "oxidation_state": {"Zhao": "Ce 3d XPS missing", "Ours": "Nd³⁺ explicit, Nd2O3 precursor unambiguous, 4f³ DFT+U"},
+        "impurity": {"Zhao": "6%→3% LiCl confounder", "Ours": "Pure-phase DFT"},
+        "concentration": {"Zhao": "x=0.02 only", "Ours": "x=0.20 + planned x=0.10 scaling"},
+        "bulk_GB": {"Zhao": "EIS not separable", "Ours": "Single crystal supercell"},
+        "charge_balance": {"Zhao": "depends on Ce⁴⁺ assumption", "Ours": "rigorous with Nd³⁺"}
+      },
+      "park_response_oneliner_korean": "Zhao 식은 'CeO₂ + Ce⁴⁺ + P-site' 3중 가정의 산물. Sulfide 환경 화학과 lanthanide ionic radius를 정직하게 따랐다면 Li_{5.4-3x}Ce_xPS_{4.4-1.5x}O_{1.5x}Cl_{1.6} (= 우리 Nd Track 1 식과 동일 구조)이 됐을 것. Zhao 합성물도 atomistically 보면 Ce가 Li 자리에 들어가있을 가능성이 매우 큼. 추가로 Fig S1 (O 1s XPS) PS3O3- 피크 부재, Fig S6 Raman PS4 변화 없음, Table S2 O@4d 위치, LiCl 불순물 6→3% confounder, σ vs x 비단조성 등으로 'P-site Ce + PS4-internal O' 메커니즘은 데이터로 뒷받침되지 않음.",
+      "conclusion": "Zhao 2025 does NOT refute our Nd→P infeasibility conclusion. It is best interpreted as a misinterpretation of standard lanthanide chemistry (Ce@Li-site) as P-site substitution, supported by ambiguous Rietveld and selective characterization. Our DFT-based Track 1/2 comparison is more rigorous and remains valid.",
+      "critique_doc": "db/literature/zhao2025_critique.md",
+      "tags": ["rare-earth-doping", "Ce", "Ce4+", "Ce3+", "lanthanide", "argyrodite", "Li5.4PS4.4Cl1.6", "Model-C-base", "P-substitution", "O-substitution", "Rietveld-ambiguity", "no-DFT", "experimental", "Park-challenge", "critique", "supports-our-Nd-to-Li"]
     }
   ]
 }

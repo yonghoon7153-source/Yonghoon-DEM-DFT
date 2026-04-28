@@ -140,7 +140,24 @@
     "estimated_start": "After paper #1 finalized (Model C v2 + comp2 v2 done)"
   },
 
-  "references": ["xiong2022", "jia2025", "adeli2019", "deiseroth2006"],
+  "references": ["xiong2022", "jia2025", "zhao2025", "adeli2019", "deiseroth2006"],
 
-  "notes": "Two-track strategy: MAIN track Nd→Li (chemically sensible, full enumeration); CONTROL track Nd→P (PI's original scheme, only 2-3 configs to demonstrate instability). The control comparison strengthens paper by quantifying why Li-substitution is preferred. Future work after Pipeline #1 completion."
+  "related_literature_critiques": {
+    "zhao2025_Ce_O_co_substitution": {
+      "system": "Li_{5.4+x}P_{1-x}Ce_xS_{4.4-2x}O_{2x}Cl_{1.6} (same base = Model C)",
+      "their_claim": "Ce⁴⁺ substitutes P⁵⁺ at 4b; O at 16e (PS4 internal)",
+      "challenge_from_PI": "Park (BML) cited this as evidence that lanthanide P-substitution works, challenging our Nd→P infeasibility conclusion",
+      "our_refutation": "Zhao formula assumes CeO₂ + Ce⁴⁺ + P-site (3 assumptions). Honest derivation with sulfide-stable Ce³⁺ + Ce₂O₃ precursor + Li-site yields Li_{5.4-3x}Ce_xPS_{4.4-1.5x}O_{1.5x}Cl_{1.6} = identical structure to our Nd Track 1. SI evidence (O 1s XPS no PS3O3- peak, Raman PS4 unchanged, Table S2 O@4d not 16e, Ce occ 3.6× nominal, LiCl impurity 6%→3% confounder) does NOT support P-site mechanism.",
+      "implication_for_our_paper": "Cite Zhao in Discussion as a contrasting case: 'Although Zhao et al. reported Ce/O substitution in same composition with claimed P-site Ce, our analysis of their SI shows O 1s XPS lacks PS3O3- signature and Rietveld places O on free 4d site, suggesting their compound likely has Ce@Li-site analogous to our Nd Track 1.'",
+      "details": "db/literature/zhao2025_critique.md"
+    }
+  },
+
+  "open_methodology_questions_to_address": {
+    "O_placement_ambiguity": "Zhao 2025 places O on 4d (free S²⁻) per Rietveld, NOT 16e (PS4 corner) per main text. Our Track 1 enum currently places O near Nd in PS4 (16e, Hard-Hard preference). RECOMMEND: enumerate BOTH O@16e and O@4d configs in Track 1, let DFT pick winner. Adds ~50-100 configs to Phase 1.",
+    "concentration_scaling": "Reviewer may challenge x=0.20 vs experimental x=0.02. RECOMMEND: add 1 dilute control calc (240-atom supercell, 1 Nd, x=0.10) for Track 1 and Track 2 to demonstrate per-defect cost is concentration-insensitive. Cost: ~10 days KISTI.",
+    "Ce_vs_Nd_chemistry_distinction": "Need to explicitly state in paper: Ce⁴⁺ (0.87 Å, -1, 4f⁰) vs Nd³⁺ (0.983 Å, -2, 4f³). Different mismatch (2.3× vs 2.6×), different charge burden (1× vs 2× Li compensation), different electronic structure (closed vs open shell)."
+  },
+
+  "notes": "Two-track strategy: MAIN track Nd→Li (chemically sensible, full enumeration); CONTROL track Nd→P (PI's original scheme, only 2-3 configs to demonstrate instability). The control comparison strengthens paper by quantifying why Li-substitution is preferred. Future work after Pipeline #1 completion. Zhao 2025 (Ce/O in same base) addressed via SI critique → does not refute our conclusion; if anything supports Ce@Li-site interpretation."
 }
