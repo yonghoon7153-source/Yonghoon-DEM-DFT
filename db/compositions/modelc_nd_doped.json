@@ -154,9 +154,94 @@
   },
 
   "open_methodology_questions_to_address": {
-    "O_placement_ambiguity": "Zhao 2025 places O on 4d (free S²⁻) per Rietveld, NOT 16e (PS4 corner) per main text. Our Track 1 enum currently places O near Nd in PS4 (16e, Hard-Hard preference). RECOMMEND: enumerate BOTH O@16e and O@4d configs in Track 1, let DFT pick winner. Adds ~50-100 configs to Phase 1.",
-    "concentration_scaling": "Reviewer may challenge x=0.20 vs experimental x=0.02. RECOMMEND: add 1 dilute control calc (240-atom supercell, 1 Nd, x=0.10) for Track 1 and Track 2 to demonstrate per-defect cost is concentration-insensitive. Cost: ~10 days KISTI.",
+    "O_placement_ambiguity": {
+      "issue": "Zhao 2025 places O on 4d (free S²⁻) per Rietveld, NOT 16e (PS4 corner) per main text. Our Track 1A currently places O on 16e (Hard-Hard near Nd). DFT must decide.",
+      "resolution": "Track 1B added: enumerate_track1_O4d.py places O on 4d. Compare DFT energies of Track 1A (O@16e) vs Track 1B (O@4d) — winner becomes paper's main result.",
+      "status": "scripts_ready_pending_execution",
+      "scripts": [
+        "runs/nd_doped_modelc/1_enumerate/enumerate_track1.py (Track 1A, O@16e — DONE 342 configs)",
+        "runs/nd_doped_modelc/1_enumerate/enumerate_track1_O4d.py (Track 1B, O@4d — TO RUN)"
+      ]
+    },
+    "concentration_scaling": {
+      "issue": "Reviewer may challenge x=0.20 (DFT) vs x=0.02 (Zhao experimental) — 10× concentration gap.",
+      "resolution": "Dilute control: 248-atom supercell (Model C × 4), 2 Nd at maximally separated Li sites, x=0.10. Compare ΔE_form/Nd at x=0.10 vs x=0.20. If similar (±0.5 eV) → defect-defect interaction minor → conclusion extends to dilute.",
+      "status": "scripts_ready_pending_execution",
+      "scripts": [
+        "runs/nd_doped_modelc/0_setup/build_track1_dilute_248atom.py",
+        "runs/nd_doped_modelc/1_enumerate/enumerate_track1_dilute.py"
+      ],
+      "expected_cost": "~10 days KISTI (DFT+U+ISPIN=2 on 248-atom × 1-2 configs each for Track 1 and Track 2)"
+    },
     "Ce_vs_Nd_chemistry_distinction": "Need to explicitly state in paper: Ce⁴⁺ (0.87 Å, -1, 4f⁰) vs Nd³⁺ (0.983 Å, -2, 4f³). Different mismatch (2.3× vs 2.6×), different charge burden (1× vs 2× Li compensation), different electronic structure (closed vs open shell)."
+  },
+
+  "execution_status_tracking": {
+    "phase_1_track1A_enumerate": {
+      "status": "DONE",
+      "n_configs": 342,
+      "location": "gabia /data/work/nd_doped_modelc/1_enumerate/configs/",
+      "notes": "Hard-Hard pruning, O@16e near Nd"
+    },
+    "phase_1_track1B_O4d_enumerate": {
+      "status": "PENDING",
+      "script": "1_enumerate/enumerate_track1_O4d.py",
+      "next_action": "Run on gabia: python enumerate_track1_O4d.py --src ../0_setup/track1_base_124atom.xyz --outdir configs_O4d/",
+      "expected_n_configs": "60-200 (smaller pool than 1A since 4d free S has only ~3-4 sites)"
+    },
+    "phase_1_track2_enumerate": {
+      "status": "DONE_3_configs",
+      "location": "gabia /data/work/nd_doped_modelc/1_enumerate/configs_track2/",
+      "notes": "Control track (Nd@P), only 3 configs as planned"
+    },
+    "phase_1_track1_dilute_enumerate": {
+      "status": "PENDING",
+      "script_build": "0_setup/build_track1_dilute_248atom.py",
+      "script_enum": "1_enumerate/enumerate_track1_dilute.py",
+      "next_action_1": "Build 248-atom: python build_track1_dilute_248atom.py --src modelc_v2_champion.xyz",
+      "next_action_2": "Enumerate: python enumerate_track1_dilute.py --src ../0_setup/track1_dilute_base_248atom.xyz",
+      "expected_n_configs": "~10 (small set for verification)"
+    },
+    "phase_2_mlip_screen_track1A": {
+      "status": "DONE",
+      "method": "UMA-s-1p2 batch relax",
+      "champion": "cfg141 Nd=[1, 82] vac=[5, 6, 63, 71]",
+      "E_pa_range_eV": "-4.34844 to -4.34342"
+    },
+    "phase_2_5_anneal_track1A": {
+      "status": "RUNNING_2026-04-28",
+      "current_state": "Frame 1/10 in progress (cfg141, E_before=-521.8122 eV)",
+      "process_pids": {"anneal": 321684, "auto_restart": 321685},
+      "log": "gabia /data/work/nd_doped_modelc/2_5_anneal_top.log",
+      "protocol": "500K NVT 50ps + 5ps quench × 10 frames",
+      "expected_completion": "~30 hr from start (Frame 1 launched 2026-04-28)",
+      "previous_attempt": "Stuck at Frame 1 due to Track 2 UMA conflict. Cleaned restart 2026-04-28.",
+      "watch_files": ["2_5_anneal_top.log", "auto_restart_phase2_5.log"]
+    },
+    "phase_3_dft_verify_track1A": {
+      "status": "PENDING",
+      "next": "After Phase 2.5 anneal completes, top 5-10 → DFT+U + ISPIN=2 on KISTI",
+      "expected_cost": "~5 days KISTI GPU"
+    },
+    "phase_3_dft_verify_track1B": {
+      "status": "PENDING",
+      "depends_on": "phase_1_track1B_O4d_enumerate + phase_2_mlip_screen on 1B configs",
+      "purpose": "Compare ΔE Track 1A (O@16e) vs Track 1B (O@4d) — picks winner"
+    },
+    "phase_3_dft_verify_dilute": {
+      "status": "PENDING",
+      "depends_on": "phase_1_track1_dilute_enumerate",
+      "purpose": "Concentration scaling validation",
+      "expected_cost": "~10 days KISTI (248-atom × 2 configs Track 1 + Track 2)"
+    },
+    "paper1_modelC_v2_postproc": {
+      "status": "IN_PROGRESS",
+      "kisti_jobs": {
+        "nscf_dos": "DONE",
+        "projwfc_pdos": "PENDING_RETRY (killed previously, retry on GPU 0 after EOS)",
+        "comp2_dft_eos": "RUNNING (v104-v108 on GPU 1)"
+      }
+    }
   },
 
   "notes": "Two-track strategy: MAIN track Nd→Li (chemically sensible, full enumeration); CONTROL track Nd→P (PI's original scheme, only 2-3 configs to demonstrate instability). The control comparison strengthens paper by quantifying why Li-substitution is preferred. Future work after Pipeline #1 completion. Zhao 2025 (Ce/O in same base) addressed via SI critique → does not refute our conclusion; if anything supports Ce@Li-site interpretation."
