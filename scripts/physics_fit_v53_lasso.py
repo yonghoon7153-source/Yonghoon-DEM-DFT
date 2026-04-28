@@ -165,8 +165,8 @@ def main():
     ss_res = np.sum((y - pred) ** 2); ss_tot = np.sum((y - y.mean()) ** 2)
     r2_in = 1 - ss_res / ss_tot
     err = np.abs(np.exp(pred) - np.exp(y)) / np.maximum(np.exp(y), 1e-12)
-    w20 = int(np.sum(err <= 0.20))
-    print(f'\n  in-sample R² = {r2_in:.4f}  w20 = {w20}/{n}', flush=True)
+    w20_in = int(np.sum(err <= 0.20))
+    print(f'\n  in-sample R² = {r2_in:.4f}  w20 = {w20_in}/{n}', flush=True)
 
     # ── Print survivors ─────────────────────────────────────
     nonzero_idx = np.where(np.abs(coef) > 1e-9)[0]
