@@ -6,12 +6,14 @@
   "atoms": 62,
   "cell_type": "rhombohedral",
   "formula_units": 5,
-  "halogen": {"Cl": 4, "Br": 4},
+  "halogen": {
+    "Cl": 4,
+    "Br": 4
+  },
   "li_per_fu": 5.4,
   "s_per_fu": 4.4,
   "has_vacancy": true,
   "vacancy_per_fu": 0.6,
-
   "eos": {
     "B0_GPa": 20.8,
     "B0_prime": 6.33,
@@ -20,35 +22,55 @@
     "status": "confirmed",
     "pipeline": "v1"
   },
-
   "band_gap_eV": 1.96,
   "vbm_character": "S 3p + Br 4p",
   "cbm_character": "Li 2s, P 3s",
-
   "elastic_dft_0K_GPa": {
-    "C11": 85.5, "C12": 20.9, "C44": 27.3, "K": 42.4, "G": 29.1, "E": 71.5, "nu": 0.200
+    "C11": 85.5,
+    "C12": 20.9,
+    "C44": 27.3,
+    "K": 42.4,
+    "G": 29.1,
+    "E": 71.5,
+    "nu": 0.2
   },
-
   "elastic_mlip_300K_GPa": {
-    "unit_cell": {"C11": 46.2, "C12": 7.7, "C44": 13.9, "K": 20.5, "G": 15.1, "E": 36.4},
-    "supercell_2x2x1": {"C11": 48.6, "C12": 8.1, "C44": 14.6, "K": 21.5, "G": 16.0, "E": 38.5}
+    "unit_cell": {
+      "C11": 46.2,
+      "C12": 7.7,
+      "C44": 13.9,
+      "K": 20.5,
+      "G": 15.1,
+      "E": 36.4
+    },
+    "supercell_2x2x1": {
+      "C11": 48.6,
+      "C12": 8.1,
+      "C44": 14.6,
+      "K": 21.5,
+      "G": 16.0,
+      "E": 38.5
+    }
   },
-
   "elastic_mlip_600K_GPa": {
     "method": "600K_snapshot_x5",
-    "C11": 33.4, "C11_std": 1.1, "C12": 14.1, "C12_std": 0.5, "C44": 10.7, "C44_std": 0.6,
-    "E_VRH": 26.4, "E_std": 1.6,
-    "K_VRH": 20.5, "G_VRH": 10.3
+    "C11": 33.4,
+    "C11_std": 1.1,
+    "C12": 14.1,
+    "C12_std": 0.5,
+    "C44": 10.7,
+    "C44_std": 0.6,
+    "E_VRH": 26.4,
+    "E_std": 1.6,
+    "K_VRH": 20.5,
+    "G_VRH": 10.3
   },
-
-  "surface_energy_Jm2": 0.450,
-  "two_gamma_Jm2": 0.90,
-
+  "surface_energy_Jm2": 0.45,
+  "two_gamma_Jm2": 0.9,
   "adhesion_v1": {
-    "Wad_Jm2": 1.200,
+    "Wad_Jm2": 1.2,
     "Wad_aJ_r10nm": 377
   },
-
   "adhesion_v5": {
     "method": "crystalline_slab_surface_MQA",
     "SE_cell": "2x2x1_248at",
@@ -56,8 +78,22 @@
     "strain_pct": 1.1,
     "status": "in_progress"
   },
-
   "practical_notes": "Optimal composition candidate: E down 9%, Wad up (1.200), basin stable. Best balance of compliance + adhesion + reproducibility.",
-
-  "references": ["adeli2019", "kraft2018"]
+  "references": [
+    "adeli2019",
+    "kraft2018"
+  ],
+  "bader_charge_v1": {
+    "Li": 0.853,
+    "Cl": -0.884,
+    "Br": -0.882,
+    "S": -1.551,
+    "source": "post_relax (charge-density extracted)",
+    "notes": "S charge anomalously low (-1.551 vs -1.7~-1.85 elsewhere). comp4 has Cl=Br=0.8 (most mixed) -> S environment most heterogeneous. Connects to 'optimal composition' note."
+  },
+  "q1q2_over_r_eV_v1bader": {
+    "Li-Cl": 4.32,
+    "Li-Br": 4.0,
+    "Li-S": 7.57
+  }
 }

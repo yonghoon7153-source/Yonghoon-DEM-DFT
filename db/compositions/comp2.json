@@ -7,62 +7,82 @@
   "cell_type": "cubic",
   "formula_units": 4,
   "space_group": "F-43m",
-  "halogen": {"Cl": 2, "Br": 2},
+  "halogen": {
+    "Cl": 2,
+    "Br": 2
+  },
   "li_per_fu": 6.0,
   "s_per_fu": 5.0,
   "has_vacancy": false,
-
   "eos": {
     "B0_GPa": 25.8,
     "B0_prime": 4.22,
     "n_points": 11,
-    "R_squared": 1.000000,
+    "R_squared": 1.0,
     "volume_range": "v096-v108",
     "status": "confirmed",
     "basin": "single",
     "pipeline": "v1"
   },
-
   "band_gap_eV": 2.04,
   "vbm_character": "S 3p + Br 4p",
   "cbm_character": "Li 2s, P 3s",
-
   "bader_trend": {
     "Cl_more_ionic_than_Br": true,
     "notes": "|Cl charge| > |Br charge| confirmed."
   },
-
   "bond_lengths_A": {
     "Li-Cl": 2.51,
     "Li-Br": 2.71,
     "P-S": 2.06,
     "notes": "Li-Br 0.20 A longer than Li-Cl."
   },
-
   "elastic_dft_0K_GPa": {
-    "C11": 73.4, "C12": 29.2, "C44": 37.4, "K": 43.9, "G": 29.7, "E": 75.9, "nu": 0.178
+    "C11": 73.4,
+    "C12": 29.2,
+    "C44": 37.4,
+    "K": 43.9,
+    "G": 29.7,
+    "E": 75.9,
+    "nu": 0.178
   },
-
   "elastic_mlip_300K_GPa": {
-    "unit_cell": {"C11": 39.5, "C12": 17.0, "C44": 22.8, "K": 24.4, "G": 17.0, "E": 41.4},
-    "supercell_2x2x1": {"C11": 42.1, "C12": 19.3, "C44": 24.0, "K": 26.5, "G": 17.6, "E": 43.3}
+    "unit_cell": {
+      "C11": 39.5,
+      "C12": 17.0,
+      "C44": 22.8,
+      "K": 24.4,
+      "G": 17.0,
+      "E": 41.4
+    },
+    "supercell_2x2x1": {
+      "C11": 42.1,
+      "C12": 19.3,
+      "C44": 24.0,
+      "K": 26.5,
+      "G": 17.6,
+      "E": 43.3
+    }
   },
-
   "elastic_mlip_600K_GPa": {
     "method": "600K_snapshot_x5",
-    "C11": 33.1, "C11_std": 1.0, "C12": 15.2, "C12_std": 0.4, "C44": 12.7, "C44_std": 0.5,
-    "E_VRH": 28.6, "E_std": 1.1,
-    "K_VRH": 21.2, "G_VRH": 11.2
+    "C11": 33.1,
+    "C11_std": 1.0,
+    "C12": 15.2,
+    "C12_std": 0.4,
+    "C44": 12.7,
+    "C44_std": 0.5,
+    "E_VRH": 28.6,
+    "E_std": 1.1,
+    "K_VRH": 21.2,
+    "G_VRH": 11.2
   },
-
   "surface_energy_Jm2": 1.189,
   "two_gamma_Jm2": 2.38,
-
   "adhesion_v1": {
     "Wad_Jm2": 1.101,
     "Wad_aJ_r10nm": 346
   },
-
   "adhesion_v5": {
     "method": "crystalline_slab_surface_MQA",
     "SE_cell": "prim_2x2x1_52at",
@@ -70,6 +90,22 @@
     "strain_pct": 3.3,
     "status": "in_progress"
   },
-
-  "references": ["deiseroth2006", "kraft2018"]
+  "references": [
+    "deiseroth2006",
+    "kraft2018"
+  ],
+  "bader_charge_v1": {
+    "Li": 0.873,
+    "Cl": -0.925,
+    "Br": -0.904,
+    "S": -1.843,
+    "basin": "B (Br ordering)",
+    "source": "post_relax/comp2_basinB/ACF.dat",
+    "notes": "comp2 v1 BasinB. Cl more ionic than Br (|q(Cl)|=0.925 > |q(Br)|=0.904, +5.9%)"
+  },
+  "q1q2_over_r_eV_v1bader": {
+    "Li-Cl": 4.45,
+    "Li-Br": 4.19,
+    "Li-S": 9.4
+  }
 }
