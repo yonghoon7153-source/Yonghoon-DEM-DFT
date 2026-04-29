@@ -14,8 +14,37 @@ const COL = {
   PATH: 0xffd700, BG: 0xf5f5f5,
   MESH: 0x4f9bff,          // bright blue — compaction plate
   ATOMS_ONLY: 0xe8e8e8,    // near-white, still contrasts #f5f5f5 bg (process view)
+  DIM: 0xe5e7eb,           // background colour for non-highlighted particles
 };
 const OPA = { SE: 0.85, MESH: 0.55 };
+
+/* View-mode colour palettes — Auerbach + Lawn 1998 fracture stages */
+const STAGE_COL = {
+  intact:        0xcccccc,
+  microcrack:    0xfde047,   // yellow
+  multicrack:    0xfb923c,   // orange
+  fragmentation: 0xef4444,   // red
+  pulverization: 0x7f1d1d,   // dark red
+};
+const STAGE_RANK = { intact: 0, microcrack: 1, multicrack: 2,
+                      fragmentation: 3, pulverization: 4 };
+
+function jetColor(t) {
+  // t ∈ [0,1] → blue→cyan→green→yellow→red
+  const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
+  const g = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 2)));
+  const b = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 1)));
+  return (Math.round(r * 255) << 16) | (Math.round(g * 255) << 8) | Math.round(b * 255);
+}
+function rygColor(t) {
+  // t ∈ [0,1] → red→yellow→green (for coverage low→high)
+  if (t < 0.5) {
+    const u = t * 2;
+    return (255 << 16) | (Math.round(u * 255) << 8) | 0;
+  }
+  const u = (t - 0.5) * 2;
+  return (Math.round((1 - u) * 255) << 16) | (255 << 8) | 0;
+}
 
 /* ── control-panel HTML ────────────────────────────────────── */
 function buildControls(container) {
@@ -26,6 +55,17 @@ function buildControls(container) {
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
     <label><input type="checkbox" data-layer="SE" checked> SE</label>
     <label><input type="checkbox" data-layer="MESH" checked> Mesh (plate)</label>
+    <hr>
+    <label style="font-size:11px;font-weight:600;margin-bottom:1px">View Mode</label>
+    <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
+      <option value="default">Default</option>
+      <option value="brittle">Brittle Hotspots (AM)</option>
+      <option value="cluster">Cluster Coloring (SE)</option>
+      <option value="stress">Stress Concentration</option>
+      <option value="coverage">Coverage Heat (AM)</option>
+      <option value="se_brittle">Fracture-prone SE</option>
+    </select>
+    <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px"></div>
     <hr>
     <label><input type="checkbox" id="path-toggle"> <span style="font-size:11px">Percolating Path</span></label>
     <div id="path-controls" style="display:none">
@@ -640,8 +680,226 @@ function resetSEColors(state) {
   mesh.material.opacity = OPA.SE;  // back to 0.85
 }
 
+/* ── View-mode rendering — re-colour all instanced meshes ─── */
+function applyViewMode(state, mode) {
+  state.viewMode = mode;
+  const aux = (state.data && state.data.aux) || {};
+  const colDim    = new THREE.Color(COL.DIM);
+  const colSeBase = new THREE.Color(COL.SE);
+
+  /* default: restore base colours + opacities */
+  if (!mode || mode === 'default') {
+    ['AM_P', 'AM_S', 'SE'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      const base = new THREE.Color(COL[t]);
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
+      m.instanceColor.needsUpdate = true;
+      m.material.opacity = (t === 'SE' ? OPA.SE : 1.0);
+      m.material.transparent = (t === 'SE');
+    });
+    setLegend(state, '');
+    return;
+  }
+
+  /* helper: dim a particle (set near-bg colour). */
+  function dimAll() {
+    ['AM_P', 'AM_S', 'SE'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, colDim));
+      m.material.opacity = 0.18;
+      m.material.transparent = true;
+    });
+  }
+  function flushColors() {
+    ['AM_P', 'AM_S', 'SE'].forEach(t => {
+      const m = state.meshes[t];
+      if (m && m.instanceColor) m.instanceColor.needsUpdate = true;
+    });
+  }
+
+  if (mode === 'brittle') {
+    dimAll();
+    /* Pick worst stage per AM particle from brittle_pairs list */
+    const stageById = {};
+    (aux.brittle_pairs || []).forEach(b => {
+      [b.id1, b.id2].forEach(id => {
+        const cur = stageById[id];
+        if (!cur || STAGE_RANK[b.stage] > STAGE_RANK[cur]) stageById[id] = b.stage;
+      });
+    });
+    /* Apply colours on AM meshes */
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        const stage = stageById[p.id];
+        if (stage) {
+          m.setColorAt(i, new THREE.Color(STAGE_COL[stage]));
+        }
+      });
+      m.material.opacity = 0.95;
+      m.material.transparent = true;
+    });
+    /* AM with no brittle contact stays dim. SE always dim in this mode. */
+    flushColors();
+    setLegend(state,
+      `<b>Brittle Stage (Auerbach + Lawn 1998)</b>
+       <span style="color:#fde047">●</span> microcrack
+       <span style="color:#fb923c">●</span> multicrack
+       <span style="color:#ef4444">●</span> fragmentation
+       <span style="color:#7f1d1d">●</span> pulverization
+       (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)`);
+    return;
+  }
+
+  if (mode === 'cluster') {
+    /* AM dim, SE coloured by cluster status */
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, colDim));
+      m.material.opacity = 0.10;
+      m.material.transparent = true;
+    });
+    const cidMap   = aux.cluster_id_per_se || {};
+    const meta     = aux.cluster_meta      || {};
+    const seMesh   = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((p, i) => {
+        const cid = cidMap[String(p.id)];
+        if (cid === undefined) {
+          seMesh.setColorAt(i, new THREE.Color(COL.SE_NON_REACH));
+          return;
+        }
+        const md = meta[String(cid)];
+        const c  = (md && md.color) ? new THREE.Color(md.color) : colSeBase;
+        seMesh.setColorAt(i, c);
+      });
+      seMesh.material.opacity = 0.92;
+      seMesh.material.transparent = true;
+    }
+    flushColors();
+    /* Legend: cluster status counts */
+    const counts = { percolating: 0, top_only: 0, bottom_only: 0, dead: 0 };
+    Object.values(meta).forEach(md => { if (counts[md.status] !== undefined)
+                                          counts[md.status] += md.size || 1; });
+    setLegend(state,
+      `<b>SE Cluster Status</b>
+       <span style="color:#1e40af">●</span> percolating (${counts.percolating})
+       <span style="color:#93c5fd">●</span> top-only (${counts.top_only})
+       <span style="color:#fbbf24">●</span> bottom-only (${counts.bottom_only})
+       <span style="color:#9ca3af">●</span> dead (${counts.dead})`);
+    return;
+  }
+
+  if (mode === 'stress') {
+    /* All particles coloured jet by max contact stress (MPa) */
+    const sMap = aux.stress_max || {};
+    const all  = Object.values(sMap).filter(v => v > 0);
+    if (!all.length) { setLegend(state, '<i>No stress data available.</i>'); return; }
+    const sMax = Math.max(...all), sMin = Math.min(...all);
+    const span = (sMax - sMin) || 1;
+    ['AM_P', 'AM_S', 'SE'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        const s = sMap[String(p.id)] ?? sMap[p.id] ?? 0;
+        if (s <= 0) {
+          m.setColorAt(i, colDim);
+        } else {
+          const tnorm = Math.max(0, Math.min(1, (s - sMin) / span));
+          m.setColorAt(i, new THREE.Color(jetColor(tnorm)));
+        }
+      });
+      m.material.opacity = 0.85;
+      m.material.transparent = true;
+    });
+    flushColors();
+    setLegend(state,
+      `<b>Max Contact Pressure (MPa)</b>
+       <span style="color:#0000ff">■</span> ${sMin.toFixed(0)}
+       <span style="color:#00ff00">■</span> ${((sMax+sMin)/2).toFixed(0)}
+       <span style="color:#ff0000">■</span> ${sMax.toFixed(0)}`);
+    return;
+  }
+
+  if (mode === 'coverage') {
+    /* AM coloured red→green by coverage %, SE dim */
+    const covMap = aux.coverage_per_am || {};
+    const seMesh = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
+      seMesh.material.opacity = 0.10;
+      seMesh.material.transparent = true;
+    }
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        const c = covMap[String(p.id)] ?? covMap[p.id];
+        if (c === undefined) {
+          m.setColorAt(i, colDim);
+          return;
+        }
+        const tnorm = Math.max(0, Math.min(1, c / 100));
+        m.setColorAt(i, new THREE.Color(rygColor(tnorm)));
+      });
+      m.material.opacity = 0.92;
+      m.material.transparent = true;
+    });
+    flushColors();
+    setLegend(state,
+      `<b>AM Coverage (% SE / surface)</b>
+       <span style="color:#ff0000">■</span> 0%
+       <span style="color:#ffff00">■</span> 50%
+       <span style="color:#00ff00">■</span> 100%`);
+    return;
+  }
+
+  if (mode === 'se_brittle') {
+    /* Highlight SE-SE pairs with high δ/R (sub-Auerbach but yielding) */
+    dimAll();
+    const stressIds = new Set();
+    const plasticIds = new Set();
+    (aux.se_stress_pairs || []).forEach(b => {
+      [b.id1, b.id2].forEach(id => {
+        stressIds.add(id);
+        if (b.plastic) plasticIds.add(id);
+      });
+    });
+    const seMesh = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((p, i) => {
+        if (plasticIds.has(p.id)) {
+          seMesh.setColorAt(i, new THREE.Color(0xef4444));   // red — Tabor plastic
+        } else if (stressIds.has(p.id)) {
+          seMesh.setColorAt(i, new THREE.Color(0xfde047));   // yellow — yield onset
+        }
+      });
+      seMesh.material.opacity = 0.95;
+      seMesh.material.transparent = true;
+    }
+    flushColors();
+    setLegend(state,
+      `<b>SE-SE Stress (Tabor regime)</b>
+       <span style="color:#fde047">●</span> δ/R > 0.0011 (yield)
+       <span style="color:#ef4444">●</span> δ/R > 0.0078 (fully plastic)
+       (${(aux.se_stress_pairs || []).length} stressed SE-SE pairs)`);
+    return;
+  }
+}
+
+function setLegend(state, html) {
+  const el = document.getElementById('view-mode-legend');
+  if (el) el.innerHTML = html;
+}
+
 /* ── wire up control panel ─────────────────────────────────── */
 function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
+  /* View Mode dropdown */
+  const modeSel = ctrlDiv.querySelector('#view-mode');
+  if (modeSel) {
+    modeSel.addEventListener('change', () => {
+      applyViewMode(state, modeSel.value);
+    });
+  }
+
   ctrlDiv.querySelectorAll('input[type=checkbox]').forEach(cb => {
     cb.addEventListener('change', () => {
       const layer = cb.dataset.layer;
