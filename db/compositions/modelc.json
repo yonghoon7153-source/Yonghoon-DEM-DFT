@@ -107,8 +107,56 @@
 
   "bader_charge": {
     "Li": 0.857, "Cl": -0.886, "S": -1.728, "P": 4.396,
-    "notes": "Cl ionicity: comp1(0.925)>ModelC(0.886)>comp3(0.903). Li6 more ionic than Li5.4 for Cl."
+    "notes": "v1 Bader. Cl ionicity: comp1(0.925)>ModelC(0.886)>comp3(0.903). Li6 more ionic than Li5.4 for Cl."
   },
+
+  "bader_charge_v2": {
+    "method": "Henkelman bader_lnx_64 v1.05 (08/19/23) on pp.x charge density (plot_num=0)",
+    "structure": "modelc_v2_V0.xyz at v103 cell (V0 from BM3 fit)",
+    "Li": 0.883, "P": 4.340, "S": -1.736, "Cl": -0.918,
+    "Li_std": 0.009, "P_std": 0.525, "S_std": 0.271, "Cl_std": 0.004,
+    "Li_range": [0.867, 0.897],
+    "P_range": [3.512, 4.892],
+    "S_range": [-1.888, -1.026],
+    "Cl_range": [-0.925, -0.913],
+    "n_atoms": {"Li": 27, "P": 5, "S": 22, "Cl": 8},
+    "total_electrons": 294.00003,
+    "completed_date": "2026-04-29",
+    "v1_v2_delta": {"Li": 0.026, "Cl": -0.032, "P": -0.056, "S": -0.008},
+    "v1_v2_interpretation": "Annealing -> Li/Cl more ionic (+0.03), PS4 nearly invariant. Champion v2 strengthens ionic Li-X network without disturbing covalent PS4."
+  },
+
+  "v2_vs_comp1_v2_bader": {
+    "modelC_v2": {"Li": 0.883, "P": 4.340, "S": -1.736, "Cl": -0.918},
+    "comp1_v2":  {"Li": 0.877, "P": 4.686, "S": -1.807, "Cl": -0.914},
+    "delta_modelC_minus_comp1": {
+      "Li": 0.006,  "P": -0.346,  "S": 0.071,  "Cl": -0.004
+    },
+    "key_finding": "PS4 charge polarization is REDUCED by Li vacancy. P +0.35 less cationic + S +0.07 less anionic in modelC. Li/Cl essentially identical between systems.",
+    "physical_explanation": "In comp1 Li6 sublattice surrounds each PS4 fully -> strong Coulomb pull -> efficient P->S charge transfer. In modelC Li5.4 some PS4 face vacancies -> reduced electrostatic environment -> P retains more electrons -> less polarized PS4 unit.",
+    "implication_for_paper": "Vacancy weakens not only ionic Li-X bonds (long-range) but also covalent PS4 polarization (short-range), explaining why Li5.4 family has lower B0 despite same PS4 topology."
+  },
+
+  "v2_q2_over_r_v2bader_recompute": {
+    "method": "q1*q2/r with k=14.4 eV*A, using v2 Bader for BOTH systems (fair comparison)",
+    "modelC_v2": {
+      "P-S": {"r_mean_A": 2.062, "q1q2_over_r_eV": 52.5},
+      "Li-S": {"r_mean_A": 2.553, "q1q2_over_r_eV": 8.65},
+      "Li-Cl": {"r_mean_A": 2.568, "q1q2_over_r_eV": 4.55}
+    },
+    "comp1_v2": {
+      "P-S": {"r_mean_A": 2.064, "q1q2_over_r_eV": 59.0},
+      "Li-S": {"r_mean_A": 2.498, "q1q2_over_r_eV": 9.13},
+      "Li-Cl": {"r_mean_A": 2.486, "q1q2_over_r_eV": 4.65}
+    },
+    "delta_pct_vacancy_effect": {
+      "P-S": "-11.0%  <-- most affected",
+      "Li-S": "-5.3%",
+      "Li-Cl": "-2.2%  <-- least affected"
+    },
+    "narrative": "Vacancy effect on bond strength proxy is anisotropic: hits PS4 covalent character hardest (-11%), then Li-S ionic (-5%), least Li-Cl (-2%). PS4 backbone is the most sensitive to local charge environment."
+  },
+
 
   "bond_lengths_A": {
     "Li-Cl": 2.552, "Li-S": 2.514, "P-S": 2.063,
