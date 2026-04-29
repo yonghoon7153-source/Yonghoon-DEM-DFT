@@ -265,34 +265,45 @@ def main():
               f'min={v.min():.2f}  median={np.median(v):.2f}  '
               f'max={v.max():.2f}  mean={v.mean():.2f}', flush=True)
 
+    # ── Save CSV first (so partial results survive any later failure) ──
+    out = Path('docs/figures/physics_regime')
+    out.mkdir(parents=True, exist_ok=True)
+    valid[['case_id', 'name', 'tau', 'tau_geom_real', 'tau_R_real',
+           'tau_lap_eff', 'sigma']].to_csv(out / 'tau_3way_real.csv',
+                                              index=False)
+    print(f'\n→ {out}/tau_3way_real.csv  (saved early)', flush=True)
+
     # Single-feature LOOCV: which τ best predicts σ_P?
+    # Manual implementation — avoids sklearn binary-incompatibility issues.
     log_P = np.log(np.maximum(valid['sigma'].values, 1e-12))
     print(f'\n=== Single-feature LOOCV R² (σ_P prediction) ===', flush=True)
-    from sklearn.model_selection import LeaveOneOut
     for col, label in [('tau', 'τ existing'),
                         ('tau_geom_real', 'τ_Dij_geom recomputed'),
                         ('tau_R_real', 'τ_Dij_R'),
                         ('tau_lap_eff', 'τ_Lap_eff')]:
         x = np.log(np.maximum(valid[col].values, 1e-3))
         n = len(x); pred = np.empty(n)
-        for tr, te in LeaveOneOut().split(x):
-            xt = x[tr]; yt = log_P[tr]
-            c = np.sum((xt - xt.mean()) * (yt - yt.mean())) / \
-                np.sum((xt - xt.mean()) ** 2)
+        for i in range(n):
+            mask = np.ones(n, dtype=bool); mask[i] = False
+            xt = x[mask]; yt = log_P[mask]
+            denom = np.sum((xt - xt.mean()) ** 2)
+            if denom <= 0:
+                pred[i] = yt.mean()
+                continue
+            c = np.sum((xt - xt.mean()) * (yt - yt.mean())) / denom
             it = yt.mean() - c * xt.mean()
-            pred[te] = c * x[te] + it
+            pred[i] = c * x[i] + it
         ss_r = np.sum((log_P - pred) ** 2)
         ss_t = np.sum((log_P - log_P.mean()) ** 2)
-        r2_loo = 1 - ss_r / ss_t
+        r2_loo = 1 - ss_r / ss_t if ss_t > 0 else float('nan')
         # in-sample slope
-        c_full = np.sum((x - x.mean()) * (log_P - log_P.mean())) / \
-                 np.sum((x - x.mean()) ** 2)
+        denom_full = np.sum((x - x.mean()) ** 2)
+        c_full = (np.sum((x - x.mean()) * (log_P - log_P.mean())) / denom_full
+                  if denom_full > 0 else 0.0)
         print(f'  {label:30s}  LOOCV R²={r2_loo:.4f}  '
               f'effective τ exponent: {c_full:+.3f}', flush=True)
 
-    # Plot
-    out = Path('docs/figures/physics_regime')
-    out.mkdir(parents=True, exist_ok=True)
+    # ── Plot ──
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
     # Subplot 1: τ_Dij_R vs τ_Dij_geom
@@ -345,11 +356,6 @@ def main():
     plt.savefig(out / 'fig6_tau_R_real.png', dpi=300)
     plt.close(fig)
     print(f'\n→ {out}/fig6_tau_R_real.png', flush=True)
-
-    valid[['case_id', 'name', 'tau', 'tau_geom_real', 'tau_R_real',
-           'tau_lap_eff', 'sigma']].to_csv(out / 'tau_3way_real.csv',
-                                              index=False)
-    print(f'→ {out}/tau_3way_real.csv', flush=True)
 
 
 if __name__ == '__main__':
