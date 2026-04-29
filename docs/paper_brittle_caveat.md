@@ -119,6 +119,23 @@ yields the equivalent overlap threshold:
 $$\delta_c = \left[\frac{3 P_c}{4 E^* \sqrt{R^*}}\right]^{2/3},
    \qquad R^* \equiv R_{\min}/2 \tag{2}$$
 
+**Note on contact-model consistency.** Equation (2) is derived from
+the Hertzian P ∝ δ^(3/2) law. Our DEM uses the linear hooke/hysteresis
+contact model (F = k_n · δ), so equation (2) gives the
+*Hertzian-equivalent* δ_c — the overlap that would correspond to P_c
+if the contact were Hertzian — not the threshold that our DEM δ field
+encounters under its actual force-overlap relation. The exact Hooke
+counterpart is δ_c^{Hooke} = P_c / k_n, and the LIGGGHTS spring
+constant k_n is calibrated to match Hertzian contact stiffness at the
+characteristic overlap, so the two thresholds agree at typical δ and
+diverge by at most a factor of two at the extremes of the overlap
+range. This factor-of-two contact-model uncertainty is absorbed into
+the per-stage Lawn factor-of-two uncertainty (Lawn 1998 §3.4); equation
+(2) is therefore retained as a supplementary cross-check that bridges
+to the literature DEM convention (Wang 2023; Bielefeld 2020), with
+the force-based classifier remaining primary because it depends only
+on F (model-agnostic measurement) and P_c (equation 1).
+
 The post-onset
 progression of damage is parameterised through Lawn's multi-stage
 classification (Lawn 1998, Table 3.4), in which successive damage
@@ -184,7 +201,10 @@ factor-of-2 uncertainty (Lawn 1998 §3.4).
 > (F/P_c ≈ 1.7, microcrack). The 3.3× K_IC ratio between single-
 > crystal and polycrystalline NCM (Quinn 2020 vs Liu 2020) gives a
 > ~11× P_c ratio at fixed R, fully accounting for the AM_P / AM_S
-> stage-distribution asymmetry reported in Section 3.
+> stage-distribution asymmetry reported in Section 3. P_c values
+> carry the factor-of-two combined uncertainty discussed above; stage
+> assignments based on F/P_c ratios within ±2× of a stage boundary
+> should be regarded as order-of-magnitude rather than definitive.
 
 **The indicator-only philosophy.** Equations (1) and the Lawn
 thresholds are applied to the DEM contact field *not to claim that any
@@ -216,6 +236,21 @@ $$P_c = A \cdot \frac{K_{IC}^2 \cdot R_{\min}}{E^*}, \qquad
 
 $$\delta_c = \left[\frac{3 P_c}{4 E^* \sqrt{R^*}}\right]^{2/3},
    \qquad R^* \equiv R_{\min}/2 \tag{2}$$
+
+**접촉 모델 일관성 주석.** 식 (2) 는 Hertzian P ∝ δ^(3/2) 법칙으로
+부터 유도된다. 본 연구의 DEM 은 선형 hooke/hysteresis 접촉 모델
+(F = k_n · δ) 을 사용하므로, 식 (2) 의 δ_c 는 *Hertzian-equivalent*
+임계값이다 — *접촉이 Hertzian 이라면* P_c 에 대응할 overlap — 이지,
+실제 우리 DEM 의 δ 필드가 따르는 force-overlap 관계 하의 임계값이
+*아니다*. 정확한 Hooke 대응식은 δ_c^{Hooke} = P_c / k_n 이며, LIGGGHTS
+의 spring constant k_n 은 characteristic overlap 에서 Hertzian
+접촉 강성과 일치하도록 calibrated 되어 있다. 따라서 두 임계값은
+typical δ 부근에서 일치하고 overlap 범위의 양 끝에서 최대 2× 차이를
+보인다. 이 factor-of-two contact-model 불확실성은 단계당 Lawn
+factor-of-two 불확실성 (Lawn 1998 §3.4) 에 흡수된다. 식 (2) 는
+따라서 *문헌 DEM convention 과의 가교* (Wang 2023; Bielefeld 2020) 를
+위한 보조 cross-check 로 유지되며, primary classifier 는 model-
+agnostic 측정값 F 와 P_c (식 1) 에만 의존하는 force-기반 분류기이다.
 
 임계점 이후 손상 진행은 Lawn 의 다단계
 분류 (Lawn 1998 Table 3.4) 로 parameterise 되며, 연속된 손상 모드가
@@ -276,7 +311,10 @@ stage 분포를 단계당 Lawn factor-of-2 불확실성 (Lawn 1998 §3.4)
 > microcrack) 에 걸쳐 있다. 단결정과 다결정 NCM 사이의 3.3× K_IC
 > 비 (Quinn 2020 vs Liu 2020) 가 동일 R 에서 ~11× P_c 비를 부여하며,
 > 이것이 Section 3 에서 보고되는 AM_P / AM_S 사이의 stage 분포
-> 비대칭을 완전히 설명한다.
+> 비대칭을 완전히 설명한다. P_c 값들은 위에서 논의한 factor-of-two
+> 결합 불확실성을 안고 있으며, 단계 경계의 ±2× 이내에 위치하는
+> F/P_c 비에 의한 stage 할당은 *정밀* 이 아닌 *order-of-magnitude*
+> 로 해석되어야 한다.
 
 **Indicator-only 철학.** 식 (1) 과 Lawn threshold 들은 DEM 접촉 필드에
 적용되지만, 어떤 특정 접촉이 *그 수준의 물리적 침투나 load 를
@@ -297,10 +335,15 @@ contact 라벨 — 이며, 의미 있는 양은 앙상블에서의 통계적 분
 The Auerbach-Lawn classifier was applied to all 267,042 AM-AM contacts
 across our 156-case ensemble. The aggregate stage distribution is
 shown in Table 1 alongside experimentally observed NCM cracking
-fractions from the literature.
+fractions from the literature. All percentages should be read with the
+combined Lawn-plus-Hooke-vs-Hertz uncertainty discussed in Section 2
+(approximately a factor of two per stage boundary); the agreement
+with experiment is order-of-magnitude rather than precise.
 
 **Table 1.** Aggregate AM-AM damage-stage distribution (δ-based
-classifier, N = 267,042 contacts) versus experimental observation.
+Hertzian-equivalent classifier, N = 267,042 contacts) versus
+experimental observation. Numbers carry a factor-of-two stage-boundary
+uncertainty (Section 2).
 
 | Stage | This work | Experimental range | Source |
 |---|---|---|---|
@@ -366,10 +409,14 @@ to the choice of fracture-permissive cases.
 
 Auerbach-Lawn classifier 를 156-case 앙상블의 267,042 개 AM-AM 접촉
 전체에 적용한 결과, 집계된 stage 분포는 Table 1 에 문헌의 실험적
-NCM cracking fraction 과 함께 제시된다.
+NCM cracking fraction 과 함께 제시된다. 모든 percent 수치는
+Section 2 에서 논의한 결합 Lawn + Hooke-vs-Hertz 불확실성 (단계 경계
+당 약 factor-of-two) 을 안고 있으며, 실험과의 일치는 *정밀* 이 아닌
+*order-of-magnitude* 수준이다.
 
-**Table 1.** AM-AM 손상 stage 분포 (δ-기반 분류기, N = 267,042 접촉)
-대 실험 관측값.
+**Table 1.** AM-AM 손상 stage 분포 (δ-기반 Hertzian-equivalent
+분류기, N = 267,042 접촉) 대 실험 관측값. 수치는 factor-of-two 단계-
+경계 불확실성을 갖는다 (Section 2).
 
 | Stage | 본 연구 | 실험 범위 | 출처 |
 |---|---|---|---|
