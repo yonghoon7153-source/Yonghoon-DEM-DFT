@@ -211,11 +211,26 @@ def merge_supplementary(df: pd.DataFrame) -> pd.DataFrame:
         if cid_col != 'case_id':
             sup = sup.rename(columns={cid_col: 'case_id'})
 
-        # Prefix non-case columns with the source filename (without ext)
+        # Drop columns that already exist in master to avoid _x/_y collisions.
+        # The master row carries the canonical name/batch — supplementary
+        # copies are redundant and pandas refuses to merge with duplicates.
+        for redundant in ('name', 'batch'):
+            if redundant in sup.columns:
+                sup = sup.drop(columns=[redundant])
+
+        # Prefix all remaining non-case columns with the source filename.
         prefix = csv_path.stem + '__'
-        rename = {c: prefix + c for c in sup.columns
-                  if c not in ('case_id', 'name', 'batch')}
+        rename = {c: prefix + c for c in sup.columns if c != 'case_id'}
         sup = sup.rename(columns=rename)
+
+        # Defensive: if any prefixed column would still clash with the
+        # master, keep the master copy (drop from sup).
+        clashes = [c for c in sup.columns
+                   if c != 'case_id' and c in df.columns]
+        if clashes:
+            print(f'  [warn] {csv_path.name}: dropping clashing columns '
+                  f'{clashes}')
+            sup = sup.drop(columns=clashes)
 
         before_cols = len(df.columns)
         df = df.merge(sup, on='case_id', how='left')
