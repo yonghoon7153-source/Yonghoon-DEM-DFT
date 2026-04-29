@@ -120,17 +120,15 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
     bottom_ids = None
     top_ids = None
 
-    # z-coordinate based boundaries (use smallest particle radius to avoid overlap)
+    # ── C4 patch: per-particle plate-contact test ───────────────────────
+    # Match calc_percolation behavior — each particle judged by its own
+    # radius, not a global min(r) threshold. r_SE-independent → fair across
+    # D0.5 vs D1.5 cases.
     if not bottom_ids or not top_ids:
-        r_ref = min(atoms_raw[aid]['radius'] for aid in target_ids)
-        z_bottom = 0.0 + r_ref * boundary_factor
-        z_top = plate_z - r_ref * boundary_factor
-        # Safety: ensure z_bottom < z_top
-        if z_bottom >= z_top:
-            z_bottom = 0.0 + plate_z * 0.05
-            z_top = plate_z * 0.95
-        bottom_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] <= z_bottom}
-        top_ids = {aid for aid in target_ids if atoms_raw[aid]['z'] >= z_top}
+        bottom_ids = {aid for aid in target_ids
+                      if atoms_raw[aid]['z'] <= atoms_raw[aid]['radius'] * boundary_factor}
+        top_ids = {aid for aid in target_ids
+                   if atoms_raw[aid]['z'] >= plate_z - atoms_raw[aid]['radius'] * boundary_factor}
 
         # Fallback L1: thin electrodes / strict boundary → 15%/85% of plate_z
         if len(bottom_ids) < 3 or len(top_ids) < 3:
