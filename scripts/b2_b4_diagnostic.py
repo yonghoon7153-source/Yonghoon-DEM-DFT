@@ -27,9 +27,16 @@ from collections import defaultdict
 
 SCRIPTS = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS))
+from fracture_model import (                                # noqa: E402
+    fracture_classify_sim, ALL_STAGES, STAGE_RANK, worse,
+)
 warnings.filterwarnings('ignore')
 
 WEBAPP = SCRIPTS.parent / 'webapp'
+
+# Per-case `scale` (sim units → metres) is read from meta.json. Default
+# matches existing pipeline (1 sim unit = 1 mm = 1000 m^-1).
+DEFAULT_SCALE = 1000.0
 
 
 def parse_type_map(s):
@@ -50,8 +57,8 @@ def find_case_dir(cid):
     return None
 
 
-def diagnose_one_case(case_dir, type_map):
-    """Return dict with per-AM stats for B2 + B4."""
+def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
+    """Return dict with per-AM stats for B2 + B4 + brittle fracture stage."""
     atoms_df = pd.read_csv(case_dir / 'atoms.csv')
     contacts_df = pd.read_csv(case_dir / 'contacts.csv', low_memory=False)
 
@@ -59,23 +66,30 @@ def diagnose_one_case(case_dir, type_map):
     am_types = {tid for tid, lbl in type_map.items() if 'AM' in lbl}
     se_types = {tid for tid, lbl in type_map.items() if lbl == 'SE'}
 
-    # Per-AM info
+    # Per-AM info — track *worst* fracture stage encountered per particle
     am_info = {}
     for _, row in atoms_df.iterrows():
         if int(row['type']) in am_types:
             r = float(row['radius'])
             am_info[int(row['id'])] = {
                 'radius': r,
-                'surface': 4 * np.pi * r ** 2,  # μm² (in DEM scale, but ratio is dimensionless)
+                'surface': 4 * np.pi * r ** 2,
                 'am_am_area': 0.0,
                 'am_se_area': 0.0,
                 'am_am_overlap_max': 0.0,
                 'am_am_overlap_count': 0,
                 'type': type_map[int(row['type'])],
+                'worst_stage': 'intact',
+                'worst_mult':  0.0,
             }
 
-    # Iterate contacts
+    # ── Per-contact fracture-stage tally (Auerbach + Lawn) ─────────────
     am_am_overlaps = []
+    stage_counts = {f'n_{s}_AM_AM': 0 for s in ALL_STAGES}
+    # Per-pair-type breakdown (AM_P-AM_P, AM_S-AM_S, mixed)
+    pair_stage_counts = {pt: {s: 0 for s in ALL_STAGES}
+                         for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')}
+
     for _, c in contacts_df.iterrows():
         i1, i2 = int(c['id1']), int(c['id2'])
         if i1 not in am_info and i2 not in am_info: continue
@@ -101,6 +115,21 @@ def diagnose_one_case(case_dir, type_map):
                     am_info[i1]['am_am_overlap_max'], ratio)
                 am_info[i2]['am_am_overlap_max'] = max(
                     am_info[i2]['am_am_overlap_max'], ratio)
+
+                # Brittle fracture stage classification
+                pair_label = '-'.join(sorted([am_info[i1]['type'],
+                                               am_info[i2]['type']]))
+                stage, _dc, mult = fracture_classify_sim(
+                    delta, r_min, contact_type=pair_label, scale=scale)
+                stage_counts[f'n_{stage}_AM_AM'] += 1
+                if pair_label in pair_stage_counts:
+                    pair_stage_counts[pair_label][stage] += 1
+                # Track per-particle worst stage
+                for pid in (i1, i2):
+                    if STAGE_RANK[stage] > STAGE_RANK[am_info[pid]['worst_stage']]:
+                        am_info[pid]['worst_stage'] = stage
+                        am_info[pid]['worst_mult']  = mult
+
         elif (t1 in am_types and t2 in se_types) or \
              (t2 in am_types and t1 in se_types):
             am_id = i1 if t1 in am_types else i2
@@ -108,28 +137,57 @@ def diagnose_one_case(case_dir, type_map):
 
     # Per-AM ratios
     ratios_AMP = []; ratios_AMS = []
+    worst_mult_AMP = []; worst_mult_AMS = []
     for aid, info in am_info.items():
         if info['surface'] <= 0: continue
         r = info['am_am_area'] / info['surface']
         if info['type'] == 'AM_P':
             ratios_AMP.append(r)
+            worst_mult_AMP.append(info['worst_mult'])
         elif info['type'] == 'AM_S':
             ratios_AMS.append(r)
-    return {
+            worst_mult_AMS.append(info['worst_mult'])
+
+    n_total_amam = sum(stage_counts.values()) or 1
+    out = {
         'n_AMP': len(ratios_AMP),
         'n_AMS': len(ratios_AMS),
-        'AMP_amam_ratio_mean': float(np.mean(ratios_AMP)) if ratios_AMP else None,
+        'AMP_amam_ratio_mean':   float(np.mean(ratios_AMP))   if ratios_AMP else None,
         'AMP_amam_ratio_median': float(np.median(ratios_AMP)) if ratios_AMP else None,
-        'AMP_amam_ratio_max': float(np.max(ratios_AMP)) if ratios_AMP else None,
-        'AMS_amam_ratio_mean': float(np.mean(ratios_AMS)) if ratios_AMS else None,
+        'AMP_amam_ratio_max':    float(np.max(ratios_AMP))    if ratios_AMP else None,
+        'AMS_amam_ratio_mean':   float(np.mean(ratios_AMS))   if ratios_AMS else None,
         'AMS_amam_ratio_median': float(np.median(ratios_AMS)) if ratios_AMS else None,
-        'AMS_amam_ratio_max': float(np.max(ratios_AMS)) if ratios_AMS else None,
-        'am_am_overlap_n': len(am_am_overlaps),
-        'am_am_overlap_max': float(np.max(am_am_overlaps)) if am_am_overlaps else 0.0,
-        'am_am_overlap_median': float(np.median(am_am_overlaps)) if am_am_overlaps else 0.0,
-        'am_am_overlap_p95': float(np.percentile(am_am_overlaps, 95))
-                              if am_am_overlaps else 0.0,
+        'AMS_amam_ratio_max':    float(np.max(ratios_AMS))    if ratios_AMS else None,
+        'am_am_overlap_n':       len(am_am_overlaps),
+        'am_am_overlap_max':     float(np.max(am_am_overlaps))    if am_am_overlaps else 0.0,
+        'am_am_overlap_median':  float(np.median(am_am_overlaps)) if am_am_overlaps else 0.0,
+        'am_am_overlap_p95':     float(np.percentile(am_am_overlaps, 95))
+                                  if am_am_overlaps else 0.0,
+        # ── Brittle fracture stage counts (Auerbach + Lawn 1998) ──
+        **stage_counts,
+        'n_total_AM_AM':                 n_total_amam,
+        'frac_microcrack_pct':           round(100.0 * stage_counts['n_microcrack_AM_AM']    / n_total_amam, 2),
+        'frac_multicrack_pct':           round(100.0 * stage_counts['n_multicrack_AM_AM']    / n_total_amam, 2),
+        'frac_fragmentation_pct':        round(100.0 * stage_counts['n_fragmentation_AM_AM'] / n_total_amam, 2),
+        'frac_pulverization_pct':        round(100.0 * stage_counts['n_pulverization_AM_AM'] / n_total_amam, 2),
+        # Severity index = (n_fragmentation + n_pulverization) / n_total
+        'fracture_index':                round(
+            (stage_counts['n_fragmentation_AM_AM'] +
+             stage_counts['n_pulverization_AM_AM']) / n_total_amam, 4),
+        # Per-AM worst-stage statistics
+        'AMP_worst_mult_median':  float(np.median(worst_mult_AMP)) if worst_mult_AMP else None,
+        'AMP_worst_mult_max':     float(np.max(worst_mult_AMP))    if worst_mult_AMP else None,
+        'AMS_worst_mult_median':  float(np.median(worst_mult_AMS)) if worst_mult_AMS else None,
+        'AMS_worst_mult_max':     float(np.max(worst_mult_AMS))    if worst_mult_AMS else None,
     }
+    # Per-pair-type breakdown columns
+    for pt, sc in pair_stage_counts.items():
+        n_pair = sum(sc.values()) or 1
+        for s, n in sc.items():
+            out[f'n_{s}_{pt}']            = n
+            out[f'frac_{s}_{pt}_pct']     = round(100.0 * n / n_pair, 2)
+        out[f'n_total_{pt}'] = sum(sc.values())
+    return out
 
 
 def main():
@@ -149,14 +207,16 @@ def main():
             up = WEBAPP / 'uploads' / cid / 'meta.json'
             meta_p = up if up.exists() else None
         type_map = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+        scale = DEFAULT_SCALE
         if meta_p:
             try:
                 m = json.load(open(meta_p))
                 tm = parse_type_map(m.get('type_map', ''))
                 if tm: type_map = tm
+                scale = float(m.get('scale', DEFAULT_SCALE))
             except Exception: pass
         try:
-            r = diagnose_one_case(case_dir, type_map)
+            r = diagnose_one_case(case_dir, type_map, scale=scale)
             r['case_id'] = cid
             all_results.append(r)
             n_processed += 1
@@ -235,6 +295,64 @@ def main():
         else:
             print('    🟢 AM mostly elastic — B4 minor, current rigid-AM '
                   'assumption acceptable.', flush=True)
+
+    # ── Brittle-fracture summary (Auerbach + Lawn 1998) ───────────────
+    print('\n' + '=' * 80, flush=True)
+    print('B4-REFRAME — Auerbach/Lawn brittle fracture stage distribution',
+          flush=True)
+    print('=' * 80, flush=True)
+    print('\nReinterpret AM-AM δ/R as fracture-likelihood proxy '
+          '(physically, NCM ceramic fractures rather than penetrating).',
+          flush=True)
+    print('Stages — intact / microcrack / multicrack / fragmentation / pulverization',
+          flush=True)
+
+    n_total_amam = df['n_total_AM_AM'].sum()
+    if n_total_amam > 0:
+        print(f'\n  Aggregate over all {len(df)} cases '
+              f'({int(n_total_amam):,} AM-AM contacts):', flush=True)
+        for s in ('intact', 'microcrack', 'multicrack',
+                   'fragmentation', 'pulverization'):
+            col = f'n_{s}_AM_AM'
+            if col not in df.columns: continue
+            tot = int(df[col].sum())
+            pct = 100.0 * tot / max(n_total_amam, 1)
+            print(f'    {s:14s}  {tot:>8,d}  ({pct:5.1f}%)', flush=True)
+
+        idx = df['fracture_index'].dropna()
+        if len(idx) > 0:
+            print(f'\n  fracture_index = (n_fragmentation + n_pulverization) / n_total:',
+                  flush=True)
+            print(f'    median across cases:  {np.median(idx):.3f}', flush=True)
+            print(f'    mean across cases:    {np.mean(idx):.3f}',   flush=True)
+            print(f'    max across cases:     {np.max(idx):.3f}',    flush=True)
+
+        # Per-pair-type breakdown headline
+        print(f'\n  Severity (fragmentation+pulverization %) by pair type:',
+              flush=True)
+        for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S'):
+            col_frag = f'n_fragmentation_{pt}'
+            col_pul  = f'n_pulverization_{pt}'
+            col_tot  = f'n_total_{pt}'
+            if col_tot not in df.columns: continue
+            tot = df[col_tot].sum()
+            if tot <= 0: continue
+            sev_pct = 100.0 * (df[col_frag].sum() + df[col_pul].sum()) / tot
+            print(f'    {pt:12s}  {sev_pct:5.1f}%  '
+                  f'(of {int(tot):,} contacts)', flush=True)
+
+        print(f'\n  Verdict — Brittle reframe:', flush=True)
+        median_idx = float(np.median(idx)) if len(idx) > 0 else 0
+        if median_idx > 0.30:
+            print('    🔴 Median fracture_index > 30% — DEM ensembles severely '
+                  'over-overlap; reframe + paper caveat mandatory.',
+                  flush=True)
+        elif median_idx > 0.10:
+            print('    🟡 Median fracture_index 10-30% — reframe recommended.',
+                  flush=True)
+        else:
+            print('    🟢 Median fracture_index < 10% — minor caveat suffices.',
+                  flush=True)
 
     # Save full results
     out = Path('docs/figures/physics_regime')
