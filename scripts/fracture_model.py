@@ -117,12 +117,17 @@ def auerbach_delta_critical(R_min_m: float, K_IC: float,
 def fracture_classify(delta_m: float, R_min_m: float,
                        contact_type: str = 'AM_P-AM_P'
                        ) -> tuple[str, float, float]:
-    """Classify a contact into a damage stage.
+    """δ-based classification (Hertzian-equivalent map).
+
+    Applies Lawn 1998 δ-multipliers (1, 2, 5, 10) — derived from the
+    Hertzian force-overlap relation P ∝ δ^(3/2). For DEM systems with a
+    *non-Hertzian* contact model (e.g. our LIGGGHTS hooke/hysteresis),
+    the δ threshold is interpreted as "what overlap would correspond to
+    that fracture stage IF the contact were Hertzian." See
+    fracture_classify_force() for the model-agnostic, force-based
+    counterpart that bypasses this assumption.
 
     Returns (stage, delta_c_m, multiplier_m_over_dc).
-      stage         — one of ALL_STAGES
-      delta_c_m     — Auerbach onset δ for this (R, K_IC) pair (m)
-      multiplier    — δ / δ_c
     """
     K_IC = k_ic_for_pair(contact_type)
     delta_c = auerbach_delta_critical(R_min_m, K_IC)
@@ -135,6 +140,65 @@ def fracture_classify(delta_m: float, R_min_m: float,
     elif m < MULT_PULVERIZATION: stage = 'fragmentation'
     else:                        stage = 'pulverization'
     return (stage, delta_c, m)
+
+
+# ── Force-based classifier (model-agnostic, primary for Hooke DEM) ──────
+# Lawn 1998 §3.4 force multipliers: cone-crack onset at P_c, multi-crack
+# at ~3·P_c, fragmentation at ~11·P_c, pulverization at ~32·P_c. These
+# are the (3/2)-power images of the δ-multipliers (1, 2, 5, 10).
+MULT_FORCE_MICROCRACK    = 1.0
+MULT_FORCE_MULTICRACK    = 3.0
+MULT_FORCE_FRAGMENTATION = 11.0
+MULT_FORCE_PULVERIZATION = 32.0
+
+
+def fracture_classify_force(F_N: float, R_min_m: float,
+                              contact_type: str = 'AM_P-AM_P',
+                              E: float = E_AM, nu: float = NU_AM,
+                              A: float = A_AUERBACH
+                              ) -> tuple[str, float, float]:
+    """Force-based fracture classification (recommended for Hooke DEM).
+
+    Bypasses the Hertzian P ∝ δ^(3/2) assumption by comparing the
+    DEM-measured contact force F directly against the Auerbach onset
+    P_c via Lawn's *force* multipliers (1, 3, 11, 32). Internally
+    consistent for AM-AM contacts because the same E_AM = 140 GPa is
+    used in both DEM contact-force computation (LIGGGHTS k_n
+    calibration) and Auerbach P_c calculation (this function), so the
+    Hooke-vs-Hertz form-factor mismatch cancels in the ratio F/P_c.
+
+    For E_SE = 1.35 GPa softened DEM, SE-related contacts are NOT to
+    be classified for brittle fracture — SE plasticity is handled by
+    the Tabor framework instead.
+
+    Returns (stage, P_c_N, multiplier_F_over_Pc).
+    """
+    K_IC = k_ic_for_pair(contact_type)
+    if R_min_m <= 0 or K_IC <= 0 or F_N <= 0:
+        return ('intact', float('inf'), 0.0)
+    E_star = E / (2.0 * (1.0 - nu * nu))
+    P_c = A * K_IC * K_IC * R_min_m / E_star
+    if P_c <= 0:
+        return ('intact', P_c, 0.0)
+    m = F_N / P_c
+    if   m < MULT_FORCE_MICROCRACK:    stage = 'intact'
+    elif m < MULT_FORCE_MULTICRACK:    stage = 'microcrack'
+    elif m < MULT_FORCE_FRAGMENTATION: stage = 'multicrack'
+    elif m < MULT_FORCE_PULVERIZATION: stage = 'fragmentation'
+    else:                              stage = 'pulverization'
+    return (stage, P_c, m)
+
+
+def fracture_classify_force_sim(F_N: float, R_min_sim: float,
+                                  contact_type: str = 'AM_P-AM_P',
+                                  scale: float = 1000.0,
+                                  E: float = E_AM, nu: float = NU_AM,
+                                  A: float = A_AUERBACH
+                                  ) -> tuple[str, float, float]:
+    """Sim-units wrapper for force-based classifier (R_min in sim units,
+    F still in N because LIGGGHTS reports normal force in SI N)."""
+    R_min_m = R_min_sim / scale
+    return fracture_classify_force(F_N, R_min_m, contact_type, E, nu, A)
 
 
 def worse(a: str, b: str) -> str:
@@ -161,9 +225,13 @@ def fracture_classify_sim(delta_sim: float, R_min_sim: float,
 __all__ = [
     'K_IC_AM_S', 'K_IC_AM_P', 'E_AM', 'NU_AM', 'H_AM',
     'A_AUERBACH', 'STAGE_RANK', 'ALL_STAGES',
+    'MULT_FORCE_MICROCRACK', 'MULT_FORCE_MULTICRACK',
+    'MULT_FORCE_FRAGMENTATION', 'MULT_FORCE_PULVERIZATION',
     'k_ic_for_pair',
     'auerbach_delta_critical',
-    'fracture_classify',
+    'fracture_classify',           # δ-based (Hertzian-equivalent)
     'fracture_classify_sim',
+    'fracture_classify_force',     # force-based (model-agnostic, primary)
+    'fracture_classify_force_sim',
     'worse',
 ]

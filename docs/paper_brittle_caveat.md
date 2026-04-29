@@ -96,4 +96,146 @@ Auerbach-Lawn brittle-fracture classifier 를 통해 damage-stage
 
 ---
 
-<!-- Section 2 will be appended below after review. -->
+## Section 2 — Auerbach-Lawn Reframe Framework
+
+### English
+
+The reframe converts the inflated AM-AM contact field into a physically
+meaningful damage-stage map by adopting Auerbach's force-based criterion
+for cone-crack initiation. For a Hertzian point-contact between two
+brittle elastic spheres, Auerbach (1891) established that the load
+required to initiate the first cone crack scales linearly with particle
+radius:
+
+$$P_c = A \cdot \frac{K_{IC}^2 \cdot R_{\min}}{E^*}, \qquad
+  E^* \equiv \frac{E}{2(1-\nu^2)} \tag{1}$$
+
+with A ≈ 200 a dimensionless geometric constant for as-prepared
+(low-flaw) ceramic surfaces (Lawn 1998, §3.4). The post-onset
+progression of damage is parameterised through Lawn's multi-stage
+classification (Lawn 1998, Table 3.4), in which successive damage
+modes appear at increasing fractions of P_c:
+
+| Stage | Force range | Physics |
+|---|---|---|
+| Intact | F < P_c | No crack |
+| Microcrack | P_c ≤ F < 3·P_c | First cone crack initiates |
+| Multi-crack | 3·P_c ≤ F < 11·P_c | Multiple cone/radial cracks |
+| Fragmentation | 11·P_c ≤ F < 32·P_c | Surface chunks separate |
+| Pulverization | F ≥ 32·P_c | Particle disintegrates |
+
+Two consequences of equation (1) are central to the reinterpretation.
+First, P_c depends linearly on R_min, so smaller particles fracture
+under proportionally smaller loads — but tolerate larger *relative*
+overlap δ/R, the well-known "size-effect" of brittle solids. Second,
+P_c depends quadratically on K_IC, so the polycrystalline (PC) and
+single-crystal (SC) NCM populations have intrinsically different
+fracture thresholds. We adopt the central-value pair
+(K_IC^PC, K_IC^SC) = (0.3, 1.0) MPa·m^0.5 (Quinn 2020; Liu 2020),
+giving a ~11× P_c ratio between AM_P-AM_P and AM_S-AM_S contacts at
+fixed R. For mixed AM_P-AM_S contacts we use the geometric mean
+K_IC = 0.55 MPa·m^0.5. The Young's modulus is fixed at E_AM = 140 GPa
+(Xu 2017, NCM811 nanoindentation; consistent with the project-wide DEM
+input value), and Poisson's ratio at ν = 0.25 (typical ceramic).
+
+**Force-based classification.** Because our DEM uses the LIGGGHTS
+hooke/hysteresis contact model rather than nonlinear Hertz, the
+overlap δ does not stand in a simple δ ∝ F^(2/3) relationship to the
+contact force; the linear hooke relation F = k_n · δ — with k_n
+calibrated to E_AM = 140 GPa — applies instead. We therefore use the
+DEM-measured normal force F directly, comparing it against P_c via
+Lawn's *force* multipliers (1, 3, 11, 32). This route is internally
+consistent for AM-AM contacts: both the DEM force F and the Auerbach
+P_c are computed from the same physical E_AM, so the Hooke-vs-Hertz
+form-factor mismatch cancels in the ratio F/P_c. The softened SE
+Young's modulus (E_SE = 1.35 GPa) does not enter, because brittle
+fracture classification is applied only to AM-AM contacts; SE-related
+plastic response is treated separately by the Tabor framework.
+
+A δ-based classifier (using equation (2): δ_c = (3 P_c / 4 E* √R*)^(2/3)
+with δ-multipliers 1, 2, 5, 10) is also retained as a supplementary
+cross-check. Differences between the two classifications quantify the
+Hooke-Hertz deviation in our cases; in practice both classifications
+yield the same per-case stage distribution to within the per-stage
+Lawn ±50 % uncertainty (Lawn 1998 §3.4).
+
+**The indicator-only philosophy.** Equations (1) and the Lawn
+thresholds are applied to the DEM contact field *not to claim that any
+particular contact represents that level of physical penetration or
+load*, but to translate each contact into the damage stage that *would*
+be observed if a brittle-fracture mechanism were physically active.
+The classifier output is therefore a **stress-concentration indicator**
+— a per-contact label drawn from a fixed five-element vocabulary —
+and the meaningful quantity is its statistical distribution across an
+ensemble. The next subsection demonstrates that this distribution
+recovers experimental NCM cracking observations quantitatively,
+validating the indicator-only interpretation.
+
+### 한국어
+
+본 reframe 은 부풀려진 AM-AM 접촉 필드를 *Auerbach 의 force-기반
+cone-crack initiation 기준* 으로 mapping 함으로써 물리적으로 의미
+있는 damage-stage map 으로 변환한다. 두 brittle 탄성 구의 Hertzian
+점접촉에 대해 Auerbach (1891) 은 첫 cone crack 을 시작시키는 load 가
+입자 반경에 선형 비례함을 확립하였다:
+
+$$P_c = A \cdot \frac{K_{IC}^2 \cdot R_{\min}}{E^*}, \qquad
+  E^* \equiv \frac{E}{2(1-\nu^2)} \tag{1}$$
+
+여기서 A ≈ 200 은 as-prepared (low-flaw) ceramic 표면의 무차원 기하
+상수이다 (Lawn 1998 §3.4). 임계점 이후 손상 진행은 Lawn 의 다단계
+분류 (Lawn 1998 Table 3.4) 로 parameterise 되며, 연속된 손상 모드가
+P_c 의 점진적 배수에서 출현한다:
+
+| 단계 | Force 범위 | 물리 |
+|---|---|---|
+| Intact | F < P_c | Crack 없음 |
+| Microcrack | P_c ≤ F < 3·P_c | 첫 cone crack 시작 |
+| Multi-crack | 3·P_c ≤ F < 11·P_c | 다수 cone/radial cracks |
+| Fragmentation | 11·P_c ≤ F < 32·P_c | 표면 chunk 분리 |
+| Pulverization | F ≥ 32·P_c | 입자 분해 |
+
+식 (1) 에서 두 가지 결과가 재해석의 중심이다. 첫째, P_c 가 R_min 에
+선형 비례하므로 작은 입자는 비례적으로 작은 load 에서 깨지지만 더
+큰 *상대* overlap δ/R 을 견딘다 — brittle solid 의 잘 알려진 "크기
+효과". 둘째, P_c 가 K_IC 에 제곱 비례하므로 다결정 (PC) NCM 과
+단결정 (SC) NCM 은 본질적으로 다른 fracture threshold 를 갖는다. 본
+연구는 중심값 쌍 (K_IC^PC, K_IC^SC) = (0.3, 1.0) MPa·m^0.5 를 채택
+하며 (Quinn 2020; Liu 2020), 이는 동일 R 에서 AM_P-AM_P 와 AM_S-AM_S
+접촉 사이에 약 11× 의 P_c 비를 부여한다. 혼합 AM_P-AM_S 접촉에는
+기하평균 K_IC = 0.55 MPa·m^0.5 를 적용한다. Young's modulus 는
+E_AM = 140 GPa (Xu 2017, NCM811 nanoindentation; project-wide DEM
+입력값과 일관) 로, Poisson 비는 ν = 0.25 (전형적 ceramic) 로 고정한다.
+
+**Force-기반 분류.** 본 연구의 DEM 은 LIGGGHTS 의 hooke/hysteresis
+접촉 모델을 사용하며 비선형 Hertz 가 아니다. 따라서 overlap δ 와
+접촉력 F 사이에 단순한 δ ∝ F^(2/3) 관계가 성립하지 않고, 대신
+선형 Hooke 관계 F = k_n · δ 가 적용된다 (k_n 은 E_AM = 140 GPa 에
+calibrated). 본 연구는 DEM 에서 직접 측정된 normal force F 를 Lawn
+의 *force* 배수 (1, 3, 11, 32) 를 통해 P_c 와 비교한다. 이 경로는
+AM-AM 접촉에 대해 *내부적으로 일관* 하다: DEM force F 와 Auerbach
+P_c 가 모두 동일한 물리 E_AM 으로부터 계산되므로 Hooke-vs-Hertz
+form-factor 불일치가 비율 F/P_c 에서 상쇄된다. Softened SE Young's
+modulus (E_SE = 1.35 GPa) 는 본 식에 들어가지 않는다 — 본 brittle
+fracture 분류는 AM-AM 접촉에만 적용되며, SE 의 plastic 응답은 별도의
+Tabor framework 으로 처리된다.
+
+δ-기반 분류기 (식 (2): δ_c = (3 P_c / 4 E^* √R^*)^(2/3) 와 δ-배수
+1, 2, 5, 10 사용) 도 보조 cross-check 로 유지된다. 두 분류 사이의
+차이는 우리 케이스에서의 Hooke-Hertz 편차를 정량화한다. 실제로 두
+분류 모두 케이스별 stage 분포를 단계당 Lawn ±50 % 불확실성 (Lawn
+1998 §3.4) 이내에서 동일하게 산출한다.
+
+**Indicator-only 철학.** 식 (1) 과 Lawn threshold 들은 DEM 접촉 필드에
+적용되지만, 어떤 특정 접촉이 *그 수준의 물리적 침투나 load 를
+나타낸다고 주장하기 위함이 아니다*. 오히려 각 접촉을, *만약 brittle-
+fracture 메커니즘이 물리적으로 활성화되어 있었다면* 관측되었을
+damage stage 로 번역하기 위함이다. 따라서 classifier 출력은
+**응력-집중 indicator** — 고정된 다섯-원소 어휘에서 추출된 per-
+contact 라벨 — 이며, 의미 있는 양은 앙상블에서의 통계적 분포이다.
+다음 절은 이 분포가 실험적 NCM cracking 관측을 정량적으로 재현함을
+보여 indicator-only 해석을 검증한다.
+
+---
+
+<!-- Section 3 will be appended below after review. -->

@@ -28,7 +28,8 @@ from collections import defaultdict
 SCRIPTS = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS))
 from fracture_model import (                                # noqa: E402
-    fracture_classify_sim, ALL_STAGES, STAGE_RANK, worse,
+    fracture_classify_sim, fracture_classify_force_sim,
+    ALL_STAGES, STAGE_RANK, worse,
 )
 warnings.filterwarnings('ignore')
 
@@ -84,11 +85,16 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
             }
 
     # ── Per-contact fracture-stage tally (Auerbach + Lawn) ─────────────
+    # Two parallel classifications:
+    #   δ-based  : uses LIGGGHTS overlap, Hertzian-equivalent (legacy)
+    #   force-based : uses LIGGGHTS fn directly, model-agnostic (primary)
     am_am_overlaps = []
     stage_counts = {f'n_{s}_AM_AM': 0 for s in ALL_STAGES}
-    # Per-pair-type breakdown (AM_P-AM_P, AM_S-AM_S, mixed)
+    stage_counts_force = {f'n_{s}_force_AM_AM': 0 for s in ALL_STAGES}
     pair_stage_counts = {pt: {s: 0 for s in ALL_STAGES}
                          for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')}
+    pair_stage_counts_force = {pt: {s: 0 for s in ALL_STAGES}
+                                for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')}
 
     for _, c in contacts_df.iterrows():
         i1, i2 = int(c['id1']), int(c['id2'])
@@ -116,7 +122,7 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
                 am_info[i2]['am_am_overlap_max'] = max(
                     am_info[i2]['am_am_overlap_max'], ratio)
 
-                # Brittle fracture stage classification
+                # Brittle fracture stage classification — δ-based (legacy)
                 pair_label = '-'.join(sorted([am_info[i1]['type'],
                                                am_info[i2]['type']]))
                 stage, _dc, mult = fracture_classify_sim(
@@ -124,11 +130,25 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
                 stage_counts[f'n_{stage}_AM_AM'] += 1
                 if pair_label in pair_stage_counts:
                     pair_stage_counts[pair_label][stage] += 1
-                # Track per-particle worst stage
+                # Track per-particle worst stage (δ-based)
                 for pid in (i1, i2):
                     if STAGE_RANK[stage] > STAGE_RANK[am_info[pid]['worst_stage']]:
                         am_info[pid]['worst_stage'] = stage
                         am_info[pid]['worst_mult']  = mult
+
+                # ── Force-based classification (primary) ──
+                # Read fn (normal force) — LIGGGHTS reports SI Newtons.
+                fn = float(c.get('fn', 0) or 0)
+                if fn <= 0:
+                    fn = ((c.get('fn_x', 0) or 0) ** 2
+                          + (c.get('fn_y', 0) or 0) ** 2
+                          + (c.get('fn_z', 0) or 0) ** 2) ** 0.5
+                if fn > 0:
+                    stage_f, _pc, _mult_f = fracture_classify_force_sim(
+                        fn, r_min, contact_type=pair_label, scale=scale)
+                    stage_counts_force[f'n_{stage_f}_force_AM_AM'] += 1
+                    if pair_label in pair_stage_counts_force:
+                        pair_stage_counts_force[pair_label][stage_f] += 1
 
         elif (t1 in am_types and t2 in se_types) or \
              (t2 in am_types and t1 in se_types):
@@ -149,6 +169,7 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
             worst_mult_AMS.append(info['worst_mult'])
 
     n_total_amam = sum(stage_counts.values()) or 1
+    n_total_amam_force = sum(stage_counts_force.values()) or 1
     out = {
         'n_AMP': len(ratios_AMP),
         'n_AMS': len(ratios_AMS),
@@ -180,13 +201,31 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
         'AMS_worst_mult_median':  float(np.median(worst_mult_AMS)) if worst_mult_AMS else None,
         'AMS_worst_mult_max':     float(np.max(worst_mult_AMS))    if worst_mult_AMS else None,
     }
-    # Per-pair-type breakdown columns
+    # Per-pair-type breakdown columns (δ-based)
     for pt, sc in pair_stage_counts.items():
         n_pair = sum(sc.values()) or 1
         for s, n in sc.items():
             out[f'n_{s}_{pt}']            = n
             out[f'frac_{s}_{pt}_pct']     = round(100.0 * n / n_pair, 2)
         out[f'n_total_{pt}'] = sum(sc.values())
+
+    # ── Force-based aggregate columns ────────────────────────
+    out.update(stage_counts_force)
+    out['n_total_AM_AM_force'] = n_total_amam_force
+    out['frac_microcrack_force_pct']    = round(100.0 * stage_counts_force['n_microcrack_force_AM_AM']    / n_total_amam_force, 2)
+    out['frac_multicrack_force_pct']    = round(100.0 * stage_counts_force['n_multicrack_force_AM_AM']    / n_total_amam_force, 2)
+    out['frac_fragmentation_force_pct'] = round(100.0 * stage_counts_force['n_fragmentation_force_AM_AM'] / n_total_amam_force, 2)
+    out['frac_pulverization_force_pct'] = round(100.0 * stage_counts_force['n_pulverization_force_AM_AM'] / n_total_amam_force, 2)
+    out['fracture_index_force'] = round(
+        (stage_counts_force['n_fragmentation_force_AM_AM'] +
+         stage_counts_force['n_pulverization_force_AM_AM']) / n_total_amam_force, 4)
+    # Force-based per-pair-type breakdown
+    for pt, sc in pair_stage_counts_force.items():
+        n_pair = sum(sc.values()) or 1
+        for s, n in sc.items():
+            out[f'n_{s}_force_{pt}']        = n
+            out[f'frac_{s}_force_{pt}_pct'] = round(100.0 * n / n_pair, 2)
+        out[f'n_total_force_{pt}'] = sum(sc.values())
     return out
 
 
@@ -341,7 +380,7 @@ def main():
             print(f'    {pt:12s}  {sev_pct:5.1f}%  '
                   f'(of {int(tot):,} contacts)', flush=True)
 
-        print(f'\n  Verdict — Brittle reframe:', flush=True)
+        print(f'\n  Verdict — Brittle reframe (δ-based):', flush=True)
         median_idx = float(np.median(idx)) if len(idx) > 0 else 0
         if median_idx > 0.30:
             print('    🔴 Median fracture_index > 30% — DEM ensembles severely '
@@ -353,6 +392,42 @@ def main():
         else:
             print('    🟢 Median fracture_index < 10% — minor caveat suffices.',
                   flush=True)
+
+    # ── Force-based parallel summary ──
+    n_total_force = df['n_total_AM_AM_force'].sum() if 'n_total_AM_AM_force' in df.columns else 0
+    if n_total_force > 0:
+        print('\n  ── Force-based classification (model-agnostic, primary) ──',
+              flush=True)
+        print(f'  Aggregate over all {len(df)} cases '
+              f'({int(n_total_force):,} AM-AM contacts with fn>0):', flush=True)
+        for s in ('intact', 'microcrack', 'multicrack',
+                   'fragmentation', 'pulverization'):
+            col = f'n_{s}_force_AM_AM'
+            if col not in df.columns: continue
+            tot = int(df[col].sum())
+            pct = 100.0 * tot / max(n_total_force, 1)
+            print(f'    {s:14s}  {tot:>8,d}  ({pct:5.1f}%)', flush=True)
+
+        if 'fracture_index_force' in df.columns:
+            idx_f = df['fracture_index_force'].dropna()
+            if len(idx_f) > 0:
+                print(f'\n  fracture_index_force '
+                      f'(force-based severe fraction):', flush=True)
+                print(f'    median: {np.median(idx_f):.3f}  '
+                      f'mean: {np.mean(idx_f):.3f}  '
+                      f'max: {np.max(idx_f):.3f}', flush=True)
+
+        print(f'\n  Severity by pair type (force-based):', flush=True)
+        for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S'):
+            col_frag = f'n_fragmentation_force_{pt}'
+            col_pul  = f'n_pulverization_force_{pt}'
+            col_tot  = f'n_total_force_{pt}'
+            if col_tot not in df.columns: continue
+            tot = df[col_tot].sum()
+            if tot <= 0: continue
+            sev_pct = 100.0 * (df[col_frag].sum() + df[col_pul].sum()) / tot
+            print(f'    {pt:12s}  {sev_pct:5.1f}%  '
+                  f'(of {int(tot):,} contacts)', flush=True)
 
     # Save full results
     out = Path('docs/figures/physics_regime')
