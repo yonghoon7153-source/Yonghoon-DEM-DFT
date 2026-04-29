@@ -130,9 +130,9 @@ def compute_tau_R(case_dir, type_map, scale=1000.0, n_pairs=200):
 
     # Build NetworkX graph with two weights
     G = nx.Graph()
-    # Atom positions for distance computation
-    pos = {a['id']: (a['x'], a['y'], a['z']) for a in atoms_raw}
-    radii = {a['id']: a['radius'] for a in atoms_raw}
+    # Atom positions for distance computation (atoms_raw is dict id→row)
+    pos = {aid: (a['x'], a['y'], a['z']) for aid, a in atoms_raw.items()}
+    radii = {aid: a['radius'] for aid, a in atoms_raw.items()}
 
     for e in edges:
         i, j = e['id1'], e['id2']
