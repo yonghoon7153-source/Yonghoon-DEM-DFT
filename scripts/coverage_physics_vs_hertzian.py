@@ -33,6 +33,7 @@ import pandas as pd
 SCRIPTS_DIR = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS_DIR))
 from plastic_coverage import film_area_from_overlap  # noqa: E402
+from dem_analysis_core import SHAPE_FACTOR  # noqa: E402
 
 WEBAPP = Path(__file__).parent.parent / 'webapp'
 
@@ -264,32 +265,46 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
     # Convert to μm²: multiply by scale² (if sim units are m and scale=1000)
     area_conv = scale * scale  # sim m² → μm²
     rows = []
-    covs_by_type = defaultdict(lambda: {'hertz': [], 'phys': []})
+    # Three coverage versions per AM type:
+    #   hertz : Hertzian numerator + 4πr² surface
+    #   phys  : Physics numerator + 4πr² surface (raw, no roughness)
+    #   rough : Physics numerator + factor × 4πr² surface (B3 shape factor)
+    covs_by_type = defaultdict(lambda: {'hertz': [], 'phys': [], 'rough': []})
     for aid, r_sim in id_to_r.items():
         t = id_to_t.get(aid)
         if t not in am_types:
             continue
         lbl = type_map.get(t, f'T{t}')
         surf = am_surf.get(aid, 0.0)
+        sf = SHAPE_FACTOR.get(lbl, 1.0)
+        surf_rough = sf * surf
         am_am = am_am_hertz.get(aid, 0.0)
         free = max(surf - am_am, 0.0)
+        free_rough = max(surf_rough - am_am, 0.0)
         A_h = am_se_hertz.get(aid, 0.0)
         A_p = am_se_phys.get(aid, 0.0)
-        cov_h = min(A_h / free * 100, 100.0) if free > 0 else 0.0
-        cov_p = min(A_p / free * 100, 100.0) if free > 0 else 0.0
+        cov_h     = min(A_h / free       * 100, 100.0) if free       > 0 else 0.0
+        cov_p     = min(A_p / free       * 100, 100.0) if free       > 0 else 0.0
+        cov_rough = min(A_p / free_rough * 100, 100.0) if free_rough > 0 else 0.0
         covs_by_type[lbl]['hertz'].append(cov_h)
         covs_by_type[lbl]['phys'].append(cov_p)
+        covs_by_type[lbl]['rough'].append(cov_rough)
         rows.append({
             'am_id': aid,
             'am_type': lbl,
+            'shape_factor': sf,
             'radius_um': round(r_sim * scale, 3),
-            'surface_area_um2':       round(surf * area_conv, 3),
-            'A_AM_SE_hertzian_um2':   round(A_h * area_conv, 4),
-            'A_AM_SE_physics_um2':    round(A_p * area_conv, 4),
-            'coverage_hertzian_pct':  round(cov_h, 3),
-            'coverage_physics_pct':   round(cov_p, 3),
+            'surface_area_um2':         round(surf * area_conv, 3),
+            'surface_area_rough_um2':   round(surf_rough * area_conv, 3),
+            'A_AM_SE_hertzian_um2':     round(A_h * area_conv, 4),
+            'A_AM_SE_physics_um2':      round(A_p * area_conv, 4),
+            'coverage_hertzian_pct':    round(cov_h, 3),
+            'coverage_physics_pct':     round(cov_p, 3),
+            'coverage_physics_rough_pct': round(cov_rough, 3),
             'delta_pct_physics_vs_hertzian': round(
                 ((cov_p - cov_h) / cov_h * 100) if cov_h > 0 else 0, 2),
+            'delta_pct_rough_vs_physics': round(
+                ((cov_rough - cov_p) / cov_p * 100) if cov_p > 0 else 0, 2),
         })
 
     # Summary
@@ -299,14 +314,19 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
             continue
         h = np.array(arrs['hertz'])
         p = np.array(arrs['phys'])
+        rg = np.array(arrs['rough'])
         summary[lbl] = {
             'n':              int(len(h)),
             'hertzian_mean':  float(np.mean(h)),
             'hertzian_std':   float(np.std(h)),
             'physics_mean':   float(np.mean(p)),
             'physics_std':    float(np.std(p)),
+            'rough_mean':     float(np.mean(rg)),
+            'rough_std':      float(np.std(rg)),
             'delta_mean_pct': float((np.mean(p) - np.mean(h)) / np.mean(h) * 100)
                                 if np.mean(h) > 0 else 0.0,
+            'delta_rough_pct': float((np.mean(rg) - np.mean(p)) / np.mean(p) * 100)
+                                if np.mean(p) > 0 else 0.0,
         }
 
     # Write per-AM CSV
@@ -335,14 +355,23 @@ def compute_case(cid: str, case_dir: Path, type_map: dict, scale: float = 1000.0
                     m[f'{base}_mean_physics']    = round(s['physics_mean'], 3)
                     m[f'{base}_std_physics']     = round(s['physics_std'], 3)
                     m[f'{base}_delta_pct_physics'] = round(s['delta_mean_pct'], 2)
+                    # ── B3 shape-factor (roughness) version ──
+                    m[f'{base}_mean_physics_rough'] = round(s['rough_mean'], 3)
+                    m[f'{base}_std_physics_rough']  = round(s['rough_std'], 3)
+                    m[f'{base}_delta_pct_rough']    = round(s['delta_rough_pct'], 2)
                 # Aggregate total-AM coverage ("coverage_AM_mean_physics")
                 all_h = [v for arrs in covs_by_type.values() for v in arrs['hertz']]
                 all_p = [v for arrs in covs_by_type.values() for v in arrs['phys']]
+                all_r = [v for arrs in covs_by_type.values() for v in arrs['rough']]
                 if all_h:
                     m['coverage_AM_mean_physics'] = round(float(np.mean(all_p)), 3)
                     m['coverage_AM_delta_pct_physics'] = round(
                         float((np.mean(all_p) - np.mean(all_h)) /
                               max(np.mean(all_h), 1e-9) * 100), 2)
+                    m['coverage_AM_mean_physics_rough'] = round(float(np.mean(all_r)), 3)
+                    m['coverage_AM_delta_pct_rough'] = round(
+                        float((np.mean(all_r) - np.mean(all_p)) /
+                              max(np.mean(all_p), 1e-9) * 100), 2)
                 # Global area totals (Physics mode) — feeds UI rows
                 #   "AM-SE Total(μm²)" and "SE-SE Total(μm²)".
                 # Keys match the existing Hertzian keys + _physics suffix.

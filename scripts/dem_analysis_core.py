@@ -17,6 +17,19 @@ from collections import defaultdict
 import networkx as nx
 
 
+# ─── Shape factor (B3 patch) ──────────────────────────────────────────────
+# Roughness/non-sphericity factor: real surface area = factor × 4πr²
+# Polycrystalline NCM: secondary particle is an aggregate of primaries, so the
+# accessible surface is ~40% larger than a perfect sphere (Quinn 2020, Lim 2017).
+# Single-crystal NCM is closer to a faceted sphere (Liu 2020, Wang 2022).
+# Quenched-glass SE is near-spherical with mild surface roughness (Sakuda 2013).
+SHAPE_FACTOR = {
+    'AM_P': 1.40,   # polycrystalline secondary
+    'AM_S': 1.10,   # single crystal
+    'SE':   1.05,   # quenched glass
+}
+
+
 # ─── Porosity & Thickness ──────────────────────────────────────────────────
 
 def calc_porosity(atoms, plate_z, box_xy=0.05):
@@ -92,10 +105,13 @@ def calc_interface_area(atoms, contacts, type_map, scale):
 
 # ─── Coverage ──────────────────────────────────────────────────────────────
 
-def calc_coverage(atoms, contacts, type_map, scale):
+def calc_coverage(atoms, contacts, type_map, scale, apply_shape_factor=False):
     """
     Coverage = SE접촉면적 / (전체표면적 - AM-AM접촉면적) per AM particle.
     Returns per-type mean, std, min, max.
+
+    apply_shape_factor: if True, multiply 4πr² by SHAPE_FACTOR[label] to
+    account for surface roughness / non-sphericity (B3 patch).
     """
     am_types = [k for k, v in type_map.items() if 'AM' in v]
     se_types = [k for k, v in type_map.items() if v == 'SE']
@@ -106,7 +122,9 @@ def calc_coverage(atoms, contacts, type_map, scale):
 
     for aid, a in atoms.items():
         if a['type'] in am_types:
-            am_surf[aid] = 4 * np.pi * a['radius']**2
+            lbl = type_map.get(a['type'], '')
+            factor = SHAPE_FACTOR.get(lbl, 1.0) if apply_shape_factor else 1.0
+            am_surf[aid] = factor * 4 * np.pi * a['radius']**2
 
     for c in contacts:
         if c['id1'] not in atoms or c['id2'] not in atoms:
@@ -209,19 +227,12 @@ def calc_percolation(atoms, contacts, se_types, plate_z, boundary_factor=2.0, bo
                 'n_components': 0, 'largest_pct': 0,
                 'top_reachable_se': set(), 'bottom_se': set(), 'top_se': set(), 'graph': nx.Graph()}
 
-    # Use minimum SE radius for boundary definition (robust for polydisperse)
-    r_se = min(atoms[aid]['radius'] for aid in se_ids)
-    z_bottom = 0.0 + r_se * boundary_factor
-    z_top = plate_z - r_se * boundary_factor
-
-    # Safety for thin electrodes: ensure z_bottom < z_top
-    if z_bottom >= z_top:
-        z_bottom = plate_z * 0.10
-        z_top = plate_z * 0.90
-    # If still too narrow or too few particles, use percentage-based boundaries
+    # ── C4 patch: per-particle plate-contact test ───────────────────────
+    # Each particle judged by its OWN radius — no global threshold.
+    # boundary_factor=2.0 keeps prior behavior: center within 1 radius of
+    # the plate. r_SE-independent → fair across D0.5 vs D1.5 cases.
     G = nx.Graph()
     G.add_nodes_from(se_ids)
-    # box_x, box_y passed as parameters (no longer hardcoded)
     for c in contacts:
         if c['id1'] in atoms and c['id2'] in atoms:
             if atoms[c['id1']]['type'] in se_types and atoms[c['id2']]['type'] in se_types:
@@ -229,8 +240,10 @@ def calc_percolation(atoms, contacts, se_types, plate_z, boundary_factor=2.0, bo
                 d = _periodic_dist(atoms[c['id1']], atoms[c['id2']], box_x, box_y)
                 G.add_edge(c['id1'], c['id2'], distance=d)
 
-    bottom_se = {aid for aid in se_ids if atoms[aid]['z'] <= z_bottom}
-    top_se = {aid for aid in se_ids if atoms[aid]['z'] >= z_top}
+    bottom_se = {aid for aid in se_ids
+                 if atoms[aid]['z'] <= atoms[aid]['radius'] * boundary_factor}
+    top_se = {aid for aid in se_ids
+              if atoms[aid]['z'] >= plate_z - atoms[aid]['radius'] * boundary_factor}
 
     # Fallback L1: if boundary too strict, widen to 15% / 85% of plate_z
     if len(bottom_se) < 3 or len(top_se) < 3:
