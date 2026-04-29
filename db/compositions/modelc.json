@@ -115,6 +115,55 @@
     "notes": "Li-Cl: comp1(2.607)>ModelC(2.552)>comp3(2.506). P-S=2.063≈comp3(2.064)→PS4 invariant."
   },
 
+  "v2_postproc": {
+    "V0_structure": "v103 (closest to BM3 V0 = 983.58 A^3 at Cl-only Li5.4 family modelC)",
+    "structure_xyz": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/v2_postproc/gabia_pkg/modelc_v2_V0.xyz",
+    "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/v2_postproc/nscf_dos/",
+    "completed_date": "2026-04-29",
+    "scf_done": true,
+    "nscf_done": true,
+    "dos_done": true,
+    "projwfc_done": true,
+    "filpdos_n_files": 152,
+    "projwfc_out_size_MB": 145,
+    "v2_bond_analysis_q2_over_r": {
+      "method": "q1*q2/r Coulomb proxy with v1 Bader charges (Li=+0.87, P=+4.50, S=-1.70, Cl=-0.87)",
+      "k_constant_eV_A": 14.4,
+      "P-S": {
+        "n_bonds": 20, "r_mean_A": 2.062, "r_std_A": 0.014,
+        "r_min_A": 2.034, "r_max_A": 2.089,
+        "q1q2_over_r_eV_mean": 53.42, "q1q2_over_r_eV_std": 0.37,
+        "type": "PS4 covalent (Pauling formal Q overestimates ionic but rank correct)"
+      },
+      "Li-S": {
+        "n_bonds": 75, "r_mean_A": 2.553, "r_std_A": 0.283,
+        "r_min_A": 2.327, "r_max_A": 3.497,
+        "q1q2_over_r_eV_mean": 8.43, "q1q2_over_r_eV_std": 0.75,
+        "type": "ionic (high spread = vacancy disorder Li5.4 family)"
+      },
+      "Li-Cl": {
+        "n_bonds": 42, "r_mean_A": 2.568, "r_std_A": 0.168,
+        "r_min_A": 2.414, "r_max_A": 3.417,
+        "q1q2_over_r_eV_mean": 4.26, "q1q2_over_r_eV_std": 0.24,
+        "type": "ionic (weakest of three)"
+      },
+      "ranking_strongest_to_weakest": "P-S (53.4 eV) >>>> Li-S (8.4 eV) > Li-Cl (4.3 eV)",
+      "interpretation": [
+        "PS4 tetrahedron is the mechanical backbone (covalent dominant)",
+        "Li sublattice provides ionic glue (intermediate strength)",
+        "Halide (Cl) plays charge-balancing role (weakest)",
+        "This is consistent with elastic moduli: B0/G dominated by PS4 framework integrity"
+      ]
+    },
+    "v1_v2_consistency_check": {
+      "P-S": "v1 2.063 -> v2 2.062 (delta 0.001 A, identical within DFT precision)",
+      "Li-S": "v1 2.514 -> v2 2.553 (delta +0.04 A, slight increase from v2 deeper basin / vacancy redistribution)",
+      "Li-Cl": "v1 2.552 -> v2 2.568 (delta +0.02 A, consistent)",
+      "verdict": "v2 V0 structure is consistent with v1 reference; PS4 framework invariant; Li-S elongation tracks v2 EOS softening (B0 21.7 -> 19.59 GPa)"
+    }
+  },
+
+
   "pipeline_v2": {
     "halogen_screening": {
       "n_configs": 45,
