@@ -266,19 +266,92 @@
       "E_pa_range_eV": "-4.34844 to -4.34342"
     },
     "phase_2_5_anneal_track1A": {
-      "status": "RUNNING_2026-04-28",
-      "current_state": "Frame 1/10 in progress (cfg141, E_before=-521.8122 eV)",
-      "process_pids": {"anneal": 321684, "auto_restart": 321685},
+      "status": "DONE_2026-04-29",
+      "completion_date": "2026-04-29 ~16:00 KST",
+      "current_state": "ALL 4 unique frames complete",
+      "process_pids": {"anneal": 337737, "auto_restart": 321685},
       "log": "gabia /data/work/nd_doped_modelc/2_5_anneal_top.log",
-      "protocol": "500K NVT 50ps + 5ps quench × 10 frames",
-      "expected_completion": "~30 hr from start (Frame 1 launched 2026-04-28)",
-      "previous_attempt": "Stuck at Frame 1 due to Track 2 UMA conflict. Cleaned restart 2026-04-28.",
-      "watch_files": ["2_5_anneal_top.log", "auto_restart_phase2_5.log"]
+      "protocol": "500K NVT 20ps + 5ps 300K quench + LBFGS final relax (timestep 0.5fs, modified protocol with safety check + chunked progress)",
+      "total_wall_time": "~5h 53min for 4 frames",
+      "input_combined_top10": {
+        "source": "2_mlip_screen/combined_ranking_for_anneal.json",
+        "track1A_count": 5,
+        "track1B_count": 5,
+        "unique_after_dedup_by_Nd_vac": 4
+      },
+      "frame_results": {
+        "frame_1_cfg141_track1A": {
+          "Nd_pair": [1, 82], "vac": [5, 6, 63, 71], "O_indices": [37, 95, 109],
+          "E_before_eV": -521.8122, "E_after_eV": -521.9585,
+          "dE_meV": -146.3,
+          "interpretation": "Track 1A near-ground state, small anneal gain"
+        },
+        "frame_2_cfg29_track1B": {
+          "Nd_pair": [23, 74], "vac": [19, 77, 84, 86], "O_at_4d": "extracted from manifest",
+          "E_before_eV": -519.80, "E_after_eV": -520.0333,
+          "dE_meV": -232.1,
+          "interpretation": "Track 1B mid-metastable"
+        },
+        "frame_3_cfg140_track1B": {
+          "Nd_pair": [20, 63], "vac": [1, 6, 68, 72],
+          "E_before_eV": -519.65, "E_after_eV": -520.0684,
+          "dE_meV": -325.8,
+          "interpretation": "Track 1B higher metastable"
+        },
+        "frame_4_cfg23_track1B": {
+          "Nd_pair": [23, 74], "vac": [2, 12, 64, 66],
+          "E_before_eV": -519.6539, "E_after_eV": -520.3255,
+          "dE_meV": -671.6,
+          "interpretation": "MOST METASTABLE Track 1B config — biggest anneal rearrangement; even with -672 meV gain still 1.63 eV/cell ABOVE Track 1A champion"
+        }
+      },
+      "final_ranking": [
+        {"rank": 1, "cfg": "cfg141", "track": "1A", "E_eV": -521.9585, "Nd": [1, 82]},
+        {"rank": 2, "cfg": "cfg23", "track": "1B", "E_eV": -520.3255, "Nd": [23, 74]},
+        {"rank": 3, "cfg": "cfg140", "track": "1B", "E_eV": -520.0684, "Nd": [20, 63]},
+        {"rank": 4, "cfg": "cfg29", "track": "1B", "E_eV": -520.0333, "Nd": [23, 74]}
+      ],
+      "track1A_vs_1B_post_anneal": {
+        "track1A_best_E_eV": -521.9585,
+        "track1B_best_E_eV": -520.3255,
+        "delta_per_cell_eV": 1.633,
+        "delta_per_O_defect_eV": 0.544,
+        "initial_MLIP_delta_per_O_eV": 0.67,
+        "anneal_reduction_per_O_eV": 0.13,
+        "verdict": "Track 1A maintains decisive thermodynamic advantage even after annealing; gap shrinks slightly (0.67 -> 0.54 eV/O) due to 1B partial relaxation but never crosses threshold"
+      },
+      "boltzmann_at_anneal_temp": {
+        "T_K": 500,
+        "kT_eV": 0.043,
+        "ratio_1B_over_1A": "exp(-1.633/0.043) = exp(-37.9) = 4e-17",
+        "implication_at_synthesis_T": "Even at 1000K synthesis quench, P(1B)/P(1A) ~ 1e-8 = essentially 100% Track 1A formation"
+      },
+      "cfg23_metastability_finding": {
+        "observation": "cfg23 (Track 1B, Nd=[23,74], vac=[2,12,64,66]) showed largest anneal gain dE = -671.6 meV, jumping from rank #4 to #2",
+        "comparison": "cfg29 (same Nd=[23,74], different vac=[19,77,84,86]) only -232 meV gain",
+        "key_difference": "vacancy positioning relative to Nd determines initial metastability magnitude",
+        "implication": "Track 1B configurations exhibit wide range of anneal stabilization (-200 to -700 meV) depending on vacancy-Nd geometry; even maximum-gain cfg23 cannot reach Track 1A energy (still 1.63 eV/cell above)",
+        "paper_supplementary_value": "demonstrates that Track 1B is not a single basin but a family of metastable basins, all higher than Track 1A",
+        "physical_origin_hypothesis": [
+          "Closer vacancy to Nd: stronger initial electrostatic distortion -> higher starting energy",
+          "Anneal allows vacancy migration + Nd local environment relaxation",
+          "Different vacancy patterns explore different local minima in 1B basin",
+          "All converge to higher E than 1A because Nd@P fundamentally less stable than Nd@Li"
+        ]
+      },
+      "auto_saved_outputs": {
+        "anneal_ranking_json": "gabia /data/work/nd_doped_modelc/2_5_anneal/anneal_ranking.json",
+        "champion_xyz_per_frame": "gabia /data/work/nd_doped_modelc/2_5_anneal/champions/frame??_cfg???.xyz",
+        "top5_for_dft": "gabia /data/work/nd_doped_modelc/3_dft_verify/top5_for_dft/"
+      },
+      "next_action": "Phase 3 DFT+U+ISPIN=2 validation on top 5 (Track 1A cfg141 + 4 Track 1B annealed)"
     },
     "phase_3_dft_verify_track1A": {
-      "status": "PENDING",
-      "next": "After Phase 2.5 anneal completes, top 5-10 → DFT+U + ISPIN=2 on KISTI",
-      "expected_cost": "~5 days KISTI GPU"
+      "status": "READY_TO_START",
+      "input_dir": "gabia /data/work/nd_doped_modelc/3_dft_verify/top5_for_dft/",
+      "next": "Transfer to KISTI, generate QE input with DFT+U Hubbard_U(Nd 4f)=6.0 eV + ISPIN=2 + start_mag(Nd)=0.6, run pw.x relax",
+      "expected_cost": "~5 days KISTI GPU per config x 5 configs",
+      "purpose": "Validate MLIP 0.54 eV/O Track 1A advantage with DFT level"
     },
     "phase_3_dft_verify_track1B": {
       "status": "PENDING",
