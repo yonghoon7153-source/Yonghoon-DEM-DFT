@@ -848,6 +848,27 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=600)
         log.append({'step': 'Advanced Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
 
+    # ── Auto-DB hook ─────────────────────────────────────────────────────
+    # Trigger an incremental rebuild of docs/db/metrics_master.csv so the
+    # new case (and its fracture-stage data emitted by analyze_contacts.py
+    # under the 'fracture' results block) lands in the master table without
+    # any manual run. Background Popen — does not block the upload UI.
+    # Incremental mode reuses unchanged cases via the mtime cache, so the
+    # actual work is bounded by the new/changed full_metrics.json files
+    # (typically a few seconds for one case).
+    try:
+        subprocess.Popen(
+            ['python3', os.path.join(scripts, 'build_metrics_db.py')],
+            cwd=os.path.dirname(scripts),
+            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+        )
+        log.append({'step': 'Auto-DB Rebuild (background)',
+                    'stdout': 'incremental build_metrics_db dispatched',
+                    'stderr': '', 'rc': 0})
+    except Exception as e:
+        log.append({'step': 'Auto-DB Rebuild (background)',
+                    'stdout': '', 'stderr': str(e), 'rc': 1})
+
     return {'success': True, 'log': log}
 
 def generate_report(case_id, case_name='', notes=''):

@@ -496,6 +496,15 @@ def save_results(results, atoms_raw, contacts_raw, df_atom, df_contact,
     # The previous code here read full_metrics.json before it was written on
     # cold runs, so it never actually fired.)
 
+    # ── Auto-DB: flatten fracture-stage data into top-level metrics keys ──
+    # results['fracture'] is produced by run_full_analysis (Auerbach + Lawn
+    # 1998 classifier). Each key (n_intact_AM_AM, fracture_index_force, etc.)
+    # is written as a flat scalar so build_metrics_db absorbs it without
+    # nested-dict flattening logic.
+    fracture = (results.get('fracture') or {})
+    if fracture:
+        metrics.update(fracture)
+
     if warnings:
         metrics['warnings'] = warnings
         metrics['warning_count'] = len(warnings)

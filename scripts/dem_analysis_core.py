@@ -716,6 +716,145 @@ def calc_am_isolation_risk(atoms, contacts, type_map):
     return result
 
 
+# ─── Brittle Fracture Stage Classification ────────────────────────────────
+# Wraps fracture_model (Auerbach + Lawn 1998) to produce per-case AM-AM
+# fracture-stage statistics. Both δ-based (Hertzian-equivalent) and
+# force-based (model-agnostic, recommended for hooke/hysteresis DEM) are
+# computed in parallel so downstream tools can compare.
+
+def calc_fracture_stages(atoms, contacts, type_map, scale=1000.0):
+    """Per-case AM-AM brittle-fracture stage tally.
+
+    Output keys (all flat, ready to merge into full_metrics.json):
+      n_<stage>_AM_AM            δ-based count per stage
+      n_<stage>_force_AM_AM      force-based count per stage
+      n_total_AM_AM              total AM-AM contacts (δ-based denom)
+      n_total_AM_AM_force        total AM-AM contacts with fn>0
+      frac_<stage>_pct           δ-based stage share (%)
+      frac_<stage>_force_pct     force-based stage share (%)
+      fracture_index             δ-based (frag+pulv)/total ∈ [0,1]
+      fracture_index_force       force-based (frag+pulv)/total
+      n_<stage>_<pair_type>      per-pair-type breakdown (δ-based)
+      n_<stage>_force_<pair>     per-pair-type breakdown (force-based)
+      R_min_um_median_<pair>     median R_min for paper Section 2 footnote
+      P_c_mN_median_<pair>       median Auerbach onset force (mN)
+      F_mN_median_<pair>         median DEM normal force (mN, real units)
+      F_over_Pc_median_<pair>    median F/P_c ratio (key indicator)
+
+    Returns a dict (or empty dict if no AM-AM contacts).
+    """
+    # Local import to avoid circular dependency at module top
+    from fracture_model import (
+        fracture_classify_sim, fracture_classify_force_sim,
+        ALL_STAGES, STAGE_RANK,
+    )
+
+    am_types = {k for k, v in type_map.items() if 'AM' in v}
+    if not am_types:
+        return {}
+
+    stage_counts       = {f'n_{s}_AM_AM':       0 for s in ALL_STAGES}
+    stage_counts_force = {f'n_{s}_force_AM_AM': 0 for s in ALL_STAGES}
+    pair_types = ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')
+    pair_stage_counts       = {pt: {s: 0 for s in ALL_STAGES} for pt in pair_types}
+    pair_stage_counts_force = {pt: {s: 0 for s in ALL_STAGES} for pt in pair_types}
+    pair_samples = {pt: {'R_min': [], 'P_c': [], 'F': []} for pt in pair_types}
+
+    for c in contacts:
+        i1, i2 = int(c.get('id1', -1)), int(c.get('id2', -1))
+        if i1 not in atoms or i2 not in atoms: continue
+        a1, a2 = atoms[i1], atoms[i2]
+        t1, t2 = a1['type'], a2['type']
+        if t1 not in am_types or t2 not in am_types: continue
+        delta = float(c.get('delta', 0) or 0)
+        r_min = min(float(a1['radius']), float(a2['radius']))
+        if r_min <= 0: continue
+
+        pair_label = '-'.join(sorted([type_map.get(t1, ''), type_map.get(t2, '')]))
+
+        # δ-based stage
+        if delta > 0:
+            stage, _dc, _m = fracture_classify_sim(
+                delta, r_min, contact_type=pair_label, scale=scale)
+            stage_counts[f'n_{stage}_AM_AM'] += 1
+            if pair_label in pair_stage_counts:
+                pair_stage_counts[pair_label][stage] += 1
+
+        # Force-based stage (uses fn from contacts.csv; sim → real
+        # conversion happens inside fracture_classify_force_sim)
+        fn = float(c.get('fn', 0) or 0)
+        if fn <= 0:
+            fn = ((c.get('fn_x', 0) or 0) ** 2
+                  + (c.get('fn_y', 0) or 0) ** 2
+                  + (c.get('fn_z', 0) or 0) ** 2) ** 0.5
+        if fn > 0:
+            stage_f, P_c_N, _mult = fracture_classify_force_sim(
+                fn, r_min, contact_type=pair_label, scale=scale)
+            stage_counts_force[f'n_{stage_f}_force_AM_AM'] += 1
+            if pair_label in pair_stage_counts_force:
+                pair_stage_counts_force[pair_label][stage_f] += 1
+            if pair_label in pair_samples:
+                pair_samples[pair_label]['R_min'].append(r_min)
+                pair_samples[pair_label]['P_c'].append(P_c_N)
+                pair_samples[pair_label]['F'].append(fn)
+
+    n_total = sum(stage_counts.values())
+    n_total_force = sum(stage_counts_force.values())
+    if n_total == 0 and n_total_force == 0:
+        return {}
+
+    out: dict = {}
+    out.update(stage_counts)
+    out.update(stage_counts_force)
+    out['n_total_AM_AM']       = n_total
+    out['n_total_AM_AM_force'] = n_total_force
+
+    if n_total > 0:
+        for s in ALL_STAGES:
+            out[f'frac_{s}_pct'] = round(100.0 * stage_counts[f'n_{s}_AM_AM'] / n_total, 2)
+        out['fracture_index'] = round(
+            (stage_counts['n_fragmentation_AM_AM']
+             + stage_counts['n_pulverization_AM_AM']) / n_total, 4)
+    if n_total_force > 0:
+        for s in ALL_STAGES:
+            out[f'frac_{s}_force_pct'] = round(
+                100.0 * stage_counts_force[f'n_{s}_force_AM_AM'] / n_total_force, 2)
+        out['fracture_index_force'] = round(
+            (stage_counts_force['n_fragmentation_force_AM_AM']
+             + stage_counts_force['n_pulverization_force_AM_AM']) / n_total_force, 4)
+
+    # Per-pair-type breakdown
+    for pt, sc in pair_stage_counts.items():
+        n_pair = sum(sc.values())
+        out[f'n_total_{pt}'] = n_pair
+        for s, n in sc.items():
+            out[f'n_{s}_{pt}'] = n
+            out[f'frac_{s}_{pt}_pct'] = round(100.0 * n / max(n_pair, 1), 2)
+    for pt, sc in pair_stage_counts_force.items():
+        n_pair = sum(sc.values())
+        out[f'n_total_force_{pt}'] = n_pair
+        for s, n in sc.items():
+            out[f'n_{s}_force_{pt}'] = n
+            out[f'frac_{s}_force_{pt}_pct'] = round(100.0 * n / max(n_pair, 1), 2)
+
+    # Section-2 footnote medians (per-pair-type, real units)
+    for pt, samples in pair_samples.items():
+        if samples['R_min']:
+            out[f'R_min_um_median_{pt}'] = round(
+                float(np.median(samples['R_min']) / scale * 1e6), 3)
+        if samples['P_c']:
+            out[f'P_c_mN_median_{pt}'] = round(
+                float(np.median(samples['P_c']) * 1e3), 4)
+        if samples['F']:
+            f_real = [f / scale for f in samples['F']]
+            out[f'F_mN_median_{pt}'] = round(float(np.median(f_real) * 1e3), 4)
+            if samples['P_c']:
+                ratios = [(f / scale) / p for f, p in zip(samples['F'], samples['P_c']) if p > 0]
+                if ratios:
+                    out[f'F_over_Pc_median_{pt}'] = round(float(np.median(ratios)), 3)
+    return out
+
+
 # ─── Effective Ionic Conductivity ─────────────────────────────────────────
 
 def calc_effective_conductivity(atoms, perc_result, porosity, tortuosity_result, type_map, plate_z, box_xy=0.05, box_x=None, box_y=None):
@@ -944,6 +1083,20 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     if eff_cond:
         print(f"  σ_eff/σ_bulk: {eff_cond['sigma_ratio']:.4f} (φ_SE={eff_cond['phi_se']:.3f}, τ={eff_cond['tau']:.2f})")
 
+    # 14. Brittle fracture stages (Auerbach + Lawn 1998) — auto-DB
+    fracture = {}
+    try:
+        fracture = calc_fracture_stages(atoms_raw, contacts_raw, type_map, scale=scale)
+        if fracture:
+            n_total = fracture.get('n_total_AM_AM', 0)
+            n_severe = (fracture.get('n_fragmentation_AM_AM', 0)
+                        + fracture.get('n_pulverization_AM_AM', 0))
+            print(f"  Fracture stages: {n_total} AM-AM contacts, "
+                  f"{n_severe} severe (frag+pulv), "
+                  f"index={fracture.get('fracture_index', 0):.3f}")
+    except Exception as e:
+        print(f"  [warn] fracture-stage calc failed: {e}")
+
     return {
         'plate_z': plate_z,
         'plate_z_source': pz_source,
@@ -962,4 +1115,5 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
         'overlap_ratio': overlap,
         'am_isolation_risk': am_risk,
         'effective_conductivity': eff_cond,
+        'fracture': fracture,
     }
