@@ -212,11 +212,28 @@ def merge_supplementary(df: pd.DataFrame) -> pd.DataFrame:
             sup = sup.rename(columns={cid_col: 'case_id'})
 
         # Drop columns that already exist in master to avoid _x/_y collisions.
-        # The master row carries the canonical name/batch — supplementary
-        # copies are redundant and pandas refuses to merge with duplicates.
         for redundant in ('name', 'batch'):
             if redundant in sup.columns:
                 sup = sup.drop(columns=[redundant])
+
+        # Some supplementary tables (e.g. coverage_hertz_vs_physics_summary
+        # carries one row per (case_id, am_type)) have multiple rows per
+        # case_id. A naive left-merge then explodes the master row count.
+        # Aggregate to one row per case_id by averaging numeric columns and
+        # joining string columns with '|' so the merge stays 1:1.
+        if sup['case_id'].duplicated().any():
+            n_before = len(sup)
+            agg_funcs = {}
+            for c in sup.columns:
+                if c == 'case_id': continue
+                if pd.api.types.is_numeric_dtype(sup[c]):
+                    agg_funcs[c] = 'mean'
+                else:
+                    agg_funcs[c] = lambda s: '|'.join(
+                        sorted(set(str(v) for v in s.dropna())))
+            sup = sup.groupby('case_id', as_index=False).agg(agg_funcs)
+            print(f'  [info] {csv_path.name}: aggregated {n_before} rows '
+                  f'→ {len(sup)} rows (one per case)')
 
         # Prefix all remaining non-case columns with the source filename.
         prefix = csv_path.stem + '__'
@@ -373,14 +390,17 @@ def diff_snapshots(tag1: str, tag2: str, n_top: int = 30) -> pd.DataFrame:
     diffs = []
     for col in common:
         try:
+            # Force numeric conversion — boolean / string columns become NaN
             v1 = pd.to_numeric(df1m.loc[common_cases, col], errors='coerce')
             v2 = pd.to_numeric(df2m.loc[common_cases, col], errors='coerce')
         except KeyError:
             continue
+        # Skip non-numeric or all-missing columns
+        if v1.dtype == object or v2.dtype == object: continue
         if v1.isna().all() or v2.isna().all():
             continue
-        # Per-row absolute diff
-        d = (v2 - v1).abs()
+        # Per-row absolute diff (cast to float to dodge any boolean dtype quirks)
+        d = (v2.astype(float) - v1.astype(float)).abs()
         n_changed = int((d > max(1e-9, 1e-6 * v1.abs().mean())).sum())
         if n_changed == 0:
             continue
