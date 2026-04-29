@@ -2429,6 +2429,47 @@ def serve_3d_data(case_id):
         with open(clusters_path) as f:
             clusters = json.load(f)
 
+    # ── 3D viewer auxiliary data: stress / brittle / cluster classification ──
+    # Lightweight recompute over contacts.csv on each request — small CSV
+    # (<100k rows typical) so this stays fast (< 200 ms).
+    aux = {
+        'stress_max': {}, 'dr_max': {},
+        'brittle_pairs': [], 'se_stress_pairs': [],
+        'cluster_meta': {}, 'cluster_id_per_se': {},
+        'coverage_per_am': {},
+    }
+    try:
+        import sys as _sys
+        _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        from viewer3d_data import (
+            aggregate_particle_metrics, classify_clusters,
+            build_cluster_id_map, build_coverage_map,
+        )
+        # Build atoms_by_id from atoms.csv we already loaded.
+        atoms_by_id = {int(r['id']): {
+            'type':   int(r['type']),
+            'radius': float(r['radius']),
+        } for _, r in df.iterrows()}
+        if os.path.exists(contacts_csv):
+            contacts_df = pd.read_csv(contacts_csv, low_memory=False)
+            contacts_iter = contacts_df.to_dict('records')
+            agg = aggregate_particle_metrics(
+                contacts_iter, atoms_by_id, type_map, scale=scale)
+            aux['stress_max']      = agg['stress_max']
+            aux['dr_max']          = agg['dr_max']
+            aux['brittle_pairs']   = agg['brittle_pairs']
+            aux['se_stress_pairs'] = agg['se_stress_pairs']
+        aux['cluster_meta']      = classify_clusters(clusters)
+        aux['cluster_id_per_se'] = {str(k): v for k, v in
+                                     build_cluster_id_map(clusters).items()}
+        aux['coverage_per_am']   = {str(k): v for k, v in build_coverage_map(
+            os.path.join(results_dir, 'coverage_per_am.csv')).items()}
+    except Exception as _e:
+        # Aux data is best-effort — don't break the viewer if it fails.
+        print(f'  [3d-data aux] {_e}')
+
     return jsonify({
         'particles': particles,
         'box': box,
@@ -2437,6 +2478,7 @@ def serve_3d_data(case_id):
         'clusters': clusters,
         'mesh_triangles': mesh_triangles,
         'atoms_only': atoms_only_mode,
+        'aux': aux,
     })
 
 @app.route('/toggle-warning/<case_id>', methods=['POST'])
@@ -3236,11 +3278,49 @@ def serve_archive_3d_data(folder):
         with open(clusters_path) as f:
             clusters = json.load(f)
 
+    # ── Auxiliary data for new view modes (mirrors /results/<id>/3d-data) ──
+    aux = {
+        'stress_max': {}, 'dr_max': {},
+        'brittle_pairs': [], 'se_stress_pairs': [],
+        'cluster_meta': {}, 'cluster_id_per_se': {},
+        'coverage_per_am': {},
+    }
+    try:
+        import sys as _sys
+        _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        from viewer3d_data import (
+            aggregate_particle_metrics, classify_clusters,
+            build_cluster_id_map, build_coverage_map,
+        )
+        atoms_by_id = {int(r['id']): {
+            'type':   int(r['type']),
+            'radius': float(r['radius']),
+        } for _, r in df.iterrows()}
+        if os.path.exists(contacts_csv):
+            contacts_df = pd.read_csv(contacts_csv, low_memory=False)
+            agg = aggregate_particle_metrics(
+                contacts_df.to_dict('records'),
+                atoms_by_id, type_map, scale=scale)
+            aux['stress_max']      = agg['stress_max']
+            aux['dr_max']          = agg['dr_max']
+            aux['brittle_pairs']   = agg['brittle_pairs']
+            aux['se_stress_pairs'] = agg['se_stress_pairs']
+        aux['cluster_meta']      = classify_clusters(clusters)
+        aux['cluster_id_per_se'] = {str(k): v for k, v in
+                                     build_cluster_id_map(clusters).items()}
+        aux['coverage_per_am']   = {str(k): v for k, v in build_coverage_map(
+            os.path.join(target, 'coverage_per_am.csv')).items()}
+    except Exception as _e:
+        print(f'  [3d-data aux/archive] {_e}')
+
     return jsonify({
         'particles': particles, 'box': box,
         'percolation': percolation, 'paths': paths, 'clusters': clusters,
         'mesh_triangles': mesh_triangles,
         'atoms_only': atoms_only_mode,
+        'aux': aux,
     })
 
 
