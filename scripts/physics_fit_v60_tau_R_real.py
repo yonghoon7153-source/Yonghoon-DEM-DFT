@@ -86,24 +86,40 @@ def compute_tau_R(case_dir, type_map, scale=1000.0, n_pairs=200):
     atoms_df = pd.read_csv(atoms_csv)
     contacts_df = pd.read_csv(contacts_csv, low_memory=False)
 
-    # Convert to lists of dicts for build_network
-    atoms_raw = atoms_df.to_dict('records')
+    # build_network expects atoms_raw as a dict (id → row), contacts as list.
+    atoms_raw = {int(r['id']): {k: r[k] for k in r.index}
+                 for _, r in atoms_df.iterrows()}
     contacts_raw = contacts_df.to_dict('records')
 
     se_types = {k for k, v in type_map.items() if v == 'SE'}
     target_types = se_types
 
-    # Plate z from atoms (max z + small margin)
-    z_max = atoms_df['z'].max()
-    plate_z = z_max + 0.001
+    # Plate z: prefer mesh_info.json if available, else atoms-derived bound.
+    mesh_info_p = case_dir / 'mesh_info.json'
+    if mesh_info_p.exists():
+        try:
+            plate_z = float(json.load(open(mesh_info_p))['plate_z'])
+        except Exception:
+            plate_z = float(atoms_df['z'].max()) + 0.001
+    else:
+        plate_z = float(atoms_df['z'].max()) + 0.001
 
-    box_x = box_y = 0.05  # default RVE
+    # box_x/box_y from input_params.json (case-specific RVE)
+    box_x = box_y = 0.05  # default
+    ip_p = case_dir / 'input_params.json'
+    if ip_p.exists():
+        try:
+            ip = json.load(open(ip_p))
+            box_x = float(ip.get('box_x', box_x))
+            box_y = float(ip.get('box_y', box_y))
+        except Exception:
+            pass
     try:
         net = build_network(atoms_raw, contacts_raw, target_types,
                              scale=scale, plate_z=plate_z,
                              box_x=box_x, box_y=box_y,
                              contact_mode='physics', mode='ionic',
-                             se_type_set=se_types)
+                             type_map=type_map)
     except Exception as e:
         print(f'  build_network failed: {e}', flush=True)
         return None
