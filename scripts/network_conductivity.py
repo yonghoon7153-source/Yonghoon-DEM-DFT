@@ -51,6 +51,49 @@ K_AM_THERMAL = 4.0e-2   # W/(cm·K) ≈ 4 W/(m·K), NCM
 K_SE_THERMAL = 0.7e-2   # W/(cm·K) ≈ 0.7 W/(m·K), LPSCl (Ketter 2025)
 
 
+# ─── D1-C / D1-F: σ_disk / σ_bulk ratios ──────────────────────────────────
+# Constriction at the contact disk traverses a region whose σ may differ
+# from grain interior σ. Two physical sources:
+#   D1-F (regime-based): plastic contact has compressed/amorphized disk
+#                        → σ_disk < σ_grain. Hertzian (elastic) contact
+#                        retains crystalline σ. Bracketed by Sakuda 2013
+#                        single-crystal (3.0) vs cold-pressed pellet (0.31)
+#                        — geometric mean ~1.0, so factor ~0.33 for fully
+#                        amorphized disk.
+#   D1-C (AM-environment): SE close to polycrystalline AM_P inherits more
+#                          GB content; near single-crystal AM_S retains
+#                          high σ. Multiplicative on top of D1-F.
+SIGMA_DISK_RATIO_AMORPH = 0.50   # plastic-disk σ / grain σ (D1-F)
+SIGMA_DISK_RATIO_AM_P   = 0.80   # AM_P-environment factor (D1-C)
+SIGMA_DISK_RATIO_AM_S   = 0.95   # AM_S-environment factor (D1-C)
+
+
+def get_sigma_disk_factor(regime, t1, t2, sigma_model='uniform',
+                          am_p_types=None, am_s_types=None):
+    """σ_disk / σ_bulk for this contact.
+
+    sigma_model:
+      'uniform'  : 1.0 (current default — no per-contact σ variation).
+      'regime'   : D1-F only. Plastic regimes get amorphized σ_disk.
+      'gb_aware' : D1-C + D1-F. Adds AM-environment modulation for
+                   SE-AM and AM-AM contacts on top of regime factor.
+    """
+    if sigma_model == 'uniform':
+        return 1.0
+    factor = 1.0
+    # D1-F: amorphization in plastic regimes (Tabor / volume / geometric caps)
+    if regime in ('tabor', 'volume', 'geom'):
+        factor *= SIGMA_DISK_RATIO_AMORPH
+    if sigma_model == 'gb_aware':
+        # D1-C: only applies when AM is involved (AM environment affects σ
+        # in the contact-disk region). For pure SE-SE contacts, no effect.
+        if am_p_types and (t1 in am_p_types or t2 in am_p_types):
+            factor *= SIGMA_DISK_RATIO_AM_P
+        elif am_s_types and (t1 in am_s_types or t2 in am_s_types):
+            factor *= SIGMA_DISK_RATIO_AM_S
+    return factor
+
+
 def build_network(atoms_raw, contacts_raw, target_types, scale,
                   plate_z, box_x=0.05, box_y=0.05, boundary_factor=2.0,
                   mode='ionic', type_map=None, results_dir=None,

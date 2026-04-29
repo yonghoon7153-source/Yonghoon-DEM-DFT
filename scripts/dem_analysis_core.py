@@ -165,22 +165,119 @@ def calc_coverage(atoms, contacts, type_map, scale, apply_shape_factor=False):
 
 # ─── SE-SE Coordination Number ─────────────────────────────────────────────
 
-def calc_se_se_cn(atoms, contacts, se_types):
+def calc_se_se_cn(atoms, contacts, se_types, perc_set=None, scale=1000.0,
+                   h_spread_sim=0.0):
+    """SE-SE coordination number + F2 area-weighted + F1 plastic-augmented variants.
+
+    perc_set: optional set of percolating SE ids. When provided, additional
+    "_perc" metrics are computed restricted to that subpopulation.
+
+    h_spread_sim: lateral-spread distance (sim units) for the F1 plastic-
+    augmented CN. Pairs whose surface-to-surface gap is ≤ h_spread_sim are
+    counted as "would-touch under plastic flow". A typical choice is
+    h_spread_sim = 2 × h_film_min × scale = 10 nm × 1000 = 0.01 mm sim
+    (i.e. ~1% of D=1 μm SE radius). Set 0 to disable F1.
+
+    Returns:
+      mean, std, ge2_pct      — all-SE plain CN (existing)
+      cn_eff_area             — Σ A_contact / Σ (4π r²)  surface-fraction
+                                 covered by SE-SE contacts (NEW — F2)
+      mean_perc, cn_eff_area_perc — same restricted to perc_set (NEW — F2)
+      mean_aug, n_extra_aug   — F1 augmented (LIGGGHTS contacts + near-miss
+                                 pairs within h_spread_sim). Only populated
+                                 when h_spread_sim > 0.
+    """
     cn = defaultdict(int)
+    cn_area = defaultdict(float)   # per-SE total contact area (sim m²)
     for c in contacts:
         if c['id1'] in atoms and c['id2'] in atoms:
             if atoms[c['id1']]['type'] in se_types and atoms[c['id2']]['type'] in se_types:
                 cn[c['id1']] += 1
                 cn[c['id2']] += 1
+                a = float(c.get('contact_area', 0) or 0)
+                cn_area[c['id1']] += a
+                cn_area[c['id2']] += a
 
     se_ids = [aid for aid, a in atoms.items() if a['type'] in se_types]
     values = np.array([cn.get(aid, 0) for aid in se_ids])
 
-    return {
-        'mean': float(np.mean(values)),
-        'std': float(np.std(values)),
+    # Surface-fraction (CN_eff_area): Σ A_contact / Σ surface
+    # Both numerator and denominator in sim m² → ratio is dimensionless.
+    surf_total = sum(4 * np.pi * atoms[aid]['radius'] ** 2 for aid in se_ids)
+    contact_total = sum(cn_area.get(aid, 0) for aid in se_ids)
+    cn_eff_area = float(contact_total / surf_total) if surf_total > 0 else 0.0
+
+    out = {
+        'mean': float(np.mean(values)) if len(values) else 0.0,
+        'std': float(np.std(values)) if len(values) else 0.0,
         'ge2_pct': float(np.sum(values >= 2) / len(values) * 100) if len(values) > 0 else 0,
+        'cn_eff_area': cn_eff_area,
     }
+
+    # F2: percolating-only metrics (when perc_set provided)
+    if perc_set is not None and len(perc_set) > 0:
+        perc_ids = [aid for aid in se_ids if aid in perc_set]
+        perc_values = np.array([cn.get(aid, 0) for aid in perc_ids])
+        surf_perc = sum(4 * np.pi * atoms[aid]['radius'] ** 2 for aid in perc_ids)
+        contact_perc = sum(cn_area.get(aid, 0) for aid in perc_ids)
+        out['mean_perc']         = float(np.mean(perc_values)) if len(perc_values) else 0.0
+        out['std_perc']          = float(np.std(perc_values)) if len(perc_values) else 0.0
+        out['n_perc']            = int(len(perc_ids))
+        out['cn_eff_area_perc']  = float(contact_perc / surf_perc) if surf_perc > 0 else 0.0
+
+    # F1: plastic-augmented CN — pairs whose surface-to-surface gap is
+    # ≤ h_spread_sim are counted as "would-touch under plastic flow".
+    # Implemented with a uniform-grid neighbor search to avoid O(N²) over
+    # the full SE population; only pairs whose centers are within
+    # (r_i + r_j + h_spread_sim) of each other are tested.
+    if h_spread_sim > 0 and se_ids:
+        # Cell size: max diameter + h_spread covers all candidate pairs.
+        r_max = max(atoms[aid]['radius'] for aid in se_ids)
+        cell = 2.0 * r_max + h_spread_sim
+        if cell <= 0:
+            return out
+        from collections import defaultdict as _dd
+        grid = _dd(list)
+        for aid in se_ids:
+            a = atoms[aid]
+            grid[(int(a['x'] // cell), int(a['y'] // cell), int(a['z'] // cell))].append(aid)
+        cn_aug = dict(cn)  # start from elastic CN counts
+        n_extra = 0
+        seen_pairs = set()
+        for (cx, cy, cz), members in grid.items():
+            # Inspect 3x3x3 neighbourhood — covers all pairs within `cell`.
+            cands = []
+            for dx in (-1, 0, 1):
+                for dy in (-1, 0, 1):
+                    for dz in (-1, 0, 1):
+                        cands.extend(grid.get((cx + dx, cy + dy, cz + dz), []))
+            for i, aid_i in enumerate(members):
+                ai = atoms[aid_i]
+                for aid_j in cands:
+                    if aid_j == aid_i:
+                        continue
+                    pair = (min(aid_i, aid_j), max(aid_i, aid_j))
+                    if pair in seen_pairs:
+                        continue
+                    seen_pairs.add(pair)
+                    aj = atoms[aid_j]
+                    dx = ai['x'] - aj['x']; dy = ai['y'] - aj['y']; dz = ai['z'] - aj['z']
+                    d = (dx * dx + dy * dy + dz * dz) ** 0.5
+                    r_sum = ai['radius'] + aj['radius']
+                    if d <= r_sum:
+                        # Already an elastic contact — covered by `cn`.
+                        continue
+                    if d <= r_sum + h_spread_sim:
+                        cn_aug[aid_i] = cn_aug.get(aid_i, 0) + 1
+                        cn_aug[aid_j] = cn_aug.get(aid_j, 0) + 1
+                        n_extra += 1
+        aug_values = np.array([cn_aug.get(aid, 0) for aid in se_ids])
+        out['mean_aug']    = float(np.mean(aug_values)) if len(aug_values) else 0.0
+        out['std_aug']     = float(np.std(aug_values)) if len(aug_values) else 0.0
+        out['n_extra_aug'] = int(n_extra)
+        out['h_spread_sim'] = float(h_spread_sim)
+
+    return out
 
 
 def calc_am_am_cn(atoms, contacts, am_types, scale=1000.0):
@@ -289,6 +386,7 @@ def calc_percolation(atoms, contacts, se_types, plate_z, boundary_factor=2.0, bo
         'n_large_components': n_large,
         'largest_pct': largest / n * 100,
         'top_reachable_se': top_reachable_se,
+        'percolating_se': percolating_se,   # F2: strictly bottom↔top percolating
         'bottom_se': bottom_se,
         'top_se': top_se,
         'graph': G,
@@ -773,24 +871,34 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
     for ct, v in iface.items():
         print(f"  {ct}: {v['n_contacts']} contacts, total {v['total_area']:.1f} μm²")
 
-    # 3. Coverage
+    # 3. Coverage (Hertzian baseline; physics + rough variants computed
+    # downstream by coverage_physics_vs_hertzian.py)
     cov = calc_coverage(atoms_raw, contacts_raw, type_map, scale)
     for lbl, v in cov.items():
         print(f"  Coverage {lbl}: {v['mean']:.1f}% ± {v['std']:.1f}%")
 
-    # 4. SE-SE CN
-    cn = calc_se_se_cn(atoms_raw, contacts_raw, se_types)
-    print(f"  SE-SE CN: {cn['mean']:.2f} ± {cn['std']:.2f}")
+    # 5. Percolation (run BEFORE CN so we can pass perc_set into F2)
+    perc = calc_percolation(atoms_raw, contacts_raw, se_types, plate_z, box_x=box_x, box_y=box_y)
+    print(f"  Percolation: {perc['percolation_pct']:.1f}%, Top Reachable: {perc['top_reachable_pct']:.1f}%")
+    print(f"  Components: {perc['n_components']}, Largest: {perc['largest_pct']:.1f}%")
+
+    # 4. SE-SE CN (with F2 percolating-only + area-weighted variants and
+    # F1 plastic-augmented variant). F1 spread distance set to ~10 nm
+    # (= 2 × h_film_min) in real units, converted to sim units via 1/scale.
+    H_SPREAD_REAL_M = 10e-9                     # 10 nm physical
+    h_spread_sim = H_SPREAD_REAL_M * scale      # sim length: m × (sim/real) — for scale=1000 (μm→mm sim) gives 1e-5
+    cn = calc_se_se_cn(atoms_raw, contacts_raw, se_types,
+                       perc_set=perc.get('percolating_se'), scale=scale,
+                       h_spread_sim=h_spread_sim)
+    print(f"  SE-SE CN: {cn['mean']:.2f} ± {cn['std']:.2f}  "
+          f"(perc-only: {cn.get('mean_perc', 0):.2f}, "
+          f"cn_eff_area: {cn.get('cn_eff_area', 0):.4f}, "
+          f"aug: {cn.get('mean_aug', 0):.2f} +{cn.get('n_extra_aug', 0)} extras)")
 
     # 4b. AM-AM CN
     am_am_cn = calc_am_am_cn(atoms_raw, contacts_raw, am_types, scale=scale)
     if am_am_cn['mean'] > 0:
         print(f"  AM-AM CN: {am_am_cn['mean']:.2f} ± {am_am_cn['std']:.2f}")
-
-    # 5. Percolation
-    perc = calc_percolation(atoms_raw, contacts_raw, se_types, plate_z, box_x=box_x, box_y=box_y)
-    print(f"  Percolation: {perc['percolation_pct']:.1f}%, Top Reachable: {perc['top_reachable_pct']:.1f}%")
-    print(f"  Components: {perc['n_components']}, Largest: {perc['largest_pct']:.1f}%")
 
     # 6. Tortuosity
     tau = calc_tortuosity(atoms_raw, perc, box_x=box_x, box_y=box_y)
