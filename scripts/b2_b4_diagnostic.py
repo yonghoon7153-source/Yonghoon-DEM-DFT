@@ -236,17 +236,23 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
         out[f'n_total_force_{pt}'] = sum(sc.values())
 
     # Per-pair-type R_min / P_c / F medians (paper Section 2 footnote)
-    # All in SI: μm, mN.
+    # All in real units (μm, mN). DEM scaling: real(N) = sim(N) / SCALE.
     for pt, samples in pair_samples.items():
         if samples['R_min_sim']:
             r_um = float(np.median(samples['R_min_sim']) / scale * 1e6)
             out[f'R_min_um_median_{pt}']   = round(r_um, 3)
         if samples['P_c_N']:
+            # P_c is already in real Newtons (auerbach_delta_critical
+            # uses real-unit math). Convert to mN for display.
             out[f'P_c_mN_median_{pt}']     = round(float(np.median(samples['P_c_N']) * 1e3), 4)
         if samples['F_N']:
-            out[f'F_mN_median_{pt}']       = round(float(np.median(samples['F_N']) * 1e3), 4)
+            # F samples come from contacts.csv as sim(N); convert to
+            # real(N) = sim(N) / SCALE, then to mN for display.
+            f_real_N = [f / scale for f in samples['F_N']]
+            out[f'F_mN_median_{pt}']       = round(float(np.median(f_real_N) * 1e3), 4)
             if samples['P_c_N']:
-                ratios = [f / p for f, p in zip(samples['F_N'], samples['P_c_N']) if p > 0]
+                # F/P_c uses real-unit F to be consistent with real-unit P_c.
+                ratios = [(f / scale) / p for f, p in zip(samples['F_N'], samples['P_c_N']) if p > 0]
                 if ratios:
                     out[f'F_over_Pc_median_{pt}'] = round(float(np.median(ratios)), 3)
     return out

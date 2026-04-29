@@ -189,16 +189,26 @@ def fracture_classify_force(F_N: float, R_min_m: float,
     return (stage, P_c, m)
 
 
-def fracture_classify_force_sim(F_N: float, R_min_sim: float,
+def fracture_classify_force_sim(F_N_sim: float, R_min_sim: float,
                                   contact_type: str = 'AM_P-AM_P',
                                   scale: float = 1000.0,
                                   E: float = E_AM, nu: float = NU_AM,
                                   A: float = A_AUERBACH
                                   ) -> tuple[str, float, float]:
-    """Sim-units wrapper for force-based classifier (R_min in sim units,
-    F still in N because LIGGGHTS reports normal force in SI N)."""
+    """Sim-units wrapper for force-based classifier.
+
+    Converts both F and R_min from DEM sim units to physical SI:
+      R_min_m   = R_min_sim / scale     (length: sim mm → m)
+      F_real_N  = F_N_sim   / scale     (force:  sim N  → real N,
+                                         per the project DEM scaling
+                                         convention real(N) = sim(N) / SCALE)
+    Without the F conversion the ratio F/P_c is inflated by a factor of
+    SCALE (=1000), which previously caused all contacts to land in the
+    pulverization stage spuriously.
+    """
     R_min_m = R_min_sim / scale
-    return fracture_classify_force(F_N, R_min_m, contact_type, E, nu, A)
+    F_real_N = F_N_sim / scale
+    return fracture_classify_force(F_real_N, R_min_m, contact_type, E, nu, A)
 
 
 def worse(a: str, b: str) -> str:
