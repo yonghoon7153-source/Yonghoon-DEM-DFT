@@ -26,7 +26,7 @@ from collections import defaultdict
 # Material constants — see scripts/fracture_model.py for full citation list.
 K_IC_AM_S = 1.0e6     # Pa·m^0.5  Liu 2020 (single crystal NCM)
 K_IC_AM_P = 0.3e6     # Pa·m^0.5  Quinn 2020 (polycrystalline NCM)
-E_AM      = 150e9     # Pa        Xu 2017 (NCM811 nanoindentation)
+E_AM      = 140e9     # Pa        Xu 2017 / project-wide convention
 NU_AM     = 0.25
 A_AUERBACH = 200.0    # Lawn 1998 §3.4 geometric constant
 
