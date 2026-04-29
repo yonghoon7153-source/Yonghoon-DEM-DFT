@@ -111,7 +111,15 @@ $$P_c = A \cdot \frac{K_{IC}^2 \cdot R_{\min}}{E^*}, \qquad
   E^* \equiv \frac{E}{2(1-\nu^2)} \tag{1}$$
 
 with A ≈ 200 a dimensionless geometric constant for as-prepared
-(low-flaw) ceramic surfaces (Lawn 1998, §3.4). The post-onset
+(low-flaw) ceramic surfaces (Lawn 1998, §3.4). For comparison with the
+δ-based supplementary classifier introduced below, inverting the
+Hertzian load-overlap relation $P = (4/3) E^* \sqrt{R^*}\,\delta^{3/2}$
+yields the equivalent overlap threshold:
+
+$$\delta_c = \left[\frac{3 P_c}{4 E^* \sqrt{R^*}}\right]^{2/3},
+   \qquad R^* \equiv R_{\min}/2 \tag{2}$$
+
+The post-onset
 progression of damage is parameterised through Lawn's multi-stage
 classification (Lawn 1998, Table 3.4), in which successive damage
 modes appear at increasing fractions of P_c:
@@ -140,24 +148,33 @@ input value), and Poisson's ratio at ν = 0.25 (typical ceramic).
 
 **Force-based classification.** Because our DEM uses the LIGGGHTS
 hooke/hysteresis contact model rather than nonlinear Hertz, the
-overlap δ does not stand in a simple δ ∝ F^(2/3) relationship to the
-contact force; the linear hooke relation F = k_n · δ — with k_n
-calibrated to E_AM = 140 GPa — applies instead. We therefore use the
-DEM-measured normal force F directly, comparing it against P_c via
-Lawn's *force* multipliers (1, 3, 11, 32). This route is internally
-consistent for AM-AM contacts: both the DEM force F and the Auerbach
-P_c are computed from the same physical E_AM, so the Hooke-vs-Hertz
-form-factor mismatch cancels in the ratio F/P_c. The softened SE
-Young's modulus (E_SE = 1.35 GPa) does not enter, because brittle
-fracture classification is applied only to AM-AM contacts; SE-related
-plastic response is treated separately by the Tabor framework.
+relationship between overlap δ and contact force F is linear
+(F = k_n · δ) rather than F ∝ δ^(3/2). To remove this contact-model
+dependence from the classifier, we use the DEM-measured normal force
+F directly — model-agnostic by construction — and compare it to P_c
+via Lawn's *force* multipliers (1, 3, 11, 32). The LIGGGHTS spring
+constant k_n is set by the user-supplied E_AM = 140 GPa, and Auerbach
+P_c (equation 1) is computed from the *same* E_AM, so both quantities
+are internally consistent functions of one shared physical modulus.
+The softened SE Young's modulus (E_SE = 1.35 GPa) does not enter,
+because brittle fracture classification is applied only to AM-AM
+contacts; SE-related plastic response is treated separately by the
+Tabor framework.
 
-A δ-based classifier (using equation (2): δ_c = (3 P_c / 4 E* √R*)^(2/3)
-with δ-multipliers 1, 2, 5, 10) is also retained as a supplementary
-cross-check. Differences between the two classifications quantify the
-Hooke-Hertz deviation in our cases; in practice both classifications
-yield the same per-case stage distribution to within the per-stage
-Lawn ±50 % uncertainty (Lawn 1998 §3.4).
+A δ-based classifier — using equation (2) with δ-multipliers
+(1, 2, 5, 10) — is retained as a supplementary cross-check.
+Differences between the two classifications quantify the Hooke-vs-
+Hertz deviation in our cases; in practice both classifications yield
+the same per-case stage distribution to within the per-stage Lawn
+factor-of-2 uncertainty (Lawn 1998 §3.4).
+
+> **Footnote (numerical example, to be filled in after b2_b4 re-run):**
+> For our ensemble's median AM-AM contact geometry (R_min ≈ TBD μm),
+> equation (1) yields P_c ≈ TBD mN for AM_P-AM_P, P_c ≈ TBD mN for
+> AM_S-AM_S, and P_c ≈ TBD mN for mixed AM_P-AM_S contacts. Median
+> DEM force at AM-AM contacts is F ≈ TBD mN, giving F/P_c ratios of
+> TBD / TBD / TBD that translate into the per-pair-type stage
+> distribution reported in Section 3.
 
 **The indicator-only philosophy.** Equations (1) and the Lawn
 thresholds are applied to the DEM contact field *not to claim that any
@@ -183,7 +200,14 @@ $$P_c = A \cdot \frac{K_{IC}^2 \cdot R_{\min}}{E^*}, \qquad
   E^* \equiv \frac{E}{2(1-\nu^2)} \tag{1}$$
 
 여기서 A ≈ 200 은 as-prepared (low-flaw) ceramic 표면의 무차원 기하
-상수이다 (Lawn 1998 §3.4). 임계점 이후 손상 진행은 Lawn 의 다단계
+상수이다 (Lawn 1998 §3.4). 후술하는 δ-기반 보조 분류기와의 비교를
+위해 Hertzian load-overlap 관계 $P = (4/3) E^* \sqrt{R^*}\,\delta^{3/2}$
+를 역전하여 등가 overlap threshold 를 얻는다:
+
+$$\delta_c = \left[\frac{3 P_c}{4 E^* \sqrt{R^*}}\right]^{2/3},
+   \qquad R^* \equiv R_{\min}/2 \tag{2}$$
+
+임계점 이후 손상 진행은 Lawn 의 다단계
 분류 (Lawn 1998 Table 3.4) 로 parameterise 되며, 연속된 손상 모드가
 P_c 의 점진적 배수에서 출현한다:
 
@@ -208,23 +232,30 @@ E_AM = 140 GPa (Xu 2017, NCM811 nanoindentation; project-wide DEM
 입력값과 일관) 로, Poisson 비는 ν = 0.25 (전형적 ceramic) 로 고정한다.
 
 **Force-기반 분류.** 본 연구의 DEM 은 LIGGGHTS 의 hooke/hysteresis
-접촉 모델을 사용하며 비선형 Hertz 가 아니다. 따라서 overlap δ 와
-접촉력 F 사이에 단순한 δ ∝ F^(2/3) 관계가 성립하지 않고, 대신
-선형 Hooke 관계 F = k_n · δ 가 적용된다 (k_n 은 E_AM = 140 GPa 에
-calibrated). 본 연구는 DEM 에서 직접 측정된 normal force F 를 Lawn
-의 *force* 배수 (1, 3, 11, 32) 를 통해 P_c 와 비교한다. 이 경로는
-AM-AM 접촉에 대해 *내부적으로 일관* 하다: DEM force F 와 Auerbach
-P_c 가 모두 동일한 물리 E_AM 으로부터 계산되므로 Hooke-vs-Hertz
-form-factor 불일치가 비율 F/P_c 에서 상쇄된다. Softened SE Young's
-modulus (E_SE = 1.35 GPa) 는 본 식에 들어가지 않는다 — 본 brittle
-fracture 분류는 AM-AM 접촉에만 적용되며, SE 의 plastic 응답은 별도의
-Tabor framework 으로 처리된다.
+접촉 모델을 사용하므로 overlap δ 와 접촉력 F 사이의 관계는 비선형
+Hertz (F ∝ δ^(3/2)) 가 아닌 선형 (F = k_n · δ) 이다. 이 contact-model
+의존성을 분류기에서 제거하기 위해, 본 연구는 DEM 에서 측정된 normal
+force F 를 직접 사용 (model-agnostic by construction) 하여 Lawn 의
+*force* 배수 (1, 3, 11, 32) 를 통해 P_c 와 비교한다. LIGGGHTS 의
+spring constant k_n 은 사용자-입력 E_AM = 140 GPa 에 의해 결정되며,
+Auerbach P_c (식 1) 도 *동일* E_AM 으로부터 계산되므로 두 양은
+*하나의 공유된 물리 modulus* 의 내부적으로 일관된 함수이다.
+Softened SE Young's modulus (E_SE = 1.35 GPa) 는 본 식에 들어가지
+않는다 — brittle fracture 분류는 AM-AM 접촉에만 적용되며, SE 의
+plastic 응답은 Tabor framework 으로 별도 처리된다.
 
-δ-기반 분류기 (식 (2): δ_c = (3 P_c / 4 E^* √R^*)^(2/3) 와 δ-배수
-1, 2, 5, 10 사용) 도 보조 cross-check 로 유지된다. 두 분류 사이의
-차이는 우리 케이스에서의 Hooke-Hertz 편차를 정량화한다. 실제로 두
-분류 모두 케이스별 stage 분포를 단계당 Lawn ±50 % 불확실성 (Lawn
-1998 §3.4) 이내에서 동일하게 산출한다.
+δ-기반 분류기 — 식 (2) 와 δ-배수 (1, 2, 5, 10) 사용 — 도 보조
+cross-check 로 유지된다. 두 분류 사이의 차이는 우리 케이스에서의
+Hooke-vs-Hertz 편차를 정량화한다. 실제로 두 분류 모두 케이스별
+stage 분포를 단계당 Lawn factor-of-2 불확실성 (Lawn 1998 §3.4)
+이내에서 동일하게 산출한다.
+
+> **각주 (수치 예시, b2_b4 재실행 후 채움):**
+> 본 앙상블의 중앙값 AM-AM 접촉 기하 (R_min ≈ TBD μm) 에서 식 (1) 은
+> AM_P-AM_P 에 P_c ≈ TBD mN, AM_S-AM_S 에 P_c ≈ TBD mN, 혼합
+> AM_P-AM_S 에 P_c ≈ TBD mN 을 산출한다. AM-AM 접촉의 중앙값 DEM
+> force 는 F ≈ TBD mN 으로, F/P_c 비 TBD / TBD / TBD 가 Section 3 의
+> per-pair-type stage 분포로 번역된다.
 
 **Indicator-only 철학.** 식 (1) 과 Lawn threshold 들은 DEM 접촉 필드에
 적용되지만, 어떤 특정 접촉이 *그 수준의 물리적 침투나 load 를

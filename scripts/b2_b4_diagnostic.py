@@ -95,6 +95,9 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
                          for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')}
     pair_stage_counts_force = {pt: {s: 0 for s in ALL_STAGES}
                                 for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')}
+    # Per-pair-type R_min, P_c, F samples for paper Section 2 footnote
+    pair_samples = {pt: {'R_min_sim': [], 'P_c_N': [], 'F_N': []}
+                    for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S')}
 
     for _, c in contacts_df.iterrows():
         i1, i2 = int(c['id1']), int(c['id2'])
@@ -144,11 +147,16 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
                           + (c.get('fn_y', 0) or 0) ** 2
                           + (c.get('fn_z', 0) or 0) ** 2) ** 0.5
                 if fn > 0:
-                    stage_f, _pc, _mult_f = fracture_classify_force_sim(
+                    stage_f, P_c_N, _mult_f = fracture_classify_force_sim(
                         fn, r_min, contact_type=pair_label, scale=scale)
                     stage_counts_force[f'n_{stage_f}_force_AM_AM'] += 1
                     if pair_label in pair_stage_counts_force:
                         pair_stage_counts_force[pair_label][stage_f] += 1
+                    # Per-pair-type R_min, P_c, F samples (Section 2 footnote)
+                    if pair_label in pair_samples:
+                        pair_samples[pair_label]['R_min_sim'].append(r_min)
+                        pair_samples[pair_label]['P_c_N'].append(P_c_N)
+                        pair_samples[pair_label]['F_N'].append(fn)
 
         elif (t1 in am_types and t2 in se_types) or \
              (t2 in am_types and t1 in se_types):
@@ -226,6 +234,21 @@ def diagnose_one_case(case_dir, type_map, scale=DEFAULT_SCALE):
             out[f'n_{s}_force_{pt}']        = n
             out[f'frac_{s}_force_{pt}_pct'] = round(100.0 * n / n_pair, 2)
         out[f'n_total_force_{pt}'] = sum(sc.values())
+
+    # Per-pair-type R_min / P_c / F medians (paper Section 2 footnote)
+    # All in SI: μm, mN.
+    for pt, samples in pair_samples.items():
+        if samples['R_min_sim']:
+            r_um = float(np.median(samples['R_min_sim']) / scale * 1e6)
+            out[f'R_min_um_median_{pt}']   = round(r_um, 3)
+        if samples['P_c_N']:
+            out[f'P_c_mN_median_{pt}']     = round(float(np.median(samples['P_c_N']) * 1e3), 4)
+        if samples['F_N']:
+            out[f'F_mN_median_{pt}']       = round(float(np.median(samples['F_N']) * 1e3), 4)
+            if samples['P_c_N']:
+                ratios = [f / p for f, p in zip(samples['F_N'], samples['P_c_N']) if p > 0]
+                if ratios:
+                    out[f'F_over_Pc_median_{pt}'] = round(float(np.median(ratios)), 3)
     return out
 
 
@@ -428,6 +451,34 @@ def main():
             sev_pct = 100.0 * (df[col_frag].sum() + df[col_pul].sum()) / tot
             print(f'    {pt:12s}  {sev_pct:5.1f}%  '
                   f'(of {int(tot):,} contacts)', flush=True)
+
+    # ── Section 2 footnote — P_c statistics for paper draft ──
+    print('\n' + '=' * 80, flush=True)
+    print('SECTION-2 FOOTNOTE — per-pair-type P_c, R_min, F medians',
+          flush=True)
+    print('=' * 80, flush=True)
+    print('\n  Pair          R_min (μm)   P_c (mN)    F (mN)      F/P_c',
+          flush=True)
+    print('  ' + '-' * 60, flush=True)
+    for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S'):
+        r_col = f'R_min_um_median_{pt}'
+        p_col = f'P_c_mN_median_{pt}'
+        f_col = f'F_mN_median_{pt}'
+        m_col = f'F_over_Pc_median_{pt}'
+        if r_col not in df.columns: continue
+        r_med = df[r_col].dropna()
+        p_med = df[p_col].dropna() if p_col in df.columns else None
+        f_med = df[f_col].dropna() if f_col in df.columns else None
+        m_med = df[m_col].dropna() if m_col in df.columns else None
+        if len(r_med) == 0: continue
+        r_v = float(np.median(r_med))
+        p_v = float(np.median(p_med)) if p_med is not None and len(p_med) > 0 else 0
+        f_v = float(np.median(f_med)) if f_med is not None and len(f_med) > 0 else 0
+        m_v = float(np.median(m_med)) if m_med is not None and len(m_med) > 0 else 0
+        print(f'  {pt:12s}  {r_v:>10.2f}   {p_v:>8.3f}   {f_v:>8.3f}   {m_v:>6.2f}',
+              flush=True)
+    print('\n  → Use these medians to fill Section 2 footnote (TBD slots).',
+          flush=True)
 
     # Save full results
     out = Path('docs/figures/physics_regime')
