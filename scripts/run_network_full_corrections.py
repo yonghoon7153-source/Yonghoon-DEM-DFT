@@ -83,25 +83,29 @@ def _fracture_factor(m: float) -> tuple[float, str]:
     return 1.0, 'intact'
 
 
-# ── (2a) σ_ionic_grain_SE(r_SE) — Cronau 2022 (amorphization-only) ─────────
+# ── (2a) σ_ionic_grain_SE(r_SE) — literature-grounded, size-invariant ─────
 def sigma_ionic_grain_factor_SE(r_SE_real_um: float) -> float:
-    """SE σ_grain factor — pure surface-amorphization correction.
+    """SE σ_grain factor — literature consensus is size-invariant for r_SE ≥ 0.5 μm.
 
-    Cronau 2022 measured σ_pellet (EIS) which is σ_grain × η_topology_pellet.
-    Our DEM computes its own η_topology, so we must NOT double-count
-    the packing/constriction part. Below we extract the σ_grain component
-    only — assuming Cronau's 0.70 overall reduction at r_SE=0.5/1.5 splits
-    roughly half-half between σ_grain (amorphization) and η_topology
-    (packing+constriction). For sulfide, intra-grain GB is negligible
-    (Going Against the Grain 2024) so all σ_grain change is from surface
-    amorphous shell + point defects induced by ball-milling.
+    Critical literature findings:
+      - Sulfide intra-grain GB is *negligible* (Going Against the Grain 2024).
+      - Sulfide bulk σ vs GB cannot be deconvolved at room temp (Kalyk 2026).
+      - Cronau 2022's 1/3 reduction is at *extended ball-milling*, primarily
+        affecting D50 < 0.3 μm. The 0.5-3 μm range shows σ_pellet ≈ constant.
+      - SPS data (ScienceDirect 2023): grain σ_grain drops only below ~100 nm.
+
+    Conclusion: our paper's r_SE = 0.5-1.5 μm range sits entirely in the
+    sulfide SE's size-invariant σ_grain regime. No σ_grain correction is
+    applied for r_SE ≥ 0.3 μm. Below 0.3 μm, surface amorphization +
+    nano-GB effects begin (Cronau, SPS) and σ_grain decreases.
+
+    This means our paper's σ_ionic ranking is *robust without σ_grain
+    correction* — all variation is captured by η_topology (DEM solver).
     """
     r = r_SE_real_um
-    if r >= 1.5: return 1.00
-    if r >= 1.0: return 0.92
-    if r >= 0.5: return 0.85   # σ_grain-only (was 0.70 = σ_pellet, double-counted)
-    if r >= 0.3: return 0.70
-    return 0.50  # extended ball-milling limit (real σ_grain damage)
+    if r >= 0.3: return 1.00         # size-invariant crystalline regime
+    if r >= 0.1: return 0.65         # nano-GB onset (SPS data)
+    return 0.33                       # extreme-milling sub-100 nm (Cronau limit)
 
 
 # ── (2b) σ_e_grain_AM(crystal) — Trevisanello 2021 ────────────────────────
