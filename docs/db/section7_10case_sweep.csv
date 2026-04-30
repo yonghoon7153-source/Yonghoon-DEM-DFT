@@ -1,0 +1,11 @@
+case_id,P_S_ratio,r_SE_um,porosity_pct,percolation_pct,sigma_ionic_mScm,sigma_e_mScm,sigma_th_mScm,AM_percolation_pct,total_severe_pct,AM_P_severe_pct,AM_S_severe_pct,F_over_Pc_AM_P_AM_P,F_DEM_AM_P_AM_P_mN,AM_AM_contacts,AM_AM_CN_mean,tau_Lap_eff,SE_SE_CN_mean,notes
+real_1,0:10,0.5,18.9,99.1,0.117,4.63,3.421,99.7,0.0,,0.0,,1.319,8849,3.86,2.70,4.39,Path A safety winner — pure AM_S + small SE
+real_2,3:7,0.5,15.8,99.4,0.152,4.13,4.063,97.0,0.38,6.25,0.0,6.25,9.036,5317,3.26,1.21,4.93,Path A balanced winner — bimodal optimum at small SE
+real_3,5:5,0.5,15.0,99.6,0.173,3.18,4.331,92.3,1.23,33.3,0.0,6.13,8.864,3254,2.73,2.26,5.24,sigma_ionic high, sigma_e medium
+real_4,7:3,0.5,14.3,99.5,0.182,1.68,4.562,76.8,3.19,21.9,0.0,6.30,9.107,1692,2.26,2.20,5.56,sigma_ionic max but sigma_e bottoms out (percolation 77 pct)
+real_5,10:0,0.5,16.3,99.2,0.153,6.21,5.166,97.7,34.87,34.87,,8.121,11.746,347,3.97,2.38,5.71,Pure AM_P + small SE — high sigma_e but 35 pct severe
+real_6,0:10,1.5,20.9,86.3,0.0313,6.20,2.926,100,0.0,,0.0,,2.472,10755,4.69,5.16,2.67,Pure AM_S + large SE — sigma_ionic collapses (porosity 21 pct)
+real_7,3:7,1.5,17.8,93.4,0.0655,6.95,3.641,99.9,1.37,61.54,0.0,12.201,17.648,7164,4.39,3.63,3.18,Path A + large SE — high sigma_e but AM_P 62 pct severe
+real_8,5:5,1.5,15.9,96.0,0.0805,7.25,4.21,99.9,2.97,50.94,0.0,11.581,16.751,4843,4.07,3.30,3.54,middle SE-up trajectory
+real_9,7:3,1.5,15.5,97.6,0.106,7.62,4.543,98.1,7.02,59.6,0.4,14.04,20.307,2679,3.58,2.89,3.93,sigma_e maximum — but 60 pct AM_P severe
+real_10,10:0,1.5,16.2,99.4,0.1193,7.53,3.29,99.4,61.27,61.27,,14.16,20.481,377,4.31,2.69,4.6,Pure AM_P + large SE — worst-case fracture anchor
