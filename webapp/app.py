@@ -282,6 +282,84 @@ def build_fracture_summary_table(metrics):
     return {'columns': ['지표', 'δ-based', 'Force-based'], 'data': rows}
 
 
+def inject_tier1_patch_rows(tables, metrics):
+    """Append a 'Tier 1 patches' section to network_summary listing the new
+    keys added by the post-Auerbach analysis pipeline:
+
+      Coverage  rough (B3 shape factor)        coverage_AM_*_mean_physics_rough
+      SE-SE CN  perc-only         (F2)         se_se_cn_perc
+      SE-SE CN  area-weighted     (F2)         se_se_cn_eff_area
+      SE-SE CN  perc + area-w     (F2)         se_se_cn_eff_area_perc
+      SE-SE CN  plastic-aug       (F1)         se_se_cn_aug (+ n_extra)
+
+    These keys are written automatically by the auto-DB pipeline
+    (dem_analysis_core.calc_se_se_cn / calc_coverage with shape factor),
+    so every freshly analysed case will populate them. Cases predating
+    the Tier 1 patches will leave the keys missing → the rows are
+    silently skipped.
+    """
+    if 'network_summary' not in tables or not metrics:
+        return
+    data = tables['network_summary']['data']
+    if not isinstance(data, list):
+        return
+
+    section_label = '── Tier 1 patches (post-Auerbach refinements) ──'
+    if any(isinstance(r, list) and r and r[0] == section_label for r in data):
+        return  # already injected on a prior call
+
+    rows: list = []
+    rows.append([section_label, '', '', ''])
+
+    # Rough coverage (B3 shape factor: AM_P=1.40, AM_S=1.10, SE=1.05)
+    for label, key in [
+        ('Coverage AM rough(%)   [B3]',   'coverage_AM_mean_physics_rough'),
+        ('Coverage AM_P rough(%) [B3]', 'coverage_AM_P_mean_physics_rough'),
+        ('Coverage AM_S rough(%) [B3]', 'coverage_AM_S_mean_physics_rough'),
+    ]:
+        v = metrics.get(key)
+        if v is None:
+            continue
+        try:
+            rows.append([label, '-', round(float(v), 2), ''])
+        except (TypeError, ValueError):
+            pass
+
+    # F2 / F1 CN variants
+    cn_specs = [
+        ('SE-SE CN (perc-only)        [F2]', 'se_se_cn_perc',          4),
+        ('SE-SE CN (area-weighted)    [F2]', 'se_se_cn_eff_area',      4),
+        ('SE-SE CN (perc area-w)      [F2]', 'se_se_cn_eff_area_perc', 4),
+        ('SE-SE CN (plastic-augmented) [F1]', 'se_se_cn_aug',          3),
+    ]
+    for label, key, prec in cn_specs:
+        v = metrics.get(key)
+        if v is None:
+            continue
+        try:
+            rows.append([label, round(float(v), prec), '-', ''])
+        except (TypeError, ValueError):
+            pass
+    n_extra = metrics.get('se_se_cn_aug_n_extra')
+    if n_extra is not None:
+        try:
+            rows.append(['  (F1 extra near-contact pairs)', int(n_extra), '-', ''])
+        except (TypeError, ValueError):
+            pass
+
+    # Only inject if at least one Tier 1 row populated
+    if len(rows) > 1:
+        # Place after the existing AM-AM section if present, else at the end
+        anchor_idx = len(data)
+        for i, r in enumerate(data):
+            if (isinstance(r, list) and r and isinstance(r[0], str)
+                    and ('AM-AM' in r[0] or '응력' in r[0])):
+                anchor_idx = i
+                break
+        for j, nr in enumerate(rows):
+            data.insert(anchor_idx + j, nr)
+
+
 def transform_network_summary_4col(tables, metrics, meta):
     """Convert network_summary table to 4-column (지표 | Hertzian | Physics | Δ%)
     and inject Network Solver + AM-AM sections from full_metrics.json.
@@ -1888,6 +1966,7 @@ def single(case_id):
 
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
+    inject_tier1_patch_rows(tables, metrics)
 
     # Brittle-fracture summary tab (auto-built from full_metrics.json keys)
     fracture_tbl = build_fracture_summary_table(metrics)
