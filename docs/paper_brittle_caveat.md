@@ -434,43 +434,58 @@ Quinn 2020) translates to an ~11× P_c ratio at fixed R_min. The
 classifier therefore assigns very different damage-stage shares to
 AM_P–AM_P and AM_S–AM_S contacts:
 
-| Pair type | n_contacts | Severe (frag+pulv) % |
-|---|---|---|
-| AM_P – AM_P (polycryst – polycryst) | 10,738 | **31.3 %** |
-| AM_P – AM_S (mixed) | 39,984 | 5.3 % |
-| AM_S – AM_S (single-crystal – single-crystal) | 216,320 | **0.0 %** |
+| Pair type | n_contacts | Severe %, δ-based | Severe %, force-based |
+|---|---|---|---|
+| AM_P – AM_P (polycryst – polycryst) | 10,738 | **31.3 %** | **28.5 %** |
+| AM_P – AM_S (mixed) | 39,984 | 5.3 % | 1.5 % |
+| AM_S – AM_S (single-crystal – single-crystal) | 216,320 | **0.0 %** | **0.0 %** |
 
 Two consequences of this breakdown make the validation especially
-strong. First, the AM_S population is essentially fracture-free
-(0.0 % severe), reproducing the well-established experimental fact
-that single-crystal NCM secondary particles are an order of magnitude
-more robust than polycrystalline secondaries (Liu 2020, Quinn 2020).
-The classifier was not told that AM_S "should" survive — the
-R-dependent Auerbach threshold and the K_IC values produce this
-result emergently. Second, the mixed AM_P–AM_S population sits at
-geometric-mean K_IC and exhibits an intermediate severity (5.3 %),
-again consistent with literature expectation for hybrid
-microstructures.
+strong. First, the AM_S population is essentially fracture-free in
+**both classifiers (0.0 % severe)**, reproducing the well-established
+experimental fact that single-crystal NCM secondary particles are an
+order of magnitude more robust than polycrystalline secondaries
+(Liu 2020, Quinn 2020). The classifier was not told that AM_S "should"
+survive — the R-dependent Auerbach threshold and the K_IC values
+produce this result emergently, and the 0.0 % is preserved across
+the two independent classification paths. Second, the mixed AM_P–AM_S
+population sits at geometric-mean K_IC and exhibits an intermediate
+severity (1.5 – 5.3 %, depending on classifier), again consistent with
+literature expectation for hybrid microstructures.
 
-**Force-based cross-check.** The same data classified via Lawn force
-multipliers (1, 3, 11, 32) on F/P_c with F drawn directly from the
-DEM normal-force field reproduces the same qualitative ordering
-(AM_P – AM_P > mixed > AM_S – AM_S) and the same severe-fraction
-range (a few percent overall). Quantitative agreement between the
-δ-based and force-based classifiers — within the per-stage Lawn
-factor-of-2 uncertainty — provides a robustness check against the
-Hooke-vs-Hertz form-factor sensitivity discussed in Section 2.
+**Force-based cross-check.** Repeating the classification with Lawn
+*force* multipliers (1, 3, 11, 32) on F/P_c ratios drawn directly
+from the DEM normal-force field (model-agnostic; see Section 2)
+yields the parallel aggregate distribution
+
+| Stage | δ-based | Force-based |
+|---|---|---|
+| Intact | 73.7 % | 80.3 % |
+| Microcrack | 17.2 % | 12.9 % |
+| Multi-crack | 7.1 % | 5.4 % |
+| Fragmentation | 1.6 % | 1.2 % |
+| Pulverization | 0.5 % | 0.2 % |
+| **Severe (frag + pulv)** | **2.1 %** | **1.4 %** |
+
+Both classifications fall *inside* the 1 – 5 % experimental range
+(Lim 2018; Quinn 2020) and inside each other's Lawn factor-of-two
+uncertainty band, satisfying the cross-check predicted in Section 2.
+The qualitative ordering (AM_P – AM_P > mixed > AM_S – AM_S) is
+identical between the two classifiers, and the AM_S 0.0 % result is
+exactly preserved — the strongest possible robustness signal against
+the Hooke-vs-Hertz model dependence.
 
 **Per-case fracture index.** For every case we define
 $\text{fracture\_index} = (n_{\text{frag}} + n_{\text{pulv}}) / n_{\text{total}}$
-∈ [0, 1]. Across the 156-case ensemble the median fracture index is
-0.013, the mean is 0.076, and the maximum is 0.613. The right-skewed
-distribution — half of the ensemble has fewer than 1.3 % severe
-contacts — confirms that catastrophic over-overlap is concentrated
-in a small minority of cases and that the *median* simulation is
-within physically reasonable bounds. Section 5 uses this index as a
-filter to verify that the σ_ionic scaling-law conclusions are robust
-to the choice of fracture-permissive cases.
+∈ [0, 1]. Across the 156-case ensemble the δ-based median fracture
+index is 0.013 (mean 0.076, max 0.613); the force-based counterpart
+is 0.005 (mean 0.063, max 0.618). Both are right-skewed — half of the
+ensemble has fewer than 1.3 % severe contacts (δ-based) or 0.5 %
+(force-based) — confirming that catastrophic over-overlap is
+concentrated in a small minority of cases and that the *median*
+simulation is within physically reasonable bounds. Section 5 uses
+this index as a filter to verify that the σ_ionic scaling-law
+conclusions are robust to the choice of fracture-permissive cases.
 
 ### 한국어
 
@@ -505,39 +520,55 @@ K_IC 비 K_IC^SC / K_IC^PC ≈ 3.3 (Liu 2020 vs Quinn 2020) 은 동일
 R_min 에서 ~11× 의 P_c 비로 전환된다. 따라서 classifier 는 AM_P–AM_P
 와 AM_S–AM_S 접촉에 매우 다른 stage share 를 부여한다:
 
-| Pair 유형 | n_contacts | Severe (frag+pulv) % |
-|---|---|---|
-| AM_P – AM_P (다결정 – 다결정) | 10,738 | **31.3 %** |
-| AM_P – AM_S (혼합) | 39,984 | 5.3 % |
-| AM_S – AM_S (단결정 – 단결정) | 216,320 | **0.0 %** |
+| Pair 유형 | n_contacts | Severe %, δ-based | Severe %, force-based |
+|---|---|---|---|
+| AM_P – AM_P (다결정 – 다결정) | 10,738 | **31.3 %** | **28.5 %** |
+| AM_P – AM_S (혼합) | 39,984 | 5.3 % | 1.5 % |
+| AM_S – AM_S (단결정 – 단결정) | 216,320 | **0.0 %** | **0.0 %** |
 
 이 분해의 두 가지 결과가 본 검증을 특히 강하게 만든다. 첫째,
-AM_S 집단은 본질적으로 fracture-free (0.0 % severe) 이며, 이는
-단결정 NCM secondary 입자가 다결정 secondary 보다 한 자리수
-이상 robust 하다는 잘 확립된 실험적 사실 (Liu 2020, Quinn 2020) 을
-재현한다. Classifier 에 AM_S 가 "살아남아야 한다" 고 알려준 적이
-없다 — R-의존 Auerbach threshold 과 K_IC 값들이 이 결과를 *발현적
-으로* 산출한다. 둘째, 혼합 AM_P–AM_S 집단은 K_IC 의 기하평균에
-위치하며 중간 정도의 severity (5.3 %) 를 보여, 이 또한 hybrid
-microstructure 에 대한 문헌 기대치와 일관된다.
+AM_S 집단은 **두 분류기 모두에서 본질적으로 fracture-free
+(0.0 % severe)** 이며, 이는 단결정 NCM secondary 입자가 다결정
+secondary 보다 한 자리수 이상 robust 하다는 잘 확립된 실험적 사실
+(Liu 2020, Quinn 2020) 을 재현한다. Classifier 에 AM_S 가
+"살아남아야 한다" 고 알려준 적이 없다 — R-의존 Auerbach threshold
+과 K_IC 값들이 이 결과를 *발현적으로* 산출하며, 두 독립적 분류
+경로에서 0.0 % 가 동일하게 보존된다. 둘째, 혼합 AM_P–AM_S 집단은
+K_IC 의 기하평균에 위치하며 중간 정도의 severity (분류기에 따라
+1.5 – 5.3 %) 를 보여, 이 또한 hybrid microstructure 에 대한 문헌
+기대치와 일관된다.
 
-**Force-기반 cross-check.** DEM 의 normal-force 필드에서 직접 가져온
-F 에 Lawn force 배수 (1, 3, 11, 32) 를 적용한 force-기반 분류는
-같은 질적 순서 (AM_P – AM_P > mixed > AM_S – AM_S) 와 같은 severe-
-fraction 범위 (전체적으로 수 percent) 를 재현한다. δ-기반 분류기와
-force-기반 분류기 사이의 정량적 일치 — 단계당 Lawn factor-of-2
-불확실성 이내 — 는 Section 2 에서 논의한 Hooke-vs-Hertz form-factor
-민감도에 대한 robustness check 를 제공한다.
+**Force-기반 cross-check.** Lawn 의 *force* 배수 (1, 3, 11, 32) 를
+DEM normal-force 필드 (model-agnostic; Section 2 참조) 에서 직접
+가져온 F/P_c 비에 적용한 평행 집계 분포:
+
+| Stage | δ-based | Force-based |
+|---|---|---|
+| Intact | 73.7 % | 80.3 % |
+| Microcrack | 17.2 % | 12.9 % |
+| Multi-crack | 7.1 % | 5.4 % |
+| Fragmentation | 1.6 % | 1.2 % |
+| Pulverization | 0.5 % | 0.2 % |
+| **Severe (frag + pulv)** | **2.1 %** | **1.4 %** |
+
+두 분류 모두 1 – 5 % 실험 범위 (Lim 2018; Quinn 2020) *내* 에 위치
+하며, 서로의 Lawn factor-of-two 불확실성 band 안에 들어가 Section 2
+에서 예측한 cross-check 를 만족한다. 두 분류 사이 질적 순서
+(AM_P – AM_P > mixed > AM_S – AM_S) 가 동일하며, AM_S 의 0.0 %
+결과는 *완벽히* 보존된다 — Hooke-vs-Hertz 모델 의존성에 대한
+가능한 한 가장 강력한 robustness 신호.
 
 **Per-case fracture index.** 각 case 마다
 $\text{fracture\_index} = (n_{\text{frag}} + n_{\text{pulv}}) / n_{\text{total}}$
-∈ [0, 1] 를 정의한다. 156-case 앙상블에서 중앙값 fracture index 는
-0.013, 평균은 0.076, 최댓값은 0.613 이다. 오른쪽으로 치우친 분포 —
-앙상블의 절반은 severe 접촉이 1.3 % 미만 — 는 catastrophic over-
-overlap 이 소수 case 에 집중되어 있음을, 그리고 *중앙값* 시뮬레이션은
-물리적으로 합리적인 범위 내에 있음을 확증한다. Section 5 는 이
-지수를 필터로 활용하여 σ_ionic scaling-law 결론이 fracture-permissive
-case 의 선택에 대해 robust 함을 검증한다.
+∈ [0, 1] 를 정의한다. 156-case 앙상블에서 δ-기반 중앙값 fracture
+index 는 0.013 (평균 0.076, 최댓값 0.613); force-기반 대응값은
+0.005 (평균 0.063, 최댓값 0.618) 이다. 둘 다 오른쪽으로 치우쳐 있어
+앙상블의 절반은 severe 접촉이 δ-기반 1.3 % 미만 (또는 force-기반
+0.5 % 미만) — catastrophic over-overlap 이 소수 case 에 집중되어
+있음을, 그리고 *중앙값* 시뮬레이션은 물리적으로 합리적인 범위
+내에 있음을 확증한다. Section 5 는 이 지수를 필터로 활용하여 σ_ionic
+scaling-law 결론이 fracture-permissive case 의 선택에 대해 robust
+함을 검증한다.
 
 ---
 
