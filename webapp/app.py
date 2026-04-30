@@ -408,17 +408,19 @@ def inject_stage_e_rows(tables, metrics):
 
     rows: list = [[section_label, '', '', '']]
 
-    # Applied factors header
+    # Applied factors header — size-dependent breakdown
     r_se = factors.get('r_SE_um')
+    r_am_p = factors.get('r_AM_P_um')
+    r_am_s = factors.get('r_AM_S_um')
     f_se_ionic = factors.get('f_SE_ionic')
     am_factors = factors.get('AM_factors') or {}
     kappa_factors = factors.get('kappa_factors') or {}
 
     if r_se is not None and f_se_ionic is not None:
         rows.append([
-            f'  σ_grain factor — SE (r={r_se:.2f}μm, σ_ionic)',
+            f'  σ_ionic — SE (r={r_se:.2f}μm)',
             '', f'×{f_se_ionic:.2f}',
-            'Cronau 2022 — size-invariant ≥0.3μm' if f_se_ionic >= 0.99
+            'Cronau 2022 — size-invariant ≥0.5μm' if f_se_ionic >= 0.99
             else f'Cronau 2022 — sub-μm amorphization'
         ])
 
@@ -426,11 +428,15 @@ def inject_stage_e_rows(tables, metrics):
         am_s = am_factors.get('AM_S')
         am_p = am_factors.get('AM_P')
         if am_s is not None or am_p is not None:
+            am_s_lbl = (f'AM_S(r={r_am_s:.1f}μm)×{am_s:.2f}'
+                         if am_s is not None and r_am_s else 'AM_S — n/a')
+            am_p_lbl = (f'AM_P(r={r_am_p:.1f}μm)×{am_p:.2f}'
+                         if am_p is not None and r_am_p else 'AM_P — n/a')
             rows.append([
-                '  σ_grain factor — AM_S / AM_P (σ_e)',
+                '  σ_e — AM crystal × size',
                 '',
-                f'×{am_s:.2f} / ×{am_p:.2f}',
-                'Trevisanello 2021 — single vs poly crystal'
+                f'{am_s_lbl} / {am_p_lbl}',
+                'Trevisanello 2021 + size-dependent internal-GB density'
             ])
 
     if kappa_factors:
@@ -438,12 +444,16 @@ def inject_stage_e_rows(tables, metrics):
         k_p = kappa_factors.get('AM_P')
         k_se = kappa_factors.get('SE')
         if k_s is not None and k_p is not None:
+            k_s_lbl = (f'AM_S(r={r_am_s:.1f}μm)×{k_s:.2f}'
+                        if k_s is not None and r_am_s else 'AM_S')
+            k_p_lbl = (f'AM_P(r={r_am_p:.1f}μm)×{k_p:.2f}'
+                        if k_p is not None and r_am_p else 'AM_P')
+            k_se_lbl = (f'SE×{k_se:.2f}' if k_se is not None else '')
             rows.append([
-                '  κ factor — AM_S / AM_P / SE',
+                '  κ — AM crystal × size + SE',
                 '',
-                f'×{k_s:.2f} / ×{k_p:.2f} / ×{k_se:.2f}'
-                if k_se is not None else f'×{k_s:.2f} / ×{k_p:.2f}',
-                'Wang 2022 — phonon GB scattering'
+                f'{k_s_lbl} / {k_p_lbl} / {k_se_lbl}',
+                'Wang 2022 + phonon GB scatter (∝ AM secondary R)'
             ])
 
     # Corrected σ values

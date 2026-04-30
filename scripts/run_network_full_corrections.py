@@ -112,19 +112,72 @@ def sigma_ionic_grain_factor_SE(r_SE_real_um: float) -> float:
     return 0.33                                      # extreme-milling limit
 
 
-# ── (2b) σ_e_grain_AM(crystal) — Trevisanello 2021 ────────────────────────
-SIGMA_E_GRAIN_AM = {
-    'AM_S': 1.00,   # single-crystal Li-rich, sulfide-class
-    'AM_P': 0.65,   # polycrystalline NMC (12% interfacial R + GB σ-loss)
-}
+# ── (2b) σ_e_grain_AM(crystal, R) — Trevisanello 2021 + size dependence ───
+def sigma_e_grain_factor_AM(am_label: str, r_AM_real_um: float) -> float:
+    """AM σ_e factor — crystallinity × size-dependent internal-GB density.
+
+    Reference values (literature):
+      AM_S (single-crystal): bulk σ_e size-invariant for r ≥ 0.5 μm.
+        Wang 2021 measured single-crystal NMC at 1-5 μm with consistent σ.
+      AM_P (polycrystalline): internal primary-grain GBs scale with
+        secondary-particle size. Larger AM_P → more internal GBs →
+        lower effective σ_e through the particle.
+        Trevisanello 2021 reference is for typical NMC secondary (5-12 μm).
+
+    Size-dependence table (AM_P):
+      r ≤ 3 μm   → 0.75   (small secondary, fewer internal GBs)
+      r 5-7 μm   → 0.65   (typical NMC commercial, Trevisanello reference)
+      r 7-12 μm  → 0.55   (larger NMC, more internal GBs)
+      r > 12 μm  → 0.45   (very large secondary)
+    """
+    if r_AM_real_um is None or not (r_AM_real_um > 0):
+        r_AM_real_um = 6.0  # safety default = typical commercial NMC
+
+    if 'AM_S' in am_label or am_label.endswith('S'):
+        # Single-crystal: bulk size-invariant for r ≥ 0.5 μm
+        if r_AM_real_um >= 0.5: return 1.00
+        return 0.85  # mild surface effect at sub-μm (rare)
+
+    # AM_P (polycrystalline)
+    r = r_AM_real_um
+    if r <= 3.0:  return 0.75
+    if r <= 7.0:  return 0.65  # Trevisanello 2021 reference
+    if r <= 12.0: return 0.55
+    return 0.45
 
 
-# ── (2c) κ_thermal_grain — Wang 2022 + Trevisanello ──────────────────────
-KAPPA_GRAIN = {
-    'AM_S': 1.00,   # single-crystal preserves bulk κ (~5-8 W/mK)
-    'AM_P': 0.50,   # poly NMC internal GB phonon scatter
-    'SE':   1.00,   # sulfide already glassy (~0.5 W/mK), size-invariant
-}
+# ── (2c) κ_thermal_grain(crystal, R) — Wang 2022 + phonon size effect ─────
+def kappa_grain_factor_AM(am_label: str, r_AM_real_um: float) -> float:
+    """AM κ factor — crystallinity × size-dependent phonon GB scattering.
+
+    AM_S: phonon mostly bulk-like (preserved single-crystal κ ~5-8 W/mK).
+    AM_P: secondary-particle internal GBs scatter phonons strongly.
+          Effect scales with internal GB density which grows with
+          secondary-particle size.
+
+    Size-dependence table (AM_P):
+      r ≤ 3 μm   → 0.65
+      r 5-7 μm   → 0.50  (typical reference)
+      r 7-12 μm  → 0.40
+      r > 12 μm  → 0.30
+    """
+    if r_AM_real_um is None or not (r_AM_real_um > 0):
+        r_AM_real_um = 6.0
+
+    if 'AM_S' in am_label or am_label.endswith('S'):
+        return 1.00
+
+    # AM_P (polycrystalline)
+    r = r_AM_real_um
+    if r <= 3.0:  return 0.65
+    if r <= 7.0:  return 0.50  # typical reference
+    if r <= 12.0: return 0.40
+    return 0.30
+
+
+def kappa_grain_factor_SE(r_SE_real_um: float) -> float:
+    """SE κ factor — sulfide is already glassy (~0.5 W/mK), size-invariant."""
+    return 1.00
 
 
 def _harmonic_mean(a: float, b: float) -> float:
@@ -188,14 +241,25 @@ def apply_corrections(atoms_df: pd.DataFrame, contacts_df: pd.DataFrame,
     id_to_radius = dict(zip(atoms_df['id'].astype(int),
                               atoms_df['radius'].astype(float)))
 
-    # Per-particle σ_e factor: by AM type label
-    def particle_AM_factor(tid: int) -> float:
+    # Per-particle σ_e / κ factors — type AND size dependent
+    scale_local = scale  # capture closure
+    def particle_AM_factor(tid: int, pid: int) -> float:
         lbl = type_map.get(tid, '')
-        return SIGMA_E_GRAIN_AM.get(lbl, 0.65)
+        if 'AM' not in lbl:
+            return 1.00
+        r_sim = id_to_radius.get(pid, 0.0)
+        r_real_um = r_sim * 1.0e6 / scale_local if r_sim > 0 else 0.0
+        return sigma_e_grain_factor_AM(lbl, r_real_um)
 
-    def particle_kappa_factor(tid: int) -> float:
+    def particle_kappa_factor(tid: int, pid: int) -> float:
         lbl = type_map.get(tid, '')
-        return KAPPA_GRAIN.get(lbl, 1.00)
+        r_sim = id_to_radius.get(pid, 0.0)
+        r_real_um = r_sim * 1.0e6 / scale_local if r_sim > 0 else 0.0
+        if 'SE' in lbl:
+            return kappa_grain_factor_SE(r_real_um)
+        if 'AM' in lbl:
+            return kappa_grain_factor_AM(lbl, r_real_um)
+        return 1.00
 
     # SE σ_ionic factor (single value, all SE same size in our cases)
     r_SE_real = _se_radius_real_um(atoms_df, type_map, scale)
@@ -246,23 +310,43 @@ def apply_corrections(atoms_df: pd.DataFrame, contacts_df: pd.DataFrame,
                 ff, lbl = 1.0, 'intact'
             stage_counts[lbl] += 1
 
-            # Grain factor (harmonic mean of two AM particles)
-            g1 = particle_AM_factor(t1); g2 = particle_AM_factor(t2)
+            # Grain factor (harmonic mean of two AM particles, size-dependent)
+            g1 = particle_AM_factor(t1, i1); g2 = particle_AM_factor(t2, i2)
             gf = _harmonic_mean(g1, g2)
             f_e.append(ff * gf)
         else:
             f_e.append(1.0)  # SE not in electronic graph
 
-        # Channel 3: κ — grain factor only (no fracture for thermal here)
-        k1 = particle_kappa_factor(t1); k2 = particle_kappa_factor(t2)
+        # Channel 3: κ — size-dependent grain factor
+        k1 = particle_kappa_factor(t1, i1); k2 = particle_kappa_factor(t2, i2)
         kf = _harmonic_mean(k1, k2)
         f_kappa.append(kf)
 
+    # Audit trail — sample one representative AM_P and AM_S particle to log
+    def _sample_radius(label: str) -> float:
+        for tid, lbl in type_map.items():
+            if lbl == label:
+                sub = atoms_df[atoms_df['type'] == tid]
+                if not sub.empty:
+                    r_sim = float(sub['radius'].median())
+                    return r_sim * 1.0e6 / scale
+        return 0.0
+    r_AM_P = _sample_radius('AM_P')
+    r_AM_S = _sample_radius('AM_S')
+
+    f_AM_P_e = sigma_e_grain_factor_AM('AM_P', r_AM_P) if r_AM_P > 0 else None
+    f_AM_S_e = sigma_e_grain_factor_AM('AM_S', r_AM_S) if r_AM_S > 0 else None
+    f_AM_P_k = kappa_grain_factor_AM('AM_P',  r_AM_P) if r_AM_P > 0 else None
+    f_AM_S_k = kappa_grain_factor_AM('AM_S',  r_AM_S) if r_AM_S > 0 else None
+    f_SE_k   = kappa_grain_factor_SE(r_SE_real) if r_SE_real > 0 else None
+
     factors_summary = {
         'r_SE_um':         r_SE_real,
+        'r_AM_P_um':       r_AM_P,
+        'r_AM_S_um':       r_AM_S,
         'f_SE_ionic':      f_SE_ionic,
-        'AM_factors':      SIGMA_E_GRAIN_AM,
-        'kappa_factors':   KAPPA_GRAIN,
+        'AM_factors':      {'AM_S': f_AM_S_e, 'AM_P': f_AM_P_e},
+        'kappa_factors':   {'AM_S': f_AM_S_k, 'AM_P': f_AM_P_k, 'SE': f_SE_k},
         'n_am_am_total':   n_am_am,
         'fracture_stage_counts': {k: int(v) for k, v in stage_counts.items()},
     }
