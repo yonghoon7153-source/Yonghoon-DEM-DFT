@@ -731,8 +731,6 @@ Lawn 불확실성 내의 어떠한 fracture-classification convention 선택
 
 ---
 
-<!-- Section 5 will be appended below after review. -->
-
 ## Section 5 — Validity-Filter Robustness Check
 
 ### English
