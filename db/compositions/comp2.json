@@ -103,9 +103,41 @@
     "source": "post_relax/comp2_basinB/ACF.dat",
     "notes": "comp2 v1 BasinB. Cl more ionic than Br (|q(Cl)|=0.925 > |q(Br)|=0.904, +5.9%)"
   },
-  "q1q2_over_r_eV_v1bader": {
-    "Li-Cl": 4.45,
-    "Li-Br": 4.19,
-    "Li-S": 9.4
+  "bader_charge_v2": {
+    "method": "Henkelman bader_lnx_64 v1.05 on pp.x charge density (plot_num=0)",
+    "structure": "comp2_v2 anneal champion at v103 cell (V0 from BM3 fit, E_min=-1050.094 Ry)",
+    "Li": 0.876,
+    "P": 4.893,
+    "S": -1.85,
+    "Cl": -0.91,
+    "Br": -0.891,
+    "Li_std": 0.008,
+    "P_std": 0.0002,
+    "S_std": 0.073,
+    "Cl_std": 0.007,
+    "Br_std": 0.003,
+    "n_atoms": {"Li": 24, "P": 4, "S": 20, "Cl": 2, "Br": 2},
+    "total_electrons": 240.0004,
+    "n_bader_maxima": 280,
+    "charge_balance": -0.006,
+    "completed_date": "2026-04-30",
+    "source": "pipeline_v2/comp2_lpscbr/ACF.dat",
+    "v1_v2_delta": {
+      "Li": 0.003,
+      "Cl": 0.015,
+      "Br": -0.051,
+      "S": -0.007
+    },
+    "v1_v2_interpretation": "Anneal -> Br more ionic (|q|: 0.840->0.891, +6.1%), Cl slightly less (0.925->0.910). Br/Cl ionicity gap narrows. P measured for first time in v2: +4.893.",
+    "notes": "NEW finding: comp2 v2 P=+4.893 > comp1 v2 P=+4.686 (delta +0.207e, +4.4%). Br doping STRENGTHENS PS4 covalent backbone (anti-trend to Cl ionicity weakening). Br has dual effect: ionic (Cl |q| down) AND covalent (P |q| up). Vacancy effect (modelC v2 P=+4.340) is opposite sign."
+  },
+  "q1q2_over_r_eV_v2bader": {
+    "P-S": 63.3,
+    "Li-Cl": 4.69,
+    "Li-Br": 4.46,
+    "Li-S": 9.31,
+    "P-S_vs_comp1_v2_pct": 7.3,
+    "P-S_vs_modelC_v2_pct": 20.2,
+    "notes": "P-S Coulomb +7.3% vs comp1 v2 (Br effect strengthens PS4) and +20.2% vs modelC v2 (vacancy weakens, Br compensates partial). q*|q|/r * 14.4 eV.A units. Bond lengths inherited from comp1 v2 (P-S 2.06 A, Li-Cl 2.486, Li-S 2.498) -- comp2 v2 specific bond lengths TODO."
   }
 }

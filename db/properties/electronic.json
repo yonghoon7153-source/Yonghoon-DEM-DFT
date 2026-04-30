@@ -68,6 +68,16 @@
         "Br": -0.904,
         "S": -1.843
       },
+      "comp2_v2": {
+        "Li": 0.876,
+        "P": 4.893,
+        "S": -1.85,
+        "Cl": -0.91,
+        "Br": -0.891,
+        "anneal_champion": true,
+        "structure": "v103 (V0 from BM3 fit)",
+        "completed_date": "2026-04-30"
+      },
       "comp3_v1": {
         "Li": 0.88,
         "Cl": -0.903,
@@ -101,14 +111,31 @@
     },
     "trends_quantitative": {
       "Cl_more_ionic_than_Br_pct": {
-        "comp2B": 5.9,
+        "comp2B_v1": 5.9,
+        "comp2_v2": 2.1,
         "comp3": -1.3,
         "comp4": 0.2,
         "comp5": 1.9,
-        "average_excl_anomaly": 2.7
+        "average_excl_anomaly": 2.5,
+        "anneal_effect": "comp2 v1->v2: Cl/Br gap narrowed 5.9% -> 2.1% (Br ordering improved by anneal)"
       },
-      "comp3_anomaly": "|q(Br)|=0.915 > |q(Cl)|=0.903 (site disorder effect)",
-      "comp4_S_anomaly": "|q(S)|=1.551 vs -1.7 to -1.85 in others (most-mixed Br/Cl environment)"
+      "comp3_anomaly": "|q(Br)|=0.915 > |q(Cl)|=0.903 (site disorder effect, expected to normalize on anneal)",
+      "comp4_S_anomaly": "|q(S)|=1.551 vs -1.7 to -1.85 in others (most-mixed Br/Cl environment)",
+      "comp2_v2_P_anomaly_NEW": {
+        "value": 4.893,
+        "vs_comp1_v2": "+0.207 e (Br doping STRENGTHENS PS4 covalent backbone)",
+        "vs_modelC_v2": "+0.553 e (Br + vacancy reverse effects on P)",
+        "interpretation": "Br has DUAL effect on PS4: (1) ionic side - Cl |q| weakens (charge competition), (2) covalent side - P |q| strengthens (lattice expansion + Br polarizability changes local Madelung field). Net mechanical change is partial cancellation (B0 only 0.4 GPa down comp2 vs comp1)."
+      },
+      "P_three_anchor_separation": {
+        "comp1_v2": 4.686,
+        "comp2_v2": 4.893,
+        "modelC_v2": 4.34,
+        "Br_alone_effect": "+0.207 e (Br stiffens PS4)",
+        "vacancy_alone_effect": "-0.346 e (vacancy softens PS4)",
+        "predicted_combined_Li5p4_Br": 4.547,
+        "comparison_to_comp3_5_v1": "comp3-5 v1 P not directly measured (~+4.4 estimated from PS4 invariance)"
+      }
     },
     "cross_family_wad_paradox": {
       "Wad_Li6_avg": 1.2,
@@ -128,6 +155,14 @@
         "Li-Cl": 4.45,
         "Li-Br": 4.19,
         "Li-S": 9.4
+      },
+      "comp2_v2": {
+        "Li-Cl": 4.69,
+        "Li-Br": 4.46,
+        "Li-S": 9.31,
+        "P-S": 63.3,
+        "P-S_vs_comp1_v2": "+7.3% (Br stiffens PS4)",
+        "P-S_vs_modelC_v2": "+20.2% (Br + no-vacancy)"
       },
       "comp3_v1": {
         "Li-Cl": 4.56,
