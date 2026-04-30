@@ -189,6 +189,99 @@ def _same_row(label, val):
     return [label, val, val, '0%']
 
 
+def build_fracture_summary_table(metrics):
+    """Build a 'fracture_summary' table from full_metrics.json keys.
+
+    Returns a {columns, data} dict in the same format as the CSV-derived
+    tables, ready to be injected into the analysis-summary tabs in
+    single.html. Section-header rows start with '──' so the template
+    renders them as full-width separators.
+
+    Two-classifier display: each metric shown in both δ-based (Hertzian-
+    equivalent) and force-based (Hooke-correct, model-agnostic) columns.
+    Returns None if the case has no AM-AM contacts (empty metrics).
+    """
+    if not metrics:
+        return None
+    n_total = metrics.get('n_total_AM_AM') or 0
+    n_total_force = metrics.get('n_total_AM_AM_force') or 0
+    if n_total == 0 and n_total_force == 0:
+        return None
+
+    def f(v, prec=2):
+        if v is None or v == '': return '-'
+        try:
+            return round(float(v), prec)
+        except (TypeError, ValueError):
+            return v
+
+    rows = []
+
+    # ── Stage distribution (%) ──
+    rows.append(['── 단계별 분포 (%) ──'])
+    for stage, label in [('intact',        'Intact'),
+                          ('microcrack',    'Microcrack'),
+                          ('multicrack',    'Multi-crack'),
+                          ('fragmentation', 'Fragmentation'),
+                          ('pulverization', 'Pulverization')]:
+        d = metrics.get(f'frac_{stage}_pct')
+        ff = metrics.get(f'frac_{stage}_force_pct')
+        rows.append([f'  {label}', f(d), f(ff)])
+
+    # ── Severe summary ──
+    rows.append(['── Severe (frag + pulv) ──'])
+    sev_d = ((metrics.get('frac_fragmentation_pct') or 0)
+             + (metrics.get('frac_pulverization_pct') or 0))
+    sev_f = ((metrics.get('frac_fragmentation_force_pct') or 0)
+             + (metrics.get('frac_pulverization_force_pct') or 0))
+    rows.append(['  Severe %',                       f(sev_d), f(sev_f)])
+    rows.append(['  fracture_index (severe/total)',
+                 f(metrics.get('fracture_index'),       4),
+                 f(metrics.get('fracture_index_force'), 4)])
+
+    # ── Per-pair-type severe % ──
+    rows.append(['── Pair-type Severe % ──'])
+    for pt in ('AM_P-AM_P', 'AM_P-AM_S', 'AM_S-AM_S'):
+        n_pt = metrics.get(f'n_total_{pt}') or 0
+        n_pt_force = metrics.get(f'n_total_force_{pt}') or 0
+        d_sev = ((metrics.get(f'frac_fragmentation_{pt}_pct') or 0)
+                 + (metrics.get(f'frac_pulverization_{pt}_pct') or 0))
+        f_sev = ((metrics.get(f'frac_fragmentation_force_{pt}_pct') or 0)
+                 + (metrics.get(f'frac_pulverization_force_{pt}_pct') or 0))
+        if n_pt == 0 and n_pt_force == 0:
+            continue
+        rows.append([f'  {pt}', f(d_sev), f(f_sev)])
+
+    # ── Auerbach P_c (mN) — material physics, single value per pair ──
+    rows.append(['── Auerbach P_c (mN) ──'])
+    for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S'):
+        v = metrics.get(f'P_c_mN_median_{pt}')
+        if v is None: continue
+        rows.append([f'  {pt}', f(v, 3), '-'])
+
+    # ── F_DEM medians (mN, real units) ──
+    rows.append(['── F_DEM (mN, real units) ──'])
+    for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S'):
+        v = metrics.get(f'F_mN_median_{pt}')
+        if v is None: continue
+        rows.append([f'  {pt}', f(v, 3), '-'])
+
+    # ── F / P_c ratios (key indicator) ──
+    rows.append(['── F / P_c ratio ──'])
+    for pt in ('AM_P-AM_P', 'AM_S-AM_S', 'AM_P-AM_S'):
+        v = metrics.get(f'F_over_Pc_median_{pt}')
+        if v is None: continue
+        rows.append([f'  {pt}', f(v, 3), '-'])
+
+    # ── Counts ──
+    rows.append(['── Contact counts ──'])
+    rows.append(['  Total AM-AM contacts',
+                 int(n_total)       if n_total       else '-',
+                 int(n_total_force) if n_total_force else '-'])
+
+    return {'columns': ['지표', 'δ-based', 'Force-based'], 'data': rows}
+
+
 def transform_network_summary_4col(tables, metrics, meta):
     """Convert network_summary table to 4-column (지표 | Hertzian | Physics | Δ%)
     and inject Network Solver + AM-AM sections from full_metrics.json.
@@ -1796,6 +1889,11 @@ def single(case_id):
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
 
+    # Brittle-fracture summary tab (auto-built from full_metrics.json keys)
+    fracture_tbl = build_fracture_summary_table(metrics)
+    if fracture_tbl is not None:
+        tables['fracture_summary'] = fracture_tbl
+
     # Load input_params.json
     input_params = {}
     params_path = os.path.join(results_dir, 'input_params.json')
@@ -3177,6 +3275,13 @@ def archive_view(folder):
 
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
+
+    # Brittle-fracture summary tab (built from full_metrics.json keys produced
+    # by dem_analysis_core.calc_fracture_stages — auto-DB pipeline). Empty
+    # for cases without AM-AM contacts; UI hides the tab when None.
+    fracture_tbl = build_fracture_summary_table(metrics)
+    if fracture_tbl is not None:
+        tables['fracture_summary'] = fracture_tbl
 
     input_params = {}
     params_path = os.path.join(results_dir, 'input_params.json')
