@@ -313,9 +313,9 @@ def inject_tier1_patch_rows(tables, metrics):
 
     # Rough coverage (B3 shape factor: AM_P=1.40, AM_S=1.10, SE=1.05)
     for label, key in [
-        ('Coverage AM rough(%)   [B3]',   'coverage_AM_mean_physics_rough'),
-        ('Coverage AM_P rough(%) [B3]', 'coverage_AM_P_mean_physics_rough'),
-        ('Coverage AM_S rough(%) [B3]', 'coverage_AM_S_mean_physics_rough'),
+        ('Coverage AM rough(%)   ⭐ [B3]',   'coverage_AM_mean_physics_rough'),
+        ('Coverage AM_P rough(%) ⭐ [B3]', 'coverage_AM_P_mean_physics_rough'),
+        ('Coverage AM_S rough(%) ⭐ [B3]', 'coverage_AM_S_mean_physics_rough'),
     ]:
         v = metrics.get(key)
         if v is None:
@@ -665,6 +665,119 @@ def transform_network_summary_4col(tables, metrics, meta):
                 net_rows.append(_same_row('상태', f"{ms or ns or '결과 없음'}"))
         for i, r in enumerate(net_rows):
             data.insert(insert_idx + i, r)
+
+    # Step 4b: τ_Lap + supplementary rows that analyze_contacts.py does NOT write
+    # to the CSV (σ_Bruggeman, Contact-free/Full, σ_brug/σ_ionic, τ-comparison,
+    # AM Percolation, Electronic Active AM). When analyze_contacts wrote its own
+    # "── Network Solver (Hertzian DEM-native) ──" header to the CSV, Step 4
+    # above is skipped (has_net_section=True) — so we ALWAYS run this second
+    # pass that adds only the rows missing from the CSV-written section.
+    # Each row uses _has_label() to avoid duplicates.
+    if metrics:
+        def _has_label(lbl):
+            for r in data:
+                if isinstance(r, list) and r and str(r[0]).strip() == lbl.strip():
+                    return True
+            return False
+
+        # Anchor: insert after the existing Network Solver section header
+        net_anchor = None
+        for i, r in enumerate(data):
+            if (isinstance(r, list) and r
+                    and isinstance(r[0], str)
+                    and r[0].startswith('── Network Solver')):
+                net_anchor = i
+                break
+
+        # Find anchor for the *END* of Network Solver section (= start of next section)
+        net_end = len(data)
+        if net_anchor is not None:
+            for i in range(net_anchor + 1, len(data)):
+                r = data[i]
+                if (isinstance(r, list) and r
+                        and isinstance(r[0], str)
+                        and r[0].startswith('──')
+                        and not r[0].startswith('── Network Solver')
+                        and not r[0].startswith('── Physics')):
+                    net_end = i
+                    break
+
+        new_rows: list = []
+
+        # σ_Bruggeman (mS/cm)
+        if (not _has_label('σ_Bruggeman (mS/cm)')
+                and metrics.get('sigma_bruggeman_mScm')):
+            new_rows.append(_same_row('σ_Bruggeman (mS/cm)',
+                                       round(metrics['sigma_bruggeman_mScm'], 4)))
+
+        # Contact-free / Full
+        if (not _has_label('Contact-free / Full')
+                and metrics.get('R_brug_over_full')):
+            r_h = metrics.get('R_brug_over_full')
+            r_p = metrics.get('R_brug_over_full_physics', r_h)
+            new_rows.append(_dual_row('Contact-free / Full',
+                                       r_h, r_p,
+                                       fmt=lambda x: f"{x:.1f}×"))
+
+        # σ_brug / σ_ionic
+        if (not _has_label('σ_brug / σ_ionic')
+                and metrics.get('sigma_ratio') and metrics.get('sigma_full_mScm')):
+            sig_brug = 3.0 * metrics['sigma_ratio']
+            sig_ion_h = metrics.get('sigma_full_mScm')
+            sig_ion_p = metrics.get('sigma_full_mScm_physics') or sig_ion_h
+            ratio_h = sig_brug / sig_ion_h if sig_ion_h > 0 else 0
+            ratio_p = sig_brug / sig_ion_p if sig_ion_p and sig_ion_p > 0 else ratio_h
+            new_rows.append(_dual_row('σ_brug / σ_ionic',
+                                       ratio_h, ratio_p,
+                                       fmt=lambda x: f"{x:.1f}×"))
+
+        # ── τ 3종 비교 ── (always-inject if absent)
+        import math as _math
+        phi_se   = metrics.get('phi_se')
+        sig_full = metrics.get('sigma_full_mScm')
+        sig_bulk = metrics.get('sigma_bulk_net_mScm')
+        tau_dij  = metrics.get('tortuosity_mean')
+        SIGMA_GRAIN_MS = 3.0
+        tau_section_label = '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──'
+        if (not _has_label(tau_section_label)
+                and phi_se and sig_full and sig_full > 0):
+            sig_full_p = metrics.get('sigma_full_mScm_physics')
+            tau_lap_eff_h = _math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full)
+            tau_lap_eff_p = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_full_p)
+                             if sig_full_p and sig_full_p > 0 else tau_lap_eff_h)
+            tau_lap_geom = (_math.sqrt(phi_se * SIGMA_GRAIN_MS / sig_bulk)
+                            if sig_bulk and sig_bulk > 0 else None)
+            new_rows.append([tau_section_label, '', '', ''])
+            if tau_dij:
+                new_rows.append(_same_row('τ_Dij (Dijkstra, 기하만)', round(tau_dij, 2)))
+            if tau_lap_geom:
+                new_rows.append(_same_row('τ_Lap_geom (Laplace, GB 제외)', round(tau_lap_geom, 2)))
+            new_rows.append(_dual_row('τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
+                                       tau_lap_eff_h, tau_lap_eff_p,
+                                       fmt=lambda x: round(x, 2)))
+            if tau_dij and tau_dij > 0:
+                ratio_h = tau_lap_eff_h / tau_dij
+                ratio_p = tau_lap_eff_p / tau_dij
+                new_rows.append(_dual_row('τ_Lap_eff / τ_Dij',
+                                           ratio_h, ratio_p,
+                                           fmt=lambda x: f"{x:.2f}×"))
+
+        # AM Percolation (electronic)
+        if (not _has_label('AM Percolation (%)')
+                and metrics.get('electronic_percolating_fraction') is not None):
+            v = f"{metrics['electronic_percolating_fraction']*100:.1f}"
+            new_rows.append(_same_row('AM Percolation (%)', v))
+
+        # Electronic Active AM
+        if (not _has_label('Electronic Active AM (%)')
+                and metrics.get('electronic_active_fraction') is not None):
+            v = f"{metrics['electronic_active_fraction']*100:.1f}"
+            new_rows.append(_same_row('Electronic Active AM (%)', v))
+
+        # Insert at the end of the Network Solver section
+        if new_rows:
+            for j, nr in enumerate(new_rows):
+                data.insert(net_end + j, nr)
 
     # Step 5: inject AM-AM contact mechanics section (invariant under contact_mode)
     has_am_am = any(isinstance(r[0], str) and r[0].startswith('── AM-AM 접촉 역학') for r in data)
