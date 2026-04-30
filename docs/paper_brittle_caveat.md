@@ -197,6 +197,22 @@ effect an additional factor of ≈ 1.6. This combined factor — derived
 without any per-case fitting — fully accounts for the AM_S = 0 % vs
 AM_P = 31 % severe-fraction asymmetry reported in Section 3.
 
+For commercially representative NCM particle sizes — AM_S as D4
+(R = 2 μm, single-crystal nano-cathode) and AM_P as D12 (R = 6 μm,
+polycrystalline secondary aggregate) — the size factor becomes
+$(2/6)^{-2/3} = 3^{2/3} \approx 2.08$, and the combined relative
+overlap tolerance ratio is
+
+$$\frac{(\delta_c/R)_{AM\_S,\,D4}}{(\delta_c/R)_{AM\_P,\,D12}}
+= (3.33)^{4/3} \cdot (1/3)^{-2/3}
+\approx 4.98 \cdot 2.08 \approx 10.4.$$
+
+Real-product single-crystal D4 NCM is therefore predicted to tolerate
+**an order of magnitude larger relative overlap** than polycrystalline
+D12 NCM before the first cone crack initiates — a useful design heuristic
+for thick-film cathode architectures where minimising AM fracture under
+stack pressure is critical.
+
 **Force-based classification.** Because our DEM uses the LIGGGHTS
 hooke/hysteresis contact model rather than nonlinear Hertz, the
 relationship between overlap δ and contact force F is linear
@@ -341,6 +357,20 @@ $$\frac{(\delta_c / R)_{AM\_S}}{(\delta_c / R)_{AM\_P}}
 기여, size 효과가 추가로 약 1.6× 기여. 어떠한 per-case fit 도
 적용하지 않은 이 결합 인자가 Section 3 에서 보고되는 AM_S = 0 % vs
 AM_P = 31 % severe-fraction 비대칭을 완전히 설명한다.
+
+상업적으로 대표적인 NCM 입자 크기 — AM_S 가 D4 (R = 2 μm,
+단결정 nano-cathode), AM_P 가 D12 (R = 6 μm, 다결정 secondary
+aggregate) — 의 경우, size 인자는 $(2/6)^{-2/3} = 3^{2/3} \approx 2.08$
+로 더 커지며, 결합된 상대 overlap tolerance 비는
+
+$$\frac{(\delta_c/R)_{AM\_S,\,D4}}{(\delta_c/R)_{AM\_P,\,D12}}
+= (3.33)^{4/3} \cdot (1/3)^{-2/3}
+\approx 4.98 \cdot 2.08 \approx 10.4.$$
+
+실제 commercial 단결정 D4 NCM 은 따라서 다결정 D12 NCM 보다 첫
+cone crack 시작 전에 **한 자리수 (order of magnitude) 더 큰 상대
+overlap 을 견딜 것** 으로 예측된다 — stack 압력 하에서 AM fracture
+최소화가 중요한 thick-film 양극 아키텍처 설계에 유용한 heuristic.
 
 **Force-기반 분류.** 본 연구의 DEM 은 LIGGGHTS 의 hooke/hysteresis
 접촉 모델을 사용하므로 overlap δ 와 접촉력 F 사이의 관계는 비선형
