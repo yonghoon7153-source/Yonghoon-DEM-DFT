@@ -177,9 +177,13 @@ def aggregate() -> pd.DataFrame:
             'sigma_e_full': pick('electronic_sigma_full_mScm'),
             'sigma_e_fracture_aware': pick('electronic_sigma_full_mScm_fracture_aware'),
             'sigma_e_loss_pct': pick('electronic_sigma_loss_pct'),
+            'sigma_e_stagewise': pick('electronic_sigma_full_mScm_stagewise'),
+            'sigma_e_loss_pct_stagewise': pick('electronic_sigma_loss_pct_stagewise'),
             'sigma_th_full': pick('thermal_sigma_full_mScm'),
             'sigma_th_fracture_aware': pick('thermal_sigma_full_mScm_fracture_aware'),
+            'sigma_th_stagewise': pick('thermal_sigma_full_mScm_stagewise'),
             'sigma_th_loss_pct': pick('thermal_sigma_loss_pct'),
+            'sigma_th_loss_pct_stagewise': pick('thermal_sigma_loss_pct_stagewise'),
             'frac_severe_pct': pick('frac_severe_pct'),
             'frac_severe_force_pct': pick('frac_severe_force_pct'),
             'frac_AM_P_AM_P_severe_pct': pick('frac_AM_P_AM_P_severe_pct'),
@@ -317,18 +321,32 @@ def main() -> None:
         print(f'  {lbl:35s}  {r_p:>+8.3f}   {r_s:>+8.3f}   {n:>4d}')
     print()
 
-    # ── 5. σ_e absolute values: full vs fracture-aware ──────────────────
+    # ── 5. σ_e absolute values: full vs fracture-aware (binary) vs stagewise ────
     print('='*78)
-    print('σ_e_full vs σ_e_fracture_aware — distribution')
+    print('σ_e: full vs fracture-aware (binary) vs stagewise (Lawn-Lit)')
     print('='*78)
     sf = df['sigma_e_full'].dropna()
     sfa = df['sigma_e_fracture_aware'].dropna()
-    print(f'  σ_e_full           median {sf.median():.2f}  mean {sf.mean():.2f}  max {sf.max():.2f}')
-    print(f'  σ_e_fracture_aware median {sfa.median():.2f}  mean {sfa.mean():.2f}  max {sfa.max():.2f}')
-    if 'sigma_e_full' in df and 'sigma_e_fracture_aware' in df:
+    ssw = df['sigma_e_stagewise'].dropna() if 'sigma_e_stagewise' in df.columns else pd.Series(dtype=float)
+    print(f'  σ_e_full           median {sf.median():6.2f}  mean {sf.mean():6.2f}  max {sf.max():6.2f}  n={len(sf)}')
+    print(f'  σ_e binary  (R=∞)  median {sfa.median():6.2f}  mean {sfa.mean():6.2f}  max {sfa.max():6.2f}  n={len(sfa)}')
+    if len(ssw):
+        print(f'  σ_e stagewise      median {ssw.median():6.2f}  mean {ssw.mean():6.2f}  max {ssw.max():6.2f}  n={len(ssw)}')
+    if 'sigma_e_fracture_aware' in df:
         ratios = (df['sigma_e_fracture_aware'] / df['sigma_e_full']).dropna()
-        print(f'  ratio fa/full      median {ratios.median():.3f}  mean {ratios.mean():.3f}')
+        print(f'  binary  fa/full    median {ratios.median():.3f}  mean {ratios.mean():.3f}')
+    if 'sigma_e_stagewise' in df.columns:
+        ratios_sw = (df['sigma_e_stagewise'] / df['sigma_e_full']).dropna()
+        if len(ratios_sw):
+            print(f'  stagewise sw/full  median {ratios_sw.median():.3f}  mean {ratios_sw.mean():.3f}')
     print()
+    if 'sigma_e_loss_pct_stagewise' in df.columns:
+        sw_loss = df['sigma_e_loss_pct_stagewise'].dropna()
+        if len(sw_loss):
+            print('  Stagewise loss_pct distribution:')
+            print(f'    n {len(sw_loss)}  mean {sw_loss.mean():.2f}%  median {sw_loss.median():.2f}%  '
+                  f'Q1/Q3 {sw_loss.quantile(0.25):.2f} / {sw_loss.quantile(0.75):.2f}%')
+            print()
 
     # ── 6. Pareto frontier candidates (low σ_e_loss + high σ_ionic) ─────
     cands = df[(df['sigma_ionic_full'].notna())
