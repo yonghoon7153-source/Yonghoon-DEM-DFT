@@ -710,6 +710,143 @@ const METRIC_TIPS = {
     formula: '(δ/R > 5%인 접촉 수 / 전체 접촉 수) × 100',
     desc: '과도한 겹침(δ/R > 5%)을 가진 접촉의 비율(%)입니다.',
     meaning: '이 비율이 0%에 가까우면 DEM 결과가 신뢰할 만합니다. 높으면 전체적으로 과도한 변형이 일어나고 있어 시뮬레이션 조건(가압 속도, 강성 등) 재검토가 필요합니다.'
+  },
+
+  // ───────── Tier 1 patches (post-Auerbach refinements) ─────────
+  'Coverage AM rough(%)   ⭐ [B3]': {
+    title: 'Coverage AM rough — Shape-factor-corrected coverage (B3)',
+    formula: 'cov_rough = A_AM-SE^Tabor / (f · 4πR² − A_AM-AM)\nf_AM_P = 1.40, f_AM_S = 1.10 (Quinn 2020 / Liu 2020)',
+    desc: '실제 NCM 입자가 perfect sphere 가 아니라 polycryst secondary 의 primary 텍스처나 single crystal 의 facet 으로 인해 4πR² 보다 큰 표면을 가짐. 그 보정된 분모로 계산한 coverage.',
+    meaning: 'Hertzian (~22%) 은 plastic film 무시로 너무 낮고, Physics (~60%) 는 perfect sphere 가정으로 너무 높음. Rough (~50-55%) 는 두 효과 모두 보정하여 ⭐ Minnmann 2021 실험 (40-65%) 과 정확 일치. Paper 의 가장 reliable coverage metric.'
+  },
+  'Coverage AM_P rough(%) ⭐ [B3]': {
+    title: 'Coverage AM_P rough — 다결정 secondary',
+    formula: 'cov_AM_P_rough = cov_AM_P_physics / 1.40 (대략)',
+    desc: '다결정 secondary aggregate 의 표면이 primary 입자 텍스처 때문에 ~40% 더 큼. f=1.40 적용.',
+    meaning: 'AM_P 의 실제 active surface 비율. Quinn 2020 / Lim 2017 의 직접 측정값 기반 보정.'
+  },
+  'Coverage AM_S rough(%) ⭐ [B3]': {
+    title: 'Coverage AM_S rough — 단결정',
+    formula: 'cov_AM_S_rough = cov_AM_S_physics / 1.10 (대략)',
+    desc: '단결정 NCM 의 facet 으로 인한 ~10% 표면 증가 보정. f=1.10.',
+    meaning: '단결정은 다결정보다 surface 가 매끄러워 보정 인자 작음. Liu 2020 / Wang 2022 측정값 기반.'
+  },
+  'SE-SE CN (perc-only)        [F2]': {
+    title: 'SE-SE CN — Percolating-only 평균 (F2 robustness)',
+    formula: 'CN_perc = mean over (percolating SE) only',
+    desc: 'Standard CN 은 모든 SE 평균. Perc-only 는 *연결된 cluster 안의 SE 만* 평균.',
+    meaning: 'Dead cluster 의 고립된 SE 가 σ_ionic 에 기여 못하므로, 그들 제외한 평균이 *실제 σ 기여 SE* 의 CN. Standard CN 과 거의 같으면 (이 case 5.58 vs 5.56) percolation 정상.'
+  },
+  'SE-SE CN (area-weighted)    [F2]': {
+    title: 'SE-SE CN — Area-weighted (F2 size-aware)',
+    formula: 'cn_eff_area = Σ A_SE-SE / Σ 4πR²_SE',
+    desc: 'Standard CN (count-based) 대신 *총 SE-SE 접촉 면적* 을 *총 SE 표면적* 으로 나눈 값. Surface-fraction 표현.',
+    meaning: '값 ≈ 0.14 means 평균 SE 표면의 14% 가 다른 SE 와 접촉. Polydisperse (큰/작은 SE 혼재) 시스템에서 더 fair (작은 SE 가 가중되지 않음).'
+  },
+  'SE-SE CN (perc area-w)      [F2]': {
+    title: 'SE-SE CN — Percolating + area-weighted (F2 combined)',
+    formula: 'percolating SE 만의 area-weighted CN',
+    desc: 'F2 의 두 보정 (perc-only + area-weighted) 결합. 이 case 는 percolation 99.5% 라 area-weighted 와 거의 동일.',
+    meaning: '가장 conservative 하면서 동시에 size-fair 한 CN 정의. σ-prediction 에 가장 정합 가능 (case 마다 robustness check).'
+  },
+  'SE-SE CN (plastic-augmented) [F1]': {
+    title: 'SE-SE CN — Plastic-augmented (F1 deformation-aware)',
+    formula: 'CN_aug = CN_standard + (near-miss pairs within h_spread = 10 nm)',
+    desc: 'LIGGGHTS 는 δ > 0 인 *elastic* contact 만 잡음. F1 은 *gap < 10 nm* 의 near-miss pair 도 carbon: plastic flow 시 닿을 가능성 있다고 가정해 추가 카운트.',
+    meaning: 'CN +0.1-0.2 정도 증가. DEM 이 *놓친* plastic deformation 효과 정량화. 이 case 는 well-packed 라 변화 +2% 미만.'
+  },
+  '(F1 extra near-contact pairs)': {
+    title: 'F1 — Near-contact pair count',
+    formula: 'gap < 10 nm (= 2 × h_film_min) 인 SE-SE pair 수',
+    desc: 'F1 augmentation 으로 추가된 *near-miss* pair 의 절대 수. 10 nm 는 Tabor plastic film 의 typical lateral spread 거리.',
+    meaning: '이 수가 클수록 DEM 의 elastic 가정이 plastic 현실과 더 차이남. ~10,000 정도면 mid-magnitude (이 case 는 well-percolated 라 σ 영향 거의 없음).'
+  },
+
+  // ───────── Fracture stages (Auerbach + Lawn 1998) ─────────
+  'Intact': {
+    title: 'Intact — 정상 접촉 (no crack)',
+    formula: 'F < P_c  (Auerbach 임계 하)',
+    desc: '접촉력 F 가 Auerbach cone-crack 시작 임계 P_c 미만. 어떠한 crack 도 시작 안 됨.',
+    meaning: '보통 NCM 에서 70-75% 가 이 단계. 압축 후 *구조적으로 건전* 한 접촉.'
+  },
+  'Microcrack': {
+    title: 'Microcrack — 첫 cone crack 시작',
+    formula: 'P_c ≤ F < 3·P_c',
+    desc: 'Auerbach 임계 ~ 3× 임계 사이. 첫 cone crack 이 contact perimeter 에서 시작 (입자 전체 구조 유지).',
+    meaning: '실험에서 압축 후 SEM 으로 관측 가능 (de Vasconcelos 2019 ~15-25%). 본 연구도 17.2% — 문헌 범위.'
+  },
+  'Multi-crack': {
+    title: 'Multi-crack — 다수 cone/radial cracks',
+    formula: '3·P_c ≤ F < 11·P_c',
+    desc: '여러 cone crack + radial crack 동시 발생. 입자는 아직 cohesive 하지만 강도 저하.',
+    meaning: 'Quinn 2020 의 SEM 관측 5-10% 와 일치. 본 연구 7.1%.'
+  },
+  'Fragmentation': {
+    title: 'Fragmentation — 표면 chunk 분리',
+    formula: '11·P_c ≤ F < 32·P_c',
+    desc: '입자 표면에서 chunk (조각) 들이 분리되기 시작. Secondary aggregate 의 primary 입자 분리 단계.',
+    meaning: 'Pulverization 직전 단계. Severe damage. 제거 시 σ_e 에 큰 영향 가능.'
+  },
+  'Pulverization': {
+    title: 'Pulverization — 입자 분해',
+    formula: 'F ≥ 32·P_c',
+    desc: '입자가 여러 fragment 로 완전 분해. >50% 부피 손실.',
+    meaning: 'Lim 2018 / Quinn 2020 관측 1-5% 와 일치 (cycling 후). 본 연구 0.5% — 압축만 한 fresh state.'
+  },
+  'Severe %': {
+    title: 'Severe — Fragmentation + Pulverization 합',
+    formula: 'severe = (n_fragmentation + n_pulverization) / n_total × 100',
+    desc: '심각하게 손상된 접촉의 비율 (frag + pulv).',
+    meaning: '실험 (1-5% post-compaction NCM) 과 비교용. 본 연구 2.1% (δ-based) / 1.4% (force-based) — 문헌 중앙값.'
+  },
+  'fracture_index (severe/total)': {
+    title: 'Per-case fracture index',
+    formula: 'fracture_index = (n_frag + n_pulv) / n_total ∈ [0, 1]',
+    desc: '이 case 의 severe contact 비율. 0 = 모두 정상, 1 = 모두 심각.',
+    meaning: 'Section 5 의 validity filter (< 0.10) 의 1차 cutoff. 156-case 앙상블의 median = 0.013, mean = 0.076.'
+  },
+
+  // Per-pair-type severe %
+  'AM_P-AM_P': {
+    title: 'AM_P–AM_P severe %',
+    formula: '(frag+pulv) / n_total for AM_P-AM_P pair only',
+    desc: '다결정-다결정 접촉의 severe 비율. K_IC = 0.3 MPa·m^0.5 (Quinn 2020) 로 가장 약함.',
+    meaning: '본 ensemble 31.3% (δ) / 28.5% (force) — paper 의 가장 큰 severe fraction. 다결정 secondary 의 fracture 위험성 정량.'
+  },
+  'AM_P-AM_S': {
+    title: 'AM_P–AM_S (mixed) severe %',
+    formula: '(frag+pulv) / n_total for mixed pair',
+    desc: '다결정-단결정 혼합 접촉. K_IC = √(K_S × K_P) = 0.55 MPa·m^0.5 기하평균.',
+    meaning: '두 종류의 중간 severity. Hybrid microstructure 의 fracture 거동.'
+  },
+  'AM_S-AM_S': {
+    title: 'AM_S–AM_S (single-crystal) severe %',
+    formula: '(frag+pulv) / n_total for AM_S-AM_S pair only',
+    desc: '단결정-단결정 접촉. K_IC = 1.0 MPa·m^0.5 (Liu 2020) 로 가장 강함.',
+    meaning: '본 ensemble 0.0% — 단결정 NCM 의 mechanical robustness 가 R-dependent Auerbach + K_IC^(4/3) scaling 으로 *발현적으로* 확인. 두 분류기 모두 0.0% 정확 일치 — 가장 강한 robustness 신호.'
+  },
+
+  // P_c, F, F/P_c medians
+  'AM_P-AM_P P_c': {
+    title: 'Auerbach onset force AM_P-AM_P',
+    formula: 'P_c = 200 · K_IC² · R_min / E*',
+    desc: '다결정 NCM 접촉의 cone-crack 시작 force. K_IC^PC = 0.3, E_AM = 140 GPa, R_min = 5μm 가정.',
+    meaning: '~1.21 mN. F_DEM 이 이를 초과하면 microcrack 시작.'
+  },
+
+  'Total AM-AM contacts': {
+    title: 'AM-AM 접촉 총 개수',
+    formula: 'Counts of AM-AM contacts in the case',
+    desc: 'δ-based: δ > 0 인 모든 AM-AM contact. Force-based: fn > 0 인 contact 만.',
+    meaning: 'Stage 분포의 분모. AM 입자 수와 packing density 에 비례.'
+  },
+
+  // Misc Fracture footnote rows (P_c values in mN per pair type)
+  'P_c AM_P-AM_P (mN)': {
+    title: 'P_c AM_P-AM_P (Auerbach onset)',
+    formula: 'P_c = 200 K_IC² R_min / E*',
+    desc: '~1.21 mN. K_IC=0.3 MPa·m^0.5 + R=5μm 기반.',
+    meaning: 'F/P_c > 1 이면 fracture risk.'
   }
 };
 
@@ -741,7 +878,9 @@ let activeTooltipRow = null;
 
 document.querySelectorAll('.metric-label[data-metric]').forEach(td => {
   const key = td.dataset.metric;
-  const tip = METRIC_TIPS[key];
+  // Try exact match first; fall back to trimmed (rows under section headers
+  // like 'fracture_summary' are indented with leading spaces).
+  const tip = METRIC_TIPS[key] || METRIC_TIPS[(key || '').trim()];
   if (!tip) return;
   const tr = td.closest('tr');
 

@@ -218,9 +218,26 @@ def build_fracture_summary_table(metrics):
     rows = []
 
     # ── Stage distribution (%) ──
+    # Older b2_b4_diagnostic.py emitted only the four damage-stage shares
+    # and omitted intact (which is the implicit complement). When we backfill
+    # those cases, frac_intact_pct is missing → recover as 100 minus the
+    # sum of the four explicit stages so the UI shows a complete distribution.
+    other_d = sum(metrics.get(f'frac_{s}_pct') or 0
+                  for s in ('microcrack', 'multicrack',
+                            'fragmentation', 'pulverization'))
+    other_f = sum(metrics.get(f'frac_{s}_force_pct') or 0
+                  for s in ('microcrack', 'multicrack',
+                            'fragmentation', 'pulverization'))
+    intact_d = (metrics.get('frac_intact_pct')
+                if metrics.get('frac_intact_pct') is not None
+                else (round(100.0 - other_d, 2) if other_d > 0 else None))
+    intact_f = (metrics.get('frac_intact_force_pct')
+                if metrics.get('frac_intact_force_pct') is not None
+                else (round(100.0 - other_f, 2) if other_f > 0 else None))
+
     rows.append(['── 단계별 분포 (%) ──'])
-    for stage, label in [('intact',        'Intact'),
-                          ('microcrack',    'Microcrack'),
+    rows.append(['  Intact', f(intact_d), f(intact_f)])
+    for stage, label in [('microcrack',    'Microcrack'),
                           ('multicrack',    'Multi-crack'),
                           ('fragmentation', 'Fragmentation'),
                           ('pulverization', 'Pulverization')]:
