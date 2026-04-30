@@ -881,3 +881,275 @@ feedback 부재, validity-filter robustness — 가 이제 실증적으로 확�
 convention 에서 0.87 – 0.95 대역에 머문다. Sections 1–3 의 brittle
 reframe 은 부풀려진 AM-AM δ/R 필드에 대한 paper-grade caveat 를
 제공하면서, 어떤 σ_ionic claim 도 흔들지 않는다.
+
+---
+
+## Section 5-1 — Bulk-Pellet vs Composite-Cathode r_SE Optimum: A Mechanistic Inversion
+
+### English
+
+The σ_ionic conclusions of Sections 4–5 hold within the *composite-cathode*
+microstructure that defines our 78-case ensemble. A natural follow-up
+question — frequently raised by industry practitioners — is whether the
+"smaller-SE-is-better" optimum extracted from the cathode microstructure
+extends to the *pure-SE separator pellet* layer of the same cell. The
+empirical answer is no: cell manufacturers consistently use *larger* SE
+(D50 ≈ 1–3 μm) in the separator while using *smaller* SE (D50 ≈ 0.3–0.8 μm)
+in the cathode composite of the same cell. This subsection clarifies why
+this inversion is *not* a contradiction of the present paper's conclusions,
+but a consequence of *different dominant mechanisms* operating in the two
+layers.
+
+**Industrial observation.** Commercial sulfide solid-electrolyte producers
+list distinct product lines for the two intended uses: separator-grade SE
+is supplied at D50 ≈ 1–3 μm (Ampcera Pass-325-mesh fine powder,
+Mitsui Mining LPSCl standard grade), while cathode-grade SE is supplied as
+sub-micron nano-powder at D50 ≈ 0.8 μm (Ampcera Argyrodite nano-powder
+line). Cell-level disclosures from Samsung SDI (2024), Solid Power
+(2023 roadmap), and QuantumScape (technical disclosures) all describe a
+*bilayer architecture*: fine SE in the cathode layer, coarse SE in the
+separator pellet.
+
+**Mechanism (i) — separator pellet favors larger SE.** Four
+DEM-external factors converge to make 1–3 μm the empirical optimum for
+sulfide-pellet separators:
+
+  *Plastic densification at cold-press.* Sulfide SEs are plastically
+  deforming under typical 250–500 MPa cold-press. Larger particles
+  experience higher per-particle force (F ∝ P · R²) at fixed pressure
+  and reach plastic-flow threshold easily, achieving 92–95 % relative
+  density. Sub-micron particles fall into jamming-arrested packings at
+  85–90 % density even at the same pressure (Bielefeld 2020, Nature
+  Communications 2024 on pellet-density failure). Cronau 2022 reports
+  σ_pellet decreasing to ≈ 1/3 of the optimum when extended ball-milling
+  drives D50 below 0.3 μm — consistent with this densification-limited
+  regime.
+
+  *σ_grain integrity.* Extended ball-milling that produces sub-micron
+  argyrodite particles introduces a surface amorphous shell and point
+  defects that reduce σ_grain itself. The effect is mild for D50 ≥ 0.5 μm
+  (Cronau optimum band) and becomes severe only below ≈ 0.1 μm (SPS data,
+  ScienceDirect 2023, where average grain size of 80 nm shows reduced
+  bulk σ_grain). For separator pellets that need to maintain high σ over
+  millimeter thickness, working in the size-invariant ≥ 1 μm regime is
+  preferred even though our DEM analysis predicts mild advantage for
+  smaller SE on η_topology grounds.
+
+  *Air sensitivity and shelf life.* Sulfide SE air-sensitivity scales with
+  specific surface area ∝ 1/R. The 3× higher surface area of 0.5 μm vs
+  1.5 μm particles translates to roughly 5–10× shorter shelf-life under
+  typical dry-room handling, raising both manufacturing cost and
+  field-failure risk. For a separator that must integrate with both
+  cathode and anode and survive cell assembly, this stability margin is
+  critical.
+
+  *Mechanical strength of the formed pellet.* Larger sulfide particles
+  give a separator with higher creep resistance under stack-pressure
+  loading; sub-micron pellets show greater long-term creep / dendrite
+  channels under Li-metal anode pressure (Solid Power 2023 disclosures,
+  internal cell-aging data). The mechanical robustness of the separator
+  is a system-level requirement that drives industry away from the
+  η_topology-optimal sub-micron region.
+
+**Mechanism (ii) — composite cathode favors smaller SE.** In the
+cathode layer, the dominant determinant of σ_eff is *not* the
+densification or stability of the SE pellet itself, but the *infiltration
+of SE into the AM voids* and the *AM-SE interfacial area*. Three
+literature anchors establish this:
+
+  *Bielefeld 2019 (J. Phys. Chem. C) microstructure simulation.* "Solid
+  electrolyte does not infiltrate small pores, leading to void formation
+  and decreased ionic conductivity" — explicitly demonstrating that
+  larger SE forms voids in the AM-rich cathode microstructure that smaller
+  SE eliminates.
+
+  *Schlautmann 2023 (Adv. Energy Mater.) experimental SEM tomography.*
+  Smaller SE particles (D50 ≈ 1 μm Li6PS5Cl) yield "more homogeneous
+  microstructures with favorable transport properties" compared to
+  larger SE in 70 / 30 NCM-Li6PS5Cl composite cathodes.
+
+  *Cronau 2022 + 2:1 size-ratio rule.* The CAM (cathode active material)
+  / SE diameter ratio must satisfy d_CAM / d_SE ≥ 2 for adequate AM-SE
+  contact. With NCM secondary particles at 5–12 μm, this constrains SE
+  to D50 ≤ 2.5 μm and ideally below 1 μm.
+
+These three findings collectively pin the cathode-side optimum at the
+sub-micron region, which is precisely the range our 78-case ensemble's
+σ_ionic / σ_e analysis identifies as Pareto-optimal. The η_topology
+mechanism — geometric exclusion of large SE from inter-AM voids,
+elevated AM-SE coverage from finer SE — is the *dominant* determinant of
+σ_eff inside the cathode and is exactly what our DEM solver (network
+Kirchhoff equations on the SE-SE graph + coverage descriptor) computes.
+
+**Mechanistic decomposition of the inversion.** The two-layer optimum
+inversion is therefore not a paradox but a clean separation of dominant
+mechanisms by layer:
+
+  σ_eff_separator(R)  ≈  σ_grain × η_topology(pure-SE) × f_densification(R)
+                                                          × f_stability(R)
+                                                          × f_manufacturing(R)
+                            ↑                        ↑
+                       size-invariant ≥ 0.5 μm    favors larger R
+
+  σ_eff_cathode(R)    ≈  σ_grain × η_topology(SE-in-AM-voids)(R)
+                            ↑           ↑
+                       size-invariant   favors smaller R via Bielefeld /
+                                        Schlautmann / 2:1 rule (×~1.5–1.7
+                                        for 0.5 vs 1.5 μm)
+
+The σ_grain factor is identical in the two layers and is empirically
+size-invariant in the 0.5–1.5 μm range (Section 6 framework). The
+inversion is driven entirely by which η_topology / external-factor mix
+dominates each layer. The present paper's DEM framework rigorously
+captures the cathode-side η_topology mechanism. The separator-side
+external factors are outside our DEM scope.
+
+**Implication for the present paper's claim domain.** The σ_ionic /
+σ_e / σ_thermal conclusions of this paper apply to the cathode-composite
+microstructure for which our 78-case ensemble was generated. They do
+*not* claim that sub-micron SE is the optimum for separator pellets —
+that statement would require modeling cold-press plastic densification,
+synthesis-cost / stability trade-offs, and creep / dendrite suppression,
+all outside the present DEM scope. The cathode-favoring "small SE"
+conclusion of this paper and the separator-favoring "larger SE" industry
+standard are therefore mutually consistent under the bilayer-cell
+architecture (cathode + separator + anode), each layer optimized
+according to the dominant mechanism in that layer.
+
+This scope clarification also explains why the recently demonstrated cell
+designs — Samsung SDI 2024, Solid Power 2023, QuantumScape — all use
+*both* fine and coarse SE in the same cell: the "전해질 미립화"
+(electrolyte miniaturization) industry trend specifically targets the
+cathode-internal SE filler and is *not* applied to the separator layer.
+The present paper's framework provides the mechanistic foundation for
+this targeted miniaturization in the cathode while acknowledging that
+the separator optimum is governed by a separate set of considerations.
+
+### 한국어
+
+Sections 4-5 의 σ_ionic 결론은 본 논문의 78-case 앙상블이 정의하는
+*복합 양극 (composite cathode)* microstructure 내에서 성립한다.
+산업 실무자들이 자주 제기하는 후속 질문은, 이 cathode microstructure
+에서 도출된 "작은 SE 우위" 결론이 같은 셀의 *순수 SE 분리막 (separator
+pellet) layer* 에도 확장되는가이다. 실증적 답은 *아니다* — 셀 제조사들
+은 같은 셀의 separator 에 *큰 SE* (D50 ≈ 1-3 μm) 를, cathode composite
+에 *작은 SE* (D50 ≈ 0.3-0.8 μm) 를 일관되게 사용한다. 본 절은 이러한
+역전 (inversion) 이 본 논문의 결론과 모순이 아니라, *두 layer 에서
+서로 다른 dominant mechanism 이 작동한 결과*임을 명료히 한다.
+
+**산업적 관찰.** 상용 sulfide solid-electrolyte 공급자들은 두 용도로
+구분된 제품 라인을 운영한다: separator-grade SE 는 D50 ≈ 1-3 μm
+(Ampcera Pass-325-mesh fine powder, Mitsui Mining LPSCl 표준 grade) 로
+공급되고, cathode-grade SE 는 sub-micron nano-powder 형태로 D50 ≈ 0.8
+μm (Ampcera Argyrodite nano-powder line) 로 공급된다. Samsung SDI
+(2024), Solid Power (2023 roadmap), QuantumScape (기술 공시) 의 cell-
+level 공시들은 모두 *bilayer architecture* 를 기술한다: cathode layer
+에 fine SE, separator pellet 에 coarse SE.
+
+**Mechanism (i) — separator pellet 은 큰 SE 를 선호.** 본 DEM scope
+외부의 네 가지 factor 가 결합되어 sulfide-pellet separator 에서는
+1-3 μm 가 실증적 optimum:
+
+  *Cold-press 의 plastic densification.* Sulfide SE 는 통상 250-500
+  MPa cold-press 에서 plastically deforming. 큰 입자는 같은 압력에서
+  per-particle force 가 더 크고 (F ∝ P · R²) plastic-flow 임계를 더
+  쉽게 넘어 92-95 % 상대 밀도를 달성. Sub-micron 입자는 같은 압력에서
+  jamming-arrested packing 으로 85-90 % 밀도에서 정지 (Bielefeld 2020,
+  Nature Communications 2024 의 pellet-density failure 분석). Cronau
+  2022 가 보고한 extended ball-milling (D50 < 0.3 μm) 의 σ_pellet 1/3
+  감소는 이 densification-limited regime 와 정합한다.
+
+  *σ_grain 무결성.* Sub-micron argyrodite 입자를 만드는 extended ball-
+  milling 은 표면 amorphous shell + 점결함을 도입해 σ_grain 자체를 떨어
+  뜨린다. 이 효과는 D50 ≥ 0.5 μm (Cronau optimum 영역) 에서는 mild 이며
+  ≈ 0.1 μm 이하에서야 본격화된다 (SPS data, ScienceDirect 2023, 평균
+  grain size 80 nm 에서 bulk σ_grain 감소 확인). 밀리미터 두께에 걸쳐
+  높은 σ 를 유지해야 하는 separator pellet 에서는, 우리 DEM 분석이
+  η_topology 관점에서 작은 SE 의 mild advantage 를 예측함에도 불구하고,
+  size-invariant ≥ 1 μm regime 에서 작업하는 게 선호된다.
+
+  *Air-sensitivity 와 shelf life.* Sulfide SE 의 air-sensitivity 는
+  비표면적 ∝ 1/R 에 비례. 0.5 μm 가 1.5 μm 대비 3 배 높은 비표면적
+  은 dry-room 환경에서 약 5-10 배 짧은 shelf-life 로 이어져 제조 cost
+  와 field-failure 위험을 동시에 높인다. cathode 와 anode 양쪽과
+  통합되어 cell assembly 를 견뎌야 하는 separator 에서 이 stability
+  margin 은 결정적이다.
+
+  *형성된 pellet 의 mechanical strength.* 큰 sulfide 입자가 stack-
+  pressure 부하 하에서 더 높은 creep resistance 를 가진 separator 를
+  생성. Sub-micron pellet 은 Li-metal 음극 압력 하에서 long-term creep /
+  dendrite 채널을 더 많이 보임 (Solid Power 2023 공시, 내부 cell-aging
+  데이터). Separator 의 mechanical robustness 는 system-level 요구
+  사항으로서 산업이 η_topology-optimal sub-micron 영역에서 멀어지게
+  하는 driver 이다.
+
+**Mechanism (ii) — composite cathode 는 작은 SE 를 선호.** Cathode layer
+에서 σ_eff 의 dominant 결정 요인은 SE pellet 자체의 densification 또는
+stability 가 아니라 *SE 의 AM 사이 빈틈으로의 침투* 와 *AM-SE 계면 면적*
+이다. 세 literature anchor 가 이를 확립한다:
+
+  *Bielefeld 2019 (J. Phys. Chem. C) microstructure simulation.* "Solid
+  electrolyte does not infiltrate small pores, leading to void formation
+  and decreased ionic conductivity" — 큰 SE 가 AM-rich cathode 미세구조
+  에서 void 를 형성하고 작은 SE 가 이를 제거함을 직접 시연.
+
+  *Schlautmann 2023 (Adv. Energy Mater.) 실험 SEM tomography.* 작은
+  SE 입자 (D50 ≈ 1 μm Li6PS5Cl) 가 70 / 30 NCM-Li6PS5Cl 복합 양극에서
+  큰 SE 대비 "더 균일한 microstructure 와 favorable transport
+  properties" 를 산출.
+
+  *Cronau 2022 + 2:1 size-ratio rule.* CAM (cathode active material) /
+  SE 직경 비가 d_CAM / d_SE ≥ 2 를 만족해야 적절한 AM-SE contact 가
+  형성된다. NCM secondary 입자가 5-12 μm 인 경우 SE 는 D50 ≤ 2.5 μm
+  로 제한되며 이상적으로는 1 μm 미만.
+
+이 세 결과가 종합적으로 cathode 측 optimum 을 sub-micron 영역에 고정
+시키며, 이는 정확히 본 논문 78-case 앙상블의 σ_ionic / σ_e 분석이
+Pareto-optimal 로 식별하는 영역이다. η_topology mechanism — 큰 SE 가
+inter-AM void 에서 geometric exclusion 되는 효과, fine SE 의 elevated
+AM-SE coverage — 가 cathode 내부 σ_eff 의 *dominant* 결정 요인이며,
+이는 우리 DEM solver (SE-SE graph 의 network Kirchhoff equations +
+coverage descriptor) 가 정확히 계산하는 양이다.
+
+**역전현상의 mechanistic decomposition.** 따라서 두 layer 의 optimum
+역전은 paradox 가 아니라 *layer 별 dominant mechanism 의 깔끔한 분리*
+이다:
+
+  σ_eff_separator(R)  ≈  σ_grain × η_topology(pure-SE) × f_densification(R)
+                                                          × f_stability(R)
+                                                          × f_manufacturing(R)
+                            ↑                        ↑
+                       size-invariant ≥ 0.5 μm    큰 R 선호
+
+  σ_eff_cathode(R)    ≈  σ_grain × η_topology(SE-in-AM-voids)(R)
+                            ↑           ↑
+                       size-invariant   작은 R 선호 (Bielefeld /
+                                        Schlautmann / 2:1 rule
+                                        ×~1.5-1.7 for 0.5 vs 1.5 μm)
+
+σ_grain factor 는 두 layer 에서 동일하며 0.5-1.5 μm 범위에서 실증적
+size-invariant 이다 (Section 6 framework). 역전은 전적으로 어떤
+η_topology / external-factor mix 가 각 layer 에서 dominant 인가에
+의해 결정된다. 본 논문의 DEM framework 는 cathode 측 η_topology
+mechanism 을 rigorous 하게 capture 한다. Separator 측 external factor
+들은 본 DEM scope 외부이다.
+
+**본 논문의 claim 영역에 대한 함의.** 본 논문의 σ_ionic / σ_e /
+σ_thermal 결론은 78-case 앙상블이 생성된 cathode-composite microstructure
+에 적용된다. 본 결론이 sub-micron SE 가 separator pellet 의 optimum
+이라고 *주장하지 않는다* — 그러한 statement 는 cold-press plastic
+densification, 합성 cost / stability trade-off, creep / dendrite
+suppression 의 모델링을 요구하며 이 모두는 본 DEM scope 외부이다.
+본 논문의 cathode-favoring "small SE" 결론과 separator-favoring "larger
+SE" 산업 표준은 따라서 bilayer-cell architecture (cathode + separator
++ anode) 하에서 *상호 consistent* 하며, 각 layer 가 그 layer 의
+dominant mechanism 에 따라 최적화된다.
+
+이 scope clarification 은 또한 최근의 시연된 cell design — Samsung SDI
+2024, Solid Power 2023, QuantumScape — 가 모두 같은 셀 안에 *fine 과
+coarse SE 를 함께* 사용하는 이유를 설명한다: "전해질 미립화" (electrolyte
+miniaturization) 산업 trend 는 *cathode-internal SE filler 에 한정* 하여
+적용되며 separator layer 에는 적용되지 않는다. 본 논문의 framework 는
+cathode 에서의 이러한 targeted miniaturization 의 mechanistic foundation
+을 제공하면서, separator optimum 은 별개 set 의 considerations 에 의해
+지배됨을 acknowledge 한다.
