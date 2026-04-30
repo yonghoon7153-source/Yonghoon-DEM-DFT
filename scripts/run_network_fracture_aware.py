@@ -232,11 +232,20 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     with open(fm_path, 'w') as f:
         json.dump(fm, f, indent=2, default=str)
 
-    msg = (f'σ_e: {sigma_e_full:.3f} → {sigma_e_filt:.3f} mS/cm  '
-           f'(loss {fm.get("electronic_sigma_loss_pct", "?")}%)  '
-           f'[{n_excl}/{n_total_am_am} AM-AM excluded]'
-           if sigma_e_full else
-           f'[{n_excl}/{n_total_am_am} AM-AM excluded]')
+    if sigma_e_full and sigma_e_filt is not None:
+        loss_pct = fm.get("electronic_sigma_loss_pct", "?")
+        msg = (f'σ_e: {sigma_e_full:.3f} → {sigma_e_filt:.3f} mS/cm  '
+               f'(loss {loss_pct}%)  '
+               f'[{n_excl}/{n_total_am_am} AM-AM excluded]')
+    elif sigma_e_full:
+        fm['electronic_sigma_full_mScm_fracture_aware'] = 0.0
+        fm['electronic_sigma_loss_pct'] = 100.0
+        with open(fm_path, 'w') as f:
+            json.dump(fm, f, indent=2, default=str)
+        msg = (f'σ_e: {sigma_e_full:.3f} → 0 (network disconnected)  '
+               f'[{n_excl}/{n_total_am_am} AM-AM excluded]')
+    else:
+        msg = f'[{n_excl}/{n_total_am_am} AM-AM excluded]'
     return (case_dir.name, True, msg)
 
 
@@ -261,7 +270,10 @@ def main() -> None:
           flush=True)
     n_ok = n_fail = 0
     for i, d in enumerate(cases, 1):
-        cid, ok, msg = run_one(d)
+        try:
+            cid, ok, msg = run_one(d)
+        except Exception as e:
+            cid, ok, msg = (d.name, False, f'EXC: {type(e).__name__}: {e}')
         tag = '✓' if ok else '✗'
         if not args.quiet or not ok:
             print(f'  [{i:3d}/{len(cases)}] {tag} {cid:30s}  {msg[:130]}',
