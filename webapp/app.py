@@ -377,6 +377,125 @@ def inject_tier1_patch_rows(tables, metrics):
             data.insert(anchor_idx + j, nr)
 
 
+def inject_stage_e_rows(tables, metrics):
+    """Append a 'Stage E (literature-grounded grain corrections)' section
+    showing the per-channel σ_grain factors applied + corrected σ values.
+
+    Three orthogonal corrections per Cronau 2022 / Trevisanello 2021 / Wang 2022:
+      σ_ionic : SE r_SE-dependent (size-invariant ≥ 0.3 μm in our range)
+      σ_e     : AM crystallinity (AM_S=1.0, AM_P=0.65)
+      κ       : AM crystallinity (AM_S=1.0, AM_P=0.50), SE size-invariant
+
+    Cases predating Stage E auto-pipeline leave the keys missing → silently
+    skipped. Newly analyzed cases (post-Stage-E auto-integration) populate.
+    """
+    if 'network_summary' not in tables or not metrics:
+        return
+    data = tables['network_summary']['data']
+    if not isinstance(data, list):
+        return
+
+    section_label = '── Stage E (literature-grounded σ_grain corrections) ──'
+    if any(isinstance(r, list) and r and r[0] == section_label for r in data):
+        return  # already injected
+
+    factors = metrics.get('stage_e_factors_used') or {}
+    sigma_i_e   = metrics.get('sigma_full_mScm_stage_e')
+    sigma_e_e   = metrics.get('electronic_sigma_full_mScm_stage_e')
+    sigma_th_e  = metrics.get('thermal_sigma_full_mScm_stage_e')
+    if not (factors or sigma_i_e is not None or sigma_e_e is not None):
+        return  # no Stage E data on this case
+
+    rows: list = [[section_label, '', '', '']]
+
+    # Applied factors header
+    r_se = factors.get('r_SE_um')
+    f_se_ionic = factors.get('f_SE_ionic')
+    am_factors = factors.get('AM_factors') or {}
+    kappa_factors = factors.get('kappa_factors') or {}
+
+    if r_se is not None and f_se_ionic is not None:
+        rows.append([
+            f'  σ_grain factor — SE (r={r_se:.2f}μm, σ_ionic)',
+            '', f'×{f_se_ionic:.2f}',
+            'Cronau 2022 — size-invariant ≥0.3μm' if f_se_ionic >= 0.99
+            else f'Cronau 2022 — sub-μm amorphization'
+        ])
+
+    if am_factors:
+        am_s = am_factors.get('AM_S')
+        am_p = am_factors.get('AM_P')
+        if am_s is not None or am_p is not None:
+            rows.append([
+                '  σ_grain factor — AM_S / AM_P (σ_e)',
+                '',
+                f'×{am_s:.2f} / ×{am_p:.2f}',
+                'Trevisanello 2021 — single vs poly crystal'
+            ])
+
+    if kappa_factors:
+        k_s = kappa_factors.get('AM_S')
+        k_p = kappa_factors.get('AM_P')
+        k_se = kappa_factors.get('SE')
+        if k_s is not None and k_p is not None:
+            rows.append([
+                '  κ factor — AM_S / AM_P / SE',
+                '',
+                f'×{k_s:.2f} / ×{k_p:.2f} / ×{k_se:.2f}'
+                if k_se is not None else f'×{k_s:.2f} / ×{k_p:.2f}',
+                'Wang 2022 — phonon GB scattering'
+            ])
+
+    # Corrected σ values
+    if sigma_i_e is not None:
+        baseline = metrics.get('sigma_full_mScm')
+        delta = (1.0 - sigma_i_e/baseline)*100 if baseline else None
+        rows.append([
+            '  σ_ionic (Stage E corrected)', '',
+            f'{sigma_i_e:.4f} mS/cm',
+            f'Δ {delta:+.1f}%' if delta is not None else ''
+        ])
+    if sigma_e_e is not None:
+        baseline = metrics.get('electronic_sigma_full_mScm')
+        delta = (1.0 - sigma_e_e/baseline)*100 if baseline else None
+        rows.append([
+            '  σ_electronic (Stage E corrected)', '',
+            f'{sigma_e_e:.3f} mS/cm',
+            f'Δ {delta:+.1f}%' if delta is not None else ''
+        ])
+    if sigma_th_e is not None:
+        baseline = metrics.get('thermal_sigma_full_mScm')
+        delta = (1.0 - sigma_th_e/baseline)*100 if baseline else None
+        rows.append([
+            '  σ_thermal (Stage E corrected)', '',
+            f'{sigma_th_e:.3f} mS/cm equiv',
+            f'Δ {delta:+.1f}%' if delta is not None else ''
+        ])
+
+    # Stage counts (audit trail)
+    sc = metrics.get('stage_e_fracture_stage_counts')
+    if sc and isinstance(sc, dict):
+        n_intact = int(sc.get('intact', 0))
+        n_mc     = int(sc.get('microcrack', 0))
+        n_mu     = int(sc.get('multicrack', 0))
+        n_fr     = int(sc.get('fragmentation', 0))
+        n_pu     = int(sc.get('pulverization', 0))
+        n_total  = n_intact + n_mc + n_mu + n_fr + n_pu
+        if n_total:
+            rows.append([
+                '  Fracture stage counts (intact/MC/Multi/Frag/Pulv)',
+                '',
+                f'{n_intact}/{n_mc}/{n_mu}/{n_fr}/{n_pu}',
+                f'Lawn 1998 force multipliers (1/3/11/32)'
+            ])
+
+    if len(rows) <= 1:
+        return  # only header — nothing to add
+
+    # Anchor at end of network_summary (after Tier 1 patches if present)
+    data.extend(rows)
+
+
 def transform_network_summary_4col(tables, metrics, meta):
     """Convert network_summary table to 4-column (지표 | Hertzian | Physics | Δ%)
     and inject Network Solver + AM-AM sections from full_metrics.json.
@@ -1189,6 +1308,26 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
                             'stderr': '', 'rc': 0})
         except Exception as _e:
             log.append({'step': 'Network Solver Merge',
+                        'stdout': '', 'stderr': str(_e), 'rc': 1})
+
+        # Stage E — Literature-grounded full grain corrections
+        # Auto-applies size/crystallinity factors per channel:
+        #   σ_ionic : SE σ_grain(r_SE) — Cronau 2022 (size-invariant ≥ 0.3 μm)
+        #   σ_e     : AM crystallinity (Trevisanello 2021) AM_S=1.0, AM_P=0.65
+        #   κ       : AM crystallinity (Wang 2022) AM_S=1.0, AM_P=0.50
+        #            SE size-invariant (sulfide already glassy)
+        try:
+            stage_e_cmd = ['python3',
+                            os.path.join(scripts, 'run_network_full_corrections.py'),
+                            os.path.basename(results_dir), '--quiet']
+            stage_e_result = subprocess.run(stage_e_cmd, capture_output=True,
+                                              text=True, timeout=3600)
+            log.append({'step': 'Stage E (literature-grounded grain corrections)',
+                        'stdout': stage_e_result.stdout,
+                        'stderr': stage_e_result.stderr,
+                        'rc': stage_e_result.returncode})
+        except Exception as _e:
+            log.append({'step': 'Stage E (literature-grounded grain corrections)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
         cmd = ['python3', os.path.join(scripts, 'generate_figures.py'),
@@ -2157,6 +2296,7 @@ def single(case_id):
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
+    inject_stage_e_rows(tables, metrics)
 
     # Brittle-fracture summary tab (auto-built from full_metrics.json keys)
     fracture_tbl = build_fracture_summary_table(metrics)

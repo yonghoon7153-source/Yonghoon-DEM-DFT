@@ -83,29 +83,33 @@ def _fracture_factor(m: float) -> tuple[float, str]:
     return 1.0, 'intact'
 
 
-# ── (2a) σ_ionic_grain_SE(r_SE) — literature-grounded, size-invariant ─────
+# ── (2a) σ_ionic_grain_SE(r_SE) — literature-grounded, smooth size-effect ──
 def sigma_ionic_grain_factor_SE(r_SE_real_um: float) -> float:
-    """SE σ_grain factor — literature consensus is size-invariant for r_SE ≥ 0.5 μm.
+    """SE σ_grain factor — literature-grounded with smooth transition zone.
+
+    Reference table (literature consensus):
+      r_SE ≥ 1.5 μm  → 1.00   ✓ very high (산업 표준, multiple measurements)
+      r_SE = 0.5 μm  → 1.00   ✓ high (Cronau optimum + SPS size-invariant)
+      r_SE = 0.3 μm  → 0.90   ~ moderate (transition zone)
+      r_SE = 0.1 μm  → 0.65   ✓ medium (SPS GB onset)
+      r_SE ≤ 30 nm   → 0.33   ✓ high (Cronau extreme-milling limit)
 
     Critical literature findings:
       - Sulfide intra-grain GB is *negligible* (Going Against the Grain 2024).
-      - Sulfide bulk σ vs GB cannot be deconvolved at room temp (Kalyk 2026).
       - Cronau 2022's 1/3 reduction is at *extended ball-milling*, primarily
-        affecting D50 < 0.3 μm. The 0.5-3 μm range shows σ_pellet ≈ constant.
+        affecting D50 < 0.3 μm.
       - SPS data (ScienceDirect 2023): grain σ_grain drops only below ~100 nm.
 
-    Conclusion: our paper's r_SE = 0.5-1.5 μm range sits entirely in the
-    sulfide SE's size-invariant σ_grain regime. No σ_grain correction is
-    applied for r_SE ≥ 0.3 μm. Below 0.3 μm, surface amorphization +
-    nano-GB effects begin (Cronau, SPS) and σ_grain decreases.
-
-    This means our paper's σ_ionic ranking is *robust without σ_grain
-    correction* — all variation is captured by η_topology (DEM solver).
+    Trigger behavior: when atom file uploaded, auto-detects r_SE from
+    atoms.csv (median SE radius / scale) and applies appropriate factor.
     """
     r = r_SE_real_um
-    if r >= 0.3: return 1.00         # size-invariant crystalline regime
-    if r >= 0.1: return 0.65         # nano-GB onset (SPS data)
-    return 0.33                       # extreme-milling sub-100 nm (Cronau limit)
+    if r is None or not (r > 0): return 1.00       # safety default
+    if r >= 0.5:  return 1.00                       # size-invariant region
+    if r >= 0.3:  return 0.90                       # transition zone
+    if r >= 0.1:  return 0.65                       # nano-GB onset (SPS)
+    if r >= 0.03: return 0.33 + 0.32*(r-0.03)/0.07  # smooth interp 30-100 nm
+    return 0.33                                      # extreme-milling limit
 
 
 # ── (2b) σ_e_grain_AM(crystal) — Trevisanello 2021 ────────────────────────
