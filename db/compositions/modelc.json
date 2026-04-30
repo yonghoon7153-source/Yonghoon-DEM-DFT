@@ -27,6 +27,20 @@
 
   "band_gap_eV": 1.65,
 
+  "pdos_v2_retry": {
+    "status": "DONE 2026-04-30 (after K=12x12x6 GPU bug fix with K=6x6x3 + comp1 v2 working pattern)",
+    "method": "QE projwfc.x v7.4.1 (qe-gpu, K=6x6x3 nosym, smearing/mv/0.005)",
+    "n_pdos_files": 151,
+    "VBM_eV": 2.0,
+    "CBM_eV": 4.6,
+    "VBM_dominant": "S 3p (1.84) — paper #1 universal",
+    "CBM_total_contribution": "S 3p x22 atoms = 0.22 (largest); P 3s x5 atoms = 0.14; Li 2s x27 atoms = 1.2E-04 (negligible)",
+    "Li_in_CBM": "negligible — vacancy + Cl-only structure does not bring Li to conduction band",
+    "narrative_update": "v1 db said 'CBM = Li 2s + P 3s' — v2 cross-check shows CBM = S 3p (antibonding) + P 3s. Li essentially absent. comp2 v2 cross-check confirms family-invariant.",
+    "battery_safety_implication": "Li negligible in CBM = electron reduction does not nucleate at Li sites -> reduced Li dendrite formation tendency (paper #1 SI candidate)",
+    "k_mesh_lesson": "K=12x12x6 too dense for QE GPU projwfc.x (NaN propagate); K=6x6x3 (matching comp1 v2 0.81 k/A density) safe for paper-quality PDOS"
+  },
+
   "elastic_dft_0K_GPa": {
     "C11": 85.3, "C12": 25.6, "C44": 28.0, "K": 43.7, "G": 30.0, "E": 73.3, "nu": 0.221,
     "notes": "C11(85.3)≈comp3(85.6)≈comp4(85.5). C44(28.0)≈comp3(27.5). E(73.3)>comp3(71.7)→Cl-only slightly more rigid."
