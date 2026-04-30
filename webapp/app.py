@@ -960,6 +960,32 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
                     'stderr': result.stderr, 'rc': result.returncode})
 
+        # Step 2c: Network solver (both contact modes) → sigma_*_mScm
+        cmd = ['python3', os.path.join(scripts, 'network_conductivity.py'),
+               atoms_csv, contacts_csv, '-o', results_dir,
+               '-t', type_map, '-s', str(scale),
+               '--contact-mode', 'both']
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        log.append({'step': 'Network Solver (both modes)', 'stdout': result.stdout,
+                    'stderr': result.stderr, 'rc': result.returncode})
+        try:
+            net_json = os.path.join(results_dir, 'network_conductivity.json')
+            fm_json  = os.path.join(results_dir, 'full_metrics.json')
+            if os.path.exists(net_json) and os.path.exists(fm_json):
+                with open(net_json) as _f: net_data = json.load(_f)
+                with open(fm_json)  as _f: fm_data  = json.load(_f)
+                for k in _NET_MERGE_KEYS:
+                    if k in net_data and net_data[k] is not None:
+                        fm_data[k] = net_data[k]
+                fm_data = _merge_dual_into_metrics(results_dir, fm_data)
+                fm_data = _refresh_post_network_warnings(fm_data)
+                fm_data['network_solver_status'] = (
+                    'success' if result.returncode == 0 else 'failed')
+                with open(fm_json, 'w') as _f:
+                    json.dump(fm_data, _f, indent=2, default=str)
+        except Exception:
+            pass
+
         # Step 3: Basic figures
         cmd = ['python3', os.path.join(scripts, 'generate_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
@@ -1000,6 +1026,40 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
         log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
                     'stderr': result.stderr, 'rc': result.returncode})
+
+        # Network solver (ionic + electronic + thermal, both contact modes).
+        # Writes sigma_full_mScm, sigma_bulk_net_mScm, electronic_*, thermal_*
+        # into network_conductivity_*.json, then merges into full_metrics.json
+        # so the analysis-summary tab Network Solver section auto-populates.
+        cmd = ['python3', os.path.join(scripts, 'network_conductivity.py'),
+               atoms_csv, contacts_csv, '-o', results_dir,
+               '-t', type_map, '-s', str(scale),
+               '--contact-mode', 'both']
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+        log.append({'step': 'Network Solver (both modes)', 'stdout': result.stdout,
+                    'stderr': result.stderr, 'rc': result.returncode})
+        # Merge network_conductivity.json → full_metrics.json
+        try:
+            net_json = os.path.join(results_dir, 'network_conductivity.json')
+            fm_json  = os.path.join(results_dir, 'full_metrics.json')
+            if os.path.exists(net_json) and os.path.exists(fm_json):
+                with open(net_json) as _f: net_data = json.load(_f)
+                with open(fm_json)  as _f: fm_data  = json.load(_f)
+                for k in _NET_MERGE_KEYS:
+                    if k in net_data and net_data[k] is not None:
+                        fm_data[k] = net_data[k]
+                fm_data = _merge_dual_into_metrics(results_dir, fm_data)
+                fm_data = _refresh_post_network_warnings(fm_data)
+                fm_data['network_solver_status'] = (
+                    'success' if result.returncode == 0 else 'failed')
+                with open(fm_json, 'w') as _f:
+                    json.dump(fm_data, _f, indent=2, default=str)
+                log.append({'step': 'Network Solver Merge',
+                            'stdout': f'merged {len(_NET_MERGE_KEYS)} σ-keys',
+                            'stderr': '', 'rc': 0})
+        except Exception as _e:
+            log.append({'step': 'Network Solver Merge',
+                        'stdout': '', 'stderr': str(_e), 'rc': 1})
 
         cmd = ['python3', os.path.join(scripts, 'generate_figures.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
