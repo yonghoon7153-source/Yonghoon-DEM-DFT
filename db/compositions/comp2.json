@@ -77,6 +77,33 @@
     "K_VRH": 21.2,
     "G_VRH": 11.2
   },
+  "elastic_mlip_600K_GPa_v2": {
+    "method": "600K_snapshot_x5_anneal_V0",
+    "structure": "comp2_v2 anneal champion (V0=v103, Bader-confirmed)",
+    "script": "mlip_snapshot_elastic_comp2v2.py (paper #1 v1 working pattern)",
+    "protocol": "MD 600K 10ps + 5 snap × 2ps + LBFGS quench + relaxed-ion finite-strain Cij",
+    "C11": 44.1,
+    "C11_std": 0.8,
+    "C12": 17.8,
+    "C12_std": 0.4,
+    "C44": 13.7,
+    "C44_std": 0.3,
+    "K_VRH": 26.6,
+    "K_std": 0.5,
+    "G_VRH": 13.5,
+    "G_std": 0.2,
+    "E_VRH": 34.7,
+    "E_std": 0.5,
+    "completed_date": "2026-04-30",
+    "sign_note": "raw output had reversed sign (paper #1 v1 code convention: s = -atoms.get_stress); absolute values stored consistent with v1 db",
+    "v1_v2_delta": {
+      "C11": 11.0,
+      "C12": 2.6,
+      "C44": 1.0,
+      "E_VRH": 6.1
+    },
+    "v1_v2_interpretation": "Anneal champion +21% stiffer (E_VRH 28.6 -> 34.7, +6.1 GPa). Br ordering improvement strengthens 600K thermal averaged elastic response."
+  },
   "surface_energy_Jm2": 1.189,
   "two_gamma_Jm2": 2.38,
   "adhesion_v1": {
