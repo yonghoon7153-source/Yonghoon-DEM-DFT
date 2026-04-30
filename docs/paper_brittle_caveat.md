@@ -910,20 +910,32 @@ line). Cell-level disclosures from Samsung SDI (2024), Solid Power
 *bilayer architecture*: fine SE in the cathode layer, coarse SE in the
 separator pellet.
 
-**Mechanism (i) — separator pellet favors larger SE.** Four
-DEM-external factors converge to make 1–3 μm the empirical optimum for
-sulfide-pellet separators:
+**Mechanism (i) — separator pellet favors larger SE.** The dominant
+textbook mechanism plus three secondary DEM-external factors converge
+to make 1–3 μm the empirical optimum for sulfide-pellet separators:
 
-  *Plastic densification at cold-press.* Sulfide SEs are plastically
-  deforming under typical 250–500 MPa cold-press. Larger particles
-  experience higher per-particle force (F ∝ P · R²) at fixed pressure
-  and reach plastic-flow threshold easily, achieving 92–95 % relative
-  density. Sub-micron particles fall into jamming-arrested packings at
-  85–90 % density even at the same pressure (Bielefeld 2020, Nature
-  Communications 2024 on pellet-density failure). Cronau 2022 reports
-  σ_pellet decreasing to ≈ 1/3 of the optimum when extended ball-milling
-  drives D50 below 0.3 μm — consistent with this densification-limited
-  regime.
+  *Inter-particle contact (grain-boundary) density per length —
+  primary textbook mechanism.* In a pure-SE pellet of fixed thickness L,
+  the number of inter-particle contacts (each contributing a finite
+  constriction resistance R_const) scales with 1/R: N_GB ≈ L/(2R).
+  Larger particles therefore present *fewer* serial constrictions per
+  ionic-transport path, so σ_eff increases with R when the per-contact
+  R_const is roughly fixed by plastic-contact geometry. For 1.5 μm vs
+  0.5 μm, this gives a ~3× difference in N_GB per length, accounting
+  for the bulk of Cronau 2022's σ_pellet ratio (D50 5–10 μm → < 0.3 μm
+  shows ≈ 1/3 reduction) and matching the standard textbook explanation
+  for ceramic-electrolyte conductivity vs particle size in the
+  literature consensus (Knauth 2009, Wenzel 2016, Cronau 2022).
+
+  *Plastic densification at cold-press — secondary.* Sulfide SEs are
+  plastically deforming under typical 250–500 MPa cold-press. Larger
+  particles experience higher per-particle force (F ∝ P · R²) at fixed
+  pressure and reach plastic-flow threshold easily, achieving 92–95 %
+  relative density. Sub-micron particles fall into jamming-arrested
+  packings at 85–90 % density even at the same pressure (Bielefeld 2020,
+  Nature Communications 2024 on pellet-density failure). This further
+  reduces effective contact area in fine-particle pellets on top of the
+  primary N_GB / length effect.
 
   *σ_grain integrity.* Extended ball-milling that produces sub-micron
   argyrodite particles introduces a surface amorphous shell and point
@@ -1046,18 +1058,30 @@ pellet) layer* 에도 확장되는가이다. 실증적 답은 *아니다* — �
 level 공시들은 모두 *bilayer architecture* 를 기술한다: cathode layer
 에 fine SE, separator pellet 에 coarse SE.
 
-**Mechanism (i) — separator pellet 은 큰 SE 를 선호.** 본 DEM scope
-외부의 네 가지 factor 가 결합되어 sulfide-pellet separator 에서는
-1-3 μm 가 실증적 optimum:
+**Mechanism (i) — separator pellet 은 큰 SE 를 선호.** Primary textbook
+mechanism 과 secondary 의 세 가지 DEM-외부 factor 가 결합되어 sulfide-
+pellet separator 에서는 1-3 μm 가 실증적 optimum:
 
-  *Cold-press 의 plastic densification.* Sulfide SE 는 통상 250-500
-  MPa cold-press 에서 plastically deforming. 큰 입자는 같은 압력에서
-  per-particle force 가 더 크고 (F ∝ P · R²) plastic-flow 임계를 더
-  쉽게 넘어 92-95 % 상대 밀도를 달성. Sub-micron 입자는 같은 압력에서
-  jamming-arrested packing 으로 85-90 % 밀도에서 정지 (Bielefeld 2020,
-  Nature Communications 2024 의 pellet-density failure 분석). Cronau
-  2022 가 보고한 extended ball-milling (D50 < 0.3 μm) 의 σ_pellet 1/3
-  감소는 이 densification-limited regime 와 정합한다.
+  *Inter-particle contact (grain-boundary) density per length —
+  primary textbook mechanism.* 두께 L 의 순수 SE pellet 에서 ionic-
+  transport 경로 당 inter-particle contact 수 (각각 finite constriction
+  resistance R_const) 는 1/R 에 비례한다: N_GB ≈ L/(2R). 큰 입자가
+  따라서 더 *적은* serial constriction 을 통과시키므로, plastic-contact
+  geometry 가 결정하는 per-contact R_const 가 거의 고정인 상황에서
+  σ_eff 는 R 에 따라 증가한다. 1.5 μm vs 0.5 μm 의 경우 N_GB / length
+  의 ~3× 차이를 만들며, Cronau 2022 의 σ_pellet ratio (D50 5-10 μm →
+  < 0.3 μm 가 ≈ 1/3 감소) 의 dominant origin 이다. Ceramic SE 의
+  conductivity 와 입자 크기 사이의 standard textbook 설명 (Knauth 2009,
+  Wenzel 2016, Cronau 2022) 과 정확히 정합한다.
+
+  *Cold-press 의 plastic densification — secondary.* Sulfide SE 는
+  통상 250-500 MPa cold-press 에서 plastically deforming. 큰 입자는
+  같은 압력에서 per-particle force 가 더 크고 (F ∝ P · R²) plastic-
+  flow 임계를 더 쉽게 넘어 92-95 % 상대 밀도를 달성. Sub-micron 입자
+  는 같은 압력에서 jamming-arrested packing 으로 85-90 % 밀도에서 정지
+  (Bielefeld 2020, Nature Communications 2024 의 pellet-density failure
+  분석). 이는 primary N_GB / length 효과 위에 더해져 fine-particle
+  pellet 의 effective contact area 를 추가로 감소시킨다.
 
   *σ_grain 무결성.* Sub-micron argyrodite 입자를 만드는 extended ball-
   milling 은 표면 amorphous shell + 점결함을 도입해 σ_grain 자체를 떨어
