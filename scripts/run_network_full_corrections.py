@@ -1,0 +1,406 @@
+#!/usr/bin/env python3
+"""Stage E — Full literature-grounded network solver.
+
+Combines two literature corrections on top of the network solver:
+
+  (1) Stagewise fracture σ_factor (Stage D, Lawn 1998 + Trevisanello 2021)
+       intact / microcrack / multicrack / fragmentation / pulverization
+       → 1.00 / 0.85 / 0.40 / 0.10 / 0.02
+       (literature-realistic central estimate for σ_e_loss)
+
+  (2) Per-particle σ_grain factor — material/synthesis correction
+       (a) σ_ionic_grain_SE(r_SE) — Cronau 2022 amorphization
+            r_SE 1.5 μm → 1.00, 1.0 → 0.85, 0.5 → 0.70, <0.3 → 0.33
+       (b) σ_e_grain_AM(crystal) — Trevisanello 2021 SC vs PC
+            AM_S (single-crystal): 1.00
+            AM_P (polycrystalline): 0.65
+       (c) κ_thermal_grain — AM crystallinity dependent (SE size-invariant
+           because sulfide κ already in glassy regime, ~0.5 W/mK)
+            AM_S: 1.00, AM_P: 0.50, SE: 1.00 regardless of r_SE
+
+Channel-specific application via edge contact_area scaling:
+
+  σ_ionic edges (SE-SE)         : × f_SE(r) on each particle, harmonic mean
+  σ_e edges (AM-AM)             : × f_AM(crystal) on each, harmonic mean
+                                   × f_fracture (Lawn stage)
+  κ edges (all)                 : × f_κ(crystal/size) per pair-type
+
+Implementation: scales contact_area + delta with channel-conditional logic
+in a SINGLE pre-processed contacts.csv — network_conductivity then computes
+σ_ionic / σ_e / κ from this with proper edge weights.
+
+This is the *literature-realistic central estimate* for the paper's
+σ_eff = σ_grain × η_topology framework, with all three orthogonal
+corrections applied per Cronau 2022, Trevisanello 2021, and Wang 2022.
+
+Output keys merged into full_metrics.json:
+  sigma_full_mScm_stage_e               (σ_ionic, grain-corrected)
+  electronic_sigma_full_mScm_stage_e    (σ_e, fracture + grain-corrected)
+  thermal_sigma_full_mScm_stage_e       (κ, grain-corrected)
+  electronic_sigma_loss_pct_stage_e
+  thermal_sigma_loss_pct_stage_e
+  stage_e_factors_used                  (audit trail)
+
+Usage:
+  python3 scripts/run_network_full_corrections.py
+  python3 scripts/run_network_full_corrections.py --quiet
+  python3 scripts/run_network_full_corrections.py CID …
+"""
+from __future__ import annotations
+import argparse
+import json
+import math
+import shutil
+import subprocess
+import sys
+import tempfile
+from pathlib import Path
+
+import pandas as pd
+
+ROOT     = Path(__file__).resolve().parent.parent
+SCRIPTS  = ROOT / 'scripts'
+WEBAPP   = ROOT / 'webapp'
+NET_PY   = SCRIPTS / 'network_conductivity.py'
+
+sys.path.insert(0, str(SCRIPTS))
+from fracture_model import fracture_classify_force_sim  # noqa: E402
+
+# ── (1) Stagewise fracture σ_factor (Stage D) ────────────────────────────
+FRACTURE_STAGES: list[tuple[float, float, float, str]] = [
+    (-float('inf'),  1.0, 1.00, 'intact'),
+    (1.0,            3.0, 0.85, 'microcrack'),
+    (3.0,           11.0, 0.40, 'multicrack'),
+    (11.0,          32.0, 0.10, 'fragmentation'),
+    (32.0,  float('inf'), 0.02, 'pulverization'),
+]
+
+
+def _fracture_factor(m: float) -> tuple[float, str]:
+    for lo, hi, f, lbl in FRACTURE_STAGES:
+        if lo <= m < hi:
+            return f, lbl
+    return 1.0, 'intact'
+
+
+# ── (2a) σ_ionic_grain_SE(r_SE) — Cronau 2022 (amorphization-only) ─────────
+def sigma_ionic_grain_factor_SE(r_SE_real_um: float) -> float:
+    """SE σ_grain factor — pure surface-amorphization correction.
+
+    Cronau 2022 measured σ_pellet (EIS) which is σ_grain × η_topology_pellet.
+    Our DEM computes its own η_topology, so we must NOT double-count
+    the packing/constriction part. Below we extract the σ_grain component
+    only — assuming Cronau's 0.70 overall reduction at r_SE=0.5/1.5 splits
+    roughly half-half between σ_grain (amorphization) and η_topology
+    (packing+constriction). For sulfide, intra-grain GB is negligible
+    (Going Against the Grain 2024) so all σ_grain change is from surface
+    amorphous shell + point defects induced by ball-milling.
+    """
+    r = r_SE_real_um
+    if r >= 1.5: return 1.00
+    if r >= 1.0: return 0.92
+    if r >= 0.5: return 0.85   # σ_grain-only (was 0.70 = σ_pellet, double-counted)
+    if r >= 0.3: return 0.70
+    return 0.50  # extended ball-milling limit (real σ_grain damage)
+
+
+# ── (2b) σ_e_grain_AM(crystal) — Trevisanello 2021 ────────────────────────
+SIGMA_E_GRAIN_AM = {
+    'AM_S': 1.00,   # single-crystal Li-rich, sulfide-class
+    'AM_P': 0.65,   # polycrystalline NMC (12% interfacial R + GB σ-loss)
+}
+
+
+# ── (2c) κ_thermal_grain — Wang 2022 + Trevisanello ──────────────────────
+KAPPA_GRAIN = {
+    'AM_S': 1.00,   # single-crystal preserves bulk κ (~5-8 W/mK)
+    'AM_P': 0.50,   # poly NMC internal GB phonon scatter
+    'SE':   1.00,   # sulfide already glassy (~0.5 W/mK), size-invariant
+}
+
+
+def _harmonic_mean(a: float, b: float) -> float:
+    if a <= 0 or b <= 0: return 0.0
+    return 2.0 * a * b / (a + b)
+
+
+def discover_case_dirs() -> list[Path]:
+    out = []
+    for base in ('results', 'archive'):
+        root = WEBAPP / base
+        if not root.exists(): continue
+        for d in sorted(root.iterdir()):
+            if (d.is_dir()
+                    and (d / 'atoms.csv').exists()
+                    and (d / 'contacts.csv').exists()
+                    and (d / 'full_metrics.json').exists()):
+                out.append(d)
+    return out
+
+
+def _read_meta(case_dir: Path) -> dict:
+    for path in (case_dir / 'meta.json',
+                 WEBAPP / 'uploads' / case_dir.name / 'meta.json'):
+        if path.exists():
+            try: return json.load(open(path))
+            except Exception: pass
+    return {}
+
+
+def parse_type_map(s: str) -> dict:
+    out = {}
+    for tok in (s or '').split(','):
+        if ':' in tok:
+            k, v = tok.split(':', 1)
+            try: out[int(k.strip())] = v.strip()
+            except Exception: pass
+    return out
+
+
+def _se_radius_real_um(atoms_df: pd.DataFrame, type_map: dict, scale: float) -> float:
+    se_types = [tid for tid, lbl in type_map.items() if 'SE' in str(lbl)]
+    if not se_types:
+        return float('nan')
+    sub = atoms_df[atoms_df['type'].isin(se_types)]
+    if sub.empty:
+        return float('nan')
+    r_sim = float(sub['radius'].median())
+    return r_sim * 1.0e6 / scale
+
+
+def apply_corrections(atoms_df: pd.DataFrame, contacts_df: pd.DataFrame,
+                       type_map: dict, scale: float
+                       ) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, dict]:
+    """Return three modified contacts_df — one per channel — with appropriate
+    contact_area scaling for σ_ionic / σ_e / κ_thermal computation."""
+    am_types = {tid for tid, lbl in type_map.items() if 'AM' in str(lbl)}
+    se_types = {tid for tid, lbl in type_map.items() if 'SE' in str(lbl)}
+    id_to_type   = dict(zip(atoms_df['id'].astype(int),
+                              atoms_df['type'].astype(int)))
+    id_to_radius = dict(zip(atoms_df['id'].astype(int),
+                              atoms_df['radius'].astype(float)))
+
+    # Per-particle σ_e factor: by AM type label
+    def particle_AM_factor(tid: int) -> float:
+        lbl = type_map.get(tid, '')
+        return SIGMA_E_GRAIN_AM.get(lbl, 0.65)
+
+    def particle_kappa_factor(tid: int) -> float:
+        lbl = type_map.get(tid, '')
+        return KAPPA_GRAIN.get(lbl, 1.00)
+
+    # SE σ_ionic factor (single value, all SE same size in our cases)
+    r_SE_real = _se_radius_real_um(atoms_df, type_map, scale)
+    f_SE_ionic = sigma_ionic_grain_factor_SE(r_SE_real)
+
+    # Build edge-by-edge factor arrays
+    n = len(contacts_df)
+    f_ionic = []   # for SE-SE only (others get 0 / N/A — solver ignores)
+    f_e     = []   # for AM-AM only
+    f_kappa = []   # for ALL contacts
+    stage_counts = {lbl: 0 for *_, lbl in FRACTURE_STAGES}
+    n_am_am = 0
+
+    for _, c in contacts_df.iterrows():
+        i1 = int(c['id1']); i2 = int(c['id2'])
+        t1 = id_to_type.get(i1); t2 = id_to_type.get(i2)
+        if t1 is None or t2 is None:
+            f_ionic.append(1.0); f_e.append(1.0); f_kappa.append(1.0); continue
+
+        is_se_se = (t1 in se_types and t2 in se_types)
+        is_am_am = (t1 in am_types and t2 in am_types)
+        is_am_se = ((t1 in am_types and t2 in se_types) or
+                    (t1 in se_types and t2 in am_types))
+
+        # Channel 1: σ_ionic
+        if is_se_se:
+            f_ionic.append(f_SE_ionic)
+        else:
+            f_ionic.append(1.0)  # AM not in ionic graph anyway
+
+        # Channel 2: σ_e — fracture × grain
+        if is_am_am:
+            n_am_am += 1
+            r1 = id_to_radius.get(i1, 0.0); r2 = id_to_radius.get(i2, 0.0)
+            r_min = min(r1, r2)
+            fn = float(c.get('fn', 0) or 0)
+            if fn <= 0:
+                fn = math.sqrt((c.get('fn_x', 0) or 0) ** 2
+                                + (c.get('fn_y', 0) or 0) ** 2
+                                + (c.get('fn_z', 0) or 0) ** 2)
+            if r_min > 0 and fn > 0:
+                pair_label = '-'.join(sorted([type_map.get(t1, ''),
+                                                type_map.get(t2, '')]))
+                _stg, _pc, mult = fracture_classify_force_sim(
+                    fn, r_min, contact_type=pair_label, scale=scale)
+                ff, lbl = _fracture_factor(mult)
+            else:
+                ff, lbl = 1.0, 'intact'
+            stage_counts[lbl] += 1
+
+            # Grain factor (harmonic mean of two AM particles)
+            g1 = particle_AM_factor(t1); g2 = particle_AM_factor(t2)
+            gf = _harmonic_mean(g1, g2)
+            f_e.append(ff * gf)
+        else:
+            f_e.append(1.0)  # SE not in electronic graph
+
+        # Channel 3: κ — grain factor only (no fracture for thermal here)
+        k1 = particle_kappa_factor(t1); k2 = particle_kappa_factor(t2)
+        kf = _harmonic_mean(k1, k2)
+        f_kappa.append(kf)
+
+    factors_summary = {
+        'r_SE_um':         r_SE_real,
+        'f_SE_ionic':      f_SE_ionic,
+        'AM_factors':      SIGMA_E_GRAIN_AM,
+        'kappa_factors':   KAPPA_GRAIN,
+        'n_am_am_total':   n_am_am,
+        'fracture_stage_counts': {k: int(v) for k, v in stage_counts.items()},
+    }
+
+    # Build three separate modified contacts_df
+    df_ionic = contacts_df.copy()
+    df_e     = contacts_df.copy()
+    df_kappa = contacts_df.copy()
+    factors_ionic = pd.Series(f_ionic, index=contacts_df.index)
+    factors_e     = pd.Series(f_e,     index=contacts_df.index)
+    factors_kappa = pd.Series(f_kappa, index=contacts_df.index)
+    for col in ('contact_area', 'delta'):
+        if col in df_ionic.columns:
+            df_ionic[col] = df_ionic[col].astype(float) * factors_ionic
+            df_e[col]     = df_e[col].astype(float) * factors_e
+            df_kappa[col] = df_kappa[col].astype(float) * factors_kappa
+    return df_ionic, df_e, df_kappa, factors_summary
+
+
+def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: str,
+                  scale: float) -> dict | None:
+    with tempfile.TemporaryDirectory(prefix='nfse_') as tmpd:
+        tmp = Path(tmpd)
+        shutil.copy2(case_dir / 'atoms.csv', tmp / 'atoms.csv')
+        contacts_modified.to_csv(tmp / 'contacts.csv', index=False)
+        cmd = [sys.executable, str(NET_PY),
+               str(tmp / 'atoms.csv'), str(tmp / 'contacts.csv'),
+               '-o', str(tmp), '-t', type_map_str, '-s', str(int(scale)),
+               '--contact-mode', 'both']
+        try:
+            cp = subprocess.run(cmd, check=False, capture_output=True,
+                                  text=True, timeout=1800)
+        except Exception:
+            return None
+        if cp.returncode != 0:
+            return None
+        net_json_p = tmp / 'network_conductivity.json'
+        if not net_json_p.exists():
+            return None
+        with open(net_json_p) as f:
+            return json.load(f)
+
+
+def run_one(case_dir: Path) -> tuple[str, bool, str]:
+    meta = _read_meta(case_dir)
+    type_map = parse_type_map(meta.get('type_map', '1:AM_P,2:AM_S,3:SE'))
+    if not type_map:
+        type_map = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
+    type_map_str = meta.get('type_map', '1:AM_P,2:AM_S,3:SE')
+    scale = float(meta.get('scale', 1000))
+
+    atoms_df = pd.read_csv(case_dir / 'atoms.csv')
+    contacts_df = pd.read_csv(case_dir / 'contacts.csv', low_memory=False)
+
+    df_ionic, df_e, df_kappa, factors = apply_corrections(
+        atoms_df, contacts_df, type_map, scale)
+
+    # Run solver three times — channel-isolated
+    res_ionic = _run_solver(case_dir, df_ionic, type_map_str, scale)
+    res_e     = _run_solver(case_dir, df_e,     type_map_str, scale)
+    res_kappa = _run_solver(case_dir, df_kappa, type_map_str, scale)
+
+    if not (res_ionic and res_e and res_kappa):
+        return (case_dir.name, False, 'one or more channel solver failed')
+
+    fm_path = case_dir / 'full_metrics.json'
+    try:
+        with open(fm_path) as f:
+            fm = json.load(f)
+    except Exception as e:
+        return (case_dir.name, False, f'fm read failed: {e}')
+
+    sigma_ionic_e = res_ionic.get('sigma_full_mScm')
+    sigma_e_e     = res_e.get('electronic_sigma_full_mScm')
+    sigma_th_e    = res_kappa.get('thermal_sigma_full_mScm')
+
+    fm['sigma_full_mScm_stage_e']            = sigma_ionic_e
+    fm['electronic_sigma_full_mScm_stage_e'] = sigma_e_e
+    fm['thermal_sigma_full_mScm_stage_e']    = sigma_th_e
+    fm['stage_e_factors_used'] = {
+        'r_SE_um':       factors['r_SE_um'],
+        'f_SE_ionic':    factors['f_SE_ionic'],
+        'AM_factors':    factors['AM_factors'],
+        'kappa_factors': factors['kappa_factors'],
+    }
+    fm['stage_e_fracture_stage_counts'] = factors['fracture_stage_counts']
+    fm['fracture_aware_method_full']    = 'Stage E (fracture + grain corrections)'
+
+    # Loss percentages (vs baseline σ_e_full / σ_th_full)
+    base_ionic = fm.get('sigma_full_mScm')
+    base_e     = fm.get('electronic_sigma_full_mScm')
+    base_th    = fm.get('thermal_sigma_full_mScm')
+    if base_ionic and base_ionic > 0 and sigma_ionic_e is not None:
+        fm['sigma_ionic_loss_pct_stage_e'] = round((1.0 - sigma_ionic_e/base_ionic)*100, 2)
+    if base_e and base_e > 0 and sigma_e_e is not None:
+        fm['electronic_sigma_loss_pct_stage_e'] = round((1.0 - sigma_e_e/base_e)*100, 2)
+    if base_th and base_th > 0 and sigma_th_e is not None:
+        fm['thermal_sigma_loss_pct_stage_e'] = round((1.0 - sigma_th_e/base_th)*100, 2)
+
+    with open(fm_path, 'w') as f:
+        json.dump(fm, f, indent=2, default=str)
+
+    msg = (f'σ_i: {(base_ionic or 0):.3f}→{(sigma_ionic_e or 0):.3f} '
+           f'σ_e: {(base_e or 0):.2f}→{(sigma_e_e or 0):.2f} '
+           f'κ: {(base_th or 0):.2f}→{(sigma_th_e or 0):.2f}  '
+           f'r_SE={factors["r_SE_um"]:.2f}μm')
+    return (case_dir.name, True, msg)
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
+                                  description=__doc__)
+    ap.add_argument('cases', nargs='*', help='Specific case_ids')
+    ap.add_argument('--quiet', action='store_true', help='One line per case')
+    args = ap.parse_args()
+
+    all_cases = discover_case_dirs()
+    if args.cases:
+        wanted = set(args.cases)
+        cases = [d for d in all_cases if d.name in wanted]
+    else:
+        cases = all_cases
+    if not cases:
+        ap.error('No cases found.')
+
+    print(f'Stage E (literature-grounded full corrections) on {len(cases)} cases',
+          flush=True)
+    print('  Channel 1 (σ_ionic) : SE size-dependent σ_grain (Cronau 2022)')
+    print('  Channel 2 (σ_e)     : fracture stagewise × AM crystal (Trevisanello 2021)')
+    print('  Channel 3 (κ)       : AM crystal grain (Wang 2022, SE size-invariant)\n')
+
+    n_ok = n_fail = 0
+    for i, d in enumerate(cases, 1):
+        try:
+            cid, ok, msg = run_one(d)
+        except Exception as e:
+            cid, ok, msg = (d.name, False, f'EXC: {type(e).__name__}: {e}')
+        tag = '✓' if ok else '✗'
+        if not args.quiet or not ok:
+            print(f'  [{i:3d}/{len(cases)}] {tag} {cid:30s}  {msg[:130]}',
+                  flush=True)
+        if ok: n_ok += 1
+        else:  n_fail += 1
+    print(f'\nDone — {n_ok} ok, {n_fail} failed.', flush=True)
+    if n_fail: sys.exit(1)
+
+
+if __name__ == '__main__':
+    main()
