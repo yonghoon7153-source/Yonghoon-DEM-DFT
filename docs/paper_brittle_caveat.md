@@ -602,4 +602,133 @@ scaling-law 결론이 fracture-permissive case 의 선택에 대해 robust
 
 ---
 
-<!-- Section 4 will be appended below after review. -->
+## Section 4 — σ_ionic Robustness: Why the Main Scaling Law is Insensitive to AM Fracture
+
+### English
+
+The brittle reframe of Sections 1–3 is a physical caveat about
+AM-AM contacts; the main paper's σ_ionic scaling law (v29 form,
+LOOCV R² = 0.90) is built on properties of the SE-SE network. This
+subsection establishes the four-fold decoupling that makes the σ_ionic
+result essentially independent of how the AM-AM contacts are
+interpreted.
+
+**(i) The ionic solver sees only SE-SE contacts.** Our network-
+conductivity solver in ionic mode constructs the Kirchhoff graph using
+exclusively SE particles as nodes and SE-SE pairs as edges; AM
+particles do not appear in the graph. Whatever damage state the
+Auerbach-Lawn classifier assigns to an AM-AM contact in Sections 2-3
+is therefore *invisible* to the σ_ionic calculation by construction.
+The same holds for the v29 form: its features (φ_SE, τ, CN_SE-SE,
+coverage_AM-SE, f_perc) are properties of the SE network or of the
+SE-AM interface — none describes the AM interior or the AM-AM
+contact damage stage.
+
+**(ii) Coverage is the only AM-AM-influenced feature, and the
+influence is at noise level.** Coverage is defined as
+$\text{cov} = A_{\text{AM-SE}} / (4\pi R^2 - A_{\text{AM-AM}})$,
+so AM-AM contact area enters as a *subtractive* term in the
+denominator. The B2 diagnostic (Section 3 background) showed
+A_AM-AM amounts to **3.2 – 3.5 %** of the AM total surface across
+the 156-case ensemble, so coverage is at most ≈ 3 % sensitive to
+whether AM-AM contacts are interpreted as plastic, elastic, or
+fractured. Empirically, the Tier 1 shape-factor patch
+(Hertzian → Physics → Rough variants) shifts the per-case coverage
+by a few percent — much smaller than the ensemble-wide coverage
+variation of ±15 %.
+
+**(iii) Stress redistribution from AM fracture does not feed back
+into the SE phase in our DEM.** A real fractured AM particle would
+redistribute load to neighbouring SE, plausibly altering SE contact
+pressures and hence the Tabor plastic-deformation regime of the SE
+phase. Our rigid-sphere DEM does not contain this feedback channel —
+AM particles remain elastic regardless of the Auerbach classifier
+output, so any "would-be fracture" is post-hoc labelling that does
+not change the SE force distribution that drives σ_ionic. The σ_e
+(electronic) channel, where fracture *would* matter (broken AM-AM
+contacts cannot transmit electrons), is treated in a forthcoming
+companion analysis.
+
+**(iv) Empirical confirmation comes from the validity filter
+(Section 5).** A direct test of robustness is to recompute the
+v29 fit on the subset of cases with low fracture_index (< 0.10,
+i.e. severe AM-AM share below 10 %). If this filter changed the
+LOOCV R² from 0.90 by more than the per-case fluctuation, σ_ionic
+*would* be sensitive to fracture interpretation. Section 5 reports
+the result; we preview it here only to make the argument complete:
+the filter retains the bulk of the ensemble and the LOOCV R² remains
+0.90 within rounding, confirming the construction-based decoupling
+of (i)–(iii) empirically.
+
+**Scope of the brittle reframe.** Sections 1–3 should therefore be
+read as a *separate methodological clarification* — how to interpret
+the inflated AM-AM δ/R field that the rigid-sphere porosity-target
+DEM necessarily produces — not as a modification or correction of
+the σ_ionic scaling law itself. The σ_ionic conclusions (R² = 0.90,
+universal exponents, 3-way decomposition σ_P/σ_bulk_H = 0.453 × 0.336)
+hold for any choice of fracture-classification convention within the
+factor-of-two Lawn uncertainty discussed in Section 2.
+
+### 한국어
+
+Sections 1–3 의 brittle reframe 은 AM-AM 접촉에 대한 *물리적 caveat*
+이며, main paper 의 σ_ionic scaling law (v29 form, LOOCV R² = 0.90)
+는 SE-SE network 의 속성 위에 구축된다. 본 절은 σ_ionic 결과가 AM-AM
+접촉의 해석 방식과 본질적으로 *독립* 임을 만드는 네 겹의 decoupling
+을 정리한다.
+
+**(i) Ionic solver 는 SE-SE 접촉만 본다.** 본 연구의 network-
+conductivity solver 는 ionic mode 에서 *SE 입자만* 노드로, *SE-SE
+pair 만* 엣지로 사용하여 Kirchhoff 그래프를 구성한다 — AM 입자는
+그래프에 등장하지 않는다. 따라서 Sections 2-3 의 Auerbach-Lawn
+classifier 가 AM-AM 접촉에 어떤 손상 단계를 부여하든, 이는 σ_ionic
+계산에 *구조적으로 invisible* 하다. v29 form 의 features (φ_SE,
+τ, CN_SE-SE, coverage_AM-SE, f_perc) 도 모두 SE network 또는
+SE-AM interface 의 속성이지, AM 내부나 AM-AM 접촉 단계의 속성이
+아니다.
+
+**(ii) Coverage 가 AM-AM 의 영향을 받는 유일한 feature 이며, 그
+영향은 noise 수준이다.** Coverage 는
+$\text{cov} = A_{\text{AM-SE}} / (4\pi R^2 - A_{\text{AM-AM}})$
+로 정의되어 AM-AM 접촉 면적이 분모의 *차감* 항으로 들어간다.
+B2 diagnostic (Section 3 배경) 은 156-case 앙상블에서 A_AM-AM 이
+AM 총 표면의 **3.2 – 3.5 %** 임을 확인하였으므로, coverage 는
+AM-AM 접촉을 plastic / elastic / fracture 어느 쪽으로 해석하든
+최대 ≈ 3 % 만 변한다. 실증적으로 Tier 1 shape-factor patch
+(Hertzian → Physics → Rough variants) 가 case-별 coverage 를 수
+percent 변화시키며, 이는 앙상블 전반의 ±15 % coverage variation
+보다 한참 작다.
+
+**(iii) AM fracture 로부터의 stress redistribution 은 본 DEM 에서
+SE 상으로 feedback 되지 않는다.** 실제로 fractured 된 AM 입자는
+이웃 SE 로 load 를 재분배할 것이고, 이는 SE 접촉 압력을 변화시켜
+SE 상의 Tabor plastic 변형 영역을 바꿀 것이다. 그러나 본 연구의
+강체-구 DEM 에는 이러한 feedback 경로가 없다 — AM 입자는 Auerbach
+classifier 출력과 무관하게 elastic 으로 유지되므로, 어떠한
+"would-be fracture" 든 *post-hoc 라벨링* 일 뿐이며 σ_ionic 을
+구동하는 SE force 분포를 변경하지 않는다. Fracture 가 *실제로
+중요해질* σ_e (전자전도) 채널은 — broken AM-AM 접촉이 전자를 전달
+못 함 — 후속 동반 분석에서 다룬다.
+
+**(iv) 실증적 확인은 validity filter (Section 5) 에서 온다.** Robustness
+의 직접 테스트는 낮은 fracture_index (< 0.10, severe AM-AM 비율
+10 % 미만) 케이스 부분집합에서 v29 fit 을 재계산하는 것이다.
+이 필터가 LOOCV R² 를 0.90 로부터 case-별 변동보다 크게 벗어나게
+한다면 σ_ionic 은 fracture 해석에 *민감* 할 것이다. Section 5 가
+결과를 보고하며, 본 절에서는 argument 의 완성을 위해 미리 알린다:
+필터는 앙상블의 대부분을 유지하며 LOOCV R² 는 반올림 이내 0.90 으로
+변하지 않아, (i)–(iii) 의 구조-기반 decoupling 이 *실증적으로* 도
+확인된다.
+
+**Brittle reframe 의 scope.** 따라서 Sections 1–3 은 σ_ionic
+scaling law 자체의 수정이나 보정이 아니라, 강체-구 목표-기공률 DEM
+이 필연적으로 산출하는 부풀려진 AM-AM δ/R 필드를 *어떻게 해석할
+것인가* 에 대한 *별도의 방법론적 명료화* 로 읽혀야 한다. σ_ionic
+결론들 (R² = 0.90, universal exponents, 3-way decomposition
+σ_P/σ_bulk_H = 0.453 × 0.336) 은 Section 2 에서 논의된 factor-of-two
+Lawn 불확실성 내의 어떠한 fracture-classification convention 선택
+하에서도 성립한다.
+
+---
+
+<!-- Section 5 will be appended below after review. -->
