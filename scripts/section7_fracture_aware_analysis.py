@@ -84,7 +84,13 @@ def _parse_se_radius(meta: dict, atoms_radii: dict) -> float:
     return float('nan')
 
 
-def _se_radius_from_atoms(case_dir: Path, type_map: dict) -> float:
+def _se_radius_from_atoms(case_dir: Path, type_map: dict, scale: float = 1000.0) -> float:
+    """Return SE particle radius in REAL μm.
+
+    atoms.csv stores radii in simulation units (meters, after scale=×1000).
+    Convert to real μm: r_real_um = r_sim_m × 1e6 / scale.
+    For typical scale=1000 and r_sim=5e-4 m → r_real = 0.5 μm.
+    """
     p = case_dir / 'atoms.csv'
     if not p.exists():
         return float('nan')
@@ -98,7 +104,10 @@ def _se_radius_from_atoms(case_dir: Path, type_map: dict) -> float:
     sub = df[df['type'].isin(se_types)]
     if sub.empty:
         return float('nan')
-    return float(sub['radius'].median())
+    r_sim = float(sub['radius'].median())
+    # Convert sim → real μm. atoms.csv stores in meters; scale = sim/real.
+    r_real_um = r_sim * 1.0e6 / scale
+    return r_real_um
 
 
 def _parse_type_map(s: str) -> dict:
@@ -113,6 +122,23 @@ def _parse_type_map(s: str) -> dict:
     return out
 
 
+def _load_supplementary(case_id: str) -> dict:
+    """Pull fracture stage metrics from b2_b4_diagnostic.csv if present."""
+    sup = ROOT / 'docs' / 'figures' / 'physics_regime' / 'b2_b4_diagnostic.csv'
+    if not sup.exists():
+        return {}
+    try:
+        df = pd.read_csv(sup)
+        if 'case_id' not in df.columns:
+            return {}
+        row = df[df['case_id'] == case_id]
+        if row.empty:
+            return {}
+        return row.iloc[0].to_dict()
+    except Exception:
+        return {}
+
+
 def aggregate() -> pd.DataFrame:
     cases = discover_case_dirs()
     rows = []
@@ -124,35 +150,66 @@ def aggregate() -> pd.DataFrame:
             print(f'  skip {d.name}: fm read failed: {e}', file=sys.stderr)
             continue
         meta = _read_meta(d)
+        scale = float(meta.get('scale', 1000))
         ps_frac, ps_label = _parse_ps_ratio(meta)
         type_map = _parse_type_map(meta.get('type_map', '1:AM_P,2:AM_S,3:SE'))
-        r_SE = _se_radius_from_atoms(d, type_map)
+        r_SE = _se_radius_from_atoms(d, type_map, scale=scale)
+        # Pull fracture metrics from supplementary CSV if not in fm
+        sup = _load_supplementary(d.name)
+
+        def pick(*keys):
+            for k in keys:
+                v = fm.get(k)
+                if v is None:
+                    v = sup.get(k)
+                if v is not None and (not isinstance(v, float) or not pd.isna(v)):
+                    return v
+            return None
         rows.append({
             'case_id': d.name,
             'ps_label': ps_label,
             'ps_frac_AM_P': ps_frac,
             'r_SE_um': r_SE,
-            'porosity': fm.get('porosity'),
-            'percolation_pct': fm.get('percolation_pct') or fm.get('top_reachable_pct'),
-            'sigma_ionic_full': fm.get('sigma_full_mScm'),
-            'sigma_ionic_physics': fm.get('sigma_full_mScm_physics'),
-            'sigma_e_full': fm.get('electronic_sigma_full_mScm'),
-            'sigma_e_fracture_aware': fm.get('electronic_sigma_full_mScm_fracture_aware'),
-            'sigma_e_loss_pct': fm.get('electronic_sigma_loss_pct'),
-            'sigma_th_full': fm.get('thermal_sigma_full_mScm'),
-            'sigma_th_fracture_aware': fm.get('thermal_sigma_full_mScm_fracture_aware'),
-            'sigma_th_loss_pct': fm.get('thermal_sigma_loss_pct'),
-            'frac_severe_pct': fm.get('frac_severe_pct'),
-            'frac_severe_force_pct': fm.get('frac_severe_force_pct'),
-            'frac_AM_P_AM_P_severe_pct': fm.get('frac_AM_P_AM_P_severe_pct'),
-            'frac_AM_P_AM_P_severe_force_pct': fm.get('frac_AM_P_AM_P_severe_force_pct'),
-            'fracture_index': fm.get('fracture_index'),
-            'fracture_index_force': fm.get('fracture_index_force'),
-            'n_am_am_contacts_total': fm.get('n_am_am_contacts_total'),
-            'n_am_am_contacts_excluded': fm.get('n_am_am_contacts_excluded'),
-            'fracture_aware_excluded_pct': fm.get('fracture_aware_excluded_pct'),
+            'porosity': pick('porosity'),
+            'percolation_pct': pick('percolation_pct', 'top_reachable_pct'),
+            'sigma_ionic_full': pick('sigma_full_mScm'),
+            'sigma_ionic_physics': pick('sigma_full_mScm_physics'),
+            'sigma_e_full': pick('electronic_sigma_full_mScm'),
+            'sigma_e_fracture_aware': pick('electronic_sigma_full_mScm_fracture_aware'),
+            'sigma_e_loss_pct': pick('electronic_sigma_loss_pct'),
+            'sigma_th_full': pick('thermal_sigma_full_mScm'),
+            'sigma_th_fracture_aware': pick('thermal_sigma_full_mScm_fracture_aware'),
+            'sigma_th_loss_pct': pick('thermal_sigma_loss_pct'),
+            'frac_severe_pct': pick('frac_severe_pct'),
+            'frac_severe_force_pct': pick('frac_severe_force_pct'),
+            'frac_AM_P_AM_P_severe_pct': pick('frac_AM_P_AM_P_severe_pct'),
+            'frac_AM_P_AM_P_severe_force_pct': pick('frac_AM_P_AM_P_severe_force_pct'),
+            'fracture_index': pick('fracture_index'),
+            'fracture_index_force': pick('fracture_index_force'),
+            'n_am_am_contacts_total': pick('n_am_am_contacts_total'),
+            'n_am_am_contacts_excluded': pick('n_am_am_contacts_excluded'),
+            'fracture_aware_excluded_pct': pick('fracture_aware_excluded_pct'),
         })
     return pd.DataFrame(rows)
+
+
+def _filter_anomalies(df: pd.DataFrame) -> pd.DataFrame:
+    """Drop cases with non-physical σ_e or σ_e_loss outliers.
+
+    Real cathode σ_e ∈ [0.1, 30] mS/cm; values > 100 indicate sparse-graph
+    network solver numerical instability.
+    Negative loss_pct → σ_e_fracture_aware > σ_e_full, also numerical artifact.
+    """
+    n0 = len(df)
+    df = df[(df['sigma_e_full'].fillna(0) < 100) &
+             (df['sigma_e_full'].fillna(0) >= 0)]
+    df = df[(df['sigma_e_fracture_aware'].fillna(0) < 100) &
+             (df['sigma_e_fracture_aware'].fillna(0) >= 0)]
+    df = df[(df['sigma_e_loss_pct'].fillna(0) >= -5) &
+             (df['sigma_e_loss_pct'].fillna(0) <= 100)]
+    print(f'  filtered {n0} → {len(df)} cases (removed {n0-len(df)} anomalies)\n',
+          flush=True)
+    return df.reset_index(drop=True)
 
 
 def _pearson(x, y):
@@ -177,15 +234,27 @@ def _spearman(x, y):
 
 def main() -> None:
     DB_DIR.mkdir(parents=True, exist_ok=True)
-    df = aggregate()
-    print(f'Loaded {len(df)} cases.', flush=True)
-    if df.empty:
+    df_raw = aggregate()
+    print(f'Loaded {len(df_raw)} cases (raw).', flush=True)
+    if df_raw.empty:
         sys.exit('no cases')
 
-    # Save raw CSV
+    # Save raw CSV (all 78 cases including anomalies)
     out_csv = DB_DIR / 'section7_fracture_aware_summary.csv'
-    df.to_csv(out_csv, index=False)
-    print(f'Wrote {out_csv}\n', flush=True)
+    df_raw.to_csv(out_csv, index=False)
+    print(f'Wrote {out_csv}', flush=True)
+
+    # Anomaly-filtered analysis frame
+    df = _filter_anomalies(df_raw)
+    if df.empty:
+        sys.exit('no cases after anomaly filter')
+    df.to_csv(DB_DIR / 'section7_fracture_aware_filtered.csv', index=False)
+
+    # r_SE distribution sanity check
+    print('r_SE distribution (μm):', flush=True)
+    print(f'  unique values: {sorted(df["r_SE_um"].dropna().unique())[:10]}')
+    print(f'  median {df["r_SE_um"].median():.2f} μm  '
+          f'min {df["r_SE_um"].min():.2f}  max {df["r_SE_um"].max():.2f}\n')
 
     # ── 1. σ_e_loss_pct distribution (overall) ─────────────────────────
     have_loss = df['sigma_e_loss_pct'].dropna()
