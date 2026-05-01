@@ -257,23 +257,27 @@
 
 ==comp1 + comp2 v2: 같은 protocol (Top 1)== — apples-to-apples 비교 valid.
 
-### comp3, 4, 5 v2 ❌ 미실행
-- ==**v2 안 함**== — 모두 v1 만 (random ordering, no anneal)
-- `comp345_v2_from_modelC.py` 는 ==template/draft, 미사용== (templates 폴더에 있음)
-- paper #1 narrative: comp3-5는 v1 사용
+### comp3, 4, 5 v2 ⏳ 시간 제약으로 미실행 (계획은 있음)
+- ==**시간 부족으로 v2 못 함**==, 원칙적으로는 할 예정이었음
+- `comp345_v2_from_modelC.py` 는 ==production-ready template== (templates 폴더, 시간 되면 실행 가능)
+- 현재 paper narrative: comp3-5는 ==v1 유지==
 
-### paper #1 mechanical comparison 정확한 매트릭스
+### paper #1 mechanical comparison 현재 매트릭스
 | comp | v1 (random) | v2 (anneal champion) |
 |---|:-:|:-:|
 | comp1 | ✅ | ✅ (Top 1) |
 | comp2 | ✅ | ✅ (Top 1) |
-| comp3 | ✅ | ❌ 안함 |
-| comp4 | ✅ | ❌ 안함 |
-| comp5 | ✅ | ❌ 안함 |
+| comp3 | ✅ | ⏳ TODO (template ready) |
+| comp4 | ✅ | ⏳ TODO (template ready) |
+| comp5 | ✅ | ⏳ TODO (template ready) |
 | modelC | ✅ | ✅ |
 
-==**Within-family Br trend (paper main): v1만 비교 가능**== (모든 comp가 v1만 일관됨).
-==**Anneal stiffening (paper sub): v2-v1 — comp1, comp2, modelC 만**==.
+### paper narrative 현 단계
+- ==**Within-family Br trend**== (paper main): v1 끼리 일관 비교 가능
+  - Li6 family: comp1 v1 vs comp2 v1
+  - Li5.4 family: comp3 v1 vs comp4 v1 vs comp5 v1
+- ==**Anneal stiffening 효과**== (paper sub): v1 vs v2 — ==comp1, comp2, modelC 만==
+- ==**향후 (시간 되면)**==: comp3-5 v2 추가 → cross-family anneal 분석 가능
 
 ---
 
