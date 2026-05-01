@@ -297,7 +297,9 @@
 - KISTI: `/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/`
 - 파일: `modelC_v2_step1.py`, `modelC_v2_mlip_eos.py`, `gen_dft_eos.py`, `modelC_v2_step3_continue.py`
 - comp1/comp2 step1_v2.py와 ==logic 동일==, rhombohedral cell + Cl-only + Li5.4 family (vacancy) 차이만.
-- 중복 복사 시 diverge 위험 있어 ==KISTI 원본 그대로 사용==.
+
+⚠️ ==**modelC v2 actual production은 Top 5 anneal (50ps each)**== — comp1/comp2 (Top 1 + 100ps)와 다름.
+필독/ 로컬본은 Top 1 + 100ps로 unified 작성, ==modelC_v2_step3_continue.py만 historical Top 5 evidence로 보존==.
 
 <!--
 주석 (잡설):
