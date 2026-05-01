@@ -234,10 +234,28 @@
 ### narrative 영향
 ==comp2 v2도 full anneal pipeline 거침== → 21% v1→v2 stiffening 정량 결과 ==paper narrative 유지 valid== ✓.
 
-### TODO — 어느 step1을 썼는지 확인
-- `step1_enumerate_halogen.py` (단순 halogen enum)
-- `step1_v2.py` (full 3-stage)
-둘 다 있는데 실제 production 사용된 것 추적 필요.
+### ✅ comp2 v2 production = `step1_v2.py` (Apr 27 16:05)
+
+==더 최신 + 완전한 3-stage pipeline== — `step1_enumerate_halogen.py` (Apr 27 15:55)는 superseded.
+
+**검증된 step1_v2.py 구조** (KISTI `pipeline_v2/comp2_lpscbr/step1_v2.py`):
+- a_exp = 9.852 (comp1 reference, lattice은 MLIP relax이 처리)
+- Halogen enum: 2 Cl + 2 Br + 4 S in 8 free sites = 420 raw configs (no sym dedup)
+- Stage 1: 420 halogen × 1 rep Li → MLIP relax → top halogen
+- Stage 2: best halogen × 20 random Li (RandomState 42) → top Li
+- Stage 3: 500K 100ps anneal + 300K quench + final relax → champion.xyz
+
+**comp1 v2 vs comp2 v2 vs comp3-5 v2 비교**:
+| 항목 | comp1 | comp2 | comp3-5 |
+|---|---|---|---|
+| step1 file | step1_v2.py | step1_v2.py | comp345_v2_from_modelC.py |
+| halogen | C(8,4)=70 | C(8,2)×C(6,2)=420 | C(8,n_br) |
+| sym dedup | no | no | no |
+| Li configs | 20 random | 20 random | 20 random per Br top |
+| anneal | Top 1 | Top 1 | Top 5 |
+
+==comp1 + comp2 같은 protocol== (Top 1) — apples-to-apples 비교 valid.
+comp3-5 는 더 깊은 search (Top 5) — narrative에 명시 필요.
 
 ---
 
