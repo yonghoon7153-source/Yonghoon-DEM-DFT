@@ -1,4 +1,20 @@
-# Argyrodite Mechanical Properties Research — Knowledge Base
+# 🚨 필독 — Argyrodite Mechanical Properties Research — Knowledge Base
+# 🚨 필독 — `CODE_INVENTORY.md` 먼저 읽고 시작
+# 🚨 필독 — 새 session 시작 시 이 파일 + CODE_INVENTORY.md 둘 다 무조건 읽음
+
+> [!error] CRITICAL — Before any code-related action, READ FIRST:
+> **`CODE_INVENTORY.md`** at repo root.
+> Rules:
+> 1. **NEVER generate scripts** — only use entries from CODE_INVENTORY.md
+> 2. If task's verified script not in inventory → **ASK user where it is**, do NOT recreate
+> 3. If anomalous result → cross-check inventory `status` field before trusting
+> 4. Update inventory when scripts get verified/found-buggy/relocated
+>
+> History of past mistakes (do not repeat):
+> - compute_cij.py shear factor 2 bug → comp2 v2 wasted
+> - Method 3 v2 LBFGS missing → clamped C=98 anomaly
+> - safe wrapper "JOB DONE" check → premature exit on walltime
+> See `CODE_INVENTORY.md` section "사용자 손해 history".
 
 ## Project Overview
 PhD research (BML Lab, Hanyang University, 안용훈) on halogen-substituted argyrodite
