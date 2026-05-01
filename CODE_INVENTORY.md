@@ -210,19 +210,34 @@
 
 ---
 
-## K. ⚠️ 미해결 — comp2 v2 production 출처 불명
+## K. ✅ 해결 — comp2 v2 production은 KISTI 에 있음
 
-`comp2_v2_V0.xyz` (Apr 29 14:59 생성, gabia /data/work/bml/manuscript_support/) 의 ==**생성 코드가 어디에도 없음**==:
-- pipeline_v2/comp2_lpscb05/ 폴더 없음
-- comp2 용 step1*.py 없음
-- halogen_screening_results json/cif 없음
+```
+/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp2_lpscbr/
+```
 
-가능성:
-- comp1 v2 champion → Cl 2개를 Br로 manual swap
-- comp2 v1 (random) → anneal만 별도 실행
-- 다른 폴더 어디서 enumerate (찾는 중)
+(gabia의 `comp2_v2_V0.xyz` 는 KISTI에서 transfer된 copy)
 
-==**이게 확정되기 전까지 comp2 v2 anneal stiffening 21% narrative는 reservation**==.
+### Full pipeline 파일들 (KISTI)
+- `step1_enumerate_halogen.py` — halogen enum (단순 버전)
+- `step1_v2.py` — halogen + Li screen + Li anneal (full 버전)
+- `step2_mlip_eos.py` — MLIP EOS
+- `step3_dft_eos.py` + `step3_dft_eos_comp2.py` — DFT EOS scan
+- `anneal_champion.py` — anneal script
+- `comp2_v2_champion.cif/.xyz` — anneal output
+- `v2_postproc/comp2_v2_V0.xyz` — post-EOS V0
+- 12 volume EOS scan (v098 to v108) + tmp_v###/.save
+- PDOS files (128 pdos_atm)
+- Bader charge.dat / charge.cube / BM3_fit.json
+- `run_comp2_v2_bader.sh`
+
+### narrative 영향
+==comp2 v2도 full anneal pipeline 거침== → 21% v1→v2 stiffening 정량 결과 ==paper narrative 유지 valid== ✓.
+
+### TODO — 어느 step1을 썼는지 확인
+- `step1_enumerate_halogen.py` (단순 halogen enum)
+- `step1_v2.py` (full 3-stage)
+둘 다 있는데 실제 production 사용된 것 추적 필요.
 
 ---
 
