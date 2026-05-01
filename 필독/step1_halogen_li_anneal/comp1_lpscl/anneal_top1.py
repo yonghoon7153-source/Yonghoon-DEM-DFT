@@ -57,7 +57,7 @@ def build(halogen_idx, li_idx):
         sp.append('Cl' if i in halogen_idx else 'S'); co.append(c)
     return Structure(lattice, sp, co)
 
-print("=== Rank 1 (Li config #0) Annealing (50ps) ===", flush=True)
+print("=== Rank 1 (Li config #0) Annealing (100ps) ===", flush=True)
 
 struct = build(best_halogen, Li_configs[0])
 atoms = adaptor.get_atoms(struct)
@@ -69,12 +69,12 @@ except: pass
 e_before = atoms.get_potential_energy()
 print(f"  E before: {e_before:.4f} eV", flush=True)
 
-print(f"  Annealing 500K, 50ps...", flush=True)
+print(f"  Annealing 500K, 100ps...", flush=True)
 MaxwellBoltzmannDistribution(atoms, temperature_K=500)
-Langevin(atoms, 1.0*units.fs, temperature_K=500, friction=0.01).run(50000)
+Langevin(atoms, 1.0*units.fs, temperature_K=500, friction=0.01).run(100000)
 
-print(f"  Quench 300K, 5ps...", flush=True)
-Langevin(atoms, 1.0*units.fs, temperature_K=300, friction=0.05).run(5000)
+print(f"  Quench 300K, 10ps...", flush=True)
+Langevin(atoms, 1.0*units.fs, temperature_K=300, friction=0.05).run(10000)
 
 try:
     LBFGS(atoms, logfile=None).run(fmax=0.005, steps=300)
