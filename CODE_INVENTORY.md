@@ -250,12 +250,12 @@
 |---|---|---|---|
 | step1 file | step1_v2.py | step1_v2.py | (확인 필요) |
 | halogen | C(8,4)=70 | C(8,2)×C(6,2)=420 | C(8,n_S) |
-| sym dedup | no | no | (확인) |
-| Li configs | 20 random | 20 random | 20 random |
-| anneal | Top 1 | Top 1 | (확인) |
+| Li configs | 20 random (seed 42) | 20 random (seed 42) | 20 random |
+| anneal | 500K 100ps + 300K 10ps quench + LBFGS | 동일 | (확인) |
+| top_for_anneal | Top 1 | Top 1 | (확인) |
 | location | KISTI pipeline_v2/comp1_lpscl/ | KISTI pipeline_v2/comp2_lpscbr/ | KISTI pipeline_v2/modelC_lpsc16/ |
 
-==comp1 + comp2 v2: 같은 protocol (Top 1)== — apples-to-apples 비교 valid.
+==comp1 v2와 comp2 v2 step1_v2.py 동일 protocol== ✓ apples-to-apples 비교 valid.
 
 ### comp3, 4, 5 v2 ⏳ 시간 제약으로 미실행 (계획은 있음)
 - ==**시간 부족으로 v2 못 함**==, 원칙적으로는 할 예정이었음
