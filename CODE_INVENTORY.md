@@ -210,88 +210,77 @@
 
 ---
 
-## K. ✅ 해결 — comp2 v2 production은 KISTI 에 있음
+## Pipeline v2 — Step 별 production code
 
-```
-/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp2_lpscbr/
-```
+> 위치: KISTI `pipeline_v2/{comp1_lpscl, comp2_lpscbr, modelC_lpsc16}/`
 
-(gabia의 `comp2_v2_V0.xyz` 는 KISTI에서 transfer된 copy)
+### 1. Halogen enumerate ✅
+- file: `step1_v2.py` (Stage 1)
+- comp1: C(8,4)=70 / comp2: C(8,2)×C(6,2)=420 / modelC: (확인필요)
+- output: top halogen config
 
-### Full pipeline 파일들 (KISTI)
-- `step1_enumerate_halogen.py` — halogen enum (단순 버전)
-- `step1_v2.py` — halogen + Li screen + Li anneal (full 버전)
-- `step2_mlip_eos.py` — MLIP EOS
-- `step3_dft_eos.py` + `step3_dft_eos_comp2.py` — DFT EOS scan
-- `anneal_champion.py` — anneal script
-- `comp2_v2_champion.cif/.xyz` — anneal output
-- `v2_postproc/comp2_v2_V0.xyz` — post-EOS V0
-- 12 volume EOS scan (v098 to v108) + tmp_v###/.save
-- PDOS files (128 pdos_atm)
-- Bader charge.dat / charge.cube / BM3_fit.json
-- `run_comp2_v2_bader.sh`
+### 2. Li screen ✅
+- file: `step1_v2.py` (Stage 2)
+- 20 random Li configs (seed=42) on best halogen
+- output: top Li config
 
-### narrative 영향
-==comp2 v2도 full anneal pipeline 거침== → 21% v1→v2 stiffening 정량 결과 ==paper narrative 유지 valid== ✓.
+### 3. Anneal ✅
+- file: `step1_v2.py` (Stage 3) + `anneal_champion.py`
+- protocol: 500K 100ps Langevin + 300K 10ps quench + LBFGS
+- top_for_anneal: Top 1
+- output: `comp{1,2}_v2_champion.{xyz,cif}`, `pipeline_v2_results.json`
 
-### ✅ comp2 v2 production = `step1_v2.py` + `anneal_champion.py` (2-stage)
+### 4. MLIP EOS ❓
+- file: `step2_mlip_eos.py`
+- (검증 대기)
 
-==Apr 27 timeline==:
-1. `step1_v2.py` (16:05) → run (17:46) → best_cl=[0,2], best_br=[5,7], best_li=Li_configs[0]
-2. `anneal_champion.py` (20:25) — best_cl/br/li 하드코딩 + 100ps anneal
-3. comp2_v2_champion.xyz/.cif (21:24) ← anneal_champion.py 결과
+### 5. DFT EOS ❓
+- file: `step3_dft_eos.py` + `step3_dft_eos_comp2.py`
+- (검증 대기)
 
-⚠️ `anneal_champion.py` 현재 .py는 50ps 표기, 실제 log는 100ps 실행됨 (.py가 나중 수정).
-production은 ==100ps==.
+### 6. BM3 fit + V0 selection ❓
+- output: `BM3_fit.json`, `v2_postproc/comp{1,2}_v2_V0.xyz`
+- (검증 대기)
 
-==Top 1 selection 검증 (comp1)==:
-- comp1 anneal_top2to5.log: Rank 2-5 best E = -217.042
-- comp1 Rank 1 (Top 1) anneal E = **-217.533**
-- ==**ΔE = 491 meV**== — Top 1이 명백히 winner ✓
-- comp2 Top 2-5 미검증 (시간되면 nd 후 확인)
+### 7. Post-processing ❓
+- PDOS (128 pdos_atm files)
+- Bader (`charge.dat`, `charge.cube`, `run_comp2_v2_bader.sh`)
+- (검증 대기)
 
-`step1_enumerate_halogen.py` (Apr 27 15:55)는 superseded (지금 안 씀).
+---
 
-**검증된 step1_v2.py 구조** (KISTI `pipeline_v2/comp2_lpscbr/step1_v2.py`):
-- a_exp = 9.852 (comp1 reference, lattice은 MLIP relax이 처리)
-- Halogen enum: 2 Cl + 2 Br + 4 S in 8 free sites = 420 raw configs (no sym dedup)
-- Stage 1: 420 halogen × 1 rep Li → MLIP relax → top halogen
-- Stage 2: best halogen × 20 random Li (RandomState 42) → top Li
-- Stage 3: 500K 100ps anneal + 300K quench + final relax → champion.xyz
-
-**v2 production 실제 한 comp 만**:
-| 항목 | comp1 v2 | comp2 v2 | modelC v2 |
-|---|---|---|---|
-| step1 file | step1_v2.py | step1_v2.py | (확인 필요) |
-| halogen | C(8,4)=70 | C(8,2)×C(6,2)=420 | C(8,n_S) |
-| Li configs | 20 random (seed 42) | 20 random (seed 42) | 20 random |
-| anneal | 500K 100ps + 300K 10ps quench + LBFGS | 동일 | (확인) |
-| top_for_anneal | Top 1 | Top 1 | (확인) |
-| location | KISTI pipeline_v2/comp1_lpscl/ | KISTI pipeline_v2/comp2_lpscbr/ | KISTI pipeline_v2/modelC_lpsc16/ |
-
-==comp1 v2와 comp2 v2 step1_v2.py 동일 protocol== ✓ apples-to-apples 비교 valid.
-
-### comp3, 4, 5 v2 ⏳ 시간 제약으로 미실행 (계획은 있음)
-- ==**시간 부족으로 v2 못 함**==, 원칙적으로는 할 예정이었음
-- `comp345_v2_from_modelC.py` 는 ==production-ready template== (templates 폴더, 시간 되면 실행 가능)
-- 현재 paper narrative: comp3-5는 ==v1 유지==
-
-### paper #1 mechanical comparison 현재 매트릭스
-| comp | v1 (random) | v2 (anneal champion) |
+### v2 실행 status
+| comp | step 1-3 | step 4-7 |
 |---|:-:|:-:|
-| comp1 | ✅ | ✅ (Top 1) |
-| comp2 | ✅ | ✅ (Top 1) |
-| comp3 | ✅ | ⏳ TODO (template ready) |
-| comp4 | ✅ | ⏳ TODO (template ready) |
-| comp5 | ✅ | ⏳ TODO (template ready) |
+| comp1 | ✅ | ✅ |
+| comp2 | ✅ | ✅ |
+| comp3, 4, 5 | ⏳ TODO (template ready) | — |
 | modelC | ✅ | ✅ |
 
-### paper narrative 현 단계
-- ==**Within-family Br trend**== (paper main): v1 끼리 일관 비교 가능
-  - Li6 family: comp1 v1 vs comp2 v1
-  - Li5.4 family: comp3 v1 vs comp4 v1 vs comp5 v1
-- ==**Anneal stiffening 효과**== (paper sub): v1 vs v2 — ==comp1, comp2, modelC 만==
-- ==**향후 (시간 되면)**==: comp3-5 v2 추가 → cross-family anneal 분석 가능
+<!--
+주석 (잡설):
+
+* Apr 27 timeline (comp2 v2):
+  16:05 step1_v2.py 작성 → 17:46 run → best_cl=[0,2], br=[5,7], li=Li_configs[0]
+  20:25 anneal_champion.py (best 하드코딩) → 21:24 champion.xyz/cif
+
+* anneal_champion.py 코드는 50ps 표기, log는 100ps 실행 — .py가 나중 수정.
+  production은 100ps.
+
+* Top 1 selection 검증 (comp1 evidence):
+  - rank 2-5 best E = -217.042 / rank 1 anneal E = -217.533
+  - ΔE = 491 meV → Top 1 명백 winner
+  - comp2 Top 2-5 미검증 (nd 후 확인 가능)
+
+* gabia comp2_v2_V0.xyz는 KISTI에서 transfer된 copy.
+
+* step1_enumerate_halogen.py (Apr 27 15:55)는 superseded.
+
+* paper narrative:
+  - within-family Br trend (paper main) = v1 비교
+  - anneal stiffening (paper sub) = comp1/comp2/modelC v1 vs v2
+  - comp3-5 v2 시간 부족, comp345_v2_from_modelC.py template 준비됨
+-->
 
 ---
 
