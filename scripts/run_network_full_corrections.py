@@ -372,6 +372,13 @@ def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: s
         tmp = Path(tmpd)
         shutil.copy2(case_dir / 'atoms.csv', tmp / 'atoms.csv')
         contacts_modified.to_csv(tmp / 'contacts.csv', index=False)
+        # CRITICAL: copy input_params.json so network_conductivity reads
+        # correct box_x, box_y (otherwise defaults to 0.05×0.05 and σ is
+        # off by box-area ratio). Same for meta.json (some helpers read it).
+        for aux in ('input_params.json', 'meta.json'):
+            src = case_dir / aux
+            if src.exists():
+                shutil.copy2(src, tmp / aux)
         cmd = [sys.executable, str(NET_PY),
                str(tmp / 'atoms.csv'), str(tmp / 'contacts.csv'),
                '-o', str(tmp), '-t', type_map_str, '-s', str(int(scale)),

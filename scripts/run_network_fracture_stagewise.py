@@ -188,6 +188,12 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
         tmp = Path(tmpd)
         shutil.copy2(case_dir / 'atoms.csv', tmp / 'atoms.csv')
         scaled_df.to_csv(tmp / 'contacts.csv', index=False)
+        # CRITICAL: copy input_params.json so network_conductivity reads
+        # correct box_x, box_y (otherwise defaults to 0.05×0.05).
+        for aux in ('input_params.json', 'meta.json'):
+            src = case_dir / aux
+            if src.exists():
+                shutil.copy2(src, tmp / aux)
 
         type_map_str = meta.get('type_map', '1:AM_P,2:AM_S,3:SE')
         cmd = [sys.executable, str(NET_PY),
