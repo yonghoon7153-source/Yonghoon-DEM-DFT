@@ -1232,3 +1232,313 @@ miniaturization) 산업 trend 는 *cathode-internal SE filler 에 한정* 하여
 cathode 에서의 이러한 targeted miniaturization 의 mechanistic foundation
 을 제공하면서, separator optimum 은 별개 set 의 considerations 에 의해
 지배됨을 acknowledge 한다.
+
+---
+
+## Section 6 — Fracture-Aware Network Solver: Methodology and Bounds
+
+### English
+
+Sections 4–5-1 established that the σ_ionic scaling law is decoupled
+from AM-AM fracture by construction (SE-SE-only ionic graph) and the
+inversion of bulk-pellet vs cathode SE-size optimum is a clean
+separation of dominant mechanisms. The σ_e (electronic) and σ_thermal
+channels do *not* enjoy the same protection — both rely on AM-AM
+contacts that are directly affected by fracture. This section presents
+the fracture-aware solver methodology used to quantify σ_e / σ_thermal
+loss in the 78-case ensemble.
+
+**Decomposition framework.** All three transport channels admit the
+same multiplicative decomposition:
+
+```
+σ_eff = σ_grain × η_topology(microstructure)
+```
+
+where σ_grain is the intrinsic single-crystal conductivity (literature
+input) and η_topology is the dimensionless microstructural factor
+computed by the network solver. The paper's v29 main scaling law
+(Section 4, LOOCV R² = 0.90) is precisely a fit of η_topology for
+σ_ionic. The fracture-aware analysis modifies η_topology only — it
+does not touch σ_grain. This orthogonality is why the σ_ionic claims
+of Sections 4–5 carry over: σ_grain is uniform across the ensemble,
+and the η_topology fit is robust to fracture-state interpretation
+(Section 5).
+
+For σ_e and σ_thermal, the η_topology depends on AM-AM contacts that
+fracture can break. Three solver variants progressively refine the
+fracture-loss estimate:
+
+**Stage C — Binary cutoff (R = ∞).** For each AM-AM contact, classify
+the Lawn 1998 force multiplier m = F/P_c. If m ≥ 3 (multicrack threshold
+or beyond), set the contact's conductance to zero (R = ∞). All other
+contacts unchanged. This is a *strict upper bound* on σ_e_loss because
+it assumes any contact in the multicrack-or-worse regime is electrically
+broken. Implementation: filter contacts.csv, re-run network_conductivity
+on the filtered graph.
+
+**Stage D — Stagewise σ_factor (Lawn-literature).** Replace the binary
+0/1 cutoff with literature-informed per-stage scaling, capturing the
+fact that fractured contacts retain *partial* conductance (Trevisanello
+2021, Min 2024, Jiang 2021):
+
+```
+intact         (m < 1)        × 1.00
+microcrack     (1 ≤ m < 3)    × 0.85   (Trevisanello, Heenan)
+multicrack     (3 ≤ m < 11)   × 0.40   (Jiang rock-salt + grain sep.)
+fragmentation  (11 ≤ m < 32)  × 0.10   (Min, mostly broken + rock-salt)
+pulverization  (m ≥ 32)       × 0.02   (binary literature limit)
+```
+
+Implementation: scale contact_area + delta of each AM-AM contact by the
+stage σ_factor. Topology preserved; only edge weights modified.
+
+**Stage E — Full literature corrections.** Stage D plus the per-particle
+σ_grain factor for AM crystallinity (Trevisanello 2021 single-crystal
+vs polycrystalline) and SE size (Cronau 2022 size-invariant ≥ 0.3 μm,
+amorphization onset below). For κ_thermal, AM crystallinity factor
+(Wang 2022 phonon GB scattering) replaces fracture; SE κ is size-
+invariant per Yang 2022 (sulfide already in glassy regime). Per-particle
+factors (size + crystallinity dependent) are listed in Section 6 of the
+companion code documentation. Edge factors use harmonic mean of two
+particle factors.
+
+**Bound interpretation.** The three variants form a graduated estimate
+of the fracture-aware σ_e:
+
+- Stage C is the *upper bound on σ_e_loss* (lower bound on σ_e). It
+  assumes complete loss above multicrack threshold.
+- Stage E is the *literature-realistic central estimate*. It captures
+  partial conductance preservation through stagewise scaling and AM
+  crystallinity dependence.
+- The gap C → E quantifies how much "rescue" the literature stagewise
+  scaling provides on top of the conservative binary cutoff.
+
+**Empirical results — 78-case ensemble.** Across the 53 cases that
+pass the σ_e numerical-anomaly filter (out of 78 raw):
+
+```
+σ_e channel results
+─────────────────────────────────────────────────────────────────
+σ_e baseline           median 6.47 mS/cm  mean 5.93   max 13.74
+Stage C (binary)       median 2.26        mean 2.28   max 10.88
+                       loss median 65%, Q1/Q3 55/80%
+Stage D (stagewise)    median 2.20  (n=18 partial run)
+                       loss median 66% — essentially same as Stage C
+Stage E (full)         median 2.42  mean 3.36   max 10.75   (n=53)
+                       loss median 47%, mean 42%
+                       fa(E)/full ratio median 0.53
+
+κ_thermal channel results (Stage E only)
+─────────────────────────────────────────────────────────────────
+κ baseline             median 4.30
+κ Stage E              median 3.46  mean 3.50
+                       loss median 11%, MEAN 30%      ← bimodal!
+                       Q1/Q3 4/66%
+                       AM_S-rich cases: minimal loss (~5%)
+                       AM_P-rich cases: severe loss (~66%)
+```
+
+Three findings stand out:
+
+(1) Stages C and D give *essentially identical* median loss (65 % vs 66 %).
+The literature-informed stagewise σ_factor does not significantly
+reduce the binary estimate because the 78-case ensemble's fracture
+distribution is dominated by *fragmentation/pulverization* contacts
+(force multiplier band 11–32+, σ_factor 0.10–0.02 ≈ 0). The microcrack
+band (factor 0.85) is too sparsely populated to alter the median. This
+is itself an empirical statement: for sulfide ASSB cathodes at 300 MPa
+target pressure, AM-AM fracture is typically *catastrophic*, not
+*moderate* — making the binary R = ∞ assumption a realistic
+description rather than a pessimistic upper bound.
+
+(2) Stage E (with AM crystallinity factor) recovers the σ_e to a less
+catastrophic 47 % median loss because the stagewise σ_factor preserves
+some multicrack-band conductance which is then attenuated only by the
+AM_P × 0.65 grain factor (rather than zeroed). The 18-percentage-point
+improvement (65 → 47 %) is the literature-realistic correction the
+binary upper bound does not capture.
+
+(3) The κ_thermal channel shows a *bimodal* loss distribution
+(median 11 %, mean 30 %, Q3 66 %): AM_S-rich designs lose only ~5 % κ
+because the AM_S × 1.00 grain factor preserves transport, while
+AM_P-rich designs lose ~66 % κ via the AM_P × 0.50 phonon-GB factor.
+This is the quantitative thermal counterpart of the cathode-side σ_e
+asymmetry — single-crystal AM_S delivers dual benefits in both
+electrical and thermal channels.
+
+**Stratification by r_SE.** The Stage E σ_e loss is also size-stratified
+(Section 7.5 will quantify this fully):
+
+```
+Stage E σ_e_loss by r_SE band:
+  fine    (< 0.7 μm) :  n=31  median 31 %  max 66 %
+  medium  (0.7–1.2)  :  n= 5  median 66 %  max 67 %
+  coarse  (> 1.2)    :  n=17  median 66 %  max 71 %
+```
+
+Fine SE designs preserve roughly twice as much σ_e under the
+literature-realistic correction (31 % loss) as coarse SE (66 % loss),
+reinforcing the cathode-side small-SE preference established in
+Section 5-1.
+
+**Implication.** Combining the Section 4 σ_ionic invariance, the
+Section 5-1 cathode/separator inversion, and the Section 6 σ_e + κ
+fracture-aware quantification, the present paper's design rule for
+the cathode composite is:
+
+  *Small SE (sub-μm) + AM_S-rich (single-crystal) microstructure
+  preserves all three transport channels under literature-realistic
+  fracture conditions; AM_P-rich coarse-SE microstructures lose 60+ %
+  of σ_e and κ to the fracture-induced AM-AM contact damage.*
+
+The σ_ionic channel is by construction insensitive to AM-AM fracture
+(Section 4) and therefore not penalized in either direction.
+
+### 한국어
+
+Sections 4–5-1 은 σ_ionic scaling law 가 *구조적으로* AM-AM fracture
+와 분리됨 (SE-SE-only ionic graph) 과, bulk-pellet vs cathode 의 SE
+크기 optimum 역전이 dominant mechanism 의 깔끔한 분리임을 확립했다.
+σ_e (전자) 와 σ_thermal 채널은 같은 보호를 받지 *못한다* — 둘 다
+fracture 가 직접 영향을 미치는 AM-AM contact 에 의존한다. 본 절은
+78-case 앙상블에서 σ_e / σ_thermal 손실을 정량화하는 fracture-aware
+solver methodology 를 제시한다.
+
+**Decomposition framework.** 세 transport 채널 모두 다음 곱셈 분해를
+인정한다:
+
+```
+σ_eff = σ_grain × η_topology(microstructure)
+```
+
+여기서 σ_grain 은 intrinsic 단결정 전도도 (literature input), η_topology
+는 network solver 가 계산하는 dimensionless microstructural factor 이다.
+본 논문의 v29 main scaling law (Section 4, LOOCV R² = 0.90) 는 정확히
+σ_ionic 의 η_topology fit 이다. Fracture-aware 분석은 η_topology 만
+수정하며 σ_grain 은 건드리지 않는다. 이 orthogonality 가 Sections 4–5
+의 σ_ionic 결론을 그대로 carry over 시키는 이유이다.
+
+σ_e 와 σ_thermal 의 경우 η_topology 는 fracture 가 깰 수 있는 AM-AM
+contact 에 의존한다. 세 solver variant 가 fracture-loss estimate 를
+점진적으로 정밀화한다:
+
+**Stage C — Binary cutoff (R = ∞).** 각 AM-AM contact 에 대해 Lawn
+1998 force multiplier m = F/P_c 분류. m ≥ 3 (multicrack 임계 이상)
+이면 contact conductance = 0 (R = ∞). 그 외는 변화 없음. *σ_e_loss
+의 strict upper bound* 이다 — multicrack-or-worse regime 의 모든
+contact 이 전기적으로 broken 이라고 가정하기 때문. 구현: contacts.csv
+필터 후 network_conductivity 재실행.
+
+**Stage D — Stagewise σ_factor (Lawn-literature).** Binary 0/1 cutoff
+대신 literature-informed per-stage scaling 으로 대체. Fractured contact
+이 *부분* 전도도를 유지한다는 사실 (Trevisanello 2021, Min 2024, Jiang
+2021) 을 반영:
+
+```
+intact         (m < 1)        × 1.00
+microcrack     (1 ≤ m < 3)    × 0.85   (Trevisanello, Heenan)
+multicrack     (3 ≤ m < 11)   × 0.40   (Jiang rock-salt + grain 분리)
+fragmentation  (11 ≤ m < 32)  × 0.10   (Min, mostly broken + rock-salt)
+pulverization  (m ≥ 32)       × 0.02   (binary literature 한계)
+```
+
+구현: 각 AM-AM contact 의 contact_area + delta 를 stage σ_factor 로
+스케일. Topology 는 보존, edge weight 만 수정.
+
+**Stage E — Full literature corrections.** Stage D + AM 결정성에 대한
+per-particle σ_grain factor (Trevisanello 2021 single-crystal vs poly-
+crystalline) + SE 크기 factor (Cronau 2022 size-invariant ≥ 0.3 μm,
+이하 amorphization 시작). κ_thermal 의 경우 AM 결정성 factor (Wang
+2022 phonon GB scattering) 가 fracture 를 대체 — SE κ 는 size-invariant
+(Yang 2022, sulfide 이미 glassy regime). Per-particle factor (크기 +
+결정성 의존) 는 companion code 문서의 Section 6 에 명시. Edge factor
+는 두 particle factor 의 harmonic mean 사용.
+
+**Bound interpretation.** 세 variant 가 fracture-aware σ_e 의 graduated
+estimate 를 형성:
+
+- Stage C 는 *σ_e_loss 의 upper bound* (σ_e 의 lower bound). Multicrack
+  임계 이상의 완전 손실 가정.
+- Stage E 는 *literature-realistic central estimate*. Stagewise scaling
+  으로 부분 전도도 보존 + AM 결정성 의존성 capture.
+- C → E gap 은 보수적 binary cutoff 위에 literature stagewise scaling
+  이 제공하는 "rescue" 의 양을 정량화한다.
+
+**Empirical 결과 — 78-case 앙상블.** σ_e 수치 anomaly filter 통과한
+53 cases (78 raw 중) 에 대해:
+
+```
+σ_e 채널 결과
+─────────────────────────────────────────────────────────────────
+σ_e baseline           median 6.47 mS/cm  mean 5.93   max 13.74
+Stage C (binary)       median 2.26        mean 2.28   max 10.88
+                       loss median 65%, Q1/Q3 55/80%
+Stage D (stagewise)    median 2.20  (n=18 partial run)
+                       loss median 66% — Stage C 와 본질적으로 동일
+Stage E (full)         median 2.42  mean 3.36   max 10.75   (n=53)
+                       loss median 47%, mean 42%
+                       fa(E)/full ratio median 0.53
+
+κ_thermal 채널 결과 (Stage E only)
+─────────────────────────────────────────────────────────────────
+κ baseline             median 4.30
+κ Stage E              median 3.46  mean 3.50
+                       loss median 11%, MEAN 30%      ← bimodal!
+                       Q1/Q3 4/66%
+                       AM_S-rich cases: 최소 손실 (~5%)
+                       AM_P-rich cases: severe 손실 (~66%)
+```
+
+세 가지 발견:
+
+(1) Stage C 와 D 가 *본질적으로 동일* 한 median loss (65 % vs 66 %)
+를 산출한다. Literature-informed stagewise σ_factor 가 binary estimate
+를 의미있게 감소시키지 못한다 — 78-case 앙상블의 fracture 분포가
+*fragmentation/pulverization* contact 에 dominated 되어 있기 때문
+(force multiplier band 11–32+, σ_factor 0.10–0.02 ≈ 0). Microcrack
+band (factor 0.85) 는 분포가 너무 sparse 하여 median 을 변경하지
+못한다. 이 자체가 empirical statement 이다: 300 MPa target 압력의
+sulfide ASSB cathode 에서 AM-AM fracture 는 통상 *catastrophic* 이지
+*moderate* 가 아니며 — binary R = ∞ 가정을 보수적 upper bound 가
+아닌 *realistic description* 으로 만든다.
+
+(2) Stage E (AM 결정성 factor 포함) 가 σ_e 를 less catastrophic 한
+47 % median loss 로 회복시킨다. Stagewise σ_factor 가 multicrack-band
+전도도 일부를 보존하고 이것이 AM_P × 0.65 grain factor 로만 약화되기
+때문 (zero 처리되지 않음). 18-percentage-point 개선 (65 → 47 %) 이
+binary upper bound 가 capture 못 하는 literature-realistic correction
+이다.
+
+(3) κ_thermal 채널이 *bimodal* loss 분포 (median 11 %, mean 30 %,
+Q3 66 %) 를 보인다: AM_S-rich design 은 ~5 % κ 만 손실 (AM_S × 1.00
+grain factor 가 transport 보존), AM_P-rich design 은 ~66 % κ 손실
+(AM_P × 0.50 phonon-GB factor 경유). Cathode 측 σ_e 비대칭의 정량적
+thermal 대응 — single-crystal AM_S 가 전기 + 열 채널 양쪽에서 dual
+benefit 을 제공한다.
+
+**r_SE 별 stratification.** Stage E σ_e loss 의 크기-별 stratification
+(Section 7.5 에서 fully 정량화):
+
+```
+Stage E σ_e_loss by r_SE band:
+  fine    (< 0.7 μm) :  n=31  median 31 %  max 66 %
+  medium  (0.7–1.2)  :  n= 5  median 66 %  max 67 %
+  coarse  (> 1.2)    :  n=17  median 66 %  max 71 %
+```
+
+Fine SE design 이 literature-realistic correction 하에서 약 *2 배*
+σ_e 를 보존 (31 % loss vs coarse 66 % loss) — Section 5-1 에서 확립한
+cathode 측 small-SE preference 를 강화한다.
+
+**함의.** Section 4 의 σ_ionic 불변성, Section 5-1 의 cathode/separator
+역전, Section 6 의 σ_e + κ fracture-aware 정량화를 종합하면, 본 논문
+의 cathode composite 에 대한 design rule 은:
+
+  *Small SE (sub-μm) + AM_S-rich (single-crystal) microstructure 가
+  literature-realistic fracture 조건 하에서 세 transport 채널 모두
+  보존; AM_P-rich coarse-SE microstructure 는 fracture-induced AM-AM
+  contact 손상으로 σ_e 와 κ 의 60 % 이상 손실.*
+
+σ_ionic 채널은 구조적으로 AM-AM fracture 에 둔감 (Section 4) 하므로
+어느 방향으로도 penalty 받지 않는다.
