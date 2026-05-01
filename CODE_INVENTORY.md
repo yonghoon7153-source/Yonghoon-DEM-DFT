@@ -230,9 +230,13 @@
 - top_for_anneal: Top 1
 - output: `comp{1,2}_v2_champion.{xyz,cif}`, `pipeline_v2_results.json`
 
-### 4. MLIP EOS ❓
+### 4. MLIP EOS ✅
 - file: `step2_mlip_eos.py`
-- (검증 대기)
+- input: `comp2_v2_champion.xyz` → LBFGS refine (fmax=0.005)
+- protocol: 13 volumes (v096~v108) × cell-fixed LBFGS (fmax=0.01)
+- BM3 fit → B0, V0, B0', R²
+- output: V0 grid 추천 (v{round(V0_scale*100)} ± 5) for DFT EOS
+- ⚠️ print의 v1 비교값 26.2 GPa 하드코딩 (comp1 기준, comp2는 25.8) — 출력만 영향
 
 ### 5. DFT EOS ❓
 - file: `step3_dft_eos.py` + `step3_dft_eos_comp2.py`
