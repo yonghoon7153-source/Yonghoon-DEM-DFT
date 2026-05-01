@@ -127,14 +127,14 @@ for r in all_li_results[:5]:
     print(f"  H{r['h_rank']}_Li{r['li_trial']}: E={r['energy']:.4f}, halogen={r['s_indices']}")
 
 # ═══════════════════════════════════════════
-# 4. Step 3: Top 5 → annealing
+# 4. Step 3: Top 1 → annealing (unified with comp1/comp2 protocol)
 # ═══════════════════════════════════════════
 print(f"\n{'='*60}")
-print(f"Step 3: Top 5 annealing (500K, 50ps)")
+print(f"Step 3: Top 1 annealing (500K, 100ps)")
 print(f"{'='*60}")
 
 anneal_results = []
-for rank, r in enumerate(all_li_results[:5]):
+for rank, r in enumerate(all_li_results[:1]):
     species = []; coords = []
     for i in r['li_indices']: species.append('Li'); coords.append(li_sites[i])
     for c in p_sites: species.append('P'); coords.append(c)
@@ -148,7 +148,7 @@ for rank, r in enumerate(all_li_results[:5]):
 
     e_before = atoms.get_potential_energy()
     MaxwellBoltzmannDistribution(atoms, temperature_K=500)
-    Langevin(atoms, 1*units.fs, temperature_K=500, friction=0.01).run(50000)
+    Langevin(atoms, 1*units.fs, temperature_K=500, friction=0.01).run(100000)
     Langevin(atoms, 1*units.fs, temperature_K=300, friction=0.05).run(10000)
     try: LBFGS(atoms, logfile=None).run(fmax=0.005, steps=300)
     except: pass
@@ -158,13 +158,12 @@ for rank, r in enumerate(all_li_results[:5]):
         'rank': rank, 'h_rank': r['h_rank'], 'li_trial': r['li_trial'],
         'e_before': e_before, 'e_after': e_after
     })
-    write(f'modelC_v2_anneal_rank{rank}.xyz', atoms)
-    print(f"  Rank {rank} (H{r['h_rank']}_Li{r['li_trial']}): "
+    write(f'modelC_v2_champion.xyz', atoms)
+    print(f"  Champion (H{r['h_rank']}_Li{r['li_trial']}): "
           f"{e_before:.4f} → {e_after:.4f} (dE={(e_after-e_before)*1000:.0f} meV)", flush=True)
 
-anneal_results.sort(key=lambda x: x['e_after'])
 champ = anneal_results[0]
-print(f"\n★ Champion: rank {champ['rank']} (H{champ['h_rank']}_Li{champ['li_trial']})")
+print(f"\n★ Champion: H{champ['h_rank']}_Li{champ['li_trial']}")
 print(f"  E = {champ['e_after']:.4f} eV")
 
 with open('modelC_v2_results.json', 'w') as f:
