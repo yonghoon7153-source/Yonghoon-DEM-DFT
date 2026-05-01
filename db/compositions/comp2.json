@@ -62,7 +62,10 @@
     "nu": 0.178
   },
   "elastic_dft_0K_GPa_v2": {
+    "_STATUS": "ANOMALOUS_DO_NOT_USE_FOR_PAPER",
+    "_REASON": "C44 = 77.60 GPa is 2x higher than comp1 v2 (38.87) under SAME clamped-ion protocol. Br doping cannot physically double C44 - calculation has setup issue (strain protocol or starting structure).",
     "method": "DFT 0K finite-strain (affine, clamped-ion, SCF only)",
+    "machine": "gabia /data/work/bml/manuscript_support/comp2v2_dft_0K/",
     "structure": "comp2_v2 anneal champion at v103 cell (V0 from BM3 fit, E_min=-1050.094 Ry)",
     "protocol": "12 strain (6 directions x 2 signs) x 0.005, ATOMIC_POSITIONS (crystal), calculation='scf', no atom relax in strained cell",
     "C11": 78.93,
@@ -85,18 +88,24 @@
     "convergence": "all 12 SCF JOB DONE",
     "anisotropy": {
       "C11_over_C44": 1.02,
-      "expected_isotropic_C44_GPa": 24.6,
       "anisotropy_factor": 3.15,
-      "note": "C44 anomalously high (3x expected isotropic) due to clamped-ion artifact - atoms cannot relieve shear strain"
+      "note": "C11 ~ C44 highly anomalous; argyrodite typical C11/C44 ~ 2"
     },
-    "vs_comp1_v2_pct": {
-      "_caveat": "comp1 v2 db value (C44=37.4, E=75.9) appears relaxed-ion typical; comp2 v2 here is clamped-ion (C44=77.6 typical). Direct comparison NOT apples-to-apples unless protocol matched.",
-      "C11": 7.5,
-      "C12": 1.6,
-      "C44": 107.5,
-      "E_VRH": 58.4
+    "vs_comp1_v2_VERIFIED": {
+      "_note": "Both clamped-ion (calculation='scf') - SAME protocol. Anomaly confirmed.",
+      "comp1_v2": {"C11": 79.27, "C44": 38.87, "E_VRH": 80.43, "nu": 0.210},
+      "comp2_v2": {"C11": 78.93, "C44": 77.60, "E_VRH": 120.20, "nu": 0.065},
+      "delta_C44_pct": 99.6,
+      "delta_E_pct": 49.5,
+      "physical_expectation": "Br -> -2 to -5% softening (Li-X polarization, ionic weakening)",
+      "actual": "+50-100% stiffening - NOT PHYSICAL, likely strain protocol bug on gabia"
     },
-    "interpretation": "Clamped-ion 0K Cij - SI/supplementary. For paper main figure, use 600K MLIP elastic (comp1 29.1 vs comp2 28.6 GPa, then v2 anneal: comp2 v2 = 34.7 GPa, +21% stiffening from Cl/Br ordering). Direct 0K comparison requires matched protocol on both compositions."
+    "next_step_options": [
+      "A. Diagnose comp2 v2 strain protocol on gabia (check CELL_PARAMETERS magnitudes in e1_p..e6_m/scf.in)",
+      "B. Skip 0K Cij for paper, use 600K MLIP for Section 3 main figure (already DB)",
+      "C. Redo comp2 v2 0K Cij on KISTI (where comp1 v2 was done, paper-quality)"
+    ],
+    "interpretation": "DO NOT cite this value in paper. For Section 3 mechanical, use 600K MLIP comparison (comp1 29.1 / comp2 28.6 GPa v1; comp2 v2 anneal = 34.7 GPa)."
   },
   "elastic_mlip_300K_GPa": {
     "unit_cell": {

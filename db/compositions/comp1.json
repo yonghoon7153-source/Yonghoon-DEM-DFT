@@ -57,7 +57,15 @@
     "v2": {"C11": 78.8, "C12": 29.8, "C44": 39.0, "K": 46.2, "G": 32.4, "E": 78.9, "nu": 0.216},
     "delta_v1v2": {"C11": 4.4, "C12": 0.4, "C44": 1.1, "E": 2.0},
     "deng2016_ref": {"C11": 39.9, "C12": 23.1, "C44": 7.8, "E": 22.1},
-    "notes": "v2 slightly stiffer: E +2.0 GPa (+2.6%). Li annealing -> stronger local bonding."
+    "notes": "v2 slightly stiffer: E +2.0 GPa (+2.6%). Li annealing -> stronger local bonding.",
+    "v2_protocol": "clamped-ion finite-strain (calculation='scf', no atom relax in strained cell), 12 strain x 0.005, ATOMIC_POSITIONS (crystal)",
+    "v2_machine": "KISTI /scratch/x3430a02/kgy/manuscript_support/post_relax_comp1_v2/",
+    "v2_files": "comp1v2_elastic_{1,2,3,4,5,6}{p,m}.out (12 files, all JOB DONE Apr 14-15)",
+    "v2_compute_script": "compute_cij_check.py",
+    "v2_verified_2026_05_01": {
+      "C11": 79.27, "C12": 29.68, "C44": 38.87, "K_VRH": 46.21, "G_VRH": 33.24, "E_VRH": 80.43, "nu": 0.210,
+      "match_with_db": "0.6% (E 78.9 db -> 79.27 recompute)"
+    }
   },
 
   "elastic_mlip_300K_GPa": {
