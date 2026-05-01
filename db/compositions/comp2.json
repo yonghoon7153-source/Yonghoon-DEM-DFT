@@ -61,6 +61,43 @@
     "E": 75.9,
     "nu": 0.178
   },
+  "elastic_dft_0K_GPa_v2": {
+    "method": "DFT 0K finite-strain (affine, clamped-ion, SCF only)",
+    "structure": "comp2_v2 anneal champion at v103 cell (V0 from BM3 fit, E_min=-1050.094 Ry)",
+    "protocol": "12 strain (6 directions x 2 signs) x 0.005, ATOMIC_POSITIONS (crystal), calculation='scf', no atom relax in strained cell",
+    "C11": 78.93,
+    "C12": 29.68,
+    "C44": 77.60,
+    "K_VRH": 46.10,
+    "G_VRH": 56.41,
+    "E_VRH": 120.20,
+    "nu": 0.065,
+    "C_matrix_GPa": [
+      [79.0, 30.65, 29.25, -0.95, -1.5, -2.1],
+      [30.65, 78.7, 29.15, 0.4, -0.95, 2.0],
+      [29.25, 29.15, 79.1, -0.95, 0.65, 0.5],
+      [-0.95, 0.4, -0.95, 77.3, 0.95, -1.8],
+      [-1.5, -0.95, 0.65, 0.95, 76.5, -1.15],
+      [-2.1, 2.0, 0.5, -1.8, -1.15, 79.0]
+    ],
+    "completed_date": "2026-05-01",
+    "n_strain": 12,
+    "convergence": "all 12 SCF JOB DONE",
+    "anisotropy": {
+      "C11_over_C44": 1.02,
+      "expected_isotropic_C44_GPa": 24.6,
+      "anisotropy_factor": 3.15,
+      "note": "C44 anomalously high (3x expected isotropic) due to clamped-ion artifact - atoms cannot relieve shear strain"
+    },
+    "vs_comp1_v2_pct": {
+      "_caveat": "comp1 v2 db value (C44=37.4, E=75.9) appears relaxed-ion typical; comp2 v2 here is clamped-ion (C44=77.6 typical). Direct comparison NOT apples-to-apples unless protocol matched.",
+      "C11": 7.5,
+      "C12": 1.6,
+      "C44": 107.5,
+      "E_VRH": 58.4
+    },
+    "interpretation": "Clamped-ion 0K Cij - SI/supplementary. For paper main figure, use 600K MLIP elastic (comp1 29.1 vs comp2 28.6 GPa, then v2 anneal: comp2 v2 = 34.7 GPa, +21% stiffening from Cl/Br ordering). Direct 0K comparison requires matched protocol on both compositions."
+  },
   "elastic_mlip_300K_GPa": {
     "unit_cell": {
       "C11": 39.5,
