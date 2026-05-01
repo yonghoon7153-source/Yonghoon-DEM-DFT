@@ -1,0 +1,8 @@
+&DOS
+    prefix   = 'comp2_v2_v0'
+    outdir   = './tmp_v103'
+    fildos   = 'comp2_v2_v0.dos'
+    Emin     = -10.0
+    Emax     = 10.0
+    DeltaE   = 0.005
+/

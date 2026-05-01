@@ -1,0 +1,8 @@
+&PROJWFC
+    prefix    = 'comp2_v2_v0'
+    outdir    = './tmp_v103'
+    filpdos   = 'comp2_v2_v0'
+    DeltaE    = 0.005
+    ngauss    = 0
+    degauss   = 0.005
+/
