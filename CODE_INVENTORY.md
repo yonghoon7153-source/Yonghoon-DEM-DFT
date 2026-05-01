@@ -237,9 +237,15 @@
 - BM3 fit → B0, V0, B0', R²
 - output: V0 grid 추천 (v{round(V0_scale*100)} ± 5) for DFT EOS
 
-### 5. DFT EOS ❓
-- file: `step3_dft_eos.py` + `step3_dft_eos_comp2.py`
-- (검증 대기)
+### 5. DFT EOS ✅ (comp2) / ⚠️ (comp1 script bug, production 우회)
+- comp2 file: `step3_dft_eos_comp2.py` ✅
+- comp1 file: `step3_dft_eos.py` ⚠️ (ntyp=3 hardcoded, 실제 4 species — 사용자 manual fix 추정)
+- input: champion.xyz의 fractional coords + cell scale
+- protocol: 11 volumes (v098~v108) × `calculation='relax'` (cell-fixed atom relax)
+- DFT settings: ecutwfc=52, ecutrho=520, K=2x2x2, mixing_beta=0.2, nosym
+  - ⚠️ CLAUDE.md 기본값 (60/480/6×6×6) 과 다름 — production 실제 사용값
+- pseudo: SSSP_1.3.0_PBE_efficiency
+- output: `comp2_v2_eos_v{098-108}.in` + tmp_v###/ 폴더
 
 ### 6. BM3 fit + V0 selection ❓
 - output: `BM3_fit.json`, `v2_postproc/comp{1,2}_v2_V0.xyz`
