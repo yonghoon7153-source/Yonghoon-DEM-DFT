@@ -426,6 +426,43 @@ def main() -> None:
         print(cands2[cols].head(10).to_string(index=False))
         print()
 
+    # ── 6b. Pareto winners by Stage E (literature-realistic) ────────────
+    if 'sigma_e_stage_e' in df.columns:
+        cands_e = df[(df['sigma_ionic_full'].notna())
+                      & (df['sigma_e_stage_e'].notna())].copy()
+        if not cands_e.empty:
+            cols_e = ['case_id', 'ps_label', 'r_SE_um', 'sigma_ionic_full',
+                       'sigma_e_full', 'sigma_e_stage_e', 'sigma_e_loss_pct_stage_e',
+                       'sigma_th_stage_e', 'sigma_th_loss_pct_stage_e']
+            print('='*78)
+            print('Stage E Top 10 — lowest σ_e loss (literature-realistic winners)')
+            print('='*78)
+            cands_e_low = cands_e.sort_values('sigma_e_loss_pct_stage_e')
+            print(cands_e_low[cols_e].head(10).to_string(index=False))
+            print()
+            print('Stage E Top 10 — highest σ_e_stage_e (post-correction σ_e value)')
+            print('='*78)
+            cands_e_high = cands_e.sort_values('sigma_e_stage_e', ascending=False)
+            print(cands_e_high[cols_e].head(10).to_string(index=False))
+            print()
+            # 3-objective Pareto: σ_ionic high + σ_e_stage_e high + κ_stage_e high
+            print('Stage E Top 10 — composite Pareto rank (σ_ionic+σ_e+κ all post-correction)')
+            print('='*78)
+            tmp = cands_e.copy()
+            for c in ['sigma_ionic_full', 'sigma_e_stage_e', 'sigma_th_stage_e']:
+                if c in tmp.columns:
+                    mn, mx = tmp[c].min(), tmp[c].max()
+                    rng = mx - mn if mx > mn else 1
+                    tmp[f'{c}_norm'] = (tmp[c] - mn) / rng
+            score_cols = [f'{c}_norm' for c in
+                           ['sigma_ionic_full', 'sigma_e_stage_e', 'sigma_th_stage_e']
+                           if f'{c}_norm' in tmp.columns]
+            if score_cols:
+                tmp['pareto_score'] = tmp[score_cols].mean(axis=1)
+                tmp_sorted = tmp.sort_values('pareto_score', ascending=False)
+                print(tmp_sorted[cols_e + ['pareto_score']].head(10).to_string(index=False))
+                print()
+
     # ── 7. r_SE × P:S 2D pivot for σ_e_loss ────────────────────────────
     if 'r_SE_band' in df.columns:
         df['ps_band'] = pd.cut(df['ps_frac_AM_P'].fillna(-1),
