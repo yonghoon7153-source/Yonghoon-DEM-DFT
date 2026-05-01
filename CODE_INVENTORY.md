@@ -234,9 +234,23 @@
 ### narrative 영향
 ==comp2 v2도 full anneal pipeline 거침== → 21% v1→v2 stiffening 정량 결과 ==paper narrative 유지 valid== ✓.
 
-### ✅ comp2 v2 production = `step1_v2.py` (Apr 27 16:05)
+### ✅ comp2 v2 production = `step1_v2.py` + `anneal_champion.py` (2-stage)
 
-==더 최신 + 완전한 3-stage pipeline== — `step1_enumerate_halogen.py` (Apr 27 15:55)는 superseded.
+==Apr 27 timeline==:
+1. `step1_v2.py` (16:05) → run (17:46) → best_cl=[0,2], best_br=[5,7], best_li=Li_configs[0]
+2. `anneal_champion.py` (20:25) — best_cl/br/li 하드코딩 + 100ps anneal
+3. comp2_v2_champion.xyz/.cif (21:24) ← anneal_champion.py 결과
+
+⚠️ `anneal_champion.py` 현재 .py는 50ps 표기, 실제 log는 100ps 실행됨 (.py가 나중 수정).
+production은 ==100ps==.
+
+==Top 1 selection 검증 (comp1)==:
+- comp1 anneal_top2to5.log: Rank 2-5 best E = -217.042
+- comp1 Rank 1 (Top 1) anneal E = **-217.533**
+- ==**ΔE = 491 meV**== — Top 1이 명백히 winner ✓
+- comp2 Top 2-5 미검증 (시간되면 nd 후 확인)
+
+`step1_enumerate_halogen.py` (Apr 27 15:55)는 superseded (지금 안 씀).
 
 **검증된 step1_v2.py 구조** (KISTI `pipeline_v2/comp2_lpscbr/step1_v2.py`):
 - a_exp = 9.852 (comp1 reference, lattice은 MLIP relax이 처리)
