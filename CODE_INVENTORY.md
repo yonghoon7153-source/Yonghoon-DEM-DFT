@@ -237,15 +237,26 @@
 - BM3 fit → B0, V0, B0', R²
 - output: V0 grid 추천 (v{round(V0_scale*100)} ± 5) for DFT EOS
 
-### 5. DFT EOS ✅ (comp2) / ⚠️ (comp1 script bug, production 우회)
-- comp2 file: `step3_dft_eos_comp2.py` ✅
-- comp1 file: `step3_dft_eos.py` ⚠️ (ntyp=3 hardcoded, 실제 4 species — 사용자 manual fix 추정)
-- input: champion.xyz의 fractional coords + cell scale
+### 5. DFT EOS ✅
+- comp2 file: `step3_dft_eos_comp2.py`
+- comp1 file: `step3_dft_eos.py`
 - protocol: 11 volumes (v098~v108) × `calculation='relax'` (cell-fixed atom relax)
-- DFT settings: ecutwfc=52, ecutrho=520, K=2x2x2, mixing_beta=0.2, nosym
-  - ⚠️ CLAUDE.md 기본값 (60/480/6×6×6) 과 다름 — production 실제 사용값
 - pseudo: SSSP_1.3.0_PBE_efficiency
-- output: `comp2_v2_eos_v{098-108}.in` + tmp_v###/ 폴더
+- output: `comp{1,2}_v2_eos_v{098-108}.in` + tmp_v###/
+
+<!--
+주석:
+* comp1 step3_dft_eos.py에 `ntyp=3` 하드코딩 bug — 실제 4종 (Li,P,S,Cl).
+  production은 manual fix 후 돌렸음 (결과 db 매칭 ✓).
+
+* DFT settings (실제 사용값, CLAUDE.md 기본값과 다름):
+  ecutwfc=52, ecutrho=520, K=2x2x2, mixing_beta=0.2, nosym=.true.
+  smearing=mv, degauss=0.01, conv_thr=1e-8, forc_conv_thr=1e-4
+  → CLAUDE.md (ecutwfc=60, ecutrho=480, K=6x6x6) outdated.
+
+* K=2x2x2는 EOS 용 (relative E만 필요). post-processing은 더 dense 사용.
+-->
+
 
 ### 6. BM3 fit + V0 selection ❓
 - output: `BM3_fit.json`, `v2_postproc/comp{1,2}_v2_V0.xyz`
