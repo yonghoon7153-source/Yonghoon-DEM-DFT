@@ -190,13 +190,31 @@ def aggregate() -> pd.DataFrame:
             'sigma_th_loss_pct_stagewise': pick('thermal_sigma_loss_pct_stagewise'),
             'sigma_th_stage_e': pick('thermal_sigma_full_mScm_stage_e'),
             'sigma_th_loss_pct_stage_e': pick('thermal_sigma_loss_pct_stage_e'),
-            'frac_severe_pct': pick('frac_severe_pct'),
-            'frac_severe_force_pct': pick('frac_severe_force_pct'),
-            'frac_AM_P_AM_P_severe_pct': pick('frac_AM_P_AM_P_severe_pct'),
-            'frac_AM_P_AM_P_severe_force_pct': pick('frac_AM_P_AM_P_severe_force_pct'),
+            # Aggregated severe% — computed from individual stage keys
+            # since backfill writes per-stage keys not _severe_ aggregate
+            'frac_severe_pct': (
+                (pick('frac_fragmentation_pct') or 0) +
+                (pick('frac_pulverization_pct') or 0)
+                if (pick('frac_fragmentation_pct') is not None or
+                    pick('frac_pulverization_pct') is not None) else None),
+            'frac_severe_force_pct': (
+                (pick('frac_fragmentation_force_pct') or 0) +
+                (pick('frac_pulverization_force_pct') or 0)
+                if (pick('frac_fragmentation_force_pct') is not None or
+                    pick('frac_pulverization_force_pct') is not None) else None),
+            'frac_AM_P_AM_P_severe_pct': (
+                (pick('frac_fragmentation_AM_P-AM_P_pct') or 0) +
+                (pick('frac_pulverization_AM_P-AM_P_pct') or 0)
+                if (pick('frac_fragmentation_AM_P-AM_P_pct') is not None or
+                    pick('frac_pulverization_AM_P-AM_P_pct') is not None) else None),
+            'frac_AM_P_AM_P_severe_force_pct': (
+                (pick('frac_fragmentation_force_AM_P-AM_P_pct') or 0) +
+                (pick('frac_pulverization_force_AM_P-AM_P_pct') or 0)
+                if (pick('frac_fragmentation_force_AM_P-AM_P_pct') is not None or
+                    pick('frac_pulverization_force_AM_P-AM_P_pct') is not None) else None),
             'fracture_index': pick('fracture_index'),
             'fracture_index_force': pick('fracture_index_force'),
-            'n_am_am_contacts_total': pick('n_am_am_contacts_total'),
+            'n_am_am_contacts_total': pick('n_am_am_contacts_total', 'n_total_AM_AM'),
             'n_am_am_contacts_excluded': pick('n_am_am_contacts_excluded'),
             'fracture_aware_excluded_pct': pick('fracture_aware_excluded_pct'),
         })
