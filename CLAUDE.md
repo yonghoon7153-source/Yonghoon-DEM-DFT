@@ -98,13 +98,25 @@ Two versions:
 - Basin labels: A (most stable), B, C...
 - Pipeline versions: v1, v2
 
-## DFT Settings (QE)
-- Functional: PBE
-- Ecutwfc: 60 Ry, Ecutrho: 480 Ry
-- K-grid: 6x6x3 (rhombo), 6x6x6 (cubic)
-- Conv_thr: 1e-8 (relax), 1e-10 (tight SCF)
-- Smearing: mv, degauss: 0.01 Ry
-- PP: SSSP efficiency or PBE ONCV
+## DFT Settings (QE) — actual production values
+
+### EOS scan (step 3)
+- Functional: PBE (SSSP_1.3.0_PBE_efficiency)
+- ecutwfc: **52 Ry**, ecutrho: **520 Ry**
+- K-grid: **2x2x2** (cubic 52-atom; coarse OK for relative E)
+- conv_thr: 1e-8, mixing_beta: 0.2, nosym: .true.
+- smearing: mv, degauss: 0.01 Ry
+- forc_conv_thr: 1e-4 (relax), nstep: 200
+
+### Post-processing (V0 SCF / NSCF / elastic)
+- ecutwfc: 60 Ry, ecutrho: 480 Ry (tighter)
+- K-grid: 6x6x3 (rhombo), 6x6x6 (cubic) — dense for accurate band/Bader
+- conv_thr: 1e-10 (tight SCF), 1e-8 (elastic relax)
+- smearing: mv, degauss: 0.01 (DOS) / 0.005 (PDOS projwfc)
+
+### Notes
+- EOS uses coarser cutoff/K to scan 11 volumes economically
+- Post-processing tightens for paper-quality observables
 
 ## MLIP Settings
 - Model: MACE-MP-0 (screening), UMA-s-1p2 (adhesion)
