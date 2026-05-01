@@ -245,17 +245,35 @@
 - Stage 2: best halogen × 20 random Li (RandomState 42) → top Li
 - Stage 3: 500K 100ps anneal + 300K quench + final relax → champion.xyz
 
-**comp1 v2 vs comp2 v2 vs comp3-5 v2 비교**:
-| 항목 | comp1 | comp2 | comp3-5 |
+**v2 production 실제 한 comp 만**:
+| 항목 | comp1 v2 | comp2 v2 | modelC v2 |
 |---|---|---|---|
-| step1 file | step1_v2.py | step1_v2.py | comp345_v2_from_modelC.py |
-| halogen | C(8,4)=70 | C(8,2)×C(6,2)=420 | C(8,n_br) |
-| sym dedup | no | no | no |
-| Li configs | 20 random | 20 random | 20 random per Br top |
-| anneal | Top 1 | Top 1 | Top 5 |
+| step1 file | step1_v2.py | step1_v2.py | (확인 필요) |
+| halogen | C(8,4)=70 | C(8,2)×C(6,2)=420 | C(8,n_S) |
+| sym dedup | no | no | (확인) |
+| Li configs | 20 random | 20 random | 20 random |
+| anneal | Top 1 | Top 1 | (확인) |
+| location | KISTI pipeline_v2/comp1_lpscl/ | KISTI pipeline_v2/comp2_lpscbr/ | KISTI pipeline_v2/modelC_lpsc16/ |
 
-==comp1 + comp2 같은 protocol== (Top 1) — apples-to-apples 비교 valid.
-comp3-5 는 더 깊은 search (Top 5) — narrative에 명시 필요.
+==comp1 + comp2 v2: 같은 protocol (Top 1)== — apples-to-apples 비교 valid.
+
+### comp3, 4, 5 v2 ❌ 미실행
+- ==**v2 안 함**== — 모두 v1 만 (random ordering, no anneal)
+- `comp345_v2_from_modelC.py` 는 ==template/draft, 미사용== (templates 폴더에 있음)
+- paper #1 narrative: comp3-5는 v1 사용
+
+### paper #1 mechanical comparison 정확한 매트릭스
+| comp | v1 (random) | v2 (anneal champion) |
+|---|:-:|:-:|
+| comp1 | ✅ | ✅ (Top 1) |
+| comp2 | ✅ | ✅ (Top 1) |
+| comp3 | ✅ | ❌ 안함 |
+| comp4 | ✅ | ❌ 안함 |
+| comp5 | ✅ | ❌ 안함 |
+| modelC | ✅ | ✅ |
+
+==**Within-family Br trend (paper main): v1만 비교 가능**== (모든 comp가 v1만 일관됨).
+==**Anneal stiffening (paper sub): v2-v1 — comp1, comp2, modelC 만**==.
 
 ---
 
