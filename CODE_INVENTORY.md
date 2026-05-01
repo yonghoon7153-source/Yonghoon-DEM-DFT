@@ -258,9 +258,25 @@
 -->
 
 
-### 6. BM3 fit + V0 selection ❓
-- output: `BM3_fit.json`, `v2_postproc/comp{1,2}_v2_V0.xyz`
-- (검증 대기)
+### 6. BM3 fit + V0 selection ✅
+- input: 11 v###/pw.out (DFT EOS 결과)
+- BM3 fit: n=11 points → V0, E0, B0, B0'
+- closest grid: argmin |V - V0|
+- output: `comp2_v2_BM3_fit.json` (raw_data + fit params),
+  `v2_postproc/tmp_v###/` (closest grid의 .save copy),
+  `v2_postproc/comp2_v2_V0.xyz` (closest grid cell + relaxed coords)
+- 검증 (comp2 v2):
+  - V0_fit = 983.58 Å³, B0 = 25.74 GPa (db 25.8 매칭 ✓)
+  - closest = v103 (V=984.94, Δ=0.14%)
+  - V0.xyz cell a=9.9496 = v103^(1/3) ✓
+
+<!--
+주석:
+* BM3 fit script .py 없음 (hand-done 또는 notebook).
+  결과 json + raw_data로 재계산 가능. reproducibility 약간 미흡.
+* tmp_v103/이 V0 cell의 .save 보유 → post-processing은 v103 cell+coords 사용.
+-->
+
 
 ### 7. Post-processing ❓
 - PDOS (128 pdos_atm files)
