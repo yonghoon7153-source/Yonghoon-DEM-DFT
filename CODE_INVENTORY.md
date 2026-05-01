@@ -206,6 +206,23 @@
 | 날짜 | 변경 |
 |---|---|
 | 2026-05-01 | 초기 catalog 생성 — comp2 v2 C44 anomaly bug 사건 후 |
+| 2026-05-01 | step1_v2.py (comp1 v2) ✅ VERIFIED, comp2 v2 production 코드 ❌ 미확인 |
+
+---
+
+## K. ⚠️ 미해결 — comp2 v2 production 출처 불명
+
+`comp2_v2_V0.xyz` (Apr 29 14:59 생성, gabia /data/work/bml/manuscript_support/) 의 ==**생성 코드가 어디에도 없음**==:
+- pipeline_v2/comp2_lpscb05/ 폴더 없음
+- comp2 용 step1*.py 없음
+- halogen_screening_results json/cif 없음
+
+가능성:
+- comp1 v2 champion → Cl 2개를 Br로 manual swap
+- comp2 v1 (random) → anneal만 별도 실행
+- 다른 폴더 어디서 enumerate (찾는 중)
+
+==**이게 확정되기 전까지 comp2 v2 anneal stiffening 21% narrative는 reservation**==.
 
 ---
 
