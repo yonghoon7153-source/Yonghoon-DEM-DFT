@@ -174,16 +174,22 @@ def aggregate() -> pd.DataFrame:
             'percolation_pct': pick('percolation_pct', 'top_reachable_pct'),
             'sigma_ionic_full': pick('sigma_full_mScm'),
             'sigma_ionic_physics': pick('sigma_full_mScm_physics'),
+            'sigma_ionic_stage_e': pick('sigma_full_mScm_stage_e'),
+            'sigma_ionic_loss_pct_stage_e': pick('sigma_ionic_loss_pct_stage_e'),
             'sigma_e_full': pick('electronic_sigma_full_mScm'),
             'sigma_e_fracture_aware': pick('electronic_sigma_full_mScm_fracture_aware'),
             'sigma_e_loss_pct': pick('electronic_sigma_loss_pct'),
             'sigma_e_stagewise': pick('electronic_sigma_full_mScm_stagewise'),
             'sigma_e_loss_pct_stagewise': pick('electronic_sigma_loss_pct_stagewise'),
+            'sigma_e_stage_e': pick('electronic_sigma_full_mScm_stage_e'),
+            'sigma_e_loss_pct_stage_e': pick('electronic_sigma_loss_pct_stage_e'),
             'sigma_th_full': pick('thermal_sigma_full_mScm'),
             'sigma_th_fracture_aware': pick('thermal_sigma_full_mScm_fracture_aware'),
             'sigma_th_stagewise': pick('thermal_sigma_full_mScm_stagewise'),
             'sigma_th_loss_pct': pick('thermal_sigma_loss_pct'),
             'sigma_th_loss_pct_stagewise': pick('thermal_sigma_loss_pct_stagewise'),
+            'sigma_th_stage_e': pick('thermal_sigma_full_mScm_stage_e'),
+            'sigma_th_loss_pct_stage_e': pick('thermal_sigma_loss_pct_stage_e'),
             'frac_severe_pct': pick('frac_severe_pct'),
             'frac_severe_force_pct': pick('frac_severe_force_pct'),
             'frac_AM_P_AM_P_severe_pct': pick('frac_AM_P_AM_P_severe_pct'),
@@ -347,6 +353,59 @@ def main() -> None:
             print(f'    n {len(sw_loss)}  mean {sw_loss.mean():.2f}%  median {sw_loss.median():.2f}%  '
                   f'Q1/Q3 {sw_loss.quantile(0.25):.2f} / {sw_loss.quantile(0.75):.2f}%')
             print()
+
+    # ── 5b. Stage E (full literature-grounded) results ──────────────────────
+    print('='*78)
+    print('Stage E (literature-grounded full corrections) — all 3 channels')
+    print('='*78)
+    if 'sigma_ionic_stage_e' in df.columns:
+        si_full = df['sigma_ionic_full'].dropna()
+        si_e    = df['sigma_ionic_stage_e'].dropna()
+        si_loss = df['sigma_ionic_loss_pct_stage_e'].dropna() if 'sigma_ionic_loss_pct_stage_e' in df.columns else pd.Series(dtype=float)
+        print(f'  σ_ionic baseline   median {si_full.median():6.4f}  n={len(si_full)}')
+        print(f'  σ_ionic Stage E    median {si_e.median():6.4f}  n={len(si_e)}')
+        if len(si_loss):
+            print(f'  σ_ionic loss%      mean {si_loss.mean():6.2f}%  median {si_loss.median():6.2f}%  '
+                  f'Q3 {si_loss.quantile(0.75):.2f}%')
+        print()
+    if 'sigma_e_stage_e' in df.columns:
+        se_e_e  = df['sigma_e_stage_e'].dropna()
+        se_loss = df['sigma_e_loss_pct_stage_e'].dropna() if 'sigma_e_loss_pct_stage_e' in df.columns else pd.Series(dtype=float)
+        print(f'  σ_e baseline       median {df["sigma_e_full"].dropna().median():6.2f}  n={len(df["sigma_e_full"].dropna())}')
+        print(f'  σ_e Stage E        median {se_e_e.median():6.2f}  mean {se_e_e.mean():6.2f}  max {se_e_e.max():6.2f}  n={len(se_e_e)}')
+        if len(se_loss):
+            print(f'  σ_e Stage E loss%  mean {se_loss.mean():6.2f}%  median {se_loss.median():6.2f}%  '
+                  f'Q1/Q3 {se_loss.quantile(0.25):.2f} / {se_loss.quantile(0.75):.2f}%')
+        ratios_e = (df['sigma_e_stage_e'] / df['sigma_e_full']).dropna()
+        if len(ratios_e):
+            print(f'  σ_e fa(E)/full     median {ratios_e.median():.3f}  mean {ratios_e.mean():.3f}')
+        print()
+    if 'sigma_th_stage_e' in df.columns:
+        sth_full = df['sigma_th_full'].dropna()
+        sth_e    = df['sigma_th_stage_e'].dropna()
+        sth_loss = df['sigma_th_loss_pct_stage_e'].dropna() if 'sigma_th_loss_pct_stage_e' in df.columns else pd.Series(dtype=float)
+        print(f'  κ baseline         median {sth_full.median():6.2f}  n={len(sth_full)}')
+        print(f'  κ Stage E          median {sth_e.median():6.2f}  mean {sth_e.mean():6.2f}  n={len(sth_e)}')
+        if len(sth_loss):
+            print(f'  κ Stage E loss%    mean {sth_loss.mean():6.2f}%  median {sth_loss.median():6.2f}%  '
+                  f'Q1/Q3 {sth_loss.quantile(0.25):.2f} / {sth_loss.quantile(0.75):.2f}%')
+        ratios_th = (df['sigma_th_stage_e'] / df['sigma_th_full']).dropna()
+        if len(ratios_th):
+            print(f'  κ E/full           median {ratios_th.median():.3f}  mean {ratios_th.mean():.3f}')
+        print()
+
+    # ── 5c. r_SE band stratification for Stage E σ_e_loss ────────────────
+    if 'sigma_e_loss_pct_stage_e' in df.columns and 'r_SE_band' in df.columns:
+        print('='*78)
+        print('Stage E σ_e loss% stratified by r_SE band')
+        print('='*78)
+        for band, sub in df.groupby('r_SE_band', observed=True):
+            losses = sub['sigma_e_loss_pct_stage_e'].dropna()
+            if len(losses) == 0: continue
+            print(f'  {str(band):20s}  n={len(losses):2d}  '
+                  f'mean={losses.mean():6.2f}%  median={losses.median():6.2f}%  '
+                  f'max={losses.max():6.2f}%')
+        print()
 
     # ── 6. Pareto frontier candidates (low σ_e_loss + high σ_ionic) ─────
     cands = df[(df['sigma_ionic_full'].notna())
