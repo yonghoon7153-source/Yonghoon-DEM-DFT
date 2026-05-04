@@ -134,18 +134,48 @@ E*_AM-SE = 22.4 GPa     (soft SE side dominates compliance)
 
 → AM-SE contact 의 yield 도 soft side (SE) 가 결정 → σ_y = 0.30 GPa 사용.
 
-### Expected μ_T range for our SE-SE contacts at 300 MPa
+### Measured μ_T distribution — SE-SE contacts at 300 MPa
 
-Run `analyze_tabor_regime.py --plot --pair SE-SE` to confirm:
+`analyze_tabor_regime.py --plot --pair SE-SE` 실행 결과
+(commit `abbf330` 시점):
 
 ```
-$ python3 scripts/analyze_tabor_regime.py --plot
-...
-Verdict: SE-SE ensemble is in TRANSITIONAL regime.
+Tabor regime analysis  pair=SE-SE
+  E*_SE   = 13.19 GPa
+  σ_y_SE  = 0.300 GPa  (H = 0.85 GPa, H/σ_y = 2.8)
+  Regimes:  elastic μ_T < 0.1  | transit 0.1 ≤ μ_T < 100  | plastic μ_T ≥ 100
+
+Ensemble  (SE-SE, n_cases ≈ 80 unique)
+──────────────────────────────────────────────────────────────
+  Total contacts        : 36 042 312
+  Median μ_T            : 12.139         ← transitional, upper-middle
+  Mean μ_T              : 12.251
+  IQR (Q1 – Q3)         : 8.474 – 15.761
+  % in fully elastic    : 0.00 %         (μ_T < 0.1)
+  % in transitional     : 100.00 %       (0.1 ≤ μ_T < 100)
+  % in fully plastic    : 0.00 %         (μ_T ≥ 100)
+
+  Verdict: SE-SE ensemble is in TRANSITIONAL regime.
 ```
 
-→ Median μ_T 가 [0.1, 100] band 안에 있어야 paper 의 Hertz vs Physics
-   column 의 ~40 % gap 이 "real elastic-plastic effect" 로 정당화됨.
+→ **모든 contact 가 transitional band 안에 위치** (no contact reaches
+   either limit). Hertz vs Physics column 의 ~40 % gap 이 "real
+   elastic-plastic effect" 로 **정량 정당화 완료**.
+
+### Physical interpretation of μ_T = 12.1
+
+```
+μ_T = (E*/σ_y) × (a/R)
+    = 44 × (a/R)
+
+→ μ_T = 12 ⇒ a/R ≈ 0.27
+   r_SE = 0.5 μm 일 때 contact radius a ≈ 135 nm
+```
+
+이는 300 MPa cold-press 의 SE-SE contact 으로 정확히 합리적 (overlap
+δ/R ≈ 7 %, plastic flow 시작 영역). IQR (8.5 – 15.8) 은 a/R 가
+0.19 – 0.36 사이 — case 별 compaction 조건/입자 크기 분포의 자연스러운
+산포.
 
 ---
 

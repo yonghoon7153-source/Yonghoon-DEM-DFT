@@ -38,9 +38,11 @@ Cathode design rule, 8 = FFT validation), Y = sub-topic within.
 > initial state, 우리 모델은 300 MPa 압축 후 dense state (porosity
 > ~15 %) 를 모델링하므로 후자가 적합합니다."
 
-**Sensitivity check**: H 를 0.6–0.85 GPa 범위에서 변화시켜도 μ_T 분포의
-regime verdict (TRANSITIONAL) 는 robust. 절댓값 30 % 변화 → median μ_T
-30 % 변화 → 여전히 transitional band [0.1, 100] 안에 머묾.
+**Sensitivity check (실측)**: H = 0.85 GPa 로 분석한 결과:
+**median μ_T = 12.1 (IQR 8.5 – 15.8)**, 100 % transitional.
+H = 0.6 GPa 로 변경 시 σ_y → 0.21 GPa 로 줄어 μ_T 가 1/0.7 = 1.43 배
+증가 (median ≈ 17.3) — **여전히 transitional band 안**, regime verdict
+무영향. 30 % 절댓값 변화에도 robust 함을 정량 확인.
 
 ---
 
@@ -303,6 +305,27 @@ FFT homogenization 도 *고정된* voxelized microstructure 위에서 푸므로:
 "DEM-ASSB 선행 paper?"                paper Sec 5-1 (Bielefeld 2019,
                                        Birkholz 2022, Grießer 2021)
 "So et al. 과 차이?"                  Tabor_ref §6 Q5 (BC 차이)
+```
+
+### 정량 결정타 한 슬라이드 (실측 결과)
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  Verdict: SE-SE ensemble in TRANSITIONAL regime                 │
+│                                                                  │
+│    Median μ_T          = 12.1   (IQR 8.5 – 15.8)                │
+│    Total contacts      = 36 042 312                              │
+│    % fully elastic     = 0.00 %                                  │
+│    % transitional      = 100.00 %                                │
+│    % fully plastic     = 0.00 %                                  │
+│                                                                  │
+│  → Hertz vs Physics gap (~40 % for σ_e at 300 MPa) is REAL,     │
+│    not a calibration artifact.                                  │
+│                                                                  │
+│  Source: docs/figures/tabor_regime_SESE.png                      │
+│          (Supplementary Fig. S-Tabor)                            │
+│          docs/db/tabor_regime_SESE.csv                           │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
 ---
