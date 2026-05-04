@@ -83,16 +83,35 @@
     "kraft2018"
   ],
   "bader_charge_v1": {
-    "Li": 0.88,
-    "Cl": -0.903,
-    "Br": -0.915,
-    "S": -1.76,
-    "source": "post_relax (charge-density extracted)",
-    "notes": "ANOMALOUS: |q(Br)|=0.915 > |q(Cl)|=0.903. Possible site disorder effect (Cl=5, Br=3 mixed). Or basin/config artifact."
+    "Li": 0.880,
+    "P": 4.444,
+    "S": -1.760,
+    "Cl": -0.912,
+    "Br": -0.900,
+    "Li_std": 0.008,
+    "P_std": 0.589,
+    "S_std": 0.260,
+    "Cl_std": 0.007,
+    "Br_std": 0.013,
+    "P_range": [3.436, 4.893],
+    "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp3_ACF.dat (KISTI 2026-05-04 measured)",
+    "notes": "P_std=0.589 HIGH: 5 P atoms span [+3.44, +4.89] = strongly heterogeneous PS4 environment from Cl/Br site mixing. ANOMALY (Br>Cl ionicity 0.900 vs 0.912 — within std overlap, ionicity gap less anomalous than v1 db noted)."
+  },
+  "bond_lengths_v1_measured": {
+    "Li-Cl": {"mean": 2.498, "std": 0.122, "n": 24},
+    "Li-Br": {"mean": 2.754, "std": 0.105, "n": 17},
+    "Li-S": {"mean": 2.478, "std": 0.117, "n": 70},
+    "P-S": {"mean": 2.065, "std": 0.013, "n": 20},
+    "source": "KISTI post_relax/comp3_post_relax.out (mic, cutoff Li-Cl 3.2, Li-Br 3.4, Li-S 3.0, P-S 2.3)"
   },
   "q1q2_over_r_eV_v1bader": {
     "Li-Cl": 4.56,
     "Li-Br": 4.22,
-    "Li-S": 8.86
+    "Li-S": 8.86,
+    "P-S": 54.5,
+    "P-S_calc": "4.444 * 1.760 / 2.065 * 14.4 = 54.5 eV",
+    "P-S_vs_comp1_v2": "-7.6% (vacancy effect dominant)",
+    "P-S_vs_comp2_v2": "-13.9% (Br stiffening absent)",
+    "P-S_vs_comp4_v1": "+38.7% (comp4 most disrupted)"
   }
 }
