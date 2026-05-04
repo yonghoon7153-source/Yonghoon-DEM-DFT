@@ -61,7 +61,29 @@ def main() -> None:
             continue
 
         sigma_base = fm.get('sigma_full_mScm')
-        sigma_phys = fm.get('sigma_full_mScm_physics')
+        # Try multiple physics key locations
+        sigma_phys = (fm.get('sigma_full_mScm_physics')
+                       or fm.get('sigma_full_mScm_phys')
+                       or fm.get('sigma_phys_full_mScm'))
+        # Fallback: read from auxiliary JSONs in case dir
+        if sigma_phys is None:
+            for aux_name in ('network_conductivity_physics.json',
+                              'network_conductivity_dual.json'):
+                aux_p = d / aux_name
+                if not aux_p.exists():
+                    continue
+                try:
+                    with open(aux_p) as af:
+                        aux = json.load(af)
+                    # dual.json has nested 'physics' subdict
+                    if 'physics' in aux and isinstance(aux['physics'], dict):
+                        sigma_phys = aux['physics'].get('sigma_full_mScm')
+                    else:
+                        sigma_phys = aux.get('sigma_full_mScm')
+                    if sigma_phys is not None:
+                        break
+                except Exception:
+                    pass
         sigma_e    = fm.get('sigma_full_mScm_stage_e')
         loss_pct   = fm.get('sigma_ionic_loss_pct_stage_e')
 
