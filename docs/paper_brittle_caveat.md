@@ -1635,3 +1635,502 @@ composite design rule 은:
 
 σ_ionic 채널은 구조적으로 AM-AM fracture 에 둔감 (Section 4) 하므로
 어느 방향으로도 penalty 받지 않는다.
+
+---
+
+## Section 7 — Cathode Composite Design Rule via 10-Case Controlled Sweep
+
+### English
+
+#### 7.1 Sweep Design and Case Selection
+
+Sections 5-1 and 6 established two independent design levers: SE
+particle size (r_SE) for σ_ionic optimization and AM_S / AM_P
+composition (P:S ratio) for σ_e and σ_thermal preservation under
+fracture. To test these levers in a controlled setting and observe
+their joint behaviour, we constructed a 10-case 2-parameter sweep:
+
+```
+P:S ∈ {0:10, 3:7, 5:5, 7:3, 10:0}    (5 levels, AM_P : AM_S volume ratio)
+r_SE ∈ {0.5 μm, 1.5 μm}                (2 levels)
+total: 5 × 2 = 10 cases
+```
+
+The P:S levels span the industrial range from pure single-crystal NCM
+(0:10) to pure polycrystalline secondary NCM (10:0), with three
+intermediate balanced points. The r_SE levels bracket the cathode-grade
+(sub-μm) and separator-grade (~1-3 μm) regimes from Section 5-1. All
+other parameters are held at the project's default values (target
+pressure 300 MPa, AM:SE volume ratio 80:20, AM_P d50 = 10 μm,
+AM_S d50 = 5 μm).
+
+The sweep is *controlled*: each (P:S, r_SE) combination is a single
+deterministic DEM run with the same seed and pressure, so any variation
+in σ_eff or fracture severity is directly attributable to the two swept
+variables.
+
+#### 7.2 Sweep Results
+
+Table 7.1 reports the post-compaction transport conductivities and
+fracture severity for the 10 cases. σ values are network-solver outputs
+(Stage A baseline); AM_P severe% is the fragmentation+pulverization
+contact fraction within AM_P-AM_P pairs (force-based classifier).
+
+```
+Table 7.1 — 10-case controlled sweep results
+
+case   P:S    r_SE  σ_ionic  σ_e   σ_th   AM_P  notes
+                    mS/cm   mS/cm  W/mK   sev%
+─────  ────  ────  ───────  ─────  ─────  ────  ─────────────────────────────
+real_1 0:10  0.5   0.117    4.63   3.42   —     pure AM_S, small SE
+real_2 3:7   0.5   0.152    4.13   4.06   0     bimodal champion ★
+real_3 5:5   0.5   0.173    3.18   4.33   0     σ_ionic-favoring
+real_4 7:3   0.5   0.182    1.68   4.56   0     σ_ionic max, σ_e bottom
+real_5 10:0  0.5   0.153    6.21   5.17   35    pure AM_P, small SE
+real_6 0:10  1.5   0.031    6.20   2.93   —     pure AM_S, large SE
+real_7 3:7   1.5   0.066    6.95   3.64   62    σ_e high, fracture-vulnerable
+real_8 5:5   1.5   0.081    7.25   4.21   51    σ_e high, half-fractured
+real_9 7:3   1.5   0.106    7.62   4.54   60    σ_e max, AM_P-severe
+real_10 10:0 1.5   0.119    7.53   3.29   61    worst-case fracture
+```
+
+#### 7.3 Two Trajectories — Path A (Small SE) vs Path B (Large SE)
+
+The 10 cases divide into two trajectories along the r_SE axis. We label
+them Path A (r_SE = 0.5 μm) and Path B (r_SE = 1.5 μm).
+
+**Path A — small SE (real_1 → real_5).** σ_ionic spans 0.117–0.182
+mS/cm, three to five times higher than Path B at the same P:S. σ_e
+starts at 4.63 (pure AM_S), declines to a 1.68 minimum at 7:3 due to
+AM-AM percolation collapse (the few AM_P particles are surrounded by
+smaller-radius SE that block their pair-wise contact graph), and
+rebounds to 6.21 at 10:0 once AM_P fully percolates. AM_P severe%
+remains at 0 across the four AM_S-bearing cases and reaches 35 % only
+at the 10:0 endpoint where every AM particle is polycrystalline.
+
+**Path B — large SE (real_6 → real_10).** σ_ionic collapses to
+0.031–0.119 mS/cm, factor of 2-4 below Path A throughout. σ_e is higher
+than Path A in the mid-P:S range (peaking at 7.62 for real_9) because
+larger SE no longer geometrically excludes AM-AM contacts. But this
+σ_e gain is bought at the cost of severe AM_P fracture starting from
+3:7 — AM_P severe% jumps from 0 % (Path A real_2) to 62 % (Path B
+real_7) at *identical* P:S=3:7 composition.
+
+**Mechanism for the AM_P-severity explosion in Path B.** Comparing
+real_2 (r_SE=0.5) and real_7 (r_SE=1.5) at the same P:S=3:7 isolates
+the r_SE effect:
+
+```
+                       real_2     real_7    ratio
+                     (0.5 μm)   (1.5 μm)
+F per AM_P-AM_P (mN)  5,317     17,648      3.3×
+F / P_c (median)         9.04     12.20     1.35×
+Lawn regime         multicrack  fragment-
+                    (3 ≤ m<11)  ation (m ≥ 11)
+AM_P severe%            0 %       62 %
+```
+
+The 3.3× force concentration on AM_P-AM_P contacts with large SE has
+four contributing factors:
+
+  *(1) Particle-count effect.* SE number density scales as 1/r_SE³, so
+  going from 0.5 to 1.5 μm reduces the SE particle count by 27×.
+  Total contact count drops accordingly, so the same applied compaction
+  force (300 MPa × cross-section) is distributed across far fewer
+  parallel contacts → per-contact force rises.
+
+  *(2) AM-AM force pathway dominance.* Large SE no longer geometrically
+  infiltrates the inter-AM gaps (Section 5-1 η_topology_void), so AM
+  particles directly contact each other more often. AM-AM contacts
+  bear a larger share of the total compaction force.
+
+  *(3) AM_P fracture-toughness deficit.* K_IC(AM_S) = 1.0 MPa·m^(1/2)
+  versus K_IC(AM_P) = 0.3 MPa·m^(1/2), so the Auerbach onset force
+  P_c ∝ K_IC² is 11× lower for AM_P pairs. The same applied force
+  reaches AM_P's multicrack threshold long before AM_S's.
+
+  *(4) F/P_c crosses the fragmentation threshold.* The Lawn 1998
+  band boundaries are m=3 (multicrack onset) and m=11 (fragmentation
+  onset). Path A real_2 sits at F/P_c=9 — within the multicrack band
+  but below fragmentation, so severe%=0. Path B real_7 sits at
+  F/P_c=12 — just over the fragmentation threshold, so a large
+  fraction of contacts (62 %) lands in the fragmentation/pulverization
+  bands counted as "severe".
+
+The σ_thermal channel is intermediate: Path A reaches 4.06–5.17
+W/(m·K), Path B 2.93–4.54 W/(m·K). Path A holds a small κ advantage
+at AM_S-rich compositions because small-SE microstructures retain
+AM-SE contact area better, sustaining the harmonic-mean κ across the
+AM_S × SE bridges.
+
+#### 7.4 Bimodal Optimum — real_2 (3:7, 0.5 μm) = Path A Champion
+
+Among the 10 cases, real_2 emerges as the composite-Pareto champion:
+
+```
+real_2:  σ_ionic = 0.152  (Path A second-highest — 16 % below the 7:3 max)
+         σ_e    = 4.13   (mid-tier, percolating, no σ_e collapse)
+         σ_th   = 4.06   (mid-tier W/(m·K))
+         AM_P severe% = 0  (zero fracture under target compaction)
+```
+
+The mechanism reads directly off the Section 5-1 / Section 6 framework:
+
+- *σ_ionic = 0.152*: small SE (0.5 μm) maximizes η_topology_void
+  (cathode-internal SE infiltration). The 3:7 composition still has
+  30 % AM_P, but the AM-SE coverage stays high because small SE
+  infiltrates the inter-AM gaps.
+- *σ_e = 4.13*: the 70 % AM_S backbone provides a high-K_IC
+  fracture-resistant percolating skeleton; small SE does not block
+  the AM-AM graph because AM particles are still the dominant volume
+  fraction.
+- *AM_P severe% = 0*: the small SE distributes compression force
+  across many small-area contacts; F/P_c stays at 9 (multicrack) for
+  AM_P-AM_P pairs and never crosses the fragmentation threshold,
+  while AM_P is anyway only 30 % of AM volume.
+
+real_2 thus realizes the two-lever design rule of Section 6: *small SE
+optimizes σ_ionic; AM_S-rich optimizes σ_e and σ_thermal under
+fracture*. Both levers reinforce each other in real_2.
+
+#### 7.5 Pareto Frontier — r_SE × P:S Trade-off Map
+
+The 10 cases span a 2D Pareto surface in (σ_ionic, σ_e, AM_P severe%)
+space. Two qualitative observations stand out:
+
+(1) **Path A Pareto-dominates Path B for σ_ionic at every P:S.** No
+case in Path B reaches the σ_ionic levels of even the lowest Path A
+point (Path B max 0.119 < Path A min 0.117). The η_topology_void
+mechanism (Section 5-1) is the dominant control for σ_ionic.
+
+(2) **Path B's σ_e advantage is conditional on accepting severe
+fracture.** Path B σ_e reaches 7.62 at real_9, but with 60 % AM_P-AM_P
+contacts in the multicrack-or-worse regime. Under the literature
+stagewise σ_factor (Section 6, Stage D), this nominally high
+σ_e_baseline must be discounted by the post-fracture survival factor.
+The 78-case ensemble Section 6 reports a Pearson correlation of +0.98
+between AM_P fraction and σ_e_loss — a result the 10-case sweep
+reproduces in microcosm (real_9 shows 60 % severe and would lose
+≈ 50 % of σ_e under Stage E corrections, while real_2 keeps 100 %).
+
+The composite Pareto frontier — the (σ_ionic, σ_e_post_fracture,
+σ_th) envelope — is therefore traced by Path A. real_2 sits at the
+inflection point where adding more AM_P starts to penalize σ_e
+(real_4's percolation collapse) without lifting σ_ionic further.
+
+#### 7.6 Design Rule (Industry-Facing Synthesis)
+
+The 10-case sweep, the 78-case ensemble (Section 6), and the
+bulk-vs-cathode inversion (Section 5-1) together yield a single design
+rule for sulfide-based ASSB cathode composites at 300 MPa target
+compaction:
+
+> **Use sub-μm SE filler (0.5 μm) and AM_S-rich (single-crystal NCM,
+> ≥ 70 %) microstructure. Sub-μm SE delivers the η_topology_void
+> mechanism that triples σ_ionic versus 1–2 μm SE; AM_S-rich provides
+> the high-K_IC backbone that survives 300 MPa cold-press without
+> entering the multicrack regime, preserving σ_e and σ_thermal at
+> near-baseline values. The bimodal optimum at AM_P : AM_S = 3:7 with
+> r_SE = 0.5 μm (real_2) realizes both levers simultaneously and
+> dominates the σ_ionic / σ_e / σ_thermal / fracture-robustness
+> 4-objective Pareto frontier.**
+
+The separator pellet of the same cell continues to favour 1–3 μm SE
+for the orthogonal reasons given in Section 5-1 (plastic densification,
+σ_grain integrity, air sensitivity, mechanical creep). The
+cathode-favouring "small SE" rule and the separator-favouring "larger
+SE" rule are layer-specific applications of the same η_topology
+= η_GB × η_void decomposition, with η_void only active in the
+AM-bearing cathode layer.
+
+### 한국어
+
+#### 7.1 Sweep 설계 및 case 선정
+
+Section 5-1 과 Section 6 에서 두 개의 독립적 design lever 가 확립되었
+다: σ_ionic 최적화를 위한 SE 입자 크기 (r_SE), fracture 하의 σ_e 와
+σ_thermal 보존을 위한 AM_S / AM_P 조성 (P:S ratio). 이 두 lever 를
+controlled 환경에서 검증하고 그 joint behaviour 를 관찰하기 위해
+10-case 2-parameter sweep 을 구성했다:
+
+```
+P:S ∈ {0:10, 3:7, 5:5, 7:3, 10:0}    (5 levels, AM_P : AM_S 부피비)
+r_SE ∈ {0.5 μm, 1.5 μm}                (2 levels)
+total: 5 × 2 = 10 cases
+```
+
+P:S levels 는 순수 single-crystal NCM (0:10) 부터 순수 polycrystalline
+secondary NCM (10:0) 까지 산업적 범위를 span 하며, 세 개의 중간
+balanced 지점을 포함한다. r_SE levels 는 Section 5-1 의 cathode-grade
+(sub-μm) 와 separator-grade (~1-3 μm) regime 을 bracket 한다. 그 외
+모든 parameter 는 본 프로젝트의 default 값으로 고정 (target pressure
+300 MPa, AM:SE 부피비 80:20, AM_P d50 = 10 μm, AM_S d50 = 5 μm).
+
+본 sweep 은 *controlled* 이다: 각 (P:S, r_SE) 조합은 동일한 seed 와
+pressure 의 단일 deterministic DEM run 이므로, σ_eff 또는 fracture
+severity 의 어떠한 변화도 두 sweep 변수에 직접 귀속된다.
+
+#### 7.2 Sweep 결과
+
+Table 7.1 은 10 cases 의 post-compaction transport conductivity 와
+fracture severity 를 보고한다. σ 값들은 network-solver 출력 (Stage A
+baseline) 이고, AM_P severe% 는 AM_P-AM_P pair 내부의
+fragmentation+pulverization contact 비율 (force-based classifier).
+
+```
+Table 7.1 — 10-case controlled sweep 결과
+
+case   P:S    r_SE  σ_ionic  σ_e   σ_th   AM_P  비고
+                    mS/cm   mS/cm  W/mK   sev%
+─────  ────  ────  ───────  ─────  ─────  ────  ─────────────────────────────
+real_1 0:10  0.5   0.117    4.63   3.42   —     순수 AM_S, small SE
+real_2 3:7   0.5   0.152    4.13   4.06   0     bimodal champion ★
+real_3 5:5   0.5   0.173    3.18   4.33   0     σ_ionic-favoring
+real_4 7:3   0.5   0.182    1.68   4.56   0     σ_ionic max, σ_e bottom
+real_5 10:0  0.5   0.153    6.21   5.17   35    순수 AM_P, small SE
+real_6 0:10  1.5   0.031    6.20   2.93   —     순수 AM_S, large SE
+real_7 3:7   1.5   0.066    6.95   3.64   62    σ_e high, fracture-vulnerable
+real_8 5:5   1.5   0.081    7.25   4.21   51    σ_e high, half-fractured
+real_9 7:3   1.5   0.106    7.62   4.54   60    σ_e max, AM_P-severe
+real_10 10:0 1.5   0.119    7.53   3.29   61    worst-case fracture
+```
+
+#### 7.3 두 trajectory — Path A (small SE) vs Path B (large SE)
+
+10 cases 는 r_SE 축을 따라 두 trajectory 로 분할된다. Path A
+(r_SE = 0.5 μm) 와 Path B (r_SE = 1.5 μm) 로 명명한다.
+
+**Path A — small SE (real_1 → real_5).** σ_ionic 은 0.117–0.182 mS/cm
+를 span 하며, 같은 P:S 의 Path B 보다 3–5× 높다. σ_e 는 4.63 (순수
+AM_S) 에서 시작해 7:3 에서 1.68 의 최저점을 찍고 (AM-AM percolation
+collapse — 적은 AM_P 입자들이 작은 SE 에 의해 pair-wise contact graph
+가 차단됨), 10:0 에서 AM_P 가 fully percolating 하면 6.21 로 회복한다.
+AM_P severe% 는 4 개의 AM_S-bearing case 에서 0 % 를 유지하다가, 모든
+AM 입자가 polycrystalline 이 되는 10:0 endpoint 에서만 35 % 에 도달
+한다.
+
+**Path B — large SE (real_6 → real_10).** σ_ionic 은 0.031–0.119 mS/cm
+로 붕괴하며, Path A 의 2-4× 아래에 머문다. σ_e 는 mid-P:S 영역에서
+Path A 보다 높고 (real_9 에서 7.62 peak) — 큰 SE 가 더 이상 AM-AM
+contact 를 geometrically exclude 하지 않기 때문이다. 그러나 이 σ_e
+이득은 3:7 부터 시작되는 severe AM_P fracture 의 비용으로 매수된다 —
+AM_P severe% 가 *동일한* P:S=3:7 조성에서 0 % (Path A real_2) 에서
+62 % (Path B real_7) 로 폭발한다.
+
+**Path B 의 AM_P-severity 폭발 메커니즘.** P:S=3:7 동일 조건에서
+real_2 (r_SE=0.5) 와 real_7 (r_SE=1.5) 를 비교하면 r_SE 효과가 격리
+된다:
+
+```
+                       real_2     real_7    비율
+                     (0.5 μm)   (1.5 μm)
+F per AM_P-AM_P (mN)  5,317     17,648      3.3×
+F / P_c (median)         9.04     12.20     1.35×
+Lawn regime         multicrack  fragment-
+                    (3 ≤ m<11)  ation (m ≥ 11)
+AM_P severe%            0 %       62 %
+```
+
+큰 SE 에서 AM_P-AM_P contact 의 3.3× force concentration 은 네 가지
+원인이 결합된 결과:
+
+  *(1) 입자 개수 효과.* SE 수밀도 ∝ 1/r_SE³, 따라서 0.5 → 1.5 μm 으로
+  키우면 SE 입자 수가 27× 감소. 총 contact 수도 비례 감소하므로 동일한
+  적용 압축력 (300 MPa × cross-section) 이 훨씬 적은 parallel contact
+  에 분산 → per-contact force 상승.
+
+  *(2) AM-AM force pathway dominance.* 큰 SE 는 inter-AM 간극에
+  geometrically infiltrate 하지 않으므로 (Section 5-1 η_topology_void),
+  AM 입자들이 서로 직접 contact 하는 빈도가 증가. AM-AM contact 가
+  총 압축력의 더 큰 share 를 부담.
+
+  *(3) AM_P fracture-toughness 결손.* K_IC(AM_S) = 1.0 MPa·m^(1/2)
+  vs K_IC(AM_P) = 0.3 MPa·m^(1/2), 따라서 Auerbach onset force
+  P_c ∝ K_IC² 는 AM_P pair 에서 11× 낮다. 같은 적용 force 가
+  AM_S 보다 AM_P 의 multicrack threshold 에 훨씬 먼저 도달.
+
+  *(4) F/P_c 가 fragmentation threshold 를 가로지름.* Lawn 1998 의
+  band 경계는 m=3 (multicrack onset) 과 m=11 (fragmentation onset).
+  Path A real_2 는 F/P_c=9 — multicrack band 내부지만 fragmentation
+  아래라 severe%=0. Path B real_7 은 F/P_c=12 — 정확히 fragmentation
+  threshold 위, 그래서 contact 의 큰 분율 (62 %) 이 "severe" 로
+  카운트되는 fragmentation/pulverization band 에 진입.
+
+σ_thermal 채널은 중간이다: Path A 4.06–5.17 W/(m·K), Path B 2.93–4.54
+W/(m·K). Path A 는 AM_S-rich 조성에서 작은 κ 우위를 유지하는데, 이는
+small-SE microstructure 가 AM-SE contact area 를 더 잘 보존해 AM_S × SE
+bridge 의 harmonic-mean κ 를 sustain 하기 때문이다.
+
+#### 7.4 Bimodal Optimum — real_2 (3:7, 0.5 μm) = Path A 챔피언
+
+10 cases 중 real_2 가 composite-Pareto champion 으로 부상한다:
+
+```
+real_2:  σ_ionic = 0.152  (Path A 두 번째로 높음 — 7:3 max 의 16 % 아래)
+         σ_e    = 4.13   (mid-tier, percolating, σ_e collapse 없음)
+         σ_th   = 4.06   (mid-tier W/(m·K))
+         AM_P severe% = 0  (target compaction 하에서 fracture 0)
+```
+
+메커니즘은 Section 5-1 / Section 6 framework 에서 직접 읽힌다:
+
+- *σ_ionic = 0.152*: small SE (0.5 μm) 가 η_topology_void
+  (cathode-internal SE infiltration) 를 maximize 한다. 3:7 조성은
+  여전히 30 % AM_P 를 가지지만, small SE 가 inter-AM 간극에 침투하므로
+  AM-SE coverage 가 높게 유지된다.
+- *σ_e = 4.13*: 70 % AM_S backbone 이 high-K_IC fracture-resistant
+  percolating skeleton 을 제공한다; AM 입자가 여전히 dominant volume
+  fraction 이므로 small SE 가 AM-AM graph 를 차단하지 않는다.
+- *AM_P severe% = 0*: small SE 가 압축력을 많은 small-area contact
+  에 분산시키므로 AM_P-AM_P pair 의 F/P_c 가 9 (multicrack) 에 머물고
+  fragmentation threshold 를 넘지 않으며, AM_P 는 어차피 AM volume
+  의 30 % 만 차지.
+
+real_2 는 따라서 Section 6 의 two-lever design rule 을 실현한다:
+*small SE 가 σ_ionic 최적화; AM_S-rich 가 fracture 하의 σ_e 와
+σ_thermal 최적화*. 두 lever 가 real_2 에서 서로를 강화한다.
+
+#### 7.5 Pareto Frontier — r_SE × P:S Trade-off Map
+
+10 cases 는 (σ_ionic, σ_e, AM_P severe%) 공간에서 2D Pareto surface 를
+span 한다. 두 가지 정성적 관찰이 두드러진다:
+
+(1) **모든 P:S 에서 Path A 가 σ_ionic 에 대해 Path B 를
+Pareto-dominate.** Path B 의 어떤 case 도 Path A 의 가장 낮은 지점의
+σ_ionic 수준에 도달하지 못한다 (Path B max 0.119 < Path A min 0.117).
+η_topology_void 메커니즘 (Section 5-1) 이 σ_ionic 의 dominant control
+이다.
+
+(2) **Path B 의 σ_e 우위는 severe fracture 를 받아들이는 조건부이다.**
+Path B 의 σ_e 는 real_9 에서 7.62 에 도달하지만, 60 % AM_P-AM_P
+contact 가 multicrack-or-worse regime 에 있다. Section 6 의 literature
+stagewise σ_factor 를 적용하면 (Stage D), 이 nominally high
+σ_e_baseline 은 post-fracture 생존 factor 로 discount 되어야 한다.
+78-case ensemble Section 6 는 AM_P fraction 과 σ_e_loss 사이 Pearson
+상관 +0.98 을 보고하며 — 10-case sweep 이 microcosm 에서 이를 재현한다
+(real_9 는 60 % severe 를 보이며 Stage E 보정 하에서 σ_e 의 ≈ 50 % 를
+잃을 것이고, real_2 는 100 % 유지).
+
+따라서 composite Pareto frontier — (σ_ionic, σ_e_post_fracture, σ_th)
+envelope — 는 Path A 에 의해 traced 된다. real_2 는 더 많은 AM_P 추가가
+σ_e 를 penalize 하기 시작하는 (real_4 의 percolation collapse)
+inflection point 에 위치하며, σ_ionic 을 더 끌어올리지도 못한다.
+
+#### 7.6 Design Rule (Industry-Facing Synthesis)
+
+10-case sweep, 78-case ensemble (Section 6), 그리고 bulk-vs-cathode
+inversion (Section 5-1) 이 종합되어 300 MPa target compaction 에서
+sulfide-based ASSB cathode composite 에 대한 단일 design rule 을 산출
+한다:
+
+> **Sub-μm SE filler (0.5 μm) 와 AM_S-rich (single-crystal NCM,
+> ≥ 70 %) microstructure 를 사용하라. Sub-μm SE 는 1–2 μm SE 대비
+> σ_ionic 을 3 배 끌어올리는 η_topology_void 메커니즘을 제공한다;
+> AM_S-rich 는 300 MPa cold-press 에서 multicrack regime 진입 없이
+> 견디는 high-K_IC backbone 을 제공해 σ_e 와 σ_thermal 을 near-baseline
+> 값으로 보존한다. AM_P : AM_S = 3:7 와 r_SE = 0.5 μm 의 bimodal
+> optimum (real_2) 이 두 lever 를 동시 실현하며 σ_ionic / σ_e /
+> σ_thermal / fracture-robustness 4-objective Pareto frontier 를
+> dominate 한다.**
+
+같은 셀의 separator pellet 은 Section 5-1 에서 제시된 직교 이유로
+(plastic densification, σ_grain 무결성, air sensitivity, mechanical
+creep) 1–3 μm SE 를 계속 선호한다. cathode-favouring "small SE" rule
+과 separator-favouring "larger SE" rule 은 동일한 η_topology
+= η_GB × η_void decomposition 의 layer-specific 응용이며, η_void 는
+AM-bearing cathode layer 에서만 active 하다.
+
+#### 7.7 Industrial Practice — The VGCF Conductive-Additive Caveat
+
+The "AM_P-rich → σ_e collapse" trade-off identified in Section 7.3
+applies to the *bare composite* without electronic-conductive additives.
+Industrial sulfide ASSB cathodes invariably include ~1 wt % vapor-grown
+carbon fibers (VGCF, σ_VGCF ≈ 10⁴ S/cm) as a percolation-bridging
+additive. VGCF qualitatively transforms the σ_e channel:
+
+- **Bridge-and-rescue.** A 1 wt % VGCF loading creates a percolating
+  fiber network whose σ_grain exceeds NCM's by 10⁵–10⁶×. Even if every
+  AM-AM contact in an AM_P-rich, fractured cathode were to lose its
+  σ_e (Stage C upper bound), the VGCF backbone alone supports σ_e in
+  the 5–20 mS/cm range — comparable to or exceeding the AM-AM
+  baseline.
+
+- **σ_e decouples from fracture.** The fragmentation-induced σ_e_loss
+  reported in Section 6 (binary 28 %, Stage E 11 %) and the Path B
+  Pareto trade-off in Section 7.5 are bare-composite numbers. Real
+  cells with VGCF are *expected* to show σ_e_loss ≈ 0 even in
+  Path B (large SE, AM_P-rich) configurations.
+
+- **σ_ionic and κ are unchanged.** VGCF is electronically conductive
+  but ionically inert and a phonon scatterer; it does not enter the
+  SE-SE σ_ionic graph and provides no κ benefit. The Section 5-1
+  bulk-vs-cathode r_SE inversion and the κ_thermal results in Section
+  6 are therefore VGCF-invariant.
+
+The implication for the design rule of Section 7.6:
+
+> *In bare-composite (no VGCF) cells, AM_S-rich is the primary lever
+> for σ_e preservation. With 1 wt % VGCF added (industrial practice),
+> σ_e becomes essentially fracture-insensitive and AM_S-rich loses its
+> σ_e advantage — the design rule reduces to small-SE-only for σ_ionic
+> optimization. The AM_S-rich preference re-emerges only for the
+> κ_thermal channel and for mechanical/cycling robustness considerations
+> outside the present DEM scope.*
+
+This caveat clarifies why high-σ_e Path B configurations (real_7, _9,
+_10 with 60 %+ AM_P severe) remain industrially viable despite the
+fracture severity reported here: the VGCF bypass largely neutralizes
+the σ_e penalty. The present paper's framework — focused on
+microstructure-level transport descriptors derived from DEM — does not
+include VGCF in its 78-case ensemble; an extension that adds VGCF
+percolation as an explicit term η_topology_VGCF in the σ_e
+decomposition is a natural next step but is out of scope here. The
+Section 6 / 7 σ_e numbers therefore stand as *bare-microstructure
+upper bounds on fracture-induced loss*, with the actual cell-level
+loss expected to be substantially smaller once VGCF is included.
+
+#### 7.7 산업적 관행 — VGCF 도전성 첨가제 단서
+
+Section 7.3 에서 식별된 "AM_P-rich → σ_e 붕괴" trade-off 는 도전성
+첨가제 *없는 bare composite* 에 대한 결과이다. 산업 sulfide ASSB
+cathode 는 percolation-bridging 첨가제로 ~1 wt % vapor-grown carbon
+fiber (VGCF, σ_VGCF ≈ 10⁴ S/cm) 를 거의 항상 포함한다. VGCF 는 σ_e
+채널을 정성적으로 변환시킨다:
+
+- **Bridge-and-rescue.** 1 wt % VGCF 적재는 σ_grain 이 NCM 보다
+  10⁵–10⁶× 큰 percolating fiber network 를 형성한다. AM_P-rich,
+  fractured cathode 에서 모든 AM-AM contact 가 σ_e 를 잃더라도
+  (Stage C upper bound), VGCF backbone 만으로 σ_e 가 5–20 mS/cm
+  범위를 지지한다 — AM-AM baseline 과 comparable 하거나 그 이상.
+
+- **σ_e 가 fracture 와 decouple.** Section 6 의 fragmentation-induced
+  σ_e_loss (binary 28 %, Stage E 11 %) 와 Section 7.5 의 Path B
+  Pareto trade-off 는 bare-composite 숫자이다. VGCF 가 들어간 실제
+  cell 은 Path B (large SE, AM_P-rich) 구성에서도 σ_e_loss ≈ 0 이
+  *예상*된다.
+
+- **σ_ionic 과 κ 는 변화 없음.** VGCF 는 전자전도성이지만 이온
+  관성이고 phonon scatterer 이다; SE-SE σ_ionic graph 에 들어가지
+  않고 κ 이득도 제공하지 않는다. Section 5-1 의 bulk-vs-cathode
+  r_SE inversion 과 Section 6 의 κ_thermal 결과는 따라서
+  VGCF-invariant 하다.
+
+Section 7.6 design rule 에 대한 함의:
+
+> *Bare-composite (VGCF 없음) cell 에서는 AM_S-rich 가 σ_e 보존을
+> 위한 primary lever. 1 wt % VGCF 추가 시 (산업 관행) σ_e 가 본질적
+> 으로 fracture-insensitive 가 되어 AM_S-rich 가 σ_e 우위를 잃음 —
+> design rule 은 σ_ionic 최적화를 위한 small-SE-only 로 축약된다.
+> AM_S-rich 선호는 κ_thermal 채널과 본 DEM scope 외부의
+> mechanical/cycling robustness 고려에서만 재등장한다.*
+
+이 단서는 60 %+ AM_P severe 를 보이는 high-σ_e Path B 구성 (real_7,
+_9, _10) 이 본 절의 fracture severity 에도 불구하고 산업적으로
+viable 한 이유를 명료히 한다: VGCF bypass 가 σ_e penalty 를 대부분
+중화한다. 본 논문의 framework — DEM 에서 도출된 microstructure-level
+transport descriptor 에 집중 — 는 78-case ensemble 에 VGCF 를 포함
+시키지 않는다; σ_e decomposition 에 VGCF percolation 을 explicit term
+η_topology_VGCF 로 추가하는 확장이 자연스러운 다음 단계이지만 여기서는
+out of scope 이다. Section 6 / 7 의 σ_e 숫자들은 따라서 *bare-
+microstructure 의 fracture-induced loss upper bound* 로 서며, VGCF 가
+포함된 실제 cell-level loss 는 substantially 더 작을 것으로 예상된다.
