@@ -10,11 +10,21 @@ Tabor (1951) regime boundaries (per Brake 2012, Greenwood 1992):
   0.1 ≤ μ_T < 100 transitional          (mixed E-P, our solver picks min(A_H, A_T, A_vol))
   μ_T ≥ 100       fully plastic         (Hertz overestimates contact area)
 
-Material constants (sulfide SE):
-  E_SE  = 1.35 GPa   (Wang 2020 nanoindentation)
-  E*_SE = E / (2(1-ν²)) ≈ 0.72 GPa  with ν ≈ 0.25
-  H_SE  = 0.6 GPa    (Sakuda 2013 hardness)
-  σ_y_SE = H/3 ≈ 0.2 GPa  (Tabor's hardness-yield relation)
+Material constants — imported from scripts/plastic_coverage.py
+(single source of truth for the entire DEM-postprocess pipeline):
+
+  E_SE_real    = 24.0  GPa     (LPSCl lab value — Wang 2020, McGrogan 2017)
+  ν_SE         = 0.30          (LIGGGHTS poissonsRatio for SE atom type)
+  H_SE         = 0.85 GPa      (LPSCl Vickers, Sakuda 2013)
+  σ_y_SE       = 0.30 GPa      (= H / 2.8, Tabor relation; not the textbook H/3)
+  E*_SE-SE     = E / (2(1-ν²))  ≈ 13.2 GPa   (symmetric pair)
+
+Note on E_SE: 24 GPa is the REAL lab value used for analytical Tabor /
+volume / fracture post-corrections.  The DEM simulation itself uses a
+softened E*_SE = 1.35 GPa to allow practical time steps; that softened
+value is for the LIGGGHTS Hertzian contact during compaction only.
+For per-contact μ_T evaluation we use the lab value (consistent with
+plastic_coverage.py's `A_tabor = F_real / H_REAL_SE`).
 
 Output
 ──────
@@ -42,21 +52,31 @@ import pandas as pd
 
 ROOT     = Path(__file__).resolve().parent.parent
 WEBAPP   = ROOT / 'webapp'
+SCRIPTS  = ROOT / 'scripts'
 DB_DIR   = ROOT / 'docs' / 'db'
 FIG_DIR  = ROOT / 'docs' / 'figures'
 
-# Material constants
-E_SE_GPA      = 1.35     # Young's modulus of sulfide SE (Wang 2020)
-NU_SE         = 0.25     # Poisson ratio (typical ceramic)
-H_SE_GPA      = 0.6      # Vickers hardness (Sakuda 2013)
-SIGMA_Y_SE_GPA = H_SE_GPA / 3.0   # Tabor's H/σ_y ≈ 3 relation
+# ── Material constants — single source of truth in plastic_coverage.py ──
+sys.path.insert(0, str(SCRIPTS))
+from plastic_coverage import (   # noqa: E402
+    E_REAL_SE, E_REAL_AM, POISSON_SE, POISSON_AM,
+    SIGMA_Y_SE, H_REAL_SE,
+)
 
-# Effective modulus for SE-SE contact (single-material symmetric pair)
-E_STAR_SE_GPA = E_SE_GPA / (2.0 * (1.0 - NU_SE ** 2))   # ≈ 0.72 GPa
+# Effective modulus for SE-SE symmetric pair  (1/E* = 2·(1-ν²)/E for symmetric)
+E_STAR_SE_SE_PA = E_REAL_SE / (2.0 * (1.0 - POISSON_SE ** 2))
 
-# Convert GPa → Pa for SI computation
-E_STAR_SE_PA = E_STAR_SE_GPA * 1e9
-SIGMA_Y_SE_PA = SIGMA_Y_SE_GPA * 1e9
+# Effective modulus for AM-AM symmetric pair (used if --pair AM-AM)
+E_STAR_AM_AM_PA = E_REAL_AM / (2.0 * (1.0 - POISSON_AM ** 2))
+
+# Effective modulus for AM-SE mixed pair  (1/E* = (1-ν₁²)/E₁ + (1-ν₂²)/E₂)
+_inv_Estar = ((1 - POISSON_AM ** 2) / E_REAL_AM
+              + (1 - POISSON_SE ** 2) / E_REAL_SE)
+E_STAR_AM_SE_PA = 1.0 / _inv_Estar
+
+# AM yield (from H_AM ≈ 6 GPa in fracture_model.py / H≈3σ_y for ceramics)
+H_REAL_AM_PA = 6.0e9
+SIGMA_Y_AM_PA = H_REAL_AM_PA / 3.0
 
 # Regime boundaries (Brake 2012, Greenwood 1992 convention)
 MU_T_ELASTIC_MAX = 0.1
@@ -103,13 +123,30 @@ def _parse_type_map(s: str) -> dict:
     return out
 
 
+def _e_star_sigma_y_for_pair(pair_label: str) -> tuple[float, float]:
+    """Return (E*, σ_y) in Pa appropriate for a given pair type.
+
+    For mixed AM-SE the soft side (SE) governs yield, mixed E* used.
+    """
+    if pair_label == 'SE-SE':
+        return E_STAR_SE_SE_PA, SIGMA_Y_SE
+    if pair_label == 'AM-AM':
+        return E_STAR_AM_AM_PA, SIGMA_Y_AM_PA
+    return E_STAR_AM_SE_PA, SIGMA_Y_SE   # AM-SE
+
+
 def compute_mu_t_for_case(case_dir: Path, pair_filter: str | None = None
                            ) -> np.ndarray | None:
     """Return array of μ_T values for one case, optionally filtered by pair type.
 
     pair_filter ∈ {None, 'SE-SE', 'AM-AM', 'AM-SE'}.
     Uses simulation-unit contact_area and radius from contacts.csv + atoms.csv,
-    converted to real μm via meta.json scale.
+    converted to real m via meta.json scale.
+
+    μ_T = E*·a / (σ_y·R) where E*, σ_y are pair-type-specific:
+      SE-SE  : E*=13.2 GPa,  σ_y=0.30 GPa  (LPSCl)
+      AM-AM  : E*=74.7 GPa,  σ_y=2.0 GPa   (NCM, H_AM ≈ 6 GPa)
+      AM-SE  : E*=22.4 GPa,  σ_y=0.30 GPa  (mixed, soft side yields)
     """
     meta = _read_meta(case_dir)
     type_map = _parse_type_map(meta.get('type_map', '1:AM_P,2:AM_S,3:SE'))
@@ -174,8 +211,12 @@ def compute_mu_t_for_case(case_dir: Path, pair_filter: str | None = None
         if a_real <= 0:
             continue
 
-        # μ_T = E*·a / (σ_y·R)
-        mu_t = (E_STAR_SE_PA * a_real) / (SIGMA_Y_SE_PA * r_min)
+        # μ_T = E*·a / (σ_y·R) — pair-type-specific E* and σ_y
+        if is_se_se:    pair_str = 'SE-SE'
+        elif is_am_am:  pair_str = 'AM-AM'
+        else:           pair_str = 'AM-SE'
+        E_star_pa, sigma_y_pa = _e_star_sigma_y_for_pair(pair_str)
+        mu_t = (E_star_pa * a_real) / (sigma_y_pa * r_min)
         if np.isfinite(mu_t) and mu_t > 0:
             mu_t_vals.append(mu_t)
 
@@ -217,9 +258,27 @@ def main() -> None:
                     help='Skip per-case CSV output')
     args = ap.parse_args()
 
+    # Pick E* and σ_y appropriate for the selected pair type
+    if args.pair == 'SE-SE':
+        E_star_pa = E_STAR_SE_SE_PA
+        sigma_y_pa = SIGMA_Y_SE
+        mat_label = 'SE'
+        H_pa = H_REAL_SE
+    elif args.pair == 'AM-AM':
+        E_star_pa = E_STAR_AM_AM_PA
+        sigma_y_pa = SIGMA_Y_AM_PA
+        mat_label = 'AM'
+        H_pa = H_REAL_AM_PA
+    else:  # AM-SE — use mixed E*, soft side governs yield (= SE σ_y)
+        E_star_pa = E_STAR_AM_SE_PA
+        sigma_y_pa = SIGMA_Y_SE
+        mat_label = 'AM-SE'
+        H_pa = H_REAL_SE
+
     print(f'Tabor regime analysis  pair={args.pair}')
-    print(f'  E* = {E_STAR_SE_GPA:.2f} GPa   σ_y = {SIGMA_Y_SE_GPA:.3f} GPa  '
-          f'H = {H_SE_GPA:.2f} GPa')
+    print(f'  E*_{mat_label:<5s} = {E_star_pa/1e9:.2f} GPa')
+    print(f'  σ_y_{mat_label:<5s} = {sigma_y_pa/1e9:.3f} GPa  '
+          f'(H = {H_pa/1e9:.2f} GPa, H/σ_y = {H_pa/sigma_y_pa:.1f})')
     print(f'  Regimes:  elastic μ_T < {MU_T_ELASTIC_MAX}  | '
           f'transit  {MU_T_ELASTIC_MAX} ≤ μ_T < {MU_T_PLASTIC_MIN}  | '
           f'plastic μ_T ≥ {MU_T_PLASTIC_MIN}\n')

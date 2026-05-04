@@ -93,16 +93,46 @@ edge cases 자연스레 처리).
 
 ## 5. Numerical Specifics for Sulfide SE
 
+**우리 프로젝트 단일 출처**: `scripts/plastic_coverage.py:34-45`
+(LIGGGHTS poissonsRatio 설정과도 정합 — `dem_scripts/*.liggghts`).
+
 ```
 Material constant       Value         Source
 ──────────────────────  ────────────  ─────────────────────────
-E_SE                    1.35 GPa      Wang 2020 nanoindentation
-ν                       0.25          typical ceramic
-E* = E/(2(1-ν²))       ≈ 0.72 GPa    derived
-H_SE                    0.6 GPa       Sakuda 2013 (75Li₂S·25P₂S₅)
+E_SE  (real, lab)       24.0 GPa      Wang 2020 nanoindentation
                                        McGrogan 2017 (LPSCl)
-σ_y = H/3              ≈ 0.2 GPa     Tabor 1951 hardness relation
+                        (DEM sim 1.35 GPa: time-step 효율 위해 softened,
+                         post-correction 분석에는 real 24 GPa 사용)
+ν_SE                    0.30          LIGGGHTS poissonsRatio
+                                       (dem_scripts/*.liggghts:33)
+E*_SE-SE                ≈ 13.2 GPa    = E / (2(1-ν²)) symmetric pair
+H_SE                    0.85 GPa      dense LPSCl (Cheng 2017 range,
+                                       Sakuda 2013 amorphous = 0.6 GPa)
+σ_y_SE                  0.30 GPa      = H / 2.8 (Brake 2012 ceramic
+                                       standard, Tabor relation)
+H/σ_y = 2.83            ✓             표준 ceramic 값 (Brake 2012)
 ```
+
+### Why E_SE_real ≠ E_SE_DEM_sim?
+
+LIGGGHTS DEM 은 cold-press 시 큰 time step 을 위해 E* 를 softened 값
+(`youngs_modulus_sim` ≈ 1.35 MPa, scaled to 1.35 GPa real-equivalent)
+로 사용. 이는 *compaction kinematics* 에 영향 없이 (= 도달 porosity
+동일) numerical 효율만 향상시키는 표준 DEM 관행. Post-correction
+analytical Tabor 분석에는 **lab 측정값 24 GPa** 사용 (consistent
+with `plastic_coverage.py:E_REAL_SE`).
+
+### Mixed AM-SE pair E*
+
+```
+1/E* = (1-ν_AM²)/E_AM + (1-ν_SE²)/E_SE
+     = (1-0.0625)/140 + (1-0.09)/24
+     = 0.0067 + 0.0379
+     = 0.0446
+E*_AM-SE = 22.4 GPa     (soft SE side dominates compliance)
+```
+
+→ AM-SE contact 의 yield 도 soft side (SE) 가 결정 → σ_y = 0.30 GPa 사용.
 
 ### Expected μ_T range for our SE-SE contacts at 300 MPa
 

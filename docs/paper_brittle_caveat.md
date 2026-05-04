@@ -2282,11 +2282,12 @@ A_volume  = 2π·R·δ            plastic flow upper bound    volume conservatio
 The effective contact area is A_eff = min(A_Hertz, A_Tabor, A_volume),
 which automatically recovers the elastic limit when the Tabor parameter
 μ_T = E*·a / (σ_y·R) ≪ 1 and the fully-plastic limit when μ_T ≫ 1
-(Brake 2012, Storakers 1997). For sulfide solid electrolytes
-(E* ≈ 1.35 GPa, σ_y ≈ 0.2 GPa derived from H = 0.6 GPa nanoindentation;
-Sakuda 2013, McGrogan 2017), our 80-case SE–SE contact ensemble
-populates the transitional regime (μ_T distribution reported in
-Supplementary Fig. S-Tabor). The elastic-only baseline (Hertz column of
+(Brake 2012, Storakers 1997). For sulfide solid electrolytes (LPSCl
+real lab values: E_SE = 24 GPa, ν_SE = 0.30 → E*_SE-SE ≈ 13.2 GPa;
+H_SE = 0.85 GPa, σ_y = H/2.8 ≈ 0.30 GPa per Brake 2012 ceramic
+convention; Wang 2020, Cheng 2017, McGrogan 2017), our 80-case SE-SE
+contact ensemble populates the transitional regime (μ_T distribution
+reported in Supplementary Fig. S-Tabor). The elastic-only baseline (Hertz column of
 network-summary tables) and the plastic-corrected value (Physics column)
 therefore bracket the true σ_eff at each pressure, with the
 Hertz–Physics gap (~40 % for σ_e at 300 MPa stack pressure) acting as a
@@ -2317,10 +2318,12 @@ A_volume  = 2π·R·δ            plastic flow upper bound    volume conservatio
 Effective contact area 는 A_eff = min(A_Hertz, A_Tabor, A_volume),
 이는 Tabor parameter μ_T = E*·a / (σ_y·R) 가 ≪ 1 일 때 elastic limit
 을, ≫ 1 일 때 fully-plastic limit 을 자동 회복한다 (Brake 2012,
-Storakers 1997). Sulfide SE (E* ≈ 1.35 GPa, σ_y ≈ 0.2 GPa, H = 0.6
-GPa nanoindentation 으로부터; Sakuda 2013, McGrogan 2017) 의 경우
-본 80-case SE-SE contact ensemble 이 transitional regime 에 위치한다
-(μ_T 분포는 Supplementary Fig. S-Tabor 에 제시). Elastic-only baseline
+Storakers 1997). Sulfide SE (LPSCl real lab values: E_SE = 24 GPa,
+ν_SE = 0.30 → E*_SE-SE ≈ 13.2 GPa; H_SE = 0.85 GPa, σ_y = H/2.8 ≈
+0.30 GPa per Brake 2012 ceramic convention; Wang 2020, Cheng 2017,
+McGrogan 2017) 의 경우 본 80-case SE-SE contact ensemble 이
+transitional regime 에 위치한다 (μ_T 분포는 Supplementary Fig.
+S-Tabor 에 제시). Elastic-only baseline
 (network-summary table 의 Hertz column) 과 plastic-corrected value
 (Physics column) 가 각 압력에서 진짜 σ_eff 를 bracket 하며, Hertz–
 Physics gap (300 MPa stack pressure 에서 σ_e 약 ~40 %) 는
