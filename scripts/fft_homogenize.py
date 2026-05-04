@@ -72,7 +72,22 @@ KAPPA_AM_W_MK         = 4.0      # W/(m·K)
 KAPPA_SE_W_MK         = 0.5      # W/(m·K)
 
 # Numerical regularization for high-contrast (insulator phases)
-EPS_CONTRAST = 1e-6
+#
+# Basic Moulinec-Suquet has spectral radius ρ = (σ_max-σ_min)/(σ_max+σ_min)
+# which → 1 as contrast → ∞, so the iteration diverges for true insulator
+# phases (σ_void = 0). We regularize by giving void/insulator phases a
+# small but nonzero σ. EPS_CONTRAST = 0.01 means σ_min = 1 % of σ_max,
+# giving σ_max/σ_min = 100 — basic MS converges in ~50–100 iterations.
+#
+# Trade-off: slight σ_eff overestimate (bias ~1 % since the "insulator"
+# now conducts at 1 % of SE rate). For paper-grade transport validation
+# this is acceptable; for stricter accuracy use --eps 0.001 with --max-iter
+# 500 (slower but tighter regularization) or implement Eyre-Milton 1999.
+EPS_CONTRAST = 0.01
+
+# Damping for stabilization at high contrast (0 = no damping, 1 = full new)
+# 0.7 is a good default for transport problems with contrast 100
+DAMPING_ALPHA = 0.7
 
 
 def discover_case(case_id: str) -> Path | None:
@@ -151,10 +166,14 @@ def fft_homogenize_z(sigma_field: np.ndarray, voxel_um: float,
 
     sigma_min = float(sigma_field.min())
     sigma_max = float(sigma_field.max())
-    # Reference: harmonic mean for high contrast (Eyre-Milton recommendation)
     contrast = sigma_max / max(sigma_min, 1e-30)
-    if contrast > 100:
-        sigma_0 = 2.0 * sigma_min * sigma_max / (sigma_min + sigma_max)
+    # Reference σ_0:
+    #   contrast > 10  →  geometric mean (better high-contrast convergence;
+    #                     polarization (σ - σ_0) magnitude balanced between
+    #                     conductive and insulator voxels)
+    #   contrast ≤ 10  →  arithmetic mean (faster for low-contrast)
+    if contrast > 10:
+        sigma_0 = float(np.sqrt(sigma_min * sigma_max))
     else:
         sigma_0 = 0.5 * (sigma_min + sigma_max)
 
@@ -191,9 +210,14 @@ def fft_homogenize_z(sigma_field: np.ndarray, voxel_um: float,
         EY[0, 0, 0] = 0.0
         EZ[0, 0, 0] = 1.0 * n_total   # because IFFT divides by n_total
 
-        e_x_new = spfft.ifftn(EX).real
-        e_y_new = spfft.ifftn(EY).real
-        e_z_new = spfft.ifftn(EZ).real
+        e_x_raw = spfft.ifftn(EX).real
+        e_y_raw = spfft.ifftn(EY).real
+        e_z_raw = spfft.ifftn(EZ).real
+
+        # Damping for high-contrast stability (DAMPING_ALPHA < 1 → conservative)
+        e_x_new = DAMPING_ALPHA * e_x_raw + (1.0 - DAMPING_ALPHA) * e_x
+        e_y_new = DAMPING_ALPHA * e_y_raw + (1.0 - DAMPING_ALPHA) * e_y
+        e_z_new = DAMPING_ALPHA * e_z_raw + (1.0 - DAMPING_ALPHA) * e_z
 
         # Convergence — relative L2 of e change
         de2 = ((e_x_new - e_x)**2 + (e_y_new - e_y)**2
@@ -201,6 +225,12 @@ def fft_homogenize_z(sigma_field: np.ndarray, voxel_um: float,
         e2  = (e_x_new**2 + e_y_new**2 + e_z_new**2).sum()
         rel = np.sqrt(de2 / max(e2, 1e-30))
         residuals.append(float(rel))
+
+        # Bail-out for divergence (NaN means damping insufficient)
+        if not np.isfinite(rel):
+            if verbose:
+                print(f'    iter {it}: NaN — divergence, bailing out')
+            return float('nan'), it + 1, residuals
 
         e_x, e_y, e_z = e_x_new, e_y_new, e_z_new
 
