@@ -2261,3 +2261,85 @@ transport descriptor 에 집중 — 는 78-case ensemble 에 VGCF 를 포함
 out of scope 이다. Section 6 / 7 의 σ_e 숫자들은 따라서 *bare-
 microstructure 의 fracture-induced loss upper bound* 로 서며, VGCF 가
 포함된 실제 cell-level loss 는 substantially 더 작을 것으로 예상된다.
+
+---
+
+## Section 2-A — Tabor Elastic-Plastic Contact Selection (Methods Addendum)
+
+### English
+
+The contact area used in σ_eff calculations is selected per contact via
+the standard Tabor (1951) elastic-plastic transition criterion, embedded
+directly in the network conductivity solver. For each pair we evaluate
+three candidate contact areas:
+
+```
+A_Hertz   = π·a²              elastic, a = √(R·δ)         Hertz 1882
+A_Tabor   = F / (π·H)         fully plastic, H = 3σ_y     Tabor 1951
+A_volume  = 2π·R·δ            plastic flow upper bound    volume conservation
+```
+
+The effective contact area is A_eff = min(A_Hertz, A_Tabor, A_volume),
+which automatically recovers the elastic limit when the Tabor parameter
+μ_T = E*·a / (σ_y·R) ≪ 1 and the fully-plastic limit when μ_T ≫ 1
+(Brake 2012, Storakers 1997). For sulfide solid electrolytes
+(E* ≈ 1.35 GPa, σ_y ≈ 0.2 GPa derived from H = 0.6 GPa nanoindentation;
+Sakuda 2013, McGrogan 2017), our 80-case SE–SE contact ensemble
+populates the transitional regime (μ_T distribution reported in
+Supplementary Fig. S-Tabor). The elastic-only baseline (Hertz column of
+network-summary tables) and the plastic-corrected value (Physics column)
+therefore bracket the true σ_eff at each pressure, with the
+Hertz–Physics gap (~40 % for σ_e at 300 MPa stack pressure) acting as a
+direct quantitative measure of the operational elastic-plastic regime
+rather than a phenomenological calibration.
+
+This Tabor-based selection is mathematically equivalent to the
+equilibrium-overlap formulation of So et al. (2022) — itself a
+simplified form of Storakers 1997 viscoplastic spheres — for the
+steady-state microstructure metrics reported here (coverage, tortuosity,
+σ_ionic). The two formulations differ only in their treatment of
+transient plastic memory under cyclic loading, which is irrelevant
+under our sustained 300 MPa stack-pressure boundary condition.
+
+### 한국어
+
+본 연구의 σ_eff 계산에서 사용되는 contact area 는 Tabor (1951) 의
+표준 elastic-plastic 전이 기준에 따라 contact 단위로 선택되며, 이는
+network conductivity solver 내부에 직접 구현되어 있다. 각 contact 에
+대해 세 candidate contact area 를 평가:
+
+```
+A_Hertz   = π·a²              elastic, a = √(R·δ)         Hertz 1882
+A_Tabor   = F / (π·H)         fully plastic, H = 3σ_y     Tabor 1951
+A_volume  = 2π·R·δ            plastic flow upper bound    volume conservation
+```
+
+Effective contact area 는 A_eff = min(A_Hertz, A_Tabor, A_volume),
+이는 Tabor parameter μ_T = E*·a / (σ_y·R) 가 ≪ 1 일 때 elastic limit
+을, ≫ 1 일 때 fully-plastic limit 을 자동 회복한다 (Brake 2012,
+Storakers 1997). Sulfide SE (E* ≈ 1.35 GPa, σ_y ≈ 0.2 GPa, H = 0.6
+GPa nanoindentation 으로부터; Sakuda 2013, McGrogan 2017) 의 경우
+본 80-case SE-SE contact ensemble 이 transitional regime 에 위치한다
+(μ_T 분포는 Supplementary Fig. S-Tabor 에 제시). Elastic-only baseline
+(network-summary table 의 Hertz column) 과 plastic-corrected value
+(Physics column) 가 각 압력에서 진짜 σ_eff 를 bracket 하며, Hertz–
+Physics gap (300 MPa stack pressure 에서 σ_e 약 ~40 %) 는
+phenomenological calibration 이 아니라 작동 elastic-plastic regime 의
+직접적인 정량 측정값이다.
+
+이 Tabor-기반 선택은 본 paper 가 보고하는 정상상태 microstructure
+metric (coverage, tortuosity, σ_ionic) 에 대해 So et al. (2022) 의
+equilibrium-overlap formulation — 그 자체로 Storakers 1997
+viscoplastic spheres 의 단순화 형태 — 과 수학적으로 동등하다. 두
+formulation 은 cyclic loading 하의 transient plastic memory 처리에서만
+다르며, 이는 본 연구의 sustained 300 MPa stack-pressure boundary
+condition 하에서는 무관하다.
+
+### Reference list (Tabor framework)
+- Tabor 1951 — *The Hardness of Metals*, Oxford. (Original elastic-plastic transition)
+- Brake 2012 — *Int. J. Solids Struct.* 49: 3129. (3-regime contact model)
+- Storakers et al. 1997 — *J. Mech. Phys. Solids* 45: 1421. (Viscoplastic spheres)
+- Thornton & Ning 1998 — *Powder Technol.* 99: 154. (Standard E-P loading/unloading)
+- Sakuda et al. 2013 — *Sci. Rep.* 3: 2261. (75Li₂S·25P₂S₅ glass nanoindentation, H ≈ 0.6 GPa)
+- McGrogan et al. 2017 — *Adv. Energy Mater.* 7: 1602011. (LPSCl mechanical properties)
+- So et al. 2022 — *MethodsX* 9: 101857. (Equilibrium overlap DEM)
