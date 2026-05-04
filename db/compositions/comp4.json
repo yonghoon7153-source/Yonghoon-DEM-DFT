@@ -96,7 +96,8 @@
     "Br_std": 0.009,
     "P_range": [3.200, 4.367],
     "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp4_ACF.dat (KISTI 2026-05-04 measured)",
-    "notes": "TRIPLE ANOMALY: P=+3.631 (lowest of all v1 comps), S=-1.551 (lowest |q|), both with HIGH std (0.49, 0.38). Cl=Br=0.8 maximum frustration disrupts BOTH covalent (PS4) and ionic backbone. Microscopic origin of comp4 mechanical softening (E -9%)."
+    "P_VALUE_WARNING": "DO NOT cite P=+3.631 in paper without v2 cross-check. v1 Bader pipeline anomaly known (comp1 v1 P=+3.27 vs comp1 v2 +4.686). comp4 P=+3.631 may be partly v1 systematic + partly comp4 frustration. Need v2 anneal + Bader to disentangle.",
+    "notes": "TRIPLE ANOMALY (v1): P=+3.631 (lowest), S=-1.551 (lowest |q|), HIGH std (0.49, 0.38). Cl=Br=0.8 maximum frustration disrupts both covalent (PS4) and ionic backbone. Microscopic origin candidate for comp4 E -9%, but v1 Bader pipeline reliability question requires v2 confirmation."
   },
   "bond_lengths_v1_measured": {
     "Li-Cl": {"mean": 2.495, "std": 0.142, "n": 19},
