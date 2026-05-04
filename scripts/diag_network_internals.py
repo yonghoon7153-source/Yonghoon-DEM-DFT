@@ -28,8 +28,9 @@ SCRIPTS  = ROOT / 'scripts'
 WEBAPP   = ROOT / 'webapp'
 
 sys.path.insert(0, str(SCRIPTS))
-from network_conductivity import (  # noqa: E402
-    load_atoms_raw, load_contacts_raw, build_network,
+from network_conductivity import build_network  # noqa: E402
+from analyze_contacts import (  # noqa: E402
+    load_atoms_raw, load_contacts_raw,
 )
 
 CASES = {
