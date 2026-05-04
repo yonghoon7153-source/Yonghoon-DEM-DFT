@@ -107,9 +107,11 @@ def main() -> None:
         if r['fail_fa']:   reasons.append(f'σ_e_fa={r["σ_e_fa"]}')
         if r['fail_loss']: reasons.append(f'loss_C={r["loss_C"]}')
         f = lambda v: f'{v:.2f}' if v is not None and not pd.isna(v) else '-'
+        n_am_v = r.get('n_AM_AM') if 'n_AM_AM' in r.index else None
+        n_am_disp = (str(int(n_am_v)) if n_am_v and not pd.isna(n_am_v) else '-')
         print(f'{r["case_id"]:36s} {f(r["σ_e_full"]):>10s} {f(r["σ_e_fa"]):>10s} '
               f'{f(r["loss_C"]):>8s} {f(r["percolation"]):>7s} '
-              f'{int(r["n_AM"]) if r["n_AM"] else "-":>6} {"; ".join(reasons)}')
+              f'{n_am_disp:>6s} {"; ".join(reasons)}')
 
     # Categorize drop reasons
     print('\n=== Drop reason summary ===')
