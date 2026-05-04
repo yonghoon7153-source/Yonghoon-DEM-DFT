@@ -43,15 +43,19 @@ DB_DIR   = ROOT / 'docs' / 'db'
 
 
 def discover_case_dirs() -> list[Path]:
+    """Recursively find case dirs at any depth under results/ or archive/."""
+    seen = set()
     out = []
     for base in ('results', 'archive'):
         root = WEBAPP / base
         if not root.exists():
             continue
-        for d in sorted(root.iterdir()):
-            if d.is_dir() and (d / 'full_metrics.json').exists():
-                out.append(d)
-    return out
+        for fm_p in root.rglob('full_metrics.json'):
+            case_dir = fm_p.parent
+            if case_dir not in seen:
+                seen.add(case_dir)
+                out.append(case_dir)
+    return sorted(out)
 
 
 def main() -> None:

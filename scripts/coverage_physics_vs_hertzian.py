@@ -497,9 +497,12 @@ def main():
         for base in ('results', 'archive'):
             root = WEBAPP / base
             if root.exists():
-                for d in sorted(root.iterdir()):
-                    if d.is_dir() and (d / 'atoms.csv').exists() and (d / 'contacts.csv').exists():
-                        cases.append(d.name)
+                # Recursive depth search — covers webapp/archive/category/case/
+                # Categorized cases were silently skipped under depth-1 scan.
+                for atoms_p in root.rglob('atoms.csv'):
+                    case_dir = atoms_p.parent
+                    if (case_dir / 'contacts.csv').exists():
+                        cases.append(case_dir.name)
     cases.extend(args.cases)
     cases = list(dict.fromkeys(cases))  # dedup, preserve order
 

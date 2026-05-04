@@ -72,14 +72,15 @@ FRACTURE_KEYS = sorted(set(FRACTURE_KEYS_PREFIXES))
 
 
 def discover_case_dirs() -> dict[str, Path]:
-    """case_id → case directory containing full_metrics.json."""
+    """case_id → case directory containing full_metrics.json (any depth)."""
     out = {}
     for base in ('results', 'archive'):
         root = WEBAPP / base
         if not root.exists(): continue
-        for d in sorted(root.iterdir()):
-            if d.is_dir() and (d / 'full_metrics.json').exists():
-                out[d.name] = d
+        for fm_p in root.rglob('full_metrics.json'):
+            case_dir = fm_p.parent
+            if case_dir.name not in out:
+                out[case_dir.name] = case_dir
     return out
 
 

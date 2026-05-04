@@ -169,14 +169,18 @@ def case_to_row(case_dir: Path) -> dict | None:
 
 
 def discover_cases() -> list[Path]:
+    """Recursively find case dirs at any depth under results/ or archive/."""
+    seen = set()
     out = []
     for base in ('results', 'archive'):
         root = WEBAPP / base
         if root.exists():
-            for d in sorted(root.iterdir()):
-                if d.is_dir() and (d / 'full_metrics.json').exists():
-                    out.append(d)
-    return out
+            for fm_p in root.rglob('full_metrics.json'):
+                case_dir = fm_p.parent
+                if case_dir not in seen:
+                    seen.add(case_dir)
+                    out.append(case_dir)
+    return sorted(out)
 
 
 def load_cache() -> dict:

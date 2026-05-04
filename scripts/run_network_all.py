@@ -50,16 +50,25 @@ _NET_MERGE_KEYS = [
 
 
 def discover_cases() -> list[Path]:
+    """Recursively find all case directories under results/ and archive/.
+
+    A case is any directory containing both atoms.csv and contacts.csv.
+    rglob() walks arbitrary depth, so categorized archive folders like
+    `webapp/archive/후막(6mAh)/input_6mAh_real_3/` (depth 2) are
+    discovered, not just depth-1 newly-uploaded cases. Without this,
+    stage scripts silently skipped 50+ % of the dataset.
+    """
+    seen = set()
     out = []
     for base in ('results', 'archive'):
         root = WEBAPP / base
-        if root.exists():
-            for d in sorted(root.iterdir()):
-                if (d.is_dir()
-                        and (d / 'atoms.csv').exists()
-                        and (d / 'contacts.csv').exists()):
-                    out.append(d)
-    return out
+        if not root.exists(): continue
+        for atoms_p in root.rglob('atoms.csv'):
+            case_dir = atoms_p.parent
+            if (case_dir / 'contacts.csv').exists() and case_dir not in seen:
+                seen.add(case_dir)
+                out.append(case_dir)
+    return sorted(out)
 
 
 def _read_meta(case_dir: Path) -> dict:

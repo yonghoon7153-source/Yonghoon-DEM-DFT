@@ -70,17 +70,22 @@ THRESHOLD_MULTIPLIER = 3.0
 
 
 def discover_case_dirs() -> list[Path]:
+    """Recursively find case dirs under results/ and archive/ at any depth.
+    Fixes a depth-1-only iteration bug that silently skipped categorized
+    archive cases (webapp/archive/category/case_id/)."""
+    seen = set()
     out = []
     for base in ('results', 'archive'):
         root = WEBAPP / base
         if not root.exists(): continue
-        for d in sorted(root.iterdir()):
-            if (d.is_dir()
-                    and (d / 'atoms.csv').exists()
-                    and (d / 'contacts.csv').exists()
-                    and (d / 'full_metrics.json').exists()):
-                out.append(d)
-    return out
+        for atoms_p in root.rglob('atoms.csv'):
+            case_dir = atoms_p.parent
+            if ((case_dir / 'contacts.csv').exists()
+                    and (case_dir / 'full_metrics.json').exists()
+                    and case_dir not in seen):
+                seen.add(case_dir)
+                out.append(case_dir)
+    return sorted(out)
 
 
 def _read_meta(case_dir: Path) -> dict:

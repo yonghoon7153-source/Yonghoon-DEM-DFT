@@ -30,16 +30,19 @@ from run_network_full_corrections import sigma_ionic_grain_factor_SE  # noqa: E4
 
 
 def discover_case_dirs() -> list[Path]:
+    """Recursively find case dirs at any depth under results/ or archive/."""
+    seen = set()
     out = []
     for base in ('results', 'archive'):
         root = WEBAPP / base
         if not root.exists(): continue
-        for d in sorted(root.iterdir()):
-            if (d.is_dir()
-                    and (d / 'atoms.csv').exists()
-                    and (d / 'full_metrics.json').exists()):
-                out.append(d)
-    return out
+        for atoms_p in root.rglob('atoms.csv'):
+            case_dir = atoms_p.parent
+            if ((case_dir / 'full_metrics.json').exists()
+                    and case_dir not in seen):
+                seen.add(case_dir)
+                out.append(case_dir)
+    return sorted(out)
 
 
 def _read_meta(case_dir: Path) -> dict:
