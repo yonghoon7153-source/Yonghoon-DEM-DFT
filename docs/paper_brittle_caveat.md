@@ -1672,9 +1672,17 @@ variables.
 #### 7.2 Sweep Results
 
 Table 7.1 reports the post-compaction transport conductivities and
-fracture severity for the 10 cases. σ values are network-solver outputs
-(Stage A baseline); AM_P severe% is the fragmentation+pulverization
-contact fraction within AM_P-AM_P pairs (force-based classifier).
+fracture severity for the 10 cases. **σ values are Stage A Hertzian
+baseline (default network-solver output, no physics correction, no
+fracture-aware Stage C/D/E discount)**; AM_P severe% is the
+fragmentation+pulverization contact fraction within AM_P-AM_P pairs
+(force-based classifier, directly measured from DEM force output, not
+derived from σ). The σ_e column is shown for academic completeness:
+Section 7.7 (VGCF caveat) explains that real cathodes neutralize the
+σ_e channel via 1 wt % carbon-fiber additive, so the *primary*
+design-relevant columns are **σ_ionic** (transport bottleneck) and
+**AM_P severe%** (mechanical/cycling robustness proxy via cracked
+NCM particles), with σ_th as a secondary thermal-management metric.
 
 ```
 Table 7.1 — 10-case controlled sweep results
@@ -1795,28 +1803,42 @@ fracture*. Both levers reinforce each other in real_2.
 
 #### 7.5 Pareto Frontier — r_SE × P:S Trade-off Map
 
-The 10 cases span a 2D Pareto surface in (σ_ionic, σ_e, AM_P severe%)
-space. Two qualitative observations stand out:
+The 10 cases span a 2D Pareto surface. Because σ_e is neutralized by
+VGCF in real cells (Section 7.7), the *cell-impact-relevant* axes
+reduce to σ_ionic, σ_th, and AM_P severe% (mechanical robustness).
+Three observations stand out:
 
 (1) **Path A Pareto-dominates Path B for σ_ionic at every P:S.** No
 case in Path B reaches the σ_ionic levels of even the lowest Path A
 point (Path B max 0.119 < Path A min 0.117). The η_topology_void
-mechanism (Section 5-1) is the dominant control for σ_ionic.
+mechanism (Section 5-1) is the dominant control for σ_ionic and is
+*not bypassed* by VGCF (carbon fibers are ionically inert). σ_ionic
+is therefore the single most decisive design metric in real cells.
 
-(2) **Path B's σ_e advantage is conditional on accepting severe
-fracture.** Path B σ_e reaches 7.62 at real_9, but with 60 % AM_P-AM_P
-contacts in the multicrack-or-worse regime. Under the literature
-stagewise σ_factor (Section 6, Stage D), this nominally high
-σ_e_baseline must be discounted by the post-fracture survival factor.
-The 78-case ensemble Section 6 reports a Pearson correlation of +0.98
-between AM_P fraction and σ_e_loss — a result the 10-case sweep
-reproduces in microcosm (real_9 shows 60 % severe and would lose
-≈ 50 % of σ_e under Stage E corrections, while real_2 keeps 100 %).
+(2) **AM_P severe% is the decisive mechanical-robustness metric.**
+Path B configurations (real_7/_8/_9/_10) all show 51–62 % of AM_P-AM_P
+contacts in the fragmentation-or-worse regime. Even when σ_e is
+backfilled by VGCF, the underlying NCM particle pulverization persists
+and drives separate failure modes outside the present DEM scope:
+cathode-electrolyte interphase (CEI) breakdown on freshly exposed
+particle surfaces, SE film cracking around fragmented AM, and capacity
+fade through cycling-induced isolation of disconnected NCM fragments.
+The AM_P severe% column is therefore the proxy for cycling stability
+that survives the VGCF caveat — a high severe% is bad regardless of
+how much VGCF is added.
 
-The composite Pareto frontier — the (σ_ionic, σ_e_post_fracture,
-σ_th) envelope — is therefore traced by Path A. real_2 sits at the
-inflection point where adding more AM_P starts to penalize σ_e
-(real_4's percolation collapse) without lifting σ_ionic further.
+(3) **Path B's σ_e advantage is largely irrelevant in practice.** Path
+B σ_e reaches 7.62 at real_9, but the ~30–60 % σ_e_loss this would
+incur via Stage E corrections (Section 6) is bypassed by VGCF.
+Reporting σ_e here is for academic completeness — the 78-case Section
+6 Pearson +0.98 correlation between AM_P fraction and σ_e_loss is a
+real microstructural finding, but its cell-level relevance is muted
+by industrial conductive-additive practice.
+
+The composite Pareto frontier — the (σ_ionic, σ_th, AM_P severe%)
+envelope under VGCF assumption — is therefore traced by Path A.
+real_2 sits at the inflection point where adding more AM_P maintains
+zero AM_P severe% without further lifting σ_ionic.
 
 #### 7.6 Design Rule (Industry-Facing Synthesis)
 
@@ -1873,9 +1895,17 @@ severity 의 어떠한 변화도 두 sweep 변수에 직접 귀속된다.
 #### 7.2 Sweep 결과
 
 Table 7.1 은 10 cases 의 post-compaction transport conductivity 와
-fracture severity 를 보고한다. σ 값들은 network-solver 출력 (Stage A
-baseline) 이고, AM_P severe% 는 AM_P-AM_P pair 내부의
-fragmentation+pulverization contact 비율 (force-based classifier).
+fracture severity 를 보고한다. **σ 값들은 Stage A Hertzian baseline
+(default network-solver 출력; physics correction 미적용, fracture-aware
+Stage C/D/E discount 미적용)** 이고, AM_P severe% 는 AM_P-AM_P pair
+내부의 fragmentation+pulverization contact 비율 (force-based
+classifier; DEM force 출력에서 직접 측정, σ 에서 유도되지 않음). σ_e
+컬럼은 학술적 completeness 를 위해 표시: Section 7.7 (VGCF caveat) 에서
+실제 cathode 는 1 wt % carbon-fiber 첨가제로 σ_e 채널을 중화함을 설명
+하므로, *primary* design-relevant 컬럼은 **σ_ionic** (transport
+bottleneck) 과 **AM_P severe%** (cracked NCM particle 을 통한 mechanical
+/ cycling robustness proxy) 이고, σ_th 가 secondary thermal-management
+지표.
 
 ```
 Table 7.1 — 10-case controlled sweep 결과
@@ -1992,27 +2022,38 @@ real_2 는 따라서 Section 6 의 two-lever design rule 을 실현한다:
 
 #### 7.5 Pareto Frontier — r_SE × P:S Trade-off Map
 
-10 cases 는 (σ_ionic, σ_e, AM_P severe%) 공간에서 2D Pareto surface 를
-span 한다. 두 가지 정성적 관찰이 두드러진다:
+10 cases 는 2D Pareto surface 를 span 한다. 실제 cell 에서 σ_e 는 VGCF
+로 중화되므로 (Section 7.7), *cell-impact-relevant* 축은 σ_ionic, σ_th,
+AM_P severe% (mechanical robustness) 로 축소된다. 세 가지 관찰이 두드
+러진다:
 
 (1) **모든 P:S 에서 Path A 가 σ_ionic 에 대해 Path B 를
 Pareto-dominate.** Path B 의 어떤 case 도 Path A 의 가장 낮은 지점의
 σ_ionic 수준에 도달하지 못한다 (Path B max 0.119 < Path A min 0.117).
 η_topology_void 메커니즘 (Section 5-1) 이 σ_ionic 의 dominant control
-이다.
+이며, VGCF 로도 *bypass 되지 않는다* (carbon fiber 는 이온 관성).
+σ_ionic 은 따라서 실제 cell 에서 가장 결정적인 단일 설계 지표.
 
-(2) **Path B 의 σ_e 우위는 severe fracture 를 받아들이는 조건부이다.**
-Path B 의 σ_e 는 real_9 에서 7.62 에 도달하지만, 60 % AM_P-AM_P
-contact 가 multicrack-or-worse regime 에 있다. Section 6 의 literature
-stagewise σ_factor 를 적용하면 (Stage D), 이 nominally high
-σ_e_baseline 은 post-fracture 생존 factor 로 discount 되어야 한다.
-78-case ensemble Section 6 는 AM_P fraction 과 σ_e_loss 사이 Pearson
-상관 +0.98 을 보고하며 — 10-case sweep 이 microcosm 에서 이를 재현한다
-(real_9 는 60 % severe 를 보이며 Stage E 보정 하에서 σ_e 의 ≈ 50 % 를
-잃을 것이고, real_2 는 100 % 유지).
+(2) **AM_P severe% 가 mechanical-robustness 의 결정적 지표.** Path B
+구성 (real_7/_8/_9/_10) 모두 AM_P-AM_P contact 의 51–62 % 가
+fragmentation-or-worse regime. VGCF 가 σ_e 를 backfill 해도, 그
+근본인 NCM 입자 분쇄는 잔존하여 본 DEM scope 외부의 별개 failure mode
+를 유발: cathode-electrolyte interphase (CEI) 가 갓 노출된 입자
+표면에서 분해, SE film 이 fragmented AM 주위에서 cracking, cycling-
+induced isolation 을 통한 disconnected NCM fragment 의 capacity fade.
+AM_P severe% 컬럼은 따라서 VGCF caveat 를 살아남는 cycling stability
+proxy — 높은 severe% 는 VGCF 양에 무관하게 나쁘다.
 
-따라서 composite Pareto frontier — (σ_ionic, σ_e_post_fracture, σ_th)
-envelope — 는 Path A 에 의해 traced 된다. real_2 는 더 많은 AM_P 추가가
+(3) **Path B 의 σ_e 우위는 실제로 거의 무관.** Path B σ_e 는 real_9
+에서 7.62 에 도달하지만, Stage E 보정 (Section 6) 으로 incurred 될
+~30–60 % σ_e_loss 가 VGCF 로 bypass 됨. 여기서 σ_e 를 보고하는 것은
+학술적 completeness — 78-case Section 6 의 AM_P fraction vs σ_e_loss
+Pearson +0.98 상관은 실제 microstructure 발견이지만, cell-level 관련성
+은 산업 도전성 첨가제 관행으로 muted.
+
+따라서 composite Pareto frontier — VGCF 가정 하의 (σ_ionic, σ_th,
+AM_P severe%) envelope — 는 Path A 에 의해 traced. real_2 는 더 많은
+AM_P 추가가
 σ_e 를 penalize 하기 시작하는 (real_4 의 percolation collapse)
 inflection point 에 위치하며, σ_ionic 을 더 끌어올리지도 못한다.
 
