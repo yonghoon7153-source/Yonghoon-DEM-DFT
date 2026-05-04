@@ -543,6 +543,29 @@ def solve_network(network_data, mode='full', return_field=False):
     # G_eff = I / ΔV = 1.0 / V_source  (since I=1, V_sink=0)
     G_eff = 1.0 / V_source
 
+    # ── Anomaly diagnostic: sanity-bound G_eff against sum-of-conductances ─
+    # Theoretical upper bound: G_eff ≤ Σ g  (all edges in parallel between
+    # source and sink — physically impossible to exceed). When numerical
+    # spsolve mis-converges for ill-conditioned topologies (sparse top
+    # electrode + dense bulk), V_source can come out vanishingly small and
+    # make G_eff exceed Σ g by orders of magnitude. Emit a clear warning so
+    # downstream scripts can flag/exclude the case rather than silently
+    # propagate a non-physical σ.
+    if os.environ.get('NETWORK_DEBUG'):
+        sum_g_bulk = 0.0
+        for e in perc_edges:
+            R = e['R_total'] if mode == 'full' else (
+                e['R_bulk'] if mode == 'bulk_only' else e['R_constriction'])
+            if R and R > 0:
+                sum_g_bulk += 1.0 / R
+        print(f"  DEBUG[{mode}]: V_source={V_source:.4e}  G_eff={G_eff:.4e}  "
+              f"Σg_bulk={sum_g_bulk:.4e}  G/Σg={G_eff/sum_g_bulk:.4f}  "
+              f"perc(b/t)={len(perc_bottom)}/{len(perc_top)}",
+              flush=True)
+        if G_eff > sum_g_bulk * 2:
+            print(f"  ⚠ G_eff exceeds Σg×2 — NUMERICAL ANOMALY (likely "
+                  f"ill-conditioned Laplacian for this topology)", flush=True)
+
     # Convert to σ_eff / σ_bulk
     # G_eff is in normalized units (ρ=1)
     # σ_eff = G_eff × L / A where L = plate_z*scale (μm), A = box_x*box_y*scale² (μm²)
