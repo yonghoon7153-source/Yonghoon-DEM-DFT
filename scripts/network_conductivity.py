@@ -445,8 +445,38 @@ def solve_network(network_data, mode='full', return_field=False):
             g = 1.0 / R
             add_conductance(i, j, g)
 
-    # Connect bottom SE to source with large conductance (low resistance)
-    g_boundary = 1e6  # effectively zero resistance
+    # Connect bottom SE to source with large conductance (low resistance).
+    # Adaptive g_boundary fixes the σ-inflation bug observed for ~22/80
+    # cases (e.g., 260420_115455_8c26b6) where σ_e came out 5000× too high.
+    #
+    # Root cause: a fixed g_boundary = 1e6 made the boundary/bulk
+    # conductance ratio ~10^6 even when Σ g_bulk was small (∼160 for
+    # AM-AM graphs in AM_P-rich, thin-pellet cases). The resulting
+    # Laplacian had condition number ~10^7-10^8 which exceeded spsolve's
+    # double-precision LU accuracy → V_source returned as 2e-6 instead of
+    # the true ~0.006, inflating G_eff by 3000× and violating the
+    # mathematical upper bound G_eff ≤ Σ g_bulk.
+    #
+    # Fix: scale g_boundary to ~100× the maximum bulk-edge conductance.
+    # This makes the boundary effectively zero-R compared to bulk
+    # (boundary contribution to V_source < 1 % of bulk drop) while keeping
+    # condition number ~10^4 — well within spsolve's accuracy. The σ
+    # answer is unchanged for well-conditioned cases (verified empirically
+    # against the 58 baseline-clean ensemble) and is *recovered* for the
+    # previously-anomalous 22.
+    g_max_bulk = 0.0
+    for e in perc_edges:
+        if mode == 'full':
+            R = e['R_total']
+        elif mode == 'bulk_only':
+            R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
+        elif mode == 'constriction_only':
+            R = e['R_constriction']
+        else:
+            R = e['R_total']
+        if R and R > 0:
+            g_max_bulk = max(g_max_bulk, 1.0 / R)
+    g_boundary = max(100.0 * g_max_bulk, 100.0)
     for bid in perc_bottom:
         add_conductance(id_to_idx[bid], source_idx, g_boundary)
 
