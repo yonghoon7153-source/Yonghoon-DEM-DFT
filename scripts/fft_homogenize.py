@@ -85,9 +85,9 @@ KAPPA_SE_W_MK         = 0.5      # W/(m·K)
 # 500 (slower but tighter regularization) or implement Eyre-Milton 1999.
 EPS_CONTRAST = 0.01
 
-# Damping for stabilization at high contrast (0 = no damping, 1 = full new)
-# 0.7 is a good default for transport problems with contrast 100
-DAMPING_ALPHA = 0.7
+# (Damping deprecated — proper σ_0 = arithmetic mean gives convergent
+#  basic Moulinec-Suquet for any finite contrast. Damping was masking
+#  a wrong σ_0 choice that gave divergent spectral radius.)
 
 
 def discover_case(case_id: str) -> Path | None:
@@ -167,15 +167,15 @@ def fft_homogenize_z(sigma_field: np.ndarray, voxel_um: float,
     sigma_min = float(sigma_field.min())
     sigma_max = float(sigma_field.max())
     contrast = sigma_max / max(sigma_min, 1e-30)
-    # Reference σ_0:
-    #   contrast > 10  →  geometric mean (better high-contrast convergence;
-    #                     polarization (σ - σ_0) magnitude balanced between
-    #                     conductive and insulator voxels)
-    #   contrast ≤ 10  →  arithmetic mean (faster for low-contrast)
-    if contrast > 10:
-        sigma_0 = float(np.sqrt(sigma_min * sigma_max))
-    else:
-        sigma_0 = 0.5 * (sigma_min + sigma_max)
+
+    # For SCALAR transport (Moulinec-Suquet 1998), σ_0 must satisfy
+    #   σ_0 > σ_max / 3   for convergence (so the spectral radius
+    #   ρ = (σ_max - σ_0)/σ_0 < 2, equivalently ||Γ_0·(σ-σ_0)|| < 1).
+    # Arithmetic mean σ_0 = (σ_max + σ_min)/2 always satisfies this for
+    # any finite contrast: ρ_basic = (σ_max - σ_min)/(σ_max + σ_min) < 1.
+    # Earlier "geometric mean" was wrong — that's for ELASTICITY shear,
+    # not for transport, and produces σ_0 too small (below σ_max/3).
+    sigma_0 = 0.5 * (sigma_min + sigma_max)
 
     if verbose:
         print(f'    σ_min={sigma_min:.4e}  σ_max={sigma_max:.4e}  '
@@ -210,14 +210,11 @@ def fft_homogenize_z(sigma_field: np.ndarray, voxel_um: float,
         EY[0, 0, 0] = 0.0
         EZ[0, 0, 0] = 1.0 * n_total   # because IFFT divides by n_total
 
-        e_x_raw = spfft.ifftn(EX).real
-        e_y_raw = spfft.ifftn(EY).real
-        e_z_raw = spfft.ifftn(EZ).real
-
-        # Damping for high-contrast stability (DAMPING_ALPHA < 1 → conservative)
-        e_x_new = DAMPING_ALPHA * e_x_raw + (1.0 - DAMPING_ALPHA) * e_x
-        e_y_new = DAMPING_ALPHA * e_y_raw + (1.0 - DAMPING_ALPHA) * e_y
-        e_z_new = DAMPING_ALPHA * e_z_raw + (1.0 - DAMPING_ALPHA) * e_z
+        # Pure Moulinec-Suquet update (no damping — proper σ_0 = arithmetic
+        # mean already gives convergent ρ = (σ_max-σ_min)/(σ_max+σ_min) < 1)
+        e_x_new = spfft.ifftn(EX).real
+        e_y_new = spfft.ifftn(EY).real
+        e_z_new = spfft.ifftn(EZ).real
 
         # Convergence — relative L2 of e change
         de2 = ((e_x_new - e_x)**2 + (e_y_new - e_y)**2
