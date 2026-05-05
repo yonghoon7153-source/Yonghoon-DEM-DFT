@@ -446,25 +446,29 @@ def solve_network(network_data, mode='full', return_field=False):
             add_conductance(i, j, g)
 
     # Connect bottom SE to source with large conductance (low resistance).
-    # Adaptive g_boundary fixes the σ-inflation bug observed for ~22/80
-    # cases (e.g., 260420_115455_8c26b6) where σ_e came out 5000× too high.
+    # Adaptive g_boundary fixes σ-inflation observed across two regimes:
     #
-    # Root cause: a fixed g_boundary = 1e6 made the boundary/bulk
-    # conductance ratio ~10^6 even when Σ g_bulk was small (∼160 for
-    # AM-AM graphs in AM_P-rich, thin-pellet cases). The resulting
-    # Laplacian had condition number ~10^7-10^8 which exceeded spsolve's
-    # double-precision LU accuracy → V_source returned as 2e-6 instead of
-    # the true ~0.006, inflating G_eff by 3000× and violating the
-    # mathematical upper bound G_eff ≤ Σ g_bulk.
+    # (1) Original baseline anomaly (commit 1c24bd2): hardcoded g_boundary
+    #     = 1e6 caused 10^6 boundary/bulk ratio for thin-pellet AM-AM
+    #     graphs where Σg_bulk was ~160. spsolve LU mis-converged → V_source
+    #     ~2e-6 instead of ~0.006 → σ inflated 3000×.
     #
-    # Fix: scale g_boundary to ~100× the maximum bulk-edge conductance.
-    # This makes the boundary effectively zero-R compared to bulk
-    # (boundary contribution to V_source < 1 % of bulk drop) while keeping
-    # condition number ~10^4 — well within spsolve's accuracy. The σ
-    # answer is unchanged for well-conditioned cases (verified empirically
-    # against the 58 baseline-clean ensemble) and is *recovered* for the
-    # previously-anomalous 22.
+    # (2) Stage-E inflation (this fix): network_conductivity is re-invoked
+    #     by run_network_full_corrections.py with contacts.csv having
+    #     contact_area × σ_factor (0.02-1.0) per Lawn fracture stage.
+    #     For high-fracture cases, ALL AM-AM edges get scaled to ~0.02,
+    #     making g_max_bulk and Σg_bulk both very small. The previous
+    #     floor of 100 in `max(100*g_max, 100)` then forced boundary g_total
+    #     = N_electrodes × 100 ≫ Σg_bulk, re-creating the ill-conditioning.
+    #
+    # Robust criterion (independent of edge magnitude):
+    #   boundary g_total ≈ 100 × bulk g_total
+    # so the matrix has dynamic range ~100, safely within spsolve LU
+    # accuracy. Plus a 10×g_max safety floor so boundary R is at least 10×
+    # smaller than any single bulk edge (boundary not the rate-limiting
+    # step).
     g_max_bulk = 0.0
+    sum_g_bulk = 0.0
     for e in perc_edges:
         if mode == 'full':
             R = e['R_total']
@@ -475,8 +479,14 @@ def solve_network(network_data, mode='full', return_field=False):
         else:
             R = e['R_total']
         if R and R > 0:
-            g_max_bulk = max(g_max_bulk, 1.0 / R)
-    g_boundary = max(100.0 * g_max_bulk, 100.0)
+            g = 1.0 / R
+            sum_g_bulk += g
+            g_max_bulk = max(g_max_bulk, g)
+
+    n_electrodes = max(len(perc_bottom) + len(perc_top), 1)
+    g_boundary_from_sum = 100.0 * sum_g_bulk / n_electrodes
+    g_boundary_from_max = 10.0 * g_max_bulk
+    g_boundary = max(g_boundary_from_sum, g_boundary_from_max, 1e-6)
     for bid in perc_bottom:
         add_conductance(id_to_idx[bid], source_idx, g_boundary)
 

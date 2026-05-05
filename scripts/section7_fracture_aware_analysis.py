@@ -255,9 +255,10 @@ def _filter_anomalies(df: pd.DataFrame) -> pd.DataFrame:
     df = df[(df['sigma_e_loss_pct'].fillna(0) >= -5) &
              (df['sigma_e_loss_pct'].fillna(0) <= 100)]
 
-    # Stage E inflation filter: E values exceeding 5× baseline are
-    # mathematically impossible (Stage E σ_factor ≤ 1 must reduce σ).
-    # Use 5× as a safe threshold accounting for ε-regularization noise.
+    # Stage E inflation safety net (kept as defence-in-depth — the
+    # underlying g_boundary issue was fixed in network_conductivity.py
+    # commit-pending, so this filter should now drop 0 cases on a fresh
+    # rerun). Threshold 5× catches any residual numerical artifacts.
     if 'sigma_e_stage_e' in df.columns and 'sigma_e_full' in df.columns:
         ratio_e = df['sigma_e_stage_e'] / df['sigma_e_full'].replace(0, float('nan'))
         bad_e = ratio_e.fillna(0) > 5.0
