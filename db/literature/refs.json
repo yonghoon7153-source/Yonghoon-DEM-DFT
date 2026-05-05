@@ -931,6 +931,161 @@
       "conclusion": "Zhao 2025 does NOT refute our Nd→P infeasibility conclusion. It is best interpreted as a misinterpretation of standard lanthanide chemistry (Ce@Li-site) as P-site substitution, supported by ambiguous Rietveld and selective characterization. Our DFT-based Track 1/2 comparison is more rigorous and remains valid.",
       "critique_doc": "db/literature/zhao2025_critique.md",
       "tags": ["rare-earth-doping", "Ce", "Ce4+", "Ce3+", "lanthanide", "argyrodite", "Li5.4PS4.4Cl1.6", "Model-C-base", "P-substitution", "O-substitution", "Rietveld-ambiguity", "no-DFT", "experimental", "Park-challenge", "critique", "supports-our-Nd-to-Li"]
+    },
+    {
+      "id": "wilkening2019",
+      "authors": "Wilkening, M. et al.",
+      "title": "31P NMR study of Li argyrodites",
+      "journal": "Chem. Mater.",
+      "year": 2019,
+      "DOI": "10.1021/acs.chemmater.9b01435",
+      "key_quote": "replacing S2- with a halogen ion having a lower electric charge the Li+ ions are less attracted by the argyrodite framework, leading to higher cation mobilities",
+      "key_content": "Halogen substitution -> reduced charge magnitude -> weaker Li-framework attraction -> higher Li mobility. Direct support for q*q/r Coulomb framework: lower |q_anion| (halogen -1 vs S -2) reduces attraction.",
+      "supports_our_finding": [
+        "q^2/r framework: Li-S (|q|=1.85) > Li-Cl (|q|=0.91) > Li-Br (|q|=0.89) by Coulomb proxy",
+        "Section 2 narrative: Li-S = dominant ionic glue, Li-X = secondary",
+        "comp4 frustration: Cl/Br mixing weakens halogen ionicity (both Cl |q| down)"
+      ],
+      "use_in_paper": "Section 2 mechanism + counterargument backing for any 'shorter=stronger' simplification",
+      "tags": ["argyrodite", "halogen", "charge", "mobility", "framework", "q-squared-over-r"]
+    },
+    {
+      "id": "yuwagemaker2023",
+      "authors": "Yu, Wagemaker, et al.",
+      "title": "Decoding disorder in Br-rich argyrodites",
+      "journal": "ACS",
+      "year": 2023,
+      "DOI": "PMC11823417",
+      "key_quote": "reduction of the electrostatic interaction between the 4d site and the surrounding Li cage. The intercage distance decreases and lithium movement is facilitated",
+      "key_content": "Site disorder -> weakened 4d anion-Li cage interaction -> intercage distance change -> faster Li transport. Direct support for site distribution mechanism.",
+      "supports_our_finding": [
+        "modelC v2 narrative: Cl 1.6/fu fills 4d (cage center) -> Li-Cl elongated, Li-S compressed",
+        "comp4 frustration: 4a/4d disorder maximum -> Madelung field disturbed -> S/P polarization weakened",
+        "Wad mechanism candidate: anion-cage interaction strength controls interface chemistry"
+      ],
+      "use_in_paper": "Section 2 + 4 mechanism backing",
+      "tags": ["argyrodite", "Br-rich", "disorder", "4d-site", "intercage", "Li-mobility"]
+    },
+    {
+      "id": "zhang2024_ionic_potential",
+      "authors": "Zhang et al.",
+      "title": "Ionic potential descriptor for argyrodite conductivity",
+      "year": 2024,
+      "DOI": "PMC11403572",
+      "key_quote": "introduce the ionic potential as a simple descriptor that predicts argyrodite conductivity by assessing the interaction strength between cations and anions",
+      "key_content": "Defines 'ionic potential' = q/r as descriptor for cation-anion interaction strength in argyrodites. Academic formalization of q*q/r approach we use.",
+      "supports_our_finding": [
+        "Our q*|q|/r proxy is the standard 'ionic potential' descriptor (publishable framework)",
+        "q*q/r ranking (Li-S > Li-Cl > Li-Br) directly corresponds to ionic potential trend",
+        "Allows paper Section 2 to cite established framework, not invent new"
+      ],
+      "use_in_paper": "Section 2 — METHOD: q*|q|/r framework. Cite as established descriptor.",
+      "tags": ["ionic-potential", "descriptor", "argyrodite", "framework", "method-ref"]
+    },
+    {
+      "id": "famprikis2019",
+      "authors": "Famprikis, T. et al.",
+      "title": "Substitutional disorder in Li6PS5X argyrodites",
+      "journal": "Phys. Chem. Chem. Phys.",
+      "year": 2019,
+      "DOI": "10.1039/C9CP00664H",
+      "key_quote": "the highest degree of anion disorder is found for Li6PS5Cl while cation disorder for the samples rich in Br",
+      "key_content": "Cl-only system shows max anion disorder; Br-rich shows cation disorder. Different disorder mechanisms by halogen.",
+      "supports_our_finding": [
+        "modelC (Cl-only): expected high 4a/4d Cl-S exchange -> our finding of Li-S compression supports",
+        "comp5 (Br-rich): cation disorder dominant -> different signature than mixed comp4",
+        "Differentiated halogen mechanisms in our 5-comp series"
+      ],
+      "use_in_paper": "Section 2 disorder framework; modelC vs comp5 distinction",
+      "tags": ["argyrodite", "disorder", "anion", "cation", "Cl", "Br"]
+    },
+    {
+      "id": "wagemaker2020_lideficient",
+      "authors": "Wagemaker et al.",
+      "title": "Li-deficient argyrodite review",
+      "journal": "Cell Reports Physical Science",
+      "year": 2020,
+      "key_quote": "Li-deficient Li5.5PS4.5Cl1.5 with a higher conductivity of 9.4 mS/cm... owing to increased S/Cl disorder and weakened Li-framework ion interactions",
+      "key_content": "Li-deficient + Cl-rich = enhanced disorder + weakened Li-framework = higher conductivity. Direct precedent for Li5.4PS4.4Cl1.6 (modelC).",
+      "supports_our_finding": [
+        "modelC narrative: Li5.4 vacancy + Cl 1.6 -> weakened framework -> consistent with elastic softening",
+        "B0 lower in Li5.4 family (modelC 21.7 < comp1 26.2) = framework weakening signature",
+        "Wad ~2x in Li5.4 family: vacancy-mediated NCM anchoring"
+      ],
+      "use_in_paper": "Section 2 + 3: Li5.4 family vacancy framework",
+      "tags": ["argyrodite", "Li-deficient", "Cl-rich", "vacancy", "framework", "Li5.4"]
+    },
+    {
+      "id": "zuo2023",
+      "authors": "Zuo et al.",
+      "title": "Chlorination interface impact in argyrodite-NCM",
+      "journal": "Angew. Chem. Int. Ed.",
+      "year": 2023,
+      "DOI": "10.1002/anie.202213228",
+      "key_quote": "Upon substitution of S2- with Cl-, the enhanced Li+ mobility leads to a higher ionic conductivity for Cl-rich argyrodite. However, the lower thermodynamic stability of Li5.5PS4.5Cl1.5 triggers a higher fraction of electrochemical decomposition",
+      "key_content": "Cl-rich enhances Li mobility but reduces thermodynamic stability at NCM interface. Trade-off between bulk conductivity and interfacial stability.",
+      "supports_our_finding": [
+        "Section 4 (adhesion + interface): Wad alone insufficient — must consider thermodynamic stability",
+        "modelC vs comp1-2 family: high Wad in Li5.4 may pay decomposition cost",
+        "Reviewer-counter for 'higher Wad always better' assumption"
+      ],
+      "use_in_paper": "Section 4 (adhesion) + Discussion (trade-offs)",
+      "tags": ["argyrodite", "NCM", "interface", "decomposition", "Cl-rich", "Wad", "trade-off"]
+    },
+    {
+      "id": "sicolo2022",
+      "authors": "Sicolo et al.",
+      "title": "NCM-LPSCl interface DFT",
+      "journal": "J. Phys. Chem. C",
+      "year": 2022,
+      "DOI": "10.1021/acs.jpcc.2c05336",
+      "key_quote": "increased Ni content leads to increased interfacial reactivity",
+      "key_content": "DFT study of LPSCl-NCM interface. Ni content controls reactivity. Direct precedent for our adhesion (paper #1) Section 4.",
+      "supports_our_finding": [
+        "Methodology backing: DFT + interface reactivity framework",
+        "Cite as prior art for our v5/v6/v8 adhesion protocols"
+      ],
+      "use_in_paper": "Section 4 method reference",
+      "tags": ["DFT", "interface", "LPSCl", "NCM", "Ni", "adhesion-method"]
+    },
+    {
+      "id": "gautam2023",
+      "authors": "Gautam et al.",
+      "title": "Halide substitution and disorder in argyrodites",
+      "journal": "Chem. Mater.",
+      "year": 2023,
+      "DOI": "10.1021/acs.chemmater.3c01525",
+      "key_quote": "Br- (4d) = 20%, Cl- (4d) = 60%... DFT simulations predict that the maximum conductivity may be achieved with around 75% site disorder",
+      "key_content": "Quantitative 4a/4d occupation ratios for Cl vs Br. Cl prefers 4d more than Br. Optimal disorder ~75%.",
+      "supports_our_finding": [
+        "modelC v2 Li-Cl 2.547 (vs comp1 v2 2.486): 4d-Cl occupation = longer Li-Cl average",
+        "Quantitative backing for 'Cl 1.6/fu fills 4d' narrative",
+        "comp3-5 mixed: different 4a/4d Cl/Br ratios drive bond length variation"
+      ],
+      "use_in_paper": "Section 2 site distribution narrative",
+      "tags": ["argyrodite", "4a", "4d", "site-occupation", "Cl", "Br", "quantitative"]
+    },
+    {
+      "id": "literature_summary_2026_05",
+      "_meta": "Summary entry — links above refs to our findings",
+      "title": "Literature backing for paper #1 bond/Bader analysis",
+      "compiled_date": "2026-05-05",
+      "key_refs_by_topic": {
+        "q2_over_r_framework": ["wilkening2019", "zhang2024_ionic_potential"],
+        "site_distribution_4a_4d": ["yuwagemaker2023", "famprikis2019", "gautam2023", "kraft2018"],
+        "Li_deficient_vacancy": ["wagemaker2020_lideficient", "adeli2019"],
+        "interface_NCM_chemistry": ["zuo2023", "sicolo2022"],
+        "argyrodite_structure_basics": ["deiseroth2006", "kraft2018"]
+      },
+      "narrative_alignment": {
+        "Section_2_bader_q2r": "wilkening2019 + zhang2024 establish framework; literature supports our Li-S>>Li-Cl>Li-Br ordering",
+        "Section_2_site_distribution": "gautam2023 + yuwagemaker2023 quantify 4a/4d occupation -> backs modelC v2 Li-Cl elongation",
+        "Section_2_comp4_frustration": "famprikis2019 anion disorder framework + our triple anomaly (S/P/Bader)",
+        "Section_3_mechanical": "wagemaker2020 Li-deficient framework + our B0/E softening trend",
+        "Section_4_adhesion": "zuo2023 + sicolo2022 NCM interface; trade-off conductivity vs stability"
+      },
+      "future_paper_txt_pending": "User will provide full text/figures of these refs as needed (per 2026-05-05 instruction). Mark this entry to revisit when papers acquired.",
+      "tags": ["literature", "summary", "paper1", "bond", "bader", "mechanism", "TODO-acquire-fulltext"]
     }
   ]
 }
