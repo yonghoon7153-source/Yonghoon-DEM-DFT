@@ -1062,18 +1062,22 @@
     {
       "id": "sicolo2022",
       "authors": "Sicolo et al.",
-      "title": "NCM-LPSCl interface DFT",
+      "title": "Interfacial Stability of Layered LiNixMnyCo1-x-yO2 Cathodes with Sulfide Solid Electrolytes in All-Solid-State Rechargeable Lithium-Ion Batteries from First-Principles Calculations",
       "journal": "J. Phys. Chem. C",
       "year": 2022,
       "DOI": "10.1021/acs.jpcc.2c05336",
+      "title_verified": "2026-05-05 (user-confirmed)",
+      "DOI_status": "previously suspected hallucinated; title confirmed by user, DOI presumed real",
       "key_quote": "increased Ni content leads to increased interfacial reactivity",
-      "key_content": "DFT study of LPSCl-NCM interface. Ni content controls reactivity. Direct precedent for our adhesion (paper #1) Section 4.",
+      "key_content": "DFT study of NCM-sulfide-electrolyte interface. Ni content (in LiNixMnyCo1-x-yO2) controls reactivity. Title explicitly covers our system: NCM cathode + sulfide SE + first-principles. Direct precedent for paper #1 Section 4 adhesion protocol.",
+      "system_match_with_us": "NCM (LiNiO2-class) on sulfide electrolyte (Li6PS5Cl-class) — exact same systems we analyze. DFT ground-state interface = our MLIP equivalent at finite T.",
       "supports_our_finding": [
-        "Methodology backing: DFT + interface reactivity framework",
-        "Cite as prior art for our v5/v6/v8 adhesion protocols"
+        "Methodology backing: DFT + NCM-sulfide interface reactivity framework",
+        "Cite as prior art for our v5/v6 adhesion protocols (1L NCM on SE, Wad calculation)",
+        "Ni-content reactivity link supports our LiNiO2 model choice"
       ],
-      "use_in_paper": "Section 4 method reference",
-      "tags": ["DFT", "interface", "LPSCl", "NCM", "Ni", "adhesion-method"]
+      "use_in_paper": "Section 4 (adhesion) METHOD reference + Discussion (interface reactivity baseline)",
+      "tags": ["DFT", "interface", "LPSCl", "NCM", "Ni", "Mn", "Co", "adhesion-method", "first-principles", "all-solid-state-battery", "sulfide-electrolyte"]
     },
     {
       "id": "gautam2023",
