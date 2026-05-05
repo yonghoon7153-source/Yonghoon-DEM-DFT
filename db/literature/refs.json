@@ -1051,19 +1051,21 @@
     {
       "id": "gautam2023",
       "authors": "Gautam et al.",
-      "title": "Halide substitution and disorder in argyrodites",
+      "title": "Exploring the Relationship Between Halide Substitution, Structural Disorder, and Lithium Distribution in Lithium Argyrodites (Li6-xPS5-xBr1+x)",
       "journal": "Chem. Mater.",
       "year": 2023,
       "DOI": "10.1021/acs.chemmater.3c01525",
+      "title_verified": "2026-05-05 (user-confirmed)",
       "key_quote": "Br- (4d) = 20%, Cl- (4d) = 60%... DFT simulations predict that the maximum conductivity may be achieved with around 75% site disorder",
-      "key_content": "Quantitative 4a/4d occupation ratios for Cl vs Br. Cl prefers 4d more than Br. Optimal disorder ~75%.",
+      "key_content": "Quantitative 4a/4d occupation ratios for Cl vs Br. Cl prefers 4d more than Br. Optimal disorder ~75%. Studies Li6-xPS5-xBr1+x (Br-rich) with comparison to Li6-xPS5-xCl1+x (Cl-rich, identical to our modelC stoichiometry).",
+      "system_match_with_us": "Li6-xPS5-xCl1+x at x=0.6 is EXACTLY our modelC (Li5.4PS4.4Cl1.6). Direct quantitative reference for our 4a/4d narrative.",
       "supports_our_finding": [
         "modelC v2 Li-Cl 2.547 (vs comp1 v2 2.486): 4d-Cl occupation = longer Li-Cl average",
         "Quantitative backing for 'Cl 1.6/fu fills 4d' narrative",
         "comp3-5 mixed: different 4a/4d Cl/Br ratios drive bond length variation"
       ],
-      "use_in_paper": "Section 2 site distribution narrative",
-      "tags": ["argyrodite", "4a", "4d", "site-occupation", "Cl", "Br", "quantitative"]
+      "use_in_paper": "Section 2 site distribution narrative — primary citation for modelC 4a/4d split",
+      "tags": ["argyrodite", "4a", "4d", "site-occupation", "Cl", "Br", "quantitative", "Li6-xPS5-xBr1+x", "Li6-xPS5-xCl1+x", "modelC-match"]
     },
     {
       "id": "literature_summary_2026_05",
