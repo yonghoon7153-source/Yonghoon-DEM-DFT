@@ -1026,20 +1026,28 @@
       "tags": ["argyrodite", "disorder", "anion", "cation", "Cl", "Br"]
     },
     {
-      "id": "wagemaker2020_lideficient",
-      "authors": "Wagemaker et al.",
-      "title": "Li-deficient argyrodite review",
-      "journal": "Cell Reports Physical Science",
-      "year": 2020,
-      "key_quote": "Li-deficient Li5.5PS4.5Cl1.5 with a higher conductivity of 9.4 mS/cm... owing to increased S/Cl disorder and weakened Li-framework ion interactions",
-      "key_content": "Li-deficient + Cl-rich = enhanced disorder + weakened Li-framework = higher conductivity. Direct precedent for Li5.4PS4.4Cl1.6 (modelC).",
+      "id": "_DELETED_wagemaker2020_lideficient",
+      "_status": "REMOVED — confirmed LLM hallucination via CrossRef search (2026-05-05)",
+      "_reason": "No matching paper found in Wagemaker 2019-2021 argyrodite search. The 9.4 mS/cm Li-deficient Li5.5PS4.5Cl1.5 quote was actually attributed to Nazar et al. (i.e., adeli2019). Replaced by wang2019_li6ps5cl0p5br0p5 from same search (verified Wagemaker group paper).",
+      "_replaced_by": ["adeli2019 (for Li-deficient discovery)", "wang2019_li6ps5cl0p5br0p5 (for Wagemaker group reference)"]
+    },
+    {
+      "id": "wang2019_li6ps5cl0p5br0p5",
+      "authors": "Wang, Yu, Ganapathy, van Eck, van Eijck (Wagemaker group)",
+      "title": "A lithium argyrodite Li6PS5Cl0.5Br0.5 electrolyte with improved bulk and interfacial conductivity",
+      "journal": "J. Power Sources",
+      "year": 2019,
+      "DOI": "10.1016/j.jpowsour.2018.11.029",
+      "title_verified": "2026-05-05 (CrossRef confirmed)",
+      "system_match_with_us": "Li6PS5Cl0.5Br0.5 = our comp2 EXACTLY. Same Li6 family, same Cl=0.5/Br=0.5 stoichiometry. Direct experimental precedent for our DFT/MLIP analysis of comp2.",
+      "key_content": "Mixed Cl/Br substitution in Li6 argyrodite — improved bulk conductivity AND interfacial conductivity (cathode side). Wagemaker group's experimental characterization of the system we computationally analyze.",
       "supports_our_finding": [
-        "modelC narrative: Li5.4 vacancy + Cl 1.6 -> weakened framework -> consistent with elastic softening",
-        "B0 lower in Li5.4 family (modelC 21.7 < comp1 26.2) = framework weakening signature",
-        "Wad ~2x in Li5.4 family: vacancy-mediated NCM anchoring"
+        "comp2 (Li6PS5Cl0.5Br0.5) is well-established system — our v2 anneal champion structure relates to this experimental composition",
+        "Mixed Cl/Br = both bulk + interfacial conductivity improvement (matches our Wad 1.18 J/m² for comp2B)",
+        "Validates our halogen substitution strategy"
       ],
-      "use_in_paper": "Section 2 + 3: Li5.4 family vacancy framework",
-      "tags": ["argyrodite", "Li-deficient", "Cl-rich", "vacancy", "framework", "Li5.4"]
+      "use_in_paper": "Section 1 (system motivation) + Section 4 (interfacial conductivity precedent for comp2)",
+      "tags": ["argyrodite", "Li6PS5Cl0.5Br0.5", "comp2-match", "experimental", "interfacial-conductivity", "Wagemaker-group"]
     },
     {
       "id": "zuo2023",
