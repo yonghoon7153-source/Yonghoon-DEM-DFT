@@ -681,6 +681,21 @@ def solve_network(network_data, mode='full', return_field=False):
     # σ_ratio = σ_eff / σ_bulk = G_eff × T / A  (dimensionless when ρ=1)
     sigma_ratio = G_eff * T_um / A_um2
 
+    # Output-level sanity check: σ_eff cannot exceed σ_bulk for a porous
+    # composite (sigma_ratio = σ_eff/σ_bulk should be ≤ 1 for any
+    # microstructure containing void/insulator phases). Values > 1.5
+    # indicate the solver mis-converged to a non-physical state for this
+    # topology — even when G/Σg appears valid, the absolute σ_ratio
+    # being > 1 violates a different physical bound. Reject.
+    if sigma_ratio > 1.5:
+        if os.environ.get('NETWORK_DEBUG'):
+            print(f"  ⚠ sigma_ratio={sigma_ratio:.3f} > 1.5 — non-physical "
+                  f"(σ_eff cannot exceed σ_bulk for porous composite). "
+                  f"Returning None.")
+        if return_field:
+            return None, None, None
+        return None, None
+
     if return_field:
         # Per-node voltages (percolating component only)
         node_V = {nid: float(V[id_to_idx[nid]]) for nid in all_ids}
