@@ -583,6 +583,49 @@ def solve_network(network_data, mode='full', return_field=False):
     # G_eff = I / ΔV = 1.0 / V_source  (since I=1, V_sink=0)
     G_eff = 1.0 / V_source
 
+    # ── Sanity check: G_eff must satisfy G_eff ≤ Σg_bulk (mathematical
+    #    upper bound for any electrical network — all bulk edges in
+    #    parallel between source and sink).
+    #    spsolve LU mis-converges for some sparse-graph topologies (e.g.
+    #    Stage E modified contacts where σ_factor scaling creates wide
+    #    g dynamic range), producing G_eff > Σg_bulk by 5-10×. Detect
+    #    this violation and retry with CG (which handles ill-conditioning
+    #    better via iterative solver and natural regularization).
+    sum_g_check = 0.0
+    for e in perc_edges:
+        if mode == 'full':       _R = e['R_total']
+        elif mode == 'bulk_only': _R = e['R_bulk'] if e['R_bulk'] > 0 else 1e-12
+        elif mode == 'constriction_only': _R = e['R_constriction']
+        else:                     _R = e['R_total']
+        if _R and _R > 0:
+            sum_g_check += 1.0 / _R
+
+    if G_eff > sum_g_check * 1.5 and solve_method == 'spsolve':
+        # spsolve gave non-physical G_eff. Retry with CG.
+        if os.environ.get('NETWORK_DEBUG'):
+            print(f"  ⚠ spsolve G_eff={G_eff:.3e} > 1.5·Σg={sum_g_check:.3e} "
+                  f"— retrying with CG …")
+        try:
+            try:
+                V_cg, info_cg = cg(L_csr, b, tol=1e-8, maxiter=20000)
+            except TypeError:
+                V_cg, info_cg = cg(L_csr, b, atol=1e-8, maxiter=20000)
+            V_src_cg = V_cg[source_idx] if V_cg is not None else 0.0
+            if info_cg == 0 and V_src_cg > 1e-12:
+                G_eff_cg = 1.0 / V_src_cg
+                if G_eff_cg <= sum_g_check * 1.2:
+                    # CG result is mathematically valid — adopt it
+                    V = V_cg
+                    V_source = V_src_cg
+                    G_eff = G_eff_cg
+                    solve_method = "cg_after_spsolve"
+                    if os.environ.get('NETWORK_DEBUG'):
+                        print(f"  ✓ CG retry succeeded: G_eff={G_eff:.3e}, "
+                              f"G/Σg={G_eff/sum_g_check:.3f}")
+        except Exception as cg_err:
+            if os.environ.get('NETWORK_DEBUG'):
+                print(f"  ✗ CG retry failed: {cg_err}; keeping spsolve result")
+
     # ── Anomaly diagnostic: sanity-bound G_eff against sum-of-conductances ─
     # Theoretical upper bound: G_eff ≤ Σ g  (all edges in parallel between
     # source and sink — physically impossible to exceed). When numerical
