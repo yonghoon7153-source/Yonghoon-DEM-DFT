@@ -1,4 +1,4 @@
-# Wad Mechanism Refutation — 빡대가리용 설명
+# Wad Mechanism Refutation — 직관적 설명
 
 > [!error] 저자 주장 (빨간 줄)
 > "The Li–Cl bond is shorter and more ionic than the Li–S and Li–Br bonds, which strengthens electrostatic interactions at the interface."
