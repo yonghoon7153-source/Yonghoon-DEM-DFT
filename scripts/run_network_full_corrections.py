@@ -368,6 +368,30 @@ def apply_corrections(atoms_df: pd.DataFrame, contacts_df: pd.DataFrame,
             df_ionic[col] = df_ionic[col].astype(float) * factors_ionic
             df_e[col]     = df_e[col].astype(float) * factors_e
             df_kappa[col] = df_kappa[col].astype(float) * factors_kappa
+
+    # Drop edges whose total factor falls below MIN_FACTOR_CUTOFF (default
+    # 0.05 = 5 % of original conductance). This is the same philosophy as
+    # Stage C's binary cutoff: contacts in the pulverization stage
+    # (σ_factor 0.02) combined with AM_P grain factor (0.65) leave
+    # contact_area at ~1.3 % of original — these are essentially-broken
+    # contacts that the solver should treat as severed, not as ill-
+    # conditioned tiny-g edges that destabilise the LU solve.
+    #
+    # Empirically, keeping these tiny edges produced σ_e Stage E values
+    # 5-130× higher than baseline for 10/80 cases — mathematically
+    # impossible because Stage E's σ_factor ≤ 1 must reduce σ. Dropping
+    # them eliminates the matrix dynamic-range explosion that causes
+    # spsolve to mis-converge.
+    MIN_FACTOR_CUTOFF = 0.05
+    n_orig = len(df_e)
+    df_e = df_e[factors_e >= MIN_FACTOR_CUTOFF].reset_index(drop=True)
+    df_ionic = df_ionic[factors_ionic >= MIN_FACTOR_CUTOFF].reset_index(drop=True)
+    df_kappa = df_kappa[factors_kappa >= MIN_FACTOR_CUTOFF].reset_index(drop=True)
+    factors_summary['n_dropped_e'] = n_orig - len(df_e)
+    factors_summary['n_dropped_ionic'] = n_orig - len(df_ionic)
+    factors_summary['n_dropped_kappa'] = n_orig - len(df_kappa)
+    factors_summary['min_factor_cutoff'] = MIN_FACTOR_CUTOFF
+
     return df_ionic, df_e, df_kappa, factors_summary
 
 
