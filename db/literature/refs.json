@@ -1040,10 +1040,11 @@
     {
       "id": "zuo2023",
       "authors": "Zuo et al.",
-      "title": "Chlorination interface impact in argyrodite-NCM",
+      "title": "Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid-State Batteries",
       "journal": "Angew. Chem. Int. Ed.",
       "year": 2023,
       "DOI": "10.1002/anie.202213228",
+      "title_verified": "2026-05-05 (user-confirmed)",
       "key_quote": "Upon substitution of S2- with Cl-, the enhanced Li+ mobility leads to a higher ionic conductivity for Cl-rich argyrodite. However, the lower thermodynamic stability of Li5.5PS4.5Cl1.5 triggers a higher fraction of electrochemical decomposition",
       "key_content": "Cl-rich enhances Li mobility but reduces thermodynamic stability at NCM interface. Trade-off between bulk conductivity and interfacial stability.",
       "supports_our_finding": [
