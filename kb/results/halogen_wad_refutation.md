@@ -200,27 +200,140 @@ comp5 v1        0.326         (~1.0)
 
 ## 🔄 대안 mechanism (저자에게 제안할 multi-factor framework)
 
-### 1. Site distribution effect (4a/4c/4d Wyckoff)
-- Br는 4a (loose cage) 선호 (size match)
-- Cl는 Br 양에 따라 site 변동: Br 충분(comp2)이면 4c/4d로 밀림, Br 부족하면 4a까지 채움
-- Backed by: gautam2023, yuwagemaker2023, kraft2018
+> [!note] Robustness 등급
+> - ⭐⭐⭐ **PRIMARY** (paper-quality 직접 증명) — Factor 1, 2
+> - ⭐ **SUPPLEMENTARY** (qualitative, future work 필요) — Factor 3, 4
 
-### 2. Li vacancy mechanism
+---
+
+### ⭐⭐⭐ Factor 1: Site distribution (4a/4c/4d Wyckoff) — PRIMARY
+
+**핵심 주장:**
+- **Br⁻는 항상 4a site (loose cage) 선호** — 큰 anion이 큰 cage에 fit
+- **Cl⁻ 분포는 Br 양에 따라 변동**:
+  - Br 충분 (comp2): Cl이 4c/4d로 밀려남 (100% segregation)
+  - Br 부족 (comp3-5): Cl이 빈 4a 자리도 채움
+  - Br 없음 (modelC): Cl이 4a 5개 모두 차지 + 4c/4d로 진입
+
+**증거 강도:** 우리 DFT ground state structure에서 ==**6/6 comp 모두 fractional coords로 직접 측정**==
+
+**근거 논문:**
+1. **Gautam et al. (Chem. Mater. 2023)**: *"Exploring the Relationship Between Halide Substitution, Structural Disorder, and Lithium Distribution in Lithium Argyrodites (Li₆₋ₓPS₅₋ₓBr₁₊ₓ)"* — DOI: 10.1021/acs.chemmater.3c01525
+   → Br 4a = 80%, Cl 4d = 60% 정량 데이터 + 우리 modelC와 동일 stoichiometry framework
+   
+2. **Yu, Wagemaker et al. (ACS 2023)**: *"From anionic disorder to fast ion transport in Br-rich argyrodites"*
+   → 4d-Li cage interaction 약화 메커니즘
+   
+3. **Kraft et al. (J. Am. Chem. Soc. 2018, Vol 140, p 16330)**: *"Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li₆PS₅X (X = Cl, Br, I)"* — DOI: 10.1021/jacs.7b06327
+   → halogen site 점유가 Li 이동 경로 결정
+
+→ ==**우리 직접 측정 + 3개 실험 논문 backing = reviewer-proof**==
+
+---
+
+### ⭐⭐⭐ Factor 2: Li vacancy mechanism — PRIMARY
+
+**핵심 주장:**
 - Cl 1.6/fu = Li 5.4/fu (charge-balance vacancy)
-- V_Li at interface → mobile Li → NCM 산소와 화학 결합 형성
-- Backed by: adeli2019, wang2019
+- Li 결핍 → framework Coulomb 약화 → B0 -17% softening (우리 측정)
+- 표면 Li 결핍 → mobile Li → NCM 산소와 interfacial bond 형성 가능성
 
-### 3. Interface size matching
-- Cl⁻ (1.81 Å) closer to NCM O²⁻ (1.40 Å) than Br⁻ (1.96 Å)
-- Geometric compatibility at interface
-- Backed by: **zuo2023**, sicolo2022
+**증거 강도:** 우리 system이 adeli2019 시스템과 ==**정확히 동일**==
 
-### 4. Polarizability angle (charge localization)
-- Cl⁻ less polarizable → charge localized at interface (stronger anchor)
-- Br⁻ more polarizable → charge dispersed (weaker anchor)
-- Backed by: kraft2018 (lattice polarizability framework)
+**근거 논문:**
+1. **Adeli, Nazar et al. (Angew. Chem. Int. Ed. 2019, Vol 58, p 8681)**: *"Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution"*
+   → ==**Li(6-x)PS(5-x)Cl(1+x) framework, x=0.6일 때 Li5.4PS4.4Cl1.6 = 우리 modelC EXACTLY**==
+   → "Cl-rich → Li vacancy 형성 → activation barrier 감소" 메커니즘 직접 보고
+   
+2. **Wang, Yu, Ganapathy, van Eck, van Eijck (Wagemaker group, J. Power Sources 2019)**: *"A lithium argyrodite Li₆PS₅Cl₀.₅Br₀.₅ electrolyte with improved bulk and interfacial conductivity"* — DOI: 10.1016/j.jpowsour.2018.11.029
+   → ==**Li6PS5Cl0.5Br0.5 = 우리 comp2 EXACTLY**==
+   → "improved bulk AND interfacial conductivity" 직접 보고 — Wad enhancement 실험 증거
 
-==**4-factor framework이 single-mechanism 보다 robust + 모든 trend 설명 가능**==.
+→ ==**우리 측정 (B0 softening, Bader P 약화) + 2개 시스템-매칭 논문 = reviewer-proof**==
+
+---
+
+### ⭐ Factor 3: Interface size matching — SUPPLEMENTARY
+
+> [!warning] Status: ==**hypothetical, supplementary only**==
+> ⚠️ **Future work**: 정량 검증 필요 (interface DFT 직접 계산)
+
+**핵심 주장 (정성적):**
+- Cl⁻ (1.81 Å) ↔ NCM O²⁻ (1.40 Å): Δr = +29%
+- Br⁻ (1.96 Å) ↔ NCM O²⁻ (1.40 Å): Δr = +40%
+- Cl이 size 측면에서 O와 더 가까움 → geometric compatibility 가능성
+
+**근거 논문 (간접):**
+1. **Zuo et al. (Angew. Chem. Int. Ed. 2023)**: *"Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid-State Batteries"* — DOI: 10.1002/anie.202213228
+   → Cl-rich의 interface impact 보고 (size matching 직접 다루지는 않음)
+   
+2. **Sicolo et al. (J. Phys. Chem. C 2022)**: *"Interfacial Stability of Layered LiNiₓMnᵧCo₁₋ₓ₋ᵧO₂ Cathodes with Sulfide Solid Electrolytes in All-Solid-State Rechargeable Lithium-Ion Batteries from First-Principles Calculations"* — DOI: 10.1021/acs.jpcc.2c05336
+   → NCM-sulfide DFT framework (Ni content focus, Cl size matching 직접 보고 안 함)
+
+**한계:**
+- ❌ 우리 자체 interface DFT 측정 없음
+- ❌ 인용 논문도 size matching argument 직접 다루지 않음
+- ❌ 둘 다 O보다 큰데 "Cl이 더 fit"이라는 주장은 정성적
+
+==**Paper에서 처리 방법:**==
+> "In addition, the smaller ionic radius of Cl⁻ (1.81 Å) compared to Br⁻ (1.96 Å) may provide better geometric compatibility with the NCM cathode oxide framework (O²⁻ 1.40 Å). However, **direct interface DFT verification of this size-matching argument remains as future work**."
+
+---
+
+### ⭐ Factor 4: Polarizability / charge localization — SUPPLEMENTARY
+
+> [!warning] Status: ==**qualitative, supplementary only**==
+> ⚠️ **Future work**: charge density at interface 직접 plot 필요
+
+**핵심 주장 (정성적):**
+- Cl⁻ 작고 less polarizable → charge가 Cl 위에 localized → stronger interfacial anchor 가능성
+- Br⁻ 크고 more polarizable → charge dispersed → weaker anchor 가능성
+- 우리 Bader: |q(Cl)| = 0.914 vs |q(Br)| = 0.891 (Cl 더 localized, **+2.5%**)
+
+**근거 논문:**
+1. **Kraft et al. (J. Am. Chem. Soc. 2018)**: lattice polarizability framework (Factor 1과 동일 ref)
+   → Halogen polarizability 차이가 ionic conductivity에 영향 (interface 직접 다루지 않음)
+
+**한계:**
+- ⚠️ Bader 차이 작음 (+2.5%) — Wad 차이 (~70% comp1 vs modelC) 설명하기엔 약함
+- ❌ "Stronger anchor" mechanism 직접 측정 안 됨
+
+==**Paper에서 처리 방법:**==
+> "Furthermore, the smaller polarizability of Cl⁻ (vs. Br⁻) may yield more localized charge at the SE-NCM interface, potentially providing a stronger electrostatic anchor. **Quantitative verification via interface charge density analysis is suggested as future work**."
+
+---
+
+### 📊 4-Factor 종합
+
+| Factor | Status | 우리 측정 | 핵심 ref | Paper-ready? |
+|--------|--------|-----------|----------|--------------|
+| **1. Site distribution** | ⭐⭐⭐ PRIMARY | ✅ 6/6 comp 직접 검증 | gautam2023, yuwagemaker2023, kraft2018 | ✅ YES |
+| **2. Li vacancy** | ⭐⭐⭐ PRIMARY | ✅ B0 softening + Bader | adeli2019 ⭐ system match, wang2019 | ✅ YES |
+| **3. Interface size match** | ⭐ SUPPL | ❌ 직접 측정 없음 | zuo2023, sicolo2022 (간접) | ⚠️ Future work flag |
+| **4. Polarizability** | ⭐ SUPPL | ⚠️ Bader 차이 작음 | kraft2018 (간접) | ⚠️ Future work flag |
+
+==**Primary mechanism (1+2)은 publish-ready, supplementary (3+4)는 future work로 명시**==.
+
+---
+
+### 🎯 Paper rebuttal에서 단계별 사용
+
+```
+1단계 (강한 펀치): Factor 1 + 우리 데이터
+   "Cl-Br site distribution differs in 우리 ground state 측정"
+   "Br→4a, Cl→4c/4d (comp2), or fills based on Br availability"
+
+2단계 (보강): Factor 2 + adeli2019 system match
+   "Li vacancy mechanism per adeli2019 (same x=0.6 system)"
+   "Wang2019 also shows interfacial conductivity for our comp2"
+
+3단계 (보충, future work flag):
+   "Additional secondary mechanisms (size matching, polarizability)
+    may contribute, though their quantitative validation requires
+    dedicated interface DFT calculations as future work."
+```
+
+==**1+2가 main argument, 3+4는 mention only**==. 저자 narrative 깨기엔 1+2만으로 충분.
 
 ---
 
