@@ -1,0 +1,65 @@
+#!/bin/bash
+# Wrapper to bypass markdown auto-linkification of *.py paths in some terminals
+# Usage:
+#   bash scripts/run sec7                    — Section 7 analysis
+#   bash scripts/run stagee CASE_ID          — Stage E for one case
+#   bash scripts/run stagec CASE_ID          — Stage C for one case
+#   bash scripts/run staged CASE_ID          — Stage D for one case
+#   bash scripts/run baseline CASE_ID        — baseline σ recompute
+#   bash scripts/run tabor                   — Tabor regime histogram
+#   bash scripts/run voxelize CASE_ID        — voxelize for FFT
+#   bash scripts/run fft CASE_ID             — FFT homogenize
+#   bash scripts/run diagS7                  — Section 7 anomaly diag
+#   bash scripts/run all-stagee CASES…       — Stage E rerun for multiple cases
+set -e
+cmd="$1"; shift || true
+case "$cmd" in
+    sec7)
+        python3 scripts/section7_fracture_aware_analysis.py "$@"
+        ;;
+    stagec)
+        python3 scripts/run_network_fracture_aware.py "$@"
+        ;;
+    staged)
+        python3 scripts/run_network_fracture_stagewise.py "$@"
+        ;;
+    stagee)
+        python3 scripts/run_network_full_corrections.py "$@"
+        ;;
+    baseline)
+        python3 scripts/run_network_all.py "$@"
+        ;;
+    tabor)
+        python3 scripts/analyze_tabor_regime.py --plot --pair SE-SE "$@"
+        ;;
+    voxelize)
+        python3 scripts/voxelize_microstructure.py "$@"
+        ;;
+    fft)
+        python3 scripts/fft_homogenize.py "$@"
+        ;;
+    diagS7)
+        python3 scripts/diag_section7_anomalies.py --show-csv "$@"
+        ;;
+    diagPhys)
+        python3 scripts/diag_stage_e_sigma_ionic.py "$@"
+        ;;
+    all-stagee)
+        # Iterate cases passed as args, run Stage E for each
+        for c in "$@"; do
+            echo "=== Stage E retry: $c ==="
+            python3 scripts/run_network_full_corrections.py "$c" || \
+                echo "    ✗ failed for $c"
+        done
+        ;;
+    *)
+        echo "Usage: bash scripts/run {sec7|stagec|staged|stagee|baseline|"
+        echo "                          tabor|voxelize|fft|diagS7|diagPhys|"
+        echo "                          all-stagee} [args]"
+        echo ""
+        echo "Bypasses the markdown auto-link conversion of *.py paths in"
+        echo "some terminals (Windows Terminal, etc.) when copy-pasting from"
+        echo "the chat UI. Direct typing of full python3 commands also works."
+        exit 1
+        ;;
+esac
