@@ -123,7 +123,7 @@ def voxelize(case_dir: Path, voxels_per_r_min: int = 5,
         type_map = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
     scale = float(meta.get('scale', 1000))
 
-    # Read input_params for box
+    # Read input_params for box (xy extent — z will be cropped to pellet top)
     ip_path = case_dir / 'input_params.json'
     if not ip_path.exists():
         if not quiet:
@@ -132,7 +132,32 @@ def voxelize(case_dir: Path, voxels_per_r_min: int = 5,
     ip = json.load(open(ip_path))
     box_x_sim = float(ip.get('box_x', 0.05))
     box_y_sim = float(ip.get('box_y', 0.05))
-    box_z_sim = float(ip.get('box_z', 0.095))
+    # box_z from input_params is the LIGGGHTS simulation domain — typically
+    # 3-5× larger than the actual pellet height (extra space for particle
+    # settling + mesh cap above). For FFT homogenization we must voxelize
+    # ONLY the pellet region; otherwise the "empty cap" region inflates
+    # void fraction and breaks AM percolation paths (FFT under-estimates
+    # σ_e by 10-100×).
+    box_z_sim_input = float(ip.get('box_z', 0.095))
+
+    # Determine actual pellet top: prefer mesh_info.json (plate_z), fall back
+    # to max(z + radius) of atoms. The pellet starts at z=0 (bottom plate).
+    mesh_p = case_dir / 'mesh_info.json'
+    plate_z_sim = None
+    if mesh_p.exists():
+        try:
+            plate_z_sim = float(json.load(open(mesh_p)).get('plate_z'))
+        except Exception:
+            plate_z_sim = None
+    if plate_z_sim is None or plate_z_sim <= 0:
+        # Fallback: max(z + radius) of atoms = top of highest particle
+        # This matches network_conductivity.py:913 fallback behavior
+        atoms_for_z = pd.read_csv(case_dir / 'atoms.csv',
+                                    usecols=['z', 'radius'])
+        plate_z_sim = float((atoms_for_z['z'] + atoms_for_z['radius']).max())
+
+    # Use plate_z as the voxelization z-extent (cropped from box_z)
+    box_z_sim = plate_z_sim
 
     # Real-μm extent
     box_x_um = box_x_sim * 1e6 / scale
@@ -153,12 +178,18 @@ def voxelize(case_dir: Path, voxels_per_r_min: int = 5,
 
     if not quiet:
         print(f'  {case_dir.name}:')
-        print(f'    box       : {box_x_um:.1f} × {box_y_um:.1f} × {box_z_um:.1f} μm')
-        print(f'    r_min     : {r_min_um:.3f} μm')
-        print(f'    voxel     : {voxel_um:.4f} μm  '
+        print(f'    box (sim)   : {box_x_sim*1e6/scale:.1f} × '
+              f'{box_y_sim*1e6/scale:.1f} × {box_z_sim_input*1e6/scale:.1f} μm '
+              f'(LIGGGHTS domain)')
+        print(f'    plate_z     : {plate_z_sim*1e6/scale:.2f} μm  '
+              f'(pellet top — voxelization cropped here)')
+        print(f'    voxel box   : {box_x_um:.1f} × {box_y_um:.1f} × '
+              f'{box_z_um:.1f} μm')
+        print(f'    r_min       : {r_min_um:.3f} μm')
+        print(f'    voxel       : {voxel_um:.4f} μm  '
               f'({voxels_per_r_min} per r_min)')
-        print(f'    grid      : {nx} × {ny} × {nz} = {n_total/1e6:.1f} M voxels')
-        print(f'    memory    : {n_total/1024**2:.0f} MB (uint8)')
+        print(f'    grid        : {nx} × {ny} × {nz} = {n_total/1e6:.1f} M voxels')
+        print(f'    memory      : {n_total/1024**2:.0f} MB (uint8)')
 
     if n_total > 5e8:
         if not quiet:
@@ -177,6 +208,14 @@ def voxelize(case_dir: Path, voxels_per_r_min: int = 5,
     r_um = atoms['radius'].values * 1e6 / scale
     types = atoms['type'].values.astype(int)
 
+    # Skip atoms whose center is above plate_z (they belong to the empty cap
+    # region that we excluded from the voxel grid; partial overlap into
+    # plate_z is naturally handled by the bounding-box clamping below).
+    in_pellet = z_um <= box_z_um + r_um.max()
+    if not in_pellet.all() and not quiet:
+        n_skip = int((~in_pellet).sum())
+        print(f'    skipped {n_skip} atoms above plate_z (cap region)')
+
     # Map atom type → phase label → priority order
     pri_idx = {lbl: i for i, lbl in enumerate(priority)}
     # Lower idx = higher priority (drawn last → wins)
@@ -189,6 +228,8 @@ def voxelize(case_dir: Path, voxels_per_r_min: int = 5,
 
     t0 = time.time()
     for i_atom_idx, atom_idx in enumerate(order):
+        if not in_pellet[atom_idx]:
+            continue
         cx, cy, cz = x_um[atom_idx], y_um[atom_idx], z_um[atom_idx]
         r = r_um[atom_idx]
         phase = _phase_id_for_label(type_to_label.get(types[atom_idx], ''))
