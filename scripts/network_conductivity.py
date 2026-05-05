@@ -600,10 +600,12 @@ def solve_network(network_data, mode='full', return_field=False):
         if _R and _R > 0:
             sum_g_check += 1.0 / _R
 
-    if G_eff > sum_g_check * 1.5 and solve_method == 'spsolve':
-        # spsolve gave non-physical G_eff. Retry with CG.
+    if G_eff > sum_g_check * 1.1 and solve_method == 'spsolve':
+        # spsolve gave non-physical G_eff (mathematical bound G ≤ Σg
+        # violated). Threshold 1.1 catches even mild violations; basic
+        # numerical noise typically stays within 1.05.
         if os.environ.get('NETWORK_DEBUG'):
-            print(f"  ⚠ spsolve G_eff={G_eff:.3e} > 1.5·Σg={sum_g_check:.3e} "
+            print(f"  ⚠ spsolve G_eff={G_eff:.3e} > 1.1·Σg={sum_g_check:.3e} "
                   f"— retrying with CG …")
         cg_succeeded = False
         try:
@@ -614,8 +616,8 @@ def solve_network(network_data, mode='full', return_field=False):
             V_src_cg = V_cg[source_idx] if V_cg is not None else 0.0
             if info_cg == 0 and V_src_cg > 1e-12:
                 G_eff_cg = 1.0 / V_src_cg
-                if G_eff_cg <= sum_g_check * 1.2:
-                    # CG result is mathematically valid — adopt it
+                if G_eff_cg <= sum_g_check * 1.1:
+                    # CG result mathematically valid — adopt it
                     V = V_cg
                     V_source = V_src_cg
                     G_eff = G_eff_cg
@@ -626,7 +628,7 @@ def solve_network(network_data, mode='full', return_field=False):
                               f"G/Σg={G_eff/sum_g_check:.3f}")
                 elif os.environ.get('NETWORK_DEBUG'):
                     print(f"  ✗ CG retry insufficient: G_eff_cg={G_eff_cg:.3e} "
-                          f"still > 1.2·Σg={1.2*sum_g_check:.3e}")
+                          f"still > 1.1·Σg={1.1*sum_g_check:.3e}")
         except Exception as cg_err:
             if os.environ.get('NETWORK_DEBUG'):
                 print(f"  ✗ CG retry failed: {cg_err}")
