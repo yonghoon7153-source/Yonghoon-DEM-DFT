@@ -1,0 +1,76 @@
+# =====================================================================
+#  Single VGCF fiber - cantilever bending sanity test
+#  - left tip fixed (setforce 0 0 0)
+#  - gravity in -z; watch tip droop
+#  - "너무 말랑말랑하지만 않으면 OK"
+# =====================================================================
+
+units           si
+atom_style      hybrid sphere bond
+boundary        f f f
+newton          on
+
+# bond/angle styles for fiber backbone
+bond_style      harmonic
+angle_style     harmonic
+special_bonds   lj/coul 0.0 0.0 0.0     # turn off pair between 1-2, 1-3, 1-4
+
+read_data       fiber.data
+
+# ---- bond / angle stiffness (from gen_fiber.py) ----
+#   E=6e8 Pa, r=5e-4 m, L0=1e-3 m
+#   K_bond  = E*A / (2*L0) = 2.356e+05   [J/m^2]
+#   K_angle = E*I / (2*L0) = 1.473e-02   [J/rad^2]
+# angle_style harmonic: theta0 in degrees, K in energy/rad^2
+bond_coeff      1   2.356e+05   1.0e-3
+angle_coeff     1   1.473e-02   180.0
+
+# ---- pair (granular, but irrelevant for single fiber: no contacts) ----
+pair_style      granular
+pair_coeff      * *  hertz/material 1.4e8 0.3 0.25 tangential mindlin NULL 1.0 0.5
+
+# ---- groups ----
+group           tip_left  id 1
+group           tip_right id 10
+group           free      subtract all tip_left
+
+# ---- integrator + freeze left end ----
+fix             freeze tip_left setforce 0.0 0.0 0.0
+fix             integ  free     nve/sphere
+
+# ---- gravity (boost to make deflection clearly visible) ----
+# real g would only droop ~0.4 um at this E; multiply for visualization.
+# expected tip deflection (cantilever, distributed load):
+#   delta = q*L^4 / (8*E*I),   q = rho*A*g_eff
+# expected tip droop:
+#   g_mult=100  -> ~40 um   (1% of length, hard to see -> means "stiff")
+#   g_mult=1000 -> ~0.4 mm  (5% of length, clearly visible bend)
+#   g_mult=5000 -> ~2 mm    (large bend; nonlinear, just for visual)
+variable        g_mult equal 1000.0
+variable        g_eff  equal 9.81*${g_mult}
+fix             grav   free gravity ${g_eff} vector 0.0 0.0 -1.0
+
+# ---- light damping so it settles instead of oscillating forever ----
+fix             damp   free viscous 1.0e-3
+
+# ---- timestep: bond period ~9 us -> dt = 1e-7 ----
+timestep        1.0e-7
+
+# ---- diagnostics ----
+compute         tipz tip_right reduce min z
+variable        z_tip  equal c_tipz
+variable        z_init equal 0.05
+variable        defl   equal v_z_init-v_z_tip
+
+thermo_style    custom step v_z_tip v_defl ke
+thermo          2000
+
+dump            d1 all custom 2000 dump.fiber id type x y z radius
+dump_modify     d1 sort id
+
+run             200000
+
+print "==============================================="
+print "  tip z      = ${z_tip}"
+print "  deflection = ${defl}  m   (g_mult = ${g_mult})"
+print "==============================================="
