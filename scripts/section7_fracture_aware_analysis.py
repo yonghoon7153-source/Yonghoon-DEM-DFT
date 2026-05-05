@@ -228,11 +228,24 @@ def aggregate() -> pd.DataFrame:
 
 
 def _filter_anomalies(df: pd.DataFrame) -> pd.DataFrame:
-    """Drop cases with non-physical σ_e or σ_e_loss outliers.
+    """Drop cases with non-physical σ values or impossible Stage-corrected ratios.
 
     Real cathode σ_e ∈ [0.1, 30] mS/cm; values > 100 indicate sparse-graph
-    network solver numerical instability.
-    Negative loss_pct → σ_e_fracture_aware > σ_e_full, also numerical artifact.
+    network solver numerical instability (the same g_boundary issue we
+    patched for the baseline solver — Stage E's modified-contacts subprocess
+    can still trip it for thin-edge graphs after σ_factor scaling).
+
+    Anomaly criteria:
+      (1) σ_e_baseline > 100 mS/cm   — baseline solver failed
+      (2) σ_e Stage-C > 100          — fracture-aware solver failed
+      (3) σ_e_loss_pct out of [-5, 100]  — non-physical loss%
+      (4) σ_e_stage_e > 5× baseline      — Stage E inflation bug
+                                            (Stage E should reduce σ_e via
+                                             σ_factor ≤ 1 and grain factor
+                                             ≤ 1; ratio >5 means subprocess
+                                             ill-conditioned for this case's
+                                             modified-contact topology)
+      (5) σ_th_stage_e > 5× baseline     — same Stage E bug for κ
     """
     n0 = len(df)
     df = df[(df['sigma_e_full'].fillna(0) < 100) &
@@ -241,6 +254,19 @@ def _filter_anomalies(df: pd.DataFrame) -> pd.DataFrame:
              (df['sigma_e_fracture_aware'].fillna(0) >= 0)]
     df = df[(df['sigma_e_loss_pct'].fillna(0) >= -5) &
              (df['sigma_e_loss_pct'].fillna(0) <= 100)]
+
+    # Stage E inflation filter: E values exceeding 5× baseline are
+    # mathematically impossible (Stage E σ_factor ≤ 1 must reduce σ).
+    # Use 5× as a safe threshold accounting for ε-regularization noise.
+    if 'sigma_e_stage_e' in df.columns and 'sigma_e_full' in df.columns:
+        ratio_e = df['sigma_e_stage_e'] / df['sigma_e_full'].replace(0, float('nan'))
+        bad_e = ratio_e.fillna(0) > 5.0
+        df = df[~bad_e]
+    if 'sigma_th_stage_e' in df.columns and 'sigma_th_full' in df.columns:
+        ratio_th = df['sigma_th_stage_e'] / df['sigma_th_full'].replace(0, float('nan'))
+        bad_th = ratio_th.fillna(0) > 5.0
+        df = df[~bad_th]
+
     print(f'  filtered {n0} → {len(df)} cases (removed {n0-len(df)} anomalies)\n',
           flush=True)
     return df.reset_index(drop=True)
