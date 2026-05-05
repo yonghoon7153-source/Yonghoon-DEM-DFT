@@ -605,6 +605,7 @@ def solve_network(network_data, mode='full', return_field=False):
         if os.environ.get('NETWORK_DEBUG'):
             print(f"  ⚠ spsolve G_eff={G_eff:.3e} > 1.5·Σg={sum_g_check:.3e} "
                   f"— retrying with CG …")
+        cg_succeeded = False
         try:
             try:
                 V_cg, info_cg = cg(L_csr, b, tol=1e-8, maxiter=20000)
@@ -619,12 +620,32 @@ def solve_network(network_data, mode='full', return_field=False):
                     V_source = V_src_cg
                     G_eff = G_eff_cg
                     solve_method = "cg_after_spsolve"
+                    cg_succeeded = True
                     if os.environ.get('NETWORK_DEBUG'):
                         print(f"  ✓ CG retry succeeded: G_eff={G_eff:.3e}, "
                               f"G/Σg={G_eff/sum_g_check:.3f}")
+                elif os.environ.get('NETWORK_DEBUG'):
+                    print(f"  ✗ CG retry insufficient: G_eff_cg={G_eff_cg:.3e} "
+                          f"still > 1.2·Σg={1.2*sum_g_check:.3e}")
         except Exception as cg_err:
             if os.environ.get('NETWORK_DEBUG'):
-                print(f"  ✗ CG retry failed: {cg_err}; keeping spsolve result")
+                print(f"  ✗ CG retry failed: {cg_err}")
+
+        if not cg_succeeded:
+            # Both solvers gave non-physical G_eff for this topology.
+            # Return None instead of propagating the garbage value to σ_eff.
+            # This typically happens for σ_e on very-small graphs (~10³
+            # nodes) where the boundary-to-interior ratio exceeds 50 %
+            # — the AM-AM percolation is geometrically too weak for any
+            # solver to reliably extract σ_e. The case is then excluded
+            # by the section7 anomaly filter rather than producing a
+            # wildly inflated σ value.
+            if os.environ.get('NETWORK_DEBUG'):
+                print(f"  ⚠ Both spsolve and CG produced G/Σg > 1.2 — "
+                      f"returning None (case fundamentally ill-conditioned)")
+            if return_field:
+                return None, None, None
+            return None, None
 
     # ── Anomaly diagnostic: sanity-bound G_eff against sum-of-conductances ─
     # Theoretical upper bound: G_eff ≤ Σ g  (all edges in parallel between
