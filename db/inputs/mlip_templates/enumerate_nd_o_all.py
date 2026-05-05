@@ -14,12 +14,16 @@ Categorization (auto by # of O at each PS4):
   G: 1 PSO3                 5·C(4,3)    = 20
   Total                                  = 2024 = C(24,3)  ✅
 
-Per Nd pair (26 reference + binned): LBFGS-screen all 2024 → top-20 anneal.
+Per Nd pair: 3-stage hierarchical screening.
+  Stage 1: SCF single-point on all 2024     (~1 s/cfg → ~30 min/pair)
+  Stage 2: LBFGS relax on top 20            (~5 min/cfg → ~100 min/pair)
+  Stage 3: 500 K MD anneal on top 5         (~30 min/cfg → ~150 min/pair)
+Total ~5 h/pair × 26 pairs ≈ 5 days.
 
 Pipeline (PIPELINE.md Step 1-3):
   Step 1: O placement enumerate (this script)
-  Step 2: MLIP screen (LBFGS)
-  Step 3: Top-20 → 500 K MD anneal → champion
+  Step 2: MLIP screen (SCF → LBFGS)
+  Step 3: Top-5 → 500 K MD anneal → champion
 
 Translation symmetry dedup: in 1×1×2 supercell, skip Nd pairs where
 both indices ≥ n_primitive (those are translations of pairs in lower half).
@@ -40,11 +44,12 @@ BASE_CIF        = "modelC_112_supercell.cif"     # 1×1×2 supercell, 124 atoms
 N_PRIMITIVE     = 62                              # Model C primitive
 N_PER_BIN       = 5                               # Nd pairs per distance bin (close/mid/far/very_far/cross-cell)
 FORCE_PAIR      = (1, 82)                         # Reference pair (always included)
-TOP_K_ANNEAL    = 20                              # # of top LBFGS configs → MD anneal per Nd pair
+TOP_K_LBFGS     = 20                              # # of top SCF configs → LBFGS relax per Nd pair
+TOP_K_ANNEAL    = 5                               # # of top LBFGS configs → MD anneal per Nd pair
 ANNEAL_T        = 500                             # K
 ANNEAL_PS       = 50                              # ps
 DT_FS           = 2.0                             # MD timestep
-LBFGS_FMAX      = 0.05                            # eV/Å for screen
+LBFGS_FMAX      = 0.05                            # eV/Å for relax
 ANNEAL_FMAX     = 0.02                            # eV/Å for post-anneal relax
 WORK_DIR        = Path("./enum_run")
 DRY_RUN         = "--dry-run" in sys.argv          # only enumerate + count, no MLIP
@@ -188,7 +193,13 @@ def select_vacancy_li(atoms, nd_pair, n_vac=4):
     return [i for _, i in d[:n_vac]]
 
 # ---------------------- MLIP RUNS ----------------------
-def lbfgs_screen(atoms, calc, fmax=LBFGS_FMAX, steps=200):
+def single_point(atoms, calc):
+    """Stage 1: SCF only, no relax. ~1 sec/config."""
+    atoms.calc = calc
+    return atoms.get_potential_energy()
+
+def lbfgs_relax(atoms, calc, fmax=LBFGS_FMAX, steps=200):
+    """Stage 2: LBFGS geometry relaxation."""
     atoms.calc = calc
     opt = LBFGS(atoms, logfile=None)
     opt.run(fmax=fmax, steps=steps)
@@ -235,34 +246,63 @@ def main():
         pair_dir = WORK_DIR / f"pair_{ip:02d}_{npair['bin']}_{npair['pair'][0]}_{npair['pair'][1]}"
         pair_dir.mkdir(exist_ok=True)
         state_file = pair_dir / "state.json"
-        state = json.loads(state_file.read_text()) if state_file.exists() else {'screened': {}, 'annealed': {}}
+        state = (json.loads(state_file.read_text()) if state_file.exists()
+                 else {'scf': {}, 'lbfgs': {}, 'annealed': {}})
+        for k in ('scf', 'lbfgs', 'annealed'):
+            state.setdefault(k, {})
 
         vac_li = select_vacancy_li(base, npair['pair'])
 
-        # ----- Stage 1: LBFGS screen all 2024 -----
         print(f"\n=== Pair {ip}: {npair['pair']} d={npair['d']:.2f} ({npair['bin']}) ===")
+
+        # ----- Stage 1: SCF single-point on all 2024 -----
+        t0 = time.time()
         for ic, oc in enumerate(o_configs):
             key = f"{ic:04d}_{oc['category']}"
-            if key in state['screened']:
+            if key in state['scf']:
                 continue
             atoms = build_doped_structure(base, npair['pair'], vac_li, oc['o_sites'])
             try:
-                E = lbfgs_screen(atoms, calc)
+                E = single_point(atoms, calc)
             except Exception as e:
                 E = float('nan')
-                print(f"  screen FAIL {key}: {e}")
-            state['screened'][key] = {'E': E, 'cat': oc['category'],
-                                       'o_sites': list(oc['o_sites'])}
-            if ic % 50 == 0:
+                print(f"  SCF FAIL {key}: {e}")
+            state['scf'][key] = {'E': E, 'cat': oc['category'],
+                                  'o_sites': list(oc['o_sites'])}
+            if ic % 100 == 0:
                 state_file.write_text(json.dumps(state, indent=2))
                 gc.collect()
         state_file.write_text(json.dumps(state, indent=2))
+        print(f"  Stage 1 SCF: {len(state['scf'])} configs in {time.time()-t0:.0f} s")
 
-        # ----- Stage 2: top 20 anneal -----
-        ranked = sorted(state['screened'].items(),
+        # ----- Stage 2: LBFGS relax top-K -----
+        ranked = sorted(state['scf'].items(),
                          key=lambda kv: kv[1]['E'] if kv[1]['E'] == kv[1]['E'] else 1e9)
-        top = ranked[:TOP_K_ANNEAL]
-        for key, info in top:
+        top_lbfgs = ranked[:TOP_K_LBFGS]
+        t0 = time.time()
+        for key, info in top_lbfgs:
+            if key in state['lbfgs']:
+                continue
+            ic = int(key.split('_')[0])
+            oc = o_configs[ic]
+            atoms = build_doped_structure(base, npair['pair'], vac_li, oc['o_sites'])
+            try:
+                E = lbfgs_relax(atoms, calc)
+                write(str(pair_dir / f"lbfgs_{key}.cif"), atoms)
+            except Exception as e:
+                E = float('nan')
+                print(f"  LBFGS FAIL {key}: {e}")
+            state['lbfgs'][key] = {'E_lbfgs': E, 'cat': oc['category']}
+            state_file.write_text(json.dumps(state, indent=2))
+            gc.collect()
+        print(f"  Stage 2 LBFGS: {len(state['lbfgs'])} configs in {time.time()-t0:.0f} s")
+
+        # ----- Stage 3: MD anneal top-K -----
+        ranked2 = sorted(state['lbfgs'].items(),
+                          key=lambda kv: kv[1]['E_lbfgs'] if kv[1]['E_lbfgs'] == kv[1]['E_lbfgs'] else 1e9)
+        top_anneal = ranked2[:TOP_K_ANNEAL]
+        t0 = time.time()
+        for key, info in top_anneal:
             if key in state['annealed']:
                 continue
             ic = int(key.split('_')[0])
@@ -277,8 +317,9 @@ def main():
             state['annealed'][key] = {'E_anneal': E, 'cat': oc['category']}
             state_file.write_text(json.dumps(state, indent=2))
             gc.collect()
+        print(f"  Stage 3 anneal: {len(state['annealed'])} configs in {time.time()-t0:.0f} s")
 
-        print(f"  done pair {ip}: screened={len(state['screened'])}, annealed={len(state['annealed'])}")
+        print(f"  done pair {ip}: SCF={len(state['scf'])}, LBFGS={len(state['lbfgs'])}, anneal={len(state['annealed'])}")
 
 if __name__ == "__main__":
     main()
