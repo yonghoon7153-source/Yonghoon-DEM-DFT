@@ -952,10 +952,11 @@
     {
       "id": "yuwagemaker2023",
       "authors": "Yu, Wagemaker, et al.",
-      "title": "Decoding disorder in Br-rich argyrodites",
+      "title": "From anionic disorder to fast ion transport in Br-rich argyrodites",
       "journal": "ACS",
       "year": 2023,
       "DOI": "PMC11823417",
+      "title_verified": "2026-05-05 (user-confirmed)",
       "key_quote": "reduction of the electrostatic interaction between the 4d site and the surrounding Li cage. The intercage distance decreases and lithium movement is facilitated",
       "key_content": "Site disorder -> weakened 4d anion-Li cage interaction -> intercage distance change -> faster Li transport. Direct support for site distribution mechanism.",
       "supports_our_finding": [
