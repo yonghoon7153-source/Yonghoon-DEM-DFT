@@ -57,10 +57,10 @@ Method: PBE-DFT post-relax, MIC distance, ASE measurement.
 |------|--------|-----------|-----------------|--------|
 | comp1 | comp1v2_scf.out → V0 | `adhesion_v5_v2/comp1_slab_v2.xyz` | Cubic, a3 z-only ✓ | ✅ Ready |
 | comp2 | comp2_v2_V0.xyz | `adhesion_v5_v2/comp2_slab_v2.xyz` | Cubic, a3 z-only ✓ | ✅ Ready |
-| comp3 | comp3_post_relax.out | `adhesion_v5_v2/comp3_slab_v1_PRESERVED.xyz` (TODO) | Rhombo → pymatgen conv (β=97°) | ⏳ TODO |
-| comp4 | comp4_post_relax.out | `adhesion_v5_v2/comp4_slab_v1_PRESERVED.xyz` (TODO) | Rhombo → pymatgen conv | ⏳ TODO |
-| comp5 | comp5/comp5_scf.out | `adhesion_v5_v2/comp5_slab_v1_PRESERVED.xyz` (TODO) | Rhombo → pymatgen conv | ⏳ TODO |
-| modelC | modelc_v2_V0.xyz | `adhesion_v5_v2/modelC_slab_v2_PRESERVED.xyz` | Rhombo → pymatgen conv (β=97°) | ✅ Done (5/5) |
+| comp3 | comp3_post_relax.out | `adhesion_v5_v2/comp3_slab_v1_PRESERVED.xyz` | Rhombo → pymatgen conv | ✅ Done (max\|Δd\|=10⁻¹⁵) |
+| comp4 | comp4_post_relax.out | `adhesion_v5_v2/comp4_slab_v1_PRESERVED.xyz` | Rhombo → pymatgen conv | ✅ Done (max\|Δd\|=10⁻¹⁵) |
+| comp5 | comp5/comp5_scf.out | `adhesion_v5_v2/comp5_slab_v1_PRESERVED.xyz` | Rhombo → pymatgen conv | ✅ Done (max\|Δd\|=10⁻¹⁵) |
+| modelC | modelc_v2_V0.xyz | `adhesion_v5_v2/modelC_slab_v2_PRESERVED.xyz` | Rhombo → pymatgen conv (β=97°) | ✅ Done |
 
 ### Slab Convention Fix Procedure (rhombohedral comps only)
 
