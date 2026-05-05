@@ -968,6 +968,27 @@
       "tags": ["argyrodite", "Br-rich", "disorder", "4d-site", "intercage", "Li-mobility"]
     },
     {
+      "id": "yuwagemaker2024_decoding",
+      "authors": "Yu, Wagemaker, et al.",
+      "title": "Decoding Structural Disorder, Synthesis Methods, and Short- and Long-Range Lithium-Ion Transport in Lithium Argyrodites (Li6-xPS5-xBr1+x)",
+      "journal": "Chem. Mater.",
+      "year": 2024,
+      "DOI": "10.1021/acs.chemmater.4c02010",
+      "URL": "https://pubs.acs.org/doi/10.1021/acs.chemmater.4c02010",
+      "title_verified": "2026-05-05 (user-confirmed via direct URL)",
+      "system": "Li6-xPS5-xBr1+x (Br-rich, x=0~1)",
+      "key_content": "Structural disorder + synthesis method + short-/long-range Li transport in Br-rich argyrodites. Companion paper to yuwagemaker2023 (anionic disorder framework). Same Wagemaker group, expanded analysis (synthesis methods + multi-scale transport).",
+      "system_match_with_us": "Li6-xPS5-xBr1+x at x=0.6 = our comp5 (Li5.4PS4.4Cl0.6Br1.0 = Br dominant in Li5.4 family). Li6-xPS5-xCl1+x companion (Cl-rich) at x=0.6 = our modelC EXACTLY (Li5.4PS4.4Cl1.6). Both extreme ends of our 5-comp series.",
+      "supports_our_finding": [
+        "modelC v2 (Cl-rich, x=0.6 in Cl framework) Li-Cl elongation: 4a+4d Cl distribution",
+        "comp5 (Br-rich Li5.4) bond/Bader trends: directly comparable to Yu Wagemaker 2024 Br-rich data",
+        "comp4 frustration: structural disorder peak when Cl=Br=0.8 — Yu's disorder framework foundation"
+      ],
+      "use_in_paper": "Section 2 site distribution (gautam2023 companion); Section 3 disorder anomaly",
+      "complementary_to": "gautam2023 (10.1021/acs.chemmater.3c01525) — both about Li6-xPS5-xBr1+x but different aspects",
+      "tags": ["argyrodite", "Br-rich", "disorder", "synthesis", "Li-transport", "multi-scale", "Li6-xPS5-xBr1+x", "Li6-xPS5-xCl1+x", "modelC-match", "comp5-match"]
+    },
+    {
       "id": "zhang2024_ionic_potential",
       "authors": "Zhang et al.",
       "title": "Ionic potential descriptor for argyrodite conductivity",
