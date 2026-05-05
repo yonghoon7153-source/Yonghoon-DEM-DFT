@@ -14,24 +14,28 @@
     {
       "id": "kraft2018",
       "authors": "Kraft, M. A. et al.",
-      "title": "Influence of lattice polarizability on the ionic conductivity in the lithium superionic argyrodites",
+      "title": "Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I)",
       "journal": "J. Am. Chem. Soc.",
       "volume": 140,
       "pages": "16330",
       "year": 2018,
-      "key_content": "S/Cl site disorder vs ionic conductivity. Li migration pathways depend on halogen site preference. Bond length analysis.",
-      "tags": ["argyrodite", "conductivity", "disorder", "bonds"]
+      "DOI": "10.1021/jacs.7b06327",
+      "title_verified": "2026-05-05 (user-confirmed)",
+      "key_content": "S/Cl site disorder vs ionic conductivity. Li migration pathways depend on halogen site preference. Bond length analysis. Polarizability framework — different halogens (Cl, Br, I) modulate lattice softness.",
+      "tags": ["argyrodite", "conductivity", "disorder", "bonds", "polarizability"]
     },
     {
       "id": "adeli2019",
       "authors": "Adeli, P. et al.",
-      "title": "Boosting solid-state diffusivity and conductivity in lithium superionic argyrodites by halide substitution",
+      "title": "Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution",
       "journal": "Angew. Chem. Int. Ed.",
       "volume": 58,
       "pages": "8681",
       "year": 2019,
-      "key_content": "Li(6-x)PS(5-x)Cl(1+x) halogen-rich compositions. Vacancy introduction -> conductivity enhancement. Li5.4PS4.4Cl1.6 studied.",
-      "tags": ["argyrodite", "vacancy", "conductivity", "halogen-rich"]
+      "title_verified": "2026-05-05 (user-confirmed)",
+      "system_match_with_us": "Li(6-x)PS(5-x)Cl(1+x) framework — at x=0.5 = Li5.5PS4.5Cl1.5 (highest conductivity), at x=0.6 = our modelC EXACTLY (Li5.4PS4.4Cl1.6).",
+      "key_content": "Li(6-x)PS(5-x)Cl(1+x) halogen-rich compositions. Vacancy introduction -> conductivity enhancement. Li5.4PS4.4Cl1.6 studied — direct precedent for our modelC.",
+      "tags": ["argyrodite", "vacancy", "conductivity", "halogen-rich", "Li(6-x)PS(5-x)Cl(1+x)", "modelC-match"]
     },
     {
       "id": "deng2016",
