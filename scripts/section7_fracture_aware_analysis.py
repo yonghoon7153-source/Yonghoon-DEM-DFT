@@ -255,17 +255,20 @@ def _filter_anomalies(df: pd.DataFrame) -> pd.DataFrame:
     df = df[(df['sigma_e_loss_pct'].fillna(0) >= -5) &
              (df['sigma_e_loss_pct'].fillna(0) <= 100)]
 
-    # Stage E inflation safety net (kept as defence-in-depth — the
-    # underlying g_boundary issue was fixed in network_conductivity.py
-    # commit-pending, so this filter should now drop 0 cases on a fresh
-    # rerun). Threshold 5× catches any residual numerical artifacts.
+    # Stage E inflation safety net — tightened from 5× to 1.1× because
+    # Stage E mathematically cannot exceed baseline (σ_factor ≤ 1, grain
+    # factor ≤ 1). Any case where σ_stage_e > 1.1·σ_baseline is a
+    # numerical artifact (e.g., from MIN_FACTOR_CUTOFF edge-dropping
+    # changing graph topology in non-monotonic ways). The 5-layer fix
+    # in network_conductivity.py catches the worst cases via None-return,
+    # this filter catches the residual inflation.
     if 'sigma_e_stage_e' in df.columns and 'sigma_e_full' in df.columns:
         ratio_e = df['sigma_e_stage_e'] / df['sigma_e_full'].replace(0, float('nan'))
-        bad_e = ratio_e.fillna(0) > 5.0
+        bad_e = ratio_e.fillna(0) > 1.1
         df = df[~bad_e]
     if 'sigma_th_stage_e' in df.columns and 'sigma_th_full' in df.columns:
         ratio_th = df['sigma_th_stage_e'] / df['sigma_th_full'].replace(0, float('nan'))
-        bad_th = ratio_th.fillna(0) > 5.0
+        bad_th = ratio_th.fillna(0) > 1.1
         df = df[~bad_th]
 
     print(f'  filtered {n0} → {len(df)} cases (removed {n0-len(df)} anomalies)\n',
