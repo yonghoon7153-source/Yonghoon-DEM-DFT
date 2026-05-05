@@ -57,6 +57,7 @@ import tempfile
 from pathlib import Path
 
 import pandas as pd
+import numpy as np
 
 ROOT     = Path(__file__).resolve().parent.parent
 SCRIPTS  = ROOT / 'scripts'
@@ -392,6 +393,30 @@ def apply_corrections(atoms_df: pd.DataFrame, contacts_df: pd.DataFrame,
     factors_summary['n_dropped_kappa'] = n_orig - len(df_kappa)
     factors_summary['min_factor_cutoff'] = MIN_FACTOR_CUTOFF
 
+    # Conductance-weighted mean factor per channel (used as fallback when
+    # the network solver returns None due to numerical instability for
+    # near-percolation-threshold topologies). The weight is the ORIGINAL
+    # contact_area (proxy for original g, since g ∝ contact_area / R_total
+    # ∝ contact_area for matched-radius pairs). For each channel:
+    #    σ_stage_e_approx ≈ σ_baseline × <factor>_g-weighted
+    # which is a Bruggeman-style effective-medium approximation.
+    if 'contact_area' in contacts_df.columns:
+        ca = contacts_df['contact_area'].astype(float).clip(lower=0).values
+    else:
+        ca = np.ones(len(contacts_df))
+    g_proxy = ca
+
+    def _wm(factors_list):
+        f_arr = np.asarray(factors_list, dtype=float)
+        denom = float(g_proxy.sum())
+        if denom <= 0:
+            return None
+        return float((g_proxy * f_arr).sum() / denom)
+
+    factors_summary['weighted_factor_ionic'] = _wm(f_ionic)
+    factors_summary['weighted_factor_e']     = _wm(f_e)
+    factors_summary['weighted_factor_kappa'] = _wm(f_kappa)
+
     return df_ionic, df_e, df_kappa, factors_summary
 
 
@@ -445,9 +470,6 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     res_e     = _run_solver(case_dir, df_e,     type_map_str, scale)
     res_kappa = _run_solver(case_dir, df_kappa, type_map_str, scale)
 
-    if not (res_ionic and res_e and res_kappa):
-        return (case_dir.name, False, 'one or more channel solver failed')
-
     fm_path = case_dir / 'full_metrics.json'
     try:
         with open(fm_path) as f:
@@ -455,9 +477,41 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     except Exception as e:
         return (case_dir.name, False, f'fm read failed: {e}')
 
-    sigma_ionic_e = res_ionic.get('sigma_full_mScm')
-    sigma_e_e     = res_e.get('electronic_sigma_full_mScm')
-    sigma_th_e    = res_kappa.get('thermal_sigma_full_mScm')
+    sigma_ionic_e = res_ionic.get('sigma_full_mScm') if res_ionic else None
+    sigma_e_e     = res_e.get('electronic_sigma_full_mScm') if res_e else None
+    sigma_th_e    = res_kappa.get('thermal_sigma_full_mScm') if res_kappa else None
+
+    # Fallback: factor-weighted approximation when solver fails
+    # (network ill-conditioned near percolation threshold for σ_factor
+    # scaled graphs; ~20 % of input_1mAh_* cases). Uses original-contact-
+    # area-weighted mean factor as Bruggeman-style effective-medium estimate.
+    source_ionic = 'solver'
+    source_e     = 'solver'
+    source_th    = 'solver'
+
+    def _is_invalid(v, base):
+        return (v is None or not (v > 0)
+                or (base is not None and base > 0 and v > base * 1.1))
+
+    base_ionic = fm.get('sigma_full_mScm')
+    base_e_solver = fm.get('electronic_sigma_full_mScm')
+    base_th_solver = fm.get('thermal_sigma_full_mScm')
+
+    if _is_invalid(sigma_ionic_e, base_ionic) and base_ionic and factors.get('weighted_factor_ionic') is not None:
+        sigma_ionic_e = base_ionic * factors['weighted_factor_ionic']
+        source_ionic = 'fallback_weighted_factor'
+    if _is_invalid(sigma_e_e, base_e_solver) and base_e_solver and factors.get('weighted_factor_e') is not None:
+        sigma_e_e = base_e_solver * factors['weighted_factor_e']
+        source_e = 'fallback_weighted_factor'
+    if _is_invalid(sigma_th_e, base_th_solver) and base_th_solver and factors.get('weighted_factor_kappa') is not None:
+        sigma_th_e = base_th_solver * factors['weighted_factor_kappa']
+        source_th = 'fallback_weighted_factor'
+
+    fm['stage_e_source'] = {
+        'sigma_ionic':    source_ionic,
+        'sigma_e':        source_e,
+        'sigma_thermal':  source_th,
+    }
 
     fm['sigma_full_mScm_stage_e']            = sigma_ionic_e
     fm['electronic_sigma_full_mScm_stage_e'] = sigma_e_e
