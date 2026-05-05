@@ -173,8 +173,13 @@
 
 
   "bond_lengths_A": {
-    "Li-Cl": 2.552, "Li-S": 2.514, "P-S": 2.063,
-    "notes": "Li-Cl: comp1(2.607)>ModelC(2.552)>comp3(2.506). P-S=2.063≈comp3(2.064)→PS4 invariant."
+    "Li-Cl": 2.547, "Li-Cl_std": 0.105, "Li-Cl_n": 41,
+    "Li-S": 2.460,  "Li-S_std": 0.078,  "Li-S_n": 67,
+    "P-S": 2.062,   "P-S_std": 0.014,   "P-S_n": 20,
+    "source": "KISTI v2_postproc/gabia_pkg/modelc_v2_V0.xyz (cutoff Li-Cl 3.2, Li-S 3.0, P-S 2.3)",
+    "verified_date": "2026-05-05",
+    "notes": "VERIFIED 2026-05-05 (replaced DB Li-S 2.514 -> 2.460, Li-Cl 2.552 -> 2.547). Earlier DB value used cutoff too wide (r_max 3.497) inflating Li-S mean. Anomaly: modelC v2 Li-Cl(2.547) > Li-S(2.460) by 0.087 A — Cl-rich (1.6/fu) at both 4a+4c sites + vacancy compression of Li-S. PS4 invariant.",
+    "previous_db": {"Li-Cl": 2.552, "Li-S": 2.514, "P-S": 2.063, "note": "deprecated, cutoff issue"}
   },
 
   "v2_postproc": {
@@ -198,10 +203,12 @@
         "type": "PS4 covalent (Pauling formal Q overestimates ionic but rank correct)"
       },
       "Li-S": {
-        "n_bonds": 75, "r_mean_A": 2.553, "r_std_A": 0.283,
-        "r_min_A": 2.327, "r_max_A": 3.497,
-        "q1q2_over_r_eV_mean": 8.43, "q1q2_over_r_eV_std": 0.75,
-        "type": "ionic (high spread = vacancy disorder Li5.4 family)"
+        "n_bonds": 67, "r_mean_A": 2.460, "r_std_A": 0.078,
+        "n_bonds_old": 75, "r_mean_A_old": 2.553, "r_std_A_old": 0.283,
+        "r_max_A_old_cutoff": 3.497,
+        "q1q2_over_r_eV_mean": 8.97, "q1q2_over_r_eV_std": 0.28,
+        "type": "ionic (re-measured 2026-05-05 with cutoff 3.0; old cutoff 3.497 included non-bonded pairs)",
+        "note": "VERIFIED. Old r_mean 2.553 inflated by wide cutoff. Real Li-S 2.460 = SHORTER than comp1 v2 (2.498) by 0.04 A — Cl-rich + vacancy compresses Li-S environment."
       },
       "Li-Cl": {
         "n_bonds": 42, "r_mean_A": 2.568, "r_std_A": 0.168,

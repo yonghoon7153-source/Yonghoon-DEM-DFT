@@ -47,10 +47,16 @@
     "notes": "|Cl charge| > |Br charge| confirmed."
   },
   "bond_lengths_A": {
-    "Li-Cl": 2.51,
-    "Li-Br": 2.71,
-    "P-S": 2.06,
-    "notes": "Li-Br 0.20 A longer than Li-Cl."
+    "v1": {"Li-Cl": 2.51, "Li-Br": 2.71, "P-S": 2.06, "note": "v1 BasinB approximate"},
+    "v2": {
+      "Li-Cl": 2.442, "Li-Cl_std": 0.075, "Li-Cl_n": 9,
+      "Li-Br": 2.585, "Li-Br_std": 0.108, "Li-Br_n": 9,
+      "Li-S":  2.510, "Li-S_std":  0.078, "Li-S_n":  78,
+      "P-S":   2.063, "P-S_std":   0.017, "P-S_n":   16,
+      "source": "KISTI pipeline_v2/comp2_lpscbr/v2_postproc/comp2_v2_V0.xyz (cutoff Li-Cl 3.2, Li-Br 3.4, Li-S 3.0, P-S 2.3)",
+      "verified_date": "2026-05-05"
+    },
+    "notes": "v2 measured: Li-Cl 2.442 (-0.044 vs comp1 v2 = Br compresses Cl bond), Li-Br 2.585 (vs Li5.4 family ~2.72 = Li6 Br shorter). Li-Br 0.14 A longer than Li-Cl in same comp."
   },
   "elastic_dft_0K_GPa": {
     "C11": 73.4,
@@ -220,12 +226,17 @@
     "notes": "NEW finding: comp2 v2 P=+4.893 > comp1 v2 P=+4.686 (delta +0.207e, +4.4%). Br doping STRENGTHENS PS4 covalent backbone (anti-trend to Cl ionicity weakening). Br has dual effect: ionic (Cl |q| down) AND covalent (P |q| up). Vacancy effect (modelC v2 P=+4.340) is opposite sign."
   },
   "q1q2_over_r_eV_v2bader": {
-    "P-S": 63.3,
-    "Li-Cl": 4.69,
-    "Li-Br": 4.46,
-    "Li-S": 9.31,
-    "P-S_vs_comp1_v2_pct": 7.3,
-    "P-S_vs_modelC_v2_pct": 20.2,
-    "notes": "P-S Coulomb +7.3% vs comp1 v2 (Br effect strengthens PS4) and +20.2% vs modelC v2 (vacancy weakens, Br compensates partial). q*|q|/r * 14.4 eV.A units. Bond lengths inherited from comp1 v2 (P-S 2.06 A, Li-Cl 2.486, Li-S 2.498) -- comp2 v2 specific bond lengths TODO."
+    "P-S": 63.2,
+    "Li-Cl": 4.70,
+    "Li-Br": 4.34,
+    "Li-S": 9.32,
+    "_recalc_date": "2026-05-05",
+    "_recalc_with": "v2 measured bond lengths (Li-Cl 2.442, Li-Br 2.585, Li-S 2.510, P-S 2.063) + v2 Bader (Li 0.876, P 4.893, S 1.850, Cl 0.910, Br 0.891)",
+    "P-S_calc": "4.893 * 1.850 / 2.063 * 14.4 = 63.2 eV",
+    "P-S_vs_comp1_v2_pct": 7.0,
+    "P-S_vs_modelC_v2_pct": 20.4,
+    "Li-Br_change_from_old": "old 4.46 (used DB Li-Br 2.71) -> new 4.34 (measured Li-Br 2.585). Li-Br SHORTER in comp2 v2 than DB suggested.",
+    "previous": {"Li-Cl": 4.69, "Li-Br": 4.46, "Li-S": 9.31, "P-S": 63.3, "note": "deprecated, used inherited/inconsistent bond lengths"},
+    "notes": "VERIFIED 2026-05-05: P-S Coulomb +7.0% vs comp1 v2 (Br stiffens PS4), +20.4% vs modelC v2 (Br + no-vacancy combined)."
   }
 }
