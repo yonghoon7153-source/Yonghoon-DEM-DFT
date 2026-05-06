@@ -923,14 +923,103 @@ document.querySelectorAll('.metric-label[data-metric]').forEach(td => {
   }
 });
 
+// ───── Paper-label aliases ─────────────────────────────────────────────
+// app.py applies _PAPER_LABEL_MAP at render time (rename for advisor/reviewer
+// readability). The METRIC_TIPS dict above is keyed by the original informal
+// labels for ~90 entries — instead of renaming all 90 keys, we provide a
+// reverse map here so tooltip lookup tries:
+//   1. Exact paper label (in case author later updates METRIC_TIPS)
+//   2. Trimmed paper label
+//   3. PAPER_TO_ORIG[trimmed]  →  original label  →  METRIC_TIPS hit
+const PAPER_TO_ORIG = {
+  'Porosity ε (%)': 'Porosity(%)',
+  'Electrode thickness T (μm)': '전극두께(μm)',
+  'Total AM-SE contact area, A_AM-SE (μm²)': 'AM-SE Total(μm²)',
+  'Total SE-SE contact area, A_SE-SE (μm²)': 'SE-SE Total(μm²)',
+  'Coverage of AM_P by SE, cov_AM_P (%)': 'Coverage AM_P(%)',
+  'Coverage of AM_S by SE, cov_AM_S (%)': 'Coverage AM_S(%)',
+  'SE-SE coordination number ⟨z_SE-SE⟩': 'SE-SE CN mean',
+  'SE percolating clusters (n≥10 / total)': 'SE Cluster 수',
+  'SE percolation, top↔bottom (%)': 'SE Percolation(%)',
+  'Top-reachable SE (%)': 'Top Reachable(%)',
+  'Tortuosity ⟨τ_Dijkstra⟩ (geodesic)': 'Tortuosity mean',
+  'Mean per-hop contact area, ⟨A_hop⟩ (μm²)': 'Path Hop Area mean(μm²)',
+  'Path bottleneck min(A_contact) (μm²)': 'Path Bottleneck(μm²)',
+  'Effective path conductance Σ(A/ℓ) (μm²)': 'Path Conductance(μm²)',
+  'AM-SE coordination number ⟨z_AM-SE⟩': 'AM-SE CN mean',
+  'Ionically-active AM, SE-touching (%)': 'Ionic Active AM(%)',
+  'SE volume fraction, φ_SE': 'SE Volume Fraction',
+  'σ_Bruggeman — EMT estimate (mS/cm)': 'σ_Bruggeman (mS/cm)',
+  'Bruggeman coefficient, σ_Bruggeman / σ_grain': 'σ_brug/σ_grain (Bruggeman)',
+  'σ_ionic — full network solver (mS/cm)': 'σ_ionic (mS/cm)',
+  'Constriction-resistance fraction (%)': 'Constriction 비율(%)',
+  'σ_e — electronic conductivity (mS/cm)': 'σ_electronic (mS/cm)',
+  'κ — thermal conductivity (mS/cm equiv)': 'σ_thermal (mS/cm equiv)',
+  'σ_ionic^physics — Tabor plastic film (mS/cm)': 'σ_ionic [physics] (mS/cm)',
+  'Plastic amplification, σ_ionic^physics / σ_ionic^Hertzian':
+      'σ_ionic ratio (physics/Hertzian)',
+  'σ_e^physics — Tabor plastic film (mS/cm)': 'σ_electronic [physics] (mS/cm)',
+  'κ^physics — Tabor plastic film (mS/cm equiv)':
+      'σ_thermal [physics] (mS/cm equiv)',
+  'σ_contact-free / σ_full — constriction overestimation': 'Contact-free / Full',
+  'σ_Bruggeman / σ_ionic — EMT vs Network solver': 'σ_brug / σ_ionic',
+  'τ_Dijkstra — geodesic-only (geometric)': 'τ_Dij (Dijkstra, 기하만)',
+  'τ_Laplace,bulk — Laplacian without constriction':
+      'τ_Lap_geom (Laplace, GB 제외)',
+  'τ_Laplace,eff ⭐ — Laplacian + constriction (COMSOL / EIS input)':
+      'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
+  'Constriction overhead, τ_Laplace,eff / τ_Dijkstra': 'τ_Lap_eff / τ_Dij',
+  'AM percolation, top↔bottom (%)': 'AM Percolation (%)',
+  'Electronically-active AM, bottom-reachable (%)': 'Electronic Active AM (%)',
+  'Coverage of AM, shape-corrected ⭐ (B3)': 'Coverage AM rough(%)   ⭐ [B3]',
+  'Coverage of AM_P, shape-corrected ⭐ (B3)':
+      'Coverage AM_P rough(%) ⭐ [B3]',
+  'Coverage of AM_S, shape-corrected ⭐ (B3)':
+      'Coverage AM_S rough(%) ⭐ [B3]',
+  'SE-SE ⟨z⟩ — percolating-only (F2)':
+      'SE-SE CN (perc-only)        [F2]',
+  'SE-SE ⟨z⟩ — surface-area weighted (F2)':
+      'SE-SE CN (area-weighted)    [F2]',
+  'SE-SE ⟨z⟩ — percolating + area-weighted (F2)':
+      'SE-SE CN (perc area-w)      [F2]',
+  'SE-SE ⟨z⟩ — plastic-augmented (F1)':
+      'SE-SE CN (plastic-augmented) [F1]',
+  'F1 near-contact pairs (gap < 10 nm)': '(F1 extra near-contact pairs)',
+  'AM-AM coordination number ⟨z_AM-AM⟩': 'AM-AM CN mean',
+  'AM-AM contact count': 'AM-AM 접촉 수',
+  // Stage E renames map back to the new keys we added in METRIC_TIPS
+  'σ_ionic correction — SE-size factor (Cronau 2022)':
+      'σ_ionic — SE size factor',
+  'σ_e correction — AM-crystallinity × size factor (Trevisanello 2021)':
+      'σ_e — AM crystal × size',
+  'κ correction — AM-crystallinity + SE factor (Wang 2022)':
+      'κ — AM crystal × size + SE',
+  'σ_ionic — Stage E (full literature-grounded corrections, mS/cm)':
+      'σ_ionic (Stage E corrected)',
+  'σ_e — Stage E (fracture × AM-crystallinity, mS/cm)':
+      'σ_electronic (Stage E corrected)',
+  'κ — Stage E (Wang grain corrections, mS/cm equiv)':
+      'σ_thermal (Stage E corrected)',
+  'Per-contact fracture-stage distribution (intact / micro / multi / frag / pulv)':
+      'Fracture stage counts (intact/MC/Multi/Frag/Pulv)',
+  '7-Layer solver defence — channel status': '7-Layer solver status',
+};
+
+function lookupTip(key) {
+  if (!key) return null;
+  const trimmed = key.trim();
+  return METRIC_TIPS[key]
+      || METRIC_TIPS[trimmed]
+      || METRIC_TIPS[PAPER_TO_ORIG[trimmed]]
+      || null;
+}
+
 // Inline tooltip: insert/remove a row below on hover
 let activeTooltipRow = null;
 
 document.querySelectorAll('.metric-label[data-metric]').forEach(td => {
   const key = td.dataset.metric;
-  // Try exact match first; fall back to trimmed (rows under section headers
-  // like 'fracture_summary' are indented with leading spaces).
-  const tip = METRIC_TIPS[key] || METRIC_TIPS[(key || '').trim()];
+  const tip = lookupTip(key);
   if (!tip) return;
   const tr = td.closest('tr');
 

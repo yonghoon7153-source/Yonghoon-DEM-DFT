@@ -540,6 +540,202 @@ def inject_stage_e_rows(tables, metrics):
     data.extend(rows)
 
 
+# ──────────────────────────────────────────────────────────────────────────
+#  Paper-style label renaming (advisor feedback — formal academic language)
+#
+#  Both analyze_contacts.py CSV outputs and webapp injectors use mixed
+#  Korean/informal labels (e.g., '── 이온경로: 연결성 ──', 'σ_brug/σ_grain
+#  (Bruggeman)'). Paper / reviewer-facing UI needs proper academic notation
+#  (LaTeX-friendly symbols, English section headers, explicit units).
+#
+#  We rename at render time (not in CSV) so:
+#    - Historical CSVs in archive/ keep their original labels on disk
+#    - Tooltips still match via the LABEL_ALIASES reverse map (single.html JS)
+#    - One-line revert if reviewers want different terminology
+# ──────────────────────────────────────────────────────────────────────────
+_PAPER_SECTION_MAP = {
+    '── 구조 ──': '── Structure (DEM compaction state) ──',
+    '── 계면 ──': '── Interfacial contact area (AM-SE / SE-SE) ──',
+    '── 이온경로: 연결성 ──': '── Ionic transport — Network connectivity ──',
+    '── 이온경로: 경로 효율 ──': '── Ionic transport — Geodesic tortuosity ──',
+    '── 이온경로: 경로 품질 ──':
+        '── Ionic transport — Path quality (bottleneck & conductance) ──',
+    '── 활성도 ──': '── Electrochemically-active surface ──',
+    '── 이온전도 ──': '── Ionic conductivity (Bruggeman EMT estimate) ──',
+    '── Network Solver (Hertzian DEM-native) ──':
+        '── Network solver — Hertzian (DEM-native contact area) ──',
+    '── Network Solver (DEM-native vs Tabor+volume physics) ──':
+        '── Network solver — Hertzian vs Physics (Tabor + volume) ──',
+    '── Physics (Plastic film, Tabor+volume) ──':
+        '── Network solver — Physics mode (Tabor plastic film + volume conservation) ──',
+    '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──':
+        '── Tortuosity comparison (Dijkstra vs Laplacian; COMSOL/EIS input = τ_Laplace,eff) ──',
+    '── Tier 1 patches (post-Auerbach refinements) ──':
+        '── Tier-1 corrections (post-Auerbach refinements) ──',
+    '── AM-AM 접촉 역학 ──': '── AM-AM contact mechanics ──',
+    '── 응력 ──': '── Particle-stress distribution (von Mises) ──',
+    '── Stage E (literature-grounded σ_grain corrections) ──':
+        '── Stage E — Literature-grounded σ_grain corrections (Cronau/Trevisanello/Wang) ──',
+}
+
+_PAPER_LABEL_MAP = {
+    # Structure
+    'Porosity(%)':                 'Porosity ε (%)',
+    '전극두께(μm)':                 'Electrode thickness T (μm)',
+    # Interface
+    'AM-SE Total(μm²)':            'Total AM-SE contact area, A_AM-SE (μm²)',
+    'SE-SE Total(μm²)':            'Total SE-SE contact area, A_SE-SE (μm²)',
+    'Binding % — AM-SE (H/L/T/V/G)':
+        'Binding regime share — AM-SE (Hertz / LIGGGHTS / Tabor / Volume / Geom)',
+    'Binding % — Total (H/L/T/V/G)':
+        'Binding regime share — All contacts (Hertz / LIGGGHTS / Tabor / Volume / Geom)',
+    'Coverage AM_P(%)':            'Coverage of AM_P by SE, cov_AM_P (%)',
+    'Coverage AM_S(%)':            'Coverage of AM_S by SE, cov_AM_S (%)',
+    'Coverage AM(%)':              'Coverage of AM by SE, cov_AM (%)',
+    # Connectivity
+    'SE-SE CN mean':               'SE-SE coordination number ⟨z_SE-SE⟩',
+    'SE-SE CN std':                'SE-SE coordination number σ(z_SE-SE)',
+    'SE Cluster 수':               'SE percolating clusters (n≥10 / total)',
+    'SE Percolation(%)':           'SE percolation, top↔bottom (%)',
+    'Top Reachable(%)':            'Top-reachable SE (%)',
+    # Tortuosity
+    'Tortuosity mean':             'Tortuosity ⟨τ_Dijkstra⟩ (geodesic)',
+    'Tortuosity median':           'Tortuosity median(τ_Dijkstra)',
+    'Tortuosity std':              'Tortuosity σ(τ_Dijkstra)',
+    'GB Density(hops/μm)':         'Grain-boundary density (hops/μm)',
+    # Path quality
+    'Path Hop Area mean(μm²)':     'Mean per-hop contact area, ⟨A_hop⟩ (μm²)',
+    'Path Bottleneck(μm²)':        'Path bottleneck min(A_contact) (μm²)',
+    'Path Conductance(μm²)':       'Effective path conductance Σ(A/ℓ) (μm²)',
+    # Active surface
+    'AM-SE CN mean':               'AM-SE coordination number ⟨z_AM-SE⟩',
+    '  ├ AM_P-SE CN mean':         '  ├ AM_P-SE coordination number ⟨z_AM_P-SE⟩',
+    '  ├ AM_S-SE CN mean':         '  ├ AM_S-SE coordination number ⟨z_AM_S-SE⟩',
+    '  └ AM-SE CN (surface-weighted)':
+        '  └ AM-SE coordination number (surface-area weighted)',
+    'Ionic Active AM(%)':          'Ionically-active AM, SE-touching (%)',
+    'AM Vulnerable(%)':            'Ionically-vulnerable AM, low-coverage (%)',
+    '  ├ AM_P Vulnerable(%)':      '  ├ AM_P ionically-vulnerable (%)',
+    '  └ AM_S Vulnerable(%)':      '  └ AM_S ionically-vulnerable (%)',
+    # Bruggeman EMT
+    'SE Volume Fraction':          'SE volume fraction, φ_SE',
+    'σ_Bruggeman (mS/cm)':         'σ_Bruggeman — EMT estimate (mS/cm)',
+    'σ_brug/σ_grain (Bruggeman)':  'Bruggeman coefficient, σ_Bruggeman / σ_grain',
+    # Network solver — Hertzian
+    'σ_ionic (mS/cm)':             'σ_ionic — full network solver (mS/cm)',
+    'R_brug (과대추정 배수)':       'Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic',
+    'Constriction 비율(%)':         'Constriction-resistance fraction (%)',
+    'σ_electronic (mS/cm)':        'σ_e — electronic conductivity (mS/cm)',
+    'σ_thermal (mS/cm equiv)':     'κ — thermal conductivity (mS/cm equiv)',
+    # Physics (Tabor)
+    'σ_ionic [physics] (mS/cm)':
+        'σ_ionic^physics — Tabor plastic film (mS/cm)',
+    'σ_ionic ratio (physics/Hertzian)':
+        'Plastic amplification, σ_ionic^physics / σ_ionic^Hertzian',
+    'σ_electronic [physics] (mS/cm)':
+        'σ_e^physics — Tabor plastic film (mS/cm)',
+    'σ_thermal [physics] (mS/cm equiv)':
+        'κ^physics — Tabor plastic film (mS/cm equiv)',
+    'Contact-free / Full':
+        'σ_contact-free / σ_full — constriction overestimation',
+    'σ_brug / σ_ionic':
+        'σ_Bruggeman / σ_ionic — EMT vs Network solver',
+    # Tortuosity comparison
+    'τ_Dij (Dijkstra, 기하만)':
+        'τ_Dijkstra — geodesic-only (geometric)',
+    'τ_Lap_geom (Laplace, GB 제외)':
+        'τ_Laplace,bulk — Laplacian without constriction',
+    'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)':
+        'τ_Laplace,eff ⭐ — Laplacian + constriction (COMSOL / EIS input)',
+    'τ_Lap_eff / τ_Dij':
+        'Constriction overhead, τ_Laplace,eff / τ_Dijkstra',
+    'AM Percolation (%)':          'AM percolation, top↔bottom (%)',
+    'Electronic Active AM (%)':    'Electronically-active AM, bottom-reachable (%)',
+    # Tier-1 corrections
+    'Coverage AM rough(%)   ⭐ [B3]':
+        'Coverage of AM, shape-corrected ⭐ (B3)',
+    'Coverage AM_P rough(%) ⭐ [B3]':
+        'Coverage of AM_P, shape-corrected ⭐ (B3)',
+    'Coverage AM_S rough(%) ⭐ [B3]':
+        'Coverage of AM_S, shape-corrected ⭐ (B3)',
+    'SE-SE CN (perc-only)        [F2]':
+        'SE-SE ⟨z⟩ — percolating-only (F2)',
+    'SE-SE CN (area-weighted)    [F2]':
+        'SE-SE ⟨z⟩ — surface-area weighted (F2)',
+    'SE-SE CN (perc area-w)      [F2]':
+        'SE-SE ⟨z⟩ — percolating + area-weighted (F2)',
+    'SE-SE CN (plastic-augmented) [F1]':
+        'SE-SE ⟨z⟩ — plastic-augmented (F1)',
+    '(F1 extra near-contact pairs)':
+        'F1 near-contact pairs (gap < 10 nm)',
+    # AM-AM mechanics
+    'AM-AM CN mean':               'AM-AM coordination number ⟨z_AM-AM⟩',
+    'AM-AM 접촉 수':                'AM-AM contact count',
+    '접촉 반경(µm)':                'Mean Hertzian contact radius, ⟨a⟩ (μm)',
+    '침투 깊이 δ(µm)':              'Mean overlap depth, ⟨δ⟩ (μm)',
+    '법선력(µN)':                   'Mean normal force, ⟨F_n⟩ (μN)',
+    '접촉 압력(MPa)':               'Mean contact pressure, ⟨p⟩ (MPa)',
+    'Hop 거리(µm)':                 'Mean inter-particle hop distance (μm)',
+    # Stress
+    'Stress CV(%)':
+        'Particle-stress coefficient of variation, CV(σ_VM) (%)',
+    'σ_AM_P/σ_mean':
+        'von-Mises stress ratio, ⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all',
+    'σ_AM_S/σ_mean':
+        'von-Mises stress ratio, ⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all',
+    'σ_SE/σ_mean':
+        'von-Mises stress ratio, ⟨σ_VM⟩_SE / ⟨σ_VM⟩_all',
+    # Stage E (already paper-style; tightened wording only)
+    'σ_ionic — SE size factor':
+        'σ_ionic correction — SE-size factor (Cronau 2022)',
+    'σ_e — AM crystal × size':
+        'σ_e correction — AM-crystallinity × size factor (Trevisanello 2021)',
+    'κ — AM crystal × size + SE':
+        'κ correction — AM-crystallinity + SE factor (Wang 2022)',
+    'σ_ionic (Stage E corrected)':
+        'σ_ionic — Stage E (full literature-grounded corrections, mS/cm)',
+    'σ_electronic (Stage E corrected)':
+        'σ_e — Stage E (fracture × AM-crystallinity, mS/cm)',
+    'σ_thermal (Stage E corrected)':
+        'κ — Stage E (Wang grain corrections, mS/cm equiv)',
+    'Fracture stage counts (intact/MC/Multi/Frag/Pulv)':
+        'Per-contact fracture-stage distribution (intact / micro / multi / frag / pulv)',
+    '7-Layer solver status':
+        '7-Layer solver defence — channel status',
+}
+
+
+def apply_paper_labels(tables):
+    """Replace informal/Korean labels with formal academic notation. Acts on
+    network_summary table in-place. Preserves leading whitespace (used for
+    indentation under section headers) and updates tooltip data-metric via
+    JS LABEL_ALIASES (single.html) so existing tooltip definitions still
+    match without requiring 90-key rename across the JS dict.
+
+    Called from /single/<case_id> and /archive/view/<folder> routes after
+    all section injectors finish."""
+    if 'network_summary' not in tables:
+        return
+    tbl = tables['network_summary']
+    data = tbl.get('data')
+    if not isinstance(data, list):
+        return
+    for row in data:
+        if not row or not isinstance(row, list):
+            continue
+        label = row[0] if row else None
+        if not isinstance(label, str):
+            continue
+        stripped = label.lstrip()
+        prefix = label[: len(label) - len(stripped)]
+        if stripped.startswith('──'):
+            new = _PAPER_SECTION_MAP.get(stripped)
+        else:
+            new = _PAPER_LABEL_MAP.get(stripped)
+        if new and new != stripped:
+            row[0] = prefix + new
+
+
 def transform_network_summary_4col(tables, metrics, meta):
     """Convert network_summary table to 4-column (지표 | Hertzian | Physics | Δ%)
     and inject Network Solver + AM-AM sections from full_metrics.json.
@@ -2341,6 +2537,8 @@ def single(case_id):
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
     inject_stage_e_rows(tables, metrics)
+    # Final pass: replace informal labels with paper-style academic notation
+    apply_paper_labels(tables)
 
     # Brittle-fracture summary tab (auto-built from full_metrics.json keys)
     fracture_tbl = build_fracture_summary_table(metrics)
@@ -3733,6 +3931,8 @@ def archive_view(folder):
     # defence + Bruggeman fallback). Mirrors the /single route so archive
     # views surface the same Stage E rows / fallback tags.
     inject_stage_e_rows(tables, metrics)
+    # Paper-style label rename (mirror /single ordering)
+    apply_paper_labels(tables)
 
     # Brittle-fracture summary tab (built from full_metrics.json keys produced
     # by dem_analysis_core.calc_fracture_stages — auto-DB pipeline). Empty
