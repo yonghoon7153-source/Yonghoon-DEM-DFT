@@ -357,11 +357,35 @@ const METRIC_TIPS = {
     desc: '소입경 활물질(AM_S) 표면이 고체전해질(SE)에 의해 덮인 비율(%)입니다.',
     meaning: '소립자는 비표면적이 크므로 피복률이 낮아지기 쉽습니다. 소립자의 역할은 대립자 사이 빈 공간을 채워 에너지 밀도를 높이는 것이지만, 피복률이 너무 낮으면 ionic inactive가 됩니다.'
   },
+  'Coverage AM(%)': {
+    title: 'Coverage AM (전체 활물질 피복률)',
+    formula: 'cov_AM = A_AM-SE^Tabor / Σ(4πR_AM²)',
+    desc: 'AM_P + AM_S 모두 합친 활물질 표면 중 SE에 덮인 비율(%). Tabor plastic film 면적 기준.',
+    meaning: '본 ensemble median ~50–55% (Minnmann 2021 실험 40–65% 범위와 일치).\nAM_P 와 AM_S 의 가중평균. shape-corrected 버전 (B3) 이 더 reliable — 별도 행 참조.'
+  },
+  'Binding % — AM-SE (H/L/T/V/G)': {
+    title: 'Binding regime % — AM-SE (5-case selection)',
+    formula: 'For each AM-SE contact, A_contact = min(F/H, V_overlap/h_film, 2πR_min²)\n  + lower bounds max(A_Hertz, A_LIGGGHTS)\n5 candidates: H=Hertz, L=LIGGGHTS, T=Tabor, V=Volume, G=Geom',
+    desc: 'AM-SE 접촉 각각에서 5가지 후보 면적 중 어느 것이 selected 되었는지의 분포(%).\n- H (Hertz): π R*δ — analytical lower bound\n- L (LIGGGHTS): DEM internal lower bound\n- T (Tabor): F / H_LPSCl — plastic flow upper cap\n- V (Volume): V_overlap / h_film_min — volume conservation cap\n- G (Geom): 2π R_min² — geometric upper cap (hemisphere)',
+    meaning: '대부분 케이스에서 L (LIGGGHTS) 또는 T (Tabor) 우세.\n물리적 의미: 380 MPa sintering 압력에서 AM-SE 계면이 plastic flow regime — Sakuda 2013 / Lee 2020 와 일치.\nV 가 우세하면 over-compression (입자 과변형), G 가 우세하면 small-overlap geometric limit 도달.'
+  },
+  'Binding % — Total (H/L/T/V/G)': {
+    title: 'Binding regime % — All contacts (AM-SE + SE-SE)',
+    formula: '같은 5-case selection, AM-SE 와 SE-SE 모두 포함',
+    desc: '전체 접촉 (AM-SE + SE-SE) 의 binding regime 분포(%).\nAM-SE 만 따로 본 위 row 와 비교하면 SE-SE 의 contribution 추정 가능.',
+    meaning: 'AM-SE 와 Total 분포가 비슷 → SE-SE 도 비슷한 regime.\nTotal 에서 T (Tabor) 가 더 높으면 SE-SE 도 강하게 plastic film 형성됨 (sulfide solid electrolyte 의 잘 알려진 거동).'
+  },
   'SE-SE CN mean': {
     title: 'SE-SE Coordination Number (배위수)',
     formula: 'CN_i = (SE 입자 i가 접촉하고 있는 다른 SE 입자의 수)\nCN_mean = 평균(모든 SE의 CN)',
     desc: 'SE 입자 하나가 평균적으로 몇 개의 다른 SE 입자와 접촉하고 있는지를 나타냅니다.',
     meaning: 'CN이 높을수록 SE 네트워크가 조밀하게 연결되어 있습니다. CN ≥ 4이면 3D 공간에서 안정적인 percolation 네트워크가 형성됩니다. CN이 낮으면 끊어지기 쉬운 취약한 네트워크입니다.'
+  },
+  'SE-SE CN std': {
+    title: 'SE-SE CN — Standard deviation σ(z_SE-SE)',
+    formula: 'σ(z) = √(⟨z²⟩ − ⟨z⟩²)  over all SE particles',
+    desc: 'SE-SE 배위수의 표준편차. CN 분포의 폭(spread)을 나타냅니다.',
+    meaning: 'σ(z) 가 작으면 모든 SE 가 비슷한 배위수 (homogeneous packing).\nσ(z) 가 크면 일부 SE 는 isolated, 일부는 over-coordinated → packing inhomogeneity.\n본 ensemble 평균 ~1.5–2.0 — typical polydisperse sphere packing.'
   },
   'SE Cluster 수': {
     title: 'SE Cluster 수 (연결 덩어리)',
@@ -531,6 +555,12 @@ const METRIC_TIPS = {
     {% endif %},
     desc: 'Bruggeman 관계식 기반 무차원 비율. σ_grain(3.0 mS/cm) 곱하면 σ_Bruggeman.',
     meaning: 'Network Solver σ_ionic이 ground truth. 이 값은 참고용 상한.'
+  },
+  'R_brug (과대추정 배수)': {
+    title: 'Bruggeman overestimation R_brug = σ_Bruggeman / σ_ionic',
+    formula: 'R_brug = σ_Bruggeman / σ_ionic\nσ_Bruggeman = σ_grain × φ_SE × f_perc / τ²  (constriction 무시)\nσ_ionic = full Network solver (R_bulk + R_constriction)',
+    desc: 'Bruggeman EMT 가 Network Solver 대비 σ 를 몇 배 과대추정하는지의 직접 비교 배수.',
+    meaning: '본 ensemble 통상 3~10×.\nfine SE (r<0.5μm) 에서 가장 큼 (constriction 지배).\ncoarse SE (>1.0μm) 에서 작음 (geometry 지배).\nR_brug 가 클수록 접촉 품질(A_contact) 이 σ_eff 의 rate-limiter — 압축 조건 / particle size 최적화 가치 큼.'
   },
   'σ_ionic (mS/cm)': {
     title: 'Ionic Conductivity (Kirchhoff, Hertzian contact area)',
@@ -938,7 +968,36 @@ const PAPER_TO_ORIG = {
   'Total SE-SE contact area, A_SE-SE (μm²)': 'SE-SE Total(μm²)',
   'Coverage of AM_P by SE, cov_AM_P (%)': 'Coverage AM_P(%)',
   'Coverage of AM_S by SE, cov_AM_S (%)': 'Coverage AM_S(%)',
+  'Coverage of AM by SE, cov_AM (%)': 'Coverage AM(%)',
+  'Binding regime share — AM-SE (Hertz / LIGGGHTS / Tabor / Volume / Geom)':
+      'Binding % — AM-SE (H/L/T/V/G)',
+  'Binding regime share — All contacts (Hertz / LIGGGHTS / Tabor / Volume / Geom)':
+      'Binding % — Total (H/L/T/V/G)',
   'SE-SE coordination number ⟨z_SE-SE⟩': 'SE-SE CN mean',
+  'SE-SE coordination number σ(z_SE-SE)': 'SE-SE CN std',
+  'Bruggeman overestimation, R_brug = σ_Bruggeman / σ_ionic':
+      'R_brug (과대추정 배수)',
+  'Tortuosity median(τ_Dijkstra)': 'Tortuosity median',
+  'Tortuosity σ(τ_Dijkstra)': 'Tortuosity std',
+  'Grain-boundary density (hops/μm)': 'GB Density(hops/μm)',
+  '  ├ AM_P-SE coordination number ⟨z_AM_P-SE⟩':
+      '  ├ AM_P-SE CN mean',
+  '  ├ AM_S-SE coordination number ⟨z_AM_S-SE⟩':
+      '  ├ AM_S-SE CN mean',
+  '  └ AM-SE coordination number (surface-area weighted)':
+      '  └ AM-SE CN (surface-weighted)',
+  'Ionically-vulnerable AM, low-coverage (%)': 'AM Vulnerable(%)',
+  '  ├ AM_P ionically-vulnerable (%)': '  ├ AM_P Vulnerable(%)',
+  '  └ AM_S ionically-vulnerable (%)': '  └ AM_S Vulnerable(%)',
+  'Mean Hertzian contact radius, ⟨a⟩ (μm)': '접촉 반경(µm)',
+  'Mean overlap depth, ⟨δ⟩ (μm)': '침투 깊이 δ(µm)',
+  'Mean normal force, ⟨F_n⟩ (μN)': '법선력(µN)',
+  'Mean contact pressure, ⟨p⟩ (MPa)': '접촉 압력(MPa)',
+  'Mean inter-particle hop distance (μm)': 'Hop 거리(µm)',
+  'Particle-stress coefficient of variation, CV(σ_VM) (%)': 'Stress CV(%)',
+  'von-Mises stress ratio, ⟨σ_VM⟩_AM_P / ⟨σ_VM⟩_all': 'σ_AM_P/σ_mean',
+  'von-Mises stress ratio, ⟨σ_VM⟩_AM_S / ⟨σ_VM⟩_all': 'σ_AM_S/σ_mean',
+  'von-Mises stress ratio, ⟨σ_VM⟩_SE / ⟨σ_VM⟩_all': 'σ_SE/σ_mean',
   'SE percolating clusters (n≥10 / total)': 'SE Cluster 수',
   'SE percolation, top↔bottom (%)': 'SE Percolation(%)',
   'Top-reachable SE (%)': 'Top Reachable(%)',
