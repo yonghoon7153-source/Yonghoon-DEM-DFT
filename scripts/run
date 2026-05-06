@@ -44,6 +44,9 @@ case "$cmd" in
     diagPhys)
         python3 scripts/diag_stage_e_sigma_ionic.py "$@"
         ;;
+    audit-ui)
+        python3 scripts/audit_ui_layout.py "$@"
+        ;;
     all-stagee)
         # Iterate cases passed as args, run Stage E for each
         for c in "$@"; do
@@ -55,7 +58,7 @@ case "$cmd" in
     *)
         echo "Usage: bash scripts/run {sec7|stagec|staged|stagee|baseline|"
         echo "                          tabor|voxelize|fft|diagS7|diagPhys|"
-        echo "                          all-stagee} [args]"
+        echo "                          audit-ui|all-stagee} [args]"
         echo ""
         echo "Bypasses the markdown auto-link conversion of *.py paths in"
         echo "some terminals (Windows Terminal, etc.) when copy-pasting from"
