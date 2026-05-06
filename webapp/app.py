@@ -895,6 +895,112 @@ def normalize_network_summary_layout(tables, metrics):
         else:
             data.append(new_row)
 
+    # ── Pass F: sort rows within each section by canonical order ──
+    # All 160 cases now have identical row CONTENT after passes A-E, but
+    # different injection paths leave them in inconsistent ORDER. This
+    # final pass enforces a single canonical ordering.
+    _CANONICAL_ROW_ORDER = [
+        # 구조
+        'Porosity(%)', '전극두께(μm)',
+        # 계면
+        'AM-SE Total(μm²)', 'SE-SE Total(μm²)',
+        'Binding % — AM-SE (H/L/T/V/G)', 'Binding % — Total (H/L/T/V/G)',
+        'Coverage AM_P(%)', 'Coverage AM_S(%)',
+        # 이온경로 · 연결성
+        'SE-SE CN mean', 'SE-SE CN std', 'SE Cluster 수',
+        'SE Percolation(%)', 'Top Reachable(%)',
+        # 이온경로 · 경로 효율
+        'Tortuosity mean', 'Tortuosity median', 'Tortuosity std',
+        'GB Density(hops/μm)',
+        # 이온경로 · 경로 품질
+        'Path Hop Area mean(μm²)', 'Path Bottleneck(μm²)', 'Path Conductance(μm²)',
+        # 활성도
+        'AM-SE CN mean',
+        '├ AM_P-SE CN mean', '├ AM_S-SE CN mean',
+        '└ AM-SE CN (surface-weighted)',
+        'Ionic Active AM(%)', 'AM Vulnerable(%)',
+        '├ AM_P Vulnerable(%)', '└ AM_S Vulnerable(%)',
+        # 이온전도 (Bruggeman EMT)
+        'SE Volume Fraction', 'σ_Bruggeman (mS/cm)',
+        'σ_brug/σ_grain (Bruggeman)',
+        # Network Solver — combined Hertzian vs Physics
+        'σ_ionic (mS/cm)',
+        'R_brug (과대추정 배수)',
+        'σ_ionic ratio (physics/Hertzian)',
+        'Constriction 비율(%)',
+        'σ_electronic (mS/cm)',
+        'σ_thermal (mS/cm equiv)',
+        'Contact-free / Full',
+        'σ_brug / σ_ionic',
+        # τ 비교
+        'τ_Dij (Dijkstra, 기하만)',
+        'τ_Lap_geom (Laplace, GB 제외)',
+        'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
+        'τ_Lap_eff / τ_Dij',
+        'AM Percolation (%)',
+        'Electronic Active AM (%)',
+        # Tier-1
+        'Coverage AM rough(%)   ⭐ [B3]',
+        'Coverage AM_P rough(%) ⭐ [B3]',
+        'Coverage AM_S rough(%) ⭐ [B3]',
+        'SE-SE CN (perc-only)        [F2]',
+        'SE-SE CN (area-weighted)    [F2]',
+        'SE-SE CN (perc area-w)      [F2]',
+        'SE-SE CN (plastic-augmented) [F1]',
+        '(F1 extra near-contact pairs)',
+        # AM-AM
+        'AM-AM CN mean', 'AM-AM 접촉 수',
+        '접촉 반경(µm)', '침투 깊이 δ(µm)', '법선력(µN)',
+        '접촉 압력(MPa)', 'Hop 거리(µm)',
+        # 응력
+        'Stress CV(%)',
+        'σ_AM_P/σ_mean', 'σ_AM_S/σ_mean', 'σ_SE/σ_mean',
+        # Stage E
+        'σ_ionic — SE size factor',
+        'σ_e — AM crystal × size',
+        'κ — AM crystal × size + SE',
+        'σ_ionic (Stage E corrected)',
+        'σ_electronic (Stage E corrected)',
+        'σ_thermal (Stage E corrected)',
+        'Fracture stage counts (intact/MC/Multi/Frag/Pulv)',
+        '7-Layer solver status',
+        # Cell-level ASR
+        'Cathode geometry (L, A)',
+        'ASR_ionic (Ω·cm²)',
+        'ASR_electronic (Ω·cm²)',
+        'ASR_thermal (K·cm²/W equiv)',
+    ]
+    _canon_idx = {lbl: i for i, lbl in enumerate(_CANONICAL_ROW_ORDER)}
+
+    def _sort_key(row):
+        if not row or not isinstance(row[0], str): return (1, 0)
+        lbl = row[0].strip()
+        i = _canon_idx.get(lbl)
+        if i is None:
+            return (1, 0)  # unknown labels go to end (preserve relative order via stable sort)
+        return (0, i)
+
+    # Group rows by section
+    sections = []   # list of [header_idx, [row_indices...]]
+    current = None
+    for i, r in enumerate(data):
+        if r and isinstance(r[0], str) and r[0].strip().startswith('──'):
+            if current is not None:
+                sections.append(current)
+            current = [i, []]
+        elif current is not None:
+            current[1].append(i)
+    if current is not None:
+        sections.append(current)
+
+    # Stable-sort each section's rows by canonical index
+    for _hdr_idx, row_idxs in sections:
+        if len(row_idxs) <= 1: continue
+        rows_in_section = [data[ri] for ri in row_idxs]
+        sorted_rows = sorted(rows_in_section, key=_sort_key)
+        for offset, sr in enumerate(sorted_rows):
+            data[row_idxs[0] + offset] = sr
+
 
 # ──────────────────────────────────────────────────────────────────────────
 #  Paper-style label renaming (advisor feedback — formal academic language)
