@@ -467,35 +467,28 @@ def inject_stage_e_rows(tables, metrics):
                 'Wang 2022 + phonon GB scatter (∝ AM secondary R)'
             ])
 
-    # Corrected σ values — append fallback tag in 4th column when the
-    # 7-Layer solver had to use the Bruggeman-style weighted-factor fallback.
-    if sigma_i_e is not None:
-        baseline = metrics.get('sigma_full_mScm')
-        delta = (1.0 - sigma_i_e/baseline)*100 if baseline else None
+    # Corrected σ values — always emit all 3 channels for layout consistency.
+    # — placeholder when the channel was skipped by Stage E (e.g. P:S=0:10
+    #    has no AM-AM electronic conductance to correct).
+    def _stage_e_row(label, sigma_e_val, baseline_key, src, fmt='%.4f', unit='mS/cm'):
+        if sigma_e_val is None:
+            return [f'  {label}', '', '—', '— (channel skipped or no baseline)']
+        baseline = metrics.get(baseline_key)
+        delta = (1.0 - sigma_e_val/baseline)*100 if baseline else None
         delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
-        rows.append([
-            '  σ_ionic (Stage E corrected)', '',
-            f'{sigma_i_e:.4f} mS/cm',
-            f'{delta_str}{_src_tag(src_i)}'
-        ])
-    if sigma_e_e is not None:
-        baseline = metrics.get('electronic_sigma_full_mScm')
-        delta = (1.0 - sigma_e_e/baseline)*100 if baseline else None
-        delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
-        rows.append([
-            '  σ_electronic (Stage E corrected)', '',
-            f'{sigma_e_e:.3f} mS/cm',
-            f'{delta_str}{_src_tag(src_e)}'
-        ])
-    if sigma_th_e is not None:
-        baseline = metrics.get('thermal_sigma_full_mScm')
-        delta = (1.0 - sigma_th_e/baseline)*100 if baseline else None
-        delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
-        rows.append([
-            '  σ_thermal (Stage E corrected)', '',
-            f'{sigma_th_e:.3f} mS/cm equiv',
-            f'{delta_str}{_src_tag(src_th)}'
-        ])
+        return [f'  {label}', '',
+                f'{sigma_e_val:{fmt[1:]}} {unit}',
+                f'{delta_str}{_src_tag(src)}']
+
+    rows.append(_stage_e_row('σ_ionic (Stage E corrected)',
+                             sigma_i_e, 'sigma_full_mScm', src_i,
+                             fmt='%.4f', unit='mS/cm'))
+    rows.append(_stage_e_row('σ_electronic (Stage E corrected)',
+                             sigma_e_e, 'electronic_sigma_full_mScm', src_e,
+                             fmt='%.3f', unit='mS/cm'))
+    rows.append(_stage_e_row('σ_thermal (Stage E corrected)',
+                             sigma_th_e, 'thermal_sigma_full_mScm', src_th,
+                             fmt='%.3f', unit='mS/cm equiv'))
 
     # Stage counts (audit trail)
     sc = metrics.get('stage_e_fracture_stage_counts')
@@ -609,36 +602,34 @@ def inject_cell_asr_rows(tables, metrics, input_params):
         asr_h = _asr_ohm_cm2(h)
         asr_p = _asr_ohm_cm2(p)
         asr_e = _asr_ohm_cm2(e)
-        if asr_h is None and asr_e is None:
-            return None
+        # Always emit row (— placeholders for missing values) so every case
+        # has identical layout regardless of which channel is meaningful.
         h_str = f'{asr_h:.2f}' if asr_h is not None else '—'
         p_str = f'{asr_p:.2f}' if asr_p is not None else '—'
-        # Δ column: Stage E vs Hertzian (Stage E is the "best estimate" in paper)
         if asr_e is not None and asr_h:
             delta = (asr_e / asr_h - 1) * 100
             d_str = f'{unit};  Stage E ASR = {asr_e:.2f}  (Δ {delta:+.1f}% vs {baseline_label})'
+        elif asr_e is not None:
+            d_str = f'{unit};  Stage E ASR = {asr_e:.2f}'
         else:
-            d_str = f'{unit}'
+            d_str = f'{unit};  Stage E ASR = —'
         return [f'  {label}', h_str, p_str, d_str]
 
-    r = _row_for('ASR_ionic (Ω·cm²)',
+    rows.append(_row_for('ASR_ionic (Ω·cm²)',
                  'sigma_full_mScm',
                  'sigma_full_mScm_physics',
                  'sigma_full_mScm_stage_e',
-                 unit='Ω·cm²')
-    if r: rows.append(r)
-    r = _row_for('ASR_electronic (Ω·cm²)',
+                 unit='Ω·cm²'))
+    rows.append(_row_for('ASR_electronic (Ω·cm²)',
                  'electronic_sigma_full_mScm',
                  'electronic_sigma_full_mScm_physics',
                  'electronic_sigma_full_mScm_stage_e',
-                 unit='Ω·cm²')
-    if r: rows.append(r)
-    r = _row_for('ASR_thermal (K·cm²/W equiv)',
+                 unit='Ω·cm²'))
+    rows.append(_row_for('ASR_thermal (K·cm²/W equiv)',
                  'thermal_sigma_full_mScm',
                  'thermal_sigma_full_mScm_physics',
                  'thermal_sigma_full_mScm_stage_e',
-                 unit='K·cm²/W equiv')
-    if r: rows.append(r)
+                 unit='K·cm²/W equiv'))
 
     if len(rows) <= 2:
         return  # nothing meaningful
@@ -649,19 +640,24 @@ def inject_cell_asr_rows(tables, metrics, input_params):
 def normalize_network_summary_layout(tables, metrics):
     """Final structural normalizer — guarantees every case has identical
     row placement regardless of network_summary.csv vintage. Different
-    analyze_contacts.py versions produced inconsistent layouts:
+    analyze_contacts.py versions produced different CSV layouts:
 
-      • Some cases: σ_e and κ rows under '── Network Solver (Hertzian) ──'
-      • Other cases: σ_e missing, κ accidentally appended at end of '── τ 비교 ──'
-      • σ_Bruggeman sometimes injected twice (once in 이온전도, once in NS)
+      • Old format: SPLIT '── Network Solver (Hertzian) ──' AND
+        '── Physics (Plastic film, Tabor+volume) ──' as two sections.
+        Each row only fills col 2 OR col 3 — wastes the Δ% column.
+      • New format: COMBINED '── Network Solver (DEM-native vs
+        Tabor+volume physics) ──' single section with proper 4-col
+        Hertzian | Physics | Δ% layout.
+      • Some old cases also have σ_e missing, κ in wrong section,
+        σ_Bruggeman duplicated, etc.
 
     This pass runs AFTER all injectors, BEFORE paper-label rename:
-      1. Move any σ_electronic / σ_thermal rows out of τ section back to
-         the network solver section (insert just before τ header).
-      2. De-duplicate σ_Bruggeman (keep the EMT-section one, drop any
-         later copies in the network solver section).
-      3. If σ_e baseline row is missing entirely but metrics has the value,
-         insert it into the network solver section (so all cases display it).
+      Pass A: merge split Hertzian + Physics sections into one combined
+              section (4-col format: Hertzian | Physics | Δ%).
+      Pass B: relocate σ_electronic / σ_thermal rows that ended up under
+              '── τ 비교 ──' back to network solver section.
+      Pass C: de-duplicate σ_Bruggeman.
+      Pass D: insert σ_e baseline row if missing (using metrics value or 0).
     """
     if 'network_summary' not in tables:
         return
@@ -680,14 +676,96 @@ def normalize_network_summary_layout(tables, metrics):
         return isinstance(label, str) and label.strip().startswith('──')
 
     def _section_of(idx):
-        """Return the most-recent section header strictly above idx."""
         for j in range(idx - 1, -1, -1):
             r = data[j]
             if r and isinstance(r[0], str) and _is_section_hdr(r[0]):
                 return r[0].strip()
         return None
 
-    # ── Pass 1: relocate σ rows wrongly stuck in τ section
+    # ── Pass A: merge split Hertzian + Physics sections into combined ──
+    # Pre-rename headers we look for:
+    HERT_HDR = '── Network Solver (Hertzian DEM-native) ──'
+    PHYS_HDR = '── Physics (Plastic film, Tabor+volume) ──'
+    COMBINED_HDR = '── Network Solver (DEM-native vs Tabor+volume physics) ──'
+
+    hert_idx = phys_idx = None
+    for i, r in enumerate(data):
+        if not r or not isinstance(r[0], str): continue
+        lbl = r[0].strip()
+        if lbl == HERT_HDR and hert_idx is None: hert_idx = i
+        elif lbl == PHYS_HDR and phys_idx is None: phys_idx = i
+
+    if hert_idx is not None and phys_idx is not None and phys_idx > hert_idx:
+        # Find Physics section end (next section header or end-of-data)
+        phys_end = len(data)
+        for j in range(phys_idx + 1, len(data)):
+            rr = data[j]
+            if rr and isinstance(rr[0], str) and _is_section_hdr(rr[0]):
+                phys_end = j
+                break
+        physics_rows = data[phys_idx + 1:phys_end]
+
+        # Pair (Physics-row → Hertzian-row) labels for value merging
+        PAIRS = {
+            'σ_ionic [physics] (mS/cm)':                   'σ_ionic (mS/cm)',
+            'σ_electronic [physics] (mS/cm)':              'σ_electronic (mS/cm)',
+            'σ_thermal [physics] (mS/cm equiv)':           'σ_thermal (mS/cm equiv)',
+        }
+        pair_values = {}     # {hert_label: physics_value_str}
+        standalone_rows = [] # rows in Physics section that are dual-mode (e.g. plastic amp)
+        for r in physics_rows:
+            if not r or not isinstance(r[0], str): continue
+            lbl = r[0].strip()
+            if lbl in PAIRS:
+                phys_v = r[2] if len(r) > 2 and r[2] not in ('', '-') else r[1]
+                pair_values[PAIRS[lbl]] = phys_v
+            else:
+                standalone_rows.append(r)
+
+        # Update Hertzian-section rows: set Physics col + Δ%
+        # (Hertzian section spans hert_idx+1 to phys_idx)
+        for hi in range(hert_idx + 1, phys_idx):
+            r = data[hi]
+            if not r or not isinstance(r[0], str): continue
+            lbl = r[0].strip()
+            if lbl not in pair_values: continue
+            phys_v = pair_values[lbl]
+            try:
+                h = float(str(r[1]).replace(',', ''))
+                p = float(str(phys_v).replace(',', ''))
+                r[2] = phys_v
+                r[3] = f'{(p - h) / h * 100:+.1f}%' if h else '0%'
+            except (ValueError, TypeError):
+                r[2] = phys_v
+
+        # Move standalone Physics rows (plastic amp, contact-free, etc.)
+        # to the end of the Hertzian section (i.e., right before phys_idx)
+        # while still preserving their Hertzian-vs-Physics 4-col content.
+        # Insert at phys_idx (which is now the end-of-Hertzian boundary).
+        for sr in standalone_rows:
+            data.insert(phys_idx, sr)
+            phys_idx += 1
+
+        # Now delete the entire Physics section (header + remaining rows)
+        # — but recompute phys_idx since we just inserted standalone rows.
+        for i, r in enumerate(data):
+            if r and isinstance(r[0], str) and r[0].strip() == PHYS_HDR:
+                # Find end of physics section
+                pe = len(data)
+                for j in range(i + 1, len(data)):
+                    rr = data[j]
+                    if rr and isinstance(rr[0], str) and _is_section_hdr(rr[0]):
+                        pe = j; break
+                del data[i:pe]
+                break
+
+        # Rename Hertzian header to combined header
+        for i, r in enumerate(data):
+            if r and isinstance(r[0], str) and r[0].strip() == HERT_HDR:
+                r[0] = COMBINED_HDR
+                break
+
+    # ── Pass B: relocate σ rows wrongly stuck in τ section ──
     misplaced = []
     for i, r in enumerate(data):
         if not r or not isinstance(r, list): continue
@@ -701,23 +779,19 @@ def normalize_network_summary_layout(tables, metrics):
 
     if misplaced:
         moved_rows = [data[i] for i in misplaced]
-        # Pop in reverse so earlier indices remain valid
         for i in reversed(misplaced):
             data.pop(i)
-        # Find τ section header and insert moved rows JUST BEFORE it
-        # (which puts them at the end of the network solver area)
         tau_idx = None
         for i, r in enumerate(data):
             if r and isinstance(r[0], str) and (
                 'τ 비교' in r[0] or 'Tortuosity comparison' in r[0]
                 or 'Dijkstra vs Laplace' in r[0]):
-                tau_idx = i
-                break
+                tau_idx = i; break
         if tau_idx is not None:
             for m in reversed(moved_rows):
                 data.insert(tau_idx, m)
 
-    # ── Pass 2: de-duplicate σ_Bruggeman (keep the FIRST occurrence only)
+    # ── Pass C: de-duplicate σ_Bruggeman ──
     seen_bruggeman = False
     drop_indices = []
     for i, r in enumerate(data):
@@ -732,26 +806,24 @@ def normalize_network_summary_layout(tables, metrics):
     for i in reversed(drop_indices):
         data.pop(i)
 
-    # ── Pass 3: ensure σ_e baseline row exists if metrics has the value.
-    # Some older CSVs omitted it when σ_e ≈ 0; we still want the row for
-    # layout consistency.
+    # ── Pass D: ensure σ_e baseline row exists ──
     has_sigma_e_baseline = any(
         r and isinstance(r[0], str) and r[0].strip() == 'σ_electronic (mS/cm)'
         for r in data if isinstance(r, list))
     sigma_e_h = metrics.get('electronic_sigma_full_mScm') if metrics else None
-    if not has_sigma_e_baseline and sigma_e_h is not None:
-        sigma_e_p = metrics.get('electronic_sigma_full_mScm_physics')
-        # Build a 4-col row identical to _dual_row format
+    if not has_sigma_e_baseline:
+        sigma_e_p = metrics.get('electronic_sigma_full_mScm_physics') if metrics else None
         h_str = f'{sigma_e_h:.2f}' if sigma_e_h else '0.00'
         if sigma_e_p is not None:
             p_str = f'{sigma_e_p:.2f}'
-            d = ((sigma_e_p - sigma_e_h) / sigma_e_h * 100) if sigma_e_h else 0
-            d_str = f'{d:+.1f}%' if sigma_e_h else '0%'
+            if sigma_e_h:
+                d_str = f'{(sigma_e_p - sigma_e_h) / sigma_e_h * 100:+.1f}%'
+            else:
+                d_str = '0%'
         else:
-            p_str = h_str
-            d_str = '0%'
+            p_str = h_str; d_str = '0%'
         new_row = ['σ_electronic (mS/cm)', h_str, p_str, d_str]
-        # Insert just before τ section header (end of network solver area)
+        # Insert at end of network solver section (just before τ section)
         tau_idx = None
         for i, r in enumerate(data):
             if r and isinstance(r[0], str) and (
