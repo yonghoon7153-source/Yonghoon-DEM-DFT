@@ -540,6 +540,112 @@ def inject_stage_e_rows(tables, metrics):
     data.extend(rows)
 
 
+def inject_cell_asr_rows(tables, metrics, input_params):
+    """Append a 'Cell-level ASR (Area-Specific Resistance)' section showing
+    the cell-scale impedance derived from intrinsic σ via Ohm's-law slab:
+
+        R_cathode = L_cathode / σ
+        G_cathode = σ · A_RVE / L_cathode
+        ASR       = L_cathode / σ        [Ω·cm²]      (per unit area)
+
+    L_cathode (μm) comes from metrics['thickness_um'] (DEM compaction-
+    measured cathode thickness — top-of-particles minus plate-z).
+    A_RVE (μm²) comes from input_params box_x × box_y × scale².
+
+    For each transport channel (σ_ionic, σ_e, κ) we compute ASR for all
+    three solver modes that exist in metrics:
+        Hertzian (DEM-native)
+        Physics (Tabor + volume conservation)
+        Stage E (literature-grounded σ_grain corrections — if present)
+
+    Reviewer-grade context: Bielefeld 2022 / Minnmann 2021 / Lee 2020 all
+    report cathode-ASR (not σ alone) because experimental EIS gives R·A
+    directly. Adding this row makes the σ → ASR conversion transparent
+    in the same table and lets reviewers cross-check against literature
+    values (typical sulfide cathode ASR_ionic ≈ 10–100 Ω·cm² @ 1 mAh/cm²
+    loading, depending on σ_eff and L).
+    """
+    if 'network_summary' not in tables or not metrics:
+        return
+    data = tables['network_summary']['data']
+    if not isinstance(data, list):
+        return
+
+    section_label = '── Cell-level ASR (Ohm slab: R = L_cathode / σ) ──'
+    if any(isinstance(r, list) and r and r[0] == section_label for r in data):
+        return
+
+    L_um = metrics.get('thickness_um')
+    if not L_um or L_um <= 0:
+        return  # no cathode thickness — can't compute slab resistance
+
+    # RVE cross-section: box_x × box_y × scale² → μm². scale comes from
+    # case.scale (used elsewhere as input_params.box_x × scale to get μm).
+    scale = input_params.get('scale') or 1
+    box_x_um = (input_params.get('box_x') or 0) * scale
+    box_y_um = (input_params.get('box_y') or 0) * scale
+    A_um2 = box_x_um * box_y_um if (box_x_um and box_y_um) else None
+
+    # Conversion factor: σ (mS/cm) → ASR (Ω·cm²)
+    #   σ [mS/cm] × 1e-3 = σ [S/cm];  ASR = L [cm] / σ [S/cm]  →  Ω·cm²
+    #   With L in μm: ASR_Ωcm2 = (L_um × 1e-4) / (σ_mScm × 1e-3) = L_um × 0.1 / σ_mScm
+    def _asr_ohm_cm2(sigma_mScm):
+        if sigma_mScm is None or sigma_mScm <= 0:
+            return None
+        return L_um * 0.1 / sigma_mScm   # Ω·cm² (or K·cm²/W for thermal)
+
+    rows = [[section_label, '', '', '']]
+    geom_str = (f'L_cathode = {L_um:.1f} μm   (DEM thickness)'
+                + (f',   A_RVE = {A_um2:.0f} μm²' if A_um2 else ''))
+    rows.append([
+        '  Cathode geometry (L, A)', '', geom_str,
+        'L = thickness_um (top-of-particles − plate-z), A = box_x × box_y × scale²',
+    ])
+
+    def _row_for(label, k_h, k_p, k_e, unit='Ω·cm²', baseline_label='Hertzian'):
+        h = metrics.get(k_h)
+        p = metrics.get(k_p) if k_p else None
+        e = metrics.get(k_e) if k_e else None
+        asr_h = _asr_ohm_cm2(h)
+        asr_p = _asr_ohm_cm2(p)
+        asr_e = _asr_ohm_cm2(e)
+        if asr_h is None and asr_e is None:
+            return None
+        h_str = f'{asr_h:.2f}' if asr_h is not None else '—'
+        p_str = f'{asr_p:.2f}' if asr_p is not None else '—'
+        # Δ column: Stage E vs Hertzian (Stage E is the "best estimate" in paper)
+        if asr_e is not None and asr_h:
+            delta = (asr_e / asr_h - 1) * 100
+            d_str = f'{unit};  Stage E ASR = {asr_e:.2f}  (Δ {delta:+.1f}% vs {baseline_label})'
+        else:
+            d_str = f'{unit}'
+        return [f'  {label}', h_str, p_str, d_str]
+
+    r = _row_for('ASR_ionic (Ω·cm²)',
+                 'sigma_full_mScm',
+                 'sigma_full_mScm_physics',
+                 'sigma_full_mScm_stage_e',
+                 unit='Ω·cm²')
+    if r: rows.append(r)
+    r = _row_for('ASR_electronic (Ω·cm²)',
+                 'electronic_sigma_full_mScm',
+                 'electronic_sigma_full_mScm_physics',
+                 'electronic_sigma_full_mScm_stage_e',
+                 unit='Ω·cm²')
+    if r: rows.append(r)
+    r = _row_for('ASR_thermal (K·cm²/W equiv)',
+                 'thermal_sigma_full_mScm',
+                 'thermal_sigma_full_mScm_physics',
+                 'thermal_sigma_full_mScm_stage_e',
+                 unit='K·cm²/W equiv')
+    if r: rows.append(r)
+
+    if len(rows) <= 2:
+        return  # nothing meaningful
+
+    data.extend(rows)
+
+
 # ──────────────────────────────────────────────────────────────────────────
 #  Paper-style label renaming (advisor feedback — formal academic language)
 #
@@ -583,6 +689,8 @@ _PAPER_SECTION_MAP = {
         '── 응력 분포 (Particle-stress distribution — von Mises) ──',
     '── Stage E (literature-grounded σ_grain corrections) ──':
         '── Stage E · 문헌 기반 σ_grain 보정 (Stage E — Literature-grounded σ_grain corrections, Cronau / Trevisanello / Wang) ──',
+    '── Cell-level ASR (Ohm slab: R = L_cathode / σ) ──':
+        '── 셀 단위 ASR · 두께·전도도 슬랩 (Cell-level area-specific resistance — Ohm slab: R = L_cathode / σ) ──',
 }
 
 _PAPER_LABEL_MAP = {
@@ -2540,10 +2648,21 @@ def single(case_id):
                         idx, ['σ_Bruggeman (mS/cm)', sigma_brug_mScm])
                     break
 
+    # Load input_params.json first — needed by inject_cell_asr_rows for
+    # RVE area (box_x × box_y × scale²)
+    input_params = {}
+    params_path = os.path.join(results_dir, 'input_params.json')
+    if os.path.exists(params_path):
+        with open(params_path) as f:
+            input_params = json.load(f)
+    if input_params and 'scale' not in input_params:
+        input_params['scale'] = meta.get('scale', 1)
+
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
     inject_stage_e_rows(tables, metrics)
+    inject_cell_asr_rows(tables, metrics, input_params)
     # Final pass: replace informal labels with paper-style academic notation
     apply_paper_labels(tables)
 
@@ -2551,13 +2670,6 @@ def single(case_id):
     fracture_tbl = build_fracture_summary_table(metrics)
     if fracture_tbl is not None:
         tables['fracture_summary'] = fracture_tbl
-
-    # Load input_params.json
-    input_params = {}
-    params_path = os.path.join(results_dir, 'input_params.json')
-    if os.path.exists(params_path):
-        with open(params_path) as f:
-            input_params = json.load(f)
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
@@ -3931,6 +4043,15 @@ def archive_view(folder):
                 if val is not None:
                     row[1] = val
 
+    # Load input_params first — needed for cell-ASR RVE area
+    input_params = {}
+    params_path = os.path.join(results_dir, 'input_params.json')
+    if os.path.exists(params_path):
+        with open(params_path) as f:
+            input_params = json.load(f)
+    if input_params and 'scale' not in input_params:
+        input_params['scale'] = meta.get('scale', 1)
+
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
 
@@ -3938,6 +4059,8 @@ def archive_view(folder):
     # defence + Bruggeman fallback). Mirrors the /single route so archive
     # views surface the same Stage E rows / fallback tags.
     inject_stage_e_rows(tables, metrics)
+    # Cell-level ASR (Ohm slab using L_cathode and RVE area)
+    inject_cell_asr_rows(tables, metrics, input_params)
     # Paper-style label rename (mirror /single ordering)
     apply_paper_labels(tables)
 
@@ -3947,12 +4070,6 @@ def archive_view(folder):
     fracture_tbl = build_fracture_summary_table(metrics)
     if fracture_tbl is not None:
         tables['fracture_summary'] = fracture_tbl
-
-    input_params = {}
-    params_path = os.path.join(results_dir, 'input_params.json')
-    if os.path.exists(params_path):
-        with open(params_path) as f:
-            input_params = json.load(f)
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,

@@ -1038,6 +1038,30 @@ const METRIC_TIPS = {
     desc: '이 case 의 모든 AM-AM contact 을 5단계 fracture stage 로 분류한 누적 카운트.\nLawn 1998 의 force-multiplier scaling 기반.',
     meaning: '본 ensemble 의 median fracture index = 0.013 — 대부분 intact.\nFragmentation + Pulverization > 5% 인 case 는 σ_e Stage E 에서 큰 손실.\n각 stage 의 σ_factor: Intact 1.00 / MC 0.90 / Multi 0.50 / Frag 0.20 / Pulv 0.05.'
   },
+  'Cathode geometry (L, A)': {
+    title: 'Cathode geometry — L_cathode / A_RVE',
+    formula: 'L_cathode = thickness_um  (top-of-particles − plate-z)\nA_RVE = box_x × box_y × scale²  (input_params.json + case.scale)',
+    desc: 'Ohm slab 계산에 들어가는 두 기하학적 입력값.\nL_cathode 는 DEM compaction 후 측정된 양극 (cathode) 두께 (μm).\nA_RVE 는 representative volume element (RVE) 의 단면적 (μm²).',
+    meaning: 'Stage E 가 σ (intrinsic 전도도, mS/cm) 를 주는 반면, ASR (Ω·cm²) 는 *cell-level resistance* — 즉 두께가 들어간 실제 셀 임피던스를 줍니다.\n실험 EIS 가 직접 보고하는 R·A 와 동일 단위 → reviewer-friendly cross-check.'
+  },
+  'ASR_ionic (Ω·cm²)': {
+    title: 'ASR_ionic — Cathode ionic area-specific resistance',
+    formula: 'ASR_ionic = L_cathode / σ_ionic\n  L in cm,  σ in S/cm  →  ASR in Ω·cm²\n  L_um × 0.1 / σ_mScm  (numeric form used in webapp)',
+    desc: 'Ohm slab 형태의 양극 ionic resistance per unit area.\nσ_ionic 의 *intrinsic* 값을 *cell-level* 로 환산.',
+    meaning: '문헌 비교 기준값:\n- Sulfide cathode (Bielefeld 2022): 10–50 Ω·cm² @ 1 mAh/cm² loading\n- Argyrodite (Lee 2020): 30–80 Ω·cm² @ 380 MPa sintering\n- Wet-coated catholyte (Minnmann 2021): 50–200 Ω·cm²\n\n본 ensemble 의 r_SE/φ_SE 조합에 따라 폭넓게 분포.\nStage E 적용 후 값이 *증가* (ASR ↑) 하면 Stage E factor 가 σ 를 줄였다는 의미 — 정상 거동.'
+  },
+  'ASR_electronic (Ω·cm²)': {
+    title: 'ASR_electronic — Cathode electronic area-specific resistance',
+    formula: 'ASR_e = L_cathode / σ_e\n  Same Ohm-slab as ASR_ionic but with σ_e (electronic).',
+    desc: 'AM-AM 네트워크 기반 electronic resistance per unit area.',
+    meaning: 'σ_e 가 σ_ionic 보다 통상 100~1000× 크기 때문에 ASR_e 는 작음 (< 1 Ω·cm² 흔함).\n도전재 (VGCF/C65) 없이 percolation 만으로 얼마나 작아지는지 vs 도전재 추가시 더 작아지는 정도가 design rule.\nAM_P-rich case 에서 σ_e 손실 크기 때문에 ASR_e 가 σ 변화의 *증폭* 으로 가시화.'
+  },
+  'ASR_thermal (K·cm²/W equiv)': {
+    title: 'ASR_thermal — Cathode thermal area-specific resistance',
+    formula: 'ASR_th = L_cathode / κ\n  Same Ohm-slab using thermal κ (W/m·K equiv units).\n  Output K·cm²/W (heat flux per K per cm² inverse).',
+    desc: 'AM + SE 모든 접촉의 phonon-conduction 네트워크 기반 thermal resistance.',
+    meaning: '배터리 열 관리 / thermal runaway 분석에 직접 입력 가능.\nSulfide ASSB cathode 통상 ASR_th ≈ 1–10 K·cm²/W (Wang 2022).\nκ 변화는 σ_ionic / σ_e 보다 작아서 Stage E 영향 제한적.'
+  },
   '7-Layer solver status': {
     title: '7-Layer solver defence status',
     formula: 'L1: g_boundary 적응화 (commit 132004b)\nL2: spsolve G_eff/Σg > 1.1 → CG retry (1ac8b1c)\nL3: CG fail → return None (c9095bb)\nL4: σ_ratio > 1.5 → return None (8380f6e)\nL5: section7 1.1× anomaly filter (c81398a)\nL6: Bruggeman weighted-factor fallback (7a11682)\nL7: 자동 트리거 + 가시화 (e360dd7)',
