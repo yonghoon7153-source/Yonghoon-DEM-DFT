@@ -406,9 +406,19 @@ def inject_stage_e_rows(tables, metrics):
     if not (factors or sigma_i_e is not None or sigma_e_e is not None):
         return  # no Stage E data on this case
 
+    src = metrics.get('stage_e_source') or {}
+    src_i  = src.get('sigma_ionic',   'solver')
+    src_e  = src.get('sigma_e',       'solver')
+    src_th = src.get('sigma_thermal', 'solver')
+    def _src_tag(s):
+        if s == 'fallback_weighted_factor':
+            return ' [⚡Bruggeman fallback]'
+        return ''
+
     rows: list = [[section_label, '', '', '']]
 
-    # Applied factors header — size-dependent breakdown
+    # Applied factors header — size-dependent breakdown (stable labels so
+    # tooltips can match; dynamic per-channel values go in value column)
     r_se = factors.get('r_SE_um')
     r_am_p = factors.get('r_AM_P_um')
     r_am_s = factors.get('r_AM_S_um')
@@ -418,8 +428,9 @@ def inject_stage_e_rows(tables, metrics):
 
     if r_se is not None and f_se_ionic is not None:
         rows.append([
-            f'  σ_ionic — SE (r={r_se:.2f}μm)',
-            '', f'×{f_se_ionic:.2f}',
+            '  σ_ionic — SE size factor',
+            '',
+            f'r_SE={r_se:.2f}μm   ×{f_se_ionic:.2f}',
             'Cronau 2022 — size-invariant ≥0.5μm' if f_se_ionic >= 0.99
             else f'Cronau 2022 — sub-μm amorphization'
         ])
@@ -456,30 +467,34 @@ def inject_stage_e_rows(tables, metrics):
                 'Wang 2022 + phonon GB scatter (∝ AM secondary R)'
             ])
 
-    # Corrected σ values
+    # Corrected σ values — append fallback tag in 4th column when the
+    # 7-Layer solver had to use the Bruggeman-style weighted-factor fallback.
     if sigma_i_e is not None:
         baseline = metrics.get('sigma_full_mScm')
         delta = (1.0 - sigma_i_e/baseline)*100 if baseline else None
+        delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
         rows.append([
             '  σ_ionic (Stage E corrected)', '',
             f'{sigma_i_e:.4f} mS/cm',
-            f'Δ {delta:+.1f}%' if delta is not None else ''
+            f'{delta_str}{_src_tag(src_i)}'
         ])
     if sigma_e_e is not None:
         baseline = metrics.get('electronic_sigma_full_mScm')
         delta = (1.0 - sigma_e_e/baseline)*100 if baseline else None
+        delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
         rows.append([
             '  σ_electronic (Stage E corrected)', '',
             f'{sigma_e_e:.3f} mS/cm',
-            f'Δ {delta:+.1f}%' if delta is not None else ''
+            f'{delta_str}{_src_tag(src_e)}'
         ])
     if sigma_th_e is not None:
         baseline = metrics.get('thermal_sigma_full_mScm')
         delta = (1.0 - sigma_th_e/baseline)*100 if baseline else None
+        delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
         rows.append([
             '  σ_thermal (Stage E corrected)', '',
             f'{sigma_th_e:.3f} mS/cm equiv',
-            f'Δ {delta:+.1f}%' if delta is not None else ''
+            f'{delta_str}{_src_tag(src_th)}'
         ])
 
     # Stage counts (audit trail)
@@ -498,6 +513,25 @@ def inject_stage_e_rows(tables, metrics):
                 f'{n_intact}/{n_mc}/{n_mu}/{n_fr}/{n_pu}',
                 f'Lawn 1998 force multipliers (1/3/11/32)'
             ])
+
+    # 7-Layer solver defence summary — single row that explains which channels
+    # used the Bruggeman fallback (visible audit trail; matches paper §6).
+    fallback_chs = []
+    if src_i  == 'fallback_weighted_factor': fallback_chs.append('σ_ionic')
+    if src_e  == 'fallback_weighted_factor': fallback_chs.append('σ_e')
+    if src_th == 'fallback_weighted_factor': fallback_chs.append('κ')
+    if fallback_chs:
+        rows.append([
+            '  7-Layer solver status', '',
+            f'Bruggeman fallback fired on: {", ".join(fallback_chs)}',
+            'Paper §6 Layer-6 (commit 7a11682) — σ ≈ σ_baseline·Σ(g·f)/Σg'
+        ])
+    else:
+        rows.append([
+            '  7-Layer solver status', '',
+            'Direct solver (all channels valid)',
+            'Paper §6 Layer-1~4 passed all sanity checks'
+        ])
 
     if len(rows) <= 1:
         return  # only header — nothing to add
@@ -3694,6 +3728,11 @@ def archive_view(folder):
 
     # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
     transform_network_summary_4col(tables, metrics, meta)
+
+    # Stage E (literature-grounded σ_grain corrections + 7-Layer solver
+    # defence + Bruggeman fallback). Mirrors the /single route so archive
+    # views surface the same Stage E rows / fallback tags.
+    inject_stage_e_rows(tables, metrics)
 
     # Brittle-fracture summary tab (built from full_metrics.json keys produced
     # by dem_analysis_core.calc_fracture_stages — auto-DB pipeline). Empty
