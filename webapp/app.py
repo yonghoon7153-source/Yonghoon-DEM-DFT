@@ -646,6 +646,124 @@ def inject_cell_asr_rows(tables, metrics, input_params):
     data.extend(rows)
 
 
+def normalize_network_summary_layout(tables, metrics):
+    """Final structural normalizer — guarantees every case has identical
+    row placement regardless of network_summary.csv vintage. Different
+    analyze_contacts.py versions produced inconsistent layouts:
+
+      • Some cases: σ_e and κ rows under '── Network Solver (Hertzian) ──'
+      • Other cases: σ_e missing, κ accidentally appended at end of '── τ 비교 ──'
+      • σ_Bruggeman sometimes injected twice (once in 이온전도, once in NS)
+
+    This pass runs AFTER all injectors, BEFORE paper-label rename:
+      1. Move any σ_electronic / σ_thermal rows out of τ section back to
+         the network solver section (insert just before τ header).
+      2. De-duplicate σ_Bruggeman (keep the EMT-section one, drop any
+         later copies in the network solver section).
+      3. If σ_e baseline row is missing entirely but metrics has the value,
+         insert it into the network solver section (so all cases display it).
+    """
+    if 'network_summary' not in tables:
+        return
+    data = tables['network_summary']['data']
+    if not isinstance(data, list) or not data:
+        return
+
+    SIGMA_LABELS = {
+        'σ_electronic (mS/cm)',
+        'σ_thermal (mS/cm equiv)',
+        'σ_electronic [physics] (mS/cm)',
+        'σ_thermal [physics] (mS/cm equiv)',
+    }
+
+    def _is_section_hdr(label):
+        return isinstance(label, str) and label.strip().startswith('──')
+
+    def _section_of(idx):
+        """Return the most-recent section header strictly above idx."""
+        for j in range(idx - 1, -1, -1):
+            r = data[j]
+            if r and isinstance(r[0], str) and _is_section_hdr(r[0]):
+                return r[0].strip()
+        return None
+
+    # ── Pass 1: relocate σ rows wrongly stuck in τ section
+    misplaced = []
+    for i, r in enumerate(data):
+        if not r or not isinstance(r, list): continue
+        lbl = r[0] if r else None
+        if not isinstance(lbl, str): continue
+        if lbl.strip() not in SIGMA_LABELS: continue
+        sec = _section_of(i)
+        if sec and ('τ 비교' in sec or 'Tortuosity comparison' in sec
+                    or 'Dijkstra vs Laplace' in sec):
+            misplaced.append(i)
+
+    if misplaced:
+        moved_rows = [data[i] for i in misplaced]
+        # Pop in reverse so earlier indices remain valid
+        for i in reversed(misplaced):
+            data.pop(i)
+        # Find τ section header and insert moved rows JUST BEFORE it
+        # (which puts them at the end of the network solver area)
+        tau_idx = None
+        for i, r in enumerate(data):
+            if r and isinstance(r[0], str) and (
+                'τ 비교' in r[0] or 'Tortuosity comparison' in r[0]
+                or 'Dijkstra vs Laplace' in r[0]):
+                tau_idx = i
+                break
+        if tau_idx is not None:
+            for m in reversed(moved_rows):
+                data.insert(tau_idx, m)
+
+    # ── Pass 2: de-duplicate σ_Bruggeman (keep the FIRST occurrence only)
+    seen_bruggeman = False
+    drop_indices = []
+    for i, r in enumerate(data):
+        if not r or not isinstance(r, list): continue
+        lbl = r[0] if r else None
+        if not isinstance(lbl, str): continue
+        if lbl.strip() == 'σ_Bruggeman (mS/cm)':
+            if seen_bruggeman:
+                drop_indices.append(i)
+            else:
+                seen_bruggeman = True
+    for i in reversed(drop_indices):
+        data.pop(i)
+
+    # ── Pass 3: ensure σ_e baseline row exists if metrics has the value.
+    # Some older CSVs omitted it when σ_e ≈ 0; we still want the row for
+    # layout consistency.
+    has_sigma_e_baseline = any(
+        r and isinstance(r[0], str) and r[0].strip() == 'σ_electronic (mS/cm)'
+        for r in data if isinstance(r, list))
+    sigma_e_h = metrics.get('electronic_sigma_full_mScm') if metrics else None
+    if not has_sigma_e_baseline and sigma_e_h is not None:
+        sigma_e_p = metrics.get('electronic_sigma_full_mScm_physics')
+        # Build a 4-col row identical to _dual_row format
+        h_str = f'{sigma_e_h:.2f}' if sigma_e_h else '0.00'
+        if sigma_e_p is not None:
+            p_str = f'{sigma_e_p:.2f}'
+            d = ((sigma_e_p - sigma_e_h) / sigma_e_h * 100) if sigma_e_h else 0
+            d_str = f'{d:+.1f}%' if sigma_e_h else '0%'
+        else:
+            p_str = h_str
+            d_str = '0%'
+        new_row = ['σ_electronic (mS/cm)', h_str, p_str, d_str]
+        # Insert just before τ section header (end of network solver area)
+        tau_idx = None
+        for i, r in enumerate(data):
+            if r and isinstance(r[0], str) and (
+                'τ 비교' in r[0] or 'Tortuosity comparison' in r[0]
+                or 'Dijkstra vs Laplace' in r[0]):
+                tau_idx = i; break
+        if tau_idx is not None:
+            data.insert(tau_idx, new_row)
+        else:
+            data.append(new_row)
+
+
 # ──────────────────────────────────────────────────────────────────────────
 #  Paper-style label renaming (advisor feedback — formal academic language)
 #
@@ -2663,6 +2781,8 @@ def single(case_id):
     inject_tier1_patch_rows(tables, metrics)
     inject_stage_e_rows(tables, metrics)
     inject_cell_asr_rows(tables, metrics, input_params)
+    # Final pre-rename pass: enforce identical row layout across all cases
+    normalize_network_summary_layout(tables, metrics)
     # Final pass: replace informal labels with paper-style academic notation
     apply_paper_labels(tables)
 
@@ -4061,6 +4181,8 @@ def archive_view(folder):
     inject_stage_e_rows(tables, metrics)
     # Cell-level ASR (Ohm slab using L_cathode and RVE area)
     inject_cell_asr_rows(tables, metrics, input_params)
+    # Final pre-rename pass: enforce identical row layout across all cases
+    normalize_network_summary_layout(tables, metrics)
     # Paper-style label rename (mirror /single ordering)
     apply_paper_labels(tables)
 
