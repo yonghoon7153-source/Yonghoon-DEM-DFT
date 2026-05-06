@@ -1,0 +1,118 @@
+{
+  "id": "comp3",
+  "formula": "Li5.4PS4.4Cl1.0Br0.6",
+  "formula_html": "Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>1.0</sub>Br<sub>0.6</sub>",
+  "family": "Li5.4",
+  "atoms": 62,
+  "cell_type": "rhombohedral",
+  "formula_units": 5,
+  "halogen": {
+    "Cl": 5,
+    "Br": 3
+  },
+  "li_per_fu": 5.4,
+  "s_per_fu": 4.4,
+  "has_vacancy": true,
+  "vacancy_per_fu": 0.6,
+  "eos": {
+    "B0_GPa": 20.8,
+    "B0_prime": 6.79,
+    "n_points": 10,
+    "R_squared": 0.999993,
+    "status": "confirmed",
+    "pipeline": "v1"
+  },
+  "band_gap_eV": 2.1,
+  "vbm_character": "S 3p + Br 4p",
+  "cbm_character": "Li 2s, P 3s",
+  "elastic_dft_0K_GPa": {
+    "C11": 85.6,
+    "C12": 21.0,
+    "C44": 27.5,
+    "K": 42.5,
+    "G": 29.2,
+    "E": 71.7,
+    "nu": 0.2
+  },
+  "elastic_mlip_300K_GPa": {
+    "unit_cell": {
+      "C11": 54.3,
+      "C12": 15.0,
+      "C44": 14.5,
+      "K": 28.1,
+      "G": 15.3,
+      "E": 39.0
+    },
+    "supercell_2x2x1": {
+      "C11": 47.8,
+      "C12": 9.2,
+      "C44": 13.4,
+      "K": 22.0,
+      "G": 15.0,
+      "E": 36.6
+    }
+  },
+  "elastic_mlip_600K_GPa": {
+    "method": "600K_snapshot_x5",
+    "C11": 34.5,
+    "C11_std": 0.8,
+    "C12": 14.0,
+    "C12_std": 0.3,
+    "C44": 10.9,
+    "C44_std": 0.4,
+    "E_VRH": 27.3,
+    "E_std": 0.4,
+    "K_VRH": 20.9,
+    "G_VRH": 10.6
+  },
+  "surface_energy_Jm2": 0.565,
+  "two_gamma_Jm2": 1.13,
+  "adhesion_v1": {
+    "Wad_Jm2": 1.052,
+    "Wad_aJ_r10nm": 331
+  },
+  "adhesion_v5": {
+    "method": "crystalline_slab_surface_MQA",
+    "SE_cell": "2x2x1_248at",
+    "NCM_cell": "5x5x1_300at",
+    "strain_pct": 1.1,
+    "status": "in_progress"
+  },
+  "references": [
+    "adeli2019",
+    "kraft2018"
+  ],
+  "bader_charge_v1": {
+    "Li": 0.880,
+    "P": 4.444,
+    "S": -1.760,
+    "Cl": -0.912,
+    "Br": -0.900,
+    "Li_std": 0.008,
+    "P_std": 0.589,
+    "S_std": 0.260,
+    "Cl_std": 0.007,
+    "Br_std": 0.013,
+    "P_range": [3.436, 4.893],
+    "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp3_ACF.dat (KISTI 2026-05-04 measured)",
+    "P_VALUE_WARNING": "DO NOT cite P=+4.444 in paper without v2 cross-check. v1 Bader pipeline showed P anomaly (comp1 v1 P=+3.27 vs comp1 v2 P=+4.686, delta -1.4 e). Same systematic issue may affect comp3 v1 P. Use v2 anneal champion + Bader for paper-quality P. Li/Cl/Br/S values consistent with v1 db (use those).",
+    "notes": "P_std=0.589 HIGH: 5 P atoms span [+3.44, +4.89] = strongly heterogeneous PS4 environment from Cl/Br site mixing. ANOMALY (Br>Cl ionicity 0.900 vs 0.912 — within std overlap, ionicity gap less anomalous than v1 db noted)."
+  },
+  "bond_lengths_v1_measured": {
+    "Li-Cl": {"mean": 2.498, "std": 0.122, "n": 24},
+    "Li-Br": {"mean": 2.754, "std": 0.105, "n": 17},
+    "Li-S": {"mean": 2.478, "std": 0.117, "n": 70},
+    "P-S": {"mean": 2.065, "std": 0.013, "n": 20},
+    "source": "KISTI post_relax/comp3_post_relax.out (mic, cutoff Li-Cl 3.2, Li-Br 3.4, Li-S 3.0, P-S 2.3)"
+  },
+  "q1q2_over_r_eV_v1bader": {
+    "Li-Cl": 4.56,
+    "Li-Br": 4.22,
+    "Li-S": 8.86,
+    "P-S": 54.5,
+    "P-S_calc": "4.444 * 1.760 / 2.065 * 14.4 = 54.5 eV",
+    "P-S_vs_comp1_v2": "-7.6% (vacancy effect dominant)",
+    "P-S_vs_comp2_v2": "-13.9% (Br stiffening absent)",
+    "P-S_vs_comp4_v1": "+38.7% (comp4 most disrupted)"
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "comp1": {
+    "E": 29.1,
+    "family": "Li6",
+    "Wad": 1.277,
+    "FoM": 0.04388316151202749
+  },
+  "comp2B": {
+    "E": 28.6,
+    "family": "Li6",
+    "Wad": 1.183,
+    "FoM": 0.041363636363636366
+  },
+  "comp3": {
+    "E": 27.3,
+    "family": "Li5.4",
+    "Wad": 2.103,
+    "FoM": 0.07703296703296704
+  },
+  "comp4": {
+    "E": 26.4,
+    "family": "Li5.4",
+    "Wad": 1.97,
+    "FoM": 0.07462121212121213
+  },
+  "comp5": {
+    "E": 25.8,
+    "family": "Li5.4",
+    "Wad": 1.651,
+    "FoM": 0.0639922480620155
+  },
+  "modelc": {
+    "E": 32.9,
+    "family": "Li5.4"
+  },
+  "_ranking_by_FoM": [
+    [
+      "comp3",
+      0.077
+    ],
+    [
+      "comp4",
+      0.0746
+    ],
+    [
+      "comp5",
+      0.064
+    ],
+    [
+      "comp1",
+      0.0439
+    ],
+    [
+      "comp2B",
+      0.0414
+    ]
+  ],
+  "_coating_interpretation": {
+    "rule": "Lower E (compliance) + Higher Wad (adhesion) = better coating",
+    "highest_FoM": "comp3",
+    "balance_champion": "comp4",
+    "balance_reason": "middle of Li5.4 trend, stable basin, E-Wad compromise"
+  }
+}

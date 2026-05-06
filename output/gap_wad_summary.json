@@ -1,0 +1,48 @@
+{
+  "gap_ordered_seeds": {
+    "comp3": {
+      "seed": 45,
+      "gap_A": -1.7,
+      "Wad_order_rank": 1
+    },
+    "comp4": {
+      "seed": 57,
+      "gap_A": -1.3,
+      "Wad_order_rank": 2
+    },
+    "comp5": {
+      "seed": 50,
+      "gap_A": -1.2,
+      "Wad_order_rank": 3
+    },
+    "comp1": {
+      "seed": 45,
+      "gap_A": -1.0,
+      "Wad_order_rank": 4
+    },
+    "comp2B": {
+      "seed": 46,
+      "gap_A": -0.9,
+      "Wad_order_rank": 5
+    }
+  },
+  "paper_Wad": {
+    "comp3": 2.103,
+    "comp4": 1.97,
+    "comp5": 1.651,
+    "comp1": 1.277,
+    "comp2B": 1.183
+  },
+  "seed52_Wad": {
+    "comp3": 2.452,
+    "comp4": 1.258,
+    "comp5": 1.219,
+    "comp1": 1.238,
+    "comp2B": 1.022
+  },
+  "linear_fit": {
+    "slope": -1.2229896907216506,
+    "intercept": 0.1447525773195868,
+    "R": -0.934907722966548
+  }
+}
