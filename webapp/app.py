@@ -549,7 +549,7 @@ def inject_cell_asr_rows(tables, metrics, input_params):
         ASR       = L_cathode / σ        [Ω·cm²]      (per unit area)
 
     L_cathode (μm) comes from metrics['thickness_um'] (DEM compaction-
-    measured cathode thickness — top-of-particles minus plate-z).
+    measured cathode thickness — top-of-particles minus mesh-z).
     A_RVE (μm²) comes from input_params box_x × box_y × scale².
 
     For each transport channel (σ_ionic, σ_e, κ) we compute ASR for all
@@ -599,7 +599,7 @@ def inject_cell_asr_rows(tables, metrics, input_params):
                 + (f',   A_RVE = {A_um2:.0f} μm²' if A_um2 else ''))
     rows.append([
         '  Cathode geometry (L, A)', '', geom_str,
-        'L = thickness_um (top-of-particles − plate-z), A = box_x × box_y × scale²',
+        'L = thickness_um (top-of-particles − mesh-z), A = box_x × box_y × scale²',
     ])
 
     def _row_for(label, k_h, k_p, k_e, unit='Ω·cm²', baseline_label='Hertzian'):
