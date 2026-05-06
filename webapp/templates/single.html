@@ -88,6 +88,14 @@
   </div>
   {% for name, tbl in tables.items() %}
   <div id="tab-{{ name }}" class="tab-panel {% if loop.first %}active{% endif %}">
+    <div class="tab-toolbar" style="display:flex;justify-content:flex-end;margin-bottom:8px">
+      <button class="btn btn-secondary btn-copy-tab" data-tab="{{ name }}"
+              data-tab-label="{{ tab_names.get(name, name.replace('_', ' ').title()) }}"
+              onclick="copyTabTable('{{ name }}', this)"
+              title="이 탭 표 전체를 클립보드로 복사 (TSV 포맷, Excel/Notion 직접 붙여넣기 가능)">
+        📋 표 복사
+      </button>
+    </div>
     <div class="table-scroll">
       <table class="data-table compact">
         <thead><tr>{% for col in tbl.columns %}<th>{{ col }}</th>{% endfor %}</tr></thead>
@@ -195,6 +203,77 @@ function copyReport() {
     btn.textContent = '복사됨!';
     setTimeout(() => btn.textContent = '복사', 1500);
   });
+}
+
+/* Copy a tab's table to clipboard, preserving section headers and the
+   4-column structure (지표 / Hertzian / Physics / Δ). Output is TSV (tab-
+   separated) so it pastes into Excel/Notion/Google Sheets directly while
+   still being readable as plain text in any editor.
+
+   Skips inline tooltip rows (.tooltip-row) which are dynamically inserted
+   on hover. Section headers are emitted with a blank line before them so
+   the structure visually matches the rendered table. */
+function copyTabTable(tabName, btn) {
+  const tab = document.getElementById('tab-' + tabName);
+  if (!tab) return;
+  const table = tab.querySelector('table.data-table');
+  if (!table) return;
+
+  // Header row
+  const cols = Array.from(table.querySelectorAll('thead th'))
+                    .map(th => th.textContent.trim());
+  const caseId = (document.querySelector('.case-header h1')
+                  || document.querySelector('h1'));
+  const title = caseId ? caseId.textContent.trim() : '';
+  // Korean tab label is provided via data-tab-label (template tab_names dict)
+  const tabName_kr = btn.dataset.tabLabel || tabName;
+
+  const lines = [];
+  if (title) lines.push(`# ${title} — ${tabName_kr}`);
+  lines.push(cols.join('\t'));
+
+  table.querySelectorAll('tbody > tr').forEach(tr => {
+    if (tr.classList.contains('tooltip-row')) return;
+    if (tr.classList.contains('section-header')) {
+      const txt = tr.querySelector('td').textContent.trim();
+      lines.push('');         // blank line before section
+      lines.push(txt);
+      return;
+    }
+    const cells = Array.from(tr.querySelectorAll('td'))
+                       .map(td => td.textContent.trim());
+    lines.push(cells.join('\t'));
+  });
+
+  const text = lines.join('\n');
+
+  function _flash(msg) {
+    const orig = btn.dataset.origLabel || btn.textContent;
+    btn.dataset.origLabel = orig;
+    btn.textContent = msg;
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  }
+
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text)
+      .then(() => _flash('✓ 복사됨'))
+      .catch(() => _flash('✗ 실패'));
+  } else {
+    // Fallback for non-secure context (HTTP / older browsers)
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.left = '-9999px';
+    document.body.appendChild(ta);
+    ta.select();
+    try {
+      document.execCommand('copy');
+      _flash('✓ 복사됨');
+    } catch (e) {
+      _flash('✗ 실패');
+    }
+    document.body.removeChild(ta);
+  }
 }
 
 async function retryNetwork() {
