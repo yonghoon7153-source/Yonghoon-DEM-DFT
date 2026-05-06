@@ -144,5 +144,64 @@
     "Li6_no_vacancy": "Surface Li saturated -> no extra NCM bonding -> Wad lower",
     "Li5.4_vacancy": "Under-coordinated Li near vacancy -> chemical anchor -> pulls NCM O2- -> Wad higher",
     "evidence": "Expect Li5.4 xy-shift variance > Li6 variance (vacancy creates site-dependent bonding)"
+  },
+
+  "phase1_rigid_binding_2026_05_06": {
+    "method": "Tier 1 rigid binding curve E(d), no relaxation, single-point UMA",
+    "date": "2026-05-06",
+    "se_slabs": {
+      "comp1": "comp1_slab_v2.xyz (624 atoms, 2x2x3 cubic)",
+      "comp2": "comp2_slab_v2.xyz (624 atoms, 2x2x3 cubic)",
+      "comp3": "comp3_slab_v1_PRESERVED.xyz (248 atoms, 2x2x1 rhombo via pymatgen conv)",
+      "comp4": "comp4_slab_v1_PRESERVED.xyz (248 atoms, 2x2x1 rhombo)",
+      "comp5": "comp5_slab_v1_PRESERVED.xyz (248 atoms, 2x2x1 rhombo)",
+      "modelC": "modelC_slab_v2_PRESERVED.xyz (248 atoms, 2x2x1 rhombo)"
+    },
+    "ncm_slabs": {
+      "5x5x1": "300 atoms, R-3m proper octahedral (sg 166), Ni-O 1.96 Å verified",
+      "7x7x1": "588 atoms, used for cubic SE (comp1/2)"
+    },
+    "registries": "6 high-symmetry (R1-R6) + 30 random = 36 per comp",
+    "d_values": [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.5, 2.8, 3.0, 3.5, 4.0, 5.0, 7.0],
+    "n_total_calcs": 3456,
+    "elapsed_h": 0.3,
+    "method_A_isolated_slab": {
+      "formula": "Wad = (E_SE_iso + E_NCM_iso - E_int(d)) / A",
+      "issue": "STRAIN ARTIFACT: NCM strained to SE cell in interface, but E_NCM_iso uses original cell. Strain energy ~30 eV uncancelled.",
+      "results": {
+        "comp1":  {"W_max_J_per_m2": 0.314, "W_max_std": 0.613, "d_min_A": 1.13, "d_min_std": 0.20, "n_reg": 36},
+        "comp2":  {"W_max_J_per_m2": 0.225, "W_max_std": 0.497, "d_min_A": 1.03, "d_min_std": 0.18, "n_reg": 36},
+        "comp3":  {"W_max_J_per_m2": 1.491, "W_max_std": 0.905, "d_min_A": 1.34, "d_min_std": 0.31, "n_reg": 36},
+        "comp4":  {"W_max_J_per_m2": 0.685, "W_max_std": 0.027, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "comp5":  {"W_max_J_per_m2": 0.830, "W_max_std": 0.028, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "modelC": {"W_max_J_per_m2": -2.180, "W_max_std": 0.228, "d_min_A": 1.18, "d_min_std": 0.08, "n_reg": 36, "WARNING": "negative due to strain artifact"}
+      }
+    },
+    "method_B_self_reference": {
+      "formula": "Wad(d) = (E_int(d=7) - E_int(d)) / A",
+      "rationale": "Both states use same strained NCM -> strain cancels exactly",
+      "results": {
+        "comp1":  {"W_max_J_per_m2": 3.374, "W_max_std": 0.49, "d_min_A": 1.13, "d_min_std": 0.20, "n_reg": 36},
+        "comp2":  {"W_max_J_per_m2": 3.140, "W_max_std": 0.43, "d_min_A": 1.03, "d_min_std": 0.18, "n_reg": 36},
+        "comp3":  {"W_max_J_per_m2": 2.106, "W_max_std": 0.91, "d_min_A": 1.34, "d_min_std": 0.31, "n_reg": 36},
+        "comp4":  {"W_max_J_per_m2": 1.091, "W_max_std": 0.02, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "comp5":  {"W_max_J_per_m2": 1.108, "W_max_std": 0.03, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "modelC": {"W_max_J_per_m2": 1.166, "W_max_std": 0.13, "d_min_A": 1.18, "d_min_std": 0.08, "n_reg": 36}
+      }
+    },
+    "ordering_observations": {
+      "tier1_rigid_self_ref":   "comp1 > comp2 > comp3 > modelC ≈ comp5 ≈ comp4",
+      "paper_v5_lbfgs_relaxed": "comp3 > comp4 > comp5 > comp1 > comp2B",
+      "interpretation": "INVERTED ordering between Tier 1 (rigid) and Tier 2 (LBFGS-relaxed). Rigid: more Li atoms = more contact = higher Wad (Li6 > Li5.4). Relaxed: vacancy chemical anchor activated (Li5.4 > Li6). Two different mechanisms — paper #2 narrative candidate."
+    },
+    "anomalies": {
+      "comp4_comp5_d_min_std_zero": "All 36 registries give same d_min=1.60 — suggests flat curve near minimum (no registry sensitivity)",
+      "comp1_comp2_d_min_close": "d_min=1.0-1.1 Å, very close — possible cubic SE + hex NCM PBC artifact"
+    },
+    "next_steps": [
+      "Phase 2: LBFGS-relaxed Wad at d=2.5 Å (paper #1 v5 standard)",
+      "36 registries × 6 comps × LBFGS = 216 calcs, ~18h on GPU 1",
+      "Direct comparison with paper #1 v5 published values"
+    ]
   }
 }
