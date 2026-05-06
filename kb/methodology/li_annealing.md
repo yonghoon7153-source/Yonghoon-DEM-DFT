@@ -115,6 +115,96 @@ Why is Model C's landscape flat but comp1's is rough?
 It means 0K methods cannot distinguish configurations, making annealing MORE
 (not less) important.
 
+## comp4 v2 Finding: Thermal Degeneracy of Li Ordering (2026-05-06)
+
+### Quantitative observation (Stage 2 LBFGS)
+
+20 random Li configs × LBFGS for comp4 v2 (best halogen ordering) shows extreme degeneracy:
+
+```
+Li10: -255.4668    Li15: -255.4665
+Li11: -255.4672    Li16: -255.4675  ← rank0 (best)
+Li12: -255.4666    Li17: -255.4665
+Li13: -255.4664    Li18: -255.4665
+Li14: -255.4665    Li19: -255.4666
+
+Spread: 1.1 meV across all configs
+500K kT = 43 meV  →  kT/spread ≈ 40×
+```
+
+All Li orderings are **thermally degenerate** at 500K — they fall within a single
+thermal basin.
+
+### Stage 3 anneal: stochastic outcome
+
+```
+rank0 (Li16 start)  Stage2 LBFGS = -255.4675  →  anneal = -255.4791  Δ = -12 meV  ✓
+rank1 (Li6  start)  Stage2 LBFGS ≈ -255.466?  →  anneal = -255.4626  Δ = +4 meV   ✗
+```
+
+rank1 anneal landed HIGHER than its Stage 2 LBFGS minimum — thermal MD escaped the
+starting basin without finding a deeper one. With kT >> basin depth, anneal outcome
+is stochastic.
+
+### Reframing: anneal is ensemble sampling, not minimum search
+
+For Li5.4 systems:
+- **❌ Wrong**: "anneal finds the lowest-energy Li ordering"
+- **✓ Right**: "anneal generates a naturally-relaxed Li distribution snapshot from the
+  thermally accessible ensemble"
+
+What top-N selection + anneal actually does:
+
+```
+Stage 1 (random Li):           작위적 placement
+   ↓ LBFGS
+Stage 2 (top-N LBFGS minima):  artificial 0K minima (thermally degenerate)
+   ↓ 500K MD anneal + quench
+Stage 3 (anneal output):       작위성 제거된 ensemble representative
+```
+
+### Why P/S/halogen ranking IS meaningful, but Li ranking is NOT
+
+```
+Sublattice         | Energy spread | Treatment
+-------------------|---------------|---------------------------------
+P (4b)             | fully ordered | structurally fixed
+S (PS₄, 16e)       | fully ordered | structurally fixed
+Free anion (4a/4d) | ~50-150 meV   | enthalpy-driven enumeration ✓
+Li (48h)           | < 2 meV       | thermally averaged ensemble ✓
+```
+
+P/S/halogen disorder → different basins separated by enthalpy → ranking matters.
+Li disorder → degenerate basins within thermal energy → ranking is noise.
+
+### Implications for paper #1 C44 problem
+
+The 47% C44 spread across Li orderings (paper #1) is the same phenomenon viewed
+through mechanical observables:
+
+- Energy spread:  1 meV (negligible)
+- C44 spread:    12.7 GPa (47%)
+
+→ Same Li configurations with indistinguishable E produce wildly different elastic
+constants. The Li ordering itself is thermodynamically meaningless (kT >> ΔE), so
+**any single-snapshot Cij is an artifact** — only ensemble averages have physical meaning.
+
+This is the same logic that motivates 600K MD snapshot averaging in paper #1.
+
+### Methodology framing for papers
+
+Suggested SI text:
+
+> "P/S/halogen ordering is enthalpy-driven and screened by 0K LBFGS energy
+> ranking. The Li/vacancy sublattice, by contrast, is thermally averaged: 20
+> random configurations × LBFGS for comp4 (Li5.4) span only 1.1 meV, far below
+> 500K kT (43 meV). Stage 3 anneal therefore does not seek a ground state but
+> generates a naturally-relaxed Li distribution from the thermally accessible
+> ensemble. Ranking among top-5 anneal outputs is dominated by stochastic MD
+> noise (~16 meV) and should not be used to select a single 'champion'; instead,
+> any anneal output serves as a representative sample for downstream
+> property calculation."
+
 ## References
 - [pustorino2025] Systematic Li structure sampling in LPSCl
 - [ayadi2024] AIMD Li short-range order, temperature homogenization
