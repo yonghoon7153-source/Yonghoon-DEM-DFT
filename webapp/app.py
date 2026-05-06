@@ -604,7 +604,7 @@ _PAPER_LABEL_MAP = {
     'SE-SE CN std':                'SE-SE coordination number σ(z_SE-SE)',
     'SE Cluster 수':               'SE percolating clusters (n≥10 / total)',
     'SE Percolation(%)':           'SE percolation, top↔bottom (%)',
-    'Top Reachable(%)':            'Top-reachable SE (%)',
+    'Top Reachable(%)':            'Separator-side SE connectivity, f_SE^sep (%)',
     # Tortuosity
     'Tortuosity mean':             'Tortuosity ⟨τ_Dijkstra⟩ (geodesic)',
     'Tortuosity median':           'Tortuosity median(τ_Dijkstra)',
@@ -657,7 +657,7 @@ _PAPER_LABEL_MAP = {
     'τ_Lap_eff / τ_Dij':
         'Constriction overhead, τ_Laplace,eff / τ_Dijkstra',
     'AM Percolation (%)':          'AM percolation, top↔bottom (%)',
-    'Electronic Active AM (%)':    'Electronically-active AM, bottom-reachable (%)',
+    'Electronic Active AM (%)':    'Current-collector-connected AM, f_AM^cc (%)',
     # Tier-1 corrections
     'Coverage AM rough(%)   ⭐ [B3]':
         'Coverage of AM, shape-corrected ⭐ (B3)',

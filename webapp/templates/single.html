@@ -516,10 +516,10 @@ const METRIC_TIPS = {
     meaning: '이온이 전극 전체를 관통하여 이동할 수 있는 연속 경로의 존재 여부를 나타냅니다. 100%에 가까울수록 거의 모든 SE가 이온 전도에 참여합니다. 95% 이상이면 포화 영역이므로 다른 지표(tortuosity, bottleneck)가 더 중요해집니다.'
   },
   'Top Reachable(%)': {
-    title: 'Top Reachable (상단 도달률)',
-    formula: 'Top Reachable = (상단 SE에 연결된 SE 수 / 전체 SE 수) × 100',
-    desc: '전극 상단(SE pellet 측)에 연결된 SE 입자의 비율입니다. 하단 연결 여부는 고려하지 않습니다.',
-    meaning: '상단(SE pellet)에서 이온이 도달할 수 있는 SE의 비율입니다. Percolation보다 넓은 개념으로, 하단에 직접 닿지 않아도 AM과 접촉하여 활성 역할을 하는 SE를 포함합니다.'
+    title: 'Separator-side SE connectivity, f_SE^sep (Bielefeld 2022 / Minnmann 2021)',
+    formula: 'f_SE^sep = N_SE^(top-anchored) / N_SE^total × 100\n  top-anchored = SE 입자가 SE-pellet (separator) 측에 SE-SE 그래프로 연결된 cluster 에 속함',
+    desc: 'Percolation theory 의 *anchored cluster* — SE-pellet (분리막) 측에 한쪽 끝이 anchored 된 SE 의 비율입니다.\n전체 percolation (top↔bottom) 의 superset: bottom (current collector) 까지 가지 못하는 dead-end SE 도 포함.\n\nBielefeld 2022 / Minnmann 2021 의 *active SE fraction (separator-connected)* 와 동일한 정의.',
+    meaning: 'Stage E 에서 σ_ionic 의 *상한* 을 결정.\nf_SE^sep ≈ 100% 이면 SE pellet 측에서 모든 SE 가 ion source 와 통함.\nf_SE^sep < SE percolation (%) 만큼이 *separator-connected but not bottom-reaching* dead-end → 전기화학적으로는 활성이지만 σ_ionic Network solver 에서는 sink 가 없는 SE.\n본 ensemble 통상 95~100% — 잘 연결된 separator interface.'
   },
   'Tortuosity mean': {
     title: 'Tortuosity (굴곡도) — Dijkstra geodesic',
@@ -740,10 +740,10 @@ const METRIC_TIPS = {
     meaning: 'σ_electronic >> σ_ionic이면 이온 전도가 rate-limiting.\n도전재 없이도 AM percolation이 형성되는지 확인.'
   },
   'Electronic Active AM (%)': {
-    title: 'Electronic Active AM (Bottom-reachable)',
-    formula: 'Active = (bottom에서 도달 가능한 AM 수) / (전체 AM 수) × 100\n그래프 기반: AM-AM 접촉 네트워크에서 bottom boundary 연결 확인',
-    desc: '전자가 current collector(bottom)에서 도달할 수 있는 AM 비율. 나머지는 Dead AM.',
-    meaning: '100%: 모든 AM이 전자적으로 활성.\n< 80%: Dead AM 존재 → 도전재(VGCF, C65) 추가 필요.\nφ_AM < 30vol%에서 급격히 감소 (percolation threshold).'
+    title: 'Current-collector-connected AM, f_AM^cc (Trevisanello 2021 / Bielefeld 2022)',
+    formula: 'f_AM^cc = N_AM^(cc-anchored) / N_AM^total × 100\n  cc-anchored = AM 입자가 current collector (bottom) 측에 AM-AM 접촉 그래프로 연결된 cluster 에 속함',
+    desc: 'Percolation theory 의 anchored cluster (electronic side) — current collector (bottom) 에 한쪽 끝이 anchored 된 AM 의 비율입니다.\n전자가 외부 회로에 도달할 수 있는 AM 의 *상한* — 나머지는 *electrochemically dead* AM.\n\nf_AM^cc 와 σ_e Network solver σ_e 는 분리된 metric: f_AM^cc 는 *binary connectivity*, σ_e 는 actual conductance with constriction.',
+    meaning: '100%: 모든 AM 이 외부 전극과 통함 — VGCF/C65 도전재 없이도 current 흘림.\n< 80%: dead AM 존재 → 도전재 첨가가 σ_e 향상에 효과적.\nf_AM^cc < φ_AM percolation threshold (≈ 30 vol%) 에서 급격히 감소.\n본 ensemble: AM_S-rich case 90~100%, AM_P-rich case 70~85%.'
   },
   'AM Percolation (%)': {
     title: 'AM Percolation (Top+Bottom Connected)',
@@ -1116,7 +1116,7 @@ const PAPER_TO_ORIG = {
   'von-Mises stress ratio, ⟨σ_VM⟩_SE / ⟨σ_VM⟩_all': 'σ_SE/σ_mean',
   'SE percolating clusters (n≥10 / total)': 'SE Cluster 수',
   'SE percolation, top↔bottom (%)': 'SE Percolation(%)',
-  'Top-reachable SE (%)': 'Top Reachable(%)',
+  'Separator-side SE connectivity, f_SE^sep (%)': 'Top Reachable(%)',
   'Tortuosity ⟨τ_Dijkstra⟩ (geodesic)': 'Tortuosity mean',
   'Mean per-hop contact area, ⟨A_hop⟩ (μm²)': 'Path Hop Area mean(μm²)',
   'Path bottleneck min(A_contact) (μm²)': 'Path Bottleneck(μm²)',
@@ -1145,7 +1145,7 @@ const PAPER_TO_ORIG = {
       'τ_Lap_eff ⭐ (Laplace, GB 포함 — COMSOL/EIS)',
   'Constriction overhead, τ_Laplace,eff / τ_Dijkstra': 'τ_Lap_eff / τ_Dij',
   'AM percolation, top↔bottom (%)': 'AM Percolation (%)',
-  'Electronically-active AM, bottom-reachable (%)': 'Electronic Active AM (%)',
+  'Current-collector-connected AM, f_AM^cc (%)': 'Electronic Active AM (%)',
   'Coverage of AM, shape-corrected ⭐ (B3)': 'Coverage AM rough(%)   ⭐ [B3]',
   'Coverage of AM_P, shape-corrected ⭐ (B3)':
       'Coverage AM_P rough(%) ⭐ [B3]',
