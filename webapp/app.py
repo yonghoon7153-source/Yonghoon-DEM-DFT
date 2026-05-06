@@ -554,28 +554,35 @@ def inject_stage_e_rows(tables, metrics):
 #    - One-line revert if reviewers want different terminology
 # ──────────────────────────────────────────────────────────────────────────
 _PAPER_SECTION_MAP = {
-    '── 구조 ──': '── Structure (DEM compaction state) ──',
-    '── 계면 ──': '── Interfacial contact area (AM-SE / SE-SE) ──',
-    '── 이온경로: 연결성 ──': '── Ionic transport — Network connectivity ──',
-    '── 이온경로: 경로 효율 ──': '── Ionic transport — Geodesic tortuosity ──',
+    '── 구조 ──': '── 구조 (Structure — DEM compaction state) ──',
+    '── 계면 ──':
+        '── 계면 (Interfacial contact area — AM-SE / SE-SE) ──',
+    '── 이온경로: 연결성 ──':
+        '── 이온 전달 · 연결성 (Ionic transport — Network connectivity) ──',
+    '── 이온경로: 경로 효율 ──':
+        '── 이온 전달 · 경로 효율 (Ionic transport — Geodesic tortuosity) ──',
     '── 이온경로: 경로 품질 ──':
-        '── Ionic transport — Path quality (bottleneck & conductance) ──',
-    '── 활성도 ──': '── Electrochemically-active surface ──',
-    '── 이온전도 ──': '── Ionic conductivity (Bruggeman EMT estimate) ──',
+        '── 이온 전달 · 경로 품질 (Ionic transport — Path quality, bottleneck & conductance) ──',
+    '── 활성도 ──':
+        '── 활성도 (Electrochemically-active surface) ──',
+    '── 이온전도 ──':
+        '── 이온 전도 (Ionic conductivity — Bruggeman EMT estimate) ──',
     '── Network Solver (Hertzian DEM-native) ──':
-        '── Network solver — Hertzian (DEM-native contact area) ──',
+        '── 네트워크 솔버 · Hertzian (Network solver — DEM native contact area) ──',
     '── Network Solver (DEM-native vs Tabor+volume physics) ──':
-        '── Network solver — Hertzian vs Physics (Tabor + volume) ──',
+        '── 네트워크 솔버 · Hertzian vs Physics (Network solver — DEM native vs Tabor + volume) ──',
     '── Physics (Plastic film, Tabor+volume) ──':
-        '── Network solver — Physics mode (Tabor plastic film + volume conservation) ──',
+        '── 네트워크 솔버 · Physics (Network solver — Tabor plastic film + volume conservation) ──',
     '── τ 비교 (Dijkstra vs Laplace, COMSOL input = τ_Lap_eff) ──':
-        '── Tortuosity comparison (Dijkstra vs Laplacian; COMSOL/EIS input = τ_Laplace,eff) ──',
+        '── 굴곡도 비교 (Tortuosity — Dijkstra vs Laplacian; COMSOL/EIS input = τ_Laplace,eff) ──',
     '── Tier 1 patches (post-Auerbach refinements) ──':
-        '── Tier-1 corrections (post-Auerbach refinements) ──',
-    '── AM-AM 접촉 역학 ──': '── AM-AM contact mechanics ──',
-    '── 응력 ──': '── Particle-stress distribution (von Mises) ──',
+        '── Tier-1 보정 (Tier-1 corrections — post-Auerbach refinements) ──',
+    '── AM-AM 접촉 역학 ──':
+        '── AM-AM 접촉 역학 (AM-AM contact mechanics) ──',
+    '── 응력 ──':
+        '── 응력 분포 (Particle-stress distribution — von Mises) ──',
     '── Stage E (literature-grounded σ_grain corrections) ──':
-        '── Stage E — Literature-grounded σ_grain corrections (Cronau/Trevisanello/Wang) ──',
+        '── Stage E · 문헌 기반 σ_grain 보정 (Stage E — Literature-grounded σ_grain corrections, Cronau / Trevisanello / Wang) ──',
 }
 
 _PAPER_LABEL_MAP = {
@@ -746,7 +753,7 @@ def transform_network_summary_4col(tables, metrics, meta):
     tbl = tables['network_summary']
 
     # Step 1: expand existing rows to 4 cols (default Physics = Hertzian, Δ = 0%)
-    tbl['columns'] = ['지표', 'Hertzian (DEM-native)', 'Physics (Tabor+volume)', 'Δ (%)']
+    tbl['columns'] = ['지표 (Metric)', 'Hertzian (DEM native)', 'Physics (Tabor + volume)', 'Δ (%)']
     def _is_section_header(label):
         if not isinstance(label, str):
             return False
