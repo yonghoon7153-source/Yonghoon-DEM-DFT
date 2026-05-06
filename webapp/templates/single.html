@@ -1040,7 +1040,7 @@ const METRIC_TIPS = {
   },
   'Cathode geometry (L, A)': {
     title: 'Cathode geometry — L_cathode / A_RVE',
-    formula: 'L_cathode = thickness_um  (top-of-particles − mesh-z)\nA_RVE = box_x × box_y × scale²  (input_params.json + case.scale)',
+    formula: 'L_cathode = thickness_um  (mesh-z)\nA_RVE = box_x × box_y × scale²  (input_params.json + case.scale)',
     desc: 'Ohm slab 계산에 들어가는 두 기하학적 입력값.\nL_cathode 는 DEM compaction 후 측정된 양극 (cathode) 두께 (μm).\nA_RVE 는 representative volume element (RVE) 의 단면적 (μm²).',
     meaning: 'Stage E 가 σ (intrinsic 전도도, mS/cm) 를 주는 반면, ASR (Ω·cm²) 는 *cell-level resistance* — 즉 두께가 들어간 실제 셀 임피던스를 줍니다.\n실험 EIS 가 직접 보고하는 R·A 와 동일 단위 → reviewer-friendly cross-check.'
   },
