@@ -219,17 +219,54 @@ function copyTabTable(tabName, btn) {
   const table = tab.querySelector('table.data-table');
   if (!table) return;
 
-  // Header row
-  const cols = Array.from(table.querySelectorAll('thead th'))
-                    .map(th => th.textContent.trim());
-  const caseId = (document.querySelector('.case-header h1')
-                  || document.querySelector('h1'));
-  const title = caseId ? caseId.textContent.trim() : '';
+  // ── Case-level header (case name + badges + warnings + analysis-row badges)
+  // We grab the page-header (above the analysis card) and the card-header-row
+  // badges (P:S / AM:SE / Target) so a single clipboard paste carries the
+  // full experimental context, not just the table.
+  const caseTitleEl = document.querySelector('.page-header .case-name')
+                      || document.querySelector('h1, h2');
+  const title = caseTitleEl ? caseTitleEl.textContent.trim() : '';
+
+  // Top-row badges (mode, scale, type_map, RVE, Porosity, 두께,
+  // Percolation, Ionic Active, E_SE, ⚠ count)
+  const headerBadges = Array.from(
+    document.querySelectorAll('.page-header .badge')
+  ).map(b => b.textContent.trim()).filter(s => s.length);
+
+  // Warning banner items (e.g. "Porosity=28.3% (>25%): insufficient compaction")
+  const warnings = Array.from(
+    document.querySelectorAll('.warning-banner .warning-msg')
+  ).map(w => w.textContent.trim()).filter(s => s.length);
+
+  // Analysis-card row badges (P:S / AM:SE / Target)
+  const analysisCard = tab.closest('.card');
+  const analysisBadges = analysisCard
+    ? Array.from(analysisCard.querySelectorAll('.card-header-row .badge'))
+        .map(b => b.textContent.trim()).filter(s => s.length)
+    : [];
+
   // Korean tab label is provided via data-tab-label (template tab_names dict)
   const tabName_kr = btn.dataset.tabLabel || tabName;
 
+  // Header row of THIS tab's table
+  const cols = Array.from(table.querySelectorAll('thead th'))
+                    .map(th => th.textContent.trim());
+
   const lines = [];
-  if (title) lines.push(`# ${title} — ${tabName_kr}`);
+  if (title) lines.push(`# ${title}`);
+  if (headerBadges.length) {
+    lines.push(headerBadges.map(b => `[${b}]`).join('  '));
+  }
+  if (warnings.length) {
+    lines.push('');
+    warnings.forEach(w => lines.push(`⚠ ${w}`));
+  }
+  if (analysisBadges.length) {
+    lines.push('');
+    lines.push(analysisBadges.map(b => `[${b}]`).join('  '));
+  }
+  lines.push('');
+  lines.push(`── ${tabName_kr} ──`);
   lines.push(cols.join('\t'));
 
   table.querySelectorAll('tbody > tr').forEach(tr => {
