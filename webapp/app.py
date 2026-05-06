@@ -301,21 +301,17 @@ def build_fracture_summary_table(metrics):
 
 def inject_tier1_patch_rows(tables, metrics):
     """Append a 'Tier 1 patches' section to network_summary listing the new
-    keys added by the post-Auerbach analysis pipeline:
+    keys added by the post-Auerbach analysis pipeline. ALWAYS emits the
+    section + all 7 rows (— placeholder for cases predating the Tier-1
+    pipeline) so every case has identical layout.
 
       Coverage  rough (B3 shape factor)        coverage_AM_*_mean_physics_rough
       SE-SE CN  perc-only         (F2)         se_se_cn_perc
       SE-SE CN  area-weighted     (F2)         se_se_cn_eff_area
       SE-SE CN  perc + area-w     (F2)         se_se_cn_eff_area_perc
       SE-SE CN  plastic-aug       (F1)         se_se_cn_aug (+ n_extra)
-
-    These keys are written automatically by the auto-DB pipeline
-    (dem_analysis_core.calc_se_se_cn / calc_coverage with shape factor),
-    so every freshly analysed case will populate them. Cases predating
-    the Tier 1 patches will leave the keys missing → the rows are
-    silently skipped.
     """
-    if 'network_summary' not in tables or not metrics:
+    if 'network_summary' not in tables:
         return
     data = tables['network_summary']['data']
     if not isinstance(data, list):
@@ -325,24 +321,24 @@ def inject_tier1_patch_rows(tables, metrics):
     if any(isinstance(r, list) and r and r[0] == section_label for r in data):
         return  # already injected on a prior call
 
-    rows: list = []
-    rows.append([section_label, '', '', ''])
+    metrics = metrics or {}
 
-    # Rough coverage (B3 shape factor: AM_P=1.40, AM_S=1.10, SE=1.05)
+    def _fmt_num(v, prec):
+        if v is None: return '—'
+        try: return round(float(v), prec)
+        except (TypeError, ValueError): return '—'
+
+    rows: list = [[section_label, '', '', '']]
+
+    # Rough coverage (B3 shape factor) — always emit all 3
     for label, key in [
         ('Coverage AM rough(%)   ⭐ [B3]',   'coverage_AM_mean_physics_rough'),
         ('Coverage AM_P rough(%) ⭐ [B3]', 'coverage_AM_P_mean_physics_rough'),
         ('Coverage AM_S rough(%) ⭐ [B3]', 'coverage_AM_S_mean_physics_rough'),
     ]:
-        v = metrics.get(key)
-        if v is None:
-            continue
-        try:
-            rows.append([label, '-', round(float(v), 2), ''])
-        except (TypeError, ValueError):
-            pass
+        rows.append([label, '-', _fmt_num(metrics.get(key), 2), ''])
 
-    # F2 / F1 CN variants
+    # F2 / F1 CN variants — always emit all 4 + the F1 extras count
     cn_specs = [
         ('SE-SE CN (perc-only)        [F2]', 'se_se_cn_perc',          4),
         ('SE-SE CN (area-weighted)    [F2]', 'se_se_cn_eff_area',      4),
@@ -350,30 +346,20 @@ def inject_tier1_patch_rows(tables, metrics):
         ('SE-SE CN (plastic-augmented) [F1]', 'se_se_cn_aug',          3),
     ]
     for label, key, prec in cn_specs:
-        v = metrics.get(key)
-        if v is None:
-            continue
-        try:
-            rows.append([label, round(float(v), prec), '-', ''])
-        except (TypeError, ValueError):
-            pass
+        rows.append([label, _fmt_num(metrics.get(key), prec), '-', ''])
     n_extra = metrics.get('se_se_cn_aug_n_extra')
-    if n_extra is not None:
-        try:
-            rows.append(['  (F1 extra near-contact pairs)', int(n_extra), '-', ''])
-        except (TypeError, ValueError):
-            pass
+    extra_str = int(n_extra) if (n_extra is not None
+                                 and not isinstance(n_extra, bool)) else '—'
+    rows.append(['  (F1 extra near-contact pairs)', extra_str, '-', ''])
 
-    # Only inject if at least one Tier 1 row populated
-    if len(rows) > 1:
-        # Place after the existing AM-AM section if present, else at the end
-        anchor_idx = len(data)
-        for i, r in enumerate(data):
-            if (isinstance(r, list) and r and isinstance(r[0], str)
-                    and ('AM-AM' in r[0] or '응력' in r[0])):
-                anchor_idx = i
-                break
-        for j, nr in enumerate(rows):
+    # Place after the existing AM-AM / 응력 section if present, else at the end
+    anchor_idx = len(data)
+    for i, r in enumerate(data):
+        if (isinstance(r, list) and r and isinstance(r[0], str)
+                and ('AM-AM' in r[0] or '응력' in r[0])):
+            anchor_idx = i
+            break
+    for j, nr in enumerate(rows):
             data.insert(anchor_idx + j, nr)
 
 
@@ -435,37 +421,33 @@ def inject_stage_e_rows(tables, metrics):
             else f'Cronau 2022 — sub-μm amorphization'
         ])
 
-    if am_factors:
-        am_s = am_factors.get('AM_S')
-        am_p = am_factors.get('AM_P')
-        if am_s is not None or am_p is not None:
-            am_s_lbl = (f'AM_S(r={r_am_s:.1f}μm)×{am_s:.2f}'
-                         if am_s is not None and r_am_s else 'AM_S — n/a')
-            am_p_lbl = (f'AM_P(r={r_am_p:.1f}μm)×{am_p:.2f}'
-                         if am_p is not None and r_am_p else 'AM_P — n/a')
-            rows.append([
-                '  σ_e — AM crystal × size',
-                '',
-                f'{am_s_lbl} / {am_p_lbl}',
-                'Trevisanello 2021 + size-dependent internal-GB density'
-            ])
+    # σ_e correction — always emit (— placeholder for missing factors)
+    am_s = am_factors.get('AM_S') if am_factors else None
+    am_p = am_factors.get('AM_P') if am_factors else None
+    am_s_lbl = (f'AM_S(r={r_am_s:.1f}μm)×{am_s:.2f}'
+                 if am_s is not None and r_am_s else 'AM_S — n/a')
+    am_p_lbl = (f'AM_P(r={r_am_p:.1f}μm)×{am_p:.2f}'
+                 if am_p is not None and r_am_p else 'AM_P — n/a')
+    rows.append([
+        '  σ_e — AM crystal × size', '',
+        f'{am_s_lbl} / {am_p_lbl}',
+        'Trevisanello 2021 + size-dependent internal-GB density'
+    ])
 
-    if kappa_factors:
-        k_s = kappa_factors.get('AM_S')
-        k_p = kappa_factors.get('AM_P')
-        k_se = kappa_factors.get('SE')
-        if k_s is not None and k_p is not None:
-            k_s_lbl = (f'AM_S(r={r_am_s:.1f}μm)×{k_s:.2f}'
-                        if k_s is not None and r_am_s else 'AM_S')
-            k_p_lbl = (f'AM_P(r={r_am_p:.1f}μm)×{k_p:.2f}'
-                        if k_p is not None and r_am_p else 'AM_P')
-            k_se_lbl = (f'SE×{k_se:.2f}' if k_se is not None else '')
-            rows.append([
-                '  κ — AM crystal × size + SE',
-                '',
-                f'{k_s_lbl} / {k_p_lbl} / {k_se_lbl}',
-                'Wang 2022 + phonon GB scatter (∝ AM secondary R)'
-            ])
+    # κ correction — always emit (— placeholder when kappa_factors missing)
+    k_s  = kappa_factors.get('AM_S') if kappa_factors else None
+    k_p  = kappa_factors.get('AM_P') if kappa_factors else None
+    k_se = kappa_factors.get('SE')   if kappa_factors else None
+    k_s_lbl  = (f'AM_S(r={r_am_s:.1f}μm)×{k_s:.2f}'
+                if k_s is not None and r_am_s else 'AM_S — n/a')
+    k_p_lbl  = (f'AM_P(r={r_am_p:.1f}μm)×{k_p:.2f}'
+                if k_p is not None and r_am_p else 'AM_P — n/a')
+    k_se_lbl = (f'SE×{k_se:.2f}' if k_se is not None else 'SE — n/a')
+    rows.append([
+        '  κ — AM crystal × size + SE', '',
+        f'{k_s_lbl} / {k_p_lbl} / {k_se_lbl}',
+        'Wang 2022 + phonon GB scatter (∝ AM secondary R)'
+    ])
 
     # Corrected σ values — always emit all 3 channels for layout consistency.
     # — placeholder when the channel was skipped by Stage E (e.g. P:S=0:10
@@ -805,6 +787,84 @@ def normalize_network_summary_layout(tables, metrics):
                 seen_bruggeman = True
     for i in reversed(drop_indices):
         data.pop(i)
+
+    # ── Pass E: insert placeholder rows for layout consistency ──
+    # Some rows are bimodal-only (AM-SE CN sub-rows, AM Vulnerable sub-rows),
+    # particle-type-specific (Coverage AM_P/AM_S, von-Mises stress ratios),
+    # or path-dependent (R_brug, Plastic amplification). Insert — placeholders
+    # so all 160 cases have the same row count + order.
+    def _label_at(idx):
+        r = data[idx] if 0 <= idx < len(data) else None
+        if r and isinstance(r[0], str): return r[0].strip()
+        return ''
+
+    def _find_row(label):
+        for i, r in enumerate(data):
+            if r and isinstance(r[0], str) and r[0].strip() == label:
+                return i
+        return None
+
+    def _insert_after(anchor_label, new_row):
+        ai = _find_row(anchor_label)
+        if ai is None: return False
+        # Skip past any existing children (rows starting with ├ or └)
+        j = ai + 1
+        while j < len(data):
+            r = data[j]
+            if not r or not isinstance(r[0], str): break
+            stripped = r[0].lstrip()
+            if not (stripped.startswith('├') or stripped.startswith('└')):
+                break
+            if stripped == new_row[0].lstrip():
+                return True  # already present — nothing to do
+            j += 1
+        data.insert(j, new_row)
+        return True
+
+    # AM-SE CN sub-rows (always emit ├ AM_P-SE / ├ AM_S-SE / └ surface-weighted)
+    for child_label in ('  ├ AM_P-SE CN mean',
+                        '  ├ AM_S-SE CN mean',
+                        '  └ AM-SE CN (surface-weighted)'):
+        if _find_row(child_label) is None:
+            _insert_after('AM-SE CN mean', [child_label, '—', '—', '0%'])
+
+    # AM Vulnerable sub-rows (├ AM_P Vulnerable / └ AM_S Vulnerable)
+    for child_label in ('  ├ AM_P Vulnerable(%)',
+                        '  └ AM_S Vulnerable(%)'):
+        if _find_row(child_label) is None:
+            _insert_after('AM Vulnerable(%)', [child_label, '—', '—', '0%'])
+
+    # Coverage AM_P / AM_S — always emit even when particle type absent
+    if _find_row('Coverage AM_P(%)') is None:
+        _insert_after('SE-SE Total(μm²)',
+                      ['Coverage AM_P(%)', '—', '—', '0%'])
+    if _find_row('Coverage AM_S(%)') is None:
+        # Insert after Coverage AM_P (or after SE-SE Total if AM_P just added)
+        anchor = 'Coverage AM_P(%)' if _find_row('Coverage AM_P(%)') else 'SE-SE Total(μm²)'
+        _insert_after(anchor, ['Coverage AM_S(%)', '—', '—', '0%'])
+
+    # von-Mises stress ratio rows — always emit AM_P / AM_S / SE
+    for label in ('σ_AM_P/σ_mean', 'σ_AM_S/σ_mean', 'σ_SE/σ_mean'):
+        if _find_row(label) is None:
+            _insert_after('Stress CV(%)', [label, '—', '—', '0%'])
+
+    # R_brug + Plastic amplification — always emit
+    if _find_row('R_brug (과대추정 배수)') is None:
+        rb = metrics.get('R_brug_over_full') if metrics else None
+        rb_str = f'{rb:.1f}×' if isinstance(rb, (int, float)) and rb else '—'
+        _insert_after('σ_ionic (mS/cm)',
+                      ['R_brug (과대추정 배수)', rb_str, rb_str, '0%'])
+    if _find_row('σ_ionic ratio (physics/Hertzian)') is None:
+        sh = metrics.get('sigma_full_mScm') if metrics else None
+        sp = metrics.get('sigma_full_mScm_physics') if metrics else None
+        if sh and sp:
+            r = sp / sh
+            ratio_str = f'{r:.2f}×'
+        else:
+            ratio_str = '—'
+        _insert_after('σ_ionic (mS/cm)',
+                      ['σ_ionic ratio (physics/Hertzian)',
+                       ratio_str, ratio_str, '0%'])
 
     # ── Pass D: ensure σ_e baseline row exists ──
     has_sigma_e_baseline = any(
