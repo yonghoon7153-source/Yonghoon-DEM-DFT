@@ -47,6 +47,9 @@ case "$cmd" in
     audit-ui)
         python3 scripts/audit_ui_layout.py "$@"
         ;;
+    sync-metrics)
+        python3 scripts/sync_csv_to_metrics.py "$@"
+        ;;
     all-stagee)
         # Iterate cases passed as args, run Stage E for each
         for c in "$@"; do
