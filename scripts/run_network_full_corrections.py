@@ -481,31 +481,54 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     sigma_e_e     = res_e.get('electronic_sigma_full_mScm') if res_e else None
     sigma_th_e    = res_kappa.get('thermal_sigma_full_mScm') if res_kappa else None
 
-    # Fallback: factor-weighted approximation when solver fails
-    # (network ill-conditioned near percolation threshold for σ_factor
-    # scaled graphs; ~20 % of input_1mAh_* cases). Uses original-contact-
-    # area-weighted mean factor as Bruggeman-style effective-medium estimate.
+    # Auto-trigger: factor-weighted Bruggeman fallback when solver fails
+    # or returns unphysical values. Conditions for triggering fallback:
+    #   (a) solver returned None (full failure)
+    #   (b) solver returned ≤ 0
+    #   (c) solver value > 1.1 × baseline (impossible: Stage E factors ≤ 1)
+    #
+    # Approximation: σ_stage_e ≈ σ_baseline × Σ(g_i · f_i) / Σ(g_i)
+    # where g_i ∝ original contact_area (proxy for original conductance),
+    # f_i = per-contact factor (fracture σ × grain). This is a Bruggeman-
+    # style effective-medium estimate that's mathematically consistent
+    # with the framework's σ_factor ≤ 1 constraint.
     source_ionic = 'solver'
     source_e     = 'solver'
     source_th    = 'solver'
+    fallback_messages = []
 
     def _is_invalid(v, base):
         return (v is None or not (v > 0)
                 or (base is not None and base > 0 and v > base * 1.1))
+
+    def _trigger_reason(v, base):
+        if v is None: return 'solver returned None'
+        if not (v > 0): return f'solver returned non-positive ({v})'
+        if base and v > base * 1.1: return f'solver result {v:.3f} > 1.1·baseline {base:.3f}'
+        return ''
 
     base_ionic = fm.get('sigma_full_mScm')
     base_e_solver = fm.get('electronic_sigma_full_mScm')
     base_th_solver = fm.get('thermal_sigma_full_mScm')
 
     if _is_invalid(sigma_ionic_e, base_ionic) and base_ionic and factors.get('weighted_factor_ionic') is not None:
+        reason = _trigger_reason(sigma_ionic_e, base_ionic)
         sigma_ionic_e = base_ionic * factors['weighted_factor_ionic']
         source_ionic = 'fallback_weighted_factor'
+        fallback_messages.append(
+            f"σ_i fallback ({reason}) → {sigma_ionic_e:.4f} = {base_ionic:.4f}×{factors['weighted_factor_ionic']:.3f}")
     if _is_invalid(sigma_e_e, base_e_solver) and base_e_solver and factors.get('weighted_factor_e') is not None:
+        reason = _trigger_reason(sigma_e_e, base_e_solver)
         sigma_e_e = base_e_solver * factors['weighted_factor_e']
         source_e = 'fallback_weighted_factor'
+        fallback_messages.append(
+            f"σ_e fallback ({reason}) → {sigma_e_e:.3f} = {base_e_solver:.3f}×{factors['weighted_factor_e']:.3f}")
     if _is_invalid(sigma_th_e, base_th_solver) and base_th_solver and factors.get('weighted_factor_kappa') is not None:
+        reason = _trigger_reason(sigma_th_e, base_th_solver)
         sigma_th_e = base_th_solver * factors['weighted_factor_kappa']
         source_th = 'fallback_weighted_factor'
+        fallback_messages.append(
+            f"κ fallback ({reason}) → {sigma_th_e:.3f} = {base_th_solver:.3f}×{factors['weighted_factor_kappa']:.3f}")
 
     fm['stage_e_source'] = {
         'sigma_ionic':    source_ionic,
@@ -543,6 +566,13 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
            f'σ_e: {(base_e or 0):.2f}→{(sigma_e_e or 0):.2f} '
            f'κ: {(base_th or 0):.2f}→{(sigma_th_e or 0):.2f}  '
            f'r_SE={factors["r_SE_um"]:.2f}μm')
+    if fallback_messages:
+        # Tag the case message so it surfaces in main() loop output, and
+        # emit per-channel reasons on a continuation line so the user can
+        # see which channel triggered the Bruggeman-style fallback.
+        msg += f'  [⚡FALLBACK×{len(fallback_messages)}]'
+        for fm_msg in fallback_messages:
+            print(f'         ↳ {fm_msg}', flush=True)
     return (case_dir.name, True, msg)
 
 
