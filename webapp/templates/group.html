@@ -454,7 +454,8 @@ function togglePlotGroupCase(pgIdx, caseIdx) {
     pg.caseGroupIdxs.splice(pos, 1);
   } else {
     pg.caseGroupIdxs.push(caseIdx);
-    pg.caseGroupIdxs.sort((a, b) => a - b);
+    // Preserve click order — DO NOT sort. Selection sequence becomes plot
+    // legend order + visible numbering on the pill.
   }
   renderPlotGroups();
   savePlotGroupsToStorage();
@@ -478,13 +479,39 @@ function renderPlotGroups() {
 
     const casesDiv = document.createElement('div');
     casesDiv.className = 'plot-group-cases';
-    caseGroups.forEach((g, ci) => {
-      if (!g.cases.length) return;
+    // Render in two passes so SELECTED pills appear in click order at the
+    // front (with numbering 1, 2, 3 …), then UNSELECTED pills follow in
+    // original case-group definition order.
+    const selectedOrdered = pg.caseGroupIdxs
+        .map(ci => ({ ci, g: caseGroups[ci] }))
+        .filter(x => x.g && x.g.cases && x.g.cases.length);
+    const unselectedOrdered = caseGroups
+        .map((g, ci) => ({ ci, g }))
+        .filter(x => x.g.cases.length && !pg.caseGroupIdxs.includes(x.ci));
+
+    selectedOrdered.forEach((x, orderIdx) => {
       const btn = document.createElement('span');
-      btn.className = 'pg-case-btn' + (pg.caseGroupIdxs.includes(ci) ? ' selected' : '');
-      btn.style.color = GROUP_COLORS[ci % GROUP_COLORS.length];
-      btn.textContent = g.name || `Case ${GROUP_LETTERS[ci] || (ci+1)}`;
-      btn.onclick = () => togglePlotGroupCase(pgIdx, ci);
+      btn.className = 'pg-case-btn selected';
+      btn.style.color = GROUP_COLORS[x.ci % GROUP_COLORS.length];
+      const labelText = x.g.name || `Case ${GROUP_LETTERS[x.ci] || (x.ci+1)}`;
+      // Click-order badge — '1.', '2.', … so user can read the sequence
+      // back from the pill row directly.
+      const num = document.createElement('span');
+      num.className = 'pg-case-num';
+      num.textContent = `${orderIdx + 1}.`;
+      num.style.cssText = 'font-weight:700;margin-right:4px;opacity:0.85';
+      btn.appendChild(num);
+      btn.appendChild(document.createTextNode(labelText));
+      btn.title = `Click order: #${orderIdx + 1} (also plot legend order)`;
+      btn.onclick = () => togglePlotGroupCase(pgIdx, x.ci);
+      casesDiv.appendChild(btn);
+    });
+    unselectedOrdered.forEach(x => {
+      const btn = document.createElement('span');
+      btn.className = 'pg-case-btn';
+      btn.style.color = GROUP_COLORS[x.ci % GROUP_COLORS.length];
+      btn.textContent = x.g.name || `Case ${GROUP_LETTERS[x.ci] || (x.ci+1)}`;
+      btn.onclick = () => togglePlotGroupCase(pgIdx, x.ci);
       casesDiv.appendChild(btn);
     });
     row.appendChild(casesDiv);
