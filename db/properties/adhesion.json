@@ -1,0 +1,207 @@
+{
+  "property": "adhesion_energy",
+  "description": "SE/NCM interface work of adhesion (Wad)",
+  "equation": "Wad = gamma_SE + gamma_NCM - gamma_SE_NCM (Dupre)",
+
+  "surface_energies": [
+    {"id": "comp1",  "gamma_SE": 1.211, "two_gamma": 2.42},
+    {"id": "comp2",  "gamma_SE": 1.189, "two_gamma": 2.38},
+    {"id": "comp3",  "gamma_SE": 0.565, "two_gamma": 1.13},
+    {"id": "comp4",  "gamma_SE": 0.450, "two_gamma": 0.90},
+    {"id": "comp5",  "gamma_SE": 0.470, "two_gamma": 0.94}
+  ],
+
+  "adhesion_v2_3000K_melt": {
+    "method": "3000K melt-quench -> amorphous SE on crystalline NCM, CIF start, 5 seeds",
+    "NCM": "LiNiO2 R-3m 3x3x1 slab (108 atoms, 64.6 A^2)",
+    "results": {
+      "comp1": {"seeds": [1,2,3,4,5], "Wad": [1.081, 1.153, 1.105, 1.080, 1.115], "mean": 1.107, "std": 0.027},
+      "comp2": {"seeds": [1,2,3,4,5], "Wad": [1.005, 0.979, 1.102, 0.982, 1.163], "mean": 1.046, "std": 0.074},
+      "comp3_to_5": "PBC artifact due to SE rhombo 5x1x1 vs NCM 3x3x1 lattice mismatch ±20%"
+    },
+    "trend": "comp1(1.107) > comp2(1.046) -> Br up, Wad down within Li6 family"
+  },
+
+  "adhesion_v1_random": [
+    {"id": "comp1",  "Wad_Jm2": 1.052, "Wad_aJ_r10nm": 331, "expt_aJ": 194},
+    {"id": "comp2",  "Wad_Jm2": 1.101, "Wad_aJ_r10nm": 346, "expt_aJ": 180},
+    {"id": "comp3",  "Wad_Jm2": 1.052, "Wad_aJ_r10nm": 331, "expt_aJ": 316},
+    {"id": "comp4",  "Wad_Jm2": 1.200, "Wad_aJ_r10nm": 377, "expt_aJ": 298}
+  ],
+
+  "adhesion_v5_crystalline_slab": {
+    "method": "crystalline SE slab + surface-only MQA (800K/300K/500K/100K)",
+    "protocol": [
+      "1. SE 2x2x1 repeat + z-shift",
+      "2. NCM 5x5x1 slab",
+      "3. SE strained to match NCM (~1-3%)",
+      "4. Gap 2.5A stacking",
+      "5. 800K surface softening (2ps)",
+      "6. Quench 300K (2ps)",
+      "7. 500K Li anneal (3ps)",
+      "8. Cool 100K (2ps) + relax",
+      "9. Wad = (E_ncm + E_se - E_int) / A  (isolated slab method)"
+    ],
+    "cell_matching": {
+      "Li6_v5_xyshift_OLD": {
+        "SE": "prim_2x2x1 (208at)", "NCM": "7x7x1 (196at)",
+        "A_Å2": 351, "SE_thickness_A": 13.6,
+        "ISSUE": "DEPRECATED: SE 13.6A too thin, Gap=-2.3A = overlap. Wad artificially high."
+      },
+      "Li6_v5_xyshift_FIX": {
+        "SE": "prim_2x2x3 (624at)", "NCM": "7x7x1 (196at)",
+        "A_Å2": 351, "SE_thickness_A": 30, "strain_pct": 0.2,
+        "notes": "SE repeat=(2,2,3) → 624at, 30A thick. Matches Li5.4 (29A). FINAL."
+      },
+      "Li5.4_v5_xyshift": {
+        "SE": "2x2x1 (248at)", "NCM": "5x5x1 (100at)",
+        "A_Å2": 179, "strain_pct": 1.1,
+        "SE_density_at_per_A2": 1.385,
+        "notes": "SE 248at on 179 A² → 1.39 at/A² — 정상 밀도"
+      },
+      "density_mismatch": "comp2B SE density (0.59) = comp4의 43%! SE thickness 13.6 vs 33.7A. Gap=-2.3A = overlap!",
+      "solution": "Li6 SE repeat=(2,2,2) → 416at, ~20A thick. All comps then 20-29A range. ADOPTED.",
+      "Li6_original": {"SE": "prim_2x2x1 (52at)", "NCM": "5x5x1 (300at)", "strain": 3.3, "notes": "original plan, not used in v5_xyshift"}
+    },
+    "z_cuts_DEPRECATED": {
+      "status": "deprecated_nonphysical",
+      "reason": "z-shift cuts crystalline SE slab -> dangling bonds -> extreme variance",
+      "comp4_results": [null, 2.719, 2.662, 0.006, 0.960],
+      "comp2B_results": [1.412, 2.902, 9.252],
+      "notes": "comp4: 0.006~2.719, comp2B: 1.412~9.252 -> meaningless"
+    },
+    "xy_shift": {
+      "status": "in_progress",
+      "method": "SE xy fractional shift (PBC safe), no z cut, 5 seeds per comp",
+      "seeds": [42, 43, 44, 45, 46],
+      "results": {
+        "comp1":  {
+          "Wad_20seeds": [1.646, 0.733, 1.241, 1.528, 1.116, 0.921, 0.929, 0.974, 1.544, 0.686, 1.238, 0.950, 0.781, 1.850, 0.765, 1.560, 1.764, 1.515, 0.761, 0.555],
+          "mean_20": 1.153, "std_20": 0.392, "median_20": 0.962,
+          "SE_at": 624, "SE_thick_A": 30, "A_A2": 351, "family": "Li6"
+        },
+        "comp2B": {
+          "Wad_20seeds": [1.514, 1.357, 1.632, 1.940, 1.687, 1.892, 1.432, 0.676, 1.335, 2.026, 1.022, 1.136, 1.555, 2.607, 1.317, 2.691, 1.671, 6.428, 1.030, 0.695],
+          "mean_20": 1.782, "std_20": 1.184, "median_20": 1.544,
+          "SE_at": 624, "SE_thick_A": 30, "A_A2": 351, "family": "Li6",
+          "outlier": "seed59=6.428",
+          "comp1_wins": "5/20 seeds (42,49,50,52,58)",
+          "notes": "comp2B > comp1 in 15/20 seeds. High variance (std=1.18). seed59=6.428 outlier."
+        },
+        "comp3":  {"Wad": [1.918, 3.033, 2.417, 2.195, 2.242], "mean": 2.36, "std": 0.42, "SE_at": 248, "SE_thick_A": 29, "A_A2": 179, "family": "Li5.4"},
+        "comp4":  {"Wad": [1.983, 2.207, 2.694, 1.827, 2.300], "mean": 2.20, "std": 0.33, "SE_at": 248, "SE_thick_A": 29, "A_A2": 179, "family": "Li5.4"},
+        "comp5":  {"Wad": [1.873, 2.819, 1.765, 1.972, 1.757], "mean": 2.04, "std": 0.44, "SE_at": 248, "SE_thick_A": 29, "A_A2": 179, "family": "Li5.4"}
+      },
+      "trends": {
+        "Li5.4_family": "comp3(2.36) > comp4(2.20) > comp5(2.04) → Br↑ Wad↓",
+        "Li6_family": "comp2B(1.47) > comp1(1.15) at 20 seeds → crystalline stacking insufficient. MQA version running.",
+        "Li6_mqa_status": {
+          "method": "500K(2ps)->300K(2ps)->100K(2ps)->relax->element-based sep",
+          "atoms": 820, "steps": 6000, "time_per_seed_min": 8,
+          "seeds": 10, "comps": 2, "total_time_min": 160,
+          "status": "running_V100, ETA ~02:00"
+        },
+        "cross_family": "Li5.4(~2.2) >> Li6(~1.0) → VACANCY ANCHOR CONFIRMED! Conservative: Li5.4 has LOWER SE density (1.38 vs 1.78 at/A2) yet HIGHER Wad → vacancy effect even stronger than raw numbers suggest.",
+        "vacancy_effect": "Li5.4/Li6 ratio ≈ 2.3x. Despite 22% lower SE density, Wad 2x higher = vacancy dominates over contact density."
+      },
+      "status": "done_5seeds",
+      "cross_comparison_issue": {
+        "problem": "Li6 SE 624at/351A2 vs Li5.4 SE 248at/179A2. Different cell areas.",
+        "within_family_Li6": "comp1 vs comp2B: Wad difference expected ~7% (expt). Noise from xy-shift may exceed signal. Need 10-20 seeds or report as 'within noise'.",
+        "within_family_Li5.4": "comp3 vs comp4 vs comp5: same SE size (248at/179A2). 5 seeds sufficient.",
+        "cross_family": "Li6 vs Li5.4: expt difference 84%. Signal >> noise. 5 seeds sufficient. But cell size differs — use v2(3000K melt) for cross-family comparison.",
+        "paper_strategy": {
+          "within_Li5.4": "v5 xy-shift results (comp3/4/5, same SE size)",
+          "cross_family": "v2 3000K melt results (same NCM, amorphous SE eliminates lattice mismatch)",
+          "Li6_internal": "noise range — report as 'similar' or use 10+ seeds"
+        }
+      },
+      "order": "comp4 -> comp2B -> comp3 -> comp1 -> comp5"
+    }
+  },
+
+  "vacuum_sensitivity": {
+    "finding": "UMA gives nonphysical energies with large vacuum",
+    "vacuum_30A": "Wad = 1.252 J/m2 (correct)",
+    "vacuum_60A": "Wad = 24.5 J/m2 (10x too high!)",
+    "cause": "UMA trained on bulk/dense systems. Large vacuum = out of distribution.",
+    "solution": "Always use vacuum=30A, expand cell on separation"
+  },
+
+  "debug_history": [
+    {"version": "v5_fix",    "Wad": 10.0,  "problem": "isolated slab relax releases strain"},
+    {"version": "v5_final",  "Wad": 75.4,  "problem": "E_ncm=+248eV, 60A vacuum -> UMA artifact"},
+    {"version": "v5_final2", "Wad": 40.2,  "problem": "PBC wrap, SE exceeds cell"},
+    {"version": "v5_correct","Wad": 17.3,  "problem": "used pre-MQA structure"},
+    {"version": "v5_real",   "Wad": 47.8,  "problem": "E_ncm=-24eV, vacuum issue"},
+    {"version": "v5_v2method","Wad": 24.5, "problem": "60A vacuum too large for UMA"},
+    {"version": "v5_working","Wad": 1.252, "problem": "CORRECT! sep+30A, cell+30A, vac=30A"},
+    {"version": "v5_noMQA", "Wad": "pending","problem": "baseline without MQA"},
+    {"version": "v5_xyshift","Wad": "pending","problem": "CURRENT: xy-shift instead of z-cut"}
+  ],
+
+  "vacancy_adhesion_mechanism": {
+    "Li6_no_vacancy": "Surface Li saturated -> no extra NCM bonding -> Wad lower",
+    "Li5.4_vacancy": "Under-coordinated Li near vacancy -> chemical anchor -> pulls NCM O2- -> Wad higher",
+    "evidence": "Expect Li5.4 xy-shift variance > Li6 variance (vacancy creates site-dependent bonding)"
+  },
+
+  "phase1_rigid_binding_2026_05_06": {
+    "method": "Tier 1 rigid binding curve E(d), no relaxation, single-point UMA",
+    "date": "2026-05-06",
+    "se_slabs": {
+      "comp1": "comp1_slab_v2.xyz (624 atoms, 2x2x3 cubic)",
+      "comp2": "comp2_slab_v2.xyz (624 atoms, 2x2x3 cubic)",
+      "comp3": "comp3_slab_v1_PRESERVED.xyz (248 atoms, 2x2x1 rhombo via pymatgen conv)",
+      "comp4": "comp4_slab_v1_PRESERVED.xyz (248 atoms, 2x2x1 rhombo)",
+      "comp5": "comp5_slab_v1_PRESERVED.xyz (248 atoms, 2x2x1 rhombo)",
+      "modelC": "modelC_slab_v2_PRESERVED.xyz (248 atoms, 2x2x1 rhombo)"
+    },
+    "ncm_slabs": {
+      "5x5x1": "300 atoms, R-3m proper octahedral (sg 166), Ni-O 1.96 Å verified",
+      "7x7x1": "588 atoms, used for cubic SE (comp1/2)"
+    },
+    "registries": "6 high-symmetry (R1-R6) + 30 random = 36 per comp",
+    "d_values": [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.5, 2.8, 3.0, 3.5, 4.0, 5.0, 7.0],
+    "n_total_calcs": 3456,
+    "elapsed_h": 0.3,
+    "method_A_isolated_slab": {
+      "formula": "Wad = (E_SE_iso + E_NCM_iso - E_int(d)) / A",
+      "issue": "STRAIN ARTIFACT: NCM strained to SE cell in interface, but E_NCM_iso uses original cell. Strain energy ~30 eV uncancelled.",
+      "results": {
+        "comp1":  {"W_max_J_per_m2": 0.314, "W_max_std": 0.613, "d_min_A": 1.13, "d_min_std": 0.20, "n_reg": 36},
+        "comp2":  {"W_max_J_per_m2": 0.225, "W_max_std": 0.497, "d_min_A": 1.03, "d_min_std": 0.18, "n_reg": 36},
+        "comp3":  {"W_max_J_per_m2": 1.491, "W_max_std": 0.905, "d_min_A": 1.34, "d_min_std": 0.31, "n_reg": 36},
+        "comp4":  {"W_max_J_per_m2": 0.685, "W_max_std": 0.027, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "comp5":  {"W_max_J_per_m2": 0.830, "W_max_std": 0.028, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "modelC": {"W_max_J_per_m2": -2.180, "W_max_std": 0.228, "d_min_A": 1.18, "d_min_std": 0.08, "n_reg": 36, "WARNING": "negative due to strain artifact"}
+      }
+    },
+    "method_B_self_reference": {
+      "formula": "Wad(d) = (E_int(d=7) - E_int(d)) / A",
+      "rationale": "Both states use same strained NCM -> strain cancels exactly",
+      "results": {
+        "comp1":  {"W_max_J_per_m2": 3.374, "W_max_std": 0.49, "d_min_A": 1.13, "d_min_std": 0.20, "n_reg": 36},
+        "comp2":  {"W_max_J_per_m2": 3.140, "W_max_std": 0.43, "d_min_A": 1.03, "d_min_std": 0.18, "n_reg": 36},
+        "comp3":  {"W_max_J_per_m2": 2.106, "W_max_std": 0.91, "d_min_A": 1.34, "d_min_std": 0.31, "n_reg": 36},
+        "comp4":  {"W_max_J_per_m2": 1.091, "W_max_std": 0.02, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "comp5":  {"W_max_J_per_m2": 1.108, "W_max_std": 0.03, "d_min_A": 1.60, "d_min_std": 0.00, "n_reg": 36},
+        "modelC": {"W_max_J_per_m2": 1.166, "W_max_std": 0.13, "d_min_A": 1.18, "d_min_std": 0.08, "n_reg": 36}
+      }
+    },
+    "ordering_observations": {
+      "tier1_rigid_self_ref":   "comp1 > comp2 > comp3 > modelC ≈ comp5 ≈ comp4",
+      "paper_v5_lbfgs_relaxed": "comp3 > comp4 > comp5 > comp1 > comp2B",
+      "interpretation": "INVERTED ordering between Tier 1 (rigid) and Tier 2 (LBFGS-relaxed). Rigid: more Li atoms = more contact = higher Wad (Li6 > Li5.4). Relaxed: vacancy chemical anchor activated (Li5.4 > Li6). Two different mechanisms — paper #2 narrative candidate."
+    },
+    "anomalies": {
+      "comp4_comp5_d_min_std_zero": "All 36 registries give same d_min=1.60 — suggests flat curve near minimum (no registry sensitivity)",
+      "comp1_comp2_d_min_close": "d_min=1.0-1.1 Å, very close — possible cubic SE + hex NCM PBC artifact"
+    },
+    "next_steps": [
+      "Phase 2: LBFGS-relaxed Wad at d=2.5 Å (paper #1 v5 standard)",
+      "36 registries × 6 comps × LBFGS = 216 calcs, ~18h on GPU 1",
+      "Direct comparison with paper #1 v5 published values"
+    ]
+  }
+}

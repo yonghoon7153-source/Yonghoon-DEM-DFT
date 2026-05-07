@@ -1,0 +1,11 @@
+&INPUTPP
+  prefix='comp2_v2_v103'
+  outdir='./tmp_v103/'
+  filplot='comp2_v2_charge.dat'
+  plot_num=21
+/
+&PLOT
+  iflag=3
+  output_format=6
+  fileout='comp2_v2_charge.cube'
+/
