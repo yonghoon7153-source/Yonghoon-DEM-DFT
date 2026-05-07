@@ -1164,11 +1164,11 @@ _PAPER_LABEL_MAP = {
     'κ — AM crystal × size + SE':
         'κ correction — AM-crystallinity + SE factor (Wang 2022)',
     'σ_ionic (Stage E corrected)':
-        'σ_ionic — Stage E (full literature-grounded corrections, mS/cm)',
+        '⭐ σ_ionic — Stage E final (full literature-grounded corrections, mS/cm)',
     'σ_electronic (Stage E corrected)':
-        'σ_e — Stage E (fracture × AM-crystallinity, mS/cm)',
+        '⭐ σ_e — Stage E final (fracture × AM-crystallinity, mS/cm)',
     'σ_thermal (Stage E corrected)':
-        'κ — Stage E (Wang grain corrections, mS/cm equiv)',
+        '⭐ κ — Stage E final (Wang grain corrections, mS/cm equiv)',
     'Fracture stage counts (intact/MC/Multi/Frag/Pulv)':
         'Per-contact fracture-stage distribution (intact / micro / multi / frag / pulv)',
     '7-Layer solver status':
