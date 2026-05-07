@@ -159,19 +159,34 @@
 - **NCM**: 1L conv (3 atomic layers) — known to be "broken structure" per user 2026-05-07
 - **상태**: ==**baseline 보존**==. v10으로 superseded but kept for reference comparison.
 
-### F2. `phase2a_v10_sandwich.py` ❓ UNKNOWN — pilot pending
+### F2. `phase2a_v10_sandwich.py` ❌ INVERTED (cycle 1 result, stopped 2026-05-07 13:45)
 - **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v10_sandwich.py` (paste from `필독/adhesion/`)
-- **로컬 미러**: `필독/adhesion/phase2a_v10_sandwich.py` ⭐
+- **로컬 미러**: `필독/adhesion/phase2a_v10_sandwich.py`
 - **목적**: Camacho-Forero 2020 sandwich method (LPSCl/NCM 업그레이드) — paper #2 main
+- **Cycle 1 결과 (3/216)**:
+  - comp1 W=+2.057 (paper 1.28, 1.6×, Camacho-Forero LPSCl/Li2S=1.44 anchor 일치)
+  - comp2 W=+1.854
+  - comp3 W=**-0.058** (paper 2.10, Li5.4 vacancy effect ==REVERSED==)
+- **원인**: SE no FixAtoms → Li6 high Li density 23 atoms migrate → high apparent Wad (intermixing dominates). Li5.4 vacancy = fewer Li → less migration → near-zero Wad. v5 paper의 vacancy chemical anchor mechanism 사라짐.
+- **상태**: ❌ STOP, supersededby v10b
 - **변경점 (vs v5)**:
   - Sandwich (no vacuum at interface) → /(2A)
   - NCM 3L conv (9 atomic layers, 42.57 Å)
-  - FixAtoms NCM **middle** 3 atomic layers (not bottom; preserves bulk + symmetric interfaces)
-  - SE no FixAtoms (Camacho-Forero standard)
-  - LBFGS fmax=0.03, steps=400 (was 0.05/200)
-- **Anchor papers**: Camacho-Forero 2020 (slab method) + Komatsu 2022 (bulk thermo, LiNiO2/LPSCl ΔED=-424 meV/atom)
-- **검증 필요**: ==**pilot 후**== Wad scale (1.5-3.0 J/m² 예상) + cross-family Li5.4 > Li6 유지
-- **상태**: 작성 완료, 미실행. ==**user pilot 후 ✅ or ❌ 결정**==.
+  - FixAtoms NCM **middle** 3 atomic layers (preserves bulk + symmetric interfaces)
+  - SE no FixAtoms (Camacho-Forero standard) ⚠️ — root cause of v10 inversion
+  - LBFGS fmax=0.03, steps=400
+
+### F2b. `phase2a_v10b_sandwich_se_fixed.py` ❓ UNKNOWN — pending pilot
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v10b_sandwich_se_fixed.py` (paste from `필독/adhesion/`)
+- **로컬 미러**: `필독/adhesion/phase2a_v10b_sandwich_se_fixed.py` ⭐
+- **목적**: v10b — sandwich + symmetric NCM/SE middle FixAtoms (v10 cycle 1 inversion 해결)
+- **변경점 (vs v10)**:
+  - **SE middle 1/3 FixAtoms 추가** (NEW) — preserve bulk SE, prevent Li intercalation, allow surface vacancy chemistry
+  - LBFGS fmax 0.05 (was 0.03), steps 300 (was 400) — middle fix should converge faster
+  - Iso slabs도 같은 middle 1/3 fix (consistency)
+  - RESULTS_DIR: phase2a_v10b_results
+- **검증 필요**: cycle 1 후 cross-family Li5.4 > Li6 회복 여부 + Wad scale 1-3 J/m² 정상 범위
+- **상태**: 작성 완료, KISTI deploy 대기
 
 ### F3. `phase2a_v9_cleavage.py` ❌ INVERTED (cross-family failed, stopped 2026-05-07)
 - **위치**: KISTI 동일 디렉토리
