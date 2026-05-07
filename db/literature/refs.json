@@ -1237,6 +1237,62 @@
       "tags": ["adhesion", "sandwich-geometry", "DFT", "AIMD", "sulfide-SSE", "LPSCl", "Li2S", "interface-reactions", "PS4-decomposition", "polysulfidophosphate", "method-precedent", "paper2-v10", "must-read"]
     },
     {
+      "id": "enaldiev2021",
+      "authors": "Enaldiev, V. V.; Ferreira, F.; Magorrian, S. J.; Fal'ko, V. I.",
+      "title": "Piezoelectric networks and ferroelectric domains in twistronic superlattices in WS2/MoS2 and WSe2/MoSe2 bilayers",
+      "journal": "2D Materials",
+      "volume": 8,
+      "pages": "025030",
+      "year": 2021,
+      "DOI": "10.1088/2053-1583/abdd92",
+      "title_verified": "2026-05-07 (user PDF text)",
+      "group": "Vladimir Fal'ko (Manchester, National Graphene Institute)",
+      "system": "WS2/MoS2, WSe2/MoSe2 TMD heterobilayers (2D-on-2D vdW)",
+      "method_category": "DFT (VASP, optB-88vdW vdW-corrected) for adhesion W(r0, d) at fixed stackings + multiscale elasticity for moiré reconstruction. NOT directly slab-vs-slab adhesion in bulk sense.",
+      "relevance_to_us": "MEDIUM — different system (2D-on-2D vdW vs our 3D-on-3D ionic) but USEFUL methodologically. Their adhesion E(d) binding curve method = OUR Phase 1 rigid binding method. Their interpolation formula could be applied to our Phase 1 data.",
+      "key_methodology": {
+        "DFT_setup": "VASP + PAW + GGA-PBE + optB-88vdW (vdW-corrected). Plane-wave cutoff 600 eV (816.34 eV for adhesion). 12x12 k-grid in plane.",
+        "adhesion_formula": "W_P/AP(r0, d) = f(d0) + epsilon*z^2 + w1*[1-Qz]*sum_n cos(Gn r0) + w2*[1-Gz]*sum_n sin(Gn r0 + gamma_P/AP); z = d - d0",
+        "stackings_sampled": "6 high-symmetry: XX, MM, MX, XM, etc. (depending on P/AP orientation)",
+        "ferroelectric_charge_transfer": "Delta(r0, d) = A0*[1-q0 z] + A_P/AP*[1-qa z]*sum_n sin(Gn r0). Captures interlayer dipole.",
+        "multiscale": "DFT local (atomic) + elasticity theory mesoscale (moiré supercell). Lattice reconstruction by minimizing total energy w.r.t. displacement fields uW(r), uMo(r)."
+      },
+      "key_numerical_values": {
+        "adhesion_gain_2H_3R_over_average": "0.5 eV/nm^2 = 0.08 J/m^2 (vdW level binding)",
+        "optimal_d0_WSe2_MoSe2": "6.56 A (DFT) vs 6.46 A (experimental homobilayer)",
+        "optimal_d0_WS2_MoS2": "6.25 A (DFT) vs 6.15 A (experimental)",
+        "uniform_strain_cost": "(lambda_W + lambda_Mo)*delta^2 ~ 10 meV/nm^2 (lattice mismatch delta = 0.2-0.3%)",
+        "ferroelectric_jump_Delta_avg": "~25-30 meV (potential step at MoX2/WX2 interface)",
+        "_unit_note": "1 eV/nm^2 = 0.16 J/m^2"
+      },
+      "comparison_to_us": {
+        "system": "TMD-TMD vdW (~0.08 J/m^2) vs LPSCl-NCM ionic (~1-2 J/m^2). Order of magnitude weaker binding.",
+        "phase1_method": "Their Figure 2 adhesion E(d) binding curves = our phase1_rigid_binding.py output exactly. Could adopt their interpolation formula for our Phase 1 data fitting.",
+        "registries": "Their 6 stackings (high-sym only) vs our 6 high-sym + 30 random = 36. We are more thorough at sampling.",
+        "vdW_correction": "They use optB-88vdW (explicit vdW); we use UMA (implicit vdW from training data). Method-level vdW treatment differs.",
+        "lateral_lattice_match": "They strain monolayer to mean of two lattices (delta = 0.2-0.3%). We strain SE to NCM. Different convention but same idea."
+      },
+      "potentially_useful_for_paper2": [
+        "Cite as method precedent for binding-curve-based adhesion (Phase 1)",
+        "Adopt interpolation formula W(r, d) = f(d0) + eps*z^2 + sum harmonics for our Phase 1 data → analytical model",
+        "Multiscale framework idea: DFT (rigid binding) + relaxation (LBFGS) — we already do this",
+        "vdW correction: NOT directly applicable (UMA already includes vdW via training); but document as a different choice"
+      ],
+      "NOT_useful_for_paper2": [
+        "Moire physics, ferroelectric/piezoelectric domains, twist angle (does not apply to 3D ionic SE/NCM)",
+        "Quantum dot confinement for excitons (electronic structure, not mechanical)",
+        "k.p band edge analysis"
+      ],
+      "key_figures_referenced": {
+        "Figure_2": "DFT adhesion energy W(r0, d) for 6 stackings, AP and P orientations, WSe2/MoSe2 + WS2/MoS2. RANGE: 0 to -3 eV/nm^2 = 0 to -0.48 J/m^2. Y-axis units = eV/nm^2. ⭐ MOST RELEVANT to us.",
+        "Figure_1": "Moire piezocharge + interlayer polarization maps. Visual context only (not directly applicable to our 3D system).",
+        "Figure_3": "Electron/hole band edge maps in AP bilayers (electronic, not relevant for adhesion).",
+        "Figure_4": "Interlayer exciton energy landscapes (electronic)."
+      },
+      "use_in_paper": "Paper #2 Methods (Phase 1 binding curve analysis): cite as precedent for rigid binding curve adhesion analysis with multi-stacking sampling. Adoption of their interpolation formula could replace our current Phase 1 numerical curves with analytical model.",
+      "tags": ["TMD", "twistronic", "moire", "vdW", "DFT-adhesion", "binding-curve", "interpolation-formula", "multiscale", "Fal'ko-group", "method-precedent", "Phase1-relevant"]
+    },
+    {
       "id": "literature_summary_2026_05",
       "_meta": "Summary entry — links above refs to our findings",
       "title": "Literature backing for paper #1 bond/Bader analysis",
