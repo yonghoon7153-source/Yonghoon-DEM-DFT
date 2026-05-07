@@ -30,6 +30,7 @@
 | `camacho_forero_2020.md` | **per-paper deep dive** | **Chem. Mater. 2020 sandwich Wadh — paper #2 v10 SLAB method 근거** |
 | `komatsu2022.md` | **per-paper deep dive** | **JPCC 2022 BULK reactivity LPSCl/LiNiO2 = −424 meV/atom (most reactive NCM). Volume change −11~−34%. Reaction products. Paper #2 BULK anchor.** |
 | `enaldiev2021.md` | per-paper deep dive | 2D Mater. 2021 TMD twistronic adhesion W(r0, d) binding curves + interpolation formula. **Method precedent for our Phase 1 rigid binding curves**. Different system (vdW 2D, ~0.5 J/m²) but same method. |
+| `haruyama2014.md` | **per-paper deep dive** ⭐⭐⭐⭐⭐ | **Chem. Mater. 2014 PIONEER DFT+U slab paper for sulfide-SE/oxide-cathode (LCO/LPS ± LNO buffer). PRIMARY method anchor for paper #2 v5. ANTI-SANDWICH argument (Section 2.1) — predicted v10/v10b inversion. SCL mechanism backing. Adhesion LCO/LPS=0.69 J/m²; Li-vacancy formation Ev table.** |
 
 ---
 

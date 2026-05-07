@@ -1293,6 +1293,98 @@
       "tags": ["TMD", "twistronic", "moire", "vdW", "DFT-adhesion", "binding-curve", "interpolation-formula", "multiscale", "Fal'ko-group", "method-precedent", "Phase1-relevant"]
     },
     {
+      "id": "haruyama2014",
+      "authors": "Haruyama, J.; Sodeyama, K.; Han, L.; Takada, K.; Tateyama, Y.",
+      "title": "Space-Charge Layer Effect at Interface between Oxide Cathode and Sulfide Electrolyte in All-Solid-State Lithium-Ion Battery",
+      "journal": "Chem. Mater.",
+      "volume": 26,
+      "pages": "4248-4255",
+      "year": 2014,
+      "DOI": "10.1021/cm5016959",
+      "title_verified": "2026-05-07 (user PDF text)",
+      "group": "Yoshitaka Tateyama (NIMS, MANA + Kyoto Univ)",
+      "system": "LCO(110)/β-Li3PS4(010) ± LiNbO3(110-bar) buffer — DFT+U slab interface",
+      "method_category": "DFT+U slab interface (Quantum ESPRESSO). FIRST DFT slab paper for sulfide SE / oxide cathode (cited by Camacho-Forero, Komatsu). Pioneer of Space-Charge Layer (SCL) mechanism explanation.",
+      "computational_details": {
+        "code": "Quantum ESPRESSO + USPP + PBE + DFT+U",
+        "U_Co_3d": "5.9 eV",
+        "cutoff": "40 Ry (smooth) / 320 Ry (augmented charge)",
+        "k_grid_interface": "Gamma-only (single point)",
+        "force_convergence": "0.001 Ry/bohr",
+        "stress_convergence": "0.5 kbar",
+        "vacuum": "~1.5 nm (CRUCIAL — see method note below)",
+        "slab_thickness": "1-2 nm per side"
+      },
+      "method_note_critical_for_us": "Haruyama EXPLICITLY argues that vacuum is crucial for OXIDE/SULFIDE interfaces. From Section 2.1: 'Without this vacuum, the supercell approach always involves two interfaces, which are atomically different in most cases. Besides, artificial interaction between the two interfacial polarizations may arise, preventing accurate estimation of the stability of each interface. Therefore, the presence of the vacuum region is quite crucial.' ⚠️ This DIRECTLY argues against sandwich geometry (Camacho-Forero) for our LPSCl/NCM system. Camacho-Forero used sandwich because their sulfide/sulfur cathodes had similar terminations. Our oxide/sulfide is asymmetric → Haruyama scenario applies.",
+      "interface_construction_method": {
+        "step1": "Bulk lattice parameters from DFT+U (matched to experiment 1-2%)",
+        "step2": "Stoichiometric surface slab with vacuum, atomic positions relaxed",
+        "step3": "Multiply slab laterally for supercell, adjust lattice constants to match attaching surface",
+        "step4": "Systematic lateral slide of one slab w.r.t. other (16/4/9 samples for LCO/LNO, LCO/LPS, LNO/LPS) → DFT+U geometry optimization with all atomic positions and lateral cell parameters relaxed → minimum energy interface chosen",
+        "no_FixAtoms": "All atomic positions and lateral cell parameters allowed to relax (no FixAtoms mentioned). Their VASP/QE handles vacuum without UMA OOD issues."
+      },
+      "key_results": {
+        "adhesion_energies_eVnm2": {
+          "LCO_LNO_110bar": 10.6,
+          "LCO_LNO_110": 6.1,
+          "LCO_LPS_010": 4.3,
+          "LNO_LPS_010": 3.8,
+          "_unit_conversion": "1 eV/nm² × 0.16 = J/m². LCO/LPS = 0.69 J/m² (oxide/sulfide direct)",
+          "_relative_to_us": "Our paper #1 v5 LiNiO2/LPSCl comp1 = 1.28 J/m² is ~2× their LCO/LPS = 0.69 J/m². Reasonable: LiNiO2 more reactive than LCO per Komatsu (-424 vs -321 meV/atom)."
+        },
+        "lattice_misfits_pct": {
+          "LCO/LNO_110bar": 3.4, "LCO/LNO_110": 5.2,
+          "LCO/LPS": 3.7, "LNO/LPS": 3.6
+        },
+        "Li_vacancy_formation_energies_eV": {
+          "bulk_LCO": 4.0, "bulk_LNO": 5.1, "bulk_LPS": 3.2,
+          "LCO_LPS_LP2_site": 1.44,
+          "_note": "LP2 site (LPS subsurface near LCO) has anomalously low Ev=1.44 eV — much lower than bulk LPS (3.2). Indicates Li wants to LEAVE LPS subsurface and adsorb on LCO. This = SCL formation mechanism. Onset voltage ~1.5 V matches experimental observation."
+        },
+        "key_atomic_structure_findings": [
+          "LCO/LPS interface: Li from LPS subsurface ADSORBS on top of CoO6 oxygen ridges and Li layers. Sulfide structure DISORDERED in interface region.",
+          "LCO/LNO interface: smoothly matched, NbO4 tetrahedrons + new CoO6 octahedrons formed using O from LNO. Crystalline order preserved.",
+          "LNO/LPS interface: no Nb-S bonds, ionic O-Li and Li-S only. Both slabs preserve bulk crystal."
+        ]
+      },
+      "space_charge_layer_mechanism": {
+        "equilibrium_LCO_LPS": "Li transfers from LPS side to LCO surface adsorption sites. Forms equilibrium SCL (Li-rich on LCO surface, Li-depleted in LPS subsurface).",
+        "charging_onset": "At ~1.5 V (LP2 Ev = 1.44 eV), LP2 Li begins to transfer into bulk LPS releasing electron to cathode. Enhances SCL → voltage profile slope at charging beginning → interfacial resistance.",
+        "buffer_LNO_effect": "LNO interposition removes Li adsorption sites on LCO surface. SCL formation suppressed. Smooth Li transport through LNO 3D paths."
+      },
+      "comparison_to_us": {
+        "v5_method_vs_haruyama": {
+          "geometry": "v5 single interface + vacuum 30 Å = SAME as Haruyama 1.5 nm vacuum",
+          "Wad_formula": "v5 /A = SAME as Haruyama (E_A + E_B - E_AB)/S",
+          "FixAtoms": "v5 33% bottom both = NOT in Haruyama (they fully relax). We added FixAtoms for UMA stability (UMA-OOD-at-vacuum) which Haruyama VASP doesn't suffer from.",
+          "verdict": "v5 = Haruyama method + UMA stability hack. STRONGEST literature backing for v5."
+        },
+        "v10b_method_vs_haruyama": {
+          "geometry": "v10b sandwich vs Haruyama single + vacuum",
+          "issue": "Haruyama explicitly argues vacuum is CRUCIAL for oxide/sulfide heterointerfaces (asymmetric terminations create artificial polarization in sandwich). Our LPSCl/NCM = exact match to Haruyama warning case.",
+          "verdict": "v10b sandwich likely INAPPROPRIATE for our LPSCl/NCM system. v10 cycle1 inversion (comp3=-0.058) may be symptom of this."
+        }
+      },
+      "implications_for_paper2": [
+        "v5 paper #1 method has STRONG Haruyama 2014 precedent (same single+vacuum+/A approach for sulfide-SE/oxide-cathode)",
+        "v10b sandwich method has Camacho-Forero precedent BUT Haruyama argues against sandwich for oxide/sulfide hetero",
+        "If v10b cycle1 still inverts (comp3 << comp1), FALL BACK to v5 method + Haruyama citation as primary",
+        "Adopt SCL narrative: Li migration from SE subsurface to NCM surface (we observe Li_mig top in v10/v10b) = SCL formation = vacancy chemical anchor mechanism",
+        "Quantitative anchor: Haruyama LCO/LPS = 0.69 J/m². Our LiNiO2/LPSCl 1.28 (paper #1 v5) = 1.86× — consistent with LiNiO2 more reactive than LCO (Komatsu Ni > Co reactivity ranking).",
+        "Buffer layer outlook: Haruyama+Komatsu both show LiNbO3 mitigates → paper #2 future work"
+      ],
+      "key_figures_referenced": {
+        "Figure_1": "Surface structures of LCO(110), LNO(110-bar), LNO(110), LPS(010). Context only.",
+        "Figure_2": "Optimized interface structures of LCO/LNO (a, b), LCO/LPS (c), LNO/LPS (d). ⭐ MOST USEFUL for visual comparison with our v5/v10b interface xyz files.",
+        "Figure_3": "PDOS of optimized interfaces. Less critical for our mechanical adhesion focus.",
+        "Figure_4": "Li sites with indices (LC1-3, LN1-3, LP1-6) for vacancy formation energy analysis. Could inspire our Li migration site classification.",
+        "Figure_5": "⭐ SCL concentration profile schematic (a-f). Equilibrium + charging onset for LCO/LPS and LCO/LNO/LPS. Strong narrative figure for paper #2.",
+        "Table_S3": "Adhesion energies (eV/nm²) for 4 interfaces. Direct comparison table."
+      },
+      "use_in_paper2": "PRIMARY method anchor for v5 single-interface approach (vs Camacho-Forero secondary for sandwich). Citation #1 for paper #2 Methods section. Quantitative anchor (LCO/LPS=0.69 J/m²) + SCL mechanism narrative.",
+      "tags": ["DFT+U", "slab", "single-interface", "vacuum", "LCO", "LPS", "LNO-buffer", "space-charge-layer", "SCL", "Li-vacancy-formation", "first-DFT-slab-sulfide-oxide", "method-anchor-PRIMARY", "must-read", "paper2-anchor", "Tateyama-NIMS", "anti-sandwich-argument"]
+    },
+    {
       "id": "literature_summary_2026_05",
       "_meta": "Summary entry — links above refs to our findings",
       "title": "Literature backing for paper #1 bond/Bader analysis",
