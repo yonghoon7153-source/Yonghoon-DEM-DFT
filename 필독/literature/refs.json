@@ -1068,24 +1068,86 @@
       "tags": ["argyrodite", "NCM", "interface", "decomposition", "Cl-rich", "Wad", "trade-off"]
     },
     {
-      "id": "sicolo2022",
-      "authors": "Sicolo et al.",
+      "id": "_DEPRECATED_sicolo2022",
+      "_attribution_correction_2026_05_07": "Misattributed entry. Actual paper = Komatsu et al. 2022 (DOI 10.1021/acs.jpcc.2c05336), corresponding author Shyue Ping Ong (UC San Diego, Materials Virtual Lab). Also MISCLASSIFIED as DFT slab — actually BULK pseudobinary thermodynamics (Materials Project + convex hull, Zhu-Mo framework). NOT slab. See komatsu2022 entry for corrected info.",
+      "supersededby": "komatsu2022",
+      "DOI": "10.1021/acs.jpcc.2c05336",
+      "tags": ["DEPRECATED", "see-komatsu2022"]
+    },
+    {
+      "id": "komatsu2022",
+      "authors": "Komatsu, H.; Banerjee, S.; Holekevi Chandrappa, M. L.; Qi, J.; Radhakrishnan, B.; Kuwata, S.; Sakamoto, K.; Ong, S. P.",
       "title": "Interfacial Stability of Layered LiNixMnyCo1-x-yO2 Cathodes with Sulfide Solid Electrolytes in All-Solid-State Rechargeable Lithium-Ion Batteries from First-Principles Calculations",
       "journal": "J. Phys. Chem. C",
+      "volume": 126,
+      "pages": "17482-17489",
       "year": 2022,
       "DOI": "10.1021/acs.jpcc.2c05336",
-      "title_verified": "2026-05-05 (user-confirmed)",
-      "DOI_status": "previously suspected hallucinated; title confirmed by user, DOI presumed real",
-      "key_quote": "increased Ni content leads to increased interfacial reactivity",
-      "key_content": "DFT study of NCM-sulfide-electrolyte interface. Ni content (in LiNixMnyCo1-x-yO2) controls reactivity. Title explicitly covers our system: NCM cathode + sulfide SE + first-principles. Direct precedent for paper #1 Section 4 adhesion protocol.",
-      "system_match_with_us": "NCM (LiNiO2-class) on sulfide electrolyte (Li6PS5Cl-class) — exact same systems we analyze. DFT ground-state interface = our MLIP equivalent at finite T.",
-      "supports_our_finding": [
-        "Methodology backing: DFT + NCM-sulfide interface reactivity framework",
-        "Cite as prior art for our v5/v6 adhesion protocols (1L NCM on SE, Wad calculation)",
-        "Ni-content reactivity link supports our LiNiO2 model choice"
+      "title_verified": "2026-05-07 (user PDF text + figures supplied)",
+      "method_category": "BULK pseudobinary thermodynamics (Materials Project + convex hull). NOT a slab Wad paper. Uses Zhu-Mo (refs 39, 40) framework: ΔED,min,mutual(A,B) = (1/N) min over x∈[0,1] {N·E_eq[x·c_A + (1-x)·c_B] − x·E[c_A] − (1-x)·E[c_B]}.",
+      "computational_details": {
+        "code": "VASP, PAW PBE",
+        "ecut": "520 eV",
+        "k_density": ">=1000/atom",
+        "Hubbard_U_oxides": {"Ni": 6.20, "Co": 3.32, "Mn": 3.90},
+        "structures": "Materials Project precomputed",
+        "no_slab": true,
+        "no_FixAtoms": "n/a (no slab)",
+        "no_AIMD": true
+      },
+      "system_match_with_us": "LiNiO2 (LNO) + Li6PS5Cl (LPSCl) — exactly our paper #2 v10 target system. PROVIDES BULK THERMODYNAMIC ANCHOR (not slab method).",
+      "key_results": {
+        "reaction_energy_LMO_LPSCl_meV_per_atom": {
+          "LNO_LiNiO2": -424,
+          "NCA_LiNi08Co015Al005": -406,
+          "High_Ni_LiNi10_12Mn1_12Co1_12_~NCM811": -383,
+          "LCO_LiCoO2": -321,
+          "NMC111_LiNi13Mn13Co13": -285,
+          "NM11_LiNi05Mn05": -259,
+          "LiMnO2_endpoint": -196,
+          "_note": "LiNiO2 = MOST reactive among NCM family. Our paper #2 system is at this corner."
+        },
+        "reaction_products_LNO_LPSCl": "0.77 LNO + 0.23 LPSCl -> 0.26 Ni3S2 + 0.45 Li2S + 0.16 Li2SO4 + 0.23 Li3PO4 + 0.23 LiCl",
+        "key_chemistry": [
+          "S2-/O2- exchange forms Li3PO4 (oxide-side phosphate, common across all NCM/LPSCl)",
+          "Ni reduction: Ni3+ -> Ni1.33+ in Ni3S2",
+          "S oxidation: S2- -> S6+ in Li2SO4 (partial)",
+          "LiCl extracted from argyrodite cage",
+          "Reaction stoichiometry x* ~ 0.7-0.8 LMO-rich (matches our slab atom ratio ~0.74 NCM)"
+        ],
+        "ternary_trend_Ni_Mn_Co": "Mn (most stable, -200) > Co (-321) > Ni (-424, most reactive). Co-free LiNi0.7Mn0.3O2 lies on same stability tie-line as LCO.",
+        "voltage_dependence": "ΔΦ widens above 4.5V; LPSCl narrow electrochemical window dominates instability at high V.",
+        "volume_change_LMO_LPSCl_chemical_pct": {
+          "LNO": -11, "NCA": -11, "High_Ni": -11, "NM11": -15, "NMC111": -17, "LCO": -12
+        },
+        "volume_change_LMO_LPSCl_electrochemical_4p5V_pct": {
+          "LNO": -34, "NCA": -29, "High_Ni": -33, "NM11": -30, "NMC111": -32, "LCO": -31,
+          "_note": "All LPSCl chemical reactions: -11 to -17% shrinkage. Electrochemical 4.5V: -29 to -34% shrinkage. LMO/Carbon: chemical +5 to +10% expansion (Li2CO3 formation), electrochemical -17 to -23% shrinkage."
+        },
+        "buffer_layers_low_reactivity": ["Li2CO3 (SEI)", "NiO (surface phase)", "LiNbO3 (oxide buffer)"]
+      },
+      "key_figures": {
+        "Figure_3": "Pseudobinary phase diagram. Y=ΔE_react (0 to -500 meV/atom), X=x in xLMO+(1-x)LPSCl. 6 curves (LNO, NCA, High-Ni, NM11, NMC111, LCO). Stars at min. LiNiO2 most negative.",
+        "Figure_4": "Ni-Mn-Co ternary contour heat map. Color: -150 light to -450 dark. Ni corner darkest = most reactive. Red dashed line LCO -> LiNi0.7Mn0.3O2 = same stability tie-line.",
+        "Figure_7": "% volume change heat map for LMO/LPSCl (left) and LMO/C (right). Both Chemical and Electrochemical 4.5V columns. All LPSCl: shrinkage. C chemical: small expansion."
+      },
+      "comparison_to_us": {
+        "method_relationship": "Komatsu (bulk thermodynamics) + Camacho-Forero 2020 (slab AIMD) + our v10 (slab LBFGS sandwich) = COMPLEMENTARY. Komatsu sets thermodynamic ceiling; Camacho-Forero/we capture slab manifestation.",
+        "for_paper2_v10": [
+          "Komatsu predicts -424 meV/atom for LNO/LPSCl (our exact system) -> chemistry is THERMODYNAMICALLY GUARANTEED.",
+          "Reaction products to look for in our v10 sandwich relax: Ni3S2-like clusters, Li-O bonds (Li3PO4 nucleus), polysulfide S-S, surface LiCl.",
+          "Volume shrinkage -11% (chemical) is contact-loss baseline; complements Wad as 'mechanical adhesion picture'.",
+          "Komatsu does NOT inform FixAtoms / vacuum / lattice-match decisions (no slab in their work)."
+        ]
+      },
+      "use_in_paper": "Paper #2 Section: bulk thermodynamic anchor for LPSCl/LiNiO2 reactivity. Cite alongside Camacho-Forero 2020 (slab method anchor). Figure 4 strong narrative for LiNiO2 = most reactive NCM-corner.",
+      "previous_misattribution_locations_to_fix": [
+        "필독/literature/adhesion_literature_review.md entry #6 (Kim et al.) — same DOI, also Komatsu",
+        "필독/literature/verified_refs_2026_05.md entry #6 (sicolo2022) — same paper",
+        "필독/literature/narrative_with_literature_steps.md — Step 5/6 sicolo2022 citations",
+        "kb/papers/* any sicolo references"
       ],
-      "use_in_paper": "Section 4 (adhesion) METHOD reference + Discussion (interface reactivity baseline)",
-      "tags": ["DFT", "interface", "LPSCl", "NCM", "Ni", "Mn", "Co", "adhesion-method", "first-principles", "all-solid-state-battery", "sulfide-electrolyte"]
+      "tags": ["bulk-thermodynamics", "NOT-slab", "convex-hull", "Materials-Project", "LPSCl", "LiNiO2", "NCM", "ternary-Ni-Mn-Co", "reaction-energy", "volume-change", "must-read", "paper2-anchor", "Ong-group"]
     },
     {
       "id": "gautam2023",

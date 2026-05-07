@@ -27,23 +27,30 @@
 | `reviewer_qa_methods.md` | guide | reviewer 예상 질문 + 답변 (Methods) |
 | `choi2025_adoption_guide.md` | analysis | Choi 2025 인용 가이드 |
 | `zhao2025_critique.md` | critique | Zhao 2025 비판 분석 |
-| `camacho_forero_2020.md` | **per-paper deep dive** | **Chem. Mater. 2020 sandwich Wadh — paper #2 v10 method 근거** |
+| `camacho_forero_2020.md` | **per-paper deep dive** | **Chem. Mater. 2020 sandwich Wadh — paper #2 v10 SLAB method 근거** |
+| `komatsu2022.md` | **per-paper deep dive** | **JPCC 2022 BULK reactivity LPSCl/LiNiO2 = −424 meV/atom (most reactive NCM). Volume change −11~−34%. Reaction products. Paper #2 BULK anchor.** |
 
 ---
 
 ## Paper #2 v10 (sandwich) 결정의 핵심 reference
 
-| Authority | Method element | 우리 v9 (deviating) | 권장 (v10) |
+| Authority | Method category | What it gives | 우리 v10 |
 |---|---|---|---|
-| Camacho-Forero 2020 | Sandwich geometry (no vacuum) | single + 30 Å vacuum | sandwich |
-| Camacho-Forero 2020 | /(2A) normalization | /A | /(2A) |
-| Camacho-Forero 2020 | No FixAtoms (full relax) | FixAtoms 33% bottom | drop FixAtoms |
-| Camacho-Forero 2020 | AIMD 300 K × 20 ps | LBFGS only or 9 ps MQA | 5-10 ps NVT |
-| Mo group (Y. Mo) | Thermodynamic SE-cathode stability | — | Lit. comparison |
-| Holzwarth | Solid-state battery interface | — | Lit. comparison |
-| Janek group | SE/NCM XPS-validated reactions | — | Reaction taxonomy |
+| **Camacho-Forero 2020** | ⭐ slab + AIMD + sandwich | Direct slab Wadh protocol (LPSCl/Li2S = 1.44 J/m²) | **Method anchor** |
+| **Komatsu 2022** (Ong) | bulk thermodynamics | ΔED,min,mutual = −424 meV/atom for LNO/LPSCl + reaction products + volume change | Bulk anchor + chemistry expectations |
+| Mo group (Zhu, Richards, Tian) | bulk thermo (general framework) | Stability framework underlying Komatsu | Methodological grandfather |
+| Haruyama 2014 (Chem. Mater.) | slab + DFT+U | LiCoO2/β-Li3PS4 space-charge layer | Pending PDF (paper-quality slab anchor) |
+| Lian 2020 (ACS AEM) | slab | LCO with multiple SE | Pending PDF |
+| Choi 2025 (ACS AEM) | MLIP slab | adoption guide for MLIP-slab figures | Figure style |
 
-==**Camacho-Forero 2020 = 우리와 가장 직접 비교 가능 (LPSCl는 comp1!)**==.
+### v10 method elements (final)
+- **Geometry**: Sandwich (no vacuum, PBC z creates 2 interfaces) — Camacho-Forero
+- **Wad 분모**: 2A — Camacho-Forero
+- **FixAtoms**: NONE on SE side (Camacho-Forero); NCM bottom 3 atomic layers FixAtoms (literature std for layered oxide bulk reference) — hybrid
+- **Sampling**: LBFGS only (UMA MD-at-interface 실패 history; Camacho-Forero AIMD는 VASP에서만 가능)
+- **NCM thickness**: 3L conv (9 atomic layers, 42.57 Å) — sufficient for surface/bulk distinction
+- **Cathode chemistry**: LiNiO2 (paper #1 일관성). NCM811 paper revision option.
+- **Expected chemistry** (Komatsu): Ni3S2 nucleus, Li3PO4, Li2S, LiCl phase separation. Volume −11% chemical, −34% at 4.5V.
 
 ---
 

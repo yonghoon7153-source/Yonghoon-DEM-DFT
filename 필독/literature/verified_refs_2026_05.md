@@ -39,11 +39,15 @@
 >
 > **우리 활용**: Cl-rich + NCM interface trade-off (conductivity vs decomposition) (Section 4)
 
-### 6. **sicolo2022** (J. Phys. Chem. C)
-> Sicolo, S. et al. **Interfacial Stability of Layered LiNiₓMnᵧCo₁₋ₓ₋ᵧO₂ Cathodes with Sulfide Solid Electrolytes in All-Solid-State Rechargeable Lithium-Ion Batteries from First-Principles Calculations**.
-> *J. Phys. Chem. C* (2022). DOI: 10.1021/acs.jpcc.2c05336
+### 6. ⚠️ **komatsu2022** (J. Phys. Chem. C) — ATTRIBUTION + METHOD CORRECTED 2026-05-07
+> ❌ ~~Sicolo, S. et al.~~ → ✅ **Komatsu, H.; Banerjee, S.; ...; Ong, S. P.** (UC San Diego + Nissan)
+> Title: same. *J. Phys. Chem. C* **126**, 17482 (2022). DOI: 10.1021/acs.jpcc.2c05336
 >
-> **우리 활용**: NCM-sulfide DFT 계면 prior art — adhesion v5/v6 method ref (Section 4)
+> **Method correction**: ❌ ~~"DFT slab method"~~ → ✅ **Bulk pseudobinary thermodynamics (Materials Project + convex hull)**. NOT slab. Provides bulk reactivity ΔED,min,mutual = −424 meV/atom for LiNiO2/LPSCl, NOT slab Wad.
+>
+> **우리 활용**: Paper #2 Section 4 — bulk thermodynamic anchor for LPSCl/LiNiO2 reactivity (Camacho-Forero 2020 의 slab method anchor와 함께 cite). LiNiO2 = NCM 중 가장 reactive (ternary contour Figure 4) + −11% volume shrinkage (Figure 7).
+>
+> **Per-paper deep-dive**: `komatsu2022.md`
 
 ### 7. **wang2019** (J. Power Sources)
 > Wang, Yu, Ganapathy, van Eck, van Eijck (Wagemaker group). **A lithium argyrodite Li₆PS₅Cl₀.₅Br₀.₅ electrolyte with improved bulk and interfacial conductivity**.

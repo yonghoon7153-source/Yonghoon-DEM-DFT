@@ -14,8 +14,8 @@
 | 3 | Li5.4 vacancy framework | **wagemaker2020** ⭐⭐⭐ | **adeli2019** ⭐⭐⭐ | Section 3 |
 | 4 | comp4 frustration anomaly | **famprikis2019** ⭐⭐ | (our data primary) | Section 3 |
 | 5 | modelC Li-Cl elongation | **gautam2023** ⭐⭐⭐ | **yuwagemaker2023** ⭐⭐⭐ | Section 2 |
-| 6 | Wad enhancement (Cl-rich) | **zuo2023** ⭐⭐ | sicolo2022 ⭐⭐ | Section 4 |
-| 7 | NCM interface methodology | **sicolo2022** ⭐⭐ | (Methods only) | Section 4 |
+| 6 | Wad enhancement (Cl-rich) | **zuo2023** ⭐⭐ | komatsu2022 ⭐⭐ | Section 4 |
+| 7 | NCM interface methodology | **komatsu2022** ⭐⭐ | (Methods only) | Section 4 |
 | ★ | Author "shorter+ionic→stronger" 반박 | **wilkening2019** ⭐⭐⭐ | (one-shot kill) | Discussion / Rebuttal |
 
 ---
@@ -235,7 +235,7 @@ comp4 weak Li-Cl (0.303) + highest Wad (1.20) → opposite
 2. Section 2 mid     ← Step 2 + 5 (site distribution)  — gautam2023, yuwagemaker2023
 3. Section 3 opener  ← Step 3 (vacancy framework)  — wagemaker2020, adeli2019
 4. Section 3 spotlight ← Step 4 (comp4 anomaly)  — famprikis2019
-5. Section 4         ← Step 5 + 6 (Wad reformulation + methods)  — zuo2023, sicolo2022
+5. Section 4         ← Step 5 + 6 (Wad reformulation + methods)  — zuo2023, komatsu2022
 6. Discussion/Reb    ← Step 7 (author rebuttal)  — wilkening2019 (one-shot)
 ```
 

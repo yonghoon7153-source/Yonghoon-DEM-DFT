@@ -1,5 +1,11 @@
 # Adhesion Interface Modeling — Literature Summary
 
+## ⚠️ Method Category Caveat (2026-05-07)
+
+**Important**: Some entries below have been **misclassified or misattributed** in earlier versions of our notes. Specifically:
+- Entry #6 (previously "Kim 2022" / "Sicolo 2022", same DOI 10.1021/acs.jpcc.2c05336): Actual = **Komatsu et al. 2022** (Ong group, UC San Diego + Nissan). Method = **BULK pseudobinary thermodynamics**, NOT DFT slab. See `komatsu2022.md` for corrected per-paper notes.
+- "FixAtoms bottom 2L" claims for some non-slab papers were extrapolated incorrectly. Trust **Camacho-Forero 2020** as the slab method anchor for sulfide SE / cathode interfaces.
+
 ## Reference Papers for Cathode-SE Interface Adhesion
 
 ### 1. Xiao et al., Nature Reviews Materials 5, 105 (2020)
@@ -48,13 +54,17 @@
 - **Key finding**: Most stable surface → lowest Li diffusion barrier at interface
 - DOI: 10.1021/jacs.2c07482
 
-### 6. Kim et al., J. Phys. Chem. C 126, 36, 15326 (2022)
-"Interfacial Stability of Layered LiNixMnyCo1-x-yO2 Cathodes with Sulfide SE"
-- **Materials**: NMC111/333/532/622/811 with Li6PS5Cl, Li3PS4
-- **Method**: DFT+U
-- **Slab**: Layered oxide cathode slabs, systematic study across compositions
-- **Key finding**: Higher Ni content → less stable interface
+### 6. ⚠️ ATTRIBUTION + METHOD CORRECTED (2026-05-07)
+**Komatsu, H. et al. (NOT Kim, NOT Sicolo)**, *J. Phys. Chem. C* 126, 17482 (2022).
+"Interfacial Stability of Layered LiNixMnyCo1-x-yO2 Cathodes with Sulfide Solid Electrolytes... from First-Principles Calculations"
+- **Group**: Shyue Ping Ong (UC San Diego) + Nissan
+- **Method**: ⚠️ **NOT a DFT slab paper**. **BULK pseudobinary thermodynamics** (Materials Project + convex hull, Zhu-Mo framework). Computes ΔED,min,mutual(A,B) from convex-hull energies. NO slab, NO FixAtoms, NO interface relaxation, NO AIMD.
+- **System**: LiNixMnyCo1-x-yO2 (NMC) + Li6PS5Cl (LPSCl) — bulk
+- **DFT**: VASP, PBE+U (Ni=6.20, Co=3.32, Mn=3.90), 520 eV ecut, k≥1000/atom, MP precomputed structures
+- **Key finding**: LiNiO2/LPSCl reaction energy −424 meV/atom (most reactive); reaction products Ni3S2 + Li2S + Li2SO4 + Li3PO4 + LiCl. Higher Ni → more reactive.
+- **Volume change**: LMO/LPSCl chemical −11 to −17%, electrochemical 4.5V −29 to −34% (mechanical contact loss).
 - DOI: 10.1021/acs.jpcc.2c05336
+- **See**: `komatsu2022.md` for full deep-dive notes.
 
 ### 7. Seymour et al., ChemSusChem 16, e202202215 (2023)
 "Understanding and Engineering Interfacial Adhesion in Solid-State Batteries with Metallic Anodes"
