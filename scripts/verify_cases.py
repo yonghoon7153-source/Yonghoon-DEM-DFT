@@ -20,60 +20,70 @@ import sys
 from pathlib import Path
 
 
-# Pipeline stages and the metrics keys each one writes (presence = stage ran)
-STAGES = [
+# Pipeline stages and the metrics keys each one writes (presence = stage ran).
+#
+# Two severity tiers:
+#   CRITICAL — UI cannot render correctly without these (require repair).
+#   COSMETIC — older cases predate the field; UI shows '—' placeholder.
+#              Repair is OPTIONAL (only matters for newly added analyses).
+STAGES_CRITICAL = [
     ('contact_analysis', [
         'porosity', 'thickness_um', 'percolation_pct',
-        'sigma_full_mScm',  # written by analyze_contacts.py via network merge
+        'sigma_full_mScm',  # baseline σ_ionic — required for ASR + Stage E delta
     ]),
-    ('coverage_physics', [
-        'coverage_AM_mean_physics_rough',  # B3 shape-corrected coverage
-        'area_AM전체_SE_total_physics',    # Tabor-area total
+    ('stage_e_values', [
+        'sigma_full_mScm_stage_e',          # Stage E σ_ionic value
+        # Note: σ_e/κ Stage E intentionally NOT critical — they're None when
+        # the channel has no AM-AM (P:S=0:10) or no κ baseline.
     ]),
-    ('network_solver_baseline', [
-        'electronic_sigma_full_mScm',
-        'thermal_sigma_full_mScm',
-        'sigma_full_mScm_physics',
+]
+
+STAGES_COSMETIC = [
+    ('coverage_physics_rough', [
+        'coverage_AM_mean_physics_rough',  # B3 shape-corrected (added later)
     ]),
-    ('stage_e', [
-        'sigma_full_mScm_stage_e',
-        'electronic_sigma_full_mScm_stage_e',
-        'thermal_sigma_full_mScm_stage_e',
-        'stage_e_factors_used',
-        'stage_e_source',
+    ('stage_e_source_meta', [
+        'stage_e_source',  # Bruggeman fallback metadata (added in commit 7a11682)
     ]),
     ('tier1_patches', [
-        'coverage_AM_mean_physics_rough',  # B3
-        'se_se_cn_perc',                   # F2
-        'se_se_cn_eff_area',               # F2
-        'se_se_cn_aug',                    # F1
+        'se_se_cn_perc', 'se_se_cn_eff_area',
+        'se_se_cn_eff_area_perc', 'se_se_cn_aug',
     ]),
 ]
 
 REPAIR_CMDS = {
-    'contact_analysis':         'bash scripts/run baseline {cid}',
-    'coverage_physics':         'bash scripts/run baseline {cid}',
-    'network_solver_baseline':  'bash scripts/run baseline {cid}',
-    'stage_e':                  'bash scripts/run stagee {cid}',
-    'tier1_patches':            'bash scripts/run baseline {cid}',
+    'contact_analysis':       'bash scripts/run baseline {cid}',
+    'stage_e_values':         'bash scripts/run stagee {cid}',
+    'coverage_physics_rough': 'bash scripts/run baseline {cid}',
+    'stage_e_source_meta':    'bash scripts/run stagee {cid}',
+    'tier1_patches':          'bash scripts/run baseline {cid}',
 }
 
 
 def _check_one(case_dir: Path) -> dict:
     fm_path = case_dir / 'full_metrics.json'
     if not fm_path.exists():
-        return {'ok': False, 'missing_file': True, 'missing_stages': []}
+        return {'ok': False, 'missing_file': True,
+                'critical': [], 'cosmetic': []}
     with open(fm_path) as f:
         m = json.load(f)
     if m.get('mode_note', '').startswith('atoms_only'):
-        return {'ok': True, 'atoms_only': True, 'missing_stages': []}
+        return {'ok': True, 'atoms_only': True,
+                'critical': [], 'cosmetic': []}
 
-    missing = []
-    for stage, keys in STAGES:
-        if any(m.get(k) is None for k in keys):
-            absent_keys = [k for k in keys if m.get(k) is None]
-            missing.append((stage, absent_keys))
-    return {'ok': not missing, 'missing_stages': missing}
+    critical = []
+    for stage, keys in STAGES_CRITICAL:
+        absent = [k for k in keys if m.get(k) is None]
+        if absent:
+            critical.append((stage, absent))
+
+    cosmetic = []
+    for stage, keys in STAGES_COSMETIC:
+        absent = [k for k in keys if m.get(k) is None]
+        if absent:
+            cosmetic.append((stage, absent))
+
+    return {'ok': not critical, 'critical': critical, 'cosmetic': cosmetic}
 
 
 def main():
@@ -81,7 +91,9 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('case_id', nargs='?')
     ap.add_argument('--fix', action='store_true',
-                    help='Auto-run missing stages (slow)')
+                    help='Auto-run missing CRITICAL stages')
+    ap.add_argument('--include-cosmetic', action='store_true',
+                    help='Also report (and --fix) cosmetic missing fields')
     args = ap.parse_args()
 
     root = Path('webapp')
@@ -96,37 +108,50 @@ def main():
         print('No cases found.')
         return
 
-    print(f'Verifying {len(cases)} cases...\n')
+    print(f'Verifying {len(cases)} cases (cosmetic={"on" if args.include_cosmetic else "off"})...\n')
 
-    incomplete = []
+    critical_cases = []
+    cosmetic_cases = []
     atoms_only = 0
     for case_dir in sorted(cases):
         r = _check_one(case_dir)
         if r.get('atoms_only'):
             atoms_only += 1
             continue
-        if not r['ok']:
-            incomplete.append((case_dir.name, r['missing_stages']))
+        if r['critical']:
+            critical_cases.append((case_dir.name, r['critical']))
+        elif r['cosmetic'] and args.include_cosmetic:
+            cosmetic_cases.append((case_dir.name, r['cosmetic']))
 
-    print(f'Summary: {len(cases) - len(incomplete) - atoms_only} complete,'
-          f' {len(incomplete)} incomplete, {atoms_only} atoms-only.\n')
+    n_complete = len(cases) - len(critical_cases) - atoms_only
+    print(f'Summary: {n_complete}/{len(cases)} complete (UI render-ready),'
+          f' {len(critical_cases)} CRITICAL,'
+          f' {atoms_only} atoms-only.\n')
 
-    if not incomplete:
-        print('✓ All cases have complete pipeline output.')
+    if not critical_cases:
+        print('✓ All cases UI-render-ready (no critical missing fields).')
+        if cosmetic_cases:
+            print(f'\n  ({len(cosmetic_cases)} cases have cosmetic gaps —'
+                  f' older code metadata, UI shows — placeholder. Use'
+                  f' --include-cosmetic to list them.)')
         return
 
-    print(f'✗ {len(incomplete)} case(s) missing pipeline stages:')
+    print(f'✗ {len(critical_cases)} case(s) with CRITICAL missing data:')
     repairs = []
-    for cid, miss in incomplete:
+    for cid, miss in critical_cases:
         print(f'\n  {cid}')
         for stage, keys in miss:
-            print(f'    - {stage}  (missing keys: {", ".join(keys[:3])}'
+            print(f'    - {stage}  (missing: {", ".join(keys[:3])}'
                   f"{', ...' if len(keys) > 3 else ''})")
             repairs.append((cid, stage))
 
+    if args.include_cosmetic and cosmetic_cases:
+        print(f'\n--- Cosmetic gaps ({len(cosmetic_cases)} cases) ---')
+        for cid, miss in cosmetic_cases:
+            print(f'  {cid}: {", ".join(s for s, _ in miss)}')
+
     if args.fix:
-        print(f'\n=== Auto-fixing {len(repairs)} (cid, stage) pairs ===')
-        # Dedup: each case may need multiple commands; collapse to unique cmds
+        print(f'\n=== Auto-fixing {len(repairs)} CRITICAL (cid, stage) pairs ===')
         unique_cmds = sorted({REPAIR_CMDS[s].format(cid=c) for c, s in repairs})
         for cmd in unique_cmds:
             print(f'  $ {cmd}')
