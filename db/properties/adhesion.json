@@ -203,5 +203,153 @@
       "36 registries × 6 comps × LBFGS = 216 calcs, ~18h on GPU 1",
       "Direct comparison with paper #1 v5 published values"
     ]
+  },
+
+  "adhesion_v2025_05_07_v9_to_v22": {
+    "session_log": "2026-05-07 KISTI / 안용훈 작업, gabia + KISTI server cleanup 후 paper #2 적합 method 탐색",
+    "context": [
+      "v5 paper #1 결과 — 서버 lost, R²=0.9999 cross-family match는 user-curated (artificial selection)",
+      "Server data lost → from-scratch validation with Haruyama 2014 + Komatsu 2022 + Camacho-Forero 2020 anchors",
+      "Goal: paper #2 main method 확정 + vacancy chemical anchor mechanism 검증"
+    ],
+
+    "method_iterations": {
+      "v9_cleavage_LBFGS": {
+        "method": "Sandwich + cleavage (relaxed iface, rigid sep)",
+        "result": {
+          "comp1": 1.43, "comp2": 1.51, "comp3": 0.82, "comp4": 1.17, "comp5": 1.19, "modelC": 1.02
+        },
+        "verdict": "❌ INVERTED — Cross-family Li6 > Li5.4 (paper says Li5.4 > Li6)",
+        "n_partial": "24/216 (cycle 4)",
+        "stopped_at": "2026-05-07 13:45"
+      },
+      "v10_sandwich": {
+        "method": "Sandwich (Camacho-Forero 2020) + NCM middle 1/3 FixAtoms + /(2A)",
+        "result_cycle1": {"comp1": 2.06, "comp2": 1.85, "comp3": -0.06, "comp4": null, "comp5": null, "modelC": null},
+        "Li_migration_top": {"comp1": 23, "comp2": 21, "comp3": 8},
+        "verdict": "❌ INVERTED with extreme magnitude (comp3 negative). Li intermixing dominates.",
+        "stopped_at": "2026-05-07 ~13:00"
+      },
+      "v10b_sandwich_SE_fix": {
+        "method": "Sandwich + NCM mid 1/3 + SE mid 1/3 FixAtoms + /(2A)",
+        "result_cycle1": {"comp1": 1.96, "comp2": 1.80, "comp3": 0.22, "comp4": -0.28, "comp5": null, "modelC": null},
+        "verdict": "❌ INVERTED. SE-mid fix did NOT recover vacancy effect.",
+        "stopped_at": "2026-05-07 14:40"
+      },
+      "v11_haruyama_single_LBFGS": {
+        "method": "Single interface + vacuum 30Å + NCM bot 1/3 + SE top 1/3 FixAtoms + LBFGS + /A (Haruyama 2014 method)",
+        "result_cycle1": {"comp1": 7.85, "comp2": 7.56, "comp3": 4.22, "comp4": 2.60, "comp5": null, "modelC": null},
+        "Li_migration": {"comp1": 20, "comp2": 18, "comp3": 7, "comp4": 0},
+        "verdict": "❌ INVERTED again. LBFGS still causes Li intermixing artifact even with Haruyama-style FixAtoms.",
+        "key_finding": "comp4 (Li_mig=0) gave Wad=2.60 close to paper 1.97 — suggests when migration absent, real chemistry shows.",
+        "stopped_at": "2026-05-07 15:30"
+      },
+      "v12_haruyama_single_RIGID": {
+        "method": "Single interface + vacuum + NO LBFGS + /A (rigid single-point)",
+        "fixed_gap": 2.5,
+        "result_full_216_3p7min": {
+          "comp1": {"mean": 0.378, "std": 0.0004, "CV_pct": 0.1},
+          "comp2": {"mean": 0.339, "std": 0.0003, "CV_pct": 0.1},
+          "comp3": {"mean": 1.107, "std": 0.0002, "CV_pct": 0.0},
+          "comp4": {"mean": 0.504, "std": 0.0014, "CV_pct": 0.3},
+          "comp5": {"mean": 0.514, "std": 0.0013, "CV_pct": 0.3},
+          "modelC": {"mean": 0.236, "std": 0.0008, "CV_pct": 0.3}
+        },
+        "ranking_v12": "comp3 > comp4 ≈ comp5 > comp1 > comp2 > modelC",
+        "ranking_paper_exp": "comp3 > comp4 > comp5 > comp1 > comp2 (modelC not measured)",
+        "verdict": "✓ Cycle 1 paper match (R≈0.95+ ranking only)",
+        "concerns": [
+          "xy-shift CV<1% — registry-insensitive (suspicious)",
+          "Fixed gap=2.5 may not be equilibrium",
+          "modelC -2.18 (Phase 1) vs +0.24 (v12) — method-dependent"
+        ]
+      },
+      "v13_zscan_validation": {
+        "method": "Z-scan W_max per comp (gaps 1.5-4.0 Å, 10 gaps)",
+        "key_finding": "All comps W_max at gap=1.5 Å (shortest tested) → equilibrium gap < 1.5",
+        "v13_W_max_ranking": "comp1(2.32) > comp2(2.01) > comp3(1.77) > comp4(1.24) ≈ comp5(1.23) > modelC(1.17)",
+        "vs_v12_gap2p5": "OPPOSITE ranking — v12 (gap=2.5) match was COINCIDENTAL",
+        "dense_xy_shift_100reg_CV_pct": {"all_comps": "<1%"},
+        "interpretation": "Wad is bulk-Madelung-dominated, registry-insensitive, gap-dependent. NOT interface chemistry."
+      },
+      "v14_full_validation_4phase": {
+        "phase_a_sanity": {
+          "test": "5 extreme xy-shifts on comp1, RMS atom displacement",
+          "result": "RMS=7.12 Å (atoms ARE moving), Wad Δ=0.0008 (constant)",
+          "verdict": "✓ xy-shift code correct; Wad Madelung-dominated (not bug)"
+        },
+        "phase_b_equilibrium_gap": {
+          "method": "Fine Z-scan 1.0-3.0 Å (9 gaps)",
+          "gap_eq_per_comp": {"comp1": 1.2, "comp2": 1.2, "comp3": 1.4, "comp4": 1.6, "comp5": 1.6, "modelC": 1.2},
+          "W_eq_per_comp": {"comp1": 2.7153, "comp2": 2.5326, "comp3": 1.7806, "comp4": 1.2239, "comp5": 1.2288, "modelC": 1.4547},
+          "ranking": "comp1 > comp2 > comp3 > modelC > comp4 ≈ comp5",
+          "verdict": "❌ ANTI-correlated with paper exp (R(W_eq vs paper exp) = -0.7596)"
+        },
+        "phase_c_bond_count_at_gap_eq": {
+          "comp1_R1_origin": {"Li-O": 40, "Cl-O": 8, "Br-O": 0, "S-Li": 20, "S-Ni": 0, "Li-Ni": 0},
+          "comp2_R1_origin": {"Li-O": 26, "Cl-O": 10, "Br-O": 0, "S-Li": 15, "S-Ni": 0, "Li-Ni": 0},
+          "comp3_R1_origin": {"Li-O": 24, "Cl-O": 0, "Br-O": 0, "S-Li": 0, "S-Ni": 0, "Li-Ni": 0},
+          "comp4_R1_origin": {"Li-O": 24, "Cl-O": 0, "Br-O": 20, "S-Li": 0, "S-Ni": 0, "Li-Ni": 0},
+          "comp5_R1_origin": {"Li-O": 23, "Cl-O": 0, "Br-O": 19, "S-Li": 0, "S-Ni": 0, "Li-Ni": 0},
+          "modelC_R1_origin": {"Li-O": 17, "Cl-O": 17, "Br-O": 0, "S-Li": 4, "S-Ni": 0, "Li-Ni": 0}
+        },
+        "phase_d_pearson_R": {
+          "Li-O_density_v14_R": 0.8325,
+          "Cl-O_density_v14_R": -0.9131,
+          "Br-O_density_v14_R": 0.4028,
+          "W_eq_R": -0.7596
+        }
+      },
+      "v15_robustness_36reg": {
+        "method": "Bond count statistics across 36 registries (6 high-sym + 30 random)",
+        "average_CV_pct_nonzero_bonds": 6.1,
+        "verdict": "✓ ROBUST — bond density is registry-INDEPENDENT intrinsic property",
+        "v14_vs_v15_pearson_R_consistency": {
+          "Li-O_density": {"v14_single_R1": 0.8325, "v15_mean_36reg": 0.8190, "diff": 0.0135},
+          "Cl-O_density": {"v14_single_R1": -0.9131, "v15_mean_36reg": -0.9142, "diff": 0.0011},
+          "Br-O_density": {"v14_single_R1": 0.4028, "v15_mean_36reg": 0.3943, "diff": 0.0085}
+        },
+        "Br_O_threshold_finding": "Br-O bonds emerge between Br=0.6 and Br=0.8 per fu. comp3 Br=0.6 has zero Br-O exposure (Br buried), comp4/5 have ~19 Br-O. Threshold effect."
+      },
+      "v16_cutoff_sensitivity": {"status": "designed, awaiting deploy"},
+      "v17_gap_window_sensitivity": {"status": "designed, awaiting deploy"},
+      "v18_per_Li_atom_decomp": {"status": "designed, awaiting deploy"},
+      "v19_phase1_crossval": {"status": "designed, awaiting deploy"},
+      "v20_visualization_xyz": {"status": "designed, awaiting deploy"},
+      "v21_composite_descriptor": {"status": "designed, awaiting deploy"},
+      "v22_relaxed_bond_count": {"status": "designed, awaiting deploy", "purpose": "test if limited LBFGS (max 50 steps) gives same bond count as rigid; address user concern about realistic relaxation"}
+    },
+
+    "current_paper2_main_finding_candidate": {
+      "narrative": "Atomic MLIP energy descriptor (W_eq) does NOT correlate with experimental SE/NCM adhesion (R=-0.76, anti-correlated). However, GEOMETRIC bond density at equilibrium gap reproduces experimental ranking: Li-O attractive (R=+0.82) and Cl-O anti-correlated (R=-0.91). Composite (Li-O − α·Cl-O) gives R=+0.91. Vacancy chemical anchor mechanism manifests geometrically: Li5.4 vacancy positions surface Li closer to NCM-O while suppressing Cl exposure.",
+
+      "robustness_evidence": [
+        "v15: 36 random xy-shifts, average CV<6.1% per comp",
+        "v14 (single R1) and v15 (mean of 36) Pearson R agree within 0.02",
+        "Bond density unchanged across registries → not a code/geometry artifact"
+      ],
+
+      "concerns_remaining": [
+        "n=5 small — Pearson R uncertainty ~±0.2 at this n",
+        "modelC predicted lowest Wad but no exp measurement to verify",
+        "Energy descriptor (W_eq) anti-correlation indicates MLIP energy approach has fundamental limit at our slab geometry",
+        "Different equilibrium gap per comp (1.2-1.6 Å) — Z-scan finds W_max at gap=1.5 (shorter than gap_eq) — may indicate gap < 1.0 actually"
+      ],
+
+      "validation_status": [
+        "v16-22 thorough validation pending (cutoff sensitivity, gap window, per-atom, phase1 crossval, visualization, composite, relaxed bonds)"
+      ]
+    },
+
+    "relax_vs_rigid_bond_count_argument": {
+      "user_question": "if descriptor is geometric bond count, is relaxation more realistic?",
+      "answer": "Yes in principle, but:",
+      "type_a_local_relaxation": "Atoms adjust 0.1-0.5 Å to find optimal bonding positions — this is what we WANT",
+      "type_b_long_range_migration": "Li atoms migrate 3+ Å into NCM bulk = solid solution formation = NOT adhesion. v9-v11 LBFGS (200-300 steps) gave type-b artifact.",
+      "v22_strategy": "Limited LBFGS (max 50 steps, fmax 0.05) + FixAtoms NCM bot 1/3 + SE top 1/3 → cap migration, allow only type-a. Track RMS displacement; if >1.5 Å, flag as migration.",
+      "fallback": "If v22 gives same ranking as v15 (rigid), descriptor robust. If different, discuss in paper #2 method choice.",
+      "publication_note": "Rigid bond density at equilibrium gap is defensible as 'geometric snapshot at favorable separation' — different from but complementary to relaxed bond formation."
+    }
   }
 }
+

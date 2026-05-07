@@ -176,7 +176,46 @@
   - SE no FixAtoms (Camacho-Forero standard) ⚠️ — root cause of v10 inversion
   - LBFGS fmax=0.03, steps=400
 
-### F2c. `phase2a_v11_haruyama_single.py` ❓ UNKNOWN — pending pilot ⭐ ACTIVE
+### F8. `phase2a_v16to22_full_suite.py` ❓ UNKNOWN — comprehensive validation suite (v16-v22)
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v16to22_full_suite.py`
+- **로컬 미러**: `필독/adhesion/phase2a_v16to22_full_suite.py` ⭐
+- **목적**: v16 cutoff + v17 gap_window + v18 per-atom + v19 phase1 crossval + v20 xyz vis + v21 composite + v22 relaxed bonds
+- **시간**: ~15 min total (v16-v21 geometry only fast, v22 needs UMA LBFGS)
+- **상태**: 작성 완료, 배포 대기. v15 통과 후 다음 단계.
+
+### F7. `phase2a_v15_bond_robustness.py` ✅ ROBUST validated (CV 6.1%)
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v15_bond_robustness.py`
+- **로컬 미러**: `필독/adhesion/phase2a_v15_bond_robustness.py`
+- **목적**: 36 xy-shifts × 6 comps bond count statistics
+- **결과**: average CV non-zero bonds = 6.1% → robust intrinsic feature
+  - Li-O density v14 single R1 = +0.8325, v15 mean of 36 = +0.8190 (Δ=0.014)
+  - Cl-O density v14 = -0.9131, v15 = -0.9142 (Δ=0.001)
+- **시간**: 2.1 min (pure geometry, no UMA)
+
+### F6. `phase2a_v14_full_validation.py` ✅ DIAGNOSTIC done
+- **위치**: KISTI 동일
+- **로컬 미러**: `필독/adhesion/phase2a_v14_full_validation.py`
+- **결과**: gap_eq 1.2-1.6 Å (per comp), W_eq R(paper)=-0.7596 (anti-correlated), Li-O density R=+0.8325, Cl-O density R=-0.9131
+- **결론**: Energy descriptor anti-correlated, geometric (bond density) correlated
+- **시간**: 1.1 min
+
+### F5. `phase2a_v13_validation.py` ✅ DIAGNOSTIC done
+- **위치**: KISTI 동일, 로컬 `필독/adhesion/phase2a_v13_validation.py`
+- **결과**: Z-scan W_max all at gap=1.5 (shortest tested), ranking OPPOSITE of v12 gap=2.5 → v12 was gap-coincidence
+- **시간**: ~10 min
+
+### F4. `phase2a_v12_rigid_haruyama.py` ✅ baseline (rigid, NO LBFGS)
+- **위치**: KISTI 동일, 로컬 `필독/adhesion/phase2a_v12_rigid_haruyama.py`
+- **결과 216/216 (3.7 min)**:
+  - comp1=0.378, comp2=0.339, comp3=1.107, comp4=0.504, comp5=0.514, modelC=0.236
+  - Cycle 1 ranking matched paper exp (coincidental, gap=2.5 dependent)
+- **상태**: ⭐ baseline for v13-v22 validation suite
+
+### F2c. `phase2a_v11_haruyama_single.py` ❌ INVERTED — LBFGS Li intermixing artifact
+- 결과 cycle 1: comp1=7.85, comp3=4.22, comp4=2.60, Li_mig 7-20 atoms
+- Stopped 2026-05-07 15:30
+
+### F2c_old. `phase2a_v11_haruyama_single.py` ❓ UNKNOWN — pending pilot ⭐ ACTIVE
 - **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v11_haruyama_single.py` (paste from `필독/adhesion/`)
 - **로컬 미러**: `필독/adhesion/phase2a_v11_haruyama_single.py` ⭐
 - **목적**: ==**Haruyama 2014 faithful**== — single interface + vacuum + /A (anti-sandwich for oxide/sulfide hetero)
