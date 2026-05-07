@@ -1,0 +1,219 @@
+% =====================================================================
+%  Figure 1 — DEM-driven multi-physics network solver pipeline
+%  Standalone TikZ document. Compile with:
+%    pdflatex docs/figures/figure1.tex
+%
+%  Or include in main paper:
+%    \usepackage{tikz}
+%    \usetikzlibrary{positioning, shapes.geometric, arrows.meta,
+%                    backgrounds, fit, calc, decorations.pathmorphing}
+%    Then \input{figure1_body.tex} (extract the figure environment).
+%
+%  Panels (a)(b)(c) are referenced as included graphics — replace with
+%  your own DEM/network-extraction renders. Panels (d)(e)(f) are pure
+%  TikZ so they are typo-free, scalable, and editable.
+% =====================================================================
+\documentclass[border=4pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath, amssymb}
+\usepackage{tikz}
+\usetikzlibrary{positioning, shapes.geometric, arrows.meta,
+                backgrounds, fit, calc, decorations.pathmorphing,
+                shadows.blur}
+\usepackage{xcolor}
+
+% --- Colour palette
+\definecolor{cAMP}{HTML}{3a3a3a}    % polycrystalline AM (gray/black)
+\definecolor{cAMS}{HTML}{888888}    % single-crystal AM
+\definecolor{cSE}{HTML}{d4b94a}     % LPSCl (mustard)
+\definecolor{cBulk}{HTML}{4a90d4}   % R_bulk (blue)
+\definecolor{cCons}{HTML}{d44a4a}   % R_constriction (red)
+\definecolor{cIonic}{HTML}{3a78d6}  % σ_ionic
+\definecolor{cElec}{HTML}{d63a3a}   % σ_e
+\definecolor{cKappa}{HTML}{e69138}  % κ
+\definecolor{cBrg}{HTML}{8e44ad}    % Bruggeman fallback
+\definecolor{cOK}{HTML}{27ae60}     % pass branch
+\definecolor{cFail}{HTML}{e74c3c}   % fail branch
+\definecolor{cFlow}{HTML}{fff3d4}   % flowchart box bg
+\definecolor{cInput}{HTML}{e0eaff}  % input bg
+\definecolor{cAccent}{HTML}{fde4d4} % Stage E / 7-Layer accent
+
+% --- Style shortcuts
+\tikzset{
+  pbox/.style    = {draw, thick, rounded corners=2pt, align=center,
+                    inner sep=4pt, font=\sffamily\small},
+  inputbox/.style= {pbox, fill=cInput},
+  flowbox/.style = {pbox, fill=cFlow},
+  accentbox/.style={pbox, fill=cAccent, font=\sffamily\bfseries\small},
+  passbox/.style = {pbox, fill=cOK!20, font=\sffamily\bfseries\small,
+                    text=cOK!50!black},
+  brgbox/.style  = {pbox, fill=cBrg!20, font=\sffamily\bfseries\small,
+                    text=cBrg!50!black},
+  decision/.style= {diamond, draw, thick, fill=cFlow, aspect=2,
+                    inner sep=1pt, font=\sffamily\bfseries\small,
+                    align=center},
+  arr/.style     = {-Latex, thick},
+  passArr/.style = {arr, draw=cOK,   text=cOK!50!black,
+                    font=\sffamily\bfseries\footnotesize},
+  failArr/.style = {arr, draw=cFail, text=cFail!50!black,
+                    font=\sffamily\bfseries\footnotesize},
+  zigzag/.style  = {decorate, decoration={zigzag, segment length=3pt,
+                                            amplitude=2pt}}
+}
+
+\begin{document}
+\begin{tikzpicture}[node distance=8pt]
+
+% ====================================================================
+%  Top row: panels (a)(b)(c) — replace \fbox with \includegraphics
+%           when real DEM renders are available.
+% ====================================================================
+\node[pbox, minimum width=4cm, minimum height=3cm,
+      fill=gray!10, font=\sffamily\itshape\footnotesize, align=center]
+     (panelA) at (0, 9)
+     {{\bfseries (a) DEM Particle\\Configuration (Cathode)}\\[2pt]
+      \footnotesize AM\_P (D12, polycrystalline NCM811,\\
+      $\sigma_{\rm grain} = 50$\,mS/cm)\\
+      AM\_S (D4, single-crystal NCM811)\\
+      SE (D1, LPSCl, $\sigma_{\rm grain} = 3$\,mS/cm)\\[6pt]
+      \scriptsize\textit{[insert DEM render here]}};
+
+\node[pbox, minimum width=4cm, minimum height=3cm,
+      fill=gray!10, font=\sffamily\itshape\footnotesize, align=center,
+      right=8pt of panelA] (panelB)
+     {{\bfseries (b) Contact Network Extraction}\\[2pt]
+      \footnotesize SE-SE: ionic transport\\
+      AM-SE: ionic + interface\\
+      AM-AM: electronic (severe at AM\_P-AM\_P)\\[6pt]
+      \scriptsize\textit{[insert contact-network render]}};
+
+\node[pbox, minimum width=4cm, minimum height=3cm,
+      fill=gray!10, font=\sffamily\itshape\footnotesize, align=center,
+      right=8pt of panelB] (panelC)
+     {{\bfseries (c) Equivalent Resistor\\Network \& Sparse Solver}\\[2pt]
+      $\mathbf{L}\mathbf{x} = \mathbf{b}$\\[3pt]
+      \footnotesize $V_{\rm top}=1$\,V, $V_{\rm bottom}=0$\,V\\
+      $I_{\rm total} \rightarrow \sigma_{\rm eff}$\\[6pt]
+      \scriptsize\textit{[insert circuit render]}};
+
+% ====================================================================
+%  Middle row: panel (d) R-split + panel (e) Three Channels
+% ====================================================================
+
+% --- Panel (d) ---
+\begin{scope}[shift={(-1, 5)}]
+  \node[font=\sffamily\bfseries] at (0, 1.2)
+       {(d) Resistance Split (Holm 1967)};
+
+  \fill[cAMP, draw=black] (-1.0, 0) circle (0.7);
+  \fill[cSE,  draw=black] ( 1.0, 0) circle (0.7);
+  \fill[cCons, draw=black] (-0.10, -0.13) rectangle (0.10, 0.13);
+
+  \draw[cBulk, ultra thick, -Latex] (-1.6, 0) -- (-0.2, 0);
+  \draw[cBulk, ultra thick, -Latex] ( 0.2, 0) -- ( 1.6, 0);
+
+  \node[cBulk, font=\sffamily\bfseries\footnotesize, align=center]
+       at (-1.0, -1.1) {$R_{\rm bulk}$\\(Internal)};
+  \node[cBulk, font=\sffamily\bfseries\footnotesize, align=center]
+       at ( 1.0, -1.1) {$R_{\rm bulk}$\\(Internal)};
+  \node[cCons, font=\sffamily\bfseries\footnotesize, align=center]
+       at ( 0.0, -1.4) {$R_{\rm constriction}$\\(Holm 1967)};
+
+  \node[font=\sffamily\itshape\footnotesize, text=gray] at (0, 1.7)
+       {84\% constriction in this case};
+\end{scope}
+
+% --- Equation under (d) ---
+\node[font=\sffamily, align=center] at (-1, 2.3)
+     {$R_{\rm total} = R_{\rm bulk} + R_{\rm constriction}$};
+
+% --- Panel (e) Three channels ---
+\begin{scope}[shift={(5.5, 5)}]
+  \node[font=\sffamily\bfseries] at (0, 1.7)
+       {(e) Three Parallel Circuit Decomposition};
+
+  \foreach \i/\title/\sub/\col in {
+    0/\sigma_{\rm ionic}/(SE-SE + AM-SE)/cIonic,
+    1/\sigma_{\rm e}/(AM-AM only)/cElec,
+    2/\kappa/(All Contacts)/cKappa
+  } {
+    \begin{scope}[shift={({\i*2.2}, 0)}]
+      \draw[\col, very thick] (-0.9, -0.9) rectangle (0.9, 0.9);
+      \node[fill=\col!10, font=\sffamily\bfseries, text=\col,
+            align=center, font=\sffamily\bfseries\footnotesize]
+            at (0, 0) {$\title$\\[2pt]\scriptsize\sub};
+    \end{scope}
+  }
+\end{scope}
+
+% ====================================================================
+%  Bottom row (largest): panel (f) Stage E + 7-Layer Defense flowchart
+% ====================================================================
+\node[font=\sffamily\bfseries] at (5, 2.6)
+     {(f) Stage E Correction \& 7-Layer Defense};
+
+% Boxes
+\node[inputbox, font=\sffamily\bfseries\small, align=center]
+     (baseR) at (-1.5, 1.5) {Base R\\(panels b–e)};
+
+\node[flowbox, font=\sffamily\bfseries\small, align=center,
+      right=14pt of baseR]
+     (genericSolver) {$\mathbf{Lx}=\mathbf{b}$\\Generic Solver};
+
+\node[font=\sffamily\itshape\small, text=gray, align=center,
+      right=12pt of genericSolver]
+     (compNote) {Generic solver\\(comparison case)};
+
+\node[accentbox, align=center, below=18pt of baseR, anchor=north west,
+      text width=5cm]
+     (stageE) {$\bigstar$ Stage E Fracture Correction\\
+               (Lawn 1998 dependence)\\[2pt]
+               \footnotesize $f_r = f_{\rm Cronau} \times f_{\rm Trev.} \times f_{\rm Wang}$};
+
+\node[accentbox, align=center, below=10pt of stageE, text width=5cm]
+     (sevenLayer) {$\bigstar$ 7-Layer Defense \& Sanity Checks\\
+                   {\footnotesize L1–L4: g\_boundary, spsolve, CG,
+                                $\sigma_{\rm ratio}$}};
+
+\node[decision, right=20pt of sevenLayer]
+     (decision) {Solver\\OK?};
+
+\node[passbox, right=12pt of decision, align=center]
+     (passBranch) {\checkmark{} Direct\\solver\\(L1–L4 pass)};
+
+\node[brgbox, below=14pt of sevenLayer, align=center, text width=5cm]
+     (bruggeman) {$\bigstar$ L6: Bruggeman EMT Fallback\\
+                  \footnotesize
+                  $\sigma_{\rm eff} \approx \sigma_{\rm baseline} \cdot
+                  {\textstyle\sum (g_i \cdot f_i)}/{\textstyle\sum g_i}$};
+
+\node[flowbox, font=\sffamily\bfseries\small, align=center,
+      below=22pt of decision, text width=4.2cm]
+     (modR) {Modified $R'$\\
+             {\footnotesize $= (R_{\rm bulk} + R_{\rm constriction})/f_r$}};
+
+\node[inputbox, font=\sffamily\bfseries\small, align=center,
+      below=12pt of modR, text width=5cm]
+     (multichannel) {Multi-channel R-Groupings\\
+                     ($\sigma_{\rm ionic}$, $\sigma_{\rm e}$, $\kappa$)};
+
+\node[passbox, right=18pt of multichannel, align=center, text width=3cm]
+     (sigmaEff) {$\bigstar$ Robust $\sigma_{\rm eff}$\\
+                 ($\sigma_{\rm ionic}, \sigma_{\rm e}, \kappa$)};
+
+% Arrows
+\draw[arr] (baseR)        -- (genericSolver);
+\draw[arr] (genericSolver)-- (compNote);
+\draw[arr] (baseR)        -- (stageE);
+\draw[arr] (stageE)       -- (sevenLayer);
+\draw[arr] (sevenLayer)   -- (decision);
+\draw[passArr] (decision) -- node[above]{PASS} (passBranch);
+\draw[failArr] (decision.south) |- node[pos=0.25, right]{FAIL} (bruggeman.east);
+\draw[passArr] (passBranch) |- (modR);
+\draw[failArr] (bruggeman) -| (modR);
+\draw[arr]    (modR)        -- (multichannel);
+\draw[arr]    (multichannel)-- (sigmaEff);
+
+\end{tikzpicture}
+\end{document}

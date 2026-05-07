@@ -53,6 +53,9 @@ case "$cmd" in
     verify-cases)
         python3 scripts/verify_cases.py "$@"
         ;;
+    fig1)
+        python3 scripts/figure1_panels.py "$@"
+        ;;
     all-stagee)
         # Iterate cases passed as args, run Stage E for each
         for c in "$@"; do
