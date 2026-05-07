@@ -1,7 +1,16 @@
 # 🚨 필독 — Verified Production Code 모음
 
-> **검증된 production code의 local mirror.**
-> KISTI/gabia 의 production folder가 cleanup 되어도 ==**여기에 남음**==.
+> **검증된 production code + literature reference 의 local mirror.**
+> KISTI/gabia 의 production folder가 cleanup 되어도, 채팅 방이 터져 새 브랜치로 가도 ==**여기에 남음**==.
+
+---
+
+## ⛔ 새 브랜치 / 새 session 에서의 절대 규칙
+
+1. ==**코드 생성 금지**==. 사용자에게 "이 작업의 verified script 어디 있나요?" 먼저 묻기.
+2. 사용자가 "없음"이라고 답할 때만 ==**그제야 생성 허용**==. 즉시 CODE_INVENTORY.md 갱신.
+3. 같은 작업의 새 .py "비슷한 거 짜드릴게요" ==**금지**== — `compute_cij` factor 2 누락, ntyp 하드코딩, safe wrapper false-positive 같은 hidden bug가 반복됨.
+4. `필독/literature/` 의 paper 노트는 method 결정 전 ==**참고 필수**==.
 
 ---
 
@@ -65,6 +74,18 @@ champion CIF 만들기            B0 결정              post-processing
     ├── comp1_lpscl/            (TODO)
     ├── comp2_lpscbr/           (TODO: run_full_pp.sh, run_comp2_v2_bader.sh, scf/nscf/dos/projwfc.in)
     └── modelC_lpsc16/          (TODO)
+
+literature/                     ← Paper reference DB (mirror of db/literature + kb/papers literature notes)
+├── README.md                   ← index of papers + add-paper procedure
+├── refs.json                   ← 36 references machine-readable DB
+├── camacho_forero_2020.md      ← ⭐ paper #2 sandwich Wadh method anchor (LPSCl/Li2S(001) interface)
+├── verified_refs_2026_05.md    ← 8 user-verified paper #1 refs
+├── adhesion_literature_review.md ← 7편 adhesion DFT slab method review
+├── narrative_with_literature_steps.md ← paper #1 Section 2-4 writing scaffold
+├── origin_adhesion_guide.md    ← Origin bar chart settings
+├── reviewer_qa_methods.md      ← Q1-Q7 reviewer 답변 template
+├── choi2025_adoption_guide.md  ← Choi 2025 adoption (figure style, ack format)
+└── zhao2025_critique.md        ← Zhao 2025 critical analysis (Park 답변용)
 ```
 
 ---

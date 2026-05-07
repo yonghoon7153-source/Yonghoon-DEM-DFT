@@ -1,6 +1,19 @@
+# 🚨🚨🚨 최상위 규칙 — 새 브랜치 / 새 session 진입 시 ==**코드 생성 금지**==
+# 🚨🚨🚨 사용자에게 "이 작업의 코드/스크립트 어디에 있나요?" ==**먼저 물어볼 것**==
+# 🚨🚨🚨 사용자가 "없다"고 답할 때만 ==**그제서야 생성 허용**==
+#
+# 이유:
+# - 방(session)이 터져서 새 브랜치로 옮길 때 사용자의 verified production code는 KISTI/gabia/예전 브랜치에 살아 있음.
+# - Claude가 새로 짠 비슷한 코드는 hidden bug (compute_cij factor 2 누락, ntyp 하드코딩, safe wrapper "JOB DONE" 오판) 사례가 ==**반복**==됨.
+# - "비슷한 거 짜드릴게요" / "내가 만들어드릴게요" 같은 응답 ==**금지**==.
+# - inventory에 위치 모르면 사용자에게 묻고, 사용자가 없다고 확인한 뒤에만 새로 작성. 작성 후 즉시 CODE_INVENTORY.md 갱신.
+#
+# 위반 시: 사용자 시간/계산자원 손해 + 잘못된 결과 paper 위협.
+
 # 🚨 필독 — Argyrodite Mechanical Properties Research — Knowledge Base
 # 🚨 필독 — `CODE_INVENTORY.md` 먼저 읽고 시작
 # 🚨 필독 — 새 session 시작 시 이 파일 + CODE_INVENTORY.md 둘 다 무조건 읽음
+# 🚨 필독 — `필독/literature/` 의 paper 노트도 method 결정 전 참고
 
 > [!error] CRITICAL — Before any code-related action, READ FIRST:
 > **`CODE_INVENTORY.md`** at repo root.
