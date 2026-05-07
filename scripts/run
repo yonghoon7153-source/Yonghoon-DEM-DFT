@@ -50,6 +50,9 @@ case "$cmd" in
     sync-metrics)
         python3 scripts/sync_csv_to_metrics.py "$@"
         ;;
+    verify-cases)
+        python3 scripts/verify_cases.py "$@"
+        ;;
     all-stagee)
         # Iterate cases passed as args, run Stage E for each
         for c in "$@"; do
