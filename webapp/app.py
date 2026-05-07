@@ -1946,6 +1946,29 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         except Exception:
             pass
 
+        # Step 2d: Stage E — Literature-grounded full grain corrections
+        # (mirrors Standard mode pipeline at line ~2024). Auto-applies
+        # size/crystallinity factors per channel:
+        #   σ_ionic : SE σ_grain(r_SE) — Cronau 2022 (size-invariant ≥ 0.3 μm)
+        #   σ_e     : AM crystallinity (Trevisanello 2021) AM_S=1.0, AM_P=0.65
+        #   κ       : AM crystallinity (Wang 2022) AM_S=1.0, AM_P=0.50
+        # Includes 7-Layer defence + Bruggeman fallback when solver is
+        # numerically unstable. Writes *_stage_e + stage_e_source into
+        # full_metrics.json so the UI Stage E section auto-populates.
+        try:
+            stage_e_cmd = ['python3',
+                            os.path.join(scripts, 'run_network_full_corrections.py'),
+                            os.path.basename(results_dir), '--quiet']
+            stage_e_result = subprocess.run(stage_e_cmd, capture_output=True,
+                                              text=True, timeout=3600)
+            log.append({'step': 'Stage E (literature-grounded grain corrections)',
+                        'stdout': stage_e_result.stdout,
+                        'stderr': stage_e_result.stderr,
+                        'rc': stage_e_result.returncode})
+        except Exception as _e:
+            log.append({'step': 'Stage E (literature-grounded grain corrections)',
+                        'stdout': '', 'stderr': str(_e), 'rc': 1})
+
         # Step 3: Basic figures
         cmd = ['python3', os.path.join(scripts, 'generate_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
