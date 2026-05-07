@@ -9,8 +9,11 @@
 
 | File | Purpose | Status (2026-05-07) |
 |---|---|---|
-| `phase2a_v10_sandwich.py` | **v10 Camacho-Forero sandwich + NCM middle FixAtoms hybrid** | ❓ UNKNOWN — pilot 진행 예정 |
-| `watchdog_phase2a_v10.sh` | Auto-restart wrapper for KISTI | ❓ UNKNOWN |
+| ⭐ `phase2a_v11_haruyama_single.py` | **v11 Haruyama 2014 faithful — single interface + vacuum + /A** | ❓ UNKNOWN — ACTIVE deploy candidate |
+| ⭐ `watchdog_phase2a_v11.sh` | v11 auto-restart wrapper | — |
+| `phase2a_v10b_sandwich_se_fixed.py` | v10b sandwich + SE middle fix (cycle 1 INVERTED) | ❌ Stopped 14:40 |
+| `phase2a_v10_sandwich.py` | v10 sandwich + NCM middle fix (cycle 1 INVERTED) | ❌ Stopped 13:45 |
+| `watchdog_phase2a_v10b.sh`, `watchdog_phase2a_v10.sh` | v10/v10b wrappers | — |
 
 ---
 

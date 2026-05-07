@@ -176,7 +176,26 @@
   - SE no FixAtoms (Camacho-Forero standard) ⚠️ — root cause of v10 inversion
   - LBFGS fmax=0.03, steps=400
 
-### F2b. `phase2a_v10b_sandwich_se_fixed.py` ❓ UNKNOWN — pending pilot
+### F2c. `phase2a_v11_haruyama_single.py` ❓ UNKNOWN — pending pilot ⭐ ACTIVE
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v11_haruyama_single.py` (paste from `필독/adhesion/`)
+- **로컬 미러**: `필독/adhesion/phase2a_v11_haruyama_single.py` ⭐
+- **목적**: ==**Haruyama 2014 faithful**== — single interface + vacuum + /A (anti-sandwich for oxide/sulfide hetero)
+- **Anchor**: Haruyama 2014 PRIMARY method anchor + Komatsu 2022 BULK + Camacho-Forero 2020 chemistry
+- **변경점 (vs v10b sandwich)**:
+  - Sandwich → ==**single interface + vacuum 30 Å**== (Haruyama §2.1 explicit)
+  - /(2A) → ==**/A**== (single interface formula)
+  - NCM/SE middle 1/3 fix → ==**NCM bottom 1/3 + SE top 1/3**== (vacuum-touching sides only)
+  - Active interface: NCM_top (free) ↔ SE_bottom (free) — chemistry develops
+- **검증 필요**: pilot 후 cross-family Li5.4 > Li6 회복 + Wad scale 0.5-1.5 J/m² 정상 범위
+- **Context**: ==**v5 paper #1 results LOST (server)**==. R²=0.9999 was curated. So v11 is from-scratch validation, no v5 ground truth.
+- **상태**: 작성 완료, KISTI deploy 대기
+
+### F2b. `phase2a_v10b_sandwich_se_fixed.py` ❌ INVERTED (cycle 1, stopped 2026-05-07 14:40)
+- Cycle 1 (4/216): comp1=+1.96, comp2=+1.80, comp3=+0.22, comp4=−0.28 → Cross-family INVERTED
+- Root cause: Haruyama 2014 §2.1 explicit anti-sandwich for oxide/sulfide hetero
+- Stopped, supersededby v11
+
+### F2b_old. `phase2a_v10b_sandwich_se_fixed.py` ❓ UNKNOWN — pending pilot
 - **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v10b_sandwich_se_fixed.py` (paste from `필독/adhesion/`)
 - **로컬 미러**: `필독/adhesion/phase2a_v10b_sandwich_se_fixed.py` ⭐
 - **목적**: v10b — sandwich + symmetric NCM/SE middle FixAtoms (v10 cycle 1 inversion 해결)
