@@ -77,15 +77,21 @@ champion CIF 만들기            B0 결정              post-processing
 
 literature/                     ← Paper reference DB (mirror of db/literature + kb/papers literature notes)
 ├── README.md                   ← index of papers + add-paper procedure
-├── refs.json                   ← 36 references machine-readable DB
-├── camacho_forero_2020.md      ← ⭐ paper #2 sandwich Wadh method anchor (LPSCl/Li2S(001) interface)
-├── verified_refs_2026_05.md    ← 8 user-verified paper #1 refs
-├── adhesion_literature_review.md ← 7편 adhesion DFT slab method review
+├── refs.json                   ← 37 references machine-readable DB
+├── camacho_forero_2020.md      ← ⭐ paper #2 sandwich Wadh SLAB method anchor
+├── komatsu2022.md              ← ⭐ paper #2 BULK thermo anchor LPSCl/LiNiO2 (-424 meV/atom)
+├── verified_refs_2026_05.md    ← 8 user-verified paper #1 refs (komatsu attribution corrected)
+├── adhesion_literature_review.md ← adhesion DFT method review (entry 6 corrected)
 ├── narrative_with_literature_steps.md ← paper #1 Section 2-4 writing scaffold
 ├── origin_adhesion_guide.md    ← Origin bar chart settings
 ├── reviewer_qa_methods.md      ← Q1-Q7 reviewer 답변 template
 ├── choi2025_adoption_guide.md  ← Choi 2025 adoption (figure style, ack format)
 └── zhao2025_critique.md        ← Zhao 2025 critical analysis (Park 답변용)
+
+adhesion/                       ← Paper #2 SE/NCM Wad production code (mirror of KISTI)
+├── README.md                   ← v10 method + run instructions + time estimates
+├── phase2a_v10_sandwich.py     ⭐ Camacho-Forero sandwich + NCM middle FixAtoms hybrid
+└── watchdog_phase2a_v10.sh     ← KISTI auto-restart wrapper
 ```
 
 ---

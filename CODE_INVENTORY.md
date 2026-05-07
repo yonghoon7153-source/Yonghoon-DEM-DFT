@@ -150,10 +150,55 @@
 
 ## F. Adhesion (Wad)
 
-### F1. v5 surface MQA scripts ❓ UNKNOWN
-- **위치**: 확인 필요
-- **목적**: SE/NCM 계면 work of adhesion, surface MQA protocol
-- **검증**: db에 결과 있음 (Wad_aJ_r10nm 등) but script 검증 필요
+### F1. `phase2a_lbfgs_wad.py` ✅ VERIFIED (paper #1 v5 baseline)
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_lbfgs_wad.py`
+- **목적**: SE/NCM v5 — single interface + 30 Å vacuum + FixAtoms 33% bottom (both NCM and SE) + /A
+- **검증**: paper #1 Section 4 published values
+  - comp1: 1.277 J/m² (paper) | comp2B: 1.183 | comp3: 2.103 | comp4: 1.970 | comp5: 1.651
+  - R = 0.9999 with experiment
+- **NCM**: 1L conv (3 atomic layers) — known to be "broken structure" per user 2026-05-07
+- **상태**: ==**baseline 보존**==. v10으로 superseded but kept for reference comparison.
+
+### F2. `phase2a_v10_sandwich.py` ❓ UNKNOWN — pilot pending
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v10_sandwich.py` (paste from `필독/adhesion/`)
+- **로컬 미러**: `필독/adhesion/phase2a_v10_sandwich.py` ⭐
+- **목적**: Camacho-Forero 2020 sandwich method (LPSCl/NCM 업그레이드) — paper #2 main
+- **변경점 (vs v5)**:
+  - Sandwich (no vacuum at interface) → /(2A)
+  - NCM 3L conv (9 atomic layers, 42.57 Å)
+  - FixAtoms NCM **middle** 3 atomic layers (not bottom; preserves bulk + symmetric interfaces)
+  - SE no FixAtoms (Camacho-Forero standard)
+  - LBFGS fmax=0.03, steps=400 (was 0.05/200)
+- **Anchor papers**: Camacho-Forero 2020 (slab method) + Komatsu 2022 (bulk thermo, LiNiO2/LPSCl ΔED=-424 meV/atom)
+- **검증 필요**: ==**pilot 후**== Wad scale (1.5-3.0 J/m² 예상) + cross-family Li5.4 > Li6 유지
+- **상태**: 작성 완료, 미실행. ==**user pilot 후 ✅ or ❌ 결정**==.
+
+### F3. `phase2a_v9_cleavage.py` ❌ INVERTED (cross-family failed, stopped 2026-05-07)
+- **위치**: KISTI 동일 디렉토리
+- **방식**: rigid cleavage Wad = (E_sep_no_relax - E_iface) / A
+- **결과 (24/216 partial)**: comp3 v9=0.82 vs v5 paper 2.10 (-61%), Li6 > Li5.4 ==**REVERSED**==
+- **원인**: rigid cleavage = bond-breaking only, vacancy strain release effect 사라짐
+- **상태**: ==**폐기**==
+
+### F4. `phase2a_v8_surface_mqa.py` ❌ INVERTED
+- **위치**: KISTI 동일 디렉토리
+- **방식**: 800K → 300K → 100K MQA + LBFGS
+- **결과**: cross-family 같은 inversion (v9와 비슷)
+- **상태**: 폐기
+
+### F5. `phase1_rigid_binding.py` ✅ DIAGNOSTIC (binding curve only)
+- **위치**: KISTI 동일 디렉토리
+- **목적**: rigid Z-scan binding curve (no relax) — Method A/B 비교
+- **결과**: phase1_summary.json. Method A modelC W_max=-2.18 (음수, isolated slab unphysical).
+- **사용**: SI figure보강. main Wad는 F1/F2 사용.
+
+### NCM structure files (verified inputs)
+- `ncm_7x7x1_PRESERVED.xyz`: LiNiO2 588 atoms (147 Li/Ni + 294 O), c=14.19 Å (1L conv = 3 atomic layer)
+- `ncm_7x7x1_3Lconv.xyz`: LiNiO2 1764 atoms, c=42.57 Å (3L conv = 9 atomic layer) — **v10 input**
+- `ncm_5x5x1_PRESERVED.xyz`: 300 atoms (1L conv)
+- `ncm_5x5x1_3Lconv.xyz`: 900 atoms, c=42.57 Å (3L conv) — **v10 input**
+- `ncm_5x5x1_2Lconv.xyz`: 600 atoms (2L conv) — unused
+- 3Lconv 생성 방법: `ase.read('*_PRESERVED.xyz') * (1,1,3)` 단순 z-repeat (verified 2026-05-07)
 
 ---
 
