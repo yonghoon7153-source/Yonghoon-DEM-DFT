@@ -75,24 +75,82 @@
 
 ## B. MLIP 600K snapshot elastic
 
-### B1. `mlip_snapshot_elastic_comp2v2.py` ❓ UNKNOWN
-- **위치**: gabia (확인 필요)
-- **목적**: MD 600K → 5 snapshot → quench → relaxed-ion Cij
-- **검증 필요**: ==**사용자 우려 — 이것도 잘못됐을 수 있음**==
-- **검증 방법**:
-  - comp1 v1 600K MLIP → 29.1 GPa (db값) 재현되는지
-  - comp2 v2 600K → 34.7 GPa (db값) 재현되는지
-- **TODO**: 검증 전까지 ==사용 보류==
+### ⭐ B0. `phase2a_v31_mlip_elastic_v2_3comp.py` ✅✅✅ CHAMPION SCRIPT (2026-05-08)
+
+> **이 항목이 MLIP 600K snapshot elastic의 SOLE CANONICAL SCRIPT**.
+> Paper #1 v1 published 와 동일한 verified protocol을 사용.
+> 다른 elastic 스크립트는 **검증 안 됐거나 버그 있음** (B1-B3 참조).
+
+- **로컬 mirror**: `필독/adhesion/phase2a_v31_mlip_elastic_v2_3comp.py`
+- **KISTI 위치 (실행용)**: `/scratch/x3430a02/kgy/manuscript_support/phase2a_v31_mlip_elastic_v2_3comp.py`
+- **GitHub raw URL**: `https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/review-ml-migration-W29af/필독/adhesion/phase2a_v31_mlip_elastic_v2_3comp.py`
+- **목적**: 600K Langevin MD 10 ps → 5 snapshots × 2 ps → 0K BFGS quench →
+  per-strain LBFGS ionic relax → finite-strain Cij (delta=0.005)
+- **검증된 protocol** (older `mlip_snapshot_elastic.py`에서 verbatim 복사,
+  paper #1 v1 published values 재현):
+  - shear strain `eps[i,j]=eps[j,i]=d/2` → ε_4_Voigt = d (correct)
+  - cell transform: `cell0 @ (I+eps).T` (transposed F)
+  - `set_cell(scale_atoms=False)` + `set_scaled_positions(pos0)` (frozen
+    fractional)
+  - **per-strain LBFGS ionic relax** (relaxed-ion, NOT clamped-ion)
+  - stress sign flip + GPa convert: `s = -a.get_stress(voigt=True)*160.2176634`
+- **인자**: 코드 안에 v2 anneal champion 3개 path 하드코딩 (STRUCTURE_PATHS.md
+  기반):
+  - comp1_v2: `post_relax_comp1_v2/comp1v2_scf.out` (espresso-out)
+  - comp2_v2: `pipeline_v2/comp2_lpscbr/v2_postproc/comp2_v2_V0.xyz` (extxyz)
+  - modelC_v2: `pipeline_v2/modelC_lpsc16/v2_postproc/gabia_pkg/modelc_v2_V0.xyz` (extxyz)
+- **time**: ~60-90 min (3 comps × 5 snapshots × per-strain LBFGS)
+- **사용**: paper #1 v2 anneal champion compositions의 elastic constants
+  재계산 (2026-05-08 paper #2 link 일관성 위해)
+- **출력**: `phase2a_v31_results/run.log` + `summary.json` (per-comp Cij,
+  K, G, E + v1 vs v2 comparison table)
+
+**왜 champion 인가**:
+1. **2 bug** 모두 fix (v2 script은 둘 다 있음): shear factor 2 + clamped-ion
+2. **Paper #1 v1 published와 동일 protocol** (older `mlip_snapshot_elastic.py`
+   verbatim copy)
+3. **검증 anchor**: comp1 v1 baseline (E=29.1, C44=13.1) 재현되어야 함
+4. **comp2 v2 검증**: 기존 db E=34.7 재현 시 protocol 정확성 확인
+
+### B1. `mlip_elastic_snapshot_v2.py` ❌❌ BUGGY — DO NOT USE
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/mlip_elastic_snapshot_v2.py`
+- **상태**: ==**확인된 버그 2개. paper #2 작업 절대 사용 금지.**==
+- **bug 1 — shear strain factor 2**:
+  - 코드: `strains[3]=[[0,0,0],[0,0,1],[0,1,0]]` (full d each off-diagonal)
+  - 결과: ε_4_Voigt = 2δ (should be δ) → C44 2x inflated
+  - 정확한 코드 (older script): `eps[1,2]=eps[2,1]=d/2`
+- **bug 2 — clamped-ion (no per-strain LBFGS)**:
+  - 코드: `s.set_cell(cell0 @ eps, scale_atoms=True)` 후 바로 stress 측정
+  - 결과: ions이 strain된 cell 안에서 relax 안 함 → Cij 모두 ~2x inflated
+  - 정확한 protocol (older script): per-strain `LBFGS(a).run(fmax=0.01, steps=200)`
+- **데이터 증거** (2026-05-08 v31 디버깅):
+  - comp1_v2 v31 (이 buggy 스크립트의 함수 import 사용): C11=70, C44=58, E=98
+  - v1 baseline (relaxed-ion correct): C11=33, C44=13, E=29
+  - C11 ratio 2.1x (clamped-ion artifact only)
+  - C44 ratio 4.5x (clamped-ion × shear factor 2)
+- **이전에 이 스크립트로 만든 값 (mlip_snapshot_v2_log.txt)** comp2B C11=66
+  E=93, comp5 C11=71 — 이 값들은 **paper에 사용 금지**.
+- **사용해야 하면**: B0 (v31c) 사용. 이 파일은 archive 용도로만 보존.
 
 ### B2. `comp1v2_mlip_elastic.py` ❓ UNKNOWN
 - **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/post_relax_comp1_v2/comp1v2_mlip_elastic.py`
 - **목적**: comp1 v2 MLIP elastic
-- **검증 필요**
+- **검증 필요** — 사용 전 B1 같은 bug 있는지 확인. 있으면 B0 (v31c) 사용.
 
 ### B3. `comp1v2_uma_elastic.py` ❓ UNKNOWN
 - **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/post_relax_comp1_v2/comp1v2_uma_elastic.py`
 - **목적**: UMA model elastic
-- **검증 필요**
+- **검증 필요** — 동일.
+
+### B_legacy. `mlip_snapshot_elastic.py` ✅ VERIFIED (older, paper #1 v1 source)
+- **위치**: KISTI `/scratch/x3430a02/kgy/manuscript_support/mlip_snapshot_elastic.py`
+- **사용**: paper #1 v1 published (comp1, comp2, comp3, comp4 hardcoded
+  fractional coords, no comp5/modelC)
+- **상태**: ✅ verified — db/properties/elastic.json `mlip_600K_snapshot` 항목의
+  comp1 (E=29.1), comp2 (E=28.6), comp3 (E=27.3), comp4 (E=26.4) 출처
+- **재사용 권장 방법**: 이 함수가 B0 (v31c)의 `elastic_0K_from_snapshot` +
+  `md_then_snapshot_elastic` 함수로 verbatim 복사됨. **B0 사용 = B_legacy
+  사용 (다른 path / extra comp)**.
 
 ---
 
