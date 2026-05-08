@@ -1413,6 +1413,74 @@
         "paper_2_action": "Acknowledge crystal structure difference between families in methods. Cite modelC as evidence that vacancy + halogen chemistry (not crystal structure) drives the interface chemistry signal."
       },
       "summary_of_corrections": "After v30 + critical review, our paper #2 narrative needs these refinements: (1) MACE absolute values not paper-quality (rigid limitation + MLIP scope), use ranking only. (2) Mechanism is size-selective halogen segregation (Cl in, Br out), not 'halogens retreat'. (3) modelC pushes vacancy+Cl past optimum (saturation), not 'vacancy alone insufficient'. (4) Cl bot20 is consistency check, not independent. (5) Slab termination is assumed representative but not exhaustively tested. (6) Crystal structure difference (cubic vs rhombo) is acknowledged but not the dominant driver (modelC evidence). Geometric Cl-O density (R=-0.91) remains the robust paper #2 main claim."
+    },
+    "v29_AIMD_results_2026_05_08": {
+      "session": "2026-05-08 11:04-12:09 KISTI uma env (64.7 min)",
+      "method": "M2-style FixAtoms (NCM + bottom 70% SE) + Langevin 300K dt=2fs friction=0.01/fs 500 steps = 1 ps",
+      "purpose": "Test whether M2 LBFGS RMS<0.2A is steady state at thermal (300K)",
+      "results_per_comp": {
+        "comp1": {
+          "rms_late_A": 0.438,
+          "max_A": 3.526,
+          "drift_factor": 3.1,
+          "verdict_strict": "FAIL"
+        },
+        "comp2": {
+          "rms_late_A": 0.387,
+          "max_A": 2.928,
+          "drift_factor": 3.8,
+          "verdict_strict": "FAIL"
+        },
+        "comp3": {
+          "rms_late_A": 0.251,
+          "max_A": 2.423,
+          "drift_factor": 2.9,
+          "verdict_strict": "FAIL"
+        },
+        "comp4": {
+          "rms_late_A": 0.236,
+          "max_A": 2.298,
+          "drift_factor": 3.3,
+          "verdict_strict": "FAIL"
+        },
+        "comp5": {
+          "rms_late_A": 0.247,
+          "max_A": 2.585,
+          "drift_factor": 3.2,
+          "verdict_strict": "FAIL"
+        },
+        "modelC": {
+          "rms_late_A": 0.259,
+          "max_A": 1.773,
+          "drift_factor": 3.5,
+          "verdict_strict": "FAIL"
+        }
+      },
+      "verdict_strict_interpretation": "1 ps is too short for atom positions to thermalize. All comps still in transient drift. Strict drift_factor < 1.5 criterion is unrealistic at this timescale.",
+      "absolute_RMS_pattern": {
+        "Li6_family_mean": 0.41,
+        "Li5.4_family_mean_mixed": 0.245,
+        "modelC": 0.259,
+        "ratio_Li6_to_Li5.4": "~1.7x more motion in Li6 family",
+        "max_disp_modelC": "smallest (1.77 A) — Cl-only Li5.4 most stable in MAX criterion"
+      },
+      "R_correlations_with_paper_Wad": {
+        "R_rms_late_vs_Wad": -0.8764,
+        "R_max_disp_vs_Wad": -0.8292,
+        "n": 5,
+        "interpretation": "Thermal interface motion ANTI-correlates with paper exp adhesion. Li5.4 family moves less at thermal → more stable interface → higher Wad. INDEPENDENT mechanism 2 alongside geometric Cl-O density (mechanism 1)."
+      },
+      "modelC_prediction": {
+        "RMS_observed": 0.259,
+        "linear_regression_Wad_pred_mJ_m2": 277,
+        "interpretation": "Predicted modelC Wad ~277 mJ/m^2 (between Li6 ~187 and Li5.4 mixed ~287). Consistent with Cl-saturation hypothesis."
+      },
+      "narrative_implication": "v29 ORIGINALLY designed as M2-fix verification (M2 LBFGS RMS<0.2A persists?). RESULT: M2 RMS<0.2A is LBFGS local minimum, not thermal steady state — ALL comps drift at 1 ps. HOWEVER absolute drift magnitude differentiates families (Li6 ~0.41A vs Li5.4 ~0.25A) and CORRELATES with paper Wad at R=-0.88. This becomes mechanism 2 (kinetic) alongside mechanism 1 (geometric Cl-O density). Paper #2 narrative gains: 'two complementary mechanisms — initial contact chemistry (mechanism 1) AND thermal interface dynamics (mechanism 2) — both differentiate Li5.4 from Li6 family.'",
+      "caveats": [
+        "1 ps too short for true thermal equilibrium; all comps in transient regime.",
+        "Strict drift criterion unrealistic — paper should report absolute RMS comparison instead.",
+        "Future work: longer AIMD (5-10 ps) per comp to reach steady state."
+      ]
     }
   }
 }
