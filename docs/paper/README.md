@@ -3,17 +3,14 @@
 ## Quick wget (single-command download)
 
 ```bash
-# Main paper draft + bibliography
-wget https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/stagewise-fracture-solver-3VvPg/docs/paper/main.tex
-wget https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/stagewise-fracture-solver-3VvPg/docs/paper/refs.bib
-```
+BR="claude/stagewise-fracture-solver-3VvPg"
+RAW="https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/$BR"
 
-Or both at once:
-
-```bash
-for f in main.tex refs.bib; do
-  wget "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/stagewise-fracture-solver-3VvPg/docs/paper/$f"
-done
+# Paper source + bibliography + matplotlib panel figure
+wget "$RAW/docs/paper/main.tex"
+wget "$RAW/docs/paper/refs.bib"
+wget "$RAW/docs/figures/figure1_panel_e.pdf"   # default placeholder figure
+# OR drop your own finalised image as ./figure1.png (auto-detected)
 ```
 
 ## Compile

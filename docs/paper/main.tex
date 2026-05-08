@@ -155,21 +155,19 @@ The contributions of this work are:
 
 \begin{figure*}[t]
   \centering
-  % If figure file not present, comment the next line out and the
-  % LaTeX run will still complete (caption shown without graphic).
-  \IfFileExists{figure1.png}{
-    \includegraphics[width=0.95\linewidth]{figure1.png}
-  }{
-    \IfFileExists{../figures/figure1_panel_e.pdf}{
-      \includegraphics[width=0.95\linewidth]{../figures/figure1_panel_e.pdf}
-    }{
-      \fbox{\parbox{0.9\linewidth}{\centering\vspace{4cm}
-        \textit{[Figure 1 placeholder --- replace with
-          \texttt{figure1.png} (your finalized composite image)
-          or \texttt{figure1\_panel\_e.pdf} from the repository.]}
-        \vspace{4cm}}}
-    }
-  }
+  % Three-tier fallback: prefer figure1.png (user's final composite),
+  % then figure1_panel_e.pdf (matplotlib generator output), else placeholder
+  % box. All paths checked in CURRENT directory only — drop the file next
+  % to main.tex and recompile.
+  \IfFileExists{figure1.png}{%
+    \includegraphics[width=0.95\linewidth]{figure1.png}%
+  }{\IfFileExists{figure1_panel_e.pdf}{%
+    \includegraphics[width=0.95\linewidth]{figure1_panel_e.pdf}%
+  }{%
+    \fbox{\parbox{0.9\linewidth}{\centering\vspace{3cm}%
+      \textit{[Figure~1 placeholder --- drop \texttt{figure1.png}
+        next to \texttt{main.tex} and recompile.]}\vspace{3cm}}}%
+  }}
   \caption{Schematic of the DEM-driven multi-physics network solver
     pipeline used in this work.
     \textbf{(a)} DEM-generated cathode microstructure with bimodal
