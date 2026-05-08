@@ -239,7 +239,7 @@ if Path(LOG).exists():
         pass
 
 # ── ETA ──
-remaining = len(pair_dirs) - n_done
+remaining = N_PAIRS_PLANNED - n_done
 if remaining > 0:
     eta_h = remaining * 3
     eta_d = eta_h / 24
