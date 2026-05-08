@@ -160,6 +160,96 @@ def fig_max():
     print(f"  saved binding_curves_max.pdf/png")
 
 
+def fig_renormalized():
+    """Renormalized binding curves: subtract asymptote so Wad → 0 at far gap.
+
+    This is the proper paper-quality binding curve. Asymptote issue arises
+    from cell rescaling when stacking (SE xy rescaled to NCM xy), making
+    E_se_iso reference inconsistent with E_se in stack.
+
+    Convention here matches TMD reference style:
+      - PLOT POSITIVE Wad (binding favorable)
+      - or FLIP SIGN to plot adhesion energy negative (TMD style)
+    """
+    gaps, max_cols = read_csv(CSV_DIR / "binding_UMA_Wad_max_J_m2.csv")
+    if gaps is None:
+        return
+    if not (gaps[-1] >= 3.5):
+        print("  WARN: max gap < 3.5 A, asymptote subtraction may be inaccurate")
+    # Asymptote = mean of last few points (gap >= 3.0 A)
+    asymp_idx = gaps >= 3.0
+    asymptotes = {}
+    for c in ALL_COMPS:
+        if c not in max_cols:
+            continue
+        m = max_cols[c]
+        if asymp_idx.any():
+            asymptotes[c] = float(np.nanmean(m[asymp_idx]))
+        else:
+            asymptotes[c] = 0.0
+
+    # ───── Plot 1: Renormalized W_ad positive (our convention) ─────
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for c in ALL_COMPS:
+        if c not in max_cols:
+            continue
+        m = max_cols[c] - asymptotes[c]
+        valid = ~np.isnan(m)
+        ax.plot(gaps[valid], m[valid],
+                color=COLORS[c], linestyle=LINESTYLES[c], lw=1.8,
+                marker='o', markersize=3,
+                label=f"{LABELS[c]} (asym={asymptotes[c]:+.2f})")
+        i_max = int(np.nanargmax(m))
+        ax.scatter([gaps[i_max]], [m[i_max]],
+                   color=COLORS[c], s=120, zorder=10,
+                   edgecolor='k', linewidth=1.0)
+        ax.annotate(f"{m[i_max]:+.2f}",
+                    (gaps[i_max], m[i_max]),
+                    xytext=(8, 8), textcoords='offset points',
+                    fontsize=8, color=COLORS[c], fontweight='bold')
+    ax.axvspan(0.6, 1.6, color='gray', alpha=0.10, zorder=0)
+    ax.axhline(0, color='k', linewidth=0.5, alpha=0.4)
+    ax.set_xlabel('Interface gap (Å)')
+    ax.set_ylabel(r'$\Delta$W$_{ad}$ (J/m$^2$, asymptote-subtracted)')
+    ax.set_title('UMA renormalized binding curves — well depth above asymptote')
+    ax.set_xlim(0.5, 4.0)
+    ax.legend(loc='upper right', fontsize=7)
+    ax.grid(True, alpha=0.3)
+    fig.savefig(OUT_DIR / "binding_curves_renormalized.pdf", bbox_inches='tight')
+    fig.savefig(OUT_DIR / "binding_curves_renormalized.png", bbox_inches='tight')
+    plt.close()
+    print(f"  saved binding_curves_renormalized.pdf/png")
+
+    # ───── Plot 2: TMD-style (flipped sign, adhesion energy negative) ─────
+    fig, ax = plt.subplots(figsize=(8, 5))
+    for c in ALL_COMPS:
+        if c not in max_cols:
+            continue
+        # Flip sign: adhesion energy = -Wad (binding favorable = negative)
+        m = -(max_cols[c] - asymptotes[c])
+        valid = ~np.isnan(m)
+        ax.plot(gaps[valid], m[valid],
+                color=COLORS[c], linestyle=LINESTYLES[c], lw=1.8,
+                marker='o', markersize=3,
+                label=LABELS[c])
+        i_min = int(np.nanargmin(m))  # most negative = strongest binding
+        ax.scatter([gaps[i_min]], [m[i_min]],
+                   color=COLORS[c], s=120, zorder=10,
+                   edgecolor='k', linewidth=1.0)
+    ax.axvspan(0.6, 1.6, color='gray', alpha=0.10, zorder=0)
+    ax.axhline(0, color='k', linewidth=0.5, alpha=0.4)
+    ax.set_xlabel('Interface gap (Å)')
+    ax.set_ylabel(r'Adhesion energy (J/m$^2$)')
+    ax.set_title('UMA binding well — TMD-style sign convention')
+    ax.set_xlim(0.5, 4.0)
+    ax.legend(loc='lower right', fontsize=7.5)
+    ax.grid(True, alpha=0.3)
+    fig.savefig(OUT_DIR / "binding_curves_tmd_style.pdf", bbox_inches='tight')
+    fig.savefig(OUT_DIR / "binding_curves_tmd_style.png", bbox_inches='tight')
+    plt.close()
+    print(f"  saved binding_curves_tmd_style.pdf/png  (TMD-reference convention)")
+
+
 def fig_R1origin():
     """Single registry R1_origin curves (raw, no averaging)."""
     gaps, r1_cols = read_csv(CSV_DIR / "binding_UMA_Wad_R1origin_J_m2.csv")
