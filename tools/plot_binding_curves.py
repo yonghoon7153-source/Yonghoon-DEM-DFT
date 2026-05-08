@@ -390,6 +390,7 @@ def main():
     fig_max()
     fig_R1origin()
     fig_4panel()
+    fig_renormalized()
     print(f"\nAll plots in: {OUT_DIR.resolve()}")
 
 
