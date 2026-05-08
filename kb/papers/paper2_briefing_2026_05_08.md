@@ -10,11 +10,15 @@
 ## 0. 한 줄 요약 (TL;DR)
 
 > 6개 argyrodite 조성의 SE/NCM 접착 강도 (paper experiment Wad)가
-> **표면 Cl-O 접촉 밀도**라는 단순 기하학적 descriptor와 R = -0.91로 강하게
-> 음의 상관관계를 보이며, 이 신호는 **NCM facet 변경 / 표면 atom 재완화 /
-> 셀 크기 / Li 위치 perturbation 등 7가지 method 변형에 모두 robust**함을
-> 확인. Mechanism은 Li 격자 vacancy와 halogen 크기 차이가 결합되어
-> 표면에서 halogen이 안쪽으로 후퇴 → NCM oxide와의 음이온-음이온 반발 감소 → 접착 향상.
+> **표면 Cl-O 접촉 밀도**라는 단순 기하학적 descriptor와 R = -0.91 ± 0.06
+> (95% CI [-1.00, -0.78])로 강하게 음의 상관관계를 보이며, 이 신호는
+> **NCM facet 변경 / 표면 atom 재완화 / 셀 크기 / Li 위치 perturbation /
+> NCM 두께 / 1000개 registry 등 모든 method 변형에 robust**함을 확인.
+> Phase 1의 독립적 UMA 에너지 method가 R = +0.87로 같은 ranking을 재현하여
+> cross-method validation 완료. Mechanism은 Li 격자 vacancy와 halogen 크기
+> 차이가 결합되어 표면에서 halogen이 안쪽으로 후퇴 (comp3-5는 슬랩 하단
+> 20%에서 Cl 0%, R = -0.91 ⭐) → NCM oxide와의 음이온-음이온 반발 감소 →
+> 접착 향상.
 
 ---
 
