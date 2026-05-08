@@ -64,16 +64,23 @@ def parse_snapshot_elastic_log(text):
         return []
     comps = {}
     cur_comp = None
-    comp_re = re.compile(r'^---\s*(\S+)\s+\((\d+)\s+atoms\)\s*---', re.M)
+    # Old format (snapshot_elastic): "--- comp1_v2 (52 atoms) ---"
+    comp_re_old = re.compile(r'^---\s*(\S+)\s+\((\d+)\s+atoms\)\s*---', re.M)
+    # New format (md_then_snapshot_elastic): "  comp1_v2 - MD(600K) -> ..."
+    comp_re_new = re.compile(r'^\s+(\S+)\s+-\s+MD\(\d+K\)\s+->\s+\d+\s+snapshots', re.M)
     snap_re = re.compile(r'snap\s+(\d+):\s+C11=([\d.]+),\s+C12=([\d.]+),\s+C44=([\d.]+),\s+E=([\d.]+)')
     avg_re = re.compile(r'AVG:\s+C11=([\d.]+).*?E=([\d.]+)', re.S)
-    equil_re = re.compile(r'Equilibrating at \d+K')
+    # New format has separate '=== name Average ===' line
+    avg_new_re = re.compile(r'===\s+(\S+)\s+Average\s+===.*?C11=([\d.]+).*?E=([\d.]+)', re.S)
 
     for line in text.split('\n'):
-        m = comp_re.match(line)
+        m = comp_re_old.match(line)
+        if not m:
+            m = comp_re_new.match(line)
         if m:
             cur_comp = m.group(1)
-            comps[cur_comp] = {'atoms': int(m.group(2)), 'snaps': [], 'avg': None}
+            atoms = int(m.group(2)) if len(m.groups()) >= 2 and m.group(2).isdigit() else 0
+            comps[cur_comp] = {'atoms': atoms, 'snaps': [], 'avg': None}
             continue
         if cur_comp is None:
             continue
@@ -90,6 +97,11 @@ def parse_snapshot_elastic_log(text):
             comps[cur_comp]['avg'] = {
                 'C11': float(m.group(1)), 'E': float(m.group(2)),
             }
+    # New format: search whole text for === comp Average ===
+    for m in avg_new_re.finditer(text):
+        name, c11, e = m.group(1), float(m.group(2)), float(m.group(3))
+        if name in comps:
+            comps[name]['avg'] = {'C11': c11, 'E': e}
     return comps
 
 
