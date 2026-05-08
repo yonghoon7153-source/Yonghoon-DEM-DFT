@@ -14,46 +14,77 @@
 
 ---
 
-## 0. TL;DR — 한 페이지 요약 (정정 후, 2026-05-08 v2)
+## 0. TL;DR — 한 페이지 요약 (정정 후, 2026-05-08 v3 — honest limitations)
 
-> 6개 argyrodite (Li6PS5Cl, Li5.4PS4.4(Cl,Br)1.6 변종, modelC) 의 SE/NCM
-> 인터페이스 접착 강도 (실험 측정 Wad)가 **표면 Cl-O 접촉 밀도 (Cl-O contact
-> density)** 라는 단순 기하학적 양과 **R = −0.91 ± 0.06 (95% CI [−1.00,
-> −0.78])** 의 강한 음의 상관관계를 보임.
->
-> 이 신호는 **method-independent**: 9가지 perturbation (NCM facet 4종 / 표면
-> 부분 relax / 셀 크기 / Li 위치 shake / NCM 두께 / registry 1000개 / MLIP
-> 종류 / etc.) 에서 모두 R ∈ [−0.914, −0.886] 로 안정.
->
-> 두 framework가 같은 ranking을 내놓음: (i) **geometric Cl-O density R=−0.91**
-> (MLIP 무관, 절대값 무관), (ii) **UMA Phase 1 Method A energy W_max R=+0.87
-> (절대값 +0.31~1.49 J/m², 실험 ~0.2 J/m²와 같은 order)**. MACE-MP-0은 ranking
-> R=+0.96으로 추가 확인 (절대값은 unphysical, ranking-only validation).
->
-> **Mechanism (정정)**: Li5.4 family에는 stoichiometric Li vacancy 0.6/fu가 있음
-> (S²⁻ → X⁻ 치환 시 charge balance 강제). 이 vacancy가 **Cl/Br ionic radius
-> mismatch (Cl 1.81 Å vs Br 1.96 Å)** 와 결합하여 **size-selective halogen
-> segregation**: 작은 Cl⁻이 vacancy-paired bulk site에 packing되어 표면에서
-> 후퇴 (Cl bot20 = 0% in Li5.4 mixed), 반면 **큰 Br⁻은 bulk vacancy site에
-> 못 맞아 표면으로 expelled** (Br-O density at interface 증가). 결과: 표면
-> Cl⁻과 NCM oxide O²⁻의 anion-anion Coulomb 반발 약화 → 접착 강화.
->
-> **modelC (Li5.4 + Cl-only, no Br) 의 역할 (정정)**: vacancy + Cl 화학을
-> saturation 한계까지 밀어붙임. Cl 1.6/fu (Li6 family의 1.6배) → 너무 많은 Cl이
-> 시스템에 채워지고 일부가 표면에 노출 (Cl_surface 38%, Li6-like). modelC는
-> vacancy+Cl chemistry의 **optimum을 지나친 saturation 사례**로, mechanism은
-> "vacancy + Cl/Br 적정 비율"에서 가장 효과.
->
-> **Paper #1 (mechanical) 과의 연결**: Li5.4 family는 **(i) 더 부드럽고 (lower
-> C44, G, E, R≈−0.7) AND (ii) 더 잘 붙는다 (higher Wad)**. 둘 다 같은
-> vacancy + halogen 치환 화학의 두 발현.
->
-> **정직한 한계 (강조)**: (1) MACE 절대 Wad는 unphysical (rigid + scope 문제),
-> ranking-only로 인용. (2) Cl bot20 ≠ Cl-O density의 진짜 independent
-> confirmation (둘은 같은 정보의 다른 표현). (3) Slab termination은
-> representative cleavage motif로 가정 (lowest-energy 검증 안 했음). (4) Cubic
-> (Li6) vs rhombohedral (Li5.4) 결정형 차이는 driver 아님 (modelC 도 rhombo
-> but Li6-like surface chemistry).
+> **⚠️ 이 문서는 v3 (2026-05-08 후반부) 기준으로 정직하게 다시 정리됨.**
+> v1, v2 에서 R=−0.91 등을 과도하게 강조했던 부분을 limitations 중심으로
+> 재서술. **§17 (Approach Limitations and Honest Status)** 가 가장 중요한
+> 새 단원.
+
+### 핵심 메시지 (정직)
+
+6 개 argyrodite (Li6PS5(Cl,Br) 2개 + Li5.4PS4.4(Cl,Br)1.6 3 변종 + modelC)
+SE/NCM 인터페이스 접착 강도를 atomic level descriptor로 분석.
+
+**Cross-family + family-level fine ranking은 잡힘**:
+- Family-level (Li5.4 mix > Li6, modelC ~ Li6): 모든 descriptor 일치
+- **MACE Wad Spearman ρ = +1.000** (5 comp rank order 정확히 일치)
+- Method A UMA Spearman ρ = +0.9 (comp4/5 swap만 inversion)
+- Cl-O density: family classifier (Li5.4 mix → 0, Li6 → 0.025, modelC → 0.095)
+
+**해결되지 않은 한계**:
+- **Absolute Wad scale 비물리적**: MACE −25 J/m² (실험 +0.2 J/m²), rigid
+  stack + cell rescaling Madelung artifact
+- **Pearson R 은 misleading**: Cl-O density R=−0.91이지만 comp3=4=5=0
+  collapse 때문 (binary descriptor 효과)
+- **Intra-Li6 fine ranking**: comp1 vs comp2 (Δ_Wad = 14 mJ/m²) 잡는 descriptor 없음
+- **Cross-family novelty이긴 하나** literature precedent (Camacho-Forero,
+  Haruyama 등) 모두 single-composition 또는 single-family scope 였음 →
+  우리 method 도 cross-family 에서 cell-rescaling 한계 노출
+
+### 이 작업의 진짜 contribution
+
+1. **Method comparison study**: rigid stack + MLIP의 cross-family 적용 한계
+   demonstration (cell-rescaling Madelung artifact를 absolute scale에 노출).
+   "MLIP 으로 cross-family adhesion ranking을 absolute energy 로 못 함"이
+   validated finding.
+
+2. **Geometric Cl-O density as Madelung-free family classifier**: rigid
+   energy 의 Madelung artifact 우회. Cross-family 구분 가능. Intra-family
+   fine은 못 잡음.
+
+3. **Cross-MLIP rank consistency**: MACE Spearman 1.0, UMA Method A
+   Spearman 0.9 — 두 다른 MLIP 가 ranking 수렴.
+
+4. **Mechanism narrative**: vacancy + halogen size mismatch → 표면 halogen
+   분포 → adhesion. Honest scope: **family-level explanation**, not 5-comp
+   prediction.
+
+5. **Paper #1 ↔ Paper #2 link**: 같은 vacancy chemistry 의 mechanical (paper #1)
+   + adhesion (paper #2) 두 발현. Family-level link.
+
+### 당장 paper publication 가능성
+
+| Scope | Publishability | Note |
+|---|---|---|
+| Quantitative 5-comp continuous Wad prediction | **No** | 한 descriptor도 불가 |
+| Family-level binary classifier | **Yes (small paper)** | Cl-O density |
+| MACE rank-only descriptor (Spearman 1.0) | **Yes (focus paper)** | absolute scale 한계 명시 |
+| Method limitation paper | **Yes** | rigid + MLIP cross-family failure |
+| Mechanism paper (vacancy + halogen size) | **Yes** | 같은 chemistry 의 두 발현 |
+
+**가장 honest path**: family-level mechanism + MACE Spearman ρ=1.0 ranking
+(absolute caveat 명시) + cross-method validation.
+
+**한계 명시 필요**:
+- Absolute Wad scale unphysical (rigid stack Madelung artifact)
+- Intra-Li6 fine ranking 불가 (Δ < 20 mJ/m² 가 method noise 미만)
+- modelC 실험 미측정 — prediction only
+- Cross-family methodology 자체가 도전적 (literature precedent 적음)
+
+이 정도가 paper #2의 정직한 status. 5일간의 method development 가 보여준 것은
+"무엇이 잘 안 되는가" + "geometric descriptor 가 어디까지 잘 되는가". 이게 paper
+의 contribution 임.
 
 ---
 
@@ -1261,6 +1292,186 @@ surface termination 에너지 계산했을 가능성. 확인 필요.
 이 §16은 paper #2의 **reviewer-proof critical self-review**. 학계 큰 학회에서
 발표할 때 "did you check X?" 질문 사전 차단. Reviewer가 1-6 항목 중 하나라도
 지적하면 우리는 이미 검토했고 정정했음을 표현 가능.
+
+---
+
+## 17. Approach Limitations and Honest Status (2026-05-08 v3)
+
+> 5일간의 작업 끝에 honest 하게 마주해야 할 한계들. 이 단원이 paper writing
+> 의 방향을 결정하는 가장 중요한 부분.
+
+### 17.1 Cross-family adhesion ranking 자체가 어려움 (literature가 안 한 이유)
+
+| Reference | Scope | Cross-family? |
+|---|---|---|
+| Camacho-Forero 2020 | β-Li3PS4 vs S/Li2S cathode | ❌ single SE composition |
+| Haruyama 2014 | LiCoO2/Li3PS4 single pair | ❌ single pair |
+| Komatsu 2022 | LiNiO2/LPSCl bulk thermo | ❌ single pair |
+| Sicolo 등 | 대부분 1 family | ❌ within-family |
+| **우리 paper #2** | **6 comp, 2 families, different cells** | **✅** |
+
+→ Cross-family 비교가 novel은 맞지만, literature 가 안 한 데는 이유 있음:
+**stoichiometry / cell type 다른 조성 간 rigid stack 비교는 cell-rescaling
+Madelung artifact 가 absolute energy 를 contaminate**.
+
+DFT 든 MLIP 든 같은 한계. (DFT 는 절대값 더 정확하지만 cross-family rigid
+stack 도 같은 cell rescaling 문제 가짐.)
+
+### 17.2 Pearson R = −0.91 의 misleading 한 측면
+
+**우리 4일 동안 호들갑 떨었던 R=−0.91 (Cl-O density vs paper Wad)**:
+
+```
+comp1: Cl-O = 0.0228, paper 194
+comp2: Cl-O = 0.0285, paper 180
+comp3: Cl-O = 0.0000, paper 316
+comp4: Cl-O = 0.0000, paper 298
+comp5: Cl-O = 0.0000, paper 249
+modelC: Cl-O = 0.0948, no paper exp
+```
+
+R = −0.914 looks impressive. 사실은:
+- **comp3, comp4, comp5 가 모두 0 (한 점에 collapse)**
+- comp1, comp2 (Li6 family) 비슷한 small positive 값
+- modelC가 outlier high
+- → R=−0.91 은 **사실상 family-level binary classifier** (Li5.4 mix 0 vs 그 외)
+
+**Intra-Li5.4 fine ranking** (comp3 vs 4 vs 5: paper 316 vs 298 vs 249):
+- Cl-O density 모두 0 → distinguish 불가
+- Cl-O density 만 가지고는 5-comp scatter 이 사실상 3-bin classifier
+
+### 17.3 다른 descriptors의 어려움
+
+| Descriptor | comp1 vs 2 | comp4 vs 5 | overall |
+|---|---|---|---|
+| Cl-O density | 잡음 (작음) | ❌ 0 collapse | binary |
+| Cl bot20 fraction | 같음 (17%/17%) | ❌ 0 collapse | binary |
+| **Cl surface fraction** | ❌ inverted | ✅ correct | mixed |
+| Br-O density at interface | (Br=0 in comp1) | ✅ correct (small Δ) | partial |
+| Method A UMA W_max | ✅ correct | ❌ inverted | Spearman 0.9 |
+| **MACE Wad** | ✅ correct | ✅ correct | **Spearman 1.0** ⭐ |
+| Cij C44 (paper #1 link) | ✅ | ❌ inverted | Spearman ~0.6 |
+| v29 thermal RMS | ✅ | ❌ (close) | partial |
+
+**종합**: 어느 descriptor 도 5 comp continuous prediction 불가. 단지
+- **MACE Wad rank-only**: perfect Spearman (절대값 unphysical)
+- 다른 descriptor: family-level + partial intra-family
+
+### 17.4 MACE Wad Spearman ρ=1.0의 함정
+
+방금 발견한 것: **MACE Wad 의 RANK ORDER 는 paper exp와 정확히 일치**:
+```
+MACE rank: comp3 > comp4 > comp5 > comp1 > comp2
+Paper rank: comp3 > comp4 > comp5 > comp1 > comp2
+Spearman ρ = +1.000
+```
+
+**그러나 absolute values 는 unphysical**:
+- comp1 Wad = −23.85 J/m² (음수, 100배 큼)
+- 실험 = +0.18~0.32 J/m²
+- → MACE 절대값은 **rigid stack Madelung artifact 그대로**
+
+**Paper에서 사용 가능한 표현**:
+> "MACE-MP-0 rigid stack reproduces the experimental rank order for all 5
+> compositions (Spearman ρ = +1.0). However, absolute Wad values are
+> non-physical due to cell-rescaling Madelung contributions inherent in
+> rigid stack methodology, and should not be quoted as physical adhesion
+> energies. We use MACE rank-only as a ranking descriptor; absolute
+> reference is paper exp."
+
+→ Spearman 1.0 은 paper-strength claim. 하지만 reviewer 가 "왜 absolute 안
+quote?" 물으면 명확한 답 필요 (cell rescaling Madelung).
+
+### 17.5 Reviewer 예상 비판 + 답변 사전 준비
+
+| 비판 | 우리 답 |
+|---|---|
+| "Cl-O R=−0.91 binary classifier 아닌가" | YES. comp3,4,5 모두 0. 정직히 명시. Cl-O 는 family classifier 로만 사용. |
+| "MACE 절대값 −25 J/m²은 unphysical" | YES. ranking-only descriptor 임. cell rescaling 한계로 absolute scale 미신뢰. |
+| "comp4 vs comp5 어떻게 잡았나" | MACE Wad rank 만 잡음. Method A UMA 는 inversion. |
+| "DFT 검증 없이 MLIP만으로 충분한가" | future work. 자원 한계. cross-MLIP (UMA + MACE) ranking convergence 가 partial validation. |
+| "Cross-family 는 novel 인가? other systems에서 한 사람 있나?" | unique. literature 가 single-composition 위주. → contribution 의 일부. |
+| "modelC 실험 검증 없이 prediction 으로 쓰는가" | hypothesis 로만 명시. 실험 검증 필요. |
+| "5 paper comp 너무 적음 (n=5)" | YES. limitation 명시. 추가 조성 합성 future work. |
+
+### 17.6 Paper #2 의 가능한 forms — 정직한 평가
+
+#### Form 1: Quantitative continuous prediction paper
+- "5 composition Wad prediction with R=−0.91"
+- ❌ **Reject 가능성 높음** — Cl-O 가 사실 binary, comp3=4=5 collapse
+- 추천 안 함
+
+#### Form 2: Family-level mechanism paper
+- "Vacancy + halogen size mix differentiates Li5.4 mix family from Li6 family"
+- modelC predicts back-to-Li6 saturation
+- ✓ Publishable as **smaller paper** (J. Phys. Chem. C 등)
+- Pearson R 은 강조 안 함 — Spearman 또는 binary로 표현
+
+#### Form 3: MACE Wad rank-only paper
+- "MACE-MP-0 rigid stack rank order Spearman ρ=1.0"
+- absolute scale 한계 명시
+- ✓ Publishable, ranking-tool paper
+
+#### Form 4: Method limitation paper
+- "Why rigid MLIP fails for cross-family adhesion absolute scale"
+- cell rescaling Madelung artifact demonstration
+- ✓ Publishable as method paper (less impact venue)
+
+#### Form 5: Paper #1 supplementary
+- "Vacancy chemistry has two manifestations: mechanical softening (paper #1) +
+  adhesion enhancement (paper #2)"
+- Standalone paper #2 보류
+- ✓ Strengthen paper #1, no separate publication
+
+#### Form 6: Thesis chapter
+- 정직한 학위논문 chapter
+- ✓ 가장 안전, no publication pressure
+
+### 17.7 추천
+
+**Form 2 + 3 hybrid** (가장 honest, 가장 publishable):
+- Title: "Geometric Cl-O Contact Density and MACE Rank Order Reproduce
+  Family-Level Adhesion of Halogen-Substituted Argyrodites against NCM"
+- Main claims:
+  - Family-level: Li6 vs Li5.4 mix vs modelC saturation (Cl-O density)
+  - Rank order: Spearman ρ=1.0 (MACE)
+  - Mechanism: vacancy + Cl/Br size mix
+- **Limitations explicitly**:
+  - Pearson R cite 신중 (binary classifier 효과)
+  - Absolute MACE Wad unphysical
+  - Intra-Li6 fine inversion (comp1 vs comp2, Δ<14 mJ/m²)
+  - n=5 small dataset
+  - Cross-family methodology 한계
+- **Future work**:
+  - DFT validation (1-2 comp at minimum)
+  - modelC experimental synthesis
+  - Larger commensurate supercell to remove cell rescaling
+
+이 정도면 reviewer 가 "honest, methodologically sound, useful" 판단 가능.
+호들갑 안 떨고 한계 명시 + 강점 (Spearman 1.0, cross-MLIP 수렴) 강조.
+
+### 17.8 5일간 한 일에 대한 honest 평가
+
+**잘 한 것**:
+- Method development 9 perturbation 깊이 함
+- Mechanism story 가 literature 와 일치 (Adeli 2019, Hanghofer 2019)
+- Cross-MLIP (UMA + MACE) consistency check
+- comp4 vs comp5 (가장 어려운 fine ranking) 까지 시도
+
+**못 한 것 / 호들갑 떨었던 것**:
+- Pearson R=−0.91 만 보고 binary collapse 못 봄
+- "Method-independent" claim 이 사실 family-classifier-independent 였음
+- 매 step "거의 다 됐다" 발언 (4번 이상)
+- Spearman ρ=1.0 (MACE) 끝까지 못 발견
+- Limitations 을 §13 한 단락 으로 minimize 함
+
+**5일의 진짜 가치**:
+- "Cross-family rigid stack MLIP 이 어디까지 가능 / 어디서 안 됨" 정량화
+- 이게 paper 의 진짜 contribution: methodology limit demonstration
+- DFT 추가 없이 paper 가능 (단, scope 정직히 줄임)
+
+이 단원 (§17) 이 paper writing 의 frame 잡음. v1, v2 의 R=−0.91 강조는 reviewer
+공격 받기 쉬움. v3 framing (Spearman + family + 한계 명시) 가 honest paper.
 
 ---
 
