@@ -1332,6 +1332,87 @@
       "verdict_KEY": "MACE Wad gives R=+0.957 (positive correlation, correct direction). UMA Wad gave R=-0.76 (inverted). Bond density is MLIP-INDEPENDENT (geometry only): Cl-O R=-0.913, Li-O R=+0.833 identical to v15. Energy descriptor IS MLIP-dependent: MACE picks up correct ranking, UMA does not (likely due to UMA over-stabilization of Li-NCM oxide coordination causing rigid energies dominated by Madelung sum).",
       "paper_2_implication": "Two INDEPENDENT positive correlations: (i) geometric Cl-O density R=-0.91 (MLIP-independent), (ii) MACE energy Wad R=+0.96 (independent MLIP confirmation). UMA energy is the OUTLIER inverted case. Paper #2 claim: bond density is the robust descriptor; energy descriptor is MLIP-dependent and only MACE gives correct ranking. Cross-MLIP comparison strengthens method-independence claim of geometric descriptor.",
       "follow_up": "Investigate why UMA gives inverted ranking (likely related to v22 LBFGS migration: UMA strongly stabilizes Li-O at NCM interface, biasing Wad toward Li6 family)."
+    },
+    "v30_MACE_zscan_2026_05_08": {
+      "session": "2026-05-08 11:17-11:19 KISTI mace env (2.8 min)",
+      "purpose": "Verify MACE Wad at proper energy minimum (Z-scan), not at fixed bond-density gap_eq",
+      "results_per_comp": {
+        "comp1": {
+          "W_max_J_m2": -23.8525,
+          "d_min_A": 1.25
+        },
+        "comp2": {
+          "W_max_J_m2": -24.8686,
+          "d_min_A": 1.25
+        },
+        "comp3": {
+          "W_max_J_m2": 3.7265,
+          "d_min_A": 1.5
+        },
+        "comp4": {
+          "W_max_J_m2": -6.3429,
+          "d_min_A": 1.5
+        },
+        "comp5": {
+          "W_max_J_m2": -6.5022,
+          "d_min_A": 1.5
+        },
+        "modelC": {
+          "W_max_J_m2": 0.7139,
+          "d_min_A": 1.25
+        }
+      },
+      "key_findings": [
+        "MACE energy-minimum gap (1.25-1.50 A) coincides with v15 bond-density gap_eq (1.2-1.6 A) — the 'gap_eq' choice in v15 was already physically meaningful, not arbitrary.",
+        "v30 W_max values nearly identical to v26c Wad at fixed gap_eq (deltas < 0.05 J/m^2). Confirms gap_eq is at MACE energy minimum, not coincidence.",
+        "Absolute W_max values still UNPHYSICAL: -25 J/m^2 for Li6 family (negative = unfavorable interface). Experimental Wad is +0.18-0.32 J/m^2. Ranking R~+0.96 correct, scale 100x off.",
+        "Likely cause: rigid stacking with no interface relaxation. Real Wad would require relaxing top-of-SE atoms in NCM-O field. M2 constrained relax avoids Li migration but Wad in M2 not yet computed."
+      ],
+      "narrative_implication": "MACE Wad is RANKING-correct (R=+0.96) but ABSOLUTE-UNPHYSICAL. Use as cross-MLIP ranking-only check, not as absolute Wad value. UMA Phase 1 Method A is the only energy descriptor in our framework with reasonable absolute scale (0.2-1.5 J/m^2, ~order of experimental ~0.2 J/m^2)."
+    },
+    "CRITICAL_CORRECTIONS_2026_05_08": {
+      "purpose": "Address narrative errors identified during critical review (after v30 + careful re-examination of v25-v27 + v26c-v30).",
+      "correction_1_MACE_absolute_scale": {
+        "previous_claim": "MACE Wad R=+0.957 is independent confirmation alongside Cl-O R=-0.91 — 'two independent positive correlations'",
+        "issue": "MACE Wad absolute values are -25 to +4 J/m^2 (mixed sign, 100x larger than experimental +0.2 J/m^2). Negative for Li6 family means MACE predicts repulsive interface at energy-minimum gap, contradicting experimental adhesion. Likely from rigid stacking limitation + MACE-MP-0 not specifically trained on sulfide-oxide hetero-interfaces.",
+        "corrected_framing": "MACE provides RANKING-LEVEL cross-MLIP validation only. Absolute scale is unreliable. UMA Phase 1 Method A (W_max 0.31-1.49 J/m^2, R=+0.87) is the only energy descriptor in this framework with reasonable absolute scale.",
+        "paper_2_action": "Report MACE R=+0.96 as 'ranking consistency check' not 'independent absolute confirmation'. Use UMA Method A for any absolute Wad numbers cited.",
+        "v30_status": "Energy-minimum-gap MACE Wad essentially identical to fixed gap_eq Wad — confirms the absolute-value issue is fundamental (not gap-choice artifact)."
+      },
+      "correction_2_Br_O_surface_segregation": {
+        "previous_claim": "Vacancy + halogen mix causes halogens to retreat from surface (Cl bot20 = 0% in Li5.4 mixed).",
+        "issue": "Data shows OPPOSITE behavior for Br: Br-O density at interface is HIGHER for comp4, comp5 (Br-rich Li5.4) than comp1, comp2 (Li6, no Br or low Br). I.e., Cl retreats, Br concentrates. Mechanism is asymmetric, not 'halogen retreats'.",
+        "corrected_mechanism": "SIZE-SELECTIVE halogen segregation. Small Cl- (1.81 A) preferentially packs near vacancy-paired bulk Li sites (charge density). Large Br- (1.96 A) cannot fit there, expelled to surface. Net effect: in Li5.4 + Cl/Br mix family, Cl bot20 ~ 0% AND Br concentrates near interface.",
+        "consistent_with_R_values": "R(Cl-O, paper Wad) = -0.91 (Cl repulsion), R(Br-O, paper Wad) = +0.40 (weak positive — Br-rich comp5 has lower paper Wad, but Br-O density doesn't track paper as cleanly because Br-O contacts also form attractive Coulomb in some configurations).",
+        "paper_2_action": "Mechanism narrative must be 'vacancy + Cl/Br SIZE MISMATCH drives Cl into bulk vacancy sites and Br to surface'. Not 'halogens retreat'. modelC observation supports: Li5.4 + Cl-only (no size mismatch) shows Cl_surface 38% (Li6-like), confirming size-selectivity needs both halogens.",
+        "literature_to_check": "Hanghofer 2019 (anion sublattice 4a/4d) for Cl/Br site preference. Yu/Wagemaker 2024 for halogen distribution in argyrodites."
+      },
+      "correction_3_modelC_argument_refinement": {
+        "previous_claim": "modelC has Cl_surface=38% (Li6-like) demonstrating 'vacancy alone insufficient'.",
+        "issue": "modelC has 1.6 Cl/fu (vs Li6 family's 1.0/fu). Total Cl atoms in modelC slab = 32 vs comp1 = 48 (Li6 with same area scaling). Surface fraction 38% in modelC equals (32 * 0.38)=12 surface Cl atoms; comp1 surface fraction 42% = (48*0.42)=20. So modelC has FEWER absolute surface Cl (12 vs 20) despite higher fraction. Net Cl-O contacts at interface in modelC = 0.0948 A^-2 vs comp1 = 0.0228 A^-2 — modelC has 4x more contacts because of higher Cl/fu.",
+        "corrected_argument": "modelC is NOT simply 'vacancy alone'. It has (i) vacancy 0.6/fu (same as Li5.4 mix) AND (ii) 1.6 Cl/fu (60% more Cl than Li6). Within Li5.4 family ranking: comp3 (Cl=1.0) > comp4 (Cl=0.8) > comp5 (Cl=0.6) — paper exp shows Cl-RICH does better. modelC (Cl=1.6) is past this trend's optimum, so high surface Cl + high interface Cl-O contacts.",
+        "interpretation": "Mechanism is best stated as: 'In Li5.4 family, smaller Cl prefers bulk vacancy sites; this works WHEN total halogen is moderate (1.6 with Cl-Br mix). When all halogen is Cl (modelC), too many Cl flood the system and some end up at surface anyway.' modelC informs the limit, not refutes 'vacancy alone'.",
+        "paper_2_action": "Re-write modelC discussion as 'modelC pushes vacancy + Cl chemistry past optimum, demonstrating saturation effect' rather than 'vacancy alone insufficient'. Predict (without experiment): modelC Wad should be LOW (between Li6 and Li5.4 mix), consistent with high interface Cl-O density."
+      },
+      "correction_4_Cl_bot20_not_independent": {
+        "previous_claim": "Cl bot20 R=-0.91 is independent geometric descriptor confirming Cl-O density R=-0.91.",
+        "issue": "Cl bot20 (SE slab z-distribution) and Cl-O density at interface (after stack) are NOT independent. Once SE slab is stacked at gap_eq, the bottom 20% of SE IS the interface region. So Cl bot20 essentially defines Cl-O density. They're related measurements of the SAME geometric fact, expressed in different units (fraction vs density per area).",
+        "corrected_framing": "Cl bot20 is a CONSISTENCY CHECK from a different reference frame (slab-only, no NCM needed) — useful for visualization (figure 4) and for estimating Cl-O density without explicit stacking. NOT independent confirmation.",
+        "what_IS_independent": "(a) UMA Phase 1 Method A (energy-based, R=+0.87) — different framework (energy vs geometry). (b) MACE Wad (different MLIP, R=+0.96 ranking). (c) Surface S termination R=-0.91 — also somewhat related but uses different element.",
+        "paper_2_action": "In paper, list Cl bot20 alongside Cl-O density as 'two complementary geometric measures of the same physical effect'. Reserve 'independent validation' for energy-based methods (UMA Method A) and MLIP-cross-check (MACE)."
+      },
+      "correction_5_slab_termination_assumption": {
+        "issue": "We use specific xyz files (comp1_slab_v2.xyz, comp3_slab_v1_PRESERVED.xyz, etc.) chosen earlier. Have NOT explicitly tested whether these are lowest-energy terminations among possible cleavage planes / atom layers.",
+        "what_we_did_test": "M5 middle-extract showed signal collapses when SE termination is removed (R drops to -0.49 / -0.62). This proves termination MATTERS but doesn't prove our chosen termination is lowest-energy.",
+        "paper_2_caveat": "Add to limitations section: 'Surface terminations chosen are representative cleavage motifs but not exhaustively energy-minimized across all possible (hkl) plane choices. Future work: compute surface energies for multiple terminations and verify lowest-energy termination preserves Cl-O density ranking.'",
+        "literature_to_check": "Choudhury 2024 'Mechanical and Electronic Properties of Bulk and Surface Li6PS5Cl Argyrodite' (Chem Mater) — may have surface termination analysis."
+      },
+      "correction_6_cubic_vs_rhombohedral_confound": {
+        "issue": "Li6 family (comp1, comp2) is cubic (52 atoms/cell, F-43m). Li5.4 family (comp3,4,5,modelC) is rhombohedral (62 atoms/cell, R3m). Family rank Li5.4 > Li6 might be partially attributable to crystal structure type, not just stoichiometric vacancy.",
+        "what_modelC_clarifies": "modelC is rhombo + Cl-only. Its Cl_surface=38% (Li6-like). If structure were the dominant driver, modelC should look like Li5.4 mix family. Instead, modelC looks more like Li6 family in surface chemistry. → Crystal structure is NOT the dominant driver. Vacancy + halogen mix IS.",
+        "paper_2_action": "Acknowledge crystal structure difference between families in methods. Cite modelC as evidence that vacancy + halogen chemistry (not crystal structure) drives the interface chemistry signal."
+      },
+      "summary_of_corrections": "After v30 + critical review, our paper #2 narrative needs these refinements: (1) MACE absolute values not paper-quality (rigid limitation + MLIP scope), use ranking only. (2) Mechanism is size-selective halogen segregation (Cl in, Br out), not 'halogens retreat'. (3) modelC pushes vacancy+Cl past optimum (saturation), not 'vacancy alone insufficient'. (4) Cl bot20 is consistency check, not independent. (5) Slab termination is assumed representative but not exhaustively tested. (6) Crystal structure difference (cubic vs rhombo) is acknowledged but not the dominant driver (modelC evidence). Geometric Cl-O density (R=-0.91) remains the robust paper #2 main claim."
     }
   }
 }

@@ -14,10 +14,10 @@
 
 ---
 
-## 0. TL;DR — 한 페이지 요약
+## 0. TL;DR — 한 페이지 요약 (정정 후, 2026-05-08 v2)
 
 > 6개 argyrodite (Li6PS5Cl, Li5.4PS4.4(Cl,Br)1.6 변종, modelC) 의 SE/NCM
-> 인터페이스 접착 강도 (실험 측정 Wad)가 **표면 Cl-O 접촉 밀도 (Cl–O contact
+> 인터페이스 접착 강도 (실험 측정 Wad)가 **표면 Cl-O 접촉 밀도 (Cl-O contact
 > density)** 라는 단순 기하학적 양과 **R = −0.91 ± 0.06 (95% CI [−1.00,
 > −0.78])** 의 강한 음의 상관관계를 보임.
 >
@@ -25,24 +25,35 @@
 > 부분 relax / 셀 크기 / Li 위치 shake / NCM 두께 / registry 1000개 / MLIP
 > 종류 / etc.) 에서 모두 R ∈ [−0.914, −0.886] 로 안정.
 >
-> 두 독립 method가 같은 ranking을 내놓음: (i) **geometric Cl-O density R=−0.91**
-> (MLIP 무관), (ii) **MACE-MP-0 energy Wad R=+0.96** (MLIP-dependent, 그러나
-> 적어도 한 MLIP에서 correct).
+> 두 framework가 같은 ranking을 내놓음: (i) **geometric Cl-O density R=−0.91**
+> (MLIP 무관, 절대값 무관), (ii) **UMA Phase 1 Method A energy W_max R=+0.87
+> (절대값 +0.31~1.49 J/m², 실험 ~0.2 J/m²와 같은 order)**. MACE-MP-0은 ranking
+> R=+0.96으로 추가 확인 (절대값은 unphysical, ranking-only validation).
 >
-> **Mechanism**: Li5.4 family에는 **stoichiometric Li vacancy 0.6/fu**가 있음
-> (S²⁻ → Cl⁻ 치환 시 charge balance 강제). 이 vacancy가 **Cl/Br size mismatch**
-> 와 결합하여 small Cl⁻을 vacancy 인근 bulk site에 packing → 표면에 Cl이
-> 적게 노출 → NCM oxide의 O²⁻와의 anion-anion Coulomb 반발 약화 → 접착
-> 향상.
+> **Mechanism (정정)**: Li5.4 family에는 stoichiometric Li vacancy 0.6/fu가 있음
+> (S²⁻ → X⁻ 치환 시 charge balance 강제). 이 vacancy가 **Cl/Br ionic radius
+> mismatch (Cl 1.81 Å vs Br 1.96 Å)** 와 결합하여 **size-selective halogen
+> segregation**: 작은 Cl⁻이 vacancy-paired bulk site에 packing되어 표면에서
+> 후퇴 (Cl bot20 = 0% in Li5.4 mixed), 반면 **큰 Br⁻은 bulk vacancy site에
+> 못 맞아 표면으로 expelled** (Br-O density at interface 증가). 결과: 표면
+> Cl⁻과 NCM oxide O²⁻의 anion-anion Coulomb 반발 약화 → 접착 강화.
 >
-> **modelC (Li5.4 + Cl-only, no Br)** 가 mechanism의 미묘함을 직접 보임:
-> vacancy만으론 부족, **vacancy + Cl/Br size mix** 둘 다 필요. modelC의 Cl
-> 표면 노출률은 Li6 family 수준 (38%) — Cl/Br mix 없으면 페어링 driving
-> force 없음.
+> **modelC (Li5.4 + Cl-only, no Br) 의 역할 (정정)**: vacancy + Cl 화학을
+> saturation 한계까지 밀어붙임. Cl 1.6/fu (Li6 family의 1.6배) → 너무 많은 Cl이
+> 시스템에 채워지고 일부가 표면에 노출 (Cl_surface 38%, Li6-like). modelC는
+> vacancy+Cl chemistry의 **optimum을 지나친 saturation 사례**로, mechanism은
+> "vacancy + Cl/Br 적정 비율"에서 가장 효과.
 >
 > **Paper #1 (mechanical) 과의 연결**: Li5.4 family는 **(i) 더 부드럽고 (lower
 > C44, G, E, R≈−0.7) AND (ii) 더 잘 붙는다 (higher Wad)**. 둘 다 같은
 > vacancy + halogen 치환 화학의 두 발현.
+>
+> **정직한 한계 (강조)**: (1) MACE 절대 Wad는 unphysical (rigid + scope 문제),
+> ranking-only로 인용. (2) Cl bot20 ≠ Cl-O density의 진짜 independent
+> confirmation (둘은 같은 정보의 다른 표현). (3) Slab termination은
+> representative cleavage motif로 가정 (lowest-energy 검증 안 했음). (4) Cubic
+> (Li6) vs rhombohedral (Li5.4) 결정형 차이는 driver 아님 (modelC 도 rhombo
+> but Li6-like surface chemistry).
 
 ---
 
@@ -1067,6 +1078,189 @@ Predict: modelC Wad ≈ Li6 family 수준 (실험으로 검증 권장)
 
 이 §15는 paper #2의 manuscript 구조 자체. 모든 이전 sections (1-14) 가 여기서
 하나의 narrative로 통합됨.
+
+---
+
+## 16. Critical Review and Corrections (2026-05-08 v2)
+
+> v30 결과 (MACE Z-scan) + 종합 critical review 후 narrative 6가지 오류/약점
+> 을 정정. 정정 후 핵심 claims는 보존되었으나 표현과 강조가 변경.
+
+### 16.1 Correction 1 — MACE 절대값은 unphysical
+
+**이전 주장**: "MACE Wad R=+0.96은 Cl-O R=−0.91과 함께 두 independent 양의
+상관."
+
+**문제**:
+- MACE Wad: comp1=−23.85 J/m², comp3=+3.73, comp4=−6.34 J/m² (mixed sign,
+  100배 큼 vs 실험 +0.18~0.32 J/m²).
+- 음수 Wad는 "interface 떼어내야 더 안정" 의미 → 실험과 모순.
+- v30 (MACE Z-scan) 에서 energy minimum에서도 동일 → gap-choice 문제 아님.
+
+**원인** (가능성):
+1. Rigid stacking, no interface relaxation → atom overlap penalty
+2. MACE-MP-0 (Materials Project bulk training) 가 sulfide-oxide
+   hetero-interface 검증되지 않음
+3. Slab dipole compensation 등 PBC artifact
+
+**정정 framing**:
+- MACE Wad = **ranking-level cross-MLIP validation** (R=+0.96)
+- 절대값은 **paper에 인용하지 않음**
+- 절대값 받을 수 있는 energy descriptor는 **UMA Phase 1 Method A** 뿐
+  (W_max 0.31~1.49 J/m², 실험 ~0.2 J/m²와 같은 order)
+
+**Paper 영향**: Section 3.5 / Discussion 4.4에서 명시.
+"MLIPs in this study agree on ranking but differ on absolute scale of Wad,
+reflecting the rigid-stacking limitation and out-of-distribution challenge for
+sulfide-oxide hetero-interfaces."
+
+### 16.2 Correction 2 — Mechanism은 "halogen retreat" 아닌 size-selective segregation
+
+**이전 주장**: "Vacancy + halogen mix → halogens가 안쪽으로 후퇴"
+
+**문제 — Br은 정반대로 행동**:
+| comp | Cl-O density | Br-O density | family |
+|---|---|---|---|
+| comp4 | **0.0000** | **0.1115** | Li5.4 mix |
+| comp5 | **0.0000** | **0.1060** | Li5.4 mix |
+
+→ Cl은 표면에서 사라지지만 (0), Br은 오히려 인터페이스에 강하게 위치 (0.11).
+"halogens retreat" 표현은 절반만 맞음.
+
+**정정된 mechanism**: **Size-selective halogen segregation**
+- Small Cl⁻ (1.81 Å, Shannon) → vacancy-paired bulk Li site의 high charge
+  density에 fit → bulk으로 packing → surface에서 retreat
+- Large Br⁻ (1.96 Å) → bulk vacancy site에 size-fit 불가 → surface로
+  expelled
+- Net: Li5.4 mixed family에서 **Cl bulk-rich, Br surface-rich**
+
+**왜 R(Br-O) = +0.40 (약함)**:
+- Br-O contact가 인터페이스에 형성되긴 하지만, comp3 (Br=0.6)에서 Br-O=0
+  (작은 양이라 surface 분포 안됨), comp4-5에서만 발현.
+- 약한 양의 상관 = "Br 늘면 surface Br-O 살짝 늘지만 paper Wad와 simple
+  trend 안 맞음".
+
+**Paper 영향**: Section 12.1 mechanism 인과 사슬을 size-selective 로 재기술.
+Discussion에서 "size-selective halogen segregation by ionic radius mismatch
+combined with vacancy-driven bulk site availability" 명시.
+
+**Literature**: Hanghofer 2019 (anion sublattice 4a/4d Cl/Br site preference)
+재검토 필요. 또는 user의 paper #1에 Cl/Br site 분포 측정이 있는지.
+
+### 16.3 Correction 3 — modelC는 "vacancy alone insufficient" 아닌 saturation
+
+**이전 주장**: "modelC has Cl_surface=38% (Li6-like), demonstrates 'vacancy
+alone insufficient — need Cl/Br mix too'."
+
+**문제**:
+- modelC = Li5.4 family + Cl-only (no Br). vacancy 0.6/fu 보유.
+- BUT modelC는 Cl 1.6/fu (Li6 family의 1.6배). **Cl 자체가 너무 많음**.
+- Cl-O density at interface: 0.0948 Å⁻² (comp1=0.0228의 4배)
+- 즉 modelC는 단순히 "Cl이 너무 많아서 표면에 흘러넘침"
+
+**정정된 framing**: modelC는 **vacancy + Cl chemistry의 saturation 한계**
+- 적정 Cl/Br 비율 (comp3 1.0/0.6, comp4 0.8/0.8, comp5 0.6/1.0)에서는 mechanism
+  잘 작동
+- modelC (Cl 1.6, Br 0) 는 **optimum을 지나침** → high surface Cl-O density
+- modelC 가 제공하는 정보는 "vacancy alone insufficient"가 아니라 "vacancy +
+  적정 halogen 비율이 필요, saturation 시 효과 사라짐"
+
+**Paper 영향**: Section 12.2 modelC 단락 수정.
+"modelC pushes the vacancy-Cl chemistry past its optimum (Cl 1.6/fu vs
+0.6-1.0 in Li5.4 mix family), reaching saturation where surface Cl exposure
+returns to Li6-family levels."
+
+**Predicted experimental outcome for modelC**: Wad **lower** than Li5.4 mix
+family (comp3-5 Wad 249-316 mJ/m²), **comparable to** or even **lower than**
+Li6 family (180-194 mJ/m²) due to high interface Cl-O contacts. (**실험으로
+검증 권장 — paper future work**)
+
+### 16.4 Correction 4 — Cl bot20은 independent 아닌 consistency check
+
+**이전 주장**: "Cl bot20 fraction R=−0.91 is INDEPENDENT geometric descriptor
+confirming Cl-O density R=−0.91."
+
+**문제**:
+- Cl bot20 = SE 슬랩 z-distribution의 bottom 20% Cl 비율
+- Cl-O density = stack 후 인터페이스 region (gap window 4.5 Å) Cl-O 접촉
+- Stack 시 SE 슬랩의 bottom = NCM과 만나는 인터페이스 → **Cl bot20이
+  Cl-O density를 거의 정의**.
+- 즉 두 measurement는 **같은 underlying 정보의 다른 단위 표현**.
+
+**정정 framing**: Cl bot20은 **consistency check from a different reference
+frame** (slab-only, no NCM stack 필요), 시각화에 유용 (figure 4). NOT
+independent confirmation.
+
+**진짜 independent 인 것**:
+- (a) **UMA Phase 1 Method A** R=+0.87 (energy framework, geometry와 다름)
+- (b) **MACE Wad** R=+0.96 (different MLIP, ranking)
+- (c) **Surface S termination** R=−0.91 (다른 element를 보지만 still
+  vacancy axis 내)
+
+**Paper 영향**: Section 9.2 D 단락에서 "complementary geometric measure of
+the same physical effect"로 표현. "independent confirmation" 문구는 Phase 1
+및 MACE에만 사용.
+
+### 16.5 Correction 5 — Slab termination representativeness 미검증
+
+**문제**:
+- 우리는 특정 slab xyz 파일 사용 (comp1_slab_v2.xyz, comp3_slab_v1_PRESERVED.xyz
+  등). 이전 user가 신중히 골랐다고 추정.
+- 우리 session에서 **다른 cleavage plane / termination layer 와 비교 안 함**.
+- M5 middle-extract는 termination이 매우 중요함을 보였지만 우리 termination
+  이 lowest-energy 라는 것은 안 보임.
+
+**Paper 영향**: Section 13 (Limitations)에 추가:
+"Surface terminations chosen are representative cleavage motifs but not
+exhaustively energy-minimized across all possible (hkl) plane choices. Future
+work: compute surface energies for multiple terminations and verify lowest-
+energy termination preserves Cl-O density ranking."
+
+**Literature**: Choudhury 2024 (Chem Mater, Bulk and Surface Li6PS5Cl) 가
+surface termination 에너지 계산했을 가능성. 확인 필요.
+
+### 16.6 Correction 6 — Cubic vs Rhombohedral confound
+
+**Issue**:
+- Li6 family (comp1, comp2): cubic F-43m, 52 atoms/cell
+- Li5.4 family (comp3-5, modelC): rhombohedral R3m, 62 atoms/cell
+- "Li5.4 > Li6" trend이 vacancy 때문인지 crystal structure 때문인지 분리 안 됨
+
+**modelC 가 핵심 evidence**:
+- modelC는 rhombohedral (Li5.4 family와 같은 결정형)
+- 그러나 surface chemistry는 Li6 family-like (Cl_surface 38%, Cl-O density 높음)
+- 만약 crystal structure가 dominant driver였다면 modelC도 Li5.4 mix 처럼
+  surface Cl 적어야 함
+- → **Crystal structure는 driver 아님**. **Vacancy + halogen chemistry IS
+  the driver**.
+
+**Paper 영향**: Methods section에서 cubic vs rhombo 차이 명시. Discussion
+에서 modelC가 crystal structure confound 제거하는 evidence로 인용.
+
+### 16.7 정정 요약 표
+
+| # | 이전 주장 | 정정된 주장 |
+|---|---|---|
+| 1 | MACE Wad는 independent confirmation (R=+0.96) | MACE는 ranking-only validation. UMA Phase 1 Method A 만이 absolute scale. |
+| 2 | Halogens retreat from surface | **Size-selective**: Cl retreat, Br to surface |
+| 3 | modelC = vacancy alone insufficient | modelC = vacancy + Cl saturation past optimum |
+| 4 | Cl bot20 = independent confirmation | Cl bot20 = consistency check (same info, different units) |
+| 5 | Slab termination representative | Slab termination assumed (not exhaustively tested) |
+| 6 | Crystal structure ignored | Crystal structure acknowledged; modelC excludes it as driver |
+
+### 16.8 정정 후에도 보존되는 핵심 claim
+
+✅ **R(Cl-O density vs paper Wad) = −0.91, p=0.03, CI [−1.00, −0.78]**
+✅ **9 method perturbation에서 R(Cl-O) ∈ [−0.914, −0.886]**
+✅ **Mechanism: vacancy + halogen size mismatch → asymmetric segregation**
+✅ **Paper #1 ↔ Paper #2 link via Cij R=−0.65 ~ −0.80**
+✅ **Geometric descriptor MLIP-independent + absolute-scale-independent**
+
+### 16.9 Narrative 기여
+
+이 §16은 paper #2의 **reviewer-proof critical self-review**. 학계 큰 학회에서
+발표할 때 "did you check X?" 질문 사전 차단. Reviewer가 1-6 항목 중 하나라도
+지적하면 우리는 이미 검토했고 정정했음을 표현 가능.
 
 ---
 
