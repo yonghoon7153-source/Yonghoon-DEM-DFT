@@ -917,6 +917,62 @@
       "v26": "필독/adhesion/phase2a_v26_all_methods.py",
       "v26b_patch": "필독/adhesion/phase2a_v26b_patch.py",
       "kb_writeup": "kb/results/adhesion_v23_v24_v25_extraction_complete.md + kb/results/adhesion_v26_method_stresstest_2026_05_07.md"
+    },
+    "vacancy_mechanism_consolidated_CORRECTED_2026_05_08": {
+      "supersedes": "vacancy_mechanism_consolidated (kept for diff)",
+      "correction_note": "Earlier version stated 'Li6 has NO vacancy' which is incorrect: Li6PS5Cl Wyckoff sites (24g, 48h) are ~50% partially occupied even at nominal Li6 stoichiometry. Li6PS5Cl IS superionic (~3 mS/cm at 300 K, Deiseroth 2006), with intracage Ea ~0.12-0.14 eV (Yu/Wagemaker 2016), inter-cage Ea ~0.17-0.20 eV. Li5.4 has ADDITIONAL stoichiometric Li vacancy (0.6/fu) on top of Wyckoff partial occupancy.",
+      "claim": "Cl-O density at interface is the primary descriptor. Mechanism = vacancy + halogen size/charge pairing redistributes halogens away from surface in Li5.4 family with mixed Cl+Br composition.",
+      "stoichiometry_corrected": {
+        "Li6_family (comp1, comp2)": {
+          "formula": "Li6PS5(Cl,Br)",
+          "Li_per_fu": 6,
+          "halogen_per_fu": 1.0,
+          "S_per_fu": 5,
+          "Wyckoff_partial_occupancy": "~50% on 24g/48h Li sites",
+          "stoichiometric_Li_vacancy": 0,
+          "ionic_conductivity_300K_S_per_cm": 0.003,
+          "intracage_Ea_eV": 0.12,
+          "intercage_Ea_eV": 0.2,
+          "ref": "Deiseroth 2006, Yu/Wagemaker 2016, Hanghofer 2019"
+        },
+        "Li5.4_family (comp3-5, modelC)": {
+          "formula": "Li5.4PS4.4(Cl,Br)1.6",
+          "Li_per_fu": 5.4,
+          "halogen_per_fu": 1.6,
+          "S_per_fu": 4.4,
+          "Wyckoff_partial_occupancy": "~45% on 24g/48h Li sites",
+          "stoichiometric_Li_vacancy": 0.6,
+          "ionic_conductivity_300K_S_per_cm": "~9e-3 (Adeli 2019, Li5.5PS4.5Cl1.5)",
+          "Ea_lower_than_Li6_due_to": "additional vacancy + S2->Cl1- weakened Li-anion interaction",
+          "ref": "Adeli 2019"
+        }
+      },
+      "step1_substitution_chemistry": "S(2-) + Li(+) -> Cl(-)/Br(-): each halogen replacing S(4d-position with mixed S/Cl occupancy) removes one Li to balance charge (Adeli 2019). Hence 0.6 halogen excess <=> 0.6 stoichiometric Li vacancy on Wyckoff sites.",
+      "step2_correctly_understood_relaxation": "Both Li6 and Li5.4 families have facile bulk Li hopping (both superionic). At a CLEAVED SURFACE, however, the question is which atoms TERMINATE at the cleavage plane. In Li5.4 family with mixed Cl+Br, halogen-Li-vacancy pairs (charge-paired locally) preferentially reside in bulk because surface termination forces the pair to be uncompensated. In Li6 family (no extra vacancy) and modelC (Li5.4 but Cl-only, no Cl+Br mix), this pairing argument is weaker.",
+      "step3_interface_observable_corrected": {
+        "Cl_surface_fraction_per_comp": {
+          "comp1_Li6_Cl1.0": 0.42,
+          "comp2_Li6_Cl0.5_Br0.5": 0.33,
+          "comp3_Li5.4_Cl1.0_Br0.6": 0.2,
+          "comp4_Li5.4_Cl0.8_Br0.8": 0.25,
+          "comp5_Li5.4_Cl0.6_Br1.0": 0.33,
+          "modelC_Li5.4_Cl1.6_no_Br": 0.38
+        },
+        "key_observation": "modelC has Li5.4 family vacancy (0.6/fu) but only Cl (no Br). Its Cl_surface=38% is comparable to Li6 family, NOT to comp3-5 (20-33%). This rules out simple 'vacancy alone causes halogen retreat' interpretation. The driving force requires BOTH (i) stoichiometric Li vacancy AND (ii) Cl+Br size mixture for differentiated bulk vs surface preferences."
+      },
+      "step4_chemistry_at_NCM": "Halogens (Cl-, Br-) at SE/NCM contact plane interact with NCM oxide O2-. Both are anions: repulsive Coulomb dominates at short range. More halogens at the interface -> more repulsion -> weaker net adhesion. This signal is what Cl-O contact density measures.",
+      "step5_quantification": "Cl-O bond density (per A^2) at gap_eq, with cutoff 3.5 A. R = -0.914 vs paper exp Wad (n=5, p=0.03). Negative correlation = repulsion confirmation.",
+      "step6_LBFGS_artifact_corrected": "Earlier methods (v9-v22) used unconstrained LBFGS on stacked SE/NCM. Both Li6 and Li5.4 have facile bulk hopping, but at the NCM interface, Li-O coordination in NCM oxide is more favorable than the Li sites in SE Wyckoff partial-occupancy lattice. This sets up a gradient pulling Li from SE into NCM, especially severe for Li6 because (a) frustrated configuration -> larger initial gradient magnitudes (Delta E_config 1162 meV from paper #1), and (b) fully stoichiometric Li means more atoms at the interface to migrate. Constrained relaxation (M2 in v26b) with FixAtoms on NCM + bottom 70% of SE blocks this drift; resulting RMS displacement < 0.2 A all 6 comps, no migration, bond count preserved. This artifact is INTERFACE-SPECIFIC and does NOT reflect bulk Li mobility.",
+      "step7_collinearity_verdict": "Cl-O density is collinear (|R|>0.99) with Li/fu, vacancy count, Cl+Br stoichiometry. They all encode the family axis (Li6 vs Li5.4). Within the Li5.4 family (comp3, 4, 5 all have 0.6 stoichiometric vacancy + 1.6 halogen), the residual variation Cl/Br ratio is below current resolution (Delta < 0.005). modelC tells us that within Li5.4 family, the Cl+Br mix matters separately from the bare vacancy.",
+      "literature_used": [
+        "Deiseroth et al. 2006 - original synthesis + structure of Li6PS5X (Angew Chem)",
+        "Adeli et al. 2019 - halide substitution boosts diffusivity, Li5.5PS4.5Cl1.5 conductivity 9.4 mS/cm vs 2.5 for Li6PS5Cl, mechanism = weakened Li-anion + extra Li vacancy + site disorder",
+        "Yu/Wagemaker et al. 2016 - Li6PS5Cl bulk vs interface diffusion, intracage Ea 0.12-0.14 eV, intercage 0.17-0.20 eV (PMID 27511442)",
+        "Hanghofer et al. 2019 - substitutional disorder + 7Li NMR jump rates Ea 0.17-0.32 eV across temperature regimes for Li6PS5Cl (PCCP)",
+        "D'Amore et al. 2022 - argyrodite Li6PS5Cl configuration enumeration, ~10^13 distinct orderings for unit cell, Coulomb-energy selection (RSC Adv)",
+        "Kraft et al. 2018 - lattice polarizability + ionic conductivity in argyrodites (JACS)",
+        "Pustorino et al. 2025 - systematic Li distribution sampling for LPSCl"
+      ]
     }
   }
 }

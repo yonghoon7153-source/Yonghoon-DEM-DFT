@@ -9,7 +9,12 @@
       "pages": "5305",
       "year": 2006,
       "key_content": "First synthesis of argyrodite Li6PS5X. F-43m space group. 4a/4c site S/halogen disorder. Li-X bond lengths.",
-      "tags": ["argyrodite", "synthesis", "structure", "disorder"]
+      "tags": [
+        "argyrodite",
+        "synthesis",
+        "structure",
+        "disorder"
+      ]
     },
     {
       "id": "kraft2018",
@@ -22,7 +27,13 @@
       "DOI": "10.1021/jacs.7b06327",
       "title_verified": "2026-05-05 (user-confirmed)",
       "key_content": "S/Cl site disorder vs ionic conductivity. Li migration pathways depend on halogen site preference. Bond length analysis. Polarizability framework — different halogens (Cl, Br, I) modulate lattice softness.",
-      "tags": ["argyrodite", "conductivity", "disorder", "bonds", "polarizability"]
+      "tags": [
+        "argyrodite",
+        "conductivity",
+        "disorder",
+        "bonds",
+        "polarizability"
+      ]
     },
     {
       "id": "adeli2019",
@@ -35,7 +46,14 @@
       "title_verified": "2026-05-05 (user-confirmed)",
       "system_match_with_us": "Li(6-x)PS(5-x)Cl(1+x) framework — at x=0.5 = Li5.5PS4.5Cl1.5 (highest conductivity), at x=0.6 = our modelC EXACTLY (Li5.4PS4.4Cl1.6).",
       "key_content": "Li(6-x)PS(5-x)Cl(1+x) halogen-rich compositions. Vacancy introduction -> conductivity enhancement. Li5.4PS4.4Cl1.6 studied — direct precedent for our modelC.",
-      "tags": ["argyrodite", "vacancy", "conductivity", "halogen-rich", "Li(6-x)PS(5-x)Cl(1+x)", "modelC-match"]
+      "tags": [
+        "argyrodite",
+        "vacancy",
+        "conductivity",
+        "halogen-rich",
+        "Li(6-x)PS(5-x)Cl(1+x)",
+        "modelC-match"
+      ]
     },
     {
       "id": "deng2016",
@@ -46,8 +64,20 @@
       "pages": "A67",
       "year": 2016,
       "key_content": "Li6PS5Cl DFT SQS elastic: C11=39.9, C12=23.1, C44=7.8, E=22.1 GPa. 23 SE compositions compared.",
-      "data": {"comp1_ref": {"C11": 39.9, "C12": 23.1, "C44": 7.8, "E": 22.1}},
-      "tags": ["argyrodite", "elastic", "DFT", "SQS"]
+      "data": {
+        "comp1_ref": {
+          "C11": 39.9,
+          "C12": 23.1,
+          "C44": 7.8,
+          "E": 22.1
+        }
+      },
+      "tags": [
+        "argyrodite",
+        "elastic",
+        "DFT",
+        "SQS"
+      ]
     },
     {
       "id": "pustorino2025",
@@ -58,7 +88,12 @@
       "pages": "313",
       "year": 2025,
       "key_content": "Li+ distribution (24g vs 48h) causes E variation 10-30 GPa. Li ordering directly affects local bonding -> shear/compressibility.",
-      "tags": ["argyrodite", "Li_ordering", "elastic", "structure_sampling"]
+      "tags": [
+        "argyrodite",
+        "Li_ordering",
+        "elastic",
+        "structure_sampling"
+      ]
     },
     {
       "id": "birch1947",
@@ -69,7 +104,11 @@
       "pages": "809",
       "year": 1947,
       "key_content": "Original Birch-Murnaghan EOS derivation from Eulerian finite strain theory.",
-      "tags": ["EOS", "theory", "methodology"]
+      "tags": [
+        "EOS",
+        "theory",
+        "methodology"
+      ]
     },
     {
       "id": "minerals2019",
@@ -80,7 +119,11 @@
       "pages": "745",
       "year": 2019,
       "key_content": "BM EOS derivation tutorial. Eulerian vs Lagrangian scheme, 2nd-4th order comparison.",
-      "tags": ["EOS", "methodology", "tutorial"]
+      "tags": [
+        "EOS",
+        "methodology",
+        "tutorial"
+      ]
     },
     {
       "id": "bader1990",
@@ -89,7 +132,11 @@
       "journal": "Oxford University Press",
       "year": 1990,
       "key_content": "Bader charge analysis theory. Electron density gradient defines atomic boundaries.",
-      "tags": ["Bader", "charge", "theory"]
+      "tags": [
+        "Bader",
+        "charge",
+        "theory"
+      ]
     },
     {
       "id": "henkelman2006",
@@ -100,7 +147,11 @@
       "pages": "354",
       "year": 2006,
       "key_content": "Efficient Bader analysis implementation for VASP/QE charge densities.",
-      "tags": ["Bader", "methodology", "implementation"]
+      "tags": [
+        "Bader",
+        "methodology",
+        "implementation"
+      ]
     },
     {
       "id": "shannon1976",
@@ -111,7 +162,10 @@
       "pages": "751",
       "year": 1976,
       "key_content": "Standard ionic radii data. Cl-(1.81A), Br-(1.96A), S2-(1.84A).",
-      "tags": ["ionic_radii", "reference"]
+      "tags": [
+        "ionic_radii",
+        "reference"
+      ]
     },
     {
       "id": "ayadi2024",
@@ -120,7 +174,12 @@
       "journal": "CEA",
       "year": 2024,
       "key_content": "AIMD Li short-range order in LPSCl. Non-uniform Li distribution around S/Cl. Temperature homogenizes. Vacancy deepens inhomogeneity.",
-      "tags": ["argyrodite", "Li_ordering", "AIMD", "short_range_order"]
+      "tags": [
+        "argyrodite",
+        "Li_ordering",
+        "AIMD",
+        "short_range_order"
+      ]
     },
     {
       "id": "damore2022",
@@ -131,7 +190,12 @@
       "pages": "22978",
       "year": 2022,
       "key_content": "Pseudo-cubic vs monoclinic LPSCl. Monoclinic more rigid (higher B0). QHA B(T) calculation. Structure difference -> elastic variation.",
-      "tags": ["argyrodite", "polymorphism", "elastic", "QHA"]
+      "tags": [
+        "argyrodite",
+        "polymorphism",
+        "elastic",
+        "QHA"
+      ]
     },
     {
       "id": "kozuka2025",
@@ -140,7 +204,12 @@
       "journal": "J. Phys. Chem. C",
       "year": 2025,
       "key_content": "LPSCl DFT elastic: E=22.1 GPa (DFT-D3). Stress-strain curve for strength/ductility evaluation.",
-      "tags": ["argyrodite", "elastic", "DFT", "strength"]
+      "tags": [
+        "argyrodite",
+        "elastic",
+        "DFT",
+        "strength"
+      ]
     },
     {
       "id": "torii2025",
@@ -153,15 +222,50 @@
       "doi": "10.1021/acs.jpcc.5c05116",
       "key_content": "Li6PS5Cl DFT-D3 (VASP/PBE-D3, PAW, 500eV, 3x3x3 k-pts). Elastic: C11=47.4, C12=28.4, C44=10.4, E=27.4, B=34.7, G=10.0 GPa. Pugh ratio B/G=3.46 (ductile). Anisotropy index A=1.09 (nearly isotropic). Stress-strain: elastic region up to 20% uniaxial strain. Shear fracture at 0.7% strain → brittle under shear. {111} plane most susceptible to fracture (layered gaps). Cl movement toward Li forms Li4Cl units under shear. Bader: Li(+0.87), P(+1.32), S1(-0.99), S2(-1.69), Cl(-0.69). Particle micro-compression: strength ~76 MPa (comparable to calculated shear strength).",
       "data": {
-        "elastic_DFT_D3": {"C11": 47.4, "C12": 28.4, "C44": 10.4, "E": 27.4, "B": 34.7, "G": 10.0, "nu": 0.37},
-        "deng_comparison": {"C11": 39.9, "C12": 23.1, "C44": 7.8, "E": 22.1, "B": 28.7, "G": 8.1},
+        "elastic_DFT_D3": {
+          "C11": 47.4,
+          "C12": 28.4,
+          "C44": 10.4,
+          "E": 27.4,
+          "B": 34.7,
+          "G": 10.0,
+          "nu": 0.37
+        },
+        "deng_comparison": {
+          "C11": 39.9,
+          "C12": 23.1,
+          "C44": 7.8,
+          "E": 22.1,
+          "B": 28.7,
+          "G": 8.1
+        },
         "shear_fracture_strain": 0.007,
-        "tensile_elastic_limit": 0.20,
-        "ultimate_strength_GPa": {"100": 8.8, "110": 5.9, "111": 6.2},
-        "bader": {"Li": 0.87, "P": 1.32, "S1": -0.99, "S2": -1.69, "Cl": -0.69}
+        "tensile_elastic_limit": 0.2,
+        "ultimate_strength_GPa": {
+          "100": 8.8,
+          "110": 5.9,
+          "111": 6.2
+        },
+        "bader": {
+          "Li": 0.87,
+          "P": 1.32,
+          "S1": -0.99,
+          "S2": -1.69,
+          "Cl": -0.69
+        }
       },
       "comparison_to_our_work": "Their DFT-D3 E=27.4 vs our 600K snapshot E=29.1 → close agreement despite different methods. Their C44=10.4 vs our DFT 0K C44=37.9 → difference is Li ordering, not D3. Their Bader Li(+0.87) matches our v2(+0.877). Key difference: single composition vs our 6 compositions + composition-dependent trends.",
-      "tags": ["argyrodite", "elastic", "DFT", "DFT-D3", "stress-strain", "shear", "anisotropy", "Bader", "VASP"]
+      "tags": [
+        "argyrodite",
+        "elastic",
+        "DFT",
+        "DFT-D3",
+        "stress-strain",
+        "shear",
+        "anisotropy",
+        "Bader",
+        "VASP"
+      ]
     },
     {
       "id": "sakuda2013",
@@ -172,7 +276,12 @@
       "pages": "2261",
       "year": 2013,
       "key_content": "Nanoindentation on SE particles. Single particle vs pellet mechanical property difference.",
-      "tags": ["SE", "mechanical", "nanoindentation", "experiment"]
+      "tags": [
+        "SE",
+        "mechanical",
+        "nanoindentation",
+        "experiment"
+      ]
     },
     {
       "id": "ketter2025",
@@ -181,7 +290,12 @@
       "journal": "Nat. Commun.",
       "year": 2025,
       "key_content": "Grain boundary effects on argyrodite mechanics. Microstructure dominates polycrystal behavior.",
-      "tags": ["argyrodite", "microstructure", "grain_boundary", "experiment"]
+      "tags": [
+        "argyrodite",
+        "microstructure",
+        "grain_boundary",
+        "experiment"
+      ]
     },
     {
       "id": "ohno2021",
@@ -192,7 +306,12 @@
       "pages": "2100370",
       "year": 2021,
       "key_content": "Band gap vs electrochemical stability window. SEI formation relationship.",
-      "tags": ["argyrodite", "electronic", "stability", "band_gap"]
+      "tags": [
+        "argyrodite",
+        "electronic",
+        "stability",
+        "band_gap"
+      ]
     },
     {
       "id": "zhu2015",
@@ -203,7 +322,12 @@
       "pages": "23685",
       "year": 2015,
       "key_content": "Band gap vs decomposition voltage relationship for solid electrolytes.",
-      "tags": ["SE", "stability", "DFT", "band_gap"]
+      "tags": [
+        "SE",
+        "stability",
+        "DFT",
+        "band_gap"
+      ]
     },
     {
       "id": "ong2013",
@@ -214,7 +338,12 @@
       "pages": "148",
       "year": 2013,
       "key_content": "LGPS PDOS analysis separating ionic and electronic conduction.",
-      "tags": ["LGPS", "electronic", "PDOS", "DFT"]
+      "tags": [
+        "LGPS",
+        "electronic",
+        "PDOS",
+        "DFT"
+      ]
     },
     {
       "id": "ransom2023",
@@ -234,7 +363,17 @@
       },
       "relevance_to_our_work": "Their approach avoids interface construction entirely (surface energies only). We use direct interface with MLIP to overcome their stated infeasibility. Their 10 validation interfaces took 'under 1 month' each → we do 100 seeds × 5 comps = 500 interfaces with MLIP. Their method recall=55.6% (misses half of good materials), precision=100% (screening tool). Our method captures within-family Br trends that their approach misses (our γ_SE data shows comp1>comp2>comp3>comp4>comp5 which by their inverse rule predicts wrong within-family Wad ordering).",
       "what_to_show_advisor": "SI Section 'Interfacial Energy Calculations and Adhesion Parameter Benchmarking' (p. S-4 to S-5): (1) Table S1 showing only 10 validated direct interfaces, (2) 1-month convergence time per interface, (3) Table S2 confusion matrix with 55.6% recall. Main text Conclusion (p. 44400): 'infeasible even for a small number of systems' — this is exactly what our MLIP approach overcomes.",
-      "tags": ["adhesion", "DFT", "surface_energy", "screening", "coatings", "solid_electrolyte", "interface", "validation", "benchmarking"]
+      "tags": [
+        "adhesion",
+        "DFT",
+        "surface_energy",
+        "screening",
+        "coatings",
+        "solid_electrolyte",
+        "interface",
+        "validation",
+        "benchmarking"
+      ]
     },
     {
       "id": "choi2025",
@@ -302,7 +441,17 @@
         "6. ADD halogen-O bond counting analysis (Fig 12 analog) if time permits — strong mechanism evidence",
         "7. MENTION UMAP training-set validation as SI item if UMA training data accessible"
       ],
-      "tags": ["adhesion", "MLIP", "interface_construction", "SMD", "SevenNet", "composition_effect", "amorphous", "semiconductor", "Korea"]
+      "tags": [
+        "adhesion",
+        "MLIP",
+        "interface_construction",
+        "SMD",
+        "SevenNet",
+        "composition_effect",
+        "amorphous",
+        "semiconductor",
+        "Korea"
+      ]
     },
     {
       "id": "xiong2022",
@@ -337,27 +486,61 @@
       },
       "key_results": {
         "lattice_constants_table1": {
-          "BaSnF4_calc": {"a": 4.424, "c": 11.395, "V": 223.020},
-          "BaSnF4_exp": {"a": 4.355, "c": 11.232, "V": 213.026, "deviation_pct": 1.58},
-          "Ba0.875Nd0.125SnF4.125": {"a": 4.432, "c": 11.427, "V": 224.280}
+          "BaSnF4_calc": {
+            "a": 4.424,
+            "c": 11.395,
+            "V": 223.02
+          },
+          "BaSnF4_exp": {
+            "a": 4.355,
+            "c": 11.232,
+            "V": 213.026,
+            "deviation_pct": 1.58
+          },
+          "Ba0.875Nd0.125SnF4.125": {
+            "a": 4.432,
+            "c": 11.427,
+            "V": 224.28
+          }
         },
-        "band_gap_eV": {"range": [3.41, 3.69], "x_dependence": "narrow fluctuation, all insulating"},
+        "band_gap_eV": {
+          "range": [
+            3.41,
+            3.69
+          ],
+          "x_dependence": "narrow fluctuation, all insulating"
+        },
         "elastic_GPa": {
-          "BaSnF4": {"E": 84.95, "G": 33.50, "B": 61.00, "nu": 0.27, "B_over_G": 1.82},
-          "Ba0.875Nd0.125SnF4.125": {"B_over_G": 1.97, "verdict": "best ductility"},
+          "BaSnF4": {
+            "E": 84.95,
+            "G": 33.5,
+            "B": 61.0,
+            "nu": 0.27,
+            "B_over_G": 1.82
+          },
+          "Ba0.875Nd0.125SnF4.125": {
+            "B_over_G": 1.97,
+            "verdict": "best ductility"
+          },
           "Pugh_criterion": "B/G > 1.75 = ductile, < 1.75 = brittle"
         },
         "diffusion": {
           "BaSnF4_barrier_eV": 0.71,
           "Ba0.875Nd0.125SnF4.125_barrier_eV": 0.18,
-          "BaSnF4_sigma_300K": 3.50e-4,
-          "Ba0.875Nd0.125SnF4.125_sigma_300K": 5.35e-3,
+          "BaSnF4_sigma_300K": 0.00035,
+          "Ba0.875Nd0.125SnF4.125_sigma_300K": 0.00535,
           "enhancement_factor": 15.3,
-          "activation_energy_eV": {"BaSnF4": 0.23, "doped": 0.15}
+          "activation_energy_eV": {
+            "BaSnF4": 0.23,
+            "doped": 0.15
+          }
         },
         "bond_lengths_Å": {
           "Ba-F_pristine": 2.67,
-          "Ba-F_doped_range": [2.73, 2.85],
+          "Ba-F_doped_range": [
+            2.73,
+            2.85
+          ],
           "Nd-F": 2.39,
           "F-F_pristine": 3.14,
           "F-F_doped": 3.32
@@ -404,42 +587,120 @@
         },
         "section_5_phase_competing": {
           "Ba_Sn_F_phases_table_S1": {
-            "BaF2": {"GGA_kJ": -11.66, "exp_kJ": -12.52},
-            "Ba2Sn": {"GGA_kJ": -1.89, "exp_kJ": -1.44},
+            "BaF2": {
+              "GGA_kJ": -11.66,
+              "exp_kJ": -12.52
+            },
+            "Ba2Sn": {
+              "GGA_kJ": -1.89,
+              "exp_kJ": -1.44
+            },
             "Ba3Sn5": -5.36,
-            "Ba5Sn3": {"GGA_kJ": -5.16, "exp_kJ": -5.92},
-            "BaSn": {"GGA_kJ": -1.47, "exp_kJ": -1.32},
-            "BaSn5": {"GGA_kJ": -2.18, "exp_kJ": -1.65},
+            "Ba5Sn3": {
+              "GGA_kJ": -5.16,
+              "exp_kJ": -5.92
+            },
+            "BaSn": {
+              "GGA_kJ": -1.47,
+              "exp_kJ": -1.32
+            },
+            "BaSn5": {
+              "GGA_kJ": -2.18,
+              "exp_kJ": -1.65
+            },
             "Sn2F6": -19.67,
             "Sn3F8": -26.67,
-            "SnF2": {"GGA_kJ": -6.96, "exp_kJ": -7.22},
-            "SnF4": {"GGA_kJ": -11.91, "exp_kJ": -11.14}
+            "SnF2": {
+              "GGA_kJ": -6.96,
+              "exp_kJ": -7.22
+            },
+            "SnF4": {
+              "GGA_kJ": -11.91,
+              "exp_kJ": -11.14
+            }
           },
           "Nd_phases_table_S2": {
             "Nd2Sn3": -4.01,
-            "NdSn2": {"GGA_kJ": -2.17, "exp_kJ": -2.05},
-            "NdSn3": {"GGA_kJ": -2.33, "exp_kJ": -2.75},
-            "Nd5Sn3": {"GGA_kJ": -6.45, "exp_kJ": -6.32},
-            "Nd5Sn4": {"GGA_kJ": -7.82, "exp_kJ": -6.65},
+            "NdSn2": {
+              "GGA_kJ": -2.17,
+              "exp_kJ": -2.05
+            },
+            "NdSn3": {
+              "GGA_kJ": -2.33,
+              "exp_kJ": -2.75
+            },
+            "Nd5Sn3": {
+              "GGA_kJ": -6.45,
+              "exp_kJ": -6.32
+            },
+            "Nd5Sn4": {
+              "GGA_kJ": -7.82,
+              "exp_kJ": -6.65
+            },
             "Nd11Sn10": -18.25,
-            "NdF3": {"GGA_kJ": -16.58, "exp_kJ": -16.21}
+            "NdF3": {
+              "GGA_kJ": -16.58,
+              "exp_kJ": -16.21
+            }
           },
           "best_Nd_source": "Nd5Sn3 (most negative formation energy, most favorable for synthesis)",
           "Nd_NO3_3_alternative": "Wide chemical potential range supports Nd(NO3)3 as feasible raw material",
           "implication_for_us": "Adopt similar convex-hull / phase competition analysis for Nd2O3 → argyrodite. Competing phases: Nd2S3, NdCl3, NdOCl, Li3Nd, LiNdO2, Nd2O3 itself."
         },
         "section_6_full_elastic_table_S5_GPa": {
-          "x_0":     {"C11": 114, "C12": 20, "C13": 46, "C33": 93,  "C44": 33, "C66": 33},
-          "x_0.02":  {"C11": 153, "C12": 19, "C13": 26, "C33": 102, "C44": 23, "C66": 19},
-          "x_0.0625":{"C11": 114, "C12": 21, "C13": 46, "C33": 97,  "C44": 32, "C66": 34},
-          "x_0.125": {"C11": 113, "C12": 27, "C13": 49, "C33": 96,  "C44": 35, "C66": 35},
-          "x_0.25":  {"C11": 114, "C12": 28, "C13": 50, "C33": 110, "C44": 31, "C66": 37},
+          "x_0": {
+            "C11": 114,
+            "C12": 20,
+            "C13": 46,
+            "C33": 93,
+            "C44": 33,
+            "C66": 33
+          },
+          "x_0.02": {
+            "C11": 153,
+            "C12": 19,
+            "C13": 26,
+            "C33": 102,
+            "C44": 23,
+            "C66": 19
+          },
+          "x_0.0625": {
+            "C11": 114,
+            "C12": 21,
+            "C13": 46,
+            "C33": 97,
+            "C44": 32,
+            "C66": 34
+          },
+          "x_0.125": {
+            "C11": 113,
+            "C12": 27,
+            "C13": 49,
+            "C33": 96,
+            "C44": 35,
+            "C66": 35
+          },
+          "x_0.25": {
+            "C11": 114,
+            "C12": 28,
+            "C13": 50,
+            "C33": 110,
+            "C44": 31,
+            "C66": 37
+          },
           "anomaly": "x=0.02 shows large C11 jump (114→153 GPa, +34%) inconsistent with smooth trend at higher x. This is 1 Nd in 50 Ba (very dilute) → likely artifact of small concentration with single defect breaking symmetry. Or could be local atomic relaxation pattern unique to this concentration.",
           "VRH_note": "Paper does Voigt-Reuss-Hill averaging via Eqs. 11-19 (standard) → reports E, G, B, ν in main Fig. 2"
         },
         "section_7_thermal_stability_AIMD": {
           "system": "Ba0.875Nd0.125SnF4.125 (49 atoms)",
-          "T_range_K": [300, 400, 500, 600, 700, 800],
+          "T_range_K": [
+            300,
+            400,
+            500,
+            600,
+            700,
+            800
+          ],
           "MSD_results": "F shows mobility, Ba/Sn/Nd nearly stationary at all temperatures (paper Fig S21)",
           "energy_drift": "Total potential energy stable across 300-800K (Fig S22) → thermal stability confirmed",
           "Bader_invariance": "Bader charges of Ba and Sn unchanged with Nd doping (Fig S23a) → no redox; framework stable"
@@ -453,8 +714,14 @@
           "DOS_at_saddle": "Nd-5p × F-2p hybridization stronger at saddle → energy lowering"
         },
         "section_13_electrochemical_decomp": {
-          "Ba_anode_voltage_window_V": [4.86, 5.66],
-          "Nd_anode_voltage_window_V": [6.38, 7.57],
+          "Ba_anode_voltage_window_V": [
+            4.86,
+            5.66
+          ],
+          "Nd_anode_voltage_window_V": [
+            6.38,
+            7.57
+          ],
           "Sn_anode_decomposition_steps": "0 V: BaSnF4 + SnF2 + NdF3; 0.80 V: Sn formation; 0.88 V: BaF2 appears; 8.58 V: full decomposition with 5 Sn",
           "Nd_anode_decomposition_steps": "Many steps from 0 V to 7.57 V; final products mostly NdF3 + BaSnF4 + Sn",
           "passivating_phases": "BaF2 (Eg ~10 eV), SnF2, NdF3 — all electronically insulating, serve as passivation layer",
@@ -462,7 +729,13 @@
         }
       },
       "figure_S15_analysis": {
-        "band_gaps_eV": {"x_0": 3.69, "x_0.02": 3.45, "x_0.0625": 3.41, "x_0.125": 3.69, "x_0.25": 3.57},
+        "band_gaps_eV": {
+          "x_0": 3.69,
+          "x_0.02": 3.45,
+          "x_0.0625": 3.41,
+          "x_0.125": 3.69,
+          "x_0.25": 3.57
+        },
         "trend": "Non-monotonic. Lowest at intermediate x=0.02-0.0625, recovers at x=0.125, dips again at x=0.25",
         "PDOS_decomposition": "F-2p dominates valence band. Ba-5p deeper (-3 to -4 eV). Sn-5p near VBM. **Nd-5p shown but Nd-4f NOT projected** (cyan line nearly flat) — paper hides 4f either by treating as core or omitting projection.",
         "critical_observation": "Without DFT+U + 4f projection, the 4f peak position is invisible. This obscures the most important electronic structure question: where is the Nd 4f^3 occupied state vs Fermi level? Our work must use PROJWFC.x with explicit 4f wavefunction inclusion.",
@@ -485,15 +758,41 @@
       },
       "figure_S29_analysis": {
         "BaSnF4_path1": {
-          "initial_state": {"Ba1-F": 2.67, "Ba2-F": 2.67, "Ba-F-Ba_angle_deg": 118.84},
-          "saddle_point": {"Ba1-F": 2.47, "Ba2-F": 2.47, "Ba-F-Ba_angle_deg": 178.13, "geometry": "linear symmetric"},
-          "final_state": {"Ba1-F": 2.67, "Ba2-F": 2.67, "Ba-F-Ba_angle_deg": 118.13},
+          "initial_state": {
+            "Ba1-F": 2.67,
+            "Ba2-F": 2.67,
+            "Ba-F-Ba_angle_deg": 118.84
+          },
+          "saddle_point": {
+            "Ba1-F": 2.47,
+            "Ba2-F": 2.47,
+            "Ba-F-Ba_angle_deg": 178.13,
+            "geometry": "linear symmetric"
+          },
+          "final_state": {
+            "Ba1-F": 2.67,
+            "Ba2-F": 2.67,
+            "Ba-F-Ba_angle_deg": 118.13
+          },
           "barrier_eV": 0.71
         },
         "doped_path1": {
-          "initial_state": {"Nd-F": 2.36, "Ba2-F": 2.77, "Nd-F-Ba_angle_deg": 123.81},
-          "saddle_point": {"Nd-F": 2.24, "Ba2-F": 2.58, "Nd-F-Ba_angle_deg": 173.00, "geometry": "asymmetric"},
-          "final_state": {"Nd-F": 2.36, "Ba2-F": 2.77, "Nd-F-Ba_angle_deg": 124.47},
+          "initial_state": {
+            "Nd-F": 2.36,
+            "Ba2-F": 2.77,
+            "Nd-F-Ba_angle_deg": 123.81
+          },
+          "saddle_point": {
+            "Nd-F": 2.24,
+            "Ba2-F": 2.58,
+            "Nd-F-Ba_angle_deg": 173.0,
+            "geometry": "asymmetric"
+          },
+          "final_state": {
+            "Nd-F": 2.36,
+            "Ba2-F": 2.77,
+            "Nd-F-Ba_angle_deg": 124.47
+          },
           "barrier_eV": 0.18
         },
         "key_mechanism": "Saddle geometry asymmetry. Pristine BaSnF4 has SYMMETRIC saddle (linear Ba-F-Ba, both 2.47 Å) → both Ba atoms simultaneously increase hybridization with F → high simultaneous bond-breaking cost = 0.71 eV. Doped has ASYMMETRIC saddle (Nd-F=2.24, Ba-F=2.58 Å) → Nd-F barely hybridizes more (already short ionic bond) while Ba-F shortens but is weaker → distributed strain rather than peak strain → 0.18 eV barrier.",
@@ -547,9 +846,18 @@
       },
       "figure_S49_analysis": {
         "voltage_windows_V": {
-          "Sn_anode": [0, 0.8],
-          "Ba_anode": [4.86, 5.66],
-          "Nd_anode": [6.38, 7.57]
+          "Sn_anode": [
+            0,
+            0.8
+          ],
+          "Ba_anode": [
+            4.86,
+            5.66
+          ],
+          "Nd_anode": [
+            6.38,
+            7.57
+          ]
         },
         "interpretation": "Ba and Nd give wide HIGH-voltage stability windows. Combined Ba0.875Nd0.125SnF4.125 electrolyte stable against Ba/Nd metal at unusual high voltages (>4.86 V) — but this is for fluoride-ion battery context (V vs Ba/Ba2+). Translation to Li context: stable window likely also high (~3-4 V vs Li/Li+).",
         "implication_for_us": "Compute analogous voltage profiles for Nd-doped argyrodite vs Li metal anode. Use pymatgen's PhaseDiagram + GrandPotentialPhaseDiagram. Expected: Nd-doped argyrodite stable window WIDER than pristine Li5.4PS4.4Cl1.6 due to Nd-F (or Nd-Cl/Nd-O) hard ionic bonds resisting reduction."
@@ -570,10 +878,22 @@
         "implication_for_us": "Direct analog already documented for argyrodite: 4a/4c free anion + 16e bonded S + 48h Li. Site preference figure not directly cite-able for our work but methodology is standard."
       },
       "figure_S50_decomposition_band_gaps": {
-        "Ba0.875Nd0.125SnF4.125": {"E_g_eV": 3.69, "role": "electrolyte"},
-        "NdF3": {"E_g_eV": 7.69, "role": "passivating phase"},
-        "SnF2": {"E_g_eV": 3.34, "role": "intermediate (less passivating)"},
-        "BaF2": {"E_g_eV": 6.59, "role": "passivating phase"},
+        "Ba0.875Nd0.125SnF4.125": {
+          "E_g_eV": 3.69,
+          "role": "electrolyte"
+        },
+        "NdF3": {
+          "E_g_eV": 7.69,
+          "role": "passivating phase"
+        },
+        "SnF2": {
+          "E_g_eV": 3.34,
+          "role": "intermediate (less passivating)"
+        },
+        "BaF2": {
+          "E_g_eV": 6.59,
+          "role": "passivating phase"
+        },
         "key_argument": "NdF3 (7.69 eV) and BaF2 (6.59 eV) — both decomposition products at extreme voltages — are wide-gap insulators that block electron transfer while allowing F-ion transport. This is the foundation of self-limiting SEI argument.",
         "argyrodite_analog": "Our likely Nd-doped argyrodite SEI products: NdCl3 (~5 eV), Nd2O3 (~5.5 eV), LiCl (6.25 eV), LiF (13.6 eV), Li2O (5.29 eV). All wide-gap. Same passivation argument transferable. Compute these analytically or from Materials Project."
       },
@@ -612,9 +932,23 @@
       },
       "figure_S21_MSD_breakdown": {
         "system": "Ba0.875Nd0.125SnF4.125",
-        "T_range_K": [300, 400, 500, 600, 700, 800],
+        "T_range_K": [
+          300,
+          400,
+          500,
+          600,
+          700,
+          800
+        ],
         "results": {
-          "F_MSD_Å2": {"300K": 3, "400K": 6, "500K": 8, "600K": 12, "700K": 14, "800K": 16},
+          "F_MSD_Å2": {
+            "300K": 3,
+            "400K": 6,
+            "500K": 8,
+            "600K": 12,
+            "700K": 14,
+            "800K": 16
+          },
           "Ba_MSD_Å2": "all T ≈ 0 (immobile)",
           "Sn_MSD_Å2": "all T ≈ 0 (immobile)",
           "Nd_MSD_Å2": "all T ≈ 0 (immobile)"
@@ -633,7 +967,25 @@
         "8. Multi-temperature MSD (Fig S21) for Li mobility analysis",
         "9. Voltage profile (Fig 8) — for electrochemical stability vs Li metal"
       ],
-      "tags": ["Nd-doping", "rare-earth", "DFT", "VASP", "PBE", "fluoride-ion-battery", "BaSnF4", "heterovalent", "ionic-conductivity", "elastic", "Pugh-ratio", "NEB", "AIMD", "isolated-defect", "F-ion", "China", "SI-data-extracted"]
+      "tags": [
+        "Nd-doping",
+        "rare-earth",
+        "DFT",
+        "VASP",
+        "PBE",
+        "fluoride-ion-battery",
+        "BaSnF4",
+        "heterovalent",
+        "ionic-conductivity",
+        "elastic",
+        "Pugh-ratio",
+        "NEB",
+        "AIMD",
+        "isolated-defect",
+        "F-ion",
+        "China",
+        "SI-data-extracted"
+      ]
     },
     {
       "id": "jia2025",
@@ -683,7 +1035,11 @@
         "LZDTC_pathways": {
           "interlayer": "LiA-LiB via [Li2-i1] or [Li1-i1]; LiA-LiA via [Li1-Li2]",
           "intralayer": "Within LiB layer via vacancies",
-          "barriers_eV": {"Li1-i1": 0.80, "Li2-i1": 0.80, "Li1-Li2": 0.360},
+          "barriers_eV": {
+            "Li1-i1": 0.8,
+            "Li2-i1": 0.8,
+            "Li1-Li2": 0.36
+          },
           "rate_limiting": "Lowest barrier = [Li1-Li2] channel at 0.360 eV"
         },
         "comparison_to_DFT_NEB": "BVSE is faster screening method (no DFT). For our argyrodite Nd-doping, we should ALSO do BVSE first (rapid 3D channel mapping) before doing expensive DFT NEB. Confirms which Li sites are connected and identifies bottleneck."
@@ -692,20 +1048,40 @@
         "tool": "Bruker AVANCE NEO 600 MHz, MAS 10 kHz, 4mm HXY probe",
         "data_obtained": "Li1/Li2 site occupation fraction via peak deconvolution",
         "site_evolution": {
-          "LZC": {"Li1": 57.2, "Li2": 42.8},
-          "LZTC": {"Li1": 56.3, "Li2": 43.7},
-          "LZDC": {"Li1": 24.1, "Li2": 75.9},
-          "LZDTC": {"Li1": 98.0, "Li2": 2.0}
+          "LZC": {
+            "Li1": 57.2,
+            "Li2": 42.8
+          },
+          "LZTC": {
+            "Li1": 56.3,
+            "Li2": 43.7
+          },
+          "LZDC": {
+            "Li1": 24.1,
+            "Li2": 75.9
+          },
+          "LZDTC": {
+            "Li1": 98.0,
+            "Li2": 2.0
+          }
         },
         "interpretation": "Dy3+ doping pushes Li to Li2 site (75.9%). Adding Ta5+ flips it back to Li1 (98%). The site preference is driven by local ionic environment + bond length adjustments.",
         "for_our_argyrodite": "Apply 7Li MAS NMR to Nd-doped Model C for Li site distribution among 48h Wyckoff. Our analog: Li 24g vs 48h occupation. Combine with DFT relaxed coords to assign chemical shifts."
       },
       "Rietveld_findings": {
         "lattice_parameters_evolution": {
-          "LZC": {"a/b": 11.85, "c": 6.32, "V": 415},
+          "LZC": {
+            "a/b": 11.85,
+            "c": 6.32,
+            "V": 415
+          },
           "LZTC": "negligible change vs LZC (Ta minimal effect)",
           "LZDC": "expanded (a/b ↑, c ↑)",
-          "LZDTC": {"a/b": 11.93, "c": 6.39, "V": 423}
+          "LZDTC": {
+            "a/b": 11.93,
+            "c": 6.39,
+            "V": 423
+          }
         },
         "implication": "LZTC has negligible volume change → modest σ improvement. LZDC has expansion → σ boost. LZDTC most expanded → highest σ."
       },
@@ -734,9 +1110,22 @@
       ],
       "figure_7_analysis": {
         "panels_a_b_c_XPS": {
-          "Cl_2p": {"pristine_2p3/2_eV": 199, "pristine_2p1/2_eV": 200, "after_500_cycles": "no shift, same peaks"},
-          "Zr_3d": {"pristine_3d5/2_eV": 183, "pristine_3d3/2_eV": 185, "after_500_cycles": "no shift, no oxidation/reduction"},
-          "Dy_3d": {"pristine_3d5/2_eV": 1297.9, "pristine_3d3/2_eV": 1335.3, "auger_overlap_eV": 1305.2, "after_500_cycles": "main peaks preserved despite Auger overlap"},
+          "Cl_2p": {
+            "pristine_2p3/2_eV": 199,
+            "pristine_2p1/2_eV": 200,
+            "after_500_cycles": "no shift, same peaks"
+          },
+          "Zr_3d": {
+            "pristine_3d5/2_eV": 183,
+            "pristine_3d3/2_eV": 185,
+            "after_500_cycles": "no shift, no oxidation/reduction"
+          },
+          "Dy_3d": {
+            "pristine_3d5/2_eV": 1297.9,
+            "pristine_3d3/2_eV": 1335.3,
+            "auger_overlap_eV": 1305.2,
+            "after_500_cycles": "main peaks preserved despite Auger overlap"
+          },
           "interpretation": "All host atoms maintain chemical state after 500 cycles → no significant redox/decomposition. Strong stability evidence for paper claims.",
           "for_our_paper": "Apply identical XPS pristine-vs-cycled comparison for Nd 3d, P 2p, S 2p, Cl 2p in our Nd-doped argyrodite. Detection of any peak shift would indicate decomposition. Standard format: 3 stacked panels (one per element), pristine on top, cycled below."
         },
@@ -753,7 +1142,13 @@
           "for_our_paper": "If we test ASSB with Nd-doped argyrodite, apply DRT to decouple resistance contributions. Adopt 3D plot format (γ(τ) vs τ vs cycle number)."
         },
         "panel_f_resistance_evolution": {
-          "decomposed_components": ["Rc", "Rsei", "Rcei", "Rct", "Rmt"],
+          "decomposed_components": [
+            "Rc",
+            "Rsei",
+            "Rcei",
+            "Rct",
+            "Rmt"
+          ],
           "trends": {
             "Rsei": "Highest, gradually rises (LGPS/Li-In interface, NOT directly LZDTC issue)",
             "Rcei": "Rises initially, stabilizes after ~10 cycles (cathode/electrolyte interface formation)",
@@ -780,46 +1175,144 @@
       },
       "SI_data": {
         "table_S1_RE_ionic_radii_pm": {
-          "La3+": 103, "Ce3+": 101, "Pr3+": 99, "Nd3+": 98, "Sm3+": 96, "Eu3+": 95,
-          "Gd3+": 94, "Tb3+": 92, "Dy3+": 91, "Ho3+": 90, "Er3+": 89, "Yb3+": 87,
-          "Y3+": 90, "Zr4+": 72,
+          "La3+": 103,
+          "Ce3+": 101,
+          "Pr3+": 99,
+          "Nd3+": 98,
+          "Sm3+": 96,
+          "Eu3+": 95,
+          "Gd3+": 94,
+          "Tb3+": 92,
+          "Dy3+": 91,
+          "Ho3+": 90,
+          "Er3+": 89,
+          "Yb3+": 87,
+          "Y3+": 90,
+          "Zr4+": 72,
           "Nd_vs_Zr": "Nd3+ (98) > Zr4+ (72) by 36% → significant lattice expansion expected"
         },
         "table_S2_Dy_series_conductivity": {
-          "Li2.05Zr0.95Dy0.05Cl6": {"impedance_Ω": 78.7, "sigma_mS_cm": 0.65},
-          "Li2.1Zr0.9Dy0.1Cl6":   {"impedance_Ω": 54.5, "sigma_mS_cm": 0.94},
-          "Li2.15Zr0.85Dy0.15Cl6":{"impedance_Ω": 47.1, "sigma_mS_cm": 1.01},
-          "Li2.2Zr0.8Dy0.2Cl6":   {"impedance_Ω": 51.4, "sigma_mS_cm": 1.14},
-          "Li2.25Zr0.75Dy0.25Cl6":{"impedance_Ω": 36.5, "sigma_mS_cm": 1.40},
-          "Li2.3Zr0.7Dy0.3Cl6":   {"impedance_Ω": 56.0, "sigma_mS_cm": 0.97},
+          "Li2.05Zr0.95Dy0.05Cl6": {
+            "impedance_Ω": 78.7,
+            "sigma_mS_cm": 0.65
+          },
+          "Li2.1Zr0.9Dy0.1Cl6": {
+            "impedance_Ω": 54.5,
+            "sigma_mS_cm": 0.94
+          },
+          "Li2.15Zr0.85Dy0.15Cl6": {
+            "impedance_Ω": 47.1,
+            "sigma_mS_cm": 1.01
+          },
+          "Li2.2Zr0.8Dy0.2Cl6": {
+            "impedance_Ω": 51.4,
+            "sigma_mS_cm": 1.14
+          },
+          "Li2.25Zr0.75Dy0.25Cl6": {
+            "impedance_Ω": 36.5,
+            "sigma_mS_cm": 1.4
+          },
+          "Li2.3Zr0.7Dy0.3Cl6": {
+            "impedance_Ω": 56.0,
+            "sigma_mS_cm": 0.97
+          },
           "trend": "σ peaks at x=0.25 (1.40 mS/cm), drops at x=0.30 (over-doping)"
         },
         "table_S3_co_doping_full": {
-          "Li2.1Zr0.8Dy0.15Ta0.05Cl6": {"sigma_mS_cm": 1.67, "rank": "BEST"},
-          "Li2.2Zr0.7Dy0.25Ta0.05Cl6": {"sigma_mS_cm": 1.40, "rank": 2},
-          "Li2.025Zr0.825Dy0.1Ta0.075Cl6": {"sigma_mS_cm": 1.30, "rank": 3},
-          "Li2.05Zr0.85Dy0.1Ta0.05Cl6": {"sigma_mS_cm": 1.20, "rank": 4},
-          "Li2.15Zr0.795Dy0.2Ta0.05Cl6": {"sigma_mS_cm": 1.15, "rank": 5},
-          "Li2.05Zr0.75Dy0.15Ta0.1Cl6":  {"sigma_mS_cm": 1.08},
-          "Li2.075Zr0.875Dy0.1Ta0.025Cl6": {"sigma_mS_cm": 0.98},
-          "Li2.225Zr0.725Dy0.25Ta0.025Cl6": {"sigma_mS_cm": 0.92},
-          "Li2.075Zr0.775Dy0.15Ta0.075Cl6": {"sigma_mS_cm": 0.90},
-          "Li2.175Zr0.675Dy0.25Ta0.075Cl6": {"sigma_mS_cm": 0.81},
-          "Li2.125Zr0.825Dy0.15Ta0.025Cl6": {"sigma_mS_cm": 0.79},
-          "Li2Zr0.8Dy0.1Ta0.1Cl6": {"sigma_mS_cm": 0.72},
-          "Li2.1Zr0.7Dy0.2Ta0.1Cl6": {"sigma_mS_cm": 0.62},
-          "Li2.175Zr0.775Dy0.2Ta0.025Cl6": {"sigma_mS_cm": 0.60},
-          "Li2.125Zr0.725Dy0.2Ta0.075Cl6": {"sigma_mS_cm": 0.57},
-          "Li2.15Zr0.65Dy0.25Ta0.1Cl6": {"sigma_mS_cm": 0.43},
+          "Li2.1Zr0.8Dy0.15Ta0.05Cl6": {
+            "sigma_mS_cm": 1.67,
+            "rank": "BEST"
+          },
+          "Li2.2Zr0.7Dy0.25Ta0.05Cl6": {
+            "sigma_mS_cm": 1.4,
+            "rank": 2
+          },
+          "Li2.025Zr0.825Dy0.1Ta0.075Cl6": {
+            "sigma_mS_cm": 1.3,
+            "rank": 3
+          },
+          "Li2.05Zr0.85Dy0.1Ta0.05Cl6": {
+            "sigma_mS_cm": 1.2,
+            "rank": 4
+          },
+          "Li2.15Zr0.795Dy0.2Ta0.05Cl6": {
+            "sigma_mS_cm": 1.15,
+            "rank": 5
+          },
+          "Li2.05Zr0.75Dy0.15Ta0.1Cl6": {
+            "sigma_mS_cm": 1.08
+          },
+          "Li2.075Zr0.875Dy0.1Ta0.025Cl6": {
+            "sigma_mS_cm": 0.98
+          },
+          "Li2.225Zr0.725Dy0.25Ta0.025Cl6": {
+            "sigma_mS_cm": 0.92
+          },
+          "Li2.075Zr0.775Dy0.15Ta0.075Cl6": {
+            "sigma_mS_cm": 0.9
+          },
+          "Li2.175Zr0.675Dy0.25Ta0.075Cl6": {
+            "sigma_mS_cm": 0.81
+          },
+          "Li2.125Zr0.825Dy0.15Ta0.025Cl6": {
+            "sigma_mS_cm": 0.79
+          },
+          "Li2Zr0.8Dy0.1Ta0.1Cl6": {
+            "sigma_mS_cm": 0.72
+          },
+          "Li2.1Zr0.7Dy0.2Ta0.1Cl6": {
+            "sigma_mS_cm": 0.62
+          },
+          "Li2.175Zr0.775Dy0.2Ta0.025Cl6": {
+            "sigma_mS_cm": 0.6
+          },
+          "Li2.125Zr0.725Dy0.2Ta0.075Cl6": {
+            "sigma_mS_cm": 0.57
+          },
+          "Li2.15Zr0.65Dy0.25Ta0.1Cl6": {
+            "sigma_mS_cm": 0.43
+          },
           "key_insight": "Co-doping σ ranges 0.43 to 1.67 mS/cm (4× variation). Best y=0.05 Ta consistently. Worst y=0.1 Ta (over-substitution removes too many Li). Sweet spot: x=0.15 Dy + y=0.05 Ta."
         },
         "rietveld_data_tables_S4_S7": {
           "all_space_group": "P-31c (hexagonal)",
           "lattice_evolution": {
-            "LZC": {"a_Å": 6.3348, "c_Å": 11.9192, "V_Å3": 414.24, "Rwp_pct": 3.88, "Li1_frac": 0.572, "Li2_frac": 0.428},
-            "LZTC": {"a_Å": 6.3400, "c_Å": 11.9117, "V_Å3": 414.65, "Rwp_pct": 3.35, "Li1_frac": 0.563, "Li2_frac": 0.437, "Ta_at_Zr": 0.05},
-            "LZDC": {"a_Å": 6.3718, "c_Å": 11.9724, "V_Å3": 420.95, "Rwp_pct": 3.24, "Li1_frac": 0.241, "Li2_frac": 0.759, "Dy_at_Zr": 0.15},
-            "LZDTC": {"a_Å": 6.3654, "c_Å": 11.9738, "V_Å3": 420.16, "Rwp_pct": 2.79, "Li1_frac": 0.98, "Li2_frac": 0.02, "Dy_at_Zr": 0.15, "Ta_at_Zr": 0.05}
+            "LZC": {
+              "a_Å": 6.3348,
+              "c_Å": 11.9192,
+              "V_Å3": 414.24,
+              "Rwp_pct": 3.88,
+              "Li1_frac": 0.572,
+              "Li2_frac": 0.428
+            },
+            "LZTC": {
+              "a_Å": 6.34,
+              "c_Å": 11.9117,
+              "V_Å3": 414.65,
+              "Rwp_pct": 3.35,
+              "Li1_frac": 0.563,
+              "Li2_frac": 0.437,
+              "Ta_at_Zr": 0.05
+            },
+            "LZDC": {
+              "a_Å": 6.3718,
+              "c_Å": 11.9724,
+              "V_Å3": 420.95,
+              "Rwp_pct": 3.24,
+              "Li1_frac": 0.241,
+              "Li2_frac": 0.759,
+              "Dy_at_Zr": 0.15
+            },
+            "LZDTC": {
+              "a_Å": 6.3654,
+              "c_Å": 11.9738,
+              "V_Å3": 420.16,
+              "Rwp_pct": 2.79,
+              "Li1_frac": 0.98,
+              "Li2_frac": 0.02,
+              "Dy_at_Zr": 0.15,
+              "Ta_at_Zr": 0.05
+            }
           },
           "wyckoff_positions": {
             "Cl_12": "(~0.65, ~0.00, ~-0.38)",
@@ -833,9 +1326,18 @@
       },
       "Nd_specific_data_extracted_from_SI": {
         "Fig_S1d_Nyquist_Nd_series": {
-          "Li2.05Zr0.95Nd0.05Cl6": {"Z_real_Ω": "~80", "sigma_estimated_mS_cm": "~0.55"},
-          "Li2.1Zr0.9Nd0.1Cl6":   {"Z_real_Ω": "~70", "sigma_estimated_mS_cm": "~0.70"},
-          "Li2.15Zr0.85Nd0.15Cl6":{"Z_real_Ω": "~60-65", "sigma_estimated_mS_cm": "~0.85"},
+          "Li2.05Zr0.95Nd0.05Cl6": {
+            "Z_real_Ω": "~80",
+            "sigma_estimated_mS_cm": "~0.55"
+          },
+          "Li2.1Zr0.9Nd0.1Cl6": {
+            "Z_real_Ω": "~70",
+            "sigma_estimated_mS_cm": "~0.70"
+          },
+          "Li2.15Zr0.85Nd0.15Cl6": {
+            "Z_real_Ω": "~60-65",
+            "sigma_estimated_mS_cm": "~0.85"
+          },
           "behavior": "Monotonic σ increase from x=0.05 to 0.15. Unlike most RE (peak at x=0.10), Nd resembles Dy in continuing to increase with x. Suggests potential boost at higher x (not tested in this paper).",
           "for_our_argyrodite": "Similar Nd-rich behavior expected if Nd → Li in argyrodite. Could explain why higher Nd loading (x=0.20 in Model C) maintains stable behavior."
         },
@@ -873,7 +1375,25 @@
           "Fig S13/S14 (Nyquist at V/cycles) — system-specific"
         ]
       },
-      "tags": ["rare-earth-doping", "Nd", "Dy", "Ta", "co-doping", "halide-SE", "Li2ZrCl6", "LZDTC", "BVSE", "7Li-NMR", "Rietveld", "experimental", "ASSB", "NCM811", "China", "ZSTU", "SI-data-extracted"]
+      "tags": [
+        "rare-earth-doping",
+        "Nd",
+        "Dy",
+        "Ta",
+        "co-doping",
+        "halide-SE",
+        "Li2ZrCl6",
+        "LZDTC",
+        "BVSE",
+        "7Li-NMR",
+        "Rietveld",
+        "experimental",
+        "ASSB",
+        "NCM811",
+        "China",
+        "ZSTU",
+        "SI-data-extracted"
+      ]
     },
     {
       "id": "zhao2025",
@@ -911,7 +1431,7 @@
       },
       "concentration_argument_for_Nd": {
         "Zhao_x": 0.02,
-        "our_DFT_x": 0.20,
+        "our_DFT_x": 0.2,
         "ratio": "10×",
         "why_our_conclusion_extends_to_dilute": [
           "(a) Per-defect cost dominated by local size mismatch (Nd 0.98 vs P 0.38 = 2.6×), concentration-insensitive at first order. Nd-Nd interaction ~1-2 eV vs ~7 eV total.",
@@ -922,19 +1442,60 @@
         "recommended_extra_calc": "Single-Nd in 240-atom supercell (x=0.10) for Track 1 and Track 2 (~10 days KISTI). Demonstrate concentration scaling for reviewer."
       },
       "our_paper_advantage_table": {
-        "DFT_verification": {"Zhao": "0 calcs", "Ours": "DFT+U + ISPIN=2, 500+ configs"},
-        "site_assignment": {"Zhao": "Rietveld only", "Ours": "Track 1/2 ΔE_form quantified"},
-        "O_position": {"Zhao": "main/SI contradiction (16e vs 4d)", "Ours": "Both enumerated, stable site determined"},
-        "oxidation_state": {"Zhao": "Ce 3d XPS missing", "Ours": "Nd³⁺ explicit, Nd2O3 precursor unambiguous, 4f³ DFT+U"},
-        "impurity": {"Zhao": "6%→3% LiCl confounder", "Ours": "Pure-phase DFT"},
-        "concentration": {"Zhao": "x=0.02 only", "Ours": "x=0.20 + planned x=0.10 scaling"},
-        "bulk_GB": {"Zhao": "EIS not separable", "Ours": "Single crystal supercell"},
-        "charge_balance": {"Zhao": "depends on Ce⁴⁺ assumption", "Ours": "rigorous with Nd³⁺"}
+        "DFT_verification": {
+          "Zhao": "0 calcs",
+          "Ours": "DFT+U + ISPIN=2, 500+ configs"
+        },
+        "site_assignment": {
+          "Zhao": "Rietveld only",
+          "Ours": "Track 1/2 ΔE_form quantified"
+        },
+        "O_position": {
+          "Zhao": "main/SI contradiction (16e vs 4d)",
+          "Ours": "Both enumerated, stable site determined"
+        },
+        "oxidation_state": {
+          "Zhao": "Ce 3d XPS missing",
+          "Ours": "Nd³⁺ explicit, Nd2O3 precursor unambiguous, 4f³ DFT+U"
+        },
+        "impurity": {
+          "Zhao": "6%→3% LiCl confounder",
+          "Ours": "Pure-phase DFT"
+        },
+        "concentration": {
+          "Zhao": "x=0.02 only",
+          "Ours": "x=0.20 + planned x=0.10 scaling"
+        },
+        "bulk_GB": {
+          "Zhao": "EIS not separable",
+          "Ours": "Single crystal supercell"
+        },
+        "charge_balance": {
+          "Zhao": "depends on Ce⁴⁺ assumption",
+          "Ours": "rigorous with Nd³⁺"
+        }
       },
       "park_response_oneliner_korean": "Zhao 식은 'CeO₂ + Ce⁴⁺ + P-site' 3중 가정의 산물. Sulfide 환경 화학과 lanthanide ionic radius를 정직하게 따랐다면 Li_{5.4-3x}Ce_xPS_{4.4-1.5x}O_{1.5x}Cl_{1.6} (= 우리 Nd Track 1 식과 동일 구조)이 됐을 것. Zhao 합성물도 atomistically 보면 Ce가 Li 자리에 들어가있을 가능성이 매우 큼. 추가로 Fig S1 (O 1s XPS) PS3O3- 피크 부재, Fig S6 Raman PS4 변화 없음, Table S2 O@4d 위치, LiCl 불순물 6→3% confounder, σ vs x 비단조성 등으로 'P-site Ce + PS4-internal O' 메커니즘은 데이터로 뒷받침되지 않음.",
       "conclusion": "Zhao 2025 does NOT refute our Nd→P infeasibility conclusion. It is best interpreted as a misinterpretation of standard lanthanide chemistry (Ce@Li-site) as P-site substitution, supported by ambiguous Rietveld and selective characterization. Our DFT-based Track 1/2 comparison is more rigorous and remains valid.",
       "critique_doc": "db/literature/zhao2025_critique.md",
-      "tags": ["rare-earth-doping", "Ce", "Ce4+", "Ce3+", "lanthanide", "argyrodite", "Li5.4PS4.4Cl1.6", "Model-C-base", "P-substitution", "O-substitution", "Rietveld-ambiguity", "no-DFT", "experimental", "Park-challenge", "critique", "supports-our-Nd-to-Li"]
+      "tags": [
+        "rare-earth-doping",
+        "Ce",
+        "Ce4+",
+        "Ce3+",
+        "lanthanide",
+        "argyrodite",
+        "Li5.4PS4.4Cl1.6",
+        "Model-C-base",
+        "P-substitution",
+        "O-substitution",
+        "Rietveld-ambiguity",
+        "no-DFT",
+        "experimental",
+        "Park-challenge",
+        "critique",
+        "supports-our-Nd-to-Li"
+      ]
     },
     {
       "id": "wilkening2019",
@@ -951,7 +1512,14 @@
         "comp4 frustration: Cl/Br mixing weakens halogen ionicity (both Cl |q| down)"
       ],
       "use_in_paper": "Section 2 mechanism + counterargument backing for any 'shorter=stronger' simplification",
-      "tags": ["argyrodite", "halogen", "charge", "mobility", "framework", "q-squared-over-r"]
+      "tags": [
+        "argyrodite",
+        "halogen",
+        "charge",
+        "mobility",
+        "framework",
+        "q-squared-over-r"
+      ]
     },
     {
       "id": "yuwagemaker2023",
@@ -969,7 +1537,14 @@
         "Wad mechanism candidate: anion-cage interaction strength controls interface chemistry"
       ],
       "use_in_paper": "Section 2 + 4 mechanism backing",
-      "tags": ["argyrodite", "Br-rich", "disorder", "4d-site", "intercage", "Li-mobility"]
+      "tags": [
+        "argyrodite",
+        "Br-rich",
+        "disorder",
+        "4d-site",
+        "intercage",
+        "Li-mobility"
+      ]
     },
     {
       "id": "yuwagemaker2024_decoding",
@@ -990,7 +1565,18 @@
       ],
       "use_in_paper": "Section 2 site distribution (gautam2023 companion); Section 3 disorder anomaly",
       "complementary_to": "gautam2023 (10.1021/acs.chemmater.3c01525) — both about Li6-xPS5-xBr1+x but different aspects",
-      "tags": ["argyrodite", "Br-rich", "disorder", "synthesis", "Li-transport", "multi-scale", "Li6-xPS5-xBr1+x", "Li6-xPS5-xCl1+x", "modelC-match", "comp5-match"]
+      "tags": [
+        "argyrodite",
+        "Br-rich",
+        "disorder",
+        "synthesis",
+        "Li-transport",
+        "multi-scale",
+        "Li6-xPS5-xBr1+x",
+        "Li6-xPS5-xCl1+x",
+        "modelC-match",
+        "comp5-match"
+      ]
     },
     {
       "id": "zhang2024_ionic_potential",
@@ -1006,7 +1592,13 @@
         "Allows paper Section 2 to cite established framework, not invent new"
       ],
       "use_in_paper": "Section 2 — METHOD: q*|q|/r framework. Cite as established descriptor.",
-      "tags": ["ionic-potential", "descriptor", "argyrodite", "framework", "method-ref"]
+      "tags": [
+        "ionic-potential",
+        "descriptor",
+        "argyrodite",
+        "framework",
+        "method-ref"
+      ]
     },
     {
       "id": "famprikis2019",
@@ -1023,13 +1615,23 @@
         "Differentiated halogen mechanisms in our 5-comp series"
       ],
       "use_in_paper": "Section 2 disorder framework; modelC vs comp5 distinction",
-      "tags": ["argyrodite", "disorder", "anion", "cation", "Cl", "Br"]
+      "tags": [
+        "argyrodite",
+        "disorder",
+        "anion",
+        "cation",
+        "Cl",
+        "Br"
+      ]
     },
     {
       "id": "_DELETED_wagemaker2020_lideficient",
       "_status": "REMOVED — confirmed LLM hallucination via CrossRef search (2026-05-05)",
       "_reason": "No matching paper found in Wagemaker 2019-2021 argyrodite search. The 9.4 mS/cm Li-deficient Li5.5PS4.5Cl1.5 quote was actually attributed to Nazar et al. (i.e., adeli2019). Replaced by wang2019_li6ps5cl0p5br0p5 from same search (verified Wagemaker group paper).",
-      "_replaced_by": ["adeli2019 (for Li-deficient discovery)", "wang2019_li6ps5cl0p5br0p5 (for Wagemaker group reference)"]
+      "_replaced_by": [
+        "adeli2019 (for Li-deficient discovery)",
+        "wang2019_li6ps5cl0p5br0p5 (for Wagemaker group reference)"
+      ]
     },
     {
       "id": "wang2019_li6ps5cl0p5br0p5",
@@ -1047,7 +1649,14 @@
         "Validates our halogen substitution strategy"
       ],
       "use_in_paper": "Section 1 (system motivation) + Section 4 (interfacial conductivity precedent for comp2)",
-      "tags": ["argyrodite", "Li6PS5Cl0.5Br0.5", "comp2-match", "experimental", "interfacial-conductivity", "Wagemaker-group"]
+      "tags": [
+        "argyrodite",
+        "Li6PS5Cl0.5Br0.5",
+        "comp2-match",
+        "experimental",
+        "interfacial-conductivity",
+        "Wagemaker-group"
+      ]
     },
     {
       "id": "zuo2023",
@@ -1065,14 +1674,25 @@
         "Reviewer-counter for 'higher Wad always better' assumption"
       ],
       "use_in_paper": "Section 4 (adhesion) + Discussion (trade-offs)",
-      "tags": ["argyrodite", "NCM", "interface", "decomposition", "Cl-rich", "Wad", "trade-off"]
+      "tags": [
+        "argyrodite",
+        "NCM",
+        "interface",
+        "decomposition",
+        "Cl-rich",
+        "Wad",
+        "trade-off"
+      ]
     },
     {
       "id": "_DEPRECATED_sicolo2022",
       "_attribution_correction_2026_05_07": "Misattributed entry. Actual paper = Komatsu et al. 2022 (DOI 10.1021/acs.jpcc.2c05336), corresponding author Shyue Ping Ong (UC San Diego, Materials Virtual Lab). Also MISCLASSIFIED as DFT slab — actually BULK pseudobinary thermodynamics (Materials Project + convex hull, Zhu-Mo framework). NOT slab. See komatsu2022 entry for corrected info.",
       "supersededby": "komatsu2022",
       "DOI": "10.1021/acs.jpcc.2c05336",
-      "tags": ["DEPRECATED", "see-komatsu2022"]
+      "tags": [
+        "DEPRECATED",
+        "see-komatsu2022"
+      ]
     },
     {
       "id": "komatsu2022",
@@ -1089,7 +1709,11 @@
         "code": "VASP, PAW PBE",
         "ecut": "520 eV",
         "k_density": ">=1000/atom",
-        "Hubbard_U_oxides": {"Ni": 6.20, "Co": 3.32, "Mn": 3.90},
+        "Hubbard_U_oxides": {
+          "Ni": 6.2,
+          "Co": 3.32,
+          "Mn": 3.9
+        },
         "structures": "Materials Project precomputed",
         "no_slab": true,
         "no_FixAtoms": "n/a (no slab)",
@@ -1118,13 +1742,27 @@
         "ternary_trend_Ni_Mn_Co": "Mn (most stable, -200) > Co (-321) > Ni (-424, most reactive). Co-free LiNi0.7Mn0.3O2 lies on same stability tie-line as LCO.",
         "voltage_dependence": "ΔΦ widens above 4.5V; LPSCl narrow electrochemical window dominates instability at high V.",
         "volume_change_LMO_LPSCl_chemical_pct": {
-          "LNO": -11, "NCA": -11, "High_Ni": -11, "NM11": -15, "NMC111": -17, "LCO": -12
+          "LNO": -11,
+          "NCA": -11,
+          "High_Ni": -11,
+          "NM11": -15,
+          "NMC111": -17,
+          "LCO": -12
         },
         "volume_change_LMO_LPSCl_electrochemical_4p5V_pct": {
-          "LNO": -34, "NCA": -29, "High_Ni": -33, "NM11": -30, "NMC111": -32, "LCO": -31,
+          "LNO": -34,
+          "NCA": -29,
+          "High_Ni": -33,
+          "NM11": -30,
+          "NMC111": -32,
+          "LCO": -31,
           "_note": "All LPSCl chemical reactions: -11 to -17% shrinkage. Electrochemical 4.5V: -29 to -34% shrinkage. LMO/Carbon: chemical +5 to +10% expansion (Li2CO3 formation), electrochemical -17 to -23% shrinkage."
         },
-        "buffer_layers_low_reactivity": ["Li2CO3 (SEI)", "NiO (surface phase)", "LiNbO3 (oxide buffer)"]
+        "buffer_layers_low_reactivity": [
+          "Li2CO3 (SEI)",
+          "NiO (surface phase)",
+          "LiNbO3 (oxide buffer)"
+        ]
       },
       "key_figures": {
         "Figure_3": "Pseudobinary phase diagram. Y=ΔE_react (0 to -500 meV/atom), X=x in xLMO+(1-x)LPSCl. 6 curves (LNO, NCA, High-Ni, NM11, NMC111, LCO). Stars at min. LiNiO2 most negative.",
@@ -1147,7 +1785,21 @@
         "필독/literature/narrative_with_literature_steps.md — Step 5/6 sicolo2022 citations",
         "kb/papers/* any sicolo references"
       ],
-      "tags": ["bulk-thermodynamics", "NOT-slab", "convex-hull", "Materials-Project", "LPSCl", "LiNiO2", "NCM", "ternary-Ni-Mn-Co", "reaction-energy", "volume-change", "must-read", "paper2-anchor", "Ong-group"]
+      "tags": [
+        "bulk-thermodynamics",
+        "NOT-slab",
+        "convex-hull",
+        "Materials-Project",
+        "LPSCl",
+        "LiNiO2",
+        "NCM",
+        "ternary-Ni-Mn-Co",
+        "reaction-energy",
+        "volume-change",
+        "must-read",
+        "paper2-anchor",
+        "Ong-group"
+      ]
     },
     {
       "id": "gautam2023",
@@ -1166,7 +1818,18 @@
         "comp3-5 mixed: different 4a/4d Cl/Br ratios drive bond length variation"
       ],
       "use_in_paper": "Section 2 site distribution narrative — primary citation for modelC 4a/4d split",
-      "tags": ["argyrodite", "4a", "4d", "site-occupation", "Cl", "Br", "quantitative", "Li6-xPS5-xBr1+x", "Li6-xPS5-xCl1+x", "modelC-match"]
+      "tags": [
+        "argyrodite",
+        "4a",
+        "4d",
+        "site-occupation",
+        "Cl",
+        "Br",
+        "quantitative",
+        "Li6-xPS5-xBr1+x",
+        "Li6-xPS5-xCl1+x",
+        "modelC-match"
+      ]
     },
     {
       "id": "camacho_forero_2020",
@@ -1190,12 +1853,21 @@
         "dft_settings": "VASP PAW PBE, ecut=500 eV (400 eV during AIMD), DFT-D3 for S8 systems, conv 1e-4 eV / forces 0.02 eV/Å, Bader charge analysis"
       },
       "wadh_results_meVperA2": {
-        "S(001)_LPS(001)": 17.47, "S(001)_LPS(100)": 20.74, "S(001)_LPSCl(001)": 2.86,
-        "S(001)_LPSI(001)": 26.73, "S(001)_LPSI(100)": 44.19,
-        "Li2S(001)_LPS(001)": 69.57, "Li2S(001)_LPS(100)": 72.33, "Li2S(001)_LPSCl(001)": 89.69,
-        "Li2S(001)_LPSI(001)": 107.23, "Li2S(001)_LPSI(100)": 83.30,
-        "Li2S(111)_LPS(001)": 9.13, "Li2S(111)_LPS(100)": 19.85, "Li2S(111)_LPSCl(001)": 10.76,
-        "Li2S(111)_LPSI(001)": 10.95, "Li2S(111)_LPSI(100)": 30.64,
+        "S(001)_LPS(001)": 17.47,
+        "S(001)_LPS(100)": 20.74,
+        "S(001)_LPSCl(001)": 2.86,
+        "S(001)_LPSI(001)": 26.73,
+        "S(001)_LPSI(100)": 44.19,
+        "Li2S(001)_LPS(001)": 69.57,
+        "Li2S(001)_LPS(100)": 72.33,
+        "Li2S(001)_LPSCl(001)": 89.69,
+        "Li2S(001)_LPSI(001)": 107.23,
+        "Li2S(001)_LPSI(100)": 83.3,
+        "Li2S(111)_LPS(001)": 9.13,
+        "Li2S(111)_LPS(100)": 19.85,
+        "Li2S(111)_LPSCl(001)": 10.76,
+        "Li2S(111)_LPSI(001)": 10.95,
+        "Li2S(111)_LPSI(100)": 30.64,
         "_unit_conversion": "meV/Å² × 0.01602 = J/m². Li2S(001)/SSE range = 1.12-1.71 J/m² (similar to our paper #1 v5 1.0-2.4 J/m²). S(001)/SSE = 0.05-0.71 J/m² (much lower)."
       },
       "key_reactions_observed": {
@@ -1234,7 +1906,21 @@
         "20 ps AIMD is the standard timescale; our 9 ps MQA is borderline."
       ],
       "use_in_paper": "Paper #2 main reference for sandwich Wadh protocol (v10). Cite as method precedent + comparison data point for LPSCl/Li2S(001).",
-      "tags": ["adhesion", "sandwich-geometry", "DFT", "AIMD", "sulfide-SSE", "LPSCl", "Li2S", "interface-reactions", "PS4-decomposition", "polysulfidophosphate", "method-precedent", "paper2-v10", "must-read"]
+      "tags": [
+        "adhesion",
+        "sandwich-geometry",
+        "DFT",
+        "AIMD",
+        "sulfide-SSE",
+        "LPSCl",
+        "Li2S",
+        "interface-reactions",
+        "PS4-decomposition",
+        "polysulfidophosphate",
+        "method-precedent",
+        "paper2-v10",
+        "must-read"
+      ]
     },
     {
       "id": "enaldiev2021",
@@ -1290,7 +1976,19 @@
         "Figure_4": "Interlayer exciton energy landscapes (electronic)."
       },
       "use_in_paper": "Paper #2 Methods (Phase 1 binding curve analysis): cite as precedent for rigid binding curve adhesion analysis with multi-stacking sampling. Adoption of their interpolation formula could replace our current Phase 1 numerical curves with analytical model.",
-      "tags": ["TMD", "twistronic", "moire", "vdW", "DFT-adhesion", "binding-curve", "interpolation-formula", "multiscale", "Fal'ko-group", "method-precedent", "Phase1-relevant"]
+      "tags": [
+        "TMD",
+        "twistronic",
+        "moire",
+        "vdW",
+        "DFT-adhesion",
+        "binding-curve",
+        "interpolation-formula",
+        "multiscale",
+        "Fal'ko-group",
+        "method-precedent",
+        "Phase1-relevant"
+      ]
     },
     {
       "id": "haruyama2014",
@@ -1333,11 +2031,15 @@
           "_relative_to_us": "Our paper #1 v5 LiNiO2/LPSCl comp1 = 1.28 J/m² is ~2× their LCO/LPS = 0.69 J/m². Reasonable: LiNiO2 more reactive than LCO per Komatsu (-424 vs -321 meV/atom)."
         },
         "lattice_misfits_pct": {
-          "LCO/LNO_110bar": 3.4, "LCO/LNO_110": 5.2,
-          "LCO/LPS": 3.7, "LNO/LPS": 3.6
+          "LCO/LNO_110bar": 3.4,
+          "LCO/LNO_110": 5.2,
+          "LCO/LPS": 3.7,
+          "LNO/LPS": 3.6
         },
         "Li_vacancy_formation_energies_eV": {
-          "bulk_LCO": 4.0, "bulk_LNO": 5.1, "bulk_LPS": 3.2,
+          "bulk_LCO": 4.0,
+          "bulk_LNO": 5.1,
+          "bulk_LPS": 3.2,
           "LCO_LPS_LP2_site": 1.44,
           "_note": "LP2 site (LPS subsurface near LCO) has anomalously low Ev=1.44 eV — much lower than bulk LPS (3.2). Indicates Li wants to LEAVE LPS subsurface and adsorb on LCO. This = SCL formation mechanism. Onset voltage ~1.5 V matches experimental observation."
         },
@@ -1382,7 +2084,24 @@
         "Table_S3": "Adhesion energies (eV/nm²) for 4 interfaces. Direct comparison table."
       },
       "use_in_paper2": "PRIMARY method anchor for v5 single-interface approach (vs Camacho-Forero secondary for sandwich). Citation #1 for paper #2 Methods section. Quantitative anchor (LCO/LPS=0.69 J/m²) + SCL mechanism narrative.",
-      "tags": ["DFT+U", "slab", "single-interface", "vacuum", "LCO", "LPS", "LNO-buffer", "space-charge-layer", "SCL", "Li-vacancy-formation", "first-DFT-slab-sulfide-oxide", "method-anchor-PRIMARY", "must-read", "paper2-anchor", "Tateyama-NIMS", "anti-sandwich-argument"]
+      "tags": [
+        "DFT+U",
+        "slab",
+        "single-interface",
+        "vacuum",
+        "LCO",
+        "LPS",
+        "LNO-buffer",
+        "space-charge-layer",
+        "SCL",
+        "Li-vacancy-formation",
+        "first-DFT-slab-sulfide-oxide",
+        "method-anchor-PRIMARY",
+        "must-read",
+        "paper2-anchor",
+        "Tateyama-NIMS",
+        "anti-sandwich-argument"
+      ]
     },
     {
       "id": "literature_summary_2026_05",
@@ -1390,11 +2109,28 @@
       "title": "Literature backing for paper #1 bond/Bader analysis",
       "compiled_date": "2026-05-05",
       "key_refs_by_topic": {
-        "q2_over_r_framework": ["wilkening2019", "zhang2024_ionic_potential"],
-        "site_distribution_4a_4d": ["yuwagemaker2023", "famprikis2019", "gautam2023", "kraft2018"],
-        "Li_deficient_vacancy": ["wagemaker2020_lideficient", "adeli2019"],
-        "interface_NCM_chemistry": ["zuo2023", "sicolo2022"],
-        "argyrodite_structure_basics": ["deiseroth2006", "kraft2018"]
+        "q2_over_r_framework": [
+          "wilkening2019",
+          "zhang2024_ionic_potential"
+        ],
+        "site_distribution_4a_4d": [
+          "yuwagemaker2023",
+          "famprikis2019",
+          "gautam2023",
+          "kraft2018"
+        ],
+        "Li_deficient_vacancy": [
+          "wagemaker2020_lideficient",
+          "adeli2019"
+        ],
+        "interface_NCM_chemistry": [
+          "zuo2023",
+          "sicolo2022"
+        ],
+        "argyrodite_structure_basics": [
+          "deiseroth2006",
+          "kraft2018"
+        ]
       },
       "narrative_alignment": {
         "Section_2_bader_q2r": "wilkening2019 + zhang2024 establish framework; literature supports our Li-S>>Li-Cl>Li-Br ordering",
@@ -1404,7 +2140,77 @@
         "Section_4_adhesion": "zuo2023 + sicolo2022 NCM interface; trade-off conductivity vs stability"
       },
       "future_paper_txt_pending": "User will provide full text/figures of these refs as needed (per 2026-05-05 instruction). Mark this entry to revisit when papers acquired.",
-      "tags": ["literature", "summary", "paper1", "bond", "bader", "mechanism", "TODO-acquire-fulltext"]
+      "tags": [
+        "literature",
+        "summary",
+        "paper1",
+        "bond",
+        "bader",
+        "mechanism",
+        "TODO-acquire-fulltext"
+      ]
+    },
+    {
+      "id": "hanghofer2019",
+      "authors": "Hanghofer, I.; Brinek, M.; Eisbacher, S. L.; et al. (Wilkening group)",
+      "title": "Substitutional disorder: structure and ion dynamics of the argyrodites Li6PS5Cl, Li6PS5Br and Li6PS5I",
+      "journal": "Phys. Chem. Chem. Phys.",
+      "year": 2019,
+      "doi": "10.1039/C9CP00664H",
+      "key_findings": [
+        "Li6PS5Cl 7Li NMR R1 high-T flank Ea = 0.32 eV, low-T = 0.17 eV",
+        "Li6PS5Br Ea = 0.21 eV high-T, 0.10 eV low-T (faster than Cl)",
+        "Anion sublattice disorder: Li6PS5I < Li6PS5Br < Li6PS5Cl",
+        "Cl-rich version has highest S2-/Cl- inversion (~50%/60% on 4a/4d)"
+      ],
+      "url": "https://pubs.rsc.org/en/content/articlelanding/2019/cp/c9cp00664h",
+      "added_in_session": "2026-05-08 paper #2 vacancy mechanism correction"
+    },
+    {
+      "id": "yu_wagemaker2016",
+      "authors": "Yu, C.; Ganapathy, S.; van Eck, E. R. H.; et al. (Wagemaker group)",
+      "title": "Unravelling Li-Ion Transport from Picoseconds to Seconds: Bulk versus Interfaces in an Argyrodite Li6PS5Cl-Li2S All-Solid-State Li-Ion Battery",
+      "journal": "JACS",
+      "year": 2016,
+      "doi": "10.1021/jacs.6b05066",
+      "key_findings": [
+        "Li6PS5Cl intracage Ea ~ 0.12-0.14 eV (within cage 48h-pair jumps)",
+        "Li6PS5Cl intercage Ea ~ 0.17-0.20 eV (long-range diffusion)",
+        "Bulk superionic conductivity ~3 mS/cm at 300 K",
+        "Distinguishes local mobility from long-range transport via NMR + DFT-MD"
+      ],
+      "url": "https://pubmed.ncbi.nlm.nih.gov/27511442/",
+      "added_in_session": "2026-05-08"
+    },
+    {
+      "id": "damore2022_rsc_adv",
+      "authors": "D'Amore, M.; et al.",
+      "title": "Argyrodite configuration determination for DFT and AIMD calculations using an integrated optimization strategy",
+      "journal": "RSC Adv.",
+      "year": 2022,
+      "doi": "10.1039/D2RA05889H",
+      "key_findings": [
+        "Li6PS5Cl unit cell has ~10^13 distinct configurations from Wyckoff partial occupancy",
+        "Electrostatic (Coulomb) energy used as primary selection criterion",
+        "Lowest-E bulk has majority of Li in 48h sites after relaxation"
+      ],
+      "url": "https://pubs.rsc.org/en/content/articlehtml/2022/ra/d2ra05889h",
+      "added_in_session": "2026-05-08"
+    },
+    {
+      "id": "rao2020_neutron",
+      "authors": "Rao, R. P.; et al.",
+      "title": "Structure and Diffusion Pathways in Li6PS5Cl Argyrodite from Neutron Diffraction, Pair-Distribution Function Analysis, and NMR",
+      "journal": "Chem. Mater.",
+      "year": 2020,
+      "doi": "10.1021/acs.chemmater.0c02418",
+      "key_findings": [
+        "Direct experimental confirmation of Wyckoff site partial occupancy in Li6PS5Cl",
+        "T5 (48h) and T5a (24g) site occupations characterized via neutron PDF",
+        "Diffusion pathways visualized at atomic resolution"
+      ],
+      "url": "https://pubs.acs.org/doi/abs/10.1021/acs.chemmater.0c02418",
+      "added_in_session": "2026-05-08"
     }
   ]
 }

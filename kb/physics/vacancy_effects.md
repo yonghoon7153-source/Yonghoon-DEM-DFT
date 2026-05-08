@@ -1,5 +1,12 @@
 # Vacancy Effects in Argyrodite
 
+> **2026-05-08 정정**: 아래 "Structural Disorder vs Compositional Vacancy"는
+> **mechanical bonding 관점에서는 유효**하나, **ionic conductivity 관점**의
+> Li hopping이 Li6에서 막혀있다는 인상을 줄 수 있어 주의. Li6PS5Cl도
+> superionic (~3 mS/cm at 300 K, Yu/Wagemaker 2016, intracage Ea 0.12 eV).
+> Li5.4는 stoichiometric Li vacancy 추가로 ~3× 더 빠름 (Adeli 2019).
+> 자세한 정정은 `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` 참고.
+
 ## Structural Disorder vs Compositional Vacancy
 
 ### Structural Disorder (Li₆PS₅Cl)
