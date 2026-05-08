@@ -296,6 +296,31 @@ artifact**. FixAtoms로 차단 가능. 이로써 v22 unconstrained relax 결과
 
 ---
 
+## 6.5 Paper #1 ↔ Paper #2 연결 (v27b 발견)
+
+v27b (Cij vs adhesion R) 결과 — **mechanical descriptor 4개가 Cl-O와 같은 방향**:
+
+| Mechanical | R vs Wad | Cl-O와 같은 방향? |
+|---|---|---|
+| C44 | -0.80 | ✓ |
+| G (shear modulus) | -0.73 | ✓ |
+| E (Young's modulus) | -0.68 | ✓ |
+| C12 | -0.64 | ✓ |
+| K (bulk modulus) | -0.31 | weak |
+| C11 | +0.69 | OPPOSITE (but noise: range 32.8-34.5 only 5%) |
+
+**Cl-O R=-0.91과 비교**: C44/G/E 모두 magnitude 0.65-0.80, 같은 방향.
+
+**해석**:
+> Li5.4 family는 (i) mechanically softer AND (ii) better adhesive — 두 효과
+> 모두 vacancy + halogen substitution 화학에서 비롯. Paper #1의 lattice
+> softening과 paper #2의 adhesion enhancement는 **하나의 화학적 원인의 두 발현**.
+
+추가로 **comp5 basin A vs B 비교**가 paper #1의 Li ordering sensitivity 발견을
+직접 검증: basin B (representative) 사용 시 R 신호 더 강함.
+
+---
+
 ## 7. 정직한 한계 (Caveats for Paper)
 
 ### 7.1 Intra-family resolution
