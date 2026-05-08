@@ -23,7 +23,8 @@ from pathlib import Path
 
 WORK = Path("enum_run")
 LOG = "enum.log"
-TOTAL_SCF, N_PAIRS = 13244, 26
+TOTAL_SCF = 13244
+N_PAIRS_PLANNED = 26  # planned total (enum may create dirs lazily)
 ANNEAL_TARGET = 5
 
 G='\033[92m'; Y='\033[93m'; R='\033[91m'; B='\033[94m'; C='\033[96m'
@@ -88,7 +89,43 @@ def read_pair_state(d):
         'na': len(s.get('annealed', {})),
         'lbfgs': s.get('lbfgs', {}),
         'annealed': s.get('annealed', {}),
+        'name': d.name,
     }
+
+
+def get_E_anneal(v):
+    """Try multiple field names for post-anneal energy."""
+    for k in ('E_anneal', 'E_post', 'e_anneal', 'e_after', 'e_post'):
+        if k in v and v[k] is not None:
+            return v[k]
+    return None
+
+
+def get_E_pre(v, lbfgs_dict, name_key):
+    """Try multiple field names for pre-anneal energy.
+    Falls back to lbfgs[idx]['E'] using parsed index from name like '01141_E'."""
+    for k in ('E_pre', 'E_lbfgs', 'e_pre', 'e_before'):
+        if k in v and v[k] is not None:
+            return v[k]
+    # Parse name key like "01141_E" -> lookup lbfgs['01141'] or lbfgs[1141]
+    idx_str = name_key.split('_')[0] if '_' in name_key else name_key
+    for key in (idx_str, idx_str.lstrip('0') or '0', int(idx_str.lstrip('0') or '0')):
+        if key in lbfgs_dict:
+            for ek in ('E', 'e', 'energy', 'E_lbfgs'):
+                if ek in lbfgs_dict[key] and lbfgs_dict[key][ek] is not None:
+                    return lbfgs_dict[key][ek]
+    return None
+
+
+def get_cat(v, name_key):
+    """Try cat field, else parse from name like '01141_E'."""
+    if 'cat' in v:
+        return v['cat']
+    if 'category' in v:
+        return v['category']
+    if '_' in name_key:
+        return name_key.rsplit('_', 1)[1]
+    return '?'
 
 
 def progress_bar(done, total, width=15):
@@ -119,11 +156,13 @@ for i, (_, s) in enumerate(pair_states):
         break
 
 # ── Pair Overview ──
-print(f"\n{C}Pairs ({len(pair_dirs)} total, target SCF={TOTAL_SCF}, anneal={ANNEAL_TARGET}):{W}")
+n_existing = len(pair_dirs)
+n_total = max(N_PAIRS_PLANNED, n_existing)
+print(f"\n{C}Pairs ({n_existing}/{n_total} created, target SCF={TOTAL_SCF}, anneal={ANNEAL_TARGET}):{W}")
 for i, (d, s) in enumerate(pair_states):
     name = d.name
     if s is None:
-        print(f"  {D}- {name:<30s} no state.json{W}")
+        print(f"  {D}· {name:<30s} no state.json{W}")
         continue
     bar = progress_bar(s['ns'], TOTAL_SCF)
     info = f"SCF{s['ns']:>5d} L{s['nl']:>2d} A{s['na']}"
@@ -134,7 +173,10 @@ for i, (d, s) in enumerate(pair_states):
     else:
         mark = ' '
     print(f"  {mark} {name:<30s} {bar} {info}")
-print(f"  {BD}Done: {n_done}/{len(pair_dirs)} pairs ({100*n_done//max(len(pair_dirs),1)}%){W}")
+# Placeholder for not-yet-created pairs
+for i in range(n_existing, N_PAIRS_PLANNED):
+    print(f"  {D}· (pair_{i:02d} not yet created){W}")
+print(f"  {BD}Done: {n_done}/{N_PAIRS_PLANNED} pairs ({100*n_done//max(N_PAIRS_PLANNED,1)}%){W}")
 
 # ── Active pair detail ──
 if active_idx is not None:
@@ -145,19 +187,22 @@ if active_idx is not None:
           f"Stage 3 Anneal: {s['na']}/{ANNEAL_TARGET}")
     if s['annealed']:
         print(f"\n  Anneal status:")
-        items = sorted(s['annealed'].items(), key=lambda kv: kv[1].get('rank', 99))
-        for rank, (k, v) in enumerate(items[:ANNEAL_TARGET], 1):
-            cat = v.get('cat', '?')
-            E_pre = v.get('E_pre', float('nan'))
-            E_post = v.get('E_post', None)
-            tag = f"#{rank}"
-            if rank == 1:
-                tag = "🏆"
+        # rank by E_anneal ascending (lowest = champion)
+        items = []
+        for k, v in s['annealed'].items():
+            E_a = get_E_anneal(v)
+            E_p = get_E_pre(v, s.get('lbfgs', {}), k)
+            cat = get_cat(v, k)
+            items.append((k, v, cat, E_p, E_a))
+        items.sort(key=lambda x: (x[4] if x[4] is not None else float('inf')))
+        for rank, (k, v, cat, E_pre, E_post) in enumerate(items[:ANNEAL_TARGET], 1):
+            tag = "🏆" if rank == 1 else f"#{rank}"
+            E_pre_s = f"{E_pre:+.3f}" if E_pre is not None else "  ?  "
             if E_post is not None:
                 rest = f"✓ E_a={E_post:+.3f} {tag}"
             else:
                 rest = "⏳ in progress"
-            print(f"  ★{rank} {k:<14s}  {cat}  E={E_pre:+.3f}  {rest}")
+            print(f"  ★{rank} {k:<14s}  {cat}  E={E_pre_s}  {rest}")
 
 # ── Champions per done pair ──
 if done_indices:
@@ -167,18 +212,19 @@ if done_indices:
         d, s = pair_states[i]
         if not s['annealed']:
             continue
-        items = sorted(s['annealed'].items(), key=lambda kv: kv[1].get('rank', 99))
-        if not items:
+        # champion = lowest E_anneal among all annealed entries
+        scored = []
+        for k, v in s['annealed'].items():
+            E_a = get_E_anneal(v)
+            if E_a is not None:
+                scored.append((k, v, E_a))
+        if not scored:
             continue
-        # champion = lowest E_post
-        champs = [(k, v) for k, v in items if v.get('E_post') is not None]
-        if not champs:
-            continue
-        champs.sort(key=lambda kv: kv[1]['E_post'])
-        kc, vc = champs[0]
-        cat = vc.get('cat', '?')
+        scored.sort(key=lambda x: x[2])
+        kc, vc, E_a_best = scored[0]
+        cat = get_cat(vc, kc)
         cats[cat] = cats.get(cat, 0) + 1
-        print(f"  {d.name:<30s} cat={cat} E_a={vc['E_post']:+.3f}")
+        print(f"  {d.name:<30s} cat={cat} E_a={E_a_best:+.3f}")
     if cats:
         print(f"\n  Category distribution: {cats}")
 
