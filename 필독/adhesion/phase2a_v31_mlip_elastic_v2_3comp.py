@@ -54,13 +54,16 @@ def snapshot_elastic(atoms, name, T=600, n_snapshots=5, equil_steps=3000,
         opt.run(fmax=0.05)
 
         cell0 = snapshot.get_cell().copy()
+        # FIXED shear strain: d/2 each off-diagonal so Voigt ε_4 = d (correct).
+        # Original v2 script used full d each → ε_4 = 2d → C44 inflated 2x.
+        # Verified against older mlip_snapshot_elastic.py for comps 1-4 paper #1 v1.
         strains = np.zeros((6, 3, 3))
         strains[0] = [[1, 0, 0], [0, 0, 0], [0, 0, 0]]
         strains[1] = [[0, 0, 0], [0, 1, 0], [0, 0, 0]]
         strains[2] = [[0, 0, 0], [0, 0, 0], [0, 0, 1]]
-        strains[3] = [[0, 0, 0], [0, 0, 1], [0, 1, 0]]
-        strains[4] = [[0, 0, 1], [0, 0, 0], [1, 0, 0]]
-        strains[5] = [[0, 1, 0], [1, 0, 0], [0, 0, 0]]
+        strains[3] = [[0, 0, 0], [0, 0, 0.5], [0, 0.5, 0]]   # yz: d/2 each
+        strains[4] = [[0, 0, 0.5], [0, 0, 0], [0.5, 0, 0]]   # xz: d/2 each
+        strains[5] = [[0, 0.5, 0], [0.5, 0, 0], [0, 0, 0]]   # xy: d/2 each
 
         C = np.zeros((6, 6))
         for i in range(6):
