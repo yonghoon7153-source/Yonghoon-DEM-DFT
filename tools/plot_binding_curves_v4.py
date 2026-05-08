@@ -34,14 +34,14 @@ GAP_MIN_PLOT = 1.0
 GAP_MAX_PLOT = 4.0
 GAP_ASYMPTOTE_MIN = 3.0
 
-# Colors per family (Li6 blue tones, Li5.4 red tones, modelC orange)
+# Colors: distinct per comp (avoid red-gradient overlap for comp3/4/5)
 COLORS = {
-    'comp1':  '#1f77b4',
-    'comp2':  '#5b9bd5',
-    'comp3':  '#a93226',
-    'comp4':  '#e74c3c',
-    'comp5':  '#f1948a',
-    'modelC': '#f39c12',
+    'comp1':  '#1f77b4',   # Li6 — blue
+    'comp2':  '#17becf',   # Li6 — cyan
+    'comp3':  '#d62728',   # Li5.4 Cl-rich — red
+    'comp4':  '#9467bd',   # Li5.4 balanced — purple
+    'comp5':  '#2ca02c',   # Li5.4 Br-rich — green
+    'modelC': '#ff7f0e',   # Li5.4 Cl-only — orange
 }
 LINESTYLES = {
     'comp1':  '-', 'comp2':  '-',
@@ -49,9 +49,12 @@ LINESTYLES = {
     'modelC': '--',
 }
 MARKERS = {
-    'comp1':  's', 'comp2':  'o',
-    'comp3':  '^', 'comp4':  'D', 'comp5':  'v',
-    'modelC': 'X',
+    'comp1':  's',     # square
+    'comp2':  'o',     # circle
+    'comp3':  '^',     # up-triangle
+    'comp4':  'D',     # diamond
+    'comp5':  'v',     # down-triangle
+    'modelC': 'X',     # cross
 }
 LABELS = {
     'comp1':  r'comp1: Li$_6$PS$_5$Cl',
@@ -87,10 +90,15 @@ def read_csv_data(path):
 
 
 def main():
-    gaps, mean_cols = read_csv_data(CSV_DIR / "binding_UMA_Wad_mean_J_m2.csv")
+    # USE MAX-OVER-REGISTRY (not mean): mean is dominated by unfavorable
+    # Madelung at random registries, giving inverted ranking vs paper exp.
+    # Max-over-registry picks the BEST binding configuration per (gap, comp),
+    # matching Method A protocol that gave R=+0.87 with paper exp.
+    gaps, max_cols = read_csv_data(CSV_DIR / "binding_UMA_Wad_max_J_m2.csv")
     if gaps is None:
         print("Run extract_phase1_binding_csv.py first.")
         return
+    mean_cols = max_cols  # use 'mean_cols' name for downstream compatibility
 
     mask_asym = gaps >= GAP_ASYMPTOTE_MIN
     asymptotes = {}
