@@ -33,16 +33,16 @@
 \hypersetup{colorlinks=true, linkcolor=blue!50!black,
             citecolor=blue!50!black, urlcolor=blue!70!black}
 
-% --- Convenience macros
-\newcommand{\sigmaionic}{\sigma_{\mathrm{ionic}}}
-\newcommand{\sigmae}{\sigma_{\mathrm{e}}}
-\newcommand{\sigmagrain}{\sigma_{\mathrm{grain}}}
-\newcommand{\Rbulk}{R_{\mathrm{bulk}}}
-\newcommand{\Rconst}{R_{\mathrm{constriction}}}
-\newcommand{\AMP}{\mathrm{AM\_P}}
-\newcommand{\AMS}{\mathrm{AM\_S}}
+% --- Convenience macros (\ensuremath so they work inside text + math)
+\newcommand{\sigmaionic}{\ensuremath{\sigma_{\mathrm{ionic}}}}
+\newcommand{\sigmae}{\ensuremath{\sigma_{\mathrm{e}}}}
+\newcommand{\sigmagrain}{\ensuremath{\sigma_{\mathrm{grain}}}}
+\newcommand{\Rbulk}{\ensuremath{R_{\mathrm{bulk}}}}
+\newcommand{\Rconst}{\ensuremath{R_{\mathrm{constriction}}}}
+\newcommand{\AMP}{AM\_P}
+\newcommand{\AMS}{AM\_S}
 \newcommand{\NCM}{NCM811}
-\newcommand{\LPSCl}{Li$_6$PS$_5$Cl}
+\newcommand{\LPSCl}{Li\textsubscript{6}PS\textsubscript{5}Cl}
 
 \title{Stage~E fracture-aware network solver for all-solid-state battery
        cathode microstructure: a literature-grounded multi-physics
@@ -155,7 +155,21 @@ The contributions of this work are:
 
 \begin{figure*}[t]
   \centering
-  \includegraphics[width=0.95\linewidth]{../figures/figure1_panel_e.pdf}
+  % If figure file not present, comment the next line out and the
+  % LaTeX run will still complete (caption shown without graphic).
+  \IfFileExists{figure1.png}{
+    \includegraphics[width=0.95\linewidth]{figure1.png}
+  }{
+    \IfFileExists{../figures/figure1_panel_e.pdf}{
+      \includegraphics[width=0.95\linewidth]{../figures/figure1_panel_e.pdf}
+    }{
+      \fbox{\parbox{0.9\linewidth}{\centering\vspace{4cm}
+        \textit{[Figure 1 placeholder --- replace with
+          \texttt{figure1.png} (your finalized composite image)
+          or \texttt{figure1\_panel\_e.pdf} from the repository.]}
+        \vspace{4cm}}}
+    }
+  }
   \caption{Schematic of the DEM-driven multi-physics network solver
     pipeline used in this work.
     \textbf{(a)} DEM-generated cathode microstructure with bimodal
