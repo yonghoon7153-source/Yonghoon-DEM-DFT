@@ -88,7 +88,7 @@ def parse_v29(log):
     comp_re = re.compile(r'========= (comp\d|modelC) \(')
     pre_done_re = re.compile(r'M2 pre-relax done')
     langevin_start_re = re.compile(r'Running Langevin: (\d+) steps')
-    rms_re = re.compile(r'Final t=\d+ fs: RMS=([\d.]+) A, max=([\d.]+) A')
+    rms_re = re.compile(r'Final t=[\d.]+ fs: RMS=([\d.]+) A, max=([\d.]+) A')
     verdict_re = re.compile(r'VERDICT: (.+)')
 
     last_comp = None
