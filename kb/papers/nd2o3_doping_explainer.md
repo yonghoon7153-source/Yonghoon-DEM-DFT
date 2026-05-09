@@ -86,16 +86,98 @@ Charge check:  +48 +50 +6 -82 -6 -16 = 0 ✓
 
 ### 2.4 "왜 1×1×10이지 다른 모양 안 되나?"
 
-→ 가능하지만 trade-off 있음:
+이건 사실 **두 가지 결정이 합쳐진 것**입니다. 각각 다른 이유:
 
-| 셀 모양 | fu | atoms | Nd₂O₃ 단위 | 도핑율 | Nd-Nd image |
-|---|---|---|---|---|---|
-| **1×1×10 (현재)** | 10 | 124 | **1** | **20%** | 7/7/70 Å |
-| 1×2×5 | 10 | 124 | 1 | 20% | 7/14/35 |
-| 2×2×5 | 20 | 248 | 2 | 20% | 14/14/35 |
-| 2×2×10 | 40 | 496 | 4 | 20% | 14/14/70 |
+| 결정 | 무엇을 결정? | 우리 선택 | 결정 근거 |
+|---|---|---|---|
+| **(1) 셀 크기 (fu 수)** | 도핑율 결정 | **10 fu** | x=0.20 강제 — fractional Nd 못 들어감 |
+| **(2) 셀 모양 (a×b×c)** | 같은 fu 안에서 어떻게 배치? | **1×1×10 stack** | paper #1과의 일관성 + 코드 재사용 |
 
-→ **1×1×10은 "최소 stoichiometric integer" 셀.** 더 큰 셀은 같은 도핑율 유지하려면 multiple Nd₂O₃ 단위 → cluster interaction 다른 problem 됨.
+#### 결정 (1) — fu 수가 도핑율을 결정
+
+modelC = Li₅.₄PS₄.₄Cl₁.₆ → Li₅.₄ 때문에 **5 fu 배수**여야 정수 atom 됨:
+
+| fu 수 | atoms (pristine) | P 수 | Nd₂O₃ 1단위 시 도핑율 |
+|---|---|---|---|
+| 5 fu | 62 | 5 | 2 Nd / 5 P = **40%** ❌ Nd 1개 부분배치 안 됨, 너무 강한 도핑 |
+| **10 fu** | **124** | **10** | **2 Nd / 10 P = 20%** ⭐ paper #2 target |
+| 15 fu | 186 | 15 | 2 Nd / 15 P = 13% (또는 4 Nd = 27%) |
+| 20 fu | 248 | 20 | 2 Nd / 20 P = 10% (dilute control) |
+
+→ **10 fu = paper #2의 최소 stoichiometric 단위**. 더 작으면 도핑율 너무 큼, 더 크면 같은 x=0.20 위해 multiple Nd₂O₃ 필요.
+
+#### 결정 (2) — 같은 10 fu를 어떤 모양으로 배치?
+
+10 fu 정해졌으니 다음: **이 10 fu를 어떻게 공간에 배치할까?**
+
+가능한 형태 (모두 124 atoms, 10 fu, x=0.20 도핑율 동일):
+
+| 형태 | 배치 의미 | a / b / c (Å) | Nd-Nd image 거리 |
+|---|---|---|---|
+| **1×1×10** ⭐ | primitive c축으로 10번 stack | 7 / 7 / 70 | 7, 7, 70 |
+| 1×2×5 | b 2배 + c 5배 | 7 / 14 / 35 | 7, 14, 35 |
+| 1×5×2 | b 5배 + c 2배 | 7 / 35 / 14 | 7, 35, 14 |
+| 2×1×5 | a 2배 + c 5배 | 14 / 7 / 35 | 14, 7, 35 |
+| 2×5×1 | a 2배 + b 5배 | 14 / 35 / 7 | 14, 35, 7 |
+| 5×2×1 | a 5배 + b 2배 | 35 / 14 / 7 | 35, 14, 7 |
+| 10×1×1 | a축으로 10번 stack | 70 / 7 / 7 | 70, 7, 7 |
+
+→ **stoichiometry는 모두 같음**. 모양만 다름. 어느 걸 택할 건가?
+
+#### 왜 1×1×10을 선택했나 — 3가지 이유
+
+**이유 1: primitive cell의 자연스러운 확장**
+
+modelC primitive cell은 rhombohedral (a=b=c=6.98 Å, all angles 60°). 10번 stacking 시:
+- **1×1×10**: 격자 vector 1개만 변경 (c → 10c). a, b 그대로 → rhombo symmetry 보존. 가장 단순.
+- 1×2×5 등: lateral 도 변경 → cell symmetry breaking 가능, 처리 복잡.
+
+**이유 2: Paper #1 (comp1-5)와 일관성** ⭐ 가장 중요
+
+paper #1 셀 형태:
+- comp1, comp2 (Li6 family): cubic 4 fu = 52 atoms (1×1×1 primitive)
+- comp3, comp4, comp5 (Li5.4 family): rhombo 5 fu = 62 atoms (**1×1×5 primitive c-stack**)
+- modelC paper #1: 5 fu = 62 atoms (**1×1×5 primitive c-stack**)
+- modelC paper #2 (Nd 도핑): 10 fu = 124 atoms = **1×1×10** = paper #1 셀의 c축 2배
+
+→ **paper #1과 같은 stacking 방식**. comp4-5와 modelC 결과를 직접 비교 가능 (도핑 효과만 분리).
+
+**이유 3: 코드 재사용**
+
+paper #1 step1-5 (enumerate, MLIP screen, anneal, EOS) 의 스크립트가 1×1×N c-stack 패턴에 맞게 작성됨. 1×2×5 같이 lateral 확장하면:
+- enumerate scripts 의 site indexing 다 수정 필요
+- xyz 파일 변환 함수 다 수정
+- anneal trajectory 분석 함수 수정
+- 검증된 verified script 다시 검증
+
+→ **human time 큰 낭비**. CODE_INVENTORY 룰 ("verified script 재사용, 새 짜기 금지") 위반.
+
+#### Trade-off 인정 — 1×1×10의 단점
+
+| | 장점 | 단점 |
+|---|---|---|
+| **1×1×10 (현재)** | 자연 stacking, 코드 재사용, paper #1 일관성 | **xy 방향 Nd-Nd image 7 Å** (가까움) → 약간의 image effect |
+| 2×2×5 (20 fu, 2 Nd₂O₃) | xy 14 Å, isotropic | x=0.20 유지하려면 2 Nd₂O₃ → cluster interaction 다른 problem |
+| **2×2×5 dilute (20 fu, 1 Nd₂O₃)** | xy 14 Å + isolated Nd | 도핑율 x=0.10 → paper #2 main과 직접 비교 안 됨 |
+
+#### 검증 — image effect 정말 작은가?
+
+DB의 `phase_2_5_quality_check` (`db/compositions/modelc_nd_doped.json`):
+
+```json
+"verdict": "cfg141 is ROBUST ground state. 20 random Li perturbation
+            trials all HIGHER (worse) than champion by 0.4-15.5 meV."
+```
+
+→ 20개 random Li 위치 변경에도 cfg141 unchanged → **xy image effect (있다면) 도 cfg141 결정 못 뒤집음**.
+
+추가로 SI에서 dilute 248-atom (2×2×5, 1 Nd₂O₃, x=0.10) spot check 계획됨 → reviewer Q 대비.
+
+#### 한 줄 정리
+
+> **fu 수 (10)** = stoichiometry / 도핑율로 결정 (강제)  
+> **모양 (1×1×10)** = paper #1과의 일관성 + 코드 재사용으로 결정 (선택)  
+> 둘은 별개 결정. 같은 10 fu를 다른 모양 (1×2×5 등) 으로 만들 수도 있었지만, 합리적 이유로 1×1×10 선택.
 
 ---
 
