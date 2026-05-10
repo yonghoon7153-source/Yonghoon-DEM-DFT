@@ -11,7 +11,8 @@
 
 | 시각 | branch | action | status | notes |
 |------|--------|--------|--------|-------|
-| 07:10 | debug-api-500-error-iukkt | figure 보정: image1 (v4) → image2 style 복원 | DONE | (a) 원인: `plot_binding_curves_v4.py` 가 max-over-registry CSV 읽고 modelC 포함 + cubic spline 없음 + asymptote subtract 후 Y range 매우 넓음. (b) 처방: `plot_binding_curves_v7.py` 작성 — JSON 기반 mean over 36 + asymptote subtract + 5 paper comps 만 + cubic spline + gap window 1.2-1.6 음영 + R(well, paper) title + auto-fit Y. (c) v4 에 DEPRECATED warning 추가. |
+| 07:18 | debug-api-500-error-iukkt | kisti_monitor.sh 작성 (엄청 자세한 watch) | DONE | `필독/step1_halogen_li_anneal/kisti_monitor.sh` — GPU 사용량/온도, ps, watchdog crash count, Stage1a/1b/2/3 진행 카운트, run.log age, last 3 lines, champion 발견 시 best_cl/br/Li/E 자동 print. `watch -n 30 ./kisti_monitor.sh` 사용. |
+| 07:10 | debug-api-500-error-iukkt | figure 보정: image1 (v4) → image2 style 복원 | DONE | (a) 원인: `plot_binding_curves_v4.py` 가 max-over-registry CSV 읽고 modelC 포함 + cubic spline 없음 + asymptote subtract 후 Y range 매우 넓음. (b) 처방: `plot_binding_curves_v7.py` 작성 — JSON 기반 mean over 36 + asymptote subtract + 5 paper comps 만 + cubic spline + gap window 1.2-1.6 음영 + R(well, paper) title + auto-fit Y. (c) v4 에 DEPRECATED warning 추가. commit `f8f59f7` |
 | 06:58 | debug-api-500-error-iukkt | portable scripts commit + push | DONE | commit `92b14a5` |
 | 06:56 | debug-api-500-error-iukkt | watchdog/run scripts portable화 (cwd-relative + conda activate 제거 + GPU env 외부 주입) | DONE | comp3/comp5 watchdog + run_ranks 모두. `cd "$(dirname "$(readlink -f "$0")")"` 사용. fairchem import sanity check 추가. |
 | 06:55 | debug-api-500-error-iukkt | KISTI deploy v1 실패 확인 | BLOCKED→FIXING | (a) `/data/work/`은 gabia 경로, KISTI는 `/scratch/x3430a02/kgy/...` → `mkdir` Permission denied → wget 파일들이 `adhesion_v5_v2/` 로 잘못 들어감. (b) `/data/apps/miniforge3/...` conda path 도 gabia용. KISTI는 `(uma)` 이미 active. |
@@ -61,3 +62,4 @@
 1. ⏳ comp3 v2 / comp5 v2 spawn destination 결정 (KISTI만? + repo 미러?)
 2. ⏳ "두번째사진" 이미지 재공유 받기 — 어느 figure script 수정인지 확인
 3. ⏳ spawn 후 CODE_INVENTORY.md 갱신 (Pipeline v2 status table comp3/4/5 ⏳ → ✅)
+
