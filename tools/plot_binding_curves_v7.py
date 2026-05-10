@@ -32,9 +32,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import CubicSpline
 
-JSON_PATH = Path("phase1_results/binding_curves.json")
+import sys
+# CLI: python plot_binding_curves_v7.py [json_path]   (default = phase1_results/binding_curves.json)
+JSON_DEFAULT = "phase1_results/binding_curves.json"
+JSON_PATH = Path(sys.argv[1]) if len(sys.argv) > 1 else Path(JSON_DEFAULT)
 CSV_DIR   = Path("binding_curves_csv")
 OUT_DIR   = Path("binding_curves_plots"); OUT_DIR.mkdir(exist_ok=True)
+TAG = JSON_PATH.parent.name if JSON_PATH.exists() else "fallback"
 
 PAPER_EXP   = {'comp1': 194, 'comp2': 180, 'comp3': 316, 'comp4': 298, 'comp5': 249}
 PAPER_COMPS = ['comp1', 'comp2', 'comp3', 'comp4', 'comp5']
@@ -156,7 +160,7 @@ def main():
     ax.axhline(0, color='k', lw=0.7, alpha=0.7, zorder=2)
     ax.set_xlabel(r'Interface gap, $d$ (Å)')
     ax.set_ylabel(r'Adhesion energy (J m$^{-2}$)')
-    ax.set_title(f'UMA binding curves (R = {R:+.3f})')
+    ax.set_title(f'UMA binding curves (R = {R:+.3f})  [{TAG}]')
     ax.set_xlim(GAP_LO, GAP_HI)
 
     all_E = np.concatenate([summary[c]['E_adh'][
@@ -192,14 +196,22 @@ def main():
     print(f"\nsaved {png}")
     print(f"saved {pdf}")
     print(f"saved {csv_out}")
+    print(f"data tag: {TAG}   (input = {JSON_PATH})")
     print(f"R(well depth vs paper) = {R:+.4f}\n")
-    print(f"{'comp':<8} {'asymp':>+10} {'E_well':>+10} {'d_min':>7} {'paper_exp':>10}")
+    print(f"{'comp':<8} {'asymp':>10} {'E_well':>10} {'d_min':>7} {'paper_exp':>10}")
     for c in PAPER_COMPS:
         if c not in summary:
             continue
         d = summary[c]
         print(f"{c:<8} {d['asymp']:>+10.4f} {d['E_well']:>+10.4f} {d['d_min']:>7.2f} "
               f"{PAPER_EXP[c]:>10}")
+    print()
+    print("Ranking (well depth, deepest first):")
+    ranked = sorted([c for c in summary if c in PAPER_COMPS],
+                    key=lambda c: summary[c]['E_well'])  # most negative first
+    print("  by v7    :", " > ".join(f"{c}({-summary[c]['E_well']:.2f})" for c in ranked))
+    paper_rank = sorted(PAPER_COMPS, key=lambda c: -PAPER_EXP[c])
+    print("  by paper :", " > ".join(f"{c}({PAPER_EXP[c]})" for c in paper_rank))
 
 
 if __name__ == "__main__":
