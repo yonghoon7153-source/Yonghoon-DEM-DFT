@@ -1,0 +1,25 @@
+{
+  "experiment": "v15 fair comparison v1_slab vs v2_slab (only comp4 differs)",
+  "date": "2026-05-10",
+  "kisti": "/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/",
+  "v1_REDO_dir": "phase2a_v15_v1_REDO_results/",
+  "v2_dir": "phase2a_v15_v2_results/",
+  "verification": "v2-v1_REDO=0.0000 for comp1/comp2/comp3/comp5/modelC (slabs unchanged) — confirms only comp4 differs.",
+  "comp4_v2_REAL_changes": {
+    "Li_O_density_per_A2": {"v1_REDO": 0.1245, "v2": 0.0761, "delta": -0.0485, "delta_pct": -39},
+    "Cl_O_density_per_A2": {"v1_REDO": 0.0000, "v2": 0.0881, "delta": "+NEW (Cl exposed at surface)"},
+    "Br_O_density_per_A2": {"v1_REDO": 0.1083, "v2": 0.0502, "delta": -0.0581, "delta_pct": -54}
+  },
+  "fair_R_values_density_vs_paper_Wad": {
+    "R_Li_O":  {"v1_REDO": 0.8190, "v2":  0.3225, "verdict": "collapsed"},
+    "R_Cl_O":  {"v1_REDO": -0.9142, "v2": 0.1344, "verdict": "sign-flipped, was main descriptor"},
+    "R_Br_O":  {"v1_REDO": 0.3943, "v2": 0.2341, "verdict": "weak in both"},
+    "R_S_Li":  {"v1_REDO": -0.8957, "v2": -0.8957, "verdict": "ROBUST — identical across v1/v2 — true descriptor"}
+  },
+  "narrative_pivot": {
+    "old_paper_2_main": "R(Cl-O density) = -0.914 anti-correlation — DROPPED (was sampling artifact of v1 incomplete annealing)",
+    "new_paper_2_main": "R(S-Li density) = -0.896 anti-correlation — ROBUST across Li ordering",
+    "interpretation": "Larger interfacial S-Li bond density at SE/NCM interface correlates with LOWER experimental Wad. Li atoms in SE bonding to NCM oxygen layer (or vice versa) inhibits clean adhesion — possibly due to Li migration / interphase formation."
+  },
+  "OLD_HARD_BOND_DATA_drift": "small (0.001-0.01) drift in plot_bond_densities_v9.py hardcoded values vs current v1_REDO. Paper figure was from older ASE/numpy. Update BOND_DATA recommended."
+}

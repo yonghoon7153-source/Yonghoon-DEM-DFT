@@ -29,19 +29,22 @@ OUT_DIR = Path("binding_curves_plots"); OUT_DIR.mkdir(exist_ok=True)
 ALL_COMPS = ['comp1', 'comp2', 'comp3', 'comp4', 'comp5', 'modelC']
 PAPER_COMPS = ['comp1', 'comp2', 'comp3', 'comp4', 'comp5']
 
-# v15 data (gap_eq, 36-reg mean)
-# comp4 updated 2026-05-10 to v2 anneal champion (rank2_anneal_3.xyz, E=-255.6596 eV).
-# v2 surface termination DIFFERS — Cl exposed (Cl-O 0→0.0881), Li-O -43%, Br-O -55%.
-# Paper #2 narrative impact: comp4 EXITS Li5.4-mix-family Cl-O=0 group.
+# v15 data (gap_eq, 36-reg mean) — UPDATED 2026-05-10 from KISTI v1_REDO + v2 runs
+# v1_REDO = comp4 with v1 slab in current ASE/numpy env (TRUE v1 baseline)
+# v2 = comp4 with v2 anneal-champion-derived slab
+# Only comp4 differs (verified: v2-v1=0.0000 for all other comps).
+# Old hardcoded values (paper figure) had 0.5-10% drift from ASE/numpy version diff.
 BOND_DATA = {
-    'comp1':  {'Li-O': 0.1138, 'Cl-O': 0.0228, 'Br-O': 0.0000},
-    'comp2':  {'Li-O': 0.0740, 'Cl-O': 0.0285, 'Br-O': 0.0000},
-    'comp3':  {'Li-O': 0.1338, 'Cl-O': 0.0000, 'Br-O': 0.0000},
-    'comp4':  {'Li-O': 0.0761, 'Cl-O': 0.0881, 'Br-O': 0.0502},  # v2 (was v1: 0.1338/0/0.1115)
-    'comp5':  {'Li-O': 0.1283, 'Cl-O': 0.0000, 'Br-O': 0.1060},
-    'modelC': {'Li-O': 0.0948, 'Cl-O': 0.0948, 'Br-O': 0.0000},
+    'comp1':  {'Li-O': 0.1147, 'Cl-O': 0.0247, 'Br-O': 0.0000},
+    'comp2':  {'Li-O': 0.0759, 'Cl-O': 0.0292, 'Br-O': 0.0000},
+    'comp3':  {'Li-O': 0.1372, 'Cl-O': 0.0000, 'Br-O': 0.0000},
+    'comp4':  {'Li-O': 0.0761, 'Cl-O': 0.0881, 'Br-O': 0.0502},  # v2 anneal champion (cross-rank)
+    'comp5':  {'Li-O': 0.1256, 'Cl-O': 0.0000, 'Br-O': 0.1078},
+    'modelC': {'Li-O': 0.0853, 'Cl-O': 0.0881, 'Br-O': 0.0000},
 }
-BOND_DATA_V1_COMP4 = {'Li-O': 0.1338, 'Cl-O': 0.0000, 'Br-O': 0.1115}  # original v1 backup
+# v1 baseline (comp4 with v1 slab, same env as above) for reference
+BOND_DATA_V1_COMP4 = {'Li-O': 0.1245, 'Cl-O': 0.0000, 'Br-O': 0.1083}
+# Robust descriptor across v1/v2 (verified): R(S-Li density vs paper Wad) = -0.896
 
 PAPER_EXP = {'comp1': 194, 'comp2': 180, 'comp3': 316, 'comp4': 298, 'comp5': 249}
 
