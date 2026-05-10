@@ -60,19 +60,50 @@ GAP_WINDOW_LO, GAP_WINDOW_HI = 1.2, 1.6
 
 
 def load_from_json(path):
-    """Compute mean Wad over 36 registries from raw JSON."""
+    """Per-registry asymptote-normalized mean Wad (v5 KEY FIX).
+
+    For each (comp, registry):
+      asymptote(reg) = mean Wad at gap >= 3.0 A
+      normalized(reg, gap) = Wad(reg, gap) - asymptote(reg)
+    Then mean over 36 registries.
+
+    This corrects the comp-level-asymptote bug in v3/v4/early-v7 where comp1
+    (Li6, big Madelung baseline) appeared deepest. Per-registry normalization
+    cancels each registry's Madelung baseline first, recovering Li5.4 > Li6
+    cross-family ranking that matches paper exp.
+    """
     raw = json.load(open(path))
     out = {}
     for c in PAPER_COMPS:
         if c not in raw:
             continue
-        regs = raw[c]
-        gaps_str = list(regs['R1_origin']['curve'].keys())
+        comp_data = raw[c]
+        # gaps across all registries
+        gap_set = set()
+        for reg, reg_data in comp_data.items():
+            gap_set.update(reg_data.get('curve', {}).keys())
+        gaps_str = sorted(gap_set, key=float)
         gaps = np.array([float(g) for g in gaps_str])
+
+        # Per-registry asymptote (mean Wad at gap >= 3.0)
+        per_reg_asym = {}
+        for reg, reg_data in comp_data.items():
+            curve = reg_data.get('curve', {})
+            asym_vals = [curve[g]['Wad_J_per_m2']
+                         for g in gaps_str
+                         if g in curve and float(g) >= GAP_ASYMPTOTE_MIN
+                         and curve[g].get('Wad_J_per_m2') is not None]
+            per_reg_asym[reg] = float(np.mean(asym_vals)) if asym_vals else 0.0
+
+        # Mean of per-registry normalized Wad per gap
         wads = []
         for g in gaps_str:
-            vals = [regs[r]['curve'][g]['Wad_J_per_m2'] for r in regs]
-            wads.append(float(np.mean(vals)))
+            vals = []
+            for reg, reg_data in comp_data.items():
+                curve = reg_data.get('curve', {})
+                if g in curve and curve[g].get('Wad_J_per_m2') is not None:
+                    vals.append(curve[g]['Wad_J_per_m2'] - per_reg_asym[reg])
+            wads.append(float(np.mean(vals)) if vals else float('nan'))
         out[c] = (gaps, np.array(wads))
     return out
 
@@ -112,9 +143,10 @@ def main():
         if c not in wad_data:
             continue
         gaps, wads = wad_data[c]
-        asym_mask = gaps >= GAP_ASYMPTOTE_MIN
-        W_asymp = float(np.nanmean(wads[asym_mask])) if asym_mask.any() else 0.0
-        E_adh = -(wads - W_asymp)
+        # wads는 이미 per-registry asymptote-subtracted (load_from_json 에서 처리됨).
+        # 추가 subtract 하지 말고 W_asymp = 0 (안 해주면 double subtract).
+        W_asymp = 0.0
+        E_adh = -wads
         binding_mask = (gaps >= 1.0) & (gaps <= 2.5)
         if binding_mask.any():
             i = int(np.nanargmin(E_adh[binding_mask]))
