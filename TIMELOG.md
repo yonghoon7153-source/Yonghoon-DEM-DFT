@@ -7,6 +7,16 @@
 
 ---
 
+## 2026-05-11
+
+| 시각 | branch | action | status | notes |
+|------|--------|--------|--------|-------|
+| 06:58 | debug-api-500-error-iukkt | portable scripts commit + push | PENDING | 다음 단계 |
+| 06:56 | debug-api-500-error-iukkt | watchdog/run scripts portable화 (cwd-relative + conda activate 제거 + GPU env 외부 주입) | DONE | comp3/comp5 watchdog + run_ranks 모두. `cd "$(dirname "$(readlink -f "$0")")"` 사용. fairchem import sanity check 추가. |
+| 06:55 | debug-api-500-error-iukkt | KISTI deploy v1 실패 확인 | BLOCKED→FIXING | (a) `/data/work/`은 gabia 경로, KISTI는 `/scratch/x3430a02/kgy/...` → `mkdir` Permission denied → wget 파일들이 `adhesion_v5_v2/` 로 잘못 들어감. (b) `/data/apps/miniforge3/...` conda path 도 gabia용. KISTI는 `(uma)` 이미 active. |
+
+---
+
 ## 2026-05-10
 
 | 시각 | branch | action | status | notes |

@@ -1,14 +1,18 @@
 #!/bin/bash
-cd /data/work/comp5_v2/1_step1to3
+# Portable: cd to script's own dir, use whichever python is on PATH.
+cd "$(dirname "$(readlink -f "$0")")"
+
 LOG=run_ranks_1to4.log
-PYTHON=/data/apps/miniforge3/envs/uma/bin/python
+PYTHON="${PYTHON:-python}"
+export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-1}
+
 for RANK in 1 2 3 4; do
     OUT="comp5_v2_rank${RANK}_results.json"
     if [ -f "$OUT" ]; then
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] rank $RANK already done, skip" >> $LOG
         continue
     fi
-    echo "[$(date '+%Y-%m-%d %H:%M:%S')] === START rank $RANK ===" >> $LOG
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] === START rank $RANK (GPU=$CUDA_VISIBLE_DEVICES) ===" >> $LOG
     RETRY=0
     while [ ! -f "$OUT" ]; do
         echo "[$(date '+%Y-%m-%d %H:%M:%S')] rank $RANK try $RETRY" >> $LOG
