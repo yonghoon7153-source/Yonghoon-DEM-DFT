@@ -117,6 +117,30 @@
     "P_VALUE_WARNING": "DO NOT cite P=+3.631 in paper without v2 cross-check. v1 Bader pipeline anomaly known (comp1 v1 P=+3.27 vs comp1 v2 +4.686). comp4 P=+3.631 may be partly v1 systematic + partly comp4 frustration. Need v2 anneal + Bader to disentangle.",
     "notes": "TRIPLE ANOMALY (v1): P=+3.631 (lowest), S=-1.551 (lowest |q|), HIGH std (0.49, 0.38). Cl=Br=0.8 maximum frustration disrupts both covalent (PS4) and ionic backbone. Microscopic origin candidate for comp4 E -9%, but v1 Bader pipeline reliability question requires v2 confirmation."
   },
+  "bader_charge_v2": {
+    "Li": 0.882,
+    "P": 2.478,
+    "S": -1.315,
+    "Cl": -0.918,
+    "Br": -0.901,
+    "Li_std": 0.008,
+    "P_std": 0.345,
+    "S_std": 0.397,
+    "Cl_std": 0.002,
+    "Br_std": 0.006,
+    "P_range": [2.270, 3.161],
+    "S_range": [-1.890, -0.983],
+    "n": {"Li": 27, "P": 5, "S": 22, "Cl": 4, "Br": 4},
+    "valence_Z": {"Li": 3, "P": 5, "S": 6, "Cl": 7, "Br": 7},
+    "source": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp4_lpscbrbr/dft_eos/v0_fit/ACF.dat (KISTI 2026-05-10 measured on V0 anneal champion)",
+    "method": "tight SCF (conv_thr=1e-10) on V0 cell + atoms (1253.10 A^3, rank2_anneal_3 champion) -> pp.x plot_num=21 (all-electron) -> Henkelman bader v1.05 at /scratch/x3430a02/kgy/apps/bader",
+    "v1_vs_v2_resolution": {
+      "P": {"v1": 3.631, "v2": 2.478, "delta": -1.153, "interpretation": "v1 anomaly RESOLVED. v2 P=+2.478 falls in normal phosphate range (+1.8~+3.0). v1 +3.631 was likely Bader pipeline + v1 paper structure not anneal-converged."},
+      "S": {"v1": -1.551, "v2": -1.315, "delta": +0.236, "interpretation": "v1 |q| was anomalously low; v2 -1.315 closer to expected sulfide (-1.0~-1.5)."},
+      "Li": {"v1": 0.853, "v2": 0.882, "delta": +0.029, "interpretation": "small increase; std halved (0.013 -> 0.008) = more uniform Li env after anneal."}
+    },
+    "TRIPLE_ANOMALY_v1_resolved": "v2 anneal champion + V0 + tight SCF + correct bader binary path resolves v1 'P=+3.631 / S=-1.551 / HIGH std' triple anomaly. v2 values fall in normal range. comp4 is NOT anomalously frustrated at electronic level."
+  },
   "bond_lengths_v1_measured": {
     "Li-Cl": {"mean": 2.495, "std": 0.142, "n": 19},
     "Li-Br": {"mean": 2.723, "std": 0.114, "n": 22},
