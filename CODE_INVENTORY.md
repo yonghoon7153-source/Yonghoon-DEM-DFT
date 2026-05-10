@@ -466,8 +466,40 @@
 |---|:-:|:-:|
 | comp1 | ✅ | ✅ |
 | comp2 | ✅ | ✅ |
-| comp3, 4, 5 | ⏳ TODO (template ready) | — |
+| comp3 | ⏳ template ready (필독/step1_halogen_li_anneal/comp3_lpscbr/) — KISTI deploy 대기 | — |
+| comp4 | ⏳ KISTI 진행 중 (`/data/work/comp4_v2/1_step1to3/`) — production source | — |
+| comp5 | ⏳ template ready (필독/step1_halogen_li_anneal/comp5_lpscbr/) — KISTI deploy 대기 | — |
 | modelC | ✅ | ✅ |
+
+### Pipeline v2 step1-3 spawned templates (2026-05-10)
+
+#### comp4_v2 reference (verbatim mirror of KISTI production)
+- `필독/step1_halogen_li_anneal/comp4_lpscbr/comp4_v2_step1to3.py` — Stage 1a/1b/2/3 main
+- `필독/step1_halogen_li_anneal/comp4_lpscbr/anneal_rank.py` — rank N halogen × 20 Li × top5 anneal
+- `필독/step1_halogen_li_anneal/comp4_lpscbr/run_ranks_1to4.sh` — chained anneal_rank 1..4
+- `필독/step1_halogen_li_anneal/comp4_lpscbr/watchdog_comp4v2.sh` — auto-restart loop
+- `필독/step1_halogen_li_anneal/comp4_lpscbr/ref_comp3.cif` — Li27P5S22Br3Cl5 rhombo 5fu
+- **KISTI 위치**: `/data/work/comp4_v2/1_step1to3/`
+- **상태**: ❓ UNKNOWN — KISTI 실행 결과 검증 안 됨, anneal_rank.py는 cache_stage1b.json 의존하지만 step1to3.py가 그 cache를 안 만듦 (DEPLOY.md §2 참조)
+
+#### comp3_v2 spawn (5 Cl, 3 Br)
+- `필독/step1_halogen_li_anneal/comp3_lpscbr/comp3_v2_step1to3.py` — `combinations(range(8), 5)`, `5*56=280` Stage1b
+- `필독/step1_halogen_li_anneal/comp3_lpscbr/anneal_rank.py` — same as comp4 with comp3_v2_* 출력명
+- `필독/step1_halogen_li_anneal/comp3_lpscbr/run_ranks_1to4.sh` — cd `/data/work/comp3_v2/1_step1to3`
+- `필독/step1_halogen_li_anneal/comp3_lpscbr/watchdog_comp3v2.sh` — `CUDA_VISIBLE_DEVICES=0` (KISTI GPU0)
+- `필독/step1_halogen_li_anneal/comp3_lpscbr/ref_comp3.cif` — copy
+- **상태**: ⏳ template only — KISTI deploy 대기
+
+#### comp5_v2 spawn (3 Cl, 5 Br)
+- `필독/step1_halogen_li_anneal/comp5_lpscbr/comp5_v2_step1to3.py` — `combinations(range(8), 3)`, `5*56=280` Stage1b
+- `필독/step1_halogen_li_anneal/comp5_lpscbr/anneal_rank.py` — same as comp4 with comp5_v2_* 출력명
+- `필독/step1_halogen_li_anneal/comp5_lpscbr/run_ranks_1to4.sh` — cd `/data/work/comp5_v2/1_step1to3`
+- `필독/step1_halogen_li_anneal/comp5_lpscbr/watchdog_comp5v2.sh` — `CUDA_VISIBLE_DEVICES=1` (KISTI GPU1)
+- `필독/step1_halogen_li_anneal/comp5_lpscbr/ref_comp3.cif` — copy
+- **상태**: ⏳ template only — KISTI deploy 대기
+
+#### Deploy guide
+- `필독/step1_halogen_li_anneal/comp345_v2_DEPLOY.md` — wget 명령, halogen split table, 알려진 cache 문제, 검증 체크리스트
 
 ### modelC 코드 위치 (필독 미러 안 함, reference만)
 - KISTI: `/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/`
