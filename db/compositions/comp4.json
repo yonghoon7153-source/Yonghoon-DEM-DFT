@@ -148,6 +148,28 @@
     "P-S": {"mean": 2.065, "std": 0.013, "n": 20},
     "source": "KISTI post_relax/comp4_post_relax.out (mic, same cutoffs as comp3)"
   },
+  "bond_lengths_v2_measured": {
+    "Li-Cl": {"mean": 2.4892, "std": 0.0836, "min": 2.3619, "max": 2.6829, "n": 19, "delta_vs_v1": -0.006},
+    "Li-Br": {"mean": 2.7279, "std": 0.1110, "min": 2.5537, "max": 3.0185, "n": 22, "delta_vs_v1": +0.005},
+    "Li-S":  {"mean": 2.4724, "std": 0.0936, "min": 2.3498, "max": 2.8562, "n": 69, "delta_vs_v1": -0.007},
+    "P-S":   {"mean": 2.0627, "std": 0.0140, "min": 2.0311, "max": 2.0802, "n": 20, "delta_vs_v1": -0.002},
+    "cutoffs_A": {"Li-Cl": 3.2, "Li-Br": 3.4, "Li-S": 3.0, "P-S": 2.3},
+    "source": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp4_lpscbrbr/dft_eos/v0_fit/comp4_v2_V0_relax.out (last frame, V0=1253.10 A^3, 62 atoms)",
+    "interpretation": "Bond lengths essentially unchanged (max delta 0.007 A). Anneal champion (Li ordering optimized) preserves PS4 framework + Li-halogen distances. v1 vs v2 stiffness consistent with this."
+  },
+  "band_gap_v1_eV": 1.96,
+  "band_gap_v2_eV": {
+    "value_thr_0.5": 2.00,
+    "values_by_threshold": {
+      "0.01": 1.58, "0.05": 1.72, "0.1": 1.78, "0.5": 2.00, "1.0": 2.10
+    },
+    "VBM_eV": -0.484,
+    "CBM_eV": 1.516,
+    "method": "DOS (E - E_F align, EF=2.9438 eV from scf), threshold 0.5 states/eV to skip smearing tail (degauss=0.01)",
+    "source": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp4_lpscbrbr/dft_eos/v0_fit/comp4_v2_V0.dos",
+    "delta_vs_v1_eV": 0.04,
+    "interpretation": "Band gap essentially unchanged between v1 and v2 (within smearing-threshold sensitivity ~0.5 eV). PDOS available at v0_fit/comp4_v2_V0.pdos.pdos_atm#*."
+  },
   "q1q2_over_r_eV_v1bader": {
     "Li-Cl": 4.32,
     "Li-Br": 4.0,
