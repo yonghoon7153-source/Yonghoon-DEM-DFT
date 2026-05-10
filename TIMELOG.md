@@ -11,7 +11,9 @@
 
 | 시각 | branch | action | status | notes |
 |------|--------|--------|--------|-------|
-| 21:50 | debug-api-500-error-iukkt | commit + push spawn templates | PENDING | 다음 단계 |
+| 21:52 | debug-api-500-error-iukkt | git push origin claude/debug-api-500-error-iukkt | DONE | commit `59e16e1` (676c455 → 59e16e1), 18 files / 1583 insertions |
+| 21:51 | debug-api-500-error-iukkt | git commit (spawn + docs) | DONE | commit `59e16e1` |
+| 21:50 | debug-api-500-error-iukkt | spawn-critical lines verification (grep halogen_perms / total / output filenames) | DONE | comp3=range(8),5 5*56 / comp4=range(8),4 5*70 / comp5=range(8),3 5*56 ✓ |
 | 21:48 | debug-api-500-error-iukkt | CODE_INVENTORY.md 갱신 — Pipeline v2 status table + spawn entries | DONE | comp3/5 ⏳ template only, comp4 ⏳ KISTI 진행 중 |
 | 21:47 | debug-api-500-error-iukkt | DEPLOY.md 작성 (comp345_v2_DEPLOY.md) | DONE | wget 명령, halogen split table, cache_stage1b.json 알려진 gap 명시 |
 | 21:46 | debug-api-500-error-iukkt | comp5_v2 spawn 4 files (Cl=3 Br=5, watchdog GPU1) | DONE | `필독/step1_halogen_li_anneal/comp5_lpscbr/` |
