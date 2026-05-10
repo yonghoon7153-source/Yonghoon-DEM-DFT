@@ -1,0 +1,44 @@
+{
+  "comp4_v2_v15_summary": {
+    "gap_eq_A": 1.6,
+    "area_A2": 179.33,
+    "Li_O_density": 0.0761,
+    "Cl_O_density": 0.0881,
+    "Br_O_density": 0.0502,
+    "Li_O_count_mean": 13.64,
+    "Cl_O_count_mean": 15.81,
+    "Br_O_count_mean": 9.0,
+    "changes_vs_v1": {
+      "Li_O": {
+        "v1": 0.1338,
+        "v2": 0.0761,
+        "delta_pct": -43
+      },
+      "Cl_O": {
+        "v1": 0.0,
+        "v2": 0.0881,
+        "delta": "+NEW (Cl exposed)"
+      },
+      "Br_O": {
+        "v1": 0.1115,
+        "v2": 0.0502,
+        "delta_pct": -55
+      }
+    },
+    "narrative_impact": "comp4 v2 EXITS Li5.4-mix-family Cl-O=0 group. Joins comp1/comp2/modelC (Cl-O>0). Paper #2 binary classifier broken for comp4."
+  },
+  "comp4_v2_v30u_summary": {
+    "W_max_J_per_m2": -8.0573,
+    "d_min_A": 1.25,
+    "W_asymptote_J_per_m2": -8.7019,
+    "well_depth_J_per_m2": 0.6446,
+    "note": "Absolute Wad scale ~100x figure (UMA-s-1p1 vs paper-figure UMA version diff). Well depth 0.64 J/m^2 vs v1 figure ~0.08 J/m^2 (8x deeper)."
+  },
+  "kisti_paths": {
+    "champion_xyz": "/data/work/comp4_v2/1_step1to3/comp4_v2_rank2_anneal_3.xyz",
+    "V0_relax": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp4_lpscbrbr/dft_eos/v0_fit/comp4_v2_V0_relax.out",
+    "slab_v2": "/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/comp4_slab_v2_PRESERVED.xyz",
+    "v15_results": "/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v15_v2_results/results.json",
+    "v30u_results": "/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/phase2a_v30u_v2_results/summary.json"
+  }
+}

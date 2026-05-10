@@ -30,14 +30,18 @@ ALL_COMPS = ['comp1', 'comp2', 'comp3', 'comp4', 'comp5', 'modelC']
 PAPER_COMPS = ['comp1', 'comp2', 'comp3', 'comp4', 'comp5']
 
 # v15 data (gap_eq, 36-reg mean)
+# comp4 updated 2026-05-10 to v2 anneal champion (rank2_anneal_3.xyz, E=-255.6596 eV).
+# v2 surface termination DIFFERS — Cl exposed (Cl-O 0→0.0881), Li-O -43%, Br-O -55%.
+# Paper #2 narrative impact: comp4 EXITS Li5.4-mix-family Cl-O=0 group.
 BOND_DATA = {
     'comp1':  {'Li-O': 0.1138, 'Cl-O': 0.0228, 'Br-O': 0.0000},
     'comp2':  {'Li-O': 0.0740, 'Cl-O': 0.0285, 'Br-O': 0.0000},
     'comp3':  {'Li-O': 0.1338, 'Cl-O': 0.0000, 'Br-O': 0.0000},
-    'comp4':  {'Li-O': 0.1338, 'Cl-O': 0.0000, 'Br-O': 0.1115},
+    'comp4':  {'Li-O': 0.0761, 'Cl-O': 0.0881, 'Br-O': 0.0502},  # v2 (was v1: 0.1338/0/0.1115)
     'comp5':  {'Li-O': 0.1283, 'Cl-O': 0.0000, 'Br-O': 0.1060},
     'modelC': {'Li-O': 0.0948, 'Cl-O': 0.0948, 'Br-O': 0.0000},
 }
+BOND_DATA_V1_COMP4 = {'Li-O': 0.1338, 'Cl-O': 0.0000, 'Br-O': 0.1115}  # original v1 backup
 
 PAPER_EXP = {'comp1': 194, 'comp2': 180, 'comp3': 316, 'comp4': 298, 'comp5': 249}
 
