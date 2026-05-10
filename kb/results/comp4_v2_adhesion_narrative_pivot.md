@@ -72,18 +72,45 @@ comp4 v2 champion validation:
 → comp4 v2 is the proper anneal champion. The Cl-exposed surface in v2 is
 the TRUE Li5.4PS4.4Cl0.8Br0.8 surface termination, not a bug.
 
-## 3. Robust descriptor — R(S-Li) = -0.896
+## 3. R(S-Li) = -0.896 — what it really means (CORRECTION)
 
 | descriptor | R(v1_REDO) | R(v2) | robust? |
 |---|---|---|---|
 | Li-O | +0.819 | +0.323 | NO |
 | Cl-O | -0.914 | +0.134 | NO (sign flip) |
 | Br-O | +0.394 | +0.234 | weak both |
-| **S-Li** | **-0.896** | **-0.896** | ⭐ **YES (identical)** |
+| **S-Li** | **-0.896** | **-0.896** | ==**family-binary classifier**== |
 
-==**S-Li density is invariant** across Li ordering choice== — the same value
-in both v1_REDO and v2. This makes S-Li the chemically meaningful, robust
-descriptor.
+### Per-comp S-Li density (KISTI v15 results)
+
+| comp | family | S-Li density (Å⁻²) | paper Wad (mJ/m²) |
+|---|---|---|---|
+| comp1 | Li6 | 0.0500 | 194 (low) |
+| comp2 | Li6 | 0.0419 | 180 (low) |
+| comp3 | Li5.4 mix | **0.0000** | 316 (high) |
+| comp4 | Li5.4 mix | **0.0000** (v1=v2) | 298 (high) |
+| comp5 | Li5.4 mix | **0.0000** | 249 (high) |
+| modelC | Li5.4 Cl | 0.0249 | — |
+
+==**Critical clarification**==: R(v1)=R(v2)=-0.896 is identical NOT because
+S-Li is "Li-ordering invariant" — it's because comp4's v1→v2 surface change
+(Cl exposed) didn't involve S-Li bonds. Comp4 is S-Li=0 in BOTH.
+
+S-Li density is fundamentally a ==**Li6 vs Li5.4 mix family-binary
+classifier**== (Li6 family has S in SE coordinated to Li in NCM at gap_eq;
+Li5.4 mix family does not). The R = -0.896 magnitude is driven by:
+- Li6 family → S-Li > 0 → low paper Wad
+- Li5.4 mix family → S-Li = 0 → high paper Wad
+
+Both Cl-O (v1) and S-Li are family-binary classifiers. The difference:
+- Cl-O classifier BROKE in v2 (comp4 anneal exposed Cl → Cl-O > 0 in
+  Li5.4 mix family)
+- S-Li classifier SURVIVED v2 because comp4 anneal didn't change S-Li
+  (which depends on full surface stoichiometry, not just halogen ordering)
+
+→ Whether S-Li is truly Li-ordering invariant requires testing OTHER comps'
+v2 anneal champions (comp3/comp5/modelC v2). For now, ==use S-Li as a
+family-binary descriptor, NOT a continuous one==.
 
 ## 4. Paper #2 narrative pivot — recommended
 
@@ -93,15 +120,23 @@ descriptor.
 - Problem: contingent on comp4 having Cl-O = 0 in v1, which is NOT the case
   in v2 anneal champion. Sampling artifact.
 
-### NEW narrative (recommended)
-- Main descriptor: ==**R(S-Li density) = -0.896**==
-- Story: "Higher interfacial S-Li bond density (S in SE bonding with Li in
-  NCM, or vice versa) correlates with LOWER experimental Wad" — possibly
-  due to Li migration into SE / interphase nucleation that weakens clean
-  adhesion.
-- Strength: invariant under Li ordering ambiguity (proven by v1 vs v2
-  identical R). Paper #1 demonstrated Li ordering sensitivity (DC44 = 47%);
-  S-Li adhesion descriptor doesn't suffer this issue.
+### NEW narrative (recommended, with caveats)
+- Main descriptor: ==**R(S-Li density) = -0.896 family-binary classifier**==
+- Story: "Li6 family exhibits S(SE)-Li(NCM) interfacial coordination
+  (S-Li > 0); Li5.4 mix family does not (S-Li = 0). Family-binary classifier
+  separating Li6 (low Wad) vs Li5.4 mix (high Wad)."
+- ==Caveat==: NOT a continuous descriptor — comp3/4/5 all have S-Li = 0 so
+  cannot distinguish within Li5.4 mix family. Cannot predict modelC Wad.
+- ==Caveat==: comp3/comp5/modelC v2 anneal champions NOT YET tested. v1→v2
+  invariance only verified for comp4. To claim "Li-ordering robust" we
+  need v2 anneal champions for ALL Li5.4 mix members.
+
+### What we lost in narrative pivot
+- ==Cannot claim== "Cl-O density anti-correlates with paper Wad" (broken in v2)
+- ==Cannot claim== "S-Li is Li-ordering robust descriptor" (only comp4 tested)
+- CAN claim "Li6 vs Li5.4 mix family separation captured by either Cl-O (v1)
+  or S-Li (v1=v2). v2 reveals Cl-O is fragile; S-Li survives this specific
+  comp4 perturbation."
 
 ### Mechanistic interpretation (proposed)
 - Li6 family (comp1, comp2): high Li density at surface → S-Li density high → low Wad (weak adhesion)
