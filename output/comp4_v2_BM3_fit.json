@@ -1,0 +1,42 @@
+{
+  "system": "comp4_v2",
+  "n_points": 11,
+  "V0_A3": 1253.1025166404363,
+  "E0_eV": -17918.513426106252,
+  "B0_GPa": 20.771858724114008,
+  "B0_prime": 6.027362703835566,
+  "R_squared": 0.999983109082423,
+  "closest_grid": {
+    "vol_label": "v104",
+    "V_A3": 1252.3890734921183,
+    "delta_V_pct": -0.05693414057061597,
+    "file": "v104/relax.out"
+  },
+  "raw_data": [
+    {"vol_label": "v098", "V_A3": 1180.1359092694033, "E_eV": -17918.196307929236, "file": "v098/relax.out"},
+    {"vol_label": "v099", "V_A3": 1192.1782670467578, "E_eV": -17918.29760611527,  "file": "v099/relax.out"},
+    {"vol_label": "v100", "V_A3": 1204.22041795402,   "E_eV": -17918.37806963313,  "file": "v100/relax.out"},
+    {"vol_label": "v101", "V_A3": 1216.262645983275,  "E_eV": -17918.438478088974, "file": "v101/relax.out"},
+    {"vol_label": "v102", "V_A3": 1228.304724151581,  "E_eV": -17918.48008919295,  "file": "v102/relax.out"},
+    {"vol_label": "v103", "V_A3": 1240.347012981696,  "E_eV": -17918.50422705101,  "file": "v103/relax.out"},
+    {"vol_label": "v104", "V_A3": 1252.3890734921183, "E_eV": -17918.512884760956, "file": "v104/relax.out"},
+    {"vol_label": "v105", "V_A3": 1264.4313367977493, "E_eV": -17918.5069630196,   "file": "v105/relax.out"},
+    {"vol_label": "v106", "V_A3": 1276.4737080444665, "E_eV": -17918.48694550929,  "file": "v106/relax.out"},
+    {"vol_label": "v107", "V_A3": 1288.5158347193333, "E_eV": -17918.45313305187,  "file": "v107/relax.out"},
+    {"vol_label": "v108", "V_A3": 1300.5579621279123, "E_eV": -17918.40613735925,  "file": "v108/relax.out"}
+  ],
+  "provenance": {
+    "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/comp4_lpscbrbr/dft_eos/",
+    "champion_input": "/data/work/comp4_v2/1_step1to3/comp4_v2_rank2_anneal_3.xyz",
+    "champion_E_anneal_eV": -255.65961830869279,
+    "champion_V_ref_A3": 1204.22041795402,
+    "champion_cell_lengths_A": [6.9837, 6.9837, 34.9183],
+    "champion_atoms": 62,
+    "champion_formula_units": 5,
+    "champion_family": "Li5.4 rhombohedral",
+    "champion_composition": "Li5.4PS4.4Cl0.8Br0.8 (comp4)",
+    "fit_script": "필독/step4_bm3_v0/bm3_fit_eos.py (verified)",
+    "fit_env": "uma (numpy 2.2.6, scipy 1.15.2, ase 3.27.0)",
+    "fit_date": "2026-05-10"
+  }
+}
