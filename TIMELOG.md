@@ -11,7 +11,8 @@
 
 | 시각 | branch | action | status | notes |
 |------|--------|--------|--------|-------|
-| 06:58 | debug-api-500-error-iukkt | portable scripts commit + push | PENDING | 다음 단계 |
+| 07:10 | debug-api-500-error-iukkt | figure 보정: image1 (v4) → image2 style 복원 | DONE | (a) 원인: `plot_binding_curves_v4.py` 가 max-over-registry CSV 읽고 modelC 포함 + cubic spline 없음 + asymptote subtract 후 Y range 매우 넓음. (b) 처방: `plot_binding_curves_v7.py` 작성 — JSON 기반 mean over 36 + asymptote subtract + 5 paper comps 만 + cubic spline + gap window 1.2-1.6 음영 + R(well, paper) title + auto-fit Y. (c) v4 에 DEPRECATED warning 추가. |
+| 06:58 | debug-api-500-error-iukkt | portable scripts commit + push | DONE | commit `92b14a5` |
 | 06:56 | debug-api-500-error-iukkt | watchdog/run scripts portable화 (cwd-relative + conda activate 제거 + GPU env 외부 주입) | DONE | comp3/comp5 watchdog + run_ranks 모두. `cd "$(dirname "$(readlink -f "$0")")"` 사용. fairchem import sanity check 추가. |
 | 06:55 | debug-api-500-error-iukkt | KISTI deploy v1 실패 확인 | BLOCKED→FIXING | (a) `/data/work/`은 gabia 경로, KISTI는 `/scratch/x3430a02/kgy/...` → `mkdir` Permission denied → wget 파일들이 `adhesion_v5_v2/` 로 잘못 들어감. (b) `/data/apps/miniforge3/...` conda path 도 gabia용. KISTI는 `(uma)` 이미 active. |
 

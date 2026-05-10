@@ -1,5 +1,14 @@
 """Phase 2a v4 — TMD-reference-style binding curves + matching CSV.
 
+⚠️ DEPRECATED 2026-05-11 — produces image 1 anomaly (Y range -3..+2.5,
+modelC included, curves not converging at d=4). Use plot_binding_curves_v7.py
+for image-2 paper style. Reasons:
+  - line 97 reads MAX-over-registry CSV (binding_UMA_Wad_max_J_m2.csv) but
+    title says "mean" (line 154) — misleading
+  - max-over-registry exaggerates Y range (extreme values not averaged out)
+  - includes modelC which paper figure (image 2) excludes
+Kept for legacy reproducibility only.
+
 Reference (WSe2/MoSe2 fig from user): smooth adhesion energy vs distance,
 no big circle markers, multiple curves with small line markers, asymptote 0
 at large d, deep well in middle. Per-line marker for distinction.
