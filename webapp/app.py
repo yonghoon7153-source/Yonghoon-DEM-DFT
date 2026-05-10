@@ -386,9 +386,16 @@ def inject_stage_e_rows(tables, metrics):
         return  # already injected
 
     factors = metrics.get('stage_e_factors_used') or {}
-    sigma_i_e   = metrics.get('sigma_full_mScm_stage_e')
-    sigma_e_e   = metrics.get('electronic_sigma_full_mScm_stage_e')
-    sigma_th_e  = metrics.get('thermal_sigma_full_mScm_stage_e')
+    # Hertzian-baseline Stage E (existing)
+    sigma_i_e    = metrics.get('sigma_full_mScm_stage_e')
+    sigma_e_e    = metrics.get('electronic_sigma_full_mScm_stage_e')
+    sigma_th_e   = metrics.get('thermal_sigma_full_mScm_stage_e')
+    # Physics-baseline Stage E (NEW — added in run_network_full_corrections
+    # so the UI can show the 4-col Hertzian | Physics | Δ% format mirroring
+    # the Network Solver section)
+    sigma_i_e_p  = metrics.get('sigma_full_mScm_stage_e_physics')
+    sigma_e_e_p  = metrics.get('electronic_sigma_full_mScm_stage_e_physics')
+    sigma_th_e_p = metrics.get('thermal_sigma_full_mScm_stage_e_physics')
     if not (factors or sigma_i_e is not None or sigma_e_e is not None):
         return  # no Stage E data on this case
 
@@ -396,6 +403,12 @@ def inject_stage_e_rows(tables, metrics):
     src_i  = src.get('sigma_ionic',   'solver')
     src_e  = src.get('sigma_e',       'solver')
     src_th = src.get('sigma_thermal', 'solver')
+    # Physics-baseline source flags (cases analyzed before Physics-Stage E
+    # was added will silently default to 'solver' — UI shows '—' Physics
+    # column for those, no fallback tag)
+    src_i_p  = src.get('sigma_ionic_physics',   'solver')
+    src_e_p  = src.get('sigma_e_physics',       'solver')
+    src_th_p = src.get('sigma_thermal_physics', 'solver')
     def _src_tag(s):
         if s == 'fallback_weighted_factor':
             return ' [⚡Bruggeman fallback]'
@@ -449,27 +462,54 @@ def inject_stage_e_rows(tables, metrics):
         'Wang 2022 + phonon GB scatter (∝ AM secondary R)'
     ])
 
-    # Corrected σ values — always emit all 3 channels for layout consistency.
-    # — placeholder when the channel was skipped by Stage E (e.g. P:S=0:10
-    #    has no AM-AM electronic conductance to correct).
-    def _stage_e_row(label, sigma_e_val, baseline_key, src, fmt='%.4f', unit='mS/cm'):
-        if sigma_e_val is None:
-            return [f'  {label}', '', '—', '— (channel skipped or no baseline)']
-        baseline = metrics.get(baseline_key)
-        delta = (1.0 - sigma_e_val/baseline)*100 if baseline else None
-        delta_str = f'Δ {delta:+.1f}%' if delta is not None else ''
-        return [f'  {label}', '',
-                f'{sigma_e_val:{fmt[1:]}} {unit}',
-                f'{delta_str}{_src_tag(src)}']
+    # Corrected σ values — 4-col format (Hertzian | Physics | Δ%) mirroring
+    # the Network Solver section. Stage E factor (Lawn × Cronau / Trev /
+    # Wang) is grain-level and applies equally to both Hertzian and
+    # Tabor-plastic-film baselines, so we report both side-by-side.
+    def _stage_e_row(label, val_h, val_p, base_h_key, base_p_key,
+                     src_h, src_p, fmt='%.4f', unit='mS/cm'):
+        baseline_h = metrics.get(base_h_key)
+        baseline_p = metrics.get(base_p_key)
+        # Hertzian column — show value or '—' if missing
+        if val_h is None:
+            h_str = '—'
+        else:
+            h_str = f'{val_h:{fmt[1:]}}'
+        # Physics column
+        if val_p is None:
+            p_str = '—'
+        else:
+            p_str = f'{val_p:{fmt[1:]}}'
+        # Δ% column — Physics vs Hertzian (mode contrast, not loss-vs-baseline)
+        if val_h is not None and val_p is not None and val_h:
+            delta_pp = (val_p - val_h) / val_h * 100
+            d_str = f'{delta_pp:+.1f}%'
+        else:
+            d_str = '—'
+        # Source tags appended (e.g. '⚡ H-fb' if Hertzian fallback fired)
+        tag_parts = []
+        if src_h == 'fallback_weighted_factor': tag_parts.append('H:⚡')
+        if src_p == 'fallback_weighted_factor': tag_parts.append('P:⚡')
+        if tag_parts:
+            d_str += '  [' + ' '.join(tag_parts) + ']'
+        return [f'  {label}', h_str, p_str, d_str + f'  {unit}']
 
     rows.append(_stage_e_row('σ_ionic (Stage E corrected)',
-                             sigma_i_e, 'sigma_full_mScm', src_i,
+                             sigma_i_e,  sigma_i_e_p,
+                             'sigma_full_mScm', 'sigma_full_mScm_physics',
+                             src_i,  src_i_p,
                              fmt='%.4f', unit='mS/cm'))
     rows.append(_stage_e_row('σ_electronic (Stage E corrected)',
-                             sigma_e_e, 'electronic_sigma_full_mScm', src_e,
+                             sigma_e_e,  sigma_e_e_p,
+                             'electronic_sigma_full_mScm',
+                             'electronic_sigma_full_mScm_physics',
+                             src_e, src_e_p,
                              fmt='%.3f', unit='mS/cm'))
     rows.append(_stage_e_row('σ_thermal (Stage E corrected)',
-                             sigma_th_e, 'thermal_sigma_full_mScm', src_th,
+                             sigma_th_e, sigma_th_e_p,
+                             'thermal_sigma_full_mScm',
+                             'thermal_sigma_full_mScm_physics',
+                             src_th, src_th_p,
                              fmt='%.3f', unit='mS/cm equiv'))
 
     # Stage counts (audit trail)
@@ -489,22 +529,30 @@ def inject_stage_e_rows(tables, metrics):
                 f'Lawn 1998 force multipliers (1/3/11/32)'
             ])
 
-    # 7-Layer solver defence summary — single row that explains which channels
-    # used the Bruggeman fallback (visible audit trail; matches paper §6).
-    fallback_chs = []
-    if src_i  == 'fallback_weighted_factor': fallback_chs.append('σ_ionic')
-    if src_e  == 'fallback_weighted_factor': fallback_chs.append('σ_e')
-    if src_th == 'fallback_weighted_factor': fallback_chs.append('κ')
-    if fallback_chs:
+    # 7-Layer solver defence summary — visible audit trail of which (channel,
+    # mode) pairs used the Bruggeman fallback. Format: '(σ_ionic, σ_e) on
+    # Hertzian; (κ) on Physics' for clear scope.
+    fb_h = []
+    fb_p = []
+    if src_i  == 'fallback_weighted_factor': fb_h.append('σ_ionic')
+    if src_e  == 'fallback_weighted_factor': fb_h.append('σ_e')
+    if src_th == 'fallback_weighted_factor': fb_h.append('κ')
+    if src_i_p  == 'fallback_weighted_factor': fb_p.append('σ_ionic')
+    if src_e_p  == 'fallback_weighted_factor': fb_p.append('σ_e')
+    if src_th_p == 'fallback_weighted_factor': fb_p.append('κ')
+    parts = []
+    if fb_h: parts.append(f"Hertzian: ({', '.join(fb_h)})")
+    if fb_p: parts.append(f"Physics: ({', '.join(fb_p)})")
+    if parts:
         rows.append([
             '  7-Layer solver status', '',
-            f'Bruggeman fallback fired on: {", ".join(fallback_chs)}',
+            'Bruggeman fallback fired — ' + '  ·  '.join(parts),
             'Paper §6 Layer-6 (commit 7a11682) — σ ≈ σ_baseline·Σ(g·f)/Σg'
         ])
     else:
         rows.append([
             '  7-Layer solver status', '',
-            'Direct solver (all channels valid)',
+            'Direct solver (all channels + both modes valid)',
             'Paper §6 Layer-1~4 passed all sanity checks'
         ])
 
@@ -577,40 +625,46 @@ def inject_cell_asr_rows(tables, metrics, input_params):
         'L = thickness_um (mesh-z), A = box_x × box_y × scale²',
     ])
 
-    def _row_for(label, k_h, k_p, k_e, unit='Ω·cm²', baseline_label='Hertzian'):
-        h = metrics.get(k_h)
-        p = metrics.get(k_p) if k_p else None
-        e = metrics.get(k_e) if k_e else None
-        asr_h = _asr_ohm_cm2(h)
-        asr_p = _asr_ohm_cm2(p)
-        asr_e = _asr_ohm_cm2(e)
-        # Always emit row (— placeholders for missing values) so every case
-        # has identical layout regardless of which channel is meaningful.
+    def _row_for(label, k_h, k_p, k_eh, k_ep, unit='Ω·cm²'):
+        """Hertzian / Physics + their Stage E counterparts.
+        4-col layout: ASR_H | ASR_P | Δ% (Physics-vs-Hertzian, with Stage E
+        side-info). Stage E ASRs (Hertzian + Physics) are reported in the
+        Δ-column text so reviewers can read the full picture in one row."""
+        asr_h  = _asr_ohm_cm2(metrics.get(k_h))
+        asr_p  = _asr_ohm_cm2(metrics.get(k_p) if k_p else None)
+        asr_eh = _asr_ohm_cm2(metrics.get(k_eh) if k_eh else None)
+        asr_ep = _asr_ohm_cm2(metrics.get(k_ep) if k_ep else None)
         h_str = f'{asr_h:.2f}' if asr_h is not None else '—'
         p_str = f'{asr_p:.2f}' if asr_p is not None else '—'
-        if asr_e is not None and asr_h:
-            delta = (asr_e / asr_h - 1) * 100
-            d_str = f'{unit};  Stage E ASR = {asr_e:.2f}  (Δ {delta:+.1f}% vs {baseline_label})'
-        elif asr_e is not None:
-            d_str = f'{unit};  Stage E ASR = {asr_e:.2f}'
+        # Δ% (Physics-vs-Hertzian baseline, mirrors Network Solver section)
+        if asr_h and asr_p:
+            d_pp = (asr_p - asr_h) / asr_h * 100
+            d_str = f'{d_pp:+.1f}%'
         else:
-            d_str = f'{unit};  Stage E ASR = —'
+            d_str = '—'
+        # Stage E inline summary (both modes when available)
+        eh_str = f'{asr_eh:.2f}' if asr_eh is not None else '—'
+        ep_str = f'{asr_ep:.2f}' if asr_ep is not None else '—'
+        d_str += f'   |  Stage E: H={eh_str}, P={ep_str} ({unit})'
         return [f'  {label}', h_str, p_str, d_str]
 
     rows.append(_row_for('ASR_ionic (Ω·cm²)',
                  'sigma_full_mScm',
                  'sigma_full_mScm_physics',
                  'sigma_full_mScm_stage_e',
+                 'sigma_full_mScm_stage_e_physics',
                  unit='Ω·cm²'))
     rows.append(_row_for('ASR_electronic (Ω·cm²)',
                  'electronic_sigma_full_mScm',
                  'electronic_sigma_full_mScm_physics',
                  'electronic_sigma_full_mScm_stage_e',
+                 'electronic_sigma_full_mScm_stage_e_physics',
                  unit='Ω·cm²'))
     rows.append(_row_for('ASR_thermal (K·cm²/W equiv)',
                  'thermal_sigma_full_mScm',
                  'thermal_sigma_full_mScm_physics',
                  'thermal_sigma_full_mScm_stage_e',
+                 'thermal_sigma_full_mScm_stage_e_physics',
                  unit='K·cm²/W equiv'))
 
     if len(rows) <= 2:

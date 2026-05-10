@@ -481,6 +481,17 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     sigma_e_e     = res_e.get('electronic_sigma_full_mScm') if res_e else None
     sigma_th_e    = res_kappa.get('thermal_sigma_full_mScm') if res_kappa else None
 
+    # --- Physics-mode parallel: solver returned both modes via --contact-mode
+    # both, so the same JSON has *_physics counterparts. Stage E factors
+    # (Lawn fracture × Cronau / Trev / Wang) are grain-level corrections
+    # that apply equally to both contact-area models. Reading the *_physics
+    # variants here lets the UI display Stage E for Hertzian AND Physics
+    # baselines side-by-side (mirrors the existing Network Solver section
+    # 4-column format: Hertzian | Physics | Δ%).
+    sigma_ionic_e_p = res_ionic.get('sigma_full_mScm_physics') if res_ionic else None
+    sigma_e_e_p     = res_e.get('electronic_sigma_full_mScm_physics') if res_e else None
+    sigma_th_e_p    = res_kappa.get('thermal_sigma_full_mScm_physics') if res_kappa else None
+
     # Auto-trigger: factor-weighted Bruggeman fallback when solver fails
     # or returns unphysical values. Conditions for triggering fallback:
     #   (a) solver returned None (full failure)
@@ -510,7 +521,12 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     base_ionic = fm.get('sigma_full_mScm')
     base_e_solver = fm.get('electronic_sigma_full_mScm')
     base_th_solver = fm.get('thermal_sigma_full_mScm')
+    # Physics baselines for the parallel Stage E pass
+    base_ionic_p   = fm.get('sigma_full_mScm_physics')
+    base_e_p       = fm.get('electronic_sigma_full_mScm_physics')
+    base_th_p      = fm.get('thermal_sigma_full_mScm_physics')
 
+    # ── Hertzian-baseline Stage E fallback ──
     if _is_invalid(sigma_ionic_e, base_ionic) and base_ionic and factors.get('weighted_factor_ionic') is not None:
         reason = _trigger_reason(sigma_ionic_e, base_ionic)
         sigma_ionic_e = base_ionic * factors['weighted_factor_ionic']
@@ -530,15 +546,39 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
         fallback_messages.append(
             f"κ fallback ({reason}) → {sigma_th_e:.3f} = {base_th_solver:.3f}×{factors['weighted_factor_kappa']:.3f}")
 
+    # ── Physics-baseline Stage E fallback (mirrors above logic) ──
+    source_ionic_p = 'solver'
+    source_e_p     = 'solver'
+    source_th_p    = 'solver'
+    if _is_invalid(sigma_ionic_e_p, base_ionic_p) and base_ionic_p and factors.get('weighted_factor_ionic') is not None:
+        sigma_ionic_e_p = base_ionic_p * factors['weighted_factor_ionic']
+        source_ionic_p = 'fallback_weighted_factor'
+    if _is_invalid(sigma_e_e_p, base_e_p) and base_e_p and factors.get('weighted_factor_e') is not None:
+        sigma_e_e_p = base_e_p * factors['weighted_factor_e']
+        source_e_p = 'fallback_weighted_factor'
+    if _is_invalid(sigma_th_e_p, base_th_p) and base_th_p and factors.get('weighted_factor_kappa') is not None:
+        sigma_th_e_p = base_th_p * factors['weighted_factor_kappa']
+        source_th_p = 'fallback_weighted_factor'
+
     fm['stage_e_source'] = {
         'sigma_ionic':    source_ionic,
         'sigma_e':        source_e,
         'sigma_thermal':  source_th,
+        # Physics-baseline counterparts (mirrors Hertzian fields above)
+        'sigma_ionic_physics':    source_ionic_p,
+        'sigma_e_physics':        source_e_p,
+        'sigma_thermal_physics':  source_th_p,
     }
 
+    # Hertzian-baseline Stage E (existing keys, backward-compatible)
     fm['sigma_full_mScm_stage_e']            = sigma_ionic_e
     fm['electronic_sigma_full_mScm_stage_e'] = sigma_e_e
     fm['thermal_sigma_full_mScm_stage_e']    = sigma_th_e
+    # Physics-baseline Stage E (NEW — added so UI can show 4-col Δ% format
+    # mirroring the Network Solver section)
+    fm['sigma_full_mScm_stage_e_physics']            = sigma_ionic_e_p
+    fm['electronic_sigma_full_mScm_stage_e_physics'] = sigma_e_e_p
+    fm['thermal_sigma_full_mScm_stage_e_physics']    = sigma_th_e_p
     fm['stage_e_factors_used'] = {
         'r_SE_um':       factors['r_SE_um'],
         'f_SE_ionic':    factors['f_SE_ionic'],
@@ -563,7 +603,9 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
         json.dump(fm, f, indent=2, default=str)
 
     msg = (f'σ_i: {(base_ionic or 0):.3f}→{(sigma_ionic_e or 0):.3f} '
+           f'(P:{(base_ionic_p or 0):.3f}→{(sigma_ionic_e_p or 0):.3f}) '
            f'σ_e: {(base_e or 0):.2f}→{(sigma_e_e or 0):.2f} '
+           f'(P:{(base_e_p or 0):.2f}→{(sigma_e_e_p or 0):.2f}) '
            f'κ: {(base_th or 0):.2f}→{(sigma_th_e or 0):.2f}  '
            f'r_SE={factors["r_SE_um"]:.2f}μm')
     if fallback_messages:
