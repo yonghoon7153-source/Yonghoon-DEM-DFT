@@ -34,14 +34,36 @@ WEBAPP = ROOT / 'webapp'
 
 # ── voxel stamping ────────────────────────────────────────────────────────
 
+def _stamp_one(solid: np.ndarray, ix0: float, iy0: float, iz0: float,
+               ir: float, ir_ceil: int) -> None:
+    """Stamp a single sphere into the voxel grid (clipped at boundaries)."""
+    nx, ny, nz = solid.shape
+    ilo = max(0, int(ix0 - ir_ceil))
+    ihi = min(nx, int(ix0 + ir_ceil) + 1)
+    jlo = max(0, int(iy0 - ir_ceil))
+    jhi = min(ny, int(iy0 + ir_ceil) + 1)
+    klo = max(0, int(iz0 - ir_ceil))
+    khi = min(nz, int(iz0 + ir_ceil) + 1)
+    if ihi <= ilo or jhi <= jlo or khi <= klo:
+        return
+    I, J, K = np.ogrid[ilo:ihi, jlo:jhi, klo:khi]
+    d2 = (I - ix0) ** 2 + (J - iy0) ** 2 + (K - iz0) ** 2
+    mask = d2 <= ir * ir
+    solid[ilo:ihi, jlo:jhi, klo:khi] |= mask
+
+
 def _stamp_spheres(solid: np.ndarray, atoms_arr: np.ndarray,
-                    xmin: float, ymin: float, zmin: float, dx: float) -> None:
+                    xmin: float, ymin: float, zmin: float, dx: float,
+                    periodic_xy: bool = False) -> None:
     """Mark voxels inside each sphere as solid (in-place).
 
     atoms_arr columns: x, y, z, r (SI units, e.g. meters).
-    Uses vectorized bounding-box per particle rather than triple nested loop.
+    When ``periodic_xy`` is True, particles crossing the xy walls are also
+    stamped on the opposite side (periodic BC = wrap-around copies).
     """
     nx, ny, nz = solid.shape
+    Lx_vox = nx
+    Ly_vox = ny
     for x, y, z, r in atoms_arr:
         ix0 = (x - xmin) / dx
         iy0 = (y - ymin) / dx
@@ -49,19 +71,31 @@ def _stamp_spheres(solid: np.ndarray, atoms_arr: np.ndarray,
         ir = r / dx
         ir_ceil = int(np.ceil(ir)) + 1
 
-        ilo = max(0, int(ix0 - ir_ceil))
-        ihi = min(nx, int(ix0 + ir_ceil) + 1)
-        jlo = max(0, int(iy0 - ir_ceil))
-        jhi = min(ny, int(iy0 + ir_ceil) + 1)
-        klo = max(0, int(iz0 - ir_ceil))
-        khi = min(nz, int(iz0 + ir_ceil) + 1)
-        if ihi <= ilo or jhi <= jlo or khi <= klo:
-            continue
+        _stamp_one(solid, ix0, iy0, iz0, ir, ir_ceil)
 
-        I, J, K = np.ogrid[ilo:ihi, jlo:jhi, klo:khi]
-        d2 = (I - ix0) ** 2 + (J - iy0) ** 2 + (K - iz0) ** 2
-        mask = d2 <= ir * ir
-        solid[ilo:ihi, jlo:jhi, klo:khi] |= mask
+        if periodic_xy:
+            # Wrap-around copies if sphere crosses xy boundary
+            crosses_xlo = (ix0 - ir) < 0
+            crosses_xhi = (ix0 + ir) > Lx_vox
+            crosses_ylo = (iy0 - ir) < 0
+            crosses_yhi = (iy0 + ir) > Ly_vox
+
+            offsets = []
+            if crosses_xlo:
+                offsets.append((+Lx_vox, 0))
+            if crosses_xhi:
+                offsets.append((-Lx_vox, 0))
+            if crosses_ylo:
+                offsets.append((0, +Ly_vox))
+            if crosses_yhi:
+                offsets.append((0, -Ly_vox))
+            # Corner: both x and y cross
+            if (crosses_xlo or crosses_xhi) and (crosses_ylo or crosses_yhi):
+                dx_off = +Lx_vox if crosses_xlo else -Lx_vox
+                dy_off = +Ly_vox if crosses_ylo else -Ly_vox
+                offsets.append((dx_off, dy_off))
+            for ox, oy in offsets:
+                _stamp_one(solid, ix0 + ox, iy0 + oy, iz0, ir, ir_ceil)
 
 
 # ── main extraction ───────────────────────────────────────────────────────
@@ -131,10 +165,18 @@ def extract_pore_mesh(case_dir: Path, voxel_res: int = 200,
     ymin_p, ymax_p = (ys - rs).min(), (ys + rs).max()
     zmin_p, zmax_p = (zs - rs).min(), (zs + rs).max()
 
-    # ── RVE cropping: clip xy to centered physical RVE; keep z as particle bbox
-    rve_xy_units = None
+    # ── RVE cropping: xy uses particle CENTER span (periodic BC, no r_max
+    # extension); z uses particle bbox (rigid top/bottom walls = mesh-z).
     if crop_to_rve:
-        # Try meta.json
+        # xy: use exact center min/max — for periodic walls particles can't
+        # escape, so center span is the RVE. Adding r_max would double-count
+        # the wrap-around region.
+        xmin_p = float(xs.min())
+        xmax_p = float(xs.max())
+        ymin_p = float(ys.min())
+        ymax_p = float(ys.max())
+
+        # If meta.json provides an explicit RVE box, prefer that
         meta_path = case_dir / 'meta.json'
         if meta_path.exists():
             try:
@@ -142,48 +184,17 @@ def extract_pore_mesh(case_dir: Path, voxel_res: int = 200,
                 meta = _json.load(open(meta_path))
                 rve_xy_um = (meta.get('rve_xy_um') or meta.get('box_xy_um')
                              or (meta.get('rve') or {}).get('xy_um'))
+                scale = float(meta.get('scale', 1.0))
                 if rve_xy_um:
-                    # Infer atoms.csv unit by comparing bbox to rve_xy_um × scale
-                    scale = meta.get('scale', 1.0)
-                    bbox_xy = max(xmax_p - xmin_p, ymax_p - ymin_p)
-                    target_atoms_units = rve_xy_um * 1e-6 * scale
-                    if bbox_xy > 0:
-                        unit_factor = bbox_xy / target_atoms_units
-                        # if very close to 1, atoms.csv is in m × scale; else mm-like
-                        rve_xy_units = rve_xy_um * 1e-6 * scale
+                    # atoms.csv stored in scaled meters (rve_um × scale)
+                    rve_xy_m = float(rve_xy_um) * 1e-6 * scale
+                    cx = (xs.min() + xs.max()) / 2
+                    cy = (ys.min() + ys.max()) / 2
+                    half = rve_xy_m / 2
+                    xmin_p, xmax_p = cx - half, cx + half
+                    ymin_p, ymax_p = cy - half, cy + half
             except Exception as e:
                 print(f'  [warn] meta.json read failed: {e}', file=sys.stderr)
-
-        # Fallback heuristic: assume xy bbox _excess_ over z is periodic ghost.
-        # Take the smaller of (xy bbox) and (z bbox z-cross) — usually z is correct.
-        if rve_xy_units is None:
-            # Crop xy to the smaller of bbox or a robust central percentile of
-            # particle centers (suppress ghost outliers).
-            cx = (xs.min() + xs.max()) / 2
-            cy = (ys.min() + ys.max()) / 2
-            # Use 99th-percentile center extents + max radius as conservative RVE
-            half_x = max(
-                (np.percentile(xs, 99) - cx) + rs.max(),
-                (cx - np.percentile(xs, 1)) + rs.max(),
-            )
-            half_y = max(
-                (np.percentile(ys, 99) - cy) + rs.max(),
-                (cy - np.percentile(ys, 1)) + rs.max(),
-            )
-            # Use the tighter of (heuristic) and (bbox) — but only crop if
-            # bbox is suspiciously larger than (centers + r_max)
-            half_bbox_x = (xmax_p - xmin_p) / 2
-            half_bbox_y = (ymax_p - ymin_p) / 2
-            if half_x < 0.95 * half_bbox_x:
-                xmin_p, xmax_p = cx - half_x, cx + half_x
-            if half_y < 0.95 * half_bbox_y:
-                ymin_p, ymax_p = cy - half_y, cy + half_y
-        else:
-            cx = (xs.min() + xs.max()) / 2
-            cy = (ys.min() + ys.max()) / 2
-            half = rve_xy_units / 2
-            xmin_p, xmax_p = cx - half, cx + half
-            ymin_p, ymax_p = cy - half, cy + half
 
     xmin, xmax = xmin_p, xmax_p
     ymin, ymax = ymin_p, ymax_p
@@ -200,7 +211,7 @@ def extract_pore_mesh(case_dir: Path, voxel_res: int = 200,
 
     solid = np.zeros((nx, ny, nz), dtype=bool)
     _stamp_spheres(solid, np.column_stack([xs, ys, zs, rs]),
-                   xmin, ymin, zmin, dx)
+                   xmin, ymin, zmin, dx, periodic_xy=crop_to_rve)
 
     pore = ~solid
 
