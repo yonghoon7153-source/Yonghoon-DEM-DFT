@@ -32,14 +32,20 @@ def furnas_porosity(f_se, lambda_ratio=10):
     """Initial RCP porosity for binary rigid mixture.
 
     Based on Bouvard 2004 Fig 2: maximum density at f_l ≈ 74 % large
-    particles, monomodal RCP = 36 % at both ends. We use a symmetric
-    parabolic interpolation around the optimum.
+    particles, monomodal RCP = 36 % at both extremes (f_l = 0 and f_l = 1).
+    We use an asymmetric parabolic interpolation that hits 36 % at both
+    ends and ~17 % at the optimum.
     """
     f_large = 1.0 - f_se
     fl_opt = 0.74
     eps_min = 0.17 if lambda_ratio >= 8 else 0.20
     eps_max = 0.36
-    delta = (f_large - fl_opt) / max(fl_opt, 1.0 - fl_opt)
+    # Asymmetric scaling: distance to nearest extreme normalized separately
+    # so that delta = ±1 at the extremes (f_large = 0 or 1) and 0 at optimum
+    if f_large <= fl_opt:
+        delta = (f_large - fl_opt) / fl_opt
+    else:
+        delta = (f_large - fl_opt) / (1.0 - fl_opt)
     eps = eps_min + (eps_max - eps_min) * delta * delta
     return min(eps, eps_max)
 
