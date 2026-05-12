@@ -11,15 +11,30 @@
 cd "$(dirname "$(readlink -f "$0")")"
 
 export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
-PY="${PYTHON:-python}"     # use 'python' (conda env's), NOT 'python3' (may be system)
 
-# Sanity: env must have fairchem/pymatgen/ase. Print actual error if fails.
-$PY -c "import fairchem, pymatgen, ase" 2>&1 | head -5
+# Activate uma conda env (try common paths). User can override CONDA_BASE.
+CONDA_BASE="${CONDA_BASE:-}"
+if [ -z "$CONDA_BASE" ]; then
+    for p in /scratch/x3430a02/mjs0000/miniforge3 /data/apps/miniforge3 \
+             $HOME/miniforge3 $HOME/miniconda3; do
+        if [ -f "$p/etc/profile.d/conda.sh" ]; then CONDA_BASE="$p"; break; fi
+    done
+fi
+if [ -n "$CONDA_BASE" ]; then
+    source "$CONDA_BASE/etc/profile.d/conda.sh"
+    conda activate uma 2>/dev/null
+fi
+
+PY="${PYTHON:-python}"
+echo "[$(date '+%H:%M:%S')] env: $(which $PY) (CONDA_PREFIX=$CONDA_PREFIX)"
+
+# Sanity: env must have fairchem/pymatgen/ase
 if ! $PY -c "import fairchem, pymatgen, ase" >/dev/null 2>&1; then
     echo "ERROR: env not active (fairchem/pymatgen/ase missing for '$PY')"
     echo "  which python: $(which $PY)"
-    echo "  which python3: $(which python3 2>/dev/null)"
     echo "  CONDA_PREFIX: $CONDA_PREFIX"
+    echo "  Tried CONDA_BASE: $CONDA_BASE"
+    $PY -c "import fairchem, pymatgen, ase" 2>&1 | head -3
     exit 1
 fi
 
