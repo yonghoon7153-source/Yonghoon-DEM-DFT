@@ -10,12 +10,16 @@ WORK=/data/work/v30u_ensemble
 RESULTS=$WORK/v30u_full_ensemble_results
 LOG=$RESULTS/run.log
 
-# Use uma env's python if available (has numpy)
-PY=python3
-for p in /data/apps/miniforge3/envs/uma/bin/python \
-         /scratch/x3430a02/mjs0000/miniforge3/envs/uma/bin/python; do
-    if [ -x "$p" ]; then PY="$p"; break; fi
+# Activate uma env (silent, fast)
+for base in /data/apps/miniforge3 /scratch/x3430a02/mjs0000/miniforge3 \
+            /opt/conda /root/miniforge3 $HOME/miniforge3; do
+    if [ -f "$base/etc/profile.d/conda.sh" ]; then
+        source "$base/etc/profile.d/conda.sh"
+        conda activate uma 2>/dev/null
+        break
+    fi
 done
+PY=python
 
 B="\033[1m"; G="\033[1;32m"; Y="\033[1;33m"; R="\033[1;31m"; C="\033[1;36m"; D="\033[2m"; N="\033[0m"
 
