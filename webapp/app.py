@@ -920,24 +920,28 @@ def normalize_network_summary_layout(tables, metrics):
                       ['σ_ionic ratio (physics/Hertzian)',
                        ratio_str, ratio_str, '0%'])
 
-    # ── Pass D: ensure σ_e baseline row exists ──
-    has_sigma_e_baseline = any(
-        r and isinstance(r[0], str) and r[0].strip() == 'σ_electronic (mS/cm)'
-        for r in data if isinstance(r, list))
-    sigma_e_h = metrics.get('electronic_sigma_full_mScm') if metrics else None
-    if not has_sigma_e_baseline:
-        sigma_e_p = metrics.get('electronic_sigma_full_mScm_physics') if metrics else None
-        h_str = f'{sigma_e_h:.2f}' if sigma_e_h else '0.00'
-        if sigma_e_p is not None:
-            p_str = f'{sigma_e_p:.2f}'
-            if sigma_e_h:
-                d_str = f'{(sigma_e_p - sigma_e_h) / sigma_e_h * 100:+.1f}%'
+    # ── Pass D: ensure σ_e and κ baseline rows exist ──
+    # Some legacy/freshly-analysed cases write σ_e or κ as None when the
+    # respective channel was numerically zero. We still want a placeholder
+    # row for layout uniformity (audit-ui = 1 variant goal).
+    def _ensure_baseline_row(label, h_key, p_key, fmt='%.2f'):
+        present = any(
+            r and isinstance(r[0], str) and r[0].strip() == label
+            for r in data if isinstance(r, list))
+        if present:
+            return
+        h_val = metrics.get(h_key) if metrics else None
+        p_val = metrics.get(p_key) if metrics else None
+        h_str = f'{h_val:{fmt[1:]}}' if h_val else '0.00'
+        if p_val is not None:
+            p_str = f'{p_val:{fmt[1:]}}'
+            if h_val:
+                d_str = f'{(p_val - h_val) / h_val * 100:+.1f}%'
             else:
                 d_str = '0%'
         else:
             p_str = h_str; d_str = '0%'
-        new_row = ['σ_electronic (mS/cm)', h_str, p_str, d_str]
-        # Insert at end of network solver section (just before τ section)
+        new_row = [label, h_str, p_str, d_str]
         tau_idx = None
         for i, r in enumerate(data):
             if r and isinstance(r[0], str) and (
@@ -948,6 +952,13 @@ def normalize_network_summary_layout(tables, metrics):
             data.insert(tau_idx, new_row)
         else:
             data.append(new_row)
+
+    _ensure_baseline_row('σ_electronic (mS/cm)',
+                         'electronic_sigma_full_mScm',
+                         'electronic_sigma_full_mScm_physics', fmt='%.2f')
+    _ensure_baseline_row('σ_thermal (mS/cm equiv)',
+                         'thermal_sigma_full_mScm',
+                         'thermal_sigma_full_mScm_physics', fmt='%.3f')
 
     # ── Pass F: sort rows within each section by canonical order ──
     # All 160 cases now have identical row CONTENT after passes A-E, but
