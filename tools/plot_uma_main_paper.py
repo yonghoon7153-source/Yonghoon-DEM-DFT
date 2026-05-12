@@ -227,7 +227,7 @@ def main():
 
     print(f"\nsaved {png}\nsaved {pdf}")
     print(f"saved {summ_path}\nsaved {raw_path}\nsaved {smooth_path}\n")
-    print(f"{'comp':<8} {'W_max':>+10} {'d_min':>7} {'pred_Wad':>10} {'paper':>7} {'err':>7}")
+    print(f"{'comp':<8} {'W_max':>10} {'d_min':>7} {'pred_Wad':>10} {'paper':>7} {'err':>7}")
     for c in have:
         print(f"{c:<8} {Wmax[c]:>+10.4f} {dmin[c]:>7.2f} {pred[c]:>10.1f} "
               f"{PAPER_EXP[c]:>7} {abs(pred[c]-PAPER_EXP[c]):>7.1f}")
