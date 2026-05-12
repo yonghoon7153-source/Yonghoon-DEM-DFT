@@ -41,14 +41,24 @@ for C in comp1 comp2 comp3 comp4 comp5 modelC; do
     F=$RESULTS/${C}_done.json
     if [ -f "$F" ]; then
         SIZE=$(du -h "$F" | cut -f1)
-        # Read W_max_mean for that comp
-        WMAX=$(python3 -c "
-import json, numpy as np
-d = json.load(open('$F'))
-m = d.get('Wad_mean', [])
-if m: print(f'{max(m):+.2f}')
-" 2>/dev/null)
-        echo -e "    ${G}[✓]${N} ${C}_done.json  ($SIZE)  W_max_mean=$WMAX J/m²"
+        # Robust python: handles both keys + index lookup; prints "Wmax±std at d=X.XX"
+        INFO=$(python3 << PYEOF 2>&1
+try:
+    import json, numpy as np
+    d = json.load(open('$F'))
+    m = d.get('Wad_mean', [])
+    s = d.get('Wad_std', [])
+    g = d.get('gaps', [])
+    if m and s and g:
+        i = int(np.argmax(m))
+        print(f"Wmax={m[i]:+.3f}±{s[i]:.3f}  d={g[i]:.2f}Å  n={d.get('n_samples','?')}")
+    else:
+        print("(no Wad_mean in json)")
+except Exception as e:
+    print(f"(parse err: {e})")
+PYEOF
+)
+        echo -e "    ${G}[✓]${N} ${C}_done.json  ($SIZE)  $INFO"
         N_DONE=$((N_DONE+1))
     else
         echo -e "    [ ] ${C}_done.json"
@@ -110,21 +120,34 @@ fi
 # Per-comp summary if done
 if [ $N_DONE -ge 1 ]; then
     echo -e "\n${C}── Per-comp W_max_mean (so far) ──${N}"
-    python3 -c "
+    python3 << PYEOF 2>&1
 import json, os, glob
+import numpy as np
 PAPER = {'comp1': 194, 'comp2': 180, 'comp3': 316, 'comp4': 298, 'comp5': 249}
-print(f\"  {'comp':<8} {'W_max_mean':>12} {'W_max_std':>10} {'d':>6} {'paper':>6}\")
-for f in sorted(glob.glob('$RESULTS/*_done.json')):
+print(f"  {'comp':<8} {'W_max_mean':>14} {'std':>8} {'d_min':>8} {'n_samp':>8} {'paper':>7}")
+results_dir = '$RESULTS'
+files = sorted(glob.glob(os.path.join(results_dir, '*_done.json')))
+xs, ys = [], []
+for f in files:
     c = os.path.basename(f).replace('_done.json','')
-    d = json.load(open(f))
-    m = d.get('Wad_mean', [])
-    s = d.get('Wad_std', [])
-    g = d.get('gaps', [])
-    if m and s and g:
-        import numpy as np
-        i = int(np.argmax(m))
-        print(f\"  {c:<8} {m[i]:>+12.3f} {s[i]:>10.3f} {g[i]:>6.2f} {PAPER.get(c,'—'):>6}\")
-" 2>/dev/null
+    try:
+        d = json.load(open(f))
+        m = d.get('Wad_mean', [])
+        s = d.get('Wad_std', [])
+        g = d.get('gaps', [])
+        n = d.get('n_samples', '?')
+        if m and s and g:
+            i = int(np.argmax(m))
+            paper = PAPER.get(c, '—')
+            print(f"  {c:<8} {m[i]:>+14.3f} {s[i]:>8.3f} {g[i]:>8.2f} {str(n):>8} {str(paper):>7}")
+            if c in PAPER:
+                xs.append(m[i]); ys.append(PAPER[c])
+    except Exception as e:
+        print(f"  {c}: parse error: {e}")
+if len(xs) >= 3:
+    R = float(np.corrcoef(xs, ys)[0,1])
+    print(f"\n  R(W_max_mean vs paper exp) = {R:+.4f}  (n={len(xs)})")
+PYEOF
 fi
 
 echo -e "\n${B}════════════════════════════════════════════════════════════════════════${N}"
