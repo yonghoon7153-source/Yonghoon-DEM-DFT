@@ -139,19 +139,27 @@ def main():
     pdf = OUT_DIR / "figure_v8_morse_smooth.pdf"
     fig.savefig(png); fig.savefig(pdf); plt.close()
 
-    # Dense CSV with Morse-smoothed values (0.02 A step)
+    # Dense CSV with Morse-smoothed values (0.02 A step).
+    # Per-comp gap range limited to where source data exists (NaN outside)
+    # to avoid Morse extrapolation blowing up at small d for comp4/comp5.
     g_csv = np.arange(g_lo, g_hi + 0.02/2, 0.02)
     smooth_curves = {}
     for c in PAPER_COMPS:
         if c not in cols:
             continue
         e = cols[c]
+        valid = ~np.isnan(e)
+        g_min_c = float(gaps[valid].min())
+        g_max_c = float(gaps[valid].max())
         popt = fit_morse(gaps, e)
         if popt is not None:
-            smooth_curves[c] = morse(g_csv, *popt)
+            y = morse(g_csv, *popt)
         else:
-            cs = CubicSpline(gaps[~np.isnan(e)], e[~np.isnan(e)])
-            smooth_curves[c] = gaussian_filter1d(cs(g_csv), sigma=10)
+            cs = CubicSpline(gaps[valid], e[valid])
+            y = gaussian_filter1d(cs(g_csv), sigma=10)
+        # Mask to source data range (avoid extrapolation artifacts)
+        y = np.where((g_csv >= g_min_c) & (g_csv <= g_max_c), y, np.nan)
+        smooth_curves[c] = y
     csv_out = OUT_DIR / "figure_v8_morse_smooth.csv"
     with open(csv_out, 'w', encoding='utf-8') as f:
         f.write("# Morse-fit smoothed binding curves from "
@@ -163,7 +171,8 @@ def main():
             row = [f"{g:.3f}"]
             for c in PAPER_COMPS:
                 if c in smooth_curves:
-                    row.append(f"{smooth_curves[c][i]:+.6f}")
+                    v = smooth_curves[c][i]
+                    row.append(f"{v:+.6f}" if not np.isnan(v) else "")
             f.write(",".join(row) + "\n")
     print(f"saved {png}")
     print(f"saved {pdf}")
