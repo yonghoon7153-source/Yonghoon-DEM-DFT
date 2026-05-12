@@ -11,12 +11,17 @@
 cd "$(dirname "$(readlink -f "$0")")"
 
 export CUDA_VISIBLE_DEVICES=${CUDA_VISIBLE_DEVICES:-0}
-PY="${PYTHON:-python3}"
+PY="${PYTHON:-python}"     # use 'python' (conda env's), NOT 'python3' (may be system)
 
-# Sanity
-$PY -c "import fairchem, pymatgen, ase" 2>/dev/null || {
-    echo "ERROR: env not active"; exit 1
-}
+# Sanity: env must have fairchem/pymatgen/ase. Print actual error if fails.
+$PY -c "import fairchem, pymatgen, ase" 2>&1 | head -5
+if ! $PY -c "import fairchem, pymatgen, ase" >/dev/null 2>&1; then
+    echo "ERROR: env not active (fairchem/pymatgen/ase missing for '$PY')"
+    echo "  which python: $(which $PY)"
+    echo "  which python3: $(which python3 2>/dev/null)"
+    echo "  CONDA_PREFIX: $CONDA_PREFIX"
+    exit 1
+fi
 
 steps=(
     "comp5_v2_stage1a.py"
