@@ -66,10 +66,48 @@ def _stamp_spheres(solid: np.ndarray, atoms_arr: np.ndarray,
 
 # ── main extraction ───────────────────────────────────────────────────────
 
+def _read_rve_box(case_dir: Path, atoms_coords_unit_to_m: float):
+    """Read physical RVE box from meta.json if present.
+
+    Returns (xmin, xmax, ymin, ymax, zmin, zmax) in atoms.csv units,
+    or None if not available.
+    """
+    import json as _json
+    for name in ('meta.json', 'rve.json'):
+        p = case_dir / name
+        if not p.exists():
+            continue
+        try:
+            meta = _json.load(open(p))
+        except Exception:
+            continue
+        # Possible key conventions
+        box = meta.get('box') or meta.get('rve_box') or meta.get('domain_box')
+        if box and all(k in box for k in ('xmin', 'xmax', 'ymin', 'ymax', 'zmin', 'zmax')):
+            f = 1.0 / atoms_coords_unit_to_m
+            return tuple(box[k] * f for k in ('xmin', 'xmax', 'ymin', 'ymax', 'zmin', 'zmax'))
+        # Alternate: xy size + thickness (mesh-z)
+        rve_xy = meta.get('rve_xy_um') or meta.get('box_xy_um')
+        thick_um = meta.get('thickness_um') or meta.get('mesh_z_um')
+        scale = meta.get('scale', 1.0)
+        if rve_xy and thick_um:
+            # atoms.csv coords are typically in (scaled) µm or m; we treat them
+            # directly as their native unit. Compute box centered on particle
+            # centroid in xy, anchored at z = particle z-min for thickness.
+            return None  # let caller use fallback
+    return None
+
+
 def extract_pore_mesh(case_dir: Path, voxel_res: int = 200,
                       pore_min_voxels: int = 50,
-                      save_mesh: bool = True) -> dict:
-    """Run full pipeline. Returns metrics dict."""
+                      save_mesh: bool = True,
+                      crop_to_rve: bool = True) -> dict:
+    """Run full pipeline. Returns metrics dict.
+
+    crop_to_rve: when True (default), clip voxel domain to physical RVE
+        (xy from meta.json box, z from particle bbox = mesh-z). This avoids
+        inflating porosity by ghost/edge particles that extend beyond the RVE.
+    """
     case_dir = Path(case_dir)
     atoms_path = case_dir / 'atoms.csv'
     if not atoms_path.exists():
@@ -88,10 +126,68 @@ def extract_pore_mesh(case_dir: Path, voxel_res: int = 200,
     zs = atoms[z_col].to_numpy()
     rs = atoms[r_col].to_numpy()
 
-    # Domain bounding box (tight, no extra margin → preserves true porosity)
-    xmin, xmax = (xs - rs).min(), (xs + rs).max()
-    ymin, ymax = (ys - rs).min(), (ys + rs).max()
-    zmin, zmax = (zs - rs).min(), (zs + rs).max()
+    # Particle bounding box (full extent, including periodic ghosts)
+    xmin_p, xmax_p = (xs - rs).min(), (xs + rs).max()
+    ymin_p, ymax_p = (ys - rs).min(), (ys + rs).max()
+    zmin_p, zmax_p = (zs - rs).min(), (zs + rs).max()
+
+    # ── RVE cropping: clip xy to centered physical RVE; keep z as particle bbox
+    rve_xy_units = None
+    if crop_to_rve:
+        # Try meta.json
+        meta_path = case_dir / 'meta.json'
+        if meta_path.exists():
+            try:
+                import json as _json
+                meta = _json.load(open(meta_path))
+                rve_xy_um = (meta.get('rve_xy_um') or meta.get('box_xy_um')
+                             or (meta.get('rve') or {}).get('xy_um'))
+                if rve_xy_um:
+                    # Infer atoms.csv unit by comparing bbox to rve_xy_um × scale
+                    scale = meta.get('scale', 1.0)
+                    bbox_xy = max(xmax_p - xmin_p, ymax_p - ymin_p)
+                    target_atoms_units = rve_xy_um * 1e-6 * scale
+                    if bbox_xy > 0:
+                        unit_factor = bbox_xy / target_atoms_units
+                        # if very close to 1, atoms.csv is in m × scale; else mm-like
+                        rve_xy_units = rve_xy_um * 1e-6 * scale
+            except Exception as e:
+                print(f'  [warn] meta.json read failed: {e}', file=sys.stderr)
+
+        # Fallback heuristic: assume xy bbox _excess_ over z is periodic ghost.
+        # Take the smaller of (xy bbox) and (z bbox z-cross) — usually z is correct.
+        if rve_xy_units is None:
+            # Crop xy to the smaller of bbox or a robust central percentile of
+            # particle centers (suppress ghost outliers).
+            cx = (xs.min() + xs.max()) / 2
+            cy = (ys.min() + ys.max()) / 2
+            # Use 99th-percentile center extents + max radius as conservative RVE
+            half_x = max(
+                (np.percentile(xs, 99) - cx) + rs.max(),
+                (cx - np.percentile(xs, 1)) + rs.max(),
+            )
+            half_y = max(
+                (np.percentile(ys, 99) - cy) + rs.max(),
+                (cy - np.percentile(ys, 1)) + rs.max(),
+            )
+            # Use the tighter of (heuristic) and (bbox) — but only crop if
+            # bbox is suspiciously larger than (centers + r_max)
+            half_bbox_x = (xmax_p - xmin_p) / 2
+            half_bbox_y = (ymax_p - ymin_p) / 2
+            if half_x < 0.95 * half_bbox_x:
+                xmin_p, xmax_p = cx - half_x, cx + half_x
+            if half_y < 0.95 * half_bbox_y:
+                ymin_p, ymax_p = cy - half_y, cy + half_y
+        else:
+            cx = (xs.min() + xs.max()) / 2
+            cy = (ys.min() + ys.max()) / 2
+            half = rve_xy_units / 2
+            xmin_p, xmax_p = cx - half, cx + half
+            ymin_p, ymax_p = cy - half, cy + half
+
+    xmin, xmax = xmin_p, xmax_p
+    ymin, ymax = ymin_p, ymax_p
+    zmin, zmax = zmin_p, zmax_p
 
     L = max(xmax - xmin, ymax - ymin, zmax - zmin)
     dx = L / voxel_res
@@ -99,7 +195,8 @@ def extract_pore_mesh(case_dir: Path, voxel_res: int = 200,
     ny = int(np.ceil((ymax - ymin) / dx))
     nz = int(np.ceil((zmax - zmin) / dx))
     print(f'  Voxel grid: {nx}×{ny}×{nz}  (dx = {dx*1e6:.3f} µm)')
-    print(f'  Particles: {len(atoms)}')
+    print(f'  Particles: {len(atoms)}  '
+          f'(cropped to RVE: {crop_to_rve})')
 
     solid = np.zeros((nx, ny, nz), dtype=bool)
     _stamp_spheres(solid, np.column_stack([xs, ys, zs, rs]),
@@ -207,9 +304,10 @@ def discover_cases() -> list[Path]:
 
 
 def _worker(args):
-    case_dir, voxel_res, pore_min = args
+    case_dir, voxel_res, pore_min, crop_to_rve = args
     try:
-        m = extract_pore_mesh(case_dir, voxel_res, pore_min)
+        m = extract_pore_mesh(case_dir, voxel_res, pore_min,
+                              crop_to_rve=crop_to_rve)
         return (case_dir.name, True, f"ε={m['porosity_voxel']*100:.2f}%")
     except Exception as e:
         return (case_dir.name, False, f'{type(e).__name__}: {e}')
@@ -226,6 +324,10 @@ def main():
                     help='Voxel grid resolution along longest axis (default 200)')
     ap.add_argument('--pore-min', type=int, default=50,
                     help='Minimum voxels for a pore component (smaller = noise)')
+    ap.add_argument('--no-crop', action='store_true',
+                    help='Disable RVE cropping (use raw particle bbox).'
+                         ' Default crops to physical RVE to avoid'
+                         ' inflating porosity from periodic ghost particles.')
     ap.add_argument('--jobs', '-j', type=int, default=1,
                     help='Parallel workers when using --all')
     args = ap.parse_args()
@@ -236,9 +338,10 @@ def main():
             ap.error('No cases found under webapp/results or webapp/archive')
         print(f'Processing {len(cases)} cases (jobs={args.jobs})...')
         n_ok = n_fail = 0
+        crop = not args.no_crop
         if args.jobs > 1:
             from concurrent.futures import ProcessPoolExecutor, as_completed
-            tasks = [(c, args.voxel_res, args.pore_min) for c in cases]
+            tasks = [(c, args.voxel_res, args.pore_min, crop) for c in cases]
             with ProcessPoolExecutor(max_workers=args.jobs) as ex:
                 futs = {ex.submit(_worker, t): t for t in tasks}
                 for i, f in enumerate(as_completed(futs), 1):
@@ -251,7 +354,8 @@ def main():
             for i, c in enumerate(cases, 1):
                 print(f'[{i}/{len(cases)}] {c.name}')
                 try:
-                    extract_pore_mesh(c, args.voxel_res, args.pore_min)
+                    extract_pore_mesh(c, args.voxel_res, args.pore_min,
+                                      crop_to_rve=crop)
                     n_ok += 1
                 except Exception:
                     traceback.print_exc()
@@ -260,7 +364,8 @@ def main():
         sys.exit(0 if n_fail == 0 else 1)
 
     elif args.case_dir:
-        extract_pore_mesh(Path(args.case_dir), args.voxel_res, args.pore_min)
+        extract_pore_mesh(Path(args.case_dir), args.voxel_res, args.pore_min,
+                          crop_to_rve=(not args.no_crop))
     else:
         ap.error('Provide CASE_DIR or use --all')
 
