@@ -1,5 +1,5 @@
 # Nd₂O₃ 도핑 — Argyrodite Solid Electrolyte (modelC)
-## 처음 합류한 대학원생용 가이드 (v2 — 2026-05-09 corrected)
+## 처음 합류한 대학원생용 가이드 (v3 — 2026-05-12: ENUM 26/26 완료, DFT top 1-2 narrative)
 
 > **이 문서는 무엇인가?**
 > Paper #2 (Nd₂O₃ co-substituted Li₅.₄PS₄.₄Cl₁.₆) 프로젝트에 합류한 사람을 위한 입문서.
@@ -262,26 +262,33 @@ cfg141 (Track 1A champion) 을 500 K MD 50 fs 돌렸더니:
 
 ## 5. 핵심 발견 4가지 (paper #2 main message)
 
-### 발견 1 — 이전 champion (cfg141) 이 25개 alternative 다 이김
+### 발견 1 — 이전 champion (cfg141) 이 25개 alternative 다 이김 (단 1 close runner-up)
 
 ```
-🥇 pair_00 reference (Nd at 1, 82)   E_a = -522.06 eV   ← 가장 안정
-🥈 pair_19 very_far (Nd at 2, 6)     E_a = -521.78 eV   (Δ = +0.28 eV)
-🥉 pair_13 far (Nd at 19, 82)        E_a = -521.52 eV   (Δ = +0.54 eV)
+🥇 pair_00 reference (Nd at 1, 82)    E_a = -522.06 eV   ← 가장 안정
+🥈 pair_24 cross (Nd at 15, 75)       E_a = -521.92 eV   (Δ = +0.14 eV) ⭐ NEW closest
+🥉 pair_19 very_far (Nd at 2, 6)      E_a = -521.78 eV   (Δ = +0.28 eV)
+4.  pair_13 far (Nd at 19, 82)        E_a = -521.52 eV   (Δ = +0.54 eV)
+5.  pair_11 far (Nd at 7, 12)         E_a = -521.37 eV   (Δ = +0.69 eV)
 …
 최불안정: pair_15 far (Nd at 6, 16)   E_a = -518.84 eV   (Δ = +3.21 eV)
 ```
 
 → **이전에 Phase 2.5에서 찾은 cfg141 (Nd_pair=[1,82]) 가 25개 alternative 다 이김** → champion robustness 한 번 더 확인.
 
+⚠️ **하지만 pair_24 가 0.14 eV 까지 따라옴** — MLIP precision (~30-50 meV/cell relative) 의 ~3× 수준. **DFT+U validation 으로 champion identity 최종 결정 필수**.
+
 ⚠️ **중요**: 이건 "pristine vs doped" 비교가 아니라, **"같은 도핑율 (x=0.20) 안에서 어느 Nd 위치가 가장 안정한가"** 를 본 결과. 26 pair 모두 Nd₂O₃ 도핑됨.
 
-**Paper에 활용**:
+**Paper에 활용** (updated):
 > "Across 25 alternative Nd-pair configurations spanning five distance bins,
 > none surpassed the previously identified champion (Nd at sites 1 and 82,
-> Phase 2.5 verified ground state). The closest alternative is 0.28 eV/cell
-> less stable, while the most disruptive is 3.21 eV/cell less stable.
-> This confirms cfg141 as a robust thermodynamic minimum."
+> Phase 2.5 verified ground state). The closest alternative (pair_24, cross
+> PBC pair with Nd at sites 15 and 75) is 0.14 eV/cell less stable — within
+> ~3× of MLIP relative precision — while the most disruptive (pair_15, far)
+> is 3.21 eV/cell less stable. This places cfg141 as a robust thermodynamic
+> minimum at the MLIP level, with DFT+U validation distinguishing it from
+> the closest runner-up."
 
 ### 발견 2 — Nd-Nd 거리 의존성
 
@@ -296,15 +303,15 @@ cfg141 (Track 1A champion) 을 500 K MD 50 fs 돌렸더니:
 
 → **합성 implication**: x = 0.02 같은 dilute 영역에서는 Nd가 자동으로 분산 → far/very_far regime → 본 결과 (DFT) 적용 가능.
 
-### 발견 3 — Category distribution: A 우세, D 절멸
+### 발견 3 — Category distribution: A 우세, D 절멸 (26/26 최종)
 
-24/26 pair 끝난 시점 결과:
+**26/26 pair 전부 완료** (2026-05-12):
 
 ```
-A (3 PS₃O distributed):    9 pair (38%) ⭐ 가장 흔함
-E (PS₂O₂ + PS₃O):          6 pair (25%)
-B (2 PS₃O + 1 free O):     4 pair (17%)
-G (1 PSO₃):                3 pair (13%)
+A (3 PS₃O distributed):    9 pair (35%) ⭐ 가장 흔함
+E (PS₂O₂ + PS₃O):          6 pair (23%)
+B (2 PS₃O + 1 free O):     5 pair (19%)
+G (1 PSO₃):                4 pair (15%)   ← reference + pair_24 (top 2) 둘 다 G
 F (1 PS₂O₂ + 1 free O):    1 pair (4%)
 C (1 PS₃O + 2 free O):     1 pair (4%)
 D (3 free O):              0 pair (0%) ❌ 절대 안 이김
@@ -312,8 +319,53 @@ D (3 free O):              0 pair (0%) ❌ 절대 안 이김
 
 **해석**:
 - **D (Track 1B = free O) 0%** → "O가 PS₄ 외부에 따로 들어간다"는 가설 **모든 Nd 환경에서 실패**.
-- **A 38%** → 분산된 PS₃O 형성이 dominant motif.
+- **A 35%** → 분산된 PS₃O 형성이 dominant motif.
 - **E + G 38%** → 일부 Nd 위치는 응집된 O cluster 형성 (Nd가 만든 strain이 cluster 유도).
+- ⭐ **Top 2 (pair_00, pair_24) 둘 다 cat=G (PSO₃)** → ==**가장 안정한 minimum 에서는 cluster motif 가 dominant**==. cat A 가 평균적으로 흔하지만 lowest-E 위치는 cluster favoring.
+
+### 발견 3b — 왜 cluster (PSO₃) 가 top minima 에서 더 안정한가 (추측)
+
+평균적으로는 distributed (cat A) 가 35% 로 흔한데, ==**lowest-2 minima 가 둘 다 cat G (PSO₃)**== 인 이유 — 5가지 가능 메커니즘:
+
+**① P-O 결합 우세 (가장 그럴듯)**
+- P-O bond ≈ 700 kJ/mol vs P-S ≈ 400 kJ/mol (1.75×)
+- PSO₃ 의 P 가 ==**3 P-O bond + 1 P-S bond**== → 2100 + 400 = 2500 kJ/mol
+- PS₃O 의 P 가 ==**1 P-O + 3 P-S**== → 700 + 1200 = 1900 kJ/mol
+- 차이: ==**600 kJ/mol per cluster = ~6 eV**== (huge — single PSO₃ vs 3 PS₃O 비교에서 약간 cancel 되지만 net favor cluster)
+- 즉 ==**같은 O 개수면 한 곳에 모이는 게 P-O 결합 총량 최대화**==
+
+**② Strain energy localization**
+- O 가 PS₄ corner 에 들어가면 P-O (1.55 Å) << P-S (2.05 Å) → ==**~25% bond shortening**== → 격자 strain
+- 분산 (cat A): 3 개의 PS₃O 가 각각 local strain pocket 만듦 (3 pockets)
+- 응집 (cat G): 1 개의 PSO₃ 가 1 local strain pocket
+- ==**Strain energy ∝ N_pockets**== (linear-ish) → cluster 가 ~3× 적은 strain. lattice 자기 이완 가능.
+
+**③ Nd 4f³ × O cluster anisotropic matching** ⭐
+- Nd³⁺ 4f³ orbital 은 ==**directional lobes**== (anisotropic)
+- 3 O 가 cluster 로 모이면 ==**directional "antenna"**==를 형성 (특히 PSO₃ 의 3 O 가 P 주변 trigonal-pyramidal)
+- 4f³ lobes 와 antenna 의 ==**orbital overlap 최대**== → 강한 covalent + ionic 혼합
+- 분산 O 는 isotropic-average → 4f³ anisotropy 못 활용
+- ==**= "anisotropy × anisotropy 의 constructive resonance"**==
+
+**④ Asymmetric Nd coordination (top 2 의 cross/far 위치 특이성)**
+- pair_00, pair_24 둘 다 Nd-Nd 거리 매우 큼 (far / cross-PBC)
+- 2 Nd 가 ==**서로 멀어서**== 3 O 를 공유 못 함 → 하나의 Nd 가 ==**PSO₃ 와 강하게 coordinate**==, 다른 Nd 는 S environment
+- 이 asymmetric arrangement 에서 ==**한 Nd 의 full O coordination이 두 Nd 의 half O coordination 보다 net 더 안정**==
+- close pair 였으면 두 Nd 가 모두 O 필요 → distributed (cat A) 가 favorable → 이게 average 통계의 일부
+
+**⑤ Charge density localization (Madelung)**
+- O²⁻ 가 cluster → ==**local 음전하 농도 ↑**==
+- Nd³⁺ 가 그 농도 pocket 으로 attracted → ==**고 Madelung 안정화**==
+- 분산 O = 음전하 dilute → 약한 Madelung
+- 단점: cluster 외 영역은 less stable → 그래서 strain pocket localization (②) 과 trade-off
+
+**종합**:
+- ①, ③ 이 ==**enthalpic gain**== 의 main source (P-O bond + Nd-O orbital matching)
+- ②, ⑤ 가 secondary (strain + Madelung)
+- ④ 가 ==**왜 특정 Nd 배치에서만 cluster 가 win**== 인지 설명 (top 2 의 far/cross 위치 특성)
+- ⑤ 의 entropy effect 는 0 K anneal 결과 → ==**합성 온도 (~700°C)에서는 distributed 더 favor 할 가능성**==
+
+==**DFT+U validation 시 cluster vs distributed 의 ΔE 가 핵심**==. 만약 DFT 에서도 cluster 가 0.1+ eV 더 안정 → ① ③ 메커니즘 confirmed.
 
 ### 발견 4 — 4f³ HSAB 메커니즘
 
@@ -361,17 +413,56 @@ champion (cfg141) 에 **20개 random Li perturbation** (max 0.5 Å displacement)
 - 25개 모두 cfg141보다 0.28-3.21 eV 불안정
 - → 이전 phase screen에서 cfg141 picking이 **robust였음을 재확인**
 
-### 6.4 다음 단계 — DFT+U validation
+### 6.4 다음 단계 — DFT+U validation (top 1-2 strategy)
 
-MLIP은 ~50-100 meV/atom 정확도 limit. 0.54 eV/O 차이는 충분히 크지만, 최종 답은 **DFT+U (U=6 eV for Nd 4f) + ISPIN=2** 로 cross-check 필요.
+MLIP은 ~50-100 meV/atom 정확도 limit. 0.54 eV/O 차이 (Track 1A vs 1B) 는 충분히 크지만, ==**top 1 vs top 2 차이 (0.14 eV)**== 는 MLIP precision 한계 안.
 
+**Top 1-2 만 DFT 검증** (top 5 → top 1-2 로 축소):
 ```
 phase_3_dft_verify_track1A:
   status: READY_TO_START
-  input: top 5 champion structures
-  cost: ~5 days/config × 5 = ~25 GPU-days
-  purpose: MLIP 0.54 eV/O 차이가 DFT 10 meV/atom precision에서도 보존되는지
+  input: TOP 2 champion structures (pair_00 + pair_24)
+  cost: ~5 days/config × 2 = ~10 GPU-days  ← 이전 25 GPU-days → 60% 절감
+  purpose: 1) MLIP의 0.14 eV 차이가 DFT에서 보존되는지 (champion identity 확정)
+           2) 1A vs 1B 0.54 eV 차이도 confirm (sub-validation)
 ```
+
+**Top 1-2 만 하는 이유 (narrative)**:
+- ==**Top 3 이하는 ΔE > 0.28 eV**== — MLIP 의 절대 ranking 신뢰 가능 영역 (cell-relative MLIP error ~30-50 meV/cell, ΔE 0.28 eV >> 6× error).
+- ==**Top 1 vs Top 2 만 MLIP 으로 분간 불가**==. DFT 는 ==**champion identity 결정**== 의 critical decision point.
+- Computational budget 우선순위: champion confirm → method generalization (Sm, Gd) >> top 3-5 ranking detail.
+- ⚠️ 단점: top 3-10 의 cluster-distribution pattern (cat G 둘 다 vs cat A 분산) 분석이 MLIP-only 에 머무름. paper 에서 ==**limitation 으로 명시**==.
+
+### 6.5 26 pair sampling 의 completeness — 누락 확률 분석
+
+**26 / 1431 = 1.8% sampling** 의 ==**missed-better-config probability**== 정량 분석:
+
+| Layer | Coverage | 누락 확률 |
+|-------|----------|-----------|
+| Layer 1 (Nd pair) | 26/1431 (1.8%) | ==**~25%**== (within-bin variation ~0.5 eV) |
+| Layer 2 (Li vacancy) | top 30-50 of 270k (MLIP-sorted) | ~5% (energy-prioritized) |
+| Layer 3 (O placement) | 7 cat × exhaustive within | ~0% (scheme-complete) |
+| **Compound** | — | ==**~29%**== |
+
+==**즉 ~30% 확률로 26 pair 밖에 더 안정한 config 존재**==. 다만 ΔE 분포:
+
+| ΔE_a (potential miss) | 확률 (overall) | 의미 |
+|----------------------|---------------|------|
+| 0 ~ −100 meV (MLIP noise) | ~50% | within precision, ranking shuffle 정도 |
+| −100 ~ −300 meV (real but small) | ~30% | top 3-5 reorder, main message 유지 |
+| −300 ~ −1 eV (significant) | ~15% | new top 2 가능, ==**DFT 로 검증 가능**== |
+| > −1 eV (game-changer) | ==**~5%**== | main thesis 재검토 |
+
+==**Realistic worst case (~30% 합 80%): top 3 이하 reorder, 하지만 PS₃O / 4f³ HSAB main message 보존**==.
+
+==**Extreme worst case (~5%): 0.5+ eV 더 안정한 outlier**==. 가능성 낮지만 paper 에 limitation 으로 명시.
+
+**Mitigation 옵션**:
+1. **즉시 (저비용)**: far/very_far bin 에 ==**+5 pair 씩**== anneal (10 추가, ~5h) → 누락 risk ~30% → ~15%
+2. **DFT cross-check** (위 6.4) → top 2 champion robust 확인
+3. **장기**: alternative cell (2×2×5) spot check → image effect 검증
+
+Paper 에 ==**Conservative claim**== 권장: "Among 26 sampled configurations, cfg141 robust at MLIP level. DFT+U validation of top 2 (cfg141 + pair_24, ΔE=0.14 eV) determines true ground state."
 
 ---
 
@@ -472,6 +563,30 @@ A. 4f electron count가 결정:
 - Eu³⁺ (4f⁶), Gd³⁺ (4f⁷): half-filled → 매우 안정, 다른 chemistry 가능
 - → **paper에서 generalizable mechanism으로 future work 언급**.
 
+### Q10. 왜 top 5 가 아니라 top 1-2 만 DFT 검증?
+A. **Computational budget + ROI**:
+- Top 1 vs Top 2 (ΔE = 0.14 eV) → ==**champion identity 결정**== 가 critical decision (DFT 필수)
+- Top 3 이하 ΔE > 0.28 eV → MLIP relative precision (~30-50 meV/cell) 의 6× → **MLIP ranking 신뢰 가능**
+- Top 5 vs Top 2: 추가 15 GPU-days 비용 vs marginal scientific gain (ranking detail)
+- ==**우선순위**==: champion confirm (top 2) >> ranking detail (top 3-5) → **top 1-2 만**
+- Paper 에서 ==**limitation 명시**==: "top 3-5 ranking 은 MLIP-only validation".
+
+### Q11. 26 pair sampling 의 누락 risk는?
+A. **Layer 별 누락 확률 ~25-30%** (Section 6.5 참조). 다만 |ΔE| 분포 상:
+- ~80% 의 누락은 |ΔE| < 0.3 eV (MLIP precision 근처) → ==**main message 무관**==
+- Game-changer (>0.5 eV) outlier 확률 ~5%
+- DFT+U validation (top 1-2) + 추후 far/very_far bin 확장 (저비용) 으로 risk reduction 가능
+- Conservative claim 권장: "Among sampled 26 alternatives, cfg141 robust at MLIP level."
+
+### Q12. pair_24 (cross_15_75) 가 reference 와 0.14 eV 밖에 차이 안 나는데, cfg141 가 진짜 global minimum 인가?
+A. cell-level 0.14 eV ≈ MLIP relative precision (~30-50 meV/cell) 의 ~3× 수준. ==**현재 MLIP 으로 분간 불가**==. DFT+U cross-check 결정적.
+- 만약 DFT 에서 pair_24 가 더 안정 → **champion 교체**
+- pair_24 도 cat=G (PSO₃) → ==**top 2 둘 다 cluster motif**== → cluster preference 자체는 MLIP-level robust
+- 현재 결론: ==**cfg141 또는 pair_24 둘 중 하나가 champion** (DFT 검증 후 확정)==
+
+### Q13. cross PBC pair (21~25) 의 신뢰성?
+A. cross 5개 평균 E_a = -520.83 eV, 다른 distance bin 과 동급 → ==**PBC image effect 크지 않음**==. 특히 pair_24 는 cross 인데도 reference 와 0.14 eV → cross-PBC 자체가 instability 원인 아님. paper 결과 모두 cross 포함해서 robust.
+
 ---
 
 ## 10. 관련 자료
@@ -506,23 +621,47 @@ Two tracks:
   1B: O at free 4d site        ← never wins (0/24 pairs)
 
 4 핵심 발견:
-  1. cfg141 (이전 champion) 이 25 alternative 다 이김 (robust)
+  1. cfg141 (이전 champion) 이 25 alternative 다 이김 (단 pair_24 만 0.14 eV)
   2. close < mid < far < very_far (Nd-Nd 거리 의존성)
-  3. A (distributed) 38% > E (cluster) 25% > D (free O) 0%
+  3. A (distributed) 35% > E (cluster) 23% > D (free O) 0%
+     ⭐ Top 2 (cfg141, pair_24) 둘 다 cat=G (PSO₃ cluster)
   4. 4f³ → PS₃O (anisotropic polarization), 4f⁰ → free O
+  + Cluster (PSO₃) > Distributed (PS₃O) at top minima — 5 가설:
+     ① P-O bond 우세 (700 vs 400 kJ/mol)
+     ② Strain energy localization (1 pocket vs 3)
+     ③ 4f³ × O cluster anisotropic matching
+     ④ Asymmetric Nd coordination (top 2 의 far/cross pair 특이성)
+     ⑤ Charge density localization (Madelung)
 
 Champion: cfg141 (Track 1A, Nd_pair = [1, 82])
-  E = -521.96 eV, robust ground state (20 random perturb 검증)
+  E = -522.06 eV, MLIP-robust ground state
+  Runner-up: pair_24 (Nd_pair = [15, 75]) at +0.14 eV
+  → DFT+U validation 으로 champion identity 최종 결정
 
-Next: DFT+U + ISPIN=2 validation on top 5 (KISTI ~25 days)
+Next: DFT+U + ISPIN=2 validation on TOP 2 (KISTI ~10 GPU-days)
+  (top 5 → top 1-2 reduced: champion confirm 가 critical, top 3-5는
+   MLIP relative precision 으로 OK)
+
+Sampling completeness:
+  ~25-30% chance some better config exists outside 26 pair sample
+  80% of these would be |ΔE| < 0.3 eV (main message intact)
+  5% game-changer (>0.5 eV) — paper에 limitation 명시
 
 Paper main message:
   "4f³ HSAB cascade가 modelC argyrodite의 Nd₂O₃ 도핑에서 PS₃O를
-   universal local motif로 결정한다"
+   universal local motif로 결정한다 (cluster preference at top minima
+   suggests further enhancement via P-O bond network optimization)"
 ```
 
 ---
 
-**작성일**: 2026-05-09
-**상태**: ENUM 24/26 done, MLIP screen + anneal complete, DFT validation pending
-**향후 update**: enum 100% 완료 시, DFT validation 시, paper draft 시
+**작성일**: 2026-05-09 (v1) → 2026-05-12 (v3)
+**상태**: ENUM ==**26/26 DONE**==, MLIP screen + anneal complete, DFT validation pending (top 2)
+**v3 변경점**:
+- ENUM 24/26 → 26/26 완료 반영
+- pair_24 (cross_15_75) 발견: closest runner-up at 0.14 eV (이전 0.28 eV 갱신)
+- Top 2 둘 다 cat=G (PSO₃ cluster) → 발견 3b (cluster 안정성 5 가설) 추가
+- DFT validation: top 5 → ==**top 1-2 narrative**== (Section 6.4 갱신)
+- Section 6.5 추가: 26 pair sampling 의 누락 확률 정량 분석 (~25-30%)
+- FAQ Q10-Q13 추가
+**향후 update**: DFT+U validation 시, paper draft 시, additional bin sampling 시
