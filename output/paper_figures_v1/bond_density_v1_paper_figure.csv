@@ -1,0 +1,11 @@
+# comp4 v1 era — bond density at SE/NCM interface (v15 protocol, hardcoded paper figure values)
+# Source: kb/results/comp4_v2_adhesion_narrative_pivot.md  + output/comp4_v2_adhesion/v1_v2_REDO_comparison.json
+# Method: phase2a_v15_bond_robustness.py, mean of 36 xy-shift registries, single Z-cut at gap_eq=1.4 A
+# Comp4 here is v1 anneal champion (NOT v2). modelC included for reference.
+comp,formula_short,Li_O_density_A-2,Cl_O_density_A-2,Br_O_density_A-2,paper_Wad_mJ_m2
+comp1,LPSC_1.0,0.1147,0.0247,0.0000,194
+comp2,LPSC_0.5Br0.5,0.0759,0.0292,0.0000,180
+comp3,LPSC_1.0Br0.6,0.1372,0.0000,0.0000,316
+comp4,LPSC_0.8Br0.8,0.1245,0.0000,0.1083,298
+comp5,LPSC_0.6Br1.0,0.1256,0.0000,0.1078,249
+modelC,LPSC_1.6,0.0853,0.0881,0.0000,
