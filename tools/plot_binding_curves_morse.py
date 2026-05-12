@@ -139,8 +139,35 @@ def main():
     pdf = OUT_DIR / "figure_v8_morse_smooth.pdf"
     fig.savefig(png); fig.savefig(pdf); plt.close()
 
+    # Dense CSV with Morse-smoothed values (0.02 A step)
+    g_csv = np.arange(g_lo, g_hi + 0.02/2, 0.02)
+    smooth_curves = {}
+    for c in PAPER_COMPS:
+        if c not in cols:
+            continue
+        e = cols[c]
+        popt = fit_morse(gaps, e)
+        if popt is not None:
+            smooth_curves[c] = morse(g_csv, *popt)
+        else:
+            cs = CubicSpline(gaps[~np.isnan(e)], e[~np.isnan(e)])
+            smooth_curves[c] = gaussian_filter1d(cs(g_csv), sigma=10)
+    csv_out = OUT_DIR / "figure_v8_morse_smooth.csv"
+    with open(csv_out, 'w', encoding='utf-8') as f:
+        f.write("# Morse-fit smoothed binding curves from "
+                f"{CSV_PATH}\n")
+        f.write("# E_adh = D*(1-exp(-a*(d-d_eq)))^2 - D + offset, J/m^2\n")
+        f.write("# Step 0.02 A, range matched to source CSV\n")
+        f.write("gap_A," + ",".join(c for c in PAPER_COMPS if c in smooth_curves) + "\n")
+        for i, g in enumerate(g_csv):
+            row = [f"{g:.3f}"]
+            for c in PAPER_COMPS:
+                if c in smooth_curves:
+                    row.append(f"{smooth_curves[c][i]:+.6f}")
+            f.write(",".join(row) + "\n")
     print(f"saved {png}")
-    print(f"saved {pdf}\n")
+    print(f"saved {pdf}")
+    print(f"saved {csv_out}\n")
     print(f"{'comp':<8} {'well depth':>10} {'fit':<40}")
     for c in PAPER_COMPS:
         if c in well_depths:
