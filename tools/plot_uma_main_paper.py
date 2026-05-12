@@ -51,9 +51,11 @@ GAP_LO, GAP_HI = 0.8, 4.0
 GAP_WINDOW_LO, GAP_WINDOW_HI = 1.2, 1.6
 
 
-def load_per_reg_norm(path):
-    """For each (comp, gap): mean over 36 registries of (Wad - per-reg asym).
-    Returns: { comp: (gaps_array, mean_arr, std_arr) }
+def load_raw_mean(path):
+    """For each (comp, gap): mean & std of RAW Wad over 36 registries.
+    NO asymptote subtraction — the original UMA_main_paper protocol applies
+    the linear-fit transform to RAW W_ad, so per-comp baselines are preserved
+    and the affine map gives positive slope (correct ranking).
     """
     raw = json.load(open(path))
     out = {}
@@ -67,22 +69,13 @@ def load_per_reg_norm(path):
         gaps_str = sorted(gap_set, key=float)
         gaps = np.array([float(g) for g in gaps_str])
 
-        # Per-reg asymptote
-        per_reg_asym = {}
-        for reg, rd in comp_data.items():
-            curve = rd.get('curve', {})
-            vals = [curve[g]['Wad_J_per_m2'] for g in gaps_str
-                    if g in curve and float(g) >= GAP_ASYMP_MIN
-                    and curve[g].get('Wad_J_per_m2') is not None]
-            per_reg_asym[reg] = float(np.mean(vals)) if vals else 0.0
-
         means = []; stds = []
         for g in gaps_str:
             vs = []
             for reg, rd in comp_data.items():
                 curve = rd.get('curve', {})
                 if g in curve and curve[g].get('Wad_J_per_m2') is not None:
-                    vs.append(curve[g]['Wad_J_per_m2'] - per_reg_asym[reg])
+                    vs.append(curve[g]['Wad_J_per_m2'])     # RAW, no subtract
             means.append(float(np.mean(vs)) if vs else float('nan'))
             stds.append(float(np.std(vs)) if len(vs) > 1 else 0.0)
         out[c] = (gaps, np.array(means), np.array(stds))
@@ -94,7 +87,7 @@ def main():
         print(f"ERROR: {JSON_PATH} not found")
         return
     print(f"Loading {JSON_PATH}")
-    data = load_per_reg_norm(JSON_PATH)
+    data = load_raw_mean(JSON_PATH)
 
     # W_max per comp (max in 1.0-2.0 window)
     Wmax = {}
@@ -216,7 +209,7 @@ def main():
     ax.axhline(0, color='k', lw=0.7, alpha=0.7, zorder=2)
     ax.set_xlabel(r'Interface gap, $d$ (Å)')
     ax.set_ylabel(r'Adhesion energy (J m$^{-2}$)')
-    ax.set_title(f'UMA binding curves (R = {R:+.3f}) — linear-fit calibrated')
+    ax.set_title(r'UMA binding curves')
     ax.set_xlim(GAP_LO, GAP_HI)
     ax.grid(True, alpha=0.25)
     ax.legend(loc='lower right', framealpha=0.95)
