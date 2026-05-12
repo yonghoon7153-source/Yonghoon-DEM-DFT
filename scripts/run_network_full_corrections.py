@@ -465,10 +465,40 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     df_ionic, df_e, df_kappa, factors = apply_corrections(
         atoms_df, contacts_df, type_map, scale)
 
-    # Run solver three times — channel-isolated
-    res_ionic = _run_solver(case_dir, df_ionic, type_map_str, scale)
-    res_e     = _run_solver(case_dir, df_e,     type_map_str, scale)
-    res_kappa = _run_solver(case_dir, df_kappa, type_map_str, scale)
+    # Optimization: if every per-contact factor for a channel is 1.0 (e.g.
+    # Cronau σ_ionic factor is size-invariant ×1.00 for r_SE ≥ 0.5 µm), the
+    # modified contacts are identical to the original and re-running the
+    # solver is wasted work — and worse, it sometimes returns a *different*
+    # numerical answer due to LU-solve / sparse-matrix conditioning that's
+    # sensitive to row ordering changes from reset_index. Detect that case
+    # and skip the solver, reusing the baseline values directly.
+    def _factor_is_unity(channel: str) -> bool:
+        key = {'ionic': 'f_SE_ionic',
+               'e':     'weighted_factor_e',
+               'kappa': 'weighted_factor_kappa'}[channel]
+        if channel == 'ionic':
+            v = factors.get('f_SE_ionic')
+            return v is not None and abs(v - 1.0) < 1e-9
+        v = factors.get(key)
+        # For e/kappa, the weighted factor is a Bruggeman-style mean; only
+        # consider unity-pass when AM factors are explicitly all 1.0
+        if channel == 'e':
+            af = factors.get('AM_factors', {})
+            return all(abs((af.get(k) or 1.0) - 1.0) < 1e-9 for k in ('AM_P', 'AM_S'))
+        if channel == 'kappa':
+            kf = factors.get('kappa_factors', {})
+            return all(abs((kf.get(k) or 1.0) - 1.0) < 1e-9
+                       for k in ('AM_P', 'AM_S', 'SE'))
+        return False
+
+    skip_ionic = _factor_is_unity('ionic')
+    skip_e     = _factor_is_unity('e')
+    skip_kappa = _factor_is_unity('kappa')
+
+    # Run solver only for channels that actually have corrections to apply
+    res_ionic = None if skip_ionic else _run_solver(case_dir, df_ionic, type_map_str, scale)
+    res_e     = None if skip_e     else _run_solver(case_dir, df_e,     type_map_str, scale)
+    res_kappa = None if skip_kappa else _run_solver(case_dir, df_kappa, type_map_str, scale)
 
     fm_path = case_dir / 'full_metrics.json'
     try:
@@ -477,9 +507,15 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     except Exception as e:
         return (case_dir.name, False, f'fm read failed: {e}')
 
-    sigma_ionic_e = res_ionic.get('sigma_full_mScm') if res_ionic else None
-    sigma_e_e     = res_e.get('electronic_sigma_full_mScm') if res_e else None
-    sigma_th_e    = res_kappa.get('thermal_sigma_full_mScm') if res_kappa else None
+    # When solver was skipped (factor ≡ 1.0), reuse baseline values from
+    # the pre-existing full_metrics.json (= the network solver baseline).
+    # When solver ran, take its output.
+    sigma_ionic_e = (fm.get('sigma_full_mScm') if skip_ionic else
+                     (res_ionic.get('sigma_full_mScm') if res_ionic else None))
+    sigma_e_e     = (fm.get('electronic_sigma_full_mScm') if skip_e else
+                     (res_e.get('electronic_sigma_full_mScm') if res_e else None))
+    sigma_th_e    = (fm.get('thermal_sigma_full_mScm') if skip_kappa else
+                     (res_kappa.get('thermal_sigma_full_mScm') if res_kappa else None))
 
     # --- Physics-mode parallel: solver returned both modes via --contact-mode
     # both, so the same JSON has *_physics counterparts. Stage E factors
@@ -488,9 +524,12 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     # variants here lets the UI display Stage E for Hertzian AND Physics
     # baselines side-by-side (mirrors the existing Network Solver section
     # 4-column format: Hertzian | Physics | Δ%).
-    sigma_ionic_e_p = res_ionic.get('sigma_full_mScm_physics') if res_ionic else None
-    sigma_e_e_p     = res_e.get('electronic_sigma_full_mScm_physics') if res_e else None
-    sigma_th_e_p    = res_kappa.get('thermal_sigma_full_mScm_physics') if res_kappa else None
+    sigma_ionic_e_p = (fm.get('sigma_full_mScm_physics') if skip_ionic else
+                       (res_ionic.get('sigma_full_mScm_physics') if res_ionic else None))
+    sigma_e_e_p     = (fm.get('electronic_sigma_full_mScm_physics') if skip_e else
+                       (res_e.get('electronic_sigma_full_mScm_physics') if res_e else None))
+    sigma_th_e_p    = (fm.get('thermal_sigma_full_mScm_physics') if skip_kappa else
+                       (res_kappa.get('thermal_sigma_full_mScm_physics') if res_kappa else None))
 
     # Auto-trigger: factor-weighted Bruggeman fallback when solver fails
     # or returns unphysical values. Conditions for triggering fallback:
@@ -503,9 +542,9 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     # f_i = per-contact factor (fracture σ × grain). This is a Bruggeman-
     # style effective-medium estimate that's mathematically consistent
     # with the framework's σ_factor ≤ 1 constraint.
-    source_ionic = 'solver'
-    source_e     = 'solver'
-    source_th    = 'solver'
+    source_ionic = 'baseline_no_correction' if skip_ionic else 'solver'
+    source_e     = 'baseline_no_correction' if skip_e     else 'solver'
+    source_th    = 'baseline_no_correction' if skip_kappa else 'solver'
     fallback_messages = []
 
     def _is_invalid(v, base):
@@ -547,9 +586,9 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
             f"κ fallback ({reason}) → {sigma_th_e:.3f} = {base_th_solver:.3f}×{factors['weighted_factor_kappa']:.3f}")
 
     # ── Physics-baseline Stage E fallback (mirrors above logic) ──
-    source_ionic_p = 'solver'
-    source_e_p     = 'solver'
-    source_th_p    = 'solver'
+    source_ionic_p = 'baseline_no_correction' if skip_ionic else 'solver'
+    source_e_p     = 'baseline_no_correction' if skip_e     else 'solver'
+    source_th_p    = 'baseline_no_correction' if skip_kappa else 'solver'
     if _is_invalid(sigma_ionic_e_p, base_ionic_p) and base_ionic_p and factors.get('weighted_factor_ionic') is not None:
         sigma_ionic_e_p = base_ionic_p * factors['weighted_factor_ionic']
         source_ionic_p = 'fallback_weighted_factor'
