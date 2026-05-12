@@ -2440,7 +2440,17 @@ def analyze(case_id):
                       'electronic_sigma_full_mScm', 'electronic_R_brug',
                       'electronic_active_fraction', 'electronic_percolating_fraction',
                       'thermal_sigma_full_mScm', 'thermal_R_brug',
-                      'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full']
+                      'sigma_bruggeman', 'sigma_bruggeman_mScm', 'R_bruggeman_over_full',
+                      # Physics-mode (Tabor + volume) baselines — required for
+                      # Stage E Physics column. Without merging these, the UI
+                      # 4-col layout shows '—' Physics even when the solver
+                      # successfully computed both modes.
+                      'sigma_full_physics', 'sigma_full_mScm_physics',
+                      'sigma_bulk_net_physics', 'sigma_bulk_net_mScm_physics',
+                      'electronic_sigma_full_mScm_physics',
+                      'thermal_sigma_full_mScm_physics',
+                      'bulk_resistance_fraction_physics',
+                      'R_brug_over_full_physics']
 
     def _run():
         results_dir = get_results_dir(case_id)

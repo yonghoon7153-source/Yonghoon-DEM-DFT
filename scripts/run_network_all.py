@@ -46,6 +46,16 @@ _NET_MERGE_KEYS = [
     'electronic_active_fraction', 'electronic_percolating_fraction',
     'thermal_sigma_full_mScm', 'thermal_R_brug',
     'physics_resistance_model', 'physics_solver_at',
+    # ── Physics-mode (Tabor + volume) counterparts ──
+    # network_conductivity.py emits these when called with
+    # --contact-mode both; without them, Stage E sees Physics baseline
+    # as 0/None and the UI Physics column shows '—'.
+    'sigma_full_physics', 'sigma_full_mScm_physics',
+    'sigma_bulk_net_physics', 'sigma_bulk_net_mScm_physics',
+    'electronic_sigma_full_mScm_physics',
+    'thermal_sigma_full_mScm_physics',
+    'bulk_resistance_fraction_physics',
+    'R_brug_over_full_physics',
 ]
 
 
