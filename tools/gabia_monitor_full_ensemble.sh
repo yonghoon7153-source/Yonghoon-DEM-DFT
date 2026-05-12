@@ -10,6 +10,13 @@ WORK=/data/work/v30u_ensemble
 RESULTS=$WORK/v30u_full_ensemble_results
 LOG=$RESULTS/run.log
 
+# Use uma env's python if available (has numpy)
+PY=python3
+for p in /data/apps/miniforge3/envs/uma/bin/python \
+         /scratch/x3430a02/mjs0000/miniforge3/envs/uma/bin/python; do
+    if [ -x "$p" ]; then PY="$p"; break; fi
+done
+
 B="\033[1m"; G="\033[1;32m"; Y="\033[1;33m"; R="\033[1;31m"; C="\033[1;36m"; D="\033[2m"; N="\033[0m"
 
 echo -e "${B}════════════════════════════════════════════════════════════════════════"
@@ -42,16 +49,16 @@ for C in comp1 comp2 comp3 comp4 comp5 modelC; do
     if [ -f "$F" ]; then
         SIZE=$(du -h "$F" | cut -f1)
         # Robust python: handles both keys + index lookup; prints "Wmax±std at d=X.XX"
-        INFO=$(python3 << PYEOF 2>&1
+        INFO=$($PY << PYEOF 2>&1
 try:
-    import json, numpy as np
+    import json
     d = json.load(open('$F'))
     m = d.get('Wad_mean', [])
     s = d.get('Wad_std', [])
     g = d.get('gaps', [])
     if m and s and g:
-        i = int(np.argmax(m))
-        print(f"Wmax={m[i]:+.3f}±{s[i]:.3f}  d={g[i]:.2f}Å  n={d.get('n_samples','?')}")
+        i = max(range(len(m)), key=lambda k: m[k])
+        print(f"Wmax={m[i]:+.3f}±{s[i]:.3f}  d={g[i]:.2f}A  n={d.get('n_samples','?')}")
     else:
         print("(no Wad_mean in json)")
 except Exception as e:
@@ -120,9 +127,8 @@ fi
 # Per-comp summary if done
 if [ $N_DONE -ge 1 ]; then
     echo -e "\n${C}── Per-comp W_max_mean (so far) ──${N}"
-    python3 << PYEOF 2>&1
-import json, os, glob
-import numpy as np
+    $PY << PYEOF 2>&1
+import json, os, glob, math
 PAPER = {'comp1': 194, 'comp2': 180, 'comp3': 316, 'comp4': 298, 'comp5': 249}
 print(f"  {'comp':<8} {'W_max_mean':>14} {'std':>8} {'d_min':>8} {'n_samp':>8} {'paper':>7}")
 results_dir = '$RESULTS'
@@ -137,16 +143,23 @@ for f in files:
         g = d.get('gaps', [])
         n = d.get('n_samples', '?')
         if m and s and g:
-            i = int(np.argmax(m))
+            i = max(range(len(m)), key=lambda k: m[k])
             paper = PAPER.get(c, '—')
             print(f"  {c:<8} {m[i]:>+14.3f} {s[i]:>8.3f} {g[i]:>8.2f} {str(n):>8} {str(paper):>7}")
             if c in PAPER:
                 xs.append(m[i]); ys.append(PAPER[c])
     except Exception as e:
         print(f"  {c}: parse error: {e}")
+# Pearson R (pure Python, no numpy)
 if len(xs) >= 3:
-    R = float(np.corrcoef(xs, ys)[0,1])
-    print(f"\n  R(W_max_mean vs paper exp) = {R:+.4f}  (n={len(xs)})")
+    n = len(xs)
+    mx = sum(xs)/n; my = sum(ys)/n
+    num = sum((xs[i]-mx)*(ys[i]-my) for i in range(n))
+    dx2 = sum((xs[i]-mx)**2 for i in range(n))
+    dy2 = sum((ys[i]-my)**2 for i in range(n))
+    denom = math.sqrt(dx2*dy2)
+    R = num/denom if denom > 0 else float('nan')
+    print(f"\n  R(W_max_mean vs paper exp) = {R:+.4f}  (n={n})")
 PYEOF
 fi
 
