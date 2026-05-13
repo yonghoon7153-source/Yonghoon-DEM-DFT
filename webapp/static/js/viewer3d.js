@@ -820,31 +820,36 @@ function applyViewMode(state, mode) {
      * (data-frame xyz), oriented so its +Y pole points along `dir`
      * (unit vector in data frame), with radius r * 1.005 so it sits
      * just outside the underlying InstancedMesh surface (no z-fight).
-     * Per-vertex alpha-blended colour gives the gradient feel. */
-    function buildCap(r, centerData, dir, stageHex, halfAngleRad) {
+     * Vertex RGBA: full stage colour, alpha = t² (1 at pole → 0 at
+     * rim) so the patch fades smoothly against the host particle's
+     * own colour without ever brightening it.  renderOrder is tied to
+     * Lawn-stage rank so where two caps overlap the more severe one
+     * always wins — no additive Venn-diagram artefacts. */
+    function buildCap(r, centerData, dir, stageName, halfAngleRad) {
       const segs = 28;
       const geo = new THREE.SphereGeometry(
         r * 1.005, segs, Math.max(8, segs >> 1),
         0, Math.PI * 2, 0, halfAngleRad,
       );
-      const stage = new THREE.Color(stageHex);
+      const stage = new THREE.Color(STAGE_COL[stageName]);
       const yMin = Math.cos(halfAngleRad);
       const pos = geo.attributes.position;
-      const colors = new Float32Array(pos.count * 3);
+      const colors = new Float32Array(pos.count * 4);   // RGBA
       for (let i = 0; i < pos.count; i++) {
-        const y = pos.array[i * 3 + 1];        // y axis = cap pole
+        const y = pos.array[i * 3 + 1];                  // cap pole = +Y
         const t = Math.max(0, Math.min(1, (y - yMin) / (1 - yMin)));
-        const fade = t * t;                     // sharper falloff at the rim
-        colors[i * 3 + 0] = stage.r * fade;
-        colors[i * 3 + 1] = stage.g * fade;
-        colors[i * 3 + 2] = stage.b * fade;
+        const fade = t * t;
+        colors[i * 4 + 0] = stage.r;
+        colors[i * 4 + 1] = stage.g;
+        colors[i * 4 + 2] = stage.b;
+        colors[i * 4 + 3] = fade;                        // alpha falloff
       }
-      geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 4));
       const mat = new THREE.MeshBasicMaterial({
         vertexColors: true,
         transparent: true,
         depthWrite: false,
-        blending: THREE.AdditiveBlending,
+        side: THREE.FrontSide,
       });
       const mesh = new THREE.Mesh(geo, mat);
       // Three.js Z-up swap for both position and orientation
@@ -853,7 +858,8 @@ function applyViewMode(state, mode) {
       mesh.quaternion.setFromUnitVectors(
         new THREE.Vector3(0, 1, 0), dirThree,
       );
-      mesh.renderOrder = 4;
+      // Heavier stages get larger renderOrder → drawn last → on top.
+      mesh.renderOrder = 4 + (STAGE_RANK[stageName] || 0);
       return mesh;
     }
 
@@ -876,16 +882,15 @@ function applyViewMode(state, mode) {
       const inv = 1.0 / Math.sqrt(dx*dx + dy*dy + dz*dz + 1e-12);
       const u = { x: dx*inv, y: dy*inv, z: dz*inv };
       const ha = HALF_ANGLE[stage] || HALF_ANGLE.microcrack;
-      const colHex = STAGE_COL[stage];
 
       group.add(buildCap(p1.r || 1,
         { x: p1.x, y: p1.y, z: p1.z },
         u,                                       // p1 → p2
-        colHex, ha));
+        stage, ha));
       group.add(buildCap(p2.r || 1,
         { x: p2.x, y: p2.y, z: p2.z },
         { x: -u.x, y: -u.y, z: -u.z },           // p2 → p1
-        colHex, ha));
+        stage, ha));
     });
     if (state.scene) {
       state.scene.add(group);
