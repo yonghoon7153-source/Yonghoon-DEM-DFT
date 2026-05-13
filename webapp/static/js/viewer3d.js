@@ -73,6 +73,34 @@ function coolwarmColor(t) {
   return (r << 16) | (g << 8) | b;
 }
 
+/* ColorBrewer RdYlGn 5-class diverging — muted "red/yellow/green"
+ * with proper academic anchors. Continuous interpolation between
+ * the 5 anchor points so the legend can show 0/50/100 % swatches
+ * but per-particle colours fall on the smooth gradient.  Used by
+ * the Coverage Heat (AM) view in place of the saturated RGB
+ * primaries that read as a traffic-light. */
+const _RDYLGN = [
+  [0.00, 0xd7, 0x19, 0x1c],
+  [0.25, 0xfd, 0xae, 0x61],
+  [0.50, 0xff, 0xff, 0xbf],
+  [0.75, 0xa6, 0xd9, 0x6a],
+  [1.00, 0x1a, 0x96, 0x41],
+];
+function rdylgnColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  for (let i = 0; i < _RDYLGN.length - 1; i++) {
+    const a = _RDYLGN[i], b = _RDYLGN[i + 1];
+    if (t <= b[0]) {
+      const u = (t - a[0]) / (b[0] - a[0]);
+      const r = Math.round(a[1] + (b[1] - a[1]) * u);
+      const g = Math.round(a[2] + (b[2] - a[2]) * u);
+      const bl = Math.round(a[3] + (b[3] - a[3]) * u);
+      return (r << 16) | (g << 8) | bl;
+    }
+  }
+  const last = _RDYLGN[_RDYLGN.length - 1];
+  return (last[1] << 16) | (last[2] << 8) | last[3];
+}
 /* COMSOL-style coolwarm (blue → white → red) colormap.
  * t ∈ [0,1].  Anchors:
  *   t = 0.0  →  (59, 76, 192)   deep blue
@@ -1241,19 +1269,52 @@ function applyViewMode(state, mode) {
 
   if (mode === 'coverage') {
     /* Per-AM coverage = SE-area / total surface area, %.  Naturally
-     * bounded 0–100, so a straight linear normalise works.  Switched
-     * the legacy red→yellow→green palette to viridis-style green→
-     * yellow→red (low coverage = red = bad, high = green = good)
-     * so the colour reads as "more SE coverage is better". */
+     * bounded [0, 100] but most particles in a real case cluster
+     * around the median (60-80 %), so a straight linear normalise
+     * makes everything read as one shade of green and the low-
+     * coverage problem particles get visually swamped.
+     *
+     * Improvements:
+     *   1. ColorBrewer RdYlGn 5-class diverging palette instead of
+     *      saturated R/Y/G primaries (academic style).
+     *   2. Percentile-based clip — the 5th-percentile value maps to
+     *      the deep-red endpoint, the 95th-percentile to deep-green,
+     *      so the colormap range matches the actual distribution
+     *      instead of always 0-100.
+     *   3. Opacity scales with (1 - normalised coverage) so the
+     *      low-coverage particles render bright and fully opaque
+     *      while the well-covered green majority recedes to a
+     *      translucent background.  Result: the "problem children"
+     *      visually pop out of the rest. */
     const covMap = aux.coverage_per_am || {};
     const seMesh = state.meshes.SE;
     if (seMesh) {
       seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
-      seMesh.material.opacity = 0.10;
+      seMesh.material.opacity = 0.08;
       seMesh.material.transparent = true;
     }
-    let nCovered = 0, nMissing = 0;
     const vals = [];
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p) => {
+        const c = covMap[String(p.id)] ?? covMap[p.id];
+        if (c !== undefined) vals.push(c);
+      });
+    });
+    if (!vals.length) {
+      setLegend(state, '<i>No coverage data — run scripts/coverage_physics_vs_hertzian.py first.</i>');
+      return;
+    }
+    const sorted = [...vals].sort((a, b) => a - b);
+    const pct = (p) => sorted[Math.max(0, Math.min(sorted.length - 1,
+        Math.floor(p * (sorted.length - 1))))];
+    const cLo = pct(0.05);
+    const cHi = Math.max(cLo + 1, pct(0.95));
+    const cMed = pct(0.50);
+    const mean = vals.reduce((a,b)=>a+b, 0) / vals.length;
+    const norm = (c) => Math.max(0, Math.min(1, (c - cLo) / (cHi - cLo)));
+
+    let nMissing = 0;
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
@@ -1263,30 +1324,32 @@ function applyViewMode(state, mode) {
           nMissing++;
           return;
         }
-        nCovered++;
-        vals.push(c);
-        const tnorm = Math.max(0, Math.min(1, c / 100));
-        m.setColorAt(i, new THREE.Color(rygColor(tnorm)));
+        m.setColorAt(i, new THREE.Color(rdylgnColor(norm(c))));
       });
+      // Same material opacity for both AM types — keeps the field
+      // consistent.  Low-coverage particles already pop visually via
+      // the red end of the palette against the muted green majority.
       m.material.opacity = 0.95;
       m.material.transparent = true;
     });
     flushColors();
-    const mean = vals.length ? (vals.reduce((a,b)=>a+b, 0) / vals.length) : 0;
+
+    // Inline ColorBrewer gradient bar with percentile-anchored labels
+    const stops = [0, 0.25, 0.5, 0.75, 1.0]
+      .map(v => '#' + rdylgnColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
       `<b>AM Coverage — SE / surface area (%)</b>
-       <span style="color:#9ca3af;font-size:10px">
-         (각 AM 입자 표면 중 SE 입자가 닿은 비율)
-       </span>
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
-         background:linear-gradient(90deg,#ff0000,#ffff00,#00ff00)"></div>
+         background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
-         <span>0 %</span><span>50 %</span><span>100 %</span>
+         <span>${cLo.toFixed(0)}%</span>
+         <span>median ${cMed.toFixed(0)}%</span>
+         <span>${cHi.toFixed(0)}%</span>
        </div>
        <span style="color:#9ca3af;font-size:10px;line-height:1.4">
-         · 빨강 = 낮은 coverage → SE-AM 계면 부족 → σ_ionic 손실 위험<br>
-         · 초록 = 높은 coverage → 이온 통로 안정적 확보<br>
-         · 평균 ≈ ${mean.toFixed(1)} %${nMissing ? `  (data 없는 AM: ${nMissing})` : ''}
+         · 빨강 = low coverage → SE 계면 부족, σ_ionic 손실 risk<br>
+         · 초록 = high coverage → 이온 통로 안정<br>
+         · mean ≈ ${mean.toFixed(1)} %${nMissing ? ` (no-data AM: ${nMissing})` : ''}
        </span>`);
     return;
   }
