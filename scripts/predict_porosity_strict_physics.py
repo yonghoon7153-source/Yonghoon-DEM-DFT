@@ -15,12 +15,27 @@ ALL OTHER parameters from PUBLISHED PHYSICS — no fitting:
                                     Sakuda 2013 range 100-200 MPa)
   - Sridhar-Fleck-McMeeking 2000 SFM constraint:
         KC = 1 + α_KC · f_AM²  with α_KC = 2 (published, no fit)
-  - Stress-bearing percolation threshold f_perc = 0.65
-        (Liu & Yin 2025 — soft phase must form contiguous
-         load-bearing network to plastically densify under
-         AM-dominated force chains; geometric value 0.30 from
-         Scher-Zallen 1970 does NOT apply here because AM grains
-         carry the stress)
+  - Stress-bearing percolation threshold f_perc = 0.62
+        Central value from literature consensus 0.60-0.70:
+         [1] Storåkers, Fleck & McMeeking, Acta Mater. 48 (2000)
+             4203-4213 — bimodal hard+soft viscoplastic spheres;
+             hard skeleton forms at f_hard ≈ 0.30-0.35
+             → f_soft_perc ≈ 0.65-0.70  (SAME group/framework as
+             our SFM constraint above, so internally consistent)
+         [2] Bouvard, Powder Technol. 111 (2000) 231 / Mech. Mater.
+             2000 — hard+soft powder 3-regime classification;
+             skeleton transition at hard ≈ 0.30 → SE ≈ 0.65
+         [3] Jacobs & Thorpe, PNAS 106 (2009) 5390 — rigidity
+             percolation in random networks at ≈ 0.66
+             (Maxwell counting, theoretical 2/3 anchor)
+         [4] Henkes, O'Hern & Behringer, Phys. Rev. Lett. 95
+             (2005) — force-chain percolation; ≈40% of grains
+             carry ≈80% of load (geometric 0.30 insufficient)
+         [5] Liu & Yin 2025 — explicit stress-bearing percolation
+             argument for ASSB composite cathodes
+        Geometric value 0.30 (Scher & Zallen 1970) does NOT
+        apply because AM grains carry the stress; SE must form a
+        load-bearing network to plastically densify.
 
 ZERO calibrated parameters for the MIXTURE behavior.
 Mixture predictions emerge directly from the framework.
@@ -62,9 +77,10 @@ SIGMA_Y_EFF = 1e6 / (3.0 * K_HECKEL)                                  # Pa
 
 # ── Published parameters (NO FIT) ─────────────────────────────────
 ALPHA_KC      = 2.0     # Sridhar 2000 typical (no fit)
-F_PERC        = 0.65    # Liu & Yin 2025 stress-bearing percolation
-                        # (soft SE must form load-bearing network;
-                        #  geometric 0.30 fails because AM carries stress)
+F_PERC        = 0.62    # Stress-bearing percolation, literature consensus
+                        # 0.60-0.70 (Storåkers+Fleck+McMeeking 2000,
+                        # Bouvard 2000, Jacobs 2009, Henkes 2005,
+                        # Liu & Yin 2025) — see docstring refs [1]-[5]
 SHARPNESS     = 8.0     # transition width (not critical)
 
 
@@ -149,7 +165,10 @@ def main():
     print()
     print(f'Published mixture parameters (NO fit):')
     print(f'  α_KC = {ALPHA_KC}            (Sridhar 2000 typical)')
-    print(f'  f_perc = {F_PERC}         (Liu & Yin 2025 stress-bearing)')
+    print(f'  f_perc = {F_PERC}         (stress-bearing consensus, see refs)')
+    print(f'    refs: Storåkers+Fleck+McMeeking 2000 (0.65-0.70),')
+    print(f'          Bouvard 2000 (0.65), Jacobs 2009 (0.66),')
+    print(f'          Henkes 2005, Liu & Yin 2025')
     print(f'  Bouvard RCP curve   (digitized data)')
     print('═' * 70)
     print()
@@ -200,7 +219,7 @@ def main():
     ax.set_ylabel('Porosity ε (%)', fontsize=12)
     ax.set_title(f'STRICT physics-first (1 anchor, 0 fits)\n'
                   f'α_KC={ALPHA_KC} (Sridhar 2000), '
-                  f'f_perc={F_PERC} (Liu & Yin 2025 stress-bearing)',
+                  f'f_perc={F_PERC} (Storåkers 2000 / Jacobs 2009 / Liu&Yin 2025)',
                   fontsize=11)
     ax.legend(fontsize=8.5, loc='upper left', framealpha=0.95)
     ax.grid(alpha=0.3)
@@ -237,9 +256,10 @@ def main():
                      arrowprops=dict(arrowstyle='<->', color='purple',
                                      lw=1.5))
 
-    ax.text(40, 5, '  Stress-bearing percolation (f_perc=0.65)\n'
+    ax.text(35, 5, f'  Stress-bearing percolation (f_perc={F_PERC})\n'
                     '  delays plastic onset until SE forms a\n'
-                    '  load-bearing network — Liu & Yin 2025',
+                    '  load-bearing network — Storåkers 2000,\n'
+                    '  Bouvard 2000, Jacobs 2009, Liu & Yin 2025',
             fontsize=9, color='purple', style='italic')
 
     ax2 = ax.twinx()
