@@ -3932,10 +3932,75 @@ def _brittle_z_csv_response(case_dir, case_name):
     return resp
 
 
+def _brittle_z_profile_compute(case_dir, bins=25):
+    """Shared loader used by data / png / csv helpers."""
+    import sys as _sys
+    _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if _scripts_dir not in _sys.path:
+        _sys.path.insert(0, _scripts_dir)
+    from plot_brittle_z_distribution import compute_brittle_zprofile
+    return compute_brittle_zprofile(case_dir, bins=bins)
+
+
+def _brittle_z_data_response(case_dir, case_name):
+    """Return brittle z-profile as JSON for the modal's table."""
+    if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
+            and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
+        return jsonify({'error': 'atoms.csv or contacts.csv missing'}), 404
+    bins = int(request.args.get('bins', 25))
+    profile = _brittle_z_profile_compute(case_dir, bins=bins)
+    # numpy arrays → plain lists for JSON
+    return jsonify({
+        'case_name':      case_name,
+        'thickness_um':   profile['thickness_um'],
+        'n_total':        profile['n_total'],
+        'n_damaged':      profile['n_damaged'],
+        'damaged_pct':    profile['damaged_pct'],
+        'bin_centers_um': [float(x) for x in profile['bin_centers_um']],
+        'bin_edges_um':   [float(x) for x in profile['bin_edges_um']],
+        'counts': {k: [int(x) for x in v] for k, v in profile['counts'].items()},
+        'mean_m':         [float(x) for x in profile['mean_m']],
+        'stage_totals':   {k: int(v) for k, v in profile['stage_totals'].items()},
+    })
+
+
+def _brittle_z_png_response(case_dir, case_name):
+    """Render the 3-panel brittle z-profile figure server-side and stream PNG."""
+    import io as _io
+    if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
+            and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
+        return ('atoms.csv or contacts.csv missing', 404)
+    bins = int(request.args.get('bins', 25))
+    profile = _brittle_z_profile_compute(case_dir, bins=bins)
+    import sys as _sys
+    _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if _scripts_dir not in _sys.path:
+        _sys.path.insert(0, _scripts_dir)
+    from plot_brittle_z_distribution import render_brittle_figure
+    fig = render_brittle_figure(profile)
+    buf = _io.BytesIO()
+    fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+    import matplotlib.pyplot as plt
+    plt.close(fig)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png', as_attachment=False,
+                      download_name=f'brittle_z_{case_name}.png')
+
+
 @app.route('/results/<case_id>/brittle-z-csv')
 def serve_brittle_z_csv(case_id):
     results_dir = get_results_dir(case_id)
     return _brittle_z_csv_response(results_dir, case_id)
+
+
+@app.route('/results/<case_id>/brittle-z-data')
+def serve_brittle_z_data(case_id):
+    return _brittle_z_data_response(get_results_dir(case_id), case_id)
+
+
+@app.route('/results/<case_id>/brittle-z-png')
+def serve_brittle_z_png(case_id):
+    return _brittle_z_png_response(get_results_dir(case_id), case_id)
 
 
 @app.route('/results/<case_id>/report')
@@ -4776,6 +4841,22 @@ def serve_archive_brittle_z_csv(folder):
     if not target:
         return ('Not found', 404)
     return _brittle_z_csv_response(target, os.path.basename(target.rstrip('/')))
+
+
+@app.route('/archive/results/<path:folder>/brittle-z-data')
+def serve_archive_brittle_z_data(folder):
+    target = _safe_path(folder)
+    if not target:
+        return jsonify({'error': 'Not found'}), 404
+    return _brittle_z_data_response(target, os.path.basename(target.rstrip('/')))
+
+
+@app.route('/archive/results/<path:folder>/brittle-z-png')
+def serve_archive_brittle_z_png(folder):
+    target = _safe_path(folder)
+    if not target:
+        return ('Not found', 404)
+    return _brittle_z_png_response(target, os.path.basename(target.rstrip('/')))
 
 
 @app.route('/archive/download/<path:filepath>')

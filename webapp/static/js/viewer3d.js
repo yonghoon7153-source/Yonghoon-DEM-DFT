@@ -746,7 +746,6 @@ function applyViewMode(state, mode) {
     });
     /* AM with no brittle contact stays dim. SE always dim in this mode. */
     flushColors();
-    const csvUrl = (state.dataUrl || '').replace('/3d-data', '/brittle-z-csv');
     setLegend(state,
       `<b>Brittle Stage (Auerbach + Lawn 1998)</b>
        <span style="color:#fde047">●</span> microcrack
@@ -754,10 +753,13 @@ function applyViewMode(state, mode) {
        <span style="color:#ef4444">●</span> fragmentation
        <span style="color:#7f1d1d">●</span> pulverization
        (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)
-       <a href="${csvUrl}" download
-          style="display:inline-block;margin-top:4px;padding:2px 8px;background:#2563eb;color:#fff;border-radius:4px;font-size:11px;text-decoration:none;font-weight:600">
-         Z-profile CSV ↓
-       </a>`);
+       <button id="brittle-z-modal-btn"
+          style="display:inline-block;margin-top:4px;padding:2px 8px;background:#2563eb;color:#fff;border-radius:4px;font-size:11px;border:none;cursor:pointer;font-weight:600">
+         Z-profile 표 / PNG / CSV
+       </button>`);
+    const btn = document.getElementById('brittle-z-modal-btn');
+    if (btn) btn.addEventListener('click',
+      () => showBrittleZProfileModal(state));
     return;
   }
 
@@ -1515,4 +1517,188 @@ function showAMCloseupView(state) {
   overlay.querySelector('.path-modal-close').addEventListener('click', close);
   document.getElementById('amcu-close').addEventListener('click', close);
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
+}
+
+
+/* ── Save a Blob with native Save-As dialog (CSV / PNG / any mime) ───
+ * Mirrors saveWithDialog() but starts from a Blob instead of a base64
+ * dataURL, so binary streams from fetch() can be saved directly.
+ */
+async function saveBlobWithDialog(blob, defaultName, btn, resetLabel) {
+  const flash = (msg) => {
+    if (btn) {
+      const orig = resetLabel || btn.textContent;
+      btn.textContent = msg;
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  };
+  const ext = (defaultName.split('.').pop() || '').toLowerCase();
+  const accept = {
+    png: { description: 'PNG image', accept: { 'image/png': ['.png'] } },
+    csv: { description: 'CSV file',  accept: { 'text/csv':  ['.csv'] } },
+  }[ext] || { description: 'File', accept: { [blob.type || 'application/octet-stream']: ['.' + ext] } };
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: defaultName,
+        types: [accept],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      flash('✓ Saved');
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+      console.warn('showSaveFilePicker failed, falling back:', e);
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = defaultName;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  flash('✓ Downloaded');
+}
+
+
+/* ── Brittle z-profile modal — table + PNG / CSV download ────────────
+ * Opens a modal that mirrors the Path Only View pattern.  Fetches a
+ * single JSON payload (compute_brittle_zprofile) and renders a Lawn-
+ * stage breakdown table inline.  Two action buttons stream the same
+ * profile rendered server-side as a 3-panel PNG or as raw CSV; each
+ * uses showSaveFilePicker so the user can choose a target name.
+ */
+async function showBrittleZProfileModal(state) {
+  const dataUrl = (state.dataUrl || '').replace('/3d-data', '/brittle-z-data');
+  const csvUrl  = (state.dataUrl || '').replace('/3d-data', '/brittle-z-csv');
+  const pngUrl  = (state.dataUrl || '').replace('/3d-data', '/brittle-z-png');
+
+  // Overlay skeleton — same DOM class so existing CSS applies
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:880px;max-width:94vw">
+      <button class="path-modal-close">&times;</button>
+      <div style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">
+        Brittle z-profile (Auerbach + Lawn 1998)
+      </div>
+      <div id="bz-summary" class="path-modal-info" style="text-align:center;margin-bottom:8px">
+        Loading…
+      </div>
+      <div id="bz-table-wrap" style="max-height:55vh;overflow:auto;border:1px solid #e5e7eb;border-radius:6px"></div>
+      <div class="path-modal-actions">
+        <button id="bz-png-btn">PNG 다운로드</button>
+        <button id="bz-csv-btn">CSV 다운로드</button>
+        <button id="bz-close-btn">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const close = () => overlay.remove();
+  overlay.querySelector('.path-modal-close').addEventListener('click', close);
+  document.getElementById('bz-close-btn').addEventListener('click', close);
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+
+  // Fetch the profile JSON and render the table inline
+  let profile;
+  try {
+    const r = await fetch(dataUrl);
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    profile = await r.json();
+  } catch (e) {
+    document.getElementById('bz-summary').textContent =
+      'Failed to load: ' + e.message;
+    return;
+  }
+
+  const sum = profile.stage_totals || {};
+  const total = profile.n_total || 0;
+  const dmg   = profile.n_damaged || 0;
+  document.getElementById('bz-summary').innerHTML =
+    `<b>${profile.case_name}</b> · contacts: ${total} ` +
+    `(damaged ${dmg}, ${(profile.damaged_pct || 0).toFixed(1)}%) · ` +
+    `thickness ${(profile.thickness_um || 0).toFixed(1)} µm<br>` +
+    `intact ${sum.intact||0} · microcrack ${sum.microcrack||0} · ` +
+    `multicrack ${sum.multicrack||0} · fragmentation ${sum.fragmentation||0} · ` +
+    `pulverization ${sum.pulverization||0}`;
+
+  const stages = ['intact','microcrack','multicrack','fragmentation','pulverization'];
+  const stageColor = {
+    intact: '#cccccc', microcrack: '#fde047', multicrack: '#fb923c',
+    fragmentation: '#ef4444', pulverization: '#7f1d1d',
+  };
+  const centers = profile.bin_centers_um || [];
+  const edges   = profile.bin_edges_um   || [];
+  const meanM   = profile.mean_m         || [];
+  const c       = profile.counts         || {};
+
+  const fmt = (x, d=2) => (typeof x === 'number' ? x.toFixed(d) : x);
+  let html = `<table style="border-collapse:collapse;width:100%;font:11px 'JetBrains Mono',monospace;color:#222;background:#fff">
+    <thead style="background:#f3f4f6;position:sticky;top:0">
+      <tr>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z center<br>(µm)</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z range<br>(µm)</th>`;
+  stages.forEach(s => {
+    html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;background:${stageColor[s]};color:${s==='pulverization'?'#fff':'#000'}">${s}</th>`;
+  });
+  html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">total</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">damaged %</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">mean F/P_c</th>
+      </tr></thead><tbody>`;
+  for (let i = 0; i < centers.length; i++) {
+    const ni = (c.intact||[])[i]||0, nu = (c.microcrack||[])[i]||0,
+          nm = (c.multicrack||[])[i]||0, nf = (c.fragmentation||[])[i]||0,
+          np = (c.pulverization||[])[i]||0;
+    const tot = ni+nu+nm+nf+np;
+    const dam = nu+nm+nf+np;
+    const dpct = tot ? (100*dam/tot) : 0;
+    html += `<tr${i%2 ? ' style="background:#fafafa"':''}>
+      <td style="padding:4px 8px;text-align:right">${fmt(centers[i],2)}</td>
+      <td style="padding:4px 8px;text-align:right;color:#777">${fmt(edges[i],2)}–${fmt(edges[i+1],2)}</td>
+      <td style="padding:4px 8px;text-align:right">${ni}</td>
+      <td style="padding:4px 8px;text-align:right">${nu}</td>
+      <td style="padding:4px 8px;text-align:right">${nm}</td>
+      <td style="padding:4px 8px;text-align:right">${nf}</td>
+      <td style="padding:4px 8px;text-align:right">${np}</td>
+      <td style="padding:4px 8px;text-align:right;font-weight:600">${tot}</td>
+      <td style="padding:4px 8px;text-align:right">${dpct.toFixed(1)}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(meanM[i],3)}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  document.getElementById('bz-table-wrap').innerHTML = html;
+
+  // Download handlers — fetch as blob then native Save-As
+  document.getElementById('bz-png-btn').addEventListener('click', async (ev) => {
+    const btn = ev.currentTarget;
+    btn.textContent = '… rendering';
+    try {
+      const r = await fetch(pngUrl);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const blob = await r.blob();
+      await saveBlobWithDialog(blob, `brittle_z_${profile.case_name}.png`, btn, 'PNG 다운로드');
+    } catch (e) {
+      btn.textContent = 'Failed';
+      console.error('PNG download failed', e);
+      setTimeout(() => { btn.textContent = 'PNG 다운로드'; }, 1500);
+    }
+  });
+  document.getElementById('bz-csv-btn').addEventListener('click', async (ev) => {
+    const btn = ev.currentTarget;
+    btn.textContent = '… fetching';
+    try {
+      const r = await fetch(csvUrl);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const blob = await r.blob();
+      await saveBlobWithDialog(blob, `brittle_z_${profile.case_name}.csv`, btn, 'CSV 다운로드');
+    } catch (e) {
+      btn.textContent = 'Failed';
+      console.error('CSV download failed', e);
+      setTimeout(() => { btn.textContent = 'CSV 다운로드'; }, 1500);
+    }
+  });
 }
