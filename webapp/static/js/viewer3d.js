@@ -96,6 +96,7 @@ function buildControls(container) {
       <option value="brittle_surface">Brittle Hotspots (surface gradient)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
       <option value="stress">Stress Concentration</option>
+      <option value="stress_brittle">Stress + Brittle (cones at contacts)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="se_brittle">Fracture-prone SE</option>
     </select>
@@ -754,6 +755,14 @@ function applyViewMode(state, mode) {
     // cluster mode owned the SE rendering).
     if (state.meshes && state.meshes.SE) state.meshes.SE.visible = true;
   }
+  if (state.combinedOverlay && state.scene) {
+    state.scene.remove(state.combinedOverlay);
+    state.combinedOverlay.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) obj.material.dispose();
+    });
+    state.combinedOverlay = null;
+  }
 
   /* default: restore base colours + opacities */
   if (!mode || mode === 'default') {
@@ -1095,6 +1104,122 @@ function applyViewMode(state, mode) {
     const sBtn = document.getElementById('stress-z-modal-btn');
     if (sBtn) sBtn.addEventListener('click',
       () => showZProfileDataHub(state, 'stress'));
+    return;
+  }
+
+  if (mode === 'stress_brittle') {
+    /* Combined view: stress field on particles (coolwarm log scale)
+     * + Lawn-stage cone markers at every damaged AM-AM contact.
+     * Each cone sits at the contact midpoint, oriented along the
+     * pair-centre vector, and its size scales with F/P_c so severe
+     * sites pop visually while the stress field provides the
+     * spatial context (where force chains are concentrated). */
+
+    // ── 1) Paint stress field exactly like the 'stress' mode ────
+    const sMap = aux.stress_max || {};
+    const all  = Object.values(sMap).filter(v => v > 0);
+    if (all.length) {
+      const sorted = [...all].sort((a, b) => a - b);
+      const pct = (p) => sorted[Math.max(0, Math.min(sorted.length - 1,
+          Math.floor(p * (sorted.length - 1))))];
+      const sLo = Math.max(1.0, pct(0.05));
+      const sHi = Math.max(sLo * 1.5, pct(0.95));
+      const logLo = Math.log10(sLo), logHi = Math.log10(sHi);
+      const norm = (s) => !(s > 0) ? 0 :
+        Math.max(0, Math.min(1, (Math.log10(s) - logLo) / (logHi - logLo)));
+      ['AM_P', 'AM_S', 'SE'].forEach(t => {
+        const m = state.meshes[t]; if (!m) return;
+        m.userData.particles.forEach((p, i) => {
+          const s = sMap[String(p.id)] ?? sMap[p.id] ?? 0;
+          if (s <= 0) m.setColorAt(i, colDim);
+          else m.setColorAt(i, new THREE.Color(coolwarmColor(norm(s))));
+        });
+        m.material.opacity = (t === 'SE' ? 0.45 : 0.85);
+        m.material.transparent = true;
+      });
+      flushColors();
+    }
+
+    // ── 2) Add brittle-stage cone markers at each damaged contact ─
+    const idx = state.idIndex || {};
+    const group = new THREE.Group();
+    group.userData.isCombined = true;
+    const stageSize = {
+      microcrack:    0.55,
+      multicrack:    0.85,
+      fragmentation: 1.20,
+      pulverization: 1.55,
+    };
+    const counts = { microcrack:0, multicrack:0, fragmentation:0, pulverization:0 };
+
+    (aux.brittle_pairs || []).forEach(b => {
+      const p1 = idx[b.id1], p2 = idx[b.id2];
+      if (!p1 || !p2) return;
+      const stage = b.stage || 'microcrack';
+      if (!(stage in stageSize)) return;
+      counts[stage] += 1;
+      const colHex = STAGE_COL[stage];
+
+      // Contact direction p1 → p2 in data frame
+      const dx = p2.x - p1.x, dy = p2.y - p1.y, dz = p2.z - p1.z;
+      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
+      const r1 = p1.r || 1, r2 = p2.r || 1;
+      const rMin = Math.min(r1, r2);
+
+      // Midpoint along contact line in data frame
+      const w = r1 / (r1 + r2);
+      const cx = p1.x + dx * w;
+      const cy = p1.y + dy * w;
+      const cz = p1.z + dz * w;
+
+      // Cone geometry: small height, base radius ∝ stage severity
+      const baseR  = rMin * 0.35 * stageSize[stage];
+      const height = rMin * 0.9  * stageSize[stage];
+      const geo = new THREE.ConeGeometry(baseR, height, 14);
+      const mat = new THREE.MeshPhongMaterial({
+        color: colHex, emissive: colHex, emissiveIntensity: 0.35,
+        transparent: false,
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+
+      // Three.js Z-up swap: (x_data, y_data, z_data) → (x, z, y)
+      mesh.position.set(cx, cz, cy);
+      const dirThree = new THREE.Vector3(dx, dz, dy).normalize();
+      // ConeGeometry default points along +Y; align that with dirThree
+      mesh.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0), dirThree);
+      mesh.renderOrder = 6;
+      group.add(mesh);
+    });
+    if (state.scene) {
+      state.scene.add(group);
+      state.combinedOverlay = group;
+    }
+
+    /* Legend — combined: stress gradient bar + brittle stage swatches */
+    const stops = [0, 0.25, 0.5, 0.75, 1.0]
+      .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
+    setLegend(state,
+      `<b>Stress field + Brittle cones</b>
+       <span style="color:#9ca3af;font-size:10px">
+         particles = max contact pressure (log)<br>
+         cones = Lawn stage at damaged AM-AM contact
+       </span>
+       <div style="margin:6px 0 2px 0;height:8px;border-radius:3px;
+         background:linear-gradient(90deg,${stops.join(',')})"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+         <span>low MPa</span><span>median</span><span>high MPa</span>
+       </div>
+       <span style="color:#ffeda0">▲</span> microcrack (${counts.microcrack})
+       <span style="color:#feb24c">▲</span> multicrack (${counts.multicrack})
+       <span style="color:#f03b20">▲</span> fragmentation (${counts.fragmentation})
+       <span style="color:#800026">▲</span> pulverization (${counts.pulverization})
+       <button id="combined-z-modal-btn" class="data-modal-btn">
+         <span class="ico">📊</span><span>Z-profile 데이터</span>
+       </button>`);
+    const cBtn = document.getElementById('combined-z-modal-btn');
+    if (cBtn) cBtn.addEventListener('click',
+      () => showZProfileDataHub(state, 'combined'));
     return;
   }
 
