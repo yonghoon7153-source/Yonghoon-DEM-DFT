@@ -29,55 +29,6 @@ const STAGE_COL = {
 const STAGE_RANK = { intact: 0, microcrack: 1, multicrack: 2,
                       fragmentation: 3, pulverization: 4 };
 
-/* Lazy cache of radial-gradient sprite textures, keyed by stage label.
- * Used by the contact-localised "Brittle Glow" view mode — sprites are
- * placed at the midpoint of each damaged AM-AM contact so the colour
- * appears as a soft halo on the contact area instead of repainting the
- * entire AM particle. */
-const _GLOW_TEX_CACHE = {};
-function getStageGlowTexture(stage) {
-  if (_GLOW_TEX_CACHE[stage]) return _GLOW_TEX_CACHE[stage];
-  const hex = STAGE_COL[stage] || 0xfde047;
-  const r = (hex >> 16) & 0xff, g = (hex >> 8) & 0xff, b = hex & 0xff;
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 128;
-  const ctx = canvas.getContext('2d');
-  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0.00, `rgba(255,255,255,1.00)`);  // hot core
-  grad.addColorStop(0.18, `rgba(${r},${g},${b},0.95)`);
-  grad.addColorStop(0.55, `rgba(${r},${g},${b},0.45)`);
-  grad.addColorStop(1.00, `rgba(${r},${g},${b},0.00)`);  // soft falloff
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 128, 128);
-  const tex = new THREE.CanvasTexture(canvas);
-  tex.minFilter = THREE.LinearFilter;
-  _GLOW_TEX_CACHE[stage] = tex;
-  return tex;
-}
-
-/* One shared white radial-gradient texture used by Brittle Heatmap
- * mode — each contact gets its OWN SpriteMaterial whose .color is set
- * to the coolwarm-mapped F/P_c value, so the gradient on a single
- * sprite is white-core → transparent and the tint comes from the
- * material colour (multiplied with the map). */
-let _WHITE_GLOW_TEX = null;
-function getWhiteGlowTexture() {
-  if (_WHITE_GLOW_TEX) return _WHITE_GLOW_TEX;
-  const canvas = document.createElement('canvas');
-  canvas.width = canvas.height = 128;
-  const ctx = canvas.getContext('2d');
-  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-  grad.addColorStop(0.00, 'rgba(255,255,255,1.00)');
-  grad.addColorStop(0.30, 'rgba(255,255,255,0.85)');
-  grad.addColorStop(0.70, 'rgba(255,255,255,0.30)');
-  grad.addColorStop(1.00, 'rgba(255,255,255,0.00)');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, 128, 128);
-  _WHITE_GLOW_TEX = new THREE.CanvasTexture(canvas);
-  _WHITE_GLOW_TEX.minFilter = THREE.LinearFilter;
-  return _WHITE_GLOW_TEX;
-}
-
 function jetColor(t) {
   // t ∈ [0,1] → blue→cyan→green→yellow→red
   const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
@@ -131,9 +82,7 @@ function buildControls(container) {
     <label style="font-size:11px;font-weight:600;margin-bottom:1px">View Mode</label>
     <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
       <option value="default">Default</option>
-      <option value="brittle">Brittle Hotspots (AM)</option>
-      <option value="brittle_glow">Brittle Glow (contact-localised)</option>
-      <option value="brittle_heatmap">Brittle Heatmap (F/P_c, blue→red)</option>
+      <option value="brittle">Brittle Hotspots (F/P_c field)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
       <option value="stress">Stress Concentration</option>
       <option value="coverage">Coverage Heat (AM)</option>
@@ -767,15 +716,24 @@ function applyViewMode(state, mode) {
   const colDim    = new THREE.Color(COL.DIM);
   const colSeBase = new THREE.Color(COL.SE);
 
-  /* Always tear down the contact-glow overlay before re-applying any
-   * mode — leaving sprites around when switching to e.g. cluster mode
-   * gives a stale, confusing picture. */
+  /* Always tear down brittle-mode overlays before re-applying any
+   * mode — stale sprites / slice planes are confusing if left around
+   * when switching to e.g. cluster mode. */
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
       if (obj.material) obj.material.dispose();
     });
     state.brittleGlowGroup = null;
+  }
+  if (state.brittleFieldPlane && state.scene) {
+    state.scene.remove(state.brittleFieldPlane);
+    if (state.brittleFieldPlane.material) {
+      if (state.brittleFieldPlane.material.map) state.brittleFieldPlane.material.map.dispose();
+      state.brittleFieldPlane.material.dispose();
+    }
+    if (state.brittleFieldPlane.geometry) state.brittleFieldPlane.geometry.dispose();
+    state.brittleFieldPlane = null;
   }
 
   /* default: restore base colours + opacities */
@@ -809,188 +767,126 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'brittle') {
-    dimAll();
-    /* Pick worst stage per AM particle from brittle_pairs list */
-    const stageById = {};
-    (aux.brittle_pairs || []).forEach(b => {
-      [b.id1, b.id2].forEach(id => {
-        const cur = stageById[id];
-        if (!cur || STAGE_RANK[b.stage] > STAGE_RANK[cur]) stageById[id] = b.stage;
-      });
-    });
-    /* Apply colours on AM meshes */
-    ['AM_P', 'AM_S'].forEach(t => {
-      const m = state.meshes[t]; if (!m) return;
-      m.userData.particles.forEach((p, i) => {
-        const stage = stageById[p.id];
-        if (stage) {
-          m.setColorAt(i, new THREE.Color(STAGE_COL[stage]));
-        }
-      });
-      m.material.opacity = 0.95;
-      m.material.transparent = true;
-    });
-    /* AM with no brittle contact stays dim. SE always dim in this mode. */
-    flushColors();
-    setLegend(state,
-      `<b>Brittle Stage (Auerbach + Lawn 1998)</b>
-       <span style="color:#fde047">●</span> microcrack
-       <span style="color:#fb923c">●</span> multicrack
-       <span style="color:#ef4444">●</span> fragmentation
-       <span style="color:#7f1d1d">●</span> pulverization
-       (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)
-       <button id="brittle-z-modal-btn"
-          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
-                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
-                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
-                 font-weight:600;letter-spacing:.2px;
-                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
-         📊 Z-profile 데이터
-       </button>`);
-    const btn = document.getElementById('brittle-z-modal-btn');
-    if (btn) btn.addEventListener('click',
-      () => showBrittleZProfileModal(state));
-    return;
-  }
-
-  if (mode === 'brittle_glow') {
-    /* Contact-localised version of brittle hotspots: AM particles stay
-     * in their base colour (slightly dimmed) and we drop a soft radial
-     * gradient sprite at the *midpoint* of each damaged AM-AM contact,
-     * coloured by Lawn stage.  This shows damage at the actual contact
-     * area instead of repainting the entire AM particle, which makes
-     * spatial clustering of microcrack hotspots much easier to read. */
-    ['AM_P', 'AM_S'].forEach(t => {
-      const m = state.meshes[t]; if (!m) return;
-      const base = new THREE.Color(COL[t]);
-      m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
-      m.material.opacity = 0.55;
-      m.material.transparent = true;
-    });
-    const seMesh = state.meshes.SE;
-    if (seMesh) {
-      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
-      seMesh.material.opacity = 0.12;
-      seMesh.material.transparent = true;
-    }
-    flushColors();
-
-    /* Build the glow overlay group */
-    const group = new THREE.Group();
-    group.userData.isBrittleGlow = true;
-    const idx = state.idIndex || {};
-    const counts = { microcrack: 0, multicrack: 0, fragmentation: 0, pulverization: 0 };
-    (aux.brittle_pairs || []).forEach(b => {
-      const p1 = idx[b.id1], p2 = idx[b.id2];
-      if (!p1 || !p2) return;
-      // Contact midpoint, biased toward smaller particle's surface so the
-      // glow sits near the actual contact instead of the center of mass.
-      const w = (p2.r) / ((p1.r || 0) + (p2.r || 0) + 1e-9);
-      const mx = p1.x + (p2.x - p1.x) * w;
-      const my = p1.y + (p2.y - p1.y) * w;
-      const mz = p1.z + (p2.z - p1.z) * w;
-      const stage = b.stage || 'microcrack';
-      counts[stage] = (counts[stage] || 0) + 1;
-
-      const mat = new THREE.SpriteMaterial({
-        map: getStageGlowTexture(stage),
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
-      });
-      const spr = new THREE.Sprite(mat);
-      // Three.js Z-up swap: (x, y, z) → (x, z, y)
-      spr.position.set(mx, mz, my);
-      // Size relative to the smaller particle radius so the glow stays
-      // visually attached to the contact surface, with a mild stage
-      // boost for visibility of severe stages.
-      const rMin = Math.min(p1.r || 1, p2.r || 1);
-      const boost = { microcrack: 0.85, multicrack: 1.10,
-                       fragmentation: 1.35, pulverization: 1.55 }[stage] || 1.0;
-      const s = rMin * 1.7 * boost;
-      spr.scale.set(s, s, 1);
-      spr.renderOrder = 5;
-      group.add(spr);
-    });
-    if (state.scene) {
-      state.scene.add(group);
-      state.brittleGlowGroup = group;
-    }
-
-    setLegend(state,
-      `<b>Brittle Glow — contact halos</b>
-       <span style="color:#fde047">●</span> microcrack (${counts.microcrack || 0})
-       <span style="color:#fb923c">●</span> multicrack (${counts.multicrack || 0})
-       <span style="color:#ef4444">●</span> fragmentation (${counts.fragmentation || 0})
-       <span style="color:#7f1d1d">●</span> pulverization (${counts.pulverization || 0})
-       <span style="color:#9ca3af;font-size:10px">
-         (gradient = severity; size ∝ R_min of pair)
-       </span>`);
-    return;
-  }
-
-  if (mode === 'brittle_heatmap') {
-    /* COMSOL-style continuous heatmap at the CONTACT level.  Each
-     * damaged AM-AM contact gets a sprite glow at its midpoint whose
-     * tint comes from a coolwarm (blue → white → red) ramp on its
-     * F/P_c (Lawn force ratio).  AM/SE particles are left in their
-     * base colours (semi-transparent so the glows sit clearly on the
-     * underlying microstructure). */
+    /* COMSOL-style 2D-cross-section scalar field for Brittle Hotspots.
+     * Every damaged AM-AM contact contributes a Gaussian "blob" of
+     * F/P_c severity into a 3D field; we sample that field on a
+     * horizontal slice plane and paint it with a coolwarm colormap.
+     * Particles fade so the slice is the dominant visual.
+     *
+     * Slider in the legend lets the user drag the slice along the
+     * compaction axis (data Z = Three.js Y) and the plane re-renders. */
     ['AM_P', 'AM_S', 'SE'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       const base = new THREE.Color(COL[t]);
       m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
-      m.material.opacity = (t === 'SE' ? 0.15 : 0.30);
+      m.material.opacity = (t === 'SE' ? 0.10 : 0.18);
       m.material.transparent = true;
     });
     flushColors();
 
+    const box = state.data.box;
     const idx = state.idIndex || {};
-    const NORM = (m) => Math.log10(1 + (m || 0)) / Math.log10(1 + 32);
-    const group = new THREE.Group();
-    group.userData.isBrittleGlow = true;  // share cleanup path with glow mode
-    let damaged = 0, mMax = 0;
+    // Pre-compute contact midpoints in data coords
+    const pts = [];
     (aux.brittle_pairs || []).forEach(b => {
       const p1 = idx[b.id1], p2 = idx[b.id2];
       if (!p1 || !p2) return;
-      damaged++;
-      const m = +b.mult || 0;
-      if (m > mMax) mMax = m;
-      const t = Math.max(0, Math.min(1, NORM(m)));
-      const tint = coolwarmColor(t);
-      // Midpoint biased toward smaller particle's surface (contact area)
       const w = (p2.r) / ((p1.r || 0) + (p2.r || 0) + 1e-9);
-      const mx = p1.x + (p2.x - p1.x) * w;
-      const my = p1.y + (p2.y - p1.y) * w;
-      const mz = p1.z + (p2.z - p1.z) * w;
-
-      const mat = new THREE.SpriteMaterial({
-        map: getWhiteGlowTexture(),
-        color: tint,
-        transparent: true,
-        depthWrite: false,
-        blending: THREE.AdditiveBlending,
+      pts.push({
+        x: p1.x + (p2.x - p1.x) * w,
+        y: p1.y + (p2.y - p1.y) * w,
+        z: p1.z + (p2.z - p1.z) * w,
+        m: +b.mult || 0,
       });
-      const spr = new THREE.Sprite(mat);
-      spr.position.set(mx, mz, my);  // Three.js Z-up swap
-      const rMin = Math.min(p1.r || 1, p2.r || 1);
-      // Larger F/P_c → larger glow (highlights severe contacts)
-      const sizeBoost = 0.7 + 1.1 * t;
-      const s = rMin * 1.7 * sizeBoost;
-      spr.scale.set(s, s, 1);
-      spr.renderOrder = 5;
-      group.add(spr);
     });
-    if (state.scene) {
-      state.scene.add(group);
-      state.brittleGlowGroup = group;
+
+    // Gaussian-kernel bandwidth: use ~25 % of mean radius of all AM
+    // particles so the field smooths over neighbouring contacts but
+    // doesn't blur out structure at the particle scale.
+    let rSum = 0, rN = 0;
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach(p => { rSum += (p.r || 0); rN++; });
+    });
+    const r_mean = rN ? (rSum / rN) : 1.0;
+    const SIGMA = Math.max(r_mean * 0.7, 1.0);
+    const SIGMA2_2 = 2 * SIGMA * SIGMA;
+    const CUTOFF = 3 * SIGMA;     // ignore pixels beyond 3σ for speed
+
+    const W = 320, H = 320;
+    const xMin = box.x_min, xMax = box.x_max;
+    const yMin = box.y_min, yMax = box.y_max;
+    const dx = (xMax - xMin) / (W - 1);
+    const dy = (yMax - yMin) / (H - 1);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = W; canvas.height = H;
+    const ctx = canvas.getContext('2d');
+
+    function rebuildField(zSlice) {
+      const field = new Float32Array(W * H);
+      // Splat each contact onto a 3σ patch
+      for (const p of pts) {
+        const dz2 = (zSlice - p.z) * (zSlice - p.z);
+        if (dz2 > CUTOFF * CUTOFF) continue;
+        const i0 = Math.max(0, Math.floor((p.x - CUTOFF - xMin) / dx));
+        const i1 = Math.min(W - 1, Math.ceil((p.x + CUTOFF - xMin) / dx));
+        const j0 = Math.max(0, Math.floor((p.y - CUTOFF - yMin) / dy));
+        const j1 = Math.min(H - 1, Math.ceil((p.y + CUTOFF - yMin) / dy));
+        for (let j = j0; j <= j1; j++) {
+          const py = yMin + j * dy;
+          for (let i = i0; i <= i1; i++) {
+            const px = xMin + i * dx;
+            const ax = px - p.x, ay = py - p.y, az = zSlice - p.z;
+            const r2 = ax*ax + ay*ay + az*az;
+            if (r2 > CUTOFF * CUTOFF) continue;
+            field[j * W + i] += p.m * Math.exp(-r2 / SIGMA2_2);
+          }
+        }
+      }
+      // Normalise so the colour range matches Lawn anchors (m=32 → red).
+      // Cap at Lawn pulverisation threshold so a single intense pair
+      // doesn't saturate the whole map.
+      const NORM = (v) => Math.log10(1 + v) / Math.log10(1 + 32);
+
+      const img = ctx.createImageData(W, H);
+      for (let k = 0; k < field.length; k++) {
+        const t = Math.max(0, Math.min(1, NORM(field[k])));
+        const c = coolwarmColor(t);
+        img.data[k*4+0] = (c >> 16) & 0xff;
+        img.data[k*4+1] = (c >> 8) & 0xff;
+        img.data[k*4+2] = c & 0xff;
+        img.data[k*4+3] = 220;     // ~86 % opaque so AM ghosts show through
+      }
+      ctx.putImageData(img, 0, 0);
+      if (state.brittleFieldPlane && state.brittleFieldPlane.material.map) {
+        state.brittleFieldPlane.material.map.needsUpdate = true;
+      }
     }
 
-    /* Inline colorbar + Lawn-stage tick labels */
+    const zMid0 = (box.z_min + box.z_max) / 2;
+    rebuildField(zMid0);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    tex.minFilter = THREE.LinearFilter;
+    const mat = new THREE.MeshBasicMaterial({
+      map: tex, side: THREE.DoubleSide,
+      transparent: true, depthWrite: false,
+    });
+    const w_x = xMax - xMin, w_y = yMax - yMin;
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(w_x, w_y), mat);
+    // Three.js Z-up: lay plane flat (XY in data) at Y = zSlice
+    plane.position.set((xMin + xMax) / 2, zMid0, (yMin + yMax) / 2);
+    plane.rotation.x = -Math.PI / 2;
+    plane.renderOrder = 10;
+    state.scene.add(plane);
+    state.brittleFieldPlane = plane;
+
+    /* Legend with z-slider + inline colorbar */
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
-      `<b>Brittle Heatmap — per-contact F/P_c</b>
+      `<b>Brittle Hotspots — F/P_c field slice</b>
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
@@ -999,9 +895,40 @@ function applyViewMode(state, mode) {
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#cbd5e1">
          <span>intact</span><span>µcrack</span><span>multi</span><span>frag</span><span>pulv</span>
        </div>
+       <label style="display:flex;align-items:center;gap:6px;margin-top:6px;font-size:11px">
+         <span>z:</span>
+         <input id="bf-z-slider" type="range" min="${box.z_min.toFixed(2)}"
+                max="${box.z_max.toFixed(2)}" step="0.5" value="${zMid0.toFixed(2)}"
+                style="flex:1">
+         <span id="bf-z-label" style="min-width:48px;text-align:right">${zMid0.toFixed(1)} µm</span>
+       </label>
        <span style="color:#9ca3af;font-size:10px">
-         ${damaged} damaged contacts &nbsp; max F/P_c = ${mMax.toFixed(2)}
-       </span>`);
+         Gaussian-smoothed (σ ≈ ${SIGMA.toFixed(1)} µm) · ${pts.length} contacts
+       </span>
+       <button id="brittle-z-modal-btn"
+          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
+                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
+                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
+                 font-weight:600;letter-spacing:.2px;
+                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
+         📊 Z-profile 데이터
+       </button>`);
+
+    const slider = document.getElementById('bf-z-slider');
+    const lbl    = document.getElementById('bf-z-label');
+    if (slider) {
+      slider.addEventListener('input', () => {
+        const z = +slider.value;
+        lbl.textContent = z.toFixed(1) + ' µm';
+        if (state.brittleFieldPlane) {
+          state.brittleFieldPlane.position.y = z;  // Three.js Y = data Z
+          rebuildField(z);
+        }
+      });
+    }
+    const zModalBtn = document.getElementById('brittle-z-modal-btn');
+    if (zModalBtn) zModalBtn.addEventListener('click',
+      () => showBrittleZProfileModal(state));
     return;
   }
 
