@@ -79,7 +79,7 @@ show_comp_eos() {
             else
                 ITER=$(grep -c "^     iteration #" "$OUT" 2>/dev/null)
                 BFGS=$(grep -c "new energy" "$OUT" 2>/dev/null)
-                LAST_ACC=$(grep "estimated scf accuracy" "$OUT" | tail -1 | awk '{print $NF}')
+                LAST_ACC=$(grep "estimated scf accuracy" "$OUT" | tail -1 | awk '{print $(NF-1)}')
                 LAST_FORCE=$(grep "Total force" "$OUT" | tail -1 | awk '{print $4}')
                 SIZE=$(du -k "$OUT" | cut -f1)
                 AGE_S=$(( $(date +%s) - $(stat -c%Y "$OUT") ))
@@ -121,13 +121,13 @@ show_comp_eos() {
         # Last SCF iter
         LAST_ITER_LINE=$(grep "^     iteration #" "$OUT" | tail -1 | tr -s ' ' | sed 's/^ //')
         [ -n "$LAST_ITER_LINE" ] && echo "    $LAST_ITER_LINE"
-        # Current total energy + force
-        LAST_TOTE=$(grep "total energy" "$OUT" | tail -1 | awk '{print $5}')
+        # Current total energy + force (energy line: "total energy = -1303.4459 Ry")
+        LAST_TOTE=$(grep "^     total energy" "$OUT" | tail -1 | awk '{print $4}')
         LAST_FORCE=$(grep "Total force" "$OUT" | tail -1 | awk '{print $4}')
         [ -n "$LAST_TOTE" ] && echo "    E=$LAST_TOTE Ry,  Total force=$LAST_FORCE"
-        # SCF accuracy progression (last 5)
+        # SCF accuracy progression (last 5) — value before " Ry" unit
         echo "    SCF accuracy (last 5):"
-        grep "estimated scf accuracy" "$OUT" | tail -5 | awk '{print "      " $NF}'
+        grep "estimated scf accuracy" "$OUT" | tail -5 | awk '{print "      " $(NF-1) " " $NF}'
         # Negative rho warning count
         NEG_RHO=$(grep -c "negative rho" "$OUT" 2>/dev/null)
         [ "$NEG_RHO" -gt 0 ] && echo -e "    ${Y}negative rho warnings: $NEG_RHO${N}"
