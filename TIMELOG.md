@@ -24,6 +24,8 @@
 
 | 시각 | branch | action | status | notes |
 |------|--------|--------|--------|-------|
+| 2026-05-14 ~04:45 | debug-api-500-error-iukkt | 🚨 14-pair bond density 진짜 결과 (gabia 01:35 출력) 사용자 paste 받아서 정정 | DONE | M→Ni 패치 후 실행. n=4 (comp1, comp2, comp4_v1, comp4_v2). **Face A: S-O R=−0.973 (strongest ANTI), Li-Li/Li-O/Br-O R≈+0.9 PAPER, S-Li R=−0.815**. **Face B: P-O R=−0.996 (strongest ANTI)**. 내가 그동안 인용한 "S-Li R=−0.896"는 옛날 4-pair n=5 CSV (comp3/5 v1 포함). 진짜는 S-O(face A)/P-O(face B). **새 mechanism**: Li5.4 family avoids parasitic anion-anion + PS₄-NCM-O contacts → productive Li-O/X-O 우세. |
+| 2026-05-14 ~02:00 | debug-api-500-error-iukkt | gabia에서 stacked orthogonal + 3-axis render + scheme generation | DONE | comp1/2/4_v2 R1_origin_d1.2/1.4 stacked. interface_3d_compare, interface_3axis_compare, scheme_vacancy_mechanism PNG/PDF 생성됨. 사용자가 "구리다"고 평가 → Rhino로 pivot. |
 | 2026-05-14 ~04:30 | debug-api-500-error-iukkt | Hood/Patel 2021 PDF 정독 + 우리 paper와 비교 | DONE | Li6-xPS5-xClBrx (transport focus, 24mS/cm @ x=0.7). 조성 공간만 sister, mechanism은 무관 (그들=conductivity, 우리=mechanical/Wad). x=0.7에서 LiClxBr1-x 4% 불순물 = 용해도 한계 — 우리 Li5.4 family가 이 한계 부근에 위치한다는 정량 인용 가능. |
 | 2026-05-14 ~04:00 | debug-api-500-error-iukkt | 사용자 PC 재부팅 + KISTI watchdog 살아있음 확인 | DONE | comp3 V0 iter=223, comp5 iter=216, 둘 다 force 0.001 (target 0.0001). 잡 살아있음 (nohup 가정). |
 | 2026-05-14 ~03:30 | debug-api-500-error-iukkt | Strauss/Zeng 2022 Nat Commun PDF 정독 | DONE | 정정: 저자=Zeng(Yanshan U), Strauss 아님. 양극이 아니라 Li-metal 음극측 segregation. x≥1.3 grain 표면에 LiCl shell 자발 형성 (cryo-STEM). 우리 paper에는 "Cl 자발 표면 분포" precedent로만 인용 가능, NMC 양극 직접 증거 아님. |
