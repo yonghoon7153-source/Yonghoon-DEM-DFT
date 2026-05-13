@@ -34,10 +34,11 @@ import numpy as np
 from ase.io import read, write
 
 COMPS = {
-    'comp1':  {'se': 'comp1_slab_v2.xyz',            'ncm': 'ncm_7x7x1_PRESERVED.xyz', 'family': 'Li6'},
-    'comp2':  {'se': 'comp2_slab_v2.xyz',            'ncm': 'ncm_7x7x1_PRESERVED.xyz', 'family': 'Li6'},
-    'comp4':  {'se': 'comp4_slab_v1_PRESERVED.xyz',  'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
-    'modelC': {'se': 'modelC_slab_v2_PRESERVED.xyz', 'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
+    'comp1':    {'se': 'comp1_slab_v2.xyz',            'ncm': 'ncm_7x7x1_PRESERVED.xyz', 'family': 'Li6'},
+    'comp2':    {'se': 'comp2_slab_v2.xyz',            'ncm': 'ncm_7x7x1_PRESERVED.xyz', 'family': 'Li6'},
+    'comp4_v1': {'se': 'comp4_slab_v1_PRESERVED.xyz',  'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
+    'comp4_v2': {'se': 'comp4_slab_v2_PRESERVED.xyz',  'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
+    'modelC':   {'se': 'modelC_slab_v2_PRESERVED.xyz', 'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
 }
 D_VALUES = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.5, 2.8, 3.0, 3.5, 4.0, 5.0, 7.0]
 
@@ -156,10 +157,12 @@ def main():
                   for i in range(N_RANDOM)]
     ALL_REG = HIGH_SYM + RANDOM_REG
 
-    n_total = len(COMPS) * 2 * len(ALL_REG) * len(D_VALUES)
+    # filter out comps where SE xyz file doesn't exist on disk
+    avail = {c: info for c, info in COMPS.items() if (WORK / info['se']).exists()}
+    n_total = len(avail) * 2 * len(ALL_REG) * len(D_VALUES)
     log("=" * 70)
     log(f"Physical face-flip test (z=0, no PBC wrap)")
-    log(f"  comps={len(COMPS)} × faces=2 × reg={len(ALL_REG)} × gaps={len(D_VALUES)} "
+    log(f"  comps={list(avail.keys())} × faces=2 × reg={len(ALL_REG)} × gaps={len(D_VALUES)} "
         f"= {n_total} SCFs (~{n_total*0.5/60:.0f} min)")
     log("=" * 70)
 
@@ -171,10 +174,13 @@ def main():
     summary = {}
     idx = 0
 
-    for c, info in COMPS.items():
-        f_iso = ISO_REF / f"{c}_done.json"
+    for c, info in avail.items():
+        # comp4_v1 / comp4_v2 share the same E_ncm reference (same NCM 5x5x1).
+        # Use comp4's eiso fix JSON if available, fall back to any v1 form.
+        iso_key = c.replace('_v1', '').replace('_v2', '')
+        f_iso = ISO_REF / f"{iso_key}_done.json"
         if not f_iso.exists():
-            log(f"[{c}] missing eiso JSON, skip"); continue
+            log(f"[{c}] missing eiso JSON ({f_iso.name}), skip"); continue
         d_iso = json.load(open(f_iso))
         E_ncm_iso = d_iso['E_ncm_iso']
 
