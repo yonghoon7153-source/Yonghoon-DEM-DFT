@@ -88,45 +88,48 @@ def create_bond(p1, p2, layer, radius=0.10):
 
 def main():
     path = rs.OpenFileName("Select xyz", "xyz files|*.xyz|All|*.*||")
-    if not path: return
+    if not path:
+        return
     atoms = parse_xyz(path)
-    print "Read %d atoms from %s" % (len(atoms), path)
+    print("Read {} atoms from {}".format(len(atoms), path))
 
     # Determine interface from NCM atoms (Ni + O)
     ncm_z_max = max(a[3] for a in atoms if a[0] in ('Ni', 'O'))
     z_lo = ncm_z_max + 0.5 - INTERFACE_ZOOM_BELOW
     z_hi = ncm_z_max + 0.5 + INTERFACE_ZOOM_ABOVE
-    print "Interface zoom: z = %.2f to %.2f" % (z_lo, z_hi)
+    print("Interface zoom: z = {:.2f} to {:.2f}".format(z_lo, z_hi))
 
     # Create layers
     layers = {}
     for el, c in COLORS.items():
-        layers[el] = ensure_layer("atom_%s" % el, c)
+        layers[el] = ensure_layer("atom_{}".format(el), c)
     bond_layer = ensure_layer("bonds", (100, 100, 100))
 
     # Place atoms
     n_atoms = 0
     placed = []
     for el, x, y, z in atoms:
-        if z < z_lo or z > z_hi: continue
+        if z < z_lo or z > z_hi:
+            continue
         create_atom((x, y, z), el, layers[el])
         placed.append((el, x, y, z))
         n_atoms += 1
-    print "Placed %d atoms" % n_atoms
+    print("Placed {} atoms".format(n_atoms))
 
     # Bonds (between SE atoms and NCM O within cutoff)
     n_bonds = 0
     ncm_O = [(el, x, y, z) for (el, x, y, z) in placed if el == 'O']
     for el, x, y, z in placed:
-        if el not in ('Li', 'S', 'Cl', 'Br'): continue
+        if el not in ('Li', 'S', 'Cl', 'Br'):
+            continue
         for (oel, ox, oy, oz) in ncm_O:
-            d = ((x-ox)**2 + (y-oy)**2 + (z-oz)**2) ** 0.5
+            d = ((x - ox) ** 2 + (y - oy) ** 2 + (z - oz) ** 2) ** 0.5
             cutoff = BOND_CUTOFFS.get((el, 'O'), 0)
             if 0 < d <= cutoff:
                 create_bond((x, y, z), (ox, oy, oz), bond_layer)
                 n_bonds += 1
-    print "Placed %d bonds" % n_bonds
-    print "DONE. Now add arrows + labels + render."
+    print("Placed {} bonds".format(n_bonds))
+    print("DONE. Now add arrows + labels + render.")
 
 
 main()
