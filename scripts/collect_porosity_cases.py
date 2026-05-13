@@ -1,13 +1,23 @@
 #!/usr/bin/env python3
-"""Walk webapp/uploads/ (and any extra dir given on CLI) and produce a
-flat CSV of every DEM case's composition + measured porosity.
+"""Walk archive directories and produce a flat CSV of every DEM case's
+composition + measured porosity.
+
+Schema discovered from webapp/archive/*/*/full_metrics.json:
+    porosity         (percent, top-level)
+    am_se_ratio      "AA:BB"   (top-level)
+    ps_ratio         "P:S"     (in meta.json, may be empty for monomodal)
+    n_AM_P, r_AM_P   (optional — trimodal cases)
+    n_AM_S, r_AM_S
+    n_SE,   r_SE
+    scale            (in meta.json, e.g. 1000)
 
 Output columns:
-    case_id, am_wt, se_wt, p_vol, s_vol, r_se_um, scale, porosity_pct
+    case_id, campaign, am_wt, se_wt, p_vol, s_vol,
+    n_AM_P, r_AM_P_um, n_AM_S, r_AM_S_um, n_SE, r_SE_um,
+    scale, porosity_pct
 
 Usage:
-    python3 scripts/collect_porosity_cases.py                # webapp/uploads
-    python3 scripts/collect_porosity_cases.py path1 path2    # extra roots
+    python3 scripts/collect_porosity_cases.py <root1> [<root2> ...]
 """
 import json
 import sys
@@ -18,79 +28,91 @@ from pathlib import Path
 def parse_ratio(s):
     if not s or ':' not in str(s):
         return None, None
-    a, b = str(s).split(':')[:2]
     try:
+        a, b = str(s).split(':')[:2]
         return float(a), float(b)
-    except ValueError:
+    except Exception:
         return None, None
+
+
+def safe_load(p: Path):
+    try:
+        return json.loads(p.read_text())
+    except Exception:
+        return None
 
 
 def collect(root: Path, rows: list):
     if not root.exists():
+        print(f'  skip: {root} (not found)')
         return
-    for meta in root.rglob('meta.json'):
-        case_dir = meta.parent
-        ip = case_dir / 'input_params.json'
-        fm = case_dir / 'full_metrics.json'
-        try:
-            m = json.loads(meta.read_text())
-        except Exception:
+    n = 0
+    for fm_path in sorted(root.rglob('full_metrics.json')):
+        case_dir = fm_path.parent
+        fm = safe_load(fm_path)
+        if not fm:
             continue
-        ip_data = {}
-        if ip.exists():
-            try:
-                ip_data = json.loads(ip.read_text())
-            except Exception:
-                pass
-        # porosity may be in meta.json or full_metrics.json
-        poro = m.get('porosity')
-        if poro is None and fm.exists():
-            try:
-                fmd = json.loads(fm.read_text())
-                poro = fmd.get('porosity', {}).get('value')
-            except Exception:
-                pass
+        meta = safe_load(case_dir / 'meta.json') or {}
+        ip   = safe_load(case_dir / 'input_params.json') or {}
+
+        poro = fm.get('porosity')
         if poro is None:
             continue
 
-        am_wt, se_wt = parse_ratio(ip_data.get('am_se_ratio'))
-        p_vol, s_vol = parse_ratio(ip_data.get('p_s_ratio'))
-        r_se = (ip_data.get('r_SE_um')
-                or ip_data.get('r_se')
-                or ip_data.get('SE_radius_um'))
-        scale = ip_data.get('scale') or ip_data.get('Scale')
+        # composition
+        am_wt, se_wt = parse_ratio(
+            fm.get('am_se_ratio') or ip.get('am_se_ratio'))
+        ps = fm.get('ps_ratio') or meta.get('ps_ratio')
+        p_vol, s_vol = parse_ratio(ps)
+
+        # scale & particle sizes — r_* in full_metrics is sim units (m);
+        # multiply by 1e6 to get µm of the SIMULATION box, then divide
+        # by scale to recover physical µm.  Pure sim values are kept
+        # if scale missing.
+        scale = meta.get('scale') or ip.get('scale') or 1.0
+        def r_phys(key):
+            r = fm.get(key)
+            if r is None:
+                return None
+            return r * 1e6 / float(scale)  # m → µm physical
 
         rows.append({
-            'case_id':  case_dir.name,
-            'am_wt':    am_wt,
-            'se_wt':    se_wt,
-            'p_vol':    p_vol,
-            's_vol':    s_vol,
-            'r_se_um':  r_se,
-            'scale':    scale,
-            'porosity_pct': poro,
+            'case_id':   case_dir.name,
+            'campaign':  root.name,
+            'am_wt':     am_wt,
+            'se_wt':     se_wt,
+            'p_vol':     p_vol,
+            's_vol':     s_vol,
+            'n_AM_P':    fm.get('n_AM_P'),
+            'r_AM_P_um': r_phys('r_AM_P'),
+            'n_AM_S':    fm.get('n_AM_S'),
+            'r_AM_S_um': r_phys('r_AM_S'),
+            'n_SE':      fm.get('n_SE'),
+            'r_SE_um':   r_phys('r_SE'),
+            'scale':     scale,
+            'porosity_pct': round(float(poro), 3),
         })
+        n += 1
+    print(f'  {root}: {n} cases')
 
 
 def main():
-    roots = [Path('webapp/uploads')]
-    roots.extend(Path(p) for p in sys.argv[1:])
+    if len(sys.argv) < 2:
+        print('usage: collect_porosity_cases.py <root1> [<root2> ...]')
+        sys.exit(1)
     rows = []
-    for r in roots:
-        collect(r, rows)
-    rows.sort(key=lambda x: x['case_id'])
+    for arg in sys.argv[1:]:
+        collect(Path(arg), rows)
+    rows.sort(key=lambda r: (r['campaign'], r['case_id']))
     out = Path('all_dem_porosity.csv')
-    fieldnames = ['case_id', 'am_wt', 'se_wt', 'p_vol', 's_vol',
-                  'r_se_um', 'scale', 'porosity_pct']
+    fieldnames = ['case_id', 'campaign', 'am_wt', 'se_wt', 'p_vol', 's_vol',
+                  'n_AM_P', 'r_AM_P_um', 'n_AM_S', 'r_AM_S_um',
+                  'n_SE', 'r_SE_um', 'scale', 'porosity_pct']
     with out.open('w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=fieldnames)
         w.writeheader()
         w.writerows(rows)
-    print(f'Wrote {len(rows)} cases → {out.resolve()}')
-    if rows:
-        print('\nfirst few rows:')
-        for r in rows[:5]:
-            print(' ', r)
+    print(f'\nWrote {len(rows)} cases → {out.resolve()}')
 
 
 if __name__ == '__main__':
