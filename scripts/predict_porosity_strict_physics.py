@@ -15,8 +15,12 @@ ALL OTHER parameters from PUBLISHED PHYSICS — no fitting:
                                     Sakuda 2013 range 100-200 MPa)
   - Sridhar-Fleck-McMeeking 2000 SFM constraint:
         KC = 1 + α_KC · f_AM²  with α_KC = 2 (published, no fit)
-  - Geometric percolation threshold f_perc = 0.30
-        (Scher & Zallen 1970 classical 3D sphere)
+  - Stress-bearing percolation threshold f_perc = 0.65
+        (Liu & Yin 2025 — soft phase must form contiguous
+         load-bearing network to plastically densify under
+         AM-dominated force chains; geometric value 0.30 from
+         Scher-Zallen 1970 does NOT apply here because AM grains
+         carry the stress)
 
 ZERO calibrated parameters for the MIXTURE behavior.
 Mixture predictions emerge directly from the framework.
@@ -58,7 +62,9 @@ SIGMA_Y_EFF = 1e6 / (3.0 * K_HECKEL)                                  # Pa
 
 # ── Published parameters (NO FIT) ─────────────────────────────────
 ALPHA_KC      = 2.0     # Sridhar 2000 typical (no fit)
-F_PERC_GEOM   = 0.30    # Scher-Zallen 1970 geometric (CLASSICAL)
+F_PERC        = 0.65    # Liu & Yin 2025 stress-bearing percolation
+                        # (soft SE must form load-bearing network;
+                        #  geometric 0.30 fails because AM carries stress)
 SHARPNESS     = 8.0     # transition width (not critical)
 
 
@@ -97,9 +103,9 @@ def sfm_constraint(f_am, lam_eff):
     return kc
 
 
-# ── Geometric percolation (Scher-Zallen 1970, CLASSICAL) ─────────
-def geometric_percolation(f_se):
-    return 1.0 / (1.0 + np.exp(-SHARPNESS * (f_se - F_PERC_GEOM)))
+# ── Stress-bearing percolation (Liu & Yin 2025) ──────────────────
+def stress_percolation(f_se):
+    return 1.0 / (1.0 + np.exp(-SHARPNESS * (f_se - F_PERC)))
 
 
 # ── Predict ──────────────────────────────────────────────────────
@@ -111,7 +117,7 @@ def predict_strict(am_se_wt, p_s_vol):
 
     eps_rcp = bouvard_rcp(f_se, lam_eff)
     kc      = sfm_constraint(f_am, lam_eff)
-    p_se    = geometric_percolation(f_se)
+    p_se    = stress_percolation(f_se)
 
     # Sridhar: composite at P_applied behaves like pure-soft at P/KC
     P_eff = P_PRESS / kc
@@ -143,7 +149,7 @@ def main():
     print()
     print(f'Published mixture parameters (NO fit):')
     print(f'  α_KC = {ALPHA_KC}            (Sridhar 2000 typical)')
-    print(f'  f_perc = {F_PERC_GEOM}          (Scher-Zallen 1970 geometric)')
+    print(f'  f_perc = {F_PERC}         (Liu & Yin 2025 stress-bearing)')
     print(f'  Bouvard RCP curve   (digitized data)')
     print('═' * 70)
     print()
@@ -194,7 +200,7 @@ def main():
     ax.set_ylabel('Porosity ε (%)', fontsize=12)
     ax.set_title(f'STRICT physics-first (1 anchor, 0 fits)\n'
                   f'α_KC={ALPHA_KC} (Sridhar 2000), '
-                  f'f_perc={F_PERC_GEOM} (geometric)',
+                  f'f_perc={F_PERC} (Liu & Yin 2025 stress-bearing)',
                   fontsize=11)
     ax.legend(fontsize=8.5, loc='upper left', framealpha=0.95)
     ax.grid(alpha=0.3)
@@ -217,7 +223,7 @@ def main():
             label='Strict physics prediction')
     ax.fill_between(am_arr, pred_list, rcp_list,
                      color='moccasin', alpha=0.5,
-                     label='Plastic densification (Heckel, geom. perc.)')
+                     label='Plastic densification (Heckel, stress perc.)')
 
     for (am, se), info in measured.items():
         ax.scatter(am, info['eps']*100, s=300, color='black',
@@ -231,16 +237,16 @@ def main():
                      arrowprops=dict(arrowstyle='<->', color='purple',
                                      lw=1.5))
 
-    ax.text(50, 9, '  Δ = "force chain shadow"\n'
-                    '  beyond mean-field SFM\n'
-                    '  (not captured by f_perc=0.30)',
+    ax.text(40, 5, '  Stress-bearing percolation (f_perc=0.65)\n'
+                    '  delays plastic onset until SE forms a\n'
+                    '  load-bearing network — Liu & Yin 2025',
             fontsize=9, color='purple', style='italic')
 
     ax2 = ax.twinx()
     ax2.plot(am_arr, kc_list, ':', color='purple', lw=1.5, alpha=0.7,
               label='KC (Sridhar 2000)')
     ax2.plot(am_arr, p_list, ':', color='darkorange', lw=1.5, alpha=0.7,
-              label=f'p_se (geometric f_perc={F_PERC_GEOM})')
+              label=f'p_se (stress f_perc={F_PERC})')
     ax2.set_ylabel('KC | p_se', fontsize=10, color='purple')
     ax2.tick_params(axis='y', colors='purple')
     ax2.set_ylim(0, max(max(kc_list), 1.3))
