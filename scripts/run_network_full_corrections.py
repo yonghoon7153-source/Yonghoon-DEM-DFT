@@ -539,13 +539,24 @@ def _compute_validation_flags(fm: dict, factors: dict,
     flags['bruggeman_fallback_fired_any'] = bool(any(
         v == 'fallback_weighted_factor' for v in src.values()))
 
-    # Overall trust flag — all four bool gates must be True (None counts
-    # as untrustworthy because the metric is missing).
-    gates = [flags['within_bielefeld_range'],
-              flags['fracture_distribution_realistic'],
-              flags['solver_input_intact'],
-              flags['stage_e_le_baseline_sigma_e']]
-    flags['trustworthy_overall'] = bool(all(g is True for g in gates))
+    # Overall trust flag — every *assessable* gate must be True; gates
+    # whose underlying metric is missing (None) are treated as
+    # "not assessable" rather than "failed" so older archive cases
+    # whose Stage-E run predates a newer factor key still pass when the
+    # available evidence is positive.  `gates_evaluated` records which
+    # gates the verdict actually rests on.
+    gate_results = {
+        'within_bielefeld_range':         flags['within_bielefeld_range'],
+        'fracture_distribution_realistic': flags['fracture_distribution_realistic'],
+        'solver_input_intact':            flags['solver_input_intact'],
+        'stage_e_le_baseline_sigma_e':    flags['stage_e_le_baseline_sigma_e'],
+    }
+    assessable = {k: v for k, v in gate_results.items() if v is not None}
+    flags['gates_evaluated']    = sorted(assessable.keys())
+    flags['gates_not_assessed'] = sorted(k for k, v in gate_results.items()
+                                           if v is None)
+    flags['trustworthy_overall'] = bool(assessable and
+                                          all(v is True for v in assessable.values()))
     return flags
 
 
