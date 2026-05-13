@@ -169,7 +169,10 @@ function injectCSS() {
 .path-modal-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
 .path-modal-actions button{background:#6c8cff;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px}
 .path-modal-actions button:hover{background:#8ba3ff}
-.path-modal-close{position:absolute;top:8px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#888}`;
+.path-modal-close{position:absolute;top:8px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#888}
+.data-modal-btn{display:block;width:100%;padding:6px 8px;margin:6px 0 2px 0;background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;border:none;border-radius:5px;font:600 10.5px/1.2 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;letter-spacing:.2px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap;transition:filter .15s,transform .05s}
+.data-modal-btn:hover{filter:brightness(1.10)}
+.data-modal-btn:active{transform:translateY(1px);filter:brightness(.95)}`;
   document.head.appendChild(s);
 }
 
@@ -818,13 +821,8 @@ function applyViewMode(state, mode) {
        <span style="color:#f03b20">●</span> fragmentation
        <span style="color:#800026">●</span> pulverization
        (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)
-       <button id="brittle-z-modal-btn"
-          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
-                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
-                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
-                 font-weight:600;letter-spacing:.2px;
-                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
-         📊 Z-profile 데이터
+       <button id="brittle-z-modal-btn" class="data-modal-btn">
+         📊 Z-profile 데이터 (표·PNG·CSV)
        </button>`);
     const btn = document.getElementById('brittle-z-modal-btn');
     if (btn) btn.addEventListener('click',
@@ -947,13 +945,8 @@ function applyViewMode(state, mode) {
        <span style="color:#9ca3af;font-size:10px">
          (patch radius ∝ stage severity; gradient brightens contact spot)
        </span>
-       <button id="brittle-z-modal-btn"
-          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
-                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
-                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
-                 font-weight:600;letter-spacing:.2px;
-                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
-         📊 Z-profile 데이터
+       <button id="brittle-z-modal-btn" class="data-modal-btn">
+         📊 Z-profile 데이터 (표·PNG·CSV)
        </button>`);
     const sBtn = document.getElementById('brittle-z-modal-btn');
     if (sBtn) sBtn.addEventListener('click',
@@ -1094,13 +1087,8 @@ function applyViewMode(state, mode) {
          <span>median ≈ ${sMed.toFixed(0)}</span>
          <span>${sHi.toFixed(0)}</span>
        </div>
-       <button id="stress-z-modal-btn"
-          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
-                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
-                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
-                 font-weight:600;letter-spacing:.2px;
-                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
-         📊 Stress Z-profile 데이터
+       <button id="stress-z-modal-btn" class="data-modal-btn">
+         📊 Z-profile 데이터 (표·PNG·CSV)
        </button>`);
     const sBtn = document.getElementById('stress-z-modal-btn');
     if (sBtn) sBtn.addEventListener('click',
