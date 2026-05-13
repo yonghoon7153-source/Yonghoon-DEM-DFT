@@ -11,13 +11,11 @@
 
 | Priority | 작업 | 상태 | 재개 방법 |
 |----------|------|------|----------|
-| MEDIUM | **comp3 v2 DFT EOS** (KISTI GPU0) | ▶ 진행 중 (v098 BFGS step 1) | `auto_restart.sh` 자동 재시작. 며칠 더. `comp3_lpscbr/dft_eos/v098-v108/relax.out` 확인. |
-| MEDIUM | **comp5 v2 DFT EOS** (KISTI GPU1) | NOT STARTED | comp4 paper scripts (gen_dft_eos_comp4.py, run_dft_eos.sh, auto_restart.sh) copy → sed comp4→comp5 → champion symlink → `nohup ./auto_restart.sh`. v104 grid center (MLIP V0/V_cell=1.0414). |
-| LOW | **EOS priority 3-vol strategy** | NOT IMPLEMENTED | 빠른 V0/B0만 필요하면 ALL_VOLS reorder: comp3="103 102 104 ..." / comp5="104 103 105 ...". 3 vols (~30h) 후 parabolic fit. |
-| LOW | **comp3 anneal_chain resume** | KILLED at 8/25 pairs | r0 (5/5) + r1/li0-li2 done, r1/li3 was at MD 75%. Resume: re-launch watchdog, chain skips done pairs. r2-r4 unlikely to beat r0/li0 (-256.370). |
-| LOW | **comp5 anneal_chain resume** | KILLED at 10/25 pairs | r0+r1 fully done. r2-r4 unlikely to beat r1/li1 (-254.919). Champion finalized. |
+| MEDIUM | **comp3/comp5 EOS 나머지 8 vols** (v098,99,100,106,107,108 etc.) | 자동 진행 (priority 3 vol 끝나면) | run_dft_eos.sh ALL_VOLS 순서로 계속. auto_restart로 walltime kill 대응. |
+| LOW | **comp3 anneal_chain resume** (r2-r4 8 pairs 더) | KILLED at 8/25 pairs | r0 (5/5) + r1/li0-li2 done. r2-r4 unlikely to beat r0/li0 (-256.370). 시간 남으면 추가. |
+| LOW | **comp5 anneal_chain resume** (r2-r4 15 pairs 더) | KILLED at 10/25 pairs | r0+r1 fully done (10/10). r2-r4 unlikely to beat r1/li1 (-254.919). Champion finalized. |
 | LOW | **comp3/5 post-processing** (Bader/PDOS) | NEEDS V0 DFT EOS done | After DFT EOS → tight SCF → pp.x + projwfc.x. Reference: comp4_lpscbrbr/dft_eos/v0_fit/ structure. |
-| LOW | **comp3/5 v2 bond length analysis** | NEEDS V0 structure | mic distance from V0.xyz + cutoffs (Li-O 2.8, Li-S 3.0, Li-Cl 3.2, Li-Br 3.4 Å). |
+| LOW | **comp3/5 v2 bond length analysis** | NEEDS V0 structure | mic distance from V0.xyz + cutoffs (Li-O 2.8, Li-S 3.0, Li-Cl 3.2, Li-Br 3.4 Å). **User confirmed: 최종 V0 나온 후에 bond length 분석 진행.** |
 
 ## 📌 TODAY'S FOCUS — 2026-05-13
 
