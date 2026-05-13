@@ -35,6 +35,20 @@ import predictor_engine
 
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 * 1024  # 2GB max
+# Disable browser caching of static assets — viewer3d.js evolves often and
+# stale caches were masking server-side fixes (e.g. fracture classifier
+# update reaching server but not the rendered view).
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+# Server start time — exposed to templates as a cache-busting version stamp
+# so `?v={{ asset_version }}` on script/asset URLs invalidates on every
+# Flask restart even if the browser ignored Cache-Control.
+_ASSET_VERSION = str(int(datetime.now().timestamp()))
+
+
+@app.context_processor
+def _inject_asset_version():
+    return {'asset_version': _ASSET_VERSION}
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
 app.config['RESULTS_FOLDER'] = os.path.join(os.path.dirname(__file__), 'results')
 app.config['SCRIPTS_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts')

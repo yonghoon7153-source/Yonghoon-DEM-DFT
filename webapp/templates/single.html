@@ -175,7 +175,7 @@ async function load3DViewer() {
   container.style.display = 'block';
   if (viewer3dLoaded) return;
   viewer3dLoaded = true;
-  const mod = await import('/static/js/viewer3d.js');
+  const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
   {% if archive_path %}
   mod.initElectrodeViewer('viewer-container', '/archive/results/{{ archive_path }}/3d-data');
   {% else %}

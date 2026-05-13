@@ -397,11 +397,15 @@ function buildPlateMesh(triangles) {
 }
 
 /* ── instanced sphere builder ──────────────────────────────── */
+// NOTE: Three.js multiplies instanceColor by material.color in the shader.
+// Keep material.color = white so per-instance setColorAt() values render
+// faithfully (otherwise dark base colors like AM_P=0x222222 wash out the
+// brittle-mode highlights yellow→red into near-black).
 function createInstancedSpheres(particles, segments, color, opacity, transparent) {
   if (!particles.length) return null;
   const geo = new THREE.SphereGeometry(1, segments, segments);
   const mat = new THREE.MeshPhongMaterial({
-    color, transparent, opacity, depthWrite: !transparent, side: THREE.FrontSide,
+    color: 0xffffff, transparent, opacity, depthWrite: !transparent, side: THREE.FrontSide,
   });
   const mesh = new THREE.InstancedMesh(geo, mat, particles.length);
   const dummy = new THREE.Object3D();
@@ -416,6 +420,7 @@ function createInstancedSpheres(particles, segments, color, opacity, transparent
   mesh.instanceMatrix.needsUpdate = true;
   if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
   mesh.userData.particles = particles;
+  mesh.userData.baseColor = color;
   return mesh;
 }
 
