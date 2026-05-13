@@ -37,7 +37,7 @@ COMPS = {
     'comp1':    {'se': 'comp1_slab_v2.xyz',            'ncm': 'ncm_7x7x1_PRESERVED.xyz', 'family': 'Li6'},
     'comp2':    {'se': 'comp2_slab_v2.xyz',            'ncm': 'ncm_7x7x1_PRESERVED.xyz', 'family': 'Li6'},
     'comp4_v1': {'se': 'comp4_slab_v1_PRESERVED.xyz',  'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
-    'comp4_v2': {'se': 'comp4_slab_v2_PRESERVED.xyz',  'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
+    'comp4_v2': {'se': 'comp4_slab_v2_PRESERVED.xyz.bak_anomaly',  'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
     'modelC':   {'se': 'modelC_slab_v2_PRESERVED.xyz', 'ncm': 'ncm_5x5x1_PRESERVED.xyz', 'family': 'Li5.4'},
 }
 D_VALUES = [0.6, 0.8, 1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.5, 2.8, 3.0, 3.5, 4.0, 5.0, 7.0]
