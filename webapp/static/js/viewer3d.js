@@ -72,6 +72,29 @@ function rygColor(t) {
   return (Math.round((1 - u) * 255) << 16) | (255 << 8) | 0;
 }
 
+/* COMSOL-style coolwarm (blue → white → red) colormap.
+ * t ∈ [0,1].  Anchors:
+ *   t = 0.0  →  (59, 76, 192)   deep blue
+ *   t = 0.5  →  (221, 221, 221) near-white
+ *   t = 1.0  →  (180,  4,  38)  deep red
+ * Linear interpolation in each half. */
+function coolwarmColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  let r, g, b;
+  if (t < 0.5) {
+    const u = t * 2;
+    r = Math.round(59  + (221 - 59 ) * u);
+    g = Math.round(76  + (221 - 76 ) * u);
+    b = Math.round(192 + (221 - 192) * u);
+  } else {
+    const u = (t - 0.5) * 2;
+    r = Math.round(221 + (180 - 221) * u);
+    g = Math.round(221 + (4   - 221) * u);
+    b = Math.round(221 + (38  - 221) * u);
+  }
+  return (r << 16) | (g << 8) | b;
+}
+
 /* ── control-panel HTML ────────────────────────────────────── */
 function buildControls(container) {
   const div = document.createElement('div');
@@ -87,6 +110,7 @@ function buildControls(container) {
       <option value="default">Default</option>
       <option value="brittle">Brittle Hotspots (AM)</option>
       <option value="brittle_glow">Brittle Glow (contact-localised)</option>
+      <option value="brittle_heatmap">Brittle Heatmap (F/P_c, blue→red)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
       <option value="stress">Stress Concentration</option>
       <option value="coverage">Coverage Heat (AM)</option>
@@ -878,6 +902,66 @@ function applyViewMode(state, mode) {
        <span style="color:#7f1d1d">●</span> pulverization (${counts.pulverization || 0})
        <span style="color:#9ca3af;font-size:10px">
          (gradient = severity; size ∝ R_min of pair)
+       </span>`);
+    return;
+  }
+
+  if (mode === 'brittle_heatmap') {
+    /* COMSOL-style continuous heatmap of fracture severity.
+     * Each AM particle is coloured by max(F/P_c) across its contacts,
+     * mapped through a coolwarm (blue → white → red) ramp.  The scale
+     * uses Lawn fracture thresholds as anchors: m=0 → blue (intact),
+     * m=1 → cyan (Auerbach onset), m=3 → white (multi-crack),
+     * m=11 → orange (fragmentation), m≥32 → deep red (pulverization).
+     * Implemented as log10(1 + m / 32) ∈ [0,1] so the dynamic range of
+     * F/P_c (often 0.1 – 30+) compresses into a perceptually-balanced
+     * colour gradient. */
+    const idx = state.idIndex || {};
+    const mPerId = {};
+    (aux.brittle_pairs || []).forEach(b => {
+      const m = +b.mult || 0;
+      [b.id1, b.id2].forEach(id => {
+        if (!(id in mPerId) || mPerId[id] < m) mPerId[id] = m;
+      });
+    });
+
+    const NORM = (m) => Math.log10(1 + (m || 0)) / Math.log10(1 + 32);  // 0..1+
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        const mv = mPerId[p.id] || 0;
+        const tn = Math.max(0, Math.min(1, NORM(mv)));
+        m.setColorAt(i, new THREE.Color(coolwarmColor(tn)));
+      });
+      m.material.opacity = 0.97;
+      m.material.transparent = false;
+    });
+    const seMesh = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
+      seMesh.material.opacity = 0.10;
+      seMesh.material.transparent = true;
+    }
+    flushColors();
+
+    /* Build inline colorbar (5 stops + Lawn labels) for the legend */
+    const stops = [0, 0.25, 0.5, 0.75, 1.0]
+      .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
+    const bar = `
+       <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
+         background:linear-gradient(90deg,${stops.join(',')})"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+         <span>m=0</span><span>m=1</span><span>m=3</span><span>m=11</span><span>m≥32</span>
+       </div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#cbd5e1">
+         <span>intact</span><span>µcrack</span><span>multi</span><span>frag</span><span>pulv</span>
+       </div>`;
+    const damaged = Object.values(mPerId).filter(v => v >= 1).length;
+    setLegend(state,
+      `<b>Brittle Heatmap — F/P_c per AM particle</b>
+       ${bar}
+       <span style="color:#9ca3af;font-size:10px">
+         ${damaged} AM particles with F/P_c ≥ 1 (Auerbach onset)
        </span>`);
     return;
   }
