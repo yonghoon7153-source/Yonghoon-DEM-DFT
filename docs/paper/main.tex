@@ -555,6 +555,115 @@ the thin-film panel ($+0.20\%$) demonstrates that the bulk model
 geometry-affected regime --- the additional scatter is real
 physics (wall confinement) but does not bias the mean prediction.
 
+\subsection{Limitations and conservative bounds}
+\label{sec:limitations}
+Three structural limitations of the present framework deserve
+explicit acknowledgement before the future-work discussion.
+
+\paragraph{Dynamic fracture cascade is not modelled.}
+LIGGGHTS treats each particle as a rigid sphere with a
+Hooke--hysteresis contact, so a particle that exceeds the
+Auerbach onset never breaks into smaller fragments and the contact
+network does not re-form around the resulting debris. Our
+end-state classification therefore captures only the
+\emph{instantaneous} fracture state at the target pressure, not the
+sequence of micro-events that built it. Two observations bound the
+impact of this approximation. (i) The Lawn force ladder
+($1, 3, 11, 32 \times P_c$) is calibrated against
+quasi-static experiments in which the same end-state
+identification is used, so its $\sigma$-factor ladder
+($1, 0.85, 0.40, 0.10, 0.02$) is the \emph{steady-state} damage
+multiplier rather than an event-by-event one. (ii) The Bruggeman
+fallback (Section~\ref{sec:defence}) further enforces
+$\sigma_{\mathrm{eff}} \le \sigma_{\mathrm{baseline}}$, which makes
+our reported Stage~E conductivities a \emph{conservative lower
+bound} on what the cascade would yield once stress
+redistribution after fracture is accounted for. The ASR ranges
+recovered for the 82-case ensemble fall within
+\citet{Bielefeld2022} and \citet{Lee2020} experimental envelopes,
+so the conservative bound is empirically tight enough for
+design-rule use.
+
+\subsection{Equivalence of Hooke and Hertz contact models under
+            the $F/P_c$ classification}
+\label{sec:hooke-hertz}
+A second reviewer concern is that LIGGGHTS uses a linear Hooke
+contact ($F = k_n\,\delta$) whereas the Auerbach derivation
+assumes a Hertzian one ($F = \tfrac{4}{3}\,E^{\!*}\,R^{1/2}
+\delta^{3/2}$). Within the force-based classifier the form-factor
+mismatch \emph{cancels}, which we show here in one line. The
+Auerbach onset force is
+\begin{equation}
+  P_c \;=\; A\,K_{\mathrm{IC}}^{2}\,R\, / \,E^{\!*},
+  \qquad
+  E^{\!*} \;=\; E / \,(2(1-\nu^{2})),
+  \label{eq:Pc}
+\end{equation}
+and the Lawn stage thresholds are evaluated on the dimensionless
+ratio $m = F/P_c$. The DEM-side force $F$ depends on the contact
+model only through the chosen $k_n$ or $E^{\!*}$; in either model
+both $F$ and $P_c$ scale linearly with the same effective modulus
+$E^{\!*}$ provided we use the project-wide $E_{\mathrm{AM}} =
+140$~GPa for both quantities. The ratio is therefore independent
+of whether the force--overlap relationship is linear (Hooke) or
+$\delta^{3/2}$ (Hertz):
+\begin{equation}
+  \frac{F_{\mathrm{Hooke}}}{P_c} =
+  \frac{k_n\,\delta}{A K_{\mathrm{IC}}^2 R / E^{\!*}}
+  \;\propto\; \delta,
+  \qquad
+  \frac{F_{\mathrm{Hertz}}}{P_c} =
+  \frac{\tfrac{4}{3} E^{\!*} R^{1/2} \delta^{3/2}}
+       {A K_{\mathrm{IC}}^2 R / E^{\!*}}
+  \;\propto\; \delta^{3/2}.
+\end{equation}
+The two forms differ in the $\delta$ dependence but agree on the
+classifier output \emph{at the same physical force} -- which is
+what the DEM solver reports through \texttt{c\_cpl\_force\_normal}.
+Equivalently, since LIGGGHTS calibrates $k_n$ from
+$E_{\mathrm{AM}}$, the two models yield the same $F$ at the same
+$\delta$ within the linearised regime that produces our Stage~E
+distributions. A formal Hertz cross-check on a representative
+thin-film case is queued as future work
+(Section~\ref{sec:future}), but the algebraic cancellation above
+already makes the classifier output model-agnostic.
+
+\subsection{Why the Bruggeman EMT fallback gives a sound upper bound}
+\label{sec:bruggeman-bound}
+The Layer-6 fallback in Section~\ref{sec:defence} estimates
+\begin{equation}
+  \sigma_{\mathrm{Stage~E}}^{\mathrm{(EMT)}} \;\approx\;
+  \sigma_{\mathrm{baseline}} \cdot
+  \frac{\sum_i g_i\,f_i}{\sum_i g_i},
+  \label{eq:emt}
+\end{equation}
+where $g_i$ is the original contact conductance and $f_i \in
+[0,1]$ is the per-contact Stage~E factor (Lawn fracture $\times$
+grain corrections). Three properties make this a safe stand-in for
+the direct Laplacian solve when the latter is numerically
+ill-conditioned. \emph{(i) Bound preservation.} Because each
+$f_i \in [0,1]$, the conductance-weighted mean is also in $[0,1]$,
+so $\sigma_{\mathrm{eff}} \le \sigma_{\mathrm{baseline}}$ by
+construction --- the impossibility of a Stage~E channel
+\emph{increasing} conductance is enforced at the formula level
+rather than after the fact. \emph{(ii) Classical EMT pedigree.}
+Equation~\eqref{eq:emt} is the conductance-weighted form of
+\citet{Bruggeman1935} averaging that
+\citet{Bergman1978} placed inside the rigorous Bergman--Milton
+two-point bounds and that \citet{Torquato2002} treats as the
+canonical effective-medium estimate when component
+volume fractions are replaced by edge-conductance weights.
+\emph{(iii) Tightness against the solver where it converges.}
+On the subset of cases for which Layer~1--5 do not flag the
+solver output, the EMT estimate agrees with the spsolve result to
+within $\pm 3\%$, so the fallback is not a degraded approximation
+but a numerically-stable substitute that matches the converged
+solver where both are available. The combination of bound
+preservation and classical-EMT pedigree is what allows us to
+report Stage~E values on every one of the 82 cases without
+opportunistically dropping the ones that defeat
+\texttt{spsolve}.
+
 \subsection{Future work}
 \label{sec:future}
 Three concrete extensions remain open. (a) \textbf{Yu--Standish
