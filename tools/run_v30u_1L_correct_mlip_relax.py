@@ -79,6 +79,7 @@ def add_vacuum(atoms, vac):
 
 
 def stack_interface(se, ncm, gap, shift_frac):
+    """Returns (combined_atoms, n_ncm) — n_ncm needed for FixAtoms partitioning."""
     se_a = se.copy(); ncm_a = ncm.copy()
     dx, dy = shift_frac
     shift_cart = dx * ncm_a.cell.array[0] + dy * ncm_a.cell.array[1]
@@ -88,13 +89,39 @@ def stack_interface(se, ncm, gap, shift_frac):
     ncm_z_max = ncm_a.positions[:, 2].max()
     se_z_min  = se_a.positions[:, 2].min()
     se_a.translate([0, 0, ncm_z_max - se_z_min + gap])
+    n_ncm = len(ncm_a)
     combined = ncm_a + se_a
     new_cell = se.cell.array.copy()
     z_extent = combined.positions[:, 2].max() - combined.positions[:, 2].min()
     new_cell[2] = [0, 0, z_extent + VACUUM_TOP]
     combined.set_cell(new_cell, scale_atoms=False)
     combined.set_pbc([True, True, True])
-    return combined
+    return combined, n_ncm
+
+
+def apply_haruyama_fixes(atoms, n_ncm, fix_frac=1/3):
+    """FixAtoms: bottom 1/3 of NCM (anchors NCM) + top 1/3 of SE (prevents lift).
+    Middle 2/3 of each slab is free → interface relax allowed, no rigid drift,
+    no intermixing through far side. Haruyama 2014 protocol."""
+    from ase.constraints import FixAtoms
+    pos = atoms.get_positions()
+    fix_idx = []
+    # NCM: bottom slice
+    ncm_z = pos[:n_ncm, 2]
+    ncm_z_min, ncm_z_max = ncm_z.min(), ncm_z.max()
+    ncm_cut = ncm_z_min + fix_frac * (ncm_z_max - ncm_z_min)
+    for i in range(n_ncm):
+        if pos[i, 2] <= ncm_cut:
+            fix_idx.append(i)
+    # SE: top slice
+    se_z = pos[n_ncm:, 2]
+    se_z_min, se_z_max = se_z.min(), se_z.max()
+    se_cut = se_z_max - fix_frac * (se_z_max - se_z_min)
+    for i in range(n_ncm, len(atoms)):
+        if pos[i, 2] >= se_cut:
+            fix_idx.append(i)
+    atoms.set_constraint(FixAtoms(indices=fix_idx))
+    return len(fix_idx)
 
 
 def xy_area(cell):
@@ -186,11 +213,13 @@ def main():
             for d in D_VALUES:
                 d_key = f"{d:.3f}"
                 t0 = time.time()
-                stacked = stack_interface(se, ncm, d, shift)
+                stacked, n_ncm = stack_interface(se, ncm, d, shift)
                 stacked.calc = calc
                 E_rigid = float(stacked.get_potential_energy())
                 A = xy_area(stacked.cell.array)
                 Wad_rigid = -(E_rigid - E_se_per_z[0] - E_ncm_iso) / A * 16.0218
+                # Haruyama FixAtoms (anti-intermixing): NCM bottom 1/3 + SE top 1/3
+                n_fixed = apply_haruyama_fixes(stacked, n_ncm, fix_frac=1/3)
                 # Relax
                 E_relaxed, n_steps = relax_atoms(stacked)
                 Wad_relaxed = -(E_relaxed - E_se_per_z[0] - E_ncm_iso) / A * 16.0218
@@ -203,6 +232,8 @@ def main():
                     'Wad_rigid':   Wad_rigid,
                     'Wad_relaxed': Wad_relaxed,
                     'n_steps':     n_steps,
+                    'n_fixed':     n_fixed,
+                    'n_total':     len(stacked),
                     'area_A2':     A,
                     't_sec':       t_elapsed,
                 }
