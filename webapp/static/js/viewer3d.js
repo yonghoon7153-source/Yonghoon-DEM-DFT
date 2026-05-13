@@ -746,13 +746,18 @@ function applyViewMode(state, mode) {
     });
     /* AM with no brittle contact stays dim. SE always dim in this mode. */
     flushColors();
+    const csvUrl = (state.dataUrl || '').replace('/3d-data', '/brittle-z-csv');
     setLegend(state,
       `<b>Brittle Stage (Auerbach + Lawn 1998)</b>
        <span style="color:#fde047">●</span> microcrack
        <span style="color:#fb923c">●</span> multicrack
        <span style="color:#ef4444">●</span> fragmentation
        <span style="color:#7f1d1d">●</span> pulverization
-       (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)`);
+       (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)
+       <a href="${csvUrl}" download
+          style="display:inline-block;margin-top:4px;padding:2px 8px;background:#2563eb;color:#fff;border-radius:4px;font-size:11px;text-decoration:none;font-weight:600">
+         Z-profile CSV ↓
+       </a>`);
     return;
   }
 
