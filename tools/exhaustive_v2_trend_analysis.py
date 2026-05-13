@@ -220,7 +220,7 @@ def main():
     print("─" * 110)
     print("TOP 30 — most paper-direction (highest R) configs:")
     print("─" * 110)
-    print(f"{'R':>+6} | {'face':<5} {'agg':<7} {'asymp':<10} {'α':<5} {'metric':<11} | {'p_set':<30} | values")
+    print(f"{'R':>6} | {'face':<5} {'agg':<7} {'asymp':<10} {'α':<5} {'metric':<11} | {'p_set':<30} | values")
     print("─" * 110)
     for r in results_sorted[:30]:
         print(f"{r['R']:>+6.3f} | {r['face_mode']:<5} {r['agg_mode']:<7} "
