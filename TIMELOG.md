@@ -16,6 +16,7 @@
 | LOW | **comp5 anneal_chain resume** (r2-r4 15 pairs 더) | KILLED at 10/25 pairs | r0+r1 fully done (10/10). r2-r4 unlikely to beat r1/li1 (-254.919). Champion finalized. |
 | LOW | **comp3/5 post-processing** (Bader/PDOS) | NEEDS V0 DFT EOS done | After DFT EOS → tight SCF → pp.x + projwfc.x. Reference: comp4_lpscbrbr/dft_eos/v0_fit/ structure. |
 | LOW | **comp3/5 v2 bond length analysis** | NEEDS V0 structure | mic distance from V0.xyz + cutoffs (Li-O 2.8, Li-S 3.0, Li-Cl 3.2, Li-Br 3.4 Å). **User confirmed: 최종 V0 나온 후에 bond length 분석 진행.** |
+| LOW | **comp3/5 v2 ADHESION slab + re-adhesion** | NEEDS V0 + Bader done | Chain: V0 cell + Bader charge → cleave SE slab with consistent surface termination → comp{3,5}_v2_slab.xyz. Then phase1_rigid_binding.py with v2 slabs → 새 adhesion figure (v2 anneal champion based, v1 OLD figure 대체). 오늘 paper main은 v1 OLD figure (paper-acceptable). v2-based adhesion은 elastic moduli section 끝나면 추가. |
 
 ## 📌 TODAY'S FOCUS — 2026-05-13
 
