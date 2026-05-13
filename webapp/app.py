@@ -4177,6 +4177,73 @@ def serve_stress_z_csv(case_id):
     return _stress_z_csv_response(get_results_dir(case_id), case_id)
 
 
+# ── Combined (Brittle + Stress) z-profile — overlay PNG / merged CSV ──
+def _combined_z_png_response(case_dir, case_name):
+    import io as _io
+    if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
+            and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
+        return ('atoms.csv or contacts.csv missing', 404)
+    bins = int(request.args.get('bins', 25))
+    try:
+        import sys as _sys
+        _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        from plot_combined_z_distribution import (
+            compute_combined_zprofile, render_combined_figure,
+        )
+        profile = compute_combined_zprofile(case_dir, bins=bins)
+        fig = render_combined_figure(profile)
+        buf = _io.BytesIO()
+        fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+        import matplotlib.pyplot as plt
+        plt.close(fig); buf.seek(0)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    return send_file(buf, mimetype='image/png', as_attachment=False,
+                      download_name=f'combined_z_{case_name}.png')
+
+
+def _combined_z_csv_response(case_dir, case_name):
+    import csv as _csv
+    import io as _io
+    if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
+            and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
+        return ('atoms.csv or contacts.csv missing', 404)
+    bins = int(request.args.get('bins', 25))
+    try:
+        import sys as _sys
+        _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        from plot_combined_z_distribution import (
+            compute_combined_zprofile, profile_to_csv_rows,
+        )
+        profile = compute_combined_zprofile(case_dir, bins=bins)
+        buf = _io.StringIO()
+        _csv.writer(buf).writerows(profile_to_csv_rows(profile))
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+    resp.headers['Content-Disposition'] = (
+        f'attachment; filename="combined_z_{case_name}.csv"')
+    return resp
+
+
+@app.route('/results/<case_id>/combined-z-png')
+def serve_combined_z_png(case_id):
+    return _combined_z_png_response(get_results_dir(case_id), case_id)
+
+@app.route('/results/<case_id>/combined-z-csv')
+def serve_combined_z_csv(case_id):
+    return _combined_z_csv_response(get_results_dir(case_id), case_id)
+
+
 @app.route('/results/<case_id>/report')
 def serve_report(case_id):
     """Generate comprehensive MD report v2.0 from analysis results."""
@@ -5055,6 +5122,22 @@ def serve_archive_stress_z_csv(folder):
     if not target:
         return ('Not found', 404)
     return _stress_z_csv_response(target, os.path.basename(target.rstrip('/')))
+
+
+@app.route('/archive/results/<path:folder>/combined-z-png')
+def serve_archive_combined_z_png(folder):
+    target = _safe_path(folder)
+    if not target:
+        return ('Not found', 404)
+    return _combined_z_png_response(target, os.path.basename(target.rstrip('/')))
+
+
+@app.route('/archive/results/<path:folder>/combined-z-csv')
+def serve_archive_combined_z_csv(folder):
+    target = _safe_path(folder)
+    if not target:
+        return ('Not found', 404)
+    return _combined_z_csv_response(target, os.path.basename(target.rstrip('/')))
 
 
 @app.route('/archive/download/<path:filepath>')
