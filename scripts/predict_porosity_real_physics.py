@@ -50,7 +50,7 @@ EPS_PURE_SE_EXP = 0.10                       # EXPERIMENTAL pure-LPSCl @ 300 MPa
 # Back-fit effective σ_y from experimental endpoint
 # 0.10 = 0.36 · exp(-K · 300 MPa) → K = 4.27e-3 1/MPa
 K_HECKEL_EFF = -np.log(EPS_PURE_SE_EXP / EPS_PURE_AM) / (P_PRESS / 1e6)  # 1/MPa
-SIGMA_Y_EFF  = 1.0 / (3.0 * K_HECKEL_EFF * 1e6)                            # Pa
+SIGMA_Y_EFF  = 1e6 / (3.0 * K_HECKEL_EFF)                                  # Pa
 # ≈ 78 MPa (time-averaged plastic resistance, lower than Tabor 283 MPa)
 
 
