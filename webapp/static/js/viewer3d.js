@@ -50,6 +50,29 @@ function rygColor(t) {
   return (Math.round((1 - u) * 255) << 16) | (255 << 8) | 0;
 }
 
+/* Coolwarm (blue → white → red) sequential colormap — academic
+ * standard for ordered scalar fields.  Anchors:
+ *   t = 0.0  →  rgb(59, 76, 192)    deep blue
+ *   t = 0.5  →  rgb(221, 221, 221)  near-white
+ *   t = 1.0  →  rgb(180,  4,  38)   deep red
+ * Linear interpolation in each half. */
+function coolwarmColor(t) {
+  t = Math.max(0, Math.min(1, t));
+  let r, g, b;
+  if (t < 0.5) {
+    const u = t * 2;
+    r = Math.round(59  + (221 - 59 ) * u);
+    g = Math.round(76  + (221 - 76 ) * u);
+    b = Math.round(192 + (221 - 192) * u);
+  } else {
+    const u = (t - 0.5) * 2;
+    r = Math.round(221 + (180 - 221) * u);
+    g = Math.round(221 + (4   - 221) * u);
+    b = Math.round(221 + (38  - 221) * u);
+  }
+  return (r << 16) | (g << 8) | b;
+}
+
 /* COMSOL-style coolwarm (blue → white → red) colormap.
  * t ∈ [0,1].  Anchors:
  *   t = 0.0  →  (59, 76, 192)   deep blue
