@@ -28,6 +28,13 @@ OUT  = WORK / 'killer_v2_figure'
 COMPS = ['comp1', 'comp2', 'comp4_v2']
 FACE_CHOICE = 'B'
 ALPHA = 1.0
+# Global y-shift mode (NOT per-comp — preserves family direction!):
+#   'none'      → no shift, raw α-corrected curves
+#   'min_asymp' → subtract min asymp across comps (smallest-asymp comp at 0)
+#   'mean_asymp'→ subtract mean asymp across comps
+#   'fixed'     → subtract Y_SHIFT_FIXED
+Y_SHIFT_MODE = 'min_asymp'
+Y_SHIFT_FIXED = 1.0
 
 PAPER_EXP = {'comp1': 194, 'comp2': 180, 'comp4_v2': 298}
 EISO_KEY  = {'comp1': 'comp1', 'comp2': 'comp2', 'comp4_v2': 'comp4'}
@@ -95,6 +102,25 @@ def main():
 
     R = float(np.corrcoef(wad_wells, paper_vals)[0, 1])
     print(f"\nR(Wad_well, paper_aJ) = {R:+.4f}  (n={len(COMPS)})")
+
+    # ── Apply global y-shift (NOT per-comp — preserves family direction & R) ──
+    asymps_alpha = [c['wad_asymp'] for c in curves.values()]
+    if Y_SHIFT_MODE == 'min_asymp':
+        shift = min(asymps_alpha)
+    elif Y_SHIFT_MODE == 'mean_asymp':
+        shift = float(np.mean(asymps_alpha))
+    elif Y_SHIFT_MODE == 'fixed':
+        shift = Y_SHIFT_FIXED
+    else:
+        shift = 0.0
+    print(f"Y global shift ({Y_SHIFT_MODE}): {shift:+.3f} J/m²  (R unchanged)")
+    for c in curves:
+        # shift Wad up means E_adh down: E_adh_new = -(Wad - shift) = E_adh_old + shift
+        # We subtract from Wad → adds to E_adh (downward in plot). Wait:
+        # E_adh = -Wad. If Wad → Wad - shift (subtract), then E_adh → -(Wad-shift) = E_adh + shift.
+        # That moves E_adh UP. To move DOWN, we need Wad → Wad + shift, i.e. E_adh - shift.
+        # Simpler: subtract shift from E_adh directly.
+        curves[c]['e_adh'] = curves[c]['e_adh'] - shift
 
     # ── plot ────────────────────────────────────────────────────
     plt.rcParams.update({'font.size': 13})
