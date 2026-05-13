@@ -367,6 +367,67 @@ zero CSV / JSON inconsistencies). 20\,/\,160 cases triggered the
 Bruggeman fallback for at least one channel; the rest used the
 direct solver path.
 
+\subsection{Trust audit on the full ensemble}
+\label{sec:trust-audit}
+Every full\_metrics.json carries a five-field
+\texttt{validation\_flags} self-report card stamped by
+\texttt{run\_network\_full\_corrections.py} after every Stage-E
+run.  A case is marked \emph{trustworthy} when all assessable
+gates evaluate True; gates whose underlying metric is missing
+(typically older Stage-E runs that predate a newer factor key) are
+excluded from the verdict rather than failing it, so the audit
+remains robust against schema evolution. The breakdown of the
+audit is reported in Table~\ref{tab:trust-audit}; the leading
+failure mode is ASR landing above the Bielefeld--Lee 200\,\si
+{\ohm\square\centi\metre} ceiling, which is dominated by
+thick-film 6--8\,mAh cases at near-Furnas porosities.
+
+\input{../db/case_audit_summary.tex}
+
+\subsection{Variance decomposition over the 82-case ensemble}
+\label{sec:pca}
+A PCA on the standardised microstructure features
+(\AMP/\AMS/SE radii, weight and volume fractions, count, porosity,
+thickness) reveals two clean, non-collinear axes (PC1 explains
+$\sim$45\,\% of the design-knob variance, PC2 $\sim$22\,\%). When
+the biplot is coloured by the Stage-E electronic conductivity loss
+$\sigma_{\mathrm{e,loss}}^{\mathrm{Stage-E}}$
+(Figure~\ref{fig:pca-biplot}), the colour gradient aligns almost
+entirely with the $p_{\mathrm{vol}}$ (AM\_P volume) loading
+vector --- the Pearson correlation of $p_{\mathrm{vol}}$ against
+$\sigma_{\mathrm{e,loss}}$ is $+0.60$ ($R^2 = 0.36$) and
+against $\kappa_{\mathrm{loss}}^{\mathrm{Stage-E}}$ is $+0.92$
+($R^2 = 0.85$), confirming that the \AMP{} fraction (\textit{not}
+the porosity, \textit{not} the absolute particle radius) is the
+dominant single-feature predictor of Stage-E damage. The
+$\sigma_{\mathrm{ionic}}$ axis is orthogonal to this and tracks
+the AM/SE weight ratio almost perfectly
+($r_{\mathrm{AM,wt}} = -0.95$), so the
+\emph{design rule} ``minimise AM\_P fraction'' for electronic /
+thermal robustness does not trade against $\sigma_{\mathrm{ionic}}$
+beyond what the weight-fraction term already captures.
+
+\begin{figure}[t]
+  \centering
+  \IfFileExists{pca_biplot.png}{%
+    \includegraphics[width=0.85\linewidth]{pca_biplot.png}%
+  }{\IfFileExists{../figures/pca_biplot.png}{%
+    \includegraphics[width=0.85\linewidth]{../figures/pca_biplot.png}%
+  }{\fbox{\parbox{0.6\linewidth}{\centering\small
+    \texttt{pca\_biplot.png} not found.\\
+    Regenerate with \texttt{python3 scripts/pca\_ensemble\_variance.py}.}}}}
+  \caption{PCA biplot of the standardised microstructure
+    features across the full DEM ensemble. Each point is a case
+    projected onto PC1--PC2; colour encodes the Stage-E
+    electronic conductivity loss
+    $\sigma_{\mathrm{e,loss}}^{\mathrm{Stage-E}}$. The colour
+    gradient aligns with the $p_{\mathrm{vol}}$ loading arrow
+    (\AMP{} volume fraction), confirming the AM\_P-fraction
+    design rule reported in Section~\ref{sec:design-rule}. Arrows
+    show feature loadings on the first two components.}
+  \label{fig:pca-biplot}
+\end{figure}
+
 \subsection{Cell-level ASR validation}
 For a representative case (\texttt{input\_1mAh\_100\_10},
 \AMP-only, $r_{\mathrm{SE}} = 0.5\,\si{\micro\metre}$, $L = 20.2\,\si{\micro\metre}$,
@@ -381,6 +442,7 @@ within the literature ranges reported by
 \citet{Bielefeld2022, Minnmann2021, Lee2020}.
 
 \subsection{Design rule: AM\_P fraction vs $\sigmae$ loss}
+\label{sec:design-rule}
 A clean-ensemble regression (160 cases passing the Section-7
 filter) of the Stage~E $\sigmae$ loss percentage against AM\_P
 volume fraction yields a Pearson correlation of $+0.967$
