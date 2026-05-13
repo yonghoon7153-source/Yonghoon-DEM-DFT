@@ -18,8 +18,14 @@ import sys
 sys.path.insert(0, '.')
 from run_v30u_full_ensemble import (
     zshift_variant, stack_rigid, xy_area, log,
-    N_ZSHIFTS, gaps, xy_shifts,
+    N_ZSHIFTS, N_XY_GRID, GAP_MIN, GAP_MAX, GAP_STEP,
 )
+
+# Reconstruct ensemble grid (gaps and xy_shifts are local to main() in the
+# original script, so we rebuild them here from module-level constants).
+gaps = np.arange(GAP_MIN, GAP_MAX + GAP_STEP/2, GAP_STEP)
+xy_shifts = [(i/N_XY_GRID, j/N_XY_GRID)
+             for i in range(N_XY_GRID) for j in range(N_XY_GRID)]
 
 # Paper protocol: 1L NCM (PRESERVED), not 3Lconv
 COMP_SPEC = {
