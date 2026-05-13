@@ -96,7 +96,7 @@ function buildControls(container) {
       <option value="brittle_surface">Brittle Hotspots (surface gradient)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
       <option value="stress">Stress Concentration</option>
-      <option value="stress_brittle">Stress + Brittle (cones at contacts)</option>
+      <option value="stress_brittle">Stress + Brittle (overlay)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="se_brittle">Fracture-prone SE</option>
     </select>
@@ -1108,12 +1108,16 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'stress_brittle') {
-    /* Combined view: stress field on particles (coolwarm log scale)
-     * + Lawn-stage cone markers at every damaged AM-AM contact.
-     * Each cone sits at the contact midpoint, oriented along the
-     * pair-centre vector, and its size scales with F/P_c so severe
-     * sites pop visually while the stress field provides the
-     * spatial context (where force chains are concentrated). */
+    /* True overlay of the two existing modes:
+     *   1. Every particle gets the *stress* mode whole-sphere
+     *      coolwarm colour (max contact pressure on log scale,
+     *      5–95th percentile clip).
+     *   2. On top of that, the *brittle_surface* mode spherical-cap
+     *      patches are drawn at every damaged AM-AM contact.  The
+     *      caps use vertex RGBA with alpha falloff so the stress
+     *      colour shows through everywhere except the contact spot
+     *      where the Lawn-stage hue dominates.  No cones — exactly
+     *      the two screenshots the user pointed at, superposed. */
 
     // ── 1) Paint stress field exactly like the 'stress' mode ────
     const sMap = aux.stress_max || {};
@@ -1140,68 +1144,68 @@ function applyViewMode(state, mode) {
       flushColors();
     }
 
-    // ── 2) Add brittle-stage cone markers at each damaged contact ─
+    // ── 2) Drop brittle-surface cap patches on every damaged contact ─
     const idx = state.idIndex || {};
     const group = new THREE.Group();
     group.userData.isCombined = true;
-    // Larger size multipliers and longer cones so they protrude well
-    // past particle surfaces — the cones use depthTest:false anyway
-    // but visually they should still feel like 3D markers, not flat
-    // overlay sprites.
-    const stageSize = {
-      microcrack:    1.2,
-      multicrack:    1.7,
-      fragmentation: 2.4,
-      pulverization: 3.0,
+    const HALF_ANGLE = {
+      microcrack:    Math.PI / 9,    // 20°
+      multicrack:    Math.PI / 6,    // 30°
+      fragmentation: Math.PI / 4.5,  // 40°
+      pulverization: Math.PI / 3.5,  // ~51°
     };
     const counts = { microcrack:0, multicrack:0, fragmentation:0, pulverization:0 };
+
+    function makeCap(r, centerData, dir, stageName, halfAngleRad) {
+      const segs = 28;
+      const geo = new THREE.SphereGeometry(
+        r * 1.005, segs, Math.max(8, segs >> 1),
+        0, Math.PI * 2, 0, halfAngleRad,
+      );
+      const stageCol = new THREE.Color(STAGE_COL[stageName]);
+      const yMin = Math.cos(halfAngleRad);
+      const pos = geo.attributes.position;
+      const colors = new Float32Array(pos.count * 4);
+      for (let i = 0; i < pos.count; i++) {
+        const y = pos.array[i * 3 + 1];
+        const t = Math.max(0, Math.min(1, (y - yMin) / (1 - yMin)));
+        const fade = t * t;
+        colors[i * 4 + 0] = stageCol.r;
+        colors[i * 4 + 1] = stageCol.g;
+        colors[i * 4 + 2] = stageCol.b;
+        colors[i * 4 + 3] = fade;
+      }
+      geo.setAttribute('color', new THREE.BufferAttribute(colors, 4));
+      const mat = new THREE.MeshBasicMaterial({
+        vertexColors: true,
+        transparent: true,
+        depthWrite: false,
+        side: THREE.FrontSide,
+      });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(centerData.x, centerData.z, centerData.y);
+      const dirThree = new THREE.Vector3(dir.x, dir.z, dir.y).normalize();
+      mesh.quaternion.setFromUnitVectors(
+        new THREE.Vector3(0, 1, 0), dirThree);
+      mesh.renderOrder = 4 + (STAGE_RANK[stageName] || 0);
+      return mesh;
+    }
 
     (aux.brittle_pairs || []).forEach(b => {
       const p1 = idx[b.id1], p2 = idx[b.id2];
       if (!p1 || !p2) return;
       const stage = b.stage || 'microcrack';
-      if (!(stage in stageSize)) return;
+      if (!(stage in HALF_ANGLE)) return;
       counts[stage] += 1;
-      const colHex = STAGE_COL[stage];
-
-      // Contact direction p1 → p2 in data frame
       const dx = p2.x - p1.x, dy = p2.y - p1.y, dz = p2.z - p1.z;
-      const r1 = p1.r || 1, r2 = p2.r || 1;
-      const rMin = Math.min(r1, r2);
-
-      // Midpoint along contact line in data frame
-      const w = r1 / (r1 + r2);
-      const cx = p1.x + dx * w;
-      const cy = p1.y + dy * w;
-      const cz = p1.z + dz * w;
-
-      // Cone — base sized for visibility, height scales with stage.
-      const baseR  = rMin * 0.55 * stageSize[stage];
-      const height = rMin * 1.4  * stageSize[stage];
-      const geo = new THREE.ConeGeometry(baseR, height, 16);
-      const mat = new THREE.MeshPhongMaterial({
-        color: colHex, emissive: colHex, emissiveIntensity: 0.75,
-        transparent: false,
-        depthTest: false,         // always render on top of particles
-        depthWrite: false,
-      });
-      const mesh = new THREE.Mesh(geo, mat);
-
-      // ConeGeometry apex points +Y by default with base at -Y.  Position
-      // the cone so its base is centred on the contact midpoint and its
-      // apex sticks out perpendicular to the contact line.  Use
-      // contact-axis direction (Three.js Z-up swap) and align +Y to it.
-      mesh.position.set(cx, cz, cy);
-      const dirThree = new THREE.Vector3(dx, dz, dy).normalize();
-      mesh.quaternion.setFromUnitVectors(
-        new THREE.Vector3(0, 1, 0), dirThree);
-      // Push the cone half its height ALONG that direction so the base
-      // sits exactly at the contact midpoint rather than centred on it.
-      mesh.position.x += dirThree.x * height * 0.5;
-      mesh.position.y += dirThree.y * height * 0.5;
-      mesh.position.z += dirThree.z * height * 0.5;
-      mesh.renderOrder = 20;     // render above any particle mesh
-      group.add(mesh);
+      const inv = 1.0 / Math.sqrt(dx*dx + dy*dy + dz*dz + 1e-12);
+      const u = { x: dx*inv, y: dy*inv, z: dz*inv };
+      const ha = HALF_ANGLE[stage];
+      group.add(makeCap(p1.r || 1,
+        { x: p1.x, y: p1.y, z: p1.z }, u, stage, ha));
+      group.add(makeCap(p2.r || 1,
+        { x: p2.x, y: p2.y, z: p2.z },
+        { x: -u.x, y: -u.y, z: -u.z }, stage, ha));
     });
     if (state.scene) {
       state.scene.add(group);
@@ -1212,20 +1216,20 @@ function applyViewMode(state, mode) {
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
-      `<b>Stress field + Brittle cones</b>
+      `<b>Stress field + Brittle caps</b>
        <span style="color:#9ca3af;font-size:10px">
          particles = max contact pressure (log)<br>
-         cones = Lawn stage at damaged AM-AM contact
+         surface caps = Lawn stage at damaged AM-AM contact
        </span>
        <div style="margin:6px 0 2px 0;height:8px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
          <span>low MPa</span><span>median</span><span>high MPa</span>
        </div>
-       <span style="color:#ffeda0">▲</span> microcrack (${counts.microcrack})
-       <span style="color:#feb24c">▲</span> multicrack (${counts.multicrack})
-       <span style="color:#f03b20">▲</span> fragmentation (${counts.fragmentation})
-       <span style="color:#800026">▲</span> pulverization (${counts.pulverization})
+       <span style="color:#ffeda0">●</span> microcrack (${counts.microcrack})
+       <span style="color:#feb24c">●</span> multicrack (${counts.multicrack})
+       <span style="color:#f03b20">●</span> fragmentation (${counts.fragmentation})
+       <span style="color:#800026">●</span> pulverization (${counts.pulverization})
        <button id="combined-z-modal-btn" class="data-modal-btn">
          <span class="ico">📊</span><span>Z-profile 데이터</span>
        </button>`);
