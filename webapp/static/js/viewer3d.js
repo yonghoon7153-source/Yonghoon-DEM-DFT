@@ -754,8 +754,12 @@ function applyViewMode(state, mode) {
        <span style="color:#7f1d1d">●</span> pulverization
        (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)
        <button id="brittle-z-modal-btn"
-          style="display:inline-block;margin-top:4px;padding:2px 8px;background:#2563eb;color:#fff;border-radius:4px;font-size:11px;border:none;cursor:pointer;font-weight:600">
-         Z-profile 표 / PNG / CSV
+          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
+                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
+                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
+                 font-weight:600;letter-spacing:.2px;
+                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
+         📊 Z-profile 데이터
        </button>`);
     const btn = document.getElementById('brittle-z-modal-btn');
     if (btn) btn.addEventListener('click',
@@ -1607,11 +1611,19 @@ async function showBrittleZProfileModal(state) {
   let profile;
   try {
     const r = await fetch(dataUrl);
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    profile = await r.json();
+    const body = await r.text();
+    let parsed; try { parsed = JSON.parse(body); } catch { parsed = null; }
+    if (!r.ok) {
+      const detail = (parsed && parsed.error) ? parsed.error : body.slice(0, 240);
+      throw new Error(`HTTP ${r.status} — ${detail}`);
+    }
+    profile = parsed || JSON.parse(body);
   } catch (e) {
-    document.getElementById('bz-summary').textContent =
-      'Failed to load: ' + e.message;
+    document.getElementById('bz-summary').innerHTML =
+      `<span style="color:#b91c1c">Failed to load: ${(e.message || e)}</span><br>
+       <span style="color:#6b7280;font-size:11px">
+         서버 콘솔(/tmp/flask.log)의 traceback을 확인해 주세요.
+       </span>`;
     return;
   }
 

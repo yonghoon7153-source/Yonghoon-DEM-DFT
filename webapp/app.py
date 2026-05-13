@@ -3918,13 +3918,20 @@ def _brittle_z_csv_response(case_dir, case_name):
     if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
             and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
         return ('atoms.csv or contacts.csv missing', 404)
+    if not os.path.exists(os.path.join(case_dir, 'meta.json')):
+        return ('meta.json missing in case directory', 404)
     from plot_brittle_z_distribution import (
         compute_brittle_zprofile, profile_to_csv_rows,
     )
     bins = int(request.args.get('bins', 25))
-    profile = compute_brittle_zprofile(case_dir, bins=bins)
-    buf = _io.StringIO()
-    _csv.writer(buf).writerows(profile_to_csv_rows(profile))
+    try:
+        profile = compute_brittle_zprofile(case_dir, bins=bins)
+        buf = _io.StringIO()
+        _csv.writer(buf).writerows(profile_to_csv_rows(profile))
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
     resp = make_response(buf.getvalue())
     resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
     resp.headers['Content-Disposition'] = (
@@ -3947,15 +3954,24 @@ def _brittle_z_data_response(case_dir, case_name):
     if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
             and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
         return jsonify({'error': 'atoms.csv or contacts.csv missing'}), 404
+    if not os.path.exists(os.path.join(case_dir, 'meta.json')):
+        return jsonify({'error': 'meta.json missing in case directory'}), 404
     bins = int(request.args.get('bins', 25))
-    profile = _brittle_z_profile_compute(case_dir, bins=bins)
+    try:
+        profile = _brittle_z_profile_compute(case_dir, bins=bins)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return jsonify({
+            'error': f'{type(e).__name__}: {e}',
+        }), 500
     # numpy arrays → plain lists for JSON
     return jsonify({
         'case_name':      case_name,
-        'thickness_um':   profile['thickness_um'],
-        'n_total':        profile['n_total'],
-        'n_damaged':      profile['n_damaged'],
-        'damaged_pct':    profile['damaged_pct'],
+        'thickness_um':   float(profile['thickness_um']),
+        'n_total':        int(profile['n_total']),
+        'n_damaged':      int(profile['n_damaged']),
+        'damaged_pct':    float(profile['damaged_pct']),
         'bin_centers_um': [float(x) for x in profile['bin_centers_um']],
         'bin_edges_um':   [float(x) for x in profile['bin_edges_um']],
         'counts': {k: [int(x) for x in v] for k, v in profile['counts'].items()},
@@ -3970,19 +3986,26 @@ def _brittle_z_png_response(case_dir, case_name):
     if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
             and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
         return ('atoms.csv or contacts.csv missing', 404)
+    if not os.path.exists(os.path.join(case_dir, 'meta.json')):
+        return ('meta.json missing in case directory', 404)
     bins = int(request.args.get('bins', 25))
-    profile = _brittle_z_profile_compute(case_dir, bins=bins)
-    import sys as _sys
-    _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
-    if _scripts_dir not in _sys.path:
-        _sys.path.insert(0, _scripts_dir)
-    from plot_brittle_z_distribution import render_brittle_figure
-    fig = render_brittle_figure(profile)
-    buf = _io.BytesIO()
-    fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
-    import matplotlib.pyplot as plt
-    plt.close(fig)
-    buf.seek(0)
+    try:
+        profile = _brittle_z_profile_compute(case_dir, bins=bins)
+        import sys as _sys
+        _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if _scripts_dir not in _sys.path:
+            _sys.path.insert(0, _scripts_dir)
+        from plot_brittle_z_distribution import render_brittle_figure
+        fig = render_brittle_figure(profile)
+        buf = _io.BytesIO()
+        fig.savefig(buf, format='png', dpi=150, bbox_inches='tight')
+        import matplotlib.pyplot as plt
+        plt.close(fig)
+        buf.seek(0)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
     return send_file(buf, mimetype='image/png', as_attachment=False,
                       download_name=f'brittle_z_{case_name}.png')
 
