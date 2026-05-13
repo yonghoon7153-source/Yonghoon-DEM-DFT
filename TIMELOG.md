@@ -18,12 +18,21 @@
 | LOW | **comp3/5 v2 bond length analysis** | NEEDS V0 structure | mic distance from V0.xyz + cutoffs (Li-O 2.8, Li-S 3.0, Li-Cl 3.2, Li-Br 3.4 Å). **User confirmed: 최종 V0 나온 후에 bond length 분석 진행.** |
 | LOW | **comp3/5 v2 ADHESION slab + re-adhesion** | NEEDS V0 + Bader done | Chain: V0 cell + Bader charge → cleave SE slab with consistent surface termination → comp{3,5}_v2_slab.xyz. Then phase1_rigid_binding.py with v2 slabs → 새 adhesion figure (v2 anneal champion based, v1 OLD figure 대체). 오늘 paper main은 v1 OLD figure (paper-acceptable). v2-based adhesion은 elastic moduli section 끝나면 추가. |
 
-## 📌 TODAY'S FOCUS — 2026-05-13
+## 📌 TODAY'S FOCUS — 2026-05-13 / 2026-05-14
 
-**Goal:** Adhesion paper figure 오늘 안에 완료
+**Goal:** mechanism scheme + lit review (waiting for KISTI comp3/5 v2 V₀)
 
 | 시각 | branch | action | status | notes |
 |------|--------|--------|--------|-------|
+| 2026-05-14 ~04:30 | debug-api-500-error-iukkt | Hood/Patel 2021 PDF 정독 + 우리 paper와 비교 | DONE | Li6-xPS5-xClBrx (transport focus, 24mS/cm @ x=0.7). 조성 공간만 sister, mechanism은 무관 (그들=conductivity, 우리=mechanical/Wad). x=0.7에서 LiClxBr1-x 4% 불순물 = 용해도 한계 — 우리 Li5.4 family가 이 한계 부근에 위치한다는 정량 인용 가능. |
+| 2026-05-14 ~04:00 | debug-api-500-error-iukkt | 사용자 PC 재부팅 + KISTI watchdog 살아있음 확인 | DONE | comp3 V0 iter=223, comp5 iter=216, 둘 다 force 0.001 (target 0.0001). 잡 살아있음 (nohup 가정). |
+| 2026-05-14 ~03:30 | debug-api-500-error-iukkt | Strauss/Zeng 2022 Nat Commun PDF 정독 | DONE | 정정: 저자=Zeng(Yanshan U), Strauss 아님. 양극이 아니라 Li-metal 음극측 segregation. x≥1.3 grain 표면에 LiCl shell 자발 형성 (cryo-STEM). 우리 paper에는 "Cl 자발 표면 분포" precedent로만 인용 가능, NMC 양극 직접 증거 아님. |
+| 2026-05-14 ~03:00 | debug-api-500-error-iukkt | Lee 2025 Science PDF (halide segregation) 정독 | DONE | UHS 2000rpm 5h 갈기로 LPSCl→LiCl shell on chalcogen 양극. cryo-TEM 직접. **우리 시스템은 NMC oxide + 정적 인터페이스 → 직접 인용 부적합. ** mechanism narrative 약화. |
+| 2026-05-14 ~02:30 | debug-api-500-error-iukkt | tools/rhino_scheme_v2_literature.py 작성 + push | DONE | commit 27cf0ba. 2-panel scheme (Li6 vs Li5.4). literature-grounded 라고 했지만 **comp3 data와 모순** (comp3 X-O=0인데 Wad 최고). narrative 약함. |
+| 2026-05-14 ~02:00 | debug-api-500-error-iukkt | mechanism literature 광범위 search (Lee, Zeng, Hood, Lu, Lim 등) | DONE | "halide segregation → Wad 강화" 직접 증거: chalcogen 양극에만 있음. NMC + Cl-rich + Wad 직접 측정 paper 없음. **우리 work이 그 빈 곳** — 단, atomistic evidence 부족. |
+| 2026-05-14 ~01:30 | debug-api-500-error-iukkt | comp4 v1→v2 bond density 변화 확인 | DONE | `output/comp4_v2_adhesion/v1_v2_REDO_comparison.json`. comp4 v2 face A에 Cl 4개 새로 노출 (Cl-O 0→0.088), Br는 후퇴 (0.108→0.050). **R(Cl-O)=−0.91 v1 era sampling artifact, drop**. **Robust descriptor: R(S-Li)=−0.896 family classifier**. |
+| 2026-05-14 ~01:00 | debug-api-500-error-iukkt | Rhino scheme 작업 (atom import, 2-panel scheme, material color fix) | DONE | tools/rhino_import_interface.py, tools/rhino_scheme_mechanism.py. AddPipe list bug fix, material API for raytraced color. 사용자 render 성공 확인. |
+| ⚠️ 미스텝 | — | "halide segregation"으로 mechanism narrative 만들려다 우리 데이터(comp3 X-O=0이지만 Wad 최고)와 모순 발견 후 narrative 약화. **이미 확정된 R=0.9999 family signal + S-Li R=−0.896 사실에 집중해야 했음**. 사용자 반복 지적. | — | 다음엔 새 narrative 만들기 전에 kb/results/ 정독 먼저. |
 | 15:17 | debug-api-500-error-iukkt | comp5 champion 추출 + MLIP EOS done | DONE | rank1/li1, E=-254.919 eV. V0=1254.04, B0=22.0 GPa (paper v1: 20.8, Δ+1.2). V0/V_cell=1.0414 → v104. |
 | 15:14 | debug-api-500-error-iukkt | comp5 anneal_chain stop (10/25 pairs done) | DONE | r0+r1 fully done. Champion = r1/li1 -254.919 eV. r2-r4 안 돌림. |
 | 14:43 | debug-api-500-error-iukkt | comp3 v2 DFT EOS KISTI 시작 (paper protocol K=2x2x1) | START | gen_dft_eos_comp4.py mirror + auto_restart.sh. GPU0. v098 BFGS step 1 진행 중. |
