@@ -27,6 +27,13 @@ from predict_porosity_strict_physics import (
     ALPHA_KC, F_PERC, SHARPNESS, bouvard_rcp,
 )
 
+# ── Mechanistic outliers identified by the validation-flag trust audit
+# (paper §5, cluster analysis). Marked with red stars on the panels so
+# the reader sees them visually isolated from the bulk ensemble.
+#   1mAh_100_15 — AM_P-only 100 %, severe = 48.7 %, near-percolation
+#   6mAh_real_10 — severe = 61.8 %, settling-phase artefact
+OUTLIER_CASES = {'input_1mAh_100_15', 'input_6mAh_real_10'}
+
 
 def stress_perc(f_se):
     return 1.0 / (1.0 + np.exp(-SHARPNESS * (f_se - F_PERC)))
@@ -131,6 +138,23 @@ def panel(ax, cases, title, note,
                    marker=mk.get(camp, 'o'),
                    alpha=alpha, edgecolors='black', linewidth=0.5,
                    label=f'{label_en.get(camp, camp)} (n={len(sub_c)})')
+
+    # Mark the two mechanistic outliers identified by the trust-audit
+    # cluster analysis (paper §5).  Drawn as oversized hollow red stars
+    # on top of the campaign markers so they are visually isolated
+    # without changing the rest of the figure.
+    outliers = [c for c in cases if c['case_id'] in OUTLIER_CASES]
+    if outliers:
+        ax.scatter([c['eps_pred'] for c in outliers],
+                   [c['eps_meas'] for c in outliers],
+                   s=320, marker='*', facecolors='none',
+                   edgecolors='red', linewidth=2.2, zorder=5,
+                   label=f'mechanistic outlier (n={len(outliers)})')
+        for c in outliers:
+            ax.annotate(c['case_id'],
+                         (c['eps_pred'], c['eps_meas']),
+                         xytext=(7, 7), textcoords='offset points',
+                         fontsize=8, color='red', fontweight='bold')
 
     lo, hi = 5, 35
     ax.plot([lo, hi], [lo, hi], 'k-', lw=1.5, zorder=1, label='1:1')
