@@ -355,6 +355,7 @@ thead .sticky-col { z-index: 3; }
   overflow: hidden;
   cursor: pointer;
   transition: .2s;
+  position: relative;
 }
 .figure-item:hover { border-color: var(--accent); transform: translateY(-2px); }
 .figure-item img { width: 100%; height: auto; display: block; }

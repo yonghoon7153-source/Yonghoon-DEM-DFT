@@ -28,7 +28,7 @@ if os.path.exists(_env_path):
 
 from flask import (
     Flask, render_template, request, jsonify, send_from_directory,
-    redirect, url_for, send_file
+    redirect, url_for, send_file, make_response,
 )
 import storage_sync
 import predictor_engine
@@ -3904,6 +3904,40 @@ def serve_force_chains(case_id):
             return jsonify(json.load(f))
     return jsonify([])
 
+
+def _brittle_z_csv_response(case_dir, case_name):
+    """Compute brittle z-profile on demand and stream as CSV download.
+    Shared helper for /results/<id> and /archive/results/<path> endpoints.
+    """
+    import csv as _csv
+    import io as _io
+    import sys as _sys
+    _scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if _scripts_dir not in _sys.path:
+        _sys.path.insert(0, _scripts_dir)
+    if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
+            and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
+        return ('atoms.csv or contacts.csv missing', 404)
+    from plot_brittle_z_distribution import (
+        compute_brittle_zprofile, profile_to_csv_rows,
+    )
+    bins = int(request.args.get('bins', 25))
+    profile = compute_brittle_zprofile(case_dir, bins=bins)
+    buf = _io.StringIO()
+    _csv.writer(buf).writerows(profile_to_csv_rows(profile))
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+    resp.headers['Content-Disposition'] = (
+        f'attachment; filename="brittle_z_{case_name}.csv"')
+    return resp
+
+
+@app.route('/results/<case_id>/brittle-z-csv')
+def serve_brittle_z_csv(case_id):
+    results_dir = get_results_dir(case_id)
+    return _brittle_z_csv_response(results_dir, case_id)
+
+
 @app.route('/results/<case_id>/report')
 def serve_report(case_id):
     """Generate comprehensive MD report v2.0 from analysis results."""
@@ -4734,6 +4768,14 @@ def serve_archive_force_chains(folder):
         with open(fc_path) as f:
             return jsonify(json.load(f))
     return jsonify([])
+
+
+@app.route('/archive/results/<path:folder>/brittle-z-csv')
+def serve_archive_brittle_z_csv(folder):
+    target = _safe_path(folder)
+    if not target:
+        return ('Not found', 404)
+    return _brittle_z_csv_response(target, os.path.basename(target.rstrip('/')))
 
 
 @app.route('/archive/download/<path:filepath>')
