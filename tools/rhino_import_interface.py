@@ -22,7 +22,36 @@ Or paste into Rhino Python editor.
 Color preset matches our render scheme (CPK-ish).
 """
 import rhinoscriptsyntax as rs
+import scriptcontext as sc
+import Rhino
 import os
+
+# Cache for materials (one per element)
+_MAT_CACHE = {}
+
+
+def get_or_create_material(el, rgb):
+    """Create a Rhino material for element if not exists. Returns material index."""
+    if el in _MAT_CACHE:
+        return _MAT_CACHE[el]
+    mat_idx = sc.doc.Materials.Add()
+    mat = sc.doc.Materials[mat_idx]
+    r, g, b = rgb
+    mat.DiffuseColor = Rhino.Display.Color4f(r / 255.0, g / 255.0, b / 255.0, 1.0).AsSystemColor()
+    mat.Name = "atom_{}".format(el)
+    mat.CommitChanges()
+    _MAT_CACHE[el] = mat_idx
+    return mat_idx
+
+
+def apply_material(obj_id, mat_idx):
+    rs.ObjectMaterialSource(obj_id, 1)  # 1 = ByObject
+    obj = sc.doc.Objects.Find(obj_id)
+    if obj:
+        attrs = obj.Attributes
+        attrs.MaterialIndex = mat_idx
+        attrs.MaterialSource = Rhino.DocObjects.ObjectMaterialSource.MaterialFromObject
+        sc.doc.Objects.ModifyAttributes(obj, attrs, True)
 
 # Element colors (RGB 0-255)
 COLORS = {
@@ -73,8 +102,13 @@ def create_atom(loc, el, layer):
     rs.CurrentLayer(layer)
     sphere = rs.AddSphere(loc, RADII.get(el, 0.8))
     if sphere:
+        rgb = COLORS.get(el, (128, 128, 128))
+        # Display color (for Rendered viewport)
         rs.ObjectColorSource(sphere, 1)
-        rs.ObjectColor(sphere, COLORS.get(el, (128, 128, 128)))
+        rs.ObjectColor(sphere, rgb)
+        # Material (for actual Render)
+        mat_idx = get_or_create_material(el, rgb)
+        apply_material(sphere, mat_idx)
     return sphere
 
 
