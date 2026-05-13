@@ -55,13 +55,33 @@ def fnum(x, default=0.0):
 
 
 def _load_case(case_dir: Path):
-    meta = json.loads((case_dir / 'meta.json').read_text())
+    # meta.json is preferred but historic archive cases sometimes ship
+    # without it; fall back to input_params.json or project defaults so
+    # this loader works on every directory that has atoms.csv +
+    # contacts.csv (matches the 3D viewer's own tolerance).
+    meta: dict = {}
+    meta_p = case_dir / 'meta.json'
+    if meta_p.exists():
+        try:
+            meta = json.loads(meta_p.read_text())
+        except Exception:
+            meta = {}
+    if not meta:
+        ip_p = case_dir / 'input_params.json'
+        if ip_p.exists():
+            try:
+                meta = json.loads(ip_p.read_text())
+            except Exception:
+                meta = {}
     scale = float(meta.get('scale', 1000.0))
     type_map = {}
     for tok in str(meta.get('type_map', '')).split(','):
         if ':' in tok:
             k, v = tok.split(':', 1)
-            type_map[int(k.strip())] = v.strip()
+            try:
+                type_map[int(k.strip())] = v.strip()
+            except Exception:
+                pass
     if not type_map:
         type_map = {1: 'AM_P', 2: 'AM_S', 3: 'SE'}
 

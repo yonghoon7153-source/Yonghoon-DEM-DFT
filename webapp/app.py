@@ -3918,8 +3918,7 @@ def _brittle_z_csv_response(case_dir, case_name):
     if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
             and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
         return ('atoms.csv or contacts.csv missing', 404)
-    if not os.path.exists(os.path.join(case_dir, 'meta.json')):
-        return ('meta.json missing in case directory', 404)
+    # meta.json optional — _load_case has its own fallbacks.
     from plot_brittle_z_distribution import (
         compute_brittle_zprofile, profile_to_csv_rows,
     )
@@ -3954,8 +3953,9 @@ def _brittle_z_data_response(case_dir, case_name):
     if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
             and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
         return jsonify({'error': 'atoms.csv or contacts.csv missing'}), 404
-    if not os.path.exists(os.path.join(case_dir, 'meta.json')):
-        return jsonify({'error': 'meta.json missing in case directory'}), 404
+    # meta.json is optional — _load_case now falls back to
+    # input_params.json or project defaults (scale=1000,
+    # type_map={1:AM_P,2:AM_S,3:SE}).
     bins = int(request.args.get('bins', 25))
     try:
         profile = _brittle_z_profile_compute(case_dir, bins=bins)
@@ -3986,8 +3986,7 @@ def _brittle_z_png_response(case_dir, case_name):
     if not (os.path.exists(os.path.join(case_dir, 'atoms.csv'))
             and os.path.exists(os.path.join(case_dir, 'contacts.csv'))):
         return ('atoms.csv or contacts.csv missing', 404)
-    if not os.path.exists(os.path.join(case_dir, 'meta.json')):
-        return ('meta.json missing in case directory', 404)
+    # meta.json optional — _load_case has its own fallbacks.
     bins = int(request.args.get('bins', 25))
     try:
         profile = _brittle_z_profile_compute(case_dir, bins=bins)
