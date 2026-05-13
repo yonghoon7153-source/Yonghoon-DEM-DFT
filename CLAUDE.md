@@ -3,27 +3,34 @@
 ## Viewing figures / PDFs on this WSL machine
 
 WSL paths (`/home/yonghoon/...`) cannot be opened directly with
-`explorer.exe`.  Always **copy the file to `~/Downloads` first**, then
-launch the explorer (or open) from there:
+`explorer.exe`.  Always **copy the file to the Windows Downloads
+folder first**, then launch explorer from there.
+
+**Path:** `/mnt/c/Users/안용훈/Downloads/`
+(Windows: `C:\Users\안용훈\Downloads\`)
+
+### Single file
 
 ```bash
-cp <path/to/file.png> ~/Downloads/ && explorer.exe ~/Downloads/<file.png>
+DL="/mnt/c/Users/안용훈/Downloads"
+cp <path/to/file.png> "$DL/" && explorer.exe "$(wslpath -w "$DL/<file.png>")"
 ```
 
-When suggesting view commands to the user, write them in this two-step
-form, e.g.:
+### Multiple files (open Downloads folder once)
 
 ```bash
-cp docs/figures/brittle_z_input_8mAh_9.png ~/Downloads/ \
-    && explorer.exe ~/Downloads/brittle_z_input_8mAh_9.png
+DL="/mnt/c/Users/안용훈/Downloads"
+cp docs/figures/<glob>.png "$DL/" && explorer.exe "$(wslpath -w "$DL")"
 ```
 
-If multiple files need to open at once, copy all then open all:
+### Concrete example (the brittle z-distribution plots)
 
 ```bash
-cp docs/figures/brittle_z_*.png ~/Downloads/ \
-    && explorer.exe ~/Downloads/  # opens the Downloads folder
+DL="/mnt/c/Users/안용훈/Downloads"
+cp docs/figures/brittle_z_*.png "$DL/" && explorer.exe "$(wslpath -w "$DL")"
 ```
 
 This convention applies to PNGs, PDFs, STL files, and any other output
-the user wants to view through Windows.
+the user wants to view through Windows.  When suggesting view commands,
+always use this `cp … "$DL/"` pattern — never call `explorer.exe` on a
+raw `/home/...` WSL path because Windows can't resolve it.
