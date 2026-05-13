@@ -32,25 +32,33 @@ To switch to your finalized composite figure (the LLM-generated one),
 edit the `\includegraphics{...}` line inside the `figure*` environment
 in `main.tex`.
 
-## Section status
+## Section status (2026-05-13 update)
 
 | Section | Status | Page est. |
 |---|---|---|
 | Abstract | Draft (needs final numbers) | 1 |
-| 1. Introduction | Placeholder | 1.5 – 2 |
-| 2. Methodology | Filled outline (Fig 1 leading) | 3 |
-| 3. Stage E corrections | Filled outline | 1 – 1.5 |
-| 4. 7-Layer defence | Filled outline (commits cited) | 1.5 – 2 |
-| 5. Results: 160-case ensemble | Filled outline | 2 – 3 |
-| 6. Discussion | Placeholder | 1 – 2 |
-| 7. Conclusion | Filled | 0.5 |
+| 1. Introduction | Filled (porosity contribution added) | 1.5 – 2 |
+| 2. Methodology | Filled (Fig 1 leading) | 3 |
+| 3. Stage E corrections | Filled | 1 – 1.5 |
+| 4. 7-Layer defence | Filled (commits cited) | 1.5 – 2 |
+| 5. Results | Filled — §5.4 Section-7 heatmap, §5.5 strict-physics porosity 82-case validation added | 3 – 4 |
+| 6. Discussion | Filled — two-mechanism wave-shape, no-overfit rationale, 3 future-work items | 1 – 2 |
+| 7. Conclusion | Filled (porosity integrated) | 0.5 |
 
-## What to fill in
+All `[Placeholder --- N pages]` markers in `main.tex` have been cleared
+or replaced with prose. Section-by-section review for tone / brevity
+is still recommended.
 
-Sections marked "Placeholder" need user-written prose. The structural
-skeleton, equations, figure references, and citations are all in place
-so you only need to fill in the narrative text between the
-`[Placeholder --- N pages]` markers.
+## New figures (drop next to main.tex before compiling)
+
+| File | Generator | Referenced by |
+|---|---|---|
+| `section7_design_rules.png` | `scripts/plot_section7_design_rules.py` | Fig. \ref{fig:section7-heatmap} |
+| `porosity_4panel.png`       | `scripts/plot_porosity_4panel.py`     | Fig. \ref{fig:porosity-validation} |
+
+Both figures use `\IfFileExists{...}` cascades in `main.tex` so the
+build falls back to `docs/figures/` or a placeholder box if the
+file is missing — no compile errors if either is absent.
 
 ## Bibliography
 
@@ -67,3 +75,13 @@ so you only need to fill in the narrative text between the
 - Lee 2020 (Argyrodite cathode)
 - Sakuda 2013 (sulfide mechanical)
 - Kloss 2012 (LIGGGHTS)
+- **Porosity-model additions (new):**
+  - Bouvard 2004 (binary RCP curve)
+  - Sridhar–Fleck 2000 (SFM constraint factor)
+  - Heckel 1961 (plastic compaction)
+  - Tabor 1948 (hardness/yield ratio)
+  - Storåkers–Fleck–McMeeking 2000 (composite-powder yield)
+  - Bouvard 2000 (three-regime hard-soft powder)
+  - Jacobs–Thorpe 2009 (rigidity-percolation 2/3 anchor)
+  - Henkes–O'Hern–Chakraborty 2005 (force-chain percolation)
+  - Liu–Yin 2025 (ASSB stress-bearing percolation)
