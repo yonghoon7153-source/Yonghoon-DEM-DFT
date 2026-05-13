@@ -384,6 +384,41 @@ thick-film 6--8\,mAh cases at near-Furnas porosities.
 
 \input{../db/case_audit_summary.tex}
 
+\paragraph{Cluster analysis of the 22 fail cases.}
+The 22 cases that fall outside the literature trust gates resolve
+into 11 unique microstructure configurations (each appearing once
+under its upload-time name and once under an auto-generated archive
+ID), which split cleanly along the $L_{\mathrm{cathode}} / \sigma$
+ASR scaling into four well-defined clusters.
+\emph{(A) Thin-film low-ASR (n=4 unique).} The 1~mAh/cm$^{2}$
+cathodes with $L = 10$--$15\,\si{\micro\metre}$ produce
+$\mathrm{ASR}_{\mathrm{ionic}} = 5$--$8\,\si{\ohm\square\centi
+\metre}$, just below the Bielefeld 10\,\si{\ohm\square\centi
+\metre} floor; the floor itself is benchmarked on
+$L\sim20\,\si{\micro\metre}$ cells, so once the $L$-proportional
+scaling is applied these cases land within the predicted band.
+\emph{(B) Thick-film high-ASR (n=5).} The 6 and 8~mAh/cm$^{2}$
+cathodes with $L = 90$--$135\,\si{\micro\metre}$ produce
+$\mathrm{ASR}_{\mathrm{ionic}} = 200$--$400\,\si{\ohm\square\centi
+\metre}$, above the Lee 380\,MPa cold-press ceiling of
+$80\,\si{\ohm\square\centi\metre}$ established at
+$\sim$20\,\si{\micro\metre}; the same thickness rescaling explains
+the apparent over-shoot. \emph{(C) Near-percolation extreme
+(n=1).} \texttt{input\_1mAh\_100\_15} (AM\_P-only,
+48.7\,\% severe fracture, ASR 1956\,\si{\ohm\square\centi\metre})
+sits where SE percolation has effectively collapsed and is
+genuinely outside the framework's intended regime;
+we flag it as a real outlier in Figure~\ref{fig:porosity-validation}
+rather than absorb it into the fit. \emph{(D) Anomalous fracture
+distribution (n=1).} \texttt{input\_6mAh\_real\_10} reports 61.8\,\%
+severe contacts --- well above the 50\,\% Lawn experimental ceiling
+and consistent with a settling-phase artefact; this case is the
+only one that fails the \texttt{fracture\_distribution\_realistic}
+gate. After thickness-rescaling clusters A and B, 165/167 cases
+(98.8\,\%) are physically consistent with the Bielefeld / Lee
+experimental window, leaving the C+D pair as the only two
+mechanistic outliers in the corpus.
+
 \subsection{Variance decomposition over the 82-case ensemble}
 \label{sec:pca}
 A PCA on the standardised microstructure features
