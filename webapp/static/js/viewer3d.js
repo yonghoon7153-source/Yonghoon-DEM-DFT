@@ -1086,25 +1086,25 @@ function applyViewMode(state, mode) {
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
-      `<b>Stress Concentration — max contact pressure</b>
-       <span style="color:#9ca3af;font-size:10px">
-         (각 입자가 받은 contact pressure의 최댓값, MPa)
-       </span>
+      `<b>Stress Concentration (max MPa, log scale)</b>
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
          <span>${sLo.toFixed(0)}</span>
-         <span>${Math.round(Math.pow(10,(logLo+logHi)/2))}</span>
+         <span>median ≈ ${sMed.toFixed(0)}</span>
          <span>${sHi.toFixed(0)}</span>
        </div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#cbd5e1">
-         <span>5th %ile</span><span>median ≈ ${sMed.toFixed(0)}</span><span>95th %ile</span>
-       </div>
-       <span style="color:#9ca3af;font-size:10px;line-height:1.4">
-         · 파랑 = 낮은 압력 / 부담 적은 입자<br>
-         · 빨강 = 압력 hotspot — force chain의 기둥, fracture risk 큼<br>
-         · log scale, 극단치(max ≈ ${sMax.toFixed(0)})는 색 saturation 방지
-       </span>`);
+       <button id="stress-z-modal-btn"
+          style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
+                 background:linear-gradient(180deg,#3b82f6,#2563eb);color:#fff;
+                 border-radius:5px;font-size:11px;border:none;cursor:pointer;
+                 font-weight:600;letter-spacing:.2px;
+                 box-shadow:0 1px 2px rgba(0,0,0,.25);white-space:nowrap">
+         📊 Stress Z-profile 데이터
+       </button>`);
+    const sBtn = document.getElementById('stress-z-modal-btn');
+    if (sBtn) sBtn.addEventListener('click',
+      () => showStressZProfileModal(state));
     return;
   }
 
@@ -2046,6 +2046,155 @@ async function showBrittleZProfileModal(state) {
       if (!r.ok) throw new Error('HTTP ' + r.status);
       const blob = await r.blob();
       await saveBlobWithDialog(blob, `brittle_z_${profile.case_name}.csv`, btn, 'CSV 다운로드');
+    } catch (e) {
+      btn.textContent = 'Failed';
+      console.error('CSV download failed', e);
+      setTimeout(() => { btn.textContent = 'CSV 다운로드'; }, 1500);
+    }
+  });
+}
+
+
+/* ── Stress z-profile modal — table + PNG / CSV download ─────────
+ * Mirrors showBrittleZProfileModal but reads /stress-z-data and shows
+ * per-bin stress statistics (mean / median / p95 / max MPa) plus
+ * per-particle-type and per-bracket counts.  Two action buttons drop
+ * the same Save-As dialog flow (showSaveFilePicker → PNG or CSV).
+ */
+async function showStressZProfileModal(state) {
+  const dataUrl = (state.dataUrl || '').replace('/3d-data', '/stress-z-data');
+  const csvUrl  = (state.dataUrl || '').replace('/3d-data', '/stress-z-csv');
+  const pngUrl  = (state.dataUrl || '').replace('/3d-data', '/stress-z-png');
+
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:900px;max-width:94vw">
+      <button class="path-modal-close">&times;</button>
+      <div style="font-size:14px;font-weight:bold;margin-bottom:8px;text-align:center">
+        Stress z-profile — per-particle max contact pressure (MPa)
+      </div>
+      <div id="sz-summary" class="path-modal-info" style="text-align:center;margin-bottom:8px">
+        Loading…
+      </div>
+      <div id="sz-table-wrap" style="max-height:55vh;overflow:auto;border:1px solid #e5e7eb;border-radius:6px"></div>
+      <div class="path-modal-actions">
+        <button id="sz-png-btn">PNG 다운로드</button>
+        <button id="sz-csv-btn">CSV 다운로드</button>
+        <button id="sz-close-btn">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  const close = () => overlay.remove();
+  overlay.querySelector('.path-modal-close').addEventListener('click', close);
+  document.getElementById('sz-close-btn').addEventListener('click', close);
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+
+  let profile;
+  try {
+    const r = await fetch(dataUrl);
+    const body = await r.text();
+    let parsed; try { parsed = JSON.parse(body); } catch { parsed = null; }
+    if (!r.ok) {
+      const detail = (parsed && parsed.error) ? parsed.error : body.slice(0, 240);
+      throw new Error(`HTTP ${r.status} — ${detail}`);
+    }
+    profile = parsed || JSON.parse(body);
+  } catch (e) {
+    document.getElementById('sz-summary').innerHTML =
+      `<span style="color:#b91c1c">Failed to load: ${(e.message || e)}</span><br>
+       <span style="color:#6b7280;font-size:11px">
+         서버 콘솔(/tmp/flask.log)의 traceback을 확인해 주세요.
+       </span>`;
+    return;
+  }
+
+  const tT  = profile.type_totals || {};
+  document.getElementById('sz-summary').innerHTML =
+    `<b>${profile.case_name}</b> · ${profile.n_with_stress} particles with `
+    + `positive contact pressure<br>`
+    + `global stats — median ≈ ${(profile.sMed || 0).toFixed(0)} MPa, `
+    + `p95 ≈ ${(profile.sHi || 0).toFixed(0)} MPa, `
+    + `max ≈ ${(profile.sMax || 0).toFixed(0)} MPa · `
+    + `thickness ${(profile.thickness_um || 0).toFixed(1)} µm<br>`
+    + `<span style="color:#6b7280">per-type — `
+    + `AM_P ${tT.AM_P||0} · AM_S ${tT.AM_S||0} · SE ${tT.SE||0}</span>`;
+
+  const brackets = ['low','mid-low','mid','mid-high','high'];
+  const brColors = {
+    'low':       '#3b4cc0', 'mid-low':  '#7d97c5', 'mid': '#dddddd',
+    'mid-high':  '#d6604d', 'high':     '#b40426',
+  };
+  const centers = profile.bin_centers_um || [];
+  const edges   = profile.bin_edges_um   || [];
+  const mean_   = profile.mean_MPa       || [];
+  const med_    = profile.median_MPa     || [];
+  const p95_    = profile.p95_MPa        || [];
+  const max_    = profile.max_MPa        || [];
+  const cpT     = profile.counts_per_type   || {};
+  const cpB     = profile.counts_by_bracket || {};
+  const fmt = (x, d=1) => (typeof x === 'number' ? x.toFixed(d) : x);
+
+  let html = `<table style="border-collapse:collapse;width:100%;font:11px 'JetBrains Mono',monospace;color:#222;background:#fff">
+    <thead style="background:#f3f4f6;position:sticky;top:0">
+      <tr>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z<br>(µm)</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">N</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">mean<br>MPa</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">median<br>MPa</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">p95<br>MPa</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">max<br>MPa</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">AM_P</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">AM_S</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">SE</th>`;
+  brackets.forEach(b => {
+    html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;background:${brColors[b]};color:${(b==='mid')?'#000':'#fff'}">${b}</th>`;
+  });
+  html += `</tr></thead><tbody>`;
+  for (let i = 0; i < centers.length; i++) {
+    const nP = (cpT.AM_P||[])[i]||0, nS = (cpT.AM_S||[])[i]||0, nE = (cpT.SE||[])[i]||0;
+    const tot = nP + nS + nE;
+    html += `<tr${i%2 ? ' style="background:#fafafa"':''}>
+      <td style="padding:4px 8px;text-align:right">${fmt(centers[i],1)}</td>
+      <td style="padding:4px 8px;text-align:right;font-weight:600">${tot}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(mean_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(med_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(p95_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(max_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${nP}</td>
+      <td style="padding:4px 8px;text-align:right">${nS}</td>
+      <td style="padding:4px 8px;text-align:right">${nE}</td>`;
+    brackets.forEach(b => {
+      html += `<td style="padding:4px 8px;text-align:right">${(cpB[b]||[])[i]||0}</td>`;
+    });
+    html += '</tr>';
+  }
+  html += '</tbody></table>';
+  document.getElementById('sz-table-wrap').innerHTML = html;
+
+  document.getElementById('sz-png-btn').addEventListener('click', async (ev) => {
+    const btn = ev.currentTarget;
+    btn.textContent = '… rendering';
+    try {
+      const r = await fetch(pngUrl);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const blob = await r.blob();
+      await saveBlobWithDialog(blob, `stress_z_${profile.case_name}.png`, btn, 'PNG 다운로드');
+    } catch (e) {
+      btn.textContent = 'Failed';
+      console.error('PNG download failed', e);
+      setTimeout(() => { btn.textContent = 'PNG 다운로드'; }, 1500);
+    }
+  });
+  document.getElementById('sz-csv-btn').addEventListener('click', async (ev) => {
+    const btn = ev.currentTarget;
+    btn.textContent = '… fetching';
+    try {
+      const r = await fetch(csvUrl);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const blob = await r.blob();
+      await saveBlobWithDialog(blob, `stress_z_${profile.case_name}.csv`, btn, 'CSV 다운로드');
     } catch (e) {
       btn.textContent = 'Failed';
       console.error('CSV download failed', e);
