@@ -40,12 +40,15 @@ from fracture_model import fracture_classify_force_sim
 
 STAGE_ORDER = ['intact', 'microcrack', 'multicrack',
                'fragmentation', 'pulverization']
+# ColorBrewer YlOrRd 5-class — academic-style sequential severity ramp.
+# Mirrors webapp/static/js/viewer3d.js STAGE_COL so the 3D viewer, the
+# z-profile PNG, and the modal table all agree.
 STAGE_COLOR = {
-    'intact':        '#cccccc',
-    'microcrack':    '#ffd54f',
-    'multicrack':    '#ff8c00',
-    'fragmentation': '#d62728',
-    'pulverization': '#9b1c8c',
+    'intact':        '#d9d9d9',
+    'microcrack':    '#ffeda0',
+    'multicrack':    '#feb24c',
+    'fragmentation': '#f03b20',
+    'pulverization': '#800026',
 }
 
 

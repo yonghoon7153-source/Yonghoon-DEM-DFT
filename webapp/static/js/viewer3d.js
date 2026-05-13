@@ -18,13 +18,17 @@ const COL = {
 };
 const OPA = { SE: 0.85, MESH: 0.55 };
 
-/* View-mode colour palettes — Auerbach + Lawn 1998 fracture stages */
+/* View-mode colour palettes — Auerbach + Lawn 1998 fracture stages.
+ * Mapped to ColorBrewer YlOrRd 5-class (sequential), which is the
+ * standard academic palette for ordered-severity scalar data: pale
+ * gold → amber → warm red → deep crimson reads as monotonically
+ * increasing damage even in grayscale prints. */
 const STAGE_COL = {
-  intact:        0xcccccc,
-  microcrack:    0xfde047,   // yellow
-  multicrack:    0xfb923c,   // orange
-  fragmentation: 0xef4444,   // red
-  pulverization: 0x7f1d1d,   // dark red
+  intact:        0xd9d9d9,   // neutral light grey
+  microcrack:    0xffeda0,   // pale gold
+  multicrack:    0xfeb24c,   // amber
+  fragmentation: 0xf03b20,   // warm vermillion
+  pulverization: 0x800026,   // deep crimson
 };
 const STAGE_RANK = { intact: 0, microcrack: 1, multicrack: 2,
                       fragmentation: 3, pulverization: 4 };
@@ -768,10 +772,10 @@ function applyViewMode(state, mode) {
     flushColors();
     setLegend(state,
       `<b>Brittle Stage (Auerbach + Lawn 1998)</b>
-       <span style="color:#fde047">●</span> microcrack
-       <span style="color:#fb923c">●</span> multicrack
-       <span style="color:#ef4444">●</span> fragmentation
-       <span style="color:#7f1d1d">●</span> pulverization
+       <span style="color:#ffeda0">●</span> microcrack
+       <span style="color:#feb24c">●</span> multicrack
+       <span style="color:#f03b20">●</span> fragmentation
+       <span style="color:#800026">●</span> pulverization
        (${(aux.brittle_pairs || []).length} damaged AM-AM pairs)
        <button id="brittle-z-modal-btn"
           style="display:block;margin:6px 0 2px 0;width:100%;padding:5px 8px;
@@ -890,10 +894,10 @@ function applyViewMode(state, mode) {
 
     setLegend(state,
       `<b>Brittle Hotspots — surface gradient patches</b>
-       <span style="color:#fde047">●</span> microcrack (${counts.microcrack})
-       <span style="color:#fb923c">●</span> multicrack (${counts.multicrack})
-       <span style="color:#ef4444">●</span> fragmentation (${counts.fragmentation})
-       <span style="color:#7f1d1d">●</span> pulverization (${counts.pulverization})
+       <span style="color:#ffeda0">●</span> microcrack (${counts.microcrack})
+       <span style="color:#feb24c">●</span> multicrack (${counts.multicrack})
+       <span style="color:#f03b20">●</span> fragmentation (${counts.fragmentation})
+       <span style="color:#800026">●</span> pulverization (${counts.pulverization})
        <span style="color:#9ca3af;font-size:10px">
          (patch radius ∝ stage severity; gradient brightens contact spot)
        </span>
@@ -1784,8 +1788,8 @@ async function showBrittleZProfileModal(state) {
 
   const stages = ['intact','microcrack','multicrack','fragmentation','pulverization'];
   const stageColor = {
-    intact: '#cccccc', microcrack: '#fde047', multicrack: '#fb923c',
-    fragmentation: '#ef4444', pulverization: '#7f1d1d',
+    intact: '#d9d9d9', microcrack: '#ffeda0', multicrack: '#feb24c',
+    fragmentation: '#f03b20', pulverization: '#800026',
   };
   const centers = profile.bin_centers_um || [];
   const edges   = profile.bin_edges_um   || [];
