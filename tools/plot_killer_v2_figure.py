@@ -33,7 +33,12 @@ ALPHA = 1.0
 #   'min_asymp' → subtract min asymp across comps (smallest-asymp comp at 0)
 #   'mean_asymp'→ subtract mean asymp across comps
 #   'fixed'     → subtract Y_SHIFT_FIXED
-Y_SHIFT_MODE = 'min_asymp'
+# 'wells_below_zero' = shift so all wells go below the y=0 line (most paper-like).
+# 'min_asymp' = smallest-asymp comp at 0 (e.g. comp4 at 0, Li6 above).
+# 'max_asymp' = largest-asymp comp at 0 (Li6 at 0, Li5.4 below).
+# 'mean_asymp' = curves centered around 0.
+# 'fixed' = subtract Y_SHIFT_FIXED.
+Y_SHIFT_MODE = 'wells_below_zero'
 Y_SHIFT_FIXED = 1.0
 
 PAPER_EXP = {'comp1': 194, 'comp2': 180, 'comp4_v2': 298}
@@ -104,23 +109,27 @@ def main():
     print(f"\nR(Wad_well, paper_aJ) = {R:+.4f}  (n={len(COMPS)})")
 
     # ── Apply global y-shift (NOT per-comp — preserves family direction & R) ──
-    asymps_alpha = [c['wad_asymp'] for c in curves.values()]
+    # Compute everything in E_adh space (= -Wad).
+    e_adh_asymps = [-c['wad_asymp'] for c in curves.values()]
+    e_adh_wells  = [-c['wad_well']  for c in curves.values()]   # most negative E_adh per comp
     if Y_SHIFT_MODE == 'min_asymp':
-        shift = min(asymps_alpha)
+        # smallest E_adh asymp → new 0 (smallest-asymp comp at 0, others above)
+        shift_e_adh = min(e_adh_asymps)
+    elif Y_SHIFT_MODE == 'max_asymp':
+        # largest E_adh asymp → 0 (largest comp at 0, others below)
+        shift_e_adh = max(e_adh_asymps)
     elif Y_SHIFT_MODE == 'mean_asymp':
-        shift = float(np.mean(asymps_alpha))
+        shift_e_adh = float(np.mean(e_adh_asymps))
+    elif Y_SHIFT_MODE == 'wells_below_zero':
+        # shift so the SHALLOWEST E_adh well reaches 0 → all wells ≤ 0
+        shift_e_adh = max(e_adh_wells)
     elif Y_SHIFT_MODE == 'fixed':
-        shift = Y_SHIFT_FIXED
+        shift_e_adh = Y_SHIFT_FIXED
     else:
-        shift = 0.0
-    print(f"Y global shift ({Y_SHIFT_MODE}): {shift:+.3f} J/m²  (R unchanged)")
+        shift_e_adh = 0.0
+    print(f"Y global shift ({Y_SHIFT_MODE}): −{shift_e_adh:+.3f} J/m²  (R unchanged)")
     for c in curves:
-        # shift Wad up means E_adh down: E_adh_new = -(Wad - shift) = E_adh_old + shift
-        # We subtract from Wad → adds to E_adh (downward in plot). Wait:
-        # E_adh = -Wad. If Wad → Wad - shift (subtract), then E_adh → -(Wad-shift) = E_adh + shift.
-        # That moves E_adh UP. To move DOWN, we need Wad → Wad + shift, i.e. E_adh - shift.
-        # Simpler: subtract shift from E_adh directly.
-        curves[c]['e_adh'] = curves[c]['e_adh'] - shift
+        curves[c]['e_adh'] = curves[c]['e_adh'] - shift_e_adh
 
     # ── plot ────────────────────────────────────────────────────
     plt.rcParams.update({'font.size': 13})
