@@ -242,12 +242,17 @@ def build_fracture_summary_table(metrics):
     other_f = sum(metrics.get(f'frac_{s}_force_pct') or 0
                   for s in ('microcrack', 'multicrack',
                             'fragmentation', 'pulverization'))
+    # When no damage stage fraction is positive we still want to say
+    # "100 % intact" *if* the case has any AM-AM contacts at all —
+    # previously the UI fell back to "-" which read as missing data.
     intact_d = (metrics.get('frac_intact_pct')
                 if metrics.get('frac_intact_pct') is not None
-                else (round(100.0 - other_d, 2) if other_d > 0 else None))
+                else (round(100.0 - other_d, 2) if other_d > 0
+                      else (100.0 if (n_total or 0) > 0 else None)))
     intact_f = (metrics.get('frac_intact_force_pct')
                 if metrics.get('frac_intact_force_pct') is not None
-                else (round(100.0 - other_f, 2) if other_f > 0 else None))
+                else (round(100.0 - other_f, 2) if other_f > 0
+                      else (100.0 if (n_total_force or 0) > 0 else None)))
 
     rows.append(['── 단계별 분포 (%) ──'])
     rows.append(['  Intact', f(intact_d), f(intact_f)])
@@ -282,6 +287,38 @@ def build_fracture_summary_table(metrics):
         if n_pt == 0 and n_pt_force == 0:
             continue
         rows.append([f'  {pt}', f(d_sev), f(f_sev)])
+
+    # ── Per-pair-type full stage distribution (%) ──
+    # b2_b4_diagnostic writes frac_{stage}_{pair}_pct and the force variant
+    # frac_{stage}_force_{pair}_pct; intact% isn't stored explicitly so
+    # recover it as 100 − Σ(damage stages) when at least one damage % is
+    # known.  Skip pair types absent from the case (e.g. P:S = 0:10 cases
+    # have no AM_P-AM_P or AM_P-AM_S contacts).
+    rows.append(['── Pair-type 단계별 분포 (%) ──'])
+    for pt in ('AM_P-AM_P', 'AM_P-AM_S', 'AM_S-AM_S'):
+        n_pt       = metrics.get(f'n_total_{pt}')       or 0
+        n_pt_force = metrics.get(f'n_total_force_{pt}') or 0
+        if n_pt == 0 and n_pt_force == 0:
+            continue
+        rows.append([f'  [{pt}]'])
+        sum_d = sum(metrics.get(f'frac_{s}_{pt}_pct') or 0
+                    for s in ('microcrack', 'multicrack',
+                               'fragmentation', 'pulverization'))
+        sum_f = sum(metrics.get(f'frac_{s}_force_{pt}_pct') or 0
+                    for s in ('microcrack', 'multicrack',
+                               'fragmentation', 'pulverization'))
+        intact_pt_d = (round(100.0 - sum_d, 2) if sum_d > 0 else
+                        (100.0 if n_pt else None))
+        intact_pt_f = (round(100.0 - sum_f, 2) if sum_f > 0 else
+                        (100.0 if n_pt_force else None))
+        rows.append(['    Intact',        f(intact_pt_d), f(intact_pt_f)])
+        for stage, label in [('microcrack',    'Microcrack'),
+                              ('multicrack',    'Multi-crack'),
+                              ('fragmentation', 'Fragmentation'),
+                              ('pulverization', 'Pulverization')]:
+            d  = metrics.get(f'frac_{stage}_{pt}_pct')
+            ff = metrics.get(f'frac_{stage}_force_{pt}_pct')
+            rows.append([f'    {label}', f(d), f(ff)])
 
     # ── Auerbach P_c (mN) — material physics, single value per pair ──
     rows.append(['── Auerbach P_c (mN) ──'])
@@ -3977,6 +4014,12 @@ def _brittle_z_data_response(case_dir, case_name):
         'counts': {k: [int(x) for x in v] for k, v in profile['counts'].items()},
         'mean_m':         [float(x) for x in profile['mean_m']],
         'stage_totals':   {k: int(v) for k, v in profile['stage_totals'].items()},
+        'counts_by_pair': {
+            pt: {s: [int(x) for x in arr] for s, arr in stages.items()}
+            for pt, stages in (profile.get('counts_by_pair') or {}).items()
+        },
+        'pair_totals':    {k: int(v) for k, v in
+                            (profile.get('pair_totals') or {}).items()},
     })
 
 

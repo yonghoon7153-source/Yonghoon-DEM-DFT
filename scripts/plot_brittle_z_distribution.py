@@ -40,6 +40,9 @@ from fracture_model import fracture_classify_force_sim
 
 STAGE_ORDER = ['intact', 'microcrack', 'multicrack',
                'fragmentation', 'pulverization']
+# Canonical AM-AM pair-type labels, sorted alphabetically so contacts
+# always map to a single canonical string regardless of (a, b) order.
+PAIR_TYPE_ORDER = ['AM_P-AM_P', 'AM_P-AM_S', 'AM_S-AM_S']
 # ColorBrewer YlOrRd 5-class — academic-style sequential severity ramp.
 # Mirrors webapp/static/js/viewer3d.js STAGE_COL so the 3D viewer, the
 # z-profile PNG, and the modal table all agree.
@@ -126,6 +129,8 @@ def compute_brittle_zprofile(case_dir, bins: int = 25) -> dict:
       counts (dict of stage → np.array of length `bins`),
       mean_m (np.array of length `bins`),
       stage_totals (dict of stage → int),
+      counts_by_pair (dict of pair_type → {stage → np.array}),
+      pair_totals (dict of pair_type → int),
     """
     case_dir = Path(case_dir)
     atoms, contacts, scale = _load_case(case_dir)
@@ -139,11 +144,15 @@ def compute_brittle_zprofile(case_dir, bins: int = 25) -> dict:
         stage, _, m = fracture_classify_force_sim(
             c['fn'], r_min_sim, contact_type=ct, scale=scale)
         z_mid = 0.5 * (a1['z'] + a2['z'])
-        am_am.append((z_mid, stage, m))
+        am_am.append((z_mid, stage, m, ct))
 
     n_total = len(am_am)
     stage_totals = {s: 0 for s in STAGE_ORDER}
-    for _, s, _ in am_am: stage_totals[s] += 1
+    pair_totals = {pt: 0 for pt in PAIR_TYPE_ORDER}
+    for _, s, _, pt in am_am:
+        stage_totals[s] += 1
+        if pt in pair_totals:
+            pair_totals[pt] += 1
     n_damaged = sum(v for k, v in stage_totals.items() if k != 'intact')
 
     if n_total == 0:
@@ -155,7 +164,11 @@ def compute_brittle_zprofile(case_dir, bins: int = 25) -> dict:
                     counts={s: np.zeros(1, dtype=int)
                             for s in STAGE_ORDER},
                     mean_m=np.zeros(1),
-                    stage_totals=stage_totals)
+                    stage_totals=stage_totals,
+                    counts_by_pair={pt: {s: np.zeros(1, dtype=int)
+                                          for s in STAGE_ORDER}
+                                    for pt in PAIR_TYPE_ORDER},
+                    pair_totals=pair_totals)
 
     zs = np.array([x[0] for x in am_am])
     z_min_um = zs.min() * 1e6 / scale
@@ -167,11 +180,15 @@ def compute_brittle_zprofile(case_dir, bins: int = 25) -> dict:
     bin_centers = 0.5 * (bin_edges[:-1] + bin_edges[1:])
 
     counts = {s: np.zeros(bins, dtype=int) for s in STAGE_ORDER}
+    counts_by_pair = {pt: {s: np.zeros(bins, dtype=int) for s in STAGE_ORDER}
+                       for pt in PAIR_TYPE_ORDER}
     ms_in_bin: list[list[float]] = [[] for _ in range(bins)]
-    for (_, stage, m), z in zip(am_am, z_phys):
+    for (_, stage, m, pt), z in zip(am_am, z_phys):
         b = min(bins - 1, max(0, np.digitize(z, bin_edges) - 1))
         counts[stage][b] += 1
         ms_in_bin[b].append(m)
+        if pt in counts_by_pair:
+            counts_by_pair[pt][stage][b] += 1
     mean_m = np.array([np.mean(ms) if ms else 0 for ms in ms_in_bin])
 
     return dict(
@@ -185,6 +202,8 @@ def compute_brittle_zprofile(case_dir, bins: int = 25) -> dict:
         counts=counts,
         mean_m=mean_m,
         stage_totals=stage_totals,
+        counts_by_pair=counts_by_pair,
+        pair_totals=pair_totals,
     )
 
 
@@ -264,33 +283,71 @@ def render_brittle_figure(profile: dict):
 
 
 def profile_to_csv_rows(profile: dict) -> list[list]:
-    """Flatten profile to list-of-rows suitable for csv.writer."""
-    rows = [[
+    """Flatten profile to list-of-rows suitable for csv.writer.
+
+    Columns:
+      z_bin_center_um, z_bin_low_um, z_bin_high_um,
+      count_intact, count_microcrack, count_multicrack,
+      count_fragmentation, count_pulverization,
+      count_total, count_damaged, damaged_fraction, mean_F_over_Pc,
+      # per-pair-type stage counts (3 pair types × 5 stages = 15 cols)
+      AM_P-AM_P_intact, AM_P-AM_P_microcrack, … , AM_P-AM_P_pulverization,
+      AM_P-AM_S_intact, … ,
+      AM_S-AM_S_intact, … , AM_S-AM_S_pulverization,
+      # convenience totals per pair type
+      AM_P-AM_P_total, AM_P-AM_S_total, AM_S-AM_S_total
+    """
+    header = [
         'z_bin_center_um', 'z_bin_low_um', 'z_bin_high_um',
         'count_intact', 'count_microcrack', 'count_multicrack',
         'count_fragmentation', 'count_pulverization',
         'count_total', 'count_damaged', 'damaged_fraction',
         'mean_F_over_Pc',
-    ]]
-    counts      = profile['counts']
-    centers     = profile['bin_centers_um']
-    edges       = profile['bin_edges_um']
-    mean_m      = profile['mean_m']
+    ]
+    for pt in PAIR_TYPE_ORDER:
+        for s in STAGE_ORDER:
+            header.append(f'{pt}_{s}')
+    for pt in PAIR_TYPE_ORDER:
+        header.append(f'{pt}_total')
+    rows = [header]
+
+    counts         = profile['counts']
+    counts_by_pair = profile.get('counts_by_pair', {})
+    centers        = profile['bin_centers_um']
+    edges          = profile['bin_edges_um']
+    mean_m         = profile['mean_m']
     for i, c in enumerate(centers):
-        n_i = counts['intact'][i]
-        n_mu = counts['microcrack'][i]
-        n_m  = counts['multicrack'][i]
-        n_f  = counts['fragmentation'][i]
-        n_p  = counts['pulverization'][i]
+        n_i  = int(counts['intact'][i])
+        n_mu = int(counts['microcrack'][i])
+        n_m  = int(counts['multicrack'][i])
+        n_f  = int(counts['fragmentation'][i])
+        n_p  = int(counts['pulverization'][i])
         n_tot = n_i + n_mu + n_m + n_f + n_p
         n_dmg = n_mu + n_m + n_f + n_p
-        rows.append([
+        row = [
             f'{c:.3f}', f'{edges[i]:.3f}', f'{edges[i+1]:.3f}',
-            int(n_i), int(n_mu), int(n_m), int(n_f), int(n_p),
-            int(n_tot), int(n_dmg),
+            n_i, n_mu, n_m, n_f, n_p,
+            n_tot, n_dmg,
             f'{(n_dmg/n_tot if n_tot else 0):.4f}',
             f'{mean_m[i]:.4f}',
-        ])
+        ]
+        # Per-pair-type stage counts + totals (zero-filled if the case
+        # has no contacts of that pair type at this z-bin).
+        for pt in PAIR_TYPE_ORDER:
+            cd = counts_by_pair.get(pt, {})
+            tot = 0
+            for s in STAGE_ORDER:
+                v = int(cd.get(s, np.zeros(0))[i]) if (
+                    s in cd and i < len(cd[s])) else 0
+                row.append(v)
+                tot += v
+        for pt in PAIR_TYPE_ORDER:
+            cd = counts_by_pair.get(pt, {})
+            tot = sum(int(cd.get(s, np.zeros(0))[i]) if (
+                s in cd and i < len(cd[s])) else 0
+                for s in STAGE_ORDER)
+            row.append(tot)
+        rows.append(row)
     return rows
 
 

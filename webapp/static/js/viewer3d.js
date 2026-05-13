@@ -1780,16 +1780,31 @@ async function showBrittleZProfileModal(state) {
     return;
   }
 
-  const sum = profile.stage_totals || {};
+  const sum   = profile.stage_totals || {};
   const total = profile.n_total || 0;
   const dmg   = profile.n_damaged || 0;
+  const ptot  = profile.pair_totals || {};
   document.getElementById('bz-summary').innerHTML =
     `<b>${profile.case_name}</b> · contacts: ${total} ` +
     `(damaged ${dmg}, ${(profile.damaged_pct || 0).toFixed(1)}%) · ` +
     `thickness ${(profile.thickness_um || 0).toFixed(1)} µm<br>` +
     `intact ${sum.intact||0} · microcrack ${sum.microcrack||0} · ` +
     `multicrack ${sum.multicrack||0} · fragmentation ${sum.fragmentation||0} · ` +
-    `pulverization ${sum.pulverization||0}`;
+    `pulverization ${sum.pulverization||0}<br>` +
+    `<span style="color:#6b7280">pair types — ` +
+    `AM_P-AM_P ${ptot['AM_P-AM_P']||0} · ` +
+    `AM_P-AM_S ${ptot['AM_P-AM_S']||0} · ` +
+    `AM_S-AM_S ${ptot['AM_S-AM_S']||0}</span>` +
+    `<div style="margin-top:6px;font-size:11px">
+       <label>Pair-type filter:
+         <select id="bz-pair-filter" style="margin-left:6px;padding:2px 4px">
+           <option value="all">All AM-AM (default)</option>
+           <option value="AM_P-AM_P">AM_P-AM_P only</option>
+           <option value="AM_P-AM_S">AM_P-AM_S only</option>
+           <option value="AM_S-AM_S">AM_S-AM_S only</option>
+         </select>
+       </label>
+     </div>`;
 
   const stages = ['intact','microcrack','multicrack','fragmentation','pulverization'];
   const stageColor = {
@@ -1799,43 +1814,64 @@ async function showBrittleZProfileModal(state) {
   const centers = profile.bin_centers_um || [];
   const edges   = profile.bin_edges_um   || [];
   const meanM   = profile.mean_m         || [];
-  const c       = profile.counts         || {};
-
+  const cAll    = profile.counts         || {};
+  const cByPair = profile.counts_by_pair || {};
   const fmt = (x, d=2) => (typeof x === 'number' ? x.toFixed(d) : x);
-  let html = `<table style="border-collapse:collapse;width:100%;font:11px 'JetBrains Mono',monospace;color:#222;background:#fff">
-    <thead style="background:#f3f4f6;position:sticky;top:0">
-      <tr>
-        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z center<br>(µm)</th>
-        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z range<br>(µm)</th>`;
-  stages.forEach(s => {
-    html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;background:${stageColor[s]};color:${s==='pulverization'?'#fff':'#000'}">${s}</th>`;
-  });
-  html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">total</th>
-        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">damaged %</th>
-        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">mean F/P_c</th>
-      </tr></thead><tbody>`;
-  for (let i = 0; i < centers.length; i++) {
-    const ni = (c.intact||[])[i]||0, nu = (c.microcrack||[])[i]||0,
-          nm = (c.multicrack||[])[i]||0, nf = (c.fragmentation||[])[i]||0,
-          np = (c.pulverization||[])[i]||0;
-    const tot = ni+nu+nm+nf+np;
-    const dam = nu+nm+nf+np;
-    const dpct = tot ? (100*dam/tot) : 0;
-    html += `<tr${i%2 ? ' style="background:#fafafa"':''}>
-      <td style="padding:4px 8px;text-align:right">${fmt(centers[i],2)}</td>
-      <td style="padding:4px 8px;text-align:right;color:#777">${fmt(edges[i],2)}–${fmt(edges[i+1],2)}</td>
-      <td style="padding:4px 8px;text-align:right">${ni}</td>
-      <td style="padding:4px 8px;text-align:right">${nu}</td>
-      <td style="padding:4px 8px;text-align:right">${nm}</td>
-      <td style="padding:4px 8px;text-align:right">${nf}</td>
-      <td style="padding:4px 8px;text-align:right">${np}</td>
-      <td style="padding:4px 8px;text-align:right;font-weight:600">${tot}</td>
-      <td style="padding:4px 8px;text-align:right">${dpct.toFixed(1)}</td>
-      <td style="padding:4px 8px;text-align:right">${fmt(meanM[i],3)}</td>
-    </tr>`;
+
+  function renderTable(pairFilter) {
+    /* When pairFilter === 'all' use the pre-aggregated counts.  When
+     * a specific pair type is selected, fall back to counts_by_pair[pt]
+     * and recompute the row totals + mean F/P_c is not available per
+     * pair type (it's a bin-level mean across ALL pairs), so we hide
+     * that column when filtered. */
+    const isAll = !pairFilter || pairFilter === 'all';
+    const src   = isAll ? cAll : (cByPair[pairFilter] || {});
+    let html = `<table style="border-collapse:collapse;width:100%;font:11px 'JetBrains Mono',monospace;color:#222;background:#fff">
+      <thead style="background:#f3f4f6;position:sticky;top:0">
+        <tr>
+          <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z center<br>(µm)</th>
+          <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z range<br>(µm)</th>`;
+    stages.forEach(s => {
+      html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;background:${stageColor[s]};color:${s==='pulverization'?'#fff':'#000'}">${s}</th>`;
+    });
+    html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">total</th>
+          <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">damaged %</th>`;
+    if (isAll) {
+      html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">mean F/P_c</th>`;
+    }
+    html += `</tr></thead><tbody>`;
+    for (let i = 0; i < centers.length; i++) {
+      const ni = (src.intact        ||[])[i]||0,
+            nu = (src.microcrack    ||[])[i]||0,
+            nm = (src.multicrack    ||[])[i]||0,
+            nf = (src.fragmentation ||[])[i]||0,
+            np = (src.pulverization ||[])[i]||0;
+      const tot = ni+nu+nm+nf+np;
+      const dam = nu+nm+nf+np;
+      const dpct = tot ? (100*dam/tot) : 0;
+      html += `<tr${i%2 ? ' style="background:#fafafa"':''}>
+        <td style="padding:4px 8px;text-align:right">${fmt(centers[i],2)}</td>
+        <td style="padding:4px 8px;text-align:right;color:#777">${fmt(edges[i],2)}–${fmt(edges[i+1],2)}</td>
+        <td style="padding:4px 8px;text-align:right">${ni}</td>
+        <td style="padding:4px 8px;text-align:right">${nu}</td>
+        <td style="padding:4px 8px;text-align:right">${nm}</td>
+        <td style="padding:4px 8px;text-align:right">${nf}</td>
+        <td style="padding:4px 8px;text-align:right">${np}</td>
+        <td style="padding:4px 8px;text-align:right;font-weight:600">${tot}</td>
+        <td style="padding:4px 8px;text-align:right">${dpct.toFixed(1)}</td>`;
+      if (isAll) {
+        html += `<td style="padding:4px 8px;text-align:right">${fmt(meanM[i],3)}</td>`;
+      }
+      html += '</tr>';
+    }
+    html += '</tbody></table>';
+    document.getElementById('bz-table-wrap').innerHTML = html;
   }
-  html += '</tbody></table>';
-  document.getElementById('bz-table-wrap').innerHTML = html;
+  renderTable('all');
+
+  const pairSel = document.getElementById('bz-pair-filter');
+  if (pairSel) pairSel.addEventListener('change',
+    () => renderTable(pairSel.value));
 
   // Download handlers — fetch as blob then native Save-As
   document.getElementById('bz-png-btn').addEventListener('click', async (ev) => {
