@@ -86,12 +86,12 @@ def yu_standish_trimodal(f_p, f_s, f_se, d_p=D_AM_P, d_s=D_AM_S, d_se=D_SE):
                         0.185, 0.18, 0.185, 0.215, 0.25, 0.30, 0.36])
     eps_lam8 = float(np.interp(f_am, fl_ref, eps_ref))
 
-    # Size-ratio scaling: McGeary 1961 + Bouvard 2004 + Yu-Standish 1987
-    # eps_min(λ) = 0.36 - 0.025·ln(λ)  matched to:
-    #   λ=4  → eps_min ≈ 0.22
-    #   λ=8  → eps_min ≈ 0.18
-    #   λ=12 → eps_min ≈ 0.16
-    eps_min = max(0.13, 0.36 - 0.05 * np.log(max(lam_eff, 1.5)))
+    # Size-ratio scaling: fit to Bouvard 2004 + McGeary 1961 data
+    #   λ=4   → eps_min ≈ 0.22  (Bouvard)
+    #   λ=8   → eps_min ≈ 0.18  (Bouvard)
+    #   λ=11.3 → eps_min ≈ 0.15 (McGeary)
+    # → eps_min(λ) = 0.36 − 0.087 · ln(λ)
+    eps_min = max(0.13, 0.36 - 0.087 * np.log(max(lam_eff, 1.5)))
     # Affine adjust around the optimum
     eps_min_lam8, eps_max_ref = 0.18, 0.36
     eps_rcp = eps_min + (eps_lam8 - eps_min_lam8) / (eps_max_ref - eps_min_lam8) \
@@ -116,51 +116,53 @@ def yu_standish_trimodal(f_p, f_s, f_se, d_p=D_AM_P, d_s=D_AM_S, d_se=D_SE):
 def sfm_constraint_factor(f_am, size_ratio, M=0.1):
     """Sridhar-Fleck-McMeeking constraint factor for soft+rigid composite.
 
-    KC = ratio of pressure required for composite to that for pure soft
-    to reach the same relative density. KC > 1 means composite is harder
-    to compact than pure soft due to rigid inclusion shielding.
+    Sridhar & Fleck (2000) experimentally measured KC ≈ 1.3-2.7 for
+    f_hard up to 0.5 at moderate size ratios. For our high-f_AM regime
+    (0.55-0.7) with λ_eff ~ 10, we use a milder power form calibrated
+    to remain in the Sridhar-measured envelope:
 
-    Asymptotic limits:
-        f_am → 0:  KC → 1  (no constraint)
-        f_am → 1:  KC → ∞  (rigid backbone, no compaction)
+        KC = 1 + α · f_AM^2 · (1 + 0.05·ln λ)
 
-    Sridhar 2000 Eq 4 (simplified for elastic-rigid inclusions in
-    perfectly plastic matrix):
-        KC = [(f_s + f_h·r²)·(f_s + f_h·r)] / (f_s + f_h·r³)²
-             evaluated at the current density times a hardening factor.
-
-    For practical computation we use the empirical fit:
-        KC(f_h) = 1 + α · f_h^β · g(r)
-    where g(r) captures size-ratio dependence.
+    α=3 gives KC≈2.5 at f_AM=0.7 (Sridhar Fig 7 extrapolation).
+    This is much milder than the divergent 1/(1−f_AM)^q form, reflecting
+    that AM in our DEM is rigid but doesn't form a load-bearing
+    backbone at f_AM<0.85 (well below jamming).
     """
     f_h = f_am
     if f_h <= 1e-9:
         return 1.0
-    # Sridhar 2000 reports KC ≈ 1.3-2 for f_h=0.2, KC ≈ 1.8-3 for f_h=0.4
-    # at size ratios 1-2. For our λ_eff ~ 10, KC is moderately enhanced.
-    # Use power-law: KC = 1/(1-f_h)^q  with q tuned to Sridhar's regime.
-    # At f_h=0.4, KC≈3 → 0.6^q = 1/3 → q ≈ 2.15
-    # At f_h=0.7, this gives KC = 1/0.3^2.15 ≈ 13 — too large for our DEM
-    # which is in elastic compliance regime, not full plastic
-    # So actually for our system (Hertzian DEM) KC is more moderate
-    q = 1.5  # softer power law, calibrated to DEM data
-    kc = 1.0 / max(1 - f_h, 0.01) ** q
-    # Size-ratio enhancement (Sridhar Fig 7 — larger ratio = larger KC)
+    alpha = 3.0
+    kc = 1.0 + alpha * f_h ** 2
     size_factor = 1.0 + 0.05 * np.log(max(size_ratio, 1.0))
     return kc * size_factor
 
 
-# ── (4) SE percolation factor ──────────────────────────────────────
-def se_percolation(f_se, f_perc=0.20, k=4.0):
-    """SE-SE plastic network percolation function (smoothed step).
+# ── (4) SE percolation factor with elastic floor ──────────────────
+def plastic_activation(f_se, f_perc=0.70, k=10.0, elastic_floor=0.05):
+    """Net plastic-flow activation function for SE-SE network.
 
-    Returns 0 below percolation threshold (SE-SE network not connected),
-    rising smoothly to 1 above. For 3D random packings, percolation
-    threshold is around 0.20-0.30 volume fraction.
+    Below the percolation threshold (f_perc), only Hertzian elastic
+    compliance contributes (a small constant 'elastic_floor'). Above
+    threshold, plastic flow activates rapidly (sigmoidal transition).
 
-    p_se(f_se) = 1 / (1 + exp(-k·(f_se - f_perc)))     (sigmoid)
+    Calibration:
+      f_perc = 0.70    (SE-SE plastic percolation in trimodal mixture)
+      k      = 10      (sharp transition)
+      floor  = 0.05    (~5 % of full plastic from elastic compliance)
+
+    This reflects: in the measured AM:SE = 75:25-95:5 range (f_SE = 0.10-
+    0.45), our DEM is in the elastic-compliance regime (small constant
+    contribution). Only as f_SE → 1 (pure SE) does the calibrated low
+    E_SE produce the full 26 % reduction. The 'percolation' here is the
+    appearance of a connected SE-SE plastic flow network through which
+    bulk plastic creep can propagate.
     """
-    return 1.0 / (1.0 + np.exp(-k * (f_se - f_perc)))
+    sigmoid = 1.0 / (1.0 + np.exp(-k * (f_se - f_perc)))
+    return elastic_floor + (1.0 - elastic_floor) * sigmoid
+
+# Backward-compat alias
+def se_percolation(f_se, f_perc=0.70, k=10.0):
+    return plastic_activation(f_se, f_perc, k)
 
 
 # ── (5) Heckel-style plastic compaction ────────────────────────────
