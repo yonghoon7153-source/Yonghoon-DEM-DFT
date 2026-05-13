@@ -2211,6 +2211,49 @@
       ],
       "url": "https://pubs.acs.org/doi/abs/10.1021/acs.chemmater.0c02418",
       "added_in_session": "2026-05-08"
+    },
+    {
+      "id": "lee2025_halide_segregation",
+      "authors": "Lee, J. et al.",
+      "title": "Halide segregation to boost all-solid-state lithium-chalcogen batteries",
+      "journal": "Science",
+      "volume": 388,
+      "pages": "724-729",
+      "year": 2025,
+      "DOI": "10.1126/science.adt1882",
+      "title_verified": "2026-05-14 (web search Science.org + PubMed 40373146)",
+      "key_content": "Universal halide segregation at SE/cathode interface across multiple halogen-SE compositions. Halogens occupy structurally weak/disordered sites in argyrodite (e.g. Cl in Li6PS5Cl), susceptible to displacement under mechanical strain. Detached halides diffuse to cathode particle surface, react with Li+ to form ionically conductive LiX (LiCl, LiBr) nanolayer. Dual shear-thermal mechanism (mechanochemical 2000 rpm) triggers it. Cryo-TEM validated. Boosts charge transport + suppresses mechanical failure. DIRECT precedent for our 'halogen redistribution' mechanism in Li5.4 vacancy-rich family.",
+      "system_match_with_us": "Same SE family (Li6PS5Cl argyrodite). Different cathode (chalcogen S/Se/Te vs our NMC oxide). Different trigger (mechanochemical vs static interface relax). Same atomistic event: halide leaves bulk argyrodite -> migrates to cathode surface -> forms LiX layer.",
+      "tags": [
+        "halide-segregation",
+        "argyrodite",
+        "cathode-interface",
+        "LiCl",
+        "LiBr",
+        "mechanism",
+        "Science",
+        "MUST-CITE"
+      ]
+    },
+    {
+      "id": "deklerk2016_diffusion_argyrodite",
+      "authors": "de Klerk, N. J. J., Rosloń, I., Wagemaker, M.",
+      "title": "Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping: The Effect of Li Vacancies, Halogens, and Halogen Disorder",
+      "journal": "Chem. Mater.",
+      "volume": 28,
+      "pages": "7955-7963",
+      "year": 2016,
+      "DOI": "10.1021/acs.chemmater.6b03630",
+      "title_verified": "2026-05-14 (web search ACS Pubs)",
+      "key_content": "DFT-MD on Li6PS5X (X=Cl, Br, I). Three coupled effects on Li conductivity: (1) Li vacancies, (2) halogen identity, (3) halogen 4a/4d site disorder. Predicts optimal Cl distribution 1:3 over 4a:4c sites -> 2x conductivity vs current. Direct DFT foundation for halogen-disorder framework. Halogens at 4a vs 4d give very different Li environments -> diffusion paths.",
+      "tags": [
+        "argyrodite",
+        "DFT-MD",
+        "vacancy",
+        "halogen-disorder",
+        "4a-4d",
+        "Wagemaker"
+      ]
     }
   ]
 }
