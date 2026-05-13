@@ -120,20 +120,29 @@ def main():
         print("NO data found. Check path.")
         return
 
-    # R(well_depth, paper exp)
-    paper_vals, well_vals, names = [], [], []
+    # R: 3 candidate metrics — paper convention uses Wad_max (= -E_adh_min)
+    paper_vals, wad_max_vals, neg_emin_vals, well_depth_vals, names = [], [], [], [], []
     for c, (g, e, _, _) in curves.items():
         if c in PAPER_EXP:
             i_min = int(np.nanargmin(e))
-            well = e[-1] - e[i_min]   # asymp - well, positive = bound
             paper_vals.append(PAPER_EXP[c])
-            well_vals.append(well)
+            wad_max_vals.append(-e[i_min])           # Wad at well (most-bound)
+            neg_emin_vals.append(-e[i_min])          # same as above (positive)
+            well_depth_vals.append(e[-1] - e[i_min]) # asymp - well (subtracts baseline)
             names.append(c)
+    R_wad = R_wd = None
     if len(paper_vals) >= 2:
-        R = float(np.corrcoef(paper_vals, well_vals)[0, 1])
-        print(f"\nR(well_depth_J/m², paper_aJ) = {R:+.3f}  (n={len(paper_vals)}, {names})")
-    else:
-        R = None
+        R_wad = float(np.corrcoef(paper_vals, wad_max_vals)[0, 1])
+        R_wd  = float(np.corrcoef(paper_vals, well_depth_vals)[0, 1])
+        print(f"\nR(Wad_max=-E_adh_min, paper_aJ) = {R_wad:+.3f}   ← paper convention")
+        print(f"R(well_depth=asymp-min, paper_aJ) = {R_wd:+.3f}   (baseline-subtracted)")
+        print(f"   n={len(paper_vals)}, {names}")
+        # also report modelC if present (not in paper exp but useful)
+        if 'modelC' in curves:
+            g_, e_, _, _ = curves['modelC']
+            print(f"   modelC Wad_max = {-e_[int(np.nanargmin(e_))]:+.4f} J/m² "
+                  f"(not in paper exp)")
+    R = R_wad  # primary metric for title
 
     # ============ PLOT ============
     fig, ax = plt.subplots(figsize=(10, 6.5))
@@ -167,7 +176,7 @@ def main():
     ax.set_ylabel(r'Adhesion energy (J m$^{-2}$)', fontsize=12)
     title = 'v30u_1L_correct (z=0, 36-reg mean) — OLD-figure style'
     if R is not None:
-        title += f'   R={R:+.3f}'
+        title += f'   R(Wad_max,paper)={R:+.3f}'
     ax.set_title(title, fontsize=12)
     ax.legend(loc='lower right', fontsize=9, framealpha=0.95)
     ax.grid(alpha=0.3)
