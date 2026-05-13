@@ -1,75 +1,76 @@
-"""render_interface_3d.py — render SE/NCM interface 3D figure with bond highlights.
+"""render_interface_3d.py — render SE/NCM interface 3D side-view with bond highlights.
 
-Reads stacked orthogonal interface xyz (e.g., comp1_R1_origin_d1.2_orthogonal.xyz)
-and renders a side-view figure showing:
-  • NCM and SE slabs side by side (color-coded atoms)
-  • Interface region highlighted (within 3 Å above/below gap)
-  • Bond contacts drawn as dashed lines:
-      Li-O (cyan, attractive)
-      S-O  (red, repulsive)
-      Cl-O (orange)
-      Br-O (purple)
-
-Layout: side projection (z vs y), zoomed on interface region.
-Output: <name>_interface_3d.png
+Reads stacked orthogonal interface xyz files and renders a side-view panel
+figure showing:
+  • NCM and SE slabs (color-coded atoms)
+  • Interface region zoomed (5 Å around the SE-NCM gap)
+  • Bond contacts drawn as colored lines:
+      Li-O (cyan solid, attractive)
+      S-O  (red dotted, repulsive)
+      Cl-O (orange dashed)
+      Br-O (purple dashed)
 
 Usage:
-    python3 render_interface_3d.py comp1.xyz [comp2.xyz ...]
-    # Generates side-by-side panel figure for multi-comp comparison
+    python3 render_interface_3d.py file1.xyz file2.xyz file3.xyz ...
 
-Author: Yonghoon-DEM-DFT collaboration
+Example (3-comp comparison):
+    python3 render_interface_3d.py \\
+        comp1_R1_origin_d1.2_orthogonal.xyz \\
+        comp2_R1_origin_d1.2_orthogonal.xyz \\
+        comp4_v2_R1_origin_d1.4_orthogonal.xyz
 """
 import sys
 from pathlib import Path
+import re
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
 from ase.io import read
 
-# Element colors (CPK + custom)
+# Element colors (CPK-style)
 COLORS = {
     'Li': '#9971D9', 'P': '#9D9D9D', 'S': '#FCC830',
     'Cl': '#1FE61F', 'Br': '#A52A2A',
     'Ni': '#5078D2', 'O': '#FF1C00',
 }
 SIZES = {
-    'Li': 100, 'P': 130, 'S': 160, 'Cl': 150, 'Br': 170,
-    'Ni': 180, 'O': 130,
+    'Li': 80, 'P': 120, 'S': 140, 'Cl': 130, 'Br': 150,
+    'Ni': 160, 'O': 110,
 }
 
-# Bond cutoffs (only SE atom → NCM-O contacts, plus optionally Li-Ni)
 BOND_RULES = [
-    ('Li', 'O', 2.8, '#00BFFF', '-',  1.5),  # cyan solid — attractive Li-O
-    ('S',  'O', 3.0, '#FF1C00', ':',  1.2),  # red dotted — repulsive S-O
-    ('Cl', 'O', 3.2, '#FFA500', '--', 1.0),  # orange dashed — Cl-O
-    ('Br', 'O', 3.4, '#9932CC', '--', 1.0),  # purple dashed — Br-O
+    ('Li', 'O', 2.8, '#00BFFF', '-',  1.5),   # cyan solid
+    ('S',  'O', 3.0, '#FF1C00', ':',  1.2),   # red dotted
+    ('Cl', 'O', 3.2, '#FFA500', '--', 1.0),   # orange dashed
+    ('Br', 'O', 3.4, '#9932CC', '--', 1.0),   # purple dashed
 ]
 
 
-def assign_ncm_se(atoms, z_cut=None):
-    """Partition atoms into NCM (Ni, O, NCM-Li) and SE based on z.
-    Returns (ncm_mask, se_mask)."""
+def clean_name(path):
+    """Extract clean comp name from filename, drop hash prefix."""
+    stem = Path(path).stem
+    cleaned = re.sub(r'^[0-9a-f]{6,8}-', '', stem)
+    return cleaned.split('_')[0] + ('_' + cleaned.split('_')[1]
+                                     if 'v1' in cleaned or 'v2' in cleaned else '')
+
+
+def assign_ncm_se(atoms):
+    """NCM = atoms with z below z_ncm_max+0.5 (NCM has Ni and O)."""
     syms = np.array(atoms.get_chemical_symbols())
     z = atoms.positions[:, 2]
-    if z_cut is None:
-        # Auto-detect: NCM has Ni/O; find z range of NCM (Ni + O atoms)
-        ncm_native = np.isin(syms, ['Ni', 'O'])
-        z_ncm_max = z[ncm_native].max() if ncm_native.any() else 0
-        z_cut = z_ncm_max + 0.5   # 0.5 Å buffer above NCM topmost atom
-    # NCM region: anything with z <= z_cut
+    ncm_native = np.isin(syms, ['Ni', 'O'])
+    z_ncm_max = z[ncm_native].max() if ncm_native.any() else 0
+    z_cut = z_ncm_max + 0.5
     ncm_mask = z <= z_cut
-    se_mask  = ~ncm_mask
-    return ncm_mask, se_mask, z_cut
+    return ncm_mask, ~ncm_mask, z_cut
 
 
-def count_contacts_at_interface(atoms, ncm_mask, se_mask):
-    """Count bond contacts between SE atoms and NCM O within cutoff."""
+def count_contacts(atoms, ncm_mask, se_mask):
     sym = np.array(atoms.get_chemical_symbols())
     ncm_O_idx = np.where(ncm_mask & (sym == 'O'))[0]
     counts = {f"{s}-O": 0 for s in ['Li', 'S', 'Cl', 'Br']}
-    contact_pairs = []
+    pairs = []
     for i in np.where(se_mask)[0]:
         se_el = sym[i]
         if se_el not in ('Li', 'S', 'Cl', 'Br'):
@@ -79,96 +80,95 @@ def count_contacts_at_interface(atoms, ncm_mask, se_mask):
             d = atoms.get_distance(i, j, mic=True)
             if d <= cutoff:
                 counts[f"{se_el}-O"] += 1
-                contact_pairs.append((i, j, se_el, d))
-    return counts, contact_pairs
+                pairs.append((i, j, se_el, d))
+    return counts, pairs
 
 
-def render_panel(ax, atoms, name, zoom_window=(8, 25)):
-    """Render side projection (y vs z) on ax."""
+def render_panel(ax, atoms, name, zoom_pad=5.0):
     sym = np.array(atoms.get_chemical_symbols())
     pos = atoms.positions
-
     ncm_mask, se_mask, z_cut = assign_ncm_se(atoms)
-    counts, pairs = count_contacts_at_interface(atoms, ncm_mask, se_mask)
+    counts, pairs = count_contacts(atoms, ncm_mask, se_mask)
 
-    # Plot atoms
-    for el in np.unique(sym):
-        mask = sym == el
-        # color shading: NCM darker, SE lighter? Keep same for now
-        ax.scatter(pos[mask, 1], pos[mask, 2],
+    z_se_min = pos[se_mask, 2].min() if se_mask.any() else z_cut
+    z_lo = z_se_min - zoom_pad - 5
+    z_hi = z_se_min + zoom_pad + 3
+
+    mask_zoom = (pos[:, 2] >= z_lo) & (pos[:, 2] <= z_hi)
+    for el in np.unique(sym[mask_zoom]):
+        m = (sym == el) & mask_zoom
+        if not m.any():
+            continue
+        ax.scatter(pos[m, 1], pos[m, 2],
                    c=COLORS.get(el, '#888'), s=SIZES.get(el, 80),
-                   edgecolors='black', linewidths=0.6, zorder=3,
-                   label=el if (mask.sum() > 0 and el not in ax.get_legend_handles_labels()[1]) else None)
+                   edgecolors='black', linewidths=0.6, zorder=3)
 
-    # Draw bond contacts
     for i, j, se_el, d in pairs:
+        if not (z_lo <= pos[i, 2] <= z_hi and z_lo <= pos[j, 2] <= z_hi):
+            continue
         for rule_se, rule_ncm, cutoff, color, style, lw in BOND_RULES:
             if rule_se == se_el:
                 ax.plot([pos[i, 1], pos[j, 1]], [pos[i, 2], pos[j, 2]],
                         color=color, linestyle=style, linewidth=lw,
-                        alpha=0.75, zorder=2)
+                        alpha=0.7, zorder=2)
                 break
 
-    # Interface line
-    ax.axhline(z_cut, color='black', linestyle='--', linewidth=0.7,
-               alpha=0.5, zorder=1)
+    ax.axhline(z_cut, color='black', linestyle='--', linewidth=0.6,
+               alpha=0.4, zorder=1)
+    ax.set_ylim(z_lo, z_hi)
 
-    # Zoom to interface region
-    ax.set_ylim(*zoom_window)
-    ax.set_xlim(0, atoms.cell.lengths()[1])
+    y_pos = pos[mask_zoom, 1]
+    if len(y_pos):
+        ax.set_xlim(y_pos.min() - 1, y_pos.max() + 1)
 
-    # Annotations
-    ax.set_title(f"{name}\n" +
-                 "  ".join([f"{k}={v}" for k, v in counts.items() if v > 0]),
-                 fontsize=10)
+    count_str = "  ".join([f"{k}={v}" for k, v in counts.items() if v > 0])
+    ax.set_title(f"{name}\n{count_str}", fontsize=10)
     ax.set_xlabel('y (Å)', fontsize=9)
     ax.set_aspect('equal')
+    ax.grid(alpha=0.2)
 
 
 def main(xyz_paths):
     n = len(xyz_paths)
-    fig, axes = plt.subplots(1, n, figsize=(6 * n, 7), squeeze=False)
+    fig, axes = plt.subplots(1, n, figsize=(5.2 * n, 6.5), squeeze=False)
     axes = axes[0]
 
     for ax, path in zip(axes, xyz_paths):
         a = read(path)
-        name = Path(path).stem.split('_')[0]      # extract first underscore-token
+        name = clean_name(path)
         render_panel(ax, a, name)
 
     axes[0].set_ylabel('z (Å)', fontsize=11)
 
-    # Legend (single, on rightmost)
+    # Legend
     handles = []
     seen = set()
     for el, c in COLORS.items():
-        if el not in seen:
-            handles.append(plt.Line2D([0], [0], marker='o', color='w',
-                                      markerfacecolor=c, markeredgecolor='k',
-                                      markersize=8, label=el))
-            seen.add(el)
+        if el in seen: continue
+        handles.append(plt.Line2D([0], [0], marker='o', color='w',
+                                  markerfacecolor=c, markeredgecolor='k',
+                                  markersize=8, label=el))
+        seen.add(el)
     for rule_se, rule_ncm, cutoff, color, style, lw in BOND_RULES:
         handles.append(plt.Line2D([0], [0], color=color, linestyle=style,
                                   linewidth=lw + 0.5,
                                   label=f"{rule_se}-{rule_ncm} ≤ {cutoff} Å"))
-    axes[-1].legend(handles=handles, loc='center left', bbox_to_anchor=(1.02, 0.5),
-                    fontsize=8, framealpha=0.95)
+    fig.legend(handles=handles, loc='center left',
+               bbox_to_anchor=(0.98, 0.5),
+               fontsize=8, framealpha=0.95)
 
-    plt.suptitle("SE/NCM interface — atomic structure + bond contact map",
-                 fontsize=12, y=1.00)
-    fig.tight_layout()
+    plt.suptitle("SE/NCM interface — bond contact map (side view)",
+                 fontsize=12, y=0.98)
+    fig.tight_layout(rect=[0, 0, 0.96, 0.97])
     out_name = "interface_3d_compare.png"
     fig.savefig(out_name, dpi=200, bbox_inches='tight')
     fig.savefig(out_name.replace('.png', '.pdf'), bbox_inches='tight')
     print(f"Saved: {out_name}")
+    print(f"Saved: {out_name.replace('.png','.pdf')}")
 
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        # Use uploaded files as default
-        paths = [
-            '/root/.claude/uploads/ec05ab4a-323a-4032-b00c-349a43b71c49/4f835cdd-comp1_R1_origin_d1.2_orthogonal.xyz',
-            '/root/.claude/uploads/ec05ab4a-323a-4032-b00c-349a43b71c49/6be69a8c-comp2_R1_origin_d1.2_orthogonal.xyz',
-        ]
-    else:
-        paths = sys.argv[1:]
-    main(paths)
+        print("Usage: python3 render_interface_3d.py file1.xyz file2.xyz ...")
+        sys.exit(1)
+    main(sys.argv[1:])
