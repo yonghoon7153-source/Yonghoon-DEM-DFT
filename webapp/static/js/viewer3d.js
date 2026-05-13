@@ -55,6 +55,29 @@ function getStageGlowTexture(stage) {
   return tex;
 }
 
+/* One shared white radial-gradient texture used by Brittle Heatmap
+ * mode — each contact gets its OWN SpriteMaterial whose .color is set
+ * to the coolwarm-mapped F/P_c value, so the gradient on a single
+ * sprite is white-core → transparent and the tint comes from the
+ * material colour (multiplied with the map). */
+let _WHITE_GLOW_TEX = null;
+function getWhiteGlowTexture() {
+  if (_WHITE_GLOW_TEX) return _WHITE_GLOW_TEX;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0.00, 'rgba(255,255,255,1.00)');
+  grad.addColorStop(0.30, 'rgba(255,255,255,0.85)');
+  grad.addColorStop(0.70, 'rgba(255,255,255,0.30)');
+  grad.addColorStop(1.00, 'rgba(255,255,255,0.00)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 128, 128);
+  _WHITE_GLOW_TEX = new THREE.CanvasTexture(canvas);
+  _WHITE_GLOW_TEX.minFilter = THREE.LinearFilter;
+  return _WHITE_GLOW_TEX;
+}
+
 function jetColor(t) {
   // t ∈ [0,1] → blue→cyan→green→yellow→red
   const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
@@ -907,47 +930,67 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'brittle_heatmap') {
-    /* COMSOL-style continuous heatmap of fracture severity.
-     * Each AM particle is coloured by max(F/P_c) across its contacts,
-     * mapped through a coolwarm (blue → white → red) ramp.  The scale
-     * uses Lawn fracture thresholds as anchors: m=0 → blue (intact),
-     * m=1 → cyan (Auerbach onset), m=3 → white (multi-crack),
-     * m=11 → orange (fragmentation), m≥32 → deep red (pulverization).
-     * Implemented as log10(1 + m / 32) ∈ [0,1] so the dynamic range of
-     * F/P_c (often 0.1 – 30+) compresses into a perceptually-balanced
-     * colour gradient. */
-    const idx = state.idIndex || {};
-    const mPerId = {};
-    (aux.brittle_pairs || []).forEach(b => {
-      const m = +b.mult || 0;
-      [b.id1, b.id2].forEach(id => {
-        if (!(id in mPerId) || mPerId[id] < m) mPerId[id] = m;
-      });
-    });
-
-    const NORM = (m) => Math.log10(1 + (m || 0)) / Math.log10(1 + 32);  // 0..1+
-    ['AM_P', 'AM_S'].forEach(t => {
+    /* COMSOL-style continuous heatmap at the CONTACT level.  Each
+     * damaged AM-AM contact gets a sprite glow at its midpoint whose
+     * tint comes from a coolwarm (blue → white → red) ramp on its
+     * F/P_c (Lawn force ratio).  AM/SE particles are left in their
+     * base colours (semi-transparent so the glows sit clearly on the
+     * underlying microstructure). */
+    ['AM_P', 'AM_S', 'SE'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
-      m.userData.particles.forEach((p, i) => {
-        const mv = mPerId[p.id] || 0;
-        const tn = Math.max(0, Math.min(1, NORM(mv)));
-        m.setColorAt(i, new THREE.Color(coolwarmColor(tn)));
-      });
-      m.material.opacity = 0.97;
-      m.material.transparent = false;
+      const base = new THREE.Color(COL[t]);
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
+      m.material.opacity = (t === 'SE' ? 0.15 : 0.30);
+      m.material.transparent = true;
     });
-    const seMesh = state.meshes.SE;
-    if (seMesh) {
-      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
-      seMesh.material.opacity = 0.10;
-      seMesh.material.transparent = true;
-    }
     flushColors();
 
-    /* Build inline colorbar (5 stops + Lawn labels) for the legend */
+    const idx = state.idIndex || {};
+    const NORM = (m) => Math.log10(1 + (m || 0)) / Math.log10(1 + 32);
+    const group = new THREE.Group();
+    group.userData.isBrittleGlow = true;  // share cleanup path with glow mode
+    let damaged = 0, mMax = 0;
+    (aux.brittle_pairs || []).forEach(b => {
+      const p1 = idx[b.id1], p2 = idx[b.id2];
+      if (!p1 || !p2) return;
+      damaged++;
+      const m = +b.mult || 0;
+      if (m > mMax) mMax = m;
+      const t = Math.max(0, Math.min(1, NORM(m)));
+      const tint = coolwarmColor(t);
+      // Midpoint biased toward smaller particle's surface (contact area)
+      const w = (p2.r) / ((p1.r || 0) + (p2.r || 0) + 1e-9);
+      const mx = p1.x + (p2.x - p1.x) * w;
+      const my = p1.y + (p2.y - p1.y) * w;
+      const mz = p1.z + (p2.z - p1.z) * w;
+
+      const mat = new THREE.SpriteMaterial({
+        map: getWhiteGlowTexture(),
+        color: tint,
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const spr = new THREE.Sprite(mat);
+      spr.position.set(mx, mz, my);  // Three.js Z-up swap
+      const rMin = Math.min(p1.r || 1, p2.r || 1);
+      // Larger F/P_c → larger glow (highlights severe contacts)
+      const sizeBoost = 0.7 + 1.1 * t;
+      const s = rMin * 1.7 * sizeBoost;
+      spr.scale.set(s, s, 1);
+      spr.renderOrder = 5;
+      group.add(spr);
+    });
+    if (state.scene) {
+      state.scene.add(group);
+      state.brittleGlowGroup = group;
+    }
+
+    /* Inline colorbar + Lawn-stage tick labels */
     const stops = [0, 0.25, 0.5, 0.75, 1.0]
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
-    const bar = `
+    setLegend(state,
+      `<b>Brittle Heatmap — per-contact F/P_c</b>
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
@@ -955,13 +998,9 @@ function applyViewMode(state, mode) {
        </div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#cbd5e1">
          <span>intact</span><span>µcrack</span><span>multi</span><span>frag</span><span>pulv</span>
-       </div>`;
-    const damaged = Object.values(mPerId).filter(v => v >= 1).length;
-    setLegend(state,
-      `<b>Brittle Heatmap — F/P_c per AM particle</b>
-       ${bar}
+       </div>
        <span style="color:#9ca3af;font-size:10px">
-         ${damaged} AM particles with F/P_c ≥ 1 (Auerbach onset)
+         ${damaged} damaged contacts &nbsp; max F/P_c = ${mMax.toFixed(2)}
        </span>`);
     return;
   }
