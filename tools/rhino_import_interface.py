@@ -118,6 +118,8 @@ def create_bond(p1, p2, layer, radius=0.10):
     # Make pipe (cylinder along line)
     pipe = rs.AddPipe(line, 0, radius, cap=2)
     rs.DeleteObject(line)
+    if isinstance(pipe, list):
+        pipe = pipe[0]
     return pipe
 
 

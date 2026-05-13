@@ -76,6 +76,9 @@ def add_bond(p1, p2, bond_type, radius=0.12):
     line = rs.AddLine(p1, p2)
     pipe = rs.AddPipe(line, 0, radius, cap=2)
     rs.DeleteObject(line)
+    # AddPipe returns a list of GUIDs; take first
+    if isinstance(pipe, list):
+        pipe = pipe[0]
     rgb = BOND_COLOR[bond_type]
     rs.ObjectColorSource(pipe, 1)
     rs.ObjectColor(pipe, rgb)
