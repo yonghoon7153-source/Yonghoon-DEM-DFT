@@ -24,6 +24,18 @@
 
 | 시각 | branch | action | status | notes |
 |------|--------|--------|--------|-------|
+| 2026-05-14 ~05:00 | debug-api-500-error-iukkt | 사용자 full gabia session log paste 받음 | DONE | 핵심 milestones 재정리: |
+|  |  |  |  | **(A) KISTI**: comp3 v2 EOS v098 iter=366 SCF, BFGS step 0, 16085 CPU sec — 진행 느림. |
+|  |  |  | **(B) 3L NCM 검증 실패**: R(1L vs 3L)=−0.4580. comp3/4/5 sign flip. 1L 최종 confirmed. |
+|  |  |  | **(C) 1L correct phase1 재현**: R1_origin d=1.2 Wad=+0.3863 J/m² (KISTI ref +0.38629 정확히 일치). |
+|  |  |  | **(D) comp4_v2 eiso_fix**: ΔW_strain = +0.5482 J/m² (vs v1 +0.4445). 셀 area v2/v1 = 0.9893. |
+|  |  |  | **(E) 14-pair bond density**: M→Ni patched. n=4 (comp1/2/4_v1/4_v2). Face A 강한 descriptor: S-O R=−0.973 ANTI, Li-Li/Li-O/Br-O R≈+0.9 PAPER. Face B: P-O R=−0.996 ANTI. |
+|  |  |  | **(F) comp4_v2 face A halogen 노출 확인**: Cl 14개 + Br 8개 동시 노출 (v1은 Br 17개만). |
+|  |  |  | **(G) comp2 halogen z-분포**: Cl mean z=14.26 (buried), Br mean z=19.24 (위쪽 노출). |
+|  |  |  | **(H) Killer figure R=+0.9991 (n=3)** 다양한 Y-shift mode로 동일 R: face B + α=1.0. |
+|  |  |  | **(I) Renders 완료**: interface_3d_compare, interface_3axis_compare, scheme_vacancy_mechanism (PNG/PDF). |
+| 2026-05-14 ~05:10 | debug-api-500-error-iukkt | 🚨 사용자 full gabia log 두 번째 paste — 완전한 narrative arc 받음 | DONE | (J) α-strain sweep: α=0 R=−0.994 / α=1.0 R=+0.959 / α=1.5 R=+0.973. (K) Killer v2 face B + α=1.0 + per_comp asymp = **R=+0.9991** (n=3). (L) face_flip comp4_v2: face A Cl+Br 동시 노출(Wad −0.10 BAD) / face B (Wad +0.65 GOOD) — face B 채택. (M) mlip_relax test (comp1만 done): Wad_rig +3.02 → +6.56 (2x increase due to atom relax). (N) li_migration_36reg (comp1만 done): N=0~3 거의 평탄, 강제 Li 이동 무영향. (O) Exhaustive trend: 다양한 (face, agg, asymp, α) 조합 top-30 R=1.000 — comp1+comp2+comp4_v2 set 압도적. |
+| 2026-05-14 ~05:00 | debug-api-500-error-iukkt | 사용자 지시: "옛날 v1에 해당하는거 다 지워 / adhesion 관련해서" | START | comp3/5 v1 stale rows + paper_figures_v1 directory 정리. |
 | 2026-05-14 ~04:45 | debug-api-500-error-iukkt | 🚨 14-pair bond density 진짜 결과 (gabia 01:35 출력) 사용자 paste 받아서 정정 | DONE | M→Ni 패치 후 실행. n=4 (comp1, comp2, comp4_v1, comp4_v2). **Face A: S-O R=−0.973 (strongest ANTI), Li-Li/Li-O/Br-O R≈+0.9 PAPER, S-Li R=−0.815**. **Face B: P-O R=−0.996 (strongest ANTI)**. 내가 그동안 인용한 "S-Li R=−0.896"는 옛날 4-pair n=5 CSV (comp3/5 v1 포함). 진짜는 S-O(face A)/P-O(face B). **새 mechanism**: Li5.4 family avoids parasitic anion-anion + PS₄-NCM-O contacts → productive Li-O/X-O 우세. |
 | 2026-05-14 ~02:00 | debug-api-500-error-iukkt | gabia에서 stacked orthogonal + 3-axis render + scheme generation | DONE | comp1/2/4_v2 R1_origin_d1.2/1.4 stacked. interface_3d_compare, interface_3axis_compare, scheme_vacancy_mechanism PNG/PDF 생성됨. 사용자가 "구리다"고 평가 → Rhino로 pivot. |
 | 2026-05-14 ~04:30 | debug-api-500-error-iukkt | Hood/Patel 2021 PDF 정독 + 우리 paper와 비교 | DONE | Li6-xPS5-xClBrx (transport focus, 24mS/cm @ x=0.7). 조성 공간만 sister, mechanism은 무관 (그들=conductivity, 우리=mechanical/Wad). x=0.7에서 LiClxBr1-x 4% 불순물 = 용해도 한계 — 우리 Li5.4 family가 이 한계 부근에 위치한다는 정량 인용 가능. |
