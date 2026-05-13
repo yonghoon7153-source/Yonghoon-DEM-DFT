@@ -1144,11 +1144,15 @@ function applyViewMode(state, mode) {
     const idx = state.idIndex || {};
     const group = new THREE.Group();
     group.userData.isCombined = true;
+    // Larger size multipliers and longer cones so they protrude well
+    // past particle surfaces — the cones use depthTest:false anyway
+    // but visually they should still feel like 3D markers, not flat
+    // overlay sprites.
     const stageSize = {
-      microcrack:    0.55,
-      multicrack:    0.85,
-      fragmentation: 1.20,
-      pulverization: 1.55,
+      microcrack:    1.2,
+      multicrack:    1.7,
+      fragmentation: 2.4,
+      pulverization: 3.0,
     };
     const counts = { microcrack:0, multicrack:0, fragmentation:0, pulverization:0 };
 
@@ -1162,7 +1166,6 @@ function applyViewMode(state, mode) {
 
       // Contact direction p1 → p2 in data frame
       const dx = p2.x - p1.x, dy = p2.y - p1.y, dz = p2.z - p1.z;
-      const dist = Math.sqrt(dx*dx + dy*dy + dz*dz) || 1;
       const r1 = p1.r || 1, r2 = p2.r || 1;
       const rMin = Math.min(r1, r2);
 
@@ -1172,23 +1175,32 @@ function applyViewMode(state, mode) {
       const cy = p1.y + dy * w;
       const cz = p1.z + dz * w;
 
-      // Cone geometry: small height, base radius ∝ stage severity
-      const baseR  = rMin * 0.35 * stageSize[stage];
-      const height = rMin * 0.9  * stageSize[stage];
-      const geo = new THREE.ConeGeometry(baseR, height, 14);
+      // Cone — base sized for visibility, height scales with stage.
+      const baseR  = rMin * 0.55 * stageSize[stage];
+      const height = rMin * 1.4  * stageSize[stage];
+      const geo = new THREE.ConeGeometry(baseR, height, 16);
       const mat = new THREE.MeshPhongMaterial({
-        color: colHex, emissive: colHex, emissiveIntensity: 0.35,
+        color: colHex, emissive: colHex, emissiveIntensity: 0.75,
         transparent: false,
+        depthTest: false,         // always render on top of particles
+        depthWrite: false,
       });
       const mesh = new THREE.Mesh(geo, mat);
 
-      // Three.js Z-up swap: (x_data, y_data, z_data) → (x, z, y)
+      // ConeGeometry apex points +Y by default with base at -Y.  Position
+      // the cone so its base is centred on the contact midpoint and its
+      // apex sticks out perpendicular to the contact line.  Use
+      // contact-axis direction (Three.js Z-up swap) and align +Y to it.
       mesh.position.set(cx, cz, cy);
       const dirThree = new THREE.Vector3(dx, dz, dy).normalize();
-      // ConeGeometry default points along +Y; align that with dirThree
       mesh.quaternion.setFromUnitVectors(
         new THREE.Vector3(0, 1, 0), dirThree);
-      mesh.renderOrder = 6;
+      // Push the cone half its height ALONG that direction so the base
+      // sits exactly at the contact midpoint rather than centred on it.
+      mesh.position.x += dirThree.x * height * 0.5;
+      mesh.position.y += dirThree.y * height * 0.5;
+      mesh.position.z += dirThree.z * height * 0.5;
+      mesh.renderOrder = 20;     // render above any particle mesh
       group.add(mesh);
     });
     if (state.scene) {
