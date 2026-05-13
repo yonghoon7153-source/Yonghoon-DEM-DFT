@@ -25,10 +25,19 @@ from collections import defaultdict
 # scripts/fracture_model.py. Re-exported aliases below preserve any
 # external callers that previously imported from this module.
 from fracture_model import (
-    fracture_classify_sim as fracture_stage,           # noqa: F401
+    fracture_classify_force_sim as fracture_stage,     # FORCE-based ← used here
+    fracture_classify_sim,                             # δ-based (Hertzian; kept for callers)
     auerbach_delta_critical as _auerbach_m,            # SI-only base
     K_IC_AM_S, K_IC_AM_P, E_AM, NU_AM, A_AUERBACH,
 )
+# Why force-based: LIGGGHTS uses Hooke (linear) contact, so the
+# Hertzian P ∝ δ^(3/2) assumption behind the δ-based classifier does
+# NOT hold.  F/P_c with Lawn 1998 §3.4 force multipliers (1, 3, 11, 32)
+# is the recommended, model-agnostic form and matches the Stage E
+# pipeline (run_network_full_corrections.py) + the diagnostic script
+# (scripts/diag_brittle_per_type.py).  Prior δ-based version severely
+# under-counted AM_P damage because the Hooke δ→F mapping differs from
+# Hertzian, making large-R AM_P appear less cracked than it actually is.
 
 # SE Tabor plastic regime threshold (kept for SE-side highlighting).
 DR_SE_PLASTIC = 0.0078    # fully plastic Tabor
@@ -106,7 +115,11 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
 
         if is_am1 and is_am2:
             ct = '-'.join(sorted([t1, t2]))
-            stage, delta_c, mult = fracture_stage(delta, r_min, ct, scale=scale)
+            # FORCE-based: m = F/P_c with multipliers (1, 3, 11, 32) per
+            # Lawn 1998 §3.4.  P_c here is the Auerbach onset force, not
+            # an equivalent overlap.  See fracture_model.py and the
+            # diagnostic script for agreement.
+            stage, P_c, mult = fracture_stage(fn, r_min, ct, scale=scale)
             if stage != 'intact':
                 brittle_pairs.append({
                     'id1': i1, 'id2': i2,
