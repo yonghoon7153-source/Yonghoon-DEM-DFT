@@ -220,7 +220,7 @@ def main():
         (75, 25): {'p_s': (7, 3), 'eps': 0.185, 'label': 'input_8mAh_3'},
     }
 
-    am_wt_arr = np.linspace(50, 100, 51)
+    am_wt_arr = np.linspace(0, 100, 101)   # full 0–100 % sweep
     p_s_configs = [(3, 7), (5, 5), (7, 3)]
     colors = {(3, 7): 'tab:blue', (5, 5): 'tab:green', (7, 3): 'tab:red'}
 
@@ -258,12 +258,12 @@ def main():
                   f'KC=Sridhar 2000)', fontsize=11)
     ax.grid(alpha=0.3)
     ax.legend(fontsize=8, loc='upper left', framealpha=0.95)
-    ax.set_xlim(48, 102)
+    ax.set_xlim(-2, 102)
     ax.set_ylim(0, 42)
 
     # ── Panel 2: physics decomposition for P:S=7:3 (measured config) ──
     ax = axes[1]
-    am_zoom = np.linspace(60, 100, 50)
+    am_zoom = np.linspace(0, 100, 101)
     eps_rcp_list, kc_list, p_se_list, eps_pred_list = [], [], [], []
     for am_wt in am_zoom:
         r = predict_porosity_physics((am_wt, 100 - am_wt), (7, 3))
@@ -307,7 +307,7 @@ def main():
                   fontsize=11)
     ax.grid(alpha=0.3)
     ax.legend(fontsize=9, loc='upper left', framealpha=0.95)
-    ax.set_xlim(58, 102)
+    ax.set_xlim(-2, 102)
     ax.set_ylim(0, 42)
 
     plt.tight_layout()
