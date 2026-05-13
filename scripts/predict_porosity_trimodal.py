@@ -71,37 +71,76 @@ def effective_size_ratio(f_am_p, f_am_s, f_se):
 
 # ── Furnas-Westman binary Bouvard 2004 fit ──────────────────────
 def bouvard_porosity(f_se, lambda_ratio):
-    """Asymmetric Bouvard 2004 Fig 2 parabolic fit.
+    """Bouvard 2004 Fig 2 — interpolated from digitized data points.
 
-    eps_min depends on size ratio:
-      λ = 4  →  eps_min ≈ 0.22
-      λ = 8  →  eps_min ≈ 0.18
-      λ = 12 →  eps_min ≈ 0.16
-      λ→∞   →  eps_min →  0.15 (McGeary asymptote)
+    For size ratio λ = 8, the porosity ε vs f_large data approximately
+    follows (digitized from Bouvard Fig 2):
+      f_large = 0.00 → ε = 0.36
+      f_large = 0.20 → ε = 0.30
+      f_large = 0.40 → ε = 0.24
+      f_large = 0.60 → ε = 0.20
+      f_large = 0.74 → ε = 0.18   (optimum)
+      f_large = 0.80 → ε = 0.19
+      f_large = 0.90 → ε = 0.25
+      f_large = 1.00 → ε = 0.36
+    For larger λ, the minimum porosity decreases (McGeary λ=11.3 gives
+    ε_min ≈ 0.15). We scale eps_min and use the same shape.
     """
     fl = 1.0 - f_se
-    fl_opt = 0.74
-    # Interpolate eps_min with size ratio (Bouvard data)
-    eps_min = max(0.15, 0.36 - 0.04 * np.log(lambda_ratio))
-    eps_max = 0.36
 
-    if fl <= fl_opt:
-        delta = (fl - fl_opt) / fl_opt
-    else:
-        delta = (fl - fl_opt) / (1.0 - fl_opt)
-    eps = eps_min + (eps_max - eps_min) * delta * delta
-    return min(eps, eps_max)
+    # Reference curve at λ = 8 (Bouvard Fig 2 data)
+    fl_ref  = np.array([0.00, 0.10, 0.20, 0.30, 0.40, 0.50, 0.60,
+                        0.70, 0.74, 0.78, 0.85, 0.90, 0.95, 1.00])
+    eps_ref = np.array([0.36, 0.33, 0.30, 0.27, 0.24, 0.22, 0.20,
+                        0.185, 0.18, 0.185, 0.215, 0.25, 0.30, 0.36])
+
+    eps_lambda8 = np.interp(fl, fl_ref, eps_ref)
+
+    # Scale eps_min with size ratio (Bouvard λ=4 → eps_min≈0.22, λ=8 → 0.18, λ=12 → 0.16)
+    eps_min_scale = 0.18 + (8 - lambda_ratio) * 0.005   # rough fit
+    eps_min_scale = max(0.14, min(0.22, eps_min_scale))
+    # Affine adjust: shift the curve toward its new minimum
+    eps_min_ref = 0.18
+    eps_max_ref = 0.36
+    eps_adjusted = eps_min_scale + (eps_lambda8 - eps_min_ref) / \
+                   (eps_max_ref - eps_min_ref) * (eps_max_ref - eps_min_scale)
+    return min(float(eps_adjusted), 0.36)
 
 
-# ── SFM plastic contribution (linear in plastic-phase fraction) ──
+# ── SFM plastic contribution with FORCE-CHAIN SHADOW correction ──
+SHADOW_EXPONENT = 2.0   # f_AM^β  (β=2: percolation-aware; β=1: linear)
+
 def plastic_delta(f_se, P=P_PRESS, sigma_y=SIGMA_Y_SE,
-                   eps_pure_se_target=0.10, eps_rcp_pure=0.36):
-    """Linear SFM approximation. Pure SE compaction at P/σ_y ≈ 1.06
-    achieves Δε = 0.26 (36 → 10 %). For mixtures, scaled by f_SE.
+                   eps_pure_se_target=0.10, eps_rcp_pure=0.36,
+                   shadow_beta=SHADOW_EXPONENT):
+    """Heterogeneity-corrected SFM plastic densification.
+
+    Naive SFM (linear in f_SE) assumes mean-field plastic flow, which
+    overpredicts plastic contribution in mixtures because AM force
+    chains shadow a portion of SE particles from compaction stress.
+
+    Physical model — force-chain percolation shadow:
+        α_effective(f_AM) = α_pure × (1 − f_AM^β)
+
+    where β controls how rapidly the shadow grows with rigid fraction:
+      β = 1: linear (mean-field-like)
+      β = 2: quadratic — force chains require AM-AM percolation
+             (force chain density ∝ AM coordination number)²
+      β > 2: even sharper percolation threshold
+
+    For typical granular mixtures with size ratio ~10, β ≈ 2 reflects
+    the experimentally observed sand-rubber stress-shadow effect
+    (Liu & Yin 2025) and our DEM force-chain quantification.
+
+    Calibration: at pure SE (f_AM=0), shadow=0 → α_eff = α_pure,
+    recovering the 0.26 endpoint reduction (36 % → 10 %).
     """
-    delta_max = eps_rcp_pure - eps_pure_se_target  # 0.26
+    f_am = 1.0 - f_se
+    alpha_pure = eps_rcp_pure - eps_pure_se_target  # 0.26 at pure SE
+    shadow = f_am ** shadow_beta
+    alpha_eff = alpha_pure * (1.0 - shadow)
     p_norm = (P / sigma_y) / (300e6 / 283e6)
-    return delta_max * f_se * min(p_norm, 1.5)
+    return alpha_eff * f_se * min(p_norm, 1.5)
 
 
 # ── Effective porosity prediction ───────────────────────────────
