@@ -1,17 +1,18 @@
-"""rhino_import_interface.py — import xyz atoms into Rhino as spheres.
+# -*- coding: utf-8 -*-
+"""rhino_import_interface.py -- import xyz atoms into Rhino as spheres.
 
-Run inside Rhino (Tools → PythonScript → Run Script…), select xyz file.
+Run inside Rhino: Tools > PythonScript > Run Script. Select xyz file.
 Creates:
-  • Spheres for each atom (only interface region: z within ±3 Å of gap)
-  • Layered by element with proper colors
-  • Optional bond cylinders for Li-O, S-O within cutoff
+  - Spheres for each atom (only interface region: z within +/-3 A of gap)
+  - Layered by element with proper colors
+  - Optional bond cylinders for Li-O, S-O within cutoff
 
 After import, user manually:
-  • Adds arrows (Curve → Polyline / FilletEdge for nice arrows)
-  • Adds vacancy marker (dashed sphere via Cylinder Subtract)
-  • Adds text labels (TextObject command)
-  • Applies materials (Rhino default + adjust to taste)
-  • Render via Rhino Render or KeyShot
+  - Adds arrows (Curve > Polyline / FilletEdge for nice arrows)
+  - Adds vacancy marker (dashed sphere via Cylinder Subtract)
+  - Adds text labels (TextObject command)
+  - Applies materials (Rhino default + adjust to taste)
+  - Render via Rhino Render or KeyShot
 
 Usage in Rhino:
     _-RunPythonScript "rhino_import_interface.py"
