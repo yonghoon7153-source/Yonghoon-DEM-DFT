@@ -7,6 +7,43 @@
 
 ---
 
+## 📌 PENDING (오늘 미루고 나중에 할 것) — 2026-05-13 기준
+
+| Priority | 작업 | 상태 | 재개 방법 |
+|----------|------|------|----------|
+| MEDIUM | **comp3 v2 DFT EOS** (KISTI GPU0) | ▶ 진행 중 (v098 BFGS step 1) | `auto_restart.sh` 자동 재시작. 며칠 더. `comp3_lpscbr/dft_eos/v098-v108/relax.out` 확인. |
+| MEDIUM | **comp5 v2 DFT EOS** (KISTI GPU1) | NOT STARTED | comp4 paper scripts (gen_dft_eos_comp4.py, run_dft_eos.sh, auto_restart.sh) copy → sed comp4→comp5 → champion symlink → `nohup ./auto_restart.sh`. v104 grid center (MLIP V0/V_cell=1.0414). |
+| LOW | **EOS priority 3-vol strategy** | NOT IMPLEMENTED | 빠른 V0/B0만 필요하면 ALL_VOLS reorder: comp3="103 102 104 ..." / comp5="104 103 105 ...". 3 vols (~30h) 후 parabolic fit. |
+| LOW | **comp3 anneal_chain resume** | KILLED at 8/25 pairs | r0 (5/5) + r1/li0-li2 done, r1/li3 was at MD 75%. Resume: re-launch watchdog, chain skips done pairs. r2-r4 unlikely to beat r0/li0 (-256.370). |
+| LOW | **comp5 anneal_chain resume** | KILLED at 10/25 pairs | r0+r1 fully done. r2-r4 unlikely to beat r1/li1 (-254.919). Champion finalized. |
+| LOW | **comp3/5 post-processing** (Bader/PDOS) | NEEDS V0 DFT EOS done | After DFT EOS → tight SCF → pp.x + projwfc.x. Reference: comp4_lpscbrbr/dft_eos/v0_fit/ structure. |
+| LOW | **comp3/5 v2 bond length analysis** | NEEDS V0 structure | mic distance from V0.xyz + cutoffs (Li-O 2.8, Li-S 3.0, Li-Cl 3.2, Li-Br 3.4 Å). |
+
+## 📌 TODAY'S FOCUS — 2026-05-13
+
+**Goal:** Adhesion paper figure 오늘 안에 완료
+
+| 시각 | branch | action | status | notes |
+|------|--------|--------|--------|-------|
+| 15:17 | debug-api-500-error-iukkt | comp5 champion 추출 + MLIP EOS done | DONE | rank1/li1, E=-254.919 eV. V0=1254.04, B0=22.0 GPa (paper v1: 20.8, Δ+1.2). V0/V_cell=1.0414 → v104. |
+| 15:14 | debug-api-500-error-iukkt | comp5 anneal_chain stop (10/25 pairs done) | DONE | r0+r1 fully done. Champion = r1/li1 -254.919 eV. r2-r4 안 돌림. |
+| 14:43 | debug-api-500-error-iukkt | comp3 v2 DFT EOS KISTI 시작 (paper protocol K=2x2x1) | START | gen_dft_eos_comp4.py mirror + auto_restart.sh. GPU0. v098 BFGS step 1 진행 중. |
+| 14:37 | debug-api-500-error-iukkt | comp3 anneal_chain stop + champion 추출 | DONE | r0/li0 = -256.370 eV. anneal_champion.xyz saved. |
+| 11:47 | debug-api-500-error-iukkt | gabia v30u_1L 시작 (1L NCM PRESERVED, 5z×36xy, 6 comps) | START | paper protocol replica. comp1+2 done, comp3 진행 중. ~16:30 완료 예상. |
+| 09:24 | debug-api-500-error-iukkt | comp3 v2 MLIP EOS (gabia) | DONE | V0=1236.55, B0=23.20 GPa. R²=0.9999. V0/V_cell=1.0268 → v103. |
+| earlier | debug-api-500-error-iukkt | v30u_full_ensemble 분석 (3L NCM, 5z×36xy) | DONE | R=+0.92 (5 paper comps). Wells tiny (~3 mJ/m², 3L NCM convergence). |
+| earlier | debug-api-500-error-iukkt | comp4 v1 swap (v2 anneal Cl exposed anomaly 발견) | DONE | comp4_slab_v1_PRESERVED.xyz (KISTI). R=0.92 → 0.93 회복 (1L에서는). |
+
+## 🎯 핵심 발견 — adhesion paper
+
+1. **OLD figure (1L NCM, 36 xy mean, R=0.931)** — paper-acceptable, paper draft 시점 검증된 figure
+2. **Wad 절대값 1L NCM artifact로 paper-scale align** (1L "broken structure" per inventory)
+3. **paper exp는 aJ 단위 (R=10nm tip), mJ/m² 변환 model-dependent (factor ~2)**
+4. **UMA Wad : paper Wad = 0.32 ± 0.03 ratio (consistent across 5 comps)** — systematic ~3x scaling, NOT calibrated/cherry-picked
+5. **Rank order R = +0.93 robust** — Li5.4 family >> Li6 family (~100+ mJ/m² 차이)
+
+---
+
 ## 2026-05-11
 
 | 시각 | branch | action | status | notes |
