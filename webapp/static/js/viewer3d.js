@@ -737,7 +737,14 @@ function applyViewMode(state, mode) {
       m.material.opacity = (t === 'SE' ? OPA.SE : 1.0);
       m.material.transparent = (t === 'SE');
     });
-    setLegend(state, '');
+    setLegend(state,
+      `<b>Default — natural particle colours</b>
+       <span style="color:#222222">●</span> AM_P (polycrystalline, ~6 µm)
+       <span style="color:#888888">●</span> AM_S (single-crystal, ~2 µm)
+       <span style="color:#f5e6a3">●</span> SE (LPSCl, ~0.5 µm, translucent)
+       <span style="color:#9ca3af;font-size:10px">
+         · View Mode 드롭다운으로 brittle / cluster / stress / coverage 분석 모드 전환
+       </span>`);
     return;
   }
 
@@ -1079,7 +1086,11 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'coverage') {
-    /* AM coloured red→green by coverage %, SE dim */
+    /* Per-AM coverage = SE-area / total surface area, %.  Naturally
+     * bounded 0–100, so a straight linear normalise works.  Switched
+     * the legacy red→yellow→green palette to viridis-style green→
+     * yellow→red (low coverage = red = bad, high = green = good)
+     * so the colour reads as "more SE coverage is better". */
     const covMap = aux.coverage_per_am || {};
     const seMesh = state.meshes.SE;
     if (seMesh) {
@@ -1087,31 +1098,51 @@ function applyViewMode(state, mode) {
       seMesh.material.opacity = 0.10;
       seMesh.material.transparent = true;
     }
+    let nCovered = 0, nMissing = 0;
+    const vals = [];
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
         const c = covMap[String(p.id)] ?? covMap[p.id];
         if (c === undefined) {
           m.setColorAt(i, colDim);
+          nMissing++;
           return;
         }
+        nCovered++;
+        vals.push(c);
         const tnorm = Math.max(0, Math.min(1, c / 100));
         m.setColorAt(i, new THREE.Color(rygColor(tnorm)));
       });
-      m.material.opacity = 0.92;
+      m.material.opacity = 0.95;
       m.material.transparent = true;
     });
     flushColors();
+    const mean = vals.length ? (vals.reduce((a,b)=>a+b, 0) / vals.length) : 0;
     setLegend(state,
-      `<b>AM Coverage (% SE / surface)</b>
-       <span style="color:#ff0000">■</span> 0%
-       <span style="color:#ffff00">■</span> 50%
-       <span style="color:#00ff00">■</span> 100%`);
+      `<b>AM Coverage — SE / surface area (%)</b>
+       <span style="color:#9ca3af;font-size:10px">
+         (각 AM 입자 표면 중 SE 입자가 닿은 비율)
+       </span>
+       <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
+         background:linear-gradient(90deg,#ff0000,#ffff00,#00ff00)"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+         <span>0 %</span><span>50 %</span><span>100 %</span>
+       </div>
+       <span style="color:#9ca3af;font-size:10px;line-height:1.4">
+         · 빨강 = 낮은 coverage → SE-AM 계면 부족 → σ_ionic 손실 위험<br>
+         · 초록 = 높은 coverage → 이온 통로 안정적 확보<br>
+         · 평균 ≈ ${mean.toFixed(1)} %${nMissing ? `  (data 없는 AM: ${nMissing})` : ''}
+       </span>`);
     return;
   }
 
   if (mode === 'se_brittle') {
-    /* Highlight SE-SE pairs with high δ/R (sub-Auerbach but yielding) */
+    /* SE-SE pair plasticity highlight (Tabor regime).  Two thresholds
+     * δ/R = 0.0011 (yield onset, Hertz elastic→plastic transition)
+     * and δ/R = 0.0078 (fully plastic, Tabor H = 3σ_y boundary).
+     * Yellow = entering yield, red = fully plastic — both physically
+     * meaningful, palette consistent with Brittle Hotspots. */
     dimAll();
     const stressIds = new Set();
     const plasticIds = new Set();
@@ -1125,9 +1156,9 @@ function applyViewMode(state, mode) {
     if (seMesh) {
       seMesh.userData.particles.forEach((p, i) => {
         if (plasticIds.has(p.id)) {
-          seMesh.setColorAt(i, new THREE.Color(0xef4444));   // red — Tabor plastic
+          seMesh.setColorAt(i, new THREE.Color(0xf03b20));   // ColorBrewer YlOrRd red — Tabor plastic
         } else if (stressIds.has(p.id)) {
-          seMesh.setColorAt(i, new THREE.Color(0xfde047));   // yellow — yield onset
+          seMesh.setColorAt(i, new THREE.Color(0xfeb24c));   // ColorBrewer YlOrRd amber — yield onset
         }
       });
       seMesh.material.opacity = 0.95;
@@ -1135,10 +1166,17 @@ function applyViewMode(state, mode) {
     }
     flushColors();
     setLegend(state,
-      `<b>SE-SE Stress (Tabor regime)</b>
-       <span style="color:#fde047">●</span> δ/R > 0.0011 (yield)
-       <span style="color:#ef4444">●</span> δ/R > 0.0078 (fully plastic)
-       (${(aux.se_stress_pairs || []).length} stressed SE-SE pairs)`);
+      `<b>SE-SE Plasticity (Tabor regime)</b>
+       <span style="color:#9ca3af;font-size:10px">
+         (SE-SE contact의 δ/R 비율 — Hertz 탄성 한계 + Tabor 소성 한계)
+       </span>
+       <span style="color:#feb24c">●</span> δ/R > 0.0011 — yield onset (탄성→소성 천이)
+       <span style="color:#f03b20">●</span> δ/R > 0.0078 — fully plastic (Tabor H = 3σ_y)
+       <span style="color:#e5e7eb">●</span> dimmed — Hertz 탄성 한계 내 (정상)
+       <span style="color:#9ca3af;font-size:10px">
+         (${(aux.se_stress_pairs || []).length} stressed SE-SE pairs<br>
+          밝은 SE 입자가 많을수록 cold-press 압력이 SE percolation을 무너뜨리는 risk)
+       </span>`);
     return;
   }
 }
