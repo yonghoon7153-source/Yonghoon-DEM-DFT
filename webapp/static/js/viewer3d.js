@@ -29,6 +29,32 @@ const STAGE_COL = {
 const STAGE_RANK = { intact: 0, microcrack: 1, multicrack: 2,
                       fragmentation: 3, pulverization: 4 };
 
+/* Lazy cache of radial-gradient sprite textures, keyed by stage label.
+ * Used by the contact-localised "Brittle Glow" view mode — sprites are
+ * placed at the midpoint of each damaged AM-AM contact so the colour
+ * appears as a soft halo on the contact area instead of repainting the
+ * entire AM particle. */
+const _GLOW_TEX_CACHE = {};
+function getStageGlowTexture(stage) {
+  if (_GLOW_TEX_CACHE[stage]) return _GLOW_TEX_CACHE[stage];
+  const hex = STAGE_COL[stage] || 0xfde047;
+  const r = (hex >> 16) & 0xff, g = (hex >> 8) & 0xff, b = hex & 0xff;
+  const canvas = document.createElement('canvas');
+  canvas.width = canvas.height = 128;
+  const ctx = canvas.getContext('2d');
+  const grad = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+  grad.addColorStop(0.00, `rgba(255,255,255,1.00)`);  // hot core
+  grad.addColorStop(0.18, `rgba(${r},${g},${b},0.95)`);
+  grad.addColorStop(0.55, `rgba(${r},${g},${b},0.45)`);
+  grad.addColorStop(1.00, `rgba(${r},${g},${b},0.00)`);  // soft falloff
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 128, 128);
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.minFilter = THREE.LinearFilter;
+  _GLOW_TEX_CACHE[stage] = tex;
+  return tex;
+}
+
 function jetColor(t) {
   // t ∈ [0,1] → blue→cyan→green→yellow→red
   const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
@@ -60,6 +86,7 @@ function buildControls(container) {
     <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
       <option value="default">Default</option>
       <option value="brittle">Brittle Hotspots (AM)</option>
+      <option value="brittle_glow">Brittle Glow (contact-localised)</option>
       <option value="cluster">Cluster Coloring (SE)</option>
       <option value="stress">Stress Concentration</option>
       <option value="coverage">Coverage Heat (AM)</option>
@@ -284,6 +311,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
 
 /* ── build scene from data ─────────────────────────────────── */
 function buildScene(scene, camera, controls, data, state) {
+  state.scene = scene;  // stash for view-mode overlays (e.g. brittle glow group)
   const box = data.box;
   // Z-up coordinate system: Three.js Y-up → swap Y↔Z for display
   // Data: x, y (horizontal), z (up=electrode height)
@@ -692,6 +720,17 @@ function applyViewMode(state, mode) {
   const colDim    = new THREE.Color(COL.DIM);
   const colSeBase = new THREE.Color(COL.SE);
 
+  /* Always tear down the contact-glow overlay before re-applying any
+   * mode — leaving sprites around when switching to e.g. cluster mode
+   * gives a stale, confusing picture. */
+  if (state.brittleGlowGroup && state.scene) {
+    state.scene.remove(state.brittleGlowGroup);
+    state.brittleGlowGroup.traverse(obj => {
+      if (obj.material) obj.material.dispose();
+    });
+    state.brittleGlowGroup = null;
+  }
+
   /* default: restore base colours + opacities */
   if (!mode || mode === 'default') {
     ['AM_P', 'AM_S', 'SE'].forEach(t => {
@@ -764,6 +803,82 @@ function applyViewMode(state, mode) {
     const btn = document.getElementById('brittle-z-modal-btn');
     if (btn) btn.addEventListener('click',
       () => showBrittleZProfileModal(state));
+    return;
+  }
+
+  if (mode === 'brittle_glow') {
+    /* Contact-localised version of brittle hotspots: AM particles stay
+     * in their base colour (slightly dimmed) and we drop a soft radial
+     * gradient sprite at the *midpoint* of each damaged AM-AM contact,
+     * coloured by Lawn stage.  This shows damage at the actual contact
+     * area instead of repainting the entire AM particle, which makes
+     * spatial clustering of microcrack hotspots much easier to read. */
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      const base = new THREE.Color(COL[t]);
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
+      m.material.opacity = 0.55;
+      m.material.transparent = true;
+    });
+    const seMesh = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
+      seMesh.material.opacity = 0.12;
+      seMesh.material.transparent = true;
+    }
+    flushColors();
+
+    /* Build the glow overlay group */
+    const group = new THREE.Group();
+    group.userData.isBrittleGlow = true;
+    const idx = state.idIndex || {};
+    const counts = { microcrack: 0, multicrack: 0, fragmentation: 0, pulverization: 0 };
+    (aux.brittle_pairs || []).forEach(b => {
+      const p1 = idx[b.id1], p2 = idx[b.id2];
+      if (!p1 || !p2) return;
+      // Contact midpoint, biased toward smaller particle's surface so the
+      // glow sits near the actual contact instead of the center of mass.
+      const w = (p2.r) / ((p1.r || 0) + (p2.r || 0) + 1e-9);
+      const mx = p1.x + (p2.x - p1.x) * w;
+      const my = p1.y + (p2.y - p1.y) * w;
+      const mz = p1.z + (p2.z - p1.z) * w;
+      const stage = b.stage || 'microcrack';
+      counts[stage] = (counts[stage] || 0) + 1;
+
+      const mat = new THREE.SpriteMaterial({
+        map: getStageGlowTexture(stage),
+        transparent: true,
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+      });
+      const spr = new THREE.Sprite(mat);
+      // Three.js Z-up swap: (x, y, z) → (x, z, y)
+      spr.position.set(mx, mz, my);
+      // Size relative to the smaller particle radius so the glow stays
+      // visually attached to the contact surface, with a mild stage
+      // boost for visibility of severe stages.
+      const rMin = Math.min(p1.r || 1, p2.r || 1);
+      const boost = { microcrack: 0.85, multicrack: 1.10,
+                       fragmentation: 1.35, pulverization: 1.55 }[stage] || 1.0;
+      const s = rMin * 1.7 * boost;
+      spr.scale.set(s, s, 1);
+      spr.renderOrder = 5;
+      group.add(spr);
+    });
+    if (state.scene) {
+      state.scene.add(group);
+      state.brittleGlowGroup = group;
+    }
+
+    setLegend(state,
+      `<b>Brittle Glow — contact halos</b>
+       <span style="color:#fde047">●</span> microcrack (${counts.microcrack || 0})
+       <span style="color:#fb923c">●</span> multicrack (${counts.multicrack || 0})
+       <span style="color:#ef4444">●</span> fragmentation (${counts.fragmentation || 0})
+       <span style="color:#7f1d1d">●</span> pulverization (${counts.pulverization || 0})
+       <span style="color:#9ca3af;font-size:10px">
+         (gradient = severity; size ∝ R_min of pair)
+       </span>`);
     return;
   }
 
