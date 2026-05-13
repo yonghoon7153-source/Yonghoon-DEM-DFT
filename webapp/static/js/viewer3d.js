@@ -704,9 +704,9 @@ function applyViewMode(state, mode) {
   const colDim    = new THREE.Color(COL.DIM);
   const colSeBase = new THREE.Color(COL.SE);
 
-  /* Tear down the Brittle Hotspots overlay (sprite glows or surface
-   * cap patches) before reapplying any mode — stale geometry left
-   * around confuses every other mode. */
+  /* Tear down view-mode overlays (Brittle Hotspots cap patches,
+   * Cluster Coloring split-mesh) before reapplying any mode — stale
+   * geometry left around confuses every other mode. */
   if (state.brittleGlowGroup && state.scene) {
     state.scene.remove(state.brittleGlowGroup);
     state.brittleGlowGroup.traverse(obj => {
@@ -714,6 +714,17 @@ function applyViewMode(state, mode) {
       if (obj.material) obj.material.dispose();
     });
     state.brittleGlowGroup = null;
+  }
+  if (state.clusterOverlay && state.scene) {
+    state.scene.remove(state.clusterOverlay);
+    state.clusterOverlay.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) obj.material.dispose();
+    });
+    state.clusterOverlay = null;
+    // Restore the original SE InstancedMesh visibility (hidden while
+    // cluster mode owned the SE rendering).
+    if (state.meshes && state.meshes.SE) state.meshes.SE.visible = true;
   }
 
   /* default: restore base colours + opacities */
@@ -921,41 +932,85 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'cluster') {
-    /* AM dim, SE coloured by cluster status */
+    /* AM dim (background context); SE split into two overlays so the
+     * dominant percolating cluster can be colour-preserving translucent
+     * (you can see through it) while the rare isolated / dead clusters
+     * stay fully opaque and pop visually. */
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((_, i) => m.setColorAt(i, colDim));
-      m.material.opacity = 0.10;
+      m.material.opacity = 0.08;
       m.material.transparent = true;
     });
-    const cidMap   = aux.cluster_id_per_se || {};
-    const meta     = aux.cluster_meta      || {};
-    const seMesh   = state.meshes.SE;
-    if (seMesh) {
-      seMesh.userData.particles.forEach((p, i) => {
-        const cid = cidMap[String(p.id)];
-        if (cid === undefined) {
-          seMesh.setColorAt(i, new THREE.Color(COL.SE_NON_REACH));
-          return;
-        }
+    const cidMap = aux.cluster_id_per_se || {};
+    const meta   = aux.cluster_meta      || {};
+
+    // Hide the original SE mesh; we replace it with two overlay groups.
+    const seMesh = state.meshes.SE;
+    if (seMesh) seMesh.visible = false;
+
+    // Partition SE particles by cluster status so each group gets its
+    // own InstancedMesh material with the right opacity.
+    const seParts  = state.seParticles || [];
+    const groups   = { percolating: [], top_only: [], bottom_only: [],
+                       dead: [], no_cluster: [] };
+    const counts   = { percolating: 0, top_only: 0, bottom_only: 0,
+                       dead: 0, no_cluster: 0 };
+    for (const p of seParts) {
+      const cid = cidMap[String(p.id)];
+      let status;
+      if (cid === undefined) status = 'no_cluster';
+      else {
         const md = meta[String(cid)];
-        const c  = (md && md.color) ? new THREE.Color(md.color) : colSeBase;
-        seMesh.setColorAt(i, c);
-      });
-      seMesh.material.opacity = 0.92;
-      seMesh.material.transparent = true;
+        status = (md && md.status) || 'dead';
+      }
+      groups[status].push(p);
+      counts[status]++;
     }
-    flushColors();
-    /* Legend: cluster status counts */
-    const counts = { percolating: 0, top_only: 0, bottom_only: 0, dead: 0 };
-    Object.values(meta).forEach(md => { if (counts[md.status] !== undefined)
-                                          counts[md.status] += md.size || 1; });
+
+    const overlay = new THREE.Group();
+    overlay.userData.isClusterOverlay = true;
+
+    function _addGroup(parts, hex, opacity) {
+      if (!parts.length) return;
+      const m = createInstancedSpheres(parts, 14, hex, opacity, true);
+      if (!m) return;
+      // Re-stamp the per-instance colour so it's not multiplied by
+      // some stale base; instanceColor + white material renders the
+      // hex faithfully.
+      const c = new THREE.Color(hex);
+      parts.forEach((_, i) => m.setColorAt(i, c));
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      m.material.depthWrite = (opacity > 0.5);
+      m.renderOrder = (opacity > 0.5) ? 3 : 1;
+      overlay.add(m);
+    }
+    // Percolating: keep blue but very translucent — context cloud
+    _addGroup(groups.percolating, 0x1e40af, 0.10);
+    // Isolated / no-cluster: fully opaque, distinct colours
+    _addGroup(groups.dead,        0x9ca3af, 0.95);
+    _addGroup(groups.top_only,    0x93c5fd, 0.95);
+    _addGroup(groups.bottom_only, 0xfbbf24, 0.95);
+    _addGroup(groups.no_cluster,  COL.SE_NON_REACH, 0.95);
+    if (state.scene) {
+      state.scene.add(overlay);
+      state.clusterOverlay = overlay;
+    }
+
     setLegend(state,
       `<b>SE Cluster Status</b>
        <span style="color:#1e40af">●</span> percolating (${counts.percolating})
+         <span style="color:#9ca3af;font-size:10px">— translucent (전 부피 가로지름)</span>
        <span style="color:#93c5fd">●</span> top-only (${counts.top_only})
+         <span style="color:#9ca3af;font-size:10px">— 윗판은 닿지만 바닥 끊김</span>
        <span style="color:#fbbf24">●</span> bottom-only (${counts.bottom_only})
-       <span style="color:#9ca3af">●</span> dead (${counts.dead})`);
+         <span style="color:#9ca3af;font-size:10px">— 바닥은 닿지만 윗판 끊김</span>
+       <span style="color:#9ca3af">●</span> dead (${counts.dead})
+         <span style="color:#9ca3af;font-size:10px">— 어디에도 안 닿는 고립</span>
+       <span style="color:#f87171">●</span> no cluster id (${counts.no_cluster})
+         <span style="color:#9ca3af;font-size:10px">— clustering 분석에서 누락 (raw SE)</span>
+       <span style="color:#e5e7eb">●</span> AM (faint background)
+         <span style="color:#9ca3af;font-size:10px">— 공간감용 ghost, 클러스터 분석 대상 아님</span>`);
     return;
   }
 
