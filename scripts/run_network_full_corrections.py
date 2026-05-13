@@ -666,8 +666,16 @@ def main() -> None:
 
     all_cases = discover_case_dirs()
     if args.cases:
-        wanted = set(args.cases)
+        # Accept either bare case IDs (`input_6mAh_real40_4`) or full/partial
+        # paths (`webapp/archive/후막(6mAh)/input_6mAh_real40_4`). Compare on
+        # the leaf name so users can copy-paste the same path they see in the
+        # webapp URL without "No cases found." friction.
+        wanted = {Path(c).name for c in args.cases}
         cases = [d for d in all_cases if d.name in wanted]
+        missing = wanted - {d.name for d in cases}
+        if missing:
+            print(f'  warning: not found in archive/results: {sorted(missing)}',
+                  flush=True)
     else:
         cases = all_cases
     if not cases:
