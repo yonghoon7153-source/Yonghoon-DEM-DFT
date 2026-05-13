@@ -1015,12 +1015,30 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'stress') {
-    /* All particles coloured jet by max contact stress (MPa) */
+    /* Per-particle MAX contact pressure, coolwarm colormap on a
+     * log10 scale clipped to the 5–95th percentile.  The raw
+     * distribution is heavy-tailed (a handful of extreme contacts
+     * can dwarf the median by 50×+), so a naïve linear normalise
+     * crushes 95 % of particles into the deep-blue end and the
+     * field looks featureless.  log + percentile clip keeps the
+     * middle of the colormap on the actual bulk of contacts. */
     const sMap = aux.stress_max || {};
     const all  = Object.values(sMap).filter(v => v > 0);
     if (!all.length) { setLegend(state, '<i>No stress data available.</i>'); return; }
-    const sMax = Math.max(...all), sMin = Math.min(...all);
-    const span = (sMax - sMin) || 1;
+    const sorted = [...all].sort((a, b) => a - b);
+    const pct = (p) => sorted[Math.max(0, Math.min(sorted.length - 1,
+        Math.floor(p * (sorted.length - 1))))];
+    const sLo  = Math.max(1.0, pct(0.05));
+    const sHi  = Math.max(sLo * 1.5, pct(0.95));
+    const sMed = pct(0.50);
+    const sMax = sorted[sorted.length - 1];
+    const logLo = Math.log10(sLo);
+    const logHi = Math.log10(sHi);
+    const norm = (s) => {
+      if (!(s > 0)) return 0;
+      return Math.max(0, Math.min(1,
+        (Math.log10(s) - logLo) / (logHi - logLo)));
+    };
     ['AM_P', 'AM_S', 'SE'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
@@ -1028,19 +1046,35 @@ function applyViewMode(state, mode) {
         if (s <= 0) {
           m.setColorAt(i, colDim);
         } else {
-          const tnorm = Math.max(0, Math.min(1, (s - sMin) / span));
-          m.setColorAt(i, new THREE.Color(jetColor(tnorm)));
+          m.setColorAt(i, new THREE.Color(coolwarmColor(norm(s))));
         }
       });
-      m.material.opacity = 0.85;
+      m.material.opacity = 0.92;
       m.material.transparent = true;
     });
     flushColors();
+    const stops = [0, 0.25, 0.5, 0.75, 1.0]
+      .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
-      `<b>Max Contact Pressure (MPa)</b>
-       <span style="color:#0000ff">■</span> ${sMin.toFixed(0)}
-       <span style="color:#00ff00">■</span> ${((sMax+sMin)/2).toFixed(0)}
-       <span style="color:#ff0000">■</span> ${sMax.toFixed(0)}`);
+      `<b>Stress Concentration — max contact pressure</b>
+       <span style="color:#9ca3af;font-size:10px">
+         (각 입자가 받은 contact pressure의 최댓값, MPa)
+       </span>
+       <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
+         background:linear-gradient(90deg,${stops.join(',')})"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+         <span>${sLo.toFixed(0)}</span>
+         <span>${Math.round(Math.pow(10,(logLo+logHi)/2))}</span>
+         <span>${sHi.toFixed(0)}</span>
+       </div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#cbd5e1">
+         <span>5th %ile</span><span>median ≈ ${sMed.toFixed(0)}</span><span>95th %ile</span>
+       </div>
+       <span style="color:#9ca3af;font-size:10px;line-height:1.4">
+         · 파랑 = 낮은 압력 / 부담 적은 입자<br>
+         · 빨강 = 압력 hotspot — force chain의 기둥, fracture risk 큼<br>
+         · log scale, 극단치(max ≈ ${sMax.toFixed(0)})는 색 saturation 방지
+       </span>`);
     return;
   }
 
