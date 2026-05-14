@@ -78,14 +78,23 @@ show_v0() {
 
     # iter count
     local N_SCF=$(grep -ca "^     iteration #" "$OUT" 2>/dev/null)
-    local N_BFGS=$(grep -ca "^     BFGS Geometry Optimization" "$OUT" 2>/dev/null)
-    local N_NEW_E=$(grep -ca "new energy" "$OUT" 2>/dev/null)
+    # BFGS step count - QE prints "number of bfgs steps    =  N"
+    local N_BFGS=$(grep -a "number of bfgs steps" "$OUT" 2>/dev/null | tail -1 | awk '{print $NF}')
+    [ -z "$N_BFGS" ] && N_BFGS=0
+    # ATOMIC_POSITIONS blocks = actual atom moves since restart
+    local N_MOVES=$(grep -ca "^ATOMIC_POSITIONS" "$OUT" 2>/dev/null)
+    # Total force evaluations (= one per SCF cycle = one per BFGS step)
+    local N_FORCE=$(grep -ca "Total force" "$OUT" 2>/dev/null)
     echo -e "  SCF iter total   : $N_SCF"
-    echo -e "  BFGS step (new E): ${C}$N_NEW_E${N}    (BFGS init headers: $N_BFGS)"
+    echo -e "  ${C}BFGS step (cumulative): $N_BFGS${N}    (atom moves this run: $N_MOVES,  SCF cycles: $N_FORCE)"
 
     # latest force
     local FORCE=$(grep -a "Total force" "$OUT" | tail -1 | awk '{print $4}')
     [ -n "$FORCE" ] && echo -e "  latest Total force = $FORCE  (target 1e-4)"
+
+    # latest few ! total energy values (energy trajectory across BFGS steps)
+    echo -e "  ${D}Last 5 ! total energy:${N}"
+    grep -a "^!" "$OUT" 2>/dev/null | tail -5 | awk '{print "    " $0}'
 
     # latest BFGS energy
     local NEW_E=$(grep -aE "energy.*new" "$OUT" | tail -1)
