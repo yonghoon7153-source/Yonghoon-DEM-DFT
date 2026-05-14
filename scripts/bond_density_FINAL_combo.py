@@ -118,8 +118,8 @@ def main():
     print("=" * 110)
 
     for comp, info in COMBO.items():
-        se = read(info['se'])
-        ncm = read(info['ncm'])
+        se = read(info['se'], format='extxyz')
+        ncm = read(info['ncm'], format='extxyz')
         if info['face'] == 'B':
             se = flip_se_xy(se)
         stacked, n_se, n_ncm = stack(se, ncm, D_WELL)

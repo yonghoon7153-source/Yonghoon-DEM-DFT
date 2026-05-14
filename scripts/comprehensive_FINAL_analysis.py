@@ -57,7 +57,7 @@ def flip_se_xy(se):
 
 def load_se(comp):
     info = COMBO[comp]
-    se = read(WORK / info['se'])
+    se = read(WORK / info['se'], format='extxyz')
     if info['face'] == 'B':
         se = flip_se_xy(se)
     return se
