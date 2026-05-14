@@ -1350,7 +1350,13 @@ function applyViewMode(state, mode) {
          · 빨강 = low coverage → SE 계면 부족, σ_ionic 손실 risk<br>
          · 초록 = high coverage → 이온 통로 안정<br>
          · mean ≈ ${mean.toFixed(1)} %${nMissing ? ` (no-data AM: ${nMissing})` : ''}
-       </span>`);
+       </span>
+       <button id="coverage-z-modal-btn" class="data-modal-btn">
+         <span class="ico">📊</span><span>Z-profile 데이터</span>
+       </button>`);
+    const covBtn = document.getElementById('coverage-z-modal-btn');
+    if (covBtn) covBtn.addEventListener('click',
+      () => showZProfileDataHub(state, 'coverage'));
     return;
   }
 
@@ -2097,6 +2103,7 @@ async function showZProfileDataHub(state, defaultTab) {
       <div style="display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid #e5e7eb">
         <button class="zh-tab" data-tab="brittle"   style="${tabStyle(false)}">Brittle stages</button>
         <button class="zh-tab" data-tab="stress"    style="${tabStyle(false)}">Stress hotspots</button>
+        <button class="zh-tab" data-tab="coverage"  style="${tabStyle(false)}">Coverage (AM)</button>
         <button class="zh-tab" data-tab="combined"  style="${tabStyle(false)}">Combined overlay</button>
       </div>
       <div id="zh-content" style="max-height:58vh;overflow:auto;border:1px solid #e5e7eb;border-radius:6px">
@@ -2118,17 +2125,21 @@ async function showZProfileDataHub(state, defaultTab) {
   document.getElementById('zh-close-btn').addEventListener('click', close);
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
 
-  /* Fetch brittle + stress data concurrently */
-  let brittle, stress, fetchErr;
+  /* Fetch brittle + stress + coverage data concurrently.  Coverage
+   * is optional — older cases may not have coverage_per_am.csv yet,
+   * so we treat a 404 there as "tab disabled" rather than fatal. */
+  let brittle, stress, coverage = null, fetchErr;
   try {
-    const [rB, rS] = await Promise.all([
+    const [rB, rS, rC] = await Promise.all([
       fetch(urlOf('/brittle-z-data')),
       fetch(urlOf('/stress-z-data')),
+      fetch(urlOf('/coverage-z-data')),
     ]);
     if (!rB.ok) throw new Error('brittle: HTTP ' + rB.status);
     if (!rS.ok) throw new Error('stress: HTTP ' + rS.status);
     brittle = await rB.json();
     stress  = await rS.json();
+    if (rC.ok) coverage = await rC.json();
   } catch (e) {
     fetchErr = e;
   }
@@ -2140,15 +2151,29 @@ async function showZProfileDataHub(state, defaultTab) {
   }
 
   /* Summary line (combines info from both endpoints) */
+  const covSummary = coverage
+    ? ` · coverage: ${coverage.n_with_cov} AM, mean ${(coverage.cMean || 0).toFixed(1)}%`
+    : ' · coverage: no coverage_per_am.csv';
   document.getElementById('zh-summary').innerHTML =
     `<b>${brittle.case_name}</b> · thickness ${(brittle.thickness_um || 0).toFixed(1)} µm<br>`
     + `<span style="color:#6b7280">brittle: ${brittle.n_total} AM-AM contacts `
     + `(damaged ${brittle.n_damaged}, ${(brittle.damaged_pct || 0).toFixed(1)}%) · `
-    + `stress: ${stress.n_with_stress} particles ≥ 0 MPa, median ${(stress.sMed || 0).toFixed(0)} / p95 ${(stress.sHi || 0).toFixed(0)} MPa</span>`;
+    + `stress: ${stress.n_with_stress} particles ≥ 0 MPa, median ${(stress.sMed || 0).toFixed(0)} / p95 ${(stress.sHi || 0).toFixed(0)} MPa`
+    + `${covSummary}</span>`;
 
-  /* Tab state machine */
-  const tabs = ['brittle', 'stress', 'combined'];
+  /* Tab state machine — coverage tab disabled if no data */
+  if (!coverage) {
+    const covTab = overlay.querySelector('.zh-tab[data-tab="coverage"]');
+    if (covTab) {
+      covTab.disabled = true;
+      covTab.style.opacity = '0.45';
+      covTab.style.cursor = 'not-allowed';
+      covTab.title = 'No coverage_per_am.csv for this case';
+    }
+  }
+  const tabs = ['brittle', 'stress', 'coverage', 'combined'];
   let active = tabs.includes(defaultTab) ? defaultTab : 'brittle';
+  if (active === 'coverage' && !coverage) active = 'brittle';
   const tabEls = overlay.querySelectorAll('.zh-tab');
   const content = document.getElementById('zh-content');
   const ctxEl = document.getElementById('zh-context');
@@ -2165,6 +2190,10 @@ async function showZProfileDataHub(state, defaultTab) {
     } else if (name === 'stress') {
       content.innerHTML = renderStressTable(stress);
       ctxEl.textContent = 'Per-particle max contact pressure (MPa) stats per z-bin';
+    } else if (name === 'coverage') {
+      content.innerHTML = coverage ? renderCoverageTable(coverage)
+        : `<div style="padding:30px;color:#888">No coverage data — run scripts/coverage_physics_vs_hertzian.py first.</div>`;
+      ctxEl.textContent = 'Per-AM SE-coverage % stats per z-bin (RdYlGn 5-class bands)';
     } else {
       content.innerHTML =
         `<div style="text-align:center;padding:10px">
@@ -2186,8 +2215,9 @@ async function showZProfileDataHub(state, defaultTab) {
   pngBtn.addEventListener('click', async (ev) => {
     const btn = ev.currentTarget;
     btn.textContent = '… rendering';
-    const suffix = active === 'brittle' ? '/brittle-z-png'
-                  : active === 'stress' ? '/stress-z-png'
+    const suffix = active === 'brittle'  ? '/brittle-z-png'
+                  : active === 'stress'   ? '/stress-z-png'
+                  : active === 'coverage' ? '/coverage-z-png'
                   : '/combined-z-png';
     const prefix = active;
     try {
@@ -2205,8 +2235,9 @@ async function showZProfileDataHub(state, defaultTab) {
   csvBtn.addEventListener('click', async (ev) => {
     const btn = ev.currentTarget;
     btn.textContent = '… fetching';
-    const suffix = active === 'brittle' ? '/brittle-z-csv'
-                  : active === 'stress' ? '/stress-z-csv'
+    const suffix = active === 'brittle'  ? '/brittle-z-csv'
+                  : active === 'stress'   ? '/stress-z-csv'
+                  : active === 'coverage' ? '/coverage-z-csv'
                   : '/combined-z-csv';
     const prefix = active;
     try {
@@ -2323,6 +2354,67 @@ function renderStressTable(profile) {
       <td style="padding:4px 8px;text-align:right">${nS}</td>
       <td style="padding:4px 8px;text-align:right">${nE}</td>`;
     brackets.forEach(b => {
+      html += `<td style="padding:4px 8px;text-align:right">${(cpB[b]||[])[i]||0}</td>`;
+    });
+    html += '</tr>';
+  }
+  return html + '</tbody></table>';
+}
+
+
+/* Coverage table renderer for the Z-profile Data Hub.  Uses
+ * ColorBrewer RdYlGn 5-class band colour headers so each bracket
+ * column reads as the same bracket the 3D viewer paints. */
+function renderCoverageTable(profile) {
+  const bands = ['critical','low','mid','high','optimal'];
+  const bandColors = {
+    critical: '#d7191c', low: '#fdae61', mid: '#ffffbf',
+    high:     '#a6d96a', optimal: '#1a9641',
+  };
+  const types = ['AM_P','AM_S'];
+  const typeColors = { 'AM_P': '#444', 'AM_S': '#888' };
+
+  const centers = profile.bin_centers_um || [];
+  const edges   = profile.bin_edges_um   || [];
+  const mean_   = profile.mean_pct       || [];
+  const med_    = profile.median_pct     || [];
+  const p5_     = profile.p5_pct         || [];
+  const p95_    = profile.p95_pct        || [];
+  const cpT     = profile.counts_per_type || {};
+  const cpB     = profile.counts_by_band  || {};
+  const fmt = (x, d=1) => (typeof x === 'number' ? x.toFixed(d) : x);
+
+  let html = `<table style="border-collapse:collapse;width:100%;font:11px 'JetBrains Mono',monospace;color:#222;background:#fff">
+    <thead style="background:#f3f4f6;position:sticky;top:0">
+      <tr>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">z<br>(µm)</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">N</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">mean<br>%</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">median<br>%</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">p5<br>%</th>
+        <th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd">p95<br>%</th>`;
+  types.forEach(t => {
+    html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;background:${typeColors[t]};color:#fff">${t}</th>`;
+  });
+  bands.forEach(b => {
+    const txtColor = (b === 'mid') ? '#000' : '#fff';
+    html += `<th style="padding:6px 8px;text-align:right;border-bottom:1px solid #ddd;background:${bandColors[b]};color:${txtColor}">${b}</th>`;
+  });
+  html += `</tr></thead><tbody>`;
+
+  for (let i = 0; i < centers.length; i++) {
+    const nP = (cpT.AM_P||[])[i]||0, nS = (cpT.AM_S||[])[i]||0;
+    const tot = nP + nS;
+    html += `<tr${i%2 ? ' style="background:#fafafa"':''}>
+      <td style="padding:4px 8px;text-align:right">${fmt(centers[i],1)}</td>
+      <td style="padding:4px 8px;text-align:right;font-weight:600">${tot}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(mean_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(med_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(p5_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${fmt(p95_[i])}</td>
+      <td style="padding:4px 8px;text-align:right">${nP}</td>
+      <td style="padding:4px 8px;text-align:right">${nS}</td>`;
+    bands.forEach(b => {
       html += `<td style="padding:4px 8px;text-align:right">${(cpB[b]||[])[i]||0}</td>`;
     });
     html += '</tr>';
