@@ -286,6 +286,87 @@ Cl이 0.07 Å로 가장 가까이 표면.
 → Cl-coherent termination은 슬랩이 자연스럽게 그렇게 정렬된 결과.
 **Cherry-pick 아님을 슬랩 구조가 증명** (Section 7의 defense 참고).
 
+### 5.1 왜 S²⁻ (charge −2)가 Br⁻ (charge −1)보다 더 표면 노출되나
+
+직관적으로는 charge가 작은 Br⁻이 표면에 더 잘 갈 것 같지만, 실제로는
+**S²⁻가 표면, Br⁻이 벌크**. 이유는 단순 전하 효과가 아니라 **argyrodite
+결정 구조의 site-specific 특성** 때문.
+
+**Argyrodite의 두 anion 사이트**:
+
+| 사이트 | 표준 점유 (Li₆PS₅X) | 위치 | 환경 |
+|--------|--------------------|------|------|
+| **4a** | "free" S²⁻ | (001) cleavage 평면 | Li 6개 둘러쌈 (Li₂S layer) |
+| **4d** | 할라이드 X⁻ (Cl/Br) | bulk 깊숙이 | Li 4개 + PS₄³⁻ 환경 |
+| (PS₄ 사면체) | 공유결합 S | bulk 내부 | P-S 공유결합, 표면 안 옴 |
+
+**(001) 결정면의 자연 cleavage**:
+
+Argyrodite (001) 표면이 자르는 평면은 **Li₂S 평면 = 4a 사이트의 free S²⁻와
+주변 Li⁺**. 이건 결정학적으로 **가장 낮은 표면 에너지 (γ)를 갖는 cleavage
+plane** (Schwöbel 2016, Sufyan 2024 등 literature 표준).
+
+→ Li₆PS₅Cl/Br은 어떻게 잘라도 **4a 사이트의 free S²⁻가 표면에 자연 노출**.
+PS₄ 사면체는 P-S 공유결합으로 안정 → 표면에 안 옴. **결정 구조가 결정하는
+자연 종단**, charge 기준 아님.
+
+**왜 standard Li₆PS₅X에서 Cl/Br은 표면 안 옴?**
+
+표준 조성 Li₆PS₅X (X 함량 = 1.0)에서:
+- 4a 사이트는 거의 S²⁻로만 채워짐
+- 4d 사이트가 Cl⁻ 또는 Br⁻ 자리 → **bulk 위치**
+- → comp1 (Li₆PS₅Cl)에서 Cl이 표면 가까이 (0.46 Å) 보이지만 이는 일부
+  4a/4d disorder + slab cleavage 모호성 때문. 대부분은 standard 4d (bulk).
+
+**Li₅.₄ family에서는 왜 Cl이 표면에 명확히 노출?**
+
+Li₅.₄PS₄.₄Cl₁.₀Br₀.₆ 같은 **halide-rich 조성**:
+- 표준 Li₆PS₅X (X=1.0)보다 halide 총량 **많음** (Cl+Br=1.6)
+- 4d 사이트가 부족함 → 일부 halide가 **4a 사이트로 swap (S²⁻와 자리 교환)**
+- 이건 literature에서 잘 알려진 "**anion site disorder (4a/4d mixing)**"
+  (Stamminger 2020, Adeli 2023 등)
+
+**Cl이 4a 선호, Br이 4d 유지 — 이온 크기 호환성**:
+
+| 이온 | 이온반지름 | 4a 사이트 (작음) | 4d 사이트 (큼) |
+|------|----------|------------------|----------------|
+| S²⁻ | 1.84 Å | **잘 맞음** (원래 자리) | 약간 큼 |
+| **Cl⁻** | **1.81 Å** | **잘 맞음** (S와 거의 같은 크기) | 약간 작음 |
+| **Br⁻** | **1.96 Å** | **너무 큼** (4a strain 큼) | **잘 맞음** ✓ |
+
+- Cl⁻은 S²⁻와 크기 거의 같음 → 4a (cleavage 평면) swap 자연스러움 → **표면**
+  노출.
+- Br⁻은 4a에 들어가면 격자 strain 크게 발생 → **4d (bulk) 머무름** 선호.
+
+→ **Cl ↔ S²⁻ swap이 4a 사이트에서 일어나서 Cl이 표면에 나옴**. Br은 4d
+사이트에 정착해서 bulk에 머무름. 우리 결과 (Cl < 1Å 표면, Br > 5Å bulk)는
+이 site preference의 직접 결과.
+
+### 5.2 "전하수 → 표면 선호" 직관이 왜 틀렸나
+
+**고전적 isolated ion 모델**: charge 큰 이온은 Madelung 인력 받아서 bulk
+머무름. charge 작은 이온은 표면 선호. → 이 모델은 freely solvated ion에서
+맞음.
+
+**Argyrodite 같은 framework structure에서는 다른 원리**:
+- 이온이 자유롭게 이동 안 함. **고정된 4a/4d 사이트에 박혀있음**.
+- 사이트 자체의 위치 (cleavage plane vs bulk)가 표면-bulk 결정.
+- 이온이 어느 사이트에 들어가는지는 **사이트 크기 vs 이온 크기 (ionic radius
+  compatibility)**가 주요인.
+- charge 효과는 **이미 site-specific Madelung 환경에 흡수**되어 차이 만들기
+  어려움.
+
+따라서 직관과 반대로:
+- S²⁻ (charge −2) at 4a → cleavage plane → **표면 노출** (charge 무관, 구조적 필연).
+- Cl⁻ (charge −1) at 4a swap (Li₅.₄ family) → 같은 평면 → **표면 노출** (size 호환).
+- Br⁻ (charge −1) at 4d → bulk → **표면 안 옴** (size 큼, 4a 못 들어감).
+
+**정리**: 표면 노출은 **(1) 결정의 자연 cleavage plane (Li₂S 평면) + (2) 이온
+반지름과 사이트 크기 호환성**으로 결정. 단순 charge 비교가 아님. argyrodite
+의 (001) cleavage가 항상 Li-S 평면을 끊고, 4a 사이트의 free S²⁻가 표면 노출됨.
+Li₅.₄ family는 halide 과잉 + Cl의 4a 호환 크기 → Cl이 4a swap으로 표면 진입.
+Br은 4d 사이트 크기에 최적화되어 bulk 유지.
+
 ---
 
 ## 6. 결과 ④ — 벌크 Cl 함량이 family 내부 순위 결정
