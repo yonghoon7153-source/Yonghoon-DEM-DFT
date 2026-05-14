@@ -145,12 +145,15 @@ def stack(se, ncm, gap):
     return combined
 
 
+_predictor = None
+
 def make_calc():
-    from fairchem.core import OCPCalculator
-    return OCPCalculator(
-        model_name='UMA',
-        model_kwargs={'task_name': 'omat', 'force_dropout': False},
-    )
+    global _predictor
+    from fairchem.core import pretrained_mlip
+    from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
+    if _predictor is None:
+        _predictor = pretrained_mlip.get_predict_unit("uma-s-1p1", device="cuda")
+    return FAIRChemCalculator(_predictor, task_name="omat")
 
 
 def get_energy(atoms, calc):
