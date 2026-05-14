@@ -97,6 +97,16 @@
 
 ---
 
+## 2026-05-14
+
+| 시각 | branch | action | status | notes |
+|------|--------|--------|--------|-------|
+| now | debug-api-500-error-iukkt | tools/verify_slabs.py KISTI 원본 그대로 포팅 + 잘못된 make_comp35_v2_slab.py 삭제 | DONE | KISTI `/scratch/x3430a02/kgy/manuscript_support/adhesion_v5_v2/verify_slabs.py` 를 사용자가 paste. 그대로 `tools/verify_slabs.py` 로 보존 (V2_FILES = comp1/comp2/modelC; REPEAT_LI5P4=(2,2,1)). orthogonalize 는 verify 용; PRESERVED 슬랩에는 사용자가 별도 적용. comp4_slab_v2_PRESERVED.xyz 는 rhombo 셀(ortho 안 됨) — 즉 production 슬랩 = bulk → repeat(2,2,1), no ortho, no vacuum. |
+| now | debug-api-500-error-iukkt | 잘못된 슬랩 산출물 회수 | DONE | `db/inputs/v2_v0_bulk/comp{3,5}_v2_slab.xyz` 삭제 (vacuum 30 A 임의 추가는 PRESERVED 와 다름). |
+| now | debug-api-500-error-iukkt | CLAUDE.md 위반 인정 | NOTE | 새 슬랩 스크립트(make_comp35_v2_slab.py) 임의 생성 → 사용자가 두 번 거절. 룰: 기존 KISTI 스크립트 paste 받아 그대로 보존. |
+
+---
+
 ## 2026-05-11
 
 | 시각 | branch | action | status | notes |
