@@ -158,16 +158,64 @@ Br 가 Cl 보다 **0.15 Å 더 크다** (이온이 더 "뚱뚱").
 
 ### 2.4. 왜 Li5.4 가 Li6 보다 Wad 큰가 (Li vacancy 효과)
 
-| family | 구조 | 표면 anion 분포 | ANION-O 밀도 |
-|--------|------|------------------|---------------|
-| Li6 (cubic) | 등방성, 모든 방향에서 anion dense | 표면에 S + Cl/Br 다 노출 | 5.59–5.70 (high) |
-| Li5.4 (rhombo) | **5-layer stacking 이방성**, Li vacancy 가 halide 와 PS₄ layer 를 c-축 따라 분리 | 일부 anion 이 PS₄ 뒤에 묻혀 표면에 안 보임 | 4.79–4.92 (low) |
+**구조적 차이 (table):**
 
-**Li vacancy 가 만드는 효과:** Li5.4 의 c-축은 5-layer 주기 (Li layer, PS₄ layer, halide layer 들이 분리됨). 표면을 자르면 (cleave) 어느 면을 자르더라도 일부 anion 은 표면 아래로 들어감.
+| family | 구조 | 표면 anion 분포 | ANION-O 밀도 | Li-O 밀도 |
+|--------|------|------------------|---------------|------------|
+| Li6 (cubic) | 등방성, 모든 방향에서 anion dense | S + Cl/Br 모두 표면에 노출 | **5.59–5.70 (high)** | **4.4–4.5 (high)** |
+| Li5.4 (rhombo) | **5-layer stacking 이방성** | 일부 anion 이 PS₄ 뒤로 묻힘 | **4.79–4.92 (low)** | **3.2–3.5 (low)** |
 
-→ Li5.4 family 가 **자연적으로 lower ANION-O = higher Wad**.
+**Li vacancy 가 만드는 3가지 효과 (정량 분석):**
 
-→ **Li vacancy 가 기계적-화학적 advantage 의 원자 단위 근원.**
+#### (a) Halide segregation along c-axis (1차 효과)
+
+Li5.4 family 의 c-축은 **5-layer 주기 (Li layer, PS₄ layer, halide layer)** 가 분리됨. Li vacancy 가 결정 내부의 안정성을 유지하기 위해 charge balance 가 필요한데, 이게 halide layer 의 well-defined ordering 으로 이어짐.
+
+→ **표면을 자르면 (cleave) 어느 면을 잘라도 일부 anion 이 PS₄ 뒤로 들어감.**
+→ **interface 에 노출되는 anion 갯수 ↓** → ANION-O 밀도 ↓ → Pauli repulsion ↓ → **Wad ↑**
+
+**정량**: ANION-O 밀도 **−14%** (5.65 → 4.85) 변화.
+
+#### (b) Li 자체의 표면 노출도 ↓ (역효과)
+
+Li5.4 의 Li 함량은 Li6 보다 적음 (5.4 vs 6.0 per fu, **−10%**). Vacancy 때문에:
+
+- 표면에 노출되는 Li 갯수 ↓
+- **Li⁺ ↔ O²⁻ attractive 상호작용 (∝ Li-O 밀도) ↓**
+- 이건 **Wad 를 깎는 방향** (attractive 줄어들면 Wad 작아짐)
+
+**정량**: Li-O 밀도 **−27%** (4.45 → 3.25). attraction loss.
+
+#### (c) 두 효과의 net balance
+
+|  | Li5.4 vs Li6 차이 | Wad 에 미치는 effect | 부호 |
+|---|---|---|---|
+| ANION-O 감소 | −0.75 (−14%) | **less Pauli repulsion** | **+Wad** (favorable) |
+| Li-O 감소 | −1.22 (−27%) | less Li-O attraction | −Wad (unfavorable) |
+| **net** | — | **anion-O reduction dominates** | **+Wad** ✓ |
+
+**왜 anion-O 감소가 dominant?** Per-pair 기준으로:
+- **anion-O Pauli 반발** (closed-shell ↔ closed-shell): **강한 short-range force** (~exp(−d/λ), λ ~ 0.3 Å)
+- **Li-O Coulomb attraction**: long-range, 약함 (q_Li=1, q_O=2 같이 작은 charge)
+- → **anion-O 한 쌍 제거 ≫ Li-O 한 쌍 제거** (energy 측면에서)
+
+→ Li vacancy 가 만든 surface anion segregation 의 **net effect 는 positive Wad**.
+
+#### (d) Trade-off table (vacancy 의 양면성)
+
+| Li vacancy 효과 | 기계적 (Wad) | 이온 전도도 (σ) |
+|----|---|---|
+| Halide segregation | +Wad (less repulsion) ✓ | (영향 미미) |
+| Li-O attraction loss | −Wad (less binding) | (영향 미미) |
+| Li mobility ↑ (vacancy assisted hopping) | (영향 미미) | **+σ (favorable)** ✓ |
+
+→ Li5.4 family 는 **σ 와 Wad 둘 다 favorable** — vacancy 의 dual benefit. 이게 Li5.4 family 가 paper Wad rank 에서 Li6 family 보다 위에 있는 이유 (316/298/249 vs 194/180).
+
+#### Summary
+
+→ Li5.4 family 가 **자연적으로 lower ANION-O = higher Wad** (anion-O reduction dominates Li-O reduction).
+
+→ **Li vacancy 가 기계적-화학적-mobility 3 way advantage 의 원자 단위 근원.**
 
 ### 2.5. Within-Li5.4 mechanism 정량 (n=3, Spearman ρ = ±1.000)
 
