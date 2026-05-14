@@ -137,12 +137,110 @@ d=1.4 Å에서 15개 SE-NCM 원소 쌍의 접촉 밀도, 36 registry 평균:
 
 **3대 driver 해석**:
 
-1. **Cl–O (R=+0.975)** — Cl 표면 노출 → 결합 강화. Li₅.₄가 Li₆의 10배 높은
-   Cl-O density. Li-매개 Cl-Li-O 가교 또는 Madelung-안정화 좌표.
-2. **S–O (R=−0.973)** — S²⁻과 O²⁻ 둘 다 anion → 가까이 있으면 Pauli 반발.
-   Li₆은 S-O density 0.10~0.12 (높음), Li₅.₄ comp3/4는 0 (없음).
-3. **Li–O (R=+0.771)** — 보편 attractive 기여 (literature 일관). Li₅.₄가
-   Li₆보다 평균 ~1.5배 높음.
+1. **Cl–O (R=+0.975)** — Cl 표면 노출 → 결합 강화.
+
+   **직관과 다른 점**: Cl⁻와 O²⁻ 둘 다 anion이라 직접 접촉은 반발일 것 같지만,
+   R=+0.975로 강한 positive correlation. 이유:
+
+   **Cl-O density는 직접 접촉이 아니라 Cl-Li-O 가교 빈도를 측정**.
+   - Cl-O cutoff 3.2 Å = Cl 이온반지름(1.81) + O 이온반지름(1.40) = 이온 접촉 거리.
+   - 이 거리에서 Cl⁻와 O²⁻는 직접 결합 아니라 **Li⁺가 사이에 끼어있는 가교 구조**:
+     `[Cl⁻ — Li⁺ — O²⁻]`
+   - Cl⁻-Li⁺ 인력 (강함) + Li⁺-O²⁻ 인력 (NCM 결합 핵심) → 전체 **3원자 결합망**.
+   - Cl-O 직접 정전 반발은 3.2 Å에서 약함 (단가 Cl⁻ × 단가 O²⁻ Coulomb 작음).
+
+   **Cl이 S보다 "덜 나쁜" anion**:
+   - 정전 반발: Cl⁻-O²⁻ ∝ (−1)(−2)/r = +2k/r vs S²⁻-O²⁻ ∝ (−2)(−2)/r = **+4k/r (2배)**.
+   - LiCl 표면 (rock-salt 형태) → NCM oxide와 wet 잘 됨.
+   - Li₂S 표면 → NCM oxide와 incompatible (Pauli 큼).
+
+   **정량**: Li₅.₄가 Li₆의 10배 높은 Cl-O density (0.084 vs 0.008) → Cl-Li-O
+   가교 결합망이 10배 많이 형성 → 결합 강화.
+
+2. **S–O (R=−0.973)** — S 표면 노출 → 결합 약화.
+
+   **직접 anion-anion Pauli 반발**:
+   - S²⁻-O²⁻: charge가 둘 다 -2 → Coulomb 반발 +4k/r (Cl-O의 2배).
+   - S²⁻ (1.84 Å)이 O²⁻ (1.40 Å)와 가까우면 orbital overlap 심함 → Pauli 반발.
+   - Li가 사이에 끼이지 못함: S와 O가 모두 음전하 강해서 Li 매개해도 net 반발.
+
+   **Li₆ 표면이 Li₂S 종단** (literature 표준, Section 12) → S²⁻가 NCM의 O²⁻
+   바로 위에 위치 → 직접 Pauli 반발 → 결합 약화.
+
+   **정량**: Li₆ S-O density = 0.11~0.12, Li₅.₄ comp3/4는 0. Li₆이 강한 반발
+   페널티를 받음.
+
+3. **Li–O (R=+0.771)** — 보편 attractive 기여.
+
+   - Li⁺와 O²⁻은 정전기적 인력 ((−1)(−2)/r = −2k/r, Cl-O와 같은 절댓값이지만 부호 인력).
+   - **literature에서 cathode-SE adhesion의 핵심 driver**로 잘 보고됨.
+   - 모든 5 comp가 surface에 Li 가짐 → baseline Li-O attractive 기여 보편적.
+   - Li₅.₄가 Li₆보다 평균 ~1.5배 높은 Li-O density.
+
+### 4.1.1 왜 Cl-O와 S-O가 정반대 부호로 작용하는가
+
+같은 "anion-O 접촉"인데 Cl-O는 R=+0.975 (positive driver), S-O는 R=−0.973
+(negative driver)로 완전히 반대 부호. 이는 세 가지 물리적 차이 때문:
+
+**(1) 전하수 (Charge) — 정전 반발의 결정적 차이**:
+
+| 쌍 | charge product | Coulomb 반발 에너지 (∝ q₁q₂/r) | 비율 |
+|----|---------------|-------------------------------|------|
+| **Cl⁻-O²⁻** | (−1)×(−2) = +2 | **+2k/r** | 1× |
+| **S²⁻-O²⁻** | (−2)×(−2) = +4 | **+4k/r** | **2×** |
+
+S²⁻가 Cl⁻보다 전하가 2배 → **O²⁻와의 정전 반발도 정확히 2배**. 같은 거리에서
+S-O Pauli + 정전반발 합이 Cl-O보다 압도적으로 큼.
+
+**(2) Li 매개 가교 가능성**:
+
+```
+Cl-O 가교 가능:   [Cl⁻] -- [Li⁺] -- [O²⁻]   ← 안정한 ionic 3체 구조
+S-O 가교 불가:    [S²⁻] -- [Li⁺] -- [O²⁻]   ← Li가 한쪽으로 끌려감 (S²⁻ 강함)
+```
+
+- **Cl-Li-O**: Cl⁻ (-1)이 Li⁺ (+1)와 매칭되고, Li가 자유롭게 O²⁻에도 결합 →
+  안정한 가교 (Cl⁻ — Li⁺ — O²⁻ 3원자 ionic 사슬).
+- **S-Li-O**: S²⁻ (-2)가 Li⁺ (+1)를 강하게 잡아당김 → Li가 S 쪽에 묶여서
+  O²⁻와 결합 못 함. 결국 S²⁻와 O²⁻가 가까이 마주봐서 직접 Pauli 반발.
+
+→ Cl-O 접촉은 **Li 매개 인력의 신호**, S-O 접촉은 **직접 Pauli 반발의 신호**.
+
+**(3) 표면 chemistry의 literature 표준**:
+
+| 표면 종단 | Cl-rich | S-rich (Li₂S) |
+|----------|---------|---------------|
+| 결정 구조 | LiCl rock-salt 형태 | Li₂S anti-fluorite |
+| NCM oxide와 호환 | **좋음** (이온성 인력 잘 형성) | **나쁨** (Li₂S vs LiNCMO₂ 모두 큰 anion + Pauli) |
+| 계면 wet 능력 | 잘 wet (literature) | 격리되어 buffer 필요 (literature, Schwöbel) |
+| literature 보고 | "Cl forms surface LiCl nanoparticles" (Strauss 2023), "Cl enriched at cathode interface" (Science 2024) | "Li₂S layer typically buffers reactive PS₄" |
+
+LiCl 표면은 양극 산화물과 직접 결합 잘 형성하고, Li₂S 표면은 buffer가
+필요할 정도로 incompatible. 표면 chemistry 자체가 정반대.
+
+### 4.1.2 종합 효과 (Cl-O + S-O + Li-O의 합)
+
+3대 driver를 **net binding score** 추정으로 더해보면:
+
+| comp | Cl-O density | S-O density | Li-O density | **합 (Cl-O − S-O + Li-O)** | paper W_ad |
+|------|-------------:|------------:|-------------:|----------------------------:|-----------:|
+| comp3 | 0.084 | 0.000 | 0.085 | **+0.169** | 316 |
+| comp4 | 0.091 | 0.000 | 0.112 | **+0.203** | 298 |
+| comp5 | 0.059 | 0.073 | 0.039 | **+0.025** | 249 |
+| comp1 | 0.008 | 0.119 | 0.057 | **−0.054** | 194 |
+| comp2 | 0.011 | 0.108 | 0.037 | **−0.060** | 180 |
+
+→ **3대 driver의 단순 합 (Cl-O + Li-O − S-O)이 paper W_ad rank를 거의 따라감**
+(family 분리 명확, comp3/4 만 small swap).
+
+**Family 분리 메커니즘 한 줄 요약**:
+- Li₅.₄ family: **Cl 표면 (인력) + S 없음 (반발 없음) + Li 풍부 (인력)** →
+  세 효과 모두 결합 유리 → 강함.
+- Li₆ family: **S 표면 (반발) + Cl 거의 없음 (인력 없음) + Li 적음 (인력 작음)** →
+  세 효과 모두 결합 불리 → 약함.
+
+Cl-O와 S-O는 mirror image driver — **표면 anion이 어떤 종류인지에 따라 부호가
+결정**됨. 두 효과가 paper W_ad의 family 분리를 정량적으로 가장 잘 설명.
 
 **P-O 가설 폐기**: 단일 R1_origin (shift=0,0) registry에서 P-O = 16 (Li₆)
 vs 0 (Li₅.₄)로 보였던 것은 **single-config artifact**. 36-reg 평균하면 P-O가
