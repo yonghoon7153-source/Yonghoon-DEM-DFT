@@ -46,9 +46,8 @@ DW_STUB = {
 EISO_KEY = {'comp1':'comp1','comp2':'comp2','comp3_v1':'comp3','comp4_v1':'comp4','comp5_v1':'comp5'}
 
 def get_dw(c):
-    p = EISO / f'{EISO_KEY[c]}_done.json'
-    if p.exists():
-        return float(json.load(open(p))['delta_Wad_J_per_m2'])
+    # v1 has no separate eiso fix — eiso fix folder only contains v2.
+    # Use DW_STUB (uniform 0.44 Li5.4, ~2.5-2.6 Li6) per OLD figure era.
     return DW_STUB[c]
 
 # Load all data
