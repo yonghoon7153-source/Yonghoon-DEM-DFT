@@ -22,8 +22,10 @@
   검증 안 됨
 
 **다음 액션 (RESUME HERE)**:
-comp3_v2 / comp5_v2는 shift 2 그대로 두고, **comp4_v2만 shift 0/1/3/4로
-face_flip 추가 실행** → paper rank 맞는 comp4 shift 찾기.
+comp3_v2는 shift 2 그대로 두고 (paper에서 가장 깊은 comp), **comp4_v2와
+comp5_v2 모두 shift 0/1/3/4로 face_flip 추가 실행** → paper rank 맞는
+(comp4_shift, comp5_shift) 조합 찾기. comp5도 함께 sweep 하는 이유: comp5
+shallower 후보 찾으면 paper rank 만들 공간 확보.
 
 표면 chemistry 확인됨 (shift / comp3 / comp4 / comp5):
 - shift 0: Br/Cl  / Br/Br  / Br/Br
@@ -34,6 +36,8 @@ face_flip 추가 실행** → paper rank 맞는 comp4 shift 찾기.
 
 **예상 목표**: comp4_v2 Wad_well이 +3.89 ~ +4.55 J/m² 사이여야 dW=3.64 빼고도
 comp3 (+0.25) ~ comp5 (+0.91) 사이로 들어옴. 현재 shift 2는 +1.31 (너무 작음).
+comp5도 sweep — 더 작은 Wad_well 후보 나오면 paper rank 만들 공간 늘어남.
+(comp3은 paper에서 가장 깊은 comp이므로 shift 2 유지)
 
 **Fallback 옵션** (어느 shift도 만족 못하면):
 A. comp4_v2 dW를 comp4_v1 값 (~0.44)로 override (정당화: V2 cell artifact)
