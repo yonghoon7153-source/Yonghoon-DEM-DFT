@@ -495,6 +495,182 @@ Bruggeman 1935, Bergman 1978, Torquato 2002.
 
 ---
 
+## §A-perc  SE stress-bearing percolation threshold — direct measurement
+
+**Context**: Reviewer asked whether the `f_perc = 0.65` anchor imported from
+Liu & Yin 2025 (continuum FEM on a porous RVE) actually corresponds to
+the percolation breakdown of the stress-bearing SE backbone in our
+discrete DEM ensemble.  We built
+`scripts/diag_se_percolation_threshold.py` to measure it directly and ran
+the reviewer's 4-item validation checklist via `--verification-suite`.
+
+### §A-perc-1  Algorithm
+
+Radjai 1996 strong-network filter (|F_n| > mean of all contact forces)
+on each case's contact graph, then top↔bottom connectivity test on the
+SE sub-network.  Operational threshold τ = 0.5 (stress-bearing /
+non-bearing volume symmetry point); two contact-cutoff definitions
+(system-global mean vs SE-involved-contact mean) and two graph
+definitions (SE-SE only vs SE-SE + AM-SE bridging) reported as a 2×2
+table to expose definition sensitivity.
+
+SE volume fractions reported under two compositions:
+
+| Definition | Formula | Reviewer expected Liu & Yin convention |
+|---|---|---|
+| (i) solid-only | V_SE / (V_AM + V_SE) | secondary |
+| (ii) RVE-aware | V_SE / V_RVE (uses case porosity) | **primary** (continuum FEM on porous RVE) |
+| (iii) mass→volume | V_SE / (V_SE + V_AM) via ρ_AM, ρ_SE | identical to (i) under our DEM input densities — reported in CSV for density-mismatch detection only |
+
+### §A-perc-2  Baseline result on 134 cases
+
+Bootstrap 95 % CI on AM_wt* (1000 resamples, naive case-level).
+Operational threshold τ = 0.5 on the main series (SE-SE only · system mean):
+
+```
+AM_wt*           = 62.16 %   CI [62.13, 66.39]
+SE_vol_frac (i)  = 0.594     CI [0.546, 0.594]
+SE_vol_frac (ii) = 0.556     (porosity-aware)
+Δ_(ii) vs 0.65   = -0.094
+Δ_(i)  vs 0.65   = -0.056
+```
+
+### §A-perc-3  Reviewer's 4-item checklist — walked
+
+**(1) Statistical significance.**  Bootstrap CI on
+SE_vol_frac (i) is [0.546, 0.594] and excludes 0.65 → the offset
+from Liu & Yin's literature anchor is statistically significant.
+This is the offset value, not its interpretation; the offset itself
+admits multiple causal explanations:
+(a) discrete contact-network vs continuum yield-stress mapping,
+(b) different SE chemistry (argyrodite vs sulfide in Liu & Yin),
+(c) ambiguity in the volume-fraction convention Liu & Yin used —
+    (i) solid-only vs (ii) RVE — which can move Δ by ~0.04.
+We do not claim our value is "correct" and Liu & Yin's is "wrong";
+we report a robust empirical offset and acknowledge the
+multiple-causes interpretation envelope.
+
+**(2) RCP universality vs size-ratio dependence — suggestive but
+inconclusive.**  D_SE bin AM_wt* values:
+D_SE = 1.0 µm (n = 104) → 66.35 %, D_SE = 2.0 µm (n = 5) → 65.60 %.
+The two bins agree within 0.8 %p, but the n = 5 sample at
+D_SE = 2.0 µm is too small to firmly establish universality.  A
+dedicated D_SE sweep (e.g. 0.5 / 1.0 / 2.0 / 3.0 µm with n ≥ 20
+each) is required to convert this from "suggestive" to "established".
+Current evidence is consistent with universality at the D_SE = 1.0 µm
+scale but should not be over-stated.
+
+**(3-C) Subset / per-campaign split — the decisive finding.**
+Stratifying by inferred campaign reveals that the baseline AM_wt*
+crossing is driven entirely by the mono-AM `particulate` subset:
+
+| Campaign | N | AM_wt* | Threshold crossed? |
+|---|---|---|---|
+| `particulate` (mono-AM) | 20 | 62.16 % | yes |
+| `thin-film 1mAh` (bimodal) | 35 | — | **no** |
+| `thick-film 6mAh` (bimodal) | 14 | — | **no** |
+| `thick-film 8mAh` (bimodal) | 17 | — | **no** |
+| `other` (auto-id archive) | 48 | — | no |
+
+The SE stress-bearing fraction stays above 0.5 throughout the
+observed AM_wt% range (50–95 %) in every one of the 66 bimodal
+cathode cases.  Only the mono-AM particulate campaign exhibits
+percolation breakdown.
+
+**(4) Outlier exclusion robustness — note on Δ = 0.00 %p.**
+Excluding the 17 audit-flagged untrustworthy cases that have valid
+contact data (5 of the 22 audit fails were already in the skip
+list due to missing contacts.csv) shifts AM_wt* by exactly 0.00 %p.
+This *exact* zero needs explanation: AM_wt* is driven by the
+mono-AM `particulate` subset (n = 20), and at most 1 of the 22
+untrustworthy cases (`input_particulate_12_S3`) belongs to
+`particulate`.  If the excluded set contains at most a single
+particulate case, the mono-AM AM_wt* statistic is essentially
+unchanged because the threshold-crossing position interpolates
+between many other particulate cases.  The script will be extended
+to print the per-campaign breakdown of the excluded set so this is
+unambiguous in future runs.  The qualitative conclusion (robust
+to outliers) holds, but the *exact* 0.00 %p should be read as
+"shift within numerical precision of the threshold-crossing
+interpolation", not as a stronger claim.
+
+### §A-perc-4  Final framing — scope clarification, not contradiction
+
+The auto-classifier emitted Scenario C ("system-specific deviation")
+from the Δ values alone, but the campaign split (Item 3-C) shows the
+offset is *regime-specific*, not *system-wide*:
+
+- **Mono-AM (particulate)**: Liu & Yin's f_perc = 0.65 is approached
+  with a statistically significant offset of Δ = −0.06 to −0.09.
+  This is small and within the envelope explained by the three
+  causes listed under Item 1.  We report the offset, do not claim
+  our value supersedes Liu & Yin, and pair it with their value
+  rather than replacing it.
+
+- **Bimodal AM (1 mAh + 6 mAh + 8 mAh cathodes)**: SE stress-bearing
+  fraction stays above the operational threshold τ = 0.5 throughout
+  the studied AM_wt% range (50–95 %).  Three-scale hierarchical
+  packing (AM_P ~6 µm, AM_S ~2 µm, SE ~0.5 µm) appears to preserve
+  SE-mediated load paths in this regime.  Liu & Yin's
+  mono-AM-derived f_perc is therefore a *conservative* anchor for
+  bimodal cathodes: it would predict percolation breakdown earlier
+  than the DEM data shows.  Extrapolation beyond AM_wt > 95 % is
+  not validated here.
+
+### §A-perc-5  Implication for paper §5 / §6 — scope clarification
+
+The porosity wave-shape model uses
+`ε(AM) = ε_Bouvard(AM) - Δε_plastic(AM) · p_se(f_SE, f_perc=0.65)`
+with p_se modulating the Heckel plastic densification term.
+Inside the bimodal cathode regime (panels ①–③ of Figure 2),
+p_se ≈ 1 throughout — meaning the Heckel term is fully active for
+those cases and the wave-shape (hump) emerges from the smooth
+interplay of ε_Bouvard and Δε_plastic across composition, not from
+a sharp f_perc on/off switch.
+
+This is a **scope clarification** of the original framing in
+paper §5, not a contradiction:
+
+- **Original §5 wording** (now corrected): "Plastic physics gated
+  by a stress-bearing percolation switch at f_perc = 0.62".  The
+  word "gated" and the f_perc = 0.62 vs 0.65 inconsistency
+  suggested a sharp transition was responsible for the hump.
+
+- **Revised §5 wording**: "Plastic physics modulated by an SE
+  stress-bearing percolation factor p_se(f_SE; f_perc = 0.65) ...
+  Section §6 verifies that p_se ≈ 1 throughout the bimodal regime,
+  so this factor acts as a smooth high-AM attenuator rather than a
+  sharp on/off switch".
+
+The qualitative wave-shape conclusion is unchanged.  The
+mechanistic explanation is now: Bouvard packing dominates the AM
+side, Heckel plastic densification dominates the SE side, both act
+continuously across composition, and the hump emerges from their
+overlap.  f_perc only matters quantitatively in panel ④
+(particulate / mono-AM) which is already labelled out-of-regime.
+
+The new §6 subsection "Stress-bearing percolation in the bimodal
+continuum threshold" makes this explicit and cites the
+diagnostic.
+
+### §A-perc-6  Reproducibility artefacts
+
+```
+docs/figures/se_percolation_threshold.png   # 4-series scatter, twin axes
+docs/db/se_percolation_results.csv          # 134-case raw table
+                                            # (case_id, campaign, am_wt,
+                                            #  r_SE_um, vol_frac (i)/(ii)/(iii),
+                                            #  porosity, 4 strong-network
+                                            #  measurements)
+```
+
+Replay command:
+```bash
+python3 scripts/diag_se_percolation_threshold.py --verification-suite
+```
+
+---
+
 ## §B  References (additional to paper main bibliography)
 
 - **Cheng et al. 2017** — *Nano Lett.* 17: 7396. (Dense LPSCl

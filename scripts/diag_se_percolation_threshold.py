@@ -980,17 +980,46 @@ def _run_verification_suite(all_rows: list[dict],
     res = _analyse_subset(kept)
     if res['am_star'] is not None and base['am_star'] is not None:
         d_am = res['am_star'] - base['am_star']
+        # Per-campaign breakdown of the excluded set — addresses the
+        # reviewer's "Δ = 0.00 %p needs explanation" point.  If the
+        # exclusion set contains few or zero mono-AM `particulate`
+        # cases, AM_wt* is naturally insensitive because the
+        # threshold-crossing series is driven by that subset.
+        dropped_by_camp: dict[str, int] = {}
+        for r in dropped:
+            dropped_by_camp[r['campaign']] = dropped_by_camp.get(r['campaign'], 0) + 1
+        n_dropped_particulate = dropped_by_camp.get('particulate', 0)
         print(f'  Cases excluded: {len(dropped)} '
               f'(untrustworthy audit; {len(kept)} remain).')
+        if dropped_by_camp:
+            breakdown = ', '.join(f'{k}={v}' for k, v in
+                                    sorted(dropped_by_camp.items()))
+            print(f'    excluded by campaign: {breakdown}')
+            print(f'    n excluded from mono-AM particulate (the subset '
+                  f'driving AM_wt*): {n_dropped_particulate} / 20')
         print(f'  AM_wt* (excluded) = {res["am_star"]:.2f} %   '
               f'Δ vs baseline = {d_am:+.2f} %p')
         if res['sv_solid'] is not None:
             print(f'  SE_vol_frac (i)   = {res["sv_solid"]:.3f}')
-        verdict = ('⚠ AM_wt* shifts > 2 %p when outliers excluded'
-                    ' → threshold is outlier-driven'
-                    if abs(d_am) > 2.0 else
-                   '✓ AM_wt* shifts < 2 %p when outliers excluded'
-                   ' → threshold is robust to outliers')
+        # Verdict needs awareness that a near-zero shift can be
+        # *trivial* when the exclusions don't touch the driving
+        # subset.  Flag that case explicitly so the reviewer can tell
+        # robustness from non-impact.
+        if abs(d_am) > 2.0:
+            verdict = ('⚠ AM_wt* shifts > 2 %p when outliers excluded'
+                        ' → threshold is outlier-driven')
+        elif n_dropped_particulate == 0:
+            verdict = ('· AM_wt* unchanged but exclusion did not touch '
+                        'mono-AM driving subset (n_dropped_particulate = 0) '
+                        '— robustness untested for the relevant subset')
+        elif n_dropped_particulate <= 2:
+            verdict = (f'~ AM_wt* shifts only {abs(d_am):.2f} %p; '
+                        f'exclusion touched {n_dropped_particulate} '
+                        f'particulate case(s), low statistical leverage')
+        else:
+            verdict = ('✓ AM_wt* shifts < 2 %p when outliers excluded '
+                        f'including {n_dropped_particulate} particulate cases '
+                        '→ threshold genuinely robust to outliers')
         print(f'  Verdict: {verdict}')
     else:
         print('  Verification not applicable (no fails CSV or no kept cases).')

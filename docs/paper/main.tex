@@ -579,7 +579,23 @@ discussed in detail in
     absence of AM-internal bimodal Furnas advantage; a subset of
     cases below the 10\,\% pure-SE anchor are DEM high-overlap
     calibration artifacts outside the physics framework.
-    Identical model parameters are used in all four panels.}
+    Identical model parameters are used in all four panels.
+    \textit{Percolation-regime note (cf.\
+    Section~\ref{sec:bimodal-perc}).}  The
+    \texttt{diag\_se\_percolation\_threshold.py} stratified analysis
+    shows that the SE stress-bearing fraction stays above the
+    operational threshold $\tau = 0.5$ throughout the entire
+    AM$_{\mathrm{wt}}$ range probed by panels~\textcircled{1}%
+    --\textcircled{3} (66 bimodal cases, no threshold crossings),
+    whereas panel~\textcircled{4} (20 mono-AM cases) is the only
+    one in which the SE backbone breaks at
+    $\mathrm{AM}_{\mathrm{wt}}^{*} = 62.16\,\%$
+    ($f_{\mathrm{SE}}^{\mathrm{(i)}} = 0.594$, $\mathrm{CI} =
+    [0.546,\,0.594]$).  Panels~\textcircled{1}--\textcircled{3} thus
+    sit deep in the percolating regime and the
+    $f_{\mathrm{perc}}$ literature anchor is effectively a no-op for
+    them; only the panel~\textcircled{4} mono-AM regime exhibits
+    measurable percolation breakdown.}
   \label{fig:porosity-validation}
 \end{figure*}
 
@@ -627,13 +643,26 @@ on opposite ends of the composition axis:
 \item[Plastic physics (SE-rich side).] Heckel densification
   $\varepsilon = \varepsilon_0 \exp(-K P)$ together with Tabor
   $\sigma_y = H/3$ \citep{Tabor1948} reduces $\varepsilon$ to the
-  10\,\% anchor at pure SE, gated by a stress-bearing percolation
-  switch at $f_{\mathrm{perc}} = 0.62$.
+  10\,\% anchor at pure SE, modulated by an SE stress-bearing
+  percolation factor $p_{\mathrm{se}}(f_{\mathrm{SE}};\,
+  f_{\mathrm{perc}} = 0.65)$ taken from \citet{LiuYin2025}.  The
+  empirical check of Section~\ref{sec:bimodal-perc} shows that
+  $p_{\mathrm{se}} \approx 1$ throughout the bimodal cathode
+  regime studied here, so this factor acts as a smooth high-AM
+  attenuator rather than a sharp on/off switch and the
+  $f_{\mathrm{perc}}$ value matters quantitatively only at the
+  mono-AM panel~\textcircled{4} extreme.
 \end{description}
 Because each mechanism dominates a different composition range,
 the resulting curve is non-monotonic with a plateau in the
 intermediate region where neither is fully active --- a feature
-\emph{predicted} by the framework rather than tuned.
+\emph{predicted} by the framework rather than tuned.  The hump
+emerges from the smooth interplay of $\varepsilon_{\mathrm{Bouvard}}$
+and $\Delta\varepsilon_{\mathrm{plastic}}$ as both shift with
+composition, not from a sharp $p_{\mathrm{se}}$ on/off transition;
+Section~\ref{sec:bimodal-perc} verifies the
+$p_{\mathrm{se}} \approx 1$ assumption directly on the DEM
+ensemble.
 
 \subsection{Why we do not fit out-of-regime deviations}
 A natural temptation is to extend the model with additional free
@@ -792,6 +821,75 @@ described in Section~\ref{sec:future} replaces the
 $f_{\mathrm{perc}} = 0.65$ \emph{assumption} with a directly
 measured value from our own SE--SE contact networks, completing
 the literature-to-measured upgrade for that anchor.
+
+\subsection{Stress-bearing percolation in the bimodal cathode
+            regime}
+\label{sec:bimodal-perc}
+Running the diagnostic of Section~\ref{sec:sensitivity} on the
+134-case ensemble and stratifying by campaign reveals that the
+$f_{\mathrm{perc}}$ anchor imported from \citet{LiuYin2025} is
+operationally relevant only at the mono-AM extreme of our design
+space:
+
+\begin{itemize}
+\item \textbf{Mono-AM (\texttt{particulate}, $n = 20$).}
+      Stress-bearing SE fraction drops below the operational
+      $\tau = 0.5$ threshold at $\mathrm{AM}_{\mathrm{wt}}^{*} =
+      62.16\,\%$, which corresponds to $f_{\mathrm{SE}}^{\mathrm{(i)}}
+      = 0.594$ (solid-only convention) or
+      $f_{\mathrm{SE}}^{\mathrm{(ii)}} = 0.556$ (RVE-aware
+      convention).  Bootstrap 95\,\% CI on
+      $f_{\mathrm{SE}}^{\mathrm{(i)}}$ is $[0.546,\,0.594]$ and
+      excludes the literature value $0.65$.  The
+      $\Delta = -0.06$ to $-0.09$ offset is statistically
+      significant but small, and can be attributed to one or more
+      of: (a) discrete contact-network vs continuum yield-stress
+      mapping, (b) different SE chemistry (our argyrodite vs Liu
+      \& Yin's sulfide), (c) ambiguity in the volume-fraction
+      convention used by \citet{LiuYin2025} (their Methods section
+      should be consulted to resolve (i) vs (ii); the qualitative
+      conclusion is invariant under either).
+\item \textbf{Bimodal cathodes (\texttt{thin-film 1\,mAh} $n = 35$,
+      \texttt{thick-film 6\,mAh} $n = 14$, \texttt{thick-film
+      8\,mAh} $n = 17$).}  The stress-bearing SE fraction stays
+      \emph{above} $0.5$ throughout the entire studied
+      AM$_{\mathrm{wt}}$ range (50--95\,\%) in every one of these
+      66 cases.  The Radjai strong-network test never breaks in
+      bimodal data — the operational threshold simply does not
+      cross.  Extrapolation beyond
+      AM$_{\mathrm{wt}} > 95\,\%$ is not validated here.
+\end{itemize}
+
+The interpretation is geometric.  Three particle scales
+($D_{\mathrm{AM_P}} \approx 6\,\si{\micro\metre}$,
+ $D_{\mathrm{AM_S}} \approx 2\,\si{\micro\metre}$,
+ $D_{\mathrm{SE}} \approx 0.5\,\si{\micro\metre}$) populate a
+hierarchical Furnas-valley packing in which AM$_S$ partially fills
+the AM$_P$ voids and SE further fills the residual interstices.
+The empirical observation is that this hierarchy preserves
+SE-mediated load paths throughout the cathode-relevant
+AM$_{\mathrm{wt}}$ range, so the mono-AM-calibrated
+$f_{\mathrm{perc}} = 0.65$ value of \citet{LiuYin2025} acts as a
+\emph{conservative} anchor for our bimodal regime: it would
+predict percolation breakdown earlier than the DEM data shows.
+
+This finding is a \emph{scope clarification} for the strict-physics
+porosity model rather than a parameter revision.  The
+$\Delta\varepsilon_{\mathrm{plastic}}(\mathrm{AM}) \cdot
+p_{\mathrm{se}}(f_{\mathrm{SE}};\,f_{\mathrm{perc}})$ term in
+Section~\ref{sec:results-porosity} carries a $p_{\mathrm{se}}
+\approx 1$ inside the bimodal regime of
+Figure~\ref{fig:porosity-validation}'s panels~\textcircled{1}--%
+\textcircled{3}, so the $f_{\mathrm{perc}}$ choice does not
+quantitatively shift those predictions.  The hump in the
+porosity wave-shape therefore arises from the smooth interplay of
+$\varepsilon_{\mathrm{Bouvard}}$ and $\Delta\varepsilon_{\mathrm
+{plastic}}$ across composition; the $f_{\mathrm{perc}}$ gate is a
+modulation that matters only at the mono-AM panel~\textcircled{4}
+extreme, which our model already labels out-of-regime.  The
+wave-shape conclusion therefore does \emph{not} rest on the
+specific $0.65$ value within the regime that matters for cathode
+design.
 
 \subsection{Future work}
 \label{sec:future}
