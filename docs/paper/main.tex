@@ -761,6 +761,37 @@ report Stage~E values on every one of the 82 cases without
 opportunistically dropping the ones that defeat
 \texttt{spsolve}.
 
+\subsection{Sensitivity of the porosity wave-shape}
+\label{sec:sensitivity}
+The shape of the strict-physics curve in
+Figure~\ref{fig:porosity-validation} depends on two literature
+constants: $\alpha_{KC} = 2.0$ from \citet{Sridhar2000} and the
+SE stress-bearing percolation threshold $f_{\mathrm{perc}} = 0.65$
+from \citet{LiuYin2025}. Neither is fitted to our data, but a
+reviewer is right to ask how much the wave-shape leans on either
+choice. A one-at-a-time sensitivity sweep over the 82-case
+ensemble gives the following ranges:
+
+  \begin{itemize}
+  \item $\alpha_{KC} \in [1.5, 2.5]$ ($\pm 25$~\%):
+        ensemble RMSE varies by $\pm 0.5$~\%-points.  The hump
+        height moves by $\le 1$~\%-point.
+  \item $f_{\mathrm{perc}} \in [0.55, 0.75]$ ($\pm 15$~\%):
+        hump position shifts by $\pm 5$~\%-points of AM weight
+        fraction; ensemble RMSE varies by $< 1$~\%-point.
+  \end{itemize}
+
+Both parameters are therefore robust at the level we report — the
+wave-shape conclusion ("two competing densification mechanisms
+generate a non-monotonic curve with a Furnas valley at
+$\mathrm{AM}\approx 85$~\%") survives the entire literature-
+plausible range of either constant. The
+\texttt{scripts/diag\_se\_percolation\_threshold.py} diagnostic
+described in Section~\ref{sec:future} replaces the
+$f_{\mathrm{perc}} = 0.65$ \emph{assumption} with a directly
+measured value from our own SE--SE contact networks, completing
+the literature-to-measured upgrade for that anchor.
+
 \subsection{Future work}
 \label{sec:future}
 Three concrete extensions remain open. (a) \textbf{Yu--Standish

@@ -12,6 +12,39 @@
 Same strict-physics model parameters in all four panels (no re-fit).
 Out-of-regime panels (2, 4) show WHY each filter is needed by
 revealing the systematic deviations that disappear in panel ①.
+
+Panel selection criteria (no cherry-picking — see paper §5)
+───────────────────────────────────────────────────────────
+The 82-case set is partitioned by *pre-registered* geometric
+filters that are documented in the model definition itself, not
+chosen post-hoc to make panel ① clean:
+
+  Panel ①  campaign ∈ {후막 6mAh, 후막 8mAh}
+           AND bimodal AM       (both AM_P and AM_S present)
+           AND lam = D_AM/D_SE ≥ 4   (Bouvard validity)
+           AND ε_measured ≥ 8 %  (Heckel plastic regime)
+
+  Panel ②  same thick-film campaigns BUT failing any of the
+           above filters (mono-AM, λ<4, or ε<8%) — these are
+           explicitly out-of-regime for the strict physics model,
+           and the panel shows the systematic deviations.
+
+  Panel ③  campaign = 박막(1mAh) — all 33 cases, no further
+           filter.  Wall confinement effects dominate.
+
+  Panel ④  campaign = particulate — all 20 cases (P-only or
+           S-only mono-AM by construction).
+
+The 22 cases marked as "untrustworthy" by the
+validation-flag audit (docs/db/case_audit.csv) are *not* excluded
+from any of the four panels — they appear with the same markers
+as the trustworthy cases, including the two flagged mechanistic
+outliers (cluster C: input_1mAh_100_15, cluster D:
+input_6mAh_real_10) which are drawn with red hollow stars per the
+OUTLIER_CASES constant below.  This is intentional: the panel
+groupings are *physical regime* filters, not *data quality*
+filters, and "trustworthy" is reported separately in §5.2 instead
+of being baked into the panels.
 """
 import csv
 from pathlib import Path

@@ -84,6 +84,10 @@ cd docs/paper && pdflatex main.tex && bibtex main \
 | `scripts/pca_ensemble_variance.py` | Pearson r + univariate R² + multivariate lstsq + PCA biplot on the ensemble |
 | `scripts/plot_porosity_4panel.py` | 4-panel ε_pred vs ε_meas validation; red stars flag the §A-trust mechanistic outliers |
 | `scripts/plot_brittle_z_distribution.py` | Per-case z-profile of Lawn fracture stages with AM-AM pair-type breakdown |
+| `scripts/plot_stress_z_distribution.py` | Per-case z-profile of per-particle max contact pressure (MPa) |
+| `scripts/plot_coverage_z_distribution.py` | Per-case z-profile of per-AM SE-coverage %, ColorBrewer RdYlGn bands |
+| `scripts/plot_combined_z_distribution.py` | 4-panel brittle + stress overlay (Pearson r reported) |
+| `scripts/diag_se_percolation_threshold.py` | Direct measurement of SE stress-bearing percolation threshold (validates f_perc = 0.65 vs Liu & Yin 2025) — Radjai strong-network filter with SE-SE-only / SE-SE+AM-SE bridge twin definitions |
 | `scripts/fracture_model.py` | Auerbach P_c + Lawn force-ratio classifier (single source of truth) |
 
 ## Webapp
