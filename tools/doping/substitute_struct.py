@@ -57,6 +57,41 @@ def find_host_indices(atoms: Atoms, host_element: str) -> list[int]:
             if sym == host_element]
 
 
+def find_host_indices_for_site(atoms: Atoms, site_name: str,
+                               ps_cutoff: float = 2.7) -> list[int]:
+    """Return indices matching host element AND specific Wyckoff site.
+
+    Distinguishes the two crystallographically inequivalent S²⁻ environments
+    in argyrodite Li6PS5Cl (cubic F-43m):
+
+      * S_16e — bonded to P (P–S < ``ps_cutoff`` Å) → PS₄ tetrahedral S.
+      * S_4a  — not bonded to P → free S²⁻ in the Li2S-like sublattice.
+
+    For Li sites (Li_24g / Li_48h), Cl_4d, and P_4b, returns every host
+    element atom: distinguishing Li 24g vs 48h reliably requires the
+    Wyckoff metadata of the input file (not always available), and the
+    other host sites have only one Wyckoff per element in this system.
+    """
+    host = SITE_TO_HOST[site_name]
+    host_idx = [i for i, sym in enumerate(atoms.get_chemical_symbols())
+                if sym == host]
+    if site_name not in ('S_16e', 'S_4a'):
+        return host_idx
+    p_idx = [i for i, sym in enumerate(atoms.get_chemical_symbols())
+             if sym == 'P']
+    if not p_idx:
+        return host_idx
+    from ase.geometry import get_distances
+    s_pos = atoms.get_positions()[host_idx]
+    p_pos = atoms.get_positions()[p_idx]
+    _, dists = get_distances(s_pos, p_pos,
+                             cell=atoms.cell.array, pbc=atoms.pbc)
+    bonded = (dists < ps_cutoff).any(axis=1)
+    if site_name == 'S_16e':
+        return [host_idx[i] for i, b in enumerate(bonded) if b]
+    return [host_idx[i] for i, b in enumerate(bonded) if not b]
+
+
 def select_substitution_sites(host_indices: list[int], n_sub: int,
                               method: str = 'first', seed: int = 42) -> list[int]:
     """Pick n_sub indices to substitute.
@@ -79,12 +114,24 @@ def select_substitution_sites(host_indices: list[int], n_sub: int,
 
 
 def substitute(atoms: Atoms, dopant: str, host_element: str,
-               n_sub: int, method: str = 'spread', seed: int = 42) -> Atoms:
-    """Replace n_sub host atoms with dopant atoms."""
+               n_sub: int, method: str = 'spread', seed: int = 42,
+               site_name: str | None = None) -> Atoms:
+    """Replace n_sub host atoms with dopant atoms.
+
+    If ``site_name`` is given (e.g., 'S_16e'), restrict the substitution to
+    that specific Wyckoff site via :func:`find_host_indices_for_site`.
+    Otherwise fall back to the chemical-element-only filter (legacy).
+    """
     new = atoms.copy()
-    host_idx = find_host_indices(new, host_element)
-    if not host_idx:
-        raise ValueError(f"No {host_element} atoms in structure")
+    if site_name is not None:
+        host_idx = find_host_indices_for_site(new, site_name)
+        if not host_idx:
+            raise ValueError(
+                f"No atoms at Wyckoff site {site_name} (host {host_element})")
+    else:
+        host_idx = find_host_indices(new, host_element)
+        if not host_idx:
+            raise ValueError(f"No {host_element} atoms in structure")
     targets = select_substitution_sites(host_idx, n_sub, method, seed=seed)
     syms = new.get_chemical_symbols()
     for i in targets:
@@ -150,8 +197,12 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
     for site_info in dopant_entry.get('compatible_sites', []):
         site = site_info['site_name']
         host = SITE_TO_HOST[site]
-        host_indices = find_host_indices(base_atoms, host)
+        host_indices = find_host_indices_for_site(base_atoms, site)
         n_host = len(host_indices)
+        if n_host == 0:
+            print(f"  ⚠ {element} on {site}: 0 atoms at this Wyckoff site, "
+                  f"skipping all concentrations")
+            continue
 
         for conc in concentrations:
             n_sub = max(1, int(round(n_host * conc)))
@@ -159,7 +210,8 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
             for seed in seeds:
                 try:
                     doped, sub_idx = substitute(base_atoms, element, host,
-                                                n_sub, method=method, seed=seed)
+                                                n_sub, method=method, seed=seed,
+                                                site_name=site)
                     doped, comp_label = apply_charge_compensation(
                         doped, site_info['host_charge'], d_info['charge'],
                         n_sub, vacancy_method=method, seed=seed)
@@ -271,7 +323,7 @@ def main():
         # Single mode
         d_info = DOPANT_DB[args.dopant]
         host = SITE_TO_HOST[args.site]
-        n_host = len(find_host_indices(base, host))
+        n_host = len(find_host_indices_for_site(base, args.site))
         n_sub = max(1, int(round(n_host * args.conc)))
         from site_preference import HOST_SITES
         site_info = {**HOST_SITES[args.site], 'site_name': args.site,

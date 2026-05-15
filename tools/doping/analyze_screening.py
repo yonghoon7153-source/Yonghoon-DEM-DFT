@@ -127,13 +127,21 @@ def main():
 
     print_top_table(ranked, args.top)
 
-    # Per-dopant best
+    # Per-dopant best (across the full ranked list, so all dopants get a row)
     by_dopant = {}
     for r in ranked:
         d = r['dopant']
         if d not in by_dopant:
             by_dopant[d] = r
-    print(f"\nUnique dopants in Top: {len(by_dopant)}")
+
+    # Unique dopants WITHIN top-N (the previous wording conflated this with
+    # the per-dopant-best count over the full ranked list).
+    top_slice = ranked[:args.top]
+    unique_in_top = {r['dopant'] for r in top_slice}
+    print(f"\nUnique dopants in Top-{args.top}: {len(unique_in_top)} "
+          f"({', '.join(sorted(unique_in_top))})")
+    print(f"Unique dopants across all {len(ranked)} ranked records: "
+          f"{len(by_dopant)}")
 
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
