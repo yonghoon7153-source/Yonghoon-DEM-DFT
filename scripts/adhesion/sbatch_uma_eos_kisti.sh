@@ -8,7 +8,7 @@
 #SBATCH --time=04:00:00
 #SBATCH -o logs/perov_ft_v07_%j.out
 #SBATCH -e logs/perov_ft_v07_%j.err
-#SBATCH --comment=llm_finetune_pipeline
+#SBATCH --comment pytorch
 
 # ============================================================
 # UMA screen all pairs + EOS top-2 for Nd-doped LPSCl
