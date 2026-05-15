@@ -78,8 +78,39 @@
   },
   {
     "element": "Ag",
-    "compatible_sites": [],
-    "note": "No compatible site found."
+    "charge": 1,
+    "radius_A": 1.15,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 0,
+        "radius_diff": 0.39,
+        "compatibility_score": 0.719,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 0,
+        "radius_diff": 0.39,
+        "compatibility_score": 0.719,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      }
+    ]
   },
   {
     "element": "Mg",
@@ -209,6 +240,11 @@
   },
   {
     "element": "Sr",
+    "compatible_sites": [],
+    "note": "No compatible site found."
+  },
+  {
+    "element": "Ba",
     "compatible_sites": [],
     "note": "No compatible site found."
   },
@@ -429,6 +465,20 @@
     "n_dopants": 1,
     "compatible_sites": [
       {
+        "site_name": "P_4b",
+        "host": "P",
+        "host_charge": 5,
+        "host_radius": 0.17,
+        "wyckoff": "4b",
+        "env": "PS4 tetrahedron center",
+        "charge_diff": 0,
+        "radius_diff": 0.43,
+        "compatibility_score": 0.699,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
         "site_name": "Li_24g",
         "host": "Li",
         "host_charge": 1,
@@ -526,6 +576,20 @@
     "radius_A": 0.54,
     "n_dopants": 1,
     "compatible_sites": [
+      {
+        "site_name": "P_4b",
+        "host": "P",
+        "host_charge": 5,
+        "host_radius": 0.17,
+        "wyckoff": "4b",
+        "env": "PS4 tetrahedron center",
+        "charge_diff": 0,
+        "radius_diff": 0.37,
+        "compatibility_score": 0.73,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
       {
         "site_name": "Li_24g",
         "host": "Li",
@@ -799,8 +863,39 @@
   },
   {
     "element": "O",
-    "compatible_sites": [],
-    "note": "No compatible site found."
+    "charge": -2,
+    "radius_A": 1.4,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "S_16e",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "16e",
+        "env": "PS4-bonded S (covalent P-S)",
+        "charge_diff": 0,
+        "radius_diff": -0.44,
+        "compatibility_score": 0.694,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "S_4a",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "4a",
+        "env": "free S2- (Li2S layer, surface)",
+        "charge_diff": 0,
+        "radius_diff": -0.44,
+        "compatibility_score": 0.694,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      }
+    ]
   },
   {
     "element": "Se",
@@ -862,6 +957,20 @@
     "n_dopants": 1,
     "compatible_sites": [
       {
+        "site_name": "S_16e",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "16e",
+        "env": "PS4-bonded S (covalent P-S)",
+        "charge_diff": 0,
+        "radius_diff": 0.37,
+        "compatibility_score": 0.73,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
         "site_name": "S_4a",
         "host": "S",
         "host_charge": -2,
@@ -896,8 +1005,25 @@
   },
   {
     "element": "F",
-    "compatible_sites": [],
-    "note": "No compatible site found."
+    "charge": -1,
+    "radius_A": 1.33,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Cl_4d",
+        "host": "Cl",
+        "host_charge": -1,
+        "host_radius": 1.81,
+        "wyckoff": "4d",
+        "env": "halide site (bulk)",
+        "charge_diff": 0,
+        "radius_diff": -0.48,
+        "compatibility_score": 0.676,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      }
+    ]
   },
   {
     "element": "Br",
@@ -976,6 +1102,23 @@
         "n_extra": 0
       },
       {
+        "site_name": "S_16e",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "16e",
+        "env": "PS4-bonded S (covalent P-S)",
+        "charge_diff": 1,
+        "radius_diff": 0.36,
+        "compatibility_score": 0.538,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
+      {
         "site_name": "S_4a",
         "host": "S",
         "host_charge": -2,
@@ -1000,6 +1143,23 @@
     "radius_A": 1.46,
     "n_dopants": 1,
     "compatible_sites": [
+      {
+        "site_name": "S_16e",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "16e",
+        "env": "PS4-bonded S (covalent P-S)",
+        "charge_diff": -1,
+        "radius_diff": -0.38,
+        "compatibility_score": 0.532,
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
       {
         "site_name": "S_4a",
         "host": "S",

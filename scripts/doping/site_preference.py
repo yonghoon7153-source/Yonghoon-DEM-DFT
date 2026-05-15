@@ -45,6 +45,7 @@ DOPANT_DB = {
     'Zn':  {'charge': +2, 'radius': 0.74},
     'Ca':  {'charge': +2, 'radius': 1.00},
     'Sr':  {'charge': +2, 'radius': 1.18},
+    'Ba':  {'charge': +2, 'radius': 1.35},
     'Al':  {'charge': +3, 'radius': 0.535},
     'Ga':  {'charge': +3, 'radius': 0.62},
     'In':  {'charge': +3, 'radius': 0.80},
@@ -75,12 +76,23 @@ DOPANT_DB = {
 }
 
 # Tolerance for radius matching (15% rule + extra for anion site disorder)
+# Note on anion_16e: PS4 → PO4 substitution is energetically favorable
+# (PO bond > PS bond) and well-documented (Li6PO5Cl is a stable phase, JMCA
+# 2022; ACS AMI 2021 showed O prefers S_16e over S_4a). So anion_16e tolerance
+# should NOT be tighter than anion_4a — both anion sites accommodate isovalent
+# substitution comparably.
 RADIUS_TOL = {
     'cation': 0.30,   # Å, for Li/P sites
-    'anion_4a': 0.40, # Å, S 4a is more flexible (anion disorder)
-    'anion_16e': 0.20, # Å, S 16e is constrained (PS4 covalent)
-    'anion_4d': 0.40, # Å, Cl 4d also flexible
+    'anion_4a': 0.40, # Å, S 4a (free S²⁻)
+    'anion_16e': 0.40, # Å, S 16e (PS4 → PO4 stable; was 0.20, fixed 2026-05-15)
+    'anion_4d': 0.40, # Å, Cl 4d
 }
+# Isovalent substitutions tolerate ~1.5x radius mismatch — charge balance is
+# automatic, so the lattice absorbs size differences through contraction/
+# expansion. Required for known cases: O→S (oxysulfide), F→Cl (halide mix),
+# Ag→Li (Ag-argyrodite). Aliovalent substitutions stay strict because charge
+# compensation defects amplify lattice strain.
+ISOVALENT_TOL_FACTOR = 1.5
 
 
 def site_preference_filter(dopant_charge: int, dopant_radius: float,
@@ -108,7 +120,7 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
         if (not allow_aliovalent) and (charge_diff != 0):
             continue
 
-        # (3) Radius tolerance
+        # (3) Radius tolerance — looser for isovalent (lattice absorbs size diff)
         if site_name in ['Li_24g', 'Li_48h', 'P_4b']:
             tol = RADIUS_TOL['cation']
         elif site_name == 'S_4a':
@@ -117,6 +129,8 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
             tol = RADIUS_TOL['anion_16e']
         else:  # Cl_4d
             tol = RADIUS_TOL['anion_4d']
+        if charge_diff == 0:
+            tol *= ISOVALENT_TOL_FACTOR
         radius_diff = dopant_radius - info['radius']
         if abs(radius_diff) > tol:
             continue
@@ -197,8 +211,12 @@ def main():
     parser.add_argument('--dopant', help='Element symbol (e.g., Mg)')
     parser.add_argument('--n', type=int, default=1, help='Number of dopants')
     parser.add_argument('--batch', help='JSON file with list of elements')
+    parser.add_argument('--all', action='store_true',
+                       help='Screen every element in DOPANT_DB (skip Li/P/S/Cl host)')
     parser.add_argument('--list', action='store_true', help='List known dopants')
     parser.add_argument('--out', default=None, help='Save results to JSON')
+    parser.add_argument('--quiet', action='store_true',
+                       help='Suppress per-dopant verbose table')
     args = parser.parse_args()
 
     if args.list:
@@ -208,15 +226,38 @@ def main():
         return
 
     results = []
-    if args.batch:
+    if args.all:
+        host_elements = {'Li', 'P', 'S', 'Cl', 'P_anion'}
+        elements = [e for e in DOPANT_DB if e not in host_elements]
+        for e in elements:
+            results.append(evaluate_dopant(e, n_dopants=args.n,
+                                          verbose=not args.quiet))
+    elif args.batch:
         elements = json.loads(Path(args.batch).read_text())
         for e in elements:
-            results.append(evaluate_dopant(e, n_dopants=args.n))
+            results.append(evaluate_dopant(e, n_dopants=args.n,
+                                          verbose=not args.quiet))
     elif args.dopant:
-        results.append(evaluate_dopant(args.dopant, n_dopants=args.n))
+        results.append(evaluate_dopant(args.dopant, n_dopants=args.n,
+                                       verbose=not args.quiet))
     else:
         parser.print_help()
         return
+
+    # Summary table
+    print(f"\n{'='*70}")
+    print(f"{'Dopant':<8}{'#sites':<8}{'best site':<12}{'best score':<12}")
+    print('-' * 70)
+    for r in results:
+        sites = r.get('compatible_sites', [])
+        if sites:
+            best = sites[0]
+            print(f"{r['element']:<8}{len(sites):<8}"
+                  f"{best['site_name']:<12}{best['compatibility_score']:<12.3f}")
+        else:
+            print(f"{r['element']:<8}{'0':<8}{'(none)':<12}{'-':<12}")
+    print(f"\nTotal: {sum(1 for r in results if r.get('compatible_sites'))} / "
+          f"{len(results)} dopants have ≥1 compatible site.")
 
     if args.out:
         Path(args.out).write_text(json.dumps(results, indent=2))
