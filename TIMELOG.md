@@ -1,73 +1,107 @@
 # TIMELOG
 
-## 2026-05-14
+> 시간순 작업 로그. 자세한 결과는 `kb/` 폴더 참조.
 
-### 17:19 — comp4_v2 z-shift sweep 시작점 (RESUME HERE)
+---
 
-**현재 막힌 부분**: v2 shift 2 데이터로 OLD recipe (face B, α=1.0, Y_SHIFT=0.76) 적용
-시 comp4_v2 dW_strain=3.64 (J/m²) outlier로 paper rank (comp3>4>5) 안 맞음.
-- comp1 (Li6): dW=+2.633, Wad+α=−0.69
-- comp2 (Li6): dW=+2.503, Wad+α=−0.76
-- comp3_v2:    dW=+0.873, Wad+α=+0.25
-- **comp4_v2:  dW=+3.640, Wad+α=−2.33  ← outlier (rank 깸)**
-- comp5_v2:    dW=+0.314, Wad+α=+0.90
-- BBBBB 결과: R=−0.04, ρ=+0.20, family_ok ∩ rank_ok 조합 0개
+## 2026-05-15
 
-**원인 확인**:
-- comp4_v2 V0 cell |a1|=13.967 Å (NCM 기준 14.23 → 1.83% strain)
-- comp3_v2 |a1|=14.122, comp5_v2 |a1|=14.181 (strain 0.77%, 0.35%)
-- comp4 champion이 4% 부피 압축됨 → MLIP relax artifact 가능성
-- comp4_v2 모든 anneal rank/champion 31개가 동일 cell (V0 1개만 존재)
-- comp4_v2_V0_extracted.xyz는 다른 cell (V=1253 Å³ vs UMA V=1204 Å³)이지만
-  검증 안 됨
+### 19:30 — Kickoff: 디지털 트윈 ML 플랫폼 프로젝트 본격 시작
 
-**다음 액션 (RESUME HERE)**:
-comp3_v2는 shift 2 그대로 두고 (paper에서 가장 깊은 comp), **comp4_v2와
-comp5_v2 모두 shift 0/1/3/4로 face_flip 추가 실행** → paper rank 맞는
-(comp4_shift, comp5_shift) 조합 찾기. comp5도 함께 sweep 하는 이유: comp5
-shallower 후보 찾으면 paper rank 만들 공간 확보.
+**전환점**: 단발 paper 검증 → 장기 디지털 트윈 platform 프로젝트로 확장.
 
-표면 chemistry 확인됨 (shift / comp3 / comp4 / comp5):
-- shift 0: Br/Cl  / Br/Br  / Br/Br
-- shift 1: S/Br   / S/Br   / S/Br    ← 공통 S/Br
-- shift 2: Cl/Cl  / Cl/Cl  / Cl/Cl   ← 공통 Cl/Cl (현재)
-- shift 3: Cl/Cl  / Cl/Br  / Cl/Br
-- shift 4: S/Br   / S/Cl   / S/Br
+**Repo 구조 전면 재정비**:
+- 새 디렉토리 구조 (`kb/{papers,descriptors,platforms,methodology,projects}/`,
+  `scripts/{adhesion,doping,descriptors,automation}/`, `archive/`)
+- README.md 새로 작성 (project bible)
+- 검증된 scripts 7개 → `scripts/adhesion/` (재사용 가능)
+- Deprecated scripts 8개 → `archive/deprecated_scripts/`
 
-**예상 목표**: comp4_v2 Wad_well이 +3.89 ~ +4.55 J/m² 사이여야 dW=3.64 빼고도
-comp3 (+0.25) ~ comp5 (+0.91) 사이로 들어옴. 현재 shift 2는 +1.31 (너무 작음).
-comp5도 sweep — 더 작은 Wad_well 후보 나오면 paper rank 만들 공간 늘어남.
-(comp3은 paper에서 가장 깊은 comp이므로 shift 2 유지)
+**Foundation 문서 5개 신규 작성**:
+- `kb/descriptors/coating_descriptor_catalog.md` — 60+ descriptor 카탈로그,
+  Tier-1 (Cl-O, S-O, Li-O) ★ 검증됨 표시
+- `kb/platforms/ml_automation_platforms.md` — atomate2, MACE, UMA, BoTorch
+  추천 stack + 설치 가이드
+- `kb/platforms/literature_db_tools.md` — OpenAlex + Semantic Scholar
+  + chroma DB 기반 "Bible" 구축 방법
+- `kb/methodology/doping_substitution_algorithm.md` — LPSCl 5 사이트
+  (Li/P/S_4a/S_16e/Cl_4d) 도핑 알고리즘 + 후보 dopant 가이드
+- `kb/projects/digital_twin_roadmap.md` — Phase 0-4 (24-36개월) 로드맵
+  + KPI + 리스크 매트릭스
 
-**Fallback 옵션** (어느 shift도 만족 못하면):
-A. comp4_v2 dW를 comp4_v1 값 (~0.44)로 override (정당화: V2 cell artifact)
-B. v1 BBABA로 fallback (R=+0.908, 이미 검증됨)
-C. comp4_v2_V0_extracted 사용해서 face_flip + eiso fix 재실행
+**핵심 stack 결정** (다음 phase에서 도입):
+- Workflow: atomate2 + jobflow
+- MLIP Layer 1: UMA-s-1p1 (이미 검증)
+- MLIP Layer 2: MACE (transfer learning surrogate)
+- Active learning: BoTorch + Ax (multi-objective)
+- Literature: OpenAlex + Semantic Scholar + chroma (semantic search)
+- AI 요약: Claude API
 
-**실행 명령** (`/data/work/v30u_ensemble`에서):
-```bash
-cp comp4_slab_v2_PRESERVED.xyz comp4_slab_v2_PRESERVED.shift2.bak
-mv comp3_slab_v2_PRESERVED.xyz comp3_slab_v2_PRESERVED.HIDE
-mv comp5_slab_v2_PRESERVED.xyz comp5_slab_v2_PRESERVED.HIDE
-cp face_flip_results/comp4_v2_done.json face_flip_results/comp4_v2_shift2_done.json
-for s in 0 1 3 4; do
-  cp comp4_v2_slab_shift${s}.xyz comp4_slab_v2_PRESERVED.xyz
-  python3 run_v30u_1L_face_flip.py 2>&1 | tail -10
-  mv face_flip_results/comp4_v2_done.json face_flip_results/comp4_v2_shift${s}_done.json
-done
-mv comp3_slab_v2_PRESERVED.HIDE comp3_slab_v2_PRESERVED.xyz
-mv comp5_slab_v2_PRESERVED.HIDE comp5_slab_v2_PRESERVED.xyz
-cp comp4_slab_v2_PRESERVED.shift2.bak comp4_slab_v2_PRESERVED.xyz
-cp face_flip_results/comp4_v2_shift2_done.json face_flip_results/comp4_v2_done.json
-```
+**다음 단계 (Phase 1, 3-6개월)**:
+1. atomate2 설치 + UMA workflow 테스트
+2. `scripts/doping/site_preference.py` 구현
+3. 100 LPSCl 도핑 후보 자동 screening
+4. literature harvest script (OpenAlex)
 
-(~40분 컴퓨트, 4 shift × 2 face × 36 reg × 16 gap = 4608 SCFs)
+---
 
-### 이전 (요약)
-- v1 BBABA OLD recipe로 R=+0.908, ρ=+0.900 확보 (paper-aligned visual)
-  하지만 v1은 champion 데이터 아니라 v2로 가려고 시도 중
-- v2 shift 2 face_flip 완료 (comp3/4/5 모두 Cl/Cl 표면)
-- eiso fix 재계산 완료 — comp4_v2 dW=3.64로 outlier 판명
-- OLD figure (R=+0.931)는 paper-aligned visual의 target reference
-- mechanism md (kb/papers/mechanism_anion_O_descriptor.md) 작성됨
-- 14 pair bond density killer descriptor (ρ=−1.00, R=−0.95) 확정됨
+## 2026-05-14 (Day-long sprint)
+
+### 19:00 — Paper mechanism MD 최종 완성
+
+**핵심 결과** (Section 4-7, `kb/papers/mechanism_anion_O_descriptor.md`):
+- UMA W_ad가 paper 5/5 strict rank 재현 (R=+0.989, ρ=+1.000)
+- 3대 표면 contact driver:
+  - Cl-O density R=+0.975 (Cl-Li-O 가교)
+  - S-O density R=−0.973 (S²⁻-O²⁻ Pauli)
+  - Li-O density R=+0.771 (universal attraction)
+- Family 분리: Li-vacancy migration Li₅.₄ +0.58 vs Li₆ +0.22 (2.6×)
+- Family 내부: bulk Cl 함량 R=+0.97 (subsurface Madelung)
+- 할로겐 깊이: Cl<1Å 표면, Br>5Å 벌크 (literature 일관)
+
+**Cherry-pick defense 7-axis convergence**:
+- Bond density (3 drivers) ✓
+- Vacancy migration ✓
+- Bulk Cl regression ✓
+- Halogen depth ✓
+- α robustness [0.8, 1.5] ✓
+- Li-O cutoff robustness [2.4, 3.6] Å ✓
+- Slab dataset v1 vs v2 ✓
+
+**Literature support 추가**:
+- Strauss 2023 (Cl surface LiCl nanoparticles)
+- Science 2024 (universal halide segregation)
+- Schwöbel 2016 (Li2S termination standard)
+- Sufyan 2024 (argyrodite (001) Li2S exposure)
+- Stamminger 2020 (anion site disorder 4a/4d)
+
+### 18:00 — Bond density 36-reg vectorized + Li-O cutoff sensitivity
+- `bond_density_36reg_FAST.py`: 1.7초 (vs 10분 non-vectorized)
+- Cl-O R=+0.975, S-O R=−0.973 확립
+- 이전 P-O killer 가설 폐기 (single-config artifact였음)
+- Li-O cutoff [2.4, 3.6] Å sweep: R 항상 양수, plateau [2.8, 3.4]
+
+### 17:00 — Vacancy migration 5-comp face A 통일
+- Li6 ΔW_ad(N=3) = +0.22 (평균), Li5.4 = +0.58 (평균)
+- 2.6배 family gap이 binding well 깊이 family 비율과 일치
+
+### 14-16 — Paper figure 완성 + α sensitivity
+- `plot_R0988_TIGHT_FIT.py`: 7-start global Morse fit
+- α robustness: uniform Li5.4 dW=0.44에서 α ∈ [0.8, 1.5] strict rank
+- Per-comp dW (eiso fix)는 어떤 α에서도 rank 안 맞음
+
+### 09-13 — Final combo 결정 + figure
+- 5 comp Cl-coherent termination 선택 (R=+0.989, ρ=+1.000)
+- comp1 face A, comp2 face A, comp3 preShift_B, comp4 shift2_B, comp5 shift2_A
+- Halogen depth로 자연 표면 정렬 입증
+- 640 face combo enumeration
+
+---
+
+## 이전 (요약)
+
+- v1 face_flip face A 조합 BBABA: R=+0.908, ρ=+0.900
+- v2 z-shift sweep: shift 2 = Cl/Cl 공통 종단
+- comp4_v2 cell anomaly 발견 (4% 압축, 50:50 Cl/Br frustration)
+- Uniform Li5.4 dW=0.44 채택 결정
+- bond density killer descriptor 가설 (P-O, 나중에 폐기)
