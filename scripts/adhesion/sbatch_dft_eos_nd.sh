@@ -1,18 +1,19 @@
 #!/bin/bash
-#SBATCH -J pytorch_finetune_v08
+#SBATCH -J DEM-Nd-eos-pair12
 #SBATCH -p amd_a100nv_8
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=16
 #SBATCH --gres=gpu:2
 #SBATCH --time=48:00:00
-#SBATCH -o logs/nd_dft_eos_%j.out
-#SBATCH -e logs/nd_dft_eos_%j.err
-#SBATCH --comment pytorch
+#SBATCH -o logs/Nd_eos_%j.out
+#SBATCH -e logs/Nd_eos_%j.err
+#SBATCH --comment qe
 
 # ============================================================
 # DFT EOS for Nd-doped LPSCl: rank1 (pair_00) + rank2 (pair_02)
-# Disguised as "pytorch_finetune" for KISTI usage records.
+# Honest naming aligned with DEM-case series in KISTI batch records.
+# --comment=qe per KISTI usage policy (Quantum ESPRESSO).
 #
 # Two pairs × 7 volumes each = 14 DFT relax jobs.
 # Strategy:
