@@ -368,6 +368,23 @@ def _bootstrap_am_star(am_wts, fracs, target=OP_THRESHOLD,
     replacement.  Returns (median, lo, hi).  Addresses the reviewer's
     "is Δ statistically significant vs measurement noise" check.
 
+    Resample unit
+    -------------
+    Naive case-level resampling — each case is drawn with replacement
+    from the full ensemble.  This treats every case as an independent
+    sample of the AM_wt% × stress-bearing relationship and gives the
+    CI that the user would obtain from a fresh independent ensemble
+    of the same size.
+
+    Caveat: when AM_wt% bins are unevenly populated (e.g. lots of
+    bimodal thick-film 80 % cases but only one mono-AM 95 % case),
+    naive resampling can sample the threshold-crossing region too
+    densely or too sparsely depending on how the resample falls.  A
+    stratified-by-AM_wt%-bin bootstrap would tighten the CI in that
+    case but is over-engineering for a first-pass robustness check
+    — we use naive resampling and document the choice so the
+    reviewer can ask for stratified if the CI looks suspicious.
+
     Returns (None, None, None) when fewer than 5 valid replicates
     cross the threshold — i.e. when the threshold is barely covered
     by the sample and the CI would be meaningless.
