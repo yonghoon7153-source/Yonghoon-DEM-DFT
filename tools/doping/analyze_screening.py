@@ -106,6 +106,17 @@ def main():
                        help='Filter: max |ΔV/V0| (default 10%%)')
     parser.add_argument('--max_de', type=float, default=None,
                        help='Filter: max ΔE/atom vs baseline (eV)')
+    parser.add_argument('--min_li_per_fu', type=float, default=4.0,
+                       help='Filter: minimum Li atoms per formula unit '
+                            '(default 4.0 = Li4PS5Cl floor; Sundar/Kraft '
+                            'literature working range is Li5.4-6.0). Set to '
+                            '0 to disable.')
+    parser.add_argument('--n_fu', type=int, default=4,
+                       help='Formula units per cell (default 4 for Li6PS5Cl '
+                            'conventional cell)')
+    parser.add_argument('--dedupe', action='store_true', default=True,
+                       help='Drop duplicate records with identical composition '
+                            'and ΔE within 1 meV/atom (default on)')
     args = parser.parse_args()
 
     data = json.loads(Path(args.results).read_text())
@@ -114,13 +125,34 @@ def main():
 
     # Filter pre-screen
     pre = records
+    n_before = len(pre)
     if args.max_dv is not None:
         pre = [r for r in pre if abs(r.get('dV_over_V0', 1e9)) <= args.max_dv]
     if args.max_de is not None:
         pre = [r for r in pre
                if r['uma_relaxed']['de_per_atom_vs_baseline'] <= args.max_de]
-    print(f"After filter (|ΔV/V0|≤{args.max_dv}, "
-          f"ΔE≤{args.max_de}): {len(pre)} records")
+    if args.min_li_per_fu > 0:
+        before_li = len(pre)
+        pre = [r for r in pre
+               if r['uma_relaxed']['composition'].get('Li', 0) / args.n_fu
+                  >= args.min_li_per_fu]
+        print(f"  Li-retention filter (≥{args.min_li_per_fu} Li/f.u.): "
+              f"{before_li} → {len(pre)} records")
+    if args.dedupe:
+        before_dd = len(pre)
+        seen: set[tuple] = set()
+        dedup = []
+        for r in pre:
+            comp = tuple(sorted(r['uma_relaxed']['composition'].items()))
+            de = round(r['uma_relaxed']['de_per_atom_vs_baseline'] * 1000)
+            key = (comp, de)
+            if key not in seen:
+                seen.add(key)
+                dedup.append(r)
+        pre = dedup
+        print(f"  Dedup (composition + ΔE/atom 1 meV bucket): "
+              f"{before_dd} → {len(pre)} records")
+    print(f"  Total after all filters: {len(pre)}/{n_before}")
 
     scored = compute_composite_score(pre, args.w_e, args.w_v, args.w_s, args.w_c)
     ranked = sorted(scored, key=lambda r: r['composite_score'], reverse=True)
