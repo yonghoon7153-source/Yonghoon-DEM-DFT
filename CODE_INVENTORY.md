@@ -522,3 +522,60 @@ find /scratch /data -name "*bader*" -o -name "*adhesion*" -o -name "*eos*" 2>/de
 ---
 
 #code-inventory #verified-scripts #claude-algorithm
+
+---
+
+## Z. 2026-05-15 unification — newly migrated files
+
+(From `claude/configure-spawn-halogen-lithium-TjDCB`. See `MIGRATION_2026_05_15.md`.)
+
+### Z1. Doping screening pipeline (Phase 1) — `tools/doping/`
+- **`tools/doping/site_preference.py`** ✅ VERIFIED (validated against 19 documented LPSCl substitutions, 0/19 mismatch)
+  - `--validate` flag cross-checks RADIUS_TOL against literature
+  - `--all` runs every entry in DOPANT_DB
+  - Per-site cutoffs (Li 0.60 / P 0.55 / S 0.50 / Cl 0.50 Å) calibrated from observed cases — refs in code header
+- **`tools/doping/substitute_struct.py`** ✅ tested on data/lpscl_bulk.cif (217 structures generated for 29 dopants)
+  - `--polymorph`, `--li_ordering`, `--method random --n_seeds N` options
+  - Ensemble mode produces N independent Li-vacancy + dopant-site seeds per (dopant, conc) for B0/E mean±std
+- **`tools/doping/run_uma_screening.py`** ✅ dry-run OK (3 struct in 21.8s on gabia A100 uma env)
+  - UMA-s-1p1 + FrechetCellFilter + FIRE, fmax 0.05, resume-safe
+- **`tools/doping/analyze_screening.py`** ✅
+  - Composite ranking (energy / volume / site_pref / charge_comp) + Top-N report
+- **`tools/doping/fetch_mp_structure.py`** ✅
+  - MP API wrapper; warns mp-985592 is dynamically unstable cubic
+- **`db/doping/dopant_candidates.json`** — 30 dopants Shannon radii + charges
+- **`db/doping/site_preference_initial.json`** — Tier-1 screening result (29/30 dopants compatible)
+- **`db/structures/lpscl_bulk.cif`** — UMA-relaxed LPSCl baseline (52 atom, pseudo_cubic_P1, 48H_low)
+
+### Z2. Nd-doped LPSCl DFT EOS (paper #2) — `runs/nd_doped_modelc/`
+- **`runs/nd_doped_modelc/2_uma_eos_predft/`**
+  - `uma_screen_all_pairs.py`, `uma_eos_pre_dft.py`, `sbatch_uma_eos_kisti.sh`
+- **`runs/nd_doped_modelc/3_dft_eos/`**
+  - `prepare_dft_eos_nd.py` (UMA → DFT input prep, 7 volumes per pair)
+  - `sbatch_dft_eos_nd.sh` (KISTI sbatch, 2 GPUs, --comment=qe)
+  - `run_dft_eos_pair.sh` (per-pair runner with BFGS auto-restart)
+  - Status: rank1 (pair_00) + rank2 (pair_02) DFT EOS in progress on KISTI
+
+### Z3. v0 paper analysis / plotting — `필독/adhesion/`
+- `alpha_sensitivity_FINAL.py` (α strain correction sensitivity, R=+0.989 derivation)
+- `bond_density_36reg_FAST.py` (36 lateral registries averaging — fixes single-config artifact)
+- `bond_density_LiO_cutoff_sweep.py` (Li-O cutoff sensitivity)
+- `comprehensive_FINAL_analysis.py`
+- `generate_stacked_deq_orthogonal.py`
+- `plot_R0988_TIGHT_FIT.py` (paper Figure 5)
+- `run_li_migration_FINAL_combo.py` (vacancy-driven ΔW_ad, anchor evidence)
+
+### Z4. Knowledge base additions — `kb/methodology/`, `kb/papers/`, `db/literature/`
+- `kb/methodology/argyrodite_mechanical_pipeline.md` ⭐ — canonical 8-step + 3 appendices, integrates v1 user-provided + Pustorino 2025 + D'Amore 2022 findings + per-step ref. table
+- `kb/methodology/coating_descriptor_catalog.md` — 60+ descriptors, §4 has B0 baseline-dependence warning (Pustorino/D'Amore)
+- `kb/methodology/doping_substitution_algorithm.md`
+- `kb/methodology/PHASE1_QUICKSTART_doping.md`
+- `kb/methodology/digital_twin_roadmap.md`, `platforms_literature_db_tools.md`, `platforms_ml_automation.md`
+- `kb/papers/mechanism_anion_O_descriptor.md` (v0 paper mechanism, R=+0.989, 3-tier Cl-O / S-O / Li-O drivers)
+- `db/literature/damore_2022_lpscl_symmetry_breaking_qha.md` (LPSCl F-43m metastable, imag phonons; B0(298K) 18.7 vs 26 GPa polymorph spread)
+- `db/literature/pustorino_2025_lpscl_li_ordering_mechanical.md` (Li ordering + S/Cl inv → B0 13.7~29.6 GPa, ±50%; 48HR is ground state)
+- `db/literature/sundar_2025_lpscl_coating.md` (Argonne 3-interface ΔE screening, comparison baseline)
+
+### Z5. Tools — `tools/`
+- `tools/literature_harvest.py` — OpenAlex / Semantic Scholar API client for auto-curation
+
