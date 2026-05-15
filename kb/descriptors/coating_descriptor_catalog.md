@@ -93,10 +93,51 @@
 | Young's modulus (E) | from B, G | E = 9BG/(3B+G) | 강도 |
 | Poisson's ratio (ν) | from B, G | ν = (3B−2G)/(2(3B+G)) | 변형 거동 |
 | Anisotropy index (A_U) | tensor analysis | aelas / pymatgen | 방향 의존성 |
+| Pugh ratio (G/B) | derived | — | brittleness (>0.57 brittle, anti-perovskite ~0.7) |
+| Thermal expansion α(T) | QHA phonon | CRYSTAL/phonopy | CTE mismatch with NCM (cycling crack) |
 | Hardness (Vickers proxy) | empirical | from G/B | scratch 저항 |
 | Fracture toughness | empirical | 추정 | crack 저항 |
+| Surface fracture energy γ | (E_slab − nE_bulk − Σnμ)/A | DFT slab | crack initiation (= 2× surface energy) |
 
 > UMA + ase로 elastic tensor 계산 가능. 자세한 건 `scripts/descriptors/elastic.py` (구현 예정).
+
+### 4.1 ⚠ Baseline 의존성 — LPSCl elastic은 ±2× 흩어진다
+
+LPSCl는 **단일 baseline 구조의 B0/E를 절대값으로 보고하면 안 된다.** 두 reference
+논문이 정량 분산을 직접 측정함:
+
+**(1) Polymorph 분산** — D'Amore et al. *PCCP* **2022**, *24*, 22978
+([DB](../literature_db/damore_2022_lpscl_symmetry_breaking_qha.md))
+- F-43m cubic (mp-985592)에 imaginary phonon mode 2개 (−146, −115 cm⁻¹)
+  → dynamically unstable
+- Pseudo-cubic Model 2 (P1): B(298K) = **18.7 GPa**, G = 12.5 GPa, E = 30.7 GPa
+- Monoclinic Model 4 (Pm): B(298K) ≈ **26 GPa** (~30% stiffer, true ground state,
+  ΔE = −0.31 eV/f.u. vs Model 2)
+- α(298K) = **6.55×10⁻⁵ K⁻¹** — oxide의 ~2배 → NCM과의 CTE mismatch가 cycling
+  crack의 1차 driver
+
+**(2) Li site + S/Cl inversion 분산** — Pustorino et al. *Chem. Mater.* **2025**,
+*37*, 313 ([DB](../literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md))
+- 13개 ordering ensemble에서 (PBE 24G/48H/48HR ± S/Cl 50% inv):
+  - B0: **13.7 ~ 29.6 GPa** (±50%)
+  - E: **21.7 ~ 37.9 GPa** (±75%)
+- True bulk ground state: **48HR (no inversion)**, ΔE = −0.80 eV/f.u. vs 24G_super
+- Li site (24g vs 48h)만으로는 elastic 영향 작음, **S/Cl inversion이 비선형 결합
+  효과로 큰 변동 유발**
+- 실험과 부합 (실측 NMR 50% inversion)
+
+**(3) 통합 메시지 — 우리 워크플로우 룰**
+| 룰 | 이유 |
+|----|------|
+| Baseline polymorph **고정 후 보고** (cubic / pseudo-cubic / monoclinic 중 택일) | polymorph 변동 ~5–7 GPa |
+| 같은 polymorph 내 **Li ordering ensemble (N≥3) 평균 ± std** | ordering 변동 ~16 GPa |
+| Dopant 효과는 **상대 ΔB0** 로 보고, 절댓값 비교 지양 | systematic error 캔슬 |
+| EOS strain **≤ 1%** (또는 hop artifact 검사) | 큰 strain 시 24g→48h hop이 shear instability로 잘못 측정 (Pustorino §3.2) |
+| Surface 모델은 **(110) 우선** 사용 | Wulff 81% dominant facet (D'Amore §3.3.2) |
+| α(T) effect는 V0 보정에 **무시 가능 (~0.6%)**, 단 NCM과 CTE mismatch는 **6× 차이** → adhesion model에 반영 | thermal cycling crack |
+
+→ 위 룰은 `scripts/doping/run_uma_screening.py`에 ensemble 모드, `substitute_struct.py`에
+`--li_ordering / --polymorph` 옵션으로 자동 반영 (Phase 1 doping pipeline).
 
 ---
 

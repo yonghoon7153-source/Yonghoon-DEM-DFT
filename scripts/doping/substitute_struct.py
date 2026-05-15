@@ -58,12 +58,12 @@ def find_host_indices(atoms: Atoms, host_element: str) -> list[int]:
 
 
 def select_substitution_sites(host_indices: list[int], n_sub: int,
-                              method: str = 'first') -> list[int]:
+                              method: str = 'first', seed: int = 42) -> list[int]:
     """Pick n_sub indices to substitute.
 
     method:
       'first': lowest indices (deterministic, reproducible)
-      'random': random selection (with seed for reproducibility)
+      'random': random selection (use ``seed`` for reproducibility)
       'spread': maximize distance between chosen sites (anti-clustering)
     """
     if n_sub >= len(host_indices):
@@ -71,7 +71,7 @@ def select_substitution_sites(host_indices: list[int], n_sub: int,
     if method == 'first':
         return host_indices[:n_sub]
     if method == 'random':
-        rng = np.random.default_rng(42)
+        rng = np.random.default_rng(seed)
         return sorted(rng.choice(host_indices, size=n_sub, replace=False).tolist())
     # spread: greedy farthest-first (use simple index spacing as proxy)
     step = len(host_indices) // n_sub
@@ -79,13 +79,13 @@ def select_substitution_sites(host_indices: list[int], n_sub: int,
 
 
 def substitute(atoms: Atoms, dopant: str, host_element: str,
-               n_sub: int, method: str = 'spread') -> Atoms:
+               n_sub: int, method: str = 'spread', seed: int = 42) -> Atoms:
     """Replace n_sub host atoms with dopant atoms."""
     new = atoms.copy()
     host_idx = find_host_indices(new, host_element)
     if not host_idx:
         raise ValueError(f"No {host_element} atoms in structure")
-    targets = select_substitution_sites(host_idx, n_sub, method)
+    targets = select_substitution_sites(host_idx, n_sub, method, seed=seed)
     syms = new.get_chemical_symbols()
     for i in targets:
         syms[i] = dopant
@@ -93,25 +93,30 @@ def substitute(atoms: Atoms, dopant: str, host_element: str,
     return new, targets
 
 
-def add_li_vacancy(atoms: Atoms, n_vac: int = 1, method: str = 'spread') -> Atoms:
+def add_li_vacancy(atoms: Atoms, n_vac: int = 1, method: str = 'spread',
+                   seed: int = 42) -> Atoms:
     """Remove n_vac Li atoms (for donor charge compensation)."""
     li_idx = find_host_indices(atoms, 'Li')
     if n_vac >= len(li_idx):
         raise ValueError(f"Cannot remove {n_vac} Li from {len(li_idx)} atoms")
-    targets = select_substitution_sites(li_idx, n_vac, method)
+    # Use seed+1 so vacancy != substitution sites for the same nominal seed
+    targets = select_substitution_sites(li_idx, n_vac, method, seed=seed + 1)
     keep = [i for i in range(len(atoms)) if i not in targets]
     return atoms[keep]
 
 
 def apply_charge_compensation(atoms: Atoms, host_charge: int,
-                              dopant_charge: int, n_dopants: int) -> Atoms:
+                              dopant_charge: int, n_dopants: int,
+                              vacancy_method: str = 'spread',
+                              seed: int = 42) -> Atoms:
     """Apply automatic charge compensation."""
     delta_q = (dopant_charge - host_charge) * n_dopants
     if delta_q == 0:
         return atoms, 'isovalent'
     elif delta_q > 0:
         # Donor: remove Li (each removal = +1 charge correction)
-        return add_li_vacancy(atoms, n_vac=delta_q), f'Li_vac_{delta_q}'
+        return add_li_vacancy(atoms, n_vac=delta_q, method=vacancy_method,
+                              seed=seed), f'Li_vac_{delta_q}'
     else:
         # Acceptor: simplest = add Li interstitial. For now, leave imbalanced
         # with note. (Proper treatment needs Li interstitial site finding.)
@@ -120,12 +125,26 @@ def apply_charge_compensation(atoms: Atoms, host_charge: int,
 
 def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
                        concentrations: list[float], out_dir: Path,
-                       dopant_db: dict) -> list[dict]:
-    """Generate structures for one dopant across all sites + concentrations."""
+                       dopant_db: dict, method: str = 'spread',
+                       n_seeds: int = 1, base_seed: int = 42,
+                       polymorph: str = 'unknown',
+                       li_ordering: str = 'unknown') -> list[dict]:
+    """Generate structures for one dopant across all sites + concentrations.
+
+    method: 'spread' (deterministic, default) or 'random' (paired with n_seeds).
+    n_seeds: number of independent seeds when method='random' — required to build
+        a Li-ordering ensemble that lets downstream UMA screening report mean±std
+        of B0/E (Pustorino 2025, D'Amore 2022).
+    polymorph / li_ordering: metadata stamped on every generated record so the
+        downstream pipeline can group results by baseline polymorph/ordering.
+    """
     element = dopant_entry['element']
     if element not in dopant_db:
         return []
     d_info = dopant_db[element]
+
+    seeds = ([base_seed] if method != 'random'
+             else [base_seed + i for i in range(n_seeds)])
 
     generated = []
     for site_info in dopant_entry.get('compatible_sites', []):
@@ -137,33 +156,42 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
         for conc in concentrations:
             n_sub = max(1, int(round(n_host * conc)))
             actual_conc = n_sub / n_host
-            try:
-                doped, sub_idx = substitute(base_atoms, element, host, n_sub,
-                                            method='spread')
-                doped, comp_label = apply_charge_compensation(
-                    doped, site_info['host_charge'], d_info['charge'], n_sub)
+            for seed in seeds:
+                try:
+                    doped, sub_idx = substitute(base_atoms, element, host,
+                                                n_sub, method=method, seed=seed)
+                    doped, comp_label = apply_charge_compensation(
+                        doped, site_info['host_charge'], d_info['charge'],
+                        n_sub, vacancy_method=method, seed=seed)
 
-                # Output filename
-                name = f"{element}_{site}_x{int(actual_conc*1000):03d}_{comp_label}"
-                xyz_path = out_dir / f'{name}.xyz'
-                write(xyz_path, doped)
+                    base_name = (f"{element}_{site}_x{int(actual_conc*1000):03d}"
+                                 f"_{comp_label}")
+                    name = (base_name if method != 'random'
+                            else f"{base_name}_s{seed - base_seed:02d}")
+                    xyz_path = out_dir / f'{name}.xyz'
+                    write(xyz_path, doped)
 
-                generated.append({
-                    'name': name,
-                    'dopant': element,
-                    'host': host,
-                    'site': site,
-                    'concentration': actual_conc,
-                    'n_sub': n_sub,
-                    'charge_compensation': comp_label,
-                    'compatibility_score': site_info['compatibility_score'],
-                    'n_atoms': len(doped),
-                    'composition': dict(zip(*np.unique(
-                        doped.get_chemical_symbols(), return_counts=True))),
-                    'xyz_file': str(xyz_path),
-                })
-            except Exception as e:
-                print(f"  ❌ {element} on {site} conc={conc:.2f}: {e}")
+                    generated.append({
+                        'name': name,
+                        'dopant': element,
+                        'host': host,
+                        'site': site,
+                        'concentration': actual_conc,
+                        'n_sub': n_sub,
+                        'charge_compensation': comp_label,
+                        'compatibility_score': site_info['compatibility_score'],
+                        'n_atoms': len(doped),
+                        'composition': dict(zip(*np.unique(
+                            doped.get_chemical_symbols(), return_counts=True))),
+                        'xyz_file': str(xyz_path),
+                        'polymorph': polymorph,
+                        'li_ordering': li_ordering,
+                        'selection_method': method,
+                        'seed': seed,
+                    })
+                except Exception as e:
+                    print(f"  ❌ {element} on {site} conc={conc:.2f} "
+                          f"seed={seed}: {e}")
     return generated
 
 
@@ -180,7 +208,37 @@ def main():
                        default=[0.05, 0.10, 0.20],
                        help='Concentration list (mole fraction)')
     parser.add_argument('--out', required=True, help='Output directory')
+    parser.add_argument('--polymorph', default='unknown',
+                       choices=['unknown', 'cubic_F-43m', 'pseudo_cubic_P1',
+                                'monoclinic_Pm'],
+                       help='Baseline polymorph label (metadata only — pass the '
+                            'matching --base file). See '
+                            'kb/literature_db/damore_2022_lpscl_symmetry_breaking_qha.md.')
+    parser.add_argument('--li_ordering', default='unknown',
+                       choices=['unknown', '24G', '48H', '48HR', '48HR_inv',
+                                '48H_low'],
+                       help='Baseline Li ordering label (metadata only — pass the '
+                            'matching --base file). See '
+                            'kb/literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md.')
+    parser.add_argument('--method', default='spread',
+                       choices=['spread', 'random', 'first'],
+                       help="Substitution-site selection: 'spread' (deterministic, "
+                            "default) or 'random' (use with --n_seeds for ensemble).")
+    parser.add_argument('--n_seeds', type=int, default=1,
+                       help='Number of random seeds per (dopant, site, conc) when '
+                            "--method=random. Enables Li-ordering ensemble for "
+                            'mean±std B0/E (Pustorino 2025: ~16 GPa B0 spread).')
+    parser.add_argument('--seed', type=int, default=42,
+                       help='Base RNG seed (used directly when --method!=random).')
     args = parser.parse_args()
+
+    if args.method == 'random' and args.n_seeds < 2:
+        print("⚠ --method=random with --n_seeds=1 gives a single configuration "
+              "(no ensemble). Set --n_seeds≥3 for B0/E mean±std.")
+    if args.polymorph == 'unknown' or args.li_ordering == 'unknown':
+        print("⚠ Baseline polymorph or Li ordering is 'unknown'. Recommended: "
+              "--polymorph monoclinic_Pm --li_ordering 48HR (ground state). "
+              "mp-985592 is metastable cubic_F-43m / 24G.")
 
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -189,18 +247,24 @@ def main():
     base = read(args.base)
     print(f"  base: {len(base)} atoms, "
           f"composition: {dict(zip(*np.unique(base.get_chemical_symbols(), return_counts=True)))}")
+    print(f"  polymorph={args.polymorph}, li_ordering={args.li_ordering}, "
+          f"method={args.method}, n_seeds={args.n_seeds}")
 
     # Load DOPANT_DB from site_preference module
     import sys
     sys.path.insert(0, str(Path(__file__).parent))
     from site_preference import DOPANT_DB
 
+    common_kw = dict(method=args.method, n_seeds=args.n_seeds,
+                     base_seed=args.seed, polymorph=args.polymorph,
+                     li_ordering=args.li_ordering)
+
     if args.site_pref:
         site_pref_data = json.loads(Path(args.site_pref).read_text())
         all_generated = []
         for entry in site_pref_data:
             gens = generate_for_dopant(base, entry, args.concentrations,
-                                      out_dir, DOPANT_DB)
+                                      out_dir, DOPANT_DB, **common_kw)
             all_generated.extend(gens)
             print(f"  {entry['element']}: {len(gens)} structures")
     elif args.dopant and args.site and args.conc:
@@ -216,12 +280,22 @@ def main():
             **site_info, 'compatibility_score': 1.0,
         }]}
         all_generated = generate_for_dopant(base, entry, [args.conc],
-                                           out_dir, DOPANT_DB)
+                                           out_dir, DOPANT_DB, **common_kw)
     else:
         parser.error("Provide --site_pref OR (--dopant --site --conc)")
 
     summary_path = out_dir / 'structures_summary.json'
-    summary_path.write_text(json.dumps(all_generated, indent=2, default=str))
+    summary_path.write_text(json.dumps({
+        'baseline': {
+            'base_file': args.base,
+            'polymorph': args.polymorph,
+            'li_ordering': args.li_ordering,
+            'selection_method': args.method,
+            'n_seeds': args.n_seeds,
+            'base_seed': args.seed,
+        },
+        'structures': all_generated,
+    }, indent=2, default=str))
     print(f"\n✓ Generated {len(all_generated)} structures")
     print(f"✓ Summary: {summary_path}")
 

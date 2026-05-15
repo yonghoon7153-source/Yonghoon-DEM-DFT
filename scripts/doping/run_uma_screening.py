@@ -139,7 +139,13 @@ def main():
                        help='Limit to first N structures (debug)')
     args = parser.parse_args()
 
-    summary = json.loads(Path(args.summary).read_text())
+    summary_raw = json.loads(Path(args.summary).read_text())
+    if isinstance(summary_raw, dict) and 'structures' in summary_raw:
+        summary = summary_raw['structures']
+        struct_baseline_meta = summary_raw.get('baseline', {})
+    else:
+        summary = summary_raw
+        struct_baseline_meta = {}
     out_path = Path(args.out)
     out_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -201,6 +207,7 @@ def main():
         if (i + 1) % 5 == 0 or (i + 1) == len(todo):
             out_path.write_text(json.dumps({
                 'baseline': baseline,
+                'structure_baseline_meta': struct_baseline_meta,
                 'n_done': len(results),
                 'n_failed': len(failed),
                 'failed': failed,
