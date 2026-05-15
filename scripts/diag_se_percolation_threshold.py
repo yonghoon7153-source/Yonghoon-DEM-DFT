@@ -164,7 +164,8 @@ class _UnionFind:
 
 def _stress_bearing_fraction(atoms: dict, contacts: list,
                               bridge_through_AM: bool,
-                              z_top: float, z_bot: float
+                              z_top: float, z_bot: float,
+                              cutoff_mode: str = 'system',
                               ) -> tuple[float, int, int]:
     """Returns (fraction, n_total_SE, n_spanning_SE_volume_units).
 
@@ -173,6 +174,20 @@ def _stress_bearing_fraction(atoms: dict, contacts: list,
     strong sub-network.  When bridge_through_AM=True, strong AM-SE
     contacts are also included as edges so an SE cluster can span
     through AM particles.
+
+    cutoff_mode:
+      'system'        — Radjai 1996 original: mean of ALL contact
+                        |F_n|.  Reviewer-preferred default because
+                        it doesn't go circular at high AM_wt%
+                        (where SE contacts become rare and their
+                        own mean would drop, artificially keeping
+                        the strong-network ratio inflated).
+      'se_involving' — mean of only SE-involving contacts.  Kept
+                        as a robustness alternative; the AM-AM
+                        force tail can dominate the system mean
+                        at extreme AM_wt% so this asks "are SE
+                        contacts strong relative to other SE
+                        contacts".
 
     The "stress-bearing fraction" is reported by VOLUME of SE
     particles in the spanning component(s) divided by total SE
@@ -185,17 +200,20 @@ def _stress_bearing_fraction(atoms: dict, contacts: list,
     if not n_total_se or not contacts:
         return 0.0, 0, 0
 
-    # Per-pair-type Radjai strong filter — Liu & Yin's 2-phase
-    # threshold is about SE phase stress transmission, so we use
-    # the mean |F_n| of contacts that involve at least one SE
-    # particle as the cutoff (rather than the global mean which
-    # would be dominated by AM-AM contacts at high AM_wt%).
-    se_involved_fn = [fn for (i1, i2, fn, _) in contacts
-                       if (atoms.get(i1, {}).get('type') == 'SE' or
-                           atoms.get(i2, {}).get('type') == 'SE')]
-    if not se_involved_fn:
-        return 0.0, n_total_se, 0
-    f_mean = float(np.mean(se_involved_fn))
+    if cutoff_mode == 'system':
+        # Radjai 1996 original — mean of ALL contact normal forces.
+        all_fn = [fn for (_, _, fn, _) in contacts]
+        if not all_fn:
+            return 0.0, n_total_se, 0
+        f_mean = float(np.mean(all_fn))
+    else:
+        # SE-involving subset — alternative robustness check.
+        se_involved_fn = [fn for (i1, i2, fn, _) in contacts
+                           if (atoms.get(i1, {}).get('type') == 'SE' or
+                               atoms.get(i2, {}).get('type') == 'SE')]
+        if not se_involved_fn:
+            return 0.0, n_total_se, 0
+        f_mean = float(np.mean(se_involved_fn))
 
     uf = _UnionFind()
     for (i1, i2, fn, _) in contacts:
@@ -251,7 +269,7 @@ def _case_stats(case_dir: Path) -> dict | None:
     if not atoms or not contacts:
         return None
 
-    # AM weight fraction (definitions identical to the porosity model)
+    # ── AM weight fraction ────────────────────────────────────────
     am_vol = sum((4.0/3.0)*math.pi*(a['r']**3)
                  for a in atoms.values() if 'AM' in (a.get('type') or ''))
     se_vol = sum((4.0/3.0)*math.pi*(a['r']**3)
@@ -261,10 +279,39 @@ def _case_stats(case_dir: Path) -> dict | None:
     am_mass = am_vol * RHO_AM
     se_mass = se_vol * RHO_SE
     am_wt = 100.0 * am_mass / (am_mass + se_mass)
-    se_vol_frac = se_vol / (am_vol + se_vol)
 
-    # Top / bottom strip thickness — use the SE particle radius as
-    # the natural margin so a single SE near the boundary counts.
+    # ── Three SE volume-fraction definitions ─────────────────────
+    # (i)  V_SE / V_total_particles  — solid-only fraction (Bouvard /
+    #      Liu & Yin's likely "SE phase fraction" convention)
+    # (ii) V_SE / V_RVE              — bulk fraction including pore
+    #      space.  Common in compaction literature and FEM continuum
+    #      stress maps.
+    # (iii) V_SE / (V_SE + V_AM)     — mass→volume back-calc.
+    #      Mathematically identical to (i) in DEM where particle
+    #      volume is the only solid contribution; reported separately
+    #      so reviewer can sanity-check the equivalence.
+    se_vol_frac_solid = se_vol / (am_vol + se_vol)             # (i)
+    # Try to read porosity from full_metrics.json or input_params.json
+    # for definition (ii).  Fall back to NaN when unavailable so the
+    # reviewer can tell which value is interpolated vs measured.
+    porosity = None
+    fm_path = case_dir / 'full_metrics.json'
+    if fm_path.exists():
+        try:
+            fm = json.loads(fm_path.read_text())
+            porosity = fm.get('porosity_pct')
+            if porosity is not None:
+                porosity = float(porosity) / 100.0
+        except Exception:
+            porosity = None
+    se_vol_frac_rve = (se_vol_frac_solid * (1.0 - porosity)
+                        if porosity is not None and 0 < porosity < 1
+                        else float('nan'))                       # (ii)
+    se_vol_frac_mass = se_mass / ((am_mass / RHO_AM + se_mass / RHO_SE) *
+                                    ((RHO_AM + RHO_SE) / 2)) if False else \
+                       se_vol / (am_vol + se_vol)                # (iii) = (i)
+
+    # ── Top / bottom strip for spanning-cluster test ─────────────
     se_rs = [a['r'] for a in atoms.values() if a.get('type') == 'SE']
     margin = float(np.median(se_rs)) if se_rs else 0.0
     z_vals = [a['z'] for a in atoms.values() if a.get('type') == 'SE']
@@ -273,17 +320,27 @@ def _case_stats(case_dir: Path) -> dict | None:
     z_top = max(z_vals) - margin
     z_bot = min(z_vals) + margin
 
-    frac_a, n_se, span_a = _stress_bearing_fraction(
-        atoms, contacts, bridge_through_AM=False,
-        z_top=z_top, z_bot=z_bot)
-    frac_b, _,    span_b = _stress_bearing_fraction(
-        atoms, contacts, bridge_through_AM=True,
-        z_top=z_top, z_bot=z_bot)
+    # ── Four stress-bearing fractions: 2 cutoffs × 2 bridge modes ─
+    measurements = {}
+    n_se_seen = 0
+    for cutoff in ('system', 'se_involving'):
+        for bridge in (False, True):
+            frac, n_se, _ = _stress_bearing_fraction(
+                atoms, contacts,
+                bridge_through_AM=bridge, z_top=z_top, z_bot=z_bot,
+                cutoff_mode=cutoff)
+            n_se_seen = n_se
+            key = f'frac_{"bridge" if bridge else "se_only"}_{cutoff}'
+            measurements[key] = frac
+
     return dict(case_id=case_dir.name,
-                am_wt=am_wt, se_vol_frac=se_vol_frac,
-                n_se=n_se,
-                frac_se_only=frac_a, span_n_se_only=span_a,
-                frac_with_bridge=frac_b, span_n_with_bridge=span_b)
+                am_wt=am_wt,
+                se_vol_frac_solid=se_vol_frac_solid,
+                se_vol_frac_rve=se_vol_frac_rve,
+                se_vol_frac_mass=se_vol_frac_mass,
+                porosity=porosity,
+                n_se=n_se_seen,
+                **measurements)
 
 
 def _operational_threshold(am_wts, fracs, target=OP_THRESHOLD):
@@ -318,9 +375,8 @@ def main():
     for d in cases:
         s = _case_stats(d)
         if s: rows.append(s)
-        tag = '·' if s else '✗'
         if not s:
-            print(f'  {tag} {d.name} — skipped')
+            print(f'  ✗ {d.name} — skipped')
     if not rows:
         print('No usable cases.', flush=True); sys.exit(1)
     print(f'Done — {len(rows)} cases analysed.', flush=True)
@@ -330,95 +386,167 @@ def main():
     csv_p = DOCSDB / 'se_percolation_results.csv'
     with csv_p.open('w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=[
-            'case_id', 'am_wt', 'se_vol_frac', 'n_se',
-            'frac_se_only', 'span_n_se_only',
-            'frac_with_bridge', 'span_n_with_bridge'])
+            'case_id', 'am_wt',
+            'se_vol_frac_solid', 'se_vol_frac_rve', 'se_vol_frac_mass',
+            'porosity', 'n_se',
+            'frac_se_only_system', 'frac_bridge_system',
+            'frac_se_only_se_involving', 'frac_bridge_se_involving'])
         w.writeheader()
         for r in rows: w.writerow(r)
     print(f'  ✓ {csv_p}')
 
-    # ── Plot ────────────────────────────────────────────────────
-    am_wts   = np.array([r['am_wt']            for r in rows])
-    fr_only  = np.array([r['frac_se_only']     for r in rows])
-    fr_brdg  = np.array([r['frac_with_bridge'] for r in rows])
-    se_vf    = np.array([r['se_vol_frac']      for r in rows])
+    am_wts = np.array([r['am_wt'] for r in rows])
+    vf_solid = np.array([r['se_vol_frac_solid'] for r in rows])
+    vf_rve   = np.array([r['se_vol_frac_rve']   for r in rows])
 
-    fig, ax1 = plt.subplots(figsize=(10, 6.5))
+    # ── Reviewer-driven sensitivity table ──────────────────────────
+    # Two cutoff modes × two bridge modes × three thresholds.
+    # Defaults: cutoff='system' (Radjai 1996 original — reviewer-
+    # preferred to avoid circular logic at high AM_wt%), threshold
+    # 0.5 (the operational anchor), bridge=False (main measurement —
+    # bridging is reported as upper-bound sanity check).
+    THRESHOLDS = [0.3, 0.5, 0.7]
+    SERIES = [
+        ('se_only', 'system',       'SE-SE only · system mean (main)'),
+        ('bridge',  'system',       'SE-SE + bridge · system mean'),
+        ('se_only', 'se_involving', 'SE-SE only · SE-involved mean'),
+        ('bridge',  'se_involving', 'SE-SE + bridge · SE-involved mean'),
+    ]
+
+    def _series_data(bridge_or_only: str, cutoff: str):
+        key = f'frac_{bridge_or_only}_{cutoff}'
+        return np.array([r[key] for r in rows])
+
+    # ── Sensitivity table ─────────────────────────────────────────
+    print('\n── Operational AM_wt* sensitivity '
+          f'(crossing thresholds {THRESHOLDS}) ──')
+    print('  series                                 │ '
+          ' '.join(f'τ={t}'.ljust(10) for t in THRESHOLDS))
+    sens_table = {}
+    for bridge_or_only, cutoff, label in SERIES:
+        fracs = _series_data(bridge_or_only, cutoff)
+        row_vals = []
+        for t in THRESHOLDS:
+            am_star = _operational_threshold(am_wts, fracs, target=t)
+            row_vals.append(am_star)
+        sens_table[(bridge_or_only, cutoff)] = row_vals
+        cells = ['—' if v is None else f'{v:.1f}%' for v in row_vals]
+        print(f'  {label:38s} │ ' + ' '.join(c.ljust(10) for c in cells))
+
+    # ── Main figure ───────────────────────────────────────────────
+    fig, ax1 = plt.subplots(figsize=(11, 6.8))
     ax2 = ax1.twinx()
 
-    # Left axis — stress-bearing ratios (the directly measured quantity)
-    ax1.scatter(am_wts, fr_only, s=42, alpha=0.75,
-                 facecolor='#1f77b4', edgecolor='black', linewidth=0.4,
-                 label='SE-SE only (Radjai strong)')
-    ax1.scatter(am_wts, fr_brdg, s=42, alpha=0.75,
-                 facecolor='#d62728', edgecolor='black', linewidth=0.4,
-                 marker='D',
-                 label='SE-SE + AM-SE bridge')
-    # Right axis — SE volume fraction (the composition quantity used
-    # by Liu & Yin's continuum-FEM literature value)
-    ax2.scatter(am_wts, se_vf, s=22, alpha=0.6,
-                 facecolor='none', edgecolor='#888',
-                 marker='x', label='SE vol fraction (composition)')
+    # Markers / colours per series
+    style = {
+        ('se_only', 'system'):       ('#1f77b4', 'o', 'SE-SE only · system mean'),
+        ('bridge',  'system'):       ('#d62728', 'D', 'SE-SE + bridge · system mean'),
+        ('se_only', 'se_involving'): ('#1f77b4', 'o', None),    # robustness
+        ('bridge',  'se_involving'): ('#d62728', 'D', None),    # robustness
+    }
+    for bridge_or_only, cutoff, _ in SERIES:
+        col, mk, label = style[(bridge_or_only, cutoff)]
+        fracs = _series_data(bridge_or_only, cutoff)
+        is_alt = (cutoff == 'se_involving')
+        ax1.scatter(am_wts, fracs, s=44 if not is_alt else 22,
+                    alpha=0.85 if not is_alt else 0.35,
+                    facecolor=col if not is_alt else 'none',
+                    edgecolor='black' if not is_alt else col,
+                    marker=mk, linewidth=0.5 if not is_alt else 0.8,
+                    label=label)
 
-    ax1.axhline(OP_THRESHOLD, color='#555', ls='--', lw=0.8,
-                 label=f'operational threshold = {OP_THRESHOLD}')
-    ax2.axhline(0.65, color='purple', ls=':', lw=0.9,
-                 label='Liu & Yin 2025 f_perc = 0.65')
+    # SE volume fraction (definition (i), solid-only — the most direct
+    # match for Liu & Yin's "SE phase fraction").  Definition (ii) is
+    # an alternative right axis but we keep one for legibility — both
+    # values are in the CSV.
+    ax2.scatter(am_wts, vf_solid, s=22, alpha=0.6,
+                facecolor='none', edgecolor='#666',
+                marker='x', label='SE vol fraction (def i: solid-only)')
 
-    # Operational threshold markers — AM_wt% where the SE-only ratio
-    # crosses 0.5
-    am_star_only = _operational_threshold(am_wts, fr_only)
-    am_star_brdg = _operational_threshold(am_wts, fr_brdg)
-    if am_star_only is not None:
-        # SE vol fraction at that AM_wt%
+    # Threshold lines + Liu & Yin anchor
+    ax1.axhline(0.5, color='#555', ls='--', lw=0.9,
+                label='operational threshold τ = 0.5')
+    for tau in (0.3, 0.7):
+        ax1.axhline(tau, color='#999', ls=':', lw=0.6)
+    ax2.axhline(0.65, color='purple', ls=':', lw=1.0,
+                label='Liu & Yin 2025 f_perc = 0.65')
+
+    # Mark main-series AM_wt* at τ=0.5
+    main_star = sens_table[('se_only', 'system')][1]
+    if main_star is not None:
         idx = np.argsort(am_wts)
-        se_at_star = float(np.interp(am_star_only, am_wts[idx], se_vf[idx]))
-        ax1.axvline(am_star_only, color='#1f77b4', ls=':', lw=1)
-        ax1.text(am_star_only + 0.4, 0.85,
-                  f'AM_wt* = {am_star_only:.1f}%\n'
-                  f'SE vol_frac at AM_wt* = {se_at_star:.2f}',
+        se_at_star = float(np.interp(main_star, am_wts[idx], vf_solid[idx]))
+        ax1.axvline(main_star, color='#1f77b4', ls=':', lw=1)
+        ax1.text(main_star + 0.4, 0.88,
+                  f'AM_wt* (main) = {main_star:.1f} %\n'
+                  f'SE vol_frac (i) at AM_wt* = {se_at_star:.2f}',
                   fontsize=9, color='#1f77b4')
 
     ax1.set_xlabel('AM weight fraction (%)', fontsize=11)
     ax1.set_ylabel('Stress-bearing SE / total SE (volume ratio)',
-                    fontsize=11, color='#1f77b4')
+                   fontsize=11, color='#1f77b4')
     ax1.tick_params(axis='y', labelcolor='#1f77b4')
-    ax2.set_ylabel('SE volume fraction (composition)',
-                    fontsize=11, color='#666')
+    ax2.set_ylabel('SE volume fraction (composition, def i)',
+                   fontsize=11, color='#666')
     ax2.tick_params(axis='y', labelcolor='#666')
     ax1.set_ylim(-0.05, 1.05); ax2.set_ylim(0, 1)
     ax1.grid(alpha=0.3)
 
     h1, l1 = ax1.get_legend_handles_labels()
     h2, l2 = ax2.get_legend_handles_labels()
-    ax1.legend(h1 + h2, l1 + l2, fontsize=9, loc='lower left',
-                 framealpha=0.95)
+    leg = ax1.legend([h for h, l in zip(h1, l1) if l] +
+                      [h for h, l in zip(h2, l2) if l],
+                      [l for l in l1 if l] + [l for l in l2 if l],
+                      fontsize=9, loc='lower left', framealpha=0.95)
+    fig.text(0.5, -0.02,
+              'Faded markers = SE-involved mean cutoff (robustness check, '
+              'see Radjai 1996 vs SE-restricted alternative). '
+              'Dotted horizontals at τ = 0.3, 0.7 show threshold-sensitivity '
+              'envelope reported in console.',
+              ha='center', va='top', fontsize=9, color='#666')
 
-    ax1.set_title('SE stress-bearing percolation — direct measurement vs Liu & Yin 2025 f_perc',
-                    fontsize=12, fontweight='bold')
+    ax1.set_title('SE stress-bearing percolation — direct measurement '
+                  'vs Liu & Yin 2025 f_perc',
+                  fontsize=12, fontweight='bold')
     plt.tight_layout()
     out = FIGDIR / 'se_percolation_threshold.png'
     fig.savefig(out, dpi=150, bbox_inches='tight')
     print(f'  ✓ {out}')
 
-    # Console summary
-    print('\n── Operational threshold (stress-bearing ratio drops below '
-          f'{OP_THRESHOLD}) ──')
-    if am_star_only is not None:
-        idx = np.argsort(am_wts)
-        se_at_star = float(np.interp(am_star_only, am_wts[idx], se_vf[idx]))
-        print(f'  (a) SE-SE only         : AM_wt* = {am_star_only:.1f} %  '
-              f'(SE vol_frac there = {se_at_star:.3f})')
+    # ── Final console summary — three SE_vol_frac definitions at
+    # the main-series AM_wt* so reviewer can pick the convention that
+    # matches Liu & Yin's continuum-FEM definition ────────────────
+    print('\n── Reviewer summary at main series (SE-SE only · system mean, τ = 0.5) ──')
+    if main_star is None:
+        print('  AM_wt* not crossed in this sample range — extend AM_wt% range.')
     else:
-        print('  (a) SE-SE only         : threshold not crossed in this sample')
-    if am_star_brdg is not None:
         idx = np.argsort(am_wts)
-        se_at_star_b = float(np.interp(am_star_brdg, am_wts[idx], se_vf[idx]))
-        print(f'  (b) SE-SE + AM-SE bridge: AM_wt* = {am_star_brdg:.1f} %  '
-              f'(SE vol_frac there = {se_at_star_b:.3f})')
-    else:
-        print('  (b) SE-SE + AM-SE bridge: threshold not crossed in this sample')
-    print(f'\nCompare with Liu & Yin 2025 f_perc = 0.65 (SE volume fraction).')
+        se_solid = float(np.interp(main_star, am_wts[idx], vf_solid[idx]))
+        # def (ii) only valid where porosity was available
+        valid_rve = ~np.isnan(vf_rve)
+        if valid_rve.sum() >= 2:
+            sorted_idx_rve = np.argsort(am_wts[valid_rve])
+            se_rve = float(np.interp(
+                main_star,
+                am_wts[valid_rve][sorted_idx_rve],
+                vf_rve[valid_rve][sorted_idx_rve]))
+        else:
+            se_rve = float('nan')
+        print(f'  AM_wt* (operational, τ = 0.5)   = {main_star:.2f} %')
+        print(f'  SE_vol_frac at AM_wt*           — three definitions:')
+        print(f'    (i)   V_SE / V_total_particles (solid-only)        = {se_solid:.3f}')
+        print(f'    (ii)  V_SE / V_RVE (including porosity)            = '
+              f'{("%.3f" % se_rve) if not np.isnan(se_rve) else "NaN (porosity missing)"}')
+        print(f'    (iii) V_SE / (V_SE + V_AM) mass→volume back-calc   = {se_solid:.3f} (same as (i) in DEM)')
+        print(f'  Liu & Yin 2025 f_perc           = 0.65 (convention: '
+              f'most likely def (i) solid-only or (ii) RVE — confirm in their §)')
+        print(f'  Δ vs literature: def (i)  = {se_solid - 0.65:+.3f}, '
+              f'def (ii) = '
+              f'{("%+.3f" % (se_rve - 0.65)) if not np.isnan(se_rve) else "NaN"}')
+
+
+if __name__ == '__main__':
+    main()
 
 
 if __name__ == '__main__':
