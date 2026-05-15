@@ -171,11 +171,17 @@ def process_rank(rank_label: str, pair_dir: Path, calc, out_dir: Path) -> dict:
     # First: relax fully (cell + positions) to get clean V0
     print(f"\n  Step 1: Full relax (cell + positions) at reference volume...")
     from ase.optimize import LBFGS
-    from ase.constraints import ExpCellFilter
+    try:
+        from ase.filters import FrechetCellFilter as CellFilter
+    except ImportError:
+        try:
+            from ase.constraints import ExpCellFilter as CellFilter
+        except ImportError:
+            from ase.constraints import UnitCellFilter as CellFilter
     atoms_full = atoms.copy()
     atoms_full.calc = calc
     atoms_full.set_pbc([True, True, True])
-    ucf = ExpCellFilter(atoms_full)
+    ucf = CellFilter(atoms_full)
     opt = LBFGS(ucf, logfile=None)
     t0 = time.time()
     opt.run(fmax=FMAX, steps=NSTEPS)

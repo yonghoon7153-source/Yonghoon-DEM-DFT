@@ -83,11 +83,18 @@ def pick_best_champion(pair_dir: Path, prefer: str = 'lbfgs') -> Path | None:
 def full_relax(atoms, calc, fmax=FMAX, nsteps=NSTEPS, label=''):
     """Cell + positions full relax."""
     from ase.optimize import LBFGS
-    from ase.constraints import ExpCellFilter
+    # ASE 3.28+ uses FrechetCellFilter; older versions use ExpCellFilter
+    try:
+        from ase.filters import FrechetCellFilter as CellFilter
+    except ImportError:
+        try:
+            from ase.constraints import ExpCellFilter as CellFilter
+        except ImportError:
+            from ase.constraints import UnitCellFilter as CellFilter
     atoms = atoms.copy()
     atoms.calc = calc
     atoms.set_pbc([True, True, True])
-    ucf = ExpCellFilter(atoms)
+    ucf = CellFilter(atoms)
     opt = LBFGS(ucf, logfile=None)
     try:
         opt.run(fmax=fmax, steps=nsteps)
