@@ -579,3 +579,18 @@ find /scratch /data -name "*bader*" -o -name "*adhesion*" -o -name "*eos*" 2>/de
 ### Z5. Tools — `tools/`
 - `tools/literature_harvest.py` — OpenAlex / Semantic Scholar API client for auto-curation
 
+
+### Z6. Compound-set doping (Type A/B/C from literature)
+- **`tools/doping/substitute_compound.py`** ✅ tested on Nd2O3 / Li5.4PS4.4Cl1.6 / MgO / Al2O3+Cl
+  - Type A: ionic compound (`--compound Nd2O3 --x_compound 0.05`)
+  - Type B: halide-rich (`--halide_rich Cl --excess_per_fu 0.6`) reproduces Li6-xPS5-xCl1+x
+  - Type C: chain Type A + Type B (`--also_halide_rich Cl --excess_per_fu 0.3`)
+  - Charge balance auto: cation aliovalency at Li site → extra Li vacancy
+  - Each test verified: Mg/Nd/Al all give expected (Li_count, Mg/Nd/Al_count, S_count, O_count, Cl_count, total_atoms)
+- `tools/doping/site_preference.py` — add 6 rare-earth dopants (La, Ce, Nd, Sm, Gd, Yb)
+  for Nd2O3 / La2O3 / Sm2O3 oxide-coating chemistry (Sundar 2025 + paper #2). Validation
+  table unchanged (0/19 mismatches preserved).
+- `db/literature/lpscl_doping_precursor_compounds_review.md` — 4-mechanism
+  classification (A: compound set, B: halide-rich, C: aliovalent+halide co-doping,
+  D: additive not lattice). 10 reference citations with DOIs.
+

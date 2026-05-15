@@ -51,6 +51,14 @@ DOPANT_DB = {
     'In':  {'charge': +3, 'radius': 0.80},
     'Sc':  {'charge': +3, 'radius': 0.745},
     'Y':   {'charge': +3, 'radius': 0.90},
+    # Rare earths — added for Nd2O3 / La2O3 oxide doping (paper #2 + Sundar
+    # 2025 coating screening). All trivalent; Shannon CN=6 values.
+    'La':  {'charge': +3, 'radius': 1.032},
+    'Ce':  {'charge': +3, 'radius': 1.01},
+    'Nd':  {'charge': +3, 'radius': 0.983},
+    'Sm':  {'charge': +3, 'radius': 0.958},
+    'Gd':  {'charge': +3, 'radius': 0.938},
+    'Yb':  {'charge': +3, 'radius': 0.868},
     # Cations for P site
     'P':   {'charge': +5, 'radius': 0.17},
     'Sb':  {'charge': +5, 'radius': 0.60},
