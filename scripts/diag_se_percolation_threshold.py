@@ -361,6 +361,37 @@ def _operational_threshold(am_wts, fracs, target=OP_THRESHOLD):
     return None
 
 
+def _bootstrap_am_star(am_wts, fracs, target=OP_THRESHOLD,
+                        n_boot: int = 1000, rng_seed: int = 12345
+                        ) -> tuple[float | None, float | None, float | None]:
+    """Bootstrap a 95 % CI on AM_wt* by resampling cases with
+    replacement.  Returns (median, lo, hi).  Addresses the reviewer's
+    "is Δ statistically significant vs measurement noise" check.
+
+    Returns (None, None, None) when fewer than 5 valid replicates
+    cross the threshold — i.e. when the threshold is barely covered
+    by the sample and the CI would be meaningless.
+    """
+    rng = np.random.default_rng(rng_seed)
+    n = len(am_wts)
+    if n < 5:
+        return (None, None, None)
+    replicates: list[float] = []
+    for _ in range(n_boot):
+        idx = rng.integers(0, n, size=n)
+        amw_b = np.asarray(am_wts)[idx]
+        fr_b  = np.asarray(fracs)[idx]
+        v = _operational_threshold(amw_b, fr_b, target=target)
+        if v is not None:
+            replicates.append(v)
+    if len(replicates) < 5:
+        return (None, None, None)
+    arr = np.array(replicates)
+    return (float(np.median(arr)),
+            float(np.percentile(arr, 2.5)),
+            float(np.percentile(arr, 97.5)))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__,
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -568,9 +599,36 @@ def main():
         print(f'    Alternative: convention (i) solid-only')
         print(f'      Δ_(i)  = {d_i:+.3f}  → SE_vol_frac (i)  = {se_solid:.3f} vs 0.65')
 
-        # Auto-classification into the reviewer's pre-registered
-        # outcome scenarios (response framing is identical regardless
-        # of which one triggers — all three are paper-positive).
+        # Bootstrap 95 % CI on AM_wt* — answers reviewer's "is Δ
+        # statistically significant vs measurement noise" question.
+        main_fracs = _series_data('se_only', 'system')
+        am_med, am_lo, am_hi = _bootstrap_am_star(am_wts, main_fracs,
+                                                    target=0.5)
+        if am_med is not None:
+            # Propagate the CI through to SE_vol_frac at AM_wt*
+            sort_idx = np.argsort(am_wts)
+            sv_med = float(np.interp(am_med, am_wts[sort_idx], vf_solid[sort_idx]))
+            sv_lo  = float(np.interp(am_lo,  am_wts[sort_idx], vf_solid[sort_idx]))
+            sv_hi  = float(np.interp(am_hi,  am_wts[sort_idx], vf_solid[sort_idx]))
+            print(f'\n  Bootstrap 95 % CI (1000 resamples, main series):')
+            print(f'    AM_wt*           = {am_med:.2f} %   '
+                  f'CI [{am_lo:.2f}, {am_hi:.2f}]')
+            print(f'    SE_vol_frac (i)  = {sv_med:.3f}    '
+                  f'CI [{sv_lo:.3f}, {sv_hi:.3f}]')
+            ci_width_i = sv_hi - sv_lo
+        else:
+            print('\n  Bootstrap CI not computable (sample too small or '
+                  'threshold barely covered).')
+            ci_width_i = None
+
+        # Auto-classification into reviewer-registered scenarios.
+        # IMPORTANT: the output is labelled "DRAFT — manual validation
+        # required" because Δ < 0.05 alone is not sufficient evidence
+        # for "strong validation" — it could be RCP-universality
+        # coincidence, bootstrap-noise-driven, or driven by outliers.
+        # The classifier provides a STARTING point for the response;
+        # the user is expected to walk the verification checklist
+        # before adopting any of the suggested framings.
         def _scenario():
             if d_ii is not None and abs(d_ii) < 0.05:
                 return ('A', 'strong validation under RVE convention',
@@ -589,8 +647,51 @@ def main():
                     'ratio, plastic phase modulus, AM crystallinity. The '
                     'deviation itself becomes a publishable finding.')
         scen, label, framing = _scenario()
-        print(f'\n  → Scenario {scen}: {label}')
-        print(f'    Framing: {framing}')
+        print(f'\n  → Scenario {scen} (auto-classified): {label}')
+        print(f'    Suggested framing (DRAFT — manual validation required):')
+        print(f'      "{framing}"')
+        print(f'\n    Before adopting, verify:')
+        # Per-scenario verification checklist.  All three share the
+        # first two items (statistical / coincidence) and the third
+        # is scenario-specific.
+        print(f'      [ ] (1) Is the Δ statistically significant '
+              f'vs measurement noise?')
+        if ci_width_i is not None:
+            sig_flag = ('CI excludes 0.65 → statistically significant'
+                        if (sv_lo > 0.65 or sv_hi < 0.65)
+                        else 'CI brackets 0.65 → cannot reject null')
+            print(f'              Bootstrap CI on SE_vol_frac (i) = '
+                  f'[{sv_lo:.3f}, {sv_hi:.3f}] — {sig_flag}')
+        else:
+            print(f'              Bootstrap unavailable; rerun with larger sample.')
+        print(f'      [ ] (2) Is the agreement physically meaningful or '
+              f'RCP-universality coincidence?')
+        print(f'              Recommend: plot AM_wt* vs D_SE across the '
+              f'monomodal percolation sweep (D_SE = 0.5/1.0/2.0/3.0 µm). '
+              f'If AM_wt* drifts with D_SE → not universality.')
+        if scen == 'A':
+            print(f'      [ ] (3-A) Is Δ_(ii) ≈ 0 because Liu & Yin\'s convention '
+                  f'really is RVE-based, or is the apparent match an artefact '
+                  f'of the porosity assumption (porosity_pct from '
+                  f'full_metrics.json may have its own uncertainty)?')
+        elif scen == 'B':
+            print(f'      [ ] (3-B) Is the RVE discrepancy magnitude consistent '
+                  f'with the argyrodite plasticity argument?  Cross-check by '
+                  f'computing |Δ_(ii)| against the case-level porosity — if '
+                  f'discrepancy scales with (1 - porosity), the plasticity '
+                  f'explanation holds.')
+        else:
+            print(f'      [ ] (3-C) Is the deviation driven by a specific '
+                  f'subset (e.g. mono-AM cases, very high or low D_SE)?  '
+                  f'Recommend: rerun with --campaign filters and report '
+                  f'AM_wt* by subset.  A deviation that disappears under '
+                  f'physically-coherent filtering is a regime boundary, '
+                  f'not a system-wide finding.')
+        print(f'      [ ] (4) Are any outlier cases skewing AM_wt*?  The 22 '
+              f'cases flagged untrustworthy in docs/db/case_audit_fails.csv '
+              f'should be checked individually — if AM_wt* shifts >2 %p '
+              f'when they are excluded, the threshold estimate is '
+              f'outlier-driven.')
 
 
 if __name__ == '__main__':
