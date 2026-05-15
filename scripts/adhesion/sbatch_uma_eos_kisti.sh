@@ -11,8 +11,17 @@
 #SBATCH --comment=llm_finetune_pipeline
 
 # ============================================================
-# UMA EOS pre-DFT analysis for Nd-doped LPSCl rank1, rank2
+# UMA screen all pairs + EOS top-2 for Nd-doped LPSCl
 # Disguised as "perovskite_finetuning" for KISTI usage records.
+#
+# This combined version:
+#   1. Re-relax all 26 pairs with UMA full relax (cell+positions)
+#   2. Auto-rank by relaxed energy
+#   3. EOS scan top-2 → V0_BM → DFT sweep recommendation
+#
+# ~50 min on 1 A100. Safer than trusting E_a from enum (which may
+# have been fixed-cell relax).
+#
 # Submit:  sbatch sbatch_uma_eos_kisti.sh
 # ============================================================
 
@@ -20,9 +29,7 @@ set -e
 
 # Project paths
 WORK_BASE=/scratch/x3430a02/kgy/nd_doped_modelc
-ENUM_BASE=$WORK_BASE/1_enumerate/enum_run
-RANK1_DIR=$ENUM_BASE/pair_00_reference_1_82
-RANK2_DIR=$ENUM_BASE/pair_24_cross_15_75
+ENUM_DIR=$WORK_BASE/1_enumerate/enum_run
 OUT_DIR=$WORK_BASE/2_uma_eos_predft
 
 mkdir -p $OUT_DIR/logs
@@ -37,7 +44,7 @@ module purge
 module load cuda/12.9.1 openmpi/4.1.8 mkl/2025.3 2>/dev/null || true
 
 echo "============================================================"
-echo "UMA EOS pre-DFT — Nd-doped LPSCl"
+echo "UMA screen + EOS — Nd-doped LPSCl (re-relax all 26 pairs)"
 echo "============================================================"
 echo "Date: $(date)"
 echo "Host: $(hostname)"
@@ -47,21 +54,28 @@ echo "Job ID: $SLURM_JOB_ID"
 echo "Partition: $SLURM_JOB_PARTITION"
 echo "============================================================"
 
-# Get the UMA EOS script (from our repo)
-if [ ! -f uma_eos_pre_dft.py ]; then
-    echo "Fetching uma_eos_pre_dft.py from repo..."
-    wget -q -O uma_eos_pre_dft.py \
-        "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/1008109/scripts/adhesion/uma_eos_pre_dft.py" \
-        || cp /scratch/x3430a02/kgy/manuscript_support/pipeline_v2/uma_eos_pre_dft.py .  # fallback
-fi
+# Get the latest screening script from repo
+COMMIT=3563b6a   # update if newer commit
+wget -q -O uma_screen_all_pairs.py \
+    "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/${COMMIT}/scripts/adhesion/uma_screen_all_pairs.py" \
+    || { echo "wget failed, trying main branch"; \
+         wget -q -O uma_screen_all_pairs.py \
+         "https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/claude/configure-spawn-halogen-lithium-TjDCB/scripts/adhesion/uma_screen_all_pairs.py?nocache=$(date +%s)"; }
 
-python3 -u uma_eos_pre_dft.py \
-    --rank1-dir "$RANK1_DIR" \
-    --rank2-dir "$RANK2_DIR" \
+ls -la uma_screen_all_pairs.py
+
+# Run combined mode: screen all 26 pairs + EOS on top-2
+python3 -u uma_screen_all_pairs.py \
+    --mode all \
+    --enum_dir "$ENUM_DIR" \
+    --top_n 2 \
     --out_dir "$OUT_DIR/results"
 
 echo ""
 echo "============================================================"
 echo "Job DONE: $(date)"
-echo "Results: $OUT_DIR/results/uma_eos_results.json"
+echo "Results: $OUT_DIR/results/"
+echo "  - screen_summary.json (26 pairs ranked)"
+echo "  - relaxed_structures/*.cif (all 26 relaxed)"
+echo "  - eos_results.json (top-2 EOS + V0_BM + DFT recommendation)"
 echo "============================================================"
