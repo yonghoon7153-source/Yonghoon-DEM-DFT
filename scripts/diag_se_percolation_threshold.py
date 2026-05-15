@@ -367,6 +367,27 @@ def _case_stats(case_dir: Path) -> dict | None:
             key = f'frac_{"bridge" if bridge else "se_only"}_{cutoff}'
             measurements[key] = frac
 
+    # Median SE radius (µm in real units) — used by the verification
+    # suite to bin cases by D_SE for the RCP-universality check.
+    se_r_sim_med = float(np.median(se_rs)) if se_rs else 0.0
+    r_SE_um = se_r_sim_med * 1.0e6 / scale  # sim → real
+
+    # Campaign inference from case-id prefix.  Matches the
+    # naming convention used elsewhere in the project (input_<n>mAh_,
+    # input_particulate_, plus the auto-generated archive IDs).
+    cid = case_dir.name
+    parent_path = str(case_dir).lower()
+    if 'particulate' in cid.lower() or 'particulate' in parent_path:
+        campaign = 'particulate'
+    elif 'input_1mAh' in cid or '박막' in parent_path or '1mah' in cid.lower():
+        campaign = 'thin-film 1mAh'
+    elif 'input_6mAh' in cid or '6mAh_real' in cid or '6mah' in cid.lower():
+        campaign = 'thick-film 6mAh'
+    elif 'input_8mAh' in cid or '8mAh_real' in cid or '8mah' in cid.lower():
+        campaign = 'thick-film 8mAh'
+    else:
+        campaign = 'other'
+
     return dict(case_id=case_dir.name,
                 am_wt=am_wt,
                 se_vol_frac_solid=se_vol_frac_solid,
@@ -374,6 +395,8 @@ def _case_stats(case_dir: Path) -> dict | None:
                 se_vol_frac_mass=se_vol_frac_mass,
                 porosity=porosity,
                 n_se=n_se_seen,
+                r_SE_um=r_SE_um,
+                campaign=campaign,
                 **measurements)
 
 
@@ -444,11 +467,37 @@ def main():
                                   formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--campaign', default=None,
                      help='Substring filter on case dir name (eg. 후막 박막 particulate)')
+    ap.add_argument('--exclude-untrustworthy', action='store_true',
+                     help='Filter out cases listed in docs/db/case_audit_fails.csv')
+    ap.add_argument('--verification-suite', action='store_true',
+                     help='After the main analysis, run the reviewer\'s 4-item '
+                          'verification checklist (statistical significance, '
+                          'D_SE universality, campaign split, outlier exclusion) '
+                          'and emit one reviewer-ready report at the bottom.')
     args = ap.parse_args()
 
     cases = _discover_cases()
     if args.campaign:
         cases = [c for c in cases if args.campaign in str(c)]
+
+    # --exclude-untrustworthy: drop the case_ids that the
+    # validation-flag audit (docs/db/case_audit_fails.csv) flagged.
+    excluded_set: set[str] = set()
+    if args.exclude_untrustworthy:
+        fails_csv = DOCSDB / 'case_audit_fails.csv'
+        if fails_csv.exists():
+            try:
+                with fails_csv.open() as f:
+                    excluded_set = {r['case_dir']
+                                     for r in csv.DictReader(f)
+                                     if r.get('case_dir')}
+            except Exception:
+                excluded_set = set()
+        before = len(cases)
+        cases = [c for c in cases if c.name not in excluded_set]
+        print(f'Excluded {before - len(cases)} untrustworthy cases '
+              f'(from {len(excluded_set)} audit-flagged ids).', flush=True)
+
     if not cases:
         print('No cases found.', flush=True); sys.exit(1)
     print(f'Processing {len(cases)} cases…', flush=True)
@@ -468,7 +517,7 @@ def main():
     csv_p = DOCSDB / 'se_percolation_results.csv'
     with csv_p.open('w', newline='') as f:
         w = csv.DictWriter(f, fieldnames=[
-            'case_id', 'am_wt',
+            'case_id', 'campaign', 'am_wt', 'r_SE_um',
             'se_vol_frac_solid', 'se_vol_frac_rve', 'se_vol_frac_mass',
             'porosity', 'n_se',
             'frac_se_only_system', 'frac_bridge_system',
@@ -747,6 +796,209 @@ def main():
               f'should be checked individually — if AM_wt* shifts >2 %p '
               f'when they are excluded, the threshold estimate is '
               f'outlier-driven.')
+
+    # ── Reviewer-ready verification suite ───────────────────────
+    # When the user passes --verification-suite, run items 2-4
+    # automatically (item 1 is the bootstrap CI already printed
+    # above) and emit a single consolidated report at the bottom.
+    if args.verification_suite and rows:
+        _run_verification_suite(rows, excluded_set, main_star=main_star)
+
+
+def _analyse_subset(rows: list[dict], series_key: str = 'frac_se_only_system',
+                     threshold: float = 0.5
+                     ) -> dict:
+    """Re-runs the operational-threshold + bootstrap on an arbitrary
+    subset of the per-case `rows` produced by _case_stats.  Returns
+    {n, am_star, am_star_ci, sv_solid_at_star, sv_rve_at_star, n_threshold_crosses}."""
+    if not rows:
+        return {'n': 0, 'am_star': None, 'am_star_ci': (None, None),
+                'sv_solid': None, 'sv_rve': None}
+    am_wts = np.array([r['am_wt'] for r in rows])
+    fracs  = np.array([r[series_key] for r in rows])
+    vf_sld = np.array([r['se_vol_frac_solid'] for r in rows])
+    vf_rve = np.array([r['se_vol_frac_rve']   for r in rows])
+    am_star = _operational_threshold(am_wts, fracs, target=threshold)
+    am_med, am_lo, am_hi = _bootstrap_am_star(am_wts, fracs, target=threshold,
+                                                n_boot=400)
+    sv_sld = None; sv_rve = None
+    if am_star is not None:
+        idx = np.argsort(am_wts)
+        sv_sld = float(np.interp(am_star, am_wts[idx], vf_sld[idx]))
+        valid = ~np.isnan(vf_rve)
+        if valid.sum() >= 2:
+            i2 = np.argsort(am_wts[valid])
+            sv_rve = float(np.interp(am_star,
+                                       am_wts[valid][i2],
+                                       vf_rve[valid][i2]))
+    return {
+        'n': len(rows),
+        'am_star': am_star,
+        'am_star_ci': (am_lo, am_hi),
+        'sv_solid': sv_sld,
+        'sv_rve': sv_rve,
+    }
+
+
+def _run_verification_suite(all_rows: list[dict],
+                              excluded_set: set,
+                              main_star: float | None):
+    """Walks the reviewer's 4-item checklist programmatically and
+    prints a consolidated reviewer-ready report.  All four items
+    end up in a single console block so the user can copy-paste
+    into the reviewer reply without re-assembly."""
+
+    print()
+    print('=' * 78)
+    print('REVIEWER-READY VERIFICATION SUITE')
+    print('  4-item checklist walked automatically — copy-paste into reply')
+    print('=' * 78)
+
+    # ── Baseline (all rows, main series) ─────────────────────────
+    base = _analyse_subset(all_rows)
+    print('\n[Baseline, all cases, SE-SE only · system mean, τ=0.5]')
+    print(f'  N = {base["n"]} cases')
+    if base['am_star'] is not None:
+        print(f'  AM_wt*  = {base["am_star"]:.2f} %   '
+              f'CI [{base["am_star_ci"][0]:.2f}, {base["am_star_ci"][1]:.2f}]')
+        print(f'  SE_vol_frac (i)  = {base["sv_solid"]:.3f}')
+        if base['sv_rve'] is not None:
+            print(f'  SE_vol_frac (ii) = {base["sv_rve"]:.3f}')
+
+    # ── (1) Statistical significance ──────────────────────────────
+    print('\n[Item 1] Statistical significance vs measurement noise')
+    if base['am_star'] is not None:
+        lo, hi = base['am_star_ci']
+        if lo is not None and hi is not None:
+            # Map CI back to SE_vol_frac (i) for the 0.65 comparison
+            am_wts = np.array([r['am_wt'] for r in all_rows])
+            vf_sld = np.array([r['se_vol_frac_solid'] for r in all_rows])
+            idx = np.argsort(am_wts)
+            sv_at_lo = float(np.interp(lo, am_wts[idx], vf_sld[idx]))
+            sv_at_hi = float(np.interp(hi, am_wts[idx], vf_sld[idx]))
+            sv_lo, sv_hi = sorted([sv_at_lo, sv_at_hi])
+            excludes = (sv_lo > 0.65) or (sv_hi < 0.65)
+            verdict = ('✓ CI excludes 0.65 → statistically significant'
+                        if excludes
+                        else '⚠ CI brackets 0.65 → cannot reject null')
+            print(f'  Bootstrap 95 % CI on SE_vol_frac (i): [{sv_lo:.3f}, {sv_hi:.3f}]')
+            print(f'  Verdict: {verdict}')
+
+    # ── (2) D_SE universality check ───────────────────────────────
+    print('\n[Item 2] RCP-universality coincidence check '
+          '(AM_wt* drift vs D_SE)')
+    # Bin by D_SE — use natural project values (0.5/1.0/2.0/3.0 µm) when
+    # available, otherwise fall back to quartiles.
+    d_se = np.array([r['r_SE_um'] * 2 for r in all_rows])  # diameter
+    valid_d = d_se[d_se > 0]
+    if valid_d.size:
+        unique_d = sorted(set(round(d, 1) for d in valid_d))
+    else:
+        unique_d = []
+    if len(unique_d) <= 6 and len(unique_d) >= 2:
+        # Discrete D_SE values — use as-is
+        bins_used = [(d, [r for r in all_rows
+                            if abs(r['r_SE_um']*2 - d) < 0.15]) for d in unique_d]
+    elif valid_d.size >= 8:
+        # Continuous — quartile-bin
+        qs = np.quantile(valid_d, [0.0, 0.25, 0.5, 0.75, 1.0])
+        bins_used = []
+        for lo, hi in zip(qs[:-1], qs[1:]):
+            subset = [r for r in all_rows
+                      if lo <= r['r_SE_um']*2 <= hi]
+            bins_used.append((f'{lo:.2f}-{hi:.2f}', subset))
+    else:
+        bins_used = []
+    if not bins_used:
+        print('  Insufficient D_SE variation in the sample to bin '
+              '(need ≥ 2 distinct D_SE values).')
+    else:
+        print(f'  {"D_SE bin (µm)":18s} │ {"N":>5s} │ {"AM_wt*":>8s}'
+              f' │ {"SE_vol_frac (i)":>16s} │ Δ vs baseline')
+        drifts = []
+        for label, sub in bins_used:
+            res = _analyse_subset(sub)
+            if res['am_star'] is None:
+                continue
+            d_am = (res['am_star'] - base['am_star']) if base['am_star'] else None
+            drifts.append(res['am_star'])
+            print(f'  D_SE = {str(label):11s} │ {res["n"]:>5d} │ '
+                  f'{res["am_star"]:>7.2f}% │ {res["sv_solid"]:>15.3f} │ '
+                  f'{(f"{d_am:+.2f} %p" if d_am is not None else "—"):>14s}')
+        if len(drifts) >= 2:
+            span = max(drifts) - min(drifts)
+            verdict = ('⚠ AM_wt* drifts ' + f'{span:.1f} %p across D_SE'
+                        ' → NOT universality (size-ratio dependent)'
+                        if span > 3.0 else
+                       '✓ AM_wt* stable within ' + f'{span:.1f} %p across D_SE'
+                       ' → consistent with universality')
+            print(f'  Verdict: {verdict}')
+
+    # ── (3-C) Subset/campaign split ───────────────────────────────
+    print('\n[Item 3-C] Subset deviation check — per-campaign AM_wt*')
+    campaigns = sorted(set(r['campaign'] for r in all_rows))
+    print(f'  {"campaign":20s} │ {"N":>5s} │ {"AM_wt*":>8s}'
+          f' │ {"SE_vol_frac (i)":>16s} │ Δ vs baseline')
+    cam_stars = []
+    for cam in campaigns:
+        sub = [r for r in all_rows if r['campaign'] == cam]
+        res = _analyse_subset(sub)
+        if res['am_star'] is None:
+            print(f'  {cam:20s} │ {res["n"]:>5d} │ {"—":>8s} │ '
+                  f'{"—":>16s} │ {"—":>14s}')
+            continue
+        d_am = (res['am_star'] - base['am_star']) if base['am_star'] else None
+        cam_stars.append((cam, res['am_star']))
+        print(f'  {cam:20s} │ {res["n"]:>5d} │ {res["am_star"]:>7.2f}% │ '
+              f'{res["sv_solid"]:>15.3f} │ '
+              f'{(f"{d_am:+.2f} %p" if d_am is not None else "—"):>14s}')
+    if cam_stars:
+        span = max(s for _, s in cam_stars) - min(s for _, s in cam_stars)
+        verdict = ('⚠ AM_wt* varies > 5 %p across campaigns'
+                    ' → deviation is subset-driven, NOT system-wide'
+                    if span > 5.0 else
+                   '✓ AM_wt* stable within ' + f'{span:.1f} %p across campaigns'
+                   ' → deviation is system-wide, not a single regime')
+        print(f'  Verdict: {verdict}')
+
+    # ── (4) Outlier exclusion sensitivity ──────────────────────────
+    print('\n[Item 4] Outlier sensitivity — exclude untrustworthy cases')
+    # Re-read case_audit_fails.csv since it may not have been loaded
+    # if the user did NOT pass --exclude-untrustworthy on this run.
+    fails_csv = DOCSDB / 'case_audit_fails.csv'
+    if fails_csv.exists():
+        try:
+            with fails_csv.open() as f:
+                untrust = {r['case_dir'] for r in csv.DictReader(f)
+                            if r.get('case_dir')}
+        except Exception:
+            untrust = set()
+    else:
+        untrust = set()
+    kept = [r for r in all_rows if r['case_id'] not in untrust]
+    dropped = [r for r in all_rows if r['case_id'] in untrust]
+    res = _analyse_subset(kept)
+    if res['am_star'] is not None and base['am_star'] is not None:
+        d_am = res['am_star'] - base['am_star']
+        print(f'  Cases excluded: {len(dropped)} '
+              f'(untrustworthy audit; {len(kept)} remain).')
+        print(f'  AM_wt* (excluded) = {res["am_star"]:.2f} %   '
+              f'Δ vs baseline = {d_am:+.2f} %p')
+        if res['sv_solid'] is not None:
+            print(f'  SE_vol_frac (i)   = {res["sv_solid"]:.3f}')
+        verdict = ('⚠ AM_wt* shifts > 2 %p when outliers excluded'
+                    ' → threshold is outlier-driven'
+                    if abs(d_am) > 2.0 else
+                   '✓ AM_wt* shifts < 2 %p when outliers excluded'
+                   ' → threshold is robust to outliers')
+        print(f'  Verdict: {verdict}')
+    else:
+        print('  Verification not applicable (no fails CSV or no kept cases).')
+
+    print()
+    print('=' * 78)
+    print('END VERIFICATION SUITE — copy block above into reviewer reply.')
+    print('=' * 78)
 
 
 if __name__ == '__main__':
