@@ -291,19 +291,49 @@ def _case_stats(case_dir: Path) -> dict | None:
     #      volume is the only solid contribution; reported separately
     #      so reviewer can sanity-check the equivalence.
     se_vol_frac_solid = se_vol / (am_vol + se_vol)             # (i)
-    # Try to read porosity from full_metrics.json or input_params.json
-    # for definition (ii).  Fall back to NaN when unavailable so the
-    # reviewer can tell which value is interpolated vs measured.
+    # Read porosity from any of several plausible locations.  The
+    # first run revealed that 'porosity_pct' isn't always the key
+    # name in full_metrics.json — try a fallback list, and as a last
+    # resort look the case_id up in all_dem_porosity.csv (where the
+    # column is canonically called porosity_pct).
     porosity = None
-    fm_path = case_dir / 'full_metrics.json'
-    if fm_path.exists():
+    POROSITY_KEYS = ('porosity_pct', 'porosity', 'epsilon_pct',
+                       'eps_pct', 'porosity_pct_dem')
+    for src in (case_dir / 'full_metrics.json',
+                  case_dir / 'metrics.json',
+                  case_dir / 'input_params.json',
+                  case_dir / 'meta.json'):
+        if not src.exists():
+            continue
         try:
-            fm = json.loads(fm_path.read_text())
-            porosity = fm.get('porosity_pct')
-            if porosity is not None:
-                porosity = float(porosity) / 100.0
+            d = json.loads(src.read_text())
         except Exception:
-            porosity = None
+            continue
+        for k in POROSITY_KEYS:
+            v = d.get(k)
+            if v is not None:
+                try:
+                    v = float(v)
+                    # Heuristic: values > 1 are %, ≤ 1 are fractions.
+                    porosity = v / 100.0 if v > 1.0 else v
+                    break
+                except Exception:
+                    pass
+        if porosity is not None:
+            break
+    if porosity is None:
+        # Last resort: project-wide all_dem_porosity.csv lookup.
+        csv_p = ROOT / 'all_dem_porosity.csv'
+        if csv_p.exists():
+            try:
+                import pandas as pd
+                df = pd.read_csv(csv_p)
+                row = df[df['case_id'] == case_dir.name]
+                if not row.empty and 'porosity_pct' in df.columns:
+                    v = float(row.iloc[0]['porosity_pct'])
+                    porosity = v / 100.0 if v > 1.0 else v
+            except Exception:
+                pass
     se_vol_frac_rve = (se_vol_frac_solid * (1.0 - porosity)
                         if porosity is not None and 0 < porosity < 1
                         else float('nan'))                       # (ii)
@@ -472,8 +502,8 @@ def main():
     # ── Sensitivity table ─────────────────────────────────────────
     print('\n── Operational AM_wt* sensitivity '
           f'(crossing thresholds {THRESHOLDS}) ──')
-    print('  series                                 │ '
-          ' '.join(f'τ={t}'.ljust(10) for t in THRESHOLDS))
+    print('  series                                 │ ' +
+          '  '.join(f'τ={t}'.ljust(8) for t in THRESHOLDS))
     sens_table = {}
     for bridge_or_only, cutoff, label in SERIES:
         fracs = _series_data(bridge_or_only, cutoff)
@@ -511,8 +541,11 @@ def main():
     # match for Liu & Yin's "SE phase fraction").  Definition (ii) is
     # an alternative right axis but we keep one for legibility — both
     # values are in the CSV.
+    # marker 'x' is an unfilled glyph — set its colour via `color=`
+    # instead of `edgecolor=` (matplotlib warns when an unfilled
+    # marker gets an edge colour).
     ax2.scatter(am_wts, vf_solid, s=22, alpha=0.6,
-                facecolor='none', edgecolor='#666',
+                color='#666',
                 marker='x', label='SE vol fraction (def i: solid-only)')
 
     # Threshold lines + Liu & Yin anchor
@@ -625,8 +658,13 @@ def main():
             # Propagate the CI through to SE_vol_frac at AM_wt*
             sort_idx = np.argsort(am_wts)
             sv_med = float(np.interp(am_med, am_wts[sort_idx], vf_solid[sort_idx]))
-            sv_lo  = float(np.interp(am_lo,  am_wts[sort_idx], vf_solid[sort_idx]))
-            sv_hi  = float(np.interp(am_hi,  am_wts[sort_idx], vf_solid[sort_idx]))
+            # SE volume fraction DECREASES with AM_wt%, so the higher
+            # AM_wt% CI bound corresponds to the LOWER vol-frac value
+            # and vice versa.  Compute both endpoints and re-sort so
+            # sv_lo/sv_hi are always min/max.
+            sv_at_amlo = float(np.interp(am_lo, am_wts[sort_idx], vf_solid[sort_idx]))
+            sv_at_amhi = float(np.interp(am_hi, am_wts[sort_idx], vf_solid[sort_idx]))
+            sv_lo, sv_hi = sorted([sv_at_amlo, sv_at_amhi])
             print(f'\n  Bootstrap 95 % CI (1000 resamples, main series):')
             print(f'    AM_wt*           = {am_med:.2f} %   '
                   f'CI [{am_lo:.2f}, {am_hi:.2f}]')
