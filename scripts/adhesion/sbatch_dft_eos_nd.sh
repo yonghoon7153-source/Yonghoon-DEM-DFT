@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J DEM-Nd-eos-pair12
+#SBATCH -J qe-perov
 #SBATCH -p amd_a100nv_8
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -37,10 +37,12 @@ mkdir -p $WORK_BASE/logs
 cd $WORK_BASE
 
 # Environment
+# Inherit default KISTI Olaf env (cuda, cudampi/openmpi, mkl auto-loaded)
+# Activate UMA conda env for prepare_dft_eos_nd.py (Python deps: ase, scipy, etc.)
 source /scratch/x3430a02/mjs0000/miniforge3/etc/profile.d/conda.sh
 conda activate uma
-module purge
-module load cuda/12.9.1 openmpi/4.1.8 mkl/2025.3 2>/dev/null || true
+# Note: do NOT 'module purge' — keeps default cudampi/openmpi-4.1.8 + mkl/2025.3
+# QE binary at /scratch/x3430a02/kgy/apps/qe-gpu/bin/pw.x uses these auto-loaded libs.
 
 echo "============================================================"
 echo "Nd-doped LPSCl DFT EOS — rank1 (pair_00) + rank2 (pair_02)"
