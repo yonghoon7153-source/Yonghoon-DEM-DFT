@@ -49,6 +49,98 @@ _ASSET_VERSION = str(int(datetime.now().timestamp()))
 @app.context_processor
 def _inject_asset_version():
     return {'asset_version': _ASSET_VERSION}
+
+
+# ── Trust-card self-report (validation_flags → 5 LED dots) ────────────
+# `validation_flags` is written into full_metrics.json by Stage E
+# (`run_network_full_corrections._compute_validation_flags`).
+# Five gates: within_bielefeld_range, fracture_distribution_realistic,
+# solver_input_intact, stage_e_le_baseline_sigma_e, bruggeman_fallback_fired_any.
+# This helper returns a render-ready dict for the trust-card template.
+_TRUST_LEDS = [
+    ('within_bielefeld_range',
+     'ASR',
+     'ASR_ionic ∈ Bielefeld/Lee/Minnmann literature range '
+     '(see paper §5.2 trust audit)'),
+    ('fracture_distribution_realistic',
+     'Frac',
+     'severe % ≤ 50 and ≥1 stage populated '
+     '(Lawn 1998 envelope, paper §5.2)'),
+    ('solver_input_intact',
+     'Solver',
+     'Stage-E edge-drop ratio ≤ 0.5 — direct Laplacian carries '
+     'majority of conductance'),
+    ('stage_e_le_baseline_sigma_e',
+     'σ ≤ base',
+     'Stage-E σ_e ≤ baseline (factor-≤-1 invariant; '
+     'paper §6 Bruggeman bound)'),
+    ('bruggeman_fallback_fired_any',
+     'Brugg',
+     'Bruggeman fallback fired at least once for this case '
+     '(orange = EMT carried part of the solve)'),
+]
+
+
+def _build_trust_card(metrics: dict) -> dict | None:
+    """Translate metrics['validation_flags'] into the LED + verdict
+    structure consumed by the single.html template. Returns None when
+    the flags block is absent so the card simply isn't rendered."""
+    flags = (metrics or {}).get('validation_flags')
+    if not isinstance(flags, dict):
+        return None
+
+    leds = []
+    n_pass = n_fail = n_na = 0
+    for key, label, tip in _TRUST_LEDS:
+        v = flags.get(key)
+        # The Bruggeman flag flips polarity: True = fallback fired = warning,
+        # not pass.  Treat True as "fail" for the card and False as pass.
+        if key == 'bruggeman_fallback_fired_any':
+            if v is None:
+                cls, n_na = 'na', n_na + 1
+            elif v:
+                cls, n_fail = 'fail', n_fail + 1
+            else:
+                cls, n_pass = 'pass', n_pass + 1
+        else:
+            if v is None:
+                cls, n_na = 'na', n_na + 1
+            elif v:
+                cls, n_pass = 'pass', n_pass + 1
+            else:
+                cls, n_fail = 'fail', n_fail + 1
+        leds.append({'label': label, 'cls': cls, 'tip': tip})
+
+    # Verdict: 4 gates excluding the Bruggeman warning indicator.  Trust
+    # requires all assessable gates pass; any fail flips to warn/fail.
+    core_keys = ['within_bielefeld_range',
+                 'fracture_distribution_realistic',
+                 'solver_input_intact',
+                 'stage_e_le_baseline_sigma_e']
+    core_vals = [flags.get(k) for k in core_keys]
+    core_fail = sum(1 for v in core_vals if v is False)
+    core_assess = sum(1 for v in core_vals if v is not None)
+    if core_assess == 0:
+        verdict = 'N/A'
+        verdict_cls = 'na'
+    elif core_fail == 0:
+        verdict = '✓ Trust'
+        verdict_cls = 'trust'
+    elif core_fail <= 1:
+        verdict = '~ Warn'
+        verdict_cls = 'warn'
+    else:
+        verdict = '✗ Untrust'
+        verdict_cls = 'fail'
+
+    return {
+        'leds': leds,
+        'verdict': verdict,
+        'verdict_cls': verdict_cls,
+        'verdict_tip': (f'{core_assess - core_fail}/{core_assess} core '
+                        f'gates passed (paper §5.2 audit).'),
+    }
+
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
 app.config['RESULTS_FOLDER'] = os.path.join(os.path.dirname(__file__), 'results')
 app.config['SCRIPTS_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts')
@@ -3180,7 +3272,8 @@ def single(case_id):
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
-                         input_params=input_params, archive_path=archive_path)
+                         input_params=input_params, archive_path=archive_path,
+                         trust_card=_build_trust_card(metrics))
 
 @app.route('/group', methods=['GET', 'POST'])
 def group():
@@ -4993,7 +5086,8 @@ def archive_view(folder):
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
-                         input_params=input_params, archive_path=folder)
+                         input_params=input_params, archive_path=folder,
+                         trust_card=_build_trust_card(metrics))
 
 
 @app.route('/archive/results/<path:folder>/figures/<filename>')
@@ -5307,6 +5401,154 @@ def download_doc(filename):
     """Download documentation files from project root."""
     doc_dir = os.path.dirname(os.path.dirname(__file__))
     return send_from_directory(doc_dir, filename, as_attachment=True)
+
+
+# ── Trust Audit dashboard ────────────────────────────────────────────
+# Walks every case under webapp/results/** + webapp/archive/** that has
+# both atoms.csv and full_metrics.json, then renders the 5-gate matrix.
+# This is the live counterpart to scripts/audit_validation_flags.py
+# (which produces the CSV / LaTeX for the paper).
+_AUDIT_GATE_TIPS = {
+    'within_bielefeld_range':
+        'ASR_ionic ∈ literature range (Bielefeld 2022 / Lee 2020 / Minnmann 2021)',
+    'fracture_distribution_realistic':
+        'severe % ≤ 50 and ≥1 Lawn stage populated (Lawn 1998 envelope)',
+    'solver_input_intact':
+        'Stage-E edge-drop ratio ≤ 0.5 (direct Laplacian dominates)',
+    'stage_e_le_baseline_sigma_e':
+        'Stage-E σ_e ≤ baseline (factor-≤-1 invariant; Bruggeman bound)',
+}
+_AUDIT_GATES = list(_AUDIT_GATE_TIPS.keys())
+
+
+def _audit_discover_cases():
+    """Yield (display_id, url, results_dir) for every case that has a
+    full_metrics.json regardless of archive vs results location."""
+    out = []
+    archive_root = app.config.get('ARCHIVE_FOLDER')
+    results_root = app.config.get('RESULTS_FOLDER')
+    seen = set()
+
+    # archive cases (path-based view URL)
+    if archive_root and os.path.isdir(archive_root):
+        for dirpath, _, files in os.walk(archive_root):
+            if 'full_metrics.json' in files and 'atoms.csv' in files:
+                rel = os.path.relpath(dirpath, archive_root)
+                if rel in seen:
+                    continue
+                seen.add(rel)
+                out.append((os.path.basename(dirpath),
+                            url_for('archive_view', folder=rel),
+                            dirpath, rel))
+
+    # local results cases (id-based view URL)
+    if results_root and os.path.isdir(results_root):
+        for case_id in os.listdir(results_root):
+            d = os.path.join(results_root, case_id)
+            if (os.path.isdir(d)
+                    and os.path.exists(os.path.join(d, 'full_metrics.json'))):
+                if case_id in seen:
+                    continue
+                seen.add(case_id)
+                out.append((case_id,
+                            url_for('single', case_id=case_id),
+                            d, None))
+    return out
+
+
+def _audit_load_row(display_id, url, results_dir, archive_rel):
+    try:
+        with open(os.path.join(results_dir, 'full_metrics.json')) as f:
+            fm = json.load(f)
+    except (OSError, ValueError):
+        return None
+
+    flags = fm.get('validation_flags') or {}
+    campaign = fm.get('campaign') or fm.get('source_case')
+    source_case = fm.get('source_case')
+
+    # Pull campaign / source_case from meta.json or input_params.json
+    # if missing in full_metrics
+    for fname in ('meta.json', 'input_params.json'):
+        if campaign and source_case:
+            break
+        p = os.path.join(results_dir, fname)
+        if not os.path.exists(p):
+            continue
+        try:
+            with open(p) as f:
+                meta = json.load(f)
+            campaign = campaign or meta.get('campaign')
+            source_case = source_case or meta.get('source_case') \
+                or meta.get('name') or meta.get('case_id')
+        except (OSError, ValueError):
+            continue
+
+    # Build per-gate cells
+    gates = []
+    n_fail = n_assess = 0
+    for k in _AUDIT_GATES:
+        v = flags.get(k)
+        if v is None:
+            gates.append({'cls': 'na', 'symbol': '—', 'tip': _AUDIT_GATE_TIPS[k] + ' (not assessable)'})
+        elif v:
+            gates.append({'cls': 'pass', 'symbol': '✓', 'tip': _AUDIT_GATE_TIPS[k]})
+            n_assess += 1
+        else:
+            gates.append({'cls': 'fail', 'symbol': '✗', 'tip': _AUDIT_GATE_TIPS[k] + ' — FAILED'})
+            n_fail += 1
+            n_assess += 1
+
+    # Bruggeman indicator (5th column, polarity flipped)
+    brugg = flags.get('bruggeman_fallback_fired_any')
+    if brugg is None:
+        gates.append({'cls': 'na', 'symbol': '—', 'tip': 'Bruggeman fallback status unknown'})
+    elif brugg:
+        gates.append({'cls': 'fail', 'symbol': '●', 'tip': 'Bruggeman fallback fired (EMT carried part of solve)'})
+    else:
+        gates.append({'cls': 'pass', 'symbol': '○', 'tip': 'Direct solver throughout (no EMT fallback)'})
+
+    if n_assess == 0:
+        verdict, verdict_cls = 'N/A', 'na'
+    elif n_fail == 0:
+        verdict, verdict_cls = '✓ Trust', 'trust'
+    elif n_fail == 1:
+        verdict, verdict_cls = '~ Warn', 'warn'
+    else:
+        verdict, verdict_cls = '✗ Untrust', 'fail'
+
+    return {
+        'case_dir': display_id,
+        'display_id': source_case or display_id,
+        'campaign': campaign,
+        'source_case': source_case,
+        'url': url,
+        'gates': gates,
+        'brugg_fired': bool(brugg),
+        'verdict': verdict,
+        'verdict_cls': verdict_cls,
+        'archive_rel': archive_rel,
+    }
+
+
+@app.route('/audit')
+def audit():
+    rows = []
+    counts = {'trust': 0, 'warn': 0, 'fail': 0, 'na': 0}
+    for display_id, url, results_dir, archive_rel in _audit_discover_cases():
+        row = _audit_load_row(display_id, url, results_dir, archive_rel)
+        if row is None:
+            continue
+        rows.append(row)
+        counts[row['verdict_cls']] = counts.get(row['verdict_cls'], 0) + 1
+
+    rows.sort(key=lambda r: (r['verdict_cls'] != 'fail',
+                              r['verdict_cls'] != 'warn',
+                              (r['campaign'] or ''),
+                              r['display_id']))
+
+    return render_template('audit.html',
+                           rows=rows, counts=counts, total=len(rows))
 
 
 @app.route('/group/fitting-report', methods=['POST'])

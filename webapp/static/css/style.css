@@ -299,6 +299,95 @@ thead .sticky-col { z-index: 3; }
 .case-warn-msg { color: var(--dim); }
 .case-warn-critical .case-warn-msg { color: #f87171; }
 .case-warn-warning .case-warn-msg { color: #fbbf24; }
+
+/* ── Trust-flag self-report card (validation_flags from Stage E) ── */
+.trust-card {
+  margin-top: 10px; padding: 10px 14px;
+  background: rgba(99,102,241,.06);
+  border: 1px solid rgba(99,102,241,.28);
+  border-radius: 8px;
+  display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px;
+  font-size: .82rem;
+}
+.trust-card-label {
+  font-weight: 600; color: #a5b4fc; letter-spacing: .02em;
+  text-transform: uppercase; font-size: .72rem;
+  margin-right: 4px;
+}
+.trust-led {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 3px 9px; border-radius: 999px;
+  font-size: .78rem; cursor: help;
+  border: 1px solid transparent;
+}
+.trust-led-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  box-shadow: 0 0 6px currentColor;
+}
+.trust-led.pass     { color: #22c55e; background: rgba(34,197,94,.10);
+                       border-color: rgba(34,197,94,.30); }
+.trust-led.fail     { color: #ef4444; background: rgba(239,68,68,.10);
+                       border-color: rgba(239,68,68,.32); }
+.trust-led.na       { color: #6b7280; background: rgba(107,114,128,.10);
+                       border-color: rgba(107,114,128,.25); }
+.trust-led-verdict {
+  margin-left: auto; padding: 4px 12px; border-radius: 6px;
+  font-weight: 700; font-size: .8rem;
+}
+.trust-verdict-trust   { background: rgba(34,197,94,.16); color: #22c55e; }
+.trust-verdict-warn    { background: rgba(251,191,36,.18); color: #f59e0b; }
+.trust-verdict-fail    { background: rgba(239,68,68,.18); color: #ef4444; }
+.trust-verdict-na      { background: rgba(107,114,128,.18); color: #9ca3af; }
+
+/* ── /audit dashboard ── */
+.audit-page { padding: 20px 0; }
+.audit-summary {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px; margin-bottom: 24px;
+}
+.audit-stat-card {
+  padding: 14px 18px; border-radius: 10px;
+  background: rgba(31,41,55,.55); border: 1px solid rgba(99,102,241,.20);
+}
+.audit-stat-card .num {
+  font-size: 1.6rem; font-weight: 700; color: #e5e7eb;
+}
+.audit-stat-card .lbl {
+  font-size: .78rem; color: var(--dim); text-transform: uppercase;
+  letter-spacing: .04em; margin-top: 2px;
+}
+.audit-stat-card.trust .num { color: #22c55e; }
+.audit-stat-card.fail .num  { color: #ef4444; }
+.audit-stat-card.na .num    { color: #9ca3af; }
+.audit-table-wrap { overflow-x: auto; }
+.audit-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
+.audit-table th, .audit-table td {
+  padding: 6px 10px; text-align: left;
+  border-bottom: 1px solid rgba(99,102,241,.10);
+}
+.audit-table th {
+  background: rgba(99,102,241,.08); position: sticky; top: 0;
+  font-weight: 600; color: #a5b4fc;
+}
+.audit-table tr:hover { background: rgba(99,102,241,.04); }
+.audit-table td.cell-gate { text-align: center; font-weight: 700; }
+.audit-cell-pass { color: #22c55e; }
+.audit-cell-fail { color: #ef4444; }
+.audit-cell-na   { color: #6b7280; }
+.audit-filters {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin: 14px 0 18px;
+}
+.audit-filter-btn {
+  padding: 5px 14px; border-radius: 999px;
+  font-size: .82rem; cursor: pointer;
+  background: transparent; border: 1px solid rgba(99,102,241,.28);
+  color: #a5b4fc;
+}
+.audit-filter-btn.active {
+  background: rgba(99,102,241,.18); color: #c7d2fe;
+  border-color: rgba(99,102,241,.55);
+}
 #toast-container {
   position: fixed; top: 20px; right: 20px; z-index: 99999;
   display: flex; flex-direction: column; gap: 8px;

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% set active = "audit" %}
+{% block title %}Trust Audit · DEM Analyzer{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h2>Trust Audit — Stage E validation flags</h2>
+  <p style="color:var(--dim);font-size:.88rem;line-height:1.55;max-width:880px">
+    Per-case self-report card written by
+    <code>scripts/run_network_full_corrections._compute_validation_flags()</code>
+    into each case's <code>full_metrics.json</code>.  Four core gates
+    (ASR, Frac, Solver, σ ≤ baseline) determine the per-case verdict;
+    a fifth indicator reports whether the Bruggeman fallback fired.
+    Paper §5.2 and <code>docs/Reviewer_Defence_Notes.md §A-trust</code>
+    document the gate definitions.
+  </p>
+</div>
+
+<div class="audit-page">
+
+  <div class="audit-summary">
+    <div class="audit-stat-card">
+      <div class="num">{{ total }}</div>
+      <div class="lbl">cases scanned</div>
+    </div>
+    <div class="audit-stat-card trust">
+      <div class="num">{{ counts.trust }}</div>
+      <div class="lbl">✓ trust</div>
+    </div>
+    <div class="audit-stat-card" style="border-color:rgba(251,191,36,.28)">
+      <div class="num" style="color:#f59e0b">{{ counts.warn }}</div>
+      <div class="lbl">~ warn (1 fail)</div>
+    </div>
+    <div class="audit-stat-card fail">
+      <div class="num">{{ counts.fail }}</div>
+      <div class="lbl">✗ untrust (≥2 fails)</div>
+    </div>
+    <div class="audit-stat-card na">
+      <div class="num">{{ counts.na }}</div>
+      <div class="lbl">N/A (no Stage E)</div>
+    </div>
+  </div>
+
+  <div class="audit-filters">
+    <button class="audit-filter-btn active" data-filter="all">All</button>
+    <button class="audit-filter-btn" data-filter="trust">✓ Trust</button>
+    <button class="audit-filter-btn" data-filter="warn">~ Warn</button>
+    <button class="audit-filter-btn" data-filter="fail">✗ Untrust</button>
+    <button class="audit-filter-btn" data-filter="na">N/A</button>
+    <button class="audit-filter-btn" data-filter="brugg">Bruggeman-fired</button>
+    <input type="text" id="audit-search"
+           placeholder="case_id / campaign 검색"
+           style="margin-left:auto;padding:5px 12px;border-radius:6px;
+                  background:rgba(31,41,55,.6);
+                  border:1px solid rgba(99,102,241,.3);
+                  color:var(--text);font-size:.85rem;width:220px">
+  </div>
+
+  <div class="audit-table-wrap card" style="padding:8px 14px">
+    <table class="audit-table">
+      <thead>
+        <tr>
+          <th>Case</th>
+          <th>Campaign</th>
+          <th class="cell-gate">ASR</th>
+          <th class="cell-gate">Frac</th>
+          <th class="cell-gate">Solver</th>
+          <th class="cell-gate">σ ≤ base</th>
+          <th class="cell-gate">Brugg</th>
+          <th>Verdict</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="audit-tbody">
+        {% for r in rows %}
+        <tr data-verdict="{{ r.verdict_cls }}"
+            data-brugg="{{ '1' if r.brugg_fired else '0' }}"
+            data-search="{{ (r.case_dir + ' ' + (r.campaign or '') + ' ' + (r.source_case or ''))|lower }}">
+          <td><a href="{{ r.url }}" style="color:#a5b4fc">{{ r.display_id }}</a></td>
+          <td style="color:var(--dim);font-size:.78rem">{{ r.campaign or '—' }}</td>
+          {% for g in r.gates %}
+          <td class="cell-gate audit-cell-{{ g.cls }}" title="{{ g.tip }}">
+            {{ g.symbol }}
+          </td>
+          {% endfor %}
+          <td>
+            <span class="trust-led-verdict trust-verdict-{{ r.verdict_cls }}"
+                  style="font-size:.72rem;padding:2px 8px">
+              {{ r.verdict }}
+            </span>
+          </td>
+          <td>
+            <a href="{{ r.url }}" class="btn btn-sm btn-secondary"
+               style="font-size:.72rem;padding:3px 9px">열기</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+(function () {
+  const tbody = document.getElementById('audit-tbody');
+  const searchEl = document.getElementById('audit-search');
+  let activeFilter = 'all';
+
+  function applyFilters () {
+    const q = (searchEl.value || '').toLowerCase().trim();
+    for (const row of tbody.rows) {
+      const v = row.dataset.verdict;
+      const brugg = row.dataset.brugg === '1';
+      let showByFilter;
+      switch (activeFilter) {
+        case 'all':   showByFilter = true; break;
+        case 'trust': showByFilter = v === 'trust'; break;
+        case 'warn':  showByFilter = v === 'warn'; break;
+        case 'fail':  showByFilter = v === 'fail'; break;
+        case 'na':    showByFilter = v === 'na'; break;
+        case 'brugg': showByFilter = brugg; break;
+        default:      showByFilter = true;
+      }
+      const showBySearch = !q || row.dataset.search.includes(q);
+      row.style.display = (showByFilter && showBySearch) ? '' : 'none';
+    }
+  }
+
+  for (const btn of document.querySelectorAll('.audit-filter-btn')) {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.audit-filter-btn')
+        .forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  }
+  searchEl.addEventListener('input', applyFilters);
+})();
+</script>
+{% endblock %}

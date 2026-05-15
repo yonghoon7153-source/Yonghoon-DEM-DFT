@@ -102,13 +102,16 @@ Bruggeman effective-medium theory.
 % =====================================================================
 
 Bridging the granular-mechanics view of an ASSB composite cathode
-(governing contact pressure, fracture, and packing) to its
-electrochemical-transport view (governing $\sigmaionic$, $\sigmae$,
-and $\kappa$) has remained challenging because the two scales speak
-different languages: DEM gives forces and overlaps, while EIS
-returns area-specific resistance (ASR). Recent literature
-\citep{Bielefeld2022, Minnmann2021, Lee2020} has reduced this gap
-by reporting cathode ASR consistently, but the per-contact mechanism
+\citep{JanekZeier2023} (governing contact pressure, fracture, and
+packing \citep{Doux2020}) to its electrochemical-transport view
+(governing $\sigmaionic$, $\sigmae$, and $\kappa$) has remained
+challenging because the two scales speak different languages: DEM
+\citep{CundallStrack1979} gives forces and overlaps, while EIS
+returns area-specific resistance (ASR).  Recent literature
+\citep{Bielefeld2022, Minnmann2021, Lee2020, Koerver2017a, Lewis2022}
+has reduced this gap by reporting cathode ASR consistently and by
+linking mechanical degradation to capacity fade
+\citep{Koerver2017b, Tippens2019}, but the per-contact mechanism
 that links fracture severity to per-channel $\sigma$ loss has been
 either ignored or treated with a single empirical multiplier.
 
@@ -213,7 +216,12 @@ The contributions of this work are:
 
 % (Methods subsection — prose ready for one-pass review)
 
-We use LIGGGHTS-PUBLIC \citep{Kloss2012} to compact bimodal NCM811
+We use LIGGGHTS-PUBLIC \citep{Kloss2012}, which implements the
+discrete-element method of \citet{CundallStrack1979} with a Hookean
+contact law that is dynamically equivalent to the Hertzian form
+\citep{Hertz1882, Thornton1997, DiRenzo2004} for the purpose of the
+force-ratio fracture classifier (see~\S\ref{sec:hooke-hertz}), to
+compact bimodal NCM811
 ($\AMP = D12$, $\AMS = D4$) and \LPSCl ($D1$) spheres in a periodic
 $x$-$y$ cell with rigid top / bottom plates, applying a target
 pressure $p_{\mathrm{target}}$. Inter-particle contacts use the
@@ -289,7 +297,7 @@ The full Stage~E factor is the product:
 f_r^{(\sigmaionic)} &= f_{\mathrm{Cronau}}(r_{\mathrm{SE}})
    & \text{\citep{Cronau2022}} \\
 f_r^{(\sigmae)}     &= f_{\mathrm{Lawn}} \times f_{\mathrm{Trev.}}(\AMP, \AMS)
-   & \text{\citep{Trevisanello2021}} \\
+   & \text{\citep{Trevisanello2021, Sun2017, Ryu2018}} \\
 f_r^{(\kappa)}      &= f_{\mathrm{Lawn}} \times f_{\mathrm{Wang}}(\AMP, \AMS)
    & \text{\citep{Wang2022}}
 \end{align}
@@ -527,14 +535,18 @@ ensemble. The model uses a single experimental anchor
 measurement) and otherwise relies entirely on published physics
 constants:
 \begin{itemize}
-\item Bouvard binary random close packing \citep{Bouvard2004};
+\item Bouvard binary random close packing \citep{Bouvard2004,
+      Sohn1968, Yi2004, Hopkins2013}, which generalises the
+      original binary-packing argument of \citet{Furnas1929};
 \item Sridhar--Fleck--McMeeking constraint factor with
       $\alpha_{KC} = 2$ \citep{Sridhar2000};
 \item Heckel plastic compaction $\varepsilon = \varepsilon_0
-      \exp(-K_{\mathrm{Heckel}} P)$ \citep{Heckel1961};
+      \exp(-K_{\mathrm{Heckel}} P)$ \citep{Heckel1961,
+      Sonnergaard1999};
 \item stress-bearing percolation threshold $f_{\mathrm{perc}} =
-      0.62$ (consensus of \citealp{Storakers2000, Bouvard2000,
-      Jacobs2009, Henkes2005, LiuYin2025}).
+      0.65$ (consensus of \citealp{Storakers2000, Bouvard2000,
+      Jacobs2009, Henkes2005, LiuYin2025}; theoretical context in
+      \citealp{StaufferAharony1994, Kirkpatrick1973, Sahimi1994}).
 \end{itemize}
 Volume-weighted effective $D_{\mathrm{AM}}$ enters Bouvard via the
 size ratio $\lambda = D_{\mathrm{AM\,eff}} / D_{\mathrm{SE}}$.
@@ -715,9 +727,13 @@ design-rule use.
 \label{sec:hooke-hertz}
 A second reviewer concern is that LIGGGHTS uses a linear Hooke
 contact ($F = k_n\,\delta$) whereas the Auerbach derivation
-assumes a Hertzian one ($F = \tfrac{4}{3}\,E^{\!*}\,R^{1/2}
-\delta^{3/2}$). Within the force-based classifier the form-factor
-mismatch \emph{cancels}, which we show here in one line. The
+\citep{Auerbach1891, Lawn1998} assumes a Hertzian one
+\citep{Hertz1882} ($F = \tfrac{4}{3}\,E^{\!*}\,R^{1/2}
+\delta^{3/2}$).  The quantitative comparison between these two
+contact-force forms in DEM is well documented
+\citep{Thornton1997, DiRenzo2004}; within the force-based
+classifier the form-factor mismatch \emph{cancels}, which we show
+here in one line.  The
 Auerbach onset force is
 \begin{equation}
   P_c \;=\; A\,K_{\mathrm{IC}}^{2}\,R\, / \,E^{\!*},
@@ -776,7 +792,8 @@ rather than after the fact. \emph{(ii) Classical EMT pedigree.}
 Equation~\eqref{eq:emt} is the conductance-weighted form of
 \citet{Bruggeman1935} averaging that
 \citet{Bergman1978} placed inside the rigorous Bergman--Milton
-two-point bounds and that \citet{Torquato2002} treats as the
+two-point bounds \citep{Milton2002, Landauer1952} and that
+\citet{Torquato2002} treats as the
 canonical effective-medium estimate when component
 volume fractions are replaced by edge-conductance weights.
 \emph{(iii) Tightness against the solver where it converges.}
@@ -854,10 +871,14 @@ space:
       8\,mAh} $n = 17$).}  The stress-bearing SE fraction stays
       \emph{above} $0.5$ throughout the entire studied
       AM$_{\mathrm{wt}}$ range (50--95\,\%) in every one of these
-      66 cases.  The Radjai strong-network test never breaks in
-      bimodal data — the operational threshold simply does not
-      cross.  Extrapolation beyond
-      AM$_{\mathrm{wt}} > 95\,\%$ is not validated here.
+      66 cases.  The strong-network test of
+      \citet{Radjai1996}\,---\,which we apply with the standard
+      cutoff $|F_n| > \langle |F_n| \rangle$ that separates the
+      load-bearing chains from the percolating weak network
+      \citep{Mueth1998, Majmudar2005}\,---\,never breaks in bimodal
+      data: the operational threshold simply does not cross.
+      Extrapolation beyond AM$_{\mathrm{wt}} > 95\,\%$ is not
+      validated here.
 \end{itemize}
 
 The interpretation is geometric.  Three particle scales

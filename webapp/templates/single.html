@@ -36,6 +36,20 @@
         {% endfor %}
       </div>
       {% endif %}
+      {% if trust_card %}
+      <div class="trust-card" title="Stage E self-report card — see paper §5.2 and docs/Reviewer_Defence_Notes.md §A-trust">
+        <span class="trust-card-label">Trust card</span>
+        {% for g in trust_card.leds %}
+        <span class="trust-led {{ g.cls }}" title="{{ g.tip }}">
+          <span class="trust-led-dot"></span>{{ g.label }}
+        </span>
+        {% endfor %}
+        <span class="trust-led-verdict trust-verdict-{{ trust_card.verdict_cls }}"
+              title="{{ trust_card.verdict_tip }}">
+          {{ trust_card.verdict }}
+        </span>
+      </div>
+      {% endif %}
     </div>
     <div class="header-actions">
       <button class="btn btn-archive" onclick="saveToArchive()">보관함에 저장</button>
