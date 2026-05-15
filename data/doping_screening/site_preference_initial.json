@@ -1,0 +1,1039 @@
+[
+  {
+    "element": "Na",
+    "charge": 1,
+    "radius_A": 1.02,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 0,
+        "radius_diff": 0.26,
+        "compatibility_score": 0.794,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 0,
+        "radius_diff": 0.26,
+        "compatibility_score": 0.794,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      }
+    ]
+  },
+  {
+    "element": "K",
+    "compatible_sites": [],
+    "note": "No compatible site found."
+  },
+  {
+    "element": "Cu",
+    "charge": 1,
+    "radius_A": 0.77,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 0,
+        "radius_diff": 0.01,
+        "compatibility_score": 0.99,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 0,
+        "radius_diff": 0.01,
+        "compatibility_score": 0.99,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      }
+    ]
+  },
+  {
+    "element": "Ag",
+    "compatible_sites": [],
+    "note": "No compatible site found."
+  },
+  {
+    "element": "Mg",
+    "charge": 2,
+    "radius_A": 0.72,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 1,
+        "radius_diff": -0.04,
+        "compatibility_score": 0.649,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 1,
+        "radius_diff": -0.04,
+        "compatibility_score": 0.649,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "Zn",
+    "charge": 2,
+    "radius_A": 0.74,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 1,
+        "radius_diff": -0.02,
+        "compatibility_score": 0.658,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 1,
+        "radius_diff": -0.02,
+        "compatibility_score": 0.658,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "Ca",
+    "charge": 2,
+    "radius_A": 1.0,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 1,
+        "radius_diff": 0.24,
+        "compatibility_score": 0.575,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 1,
+        "radius_diff": 0.24,
+        "compatibility_score": 0.575,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "Sr",
+    "compatible_sites": [],
+    "note": "No compatible site found."
+  },
+  {
+    "element": "Al",
+    "charge": 3,
+    "radius_A": 0.535,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 2,
+        "radius_diff": -0.225,
+        "compatibility_score": 0.449,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 2,
+        "radius_diff": -0.225,
+        "compatibility_score": 0.449,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  },
+  {
+    "element": "Ga",
+    "charge": 3,
+    "radius_A": 0.62,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 2,
+        "radius_diff": -0.14,
+        "compatibility_score": 0.467,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 2,
+        "radius_diff": -0.14,
+        "compatibility_score": 0.467,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  },
+  {
+    "element": "In",
+    "charge": 3,
+    "radius_A": 0.8,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 2,
+        "radius_diff": 0.04,
+        "compatibility_score": 0.49,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 2,
+        "radius_diff": 0.04,
+        "compatibility_score": 0.49,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  },
+  {
+    "element": "Sc",
+    "charge": 3,
+    "radius_A": 0.745,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 2,
+        "radius_diff": -0.015,
+        "compatibility_score": 0.496,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 2,
+        "radius_diff": -0.015,
+        "compatibility_score": 0.496,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  },
+  {
+    "element": "Y",
+    "charge": 3,
+    "radius_A": 0.9,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 2,
+        "radius_diff": 0.14,
+        "compatibility_score": 0.467,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 2,
+        "radius_diff": 0.14,
+        "compatibility_score": 0.467,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  },
+  {
+    "element": "Sb",
+    "charge": 5,
+    "radius_A": 0.6,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 4,
+        "radius_diff": -0.16,
+        "compatibility_score": 0.316,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 4,
+        "radius_diff": -0.16,
+        "compatibility_score": 0.316,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      }
+    ]
+  },
+  {
+    "element": "As",
+    "charge": 5,
+    "radius_A": 0.46,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "P_4b",
+        "host": "P",
+        "host_charge": 5,
+        "host_radius": 0.17,
+        "wyckoff": "4b",
+        "env": "PS4 tetrahedron center",
+        "charge_diff": 0,
+        "radius_diff": 0.29,
+        "compatibility_score": 0.775,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 4,
+        "radius_diff": -0.3,
+        "compatibility_score": 0.303,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 4,
+        "radius_diff": -0.3,
+        "compatibility_score": 0.303,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      }
+    ]
+  },
+  {
+    "element": "V",
+    "charge": 5,
+    "radius_A": 0.54,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 4,
+        "radius_diff": -0.22,
+        "compatibility_score": 0.311,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 4,
+        "radius_diff": -0.22,
+        "compatibility_score": 0.311,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      }
+    ]
+  },
+  {
+    "element": "Nb",
+    "charge": 5,
+    "radius_A": 0.64,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 4,
+        "radius_diff": -0.12,
+        "compatibility_score": 0.321,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 4,
+        "radius_diff": -0.12,
+        "compatibility_score": 0.321,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      }
+    ]
+  },
+  {
+    "element": "Si",
+    "charge": 4,
+    "radius_A": 0.4,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "P_4b",
+        "host": "P",
+        "host_charge": 5,
+        "host_radius": 0.17,
+        "wyckoff": "4b",
+        "env": "PS4 tetrahedron center",
+        "charge_diff": -1,
+        "radius_diff": 0.23,
+        "compatibility_score": 0.578,
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "Ge",
+    "charge": 4,
+    "radius_A": 0.53,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 3,
+        "radius_diff": -0.23,
+        "compatibility_score": 0.366,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 3,
+        "radius_diff": -0.23,
+        "compatibility_score": 0.366,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      }
+    ]
+  },
+  {
+    "element": "Sn",
+    "charge": 4,
+    "radius_A": 0.69,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 3,
+        "radius_diff": -0.07,
+        "compatibility_score": 0.389,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 3,
+        "radius_diff": -0.07,
+        "compatibility_score": 0.389,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      }
+    ]
+  },
+  {
+    "element": "Ti",
+    "charge": 4,
+    "radius_A": 0.605,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 3,
+        "radius_diff": -0.155,
+        "compatibility_score": 0.377,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 3,
+        "radius_diff": -0.155,
+        "compatibility_score": 0.377,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      }
+    ]
+  },
+  {
+    "element": "Zr",
+    "charge": 4,
+    "radius_A": 0.72,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 3,
+        "radius_diff": -0.04,
+        "compatibility_score": 0.394,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 3,
+        "radius_diff": -0.04,
+        "compatibility_score": 0.394,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 3
+      }
+    ]
+  },
+  {
+    "element": "O",
+    "compatible_sites": [],
+    "note": "No compatible site found."
+  },
+  {
+    "element": "Se",
+    "charge": -2,
+    "radius_A": 1.98,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "S_16e",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "16e",
+        "env": "PS4-bonded S (covalent P-S)",
+        "charge_diff": 0,
+        "radius_diff": 0.14,
+        "compatibility_score": 0.877,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "S_4a",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "4a",
+        "env": "free S2- (Li2S layer, surface)",
+        "charge_diff": 0,
+        "radius_diff": 0.14,
+        "compatibility_score": 0.877,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Cl_4d",
+        "host": "Cl",
+        "host_charge": -1,
+        "host_radius": 1.81,
+        "wyckoff": "4d",
+        "env": "halide site (bulk)",
+        "charge_diff": -1,
+        "radius_diff": 0.17,
+        "compatibility_score": 0.599,
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "Te",
+    "charge": -2,
+    "radius_A": 2.21,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "S_4a",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "4a",
+        "env": "free S2- (Li2S layer, surface)",
+        "charge_diff": 0,
+        "radius_diff": 0.37,
+        "compatibility_score": 0.73,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Cl_4d",
+        "host": "Cl",
+        "host_charge": -1,
+        "host_radius": 1.81,
+        "wyckoff": "4d",
+        "env": "halide site (bulk)",
+        "charge_diff": -1,
+        "radius_diff": 0.4,
+        "compatibility_score": 0.526,
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "F",
+    "compatible_sites": [],
+    "note": "No compatible site found."
+  },
+  {
+    "element": "Br",
+    "charge": -1,
+    "radius_A": 1.96,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Cl_4d",
+        "host": "Cl",
+        "host_charge": -1,
+        "host_radius": 1.81,
+        "wyckoff": "4d",
+        "env": "halide site (bulk)",
+        "charge_diff": 0,
+        "radius_diff": 0.15,
+        "compatibility_score": 0.87,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "S_16e",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "16e",
+        "env": "PS4-bonded S (covalent P-S)",
+        "charge_diff": 1,
+        "radius_diff": 0.12,
+        "compatibility_score": 0.617,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
+      {
+        "site_name": "S_4a",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "4a",
+        "env": "free S2- (Li2S layer, surface)",
+        "charge_diff": 1,
+        "radius_diff": 0.12,
+        "compatibility_score": 0.617,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "I",
+    "charge": -1,
+    "radius_A": 2.2,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Cl_4d",
+        "host": "Cl",
+        "host_charge": -1,
+        "host_radius": 1.81,
+        "wyckoff": "4d",
+        "env": "halide site (bulk)",
+        "charge_diff": 0,
+        "radius_diff": 0.39,
+        "compatibility_score": 0.719,
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "S_4a",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "4a",
+        "env": "free S2- (Li2S layer, surface)",
+        "charge_diff": 1,
+        "radius_diff": 0.36,
+        "compatibility_score": 0.538,
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      }
+    ]
+  },
+  {
+    "element": "N",
+    "charge": -3,
+    "radius_A": 1.46,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "S_4a",
+        "host": "S",
+        "host_charge": -2,
+        "host_radius": 1.84,
+        "wyckoff": "4a",
+        "env": "free S2- (Li2S layer, surface)",
+        "charge_diff": -1,
+        "radius_diff": -0.38,
+        "compatibility_score": 0.532,
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 1
+      },
+      {
+        "site_name": "Cl_4d",
+        "host": "Cl",
+        "host_charge": -1,
+        "host_radius": 1.81,
+        "wyckoff": "4d",
+        "env": "halide site (bulk)",
+        "charge_diff": -2,
+        "radius_diff": -0.35,
+        "compatibility_score": 0.426,
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  }
+]
