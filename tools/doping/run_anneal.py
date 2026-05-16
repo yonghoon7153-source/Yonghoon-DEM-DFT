@@ -196,8 +196,8 @@ def main():
                        help='MD log interval (steps)')
     args = parser.parse_args()
 
-    if not args.xyz and not args.top_candidates:
-        parser.error("Provide --xyz files or --top_candidates JSON")
+    if not args.xyz and not args.top_candidates and not args.summary_json and not args.xyz_dir:
+        parser.error("Provide --xyz files, --xyz_dir, --top_candidates, or --summary_json JSON")
 
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -214,7 +214,13 @@ def main():
         print(f"  Discovered {len(xyz_paths)} xyz files under {args.xyz_dir}")
     elif args.summary_json:
         data = json.loads(Path(args.summary_json).read_text())
-        recs = (data.get('structures', data.get('results', []))
+        # Accept the key conventions used by upstream tools:
+        #   substitute_compound output → {'structures': [...]}
+        #   run_uma_screening output   → {'results':    [...]}
+        #   select_winners output      → {'winners':    [...]}  (cascade Stage 03)
+        recs = (data.get('winners')
+                or data.get('structures')
+                or data.get('results', [])
                 if isinstance(data, dict) else data)
         xyz_paths = [Path(r['xyz_file']) for r in recs
                      if 'xyz_file' in r and Path(r['xyz_file']).exists()]
