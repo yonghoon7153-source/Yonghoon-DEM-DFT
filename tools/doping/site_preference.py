@@ -35,20 +35,23 @@ HOST_SITES = {
 
 # Shannon ionic radii for common dopants (4-coord or 6-coord, charge-appropriate)
 DOPANT_DB = {
-    # Cations for Li site
-    'Li':  {'charge': +1, 'radius': 0.76},
-    'Na':  {'charge': +1, 'radius': 1.02},
-    'K':   {'charge': +1, 'radius': 1.38},
-    'Cu':  {'charge': +1, 'radius': 0.77},
-    'Ag':  {'charge': +1, 'radius': 1.15},
-    'Mg':  {'charge': +2, 'radius': 0.72},
-    'Zn':  {'charge': +2, 'radius': 0.74},
-    'Ca':  {'charge': +2, 'radius': 1.00},
+    # Cations for Li site — Shannon radius given for the standard host CN.
+    # When 'radius_cn4' is supplied separately, site_preference uses it for
+    # P_4b lookup (P is tetrahedral CN=4); otherwise the CN=6 'radius' is
+    # used for both Li and P sites. Reference: Shannon 1976, IUCr.
+    'Li':  {'charge': +1, 'radius': 0.76, 'radius_cn4': 0.59},
+    'Na':  {'charge': +1, 'radius': 1.02, 'radius_cn4': 0.99},
+    'K':   {'charge': +1, 'radius': 1.38, 'radius_cn4': 1.37},
+    'Cu':  {'charge': +1, 'radius': 0.77, 'radius_cn4': 0.60},
+    'Ag':  {'charge': +1, 'radius': 1.15, 'radius_cn4': 1.00},
+    'Mg':  {'charge': +2, 'radius': 0.72, 'radius_cn4': 0.57},
+    'Zn':  {'charge': +2, 'radius': 0.74, 'radius_cn4': 0.60},
+    'Ca':  {'charge': +2, 'radius': 1.00, 'radius_cn4': 1.00},  # Ca²⁺ usually CN=6+
     'Sr':  {'charge': +2, 'radius': 1.18},
     'Ba':  {'charge': +2, 'radius': 1.35},
-    'Al':  {'charge': +3, 'radius': 0.535},
-    'Ga':  {'charge': +3, 'radius': 0.62},
-    'In':  {'charge': +3, 'radius': 0.80},
+    'Al':  {'charge': +3, 'radius': 0.535, 'radius_cn4': 0.39},
+    'Ga':  {'charge': +3, 'radius': 0.62, 'radius_cn4': 0.47},
+    'In':  {'charge': +3, 'radius': 0.80, 'radius_cn4': 0.62},
     'Sc':  {'charge': +3, 'radius': 0.745},
     'Y':   {'charge': +3, 'radius': 0.90},
     # Rare earths — added for Nd2O3 / La2O3 oxide doping (paper #2 + Sundar
@@ -66,6 +69,7 @@ DOPANT_DB = {
     'Fe2': {'charge': +2, 'radius': 0.78},   # Fe²⁺ alternative (FeO, FeS)
     'Co3': {'charge': +3, 'radius': 0.61},   # Co³⁺ (LiCoO2, Co2O3)
     'Cu2': {'charge': +2, 'radius': 0.73},   # Cu²⁺ (CuO, CuS)
+    'Bi5': {'charge': +5, 'radius': 0.76},   # Bi⁵⁺ (Bi2O5) — alt valence
     'Nd':  {'charge': +3, 'radius': 0.983},
     'Sm':  {'charge': +3, 'radius': 0.958},
     'Gd':  {'charge': +3, 'radius': 0.938},

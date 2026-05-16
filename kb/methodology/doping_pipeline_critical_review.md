@@ -1,149 +1,168 @@
-# Doping Pipeline — Critical Self-Review (2026-05-16)
+# Doping Pipeline — Critical Self-Review (2026-05-16, v4 championship)
 
-기록 목적: 우리 doping pipeline (tools/doping/) 의 알려진 한계점을 명시.
-새 세션에서 이 파일 + CODE_INVENTORY.md 같이 읽으면 무엇이 부족한지 즉시 파악.
-
-`tools/doping/`: site_preference.py, substitute_struct.py, substitute_compound.py,
-run_uma_screening.py, run_anneal.py, analyze_screening.py, run_compound_batch.sh
+본 문서는 **새 세션에서 첫 5분 안에 읽어** 우리 도구가 무엇을 잡고
+무엇을 놓치는지 즉시 파악할 수 있게 작성. CODE_INVENTORY.md와 같이 읽기.
 
 ---
 
-## A. Chemistry coverage gaps
+## 1. 도구 현황 (16 files in `tools/doping/`)
 
-### A1. Multi-cation 화합물 (e.g., MgAl₂O₄ spinel, LaAlO₃, LiNbO₃) — ⚠ 부분 지원
-- 현재 `classify_compound` 가 모든 양이온을 **하나의 cation_site** 에 일괄 배치.
-- LaAlO₃에서 La와 Al이 같은 Li 자리에 같이 들어감 → 이건 진짜 화학과 다름.
-- **TODO**: per-cation cation_site mapping (La→Li_24g, Al→P_4b 같이).
+### Substitution
+| 도구 | 역할 |
+|------|------|
+| `site_preference.py` | 75+ DOPANT_DB, 19 multi-valence, CN-aware radii, --validate 0/19 |
+| `substitute_struct.py` | spread/random/cluster/first/near_cation, PBC farthest-point |
+| `substitute_compound.py` | Type A/B/B'/C/D, auto-valence, Li interstitial for acceptor |
+| `run_compound_batch.sh` v3 | ~85 compounds × 9 sites × 5 seeds 자동 batch |
 
-### A2. High-entropy doping (5+ cations 동시)
-- 학계 hot topic (high-entropy oxide → high-entropy sulfide SE 시작 단계).
-- 현재: 한 batch run에 compound 하나만 가능.
-- **TODO**: `--compounds A,B,C --ratios x,y,z` 다중 compound 동시 모드.
+### Screening
+| 도구 | 역할 |
+|------|------|
+| `run_uma_screening.py` | UMA relax + Tier-1 (ΔE/atom, ΔV) + Tier-2 (5 cheap metrics) + outlier guard + provenance |
+| `select_winners.py` | per-(compound, sites) Top-1 추출 |
+| `bvse_proxy.py` | per-Li BVS + Li migration volume fraction |
 
-### A3. Cluster doping (precipitate as 2nd phase)
-- Coating literature (Sundar 2025) 에선 NdOₓ가 별도 phase로 표면 존재 가능.
-- 현재 모델: 항상 lattice substitution만.
-- **TODO**: surface model + 2-phase 처리는 별도 워크플로우 (Wad pipeline).
+### Post-processing
+| 도구 | 역할 |
+|------|------|
+| `run_anneal.py` | Langevin MD + relax, 4 input modes, --light/--per_compound_top |
+| `rank_anneal.py` | pre/post anneal ranking flip detection |
+| `run_mlip_postproc.py` | EOS BM3 fit + finite-strain Cij + VRH (B/G/E/Pugh/ν) |
+| `analyze_screening.py` | 5 objective (composite/binding_E/formation_E/per_dopant/disorder) |
+| `combine_rankings.py` | 7-stage chain → unified multi-axis ranking |
+| `generate_dft_inputs.py` | Top-N → QE pw.in (Tier-4 paper-grade) |
 
-### A4. Partial occupancy / fractional dopant
-- 실제 NMR: Mg와 Li가 같은 24g 자리를 50:50 점유 가능.
-- 현재: 원자 단위 결정론적 substitution.
-- **TODO**: virtual atom approximation (vca) or stochastic occupancy.
-
-### A5. Antisite defects 자체 (도펀트 없이)
-- Li-P antisite, S-Cl inversion (이미 D'Amore/Pustorino reference).
-- 현재 모델: dopant introduction 위주.
-- **TODO**: anti-site mutation mode (도펀트 없이 host atom swap만).
-
-### A6. Interstitial dopants — ★ **가장 중요 missing**
-- B³⁺/Si⁴⁺ at P_4b는 acceptor → Li interstitial이 charge compensation.
-- 우리 코드: `li_vacancies_needed`가 음수면 그냥 0 처리 → 전하 불균형으로 UMA 자동 거절.
-- 진짜 처리: Li interstitial site (보통 16e octahedral void) 찾아서 추가 Li 배치.
-- **TODO**: interstitial.py — void finding + Li 삽입.
-
----
-
-## B. Site preference & radii
-
-### B1. Coordination-dependent Shannon radii — ⚠ 단일 값 사용
-- Shannon 반경은 CN에 따라 다름 (Li 4-coord = 0.59, 6-coord = 0.76).
-- 우리 DB: 한 element당 한 값 (대부분 CN=6).
-- P-site (CN=4 tetrahedral) → 4-coord 값 써야 정확.
-- **TODO**: DB에 `radius_cn` dict, host site의 CN으로 lookup.
-
-### B2. Strict / Moderate / Exotic 3-tier preference
-- 현재 ALLOW_EXOTIC binary (filter or no-filter).
-- 더 좋은 모델: tier별 다른 confidence weight.
-- **TODO**: site_preference에 tier 라벨 추가.
-
-### B3. Pauling's 2nd rule (local charge balance) 무시
-- 결합력 합 ≈ 음이온 전하. 현재 cell-global 전하만 본다.
-- **TODO**: 후처리로 local bond-valence sum 체크.
-
-### B4. 자동 valence 추론 ★ 즉시 fix
-- 현재 `MnO2` → {Mn:1, O:2}, Mn=+2 lookup → 전하 -2 → 오류.
-- DB에 `Mn4` 별도 entry 추가했지만 parser는 자동으로 못 찾음.
-- ★ **이번 commit에서 구현**: 전하 불균형 시 compound 안 cation의 valence를
-  중성 조건으로 자동 추론.
+### Infrastructure
+| 도구 | 역할 |
+|------|------|
+| `_provenance.py` | env metadata (python/ase/uma/git versions) |
+| `preflight.py` | 4 sanity checks 전 batch 시작 |
+| `tier_cascade.sh` v2 | 10-stage factory line + STAGE_NN.DONE 마커 |
+| `watch_status.sh` | 실시간 dashboard |
 
 ---
 
-## C. Vacancy placement
+## 2. 지금 잘 다루는 것 (검증됨)
 
-### C1. 'Random' vacancy = uniform random ★ 한계
-- 실제 LPSCl₁₊ₓ: Li vacancy가 aliovalent cation 근처에 cluster (local charge
-  compensation).
-- 우리 'random': cation 위치와 무관.
-- ★ **이번 commit에서 구현**: `--vacancy_near_cation` (vacancy를 cation 근방에).
-
-### C2. Li_24g vs Li_48h vacancy 선호 무시
-- 48h half-occupied → 실험적으로 vacancy 48h에 형성 우세.
-- 우리: 모든 Li 동등하게 취급.
-- **TODO**: `--vacancy_site Li_48h` 옵션 (요구 시 즉시 추가 가능).
-
-### C3. Vacancy ordering temperature 효과
-- 0K에선 vacancy ordering이 잡힐 수 있음 (artifact).
-- anneal에서 disorder 회복 — 그래서 anneal 모든 후보에 권장.
+- 85+ compound 종류 (mono~hexa oxide, fluoride, chloride, bromide, iodide,
+  nitride, sulfide, polyanion)
+- 19 multi-valence 원소 (CrO3/MnO2/Fe3O4/Bi2O5 등 자동 처리)
+- 5 doping type (single/halide-rich/mixed-halide/chain/high-entropy)
+- True farthest-point spread (PBC-aware), cluster (PS4→PO4), near_cation
+- Li vacancy (donor) + Li interstitial (acceptor) 둘 다 charge balance
+- Multi-supercell (1x1x1, 2x1x1, 2x2x1, 2x2x2)
+- 5 ranking objective + 5 Tier-2 metric + BVSE proxy
+- 7-stage cascade with resume markers
+- Provenance + outlier guard + reproducibility
 
 ---
 
-## D. Algorithm subtleties
+## 3. 솔직히 놓치는 것 (TODO 우선순위)
 
-### D1. 'Cluster' 알고리즘 — 진짜 cluster radius 없음
-- 현재: 가장 가까운 host atom 추가만 함 (chain).
-- 진짜 cluster: 첫 atom 근처 R Å 안의 모든 host atom 중 선택.
-- **TODO**: `--cluster_radius 4.0` 추가.
+### ⚠ 즉시 critical (paper-grade 위해 필수)
 
-### D2. Spread/cluster seed sensitivity
-- 'spread': 초기 atom만 random, 나머지 deterministic → seed 효과 제한.
-- 'cluster': 동일.
-- 'random'만 진짜 ensemble 다양성.
-- → ensemble 보고 시 method='random' n_seeds≥5 권장.
+1. **MLIP bias 검증 안 됨** (Wang 2025 npj Comp Mater: UMA류 general MLIP은
+   sulfide PES softening + Li diffusivity overestimation 문제 존재)
+   → spot-check: comp1/comp5 known DFT B0와 UMA 값 비교 필요
+   → 또는 reEWC fine-tuning (Wang 2025 reference)
 
-### D3. 구조적 deduplication 없음
-- 다른 seed가 cell symmetry로 동등한 구조 만들 수 있음.
-- 우리 dedup은 (composition, ΔE) → 같은 구조 다른 ΔE는 못 잡음.
-- **TODO**: SOAP descriptor or RMSD-based dedup.
+2. **Mixed-cation 화합물에서 per-cation site routing 미완**
+   - 현재 모든 양이온이 같은 site에 (Mg + Al in MgAl₂O₄ → 둘 다 Li_24g)
+   - 실제 spinel chemistry: Mg at tetrahedral (Li-like), Al at octahedral
+   - Workaround: --auto_cation_sites가 site 다양화는 시도
 
----
+3. **Formation energy μ JSON 없음**
+   - `--objective formation_E` 옵션은 있지만 precursor chemical potential
+     dict 없음. MP API로 받아오는 helper 작성 필요.
 
-## E. Workflow integration
+### Medium impact
 
-### E1. Single-shot screening — multi-stage filter cascade 없음
-- 현재: 460개 후보를 모두 같은 분해능으로 처리.
-- 좋은 모델: Tier-1 (loose) → Tier-2 (anneal Top-50) → Tier-3 (EOS Top-10).
-- **TODO**: cascade.py — Tier별 fmax/steps/method 설정.
+4. **Generic vacancy defect** (Li removal 단독, cation 없이)
+5. **Antisite defects** (P-S, S-Cl) — D'Amore 2022 reference
+6. **Partial occupancy / VCA** — Mg+Li 50:50 같은 자리
+7. **SOAP/RMSD structural dedup** (symmetry-equivalent 제거)
 
-### E2. Anneal-then-rescreen 자동화 ★ 부분 구현
-- 현재: `run_anneal.py` 가 anneal만 함, post-anneal ranking은 수동.
-- → ★ **이번 commit**: anneal 후 자동 ΔE/atom 갱신 + 새 분석.
+### Lower
 
-### E3. Reproducibility 메타데이터
-- UMA model name + version, ASE version, Python version 기록 안 됨.
-- **TODO**: 모든 결과 JSON에 `provenance` block 추가.
-
-### E4. Failure tracking
-- 실패 시 generic exception print만, 원인 코드 없음.
-- **TODO**: 실패 원인 분류 (site collision / charge imbalance / not converged / OOM).
-
-### E5. Anneal 진단 (RMSD, phase transition)
-- 현재: pre/post energy만.
-- **TODO**: trajectory에서 RMSD(t), composition stability, transition 감지.
+8. **CN-aware radii 부분 구현** (Li/Na/K/Mg/Zn/Al/Ga/In만 cn4 값 있음)
+9. **Polyanion as discrete unit** (PO₄ 그룹이 PS₄ 자리 통째 대체)
+10. **Convex hull / Ehull** (MP 통합)
 
 ---
 
-## 우선순위 (이번 세션 즉시 fix)
+## 4. 알려진 외부 의존성 / 가정
 
-| 번호 | 항목 | 영향 |
-|------|------|------|
-| **B4** | Auto-valence from neutrality | MnO2, Fe3O4, CrO3 등 즉시 작동 |
-| **C1** | --vacancy_near_cation | 실제 chemistry 부합 |
-| **D1** | --cluster_radius | 진짜 cluster 가능 |
-| **E2** | post-anneal 자동 재분석 | 워크플로우 완결 |
-
-나머지는 다음 세션 작업 — 이 파일 새 세션에서 첫 5분 안에 읽고 우선순위 정할 것.
+- UMA-s-1p1 (FAIRChem) — sulfide-specific fine-tuning 없음, general model
+- PBE 수준 정확도 (DFT 수준 아님, B0 계산값에 ~10-20% 절대 오차 가능)
+- Shannon ionic radii (1976 + Adams 2003 sulfide refit)
+- BVSE parameters (Brown 1985 / Adams 2003 — Li-S, Li-Cl, Li-O 등)
+- Argyrodite F-43m baseline (idealized Wyckoff; D'Amore 2022 phonon
+  unstable이지만 anneal로 자연 fix)
 
 ---
 
-**작성**: 2026-05-16
-**관련 commit**: 다음 commit이 B4 + C1 + D1 + E2 동시 처리.
+## 5. 1주일 batch 시 failure mode 대비책
+
+| Failure | 대비 |
+|---------|------|
+| OOM | 메모리 측정 안 함 — 큰 supercell 시 주의 |
+| Disk full | preflight 단계 ≥5GB check ✅ |
+| Cluster reboot | resume by name 모든 도구 ✅ |
+| Process kill | tier_cascade STAGE_NN.DONE 마커로 stage-level resume ✅ |
+| Bad baseline | preflight PS4 integrity check ✅ |
+| UMA divergence | outlier_flag (|ΔV|>30% 또는 |ΔE|>5 eV/atom) ✅ |
+| 잘못된 chemistry | site_preference --validate 0/19 통과 보장 ✅ |
+| Insight 없음 | positive control (Nd2O3/La2O3/Al2O3) → 모두 Top tier에 들어야 함 |
+
+---
+
+## 6. 사용 시퀀스 (1 batch 권장)
+
+```bash
+# 0. 갱신
+cd <repo>
+BRANCH=claude/unified-2026-05-15
+RAW="https://raw.githubusercontent.com/yonghoon7153-source/Yonghoon-DEM-DFT/${BRANCH}"
+for f in $(curl -s "https://api.github.com/repos/yonghoon7153-source/Yonghoon-DEM-DFT/contents/tools/doping?ref=${BRANCH}" | python3 -c "import json,sys; [print(d['name']) for d in json.load(sys.stdin)]"); do
+    wget -q -O tools/doping/$f "${RAW}/tools/doping/${f}?nocache=$(date +%s)"
+done
+chmod +x tools/doping/*.sh
+
+# 1. cascade
+nohup bash -c '
+source /data/apps/miniforge3/etc/profile.d/conda.sh
+conda activate uma
+bash tools/doping/tier_cascade.sh \
+    db/structures/lpscl_F43m_24G_canonical.cif \
+    runs/tier_$(date +%F) \
+    5 1,1,1 1
+' > logs/cascade.log 2>&1 &
+
+# 2. monitor
+watch -n 30 'bash tools/doping/watch_status.sh'
+
+# 3. (cascade 끝나면) DFT inputs for top-10
+python3 tools/doping/combine_rankings.py \
+    --cascade_dir runs/tier_$(date +%F) \
+    --out runs/tier_$(date +%F)/FINAL_RANKING.json
+python3 tools/doping/generate_dft_inputs.py \
+    --ranking runs/tier_$(date +%F)/FINAL_RANKING.json \
+    --top 10 --out runs/tier_$(date +%F)/dft_inputs/
+```
+
+---
+
+## 7. 다음 라운드 (이 batch 결과 받은 후)
+
+1. Top-10 → KISTI DFT 검증 (`generate_dft_inputs.py` 출력 그대로)
+2. MLIP vs DFT 정량 비교 → UMA bias 보정 또는 reEWC fine-tuning
+3. Top-3 → MLIP-AIMD 600K 50ps → 실제 σ_Li 계산
+4. Top-3 → 600K snapshot elastic (Cij thermal disorder 포함)
+5. Mixed-cation per-site routing 구현 (Wave 5)
+6. paper draft
+
+---
+
+**최종 commit hash 확인**: `git log --oneline -3`
+**브랜치**: `claude/unified-2026-05-15`
+**작성일**: 2026-05-16

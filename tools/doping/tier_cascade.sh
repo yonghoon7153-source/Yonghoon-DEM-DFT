@@ -143,6 +143,32 @@ STAGE 08 elastic \
         --device cuda
 
 # Stage 09 — Final report
+# Stage 9a — Aggregate into FINAL_RANKING.json
+STAGE 09a combine \
+    python3 tools/doping/combine_rankings.py \
+        --cascade_dir "$OUT" \
+        --out "$OUT/FINAL_RANKING.json"
+
+# Stage 9b — Collect dataset for ML predictor
+STAGE 09b collect \
+    python3 tools/doping/collect_dataset.py \
+        --cascade_dir "$OUT" \
+        --out "$OUT/dataset.csv"
+
+# Stage 9c — Train in-house ML predictor (so future candidates can be
+#   scored instantly without running the full cascade).
+STAGE 09c train_predictor \
+    python3 tools/doping/train_predictor.py \
+        --csv "$OUT/dataset.csv" \
+        --out_dir "$OUT/predictor/" \
+        --mode with_structure
+
+# Stage 9d — DFT input generation (Top-10 → KISTI scp)
+STAGE 09d dft_inputs \
+    python3 tools/doping/generate_dft_inputs.py \
+        --ranking "$OUT/FINAL_RANKING.json" \
+        --top 10 --out "$OUT/dft_inputs/"
+
 STAGE 09 report \
     python3 -c "
 import json
