@@ -283,19 +283,28 @@ fi
 # Cost ≈2.5h on A100. Per-baseline path; missing path → skip that baseline
 # (no fake "comp3 baseline = comp1 CIF" — reviewer-caught CR-B fix).
 # Set TOP_K_NCM=0 to skip the whole stage.
+#
+# Baseline conventions (v4.5.2 — comp4 is the DFT-EOS-anchored Li5.4 anchor):
+#   NCM_BASELINE_COMP1   : Li6PS5Cl pristine (cubic, db CIF)        REQUIRED anchor
+#   NCM_BASELINE_LI5P4   : Li5.4 family DFT-grade (comp4 V0)        primary Δ vs Li5.4
+#   NCM_BASELINE_LI5P4_2 : Li5.4 family MLIP-grade (comp3 V0)       SI 비교
+#   NCM_BASELINE_LI5P4_3 : Li5.4 family MLIP-grade (comp5 V0)       SI 비교
 TOP_K_NCM="${TOP_K_NCM:-5}"
 NCM_BASELINE_COMP1="${NCM_BASELINE_COMP1:-db/structures/lpscl_F43m_24G_canonical.cif}"
-NCM_BASELINE_COMP3="${NCM_BASELINE_COMP3:-}"  # Li5.4 family CIF (none in db yet; user supplies)
+NCM_BASELINE_LI5P4="${NCM_BASELINE_LI5P4:-db/structures/comp4_v2_V0_UMA.xyz}"
+NCM_BASELINE_LI5P4_2="${NCM_BASELINE_LI5P4_2:-}"   # default unset; SI only
+NCM_BASELINE_LI5P4_3="${NCM_BASELINE_LI5P4_3:-}"   # default unset; SI only
 NCM_BASELINE_ARGS=""
 [ -f "$NCM_BASELINE_COMP1" ] && \
     NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp1=$NCM_BASELINE_COMP1"
-if [ -n "$NCM_BASELINE_COMP3" ] && [ -f "$NCM_BASELINE_COMP3" ]; then
-    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp3=$NCM_BASELINE_COMP3"
-else
-    LOG "Stage 11: comp3 baseline CIF not provided (NCM_BASELINE_COMP3 unset or missing)."
-    LOG "         To enable: NCM_BASELINE_COMP3=db/structures/<Li5.4_cif> bash $0 ..."
-fi
+[ -f "$NCM_BASELINE_LI5P4" ] && \
+    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp4=$NCM_BASELINE_LI5P4"
+[ -n "$NCM_BASELINE_LI5P4_2" ] && [ -f "$NCM_BASELINE_LI5P4_2" ] && \
+    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp3=$NCM_BASELINE_LI5P4_2"
+[ -n "$NCM_BASELINE_LI5P4_3" ] && [ -f "$NCM_BASELINE_LI5P4_3" ] && \
+    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp5=$NCM_BASELINE_LI5P4_3"
 if [ "$TOP_K_NCM" != "0" ] && [ -n "$NCM_BASELINE_ARGS" ]; then
+    LOG "Stage 11 baselines:$NCM_BASELINE_ARGS"
     STAGE 11 cathode \
         python3 tools/doping/run_cathode_interface.py \
             --ranking "$OUT/06_rerank/post_anneal_ranking.json" \

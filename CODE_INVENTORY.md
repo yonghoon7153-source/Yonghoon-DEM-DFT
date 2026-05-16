@@ -677,3 +677,28 @@ repo에 mirror된 이유: gabia cleanup 대비 reference 보존 + factor 2 bug �
 - 2026-05-01: A2 `compute_cij.py` (gabia comp2_v2) factor 2 누락 → comp2 v2 wasted
 - 2026-05-16: **modelC v2 `fit_cij.py` 동일 패턴 재발견** — 같은 author가 새 디렉토리에 같은 bug 복제. 향후 elastic 신규 코드 작성 시 **make_strain의 shear ε vs γ 정의 + fit의 / (2·STRAIN) divisor 항상 한 쌍으로 검토**.
 
+### Z8. 2026-05-16 v30u_ensemble Li5.4 family V0 baselines
+
+Li5.4 family baseline structures for Stage 11 (NCM-doped-SE adhesion).
+Sourced from gabia `/data/work/v30u_ensemble/` — these are the same V0
+structures that produced the R=+0.989 paper binding curve figure (see
+Z7-A), so Stage 11 uses an *apples-to-apples* baseline with the v0
+paper analysis pipeline.
+
+| File | Source | Grade | Stage 11 role |
+|------|--------|-------|---------------|
+| `db/structures/comp4_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | **DFT-EOS validated** (B0=20.8 GPa cross-checks DFT) | **primary Li5.4 anchor** (`NCM_BASELINE_LI5P4` default) |
+| `db/structures/comp3_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | MLIP-finished (user: *"약간 야매"*) | SI Li5.4 comparison (`NCM_BASELINE_LI5P4_2`, default unset) |
+| `db/structures/comp5_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | MLIP-finished (user: *"약간 야매"*) | SI Li5.4 comparison (`NCM_BASELINE_LI5P4_3`, default unset) |
+
+**Default Stage 11 behavior**: cascade pulls comp1 (Li6 anchor) +
+comp4 (Li5.4 anchor) automatically. comp3/comp5 are paper-SI only;
+opt in via env vars when SI table needs the full 3-comp Li5.4 spread.
+
+**DFT-grade pure V0 source (for reviewer-grade verification)**:
+- gabia `/data/work/bml/manuscript_support/comp4_lpsc08b08/eos/comp4_lpsc08b08_v{096..102}.out` (DFT EOS scan)
+- gabia `/data/work/bml/manuscript_support/comp4_restart/comp4_r2_v{096..106}.out` (restart runs)
+- BM3 fit of these gives DFT-grade V0; current Z8 mirror uses UMA V0
+  which is what the v30u binding curve work used. Switch to DFT V0 if
+  reviewer demands pure-DFT baseline (separate task).
+
