@@ -117,9 +117,10 @@ def main():
         X = df[cat_feats + num_feats]
         try:
             y_pred = model.predict(X)[0]
-            r2 = cv.get(target, {}).get('cv_r2_mean', 0)
-            mae = cv.get(target, {}).get('cv_mae_mean', 0)
-            print(f"{target:<35}{y_pred:>+13.4g} {r2:>+9.3f} {mae:>9.4g}")
+            tcv = cv.get(target, {})
+            r2 = tcv.get('best_cv_r2_mean', tcv.get('cv_r2_mean', 0))
+            mtype = bundle.get('model_type', 'gbr')
+            print(f"{target:<35}{y_pred:>+13.4g} {r2:>+9.3f}  ({mtype})")
         except Exception as e:
             print(f"{target:<35}{'(predict err):':>14} {e}")
     print()

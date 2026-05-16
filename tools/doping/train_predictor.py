@@ -72,11 +72,17 @@ def main():
                   help="'cold_start': only label features (predict before UMA), "
                        "'with_structure': also use Tier-2 + BVSE (predict after "
                        "a quick UMA + BVSE pass).")
+    p.add_argument('--models', nargs='+', default=['all'],
+                  help="Which models to train. 'all' = every available "
+                       "(gbr, rf, xgb if installed, lgbm if installed, "
+                       "catboost if installed). For each target keep the "
+                       "model with the highest CV R² as predictor_<target>.pkl.")
     args = p.parse_args()
 
     try:
         import pandas as pd
-        from sklearn.ensemble import GradientBoostingRegressor
+        from sklearn.ensemble import (GradientBoostingRegressor,
+                                       RandomForestRegressor)
         from sklearn.model_selection import KFold, cross_val_score
         from sklearn.metrics import mean_absolute_error, r2_score
         from sklearn.preprocessing import OneHotEncoder
@@ -85,6 +91,36 @@ def main():
         import pickle
     except ImportError as e:
         raise SystemExit(f"Need pandas + sklearn: {e}")
+
+    # Optional fancier learners (auto-detect; skip silently if not installed)
+    available_models = {
+        'gbr': lambda: GradientBoostingRegressor(n_estimators=200,
+                                                 max_depth=4, random_state=42),
+        'rf':  lambda: RandomForestRegressor(n_estimators=300, max_depth=10,
+                                             random_state=42, n_jobs=-1),
+    }
+    try:
+        from xgboost import XGBRegressor
+        available_models['xgb'] = lambda: XGBRegressor(
+            n_estimators=300, max_depth=5, learning_rate=0.05,
+            random_state=42, n_jobs=-1, verbosity=0)
+    except ImportError:
+        pass
+    try:
+        from lightgbm import LGBMRegressor
+        available_models['lgbm'] = lambda: LGBMRegressor(
+            n_estimators=300, max_depth=-1, learning_rate=0.05,
+            random_state=42, n_jobs=-1, verbose=-1)
+    except ImportError:
+        pass
+    try:
+        from catboost import CatBoostRegressor
+        available_models['catboost'] = lambda: CatBoostRegressor(
+            iterations=300, depth=5, learning_rate=0.05,
+            random_state=42, verbose=False)
+    except ImportError:
+        pass
+    print(f"Available models: {list(available_models.keys())}")
 
     out = Path(args.out_dir)
     out.mkdir(parents=True, exist_ok=True)
@@ -117,37 +153,70 @@ def main():
         X = d[feats_categorical + [f for f in feats_numeric if f in d.columns]]
         y = d[tgt].values
 
-        pre = ColumnTransformer([
-            ('cat', OneHotEncoder(handle_unknown='ignore'), feats_categorical),
-        ], remainder='passthrough')
-        model = Pipeline([
-            ('pre', pre),
-            ('reg', GradientBoostingRegressor(n_estimators=200,
-                                              max_depth=4, random_state=42))
-        ])
+        models_to_try = (list(available_models.keys())
+                        if args.models == ['all']
+                        else [m for m in args.models if m in available_models])
+        if not models_to_try:
+            print(f"  ✗ {tgt}: no available models")
+            continue
 
-        # 5-fold CV
         kf = KFold(n_splits=5, shuffle=True, random_state=42)
-        cv_r2 = cross_val_score(model, X, y, cv=kf, scoring='r2')
-        cv_mae = cross_val_score(model, X, y, cv=kf, scoring='neg_mean_absolute_error')
+        target_results = {}
+        best_model_name, best_r2, best_pipeline = None, -np.inf, None
+        for mname in models_to_try:
+            pre = ColumnTransformer([
+                ('cat', OneHotEncoder(handle_unknown='ignore'),
+                 feats_categorical),
+            ], remainder='passthrough')
+            pipeline = Pipeline([
+                ('pre', pre),
+                ('reg', available_models[mname]()),
+            ])
+            try:
+                cv_r2 = cross_val_score(pipeline, X, y, cv=kf, scoring='r2')
+                cv_mae = cross_val_score(pipeline, X, y, cv=kf,
+                                        scoring='neg_mean_absolute_error')
+            except Exception as e:
+                print(f"    {mname}: CV failed ({e})")
+                continue
+            target_results[mname] = {
+                'cv_r2_mean': float(cv_r2.mean()),
+                'cv_r2_std': float(cv_r2.std()),
+                'cv_mae_mean': float(-cv_mae.mean()),
+            }
+            if cv_r2.mean() > best_r2:
+                best_r2 = cv_r2.mean()
+                best_model_name = mname
+                best_pipeline = pipeline
 
-        # Train final model on all data
-        model.fit(X, y)
+        if best_pipeline is None:
+            print(f"  ✗ {tgt}: all models failed")
+            continue
+
+        # Refit on full dataset and save the winning model
+        best_pipeline.fit(X, y)
         with (out / f"predictor_{tgt}.pkl").open('wb') as f:
-            pickle.dump({'model': model, 'features_categorical': feats_categorical,
-                        'features_numeric': [f for f in feats_numeric if f in d.columns],
-                        'target': tgt}, f)
+            pickle.dump({
+                'model': best_pipeline,
+                'model_type': best_model_name,
+                'features_categorical': feats_categorical,
+                'features_numeric': [f for f in feats_numeric if f in d.columns],
+                'target': tgt,
+            }, f)
 
         metrics[tgt] = {
             'n_rows': int(len(d)),
-            'cv_r2_mean': float(cv_r2.mean()),
-            'cv_r2_std': float(cv_r2.std()),
-            'cv_mae_mean': float(-cv_mae.mean()),
+            'best_model': best_model_name,
+            'best_cv_r2_mean': float(best_r2),
             'y_mean': float(y.mean()),
             'y_std': float(y.std()),
+            'all_models': target_results,
         }
-        print(f"  ✓ {tgt}: n={len(d)} R²={cv_r2.mean():+.3f}±{cv_r2.std():.3f} "
-              f"MAE={-cv_mae.mean():.4g} (y_mean={y.mean():+.3g}, σ={y.std():.3g})")
+        mt = target_results[best_model_name]
+        print(f"  ✓ {tgt}: best={best_model_name} "
+              f"R²={mt['cv_r2_mean']:+.3f}±{mt['cv_r2_std']:.3f} "
+              f"MAE={mt['cv_mae_mean']:.4g} "
+              f"(tried {len(target_results)} models)")
 
     summary = {
         'provenance': get_provenance(),
