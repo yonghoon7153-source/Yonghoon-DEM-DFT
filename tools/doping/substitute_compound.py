@@ -54,11 +54,25 @@ from ase import Atoms
 
 import sys
 sys.path.insert(0, str(Path(__file__).parent))
-from site_preference import DOPANT_DB, HOST_SITES
+from site_preference import DOPANT_DB, HOST_SITES, site_preference_filter
 from substitute_struct import (
     find_host_indices, find_host_indices_for_site,
     select_substitution_sites, SITE_TO_HOST,
 )
+
+
+def compatible_sites_for_element(element: str, db: dict) -> set[str]:
+    """Return the set of HOST_SITES names where ``element`` can sit,
+    according to the literature-calibrated radius+charge filter in
+    site_preference.py. Skipping incompatible (cation_site, anion_site)
+    combinations saves UMA cost and avoids reporting non-physical
+    placements (e.g., La³⁺ at S_4a, or O²⁻ at P_4b).
+    """
+    if element not in db:
+        return set()
+    info = db[element]
+    matches = site_preference_filter(info['charge'], info['radius'])
+    return {m['site_name'] for m in matches}
 
 
 def parse_compound(formula: str) -> dict[str, int]:
@@ -139,7 +153,7 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
             raise ValueError(
                 f"Need {n_sub} {cat} at {cation_site}, but only "
                 f"{len(host_idx)} sites available")
-        targets = select_substitution_sites(host_idx, n_sub, method, seed_local)
+        targets = select_substitution_sites(host_idx, n_sub, method, seed_local, atoms=new)
         syms = new.get_chemical_symbols()
         for i in targets:
             syms[i] = cat
@@ -157,7 +171,7 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
             raise ValueError(
                 f"Need {n_sub} {an} at {anion_site}, but only "
                 f"{len(host_idx)} sites available")
-        targets = select_substitution_sites(host_idx, n_sub, method, seed_local)
+        targets = select_substitution_sites(host_idx, n_sub, method, seed_local, atoms=new)
         syms = new.get_chemical_symbols()
         for i in targets:
             syms[i] = an
@@ -175,7 +189,7 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
             raise ValueError(
                 f"Need {n_vac} Li vacancies but only {len(li_idx)} Li remain")
         vac_targets = select_substitution_sites(
-            li_idx, n_vac, method, seed_local + 100)
+            li_idx, n_vac, method, seed_local + 100, atoms=new)
         keep = [i for i in range(len(new)) if i not in vac_targets]
         new = new[keep]
         placement_log['li_vacancies'] = {'n': n_vac, 'indices': vac_targets}
@@ -200,7 +214,7 @@ def halide_rich_swap(atoms: Atoms, halide: str, n_swap: int,
         raise ValueError(
             f"Need {n_swap} S→{halide} swaps at {anion_site}, but only "
             f"{len(host_idx)} sites available")
-    targets = select_substitution_sites(host_idx, n_swap, method, seed)
+    targets = select_substitution_sites(host_idx, n_swap, method, seed, atoms=new)
     syms = new.get_chemical_symbols()
     for i in targets:
         syms[i] = halide
@@ -211,7 +225,7 @@ def halide_rich_swap(atoms: Atoms, halide: str, n_swap: int,
         raise ValueError(
             f"Need {n_swap} Li vacancies but only {len(li_idx)} Li remain")
     vac_targets = select_substitution_sites(
-        li_idx, n_swap, method, seed + 1)
+        li_idx, n_swap, method, seed + 1, atoms=new)
     keep = [i for i in range(len(new)) if i not in vac_targets]
     new = new[keep]
 
@@ -234,6 +248,22 @@ def main():
                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--base', required=True, help='LPSCl base structure')
     parser.add_argument('--out', required=True, help='Output directory')
+    parser.add_argument('--supercell', nargs=3, type=int, default=[1, 1, 1],
+                       metavar=('NX', 'NY', 'NZ'),
+                       help='Multiply base cell (default 1 1 1 = 4 f.u. / 52 atoms; '
+                            '2 1 1 = 8 f.u., 2 2 1 = 16 f.u., 2 2 2 = 32 f.u. — '
+                            'needed when combining Type A + Type B doping at low '
+                            'concentrations so a single integer atom does not '
+                            'exceed the requested mole fraction).')
+    parser.add_argument('--auto_anion_sites', action='store_true',
+                       help='For Type A: generate one structure per available '
+                            'anion site (S_16e, S_4a, Cl_4d) instead of using '
+                            'a single --anion_site. Lets UMA energy decide '
+                            'whether O prefers PS4→PO4 (S_16e), free O²⁻ (S_4a), '
+                            'or oxychloride (Cl_4d).')
+    parser.add_argument('--auto_cation_sites', action='store_true',
+                       help='For Type A: also iterate cation sites '
+                            '{Li_24g, Li_48h, P_4b}.')
 
     # Type A
     parser.add_argument('--compound',
@@ -270,8 +300,17 @@ def main():
         parser.error("Provide --compound (Type A) and/or --halide_rich (Type B)")
 
     base = read(args.base)
+    if args.supercell != [1, 1, 1]:
+        base = base.repeat(args.supercell)
+        # Scale n_fu by the supercell multiplier
+        cell_mult = args.supercell[0] * args.supercell[1] * args.supercell[2]
+        n_fu_actual = args.n_fu * cell_mult
+        print(f"Supercell {args.supercell}: base now {len(base)} atoms, "
+              f"n_fu={n_fu_actual}")
+    else:
+        n_fu_actual = args.n_fu
     print(f"Loaded base: {len(base)} atoms, composition: {composition_summary(base)}")
-    print(f"Assuming {args.n_fu} f.u. per cell (4 × Li6PS5Cl by default).")
+    print(f"Effective f.u. per cell: {n_fu_actual}")
 
     out_dir = Path(args.out)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -279,87 +318,157 @@ def main():
     seeds = ([args.seed] if args.method != 'random'
              else [args.seed + i for i in range(args.n_seeds)])
 
+    # Decide the (cation_site, anion_site) combinations to iterate.
+    if args.auto_cation_sites:
+        cation_sites = ['Li_24g', 'Li_48h', 'P_4b']
+    else:
+        cation_sites = [args.cation_site]
+    if args.auto_anion_sites:
+        anion_sites = ['S_16e', 'S_4a', 'Cl_4d']
+    else:
+        anion_sites = [args.anion_site]
+
+    # Pre-filter site combinations against site_preference (only when iterating
+    # auto modes — explicit single-site requests are kept as-is to let the user
+    # force unusual placements like Sundar-style oxide-at-anion-site coatings).
+    if args.compound:
+        compound_atoms = parse_compound(args.compound)
+        cations_in = [el for el, _ in compound_atoms.items()
+                      if DOPANT_DB.get(el, {}).get('charge', 0) > 0]
+        anions_in = [el for el, _ in compound_atoms.items()
+                     if DOPANT_DB.get(el, {}).get('charge', 0) < 0]
+        if args.auto_cation_sites:
+            allowed_c = set.intersection(*(compatible_sites_for_element(c, DOPANT_DB)
+                                           for c in cations_in)) if cations_in else set()
+            before = list(cation_sites)
+            cation_sites = [s for s in cation_sites if s in allowed_c]
+            if before != cation_sites:
+                print(f"  site_preference filter (cations {cations_in}): "
+                      f"{before} → {cation_sites}")
+        if args.auto_anion_sites:
+            allowed_a = set.intersection(*(compatible_sites_for_element(a, DOPANT_DB)
+                                           for a in anions_in)) if anions_in else set()
+            before = list(anion_sites)
+            anion_sites = [s for s in anion_sites if s in allowed_a]
+            if before != anion_sites:
+                print(f"  site_preference filter (anions {anions_in}): "
+                      f"{before} → {anion_sites}")
+        if args.auto_cation_sites and not cation_sites:
+            parser.error(f"No compatible cation sites for {cations_in}")
+        if args.auto_anion_sites and not anion_sites:
+            parser.error(f"No compatible anion sites for {anions_in}")
+
+    print(f"Iterating: {len(cation_sites)} cation sites × "
+          f"{len(anion_sites)} anion sites × {len(seeds)} seeds = "
+          f"{len(cation_sites)*len(anion_sites)*len(seeds)} structures")
+
     generated: list[dict] = []
-    for seed in seeds:
-        doped = base.copy()
-        info: dict = {'seed': seed, 'steps': []}
+    for cation_site in cation_sites:
+      for anion_site in anion_sites:
+        for seed in seeds:
+            doped = base.copy()
+            info: dict = {
+                'seed': seed,
+                'cation_site_used': cation_site,
+                'anion_site_used': anion_site,
+                'steps': [],
+            }
 
-        # --- Type A ---
-        if args.compound:
-            composition = parse_compound(args.compound)
-            n_units = max(1, int(round(args.n_fu * args.x_compound)))
-            actual_x = n_units / args.n_fu
-            doped, log = substitute_compound_at_sites(
-                doped, composition, n_units,
-                args.cation_site, args.anion_site,
-                args.method, seed, DOPANT_DB)
-            info['steps'].append({
-                'type': 'A_compound',
-                'compound': args.compound,
-                'composition': composition,
-                'n_units': n_units,
-                'actual_x': actual_x,
-                **log,
+            # --- Type A ---
+            if args.compound:
+                composition = parse_compound(args.compound)
+                n_units = max(1, int(round(n_fu_actual * args.x_compound)))
+                actual_x = n_units / n_fu_actual
+                try:
+                    doped, log = substitute_compound_at_sites(
+                        doped, composition, n_units,
+                        cation_site, anion_site,
+                        args.method, seed, DOPANT_DB)
+                    info['steps'].append({
+                        'type': 'A_compound',
+                        'compound': args.compound,
+                        'composition': composition,
+                        'n_units': n_units,
+                        'actual_x': actual_x,
+                        **log,
+                    })
+                except ValueError as e:
+                    print(f"  ⚠ skip {args.compound} @ ({cation_site}, "
+                          f"{anion_site}) seed={seed}: {e}")
+                    continue
+
+            # --- Type B ---
+            if args.halide_rich:
+                if args.excess_per_fu is None:
+                    parser.error("--halide_rich requires --excess_per_fu")
+                n_swap = max(1, int(round(n_fu_actual * args.excess_per_fu)))
+                doped, log = halide_rich_swap(
+                    doped, args.halide_rich, n_swap,
+                    anion_site if anion_site.startswith('S') else 'S_4a',
+                    args.method, seed + 50)
+                info['steps'].append({
+                    'type': 'B_halide_rich',
+                    'halide': args.halide_rich,
+                    'n_swap': n_swap,
+                    'actual_excess': n_swap / n_fu_actual,
+                    **log,
+                })
+            elif args.also_halide_rich:
+                if args.excess_per_fu is None:
+                    parser.error("--also_halide_rich requires --excess_per_fu")
+                n_swap = max(1, int(round(n_fu_actual * args.excess_per_fu)))
+                doped, log = halide_rich_swap(
+                    doped, args.also_halide_rich, n_swap,
+                    'S_4a', args.method, seed + 70)
+                info['steps'].append({
+                    'type': 'C_chain_halide_rich',
+                    'halide': args.also_halide_rich,
+                    'n_swap': n_swap,
+                    **log,
+                })
+
+            # Name + write
+            parts = []
+            if args.compound:
+                parts.append(f"{args.compound}_x{int(args.x_compound*1000):03d}")
+            if args.halide_rich:
+                parts.append(
+                    f"{args.halide_rich}rich_x{int(args.excess_per_fu*1000):03d}")
+            if args.also_halide_rich:
+                parts.append(
+                    f"chain_{args.also_halide_rich}_x{int(args.excess_per_fu*1000):03d}")
+            # Disambiguate by site combination only when iterating multiple
+            if len(cation_sites) > 1 or len(anion_sites) > 1:
+                site_tag = f"c{cation_site.replace('_','')}a{anion_site.replace('_','')}"
+                parts.append(site_tag)
+            if args.supercell != [1, 1, 1]:
+                parts.append("sc" + "x".join(str(s) for s in args.supercell))
+            if args.method == 'random':
+                parts.append(f"s{seed - args.seed:02d}")
+            name = "_".join(parts) if parts else "doped"
+            xyz_path = out_dir / f'{name}.xyz'
+            write(xyz_path, doped)
+
+            info.update({
+                'name': name,
+                'n_atoms': len(doped),
+                'composition': composition_summary(doped),
+                'xyz_file': str(xyz_path),
+                'n_fu_actual': n_fu_actual,
+                'supercell': args.supercell,
             })
-
-        # --- Type B ---
-        if args.halide_rich:
-            if args.excess_per_fu is None:
-                parser.error("--halide_rich requires --excess_per_fu")
-            n_swap = max(1, int(round(args.n_fu * args.excess_per_fu)))
-            doped, log = halide_rich_swap(
-                doped, args.halide_rich, n_swap,
-                args.anion_site if args.anion_site.startswith('S') else 'S_4a',
-                args.method, seed + 50)
-            info['steps'].append({
-                'type': 'B_halide_rich',
-                'halide': args.halide_rich,
-                'n_swap': n_swap,
-                'actual_excess': n_swap / args.n_fu,
-                **log,
-            })
-        elif args.also_halide_rich:
-            if args.excess_per_fu is None:
-                parser.error("--also_halide_rich requires --excess_per_fu")
-            n_swap = max(1, int(round(args.n_fu * args.excess_per_fu)))
-            doped, log = halide_rich_swap(
-                doped, args.also_halide_rich, n_swap,
-                'S_4a', args.method, seed + 70)
-            info['steps'].append({
-                'type': 'C_chain_halide_rich',
-                'halide': args.also_halide_rich,
-                'n_swap': n_swap,
-                **log,
-            })
-
-        # Name + write
-        parts = []
-        if args.compound:
-            parts.append(f"{args.compound}_x{int(args.x_compound*1000):03d}")
-        if args.halide_rich:
-            parts.append(f"{args.halide_rich}rich_x{int(args.excess_per_fu*1000):03d}")
-        if args.also_halide_rich:
-            parts.append(f"chain_{args.also_halide_rich}_x{int(args.excess_per_fu*1000):03d}")
-        if args.method == 'random':
-            parts.append(f"s{seed - args.seed:02d}")
-        name = "_".join(parts) if parts else "doped"
-        xyz_path = out_dir / f'{name}.xyz'
-        write(xyz_path, doped)
-
-        info.update({
-            'name': name,
-            'n_atoms': len(doped),
-            'composition': composition_summary(doped),
-            'xyz_file': str(xyz_path),
-        })
-        generated.append(info)
-        print(f"  ✓ {name}: {len(doped)} atoms, {composition_summary(doped)}")
+            generated.append(info)
+            print(f"  ✓ {name}: {len(doped)} atoms, {composition_summary(doped)}")
 
     summary = {
         'base_file': args.base,
         'n_fu': args.n_fu,
+        'n_fu_actual': n_fu_actual,
+        'supercell': args.supercell,
         'method': args.method,
         'n_seeds': args.n_seeds,
+        'cation_sites_tried': cation_sites,
+        'anion_sites_tried': anion_sites,
         'structures': generated,
     }
     summary_path = out_dir / 'compound_summary.json'

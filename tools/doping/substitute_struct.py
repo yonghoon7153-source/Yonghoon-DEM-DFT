@@ -93,13 +93,26 @@ def find_host_indices_for_site(atoms: Atoms, site_name: str,
 
 
 def select_substitution_sites(host_indices: list[int], n_sub: int,
-                              method: str = 'first', seed: int = 42) -> list[int]:
-    """Pick n_sub indices to substitute.
+                              method: str = 'first', seed: int = 42,
+                              atoms: Atoms | None = None) -> list[int]:
+    """Pick n_sub indices to substitute. Selection strategy via ``method``:
 
-    method:
-      'first': lowest indices (deterministic, reproducible)
-      'random': random selection (use ``seed`` for reproducibility)
-      'spread': maximize distance between chosen sites (anti-clustering)
+      'first':  lowest indices (deterministic, reproducible)
+      'random': uniform random subset (use ``seed`` for reproducibility)
+      'spread': true PBC-aware farthest-point sampling — start from one site
+                and at each step add the host atom whose minimum distance to
+                the already-chosen set is largest. Models "homogeneous solid
+                solution" obtained from extensive ball milling (Yu 2022,
+                Kraft 2017). Requires ``atoms``; without it falls back to
+                index-spacing (legacy).
+      'cluster': anti-spread — pick a seed atom and add its nearest host
+                neighbors. Models the case where the precursor's local
+                coordination is preserved (e.g., 3 O atoms from La2O3 land
+                on the same PS4 tetrahedron to form a PO4 unit instead of
+                three separate PSO3 units). Requires ``atoms``.
+
+    ``atoms`` must be supplied for 'spread' / 'cluster' so PBC distances
+    can be computed (MIC = minimum image convention).
     """
     if n_sub >= len(host_indices):
         return host_indices
@@ -108,9 +121,30 @@ def select_substitution_sites(host_indices: list[int], n_sub: int,
     if method == 'random':
         rng = np.random.default_rng(seed)
         return sorted(rng.choice(host_indices, size=n_sub, replace=False).tolist())
-    # spread: greedy farthest-first (use simple index spacing as proxy)
-    step = len(host_indices) // n_sub
-    return [host_indices[i * step] for i in range(n_sub)]
+
+    if method in ('spread', 'cluster'):
+        if atoms is None:
+            # Legacy index-spacing fallback (no geometry available)
+            step = max(1, len(host_indices) // n_sub)
+            return [host_indices[i * step] for i in range(n_sub)]
+        # True PBC-aware selection
+        rng = np.random.default_rng(seed)
+        D_full = atoms.get_all_distances(mic=True)
+        D = D_full[np.ix_(host_indices, host_indices)]
+        # Initial seed atom: random (seed-controlled)
+        chosen_local = [int(rng.integers(0, len(host_indices)))]
+        for _ in range(n_sub - 1):
+            min_d_to_chosen = D[:, chosen_local].min(axis=1)
+            min_d_to_chosen[chosen_local] = -np.inf if method == 'spread' else np.inf
+            if method == 'spread':
+                next_local = int(np.argmax(min_d_to_chosen))
+            else:  # cluster
+                # Hide already-chosen, pick nearest among remaining
+                next_local = int(np.argmin(min_d_to_chosen))
+            chosen_local.append(next_local)
+        return sorted(host_indices[i] for i in chosen_local)
+
+    raise ValueError(f"Unknown selection method: {method!r}")
 
 
 def substitute(atoms: Atoms, dopant: str, host_element: str,
@@ -132,7 +166,8 @@ def substitute(atoms: Atoms, dopant: str, host_element: str,
         host_idx = find_host_indices(new, host_element)
         if not host_idx:
             raise ValueError(f"No {host_element} atoms in structure")
-    targets = select_substitution_sites(host_idx, n_sub, method, seed=seed)
+    targets = select_substitution_sites(host_idx, n_sub, method, seed=seed,
+                                        atoms=new)
     syms = new.get_chemical_symbols()
     for i in targets:
         syms[i] = dopant
@@ -147,7 +182,8 @@ def add_li_vacancy(atoms: Atoms, n_vac: int = 1, method: str = 'spread',
     if n_vac >= len(li_idx):
         raise ValueError(f"Cannot remove {n_vac} Li from {len(li_idx)} atoms")
     # Use seed+1 so vacancy != substitution sites for the same nominal seed
-    targets = select_substitution_sites(li_idx, n_vac, method, seed=seed + 1)
+    targets = select_substitution_sites(li_idx, n_vac, method, seed=seed + 1,
+                                        atoms=atoms)
     keep = [i for i in range(len(atoms)) if i not in targets]
     return atoms[keep]
 
