@@ -140,10 +140,21 @@ done
 
 # ============================================================
 # Type A cluster method on the trivalent + small cations (PS4 → PO4)
+# v4.5.6: filter by COMPOUND_FILTER if set (was hardcoded; ignored filter)
 # ============================================================
+TYPEA_CLUSTER_COMPOUNDS=(Nd2O3 La2O3 Sm2O3 Al2O3 Sc2O3 Y2O3 B2O3 WO3 MoO3 Cr2O3)
+if [ -n "$COMPOUND_FILTER" ]; then
+    FILTERED=()
+    for f in "${FILTER_ARR[@]}"; do
+        for c in "${TYPEA_CLUSTER_COMPOUNDS[@]}"; do
+            [ "$c" = "$f" ] && FILTERED+=("$c") && break
+        done
+    done
+    TYPEA_CLUSTER_COMPOUNDS=("${FILTERED[@]}")
+fi
 echo ""
 echo "--- Type A cluster method (precursor local-coord biased) ---"
-for cmpd in Nd2O3 La2O3 Sm2O3 Al2O3 Sc2O3 Y2O3 B2O3 WO3 MoO3 Cr2O3; do
+for cmpd in "${TYPEA_CLUSTER_COMPOUNDS[@]}"; do
   out="$OUT_BASE/structures/typeA_${cmpd}_cluster"
   [ -f "$out/compound_summary.json" ] && { echo "  [skip] typeA_${cmpd}_cluster"; continue; }
   echo "  → typeA_${cmpd}_cluster"
@@ -158,34 +169,44 @@ done
 
 # ============================================================
 # Type B — Halide-rich, fine-grained excess sweep (Cl, Br, I)
-# Halide excess x_excess covers Li6→Li5 working range. Distinct n_swap
-# values on 1x1x1 (4 fu): 0.20→1, 0.40→2, 0.60→2, 0.80→3, full S→Cl→4.
-# Larger supercells give finer resolution (e.g., 2x2x1 = 16 fu allows
-# 1/16 increments).
+# v4.5.6: skip Type B entirely if COMPOUND_FILTER set — Type B is
+# compound-independent (no cation dopant), so filtering by compound name
+# means user wants compound-specific runs only.
 # ============================================================
-for hx in 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90; do
-  xname="${hx/0./0}"
-  for halide in Cl Br I; do
-    out="$OUT_BASE/structures/typeB_${halide}rich_x${xname}"
-    [ -f "$out/compound_summary.json" ] && { echo "  [skip] typeB_${halide}_x${xname}"; continue; }
-    echo "  → typeB_${halide}rich_x${xname}"
-    python3 "$SCRIPT" \
-        --base "$BASE" --supercell $SC_FLAG \
-        --halide_rich "$halide" --excess_per_fu "$hx" \
-        --anion_site S_4a \
-        --method "$METHOD" --n_seeds "$N_SEEDS" \
-        --out "$out" 2>&1 | tail -3 || true
-  done
-done
+if [ -z "$COMPOUND_FILTER" ]; then
+    for hx in 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90; do
+      xname="${hx/0./0}"
+      for halide in Cl Br I; do
+        out="$OUT_BASE/structures/typeB_${halide}rich_x${xname}"
+        [ -f "$out/compound_summary.json" ] && { echo "  [skip] typeB_${halide}_x${xname}"; continue; }
+        echo "  → typeB_${halide}rich_x${xname}"
+        python3 "$SCRIPT" \
+            --base "$BASE" --supercell $SC_FLAG \
+            --halide_rich "$halide" --excess_per_fu "$hx" \
+            --anion_site S_4a \
+            --method "$METHOD" --n_seeds "$N_SEEDS" \
+            --out "$out" 2>&1 | tail -3 || true
+      done
+    done
+else
+    echo "  [skip Type B halide-rich: compound-independent, COMPOUND_FILTER active]"
+fi
 
 # ============================================================
 # Type C — Cation compound × halide excess fine sweep
-# Each top compound × halide excess {0.20, 0.40, 0.60, 0.80}
-# Mirrors Yu 2022 Al-Cl strategy but with explicit Cl excess scan; the
-# (compound, halide_excess) pair acts like a single composite dopant
-# whose stoichiometry the user can fine-tune via the excess parameter.
+# v4.5.6: filter by COMPOUND_FILTER if set (was hardcoded; ignored filter)
 # ============================================================
-for cmpd in Al2O3 Sc2O3 Y2O3 La2O3 Nd2O3 MgO ZnO WO3 MoO3 B2O3 Sm2O3; do
+TYPEC_COMPOUNDS=(Al2O3 Sc2O3 Y2O3 La2O3 Nd2O3 MgO ZnO WO3 MoO3 B2O3 Sm2O3)
+if [ -n "$COMPOUND_FILTER" ]; then
+    FILTERED=()
+    for f in "${FILTER_ARR[@]}"; do
+        for c in "${TYPEC_COMPOUNDS[@]}"; do
+            [ "$c" = "$f" ] && FILTERED+=("$c") && break
+        done
+    done
+    TYPEC_COMPOUNDS=("${FILTERED[@]}")
+fi
+for cmpd in "${TYPEC_COMPOUNDS[@]}"; do
   for hx in 0.20 0.40 0.60 0.80; do
     xname="${hx/0./0}"
     out="$OUT_BASE/structures/typeC_${cmpd}_Clchain_x${xname}"
