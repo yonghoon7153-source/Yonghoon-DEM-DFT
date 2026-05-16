@@ -135,9 +135,18 @@ def li_vacancies_needed(atoms: Atoms, cations: dict[str, int],
 
 def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
                                  n_units: int, cation_site: str, anion_site: str,
-                                 method: str, seed: int, db: dict
+                                 method: str, seed: int, db: dict,
+                                 vacancy_method: str = 'random'
                                  ) -> tuple[Atoms, dict]:
-    """Place all atoms of one compound unit-cluster into target sites."""
+    """Place all atoms of one compound unit-cluster into target sites.
+
+    ``vacancy_method`` is decoupled from ``method`` and defaults to 'random'.
+    Real LPSCl₁₊ₓ-style halide-rich phases have *disordered* Li vacancies
+    (Kraft 2017 NMR / Adeli 2019 PDF) — using 'spread' for vacancies would
+    create an artificial ordered Li-vacancy superlattice that does not match
+    experiment. Subsitution sites for the dopant atoms themselves can still
+    use 'spread' or 'cluster' to model precursor placement geometry.
+    """
     new = atoms.copy()
     cations, anions, net_q = classify_compound(composition, db)
     if net_q != 0:
@@ -193,7 +202,7 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
             raise ValueError(
                 f"Need {n_vac} Li vacancies but only {len(li_idx)} Li remain")
         vac_targets = select_substitution_sites(
-            li_idx, n_vac, method, seed_local + 100, atoms=new)
+            li_idx, n_vac, vacancy_method, seed_local + 100, atoms=new)
         keep = [i for i in range(len(new)) if i not in vac_targets]
         new = new[keep]
         placement_log['li_vacancies'] = {'n': n_vac, 'indices': vac_targets}
@@ -203,14 +212,69 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
     return new, placement_log
 
 
+def mixed_halide_swap(atoms: Atoms, halide_excess: dict[str, float],
+                     n_fu: int, anion_site: str, method: str, seed: int,
+                     vacancy_method: str = 'random') -> tuple[Atoms, dict]:
+    """Multi-halide halide-rich substitution (LPSClBr-style precursors).
+
+    ``halide_excess`` = {'Cl': 0.3, 'Br': 0.3} → 0.3 + 0.3 = 0.6 total excess
+    per f.u., giving Li5.4PS4.4Cl1.3Br0.3 (4 fu = 24 Li → 22.4 ≈ 22 Li after
+    2 S→halide swaps + 2 Li vacancies; halides split 1 Cl + 1 Br for the 2
+    swaps). Replicates comp2/3/4/5 chemistry (Cl₁₋ₓBrₓ argyrodite family).
+    """
+    new = atoms.copy()
+    host_idx = find_host_indices_for_site(new, anion_site)
+    n_swap_per_halide = {h: max(1, int(round(n_fu * x)))
+                         for h, x in halide_excess.items()}
+    total_swap = sum(n_swap_per_halide.values())
+    if total_swap > len(host_idx):
+        raise ValueError(
+            f"Need {total_swap} S→halide swaps at {anion_site}, "
+            f"but only {len(host_idx)} sites")
+
+    # Pick total_swap S sites then partition by halide stoichiometry
+    targets = select_substitution_sites(host_idx, total_swap, method, seed,
+                                       atoms=new)
+    syms = new.get_chemical_symbols()
+    idx_iter = iter(targets)
+    placements = {}
+    for halide, n in n_swap_per_halide.items():
+        these = [next(idx_iter) for _ in range(n)]
+        for i in these:
+            syms[i] = halide
+        placements[halide] = these
+    new.set_chemical_symbols(syms)
+
+    li_idx = find_host_indices(new, 'Li')
+    if total_swap >= len(li_idx):
+        raise ValueError(
+            f"Need {total_swap} Li vacancies but only {len(li_idx)} Li remain")
+    vac_targets = select_substitution_sites(
+        li_idx, total_swap, vacancy_method, seed + 1, atoms=new)
+    keep = [i for i in range(len(new)) if i not in vac_targets]
+    new = new[keep]
+
+    return new, {
+        'mixed_halides': halide_excess,
+        'n_swap_per_halide': n_swap_per_halide,
+        'swap_targets': placements,
+        'li_vacancies': vac_targets,
+    }
+
+
 def halide_rich_swap(atoms: Atoms, halide: str, n_swap: int,
-                    anion_site: str, method: str, seed: int) -> tuple[Atoms, dict]:
+                    anion_site: str, method: str, seed: int,
+                    vacancy_method: str = 'random') -> tuple[Atoms, dict]:
     """Type B — replace ``n_swap`` S atoms at ``anion_site`` with ``halide``,
     and remove the same number of Li atoms.
 
     Reproduces the Li6−xPS5−xCl1+x family stoichiometry. Charge balance is
     automatic: each S→Cl swap drops the local charge by +1, each Li vacancy
     drops it by −1; the two cancel.
+
+    Li vacancies use ``vacancy_method='random'`` by default — Kraft 2017
+    NMR / Adeli 2019 PDF show Li vacancies are positionally disordered, not
+    ordered into a superlattice.
     """
     new = atoms.copy()
     host_idx = find_host_indices_for_site(new, anion_site)
@@ -229,7 +293,7 @@ def halide_rich_swap(atoms: Atoms, halide: str, n_swap: int,
         raise ValueError(
             f"Need {n_swap} Li vacancies but only {len(li_idx)} Li remain")
     vac_targets = select_substitution_sites(
-        li_idx, n_swap, method, seed + 1, atoms=new)
+        li_idx, n_swap, vacancy_method, seed + 1, atoms=new)
     keep = [i for i in range(len(new)) if i not in vac_targets]
     new = new[keep]
 
@@ -291,6 +355,16 @@ def main():
                        help="Halide element for Li6-xPS5-xX1+x family, e.g. 'Cl'")
     parser.add_argument('--excess_per_fu', type=float,
                        help='Halide excess x per f.u. (e.g., 0.6 for Li5.4PS4.4Cl1.6)')
+    parser.add_argument('--mixed_halides',
+                       help="Multi-halide co-substitution as 'Cl:0.3,Br:0.3' — "
+                            "reproduces LPSClBr / comp2-5 chemistry. Excess "
+                            "values sum to total S→halide swap fraction per f.u.")
+    parser.add_argument('--vacancy_method', default='random',
+                       choices=['random', 'spread', 'cluster', 'first'],
+                       help='Method for Li vacancy placement (default random — '
+                            'matches experimental Kraft 2017 NMR / Adeli 2019 '
+                            'PDF showing Li vacancies are disordered, not '
+                            'arranged in a superlattice).')
 
     # Type C (chain Type A + Type B)
     parser.add_argument('--also_halide_rich',
@@ -306,8 +380,10 @@ def main():
                        help='Ensemble size (only meaningful with --method random)')
     args = parser.parse_args()
 
-    if not args.compound and not args.halide_rich:
-        parser.error("Provide --compound (Type A) and/or --halide_rich (Type B)")
+    if not args.compound and not args.halide_rich and not args.mixed_halides:
+        parser.error(
+            "Provide --compound (Type A), --halide_rich (Type B), or "
+            "--mixed_halides (Type B' — comp2/3/4/5 chemistry)")
 
     base = read(args.base)
     if args.supercell != [1, 1, 1]:
@@ -394,7 +470,8 @@ def main():
                     doped, log = substitute_compound_at_sites(
                         doped, composition, n_units,
                         cation_site, anion_site,
-                        args.method, seed, DOPANT_DB)
+                        args.method, seed, DOPANT_DB,
+                        vacancy_method=args.vacancy_method)
                     info['steps'].append({
                         'type': 'A_compound',
                         'compound': args.compound,
@@ -408,7 +485,7 @@ def main():
                           f"{anion_site}) seed={seed}: {e}")
                     continue
 
-            # --- Type B ---
+            # --- Type B (single halide) ---
             if args.halide_rich:
                 if args.excess_per_fu is None:
                     parser.error("--halide_rich requires --excess_per_fu")
@@ -416,12 +493,30 @@ def main():
                 doped, log = halide_rich_swap(
                     doped, args.halide_rich, n_swap,
                     anion_site if anion_site.startswith('S') else 'S_4a',
-                    args.method, seed + 50)
+                    args.method, seed + 50,
+                    vacancy_method=args.vacancy_method)
                 info['steps'].append({
                     'type': 'B_halide_rich',
                     'halide': args.halide_rich,
                     'n_swap': n_swap,
                     'actual_excess': n_swap / n_fu_actual,
+                    **log,
+                })
+            # --- Type B' (mixed halides — LPSClBr) ---
+            elif args.mixed_halides:
+                # Parse 'Cl:0.3,Br:0.3' format
+                mix = {}
+                for entry in args.mixed_halides.split(','):
+                    h, x = entry.split(':')
+                    mix[h.strip()] = float(x)
+                doped, log = mixed_halide_swap(
+                    doped, mix, n_fu_actual,
+                    anion_site if anion_site.startswith('S') else 'S_4a',
+                    args.method, seed + 60,
+                    vacancy_method=args.vacancy_method)
+                info['steps'].append({
+                    'type': 'B_mixed_halide',
+                    'mix': mix,
                     **log,
                 })
             elif args.also_halide_rich:
@@ -430,7 +525,8 @@ def main():
                 n_swap = max(1, int(round(n_fu_actual * args.excess_per_fu)))
                 doped, log = halide_rich_swap(
                     doped, args.also_halide_rich, n_swap,
-                    'S_4a', args.method, seed + 70)
+                    'S_4a', args.method, seed + 70,
+                    vacancy_method=args.vacancy_method)
                 info['steps'].append({
                     'type': 'C_chain_halide_rich',
                     'halide': args.also_halide_rich,

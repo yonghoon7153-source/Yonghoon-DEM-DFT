@@ -140,6 +140,17 @@ def main():
                                     formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument('--xyz', nargs='+',
                        help='xyz files to anneal (one or more)')
+    parser.add_argument('--xyz_dir',
+                       help='Directory of xyz files to anneal — recursive '
+                            'glob "**/*.xyz". Use for "anneal ALL screening '
+                            'candidates" mode since UMA pre-anneal ranking is '
+                            'a heuristic and Pipeline Step 3 docs note '
+                            'screening can re-order under anneal.')
+    parser.add_argument('--summary_json',
+                       help='Structures summary JSON (substitute_compound '
+                            "output); pulls xyz_file from each entry's "
+                            "'xyz_file' field. Alternative to --xyz_dir for "
+                            'a specific batch.')
     parser.add_argument('--top_candidates',
                        help='analyze_screening top_candidates JSON; pulls '
                             'xyz_file path from each record')
@@ -175,10 +186,24 @@ def main():
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
 
-    # Build xyz list
+    # Build xyz list (multiple input modes)
     if args.xyz:
         xyz_paths = [Path(p) for p in args.xyz]
-    else:
+    elif args.xyz_dir:
+        xyz_paths = sorted(Path(args.xyz_dir).rglob('*.xyz'))
+        # Filter out anneal-produced (post_md.xyz, post_relax.xyz) to avoid
+        # re-annealing our own outputs if --xyz_dir overlaps --out
+        xyz_paths = [p for p in xyz_paths
+                     if p.name not in ('post_md.xyz', 'post_relax.xyz')]
+        print(f"  Discovered {len(xyz_paths)} xyz files under {args.xyz_dir}")
+    elif args.summary_json:
+        data = json.loads(Path(args.summary_json).read_text())
+        recs = (data.get('structures', data.get('results', []))
+                if isinstance(data, dict) else data)
+        xyz_paths = [Path(r['xyz_file']) for r in recs
+                     if 'xyz_file' in r and Path(r['xyz_file']).exists()]
+        print(f"  Loaded {len(xyz_paths)} xyz from summary {args.summary_json}")
+    elif args.top_candidates:
         data = json.loads(Path(args.top_candidates).read_text())
         top = data.get('top_candidates', [])[:args.top]
         xyz_paths = []
@@ -189,8 +214,10 @@ def main():
             else:
                 print(f"  ⚠ skip {entry.get('name')}: xyz_file not found "
                       f"({xpath})")
-        if not xyz_paths:
-            raise SystemExit("No xyz files resolvable from top_candidates")
+    else:
+        parser.error("Provide --xyz, --xyz_dir, --summary_json, or --top_candidates")
+    if not xyz_paths:
+        raise SystemExit("No xyz files found")
 
     print(f"Loading UMA-s-1p1 ({args.device})...")
     calc = load_uma_calc(args.device, args.task)
