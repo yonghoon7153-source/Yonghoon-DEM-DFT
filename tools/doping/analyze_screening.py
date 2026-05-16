@@ -36,6 +36,122 @@ def normalize(values: list[float], invert: bool = False) -> list[float]:
     return (1.0 - norm if invert else norm).tolist()
 
 
+def _dopant_atom_count(record: dict) -> int:
+    """How many atoms of the dopant compound were introduced into the cell.
+
+    Sums all 'n' fields across the placement steps (cation + anion in Type A,
+    halide swaps in Type B). Used by ranking objectives that normalize by
+    the number of foreign atoms added rather than total cell atoms.
+    """
+    n_dopant = 0
+    for step in record.get('steps', []):
+        for placement in step.get('placements', []):
+            n_dopant += placement.get('n', 0)
+        n_dopant += step.get('n_swap', 0)
+    return max(1, n_dopant)  # floor 1 to avoid /0
+
+
+def compute_score(records: list[dict],
+                  objective: str = 'composite',
+                  w_e: float = 0.4, w_v: float = 0.3,
+                  w_s: float = 0.2, w_c: float = 0.1,
+                  converged_penalty: float = 0.10,
+                  precursor_mu: dict | None = None) -> list[dict]:
+    """Annotate ``records`` with composite_score under the chosen objective.
+
+    Objectives:
+      'composite'    — weighted min-max heuristic (current default; arbitrary
+                       but useful for first-pass ranking).
+      'binding_E'    — sort by ΔE/atom directly. Sundar 2025-style "lower
+                       binding energy = more stable doped phase". No
+                       normalization, returns the raw absolute value as a
+                       positive score (so higher = more negative ΔE).
+      'binding_per_dopant' — ΔE × n_atoms / n_dopant_atoms. Removes the
+                       systematic bias against high-vacancy compounds. Useful
+                       for cross-compound comparison (Y₂O₃ vs Li₂O have
+                       different dopant counts per cell).
+      'formation_E'  — E_doped − E_LPSCl − Σ Δn_i × μ_i  where Δn_i is the
+                       net atom count change for element i and μ_i is the
+                       precursor chemical potential (precursor_mu dict; if
+                       missing, falls back to ΔE/atom and warns).
+      'disorder_sensitivity' — within-ensemble σ ΔE/atom (groups records by
+                       (dopant, site, anion_site_label)). Per-record score
+                       = group σ. High σ → Pustorino-style ordering
+                       sensitivity, may correlate with disorder-enabled
+                       conductivity but not stability.
+    """
+    if not records:
+        return records
+    if objective != 'composite':
+        # Apply soft convergence penalty universally
+        for r in records:
+            r.setdefault('_score_components', {})
+
+    if objective == 'binding_E':
+        for r in records:
+            de = r['uma_relaxed']['de_per_atom_vs_baseline']
+            score = -de
+            if not r.get('converged'):
+                score -= converged_penalty
+            r['composite_score'] = score
+        print(f"  Score: binding_E (raw -ΔE/atom)")
+        return records
+
+    if objective == 'binding_per_dopant':
+        for r in records:
+            de = r['uma_relaxed']['de_per_atom_vs_baseline']
+            n_at = r['uma_relaxed']['n_atoms']
+            n_dop = _dopant_atom_count(r)
+            score = -de * n_at / n_dop
+            if not r.get('converged'):
+                score -= converged_penalty
+            r['composite_score'] = score
+        print(f"  Score: binding_per_dopant (-ΔE × n_at / n_dopant_atoms)")
+        return records
+
+    if objective == 'formation_E':
+        if precursor_mu is None:
+            print("  ⚠ --objective formation_E without --precursor_mu, "
+                  "falling back to binding_E.")
+            return compute_score(records, 'binding_E', converged_penalty=converged_penalty)
+        base_E = records[0].get('baseline_e_per_atom', 0)
+        for r in records:
+            E = r['uma_relaxed']['e_total']
+            comp = r['uma_relaxed']['composition']
+            base_n = sum(comp.values())  # rough — assumes Li6PS5Cl scale
+            f = E - base_E * base_n
+            for el, n in comp.items():
+                f -= n * precursor_mu.get(el, 0)
+            score = -f / base_n
+            if not r.get('converged'):
+                score -= converged_penalty
+            r['composite_score'] = score
+        print(f"  Score: formation_E (eV/atom)")
+        return records
+
+    if objective == 'disorder_sensitivity':
+        from collections import defaultdict
+        import statistics
+        groups = defaultdict(list)
+        for r in records:
+            key = (r.get('dopant'), r.get('site'), r.get('anion_site_label'))
+            groups[key].append(r)
+        for key, rs in groups.items():
+            if len(rs) > 1:
+                des = [r['uma_relaxed']['de_per_atom_vs_baseline'] for r in rs]
+                sigma = statistics.stdev(des)
+            else:
+                sigma = 0.0
+            for r in rs:
+                r['composite_score'] = sigma  # higher = more disorder
+        print(f"  Score: disorder_sensitivity (σ ΔE within ensemble)")
+        return records
+
+    # Default — composite heuristic (kept for backward compat)
+    return compute_composite_score(records, w_e, w_v, w_s, w_c,
+                                  converged_penalty)
+
+
 def compute_composite_score(records: list[dict],
                            w_e: float = 0.4, w_v: float = 0.3,
                            w_s: float = 0.2, w_c: float = 0.1,
@@ -112,6 +228,22 @@ def main():
                        help='Weight: site preference')
     parser.add_argument('--w_c', type=float, default=0.1,
                        help='Weight: charge compensation penalty')
+    parser.add_argument('--objective', default='composite',
+                       choices=['composite', 'binding_E', 'formation_E',
+                                'binding_per_dopant', 'disorder_sensitivity'],
+                       help='Ranking metric (default composite — heuristic; '
+                            'binding_E = raw ΔE/atom; '
+                            'formation_E = E_doped − n_LPSCl×μ_LPSCl − Σ n_i × μ_i '
+                            '(needs --precursor_mu JSON); '
+                            'binding_per_dopant = ΔE normalized by number of '
+                            'dopant atoms introduced (penalty-free per-atom); '
+                            'disorder_sensitivity = σ ΔE across ensemble '
+                            'seeds, higher = more Li-ordering sensitive '
+                            '(Pustorino-style metric).')
+    parser.add_argument('--precursor_mu',
+                       help='JSON {element_or_compound: chemical_potential_eV} '
+                            'for --objective formation_E. Without it falls '
+                            'back to ΔE/atom of dopant-containing cell.')
     parser.add_argument('--max_dv', type=float, default=0.10,
                        help='Filter: max |ΔV/V0| (default 10%%). Compound '
                             'substitution often needs 0.20 because foreign '
@@ -171,8 +303,12 @@ def main():
               f"{before_dd} → {len(pre)} records")
     print(f"  Total after all filters: {len(pre)}/{n_before}")
 
-    scored = compute_composite_score(pre, args.w_e, args.w_v, args.w_s,
-                                     args.w_c, args.converged_penalty)
+    precursor_mu = None
+    if args.precursor_mu:
+        precursor_mu = json.loads(Path(args.precursor_mu).read_text())
+    scored = compute_score(pre, args.objective,
+                          args.w_e, args.w_v, args.w_s, args.w_c,
+                          args.converged_penalty, precursor_mu)
     ranked = sorted(scored, key=lambda r: r['composite_score'], reverse=True)
 
     print_top_table(ranked, args.top)

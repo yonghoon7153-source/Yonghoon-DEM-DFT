@@ -136,9 +136,13 @@ for cmpd in Nd2O3 La2O3 Sm2O3 Al2O3 Sc2O3 Y2O3 B2O3 WO3 MoO3 Cr2O3; do
 done
 
 # ============================================================
-# Type B — Halide-rich (Cl, Br, I — multiple anion-rich families)
+# Type B — Halide-rich, fine-grained excess sweep (Cl, Br, I)
+# Halide excess x_excess covers Li6→Li5 working range. Distinct n_swap
+# values on 1x1x1 (4 fu): 0.20→1, 0.40→2, 0.60→2, 0.80→3, full S→Cl→4.
+# Larger supercells give finer resolution (e.g., 2x2x1 = 16 fu allows
+# 1/16 increments).
 # ============================================================
-for hx in 0.25 0.50 0.75; do
+for hx in 0.10 0.20 0.30 0.40 0.50 0.60 0.70 0.80 0.90; do
   xname="${hx/0./0}"
   for halide in Cl Br I; do
     out="$OUT_BASE/structures/typeB_${halide}rich_x${xname}"
@@ -154,19 +158,26 @@ for hx in 0.25 0.50 0.75; do
 done
 
 # ============================================================
-# Type C — Aliovalent + halide chain (representative cations × Cl excess)
+# Type C — Cation compound × halide excess fine sweep
+# Each top compound × halide excess {0.20, 0.40, 0.60, 0.80}
+# Mirrors Yu 2022 Al-Cl strategy but with explicit Cl excess scan; the
+# (compound, halide_excess) pair acts like a single composite dopant
+# whose stoichiometry the user can fine-tune via the excess parameter.
 # ============================================================
-for cmpd in Al2O3 Sc2O3 Y2O3 La2O3 Nd2O3 MgO ZnO WO3 MoO3 B2O3; do
-  out="$OUT_BASE/structures/typeC_${cmpd}_Clchain"
-  [ -f "$out/compound_summary.json" ] && { echo "  [skip] typeC_${cmpd}_Clchain"; continue; }
-  echo "  → typeC_${cmpd}_Clchain"
-  python3 "$SCRIPT" \
-      --base "$BASE" --supercell $SC_FLAG \
-      --compound "$cmpd" --x_compound 0.05 \
-      --auto_anion_sites $EXOTIC_FLAG \
-      --also_halide_rich Cl --excess_per_fu 0.50 \
-      --method "$METHOD" --n_seeds "$N_SEEDS" \
-      --out "$out" 2>&1 | tail -3 || true
+for cmpd in Al2O3 Sc2O3 Y2O3 La2O3 Nd2O3 MgO ZnO WO3 MoO3 B2O3 Sm2O3; do
+  for hx in 0.20 0.40 0.60 0.80; do
+    xname="${hx/0./0}"
+    out="$OUT_BASE/structures/typeC_${cmpd}_Clchain_x${xname}"
+    [ -f "$out/compound_summary.json" ] && { echo "  [skip] typeC_${cmpd}_x${xname}"; continue; }
+    echo "  → typeC_${cmpd}_Clchain_x${xname}"
+    python3 "$SCRIPT" \
+        --base "$BASE" --supercell $SC_FLAG \
+        --compound "$cmpd" --x_compound 0.05 \
+        --auto_anion_sites $EXOTIC_FLAG \
+        --also_halide_rich Cl --excess_per_fu "$hx" \
+        --method "$METHOD" --n_seeds "$N_SEEDS" \
+        --out "$out" 2>&1 | tail -3 || true
+  done
 done
 
 echo ""

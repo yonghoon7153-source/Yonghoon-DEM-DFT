@@ -70,6 +70,20 @@ DOPANT_DB = {
     'Sm':  {'charge': +3, 'radius': 0.958},
     'Gd':  {'charge': +3, 'radius': 0.938},
     'Yb':  {'charge': +3, 'radius': 0.868},
+    'Pr':  {'charge': +3, 'radius': 0.99},   # Praseodymium
+    'Tb':  {'charge': +3, 'radius': 0.923},  # Terbium
+    'Dy':  {'charge': +3, 'radius': 0.912},  # Dysprosium (laser, magnet)
+    'Ho':  {'charge': +3, 'radius': 0.901},  # Holmium
+    'Er':  {'charge': +3, 'radius': 0.89},   # Erbium
+    'Tm':  {'charge': +3, 'radius': 0.88},   # Thulium
+    'Lu':  {'charge': +3, 'radius': 0.861},  # Lutetium (smallest Ln)
+    'Bi':  {'charge': +3, 'radius': 1.03},   # Bi³⁺ (Bi2S3, Bi2O3 — SE doping
+                                              # reports for Li-ion sulfide SEs)
+    'Re':  {'charge': +7, 'radius': 0.53},   # Re⁷⁺ (Re2O7 — high-valence P
+                                              # substitution candidate)
+    'H':   {'charge': +1, 'radius': -0.04},  # Proton (Shannon negative CN=2;
+                                              # for LiOH/LiBH4 hydride-related
+                                              # precursors only)
     # 3d transition metals (Li-site or P-site depending on charge)
     'Cr':  {'charge': +3, 'radius': 0.615},  # Cr³⁺ CN=6 — Li site
     'Mn':  {'charge': +2, 'radius': 0.83},   # Mn²⁺ CN=6 high-spin — Li site
