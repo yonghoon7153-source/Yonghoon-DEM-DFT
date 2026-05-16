@@ -104,6 +104,66 @@ def classify_compound(composition: dict[str, int], db: dict
     return cations, anions, net_q
 
 
+# Common alternative oxidation states per element — used by auto-valence
+# inference when the default charge gives a non-neutral compound (e.g.,
+# MnO2, CrO3, Fe3O4). Searched in order; first valence giving net_q==0 wins.
+ALTERNATIVE_VALENCES = {
+    'Cr': [+3, +6, +4, +2],     # Cr2O3 default; CrO3 needs +6; CrO2 needs +4
+    'Mn': [+2, +4, +7, +3, +6], # MnO default; MnO2 +4; KMnO4 +7
+    'Fe': [+3, +2],              # Fe2O3 default; FeO needs +2
+    'Co': [+2, +3, +4],          # CoO default; Co2O3 +3; Co3O4 mixed
+    'Ni': [+2, +3, +4],
+    'Cu': [+1, +2],              # Cu2O default; CuO +2
+    'V':  [+5, +4, +3, +2],      # V2O5 default; VO2 +4
+    'Mo': [+6, +4, +5, +3],
+    'W':  [+6, +4, +5],
+    'Re': [+7, +6, +4],
+    'Ti': [+4, +3],
+    'Sn': [+4, +2],              # SnO2 default; SnO +2
+    'Pb': [+4, +2],
+    'Sb': [+5, +3],              # Sb2O5 default; Sb2O3 +3
+    'Bi': [+3, +5],
+    'Ce': [+4, +3],              # CeO2 default; Ce2O3 +3
+    'Eu': [+3, +2],
+    'U':  [+6, +5, +4, +3],
+    'P':  [+5, +3],
+}
+
+
+def auto_balance_compound(composition: dict[str, int],
+                         db: dict) -> tuple[dict, dict]:
+    """If compound is non-neutral with default DB charges, search for a single
+    cation whose valence can be substituted from ALTERNATIVE_VALENCES to
+    achieve neutrality. Returns (modified_db_subset, info).
+
+    Example: MnO2 = {Mn:1, O:2}. Default Mn=+2 gives net=-2.
+    Try Mn=+4 → 1×4 + 2×(-2) = 0 ✓. Returns DB-overlay {Mn:+4}.
+    """
+    cations, anions, net_q = classify_compound(composition, db)
+    if net_q == 0:
+        return {}, {'status': 'already_neutral', 'net_q': 0}
+    if len(cations) != 1:
+        # Multi-cation: more complex; just report imbalance for now
+        return {}, {'status': 'multi_cation_imbalance', 'net_q': net_q}
+    # Try alternative valences for the single cation
+    cat, n_cat = next(iter(cations.items()))
+    if cat not in ALTERNATIVE_VALENCES:
+        return {}, {'status': 'no_alt_valences_known',
+                   'cation': cat, 'net_q': net_q}
+    anion_q = sum(db[a]['charge'] * n for a, n in anions.items())
+    for v in ALTERNATIVE_VALENCES[cat]:
+        if v * n_cat + anion_q == 0:
+            return {cat: {**db[cat], 'charge': v}}, {
+                'status': 'auto_valence',
+                'cation': cat,
+                'old_charge': db[cat]['charge'],
+                'new_charge': v,
+            }
+    return {}, {'status': 'no_neutral_valence_found',
+               'cation': cat, 'tried': ALTERNATIVE_VALENCES[cat],
+               'net_q': net_q}
+
+
 def compute_substitution_count(n_units: int, multiplicity: int) -> int:
     """Atoms of one element introduced when ``n_units`` formula units of the
     compound enter the cell."""
@@ -148,11 +208,17 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
     use 'spread' or 'cluster' to model precursor placement geometry.
     """
     new = atoms.copy()
+    # Auto-valence inference (MnO2, CrO3, Fe3O4, …) before charge check.
+    overlay, av_info = auto_balance_compound(composition, db)
+    if overlay:
+        db = {**db, **overlay}
     cations, anions, net_q = classify_compound(composition, db)
     if net_q != 0:
         raise ValueError(
-            f"Compound {composition} is not charge-neutral (Σq={net_q:+d}). "
-            "Use --halide_rich or split into separate Type A + B steps.")
+            f"Compound {composition} is not charge-neutral (Σq={net_q:+d}, "
+            f"auto-valence search status={av_info.get('status', 'n/a')}). "
+            "Use --halide_rich, split into separate Type A + B steps, or "
+            "add a custom valence to ALTERNATIVE_VALENCES.")
 
     placement_log = {'cation_site': cation_site, 'anion_site': anion_site,
                      'placements': []}
@@ -201,8 +267,13 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
         if n_vac >= len(li_idx):
             raise ValueError(
                 f"Need {n_vac} Li vacancies but only {len(li_idx)} Li remain")
+        # Reference for 'near_cation': aliovalent cation positions
+        # (Mg, Al, Nd, etc. — the actually substituted atoms)
+        ref_idx = [i for i, s in enumerate(new.get_chemical_symbols())
+                  if s in cations]
         vac_targets = select_substitution_sites(
-            li_idx, n_vac, vacancy_method, seed_local + 100, atoms=new)
+            li_idx, n_vac, vacancy_method, seed_local + 100, atoms=new,
+            reference_indices=ref_idx)
         keep = [i for i in range(len(new)) if i not in vac_targets]
         new = new[keep]
         placement_log['li_vacancies'] = {'n': n_vac, 'indices': vac_targets}
@@ -360,11 +431,21 @@ def main():
                             "reproduces LPSClBr / comp2-5 chemistry. Excess "
                             "values sum to total S→halide swap fraction per f.u.")
     parser.add_argument('--vacancy_method', default='random',
-                       choices=['random', 'spread', 'cluster', 'first'],
+                       choices=['random', 'spread', 'cluster', 'first',
+                                'near_cation'],
                        help='Method for Li vacancy placement (default random — '
                             'matches experimental Kraft 2017 NMR / Adeli 2019 '
                             'PDF showing Li vacancies are disordered, not '
-                            'arranged in a superlattice).')
+                            'arranged in a superlattice). "near_cation" '
+                            'biases vacancy formation toward Li atoms within '
+                            '--vacancy_cutoff Å of the aliovalent dopant, '
+                            'matching the local charge-compensation picture '
+                            '(Pham 2021 oxysulfide; aliovalent defect '
+                            'theory).')
+    parser.add_argument('--vacancy_cutoff', type=float, default=5.0,
+                       help='Radius (Å) for --vacancy_method near_cation; '
+                            'default 5.0 ≈ 2× P-S bond, captures the dopant '
+                            "cation's first/second coordination shells.")
 
     # Type C (chain Type A + Type B)
     parser.add_argument('--also_halide_rich',

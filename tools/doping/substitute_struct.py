@@ -94,7 +94,9 @@ def find_host_indices_for_site(atoms: Atoms, site_name: str,
 
 def select_substitution_sites(host_indices: list[int], n_sub: int,
                               method: str = 'first', seed: int = 42,
-                              atoms: Atoms | None = None) -> list[int]:
+                              atoms: Atoms | None = None,
+                              reference_indices: list[int] | None = None,
+                              cluster_radius: float = 4.0) -> list[int]:
     """Pick n_sub indices to substitute. Selection strategy via ``method``:
 
       'first':  lowest indices (deterministic, reproducible)
@@ -124,25 +126,43 @@ def select_substitution_sites(host_indices: list[int], n_sub: int,
 
     if method in ('spread', 'cluster'):
         if atoms is None:
-            # Legacy index-spacing fallback (no geometry available)
             step = max(1, len(host_indices) // n_sub)
             return [host_indices[i * step] for i in range(n_sub)]
-        # True PBC-aware selection
         rng = np.random.default_rng(seed)
         D_full = atoms.get_all_distances(mic=True)
         D = D_full[np.ix_(host_indices, host_indices)]
-        # Initial seed atom: random (seed-controlled)
         chosen_local = [int(rng.integers(0, len(host_indices)))]
         for _ in range(n_sub - 1):
             min_d_to_chosen = D[:, chosen_local].min(axis=1)
             min_d_to_chosen[chosen_local] = -np.inf if method == 'spread' else np.inf
             if method == 'spread':
                 next_local = int(np.argmax(min_d_to_chosen))
-            else:  # cluster
-                # Hide already-chosen, pick nearest among remaining
+            else:  # cluster (chain — nearest to already chosen)
                 next_local = int(np.argmin(min_d_to_chosen))
             chosen_local.append(next_local)
         return sorted(host_indices[i] for i in chosen_local)
+
+    if method == 'near_cation':
+        # Bias selection toward host atoms close to reference_indices (the
+        # aliovalent cation positions). Models local charge compensation:
+        # Li vacancy forms preferentially near a Mg²⁺/Al³⁺/Nd³⁺ dopant to
+        # minimize Madelung energy of the defect pair.
+        if atoms is None or not reference_indices:
+            # Fallback to random when no reference available
+            rng = np.random.default_rng(seed)
+            return sorted(rng.choice(host_indices, size=n_sub,
+                                    replace=False).tolist())
+        D_full = atoms.get_all_distances(mic=True)
+        # For each host_idx, distance to nearest reference atom
+        min_d_to_ref = D_full[np.ix_(host_indices, reference_indices)].min(axis=1)
+        # Probability weight ∝ exp(-d/cutoff) — exponential decay matches
+        # Coulomb 1/r decay roughly while keeping things normalized.
+        rng = np.random.default_rng(seed)
+        weights = np.exp(-min_d_to_ref / cluster_radius)
+        weights = weights / weights.sum()
+        picks = rng.choice(len(host_indices), size=n_sub, replace=False,
+                          p=weights)
+        return sorted(host_indices[i] for i in picks)
 
     raise ValueError(f"Unknown selection method: {method!r}")
 
