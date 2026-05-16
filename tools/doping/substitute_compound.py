@@ -130,6 +130,96 @@ ALTERNATIVE_VALENCES = {
 }
 
 
+def find_li_interstitial_sites(atoms: Atoms, n_needed: int,
+                              min_dist_to_atom: float = 1.8,
+                              min_dist_between: float = 2.5,
+                              grid_resolution: int = 25) -> list[np.ndarray]:
+    """Locate empty space for Li interstitials by sampling a fractional grid
+    and keeping points far from existing atoms (Voronoi-style heuristic).
+
+    Used to compensate ACCEPTOR cations at P_4b (B³⁺ at P⁵⁺, Si⁴⁺ at P⁵⁺
+    leave the cell charge-deficient — real synthesis incorporates Li⁺
+    interstitials at empty octahedral voids in the argyrodite cage).
+
+    Args:
+        n_needed: number of interstitial Li atoms to place
+        min_dist_to_atom: Å, smallest acceptable distance to any existing atom
+          (1.8 ≈ Li-S equilibrium minus 0.4 for a starting void; UMA relax
+          will then settle the interstitial into its actual minimum).
+        min_dist_between: Å, smallest spacing between two interstitial Li
+          (2.5 ≈ Li-Li ionic contact in Li metal / Li₂S).
+        grid_resolution: candidate points per axis (25³ = 15625 candidates).
+
+    Returns:
+        list of Cartesian positions (np.ndarray shape (3,)) for the n_needed
+        interstitial Li atoms; length 0 if not enough voids found.
+    """
+    from scipy.spatial import cKDTree
+    cell = atoms.cell.array
+    n = grid_resolution
+    frac = np.array(np.meshgrid(np.linspace(0, 1, n, endpoint=False),
+                                np.linspace(0, 1, n, endpoint=False),
+                                np.linspace(0, 1, n, endpoint=False),
+                                indexing='ij')).reshape(3, -1).T
+    cart = frac @ cell
+
+    # Distance from each candidate to nearest atom (PBC-aware tree query
+    # via duplicating in 3x3x3 supercell for the tree)
+    pos = atoms.get_positions()
+    shifts = np.array([[i, j, k] for i in (-1, 0, 1)
+                       for j in (-1, 0, 1) for k in (-1, 0, 1)])
+    pos_pbc = np.concatenate([pos + s @ cell for s in shifts])
+    tree = cKDTree(pos_pbc)
+    dists, _ = tree.query(cart)
+
+    # Keep candidates with d > min_dist_to_atom, sorted by farthest-first
+    mask = dists > min_dist_to_atom
+    candidates = sorted(zip(cart[mask], dists[mask]),
+                       key=lambda x: -x[1])
+
+    # Pick n_needed maximally separated voids
+    chosen: list[np.ndarray] = []
+    for pos_cand, _ in candidates:
+        if len(chosen) >= n_needed:
+            break
+        # Check spacing to already chosen (also PBC-aware via mic_dist)
+        ok = True
+        for c in chosen:
+            # Minimum image distance
+            d_vec = pos_cand - c
+            d_frac = np.linalg.solve(cell.T, d_vec)
+            d_frac -= np.round(d_frac)
+            d_mic = np.linalg.norm(d_frac @ cell)
+            if d_mic < min_dist_between:
+                ok = False
+                break
+        if ok:
+            chosen.append(pos_cand)
+    return chosen
+
+
+def add_li_interstitials(atoms: Atoms, n_int: int) -> tuple[Atoms, list]:
+    """Append ``n_int`` Li atoms at empty interstitial voids.
+
+    Returns (new_atoms, positions_added). UMA relax afterwards will let
+    the interstitials settle into the actual energy minimum (typically
+    near the Cl_4d / S_4a faces of the Li2S sublattice).
+    """
+    if n_int <= 0:
+        return atoms, []
+    sites = find_li_interstitial_sites(atoms, n_int)
+    if len(sites) < n_int:
+        raise RuntimeError(
+            f"Could only find {len(sites)} interstitial voids out of "
+            f"{n_int} needed; supercell may be too small or already too "
+            "crowded. Try a larger supercell.")
+    new = atoms.copy()
+    for pos in sites:
+        new.append('Li')
+        new.positions[-1] = pos
+    return new, sites
+
+
 def auto_balance_compound(composition: dict[str, int],
                          db: dict) -> tuple[dict, dict]:
     """If compound is non-neutral with default DB charges, search for a single
@@ -260,8 +350,21 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
              'targets': targets})
         seed_local += 1
 
-    # 3. Li vacancies for cation aliovalency
-    n_vac = li_vacancies_needed(new, cations, cation_site, n_units, db)
+    # 3. Charge compensation — Li vacancies (donor case) or Li interstitials
+    #    (acceptor case, e.g., B³⁺/Si⁴⁺ at P⁵⁺). Compute signed surplus first.
+    host_q = HOST_SITES[cation_site]['charge']
+    surplus = sum((db[c]['charge'] - host_q) * compute_substitution_count(n_units, m)
+                  for c, m in cations.items())
+    n_vac = max(surplus, 0)
+    n_int = max(-surplus, 0)
+    if n_int > 0:
+        try:
+            new, int_positions = add_li_interstitials(new, n_int)
+            placement_log['li_interstitials'] = {
+                'n': n_int, 'positions': [list(p) for p in int_positions]}
+        except RuntimeError as e:
+            placement_log['li_interstitials'] = {'n': n_int, 'error': str(e)}
+            # leave cell charge-imbalanced; UMA will rank it low
     if n_vac > 0:
         li_idx = find_host_indices(new, 'Li')
         if n_vac >= len(li_idx):
