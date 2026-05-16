@@ -60,8 +60,8 @@ BVS_PARAMS = {
 NEIGHBOR_CUTOFF_A = 5.0  # neighbors within this distance contribute
 
 
-def compute_migration_volume(atoms, bvs_lo: float = 0.5,
-                            bvs_hi: float = 1.5,
+def compute_migration_volume(atoms, bvs_lo: float = 0.8,
+                            bvs_hi: float = 1.2,
                             n_grid: int = 20,
                             cutoff: float = 5.0) -> dict:
     """Quantitative Li-migration accessible volume.
@@ -165,9 +165,13 @@ def compute_bvs_per_li(atoms) -> dict:
 
     mean = float(arr.mean())
     std = float(arr.std())
-    # Proxy: high std AND mean close to 1.0 → ideal Li conductor
+    # Proxy: σ-fast Li conductors have FLAT PES across Li sites, i.e. BVS≈1.0
+    # consistently with SMALL std (Adams 2003 / Mo 2014 BVSE landscape). Fixed
+    # sign convention vs earlier version (which inverted the chemistry):
+    # high std means some deep-trap + some over-coordinated sites that block
+    # percolation. Score combines (closeness of mean to 1) × (1 - std).
     deviation_from_1 = abs(mean - 1.0)
-    proxy = std * max(0.0, 1.0 - deviation_from_1)
+    proxy = max(0.0, 1.0 - deviation_from_1) * max(0.0, 1.0 - std)
 
     return {
         'bvs_li_mean': mean,

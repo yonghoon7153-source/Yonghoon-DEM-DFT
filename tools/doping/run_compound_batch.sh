@@ -197,10 +197,19 @@ for sub in sorted(out_base.glob("structures/*/compound_summary.json")):
         steps = s.get('steps', [])
         type_a = next((st for st in steps if st['type'] == 'A_compound'), None)
         type_b = next((st for st in steps if st['type'] == 'B_halide_rich'), None)
+        type_bp = next((st for st in steps if st['type'] == 'B_mixed_halide'), None)
         type_c = next((st for st in steps if st['type'] == 'C_chain_halide_rich'), None)
+        type_d = next((st for st in steps if st['type'] == 'D_multi_compound'), None)
+        # CR-7 fix (2026-05-16): include Type B' (mixed halides, LPSClBr) and
+        # Type D (multi-compound, high-entropy). Previously these merged as
+        # 'unknown' and got collapsed into a single grouping bucket.
         if type_a and type_c:
             label_dopant = f"{type_a['compound']}+{type_c['halide']}rich"
             comp_label = 'compound_set_chain'
+            label_conc = type_a.get('actual_x', 0.0)
+        elif type_a and type_d:
+            label_dopant = type_a['compound'] + "+multi"
+            comp_label = 'compound_set_multi'
             label_conc = type_a.get('actual_x', 0.0)
         elif type_a:
             label_dopant = type_a['compound']
@@ -210,6 +219,15 @@ for sub in sorted(out_base.glob("structures/*/compound_summary.json")):
             label_dopant = f"{type_b['halide']}rich"
             comp_label = 'halide_rich_vac'
             label_conc = type_b.get('actual_excess', 0.0)
+        elif type_bp:
+            mix = type_bp.get('mix', {})
+            label_dopant = "+".join(f"{h}rich" for h in sorted(mix))
+            comp_label = 'mixed_halide_vac'
+            label_conc = sum(mix.values())
+        elif type_d:
+            label_dopant = type_d['compound'] + "+multi"
+            comp_label = 'multi_compound'
+            label_conc = type_d.get('x', 0.0)
         else:
             label_dopant, comp_label, label_conc = 'unknown', 'unknown', 0.0
 

@@ -49,8 +49,7 @@ fi
 # --- Progress per log ---
 echo ""
 echo "▸ Progress per log"
-for log in logs/uma_*.log logs/anneal_*.log logs/postproc_*.log logs/v3_*.log \
-           logs/tier_*.log 2>/dev/null; do
+for log in logs/uma_*.log logs/anneal_*.log logs/postproc_*.log logs/v3_*.log logs/tier_*.log logs/cascade.log; do
     [ -f "$log" ] || continue
     # Latest count like '[N/Total]'
     latest=$(grep -oE '\[[0-9]+/[0-9]+\]' "$log" 2>/dev/null | tail -1)

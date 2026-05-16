@@ -82,8 +82,12 @@ def compute_tier2_metrics(atoms) -> dict:
     """
     syms = atoms.get_chemical_symbols()
     li_idx = [i for i, s in enumerate(syms) if s == 'Li']
-    host_elements = {'Li', 'P', 'S', 'Cl', 'Br', 'I', 'O', 'N', 'F'}
-    dopant_idx = [i for i, s in enumerate(syms) if s not in host_elements]
+    # CR-6 fix (2026-05-16): "dopant" = anything NOT in the LPSCl baseline
+    # composition (Li, P, S, Cl). Br/I/O/N/F that arrive via doping are
+    # correctly treated as dopants. Previously they were lumped with host
+    # so halide-rich / oxysulfide structures always got dopant_blocking=0.
+    baseline_elements = {'Li', 'P', 'S', 'Cl'}
+    dopant_idx = [i for i, s in enumerate(syms) if s not in baseline_elements]
 
     metrics: dict = {}
 

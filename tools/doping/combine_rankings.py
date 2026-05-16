@@ -39,8 +39,8 @@ from _provenance import get_provenance
 STAGE_FILES = [
     ('screening',     '02_screen/uma_results.json',       'results'),
     ('winners',       '03_winners/winners.json',          'winners'),
-    ('bvse',          '04_bvse/bvs_report.json',          'records'),
-    ('anneal',        '05_anneal/anneal_results.json',    'results'),
+    ('anneal',        '04_anneal/anneal_results.json',    'results'),
+    ('bvse',          '05_bvse/bvs_report.json',          'records'),
     ('rerank',        '06_rerank/post_anneal_ranking.json',
                                                     'ranked_by_post_anneal'),
     ('eos',           '07_eos/postproc_summary.json',     'records'),

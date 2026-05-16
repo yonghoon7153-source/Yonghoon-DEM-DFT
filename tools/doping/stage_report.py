@@ -185,8 +185,14 @@ def report_03_winners(cd: Path) -> str:
     return '\n'.join(md) + '\n'
 
 
-def report_04_bvse(cd: Path) -> str:
-    path = cd / '04_bvse' / 'bvs_report.json'
+def report_bvse(cd: Path) -> str:
+    """BVSE report — path varies by cascade version (v1: 04_bvse, v2: 05_bvse)."""
+    for sub in ('04_bvse', '05_bvse'):
+        path = cd / sub / 'bvs_report.json'
+        if path.exists():
+            break
+    else:
+        return "# BVSE\n\n(no report)\n"
     if not path.exists():
         return "# Stage 04 — BVSE\n\n(no report)\n"
     d = json.loads(path.read_text())
@@ -223,8 +229,14 @@ def report_04_bvse(cd: Path) -> str:
     return '\n'.join(md) + '\n'
 
 
-def report_05_anneal(cd: Path) -> str:
-    path = cd / '05_anneal' / 'anneal_results.json'
+def report_anneal(cd: Path) -> str:
+    """Anneal report — path varies (v1: 05_anneal, v2: 04_anneal)."""
+    for sub in ('04_anneal', '05_anneal'):
+        path = cd / sub / 'anneal_results.json'
+        if path.exists():
+            break
+    else:
+        return "# Anneal\n\n(no report)\n"
     if not path.exists():
         return "# Stage 05 — anneal\n\n(no results)\n"
     d = json.loads(path.read_text())
@@ -361,8 +373,9 @@ REPORT_HANDLERS = {
     '01': report_01_substitute,
     '02': report_02_screen,
     '03': report_03_winners,
-    '04': report_04_bvse,
-    '05': report_05_anneal,
+    # v2 cascade: 04=anneal, 05=bvse; v1 was swapped. handlers auto-detect path.
+    '04': report_anneal,
+    '05': report_bvse,
     '07': report_07_eos,
     '08': report_08_elastic,
     '09': report_09_final,

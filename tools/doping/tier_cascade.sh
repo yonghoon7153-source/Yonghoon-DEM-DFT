@@ -41,9 +41,13 @@ SUPERCELL="${4:-1,1,1}"
 EXOTIC="${5:-1}"
 
 mkdir -p "$OUT/logs"
-cd "$(dirname $(realpath "$BASE"))/.." 2>/dev/null || cd .
-
+# Resolve REPO_ROOT explicitly — earlier `cd $(dirname BASE)/..` was a bug
+# because it landed in repo/db/, not repo root (BASE = db/structures/...cif).
+# Now we go up TWO directories from BASE so tools/doping/... paths resolve.
+REPO_ROOT="$(realpath "$(dirname "$(dirname "$(realpath "$BASE")")")")"
+cd "$REPO_ROOT"
 LOG() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/cascade.log"; }
+LOG "REPO_ROOT resolved to: $REPO_ROOT"
 DONE_MARK() { touch "$OUT/STAGE_${1}.DONE"; }
 DONE_CHECK() { [ -f "$OUT/STAGE_${1}.DONE" ]; }
 STAGE() {
@@ -99,40 +103,54 @@ STAGE 02 screen \
         --out "$OUT/02_screen/uma_results.json" \
         --device cuda --steps 1500
 
-# Stage 03 — Select per-group winners
+# Stage 03 — Select per-group winners (only converged + dV < 25%)
 STAGE 03 winners \
     python3 tools/doping/select_winners.py \
         --results "$OUT/02_screen/uma_results.json" \
         --out "$OUT/03_winners/winners.json" \
         --group_by dopant site anion_site_label \
-        --max_dv 0.25
+        --max_dv 0.25 --require_converged
 
-# Stage 04 — BVSE Li mobility proxy (cheap, before heavy stages)
-STAGE 04 bvse \
-    python3 tools/doping/bvse_proxy.py \
-        --xyz_dir "$OUT/01_structures/structures" \
-        --out "$OUT/04_bvse/bvs_report.json" \
-        --grid_resolution 25
-
-# Stage 05 — Light anneal of winners (uses winners.json → xyz_file → light Langevin)
-STAGE 05 anneal \
+# Stage 04 — Light anneal of winners FIRST (need relaxed geometry for BVSE)
+STAGE 04 anneal \
     python3 tools/doping/run_anneal.py \
         --summary_json "$OUT/03_winners/winners.json" \
-        --out "$OUT/05_anneal" \
+        --out "$OUT/04_anneal" \
         --device cuda --light
+
+# Stage 05 — BVSE on post-anneal (relaxed) geometry, not the pre-relax input.
+#   External review CR-3: BVS depends exponentially on bond length, so the
+#   un-relaxed substitute-compound output gave artificial distances.
+STAGE 05 bvse \
+    bash -c '
+        xyzs=$(ls "'"$OUT"'"/04_anneal/*/post_relax.xyz 2>/dev/null)
+        if [ -z "$xyzs" ]; then
+            echo "  No post_relax.xyz files; falling back to initial structures"
+            xyzs_dir="'"$OUT"'/01_structures/structures"
+            python3 tools/doping/bvse_proxy.py \
+                --xyz_dir "$xyzs_dir" \
+                --out "'"$OUT"'/05_bvse/bvs_report.json" \
+                --grid_resolution 25
+        else
+            python3 tools/doping/bvse_proxy.py \
+                --xyz $xyzs \
+                --out "'"$OUT"'/05_bvse/bvs_report.json" \
+                --grid_resolution 25
+        fi
+    '
 
 # Stage 06 — Re-rank using post-anneal energies
 STAGE 06 rerank \
     python3 tools/doping/rank_anneal.py \
         --screening "$OUT/02_screen/uma_results.json" \
-        --anneal "$OUT/05_anneal/anneal_results.json" \
+        --anneal "$OUT/04_anneal/anneal_results.json" \
         --out "$OUT/06_rerank/post_anneal_ranking.json" --top 30
 
 # Stage 07 — MLIP EOS (uses POST-ANNEAL xyz so no double-anneal)
 #   --no_anneal skips the redundant anneal step inside run_mlip_postproc
 STAGE 07 eos \
     python3 tools/doping/run_mlip_postproc.py \
-        --xyz $(ls "$OUT"/05_anneal/*/post_relax.xyz 2>/dev/null | tr '\n' ' ') \
+        --xyz $(ls "$OUT"/04_anneal/*/post_relax.xyz 2>/dev/null | tr '\n' ' ') \
         --out "$OUT/07_eos" \
         --no_anneal --no_elastic \
         --device cuda
@@ -140,7 +158,7 @@ STAGE 07 eos \
 # Stage 08 — MLIP elastic (clamped-ion Cij at 0K, then VRH average)
 STAGE 08 elastic \
     python3 tools/doping/run_mlip_postproc.py \
-        --xyz $(ls "$OUT"/05_anneal/*/post_relax.xyz 2>/dev/null | tr '\n' ' ') \
+        --xyz $(ls "$OUT"/04_anneal/*/post_relax.xyz 2>/dev/null | tr '\n' ' ') \
         --out "$OUT/08_elastic" \
         --no_anneal --no_eos \
         --device cuda
@@ -186,8 +204,8 @@ print('=' * 70)
 recs = {}
 for json_path in [out / '02_screen/uma_results.json',
                   out / '03_winners/winners.json',
-                  out / '04_bvse/bvs_report.json',
-                  out / '05_anneal/anneal_results.json',
+                  out / '05_bvse/bvs_report.json',
+                  out / '04_anneal/anneal_results.json',
                   out / '07_eos/postproc_summary.json',
                   out / '08_elastic/postproc_summary.json']:
     if not json_path.exists():

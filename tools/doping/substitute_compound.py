@@ -286,7 +286,8 @@ def li_vacancies_needed(atoms: Atoms, cations: dict[str, int],
 def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
                                  n_units: int, cation_site: str, anion_site: str,
                                  method: str, seed: int, db: dict,
-                                 vacancy_method: str = 'random'
+                                 vacancy_method: str = 'random',
+                                 vacancy_cutoff: float = 5.0
                                  ) -> tuple[Atoms, dict]:
     """Place all atoms of one compound unit-cluster into target sites.
 
@@ -374,9 +375,12 @@ def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
         # (Mg, Al, Nd, etc. — the actually substituted atoms)
         ref_idx = [i for i, s in enumerate(new.get_chemical_symbols())
                   if s in cations]
+        # CR-5 fix (2026-05-16): propagate cluster_radius from CLI so
+        # --vacancy_cutoff actually controls the near_cation exponential decay.
         vac_targets = select_substitution_sites(
             li_idx, n_vac, vacancy_method, seed_local + 100, atoms=new,
-            reference_indices=ref_idx)
+            reference_indices=ref_idx,
+            cluster_radius=vacancy_cutoff)
         keep = [i for i in range(len(new)) if i not in vac_targets]
         new = new[keep]
         placement_log['li_vacancies'] = {'n': n_vac, 'indices': vac_targets}
@@ -667,7 +671,8 @@ def main():
                         doped, composition, n_units,
                         cation_site, anion_site,
                         args.method, seed, DOPANT_DB,
-                        vacancy_method=args.vacancy_method)
+                        vacancy_method=args.vacancy_method,
+                        vacancy_cutoff=args.vacancy_cutoff)
                     info['steps'].append({
                         'type': 'A_compound',
                         'compound': args.compound,
@@ -745,7 +750,8 @@ def main():
                             doped, composition, n_units,
                             cation_site, anion_site,
                             args.method, step_seed, DOPANT_DB,
-                            vacancy_method=args.vacancy_method)
+                            vacancy_method=args.vacancy_method,
+                            vacancy_cutoff=args.vacancy_cutoff)
                         info['steps'].append({
                             'type': 'D_multi_compound',
                             'compound': cname, 'x': x_each,
@@ -778,8 +784,58 @@ def main():
             xyz_path = out_dir / f'{name}.xyz'
             write(xyz_path, doped)
 
+            # Derive grouping keys at write-time so downstream tools
+            # (select_winners, combine_rankings) work even when this script
+            # is called standalone (without run_compound_batch.sh's merge
+            # step). Fixes the chain-integrity bug noted in the external
+            # review (CR-2, 2026-05-16).
+            type_a_step = next((s for s in info['steps']
+                                if s.get('type') == 'A_compound'), None)
+            type_b_step = next((s for s in info['steps']
+                                if s.get('type') == 'B_halide_rich'), None)
+            type_c_step = next((s for s in info['steps']
+                                if s.get('type') == 'C_chain_halide_rich'), None)
+            type_d_step = next((s for s in info['steps']
+                                if s.get('type') == 'D_multi_compound'), None)
+            type_bp_step = next((s for s in info['steps']
+                                 if s.get('type') == 'B_mixed_halide'), None)
+            if type_a_step and type_c_step:
+                derived_dopant = f"{type_a_step['compound']}+{type_c_step['halide']}rich"
+                comp_label = 'compound_set_chain'
+                derived_conc = type_a_step.get('actual_x', 0.0)
+            elif type_a_step and type_d_step:
+                derived_dopant = type_a_step['compound'] + "+multi"
+                comp_label = 'compound_set_multi'
+                derived_conc = type_a_step.get('actual_x', 0.0)
+            elif type_a_step:
+                derived_dopant = type_a_step['compound']
+                comp_label = 'compound_set'
+                derived_conc = type_a_step.get('actual_x', 0.0)
+            elif type_b_step:
+                derived_dopant = f"{type_b_step['halide']}rich"
+                comp_label = 'halide_rich_vac'
+                derived_conc = type_b_step.get('actual_excess', 0.0)
+            elif type_bp_step:
+                derived_dopant = "+".join(f"{h}rich" for h in type_bp_step.get('mix', {}))
+                comp_label = 'mixed_halide_vac'
+                derived_conc = sum(type_bp_step.get('mix', {}).values())
+            elif type_d_step:
+                derived_dopant = type_d_step['compound'] + "+multi"
+                comp_label = 'multi_compound'
+                derived_conc = type_d_step.get('x', 0.0)
+            else:
+                derived_dopant = 'unknown'
+                comp_label = 'unknown'
+                derived_conc = 0.0
+
             info.update({
                 'name': name,
+                'dopant': derived_dopant,
+                'site': cation_site,
+                'anion_site_label': anion_site,
+                'concentration': derived_conc,
+                'charge_compensation': comp_label,
+                'host': 'compound',
                 'n_atoms': len(doped),
                 'composition': composition_summary(doped),
                 'xyz_file': str(xyz_path),
