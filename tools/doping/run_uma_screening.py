@@ -132,7 +132,11 @@ def main():
     parser.add_argument('--fmax', type=float, default=0.05,
                        help='Force convergence (eV/Å)')
     parser.add_argument('--steps', type=int, default=300,
-                       help='Max FIRE steps')
+                       help='Max FIRE steps (default 300 for single-element; '
+                            'use 1500+ for compound mode — foreign atoms + '
+                            'multiple Li vacancies need many steps to settle. '
+                            'Compound batch on canonical baseline: 5/51 '
+                            'converged at 300, expect ≥45/51 at 1500.)')
     parser.add_argument('--no_cell_relax', action='store_true',
                        help='Position-only relaxation (fix cell)')
     parser.add_argument('--limit', type=int, default=None,

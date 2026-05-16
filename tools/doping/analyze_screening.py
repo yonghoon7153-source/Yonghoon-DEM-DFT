@@ -38,35 +38,45 @@ def normalize(values: list[float], invert: bool = False) -> list[float]:
 
 def compute_composite_score(records: list[dict],
                            w_e: float = 0.4, w_v: float = 0.3,
-                           w_s: float = 0.2, w_c: float = 0.1) -> list[dict]:
-    """Composite score per record. Higher = better."""
+                           w_s: float = 0.2, w_c: float = 0.1,
+                           converged_penalty: float = 0.10) -> list[dict]:
+    """Composite score per record. Higher = better.
+
+    Non-converged records are kept and ranked (a soft penalty is subtracted
+    from the final score, default 0.10 ≈ ten percent of the normalized
+    range). Compound-substitution structures often need >300 FIRE steps
+    because foreign atoms and multiple Li vacancies create large initial
+    strain; dropping them entirely loses real chemistry, while ignoring the
+    convergence flag would over-credit them.
+    """
     if not records:
         return records
-    converged = [r for r in records if r.get('converged', False)]
-    if not converged:
-        print("⚠ No converged structures. Using all.")
-        converged = records
 
-    de = [r['uma_relaxed']['de_per_atom_vs_baseline'] for r in converged]
-    dv = [abs(r['dV_over_V0']) for r in converged]
-    sp = [r.get('compatibility_score', 0.0) for r in converged]
+    de = [r['uma_relaxed']['de_per_atom_vs_baseline'] for r in records]
+    dv = [abs(r['dV_over_V0']) for r in records]
+    sp = [r.get('compatibility_score', 0.0) for r in records]
     cp = [1.0 if str(r.get('charge_compensation', '')).startswith('imbalanced')
-          else 0.0 for r in converged]
+          else 0.0 for r in records]
 
     n_de = normalize(de, invert=True)   # lower energy → higher score
     n_dv = normalize(dv, invert=True)   # smaller |ΔV| → higher score
     n_sp = normalize(sp, invert=False)  # higher compatibility → higher score
     n_cp = normalize(cp, invert=True)   # lower penalty → higher score
 
-    for r, ne, nv, ns, nc in zip(converged, n_de, n_dv, n_sp, n_cp):
+    n_conv = sum(1 for r in records if r.get('converged'))
+    print(f"  Score: converged {n_conv}/{len(records)}, "
+          f"non-converged penalty = {converged_penalty:.2f}")
+
+    for r, ne, nv, ns, nc in zip(records, n_de, n_dv, n_sp, n_cp):
         r['_score_components'] = {
             'energy': ne, 'volume': nv,
             'site_pref': ns, 'charge_comp': nc,
         }
-        r['composite_score'] = (
-            w_e * ne + w_v * nv + w_s * ns + w_c * nc
-        )
-    return converged
+        score = w_e * ne + w_v * nv + w_s * ns + w_c * nc
+        if not r.get('converged', False):
+            score -= converged_penalty
+        r['composite_score'] = score
+    return records
 
 
 def print_top_table(ranked: list[dict], n: int = 20):
@@ -103,7 +113,14 @@ def main():
     parser.add_argument('--w_c', type=float, default=0.1,
                        help='Weight: charge compensation penalty')
     parser.add_argument('--max_dv', type=float, default=0.10,
-                       help='Filter: max |ΔV/V0| (default 10%%)')
+                       help='Filter: max |ΔV/V0| (default 10%%). Compound '
+                            'substitution often needs 0.20 because foreign '
+                            'large cations + multiple Li vacancies expand the '
+                            'lattice by 10-17%% (BaO, SrO, ZnO, Nd2O3, Y2O3).')
+    parser.add_argument('--converged_penalty', type=float, default=0.10,
+                       help='Composite-score penalty for non-converged FIRE '
+                            'relaxations (default 0.10). Set 0 to ignore the '
+                            'flag; set higher to be stricter.')
     parser.add_argument('--max_de', type=float, default=None,
                        help='Filter: max ΔE/atom vs baseline (eV)')
     parser.add_argument('--min_li_per_fu', type=float, default=4.0,
@@ -154,7 +171,8 @@ def main():
               f"{before_dd} → {len(pre)} records")
     print(f"  Total after all filters: {len(pre)}/{n_before}")
 
-    scored = compute_composite_score(pre, args.w_e, args.w_v, args.w_s, args.w_c)
+    scored = compute_composite_score(pre, args.w_e, args.w_v, args.w_s,
+                                     args.w_c, args.converged_penalty)
     ranked = sorted(scored, key=lambda r: r['composite_score'], reverse=True)
 
     print_top_table(ranked, args.top)
