@@ -97,6 +97,27 @@ ALL_COMPOUNDS=("${MONO_OXIDES[@]}" "${DI_OXIDES[@]}" "${TRI_OXIDES[@]}"
                "${IODIDES[@]}" "${NITRIDES[@]}" "${SULFIDES[@]}"
                "${POLYANIONS[@]}")
 
+# v4.5.4: COMPOUND_FILTER env var — comma-separated list (e.g. "Nd2O3,MgO")
+# limits the batch to just these. Default (unset) = all ~50 compounds.
+# Use case: single-compound dev-cycle batch on gabia without spending
+# days on the full exploratory matrix.
+if [ -n "$COMPOUND_FILTER" ]; then
+    IFS=',' read -ra FILTER_ARR <<< "$COMPOUND_FILTER"
+    FILTERED=()
+    for f in "${FILTER_ARR[@]}"; do
+        for c in "${ALL_COMPOUNDS[@]}"; do
+            [ "$c" = "$f" ] && FILTERED+=("$c") && break
+        done
+    done
+    if [ ${#FILTERED[@]} -eq 0 ]; then
+        echo "ERROR: COMPOUND_FILTER=$COMPOUND_FILTER matched no known compound."
+        echo "       Known compounds: ${ALL_COMPOUNDS[*]}"
+        exit 1
+    fi
+    ALL_COMPOUNDS=("${FILTERED[@]}")
+    echo "COMPOUND_FILTER active: ${ALL_COMPOUNDS[*]} (${#ALL_COMPOUNDS[@]} of full list)"
+fi
+
 echo ""
 echo "Total compound classes: ${#ALL_COMPOUNDS[@]}"
 echo ""
