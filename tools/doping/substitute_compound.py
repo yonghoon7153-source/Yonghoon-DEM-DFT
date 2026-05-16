@@ -533,6 +533,16 @@ def main():
                        help="Multi-halide co-substitution as 'Cl:0.3,Br:0.3' — "
                             "reproduces LPSClBr / comp2-5 chemistry. Excess "
                             "values sum to total S→halide swap fraction per f.u.")
+    parser.add_argument('--mixed_compounds',
+                       help="Multi-compound (이중 화합물 / high-entropy) doping "
+                            "as 'Nd2O3:0.025,Al2O3:0.025,MgO:0.05'. Each pair "
+                            "compound:x_compound is applied sequentially at "
+                            "the chosen --cation_site / --anion_site; Li "
+                            "vacancies / interstitials accumulate over all "
+                            "compounds for global charge balance. Use this "
+                            "for high-entropy oxide screening (Nd+La+Sm+Y "
+                            "simultaneously) — newer sulfide-SE direction "
+                            "than single-cation doping.")
     parser.add_argument('--vacancy_method', default='random',
                        choices=['random', 'spread', 'cluster', 'first',
                                 'near_cation'],
@@ -564,10 +574,12 @@ def main():
                        help='Ensemble size (only meaningful with --method random)')
     args = parser.parse_args()
 
-    if not args.compound and not args.halide_rich and not args.mixed_halides:
+    if (not args.compound and not args.halide_rich
+            and not args.mixed_halides and not args.mixed_compounds):
         parser.error(
-            "Provide --compound (Type A), --halide_rich (Type B), or "
-            "--mixed_halides (Type B' — comp2/3/4/5 chemistry)")
+            "Provide --compound (Type A), --halide_rich (Type B), "
+            "--mixed_halides (Type B'), or --mixed_compounds (Type D — "
+            "이중 / high-entropy co-doping)")
 
     base = read(args.base)
     if args.supercell != [1, 1, 1]:
@@ -717,6 +729,32 @@ def main():
                     'n_swap': n_swap,
                     **log,
                 })
+
+            # --- Type D (multi-compound / high-entropy) ---
+            if args.mixed_compounds:
+                compound_specs = []
+                for entry in args.mixed_compounds.split(','):
+                    cname, xstr = entry.strip().split(':')
+                    compound_specs.append((cname.strip(), float(xstr)))
+                step_seed = seed + 80
+                for cname, x_each in compound_specs:
+                    composition = parse_compound(cname)
+                    n_units = max(1, int(round(n_fu_actual * x_each)))
+                    try:
+                        doped, log = substitute_compound_at_sites(
+                            doped, composition, n_units,
+                            cation_site, anion_site,
+                            args.method, step_seed, DOPANT_DB,
+                            vacancy_method=args.vacancy_method)
+                        info['steps'].append({
+                            'type': 'D_multi_compound',
+                            'compound': cname, 'x': x_each,
+                            'n_units': n_units,
+                            **log,
+                        })
+                    except ValueError as e:
+                        print(f"  ⚠ skip {cname} in mixed_compounds: {e}")
+                    step_seed += 10
 
             # Name + write
             parts = []

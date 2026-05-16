@@ -44,15 +44,17 @@ def main():
     data = json.loads(Path(args.results).read_text())
     records = data.get('results', [])
 
-    # Filter
-    pre = records
+    # Filter — drop errored records (no uma_relaxed) and explicit outliers
+    pre = [r for r in records if 'uma_relaxed' in r and args.metric in r['uma_relaxed']]
+    n_no_uma = len(records) - len(pre)
     if args.max_dv is not None:
         pre = [r for r in pre if abs(r.get('dV_over_V0', 1e9)) <= args.max_dv]
     if args.require_converged:
         pre = [r for r in pre if r.get('converged', False)]
-    # Skip explicit outliers
     pre = [r for r in pre if not r['uma_relaxed'].get('outlier_flag', False)]
-    print(f"Filtered: {len(records)} → {len(pre)} records")
+    print(f"Filtered: {len(records)} → {len(pre)} records "
+          f"(dropped {n_no_uma} no-UMA + {len(records) - len(pre) - n_no_uma} "
+          f"by filters)")
 
     # Group + pick winner per group
     groups = defaultdict(list)
