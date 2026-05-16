@@ -594,3 +594,86 @@ find /scratch /data -name "*bader*" -o -name "*adhesion*" -o -name "*eos*" 2>/de
   classification (A: compound set, B: halide-rich, C: aliovalent+halide co-doping,
   D: additive not lattice). 10 reference citations with DOIs.
 
+
+### Z7. 2026-05-16 gabia migration — binding curve / EOS / elastic
+
+**Provenance**: gabia `/data/work/v30u_ensemble/` (binding curve production for R=+0.989 paper figure), `/data/work/comp3_v2_eos/` (comp3 v2 EOS), `/data/work/modelc_v2_elastic/` (modelC v2 elastic) mirrored to repo on 2026-05-16. User-confirmed *"마지막으로 이게 나온 코드"* for the UMA binding curves figure (Cl-coherent termination, α=1.0, uniform Li5.4 dW, R=+0.989, ρ=+1.000, ⟨RMSE⟩=0.0662 J/m², strict paper rank, 5 comps).
+
+#### Z7-A. Binding curve production — `필독/adhesion/v30u_ensemble/` (45 .py files)
+
+**핵심 production lineage**:
+- `run_v30u_1L.py` → `_correct.py` → `_correct_mlip_relax.py` → `_correct_eiso_fix.py` → `_face_flip.py` — 5-step 진화. **최종**: `_correct_eiso_fix.py` + `_face_flip.py` 조합 (eiso 보정 + face orientation flip).
+- `run_v30u_ensemble.py`, `run_v30u_full_ensemble.py` — multi-comp batch driver.
+- `run_comp35_v2_eiso_fix.py`, `run_comp4_v2_eiso_fix.py` — comp별 eiso rerun.
+
+**Slab/face generators**:
+- `make_comp12_stacked_orthogonal.py`, `make_comp35_v2_slab.py`, `make_comp4_v2_stacked_orthogonal.py`
+- `enumerate_v1_faces.py`, `enumerate_v2_faces.py`
+- `generate_stacked_xyz_at_deq.py`, `generate_stacked_deq_orthogonal.py`
+
+**α correction (paper Figure 5)**:
+- `alpha_sensitivity_FINAL.py` — α ∈ [0.0, 1.5] sweep
+- `alpha_strain_fit.py` — α strain fitting
+- `db/properties/alpha_sensitivity_FINAL.json` — output data
+
+**Wad analysis**:
+- `normalize_wad_by_surface_Li.py` — surface-Li normalization
+- `bond_density_at_interface.py`, `_full.py`, `_36reg_FAST.py`, `_36reg_FINAL.py`, `_LiO_cutoff_sweep.py`, `_FINAL_combo.py`
+- `bond_length_ensemble.py`
+- `analyze_per_z_surface_all.py`, `analyze_species_z_profile.py`, `analyze_halogen_slab_positions.py`
+
+**🎯 R=0.989 figure plotters**:
+- `plot_binding_curves_morse_fullwindow.py` ⭐ — **사용자가 보낸 figure** (Cl-coherent, α=1.0, Morse fit, full window 0.5-4.2 Å)
+- `plot_killer_v2_R0988_final.py`, `plot_R0988_standalone.py`, `plot_killer_v2_figure_n5.py`, `plot_killer_v2_figure.py`
+- `plot_binding_curves_morse.py` (earlier window)
+- `plot_v30u_1L_correct_z0_only.py`, `plot_v30u_1L_correct_eiso_fix.py`
+
+**Li migration tests (anchor mechanism evidence)**:
+- `run_li_migration_rigid_test.py`, `_rigid_36reg.py`, `_FINAL_combo.py`
+
+**Mechanism schematics**:
+- `scheme_vacancy_mechanism.py`, `render_interface_3axis.py`, `render_interface_3d.py`
+
+**Misc**:
+- `comprehensive_FINAL_analysis.py`, `exhaustive_v2_trend_analysis.py`
+
+**검증 status**: ✅ **VERIFIED** — paper Figure 5 (R=+0.989, ρ=+1.000) 재현 source. raw z-shift directories는 gabia 보존 (`/data/work/v30u_ensemble/comp{1,2,4,5}_slab_v*_zshifts/`, `comp3_slab_v1_PRESERVED_zshifts`), 필요 시 추가 mirror.
+
+#### Z7-B. EOS production — `필독/step2_mlip_eos/comp3_v2/`, `필독/step3_dft_eos/comp3_v2/`
+
+- `필독/step2_mlip_eos/comp3_v2/comp3_v2_mlip_eos.py` ✅ MLIP EOS scan (UMA, comp3 v2)
+- `필독/step3_dft_eos/comp3_v2/step3_dft_eos_comp3.py` ✅ DFT EOS 11 volumes (comp3 v2)
+- `필독/step3_dft_eos/comp3_v2/run_comp3_v2_eos.sh` — gabia chain runner
+- `필독/step3_dft_eos/comp3_v2/watch_eos.sh` — progress monitor
+- `필독/step3_dft_eos/run_eos_both.sh` — basin A/B batch driver (modelC)
+- `필독/step3_dft_eos/run_comp5_elastic_basinA.sh` — comp5 basinA elastic
+- `필독/step3_dft_eos/run_all_elastic_v2.sh` — all-comp elastic v2 batch
+
+**검증 status**: ✅ **production source** for db/properties/eos.json (canonical B0: comp1=26.2, comp2=25.8, comp3=20.8, comp4=20.8, comp5=22.9, modelc=21.7 GPa). BM3 fit downstream in `필독/step4_bm3_v0/bm3_fit_eos.py` (already inventoried).
+
+#### Z7-C. modelC v2 elastic — `필독/step5_postproc/elastic_modelC_v2/` ❌ BUGGY
+
+⚠ **factor 2 bug 재발** (CLAUDE.md history A2 `compute_cij.py` 동일 패턴):
+
+- `modelC_mlip_elastic.py` — MLIP elastic (modelC)
+- `dft_0K/make_strain.py` — strain generator
+- `dft_0K/fit_cij.py` — **❌ BUGGY** — Voigt shear factor 2 누락
+- `dft_0K/run_dft_elastic.sh`, `run_dft_gpu.sh`, `run_modelc_v2_0K_elastic.sh` — runners
+
+**진단** (2026-05-16):
+- `make_strain.py` shear eps matrix: `[[0,0,0],[0,0,1],[0,1,0]] * STRAIN` → ε_xy = ε_yx = STRAIN (symmetric tensor strain) → **engineering γ_xy = 2×STRAIN**.
+- `fit_cij.py` line: `ds = (sig_p − sig_m) / (2*STRAIN)` — STRAIN으로만 나눔.
+- σ_xy(QE) = 2·C_66·ε_xy = 2·C_66·STRAIN ⇒ ds = 2·C_66 ⇒ **reported C_44/C_55/C_66 = 2× true Voigt**.
+- 영향: K_V (diagonal-only) 정확, **G_V/G_R 2× over**, E_young 2× over, Pugh ratio 잘못.
+- **증거**: `db/properties/elastic.json` row 1 (comp1 C44=37.9, E=76.9, factor 2 over) → canonical row 4 (comp1 C44=13.1, E=29.1, ✅ factor 2 fixed, sign-corrected). row 1이 이 fit_cij.py pattern.
+
+**조치**: ❌ **사용 금지**. modelC v2 elastic 결과는 다음 verified source 사용:
+- **0K DFT clamped-ion**: KISTI `compute_cij_check.py` (CODE_INVENTORY A1 ✅)
+- **600K MLIP snapshot relaxed-ion**: `필독/adhesion/phase2a_v31_mlip_elastic_v2_3comp.py` (B0 champion ✅, paper #1 v1 reproduction)
+
+repo에 mirror된 이유: gabia cleanup 대비 reference 보존 + factor 2 bug 비교 anchor.
+
+#### Z7 history note (사용자 손해 방지)
+- 2026-05-01: A2 `compute_cij.py` (gabia comp2_v2) factor 2 누락 → comp2 v2 wasted
+- 2026-05-16: **modelC v2 `fit_cij.py` 동일 패턴 재발견** — 같은 author가 새 디렉토리에 같은 bug 복제. 향후 elastic 신규 코드 작성 시 **make_strain의 shear ε vs γ 정의 + fit의 / (2·STRAIN) divisor 항상 한 쌍으로 검토**.
+
