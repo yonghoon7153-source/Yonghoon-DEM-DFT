@@ -163,7 +163,10 @@ def main():
                       'pugh_ratio', 'poisson_nu']
     groups: dict[str, list[dict]] = {}
     for r in rows:
-        m = re.match(r'(.+?)_seed\d+$', r['name'])
+        # v4.5.1 CR-A fix: substitute_struct/substitute_compound emit
+        # name_s{NN} (NOT _seed{NN}); previous regex matched nothing →
+        # grouped_stats was always empty list (reviewer-caught critical).
+        m = re.match(r'(.+?)_s\d+$', r['name'])
         gkey = m.group(1) if m else r['name']
         groups.setdefault(gkey, []).append(r)
     grouped_stats = []

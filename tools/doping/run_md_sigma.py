@@ -83,10 +83,19 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
         # Equilibration
         md.run(equil_steps)
 
-        # Production + PBC unwrapping (md_lpscl_v2 protocol verbatim)
+        # Production + PBC unwrapping. v4.5.1 M-C fix: use full 3x3 cell
+        # matrix (triclinic-safe). Previous version used only diagonal of
+        # cell — correct for cubic prim cells but biased for doped
+        # configurations whose post-anneal cell drifts toward monoclinic
+        # (β ≈ 90 ± 1°). Also log cell parameters as sanity check.
         symbols = atoms.get_chemical_symbols()
         li_idx = [i for i, s in enumerate(symbols) if s == 'Li']
-        cell_diag = np.diag(atoms.get_cell())
+        cell_matrix = np.array(atoms.get_cell())
+        inv_cell = np.linalg.inv(cell_matrix)
+        cellpar = atoms.cell.cellpar()
+        print(f"      cell a={cellpar[0]:.3f} b={cellpar[1]:.3f} "
+              f"c={cellpar[2]:.3f}  α={cellpar[3]:.2f} "
+              f"β={cellpar[4]:.2f} γ={cellpar[5]:.2f}", flush=True)
 
         prev_pos = atoms.get_positions()[li_idx]
         unwrapped = prev_pos.copy()
@@ -95,8 +104,11 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
         for step in range(prod_steps):
             md.run(1)
             cur_pos = atoms.get_positions()[li_idx]
-            diff = cur_pos - prev_pos
-            diff -= np.round(diff / cell_diag) * cell_diag
+            # Triclinic-safe minimum-image: project diff into fractional,
+            # subtract nearest integer image, project back.
+            frac_diff = (cur_pos - prev_pos) @ inv_cell
+            frac_diff -= np.round(frac_diff)
+            diff = frac_diff @ cell_matrix
             unwrapped = unwrapped + diff
             prev_pos = cur_pos.copy()
             if step % save_every == 0:
@@ -120,23 +132,40 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
         sigma = (n_density * 1e6) * q**2 * (D_cm2s * 1e-4) / (kB * T) * 1e-2
 
         elapsed = time.time() - t0
+        # v4.5.1 M-D fix: flag low-R² points so Arrhenius fit can exclude
+        # them. 600K with 50 ps is marginal (≈0.5 Li hop / atom) — R²
+        # often < 0.85 even though higher T is fine. Without this flag
+        # a noisy low-T point biases Ea / D_300K extrapolation.
+        reliable = bool(r**2 >= 0.85)
         results[T] = {'D_cm2s': D_cm2s, 'sigma_S_cm': sigma,
-                      'msd_R2': r**2, 'elapsed_min': elapsed / 60.0}
+                      'msd_R2': r**2, 'reliable': reliable,
+                      'elapsed_min': elapsed / 60.0}
+        flag = '' if reliable else '  ⚠ low R² (Arrhenius excludes)'
         print(f"      T={T}K  D={D_cm2s:.3e}  σ={sigma:.3e} S/cm  "
-              f"R²={r**2:.3f}  ({elapsed/60:.1f}min)", flush=True)
+              f"R²={r**2:.3f}  ({elapsed/60:.1f}min){flag}", flush=True)
 
         # Save raw MSD for paper SI reproducibility
         np.savetxt(out_dir / f"msd_{T}K.dat",
                    np.column_stack([dt_arr * 1e12, msd]),
                    header=f"time(ps)  MSD(A^2)  T={T}K  D={D_cm2s:.3e}")
 
-    # Arrhenius — needs ≥ 3 T points
-    if len(results) < 3:
+    # Arrhenius — needs ≥ 3 reliable T points (v4.5.1 M-D fix).
+    # Exclude T points with MSD R² < 0.85 (low-T noisy fit). If fewer
+    # than 3 reliable points, fall back to all available T but flag
+    # the result as low-confidence so the user knows to extend prod_ps
+    # or add T points.
+    reliable_Ts = sorted(T for T in results if results[T].get('reliable'))
+    fit_Ts = reliable_Ts if len(reliable_Ts) >= 3 else sorted(results.keys())
+    fit_quality = ('reliable' if len(reliable_Ts) >= 3
+                   else f'low-confidence (only {len(reliable_Ts)}/{len(results)} '
+                        f'T with R²≥0.85, fell back to all)')
+    if len(fit_Ts) < 3:
         return {'per_temperature': results,
-                'warning': 'Arrhenius needs ≥3 T points'}
+                'warning': f'Arrhenius needs ≥3 T points, have {len(fit_Ts)}',
+                'fit_quality': fit_quality}
 
-    Ts = np.array(sorted(results.keys()), dtype=float)
-    Ds = np.array([results[T]['D_cm2s'] for T in Ts])
+    Ts = np.array(fit_Ts, dtype=float)
+    Ds = np.array([results[T]['D_cm2s'] for T in fit_Ts])
     inv_T_1000 = 1000.0 / Ts
     ln_D = np.log(Ds)
     slope_arr, intercept_arr, r_arr, _, _ = linregress(inv_T_1000, ln_D)
@@ -157,7 +186,10 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
             'sigma_300K_S_cm_NE': float(sigma_300K),
             'sigma_300K_S_cm_with_HR_0p5_estimate': float(sigma_300K * 0.5),
             'fit_R2': float(r_arr**2),
-            'n_T_points': len(Ts),
+            'n_T_points_used': len(Ts),
+            'n_T_points_total': len(results),
+            'T_points_used_K': fit_Ts,
+            'fit_quality': fit_quality,
         },
         'n_Li': int(n_Li),
         'n_atoms': int(n_total),

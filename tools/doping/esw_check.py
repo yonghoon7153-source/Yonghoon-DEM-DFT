@@ -1,23 +1,27 @@
 #!/usr/bin/env python
-"""esw_check.py — Stage 9f: electrochemical stability window (ESW).
+"""esw_check.py — Stage 9f: COMPETING-PHASE ENERGY SPAN (NOT real ESW).
 
-Thermodynamic ESW upper / lower bound estimate for each top-K winner
-against the most stable competing phases of the constituent elements.
+⚠ IMPORTANT FRAMING (reviewer-caught M-B, 2026-05-16): the value this
+script reports is NOT the electrochemical stability window. Real ESW
+requires Mo 2012 grand canonical phase diagram (μ_Li sweep against
+Li metal reference) — out of scope for v4.5.1.
 
-Approach (cheap, screening-grade):
-  1. For each element in winner composition, query MP for the most
-     stable oxidized phase (higher oxidation state, e.g. P2O5, S → SO3)
-     and most stable reduced phase (lower oxidation, e.g. Li2S → Li,
-     Cl2 → LiCl).
-  2. Estimate ESW = E_oxidation - E_reduction in eV vs Li/Li⁺ proxy.
-  3. WARN if ESW is below typical SE window (3-5 V) — the doped
-     argyrodite is then expected to react with Li anode or NCM
-     cathode at operating voltage.
+What this script DOES compute: the energy span (E_max − E_min) across
+all competing phases in the winner's chemsys. This is a *very* coarse
+qualitative metastability hint, useful for paper-SI flagging of
+"chemsys with unusually large competing-phase spread" but NOT for
+paper-main-table voltage-vs-Li/Li+ claims.
 
-Limitations (printed at runtime):
+paper reporting:
+  - DO write "competing-phase energy span as qualitative metastability
+    hint"
+  - DO NOT write "ESW = X eV" or "voltage stability window"
+  - For real ESW: implement Mo 2012 method (TODO v5)
+
+Limitations:
+  - NOT voltage-referenced (no μ_Li grand canonical sweep).
   - Pure thermodynamic; kinetic barriers ignored.
-  - Pseudobinary phase diagram approximation (Sundar 2025 style).
-  - For paper-grade ESW: explicit interface DFT (Stage 11) preferred.
+  - For paper-grade ESW: implement Mo 2012 (PCCP 14, 22687-22700).
 
 Usage:
   export MP_API_KEY=<key>

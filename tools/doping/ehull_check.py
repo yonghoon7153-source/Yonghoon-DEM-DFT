@@ -40,26 +40,38 @@ def get_winner_composition(xyz_path):
     return comp, len(atoms)
 
 
-def query_hull_energy(elements, mpr):
-    """Return min E/atom of competing phases on the hull. None on failure."""
+def query_hull_decomposition(elements, winner_composition, mpr):
+    """v4.5.1 M-A fix: report hull DECOMPOSITION at winner composition
+    instead of meaningless min E/atom across chemsys.
+
+    Returns:
+        hull_E_at_winner_per_atom: weighted-avg energy of the hull
+            tie-line vertices the winner composition decomposes into
+            (paper-defensible reference energy — true ΔE_hull = winner
+            DFT E - this value).
+        decomp_str: "0.27×Li2S + 0.40×LiCl + ..." — the competing
+            phases the winner would decompose into on the hull.
+        n_entries: chemsys MP entry count (sanity check).
+    """
     from pymatgen.analysis.phase_diagram import PhaseDiagram
+    from pymatgen.core import Composition
     try:
         entries = mpr.get_entries_in_chemsys(elements)
         if not entries:
-            return None, []
+            return None, "(no MP entries)", 0
         pd = PhaseDiagram(entries)
-        # Lowest-energy entry per atom is on the hull. We need the hull
-        # energy at the winner's composition — but we don't have a DFT
-        # entry for it. Cheapest interpretable proxy: the minimum E/atom
-        # across all competing entries (loose upper bound on E_hull).
-        # Real ΔE_hull requires the winner's DFT energy.
-        e_min = min(e.energy_per_atom for e in entries)
-        return e_min, [f"{e.composition.reduced_formula}: "
-                       f"{e.energy_per_atom:.3f} eV/atom"
-                       for e in sorted(entries,
-                                      key=lambda x: x.energy_per_atom)[:5]]
+        winner_comp = Composition(winner_composition)
+        decomp = pd.get_decomposition(winner_comp)
+        # weighted-avg energy at the hull tie-line at winner composition
+        hull_E = sum(e.energy_per_atom * frac
+                     for e, frac in decomp.items())
+        decomp_str = " + ".join(
+            f"{frac:.3f}×{e.composition.reduced_formula}"
+            for e, frac in sorted(decomp.items(),
+                                  key=lambda x: -x[1]))
+        return float(hull_E), decomp_str, len(entries)
     except Exception as e:
-        return None, [f"MP query failed: {e}"]
+        return None, f"MP decomp failed: {e}", 0
 
 
 def main():
@@ -117,7 +129,12 @@ def main():
             comp, n_at = get_winner_composition(xyz)
             elements = sorted(comp.keys())
             print(f"  [{i}/{len(records)}] {name}  ({''.join(elements)})", flush=True)
-            e_min, top_phases = query_hull_energy(elements, mpr)
+            hull_E, decomp_str, n_entries = query_hull_decomposition(
+                elements, comp, mpr)
+            if hull_E is not None:
+                print(f"      hull decomp: {decomp_str}", flush=True)
+                print(f"      hull_E_at_winner_comp: {hull_E:.4f} eV/atom",
+                      flush=True)
             rows.append({
                 'name': name,
                 'dopant': rec.get('dopant'),
@@ -125,12 +142,15 @@ def main():
                 'composition': comp,
                 'elements': elements,
                 'n_atoms': n_at,
-                'mp_min_e_per_atom_eV': e_min,
-                'top_5_competing_phases': top_phases,
-                'note': ('MLIP E and MP DFT E not directly comparable; '
-                         'this gives competing-phase reference. True '
-                         'ΔE_hull requires winner DFT — use this as '
-                         'synthesizability hint, not a hard cut.'),
+                'hull_E_at_winner_composition_eV_atom': hull_E,
+                'hull_decomposition': decomp_str,
+                'n_chemsys_entries': n_entries,
+                'note': ('Hull reference at winner composition (decomp '
+                         'into competing phases). Absolute ΔE_hull = '
+                         'winner_DFT_E - hull_E_at_winner_composition; '
+                         'run DFT on winner.xyz for the final number. '
+                         'paper-defensible reporting: list decomp '
+                         'phases + ratios.'),
             })
 
     out = Path(args.out)

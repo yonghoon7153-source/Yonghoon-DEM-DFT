@@ -254,7 +254,9 @@ STAGE 09e ehull \
         --anneal_dir "$OUT/04_anneal" \
         --out "$OUT/09e_ehull/ehull_summary.json" --top 10
 
-# Stage 9f — Electrochemical stability window (ESW) thermodynamic bound.
+# Stage 9f — Competing-phase energy span (qualitative metastability hint).
+# NOT a real ESW — real ESW needs Mo 2012 grand canonical method (TODO v5).
+# Report this in paper-SI only, NOT main table, NOT as "ESW".
 # Skips gracefully if MP_API_KEY not set.
 STAGE 09f esw \
     python3 tools/doping/esw_check.py \
@@ -278,20 +280,31 @@ else
 fi
 
 # Stage 11 — NCM-doped-SE adhesion v6 (paper composite-cathode application).
-# Cost ≈2.5h on A100. baselines comp1+comp3 as Wad reference anchors.
-# Set TOP_K_NCM=0 to skip.
+# Cost ≈2.5h on A100. Per-baseline path; missing path → skip that baseline
+# (no fake "comp3 baseline = comp1 CIF" — reviewer-caught CR-B fix).
+# Set TOP_K_NCM=0 to skip the whole stage.
 TOP_K_NCM="${TOP_K_NCM:-5}"
-NCM_BASELINE_CIF="${NCM_BASELINE_CIF:-db/structures/lpscl_F43m_24G_canonical.cif}"
-if [ "$TOP_K_NCM" != "0" ] && [ -f "$NCM_BASELINE_CIF" ]; then
+NCM_BASELINE_COMP1="${NCM_BASELINE_COMP1:-db/structures/lpscl_F43m_24G_canonical.cif}"
+NCM_BASELINE_COMP3="${NCM_BASELINE_COMP3:-}"  # Li5.4 family CIF (none in db yet; user supplies)
+NCM_BASELINE_ARGS=""
+[ -f "$NCM_BASELINE_COMP1" ] && \
+    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp1=$NCM_BASELINE_COMP1"
+if [ -n "$NCM_BASELINE_COMP3" ] && [ -f "$NCM_BASELINE_COMP3" ]; then
+    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp3=$NCM_BASELINE_COMP3"
+else
+    LOG "Stage 11: comp3 baseline CIF not provided (NCM_BASELINE_COMP3 unset or missing)."
+    LOG "         To enable: NCM_BASELINE_COMP3=db/structures/<Li5.4_cif> bash $0 ..."
+fi
+if [ "$TOP_K_NCM" != "0" ] && [ -n "$NCM_BASELINE_ARGS" ]; then
     STAGE 11 cathode \
         python3 tools/doping/run_cathode_interface.py \
             --ranking "$OUT/06_rerank/post_anneal_ranking.json" \
             --anneal_dir "$OUT/04_anneal" \
-            --baselines "comp1=$NCM_BASELINE_CIF" "comp3=$NCM_BASELINE_CIF" \
+            --baselines $NCM_BASELINE_ARGS \
             --out "$OUT/11_cathode_interface" \
             --top "$TOP_K_NCM" --n_seeds 5
 else
-    LOG "Stage 11 (cathode): SKIP (TOP_K_NCM=$TOP_K_NCM, baseline=$NCM_BASELINE_CIF)"
+    LOG "Stage 11 (cathode): SKIP (TOP_K_NCM=$TOP_K_NCM, baselines=$NCM_BASELINE_ARGS)"
 fi
 
 STAGE 09 report \
