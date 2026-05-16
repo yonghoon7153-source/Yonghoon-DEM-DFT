@@ -123,6 +123,19 @@ def main():
         cation_sites = list(CATION_SITES)
         anion_sites = list(ANION_SITES)
     combos = list(product(cation_sites, anion_sites))
+    if not combos:
+        # M-2 fix: empty combos (e.g. extremely strict site_preference for
+        # an unusual compound) would crash the prediction code below.
+        # Surface a clear error and a usable workaround.
+        print(f"\n  ✗ No chemically allowed (cation_site, anion_site) "
+              f"combinations for {args.compound}.")
+        print(f"     Cation sites allowed: {cation_sites or 'NONE'}")
+        print(f"     Anion sites allowed:  {anion_sites or 'NONE'}")
+        print(f"     Workaround options:")
+        print(f"       (a) inspect site_preference --dopant <each element>")
+        print(f"       (b) loosen RADIUS_TOL in site_preference.py")
+        print(f"       (c) pass --no_filter (skips site_preference, lets UMA decide)")
+        sys.exit(2)
     if len(combos) < len(CATION_SITES) * len(ANION_SITES):
         print(f"  site_preference pruned {len(CATION_SITES)*len(ANION_SITES)} → "
               f"{len(combos)} chemically allowed combinations")

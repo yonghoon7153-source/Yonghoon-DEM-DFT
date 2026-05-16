@@ -182,15 +182,25 @@ def main():
     print(f"{'='*110}")
     print(f"{'Rank':<5}{'Name':<40}{'ΔE/at':>8}{'V_mig%':>8}{'B0':>8}{'E_y':>8}{'Pugh':>7}"
           f"{'comb':>8}")
+    # N-2 fix: distinguish "missing data" (e.g. EOS fit failed → B0=None)
+    # from "data is 0". Display 'n/a' for None instead of 0.0.
+    def _fmt(v, spec):
+        return '   n/a' if v is None else format(v, spec)
     for i, r in enumerate(rows[:20], 1):
-        de = r.get('de_per_atom_post_anneal') or r.get('de_per_atom_screen') or 0
-        vmig = r.get('migration_volume_pct') or 0
-        b0 = r.get('B0_GPa') or 0
-        ey = r.get('E_young_GPa') or 0
-        pg = r.get('pugh_ratio') or 0
+        de_raw = r.get('de_per_atom_post_anneal')
+        if de_raw is None:
+            de_raw = r.get('de_per_atom_screen')
+        vmig = r.get('migration_volume_pct')
+        b0 = r.get('B0_GPa')
+        ey = r.get('E_young_GPa')
+        pg = r.get('pugh_ratio')
         print(f"{i:<5}{r['name'][:38]:<40}"
-              f"{de:>+7.3f} {vmig:>6.2f}% {b0:>7.1f} {ey:>7.1f} "
-              f"{pg:>6.3f} {r['score_combined']:>7.3f}")
+              f"{_fmt(de_raw, '+7.3f'):>7} "
+              f"{_fmt(vmig, '6.2f'):>6}% "
+              f"{_fmt(b0, '7.1f'):>7} "
+              f"{_fmt(ey, '7.1f'):>7} "
+              f"{_fmt(pg, '6.3f'):>6} "
+              f"{r['score_combined']:>7.3f}")
     print(f"\n✓ {len(rows)} structures → {out}")
 
 

@@ -144,12 +144,17 @@ def check_baseline_relax(base_cif: Path, calc=None) -> tuple[bool, dict]:
 def check_positive_controls(base_cif: Path, device: str = 'cuda',
                             relax_steps: int = 300) -> tuple[bool, dict]:
     """Run substitute_compound for 3 literature-verified dopants and
-    confirm UMA gives ΔE/atom ∈ [-0.05, +0.05] eV/atom + |ΔV|<15%.
+    confirm that UMA produces a *sane* (not chemistry-meaningful) result:
+    ΔE/atom ∈ [-0.5, +0.1] eV/atom + |ΔV/V₀| < 20%.
 
-    A-5 fix (2026-05-16): replaces the dead POSITIVE_CONTROL_COMPOUNDS
-    constant with an actual integration test that the whole substitute →
-    relax → metric chain works on known-good chemistry before launching
-    a multi-day cascade.
+    NOTE on tolerance — these bounds are deliberately loose (10× wider
+    than typical doping ΔE of ±0.03 eV/atom). The intent is a sanity test
+    "did UMA + substitute + relax compose without diverging?" rather than
+    a chemistry-quality check. A real chemistry validation against
+    literature B0 / σ / ΔE_form belongs to the cascade post-processing.
+
+    A-5 fix (2026-05-16): replaced the dead POSITIVE_CONTROL_COMPOUNDS
+    constant with this integration test.
     """
     sys.path.insert(0, str(Path(__file__).parent))
     from substitute_compound import substitute_compound_at_sites, parse_compound

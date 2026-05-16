@@ -183,11 +183,18 @@ def main():
                or 0)
         # NEW-3 fix: derive normalization from the ACTUAL training
         # dataset min/max instead of hard-coded ranges. Falls back to
-        # empirical defaults only if dataset.csv is missing.
+        # narrow empirical ranges only if dataset.csv is missing.
+        # M-3 fix (2026-05-16): fallback ranges narrowed to argyrodite-
+        # doping literature values (Mg/Al/Cl-rich/Nd2O3 typical):
+        #   ΔE/atom ∈ [-0.05, +0.02]  (was [-1.5, +0.5] which over-spread)
+        #   E_young  ∈ [15, 40] GPa   (LPSCl D'Amore 2022, Pustorino 2025)
+        #   mob frac ∈ [0, 0.15]      (BVSE on canonical structures)
+        # Cascade always produces dataset.csv at stage 09b so this path
+        # is only used in unusual circumstances (predictor copied alone).
         norm_ranges = {
-            'screen_de_per_atom':           (-1.5, 0.5),
-            'elastic_E_young_GPa':          (10, 50),
-            'migration_volume_fraction':    (0, 0.3),
+            'screen_de_per_atom':           (-0.05, 0.02),
+            'elastic_E_young_GPa':          (15, 40),
+            'migration_volume_fraction':    (0, 0.15),
         }
         if training_dataset_csv.exists():
             try:

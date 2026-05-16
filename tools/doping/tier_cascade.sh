@@ -52,11 +52,9 @@ LOG() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/cascade.log"; }
 LOG "REPO_ROOT resolved to: $REPO_ROOT"
 LOG "SCRIPT_DIR:              $SCRIPT_DIR"
 
-# v4.2 fix (NEW-4): version-stamp the cascade output so re-running with
-# a different cascade script version doesn't silently mix incompatible
-# stage marker / directory layouts. v4 used 04_bvse + 05_anneal; v4.2
-# uses 04_anneal + 05_bvse, so a v4 OUT dir resumed with v4.2 would
-# silently produce wrong BVSE input. Refuse to mix versions.
+# v4.3 fix (CRITICAL-1): VERSION_FILE 없는 case에서 STAGE_*.DONE 마커가
+# 이미 있으면 v1 layout일 가능성 → silent corruption 방지. 사용자가
+# 명시적으로 `rm -rf $OUT` 하거나 `touch $VERSION_FILE` 하기 전까지 fail.
 CASCADE_VERSION=2
 VERSION_FILE="$OUT/CASCADE_VERSION"
 if [ -f "$VERSION_FILE" ]; then
@@ -67,6 +65,16 @@ if [ -f "$VERSION_FILE" ]; then
         echo "  Either: (a) rm -rf $OUT and rerun, or (b) checkout the matching cascade script version."
         exit 1
     fi
+elif ls "$OUT"/STAGE_*.DONE >/dev/null 2>&1; then
+    # STAGE markers exist but no CASCADE_VERSION → likely v1 dir.
+    # Refuse to silently stamp a wrong version.
+    echo "ERROR: $OUT has existing STAGE_*.DONE markers but no CASCADE_VERSION file."
+    echo "  This is most likely a v1 cascade output (v1 did not stamp version)."
+    echo "  Stage layouts are incompatible between v1 (04=bvse, 05=anneal) and"
+    echo "  v$CASCADE_VERSION (04=anneal, 05=bvse). Resume would corrupt results."
+    echo "  Either: (a) rm -rf $OUT and rerun, or (b) downgrade cascade script to v1,"
+    echo "  or (c) if you know it is safe, manually:  echo 1 > $VERSION_FILE  (NOT recommended)."
+    exit 1
 else
     echo "$CASCADE_VERSION" > "$VERSION_FILE"
 fi
@@ -74,8 +82,12 @@ DONE_MARK() { touch "$OUT/STAGE_${1}.DONE"; }
 DONE_CHECK() { [ -f "$OUT/STAGE_${1}.DONE" ]; }
 STAGE() {
     local id=$1; local name=$2; shift 2
-    if DONE_CHECK "$id"; then
-        LOG "Stage $id ($name): SKIP (already done)"
+    # M-4 fix: FORCE_RERUN=01 or FORCE_RERUN=all skips the DONE marker.
+    # Useful when dev-cycle iterating on a single stage (e.g. preflight)
+    # without `rm -rf` of the whole OUT dir.
+    if DONE_CHECK "$id" && [ "${FORCE_RERUN:-}" != "$id" ] \
+       && [ "${FORCE_RERUN:-}" != "all" ]; then
+        LOG "Stage $id ($name): SKIP (already done; FORCE_RERUN=$id to force)"
         return 0
     fi
     LOG "Stage $id ($name): START"
