@@ -38,8 +38,12 @@ PSEUDOS = {
     'Br': ('79.9040', 'br_pbe_v1.4.uspp.F.UPF'),
     'Cl': ('35.4530', 'cl_pbe_v1_4_uspp_F.UPF'),
     'Nd': ('144.242', 'Nd.paw.z_14.atompaw.wentzcovitch.v1.2.upf'),
+    # 2026-05-16 fix: Nd2O3-doped LPSCl needs O. SSSP_1.3.0 efficiency
+    # PAW available at /scratch/x3430a02/kgy/pseudo/.
+    'O':  ('15.9994', 'O.pbe-n-kjpaw_psl.0.1.UPF'),
 }
 ND_PP_SRC = '/scratch/x3430a02/kgy/pseudo/Nd.paw.z_14.atompaw.wentzcovitch.v1.2.upf'
+O_PP_SRC  = '/scratch/x3430a02/kgy/pseudo/O.pbe-n-kjpaw_psl.0.1.UPF'
 
 # Volume ratios for DFT EOS (matches comp5 pattern)
 VOLUME_RATIOS = [0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06]
@@ -171,17 +175,19 @@ def main():
     print(f"  Output base:       {out_base}")
     print(f"  Template:          comp5_lpscbr (May 13, ecutwfc=52, ecutrho=520)")
 
-    # Copy Nd PP to pseudo_dir if not already there
-    nd_dst = Path(PSEUDO_DIR) / Path(ND_PP_SRC).name
-    if not nd_dst.exists():
-        print(f"\n  Copying Nd PP: {ND_PP_SRC} → {nd_dst}")
-        try:
-            shutil.copy(ND_PP_SRC, nd_dst)
-        except PermissionError:
-            print(f"  ⚠️  Cannot write to {PSEUDO_DIR}. Run manually:")
-            print(f"     cp {ND_PP_SRC} {nd_dst}")
-    else:
-        print(f"\n  Nd PP already present: {nd_dst}")
+    # Copy Nd + O PPs to pseudo_dir if not already there
+    for src in (ND_PP_SRC, O_PP_SRC):
+        dst = Path(PSEUDO_DIR) / Path(src).name
+        label = Path(src).stem.split('.')[0]
+        if not dst.exists():
+            print(f"\n  Copying {label} PP: {src} → {dst}")
+            try:
+                shutil.copy(src, dst)
+            except PermissionError:
+                print(f"  ⚠️  Cannot write to {PSEUDO_DIR}. Run manually:")
+                print(f"     cp {src} {dst}")
+        else:
+            print(f"\n  {label} PP already present: {dst}")
 
     summary = {}
     for pair_name, info in eos_data.items():
