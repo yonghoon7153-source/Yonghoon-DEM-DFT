@@ -149,6 +149,37 @@ def main():
         row['poisson_nu'] = ela.get('poisson_nu', None)
         rows.append(row)
 
+    # v4.5 (D1): per-group n_seeds mean±std. Each tier_cascade winner is
+    # one (dopant, sites, seed) configuration; the Pustorino 2025 result
+    # that Li ordering causes ~16 GPa B0 spread means single-seed numbers
+    # are misleading for paper claims. We aggregate by name-prefix
+    # (everything before "_seed{N}") and emit group mean ± std for the
+    # main numeric axes. paper Table reporting uses these.
+    import re
+    NUMERIC_FIELDS = ['de_per_atom_post_anneal', 'de_per_atom_screen',
+                      'dV_over_V0', 'migration_volume_pct',
+                      'li_mobility_score', 'B0_GPa', 'V0_per_atom',
+                      'E_young_GPa', 'B_hill_GPa', 'G_hill_GPa',
+                      'pugh_ratio', 'poisson_nu']
+    groups: dict[str, list[dict]] = {}
+    for r in rows:
+        m = re.match(r'(.+?)_seed\d+$', r['name'])
+        gkey = m.group(1) if m else r['name']
+        groups.setdefault(gkey, []).append(r)
+    grouped_stats = []
+    for gkey, group_rows in groups.items():
+        if len(group_rows) < 2:
+            continue  # std needs ≥2 seeds
+        entry = {'group_key': gkey, 'n_seeds': len(group_rows)}
+        for field in NUMERIC_FIELDS:
+            vals = [r.get(field) for r in group_rows if r.get(field) is not None]
+            if len(vals) >= 2:
+                arr = np.array(vals, dtype=float)
+                entry[f'{field}_mean'] = float(arr.mean())
+                entry[f'{field}_std'] = float(arr.std(ddof=1))
+                entry[f'{field}_n'] = len(vals)
+        grouped_stats.append(entry)
+
     # Composite axis scores (min-max normalized)
     de_axis = [r.get('de_per_atom_post_anneal') or r.get('de_per_atom_screen') for r in rows]
     de_norm = normalize(de_axis, invert=True)  # lower ΔE = higher score
@@ -174,6 +205,7 @@ def main():
                     'mobility': args.w_mob},
         'n_structures': len(rows),
         'rows': rows,
+        'grouped_stats': grouped_stats,  # v4.5 D1: n_seeds mean±std per group
     }, indent=2, default=str))
 
     # Top-20 table

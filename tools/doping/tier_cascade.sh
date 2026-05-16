@@ -246,6 +246,54 @@ STAGE 09d dft_inputs \
         --ranking "$OUT/FINAL_RANKING.json" \
         --top 10 --out "$OUT/dft_inputs/"
 
+# Stage 9e — Synthesizability (convex-hull) hint via Materials Project.
+# Skips gracefully if MP_API_KEY not set. Cheap (~30s API calls).
+STAGE 09e ehull \
+    python3 tools/doping/ehull_check.py \
+        --ranking "$OUT/06_rerank/post_anneal_ranking.json" \
+        --anneal_dir "$OUT/04_anneal" \
+        --out "$OUT/09e_ehull/ehull_summary.json" --top 10
+
+# Stage 9f — Electrochemical stability window (ESW) thermodynamic bound.
+# Skips gracefully if MP_API_KEY not set.
+STAGE 09f esw \
+    python3 tools/doping/esw_check.py \
+        --ranking "$OUT/06_rerank/post_anneal_ranking.json" \
+        --anneal_dir "$OUT/04_anneal" \
+        --out "$OUT/09f_esw/esw_summary.json" --top 10
+
+# Stage 10 — σ_Li MD (paper-essential ionic conductivity, top-5 × 3T × 50ps).
+# Cost ≈12h on A100. Set TOP_K_SIGMA=0 to skip.
+TOP_K_SIGMA="${TOP_K_SIGMA:-5}"
+if [ "$TOP_K_SIGMA" != "0" ]; then
+    STAGE 10 md_sigma \
+        python3 tools/doping/run_md_sigma.py \
+            --ranking "$OUT/06_rerank/post_anneal_ranking.json" \
+            --anneal_dir "$OUT/04_anneal" \
+            --out "$OUT/10_md_sigma" \
+            --top "$TOP_K_SIGMA" \
+            --temps 600 800 1000 --prod_ps 50
+else
+    LOG "Stage 10 (md_sigma): SKIP (TOP_K_SIGMA=0)"
+fi
+
+# Stage 11 — NCM-doped-SE adhesion v6 (paper composite-cathode application).
+# Cost ≈2.5h on A100. baselines comp1+comp3 as Wad reference anchors.
+# Set TOP_K_NCM=0 to skip.
+TOP_K_NCM="${TOP_K_NCM:-5}"
+NCM_BASELINE_CIF="${NCM_BASELINE_CIF:-db/structures/lpscl_F43m_24G_canonical.cif}"
+if [ "$TOP_K_NCM" != "0" ] && [ -f "$NCM_BASELINE_CIF" ]; then
+    STAGE 11 cathode \
+        python3 tools/doping/run_cathode_interface.py \
+            --ranking "$OUT/06_rerank/post_anneal_ranking.json" \
+            --anneal_dir "$OUT/04_anneal" \
+            --baselines "comp1=$NCM_BASELINE_CIF" "comp3=$NCM_BASELINE_CIF" \
+            --out "$OUT/11_cathode_interface" \
+            --top "$TOP_K_NCM" --n_seeds 5
+else
+    LOG "Stage 11 (cathode): SKIP (TOP_K_NCM=$TOP_K_NCM, baseline=$NCM_BASELINE_CIF)"
+fi
+
 STAGE 09 report \
     python3 -c "
 import json
