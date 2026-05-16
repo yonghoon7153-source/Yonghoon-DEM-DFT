@@ -208,6 +208,18 @@ def get_baseline(args, calc) -> dict:
                 f"Silent contamination would result. Either:\n"
                 f"  (a) rm {args.baseline} and rerun, or\n"
                 f"  (b) use a fresh OUT dir for the new base CIF.")
+        # v4.4.1 fix: pre-v4.4 baseline.json had no source_base_md5 stamp.
+        # When the user supplies --base alongside such a legacy baseline,
+        # we cannot verify the CIF matches what the cache was built from.
+        # Warn loudly instead of silently trusting (the silent-contamination
+        # fail mode v4.4 was supposed to close).
+        elif not cached_md5 and base_md5:
+            print(f"  ⚠ WARN: cached baseline.json has no source_base_md5 "
+                  f"(pre-v4.4 baseline).")
+            print(f"     Cannot verify it matches --base {args.base}. "
+                  f"Proceeding anyway.")
+            print(f"     Recommend: rm {args.baseline} and regenerate once "
+                  f"for safety.")
         return cached
     if not args.base:
         raise ValueError("Provide --baseline (cached) or --base (CIF) for baseline")
