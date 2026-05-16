@@ -25,7 +25,7 @@ BASE="${1:?BASE cif required}"
 OUT_BASE="${2:?OUT base directory required}"
 N_SEEDS="${3:-3}"
 SUPERCELL="${4:-1,1,1}"
-EXOTIC="${5:-0}"
+EXOTIC="${5:-1}"  # default 1 = explore chemically-unusual placements too
 SC_FLAG=$(echo "$SUPERCELL" | tr ',' ' ')
 
 EXOTIC_FLAG=""
@@ -65,18 +65,37 @@ PENTA_OXIDES=(V2O5 Nb2O5 Ta2O5 Sb2O5)
 # +6 (hexavalent — Cr/Mo/W, P-site donor +1)
 HEXA_OXIDES=(CrO3 MoO3 WO3)
 
-# Fluorides (alternative halide precursors — F → Cl_4d, cation → Li/P)
-FLUORIDES=(LiF NaF MgF2 CaF2 AlF3 YF3)
+# Fluorides (F → Cl_4d, cation → Li/P)
+FLUORIDES=(LiF NaF MgF2 CaF2 AlF3 YF3 LaF3 NdF3 ZrF4 TiF4 ScF3)
 
-# Bromides / iodides (halogen mixing)
-HALIDES_MIXED=(LiBr LiI NaBr KBr)
+# Chlorides (precursor that adds both cation and Cl — ZrCl4/TiCl4/AlCl3
+# common ball-mill reagents; CeCl3/LaCl3 etc. for RE doping)
+CHLORIDES=(LiCl NaCl KCl MgCl2 CaCl2 SrCl2 BaCl2 AlCl3 GaCl3 FeCl3 CrCl3
+           YCl3 LaCl3 NdCl3 SmCl3 ScCl3 ZrCl4 HfCl4 TiCl4 NbCl5 TaCl5)
 
-# Nitrides (N → S_4a anion disorder, less common but reported for argyrodites)
-NITRIDES=(Li3N AlN BN)
+# Bromides / iodides (halogen-mixed argyrodite precursors)
+BROMIDES=(LiBr NaBr KBr MgBr2 CaBr2 AlBr3 ZrBr4)
+IODIDES=(LiI NaI MgI2 AlI3)
+
+# Nitrides (N → S_4a anion disorder, e.g., Li6PS4N1Cl variants reported)
+NITRIDES=(Li3N Na3N Mg3N2 Ca3N2 AlN BN Si3N4 GaN)
+
+# Sulfide precursors (cation → host, S already host so no anion change —
+# effectively single-element cation substitution; included because real
+# LPSCl synthesis routinely uses these as starting reagents)
+SULFIDES=(Li2S Na2S MgS CaS Al2S3 Ga2S3 B2S3 SiS2 GeS2 SnS2 P2S5 As2S3 Sb2S3
+          Y2S3 La2S3 Nd2S3 ZrS2 TiS2)
+
+# Polyanion-substituting compounds (PO4 / SO4 / BO3 unit replaces PS4)
+# Treated as 'compound' substitution; user iterates auto sites to find
+# energetically favored unit.
+POLYANIONS=(Li3PO4 Li2SO4 Li3BO3 Li2MoO4 Li2WO4 LiNO3)
 
 ALL_COMPOUNDS=("${MONO_OXIDES[@]}" "${DI_OXIDES[@]}" "${TRI_OXIDES[@]}"
                "${TETRA_OXIDES[@]}" "${PENTA_OXIDES[@]}" "${HEXA_OXIDES[@]}"
-               "${FLUORIDES[@]}" "${HALIDES_MIXED[@]}" "${NITRIDES[@]}")
+               "${FLUORIDES[@]}" "${CHLORIDES[@]}" "${BROMIDES[@]}"
+               "${IODIDES[@]}" "${NITRIDES[@]}" "${SULFIDES[@]}"
+               "${POLYANIONS[@]}")
 
 echo ""
 echo "Total compound classes: ${#ALL_COMPOUNDS[@]}"
