@@ -280,29 +280,32 @@ else
 fi
 
 # Stage 11 — NCM-doped-SE adhesion v6 (paper composite-cathode application).
-# Cost ≈2.5h on A100. Per-baseline path; missing path → skip that baseline
-# (no fake "comp3 baseline = comp1 CIF" — reviewer-caught CR-B fix).
+# Cost ≈5-15h on A100 depending on baseline count. Per-baseline path;
+# missing path → skip that baseline (no fake aliasing).
 # Set TOP_K_NCM=0 to skip the whole stage.
 #
-# Baseline conventions (v4.5.2 — comp4 is the DFT-EOS-anchored Li5.4 anchor):
-#   NCM_BASELINE_COMP1   : Li6PS5Cl pristine (cubic, db CIF)        REQUIRED anchor
-#   NCM_BASELINE_LI5P4   : Li5.4 family DFT-grade (comp4 V0)        primary Δ vs Li5.4
-#   NCM_BASELINE_LI5P4_2 : Li5.4 family MLIP-grade (comp3 V0)       SI 비교
-#   NCM_BASELINE_LI5P4_3 : Li5.4 family MLIP-grade (comp5 V0)       SI 비교
+# Baselines aligned to paper Table 1 (v4.5.3 — full 6-comp experimental matrix):
+#   NCM_BASELINE_COMP1   : Li6PS5Cl pristine (cubic, canonical CIF)
+#   NCM_BASELINE_COMP2   : Li6PS5Cl0.5Br0.5 mixed halide
+#   NCM_BASELINE_COMP3   : Li5.4PS4.4Cl1.0Br0.6 (Cl-rich Li5.4, MLIP-V0)
+#   NCM_BASELINE_COMP4   : Li5.4PS4.4Cl0.8Br0.8 (balanced Li5.4, DFT-EOS-validated)
+#   NCM_BASELINE_COMP5   : Li5.4PS4.4Cl0.6Br1.0 (Br-rich Li5.4, MLIP-V0)
+#   NCM_BASELINE_MODELC  : Li5.4PS4.4Cl1.6 (Cl-only Li5.4, DFT-EOS V0)
+# To disable a baseline: NCM_BASELINE_COMP5="" bash tier_cascade.sh ...
 TOP_K_NCM="${TOP_K_NCM:-5}"
 NCM_BASELINE_COMP1="${NCM_BASELINE_COMP1:-db/structures/lpscl_F43m_24G_canonical.cif}"
-NCM_BASELINE_LI5P4="${NCM_BASELINE_LI5P4:-db/structures/comp4_v2_V0_UMA.xyz}"
-NCM_BASELINE_LI5P4_2="${NCM_BASELINE_LI5P4_2:-}"   # default unset; SI only
-NCM_BASELINE_LI5P4_3="${NCM_BASELINE_LI5P4_3:-}"   # default unset; SI only
+NCM_BASELINE_COMP2="${NCM_BASELINE_COMP2:-db/structures/comp2_V0.cif}"
+NCM_BASELINE_COMP3="${NCM_BASELINE_COMP3:-db/structures/comp3_v2_V0_UMA.xyz}"
+NCM_BASELINE_COMP4="${NCM_BASELINE_COMP4:-db/structures/comp4_v2_V0_UMA.xyz}"
+NCM_BASELINE_COMP5="${NCM_BASELINE_COMP5:-db/structures/comp5_v2_V0_UMA.xyz}"
+NCM_BASELINE_MODELC="${NCM_BASELINE_MODELC:-db/structures/modelC_DFT_EOS_V0.cif}"
 NCM_BASELINE_ARGS=""
-[ -f "$NCM_BASELINE_COMP1" ] && \
-    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp1=$NCM_BASELINE_COMP1"
-[ -f "$NCM_BASELINE_LI5P4" ] && \
-    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp4=$NCM_BASELINE_LI5P4"
-[ -n "$NCM_BASELINE_LI5P4_2" ] && [ -f "$NCM_BASELINE_LI5P4_2" ] && \
-    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp3=$NCM_BASELINE_LI5P4_2"
-[ -n "$NCM_BASELINE_LI5P4_3" ] && [ -f "$NCM_BASELINE_LI5P4_3" ] && \
-    NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS comp5=$NCM_BASELINE_LI5P4_3"
+for spec in "comp1=$NCM_BASELINE_COMP1" "comp2=$NCM_BASELINE_COMP2" \
+            "comp3=$NCM_BASELINE_COMP3" "comp4=$NCM_BASELINE_COMP4" \
+            "comp5=$NCM_BASELINE_COMP5" "modelC=$NCM_BASELINE_MODELC"; do
+    path="${spec#*=}"
+    [ -n "$path" ] && [ -f "$path" ] && NCM_BASELINE_ARGS="$NCM_BASELINE_ARGS $spec"
+done
 if [ "$TOP_K_NCM" != "0" ] && [ -n "$NCM_BASELINE_ARGS" ]; then
     LOG "Stage 11 baselines:$NCM_BASELINE_ARGS"
     STAGE 11 cathode \

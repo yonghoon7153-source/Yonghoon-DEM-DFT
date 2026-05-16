@@ -677,28 +677,35 @@ repo에 mirror된 이유: gabia cleanup 대비 reference 보존 + factor 2 bug �
 - 2026-05-01: A2 `compute_cij.py` (gabia comp2_v2) factor 2 누락 → comp2 v2 wasted
 - 2026-05-16: **modelC v2 `fit_cij.py` 동일 패턴 재발견** — 같은 author가 새 디렉토리에 같은 bug 복제. 향후 elastic 신규 코드 작성 시 **make_strain의 shear ε vs γ 정의 + fit의 / (2·STRAIN) divisor 항상 한 쌍으로 검토**.
 
-### Z8. 2026-05-16 v30u_ensemble Li5.4 family V0 baselines
+### Z8. 2026-05-16 Stage 11 baselines — full 6-comp paper Table 1 matrix
 
-Li5.4 family baseline structures for Stage 11 (NCM-doped-SE adhesion).
-Sourced from gabia `/data/work/v30u_ensemble/` — these are the same V0
-structures that produced the R=+0.989 paper binding curve figure (see
-Z7-A), so Stage 11 uses an *apples-to-apples* baseline with the v0
-paper analysis pipeline.
+Stage 11 NCM-doped-SE adhesion baselines now mirror the complete
+experimental matrix from CLAUDE.md compositions table. Cascade
+defaults all 6 ON if file exists (skip-missing). User can disable
+specific baselines via env vars (e.g. `NCM_BASELINE_COMP5=""`).
 
-| File | Source | Grade | Stage 11 role |
-|------|--------|-------|---------------|
-| `db/structures/comp4_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | **DFT-EOS validated** (B0=20.8 GPa cross-checks DFT) | **primary Li5.4 anchor** (`NCM_BASELINE_LI5P4` default) |
-| `db/structures/comp3_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | MLIP-finished (user: *"약간 야매"*) | SI Li5.4 comparison (`NCM_BASELINE_LI5P4_2`, default unset) |
-| `db/structures/comp5_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | MLIP-finished (user: *"약간 야매"*) | SI Li5.4 comparison (`NCM_BASELINE_LI5P4_3`, default unset) |
+| File | Source | Grade | Composition |
+|------|--------|-------|-------------|
+| `db/structures/lpscl_F43m_24G_canonical.cif` | repo (pre-existing) | canonical | comp1 = Li6PS5Cl (pure Cl, cubic) |
+| `db/structures/comp2_V0.cif` | gabia `/data/work/binding_V0/comp2_V0.cif` (Apr 23 2026) | binding workflow V0 | comp2 = Li6PS5Cl0.5Br0.5 (Li6 mixed halide) |
+| `db/structures/comp3_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | MLIP-finished | comp3 = Li5.4PS4.4Cl1.0Br0.6 (Cl-rich Li5.4) |
+| `db/structures/comp4_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | **DFT-EOS validated** (B0=20.8 GPa DFT) | comp4 = Li5.4PS4.4Cl0.8Br0.8 (balanced Li5.4) |
+| `db/structures/comp5_v2_V0_UMA.xyz` | gabia v30u_ensemble (May 14 2026) | MLIP-finished | comp5 = Li5.4PS4.4Cl0.6Br1.0 (Br-rich Li5.4) |
+| `db/structures/modelC_DFT_EOS_V0.cif` | gabia `/data/work/bml/manuscript_support/comp3_lpsc10b06/Li54PS44Cl16_ModelC_EOS_relaxed.cif` (Mar 19 2026) | **DFT EOS relaxed** (highest E paper anchor) | modelC = Li5.4PS4.4Cl1.6 (Cl-only Li5.4) |
 
-**Default Stage 11 behavior**: cascade pulls comp1 (Li6 anchor) +
-comp4 (Li5.4 anchor) automatically. comp3/comp5 are paper-SI only;
-opt in via env vars when SI table needs the full 3-comp Li5.4 spread.
+**Apples-to-apples reasoning**: comp3/4/5 V0 are the same UMA-relaxed
+structures that produced the R=+0.989 paper binding curve figure
+(Z7-A). Using them as Stage 11 baselines means the cathode adhesion
+comparison is built on the same V0 ensemble as the v0 paper
+mechanical analysis.
 
-**DFT-grade pure V0 source (for reviewer-grade verification)**:
-- gabia `/data/work/bml/manuscript_support/comp4_lpsc08b08/eos/comp4_lpsc08b08_v{096..102}.out` (DFT EOS scan)
-- gabia `/data/work/bml/manuscript_support/comp4_restart/comp4_r2_v{096..106}.out` (restart runs)
-- BM3 fit of these gives DFT-grade V0; current Z8 mirror uses UMA V0
-  which is what the v30u binding curve work used. Switch to DFT V0 if
-  reviewer demands pure-DFT baseline (separate task).
+**DFT-grade verification path (reviewer-grade)**:
+- comp4 DFT EOS scan: gabia `/data/work/bml/manuscript_support/comp4_lpsc08b08/eos/comp4_lpsc08b08_v{096..102}.out` + `comp4_restart/comp4_r2_v{096..106}.out`
+- modelC DFT EOS V0 already in `modelC_DFT_EOS_V0.cif`
+- comp1/2/3/5 DFT pending (currently MLIP-grade V0; user noted *"약간 야매"*)
+- Switch to pure-DFT baselines if reviewer demands — separate task.
+
+**Default Stage 11 behavior (v4.5.3)**: cascade pulls all 6 baselines
+that exist. Estimated cost ~15h on A100 for 6 baselines × 5 seeds.
+Disable individual baselines for cost-sensitive runs.
 
