@@ -64,8 +64,7 @@ done
 # --- Results JSON sizes ---
 echo ""
 echo "▸ Result JSON sizes (so far)"
-for j in runs/*/uma_results.json runs/*/anneal_results.json \
-         runs/*/postproc_summary.json runs/*/winners.json 2>/dev/null; do
+for j in runs/*/uma_results.json runs/*/anneal_results.json runs/*/postproc_summary.json runs/*/winners.json; do
     [ -f "$j" ] || continue
     size=$(du -h "$j" 2>/dev/null | awk '{print $1}')
     nrec=$(python3 -c "
