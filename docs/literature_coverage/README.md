@@ -481,6 +481,138 @@ Anodes:
 - Tier 2: Minnmann 2024 JES (modern NCM/LPSCl tomography)
 - Tier 3: Kato 2018 JPCL (thick electrode scaling)
 
+### 13. McGeary 1961 J Am Ceram Soc (Tier 1, founding reference for binary/ternary packing wave curves)
+
+**Kind:** experimental mechanical packing of spherical steel/tungsten/aluminium
+shot under vibration; the foundational empirical study cited by every binary-RCP
+paper since.  PDF stored at `docs/literature_coverage/pdfs/McGeary_1961_JAmCeramSoc_Mechanical_Packing_of_Spherical_Particles.pdf`.
+
+DOI: 10.1111/j.1151-2916.1961.tb13716.x   (J. Am. Ceram. Soc. 44 [10] 513–522)
+
+**Critical findings (directly relevant to our paper):**
+
+| Packing | Max density | Composition | Size ratio |
+|---|---|---|---|
+| 1-component | 62.5% theoretical | — | — |
+| Binary (Fig 3)        | **86.0%** | 73% coarse / 27% fine    | 7:1 (or larger) |
+| Ternary (Figs 6, 7)   | **90.0%** | 67 : 23 : 10             | 77 : 7 : 1      |
+| Quaternary (Table IV) | **95.1%** | 61 : 23 : 10 : 6         | 316 : 38 : 7 : 1 |
+
+**Size-ratio threshold (Fig 5) — the most important figure for us:**
+- Plot is *maximum packing density* vs *d_coarse / d_fine*
+- **Knee at d_c/d_f ≈ 7** — below this, packing efficiency drops rapidly
+- Triangular pore (passage through three close-packed coarse spheres):
+  effective diameter p_t = (2/√3 − 1)·d ≈ 0.154·d_c, so the fine sphere
+  can pass freely only when d_c/d_f ≳ 7.
+
+**Our system fit (NCM811 P + S + LPSCl):**
+- D_AM_P / D_SE   ≈ 6 µm / 0.5 µm = **12** → above McGeary knee, Furnas valid
+- D_AM_P / D_AM_S ≈ 6 / 2          = **3**  → BELOW the knee, no Furnas valley
+                                              between AM_P and AM_S
+- D_AM_S / D_SE   ≈ 2 / 0.5        = **4**  → marginal, near the knee
+- → Quantitatively explains why our paper's λ ≥ 4 filter is *necessary*
+  for the Bouvard RCP curve to apply (panel ② of the porosity 4-panel).
+
+**Wave-curve reference for the paper (§5):**
+- Fig 3 is the canonical non-monotonic ε(composition) curve with a clear
+  V/wave at ~73% coarse.  Pure mechanical packing, **no plastic flow**, so
+  the wave is purely *geometric* — directly supports the rewritten §5
+  narrative: the hump in our ε(AM_wt) is Bouvard-geometry driven, not
+  percolation-gated.
+- Caveat: McGeary explicitly states "No plastic deformation of the particles
+  occurs."  So McGeary's curves are the **purely-geometric lower bound** of
+  what's achievable; our strict-physics adds the Heckel plastic correction
+  on top of this baseline.
+
+**Direct quotes for citation:**
+> "Forming of high-density multicomponent packings was shown to require at
+> least a sevenfold difference between sphere sizes of the individual
+> components."
+> → anchors our λ ≥ 4 filter as *conservative* relative to McGeary's 7.
+>
+> "No plastic deformation of the particles occurs, and it is possible to
+> pour the material out of the container after packing."
+> → defines McGeary as the **pure-geometry baseline** against which our
+> plastic contribution is measured.
+
+**Cross-link to refs.bib:** `@article{McGeary1961, ...}` — cite alongside
+`Furnas1929`, `Westman1930`, `Bouvard2004` for the geometric Bouvard RCP
+baseline in §5.1.
+
+### 14. Bouvard 2000 Powder Technology (Tier 1, plastic-flow monotonic reference — NOT a wave reference)
+
+**Kind:** review of hard / soft powder mixture densification under pressure;
+survey of multiple experimental systems (superalloy + alumina, Ag + WC,
+Pb + inclusions, Al + carbide, WC + Co).  PDF stored at
+`docs/literature_coverage/pdfs/Bouvard_2000_PowderTech_...pdf`.
+
+DOI: 10.1016/S0032-5910(99)00293-4   (Powder Technology 111 [2000] 231–239)
+
+**Critical reading (calibrates expectations for our §5 narrative):**
+
+Bouvard 2000's central claim — quoted from the abstract:
+
+> *"When soft particle deformation is the main densification mechanism,
+> **hard particles hinder the densification**, with more or less significance
+> depending on whether they are mostly isolated, are grouped in aggregates
+> or form a percolating network."*
+
+→ **Bouvard's framework is monotonic.**  Hard fraction ↑ ⇒ density ↓
+(no wave, no V, no hump).
+
+**Evidence in the paper:**
+
+| Figure | What it shows | Shape |
+|---|---|---|
+| Fig 1 | Astroloy + 18 % / 35 % alumina, ρ(t) over 0–200 min | Monotonic asymptote; more alumina ⇒ lower density |
+| Fig 4 | Ag + WC, ρ vs vol% WC for r = 0.08, 1, 2.5, 4, 10  | **All curves monotonically decreasing** in 0–40 % WC |
+| Fig 5 | Pb + 18 % spherical / angular inclusions, ρ(t)       | Monotonic, angular < spherical |
+| Fig 7 | Al + 60 % carbide, ρ(P) at 25 °C / 450 °C            | Monotonic increase with pressure |
+| Fig 8 | WC + 0–24 % Co, ρ vs Co fraction                    | Monotonic decrease with Co |
+
+**None of these show a wave / V-curve / hump in $\varepsilon$(composition).**
+
+**Why not (Bouvard's own decomposition, §5):**
+1. Low hard fraction → isolated inclusions → moderate hindrance
+2. Mid hard fraction → aggregates → stronger hindrance
+3. High hard fraction → percolating skeleton → soft particle deformation
+   blocked, density limited
+
+All three regimes act in the *same direction* (densification harder), so the
+curve is monotonic.
+
+**Why our paper's $\varepsilon$(AM_wt) DOES show a hump despite Bouvard
+2000's monotonicity:**
+
+| | Bouvard 2000 experiments | Our DEM cathodes |
+|---|---|---|
+| Soft phase | One size only (Ag / Pb / Al / Astroloy) | Three sizes (AM_P, AM_S, SE) |
+| Hard fraction range studied | 0–40 % | 0–100 % (full sweep) |
+| Geometric Furnas valley active? | No — only one soft size, no binary RCP | **Yes — AM_P/SE λ ≈ 12, AM_S/SE λ ≈ 4, full ternary packing** |
+| Plastic flow vs geometry | Plastic dominates | Both compete |
+
+→ Our wave comes from the **geometric ternary RCP** (McGeary-style, §5
+Bouvard curve), not from Bouvard 2000's plastic-flow mechanism.
+
+**Honest framing for the paper:**
+- Bouvard 2000 is the correct cite for the *plastic-flow monotonic baseline*
+  (Heckel-style argument) and for the 3-regime hard-fraction decomposition
+  (isolated / aggregates / percolating), which we already invoke for the
+  $f_{\mathrm{perc}} = 0.65$ percolation argument.
+- Bouvard 2000 is **NOT** an experimental wave-shape precedent.  The only
+  cleanly documented wave is McGeary 1961 (Fig 3), and it is purely
+  geometric.
+
+**Hard-rich extrapolation (AM\_wt > 95 %):**
+- Bouvard 2000 explicitly notes that beyond the percolation transition the
+  hard skeleton supports the load and densification approaches a hard limit
+  set by the hard-phase RCP.  This is the regime our paper §6 disclaims as
+  not validated by our data (n = 0 above AM\_wt = 95 %).
+
+**Cross-link to refs.bib:** entry `@article{Bouvard2000, ...}` already in
+the bibliography; the existing `note` field correctly describes it as the
+three-regime hard-soft framework, not as a wave-shape reference.
+
 ## Open issue: 2D-to-3D conversion
 For randomly sectioned spheres touching SE:
 - Perimeter coverage (2D SEM) ≤ surface coverage (3D)
