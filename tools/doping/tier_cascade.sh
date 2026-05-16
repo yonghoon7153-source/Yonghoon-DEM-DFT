@@ -60,6 +60,9 @@ STAGE() {
     if [ $status -eq 0 ]; then
         DONE_MARK "$id"
         LOG "Stage $id ($name): OK (${elapsed}s)"
+        # Auto-generate human-readable markdown report
+        python3 tools/doping/stage_report.py \
+            --cascade_dir "$OUT" --stage "$id" 2>/dev/null || true
     else
         LOG "Stage $id ($name): FAILED — abort cascade"
         exit $status
