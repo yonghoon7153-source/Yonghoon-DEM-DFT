@@ -10,6 +10,25 @@
 
 ---
 
+## ★ 핵심 통찰 (2026-05-16) — 데이터 hierarchy 그대로가 model tier
+
+cascade 자체가 자연스러운 ML tier 구조를 만든다:
+
+| Tier | 데이터 출처 | 데이터 양 | Target |
+|------|------------|-----------|--------|
+| 1 | screen + anneal | ~ 모든 구조 (n ~ 1000+) | ΔE/atom (stability) |
+| 2 | EOS + elastic + BVSE | per-winner (n ~ 100) | B₀, E_young, σ_proxy |
+| 3 | DFT (외부 실행) | top-K (n ~ 10) | 정확한 band/Bader/COHP |
+
+**진정한 의의**: tier-1은 *MLIP 데이터만으로 학습 가능*. DFT가 필요 없다. 결과
+는 새 후보를 *Tier-1 통과 → Tier-2 예측 → Tier-3 (DFT) 추천* 하는 가벼운
+조회 시스템. `chain_predict.py`가 이 게이트를 자동화함.
+
+논문 시점: tier-1 만으로도 SE 도핑 screening의 SOTA가 될 가능성 큼 — 기존
+heavy DFT 워크플로우 대비 1000× 빠른 ML 예측.
+
+---
+
 ## Phase 1 — Foundation (✅ 완성, 2026-05-16)
 
 `tools/doping/` 16-step factory line + 자동 cascade (`tier_cascade.sh`)
