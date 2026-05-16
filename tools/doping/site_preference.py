@@ -54,22 +54,48 @@ DOPANT_DB = {
     # Rare earths — added for Nd2O3 / La2O3 oxide doping (paper #2 + Sundar
     # 2025 coating screening). All trivalent; Shannon CN=6 values.
     'La':  {'charge': +3, 'radius': 1.032},
-    'Ce':  {'charge': +3, 'radius': 1.01},
+    'Ce':  {'charge': +4, 'radius': 0.87},   # Ce⁴⁺ (CeO2 ceria default — most
+                                              # common Ce in solid-state synth.)
+    'Ce3': {'charge': +3, 'radius': 1.01},   # Ce³⁺ alternative valence
+    'Eu':  {'charge': +3, 'radius': 0.947},  # Eu³⁺ (most common in synth)
+    'Eu2': {'charge': +2, 'radius': 1.17},   # Eu²⁺ alternative
+    # Variable valence cations — explicit entries for non-default oxidation states
+    'Cr6': {'charge': +6, 'radius': 0.26},   # Cr⁶⁺ (CrO3, K2CrO4)
+    'Mn4': {'charge': +4, 'radius': 0.53},   # Mn⁴⁺ (MnO2)
+    'Mn7': {'charge': +7, 'radius': 0.46},   # Mn⁷⁺ (KMnO4)
+    'Fe2': {'charge': +2, 'radius': 0.78},   # Fe²⁺ alternative (FeO, FeS)
+    'Co3': {'charge': +3, 'radius': 0.61},   # Co³⁺ (LiCoO2, Co2O3)
+    'Cu2': {'charge': +2, 'radius': 0.73},   # Cu²⁺ (CuO, CuS)
     'Nd':  {'charge': +3, 'radius': 0.983},
     'Sm':  {'charge': +3, 'radius': 0.958},
     'Gd':  {'charge': +3, 'radius': 0.938},
     'Yb':  {'charge': +3, 'radius': 0.868},
+    # 3d transition metals (Li-site or P-site depending on charge)
+    'Cr':  {'charge': +3, 'radius': 0.615},  # Cr³⁺ CN=6 — Li site
+    'Mn':  {'charge': +2, 'radius': 0.83},   # Mn²⁺ CN=6 high-spin — Li site
+    'Fe':  {'charge': +3, 'radius': 0.645},  # Fe³⁺ CN=6 — Li site
+    'Co':  {'charge': +2, 'radius': 0.745},  # Co²⁺ CN=6 — Li site (NMC parent)
+    'Ni':  {'charge': +2, 'radius': 0.69},   # Ni²⁺ CN=6 — Li site (NMC parent)
     # Cations for P site
     'P':   {'charge': +5, 'radius': 0.17},
     'Sb':  {'charge': +5, 'radius': 0.60},
     'As':  {'charge': +5, 'radius': 0.46},
     'V':   {'charge': +5, 'radius': 0.54},
     'Nb':  {'charge': +5, 'radius': 0.64},
+    'Ta':  {'charge': +5, 'radius': 0.64},   # 5d analogue of Nb
     'Si':  {'charge': +4, 'radius': 0.40},
     'Ge':  {'charge': +4, 'radius': 0.53},
     'Sn':  {'charge': +4, 'radius': 0.69},
     'Ti':  {'charge': +4, 'radius': 0.605},
     'Zr':  {'charge': +4, 'radius': 0.72},
+    'Hf':  {'charge': +4, 'radius': 0.71},   # 5d analogue of Zr
+    # Small / high-valence cations — P-site substitution candidates
+    # (Wang 2025 LiBH4: BH4⁻ goes to Cl⁻ site as complex anion, but atomic B
+    # would substitute P. W/Mo at P5+ are reported as 6+ donors in
+    # thiophosphate glasses, e.g. WS3 / MoS3 additions.)
+    'B':   {'charge': +3, 'radius': 0.11},   # B³⁺ CN=4 — P site (acceptor)
+    'W':   {'charge': +6, 'radius': 0.42},   # W⁶⁺ CN=4 — P site (donor +1)
+    'Mo':  {'charge': +6, 'radius': 0.41},   # Mo⁶⁺ CN=4 — P site (donor +1)
     # Anions for S or Cl site
     'S':   {'charge': -2, 'radius': 1.84},
     'O':   {'charge': -2, 'radius': 1.40},

@@ -112,13 +112,13 @@ def compute_substitution_count(n_units: int, multiplicity: int) -> int:
 
 def li_vacancies_needed(atoms: Atoms, cations: dict[str, int],
                        cation_site: str, n_units: int, db: dict) -> int:
-    """How many Li atoms must be removed to keep the cell neutral.
+    """Compute charge surplus from cation placement; positive value = need
+    that many Li vacancies; negative value = need Li interstitials (NOT
+    modelled — acceptor cations like B³⁺ at P⁵⁺, Si⁴⁺ at P⁵⁺ leave the cell
+    charge-unbalanced and will rank low under UMA's energy filter).
 
     Each cation at the cation_site introduces ``(q_cation - q_host)`` extra
-    positive charge per atom. Total positive surplus → that many Li vacancies.
-    Anion replacement on an anion site of equal charge (e.g., O²⁻ → S²⁻) adds
-    no charge; an aliovalent anion (e.g., Cl⁻ → S²⁻) adds its own correction
-    handled separately under halide-rich mode.
+    charge per atom. Sum across all compound cations gives net surplus.
     """
     host_q = HOST_SITES[cation_site]['charge']
     n_vac = 0
@@ -127,6 +127,10 @@ def li_vacancies_needed(atoms: Atoms, cations: dict[str, int],
         n_atoms = compute_substitution_count(n_units, mult)
         n_vac += dq_per_atom * n_atoms
     return max(n_vac, 0)  # only remove Li if net positive surplus
+    # NOTE: when n_vac < 0 (acceptor case, e.g., B/Si/Al at P site), the
+    # cell ends up charge-imbalanced. UMA energy will reflect this through a
+    # higher binding penalty. Future work: model Li interstitials or
+    # reverse-halide-rich (Cl→S swap with extra Li) as compensation paths.
 
 
 def substitute_compound_at_sites(atoms: Atoms, composition: dict[str, int],
@@ -264,6 +268,12 @@ def main():
     parser.add_argument('--auto_cation_sites', action='store_true',
                        help='For Type A: also iterate cation sites '
                             '{Li_24g, Li_48h, P_4b}.')
+    parser.add_argument('--allow_exotic', action='store_true',
+                       help='Bypass the site_preference radius filter and let '
+                            'UMA energy rank chemically unusual placements '
+                            '(e.g., La at P_4b, B at Li_24g, O at P_4b). '
+                            'Useful when --auto_*_sites would otherwise drop '
+                            'a combination you want to explore manually.')
 
     # Type A
     parser.add_argument('--compound',
@@ -331,7 +341,8 @@ def main():
     # Pre-filter site combinations against site_preference (only when iterating
     # auto modes — explicit single-site requests are kept as-is to let the user
     # force unusual placements like Sundar-style oxide-at-anion-site coatings).
-    if args.compound:
+    # --allow_exotic bypasses the filter so every combination is tried.
+    if args.compound and not args.allow_exotic:
         compound_atoms = parse_compound(args.compound)
         cations_in = [el for el, _ in compound_atoms.items()
                       if DOPANT_DB.get(el, {}).get('charge', 0) > 0]
