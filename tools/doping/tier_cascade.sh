@@ -51,6 +51,25 @@ cd "$REPO_ROOT"
 LOG() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/cascade.log"; }
 LOG "REPO_ROOT resolved to: $REPO_ROOT"
 LOG "SCRIPT_DIR:              $SCRIPT_DIR"
+
+# v4.2 fix (NEW-4): version-stamp the cascade output so re-running with
+# a different cascade script version doesn't silently mix incompatible
+# stage marker / directory layouts. v4 used 04_bvse + 05_anneal; v4.2
+# uses 04_anneal + 05_bvse, so a v4 OUT dir resumed with v4.2 would
+# silently produce wrong BVSE input. Refuse to mix versions.
+CASCADE_VERSION=2
+VERSION_FILE="$OUT/CASCADE_VERSION"
+if [ -f "$VERSION_FILE" ]; then
+    actual=$(cat "$VERSION_FILE")
+    if [ "$actual" != "$CASCADE_VERSION" ]; then
+        echo "ERROR: $OUT was built by cascade v$actual, current script is v$CASCADE_VERSION."
+        echo "  Stage layouts differ (v1: 04=bvse, v2: 04=anneal). Resume would corrupt."
+        echo "  Either: (a) rm -rf $OUT and rerun, or (b) checkout the matching cascade script version."
+        exit 1
+    fi
+else
+    echo "$CASCADE_VERSION" > "$VERSION_FILE"
+fi
 DONE_MARK() { touch "$OUT/STAGE_${1}.DONE"; }
 DONE_CHECK() { [ -f "$OUT/STAGE_${1}.DONE" ]; }
 STAGE() {
@@ -114,12 +133,25 @@ STAGE 03 winners \
         --group_by dopant site anion_site_label \
         --max_dv 0.25 --require_converged
 
-# Stage 04 — Light anneal of winners FIRST (need relaxed geometry for BVSE)
+# Stage 04 — REAL anneal of winners (500K, 50 ps, FIRE relax)
+# v4.2 (DEFEND-2 fix): previous --light (300K, 20 ps) was finite-T noise
+# injection rather than annealing. At 300K, Li-hop Arrhenius rate × 20 ps
+# gives ≈0.008 hop/Li, so Li sublattice barely sampled. Real Pipeline
+# Step 3 (kb/methodology/argyrodite_mechanical_pipeline.md) calls for
+# 500K @ 50ps where kT/Eₐ ratio is just enough to sample Li hops while
+# PS₄ stretching (E_bond≈3.5 eV) and Cl⁻ cage (E_a≈0.4 eV) stay rigid
+# on the 50ps timescale. PS₄ rotation barriers (~0.1-0.3 eV per
+# D'Amore 2022) ARE thermally accessible at 500K — that's intentional;
+# librations average out into a more realistic relaxed geometry. If
+# computational budget is tight, pass ANNEAL_MODE=light to fall back
+# to the cheap 300K mode.
+ANNEAL_FLAGS=""
+[ "${ANNEAL_MODE:-real}" = "light" ] && ANNEAL_FLAGS="--light"
 STAGE 04 anneal \
     python3 tools/doping/run_anneal.py \
         --summary_json "$OUT/03_winners/winners.json" \
         --out "$OUT/04_anneal" \
-        --device cuda --light
+        --device cuda $ANNEAL_FLAGS
 
 # Stage 05 — BVSE on post-anneal (relaxed) geometry, not the pre-relax input.
 #   External review CR-3: BVS depends exponentially on bond length, so the

@@ -36,16 +36,20 @@ sys.path.insert(0, str(Path(__file__).parent))
 from _provenance import get_provenance
 
 
-STAGE_FILES = [
-    ('screening',     '02_screen/uma_results.json',       'results'),
-    ('winners',       '03_winners/winners.json',          'winners'),
-    ('anneal',        '04_anneal/anneal_results.json',    'results'),
-    ('bvse',          '05_bvse/bvs_report.json',          'records'),
-    ('rerank',        '06_rerank/post_anneal_ranking.json',
-                                                    'ranked_by_post_anneal'),
-    ('eos',           '07_eos/postproc_summary.json',     'records'),
-    ('elastic',       '08_elastic/postproc_summary.json', 'records'),
-]
+# NEW-6 fix: stage path fallback list. v1 cascade: 04=bvse, 05=anneal.
+# v2 cascade: 04=anneal, 05=bvse. We try v2 path first, then v1.
+STAGE_FILE_CANDIDATES = {
+    'screening': [('02_screen/uma_results.json',       'results')],
+    'winners':   [('03_winners/winners.json',          'winners')],
+    'anneal':    [('04_anneal/anneal_results.json',    'results'),
+                  ('05_anneal/anneal_results.json',    'results')],
+    'bvse':      [('05_bvse/bvs_report.json',          'records'),
+                  ('04_bvse/bvs_report.json',          'records')],
+    'rerank':    [('06_rerank/post_anneal_ranking.json',
+                                                  'ranked_by_post_anneal')],
+    'eos':       [('07_eos/postproc_summary.json',     'records')],
+    'elastic':   [('08_elastic/postproc_summary.json', 'records')],
+}
 
 
 def normalize(values, invert=False):
@@ -79,12 +83,20 @@ def main():
     cd = Path(args.cascade_dir)
     recs: dict[str, dict] = {}
 
-    # Pass 1: union all records keyed by 'name'
-    for stage_name, rel_path, key in STAGE_FILES:
-        path = cd / rel_path
-        if not path.exists():
-            print(f"  ✗ {stage_name}: missing ({path})")
+    # Pass 1: union all records keyed by 'name'. Try each candidate path
+    # and use the first that exists (handles v1↔v2 cascade layouts).
+    for stage_name, candidates in STAGE_FILE_CANDIDATES.items():
+        chosen = None
+        for rel_path, key in candidates:
+            p = cd / rel_path
+            if p.exists():
+                chosen = (p, key)
+                break
+        if chosen is None:
+            print(f"  ✗ {stage_name}: no path found "
+                  f"(tried {[c[0] for c in candidates]})")
             continue
+        path, key = chosen
         d = json.loads(path.read_text())
         records = d.get(key, [])
         if not isinstance(records, list):
@@ -96,7 +108,7 @@ def main():
             if name not in recs:
                 recs[name] = {'name': name}
             recs[name][f'_{stage_name}'] = r
-        print(f"  ✓ {stage_name}: {len(records)} records")
+        print(f"  ✓ {stage_name}: {len(records)} records (from {path.name})")
     print(f"\nJoined: {len(recs)} unique structures")
 
     # Pass 2: extract per-structure metrics

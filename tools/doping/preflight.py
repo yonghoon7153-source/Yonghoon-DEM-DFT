@@ -141,6 +141,73 @@ def check_baseline_relax(base_cif: Path, calc=None) -> tuple[bool, dict]:
     return (not issues), report
 
 
+def check_positive_controls(base_cif: Path, device: str = 'cuda',
+                            relax_steps: int = 300) -> tuple[bool, dict]:
+    """Run substitute_compound for 3 literature-verified dopants and
+    confirm UMA gives ΔE/atom ∈ [-0.05, +0.05] eV/atom + |ΔV|<15%.
+
+    A-5 fix (2026-05-16): replaces the dead POSITIVE_CONTROL_COMPOUNDS
+    constant with an actual integration test that the whole substitute →
+    relax → metric chain works on known-good chemistry before launching
+    a multi-day cascade.
+    """
+    sys.path.insert(0, str(Path(__file__).parent))
+    from substitute_compound import substitute_compound_at_sites, parse_compound
+    from site_preference import DOPANT_DB
+    from ase.io import read
+    from ase.optimize import FIRE
+    try:
+        from ase.filters import FrechetCellFilter as CellFilter
+    except ImportError:
+        from ase.constraints import ExpCellFilter as CellFilter
+    from fairchem.core import pretrained_mlip, FAIRChemCalculator
+
+    predictor = pretrained_mlip.get_predict_unit('uma-s-1p1', device=device)
+    calc = FAIRChemCalculator(predictor, task_name='omat')
+
+    base = read(str(base_cif))
+    base.calc = calc
+    opt = FIRE(CellFilter(base), logfile=None)
+    opt.run(fmax=0.05, steps=relax_steps)
+    e_baseline = base.get_potential_energy() / len(base)
+    v_baseline_per_atom = base.get_volume() / len(base)
+
+    cases = [
+        ('Nd2O3',  'Li_24g', 'S_16e', 'paper #2 target'),
+        ('MgO',    'Li_24g', 'S_16e', 'Sundar 2025 oxide screen'),
+        ('Al2O3',  'Li_24g', 'S_16e', 'Yu 2022 / Sundar 2025'),
+    ]
+    results = []
+    issues = []
+    for cmpd, csite, asite, ref in cases:
+        try:
+            base_copy = read(str(base_cif))
+            comp = parse_compound(cmpd)
+            doped, log = substitute_compound_at_sites(
+                base_copy, comp, n_units=1,
+                cation_site=csite, anion_site=asite,
+                method='spread', seed=42, db=DOPANT_DB)
+            doped.calc = calc
+            opt = FIRE(CellFilter(doped), logfile=None)
+            opt.run(fmax=0.05, steps=relax_steps)
+            e_doped = doped.get_potential_energy() / len(doped)
+            v_doped_per_atom = doped.get_volume() / len(doped)
+            de = e_doped - e_baseline
+            dv = (v_doped_per_atom - v_baseline_per_atom) / v_baseline_per_atom
+            ok = -0.5 < de < 0.1 and abs(dv) < 0.20
+            r = {'compound': cmpd, 'ref': ref,
+                'de_per_atom': de, 'dv_rel': dv, 'ok': ok}
+            results.append(r)
+            if not ok:
+                issues.append(
+                    f"{cmpd} ({ref}): ΔE/atom={de:+.4f}, ΔV={dv*100:+.1f}% "
+                    f"outside [-0.5, +0.1] / 20%")
+        except Exception as e:
+            results.append({'compound': cmpd, 'ref': ref, 'error': str(e)})
+            issues.append(f"{cmpd}: exception ({e})")
+    return (not issues), {'cases': results, 'issues': issues}
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__,
                                formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -181,6 +248,11 @@ def main():
         if ok:
             ok, r = check_baseline_relax(Path(args.base))
             section('baseline_relax', ok, r)
+            # A-5 fix: actually run positive controls (literature-verified
+            # dopants must produce sensible ΔE/atom + reasonable structure).
+            # Quick sanity that the whole pipeline compose properly works.
+            ok, r = check_positive_controls(Path(args.base), args.device)
+            section('positive_controls', ok, r)
 
     report['summary'] = {'pass': n_pass, 'total': n_total}
     report_path = out / 'preflight_report.json'

@@ -77,10 +77,12 @@ def main():
     p.add_argument('--n_fu_actual', type=int, default=4)
     p.add_argument('--charge_compensation', default='compound_set')
     # Tier gating thresholds
-    p.add_argument('--stability_threshold', type=float, default=-0.05,
+    p.add_argument('--stability_threshold', type=float, default=-0.01,
                   help='Tier-1 ΔE/atom must be ≤ this to proceed to Tier-2 '
-                       '(default -0.05 eV/atom; i.e. dopant must lower the '
-                       'energy by ≥ 50 meV/atom to be considered promising)')
+                       '(default -0.01 eV/atom). v4.1 default of -0.05 was '
+                       'too strict — empirical argyrodite doping ΔE/atom '
+                       'falls in [-0.03, +0.02] (Mg/Al/Cl-rich literature), '
+                       'so -0.05 rejected ~95%% of plausible candidates.')
     p.add_argument('--propose_dft', action='store_true',
                   help='Compute the composite score and recommend whether to '
                        'spend DFT budget (Tier-3) on this combination.')
@@ -96,6 +98,29 @@ def main():
         raise SystemExit(f"No predictor_*.pkl in {pdir}")
     summary = json.loads((pdir / 'training_summary.json').read_text())
     cv = summary.get('cv_metrics', {})
+
+    # NEW-1 fix: cold-start WARN. If the requested compound is NOT in the
+    # training set's dopant column, the OneHotEncoder maps it to a zero
+    # vector (handle_unknown='ignore'); CV R² on in-distribution data
+    # then no longer applies. We can't recover full reliability without
+    # retraining, but at least we tell the user.
+    training_dataset_csv = pdir.parent / 'dataset.csv'
+    seen_dopants: set = set()
+    if training_dataset_csv.exists():
+        try:
+            seen_dopants = set(pd.read_csv(training_dataset_csv,
+                              usecols=['dopant'])['dopant'].dropna().unique())
+        except Exception:
+            pass
+    is_ood = seen_dopants and args.compound not in seen_dopants
+    if is_ood:
+        print(f"\n⚠⚠⚠ COLD-START WARNING: '{args.compound}' is NOT in the "
+              f"training set ({len(seen_dopants)} known dopants).")
+        print(f"   The reported predictions are extrapolation; CV R² values "
+              f"reflect in-distribution performance and DO NOT apply.")
+        print(f"   Treat all numbers as ROUGH GUESSES and verify with a real "
+              f"UMA cascade (e.g. predict_best_site --verify) before any "
+              f"paper claim.")
 
     row = {
         'dopant': args.compound,
@@ -156,19 +181,47 @@ def main():
         ey = tier2_results.get('elastic_E_young_GPa', {}).get('value', 0) or 0
         mob = (tier2_results.get('migration_volume_fraction', {}).get('value', 0)
                or 0)
-        # Rough normalization (paper-axis empirical):
-        # ΔE ~ [-1.5, +0.5], E_y ~ [10, 50], mobility ~ [0, 0.3]
-        stab_score = max(0, (-de + 0.5) / 2.0) if isinstance(de, (int, float)) else 0
-        mod_score = max(0, min((ey - 10) / 40, 1))
-        mob_score = max(0, min(mob / 0.3, 1))
+        # NEW-3 fix: derive normalization from the ACTUAL training
+        # dataset min/max instead of hard-coded ranges. Falls back to
+        # empirical defaults only if dataset.csv is missing.
+        norm_ranges = {
+            'screen_de_per_atom':           (-1.5, 0.5),
+            'elastic_E_young_GPa':          (10, 50),
+            'migration_volume_fraction':    (0, 0.3),
+        }
+        if training_dataset_csv.exists():
+            try:
+                df_train = pd.read_csv(training_dataset_csv)
+                for col in norm_ranges:
+                    if col in df_train.columns:
+                        vals = df_train[col].dropna()
+                        if len(vals) > 5:
+                            norm_ranges[col] = (float(vals.min()),
+                                               float(vals.max()))
+            except Exception:
+                pass
+        de_lo, de_hi = norm_ranges['screen_de_per_atom']
+        ey_lo, ey_hi = norm_ranges['elastic_E_young_GPa']
+        mb_lo, mb_hi = norm_ranges['migration_volume_fraction']
+        stab_score = (max(0, min((de_hi - de) / max(de_hi - de_lo, 1e-6), 1))
+                     if isinstance(de, (int, float)) else 0)
+        mod_score = max(0, min((ey - ey_lo) / max(ey_hi - ey_lo, 1e-6), 1))
+        mob_score = max(0, min((mob - mb_lo) / max(mb_hi - mb_lo, 1e-6), 1))
         composite = 0.4 * stab_score + 0.3 * mod_score + 0.3 * mob_score
         result['composite_score'] = composite
-        recommended = composite > 0.5
-        result['dft_recommended'] = recommended
+        result['composite_norm_ranges'] = norm_ranges
+        result['dft_recommended'] = composite > 0.5
+        result['cold_start_warning'] = is_ood
         print(f"\n[Tier 3 gating]")
         print(f"  composite paper score: {composite:.3f}")
-        print(f"  DFT recommended: {'YES' if recommended else 'no'} "
-              f"(threshold 0.50)")
+        print(f"  norm ranges (from dataset if available):")
+        for k, v in norm_ranges.items():
+            print(f"    {k:<35} {v}")
+        if is_ood:
+            print(f"  DFT recommended: NO (cold-start, do not waste DFT budget)")
+        else:
+            print(f"  DFT recommended: {'YES' if composite > 0.5 else 'no'} "
+                  f"(threshold 0.50)")
 
     result['final_verdict'] = 'passed Tier-1+2'
     if args.out:

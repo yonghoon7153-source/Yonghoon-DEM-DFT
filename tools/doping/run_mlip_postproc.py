@@ -2,11 +2,18 @@
 """run_mlip_postproc.py — full MLIP post-processing per structure.
 
 For each input xyz, runs in order:
-  1. Light anneal (300 K, 20 ps, optional)
-  2. EOS volume sweep (96-106% in 7 steps, Birch-Murnaghan 3rd-order fit)
-     → V0, B0, B0', R²
+  1. Light anneal (300 K, 20 ps, optional). NOTE: 300K @ 20ps is mostly
+     finite-T noise injection rather than true Li-sublattice annealing
+     (Arrhenius rate × 20ps ≈ 0.01 hop/Li at 300K). Use temperature=500
+     and time_ps=50 for actual Pipeline-Step-3 anneal (kT=0.043 eV
+     vs Li hop Eₐ=0.2 eV barrier).
+  2. EOS volume sweep (94-106% in 7 steps: 0.94/0.96/0.98/1.00/1.02/
+     1.04/1.06), Birch-Murnaghan 3rd-order fit
+     → V0, B0, B0', R² (returns None for B0/V0 if r²<0.95 — A-3 fix)
   3. Elastic constants via finite strain (6 Voigt strains, ε = ±0.005),
-     Voigt-Reuss-Hill average → B, G, E (Young), ν (Poisson), G/B (Pugh)
+     Voigt-Reuss-Hill average → B, G, E (Young), ν (Poisson), G/B (Pugh).
+     Sign convention: ASE atoms.get_stress() returns positive stress
+     for compression (= negative of dE/dV/V), so dσ/dε > 0 → C_ii > 0.
 
 All UMA, no extra DFT. Output: per-structure JSON + global summary.
 
@@ -110,12 +117,22 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
         ss_res = np.sum((E - E_pred) ** 2)
         ss_tot = np.sum((E - E.mean()) ** 2)
         r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
+        # A-3 fix: r² gate. Diverged BM3 fits (r²<0.95) shouldn't poison
+        # downstream rankings; flag B0_GPa as None and set fit_quality_ok=False
+        # so combine_rankings can drop them.
+        fit_ok = r2 >= 0.95 and 0 < V0 < 5 * V[len(V)//2]
         return {'V_points': V.tolist(), 'E_points': E.tolist(),
                 'fractions': list(fractions),
-                'V0': float(V0), 'V0_per_atom': float(V0) / n,
-                'E0': float(E0), 'B0_eV_per_A3': float(B0),
-                'B0_GPa': float(B0_GPa), 'Bp': float(Bp),
-                'r2': float(r2)}
+                'V0': float(V0) if fit_ok else None,
+                'V0_per_atom': float(V0) / n if fit_ok else None,
+                'E0': float(E0) if fit_ok else None,
+                'B0_eV_per_A3': float(B0) if fit_ok else None,
+                'B0_GPa': float(B0_GPa) if fit_ok else None,
+                'Bp': float(Bp) if fit_ok else None,
+                'r2': float(r2),
+                'fit_quality_ok': fit_ok,
+                'fit_quality_reason': ('OK' if fit_ok
+                                      else f'r²={r2:.4f} < 0.95 or V0 unphysical')}
     except Exception as e:
         return {'V_points': V.tolist(), 'E_points': E.tolist(),
                 'fractions': list(fractions),

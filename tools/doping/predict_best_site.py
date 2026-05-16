@@ -76,8 +76,56 @@ def main():
     if not models:
         raise SystemExit(f"No predictor_*.pkl in {pdir}")
 
-    # Enumerate combinations
-    combos = list(product(CATION_SITES, ANION_SITES))
+    # NEW-1 fix: cold-start WARN — predict_best_site is the OOD use case
+    # the previous review flagged. Tell the user explicitly.
+    training_dataset_csv = pdir.parent / 'dataset.csv'
+    seen_dopants: set = set()
+    if training_dataset_csv.exists():
+        try:
+            seen_dopants = set(pd.read_csv(training_dataset_csv,
+                              usecols=['dopant'])['dopant'].dropna().unique())
+        except Exception:
+            pass
+    is_ood = seen_dopants and args.compound not in seen_dopants
+    if is_ood:
+        print(f"\n⚠⚠⚠ COLD-START WARNING: '{args.compound}' is NOT in the "
+              f"training set ({len(seen_dopants)} known dopants).")
+        print(f"   Predictions are extrapolation; treat as ROUGH guesses.")
+        print(f"   Strongly recommend --verify to ground-truth via UMA.")
+
+    # NEW: prune chemically-impossible site combinations via site_preference.
+    # predict_best_site previously enumerated all 9 combos blindly, so
+    # e.g. Nd³⁺ at P_4b (radius 0.17, |Δr|=0.81 > 0.55 cutoff) appeared
+    # as a "candidate" with junk prediction.
+    sys.path.insert(0, str(Path(__file__).parent))
+    from substitute_compound import compatible_sites_for_element, parse_compound
+    from site_preference import DOPANT_DB
+    try:
+        composition = parse_compound(args.compound)
+        cations = [el for el in composition
+                   if DOPANT_DB.get(el, {}).get('charge', 0) > 0]
+        anions = [el for el in composition
+                  if DOPANT_DB.get(el, {}).get('charge', 0) < 0]
+        if cations:
+            allowed_c = set.intersection(*(compatible_sites_for_element(c, DOPANT_DB)
+                                          for c in cations))
+            cation_sites = [s for s in CATION_SITES if s in allowed_c]
+        else:
+            cation_sites = list(CATION_SITES)
+        if anions:
+            allowed_a = set.intersection(*(compatible_sites_for_element(a, DOPANT_DB)
+                                          for a in anions))
+            anion_sites = [s for s in ANION_SITES if s in allowed_a]
+        else:
+            anion_sites = list(ANION_SITES)
+    except Exception as e:
+        print(f"  (site_preference filter failed: {e}; using all combinations)")
+        cation_sites = list(CATION_SITES)
+        anion_sites = list(ANION_SITES)
+    combos = list(product(cation_sites, anion_sites))
+    if len(combos) < len(CATION_SITES) * len(ANION_SITES):
+        print(f"  site_preference pruned {len(CATION_SITES)*len(ANION_SITES)} → "
+              f"{len(combos)} chemically allowed combinations")
     print(f"\nML-predicted ranking for {args.compound} "
           f"(x={args.concentration}) — {len(combos)} candidate sites:")
     print()

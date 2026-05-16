@@ -59,17 +59,12 @@ DOPANT_DB = {
     'La':  {'charge': +3, 'radius': 1.032},
     'Ce':  {'charge': +4, 'radius': 0.87},   # Ce⁴⁺ (CeO2 ceria default — most
                                               # common Ce in solid-state synth.)
-    'Ce3': {'charge': +3, 'radius': 1.01},   # Ce³⁺ alternative valence
     'Eu':  {'charge': +3, 'radius': 0.947},  # Eu³⁺ (most common in synth)
-    'Eu2': {'charge': +2, 'radius': 1.17},   # Eu²⁺ alternative
-    # Variable valence cations — explicit entries for non-default oxidation states
-    'Cr6': {'charge': +6, 'radius': 0.26},   # Cr⁶⁺ (CrO3, K2CrO4)
-    'Mn4': {'charge': +4, 'radius': 0.53},   # Mn⁴⁺ (MnO2)
-    'Mn7': {'charge': +7, 'radius': 0.46},   # Mn⁷⁺ (KMnO4)
-    'Fe2': {'charge': +2, 'radius': 0.78},   # Fe²⁺ alternative (FeO, FeS)
-    'Co3': {'charge': +3, 'radius': 0.61},   # Co³⁺ (LiCoO2, Co2O3)
-    'Cu2': {'charge': +2, 'radius': 0.73},   # Cu²⁺ (CuO, CuS)
-    'Bi5': {'charge': +5, 'radius': 0.76},   # Bi⁵⁺ (Bi2O5) — alt valence
+    # NOTE: alternate-valence variants (Ce³⁺, Eu²⁺, Cr⁶⁺, Mn⁴⁺/⁷⁺, Fe²⁺,
+    # Co³⁺, Cu²⁺, Bi⁵⁺) are NOT separate DB entries — they're handled by
+    # ALTERNATIVE_VALENCES auto-balance in substitute_compound.py because
+    # parse_compound("CrO3") → {Cr:1, O:3} doesn't see "Cr6". A-2 fix
+    # (2026-05-16): single source of truth = ALTERNATIVE_VALENCES.
     'Nd':  {'charge': +3, 'radius': 0.983},
     'Sm':  {'charge': +3, 'radius': 0.958},
     'Gd':  {'charge': +3, 'radius': 0.938},

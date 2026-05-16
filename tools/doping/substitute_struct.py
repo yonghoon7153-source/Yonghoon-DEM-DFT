@@ -99,19 +99,29 @@ def select_substitution_sites(host_indices: list[int], n_sub: int,
                               cluster_radius: float = 4.0) -> list[int]:
     """Pick n_sub indices to substitute. Selection strategy via ``method``:
 
-      'first':  lowest indices (deterministic, reproducible)
-      'random': uniform random subset (use ``seed`` for reproducibility)
-      'spread': true PBC-aware farthest-point sampling — start from one site
-                and at each step add the host atom whose minimum distance to
-                the already-chosen set is largest. Models "homogeneous solid
-                solution" obtained from extensive ball milling (Yu 2022,
-                Kraft 2017). Requires ``atoms``; without it falls back to
-                index-spacing (legacy).
-      'cluster': anti-spread — pick a seed atom and add its nearest host
-                neighbors. Models the case where the precursor's local
-                coordination is preserved (e.g., 3 O atoms from La2O3 land
-                on the same PS4 tetrahedron to form a PO4 unit instead of
-                three separate PSO3 units). Requires ``atoms``.
+      'first':  lowest indices (truly deterministic — same atoms regardless
+                of seed). For reproducibility tests / ablation only.
+      'random': uniform random subset; SEED-REPRODUCIBLE (same ``seed``
+                gives same output, but different seeds give different
+                outputs — this is the only mode that varies across seeds).
+      'spread': PBC-aware farthest-point sampling. SEED-REPRODUCIBLE
+                with random initial seed atom — different ``seed``
+                values give different starting points (so the resulting
+                set varies seed-to-seed even though selection is greedy
+                deterministic afterwards). Models a homogeneous solid
+                solution from extensive ball milling (Yu 2022, Kraft 2017).
+                Requires ``atoms`` for PBC distance calc.
+      'cluster': greedy chain growth — pick a seed atom (random per seed)
+                and at each step add the host atom NEAREST to the already-
+                chosen set. NOT a true radius-based cluster: this is
+                'chain' clustering, where the selection extends through
+                successive nearest neighbours. May leave the seed PS4 and
+                hop into adjacent PS4 if those S atoms are closer to the
+                last pick than the remaining same-PS4 S atoms. The mean
+                pair distance ≈ PS4 S-S edge (~3.4 Å) on canonical LPSCl
+                because the F-43m geometry happens to place inter-PS4 S
+                farther than intra-PS4 S, but for distorted geometries
+                this approximation breaks down.
 
     ``atoms`` must be supplied for 'spread' / 'cluster' so PBC distances
     can be computed (MIC = minimum image convention).
