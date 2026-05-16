@@ -41,13 +41,16 @@ SUPERCELL="${4:-1,1,1}"
 EXOTIC="${5:-1}"
 
 mkdir -p "$OUT/logs"
-# Resolve REPO_ROOT explicitly — earlier `cd $(dirname BASE)/..` was a bug
-# because it landed in repo/db/, not repo root (BASE = db/structures/...cif).
-# Now we go up TWO directories from BASE so tools/doping/... paths resolve.
-REPO_ROOT="$(realpath "$(dirname "$(dirname "$(realpath "$BASE")")")")"
+# Resolve REPO_ROOT via this script's own location:
+#   tools/doping/tier_cascade.sh  → REPO_ROOT/../..
+# More robust than walking up from BASE (which lives at varying depths
+# depending on the user's cli invocation).
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 cd "$REPO_ROOT"
 LOG() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/cascade.log"; }
 LOG "REPO_ROOT resolved to: $REPO_ROOT"
+LOG "SCRIPT_DIR:              $SCRIPT_DIR"
 DONE_MARK() { touch "$OUT/STAGE_${1}.DONE"; }
 DONE_CHECK() { [ -f "$OUT/STAGE_${1}.DONE" ]; }
 STAGE() {
