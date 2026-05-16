@@ -90,6 +90,15 @@ STAGE() {
         LOG "Stage $id ($name): SKIP (already done; FORCE_RERUN=$id to force)"
         return 0
     fi
+    # v4.4 fix: warn that re-running a stage does NOT auto-invalidate
+    # downstream STAGE_*.DONE markers. If you rerun stage 02 (screen),
+    # stage 04 (anneal), 05 (bvse), 06 (rerank), 07 (eos), 08 (elastic),
+    # 09 (final report) will still be marked DONE with stale results.
+    # The user must manually `rm $OUT/STAGE_{04..09}*.DONE` (or FORCE_RERUN=all).
+    if [ "${FORCE_RERUN:-}" = "$id" ] && DONE_CHECK "$id"; then
+        LOG "Stage $id ($name): FORCE rerun (⚠ downstream stages NOT auto-invalidated"
+        LOG "  — rm \$OUT/STAGE_<later>.DONE manually, or use FORCE_RERUN=all)"
+    fi
     LOG "Stage $id ($name): START"
     local t0=$(date +%s)
     "$@" 2>&1 | tee -a "$OUT/logs/${id}_${name}.log"

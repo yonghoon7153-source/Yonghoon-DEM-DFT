@@ -183,9 +183,32 @@ def compute_descriptors(atoms, baseline_e_per_atom: float,
 
 
 def get_baseline(args, calc) -> dict:
-    """Get or compute clean LPSCl baseline (e_per_atom, volume_per_atom)."""
+    """Get or compute clean LPSCl baseline (e_per_atom, volume_per_atom).
+
+    v4.4 fix (scenario A — silent contamination): when reusing a cached
+    baseline.json, verify its source_base_md5 against the current --base
+    file. If they differ, refuse rather than silently mix results derived
+    from different baselines.
+    """
+    import hashlib
+    base_md5 = None
+    if args.base and Path(args.base).exists():
+        base_md5 = hashlib.md5(Path(args.base).read_bytes()).hexdigest()
+
     if args.baseline and Path(args.baseline).exists():
-        return json.loads(Path(args.baseline).read_text())
+        cached = json.loads(Path(args.baseline).read_text())
+        cached_md5 = cached.get('source_base_md5')
+        if cached_md5 and base_md5 and cached_md5 != base_md5:
+            raise ValueError(
+                f"baseline.json was built from a DIFFERENT base CIF.\n"
+                f"  cached source_base_md5: {cached_md5}\n"
+                f"  current --base md5:     {base_md5}\n"
+                f"  current --base path:    {args.base}\n"
+                f"  cached source_base:     {cached.get('source_base_file', 'unknown')}\n"
+                f"Silent contamination would result. Either:\n"
+                f"  (a) rm {args.baseline} and rerun, or\n"
+                f"  (b) use a fresh OUT dir for the new base CIF.")
+        return cached
     if not args.base:
         raise ValueError("Provide --baseline (cached) or --base (CIF) for baseline")
     print(f"Computing LPSCl baseline from: {args.base}")
@@ -201,6 +224,10 @@ def get_baseline(args, calc) -> dict:
         'n_atoms': len(base),
         'converged': conv,
         'n_steps': nsteps,
+        # v4.4: stamp source provenance so cached baseline.json can't
+        # silently be reused with a different --base CIF.
+        'source_base_file': str(args.base),
+        'source_base_md5': base_md5,
     }
     if args.baseline:
         Path(args.baseline).write_text(json.dumps(bl, indent=2))

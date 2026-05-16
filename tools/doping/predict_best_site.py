@@ -66,6 +66,12 @@ def main():
                   help='Seeds per (compound, sites) combo for verify')
     p.add_argument('--steps', type=int, default=1500,
                   help='UMA relax steps (only with --verify)')
+    p.add_argument('--no_filter', action='store_true',
+                  help='Skip site_preference radius/charge filter and let UMA '
+                       'rank all 9 (cation_site × anion_site) combinations '
+                       'including chemically unusual ones. Useful when the '
+                       'default filter is too strict for an exotic compound '
+                       'or when exploring beyond Shannon-radius heuristics.')
     args = p.parse_args()
 
     pdir = Path(args.predictor_dir)
@@ -97,31 +103,41 @@ def main():
     # predict_best_site previously enumerated all 9 combos blindly, so
     # e.g. Nd³⁺ at P_4b (radius 0.17, |Δr|=0.81 > 0.55 cutoff) appeared
     # as a "candidate" with junk prediction.
+    # v4.4 fix: --no_filter actually skips this block (advertised in the
+    # empty-combo error message; previously a phantom option).
     sys.path.insert(0, str(Path(__file__).parent))
     from substitute_compound import compatible_sites_for_element, parse_compound
     from site_preference import DOPANT_DB
-    try:
-        composition = parse_compound(args.compound)
-        cations = [el for el in composition
-                   if DOPANT_DB.get(el, {}).get('charge', 0) > 0]
-        anions = [el for el in composition
-                  if DOPANT_DB.get(el, {}).get('charge', 0) < 0]
-        if cations:
-            allowed_c = set.intersection(*(compatible_sites_for_element(c, DOPANT_DB)
-                                          for c in cations))
-            cation_sites = [s for s in CATION_SITES if s in allowed_c]
-        else:
-            cation_sites = list(CATION_SITES)
-        if anions:
-            allowed_a = set.intersection(*(compatible_sites_for_element(a, DOPANT_DB)
-                                          for a in anions))
-            anion_sites = [s for s in ANION_SITES if s in allowed_a]
-        else:
-            anion_sites = list(ANION_SITES)
-    except Exception as e:
-        print(f"  (site_preference filter failed: {e}; using all combinations)")
+    if args.no_filter:
+        print(f"  --no_filter set — using all {len(CATION_SITES)}×"
+              f"{len(ANION_SITES)} combinations without site_preference pruning")
         cation_sites = list(CATION_SITES)
         anion_sites = list(ANION_SITES)
+    else:
+        try:
+            composition = parse_compound(args.compound)
+            cations = [el for el in composition
+                       if DOPANT_DB.get(el, {}).get('charge', 0) > 0]
+            anions = [el for el in composition
+                      if DOPANT_DB.get(el, {}).get('charge', 0) < 0]
+            if cations:
+                allowed_c = set.intersection(
+                    *(compatible_sites_for_element(c, DOPANT_DB)
+                      for c in cations))
+                cation_sites = [s for s in CATION_SITES if s in allowed_c]
+            else:
+                cation_sites = list(CATION_SITES)
+            if anions:
+                allowed_a = set.intersection(
+                    *(compatible_sites_for_element(a, DOPANT_DB)
+                      for a in anions))
+                anion_sites = [s for s in ANION_SITES if s in allowed_a]
+            else:
+                anion_sites = list(ANION_SITES)
+        except Exception as e:
+            print(f"  (site_preference filter failed: {e}; using all combinations)")
+            cation_sites = list(CATION_SITES)
+            anion_sites = list(ANION_SITES)
     combos = list(product(cation_sites, anion_sites))
     if not combos:
         # M-2 fix: empty combos (e.g. extremely strict site_preference for
