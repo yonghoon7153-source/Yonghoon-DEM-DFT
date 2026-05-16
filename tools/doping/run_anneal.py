@@ -156,6 +156,22 @@ def main():
                             'xyz_file path from each record')
     parser.add_argument('--top', type=int, default=5,
                        help='If --top_candidates: number of top entries to anneal')
+    parser.add_argument('--per_compound_top', type=int, default=None,
+                       help='Per-compound stratified Top-N anneal: groups the '
+                            'input (from --summary_json or --uma_results) by '
+                            "dopant, anneals the lowest-ΔE/atom N entries of "
+                            "each group. Recommended for compound batches "
+                            "where ranking is heavy-tailed (one strong cation "
+                            "family dominates the global Top-N otherwise).")
+    parser.add_argument('--uma_results',
+                       help='UMA screening results JSON (has uma_relaxed.'
+                            'de_per_atom_vs_baseline per record). Used as '
+                            'sort key when --per_compound_top is set.')
+    parser.add_argument('--light', action='store_true',
+                       help='Light anneal preset (300K, 20 ps, 500 relax '
+                            'steps) — for stratified per-compound Top-N to '
+                            'cheaply relieve unphysical Li placement before '
+                            'reranking. Override individual flags as needed.')
     parser.add_argument('--out', required=True, help='Output base directory')
     parser.add_argument('--temperature', type=float, default=500,
                        help='Annealing temperature in K (default 500; pipeline '
@@ -218,6 +234,42 @@ def main():
         parser.error("Provide --xyz, --xyz_dir, --summary_json, or --top_candidates")
     if not xyz_paths:
         raise SystemExit("No xyz files found")
+
+    # Per-compound stratified Top-N filter
+    if args.per_compound_top:
+        if not args.uma_results:
+            parser.error("--per_compound_top requires --uma_results "
+                        "(needs ΔE/atom for ranking within each dopant group)")
+        uma = json.loads(Path(args.uma_results).read_text())['results']
+        # Map xyz path → ΔE/atom + dopant
+        name_to_xpath = {p.stem: p for p in xyz_paths}
+        from collections import defaultdict
+        groups = defaultdict(list)
+        for rec in uma:
+            name = rec.get('name')
+            if name in name_to_xpath:
+                groups[rec.get('dopant', 'unknown')].append((
+                    rec['uma_relaxed']['de_per_atom_vs_baseline'],
+                    name_to_xpath[name],
+                ))
+        filtered: list = []
+        for dop, items in groups.items():
+            items.sort()  # ascending ΔE → most stable first
+            keep = items[:args.per_compound_top]
+            filtered.extend(p for _, p in keep)
+            print(f"  per-compound Top-{args.per_compound_top}: {dop} → "
+                  f"{len(keep)}/{len(items)}")
+        xyz_paths = filtered
+        print(f"  Stratified Top-{args.per_compound_top}: "
+              f"{len(xyz_paths)} structures across {len(groups)} dopants")
+
+    # --light preset
+    if args.light:
+        args.temperature = min(args.temperature, 300)
+        args.time_ps = min(args.time_ps, 20)
+        args.relax_steps = min(args.relax_steps, 500)
+        print(f"  --light preset: T={args.temperature}K, "
+              f"t={args.time_ps}ps, relax steps={args.relax_steps}")
 
     print(f"Loading UMA-s-1p1 ({args.device})...")
     calc = load_uma_calc(args.device, args.task)

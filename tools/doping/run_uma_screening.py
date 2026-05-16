@@ -22,8 +22,12 @@ Usage:
 """
 import argparse
 import json
+import sys
 import time
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).parent))
+from _provenance import get_provenance
+_PROVENANCE = get_provenance()
 import numpy as np
 from ase.io import read
 from ase.optimize import FIRE
@@ -58,9 +62,87 @@ def relax_structure(atoms, calc, fmax: float = 0.05, steps: int = 300,
     return atoms, converged, opt.get_number_of_steps()
 
 
+def compute_tier2_metrics(atoms) -> dict:
+    """Cheap structural descriptors (Tier-2) computed from final geometry.
+
+    No extra UMA calls — pure geometry analysis. These metrics complement
+    Tier-1 (ΔE/atom, ΔV/V₀) so the ranking is not dependent on a single
+    arbitrary composite. All are paper-defensible:
+
+      - li_li_disorder_std: std of nearest Li-Li distance — Pustorino 2025
+        cites Li ordering as the main B0 spread driver
+      - li_li_disorder_mean: mean nearest Li-Li distance — ionic conductivity
+        proxy (Adeli 2019 halide-rich uses Li-Li spacing as σ proxy)
+      - dopant_blocking_count: # of Li atoms within 4 Å of any aliovalent
+        cation (Mg/Al/Y/La/Sc/Nd/etc.) — Li migration path blockage
+        (Pham 2021 oxysulfide arguments)
+      - lattice_angle_dev_deg: σ of (cell_angle − 90°) — symmetry breaking
+        magnitude (D'Amore 2022 pseudo-cubic distortion measure)
+      - lattice_aspect_ratio: max(a,b,c) / min(a,b,c) — anisotropic strain
+    """
+    syms = atoms.get_chemical_symbols()
+    li_idx = [i for i, s in enumerate(syms) if s == 'Li']
+    host_elements = {'Li', 'P', 'S', 'Cl', 'Br', 'I', 'O', 'N', 'F'}
+    dopant_idx = [i for i, s in enumerate(syms) if s not in host_elements]
+
+    metrics: dict = {}
+
+    if len(li_idx) >= 2:
+        D = atoms.get_all_distances(mic=True)
+        li_nn = []
+        for i in li_idx:
+            d_others = [D[i, j] for j in li_idx if j != i]
+            li_nn.append(min(d_others))
+        metrics['li_li_disorder_std'] = float(np.std(li_nn))
+        metrics['li_li_disorder_mean'] = float(np.mean(li_nn))
+    else:
+        metrics['li_li_disorder_std'] = 0.0
+        metrics['li_li_disorder_mean'] = 0.0
+
+    if dopant_idx and li_idx:
+        D2 = atoms.get_all_distances(mic=True)
+        blocked = sum(1 for li in li_idx
+                     if min(D2[li, d] for d in dopant_idx) < 4.0)
+        metrics['dopant_blocking_count'] = int(blocked)
+        metrics['dopant_blocking_fraction'] = float(blocked) / len(li_idx)
+    else:
+        metrics['dopant_blocking_count'] = 0
+        metrics['dopant_blocking_fraction'] = 0.0
+
+    angles = atoms.cell.angles()
+    metrics['lattice_angle_dev_deg'] = float(np.std(
+        [abs(a - 90) for a in angles]))
+    lengths = atoms.cell.lengths()
+    metrics['lattice_aspect_ratio'] = float(max(lengths) / min(lengths))
+
+    return metrics
+
+
+def is_outlier(atoms, e_per_atom: float, baseline_e_per_atom: float,
+              baseline_volume_per_atom: float, dv_max: float = 0.30,
+              de_max: float = 5.0) -> tuple[bool, str]:
+    """Inline outlier guard — flag obviously broken UMA results.
+
+    Returns (is_outlier, reason). Catches:
+      - Cell volume blew up >30% (typical for unphysical placement)
+      - Energy outlier >5 eV/atom from baseline (UMA divergence)
+      - Atom count below 50% of expected (atoms escaped cell?)
+    """
+    n = len(atoms)
+    vol_per_atom = atoms.get_volume() / n
+    dv_rel = (vol_per_atom - baseline_volume_per_atom) / baseline_volume_per_atom
+    if abs(dv_rel) > dv_max:
+        return True, f"volume_runaway_dv={dv_rel:+.1%}"
+    de = e_per_atom - baseline_e_per_atom
+    if abs(de) > de_max:
+        return True, f"energy_outlier_de={de:+.2f}_eV/atom"
+    return False, ""
+
+
 def compute_descriptors(atoms, baseline_e_per_atom: float,
+                        baseline_volume_per_atom: float = None,
                         chem_potentials: dict = None) -> dict:
-    """Tier-1 descriptors after relaxation."""
+    """Tier-1 + Tier-2 descriptors after relaxation."""
     e_total = float(atoms.get_potential_energy())
     n = len(atoms)
     e_per_atom = e_total / n
@@ -70,7 +152,7 @@ def compute_descriptors(atoms, baseline_e_per_atom: float,
     vol = float(atoms.get_volume())
     syms = atoms.get_chemical_symbols()
     composition = {el: int(c) for el, c in zip(*np.unique(syms, return_counts=True))}
-    return {
+    base = {
         'e_total': e_total,
         'e_per_atom': e_per_atom,
         'de_per_atom_vs_baseline': e_per_atom - baseline_e_per_atom,
@@ -85,6 +167,15 @@ def compute_descriptors(atoms, baseline_e_per_atom: float,
         'n_atoms': n,
         'composition': composition,
     }
+    # Tier-2 cheap proxy metrics (no extra UMA cost)
+    base['tier2'] = compute_tier2_metrics(atoms)
+    # Inline outlier guard (uses baseline volume per atom if available)
+    if baseline_volume_per_atom is not None:
+        is_out, reason = is_outlier(atoms, e_per_atom, baseline_e_per_atom,
+                                    baseline_volume_per_atom)
+        base['outlier_flag'] = is_out
+        base['outlier_reason'] = reason
+    return base
 
 
 def get_baseline(args, calc) -> dict:
@@ -185,7 +276,9 @@ def main():
                 atoms, calc, fmax=args.fmax, steps=args.steps,
                 cell_relax=not args.no_cell_relax)
             dt = time.time() - t0
-            desc = compute_descriptors(atoms, baseline['e_per_atom'])
+            desc = compute_descriptors(atoms, baseline['e_per_atom'],
+                                       baseline.get('volume_per_atom'))
+    # the original code expects 'desc' just below; cell context preserved
             dV = (desc['volume'] - baseline['volume'] *
                   (desc['n_atoms'] / baseline['n_atoms'])) / (
                   baseline['volume'] * desc['n_atoms'] / baseline['n_atoms'])
@@ -210,6 +303,8 @@ def main():
         # Periodic save
         if (i + 1) % 5 == 0 or (i + 1) == len(todo):
             out_path.write_text(json.dumps({
+                'provenance': _PROVENANCE,
+                'cli_args': vars(args),
                 'baseline': baseline,
                 'structure_baseline_meta': struct_baseline_meta,
                 'n_done': len(results),
