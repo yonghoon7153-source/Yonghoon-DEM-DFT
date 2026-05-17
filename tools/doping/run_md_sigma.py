@@ -178,7 +178,8 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
     n_density = n_Li / vol_cm3
     sigma_300K = (n_density * 1e6) * q**2 * (D_300K * 1e-4) / (kB * 300) * 1e-2
 
-    # v4.5.11 M-1: physical sanity check on Arrhenius fit
+    # v4.5.12 M-1 (enhanced from v4.5.11 per 8th-round review):
+    # physical sanity check on Arrhenius fit.
     sanity_warnings = []
     if Ea_eV < 0:
         sanity_warnings.append(
@@ -192,14 +193,30 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
         sanity_warnings.append(
             f'σ_300K = {sigma_300K:.3e} S/cm exceeds 1 S/cm — unphysical, '
             f'check D_300K and number density')
-    if sigma_300K < 1e-9:  # < 10^-6 mS/cm
+    # v4.5.12: tightened from 1e-9 (insulator-level, never triggers for
+    # doped argyrodite) to 1e-6 (still very low, catches realistic MD
+    # undersampling cases).
+    if sigma_300K < 1e-6:
         sanity_warnings.append(
-            f'σ_300K = {sigma_300K:.3e} S/cm extremely low — MD timescale '
+            f'σ_300K = {sigma_300K:.3e} S/cm below 10⁻⁶ S/cm — MD timescale '
             f'too short for slow ion transport or D underestimate')
     if r_arr**2 < 0.85:
         sanity_warnings.append(
             f'Arrhenius fit R² = {r_arr**2:.3f} < 0.85 — extrapolation '
             f'unreliable, extend prod_ps or add T points')
+    # v4.5.12 NEW: D(T) monotonicity (T↑ → D↑ for thermally activated
+    # transport). Non-monotonic = MD undersampled or trapped state.
+    Ds_at_Ts = [results[T]['D_cm2s'] for T in sorted(results)]
+    if not all(Ds_at_Ts[i] < Ds_at_Ts[i+1] for i in range(len(Ds_at_Ts)-1)):
+        sanity_warnings.append(
+            f'D(T) is non-monotonic across {sorted(results)} K — '
+            f'likely MD undersampling at low T or trapped Li sublattice')
+    # v4.5.12 NEW: n_Li statistical sanity (paper-grade needs ≥ 100
+    # for σ std < 20%; 2x2x2 supercell of 52-atom LPSCl gives 192 Li).
+    if n_Li < 100:
+        sanity_warnings.append(
+            f'n_Li = {n_Li} < 100 — statistical noise high in σ_NE; '
+            f'use larger supercell for paper-grade')
 
     return {
         'per_temperature': results,

@@ -26,6 +26,7 @@ Usage:
 """
 import argparse
 import json
+import sys
 import time
 from pathlib import Path
 import numpy as np
@@ -34,6 +35,9 @@ from ase.md.langevin import Langevin
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 from ase.optimize import FIRE
 from ase import units
+
+sys.path.insert(0, str(Path(__file__).parent))
+from _provenance import get_provenance
 
 try:
     from ase.filters import FrechetCellFilter as CellFilter
@@ -315,6 +319,7 @@ def main():
         # Periodic save
         if (i + 1) % 2 == 0 or (i + 1) == len(todo):
             results_path.write_text(json.dumps({
+                'provenance': get_provenance(),
                 'temperature_K': args.temperature,
                 'time_ps': args.time_ps,
                 'n_done': len(results),

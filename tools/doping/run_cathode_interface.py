@@ -148,16 +148,22 @@ def run_one_se(se_atoms, label, ncm_cache, seeds, calc_factory, out_dir):
         ncm_cache[nx] = build_ncm_1L(nx)
     ncm = ncm_cache[nx]
 
-    # v4.5.11 CR-3 fix: xy area mismatch monitor (strain energy contaminates Wad)
+    # v4.5.12 CR-3 (enhanced from v4.5.11 per 8th-round review):
+    # 5% WARN + 10% likely-contaminated, matching Choi 2025 / Sundar 2025 /
+    # Mo 2014 literature mismatch ceilings (5-8% for paper-grade).
     se_cell = se_atoms.cell.array
     se_area = float(np.linalg.norm(np.cross(se_cell[0], se_cell[1])))
     ncm_cell = ncm.cell.array
     ncm_area = float(np.linalg.norm(np.cross(ncm_cell[0], ncm_cell[1])))
     area_mismatch_pct = abs(ncm_area - se_area) / se_area * 100.0
     if area_mismatch_pct > 10:
-        print(f"    ⚠ [{label}] LARGE xy area mismatch {area_mismatch_pct:.1f}% "
+        print(f"    ⚠⚠ [{label}] LARGE xy area mismatch {area_mismatch_pct:.1f}% "
               f"(SE {se_area:.1f} vs NCM {ncm_area:.1f} Å²) — "
-              f"Wad may include strain energy artifact", flush=True)
+              f"Wad likely contaminated, consider exclusion", flush=True)
+    elif area_mismatch_pct > 5:
+        print(f"    ⚠ [{label}] moderate xy area mismatch "
+              f"{area_mismatch_pct:.1f}% — flag for strain sensitivity",
+              flush=True)
 
     rng = np.random.RandomState(42)
     xy_shifts = [(rng.random(), rng.random()) for _ in range(max(seeds) - 41)]
@@ -309,6 +315,27 @@ def main():
                         'winners': all_results['winners']},
                        indent=2, default=str))
 
+    # v4.5.12 CR-2 follow-up: automatic nx-grouping summary so paper
+    # analysis filters cross-nx comparisons without manual book-keeping.
+    from collections import defaultdict
+    nx_groups: dict = defaultdict(lambda: {'baselines': [], 'winners': []})
+    for b in all_results['baselines']:
+        nx = b.get('ncm_nx')
+        if nx is not None:
+            nx_groups[nx]['baselines'].append(b.get('label'))
+    for w in all_results['winners']:
+        nx = w.get('ncm_nx')
+        if nx is not None:
+            nx_groups[nx]['winners'].append(w.get('label'))
+    print(f"\n  NCM nx-groups (winner-vs-baseline comparison valid within group):")
+    for nx, members in sorted(nx_groups.items()):
+        print(f"    nx={nx}: {len(members['baselines'])} baselines, "
+              f"{len(members['winners'])} winners")
+        if members['baselines']:
+            print(f"           baselines: {', '.join(members['baselines'])}")
+        if members['winners']:
+            print(f"           winners:   {', '.join(members['winners'][:5])}")
+
     # Aggregate
     summary = {
         'provenance': get_provenance(),
@@ -318,6 +345,7 @@ def main():
                    'quench_ps': QUENCH_PS, 'gap_A': GAP},
         'baselines': all_results['baselines'],
         'winners': all_results['winners'],
+        'nx_groups': {str(k): v for k, v in nx_groups.items()},
     }
 
     # Δ_Wad reporting (winner vs each baseline)
