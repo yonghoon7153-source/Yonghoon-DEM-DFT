@@ -87,18 +87,21 @@ def generate_pwin(atoms, prefix: str, cell_scale: float) -> str:
     lines.append("/")
     lines.append("&ELECTRONS")
     # Charge-sloshing-tolerant settings for Nd-doped LPSCl (Nd f-electron
-    # near-degeneracy at V_ref causes oscillation under plain mixing).
-    # Empirically derived 2026-05-17 from pair01 SCF fail diagnosis:
-    # plain mixing with beta=0.1 oscillates between 10^-3 and 10^-4
-    # forever. local-TF screening + CG diagonalization + beta=0.05
-    # breaks the oscillation. Cost: ~1.5x slower per SCF on close-pair
-    # (pair02) compared to plain Davidson, but enables reference-pair
-    # (pair01) convergence which is otherwise impossible.
+    # near-degeneracy at V_ref causes oscillation under default mixing).
+    # Empirical history (2026-05-17 KISTI Job 726129/726388 diagnosis):
+    #   - PLAIN mixing + beta=0.1 → SCF oscillates 1e-3/1e-4 forever
+    #     (charge sloshing). electron_maxstep=500 hit on v100, v102.
+    #   - LOCAL-TF mixing breaks oscillation via Thomas-Fermi screening
+    #     (standard fix for ionic systems with rare-earth f-electrons).
+    #   - CG diagonalization was tried with beta=0.05 — proved ~5x
+    #     slower per iter than Davidson even on GPU (300 s/iter vs
+    #     5-10 s/iter), completely impractical for walltime budget.
+    # Final settings (Davidson + local-TF + standard beta + relaxed
+    # conv_thr 1e-6, still 14 μeV resolution = paper-grade).
     lines.append("    conv_thr    = 1.0d-6")
-    lines.append("    mixing_beta = 0.05")
+    lines.append("    mixing_beta = 0.1")
     lines.append("    mixing_mode = 'local-TF'")
     lines.append("    electron_maxstep = 500")
-    lines.append("    diagonalization = 'cg'")
     lines.append("/")
     lines.append("&IONS")
     lines.append("    ion_dynamics = 'bfgs'")
