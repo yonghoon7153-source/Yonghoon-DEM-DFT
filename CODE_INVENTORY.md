@@ -521,6 +521,45 @@ find /scratch /data -name "*bader*" -o -name "*adhesion*" -o -name "*eos*" 2>/de
 
 ---
 
+## TODO — paper #2 writeup (2026-05-17 cascade 결과 후속)
+
+### Stage 11 adhesion calibration (Option A → B 단계)
+
+⏳ **Immediate (cascade 끝나면 즉시)**:
+- [ ] Stage 11 `cathode_interface_summary.json`에서 winner별 Wad mean±std 추출
+- [ ] comp1 calibration ratio 계산: `Wad_comp1_paper1 / Wad_comp1_stage11` (≈0.0036)
+- [ ] 모든 winner Wad에 ratio 적용 → paper Table용 calibrated Wad
+- [ ] 6 baseline 각각의 ratio가 ≈ 1.0 (system-wide constant) 검증
+
+⏳ **Phase 2 (paper writeup, ~14h GPU)**:
+- [ ] Composite score top-3 선정 (FINAL_RANKING.json: ΔE + B_hill + mobility + Wad_cal)
+- [ ] `필독/adhesion/v30u_ensemble/run_v30u_full_ensemble.py` adapt to doped winner inputs
+- [ ] Full v30u protocol (face enum → 36 reg → α → eiso → Morse) 실행 — top-3 only
+- [ ] Paper Table X: top-3 winner × 6 baseline × full-protocol Wad
+
+⏳ **Future work (paper #2 critical 아님)**:
+- [ ] Reverse-Wad method (interface relax + separate + each-piece relax)
+- [ ] DFT spot-check 1-2 interfaces for absolute calibration anchor
+- [ ] NCM thickness convergence (1L vs 3L vs 5L)
+- [ ] Green-Kubo Haven ratio (independent of v6 anneal)
+
+**Full narrative + justification**:
+- `kb/methodology/adhesion_calibration_decision_2026_05_17.md`
+- `db/properties/adhesion.json` → `paper2_stage11_v6_separation_2026_05_17`
+
+### KISTI Nd-doped DFT EOS (pair01 SCF rerun)
+
+⏳ **즉시 (현재 진행)**:
+- [ ] v098/100/102/104 looser SCF rerun (conv_thr 1e-7, electron_maxstep 500, mixing_beta 0.1) — KISTI Job 725838 GPU 0 활용
+- [ ] 7/7 BFGS converged 후 BM3 fit → paper-grade B0/V0 (현재 elastic B_hill=19.6 GPa anchor 보완)
+
+⏳ **Cascade 끝나면 (v4.5.x fix 반영)**:
+- [ ] FORCE_RERUN=09a (combine_rankings name fix v4.5.8 적용 → B0/E_y/Pugh 채워진 FINAL_RANKING)
+- [ ] FORCE_RERUN=10 (σ_Li MD uma-s-1p1 fix v4.5.9 적용 → 진짜 12h MD)
+- [ ] FORCE_RERUN=09 (final report 재생성)
+
+---
+
 #code-inventory #verified-scripts #claude-algorithm
 
 ---

@@ -1481,6 +1481,53 @@
         "Strict drift criterion unrealistic — paper should report absolute RMS comparison instead.",
         "Future work: longer AIMD (5-10 ps) per comp to reach steady state."
       ]
+    },
+    "paper2_stage11_v6_separation_2026_05_17": {
+      "context": "Paper #2 Nd2O3-doped LPSCl cascade Stage 11 — first Wad calculation on doped winner vs 6 baselines (comp1-5 + modelC).",
+      "method": "v6 protocol separation Wad (tools/doping/run_cathode_interface.py): 1L NCM frozen + 500K SE anneal + LBFGS → +30A translate separation",
+      "Wad_J_m2_observed_5seed_mean_range": {
+        "comp1_Li6_pristine": "45-80",
+        "comp2_Li6_mixed_halide": "45-80",
+        "comp3_Li5p4_Cl_rich": "143-218",
+        "comp4_Li5p4_balanced_DFTvalid": "140-219",
+        "comp5_Li5p4_Br_rich": "125-214",
+        "modelC_Li5p4_Cl_only": "155-225",
+        "Nd2O3_winner_s04_3seeds": "44-67"
+      },
+      "absolute_scale_diagnosis": "100-1000x over experimental NCM-SE Wad (Sundar 2025: 0.2-0.4 J/m^2). Pattern identical to paper #1 v25/v26c MACE Wad finding (R=+0.957 ranking-correct, absolute UNPHYSICAL). Cause: rigid separation creates artificial dangling-bond energy. v6 protocol's relaxed interface deepens E_int well; +30A translate force-breaks formed bonds; (E_sep - E_int) includes that artifact.",
+      "ranking_observation": {
+        "Li5p4_vs_Li6_family_ratio": "3-4x larger Wad for Li5p4 family — Li vacancy + Cl-rich creates active surface (consistent with paper #1 vacancy anchor narrative)",
+        "Nd2O3_winner_pattern": "Wad reduces to Li6 levels (44-67) despite Nd2O3 creating Li vacancies. Hypothesis: heavy RE (Nd) saturates surface anchor sites, blocking Li-O cohesion mechanism Li5p4 family relies on. Paper #2 mechanism hook: 'Nd2O3 doping reduces NCM-SE adhesion below pristine Li6 levels by chemical anchor saturation — heavy rare-earth blocks Li-O cohesion.'"
+      },
+      "decision_2026_05_17": {
+        "option_A_adopted_now": "Use Stage 11 ranking + paper #1 calibration ratio. Baselines cited from paper #1 full v30u protocol (R=+0.989, 필독/adhesion/v30u_ensemble/). Doped winner Wad = stage11 × (Wad_comp1_paper1 / Wad_comp1_stage11). Paper-defensible with reviewer pre-empts.",
+        "option_B_deferred_to_top3_only": "Run full v30u protocol (face enum + 36 lateral reg + alpha + eiso + binding curve) on top-3 winners only (selected by composite score from FINAL_RANKING). Cost: top-3 x 6 baselines = 14h GPU vs intractable 50h for all 12.",
+        "option_C_not_adopted": "DFT spot-check 1-2 interfaces — too expensive (48h KISTI per case), Option A already paper-defensible."
+      },
+      "justification": [
+        "Stage 11 separation method established as cheap protocol; ranking reliable per paper #1 cross-validation (MACE Wad R=+0.957 analog)",
+        "Paper #1 calibration ratio = R=+0.989-grade absolute anchor; system-wide overestimate correction is field-standard approach",
+        "Top-3 full-protocol selection matches MLIP-screen-then-verify methodology; reviewer-immune"
+      ],
+      "todos_after_cascade_done": [
+        "Extract Stage 11 final Wad mean+/-std from 11_cathode_interface/cathode_interface_summary.json",
+        "Compute comp1 calibration ratio Wad_paper1 / Wad_stage11",
+        "Apply ratio to all winners -> calibrated Wad table for paper",
+        "Cross-check ratio per baseline (should be ~constant; if not, ranking-only narrative)"
+      ],
+      "todos_phase2_paper_writeup": [
+        "Composite score top-3 selection (FINAL_RANKING.json: dE + B_hill + mobility + calibrated_Wad)",
+        "Adapt 필독/adhesion/v30u_ensemble/run_v30u_full_ensemble.py to doped winner inputs",
+        "Full v30u protocol on top-3 (face enum + 36 reg + alpha + eiso + Morse fit) ~14h",
+        "Paper Table X: top-3 with full-protocol Wad vs all 6 baselines"
+      ],
+      "todos_future_work_not_paper2_critical": [
+        "Reverse-Wad method (relax interface, separate, relax each piece independently)",
+        "DFT spot-check 1-2 interfaces for absolute calibration anchor",
+        "NCM thickness convergence (1L vs 3L vs 5L)",
+        "Green-Kubo Haven ratio (independent of v6 anneal protocol)"
+      ],
+      "see_also": "kb/methodology/adhesion_calibration_decision_2026_05_17.md (full narrative + TODO breakdown)"
     }
   }
 }
