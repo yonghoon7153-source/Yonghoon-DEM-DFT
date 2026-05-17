@@ -102,7 +102,15 @@ def main():
         if not isinstance(records, list):
             records = []
         for r in records:
+            # v4.5.8 fix: postproc (07/08) records all share name='post_relax'
+            # (xyz stem). The true winner name is the parent dir of xyz_input.
+            # Fall back to r['name'] for other stages whose records carry the
+            # winner name directly.
             name = r.get('name', None)
+            if name in (None, 'post_relax'):
+                xyz = r.get('xyz_input') or r.get('xyz_file')
+                if xyz:
+                    name = Path(xyz).parent.name
             if not name:
                 continue
             if name not in recs:
