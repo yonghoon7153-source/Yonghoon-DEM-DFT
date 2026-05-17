@@ -401,6 +401,15 @@ def main():
             print(f"  no handler for stage {s}")
             continue
         md = REPORT_HANDLERS[s](cd)
+        # v4.5.14 (10th-round review minor): stamp provenance footer so
+        # paper SI can include stage markdown reports directly with
+        # commit / model traceability.
+        p = get_provenance()
+        md += (f"\n\n---\n"
+               f"*Generated at {p['timestamp_iso']} "
+               f"(commit `{p['git_commit'][:8]}`, "
+               f"branch `{p['git_branch']}`, "
+               f"UMA `{p['uma_model_name']}`)*\n")
         report_path = cd / f'STAGE_{s}_REPORT.md'
         report_path.write_text(md)
         print(f"  ✓ stage {s} → {report_path}")

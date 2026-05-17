@@ -47,6 +47,9 @@ mkdir -p "$OUT/logs"
 # depending on the user's cli invocation).
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+# v4.5.14: export so child shells (run_compound_batch.sh inline python)
+# can locate tools/doping/ for _provenance import.
+export REPO_ROOT
 cd "$REPO_ROOT"
 LOG() { echo "[$(date +%H:%M:%S)] $*" | tee -a "$OUT/cascade.log"; }
 LOG "REPO_ROOT resolved to: $REPO_ROOT"

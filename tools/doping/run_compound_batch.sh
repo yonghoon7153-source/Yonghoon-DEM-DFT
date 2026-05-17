@@ -229,7 +229,22 @@ echo "==================================================="
 
 python3 << PYEOF
 import json
+import sys
 from pathlib import Path
+
+# v4.5.14 fix (10th-round reviewer NEW finding): merge-level provenance
+# closes the last cascade-stage hole — Stage 02 UMA screen reads this
+# structures_summary.json as primary input, but until v4.5.14 it had
+# no git_commit / cascade_version / merge timestamp metadata.
+SCRIPT_DIR = Path("$REPO_ROOT/tools/doping" if "$REPO_ROOT" else ".")
+sys.path.insert(0, str(SCRIPT_DIR))
+try:
+    from _provenance import get_provenance
+    _merge_prov = get_provenance()
+    _merge_prov['merge_source_script'] = 'run_compound_batch.sh inline python'
+except Exception as _e:
+    _merge_prov = {'error': f'get_provenance failed: {_e}',
+                   'merge_source_script': 'run_compound_batch.sh inline python'}
 
 out_base = Path("$OUT_BASE")
 merged = []
@@ -283,7 +298,11 @@ for sub in sorted(out_base.glob("structures/*/compound_summary.json")):
         merged.append(s)
 
 merge_path = out_base / 'structures_summary.json'
-merge_path.write_text(json.dumps({'structures': merged}, indent=2, default=str))
+merge_path.write_text(json.dumps({
+    'provenance': _merge_prov,
+    'n_structures': len(merged),
+    'structures': merged,
+}, indent=2, default=str))
 print(f"  Merged {len(merged)} structures → {merge_path}")
 PYEOF
 
