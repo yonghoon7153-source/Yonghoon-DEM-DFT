@@ -19,10 +19,14 @@ Usage:
 """
 import argparse
 import json
+import sys
 from pathlib import Path
 import numpy as np
 from ase.io import read, write
 from ase import Atoms
+
+sys.path.insert(0, str(Path(__file__).parent))
+from _provenance import get_provenance
 
 # Map site labels to host element (used to find substitution targets)
 SITE_TO_HOST = {
@@ -404,6 +408,7 @@ def main():
 
     summary_path = out_dir / 'structures_summary.json'
     summary_path.write_text(json.dumps({
+        'provenance': get_provenance(),  # v4.5.13 NEW-1 fix
         'baseline': {
             'base_file': args.base,
             'polymorph': args.polymorph,

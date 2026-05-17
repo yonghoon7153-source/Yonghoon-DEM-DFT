@@ -15,8 +15,12 @@ Usage:
 """
 import argparse
 import json
+import sys
 from pathlib import Path
 import numpy as np
+
+sys.path.insert(0, str(Path(__file__).parent))
+from _provenance import get_provenance
 
 
 def main():
@@ -96,6 +100,7 @@ def main():
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
+        'provenance': get_provenance(),  # v4.5.13 NEW-1 fix
         'n_joined': len(joined),
         'ranked_by_post_anneal': ranked,
         'ranking_shifts': shifts,

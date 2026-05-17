@@ -55,6 +55,7 @@ from ase import Atoms
 import sys
 sys.path.insert(0, str(Path(__file__).parent))
 from site_preference import DOPANT_DB, HOST_SITES, site_preference_filter
+from _provenance import get_provenance
 from substitute_struct import (
     find_host_indices, find_host_indices_for_site,
     select_substitution_sites, SITE_TO_HOST,
@@ -856,6 +857,7 @@ def main():
         'anion_sites_tried': anion_sites,
         'structures': generated,
     }
+    summary['provenance'] = get_provenance()  # v4.5.13 NEW-1 fix
     summary_path = out_dir / 'compound_summary.json'
     summary_path.write_text(json.dumps(summary, indent=2, default=str))
     print(f"\n✓ Generated {len(generated)} structures")
