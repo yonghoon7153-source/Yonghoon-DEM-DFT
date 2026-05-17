@@ -64,7 +64,7 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
     print(f"    prim {len(atoms_prim)} → {supercell}x supercell {n_total} atoms "
           f"({n_Li} Li)", flush=True)
 
-    predictor = pretrained_mlip.get_predict_unit("uma-s-1p2", device=device)
+    predictor = pretrained_mlip.get_predict_unit("uma-s-1p1", device=device)
     calc = FAIRChemCalculator(predictor, task_name="omat")
 
     equil_steps = int(equil_ps * 1000 / dt_fs)
