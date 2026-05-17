@@ -88,20 +88,25 @@ def generate_pwin(atoms, prefix: str, cell_scale: float) -> str:
     lines.append("&ELECTRONS")
     # Charge-sloshing-tolerant settings for Nd-doped LPSCl (Nd f-electron
     # near-degeneracy at V_ref causes oscillation under default mixing).
-    # Empirical history (2026-05-17 KISTI Job 726129/726388 diagnosis):
-    #   - PLAIN mixing + beta=0.1 → SCF oscillates 1e-3/1e-4 forever
-    #     (charge sloshing). electron_maxstep=500 hit on v100, v102.
-    #   - LOCAL-TF mixing breaks oscillation via Thomas-Fermi screening
-    #     (standard fix for ionic systems with rare-earth f-electrons).
-    #   - CG diagonalization was tried with beta=0.05 — proved ~5x
-    #     slower per iter than Davidson even on GPU (300 s/iter vs
-    #     5-10 s/iter), completely impractical for walltime budget.
-    # Final settings (Davidson + local-TF + standard beta + relaxed
-    # conv_thr 1e-6, still 14 μeV resolution = paper-grade).
+    # Empirical history (2026-05-17/18 KISTI iteration):
+    #   v1 PLAIN + β=0.1, maxstep=500       → SCF oscillates 1e-3/1e-4
+    #   v2 local-TF + CG + β=0.05           → CG 5x slower, impractical
+    #   v3 local-TF Davidson β=0.1 step=500 → still oscillates V_ref
+    #   v4 local-TF Davidson β=0.05 ndim=16 → ✓ final settings
+    #
+    # v4 changes (algorithmic only — physical result unchanged):
+    #   mixing_beta:      0.1  → 0.05  (slower damping breaks oscillation)
+    #   mixing_ndim:      8    → 16    (deeper Pulay memory)
+    #   electron_maxstep: 500  → 1000  (safety margin)
+    # Cost: ~1.5x wall per SCF cycle. Result identical (same conv_thr).
+    # paper SI reporting: "SCF: conv_thr 1e-6 Ry, Pulay mixing with
+    # local-TF screening (β=0.05, ndim=16), Davidson diagonalization,
+    # electron_maxstep=1000."
     lines.append("    conv_thr    = 1.0d-6")
-    lines.append("    mixing_beta = 0.1")
+    lines.append("    mixing_beta = 0.05")
     lines.append("    mixing_mode = 'local-TF'")
-    lines.append("    electron_maxstep = 500")
+    lines.append("    mixing_ndim = 16")
+    lines.append("    electron_maxstep = 1000")
     lines.append("/")
     lines.append("&IONS")
     lines.append("    ion_dynamics = 'bfgs'")
