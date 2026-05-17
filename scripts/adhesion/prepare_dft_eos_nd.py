@@ -86,9 +86,19 @@ def generate_pwin(atoms, prefix: str, cell_scale: float) -> str:
     lines.append("    nosym       = .true.")
     lines.append("/")
     lines.append("&ELECTRONS")
-    lines.append("    conv_thr    = 1.0d-7")
-    lines.append("    mixing_beta = 0.1")
+    # Charge-sloshing-tolerant settings for Nd-doped LPSCl (Nd f-electron
+    # near-degeneracy at V_ref causes oscillation under plain mixing).
+    # Empirically derived 2026-05-17 from pair01 SCF fail diagnosis:
+    # plain mixing with beta=0.1 oscillates between 10^-3 and 10^-4
+    # forever. local-TF screening + CG diagonalization + beta=0.05
+    # breaks the oscillation. Cost: ~1.5x slower per SCF on close-pair
+    # (pair02) compared to plain Davidson, but enables reference-pair
+    # (pair01) convergence which is otherwise impossible.
+    lines.append("    conv_thr    = 1.0d-6")
+    lines.append("    mixing_beta = 0.05")
+    lines.append("    mixing_mode = 'local-TF'")
     lines.append("    electron_maxstep = 500")
+    lines.append("    diagonalization = 'cg'")
     lines.append("/")
     lines.append("&IONS")
     lines.append("    ion_dynamics = 'bfgs'")
