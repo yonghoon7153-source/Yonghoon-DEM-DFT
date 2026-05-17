@@ -141,10 +141,23 @@ def run_one_se(se_atoms, label, ncm_cache, seeds, calc_factory, out_dir):
     """Per-SE (winner or baseline) Wad ensemble. Returns dict."""
     from ase.optimize import LBFGS
     # NCM size choice: rhombo (62-atom) → 5x5, cubic (52-atom) → 7x7
+    # v4.5.11 CR-2 fix: also flag the choice in output so winner-vs-baseline
+    # comparisons across NCM sizes are detectable downstream.
     nx = 5 if len(se_atoms) >= 60 else 7
     if nx not in ncm_cache:
         ncm_cache[nx] = build_ncm_1L(nx)
     ncm = ncm_cache[nx]
+
+    # v4.5.11 CR-3 fix: xy area mismatch monitor (strain energy contaminates Wad)
+    se_cell = se_atoms.cell.array
+    se_area = float(np.linalg.norm(np.cross(se_cell[0], se_cell[1])))
+    ncm_cell = ncm.cell.array
+    ncm_area = float(np.linalg.norm(np.cross(ncm_cell[0], ncm_cell[1])))
+    area_mismatch_pct = abs(ncm_area - se_area) / se_area * 100.0
+    if area_mismatch_pct > 10:
+        print(f"    ⚠ [{label}] LARGE xy area mismatch {area_mismatch_pct:.1f}% "
+              f"(SE {se_area:.1f} vs NCM {ncm_area:.1f} Å²) — "
+              f"Wad may include strain energy artifact", flush=True)
 
     rng = np.random.RandomState(42)
     xy_shifts = [(rng.random(), rng.random()) for _ in range(max(seeds) - 41)]
@@ -155,24 +168,44 @@ def run_one_se(se_atoms, label, ncm_cache, seeds, calc_factory, out_dir):
         interface, n_ncm, area = build_interface(ncm, se_atoms, dx, dy)
         interface = anneal_se(interface, n_ncm, calc_factory)
         interface.calc = calc_factory()
+        # v4.5.11 CR-1 fix: LBFGS fail no longer silently swallowed.
+        # Log the exception + flag the seed in per_seed so paper-grade analysis
+        # can filter out unreliable Wad values from non-converged LBFGS.
+        lbfgs_ok = True
+        lbfgs_err = ''
         try:
-            LBFGS(interface, logfile=None).run(fmax=0.01, steps=200)
-        except Exception:
-            pass
+            opt = LBFGS(interface, logfile=None)
+            opt.run(fmax=0.01, steps=200)
+            lbfgs_steps = opt.get_number_of_steps()
+            if lbfgs_steps >= 200:
+                lbfgs_ok = False
+                lbfgs_err = f'max steps reached ({lbfgs_steps})'
+        except Exception as e:
+            lbfgs_ok = False
+            lbfgs_err = str(e)[:120]
+            print(f"    ⚠ [{label} seed={s}] LBFGS FAILED: {lbfgs_err}",
+                  flush=True)
         Wad, E_int, E_sep = calc_wad(interface, n_ncm, area, calc_factory)
         wads.append(Wad)
         per_seed.append({'seed': s, 'dx': float(dx), 'dy': float(dy),
                          'Wad_J_m2': Wad, 'E_int_eV': E_int,
-                         'E_sep_eV': E_sep, 'elapsed_s': time.time() - t0})
+                         'E_sep_eV': E_sep, 'elapsed_s': time.time() - t0,
+                         'lbfgs_ok': lbfgs_ok,
+                         'lbfgs_error': lbfgs_err if not lbfgs_ok else ''})
+        flag = '' if lbfgs_ok else '  ⚠ LBFGS unreliable'
         print(f"      [{label} seed={s}] Wad={Wad:+.3f} "
-              f"({dx:.2f},{dy:.2f}) {time.time()-t0:.0f}s", flush=True)
+              f"({dx:.2f},{dy:.2f}) {time.time()-t0:.0f}s{flag}", flush=True)
 
     return {
         'label': label,
         'ncm_nx': nx,
+        'ncm_area_A2': ncm_area,
+        'se_area_A2': se_area,
+        'area_mismatch_pct': area_mismatch_pct,
         'Wad_mean_J_m2': float(np.mean(wads)),
         'Wad_std_J_m2': float(np.std(wads)),
         'n_seeds': len(wads),
+        'n_lbfgs_ok': sum(1 for p in per_seed if p['lbfgs_ok']),
         'per_seed': per_seed,
     }
 
@@ -239,6 +272,11 @@ def main():
         all_results['baselines'].append(res)
         (out / f'baseline_{label}.json').write_text(
             json.dumps(res, indent=2, default=str))
+        # v4.5.11 CR-5: incremental save per baseline (was only per winner)
+        (out / 'cathode_interface_summary_incremental.json').write_text(
+            json.dumps({'partial': True, 'baselines': all_results['baselines'],
+                        'winners': all_results['winners']},
+                       indent=2, default=str))
 
     # Winners
     for i, rec in enumerate(winners, 1):

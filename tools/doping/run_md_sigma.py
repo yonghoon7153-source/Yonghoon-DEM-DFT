@@ -178,6 +178,29 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
     n_density = n_Li / vol_cm3
     sigma_300K = (n_density * 1e6) * q**2 * (D_300K * 1e-4) / (kB * 300) * 1e-2
 
+    # v4.5.11 M-1: physical sanity check on Arrhenius fit
+    sanity_warnings = []
+    if Ea_eV < 0:
+        sanity_warnings.append(
+            f'Ea_eV = {Ea_eV:+.4f} is NEGATIVE — non-physical, fit broken '
+            f'or T-dependence opposite of Arrhenius (cooling-not-heating?)')
+    if Ea_eV > 1.0:
+        sanity_warnings.append(
+            f'Ea_eV = {Ea_eV:.4f} > 1.0 eV — far above argyrodite literature '
+            f'(0.2-0.4 eV); MD undersampled or wrong fit window')
+    if sigma_300K > 1.0:  # > 1 S/cm = > 10^3 mS/cm vs literature 1-10 mS/cm
+        sanity_warnings.append(
+            f'σ_300K = {sigma_300K:.3e} S/cm exceeds 1 S/cm — unphysical, '
+            f'check D_300K and number density')
+    if sigma_300K < 1e-9:  # < 10^-6 mS/cm
+        sanity_warnings.append(
+            f'σ_300K = {sigma_300K:.3e} S/cm extremely low — MD timescale '
+            f'too short for slow ion transport or D underestimate')
+    if r_arr**2 < 0.85:
+        sanity_warnings.append(
+            f'Arrhenius fit R² = {r_arr**2:.3f} < 0.85 — extrapolation '
+            f'unreliable, extend prod_ps or add T points')
+
     return {
         'per_temperature': results,
         'arrhenius': {
@@ -194,10 +217,12 @@ def run_one_winner(xyz_path: Path, out_dir: Path, temps, equil_ps,
         'n_Li': int(n_Li),
         'n_atoms': int(n_total),
         'supercell': supercell,
+        'sanity_warnings': sanity_warnings,
         'caveats': [
             'Haven ratio not applied — divide σ_NE by ~2 for argyrodite '
-            'literature consistency (HR ≈ 0.3-0.7).',
-            'UMA-s-1p2 sulfide PES softening (Wang 2025) — verify against '
+            'literature consistency (HR ≈ 0.3-0.7). Paper should derive '
+            'effective H_R from comp1 σ_NE vs experimental σ (1-3 mS/cm).',
+            'UMA-s-1p1 sulfide PES softening (Wang 2025) — verify against '
             'AIMD for at least one winner.',
             f'Production {prod_ps} ps screening-grade only.',
         ],
@@ -263,9 +288,14 @@ def main():
         res['dopant'] = rec.get('dopant')
         res['site'] = rec.get('site')
         res['anion_site_label'] = rec.get('anion_site_label')
+        res['provenance'] = get_provenance()  # v4.5.11 CR-4: per-winner stamp
         (per_winner_out / 'sigma_md.json').write_text(
             json.dumps(res, indent=2, default=str))
         all_results[name] = res
+        # v4.5.11: incremental summary (mirror Stage 11 pattern)
+        (out / 'sigma_md_summary_incremental.json').write_text(
+            json.dumps({'partial': True, 'records': list(all_results.values())},
+                       indent=2, default=str))
 
     summary = {
         'provenance': get_provenance(),
