@@ -248,6 +248,9 @@ def main():
             print(f"  [{i}/{len(winners)}] {name}: MISSING {xyz} — skip")
             continue
         print(f"  [{i}/{len(winners)}] {name}")
+        # v4.5.10 fix: create winner subdirectory BEFORE running (else
+        # wad.json write fails after 5 seeds of compute → data loss)
+        (out / name).mkdir(parents=True, exist_ok=True)
         se = read(str(xyz))
         try:
             res = run_one_se(se, name, ncm_cache, seeds, calc_factory,
@@ -261,6 +264,12 @@ def main():
         all_results['winners'].append(res)
         (out / name / 'wad.json').write_text(
             json.dumps(res, indent=2, default=str))
+        # v4.5.10: incremental summary save — if a later winner crashes,
+        # earlier winners' data is preserved.
+        (out / 'cathode_interface_summary_incremental.json').write_text(
+            json.dumps({'partial': True, 'baselines': all_results['baselines'],
+                        'winners': all_results['winners']},
+                       indent=2, default=str))
 
     # Aggregate
     summary = {
