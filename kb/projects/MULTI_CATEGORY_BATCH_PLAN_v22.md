@@ -106,7 +106,10 @@ Paper #1 Type B 재현 + 새 Br case:
 
 ## 4. 실행 명령 (gabia)
 
-### Option α (권장): 모든 22 compound 한 번에
+### Option α: 모든 22 compound 한 번에 (Round 4 reviewer 우려)
+
+⚠ **DEPRECATED — Round 4 reviewer 권장으로 Option β 채택**. 아래 보존 (반환 참고용).
+
 
 ```bash
 cd /data/work/repo
@@ -156,9 +159,14 @@ for hal in Cl Br; do
 done
 ```
 
-### Option β: Phase 1A (12 oxide) → Phase 1B (10 추가) 순차
+### Option β ✅ ADOPTED — Phase 1A (12 oxide) → Round 5 review → Phase 1B (10 추가)
 
-만약 안전 path 선호:
+**Round 4 reviewer 권장 + 사용자 채택 (2026-05-18)**. 이유:
+- Partial-paper safety net: Phase 1A 완료 = oxide-only paper draft 가능
+- AlCl3/ZrCl4 chemistry issue가 Tier B에 몰려있음 → Phase 1A 안전 진행 후 1B에서 catch
+- Layer 2 R² intermediate measurement → Round 5 review checkpoint
+- 22 compound × per-compound step-by-step stepping과도 호환
+
 
 ```bash
 # Week 1-2: Tier A 12 oxide (Phase 1A)
@@ -177,6 +185,78 @@ for hal in Cl Br; do
 done
 
 # Phase 1B 끝나면 Layer 2 full multi-category로 paper 2차 draft
+```
+
+### Phase 1A & 1B per-compound stepping table (Option β + per-compound 결합)
+
+배치 자체는 sequential하게 진행하되, 각 compound 완료 후 결과 분석 + GO 결정:
+
+```
+[Phase 1A — 12 oxide, ~12-14일 (TOP_K_SIGMA=3)]
+  Step 1/22:  Li2O   ← 가장 안전, baseline-like, cascade 검증용
+  Step 2/22:  MgO
+  Step 3/22:  CaO
+  Step 4/22:  ZnO   (Sundar 2025 top coating)
+  Step 5/22:  Al2O3 (Sundar 2025 top coating)
+  Step 6/22:  Y2O3  (4d⁰)
+  Step 7/22:  La2O3 (4f⁰ closed shell)
+  Step 8/22:  Nd2O3 (4f³ — paper #2 original case study, cross-check)
+  Step 9/22:  Sm2O3 (4f⁵)
+  Step 10/22: SiO2  (P-site acceptor)
+  Step 11/22: ZrO2  (4d⁰)
+  Step 12/22: TiO2  (mixed valence test)
+
+  [Checkpoint A] Phase 1A 완료 → unified_dataset_A.csv → Layer 2 R² 1차 측정
+                 → Round 5 reviewer → Phase 1B GO 결정
+
+[Phase 1B — 10 halide+sulfide+nitride+halide-rich, ~9-11일]
+  Step 13/22: LiF    (fluoride, paper #1 cross-validation)
+  Step 14/22: MgF2
+  Step 15/22: AlF3
+  Step 16/22: AlCl3  ⚠ chemistry watch (Cl host conflict)
+  Step 17/22: ZrCl4  ⚠ chemistry watch (Zr size mismatch + Cl host)
+  Step 18/22: LiBr   (paper #1 Br extension)
+  Step 19/22: Li2S   (S²⁻ enrichment)
+  Step 20/22: Li3N   ⚠ chemistry watch (N³⁻ charge mismatch)
+  Step 21/22: LiCl-rich  (Type B, paper #1 modelC cross-validation)
+  Step 22/22: LiBr-rich  (Type B, Br=1.6 새 case)
+
+  [Checkpoint B] Phase 1B 완료 → unified_dataset_full.csv → Layer 2 full R²
+                 → Round 6 reviewer → paper draft start
+```
+
+### Per-compound 분석 protocol (각 step 끝나면)
+
+자동 추출:
+```bash
+WBASE=/data/work/runs/multi_category_2026_05_19_v22/<compound>
+python3 << 'PY'
+import json
+from pathlib import Path
+WBASE = Path('$WBASE')
+print(f"=== {WBASE.name} cascade result ===")
+# Stage markers
+done = sorted([p.name for p in WBASE.glob('STAGE_*.DONE')])
+print(f"Stages complete: {len(done)}/18+")
+# Key files
+for stage, key in [('02_screen/uma_results.json', 'results'),
+                    ('07_eos/postproc_summary.json', 'records'),
+                    ('10_md_sigma/sigma_md_summary.json', 'records')]:
+    p = WBASE / stage
+    if p.exists():
+        n = len(json.loads(p.read_text()).get(key, []))
+        print(f"  {stage}: {n} records")
+PY
+```
+
+검토 항목 (per compound):
+- ✅ 모든 stage DONE marker?
+- ✅ dataset.csv 모든 컬럼 채움 비율?
+- ✅ σ_Li winners 합리적 (pristine LPSCl 3 mS/cm 대비)?
+- ✅ EOS B₀ 합리적 (15-30 GPa 범위)?
+- ✅ Stage 11 area_mismatch_pct 기록?
+
+이슈 발견 시: cascade 중단 → fix → 재시작 (resume marker로 빨리)
 ```
 
 ## 5. Multi-category batch의 paper-grade 강점
