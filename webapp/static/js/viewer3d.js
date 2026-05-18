@@ -128,7 +128,7 @@ function buildControls(container) {
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="se_brittle">SE Tabor regime (plastic state)</option>
     </select>
-    <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px"></div>
+    <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
     <label><input type="checkbox" id="path-toggle"> <span style="font-size:11px">Percolating Path</span></label>
     <div id="path-controls" style="display:none">
@@ -1443,52 +1443,75 @@ function applyViewMode(state, mode) {
     const n_total = stats.n_se_total || 0;
     const idleStat = `${nIdle}/${n_total}`;
 
+    const filterTitles = {
+      all:     'all pair-types (worst-of)',
+      se_se:   'SE-SE 자기들끼리 force chain만',
+      am_p_se: 'AM_P-SE — 큰 AM이 SE를 plastic 누르는 영역',
+      am_s_se: 'AM_S-SE — 중간 AM이 SE를 plastic 누르는 영역',
+    };
+    const filterShort = {
+      all:'All', se_se:'SE/SE', am_p_se:'P/SE', am_s_se:'S/SE',
+    };
     const filterButtons = `
-      <div style="display:flex;gap:4px;margin:6px 0 8px;font-size:10px">
+      <div style="display:flex;flex-wrap:wrap;gap:3px;margin:5px 0 6px">
         ${['all','se_se','am_p_se','am_s_se'].map(k => {
-          const lbl = ({all:'All', se_se:'SE-SE', am_p_se:'AM_P-SE', am_s_se:'AM_S-SE'})[k];
           const active = (k === filter);
-          return `<button data-tabor-filter="${k}"
-             style="padding:2px 6px;border-radius:4px;cursor:pointer;
+          return `<button data-tabor-filter="${k}" title="${filterTitles[k]}"
+             style="padding:1px 4px;border-radius:3px;cursor:pointer;
                     background:${active?'rgba(99,102,241,.32)':'transparent'};
-                    border:1px solid rgba(99,102,241,${active?'.85':'.35'});
-                    color:${active?'#e0e7ff':'#a5b4fc'};font-size:10px">
-            ${lbl}</button>`;
+                    border:1px solid rgba(99,102,241,${active?'.85':'.30'});
+                    color:${active?'#e0e7ff':'#a5b4fc'};
+                    font-size:9.5px;line-height:1.3;
+                    min-width:0;flex:1 1 auto">
+            ${filterShort[k]}</button>`;
         }).join('')}
       </div>`;
 
+    /* Compact one-line stats per regime: dot + count + label + pair %.
+     * `title` carries the longer δ/R criterion + Korean description so
+     * the panel stays narrow but reviewers can hover for detail. */
+    const row = (color, sym, count, label, pairPct, tip) => `
+      <div title="${tip}" style="display:flex;align-items:baseline;gap:5px;
+                                  font-size:10.5px;line-height:1.3">
+        <span style="color:${color};font-size:13px;line-height:0.9;
+                     width:10px;text-align:center">${sym}</span>
+        <span style="color:#e5e7eb;font-weight:600;min-width:34px">${count}</span>
+        <span style="color:#cbd5e1;flex:1;white-space:nowrap;
+                     overflow:hidden;text-overflow:ellipsis">${label}</span>
+        <span style="color:#9ca3af;font-size:9.5px">${pairPct}</span>
+      </div>`;
+    const pctIdle = (stats.n_se_total || 0) > 0
+      ? (100 * (stats.n_se_idle || 0) / stats.n_se_total).toFixed(0) + '%'
+      : '—';
+
     setLegend(state,
-      `<b>SE Tabor regime map (δ/R 기반 plastic state)</b>
-       <span style="color:#9ca3af;font-size:10px">
-         SE 입자의 worst contact δ/R 비율로 plastic 상태 분류.<br>
-         Hertz 탄성 한계 (δ/R = 0.0011) + Tabor 소성 한계 (δ/R = 0.0078).
-       </span>
-       ${filterButtons}
-       <div style="display:flex;flex-direction:column;gap:3px;font-size:11px;
-                   margin-top:4px;line-height:1.4">
-         <div><span style="color:#f03b20">●</span>
-           <b>Plastic</b> &nbsp; δ/R > 0.0078 &nbsp;
-           <span style="color:#9ca3af">— ${nPlastic} particles
-             (${pct(regimePairs.plastic, totalActive)} pairs)</span></div>
-         <div><span style="color:#feb24c">●</span>
-           <b>Yield onset</b> &nbsp; 0.0011 &lt; δ/R ≤ 0.0078 &nbsp;
-           <span style="color:#9ca3af">— ${nYield} particles
-             (${pct(regimePairs.yield, totalActive)} pairs)</span></div>
-         <div><span style="color:#7eb8d6">●</span>
-           <b>Elastic</b> &nbsp; 0 &lt; δ/R ≤ 0.0011 &nbsp;
-           <span style="color:#9ca3af">— ${nElastic} particles
-             (${pct(regimePairs.elastic, totalActive)} pairs)</span></div>
-         <div><span style="color:#3b4a5c">●</span>
-           <b>Idle (in AM-AM void)</b> &nbsp; 접촉 stress 없음 &nbsp;
-           <span style="color:#9ca3af">— ${idleStat} SE (geometric only)</span></div>
+      `<div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
+         SE Tabor regime (δ/R)
        </div>
-       <span style="color:#9ca3af;font-size:10px;display:block;margin-top:7px;
-                    padding-top:6px;border-top:1px solid rgba(99,102,241,.18)">
-         ★ Idle 입자가 많을수록 AM-AM force chain이 dominant — paper §5
-         <code>p_se</code> sigmoid의 OFF 영역 (stress-bearing percolation 미발달).<br>
-         ★ Plastic + Yield 비율이 클수록 SE가 load-bearing network 형성 —
-         <code>p_se → 1</code>, Heckel plastic densification 활성.
-       </span>`);
+       <div style="color:#9ca3af;font-size:9.5px;line-height:1.35">
+         SE worst-contact δ/R 분류 — Hertz 0.0011 / Tabor 0.0078
+       </div>
+       ${filterButtons}
+       <div style="display:flex;flex-direction:column;gap:2px;margin-top:2px">
+         ${row('#f03b20', '●', nPlastic, 'Plastic',
+                pct(regimePairs.plastic, totalActive),
+                'δ/R > 0.0078 — fully plastic (Tabor H = 3σ_y)')}
+         ${row('#feb24c', '●', nYield, 'Yield',
+                pct(regimePairs.yield, totalActive),
+                '0.0011 < δ/R ≤ 0.0078 — yield onset')}
+         ${row('#7eb8d6', '●', nElastic, 'Elastic',
+                pct(regimePairs.elastic, totalActive),
+                '0 < δ/R ≤ 0.0011 — Hertz elastic, pre-yield')}
+         ${row('#3b4a5c', '○', (stats.n_se_idle || 0),
+                'Idle (void)', pctIdle,
+                'AM-AM void — 접촉 stress 없음, paper §5 p_se = 0')}
+       </div>
+       <div style="color:#9ca3af;font-size:9px;line-height:1.35;
+                    margin-top:5px;padding-top:4px;
+                    border-top:1px solid rgba(99,102,241,.18)">
+         ★ Idle ↑ → AM-AM force chain dominant (p_se ≈ 0)<br>
+         ★ Plastic ↑ → SE load-bearing network (p_se ≈ 1)
+       </div>`);
 
     /* Wire pair-type filter buttons (delegated, fires re-render). */
     setTimeout(() => {
