@@ -1480,8 +1480,17 @@ function applyViewMode(state, mode) {
                      overflow:hidden;text-overflow:ellipsis">${label}</span>
         <span style="color:#9ca3af;font-size:9.5px">${pairPct}</span>
       </div>`;
+    /* Per-filter Idle count: SE particles with NO recorded contact in
+     * the currently-selected pair-type bucket.  (The backend's
+     * `stats.n_se_idle` is the *global* count of SE never touched by
+     * any contact — useful only for the 'all' filter when no SE-SE +
+     * AM-SE union covers everything.)  Computed locally as
+     *   idle = total_SE − (plastic + yield + elastic in this filter)
+     * so the stat panel always reflects the active toggle. */
+    const idleCount = Math.max(
+      0, (stats.n_se_total || 0) - (nPlastic + nYield + nElastic));
     const pctIdle = (stats.n_se_total || 0) > 0
-      ? (100 * (stats.n_se_idle || 0) / stats.n_se_total).toFixed(0) + '%'
+      ? (100 * idleCount / stats.n_se_total).toFixed(0) + '%'
       : '—';
 
     setLegend(state,
@@ -1502,9 +1511,9 @@ function applyViewMode(state, mode) {
          ${row('#7eb8d6', '●', nElastic, 'Elastic',
                 pct(regimePairs.elastic, totalActive),
                 '0 < δ/R ≤ 0.0011 — Hertz elastic, pre-yield')}
-         ${row('#3b4a5c', '○', (stats.n_se_idle || 0),
+         ${row('#3b4a5c', '○', idleCount,
                 'Idle (void)', pctIdle,
-                'AM-AM void — 접촉 stress 없음, paper §5 p_se = 0')}
+                'AM-AM void — 이 pair-type에서 접촉 stress 없음. paper §5 p_se = 0')}
        </div>
        <div style="color:#9ca3af;font-size:9px;line-height:1.35;
                     margin-top:5px;padding-top:4px;
