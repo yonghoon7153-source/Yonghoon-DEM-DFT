@@ -121,13 +121,93 @@ If we wrote a Digital Twin methodology + demonstration paper now:
 4. Only Nd2O3 cascade run so far (data starvation).
 5. modelC base hardcoded (Li5.4PS4.4Cl1.6) — other base argyrodites?
 
-## What we expect from review
+## What we expect from review — explicit **recommendation** required
 
-- Identify Layer 2 readiness gaps (data, features, model, validation scheme)
-- Suggest minimum batch size for paper-grade Layer 2 demonstration
-- Critique cold-start prediction methodology
-- Flag any Layer 1 ↔ Layer 2 data flow holes in `collect_dataset.py`
-- Recommend Phase 2 transition path (when to swap GBR → GNN)
+리뷰어가 **각 항목에 대해 구체적 권장사항을 제시**해주세요. 모호한 "should
+consider X" 말고 **actionable decision** 형태로:
+
+### 1. 즉시 결정 사항 (Layer 1 fixes — 코드 수정 전 결정)
+
+리뷰어 권장 형식: **"Fix now"** / **"Defer to Phase 2"** / **"Skip entirely"**
+
+- **A. Stage 07/08 sanity_warnings 추가** (B0 5-80 GPa, E 5-200 GPa)
+  - 권장 action: ?
+  - 권장 threshold: ?
+
+- **B. Stage 11 v6 area mismatch (현재 234-325% strain)**
+  - (b1) `run_cathode_interface.py` patch — SE supercell expansion
+  - (b2) v30u_ensemble verified slab builder import (paper #1 호환)
+  - (b3) Defer — Layer 2 v1에서 Wad target 제외
+  - 권장: ?
+
+- **C. `collect_dataset.py` quality flag 통합** (lbfgs_ok, area_mismatch_pct, fit_quality_ok)
+  - 권장 action: ?
+  - Layer 2 학습 시 처리 (drop / weight / flag-only)?
+
+### 2. Layer 2 demonstration 최소 요건
+
+리뷰어 권장 형식: **수치 + 근거**
+
+- **D. Minimum dataset size for paper-grade Layer 2 GBR**
+  - 권장 N (compound × site × seed): ?
+  - 근거: ?
+
+- **E. Compound batch composition** — 어느 compound 우선?
+  - 우리 후보: Li2O, MgO, Al2O3, Y2O3, La2O3, Nd2O3, Sm2O3, SiO2, ZrO2 (9 oxide)
+  - 권장 추가/제외: ?
+  - 다른 카테고리 (fluoride, chloride, bromide) 포함 여부: ?
+
+- **F. CV scheme** (random k-fold vs GroupKFold by dopant)
+  - 권장: ?
+  - 우리 use case ("known dopant 새 site" vs "new dopant cold-start") 별 권장 다른가?
+
+### 3. 모델 아키텍처
+
+리뷰어 권장 형식: **현재 GBR 유지 권장 / GNN 전환 권장**
+
+- **G. Layer 2 v1 모델**: GBR (현재) 그대로 권장? 또는 다른 sklearn 모델?
+  - 권장: ?
+  - 근거 (interpretability vs accuracy vs deployment): ?
+
+- **H. GNN 전환 시점**
+  - 권장 dataset 크기 임계점: ?
+  - 권장 GNN: ALIGNN / M3GNet / MACE / SchNet / 기타?
+
+### 4. Demonstration paper 구조
+
+리뷰어 권장 형식: **paper 구조 outline**
+
+- **I. Paper 핵심 contribution**
+  - (i1) Methodology + tool paper (JOSS, JCIM 등)
+  - (i2) Application paper (Chem Mater, J Mater Chem A 등)
+  - (i3) Mechanism + screening hybrid
+  - 권장: ?
+
+- **J. Minimum demonstration**
+  - "이 정도면 paper 작성 시작 OK" 임계점 정량 권장: ?
+    - N compounds: ?
+    - Layer 2 CV R²: ?
+    - Cold-start accuracy: ?
+
+### 5. Phase 2 transition path
+
+리뷰어 권장 형식: **순서가 있는 step list**
+
+- **K. Active learning loop 구축 순서**
+  - 1단계: ?
+  - 2단계: ?
+  - 3단계: ?
+
+- **L. 다음 압축/재개 시 잃지 말아야 할 핵심**
+  - 권장: 추가로 anchor 문서에 박아둘 항목?
+
+## Reviewer가 명시적으로 답해주길 바라는 한 문장
+
+> *"이 프로젝트가 Digital Twin paper로 publish 가능한 최단 path는 무엇인가?
+> 우리가 지금까지 한 작업 중 직접 paper 기여하는 것은? 버려야 할 것은?
+> 그리고 아직 안 했지만 필수로 해야 할 작업은?"*
+
+답변은 우선순위와 근거 함께 제시 부탁드립니다.
 
 ## Files to attach
 
