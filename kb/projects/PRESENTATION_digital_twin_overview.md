@@ -176,7 +176,7 @@ Layer 1 UMA 정밀 계산 (Top-100만, 100 GPU-hr)
 
 ### Paper #2 / Layer 2 첫 검증 (Nd₂O₃ doping case study)
 - 5개 winner σ_Li 측정: 최고 **3.78 mS/cm** (LPSCl 수준 유지)
-- 4f³ 화학으로 16e 자리 선호 발견 (0.67 eV/O)
+- Cascade site preference filter로 16e 자리 선호 자동 식별 (0.67 eV/O 정량)
 - Layer 2 GBR: **R² = +0.953 (random) vs Dummy R² = −0.06** (학습 정량 증명)
 - LOCO R² = +0.137 → multi-compound batch 필요성 정량 증명
 
@@ -338,7 +338,7 @@ Annotations:
 Style: paper-grade matplotlib style, clean grid.
 ```
 
-### 모식도 4 — Nd₂O₃ 첨가제 작동 mechanism (case study)
+### 모식도 4 — Cascade 작동 예시: Nd₂O₃ doping site flow
 
 ```
 Schematic showing Nd₂O₃ doping mechanism in LPSCl argyrodite:
@@ -351,16 +351,16 @@ Left panel — Pristine Li₆PS₅Cl:
 Middle panel — Substitution:
   - Arrow showing Nd³⁺ replacing 3 Li⁺ (charge compensation)
   - O²⁻ replacing S²⁻ at PS₄ corner (16e site)
-  - Label: "Hard-Hard preference (Nd³⁺ 4f³ + O²⁻)"
+  - Label: "Nd³⁺ → Li_24g via charge compensation (Hard-Hard cation-anion pair)"
 
 Right panel — Doped winner (S16e + cLi48ha):
   - New PS₃O₃ tetrahedron unit shown
   - Li hopping pathway preserved (arrow)
   - Label: "σ_300K = 3.78 mS/cm (LPSCl-level)"
 
-Bottom: 4f³ electron orbital lobe diagram (Nd³⁺):
-  - 3 unpaired electrons → anisotropic polarization
-  - "0.67 eV/O preference for 16e site"
+Bottom: Cascade site preference filter (Stage 02 → 03):
+  - "site_preference 75+ DOPANT_DB + chemistry filter"
+  - "Top winners ranked by ΔE/atom × σ_Li composite"
 
 Style: clean atomic schematic, suitable for paper figure.
 Aspect ratio: wide (3 horizontal panels).
@@ -405,8 +405,9 @@ Color scheme: muted blues + accent orange.
 만 UMA 정밀 검증. 잘못 거를 위험은 cross-validation으로 통제.
 
 ### Q3: 첨가제 종류가 75개 넘는데 왜 Nd₂O₃만 했나?
-**A**: 첫 case study. 4f³ chemistry라 mechanism 해석 가치 큼. 다음 batch (~1주)
-에서 12종 동시 진행 예정.
+**A**: 첫 single-compound cascade demonstration. 22 compound batch (4 tier:
+oxide / halide / sulfide-nitride / halide-rich)가 진행 중이며, cold-start
+generalization을 정량 검증할 예정.
 
 ### Q4: 실제 실험과 어떻게 다른가?
 **A**: 시뮬레이션 후보를 합성 그룹에 추천 → 실험 측정 → 더 좋은 모델 학습 (Layer 3).
