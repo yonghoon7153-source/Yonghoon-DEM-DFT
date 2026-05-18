@@ -1467,19 +1467,38 @@ function applyViewMode(state, mode) {
         }).join('')}
       </div>`;
 
-    /* Compact one-line stats per regime: dot + count + label + pair %.
-     * `title` carries the longer δ/R criterion + Korean description so
-     * the panel stays narrow but reviewers can hover for detail. */
-    const row = (color, sym, count, label, pairPct, tip) => `
-      <div title="${tip}" style="display:flex;align-items:baseline;gap:5px;
-                                  font-size:10.5px;line-height:1.3">
-        <span style="color:${color};font-size:13px;line-height:0.9;
-                     width:10px;text-align:center">${sym}</span>
-        <span style="color:#e5e7eb;font-weight:600;min-width:34px">${count}</span>
-        <span style="color:#cbd5e1;flex:1;white-space:nowrap;
-                     overflow:hidden;text-overflow:ellipsis">${label}</span>
-        <span style="color:#9ca3af;font-size:9.5px">${pairPct}</span>
-      </div>`;
+    /* Compact one-line stats per regime: dot + label + count + pair%.
+     *   - Counts ≥ 10k use 'k' suffix to keep numeric column narrow
+     *     (101470 → "101k", 30454 → "30k"); full number lives in
+     *     the row's `title` for hover detail.
+     *   - Label uses ellipsis on overflow so long Korean text still
+     *     fits in narrow sidebars instead of pushing siblings off.
+     *   - Numeric columns are monospace + right-aligned for vertical
+     *     alignment across regimes regardless of digit count. */
+    const fmtCount = n =>
+      (n >= 10000) ? (Math.round(n / 1000) + 'k')
+      : (n >= 1000) ? n.toLocaleString()
+      : n.toString();
+    const row = (color, sym, count, label, pairPct, tip) => {
+      const tipFull = `${tip}  (${count.toLocaleString()} particles)`;
+      return `
+        <div title="${tipFull}" style="display:flex;align-items:baseline;
+                                       gap:6px;font-size:10.5px;line-height:1.35">
+          <span style="color:${color};font-size:12px;line-height:0.9;
+                       flex:0 0 10px;text-align:center">${sym}</span>
+          <span style="color:#cbd5e1;flex:1 1 auto;min-width:0;
+                       white-space:nowrap;overflow:hidden;
+                       text-overflow:ellipsis">${label}</span>
+          <span style="color:#e5e7eb;font-weight:600;
+                       font-family:ui-monospace,Menlo,monospace;
+                       flex:0 0 auto;text-align:right;
+                       min-width:30px">${fmtCount(count)}</span>
+          <span style="color:#9ca3af;font-size:9.5px;
+                       font-family:ui-monospace,Menlo,monospace;
+                       flex:0 0 auto;text-align:right;
+                       min-width:38px">${pairPct}</span>
+        </div>`;
+    };
     /* Per-filter Idle count: SE particles with NO recorded contact in
      * the currently-selected pair-type bucket.  (The backend's
      * `stats.n_se_idle` is the *global* count of SE never touched by
@@ -1497,8 +1516,9 @@ function applyViewMode(state, mode) {
       `<div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
          SE Tabor regime (δ/R)
        </div>
-       <div style="color:#9ca3af;font-size:9.5px;line-height:1.35">
-         SE worst-contact δ/R 분류 — Hertz 0.0011 / Tabor 0.0078
+       <div style="color:#9ca3af;font-size:9.5px;line-height:1.35"
+            title="δ/R thresholds: Hertz elastic→yield at 0.0011, Tabor fully plastic at 0.0078 (H = 3σ_y)">
+         worst-contact δ/R · Hertz 0.0011 / Tabor 0.0078
        </div>
        ${filterButtons}
        <div style="display:flex;flex-direction:column;gap:2px;margin-top:2px">
@@ -1512,8 +1532,8 @@ function applyViewMode(state, mode) {
                 pct(regimePairs.elastic, totalActive),
                 '0 < δ/R ≤ 0.0011 — Hertz elastic, pre-yield')}
          ${row('#3b4a5c', '○', idleCount,
-                'Idle (void)', pctIdle,
-                'AM-AM void — 이 pair-type에서 접촉 stress 없음. paper §5 p_se = 0')}
+                'Idle', pctIdle,
+                'AM-AM void — 이 pair-type에서 접촉 stress 없는 SE. paper §5 p_se = 0')}
        </div>
        <div style="color:#9ca3af;font-size:9px;line-height:1.35;
                     margin-top:5px;padding-top:4px;
