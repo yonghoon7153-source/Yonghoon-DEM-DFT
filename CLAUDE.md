@@ -10,9 +10,11 @@
 #
 # 위반 시: 사용자 시간/계산자원 손해 + 잘못된 결과 paper 위협.
 
+# 🚨 필독 — **`kb/projects/MUST_READ_digital_twin_north_star.md`** ← 압축 후 첫 5분 안에 읽기
+# 🚨 필독 — 이 프로젝트 = Digital Twin Platform (3-layer ML). Nd2O3 paper narrative drift 금지.
 # 🚨 필독 — Argyrodite Mechanical Properties Research — Knowledge Base
 # 🚨 필독 — `CODE_INVENTORY.md` 먼저 읽고 시작
-# 🚨 필독 — 새 session 시작 시 이 파일 + CODE_INVENTORY.md 둘 다 무조건 읽음
+# 🚨 필독 — 새 session 시작 시 위 north_star + 이 파일 + CODE_INVENTORY.md 셋 다 무조건 읽음
 # 🚨 필독 — `필독/literature/` 의 paper 노트도 method 결정 전 참고
 
 > [!error] CRITICAL — Before any code-related action, READ FIRST:
