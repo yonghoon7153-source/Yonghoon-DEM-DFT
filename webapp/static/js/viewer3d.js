@@ -1361,54 +1361,44 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'se_engagement') {
-    /* SE engagement & pore-risk gradient.
+    /* SE engagement → residual micro-pore map.
      *
-     * Replaces the old 4-bin "Tabor regime" view with a continuous,
-     * physically-motivated visualisation that directly answers two
-     * paper-relevant questions:
+     * Physical premise (paper §5 + Sakuda 2013 framework):
+     *   Cold-press SE plastic flow fills the AM-AM voids. When
+     *   plastic flow is STRONG, SE conforms to the gap geometry
+     *   and the gap closes — low residual porosity locally.
+     *   When plastic flow is WEAK (SE only Hertz-elastic, AM-AM
+     *   force chain bypasses SE), the SE springs back on release
+     *   and a micro-pore remains.
      *
-     *   (1) WHERE is the stress-bearing switch (p_se sigmoid) OFF?
-     *       → SE particles that have contacts but few of them are
-     *         plastic ("pre-switch SE"; AM-AM force chains are
-     *         bypassing them).  Coloured cool (blue/teal).
+     *   → "WEAK SE plastic flow"  ==  "high local pore risk"
      *
-     *   (2) WHERE might micro-pores form during compaction release?
-     *       → SE particles whose worst contact is well above the
-     *         Tabor plastic threshold (δ/R ≫ 0.0078) — these are
-     *         over-deformed and likely to spring back partially,
-     *         leaving a gap.  Marked with a bright red overlay
-     *         (highlighted on top of the engagement gradient).
-     *
-     * The engagement score per SE is
-     *     score = (n_plastic + 0.5·n_yield) / n_contacts ∈ [0, 1]
-     * The pore_risk excess per SE is
-     *     risk  = max(0, δ/R_max − 0.0078) / 0.0078
+     * So this view inverts the previous over-plastic-as-risk draft.
+     * Particles with LOW engagement (score → 0) are coloured BRIGHT
+     * RED to pop as micro-pore hotspots; particles with HIGH
+     * engagement (score → 1) are muted dark teal as harmless
+     * background that already filled their voids.
      */
     const engagement = aux.se_engagement || {};
     const all_se_ids = aux.all_se_ids || [];
 
-    /* Continuous viridis-style cool→warm gradient (engagement) */
-    const engagementColor = (s) => {
-      // 0.0 cool blue → 0.5 yellow → 1.0 green
+    /* Sequential red→muted green gradient (low engagement = pore risk) */
+    const poreRiskColor = (s) => {
       if (s <= 0.5) {
         const t = s / 0.5;
-        // Interpolate dark blue (0.18, 0.25, 0.45) → yellow (0.96, 0.86, 0.30)
-        const r = 0.18 + (0.96 - 0.18) * t;
-        const g = 0.25 + (0.86 - 0.25) * t;
-        const b = 0.45 + (0.30 - 0.45) * t;
+        const r = 1.00;
+        const g = 0.20 + (0.65 - 0.20) * t;
+        const b = 0.13 + (0.20 - 0.13) * t;
         return new THREE.Color(r, g, b);
       }
       const t = (s - 0.5) / 0.5;
-      // Yellow → green (0.20, 0.75, 0.30)
-      const r = 0.96 + (0.20 - 0.96) * t;
-      const g = 0.86 + (0.75 - 0.86) * t;
-      const b = 0.30 + (0.30 - 0.30) * t;
+      const r = 1.00 + (0.30 - 1.00) * t;
+      const g = 0.65 + (0.55 - 0.65) * t;
+      const b = 0.20 + (0.48 - 0.20) * t;
       return new THREE.Color(r, g, b);
     };
-    const colorIdle      = new THREE.Color(0x1b1f2e);  // very dark — no contact
-    const colorPoreRisk  = new THREE.Color(0xf03b20);  // bright red overlay
+    const colorIdle = new THREE.Color(0x1b1f2e);
 
-    /* Dim AM so SE state is legible */
     [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
       if (!m) return;
       m.userData.particles.forEach((_, i) =>
@@ -1417,10 +1407,7 @@ function applyViewMode(state, mode) {
       m.material.transparent = true;
     });
 
-    /* Apply per-SE colour and tally categories.  Pore-risk threshold
-     * is fixed at risk ≥ 1.0 (i.e. δ/R ≥ 2× Tabor plastic threshold);
-     * those are the cleanest micro-pore candidates. */
-    let nStrong = 0, nWeak = 0, nBypass = 0, nIdle = 0, nPoreRisk = 0;
+    let nStrong = 0, nPartial = 0, nWeak = 0, nIdle = 0;
     const seMesh = state.meshes.SE;
     if (seMesh) {
       seMesh.userData.particles.forEach((p, i) => {
@@ -1429,15 +1416,11 @@ function applyViewMode(state, mode) {
           seMesh.setColorAt(i, colorIdle); nIdle++;
           return;
         }
-        const s = e.score, r = e.pore_risk || 0;
-        if (r >= 1.0) {
-          seMesh.setColorAt(i, colorPoreRisk); nPoreRisk++;
-        } else {
-          seMesh.setColorAt(i, engagementColor(s));
-        }
+        const s = e.score;
+        seMesh.setColorAt(i, poreRiskColor(s));
         if (s >= 0.7)        nStrong++;
-        else if (s >= 0.1)   nWeak++;
-        else                 nBypass++;
+        else if (s >= 0.3)   nPartial++;
+        else                 nWeak++;
       });
       seMesh.material.opacity = 0.92;
       seMesh.material.transparent = true;
@@ -1472,43 +1455,39 @@ function applyViewMode(state, mode) {
 
     setLegend(state,
       `<div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
-         SE engagement &amp; pore risk
+         SE pore-risk map
        </div>
        <div style="color:#9ca3af;font-size:9.5px;line-height:1.35"
-            title="engagement = (n_plastic + 0.5·n_yield) / n_contacts. pore_risk = max(0, δ/R_max - 0.0078) / 0.0078.">
-         color = engagement (force-chain 참여도)<br>
-         red overlay = over-plastic (micro-pore 위험)
+            title="engagement_score = (n_plastic + 0.5·n_yield) / n_total. Lower score = SE failed to plastically fill its AM-AM void → micro-pore remains after release.">
+         약한 plastic flow → SE가 AM-AM gap 못 채움 → micro-pore<br>
+         빨강 = 위험, 녹색 = SE가 gap 잘 채움 (안전)
        </div>
        <div style="display:flex;align-items:center;gap:4px;
                     margin:6px 0 4px;font-size:9.5px;color:#9ca3af">
-         <span>0</span>
+         <span title="risk high">위험</span>
          <div style="flex:1;height:8px;border-radius:4px;
                      background:linear-gradient(90deg,
-                       rgb(46,64,115) 0%,
-                       rgb(245,219,77) 50%,
-                       rgb(51,191,77) 100%)"></div>
-         <span>1</span>
+                       rgb(255,51,33) 0%,
+                       rgb(255,166,51) 50%,
+                       rgb(77,140,122) 100%)"></div>
+         <span title="risk low">안전</span>
        </div>
        <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
-         ${row('#33bf4d', '●', nStrong, 'Strong bearer', pct(nStrong),
-                'engagement ≥ 0.7 — 대부분 contact가 plastic, force chain 완전 참여 (paper §5 p_se ≈ 1)')}
-         ${row('#f5db4d', '●', nWeak, 'Weak / pre-switch', pct(nWeak),
-                '0.1 ≤ engagement < 0.7 — 접점은 있지만 일부만 plastic. AM-AM이 우회 중 (paper §5 p_se 천이 영역)')}
-         ${row('#2e4073', '●', nBypass, 'Bypass', pct(nBypass),
-                'engagement < 0.1 — 거의 모든 접점 elastic. 기하학적으로 끼였지만 stress 운반 안 함 (p_se ≈ 0)')}
+         ${row('#ff3321', '●', nWeak, 'Pore risk: HIGH', pct(nWeak),
+                'engagement < 0.3 — SE가 거의 elastic만, plastic flow 부족. AM-AM gap에 spring-back으로 micro-pore 생성 candidate.')}
+         ${row('#ffa633', '●', nPartial, 'Pore risk: med', pct(nPartial),
+                '0.3 ≤ engagement < 0.7 — 부분적 plastic flow. 일부 gap 채우고 일부는 남음.')}
+         ${row('#4d8c7a', '●', nStrong, 'Well-engaged', pct(nStrong),
+                'engagement ≥ 0.7 — SE가 plastic flow로 AM-AM gap 완전 충진. 안전.')}
          ${row('#1b1f2e', '○', nIdle, 'Idle (no contact)', pct(nIdle),
-                'AM-AM void에 완전 isolated — 접점 자체가 없음')}
-         <div style="height:1px;background:rgba(99,102,241,.20);margin:3px 0"></div>
-         ${row('#f03b20', '★', nPoreRisk, 'Over-plastic (pore risk)',
-                pct(nPoreRisk),
-                'δ/R > 0.0156 (Tabor 임계의 2배) — 압력 해제 시 spring-back으로 micro-pore 형성 가능. 다른 카테고리와 overlap.')}
+                'AM-AM void에 완전 isolated SE — 어차피 인접 AM 없어서 channel 형성 불가.')}
        </div>
        <div style="color:#9ca3af;font-size:9px;line-height:1.4;
                     margin-top:5px;padding-top:4px;
                     border-top:1px solid rgba(99,102,241,.18)">
-         ★ Bypass / Weak ↑ → AM-AM force chain dominant, p_se OFF zone<br>
-         ★ Strong bearer ↑ → SE load-bearing network, p_se ≈ 1<br>
-         ★ Pore-risk 빨강 입자 ↑ → over-plastic, post-release micro-pore 후보
+         ★ HIGH/medium 빨강 입자가 많을수록 → cold-press 후 micro-pore 잔류 위험<br>
+         ★ Well-engaged 녹색이 dominant → SE가 잘 충진된 dense cathode<br>
+         ★ paper §5 p_se sigmoid: HIGH = OFF zone, Well = ON zone
        </div>`);
     return;
   }
