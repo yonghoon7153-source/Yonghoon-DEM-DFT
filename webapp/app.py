@@ -3024,6 +3024,20 @@ def retry_network(case_id):
                             print(f"  [AM-AM] Backfill failed: {_e}")
                         with open(met_json, 'w') as _mf:
                             json.dump(met_data, _mf, indent=2, default=str)
+                        # Stage E refresh — the network solver just rewrote
+                        # the baseline σ_* keys, so Stage E σ_*_stage_e and
+                        # the validation_flags self-report card must be
+                        # regenerated to stay in sync.  Same call shape as
+                        # /analyze and archive_reanalyze.
+                        try:
+                            subprocess.run(['python3',
+                                             os.path.join(app.config['SCRIPTS_FOLDER'],
+                                                          'run_network_full_corrections.py'),
+                                             case_id, '--quiet'],
+                                            capture_output=True, text=True,
+                                            timeout=3600)
+                        except Exception as _se:
+                            print(f"  [Stage E] retry-network refresh failed: {_se}")
                     elif net_status == 'success':
                         net_status = 'no_output'
             except subprocess.TimeoutExpired:
@@ -3211,6 +3225,17 @@ def batch_rerun_physics():
                 subprocess.run(['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                                 '--case-dir', c['case_dir']],
                                capture_output=True, text=True, timeout=600)
+
+                # 5) Stage E refresh — writes σ_ionic/σ_e/κ _stage_e keys +
+                #    validation_flags self-report card.  Idempotent (overwrites
+                #    previous Stage E with fresh-baseline-derived corrections).
+                #    Same call shape as the /analyze pipeline; without this the
+                #    Trust card stays blank and the /audit dashboard shows the
+                #    case as 'no-stage-e' after a batch rerun.
+                subprocess.run(['python3',
+                                 os.path.join(scripts, 'run_network_full_corrections.py'),
+                                 c['cid'], '--quiet'],
+                               capture_output=True, text=True, timeout=3600)
 
                 _batch_status['done'] += 1
             except Exception as e:
@@ -5088,6 +5113,23 @@ def archive_reanalyze(folder):
         cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                '--case-dir', target]
         subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+
+        # Stage E (literature-grounded grain corrections) — MUST run after
+        # analyze_contacts so the baseline σ_* keys exist for Cronau /
+        # Trevisanello / Wang multipliers to scale against.  Same call shape
+        # as the /analyze pipeline (line ~2291).  Auto-writes σ_*_stage_e
+        # AND the validation_flags self-report card → Trust card on the
+        # single.html page header is populated immediately.
+        try:
+            stage_e_cmd = ['python3',
+                            os.path.join(scripts, 'run_network_full_corrections.py'),
+                            os.path.basename(target), '--quiet']
+            subprocess.run(stage_e_cmd, capture_output=True, text=True,
+                            timeout=3600)
+        except Exception:
+            # Non-fatal — case still has baseline metrics; the audit script
+            # will surface this as 'no-stage-e' later.
+            pass
 
         with open(status_file, 'w') as f:
             f.write('done')
