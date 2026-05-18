@@ -456,3 +456,133 @@ def winner_name(xyz_path):
 - `tools/doping/bvse_proxy.py` (winner_name + 4 usages)
 - `tools/doping/run_mlip_postproc.py` (winner_name + 5 usages)
 - commit `a00fbf1` full diff
+
+---
+
+# 📍 ROUND 4 UPDATE (2026-05-18 night) — Pre-batch final check
+
+> Round 3 reviewer는 GO + 3가지 권장 (run_anneal defensive fix, slide 7
+> wording, multi-category expansion). v4.5.18로 모두 반영. 사용자가 
+> **batch 시작 전 마지막 reviewer 점검** 요청. Round 4는 *go/no-go 인증*
+> 만 묻습니다 (코드 변경 추가 X).
+
+## v4.5.18 적용 사항 (Round 3 권장 follow-up)
+
+### Fix 1: `run_anneal.py` defensive NEW-D
+Round 3 reviewer가 *"run_anneal.py:66 conditional hole — 현재 cascade
+flow에선 trigger 안 되지만 manual `run_anneal --xyz post_relax.xyz`로
+호출하면 collision"* 지적. 5곳 stem usage를 winner_name() helper로 교체
+(v4.5.17 bvse + postproc과 같은 패턴).
+
+### Fix 2: PRESENTATION slide 7 wording
+> *"Nd₂O₃ case study (σ_Li 3.78 mS/cm winner)"*  
+> → *"Single-compound demonstration: Nd₂O₃ (cascade 작동 예시, 60
+>     configs → 5 σ winners)"*
+
+Anti-drift wording (north_star anti-pattern *"Nd narrative reinforce"*
+회피).
+
+### Fix 3: Multi-category compound 확장 (Round 2 + 사용자 지적)
+Round 1 9-12 oxide → Round 2 사용자 지적 (*"ZrCl4, LiBr 같은 non-oxide
+후보 많은데"*) → Round 3 reviewer agreed *"Round 1 oxide-only was
+conservative scope-creep avoidance"* → **22-compound 4-category**:
+
+- **Tier A**: Oxides (12) — Li₂O, MgO, CaO, ZnO, Al₂O₃, Y₂O₃, La₂O₃,
+  Nd₂O₃, Sm₂O₃, SiO₂, ZrO₂, TiO₂
+- **Tier B**: Halides (6) — LiF, MgF₂, AlF₃, AlCl₃, ZrCl₄, LiBr
+- **Tier C**: Sulfide/Nitride (2) — Li₂S, Li₃N
+- **Tier D**: Halide-rich Type B (2) — LiCl-rich, LiBr-rich
+
+`kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` 8 sections에 정리.
+
+## 사용자가 선택한 batch parameters
+
+| 변수 | 값 | 근거 |
+|---|---|---|
+| N_SEEDS | 5 (default) | Li disorder 통계 |
+| SUPERCELL | 1,1,1 | 빠른 batch (supercell variant Phase 2) |
+| EXOTIC | 1 | chemistry 다양성 (반드시) |
+| TOP_K_SIGMA | **5** | σ_Li paper-essential target |
+| TOP_K_NCM | **3** (5→3 축소) | reviewer b3 Wad defer + 시간 절약 |
+
+→ 22 cascades × ~30h GPU ÷ 2 (gabia 2 GPU) ≈ **15 days 24/7**.
+
+## Round 4 specific questions
+
+### Q-R4-1: v4.5.18 변경 사항 OK?
+- `run_anneal.py` 5곳 winner_name() patch — round 3 권장 정확히 적용?
+- PRESENTATION slide 7 wording — anti-drift 효과적인가?
+- MULTI_CATEGORY_BATCH_PLAN_v22.md 22-compound list — 추가/제외 권장?
+
+### Q-R4-2: TOP_K_NCM=3 결정 합리적인가?
+- Round 2 reviewer b3 권장: *"Defer — Layer 2 v1에서 Wad target 제외"*
+- 현재 train_predictor TARGETS에서 Wad 제외됨 ✓ (b3 만족)
+- 그러나 Stage 11 자체는 실행 (TOP_K_NCM=3, 5→3 축소)
+  - 이유: Stage 11 데이터가 dataset.csv 컬럼으로 보존 → paper Discussion
+    *"strain-contaminated Wad ranking only, paper #1 R=0.989 calibration"* 사용 가능
+  - **권장**: 3 유지 / 5 복원 / 0 (완전 skip) 중?
+- 또는 baseline 중복 (22 cascade × 6 baselines)이 문제면 다른 방식 권장?
+
+### Q-R4-3: Batch 시작 명령 검토
+사용자 계획 (현재):
+```bash
+TYPE_A_COMPOUNDS=(20 oxide+halide+sulfide+nitride)
+for cmp in ${TYPE_A_COMPOUNDS[@]}; do
+    bash tools/doping/tier_cascade.sh ... --compound $cmp --x_compound 0.05
+done
+for hal in Cl Br; do
+    bash tools/doping/tier_cascade.sh ... --halide_rich $hal --excess_per_fu 0.6 \
+        --anion_site S_4a
+done
+```
+- Sequential (한 cascade 끝나면 다음) — gabia 2 GPU 동시성 활용 못 함?
+- Parallel 2 cascade 동시 실행이 더 효율적인가?
+- 또는 그대로 sequential 안전한가? (GPU memory contention 위험)
+
+### Q-R4-4: Layer 2 batch 후 quality gate 통과 안 하면?
+
+22-cascade batch가 끝나고 만약:
+- Random R² < 0.6 → feature engineering 더 필요?
+- LOCO R² < 0.0 → GroupKFold 자체가 over-strict?
+- N usable rows < 500 → 추가 compound 더 필요?
+
+**대비책 권장**: 
+- 22 batch 1차 후 quality 부족하면 추가 어떤 compound? (Round 1의 다음 25-50 후보?)
+- Layer 2 모델 swap (GBR → GNN) 시점은? Round 1 권장 N≥5000인데, 22 batch (~1650)가 부족하면?
+
+### Q-R4-5: 발표 (PRESENTATION 문서) 추가 다듬기 필요?
+
+Round 3 reviewer가 slide 7 wording 외에 다른 anti-drift 우려 짚지 않았는데,
+batch 시작 전 사용자가 발표할 가능성 있으니 한 번 더 audit:
+- 다른 슬라이드에 *"Nd narrative reinforce"* 잔재?
+- *"R=0.989 paper-validated"* 표현이 R² (Layer 2)과 헷갈리지 않게?
+- *"1000× faster than DFT"* 정량 claim 정확한가? (UMA가 DFT 대비 정확히
+  1000×는 아닐 수 있음 — 실제 wall-time ratio?)
+
+### Q-R4-6: 최종 GO/NO-GO
+
+> *"v4.5.18 + 22-compound batch + TOP_K_SIGMA=5/TOP_K_NCM=3로 즉시
+> batch 시작 GO인가? 또는 사전 fix/검증 추가 필요한가?"*
+
+## v4.5.18 attached for Round 4
+
+- `tools/doping/run_anneal.py` (+12/-5 lines, winner_name() + 5 usages)
+- `kb/projects/PRESENTATION_digital_twin_overview.md` (slide 7 wording fix)
+- `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` (NEW, 278 lines)
+- commit `8653274` v4.5.18 stat + diff
+
+## Round chain summary
+
+```
+Round 1  → 7 fix recs (DT-1~DT-7) → v4.5.15 commit
+Round 2  → 3 new findings (NEW-A/B/C) + Round 1 권장 재확인 → v4.5.16 commit
+Round 3  → NEW-D + slide wording + 22-compound expansion → v4.5.17/18 commits
+Round 4  → Pre-batch final check (이 round)
+[ Multi-compound batch runs ~2-3 weeks ]
+Round 5  → Post-batch Layer 2 R² quality gate
+Round 6  → Paper draft review
+```
+
+12 rounds completed (cascade development) + 1 round paradigm shift (Digital
+Twin) + 3 rounds Layer 2 production-readiness = **16 rounds total** through
+the entire pipeline development. Externally reviewed at every gate.
