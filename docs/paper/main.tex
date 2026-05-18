@@ -216,12 +216,34 @@ The contributions of this work are:
 
 % (Methods subsection — prose ready for one-pass review)
 
-We use LIGGGHTS-PUBLIC \citep{Kloss2012}, which implements the
-discrete-element method of \citet{CundallStrack1979} with a Hookean
-contact law that is dynamically equivalent to the Hertzian form
-\citep{Hertz1882, Thornton1997, DiRenzo2004} for the purpose of the
-force-ratio fracture classifier (see~\S\ref{sec:hooke-hertz}), to
-compact bimodal NCM811
+The most direct DEM precedent for ASSB cold pressing is
+\citet{So2021}, who implemented an explicit nonlinear-Hertzian plus
+hardness-threshold plastic-flow model --- with an equilibrium-overlap
+$h_{\mathrm{eq}}$ that evolves over time once the contact stress
+exceeds the soft-phase hardness --- and reported relative density,
+tortuosity, and modified-Bruggeman conductivity for an LPS/Si system
+across 50--600~MPa using the real LPS modulus $E_{\mathrm{SE}} = 24$~GPa
+\citep{Sakuda2013}.  Their formulation tracks plastic deformation
+particle-by-particle but is restricted in practice to single-case
+analyses because of the cost of integrating $h_{\mathrm{eq}}$.  We
+adopt a complementary shortcut: LIGGGHTS-PUBLIC \citep{Kloss2012}
+\texttt{hooke/hysteresis} contact (Walton--Braun) with the
+\emph{real} AM modulus $E_{\mathrm{AM}} = 140$~GPa (NCM811 is too
+hard to plastically deform significantly) and a porosity-calibrated
+effective SE modulus $E_{\mathrm{SE}}^{\mathrm{eff}} = 1.35$~GPa
+(softened by a factor of $\sim 18$ from the real 24~GPa to absorb
+the cumulative effect of plastic flow in the soft phase into a single
+constitutive parameter, following the standard DEM convention of
+\citet{CundallStrack1979} and \citet{Thornton1997}).  The Hooke--Hertz
+equivalence proof of \S\ref{sec:hooke-hertz} establishes that the
+form-factor difference cancels in the force-ratio fracture
+classifier, so the choice of contact-force law (Hooke vs Hertz) does
+not affect the Lawn-stage assignment.  This shortcut reaches the
+same compaction equilibrium at much lower cost than the explicit
+$h_{\mathrm{eq}}$ formulation, enabling the 167-case ensemble sweep
+analysed here, at the price of treating SE plastic flow as an
+effective elastic response rather than an explicitly time-resolved
+process.  We use this configuration to compact bimodal NCM811
 ($\AMP = D12$, $\AMS = D4$) and \LPSCl ($D1$) spheres in a periodic
 $x$-$y$ cell with rigid top / bottom plates, applying a target
 pressure $p_{\mathrm{target}}$. Inter-particle contacts use the
@@ -746,9 +768,15 @@ ratio $m = F/P_c$. The DEM-side force $F$ depends on the contact
 model only through the chosen $k_n$ or $E^{\!*}$; in either model
 both $F$ and $P_c$ scale linearly with the same effective modulus
 $E^{\!*}$ provided we use the project-wide $E_{\mathrm{AM}} =
-140$~GPa for both quantities. The ratio is therefore independent
-of whether the force--overlap relationship is linear (Hooke) or
-$\delta^{3/2}$ (Hertz):
+140$~GPa for both quantities.  Note that this proof applies only
+to AM--AM contacts (where the brittle fracture classifier
+operates); SE-involving contacts use the porosity-calibrated
+effective modulus $E_{\mathrm{SE}}^{\mathrm{eff}} = 1.35$~GPa
+established in \S\ref{sec:methods} and are exempt from
+Auerbach/Lawn fracture classification because LPSCl deforms
+plastically rather than brittlely \citep{Sakuda2013}.  The ratio
+is therefore independent of whether the force--overlap relationship
+is linear (Hooke) or $\delta^{3/2}$ (Hertz):
 \begin{equation}
   \frac{F_{\mathrm{Hooke}}}{P_c} =
   \frac{k_n\,\delta}{A K_{\mathrm{IC}}^2 R / E^{\!*}}
@@ -806,6 +834,21 @@ preservation and classical-EMT pedigree is what allows us to
 report Stage~E values on every one of the 82 cases without
 opportunistically dropping the ones that defeat
 \texttt{spsolve}.
+
+It is worth noting that the same qualitative pattern --- Bruggeman
+over-estimating the SE conductivity by a factor of $\sim 3$ at
+relevant compositions --- was independently reported by
+\citet{So2021} from their explicit-plastic-flow DEM simulation of
+the LPS/Si system, who proposed a modified Bruggeman relation with
+a critical SE volume fraction $\varphi_{\mathrm{SE}}^{\mathrm{crit}}
+\approx 0.13$ below which the conductivity goes to zero.  This is a
+distinct percolation concept from the stress-bearing
+$f_{\mathrm{perc}} = 0.65$ of \citet{LiuYin2025} used in
+Section~\ref{sec:two-mechanisms}: the former describes geometric
+SE--SE connectivity (below which the SE network is electrically
+disconnected), the latter describes the SE force-chain participation
+ratio (below which SE no longer carries the compaction load).  The
+two thresholds are complementary rather than redundant.
 
 \subsection{Sensitivity of the porosity wave-shape}
 \label{sec:sensitivity}

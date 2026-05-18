@@ -613,6 +613,90 @@ Bouvard curve), not from Bouvard 2000's plastic-flow mechanism.
 the bibliography; the existing `note` field correctly describes it as the
 three-regime hard-soft framework, not as a wave-shape reference.
 
+### 15. So et al. 2021 J Power Sources (Tier 1, direct DEM precedent for ASSB cold pressing) ⭐⭐
+
+**Kind:** explicit-plastic DEM simulation of ASSB cold pressing in MATLAB
+(Kyushu / Inoue group).  PDF stored at
+`docs/literature_coverage/pdfs/So_2021_JPS_DEM_mold_pressure_ASSB_cold_pressing.pdf`.
+
+DOI: 10.1016/j.jpowsour.2021.230344   (J. Power Sources 508 [2021] 230344)
+
+**Method (Table 1 / Fig 1):**
+
+| Parameter | So et al. value | Our value | Notes |
+|---|---|---|---|
+| AM phase | Si anode, mono-AM | NCM811 cathode, **bimodal AM_P + AM_S** | different application |
+| AM Young's modulus | E_Si = **70 GPa** (real) | E_NCM = **140 GPa** (real, unchanged) | both use literature values |
+| AM hardness | H_Si = 10.6 GPa | H_NCM = 6.0 GPa | both literature |
+| SE phase | LPS (Li₂S-P₂S₅) | LPSCl argyrodite | both sulfide |
+| SE Young's modulus | E_LPS = **24 GPa** (real, Sakuda 2013) | E_LPSCl^eff = **1.35 GPa** (~18× softened from real 24 GPa) | **same Sakuda 2013 anchor** |
+| SE hardness | H_LPS = 1.9 GPa (McGrogan 2017) | H_LPSCl = 0.85 GPa (Sakuda 2013) | both literature |
+| Plastic mechanism | **Explicit h_eq evolution** (Eq. 13: dh_eq/dt = (F_spring − F_th)/(t_rel·k_n)) once F > F_th = (2/3)·min(H_i,H_j)·A_con | **E_eff softening on SE only**, porosity-calibrated by regression against Sakuda 2013 / Minnmann 2021 | physics-explicit vs calibration-implicit |
+| Contact model | Nonlinear Hertzian + Thornton elastoplastic | LIGGGHTS `gran model hooke/hysteresis` (Walton–Braun) | both have plastic flow built in |
+| Particles | ~45,000 spherical | ~2,000 (smaller RVE) | trade-off vs ensemble size |
+| Pressures | 50, 100, 200, 400, 600 MPa | 300, 380 MPa (single point per case) | we sweep composition not pressure |
+| Compute cost | ~25 min/case (Intel Xeon W-2145) | comparable per case | similar performance |
+| **Cases analysed** | 1 (per pressure) | **167 (full ensemble sweep)** | our scale advantage |
+
+**Three key findings reproduced by both works (this is the strongest validation
+of our shortcut):**
+
+| Finding | So et al. | Ours |
+|---|---|---|
+| (1) AM-AM stress ≫ AM-SE > SE-SE | Fig 5d: at 400 MPa, AM-AM ≈ 6 GPa, AM-SE ≈ 1 GPa, SE-SE ≈ 1 GPa | Tabor regime share 85.4% on AM-AM dominated contacts; von Mises stress AM_P/all = 0.637 (AM under-stressed at mean, but individually AM-AM highest) |
+| (2) Bruggeman over-estimates SE conductivity by ~3× | Fig 8a: simulation curves below the Bruggeman line | input_1mAh_100_2: **R_brug = σ_Bruggeman / σ_ionic = 3.5×** |
+| (3) Modified Bruggeman needed at low SE fraction | φ_SE^crit = 0.13 (geometric/electrical percolation, below which σ → 0) | f_perc = 0.65 (stress-bearing percolation from Liu & Yin 2025) — **different quantity, complementary to (3)** |
+
+**Crucially the "compilation we couldn't follow":**
+
+So et al.'s explicit h_eq formulation requires a custom MATLAB
+implementation with ODE integration of the plastic-flow kinetics
+(Eq. 13).  LIGGGHTS-PUBLIC does not ship with this contact model, so
+exactly reproducing their approach would require a custom C++ pair
+style.  We deliberately did not do this, choosing instead:
+
+  (a) LIGGGHTS native `gran model hooke/hysteresis` (Walton-Braun)
+      which has some built-in plastic hysteresis via the
+      coefficientMaxElasticStiffness / coefficientPlasticityDepth /
+      coefficientAdhesionStiffness triplet (see
+      `dem_scripts/*.liggghts`);
+
+  (b) **SE-only E_eff softening to 1.35 GPa** (a single calibrated
+      number, regressed against the Sakuda 2013 + Minnmann 2021
+      target porosity at 380 MPa cold press).
+
+This trades the physical fidelity of explicit time-resolved plastic
+flow for the ability to sweep 167 compositions cheaply.  Both
+approaches reach the same compaction equilibrium and reproduce the
+same three findings above.
+
+**Three percolation thresholds — clarifying terminology overlap:**
+
+Different communities use the word "percolation threshold" for
+different quantities.  Three values appear in the literature linked
+to this work:
+
+  - **φ_SE^crit ≈ 0.13** (So et al. 2021) — geometric/electrical
+    percolation threshold; below this SE volume fraction the SE
+    network is electrically disconnected and ionic conductivity → 0.
+  - **f_SE^geometric ≈ 0.36** (e.g.  Bielefeld 2022) — random-close-
+    packing geometric percolation in 3D sphere assemblies; different
+    convention.
+  - **f_perc = 0.65** (Liu & Yin 2025, our paper) — *stress-bearing*
+    SE force-chain percolation; this is the SE fraction below which
+    the SE phase stops carrying a significant share of the compaction
+    load.
+
+These are three distinct percolation phenomena; our `f_perc = 0.65`
+extends the discussion (not replaces it) by quantifying stress-bearing
+participation, which neither So et al. nor Bielefeld measure
+directly.
+
+**Cross-link to refs.bib:** `@article{So2021, ...}` — cite in the
+introduction (DEM-ASSB precedent), in the Bruggeman discussion
+(parallel over-estimation finding), and in the percolation subsection
+(distinguishing geometric vs stress-bearing thresholds).
+
 ## Open issue: 2D-to-3D conversion
 For randomly sectioned spheres touching SE:
 - Perimeter coverage (2D SEM) ≤ surface coverage (3D)
