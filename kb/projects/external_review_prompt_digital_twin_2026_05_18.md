@@ -390,3 +390,69 @@ v4.5.15 결과 (R²=0.95 random, LOCO=0.14) 보고 round 1 권장값 조정 필�
   - BVSE n_records: 0
   - train_predictor `--mode with_structure` → 0 trained
   - train_predictor `--mode cold_start` → 1 trained (screen_de_per_atom)
+
+---
+
+# 📍 ROUND 3 UPDATE (2026-05-18 late) — v4.5.17 NEW-D fix
+
+> v4.5.16 deployed (NEW-A bvse_proxy hard-exclude + NEW-B mask + NEW-C
+> threshold). Gabia sanity test on Stage 05 alone revealed **NEW-D**:
+> same `post_relax.xyz` name collision pattern that round 9 fixed in
+> combine_rankings.py (CR-A v4.5.8) was missed in `bvse_proxy.py` and
+> `run_mlip_postproc.py`. Without fix, multi-compound batch loses 80%
+> of Stage 05/07/08 records to dict-key collision.
+
+## v4.5.17 deployed fix (NEW-D)
+
+| File | Change | Impact |
+|------|--------|--------|
+| `bvse_proxy.py` | `winner_name()` helper; replace 4 uses of `.stem` | BVSE records 0 dupes in dict |
+| `run_mlip_postproc.py` | same helper; replace 5 uses of `.stem` | EOS/elastic records keyed by parent dir |
+
+Test result (v4.5.16 in-vivo, NEW-D bug):
+- Stage 05 BVSE: 12 records computed
+- collect_dataset: only **1/61 row** with `bvs_li_mean` non-null (11 overwritten)
+
+Test result (v4.5.17 expected after gabia rerun):
+- Stage 05 BVSE: 12 records computed, **12 unique names** preserved
+- collect_dataset: **12/61 row** with `bvs_li_mean` non-null
+
+**Commit**: `a00fbf1` v4.5.17 on `claude/unified-2026-05-15`.
+
+## Round 3 question for reviewer
+
+### Q-R3-1: NEW-D fix 적절한가?
+
+`winner_name(xyz_path)` helper — `stem in ('post_relax', 'post_md')`이면
+`parent.name` 반환:
+```python
+def winner_name(xyz_path):
+    p = Path(xyz_path)
+    if p.stem in ('post_relax', 'post_md'):
+        return p.parent.name
+    return p.stem
+```
+
+- 적용 위치: 9 places (bvse 4 + postproc 5)
+- 동일 패턴이 combine_rankings.py (v4.5.8 CR-A)에 이미 적용됨 — 일관성
+- 권장 audit: 다른 cascade script에도 같은 패턴 잔재 있는지? (run_anneal,
+  run_md_sigma, run_cathode_interface, rank_anneal, generate_dft_inputs 등)
+
+### Q-R3-2: Multi-compound batch GO 인증?
+
+지금 v4.5.17 + Round 3 reviewer 인증 후 즉시 시작 가능?
+- ✅ DT-1~DT-7 (v4.5.15)
+- ✅ NEW-A/B/C (v4.5.16)
+- ✅ NEW-D (v4.5.17)
+- 추가 audit 필요한 hole 있는가?
+
+### Q-R3-3: One-line ask (Round 3)
+
+> *"v4.5.17 post NEW-D fix로 multi-compound batch GO 가능한가, 아니면
+> 추가 라운드 4가 필요한가?"*
+
+## v4.5.17 files attached
+
+- `tools/doping/bvse_proxy.py` (winner_name + 4 usages)
+- `tools/doping/run_mlip_postproc.py` (winner_name + 5 usages)
+- commit `a00fbf1` full diff
