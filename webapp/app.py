@@ -57,59 +57,178 @@ def _inject_asset_version():
 # Five gates: within_bielefeld_range, fracture_distribution_realistic,
 # solver_input_intact, stage_e_le_baseline_sigma_e, bruggeman_fallback_fired_any.
 # This helper returns a render-ready dict for the trust-card template.
+#
+# Each LED definition (key) carries the rich tooltip metadata:
+#   label      — text inside the LED chip
+#   value_key  — which validation_flags entry holds the *measured value*
+#                so the tooltip can show "ASR = 42.3 Ω·cm²" not just pass/fail
+#   value_fmt  — printf-style format ('{:.2f}', or callable)
+#   value_unit — appended to the formatted value
+#   criterion  — pass criterion in plain English (Bielefeld envelope etc.)
+#   desc_kr    — Korean one-liner explaining the gate's purpose
+#   na_reason  — Korean explanation of why a gate is N/A when data is missing
+#   pass_kr    — Korean explanation when gate passes
+#   fail_kr    — Korean explanation when gate fails
+#   ref        — paper section / reference for the gate definition
+#   polarity   — 'positive' = True is pass, 'negative' = True is fail (Brugg)
 _TRUST_LEDS = [
-    ('within_bielefeld_range',
-     'ASR',
-     'ASR_ionic ∈ Bielefeld/Lee/Minnmann literature range '
-     '(see paper §5.2 trust audit)'),
-    ('fracture_distribution_realistic',
-     'Frac',
-     'severe % ≤ 50 and ≥1 stage populated '
-     '(Lawn 1998 envelope, paper §5.2)'),
-    ('solver_input_intact',
-     'Solver',
-     'Stage-E edge-drop ratio ≤ 0.5 — direct Laplacian carries '
-     'majority of conductance'),
-    ('stage_e_le_baseline_sigma_e',
-     'σ ≤ base',
-     'Stage-E σ_e ≤ baseline (factor-≤-1 invariant; '
-     'paper §6 Bruggeman bound)'),
-    ('bruggeman_fallback_fired_any',
-     'Brugg',
-     'Bruggeman fallback fired at least once for this case '
-     '(orange = EMT carried part of the solve)'),
+    {
+        'key':       'within_bielefeld_range',
+        'label':     'ASR',
+        'value_key': 'asr_ionic_Ohm_cm2',
+        'value_fmt': '{:.2f}',
+        'value_unit': ' Ω·cm²',
+        'criterion': '10 ≤ ASR ≤ 200 Ω·cm² (literature envelope)',
+        'desc_kr':   'Cathode ASR가 sulfide ASSB 문헌 (Bielefeld 2022 / '
+                     'Lee 2020 / Minnmann 2021) 범위 안에 있는지. '
+                     'Stage E σ_ionic 의 first-line sanity check.',
+        'pass_kr':   '✓ 측정값이 문헌 envelope 안에 있음 — '
+                     'σ_ionic 계산이 비현실적 값으로 빠지지 않았다는 뜻.',
+        'fail_kr':   '✗ ASR이 문헌 범위를 벗어남. Stage E factor가 너무 '
+                     '많이 깎아냈거나 baseline σ가 비정상일 수 있음.',
+        'na_reason': '두께 또는 σ_ionic 정보가 full_metrics에 없어서 '
+                     'ASR 계산 불가 (대부분 baseline-only 케이스).',
+        'ref':       'paper §5.2 · Bielefeld 2022 / Lee 2020 / Minnmann 2021',
+        'polarity':  'positive',
+    },
+    {
+        'key':       'fracture_distribution_realistic',
+        'label':     'Frac',
+        'value_key': 'fracture_severe_pct',
+        'value_fmt': '{:.1f}',
+        'value_unit': '% severe',
+        'criterion': 'severe % ≤ 50 & ≥1 Lawn stage populated',
+        'desc_kr':   '심한 fracture (fragmentation + pulverization) 비율이 '
+                     '50%를 넘으면 classifier가 한 bucket으로 몰린 거. '
+                     '1 GPa 압축 실험에서도 보통 40% 안 넘음.',
+        'pass_kr':   '✓ Lawn 1998 cone-crack envelope 안에 있음 — '
+                     'fracture classifier가 정상 분포 출력.',
+        'fail_kr':   '✗ Severe fracture 비율 비정상. classifier threshold '
+                     '검토 또는 contact force unit 변환 (sim → real) 확인 필요.',
+        'na_reason': 'fracture_stage_counts가 비어있음 — '
+                     'fracture 분석이 아직 안 돌았거나 contact 없음.',
+        'ref':       'paper §5.2 · Lawn 1998',
+        'polarity':  'positive',
+    },
+    {
+        'key':       'solver_input_intact',
+        'label':     'Solver',
+        'value_key': 'edge_drop_ratio_e',
+        'value_fmt': '{:.2%}',
+        'value_unit': ' edges dropped',
+        'criterion': 'edge_drop_ratio_e ≤ 0.5',
+        'desc_kr':   'Stage E factor가 5% cutoff (MIN_FACTOR_CUTOFF) '
+                     '아래로 떨어진 AM-AM electronic edge를 얼마나 버렸나. '
+                     '절반 넘게 버리면 direct solver 대신 Bruggeman '
+                     'fallback이 거의 다 하고 있다는 뜻.',
+        'pass_kr':   '✓ Direct Laplacian solver가 conductance의 대부분을 '
+                     '실제로 계산 — Stage E 결과 신뢰 가능.',
+        'fail_kr':   '✗ Edge 절반 이상이 cutoff 아래로 깎여나감. '
+                     'Bruggeman fallback이 over-active. fracture index '
+                     '재검토 또는 Stage E factor 분포 조사 필요.',
+        'na_reason': 'n_dropped_e 또는 n_am_am_total 메트릭 없음 — '
+                     'Stage E 완전히 안 돌아간 케이스.',
+        'ref':       'paper §6 · MIN_FACTOR_CUTOFF = 0.05',
+        'polarity':  'positive',
+    },
+    {
+        'key':       'stage_e_le_baseline_sigma_e',
+        'label':     'σ ≤ base',
+        'value_key': None,
+        'value_fmt': None,
+        'value_unit': '',
+        'criterion': 'σ_e^(Stage E) ≤ 1.05 × σ_e^(baseline)',
+        'desc_kr':   'Stage E factor가 1 이하라는 invariant (factor는 '
+                     'conductance를 절대 늘릴 수 없다)가 지켜졌나. '
+                     'Bruggeman fallback은 by construction 보장하지만 '
+                     'direct solver 경로는 수치 오차로 약간 넘을 수 있음.',
+        'pass_kr':   '✓ Factor-≤-1 invariant 유지됨 — Stage E σ가 baseline을 '
+                     '넘지 않음. paper §6 Bruggeman bound 증명과 일관.',
+        'fail_kr':   '✗ Stage E σ_e > baseline σ_e. 수치 불안정성 또는 '
+                     'high-contrast Laplacian 발산. 7-layer 방어선 재검토.',
+        'na_reason': 'Stage E σ_e 또는 baseline σ_e가 없음 — '
+                     '비교 불가.',
+        'ref':       'paper §6 · Bruggeman bound proof',
+        'polarity':  'positive',
+    },
+    {
+        'key':       'bruggeman_fallback_fired_any',
+        'label':     'Brugg',
+        'value_key': None,
+        'value_fmt': None,
+        'value_unit': '',
+        'criterion': 'no channel fell back to EMT',
+        'desc_kr':   'σ_ionic / σ_e / κ 세 channel 중 하나라도 Bruggeman '
+                     'EMT fallback으로 풀렸나. Fallback은 정답을 보장하지만 '
+                     'high-contrast 케이스에서 conservative한 upper-bound. '
+                     'orange = EMT가 일부 채널 운반.',
+        'pass_kr':   '✓ 세 channel 모두 direct Laplacian solver로 수렴 — '
+                     'EMT 보정 필요 없었음.',
+        'fail_kr':   '⚠ 적어도 한 channel이 Bruggeman으로 fallback. 결과는 '
+                     '안전한 upper-bound이지만 direct solver 결과는 아님. '
+                     'paper §6 self-report로 명시 권장.',
+        'na_reason': 'stage_e_source 메트릭 없음 — Stage E 안 돌아간 케이스.',
+        'ref':       'paper §6 · 7-layer defence Layer 6',
+        'polarity':  'negative',  # True = fired = fail (orange)
+    },
 ]
+
+
+def _format_led_value(led_def: dict, flags: dict) -> str | None:
+    """Pull the measured value for an LED's tooltip. Returns formatted
+    string or None if no value tracked / data missing."""
+    vk = led_def.get('value_key')
+    if not vk:
+        return None
+    raw = flags.get(vk)
+    if raw is None:
+        return None
+    try:
+        fmt = led_def.get('value_fmt') or '{}'
+        return fmt.format(raw) + led_def.get('value_unit', '')
+    except (TypeError, ValueError):
+        return str(raw)
 
 
 def _build_trust_card(metrics: dict) -> dict | None:
     """Translate metrics['validation_flags'] into the LED + verdict
     structure consumed by the single.html template. Returns None when
-    the flags block is absent so the card simply isn't rendered."""
+    the flags block is absent so the card simply isn't rendered.
+
+    Each LED carries a rich tooltip payload (value + criterion + Korean
+    description + pass/fail one-liners + reference) so the hover surface
+    on the page header is a self-contained explanation of the gate."""
     flags = (metrics or {}).get('validation_flags')
     if not isinstance(flags, dict):
         return None
 
     leds = []
     n_pass = n_fail = n_na = 0
-    for key, label, tip in _TRUST_LEDS:
-        v = flags.get(key)
-        # The Bruggeman flag flips polarity: True = fallback fired = warning,
-        # not pass.  Treat True as "fail" for the card and False as pass.
-        if key == 'bruggeman_fallback_fired_any':
-            if v is None:
-                cls, n_na = 'na', n_na + 1
-            elif v:
-                cls, n_fail = 'fail', n_fail + 1
-            else:
-                cls, n_pass = 'pass', n_pass + 1
+    for led_def in _TRUST_LEDS:
+        v = flags.get(led_def['key'])
+        polarity = led_def.get('polarity', 'positive')
+        if v is None:
+            cls, state_kr = 'na', 'N/A · 측정 불가'
+            n_na += 1
+        elif (v if polarity == 'positive' else not v):
+            cls, state_kr = 'pass', led_def['pass_kr']
+            n_pass += 1
         else:
-            if v is None:
-                cls, n_na = 'na', n_na + 1
-            elif v:
-                cls, n_pass = 'pass', n_pass + 1
-            else:
-                cls, n_fail = 'fail', n_fail + 1
-        leds.append({'label': label, 'cls': cls, 'tip': tip})
+            cls, state_kr = 'fail', led_def['fail_kr']
+            n_fail += 1
+
+        value_str = _format_led_value(led_def, flags)
+        # Build the rich tooltip payload.  Template renders this as a
+        # styled <div class="trust-tip"> child of each <span class="trust-led">.
+        leds.append({
+            'label':     led_def['label'],
+            'cls':       cls,
+            'value':     value_str or '—',
+            'criterion': led_def['criterion'],
+            'desc_kr':   led_def['desc_kr'],
+            'state_kr':  state_kr if cls != 'na' else led_def['na_reason'],
+            'ref':       led_def['ref'],
+        })
 
     # Verdict: 4 gates excluding the Bruggeman warning indicator.  Trust
     # requires all assessable gates pass; any fail flips to warn/fail.
@@ -121,24 +240,29 @@ def _build_trust_card(metrics: dict) -> dict | None:
     core_fail = sum(1 for v in core_vals if v is False)
     core_assess = sum(1 for v in core_vals if v is not None)
     if core_assess == 0:
-        verdict = 'N/A'
-        verdict_cls = 'na'
+        verdict, verdict_cls = 'N/A', 'na'
+        verdict_kr = ('이 케이스는 Stage E가 돌지 않아 trust gate를 평가할 '
+                       '수 없습니다. Stage E를 실행하면 5-LED 카드가 활성화됩니다.')
     elif core_fail == 0:
-        verdict = '✓ Trust'
-        verdict_cls = 'trust'
+        verdict, verdict_cls = '✓ Trust', 'trust'
+        verdict_kr = (f'{core_assess}/{core_assess} core gate 통과 — '
+                       'paper §5.2 trustworthy 케이스로 분류 가능.')
     elif core_fail <= 1:
-        verdict = '~ Warn'
-        verdict_cls = 'warn'
+        verdict, verdict_cls = '~ Warn', 'warn'
+        verdict_kr = (f'{core_assess - core_fail}/{core_assess} core gate 통과 — '
+                       '1개 gate 실패. 결과 사용 시 caveat 명시 권장.')
     else:
-        verdict = '✗ Untrust'
-        verdict_cls = 'fail'
+        verdict, verdict_cls = '✗ Untrust', 'fail'
+        verdict_kr = (f'{core_fail}/{core_assess} core gate 실패 — '
+                       '결과 신뢰 곤란. paper §5.2 audit에서 제외 권장 케이스.')
 
     return {
         'leds': leds,
         'verdict': verdict,
         'verdict_cls': verdict_cls,
-        'verdict_tip': (f'{core_assess - core_fail}/{core_assess} core '
-                        f'gates passed (paper §5.2 audit).'),
+        'verdict_kr': verdict_kr,
+        'verdict_summary': (f'{core_assess - core_fail}/{core_assess} core '
+                             f'gates passed'),
     }
 
 app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')

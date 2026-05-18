@@ -37,16 +37,41 @@
       </div>
       {% endif %}
       {% if trust_card %}
-      <div class="trust-card" title="Stage E self-report card — see paper §5.2 and docs/Reviewer_Defence_Notes.md §A-trust">
-        <span class="trust-card-label">Trust card</span>
+      <div class="trust-card">
+        <span class="trust-card-label"
+              title="Stage E self-report card — see paper §5.2 and docs/Reviewer_Defence_Notes.md §A-trust">Trust card</span>
         {% for g in trust_card.leds %}
-        <span class="trust-led {{ g.cls }}" title="{{ g.tip }}">
+        <span class="trust-led {{ g.cls }}">
           <span class="trust-led-dot"></span>{{ g.label }}
+          <div class="trust-tip">
+            <div class="trust-tip-head">
+              <span class="trust-tip-title">{{ g.label }} gate</span>
+              <span class="trust-tip-state trust-tip-state-{{ g.cls }}">
+                {% if g.cls == 'pass' %}✓ PASS
+                {% elif g.cls == 'fail' %}✗ FAIL
+                {% else %}— N/A{% endif %}
+              </span>
+            </div>
+            <div class="trust-tip-value">{{ g.value }}</div>
+            <div class="trust-tip-criterion">criterion: {{ g.criterion }}</div>
+            <div class="trust-tip-desc">{{ g.desc_kr }}</div>
+            <div class="trust-tip-state-kr">{{ g.state_kr }}</div>
+            <div class="trust-tip-ref">{{ g.ref }}</div>
+          </div>
         </span>
         {% endfor %}
-        <span class="trust-led-verdict trust-verdict-{{ trust_card.verdict_cls }}"
-              title="{{ trust_card.verdict_tip }}">
+        <span class="trust-led-verdict trust-verdict-{{ trust_card.verdict_cls }}">
           {{ trust_card.verdict }}
+          <div class="trust-tip trust-tip-verdict">
+            <div class="trust-tip-head">
+              <span class="trust-tip-title">Verdict</span>
+              <span class="trust-tip-state trust-tip-state-{{ trust_card.verdict_cls }}">
+                {{ trust_card.verdict_summary }}
+              </span>
+            </div>
+            <div class="trust-tip-desc">{{ trust_card.verdict_kr }}</div>
+            <div class="trust-tip-ref">paper §5.2 trust audit</div>
+          </div>
         </span>
       </div>
       {% endif %}
