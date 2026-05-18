@@ -16,7 +16,7 @@ published physics that dominate at opposite ends of the composition axis:
 ```
 
 The transition between the two is governed by stress-bearing
-percolation `p_se = σ(8·(f_se − f_perc))` with `f_perc = 0.62`
+percolation `p_se = σ(8·(f_se − f_perc))` with `f_perc = 0.65`
 (Storåkers 2000 / Bouvard 2000 / Jacobs 2009 / Henkes 2005 /
 Liu & Yin 2025 consensus).
 
@@ -26,7 +26,7 @@ Liu & Yin 2025 consensus).
 |--------|-------------------|---------------------------------------------------------|---------------|
 | 100→90 | 36% → 23% rapid drop | Bouvard binary packing: small particles begin Furnas-filling AM voids | Bouvard 2004 |
 | 90→80  | Furnas valley ~17% | Bimodal/trimodal binary RCP minimum                    | McGeary 1961, Bouvard+McGeary curve |
-| 80→60  | Flat / mild rise   | Packing past optimum + plastic still inactive (f_se < f_perc = 0.62) | Furnas-Westman 1930 + Liu&Yin 2025 |
+| 80→60  | Flat / mild rise   | Packing past optimum + plastic still inactive (f_se < f_perc = 0.65) | Furnas-Westman 1930 + Liu&Yin 2025 |
 | 60→30  | 17% → 13% gradual drop | Stress-bearing percolation activates → plastic begins | Storåkers-Fleck-McMeeking 2000, Jacobs 2009 |
 | 30→0   | 13% → 10% gentle slope | Heckel plastic compaction (Tabor σ_y = H/3)         | Heckel 1961, Tabor 1948 |
 

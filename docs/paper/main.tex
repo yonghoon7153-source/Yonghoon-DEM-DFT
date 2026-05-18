@@ -798,6 +798,54 @@ thin-film case is queued as future work
 (Section~\ref{sec:future}), but the algebraic cancellation above
 already makes the classifier output model-agnostic.
 
+\subsection{Treatment of SE--SE grain-boundary resistance}
+\label{sec:se-gb}
+Each SE--SE contact in our Kirchhoff network is treated as
+bulk-conducting through the single-crystal grain conductivity
+$\sigma_{\mathrm{grain}}^{\mathrm{LPSCl}} = 3.0$~mS/cm
+\citep{Sakuda2013}, with a Holm--Maxwell constriction resistance
+$R = 1/(2\,\sigma_{\mathrm{grain}}\,a)$ \citep{Holm1967} at the
+contact radius $a$ and \emph{no explicit grain-boundary term} added
+in series.  This treatment follows the foundational assumption
+\citep{Sakuda2013, So2021, Koerver2017a} that cold pressing at room
+temperature eliminates the SE--SE grain-boundary resistance through
+plastic flow of the soft sulfide phase, so that the transport
+properties approach those of hot-pressed samples.  Indeed
+\citet{So2021} state explicitly that ``the relative conduction
+coefficient could be estimated based solely on the geometry
+(porosity and tortuosity factor) without including the effects of
+the SE--SE grain-boundary resistance,'' and report Bruggeman-relation
+fits to their DEM ionic conductivity that depend only on $\varphi_{
+\mathrm{SE}}$ and $\tau_{\mathrm{SE}}$ --- consistent with the bulk-
+only formulation we adopt here.
+
+The 300~MPa compaction target used throughout this work reaches
+87\,\% relative density (13\,\% porosity), which matches the Sakuda
+2013 cold-press density data at 300~MPa and the Minnmann 2021
+NCM-622/Li$_6$PS$_5$Cl composite measurement at 380~MPa (13--17\,\%
+porosity).  Direct SEM evidence of complete SE--SE grain-boundary
+disappearance is reported by \citet{Sakuda2013} at 360~MPa (their
+Fig.~3a); our 300~MPa is 60~MPa below this threshold, so a small
+residual GB density is expected.  The Cronau 2022 particle-size
+factor $f_{\mathrm{Cronau}}(r_{\mathrm{SE}})$ applied per contact
+during Stage~E (\S\ref{sec:stagee}) captures this
+residual GB density via a particle-size proxy: cases with
+$r_{\mathrm{SE}} \ge 0.5\,\si{\micro\metre}$ (the size-invariant
+regime) receive factor~1.00, while finer SE particles, which retain
+a higher GB area per unit volume, receive $f_{\mathrm{Cronau}} <
+1.00$ that downscales $\sigma_{\mathrm{grain}}$ accordingly.
+
+A sensitivity bound is provided by the cold-pressed pellet $\sigma$
+value of 0.25--0.40~mS/cm reported by \citet{Sakuda2013}
+(GB-dominated regime, $\sim 10\times$ lower than the single-crystal
+anchor).  Adopting this pellet value as $\sigma_{\mathrm{grain}}$
+would reduce $\sigma_{\mathrm{ionic}}$ throughout the ensemble by a
+factor of $\sim 10$, dropping the Stage~E values well below the
+Bielefeld/Minnmann literature envelope.  We therefore retain the
+single-crystal anchor plus Cronau correction as the
+\emph{best-supported}, but acknowledge that it represents the
+upper-end estimate of what is achievable at 300~MPa cold pressing.
+
 \subsection{Why the Bruggeman EMT fallback gives a sound upper bound}
 \label{sec:bruggeman-bound}
 The Layer-6 fallback in Section~\ref{sec:defence} estimates
