@@ -1,33 +1,43 @@
 #!/usr/bin/env bash
-# watch_phase1_v22.sh — 22-compound multi-category batch dashboard
+# watch_phase1_v22.sh — 105-compound multi-category batch dashboard (v22→v105)
 #
 # Usage:
 #   watch -n 30 'bash tools/doping/watch_phase1_v22.sh'
 #
-# Shows:
-#   ▸ Overall progress (X/22 compounds done, Y/12 Phase 1A, Z/10 Phase 1B)
-#   ▸ Current compound + stage
-#   ▸ Per-compound status (Phase 1A 12 + Phase 1B 10)
-#   ▸ Recent log tail
-#   ▸ GPU utilization
-#   ▸ ETA estimation
-#
-# Env: BATCH_DIR can override default path
+# Note: filename kept as v22 for backward compat. Now handles 105 compounds.
+
 BATCH_DIR="${BATCH_DIR:-/data/work/runs/multi_category_2026_05_19_v22}"
 
-# 22-compound ordered list (Phase 1A oxide → 1B halide)
-PHASE_1A=(Li2O MgO CaO ZnO Al2O3 Y2O3 La2O3 Nd2O3 Sm2O3 SiO2 ZrO2 TiO2)
-PHASE_1B=(LiF MgF2 AlF3 AlCl3 ZrCl4 LiBr Li2S Li3N LiCl_rich LiBr_rich)
-ALL_COMPOUNDS=("${PHASE_1A[@]}" "${PHASE_1B[@]}")
+# Phase 1A — 37 oxides
+PHASE_1A=(
+    Li2O Na2O Cu2O Ag2O
+    MgO ZnO CaO SrO BaO MnO CoO NiO
+    Al2O3 Sc2O3 Y2O3 La2O3 Nd2O3 Sm2O3 Gd2O3 Ga2O3 In2O3 Cr2O3 Fe2O3 B2O3
+    SiO2 GeO2 SnO2 TiO2 ZrO2 HfO2
+    V2O5 Nb2O5 Ta2O5 Sb2O5
+    CrO3 MoO3 WO3
+)
 
-# Stage labels (18+ stages)
-STAGES=(00_preflight 01_substitute 02_screen 03_winners 04_anneal 05_bvse
-        06_rerank 07_eos 08_elastic 09a_combine 09b_collect 09c_train_predictor
-        09d_dft_inputs 09e_ehull 09f_esw 10_md_sigma 11_cathode_interface
-        12_collect_final 12b_train_final)
-N_STAGES=${#STAGES[@]}
+# Phase 1B — 64 non-oxides
+PHASE_1B=(
+    LiF MgF2 CaF2 AlF3 YF3 LaF3 NdF3 ZrF4 TiF4 ScF3
+    LiCl MgCl2 CaCl2 SrCl2 BaCl2 AlCl3 GaCl3 FeCl3 CrCl3
+    YCl3 LaCl3 NdCl3 SmCl3 ScCl3 ZrCl4 HfCl4 TiCl4 NbCl5 TaCl5
+    LiBr MgBr2 CaBr2 AlBr3 ZrBr4
+    LiI NaI MgI2 AlI3
+    Li3N Mg3N2 Ca3N2 AlN GaN
+    Li2S Na2S MgS CaS Al2S3 Ga2S3 SiS2 GeS2 SnS2 As2S3 Sb2S3
+)
 
-# Color helpers (terminal-safe)
+# Tier D
+TIER_D=(Cl_rich Br_rich I_rich F_rich)
+
+N_1A=${#PHASE_1A[@]}
+N_1B=${#PHASE_1B[@]}
+N_D=${#TIER_D[@]}
+N_TOTAL=$((N_1A + N_1B + N_D))
+
+# Colors
 GRN=$'\e[32m'
 YLW=$'\e[33m'
 RED=$'\e[31m'
@@ -36,236 +46,179 @@ DIM=$'\e[2m'
 RST=$'\e[0m'
 BLD=$'\e[1m'
 
-clear_line() { printf "%-70s" "$1"; }
-
 # Header
 echo "╔════════════════════════════════════════════════════════════════════════════╗"
-echo "║  ${BLD}Multi-Category Batch v22 — Phase 1 dashboard${RST}                          ║"
-echo "║  ${DIM}$(date +'%Y-%m-%d %H:%M:%S')  ($BATCH_DIR)${RST}      ║"
+echo "║  ${BLD}Multi-Category Batch v105 — Phase 1 dashboard${RST}                         ║"
+echo "║  ${DIM}$(date +'%Y-%m-%d %H:%M:%S')  ($BATCH_DIR)${RST}     ║"
 echo "╚════════════════════════════════════════════════════════════════════════════╝"
 
-# ───── Section 1: Overall progress ───────────────────────────────────────
-declare -i n_done_1a=0 n_done_1b=0 n_running=0
+# ───── Section 1: Overall progress ────────────────────────────────────
+declare -i n_1a=0 n_1b=0 n_d=0
 current_cmp=""
-current_stage=""
 
 for cmp in "${PHASE_1A[@]}"; do
     cmp_dir="$BATCH_DIR/$cmp"
     if [ -f "$cmp_dir/STAGE_12b.DONE" ] || [ -f "$cmp_dir/STAGE_12.DONE" ]; then
-        n_done_1a=$((n_done_1a + 1))
+        n_1a=$((n_1a + 1))
     elif [ -d "$cmp_dir" ]; then
-        # 진행 중 — 마지막 STAGE_*.DONE 찾기
         last=$(ls -t "$cmp_dir"/STAGE_*.DONE 2>/dev/null | head -1 | xargs basename 2>/dev/null | cut -d. -f1)
-        [ -n "$last" ] && current_cmp="$cmp" && current_stage="$last" && n_running=1
+        [ -n "$last" ] && current_cmp="$cmp:$last"
     fi
 done
-
 for cmp in "${PHASE_1B[@]}"; do
     cmp_dir="$BATCH_DIR/$cmp"
     if [ -f "$cmp_dir/STAGE_12b.DONE" ] || [ -f "$cmp_dir/STAGE_12.DONE" ]; then
-        n_done_1b=$((n_done_1b + 1))
+        n_1b=$((n_1b + 1))
     elif [ -d "$cmp_dir" ]; then
         last=$(ls -t "$cmp_dir"/STAGE_*.DONE 2>/dev/null | head -1 | xargs basename 2>/dev/null | cut -d. -f1)
-        [ -n "$last" ] && current_cmp="$cmp" && current_stage="$last" && n_running=1
+        [ -n "$last" ] && current_cmp="$cmp:$last"
+    fi
+done
+for hal in "${TIER_D[@]}"; do
+    if [ -f "$BATCH_DIR/$hal/STAGE_12b.DONE" ] || [ -f "$BATCH_DIR/$hal/STAGE_12.DONE" ]; then
+        n_d=$((n_d + 1))
     fi
 done
 
-n_done_total=$((n_done_1a + n_done_1b))
-pct_total=$((n_done_total * 100 / 22))
+n_done=$((n_1a + n_1b + n_d))
+pct=$((n_done * 100 / N_TOTAL))
 
 echo ""
-echo "▸ Overall progress"
-printf "  Phase 1A (oxides):     %s%d/12%s  " "$GRN" "$n_done_1a" "$RST"
-# Mini progress bar
-bar_1a=""
-for i in $(seq 1 12); do
-    [ $i -le $n_done_1a ] && bar_1a+="█" || bar_1a+="·"
+echo "▸ Overall progress (105-compound v22 batch)"
+printf "  Phase 1A (oxides):           %s%3d/%-3d%s  " "$GRN" "$n_1a" "$N_1A" "$RST"
+bar=""; max_show=37
+for i in $(seq 1 $max_show); do
+    [ $i -le $n_1a ] && bar+="█" || bar+="·"
 done
-printf "[%s]\n" "$bar_1a"
+printf "[%s]\n" "$bar"
 
-printf "  Phase 1B (halide+):    %s%d/10%s  " "$GRN" "$n_done_1b" "$RST"
-bar_1b=""
-for i in $(seq 1 10); do
-    [ $i -le $n_done_1b ] && bar_1b+="█" || bar_1b+="·"
+printf "  Phase 1B (halide+non-oxide): %s%3d/%-3d%s  " "$GRN" "$n_1b" "$N_1B" "$RST"
+bar=""
+for i in $(seq 1 64); do
+    [ $i -le $n_1b ] && bar+="█" || bar+="·"
 done
-printf "[%s]\n" "$bar_1b"
+printf "[%s]\n" "$bar"
 
-printf "  ${BLD}Total:                 %s%d/22%s (%d%%)${RST}\n\n" "$GRN" "$n_done_total" "$RST" "$pct_total"
+printf "  Tier D (halide-rich):        %s%3d/%-3d%s  [%s%s]\n" "$GRN" "$n_d" "$N_D" "$RST" \
+    "$(printf '█%.0s' $(seq 1 $n_d))" "$(printf '·%.0s' $(seq 1 $((N_D - n_d))))"
 
-# ───── Section 2: Current cascade (if running) ───────────────────────────
+printf "\n  ${BLD}Total: %s%d/%d%s (%d%%)${RST}\n\n" "$GRN" "$n_done" "$N_TOTAL" "$RST" "$pct"
+
+# ───── Section 2: Currently active ────────────────────────────────────
 if [ -n "$current_cmp" ]; then
-    echo "▸ Currently active: ${CYA}${BLD}$current_cmp${RST} → last DONE = $current_stage"
-
-    # Determine which stage is in progress (the NEXT one after last DONE)
-    last_idx=-1
-    for i in "${!STAGES[@]}"; do
-        if [ "STAGE_${STAGES[$i]}" = "STAGE_${current_stage}" ] || \
-           [ "STAGE_${STAGES[$i]%%_*}" = "STAGE_${current_stage}" ]; then
-            last_idx=$i; break
-        fi
-    done
-
-    # Per-stage marker for active compound
-    cmp_dir="$BATCH_DIR/$current_cmp"
-    printf "  Stage chain: "
-    for s in "${STAGES[@]}"; do
-        marker_name="STAGE_${s%%_*}.DONE"
-        # try both label patterns
-        if ls "$cmp_dir/$marker_name" >/dev/null 2>&1 || \
-           ls "$cmp_dir"/STAGE_*"${s%%_*}"*.DONE >/dev/null 2>&1; then
-            printf "${GRN}●${RST}"
-        else
-            printf "${DIM}○${RST}"
-        fi
-    done
-    echo ""
-    echo ""
-else
-    if [ "$n_done_total" -eq 22 ]; then
-        echo "${GRN}▸ ALL 22 COMPOUNDS COMPLETE ✓${RST}"
-        echo ""
-    else
-        echo "${YLW}▸ No active cascade detected${RST}"
-        echo ""
-    fi
+    cmp_name="${current_cmp%%:*}"
+    last_stage="${current_cmp##*:}"
+    echo "▸ Currently active: ${CYA}${BLD}$cmp_name${RST} → last DONE = $last_stage"
 fi
-
-# ───── Section 3: Per-compound status table ──────────────────────────────
-echo "▸ Per-compound status"
 echo ""
-echo "  ${BLD}Phase 1A — Oxides${RST}"
+
+# ───── Section 3: Recent activity (last 5 compounds with action) ──────
+echo "▸ Recent activity (top 5 most recent)"
+ls -t "$BATCH_DIR"/*/STAGE_*.DONE 2>/dev/null | head -5 | while read f; do
+    cmp=$(basename $(dirname "$f"))
+    stage=$(basename "$f" | sed 's/STAGE_//; s/.DONE//')
+    mtime=$(stat -c "%y" "$f" 2>/dev/null | cut -d. -f1)
+    echo "  $cmp / $stage  ($mtime)"
+done
+echo ""
+
+# ───── Section 4: Per-tier progress ───────────────────────────────────
+echo "▸ Phase 1A — Oxides (37)"
 for i in "${!PHASE_1A[@]}"; do
     cmp="${PHASE_1A[$i]}"
-    step_num=$((i + 1))
+    step=$((i + 1))
     cmp_dir="$BATCH_DIR/$cmp"
     if [ -f "$cmp_dir/STAGE_12b.DONE" ] || [ -f "$cmp_dir/STAGE_12.DONE" ]; then
-        status="${GRN}✓ DONE${RST}"
-        last=""
-        # σ_Li 결과 1줄 (3 winners 평균)
-        sig_file="$cmp_dir/10_md_sigma/sigma_md_summary.json"
-        if [ -f "$sig_file" ]; then
-            sig_info=$(python3 -c "
-import json
-d = json.load(open('$sig_file'))
-recs = d.get('records', [])
-if recs:
-    sigmas = [r.get('arrhenius', {}).get('sigma_300K_S_cm_NE', 0) * 1000 for r in recs]
-    sigmas = [s for s in sigmas if s > 0]
-    if sigmas:
-        print(f'σ={max(sigmas):.2f}/{min(sigmas):.2f} mS/cm (n={len(sigmas)})')
-" 2>/dev/null)
-            [ -n "$sig_info" ] && last="$sig_info"
-        fi
+        status="${GRN}✓${RST}"
     elif [ -d "$cmp_dir" ]; then
-        last_stage=$(ls -t "$cmp_dir"/STAGE_*.DONE 2>/dev/null | head -1 | xargs basename 2>/dev/null | cut -d. -f1)
-        if [ -n "$last_stage" ]; then
-            status="${YLW}⟲ $last_stage${RST}"
-        else
-            status="${YLW}⟲ starting${RST}"
-        fi
-        last=""
+        last_stage=$(ls -t "$cmp_dir"/STAGE_*.DONE 2>/dev/null | head -1 | xargs basename 2>/dev/null | cut -d. -f1 | sed 's/STAGE_//')
+        status="${YLW}⟲${last_stage}${RST}"
     else
-        status="${DIM}─ pending${RST}"
-        last=""
+        status="${DIM}·${RST}"
     fi
-    printf "    %2d. %-12s %-25s %s\n" "$step_num" "$cmp" "$status" "$last"
+    # 6 columns per row
+    if [ $((step % 6)) -eq 1 ]; then printf "  "; fi
+    printf "%-3d.%-7s %-15s " "$step" "$cmp" "$status"
+    if [ $((step % 6)) -eq 0 ]; then echo ""; fi
 done
-
 echo ""
-echo "  ${BLD}Phase 1B — Halide/Sulfide/Nitride/Halide-rich${RST}"
+
+echo "▸ Phase 1B — Halides+Sulfide+Nitride (64)"
 for i in "${!PHASE_1B[@]}"; do
     cmp="${PHASE_1B[$i]}"
-    step_num=$((i + 13))
+    step=$((i + N_1A + 1))
     cmp_dir="$BATCH_DIR/$cmp"
     if [ -f "$cmp_dir/STAGE_12b.DONE" ] || [ -f "$cmp_dir/STAGE_12.DONE" ]; then
-        status="${GRN}✓ DONE${RST}"
-        last=""
-        sig_file="$cmp_dir/10_md_sigma/sigma_md_summary.json"
-        if [ -f "$sig_file" ]; then
-            sig_info=$(python3 -c "
-import json
-d = json.load(open('$sig_file'))
-recs = d.get('records', [])
-if recs:
-    sigmas = [r.get('arrhenius', {}).get('sigma_300K_S_cm_NE', 0) * 1000 for r in recs]
-    sigmas = [s for s in sigmas if s > 0]
-    if sigmas:
-        print(f'σ={max(sigmas):.2f}/{min(sigmas):.2f} mS/cm (n={len(sigmas)})')
-" 2>/dev/null)
-            [ -n "$sig_info" ] && last="$sig_info"
-        fi
+        status="${GRN}✓${RST}"
     elif [ -d "$cmp_dir" ]; then
-        last_stage=$(ls -t "$cmp_dir"/STAGE_*.DONE 2>/dev/null | head -1 | xargs basename 2>/dev/null | cut -d. -f1)
-        if [ -n "$last_stage" ]; then
-            status="${YLW}⟲ $last_stage${RST}"
-        else
-            status="${YLW}⟲ starting${RST}"
-        fi
-        last=""
+        last_stage=$(ls -t "$cmp_dir"/STAGE_*.DONE 2>/dev/null | head -1 | xargs basename 2>/dev/null | cut -d. -f1 | sed 's/STAGE_//')
+        status="${YLW}⟲${last_stage}${RST}"
     else
-        status="${DIM}─ pending${RST}"
-        last=""
+        status="${DIM}·${RST}"
     fi
-    chem_watch=""
-    case "$cmp" in
-        AlCl3|ZrCl4|Li3N) chem_watch="${RED}⚠${RST}" ;;
-    esac
-    printf "    %2d. %-12s %-25s %s %s\n" "$step_num" "$cmp" "$status" "$last" "$chem_watch"
+    if [ $((step % 6)) -eq $((N_1A % 6 + 1)) ]; then printf "  "; fi
+    printf "%-3d.%-7s %-15s " "$step" "$cmp" "$status"
+    if [ $((step % 6)) -eq $((N_1A % 6)) ]; then echo ""; fi
 done
 echo ""
-
-# ───── Section 4: GPU status ─────────────────────────────────────────────
-echo "▸ GPU"
-nvidia-smi --query-gpu=index,name,utilization.gpu,memory.used,memory.total,temperature.gpu \
-           --format=csv,noheader 2>/dev/null \
-  | awk -F, '{printf "  GPU%s%s: util=%-4s mem=%-12s T=%-4s\n", $1, $2, $3, $4"/"$5, $6}'
 echo ""
 
-# ───── Section 5: Active python processes ────────────────────────────────
-echo "▸ Active processes (doping)"
-ps -eo pid,etime,pcpu,pmem,cmd 2>/dev/null \
-  | grep -E "(run_uma_screening|run_anneal|run_mlip_postproc|run_md_sigma|run_cathode_interface|tier_cascade|preflight|substitute_compound)" \
+# ───── Section 5: GPU status ──────────────────────────────────────────
+echo "▸ GPU"
+nvidia-smi --query-gpu=index,utilization.gpu,memory.used,memory.total,temperature.gpu \
+           --format=csv,noheader 2>/dev/null \
+  | awk -F, '{printf "  GPU%s: util=%-5s mem=%-15s T=%-4s\n", $1, $2, $3"/"$4, $5}'
+echo ""
+
+# ───── Section 6: Active processes ────────────────────────────────────
+echo "▸ Active python processes"
+ps -eo pid,etime,pcpu,cmd 2>/dev/null \
+  | grep -E "(run_uma|run_anneal|run_mlip|run_md_sigma|run_cathode|tier_cascade|substitute_compound)" \
   | grep -v grep \
   | head -5 \
-  | awk '{printf "  %s  etime=%-12s cpu=%5s%%  %s\n", $1, $2, $3, $5}'
+  | awk '{printf "  PID %s  etime=%-10s CPU=%5s%%  %s\n", $1, $2, $3, $5}'
 echo ""
 
-# ───── Section 6: Recent log tail (current compound) ─────────────────────
+# ───── Section 7: Current compound log ────────────────────────────────
 if [ -n "$current_cmp" ]; then
-    log_file="$BATCH_DIR/$current_cmp.log"
+    cmp_name="${current_cmp%%:*}"
+    log_file="$BATCH_DIR/$cmp_name.log"
     if [ -f "$log_file" ]; then
-        echo "▸ Recent log ($current_cmp.log, last 6 lines)"
-        tail -6 "$log_file" 2>/dev/null | sed 's/^/  /' | head -6
+        echo "▸ Recent log ($cmp_name.log, last 5 lines)"
+        tail -5 "$log_file" 2>/dev/null | sed 's/^/  /'
         echo ""
     fi
 fi
 
-# ───── Section 7: ETA estimation ─────────────────────────────────────────
-if [ "$n_done_total" -gt 0 ] && [ "$n_done_total" -lt 22 ]; then
-    # 첫 compound 시작 시간 추정 (가장 오래된 STAGE_00.DONE)
-    first_start=$(find "$BATCH_DIR" -name "STAGE_00.DONE" -printf "%T@\n" 2>/dev/null | sort -n | head -1)
-    if [ -n "$first_start" ]; then
-        now=$(date +%s)
-        elapsed=$(awk "BEGIN {print $now - $first_start}")
-        elapsed_h=$(awk "BEGIN {printf \"%.1f\", $elapsed / 3600}")
-        per_cmp_h=$(awk "BEGIN {printf \"%.1f\", $elapsed / 3600 / $n_done_total}")
-        remaining_cmp=$((22 - n_done_total))
-        eta_h=$(awk "BEGIN {printf \"%.1f\", $per_cmp_h * $remaining_cmp}")
-        eta_d=$(awk "BEGIN {printf \"%.1f\", $eta_h / 24}")
-        echo "▸ ETA"
-        echo "  Elapsed:     ${elapsed_h}h ($n_done_total compounds done)"
-        echo "  Per-cmp avg: ${per_cmp_h}h"
-        echo "  Remaining:   $remaining_cmp compounds × ${per_cmp_h}h = ${eta_h}h (~${eta_d} days)"
+# ───── Section 8: ETA ──────────────────────────────────────────────────
+if [ "$n_done" -gt 0 ] && [ "$n_done" -lt "$N_TOTAL" ]; then
+    first_done_marker=$(find "$BATCH_DIR" -name "STAGE_12*.DONE" -printf "%T@\n" 2>/dev/null | sort -n | head -1)
+    if [ -z "$first_done_marker" ]; then
+        # 아직 1개도 완료 안 된 경우 — 첫 STAGE_00 사용
+        first_done_marker=$(find "$BATCH_DIR" -name "STAGE_00.DONE" -printf "%T@\n" 2>/dev/null | sort -n | head -1)
     fi
-    echo ""
+    if [ -n "$first_done_marker" ]; then
+        now=$(date +%s)
+        elapsed=$(awk "BEGIN {print $now - $first_done_marker}")
+        elapsed_h=$(awk "BEGIN {printf \"%.1f\", $elapsed / 3600}")
+        if [ "$n_done" -gt 0 ]; then
+            per_cmp_h=$(awk "BEGIN {printf \"%.1f\", $elapsed / 3600 / $n_done}")
+            remaining=$((N_TOTAL - n_done))
+            eta_h=$(awk "BEGIN {printf \"%.0f\", $per_cmp_h * $remaining}")
+            eta_d=$(awk "BEGIN {printf \"%.1f\", $eta_h / 24}")
+            echo "▸ ETA"
+            echo "  Elapsed: ${elapsed_h}h ($n_done/$N_TOTAL done)"
+            echo "  Avg per cmp: ${per_cmp_h}h"
+            echo "  Remaining: $remaining cmps × ${per_cmp_h}h = ${eta_h}h (~${eta_d} days)"
+        fi
+        echo ""
+    fi
 fi
 
-# ───── Section 8: Disk usage ─────────────────────────────────────────────
+# ───── Section 9: Disk ────────────────────────────────────────────────
 if [ -d "$BATCH_DIR" ]; then
     size=$(du -sh "$BATCH_DIR" 2>/dev/null | cut -f1)
-    echo "▸ Disk: $BATCH_DIR  ($size)"
+    free=$(df -h "$BATCH_DIR" 2>/dev/null | awk 'NR==2 {print $4}')
+    echo "▸ Disk: $BATCH_DIR  ($size used; $free free on volume)"
 fi
-
-echo ""
 echo "${DIM}  Refresh: watch -n 30 'bash tools/doping/watch_phase1_v22.sh'${RST}"
-echo "${DIM}  Stop: Ctrl+C${RST}"
