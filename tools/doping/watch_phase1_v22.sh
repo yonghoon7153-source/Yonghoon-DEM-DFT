@@ -1,12 +1,24 @@
 #!/usr/bin/env bash
-# watch_phase1_v22.sh — 105-compound multi-category batch dashboard (v22→v105)
+# watch_phase1_v22.sh — 95-compound multi-category batch dashboard
 #
-# Usage:
-#   watch -n 30 'bash tools/doping/watch_phase1_v22.sh'
+# Usage (self-looping, scrollable):
+#   bash tools/doping/watch_phase1_v22.sh             # 30s interval, infinite loop
+#   bash tools/doping/watch_phase1_v22.sh --once      # single snapshot
+#   INTERVAL=60 bash tools/doping/watch_phase1_v22.sh # 60s interval
 #
-# Note: filename kept as v22 for backward compat. Now handles 105 compounds.
+# Stop: Ctrl+C
+# Note: Terminal output is preserved (scrollable). Use `tmux` or `screen`
+#       for long-running monitoring sessions.
 
 BATCH_DIR="${BATCH_DIR:-/data/work/runs/multi_category_2026_05_19_v22}"
+INTERVAL="${INTERVAL:-30}"
+MODE="loop"
+[ "${1:-}" = "--once" ] && MODE="once"
+
+# ============================================================
+# Display function (called once per iteration)
+# ============================================================
+render_dashboard() {
 
 # Phase 1A — 37 oxides
 PHASE_1A=(
@@ -221,4 +233,25 @@ if [ -d "$BATCH_DIR" ]; then
     free=$(df -h "$BATCH_DIR" 2>/dev/null | awk 'NR==2 {print $4}')
     echo "▸ Disk: $BATCH_DIR  ($size used; $free free on volume)"
 fi
-echo "${DIM}  Refresh: watch -n 30 'bash tools/doping/watch_phase1_v22.sh'${RST}"
+echo "${DIM}  ── next refresh in ${INTERVAL}s (Ctrl+C to stop) ──${RST}"
+
+}  # ← end of render_dashboard()
+
+# ============================================================
+# Main: either single snapshot or infinite loop
+# ============================================================
+if [ "$MODE" = "once" ]; then
+    render_dashboard
+else
+    trap 'echo ""; echo "${DIM}Stopped at $(date +%T)${RST}"; exit 0' INT TERM
+    iter=0
+    while true; do
+        iter=$((iter + 1))
+        echo ""
+        echo "════════════════════════════════════════════════════════════════════════════"
+        echo "  Iteration #$iter  ($(date +'%Y-%m-%d %H:%M:%S'))"
+        echo "════════════════════════════════════════════════════════════════════════════"
+        render_dashboard
+        sleep "$INTERVAL"
+    done
+fi
