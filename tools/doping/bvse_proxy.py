@@ -197,6 +197,17 @@ def main():
                        'increase to 30 for finer scan at ~3× cost)')
     args = p.parse_args()
 
+    def winner_name(xyz_path):
+        """NEW-D fix (v4.5.17): cascade outputs like
+        04_anneal/{winner}/post_relax.xyz all share stem='post_relax',
+        causing dict-key collision in collect_dataset. Use parent dir
+        name in that case. Same pattern as combine_rankings.py CR-A
+        (v4.5.8) — applied here too."""
+        p = Path(xyz_path)
+        if p.stem in ('post_relax', 'post_md'):
+            return p.parent.name
+        return p.stem
+
     paths = []
     explicit_xyz = bool(args.xyz)
     if args.xyz:
@@ -228,19 +239,22 @@ def main():
             existing = {}
 
     records = list(existing.values())
-    todo = [p for p in paths if p.stem not in existing]
+    # NEW-D: use winner_name for resume + record naming (parent dir when
+    # stem is 'post_relax'/'post_md').
+    todo = [p for p in paths if winner_name(p) not in existing]
     print(f"  To compute: {len(todo)}/{len(paths)}")
 
     for i, xpath in enumerate(todo):
+        wname = winner_name(xpath)
         try:
             atoms = read(str(xpath))
             bvs = compute_bvs_per_li(atoms)
             mig = compute_migration_volume(atoms,
                                           n_grid=args.grid_resolution)
-            records.append({'name': xpath.stem, 'xyz': str(xpath),
+            records.append({'name': wname, 'xyz': str(xpath),
                           **bvs, **mig})
         except Exception as e:
-            records.append({'name': xpath.stem, 'error': str(e)})
+            records.append({'name': wname, 'error': str(e)})
         if (i + 1) % 50 == 0 or (i + 1) == len(todo):
             # Periodic save for crash resilience
             out.write_text(json.dumps({

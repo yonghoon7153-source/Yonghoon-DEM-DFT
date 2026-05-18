@@ -214,8 +214,20 @@ def elastic_finite_strain(atoms_ref, calc, eps=0.005, fmax=0.05,
     }
 
 
+def winner_name(xyz_path):
+    """NEW-D fix (v4.5.17): cascade outputs like
+    04_anneal/{winner}/post_relax.xyz all share stem='post_relax',
+    causing dict-key collision in collect_dataset. Use parent dir
+    name in that case."""
+    from pathlib import Path
+    p = Path(xyz_path)
+    if p.stem in ('post_relax', 'post_md'):
+        return p.parent.name
+    return p.stem
+
+
 def process_one(xyz_path, calc, out_dir, args):
-    name = xyz_path.stem
+    name = winner_name(xyz_path)
     work = out_dir / name
     work.mkdir(parents=True, exist_ok=True)
 
@@ -316,7 +328,8 @@ def main():
         existing = json.loads(summary_path.read_text())
         done = {r['name']: r for r in existing.get('records', [])}
         print(f"Resume: {len(done)} already done")
-    todo = [p for p in xyz_paths if p.stem not in done]
+    # NEW-D: use winner_name for resume check
+    todo = [p for p in xyz_paths if winner_name(p) not in done]
     print(f"To process: {len(todo)}/{len(xyz_paths)}")
 
     print(f"Loading UMA-s-1p1 ({args.device})...")
@@ -325,7 +338,8 @@ def main():
     records = list(done.values())
     t_start = time.time()
     for i, xpath in enumerate(todo):
-        print(f"\n[{i+1}/{len(todo)}] {xpath.stem}")
+        wname = winner_name(xpath)
+        print(f"\n[{i+1}/{len(todo)}] {wname}")
         try:
             rec = process_one(xpath, calc, out, args)
             records.append(rec)
@@ -338,7 +352,7 @@ def main():
                   f"Pugh={ela.get('pugh_ratio_GoverB', float('nan')):.2f}")
         except Exception as e:
             print(f"  ❌ FAILED: {e}")
-            records.append({'name': xpath.stem, 'error': str(e)})
+            records.append({'name': winner_name(xpath), 'error': str(e)})
         # Periodic save
         if (i + 1) % 3 == 0 or (i + 1) == len(todo):
             summary_path.write_text(json.dumps({
