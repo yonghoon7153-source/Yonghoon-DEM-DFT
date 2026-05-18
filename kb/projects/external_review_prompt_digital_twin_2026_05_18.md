@@ -223,3 +223,170 @@ consider X" 말고 **actionable decision** 형태로:
 > *"Is our Digital Twin platform's Layer 2 (ML surrogate) training pipeline
 > production-ready, or are there blocking gaps before we should scale up
 > the multi-compound batch?"*
+
+---
+
+# 📍 ROUND 2 UPDATE (2026-05-18 evening) — v4.5.15 deployed + in-vivo test
+
+> 첫 round (위) 권장사항을 받아 **즉시 v4.5.15 commit + deploy + gabia 실측**.
+> 결과: **Layer 2 학습 자체는 작동 확인**, but **새 bug 2건 + sample-size
+> 한계 노출**. 이번 round 2에서는 (a) v4.5.15 fix 적용의 타당성 검증, (b) 새
+> findings 처리 결정, (c) multi-compound batch 시작 전 마지막 점검.
+
+## v4.5.15 deployed fixes (round 1 권장에 기반)
+
+| ID | Description | Result |
+|----|-------------|--------|
+| DT-1 | `collect_dataset.py` stage path swap (04_bvse/05_anneal → 04_anneal/05_bvse) | ✅ anneal 12/61 non-null (was 0/61) |
+| DT-2 | Stage 10 (σ_Li) + Stage 11 (Wad) 컬럼 통합 (19 new cols) | ✅ sigma_300K 5/61 non-null |
+| DT-3 | Quality flags (sanity_warnings_count, lbfgs_ok_fraction, area_mismatch_severity, eos_fit_quality_ok) | ✅ all present |
+| DT-4 | GroupKFold + LOCO CV alongside random | ✅ 3 schemes reporting |
+| DT-5 | sigma_300K_S_cm_NE added to TARGETS | ✅ recognized |
+| DT-6 | DummyRegressor baseline | ✅ R²≈0 baseline working |
+| DT-7 | Stage 12 (collect+train) cascade reorder | ✅ post-Stage 10/11 |
+
+**Commit**: `b9f2b19 v4.5.15` on `claude/unified-2026-05-15` branch.
+**Total**: 3 files, +168 / −18 lines.
+
+## In-vivo test result (gabia, Nd2O3 cascade)
+
+### Layer 2 training works (cold_start mode, screen_de_per_atom target):
+
+| Model | Random KFold R² | LOCO R² | n_folds (loco) |
+|-------|-----------------|---------|----------------|
+| **GBR**   | **+0.953 ± 0.012** | +0.137 ± 0.539 | 2 |
+| **RF**    | +0.953 ± 0.012 | +0.137 ± 0.540 | 2 |
+| **Dummy** | −0.059 ± 0.038 | −3.32 ± 2.89  | 2 |
+
+**핵심 관찰**:
+- ✅ GBR R²=+0.95 (random) vs Dummy R²=−0.06 → **non-trivial 학습 확인**
+- ✅ LOCO collapse (0.14 vs random 0.95) → **multi-compound batch 필수성 정량 증명**
+- ✅ Dummy LOCO R²=−3.32 → **Layer 2 (R²=0.14)도 dummy보다 훨씬 나음 (+3.5)**
+- ⚠ LOCO n_folds=2 → dataset에 dopant=2종 (Nd2O3 + 1 잔여) — 진정한 cold-start 아님
+
+→ Layer 2 학습 framework 자체는 paper-grade로 작동. 다만 **single-compound로는 한계 직접 노출**.
+
+## Round 2 new findings (deployment 후 발견)
+
+### NEW-A: BVSE Stage 05 produces **empty records list**
+
+```bash
+$ python3 -c "import json; d=json.load(open('05_bvse/bvs_report.json'));
+                print('n_records:', len(d.get('records', [])))"
+n_records: 0
+```
+
+- `STAGE_05.DONE` 마커는 있음 → BVSE ran without crash
+- but `records: []` → silent fail
+- 결과: bvs_li_mean / migration_volume_fraction 등 **0/61 non-null**
+- Layer 2의 *"migration mobility"* target 학습 불가능
+
+**가능한 원인** (reviewer 진단 요청):
+- (a) `bvse_proxy.py`가 `xyz_dir` 인자 받았지만 글로빙 실패
+- (b) Stage 05 input이 Stage 04 anneal output `post_relax.xyz` 인데 file 위치 다름
+- (c) CR-3 fix (v4.5.11)가 BVSE를 post-anneal로 이동했는데 path layout 미스매치
+- (d) bvse_proxy 내부 silent exception
+
+### NEW-B: `train_predictor.py` mask 너무 strict (with_structure mode)
+
+```python
+# train_predictor.py:170 (현재)
+for f in feats_numeric:
+    if f in df.columns:
+        mask &= df[f].notna()    # ← bvs_li_mean이 0/61 → mask all False
+```
+
+`with_structure` mode가 BVSE 컬럼 non-null 요구 → NEW-A로 인해 0 usable.
+
+`cold_start` mode (BVSE features 안 봄)에선:
+- screen_de_per_atom: 60/61 usable ✓
+- 다른 target들은 sample 적어서 skip (threshold=20)
+
+**해결책 옵션** (reviewer 진단 요청):
+- (b1) `cold_start` default로 변경 (sklearn 권장: less strict masking)
+- (b2) Optional feature 패턴 — NaN imputer 도입
+- (b3) BVSE feature를 STRUCTURAL → CHEAP_FEATURES_OPTIONAL로 분리
+
+### NEW-C: Sample-size threshold issue
+
+`train_predictor.py:149`:
+```python
+if len(d) < 20:
+    print(f"  ✗ skip {tgt} (only {len(d)} usable rows)")
+```
+
+`sigma_300K_S_cm_NE`: 5 usable rows (Nd2O3 5 winners) → skip.
+
+paper에 "preliminary indicator" 결과 보고하려면 threshold 완화 필요.
+
+**Reviewer 권장 threshold?**
+- 너무 낮으면 (n<5) CV unstable
+- 너무 높으면 (n≥20) winner stage data 학습 불가
+
+## Round 2 specific questions for reviewer
+
+### Q-R2-1: NEW-A — BVSE empty records 원인 진단 + fix path?
+
+가능한 fix:
+- (a1) `bvse_proxy.py` exception handling 강화 + non-fatal logging
+- (a2) `tier_cascade.sh` Stage 05 input path 명시 (현재: `04_anneal/*/post_relax.xyz`)
+- (a3) BVSE를 optional stage로 격하, mobility target은 σ_300K MD로 대체
+- 권장: ?
+
+### Q-R2-2: NEW-B — mask logic 권장?
+
+- (b1) `cold_start` default + BVSE features는 *"if available"* optional 처리
+- (b2) sklearn SimpleImputer (mean/median) 통합
+- (b3) feature group 분리 — required vs optional
+- 권장: ?
+
+### Q-R2-3: NEW-C — small sample threshold 권장?
+
+- 현재 `len(d) < 20` → 5 sample sigma_300K skip
+- 권장 새 threshold: ?
+- multi-compound batch 후 sample 충분해지면 자동 해결되지만, paper "preliminary indicator" 보고 위해 단기 완화 가능?
+
+### Q-R2-4: Round 1 권장 그대로 진행해도 OK인가?
+
+Round 1 권장사항:
+- **D**: N ≥ 500 datapoint
+- **E**: 9 oxide + (CaO/ZnO/TiO2)
+- **F**: 3 CV scheme reporting (구현 완료)
+- **G**: GBR 유지 + dummy baseline (구현 완료, R²=−0.06 정확히 작동)
+
+v4.5.15 결과 (R²=0.95 random, LOCO=0.14) 보고 round 1 권장값 조정 필요한가?
+
+특히:
+- **N ≥ 500** — Nd2O3 single 60 사례에서 random R²=0.95 이미 나왔는데 multi-compound 후 N=500에서 어떤 R² 기대?
+- **9 oxide list** — Round 1 권장대로 그대로 진행 OK?
+- **추가 compound 카테고리** (fluoride, chloride) Round 2에서 추가하라 권장?
+
+### Q-R2-5: Multi-compound batch 시작 시점
+
+지금 즉시 시작 vs NEW-A/B/C fix 후 시작?
+
+- **Option α**: NEW-A (BVSE) 먼저 fix → batch → BVSE features 학습 포함
+- **Option β**: 즉시 batch (BVSE NaN으로 두고) → batch 후 NEW-A fix
+- **Option γ**: NEW-A는 별도 stage로 격하 (BVSE 없이 Layer 2 작동) → batch
+
+**시간 여유 있음** (사용자 명시), but 가장 efficient path?
+
+### Q-R2-6: Round 2 reviewer one-line ask
+
+> *"v4.5.15 deployment 결과 + 새 findings (BVSE empty, mask strict, threshold) 보고
+> Layer 2 production-ready로 인정 가능한가, 아니면 multi-compound batch 시작
+> 전 추가 fix 필요한 critical 항목 있는가?"*
+
+## v4.5.15 Files attached for Round 2
+
+- **commit b9f2b19**: v4.5.15 patch diff (3 files)
+- `tools/doping/collect_dataset.py` (updated)
+- `tools/doping/train_predictor.py` (updated)
+- `tools/doping/tier_cascade.sh` (Stage 12 added)
+- gabia 실측 결과:
+  - `runs/.../dataset_v3.csv` (60 cols × 61 rows)
+  - `runs/.../predictor_v3_cold/training_summary.json` (R²=0.953 GBR vs −0.06 dummy)
+- New findings 진단 결과:
+  - BVSE n_records: 0
+  - train_predictor `--mode with_structure` → 0 trained
+  - train_predictor `--mode cold_start` → 1 trained (screen_de_per_atom)
