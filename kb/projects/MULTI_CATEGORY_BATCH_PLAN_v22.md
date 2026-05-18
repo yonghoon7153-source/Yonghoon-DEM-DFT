@@ -81,19 +81,28 @@ Paper #1 Type B 재현 + 새 Br case:
 | Compounds | 22 |
 | Sites per compound | ~5 (chemistry-allowed by site_preference) |
 | Random seeds per (compound, site) | 5 |
-| Supercell variants | 3 (1×1×1, 2×1×1, 2×2×1) |
+| Supercell variants | 1 (1×1×1; multi-supercell deferred to Phase 2) |
+| **TOP_K_SIGMA** (Stage 10 σ_MD) | **3** (Round 4 reviewer 권장; was 5) |
+| **TOP_K_NCM** (Stage 11 Wad) | **3** (reviewer b3 defer + 시간 절약) |
 | **Total datapoint** | **~1,650** |
-| **GPU time (RTX A6000)** | **2-3 weeks** |
+| **GPU time (RTX A6000, 2-GPU 병렬)** | **~16 days** (TOP_K_SIGMA=3 기준) |
 
-### Stage별 시간 분포 (per compound)
+### Stage별 시간 분포 (per compound, TOP_K=3 기준)
 - Stage 01 substitute + 02 screen: 30분-1시간
 - Stage 04 anneal × 5 winners: 4-6시간
-- Stage 07 EOS × 5: 2-3시간
-- Stage 08 elastic × 5: 1-2시간
-- Stage 10 σ_Li × 5: 2-4시간
-- Stage 11 Wad × 5 (winners) + 6 baselines: 3-5시간
+- Stage 07 EOS × 3 (top-3): 1-2시간
+- Stage 08 elastic × 3 (top-3): 1시간
+- **Stage 10 σ_Li × 3 (TOP_K_SIGMA=3, 12h each)**: **~36시간** ← gating factor
+- Stage 11 Wad × 3 (winners) + 6 baselines: 3-5시간
 
-→ Compound 1개당 ~15시간 gabia GPU. 22 × 15h ÷ 2 (병렬 GPU 효율) ≈ 165h = **~1주 (24/7)**.
+→ Compound 1개당 ~45시간 gabia GPU. 22 × 45h ÷ 2 (병렬 GPU) ≈ 495h ≈ **~21일** 보수적 (안전 마진 2-3일).
+**실제 timing은 Step 1/22 (Li2O) 결과로 보정**.
+
+### TOP_K framing for paper (Round 4 reviewer 권장)
+> *"σ_Li and Wad evaluated for top-3 candidates per compound, selected by
+> the cascade composite score (ΔE/atom × Li-mobility × σ_proxy). The
+> remaining 2/5 winners undergo Wad spot-check only when ranking
+> inversions are detected in the top-3."*
 
 ## 4. 실행 명령 (gabia)
 
