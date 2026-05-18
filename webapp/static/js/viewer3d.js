@@ -126,7 +126,7 @@ function buildControls(container) {
       <option value="stress">Stress Concentration</option>
       <option value="stress_brittle">Stress + Brittle (overlay)</option>
       <option value="coverage">Coverage Heat (AM)</option>
-      <option value="se_brittle">Fracture-prone SE</option>
+      <option value="se_brittle">SE Tabor regime (plastic state)</option>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px"></div>
     <hr>
@@ -1361,45 +1361,144 @@ function applyViewMode(state, mode) {
   }
 
   if (mode === 'se_brittle') {
-    /* SE-SE pair plasticity highlight (Tabor regime).  Two thresholds
-     * δ/R = 0.0011 (yield onset, Hertz elastic→plastic transition)
-     * and δ/R = 0.0078 (fully plastic, Tabor H = 3σ_y boundary).
-     * Yellow = entering yield, red = fully plastic — both physically
-     * meaningful, palette consistent with Brittle Hotspots. */
-    dimAll();
-    const stressIds = new Set();
-    const plasticIds = new Set();
-    (aux.se_stress_pairs || []).forEach(b => {
-      [b.id1, b.id2].forEach(id => {
-        stressIds.add(id);
-        if (b.plastic) plasticIds.add(id);
+    /* SE Tabor regime map — 4-state per-SE-particle classification:
+     *   idle    : SE in AM-AM void, no recorded contact stress
+     *   elastic : SE with Hertz-elastic contacts only (pre-yield)
+     *   yield   : SE with at least one yield-onset contact (δ/R > 0.0011)
+     *   plastic : SE with at least one fully-plastic contact (δ/R > 0.0078)
+     *
+     * Pair-type filter (state.seTaborFilter, default 'all') chooses
+     * which pair population determines each SE's state:
+     *   'all'     : worst-of across SE-SE / AM_P-SE / AM_S-SE
+     *   'se_se'   : only SE-SE contacts
+     *   'am_p_se' : only AM_P-SE contacts (large hard against soft)
+     *   'am_s_se' : only AM_S-SE contacts (medium hard against soft)
+     */
+    const filter = state.seTaborFilter || 'all';
+    const se_states = aux.se_states || {};
+    const stats     = aux.tabor_stats || {};
+
+    /* Union state across selected pair-types.  Worst-of regime wins. */
+    const idLevel = new Map();   // id → 1 elastic / 2 yield / 3 plastic
+    const RANK = { elastic: 1, yield: 2, plastic: 3 };
+    const sources = (filter === 'all')
+      ? ['se_se', 'am_p_se', 'am_s_se']
+      : [filter];
+    sources.forEach(key => {
+      const st = se_states[key] || {};
+      ['elastic', 'yield', 'plastic'].forEach(regime => {
+        (st[`${regime}_ids`] || []).forEach(id => {
+          const cur = idLevel.get(id) || 0;
+          if (RANK[regime] > cur) idLevel.set(id, RANK[regime]);
+        });
       });
     });
+
+    /* Colour SE particles.  idle = visible, neutral; elastic = cool
+     * grey-blue (in network but pre-yield); yield = amber; plastic =
+     * red.  AM particles dimmed so the SE map reads cleanly. */
     const seMesh = state.meshes.SE;
+    const colorIdle    = new THREE.Color(0x3b4a5c);  // slate — in void, idle
+    const colorElastic = new THREE.Color(0x7eb8d6);  // muted cyan — elastic
+    const colorYield   = new THREE.Color(0xfeb24c);  // ColorBrewer amber
+    const colorPlastic = new THREE.Color(0xf03b20);  // ColorBrewer red
+    [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
+      if (!m) return;
+      m.userData.particles.forEach((_, i) =>
+        m.setColorAt(i, new THREE.Color(0x222226)));
+      m.material.opacity = 0.18;
+      m.material.transparent = true;
+    });
+    let nIdle = 0, nElastic = 0, nYield = 0, nPlastic = 0;
     if (seMesh) {
       seMesh.userData.particles.forEach((p, i) => {
-        if (plasticIds.has(p.id)) {
-          seMesh.setColorAt(i, new THREE.Color(0xf03b20));   // ColorBrewer YlOrRd red — Tabor plastic
-        } else if (stressIds.has(p.id)) {
-          seMesh.setColorAt(i, new THREE.Color(0xfeb24c));   // ColorBrewer YlOrRd amber — yield onset
-        }
+        const lvl = idLevel.get(p.id) || 0;
+        if (lvl === 3) { seMesh.setColorAt(i, colorPlastic); nPlastic++; }
+        else if (lvl === 2) { seMesh.setColorAt(i, colorYield); nYield++; }
+        else if (lvl === 1) { seMesh.setColorAt(i, colorElastic); nElastic++; }
+        else { seMesh.setColorAt(i, colorIdle); nIdle++; }
       });
-      seMesh.material.opacity = 0.95;
+      seMesh.material.opacity = 0.92;
       seMesh.material.transparent = true;
     }
     flushColors();
+
+    /* Pair-type stats panel.  Source totals come from the backend so
+     * the user sees actual contact counts, not just the per-particle
+     * derived numbers above (one particle can contribute to many
+     * contacts).  Percentages computed against the selected pair-type
+     * total. */
+    const pairTotals = (stats.totals || {});
+    const totalActive = sources.reduce((s, k) => s + (pairTotals[k] || 0), 0);
+    const pairCounts = (stats.pair_counts || {});
+    let regimePairs = { elastic: 0, yield: 0, plastic: 0 };
+    sources.forEach(k => {
+      const pc = pairCounts[k] || {};
+      regimePairs.elastic += pc.elastic || 0;
+      regimePairs.yield   += pc.yield   || 0;
+      regimePairs.plastic += pc.plastic || 0;
+    });
+    const pct = (n, tot) => tot > 0 ? (100 * n / tot).toFixed(1) + '%' : '—';
+
+    const n_total = stats.n_se_total || 0;
+    const idleStat = `${nIdle}/${n_total}`;
+
+    const filterButtons = `
+      <div style="display:flex;gap:4px;margin:6px 0 8px;font-size:10px">
+        ${['all','se_se','am_p_se','am_s_se'].map(k => {
+          const lbl = ({all:'All', se_se:'SE-SE', am_p_se:'AM_P-SE', am_s_se:'AM_S-SE'})[k];
+          const active = (k === filter);
+          return `<button data-tabor-filter="${k}"
+             style="padding:2px 6px;border-radius:4px;cursor:pointer;
+                    background:${active?'rgba(99,102,241,.32)':'transparent'};
+                    border:1px solid rgba(99,102,241,${active?'.85':'.35'});
+                    color:${active?'#e0e7ff':'#a5b4fc'};font-size:10px">
+            ${lbl}</button>`;
+        }).join('')}
+      </div>`;
+
     setLegend(state,
-      `<b>SE-SE Plasticity (Tabor regime)</b>
+      `<b>SE Tabor regime map (δ/R 기반 plastic state)</b>
        <span style="color:#9ca3af;font-size:10px">
-         (SE-SE contact의 δ/R 비율 — Hertz 탄성 한계 + Tabor 소성 한계)
+         SE 입자의 worst contact δ/R 비율로 plastic 상태 분류.<br>
+         Hertz 탄성 한계 (δ/R = 0.0011) + Tabor 소성 한계 (δ/R = 0.0078).
        </span>
-       <span style="color:#feb24c">●</span> δ/R > 0.0011 — yield onset (탄성→소성 천이)
-       <span style="color:#f03b20">●</span> δ/R > 0.0078 — fully plastic (Tabor H = 3σ_y)
-       <span style="color:#e5e7eb">●</span> dimmed — Hertz 탄성 한계 내 (정상)
-       <span style="color:#9ca3af;font-size:10px">
-         (${(aux.se_stress_pairs || []).length} stressed SE-SE pairs<br>
-          밝은 SE 입자가 많을수록 cold-press 압력이 SE percolation을 무너뜨리는 risk)
+       ${filterButtons}
+       <div style="display:flex;flex-direction:column;gap:3px;font-size:11px;
+                   margin-top:4px;line-height:1.4">
+         <div><span style="color:#f03b20">●</span>
+           <b>Plastic</b> &nbsp; δ/R > 0.0078 &nbsp;
+           <span style="color:#9ca3af">— ${nPlastic} particles
+             (${pct(regimePairs.plastic, totalActive)} pairs)</span></div>
+         <div><span style="color:#feb24c">●</span>
+           <b>Yield onset</b> &nbsp; 0.0011 &lt; δ/R ≤ 0.0078 &nbsp;
+           <span style="color:#9ca3af">— ${nYield} particles
+             (${pct(regimePairs.yield, totalActive)} pairs)</span></div>
+         <div><span style="color:#7eb8d6">●</span>
+           <b>Elastic</b> &nbsp; 0 &lt; δ/R ≤ 0.0011 &nbsp;
+           <span style="color:#9ca3af">— ${nElastic} particles
+             (${pct(regimePairs.elastic, totalActive)} pairs)</span></div>
+         <div><span style="color:#3b4a5c">●</span>
+           <b>Idle (in AM-AM void)</b> &nbsp; 접촉 stress 없음 &nbsp;
+           <span style="color:#9ca3af">— ${idleStat} SE (geometric only)</span></div>
+       </div>
+       <span style="color:#9ca3af;font-size:10px;display:block;margin-top:7px;
+                    padding-top:6px;border-top:1px solid rgba(99,102,241,.18)">
+         ★ Idle 입자가 많을수록 AM-AM force chain이 dominant — paper §5
+         <code>p_se</code> sigmoid의 OFF 영역 (stress-bearing percolation 미발달).<br>
+         ★ Plastic + Yield 비율이 클수록 SE가 load-bearing network 형성 —
+         <code>p_se → 1</code>, Heckel plastic densification 활성.
        </span>`);
+
+    /* Wire pair-type filter buttons (delegated, fires re-render). */
+    setTimeout(() => {
+      document.querySelectorAll('[data-tabor-filter]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.seTaborFilter = btn.dataset.taborFilter;
+          applyViewMode(state, 'se_brittle');
+        });
+      });
+    }, 0);
     return;
   }
 }

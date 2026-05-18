@@ -8,7 +8,13 @@ modes":
   cluster coloring   — percolating vs broken vs dead components
   stress hot spots   — per-particle max contact stress (MPa)
   coverage heat      — per-AM SE coverage (%)
-  fracture-prone SE  — SE-SE with high δ/R (sub-Auerbach but stressed)
+  SE Tabor regime    — SE particles classified into idle / elastic /
+                       yield-onset / fully-plastic by their worst
+                       contact, with optional pair-type filter
+                       (SE-SE vs AM_P-SE vs AM_S-SE).  Replaces the
+                       legacy "fracture-prone SE" mode whose name was
+                       misleading: SE is ductile and does not
+                       brittle-fracture; it plastically flows.
 
 All scales are in display units (μm, MPa) so the front-end can use
 them directly without further conversion.
@@ -39,9 +45,27 @@ from fracture_model import (
 # under-counted AM_P damage because the Hooke δ→F mapping differs from
 # Hertzian, making large-R AM_P appear less cracked than it actually is.
 
-# SE Tabor plastic regime threshold (kept for SE-side highlighting).
-DR_SE_PLASTIC = 0.0078    # fully plastic Tabor
-DR_SE_YIELD   = 0.0011    # elastic-plastic transition
+# SE Tabor plastic regime thresholds (kept for SE-side highlighting).
+# Same δ/R values are reused for the AM-SE interface — the soft side
+# (SE) yields first regardless of which AM it contacts.
+DR_SE_PLASTIC = 0.0078    # fully plastic Tabor (H ≈ 3·σ_y, δ/R cutoff)
+DR_SE_YIELD   = 0.0011    # elastic-plastic transition (yield onset)
+
+
+# Regime rank for "worst state across contacts" aggregation per particle.
+_REGIME_RANK = {'elastic': 1, 'yield': 2, 'plastic': 3}
+
+
+def _classify_dr(dr: float) -> str:
+    """Return one of 'elastic' / 'yield' / 'plastic' for an SE-touching
+    contact.  A particle with no recorded contact is treated as 'idle'
+    upstream (this function never returns 'idle').
+    """
+    if dr > DR_SE_PLASTIC:
+        return 'plastic'
+    if dr > DR_SE_YIELD:
+        return 'yield'
+    return 'elastic'
 
 
 def auerbach_delta_critical(R_min_sim: float, K_IC: float,
@@ -72,9 +96,37 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     dr_max:        dict[int, float] = defaultdict(float)
     worst_partner: dict[int, int]   = {}
     brittle_pairs: list[dict] = []
-    se_stress_pairs: list[dict] = []
+    se_stress_pairs: list[dict] = []      # SE-SE pairs above yield (legacy key)
+    am_se_stress_pairs: list[dict] = []   # AM-SE pairs above yield (NEW)
+
+    # Per-SE-particle worst regime, split by which AM type (if any) it
+    # touches.  Three independent state tracks because the view-mode
+    # filter lets the user toggle pair-type (SE-SE / AM_P-SE / AM_S-SE).
+    # Values are the regime rank from _REGIME_RANK so 'plastic' wins
+    # over 'yield' wins over 'elastic'.
+    se_state_se_se:   dict[int, int] = {}
+    se_state_am_p_se: dict[int, int] = {}
+    se_state_am_s_se: dict[int, int] = {}
+
+    # Total pair counts per type, for the legend stats panel.  We also
+    # track all-elastic pair counts (where SE just sits there in
+    # Hertz-elastic regime, no plasticity) — visualised as the "idle SE
+    # in AM-AM void" population the user wanted to surface.
+    pair_counts = {
+        'se_se':   {'elastic': 0, 'yield': 0, 'plastic': 0},
+        'am_p_se': {'elastic': 0, 'yield': 0, 'plastic': 0},
+        'am_s_se': {'elastic': 0, 'yield': 0, 'plastic': 0},
+    }
+    # Track every SE particle that participated in any contact (so the
+    # frontend can compute idle = all_SE - (any-regime SE)).
+    se_with_contact: set[int] = set()
 
     pressure_conv = scale / 1.0e6     # sim Pa → real MPa (calibrated to scale)
+
+    def _bump_state(d: dict[int, int], sid: int, regime: str) -> None:
+        rank = _REGIME_RANK[regime]
+        if rank > d.get(sid, 0):
+            d[sid] = rank
 
     for c in contacts:
         i1 = int(c.get('id1', -1)); i2 = int(c.get('id2', -1))
@@ -100,6 +152,7 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         if p_MPa > stress_max[i2]: stress_max[i2] = p_MPa
 
         r_min = min(float(a1.get('radius', 0)), float(a2.get('radius', 0)))
+        dr = 0.0
         if r_min > 0 and delta > 0:
             dr = delta / r_min
             if dr > dr_max[i1]:
@@ -123,28 +176,117 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
             if stage != 'intact':
                 brittle_pairs.append({
                     'id1': i1, 'id2': i2,
-                    'dr': round(dr if r_min > 0 and delta > 0 else 0, 4),
+                    'dr': round(dr, 4),
                     'mult': round(mult, 2),
                     'stage': stage,
                     'pressure_MPa': round(p_MPa, 1),
                     'pair_type': ct,
                 })
-        elif is_se1 and is_se2:
-            # SE-SE: highlight only those above plastic Tabor threshold
-            if r_min > 0 and delta > 0 and (delta / r_min) > DR_SE_YIELD:
+            continue
+
+        # ─── SE-touching contact (either SE-SE or AM-SE) ──────────────
+        if not (is_se1 or is_se2):
+            continue
+        if dr <= 0:
+            continue   # no overlap → not a real contact
+
+        regime = _classify_dr(dr)
+
+        if is_se1 and is_se2:
+            pair_counts['se_se'][regime] += 1
+            se_with_contact.add(i1); se_with_contact.add(i2)
+            _bump_state(se_state_se_se, i1, regime)
+            _bump_state(se_state_se_se, i2, regime)
+            if regime != 'elastic':
+                # Legacy se_stress_pairs key — yield+plastic only
                 se_stress_pairs.append({
                     'id1': i1, 'id2': i2,
-                    'dr': round(delta / r_min, 4),
+                    'dr': round(dr, 4),
                     'pressure_MPa': round(p_MPa, 1),
-                    'plastic': (delta / r_min) > DR_SE_PLASTIC,
+                    'plastic': regime == 'plastic',
                 })
+        else:
+            # Mixed AM-SE contact.  Track which AM type so the filter
+            # can distinguish AM_P-SE (small-soft against large-hard)
+            # from AM_S-SE (small-soft against medium-hard).
+            am_type = t1 if is_am1 else t2
+            se_id   = i2 if is_am1 else i1
+            se_with_contact.add(se_id)
+            pair_key = 'am_p_se' if 'AM_P' in am_type else 'am_s_se'
+            pair_counts[pair_key][regime] += 1
+            target = (se_state_am_p_se if pair_key == 'am_p_se'
+                       else se_state_am_s_se)
+            _bump_state(target, se_id, regime)
+            if regime != 'elastic':
+                am_se_stress_pairs.append({
+                    'id1': i1, 'id2': i2,
+                    'se_id': se_id,
+                    'am_type': am_type,
+                    'pair_type': pair_key,    # 'am_p_se' or 'am_s_se'
+                    'dr': round(dr, 4),
+                    'pressure_MPa': round(p_MPa, 1),
+                    'plastic': regime == 'plastic',
+                })
+
+    # ── Convert worst-regime rank back into labels per pair-type ──────
+    _rank_to_label = {v: k for k, v in _REGIME_RANK.items()}
+
+    def _emit_state_lists(state_dict: dict[int, int]) -> dict:
+        out = {'elastic_ids': [], 'yield_ids': [], 'plastic_ids': []}
+        for sid, rank in state_dict.items():
+            label = _rank_to_label.get(rank)
+            if label:
+                out[f'{label}_ids'].append(int(sid))
+        return out
+
+    # All SE particle IDs, so the frontend can compute the "idle" set
+    # (geometrically present in AM-AM voids but with no recorded
+    # contact stress in any pair type) by exclusion.
+    all_se_ids = [int(aid) for aid, a in atoms_by_id.items()
+                  if type_map.get(int(a.get('type', -1)), '?') == 'SE']
+
+    tabor_stats = {
+        'pair_counts': pair_counts,
+        'totals': {
+            'se_se':   sum(pair_counts['se_se'].values()),
+            'am_p_se': sum(pair_counts['am_p_se'].values()),
+            'am_s_se': sum(pair_counts['am_s_se'].values()),
+        },
+        # Per-pair-type SE-particle counts at worst-regime (excludes
+        # idle by construction; idle = total_SE - any-contact SE).
+        'particle_counts': {
+            'se_se':   {k: 0 for k in ('elastic', 'yield', 'plastic')},
+            'am_p_se': {k: 0 for k in ('elastic', 'yield', 'plastic')},
+            'am_s_se': {k: 0 for k in ('elastic', 'yield', 'plastic')},
+        },
+        'n_se_total':       len(all_se_ids),
+        'n_se_with_contact': len(se_with_contact),
+        'n_se_idle':        max(0, len(all_se_ids) - len(se_with_contact)),
+    }
+    for sid, rank in se_state_se_se.items():
+        tabor_stats['particle_counts']['se_se'][_rank_to_label[rank]] += 1
+    for sid, rank in se_state_am_p_se.items():
+        tabor_stats['particle_counts']['am_p_se'][_rank_to_label[rank]] += 1
+    for sid, rank in se_state_am_s_se.items():
+        tabor_stats['particle_counts']['am_s_se'][_rank_to_label[rank]] += 1
 
     return {
         'stress_max':       {int(k): round(v, 2) for k, v in stress_max.items()},
         'dr_max':           {int(k): round(v, 4) for k, v in dr_max.items()},
         'worst_partner':    {int(k): int(v)      for k, v in worst_partner.items()},
         'brittle_pairs':    brittle_pairs,
-        'se_stress_pairs':  se_stress_pairs,
+        'se_stress_pairs':  se_stress_pairs,      # legacy: SE-SE yield+plastic
+        'am_se_stress_pairs': am_se_stress_pairs, # NEW: AM-SE yield+plastic
+        # NEW per-pair-type SE particle states (worst-of regime).  Idle
+        # SE particles are exposed via `tabor_stats.n_se_idle` count and
+        # the `all_se_ids - any-contact set` derivation on the frontend.
+        'se_states': {
+            'se_se':   _emit_state_lists(se_state_se_se),
+            'am_p_se': _emit_state_lists(se_state_am_p_se),
+            'am_s_se': _emit_state_lists(se_state_am_s_se),
+        },
+        'tabor_stats':  tabor_stats,
+        'all_se_ids':   all_se_ids,
     }
 
 

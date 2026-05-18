@@ -4073,6 +4073,8 @@ def serve_3d_data(case_id):
     aux = {
         'stress_max': {}, 'dr_max': {},
         'brittle_pairs': [], 'se_stress_pairs': [],
+        'am_se_stress_pairs': [],
+        'se_states': {}, 'tabor_stats': {}, 'all_se_ids': [],
         'cluster_meta': {}, 'cluster_id_per_se': {},
         'coverage_per_am': {},
     }
@@ -4095,10 +4097,14 @@ def serve_3d_data(case_id):
             contacts_iter = contacts_df.to_dict('records')
             agg = aggregate_particle_metrics(
                 contacts_iter, atoms_by_id, type_map, scale=scale)
-            aux['stress_max']      = agg['stress_max']
-            aux['dr_max']          = agg['dr_max']
-            aux['brittle_pairs']   = agg['brittle_pairs']
-            aux['se_stress_pairs'] = agg['se_stress_pairs']
+            aux['stress_max']         = agg['stress_max']
+            aux['dr_max']             = agg['dr_max']
+            aux['brittle_pairs']      = agg['brittle_pairs']
+            aux['se_stress_pairs']    = agg['se_stress_pairs']
+            aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
+            aux['se_states']          = agg.get('se_states', {})
+            aux['tabor_stats']        = agg.get('tabor_stats', {})
+            aux['all_se_ids']         = agg.get('all_se_ids', [])
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
@@ -5370,6 +5376,8 @@ def serve_archive_3d_data(folder):
     aux = {
         'stress_max': {}, 'dr_max': {},
         'brittle_pairs': [], 'se_stress_pairs': [],
+        'am_se_stress_pairs': [],
+        'se_states': {}, 'tabor_stats': {}, 'all_se_ids': [],
         'cluster_meta': {}, 'cluster_id_per_se': {},
         'coverage_per_am': {},
     }
@@ -5391,10 +5399,14 @@ def serve_archive_3d_data(folder):
             agg = aggregate_particle_metrics(
                 contacts_df.to_dict('records'),
                 atoms_by_id, type_map, scale=scale)
-            aux['stress_max']      = agg['stress_max']
-            aux['dr_max']          = agg['dr_max']
-            aux['brittle_pairs']   = agg['brittle_pairs']
-            aux['se_stress_pairs'] = agg['se_stress_pairs']
+            aux['stress_max']         = agg['stress_max']
+            aux['dr_max']             = agg['dr_max']
+            aux['brittle_pairs']      = agg['brittle_pairs']
+            aux['se_stress_pairs']    = agg['se_stress_pairs']
+            aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
+            aux['se_states']          = agg.get('se_states', {})
+            aux['tabor_stats']        = agg.get('tabor_stats', {})
+            aux['all_se_ids']         = agg.get('all_se_ids', [])
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
