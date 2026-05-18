@@ -108,6 +108,16 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     se_state_am_p_se: dict[int, int] = {}
     se_state_am_s_se: dict[int, int] = {}
 
+    # Per-SE-particle ENGAGEMENT tracking (across ALL contact partners).
+    # The user wants to see SE that has contacts but few-of-them-plastic
+    # ("pre-switch SE in AM-AM void" or "incomplete plastic flow that
+    # might leave micro-pores after compaction release").  We count
+    # contacts by regime per particle, plus track the absolute max δ/R
+    # to derive an "over-plastic excess" score for micro-pore risk.
+    se_contact_counts: dict[int, dict[str, int]] = defaultdict(
+        lambda: {'plastic': 0, 'yield': 0, 'elastic': 0})
+    se_dr_max:    dict[int, float] = defaultdict(float)   # any-partner δ/R max
+
     # Total pair counts per type, for the legend stats panel.  We also
     # track all-elastic pair counts (where SE just sits there in
     # Hertz-elastic regime, no plasticity) — visualised as the "idle SE
@@ -192,6 +202,20 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
 
         regime = _classify_dr(dr)
 
+        # ── ENGAGEMENT bookkeeping (any-partner) ─────────────────────
+        # Per-SE-particle contact tally by regime + worst-δ/R tracker,
+        # so we can later compute (a) engagement_score = plastic-share
+        # of contacts and (b) pore_risk = how-far-over-plastic the
+        # worst contact is.  Counted ONCE per contact per SE — i.e.
+        # for SE-SE both endpoints are SE so we bump both; for AM-SE
+        # we only bump the SE side.  The AM endpoint's engagement is
+        # not tracked (AM is rigid, doesn't yield).
+        for sid in [i1, i2]:
+            if type_map.get(int(atoms_by_id[sid].get('type', -1)), '?') == 'SE':
+                se_contact_counts[sid][regime] += 1
+                if dr > se_dr_max[sid]:
+                    se_dr_max[sid] = dr
+
         if is_se1 and is_se2:
             pair_counts['se_se'][regime] += 1
             se_with_contact.add(i1); se_with_contact.add(i2)
@@ -245,6 +269,39 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     all_se_ids = [int(aid) for aid, a in atoms_by_id.items()
                   if type_map.get(int(a.get('type', -1)), '?') == 'SE']
 
+    # ── ENGAGEMENT + PORE-RISK per SE particle ────────────────────────
+    # engagement = (plastic + 0.5·yield) / total_contacts
+    #   1.0 = every contact plastic → fully integrated in force chain
+    #   0.0 = every contact pre-yield → "stuck SE", AM-AM bypassing
+    #
+    # pore_risk = max(0, dr_max − DR_SE_PLASTIC) / DR_SE_PLASTIC
+    #   0 = right at Tabor plastic threshold (no excess)
+    #   1 = 2× the threshold → micro-pore likely during spring-back
+    #
+    # Particles with NO contacts are excluded (they're the "void idle"
+    # set, separate from "low engagement" — both are highlighted
+    # differently in the frontend SE engagement view).
+    se_engagement: dict[int, dict] = {}
+    for sid in all_se_ids:
+        c = se_contact_counts.get(sid)
+        if not c:
+            continue   # truly idle (no contacts) — emitted as null elsewhere
+        n_p = c['plastic']; n_y = c['yield']; n_e = c['elastic']
+        n_tot = n_p + n_y + n_e
+        if n_tot == 0:
+            continue
+        score = (n_p + 0.5 * n_y) / n_tot
+        dr_excess = max(0.0, se_dr_max.get(sid, 0.0) - DR_SE_PLASTIC)
+        pore_risk = dr_excess / DR_SE_PLASTIC
+        se_engagement[int(sid)] = {
+            'score':     round(score, 3),
+            'pore_risk': round(pore_risk, 3),
+            'n_plastic': n_p,
+            'n_yield':   n_y,
+            'n_elastic': n_e,
+            'dr_max':    round(se_dr_max.get(sid, 0.0), 4),
+        }
+
     tabor_stats = {
         'pair_counts': pair_counts,
         'totals': {
@@ -287,6 +344,9 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         },
         'tabor_stats':  tabor_stats,
         'all_se_ids':   all_se_ids,
+        # NEW: per-SE engagement & micro-pore risk (any-partner aggregate)
+        # consumed by the "SE Force-chain engagement" view mode.
+        'se_engagement': se_engagement,
     }
 
 

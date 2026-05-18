@@ -126,7 +126,7 @@ function buildControls(container) {
       <option value="stress">Stress Concentration</option>
       <option value="stress_brittle">Stress + Brittle (overlay)</option>
       <option value="coverage">Coverage Heat (AM)</option>
-      <option value="se_brittle">SE Tabor regime (plastic state)</option>
+      <option value="se_engagement">SE engagement & pore risk</option>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -1360,48 +1360,55 @@ function applyViewMode(state, mode) {
     return;
   }
 
-  if (mode === 'se_brittle') {
-    /* SE Tabor regime map — 4-state per-SE-particle classification:
-     *   idle    : SE in AM-AM void, no recorded contact stress
-     *   elastic : SE with Hertz-elastic contacts only (pre-yield)
-     *   yield   : SE with at least one yield-onset contact (δ/R > 0.0011)
-     *   plastic : SE with at least one fully-plastic contact (δ/R > 0.0078)
+  if (mode === 'se_engagement') {
+    /* SE engagement & pore-risk gradient.
      *
-     * Pair-type filter (state.seTaborFilter, default 'all') chooses
-     * which pair population determines each SE's state:
-     *   'all'     : worst-of across SE-SE / AM_P-SE / AM_S-SE
-     *   'se_se'   : only SE-SE contacts
-     *   'am_p_se' : only AM_P-SE contacts (large hard against soft)
-     *   'am_s_se' : only AM_S-SE contacts (medium hard against soft)
+     * Replaces the old 4-bin "Tabor regime" view with a continuous,
+     * physically-motivated visualisation that directly answers two
+     * paper-relevant questions:
+     *
+     *   (1) WHERE is the stress-bearing switch (p_se sigmoid) OFF?
+     *       → SE particles that have contacts but few of them are
+     *         plastic ("pre-switch SE"; AM-AM force chains are
+     *         bypassing them).  Coloured cool (blue/teal).
+     *
+     *   (2) WHERE might micro-pores form during compaction release?
+     *       → SE particles whose worst contact is well above the
+     *         Tabor plastic threshold (δ/R ≫ 0.0078) — these are
+     *         over-deformed and likely to spring back partially,
+     *         leaving a gap.  Marked with a bright red overlay
+     *         (highlighted on top of the engagement gradient).
+     *
+     * The engagement score per SE is
+     *     score = (n_plastic + 0.5·n_yield) / n_contacts ∈ [0, 1]
+     * The pore_risk excess per SE is
+     *     risk  = max(0, δ/R_max − 0.0078) / 0.0078
      */
-    const filter = state.seTaborFilter || 'all';
-    const se_states = aux.se_states || {};
-    const stats     = aux.tabor_stats || {};
+    const engagement = aux.se_engagement || {};
+    const all_se_ids = aux.all_se_ids || [];
 
-    /* Union state across selected pair-types.  Worst-of regime wins. */
-    const idLevel = new Map();   // id → 1 elastic / 2 yield / 3 plastic
-    const RANK = { elastic: 1, yield: 2, plastic: 3 };
-    const sources = (filter === 'all')
-      ? ['se_se', 'am_p_se', 'am_s_se']
-      : [filter];
-    sources.forEach(key => {
-      const st = se_states[key] || {};
-      ['elastic', 'yield', 'plastic'].forEach(regime => {
-        (st[`${regime}_ids`] || []).forEach(id => {
-          const cur = idLevel.get(id) || 0;
-          if (RANK[regime] > cur) idLevel.set(id, RANK[regime]);
-        });
-      });
-    });
+    /* Continuous viridis-style cool→warm gradient (engagement) */
+    const engagementColor = (s) => {
+      // 0.0 cool blue → 0.5 yellow → 1.0 green
+      if (s <= 0.5) {
+        const t = s / 0.5;
+        // Interpolate dark blue (0.18, 0.25, 0.45) → yellow (0.96, 0.86, 0.30)
+        const r = 0.18 + (0.96 - 0.18) * t;
+        const g = 0.25 + (0.86 - 0.25) * t;
+        const b = 0.45 + (0.30 - 0.45) * t;
+        return new THREE.Color(r, g, b);
+      }
+      const t = (s - 0.5) / 0.5;
+      // Yellow → green (0.20, 0.75, 0.30)
+      const r = 0.96 + (0.20 - 0.96) * t;
+      const g = 0.86 + (0.75 - 0.86) * t;
+      const b = 0.30 + (0.30 - 0.30) * t;
+      return new THREE.Color(r, g, b);
+    };
+    const colorIdle      = new THREE.Color(0x1b1f2e);  // very dark — no contact
+    const colorPoreRisk  = new THREE.Color(0xf03b20);  // bright red overlay
 
-    /* Colour SE particles.  idle = visible, neutral; elastic = cool
-     * grey-blue (in network but pre-yield); yield = amber; plastic =
-     * red.  AM particles dimmed so the SE map reads cleanly. */
-    const seMesh = state.meshes.SE;
-    const colorIdle    = new THREE.Color(0x3b4a5c);  // slate — in void, idle
-    const colorElastic = new THREE.Color(0x7eb8d6);  // muted cyan — elastic
-    const colorYield   = new THREE.Color(0xfeb24c);  // ColorBrewer amber
-    const colorPlastic = new THREE.Color(0xf03b20);  // ColorBrewer red
+    /* Dim AM so SE state is legible */
     [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
       if (!m) return;
       m.userData.particles.forEach((_, i) =>
@@ -1409,152 +1416,103 @@ function applyViewMode(state, mode) {
       m.material.opacity = 0.18;
       m.material.transparent = true;
     });
-    let nIdle = 0, nElastic = 0, nYield = 0, nPlastic = 0;
+
+    /* Apply per-SE colour and tally categories.  Pore-risk threshold
+     * is fixed at risk ≥ 1.0 (i.e. δ/R ≥ 2× Tabor plastic threshold);
+     * those are the cleanest micro-pore candidates. */
+    let nStrong = 0, nWeak = 0, nBypass = 0, nIdle = 0, nPoreRisk = 0;
+    const seMesh = state.meshes.SE;
     if (seMesh) {
       seMesh.userData.particles.forEach((p, i) => {
-        const lvl = idLevel.get(p.id) || 0;
-        if (lvl === 3) { seMesh.setColorAt(i, colorPlastic); nPlastic++; }
-        else if (lvl === 2) { seMesh.setColorAt(i, colorYield); nYield++; }
-        else if (lvl === 1) { seMesh.setColorAt(i, colorElastic); nElastic++; }
-        else { seMesh.setColorAt(i, colorIdle); nIdle++; }
+        const e = engagement[p.id];
+        if (!e) {
+          seMesh.setColorAt(i, colorIdle); nIdle++;
+          return;
+        }
+        const s = e.score, r = e.pore_risk || 0;
+        if (r >= 1.0) {
+          seMesh.setColorAt(i, colorPoreRisk); nPoreRisk++;
+        } else {
+          seMesh.setColorAt(i, engagementColor(s));
+        }
+        if (s >= 0.7)        nStrong++;
+        else if (s >= 0.1)   nWeak++;
+        else                 nBypass++;
       });
       seMesh.material.opacity = 0.92;
       seMesh.material.transparent = true;
     }
     flushColors();
 
-    /* Pair-type stats panel.  Source totals come from the backend so
-     * the user sees actual contact counts, not just the per-particle
-     * derived numbers above (one particle can contribute to many
-     * contacts).  Percentages computed against the selected pair-type
-     * total. */
-    const pairTotals = (stats.totals || {});
-    const totalActive = sources.reduce((s, k) => s + (pairTotals[k] || 0), 0);
-    const pairCounts = (stats.pair_counts || {});
-    let regimePairs = { elastic: 0, yield: 0, plastic: 0 };
-    sources.forEach(k => {
-      const pc = pairCounts[k] || {};
-      regimePairs.elastic += pc.elastic || 0;
-      regimePairs.yield   += pc.yield   || 0;
-      regimePairs.plastic += pc.plastic || 0;
-    });
-    const pct = (n, tot) => tot > 0 ? (100 * n / tot).toFixed(1) + '%' : '—';
-
-    const n_total = stats.n_se_total || 0;
-    const idleStat = `${nIdle}/${n_total}`;
-
-    const filterTitles = {
-      all:     'all pair-types (worst-of)',
-      se_se:   'SE-SE 자기들끼리 force chain만',
-      am_p_se: 'AM_P-SE — 큰 AM이 SE를 plastic 누르는 영역',
-      am_s_se: 'AM_S-SE — 중간 AM이 SE를 plastic 누르는 영역',
-    };
-    const filterShort = {
-      all:'All', se_se:'SE/SE', am_p_se:'P/SE', am_s_se:'S/SE',
-    };
-    const filterButtons = `
-      <div style="display:flex;flex-wrap:wrap;gap:3px;margin:5px 0 6px">
-        ${['all','se_se','am_p_se','am_s_se'].map(k => {
-          const active = (k === filter);
-          return `<button data-tabor-filter="${k}" title="${filterTitles[k]}"
-             style="padding:1px 4px;border-radius:3px;cursor:pointer;
-                    background:${active?'rgba(99,102,241,.32)':'transparent'};
-                    border:1px solid rgba(99,102,241,${active?'.85':'.30'});
-                    color:${active?'#e0e7ff':'#a5b4fc'};
-                    font-size:9.5px;line-height:1.3;
-                    min-width:0;flex:1 1 auto">
-            ${filterShort[k]}</button>`;
-        }).join('')}
-      </div>`;
-
-    /* Compact one-line stats per regime: dot + label + count + pair%.
-     *   - Counts ≥ 10k use 'k' suffix to keep numeric column narrow
-     *     (101470 → "101k", 30454 → "30k"); full number lives in
-     *     the row's `title` for hover detail.
-     *   - Label uses ellipsis on overflow so long Korean text still
-     *     fits in narrow sidebars instead of pushing siblings off.
-     *   - Numeric columns are monospace + right-aligned for vertical
-     *     alignment across regimes regardless of digit count. */
     const fmtCount = n =>
       (n >= 10000) ? (Math.round(n / 1000) + 'k')
       : (n >= 1000) ? n.toLocaleString()
       : n.toString();
-    const row = (color, sym, count, label, pairPct, tip) => {
-      const tipFull = `${tip}  (${count.toLocaleString()} particles)`;
-      return `
-        <div title="${tipFull}" style="display:flex;align-items:baseline;
-                                       gap:6px;font-size:10.5px;line-height:1.35">
-          <span style="color:${color};font-size:12px;line-height:0.9;
-                       flex:0 0 10px;text-align:center">${sym}</span>
-          <span style="color:#cbd5e1;flex:1 1 auto;min-width:0;
-                       white-space:nowrap;overflow:hidden;
-                       text-overflow:ellipsis">${label}</span>
-          <span style="color:#e5e7eb;font-weight:600;
-                       font-family:ui-monospace,Menlo,monospace;
-                       flex:0 0 auto;text-align:right;
-                       min-width:30px">${fmtCount(count)}</span>
-          <span style="color:#9ca3af;font-size:9.5px;
-                       font-family:ui-monospace,Menlo,monospace;
-                       flex:0 0 auto;text-align:right;
-                       min-width:38px">${pairPct}</span>
-        </div>`;
-    };
-    /* Per-filter Idle count: SE particles with NO recorded contact in
-     * the currently-selected pair-type bucket.  (The backend's
-     * `stats.n_se_idle` is the *global* count of SE never touched by
-     * any contact — useful only for the 'all' filter when no SE-SE +
-     * AM-SE union covers everything.)  Computed locally as
-     *   idle = total_SE − (plastic + yield + elastic in this filter)
-     * so the stat panel always reflects the active toggle. */
-    const idleCount = Math.max(
-      0, (stats.n_se_total || 0) - (nPlastic + nYield + nElastic));
-    const pctIdle = (stats.n_se_total || 0) > 0
-      ? (100 * idleCount / stats.n_se_total).toFixed(0) + '%'
-      : '—';
+    const n_total = all_se_ids.length || 1;
+    const pct = (n) => (100 * n / n_total).toFixed(1) + '%';
+
+    const row = (color, sym, count, label, pctStr, tip) => `
+      <div title="${tip}  (${count.toLocaleString()} particles)"
+           style="display:flex;align-items:baseline;gap:6px;
+                  font-size:10.5px;line-height:1.35">
+        <span style="color:${color};font-size:12px;line-height:0.9;
+                     flex:0 0 10px;text-align:center">${sym}</span>
+        <span style="color:#cbd5e1;flex:1 1 auto;min-width:0;
+                     white-space:nowrap;overflow:hidden;
+                     text-overflow:ellipsis">${label}</span>
+        <span style="color:#e5e7eb;font-weight:600;
+                     font-family:ui-monospace,Menlo,monospace;
+                     flex:0 0 auto;text-align:right;
+                     min-width:30px">${fmtCount(count)}</span>
+        <span style="color:#9ca3af;font-size:9.5px;
+                     font-family:ui-monospace,Menlo,monospace;
+                     flex:0 0 auto;text-align:right;
+                     min-width:38px">${pctStr}</span>
+      </div>`;
 
     setLegend(state,
       `<div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
-         SE Tabor regime (δ/R)
+         SE engagement &amp; pore risk
        </div>
        <div style="color:#9ca3af;font-size:9.5px;line-height:1.35"
-            title="δ/R thresholds: Hertz elastic→yield at 0.0011, Tabor fully plastic at 0.0078 (H = 3σ_y)">
-         worst-contact δ/R · Hertz 0.0011 / Tabor 0.0078
+            title="engagement = (n_plastic + 0.5·n_yield) / n_contacts. pore_risk = max(0, δ/R_max - 0.0078) / 0.0078.">
+         color = engagement (force-chain 참여도)<br>
+         red overlay = over-plastic (micro-pore 위험)
        </div>
-       ${filterButtons}
-       <div style="display:flex;flex-direction:column;gap:2px;margin-top:2px">
-         ${row('#f03b20', '●', nPlastic, 'Plastic',
-                pct(regimePairs.plastic, totalActive),
-                'δ/R > 0.0078 — fully plastic (Tabor H = 3σ_y)')}
-         ${row('#feb24c', '●', nYield, 'Yield',
-                pct(regimePairs.yield, totalActive),
-                '0.0011 < δ/R ≤ 0.0078 — yield onset')}
-         ${row('#7eb8d6', '●', nElastic, 'Elastic',
-                pct(regimePairs.elastic, totalActive),
-                '0 < δ/R ≤ 0.0011 — Hertz elastic, pre-yield')}
-         ${row('#3b4a5c', '○', idleCount,
-                'Idle', pctIdle,
-                'AM-AM void — 이 pair-type에서 접촉 stress 없는 SE. paper §5 p_se = 0')}
+       <div style="display:flex;align-items:center;gap:4px;
+                    margin:6px 0 4px;font-size:9.5px;color:#9ca3af">
+         <span>0</span>
+         <div style="flex:1;height:8px;border-radius:4px;
+                     background:linear-gradient(90deg,
+                       rgb(46,64,115) 0%,
+                       rgb(245,219,77) 50%,
+                       rgb(51,191,77) 100%)"></div>
+         <span>1</span>
        </div>
-       <div style="color:#9ca3af;font-size:9px;line-height:1.35;
+       <div style="display:flex;flex-direction:column;gap:2px;margin-top:4px">
+         ${row('#33bf4d', '●', nStrong, 'Strong bearer', pct(nStrong),
+                'engagement ≥ 0.7 — 대부분 contact가 plastic, force chain 완전 참여 (paper §5 p_se ≈ 1)')}
+         ${row('#f5db4d', '●', nWeak, 'Weak / pre-switch', pct(nWeak),
+                '0.1 ≤ engagement < 0.7 — 접점은 있지만 일부만 plastic. AM-AM이 우회 중 (paper §5 p_se 천이 영역)')}
+         ${row('#2e4073', '●', nBypass, 'Bypass', pct(nBypass),
+                'engagement < 0.1 — 거의 모든 접점 elastic. 기하학적으로 끼였지만 stress 운반 안 함 (p_se ≈ 0)')}
+         ${row('#1b1f2e', '○', nIdle, 'Idle (no contact)', pct(nIdle),
+                'AM-AM void에 완전 isolated — 접점 자체가 없음')}
+         <div style="height:1px;background:rgba(99,102,241,.20);margin:3px 0"></div>
+         ${row('#f03b20', '★', nPoreRisk, 'Over-plastic (pore risk)',
+                pct(nPoreRisk),
+                'δ/R > 0.0156 (Tabor 임계의 2배) — 압력 해제 시 spring-back으로 micro-pore 형성 가능. 다른 카테고리와 overlap.')}
+       </div>
+       <div style="color:#9ca3af;font-size:9px;line-height:1.4;
                     margin-top:5px;padding-top:4px;
                     border-top:1px solid rgba(99,102,241,.18)">
-         ★ Idle ↑ → AM-AM force chain dominant (p_se ≈ 0)<br>
-         ★ Plastic ↑ → SE load-bearing network (p_se ≈ 1)
+         ★ Bypass / Weak ↑ → AM-AM force chain dominant, p_se OFF zone<br>
+         ★ Strong bearer ↑ → SE load-bearing network, p_se ≈ 1<br>
+         ★ Pore-risk 빨강 입자 ↑ → over-plastic, post-release micro-pore 후보
        </div>`);
-
-    /* Wire pair-type filter buttons (delegated, fires re-render). */
-    setTimeout(() => {
-      document.querySelectorAll('[data-tabor-filter]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          state.seTaborFilter = btn.dataset.taborFilter;
-          applyViewMode(state, 'se_brittle');
-        });
-      });
-    }, 0);
     return;
   }
 }
-
 function setLegend(state, html) {
   const el = document.getElementById('view-mode-legend');
   if (el) el.innerHTML = html;

@@ -4075,6 +4075,7 @@ def serve_3d_data(case_id):
         'brittle_pairs': [], 'se_stress_pairs': [],
         'am_se_stress_pairs': [],
         'se_states': {}, 'tabor_stats': {}, 'all_se_ids': [],
+        'se_engagement': {},
         'cluster_meta': {}, 'cluster_id_per_se': {},
         'coverage_per_am': {},
     }
@@ -4105,6 +4106,7 @@ def serve_3d_data(case_id):
             aux['se_states']          = agg.get('se_states', {})
             aux['tabor_stats']        = agg.get('tabor_stats', {})
             aux['all_se_ids']         = agg.get('all_se_ids', [])
+            aux['se_engagement']      = agg.get('se_engagement', {})
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
@@ -5378,6 +5380,7 @@ def serve_archive_3d_data(folder):
         'brittle_pairs': [], 'se_stress_pairs': [],
         'am_se_stress_pairs': [],
         'se_states': {}, 'tabor_stats': {}, 'all_se_ids': [],
+        'se_engagement': {},
         'cluster_meta': {}, 'cluster_id_per_se': {},
         'coverage_per_am': {},
     }
@@ -5407,6 +5410,7 @@ def serve_archive_3d_data(folder):
             aux['se_states']          = agg.get('se_states', {})
             aux['tabor_stats']        = agg.get('tabor_stats', {})
             aux['all_se_ids']         = agg.get('all_se_ids', [])
+            aux['se_engagement']      = agg.get('se_engagement', {})
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
