@@ -41,6 +41,7 @@ TARGETS = [
     'elastic_E_young_GPa',
     'elastic_pugh_GoverB',
     'migration_volume_fraction',
+    'sigma_300K_S_cm_NE',  # DT-5: Stage 10 σ_Li (paper-essential)
 ]
 
 # Features computable from a NEW (compound, sites, conc) request without UMA
@@ -83,7 +84,10 @@ def main():
         import pandas as pd
         from sklearn.ensemble import (GradientBoostingRegressor,
                                        RandomForestRegressor)
-        from sklearn.model_selection import KFold, cross_val_score
+        from sklearn.dummy import DummyRegressor  # DT-6: baseline
+        from sklearn.model_selection import (KFold, GroupKFold,
+                                             LeaveOneGroupOut,
+                                             cross_val_score)
         from sklearn.metrics import mean_absolute_error, r2_score
         from sklearn.preprocessing import OneHotEncoder
         from sklearn.compose import ColumnTransformer
@@ -98,6 +102,8 @@ def main():
                                                  max_depth=4, random_state=42),
         'rf':  lambda: RandomForestRegressor(n_estimators=300, max_depth=10,
                                              random_state=42, n_jobs=-1),
+        # DT-6: dummy baseline — paper에 "GBR vs trivial baseline" 비교 가능
+        'dummy': lambda: DummyRegressor(strategy='mean'),
     }
     try:
         from xgboost import XGBRegressor
@@ -152,6 +158,9 @@ def main():
 
         X = d[feats_categorical + [f for f in feats_numeric if f in d.columns]]
         y = d[tgt].values
+        # DT-4: groups for GroupKFold (dopant leakage prevention) + LOCO
+        # (compound-level cold-start estimate).
+        groups = d['dopant'].astype(str).values
 
         models_to_try = (list(available_models.keys())
                         if args.models == ['all']
@@ -160,7 +169,23 @@ def main():
             print(f"  ✗ {tgt}: no available models")
             continue
 
-        kf = KFold(n_splits=5, shuffle=True, random_state=42)
+        # DT-4: 3 CV schemes for paper-grade reporting.
+        # 'random' KFold       — in-distribution (same dopant in train+test)
+        #                        OPTIMISTIC, upper bound on production R².
+        # 'group_dopant' GroupKFold — cold-start (dopant held out of fold).
+        #                        REALISTIC for "new dopant" deployment.
+        # 'loco' LeaveOneGroupOut — single dopant held out at a time.
+        #                        PESSIMISTIC, true compound-level cold-start.
+        cv_schemes = {
+            'random': KFold(n_splits=5, shuffle=True, random_state=42),
+        }
+        n_groups = len(set(groups))
+        if n_groups >= 3:
+            cv_schemes['group_dopant'] = GroupKFold(
+                n_splits=min(5, n_groups))
+        if n_groups >= 2:
+            cv_schemes['loco'] = LeaveOneGroupOut()
+
         target_results = {}
         best_model_name, best_r2, best_pipeline = None, -np.inf, None
         for mname in models_to_try:
@@ -172,20 +197,45 @@ def main():
                 ('pre', pre),
                 ('reg', available_models[mname]()),
             ])
-            try:
-                cv_r2 = cross_val_score(pipeline, X, y, cv=kf, scoring='r2')
-                cv_mae = cross_val_score(pipeline, X, y, cv=kf,
-                                        scoring='neg_mean_absolute_error')
-            except Exception as e:
-                print(f"    {mname}: CV failed ({e})")
+            cv_per_scheme = {}
+            for sname, sch in cv_schemes.items():
+                try:
+                    if sname == 'random':
+                        r2 = cross_val_score(pipeline, X, y, cv=sch,
+                                             scoring='r2')
+                        mae = cross_val_score(pipeline, X, y, cv=sch,
+                                              scoring='neg_mean_absolute_error')
+                    else:
+                        r2 = cross_val_score(pipeline, X, y, cv=sch,
+                                             groups=groups, scoring='r2')
+                        mae = cross_val_score(pipeline, X, y, cv=sch,
+                                              groups=groups,
+                                              scoring='neg_mean_absolute_error')
+                    cv_per_scheme[sname] = {
+                        'cv_r2_mean': float(r2.mean()),
+                        'cv_r2_std': float(r2.std()),
+                        'cv_mae_mean': float(-mae.mean()),
+                        'n_folds': len(r2),
+                    }
+                except Exception as e:
+                    cv_per_scheme[sname] = {'error': str(e)}
+
+            # 'random' is the canonical CV for model selection (backward compat).
+            random_r2 = cv_per_scheme.get('random', {}).get('cv_r2_mean')
+            if random_r2 is None:
+                print(f"    {mname}: random CV failed")
                 continue
             target_results[mname] = {
-                'cv_r2_mean': float(cv_r2.mean()),
-                'cv_r2_std': float(cv_r2.std()),
-                'cv_mae_mean': float(-cv_mae.mean()),
+                # Backward-compatible top-level (existing predict_new etc.
+                # read 'cv_r2_mean'). Equals random KFold value.
+                'cv_r2_mean': random_r2,
+                'cv_r2_std': cv_per_scheme['random']['cv_r2_std'],
+                'cv_mae_mean': cv_per_scheme['random']['cv_mae_mean'],
+                # DT-4: 3 CV schemes for paper reporting
+                'cv_by_scheme': cv_per_scheme,
             }
-            if cv_r2.mean() > best_r2:
-                best_r2 = cv_r2.mean()
+            if random_r2 > best_r2:
+                best_r2 = random_r2
                 best_model_name = mname
                 best_pipeline = pipeline
 

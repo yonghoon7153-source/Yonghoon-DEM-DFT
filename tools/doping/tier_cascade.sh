@@ -322,6 +322,21 @@ else
     LOG "Stage 11 (cathode): SKIP (TOP_K_NCM=$TOP_K_NCM, baselines=$NCM_BASELINE_ARGS)"
 fi
 
+# Stage 12 — Final dataset collect + ML retrain AFTER Stages 10/11.
+# (DT-7 fix: Stage 09b/09c above ran before σ_Li MD + Wad, so their
+# results were absent from dataset.csv. Stage 12 re-runs collect+train
+# now that ALL stages have written output. dataset.csv & predictor/
+# are overwritten with the complete data.)
+STAGE 12 collect_final \
+    python3 tools/doping/collect_dataset.py \
+        --cascade_dir "$OUT" \
+        --out "$OUT/dataset.csv"
+STAGE 12b train_final \
+    python3 tools/doping/train_predictor.py \
+        --csv "$OUT/dataset.csv" \
+        --out_dir "$OUT/predictor/" \
+        --mode with_structure
+
 STAGE 09 report \
     python3 -c "
 import json
