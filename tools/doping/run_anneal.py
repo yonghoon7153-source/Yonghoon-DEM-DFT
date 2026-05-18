@@ -55,6 +55,19 @@ def load_uma_calc(device: str = 'cuda', task: str = 'omat'):
     return FAIRChemCalculator(predictor, task_name=task)
 
 
+def winner_name(xyz_path):
+    """v4.5.18 NEW-D defensive fix: cascade outputs share stem
+    'post_relax' or 'post_md' across winners. Use parent dir name in
+    that case. Same pattern as bvse_proxy/run_mlip_postproc (v4.5.17)
+    + combine_rankings.py CR-A (v4.5.8). Round 3 reviewer flagged this
+    as 'conditional hole — safe in current cascade flow but manual
+    re-anneal of post_relax.xyz would collide'. Defensive patch."""
+    p = Path(xyz_path)
+    if p.stem in ('post_relax', 'post_md'):
+        return p.parent.name
+    return p.stem
+
+
 def anneal_one(xyz_path: Path, calc, out_dir: Path,
               temperature_K: float = 500, time_ps: float = 50,
               dt_fs: float = 2.0, friction: float = 0.01,
@@ -63,7 +76,7 @@ def anneal_one(xyz_path: Path, calc, out_dir: Path,
     """Run Langevin NVT MD at ``temperature_K`` for ``time_ps``, then a final
     cell+positions relax. Records pre-anneal, post-MD, and post-relax energies
     so you can see how much extra binding the thermal sampling found."""
-    name = xyz_path.stem
+    name = winner_name(xyz_path)
     work = out_dir / name
     work.mkdir(parents=True, exist_ok=True)
 
@@ -252,7 +265,7 @@ def main():
                         "(needs ΔE/atom for ranking within each dopant group)")
         uma = json.loads(Path(args.uma_results).read_text())['results']
         # Map xyz path → ΔE/atom + dopant
-        name_to_xpath = {p.stem: p for p in xyz_paths}
+        name_to_xpath = {winner_name(p): p for p in xyz_paths}
         from collections import defaultdict
         groups = defaultdict(list)
         for rec in uma:
@@ -292,13 +305,13 @@ def main():
         done = {r['name']: r for r in existing.get('results', [])}
         print(f"Resume: {len(done)} already annealed")
 
-    todo = [p for p in xyz_paths if p.stem not in done]
+    todo = [p for p in xyz_paths if winner_name(p) not in done]
     print(f"To process: {len(todo)}/{len(xyz_paths)}")
 
     results = list(done.values())
     t_start = time.time()
     for i, p in enumerate(todo):
-        print(f"\n[{i+1}/{len(todo)}] {p.stem}")
+        print(f"\n[{i+1}/{len(todo)}] {winner_name(p)}")
         try:
             rec = anneal_one(
                 p, calc, out,
@@ -314,7 +327,7 @@ def main():
             results.append(rec)
         except Exception as e:
             print(f"  ❌ FAILED: {e}")
-            results.append({'name': p.stem, 'xyz_input': str(p),
+            results.append({'name': winner_name(p), 'xyz_input': str(p),
                            'error': str(e)})
         # Periodic save
         if (i + 1) % 2 == 0 or (i + 1) == len(todo):

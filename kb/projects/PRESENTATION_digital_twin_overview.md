@@ -222,7 +222,7 @@ Week 4-6               🔁 Paper revision + submit
 | 4 | Layer 1: 18-단계 cascade (factory line 그림) | 2분 |
 | 5 | Paper #1 결과 (R=0.989 binding curve plot) | 1분 |
 | 6 | Layer 2: GBR 학습 결과 (R²=0.95 vs Dummy=-0.06) | 1분 |
-| 7 | Nd₂O₃ case study (σ_Li 3.78 mS/cm winner) | 1분 |
+| 7 | **Single-compound demonstration: Nd₂O₃** (cascade 작동 예시, 60 configs → 5 σ winners) | 1분 |
 | 8 | 다음 단계 (12 oxide batch + paper) | 1분 |
 | 9 | Q&A | – |
 
