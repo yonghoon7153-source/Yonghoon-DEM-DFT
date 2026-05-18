@@ -40,6 +40,15 @@ STAGE_E_KEYS = [
     'electronic_sigma_full_mScm_stage_e',
     'thermal_sigma_full_mScm_stage_e',
 ]
+# Pair each Stage E key with its baseline.  If the baseline itself is
+# absent or zero (e.g. mono-AM cases where SE-only or electronic-only
+# transport channels are not applicable), then the Stage E value being
+# absent is consistent — not a corpus integrity issue.
+STAGE_E_BASELINE_MAP = {
+    'sigma_full_mScm_stage_e':            'sigma_full_mScm',
+    'electronic_sigma_full_mScm_stage_e': 'electronic_sigma_full_mScm',
+    'thermal_sigma_full_mScm_stage_e':    'thermal_sigma_full_mScm',
+}
 STAGE_E_AUDIT_KEYS = [
     'stage_e_source',          # which channels direct-solved vs fallback'd
     'stage_e_factors_used',    # audit trail of Cronau / Trev. / Wang factors
@@ -76,13 +85,40 @@ def _present(fm: dict, key: str) -> bool:
     return True
 
 
+def _is_zero_or_absent(fm: dict, key: str) -> bool:
+    """Baseline is effectively zero (so its Stage E counterpart is
+    legitimately absent — not a pipeline failure)."""
+    v = fm.get(key)
+    if v is None:
+        return True
+    if isinstance(v, (int, float)) and v == 0:
+        return True
+    return False
+
+
+def _stage_e_ok(fm: dict, stage_e_key: str) -> bool:
+    """A Stage E field is 'OK' if EITHER it has a real value OR its
+    baseline counterpart is itself zero/absent (consistent absence).
+
+    Example: a mono-AM-100 case has zero baseline σ_e (no SE → no
+    electronic transport channel through SE), so an absent
+    electronic_sigma_full_mScm_stage_e is expected and correct.
+    """
+    if _present(fm, stage_e_key):
+        return True
+    baseline_key = STAGE_E_BASELINE_MAP.get(stage_e_key)
+    if baseline_key is None:
+        return False
+    return _is_zero_or_absent(fm, baseline_key)
+
+
 def _classify(fm: dict) -> tuple[str, list[str]]:
     """Return (category, list_of_missing_fields) for a single case."""
     missing = []
 
-    # Stage E channels
+    # Stage E channels — accept absence if baseline is also absent/zero
     for k in STAGE_E_KEYS:
-        if not _present(fm, k):
+        if not _stage_e_ok(fm, k):
             missing.append(k)
 
     # Stage E audit trail
