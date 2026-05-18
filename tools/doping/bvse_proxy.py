@@ -198,11 +198,19 @@ def main():
     args = p.parse_args()
 
     paths = []
+    explicit_xyz = bool(args.xyz)
     if args.xyz:
         paths.extend(Path(p) for p in args.xyz)
     if args.xyz_dir:
         paths.extend(sorted(Path(args.xyz_dir).rglob('*.xyz')))
-    paths = [p for p in paths if p.name not in ('post_md.xyz', 'post_relax.xyz')]
+    # NEW-A fix (v4.5.16): only auto-exclude intermediate files when scanning
+    # by directory. Explicit --xyz list means the caller knows which files to
+    # process — trust them. v4.5 CR-3 swap made BVSE primary input
+    # `04_anneal/*/post_relax.xyz`, and this filter was excluding the very
+    # files cascade explicitly passes. Resulted in `records: []` (silent fail).
+    if not explicit_xyz:
+        paths = [p for p in paths
+                 if p.name not in ('post_md.xyz', 'post_relax.xyz')]
     print(f"Processing {len(paths)} structures")
 
     # Resume — load existing records if present

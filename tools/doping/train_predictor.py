@@ -136,9 +136,14 @@ def main():
 
     feats_categorical = ['dopant', 'cation_site', 'anion_site',
                         'charge_compensation']
-    feats_numeric = ['concentration', 'n_fu_actual']
-    if args.mode == 'with_structure':
-        feats_numeric += STRUCTURAL_FEATURES
+    # NEW-B fix (v4.5.16): split numeric features into REQUIRED vs OPTIONAL.
+    # REQUIRED features must be non-null (e.g. dopant + concentration + n_fu);
+    # OPTIONAL features (Tier-2 metrics, BVSE proxy) can have NaN — column is
+    # included only if >50% non-null in the data, then rows with NaN dropped.
+    # Round 1 mask was too strict: BVSE 0/61 (silent fail) dropped all 61 rows.
+    REQUIRED_NUMERIC = ['concentration', 'n_fu_actual']
+    OPTIONAL_NUMERIC = (STRUCTURAL_FEATURES
+                        if args.mode == 'with_structure' else [])
 
     metrics = {}
     for tgt in TARGETS:
@@ -148,13 +153,29 @@ def main():
         mask = df[tgt].notna()
         for f in feats_categorical:
             mask &= df[f].notna()
-        for f in feats_numeric:
+        for f in REQUIRED_NUMERIC:
             if f in df.columns:
                 mask &= df[f].notna()
+        # OPTIONAL features: include column only if it has enough signal in
+        # the target-non-null subset (≥50% non-null), then mask out remaining NaN.
+        target_subset = df[mask]
+        optional_avail = []
+        for f in OPTIONAL_NUMERIC:
+            if f in df.columns and \
+               target_subset[f].notna().sum() > 0.5 * len(target_subset):
+                optional_avail.append(f)
+                mask &= df[f].notna()
+        feats_numeric = REQUIRED_NUMERIC + optional_avail
         d = df[mask]
-        if len(d) < 20:
-            print(f"  ✗ skip {tgt} (only {len(d)} usable rows)")
+        # NEW-C: adaptive n_splits so small targets (e.g. σ_300K with 5 winners)
+        # still report something. Random KFold uses min(5, max(2, n//4)).
+        # Final skip if n < 5 (KFold can't even do 2-fold reliably).
+        if len(d) < 5:
+            print(f"  ✗ skip {tgt} (only {len(d)} usable rows, need ≥5)")
             continue
+        if len(d) < 20:
+            print(f"  ⚠ {tgt}: only {len(d)} usable rows — preliminary CV")
+        n_splits_random = min(5, max(2, len(d) // 4))
 
         X = d[feats_categorical + [f for f in feats_numeric if f in d.columns]]
         y = d[tgt].values
@@ -176,8 +197,11 @@ def main():
         #                        REALISTIC for "new dopant" deployment.
         # 'loco' LeaveOneGroupOut — single dopant held out at a time.
         #                        PESSIMISTIC, true compound-level cold-start.
+        # NEW-C: adaptive n_splits (set above from len(d)) so σ_300K with
+        # 5 winners can still report n_splits=2-fold CV.
         cv_schemes = {
-            'random': KFold(n_splits=5, shuffle=True, random_state=42),
+            'random': KFold(n_splits=n_splits_random, shuffle=True,
+                            random_state=42),
         }
         n_groups = len(set(groups))
         if n_groups >= 3:
