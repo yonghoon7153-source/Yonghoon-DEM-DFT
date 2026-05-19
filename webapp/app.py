@@ -4107,7 +4107,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 2:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 3:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -4170,7 +4170,7 @@ def serve_3d_data(case_id):
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 2
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 3
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -5511,7 +5511,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 2:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 3:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -5561,7 +5561,7 @@ def serve_archive_3d_data(folder):
                     aux['se_engagement']      = agg.get('se_engagement', {})
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 2
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 3
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')

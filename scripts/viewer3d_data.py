@@ -326,21 +326,33 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     for sid, rank in se_state_am_s_se.items():
         tabor_stats['particle_counts']['am_s_se'][_rank_to_label[rank]] += 1
 
+    # ── Payload-size guard rails ──────────────────────────────────────
+    # The full se_stress_pairs / am_se_stress_pairs lists can reach
+    # 2-3 M entries on fine-SE particulate cases (every plastic-regime
+    # contact emits one entry) → 360 MB JSON, untransportable.  Cap to
+    # the top-N most-stressed pairs by pressure_MPa.  All frontend view
+    # modes after commit 4d3f39b read per-particle state via
+    # `se_engagement`, so these pair lists are now diagnostic only.
+    _PAIR_CAP = 20_000
+    if len(se_stress_pairs) > _PAIR_CAP:
+        se_stress_pairs.sort(key=lambda p: p['pressure_MPa'], reverse=True)
+        se_stress_pairs = se_stress_pairs[:_PAIR_CAP]
+    if len(am_se_stress_pairs) > _PAIR_CAP:
+        am_se_stress_pairs.sort(key=lambda p: p['pressure_MPa'], reverse=True)
+        am_se_stress_pairs = am_se_stress_pairs[:_PAIR_CAP]
+
     return {
         'stress_max':       {int(k): round(v, 2) for k, v in stress_max.items()},
         'dr_max':           {int(k): round(v, 4) for k, v in dr_max.items()},
         'worst_partner':    {int(k): int(v)      for k, v in worst_partner.items()},
         'brittle_pairs':    brittle_pairs,
-        'se_stress_pairs':  se_stress_pairs,      # legacy: SE-SE yield+plastic
-        'am_se_stress_pairs': am_se_stress_pairs, # NEW: AM-SE yield+plastic
-        # NEW per-pair-type SE particle states (worst-of regime).  Idle
-        # SE particles are exposed via `tabor_stats.n_se_idle` count and
-        # the `all_se_ids - any-contact set` derivation on the frontend.
-        'se_states': {
-            'se_se':   _emit_state_lists(se_state_se_se),
-            'am_p_se': _emit_state_lists(se_state_am_p_se),
-            'am_s_se': _emit_state_lists(se_state_am_s_se),
-        },
+        'se_stress_pairs':  se_stress_pairs,      # capped: top-N by pressure
+        'am_se_stress_pairs': am_se_stress_pairs, # capped: top-N by pressure
+        # se_states emit dropped — was only consumed by the old SE
+        # Tabor 4-bin view mode (removed in commit 4d3f39b).  Keeping
+        # this empty dict for backward-compat with any cached payloads
+        # that still reference the key.
+        'se_states': {},
         'tabor_stats':  tabor_stats,
         # Emit just the count, not the full id list — the frontend
         # only uses `all_se_ids.length` to compute percentages, and
