@@ -127,6 +127,11 @@ function buildControls(container) {
       <option value="stress_brittle">Stress + Brittle (overlay)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="se_engagement">SE engagement & pore risk</option>
+      <optgroup label="Fracture (Phase A)">
+        <option value="worst_fpc">Worst F/P_c per particle</option>
+        <option value="am_p_skeleton">AM_P Fracture Skeleton</option>
+        <option value="stress_chain">Stress Chain (AM-AM)</option>
+      </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -844,6 +849,15 @@ function applyViewMode(state, mode) {
       if (obj.material) obj.material.dispose();
     });
     state.combinedOverlay = null;
+  }
+  /* Phase B — fracture overlays */
+  if (state.stressChainGroup && state.scene) {
+    state.scene.remove(state.stressChainGroup);
+    state.stressChainGroup.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) obj.material.dispose();
+    });
+    state.stressChainGroup = null;
   }
 
   /* default: restore base colours + opacities */
@@ -1569,6 +1583,196 @@ function applyViewMode(state, mode) {
          ★ Well-engaged 녹색이 dominant → SE가 잘 충진된 dense cathode<br>
          ★ paper §5 p_se sigmoid: HIGH = OFF zone, Well = ON zone
        </div>`);
+    return;
+  }
+
+  /* ── Phase B1: Worst F/P_c per particle (continuous heat) ─────────── */
+  if (mode === 'worst_fpc') {
+    dimAll();
+    const fpcMap = aux.particle_max_fpc || {};
+    /* Lawn 1998 stage thresholds: 1, 3, 11, 32 */
+    const stageColor = (m) => {
+      if (m < 1)   return 0x3b82f6;   // intact (blue)
+      if (m < 3)   return 0xfde047;   // microcrack (yellow)
+      if (m < 11)  return 0xfb923c;   // multi-crack (orange)
+      if (m < 32)  return 0xef4444;   // fragmentation (red)
+      return                0x7f1d1d; // pulverization (dark red)
+    };
+    let n = 0, maxSeen = 0;
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        const v = fpcMap[String(p.id)] ?? fpcMap[p.id];
+        if (v === undefined) return;
+        m.setColorAt(i, new THREE.Color(stageColor(v)));
+        n++; if (v > maxSeen) maxSeen = v;
+      });
+      m.material.opacity = 0.95; m.material.transparent = true;
+    });
+    /* SE always dim in this mode */
+    const seMesh = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
+      seMesh.material.opacity = 0.08; seMesh.material.transparent = true;
+    }
+    flushColors();
+    setLegend(state,
+      `<b>Worst F/P_c per particle (Lawn stages)</b><br>
+       <span style="color:#3b82f6">●</span> intact (F/P_c &lt; 1)<br>
+       <span style="color:#fde047">●</span> microcrack (1–3)<br>
+       <span style="color:#fb923c">●</span> multi-crack (3–11)<br>
+       <span style="color:#ef4444">●</span> fragmentation (11–32)<br>
+       <span style="color:#7f1d1d">●</span> pulverization (≥ 32)<br>
+       <span style="color:#9ca3af">(${n} AM particles, max F/P_c = ${maxSeen.toFixed(2)})</span><br>
+       <span style="color:#9ca3af;font-size:9px">★ Median per pair-type만 보던 표 통계와 달리, 입자별 worst contact을 그대로 표시. 한 입자가 본 가장 위험한 stress.</span>`);
+    return;
+  }
+
+  /* ── Phase B3: AM_P Fracture Skeleton (connected components) ─────── */
+  if (mode === 'am_p_skeleton') {
+    dimAll();
+    const skeleton = aux.am_p_skeleton || [];        // list of clusters
+    if (!skeleton.length) {
+      setLegend(state,
+        '<b>AM_P Fracture Skeleton</b><br>' +
+        '<i style="color:#9ca3af">F/P_c ≥ 1 인 AM_P-AM_P 접촉 없음 — 이 case는 다행히 fracture-prone backbone이 없음.</i>');
+      return;
+    }
+    /* Build membership: pid → cluster index (largest = 0) */
+    const clusterOf = {};
+    skeleton.forEach((cluster, ci) => cluster.forEach(pid => { clusterOf[pid] = ci; }));
+    /* Distinct color per cluster, largest = bright red, smaller = orange/yellow */
+    const palette = [0xef4444, 0xf97316, 0xfbbf24, 0xfde047,
+                     0xa3e635, 0x4ade80, 0x2dd4bf, 0x60a5fa];
+    const colorOfCluster = (ci) => palette[Math.min(ci, palette.length - 1)];
+    /* Color AM_P particles by their cluster */
+    let nHit = 0;
+    const mAP = state.meshes.AM_P;
+    if (mAP) {
+      mAP.userData.particles.forEach((p, i) => {
+        const ci = clusterOf[p.id];
+        if (ci !== undefined) {
+          mAP.setColorAt(i, new THREE.Color(colorOfCluster(ci)));
+          nHit++;
+        }
+      });
+      mAP.material.opacity = 0.95; mAP.material.transparent = true;
+    }
+    /* AM_S and SE dim */
+    ['AM_S', 'SE'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, colDim));
+      m.material.opacity = 0.06; m.material.transparent = true;
+    });
+    /* Draw lines connecting skeleton particles using stress chain data */
+    const segs = aux.stress_chain_segments || [];
+    if (segs.length && state.scene) {
+      const group = new THREE.Group();
+      /* Build position lookup: pid → THREE.Vector3 */
+      const pos = {};
+      ['AM_P', 'AM_S'].forEach(t => {
+        const m = state.meshes[t]; if (!m) return;
+        m.userData.particles.forEach(p => {
+          pos[p.id] = new THREE.Vector3(p.x, p.y, p.z);
+        });
+      });
+      segs.forEach(s => {
+        if (s.pair_type !== 'AM_P-AM_P' || s.mult < 1) return;
+        const a = pos[s.id1], b = pos[s.id2];
+        if (!a || !b) return;
+        const r = Math.max(0.25, Math.log10(s.mult + 1) * 0.7);
+        const ci = clusterOf[s.id1] ?? clusterOf[s.id2] ?? 0;
+        const tube = new THREE.TubeGeometry(
+          new THREE.LineCurve3(a, b), 1, r, 6, false);
+        const mat = new THREE.MeshBasicMaterial({
+          color: colorOfCluster(ci),
+          transparent: true, opacity: 0.85,
+        });
+        group.add(new THREE.Mesh(tube, mat));
+      });
+      state.scene.add(group);
+      state.stressChainGroup = group;
+    }
+    flushColors();
+    const nClusters = skeleton.length;
+    const biggest = skeleton[0].length;
+    setLegend(state,
+      `<b>AM_P Fracture Skeleton (load-bearing backbone)</b><br>
+       ${nClusters} 개 cluster, 가장 큰 cluster = ${biggest} 입자<br>
+       총 skeleton 입자 = ${nHit}<br>
+       <span style="color:#ef4444">●</span> Cluster #1 (largest)
+       <span style="color:#f97316">●</span> #2
+       <span style="color:#fbbf24">●</span> #3 ...<br>
+       <span style="color:#9ca3af;font-size:9px">★ F/P_c ≥ 1 인 AM_P-AM_P 접촉으로 연결된 connected component. 이 backbone에서 fragmentation이 시작되어 cascade 가능.</span>`);
+    return;
+  }
+
+  /* ── Phase B2: Stress Chain (all AM-AM contacts as line segments) ── */
+  if (mode === 'stress_chain') {
+    /* Keep default particle colors, just overlay lines */
+    ['AM_P', 'AM_S', 'SE'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      const base = (t === 'SE') ? colSeBase
+                                : new THREE.Color(t === 'AM_P' ? COL.AM_P : COL.AM_S);
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, base));
+      m.material.opacity = (t === 'SE') ? 0.10 : 0.45;
+      m.material.transparent = true;
+    });
+    const segs = aux.stress_chain_segments || [];
+    if (!segs.length) {
+      setLegend(state, '<i>No stress chain data</i>');
+      flushColors();
+      return;
+    }
+    /* Build position lookup */
+    const pos = {};
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach(p => {
+        pos[p.id] = new THREE.Vector3(p.x, p.y, p.z);
+      });
+    });
+    /* Pair-type colors */
+    const pairCol = {
+      'AM_P-AM_P': 0xef4444,
+      'AM_P-AM_S': 0xf97316,
+      'AM_S-AM_S': 0x60a5fa,
+    };
+    const group = new THREE.Group();
+    let nDrawn = 0, nIntact = 0, nSevere = 0;
+    segs.forEach(s => {
+      const a = pos[s.id1], b = pos[s.id2];
+      if (!a || !b) return;
+      /* Tube radius from F/P_c — log scale for legibility.
+       * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color. */
+      const isIntact = s.mult < 1;
+      if (isIntact) nIntact++; else { nSevere++; }
+      const r = Math.max(0.12, Math.log10(s.mult + 1.1) * 0.5);
+      const tube = new THREE.TubeGeometry(
+        new THREE.LineCurve3(a, b), 1, r, 6, false);
+      const col = isIntact ? 0x4b5563 : pairCol[s.pair_type] || 0x9ca3af;
+      const mat = new THREE.MeshBasicMaterial({
+        color: col,
+        transparent: true,
+        opacity: isIntact ? 0.18 : 0.85,
+      });
+      group.add(new THREE.Mesh(tube, mat));
+      nDrawn++;
+    });
+    if (state.scene) {
+      state.scene.add(group);
+      state.stressChainGroup = group;
+    }
+    flushColors();
+    setLegend(state,
+      `<b>Stress Chain (AM-AM contacts)</b><br>
+       선 두께 ∝ log(F/P_c+1), 색 = pair-type<br>
+       <span style="color:#ef4444">●</span> AM_P-AM_P
+       <span style="color:#f97316">●</span> AM_P-AM_S
+       <span style="color:#60a5fa">●</span> AM_S-AM_S<br>
+       <span style="color:#4b5563">●</span> intact (F/P_c &lt; 1)<br>
+       <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 contact 그림 (intact ${nIntact}, brittle ${nSevere})</span><br>
+       <span style="color:#9ca3af;font-size:9px">★ 두꺼운 빨강 line = AM_P-AM_P severe stress channel. 이게 어디서 어떻게 cluster 되는지가 fracture risk 위치.</span>`);
     return;
   }
 }
