@@ -8,16 +8,16 @@
     <div>
       <h2 class="case-name" ondblclick="editName(this)" title="더블클릭으로 이름 변경" style="cursor:pointer">{{ case.name }}</h2>
       <p>
-        <span class="badge badge-{{ case.mode }}">{{ case.mode }}</span>
-        <span class="badge badge-scale">Scale: {{ case.scale }}x</span>
-        {% if case.type_map %}<span class="badge">{{ case.type_map }}</span>{% endif %}
+        <span class="badge badge-{{ case.mode }}" title="입자 크기 분포 모드 — standard: 단일 크기(monodisperse), bimodal: 큰 입자(AM_P) + 작은 입자(AM_S) 혼합">{{ case.mode }}</span>
+        <span class="badge badge-scale" title="DEM 입자를 실제 크기 대비 몇 배로 확대해 시뮬레이션했는지 (시간스텝 안정성용 geometric scaling). 모든 길이는 이 배율로 나눠야 실측 단위.">Scale: {{ case.scale }}x</span>
+        {% if case.type_map %}<span class="badge" title="LIGGGHTS atom-type 매핑 — 입력 파일에서 어떤 type 번호가 어느 상(phase)인지">{{ case.type_map }}</span>{% endif %}
         {% if metrics %}
-          {% if input_params and input_params.box_x is defined %}<span class="badge">RVE: {{ "%.0f"|format(input_params.box_x * case.scale) }}×{{ "%.0f"|format(input_params.box_y * case.scale) }}μm</span>{% endif %}
-          {% if metrics.porosity is defined %}<span class="badge">Porosity: {{ "%.1f"|format(metrics.porosity) }}%</span>{% endif %}
-          {% if metrics.thickness_um is defined %}<span class="badge">두께: {{ "%.1f"|format(metrics.thickness_um) }}μm</span>{% endif %}
-          {% if metrics.percolation_pct is defined %}<span class="badge">Percolation: {{ "%.1f"|format(metrics.percolation_pct) }}%</span>{% endif %}
-          {% if metrics.ionic_active_pct is defined %}<span class="badge badge-{{ 'standard' if metrics.ionic_active_pct >= 95 else 'bimodal' }}">Ionic Active: {{ "%.1f"|format(metrics.ionic_active_pct) }}%</span>{% endif %}
-          {% if metrics.e_se_eff_gpa is defined %}<span class="badge">E_SE: {{ "%.2f"|format(metrics.e_se_eff_gpa) }} GPa ({{ "%.0f"|format(metrics.e_se_eff_gpa / 1.35 * 24) }} GPa)</span>{% endif %}
+          {% if input_params and input_params.box_x is defined %}<span class="badge" title="Representative Volume Element 단면적 (가로×세로, μm). Scale 적용된 실측 단위.">RVE: {{ "%.0f"|format(input_params.box_x * case.scale) }}×{{ "%.0f"|format(input_params.box_y * case.scale) }}μm</span>{% endif %}
+          {% if metrics.porosity is defined %}<span class="badge" title="기공률 ε = (1 − V_particles / V_electrode) × 100. 전극 내 빈 공간 비율(%). 낮을수록 잘 다져진 상태.">Porosity: {{ "%.1f"|format(metrics.porosity) }}%</span>{% endif %}
+          {% if metrics.thickness_um is defined %}<span class="badge" title="가압 후 전극 두께 = z_max(최상단 입자) − z_min(기판). 실측 단위(μm).">두께: {{ "%.1f"|format(metrics.thickness_um) }}μm</span>{% endif %}
+          {% if metrics.percolation_pct is defined %}<span class="badge" title="SE Percolation: 전극 상↔하단을 연결하는 SE 클러스터에 속한 SE 비율(%). 100%에 가까울수록 이온 전도 네트워크가 끊김 없이 형성됨.">Percolation: {{ "%.1f"|format(metrics.percolation_pct) }}%</span>{% endif %}
+          {% if metrics.ionic_active_pct is defined %}<span class="badge badge-{{ 'standard' if metrics.ionic_active_pct >= 95 else 'bimodal' }}" title="Ionic Active AM 비율: 상단까지 도달 가능한 SE 클러스터와 접촉하는 AM 입자의 비율(%). 이온 공급이 닿지 않으면 그 AM은 전기화학적으로 dead.">Ionic Active: {{ "%.1f"|format(metrics.ionic_active_pct) }}%</span>{% endif %}
+          {% if metrics.e_se_eff_gpa is defined %}<span class="badge" title="E_SE_eff (Effective Young's modulus of SE phase): 이 case의 DEM 시뮬레이션에서 SE 입자에 사용된 영률. 순수 SE를 300 MPa로 압축했을 때 실험 porosity 10% endpoint를 맞추도록 calibrate된 값 (predict_porosity_honest.py 참조). 괄호 안 24 GPa는 LPSCl 단결정 벌크 문헌값(Wang 2020) — 참고 상수. cold-press pellet의 grain boundary + 잔존 porosity로 실효 강성이 벌크의 ~5.6%까지 떨어진 물리적 사실을 반영.">E_SE: {{ "%.2f"|format(metrics.e_se_eff_gpa) }} GPa <span style="opacity:0.7">(bulk LPSCl: 24 GPa)</span></span>{% endif %}
         {% endif %}
         {% if metrics.warnings is defined and metrics.warnings %}
         <span class="badge badge-warning" title="{% for w in metrics.warnings %}{{ w.msg }}&#10;{% endfor %}">⚠ {{ metrics.warning_count }}</span>
@@ -95,16 +95,16 @@
   <div class="card-header-row">
     <h3>분석 요약</h3>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
-      {% if case.ps_ratio %}<span class="badge">P:S = {{ case.ps_ratio }}</span>
-      {% elif metrics and metrics.ps_ratio %}<span class="badge">P:S = {{ metrics.ps_ratio }}</span>{% endif %}
+      {% if case.ps_ratio %}<span class="badge" title="AM_P (대입자, primary/polycrystalline) : AM_S (소입자, secondary/single-crystal) 부피 비율">P:S = {{ case.ps_ratio }}</span>
+      {% elif metrics and metrics.ps_ratio %}<span class="badge" title="AM_P (대입자, primary/polycrystalline) : AM_S (소입자, secondary/single-crystal) 부피 비율">P:S = {{ metrics.ps_ratio }}</span>{% endif %}
       {% if metrics and metrics.am_se_ratio %}
         {% if input_params and input_params.am_se_ratio and input_params.am_se_ratio != metrics.am_se_ratio %}
-        <span class="badge">AM:SE = {{ metrics.am_se_ratio }} ({{ input_params.am_se_ratio }})</span>
+        <span class="badge" title="활물질(AM) : 고체전해질(SE) 무게 비율. 좌측은 실측 (post-compaction), 괄호는 input target. 일치하면 한 값만 표시.">AM:SE = {{ metrics.am_se_ratio }} ({{ input_params.am_se_ratio }})</span>
         {% else %}
-        <span class="badge">AM:SE = {{ metrics.am_se_ratio }}</span>
+        <span class="badge" title="활물질(AM) : 고체전해질(SE) 무게 비율 (input target과 일치)">AM:SE = {{ metrics.am_se_ratio }}</span>
         {% endif %}
       {% elif input_params and input_params.am_se_ratio %}
-      <span class="badge">AM:SE = {{ input_params.am_se_ratio }}</span>
+      <span class="badge" title="활물질(AM) : 고체전해질(SE) 무게 비율 (input target)">AM:SE = {{ input_params.am_se_ratio }}</span>
       {% endif %}
       {% if metrics and metrics.target_pressure_mpa is defined %}<span class="badge">Target: {{ metrics.target_pressure_mpa }} MPa</span>
       {% elif input_params and input_params.target_press_sim is defined %}<span class="badge">Target: {{ "%.1f"|format(input_params.target_press_sim * 1000) }} MPa</span>{% endif %}
@@ -981,48 +981,48 @@ const METRIC_TIPS = {
   'Severe %': {
     title: 'Severe — Fragmentation + Pulverization 합',
     formula: 'severe = (n_fragmentation + n_pulverization) / n_total × 100',
-    desc: '심각하게 손상된 접촉의 비율 (frag + pulv).',
-    meaning: '실험 (1-5% post-compaction NCM) 과 비교용. 본 연구 2.1% (δ-based) / 1.4% (force-based) — 문헌 중앙값.'
+    desc: '심각하게 손상된 접촉의 비율 (frag + pulv). 두 컬럼은 분류기 차이일 뿐, P_c와 F_DEM 자체는 동일.',
+    meaning: '문헌 비교 기준: post-compaction NCM에서 1–5% 정도가 일반적 (de Vasconcelos 2019, Quinn 2020). Force-based(권장) 값이 5%를 넘으면 σ_e Stage E에서 큰 손실 가능.'
   },
   'fracture_index (severe/total)': {
     title: 'Per-case fracture index',
     formula: 'fracture_index = (n_frag + n_pulv) / n_total ∈ [0, 1]',
-    desc: '이 case 의 severe contact 비율. 0 = 모두 정상, 1 = 모두 심각.',
-    meaning: 'Section 5 의 validity filter (< 0.10) 의 1차 cutoff. 156-case 앙상블의 median = 0.013, mean = 0.076.'
+    desc: '이 case 의 severe contact 비율. 0 = 모두 정상, 1 = 모두 심각. δ/Force 두 컬럼은 stage 분류 cutoff 차이.',
+    meaning: 'Section 5 validity filter cutoff: < 0.10. Force-based(권장)가 표준.'
   },
 
   // Per-pair-type severe %
   'AM_P-AM_P': {
     title: 'AM_P–AM_P severe %',
     formula: '(frag+pulv) / n_total for AM_P-AM_P pair only',
-    desc: '다결정-다결정 접촉의 severe 비율. K_IC = 0.3 MPa·m^0.5 (Quinn 2020) 로 가장 약함.',
-    meaning: '본 ensemble 31.3% (δ) / 28.5% (force) — paper 의 가장 큰 severe fraction. 다결정 secondary 의 fracture 위험성 정량.'
+    desc: '다결정 primary (AM_P) 끼리의 접촉 severe 비율. K_IC = 0.3 MPa·m^0.5 (Quinn 2020) 로 가장 약하고, 큰 입자라 stress chain 의 backbone 역할 → 가장 위험.',
+    meaning: '이 셀의 fracture는 대부분 여기서 발생. 값이 20%를 넘으면 사이클링 초기 capacity fade 위험. 개선책: P:S 비율 낮추거나 AM_P 입자 크기 줄이기.'
   },
   'AM_P-AM_S': {
     title: 'AM_P–AM_S (mixed) severe %',
     formula: '(frag+pulv) / n_total for mixed pair',
-    desc: '다결정-단결정 혼합 접촉. K_IC = √(K_S × K_P) = 0.55 MPa·m^0.5 기하평균.',
-    meaning: '두 종류의 중간 severity. Hybrid microstructure 의 fracture 거동.'
+    desc: '다결정 AM_P – 단결정 AM_S 혼합 접촉. K_IC = √(K_S × K_P) = 0.548 MPa·m^0.5 (기하평균).',
+    meaning: 'AM_S가 AM_P 사이 빈공간을 채우는 역할 → 직접 stress chain에 끼지 않아 보통 severe% 낮음. AM_P-AM_S severe %가 높다면 AM_S 분산 불충분.'
   },
   'AM_S-AM_S': {
     title: 'AM_S–AM_S (single-crystal) severe %',
     formula: '(frag+pulv) / n_total for AM_S-AM_S pair only',
-    desc: '단결정-단결정 접촉. K_IC = 1.0 MPa·m^0.5 (Liu 2020) 로 가장 강함.',
-    meaning: '본 ensemble 0.0% — 단결정 NCM 의 mechanical robustness 가 R-dependent Auerbach + K_IC^(4/3) scaling 으로 *발현적으로* 확인. 두 분류기 모두 0.0% 정확 일치 — 가장 강한 robustness 신호.'
+    desc: '단결정 AM_S 끼리의 접촉. K_IC = 1.0 MPa·m^0.5 (Liu 2020) 로 가장 강하고, 작은 입자라 contact force도 낮음.',
+    meaning: '대부분 case에서 0%. 단결정 NCM의 mechanical robustness가 R-dependent Auerbach P_c ∝ K_IC²·R 스케일링에서 자연 발현.'
   },
 
   // P_c, F, F/P_c medians
   'AM_P-AM_P P_c': {
     title: 'Auerbach onset force AM_P-AM_P',
-    formula: 'P_c = 200 · K_IC² · R_min / E*',
-    desc: '다결정 NCM 접촉의 cone-crack 시작 force. K_IC^PC = 0.3, E_AM = 140 GPa, R_min = 5μm 가정.',
-    meaning: '~1.21 mN. F_DEM 이 이를 초과하면 microcrack 시작.'
+    formula: 'P_c = 200 · K_IC² · R_min / E*  (Lawn 1998)',
+    desc: '다결정 NCM 접촉의 cone-crack 시작 임계 force. R_min = 접촉쌍의 작은 쪽 반경(case마다 다름), K_IC = 0.3 MPa·m^0.5, E_AM = 140 GPa.',
+    meaning: 'F_DEM > P_c 이면 microcrack 시작. 분류기와 무관한 재료/기하 상수 (한 값만 표시되는 이유).'
   },
 
   'Total AM-AM contacts': {
     title: 'AM-AM 접촉 총 개수',
     formula: 'Counts of AM-AM contacts in the case',
-    desc: 'δ-based: δ > 0 인 모든 AM-AM contact. Force-based: fn > 0 인 contact 만.',
+    desc: 'δ-based: δ > 0 인 모든 AM-AM contact. Force-based: fn > 0 인 contact 만. 보통 두 값이 같음(접촉이면 힘도 0이 아니므로).',
     meaning: 'Stage 분포의 분모. AM 입자 수와 packing density 에 비례.'
   },
 
@@ -1030,8 +1030,64 @@ const METRIC_TIPS = {
   'P_c AM_P-AM_P (mN)': {
     title: 'P_c AM_P-AM_P (Auerbach onset)',
     formula: 'P_c = 200 K_IC² R_min / E*',
-    desc: '~1.21 mN. K_IC=0.3 MPa·m^0.5 + R=5μm 기반.',
-    meaning: 'F/P_c > 1 이면 fracture risk.'
+    desc: 'K_IC=0.3 MPa·m^0.5 (Quinn 2020), E*=AM-AM Hertz reduced modulus, R_min은 case별 접촉쌍 작은 반경.',
+    meaning: 'F/P_c > 1 이면 fracture risk 시작. F/P_c ≥ 11이면 fragmentation, ≥ 32이면 pulverization 단계 진입.'
+  },
+
+  // ───────── Section-header tooltips (in order they appear) ─────────
+  '── 취성 파괴 (Auerbach) ──': {
+    title: '취성 파괴 분석 — Lawn 1998 Auerbach 공식',
+    formula: '두 분류기 모두 동일 P_c, 동일 F_DEM 사용. stage cutoff만 다름:\n  δ-based:     δ/δ_c × {1, 2, 5, 10}   (Hertz P ∝ δ^(3/2) 가정)\n  Force-based: F/P_c × {1, 3, 11, 32}   (분류기-무관)',
+    desc: '각 AM-AM 접촉을 5 단계 fracture stage로 분류. LIGGGHTS가 Hooke(선형) 모델이라 Hertz 가정이 깨지므로 Force-based가 표준.',
+    meaning: '★ Force-based 컬럼이 source of truth. 3D viewer 색상, σ_e Stage E 모두 Force 기준. δ-based는 legacy/diagnostic용으로만 표시.'
+  },
+  '── 단계별 분포 (%) ──': {
+    title: '전체 AM-AM 접촉의 stage 분포',
+    formula: 'Σ frac_stage_pct = 100% (per classifier)',
+    desc: '이 case의 모든 AM-AM contact을 5단계로 분류한 백분율. δ vs Force 두 컬럼은 같은 데이터를 다른 cutoff로 분류한 결과.',
+    meaning: '두 컬럼이 비슷할수록 Hooke ≈ Hertz 영역 → DEM 안정. Fragmentation+Pulverization 합이 5% 넘으면 σ_e Stage E에서 손실 큼.'
+  },
+  '── Severe (frag + pulv) ──': {
+    title: 'Severe = Fragmentation + Pulverization 합산',
+    formula: 'severe_pct = frac_fragmentation + frac_pulverization\nfracture_index = severe_pct / 100 ∈ [0, 1]',
+    desc: '심각 손상 접촉의 비율과 정규화 지수. 두 분류기를 나란히 비교.',
+    meaning: '문헌 기준 post-compaction NCM은 1–5% 정상 범위. Force-based가 5%를 넘으면 사이클링 capacity fade 위험.'
+  },
+  '── Pair-type Severe % ──': {
+    title: 'Pair-type별 Severe % 분해',
+    formula: 'pair마다 (frag+pulv)/n_total로 따로 계산',
+    desc: 'AM_P-AM_P / AM_P-AM_S / AM_S-AM_S 각 접촉 유형의 severe 비율. K_IC와 R이 pair마다 다르므로 fracture 위험도가 분리됨.',
+    meaning: 'AM_P-AM_P (다결정-다결정) 가 보통 가장 위험 (K_IC=0.3, 큰 입자). AM_S-AM_S 는 거의 0% (단결정 NCM 강도). 디자인 핵심: AM_P 격렬 충돌 줄이기.'
+  },
+  '── Pair-type 단계별 분포 (%) ──': {
+    title: 'Pair-type별 5단계 분포',
+    formula: '각 pair-type 안에서만 정규화 → Σ stage_pct = 100%',
+    desc: '각 접촉 유형을 독립적으로 5단계 분포로 분해. 어느 pair에서 어떤 stage가 우세한지 한눈에 보임.',
+    meaning: 'AM_P-AM_P에서 Multi-crack/Fragmentation이 높고, AM_S-AM_S는 거의 100% Intact이면 정상. AM_P-AM_S Microcrack 비율이 높으면 P:S 비율 재검토.'
+  },
+  '── Auerbach P_c (mN) ──': {
+    title: 'Auerbach 임계 force — 재료/기하 상수',
+    formula: 'P_c = 200 · K_IC² · R_min / E*  (Lawn 1998)\nA=200 (surface-state, Lawn 1998)\nK_IC: AM_P=0.3, AM_S=1.0, mixed=0.548 MPa·m^0.5',
+    desc: '각 pair-type의 cone-crack 시작 임계 force (mN). 분류기와 무관 — Force-based 컬럼이 "-"인 이유 (한 값을 양쪽이 공유).',
+    meaning: 'AM_P P_c가 가장 낮음(취약). AM_S P_c가 ~3–4배 높음(견고). F_DEM이 P_c를 넘으면 fracture 시작.'
+  },
+  '── F_DEM (mN, real units) ──': {
+    title: 'F_DEM — 실제 DEM 출력 접촉력 중앙값',
+    formula: 'median over all contacts of that pair-type of |F_normal|\n(Scale factor 적용해 mN 실측 단위로 환산)',
+    desc: 'LIGGGHTS가 출력한 접촉 force의 pair-type별 중앙값. 분류기와 무관한 측정값 → Force-based 컬럼이 "-" (같은 값).',
+    meaning: '큰 입자(AM_P)끼리는 stress chain backbone이라 가장 큼. 작은 입자(AM_S)끼리는 filler라 낮음. 이 값을 P_c와 직접 나눠서 risk 평가.'
+  },
+  '── F / P_c ratio ──': {
+    title: 'F / P_c — fracture 마진 (핵심 지표)',
+    formula: 'F_DEM / P_c  (dimensionless)\n≥ 1: microcrack | ≥ 3: multi-crack | ≥ 11: fragmentation | ≥ 32: pulverization',
+    desc: 'pair-type별 fracture risk 정량. 1보다 크면 균열 시작, 11 넘으면 chunk 분리, 32 넘으면 입자 분해.',
+    meaning: '★ 가장 중요한 단일 지표. AM_P-AM_P > 5면 사이클링 위험, > 10이면 첫 100 사이클 안에 capacity fade. AM_S-AM_S < 0.3이면 단결정 안전.'
+  },
+  '── Contact counts ──': {
+    title: 'AM-AM 접촉 개수 — 분포의 분모',
+    formula: 'δ-based: δ > 0 contacts\nForce-based: |F_n| > 0 contacts',
+    desc: '5-stage 분포 계산의 총합. δ vs Force 두 값은 보통 같음 (접촉이면 힘도 0이 아니므로).',
+    meaning: '값이 다르면 numerical noise (sub-machine-epsilon overlap) 존재. AM 입자 수 × packing density에 비례.'
   },
 
   // ───────── Stage E (literature-grounded σ_grain corrections) ─────────
@@ -1074,8 +1130,8 @@ const METRIC_TIPS = {
   'Fracture stage counts (intact/MC/Multi/Frag/Pulv)': {
     title: 'Fracture stage 분포 (Lawn 1998)',
     formula: 'Per-contact F/P_c ratio → 5 stages\nIntact (F<P_c) | Microcrack (1-3) | Multi (3-11) | Fragmentation (11-32) | Pulverization (>32)',
-    desc: '이 case 의 모든 AM-AM contact 을 5단계 fracture stage 로 분류한 누적 카운트.\nLawn 1998 의 force-multiplier scaling 기반.',
-    meaning: '본 ensemble 의 median fracture index = 0.013 — 대부분 intact.\nFragmentation + Pulverization > 5% 인 case 는 σ_e Stage E 에서 큰 손실.\n각 stage 의 σ_factor: Intact 1.00 / MC 0.90 / Multi 0.50 / Frag 0.20 / Pulv 0.05.'
+    desc: '이 case 의 모든 AM-AM contact 을 5단계 fracture stage 로 분류한 누적 카운트.\nLawn 1998 의 force-multiplier scaling 기반. Force-based 컬럼이 standard.',
+    meaning: 'Fragmentation + Pulverization 합이 5% 넘으면 σ_e Stage E 에서 큰 손실.\n각 stage 의 σ_factor: Intact 1.00 / MC 0.90 / Multi 0.50 / Frag 0.20 / Pulv 0.05.'
   },
   'Cathode geometry (L, A)': {
     title: 'Cathode geometry — L_cathode / A_RVE',
