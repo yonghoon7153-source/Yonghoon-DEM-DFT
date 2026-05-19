@@ -291,16 +291,15 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         if n_tot == 0:
             continue
         score = (n_p + 0.5 * n_y) / n_tot
-        dr_excess = max(0.0, se_dr_max.get(sid, 0.0) - DR_SE_PLASTIC)
-        pore_risk = dr_excess / DR_SE_PLASTIC
-        se_engagement[int(sid)] = {
-            'score':     round(score, 3),
-            'pore_risk': round(pore_risk, 3),
-            'n_plastic': n_p,
-            'n_yield':   n_y,
-            'n_elastic': n_e,
-            'dr_max':    round(se_dr_max.get(sid, 0.0), 4),
-        }
+        # Payload-compact form: emit just the engagement score (single
+        # float) per SE particle.  For fine-SE particulate cases the
+        # corpus reaches 620k SE — a 6-field dict per particle would
+        # produce a 60 MB JSON response that truncates over the dev-
+        # server transport.  The frontend visualises by score only;
+        # the auxiliary counts (n_plastic/n_yield/dr_max/pore_risk)
+        # are no longer rendered (over-plastic overlay was removed in
+        # the pore-risk semantics flip — commit 3c20a40).
+        se_engagement[int(sid)] = round(score, 3)
 
     tabor_stats = {
         'pair_counts': pair_counts,
@@ -343,9 +342,17 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
             'am_s_se': _emit_state_lists(se_state_am_s_se),
         },
         'tabor_stats':  tabor_stats,
-        'all_se_ids':   all_se_ids,
-        # NEW: per-SE engagement & micro-pore risk (any-partner aggregate)
-        # consumed by the "SE Force-chain engagement" view mode.
+        # Emit just the count, not the full id list — the frontend
+        # only uses `all_se_ids.length` to compute percentages, and
+        # a 620k-element id array adds ~5 MB to the JSON response
+        # for sub-μm SE particulate cases.  Backward compat: keep
+        # the key name but value is now just a number; the
+        # JS-side fallback uses `seMeshCount` when this is 0.
+        'all_se_ids_count': len(all_se_ids),
+        # Per-SE engagement score (single float per particle).  Was
+        # a 6-field dict pre-commit-42b3ea6 — frontend visualises by
+        # score only, so flattening saves ~50 MB JSON for the
+        # particulate corpus.
         'se_engagement': se_engagement,
     }
 

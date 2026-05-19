@@ -1419,14 +1419,16 @@ function applyViewMode(state, mode) {
      * engagement (score → 1) are muted dark teal as harmless
      * background that already filled their voids.
      */
+    /* engagement[se_id] is a single float (engagement score 0-1)
+     * since commit 42b3ea6 — was a 6-field dict, but the visualisation
+     * only reads `.score`, so the backend now sends just that number
+     * to keep the JSON payload under 10 MB for 620k-SE particulate
+     * cases (was hitting "Unexpected end of JSON input" at 60 MB). */
     const engagement = aux.se_engagement || {};
-    const all_se_ids = aux.all_se_ids || [];
+    const n_se_total_backend = aux.all_se_ids_count || 0;
     const seMeshCount = (state.meshes.SE && state.meshes.SE.userData.particles)
       ? state.meshes.SE.userData.particles.length
       : 0;
-    /* If the backend skipped aux computation (very large contacts.csv),
-     * `engagement` will be empty.  Detect this up front so we can show
-     * a clear message in the legend instead of a 61971600 % bug. */
     const auxAvailable = Object.keys(engagement).length > 0;
 
     /* Sequential red→muted green gradient (low engagement = pore risk) */
@@ -1458,12 +1460,11 @@ function applyViewMode(state, mode) {
     const seMesh = state.meshes.SE;
     if (seMesh) {
       seMesh.userData.particles.forEach((p, i) => {
-        const e = engagement[p.id];
-        if (!e) {
+        const s = engagement[p.id];
+        if (s === undefined || s === null) {
           seMesh.setColorAt(i, colorIdle); nIdle++;
           return;
         }
-        const s = e.score;
         seMesh.setColorAt(i, poreRiskColor(s));
         if (s >= 0.7)        nStrong++;
         else if (s >= 0.3)   nPartial++;
@@ -1478,12 +1479,12 @@ function applyViewMode(state, mode) {
       (n >= 10000) ? (Math.round(n / 1000) + 'k')
       : (n >= 1000) ? n.toLocaleString()
       : n.toString();
-    /* Use all_se_ids when available (authoritative SE count from the
-     * backend); fall back to the InstancedMesh particle count which
-     * matches whatever shapes actually rendered on screen.  Avoids the
-     * "62,000,000 %" bug seen on input_particulate_1 when aux was
-     * skipped and all_se_ids came back empty. */
-    const n_total = (all_se_ids.length || seMeshCount) || 1;
+    /* Use backend SE count when available (authoritative from
+     * atoms.csv walk); fall back to InstancedMesh particle count
+     * (matches whatever shapes actually rendered on screen).
+     * Avoids the "62,000,000 %" bug seen on input_particulate_1
+     * when aux was skipped and SE count came back 0. */
+    const n_total = (n_se_total_backend || seMeshCount) || 1;
     const pct = (n) => (100 * n / n_total).toFixed(1) + '%';
 
     const row = (color, sym, count, label, pctStr, tip) => `
