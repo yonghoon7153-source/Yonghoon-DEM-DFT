@@ -139,9 +139,64 @@ log_msg() {
     echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$MASTER_LOG"
 }
 
-is_done() {
+# v4.5.22 — multi-trigger skip detection (5-layer):
+#   1. STAGE_12*.DONE marker (cascade fully complete)
+#   2. Symlink target check (Li2O_x005 → Li2O which is done)
+#   3. Recent activity (file modified in last 30 min → cascade still running)
+#   4. Explicit lock file ($OUT/.master_lock with PID)
+#   5. External cascade PID file ($OUT.pid from prior independent run)
+# Returns: "done" / "running" / "locked" / "pending" (printed to stdout)
+cascade_status() {
     local outdir=$1
-    [ -f "$outdir/STAGE_12.DONE" ] || [ -f "$outdir/STAGE_12b.DONE" ]
+
+    # Layer 1: STAGE_12 marker = done
+    if [ -f "$outdir/STAGE_12.DONE" ] || [ -f "$outdir/STAGE_12b.DONE" ]; then
+        echo "done"; return
+    fi
+
+    # Layer 2: symlink target check (e.g., Li2O_x005 → Li2O)
+    if [ -L "$outdir" ]; then
+        local target=$(readlink -f "$outdir")
+        if [ -f "$target/STAGE_12.DONE" ] || [ -f "$target/STAGE_12b.DONE" ]; then
+            echo "done-via-symlink"; return
+        fi
+    fi
+
+    # Layer 3: recent activity (file modified in last 30 min)
+    # If cascade currently running (own process or external), files actively writing.
+    if [ -d "$outdir" ]; then
+        local recent=$(find "$outdir" -type f -mmin -30 2>/dev/null | head -1)
+        if [ -n "$recent" ]; then
+            echo "running"; return
+        fi
+    fi
+
+    # Layer 4: explicit lock file (master writes own PID)
+    if [ -f "$outdir/.master_lock" ]; then
+        local lock_pid=$(cat "$outdir/.master_lock" 2>/dev/null)
+        if [ -n "$lock_pid" ] && kill -0 "$lock_pid" 2>/dev/null; then
+            echo "locked"; return
+        fi
+        # stale lock — remove and continue
+        rm -f "$outdir/.master_lock"
+    fi
+
+    # Layer 5: external PID file ($BATCH_DIR/<name>.pid from independent run)
+    local ext_pid_file="${outdir%.pid}.pid"
+    if [ -f "$ext_pid_file" ]; then
+        local ext_pid=$(cat "$ext_pid_file" 2>/dev/null)
+        if [ -n "$ext_pid" ] && kill -0 "$ext_pid" 2>/dev/null; then
+            echo "external"; return
+        fi
+    fi
+
+    echo "pending"
+}
+
+# Backward-compat wrapper (existing callers use is_done)
+is_done() {
+    local s=$(cascade_status "$1")
+    [ "$s" = "done" ] || [ "$s" = "done-via-symlink" ]
 }
 
 # ============================================================
@@ -160,34 +215,51 @@ log_msg "Estimated time: ~$((TOTAL_CASCADES * 17 / 24)) days (TOP_K_SIGMA=2, 1 G
 log_msg "MASTER_LOG=$MASTER_LOG"
 
 # ============================================================
-# Resume status dump — show what's already done before starting
+# Resume status dump (v4.5.22 — 5-trigger detection)
 # ============================================================
 log_msg ""
-log_msg "--- Resume status (pre-launch scan) ---"
-n_already_done=0
-n_partial=0
+log_msg "--- Resume status (pre-launch scan, v4.5.22 5-trigger) ---"
+declare -A status_count=( [done]=0 [done-via-symlink]=0 [running]=0 \
+                          [locked]=0 [external]=0 [pending]=0 [partial]=0 )
 for cmp in "${ALL_COMPOUNDS[@]}"; do
     for conc_label in "${CONC_LABELS[@]}"; do
         cmp_label="${cmp}_${conc_label}"
         OUT="$BATCH_DIR/$cmp_label"
-        if is_done "$OUT"; then
-            n_already_done=$((n_already_done + 1))
-        elif [ -d "$OUT" ]; then
-            # partial cascade — find last DONE marker
+        st=$(cascade_status "$OUT")
+        if [ "$st" = "pending" ] && [ -d "$OUT" ]; then
+            # pending but dir exists → partial cascade
             last_stage=$(ls -t "$OUT"/STAGE_*.DONE 2>/dev/null | head -1 \
                           | xargs basename 2>/dev/null | cut -d. -f1)
             if [ -n "$last_stage" ]; then
-                n_partial=$((n_partial + 1))
+                st="partial"
                 log_msg "  PARTIAL: $cmp_label (last=$last_stage) → will resume"
             fi
+        elif [ "$st" = "running" ] || [ "$st" = "locked" ] || [ "$st" = "external" ]; then
+            log_msg "  $st: $cmp_label → will SKIP this iteration"
+        elif [ "$st" = "done-via-symlink" ]; then
+            target=$(readlink -f "$OUT")
+            log_msg "  done-via-symlink: $cmp_label → $target"
         fi
+        status_count[$st]=$((${status_count[$st]:-0} + 1))
     done
 done
-n_pending=$((TOTAL_CASCADES - n_already_done - n_partial))
 log_msg ""
-log_msg "  Already DONE  : $n_already_done / $TOTAL_CASCADES (will skip)"
-log_msg "  Partial       : $n_partial (will resume from last STAGE marker)"
-log_msg "  Pending       : $n_pending (will run from Stage 00)"
+log_msg "  Summary by trigger:"
+log_msg "    done            : ${status_count[done]:-0}  (STAGE_12 marker)"
+log_msg "    done-via-symlink: ${status_count[done-via-symlink]:-0}  (symlink target has STAGE_12)"
+log_msg "    running         : ${status_count[running]:-0}  (recent file activity, <30min)"
+log_msg "    locked          : ${status_count[locked]:-0}  (.master_lock with alive PID)"
+log_msg "    external        : ${status_count[external]:-0}  (<dir>.pid alive external process)"
+log_msg "    partial         : ${status_count[partial]:-0}  (will resume from last STAGE)"
+log_msg "    pending         : ${status_count[pending]:-0}  (fresh start)"
+n_already_done=$((${status_count[done]:-0} + ${status_count[done-via-symlink]:-0}))
+n_skip_active=$((${status_count[running]:-0} + ${status_count[locked]:-0} + ${status_count[external]:-0}))
+n_partial=${status_count[partial]:-0}
+n_pending=${status_count[pending]:-0}
+log_msg ""
+log_msg "  Will SKIP   : $((n_already_done + n_skip_active)) ($n_already_done done + $n_skip_active active)"
+log_msg "  Will RESUME : $n_partial"
+log_msg "  Will START  : $n_pending"
 if [ "$n_already_done" -gt 0 ] || [ "$n_partial" -gt 0 ]; then
     remaining_h=$(( (n_pending + n_partial) * 17 ))
     remaining_d=$((remaining_h / 24))
@@ -213,12 +285,26 @@ for i in "${!ALL_COMPOUNDS[@]}"; do
         OUT="$BATCH_DIR/$cmp_label"
         LOG="$BATCH_DIR/${cmp_label}.log"
 
-        if is_done "$OUT"; then
-            log_msg "Step $cascade_step/$TOTAL_CASCADES: $cmp_label ($phase_label) SKIP (already done)"
-            continue
-        fi
+        # v4.5.22: 5-trigger skip detection
+        st=$(cascade_status "$OUT")
+        case "$st" in
+            done|done-via-symlink)
+                log_msg "Step $cascade_step/$TOTAL_CASCADES: $cmp_label SKIP (status=$st)"
+                continue
+                ;;
+            running|locked|external)
+                log_msg "Step $cascade_step/$TOTAL_CASCADES: $cmp_label SKIP (status=$st — active)"
+                log_msg "  → will retry on next master_batch invocation"
+                continue
+                ;;
+            # pending or partial → run cascade (tier_cascade internal resume handles partial)
+        esac
 
         log_msg "Step $cascade_step/$TOTAL_CASCADES: $cmp_label ($phase_label, x=$x_val) START"
+
+        # Write .master_lock with current master PID for cross-instance coordination
+        mkdir -p "$OUT"
+        echo "$$" > "$OUT/.master_lock"
 
         # Run cascade with 24h timeout
         # COMPOUND_FILTER=<cmp> restricts substitute to single compound (v4.5.19 fix)
