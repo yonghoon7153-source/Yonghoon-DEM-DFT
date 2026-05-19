@@ -1383,19 +1383,22 @@ const PAPER_TO_ORIG = {
   '7-Layer solver defence — channel status': '7-Layer solver status',
 };
 
-// Walk back through previous <tr>s to find the most recent section header
-// (a row whose label looks like "── ... ──"), so context-sensitive tooltip
-// keys can disambiguate identical row labels (e.g. "AM_P-AM_P" appears in
-// 4 different fracture sections — Severe %, P_c, F_DEM, F/P_c).
+// Walk back through previous <tr>s to find the most recent section header,
+// so context-sensitive tooltip keys can disambiguate identical row labels
+// (e.g. "AM_P-AM_P" appears in 4 different fracture sections).
+//
+// Section headers are rendered as <tr class="section-header"> (NOT as
+// metric-label rows) at single.html:143-144, so we look for that class
+// and read its text content directly.
 function getSectionContext(tr) {
   let prev = tr.previousElementSibling;
   while (prev) {
-    const lbl = prev.querySelector('.metric-label[data-metric]');
-    if (lbl) {
-      const v = lbl.dataset.metric.trim();
-      if (v.startsWith('── ') && v.endsWith(' ──')) {
-        return v.slice(3, -3).trim();
-      }
+    if (prev.classList && prev.classList.contains('section-header')) {
+      const txt = (prev.textContent || '').trim();
+      // Strip "── " and " ──" wrappers
+      const m = txt.match(/^──\s+(.+?)\s+──$/);
+      if (m) return m[1].trim();
+      return txt;
     }
     prev = prev.previousElementSibling;
   }
