@@ -81,11 +81,12 @@ PHASE_1B=(
     Li2S Na2S MgS CaS Al2S3 Ga2S3 SiS2 GeS2 SnS2 As2S3 Sb2S3
 )
 
-# Tier D — Halide-rich Type B (4 halogens)
-TIER_D=(Cl Br I F)
+# Tier D — Halide-rich Type B (DEFERRED, see note below master loop)
+# Paper #1 already provides Cl-rich (modelC) + Br-rich (comp5) anchors.
+TIER_D=(Cl Br I F)  # placeholder, NOT executed in current loop
 
 TOTAL_TYPE_A=$((${#PHASE_1A[@]} + ${#PHASE_1B[@]}))
-TOTAL_ALL=$((TOTAL_TYPE_A + ${#TIER_D[@]}))
+TOTAL_ALL=$TOTAL_TYPE_A  # Tier D deferred → 91 cascades total
 
 # ============================================================
 # Helpers
@@ -134,12 +135,16 @@ for i in "${!ALL_TYPE_A[@]}"; do
 
     log_msg "Step $step/$TOTAL_ALL: $cmp ($phase_label) START"
 
-    # Run cascade with 24h timeout
-    timeout 86400 bash tools/doping/tier_cascade.sh \
-        db/structures/lpscl_F43m_24G_canonical.cif \
-        "$OUT" \
-        5 1,1,1 1 \
-        --compound "$cmp" --x_compound 0.05 \
+    # v4.5.19 fix: COMPOUND_FILTER env var is the proper single-compound mode.
+    # Earlier `--compound $cmp --x_compound 0.05` positional args were ignored
+    # by tier_cascade.sh and full DOPANT_DB (75+ compounds) enumerated →
+    # 5,250 structures (50× over-generation). COMPOUND_FILTER (v4.5.4)
+    # natively supported by run_compound_batch.sh restricts to listed compounds.
+    timeout 86400 env COMPOUND_FILTER="$cmp" \
+        bash tools/doping/tier_cascade.sh \
+            db/structures/lpscl_F43m_24G_canonical.cif \
+            "$OUT" \
+            5 1,1,1 1 \
         > "$LOG" 2>&1
 
     rc=$?
@@ -153,38 +158,18 @@ for i in "${!ALL_TYPE_A[@]}"; do
 done
 
 # Tier D — halide-rich Type B
+# v4.5.19 NOTE: run_compound_batch.sh Type B is "compound-independent" mode
+# (runs ONLY when COMPOUND_FILTER unset, AND generates 9 hx × 3 halides = 27
+# halide-rich variants). For single halide-rich (e.g., LiCl-rich x=0.6 only),
+# we need direct substitute_compound.py call — not yet wired through cascade.
+# DEFERRED: Tier D will be handled by separate Phase 2 script after Phase 1A+1B
+# completion. Paper #1 already covers Cl-rich (modelC) and Br-rich (comp5).
 log_msg "=========================================="
-log_msg "Phase 1A + 1B complete. Starting Tier D (halide-rich)."
+log_msg "Phase 1A + 1B complete. Tier D (halide-rich) DEFERRED."
+log_msg "  Reason: run_compound_batch.sh Type B is compound-independent;"
+log_msg "  requires direct substitute_compound.py call (Phase 2)."
+log_msg "  Paper #1 anchors: modelC (LiCl-rich), comp5 (LiBr-rich)."
 log_msg "=========================================="
-
-for j in "${!TIER_D[@]}"; do
-    hal="${TIER_D[$j]}"
-    step=$((TOTAL_TYPE_A + j + 1))
-    OUT="$BATCH_DIR/${hal}_rich"
-    LOG="$BATCH_DIR/${hal}_rich.log"
-
-    if is_done "$OUT"; then
-        log_msg "Step $step/$TOTAL_ALL: ${hal}_rich SKIP (already done)"
-        continue
-    fi
-
-    log_msg "Step $step/$TOTAL_ALL: ${hal}_rich START"
-    timeout 86400 bash tools/doping/tier_cascade.sh \
-        db/structures/lpscl_F43m_24G_canonical.cif \
-        "$OUT" \
-        5 1,1,1 1 \
-        --halide_rich "$hal" --excess_per_fu 0.6 \
-        --anion_site S_4a \
-        > "$LOG" 2>&1
-    rc=$?
-    if [ $rc -eq 0 ] && is_done "$OUT"; then
-        log_msg "Step $step/$TOTAL_ALL: ${hal}_rich ✓ DONE"
-    elif [ $rc -eq 124 ]; then
-        log_msg "Step $step/$TOTAL_ALL: ${hal}_rich ⚠ TIMEOUT"
-    else
-        log_msg "Step $step/$TOTAL_ALL: ${hal}_rich ❌ FAIL (rc=$rc)"
-    fi
-done
 
 # Final summary
 log_msg "=========================================="

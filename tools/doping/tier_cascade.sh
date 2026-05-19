@@ -136,6 +136,16 @@ STAGE 00 preflight \
         --base "$BASE" --out "$OUT/00_preflight" --device cuda
 
 # Stage 01 — Substitute compound batch
+# v4.5.19 (debug fix): COMPOUND_FILTER env var explicitly documented + logged.
+# Setting COMPOUND_FILTER=<compound> (or comma-separated list) restricts
+# Stage 01 to that compound only. WITHOUT this env var, the full DOPANT_DB
+# (~85 compounds) is enumerated → ~5000+ structures (over-generation bug).
+# run_compound_batch.sh v4.5.4 supports COMPOUND_FILTER natively.
+if [ -n "${COMPOUND_FILTER:-}" ]; then
+    LOG "Stage 01 COMPOUND_FILTER=$COMPOUND_FILTER (single/subset mode)"
+else
+    LOG "Stage 01 COMPOUND_FILTER unset → full DOPANT_DB enumeration (~85 compounds)"
+fi
 STAGE 01 substitute \
     bash tools/doping/run_compound_batch.sh \
         "$BASE" "$OUT/01_structures" "$N_SEEDS" "$SUPERCELL" "$EXOTIC"

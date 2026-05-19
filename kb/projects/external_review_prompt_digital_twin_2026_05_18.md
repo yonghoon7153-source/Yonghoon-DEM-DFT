@@ -586,3 +586,125 @@ Round 6  → Paper draft review
 12 rounds completed (cascade development) + 1 round paradigm shift (Digital
 Twin) + 3 rounds Layer 2 production-readiness = **16 rounds total** through
 the entire pipeline development. Externally reviewed at every gate.
+
+---
+
+# 📍 ROUND 5 UPDATE (2026-05-19 morning) — Critical bug discovered in batch start
+
+> Round 4 reviewer CONDITIONAL GO 후 master_batch_105.sh + Phase 0 5 step
+> 완료 → Li2O cascade 시작. 10시간 후 in-vivo watch에서 발견:
+
+## NEW-E (CRITICAL — pre-batch debugging miss):
+
+### 발견 경위
+- Li2O cascade Step 1/95 시작 (2026-05-19 00:17)
+- Stage 01 `STAGE_01.DONE` 마커 00:24:41 생성 ✓
+- Stage 02 (`run_uma_screening`) 10시간 진행 후 마커 안 생성
+- Watch에서 `Li2O ⟲ STAGE_01`로 stuck 보임
+- 진단: `find $WBASE/01_structures -name "*.xyz" | wc -l` → **5,250** structures
+- 추가 진단: `ls $WBASE/01_structures/structures/` → `typeA_Ag2O, typeA_Al2O3, ..., typeA_GaCl3` 등 **DOPANT_DB 전체** 75+ compound 생성됨!
+
+### 원인 (tier_cascade.sh:139-141)
+
+```bash
+# Stage 01 — Substitute compound batch
+STAGE 01 substitute \
+    bash tools/doping/run_compound_batch.sh \
+        "$BASE" "$OUT/01_structures" "$N_SEEDS" "$SUPERCELL" "$EXOTIC"
+```
+
+`tier_cascade.sh`는 **positional args 5개만 받음** (BASE OUT N_SEEDS SUPERCELL EXOTIC).
+사용자가 master_batch_105.sh에 추가한 `--compound Li2O --x_compound 0.05`는 **silently ignored**.
+
+결과: `run_compound_batch.sh`가 **COMPOUND_FILTER 환경변수 없이** 호출됨 → 모든 DOPANT_DB
+compound (75+) enumerate → 75 × N_seeds × site × method × etc = 5,250 structures
+→ Stage 02 UMA screening 10시간 stuck.
+
+### Round 4에서 못 잡은 이유
+
+Round 4 reviewer는 `tier_cascade.sh` Stage 01 invocation을 line-by-line check 안 함.
+*"per-compound stepping"* 권장에서 사용자가 `--compound Li2O` 옵션 사용한다고 가정.
+하지만 그 옵션은 tier_cascade.sh가 받지 못함.
+
+## v4.5.19 fix
+
+### Fix 1 (tier_cascade.sh): COMPOUND_FILTER 명시적 처리 + LOG
+```bash
+if [ -n "${COMPOUND_FILTER:-}" ]; then
+    LOG "Stage 01 COMPOUND_FILTER=$COMPOUND_FILTER (single/subset mode)"
+else
+    LOG "Stage 01 COMPOUND_FILTER unset → full DOPANT_DB enumeration (~85 compounds)"
+fi
+```
+사용자에게 명확히 *"전체 enumeration인지 single인지"* 가시화.
+
+### Fix 2 (master_batch_105.sh): env var 사용
+
+OLD (broken):
+```bash
+bash tier_cascade.sh BASE OUT 5 1,1,1 1 --compound "$cmp" --x_compound 0.05
+```
+NEW:
+```bash
+timeout 86400 env COMPOUND_FILTER="$cmp" \
+    bash tier_cascade.sh BASE OUT 5 1,1,1 1
+```
+
+`env COMPOUND_FILTER="$cmp"` → cascade가 child shell에 전파 → `run_compound_batch.sh`가
+v4.5.4 기능으로 single compound restrict.
+
+### Fix 3 (master_batch_105.sh): Tier D deferred
+
+`run_compound_batch.sh` Type B (halide-rich)는 *"compound-independent"* 모드:
+- `COMPOUND_FILTER` set → Type B 자동 SKIP
+- `COMPOUND_FILTER` unset → 27개 halide-rich variants 자동 enumerate
+
+→ Tier D만 따로 실행할 수 있는 옵션 없음. Phase 2 (수동 substitute_compound 호출)로
+deferred. Paper #1의 modelC (Cl-rich) + comp5 (Br-rich) anchor 인용으로 mitigate.
+
+배치 카운트: **91 cascades** (Phase 1A 37 + Phase 1B 54), Tier D 3-4개 deferred.
+
+## Round 5 specific questions
+
+### Q-R5-1: NEW-E fix correctness?
+- tier_cascade.sh Stage 01에 COMPOUND_FILTER 로깅 추가 (전체 vs single 가시화)
+- master_batch에 `env COMPOUND_FILTER="$cmp"` 사용
+- 다른 master batch 사례 audit 필요? (v4.5.13 README가 cite한 *"FORCE_RERUN=10 COMPOUND_FILTER=Nd2O3"* 패턴 이미 사용 — Nd2O3 cascade는 정상 작동했음. 즉 사용자가 그동안 manual env var 알고 있었음. master_batch_105.sh가 그 패턴을 빠뜨림.)
+
+### Q-R5-2: Tier D handling
+- v4.5.19에서 Tier D deferred. 합리적?
+- 또는 별도 script (substitute_compound 직접 호출 + cascade rest) 작성?
+
+### Q-R5-3: Round 4 audit miss 원인
+
+이번 round 5 발견은 round 4에서 batch script line-by-line check가 부족했던 결과.
+앞으로 batch start command (예: `bash master_batch_105.sh`) 검수 시:
+1. 실제 cascade 호출 명령 (`bash tier_cascade.sh ...`) line-by-line
+2. positional vs env var args 확인
+3. dry-run mode (`--dry-run` flag) 도입 필요?
+
+### Q-R5-4: One-line ask
+> *"v4.5.19 NEW-E fix로 91-compound batch 다시 시작해도 안전한가?
+> 다른 cascade-level audit hole 있나?"*
+
+## v4.5.19 files attached for Round 5
+
+- `tools/doping/tier_cascade.sh` (Stage 01 COMPOUND_FILTER explicit handling)
+- `tools/doping/master_batch_105.sh` (env var fix + Tier D deferred)
+- Bug evidence:
+  - 5,250 xyz files at `$BATCH_DIR/Li2O/01_structures/structures/`
+  - Naming pattern: `typeA_<DOPANT_DB compound>`
+  - Stage 02 stuck 10h+ before kill
+
+## Round chain (v4 → v4.5.19, 16 rounds total)
+
+```
+Round 1-8  (v4 → v4.5.13): 60+ Layer 1 cascade fixes
+Round 9-10 (Digital Twin Layer 2): DT-1~DT-7 paradigm shift
+Round 11-12 (Layer 2 in-vivo): NEW-A/B/C/D
+Round 13-14 (round 3-4): defensive run_anneal + Option β + 22→105 expansion
+Round 15-16 (this round 5): NEW-E (cascade env-var miss)
+```
+
+80+ items, 75+ fix, 처리율 ~94%. **In-vivo testing is paying off** — bugs 발견 시점은
+점점 batch start에 가까워지지만, 잡힘.
