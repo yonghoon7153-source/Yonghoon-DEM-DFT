@@ -23,12 +23,22 @@ import numpy as np
 from ase.io import read
 
 
-# Template constants (from comp5_lpscbr/dft_eos/v100/relax.in)
+# Template constants
+# v5 (2026-05-19): paper #2 Nd-doped requires settings DIFFERENT from paper #1
+# (comp1-5). Nd 4f^3 open-shell + PAW z=14 semi-core valence demand:
+#   ecutwfc 52 → 60 Ry  (Nd PAW needs higher cutoff than s/p-only systems)
+#   ecutrho 520 → 480   (PAW + USPP mixed: ratio 8× of ecutwfc per db plan)
+# See db/compositions/modelc_nd_doped.json "DFT_settings".
 PSEUDO_DIR = '/scratch/x3430a02/kgy/manuscript_support/pseudo'
-ECUTWFC = 52.0
-ECUTRHO = 520.0
+ECUTWFC = 60.0
+ECUTRHO = 480.0
 DEGAUSS = 0.01
 KPOINTS = "2 2 1 0 0 0"
+
+# Nd-specific settings (db verified, modelc_nd_doped.json DFT_settings)
+NSPIN_ND = 2                  # 4f^3 open-shell (3 unpaired e-)
+HUBBARD_U_ND_EV = 6.0          # Dudarev U for Nd 4f localization
+START_MAG_ND = 0.6             # initial magnetization fraction (≈ 3/5 of 4f^3)
 
 # Pseudopotentials (PBE, USPP/PAW)
 PSEUDOS = {
@@ -84,25 +94,27 @@ def generate_pwin(atoms, prefix: str, cell_scale: float) -> str:
     lines.append("    smearing    = 'mv'")
     lines.append(f"    degauss     = {DEGAUSS}")
     lines.append("    nosym       = .true.")
+    # Nd 4f^3 open-shell requires spin polarization + DFT+U (db verified).
+    # Prior 3-commit mixing-tweak iteration (d6811b6/800d9c4/9d06ad3) wrongly
+    # diagnosed SCF non-convergence as "charge sloshing"; root cause was
+    # missing ISPIN=2 + Hubbard_U (Nd 4f^3 cannot converge without them).
+    # KISTI job 726844 evidence: all 7 volumes of pair01 hit electron_maxstep
+    # with identical negative_rho=0.231 e/cell (volume-independent → setup bug).
+    if 'Nd' in species:
+        nd_idx = species.index('Nd') + 1  # QE is 1-indexed in ATOMIC_SPECIES
+        lines.append(f"    nspin       = {NSPIN_ND}")
+        lines.append(f"    starting_magnetization({nd_idx}) = {START_MAG_ND}")
+        lines.append("    lda_plus_u  = .true.")
+        lines.append(f"    Hubbard_U({nd_idx}) = {HUBBARD_U_ND_EV}")
     lines.append("/")
     lines.append("&ELECTRONS")
-    # Charge-sloshing-tolerant settings for Nd-doped LPSCl (Nd f-electron
-    # near-degeneracy at V_ref causes oscillation under default mixing).
-    # Empirical history (2026-05-17/18 KISTI iteration):
-    #   v1 PLAIN + β=0.1, maxstep=500       → SCF oscillates 1e-3/1e-4
-    #   v2 local-TF + CG + β=0.05           → CG 5x slower, impractical
-    #   v3 local-TF Davidson β=0.1 step=500 → still oscillates V_ref
-    #   v4 local-TF Davidson β=0.05 ndim=16 → ✓ final settings
-    #
-    # v4 changes (algorithmic only — physical result unchanged):
-    #   mixing_beta:      0.1  → 0.05  (slower damping breaks oscillation)
-    #   mixing_ndim:      8    → 16    (deeper Pulay memory)
-    #   electron_maxstep: 500  → 1000  (safety margin)
-    # Cost: ~1.5x wall per SCF cycle. Result identical (same conv_thr).
-    # paper SI reporting: "SCF: conv_thr 1e-6 Ry, Pulay mixing with
-    # local-TF screening (β=0.05, ndim=16), Davidson diagonalization,
-    # electron_maxstep=1000."
-    lines.append("    conv_thr    = 1.0d-6")
+    # Mixing settings retained from v4 (commit 9d06ad3) — these were the
+    # right tools for the wrong diagnosis but remain conservative defaults.
+    # With ISPIN+U applied, SCF typically converges in ~100-200 iter (down
+    # from never-converging) but maxstep=1000 kept as safety ceiling.
+    # conv_thr 1e-6 → 1e-8: tighter convergence required for spin+U systems
+    # where fractional 4f occupancies amplify residual charge noise.
+    lines.append("    conv_thr    = 1.0d-8")
     lines.append("    mixing_beta = 0.05")
     lines.append("    mixing_mode = 'local-TF'")
     lines.append("    mixing_ndim = 16")
