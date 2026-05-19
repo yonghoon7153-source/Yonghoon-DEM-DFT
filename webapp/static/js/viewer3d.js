@@ -248,7 +248,34 @@ export function initElectrodeViewer(containerId, dataUrl) {
 
   /* ── data fetch & build ──────────────────────────────────── */
   state.dataUrl = dataUrl;
-  fetch(dataUrl).then(r => r.json()).then(data => {
+
+  /* Inline loading / error overlay so silent failures are visible.
+   * Without this, fetch hangs and the user sees infinite "loading"
+   * with no clue why — exactly the input_particulate_1 symptom
+   * that prompted this hardening. */
+  const overlay = document.createElement('div');
+  overlay.style.cssText =
+    'position:absolute;top:8px;left:8px;z-index:50;padding:6px 12px;'
+    + 'background:rgba(0,0,0,.6);color:#e4e6f0;font-size:12px;'
+    + 'border-radius:6px;font-family:ui-monospace,Menlo,monospace';
+  overlay.textContent = '3D viewer 데이터 로딩 중…';
+  container.appendChild(overlay);
+  const fetchT0 = performance.now();
+  const fetchTimer = setInterval(() => {
+    const dt = ((performance.now() - fetchT0) / 1000).toFixed(0);
+    overlay.textContent = `3D viewer 데이터 로딩 중… (${dt}s)`;
+  }, 1000);
+
+  fetch(dataUrl)
+    .then(r => {
+      if (!r.ok) throw new Error(
+        `/3d-data → HTTP ${r.status} ${r.statusText}`);
+      overlay.textContent = '응답 받음, JSON 파싱 중…';
+      return r.json();
+    })
+    .then(data => {
+    clearInterval(fetchTimer);
+    overlay.remove();
     state.data = data;
     buildScene(scene, camera, controls, data, state);
     wireControls(ctrlDiv, renderer, camera, controls, scene, state);
@@ -329,6 +356,19 @@ export function initElectrodeViewer(containerId, dataUrl) {
     animate();
   }).catch(err => {
     console.error('viewer3d: failed to load data', err);
+    clearInterval(fetchTimer);
+    overlay.style.background = 'rgba(127,29,29,.85)';
+    overlay.style.color = '#fee2e2';
+    overlay.style.maxWidth = 'calc(100% - 24px)';
+    overlay.style.whiteSpace = 'pre-wrap';
+    overlay.style.lineHeight = '1.5';
+    overlay.innerHTML =
+      `<b>3D viewer 로딩 실패</b>\n`
+      + `URL: <code style="font-size:11px">${dataUrl}</code>\n`
+      + `Error: ${err && err.message ? err.message : String(err)}\n\n`
+      + `<span style="color:#fca5a5;font-size:11px">`
+      + `브라우저 DevTools Console / Network 탭에서 자세한 trace 확인 가능.`
+      + `</span>`;
   });
 
   /* ── animation loop ──────────────────────────────────────── */

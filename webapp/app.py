@@ -4094,19 +4094,37 @@ def serve_3d_data(case_id):
             'radius': float(r['radius']),
         } for _, r in df.iterrows()}
         if os.path.exists(contacts_csv):
+            import time as _t
+            _t0 = _t.time()
             contacts_df = pd.read_csv(contacts_csv, low_memory=False)
-            contacts_iter = contacts_df.to_dict('records')
-            agg = aggregate_particle_metrics(
-                contacts_iter, atoms_by_id, type_map, scale=scale)
-            aux['stress_max']         = agg['stress_max']
-            aux['dr_max']             = agg['dr_max']
-            aux['brittle_pairs']      = agg['brittle_pairs']
-            aux['se_stress_pairs']    = agg['se_stress_pairs']
-            aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
-            aux['se_states']          = agg.get('se_states', {})
-            aux['tabor_stats']        = agg.get('tabor_stats', {})
-            aux['all_se_ids']         = agg.get('all_se_ids', [])
-            aux['se_engagement']      = agg.get('se_engagement', {})
+            _t1 = _t.time()
+            n_rows = len(contacts_df)
+            print(f'  [3d-data aux] contacts.csv: {n_rows} rows, '
+                  f'read in {_t1-_t0:.1f}s')
+            # Cap aux work for very large cases — the viewer can still
+            # load with empty aux (basic shapes + colors), and the user
+            # gets a clear log line explaining why aux is missing.
+            if n_rows > 800_000:
+                print(f'  [3d-data aux] skipping aggregate '
+                      f'(> 800k rows; would hang the request)')
+            else:
+                contacts_iter = contacts_df.to_dict('records')
+                _t2 = _t.time()
+                print(f'  [3d-data aux] to_dict in {_t2-_t1:.1f}s')
+                agg = aggregate_particle_metrics(
+                    contacts_iter, atoms_by_id, type_map, scale=scale)
+                _t3 = _t.time()
+                print(f'  [3d-data aux] aggregate in {_t3-_t2:.1f}s '
+                      f'(total {_t3-_t0:.1f}s)')
+                aux['stress_max']         = agg['stress_max']
+                aux['dr_max']             = agg['dr_max']
+                aux['brittle_pairs']      = agg['brittle_pairs']
+                aux['se_stress_pairs']    = agg['se_stress_pairs']
+                aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
+                aux['se_states']          = agg.get('se_states', {})
+                aux['tabor_stats']        = agg.get('tabor_stats', {})
+                aux['all_se_ids']         = agg.get('all_se_ids', [])
+                aux['se_engagement']      = agg.get('se_engagement', {})
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
@@ -4114,7 +4132,9 @@ def serve_3d_data(case_id):
             os.path.join(results_dir, 'coverage_per_am.csv')).items()}
     except Exception as _e:
         # Aux data is best-effort — don't break the viewer if it fails.
-        print(f'  [3d-data aux] {_e}')
+        import traceback
+        print(f'  [3d-data aux] FAILED: {type(_e).__name__}: {_e}')
+        traceback.print_exc()
 
     return jsonify({
         'particles': particles,
@@ -5398,26 +5418,43 @@ def serve_archive_3d_data(folder):
             'radius': float(r['radius']),
         } for _, r in df.iterrows()}
         if os.path.exists(contacts_csv):
+            import time as _t
+            _t0 = _t.time()
             contacts_df = pd.read_csv(contacts_csv, low_memory=False)
-            agg = aggregate_particle_metrics(
-                contacts_df.to_dict('records'),
-                atoms_by_id, type_map, scale=scale)
-            aux['stress_max']         = agg['stress_max']
-            aux['dr_max']             = agg['dr_max']
-            aux['brittle_pairs']      = agg['brittle_pairs']
-            aux['se_stress_pairs']    = agg['se_stress_pairs']
-            aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
-            aux['se_states']          = agg.get('se_states', {})
-            aux['tabor_stats']        = agg.get('tabor_stats', {})
-            aux['all_se_ids']         = agg.get('all_se_ids', [])
-            aux['se_engagement']      = agg.get('se_engagement', {})
+            _t1 = _t.time()
+            n_rows = len(contacts_df)
+            print(f'  [3d-data aux/archive] contacts.csv: {n_rows} rows, '
+                  f'read in {_t1-_t0:.1f}s')
+            if n_rows > 800_000:
+                print(f'  [3d-data aux/archive] skipping aggregate '
+                      f'(> 800k rows; would hang the request)')
+            else:
+                contacts_iter = contacts_df.to_dict('records')
+                _t2 = _t.time()
+                agg = aggregate_particle_metrics(
+                    contacts_iter, atoms_by_id, type_map, scale=scale)
+                _t3 = _t.time()
+                print(f'  [3d-data aux/archive] to_dict {_t2-_t1:.1f}s, '
+                      f'aggregate {_t3-_t2:.1f}s (total {_t3-_t0:.1f}s)')
+                aux['stress_max']         = agg['stress_max']
+                aux['dr_max']             = agg['dr_max']
+                aux['brittle_pairs']      = agg['brittle_pairs']
+                aux['se_stress_pairs']    = agg['se_stress_pairs']
+                aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
+                aux['se_states']          = agg.get('se_states', {})
+                aux['tabor_stats']        = agg.get('tabor_stats', {})
+                aux['all_se_ids']         = agg.get('all_se_ids', [])
+                aux['se_engagement']      = agg.get('se_engagement', {})
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
         aux['coverage_per_am']   = {str(k): v for k, v in build_coverage_map(
             os.path.join(target, 'coverage_per_am.csv')).items()}
     except Exception as _e:
-        print(f'  [3d-data aux/archive] {_e}')
+        import traceback
+        print(f'  [3d-data aux/archive] FAILED: '
+              f'{type(_e).__name__}: {_e}')
+        traceback.print_exc()
 
     return jsonify({
         'particles': particles, 'box': box,
