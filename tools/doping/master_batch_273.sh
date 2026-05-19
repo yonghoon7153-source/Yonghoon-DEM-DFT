@@ -273,11 +273,19 @@ for c in csvs:
             cmp, conc_label = parent.rsplit('_x', 1)
             df['compound_id'] = cmp
             df['concentration_label'] = 'x' + conc_label
-            df['concentration_pct'] = int(conc_label) / 10  # x002 → 0.2 (2%)
+            # v4.5.21 NEW-F fix (Round 6 reviewer CRITICAL):
+            # master_batch_273 label convention: x002=2%, x005=5%, x010=10%
+            # (label digits = percent value). Previous v4.5.20 used
+            # `int(conc_label) / 10` which gave 0.2/0.5/1.0 (1/10 off) —
+            # silent unit mismatch with column name "pct" (= percent).
+            # Both columns reported for paper-grade unit clarity:
+            df['concentration_pct'] = float(conc_label)        # 2.0 / 5.0 / 10.0  (percent)
+            df['concentration_fraction'] = float(conc_label) / 100  # 0.02 / 0.05 / 0.10  (fraction)
         else:
             df['compound_id'] = parent
             df['concentration_label'] = 'unknown'
             df['concentration_pct'] = None
+            df['concentration_fraction'] = None
         dfs.append(df)
     except Exception as e:
         print(f'  warn: skip {c}: {e}')
