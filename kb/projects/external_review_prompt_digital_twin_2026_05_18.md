@@ -708,3 +708,147 @@ Round 15-16 (this round 5): NEW-E (cascade env-var miss)
 
 80+ items, 75+ fix, 처리율 ~94%. **In-vivo testing is paying off** — bugs 발견 시점은
 점점 batch start에 가까워지지만, 잡힘.
+
+---
+
+# 📍 ROUND 6 UPDATE (2026-05-19 evening) — Multi-concentration master (Premium 6.4mo)
+
+> Round 5 NEW-E GO + Li2O cascade in-vivo verification PASS (Stage 02 22분,
+> 5,250→45 structures, 27× 빨라짐). 사용자가 **concentration sweep 추가**
+> 결정 — "concentration이 달라졌을 때의 ranking 고찰" paper-grade insight.
+>
+> 사용자 명시:
+> - 1 GPU (gabia 다른 일 충돌 회피)
+> - 91 compound 유지 (DOPANT_DB 다양성)
+> - Li2O 백업 후 재시작 OK
+> - **6.4개월 timeline accept** ("Premium plan, 오래걸려도 돼")
+> - **Resume 강력 요청** ("Li2O→Na2O 넘어가서 stop해도 resume 가능하게")
+
+## v4.5.20 변경 2건
+
+### Fix — `run_compound_batch.sh`: X_COMPOUND env var
+```bash
+# Before (3곳 hardcoded):
+--compound "$cmpd" --x_compound 0.05
+
+# After (v4.5.20):
+X_COMPOUND="${X_COMPOUND:-0.05}"
+--compound "$cmpd" --x_compound "$X_COMPOUND"
+```
+Backward compat 유지 (default 0.05). master_batch_273에서 per-iteration set.
+
+### New — `master_batch_273.sh`: multi-concentration loop
+
+```bash
+declare -A CONCENTRATIONS=(
+    ["x002"]="0.02"   # Xiong 2022 dilute precedent
+    ["x005"]="0.05"   # Sundar 2025 standard, paper #1 anchor
+    ["x010"]="0.10"   # Adeli 2019 heavy doping
+)
+
+for cmp in "${ALL_COMPOUNDS[@]}"; do
+    for conc_label in x002 x005 x010; do
+        cmp_label="${cmp}_${conc_label}"  # e.g., Li2O_x005
+        OUT="$BATCH_DIR/$cmp_label"
+        if is_done "$OUT"; then continue; fi
+        timeout 86400 env \
+            COMPOUND_FILTER="$cmp" \
+            X_COMPOUND="${CONCENTRATIONS[$conc_label]}" \
+            bash tier_cascade.sh ...
+    done
+done
+```
+
+총 91 × 3 = **273 cascades**, ~193일 (6.4개월).
+
+## Resume 강화 (사용자 강력 요청)
+
+### 5-layer resume safety
+1. **Per-stage**: tier_cascade.sh의 STAGE_NN.DONE marker 기존 작동
+2. **Per-cascade**: master_batch_273 is_done() = STAGE_12*.DONE check
+3. **Per-master**: 같은 명령 idempotent re-run
+4. **Pre-launch status dump**: 시작 시 *"Already DONE / Partial / Pending"* 출력
+5. **Estimated remaining time**: pending 수에 따라 자동 재계산
+
+### Resume usage examples
+```bash
+# 첫 실행
+nohup bash master_batch_273.sh > master_outer_273.log 2>&1 &
+
+# Mid-batch에 죽음 (e.g., Li2O_x010 → Na2O_x002 진행 중 crash)
+# 같은 명령 다시:
+nohup bash master_batch_273.sh > master_outer_273.log 2>&1 &
+# 자동:
+#   Li2O_x002, Li2O_x005, Li2O_x010 → SKIP (DONE)
+#   Na2O_x002 → resume from last STAGE marker
+#   Na2O_x005 onwards → run from Stage 00
+```
+
+### Force re-run (특정 compound 다시)
+```bash
+# Option A: STAGE_12 marker만 삭제 (Stage 12부터 재실행)
+rm $BATCH_DIR/Li2O_x005/STAGE_12*.DONE
+# Option B: 전체 디렉토리 삭제 (Stage 00부터)
+rm -rf $BATCH_DIR/Li2O_x005
+# Option C: tier_cascade.sh native FORCE_RERUN=NN
+FORCE_RERUN=04 bash master_batch_273.sh   # Stage 04 강제 재실행
+```
+
+## Round 6 specific questions
+
+### Q-R6-1: v4.5.20 code correctness?
+- `X_COMPOUND` env var propagation (run_compound_batch line 42 + 3 use sites)
+- `master_batch_273.sh` per-iteration `env COMPOUND_FILTER=... X_COMPOUND=...` correct?
+- Loop nesting: compound outer × conc inner — 자연스러운가?
+- 디렉토리 naming `{cmp}_{conc_label}` (e.g., Li2O_x005) collision-safe?
+
+### Q-R6-2: Resume logic 검증?
+- `is_done()` STAGE_12 || STAGE_12b check — Stage 12 fail edge case 처리?
+- Per-stage resume (within tier_cascade.sh) + per-cascade resume (master) layered correctly?
+- Pre-launch status dump가 정확? (test: 가짜 STAGE_12.DONE 만들어서 SKIP 확인 필요)
+- FORCE_RERUN 옵션 호환?
+
+### Q-R6-3: 6.4 month commitment의 risk
+사용자 명시 accept. 단 reviewer가 추가로 짚을 위험:
+- gabia GPU 다른 일 충돌? (월 단위 reservation 확인)
+- 6.4개월 동안 conda env / hardware / OS upgrade 위험
+- Mid-batch (e.g., 4개월차)에 NEW bug 발견 시 처리 — 어디까지 손실 감수?
+- Intermediate paper draft 가능성? (Phase 1A 끝 = 2개월 후, oxide-only)
+
+### Q-R6-4: Concentration sweep (2%, 5%, 10%) 화학적 정당성?
+- Literature precedent: 2% (Xiong 2022), 5% (Sundar 2025, paper #1), 10% (Adeli 2019)
+- 3 points enable linear/quadratic trend fitting
+- 다른 sweep (1%, 5%, 15%) 또는 (3%, 7%, 12%) 권장? 또는 그대로 OK?
+
+### Q-R6-5: Layer 2 dataset 풍부함 정량
+- 12,000 datapoint × 60-65 feature columns
+- GNN training 충분 (ALIGNN/M3GNet threshold 5k+)
+- concentration_pct 컬럼이 학습 feature로 적절한가?
+
+### Q-R6-6: One-line ask
+> *"v4.5.20 273-cascade multi-concentration master batch로 6.4개월 launch GO?
+> Resume capability 충분히 robust한가?"*
+
+## v4.5.20 files attached for Round 6
+
+- `tools/doping/run_compound_batch.sh` (X_COMPOUND env var support)
+- `tools/doping/master_batch_273.sh` (new, 297 lines)
+- `tools/doping/tier_cascade.sh` (v4.5.19 unchanged, included for context)
+- commit `3d5195d` v4.5.20 full diff
+
+## Round chain (v4 → v4.5.20, 15 rounds total)
+
+```
+Round 1-8     (v4 → v4.5.13):  60+ Layer 1 cascade fixes
+Round 9-10    (Digital Twin):  DT-1~DT-7 paradigm shift
+Round 11-12   (Layer 2 in-vivo): NEW-A/B/C/D
+Round 13-14   (round 3-4):     defensive + Option β + 22→105 expansion
+Round 15      (round 5 NEW-E): tier_cascade env var fix → 91 compound
+Round 16      (round 6 v4.5.20): 91 → 273 multi-conc, 6.4mo commitment
+```
+
+In-vivo verified:
+- v4.5.19 NEW-E fix: Li2O sanity 9 structures + cascade Stage 02 22min (27× speedup)
+- Li2O cascade currently at Stage 10 σ_MD (이전 6h+ done, ~3h Stage 10 in progress)
+
+Per-cascade time confirmed: ~17h average. 273 × 17h = 4641h ≈ 193 days exactly.
