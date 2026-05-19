@@ -34,6 +34,13 @@ EXOTIC_FLAG=""
 SCRIPT="tools/doping/substitute_compound.py"
 METHOD="random"
 
+# v4.5.20: X_COMPOUND env var support for multi-concentration sweep.
+# Default 0.05 (5%) preserved for backward compat. Set via:
+#   X_COMPOUND=0.02 bash run_compound_batch.sh ...   (2% doping)
+#   X_COMPOUND=0.10 bash run_compound_batch.sh ...   (10% doping)
+# Used by master_batch_273.sh for (compound × concentration) sweep.
+X_COMPOUND="${X_COMPOUND:-0.05}"
+
 mkdir -p "$OUT_BASE"
 echo "==================================================="
 echo "Compound doping batch v3 (diversified)"
@@ -42,6 +49,7 @@ echo "  out:         $OUT_BASE"
 echo "  method:      $METHOD, n_seeds: $N_SEEDS"
 echo "  supercell:   $SUPERCELL"
 echo "  allow_exotic: $EXOTIC"
+echo "  X_COMPOUND:  $X_COMPOUND  (doping rate, v4.5.20 env var)"
 echo "==================================================="
 
 # ============================================================
@@ -131,7 +139,7 @@ for cmpd in "${ALL_COMPOUNDS[@]}"; do
   echo "  → typeA_$cmpd"
   python3 "$SCRIPT" \
       --base "$BASE" --supercell $SC_FLAG \
-      --compound "$cmpd" --x_compound 0.05 \
+      --compound "$cmpd" --x_compound "$X_COMPOUND" \
       --auto_cation_sites --auto_anion_sites \
       $EXOTIC_FLAG \
       --method "$METHOD" --n_seeds "$N_SEEDS" \
@@ -160,7 +168,7 @@ for cmpd in "${TYPEA_CLUSTER_COMPOUNDS[@]}"; do
   echo "  → typeA_${cmpd}_cluster"
   python3 "$SCRIPT" \
       --base "$BASE" --supercell $SC_FLAG \
-      --compound "$cmpd" --x_compound 0.05 \
+      --compound "$cmpd" --x_compound "$X_COMPOUND" \
       --auto_cation_sites --auto_anion_sites \
       $EXOTIC_FLAG \
       --method cluster --n_seeds "$N_SEEDS" \
@@ -214,7 +222,7 @@ for cmpd in "${TYPEC_COMPOUNDS[@]}"; do
     echo "  → typeC_${cmpd}_Clchain_x${xname}"
     python3 "$SCRIPT" \
         --base "$BASE" --supercell $SC_FLAG \
-        --compound "$cmpd" --x_compound 0.05 \
+        --compound "$cmpd" --x_compound "$X_COMPOUND" \
         --auto_anion_sites $EXOTIC_FLAG \
         --also_halide_rich Cl --excess_per_fu "$hx" \
         --method "$METHOD" --n_seeds "$N_SEEDS" \
