@@ -275,7 +275,21 @@ export function initElectrodeViewer(containerId, dataUrl) {
     })
     .then(data => {
     clearInterval(fetchTimer);
-    overlay.remove();
+    if (data._aux_error) {
+      /* Server returned base geometry but couldn't serialize aux
+       * (numpy types / NaN / OOM during jsonify).  Show as a
+       * non-fatal warning — viewer still renders. */
+      overlay.style.background = 'rgba(180,83,9,.85)';
+      overlay.style.color = '#fef3c7';
+      overlay.style.fontSize = '11px';
+      overlay.innerHTML =
+        `⚠ aux 데이터 누락 (서버 jsonify 오류)<br>`
+        + `<span style="color:#fde68a;font-size:10px">`
+        + `${data._aux_error}</span>`;
+      setTimeout(() => overlay.remove(), 6000);
+    } else {
+      overlay.remove();
+    }
     state.data = data;
     buildScene(scene, camera, controls, data, state);
     wireControls(ctrlDiv, renderer, camera, controls, scene, state);

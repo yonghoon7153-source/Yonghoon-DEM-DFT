@@ -4188,7 +4188,13 @@ def serve_3d_data(case_id):
         print(f'  [3d-data aux] FAILED: {type(_e).__name__}: {_e}')
         traceback.print_exc()
 
-    return jsonify({
+    # Defensive: try jsonify the full response.  If anything (numpy
+    # types, NaN, huge dict serialisation, etc.) blows up here we'd
+    # silently return either a 500 with HTML body or a truncated JSON,
+    # which on the frontend looks like "Unexpected end of JSON input"
+    # with no clue why.  Explicit fallback returns at least the base
+    # geometry so the user sees particles instead of a red error box.
+    payload = {
         'particles': particles,
         'box': box,
         'percolation': percolation,
@@ -4197,7 +4203,31 @@ def serve_3d_data(case_id):
         'mesh_triangles': mesh_triangles,
         'atoms_only': atoms_only_mode,
         'aux': aux,
-    })
+    }
+    try:
+        resp = jsonify(payload)
+        # Force compute Content-Length so chunked-encoding doesn't
+        # mask a truncation downstream.
+        body = resp.get_data()
+        print(f'  [3d-data] response: {len(body)/1e6:.2f} MB')
+        return resp
+    except (TypeError, ValueError) as _je:
+        import traceback
+        traceback.print_exc()
+        print(f'  [3d-data] jsonify FAILED ({type(_je).__name__}: {_je}) — '
+              f'returning base geometry only, aux dropped')
+        # Strip aux and retry — if particles+box+clusters serialise,
+        # the viewer can at least show shapes.
+        payload['aux'] = {}
+        payload['_aux_error'] = f'{type(_je).__name__}: {_je}'[:200]
+        return jsonify(payload)
+    except Exception as _je:
+        import traceback
+        traceback.print_exc()
+        print(f'  [3d-data] CATASTROPHIC FAIL: {type(_je).__name__}: {_je}')
+        return jsonify({'error': str(_je)[:300],
+                         'particles': [], 'aux': {},
+                         'box': box, 'atoms_only': True}), 200
 
 @app.route('/toggle-warning/<case_id>', methods=['POST'])
 def toggle_warning(case_id):
@@ -5549,13 +5579,31 @@ def serve_archive_3d_data(folder):
               f'{type(_e).__name__}: {_e}')
         traceback.print_exc()
 
-    return jsonify({
+    payload = {
         'particles': particles, 'box': box,
         'percolation': percolation, 'paths': paths, 'clusters': clusters,
         'mesh_triangles': mesh_triangles,
         'atoms_only': atoms_only_mode,
         'aux': aux,
-    })
+    }
+    try:
+        resp = jsonify(payload)
+        body = resp.get_data()
+        print(f'  [3d-data/archive] response: {len(body)/1e6:.2f} MB')
+        return resp
+    except (TypeError, ValueError) as _je:
+        import traceback
+        traceback.print_exc()
+        print(f'  [3d-data/archive] jsonify FAILED — dropping aux')
+        payload['aux'] = {}
+        payload['_aux_error'] = f'{type(_je).__name__}: {_je}'[:200]
+        return jsonify(payload)
+    except Exception as _je:
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': str(_je)[:300],
+                         'particles': [], 'aux': {},
+                         'box': box, 'atoms_only': True}), 200
 
 
 @app.route('/archive/results/<path:folder>/save-screenshot', methods=['POST'])
