@@ -99,6 +99,28 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
     se_stress_pairs: list[dict] = []      # SE-SE pairs above yield (legacy key)
     am_se_stress_pairs: list[dict] = []   # AM-SE pairs above yield (NEW)
 
+    # ── Per-particle fracture aggregates (Phase A1) ──────────────────────
+    # For every AM particle, track:
+    #   - particle_max_fpc: largest F/P_c (mult) it experienced
+    #   - particle_worst_stage: the stage at that worst contact
+    #   - particle_n_brittle: count of non-intact AM-AM contacts
+    # particle_worst_partner_brittle: the partner id at the worst contact
+    particle_max_fpc:        dict[int, float] = defaultdict(float)
+    particle_worst_stage:    dict[int, str]   = {}
+    particle_n_brittle:      dict[int, int]   = defaultdict(int)
+    particle_worst_partner_brittle: dict[int, int] = {}
+    particle_worst_pair_type:       dict[int, str] = {}
+
+    # ── Stress-chain segment list (Phase A4) ─────────────────────────────
+    # Every AM-AM contact (intact OR brittle) with non-zero force, so the
+    # viewer can render load-path lines (thickness ∝ log(F/P_c+1)).
+    # Capped to top-N by mult to keep payload reasonable.
+    stress_chain_segments: list[dict] = []
+
+    # ── AM_P-AM_P brittle edges (Phase A3 input — graph for skeleton) ────
+    # connected-component pass happens AFTER the loop completes.
+    am_p_brittle_edges: list[tuple[int, int]] = []
+
     # Per-SE-particle worst regime, split by which AM type (if any) it
     # touches.  Three independent state tracks because the view-mode
     # filter lets the user toggle pair-type (SE-SE / AM_P-SE / AM_S-SE).
@@ -183,6 +205,30 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
             # an equivalent overlap.  See fracture_model.py and the
             # diagnostic script for agreement.
             stage, P_c, mult = fracture_stage(fn, r_min, ct, scale=scale)
+
+            # Phase A1 — per-particle worst F/P_c
+            for pid, other in ((i1, i2), (i2, i1)):
+                if mult > particle_max_fpc[pid]:
+                    particle_max_fpc[pid] = mult
+                    particle_worst_stage[pid] = stage
+                    particle_worst_partner_brittle[pid] = other
+                    particle_worst_pair_type[pid] = ct
+                if stage != 'intact':
+                    particle_n_brittle[pid] += 1
+
+            # Phase A4 — stress-chain segment (all AM-AM contacts incl. intact)
+            if fn > 0:
+                stress_chain_segments.append({
+                    'id1': i1, 'id2': i2,
+                    'mult': round(mult, 2),
+                    'pair_type': ct,
+                    'stage': stage,
+                })
+
+            # Phase A3 — AM_P-AM_P brittle edge (skeleton input)
+            if ct == 'AM_P-AM_P' and mult >= 1.0:
+                am_p_brittle_edges.append((i1, i2))
+
             if stage != 'intact':
                 brittle_pairs.append({
                     'id1': i1, 'id2': i2,
@@ -341,6 +387,37 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         am_se_stress_pairs.sort(key=lambda p: p['pressure_MPa'], reverse=True)
         am_se_stress_pairs = am_se_stress_pairs[:_PAIR_CAP]
 
+    # ── Phase A4 — cap stress-chain segments to top-N by mult ────────────
+    # Typical AM-AM count ~1700, no cap needed.  Particulate cases with
+    # very fine AM_S can hit 50k — cap at 5000 most-stressed.
+    _SC_CAP = 5_000
+    if len(stress_chain_segments) > _SC_CAP:
+        stress_chain_segments.sort(key=lambda s: s['mult'], reverse=True)
+        stress_chain_segments = stress_chain_segments[:_SC_CAP]
+
+    # ── Phase A3 — connected components of AM_P brittle skeleton ─────────
+    # Union-find over AM_P-AM_P edges with F/P_c >= 1.  Each component is
+    # a load-bearing fracture-prone backbone segment.
+    parent: dict[int, int] = {}
+    def _find(x: int) -> int:
+        while parent.get(x, x) != x:
+            parent[x] = parent.get(parent[x], parent[x])
+            x = parent[x]
+        return x
+    def _union(a: int, b: int) -> None:
+        ra, rb = _find(a), _find(b)
+        if ra != rb: parent[ra] = rb
+    for a, b in am_p_brittle_edges:
+        parent.setdefault(a, a); parent.setdefault(b, b)
+        _union(a, b)
+    am_p_skeleton_clusters: dict[int, list[int]] = defaultdict(list)
+    for node in parent:
+        am_p_skeleton_clusters[_find(node)].append(node)
+    # Convert to list-of-lists, sorted by size (largest first)
+    am_p_skeleton: list[list[int]] = sorted(
+        ([sorted(v) for v in am_p_skeleton_clusters.values() if len(v) >= 2]),
+        key=len, reverse=True)
+
     return {
         'stress_max':       {int(k): round(v, 2) for k, v in stress_max.items()},
         'dr_max':           {int(k): round(v, 4) for k, v in dr_max.items()},
@@ -348,6 +425,16 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
         'brittle_pairs':    brittle_pairs,
         'se_stress_pairs':  se_stress_pairs,      # capped: top-N by pressure
         'am_se_stress_pairs': am_se_stress_pairs, # capped: top-N by pressure
+        # ── Phase A1: per-particle worst F/P_c ────────────────────────────
+        'particle_max_fpc': {int(k): round(v, 3) for k, v in particle_max_fpc.items()},
+        'particle_worst_stage':   {int(k): v for k, v in particle_worst_stage.items()},
+        'particle_n_brittle':     {int(k): int(v) for k, v in particle_n_brittle.items()},
+        'particle_worst_partner_brittle': {int(k): int(v) for k, v in particle_worst_partner_brittle.items()},
+        'particle_worst_pair_type':       {int(k): v for k, v in particle_worst_pair_type.items()},
+        # ── Phase A3: AM_P fracture skeleton ──────────────────────────────
+        'am_p_skeleton': am_p_skeleton,            # list of clusters (lists of pid)
+        # ── Phase A4: AM-AM stress-chain segments ─────────────────────────
+        'stress_chain_segments': stress_chain_segments,
         # se_states emit dropped — was only consumed by the old SE
         # Tabor 4-bin view mode (removed in commit 4d3f39b).  Keeping
         # this empty dict for backward-compat with any cached payloads

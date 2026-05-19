@@ -4078,6 +4078,11 @@ def serve_3d_data(case_id):
         'se_engagement': {},
         'cluster_meta': {}, 'cluster_id_per_se': {},
         'coverage_per_am': {},
+        # Phase A1/A3/A4 — per-particle fracture aggregates + stress chain
+        'particle_max_fpc': {}, 'particle_worst_stage': {},
+        'particle_n_brittle': {}, 'particle_worst_partner_brittle': {},
+        'particle_worst_pair_type': {},
+        'am_p_skeleton': [], 'stress_chain_segments': [],
     }
     try:
         import sys as _sys
@@ -4107,7 +4112,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 3:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 4:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -4166,11 +4171,19 @@ def serve_3d_data(case_id):
                     aux['tabor_stats']        = agg.get('tabor_stats', {})
                     aux['all_se_ids_count']   = agg.get('all_se_ids_count', 0)
                     aux['se_engagement']      = agg.get('se_engagement', {})
+                    # Phase A1/A3/A4
+                    aux['particle_max_fpc']         = agg.get('particle_max_fpc', {})
+                    aux['particle_worst_stage']     = agg.get('particle_worst_stage', {})
+                    aux['particle_n_brittle']       = agg.get('particle_n_brittle', {})
+                    aux['particle_worst_partner_brittle'] = agg.get('particle_worst_partner_brittle', {})
+                    aux['particle_worst_pair_type'] = agg.get('particle_worst_pair_type', {})
+                    aux['am_p_skeleton']            = agg.get('am_p_skeleton', [])
+                    aux['stress_chain_segments']    = agg.get('stress_chain_segments', [])
 
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 3
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 4
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -5485,6 +5498,11 @@ def serve_archive_3d_data(folder):
         'se_engagement': {},
         'cluster_meta': {}, 'cluster_id_per_se': {},
         'coverage_per_am': {},
+        # Phase A1/A3/A4 — per-particle fracture aggregates + stress chain
+        'particle_max_fpc': {}, 'particle_worst_stage': {},
+        'particle_n_brittle': {}, 'particle_worst_partner_brittle': {},
+        'particle_worst_pair_type': {},
+        'am_p_skeleton': [], 'stress_chain_segments': [],
     }
     try:
         import sys as _sys
@@ -5511,7 +5529,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 3:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 4:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -5559,9 +5577,17 @@ def serve_archive_3d_data(folder):
                     aux['tabor_stats']        = agg.get('tabor_stats', {})
                     aux['all_se_ids_count']   = agg.get('all_se_ids_count', 0)
                     aux['se_engagement']      = agg.get('se_engagement', {})
+                    # Phase A1/A3/A4
+                    aux['particle_max_fpc']         = agg.get('particle_max_fpc', {})
+                    aux['particle_worst_stage']     = agg.get('particle_worst_stage', {})
+                    aux['particle_n_brittle']       = agg.get('particle_n_brittle', {})
+                    aux['particle_worst_partner_brittle'] = agg.get('particle_worst_partner_brittle', {})
+                    aux['particle_worst_pair_type'] = agg.get('particle_worst_pair_type', {})
+                    aux['am_p_skeleton']            = agg.get('am_p_skeleton', [])
+                    aux['stress_chain_segments']    = agg.get('stress_chain_segments', [])
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 3
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 4
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')
