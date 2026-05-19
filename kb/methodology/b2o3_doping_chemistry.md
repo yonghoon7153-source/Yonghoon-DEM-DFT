@@ -118,48 +118,128 @@ LPSCl1.6 avoids this entirely: existing 4a/4d/24g vacancies absorb the extra Li.
 
 ---
 
-## 5. Doping site enumeration
+## 5. Doping site enumeration — physically-ordered hierarchical strategy
 
-### 5.1 B placement at 4b (P site)
+**Design principle**: enumerate the most-perturbing site first, let downstream
+sites adapt. Ordering: **B (largest perturbation) → halogen (medium) → O (local)
+→ Li (smallest, charge-comp)**.
 
-10 fu cell has 10 P atoms. Choose 2 for B:
-- **C(10,2) = 45 B-B pair configurations**
-- Distance between 2 B atoms varies (close pair vs far pair)
-- B-B short distance might destabilize (electrostatic + steric)
-- B-B far → "isolated dopant" limit
+User's insight (2026-05-19): B 박은 후 주변 S/Cl 재배치가 physically natural
+— lpscl16 champion의 halogen 그대로 쓰는 것보다 정확. 단점은 enumeration scope
+가 커짐 → pymatgen + enumlib symmetry reduction으로 해결.
 
-### 5.2 O placement at 16e (PS4 corner S)
+### 5.1 Per-axis combinatorial scope (10 fu cell, no symmetry)
 
-10 fu cell has 44 S total = 40 PS4-corner-S + 4 free-S.
-Choose 3 for O substitution:
-- **C(44,3) = 13,244 total positions** if no chemistry bias (user's choice)
-- C(8,3) = 56 if restricted to "near-B PS4 corners" (Hard-Hard bias, Nd-doped style)
-
-### 5.3 Li vacancy distribution
-
-After B2O3 doping: 2 vacancies remaining (was 6, B2O3 filled 4).
-- Which 4 of 6 to fill: C(6,4) = 15
-- Which 4a/4d/24g/48h Li site type: depends on UMA relax energetics
-
-### 5.4 Total enumeration (no chemistry bias)
-
-- 45 B pairs × C(44,3)=13,244 O positions × C(6,4)=15 Li fills = **8.94 million configs**
-- Computationally absurd at full enumeration
-- → **hierarchical screening** required (Stage 1 sample/select → Stage 2 refine → Stage 3 anneal)
-
-### 5.5 Recommended hierarchical strategy
-
-| Stage | Configs | Method | Time (1 GPU) |
+| Site | Sites | Choose | C(n,k) |
 |---|---|---|---|
-| 1a — B pair only (1 random Li, 3 O random) | 45 | SCF single-point | ~10 min |
-| 1b — Top 5 B pairs × full O enumerate × 1 random Li | 5 × 13,244 = 66,220 | SCF | ~12 h |
-| 1c — Top 100 (B, O) × 15 Li fills | 100 × 15 = 1500 | SCF | ~30 min |
-| 2  — Top 50 LBFGS relax | 50 | LBFGS fmax 0.05 | ~5 h |
-| 3  — Top 5 MD anneal 500K 100ps | 5 | Langevin + LBFGS | ~3 h |
-| **Total** | | | **~20 h** |
+| B at P (4b) | 10 | 2 | **45** |
+| Halogen (4a/4d free) — 4 S + 16 Cl among 20 sites | 20 | 4 | **4,845** |
+| O at S (PS4 corner 16e or free) | 44 | 3 | **13,244** |
+| Li fill (existing vacancies) | 6 | 4 | **15** |
+| **Full product** | | | **~43 billion** |
 
-(Stage 1b is the bottleneck; can downsample to ~1000 random O placements
-to drop to ~2 h if needed.)
+### 5.2 Symmetry reduction (pymatgen + enumlib)
+
+modelC R-3 (rhombohedral) symmetry + 1×1×2 supercell:
+- Point ops: 6 (E, 2C3, i, 2S6)
+- Translation: 2 (z-axis)
+- Combined: ~12-18 operations
+
+Expected reduction (orbit-averaged, conservative):
+| Axis | Full | Sym-reduced | Reduction |
+|---|---|---|---|
+| B pair | 45 | ~8 | ~5× |
+| Halogen (4 S / 16 Cl) | 4,845 | ~400-600 | ~10× |
+| **B + halogen co-enumerate** | 218,025 | **~5,000** | ~40× |
+| O placement (after B/halogen fixed; local sym lower) | 13,244 | ~3,000-4,000 | ~3-4× |
+| Li fill (after B/halogen/O fixed; very low sym) | 15 | ~5-8 | ~2-3× |
+
+Engine: `pymatgen.transformations.advanced_transformations.EnumerateStructureTransformation`
+(uses enumlib's Hart-Forcade algorithm). Requires `enumlib` install (pip).
+
+### 5.3 Hierarchical stages (with pymatgen sym reduction)
+
+| Stage | Logic | Configs (sym-reduced) | Time (1 GPU) |
+|---|---|---|---|
+| **1a — B + halogen co-enumerate** | enumerate 2 B at P + 4 S among 20 free sites simultaneously | ~5,000 unique | ~1.5h SCF |
+| **1b — Top 10 × O enumerate (1 representative Li each)** | for each of top 10 (B, halogen), enumerate 3 O at C(44,3) positions, sym-reduced | 10 × 3,500 ≈ 35,000 | ~10h SCF |
+| **1c — Top 100 × all Li fills** | enumerate C(6,4) = 15 Li patterns, sym-reduced (~7 per) | 100 × 7 ≈ 700 | ~12 min SCF |
+| **2 — Top 30 LBFGS relax** | fmax 0.05, cell + atoms free | 30 | ~2.5h |
+| **3 — Top 5 MD anneal** | Langevin 500 K × 100 ps + 300 K cool × 10 ps + LBFGS final | 5 | ~3h |
+| **Total** | | | **~17h on 1× A100** |
+
+**Choice of "top 10" for Stage 1b** (paper-grade safe): if energy spread among
+top 5 B-halogen patterns is small (~kT), top 5 might miss the true ground state.
+Top 10 covers ~2× more of the favorable manifold.
+
+### 5.4 Stage 1c "1 representative Li" choice rule (for Stage 1b)
+
+To avoid 15× cost in Stage 1b, pick 1 Li fill pattern. Rule:
+- Compute Bader basin centers for B, O atoms (after substitution)
+- 4 closest Li vacancies (= largest electrostatic attractor) → fill these
+- Heuristic, but biased toward physically reasonable starting point
+- Stage 1c then enumerates all 15 patterns to identify true champion Li fill
+
+### 5.5 Stage 3 anneal — captures halogen secondary redistribution
+
+MD anneal at 500 K for 100 ps allows Li hops (barrier ~0.2 eV) and Cl/S free-site
+hops (barrier ~0.3-0.5 eV). At 500 K kT = 43 meV → Boltzmann factor ~10⁻⁵ per
+hop attempt → ~1-10 successful hops per 100 ps per atom → halogen rearrangement
+captured even if Stage 1a missed the optimal pattern.
+
+### 5.6 pymatgen implementation sketch
+
+```python
+from pymatgen.core import Structure
+from pymatgen.transformations.advanced_transformations import (
+    EnumerateStructureTransformation,
+)
+from pymatgen.transformations.site_transformations import (
+    ReplaceSiteSpeciesTransformation,
+)
+
+# Load lpscl16_verify champion (62-atom primitive)
+struct = Structure.from_file("lpscl16_champion.cif")
+struct = struct * (1, 1, 2)  # 124 atoms, 10 fu
+
+# Identify site groups
+p_sites = [i for i, s in enumerate(struct) if s.specie.symbol == "P"]  # 10
+free_anion_sites = identify_free_4a4d(struct)  # 20 sites (currently 4 S + 16 Cl in modelC)
+ps4_corner_S_sites = identify_ps4_corners(struct)  # 40 sites
+
+# === Stage 1a: B + halogen co-enumerate ===
+# Set fractional occupancy on disorder sites
+struct_1a = struct.copy()
+for i in p_sites:
+    struct_1a[i] = {"P": 0.8, "B": 0.2}  # 2 B / 10 P
+for i in free_anion_sites:
+    struct_1a[i] = {"Cl": 0.8, "S": 0.2}  # 4 S / 20 free sites
+
+enum_1a = EnumerateStructureTransformation(
+    min_cell_size=1, max_cell_size=1,
+    enum_precision_parameter=1e-3,
+)
+unique_1a = enum_1a.apply_transformation(struct_1a, return_ranked_list=10_000)
+# Expected: ~3,000-6,000 unique configs
+
+# SCF each → rank → top 10
+# ...
+
+# === Stage 1b: top 10 × O enumerate ===
+for top_struct in unique_1a[:10]:
+    # Add representative Li fill (Bader proximity heuristic)
+    top_with_Li = add_representative_Li(top_struct)
+    # Disorder O at PS4 corner S
+    for i in find_ps4_corners(top_with_Li):
+        top_with_Li[i] = {"S": 41/44, "O": 3/44}
+
+    enum_1b = EnumerateStructureTransformation(...)
+    o_configs = enum_1b.apply_transformation(top_with_Li, return_ranked_list=5_000)
+    # Expected: ~3,000-4,000 unique per top-pattern
+    # SCF each
+
+# === Stage 1c, 2, 3: as above ===
+```
 
 ---
 
@@ -168,8 +248,11 @@ to drop to ~2 h if needed.)
 - [x] Literature confirms B-at-P chemistry
 - [x] Si-analog precedent (Morscher 2024) verified
 - [x] Charge balance accounting (vacancy-fill mode) derived
-- [x] Enumeration scope (~9M configs) — hierarchical needed
+- [x] Enumeration scope (43B configs full → ~5K via pymatgen sym reduction at Stage 1a)
+- [x] Hierarchical stages 1a/1b/1c/2/3 designed (~17h on 1× A100)
+- [x] B (largest perturbation) → halogen (medium) → O (local) → Li ordering
 - [ ] **lpscl16_verify champion** ready (gabia, ~22h after Li2O cascade ends)
+- [ ] pymatgen + enumlib install on gabia (`pip install enumlib`)
 - [ ] B2O3 enumerate script (lpscl16_champion + structure)
 - [ ] DFT settings for B-doped LPSCl (likely same as Nd-doped but no ISPIN/U
       since B has no f-electrons)
