@@ -1090,6 +1090,90 @@ const METRIC_TIPS = {
     meaning: '값이 다르면 numerical noise (sub-machine-epsilon overlap) 존재. AM 입자 수 × packing density에 비례.'
   },
 
+  // ───────── Composite keys: pair-type rows, disambiguated by section ─────────
+  // Format: 'pair_type @ section_name (── stripped)'
+  // Triggered by getSectionContext() walking back to the section header.
+
+  // Auerbach P_c (mN) section
+  'AM_P-AM_P @ Auerbach P_c (mN)': {
+    title: 'P_c — AM_P-AM_P (Auerbach 임계 force)',
+    formula: 'P_c = 200 · K_IC² · R_min / E*\nK_IC = 0.3 MPa·m^0.5 (Quinn 2020)',
+    desc: '다결정 primary NCM 접촉이 cone-crack 시작하는 임계 force (mN). 분류기-무관(상수 한 값).',
+    meaning: 'AM_P는 K_IC가 가장 낮아 P_c도 가장 낮음 → 가장 취약. F_DEM이 이를 넘으면 microcrack 시작.'
+  },
+  'AM_S-AM_S @ Auerbach P_c (mN)': {
+    title: 'P_c — AM_S-AM_S (Auerbach 임계 force)',
+    formula: 'P_c = 200 · K_IC² · R_min / E*\nK_IC = 1.0 MPa·m^0.5 (Liu 2020)',
+    desc: '단결정 secondary NCM 접촉의 cone-crack 임계 force. AM_P 대비 ~10× 강함 (K_IC² 효과).',
+    meaning: '대부분 case에서 F_DEM이 이 값에 못 미침 → severe % 거의 0%.'
+  },
+  'AM_P-AM_S @ Auerbach P_c (mN)': {
+    title: 'P_c — AM_P-AM_S (mixed)',
+    formula: 'P_c = 200 · K_IC² · R_min / E*\nK_IC = √(K_P · K_S) = 0.548 MPa·m^0.5 (geom mean)',
+    desc: '혼합 접촉의 cone-crack 임계. K_IC는 두 K_IC의 기하평균.',
+    meaning: 'AM_P와 AM_S P_c의 중간. R_min은 작은 쪽(AM_S) 반경이라 P_c가 의외로 낮을 수 있음.'
+  },
+
+  // F_DEM (mN, real units) section
+  'AM_P-AM_P @ F_DEM (mN, real units)': {
+    title: 'F_DEM — AM_P-AM_P (median 접촉력)',
+    formula: 'median over AM_P-AM_P contacts of |F_normal|\n(scale 적용해 mN 실측 단위)',
+    desc: 'DEM이 출력한 큰 입자끼리 접촉의 normal force 중앙값. 분류기-무관(측정값).',
+    meaning: '큰 입자끼리는 stress chain backbone이라 가장 큼. P_c와 직접 비교 → F/P_c가 fracture risk 결정.'
+  },
+  'AM_S-AM_S @ F_DEM (mN, real units)': {
+    title: 'F_DEM — AM_S-AM_S (median)',
+    formula: 'median over AM_S-AM_S contacts of |F_normal|, mN',
+    desc: '작은 입자끼리의 접촉 force 중앙값. AM_S는 filler 역할이라 직접 하중을 거의 안 받음.',
+    meaning: '보통 AM_P-AM_P의 10–100× 작음. P_c(AM_S)도 높아서 F/P_c는 < 0.3 영역.'
+  },
+  'AM_P-AM_S @ F_DEM (mN, real units)': {
+    title: 'F_DEM — AM_P-AM_S (median, mixed)',
+    formula: 'median over mixed contacts of |F_normal|, mN',
+    desc: '혼합 접촉의 force 중앙값. AM_S가 AM_P 사이에서 받는 압력.',
+    meaning: 'AM_P-AM_P와 AM_S-AM_S의 중간. F/P_c가 1 부근이면 marginal risk.'
+  },
+
+  // F / P_c ratio section
+  'AM_P-AM_P @ F / P_c ratio': {
+    title: 'F / P_c — AM_P-AM_P (★ 핵심 fracture 지표)',
+    formula: 'F_DEM / P_c  (dimensionless)\n≥1: microcrack | ≥3: multi-crack\n≥11: fragmentation | ≥32: pulverization',
+    desc: 'Auerbach 임계 대비 실제 force 배율. fracture risk의 가장 직접적 정량.',
+    meaning: '★ 이 셀 가장 위험한 채널. 6배 → multi-crack ~ fragmentation 경계. 10배 넘으면 confirmed fragmentation. P:S 비율 또는 AM_P 크기 조정으로 낮춤.'
+  },
+  'AM_S-AM_S @ F / P_c ratio': {
+    title: 'F / P_c — AM_S-AM_S (단결정 마진)',
+    formula: 'F_DEM / P_c',
+    desc: '단결정 NCM의 fracture 마진. K_IC=1.0이라 P_c가 높음.',
+    meaning: '대부분 < 0.3 (안전). 0.5 넘으면 microstructure 재검토. 0% severe인 이유.'
+  },
+  'AM_P-AM_S @ F / P_c ratio': {
+    title: 'F / P_c — AM_P-AM_S (mixed 마진)',
+    formula: 'F_DEM / P_c',
+    desc: '혼합 접촉의 fracture 마진. K_IC는 기하평균.',
+    meaning: '≈1이면 marginal — AM_S가 AM_P 응력을 분담하다 microcrack 시작 가능. P:S 비율 조정으로 stress 분산 개선.'
+  },
+
+  // Pair-type Severe % section (explicit so it doesn't fall back to generic)
+  'AM_P-AM_P @ Pair-type Severe %': {
+    title: 'AM_P-AM_P severe %',
+    formula: '(n_frag + n_pulv) / n_total for AM_P-AM_P only',
+    desc: '다결정-다결정 접촉의 심각 손상 비율. K_IC=0.3 (가장 약함) × stress chain backbone = 가장 위험.',
+    meaning: '이 셀 fracture의 대부분이 여기서 발생. 20% 넘으면 사이클링 초기 capacity fade 위험.'
+  },
+  'AM_S-AM_S @ Pair-type Severe %': {
+    title: 'AM_S-AM_S severe %',
+    formula: '(n_frag + n_pulv) / n_total for AM_S-AM_S only',
+    desc: '단결정-단결정 접촉의 심각 손상 비율. K_IC=1.0 + 작은 입자 = 가장 안전.',
+    meaning: '거의 모든 case에서 0%. 단결정 NCM의 mechanical robustness 자연 발현.'
+  },
+  'AM_P-AM_S @ Pair-type Severe %': {
+    title: 'AM_P-AM_S (mixed) severe %',
+    formula: '(n_frag + n_pulv) / n_total for mixed only',
+    desc: '혼합 접촉의 심각 손상. AM_S가 AM_P 충돌의 일부를 흡수.',
+    meaning: '값이 높으면 AM_S 분산 부족 — P:S 비율 조정 필요.'
+  },
+
   // ───────── Stage E (literature-grounded σ_grain corrections) ─────────
   'σ_ionic — SE size factor': {
     title: 'σ_ionic — SE size factor (Cronau 2022)',
@@ -1299,9 +1383,32 @@ const PAPER_TO_ORIG = {
   '7-Layer solver defence — channel status': '7-Layer solver status',
 };
 
-function lookupTip(key) {
+// Walk back through previous <tr>s to find the most recent section header
+// (a row whose label looks like "── ... ──"), so context-sensitive tooltip
+// keys can disambiguate identical row labels (e.g. "AM_P-AM_P" appears in
+// 4 different fracture sections — Severe %, P_c, F_DEM, F/P_c).
+function getSectionContext(tr) {
+  let prev = tr.previousElementSibling;
+  while (prev) {
+    const lbl = prev.querySelector('.metric-label[data-metric]');
+    if (lbl) {
+      const v = lbl.dataset.metric.trim();
+      if (v.startsWith('── ') && v.endsWith(' ──')) {
+        return v.slice(3, -3).trim();
+      }
+    }
+    prev = prev.previousElementSibling;
+  }
+  return null;
+}
+
+function lookupTip(key, ctx) {
   if (!key) return null;
   const trimmed = key.trim();
+  if (ctx) {
+    const composite = `${trimmed} @ ${ctx}`;
+    if (METRIC_TIPS[composite]) return METRIC_TIPS[composite];
+  }
   return METRIC_TIPS[key]
       || METRIC_TIPS[trimmed]
       || METRIC_TIPS[PAPER_TO_ORIG[trimmed]]
@@ -1313,9 +1420,10 @@ let activeTooltipRow = null;
 
 document.querySelectorAll('.metric-label[data-metric]').forEach(td => {
   const key = td.dataset.metric;
-  const tip = lookupTip(key);
-  if (!tip) return;
   const tr = td.closest('tr');
+  const section = getSectionContext(tr);
+  const tip = lookupTip(key, section);
+  if (!tip) return;
 
   tr.addEventListener('mouseenter', () => {
     // Remove any existing tooltip row
