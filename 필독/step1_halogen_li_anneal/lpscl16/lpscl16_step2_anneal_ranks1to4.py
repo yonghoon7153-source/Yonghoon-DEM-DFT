@@ -1,11 +1,16 @@
 """
-Model C v2 — Step 3 continuation (ranks 1-4 only) [HISTORICAL reference]
-Rank 0 done: -258.2051 eV. Top 5 ALL H0 S=[1,4], Li spread=0.1meV
+lpscl16 Step 2 — anneal ranks 1-4 of top-5 Li configs.
 
-NOTE: 이 script는 modelC v2 production이 실제로 ==Top 5 anneal (50ps)==
-사용했음의 증거. step1 unified version (Top 1 + 100ps)과 다름.
-modelC champion.xyz는 이 script의 ranks 1-4 + rank 0 비교 결과.
+Pipeline integrity (vs production v2, unified 2026-05-19):
+  - step1 already does Rank 0 anneal at 100ps + LBFGS final relax
+  - this script: ranks 1-4 anneal at 100ps + LBFGS (UNIFIED to 100ps)
+  - Prior production used 50ps for ranks 1-4 / 100ps for Rank 0 (asymmetric);
+    unified to 100ps for paper-grade comparability. ~2× MD cost on 4 configs.
+
+Reference CIF: env var LPSCL16_REF_CIF (default = KISTI manuscript_support path).
+Reference: kb/methodology/argyrodite_mechanical_pipeline_v2.md Step 3.
 """
+import os
 import numpy as np
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -23,7 +28,9 @@ adaptor = AseAtomsAdaptor()
 def new_calc():
     return FAIRChemCalculator(predictor, task_name="omat")
 
-ref = Structure.from_file('/scratch/x3430a02/kgy/manuscript_support/comp3_lpsc10b06/configs/comp3_lpsc10b06_config_000.cif')
+REF_CIF = os.environ.get('LPSCL16_REF_CIF',
+    '/scratch/x3430a02/kgy/manuscript_support/comp3_lpsc10b06/configs/comp3_lpsc10b06_config_000.cif')
+ref = Structure.from_file(REF_CIF)
 li_sites = []; p_sites = []; s_framework = []; free_sites = []
 for i, site in enumerate(ref):
     sp = str(site.specie); fc = site.frac_coords
@@ -65,7 +72,8 @@ for rank in range(1, 5):
     atoms.calc = new_calc()
     e_before = atoms.get_potential_energy()
     MaxwellBoltzmannDistribution(atoms, temperature_K=500)
-    Langevin(atoms, 1*units.fs, temperature_K=500, friction=0.01).run(50000)
+    # 100ps 500K anneal (unified with step1 Rank 0), then 10ps 300K cool
+    Langevin(atoms, 1*units.fs, temperature_K=500, friction=0.01).run(100000)
     Langevin(atoms, 1*units.fs, temperature_K=300, friction=0.05).run(10000)
     try: LBFGS(atoms, logfile=None).run(fmax=0.005, steps=300)
     except: pass

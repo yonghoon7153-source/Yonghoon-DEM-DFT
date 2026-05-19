@@ -1,9 +1,19 @@
 """
-Model C (Li5.4PS4.4Cl1.6) Pipeline v2
-Step 1: 45 halogen configs screening
-Step 2: Top 5 halogen × 20 Li configs = 100 configs
-Step 3: Overall top 5 → 500K annealing → champion
+lpscl16 Step 1 — halogen screening + Li screening + Rank 0 anneal.
+
+LPSCl1.6 = Li5.4PS4.4Cl1.6 (= modelC family, no Br, halogen-rich Cl1.6).
+Pipeline phases (in this single script):
+  Step 1: 45 halogen configs LBFGS screen (Li fixed)
+  Step 2: Top 5 halogen × 20 Li configs = 100 LBFGS
+  Step 3: Top 1 (Rank 0) anneal at 500K 100ps + 300K 10ps cool + LBFGS
+
+Companion script lpscl16_step2_anneal_ranks1to4.py anneals ranks 1-4 (also 100ps)
+to verify Rank 0 is true champion.
+
+Reference CIF: env var LPSCL16_REF_CIF (default = KISTI manuscript_support path).
+Reference: kb/methodology/argyrodite_mechanical_pipeline_v2.md Steps 1-3.
 """
+import os
 import numpy as np
 from pymatgen.core import Structure
 from pymatgen.io.ase import AseAtomsAdaptor
@@ -26,8 +36,11 @@ def new_calc():
 # ═══════════════════════════════════════════
 # 1. Load reference structure + classify sites
 # ═══════════════════════════════════════════
-ref = Structure.from_file('/scratch/x3430a02/kgy/manuscript_support/comp3_lpsc10b06/configs/comp3_lpsc10b06_config_000.cif')
-print(f"Reference: {ref.composition}, {len(ref)} atoms")
+REF_CIF = os.environ.get('LPSCL16_REF_CIF',
+    '/scratch/x3430a02/kgy/manuscript_support/comp3_lpsc10b06/configs/comp3_lpsc10b06_config_000.cif')
+ref = Structure.from_file(REF_CIF)
+print(f"Reference: {REF_CIF}")
+print(f"Composition: {ref.composition}, {len(ref)} atoms")
 
 li_sites = []; p_sites = []; s_framework = []; free_sites = []
 
