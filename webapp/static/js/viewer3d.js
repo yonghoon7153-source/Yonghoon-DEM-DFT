@@ -1421,6 +1421,13 @@ function applyViewMode(state, mode) {
      */
     const engagement = aux.se_engagement || {};
     const all_se_ids = aux.all_se_ids || [];
+    const seMeshCount = (state.meshes.SE && state.meshes.SE.userData.particles)
+      ? state.meshes.SE.userData.particles.length
+      : 0;
+    /* If the backend skipped aux computation (very large contacts.csv),
+     * `engagement` will be empty.  Detect this up front so we can show
+     * a clear message in the legend instead of a 61971600 % bug. */
+    const auxAvailable = Object.keys(engagement).length > 0;
 
     /* Sequential red→muted green gradient (low engagement = pore risk) */
     const poreRiskColor = (s) => {
@@ -1471,7 +1478,12 @@ function applyViewMode(state, mode) {
       (n >= 10000) ? (Math.round(n / 1000) + 'k')
       : (n >= 1000) ? n.toLocaleString()
       : n.toString();
-    const n_total = all_se_ids.length || 1;
+    /* Use all_se_ids when available (authoritative SE count from the
+     * backend); fall back to the InstancedMesh particle count which
+     * matches whatever shapes actually rendered on screen.  Avoids the
+     * "62,000,000 %" bug seen on input_particulate_1 when aux was
+     * skipped and all_se_ids came back empty. */
+    const n_total = (all_se_ids.length || seMeshCount) || 1;
     const pct = (n) => (100 * n / n_total).toFixed(1) + '%';
 
     const row = (color, sym, count, label, pctStr, tip) => `
@@ -1493,8 +1505,21 @@ function applyViewMode(state, mode) {
                      min-width:38px">${pctStr}</span>
       </div>`;
 
+    const banner = auxAvailable ? '' : `
+      <div style="background:rgba(180,83,9,.18);
+                  border:1px solid rgba(245,158,11,.45);
+                  color:#fcd34d;font-size:10px;line-height:1.35;
+                  padding:5px 7px;border-radius:4px;margin-bottom:5px">
+        ⚠ aux 계산 skip된 케이스 (contacts.csv가 너무 큼 또는 cache miss).
+        Engagement 분류 데이터 없음 — 모든 SE를 idle로 표시.<br>
+        <span style="color:#fde68a;font-size:9.5px">
+          → Flask console 로그 / 재실행으로 cache 생성 후 다시 로드.
+        </span>
+      </div>`;
+
     setLegend(state,
-      `<div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
+      `${banner}
+       <div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
          SE pore-risk map
        </div>
        <div style="color:#9ca3af;font-size:9.5px;line-height:1.35"

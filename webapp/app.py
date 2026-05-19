@@ -4095,36 +4095,88 @@ def serve_3d_data(case_id):
         } for _, r in df.iterrows()}
         if os.path.exists(contacts_csv):
             import time as _t
-            _t0 = _t.time()
-            contacts_df = pd.read_csv(contacts_csv, low_memory=False)
-            _t1 = _t.time()
-            n_rows = len(contacts_df)
-            print(f'  [3d-data aux] contacts.csv: {n_rows} rows, '
-                  f'read in {_t1-_t0:.1f}s')
-            # Cap aux work for very large cases — the viewer can still
-            # load with empty aux (basic shapes + colors), and the user
-            # gets a clear log line explaining why aux is missing.
-            if n_rows > 800_000:
-                print(f'  [3d-data aux] skipping aggregate '
-                      f'(> 800k rows; would hang the request)')
-            else:
-                contacts_iter = contacts_df.to_dict('records')
-                _t2 = _t.time()
-                print(f'  [3d-data aux] to_dict in {_t2-_t1:.1f}s')
-                agg = aggregate_particle_metrics(
-                    contacts_iter, atoms_by_id, type_map, scale=scale)
-                _t3 = _t.time()
-                print(f'  [3d-data aux] aggregate in {_t3-_t2:.1f}s '
-                      f'(total {_t3-_t0:.1f}s)')
-                aux['stress_max']         = agg['stress_max']
-                aux['dr_max']             = agg['dr_max']
-                aux['brittle_pairs']      = agg['brittle_pairs']
-                aux['se_stress_pairs']    = agg['se_stress_pairs']
-                aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
-                aux['se_states']          = agg.get('se_states', {})
-                aux['tabor_stats']        = agg.get('tabor_stats', {})
-                aux['all_se_ids']         = agg.get('all_se_ids', [])
-                aux['se_engagement']      = agg.get('se_engagement', {})
+            # Aux cache — particulate cases with sub-μm SE balloon to
+            # 2-3 M contacts; recomputing aux on every page load would
+            # be a 60-90 s endpoint.  Cache the aggregate dict on disk
+            # under viewer_aux.json keyed by contacts.csv mtime; next
+            # load is then instant.
+            cache_path = os.path.join(results_dir, 'viewer_aux.json')
+            contacts_mtime = os.path.getmtime(contacts_csv)
+            cache_valid = False
+            if os.path.exists(cache_path):
+                try:
+                    with open(cache_path) as _cf:
+                        cached = json.load(_cf)
+                    if cached.get('_contacts_mtime') == contacts_mtime:
+                        for k in ('stress_max', 'dr_max', 'brittle_pairs',
+                                   'se_stress_pairs', 'am_se_stress_pairs',
+                                   'se_states', 'tabor_stats', 'all_se_ids',
+                                   'se_engagement'):
+                            if k in cached:
+                                # JSON dicts come back with str keys —
+                                # convert int-keyed dicts back to ints
+                                # so the frontend's `engagement[p.id]`
+                                # numeric-key lookup works.
+                                if k in ('stress_max', 'dr_max',
+                                         'se_engagement'):
+                                    aux[k] = {int(kk): v for kk, v
+                                               in cached[k].items()}
+                                else:
+                                    aux[k] = cached[k]
+                        cache_valid = True
+                        print(f'  [3d-data aux] cache HIT')
+                except (OSError, ValueError, KeyError) as _ce:
+                    print(f'  [3d-data aux] cache invalid: {_ce}')
+
+            if not cache_valid:
+                _t0 = _t.time()
+                contacts_df = pd.read_csv(contacts_csv, low_memory=False)
+                _t1 = _t.time()
+                n_rows = len(contacts_df)
+                print(f'  [3d-data aux] contacts.csv: {n_rows} rows, '
+                      f'read in {_t1-_t0:.1f}s')
+                # 5 M rows ≈ 2-3 GB peak via to_dict; switching to a
+                # streaming itertuples → dict generator drops peak
+                # memory to ~200 MB and runs in ~30-90 s on commodity
+                # workstations.  Cases above 5 M stay skipped (still
+                # very rare — would require sub-100 nm SE).
+                if n_rows > 5_000_000:
+                    print(f'  [3d-data aux] skipping aggregate '
+                          f'(> 5 M rows; out-of-budget)')
+                else:
+                    _cols = list(contacts_df.columns)
+                    def _stream_records(df, cols=_cols):
+                        # yield one dict per row — lazy, no upfront
+                        # materialisation of 2-3 M dicts in memory.
+                        for tup in df.itertuples(index=False, name=None):
+                            yield dict(zip(cols, tup))
+                    _t2 = _t.time()
+                    agg = aggregate_particle_metrics(
+                        _stream_records(contacts_df),
+                        atoms_by_id, type_map, scale=scale)
+                    _t3 = _t.time()
+                    print(f'  [3d-data aux] streaming aggregate '
+                          f'in {_t3-_t2:.1f}s (total {_t3-_t0:.1f}s)')
+                    aux['stress_max']         = agg['stress_max']
+                    aux['dr_max']             = agg['dr_max']
+                    aux['brittle_pairs']      = agg['brittle_pairs']
+                    aux['se_stress_pairs']    = agg['se_stress_pairs']
+                    aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
+                    aux['se_states']          = agg.get('se_states', {})
+                    aux['tabor_stats']        = agg.get('tabor_stats', {})
+                    aux['all_se_ids']         = agg.get('all_se_ids', [])
+                    aux['se_engagement']      = agg.get('se_engagement', {})
+
+                    # Write cache so subsequent page loads are instant.
+                    try:
+                        cache_blob = dict(aux)
+                        cache_blob['_contacts_mtime'] = contacts_mtime
+                        with open(cache_path, 'w') as _cf:
+                            json.dump(cache_blob, _cf, default=str)
+                        print(f'  [3d-data aux] cache WROTE → '
+                              f'{os.path.basename(cache_path)}')
+                    except OSError as _we:
+                        print(f'  [3d-data aux] cache write failed: {_we}')
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
@@ -5419,32 +5471,73 @@ def serve_archive_3d_data(folder):
         } for _, r in df.iterrows()}
         if os.path.exists(contacts_csv):
             import time as _t
-            _t0 = _t.time()
-            contacts_df = pd.read_csv(contacts_csv, low_memory=False)
-            _t1 = _t.time()
-            n_rows = len(contacts_df)
-            print(f'  [3d-data aux/archive] contacts.csv: {n_rows} rows, '
-                  f'read in {_t1-_t0:.1f}s')
-            if n_rows > 800_000:
-                print(f'  [3d-data aux/archive] skipping aggregate '
-                      f'(> 800k rows; would hang the request)')
-            else:
-                contacts_iter = contacts_df.to_dict('records')
-                _t2 = _t.time()
-                agg = aggregate_particle_metrics(
-                    contacts_iter, atoms_by_id, type_map, scale=scale)
-                _t3 = _t.time()
-                print(f'  [3d-data aux/archive] to_dict {_t2-_t1:.1f}s, '
-                      f'aggregate {_t3-_t2:.1f}s (total {_t3-_t0:.1f}s)')
-                aux['stress_max']         = agg['stress_max']
-                aux['dr_max']             = agg['dr_max']
-                aux['brittle_pairs']      = agg['brittle_pairs']
-                aux['se_stress_pairs']    = agg['se_stress_pairs']
-                aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
-                aux['se_states']          = agg.get('se_states', {})
-                aux['tabor_stats']        = agg.get('tabor_stats', {})
-                aux['all_se_ids']         = agg.get('all_se_ids', [])
-                aux['se_engagement']      = agg.get('se_engagement', {})
+            # Aux cache (same logic as /results/<id>/3d-data above —
+            # 2-3 M contact cases would otherwise re-aggregate per page
+            # load).  Keyed on contacts.csv mtime.
+            cache_path = os.path.join(target, 'viewer_aux.json')
+            contacts_mtime = os.path.getmtime(contacts_csv)
+            cache_valid = False
+            if os.path.exists(cache_path):
+                try:
+                    with open(cache_path) as _cf:
+                        cached = json.load(_cf)
+                    if cached.get('_contacts_mtime') == contacts_mtime:
+                        for k in ('stress_max', 'dr_max', 'brittle_pairs',
+                                   'se_stress_pairs', 'am_se_stress_pairs',
+                                   'se_states', 'tabor_stats', 'all_se_ids',
+                                   'se_engagement'):
+                            if k in cached:
+                                if k in ('stress_max', 'dr_max',
+                                         'se_engagement'):
+                                    aux[k] = {int(kk): v for kk, v
+                                               in cached[k].items()}
+                                else:
+                                    aux[k] = cached[k]
+                        cache_valid = True
+                        print(f'  [3d-data aux/archive] cache HIT')
+                except (OSError, ValueError, KeyError) as _ce:
+                    print(f'  [3d-data aux/archive] cache invalid: {_ce}')
+
+            if not cache_valid:
+                _t0 = _t.time()
+                contacts_df = pd.read_csv(contacts_csv, low_memory=False)
+                _t1 = _t.time()
+                n_rows = len(contacts_df)
+                print(f'  [3d-data aux/archive] contacts.csv: {n_rows} rows, '
+                      f'read in {_t1-_t0:.1f}s')
+                if n_rows > 5_000_000:
+                    print(f'  [3d-data aux/archive] skipping aggregate '
+                          f'(> 5 M rows; out-of-budget)')
+                else:
+                    _cols = list(contacts_df.columns)
+                    def _stream_records(df, cols=_cols):
+                        for tup in df.itertuples(index=False, name=None):
+                            yield dict(zip(cols, tup))
+                    _t2 = _t.time()
+                    agg = aggregate_particle_metrics(
+                        _stream_records(contacts_df),
+                        atoms_by_id, type_map, scale=scale)
+                    _t3 = _t.time()
+                    print(f'  [3d-data aux/archive] streaming aggregate '
+                          f'in {_t3-_t2:.1f}s (total {_t3-_t0:.1f}s)')
+                    aux['stress_max']         = agg['stress_max']
+                    aux['dr_max']             = agg['dr_max']
+                    aux['brittle_pairs']      = agg['brittle_pairs']
+                    aux['se_stress_pairs']    = agg['se_stress_pairs']
+                    aux['am_se_stress_pairs'] = agg.get('am_se_stress_pairs', [])
+                    aux['se_states']          = agg.get('se_states', {})
+                    aux['tabor_stats']        = agg.get('tabor_stats', {})
+                    aux['all_se_ids']         = agg.get('all_se_ids', [])
+                    aux['se_engagement']      = agg.get('se_engagement', {})
+                    try:
+                        cache_blob = dict(aux)
+                        cache_blob['_contacts_mtime'] = contacts_mtime
+                        with open(cache_path, 'w') as _cf:
+                            json.dump(cache_blob, _cf, default=str)
+                        print(f'  [3d-data aux/archive] cache WROTE')
+                    except OSError as _we:
+                        print(f'  [3d-data aux/archive] cache write failed: '
+                              f'{_we}')
         aux['cluster_meta']      = classify_clusters(clusters)
         aux['cluster_id_per_se'] = {str(k): v for k, v in
                                      build_cluster_id_map(clusters).items()}
