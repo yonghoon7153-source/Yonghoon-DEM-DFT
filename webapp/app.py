@@ -4,6 +4,7 @@ DEM Analysis Web Application
 - Group mode: Upload multiple cases → comparison plots + summary report
 """
 import os
+import csv
 import json
 import uuid
 import shutil
@@ -2592,6 +2593,34 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
 
 
 # ─── Routes ─────────────────────────────────────────────────────────────────
+
+@app.route('/api/se_corpus.json')
+def api_se_corpus():
+    """Return docs/data/se_diagnostics_82.csv parsed as JSON for the viewer.
+
+    Used by SE Diagnostics export buttons (PNG stats card) to embed
+    corpus-percentile context per case.  Cached in-memory so repeated
+    viewer hits don't re-parse.
+    """
+    csv_path = os.path.join(os.path.dirname(__file__), '..',
+                             'docs', 'data', 'se_diagnostics_82.csv')
+    if not os.path.exists(csv_path):
+        return jsonify({'error': 'corpus CSV not found — run '
+                                  'scripts/extract_se_network_diagnostics.py first.',
+                        'rows': []}), 200
+    # Tiny in-process cache keyed on mtime
+    global _se_corpus_cache
+    try:
+        _se_corpus_cache
+    except NameError:
+        _se_corpus_cache = {'mtime': 0, 'rows': []}
+    mt = os.path.getmtime(csv_path)
+    if _se_corpus_cache['mtime'] != mt:
+        with open(csv_path, newline='') as f:
+            _se_corpus_cache = {'mtime': mt,
+                                 'rows': list(csv.DictReader(f))}
+    return jsonify({'rows': _se_corpus_cache['rows']})
+
 
 @app.route('/')
 def index():

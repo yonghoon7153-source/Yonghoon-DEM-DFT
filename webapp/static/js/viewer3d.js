@@ -2392,13 +2392,25 @@ function exportSeDiagnostics(state, btn) {
   }
 
   if (kind === 'png_stats') {
-    const png = renderSeStatsCardPNG(state);
-    if (!png) return;
-    const byteStr = atob(png.split(',')[1]);
-    const ab = new ArrayBuffer(byteStr.length); const ia = new Uint8Array(ab);
-    for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i);
-    saveBlobWithDialog(new Blob([ab], { type: 'image/png' }),
-                        `${caseId}_se_stats.png`, btn, btn.textContent);
+    /* Fetch corpus stats (one-shot, cached on state) before rendering so
+     * the card can show percentile context across all 27 percolating cases. */
+    const finalize = (corpus) => {
+      const png = renderSeStatsCardPNG(state, corpus);
+      if (!png) return;
+      const byteStr = atob(png.split(',')[1]);
+      const ab = new ArrayBuffer(byteStr.length); const ia = new Uint8Array(ab);
+      for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i);
+      saveBlobWithDialog(new Blob([ab], { type: 'image/png' }),
+                          `${caseId}_se_stats.png`, btn, btn.textContent);
+    };
+    if (state.seCorpus) {
+      finalize(state.seCorpus);
+    } else {
+      fetch('/api/se_corpus.json').then(r => r.json()).then(j => {
+        state.seCorpus = j.rows || [];
+        finalize(state.seCorpus);
+      }).catch(() => finalize(null));
+    }
     return;
   }
 }
@@ -2545,7 +2557,7 @@ function renderSeZProfilePNG(state) {
 }
 
 /* ── Canvas-based stats summary card ─────────────────────────────────── */
-function renderSeStatsCardPNG(state) {
+function renderSeStatsCardPNG(state, corpusRows) {
   const aux = (state.data && state.data.aux) || {};
   const perc     = aux.se_percolating || [];
   const artPts   = aux.se_articulation_points || [];
@@ -2562,21 +2574,69 @@ function renderSeStatsCardPNG(state) {
   const thresholdNorm = aux.se_bn_threshold_norm;
   const nBnBelow = aux.se_n_bn_below_threshold;
 
-  const W = 700, H = 480;
+  /* Per-case derived metrics matching the corpus figure axes */
+  const cutFrac = artPts.length / nPerc;
+
+  /* Find this case's row in corpus + compute percentile rank */
+  const caseId = (state.data && state.data.case_id) || 'case';
+  let corpusRow = null, corpusPerc = null;
+  if (corpusRows && corpusRows.length) {
+    corpusRow = corpusRows.find(r => r.case_id === caseId);
+    /* Only use cases with valid percolating data */
+    const valid = corpusRows.filter(r => +r.n_percolating > 0);
+    const rank = (key, val) => {
+      const arr = valid.map(r => +r[key])
+                       .filter(v => Number.isFinite(v))
+                       .sort((a, b) => a - b);
+      if (!arr.length) return null;
+      let i = 0; while (i < arr.length && arr[i] < val) i++;
+      return { pct: Math.round(100 * i / arr.length),
+               lo: arr[0], hi: arr[arr.length - 1],
+               med: arr[Math.floor(arr.length / 2)],
+               n: arr.length };
+    };
+    corpusPerc = {
+      cutFrac: rank('cut_fraction', cutFrac),
+    };
+    /* Compute bn_below_frac = n_bn_below_threshold / n_perc_edges
+     * (the panel-b metric).  Add a synthetic field to each row. */
+    const arrBnFrac = valid.map(r => {
+      const ne = +r.n_perc_edges; const nb = +r.n_bn_below_threshold;
+      return (ne > 0 && Number.isFinite(nb)) ? nb / ne : NaN;
+    }).filter(v => Number.isFinite(v)).sort((a, b) => a - b);
+    const myBnFrac = corpusRow ? (() => {
+      const ne = +corpusRow.n_perc_edges; const nb = +corpusRow.n_bn_below_threshold;
+      return (ne > 0 && Number.isFinite(nb)) ? nb / ne : null;
+    })() : null;
+    if (myBnFrac != null && arrBnFrac.length) {
+      let i = 0; while (i < arrBnFrac.length && arrBnFrac[i] < myBnFrac) i++;
+      corpusPerc.bnFrac = {
+        val: myBnFrac, pct: Math.round(100 * i / arrBnFrac.length),
+        lo: arrBnFrac[0], hi: arrBnFrac[arrBnFrac.length - 1],
+        med: arrBnFrac[Math.floor(arrBnFrac.length / 2)],
+        n: arrBnFrac.length,
+      };
+    }
+  }
+
+  /* Canvas — taller now to fit corpus section */
+  const W = 800, H = corpusRow ? 760 : 480;
   const cvs = document.createElement('canvas');
   cvs.width = W; cvs.height = H;
   const ctx = cvs.getContext('2d');
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
 
-  const caseId = (state.data && state.data.case_id) || 'case';
   ctx.fillStyle = '#0f172a';
   ctx.font = 'bold 20px serif';
   ctx.fillText(`SE Network Diagnostics  —  ${caseId}`, 30, 40);
 
-  const rows = [
+  /* ── Section 1: per-case raw counts ───────────────────────────────── */
+  ctx.font = 'bold 13px serif'; ctx.fillStyle = '#444';
+  ctx.fillText('Per-case', 30, 70);
+  const rows1 = [
     ['Percolating SE (backbone)',        nPerc,                  '#14b8a6'],
     ['Articulation points (cut nodes)',  artPts.length,          '#facc15'],
-    ['  cut fraction = n_cut / n_perc',  (artPts.length / nPerc).toFixed(4), '#facc15'],
+    ['  cut fraction = n_cut / n_perc',  cutFrac.toFixed(4),     '#facc15'],
     ['Dead-end clusters — top only',     `${deadTop} cluster`,   '#ec4899'],
     ['Dead-end clusters — bottom only',  `${deadBot} cluster`,   '#f97316'],
     ['Bottleneck contacts (capped list)', bnEdges.length,        '#dc2626'],
@@ -2585,26 +2645,79 @@ function renderSeStatsCardPNG(state) {
                                             ? narrowestNorm.toFixed(5) : '—', '#dc2626'],
     ['Narrowest area',                   typeof narrowest === 'number'
                                             ? narrowest.toFixed(5) + ' μm²' : '—', '#dc2626'],
-    ['Corpus median A/r²',               typeof medianNorm === 'number'
+    ['Corpus median A/r² (this case)',   typeof medianNorm === 'number'
                                             ? medianNorm.toFixed(4) : '—', '#444'],
-    ['Threshold (10% of median)',        typeof thresholdNorm === 'number'
+    ['bn threshold (10% of median)',     typeof thresholdNorm === 'number'
                                             ? thresholdNorm.toFixed(4) : '—', '#444'],
   ];
   ctx.font = '14px serif';
-  rows.forEach((r, i) => {
-    const y = 90 + i * 30;
-    /* color swatch */
+  rows1.forEach((r, i) => {
+    const y = 95 + i * 28;
     ctx.fillStyle = r[2]; ctx.fillRect(30, y - 12, 12, 14);
-    ctx.fillStyle = '#222';
-    ctx.fillText(String(r[0]), 52, y);
-    ctx.font = 'bold 14px serif';
-    ctx.fillStyle = '#0f172a';
-    ctx.fillText(String(r[1]), 460, y);
+    ctx.fillStyle = '#222'; ctx.fillText(String(r[0]), 52, y);
+    ctx.font = 'bold 14px serif'; ctx.fillStyle = '#0f172a';
+    ctx.fillText(String(r[1]), 510, y);
     ctx.font = '14px serif';
   });
+
+  /* ── Section 2: corpus comparison ─────────────────────────────────── */
+  if (corpusRow) {
+    const y0 = 95 + rows1.length * 28 + 14;
+    ctx.font = 'bold 13px serif'; ctx.fillStyle = '#444';
+    ctx.fillText(`Corpus context (${corpusPerc.cutFrac.n} percolating cases)`, 30, y0);
+
+    /* composition values from corpus row */
+    const comp = [
+      ['campaign',  corpusRow.campaign || '—'],
+      ['φ_SE',      (+corpusRow.phi_SE).toFixed(3)],
+      ['λ_eff',     (+corpusRow.lam_eff).toFixed(2)],
+      ['AM wt%',    (+corpusRow.am_wt).toFixed(1)],
+    ];
+    ctx.font = '12px serif';
+    comp.forEach((c, i) => {
+      const x = 30 + i * 180;
+      ctx.fillStyle = '#666'; ctx.fillText(c[0], x, y0 + 22);
+      ctx.fillStyle = '#0f172a'; ctx.font = 'bold 13px serif';
+      ctx.fillText(c[1], x, y0 + 40);
+      ctx.font = '12px serif';
+    });
+
+    /* Percentile rank bars (cut_fraction, bn_below_frac) */
+    const drawRank = (yy, label, p, color) => {
+      ctx.fillStyle = '#222'; ctx.font = '12px serif';
+      ctx.fillText(label, 30, yy);
+      /* bar */
+      const bx = 30, bw = 480, by = yy + 6, bh = 14;
+      ctx.fillStyle = '#e5e7eb'; ctx.fillRect(bx, by, bw, bh);
+      /* fill up to percentile */
+      ctx.fillStyle = color;
+      ctx.fillRect(bx, by, bw * p.pct / 100, bh);
+      /* tick at 50% */
+      ctx.fillStyle = '#9ca3af';
+      ctx.fillRect(bx + bw / 2, by - 2, 1, bh + 4);
+      /* label */
+      ctx.font = 'bold 12px serif'; ctx.fillStyle = '#0f172a';
+      ctx.fillText(`p${p.pct} (val=${p.val != null ? p.val.toFixed(4)
+                                                      : p.med.toFixed(4)})`,
+                    bx + bw + 10, by + 11);
+      ctx.font = '10px serif'; ctx.fillStyle = '#666';
+      ctx.fillText(`corpus [min, med, max] = [${p.lo.toFixed(4)}, `
+                     + `${p.med.toFixed(4)}, ${p.hi.toFixed(4)}]`,
+                    bx, by + bh + 14);
+    };
+    const cP = corpusPerc.cutFrac;
+    cP.val = cutFrac;
+    drawRank(y0 + 80,  '★ cut_fraction (lower = more robust topology)',
+              cP, '#facc15');
+    if (corpusPerc.bnFrac) {
+      drawRank(y0 + 140, '★ bn_below_frac (lower = fewer narrow contacts)',
+                corpusPerc.bnFrac, '#dc2626');
+    }
+  }
+
   ctx.fillStyle = '#666'; ctx.font = '11px serif';
   ctx.fillText('Generated from 3D viewer SE diagnostic mode.  '
-                 + 'cut + bn = percolation risk descriptors.',
+                 + 'Bars: where this case sits among percolating cases.',
                  30, H - 18);
   return cvs.toDataURL('image/png');
 }
