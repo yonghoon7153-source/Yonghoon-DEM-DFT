@@ -417,11 +417,15 @@ def list_cases():
                 meta['overall_grade']    = _gres['composite']['grade']
                 meta['overall_n_axes']   = _gres['composite']['n_axes']
                 meta['is_unit_cell']     = _gres['composite'].get('is_unit_cell', False)
+                meta['rve_area_um2']     = _gres['composite'].get('rve_area_um2')
+                meta['base_case']        = _gres['composite'].get('base_case')
             except Exception:
                 meta['overall_score']    = None
                 meta['overall_grade']    = '—'
                 meta['overall_n_axes']   = 0
                 meta['is_unit_cell']     = False
+                meta['rve_area_um2']     = None
+                meta['base_case']        = None
         cases.append(meta)
     return cases
 
@@ -465,9 +469,10 @@ def _inject_input_params(metrics, results_dir):
     """Pull am_se_ratio (and other input-side parameters needed by the
     grade engine) from input_params.json when not already in metrics.
 
-    The grade engine reads metrics['_input_am_se_ratio'] as a robust
-    fallback for Q_areal computation when full_metrics doesn't carry
-    am_se_ratio (some Stage-E re-runs strip it)."""
+    Also pulls box_x / box_y so the grade engine can compute the RVE
+    cross-section area (μm²) — used as a finite-size noise indicator
+    in the dashboard so cases that differ ONLY in RVE size (e.g.
+    *_real_x  vs *_real40_x) can be grouped or filtered."""
     if not results_dir:
         return metrics
     ip_path = os.path.join(results_dir, 'input_params.json')
@@ -478,12 +483,22 @@ def _inject_input_params(metrics, results_dir):
             ip = json.load(f)
     except (OSError, ValueError):
         return metrics
+    inj = {}
     ratio = ip.get('am_se_ratio') or ip.get('AM_SE_ratio')
-    if ratio and 'am_se_ratio' not in metrics:
-        return {**metrics, '_input_am_se_ratio': str(ratio)}
     if ratio:
-        return {**metrics, '_input_am_se_ratio': str(ratio)}
-    return metrics
+        inj['_input_am_se_ratio'] = str(ratio)
+    # Box dimensions — stored in sim units; convert to μm via scale (default 1000).
+    bx = ip.get('box_x'); by = ip.get('box_y')
+    scale = ip.get('scale') or 1000
+    try:
+        if bx is not None and by is not None:
+            inj['_input_box_x'] = float(bx) * float(scale)
+            inj['_input_box_y'] = float(by) * float(scale)
+    except (TypeError, ValueError):
+        pass
+    if not inj:
+        return metrics
+    return {**metrics, **inj}
 
 
 def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
@@ -2893,6 +2908,8 @@ def api_all_grades():
                 'grade':        r['composite']['grade'],
                 'n_axes':       r['composite']['n_axes'],
                 'is_unit_cell': r['composite'].get('is_unit_cell', False),
+                'rve_area_um2': r['composite'].get('rve_area_um2'),
+                'base_case':    r['composite'].get('base_case'),
             })
         except Exception:
             continue

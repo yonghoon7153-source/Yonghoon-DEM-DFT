@@ -1058,33 +1058,63 @@ def _grade_axis(axis: dict, metrics: dict,
 
 
 # ── Unit-cell detection ─────────────────────────────────────────────────
+def _rve_area_um2(metrics: dict) -> float | None:
+    """Extract RVE cross-section area (μm²) from metrics or injected
+    input_params.  Used downstream as a finite-size confidence indicator
+    (smaller RVE → noisier σ_ionic / ASR estimates)."""
+    for k in ('_input_box_x', 'box_x_um'):
+        bx = metrics.get(k)
+        by = metrics.get(k.replace('x', 'y'))
+        try:
+            if bx and by:
+                return float(bx) * float(by)
+        except (TypeError, ValueError):
+            continue
+    return None
+
+
 def detect_unit_cell(metrics: dict, case_id: str | None = None) -> dict:
     """Decide if a case is a small periodic unit-cell test rather than a
     full ASSB cathode.  Such cases lack realistic top↔bottom percolation
     challenges and shouldn't be ranked against full cells without caveat.
 
+    Naming reminders (corrected per user clarification):
+      - "particulate_*"  →  SE PARTICLE-SIZE variation series, NOT unit cells.
+                            Treated as full cathodes.
+      - "real_x" vs "real40_x"  →  same physical input, only the RVE size
+                                    differs (50×50 μm vs 40×40 μm).  Do NOT
+                                    interpret as pressure / processing diff.
+      - When unsure, check input_params.json or ask the user.
+
+    Strict criteria here (both required):
+      • thickness < 25 μm  (almost certainly not a full cathode)
+      • AM-AM percolation == 0 AND ionic_active == 100  (periodic UC signature)
+    Single weaker signals just add an info note, do not flip is_unit_cell.
+
     Returns {'is_unit_cell': bool, 'reasons': [str, ...]}.
     """
     reasons = []
-    if case_id and 'particulate' in case_id.lower():
-        reasons.append('case_id contains "particulate"')
+    strict_signals = 0
+
     L = metrics.get('thickness_um')
     try:
-        if L is not None and float(L) < 30:
-            reasons.append(f'thickness {L} μm < 30 μm (unit-cell scale)')
+        if L is not None and float(L) < 25:
+            reasons.append(f'thickness {L:.1f} μm < 25 μm — possible unit-cell')
+            strict_signals += 1
     except (TypeError, ValueError):
         pass
+
     am_perc = metrics.get('am_percolation_pct')
     ion_act = metrics.get('ionic_active_pct')
     try:
-        # Diagnostic geometry: no AM connectivity but 100% activity
-        # (typical of periodic unit cell tests)
         if (am_perc is not None and float(am_perc) == 0 and
             ion_act is not None and float(ion_act) >= 99):
-            reasons.append('am_percolation=0 + ionic_active=100% (periodic UC)')
+            reasons.append('am_percolation=0 + ionic_active=100% — periodic UC signature')
+            strict_signals += 1
     except (TypeError, ValueError):
         pass
-    return {'is_unit_cell': bool(reasons), 'reasons': reasons}
+
+    return {'is_unit_cell': strict_signals >= 2, 'reasons': reasons}
 
 
 # ── Top-level entry point ───────────────────────────────────────────────
@@ -1136,6 +1166,22 @@ def build_overall_grade(metrics: dict,
     cat_scores = {c: round(_stat.mean(v), 1) for c, v in cats.items()}
 
     uc = detect_unit_cell(metrics, case_id)
+    rve_area = _rve_area_um2(metrics)
+
+    # Strip the "real40_" RVE-size suffix so variants of the same physical
+    # input group together for the "RVE size only" pairing.
+    #   input_6mAh_real_4     (RVE 50×50)
+    #   input_6mAh_real40_4   (RVE 40×40)
+    # These differ ONLY in RVE size, no other physical parameter changes.
+    # particulate_* names are SE-particle-size variations — kept as
+    # distinct base cases (they are NOT RVE-only twins).
+    base_case = None
+    if case_id:
+        import re as _re
+        if 'real' in case_id:
+            base_case = _re.sub(r'real(40)?_', 'rveX_', case_id)
+        else:
+            base_case = case_id   # particulate_* / 1mAh_* / etc. stay distinct
 
     composite = {
         'score':          round(weighted, 1),
@@ -1145,6 +1191,8 @@ def build_overall_grade(metrics: dict,
         'n_total':        len(AXES),
         'is_unit_cell':   uc['is_unit_cell'],
         'unit_cell_reasons': uc['reasons'],
+        'rve_area_um2':   rve_area,
+        'base_case':      base_case,
     }
 
     return {
