@@ -4083,6 +4083,10 @@ def serve_3d_data(case_id):
         'particle_n_brittle': {}, 'particle_worst_partner_brittle': {},
         'particle_worst_pair_type': {},
         'am_p_skeleton': [], 'stress_chain_segments': [],
+        # Phase A5+A6 — SE network diagnostics
+        'se_percolating': [], 'se_articulation_points': [],
+        'se_bottleneck_edges': [], 'se_dead_end_clusters': [],
+        'se_n_percolating': 0,
     }
     try:
         import sys as _sys
@@ -4092,6 +4096,7 @@ def serve_3d_data(case_id):
         from viewer3d_data import (
             aggregate_particle_metrics, classify_clusters,
             build_cluster_id_map, build_coverage_map,
+            compute_se_network_diagnostics,
         )
         # Build atoms_by_id from atoms.csv we already loaded.
         atoms_by_id = {int(r['id']): {
@@ -4112,7 +4117,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 5:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 6:
                         # Restore every cached key except metadata.  Some
                         # int-keyed dicts (stress_max, dr_max, se_engagement,
                         # particle_max_fpc, particle_n_brittle) need their
@@ -4185,10 +4190,30 @@ def serve_3d_data(case_id):
                     aux['am_p_skeleton']            = agg.get('am_p_skeleton', [])
                     aux['stress_chain_segments']    = agg.get('stress_chain_segments', [])
 
+                    # Phase A5+A6 — SE network diagnostics (re-stream contacts;
+                    # NetworkX-based, ~1-2 s for typical 60k SE-SE contacts).
+                    try:
+                        _plate_z_sim = box.get('z_max', 0) / max(scale, 1)
+                        _se_diag = compute_se_network_diagnostics(
+                            _stream_records(contacts_df), atoms_by_id,
+                            type_map, plate_z=_plate_z_sim, scale=scale)
+                        aux['se_percolating']           = _se_diag.get('percolating_se', [])
+                        aux['se_articulation_points']   = _se_diag.get('articulation_points', [])
+                        aux['se_bottleneck_edges']      = _se_diag.get('bottleneck_edges', [])
+                        aux['se_dead_end_clusters']     = _se_diag.get('dead_end_clusters', [])
+                        aux['se_n_percolating']         = _se_diag.get('n_percolating', 0)
+                        print(f'  [3d-data aux] SE diag: '
+                              f'{aux["se_n_percolating"]} percolating, '
+                              f'{len(aux["se_articulation_points"])} cut-pts, '
+                              f'{len(aux["se_bottleneck_edges"])} narrow edges, '
+                              f'{len(aux["se_dead_end_clusters"])} dead-ends')
+                    except Exception as _ediag:
+                        print(f'  [3d-data aux] SE diag failed: {_ediag}')
+
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 5
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 6
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -5508,6 +5533,10 @@ def serve_archive_3d_data(folder):
         'particle_n_brittle': {}, 'particle_worst_partner_brittle': {},
         'particle_worst_pair_type': {},
         'am_p_skeleton': [], 'stress_chain_segments': [],
+        # Phase A5+A6 — SE network diagnostics
+        'se_percolating': [], 'se_articulation_points': [],
+        'se_bottleneck_edges': [], 'se_dead_end_clusters': [],
+        'se_n_percolating': 0,
     }
     try:
         import sys as _sys
@@ -5517,6 +5546,7 @@ def serve_archive_3d_data(folder):
         from viewer3d_data import (
             aggregate_particle_metrics, classify_clusters,
             build_cluster_id_map, build_coverage_map,
+            compute_se_network_diagnostics,
         )
         atoms_by_id = {int(r['id']): {
             'type':   int(r['type']),
@@ -5534,7 +5564,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 5:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 6:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -5590,9 +5620,22 @@ def serve_archive_3d_data(folder):
                     aux['particle_worst_pair_type'] = agg.get('particle_worst_pair_type', {})
                     aux['am_p_skeleton']            = agg.get('am_p_skeleton', [])
                     aux['stress_chain_segments']    = agg.get('stress_chain_segments', [])
+                    # Phase A5+A6 — SE network diagnostics
+                    try:
+                        _plate_z_sim = box.get('z_max', 0) / max(scale, 1)
+                        _se_diag = compute_se_network_diagnostics(
+                            _stream_records(contacts_df), atoms_by_id,
+                            type_map, plate_z=_plate_z_sim, scale=scale)
+                        aux['se_percolating']           = _se_diag.get('percolating_se', [])
+                        aux['se_articulation_points']   = _se_diag.get('articulation_points', [])
+                        aux['se_bottleneck_edges']      = _se_diag.get('bottleneck_edges', [])
+                        aux['se_dead_end_clusters']     = _se_diag.get('dead_end_clusters', [])
+                        aux['se_n_percolating']         = _se_diag.get('n_percolating', 0)
+                    except Exception as _ediag:
+                        print(f'  [3d-data aux/archive] SE diag failed: {_ediag}')
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 5
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 6
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')

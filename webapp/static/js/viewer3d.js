@@ -132,6 +132,9 @@ function buildControls(container) {
         <option value="am_p_skeleton">AM_P Fracture Skeleton</option>
         <option value="stress_chain">Stress Chain (AM-AM)</option>
       </optgroup>
+      <optgroup label="Percolation (Phase A5/A6)">
+        <option value="se_diagnostics">SE Network Diagnostics</option>
+      </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -1823,6 +1826,118 @@ function applyViewMode(state, mode) {
     };
     renderStressChain(state, segs);
     flushColors();
+    return;
+  }
+
+  /* ── Phase A5+A6: SE Network Diagnostics ─────────────────────────── */
+  if (mode === 'se_diagnostics') {
+    /* Background: AM dim, SE everyone faint gray */
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, colDim));
+      m.material.opacity = 0.05; m.material.transparent = true;
+    });
+    const seMesh = state.meshes.SE;
+    if (seMesh) {
+      seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
+      seMesh.material.opacity = 0.35; seMesh.material.transparent = true;
+    }
+
+    const perc = new Set(aux.se_percolating || []);
+    const artPts = new Set(aux.se_articulation_points || []);
+    const deadEnds = aux.se_dead_end_clusters || [];
+    const bnEdges = aux.se_bottleneck_edges || [];
+    const nPerc = aux.se_n_percolating || 0;
+
+    if (!nPerc) {
+      flushColors();
+      setLegend(state, '<i>No SE percolation data (run reanalysis).</i>');
+      return;
+    }
+
+    /* Color SE by role: percolating=teal, articulation=yellow, dead-end=red */
+    const colPerc = new THREE.Color(0x14b8a6);   // teal
+    const colArt  = new THREE.Color(0xfacc15);   // yellow
+    /* dead-end clusters: top_only = magenta, bottom_only = orange */
+    const deadEndType = {};
+    deadEnds.forEach(d => {
+      d.ids.forEach(pid => { deadEndType[pid] = d.type; });
+    });
+    if (seMesh) {
+      seMesh.userData.particles.forEach((p, i) => {
+        if (artPts.has(p.id)) {
+          seMesh.setColorAt(i, colArt);
+        } else if (perc.has(p.id)) {
+          seMesh.setColorAt(i, colPerc);
+        } else if (deadEndType[p.id] === 'top_only') {
+          seMesh.setColorAt(i, new THREE.Color(0xec4899));
+        } else if (deadEndType[p.id] === 'bottom_only') {
+          seMesh.setColorAt(i, new THREE.Color(0xf97316));
+        }
+      });
+      seMesh.material.opacity = 0.85; seMesh.material.transparent = true;
+    }
+
+    /* Render bottleneck edges as orange tubes */
+    if (state.scene && bnEdges.length) {
+      const group = new THREE.Group();
+      /* Build SE position lookup (Y-up convention) */
+      const pos = {};
+      if (seMesh) {
+        seMesh.userData.particles.forEach(p => {
+          pos[p.id] = new THREE.Vector3(p.x, p.z, p.y);
+        });
+      }
+      const box = state.data && state.data.box;
+      const halfX = box ? (box.x_max - box.x_min) / 2 : Infinity;
+      const halfY = box ? (box.y_max - box.y_min) / 2 : Infinity;
+      /* Sort area ascending: narrowest first → most red (most critical) */
+      const sortedBn = [...bnEdges].sort((a, b) => a.area_um2 - b.area_um2);
+      const minArea = sortedBn[0]?.area_um2 || 0;
+      const maxArea = sortedBn[sortedBn.length - 1]?.area_um2 || 1;
+      sortedBn.forEach((e, idx) => {
+        const a = pos[e.id1], b = pos[e.id2];
+        if (!a || !b) return;
+        if (Math.abs(a.x - b.x) > halfX || Math.abs(a.z - b.z) > halfY) return;
+        /* color: narrowest = deep red, widest = orange */
+        const t = (e.area_um2 - minArea) / Math.max(1e-9, maxArea - minArea);
+        const hue = 0 + t * 30;   // 0 (red) → 30 (orange)
+        const col = new THREE.Color(`hsl(${hue}, 90%, 50%)`);
+        const tube = new THREE.TubeGeometry(
+          new THREE.LineCurve3(a, b), 1, 1.0, 8, false);
+        const mat = new THREE.MeshBasicMaterial({
+          color: col, transparent: true, opacity: 0.95,
+          depthWrite: false,
+        });
+        group.add(new THREE.Mesh(tube, mat));
+      });
+      state.scene.add(group);
+      state.stressChainGroup = group;   // reuse same cleanup hook
+    }
+    flushColors();
+
+    const deadTop = deadEnds.filter(d => d.type === 'top_only').length;
+    const deadBot = deadEnds.filter(d => d.type === 'bottom_only').length;
+    const narrowest = bnEdges[0]?.area_um2 ?? '—';
+    setLegend(state,
+      `<b style="font-size:10px">SE Network Diagnostics</b>
+       <table style="font-size:9px;color:#cbd5e1;margin:4px 0;border-collapse:collapse">
+         <tr><td><span style="color:#14b8a6">●</span> Percolating</td>
+             <td style="padding-left:6px">${nPerc}</td></tr>
+         <tr><td><span style="color:#facc15">●</span> Articulation (cut)</td>
+             <td style="padding-left:6px">${artPts.size}</td></tr>
+         <tr><td><span style="color:#ec4899">●</span> Dead-end (top only)</td>
+             <td style="padding-left:6px">${deadTop} cluster</td></tr>
+         <tr><td><span style="color:#f97316">●</span> Dead-end (bot only)</td>
+             <td style="padding-left:6px">${deadBot} cluster</td></tr>
+         <tr><td><span style="color:#dc2626">━</span> Narrowest contact</td>
+             <td style="padding-left:6px">${typeof narrowest === 'number' ? narrowest.toFixed(3) + ' μm²' : narrowest}</td></tr>
+       </table>
+       <div style="color:#6b7280;font-size:8px;line-height:1.3">
+         ★ Articulation point 제거 시 percolation 분리 (critical node)<br>
+         ★ Tube 색: 진한 빨강 = 가장 좁은 contact = bottleneck<br>
+         ★ Dead-end cluster = SE 무리이긴 한데 한쪽만 닿아 inactive
+       </div>`);
     return;
   }
 }

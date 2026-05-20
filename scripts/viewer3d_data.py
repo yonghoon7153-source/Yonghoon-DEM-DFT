@@ -503,6 +503,121 @@ def build_cluster_id_map(se_clusters_json: dict) -> dict[int, int]:
     return out
 
 
+# ── Phase A5 + A6: SE network diagnostics ───────────────────────────────
+#  - articulation points (cut vertices) in the percolating subgraph
+#  - narrowest contacts (bottleneck edges)
+#  - dead-end clusters (touching bottom or top but not both)
+
+def compute_se_network_diagnostics(contacts,
+                                    atoms_by_id: dict,
+                                    type_map: dict,
+                                    plate_z: float,
+                                    scale: float = 1000.0,
+                                    boundary_factor: float = 2.0,
+                                    n_narrowest: int = 50) -> dict:
+    """Build SE-SE contact graph, identify percolation breakage points.
+
+    Inputs are sim units (plate_z in sim length).  Output areas are
+    converted to real μm² so the viewer can render them with the same
+    units the dashboard uses.
+
+    Returns dict with:
+      percolating_se:        sorted list of SE pid in the bottom↔top cluster
+      articulation_points:   SE pid whose removal would split percolation
+      bottleneck_edges:      top-N narrowest contact-area edges in perc subgraph
+                              [{id1, id2, area_um2}]
+      dead_end_clusters:     clusters touching bottom XOR top but not both
+                              [{ids:[pid], type:'bottom_only'|'top_only', size}]
+      n_percolating:         convenience count
+    """
+    import networkx as nx  # local import — only loaded when diagnostics requested
+
+    se_ids = {pid for pid, a in atoms_by_id.items()
+              if type_map.get(int(a.get('type', -1))) == 'SE'}
+    if not se_ids:
+        return {'percolating_se': [], 'articulation_points': [],
+                'bottleneck_edges': [], 'dead_end_clusters': [],
+                'n_percolating': 0}
+
+    area_conv = (1.0 / (scale ** 2)) * 1.0e12   # sim m² → real μm²
+
+    # Build SE-SE graph weighted by contact area
+    G = nx.Graph()
+    G.add_nodes_from(se_ids)
+    for c in contacts:
+        i1 = int(c.get('id1', -1)); i2 = int(c.get('id2', -1))
+        if i1 not in se_ids or i2 not in se_ids:
+            continue
+        area = float(c.get('contact_area', 0) or 0)
+        if area <= 0:
+            continue
+        # Keep largest area if duplicate edges appear
+        if G.has_edge(i1, i2):
+            if area > G[i1][i2].get('area', 0):
+                G[i1][i2]['area'] = area
+        else:
+            G.add_edge(i1, i2, area=area)
+
+    # Boundary identification — per-particle radius gate (matches calc_percolation)
+    bottom_se, top_se = set(), set()
+    for pid in se_ids:
+        a = atoms_by_id[pid]
+        z = float(a.get('z', 0))
+        r = float(a.get('radius', 0))
+        if z <= r * boundary_factor:
+            bottom_se.add(pid)
+        if z >= plate_z - r * boundary_factor:
+            top_se.add(pid)
+
+    # Identify percolating component(s) + dead-end clusters
+    percolating_se = set()
+    dead_end_clusters = []
+    for comp in nx.connected_components(G):
+        has_b = bool(comp & bottom_se)
+        has_t = bool(comp & top_se)
+        if has_b and has_t:
+            percolating_se.update(comp)
+        elif (has_b or has_t) and len(comp) >= 3:
+            dead_end_clusters.append({
+                'ids':  sorted(int(x) for x in comp),
+                'type': 'bottom_only' if has_b else 'top_only',
+                'size': len(comp),
+            })
+    # Sort dead-ends largest-first, cap to top-20 to keep payload small
+    dead_end_clusters.sort(key=lambda d: d['size'], reverse=True)
+    dead_end_clusters = dead_end_clusters[:20]
+
+    if not percolating_se:
+        return {'percolating_se': [], 'articulation_points': [],
+                'bottleneck_edges': [], 'dead_end_clusters': dead_end_clusters,
+                'n_percolating': 0}
+
+    Gp = G.subgraph(percolating_se).copy()
+
+    # Articulation points (cut vertices) in the percolating subgraph
+    try:
+        art_pts = sorted(int(p) for p in nx.articulation_points(Gp))
+    except Exception:
+        art_pts = []
+
+    # Top-N narrowest edges (smallest contact area)
+    edges = [(int(u), int(v), float(d.get('area', 0)))
+             for u, v, d in Gp.edges(data=True)]
+    edges.sort(key=lambda e: e[2])
+    bottleneck_edges = [
+        {'id1': u, 'id2': v, 'area_um2': round(a * area_conv, 5)}
+        for u, v, a in edges[:n_narrowest]
+    ]
+
+    return {
+        'percolating_se':      sorted(int(x) for x in percolating_se),
+        'articulation_points': art_pts,
+        'bottleneck_edges':    bottleneck_edges,
+        'dead_end_clusters':   dead_end_clusters,
+        'n_percolating':       len(percolating_se),
+    }
+
+
 # ── Per-AM coverage map (μm² SE / μm² total surface) ─────────────────────
 
 def build_coverage_map(coverage_per_am_csv_path) -> dict[int, float]:
