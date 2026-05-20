@@ -640,6 +640,48 @@ async function saveWithDialog(dataUrl, defaultName, btn, resetLabel) {
   flash('✓ Downloaded');
 }
 
+/* Generic blob saver — accepts any Blob (CSV, PNG, etc.).  Picks MIME
+ * label based on blob.type to drive the OS Save-As dialog filter. */
+async function saveBlobWithDialog(blob, defaultName, btn, resetLabel) {
+  const flash = (msg) => {
+    if (btn) {
+      const orig = resetLabel || btn.textContent;
+      btn.textContent = msg;
+      setTimeout(() => { btn.textContent = orig; }, 1500);
+    }
+  };
+  const mime = blob.type || 'application/octet-stream';
+  const ext = defaultName.split('.').pop().toLowerCase();
+  const descMap = {
+    csv:  { description: 'CSV file',  accept: { 'text/csv':         ['.csv']  } },
+    png:  { description: 'PNG image', accept: { 'image/png':        ['.png']  } },
+    json: { description: 'JSON file', accept: { 'application/json': ['.json'] } },
+  };
+  if (window.showSaveFilePicker) {
+    try {
+      const handle = await window.showSaveFilePicker({
+        suggestedName: defaultName,
+        types: [descMap[ext] || { description: 'File',
+                                    accept: { [mime]: ['.' + ext] } }],
+      });
+      const writable = await handle.createWritable();
+      await writable.write(blob);
+      await writable.close();
+      flash('✓ Saved');
+      return;
+    } catch (e) {
+      if (e.name === 'AbortError') return;
+      console.warn('saveBlobWithDialog fallback:', e);
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = defaultName;
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  flash('✓ Downloaded');
+}
+
 
 /* ── axis labels using sprite text ─────────────────────────── */
 function addAxisLabels(scene, box) {
@@ -2212,6 +2254,34 @@ function renderSeDiagnostics(state) {
        bn threshold = A/r² &lt; ${typeof thresholdNorm === 'number' ? thresholdNorm.toFixed(4) : '—'}
        (median × 10%, median = ${typeof medianNorm === 'number' ? medianNorm.toFixed(3) : '—'})<br>
        cut node 제거 시 percolation 분리. bn 빨강 진할수록 좁음. d-top/bot = 한쪽만 닿은 SE 클러스터.
+     </div>
+     <div style="margin-top:5px;padding-top:4px;border-top:1px solid #2a2d3e;
+                  display:flex;flex-wrap:wrap;gap:0">
+       <button data-sed-export="csv_particles"
+         style="background:#0a4f2e;color:#8cffb2;border:1px solid #0a4f2e;
+                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;white-space:nowrap"
+         title="모든 SE 입자: id, x, y, z, role">📥 CSV particles</button>
+       <button data-sed-export="csv_bn"
+         style="background:#5a1d1d;color:#ffb8b8;border:1px solid #5a1d1d;
+                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;white-space:nowrap"
+         title="Bottleneck contacts: id1, id2, area_um2, area_norm, r_min_um">📥 CSV bn</button>
+       <button data-sed-export="csv_clusters"
+         style="background:#4a2d6f;color:#d8c2ff;border:1px solid #4a2d6f;
+                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;white-space:nowrap"
+         title="Dead-end clusters: idx, type, size, ids">📥 CSV clusters</button>
+       <button data-sed-export="png_zprofile"
+         style="background:#1d3a5f;color:#a8d2ff;border:1px solid #1d3a5f;
+                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;white-space:nowrap"
+         title="Depth (z) profile of cut / bn / dead-end as PNG">📥 PNG z-profile</button>
+       <button data-sed-export="png_stats"
+         style="background:#3a3a3a;color:#d8d8d8;border:1px solid #3a3a3a;
+                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;white-space:nowrap"
+         title="Summary stats card as PNG">📥 PNG stats</button>
      </div>`);
 
   /* Wire up buttons */
@@ -2231,7 +2301,312 @@ function renderSeDiagnostics(state) {
         renderSeDiagnostics(state);
       });
     });
+    /* Export buttons (CSV / PNG) */
+    legendEl.querySelectorAll('[data-sed-export]').forEach(b => {
+      b.addEventListener('click', () => exportSeDiagnostics(state, b));
+    });
   }
+}
+
+/* ── SE Diagnostics: CSV + PNG exports ───────────────────────────────── */
+function exportSeDiagnostics(state, btn) {
+  const kind = btn.dataset.sedExport;
+  const aux  = (state.data && state.data.aux) || {};
+  const caseId = (state.data && state.data.case_id) || 'case';
+  const perc     = new Set(aux.se_percolating || []);
+  const artPts   = new Set(aux.se_articulation_points || []);
+  const deadEnds = aux.se_dead_end_clusters || [];
+  const bnEdges  = aux.se_bottleneck_edges || [];
+  const seMesh   = state.meshes && state.meshes.SE;
+  const deadEndType = {};
+  deadEnds.forEach(d => d.ids.forEach(pid => { deadEndType[pid] = d.type; }));
+
+  /* helper: CSV escape */
+  const esc = v => {
+    const s = String(v ?? '');
+    return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  const dl  = (rows, name) => {
+    const txt = rows.map(r => r.map(esc).join(',')).join('\n') + '\n';
+    saveBlobWithDialog(new Blob(['﻿' + txt], { type: 'text/csv' }),
+                        name, btn, btn.textContent);
+  };
+
+  if (kind === 'csv_particles') {
+    const rows = [['id', 'x', 'y', 'z', 'radius', 'role']];
+    if (seMesh) {
+      seMesh.userData.particles.forEach(p => {
+        let role = 'isolated';
+        if (artPts.has(p.id))                       role = 'articulation';
+        else if (perc.has(p.id))                    role = 'percolating';
+        else if (deadEndType[p.id] === 'top_only')  role = 'dead_top';
+        else if (deadEndType[p.id] === 'bottom_only') role = 'dead_bot';
+        rows.push([p.id, p.x, p.y, p.z, p.r || '', role]);
+      });
+    }
+    dl(rows, `${caseId}_se_particles.csv`);
+    return;
+  }
+
+  if (kind === 'csv_bn') {
+    const rows = [['id1', 'id2', 'area_um2', 'area_norm', 'r_min_um']];
+    bnEdges.forEach(e => {
+      rows.push([e.id1, e.id2, e.area_um2 ?? '',
+                  e.area_norm ?? '', e.r_min_um ?? '']);
+    });
+    /* Metadata row at top */
+    const meta = [
+      ['# median_norm', aux.se_bn_median_norm ?? ''],
+      ['# threshold_norm', aux.se_bn_threshold_norm ?? ''],
+      ['# n_bn_below_threshold', aux.se_n_bn_below_threshold ?? ''],
+      [''],
+    ];
+    dl(meta.concat(rows), `${caseId}_se_bottleneck.csv`);
+    return;
+  }
+
+  if (kind === 'csv_clusters') {
+    const rows = [['cluster_idx', 'type', 'size', 'ids']];
+    deadEnds.forEach((d, i) => {
+      rows.push([i, d.type, d.size, (d.ids || []).join(';')]);
+    });
+    dl(rows, `${caseId}_se_deadend_clusters.csv`);
+    return;
+  }
+
+  if (kind === 'png_zprofile') {
+    /* Client-side canvas z-profile chart */
+    const png = renderSeZProfilePNG(state);
+    if (!png) {
+      btn.textContent = '⚠ no data';
+      setTimeout(() => { btn.textContent = '📥 PNG z-profile'; }, 1500);
+      return;
+    }
+    // Convert dataURL to Blob and save
+    const byteStr = atob(png.split(',')[1]);
+    const ab = new ArrayBuffer(byteStr.length); const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i);
+    saveBlobWithDialog(new Blob([ab], { type: 'image/png' }),
+                        `${caseId}_se_zprofile.png`, btn, btn.textContent);
+    return;
+  }
+
+  if (kind === 'png_stats') {
+    const png = renderSeStatsCardPNG(state);
+    if (!png) return;
+    const byteStr = atob(png.split(',')[1]);
+    const ab = new ArrayBuffer(byteStr.length); const ia = new Uint8Array(ab);
+    for (let i = 0; i < byteStr.length; i++) ia[i] = byteStr.charCodeAt(i);
+    saveBlobWithDialog(new Blob([ab], { type: 'image/png' }),
+                        `${caseId}_se_stats.png`, btn, btn.textContent);
+    return;
+  }
+}
+
+/* ── Canvas-based z-profile chart (no backend, instant) ──────────────── */
+function renderSeZProfilePNG(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const box = (state.data && state.data.box) || {};
+  const perc     = new Set(aux.se_percolating || []);
+  const artPts   = new Set(aux.se_articulation_points || []);
+  const bnEdges  = aux.se_bottleneck_edges || [];
+  const deadEnds = aux.se_dead_end_clusters || [];
+  const seMesh   = state.meshes && state.meshes.SE;
+  if (!seMesh || !aux.se_n_percolating) return null;
+  const deadTopIds = new Set();
+  const deadBotIds = new Set();
+  deadEnds.forEach(d => (d.ids || []).forEach(pid => {
+    if (d.type === 'top_only')    deadTopIds.add(pid);
+    if (d.type === 'bottom_only') deadBotIds.add(pid);
+  }));
+
+  /* Collect per-category z values (data-space z = particle.z) */
+  const z_perc = [], z_cut = [], z_dtop = [], z_dbot = [];
+  seMesh.userData.particles.forEach(p => {
+    if (artPts.has(p.id))                       z_cut.push(p.z);
+    else if (perc.has(p.id))                    z_perc.push(p.z);
+    else if (deadTopIds.has(p.id))              z_dtop.push(p.z);
+    else if (deadBotIds.has(p.id))              z_dbot.push(p.z);
+  });
+  /* bn edges: use midpoint z */
+  const idIndex = {};
+  seMesh.userData.particles.forEach(p => { idIndex[p.id] = p; });
+  const z_bn = [];
+  bnEdges.forEach(e => {
+    const a = idIndex[e.id1], b = idIndex[e.id2];
+    if (a && b) z_bn.push(0.5 * (a.z + b.z));
+  });
+  if (z_perc.length === 0 && z_cut.length === 0) return null;
+
+  const z_min = box.z_min || 0;
+  const z_max = box.z_max || Math.max(...z_perc, ...z_cut, 1);
+  const n_bins = 25;
+  const step = (z_max - z_min) / n_bins;
+  const histogram = arr => {
+    const h = new Array(n_bins).fill(0);
+    arr.forEach(z => {
+      const i = Math.max(0, Math.min(n_bins - 1, Math.floor((z - z_min) / step)));
+      h[i]++;
+    });
+    return h;
+  };
+  const h_perc = histogram(z_perc);
+  const h_cut  = histogram(z_cut);
+  const h_bn   = histogram(z_bn);
+  const h_dtop = histogram(z_dtop);
+  const h_dbot = histogram(z_dbot);
+
+  /* Canvas drawing */
+  const W = 1100, H = 700;
+  const cvs = document.createElement('canvas');
+  cvs.width = W; cvs.height = H;
+  const ctx = cvs.getContext('2d');
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#111';
+  ctx.font = 'bold 16px serif';
+  const caseId = (state.data && state.data.case_id) || 'case';
+  ctx.fillText(`${caseId}  —  SE Network z-profile`, 16, 28);
+  ctx.font = '11px serif';
+  ctx.fillStyle = '#666';
+  ctx.fillText(`box z = [${z_min.toFixed(1)}, ${z_max.toFixed(1)}] μm, `
+                 + `${n_bins} bins, ${z_perc.length + z_cut.length + z_dtop.length + z_dbot.length} SE particles + ${z_bn.length} bn edges`,
+                 16, 46);
+
+  /* 3 horizontal-bar panels, side by side */
+  const panelW = (W - 100) / 3, panelH = H - 100, panelY = 70;
+  const panelX = i => 40 + i * panelW;
+  const drawPanel = (col, title, layers) => {
+    const x0 = panelX(col), y0 = panelY;
+    /* axes */
+    ctx.strokeStyle = '#999'; ctx.lineWidth = 1;
+    ctx.strokeRect(x0, y0, panelW - 20, panelH);
+    /* title */
+    ctx.fillStyle = '#111'; ctx.font = 'bold 13px serif';
+    ctx.fillText(title, x0, y0 - 10);
+    /* z-axis labels */
+    ctx.fillStyle = '#555'; ctx.font = '10px serif';
+    ctx.fillText(z_min.toFixed(1), x0 - 26, y0 + panelH);
+    ctx.fillText(z_max.toFixed(1), x0 - 26, y0 + 4);
+    ctx.fillText('z (μm)', x0 - 30, y0 + panelH / 2);
+    /* find max for x scaling */
+    let maxV = 0;
+    layers.forEach(L => L.data.forEach(v => { if (v > maxV) maxV = v; }));
+    if (maxV === 0) maxV = 1;
+    ctx.fillText(`max=${maxV}`, x0 + panelW - 60, y0 + panelH + 14);
+    /* draw layered horizontal bars (stacked by layer order) */
+    const binH = panelH / n_bins;
+    layers.forEach(L => {
+      ctx.fillStyle = L.color;
+      ctx.globalAlpha = L.alpha;
+      for (let i = 0; i < n_bins; i++) {
+        const v = L.data[i];
+        if (v <= 0) continue;
+        const bx = x0 + 1;
+        const by = y0 + panelH - (i + 1) * binH;
+        const bw = ((panelW - 22) * v / maxV);
+        ctx.fillRect(bx, by + 1, bw, binH - 2);
+      }
+    });
+    ctx.globalAlpha = 1;
+    /* legend */
+    ctx.font = '10px serif';
+    let ly = y0 + panelH + 30;
+    layers.forEach(L => {
+      ctx.fillStyle = L.color;
+      ctx.fillRect(x0, ly - 8, 12, 10);
+      ctx.fillStyle = '#222';
+      ctx.fillText(`${L.name}  (n=${L.data.reduce((a,b)=>a+b,0)})`, x0 + 16, ly);
+      ly += 14;
+    });
+  };
+
+  drawPanel(0, '(a) Cut nodes', [
+    { name: 'percolating', data: h_perc, color: '#14b8a6', alpha: 0.30 },
+    { name: 'cut',         data: h_cut,  color: '#facc15', alpha: 0.92 },
+  ]);
+  drawPanel(1, '(b) Bottleneck + dead-end', [
+    { name: 'bn edges',  data: h_bn,   color: '#dc2626', alpha: 0.85 },
+    { name: 'dead-top',  data: h_dtop, color: '#ec4899', alpha: 0.70 },
+    { name: 'dead-bot',  data: h_dbot, color: '#f97316', alpha: 0.70 },
+  ]);
+  /* Panel c: cut fraction per bin */
+  const h_cf = h_cut.map((v, i) => (h_perc[i] + v) > 0
+                                     ? v / (h_perc[i] + v) : 0);
+  drawPanel(2, '(c) Local cut fraction', [
+    { name: 'n_cut / (n_perc+n_cut)', data: h_cf.map(v => Math.round(v * 1000)),
+      color: '#7c3aed', alpha: 0.85 },
+  ]);
+  /* footnote */
+  ctx.fillStyle = '#555'; ctx.font = '10px serif';
+  ctx.fillText('Bars: count per z-bin (panel c shows fraction ×1000).  '
+                 + 'Y-axis: z (depth, μm) — bottom = z_min, top = z_max',
+                 16, H - 12);
+  return cvs.toDataURL('image/png');
+}
+
+/* ── Canvas-based stats summary card ─────────────────────────────────── */
+function renderSeStatsCardPNG(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const perc     = aux.se_percolating || [];
+  const artPts   = aux.se_articulation_points || [];
+  const bnEdges  = aux.se_bottleneck_edges || [];
+  const deadEnds = aux.se_dead_end_clusters || [];
+  const nPerc = perc.length;
+  if (!nPerc) return null;
+
+  const deadTop = deadEnds.filter(d => d.type === 'top_only').length;
+  const deadBot = deadEnds.filter(d => d.type === 'bottom_only').length;
+  const narrowest = bnEdges[0]?.area_um2;
+  const narrowestNorm = bnEdges[0]?.area_norm;
+  const medianNorm = aux.se_bn_median_norm;
+  const thresholdNorm = aux.se_bn_threshold_norm;
+  const nBnBelow = aux.se_n_bn_below_threshold;
+
+  const W = 700, H = 480;
+  const cvs = document.createElement('canvas');
+  cvs.width = W; cvs.height = H;
+  const ctx = cvs.getContext('2d');
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+
+  const caseId = (state.data && state.data.case_id) || 'case';
+  ctx.fillStyle = '#0f172a';
+  ctx.font = 'bold 20px serif';
+  ctx.fillText(`SE Network Diagnostics  —  ${caseId}`, 30, 40);
+
+  const rows = [
+    ['Percolating SE (backbone)',        nPerc,                  '#14b8a6'],
+    ['Articulation points (cut nodes)',  artPts.length,          '#facc15'],
+    ['  cut fraction = n_cut / n_perc',  (artPts.length / nPerc).toFixed(4), '#facc15'],
+    ['Dead-end clusters — top only',     `${deadTop} cluster`,   '#ec4899'],
+    ['Dead-end clusters — bottom only',  `${deadBot} cluster`,   '#f97316'],
+    ['Bottleneck contacts (capped list)', bnEdges.length,        '#dc2626'],
+    ['Below-threshold bn (uncapped)',    nBnBelow ?? '—',        '#dc2626'],
+    ['Narrowest A/r²',                   typeof narrowestNorm === 'number'
+                                            ? narrowestNorm.toFixed(5) : '—', '#dc2626'],
+    ['Narrowest area',                   typeof narrowest === 'number'
+                                            ? narrowest.toFixed(5) + ' μm²' : '—', '#dc2626'],
+    ['Corpus median A/r²',               typeof medianNorm === 'number'
+                                            ? medianNorm.toFixed(4) : '—', '#444'],
+    ['Threshold (10% of median)',        typeof thresholdNorm === 'number'
+                                            ? thresholdNorm.toFixed(4) : '—', '#444'],
+  ];
+  ctx.font = '14px serif';
+  rows.forEach((r, i) => {
+    const y = 90 + i * 30;
+    /* color swatch */
+    ctx.fillStyle = r[2]; ctx.fillRect(30, y - 12, 12, 14);
+    ctx.fillStyle = '#222';
+    ctx.fillText(String(r[0]), 52, y);
+    ctx.font = 'bold 14px serif';
+    ctx.fillStyle = '#0f172a';
+    ctx.fillText(String(r[1]), 460, y);
+    ctx.font = '14px serif';
+  });
+  ctx.fillStyle = '#666'; ctx.font = '11px serif';
+  ctx.fillText('Generated from 3D viewer SE diagnostic mode.  '
+                 + 'cut + bn = percolation risk descriptors.',
+                 30, H - 18);
+  return cvs.toDataURL('image/png');
 }
 
 function setLegend(state, html) {
