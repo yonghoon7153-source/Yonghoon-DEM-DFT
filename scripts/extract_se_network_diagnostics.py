@@ -215,6 +215,7 @@ def analyze_case(case_dir: Path) -> dict | None:
     comp = load_composition(case_dir, meta)
     bn = diag.get('bottleneck_edges') or []
     bn_areas = [b['area_um2'] for b in bn]
+    bn_norms = [b.get('area_norm', 0) for b in bn]
     return {
         'case_id': case_id,
         'campaign': meta.get('campaign', '?'),
@@ -223,9 +224,17 @@ def analyze_case(case_dir: Path) -> dict | None:
         'n_percolating': diag.get('n_percolating', 0),
         'n_cut':        len(diag.get('articulation_points') or []),
         'n_bn':         len(bn),
+        # raw areas (μm²) — bn_area_min may vary across cases due to r_SE
         'bn_area_min':  round(min(bn_areas), 5) if bn_areas else None,
         'bn_area_p10':  round(float(np.percentile(bn_areas, 10)), 5) if bn_areas else None,
         'bn_area_p50':  round(float(np.percentile(bn_areas, 50)), 5) if bn_areas else None,
+        # normalized A/r² — scale-invariant, cross-case comparable
+        'bn_norm_min':  round(min(bn_norms), 5) if bn_norms else None,
+        'bn_norm_p10':  round(float(np.percentile(bn_norms, 10)), 5) if bn_norms else None,
+        'bn_norm_p50':  round(float(np.percentile(bn_norms, 50)), 5) if bn_norms else None,
+        # reference: median A/r² across full percolating subgraph + threshold used
+        'bn_median_norm':    diag.get('bn_median_norm', 0),
+        'bn_threshold_norm': diag.get('bn_threshold_norm', 0),
         'n_dead_end_clusters': len(diag.get('dead_end_clusters') or []),
         'n_dead_end_top':      sum(1 for d in (diag.get('dead_end_clusters') or [])
                                      if d.get('type') == 'top_only'),
@@ -264,6 +273,10 @@ def make_figure(rows: list[dict], out_path: Path):
     cutf  = np.array([r['cut_fraction'] for r in R])
     bnmin = np.array([r['bn_area_min'] or np.nan for r in R])
     bnp50 = np.array([r['bn_area_p50'] or np.nan for r in R])
+    # Normalized A/r² — scale-invariant
+    bnnorm_min = np.array([r['bn_norm_min'] or np.nan for r in R])
+    bnnorm_p50 = np.array([r['bn_norm_p50'] or np.nan for r in R])
+    bn_med     = np.array([r['bn_median_norm'] or np.nan for r in R])
     camp  = [r['campaign'] for r in R]
 
     camp_colors = {'particulate': '#d62728', '박막(1mAh)': '#1f77b4',
@@ -295,12 +308,20 @@ def make_figure(rows: list[dict], out_path: Path):
             title=r'(a)  Cut-node count vs $\phi_{\mathrm{SE}}$')
     ax.legend(loc='best', fontsize=7.5)
 
-    # (b) bn min area vs φ_SE — log y because areas span orders of magnitude
+    # (b) bn min normalized A/r² vs φ_SE — scale-invariant
     ax = fig.add_subplot(gs[0, 1])
-    scatter(ax, phi, bnmin, ylog=True,
+    scatter(ax, phi, bnnorm_min, ylog=True,
             xlabel=r'SE volume fraction  $\phi_{\mathrm{SE}}$',
-            ylabel=r'Narrowest bottleneck area  $A_{\mathrm{bn,min}}$  (μm²)',
-            title=r'(b)  Bottleneck min-area vs $\phi_{\mathrm{SE}}$')
+            ylabel=r'Narrowest  $A/r_{\min}^2$  (dimensionless)',
+            title=r'(b)  Bottleneck min  $A/r^2$  vs $\phi_{\mathrm{SE}}$')
+    # Reference line: median across all cases
+    median_ref = float(np.nanmedian(bn_med)) if not np.all(np.isnan(bn_med)) else None
+    if median_ref:
+        ax.axhline(median_ref, color='gray', ls='--', lw=0.8,
+                    label=f'corpus median A/r² ≈ {median_ref:.3f}')
+        ax.axhline(median_ref * 0.10, color='red', ls=':', lw=0.8,
+                    label='threshold (10% of median)')
+        ax.legend(loc='best', fontsize=7)
 
     # (c) cut fraction vs λ_eff
     ax = fig.add_subplot(gs[1, 0])
@@ -312,12 +333,12 @@ def make_figure(rows: list[dict], out_path: Path):
     ax.set_xticks([2, 3, 5, 7, 10, 15, 20])
     ax.set_xticklabels(['2', '3', '5', '7', '10', '15', '20'])
 
-    # (d) bn median area vs AM weight fraction
+    # (d) bn median A/r² vs AM weight fraction
     ax = fig.add_subplot(gs[1, 1])
-    scatter(ax, f_AM*100, bnp50, ylog=True,
+    scatter(ax, f_AM*100, bnnorm_p50, ylog=True,
             xlabel='AM weight fraction (%)',
-            ylabel=r'Bottleneck median area  $A_{\mathrm{bn,50}}$  (μm²)',
-            title=r'(d)  Bottleneck median-area vs AM weight fraction')
+            ylabel=r'Bottleneck median  $A/r_{\min}^2$',
+            title=r'(d)  Bottleneck median  $A/r^2$  vs AM weight fraction')
 
     fig.suptitle(
         'SE percolation-risk descriptors across 82-case DEM corpus  —  '

@@ -2180,6 +2180,9 @@ function renderSeDiagnostics(state) {
   const deadTop = deadEnds.filter(d => d.type === 'top_only').length;
   const deadBot = deadEnds.filter(d => d.type === 'bottom_only').length;
   const narrowest = bnEdges[0]?.area_um2;
+  const narrowestNorm = bnEdges[0]?.area_norm;
+  const medianNorm = aux.se_bn_median_norm;
+  const thresholdNorm = aux.se_bn_threshold_norm;
   const btn = (key, color, label, count) => {
     const on = filter[key];
     const bg = on ? color : '#1f2937';
@@ -2204,7 +2207,10 @@ function renderSeDiagnostics(state) {
        ${btn('bottleneck',   '#dc2626', 'bn',       bnEdges.length)}
      </div>
      <div style="color:#6b7280;font-size:8px;margin-top:3px;line-height:1.3">
-       narrowest: ${typeof narrowest === 'number' ? narrowest.toFixed(3) + ' μm²' : '—'}<br>
+       narrowest: ${typeof narrowest === 'number' ? narrowest.toFixed(3) + ' μm²' : '—'}
+       (A/r² = ${typeof narrowestNorm === 'number' ? narrowestNorm.toFixed(4) : '—'})<br>
+       bn threshold = A/r² &lt; ${typeof thresholdNorm === 'number' ? thresholdNorm.toFixed(4) : '—'}
+       (median × 10%, median = ${typeof medianNorm === 'number' ? medianNorm.toFixed(3) : '—'})<br>
        cut node 제거 시 percolation 분리. bn 빨강 진할수록 좁음. d-top/bot = 한쪽만 닿은 SE 클러스터.
      </div>`);
 

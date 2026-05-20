@@ -514,7 +514,9 @@ def compute_se_network_diagnostics(contacts,
                                     plate_z: float,
                                     scale: float = 1000.0,
                                     boundary_factor: float = 2.0,
-                                    n_narrowest: int = 50) -> dict:
+                                    bn_threshold_factor: float = 0.10,
+                                    bn_min: int = 10,
+                                    bn_max: int = 200) -> dict:
     """Build SE-SE contact graph, identify percolation breakage points.
 
     Inputs are sim units (plate_z in sim length).  Output areas are
@@ -600,18 +602,50 @@ def compute_se_network_diagnostics(contacts,
     except Exception:
         art_pts = []
 
-    # Top-N narrowest edges (smallest contact area)
-    edges = [(int(u), int(v), float(d.get('area', 0)))
-             for u, v, d in Gp.edges(data=True)]
-    edges.sort(key=lambda e: e[2])
-    bottleneck_edges = [
-        {'id1': u, 'id2': v, 'area_um2': round(a * area_conv, 5)}
-        for u, v, a in edges[:n_narrowest]
-    ]
+    # Bottleneck edges — dimensionless A/r_min² threshold (Phase C refinement)
+    # A typical Hertz contact has a/R ~ 0.1 → A/R² ~ 0.03.  We flag
+    # edges below median(A/r²) × bn_threshold_factor (default 10%).
+    # Bounded by [bn_min, bn_max] so visualization always has signal.
+    import statistics as _stat
+    edges = []
+    for u, v, d in Gp.edges(data=True):
+        area = float(d.get('area', 0) or 0)
+        r1 = float(atoms_by_id.get(u, {}).get('radius', 0) or 0)
+        r2 = float(atoms_by_id.get(v, {}).get('radius', 0) or 0)
+        r_min = min(r1, r2)
+        if r_min <= 0 or area <= 0:
+            continue
+        norm = area / (r_min ** 2)   # dimensionless
+        edges.append((int(u), int(v), area, norm, r_min))
+
+    bottleneck_edges = []
+    bn_median_norm = 0.0
+    bn_threshold_norm = 0.0
+    if edges:
+        edges.sort(key=lambda e: e[3])   # by normalized metric
+        norms = [e[3] for e in edges]
+        bn_median_norm = float(_stat.median(norms))
+        bn_threshold_norm = bn_median_norm * bn_threshold_factor
+
+        for u, v, area, norm, r_min in edges:
+            is_below_threshold = (norm < bn_threshold_norm)
+            if (not is_below_threshold) and len(bottleneck_edges) >= bn_min:
+                break
+            if len(bottleneck_edges) >= bn_max:
+                break
+            bottleneck_edges.append({
+                'id1':       u,
+                'id2':       v,
+                'area_um2':  round(area * area_conv, 5),
+                'area_norm': round(norm, 5),
+                'r_min_um':  round(r_min * scale, 3),
+            })
 
     return {
         'percolating_se':      sorted(int(x) for x in percolating_se),
         'articulation_points': art_pts,
+        'bn_median_norm':      round(bn_median_norm, 5),
+        'bn_threshold_norm':   round(bn_threshold_norm, 5),
         'bottleneck_edges':    bottleneck_edges,
         'dead_end_clusters':   dead_end_clusters,
         'n_percolating':       len(percolating_se),
