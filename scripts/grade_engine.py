@@ -110,22 +110,25 @@ AXES: list[dict[str, Any]] = [
     {'category': 'SE 네트워크 위상',
      'key': '__cut_fraction', 'label': 'Cut fraction (위상 robustness)',
      'direction': 'lower_corpus', 'corpus_key': 'cut_fraction',
+     'corpus_filter_key': 'n_percolating',  # exclude non-percolating cases
      'formula': 'cut_fraction = n_articulation / n_percolating_SE',
      'meaning': 'Cut node 1개 제거 시 percolation 분리되는 비율. 낮을수록 redundancy ↑. '
-                'Corpus percentile 기준 평가.',
+                'Corpus percentile (percolating-only 27 cases 기준).',
      'weight': 1.0},
 
     {'category': 'SE 네트워크 위상',
      'key': '__bn_below_frac', 'label': 'Bottleneck burden',
      'direction': 'lower_corpus', 'corpus_key': 'bn_below_frac',
+     'corpus_filter_key': 'n_percolating',
      'formula': 'n_bn_below_threshold / n_perc_edges  (A/r² < 10% × median)',
      'meaning': '폭이 corpus median의 10% 미만인 좁은 contact 비율. '
-                'σ_ionic constriction loss 직접 원인. Corpus percentile.',
+                'σ_ionic constriction loss 직접 원인. Percolating-only corpus percentile.',
      'weight': 1.0},
 
     {'category': 'SE 네트워크 위상',
-     'key': 'se_bn_median_norm', 'label': '백본 두께 (median A/r²)',
+     'key': '__bn_median_norm', 'label': '백본 두께 (median A/r²)',
      'direction': 'higher_corpus', 'corpus_key': 'bn_median_norm',
+     'corpus_filter_key': 'n_percolating',
      'formula': 'median(A_contact / r_min²) over percolating SE-SE edges',
      'meaning': '대표 contact의 dimensionless 크기. Hertz 이상 ≈ 0.03, '
                 '본 corpus median ≈ 0.28. 높을수록 백본 두꺼움.',
@@ -148,28 +151,45 @@ AXES: list[dict[str, Any]] = [
 
     # ── 4. 경로 효율 (Path efficiency) ──
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'tortuosity_lap_eff', 'label': 'τ_Laplace,eff ⭐',
+     'key': 'tortuosity_lap_eff_physics', 'label': 'τ_Laplace,eff ⭐',
      'direction': 'lower', 'thresholds': [1.8, 2.2, 2.8, 3.5, 4.5, 6.0],
-     'fallback_key': 'tortuosity_recommended',
-     'formula': 'Laplacian inv-network tortuosity (COMSOL/EIS input)',
-     'meaning': 'Tippens 2019, Famprikis 2019. <2.5 우수, >5 endpoint dominated.',
+     'fallback_key': 'tortuosity_lap_eff',
+     # NO fallback to tau_dij/tortuosity_mean — those are geometric-only
+     # and would show artificially low τ when constriction overhead is
+     # missing.  Show "—" instead so the user knows it wasn't computed.
+     'formula': 'Laplacian + constriction tortuosity (COMSOL/EIS input). '
+                'Stage E physics value preferred.',
+     'meaning': 'Tippens 2019, Famprikis 2019. <2.5 우수, >5 endpoint dominated. '
+                'τ_Dijkstra (geometric only)와 다름 — fallback 금지.',
      'weight': 1.0},
 
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'tortuosity_lap_bulk', 'label': 'τ_Laplace,bulk (구조)',
+     'key': 'tortuosity_lap_bulk_physics', 'label': 'τ_Laplace,bulk (구조)',
      'direction': 'lower', 'thresholds': [1.2, 1.4, 1.7, 2.0, 2.5, 3.0],
-     'fallback_key': 'tortuosity_mean',
-     'formula': 'Laplacian without constriction (pure geometric)',
-     'meaning': 'Bruggeman 가정시 φ^−0.5 ≈ 1.85.',
+     'fallback_key': 'tortuosity_lap_bulk',
+     # Bulk (geometric-only Laplacian) is fundamentally different from
+     # tortuosity_mean (Dijkstra median) so no falling back to the latter.
+     'formula': 'Laplacian without constriction (geometric only)',
+     'meaning': 'Bruggeman 가정시 φ^−0.5 ≈ 1.85. τ_Dij (Dijkstra)와 다름.',
      'weight': 0.5},
 
     {'category': '경로 효율 (Tortuosity)',
      'key': '__constriction_overhead',
-     'label': 'Constriction overhead τ_eff/τ_geo',
+     'label': 'Constriction overhead τ_eff/τ_bulk',
      'direction': 'lower', 'thresholds': [1.5, 1.8, 2.2, 2.8, 3.5, 5.0],
-     'formula': 'τ_Laplace,eff / τ_Laplace,bulk (또는 τ_Dij)',
-     'meaning': '좁은 contact으로 인한 추가 저항 비율. 1배=geometric만.',
+     'formula': 'τ_Laplace,eff / τ_Laplace,bulk — needs both Laplacian values',
+     'meaning': '좁은 contact으로 인한 추가 저항 비율. 1배=geometric만, '
+                '높을수록 constriction loss 큼.',
      'weight': 0.7},
+
+    {'category': '경로 효율 (Tortuosity)',
+     'key': 'tortuosity_recommended', 'label': 'τ_Dijkstra (geodesic)',
+     'direction': 'lower', 'thresholds': [1.15, 1.25, 1.40, 1.60, 1.90, 2.40],
+     'fallback_key': 'tortuosity_mean',
+     'formula': 'Dijkstra median geodesic tortuosity (geometric path length / z)',
+     'meaning': '구조적 우회만 (constriction 미포함). Laplacian과 다른 정량 — 일반적으로 '
+                'τ_Lap_eff보다 훨씬 낮음.',
+     'weight': 0.3},
 
     {'category': '경로 효율 (Tortuosity)',
      'key': 'path_hop_area_mean_physics', 'label': '⟨A_hop⟩ (μm², 평균)',
@@ -433,11 +453,27 @@ def _load_corpus(csv_path: str | None) -> list[dict]:
         return list(csv.DictReader(f))
 
 
-def _corpus_percentile(rows: Iterable[dict], key: str,
-                        value: float) -> dict | None:
+def _passes_filter(row: dict, filter_key: str | None) -> bool:
+    """Whether a corpus row should be included in percentile / threshold
+    calculations.  When `filter_key` is set, the row must have a positive
+    float value at that key (used to exclude non-percolating cases from
+    percolation-only metrics like cut_fraction)."""
+    if not filter_key:
+        return True
+    try:
+        v = float(row.get(filter_key))
+    except (TypeError, ValueError):
+        return False
+    return math.isfinite(v) and v > 0
+
+
+def _corpus_percentile(rows: Iterable[dict], key: str, value: float,
+                        filter_key: str | None = None) -> dict | None:
     """Return {pct, n, lo, med, hi} — value's percentile rank in corpus[key]."""
     arr = []
     for r in rows:
+        if not _passes_filter(r, filter_key):
+            continue
         v = r.get(key)
         try:
             v = float(v)
@@ -459,14 +495,21 @@ def _corpus_percentile(rows: Iterable[dict], key: str,
 
 
 def _corpus_threshold_scores(rows: Iterable[dict], corpus_key: str,
-                              direction: str) -> list[float] | None:
+                              direction: str,
+                              filter_key: str | None = None) -> list[float] | None:
     """Derive 6 percentile cutoffs from corpus for corpus-relative axes.
 
     direction='lower_corpus'  → [p10, p25, p40, p55, p70, p85] (low percentile = high grade)
     direction='higher_corpus' → [p90, p75, p60, p45, p30, p15] (high percentile = high grade)
+
+    When `filter_key` is provided, only corpus rows where filter_key > 0
+    are considered (so non-percolating cases don't skew the distribution
+    for percolating-only metrics).
     """
     arr = []
     for r in rows:
+        if not _passes_filter(r, filter_key):
+            continue
         try:
             v = float(r.get(corpus_key))
         except (TypeError, ValueError):
@@ -562,6 +605,14 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             return nb / ne
         return None
 
+    if key == '__bn_median_norm':
+        aux = metrics.get('_aux_se_diag') or {}
+        v = aux.get('bn_median_norm') or aux.get('se_bn_median_norm')
+        try:
+            return float(v) if v is not None else None
+        except (TypeError, ValueError):
+            return None
+
     if key == '__frac_severe_force_pct':
         a = metrics.get('frac_fragmentation_force_pct') or 0
         b = metrics.get('frac_pulverization_force_pct') or 0
@@ -571,15 +622,16 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         return a + b
 
     if key == '__sigma_vm_cv_pct':
+        # analyze_contacts.py writes stress_cv = std/mean (always a fraction).
+        # Multiplying by 100 unconditionally is correct because no physical
+        # CV-of-stress can be >10× (would mean σ ≫ ⟨σ⟩, unphysical).
         cv = metrics.get('stress_cv')
         if cv is None:
             return None
         try:
-            cv = float(cv)
+            return float(cv) * 100
         except (TypeError, ValueError):
             return None
-        # stress_cv stored as fraction (0-3.x) OR already as %; auto-detect
-        return cv * 100 if cv < 10 else cv
 
     if key == '__electronic_active_pct':
         f = metrics.get('electronic_active_fraction')
@@ -616,11 +668,14 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         return None
 
     if key == '__constriction_overhead':
-        # τ_eff / τ_geo  — use lap_eff when present, else fall back to tau_dij
-        for ne, nd in (('tortuosity_lap_eff',     'tortuosity_lap_bulk'),
-                        ('tortuosity_lap_eff',     'tortuosity_recommended'),
-                        ('tortuosity_recommended', 'tortuosity_mean')):
-            num = metrics.get(ne); den = metrics.get(nd)
+        # τ_eff / τ_bulk — ONLY valid when both Laplacian values exist.
+        # Geometric (Dijkstra) tortuosity is a different quantity and
+        # would inflate the overhead artificially.
+        for ne_key, nb_key in (
+                ('tortuosity_lap_eff_physics', 'tortuosity_lap_bulk_physics'),
+                ('tortuosity_lap_eff',         'tortuosity_lap_bulk'),
+        ):
+            num = metrics.get(ne_key); den = metrics.get(nb_key)
             try:
                 num = float(num) if num is not None else None
                 den = float(den) if den is not None else None
@@ -666,30 +721,44 @@ def _derived_value(key: str, metrics: dict) -> float | None:
 
     if key == '__Q_areal_mAhcm2':
         # Areal capacity = T(μm) × ρ_composite × C_AM × wt_AM × (1 − ε) × 1e-4
-        # Use AM mass-fraction parsed from AM:SE input ratio when present
-        # (form "82:18" means 82% AM by weight), else fall back to 0.80.
+        # Robust AM mass-fraction parsing:
+        #   - metrics['am_se_ratio'] (preferred)
+        #   - metrics['_input_am_se_ratio'] (injected from input_params)
+        #   - default 0.80 (typical sulfide cathode)
         L = metrics.get('thickness_um')
         if not L:
             return None
         wt_am = 0.80
-        amse = metrics.get('am_se_ratio')
-        if isinstance(amse, str) and ':' in amse:
-            try:
-                a, s = (float(x) for x in amse.split(':'))
-                if a + s > 0:
-                    wt_am = a / (a + s)   # → 0.82 for "82:18"
-            except ValueError:
-                pass
+        for src in ('am_se_ratio', '_input_am_se_ratio'):
+            amse = metrics.get(src)
+            if isinstance(amse, str) and ':' in amse:
+                try:
+                    parts = amse.replace(' ', '').split(':')
+                    a, s = float(parts[0]), float(parts[1])
+                    if a + s > 0:
+                        wt_am = a / (a + s)   # → 0.82 for "82:18" or "8:2"
+                        break
+                except (ValueError, IndexError):
+                    continue
+        # Guard against degenerate values
+        if not (0.05 < wt_am < 0.99):
+            wt_am = 0.80
         rho_am = 4.7    # g/cc, NMC bulk
         C_am   = 175    # mAh/g, NMC811 @ 4.3V cutoff (representative)
         # Solid (non-porous) fraction of the electrode by volume
         eps = metrics.get('porosity')
         try:
-            solid = 1.0 - float(eps) / 100.0
+            eps_f = float(eps)
+            # porosity stored as % (0-100); guard against fraction form
+            if eps_f > 1.0:
+                solid = 1.0 - eps_f / 100.0
+            else:
+                solid = 1.0 - eps_f
+            if not (0.5 < solid < 1.0):
+                solid = 0.85
         except (TypeError, ValueError):
             solid = 0.85
         # AM volume fraction in the solid = wt_am × ρ_composite / ρ_am
-        # Approximating ρ_composite ≈ wt_am × ρ_AM + (1-wt_am) × ρ_SE
         rho_se = 1.85   # LPSCl bulk g/cc
         rho_comp = wt_am * rho_am + (1 - wt_am) * rho_se
         am_vol_frac = wt_am * rho_comp / rho_am
@@ -796,14 +865,16 @@ def _grade_axis(axis: dict, metrics: dict,
                         f"({'larger' if direction == 'higher' else 'smaller'} = better)")
     elif direction in ('higher_corpus', 'lower_corpus'):
         base_dir = 'higher' if direction == 'higher_corpus' else 'lower'
+        filter_key = axis.get('corpus_filter_key')
         thresholds = _corpus_threshold_scores(
-            corpus_rows, axis['corpus_key'], direction)
+            corpus_rows, axis['corpus_key'], direction, filter_key)
         if thresholds is None:
             return out
         score = _interp_score(value, thresholds, base_dir)
-        pctile = _corpus_percentile(corpus_rows, axis['corpus_key'], value)
+        pctile = _corpus_percentile(corpus_rows, axis['corpus_key'], value, filter_key)
         if pctile:
-            out['basis'] = (f"corpus n={pctile['n']}, percentile = {pctile['pct']} "
+            filt = f' (filter: {filter_key} > 0)' if filter_key else ''
+            out['basis'] = (f"corpus n={pctile['n']}{filt}, percentile = {pctile['pct']} "
                             f"(corpus [min/med/max] = [{pctile['lo']:.4g}, "
                             f"{pctile['med']:.4g}, {pctile['hi']:.4g}])")
         else:

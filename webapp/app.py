@@ -402,6 +402,7 @@ def list_cases():
                             'articulation_points':   _aux.get('se_articulation_points', []),
                             'n_bn_below_threshold':  _aux.get('se_n_bn_below_threshold'),
                             'n_perc_edges':          _aux.get('se_n_perc_edges'),
+                            'bn_median_norm':        _aux.get('se_bn_median_norm'),
                         }
                     except (OSError, ValueError):
                         pass
@@ -409,8 +410,9 @@ def list_cases():
                                           'docs', 'data', 'se_diagnostics_82.csv')
                 if not os.path.exists(corpus_csv):
                     corpus_csv = None
-                _gres = build_overall_grade(m, corpus_csv, se_aux,
-                                              case_id=case_id)
+                _gres = build_overall_grade(
+                    _inject_input_params(m, results_dir),
+                    corpus_csv, se_aux, case_id=case_id)
                 meta['overall_score']    = _gres['composite']['score']
                 meta['overall_grade']    = _gres['composite']['grade']
                 meta['overall_n_axes']   = _gres['composite']['n_axes']
@@ -459,6 +461,31 @@ def _same_row(label, val):
     return [label, val, val, '0%']
 
 
+def _inject_input_params(metrics, results_dir):
+    """Pull am_se_ratio (and other input-side parameters needed by the
+    grade engine) from input_params.json when not already in metrics.
+
+    The grade engine reads metrics['_input_am_se_ratio'] as a robust
+    fallback for Q_areal computation when full_metrics doesn't carry
+    am_se_ratio (some Stage-E re-runs strip it)."""
+    if not results_dir:
+        return metrics
+    ip_path = os.path.join(results_dir, 'input_params.json')
+    if not os.path.exists(ip_path):
+        return metrics
+    try:
+        with open(ip_path) as f:
+            ip = json.load(f)
+    except (OSError, ValueError):
+        return metrics
+    ratio = ip.get('am_se_ratio') or ip.get('AM_SE_ratio')
+    if ratio and 'am_se_ratio' not in metrics:
+        return {**metrics, '_input_am_se_ratio': str(ratio)}
+    if ratio:
+        return {**metrics, '_input_am_se_ratio': str(ratio)}
+    return metrics
+
+
 def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
     """Build a 'overall_grade' table by calling scripts/grade_engine.
 
@@ -503,13 +530,13 @@ def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
                     'n_percolating':         _aux.get('se_n_percolating'),
                     'articulation_points':   _aux.get('se_articulation_points', []),
                     'n_bn_below_threshold':  _aux.get('se_n_bn_below_threshold'),
-                    'n_perc_edges':          _aux.get('se_n_perc_edges')
-                                              or (_aux.get('se_bn_median_norm') and
-                                                  len(_aux.get('se_bottleneck_edges', []))),
+                    'n_perc_edges':          _aux.get('se_n_perc_edges'),
+                    'bn_median_norm':        _aux.get('se_bn_median_norm'),
                 }
             except (OSError, ValueError):
                 pass
 
+    metrics = _inject_input_params(metrics, results_dir)
     result = build_overall_grade(metrics, corpus_csv, se_aux,
                                   carbon_wt_pct=carbon_wt_pct)
 
@@ -2855,9 +2882,11 @@ def api_all_grades():
             except (OSError, ValueError):
                 pass
         try:
-            r = build_overall_grade(metrics, corpus_csv, se_aux,
-                                    carbon_wt_pct=carbon_wt if carbon_wt > 0 else None,
-                                    case_id=case_id)
+            r = build_overall_grade(
+                _inject_input_params(metrics, results_dir),
+                corpus_csv, se_aux,
+                carbon_wt_pct=carbon_wt if carbon_wt > 0 else None,
+                case_id=case_id)
             rows.append({
                 'case_id':      case_id,
                 'score':        r['composite']['score'],
@@ -2927,9 +2956,11 @@ def case_grade_json(case_id):
         except (OSError, ValueError):
             pass
 
-    result = build_overall_grade(metrics, corpus_csv, se_aux,
-                                  carbon_wt_pct=carbon_wt if carbon_wt > 0 else None,
-                                  case_id=case_id)
+    result = build_overall_grade(
+        _inject_input_params(metrics, results_dir),
+        corpus_csv, se_aux,
+        carbon_wt_pct=carbon_wt if carbon_wt > 0 else None,
+        case_id=case_id)
 
     # Attach the grade-colour map so the client doesn't need its own copy.
     return jsonify({
@@ -4516,7 +4547,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 10:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 11:
                         # Restore every cached key except metadata.  Some
                         # int-keyed dicts (stress_max, dr_max, se_engagement,
                         # particle_max_fpc, particle_n_brittle) need their
@@ -4604,6 +4635,7 @@ def serve_3d_data(case_id):
                         aux['se_bn_median_norm']        = _se_diag.get('bn_median_norm', 0)
                         aux['se_bn_threshold_norm']     = _se_diag.get('bn_threshold_norm', 0)
                         aux['se_n_bn_below_threshold']  = _se_diag.get('n_bn_below_threshold', 0)
+                        aux['se_n_perc_edges']          = _se_diag.get('n_perc_edges', 0)
                         print(f'  [3d-data aux] SE diag: '
                               f'{aux["se_n_percolating"]} percolating, '
                               f'{len(aux["se_articulation_points"])} cut-pts, '
@@ -4615,7 +4647,7 @@ def serve_3d_data(case_id):
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 10
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 11
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -5973,7 +6005,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 10:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 11:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -6043,11 +6075,12 @@ def serve_archive_3d_data(folder):
                         aux['se_bn_median_norm']        = _se_diag.get('bn_median_norm', 0)
                         aux['se_bn_threshold_norm']     = _se_diag.get('bn_threshold_norm', 0)
                         aux['se_n_bn_below_threshold']  = _se_diag.get('n_bn_below_threshold', 0)
+                        aux['se_n_perc_edges']          = _se_diag.get('n_perc_edges', 0)
                     except Exception as _ediag:
                         print(f'  [3d-data aux/archive] SE diag failed: {_ediag}')
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 10
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 11
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')
