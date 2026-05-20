@@ -640,49 +640,6 @@ async function saveWithDialog(dataUrl, defaultName, btn, resetLabel) {
   flash('✓ Downloaded');
 }
 
-/* Generic blob saver — accepts any Blob (CSV, PNG, etc.).  Picks MIME
- * label based on blob.type to drive the OS Save-As dialog filter. */
-async function saveBlobWithDialog(blob, defaultName, btn, resetLabel) {
-  const flash = (msg) => {
-    if (btn) {
-      const orig = resetLabel || btn.textContent;
-      btn.textContent = msg;
-      setTimeout(() => { btn.textContent = orig; }, 1500);
-    }
-  };
-  const mime = blob.type || 'application/octet-stream';
-  const ext = defaultName.split('.').pop().toLowerCase();
-  const descMap = {
-    csv:  { description: 'CSV file',  accept: { 'text/csv':         ['.csv']  } },
-    png:  { description: 'PNG image', accept: { 'image/png':        ['.png']  } },
-    json: { description: 'JSON file', accept: { 'application/json': ['.json'] } },
-  };
-  if (window.showSaveFilePicker) {
-    try {
-      const handle = await window.showSaveFilePicker({
-        suggestedName: defaultName,
-        types: [descMap[ext] || { description: 'File',
-                                    accept: { [mime]: ['.' + ext] } }],
-      });
-      const writable = await handle.createWritable();
-      await writable.write(blob);
-      await writable.close();
-      flash('✓ Saved');
-      return;
-    } catch (e) {
-      if (e.name === 'AbortError') return;
-      console.warn('saveBlobWithDialog fallback:', e);
-    }
-  }
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = defaultName;
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  flash('✓ Downloaded');
-}
-
-
 /* ── axis labels using sprite text ─────────────────────────── */
 function addAxisLabels(scene, box) {
   // Z-up: X→right, Y→depth(Three.js Z), Z→up(Three.js Y)
