@@ -55,19 +55,35 @@ plt.rcParams.update({
 
 
 def discover_cases() -> list[Path]:
-    seen, out = set(), []
-    for base in ('archive', 'results'):
+    """Walk both results/ and archive/, prefer named cases (results/) over
+    timestamp-archived duplicates.  Returns one entry per logical case.
+
+    Dedup key: file size of atoms.csv (cases with identical analyses have
+    identical atom files — different timestamps still match).  results/
+    takes priority so the canonical case_id is used.
+    """
+    seen_keys, out = {}, []
+    # Pass 1: results/ first (canonical names)
+    for base in ('results', 'archive'):
         root = WEBAPP / base
         if not root.exists():
             continue
         for atoms_p in root.rglob('atoms.csv'):
             d = atoms_p.parent
-            if ((d / 'contacts.csv').exists() and
+            if not ((d / 'contacts.csv').exists() and
                     ((d / 'input_params.json').exists() or
                      (d / 'meta.json').exists())):
-                if d not in seen:
-                    seen.add(d)
-                    out.append(d)
+                continue
+            try:
+                size = atoms_p.stat().st_size
+                ct_size = (d / 'contacts.csv').stat().st_size
+            except OSError:
+                continue
+            key = (size, ct_size)   # (atoms.csv bytes, contacts.csv bytes)
+            if key in seen_keys:
+                continue            # duplicate of an earlier (preferred) entry
+            seen_keys[key] = d
+            out.append(d)
     return sorted(out)
 
 

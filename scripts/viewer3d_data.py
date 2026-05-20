@@ -571,6 +571,32 @@ def compute_se_network_diagnostics(contacts,
         if z >= plate_z - r * boundary_factor:
             top_se.add(pid)
 
+    # Fallback L1: if strict per-radius gate finds < 3 boundary SE on
+    # either side, widen to 15% / 85% of plate_z.  Matches dem_analysis_core
+    # calc_percolation's 2-stage fallback so dashboard and viewer agree.
+    if len(bottom_se) < 3 or len(top_se) < 3:
+        z_bottom = plate_z * 0.15
+        z_top    = plate_z * 0.85
+        bottom_se = {pid for pid in se_ids
+                     if atoms_by_id[pid].get('z', 0) <= z_bottom}
+        top_se    = {pid for pid in se_ids
+                     if atoms_by_id[pid].get('z', 0) >= z_top}
+
+    # Fallback L2: anchor to observed SE z-range when mesh_info.plate_z
+    # overshoots actual packed top (common after DEM re-analysis).
+    if len(bottom_se) < 3 or len(top_se) < 3:
+        z_vals = [atoms_by_id[pid].get('z', 0) for pid in se_ids]
+        if z_vals:
+            z_min_obs, z_max_obs = min(z_vals), max(z_vals)
+            span = z_max_obs - z_min_obs
+            if span > 0:
+                z_bottom = z_min_obs + span * 0.15
+                z_top    = z_max_obs - span * 0.15
+                bottom_se = {pid for pid in se_ids
+                             if atoms_by_id[pid].get('z', 0) <= z_bottom}
+                top_se    = {pid for pid in se_ids
+                             if atoms_by_id[pid].get('z', 0) >= z_top}
+
     # Identify percolating component(s) + dead-end clusters
     percolating_se = set()
     dead_end_clusters = []
