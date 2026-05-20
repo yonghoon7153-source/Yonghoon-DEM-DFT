@@ -339,7 +339,34 @@ AXES: list[dict[str, Any]] = [
      'meaning': '전체 저항 중 contact constriction 기여도. bn_below_frac과 정보 일부 중복.',
      'weight': 0.3},
 
-    # ── 10. 셀 ASR ──
+    # ── 10. 셀 ASR + 에너지 밀도 ──
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__Q_gravimetric_mAhg', 'label': 'Q_gravimetric (mAh/g 복합체) ⭐★',
+     'direction': 'higher', 'thresholds': [160, 145, 125, 105, 85, 65],
+     'formula': 'wt_AM × C_AM  (NCM811 real C ≈ 190 mAh/g)',
+     'meaning': '★★ 활물질 무게비 직접 반영 — 같은 두께·밀도라도 wt_AM 높을수록 '
+                '비용량 ↑. AM:SE 90:10 → 171, 82:18 → 156, 70:30 → 133, 60:40 → 114 mAh/g. '
+                'cell 무게-기반 에너지 밀도 평가의 핵심 (학계/산업 1순위 KPI).',
+     'weight': 3.0},
+
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__Q_volumetric_mAhcc', 'label': 'Q_volumetric (mAh/cc) ⭐★',
+     'direction': 'higher', 'thresholds': [600, 510, 420, 340, 270, 200],
+     'formula': 'ρ_composite × wt_AM × C_AM × (1−ε) — 부피 용량',
+     'meaning': '★★ cell 부피-기반 에너지 밀도. ASSB 상용화 목표 ≥500 mAh/cc '
+                '(Janek 2023). AM:SE 82:18 + 14%ε → ~574, 62:38 + 7%ε → ~411. '
+                '고밀도 packing(low ε) + 고 wt_AM = 부피 에너지 최대.',
+     'weight': 2.5},
+
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__wt_am_pct', 'label': 'wt_AM (%) — 활물질 무게비',
+     'direction': 'higher', 'thresholds': [85, 80, 75, 70, 60, 50],
+     'formula': '100 × m_AM / (m_AM + m_SE)',
+     'meaning': '활물질 무게 비율. ≥80% (e.g. 82:18, 85:15)이 commercial cathode 표준. '
+                '<70% SE-rich는 cell-level 에너지 밀도 손실 크고 비용 ↑.',
+     'weight': 1.2},
+
+    # ── 11. 셀 ASR ──
     {'category': '셀 단위 ASR',
      'key': '__asr_ionic_Ohm_cm2', 'label': 'ASR_ionic (Ω·cm²) ⭐',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
@@ -378,7 +405,52 @@ AXES: list[dict[str, Any]] = [
      'meaning': '냉각 효율. sulfide cell에서 1차 성능 결정 인자 아님.',
      'weight': 0.15},
 
-    # ── 11. 가공 / 신뢰성 (Manufacturability) ──
+    {'category': '셀 단위 ASR',
+     'key': '__polarization_mV_at_C3', 'label': '분극 η @ C/3 (mV) ⭐',
+     'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
+     'formula': 'η = i × (ASR_ionic + ASR_e),  i = 0.33 mA/cm² (C/3 of 1 mAh/cm²)',
+     'meaning': '★ 실제 작동 분극 전압 drop (mV).  관측 가능량.  '
+                '<100 mV 우수, >250 high-rate에서 cutoff 도달 위험.',
+     'weight': 1.2},
+
+    # ── 12. 안전성 (Safety) ──
+    {'category': '안전성 (Safety)',
+     'key': '__am_am_short_risk_cn', 'label': 'AM-AM ⟨z⟩ (short risk)',
+     'direction': 'band', 'optimum': 2.5, 'band_width': 1.5,
+     'fallback_key': 'am_am_cn',
+     'formula': 'am_am_cn — AM 입자 평균 AM-AM 접촉 수',
+     'meaning': 'AM-AM 연결도. 2-3이 sweet spot — 너무 낮으면(<1) 전자전도 빈약, '
+                '너무 높으면(>4.5) electrons direct path 형성 → internal short risk + '
+                'SE 침투 어려움. Band-around-optimum scoring.',
+     'weight': 0.5},
+
+    {'category': '안전성 (Safety)',
+     'key': '__stress_hotspot_pct', 'label': 'Stress hotspot density (%)',
+     'direction': 'lower', 'thresholds': [3, 7, 14, 22, 32, 45],
+     'formula': 'CV(σ_VM) × 5 / 100  — particle stress p99 초과 비율 근사',
+     'meaning': 'σ_VM의 high-tail (p99 초과) 입자 비율. 초기 cycling 시 fracture '
+                'nucleation 지점. CV(σ_VM) 기반 보수적 추정.',
+     'weight': 0.4},
+
+    # ── 13. 수명 (Cycling) ──
+    {'category': '수명 (Cycling)',
+     'key': '__cycle_stable_AM_pct', 'label': 'Cycle-stable AM (%)',
+     'direction': 'higher', 'thresholds': [95, 90, 80, 70, 55, 40],
+     'formula': '(1 − fracture_severe/100) × (ionic_active/100) × (electronic_active/100) × 100',
+     'meaning': '★ 합성 cycling 안정성 — 활성 + 전자연결 + 심각손상 없음을 동시 만족하는 '
+                'AM 비율.  초기 fracture로 percolation 끊기지 않는 cell 비율.',
+     'weight': 1.0},
+
+    {'category': '수명 (Cycling)',
+     'key': '__sigma_e_fracture_loss_pct',
+     'label': 'σ_e fracture-induced loss (%)',
+     'direction': 'lower', 'thresholds': [10, 25, 40, 55, 70, 85],
+     'formula': '100 × (σ_e_baseline − σ_e_stage_e) / σ_e_baseline',
+     'meaning': 'Stage E의 fracture 보정으로 σ_e가 떨어진 비율. 높을수록 cycling에서 '
+                '전자전도 약화 risk ↑.',
+     'weight': 0.5},
+
+    # ── 14. 가공 / 신뢰성 (Manufacturability) ──
     {'category': '가공 신뢰성',
      'key': '__validation_pass_pct', 'label': 'Validation trust (%)',
      'direction': 'higher', 'thresholds': [95, 85, 75, 60, 45, 25],
@@ -718,6 +790,104 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         if L and k and k > 0:
             return float(L) * 0.1 / float(k)
         return None
+
+    # ── Energy density (user data: NCM811 C ≈ 190 mAh/g real, ρ 4.8 g/cc;
+    #                              LPSCl ρ 2.0 g/cc) ─────────────────────
+    if key == '__wt_am_pct':
+        for src in ('am_se_ratio', '_input_am_se_ratio'):
+            amse = metrics.get(src)
+            if isinstance(amse, str) and ':' in amse:
+                try:
+                    a, s = (float(x) for x in amse.replace(' ', '').split(':')[:2])
+                    if a + s > 0:
+                        return 100 * a / (a + s)
+                except (ValueError, IndexError):
+                    continue
+        return None
+
+    if key == '__Q_gravimetric_mAhg':
+        wt_pct = _derived_value('__wt_am_pct', metrics)
+        if wt_pct is None:
+            return None
+        return (wt_pct / 100.0) * 190   # NCM811 real C ~ 190 mAh/g
+
+    if key == '__Q_volumetric_mAhcc':
+        wt_pct = _derived_value('__wt_am_pct', metrics)
+        if wt_pct is None:
+            return None
+        wt_am = wt_pct / 100.0
+        rho_am, rho_se, C_am = 4.8, 2.0, 190   # user-provided constants
+        rho_comp = wt_am * rho_am + (1 - wt_am) * rho_se
+        eps = metrics.get('porosity')
+        try:
+            eps_f = float(eps)
+            solid = 1.0 - (eps_f / 100.0 if eps_f > 1 else eps_f)
+            if not (0.5 < solid < 1.0): solid = 0.85
+        except (TypeError, ValueError):
+            solid = 0.85
+        return rho_comp * wt_am * C_am * solid
+
+    # ── Operating polarization ─────────────────────────────────────────
+    if key == '__polarization_mV_at_C3':
+        # i = 0.33 mA/cm² (C/3 rate for 1 mAh/cm² electrode loading)
+        # η (V) = i (A/cm²) × ASR (Ω·cm²) — convert to mV
+        asr_i = _derived_value('__asr_ionic_Ohm_cm2', metrics)
+        asr_e = _derived_value('__asr_electronic_Ohm_cm2', metrics)
+        if asr_i is None and asr_e is None:
+            return None
+        asr_total = (asr_i or 0) + (asr_e or 0)
+        if asr_total <= 0:
+            return None
+        return 0.33e-3 * asr_total * 1000   # mV
+
+    # ── Safety ─────────────────────────────────────────────────────────
+    if key == '__am_am_short_risk_cn':
+        # Pass-through: directly use am_am_cn (band-around-optimum already
+        # handles this in _band_score, just expose the value).
+        v = metrics.get('am_am_cn')
+        try:
+            return float(v) if v is not None else None
+        except (TypeError, ValueError):
+            return None
+
+    if key == '__stress_hotspot_pct':
+        # Approximation: with CV(σ_VM) = c (as %), the fraction of particles
+        # in the >p99 tail scales like ~5% per 100% CV (heuristic, conservative).
+        # For Gaussian, p99 tail is 1%, but stress dist is heavy-tailed so we
+        # use a heavier-tail proxy: hotspot_pct ≈ CV × 5 / 100 (capped 0-100).
+        cv_pct = _derived_value('__sigma_vm_cv_pct', metrics)
+        if cv_pct is None:
+            return None
+        return min(100, cv_pct * 5 / 100)
+
+    # ── Cycling life ────────────────────────────────────────────────────
+    if key == '__cycle_stable_AM_pct':
+        sev_pct = _derived_value('__frac_severe_force_pct', metrics)
+        ion_act = metrics.get('ionic_active_pct')
+        el_act_f = metrics.get('electronic_active_fraction')
+        try:
+            sev = float(sev_pct) / 100 if sev_pct is not None else 0
+            ion = float(ion_act) / 100 if ion_act is not None else None
+            el  = float(el_act_f) if el_act_f is not None else None
+        except (TypeError, ValueError):
+            return None
+        if ion is None or el is None:
+            return None
+        return (1 - sev) * ion * el * 100
+
+    if key == '__sigma_e_fracture_loss_pct':
+        # baseline = no Stage E (i.e. physics-only), Stage E = fracture-augmented
+        new = metrics.get('electronic_sigma_full_mScm_stage_e_physics')
+        old = metrics.get('electronic_sigma_full_mScm_physics')
+        try:
+            if new is None or old is None:
+                return None
+            new = float(new); old = float(old)
+            if old <= 0:
+                return None
+            return max(0, 100 * (old - new) / old)
+        except (TypeError, ValueError):
+            return None
 
     if key == '__Q_areal_mAhcm2':
         # Areal capacity = T(μm) × ρ_composite × C_AM × wt_AM × (1 − ε) × 1e-4
