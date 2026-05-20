@@ -263,26 +263,31 @@ def analyze_case(case_dir: Path, debug: bool = False) -> dict | None:
         return None
     comp = load_composition(case_dir, meta)
     bn = diag.get('bottleneck_edges') or []
-    bn_areas = [b['area_um2'] for b in bn]
-    bn_norms = [b.get('area_norm', 0) for b in bn]
+    bn_sn = diag.get('bn_stats_norm') or {}
+    bn_sa = diag.get('bn_stats_area') or {}
     return {
         'case_id': case_id,
         **comp,                            # campaign is in comp now
         'scale_factor': scale,
         'n_percolating': diag.get('n_percolating', 0),
-        'n_cut':        len(diag.get('articulation_points') or []),
-        'n_bn':              len(bn),
+        'n_perc_edges':  diag.get('n_perc_edges', 0),
+        'n_cut':         len(diag.get('articulation_points') or []),
+        'n_bn_capped':   len(bn),          # what viewer renders (capped at bn_max)
         # uncapped count of edges below A/r² threshold (true # of narrow contacts)
         'n_bn_below_threshold': diag.get('n_bn_below_threshold', 0),
-        # raw areas (μm²) — bn_area_min may vary across cases due to r_SE
-        'bn_area_min':  round(min(bn_areas), 5) if bn_areas else None,
-        'bn_area_p10':  round(float(np.percentile(bn_areas, 10)), 5) if bn_areas else None,
-        'bn_area_p50':  round(float(np.percentile(bn_areas, 50)), 5) if bn_areas else None,
-        # normalized A/r² — scale-invariant, cross-case comparable
-        'bn_norm_min':  round(min(bn_norms), 5) if bn_norms else None,
-        'bn_norm_p10':  round(float(np.percentile(bn_norms, 10)), 5) if bn_norms else None,
-        'bn_norm_p50':  round(float(np.percentile(bn_norms, 50)), 5) if bn_norms else None,
-        # reference: median A/r² across full percolating subgraph + threshold used
+        # Full-distribution stats over ALL percolating edges (NOT capped) —
+        # these are the scientific numbers for cross-case comparison
+        'bn_area_min':   bn_sa.get('min_um2'),
+        'bn_area_p10':   bn_sa.get('p10_um2'),
+        'bn_area_p50':   bn_sa.get('p50_um2'),
+        'bn_norm_min':   bn_sn.get('min'),
+        'bn_norm_p1':    bn_sn.get('p1'),
+        'bn_norm_p5':    bn_sn.get('p5'),
+        'bn_norm_p10':   bn_sn.get('p10'),
+        'bn_norm_p25':   bn_sn.get('p25'),
+        'bn_norm_p50':   bn_sn.get('p50'),
+        'bn_norm_p75':   bn_sn.get('p75'),
+        'bn_norm_max':   bn_sn.get('max'),
         'bn_median_norm':    diag.get('bn_median_norm', 0),
         'bn_threshold_norm': diag.get('bn_threshold_norm', 0),
         'n_dead_end_clusters': len(diag.get('dead_end_clusters') or []),

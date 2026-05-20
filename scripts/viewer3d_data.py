@@ -661,17 +661,43 @@ def compute_se_network_diagnostics(contacts,
     bottleneck_edges = []
     bn_median_norm = 0.0
     bn_threshold_norm = 0.0
-    n_bn_below_threshold = 0   # uncapped count of edges below threshold
+    n_bn_below_threshold = 0      # true count of edges below threshold (uncapped)
+    n_perc_edges = 0              # total edges in percolating subgraph
+    # Full-distribution percentiles over ALL percolating edges (no cap)
+    bn_stats_norm = {'min': 0.0, 'p1': 0.0, 'p5': 0.0, 'p10': 0.0,
+                     'p25': 0.0, 'p50': 0.0, 'p75': 0.0, 'max': 0.0}
+    bn_stats_area = {'min_um2': 0.0, 'p10_um2': 0.0, 'p50_um2': 0.0}
+
     if edges:
         edges.sort(key=lambda e: e[3])   # by normalized metric
         norms = [e[3] for e in edges]
+        areas_um2 = [e[2] * area_conv for e in edges]
+        n_perc_edges = len(norms)
+
         bn_median_norm = float(_stat.median(norms))
         bn_threshold_norm = bn_median_norm * bn_threshold_factor
-
-        # True count (no cap) of below-threshold edges
         n_bn_below_threshold = sum(1 for n in norms if n < bn_threshold_norm)
 
-        # Capped display list — keeps payload bounded for viewer rendering
+        # Percentiles on the FULL distribution (uncapped) — these are the
+        # scientific stats used in CSV/figures.  Display list cap below
+        # does not affect these.
+        def _pct(arr, p):
+            i = max(0, min(len(arr) - 1, int(round(p / 100.0 * (len(arr) - 1)))))
+            return float(arr[i])
+        bn_stats_norm = {
+            'min': _pct(norms,  0), 'p1':  _pct(norms,  1),
+            'p5':  _pct(norms,  5), 'p10': _pct(norms, 10),
+            'p25': _pct(norms, 25), 'p50': _pct(norms, 50),
+            'p75': _pct(norms, 75), 'max': _pct(norms, 100),
+        }
+        bn_stats_area = {
+            'min_um2': _pct(areas_um2,  0),
+            'p10_um2': _pct(areas_um2, 10),
+            'p50_um2': _pct(areas_um2, 50),
+        }
+
+        # Display list — capped at bn_max for viewer payload only.
+        # Does NOT affect statistics above.
         for u, v, area, norm, r_min in edges:
             is_below_threshold = (norm < bn_threshold_norm)
             if (not is_below_threshold) and len(bottleneck_edges) >= bn_min:
@@ -692,6 +718,10 @@ def compute_se_network_diagnostics(contacts,
         'bn_median_norm':      round(bn_median_norm, 5),
         'bn_threshold_norm':   round(bn_threshold_norm, 5),
         'n_bn_below_threshold': n_bn_below_threshold,
+        'n_perc_edges':        n_perc_edges,
+        # full-distribution stats (uncapped) — for CSV/figures
+        'bn_stats_norm':       {k: round(v, 6) for k, v in bn_stats_norm.items()},
+        'bn_stats_area':       {k: round(v, 6) for k, v in bn_stats_area.items()},
         'bottleneck_edges':    bottleneck_edges,
         'dead_end_clusters':   dead_end_clusters,
         'n_percolating':       len(percolating_se),
