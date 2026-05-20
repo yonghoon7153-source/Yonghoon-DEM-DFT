@@ -853,6 +853,21 @@ function applyViewMode(state, mode) {
     });
     state.combinedOverlay = null;
   }
+  /* Phase B — restore any per-instance scale modifications from se_diagnostics */
+  if (state.seInstanceScaleModified) {
+    const dummy = new THREE.Object3D();
+    ['SE', 'AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        dummy.position.set(p.x, p.z, p.y);
+        dummy.scale.setScalar(p.r);
+        dummy.updateMatrix();
+        m.setMatrixAt(i, dummy.matrix);
+      });
+      m.instanceMatrix.needsUpdate = true;
+    });
+    state.seInstanceScaleModified = false;
+  }
   /* Phase B — fracture overlays */
   if (state.stressChainGroup && state.scene) {
     state.scene.remove(state.stressChainGroup);
@@ -2087,20 +2102,35 @@ function renderSeDiagnostics(state) {
     d.ids.forEach(pid => { deadEndType[pid] = d.type; });
   });
   if (seMesh) {
+    /* Per-instance scale: highlighted → full size, dim → 35% size so
+     * they recede visually.  Three.js InstancedMesh has no per-instance
+     * opacity, so we use matrix scale to fake transparency.  The
+     * tear-down block (top of applyViewMode) restores original size
+     * when switching modes. */
+    const dummy = new THREE.Object3D();
     seMesh.userData.particles.forEach((p, i) => {
       let col = colDim;
+      let highlighted = false;
       if (artPts.has(p.id) && filter['articulation']) {
-        col = colArt;
+        col = colArt; highlighted = true;
       } else if (perc.has(p.id) && filter['percolating']) {
-        col = colPerc;
+        col = colPerc; highlighted = true;
       } else if (deadEndType[p.id] === 'top_only' && filter['dead_top']) {
-        col = colDeadTop;
+        col = colDeadTop; highlighted = true;
       } else if (deadEndType[p.id] === 'bottom_only' && filter['dead_bot']) {
-        col = colDeadBot;
+        col = colDeadBot; highlighted = true;
       }
       seMesh.setColorAt(i, col);
+      /* shrink un-highlighted SE so highlighted ones pop */
+      const scale = highlighted ? p.r : p.r * 0.35;
+      dummy.position.set(p.x, p.z, p.y);
+      dummy.scale.setScalar(scale);
+      dummy.updateMatrix();
+      seMesh.setMatrixAt(i, dummy.matrix);
     });
-    seMesh.material.opacity = 0.85; seMesh.material.transparent = true;
+    seMesh.instanceMatrix.needsUpdate = true;
+    seMesh.material.opacity = 0.92; seMesh.material.transparent = true;
+    state.seInstanceScaleModified = true;
   }
 
   /* Bottleneck tubes (only if filter on) */
