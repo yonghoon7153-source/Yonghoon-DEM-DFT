@@ -661,12 +661,17 @@ def compute_se_network_diagnostics(contacts,
     bottleneck_edges = []
     bn_median_norm = 0.0
     bn_threshold_norm = 0.0
+    n_bn_below_threshold = 0   # uncapped count of edges below threshold
     if edges:
         edges.sort(key=lambda e: e[3])   # by normalized metric
         norms = [e[3] for e in edges]
         bn_median_norm = float(_stat.median(norms))
         bn_threshold_norm = bn_median_norm * bn_threshold_factor
 
+        # True count (no cap) of below-threshold edges
+        n_bn_below_threshold = sum(1 for n in norms if n < bn_threshold_norm)
+
+        # Capped display list — keeps payload bounded for viewer rendering
         for u, v, area, norm, r_min in edges:
             is_below_threshold = (norm < bn_threshold_norm)
             if (not is_below_threshold) and len(bottleneck_edges) >= bn_min:
@@ -686,6 +691,7 @@ def compute_se_network_diagnostics(contacts,
         'articulation_points': art_pts,
         'bn_median_norm':      round(bn_median_norm, 5),
         'bn_threshold_norm':   round(bn_threshold_norm, 5),
+        'n_bn_below_threshold': n_bn_below_threshold,
         'bottleneck_edges':    bottleneck_edges,
         'dead_end_clusters':   dead_end_clusters,
         'n_percolating':       len(percolating_se),

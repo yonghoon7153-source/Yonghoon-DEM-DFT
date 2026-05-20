@@ -4088,6 +4088,7 @@ def serve_3d_data(case_id):
         'se_bottleneck_edges': [], 'se_dead_end_clusters': [],
         'se_n_percolating': 0,
         'se_bn_median_norm': 0, 'se_bn_threshold_norm': 0,
+        'se_n_bn_below_threshold': 0,
     }
     try:
         import sys as _sys
@@ -4124,7 +4125,7 @@ def serve_3d_data(case_id):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 9:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 10:
                         # Restore every cached key except metadata.  Some
                         # int-keyed dicts (stress_max, dr_max, se_engagement,
                         # particle_max_fpc, particle_n_brittle) need their
@@ -4211,6 +4212,7 @@ def serve_3d_data(case_id):
                         aux['se_n_percolating']         = _se_diag.get('n_percolating', 0)
                         aux['se_bn_median_norm']        = _se_diag.get('bn_median_norm', 0)
                         aux['se_bn_threshold_norm']     = _se_diag.get('bn_threshold_norm', 0)
+                        aux['se_n_bn_below_threshold']  = _se_diag.get('n_bn_below_threshold', 0)
                         print(f'  [3d-data aux] SE diag: '
                               f'{aux["se_n_percolating"]} percolating, '
                               f'{len(aux["se_articulation_points"])} cut-pts, '
@@ -4222,7 +4224,7 @@ def serve_3d_data(case_id):
                     # Write cache so subsequent page loads are instant.
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 9
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 10
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux] cache WROTE → '
@@ -5547,6 +5549,7 @@ def serve_archive_3d_data(folder):
         'se_bottleneck_edges': [], 'se_dead_end_clusters': [],
         'se_n_percolating': 0,
         'se_bn_median_norm': 0, 'se_bn_threshold_norm': 0,
+        'se_n_bn_below_threshold': 0,
     }
     try:
         import sys as _sys
@@ -5574,7 +5577,7 @@ def serve_archive_3d_data(folder):
                 try:
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
-                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 9:
+                    if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 10:
                         for k in ('stress_max', 'dr_max', 'brittle_pairs',
                                    'se_stress_pairs', 'am_se_stress_pairs',
                                    'se_states', 'tabor_stats', 'all_se_ids_count',
@@ -5643,11 +5646,12 @@ def serve_archive_3d_data(folder):
                         aux['se_n_percolating']         = _se_diag.get('n_percolating', 0)
                         aux['se_bn_median_norm']        = _se_diag.get('bn_median_norm', 0)
                         aux['se_bn_threshold_norm']     = _se_diag.get('bn_threshold_norm', 0)
+                        aux['se_n_bn_below_threshold']  = _se_diag.get('n_bn_below_threshold', 0)
                     except Exception as _ediag:
                         print(f'  [3d-data aux/archive] SE diag failed: {_ediag}')
                     try:
                         cache_blob = dict(aux)
-                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 9
+                        cache_blob['_contacts_mtime'] = contacts_mtime; cache_blob['_schema'] = 10
                         with open(cache_path, 'w') as _cf:
                             json.dump(cache_blob, _cf, default=str)
                         print(f'  [3d-data aux/archive] cache WROTE')

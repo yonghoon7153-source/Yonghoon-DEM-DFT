@@ -178,7 +178,7 @@ def estimate_plate_z(atoms: dict) -> float:
 
 
 def load_composition(case_dir: Path, meta: dict):
-    """Extract AM_wt fraction, P:S ratio, λ_eff, φ_SE.
+    """Extract AM_wt fraction, P:S ratio, λ_eff, φ_SE, campaign.
 
     Falls back to all_dem_porosity.csv lookup if meta is incomplete."""
     am_wt = meta.get('am_wt')
@@ -188,8 +188,9 @@ def load_composition(case_dir: Path, meta: dict):
     r_AM_P = meta.get('r_AM_P_um') or 0
     r_AM_S = meta.get('r_AM_S_um') or 0
     r_SE   = meta.get('r_SE_um') or 0
+    campaign = meta.get('campaign') or '?'
 
-    # Lookup in all_dem_porosity.csv (canonical source)
+    # Lookup in all_dem_porosity.csv (canonical source — also has campaign)
     porosity_csv = ROOT / 'all_dem_porosity.csv'
     if porosity_csv.exists():
         case_id = case_dir.name
@@ -202,6 +203,7 @@ def load_composition(case_dir: Path, meta: dict):
                 r_AM_P = float(r.get('r_AM_P_um', 0) or 0)
                 r_AM_S = float(r.get('r_AM_S_um', 0) or 0)
                 r_SE   = float(r.get('r_SE_um', 0) or 0)
+                campaign = (r.get('campaign') or '').strip() or campaign
                 break
 
     # Effective r_AM (volume-weighted)
@@ -218,6 +220,7 @@ def load_composition(case_dir: Path, meta: dict):
     V_SE = (se_wt or (100 - (am_wt or 0))) / 2.0
     phi_SE = V_SE / (V_AM + V_SE) if (V_AM + V_SE) > 0 else 0
     return {
+        'campaign': campaign,
         'am_wt':   am_wt or 0,
         'se_wt':   se_wt or (100 - (am_wt or 0)),
         'p_vol':   p_vol,
@@ -264,12 +267,13 @@ def analyze_case(case_dir: Path, debug: bool = False) -> dict | None:
     bn_norms = [b.get('area_norm', 0) for b in bn]
     return {
         'case_id': case_id,
-        'campaign': meta.get('campaign', '?'),
-        **comp,
+        **comp,                            # campaign is in comp now
         'scale_factor': scale,
         'n_percolating': diag.get('n_percolating', 0),
         'n_cut':        len(diag.get('articulation_points') or []),
-        'n_bn':         len(bn),
+        'n_bn':              len(bn),
+        # uncapped count of edges below A/r² threshold (true # of narrow contacts)
+        'n_bn_below_threshold': diag.get('n_bn_below_threshold', 0),
         # raw areas (μm²) — bn_area_min may vary across cases due to r_SE
         'bn_area_min':  round(min(bn_areas), 5) if bn_areas else None,
         'bn_area_p10':  round(float(np.percentile(bn_areas, 10)), 5) if bn_areas else None,
@@ -323,6 +327,11 @@ def make_figure(rows: list[dict], out_path: Path):
     bnnorm_min = np.array([r['bn_norm_min'] or np.nan for r in R])
     bnnorm_p50 = np.array([r['bn_norm_p50'] or np.nan for r in R])
     bn_med     = np.array([r['bn_median_norm'] or np.nan for r in R])
+    # Uncapped count of below-threshold edges + normalized by percolating count
+    n_bn_below = np.array([r.get('n_bn_below_threshold', 0) or 0 for r in R],
+                          dtype=float)
+    n_perc     = np.array([r['n_percolating'] for r in R], dtype=float)
+    bn_frac    = np.where(n_perc > 0, n_bn_below / n_perc, 0)
     camp  = [r['campaign'] for r in R]
 
     camp_colors = {'particulate': '#d62728', '박막(1mAh)': '#1f77b4',
@@ -360,20 +369,15 @@ def make_figure(rows: list[dict], out_path: Path):
             title=r'(a)  Cut-node count vs $\phi_{\mathrm{SE}}$')
     ax.legend(loc='best', fontsize=7.5)
 
-    # (b) bn min normalized A/r² vs φ_SE — scale-invariant
+    # (b) Number of below-threshold contacts vs φ_SE
+    # Switched from bn_min (saturates at machine zero) to a true count
+    # of edges with A/r² < 10% of corpus median — much more discriminating.
     ax = fig.add_subplot(gs[0, 1])
-    scatter(ax, phi, bnnorm_min, ylog=True,
+    scatter(ax, phi, n_bn_below, ylog=True,
             xlabel=r'SE volume fraction  $\phi_{\mathrm{SE}}$',
-            ylabel=r'Narrowest  $A/r_{\min}^2$  (dimensionless)',
-            title=r'(b)  Bottleneck min  $A/r^2$  vs $\phi_{\mathrm{SE}}$')
-    # Reference line: median across all cases
-    median_ref = float(np.nanmedian(bn_med)) if not np.all(np.isnan(bn_med)) else None
-    if median_ref:
-        ax.axhline(median_ref, color='gray', ls='--', lw=0.8,
-                    label=f'corpus median A/r² ≈ {median_ref:.3f}')
-        ax.axhline(median_ref * 0.10, color='red', ls=':', lw=0.8,
-                    label='threshold (10% of median)')
-        ax.legend(loc='best', fontsize=7)
+            ylabel=r'$n_{\mathrm{bn}}^{<\!\mathrm{thr}}$  '
+                    r'(edges with $A/r^2 < $median×10%)',
+            title=r'(b)  Below-threshold bottleneck count vs $\phi_{\mathrm{SE}}$')
 
     # (c) cut fraction vs λ_eff (skip log if no positive λ)
     ax = fig.add_subplot(gs[1, 0])
@@ -393,8 +397,9 @@ def make_figure(rows: list[dict], out_path: Path):
             title=r'(d)  Bottleneck median  $A/r^2$  vs AM weight fraction')
 
     fig.suptitle(
-        'SE percolation-risk descriptors across 82-case DEM corpus  —  '
-        'cut nodes (topology) + bottleneck areas (transport)',
+        f'SE percolation-risk descriptors across DEM corpus  —  '
+        f'{len(R)} percolating cases  '
+        f'(cut nodes = topology, bottleneck = transport)',
         fontsize=12, fontweight='bold', y=0.985)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path)
