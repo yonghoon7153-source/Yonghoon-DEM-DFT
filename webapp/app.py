@@ -4113,21 +4113,26 @@ def serve_3d_data(case_id):
                     with open(cache_path) as _cf:
                         cached = json.load(_cf)
                     if cached.get('_contacts_mtime') == contacts_mtime and cached.get('_schema') == 4:
-                        for k in ('stress_max', 'dr_max', 'brittle_pairs',
-                                   'se_stress_pairs', 'am_se_stress_pairs',
-                                   'se_states', 'tabor_stats', 'all_se_ids_count',
-                                   'se_engagement'):
-                            if k in cached:
-                                # JSON dicts come back with str keys —
-                                # convert int-keyed dicts back to ints
-                                # so the frontend's `engagement[p.id]`
-                                # numeric-key lookup works.
-                                if k in ('stress_max', 'dr_max',
-                                         'se_engagement'):
-                                    aux[k] = {int(kk): v for kk, v
-                                               in cached[k].items()}
-                                else:
-                                    aux[k] = cached[k]
+                        # Restore every cached key except metadata.  Some
+                        # int-keyed dicts (stress_max, dr_max, se_engagement,
+                        # particle_max_fpc, particle_n_brittle) need their
+                        # JSON-string keys coerced back to int so the
+                        # frontend's numeric-key lookups (`engagement[p.id]`)
+                        # work.
+                        _INT_KEYED = {
+                            'stress_max', 'dr_max', 'se_engagement',
+                            'particle_max_fpc', 'particle_n_brittle',
+                            'particle_worst_stage',
+                            'particle_worst_partner_brittle',
+                            'particle_worst_pair_type',
+                        }
+                        for k, v in cached.items():
+                            if k.startswith('_'):
+                                continue
+                            if k in _INT_KEYED and isinstance(v, dict):
+                                aux[k] = {int(kk): vv for kk, vv in v.items()}
+                            else:
+                                aux[k] = v
                         cache_valid = True
                         print(f'  [3d-data aux] cache HIT')
                 except (OSError, ValueError, KeyError) as _ce:
