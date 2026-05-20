@@ -133,14 +133,14 @@ AXES: list[dict[str, Any]] = [
 
     # ── 3. SE 네트워크 통계 (Statistics) ──
     {'category': 'SE 네트워크 통계',
-     'key': 'cn_mean_SE', 'label': '⟨z_SE-SE⟩ (coordination)',
+     'key': 'se_se_cn', 'label': '⟨z_SE-SE⟩ (coordination)',
      'direction': 'higher', 'thresholds': [5.5, 5.0, 4.5, 4.0, 3.5, 3.0],
      'formula': 'mean coordination number of SE particles to other SE',
      'meaning': '4–6 = packed, <3 = sparse (Mukhopadhyay 2014). RCP ≈ 6.',
      'weight': 0.6},
 
     {'category': 'SE 네트워크 통계',
-     'key': 'cn_std_SE', 'label': 'σ(z_SE-SE) (균질도)',
+     'key': 'se_se_cn_std', 'label': 'σ(z_SE-SE) (균질도)',
      'direction': 'lower', 'thresholds': [1.5, 1.7, 2.0, 2.3, 2.7, 3.2],
      'formula': 'std dev of SE coordination — packing inhomogeneity',
      'meaning': '낮으면 균일 packing, 높으면 일부 SE 고립/일부 over-coordinated.',
@@ -148,65 +148,65 @@ AXES: list[dict[str, Any]] = [
 
     # ── 4. 경로 효율 (Path efficiency) ──
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'tau_laplace_eff_physics', 'label': 'τ_Laplace,eff ⭐',
+     'key': 'tortuosity_lap_eff', 'label': 'τ_Laplace,eff ⭐',
      'direction': 'lower', 'thresholds': [1.8, 2.2, 2.8, 3.5, 4.5, 6.0],
-     'fallback_key': 'tau_laplace_eff',
-     'formula': 'τ_Laplace,eff = (full Laplacian inv-network) tortuosity',
-     'meaning': 'COMSOL/EIS 입력 직결 (Tippens 2019, Famprikis 2019). '
-                '<2.5는 우수, >5는 endpoint dominated.',
+     'fallback_key': 'tortuosity_recommended',
+     'formula': 'Laplacian inv-network tortuosity (COMSOL/EIS input)',
+     'meaning': 'Tippens 2019, Famprikis 2019. <2.5 우수, >5 endpoint dominated.',
      'weight': 1.0},
 
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'tau_laplace_bulk', 'label': 'τ_Laplace,bulk (구조)',
+     'key': 'tortuosity_lap_bulk', 'label': 'τ_Laplace,bulk (구조)',
      'direction': 'lower', 'thresholds': [1.2, 1.4, 1.7, 2.0, 2.5, 3.0],
-     'formula': 'τ_Laplace,bulk — Laplacian without constriction (geometric only)',
-     'meaning': '순수 geometric tortuosity. Bruggeman 가정시 φ^−0.5 ≈ 1.85.',
+     'fallback_key': 'tortuosity_mean',
+     'formula': 'Laplacian without constriction (pure geometric)',
+     'meaning': 'Bruggeman 가정시 φ^−0.5 ≈ 1.85.',
      'weight': 0.5},
 
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'constriction_overhead_physics',
+     'key': '__constriction_overhead',
      'label': 'Constriction overhead τ_eff/τ_geo',
      'direction': 'lower', 'thresholds': [1.5, 1.8, 2.2, 2.8, 3.5, 5.0],
-     'fallback_key': 'constriction_overhead',
-     'formula': 'τ_Laplace,eff / τ_Laplace,bulk',
-     'meaning': '좁은 contact으로 인한 추가 저항 비율. 1배=geometric만, 큰값=constriction 지배.',
+     'formula': 'τ_Laplace,eff / τ_Laplace,bulk (또는 τ_Dij)',
+     'meaning': '좁은 contact으로 인한 추가 저항 비율. 1배=geometric만.',
      'weight': 0.7},
 
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'A_hop_mean_physics', 'label': '⟨A_hop⟩ (μm², 평균)',
+     'key': 'path_hop_area_mean_physics', 'label': '⟨A_hop⟩ (μm², 평균)',
      'direction': 'higher', 'thresholds': [0.5, 0.3, 0.2, 0.1, 0.05, 0.02],
-     'fallback_key': 'A_hop_mean',
+     'fallback_key': 'path_hop_area_mean',
      'formula': 'mean per-hop contact area along percolating paths',
      'meaning': '경로상 평균 contact 면적. Tabor (physics)에서 일반적으로 3-5배 더 큼.',
      'weight': 0.5},
 
     # ── 5. 계면 (Interface coverage) ──
     {'category': '계면 (Interface)',
-     'key': 'coverage_AM_P_pct_physics', 'label': 'Coverage AM_P (%)',
+     'key': 'coverage_AM_P_mean_physics', 'label': 'Coverage AM_P (%)',
      'direction': 'higher', 'thresholds': [70, 60, 50, 40, 30, 20],
-     'fallback_key': 'coverage_AM_P_pct',
+     'fallback_key': 'coverage_AM_P_mean',
      'formula': 'Tabor-corrected SE-covered surface fraction of AM_P particles',
      'meaning': 'AM_P (대입자) 표면 중 SE가 닿은 비율. Mücke 2025 기준 ≥60% 권장.',
      'weight': 0.8},
 
     {'category': '계면 (Interface)',
-     'key': 'coverage_AM_S_pct_physics', 'label': 'Coverage AM_S (%)',
+     'key': 'coverage_AM_S_mean_physics', 'label': 'Coverage AM_S (%)',
      'direction': 'higher', 'thresholds': [70, 60, 50, 40, 30, 20],
-     'fallback_key': 'coverage_AM_S_pct',
+     'fallback_key': 'coverage_AM_S_mean',
      'formula': 'Tabor-corrected SE-covered surface fraction of AM_S particles',
      'meaning': 'AM_S (소입자) 표면 coverage. bimodal 케이스에서 AM_P보다 더 균일해야 좋음.',
      'weight': 0.8},
 
     {'category': '계면 (Interface)',
-     'key': 'coverage_AM_pct_shape_corrected',
+     'key': 'coverage_AM_mean_physics_rough',
      'label': 'Coverage AM, shape-corr ⭐ (B3)',
      'direction': 'higher', 'thresholds': [65, 55, 45, 35, 25, 15],
+     'fallback_key': 'coverage_AM_mean_physics',
      'formula': 'Tier-1 B3 shape-corrected total AM SE-coverage (%)',
      'meaning': 'Tier-1 보정 — 입자 ellipsoid 형상까지 반영한 가장 신뢰도 높은 coverage.',
      'weight': 0.7},
 
     {'category': '계면 (Interface)',
-     'key': 'cn_mean_AM_SE', 'label': '⟨z_AM-SE⟩ (배위수)',
+     'key': 'am_se_cn_mean', 'label': '⟨z_AM-SE⟩ (배위수)',
      'direction': 'higher', 'thresholds': [80, 60, 40, 25, 15, 8],
      'formula': 'mean # SE in contact per AM particle',
      'meaning': '활성 표면 redundancy. AM 입자마다 닿는 SE 개수 평균.',
@@ -221,24 +221,24 @@ AXES: list[dict[str, Any]] = [
      'weight': 1.2},
 
     {'category': '전기화학 활성도',
-     'key': 'ionic_vulnerable_pct', 'label': 'Vulnerable AM (%)',
+     'key': '__vulnerable_pct', 'label': 'Vulnerable AM (%)',
      'direction': 'lower', 'thresholds': [1, 3, 7, 12, 20, 30],
-     'formula': '% of AM with SE-coverage below 10% threshold',
+     'formula': '100 − ionic_active_pct (low-coverage / dead-zone fallback)',
      'meaning': '연결은 됐지만 SE coverage가 낮아 cycling시 끊길 risk 높은 AM.',
      'weight': 0.6},
 
     # ── 7. 전자 전도 (Electronic) ──
     {'category': '전자 전도',
-     'key': 'am_percolation_pct', 'label': 'AM percolation top↔bot (%)',
+     'key': '__am_percolation_pct', 'label': 'AM percolation top↔bot (%)',
      'direction': 'higher', 'thresholds': [90, 80, 70, 55, 40, 25],
      'formula': '% of AM in the connected component spanning bottom→top',
      'meaning': 'AM-AM contact 망의 top↔bot 연결성. <70%면 도전재 필수.',
      'weight': 0.9},
 
     {'category': '전자 전도',
-     'key': 'f_AM_cc_pct', 'label': 'CC-connected AM (%)',
+     'key': '__electronic_active_pct', 'label': 'CC-connected AM (%)',
      'direction': 'higher', 'thresholds': [90, 80, 70, 55, 40, 25],
-     'formula': '% of AM connected to current collector via AM-AM chain',
+     'formula': 'electronic_active_fraction × 100',
      'meaning': '하단 current collector까지 전자가 도달 가능한 AM 비율.',
      'weight': 0.9},
 
@@ -248,7 +248,8 @@ AXES: list[dict[str, Any]] = [
      'direction': 'higher', 'thresholds': [5, 2, 1, 0.5, 0.2, 0.05],
      'fallback_key': 'electronic_sigma_full_mScm_physics',
      'formula': 'Stage E final electronic conductivity (Trevisanello AM-crystallinity × size)',
-     'meaning': 'sulfide cathode 무도전재 σ_e 0.5–5 mS/cm 권장 (Janek review).',
+     'meaning': 'sulfide cathode 무도전재 σ_e 0.5–5 mS/cm 권장 (Janek review). '
+                'What-if 도전재 토글로 1차 추정 변경 가능.',
      'weight': 1.0},
 
     # ── 8. 기계적 안정성 (Mechanical) ──
@@ -276,9 +277,9 @@ AXES: list[dict[str, Any]] = [
      'weight': 0.7},
 
     {'category': '기계적 안정성',
-     'key': 'sigma_vm_cv_pct', 'label': 'CV(σ_VM) (%)',
+     'key': '__sigma_vm_cv_pct', 'label': 'CV(σ_VM) (%)',
      'direction': 'lower', 'thresholds': [100, 130, 160, 200, 250, 320],
-     'formula': '100 × σ(σ_VM_per_particle) / ⟨σ_VM⟩',
+     'formula': '100 × stress_cv  (CV = σ(stress) / ⟨stress⟩)',
      'meaning': '응력 분포 불균일도. 높을수록 hotspot 다수 → 국부 fracture.',
      'weight': 0.4},
 
@@ -311,38 +312,32 @@ AXES: list[dict[str, Any]] = [
      'weight': 0.6},
 
     {'category': '전도도 절대값',
-     'key': 'constriction_resistance_fraction_pct_physics',
+     'key': '__constriction_R_fraction_pct',
      'label': 'Constriction R fraction (%)',
      'direction': 'lower', 'thresholds': [40, 55, 65, 75, 85, 92],
-     'fallback_key': 'constriction_resistance_fraction_pct',
-     'formula': 'R_constriction / R_total — fraction of total resistance from narrow contacts',
+     'formula': '100 × (1 − bulk_resistance_fraction)  — fraction from contact constriction',
      'meaning': '전체 저항 중 contact constriction 기여도. 높을수록 sintering 여지 ↑.',
      'weight': 0.5},
 
     # ── 10. 셀 ASR ──
     {'category': '셀 단위 ASR',
-     'key': 'asr_ionic_Ohm_cm2_stage_e_physics', 'label': 'ASR_ionic (Ω·cm²) ⭐',
+     'key': '__asr_ionic_Ohm_cm2', 'label': 'ASR_ionic (Ω·cm²) ⭐',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
-     'fallback_key': 'asr_ionic_Ohm_cm2_physics',
-     'formula': 'ASR = L_cathode / σ_ionic_stage_e — Ohm slab',
+     'formula': 'ASR = L_cathode(μm) × 0.1 / σ_ionic(mS/cm)',
      'meaning': '1mAh/cm² C/3에서 ≤100 Ω·cm² workable. >250면 high-rate 위험.',
      'weight': 1.4},
 
     {'category': '셀 단위 ASR',
-     'key': 'asr_electronic_Ohm_cm2_stage_e_physics',
-     'label': 'ASR_electronic (Ω·cm²)',
+     'key': '__asr_electronic_Ohm_cm2', 'label': 'ASR_electronic (Ω·cm²)',
      'direction': 'lower', 'thresholds': [2, 5, 10, 20, 40, 80],
-     'fallback_key': 'asr_electronic_Ohm_cm2_physics',
-     'formula': 'ASR_e = L_cathode / σ_e_stage_e',
+     'formula': 'ASR_e = L_cathode × 0.1 / σ_e_stage_e',
      'meaning': '전자전도 영역 저항. 도전재 무첨가 sulfide에서 ASR_ionic만큼 critical.',
      'weight': 0.8},
 
     {'category': '셀 단위 ASR',
-     'key': 'asr_thermal_Kcm2_W_stage_e_physics',
-     'label': 'ASR_thermal (K·cm²/W)',
+     'key': '__asr_thermal_Kcm2_W', 'label': 'ASR_thermal (K·cm²/W)',
      'direction': 'lower', 'thresholds': [1.5, 2.5, 4, 6, 9, 14],
-     'fallback_key': 'asr_thermal_Kcm2_W_physics',
-     'formula': 'ASR_th = L_cathode × κ⁻¹',
+     'formula': 'ASR_th = L_cathode × 0.1 / κ',
      'meaning': '냉각 효율. 큰값일수록 thermal runaway risk.',
      'weight': 0.3},
 
@@ -477,6 +472,58 @@ def _corpus_threshold_scores(rows: Iterable[dict], corpus_key: str,
 
 
 # ── Derived metrics (not directly in full_metrics.json) ──────────────────
+def _sigma_e_effective(metrics: dict) -> float | None:
+    """Pick the best σ_e value available, honouring a carbon override.
+
+    When metrics contains '_sigma_e_override_mScm' (injected by the What-if
+    panel), that value wins.  Otherwise fall back through the Stage-E /
+    physics / Hertzian chain.
+    """
+    override = metrics.get('_sigma_e_override_mScm')
+    if override is not None:
+        try:
+            return float(override)
+        except (TypeError, ValueError):
+            pass
+    for k in ('electronic_sigma_full_mScm_stage_e_physics',
+              'electronic_sigma_full_mScm_physics',
+              'electronic_sigma_full_mScm_stage_e',
+              'electronic_sigma_full_mScm'):
+        v = metrics.get(k)
+        if v is not None:
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                continue
+    return None
+
+
+def _sigma_ionic_effective(metrics: dict) -> float | None:
+    for k in ('sigma_full_mScm_stage_e_physics', 'sigma_full_mScm_physics',
+              'sigma_full_mScm_stage_e', 'sigma_full_mScm'):
+        v = metrics.get(k)
+        if v is not None:
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                continue
+    return None
+
+
+def _kappa_effective(metrics: dict) -> float | None:
+    for k in ('thermal_sigma_full_mScm_stage_e_physics',
+              'thermal_sigma_full_mScm_physics',
+              'thermal_sigma_full_mScm_stage_e',
+              'thermal_sigma_full_mScm'):
+        v = metrics.get(k)
+        if v is not None:
+            try:
+                return float(v)
+            except (TypeError, ValueError):
+                continue
+    return None
+
+
 def _derived_value(key: str, metrics: dict) -> float | None:
     """Compute axis values that aren't stored as a single metric key."""
     if key == '__cut_fraction':
@@ -502,10 +549,103 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         a = metrics.get('frac_fragmentation_force_pct') or 0
         b = metrics.get('frac_pulverization_force_pct') or 0
         if a == 0 and b == 0:
-            # Fallback to delta-based if force not available
             a = metrics.get('frac_fragmentation_pct') or 0
             b = metrics.get('frac_pulverization_pct') or 0
         return a + b
+
+    if key == '__sigma_vm_cv_pct':
+        cv = metrics.get('stress_cv')
+        if cv is None:
+            return None
+        try:
+            cv = float(cv)
+        except (TypeError, ValueError):
+            return None
+        # stress_cv stored as fraction (0-3.x) OR already as %; auto-detect
+        return cv * 100 if cv < 10 else cv
+
+    if key == '__electronic_active_pct':
+        f = metrics.get('electronic_active_fraction')
+        if f is None:
+            return None
+        try:
+            return float(f) * 100
+        except (TypeError, ValueError):
+            return None
+
+    if key == '__am_percolation_pct':
+        # Prefer the flat key, else convert from electronic_percolating_fraction
+        v = metrics.get('am_percolation_pct')
+        if v is not None:
+            try: return float(v)
+            except (TypeError, ValueError): pass
+        f = metrics.get('electronic_percolating_fraction')
+        if f is not None:
+            try: return float(f) * 100
+            except (TypeError, ValueError): return None
+        return None
+
+    if key == '__vulnerable_pct':
+        # If a dedicated metric exists use it; else fall back to (100 − active)
+        for k in ('ionic_vulnerable_pct', 'vulnerable_am_pct'):
+            v = metrics.get(k)
+            if v is not None:
+                try: return float(v)
+                except (TypeError, ValueError): pass
+        act = metrics.get('ionic_active_pct')
+        if act is not None:
+            try: return max(0.0, 100.0 - float(act))
+            except (TypeError, ValueError): return None
+        return None
+
+    if key == '__constriction_overhead':
+        # τ_eff / τ_geo  — use lap_eff when present, else fall back to tau_dij
+        for ne, nd in (('tortuosity_lap_eff',     'tortuosity_lap_bulk'),
+                        ('tortuosity_lap_eff',     'tortuosity_recommended'),
+                        ('tortuosity_recommended', 'tortuosity_mean')):
+            num = metrics.get(ne); den = metrics.get(nd)
+            try:
+                num = float(num) if num is not None else None
+                den = float(den) if den is not None else None
+            except (TypeError, ValueError):
+                continue
+            if num and den and den > 0:
+                return num / den
+        return None
+
+    if key == '__constriction_R_fraction_pct':
+        for k in ('bulk_resistance_fraction_physics',
+                  'bulk_resistance_fraction'):
+            v = metrics.get(k)
+            if v is not None:
+                try:
+                    bf = float(v)
+                    # bulk_resistance_fraction stored 0-1
+                    return (1.0 - bf) * 100 if bf <= 1.0 else max(0, 100 - bf)
+                except (TypeError, ValueError):
+                    continue
+        return None
+
+    if key == '__asr_ionic_Ohm_cm2':
+        L = metrics.get('thickness_um')
+        s = _sigma_ionic_effective(metrics)
+        if L and s and s > 0:
+            return float(L) * 0.1 / float(s)
+        return None
+
+    if key == '__asr_electronic_Ohm_cm2':
+        L = metrics.get('thickness_um')
+        s = _sigma_e_effective(metrics)
+        if L and s and s > 0:
+            return float(L) * 0.1 / float(s)
+        return None
+
+    if key == '__asr_thermal_Kcm2_W':
+        L = metrics.get('thickness_um')
+        k = _kappa_effective(metrics)
+        if L and k and k > 0:
+            return float(L) * 0.1 / float(k)
+        return None
 
     if key == '__validation_pass_pct':
         vf = metrics.get('validation_flags') or {}
@@ -518,6 +658,10 @@ def _derived_value(key: str, metrics: dict) -> float | None:
                 n_total += 1
                 if info['ok']:
                     n_pass += 1
+            elif isinstance(info, bool):
+                n_total += 1
+                if info:
+                    n_pass += 1
         if n_total == 0:
             return None
         return 100.0 * n_pass / n_total
@@ -525,11 +669,33 @@ def _derived_value(key: str, metrics: dict) -> float | None:
     return None
 
 
+_SIGMA_E_KEYS = {
+    'electronic_sigma_full_mScm_stage_e_physics',
+    'electronic_sigma_full_mScm_physics',
+    'electronic_sigma_full_mScm_stage_e',
+    'electronic_sigma_full_mScm',
+}
+
+
 def _resolve_value(axis: dict, metrics: dict) -> float | None:
-    """Look up axis value with optional fallback key."""
+    """Look up axis value with optional fallback key.
+
+    Honours a carbon override on any σ_e axis: when
+    metrics['_sigma_e_override_mScm'] is set, σ_e axes return that
+    value instead of the original Stage-E σ_e.  ASR_electronic is a
+    derived metric that already uses the override-aware
+    _sigma_e_effective() helper, so it follows automatically.
+    """
     key = axis.get('key')
     if key and key.startswith('__'):
         return _derived_value(key, metrics)
+    # σ_e override takes precedence on the electronic-σ axes
+    if key in _SIGMA_E_KEYS and metrics.get('_sigma_e_override_mScm') is not None:
+        try:
+            v = float(metrics['_sigma_e_override_mScm'])
+            return v if math.isfinite(v) else None
+        except (TypeError, ValueError):
+            pass
     val = metrics.get(key) if key else None
     if val is None:
         fb = axis.get('fallback_key')
@@ -596,19 +762,30 @@ def _grade_axis(axis: dict, metrics: dict,
 # ── Top-level entry point ───────────────────────────────────────────────
 def build_overall_grade(metrics: dict,
                          corpus_csv: str | None = None,
-                         se_aux: dict | None = None) -> dict:
+                         se_aux: dict | None = None,
+                         carbon_wt_pct: float | None = None) -> dict:
     """Compute multi-axis grades for one case.
 
     Args:
-        metrics:     full_metrics.json contents (dict).
-        corpus_csv:  optional path to docs/data/se_diagnostics_82.csv.
-                     When omitted, corpus-relative axes drop to '—'.
-        se_aux:      optional viewer aux dict (n_percolating,
-                     articulation_points etc.) — used by derived axes.
+        metrics:        full_metrics.json contents (dict).
+        corpus_csv:     optional path to docs/data/se_diagnostics_82.csv.
+                        When omitted, corpus-relative axes drop to '—'.
+        se_aux:         optional viewer aux dict (n_percolating,
+                        articulation_points etc.) — used by derived axes.
+        carbon_wt_pct:  when >0, apply the What-if carbon-additive model
+                        to override σ_e (and downstream ASR_e) before
+                        grading.  Other axes are unaffected.
     """
+    inject = {}
     if se_aux:
-        # Inject so _derived_value can reach it
-        metrics = {**metrics, '_aux_se_diag': se_aux}
+        inject['_aux_se_diag'] = se_aux
+    if carbon_wt_pct and carbon_wt_pct > 0:
+        wi = whatif_carbon_additive(metrics, wt_pct=carbon_wt_pct)
+        if wi.get('available') and wi.get('sigma_e_new') is not None:
+            inject['_sigma_e_override_mScm'] = wi['sigma_e_new']
+            inject['_carbon_wt_pct'] = carbon_wt_pct
+    if inject:
+        metrics = {**metrics, **inject}
 
     corpus_rows = _load_corpus(corpus_csv)
     axes_out = [_grade_axis(ax, metrics, corpus_rows) for ax in AXES]
