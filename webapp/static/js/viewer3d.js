@@ -1840,23 +1840,17 @@ function applyViewMode(state, mode) {
         return;
       }
       /* Tube radius from F/P_c — log scale for legibility.
-       * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color.
-       * Floors raised so tubes are visible even when embedded in particles. */
+       * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color. */
       const isIntact = s.mult < 1;
       if (isIntact) nIntact++; else { nSevere++; }
-      const r = isIntact
-        ? Math.max(0.35, Math.log10(s.mult + 1.1) * 0.7)
-        : Math.max(0.9,  Math.log10(s.mult + 1.0) * 1.8);
+      const r = Math.max(0.12, Math.log10(s.mult + 1.1) * 0.5);
       const tube = new THREE.TubeGeometry(
-        new THREE.LineCurve3(a, b), 1, r, 10, false);
+        new THREE.LineCurve3(a, b), 1, r, 6, false);
       const col = isIntact ? 0x4b5563 : pairCol[s.pair_type] || 0x9ca3af;
       const mat = new THREE.MeshBasicMaterial({
         color: col,
         transparent: true,
-        opacity: isIntact ? 0.20 : 0.90,
-        depthWrite: !isIntact,   /* brittle tubes drawn over particles
-                                    so stress-chain topology shows; intact
-                                    keep normal depth to recede */
+        opacity: isIntact ? 0.18 : 0.85,
       });
       group.add(new THREE.Mesh(tube, mat));
       nDrawn++;
