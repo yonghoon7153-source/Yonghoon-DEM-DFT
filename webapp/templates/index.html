@@ -68,6 +68,8 @@
     <div style="display:flex;gap:6px;align-items:center">
       <button class="btn btn-sm btn-secondary sort-btn" onclick="filterCases('all')" id="filter-all" style="background:rgba(108,140,255,.2);color:var(--accent)">전체</button>
       <button class="btn btn-sm btn-secondary sort-btn" onclick="filterCases('fav')" id="filter-fav">★ 즐겨찾기</button>
+      <button class="btn btn-sm btn-secondary sort-btn" onclick="filterCases('rank')" id="filter-rank"
+              title="완료(분석된) 케이스만 종합 등급 순으로 정렬. 각 행 옆에 순위 + 점수 + 등급 뱃지가 붙습니다.">🏆 랭킹</button>
       <span style="width:1px;height:20px;background:var(--border);margin:0 4px"></span>
       <button class="btn btn-sm btn-secondary sort-btn" onclick="sortCases('name')" id="sort-name">이름순</button>
       <button class="btn btn-sm btn-secondary sort-btn active" onclick="sortCases('date')" id="sort-date">최신순</button>
@@ -91,7 +93,13 @@
     </thead>
     <tbody>
       {% for case in cases %}
-      <tr data-fav="{{ 'true' if case.favorite else 'false' }}" data-case-id="{{ case.id }}">
+      <tr data-fav="{{ 'true' if case.favorite else 'false' }}"
+          data-case-id="{{ case.id }}"
+          data-status="{{ case.status }}"
+          data-has-results="{{ 'true' if case.has_results else 'false' }}"
+          data-overall-score="{{ case.overall_score if case.overall_score is not none else -1 }}"
+          data-overall-grade="{{ case.overall_grade or '—' }}"
+          data-overall-n-axes="{{ case.overall_n_axes or 0 }}">
         <td><span class="fav-star" onclick="toggleFav(event, '{{ case.id }}')" title="즐겨찾기" style="cursor:pointer;margin-right:4px;font-size:1.1em;color:{{ '#f59e0b' if case.favorite else 'var(--dim)' }}">{{ '★' if case.favorite else '☆' }}</span><strong class="case-name" ondblclick="editName(this, '{{ case.id }}')" title="더블클릭으로 이름 변경">{{ case.name }}</strong>{% if case.warning_count %} <span class="badge badge-warning" title="{{ case.warning_msgs | join('&#10;') }}">⚠ {{ case.warning_count }}</span>{% endif %}{% if case.network_solver_status in ('failed', 'error', 'timeout', 'no_input', 'no_output') %} <span class="badge badge-error" title="Network Solver: {{ case.network_solver_status }}{% if case.network_solver_error %} - {{ case.network_solver_error[:100] }}{% endif %}">NET ✗</span>{% elif case.network_solver_status == 'success' %} <span class="badge badge-success" title="Network Solver 완료">NET ✓</span>{% endif %}{% if case.physics_resistance_model in ('mikic', 'maxwell+film') %} <span class="badge" style="background:#0a4f2e;color:#8cffb2" title="Physics σ: {{ case.physics_resistance_model }} (업그레이드 공식){% if case.physics_solver_at %} · {{ case.physics_solver_at }}{% endif %}">PHYS ✓</span>{% elif case.physics_resistance_model == 'maxwell' %} <span class="badge" style="background:#5a3a00;color:#ffb36b" title="Physics σ: Maxwell only (legacy). 전체 재분석 (NET 강제) 로 업그레이드">PHYS legacy</span>{% elif case.physics_resistance_model == 'no_physics' %} <span class="badge" style="background:#333;color:#888" title="Physics solver 미실행. 재분석 (NET) 로 실행">PHYS ∅</span>{% endif %}</td>
         <td><span class="badge badge-{{ case.mode }}">{{ case.mode }}</span></td>
         <td>
@@ -198,23 +206,96 @@ async function toggleFav(e, caseId) {
   }
 }
 
-// Filter: all / favorites
+// Filter: all / favorites / ranking
 let currentFilter = 'all';
+
+const GRADE_COLOR = {
+  'A':  '#10b981', 'B+': '#84cc16', 'B':  '#eab308',
+  'B-': '#f97316', 'C+': '#ef4444', 'C':  '#dc2626',
+  'D':  '#7f1d1d', '—':  '#6b7280',
+};
+
+function clearRankBadges() {
+  document.querySelectorAll('.rank-badge').forEach(b => b.remove());
+  document.querySelectorAll('.rank-score-badge').forEach(b => b.remove());
+}
+
+function injectRankBadges(orderedRows) {
+  orderedRows.forEach((tr, i) => {
+    const score = parseFloat(tr.dataset.overallScore);
+    const grade = tr.dataset.overallGrade || '—';
+    const nAxes = tr.dataset.overallNAxes || '0';
+    const nameCell = tr.querySelector('td:first-child');
+    if (!nameCell) return;
+    // 순위 badge (1~N)
+    const rb = document.createElement('span');
+    rb.className = 'rank-badge';
+    rb.textContent = '#' + (i + 1);
+    rb.title = `종합 등급 순위 ${i+1} / ${orderedRows.length} (완료 케이스 중)`;
+    rb.style.cssText = `display:inline-block;margin-right:8px;
+      padding:2px 8px;border-radius:10px;font-weight:700;font-size:.85rem;
+      background:${i === 0 ? '#fde047' : i === 1 ? '#cbd5e1' : i === 2 ? '#fdba74'
+                            : 'rgba(108,140,255,.15)'};
+      color:${i < 3 ? '#0f172a' : 'var(--accent)'};
+      font-family:ui-monospace,Menlo,monospace`;
+    // 점수 + 등급 badge
+    const gb = document.createElement('span');
+    gb.className = 'rank-score-badge';
+    const color = GRADE_COLOR[grade] || '#6b7280';
+    const scoreStr = Number.isFinite(score) && score >= 0 ? score.toFixed(1) : '—';
+    gb.innerHTML = `<span style="font-family:ui-monospace,Menlo,monospace;font-size:.78rem">
+        ${scoreStr}</span>
+      <span style="background:${color}1f;color:${color};
+                    border:1px solid ${color}55;border-radius:4px;
+                    padding:1px 6px;font-weight:600;
+                    font-family:ui-monospace,Menlo,monospace;font-size:.78rem;
+                    margin-left:4px">${grade}</span>`;
+    gb.title = `${nAxes}개 평가축에서 가중평균 ${scoreStr}점`;
+    gb.style.cssText = 'margin-left:10px;display:inline-flex;align-items:center;gap:4px';
+    nameCell.prepend(rb);
+    nameCell.appendChild(gb);
+  });
+}
+
 function filterCases(mode) {
   currentFilter = mode;
   const tbody = document.querySelector('.data-table tbody');
   if (!tbody) return;
-  tbody.querySelectorAll('tr').forEach(tr => {
-    if (mode === 'fav') {
-      tr.style.display = tr.dataset.fav === 'true' ? '' : 'none';
-    } else {
-      tr.style.display = '';
-    }
-  });
-  document.getElementById('filter-all').style.background = mode === 'all' ? 'rgba(108,140,255,.2)' : '';
-  document.getElementById('filter-all').style.color = mode === 'all' ? 'var(--accent)' : '';
-  document.getElementById('filter-fav').style.background = mode === 'fav' ? 'rgba(245,158,11,.2)' : '';
-  document.getElementById('filter-fav').style.color = mode === 'fav' ? '#f59e0b' : '';
+  // Always clear rank badges first; re-inject only for 'rank'
+  clearRankBadges();
+
+  if (mode === 'rank') {
+    // Only 완료(done) cases with a valid overall_score, sorted desc.
+    const rows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
+      const status = tr.dataset.status;
+      const hasResults = tr.dataset.hasResults === 'true';
+      const sc = parseFloat(tr.dataset.overallScore);
+      return (status === 'done' || hasResults) && Number.isFinite(sc) && sc >= 0;
+    });
+    rows.sort((a, b) =>
+      parseFloat(b.dataset.overallScore) - parseFloat(a.dataset.overallScore));
+    // Hide everything, then unhide ordered rows
+    tbody.querySelectorAll('tr').forEach(tr => tr.style.display = 'none');
+    rows.forEach(tr => { tr.style.display = ''; tbody.appendChild(tr); });
+    injectRankBadges(rows);
+  } else {
+    tbody.querySelectorAll('tr').forEach(tr => {
+      if (mode === 'fav') {
+        tr.style.display = tr.dataset.fav === 'true' ? '' : 'none';
+      } else {
+        tr.style.display = '';
+      }
+    });
+  }
+  // Active-state styling
+  const setBtn = (id, on, bg, fg) => {
+    const el = document.getElementById(id); if (!el) return;
+    el.style.background = on ? bg : '';
+    el.style.color      = on ? fg : '';
+  };
+  setBtn('filter-all',  mode === 'all',  'rgba(108,140,255,.2)', 'var(--accent)');
+  setBtn('filter-fav',  mode === 'fav',  'rgba(245,158,11,.2)',  '#f59e0b');
+  setBtn('filter-rank', mode === 'rank', 'rgba(16,185,129,.2)',  '#10b981');
 }
 
 // Drag & Drop
