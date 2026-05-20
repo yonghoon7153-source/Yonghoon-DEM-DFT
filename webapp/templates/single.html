@@ -116,7 +116,8 @@
       'contact_summary': '접촉 요약',
       'coordination_summary': '배위수',
       'network_summary': '네트워크 지표',
-      'fracture_summary': '취성 파괴 (Auerbach)'
+      'fracture_summary': '취성 파괴 (Auerbach)',
+      'overall_grade': '🎯 종합 등급'
     } %}
     {% for name, tbl in tables.items() %}
     <button class="tab-btn {% if loop.first %}active{% endif %}"
@@ -136,7 +137,25 @@
       </button>
     </div>
     <div class="table-scroll">
-      <table class="data-table compact">
+      <table class="data-table compact{% if name == 'overall_grade' %} grade-table{% endif %}">
+        {% if name == 'overall_grade' %}
+        {# Grade table: drop the 4th "근거" column from the visible header,
+           keep it as a per-row hover-tip payload instead. #}
+        <thead><tr><th>지표</th><th>값</th><th>등급 (점수)</th></tr></thead>
+        <tbody>
+          {% for row in tbl.data %}
+          {% if row[0] is string and row[0].startswith('──') %}
+          <tr class="section-header"><td colspan="3">{{ row[0] }}</td></tr>
+          {% else %}
+          <tr class="grade-row" data-grade-tip="{{ row[3]|e }}">
+            <td class="metric-label">{{ row[0]|safe }}</td>
+            <td>{{ row[1]|safe }}</td>
+            <td>{{ row[2]|safe }}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+        {% else %}
         <thead><tr>{% for col in tbl.columns %}<th>{{ col }}</th>{% endfor %}</tr></thead>
         <tbody>
           {% for row in tbl.data %}
@@ -147,6 +166,7 @@
           {% endif %}
           {% endfor %}
         </tbody>
+        {% endif %}
       </table>
     </div>
     {% if name == 'network_summary' %}
@@ -1459,5 +1479,119 @@ document.addEventListener('mouseover', (e) => {
     activeTooltipRow = null;
   }
 });
+
+/* ── Grade table hover tooltip ──────────────────────────────────────
+ * Each .grade-row carries data-grade-tip with a pre-formatted HTML
+ * payload (label, category, direction, formula, basis, meaning).
+ * Same tooltip-row mechanism as the metric tooltips above so the visual
+ * style is consistent. */
+document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
+  const tip = tr.dataset.gradeTip;
+  if (!tip) return;
+  tr.addEventListener('mouseenter', () => {
+    if (activeTooltipRow) { activeTooltipRow.remove(); activeTooltipRow = null; }
+    const colCount = tr.children.length;
+    const ttRow = document.createElement('tr');
+    ttRow.className = 'tooltip-row';
+    ttRow.innerHTML = `<td colspan="${colCount}"><div class="tt-inner">${tip}</div></td>`;
+    tr.after(ttRow);
+    activeTooltipRow = ttRow;
+  });
+  tr.addEventListener('mouseleave', (e) => {
+    if (activeTooltipRow && e.relatedTarget && activeTooltipRow.contains(e.relatedTarget)) return;
+    if (activeTooltipRow) { activeTooltipRow.remove(); activeTooltipRow = null; }
+  });
+});
+
+/* ── What-if 도전재 1wt% panel ───────────────────────────────────────
+ * Lives at the bottom of the 종합 등급 tab. Calls
+ * /case/<id>/whatif-carbon?wt=<n> when slider changes and re-paints
+ * the σ_e / ASR_e before-after fields. */
+(function () {
+  const tab = document.getElementById('tab-overall_grade');
+  if (!tab) return;
+  const panel = document.createElement('div');
+  panel.className = 'whatif-panel';
+  panel.innerHTML = `
+    <div class="whatif-head">
+      🧪 <b>What-if — 도전재 carbon black 첨가 시</b>
+      <span class="whatif-hint">(Bruggeman φ²·σ_C 모델, t=2)</span>
+    </div>
+    <div class="whatif-controls">
+      <label>wt% : <input type="range" id="whatif-wt"
+              min="0" max="5" step="0.25" value="1.0" style="width:180px;vertical-align:middle">
+        <span id="whatif-wt-val">1.00</span> wt%</label>
+      <button id="whatif-recalc" class="btn btn-sm btn-primary"
+              style="margin-left:10px">재계산</button>
+    </div>
+    <div id="whatif-result" class="whatif-result">
+      <div class="whatif-loading">슬라이더를 움직이거나 [재계산] 클릭</div>
+    </div>
+    <div class="whatif-note">
+      ⚠ 1차 추정. φ_C = wt% × (ρ_avg/ρ_C) ≈ wt% × 1.75 ;  σ_e^new ≈ σ_e^old + φ_C² × σ_C
+      (σ_C = 1000 mS/cm, percolation 후 effective).  실제 cathode 실험에서는
+      σ_e 향상 10–100배 / capacity retention +5–10% 보고 (Mücke 2025, Lee 2024).
+      이온/구조축은 영향 없음 (carbon은 SE 네트워크 미참여).
+    </div>`;
+  tab.appendChild(panel);
+
+  const caseId = '{{ case.id }}';
+  const wtSlider = panel.querySelector('#whatif-wt');
+  const wtLabel  = panel.querySelector('#whatif-wt-val');
+  const resultEl = panel.querySelector('#whatif-result');
+  const recalcBtn= panel.querySelector('#whatif-recalc');
+
+  async function fetchWhatif(wt) {
+    resultEl.innerHTML = '<div class="whatif-loading">… 계산 중</div>';
+    try {
+      const r = await fetch(`/case/${encodeURIComponent(caseId)}/whatif-carbon?wt=${wt}`);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      if (!data.available) {
+        resultEl.innerHTML = `<div class="whatif-err">데이터 없음: ${data.reason || '알 수 없음'}</div>`;
+        return;
+      }
+      const arrow = (a, b) => a < b ? '▲' : a > b ? '▼' : '–';
+      const sigRatioHTML = data.sigma_ratio > 1.05
+          ? `<span style="color:#10b981">×${data.sigma_ratio}</span>`
+          : data.sigma_ratio < 0.95
+          ? `<span style="color:#ef4444">×${data.sigma_ratio}</span>`
+          : `<span>×${data.sigma_ratio}</span>`;
+      const asrRatioHTML = data.asr_e_ratio != null
+          ? (data.asr_e_ratio < 0.95
+             ? `<span style="color:#10b981">×${data.asr_e_ratio}</span>`
+             : data.asr_e_ratio > 1.05
+             ? `<span style="color:#ef4444">×${data.asr_e_ratio}</span>`
+             : `<span>×${data.asr_e_ratio}</span>`)
+          : '—';
+      resultEl.innerHTML = `
+        <table class="whatif-table">
+          <tr><th></th><th>현재 (no additive)</th><th>+${data.wt_pct} wt% carbon</th><th>변화</th></tr>
+          <tr><td>φ_carbon</td><td>0</td><td>${data.phi_carbon}</td><td></td></tr>
+          <tr><td>σ_e (mS/cm)</td>
+              <td>${data.sigma_e_old}</td>
+              <td><b>${data.sigma_e_new}</b></td>
+              <td>${sigRatioHTML} ${arrow(data.sigma_e_old, data.sigma_e_new)}</td></tr>
+          <tr><td>ASR_electronic (Ω·cm²)</td>
+              <td>${data.asr_e_old ?? '—'}</td>
+              <td><b>${data.asr_e_new ?? '—'}</b></td>
+              <td>${asrRatioHTML} ${data.asr_e_old != null && data.asr_e_new != null
+                                       ? arrow(data.asr_e_new, data.asr_e_old) : ''}</td></tr>
+        </table>
+        <div class="whatif-impact">
+          전자 전도 축 평가는 σ_e 증가에 따라 자동 갱신됩니다 — 슬라이더로 sweep 해보세요.
+        </div>`;
+    } catch (e) {
+      resultEl.innerHTML = `<div class="whatif-err">오류: ${e.message}</div>`;
+    }
+  }
+  wtSlider.addEventListener('input', () => {
+    wtLabel.textContent = (+wtSlider.value).toFixed(2);
+  });
+  wtSlider.addEventListener('change', () => fetchWhatif(wtSlider.value));
+  recalcBtn.addEventListener('click', () => fetchWhatif(wtSlider.value));
+  // Initial fetch on first tab activation
+  fetchWhatif(wtSlider.value);
+})();
 </script>
 {% endblock %}

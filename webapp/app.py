@@ -2789,6 +2789,45 @@ def api_se_corpus():
     return jsonify({'rows': _se_corpus_cache['rows']})
 
 
+@app.route('/case/<path:case_id>/whatif-carbon')
+def case_whatif_carbon(case_id):
+    """Return σ_e / ASR_e estimate for a hypothetical carbon-additive
+    cathode at wt% (default 1.0).  Backs the What-if panel in the
+    종합 등급 tab.  Supports both dashboard cases ('<id>') and archive
+    cases ('archive:<folder>')."""
+    try:
+        wt = float(request.args.get('wt', 1.0))
+    except ValueError:
+        wt = 1.0
+    wt = max(0.0, min(10.0, wt))
+
+    # Resolve metrics path (dashboard vs archive)
+    if case_id.startswith('archive:'):
+        rel = case_id[len('archive:'):]
+        target = _safe_path(rel)
+        metrics_path = os.path.join(target, 'full_metrics.json') if target else None
+    else:
+        metrics_path = os.path.join(get_results_dir(case_id), 'full_metrics.json')
+
+    if not metrics_path or not os.path.exists(metrics_path):
+        return jsonify({'available': False,
+                        'reason': 'full_metrics.json not found'}), 200
+    with open(metrics_path) as f:
+        metrics = json.load(f)
+
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        from grade_engine import whatif_carbon_additive
+        out = whatif_carbon_additive(metrics, wt_pct=wt)
+    except Exception as e:
+        return jsonify({'available': False,
+                        'reason': f'{type(e).__name__}: {e}'}), 200
+    return jsonify(out)
+
+
 @app.route('/')
 def index():
     cases = list_cases()
