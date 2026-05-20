@@ -2212,12 +2212,25 @@ function renderSeDiagnostics(state) {
        (median × 10%, median = ${typeof medianNorm === 'number' ? medianNorm.toFixed(3) : '—'})<br>
        cut node 제거 시 percolation 분리. bn 빨강 진할수록 좁음. d-top/bot = 한쪽만 닿은 SE 클러스터.
      </div>
-     <div style="margin-top:5px;padding-top:4px;border-top:1px solid #2a2d3e">
+     <div style="margin-top:8px;padding-top:6px;border-top:1px solid #2a2d3e">
        <button data-sed-open-hub
-         style="background:#2563eb;color:#fff;border:none;
-                border-radius:3px;padding:4px 8px;font-size:10px;font-weight:600;
-                cursor:pointer;width:100%;white-space:nowrap"
-         title="CSV/PNG 다운로드 통합 모달 열기">📥 데이터 허브 (5종 다운로드)</button>
+         style="background:linear-gradient(135deg,#6366f1 0%,#2563eb 55%,#1d4ed8 100%);
+                color:#fff;border:1px solid rgba(255,255,255,.12);
+                border-radius:6px;padding:7px 10px;font-size:10.5px;font-weight:600;
+                letter-spacing:.2px;cursor:pointer;width:100%;
+                box-shadow:0 1px 0 rgba(255,255,255,.18) inset,
+                            0 1px 4px rgba(37,99,235,.45);
+                display:flex;align-items:center;justify-content:center;gap:6px;
+                transition:transform .12s ease,box-shadow .12s ease,filter .12s ease"
+         onmouseover="this.style.filter='brightness(1.08)';this.style.transform='translateY(-1px)';this.style.boxShadow='0 1px 0 rgba(255,255,255,.22) inset,0 4px 10px rgba(37,99,235,.55)'"
+         onmouseout="this.style.filter='';this.style.transform='';this.style.boxShadow='0 1px 0 rgba(255,255,255,.18) inset,0 1px 4px rgba(37,99,235,.45)'"
+         title="CSV/PNG 다운로드 통합 모달 열기">
+         <span style="font-size:13px;line-height:1">📥</span>
+         <span>데이터 허브</span>
+         <span style="font-weight:500;opacity:.85;font-size:9.5px;
+                       background:rgba(255,255,255,.18);
+                       padding:1px 6px;border-radius:10px;line-height:1.4">5종</span>
+       </button>
      </div>`);
 
   /* Wire up buttons */
