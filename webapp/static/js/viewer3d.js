@@ -1762,13 +1762,18 @@ function applyViewMode(state, mode) {
           nSkippedPeriodic++;
           return;
         }
-        const r = Math.max(0.25, Math.log10(s.mult + 1) * 0.7);
+        /* Tube thick enough to be visible at the contact point even when
+         * embedded in touching particles.  Floor 1.0 μm, scales with
+         * log(F/P_c) up to ~3 μm at pulverization severity. */
+        const r = Math.max(1.0, Math.log10(s.mult + 1) * 2.0);
         const ci = clusterOf[s.id1] ?? clusterOf[s.id2] ?? 0;
         const tube = new THREE.TubeGeometry(
-          new THREE.LineCurve3(a, b), 1, r, 6, false);
+          new THREE.LineCurve3(a, b), 1, r, 12, false);
         const mat = new THREE.MeshBasicMaterial({
           color: colorOfCluster(ci),
-          transparent: true, opacity: 0.85,
+          transparent: true, opacity: 0.92,
+          depthWrite: false,   /* draw over particle bodies — preserves
+                                  cluster topology visibility */
         });
         group.add(new THREE.Mesh(tube, mat));
         nDrawn++;
@@ -1835,17 +1840,23 @@ function applyViewMode(state, mode) {
         return;
       }
       /* Tube radius from F/P_c — log scale for legibility.
-       * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color. */
+       * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color.
+       * Floors raised so tubes are visible even when embedded in particles. */
       const isIntact = s.mult < 1;
       if (isIntact) nIntact++; else { nSevere++; }
-      const r = Math.max(0.12, Math.log10(s.mult + 1.1) * 0.5);
+      const r = isIntact
+        ? Math.max(0.35, Math.log10(s.mult + 1.1) * 0.7)
+        : Math.max(0.9,  Math.log10(s.mult + 1.0) * 1.8);
       const tube = new THREE.TubeGeometry(
-        new THREE.LineCurve3(a, b), 1, r, 6, false);
+        new THREE.LineCurve3(a, b), 1, r, 10, false);
       const col = isIntact ? 0x4b5563 : pairCol[s.pair_type] || 0x9ca3af;
       const mat = new THREE.MeshBasicMaterial({
         color: col,
         transparent: true,
-        opacity: isIntact ? 0.18 : 0.85,
+        opacity: isIntact ? 0.20 : 0.90,
+        depthWrite: !isIntact,   /* brittle tubes drawn over particles
+                                    so stress-chain topology shows; intact
+                                    keep normal depth to recede */
       });
       group.add(new THREE.Mesh(tube, mat));
       nDrawn++;
