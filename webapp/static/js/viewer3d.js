@@ -2212,33 +2212,12 @@ function renderSeDiagnostics(state) {
        (median × 10%, median = ${typeof medianNorm === 'number' ? medianNorm.toFixed(3) : '—'})<br>
        cut node 제거 시 percolation 분리. bn 빨강 진할수록 좁음. d-top/bot = 한쪽만 닿은 SE 클러스터.
      </div>
-     <div style="margin-top:5px;padding-top:4px;border-top:1px solid #2a2d3e;
-                  display:flex;flex-wrap:wrap;gap:0">
-       <button data-sed-export="csv_particles"
-         style="background:#0a4f2e;color:#8cffb2;border:1px solid #0a4f2e;
-                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
-                margin:1px 1px 0 0;white-space:nowrap"
-         title="모든 SE 입자: id, x, y, z, role">📥 CSV particles</button>
-       <button data-sed-export="csv_bn"
-         style="background:#5a1d1d;color:#ffb8b8;border:1px solid #5a1d1d;
-                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
-                margin:1px 1px 0 0;white-space:nowrap"
-         title="Bottleneck contacts: id1, id2, area_um2, area_norm, r_min_um">📥 CSV bn</button>
-       <button data-sed-export="csv_clusters"
-         style="background:#4a2d6f;color:#d8c2ff;border:1px solid #4a2d6f;
-                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
-                margin:1px 1px 0 0;white-space:nowrap"
-         title="Dead-end clusters: idx, type, size, ids">📥 CSV clusters</button>
-       <button data-sed-export="png_zprofile"
-         style="background:#1d3a5f;color:#a8d2ff;border:1px solid #1d3a5f;
-                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
-                margin:1px 1px 0 0;white-space:nowrap"
-         title="Depth (z) profile of cut / bn / dead-end as PNG">📥 PNG z-profile</button>
-       <button data-sed-export="png_stats"
-         style="background:#3a3a3a;color:#d8d8d8;border:1px solid #3a3a3a;
-                border-radius:3px;padding:1px 5px;font-size:9px;cursor:pointer;
-                margin:1px 1px 0 0;white-space:nowrap"
-         title="Summary stats card as PNG">📥 PNG stats</button>
+     <div style="margin-top:5px;padding-top:4px;border-top:1px solid #2a2d3e">
+       <button data-sed-open-hub
+         style="background:#2563eb;color:#fff;border:none;
+                border-radius:3px;padding:4px 8px;font-size:10px;font-weight:600;
+                cursor:pointer;width:100%;white-space:nowrap"
+         title="CSV/PNG 다운로드 통합 모달 열기">📥 데이터 허브 (5종 다운로드)</button>
      </div>`);
 
   /* Wire up buttons */
@@ -2258,10 +2237,18 @@ function renderSeDiagnostics(state) {
         renderSeDiagnostics(state);
       });
     });
-    /* Export buttons (CSV / PNG) */
+    /* Export buttons (CSV / PNG) — kept as fallback for any inline
+     * markup that still uses data-sed-export; the legend now ships
+     * a single "데이터 허브 열기" button which opens the unified
+     * Z-profile Data Hub modal on the SE tab. */
     legendEl.querySelectorAll('[data-sed-export]').forEach(b => {
       b.addEventListener('click', () => exportSeDiagnostics(state, b));
     });
+    const hubBtn = legendEl.querySelector('[data-sed-open-hub]');
+    if (hubBtn) {
+      hubBtn.addEventListener('click',
+        () => showZProfileDataHub(state, 'se'));
+    }
   }
 }
 
@@ -3380,6 +3367,7 @@ async function showZProfileDataHub(state, defaultTab) {
         <button class="zh-tab" data-tab="stress"    style="${tabStyle(false)}">Stress hotspots</button>
         <button class="zh-tab" data-tab="coverage"  style="${tabStyle(false)}">Coverage (AM)</button>
         <button class="zh-tab" data-tab="combined"  style="${tabStyle(false)}">Combined overlay</button>
+        <button class="zh-tab" data-tab="se"        style="${tabStyle(false)}">SE Diagnostics</button>
       </div>
       <div id="zh-content" style="max-height:58vh;overflow:auto;border:1px solid #e5e7eb;border-radius:6px">
         <div style="padding:30px;text-align:center;color:#888">Loading…</div>
@@ -3446,9 +3434,23 @@ async function showZProfileDataHub(state, defaultTab) {
       covTab.title = 'No coverage_per_am.csv for this case';
     }
   }
-  const tabs = ['brittle', 'stress', 'coverage', 'combined'];
+  const tabs = ['brittle', 'stress', 'coverage', 'combined', 'se'];
   let active = tabs.includes(defaultTab) ? defaultTab : 'brittle';
   if (active === 'coverage' && !coverage) active = 'brittle';
+  /* SE tab is only meaningful when SE diagnostic data was computed
+   * (state.data.aux.se_n_percolating > 0). If not, gray out. */
+  const aux = (state.data && state.data.aux) || {};
+  const seReady = (aux.se_n_percolating || 0) > 0;
+  if (!seReady) {
+    const seTab = overlay.querySelector('.zh-tab[data-tab="se"]');
+    if (seTab) {
+      seTab.disabled = true;
+      seTab.style.opacity = '0.45';
+      seTab.style.cursor = 'not-allowed';
+      seTab.title = 'No SE percolation data — run reanalysis';
+    }
+    if (active === 'se') active = 'brittle';
+  }
   const tabEls = overlay.querySelectorAll('.zh-tab');
   const content = document.getElementById('zh-content');
   const ctxEl = document.getElementById('zh-context');
@@ -3459,6 +3461,11 @@ async function showZProfileDataHub(state, defaultTab) {
     active = name;
     tabEls.forEach(el => el.setAttribute('style',
       tabStyle(el.dataset.tab === name)));
+    /* SE tab has 5 file-specific buttons inside its own content — the
+     * shared bottom PNG/CSV pair doesn't apply. Hide them there. */
+    const onSE = (name === 'se');
+    pngBtn.style.display = onSE ? 'none' : '';
+    csvBtn.style.display = onSE ? 'none' : '';
     if (name === 'brittle') {
       content.innerHTML = renderBrittleTable(brittle);
       ctxEl.textContent = 'Lawn fracture stage counts per z-bin (force-based)';
@@ -3469,6 +3476,14 @@ async function showZProfileDataHub(state, defaultTab) {
       content.innerHTML = coverage ? renderCoverageTable(coverage)
         : `<div style="padding:30px;color:#888">No coverage data — run scripts/coverage_physics_vs_hertzian.py first.</div>`;
       ctxEl.textContent = 'Per-AM SE-coverage % stats per z-bin (RdYlGn 5-class bands)';
+    } else if (name === 'se') {
+      content.innerHTML = renderSeDiagnosticsHub(state);
+      ctxEl.textContent = 'SE network connectivity diagnostics — percolation, articulation, dead-ends, bottlenecks';
+      /* Wire the 5 per-file download buttons to the existing
+       * exportSeDiagnostics helper, which already routes by data-attr. */
+      content.querySelectorAll('[data-sed-export]').forEach(b => {
+        b.addEventListener('click', () => exportSeDiagnostics(state, b));
+      });
     } else {
       content.innerHTML =
         `<div style="text-align:center;padding:10px">
@@ -3536,6 +3551,84 @@ function tabStyle(active) {
           font:600 12px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
           letter-spacing:.2px;cursor:pointer;border-radius:4px 4px 0 0;
           transition:background .15s,color .15s,border-color .15s`;
+}
+
+/* SE Diagnostics tab body — summary stats + 5 per-file download
+ * buttons (CSV particles / bn / clusters + PNG z-profile / stats).
+ * Buttons carry data-sed-export attrs that the existing
+ * exportSeDiagnostics() helper dispatches on. */
+function renderSeDiagnosticsHub(state) {
+  const aux = (state.data && state.data.aux) || {};
+  const nPerc      = aux.se_n_percolating         || 0;
+  const artPts     = aux.se_articulation_points   || [];
+  const bnEdges    = aux.se_bottleneck_edges      || [];
+  const deadEnds   = aux.se_dead_end_clusters     || [];
+  const nBnBelow   = aux.se_n_bn_below_threshold;
+  const medianNorm = aux.se_bn_median_norm;
+  const thresholdNorm = aux.se_bn_threshold_norm;
+  const deadTop = deadEnds.filter(d => d.type === 'top_only').length;
+  const deadBot = deadEnds.filter(d => d.type === 'bottom_only').length;
+  const narrowest     = bnEdges[0]?.area_um2;
+  const narrowestNorm = bnEdges[0]?.area_norm;
+  const cutFrac = nPerc ? (artPts.length / nPerc) : 0;
+
+  const fmt  = (x, d=4) => (typeof x === 'number') ? x.toFixed(d) : '—';
+  const cell = (label, val, sw) =>
+    `<div style="background:#fff;border:1px solid #e5e7eb;border-radius:6px;
+                 padding:8px 10px;display:flex;align-items:center;gap:10px">
+       <span style="width:10px;height:18px;background:${sw};border-radius:2px;flex:none"></span>
+       <div style="display:flex;flex-direction:column;line-height:1.2;flex:1;min-width:0">
+         <span style="color:#6b7280;font-size:10px">${label}</span>
+         <span style="font-weight:600;color:#0f172a;font-size:13px">${val}</span>
+       </div>
+     </div>`;
+
+  const dlBtn = (kind, color, label, hint) =>
+    `<button data-sed-export="${kind}"
+       style="background:${color};color:#fff;border:none;border-radius:5px;
+              padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;
+              display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+              min-width:170px"
+       title="${hint}">
+       <span>${label}</span>
+       <span style="font-weight:400;font-size:10px;opacity:.85">${hint}</span>
+     </button>`;
+
+  return `
+    <div style="padding:14px 16px;background:#f9fafb">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px">
+        ${cell('Percolating SE (backbone)',    nPerc,                                  '#14b8a6')}
+        ${cell('Articulation points (cut)',    artPts.length,                          '#facc15')}
+        ${cell('cut fraction',                 fmt(cutFrac, 4),                        '#facc15')}
+        ${cell('Dead-end — top only',          deadTop + ' cluster',                    '#ec4899')}
+        ${cell('Dead-end — bottom only',       deadBot + ' cluster',                    '#f97316')}
+        ${cell('Bottleneck list (capped)',     bnEdges.length,                          '#dc2626')}
+        ${cell('Below-threshold bn (uncapped)', nBnBelow ?? '—',                       '#dc2626')}
+        ${cell('Narrowest A/r²',               typeof narrowestNorm === 'number' ? fmt(narrowestNorm, 5) : '—', '#dc2626')}
+        ${cell('Narrowest area',               typeof narrowest === 'number' ? fmt(narrowest, 5) + ' μm²' : '—', '#dc2626')}
+        ${cell('Corpus median A/r²',           typeof medianNorm === 'number' ? fmt(medianNorm, 4) : '—', '#444')}
+        ${cell('bn threshold (10% × median)',  typeof thresholdNorm === 'number' ? fmt(thresholdNorm, 4) : '—', '#444')}
+        ${cell('Median × 10% rule',            'A/r² < threshold = narrow',             '#9ca3af')}
+      </div>
+
+      <div style="border-top:1px solid #e5e7eb;padding-top:12px">
+        <div style="font-size:11px;color:#374151;font-weight:600;margin-bottom:8px">
+          📥 다운로드 — 파일별로 따로 (5종)
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          ${dlBtn('csv_particles', '#059669', 'CSV particles', 'id, x, y, z, radius, role')}
+          ${dlBtn('csv_bn',        '#b91c1c', 'CSV bottleneck', 'id1, id2, area_um2, area_norm, r_min_um (+ header meta)')}
+          ${dlBtn('csv_clusters',  '#7c3aed', 'CSV clusters',   'dead-end clusters: idx, type, size, ids')}
+          ${dlBtn('png_zprofile',  '#2563eb', 'PNG z-profile',  '깊이별 cut / bn / dead-end 분포 차트')}
+          ${dlBtn('png_stats',     '#374151', 'PNG stats',      '요약 통계 카드 (corpus percentile 포함)')}
+        </div>
+        <div style="margin-top:8px;font-size:10px;color:#6b7280;line-height:1.5">
+          PNG stats는 corpus 비교 (cut_fraction / bn_below_frac percentile 막대)
+          포함 — 27개 percolating case 중 이 case의 상대적 위치를 보여줍니다.<br>
+          모든 파일은 클라이언트에서 실시간 생성. 서버 round-trip 없음.
+        </div>
+      </div>
+    </div>`;
 }
 
 function renderBrittleTable(profile) {
