@@ -54,16 +54,20 @@ plt.rcParams.update({
 })
 
 
-def discover_cases() -> list[Path]:
-    """Walk both results/ and archive/, prefer named cases (results/) over
-    timestamp-archived duplicates.  Returns one entry per logical case.
+_TS_PAT = __import__('re').compile(r'^\d{6}_\d{6}_[0-9a-f]{6,}$')
 
-    Dedup key: file size of atoms.csv (cases with identical analyses have
-    identical atom files — different timestamps still match).  results/
-    takes priority so the canonical case_id is used.
+def _is_timestamp_name(name: str) -> bool:
+    """True for archive timestamp IDs like 260421_213656_78ec86."""
+    return bool(_TS_PAT.match(name))
+
+
+def discover_cases() -> list[Path]:
+    """Walk both results/ and archive/, dedup by (atoms.csv size,
+    contacts.csv size).  Prefer NAMED case_ids (input_*, etc.) over
+    timestamp-style IDs when both exist for the same analysis.
     """
-    seen_keys, out = {}, []
-    # Pass 1: results/ first (canonical names)
+    # Pass 1: collect every candidate dir
+    cands = []
     for base in ('results', 'archive'):
         root = WEBAPP / base
         if not root.exists():
@@ -79,12 +83,22 @@ def discover_cases() -> list[Path]:
                 ct_size = (d / 'contacts.csv').stat().st_size
             except OSError:
                 continue
-            key = (size, ct_size)   # (atoms.csv bytes, contacts.csv bytes)
-            if key in seen_keys:
-                continue            # duplicate of an earlier (preferred) entry
-            seen_keys[key] = d
-            out.append(d)
-    return sorted(out)
+            cands.append((d, size, ct_size))
+
+    # Pass 2: dedup by (atoms size, contacts size); within a key, prefer
+    # non-timestamp names (i.e., human-readable input_* over hex IDs).
+    by_key: dict[tuple, Path] = {}
+    for d, asize, csize in cands:
+        key = (asize, csize)
+        if key not in by_key:
+            by_key[key] = d
+        else:
+            cur = by_key[key]
+            cur_is_ts = _is_timestamp_name(cur.name)
+            new_is_ts = _is_timestamp_name(d.name)
+            if cur_is_ts and not new_is_ts:
+                by_key[key] = d   # named wins over timestamp
+    return sorted(by_key.values())
 
 
 def load_case(case_dir: Path):
@@ -304,14 +318,20 @@ def make_figure(rows: list[dict], out_path: Path):
     gs = fig.add_gridspec(2, 2, hspace=0.32, wspace=0.28,
                           left=0.07, right=0.985, top=0.93, bottom=0.07)
 
-    def scatter(ax, x, y, ylog=False, xlabel='', ylabel='', title=''):
+    def scatter(ax, x, y, ylog=False, xlog=False,
+                 xlabel='', ylabel='', title=''):
         for c in sorted(set(camp)):
             idx = np.array([i for i, cc in enumerate(camp) if cc == c])
             if len(idx) == 0: continue
             ax.scatter(x[idx], y[idx], c=camp_colors.get(c, '#999'),
                         s=42, edgecolors='black', linewidths=0.5,
                         label=camp_lab.get(c, c))
-        if ylog: ax.set_yscale('log')
+        # Only set log scale when data has positive values (avoid matplotlib
+        # warning on cases where x/y is all zero or NaN)
+        if ylog and np.nanmax(y) > 0:
+            ax.set_yscale('log')
+        if xlog and np.nanmax(x) > 0:
+            ax.set_xscale('log')
         ax.set_xlabel(xlabel); ax.set_ylabel(ylabel)
         ax.set_title(title, loc='left')
         ax.grid(alpha=0.25)
@@ -339,15 +359,15 @@ def make_figure(rows: list[dict], out_path: Path):
                     label='threshold (10% of median)')
         ax.legend(loc='best', fontsize=7)
 
-    # (c) cut fraction vs λ_eff
+    # (c) cut fraction vs λ_eff (skip log if no positive λ)
     ax = fig.add_subplot(gs[1, 0])
-    scatter(ax, lam, cutf,
+    scatter(ax, lam, cutf, xlog=True,
             xlabel=r'Size ratio  $\lambda_{\mathrm{eff}} = r_{\mathrm{AM,eff}}/r_{\mathrm{SE}}$',
             ylabel=r'$n_{\mathrm{cut}} / n_{\mathrm{percolating}}$',
             title=r'(c)  Cut fraction (network fragility) vs $\lambda_{\mathrm{eff}}$')
-    ax.set_xscale('log')
-    ax.set_xticks([2, 3, 5, 7, 10, 15, 20])
-    ax.set_xticklabels(['2', '3', '5', '7', '10', '15', '20'])
+    if np.nanmax(lam) > 0:
+        ax.set_xticks([2, 3, 5, 7, 10, 15, 20])
+        ax.set_xticklabels(['2', '3', '5', '7', '10', '15', '20'])
 
     # (d) bn median A/r² vs AM weight fraction
     ax = fig.add_subplot(gs[1, 1])
@@ -388,6 +408,16 @@ def main():
         print(f'  [{i+1:>3}/{len(cases)}] {case_dir.name:35s}  '
               f'perc={result["n_percolating"]:>5d}  cut={result["n_cut"]:>4d}  '
               f'bn_min={result["bn_area_min"] if result["bn_area_min"] is not None else "-"}')
+
+    # Summary diagnostics
+    n_total = len(rows)
+    n_perc  = sum(1 for r in rows if r['n_percolating'] > 0)
+    n_with_comp = sum(1 for r in rows if r['lam_eff'] > 0)
+    print(f'\nSummary:')
+    print(f'  total cases:                 {n_total}')
+    print(f'  with percolating SE (>0):    {n_perc}')
+    print(f'  with composition (lam>0):    {n_with_comp}')
+    print(f'  → figure uses intersection (both)')
 
     write_csv(rows, Path(args.out_csv))
     if not (args.csv_only or args.no_plot):
