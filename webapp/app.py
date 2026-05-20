@@ -409,14 +409,17 @@ def list_cases():
                                           'docs', 'data', 'se_diagnostics_82.csv')
                 if not os.path.exists(corpus_csv):
                     corpus_csv = None
-                _gres = build_overall_grade(m, corpus_csv, se_aux)
-                meta['overall_score']  = _gres['composite']['score']
-                meta['overall_grade']  = _gres['composite']['grade']
-                meta['overall_n_axes'] = _gres['composite']['n_axes']
+                _gres = build_overall_grade(m, corpus_csv, se_aux,
+                                              case_id=case_id)
+                meta['overall_score']    = _gres['composite']['score']
+                meta['overall_grade']    = _gres['composite']['grade']
+                meta['overall_n_axes']   = _gres['composite']['n_axes']
+                meta['is_unit_cell']     = _gres['composite'].get('is_unit_cell', False)
             except Exception:
-                meta['overall_score']  = None
-                meta['overall_grade']  = '—'
-                meta['overall_n_axes'] = 0
+                meta['overall_score']    = None
+                meta['overall_grade']    = '—'
+                meta['overall_n_axes']   = 0
+                meta['is_unit_cell']     = False
         cases.append(meta)
     return cases
 
@@ -2853,12 +2856,14 @@ def api_all_grades():
                 pass
         try:
             r = build_overall_grade(metrics, corpus_csv, se_aux,
-                                    carbon_wt_pct=carbon_wt if carbon_wt > 0 else None)
+                                    carbon_wt_pct=carbon_wt if carbon_wt > 0 else None,
+                                    case_id=case_id)
             rows.append({
-                'case_id':  case_id,
-                'score':    r['composite']['score'],
-                'grade':    r['composite']['grade'],
-                'n_axes':   r['composite']['n_axes'],
+                'case_id':      case_id,
+                'score':        r['composite']['score'],
+                'grade':        r['composite']['grade'],
+                'n_axes':       r['composite']['n_axes'],
+                'is_unit_cell': r['composite'].get('is_unit_cell', False),
             })
         except Exception:
             continue
@@ -2923,7 +2928,8 @@ def case_grade_json(case_id):
             pass
 
     result = build_overall_grade(metrics, corpus_csv, se_aux,
-                                  carbon_wt_pct=carbon_wt if carbon_wt > 0 else None)
+                                  carbon_wt_pct=carbon_wt if carbon_wt > 0 else None,
+                                  case_id=case_id)
 
     # Attach the grade-colour map so the client doesn't need its own copy.
     return jsonify({

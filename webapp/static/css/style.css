@@ -184,6 +184,17 @@ select.input { cursor: pointer; }
   color: #10b981; min-width: 32px; text-align: right; font-size: .72rem;
 }
 
+.rank-whatif-bar .rwf-divider {
+  width: 1px; height: 14px; background: rgba(255,255,255,.12);
+  margin: 0 2px;
+}
+.rank-whatif-bar .rwf-uc-check {
+  display: inline-flex; align-items: center; gap: 4px;
+  font-size: .72rem; color: #c4b5fd; cursor: pointer;
+  user-select: none;
+}
+.rank-whatif-bar .rwf-uc-check input { accent-color: #a78bfa; }
+
 /* Compact toggle variant — used inside the ranking toolbar */
 .whatif-toggle.compact .whatif-toggle-slider {
   width: 28px; height: 14px;

@@ -89,15 +89,15 @@ AXES: list[dict[str, Any]] = [
      'formula': 'ε = 1 − V_particles/V_electrode',
      'meaning': 'Sulfide ASSB cathode target 10–15% (Ohno 2020, Park 2023). '
                 '너무 낮으면 SE 변형 한계, 너무 높으면 contact 부족.',
-     'weight': 0.8},
+     'weight': 0.6},
 
     {'category': '구조 (Structure)',
      'key': 'thickness_um', 'label': '두께 T (μm)',
-     'direction': 'band', 'optimum': 80.0, 'band_width': 50.0,
-     'formula': 'T = z_max(plate) − z_min(substrate)',
-     'meaning': '30–150 μm 영역에서 cell capacity vs ASR 균형 (Janek 2023). '
-                '얇으면 면용량 낮고, 두꺼우면 ASR 폭증.',
-     'weight': 0.5},
+     'direction': 'band', 'optimum': 95.0, 'band_width': 35.0,
+     'formula': 'T = z_max(plate) − z_min(substrate)  (target 60–130 μm)',
+     'meaning': '60–130 μm = full-cell cathode 실용 범위. 박막(<40μm)은 '
+                'unit cell test일 가능성 ↑, 후막(>150μm)은 ASR 폭증.',
+     'weight': 0.4},
 
     # ── 2. SE 네트워크 위상 (Topology) ──
     {'category': 'SE 네트워크 위상',
@@ -105,7 +105,7 @@ AXES: list[dict[str, Any]] = [
      'direction': 'higher', 'thresholds': [99.0, 97.5, 95, 90, 80, 60],
      'formula': '% of SE in the connected component spanning bottom→top plates',
      'meaning': '<95%면 dead-zone 존재 → 이론 σ_ionic도 절반 이하 떨어짐 (Bielefeld 2019, Liu&Yin 2025).',
-     'weight': 1.2},
+     'weight': 1.4},
 
     {'category': 'SE 네트워크 위상',
      'key': '__cut_fraction', 'label': 'Cut fraction (위상 robustness)',
@@ -249,8 +249,8 @@ AXES: list[dict[str, Any]] = [
      'fallback_key': 'electronic_sigma_full_mScm_physics',
      'formula': 'Stage E final electronic conductivity (Trevisanello AM-crystallinity × size)',
      'meaning': 'sulfide cathode 무도전재 σ_e 0.5–5 mS/cm 권장 (Janek review). '
-                'What-if 도전재 토글로 1차 추정 변경 가능.',
-     'weight': 1.0},
+                '도전재 1wt%로 향상 가능 — What-if 토글에서 가시화.',
+     'weight': 0.7},
 
     # ── 8. 기계적 안정성 (Mechanical) ──
     {'category': '기계적 안정성',
@@ -291,7 +291,7 @@ AXES: list[dict[str, Any]] = [
      'fallback_key': 'sigma_full_mScm_physics',
      'formula': 'Stage E final ionic conductivity (Cronau SE-size factor)',
      'meaning': '실측 sulfide composite 0.1–0.5 mS/cm (Janek 2023 review).',
-     'weight': 1.5},
+     'weight': 1.8},
 
     {'category': '전도도 절대값',
      'key': 'thermal_sigma_full_mScm_stage_e_physics',
@@ -299,8 +299,8 @@ AXES: list[dict[str, Any]] = [
      'direction': 'higher', 'thresholds': [8, 5, 3, 1.5, 0.7, 0.2],
      'fallback_key': 'thermal_sigma_full_mScm_physics',
      'formula': 'Stage E final thermal conductivity (Wang phonon GB-scattering)',
-     'meaning': '열 발산 능력. 고전류 동작시 hotspot 형성 방지 직결.',
-     'weight': 0.4},
+     'meaning': '열 발산 능력. sulfide cell에서 1차 성능 결정 인자 아님.',
+     'weight': 0.2},
 
     {'category': '전도도 절대값',
      'key': 'R_brug_over_full_physics',
@@ -308,16 +308,16 @@ AXES: list[dict[str, Any]] = [
      'direction': 'lower', 'thresholds': [2.0, 3.0, 4.5, 6.5, 9.0, 13.0],
      'fallback_key': 'R_brug_over_full',
      'formula': 'σ_Bruggeman_EMT / σ_full_network — EMT theoretical vs actual ratio',
-     'meaning': '이상 균질 매질 가정의 과대평가 배수. 큰값=현재 구조의 결함이 큼.',
-     'weight': 0.6},
+     'meaning': '이상 균질 매질 가정의 과대평가 배수. σ_ionic과 정보 일부 중복.',
+     'weight': 0.3},
 
     {'category': '전도도 절대값',
      'key': '__constriction_R_fraction_pct',
      'label': 'Constriction R fraction (%)',
      'direction': 'lower', 'thresholds': [40, 55, 65, 75, 85, 92],
      'formula': '100 × (1 − bulk_resistance_fraction)  — fraction from contact constriction',
-     'meaning': '전체 저항 중 contact constriction 기여도. 높을수록 sintering 여지 ↑.',
-     'weight': 0.5},
+     'meaning': '전체 저항 중 contact constriction 기여도. bn_below_frac과 정보 일부 중복.',
+     'weight': 0.3},
 
     # ── 10. 셀 ASR ──
     {'category': '셀 단위 ASR',
@@ -325,21 +325,38 @@ AXES: list[dict[str, Any]] = [
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
      'formula': 'ASR = L_cathode(μm) × 0.1 / σ_ionic(mS/cm)',
      'meaning': '1mAh/cm² C/3에서 ≤100 Ω·cm² workable. >250면 high-rate 위험.',
-     'weight': 1.4},
+     'weight': 2.0},
+
+    {'category': '셀 단위 ASR',
+     'key': '__Q_areal_mAhcm2', 'label': 'Q_areal (mAh/cm²) ⭐',
+     'direction': 'higher', 'thresholds': [5.0, 3.5, 2.5, 1.5, 0.8, 0.3],
+     'formula': 'Q_areal = T(μm) × ρ_AM × C_AM × wt_AM × 1e-4 '
+                '(ρ_NMC ≈ 4.7, C_NMC ≈ 175 mAh/g)',
+     'meaning': '면용량 — high-capacity cell이면 같은 ASR이라도 더 가치 ↑. '
+                '박막(<2 mAh/cm²)은 unit-cell test, >5는 commercial target.',
+     'weight': 1.5},
+
+    {'category': '셀 단위 ASR',
+     'key': '__ASR_per_capacity', 'label': 'ASR/Q_areal (Ω·cm²/mAh/cm²) ⭐',
+     'direction': 'lower', 'thresholds': [10, 20, 35, 55, 90, 150],
+     'formula': '(L × 0.1 / σ_ionic) / Q_areal  — 두께·용량 보정 ASR',
+     'meaning': '★ "후막일수록 harsh" 패널티의 핵심 — 같은 ASR이라도 박막은 '
+                '낮은 capacity로 인해 ratio가 나빠짐. <20 = 우수, >100 = 위험.',
+     'weight': 1.6},
 
     {'category': '셀 단위 ASR',
      'key': '__asr_electronic_Ohm_cm2', 'label': 'ASR_electronic (Ω·cm²)',
      'direction': 'lower', 'thresholds': [2, 5, 10, 20, 40, 80],
      'formula': 'ASR_e = L_cathode × 0.1 / σ_e_stage_e',
      'meaning': '전자전도 영역 저항. 도전재 무첨가 sulfide에서 ASR_ionic만큼 critical.',
-     'weight': 0.8},
+     'weight': 0.7},
 
     {'category': '셀 단위 ASR',
      'key': '__asr_thermal_Kcm2_W', 'label': 'ASR_thermal (K·cm²/W)',
      'direction': 'lower', 'thresholds': [1.5, 2.5, 4, 6, 9, 14],
      'formula': 'ASR_th = L_cathode × 0.1 / κ',
-     'meaning': '냉각 효율. 큰값일수록 thermal runaway risk.',
-     'weight': 0.3},
+     'meaning': '냉각 효율. sulfide cell에서 1차 성능 결정 인자 아님.',
+     'weight': 0.15},
 
     # ── 11. 가공 / 신뢰성 (Manufacturability) ──
     {'category': '가공 신뢰성',
@@ -647,6 +664,46 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             return float(L) * 0.1 / float(k)
         return None
 
+    if key == '__Q_areal_mAhcm2':
+        # Areal capacity = T(μm) × ρ_composite × C_AM × wt_AM × (1 − ε) × 1e-4
+        # Use AM mass-fraction parsed from AM:SE input ratio when present
+        # (form "82:18" means 82% AM by weight), else fall back to 0.80.
+        L = metrics.get('thickness_um')
+        if not L:
+            return None
+        wt_am = 0.80
+        amse = metrics.get('am_se_ratio')
+        if isinstance(amse, str) and ':' in amse:
+            try:
+                a, s = (float(x) for x in amse.split(':'))
+                if a + s > 0:
+                    wt_am = a / (a + s)   # → 0.82 for "82:18"
+            except ValueError:
+                pass
+        rho_am = 4.7    # g/cc, NMC bulk
+        C_am   = 175    # mAh/g, NMC811 @ 4.3V cutoff (representative)
+        # Solid (non-porous) fraction of the electrode by volume
+        eps = metrics.get('porosity')
+        try:
+            solid = 1.0 - float(eps) / 100.0
+        except (TypeError, ValueError):
+            solid = 0.85
+        # AM volume fraction in the solid = wt_am × ρ_composite / ρ_am
+        # Approximating ρ_composite ≈ wt_am × ρ_AM + (1-wt_am) × ρ_SE
+        rho_se = 1.85   # LPSCl bulk g/cc
+        rho_comp = wt_am * rho_am + (1 - wt_am) * rho_se
+        am_vol_frac = wt_am * rho_comp / rho_am
+        return float(L) * solid * am_vol_frac * rho_am * C_am * 1e-4
+
+    if key == '__ASR_per_capacity':
+        L = metrics.get('thickness_um')
+        s = _sigma_ionic_effective(metrics)
+        Q = _derived_value('__Q_areal_mAhcm2', metrics)
+        if not (L and s and s > 0 and Q and Q > 0):
+            return None
+        asr = float(L) * 0.1 / float(s)
+        return asr / Q
+
     if key == '__validation_pass_pct':
         vf = metrics.get('validation_flags') or {}
         if not vf:
@@ -759,11 +816,42 @@ def _grade_axis(axis: dict, metrics: dict,
     return out
 
 
+# ── Unit-cell detection ─────────────────────────────────────────────────
+def detect_unit_cell(metrics: dict, case_id: str | None = None) -> dict:
+    """Decide if a case is a small periodic unit-cell test rather than a
+    full ASSB cathode.  Such cases lack realistic top↔bottom percolation
+    challenges and shouldn't be ranked against full cells without caveat.
+
+    Returns {'is_unit_cell': bool, 'reasons': [str, ...]}.
+    """
+    reasons = []
+    if case_id and 'particulate' in case_id.lower():
+        reasons.append('case_id contains "particulate"')
+    L = metrics.get('thickness_um')
+    try:
+        if L is not None and float(L) < 30:
+            reasons.append(f'thickness {L} μm < 30 μm (unit-cell scale)')
+    except (TypeError, ValueError):
+        pass
+    am_perc = metrics.get('am_percolation_pct')
+    ion_act = metrics.get('ionic_active_pct')
+    try:
+        # Diagnostic geometry: no AM connectivity but 100% activity
+        # (typical of periodic unit cell tests)
+        if (am_perc is not None and float(am_perc) == 0 and
+            ion_act is not None and float(ion_act) >= 99):
+            reasons.append('am_percolation=0 + ionic_active=100% (periodic UC)')
+    except (TypeError, ValueError):
+        pass
+    return {'is_unit_cell': bool(reasons), 'reasons': reasons}
+
+
 # ── Top-level entry point ───────────────────────────────────────────────
 def build_overall_grade(metrics: dict,
                          corpus_csv: str | None = None,
                          se_aux: dict | None = None,
-                         carbon_wt_pct: float | None = None) -> dict:
+                         carbon_wt_pct: float | None = None,
+                         case_id: str | None = None) -> dict:
     """Compute multi-axis grades for one case.
 
     Args:
@@ -806,12 +894,16 @@ def build_overall_grade(metrics: dict,
             cats.setdefault(a['category'], []).append(a['score'])
     cat_scores = {c: round(_stat.mean(v), 1) for c, v in cats.items()}
 
+    uc = detect_unit_cell(metrics, case_id)
+
     composite = {
         'score':          round(weighted, 1),
         'grade':          score_to_grade(weighted),
         'gpa':            round(grade_to_gpa(score_to_grade(weighted)), 2),
         'n_axes':         len(scored),
         'n_total':        len(AXES),
+        'is_unit_cell':   uc['is_unit_cell'],
+        'unit_cell_reasons': uc['reasons'],
     }
 
     return {
