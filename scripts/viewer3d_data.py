@@ -543,7 +543,12 @@ def compute_se_network_diagnostics(contacts,
 
     area_conv = (1.0 / (scale ** 2)) * 1.0e12   # sim m² → real μm²
 
-    # Build SE-SE graph weighted by contact area
+    # Build SE-SE graph.  Edges keep contact_area as weight for bn analysis,
+    # but the EDGE EXISTENCE is gated on the same criteria as dem_analysis_core
+    # calc_percolation (which gates only on "both ends are SE", no area > 0
+    # filter).  Earlier we required area > 0 which dropped SE-SE pairs whose
+    # LIGGGHTS dump emitted contact_area = 0 (sub-threshold overlap with
+    # nonzero force), causing many real percolating cases to report perc=0.
     G = nx.Graph()
     G.add_nodes_from(se_ids)
     for c in contacts:
@@ -551,8 +556,6 @@ def compute_se_network_diagnostics(contacts,
         if i1 not in se_ids or i2 not in se_ids:
             continue
         area = float(c.get('contact_area', 0) or 0)
-        if area <= 0:
-            continue
         # Keep largest area if duplicate edges appear
         if G.has_edge(i1, i2):
             if area > G[i1][i2].get('area', 0):
