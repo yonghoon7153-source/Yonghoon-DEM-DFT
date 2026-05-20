@@ -2073,7 +2073,10 @@ function renderSeDiagnostics(state) {
     state.stressChainGroup = null;
   }
   const aux = (state.data && state.data.aux) || {};
-  const colDim = new THREE.Color(0x2a2d3e);
+  /* Scene bg is #f5f5f5 (light gray) — use a tone very close to it so
+   * filtered-off particles fade into the background instead of showing
+   * up as dark dots. */
+  const colDim = new THREE.Color(0xdcdce0);
   const filter = state.seDiagFilter || {
     'percolating': true, 'articulation': true,
     'dead_top': true, 'dead_bot': true, 'bottleneck': true,
@@ -2121,15 +2124,16 @@ function renderSeDiagnostics(state) {
         col = colDeadBot; highlighted = true;
       }
       seMesh.setColorAt(i, col);
-      /* shrink un-highlighted SE so highlighted ones pop */
-      const scale = highlighted ? p.r : p.r * 0.35;
+      /* shrink un-highlighted SE so highlighted ones pop;
+       * dim ones go to 25% size and blend into the light background */
+      const scale = highlighted ? p.r : p.r * 0.25;
       dummy.position.set(p.x, p.z, p.y);
       dummy.scale.setScalar(scale);
       dummy.updateMatrix();
       seMesh.setMatrixAt(i, dummy.matrix);
     });
     seMesh.instanceMatrix.needsUpdate = true;
-    seMesh.material.opacity = 0.92; seMesh.material.transparent = true;
+    seMesh.material.opacity = 0.85; seMesh.material.transparent = true;
     state.seInstanceScaleModified = true;
   }
 
