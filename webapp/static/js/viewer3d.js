@@ -1812,66 +1812,141 @@ function applyViewMode(state, mode) {
       flushColors();
       return;
     }
-    /* Build position lookup with Y-up convention */
-    const pos = {};
-    ['AM_P', 'AM_S'].forEach(t => {
-      const m = state.meshes[t]; if (!m) return;
-      m.userData.particles.forEach(p => {
-        pos[p.id] = new THREE.Vector3(p.x, p.z, p.y);
-      });
-    });
-    /* Periodic-jump cutoff */
-    const box = state.data && state.data.box;
-    const halfX = box ? (box.x_max - box.x_min) / 2 : Infinity;
-    const halfY = box ? (box.y_max - box.y_min) / 2 : Infinity;
-    /* Pair-type colors */
-    const pairCol = {
-      'AM_P-AM_P': 0xef4444,
-      'AM_P-AM_S': 0xf97316,
-      'AM_S-AM_S': 0x60a5fa,
+    /* Default filter — fresh entry into this mode resets to "all on" */
+    state.stressChainFilter = {
+      'AM_P-AM_P': true, 'AM_P-AM_S': true,
+      'AM_S-AM_S': true, 'intact':    true,
     };
-    const group = new THREE.Group();
-    let nDrawn = 0, nIntact = 0, nSevere = 0, nSkippedPeriodic = 0;
-    segs.forEach(s => {
-      const a = pos[s.id1], b = pos[s.id2];
-      if (!a || !b) return;
-      if (Math.abs(a.x - b.x) > halfX || Math.abs(a.z - b.z) > halfY) {
-        nSkippedPeriodic++;
-        return;
-      }
-      /* Tube radius from F/P_c — log scale for legibility.
-       * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color. */
-      const isIntact = s.mult < 1;
-      if (isIntact) nIntact++; else { nSevere++; }
-      const r = Math.max(0.12, Math.log10(s.mult + 1.1) * 0.5);
-      const tube = new THREE.TubeGeometry(
-        new THREE.LineCurve3(a, b), 1, r, 6, false);
-      const col = isIntact ? 0x4b5563 : pairCol[s.pair_type] || 0x9ca3af;
-      const mat = new THREE.MeshBasicMaterial({
-        color: col,
-        transparent: true,
-        opacity: isIntact ? 0.18 : 0.85,
-      });
-      group.add(new THREE.Mesh(tube, mat));
-      nDrawn++;
-    });
-    if (state.scene) {
-      state.scene.add(group);
-      state.stressChainGroup = group;
-    }
+    renderStressChain(state, segs);
     flushColors();
-    setLegend(state,
-      `<b>Stress Chain (AM-AM contacts)</b><br>
-       선 두께 ∝ log(F/P_c+1), 색 = pair-type<br>
-       <span style="color:#ef4444">●</span> AM_P-AM_P
-       <span style="color:#f97316">●</span> AM_P-AM_S
-       <span style="color:#60a5fa">●</span> AM_S-AM_S<br>
-       <span style="color:#4b5563">●</span> intact (F/P_c &lt; 1)<br>
-       <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 contact 그림 (intact ${nIntact}, brittle ${nSevere})${nSkippedPeriodic ? `, periodic-wrap 제외 ${nSkippedPeriodic}` : ''}</span><br>
-       <span style="color:#9ca3af;font-size:9px">★ 두꺼운 빨강 line = AM_P-AM_P severe stress channel. 이게 어디서 어떻게 cluster 되는지가 fracture risk 위치.</span>`);
     return;
   }
 }
+/* ── Stress Chain renderer (Phase B2) ─────────────────────────────────
+ * Rebuilds the tube group based on state.stressChainFilter.  Called
+ * once on view-mode entry and again on every filter-button click so
+ * the user can toggle pair-types / intact on/off independently.
+ */
+function renderStressChain(state, segs) {
+  /* Dispose any existing chain group */
+  if (state.stressChainGroup && state.scene) {
+    state.scene.remove(state.stressChainGroup);
+    state.stressChainGroup.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) obj.material.dispose();
+    });
+    state.stressChainGroup = null;
+  }
+  const filter = state.stressChainFilter || {
+    'AM_P-AM_P': true, 'AM_P-AM_S': true,
+    'AM_S-AM_S': true, 'intact':    true,
+  };
+  /* Position lookup */
+  const pos = {};
+  ['AM_P', 'AM_S'].forEach(t => {
+    const m = state.meshes[t]; if (!m) return;
+    m.userData.particles.forEach(p => {
+      pos[p.id] = new THREE.Vector3(p.x, p.z, p.y);
+    });
+  });
+  const box = state.data && state.data.box;
+  const halfX = box ? (box.x_max - box.x_min) / 2 : Infinity;
+  const halfY = box ? (box.y_max - box.y_min) / 2 : Infinity;
+  const pairCol = {
+    'AM_P-AM_P': 0xef4444,
+    'AM_P-AM_S': 0xf97316,
+    'AM_S-AM_S': 0x60a5fa,
+  };
+  const group = new THREE.Group();
+  let nDrawn = 0, nIntact = 0, nSevere = 0, nSkippedPeriodic = 0;
+  /* Total counts per filter category (so legend numbers reflect data,
+   * not just what's currently drawn) */
+  const totalCounts = {
+    'AM_P-AM_P': 0, 'AM_P-AM_S': 0, 'AM_S-AM_S': 0, 'intact': 0,
+  };
+  segs.forEach(s => {
+    const a = pos[s.id1], b = pos[s.id2];
+    if (!a || !b) return;
+    if (Math.abs(a.x - b.x) > halfX || Math.abs(a.z - b.z) > halfY) {
+      nSkippedPeriodic++;
+      return;
+    }
+    const isIntact = s.mult < 1;
+    /* tally totals before filter */
+    if (isIntact) totalCounts['intact']++;
+    else totalCounts[s.pair_type] = (totalCounts[s.pair_type] || 0) + 1;
+    /* apply filter */
+    if (isIntact && !filter['intact']) return;
+    if (!isIntact && !filter[s.pair_type]) return;
+
+    if (isIntact) nIntact++; else nSevere++;
+    const r = Math.max(0.12, Math.log10(s.mult + 1.1) * 0.5);
+    const tube = new THREE.TubeGeometry(
+      new THREE.LineCurve3(a, b), 1, r, 6, false);
+    const col = isIntact ? 0x4b5563 : pairCol[s.pair_type] || 0x9ca3af;
+    const mat = new THREE.MeshBasicMaterial({
+      color: col,
+      transparent: true,
+      opacity: isIntact ? 0.18 : 0.85,
+    });
+    group.add(new THREE.Mesh(tube, mat));
+    nDrawn++;
+  });
+  if (state.scene) {
+    state.scene.add(group);
+    state.stressChainGroup = group;
+  }
+
+  /* Filter button helper */
+  const btn = (key, color, label, count) => {
+    const on = filter[key];
+    const bg = on ? color : '#1f2937';
+    const fg = on ? '#fff' : '#6b7280';
+    const border = on ? color : '#374151';
+    return `<button data-sc-filter="${key}"
+       style="background:${bg};color:${fg};border:1px solid ${border};
+              border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
+              margin:1px 2px 1px 0">
+       ${label} ${count}</button>`;
+  };
+  setLegend(state,
+    `<b>Stress Chain (AM-AM contacts)</b><br>
+     선 두께 ∝ log(F/P_c+1)<br>
+     <div style="margin:4px 0">
+       <button data-sc-filter="ALL"
+         style="background:#0ea5e9;color:#fff;border:1px solid #0284c7;
+                border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
+                margin:1px 2px 1px 0;font-weight:bold">ALL ↺</button>
+       ${btn('AM_P-AM_P', '#ef4444', 'P-P', totalCounts['AM_P-AM_P'])}
+       ${btn('AM_P-AM_S', '#f97316', 'P-S', totalCounts['AM_P-AM_S'])}
+       ${btn('AM_S-AM_S', '#60a5fa', 'S-S', totalCounts['AM_S-AM_S'])}
+       ${btn('intact',    '#4b5563', 'intact', totalCounts['intact'])}
+     </div>
+     <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 그림 ${
+       nSkippedPeriodic ? `(periodic-wrap 제외 ${nSkippedPeriodic})` : ''
+     }</span><br>
+     <span style="color:#9ca3af;font-size:9px">★ ALL = 모두 다시 표시. 다른 버튼은 토글 — 중복 선택 OK. 두꺼운 빨강 line = AM_P-AM_P severe stress channel.</span>`);
+
+  /* Wire up filter buttons */
+  const legendEl = document.getElementById('view-mode-legend');
+  if (legendEl) {
+    legendEl.querySelectorAll('[data-sc-filter]').forEach(b => {
+      b.addEventListener('click', () => {
+        const key = b.dataset.scFilter;
+        if (key === 'ALL') {
+          state.stressChainFilter = {
+            'AM_P-AM_P': true, 'AM_P-AM_S': true,
+            'AM_S-AM_S': true, 'intact':    true,
+          };
+        } else {
+          state.stressChainFilter[key] = !state.stressChainFilter[key];
+        }
+        renderStressChain(state, segs);
+      });
+    });
+  }
+}
+
 function setLegend(state, html) {
   const el = document.getElementById('view-mode-legend');
   if (el) el.innerHTML = html;
