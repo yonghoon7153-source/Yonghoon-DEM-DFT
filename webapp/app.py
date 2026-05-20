@@ -2791,6 +2791,80 @@ def api_se_corpus():
     return jsonify({'rows': _se_corpus_cache['rows']})
 
 
+@app.route('/api/all-grades')
+def api_all_grades():
+    """Batch grade re-computation for every uploaded case at a given
+    carbon wt%.  Used by the index-page 🏆 랭킹 toggle so the ranking
+    re-sorts itself when the user flips the What-if switch.
+
+    Returns:
+      { 'carbon_wt_pct': N,
+        'cases': [ {case_id, score, grade, n_axes}, … ] }
+    """
+    try:
+        carbon_wt = float(request.args.get('carbon_wt', 0))
+    except ValueError:
+        carbon_wt = 0.0
+    carbon_wt = max(0.0, min(10.0, carbon_wt))
+
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        from grade_engine import build_overall_grade
+    except ImportError:
+        return jsonify({'error': 'grade_engine import failed'}), 500
+
+    corpus_csv = os.path.join(os.path.dirname(__file__), '..',
+                              'docs', 'data', 'se_diagnostics_82.csv')
+    if not os.path.exists(corpus_csv):
+        corpus_csv = None
+
+    rows = []
+    upload_dir = app.config['UPLOAD_FOLDER']
+    if not os.path.exists(upload_dir):
+        return jsonify({'carbon_wt_pct': carbon_wt, 'cases': []})
+
+    for case_id in os.listdir(upload_dir):
+        results_dir = os.path.join(app.config['RESULTS_FOLDER'], case_id)
+        metrics_path = os.path.join(results_dir, 'full_metrics.json')
+        if not os.path.exists(metrics_path):
+            continue
+        try:
+            with open(metrics_path) as f:
+                metrics = json.load(f)
+        except (OSError, ValueError):
+            continue
+        # Reuse cached SE aux if present
+        se_aux = None
+        aux_path = os.path.join(results_dir, 'viewer_aux.json')
+        if os.path.exists(aux_path):
+            try:
+                with open(aux_path) as af:
+                    _aux = json.load(af)
+                se_aux = {
+                    'n_percolating':         _aux.get('se_n_percolating'),
+                    'articulation_points':   _aux.get('se_articulation_points', []),
+                    'n_bn_below_threshold':  _aux.get('se_n_bn_below_threshold'),
+                    'n_perc_edges':          _aux.get('se_n_perc_edges'),
+                }
+            except (OSError, ValueError):
+                pass
+        try:
+            r = build_overall_grade(metrics, corpus_csv, se_aux,
+                                    carbon_wt_pct=carbon_wt if carbon_wt > 0 else None)
+            rows.append({
+                'case_id':  case_id,
+                'score':    r['composite']['score'],
+                'grade':    r['composite']['grade'],
+                'n_axes':   r['composite']['n_axes'],
+            })
+        except Exception:
+            continue
+    return jsonify({'carbon_wt_pct': carbon_wt, 'cases': rows})
+
+
 @app.route('/case/<path:case_id>/grade')
 def case_grade_json(case_id):
     """Return the full overall-grade structure as JSON, with optional

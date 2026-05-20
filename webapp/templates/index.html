@@ -70,6 +70,19 @@
       <button class="btn btn-sm btn-secondary sort-btn" onclick="filterCases('fav')" id="filter-fav">★ 즐겨찾기</button>
       <button class="btn btn-sm btn-secondary sort-btn" onclick="filterCases('rank')" id="filter-rank"
               title="완료(분석된) 케이스만 종합 등급 순으로 정렬. 각 행 옆에 순위 + 점수 + 등급 뱃지가 붙습니다.">🏆 랭킹</button>
+      <span id="rank-whatif" style="display:none;align-items:center;gap:8px;padding:0 8px;
+              background:rgba(16,185,129,.06);border:1px solid rgba(16,185,129,.25);
+              border-radius:6px;height:30px;font-size:.78rem;color:#94a3b8">
+        🧪 도전재
+        <label class="whatif-toggle" title="ON이면 랭킹이 carbon-additive 시나리오로 재계산됩니다">
+          <input type="checkbox" id="rank-whatif-toggle">
+          <span class="whatif-toggle-slider"></span>
+          <span class="whatif-toggle-label" id="rank-whatif-label">OFF</span>
+        </label>
+        <input type="range" id="rank-whatif-wt" min="0" max="5" step="0.25" value="1.0"
+               style="width:90px;vertical-align:middle">
+        <span id="rank-whatif-wt-val" style="font-family:ui-monospace,Menlo,monospace;color:#10b981;min-width:42px">1.00 wt%</span>
+      </span>
       <span style="width:1px;height:20px;background:var(--border);margin:0 4px"></span>
       <button class="btn btn-sm btn-secondary sort-btn" onclick="sortCases('name')" id="sort-name">이름순</button>
       <button class="btn btn-sm btn-secondary sort-btn active" onclick="sortCases('date')" id="sort-date">최신순</button>
@@ -220,64 +233,127 @@ function clearRankBadges() {
   document.querySelectorAll('.rank-score-badge').forEach(b => b.remove());
 }
 
-function injectRankBadges(orderedRows) {
+function injectRankBadges(orderedRows, overrides) {
   orderedRows.forEach((tr, i) => {
-    const score = parseFloat(tr.dataset.overallScore);
-    const grade = tr.dataset.overallGrade || '—';
-    const nAxes = tr.dataset.overallNAxes || '0';
+    const ov     = overrides ? overrides[tr.dataset.caseId] : null;
+    const score  = ov ? ov.score : parseFloat(tr.dataset.overallScore);
+    const grade  = ov ? ov.grade : (tr.dataset.overallGrade || '—');
+    const nAxes  = ov ? ov.n_axes : (tr.dataset.overallNAxes || '0');
     const nameCell = tr.querySelector('td:first-child');
     if (!nameCell) return;
-    // 순위 badge (1~N)
     const rb = document.createElement('span');
     rb.className = 'rank-badge';
     rb.textContent = '#' + (i + 1);
-    rb.title = `종합 등급 순위 ${i+1} / ${orderedRows.length} (완료 케이스 중)`;
+    rb.title = `종합 등급 순위 ${i+1} / ${orderedRows.length}`
+              + (overrides ? ' (carbon-additive scenario)' : ' (baseline)');
     rb.style.cssText = `display:inline-block;margin-right:8px;
       padding:2px 8px;border-radius:10px;font-weight:700;font-size:.85rem;
       background:${i === 0 ? '#fde047' : i === 1 ? '#cbd5e1' : i === 2 ? '#fdba74'
                             : 'rgba(108,140,255,.15)'};
       color:${i < 3 ? '#0f172a' : 'var(--accent)'};
       font-family:ui-monospace,Menlo,monospace`;
-    // 점수 + 등급 badge
     const gb = document.createElement('span');
     gb.className = 'rank-score-badge';
     const color = GRADE_COLOR[grade] || '#6b7280';
     const scoreStr = Number.isFinite(score) && score >= 0 ? score.toFixed(1) : '—';
+    const carbonTag = overrides
+        ? `<span style="margin-left:6px;font-size:.7rem;color:#10b981;
+                         font-family:ui-monospace,Menlo,monospace">🧪</span>` : '';
     gb.innerHTML = `<span style="font-family:ui-monospace,Menlo,monospace;font-size:.78rem">
         ${scoreStr}</span>
       <span style="background:${color}1f;color:${color};
                     border:1px solid ${color}55;border-radius:4px;
                     padding:1px 6px;font-weight:600;
                     font-family:ui-monospace,Menlo,monospace;font-size:.78rem;
-                    margin-left:4px">${grade}</span>`;
-    gb.title = `${nAxes}개 평가축에서 가중평균 ${scoreStr}점`;
+                    margin-left:4px">${grade}</span>${carbonTag}`;
+    gb.title = `${nAxes}개 평가축에서 가중평균 ${scoreStr}점`
+              + (overrides ? ' (carbon override 적용됨)' : '');
     gb.style.cssText = 'margin-left:10px;display:inline-flex;align-items:center;gap:4px';
     nameCell.prepend(rb);
     nameCell.appendChild(gb);
   });
 }
 
+function applyRanking(scoreOverrides) {
+  /* Sort + display the rank view.  `scoreOverrides` (optional) is a
+   * { case_id → {score, grade, n_axes} } map from /api/all-grades —
+   * when present, those values override the baseline data-overall-*
+   * attributes per row (without persisting). */
+  const tbody = document.querySelector('.data-table tbody');
+  if (!tbody) return;
+  clearRankBadges();
+  const rows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
+    const status = tr.dataset.status;
+    const hasResults = tr.dataset.hasResults === 'true';
+    const ov = scoreOverrides ? scoreOverrides[tr.dataset.caseId] : null;
+    const sc = ov ? ov.score : parseFloat(tr.dataset.overallScore);
+    return (status === 'done' || hasResults) && Number.isFinite(sc) && sc >= 0;
+  });
+  rows.sort((a, b) => {
+    const sa = scoreOverrides && scoreOverrides[a.dataset.caseId]?.score;
+    const sb = scoreOverrides && scoreOverrides[b.dataset.caseId]?.score;
+    const va = Number.isFinite(sa) ? sa : parseFloat(a.dataset.overallScore);
+    const vb = Number.isFinite(sb) ? sb : parseFloat(b.dataset.overallScore);
+    return vb - va;
+  });
+  tbody.querySelectorAll('tr').forEach(tr => tr.style.display = 'none');
+  rows.forEach(tr => { tr.style.display = ''; tbody.appendChild(tr); });
+  injectRankBadges(rows, scoreOverrides);
+}
+
+async function fetchAllGrades(carbonWt) {
+  const r = await fetch(`/api/all-grades?carbon_wt=${carbonWt}`);
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  const data = await r.json();
+  const map = {};
+  for (const c of (data.cases || [])) {
+    map[c.case_id] = { score: c.score, grade: c.grade, n_axes: c.n_axes };
+  }
+  return { map, carbon_wt_pct: data.carbon_wt_pct };
+}
+
+let rankCarbonOn = false;
+let rankCarbonWt = 1.0;
+let cachedOverrides = null;   // last fetched override map
+
+async function refreshRanking() {
+  if (currentFilter !== 'rank') return;
+  if (!rankCarbonOn) {
+    applyRanking(null);
+    return;
+  }
+  // Show loading hint via the wt label
+  const lbl = document.getElementById('rank-whatif-label');
+  const orig = lbl.textContent;
+  lbl.textContent = '…';
+  try {
+    const { map } = await fetchAllGrades(rankCarbonWt);
+    cachedOverrides = map;
+    lbl.textContent = 'ON';
+    applyRanking(map);
+  } catch (e) {
+    console.error('rank carbon fetch failed', e);
+    lbl.textContent = 'ERR';
+  }
+}
+
 function filterCases(mode) {
   currentFilter = mode;
   const tbody = document.querySelector('.data-table tbody');
   if (!tbody) return;
-  // Always clear rank badges first; re-inject only for 'rank'
   clearRankBadges();
 
+  const whatifBar = document.getElementById('rank-whatif');
+  if (whatifBar) whatifBar.style.display = (mode === 'rank') ? 'inline-flex' : 'none';
+
   if (mode === 'rank') {
-    // Only 완료(done) cases with a valid overall_score, sorted desc.
-    const rows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
-      const status = tr.dataset.status;
-      const hasResults = tr.dataset.hasResults === 'true';
-      const sc = parseFloat(tr.dataset.overallScore);
-      return (status === 'done' || hasResults) && Number.isFinite(sc) && sc >= 0;
-    });
-    rows.sort((a, b) =>
-      parseFloat(b.dataset.overallScore) - parseFloat(a.dataset.overallScore));
-    // Hide everything, then unhide ordered rows
-    tbody.querySelectorAll('tr').forEach(tr => tr.style.display = 'none');
-    rows.forEach(tr => { tr.style.display = ''; tbody.appendChild(tr); });
-    injectRankBadges(rows);
+    if (rankCarbonOn && cachedOverrides) {
+      applyRanking(cachedOverrides);
+    } else if (rankCarbonOn) {
+      refreshRanking();
+    } else {
+      applyRanking(null);
+    }
   } else {
     tbody.querySelectorAll('tr').forEach(tr => {
       if (mode === 'fav') {
@@ -287,7 +363,6 @@ function filterCases(mode) {
       }
     });
   }
-  // Active-state styling
   const setBtn = (id, on, bg, fg) => {
     const el = document.getElementById(id); if (!el) return;
     el.style.background = on ? bg : '';
@@ -297,6 +372,32 @@ function filterCases(mode) {
   setBtn('filter-fav',  mode === 'fav',  'rgba(245,158,11,.2)',  '#f59e0b');
   setBtn('filter-rank', mode === 'rank', 'rgba(16,185,129,.2)',  '#10b981');
 }
+
+/* Wire the carbon What-if controls in the ranking bar. */
+document.addEventListener('DOMContentLoaded', () => {
+  const tog  = document.getElementById('rank-whatif-toggle');
+  const sl   = document.getElementById('rank-whatif-wt');
+  const slv  = document.getElementById('rank-whatif-wt-val');
+  const lbl  = document.getElementById('rank-whatif-label');
+  if (!tog || !sl) return;
+  sl.addEventListener('input', () => {
+    rankCarbonWt = +sl.value;
+    if (slv) slv.textContent = rankCarbonWt.toFixed(2) + ' wt%';
+  });
+  sl.addEventListener('change', () => {
+    cachedOverrides = null;  // invalidate
+    if (rankCarbonOn) refreshRanking();
+  });
+  tog.addEventListener('change', () => {
+    rankCarbonOn = tog.checked;
+    if (lbl) {
+      lbl.textContent = rankCarbonOn ? 'ON' : 'OFF';
+      lbl.classList.toggle('on', rankCarbonOn);
+    }
+    cachedOverrides = null;
+    refreshRanking();
+  });
+});
 
 // Drag & Drop
 const dropzone = document.getElementById('dropzone');
