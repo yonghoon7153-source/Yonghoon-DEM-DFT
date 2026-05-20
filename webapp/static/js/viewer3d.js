@@ -1732,22 +1732,36 @@ function applyViewMode(state, mode) {
       m.userData.particles.forEach((_, i) => m.setColorAt(i, colDim));
       m.material.opacity = 0.06; m.material.transparent = true;
     });
-    /* Draw lines connecting skeleton particles using stress chain data */
+    /* Draw lines connecting skeleton particles using stress chain data.
+     * Three.js coordinate convention: data (x, y, z) → THREE (x, z, y)
+     * (data z = vertical → Three Y).  Also skip periodic-wraparound
+     * contacts where the two particles are on opposite sides of the box
+     * (straight-line would shoot outside the visible cell). */
     const segs = aux.stress_chain_segments || [];
     if (segs.length && state.scene) {
       const group = new THREE.Group();
-      /* Build position lookup: pid → THREE.Vector3 */
+      /* Build position lookup using correct Y-up convention */
       const pos = {};
       ['AM_P', 'AM_S'].forEach(t => {
         const m = state.meshes[t]; if (!m) return;
         m.userData.particles.forEach(p => {
-          pos[p.id] = new THREE.Vector3(p.x, p.y, p.z);
+          pos[p.id] = new THREE.Vector3(p.x, p.z, p.y);
         });
       });
+      /* Periodic-jump cutoff: half the box X / Y span (data coords) */
+      const box = state.data && state.data.box;
+      const halfX = box ? (box.x_max - box.x_min) / 2 : Infinity;
+      const halfY = box ? (box.y_max - box.y_min) / 2 : Infinity;
+      let nDrawn = 0, nSkippedPeriodic = 0;
       segs.forEach(s => {
         if (s.pair_type !== 'AM_P-AM_P' || s.mult < 1) return;
         const a = pos[s.id1], b = pos[s.id2];
         if (!a || !b) return;
+        /* In THREE coords: x → data x, z → data y */
+        if (Math.abs(a.x - b.x) > halfX || Math.abs(a.z - b.z) > halfY) {
+          nSkippedPeriodic++;
+          return;
+        }
         const r = Math.max(0.25, Math.log10(s.mult + 1) * 0.7);
         const ci = clusterOf[s.id1] ?? clusterOf[s.id2] ?? 0;
         const tube = new THREE.TubeGeometry(
@@ -1757,6 +1771,7 @@ function applyViewMode(state, mode) {
           transparent: true, opacity: 0.85,
         });
         group.add(new THREE.Mesh(tube, mat));
+        nDrawn++;
       });
       state.scene.add(group);
       state.stressChainGroup = group;
@@ -1792,14 +1807,18 @@ function applyViewMode(state, mode) {
       flushColors();
       return;
     }
-    /* Build position lookup */
+    /* Build position lookup with Y-up convention */
     const pos = {};
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach(p => {
-        pos[p.id] = new THREE.Vector3(p.x, p.y, p.z);
+        pos[p.id] = new THREE.Vector3(p.x, p.z, p.y);
       });
     });
+    /* Periodic-jump cutoff */
+    const box = state.data && state.data.box;
+    const halfX = box ? (box.x_max - box.x_min) / 2 : Infinity;
+    const halfY = box ? (box.y_max - box.y_min) / 2 : Infinity;
     /* Pair-type colors */
     const pairCol = {
       'AM_P-AM_P': 0xef4444,
@@ -1807,10 +1826,14 @@ function applyViewMode(state, mode) {
       'AM_S-AM_S': 0x60a5fa,
     };
     const group = new THREE.Group();
-    let nDrawn = 0, nIntact = 0, nSevere = 0;
+    let nDrawn = 0, nIntact = 0, nSevere = 0, nSkippedPeriodic = 0;
     segs.forEach(s => {
       const a = pos[s.id1], b = pos[s.id2];
       if (!a || !b) return;
+      if (Math.abs(a.x - b.x) > halfX || Math.abs(a.z - b.z) > halfY) {
+        nSkippedPeriodic++;
+        return;
+      }
       /* Tube radius from F/P_c — log scale for legibility.
        * Intact (mult < 1) gets a thin gray line; brittle gets pair-type color. */
       const isIntact = s.mult < 1;
@@ -1839,7 +1862,7 @@ function applyViewMode(state, mode) {
        <span style="color:#f97316">●</span> AM_P-AM_S
        <span style="color:#60a5fa">●</span> AM_S-AM_S<br>
        <span style="color:#4b5563">●</span> intact (F/P_c &lt; 1)<br>
-       <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 contact 그림 (intact ${nIntact}, brittle ${nSevere})</span><br>
+       <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 contact 그림 (intact ${nIntact}, brittle ${nSevere})${nSkippedPeriodic ? `, periodic-wrap 제외 ${nSkippedPeriodic}` : ''}</span><br>
        <span style="color:#9ca3af;font-size:9px">★ 두꺼운 빨강 line = AM_P-AM_P severe stress channel. 이게 어디서 어떻게 cluster 되는지가 fracture risk 위치.</span>`);
     return;
   }
