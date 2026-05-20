@@ -1933,9 +1933,8 @@ function renderStressChain(state, segs) {
     const border = on ? color : '#374151';
     return `<button data-sc-filter="${key}"
        style="background:${bg};color:${fg};border:1px solid ${border};
-              border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
-              margin:1px 2px 1px 0">
-       ${label} ${count}</button>`;
+              border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+              margin:1px 1px 0 0;white-space:nowrap">${label} ${count}</button>`;
   };
   /* Stage filter button helper */
   const stageBtn = (key, label, count) => {
@@ -1945,40 +1944,37 @@ function renderStressChain(state, segs) {
     const border = on ? '#7c3aed' : '#374151';
     return `<button data-sc-stage="${key}"
        style="background:${bg};color:${fg};border:1px solid ${border};
-              border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
-              margin:1px 2px 1px 0">
-       ${label} ${count}</button>`;
+              border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+              margin:1px 1px 0 0;white-space:nowrap">${label} ${count}</button>`;
   };
   setLegend(state,
-    `<b>Stress Chain (AM-AM contacts)</b><br>
-     선 두께 ∝ log(F/P_c+1)<br>
-     <div style="font-size:9px;color:#9ca3af;margin-top:4px">Pair-type:</div>
-     <div style="margin:2px 0 4px 0">
+    `<b style="font-size:10px">Stress Chain</b>
+     <span style="color:#9ca3af;font-size:9px">(${nDrawn.toLocaleString()} drawn${
+       nSkippedPeriodic ? `, ${nSkippedPeriodic} wrap` : ''
+     })</span>
+     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;margin-top:3px">
        <button data-sc-filter="ALL"
          style="background:#0ea5e9;color:#fff;border:1px solid #0284c7;
-                border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
-                margin:1px 2px 1px 0;font-weight:bold">ALL ↺</button>
+                border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;font-weight:bold;white-space:nowrap">ALL</button>
        ${btn('AM_P-AM_P', '#ef4444', 'P-P', totalCounts['AM_P-AM_P'])}
        ${btn('AM_P-AM_S', '#f97316', 'P-S', totalCounts['AM_P-AM_S'])}
        ${btn('AM_S-AM_S', '#60a5fa', 'S-S', totalCounts['AM_S-AM_S'])}
-       ${btn('intact',    '#4b5563', 'intact', totalCounts['intact'])}
+       ${btn('intact',    '#4b5563', 'int', totalCounts['intact'])}
      </div>
-     <div style="font-size:9px;color:#9ca3af;margin-top:2px">Stage (brittle only):</div>
-     <div style="margin:2px 0 4px 0">
+     <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;margin-top:2px">
        <button data-sc-stage="ALL"
          style="background:#7c3aed;color:#fff;border:1px solid #6d28d9;
-                border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
-                margin:1px 2px 1px 0;font-weight:bold">ALL ↺</button>
-       ${stageBtn('microcrack',    'micro',  stageCounts['microcrack'])}
-       ${stageBtn('multicrack',    'multi',  stageCounts['multicrack'])}
-       ${stageBtn('fragmentation', 'frag',   stageCounts['fragmentation'])}
-       ${stageBtn('pulverization', 'pulv',   stageCounts['pulverization'])}
+                border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+                margin:1px 1px 0 0;font-weight:bold;white-space:nowrap">ALL</button>
+       ${stageBtn('microcrack',    'μ',    stageCounts['microcrack'])}
+       ${stageBtn('multicrack',    'M',    stageCounts['multicrack'])}
+       ${stageBtn('fragmentation', 'F',    stageCounts['fragmentation'])}
+       ${stageBtn('pulverization', 'P',    stageCounts['pulverization'])}
      </div>
-     <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 그림 ${
-       nSkippedPeriodic ? `(periodic-wrap 제외 ${nSkippedPeriodic})` : ''
-     }</span><br>
-     <span style="color:#9ca3af;font-size:9px">★ Pair-type AND stage 둘 다 활성인 contact만 표시. Intact는 stage 무관 (intact 자체가 stage). 두 줄 다 ALL ↺ 누르면 초기화.<br>
-       ★ Stage 임계 (F/P_c): micro 1–3, multi 3–11, frag 11–32, pulv ≥32 (Lawn 1998)</span>`);
+     <div style="color:#6b7280;font-size:8px;margin-top:3px;line-height:1.3">
+       두께∝log(F/P_c). Pair AND stage. F/P_c: μ 1–3, M 3–11, F 11–32, P ≥32
+     </div>`);
 
   /* Wire up filter buttons */
   const legendEl = document.getElementById('view-mode-legend');
