@@ -151,26 +151,18 @@ AXES: list[dict[str, Any]] = [
 
     # ── 4. 경로 효율 (Path efficiency) ──
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'tortuosity_lap_eff_physics', 'label': 'τ_Laplace,eff ⭐',
+     'key': '__tau_lap_eff', 'label': 'τ_Laplace,eff ⭐',
      'direction': 'lower', 'thresholds': [1.8, 2.2, 2.8, 3.5, 4.5, 6.0],
-     'fallback_key': 'tortuosity_lap_eff',
-     # NO fallback to tau_dij/tortuosity_mean — those are geometric-only
-     # and would show artificially low τ when constriction overhead is
-     # missing.  Show "—" instead so the user knows it wasn't computed.
-     'formula': 'Laplacian + constriction tortuosity (COMSOL/EIS input). '
-                'Stage E physics value preferred.',
-     'meaning': 'Tippens 2019, Famprikis 2019. <2.5 우수, >5 endpoint dominated. '
-                'τ_Dijkstra (geometric only)와 다름 — fallback 금지.',
+     'formula': '√(φ_SE × σ_grain / σ_full)  — Stage E physics 우선, σ_grain=3 mS/cm',
+     'meaning': 'COMSOL/EIS input tortuosity (Tippens 2019, Famprikis 2019). '
+                '<2.5 우수, >5 endpoint dominated.  app.py 표시값과 동일 공식.',
      'weight': 1.0},
 
     {'category': '경로 효율 (Tortuosity)',
-     'key': 'tortuosity_lap_bulk_physics', 'label': 'τ_Laplace,bulk (구조)',
+     'key': '__tau_lap_bulk', 'label': 'τ_Laplace,bulk (구조)',
      'direction': 'lower', 'thresholds': [1.2, 1.4, 1.7, 2.0, 2.5, 3.0],
-     'fallback_key': 'tortuosity_lap_bulk',
-     # Bulk (geometric-only Laplacian) is fundamentally different from
-     # tortuosity_mean (Dijkstra median) so no falling back to the latter.
-     'formula': 'Laplacian without constriction (geometric only)',
-     'meaning': 'Bruggeman 가정시 φ^−0.5 ≈ 1.85. τ_Dij (Dijkstra)와 다름.',
+     'formula': '√(φ_SE × σ_grain / σ_bulk_net)  — constriction 제외 (geometric Laplacian)',
+     'meaning': 'Bruggeman 가정 φ^−0.5 ≈ 1.85.  τ_Dij와 다른 정량.',
      'weight': 0.5},
 
     {'category': '경로 효율 (Tortuosity)',
@@ -243,8 +235,9 @@ AXES: list[dict[str, Any]] = [
     {'category': '전기화학 활성도',
      'key': '__vulnerable_pct', 'label': 'Vulnerable AM (%)',
      'direction': 'lower', 'thresholds': [1, 3, 7, 12, 20, 30],
-     'formula': '100 − ionic_active_pct (low-coverage / dead-zone fallback)',
-     'meaning': '연결은 됐지만 SE coverage가 낮아 cycling시 끊길 risk 높은 AM.',
+     'formula': 'am_vulnerable_pct (실제 metric, fallback: 100 − ionic_active)',
+     'meaning': '연결은 됐지만 SE coverage가 낮아 cycling시 끊길 risk 높은 AM. '
+                '실측 metric 우선 사용.',
      'weight': 0.6},
 
     # ── 7. 전자 전도 (Electronic) ──
@@ -375,38 +368,48 @@ AXES: list[dict[str, Any]] = [
                 'case_id에서 target 자동 추출.  particulate / S 등 tier 없는 case는 N/A.',
      'weight': 1.0},
 
-    # ── 11. 설계 / 입자 (Design parameters) ──
-    {'category': '설계 (Design)',
-     'key': '__r_SE_um', 'label': 'r_SE (μm) — SE 입자 반경 ⭐',
+    # ── 11. 설계 / 입자 정보 (Design info — informational only) ──
+    # NOTE: r_SE / λ_eff는 input 파라미터일 뿐 성능 측정이 아니므로 weight 매우 낮게.
+    # 성능 측정은 cell이 실제로 보이는 σ_ionic / ASR / fracture로 평가됨.
+    {'category': '설계 정보 (Design info)',
+     'key': '__r_SE_um', 'label': 'r_SE (μm) — SE 입자 반경',
      'direction': 'lower', 'thresholds': [0.4, 0.6, 0.9, 1.2, 1.5, 2.0],
      'formula': 'input_params.r_SE × scale → μm',
-     'meaning': '★ corpus 분석 결과 — 작은 SE = redundant network, narrow contact 적음. '
-                'r_SE 0.5μm corpus median.  ≥1.5μm는 percolation fragility ↑ '
-                '(Liu & Yin 2025).',
-     'weight': 0.7},
+     'meaning': '입력 SE 입자 크기.  점수 영향 작음 (informational).  '
+                '실제 성능은 σ_ionic / cut_fraction / bn_below_frac이 측정.',
+     'weight': 0.1},
 
-    {'category': '설계 (Design)',
+    {'category': '설계 정보 (Design info)',
      'key': '__lambda_eff', 'label': 'λ_eff = r_AM / r_SE',
      'direction': 'higher', 'thresholds': [8, 6, 4, 3, 2, 1.5],
-     'formula': 'r_AM (effective, P 우선) / r_SE  — bimodal에선 r_AM_P 사용',
-     'meaning': 'corpus 4-panel design rule 핵심.  λ=8 → cut_fraction 3% (robust), '
-                'λ=2 → 17% (fragile).  AM 크고 SE 작을수록 ↑.',
-     'weight': 0.5},
+     'formula': 'r_AM (P 우선) / r_SE',
+     'meaning': '설계 비율.  점수 영향 작음 (informational).  '
+                '실제 fragility는 cut_fraction (corpus percentile)이 측정.',
+     'weight': 0.1},
 
-    {'category': '설계 (Design)',
+    {'category': '설계 정보 (Design info)',
      'key': '__stage_e_available', 'label': 'Stage E 보정 적용',
      'direction': 'higher', 'thresholds': [1, 1, 1, 0.5, 0.5, 0.5],
-     'formula': '1 if sigma_full_mScm_stage_e_physics 있음 else 0.5',
-     'meaning': 'Cronau / Trevisanello / Wang grain corrections 적용 여부. '
-                '미적용 case는 σ를 ~2x 과대평가 가능 — 다른 case와 직접 비교 부적합.',
+     'formula': '1 if Stage E σ 존재 else 0.5',
+     'meaning': 'QA flag — Stage E (Cronau / Trevisanello / Wang) 적용 여부. '
+                '미적용시 σ 과대평가 가능.',
      'weight': 0.3},
 
-    {'category': '설계 (Design)',
+    {'category': '설계 정보 (Design info)',
      'key': '__compaction_efficiency', 'label': '압축 효율 (300 MPa porosity)',
      'direction': 'band', 'optimum': 15.0, 'band_width': 5.0,
      'formula': 'porosity (%) at target_press_sim ≈ 0.3 (300 MPa)',
      'meaning': '300 MPa 압축시 실험 sulfide cathode porosity 12-18% 범위. '
                 '<10% over-compress (fracture risk), >22% under-compress (poor contact).',
+     'weight': 0.4},
+
+    {'category': '설계 정보 (Design info)',
+     'key': '__volume_change_buffer', 'label': '부피변화 buffer (porosity 적정성)',
+     'direction': 'higher', 'thresholds': [15, 12, 10, 8, 6, 4],
+     'formula': 'porosity (%) — NCM 충방전시 ~5% 부피 변화 흡수 가능한 여유',
+     'meaning': 'cycling 동안 NCM 부피 ~5% 변화 → SE 박리 위험. '
+                '≥10% porosity = 충분한 buffer, <6% = 위험.  '
+                '압축 효율의 cycling-stability side.',
      'weight': 0.4},
 
     # ── 12. 셀 ASR ──
@@ -449,6 +452,22 @@ AXES: list[dict[str, Any]] = [
      'weight': 0.15},
 
     {'category': '셀 단위 ASR',
+     'key': '__ASR_total_Ohm_cm2', 'label': 'ASR_total (Ω·cm²) — i+e 합 ⭐',
+     'direction': 'lower', 'thresholds': [40, 80, 130, 200, 320, 500],
+     'formula': 'ASR_ionic + ASR_electronic — same circuit, 더해서 셀 전체 저항',
+     'meaning': '★ 단일 저항 axis로는 ASR_ionic만으로 전체 그림 못 봄.  '
+                '도전재 없는 sulfide cathode는 ASR_e도 비교 가능 규모.',
+     'weight': 1.5},
+
+    {'category': '셀 단위 ASR',
+     'key': '__c_rate_capability', 'label': 'C-rate proxy (1/ASR_total)',
+     'direction': 'higher', 'thresholds': [0.025, 0.012, 0.008, 0.005, 0.003, 0.002],
+     'formula': '1 / ASR_total  — 단위 mhos/cm² (역수)',
+     'meaning': '같은 capacity면 ASR 낮을수록 high-rate 가능.  ASR_total과 정보 중복 '
+                '있으나 "rate capability" 직관적 해석용.',
+     'weight': 0.4},
+
+    {'category': '셀 단위 ASR',
      'key': '__polarization_mV_at_C3', 'label': '분극 η @ C/3 (mV) ⭐',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
      'formula': 'η = i × (ASR_ionic + ASR_e),  i = 0.33 mA/cm² (C/3 of 1 mAh/cm²)',
@@ -467,13 +486,9 @@ AXES: list[dict[str, Any]] = [
                 'SE 침투 어려움. Band-around-optimum scoring.',
      'weight': 0.5},
 
-    {'category': '안전성 (Safety)',
-     'key': '__stress_hotspot_pct', 'label': 'Stress hotspot density (%)',
-     'direction': 'lower', 'thresholds': [3, 7, 14, 22, 32, 45],
-     'formula': 'CV(σ_VM) × 5 / 100  — particle stress p99 초과 비율 근사',
-     'meaning': 'σ_VM의 high-tail (p99 초과) 입자 비율. 초기 cycling 시 fracture '
-                'nucleation 지점. CV(σ_VM) 기반 보수적 추정.',
-     'weight': 0.4},
+    # NOTE: 'Stress hotspot density' 축 제거됨.  CV(σ_VM) × 0.05 같은 근사 대신
+    # 실 데이터 (particle_max_fpc per-particle count)가 metrics에 들어오면
+    # 그때 진짜 axis로 추가.  현재는 stress_cv 자체로 충분 (기계적 안정성에 있음).
 
     # ── 13. 수명 (Cycling) ──
     {'category': '수명 (Cycling)',
@@ -770,8 +785,11 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         return None
 
     if key == '__vulnerable_pct':
-        # If a dedicated metric exists use it; else fall back to (100 − active)
-        for k in ('ionic_vulnerable_pct', 'vulnerable_am_pct'):
+        # Use REAL metric first: am_vulnerable_pct (from dem_analysis_core).
+        # Falls back to dedicated alternatives, then to (100 − ionic_active)
+        # as last resort.
+        for k in ('am_vulnerable_pct', 'ionic_vulnerable_pct',
+                  'vulnerable_am_pct'):
             v = metrics.get(k)
             if v is not None:
                 try: return float(v)
@@ -782,22 +800,34 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             except (TypeError, ValueError): return None
         return None
 
+    # τ_Laplace,eff (COMSOL/EIS input) — same formula as webapp/app.py:2026
+    #   τ_Lap_eff = √(φ_SE × σ_grain / σ_full)
+    if key == '__tau_lap_eff':
+        phi_se = metrics.get('phi_se')
+        sig_full = _sigma_ionic_effective(metrics)
+        try:
+            if phi_se and sig_full and sig_full > 0:
+                return (float(phi_se) * 3.0 / float(sig_full)) ** 0.5
+        except (TypeError, ValueError):
+            return None
+        return None
+
+    if key == '__tau_lap_bulk':
+        phi_se = metrics.get('phi_se')
+        sig_bulk = metrics.get('sigma_bulk_net_mScm')
+        try:
+            if phi_se and sig_bulk and sig_bulk > 0:
+                return (float(phi_se) * 3.0 / float(sig_bulk)) ** 0.5
+        except (TypeError, ValueError):
+            return None
+        return None
+
     if key == '__constriction_overhead':
-        # τ_eff / τ_bulk — ONLY valid when both Laplacian values exist.
-        # Geometric (Dijkstra) tortuosity is a different quantity and
-        # would inflate the overhead artificially.
-        for ne_key, nb_key in (
-                ('tortuosity_lap_eff_physics', 'tortuosity_lap_bulk_physics'),
-                ('tortuosity_lap_eff',         'tortuosity_lap_bulk'),
-        ):
-            num = metrics.get(ne_key); den = metrics.get(nb_key)
-            try:
-                num = float(num) if num is not None else None
-                den = float(den) if den is not None else None
-            except (TypeError, ValueError):
-                continue
-            if num and den and den > 0:
-                return num / den
+        # τ_eff / τ_bulk — both Laplacian derivations from φ_SE + σ.
+        num = _derived_value('__tau_lap_eff', metrics)
+        den = _derived_value('__tau_lap_bulk', metrics)
+        if num and den and den > 0:
+            return num / den
         return None
 
     if key == '__constriction_R_fraction_pct':
@@ -870,6 +900,29 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             solid = 0.85
         return rho_comp * wt_am * C_am * solid
 
+    # ── ASR_total + C-rate proxy + Volume buffer ──────────────────────
+    if key == '__ASR_total_Ohm_cm2':
+        asr_i = _derived_value('__asr_ionic_Ohm_cm2', metrics)
+        asr_e = _derived_value('__asr_electronic_Ohm_cm2', metrics)
+        if asr_i is None and asr_e is None:
+            return None
+        return (asr_i or 0) + (asr_e or 0)
+
+    if key == '__c_rate_capability':
+        asr_t = _derived_value('__ASR_total_Ohm_cm2', metrics)
+        if asr_t and asr_t > 0:
+            return 1.0 / asr_t
+        return None
+
+    if key == '__volume_change_buffer':
+        # NCM 부피 ~5% 변화 → porosity가 흡수 buffer.
+        # Pass through porosity (already 0-100 %).
+        eps = metrics.get('porosity')
+        try:
+            return float(eps) if eps is not None else None
+        except (TypeError, ValueError):
+            return None
+
     # ── Operating polarization ─────────────────────────────────────────
     if key == '__polarization_mV_at_C3':
         # i = 0.33 mA/cm² (C/3 rate for 1 mAh/cm² electrode loading)
@@ -893,15 +946,7 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         except (TypeError, ValueError):
             return None
 
-    if key == '__stress_hotspot_pct':
-        # Approximation: with CV(σ_VM) = c (as %), the fraction of particles
-        # in the >p99 tail scales like ~5% per 100% CV (heuristic, conservative).
-        # For Gaussian, p99 tail is 1%, but stress dist is heavy-tailed so we
-        # use a heavier-tail proxy: hotspot_pct ≈ CV × 5 / 100 (capped 0-100).
-        cv_pct = _derived_value('__sigma_vm_cv_pct', metrics)
-        if cv_pct is None:
-            return None
-        return min(100, cv_pct * 5 / 100)
+    # __stress_hotspot_pct 제거 — 근사 대신 stress_cv axis (기계적 안정성)으로 충분.
 
     # ── Cycling life ────────────────────────────────────────────────────
     if key == '__cycle_stable_AM_pct':
@@ -990,7 +1035,15 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             return None
 
     if key == '__sigma_e_fracture_loss_pct':
-        # baseline = no Stage E (i.e. physics-only), Stage E = fracture-augmented
+        # Use REAL metric first: electronic_sigma_loss_pct_stage_e (analyze_contacts.py).
+        # Fall back to deriving from σ_e before/after Stage E.
+        for k in ('electronic_sigma_loss_pct_stage_e',
+                  'electronic_sigma_loss_pct_stagewise',
+                  'electronic_sigma_loss_pct'):
+            v = metrics.get(k)
+            if v is not None:
+                try: return float(v)
+                except (TypeError, ValueError): pass
         new = metrics.get('electronic_sigma_full_mScm_stage_e_physics')
         old = metrics.get('electronic_sigma_full_mScm_physics')
         try:
