@@ -456,7 +456,7 @@ def _same_row(label, val):
     return [label, val, val, '0%']
 
 
-def build_overall_grade_table(metrics, results_dir=None):
+def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
     """Build a 'overall_grade' table by calling scripts/grade_engine.
 
     Layout (4 columns) matches the other analysis-summary tabs:
@@ -464,9 +464,12 @@ def build_overall_grade_table(metrics, results_dir=None):
     The 'category' label of each axis becomes a section header row
     (prefix '── … ──') so the template renders as a separator.
 
-    Also returns the composite (overall) {grade, score} via a fake-row
-    at the very bottom for visual emphasis.  Returns None if metrics is
-    empty or the engine couldn't score any axis.
+    When `carbon_wt_pct` is set (>0), the grade engine applies the
+    What-if carbon-additive model so σ_e + ASR_electronic axes use
+    the hypothetical σ_e_new.  This is what powers the live ON/OFF
+    toggle in the 종합 등급 tab.
+
+    Returns None if metrics is empty or the engine couldn't score any axis.
     """
     if not metrics:
         return None
@@ -501,12 +504,11 @@ def build_overall_grade_table(metrics, results_dir=None):
                                               or (_aux.get('se_bn_median_norm') and
                                                   len(_aux.get('se_bottleneck_edges', []))),
                 }
-                # n_perc_edges may not be cached; fall back to median estimate
-                # so we don't lose the bn_below_frac axis entirely.
             except (OSError, ValueError):
                 pass
 
-    result = build_overall_grade(metrics, corpus_csv, se_aux)
+    result = build_overall_grade(metrics, corpus_csv, se_aux,
+                                  carbon_wt_pct=carbon_wt_pct)
 
     rows = []
     last_cat = None
@@ -2787,6 +2789,74 @@ def api_se_corpus():
             _se_corpus_cache = {'mtime': mt,
                                  'rows': list(csv.DictReader(f))}
     return jsonify({'rows': _se_corpus_cache['rows']})
+
+
+@app.route('/case/<path:case_id>/grade')
+def case_grade_json(case_id):
+    """Return the full overall-grade structure as JSON, with optional
+    `carbon_wt` query parameter (default 0 → no override).  Used by the
+    What-if ON/OFF toggle in the 종합 등급 tab to re-render the table
+    without a page reload."""
+    try:
+        carbon_wt = float(request.args.get('carbon_wt', 0))
+    except ValueError:
+        carbon_wt = 0.0
+    carbon_wt = max(0.0, min(10.0, carbon_wt))
+
+    # Resolve metrics + results_dir (dashboard vs archive)
+    if case_id.startswith('archive:'):
+        rel = case_id[len('archive:'):]
+        target = _safe_path(rel)
+        if not target:
+            return jsonify({'error': 'archive path not allowed'}), 400
+        results_dir = target
+    else:
+        results_dir = get_results_dir(case_id)
+    metrics_path = os.path.join(results_dir, 'full_metrics.json')
+    if not os.path.exists(metrics_path):
+        return jsonify({'error': 'metrics not found'}), 404
+    with open(metrics_path) as f:
+        metrics = json.load(f)
+
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        from grade_engine import build_overall_grade, GRADE_COLOR
+    except ImportError:
+        return jsonify({'error': 'grade_engine import failed'}), 500
+
+    corpus_csv = os.path.join(os.path.dirname(__file__), '..',
+                              'docs', 'data', 'se_diagnostics_82.csv')
+    if not os.path.exists(corpus_csv):
+        corpus_csv = None
+
+    # SE diag aux (same as the build_overall_grade_table path)
+    se_aux = None
+    aux_path = os.path.join(results_dir, 'viewer_aux.json')
+    if os.path.exists(aux_path):
+        try:
+            with open(aux_path) as af:
+                _aux = json.load(af)
+            se_aux = {
+                'n_percolating':         _aux.get('se_n_percolating'),
+                'articulation_points':   _aux.get('se_articulation_points', []),
+                'n_bn_below_threshold':  _aux.get('se_n_bn_below_threshold'),
+                'n_perc_edges':          _aux.get('se_n_perc_edges'),
+            }
+        except (OSError, ValueError):
+            pass
+
+    result = build_overall_grade(metrics, corpus_csv, se_aux,
+                                  carbon_wt_pct=carbon_wt if carbon_wt > 0 else None)
+
+    # Attach the grade-colour map so the client doesn't need its own copy.
+    return jsonify({
+        'carbon_wt_pct': carbon_wt,
+        'grade_colors':  GRADE_COLOR,
+        **result,
+    })
 
 
 @app.route('/case/<path:case_id>/whatif-carbon')

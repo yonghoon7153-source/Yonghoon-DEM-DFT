@@ -1515,7 +1515,12 @@ document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
   panel.innerHTML = `
     <div class="whatif-head">
       🧪 <b>What-if — 도전재 carbon black 첨가 시</b>
-      <span class="whatif-hint">(Bruggeman φ²·σ_C 모델, t=2)</span>
+      <span class="whatif-hint">(Bruggeman φ²·σ_C, t=2)</span>
+      <label class="whatif-toggle" title="ON이면 종합 등급 표가 carbon 첨가 시나리오로 재계산됩니다">
+        <input type="checkbox" id="whatif-toggle">
+        <span class="whatif-toggle-slider"></span>
+        <span class="whatif-toggle-label" id="whatif-toggle-label">OFF</span>
+      </label>
     </div>
     <div class="whatif-controls">
       <label>wt% : <input type="range" id="whatif-wt"
@@ -1525,7 +1530,7 @@ document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
               style="margin-left:10px">재계산</button>
     </div>
     <div id="whatif-result" class="whatif-result">
-      <div class="whatif-loading">슬라이더를 움직이거나 [재계산] 클릭</div>
+      <div class="whatif-loading">슬라이더를 움직이면 σ_e / ASR_e 비교 표시. <b>ON</b>으로 켜면 종합 등급 표 자체가 재계산됩니다.</div>
     </div>
     <div class="whatif-note">
       ⚠ 1차 추정. φ_C = wt% × (ρ_avg/ρ_C) ≈ wt% × 1.75 ;  σ_e^new ≈ σ_e^old + φ_C² × σ_C
@@ -1535,11 +1540,33 @@ document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
     </div>`;
   tab.appendChild(panel);
 
-  const caseId = '{{ case.id }}';
-  const wtSlider = panel.querySelector('#whatif-wt');
-  const wtLabel  = panel.querySelector('#whatif-wt-val');
-  const resultEl = panel.querySelector('#whatif-result');
-  const recalcBtn= panel.querySelector('#whatif-recalc');
+  const caseId    = '{{ case.id }}';
+  const wtSlider  = panel.querySelector('#whatif-wt');
+  const wtLabel   = panel.querySelector('#whatif-wt-val');
+  const resultEl  = panel.querySelector('#whatif-result');
+  const recalcBtn = panel.querySelector('#whatif-recalc');
+  const toggle    = panel.querySelector('#whatif-toggle');
+  const toggleLbl = panel.querySelector('#whatif-toggle-label');
+
+  /* Snapshot the original grade table tbody + composite header so we
+   * can swap back to it instantly when the toggle goes OFF. */
+  const tableEl = tab.querySelector('table.grade-table');
+  const originalTBody = tableEl ? tableEl.querySelector('tbody').cloneNode(true) : null;
+  /* Find the "Overall" composite cell and remember its original HTML.
+   * Falls back gracefully if structure changed. */
+  let originalCompositeHTML = null;
+  function findCompositeRow(tbody) {
+    if (!tbody) return null;
+    for (const tr of tbody.querySelectorAll('tr')) {
+      const tdLabel = tr.querySelector('td:first-child');
+      if (tdLabel && /Overall|가중평균/.test(tdLabel.textContent)) return tr;
+    }
+    return null;
+  }
+  if (originalTBody) {
+    const oc = findCompositeRow(originalTBody);
+    if (oc) originalCompositeHTML = oc.outerHTML;
+  }
 
   async function fetchWhatif(wt) {
     resultEl.innerHTML = '<div class="whatif-loading">… 계산 중</div>';
@@ -1579,17 +1606,156 @@ document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
                                        ? arrow(data.asr_e_new, data.asr_e_old) : ''}</td></tr>
         </table>
         <div class="whatif-impact">
-          전자 전도 축 평가는 σ_e 증가에 따라 자동 갱신됩니다 — 슬라이더로 sweep 해보세요.
+          ${toggle.checked
+              ? '<b style="color:#10b981">● 종합 등급 표 ON</b> — σ_e ↑ 만큼 전자전도 + 전체 가중평균이 재계산됨.'
+              : 'ON으로 켜면 위 시나리오가 종합 등급 표에도 적용됩니다.'}
         </div>`;
     } catch (e) {
       resultEl.innerHTML = `<div class="whatif-err">오류: ${e.message}</div>`;
     }
   }
+
+  /* ── Live grade-table re-render on toggle / wt change ─────────────── */
+  function escapeAttr(s) { return String(s ?? '').replace(/"/g, '&quot;'); }
+
+  function renderGradeRow(ax, colors) {
+    const v = ax.value;
+    const valStr = v == null ? '—'
+                 : Math.abs(v) >= 100 ? v.toFixed(1)
+                 : Math.abs(v) >= 1   ? Number(v.toPrecision(3))
+                                       : Number(v.toPrecision(4));
+    const score = ax.score;
+    const scoreStr = score != null ? Math.round(score) : '—';
+    const color = (colors && colors[ax.grade]) || '#6b7280';
+    const gradeHtml = `<span class="grade-badge"
+        style="background:${color}1f;color:${color};border:1px solid ${color}55;
+               border-radius:4px;padding:1px 6px;font-weight:600;
+               font-family:ui-monospace,Menlo,monospace">
+        ${ax.grade}<span style="opacity:.7;font-weight:400;font-size:.85em;
+                                  margin-left:4px">(${scoreStr})</span></span>`;
+    const tip =
+        `<b>${ax.label}</b><br>` +
+        `<span style='color:#9ca3af'>category:</span> ${ax.category}<br>` +
+        `<span style='color:#9ca3af'>direction:</span> ${
+            ax.direction === 'higher' ? 'higher = better'
+          : ax.direction === 'lower'  ? 'lower = better'
+          : ax.direction || ''}<br>` +
+        `<span style='color:#9ca3af'>formula:</span> ${ax.formula || ''}<br>` +
+        `<span style='color:#9ca3af'>basis:</span> ${ax.basis || ''}<br>` +
+        `<span style='color:#9ca3af'>meaning:</span> ${ax.meaning || ''}`;
+    return `<tr class="grade-row" data-grade-tip="${escapeAttr(tip)}">
+        <td class="metric-label">${ax.label}</td>
+        <td>${valStr}</td>
+        <td>${gradeHtml}</td></tr>`;
+  }
+
+  function rebuildGradeTbody(data) {
+    if (!tableEl) return;
+    const tbody = tableEl.querySelector('tbody');
+    if (!tbody) return;
+    const colors = data.grade_colors || {};
+    let lastCat = null;
+    let html = '';
+    data.axes.forEach(ax => {
+      if (ax.category !== lastCat) {
+        html += `<tr class="section-header"><td colspan="3">── ${ax.category} ──</td></tr>`;
+        lastCat = ax.category;
+      }
+      html += renderGradeRow(ax, colors);
+    });
+    // 종합
+    const comp = data.composite;
+    const ccol = colors[comp.grade] || '#6b7280';
+    const carbonNote = data.carbon_wt_pct > 0
+        ? ` <span style="color:#10b981">(carbon +${data.carbon_wt_pct}wt% 적용)</span>` : '';
+    html += `<tr class="section-header"><td colspan="3">── 종합 ──</td></tr>`;
+    html += `<tr class="grade-row"
+        data-grade-tip="${escapeAttr('<b>Overall</b><br>33축 가중평균. carbon override 시 σ_e/ASR_e 축만 영향.')}">
+        <td class="metric-label"><b>Overall (가중평균)</b>${carbonNote}</td>
+        <td><b>${comp.score} / 100</b></td>
+        <td><span class="grade-badge"
+            style="background:${ccol}1f;color:${ccol};border:2px solid ${ccol};
+                   border-radius:5px;padding:2px 10px;font-weight:700;font-size:1.05em;
+                   font-family:ui-monospace,Menlo,monospace">${comp.grade}</span></td></tr>`;
+    // 카테고리 평균
+    html += `<tr class="section-header"><td colspan="3">── 카테고리 평균 ──</td></tr>`;
+    for (const [cat, score] of Object.entries(data.category_scores || {})) {
+      const grade = (function(s) {
+        if (s >= 92) return 'A';
+        if (s >= 85) return 'B+';
+        if (s >= 78) return 'B';
+        if (s >= 70) return 'B-';
+        if (s >= 62) return 'C+';
+        if (s >= 55) return 'C';
+        return 'D';
+      })(score);
+      const c = colors[grade] || '#6b7280';
+      html += `<tr><td>${cat}</td><td>${score.toFixed(1)}</td>
+          <td><span class="grade-badge"
+              style="background:${c}1f;color:${c};border:1px solid ${c}55;
+                     border-radius:4px;padding:1px 6px;font-weight:600;
+                     font-family:ui-monospace,Menlo,monospace">${grade}</span></td></tr>`;
+    }
+    tbody.innerHTML = html;
+    // Re-bind tooltip hover on the new rows.
+    rebindGradeRowTooltips();
+  }
+
+  /* The grade-row tooltip binding was attached once on DOMContentLoaded;
+   * after innerHTML swap we have new <tr> nodes so we re-bind. */
+  function rebindGradeRowTooltips() {
+    document.querySelectorAll('tr.grade-row[data-grade-tip]').forEach(tr => {
+      if (tr.dataset._tipBound === '1') return;
+      tr.dataset._tipBound = '1';
+      const tip = tr.dataset.gradeTip;
+      tr.addEventListener('mouseenter', () => {
+        if (activeTooltipRow) { activeTooltipRow.remove(); activeTooltipRow = null; }
+        const colCount = tr.children.length;
+        const ttRow = document.createElement('tr');
+        ttRow.className = 'tooltip-row';
+        ttRow.innerHTML = `<td colspan="${colCount}"><div class="tt-inner">${tip}</div></td>`;
+        tr.after(ttRow);
+        activeTooltipRow = ttRow;
+      });
+      tr.addEventListener('mouseleave', (e) => {
+        if (activeTooltipRow && e.relatedTarget && activeTooltipRow.contains(e.relatedTarget)) return;
+        if (activeTooltipRow) { activeTooltipRow.remove(); activeTooltipRow = null; }
+      });
+    });
+  }
+
+  async function applyGradeOverride() {
+    if (!tableEl) return;
+    const wt = toggle.checked ? wtSlider.value : 0;
+    try {
+      const r = await fetch(`/case/${encodeURIComponent(caseId)}/grade?carbon_wt=${wt}`);
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const data = await r.json();
+      rebuildGradeTbody(data);
+    } catch (e) {
+      console.error('grade re-render failed', e);
+    }
+  }
+
   wtSlider.addEventListener('input', () => {
     wtLabel.textContent = (+wtSlider.value).toFixed(2);
   });
-  wtSlider.addEventListener('change', () => fetchWhatif(wtSlider.value));
-  recalcBtn.addEventListener('click', () => fetchWhatif(wtSlider.value));
+  wtSlider.addEventListener('change', () => {
+    fetchWhatif(wtSlider.value);
+    if (toggle.checked) applyGradeOverride();
+  });
+  recalcBtn.addEventListener('click', () => {
+    fetchWhatif(wtSlider.value);
+    if (toggle.checked) applyGradeOverride();
+  });
+  toggle.addEventListener('change', () => {
+    toggleLbl.textContent = toggle.checked ? 'ON' : 'OFF';
+    toggleLbl.classList.toggle('on', toggle.checked);
+    // Tint the panel border when ON
+    panel.classList.toggle('on', toggle.checked);
+    applyGradeOverride();
+    fetchWhatif(wtSlider.value);
+  });
   // Initial fetch on first tab activation
   fetchWhatif(wtSlider.value);
 })();

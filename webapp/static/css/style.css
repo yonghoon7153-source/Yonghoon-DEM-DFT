@@ -228,8 +228,47 @@ tr.tooltip-row .tt-meaning { color: #a5f3c4; margin-top: 8px; }
   border: 1px solid #2a2d3e; border-radius: 10px; padding: 16px 18px;
   color: var(--text);
 }
-.whatif-head { font-size: .98rem; color: var(--text); margin-bottom: 10px; }
-.whatif-head .whatif-hint { color: var(--dim); font-size: .8rem; font-weight: 400; margin-left: 6px; }
+.whatif-head {
+  font-size: .98rem; color: var(--text); margin-bottom: 10px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+}
+.whatif-head .whatif-hint { color: var(--dim); font-size: .8rem; font-weight: 400; }
+
+/* Toggle switch */
+.whatif-toggle {
+  display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer; margin-left: auto;
+  user-select: none;
+}
+.whatif-toggle input { display: none; }
+.whatif-toggle .whatif-toggle-slider {
+  position: relative; width: 38px; height: 20px;
+  background: #2a2d3e; border: 1px solid var(--border);
+  border-radius: 999px; transition: background .15s;
+}
+.whatif-toggle .whatif-toggle-slider::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 14px; height: 14px; background: #94a3b8;
+  border-radius: 50%; transition: transform .18s ease, background .18s;
+}
+.whatif-toggle input:checked + .whatif-toggle-slider {
+  background: rgba(16,185,129,.35); border-color: #10b981;
+}
+.whatif-toggle input:checked + .whatif-toggle-slider::after {
+  transform: translateX(18px); background: #10b981;
+}
+.whatif-toggle-label {
+  font-family: var(--mono); font-size: .78rem;
+  color: var(--dim); min-width: 26px; text-align: left;
+}
+.whatif-toggle-label.on { color: #10b981; font-weight: 700; }
+
+/* Panel-ON ambient highlight so the user sees that the grade table is in
+ * What-if mode, not the baseline. */
+.whatif-panel.on {
+  border-color: #10b981;
+  box-shadow: 0 0 0 1px rgba(16,185,129,.25), 0 2px 12px rgba(16,185,129,.10);
+}
 .whatif-controls { margin-bottom: 10px; font-size: .88rem; color: var(--dim); }
 .whatif-controls #whatif-wt-val {
   display: inline-block; min-width: 36px; text-align: right; font-family: var(--mono);
