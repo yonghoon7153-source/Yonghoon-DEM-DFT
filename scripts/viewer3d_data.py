@@ -516,7 +516,8 @@ def compute_se_network_diagnostics(contacts,
                                     boundary_factor: float = 2.0,
                                     bn_threshold_factor: float = 0.10,
                                     bn_min: int = 10,
-                                    bn_max: int = 200) -> dict:
+                                    bn_max: int = 200,
+                                    verbose: bool = False) -> dict:
     """Build SE-SE contact graph, identify percolation breakage points.
 
     Inputs are sim units (plate_z in sim length).  Output areas are
@@ -600,10 +601,20 @@ def compute_se_network_diagnostics(contacts,
                 top_se    = {pid for pid in se_ids
                              if atoms_by_id[pid].get('z', 0) >= z_top}
 
+    if verbose:
+        print(f'           graph: nodes={G.number_of_nodes()}, '
+              f'edges={G.number_of_edges()}, '
+              f'bottom_se={len(bottom_se)}, top_se={len(top_se)}')
+
     # Identify percolating component(s) + dead-end clusters
     percolating_se = set()
     dead_end_clusters = []
-    for comp in nx.connected_components(G):
+    components = list(nx.connected_components(G))
+    if verbose:
+        sizes = sorted((len(c) for c in components), reverse=True)
+        print(f'           n_components={len(components)}, '
+              f'top sizes={sizes[:5]}')
+    for comp in components:
         has_b = bool(comp & bottom_se)
         has_t = bool(comp & top_se)
         if has_b and has_t:

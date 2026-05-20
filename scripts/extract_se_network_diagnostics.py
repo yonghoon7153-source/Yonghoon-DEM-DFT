@@ -231,14 +231,30 @@ def load_composition(case_dir: Path, meta: dict):
     }
 
 
-def analyze_case(case_dir: Path) -> dict | None:
+def analyze_case(case_dir: Path, debug: bool = False) -> dict | None:
     case_id = case_dir.name
     try:
         atoms, type_map, scale, meta = load_case(case_dir)
         contacts = load_contacts(case_dir)
         plate_z = estimate_plate_z(atoms)
+        if debug:
+            se_types = {k for k, v in type_map.items() if v == 'SE'}
+            n_se = sum(1 for a in atoms.values() if a['type'] in se_types)
+            n_se_contacts = sum(1 for c in contacts
+                                  if (c['id1'] in atoms and c['id2'] in atoms and
+                                      atoms[c['id1']]['type'] in se_types and
+                                      atoms[c['id2']]['type'] in se_types))
+            zs = sorted(a['z'] for a in atoms.values())
+            zmin, zmax = zs[0], zs[-1]
+            zp99 = zs[int(len(zs)*0.99)] if zs else 0
+            print(f'    DEBUG: n_atoms={len(atoms)}, n_SE={n_se}, '
+                   f'n_SE-SE contacts={n_se_contacts}')
+            print(f'           z range: [{zmin:.5f}, {zmax:.5f}], '
+                   f'z@99%={zp99:.5f}, plate_z(max)={plate_z:.5f}')
+            print(f'           scale={scale}, type_map={type_map}')
         diag = compute_se_network_diagnostics(
-            contacts, atoms, type_map, plate_z=plate_z, scale=scale)
+            contacts, atoms, type_map, plate_z=plate_z, scale=scale,
+            verbose=debug)
     except Exception as e:
         print(f'  [{case_id}] SKIP — load/diag fail: {e}')
         return None
@@ -393,6 +409,9 @@ def main():
                      help='Only write CSV, skip figure.')
     ap.add_argument('--no-plot', action='store_true',
                      help='Same as --csv-only.')
+    ap.add_argument('--debug', nargs='*', default=None,
+                     help='Case substrings to print debug info for. '
+                          'Empty = no debug. "all" = every case.')
     ap.add_argument('--out-csv', default=str(DATA_DIR / 'se_diagnostics_82.csv'))
     ap.add_argument('--out-fig', default=str(FIG_DIR / 'percolation_risk_scaling.png'))
     args = ap.parse_args()
@@ -401,8 +420,11 @@ def main():
     print(f'Found {len(cases)} candidate case dirs')
 
     rows = []
+    debug_filters = args.debug or []
     for i, case_dir in enumerate(cases):
-        result = analyze_case(case_dir)
+        want_debug = any(s in case_dir.name for s in debug_filters) \
+                     or 'all' in debug_filters
+        result = analyze_case(case_dir, debug=want_debug)
         if result is None: continue
         rows.append(result)
         print(f'  [{i+1:>3}/{len(cases)}] {case_dir.name:35s}  '
