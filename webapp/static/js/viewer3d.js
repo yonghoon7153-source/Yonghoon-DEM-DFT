@@ -1812,10 +1812,14 @@ function applyViewMode(state, mode) {
       flushColors();
       return;
     }
-    /* Default filter — fresh entry into this mode resets to "all on" */
+    /* Default filters — fresh entry into this mode resets to "all on" */
     state.stressChainFilter = {
       'AM_P-AM_P': true, 'AM_P-AM_S': true,
       'AM_S-AM_S': true, 'intact':    true,
+    };
+    state.stressChainStageFilter = {
+      'microcrack': true, 'multicrack': true,
+      'fragmentation': true, 'pulverization': true,
     };
     renderStressChain(state, segs);
     flushColors();
@@ -1841,6 +1845,20 @@ function renderStressChain(state, segs) {
     'AM_P-AM_P': true, 'AM_P-AM_S': true,
     'AM_S-AM_S': true, 'intact':    true,
   };
+  /* Stage filter (cross-cuts with pair-type filter via AND) */
+  const stageFilter = state.stressChainStageFilter || {
+    'microcrack': true, 'multicrack': true,
+    'fragmentation': true, 'pulverization': true,
+  };
+  /* Stage classification — must match Lawn 1998 thresholds in
+   * fracture_model.py: 1, 3, 11, 32.  Intact handled by pair-type
+   * filter ('intact' key), so this only filters brittle (mult >= 1). */
+  const stageOf = (mult) => {
+    if (mult >= 32) return 'pulverization';
+    if (mult >= 11) return 'fragmentation';
+    if (mult >= 3)  return 'multicrack';
+    return 'microcrack';   /* mult in [1, 3) */
+  };
   /* Position lookup */
   const pos = {};
   ['AM_P', 'AM_S'].forEach(t => {
@@ -1864,6 +1882,10 @@ function renderStressChain(state, segs) {
   const totalCounts = {
     'AM_P-AM_P': 0, 'AM_P-AM_S': 0, 'AM_S-AM_S': 0, 'intact': 0,
   };
+  const stageCounts = {
+    'microcrack': 0, 'multicrack': 0,
+    'fragmentation': 0, 'pulverization': 0,
+  };
   segs.forEach(s => {
     const a = pos[s.id1], b = pos[s.id2];
     if (!a || !b) return;
@@ -1874,10 +1896,16 @@ function renderStressChain(state, segs) {
     const isIntact = s.mult < 1;
     /* tally totals before filter */
     if (isIntact) totalCounts['intact']++;
-    else totalCounts[s.pair_type] = (totalCounts[s.pair_type] || 0) + 1;
-    /* apply filter */
+    else {
+      totalCounts[s.pair_type] = (totalCounts[s.pair_type] || 0) + 1;
+      stageCounts[stageOf(s.mult)]++;
+    }
+    /* apply filters — pair-type AND stage must both allow */
     if (isIntact && !filter['intact']) return;
-    if (!isIntact && !filter[s.pair_type]) return;
+    if (!isIntact) {
+      if (!filter[s.pair_type]) return;
+      if (!stageFilter[stageOf(s.mult)]) return;
+    }
 
     if (isIntact) nIntact++; else nSevere++;
     const r = Math.max(0.12, Math.log10(s.mult + 1.1) * 0.5);
@@ -1897,7 +1925,7 @@ function renderStressChain(state, segs) {
     state.stressChainGroup = group;
   }
 
-  /* Filter button helper */
+  /* Pair-type filter button helper */
   const btn = (key, color, label, count) => {
     const on = filter[key];
     const bg = on ? color : '#1f2937';
@@ -1909,10 +1937,23 @@ function renderStressChain(state, segs) {
               margin:1px 2px 1px 0">
        ${label} ${count}</button>`;
   };
+  /* Stage filter button helper */
+  const stageBtn = (key, label, count) => {
+    const on = stageFilter[key];
+    const bg = on ? '#7c3aed' : '#1f2937';
+    const fg = on ? '#fff' : '#6b7280';
+    const border = on ? '#7c3aed' : '#374151';
+    return `<button data-sc-stage="${key}"
+       style="background:${bg};color:${fg};border:1px solid ${border};
+              border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
+              margin:1px 2px 1px 0">
+       ${label} ${count}</button>`;
+  };
   setLegend(state,
     `<b>Stress Chain (AM-AM contacts)</b><br>
      선 두께 ∝ log(F/P_c+1)<br>
-     <div style="margin:4px 0">
+     <div style="font-size:9px;color:#9ca3af;margin-top:4px">Pair-type:</div>
+     <div style="margin:2px 0 4px 0">
        <button data-sc-filter="ALL"
          style="background:#0ea5e9;color:#fff;border:1px solid #0284c7;
                 border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
@@ -1922,14 +1963,27 @@ function renderStressChain(state, segs) {
        ${btn('AM_S-AM_S', '#60a5fa', 'S-S', totalCounts['AM_S-AM_S'])}
        ${btn('intact',    '#4b5563', 'intact', totalCounts['intact'])}
      </div>
+     <div style="font-size:9px;color:#9ca3af;margin-top:2px">Stage (brittle only):</div>
+     <div style="margin:2px 0 4px 0">
+       <button data-sc-stage="ALL"
+         style="background:#7c3aed;color:#fff;border:1px solid #6d28d9;
+                border-radius:3px;padding:2px 6px;font-size:10px;cursor:pointer;
+                margin:1px 2px 1px 0;font-weight:bold">ALL ↺</button>
+       ${stageBtn('microcrack',    'micro',  stageCounts['microcrack'])}
+       ${stageBtn('multicrack',    'multi',  stageCounts['multicrack'])}
+       ${stageBtn('fragmentation', 'frag',   stageCounts['fragmentation'])}
+       ${stageBtn('pulverization', 'pulv',   stageCounts['pulverization'])}
+     </div>
      <span style="color:#9ca3af">${nDrawn.toLocaleString()}개 그림 ${
        nSkippedPeriodic ? `(periodic-wrap 제외 ${nSkippedPeriodic})` : ''
      }</span><br>
-     <span style="color:#9ca3af;font-size:9px">★ ALL = 모두 다시 표시. 다른 버튼은 토글 — 중복 선택 OK. 두꺼운 빨강 line = AM_P-AM_P severe stress channel.</span>`);
+     <span style="color:#9ca3af;font-size:9px">★ Pair-type AND stage 둘 다 활성인 contact만 표시. Intact는 stage 무관 (intact 자체가 stage). 두 줄 다 ALL ↺ 누르면 초기화.<br>
+       ★ Stage 임계 (F/P_c): micro 1–3, multi 3–11, frag 11–32, pulv ≥32 (Lawn 1998)</span>`);
 
   /* Wire up filter buttons */
   const legendEl = document.getElementById('view-mode-legend');
   if (legendEl) {
+    /* Pair-type buttons */
     legendEl.querySelectorAll('[data-sc-filter]').forEach(b => {
       b.addEventListener('click', () => {
         const key = b.dataset.scFilter;
@@ -1940,6 +1994,21 @@ function renderStressChain(state, segs) {
           };
         } else {
           state.stressChainFilter[key] = !state.stressChainFilter[key];
+        }
+        renderStressChain(state, segs);
+      });
+    });
+    /* Stage buttons */
+    legendEl.querySelectorAll('[data-sc-stage]').forEach(b => {
+      b.addEventListener('click', () => {
+        const key = b.dataset.scStage;
+        if (key === 'ALL') {
+          state.stressChainStageFilter = {
+            'microcrack': true, 'multicrack': true,
+            'fragmentation': true, 'pulverization': true,
+          };
+        } else {
+          state.stressChainStageFilter[key] = !state.stressChainStageFilter[key];
         }
         renderStressChain(state, segs);
       });

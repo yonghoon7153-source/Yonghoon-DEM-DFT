@@ -216,8 +216,12 @@ def aggregate_particle_metrics(contacts: Iterable[dict],
                 if stage != 'intact':
                     particle_n_brittle[pid] += 1
 
-            # Phase A4 — stress-chain segment (all AM-AM contacts incl. intact)
-            if fn > 0:
+            # Phase A4 — stress-chain segment (all AM-AM contacts incl. intact).
+            # Filter on BOTH delta > 0 AND fn > 0 to match dem_analysis_core's
+            # n_total_AM_AM (dashboard count).  LIGGGHTS dumps sometimes carry
+            # lingering tangential-history fn > 0 with delta = 0, which inflated
+            # earlier viewer counts vs the dashboard's 1692-style total.
+            if fn > 0 and delta > 0:
                 stress_chain_segments.append({
                     'id1': i1, 'id2': i2,
                     'mult': round(mult, 2),
