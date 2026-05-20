@@ -332,11 +332,18 @@ def make_figure(rows: list[dict], out_path: Path):
     bnnorm_min = np.array([r['bn_norm_min'] or np.nan for r in R])
     bnnorm_p50 = np.array([r['bn_norm_p50'] or np.nan for r in R])
     bn_med     = np.array([r['bn_median_norm'] or np.nan for r in R])
-    # Uncapped count of below-threshold edges + normalized by percolating count
+    # Uncapped count of below-threshold edges (RVE-size-dependent — for
+    # cross-case comparison we use the *fraction* below).
     n_bn_below = np.array([r.get('n_bn_below_threshold', 0) or 0 for r in R],
                           dtype=float)
     n_perc     = np.array([r['n_percolating'] for r in R], dtype=float)
-    bn_frac    = np.where(n_perc > 0, n_bn_below / n_perc, 0)
+    n_perc_e   = np.array([r.get('n_perc_edges', 0) or 0 for r in R], dtype=float)
+    # ★ Scale-invariant: fraction of SE-SE edges in percolating subgraph that
+    # are below the A/r² threshold.  This removes the RVE-size bias seen in
+    # raw counts (e.g. real40 vs baseline have wildly different RVE volumes).
+    bn_below_frac = np.where(n_perc_e > 0, n_bn_below / n_perc_e, np.nan)
+    # Cut node fraction (per panel c) but also used elsewhere if helpful
+    cutf_arr  = np.array([r['cut_fraction'] for r in R])
     camp  = [r['campaign'] for r in R]
 
     camp_colors = {'particulate': '#d62728', '박막(1mAh)': '#1f77b4',
@@ -366,23 +373,23 @@ def make_figure(rows: list[dict], out_path: Path):
         ax.set_title(title, loc='left')
         ax.grid(alpha=0.25)
 
-    # (a) cut count vs φ_SE
+    # (a) cut fraction vs φ_SE (scale-invariant — was raw count)
     ax = fig.add_subplot(gs[0, 0])
-    scatter(ax, phi, n_cut,
+    scatter(ax, phi, cutf_arr,
             xlabel=r'SE volume fraction  $\phi_{\mathrm{SE}}$',
-            ylabel=r'$n_{\mathrm{cut}}$  (articulation points)',
-            title=r'(a)  Cut-node count vs $\phi_{\mathrm{SE}}$')
+            ylabel=r'$n_{\mathrm{cut}} / n_{\mathrm{percolating}}$',
+            title=r'(a)  Cut fraction vs $\phi_{\mathrm{SE}}$')
     ax.legend(loc='best', fontsize=7.5)
 
-    # (b) Number of below-threshold contacts vs φ_SE
-    # Switched from bn_min (saturates at machine zero) to a true count
-    # of edges with A/r² < 10% of corpus median — much more discriminating.
+    # (b) Below-threshold bottleneck FRACTION vs φ_SE — RVE-size invariant
+    # Previously used raw count which scaled trivially with RVE size
+    # (real40 cases have ~50× smaller RVE → ~50× fewer narrow contacts
+    # even at identical fragility).  Fraction = scale-invariant.
     ax = fig.add_subplot(gs[0, 1])
-    scatter(ax, phi, n_bn_below, ylog=True,
+    scatter(ax, phi, bn_below_frac, ylog=True,
             xlabel=r'SE volume fraction  $\phi_{\mathrm{SE}}$',
-            ylabel=r'$n_{\mathrm{bn}}^{<\!\mathrm{thr}}$  '
-                    r'(edges with $A/r^2 < $median×10%)',
-            title=r'(b)  Below-threshold bottleneck count vs $\phi_{\mathrm{SE}}$')
+            ylabel=r'$n_{\mathrm{bn}}^{<\!\mathrm{thr}} / n_{\mathrm{perc\,edges}}$',
+            title=r'(b)  Below-threshold bottleneck fraction vs $\phi_{\mathrm{SE}}$')
 
     # (c) cut fraction vs λ_eff (skip log if no positive λ)
     ax = fig.add_subplot(gs[1, 0])
