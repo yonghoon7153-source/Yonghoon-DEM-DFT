@@ -381,6 +381,42 @@ def list_cases():
                 phys_model = 'no_physics'
             meta['physics_resistance_model'] = phys_model
             meta['physics_solver_at'] = m.get('physics_solver_at', '')
+
+            # Composite score (overall grade) — used for the 랭킹 filter.
+            # Cheap to compute (no SE-aux dependency at the list level;
+            # corpus-relative axes drop to N/A here, which is fine).
+            try:
+                import sys as _sys
+                scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+                if scripts_dir not in _sys.path:
+                    _sys.path.insert(0, scripts_dir)
+                from grade_engine import build_overall_grade
+                aux_path = os.path.join(results_dir, 'viewer_aux.json')
+                se_aux = None
+                if os.path.exists(aux_path):
+                    try:
+                        with open(aux_path) as af:
+                            _aux = json.load(af)
+                        se_aux = {
+                            'n_percolating':         _aux.get('se_n_percolating'),
+                            'articulation_points':   _aux.get('se_articulation_points', []),
+                            'n_bn_below_threshold':  _aux.get('se_n_bn_below_threshold'),
+                            'n_perc_edges':          _aux.get('se_n_perc_edges'),
+                        }
+                    except (OSError, ValueError):
+                        pass
+                corpus_csv = os.path.join(os.path.dirname(__file__), '..',
+                                          'docs', 'data', 'se_diagnostics_82.csv')
+                if not os.path.exists(corpus_csv):
+                    corpus_csv = None
+                _gres = build_overall_grade(m, corpus_csv, se_aux)
+                meta['overall_score']  = _gres['composite']['score']
+                meta['overall_grade']  = _gres['composite']['grade']
+                meta['overall_n_axes'] = _gres['composite']['n_axes']
+            except Exception:
+                meta['overall_score']  = None
+                meta['overall_grade']  = '—'
+                meta['overall_n_axes'] = 0
         cases.append(meta)
     return cases
 
@@ -418,6 +454,137 @@ def _dual_row(label, h_val, p_val, fmt=None):
 def _same_row(label, val):
     """[label, val, val, '0%'] — metric not affected by contact mode."""
     return [label, val, val, '0%']
+
+
+def build_overall_grade_table(metrics, results_dir=None):
+    """Build a 'overall_grade' table by calling scripts/grade_engine.
+
+    Layout (4 columns) matches the other analysis-summary tabs:
+        지표  |  값  |  등급  |  근거
+    The 'category' label of each axis becomes a section header row
+    (prefix '── … ──') so the template renders as a separator.
+
+    Also returns the composite (overall) {grade, score} via a fake-row
+    at the very bottom for visual emphasis.  Returns None if metrics is
+    empty or the engine couldn't score any axis.
+    """
+    if not metrics:
+        return None
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        from grade_engine import build_overall_grade, GRADE_COLOR
+    except ImportError:
+        return None
+
+    corpus_csv = os.path.join(os.path.dirname(__file__), '..',
+                              'docs', 'data', 'se_diagnostics_82.csv')
+    if not os.path.exists(corpus_csv):
+        corpus_csv = None
+
+    # Pull SE diag aux from viewer_aux.json cache if present (avoids
+    # recomputing here — the 3D viewer endpoint already populated it).
+    se_aux = None
+    if results_dir:
+        aux_path = os.path.join(results_dir, 'viewer_aux.json')
+        if os.path.exists(aux_path):
+            try:
+                with open(aux_path) as f:
+                    _aux = json.load(f)
+                se_aux = {
+                    'n_percolating':         _aux.get('se_n_percolating'),
+                    'articulation_points':   _aux.get('se_articulation_points', []),
+                    'n_bn_below_threshold':  _aux.get('se_n_bn_below_threshold'),
+                    'n_perc_edges':          _aux.get('se_n_perc_edges')
+                                              or (_aux.get('se_bn_median_norm') and
+                                                  len(_aux.get('se_bottleneck_edges', []))),
+                }
+                # n_perc_edges may not be cached; fall back to median estimate
+                # so we don't lose the bn_below_frac axis entirely.
+            except (OSError, ValueError):
+                pass
+
+    result = build_overall_grade(metrics, corpus_csv, se_aux)
+
+    rows = []
+    last_cat = None
+    for ax in result['axes']:
+        if ax['category'] != last_cat:
+            rows.append([f"── {ax['category']} ──"])
+            last_cat = ax['category']
+        v = ax['value']
+        if v is None:
+            val_str = '—'
+        elif abs(v) >= 100:
+            val_str = f"{v:.1f}"
+        elif abs(v) >= 1:
+            val_str = f"{v:.3g}"
+        else:
+            val_str = f"{v:.4g}"
+        score = ax['score']
+        score_str = f"{score:.0f}" if score is not None else '—'
+        # 등급 cell carries colour + composite hover info via inline span
+        color = GRADE_COLOR.get(ax['grade'], '#6b7280')
+        grade_html = (f'<span class="grade-badge" '
+                      f'style="background:{color}1f;color:{color};'
+                      f'border:1px solid {color}55;border-radius:4px;'
+                      f'padding:1px 6px;font-weight:600;'
+                      f'font-family:ui-monospace,Menlo,monospace">'
+                      f'{ax["grade"]}'
+                      f'<span style="opacity:.7;font-weight:400;font-size:.85em;'
+                      f'margin-left:4px">({score_str})</span></span>')
+        # Hover-only basis: tooltip span — same tooltip-row mechanism in
+        # single.html picks up data-tip on .metric-label.
+        tip = (
+            f"<b>{ax['label']}</b><br>"
+            f"<span style='color:#9ca3af'>category:</span> {ax['category']}<br>"
+            f"<span style='color:#9ca3af'>direction:</span> "
+            f"{'higher = better' if ax['direction'] == 'higher' else 'lower = better' if ax['direction'] == 'lower' else ax['direction']}<br>"
+            f"<span style='color:#9ca3af'>formula:</span> {ax['formula']}<br>"
+            f"<span style='color:#9ca3af'>basis:</span> {ax['basis']}<br>"
+            f"<span style='color:#9ca3af'>meaning:</span> {ax['meaning']}"
+        )
+        rows.append([ax['label'], val_str, grade_html, tip])
+
+    # Composite at the bottom
+    comp = result['composite']
+    color = GRADE_COLOR.get(comp['grade'], '#6b7280')
+    rows.append(['── 종합 ──'])
+    rows.append([
+        '<b>Overall (가중평균)</b>',
+        f"<b>{comp['score']} / 100</b>",
+        f'<span class="grade-badge" '
+        f'style="background:{color}1f;color:{color};border:2px solid {color};'
+        f'border-radius:5px;padding:2px 10px;font-weight:700;font-size:1.05em;'
+        f'font-family:ui-monospace,Menlo,monospace">{comp["grade"]}</span>',
+        f"<b>{comp['n_axes']} / {comp['n_total']} axes scored</b><br>"
+        f"<span style='color:#9ca3af;font-size:.92em'>"
+        f"GPA-equivalent: {comp['gpa']} / 4.3 — "
+        f"axes carry weights {{1.5 (σ_ionic), 1.4 (ASR_ionic), "
+        f"1.2 (활성도/percolation), 0.3 (κ)}} etc.</span>"
+    ])
+
+    # Category summary section
+    rows.append(['── 카테고리 평균 ──'])
+    for cat, score in result['category_scores'].items():
+        from grade_engine import score_to_grade  # re-import in-scope
+        g = score_to_grade(score)
+        c = GRADE_COLOR.get(g, '#6b7280')
+        rows.append([cat, f'{score:.1f}',
+                      f'<span class="grade-badge" '
+                      f'style="background:{c}1f;color:{c};border:1px solid {c}55;'
+                      f'border-radius:4px;padding:1px 6px;font-weight:600;'
+                      f'font-family:ui-monospace,Menlo,monospace">{g}</span>',
+                      ''])
+
+    return {
+        'columns': ['지표', '값', '등급', '근거 (hover)'],
+        'data':    rows,
+        '_composite': comp,
+        '_category_scores': result['category_scores'],
+    }
 
 
 def build_fracture_summary_table(metrics):
@@ -3448,6 +3615,12 @@ def single(case_id):
     if fracture_tbl is not None:
         tables['fracture_summary'] = fracture_tbl
 
+    # Multi-axis grading tab — last in the tab bar. Reads SE diag aux from
+    # viewer_aux.json cache when available; falls back to no-aux scoring.
+    overall_tbl = build_overall_grade_table(metrics, get_results_dir(case_id))
+    if overall_tbl is not None:
+        tables['overall_grade'] = overall_tbl
+
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
                          input_params=input_params, archive_path=archive_path,
@@ -5442,6 +5615,11 @@ def archive_view(folder):
     fracture_tbl = build_fracture_summary_table(metrics)
     if fracture_tbl is not None:
         tables['fracture_summary'] = fracture_tbl
+
+    # Multi-axis grading tab (mirrors /single).
+    overall_tbl = build_overall_grade_table(metrics, results_dir)
+    if overall_tbl is not None:
+        tables['overall_grade'] = overall_tbl
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
