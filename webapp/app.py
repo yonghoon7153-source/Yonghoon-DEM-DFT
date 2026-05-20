@@ -496,6 +496,24 @@ def _inject_input_params(metrics, results_dir):
             inj['_input_box_y'] = float(by) * float(scale)
     except (TypeError, ValueError):
         pass
+    # Particle radii (sim units) — convert to μm using scale.  Used by
+    # grade_engine's r_SE / λ_eff design axes.
+    for k_src, k_dst in (('r_SE', '_input_r_SE_um'),
+                          ('r_AM_P', '_input_r_AM_P_um'),
+                          ('r_AM_S', '_input_r_AM_S_um')):
+        v = ip.get(k_src) or ip.get(k_src + '_sim')
+        try:
+            if v is not None:
+                inj[k_dst] = float(v) * float(scale)
+        except (TypeError, ValueError):
+            continue
+    # Target sintering pressure (sim → MPa via × 1000 historical convention)
+    tp = ip.get('target_press_sim') or ip.get('target_pressure_MPa')
+    try:
+        if tp is not None:
+            inj['_input_target_press_MPa'] = float(tp) * 1000 if float(tp) < 10 else float(tp)
+    except (TypeError, ValueError):
+        pass
     if not inj:
         return metrics
     return {**metrics, **inj}

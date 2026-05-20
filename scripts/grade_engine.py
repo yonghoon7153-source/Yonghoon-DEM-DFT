@@ -366,7 +366,50 @@ AXES: list[dict[str, Any]] = [
                 '<70% SE-rich는 cell-level 에너지 밀도 손실 크고 비용 ↑.',
      'weight': 1.2},
 
-    # ── 11. 셀 ASR ──
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__Q_target_match_pct', 'label': '목표 면용량 달성도 (%) ⭐',
+     'direction': 'higher', 'thresholds': [95, 88, 80, 70, 55, 40],
+     'formula': '100 × min(Q_actual / Q_target, Q_target / Q_actual) — '
+                'case_id의 capacity tier (1mAh / 6mAh / 8mAh)와 Q_areal 비교',
+     'meaning': '★ "6 mAh/cm² 의도한 case가 실제 6mAh를 만드는가" 평가. '
+                'case_id에서 target 자동 추출.  particulate / S 등 tier 없는 case는 N/A.',
+     'weight': 1.0},
+
+    # ── 11. 설계 / 입자 (Design parameters) ──
+    {'category': '설계 (Design)',
+     'key': '__r_SE_um', 'label': 'r_SE (μm) — SE 입자 반경 ⭐',
+     'direction': 'lower', 'thresholds': [0.4, 0.6, 0.9, 1.2, 1.5, 2.0],
+     'formula': 'input_params.r_SE × scale → μm',
+     'meaning': '★ corpus 분석 결과 — 작은 SE = redundant network, narrow contact 적음. '
+                'r_SE 0.5μm corpus median.  ≥1.5μm는 percolation fragility ↑ '
+                '(Liu & Yin 2025).',
+     'weight': 0.7},
+
+    {'category': '설계 (Design)',
+     'key': '__lambda_eff', 'label': 'λ_eff = r_AM / r_SE',
+     'direction': 'higher', 'thresholds': [8, 6, 4, 3, 2, 1.5],
+     'formula': 'r_AM (effective, P 우선) / r_SE  — bimodal에선 r_AM_P 사용',
+     'meaning': 'corpus 4-panel design rule 핵심.  λ=8 → cut_fraction 3% (robust), '
+                'λ=2 → 17% (fragile).  AM 크고 SE 작을수록 ↑.',
+     'weight': 0.5},
+
+    {'category': '설계 (Design)',
+     'key': '__stage_e_available', 'label': 'Stage E 보정 적용',
+     'direction': 'higher', 'thresholds': [1, 1, 1, 0.5, 0.5, 0.5],
+     'formula': '1 if sigma_full_mScm_stage_e_physics 있음 else 0.5',
+     'meaning': 'Cronau / Trevisanello / Wang grain corrections 적용 여부. '
+                '미적용 case는 σ를 ~2x 과대평가 가능 — 다른 case와 직접 비교 부적합.',
+     'weight': 0.3},
+
+    {'category': '설계 (Design)',
+     'key': '__compaction_efficiency', 'label': '압축 효율 (300 MPa porosity)',
+     'direction': 'band', 'optimum': 15.0, 'band_width': 5.0,
+     'formula': 'porosity (%) at target_press_sim ≈ 0.3 (300 MPa)',
+     'meaning': '300 MPa 압축시 실험 sulfide cathode porosity 12-18% 범위. '
+                '<10% over-compress (fracture risk), >22% under-compress (poor contact).',
+     'weight': 0.4},
+
+    # ── 12. 셀 ASR ──
     {'category': '셀 단위 ASR',
      'key': '__asr_ionic_Ohm_cm2', 'label': 'ASR_ionic (Ω·cm²) ⭐',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
@@ -875,6 +918,77 @@ def _derived_value(key: str, metrics: dict) -> float | None:
             return None
         return (1 - sev) * ion * el * 100
 
+    # ── Target capacity tier match (from case_id) ────────────────────
+    if key == '__Q_target_match_pct':
+        cid = metrics.get('_case_id') or ''
+        # Extract capacity tier from case_id (1mAh / 6mAh / 8mAh)
+        import re as _re
+        m = _re.search(r'(\d+)mAh', cid)
+        if not m:
+            return None   # particulate / S / etc. — no target → N/A axis
+        target = float(m.group(1))
+        actual = _derived_value('__Q_areal_mAhcm2', metrics)
+        if not actual or actual <= 0 or target <= 0:
+            return None
+        ratio = min(actual / target, target / actual)
+        return 100 * ratio
+
+    # ── Design parameters from input_params ──────────────────────────
+    if key == '__r_SE_um':
+        # _input_box_x came in as box * scale already.  r_SE in
+        # metrics is stored sim-units; convert via scale.
+        for kk in ('_input_r_SE_um', '_input_r_SE'):
+            v = metrics.get(kk)
+            if v is not None:
+                try:
+                    fv = float(v)
+                    # If stored as sim units (< 0.01), convert (× scale=1000)
+                    return fv * 1000 if fv < 0.01 else fv
+                except (TypeError, ValueError):
+                    continue
+        return None
+
+    if key == '__lambda_eff':
+        r_se = _derived_value('__r_SE_um', metrics)
+        if not r_se or r_se <= 0:
+            return None
+        # effective r_AM: prefer AM_P, else AM_S
+        r_am = None
+        for kk in ('_input_r_AM_P_um', '_input_r_AM_P'):
+            v = metrics.get(kk)
+            if v is not None:
+                try:
+                    fv = float(v)
+                    r_am = fv * 1000 if fv < 0.01 else fv
+                    break
+                except (TypeError, ValueError):
+                    continue
+        if r_am is None:
+            for kk in ('_input_r_AM_S_um', '_input_r_AM_S'):
+                v = metrics.get(kk)
+                if v is not None:
+                    try:
+                        fv = float(v)
+                        r_am = fv * 1000 if fv < 0.01 else fv
+                        break
+                    except (TypeError, ValueError):
+                        continue
+        if not r_am or r_am <= 0:
+            return None
+        return r_am / r_se
+
+    if key == '__stage_e_available':
+        # 1.0 if Stage E σ_ionic is present, 0.5 otherwise
+        return 1.0 if metrics.get('sigma_full_mScm_stage_e_physics') is not None else 0.5
+
+    if key == '__compaction_efficiency':
+        # Pass-through porosity; band scoring handles the rest
+        eps = metrics.get('porosity')
+        try:
+            return float(eps) if eps is not None else None
+        except (TypeError, ValueError):
+            return None
+
     if key == '__sigma_e_fracture_loss_pct':
         # baseline = no Stage E (i.e. physics-only), Stage E = fracture-augmented
         new = metrics.get('electronic_sigma_full_mScm_stage_e_physics')
@@ -1146,6 +1260,8 @@ def build_overall_grade(metrics: dict,
     inject = {}
     if se_aux:
         inject['_aux_se_diag'] = se_aux
+    if case_id:
+        inject['_case_id'] = case_id   # needed by __Q_target_match_pct
     if carbon_wt_pct and carbon_wt_pct > 0:
         wi = whatif_carbon_additive(metrics, wt_pct=carbon_wt_pct)
         if wi.get('available') and wi.get('sigma_e_new') is not None:
