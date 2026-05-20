@@ -1078,18 +1078,26 @@ def detect_unit_cell(metrics: dict, case_id: str | None = None) -> dict:
     full ASSB cathode.  Such cases lack realistic top↔bottom percolation
     challenges and shouldn't be ranked against full cells without caveat.
 
-    Naming reminders (corrected per user clarification):
-      - "particulate_*"  →  SE PARTICLE-SIZE variation series, NOT unit cells.
-                            Treated as full cathodes.
-      - "real_x" vs "real40_x"  →  same physical input, only the RVE size
-                                    differs (50×50 μm vs 40×40 μm).  Do NOT
-                                    interpret as pressure / processing diff.
-      - When unsure, check input_params.json or ask the user.
+    Naming reminders (corrected per user clarification + case_summary.csv
+    ground truth — see docs/CASE_NAMING.md for full reference):
+      - "1mAh_*"     → target areal capacity 1 mAh/cm² (thin, ~15-20 μm).
+      - "6mAh_*"     → target 6 mAh/cm² (~110-120 μm).
+      - "8mAh_*"     → target 8 mAh/cm² (~140-185 μm).
+      - "particulate_*" → SE particle-size sweep series (AM_S only,
+                          RVE 30×30 μm).  NOT unit cells — full cathodes
+                          with ~90-160 μm thickness.
+      - "*_real"     → RVE 50×50 μm (full-size).
+      - "*_real40"   → RVE 40×40 μm (smaller, finite-size variant of same
+                       physical input).  NOT high-pressure sintering.
+      - "*_100"      → RVE 100×100 μm (large RVE for 1mAh).
+      - "*_S1..S5"   → random-seed replicates (5 statistical samples).
+      - "*_AMP"      → ps_ratio 10:0 (AM_P-only mono cathode).
+      - "*_AMS"      → ps_ratio 0:10 (AM_S-only mono cathode).
+      - "*_E05/_E15" → (tentative) porosity-target variation.
 
-    Strict criteria here (both required):
-      • thickness < 25 μm  (almost certainly not a full cathode)
-      • AM-AM percolation == 0 AND ionic_active == 100  (periodic UC signature)
-    Single weaker signals just add an info note, do not flip is_unit_cell.
+    True unit-cell signature requires BOTH (rare in this corpus):
+      • thickness < 25 μm  AND
+      • AM-AM percolation = 0  +  ionic_active = 100% (periodic UC behavior)
 
     Returns {'is_unit_cell': bool, 'reasons': [str, ...]}.
     """
@@ -1099,7 +1107,7 @@ def detect_unit_cell(metrics: dict, case_id: str | None = None) -> dict:
     L = metrics.get('thickness_um')
     try:
         if L is not None and float(L) < 25:
-            reasons.append(f'thickness {L:.1f} μm < 25 μm — possible unit-cell')
+            reasons.append(f'thickness {float(L):.1f} μm < 25 μm — possible unit-cell')
             strict_signals += 1
     except (TypeError, ValueError):
         pass
@@ -1168,20 +1176,21 @@ def build_overall_grade(metrics: dict,
     uc = detect_unit_cell(metrics, case_id)
     rve_area = _rve_area_um2(metrics)
 
-    # Strip the "real40_" RVE-size suffix so variants of the same physical
-    # input group together for the "RVE size only" pairing.
-    #   input_6mAh_real_4     (RVE 50×50)
-    #   input_6mAh_real40_4   (RVE 40×40)
-    # These differ ONLY in RVE size, no other physical parameter changes.
-    # particulate_* names are SE-particle-size variations — kept as
-    # distinct base cases (they are NOT RVE-only twins).
+    # Compute base_case identifier for grouping.  Two grouping strategies:
+    #   1. RVE-only twin:  real_X  ↔ real40_X  → base = "<cap>_rveX_<config>"
+    #   2. Seed group:     *_S1 .. *_S5         → base = "<everything before _SN>"
+    # particulate_X / capacity_* / config_* stay distinct otherwise (they
+    # represent different physical inputs, not statistical replicates).
     base_case = None
     if case_id:
         import re as _re
-        if 'real' in case_id:
-            base_case = _re.sub(r'real(40)?_', 'rveX_', case_id)
-        else:
-            base_case = case_id   # particulate_* / 1mAh_* / etc. stay distinct
+        b = case_id
+        # Collapse RVE marker first: real40 → rveX, real → rveX
+        b = _re.sub(r'_real40(?=_)', '_rveX', b)
+        b = _re.sub(r'_real(?=_)',   '_rveX', b)
+        # Then collapse seed suffix _S1..S9 (single digit)
+        b = _re.sub(r'_S[1-9]$', '_seedX', b)
+        base_case = b
 
     composite = {
         'score':          round(weighted, 1),
