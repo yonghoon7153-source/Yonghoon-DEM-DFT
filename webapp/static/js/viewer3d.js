@@ -1586,45 +1586,113 @@ function applyViewMode(state, mode) {
     return;
   }
 
-  /* ── Phase B1: Worst F/P_c per particle (continuous heat) ─────────── */
+  /* ── Phase B1: Worst F/P_c per particle (continuous log heatmap) ───
+   * Unlike Brittle Hotspots which bins into 5 Lawn stages, this shows
+   * the actual F/P_c value on a continuous log scale.  Two particles
+   * both in "multi-crack" stage (F/P_c ∈ [3, 11]) will look different
+   * if one is at 3.5 vs 10.5.  Also includes intact particles so you
+   * can see who is "on the edge" (F/P_c just below 1).
+   */
   if (mode === 'worst_fpc') {
-    dimAll();
     const fpcMap = aux.particle_max_fpc || {};
-    /* Lawn 1998 stage thresholds: 1, 3, 11, 32 */
-    const stageColor = (m) => {
-      if (m < 1)   return 0x3b82f6;   // intact (blue)
-      if (m < 3)   return 0xfde047;   // microcrack (yellow)
-      if (m < 11)  return 0xfb923c;   // multi-crack (orange)
-      if (m < 32)  return 0xef4444;   // fragmentation (red)
-      return                0x7f1d1d; // pulverization (dark red)
+    /* Collect values to compute quantiles */
+    const vals = [];
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach(p => {
+        const v = fpcMap[String(p.id)] ?? fpcMap[p.id];
+        if (v !== undefined) vals.push(v);
+      });
+    });
+    if (!vals.length) {
+      dimAll();
+      setLegend(state, '<i>No F/P_c data — run reanalysis (cache schema 4+).</i>');
+      flushColors();
+      return;
+    }
+    /* Log scale: x = log10(F/P_c + 0.1) so F/P_c=0 → -1, F/P_c=1 → 0.04,
+     * F/P_c=10 → 1.0, F/P_c=30 → 1.49.  Map to [0,1] using the data
+     * range.  Then coolwarm colormap. */
+    const xs = vals.map(v => Math.log10(v + 0.1));
+    const xLo = Math.min(...xs);
+    const xHi = Math.max(...xs);
+    const xMid = Math.log10(1 + 0.1);   /* F/P_c = 1 threshold position */
+    const norm = (v) => {
+      const x = Math.log10(v + 0.1);
+      return Math.max(0, Math.min(1, (x - xLo) / (xHi - xLo + 1e-9)));
     };
-    let n = 0, maxSeen = 0;
+    /* Diverging colormap: cool→neutral→warm, centered on F/P_c=1 */
+    const tThreshold = Math.max(0, Math.min(1, (xMid - xLo) / (xHi - xLo + 1e-9)));
+    const heat = (v) => {
+      const t = norm(v);
+      /* Below threshold: dark blue → cyan → green-yellow */
+      /* Above threshold: yellow → orange → deep red */
+      if (t < tThreshold) {
+        const u = t / Math.max(1e-9, tThreshold);
+        /* dark blue (#1e3a8a) → cyan (#06b6d4) → pale yellow (#fef3c7) */
+        if (u < 0.5) {
+          const w = u / 0.5;
+          return new THREE.Color(0x1e3a8a).lerp(new THREE.Color(0x06b6d4), w);
+        } else {
+          const w = (u - 0.5) / 0.5;
+          return new THREE.Color(0x06b6d4).lerp(new THREE.Color(0xfef3c7), w);
+        }
+      } else {
+        const u = (t - tThreshold) / Math.max(1e-9, 1 - tThreshold);
+        /* pale yellow → orange (#f97316) → deep red (#7f1d1d) */
+        if (u < 0.5) {
+          const w = u / 0.5;
+          return new THREE.Color(0xfef3c7).lerp(new THREE.Color(0xf97316), w);
+        } else {
+          const w = (u - 0.5) / 0.5;
+          return new THREE.Color(0xf97316).lerp(new THREE.Color(0x7f1d1d), w);
+        }
+      }
+    };
+    let nHit = 0, maxSeen = 0, minSeen = Infinity, nOver = 0;
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
         const v = fpcMap[String(p.id)] ?? fpcMap[p.id];
-        if (v === undefined) return;
-        m.setColorAt(i, new THREE.Color(stageColor(v)));
-        n++; if (v > maxSeen) maxSeen = v;
+        if (v === undefined) {
+          m.setColorAt(i, colDim);
+          return;
+        }
+        m.setColorAt(i, heat(v));
+        nHit++;
+        if (v > maxSeen) maxSeen = v;
+        if (v < minSeen) minSeen = v;
+        if (v >= 1) nOver++;
       });
       m.material.opacity = 0.95; m.material.transparent = true;
     });
-    /* SE always dim in this mode */
+    /* SE always dim */
     const seMesh = state.meshes.SE;
     if (seMesh) {
       seMesh.userData.particles.forEach((_, i) => seMesh.setColorAt(i, colDim));
-      seMesh.material.opacity = 0.08; seMesh.material.transparent = true;
+      seMesh.material.opacity = 0.06; seMesh.material.transparent = true;
     }
     flushColors();
+    /* Quantiles for legend */
+    const sorted = [...vals].sort((a,b) => a-b);
+    const q = (p) => sorted[Math.max(0, Math.min(sorted.length-1,
+        Math.floor(p * (sorted.length-1))))];
+    const overPct = nHit ? (100 * nOver / nHit).toFixed(1) : '0.0';
     setLegend(state,
-      `<b>Worst F/P_c per particle (Lawn stages)</b><br>
-       <span style="color:#3b82f6">●</span> intact (F/P_c &lt; 1)<br>
-       <span style="color:#fde047">●</span> microcrack (1–3)<br>
-       <span style="color:#fb923c">●</span> multi-crack (3–11)<br>
-       <span style="color:#ef4444">●</span> fragmentation (11–32)<br>
-       <span style="color:#7f1d1d">●</span> pulverization (≥ 32)<br>
-       <span style="color:#9ca3af">(${n} AM particles, max F/P_c = ${maxSeen.toFixed(2)})</span><br>
-       <span style="color:#9ca3af;font-size:9px">★ Median per pair-type만 보던 표 통계와 달리, 입자별 worst contact을 그대로 표시. 한 입자가 본 가장 위험한 stress.</span>`);
+      `<b>Worst F/P_c per particle (continuous log scale)</b><br>
+       <div style="display:flex;align-items:center;gap:4px;margin:4px 0">
+         <span style="display:inline-block;width:6em;height:10px;background:linear-gradient(to right,
+           #1e3a8a 0%, #06b6d4 ${50*tThreshold}%, #fef3c7 ${100*tThreshold}%,
+           #f97316 ${100*(tThreshold + (1-tThreshold)/2)}%, #7f1d1d 100%)"></span>
+         <span style="font-size:9px;color:#9ca3af">${minSeen.toFixed(2)} → ${maxSeen.toFixed(2)}</span>
+       </div>
+       <table style="font-size:9px;color:#cbd5e1;border-collapse:collapse">
+         <tr><td style="padding:0 4px 0 0">F/P_c = 1 threshold</td><td>${nOver}/${nHit} (${overPct}%)</td></tr>
+         <tr><td style="padding:0 4px 0 0">median</td><td>${q(0.5).toFixed(2)}</td></tr>
+         <tr><td style="padding:0 4px 0 0">95th pct</td><td>${q(0.95).toFixed(2)}</td></tr>
+         <tr><td style="padding:0 4px 0 0">max</td><td>${maxSeen.toFixed(2)}</td></tr>
+       </table>
+       <span style="color:#9ca3af;font-size:9px">★ Brittle Hotspots는 stage로 bin해서 보지만 이 mode는 F/P_c 실값을 연속으로 표시 — 같은 multi-crack stage 안에서도 F/P_c=3.5 와 10.5 의 차이가 그라데이션으로 보임. 흰색 부근이 임계 F/P_c=1 (fracture 시작 경계).</span>`);
     return;
   }
 
