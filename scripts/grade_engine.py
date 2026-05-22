@@ -268,29 +268,38 @@ AXES: list[dict[str, Any]] = [
                 '— ranking에서 핵심 차별 요소 아님.  What-if 도전재 토글로 시뮬레이션.',
      'weight': 0.35},
 
-    # ── 8. 기계적 안정성 (Mechanical) — 비가역 cycling damage → weight 강화 ──
+    # ── 8. 기계적 안정성 (Mechanical) — DEM 초기 compaction 시점의 fracture만
+    # 측정.  cycling-induced fracture와는 다른 메커니즘.  Lee 2025 ACS EL은
+    # 7:3 polycrystalline-heavy 조성이 cycling 87.8% retention 1순위로 보고
+    # — DEM multi-crack 많아도 cycling 안정성 유지 가능.  따라서 weight 신중하게
+    # — severe(frag+pulv)만 강하게 (pulverization은 진짜 input 손실),
+    # multi-crack / fracture index는 약하게 (compaction-time artifact 가능).
     {'category': '기계적 안정성',
      'key': '__frac_severe_force_pct', 'label': 'Fragmentation+Pulv (%)',
      'direction': 'lower', 'thresholds': [0.5, 1.5, 3, 6, 10, 18],
      'formula': '(frac_fragmentation + frac_pulverization) [force-based]',
-     'meaning': '★ 심각 손상 — 사이클링 비가역.  Lawn 1998 force-ratio classifier.',
-     'weight': 1.2},
+     'meaning': '입자 완전 파괴 비율 — 비가역 capacity loss.  '
+                'multi-crack과 달리 진짜 손상.',
+     'weight': 0.8},
 
     {'category': '기계적 안정성',
      'key': 'frac_multicrack_force_pct', 'label': 'Multi-crack (%)',
      'direction': 'lower', 'thresholds': [3, 6, 10, 16, 25, 40],
      'fallback_key': 'frac_multicrack_pct',
-     'formula': 'frac_multicrack_force_pct — Lawn stage 2',
-     'meaning': 'multi-crack 비율 — 사이클링시 fragmentation 진행 risk.',
-     'weight': 0.7},
+     'formula': 'frac_multicrack_force_pct — Lawn stage 2 (compaction-time)',
+     'meaning': 'DEM compaction 시점 multi-crack.  ASSB에서는 일부 multi-crack '
+                '이 fresh AM-SE interface 생성 (Lee 2025).  weight 낮음.',
+     'weight': 0.25},
 
     {'category': '기계적 안정성',
-     'key': 'fracture_index_force', 'label': 'Fracture index',
+     'key': 'fracture_index_force', 'label': 'Fracture index (compaction)',
      'direction': 'lower', 'thresholds': [0.05, 0.10, 0.20, 0.35, 0.55, 0.80],
      'fallback_key': 'fracture_index',
-     'formula': 'Σ stage_weight × frac_stage / 4',
-     'meaning': '★ Lawn weights 통합 손상 척도 (intact 0 → pulv 4).',
-     'weight': 1.0},
+     'formula': 'Σ stage_weight × frac_stage / 4 (compaction-time only)',
+     'meaning': 'DEM compaction fracture composite index — cycling-induced fracture '
+                '아님.  Lee 2025 ACS EL: P-heavy (7:3)가 DEM multi-crack 많아도 '
+                'cycling capacity retention 1순위 87.8%.  weight 낮춤.',
+     'weight': 0.4},
 
     {'category': '기계적 안정성',
      'key': '__sigma_vm_cv_pct', 'label': 'CV(σ_VM) (%)',
@@ -376,6 +385,15 @@ AXES: list[dict[str, Any]] = [
      'meaning': '"6 mAh/cm² 의도한 case가 실제 달성하는가" 정합성 체크. '
                 'tier 없는 case (particulate / S)는 N/A.',
      'weight': 0.8},
+
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__ps_ratio_band', 'label': 'P:S 조성 band (Lee 2025 7:3) ⭐',
+     'direction': 'band', 'optimum': 70.0, 'band_width': 15.0,
+     'formula': 'P:S ratio의 P fraction (%) — band around 70% (= 7:3)',
+     'meaning': '★ Lee 2025 ACS Energy Letters: polycrystalline:single-crystal = 7:3 '
+                '@ 90 wt% CAM에서 capacity retention 87.8%@200cyc 최고 보고.  '
+                'P-heavy + S minority가 packing(P) + cycling stability(S) 균형.',
+     'weight': 1.5},
 
     # ── 11. 설계 / 입자 정보 (Design info — informational only) ──
     # NOTE: r_SE / λ_eff는 input 파라미터일 뿐 성능 측정이 아니므로 weight 매우 낮게.
@@ -1048,6 +1066,20 @@ def _derived_value(key: str, metrics: dict) -> float | None:
     if key == '__commercial_composition':
         # Pass-through wt_am_pct; band scoring (75-90% sweet spot) handles rest
         return _derived_value('__wt_am_pct', metrics)
+
+    if key == '__ps_ratio_band':
+        # Returns P fraction (%) — band optimum 70 (= P:S 7:3).
+        # Lee 2025 ACS Energy Letters confirmed 7:3 P:S polycrystalline:single-crystal
+        # is best for sulfide ASSB cycling retention.
+        ps = metrics.get('ps_ratio') or metrics.get('_meta_ps_ratio')
+        if isinstance(ps, str) and ':' in ps:
+            try:
+                a, b = (float(x) for x in ps.replace(' ', '').split(':')[:2])
+                if a + b > 0:
+                    return 100 * a / (a + b)   # P fraction in %
+            except (ValueError, IndexError):
+                pass
+        return None
 
     if key == '__bimodal_design':
         # bimodal = AM_P + AM_S 모두 존재 (n_AM_P > 0 AND n_AM_S > 0).
