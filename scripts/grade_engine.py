@@ -268,12 +268,18 @@ AXES: list[dict[str, Any]] = [
                 '— ranking에서 핵심 차별 요소 아님.  What-if 도전재 토글로 시뮬레이션.',
      'weight': 0.35},
 
-    # ── 8. 기계적 안정성 (Mechanical) — DEM 초기 compaction 시점의 fracture만
-    # 측정.  cycling-induced fracture와는 다른 메커니즘.  Lee 2025 ACS EL은
-    # 7:3 polycrystalline-heavy 조성이 cycling 87.8% retention 1순위로 보고
-    # — DEM multi-crack 많아도 cycling 안정성 유지 가능.  따라서 weight 신중하게
-    # — severe(frag+pulv)만 강하게 (pulverization은 진짜 input 손실),
-    # multi-crack / fracture index는 약하게 (compaction-time artifact 가능).
+    # ── 8. 기계적 안정성 (Mechanical) ───────────────────────────────────
+    # DEM 초기 compaction (300 MPa) 시점의 fracture만 측정 — cycling-induced
+    # fracture와는 다른 메커니즘.  Stage별 Li 저장 손실 (문헌 consensus):
+    #   • Microcrack: precursor only — SE infiltration으로 healing 가능 (NPG
+    #     Asia 2024 "Infiltration-driven enhancement", Sci Direct 2023
+    #     "Revealing crack-healing mechanism").  → low weight.
+    #   • Multi-crack: 일부 healable + fresh AM-SE interface 생성 (Lee 2025
+    #     ACS EL이 7:3 P-heavy에서 multi-crack 많아도 87.8% retention 최고
+    #     보고한 이유).  → low weight.
+    #   • Fragmentation: 부분 electrical disconnect → 부분 capacity loss.
+    #   • Pulverization: 완전 분해 → electronic contact 끊김 → 진짜 capacity loss.
+    # → severe(frag+pulv)만 강하게, multi-crack/index는 약하게.
     {'category': '기계적 안정성',
      'key': '__frac_severe_force_pct', 'label': 'Fragmentation+Pulv (%)',
      'direction': 'lower', 'thresholds': [0.5, 1.5, 3, 6, 10, 18],
@@ -387,13 +393,17 @@ AXES: list[dict[str, Any]] = [
      'weight': 0.8},
 
     {'category': '에너지 밀도 (Energy density)',
-     'key': '__ps_ratio_band', 'label': 'P:S 조성 band (Lee 2025 7:3) ⭐',
+     'key': '__ps_ratio_band', 'label': 'P:S 조성 band (P-heavy 7:3) ⭐',
      'direction': 'band', 'optimum': 70.0, 'band_width': 15.0,
      'formula': 'P:S ratio의 P fraction (%) — band around 70% (= 7:3)',
-     'meaning': '★ Lee 2025 ACS Energy Letters: polycrystalline:single-crystal = 7:3 '
-                '@ 90 wt% CAM에서 capacity retention 87.8%@200cyc 최고 보고.  '
-                'P-heavy + S minority가 packing(P) + cycling stability(S) 균형.',
-     'weight': 1.5},
+     'meaning': '★ 다수 문헌 일관: bimodal cathode P:S 7:3 최적.  '
+                '(a) Lee 2025 ACS EL: 87.8% retention@200cyc 최고. '
+                '(b) ScienceDirect 2021 "cathode architecture": geometric packing '
+                '큰 입자 위주 + 작은 입자 void 채움.  '
+                '(c) ACS Appl Mater 2025 "Toughened Bimodal": interface heterogeneity 이득. '
+                '주의: 우리 DEM은 geometric packing만 잡고 crystallinity (poly vs SC) 차이 못 잡음 — '
+                'axis는 절반만 직접 측정.',
+     'weight': 1.2},
 
     # ── 11. 설계 / 입자 정보 (Design info — informational only) ──
     # NOTE: r_SE / λ_eff는 input 파라미터일 뿐 성능 측정이 아니므로 weight 매우 낮게.
