@@ -303,8 +303,10 @@ AXES: list[dict[str, Any]] = [
      'direction': 'higher', 'thresholds': [0.5, 0.3, 0.15, 0.08, 0.04, 0.01],
      'fallback_key': 'sigma_full_mScm_physics',
      'formula': 'Stage E final ionic conductivity (Cronau SE-size factor)',
-     'meaning': '실측 sulfide composite 0.1–0.5 mS/cm (Janek 2023 review).',
-     'weight': 1.8},
+     'meaning': '실측 sulfide composite 0.1–0.5 mS/cm (Janek 2023 review). '
+                '주의: 절대값만으론 commercial 적합성 판단 불충분 — '
+                'wt_AM ratio + ASR_total 도 같이 고려.',
+     'weight': 1.5},
 
     {'category': '전도도 절대값',
      'key': 'thermal_sigma_full_mScm_stage_e_physics',
@@ -335,29 +337,35 @@ AXES: list[dict[str, Any]] = [
     # ── 10. 셀 ASR + 에너지 밀도 ──
     {'category': '에너지 밀도 (Energy density)',
      'key': '__Q_gravimetric_mAhg', 'label': 'Q_gravimetric (mAh/g 복합체) ⭐★',
-     'direction': 'higher', 'thresholds': [160, 145, 125, 105, 85, 65],
+     'direction': 'higher', 'thresholds': [160, 148, 135, 120, 100, 80],
      'formula': 'wt_AM × C_AM  (NCM811 real C ≈ 190 mAh/g)',
-     'meaning': '★★ 활물질 무게비 직접 반영 — 같은 두께·밀도라도 wt_AM 높을수록 '
-                '비용량 ↑. AM:SE 90:10 → 171, 82:18 → 156, 70:30 → 133, 60:40 → 114 mAh/g. '
-                'cell 무게-기반 에너지 밀도 평가의 핵심 (학계/산업 1순위 KPI).',
-     'weight': 3.0},
+     'meaning': '★★★ 비용량.  85:15 → 162, 82:18 → 156, 75:25 → 142, 72:28 → 137, '
+                '60:40 → 114 mAh/g.  cell 무게당 에너지 = 산업 1순위 KPI.',
+     'weight': 4.0},
 
     {'category': '에너지 밀도 (Energy density)',
      'key': '__Q_volumetric_mAhcc', 'label': 'Q_volumetric (mAh/cc) ⭐★',
-     'direction': 'higher', 'thresholds': [600, 510, 420, 340, 270, 200],
+     'direction': 'higher', 'thresholds': [600, 520, 440, 360, 290, 220],
      'formula': 'ρ_composite × wt_AM × C_AM × (1−ε) — 부피 용량',
-     'meaning': '★★ cell 부피-기반 에너지 밀도. ASSB 상용화 목표 ≥500 mAh/cc '
-                '(Janek 2023). AM:SE 82:18 + 14%ε → ~574, 62:38 + 7%ε → ~411. '
-                '고밀도 packing(low ε) + 고 wt_AM = 부피 에너지 최대.',
-     'weight': 2.5},
+     'meaning': '★★ ASSB 상용화 목표 ≥500 mAh/cc (Janek 2023).  부피당 에너지.',
+     'weight': 3.0},
 
     {'category': '에너지 밀도 (Energy density)',
      'key': '__wt_am_pct', 'label': 'wt_AM (%) — 활물질 무게비',
-     'direction': 'higher', 'thresholds': [85, 80, 75, 70, 60, 50],
+     'direction': 'higher', 'thresholds': [85, 82, 78, 73, 65, 55],
      'formula': '100 × m_AM / (m_AM + m_SE)',
-     'meaning': '활물질 무게 비율. ≥80% (e.g. 82:18, 85:15)이 commercial cathode 표준. '
-                '<70% SE-rich는 cell-level 에너지 밀도 손실 크고 비용 ↑.',
-     'weight': 1.2},
+     'meaning': '활물질 무게 비율.  ★ 75% 미만은 sharp drop (SE-rich = commercial 부적합).',
+     'weight': 2.5},
+
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__commercial_composition', 'label': '상용 조성 band (AM:SE) ⭐★',
+     'direction': 'band', 'optimum': 82.0, 'band_width': 6.0,
+     'formula': 'wt_AM(%) 의 band-around-optimum (82±6 = 76-88% 상용 sweet spot)',
+     'meaning': '★★★ commercial sulfide cathode 75-90% AM가 sweet spot (Janek 2023, '
+                'Mücke 2025). <70% SE-rich는 비용 폭증 + 에너지 밀도 손실, >92%는 '
+                'percolation 빈약.  particulate 72:28 같은 academic composition을 '
+                '명시적으로 demote.',
+     'weight': 2.0},
 
     {'category': '에너지 밀도 (Energy density)',
      'key': '__Q_target_match_pct', 'label': '목표 면용량 달성도 (%) ⭐',
@@ -404,6 +412,15 @@ AXES: list[dict[str, Any]] = [
      'weight': 0.4},
 
     {'category': '설계 정보 (Design info)',
+     'key': '__bimodal_design', 'label': 'bimodal 설계 (packing efficiency) ⭐',
+     'direction': 'higher', 'thresholds': [1, 1, 1, 0.5, 0.5, 0.5],
+     'formula': '1.0 if bimodal (AM_P + AM_S 같이) else 0.5',
+     'meaning': '★ commercial NCM cathode는 거의 항상 bimodal (대입자 + 소입자) '
+                'packing density ↑, capacity utilization ↑.  mono는 academic. '
+                'cell-level performance에 직접 영향.',
+     'weight': 1.0},
+
+    {'category': '설계 정보 (Design info)',
      'key': '__volume_change_buffer', 'label': '부피변화 buffer (porosity 적정성)',
      'direction': 'higher', 'thresholds': [15, 12, 10, 8, 6, 4],
      'formula': 'porosity (%) — NCM 충방전시 ~5% 부피 변화 흡수 가능한 여유',
@@ -417,8 +434,10 @@ AXES: list[dict[str, Any]] = [
      'key': '__asr_ionic_Ohm_cm2', 'label': 'ASR_ionic (Ω·cm²) ⭐',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
      'formula': 'ASR = L_cathode(μm) × 0.1 / σ_ionic(mS/cm)',
-     'meaning': '1mAh/cm² C/3에서 ≤100 Ω·cm² workable. >250면 high-rate 위험.',
-     'weight': 2.0},
+     'meaning': '1mAh/cm² C/3에서 ≤100 Ω·cm² workable. >250면 high-rate 위험. '
+                '주의: SE-rich (e.g. 72:28) cathode가 자연히 낮은 ASR 가짐 — '
+                '에너지 밀도와 함께 봐야 함.',
+     'weight': 1.5},
 
     {'category': '셀 단위 ASR',
      'key': '__Q_areal_mAhcm2', 'label': 'Q_areal (mAh/cm²) ⭐',
@@ -455,9 +474,9 @@ AXES: list[dict[str, Any]] = [
      'key': '__ASR_total_Ohm_cm2', 'label': 'ASR_total (Ω·cm²) — i+e 합 ⭐',
      'direction': 'lower', 'thresholds': [40, 80, 130, 200, 320, 500],
      'formula': 'ASR_ionic + ASR_electronic — same circuit, 더해서 셀 전체 저항',
-     'meaning': '★ 단일 저항 axis로는 ASR_ionic만으로 전체 그림 못 봄.  '
+     'meaning': '단일 저항 axis로는 ASR_ionic만으로 전체 그림 못 봄.  '
                 '도전재 없는 sulfide cathode는 ASR_e도 비교 가능 규모.',
-     'weight': 1.5},
+     'weight': 1.2},
 
     {'category': '셀 단위 ASR',
      'key': '__c_rate_capability', 'label': 'C-rate proxy (1/ASR_total)',
@@ -752,16 +771,17 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         return a + b
 
     if key == '__sigma_vm_cv_pct':
-        # analyze_contacts.py writes stress_cv = std/mean (always a fraction).
-        # Multiplying by 100 unconditionally is correct because no physical
-        # CV-of-stress can be >10× (would mean σ ≫ ⟨σ⟩, unphysical).
+        # stress_cv 는 case에 따라 fraction(0-3) 또는 percentage(50-300)로
+        # 저장됨 — analyze_contacts.py vintage에 따라 다름.  자동 감지:
         cv = metrics.get('stress_cv')
         if cv is None:
             return None
         try:
-            return float(cv) * 100
+            v = float(cv)
         except (TypeError, ValueError):
             return None
+        # ≥ 5 면 이미 percentage (CV stress 5 fraction은 불가능하므로 안전)
+        return v if v >= 5 else v * 100
 
     if key == '__electronic_active_pct':
         f = metrics.get('electronic_active_fraction')
@@ -1025,6 +1045,36 @@ def _derived_value(key: str, metrics: dict) -> float | None:
     if key == '__stage_e_available':
         # 1.0 if Stage E σ_ionic is present, 0.5 otherwise
         return 1.0 if metrics.get('sigma_full_mScm_stage_e_physics') is not None else 0.5
+
+    if key == '__commercial_composition':
+        # Pass-through wt_am_pct; band scoring (75-90% sweet spot) handles rest
+        return _derived_value('__wt_am_pct', metrics)
+
+    if key == '__bimodal_design':
+        # bimodal = AM_P + AM_S 모두 존재 (n_AM_P > 0 AND n_AM_S > 0).
+        # 'mode' 메타데이터 또는 P:S ratio로 판단.
+        n_p = metrics.get('AM_P_n_particles')
+        n_s = metrics.get('AM_S_n_particles')
+        try:
+            if n_p is not None and n_s is not None:
+                return 1.0 if (float(n_p) > 0 and float(n_s) > 0) else 0.5
+        except (TypeError, ValueError):
+            pass
+        # Fallback: parse ps_ratio "7:3" — both nonzero = bimodal
+        ps = metrics.get('ps_ratio') or metrics.get('_meta_ps_ratio') or ''
+        if isinstance(ps, str) and ':' in ps:
+            try:
+                a, b = (float(x) for x in ps.split(':')[:2])
+                return 1.0 if (a > 0 and b > 0) else 0.5
+            except (ValueError, IndexError):
+                pass
+        # Fallback: 'mode' metadata
+        mode = metrics.get('_meta_mode') or metrics.get('mode')
+        if mode == 'bimodal':
+            return 1.0
+        if mode == 'standard':
+            return 0.5
+        return None
 
     if key == '__compaction_efficiency':
         # Pass-through porosity; band scoring handles the rest

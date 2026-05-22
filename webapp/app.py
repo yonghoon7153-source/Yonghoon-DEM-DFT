@@ -514,6 +514,23 @@ def _inject_input_params(metrics, results_dir):
             inj['_input_target_press_MPa'] = float(tp) * 1000 if float(tp) < 10 else float(tp)
     except (TypeError, ValueError):
         pass
+    # Mode + ps_ratio from meta.json (for bimodal vs standard detection)
+    meta_path = os.path.join(os.path.dirname(results_dir),
+                              os.path.basename(results_dir).replace('webapp/results','webapp/uploads')
+                              if 'results' in results_dir else os.path.basename(results_dir),
+                              'meta.json')
+    # Cleaner: look for meta.json near results_dir
+    for mp in (os.path.join(results_dir, 'meta.json'),
+               os.path.join(os.path.dirname(results_dir), 'meta.json')):
+        if os.path.exists(mp):
+            try:
+                with open(mp) as mf:
+                    md = json.load(mf)
+                if 'mode' in md:    inj['_meta_mode']     = md['mode']
+                if 'ps_ratio' in md: inj['_meta_ps_ratio'] = md['ps_ratio']
+                break
+            except (OSError, ValueError):
+                pass
     if not inj:
         return metrics
     return {**metrics, **inj}
