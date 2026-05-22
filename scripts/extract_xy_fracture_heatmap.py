@@ -41,20 +41,19 @@ except ImportError as e:
     sys.exit(1)
 
 
-def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
+def case_xy_heatmap(case_dir: Path, n_bins: int = 20,
+                     min_count_for_pct: int = 3):
     """Compute XY severe% heatmap for one case.
 
+    Args:
+        n_bins:            grid resolution (NxN).
+        min_count_for_pct: bin은 total contact count >= 이 값일 때만
+                           severe%를 평가 (그 이하는 NaN — sparse statistics
+                           noise 제거).  3 = 의미 있는 binned percentage.
+
     Returns:
-        {
-            'case_id': ...,
-            'n_bins': N,
-            'box_x_um': float, 'box_y_um': float,
-            'bins_x': [...], 'bins_y': [...],   # bin edges (μm)
-            'severe_count': [[...]], 'total_count': [[...]],
-            'severe_pct': [[...]],
-            'n_severe_contacts': int, 'n_total_contacts': int,
-        }
-    Or None if data missing.
+        dict with severe_count / total_count / severe_pct grids + meta.
+        None if data missing.
     """
     case_id = case_dir.name
     results_dir = ROOT / 'webapp' / 'results' / case_id
@@ -63,7 +62,6 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
     contacts_csv = results_dir / 'contacts.csv'
     meta_file = case_dir / 'meta.json'
     ip_file = results_dir / 'input_params.json'
-    fm_file = results_dir / 'full_metrics.json'
 
     if not (atoms_csv.exists() and contacts_csv.exists() and meta_file.exists()):
         return None
@@ -82,7 +80,6 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
     if box_x_um <= 0 or box_y_um <= 0:
         return None
 
-    # Atoms — map id → (x_um, y_um, type, r_um)
     df_a = pd.read_csv(atoms_csv)
     for col in df_a.columns:
         df_a[col] = pd.to_numeric(df_a[col], errors='coerce')
@@ -97,11 +94,9 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
         for _, r in df_a.iterrows()
     }
 
-    # Run aggregate to get brittle_pairs + counts
     contacts_df = pd.read_csv(contacts_csv, low_memory=False)
-    n_total = len(contacts_df)
-    if n_total > 5_000_000:
-        return None  # too large
+    if len(contacts_df) > 5_000_000:
+        return None
 
     def _stream(df):
         cols = list(df.columns)
@@ -112,14 +107,11 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
                                       type_map, scale=scale)
     brittle_pairs = agg.get('brittle_pairs', [])
 
-    # Bins (in μm)
     bins_x = np.linspace(0, box_x_um, n_bins + 1)
     bins_y = np.linspace(0, box_y_um, n_bins + 1)
     severe = np.zeros((n_bins, n_bins), dtype=int)
     total  = np.zeros((n_bins, n_bins), dtype=int)
 
-    # Total = number of brittle_pairs (all damaged contacts)
-    # Severe = subset where stage in {fragmentation, pulverization}
     n_severe = 0
     n_total_contacts = len(brittle_pairs)
     for bp in brittle_pairs:
@@ -127,7 +119,6 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
         a2 = atoms_by_id.get(bp['id2'])
         if not (a1 and a2):
             continue
-        # Mid-point in μm (positions stored in sim units)
         mx = (a1['x'] + a2['x']) / 2 * scale
         my = (a1['y'] + a2['y']) / 2 * scale
         ix = int(np.clip(np.floor(mx / box_x_um * n_bins), 0, n_bins - 1))
@@ -137,19 +128,25 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
             severe[iy, ix] += 1
             n_severe += 1
 
-    # severe %: per-bin (severe/total)*100, NaN where total=0
+    # severe %: NaN where bin count < min_count_for_pct (sparse → unreliable)
     with np.errstate(divide='ignore', invalid='ignore'):
-        severe_pct = np.where(total > 0, severe / total * 100, np.nan)
+        severe_pct_full = np.where(total > 0, severe / total * 100, np.nan)
+        severe_pct_reliable = np.where(total >= min_count_for_pct,
+                                        severe_pct_full, np.nan)
 
     return {
         'case_id': case_id, 'case_name': meta.get('name', case_id),
-        'n_bins': n_bins,
+        'mode':    meta.get('mode', ''),
+        'am_se_ratio': meta.get('ps_ratio', '') or '',
+        'n_bins': n_bins, 'min_count_for_pct': min_count_for_pct,
         'box_x_um': round(box_x_um, 2), 'box_y_um': round(box_y_um, 2),
         'bins_x': bins_x.tolist(), 'bins_y': bins_y.tolist(),
         'severe_count': severe.tolist(),
         'total_count':  total.tolist(),
-        'severe_pct':   [[None if np.isnan(v) else round(v, 1)
-                          for v in row] for row in severe_pct],
+        'severe_pct_full':     [[None if np.isnan(v) else round(v, 1)
+                                  for v in row] for row in severe_pct_full],
+        'severe_pct_reliable': [[None if np.isnan(v) else round(v, 1)
+                                  for v in row] for row in severe_pct_reliable],
         'n_severe_contacts': n_severe,
         'n_total_contacts':  n_total_contacts,
         'severe_frac_overall': round(100 * n_severe / max(n_total_contacts, 1), 2),
@@ -157,42 +154,76 @@ def case_xy_heatmap(case_dir: Path, n_bins: int = 20):
 
 
 def render_png(data: dict, out_path: Path):
-    """Render the heatmap as a 2-panel PNG (severe% + total density)."""
+    """Render 3-panel heatmap PNG.
+
+    Panel 1: Severe absolute count (frag+pulv per bin) — colour 'inferno_r'
+    Panel 2: Total damaged contact count per bin — colour 'viridis'
+    Panel 3: Severe% (reliable, count ≥ 3 bins only) — colour 'hot_r'
+             그 외 bin은 gray.
+    """
     if not data:
         return False
+    severe_count = np.array(data['severe_count'])
+    total_count  = np.array(data['total_count'])
     severe_pct = np.array([[np.nan if v is None else v for v in row]
-                            for row in data['severe_pct']], dtype=float)
-    total = np.array(data['total_count'])
+                            for row in data['severe_pct_reliable']], dtype=float)
     bins_x, bins_y = data['bins_x'], data['bins_y']
+    extent = [bins_x[0], bins_x[-1], bins_y[0], bins_y[-1]]
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    fig, axes = plt.subplots(1, 3, figsize=(17, 5.5))
 
-    # Left: severe%  (color = damage intensity)
+    # Panel 1: Severe absolute count
     ax = axes[0]
-    im = ax.imshow(severe_pct, origin='lower',
-                    extent=[bins_x[0], bins_x[-1], bins_y[0], bins_y[-1]],
-                    cmap='hot_r', vmin=0, vmax=max(10, np.nanmax(severe_pct) if np.isfinite(np.nanmax(severe_pct)) else 10),
+    sev_max = max(1, severe_count.max())
+    im = ax.imshow(severe_count, origin='lower', extent=extent,
+                    cmap='inferno_r', vmin=0, vmax=sev_max,
                     aspect='equal', interpolation='nearest')
-    ax.set_title(f"Severe% (frag + pulv) per XY bin\n"
-                 f"overall: {data['severe_frac_overall']}% ({data['n_severe_contacts']}/{data['n_total_contacts']})",
-                 fontsize=10)
-    ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
-    plt.colorbar(im, ax=ax, label='severe %', fraction=0.046, pad=0.04)
-
-    # Right: total contact density (sanity check — uniform = OK)
-    ax = axes[1]
-    im = ax.imshow(total, origin='lower',
-                    extent=[bins_x[0], bins_x[-1], bins_y[0], bins_y[-1]],
-                    cmap='viridis', aspect='equal', interpolation='nearest')
-    ax.set_title(f"Total damaged contact count per XY bin\n"
-                 f"sum: {total.sum()}, max bin: {total.max()}",
+    ax.set_title(f"Severe absolute count (frag + pulv per bin)\n"
+                 f"total severe: {data['n_severe_contacts']}, max/bin: {sev_max}",
                  fontsize=10)
     ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
     plt.colorbar(im, ax=ax, label='count', fraction=0.046, pad=0.04)
 
-    fig.suptitle(f"{data['case_name']} — XY fracture heatmap "
-                  f"(RVE {data['box_x_um']:.0f}×{data['box_y_um']:.0f} μm, {data['n_bins']}×{data['n_bins']} bins)",
-                  fontsize=11, y=1.02)
+    # Panel 2: Total damaged contact count
+    ax = axes[1]
+    tot_max = max(1, total_count.max())
+    im = ax.imshow(total_count, origin='lower', extent=extent,
+                    cmap='viridis', vmin=0, vmax=tot_max,
+                    aspect='equal', interpolation='nearest')
+    ax.set_title(f"Total damaged contact count\n"
+                 f"sum: {total_count.sum()}, max/bin: {tot_max}",
+                 fontsize=10)
+    ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
+    plt.colorbar(im, ax=ax, label='count', fraction=0.046, pad=0.04)
+
+    # Panel 3: Severe% (reliable bins only)
+    ax = axes[2]
+    # set gray background where NaN, then overlay coloured cells
+    ax.set_facecolor('#dddddd')
+    # vmax: 사용 가능한 데이터의 95-percentile으로 안정화 — 0 ~ 100 % 풀스케일은
+    # 대부분 case 약하게 보임
+    valid = severe_pct[~np.isnan(severe_pct)]
+    if valid.size:
+        vmax = max(10, float(np.nanpercentile(severe_pct, 95)))
+    else:
+        vmax = 10
+    im = ax.imshow(severe_pct, origin='lower', extent=extent,
+                    cmap='hot_r', vmin=0, vmax=vmax,
+                    aspect='equal', interpolation='nearest')
+    n_reliable = int(np.sum(~np.isnan(severe_pct)))
+    ax.set_title(f"Severe% (bins with ≥{data['min_count_for_pct']} contacts)\n"
+                 f"reliable bins: {n_reliable} / {data['n_bins']**2}, "
+                 f"overall severe: {data['severe_frac_overall']}%",
+                 fontsize=10)
+    ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
+    plt.colorbar(im, ax=ax, label='severe %', fraction=0.046, pad=0.04)
+
+    fig.suptitle(
+        f"{data['case_name']} — XY fracture heatmap  "
+        f"(mode: {data['mode']}, ps_ratio: {data['am_se_ratio'] or '—'}, "
+        f"RVE {data['box_x_um']:.0f}×{data['box_y_um']:.0f} μm, "
+        f"{data['n_bins']}×{data['n_bins']} bins)",
+        fontsize=11, y=1.02)
     fig.tight_layout()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=120, bbox_inches='tight')
