@@ -2211,6 +2211,92 @@
       ],
       "url": "https://pubs.acs.org/doi/abs/10.1021/acs.chemmater.0c02418",
       "added_in_session": "2026-05-08"
+    },
+    {
+      "id": "lee2025_halogen_lpo",
+      "authors": "Lee, J.; Moon, H.; Lee, J.; Kim, Y.; Kim, G.; Kim, B.; Yoo, J.; Kang, M.",
+      "title": "Halogen-programmed Li3PO4 coating for self-adaptive and durable interfaces in sulfide-based all-solid-state batteries",
+      "journal": "Chem. Eng. J.",
+      "volume": 530,
+      "pages": "173574",
+      "year": 2026,
+      "doi": "10.1016/j.cej.2026.173574",
+      "system_match_with_us": "LPOFCl (F+Cl co-substituted Li3PO4) coating on NCM811 paired with LPSCl. Halogen substitution mechanism analogous to our Cl/Br tuning in argyrodite bulk.",
+      "key_findings": [
+        "VASP/PBE 500 eV plane-wave + 0.5 A^-1 K-grid + NEB (12 images, spring 5 eV/A^2)",
+        "Li+ migration barrier 0.62 eV (LPO) -> 0.41 eV (LPOFCl), 34% reduction",
+        "Three cooperative mechanisms: electrostatic asymmetry + Cl polarizability + weakened Li-O via F redistribution",
+        "Interfacial dG: LPSCl|LPOFCl = -27.71 eV (vs -18.61 for LPSCl|LPO), much more compatible",
+        "F-Cl co-substitution synergy beats single halogen (LPOF or LPOCl alone)"
+      ],
+      "kb_note": "db/literature/lee2025_halogen_lpo_coating.md",
+      "tags": [
+        "coating",
+        "halogen-substitution",
+        "Li3PO4",
+        "Li-migration",
+        "NEB",
+        "interface-engineering",
+        "paper2-relevant"
+      ],
+      "added_in_session": "2026-05-22"
+    },
+    {
+      "id": "fadillah2025_li_opa",
+      "authors": "Fadillah, L.; Braks, L.; Oh, J.; Liu, M.; Turk, H.; Tisi, D.; Mensi, M.; Ceriotti, M.; Choi, J. W.; Coskun, A.",
+      "title": "Molecular Surface Engineering of Sulfide Electrolytes with Enhanced Humidity Tolerance for Robust Lithium Metal All-Solid-State Batteries",
+      "journal": "Adv. Mater.",
+      "year": 2025,
+      "doi": "10.1002/adma.202515013",
+      "system_match_with_us": "LPSClBr = Li6PS5Cl0.5Br0.5 matches our comp2 exactly. Direct citation source for comp2 family context.",
+      "key_findings": [
+        "Octadecyl phosphonic acid (OPA) and Li-OPA surface coating on Li6PS5Cl0.5Br0.5",
+        "DFT adsorption energy: OPA-H 3.856 eV, Li-OPA 5.174 eV on LPSCl(100)",
+        "MC simulations: Cl preferentially terminates LPSCl(100), Br migrates to bulk",
+        "PET (Point Edge Transformer) ML potential trained on MAD universal dataset",
+        "Critical current density 0.8 -> 2.4 mA/cm^2; 92% conductivity retention after 24h dry-room exposure",
+        "NMC811 full cell: 160 mAh/g at 0.3C, 99.7% CE, 85% retention 100 cycles"
+      ],
+      "halogen_partitioning_insight": "Br migrates from surface to bulk in LPSClBr - supports our paper #1 argument about halogen site preference dependence on local chemistry",
+      "kb_note": "db/literature/fadillah2025_li_opa_lpsclbr.md",
+      "tags": [
+        "comp2-match",
+        "halogen-partitioning",
+        "surface-coating",
+        "ML-potential",
+        "PET",
+        "humidity-tolerance",
+        "paper2-relevant"
+      ],
+      "added_in_session": "2026-05-22"
+    },
+    {
+      "id": "li2025_pvac",
+      "authors": "Li, X.; Guo, Y.; Wang, Y.; Liu, J.; Wu, Z.; Wang, D.",
+      "title": "Physicochemical Dual-Force-Driven PVAC@LPSCl Composite Electrolyte Film for High-Performance All-Solid-State Batteries",
+      "journal": "Adv. Funct. Mater.",
+      "year": 2025,
+      "doi": "10.1002/adfm.202512635",
+      "system_match_with_us": "Uses LPSCl1.5 (Li5.5PS4.5Cl1.5) which is close to but not identical to our modelC (Li5.4PS4.4Cl1.6). Same Cl-rich halogen-substitution family (Adeli 2019 framework).",
+      "key_findings": [
+        "DFT-guided binder adsorption: PVAC -0.90 eV on LPSCl(001) via Li-O coordination (1.93 A)",
+        "Binder adsorption ranking on LPSCl: PVDF -1.76 > PVAC -0.90 > PEO -0.77 > PEVA -0.64 > SBR -0.34",
+        "LPSCl1.5 ionic conductivity 2.01 mS/cm (vs 0.84 mS/cm for pristine LPSCl)",
+        "Cl-rich substitution improves both deformability and conductivity simultaneously",
+        "Film mechanical: 1.2 MPa tensile, 50 um thick, CCD 3.18 mA/cm^2"
+      ],
+      "modelC_relevance": "Their LPSCl1.5 conductivity 2.0 mS/cm is a useful benchmark for our modelC family. Their film mechanical 1.2 MPa is binder-dominated regime (different from our bulk B0=21.7 GPa).",
+      "kb_note": "db/literature/li2025_pvac_lpscl15.md",
+      "tags": [
+        "binder",
+        "PVAC",
+        "LPSCl1.5",
+        "modelC-related",
+        "Cl-rich",
+        "film-mechanical",
+        "DFT-adsorption"
+      ],
+      "added_in_session": "2026-05-22"
     }
   ]
 }
