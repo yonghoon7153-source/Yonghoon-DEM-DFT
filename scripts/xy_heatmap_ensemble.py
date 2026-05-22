@@ -163,8 +163,7 @@ def main():
     for patch, c in zip(bp['boxes'], colors):
         patch.set_facecolor(c); patch.set_alpha(0.5)
     ax2.set_ylabel('Severe % overall', fontsize=10)
-    ax2.set_title('Composition class 별 severe% 분포',
-                  fontsize=10)
+    ax2.set_title('Severe% by composition class', fontsize=10)
     ax2.grid(axis='y', alpha=0.3)
     ax2.axhline(10, linestyle='--', color='gray', linewidth=0.7)
 
@@ -180,7 +179,7 @@ def main():
                           [t for t in TIER_ORDER if tier_groups[t]]):
         patch.set_facecolor(TIER_COLOR[t]); patch.set_alpha(0.5)
     ax3.set_ylabel('Severe % overall', fontsize=10)
-    ax3.set_title('Tier (target areal capacity) 별 severe% 분포', fontsize=10)
+    ax3.set_title('Severe% by capacity tier', fontsize=10)
     ax3.grid(axis='y', alpha=0.3)
 
     # Panel 4 (bottom-right): RVE area vs severe% scatter
