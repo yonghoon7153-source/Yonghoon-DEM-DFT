@@ -104,35 +104,35 @@ AXES: list[dict[str, Any]] = [
      'key': 'percolation_pct', 'label': 'SE percolation top↔bot (%)',
      'direction': 'higher', 'thresholds': [99.0, 97.5, 95, 90, 80, 60],
      'formula': '% of SE in the connected component spanning bottom→top plates',
-     'meaning': '<95%면 dead-zone 존재 → 이론 σ_ionic도 절반 이하 떨어짐 (Bielefeld 2019, Liu&Yin 2025).',
-     'weight': 1.4},
+     'meaning': '★ 이온 percolation = 회복 불가능한 본질적 측면.  <95%면 dead-zone '
+                '존재 → 이론 σ_ionic도 절반 이하 떨어짐 (Bielefeld 2019, Liu&Yin 2025).',
+     'weight': 1.5},
 
     {'category': 'SE 네트워크 위상',
      'key': '__cut_fraction', 'label': 'Cut fraction (위상 robustness)',
      'direction': 'lower_corpus', 'corpus_key': 'cut_fraction',
-     'corpus_filter_key': 'n_percolating',  # exclude non-percolating cases
+     'corpus_filter_key': 'n_percolating',
      'formula': 'cut_fraction = n_articulation / n_percolating_SE',
-     'meaning': 'Cut node 1개 제거 시 percolation 분리되는 비율. 낮을수록 redundancy ↑. '
-                'Corpus percentile (percolating-only 27 cases 기준).',
-     'weight': 1.0},
+     'meaning': '★ Cut node 1개 제거시 percolation 분리되는 비율 — 이온 path '
+                'redundancy.  비가역 본질적 측면.',
+     'weight': 1.2},
 
     {'category': 'SE 네트워크 위상',
      'key': '__bn_below_frac', 'label': 'Bottleneck burden',
      'direction': 'lower_corpus', 'corpus_key': 'bn_below_frac',
      'corpus_filter_key': 'n_percolating',
      'formula': 'n_bn_below_threshold / n_perc_edges  (A/r² < 10% × median)',
-     'meaning': '폭이 corpus median의 10% 미만인 좁은 contact 비율. '
-                'σ_ionic constriction loss 직접 원인. Percolating-only corpus percentile.',
-     'weight': 1.0},
+     'meaning': '★ 좁은 contact 비율 — σ_ionic constriction loss 직접 원인. '
+                'sintering 압력으로만 개선 가능, 이미 다져진 cathode는 비가역.',
+     'weight': 1.2},
 
     {'category': 'SE 네트워크 위상',
      'key': '__bn_median_norm', 'label': '백본 두께 (median A/r²)',
      'direction': 'higher_corpus', 'corpus_key': 'bn_median_norm',
      'corpus_filter_key': 'n_percolating',
      'formula': 'median(A_contact / r_min²) over percolating SE-SE edges',
-     'meaning': '대표 contact의 dimensionless 크기. Hertz 이상 ≈ 0.03, '
-                '본 corpus median ≈ 0.28. 높을수록 백본 두꺼움.',
-     'weight': 0.8},
+     'meaning': '대표 contact의 dimensionless 크기. corpus median ≈ 0.28.',
+     'weight': 0.7},
 
     # ── 3. SE 네트워크 통계 (Statistics) ──
     {'category': 'SE 네트워크 통계',
@@ -140,14 +140,14 @@ AXES: list[dict[str, Any]] = [
      'direction': 'higher', 'thresholds': [5.5, 5.0, 4.5, 4.0, 3.5, 3.0],
      'formula': 'mean coordination number of SE particles to other SE',
      'meaning': '4–6 = packed, <3 = sparse (Mukhopadhyay 2014). RCP ≈ 6.',
-     'weight': 0.6},
+     'weight': 0.4},
 
     {'category': 'SE 네트워크 통계',
      'key': 'se_se_cn_std', 'label': 'σ(z_SE-SE) (균질도)',
      'direction': 'lower', 'thresholds': [1.5, 1.7, 2.0, 2.3, 2.7, 3.2],
      'formula': 'std dev of SE coordination — packing inhomogeneity',
      'meaning': '낮으면 균일 packing, 높으면 일부 SE 고립/일부 over-coordinated.',
-     'weight': 0.4},
+     'weight': 0.3},
 
     # ── 4. 경로 효율 (Path efficiency) ──
     {'category': '경로 효율 (Tortuosity)',
@@ -240,73 +240,75 @@ AXES: list[dict[str, Any]] = [
                 '실측 metric 우선 사용.',
      'weight': 0.6},
 
-    # ── 7. 전자 전도 (Electronic) ──
+    # ── 7. 전자 전도 (Electronic) — VGCF 도전재로 회복 가능 → weight 낮음 ──
     {'category': '전자 전도',
      'key': '__am_percolation_pct', 'label': 'AM percolation top↔bot (%)',
      'direction': 'higher', 'thresholds': [90, 80, 70, 55, 40, 25],
      'formula': '% of AM in the connected component spanning bottom→top',
-     'meaning': 'AM-AM contact 망의 top↔bot 연결성. <70%면 도전재 필수.',
-     'weight': 0.9},
+     'meaning': 'AM-AM contact percolation.  <70%면 VGCF 등 도전재 첨가 권장 — '
+                '회복 가능한 측면이라 가중치 낮음.',
+     'weight': 0.5},
 
     {'category': '전자 전도',
      'key': '__electronic_active_pct', 'label': 'CC-connected AM (%)',
      'direction': 'higher', 'thresholds': [90, 80, 70, 55, 40, 25],
      'formula': 'electronic_active_fraction × 100',
-     'meaning': '하단 current collector까지 전자가 도달 가능한 AM 비율.',
-     'weight': 0.9},
+     'meaning': '하단 current collector까지 전자가 도달 가능한 AM 비율. '
+                'VGCF로 회복 가능.',
+     'weight': 0.5},
 
     {'category': '전자 전도',
      'key': 'electronic_sigma_full_mScm_stage_e_physics',
-     'label': 'σ_e Stage E (mS/cm) ⭐',
+     'label': 'σ_e Stage E (mS/cm)',
      'direction': 'higher', 'thresholds': [5, 2, 1, 0.5, 0.2, 0.05],
      'fallback_key': 'electronic_sigma_full_mScm_physics',
-     'formula': 'Stage E final electronic conductivity (Trevisanello AM-crystallinity × size)',
-     'meaning': 'sulfide cathode 무도전재 σ_e 0.5–5 mS/cm 권장 (Janek review). '
-                '도전재 1wt%로 향상 가능 — What-if 토글에서 가시화.',
-     'weight': 0.7},
+     'formula': 'Stage E final electronic conductivity',
+     'meaning': '★ 무도전재 sulfide cathode σ_e.  단, VGCF / carbon black 1-3 wt% '
+                '첨가로 10-100× 회복 가능한 metric (Mücke 2025).  따라서 가중치 낮음 '
+                '— ranking에서 핵심 차별 요소 아님.  What-if 도전재 토글로 시뮬레이션.',
+     'weight': 0.35},
 
-    # ── 8. 기계적 안정성 (Mechanical) ──
+    # ── 8. 기계적 안정성 (Mechanical) — 비가역 cycling damage → weight 강화 ──
     {'category': '기계적 안정성',
      'key': '__frac_severe_force_pct', 'label': 'Fragmentation+Pulv (%)',
      'direction': 'lower', 'thresholds': [0.5, 1.5, 3, 6, 10, 18],
      'formula': '(frac_fragmentation + frac_pulverization) [force-based]',
-     'meaning': 'Lawn 1998 force-ratio classifier로 본 심각 손상 비율 (cycling crack risk).',
-     'weight': 0.9},
+     'meaning': '★ 심각 손상 — 사이클링 비가역.  Lawn 1998 force-ratio classifier.',
+     'weight': 1.2},
 
     {'category': '기계적 안정성',
      'key': 'frac_multicrack_force_pct', 'label': 'Multi-crack (%)',
      'direction': 'lower', 'thresholds': [3, 6, 10, 16, 25, 40],
      'fallback_key': 'frac_multicrack_pct',
      'formula': 'frac_multicrack_force_pct — Lawn stage 2',
-     'meaning': 'Hertzian → ring crack → multi-crack 단계 도달 비율.',
-     'weight': 0.6},
+     'meaning': 'multi-crack 비율 — 사이클링시 fragmentation 진행 risk.',
+     'weight': 0.7},
 
     {'category': '기계적 안정성',
      'key': 'fracture_index_force', 'label': 'Fracture index',
      'direction': 'lower', 'thresholds': [0.05, 0.10, 0.20, 0.35, 0.55, 0.80],
      'fallback_key': 'fracture_index',
-     'formula': 'Σ stage_weight × frac_stage / 4 — composite damage index 0=intact, 1=all pulv',
-     'meaning': 'Lawn weights (intact 0, micro 1, multi 2, frag 3, pulv 4) — 통합 손상 척도.',
-     'weight': 0.7},
+     'formula': 'Σ stage_weight × frac_stage / 4',
+     'meaning': '★ Lawn weights 통합 손상 척도 (intact 0 → pulv 4).',
+     'weight': 1.0},
 
     {'category': '기계적 안정성',
      'key': '__sigma_vm_cv_pct', 'label': 'CV(σ_VM) (%)',
      'direction': 'lower', 'thresholds': [100, 130, 160, 200, 250, 320],
      'formula': '100 × stress_cv  (CV = σ(stress) / ⟨stress⟩)',
-     'meaning': '응력 분포 불균일도. 높을수록 hotspot 다수 → 국부 fracture.',
-     'weight': 0.4},
+     'meaning': '응력 분포 불균일도 — hotspot 식별.',
+     'weight': 0.3},
 
     # ── 9. 전도도 (Absolute conductivity) ──
     {'category': '전도도 절대값',
      'key': 'sigma_full_mScm_stage_e_physics',
-     'label': 'σ_ionic Stage E (mS/cm) ⭐',
+     'label': 'σ_ionic Stage E (mS/cm) ⭐★',
      'direction': 'higher', 'thresholds': [0.5, 0.3, 0.15, 0.08, 0.04, 0.01],
      'fallback_key': 'sigma_full_mScm_physics',
      'formula': 'Stage E final ionic conductivity (Cronau SE-size factor)',
-     'meaning': '실측 sulfide composite 0.1–0.5 mS/cm (Janek 2023 review). '
-                '주의: 절대값만으론 commercial 적합성 판단 불충분 — '
-                'wt_AM ratio + ASR_total 도 같이 고려.',
-     'weight': 1.5},
+     'meaning': '★★ 이온 전도도 — 회복 불가능한 본질적 측면.  '
+                '실측 sulfide composite 0.1–0.5 mS/cm (Janek 2023).  TOP KPI.',
+     'weight': 2.0},
 
     {'category': '전도도 절대값',
      'key': 'thermal_sigma_full_mScm_stage_e_physics',
@@ -339,42 +341,41 @@ AXES: list[dict[str, Any]] = [
      'key': '__Q_gravimetric_mAhg', 'label': 'Q_gravimetric (mAh/g 복합체) ⭐★',
      'direction': 'higher', 'thresholds': [160, 148, 135, 120, 100, 80],
      'formula': 'wt_AM × C_AM  (NCM811 real C ≈ 190 mAh/g)',
-     'meaning': '★★★ 비용량.  85:15 → 162, 82:18 → 156, 75:25 → 142, 72:28 → 137, '
-                '60:40 → 114 mAh/g.  cell 무게당 에너지 = 산업 1순위 KPI.',
-     'weight': 4.0},
+     'meaning': '★★★ 비용량 = 무게당 에너지.  산업 KPI 1위 (Wh/kg).  '
+                '85:15 → 162, 82:18 → 156, 75:25 → 142, 72:28 → 137, 60:40 → 114 mAh/g.',
+     'weight': 5.0},
 
     {'category': '에너지 밀도 (Energy density)',
      'key': '__Q_volumetric_mAhcc', 'label': 'Q_volumetric (mAh/cc) ⭐★',
      'direction': 'higher', 'thresholds': [600, 520, 440, 360, 290, 220],
      'formula': 'ρ_composite × wt_AM × C_AM × (1−ε) — 부피 용량',
-     'meaning': '★★ ASSB 상용화 목표 ≥500 mAh/cc (Janek 2023).  부피당 에너지.',
-     'weight': 3.0},
-
-    {'category': '에너지 밀도 (Energy density)',
-     'key': '__wt_am_pct', 'label': 'wt_AM (%) — 활물질 무게비',
-     'direction': 'higher', 'thresholds': [85, 82, 78, 73, 65, 55],
-     'formula': '100 × m_AM / (m_AM + m_SE)',
-     'meaning': '활물질 무게 비율.  ★ 75% 미만은 sharp drop (SE-rich = commercial 부적합).',
-     'weight': 2.5},
+     'meaning': '★★★ 부피당 에너지 = Wh/L.  ASSB 상용화 목표 ≥500 mAh/cc (Janek 2023). '
+                '산업 KPI 1위와 동격.',
+     'weight': 4.5},
 
     {'category': '에너지 밀도 (Energy density)',
      'key': '__commercial_composition', 'label': '상용 조성 band (AM:SE) ⭐★',
      'direction': 'band', 'optimum': 82.0, 'band_width': 6.0,
      'formula': 'wt_AM(%) 의 band-around-optimum (82±6 = 76-88% 상용 sweet spot)',
-     'meaning': '★★★ commercial sulfide cathode 75-90% AM가 sweet spot (Janek 2023, '
-                'Mücke 2025). <70% SE-rich는 비용 폭증 + 에너지 밀도 손실, >92%는 '
-                'percolation 빈약.  particulate 72:28 같은 academic composition을 '
-                '명시적으로 demote.',
-     'weight': 2.0},
+     'meaning': '★★ commercial sulfide cathode 75-90% AM가 sweet spot (Janek 2023, '
+                'Mücke 2025).  비용 + 에너지 밀도 두 측면 동시 반영.',
+     'weight': 2.5},
 
     {'category': '에너지 밀도 (Energy density)',
-     'key': '__Q_target_match_pct', 'label': '목표 면용량 달성도 (%) ⭐',
+     'key': '__wt_am_pct', 'label': 'wt_AM (%) — 활물질 무게비',
+     'direction': 'higher', 'thresholds': [85, 82, 78, 73, 65, 55],
+     'formula': '100 × m_AM / (m_AM + m_SE)',
+     'meaning': '활물질 무게 비율.  Q_gravimetric이 이미 반영하지만 '
+                '70% 미만 strong drop은 별도 시각화 위해 유지.',
+     'weight': 1.5},
+
+    {'category': '에너지 밀도 (Energy density)',
+     'key': '__Q_target_match_pct', 'label': '목표 면용량 달성도 (%)',
      'direction': 'higher', 'thresholds': [95, 88, 80, 70, 55, 40],
-     'formula': '100 × min(Q_actual / Q_target, Q_target / Q_actual) — '
-                'case_id의 capacity tier (1mAh / 6mAh / 8mAh)와 Q_areal 비교',
-     'meaning': '★ "6 mAh/cm² 의도한 case가 실제 6mAh를 만드는가" 평가. '
-                'case_id에서 target 자동 추출.  particulate / S 등 tier 없는 case는 N/A.',
-     'weight': 1.0},
+     'formula': 'min(Q_actual/Q_target, Q_target/Q_actual) × 100',
+     'meaning': '"6 mAh/cm² 의도한 case가 실제 달성하는가" 정합성 체크. '
+                'tier 없는 case (particulate / S)는 N/A.',
+     'weight': 0.8},
 
     # ── 11. 설계 / 입자 정보 (Design info — informational only) ──
     # NOTE: r_SE / λ_eff는 input 파라미터일 뿐 성능 측정이 아니므로 weight 매우 낮게.
@@ -429,15 +430,14 @@ AXES: list[dict[str, Any]] = [
                 '압축 효율의 cycling-stability side.',
      'weight': 0.4},
 
-    # ── 12. 셀 ASR ──
+    # ── 12. 셀 ASR — 이온 측 강화, 전자 측 축소 ──
     {'category': '셀 단위 ASR',
-     'key': '__asr_ionic_Ohm_cm2', 'label': 'ASR_ionic (Ω·cm²) ⭐',
+     'key': '__asr_ionic_Ohm_cm2', 'label': 'ASR_ionic (Ω·cm²) ⭐★',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
      'formula': 'ASR = L_cathode(μm) × 0.1 / σ_ionic(mS/cm)',
-     'meaning': '1mAh/cm² C/3에서 ≤100 Ω·cm² workable. >250면 high-rate 위험. '
-                '주의: SE-rich (e.g. 72:28) cathode가 자연히 낮은 ASR 가짐 — '
-                '에너지 밀도와 함께 봐야 함.',
-     'weight': 1.5},
+     'meaning': '★★ 이온 ASR — 회복 불가능.  1mAh/cm² C/3에서 ≤100 workable. '
+                '주의: SE-rich (72:28)가 자동으로 낮은 ASR → 에너지 밀도와 함께 봐야.',
+     'weight': 2.5},
 
     {'category': '셀 단위 ASR',
      'key': '__Q_areal_mAhcm2', 'label': 'Q_areal (mAh/cm²) ⭐',
@@ -460,8 +460,9 @@ AXES: list[dict[str, Any]] = [
      'key': '__asr_electronic_Ohm_cm2', 'label': 'ASR_electronic (Ω·cm²)',
      'direction': 'lower', 'thresholds': [2, 5, 10, 20, 40, 80],
      'formula': 'ASR_e = L_cathode × 0.1 / σ_e_stage_e',
-     'meaning': '전자전도 영역 저항. 도전재 무첨가 sulfide에서 ASR_ionic만큼 critical.',
-     'weight': 0.7},
+     'meaning': '전자전도 영역 저항.  σ_e 동일 — VGCF/도전재로 회복 가능하므로 '
+                '가중치 낮음.  본질적 차별 측면 아님.',
+     'weight': 0.35},
 
     {'category': '셀 단위 ASR',
      'key': '__asr_thermal_Kcm2_W', 'label': 'ASR_thermal (K·cm²/W)',
@@ -490,9 +491,8 @@ AXES: list[dict[str, Any]] = [
      'key': '__polarization_mV_at_C3', 'label': '분극 η @ C/3 (mV) ⭐',
      'direction': 'lower', 'thresholds': [30, 60, 100, 160, 250, 400],
      'formula': 'η = i × (ASR_ionic + ASR_e),  i = 0.33 mA/cm² (C/3 of 1 mAh/cm²)',
-     'meaning': '★ 실제 작동 분극 전압 drop (mV).  관측 가능량.  '
-                '<100 mV 우수, >250 high-rate에서 cutoff 도달 위험.',
-     'weight': 1.2},
+     'meaning': '★ 실제 작동 분극 전압 drop.  관측 가능량.  EIS / 셀 측정 직접 비교.',
+     'weight': 1.5},
 
     # ── 12. 안전성 (Safety) ──
     {'category': '안전성 (Safety)',
@@ -509,23 +509,22 @@ AXES: list[dict[str, Any]] = [
     # 실 데이터 (particle_max_fpc per-particle count)가 metrics에 들어오면
     # 그때 진짜 axis로 추가.  현재는 stress_cv 자체로 충분 (기계적 안정성에 있음).
 
-    # ── 13. 수명 (Cycling) ──
+    # ── 13. 수명 (Cycling) — 비가역 KPI ──
     {'category': '수명 (Cycling)',
-     'key': '__cycle_stable_AM_pct', 'label': 'Cycle-stable AM (%)',
+     'key': '__cycle_stable_AM_pct', 'label': 'Cycle-stable AM (%) ⭐★',
      'direction': 'higher', 'thresholds': [95, 90, 80, 70, 55, 40],
      'formula': '(1 − fracture_severe/100) × (ionic_active/100) × (electronic_active/100) × 100',
-     'meaning': '★ 합성 cycling 안정성 — 활성 + 전자연결 + 심각손상 없음을 동시 만족하는 '
-                'AM 비율.  초기 fracture로 percolation 끊기지 않는 cell 비율.',
-     'weight': 1.0},
+     'meaning': '★★ 합성 cycling 안정성 — 활성+전자연결+심각손상없음 동시 만족 AM 비율. '
+                '비가역 (한번 fracture된 입자는 영구).  cycling life KPI 1순위.',
+     'weight': 1.8},
 
     {'category': '수명 (Cycling)',
      'key': '__sigma_e_fracture_loss_pct',
      'label': 'σ_e fracture-induced loss (%)',
      'direction': 'lower', 'thresholds': [10, 25, 40, 55, 70, 85],
      'formula': '100 × (σ_e_baseline − σ_e_stage_e) / σ_e_baseline',
-     'meaning': 'Stage E의 fracture 보정으로 σ_e가 떨어진 비율. 높을수록 cycling에서 '
-                '전자전도 약화 risk ↑.',
-     'weight': 0.5},
+     'meaning': 'fracture로 σ_e 손실 비율.  단, σ_e 자체는 VGCF로 회복 가능 → weight 낮음.',
+     'weight': 0.3},
 
     # ── 14. 가공 / 신뢰성 (Manufacturability) ──
     {'category': '가공 신뢰성',
