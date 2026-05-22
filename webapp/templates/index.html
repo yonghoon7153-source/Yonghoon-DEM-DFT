@@ -70,6 +70,20 @@
       <button class="btn btn-sm btn-secondary sort-btn" onclick="filterCases('fav')" id="filter-fav">★ 즐겨찾기</button>
       <button class="btn btn-sm btn-secondary sort-btn nowrap" onclick="filterCases('rank')" id="filter-rank"
               title="완료(분석된) 케이스만 종합 등급 순으로 정렬. 각 행 옆에 순위 + 점수 + 등급 뱃지가 붙습니다.">🏆 랭킹</button>
+      <span id="rank-tier-bar" class="rank-tier-bar" style="display:none">
+        <button class="tier-btn active" data-tier="all"
+                title="모든 case 한 줄로 sort (서로 다른 면용량 섞임)">전체</button>
+        <button class="tier-btn" data-tier="6mAh"
+                title="6 mAh/cm² 후막 cathode (~110-120μm) 끼리만 비교">6mAh</button>
+        <button class="tier-btn" data-tier="8mAh"
+                title="8 mAh/cm² 초후막 cathode (~140-185μm) 끼리만 비교">8mAh</button>
+        <button class="tier-btn" data-tier="1mAh"
+                title="1 mAh/cm² 박막 cathode (~15-20μm) 끼리만 비교">1mAh</button>
+        <button class="tier-btn" data-tier="particulate"
+                title="particulate (SE 크기 sweep, RVE 30×30) 끼리만 비교">particulate</button>
+        <button class="tier-btn" data-tier="S"
+                title="S 시리즈 (AM_S only mono) 끼리만 비교">S</button>
+      </span>
       <span id="rank-whatif" class="rank-whatif-bar" style="display:none">
         <span class="rwf-tag" title="도전재 carbon black 첨가 시 σ_e/ASR_e 재계산 (Bruggeman φ²·σ_C)">🧪</span>
         <label class="whatif-toggle compact" title="ON이면 랭킹이 carbon-additive 시나리오로 재계산됩니다">
@@ -78,11 +92,6 @@
         </label>
         <input type="range" id="rank-whatif-wt" min="0" max="5" step="0.25" value="1.0">
         <span id="rank-whatif-wt-val">1.0%</span>
-        <span class="rwf-divider"></span>
-        <label class="rwf-uc-check" title="입력 case_id가 particulate / 두께 < 30μm / am_perc=0인 case를 랭킹에서 제외">
-          <input type="checkbox" id="rank-exclude-uc" checked>
-          <span>🧫 단위셀 제외</span>
-        </label>
       </span>
       <span style="width:1px;height:20px;background:var(--border);margin:0 4px"></span>
       <button class="btn btn-sm btn-secondary sort-btn" onclick="sortCases('name')" id="sort-name">이름순</button>
@@ -114,7 +123,8 @@
           data-overall-score="{{ case.overall_score if case.overall_score is not none else -1 }}"
           data-overall-grade="{{ case.overall_grade or '—' }}"
           data-overall-n-axes="{{ case.overall_n_axes or 0 }}"
-          data-unit-cell="{{ 'true' if case.is_unit_cell else 'false' }}">
+          data-unit-cell="{{ 'true' if case.is_unit_cell else 'false' }}"
+          data-tier="{% if '1mAh' in case.name %}1mAh{% elif '6mAh' in case.name %}6mAh{% elif '8mAh' in case.name %}8mAh{% elif 'particulate' in case.name %}particulate{% elif case.name.startswith('input_S_') %}S{% else %}other{% endif %}">
         <td><span class="fav-star" onclick="toggleFav(event, '{{ case.id }}')" title="즐겨찾기" style="cursor:pointer;margin-right:4px;font-size:1.1em;color:{{ '#f59e0b' if case.favorite else 'var(--dim)' }}">{{ '★' if case.favorite else '☆' }}</span><strong class="case-name" ondblclick="editName(this, '{{ case.id }}')" title="더블클릭으로 이름 변경">{{ case.name }}</strong>{% if case.warning_count %} <span class="badge badge-warning" title="{{ case.warning_msgs | join('&#10;') }}">⚠ {{ case.warning_count }}</span>{% endif %}{% if case.network_solver_status in ('failed', 'error', 'timeout', 'no_input', 'no_output') %} <span class="badge badge-error" title="Network Solver: {{ case.network_solver_status }}{% if case.network_solver_error %} - {{ case.network_solver_error[:100] }}{% endif %}">NET ✗</span>{% elif case.network_solver_status == 'success' %} <span class="badge badge-success" title="Network Solver 완료">NET ✓</span>{% endif %}{% if case.physics_resistance_model in ('mikic', 'maxwell+film') %} <span class="badge" style="background:#0a4f2e;color:#8cffb2" title="Physics σ: {{ case.physics_resistance_model }} (업그레이드 공식){% if case.physics_solver_at %} · {{ case.physics_solver_at }}{% endif %}">PHYS ✓</span>{% elif case.physics_resistance_model == 'maxwell' %} <span class="badge" style="background:#5a3a00;color:#ffb36b" title="Physics σ: Maxwell only (legacy). 전체 재분석 (NET 강제) 로 업그레이드">PHYS legacy</span>{% elif case.physics_resistance_model == 'no_physics' %} <span class="badge" style="background:#333;color:#888" title="Physics solver 미실행. 재분석 (NET) 로 실행">PHYS ∅</span>{% endif %}</td>
         <td><span class="badge badge-{{ case.mode }}">{{ case.mode }}</span></td>
         <td>
@@ -283,21 +293,21 @@ function injectRankBadges(orderedRows, overrides) {
   });
 }
 
+let rankTier = 'all';  // current tier filter
+
 function applyRanking(scoreOverrides) {
   /* Sort + display the rank view.  `scoreOverrides` (optional) is a
    * { case_id → {score, grade, n_axes, is_unit_cell} } map from
-   * /api/all-grades.  Honours the "단위셀 제외" toggle. */
+   * /api/all-grades.  Honours the tier filter (rankTier). */
   const tbody = document.querySelector('.data-table tbody');
   if (!tbody) return;
   clearRankBadges();
-  const excludeUC = document.getElementById('rank-exclude-uc')?.checked;
   const rows = Array.from(tbody.querySelectorAll('tr')).filter(tr => {
     const status = tr.dataset.status;
     const hasResults = tr.dataset.hasResults === 'true';
     const ov = scoreOverrides ? scoreOverrides[tr.dataset.caseId] : null;
     const sc = ov ? ov.score : parseFloat(tr.dataset.overallScore);
-    const isUC = ov ? ov.is_unit_cell : (tr.dataset.unitCell === 'true');
-    if (excludeUC && isUC) return false;
+    if (rankTier !== 'all' && tr.dataset.tier !== rankTier) return false;
     return (status === 'done' || hasResults) && Number.isFinite(sc) && sc >= 0;
   });
   rows.sort((a, b) => {
@@ -356,6 +366,8 @@ function filterCases(mode) {
 
   const whatifBar = document.getElementById('rank-whatif');
   if (whatifBar) whatifBar.style.display = (mode === 'rank') ? 'inline-flex' : 'none';
+  const tierBar = document.getElementById('rank-tier-bar');
+  if (tierBar) tierBar.style.display = (mode === 'rank') ? 'inline-flex' : 'none';
 
   if (mode === 'rank') {
     if (rankCarbonOn && cachedOverrides) {
@@ -404,14 +416,16 @@ document.addEventListener('DOMContentLoaded', () => {
     cachedOverrides = null;
     refreshRanking();
   });
-  const ucTog = document.getElementById('rank-exclude-uc');
-  if (ucTog) {
-    ucTog.addEventListener('change', () => {
-      // Apply with current state (cached overrides if any, else baseline)
+  // Tier filter buttons — clicking sets rankTier and re-applies ranking.
+  document.querySelectorAll('.tier-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      rankTier = b.dataset.tier;
+      document.querySelectorAll('.tier-btn').forEach(x =>
+        x.classList.toggle('active', x.dataset.tier === rankTier));
       if (rankCarbonOn && cachedOverrides) applyRanking(cachedOverrides);
       else applyRanking(null);
     });
-  }
+  });
 });
 
 // Drag & Drop
