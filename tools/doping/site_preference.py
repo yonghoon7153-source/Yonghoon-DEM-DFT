@@ -269,11 +269,14 @@ LITERATURE_SITES = {
     'Nb': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Nb⁵⁺→P⁵⁺ isovalent'},
     'Ta': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Ta⁵⁺→P⁵⁺ isovalent (5d analogue of Nb)'},
     'Si': {'sites': ['P_4b'], 'confidence': 'cited',    'ref': 'ScienceDirect S0013468621017217 Si substitution on P-site argyrodite'},
-    'Ge': {'sites': ['P_4b'], 'confidence': 'cited',    'ref': 'Ge⁴⁺→P (LGPS Li10GeP2S12 family, established)'},
+    'Ge': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Ge⁴⁺→P isovalent analogue (LGPS is Ge-structural, not LPSCl Ge-doping cited)'},
     'Sn': {'sites': ['P_4b'], 'confidence': 'cited',    'ref': 'MDPI Materials 16(7) 2751 (2023) DOI 10.3390/ma16072751: P→Sn, Sn–S bond'},
     'Ti': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Ti⁴⁺→P acceptor (group-14/-4 analogue)'},
-    'Zr': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Zr⁴⁺→P acceptor'},
-    'Hf': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Hf⁴⁺→P (5d analogue of Zr)'},
+    # Zr/Hf (reviewer round-2): r(Zr⁴⁺)=0.72, r(Hf⁴⁺)=0.71 ≈ r(Li⁺)=0.76 —
+    # much closer to Li than to P⁵⁺(0.17). Radius favors Li, charge favors P
+    # → genuinely amphoteric; list both, let UMA energy decide.
+    'Zr': {'sites': ['P_4b', 'Li_24g'], 'confidence': 'analogy', 'ref': 'Zr⁴⁺ amphoteric: charge→P, radius(0.72≈Li 0.76)→Li (heuristic)'},
+    'Hf': {'sites': ['P_4b', 'Li_24g'], 'confidence': 'analogy', 'ref': 'Hf⁴⁺ amphoteric: charge→P, radius(0.71≈Li)→Li (heuristic; 5d analogue of Zr)'},
     'W':  {'sites': ['P_4b'], 'confidence': 'analogy',  'ref': 'W⁶⁺→P donor by analogy to WS3 thiophosphate-glass additions; weak direct LPSCl ref'},
     'Mo': {'sites': ['P_4b'], 'confidence': 'analogy',  'ref': 'Mo⁶⁺→P donor by analogy to MoS3 additions; weak direct LPSCl ref'},
     # ---- Li-site cations (+1 isovalent) ----

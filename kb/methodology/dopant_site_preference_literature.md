@@ -1,18 +1,28 @@
-# Dopant Site Preference — Literature-Grounded Assignments (v4.5.25)
+# Dopant Site Preference — Literature-Anchored Heuristic Assignments (v4.5.26)
 
-> **LITERATURE-PREFERRED policy** + reviewer audit (2026-05-19).
-> `confidence`: **cited**=concrete paper/DOI · **standard**=textbook isovalent/aliovalent · **analogy**=by chemical analogy, use with caveat.
-> Documented dopants are RESTRICTED to these sites (radius-only spurious sites dropped).
-> Undocumented elements fall back to Shannon-radius+charge filter.
-> Source: `tools/doping/site_preference.py::LITERATURE_SITES`.
+> **NOT pure literature-grounded** — это literature-ANCHORED heuristic:
+> **cited 14** (concrete paper/DOI) · **standard 15** (textbook isovalent/aliovalent) · **analogy 24** (chemical analogy + caveat).
+> Paper must report this confidence distribution so reviewers judge reliability themselves (reviewer round-2).
+>
+> **Policy**: documented dopants RESTRICTED to listed sites (radius-only spurious sites dropped); charge-sign always enforced; undocumented → radius/charge fallback.
+> **Site assignment basis**: ionic radius + charge-sign + HSAB hard/soft-acid heuristic, literature-anchored where available.
+> Source: `tools/doping/site_preference.py::LITERATURE_SITES`. Two review rounds (2026-05-19).
 
-## Reviewer-driven changes (2026-05-19)
+## Confidence-tier usage caveat (reviewer round-2)
 
-- **B REMOVED** — ref 'Lee2025 CEJ B³⁺ PO4-cluster' was fabricated (Lee2025 = Li3PO4 coating; real LPSCl-B is borohydride BH4⁻→Cl⁻). → radius fallback (P_4b).
-- **Ce P_4b REMOVED** — Ce⁴⁺ r=0.87 unrealistic for P⁵⁺(0.17). → radius (Li only).
-- **Al P_4b REMOVED** — Al-LPSCl literature is Li-site aliovalent; P-site unsupported.
-- **3d TM (Cr,Mn,Fe,Co,Ni) RESTRICTED to Li_24g** (confidence=analogy) — lattice substitution unconfirmed (phase-separation risk); kept to block radius's spurious P_4b.
-- **Re RESTRICTED to P_4b**, **Bi REMOVED** (→radius Li).
+- **cited/standard** dopants: site assignment defensible, use directly.
+- **analogy** dopants (RE 11, 3d-TM 5, Zr/Hf, W/Mo/Re/N/Sr/Sc...): heuristic.
+  Report Layer-2 results for these SEPARATELY (do not pool with cited).
+- **3d TM (Cr,Mn,Fe,Co,Ni)**: lattice substitution unconfirmed — separate
+  sulfide phase (FeS/CoS/NiS) may be more stable. Li_24g is a heuristic
+  restriction (blocks radius's spurious P_4b), NOT a confirmed placement.
+- **radius-fallback (B,Ce,Bi)**: no literature claim; B³⁺→P_4b geometric only.
+
+## Open items (paper-text, do not block batch)
+
+- **As/Sb valence**: LITERATURE_SITES has +5 only; As2S3/Sb2S3 precursors are
+  +3 → Li-vacancy count may be off (MLIP relaxation compensates site). P1.
+- **DOI verify**: Ba (PMC 11106650), Ag (Nature Comm 2025), F (2022 vs 2024).
 
 ## Li-site cations
 
@@ -55,11 +65,11 @@
 | Dopant | q | r(Å) | site(s) | conf | reason/ref |
 |---|---|---|---|---|---|
 | Si | +4 | 0.4 | P_4b | cited | ScienceDirect S0013468621017217 Si substitution on P-site argyrodite |
-| Ge | +4 | 0.53 | P_4b | cited | Ge⁴⁺→P (LGPS Li10GeP2S12 family, established) |
+| Ge | +4 | 0.53 | P_4b | standard | Ge⁴⁺→P isovalent analogue (LGPS is Ge-structural, not LPSCl Ge-doping cited) |
 | Ti | +4 | 0.605 | P_4b | standard | Ti⁴⁺→P acceptor (group-14/-4 analogue) |
 | Sn | +4 | 0.69 | P_4b | cited | MDPI Materials 16(7) 2751 (2023) DOI 10.3390/ma16072751: P→Sn, Sn–S bond |
-| Hf | +4 | 0.71 | P_4b | standard | Hf⁴⁺→P (5d analogue of Zr) |
-| Zr | +4 | 0.72 | P_4b | standard | Zr⁴⁺→P acceptor |
+| Hf | +4 | 0.71 | P_4b, Li_24g | analogy | Hf⁴⁺ amphoteric: charge→P, radius(0.71≈Li)→Li (heuristic; 5d analogue of Zr) |
+| Zr | +4 | 0.72 | P_4b, Li_24g | analogy | Zr⁴⁺ amphoteric: charge→P, radius(0.72≈Li 0.76)→Li (heuristic) |
 | As | +5 | 0.46 | P_4b | standard | As⁵⁺→P⁵⁺ isovalent (standard) |
 | V | +5 | 0.54 | P_4b | standard | V⁵⁺→P⁵⁺ isovalent |
 | Sb | +5 | 0.6 | P_4b | standard | Sb⁵⁺→P⁵⁺ isovalent (standard thiophosphate) |
@@ -96,10 +106,3 @@
 | Bi | +3 | 1.03 | Li_24g, Li_48h |
 | B | +3 | 0.11 | P_4b |
 | Ce | +4 | 0.87 | Li_24g, Li_48h |
-
-## Confidence summary
-
-- **cited**: 15 dopants
-- **standard**: 16 dopants
-- **analogy**: 22 dopants
-- radius-fallback (undocumented): 5 dopants
