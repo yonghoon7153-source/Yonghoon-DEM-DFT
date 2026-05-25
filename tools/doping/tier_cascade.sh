@@ -380,19 +380,19 @@ def score_key(r):
     if 'E_post_relax' in r and 'n_atoms' in r:
         return r['E_post_relax'] / r['n_atoms']
     if 'uma_relaxed' in r:
-        return r['uma_relaxed'].get('de_per_atom_vs_baseline', 0)
+        return r['uma_relaxed'].get('de_per_atom_vs_baseline', 0) or 0
     return 0
 
 ranked = sorted(recs.values(), key=score_key)
 print(f'Top-20 final winners:')
 print(f'{\"Rank\":<5}{\"Name\":<40}{\"ΔE/atom\":>10}{\"V_mig%\":>9}{\"B0 GPa\":>10}{\"Eyoung\":>10}')
 for i, r in enumerate(ranked[:20], 1):
-    de = r.get('uma_relaxed', {}).get('de_per_atom_vs_baseline', 0)
-    vmig = r.get('migration_volume_fraction', 0) * 100
+    de = r.get('uma_relaxed', {}).get('de_per_atom_vs_baseline', 0) or 0
+    vmig = (r.get('migration_volume_fraction') or 0) * 100
     eos = r.get('eos', {})
-    b0 = eos.get('B0_GPa', 0) if isinstance(eos, dict) else 0
+    b0 = (eos.get('B0_GPa') or 0) if isinstance(eos, dict) else 0
     ela = r.get('elastic', {})
-    ey = ela.get('E_young_GPa', 0) if isinstance(ela, dict) else 0
+    ey = (ela.get('E_young_GPa') or 0) if isinstance(ela, dict) else 0
     print(f'{i:<5}{r.get(\"name\",\"?\")[:38]:<40}{de:>+9.4f} {vmig:>7.2f}% {b0:>9.2f} {ey:>9.2f}')
 
 (out / 'FINAL_REPORT.json').write_text(json.dumps(list(recs.values()), indent=2, default=str))
