@@ -402,7 +402,8 @@ AXES: list[dict[str, Any]] = [
                 '큰 입자 위주 + 작은 입자 void 채움.  '
                 '(c) ACS Appl Mater 2025 "Toughened Bimodal": interface heterogeneity 이득. '
                 '주의: 우리 DEM은 geometric packing만 잡고 crystallinity (poly vs SC) 차이 못 잡음 — '
-                'axis는 절반만 직접 측정.',
+                'axis는 절반만 직접 측정.  ★ monomodal case는 N/A (P:S 무의미) — '
+                'monomodal로서 평가됨, 페널티 없음.',
      'weight': 1.2},
 
     # ── 11. 설계 / 입자 정보 (Design info — informational only) ──
@@ -443,10 +444,11 @@ AXES: list[dict[str, Any]] = [
     {'category': '설계 정보 (Design info)',
      'key': '__bimodal_design', 'label': 'bimodal 설계 (packing efficiency) ⭐',
      'direction': 'higher', 'thresholds': [1, 1, 1, 0.5, 0.5, 0.5],
-     'formula': '1.0 if bimodal (AM_P + AM_S 같이) else 0.5',
-     'meaning': '★ commercial NCM cathode는 거의 항상 bimodal (대입자 + 소입자) '
-                'packing density ↑, capacity utilization ↑.  mono는 academic. '
-                'cell-level performance에 직접 영향.',
+     'formula': 'bimodal → 1.0 (A);  monomodal → N/A (페널티 없음)',
+     'meaning': '★ commercial NCM cathode는 거의 항상 bimodal (대입자+소입자) '
+                'packing density ↑.  ★ monomodal은 N/A — "bimodal 아님" 페널티 '
+                '대신 monomodal로서 평가.  bimodal 우위는 실제 porosity / σ_ionic / '
+                'energy density axes에 이미 반영됨 (double-count 방지).',
      'weight': 1.0},
 
     {'category': '설계 정보 (Design info)',
@@ -758,6 +760,43 @@ def _kappa_effective(metrics: dict) -> float | None:
             except (TypeError, ValueError):
                 continue
     return None
+
+
+def _composition_of(metrics: dict) -> str:
+    """Determine cathode morphology class from ps_ratio / particle counts.
+
+    Returns 'bimodal' | 'mono AM_P' | 'mono AM_S' | 'unknown'.
+
+    Monomodal cases (mono AM_P / mono AM_S) are valid design choices and
+    should NOT be penalised against bimodal-specific criteria (P:S ratio
+    band, bimodal-packing axis).  Those axes return N/A for monomodal so
+    the case is judged on its own performance metrics instead.
+    """
+    # Particle counts (most reliable)
+    n_p = metrics.get('AM_P_n_particles')
+    n_s = metrics.get('AM_S_n_particles')
+    try:
+        if n_p is not None and n_s is not None:
+            np_, ns_ = float(n_p), float(n_s)
+            if np_ > 0 and ns_ > 0: return 'bimodal'
+            if np_ > 0:             return 'mono AM_P'
+            if ns_ > 0:             return 'mono AM_S'
+    except (TypeError, ValueError):
+        pass
+    # ps_ratio "P:S"
+    ps = metrics.get('ps_ratio') or metrics.get('_meta_ps_ratio') or ''
+    if isinstance(ps, str) and ':' in ps:
+        try:
+            a, b = (float(x) for x in ps.replace(' ', '').split(':')[:2])
+            if a > 0 and b > 0: return 'bimodal'
+            if a > 0:           return 'mono AM_P'
+            if b > 0:           return 'mono AM_S'
+        except (ValueError, IndexError):
+            pass
+    # mode metadata
+    mode = metrics.get('_meta_mode') or metrics.get('mode')
+    if mode == 'bimodal':  return 'bimodal'
+    return 'unknown'
 
 
 def _derived_value(key: str, metrics: dict) -> float | None:
@@ -1078,9 +1117,11 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         return _derived_value('__wt_am_pct', metrics)
 
     if key == '__ps_ratio_band':
-        # Returns P fraction (%) — band optimum 70 (= P:S 7:3).
-        # Lee 2025 ACS Energy Letters confirmed 7:3 P:S polycrystalline:single-crystal
-        # is best for sulfide ASSB cycling retention.
+        # P:S ratio band (optimum 70% P = 7:3) — Lee 2025 bimodal optimum.
+        # ★ monomodal cases는 P:S ratio가 무의미 → N/A (페널티 안 줌).
+        #   monomodal로서 평가하게 함.  bimodal일 때만 P fraction 반환.
+        if _composition_of(metrics) != 'bimodal':
+            return None
         ps = metrics.get('ps_ratio') or metrics.get('_meta_ps_ratio')
         if isinstance(ps, str) and ':' in ps:
             try:
@@ -1092,29 +1133,15 @@ def _derived_value(key: str, metrics: dict) -> float | None:
         return None
 
     if key == '__bimodal_design':
-        # bimodal = AM_P + AM_S 모두 존재 (n_AM_P > 0 AND n_AM_S > 0).
-        # 'mode' 메타데이터 또는 P:S ratio로 판단.
-        n_p = metrics.get('AM_P_n_particles')
-        n_s = metrics.get('AM_S_n_particles')
-        try:
-            if n_p is not None and n_s is not None:
-                return 1.0 if (float(n_p) > 0 and float(n_s) > 0) else 0.5
-        except (TypeError, ValueError):
-            pass
-        # Fallback: parse ps_ratio "7:3" — both nonzero = bimodal
-        ps = metrics.get('ps_ratio') or metrics.get('_meta_ps_ratio') or ''
-        if isinstance(ps, str) and ':' in ps:
-            try:
-                a, b = (float(x) for x in ps.split(':')[:2])
-                return 1.0 if (a > 0 and b > 0) else 0.5
-            except (ValueError, IndexError):
-                pass
-        # Fallback: 'mode' metadata
-        mode = metrics.get('_meta_mode') or metrics.get('mode')
-        if mode == 'bimodal':
+        # ★ bimodal일 때만 평가 (A 등급으로 packing efficiency 인정).
+        #   monomodal은 N/A — "bimodal 아님" 페널티 대신 monomodal로서
+        #   해당 axis 미적용.  bimodal 우위는 실제 packing 성능 (porosity,
+        #   σ_ionic, energy density) axes에 이미 반영됨.
+        comp = _composition_of(metrics)
+        if comp == 'bimodal':
             return 1.0
-        if mode == 'standard':
-            return 0.5
+        if comp in ('mono AM_P', 'mono AM_S'):
+            return None   # N/A — judged on own performance metrics
         return None
 
     if key == '__compaction_efficiency':
