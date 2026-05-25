@@ -1,9 +1,17 @@
 # Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 
-> **목적**: Layer 2 cold-start cross-validation을 위한 22-compound, 4-category 다중 첨가제 batch.
+> [!warning] ⚠️ SUPERSEDED (2026-05-25) — 이 문서는 22-compound 초기 계획.
+> **실제 실행 = `tools/doping/master_batch_273.sh` (v4.5.20)**:
+> - **91 compounds × 3 농도(2/5/10%) = 273 cascades** (이 문서 22-compound의 ~12×)
+> - Phase 1A 37 oxides (+1~+6 전 valence) + Phase 1B 54 (불/염/브롬/요오드화물·질화물·황화물)
+> - concentration-aware Layer 2 feature 추가 (이 문서엔 단일 0.05만)
+> - 타임라인 ~193일 (6.4개월), 1 GPU — 스크립트 헤더 명시
+> - 아래 22-compound 내용은 **설계 진화 history로 보존**. 현재 batch 기준은 master_batch_273.sh.
+>
+> **목적**: Layer 2 cold-start cross-validation을 위한 다중 첨가제 batch (변함없음).
 > Round 1 reviewer의 oxide-only 권장을 사용자 지적 (*"ZrCl4, LiBr 같은 non-oxide 후보 많은데"*) 따라 확장.
 >
-> 작성: 2026-05-18 (Round 3 reviewer GO 후)
+> 작성: 2026-05-18 (Round 3 reviewer GO 후) | Superseded: 2026-05-25 (273-batch 확정)
 
 ---
 

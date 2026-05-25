@@ -121,19 +121,23 @@
 - **처리**: 별도 issue, Digital Twin core와 무관. UMA MLIP EOS (B0=20.0)으로
   paper #1에 인용 가능.
 
-### Multi-compound batch 미실행
-- 75+ DOPANT_DB 중 1개 (Nd2O3)만 돌림 → Layer 2 학습 데이터 부족
-- **처리**: README Phase 1 plan대로 ~20 compound batch 추가. Path forward.
+### Multi-compound batch 실행 중 (2026-05-20~) ✅
+- **현재 ground truth = `tools/doping/master_batch_273.sh` (v4.5.20)**
+- **91 compounds × 3 농도 (2/5/10%) = 273 cascades**
+  - Phase 1A (37 oxides): +1~+6 valence 전범위 (Li2O Na2O Cu2O Ag2O / MgO ZnO CaO SrO BaO MnO CoO NiO / Al2O3 Sc2O3 Y2O3 La2O3 Nd2O3 Sm2O3 Gd2O3 Ga2O3 In2O3 Cr2O3 Fe2O3 B2O3 / SiO2 GeO2 SnO2 TiO2 ZrO2 HfO2 / V2O5 Nb2O5 Ta2O5 Sb2O5 / CrO3 MoO3 WO3)
+  - Phase 1B (54): 불화물 10 + 염화물 19 + 브롬화물 5 + 요오드화물 4 + 질화물 5 + 황화물 11
+  - 농도 3종 = concentration-aware Layer 2 feature (문헌 근거: Xiong2022 2%, Sundar2025 5%, Adeli2019 10%)
+- **타임라인: ~193일 (6.4개월), 1 GPU sequential** — 스크립트 헤더에 명시된 의도된 규모
+- gabia 진행 중 (2026-05-25 기준 ~7/273)
+- ⚠️ **이 273이 최신 의도. 아래 v22(22-compound) plan doc은 superseded** (2026-05-18 구버전)
 
 ## 6. 다음 step (Priority order)
 
-### Priority 1 — Multi-compound batch 시작 (Layer 2 학습 위해)
-```bash
-# 핵심 oxide만 (industry-relevant)
-COMPOUNDS=(Li2O MgO Al2O3 Y2O3 La2O3 Nd2O3 Sm2O3 SiO2 ZrO2)
-# ~9 compound × 7 site × 3 seed = ~200 datapoint
-# gabia ~1주 batch
-```
+### Priority 1 — 273-batch 진행 + Layer 2 데이터 축적
+- `master_batch_273.sh`가 알아서 resume/skip (5-trigger detection). 그냥 돌게 두면 됨.
+- compound 완료마다 `dataset.csv` (45행 × 60물성) 생성 → 273개 pool이 Layer 2 학습셋
+- **핵심: per-compound predictor(Stage 12b)는 deliverable 아님** (6-7점이라 R² 음수 정상). 273 pool → 단일 Layer 2 + LOCO가 산출물
+- B2O3 포함 91개 모두 동등한 design-space 점. 특정 도펀트 "1등 증명"이 목적 아님
 
 ### Priority 2 — Layer 2 학습 정량 검증
 - collect_dataset.py가 만든 CSV 컬럼 valid 확인
