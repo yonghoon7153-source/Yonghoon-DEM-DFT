@@ -38,7 +38,8 @@ import matplotlib.pyplot as plt
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 from extract_2d_microstructure import (   # noqa: E402
-    slice_microstructure, VOID, AM_P, AM_S, SE, PHASE_NAMES,
+    slice_microstructure, render_png as render_microstructure_png,
+    VOID, AM_P, AM_S, SE, PHASE_NAMES,
 )
 
 SIGMA_GRAIN_MS = 3.0   # bulk LPSCl ionic conductivity (mS/cm)
@@ -75,6 +76,12 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
 
     fr = slice_data['phase_fracs']
 
+    # ASR_ionic — full_metrics에 저장 안 됨 (on-the-fly).  L × 0.1 / σ_ionic.
+    L_um = _fnum(fm, 'thickness_um')
+    asr_ionic = None
+    if L_um and sig_full and sig_full > 0:
+        asr_ionic = L_um * 0.1 / sig_full   # Ω·cm²
+
     rows = [
         # name, value, unit, COMSOL parameter suggestion, source
         ('phi_SE',         phi_se,                                   '1',
@@ -102,9 +109,8 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
          'cov_AM', '★ 3D AM-SE coverage (Tabor shape-corrected)'),
         ('A_AM_SE_total',  _fnum(fm, 'area_AM_P_SE_total') or 0,      'um2',
          'A_AMSE', '3D total AM-SE interfacial area'),
-        ('ASR_ionic',      _fnum(fm, 'asr_ionic_Ohm_cm2_stage_e_physics',
-                                  'asr_ionic_Ohm_cm2_physics'),       'Ohm*cm2',
-         'ASR_i', '3D cell-level ASR (Ohm slab)'),
+        ('ASR_ionic',      asr_ionic,                                 'Ohm*cm2',
+         'ASR_i', '3D cell-level ASR = L_cat × 0.1 / σ_ionic (Ohm slab)'),
         ('thickness',      _fnum(fm, 'thickness_um'),                 'um',
          'L_cat', 'cathode thickness (z extent)'),
         ('SE_SE_cn',       _fnum(fm, 'se_se_cn'),                     '1',
@@ -331,7 +337,9 @@ def main():
     write_dxf(phase_contours, interface_segs, out_dir / 'geometry.dxf')
     write_svg(phase_contours, interface_segs, sd['a_extent'], sd['b_extent'],
               b0, out_dir / 'geometry.svg')
-    print(f'  geometry → geometry.dxf + geometry.svg + microstructure.npy')
+    # PNG preview — 2-panel (phase domain + AM-SE coverage interface)
+    render_microstructure_png(sd, out_dir / 'geometry.png')
+    print(f'  geometry → geometry.dxf + geometry.svg + geometry.png + microstructure.npy')
     print(f'    phase boundaries: {n_seg} polylines')
     print(f'    AM-SE coverage as geometry: {n_cov} covered arcs + '
           f'{n_ina} inactive arcs (2D coverage {sd["coverage_2d_pct"]}%)')
