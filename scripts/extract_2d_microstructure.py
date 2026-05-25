@@ -46,27 +46,51 @@ def _disk(radius_px: int) -> np.ndarray:
     return (xx*xx + yy*yy) <= r*r
 
 
-def _se_to_continuum(labels: np.ndarray, r_se_px: float) -> np.ndarray:
-    """Convert discrete SE particles → continuous SE matrix.
+def _se_to_continuum(labels: np.ndarray, r_se_px: float,
+                      target_void_frac: float | None = None) -> np.ndarray:
+    """Convert discrete SE particles → continuous SE matrix, calibrated to
+    preserve the 3D-measured porosity.
 
-    Morphological closing (dilate→erode) on the SE phase fills the
-    sub-particle gaps that are slice-plane artefacts (in 3D those gaps
-    are bridged by SE particles just above/below the cut), WITHOUT
-    filling the genuine porosity pockets (which are larger than the
-    closing radius).  AM pixels are never overwritten.
+    Morphological closing bridges the sub-particle gaps that are slice-plane
+    artefacts (in 3D those gaps are filled by SE particles just above/below
+    the cut).  BUT unconstrained closing over-fills — it also eats genuine
+    porosity, inflating SE area fraction above the 3D φ_SE (violates
+    Delesse's stereology principle: slice area fraction = volume fraction).
 
-    Returns a NEW label grid.
+    Calibration: fill only the void pixels CLOSEST to existing SE first
+    (true inter-particle bridges), stopping when void fraction reaches the
+    3D-measured porosity.  This keeps SE connected AND preserves the
+    physics-measured void fraction.
+
+    target_void_frac : 3D porosity (0-1).  None → fill all closed region
+                       (legacy, may over-fill).
     """
     se = (labels == SE)
     is_am = (labels == AM_P) | (labels == AM_S)
-    # closing radius ≈ one SE particle radius — bridges inter-SE gaps
-    # (≤ ~2·r_SE) but leaves multi-μm void pockets intact.
     rad = max(1, int(round(r_se_px)))
     se_closed = _ndi.binary_closing(se, structure=_disk(rad))
+    fillable = se_closed & (~is_am) & (labels == VOID)
     out = labels.copy()
-    # newly-SE = closed SE region that was void (never steal AM)
-    fill = se_closed & (~is_am) & (labels == VOID)
-    out[fill] = SE
+
+    if target_void_frac is None or fillable.sum() == 0:
+        out[fillable] = SE
+        return out
+
+    total = labels.size
+    cur_void = int(np.sum(labels == VOID))
+    target_void = int(round(target_void_frac * total))
+    n_to_fill = cur_void - target_void
+    if n_to_fill <= 0:
+        return out                       # already at/below target — don't fill
+    if n_to_fill >= int(fillable.sum()):
+        out[fillable] = SE               # fill all (still above target)
+        return out
+    # distance of every pixel to nearest SE; fill closest fillable first
+    dist = _ndi.distance_transform_edt(~se)
+    fy, fx = np.where(fillable)
+    order = np.argsort(dist[fy, fx])     # closest-to-SE bridges first
+    sel = order[:n_to_fill]
+    out[fy[sel], fx[sel]] = SE
     return out
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -171,6 +195,13 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     if box_x_um <= 0 or box_y_um <= 0:
         return None
 
+    # 3D-measured porosity (full_metrics, %) → fraction.  Used to calibrate
+    # the SE continuum so the 2D void fraction matches the 3D ground truth.
+    fm_file = results_dir / 'full_metrics.json'
+    fm = json.loads(fm_file.read_text()) if fm_file.exists() else {}
+    poro_3d = fm.get('porosity')
+    target_void_frac = (float(poro_3d) / 100.0) if poro_3d is not None else None
+
     df = pd.read_csv(atoms_csv)
     for col in ('x', 'y', 'z', 'radius', 'type', 'id'):
         if col in df.columns:
@@ -246,7 +277,8 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     # ── SE continuum: merge discrete SE → connected matrix ─────────────
     if se_continuum:
         r_se_px = max(1.0, r_se_um / pa)
-        labels = _se_to_continuum(labels, r_se_px)
+        labels = _se_to_continuum(labels, r_se_px,
+                                  target_void_frac=target_void_frac)
 
     # ── Morphology: AM_P polycrystalline grains, AM_S single-crystal ───
     # Trevisanello 2021 (Adv Energy Mater): polycrystalline NCM secondary
