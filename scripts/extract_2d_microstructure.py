@@ -36,6 +36,38 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.colors import ListedColormap, BoundaryNorm
+from scipy import ndimage as _ndi
+
+
+def _disk(radius_px: int) -> np.ndarray:
+    """Boolean disk structuring element of given pixel radius."""
+    r = max(1, int(radius_px))
+    yy, xx = np.ogrid[-r:r+1, -r:r+1]
+    return (xx*xx + yy*yy) <= r*r
+
+
+def _se_to_continuum(labels: np.ndarray, r_se_px: float) -> np.ndarray:
+    """Convert discrete SE particles → continuous SE matrix.
+
+    Morphological closing (dilate→erode) on the SE phase fills the
+    sub-particle gaps that are slice-plane artefacts (in 3D those gaps
+    are bridged by SE particles just above/below the cut), WITHOUT
+    filling the genuine porosity pockets (which are larger than the
+    closing radius).  AM pixels are never overwritten.
+
+    Returns a NEW label grid.
+    """
+    se = (labels == SE)
+    is_am = (labels == AM_P) | (labels == AM_S)
+    # closing radius ≈ one SE particle radius — bridges inter-SE gaps
+    # (≤ ~2·r_SE) but leaves multi-μm void pockets intact.
+    rad = max(1, int(round(r_se_px)))
+    se_closed = _ndi.binary_closing(se, structure=_disk(rad))
+    out = labels.copy()
+    # newly-SE = closed SE region that was void (never steal AM)
+    fill = se_closed & (~is_am) & (labels == VOID)
+    out[fill] = SE
+    return out
 
 ROOT = Path(__file__).resolve().parent.parent
 
@@ -54,18 +86,28 @@ def _type_to_phase(type_name: str) -> int:
     return VOID
 
 
-def slice_microstructure(case_dir: Path, z_frac: float = 0.5,
-                          n_pixels: int = 500):
-    """Rasterise one z-slice of a case into a 4-phase label grid.
+def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
+                          n_pixels: int = 500, axis: str = 'y',
+                          se_continuum: bool = True):
+    """Rasterise one planar slice of a case into a 4-phase label grid.
 
-    Returns dict {labels (H×W int), box_x_um, box_y_um, z0_um, ...} or None.
+    axis = slice-NORMAL direction:
+      'z' → XY plane (horizontal cut, lateral view)
+      'y' → XZ plane (vertical cross-section: x lateral, z through-thickness) ★
+      'x' → YZ plane (vertical cross-section: y lateral, z through-thickness)
+    For 'y'/'x' the vertical axis spans the full electrode thickness — the
+    SEM-cross-section view most relevant for through-plane ionic transport.
+
+    se_continuum=True merges discrete SE particles into a connected SE
+    matrix (morphological closing) so void = genuine porosity only.
+
+    Returns a dict, or None if data missing.
     """
     case_id = case_dir.name
     results_dir = ROOT / 'webapp' / 'results' / case_id
     atoms_csv = results_dir / 'atoms.csv'
     meta_file = case_dir / 'meta.json'
     ip_file = results_dir / 'input_params.json'
-    fm_file = results_dir / 'full_metrics.json'
     if not (atoms_csv.exists() and meta_file.exists()):
         return None
 
@@ -87,58 +129,77 @@ def slice_microstructure(case_dir: Path, z_frac: float = 0.5,
         if col in df.columns:
             df[col] = pd.to_numeric(df[col], errors='coerce')
 
-    # All in μm
     xs = df['x'].to_numpy() * scale
     ys = df['y'].to_numpy() * scale
     zs = df['z'].to_numpy() * scale
     rs = df['radius'].to_numpy() * scale
     phases = np.array([_type_to_phase(type_map.get(int(t), ''))
                        for t in df['type'].to_numpy()])
+    r_se_um = (ip.get('r_SE') or ip.get('r_SE_sim') or 0.0005) * scale
 
     z_min, z_max = float(np.nanmin(zs - rs)), float(np.nanmax(zs + rs))
-    z0 = z_min + z_frac * (z_max - z_min)
+    thickness = z_max - z_min
 
-    # Pixel grid
+    # ── Assign in-plane axes (a horizontal, b vertical) + normal c ──────
+    if axis == 'z':
+        ca, cb, cc = xs, ys, zs                    # plot x-y, cut at z
+        a_label, b_label = 'x (μm)', 'y (μm)'
+        a_extent, b_extent = box_x_um, box_y_um
+        c_min, c_max = z_min, z_max
+    elif axis == 'x':
+        ca, cb, cc = ys, zs, xs                    # plot y-z, cut at x
+        a_label, b_label = 'y (μm)', 'z (μm)'
+        a_extent, b_extent = box_y_um, thickness
+        c_min, c_max = 0.0, box_x_um
+    else:  # 'y' (default) — XZ vertical cross-section
+        ca, cb, cc = xs, zs, ys                    # plot x-z, cut at y
+        a_label, b_label = 'x (μm)', 'z (μm)'
+        a_extent, b_extent = box_x_um, thickness
+        c_min, c_max = 0.0, box_y_um
+
+    c0 = c_min + slice_frac * (c_max - c_min)
+    # For z-plot the b-axis origin is z_min; for x/y-plot it's also z_min.
+    b_origin = z_min if axis in ('x', 'y') else 0.0
+
+    # Pixel grid: a horizontal, b vertical
     nx = n_pixels
-    ny = max(1, int(round(n_pixels * box_y_um / box_x_um)))
-    px = box_x_um / nx   # μm per pixel
-    py = box_y_um / ny
+    ny = max(1, int(round(n_pixels * b_extent / a_extent)))
+    pa = a_extent / nx
+    pb = b_extent / ny
 
     labels   = np.zeros((ny, nx), dtype=np.int8)
-    # Track |z0 - zc| of the particle currently owning each pixel — smaller
-    # (closer center) wins so the slice shows the nearest particle's phase.
-    owner_dz = np.full((ny, nx), np.inf, dtype=np.float32)
+    owner_dc = np.full((ny, nx), np.inf, dtype=np.float32)
 
-    # Particles intersecting the plane
-    dz = np.abs(zs - z0)
-    hit = dz < rs
+    dc = np.abs(cc - c0)
+    hit = dc < rs
     idx_hit = np.where(hit)[0]
-    # Draw farthest-first so closest overwrites
-    order = idx_hit[np.argsort(-dz[idx_hit])]
+    order = idx_hit[np.argsort(-dc[idx_hit])]
 
     for i in order:
-        r_slice = float(np.sqrt(max(0.0, rs[i]**2 - (zs[i] - z0)**2)))
+        r_slice = float(np.sqrt(max(0.0, rs[i]**2 - (cc[i] - c0)**2)))
         if r_slice <= 0:
             continue
-        xc, yc = xs[i], ys[i]
-        # bounding box in pixel coords
-        ix0 = max(0, int(np.floor((xc - r_slice) / px)))
-        ix1 = min(nx - 1, int(np.ceil((xc + r_slice) / px)))
-        iy0 = max(0, int(np.floor((yc - r_slice) / py)))
-        iy1 = min(ny - 1, int(np.ceil((yc + r_slice) / py)))
+        ac, bc = ca[i], cb[i] - b_origin   # b coordinate relative to grid origin
+        ix0 = max(0, int(np.floor((ac - r_slice) / pa)))
+        ix1 = min(nx - 1, int(np.ceil((ac + r_slice) / pa)))
+        iy0 = max(0, int(np.floor((bc - r_slice) / pb)))
+        iy1 = min(ny - 1, int(np.ceil((bc + r_slice) / pb)))
         if ix1 < ix0 or iy1 < iy0:
             continue
-        # pixel centers
-        gx = (np.arange(ix0, ix1 + 1) + 0.5) * px
-        gy = (np.arange(iy0, iy1 + 1) + 0.5) * py
-        GX, GY = np.meshgrid(gx, gy)
-        inside = (GX - xc) ** 2 + (GY - yc) ** 2 <= r_slice ** 2
-        sub_dz = owner_dz[iy0:iy1+1, ix0:ix1+1]
+        ga = (np.arange(ix0, ix1 + 1) + 0.5) * pa
+        gb = (np.arange(iy0, iy1 + 1) + 0.5) * pb
+        GA, GB = np.meshgrid(ga, gb)
+        inside = (GA - ac) ** 2 + (GB - bc) ** 2 <= r_slice ** 2
+        sub_dc = owner_dc[iy0:iy1+1, ix0:ix1+1]
         sub_lab = labels[iy0:iy1+1, ix0:ix1+1]
-        # this particle wins where inside AND closer than current owner
-        win = inside & (dz[i] < sub_dz)
+        win = inside & (dc[i] < sub_dc)
         sub_lab[win] = phases[i]
-        sub_dz[win] = dz[i]
+        sub_dc[win] = dc[i]
+
+    # ── SE continuum: merge discrete SE → connected matrix ─────────────
+    if se_continuum:
+        r_se_px = max(1.0, r_se_um / pa)
+        labels = _se_to_continuum(labels, r_se_px)
 
     # Phase fractions
     total = labels.size
@@ -179,9 +240,12 @@ def slice_microstructure(case_dir: Path, z_frac: float = 0.5,
         'case_id': case_id, 'case_name': meta.get('name', case_id),
         'mode': meta.get('mode', ''), 'ps_ratio': meta.get('ps_ratio', ''),
         'labels': labels, 'interface': interface,
-        'box_x_um': box_x_um, 'box_y_um': box_y_um,
-        'z0_um': z0, 'z_frac': z_frac, 'z_range_um': (z_min, z_max),
-        'n_pixels': nx, 'px_um': px,
+        'axis': axis, 'se_continuum': se_continuum,
+        'a_label': a_label, 'b_label': b_label,
+        'a_extent': a_extent, 'b_extent': b_extent, 'b_origin': b_origin,
+        'slice_at_um': c0, 'slice_frac': slice_frac,
+        'thickness_um': thickness,
+        'n_pixels': nx, 'pa_um': pa, 'pb_um': pb,
         'phase_fracs': fracs,
         'coverage_2d_pct': coverage_pct,
         'n_am_boundary_px': n_bnd,
@@ -194,10 +258,13 @@ def render_png(data, out_path: Path):
     labels = data['labels']
     interface = data['interface']
     fr = data['phase_fracs']
-    aspect_h = data['box_y_um'] / data['box_x_um']
-    extent = [0, data['box_x_um'], 0, data['box_y_um']]
+    a_ext, b_ext = data['a_extent'], data['b_extent']
+    b0 = data['b_origin']
+    # extent: a horizontal (0..a_ext), b vertical (b0..b0+b_ext)
+    extent = [0, a_ext, b0, b0 + b_ext]
+    aspect_h = b_ext / a_ext
 
-    fig, axes = plt.subplots(1, 2, figsize=(15, 7 * aspect_h + 1.5))
+    fig, axes = plt.subplots(1, 2, figsize=(15, 7 * max(0.4, aspect_h) + 1.5))
 
     # ── Panel 1: 4-phase microstructure ───────────────────────────────
     ax = axes[0]
@@ -205,8 +272,9 @@ def render_png(data, out_path: Path):
     norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
     ax.imshow(labels, origin='lower', cmap=cmap, norm=norm,
                extent=extent, interpolation='nearest', aspect='equal')
-    ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
-    ax.set_title(f"4-phase microstructure\n"
+    ax.set_xlabel(data['a_label']); ax.set_ylabel(data['b_label'])
+    se_tag = ' (continuum)' if data['se_continuum'] else ' (discrete)'
+    ax.set_title(f"4-phase microstructure{se_tag}\n"
                  f"void {fr['void']}% / AM_P {fr['AM_P']}% / "
                  f"AM_S {fr['AM_S']}% / SE {fr['SE']}%", fontsize=10)
     handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray',
@@ -216,19 +284,16 @@ def render_png(data, out_path: Path):
 
     # ── Panel 2: AM-SE coverage (interface) map ───────────────────────
     ax = axes[1]
-    # base: AM faint gray, SE faint gold, void white
-    base = np.zeros_like(labels)
     cmap_b = ListedColormap(['#ffffff', '#e8e8ee', '#e8e8ee', '#faf3d0'])
     ax.imshow(labels, origin='lower', cmap=cmap_b,
                norm=BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], 4),
                extent=extent, interpolation='nearest', aspect='equal')
-    # overlay covered (green) / uncovered (red) AM boundary
     cov_overlay = np.ma.masked_where(interface == 0, interface)
-    cmap_ov = ListedColormap(['#10b981', '#ef4444'])   # 1=covered, 2=uncov
+    cmap_ov = ListedColormap(['#10b981', '#ef4444'])
     ax.imshow(cov_overlay, origin='lower', cmap=cmap_ov,
                norm=BoundaryNorm([0.5, 1.5, 2.5], 2),
                extent=extent, interpolation='nearest', aspect='equal')
-    ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
+    ax.set_xlabel(data['a_label']); ax.set_ylabel(data['b_label'])
     ax.set_title(f"AM–SE interface (coverage)\n"
                  f"2D coverage = {data['coverage_2d_pct']}%  "
                  f"({data['n_am_boundary_px']} AM-boundary px)", fontsize=10)
@@ -238,11 +303,13 @@ def render_png(data, out_path: Path):
                 Patch(facecolor='#e8e8ee', edgecolor='gray', label='AM bulk')]
     ax.legend(handles=handles2, loc='upper right', fontsize=8.5, framealpha=0.9)
 
+    axis_desc = {'z': 'XY horizontal', 'y': 'XZ cross-section',
+                 'x': 'YZ cross-section'}.get(data['axis'], data['axis'])
     fig.suptitle(
-        f"{data['case_name']} — 2D microstructure  "
+        f"{data['case_name']} — 2D microstructure ({axis_desc})  "
         f"(mode: {data['mode']}, ps: {data['ps_ratio'] or '—'}, "
-        f"z={data['z0_um']:.1f}μm @{data['z_frac']:.0%}, "
-        f"{data['n_pixels']}px / {data['px_um']:.3f}μm·px⁻¹)",
+        f"slice@{data['slice_at_um']:.1f}μm {data['slice_frac']:.0%}, "
+        f"{data['n_pixels']}px / {data['pa_um']:.3f}μm·px⁻¹)",
         fontsize=11, y=1.0)
     fig.tight_layout()
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -255,11 +322,16 @@ def main():
     ap.add_argument('cases', nargs='*', help='case names or "--all"')
     ap.add_argument('--all', action='store_true')
     ap.add_argument('--tier')
-    ap.add_argument('--z-frac', type=float, default=0.5,
-                    help='slice height fraction (0=bottom, 1=top, default 0.5)')
+    ap.add_argument('--axis', choices=['z', 'y', 'x'], default='y',
+                    help="slice-normal axis: 'y'=XZ cross-section (default, "
+                         "through-thickness view), 'x'=YZ, 'z'=XY horizontal")
+    ap.add_argument('--slice-frac', type=float, default=0.5,
+                    help='slice position fraction along the normal axis (0-1, default 0.5)')
     ap.add_argument('--n-pixels', type=int, default=500)
     ap.add_argument('--slices', type=int, default=1,
-                    help='# slices evenly spaced (overrides --z-frac if >1)')
+                    help='# slices evenly spaced (overrides --slice-frac if >1)')
+    ap.add_argument('--no-continuum', action='store_true',
+                    help='keep SE as discrete particles (default: merge to continuum)')
     ap.add_argument('--out-png', default='docs/figures/microstructure_2d')
     ap.add_argument('--out-npy', default='docs/data/microstructure_2d')
     args = ap.parse_args()
@@ -297,22 +369,27 @@ def main():
     out_png_dir.mkdir(parents=True, exist_ok=True)
     out_npy_dir.mkdir(parents=True, exist_ok=True)
 
-    z_fracs = ([args.z_frac] if args.slices <= 1
-               else list(np.linspace(0.25, 0.75, args.slices)))
+    fracs_list = ([args.slice_frac] if args.slices <= 1
+                  else list(np.linspace(0.25, 0.75, args.slices)))
 
-    print(f'Processing {len(candidates)} case(s), {len(z_fracs)} slice(s) each...')
+    print(f'Processing {len(candidates)} case(s), {len(fracs_list)} slice(s) '
+          f'each, axis={args.axis}, continuum={not args.no_continuum}...')
     n_ok = 0
     for name, d in candidates:
-        for zf in z_fracs:
+        for zf in fracs_list:
             try:
-                data = slice_microstructure(d, z_frac=zf, n_pixels=args.n_pixels)
+                data = slice_microstructure(d, slice_frac=zf,
+                                            n_pixels=args.n_pixels,
+                                            axis=args.axis,
+                                            se_continuum=not args.no_continuum)
             except Exception as e:
                 print(f'  [{name} z={zf:.2f}] FAILED: {type(e).__name__}: {e}')
                 continue
             if not data:
                 print(f'  [{name}] skip (missing data)')
                 break
-            tag = f'{name}' if len(z_fracs) == 1 else f'{name}_z{zf:.2f}'
+            tag = (f'{name}_{args.axis}' if len(fracs_list) == 1
+                   else f'{name}_{args.axis}{zf:.2f}')
             np.save(out_npy_dir / f'{tag}.npy', data['labels'])
             render_png(data, out_png_dir / f'{tag}.png')
             fr = data['phase_fracs']
