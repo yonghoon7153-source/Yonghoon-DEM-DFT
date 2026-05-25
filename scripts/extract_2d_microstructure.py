@@ -80,44 +80,60 @@ def _se_to_continuum(labels: np.ndarray, r_se_px: float,
     if need <= 0:
         return out
 
-    # Multi-scale isolated pores: big pores first, then smaller to top up to
-    # the target.  Each pore is carved only where it is fully interior to the
-    # CURRENT SE (distance-to-edge > pore radius), so SE never disconnects;
-    # a blocked mask keeps pores apart so they cannot merge into a channel.
+    # Irregular, size-varied isolated pores.  Each pore is carved only where
+    # it is fully INTERIOR to the connected SE (a hole strictly inside a
+    # connected 2D region never disconnects it), and a blocked margin keeps
+    # pores from touching → SE stays one percolating network.  Pore size is
+    # capped by the local SE thickness, so wide SE channels get larger pores
+    # and tight gaps get small ones (realistic porosity), and each pore is a
+    # wobbly blob (low-order radial harmonics), not a perfect disc.
     ny, nx = out.shape
     rng = np.random.default_rng(0)
     blocked = np.zeros((ny, nx), dtype=bool)
-    pr0 = max(3, int(round(r_se_px)))
-    for pr in (pr0, max(2, pr0 // 2), 2):
+    se_now = (out == SE)
+    dist_edge = _ndi.distance_transform_edt(se_now)        # interior room map
+    pr_min = 2.0
+    pr_max = max(3.0, r_se_px * 1.6)
+    AMP = 0.35                                             # max radial wobble
+    cy, cx = np.where(se_now & (dist_edge > pr_min + 1.5))
+    if len(cy) == 0:
+        return out
+    order = np.argsort(-dist_edge[cy, cx])                 # thickest SE first
+    for ci in order:
         if need <= 0:
             break
-        se_now = (out == SE)
-        dist_edge = _ndi.distance_transform_edt(se_now)
-        cand = se_now & (dist_edge > pr + 1) & (~blocked)
-        cy, cx = np.where(cand)
-        if len(cy) == 0:
+        py, px = int(cy[ci]), int(cx[ci])
+        if blocked[py, px]:
             continue
-        yy, xx = np.ogrid[-pr:pr + 1, -pr:pr + 1]
-        disc = (yy * yy + xx * xx) <= pr * pr
-        for idx in rng.permutation(len(cy)):
-            if need <= 0:
-                break
-            py, px = int(cy[idx]), int(cx[idx])
-            if blocked[py, px]:
-                continue
-            y0, y1, x0, x1 = py - pr, py + pr + 1, px - pr, px + pr + 1
-            if y0 < 0 or x0 < 0 or y1 > ny or x1 > nx:
-                continue
-            region = out[y0:y1, x0:x1]
-            m = disc & (region == SE)
-            c = int(m.sum())
-            if c == 0:
-                continue
-            region[m] = VOID
-            need -= c
-            by0, by1 = max(0, py - 2 * pr), min(ny, py + 2 * pr + 1)
-            bx0, bx1 = max(0, px - 2 * pr), min(nx, px + 2 * pr + 1)
-            blocked[by0:by1, bx0:bx1] = True
+        room = float(dist_edge[py, px])
+        # sample a target radius (skewed small), capped so the wobbly blob
+        # stays fully interior to the original SE
+        r_target = pr_min + (pr_max - pr_min) * rng.random() ** 1.7
+        r_base = min(r_target, (room - 1.5) / (1.0 + AMP))
+        if r_base < pr_min:
+            continue
+        a = rng.uniform(-1, 1, 3) * (AMP / 3.0)            # 3 harmonics
+        ph = rng.uniform(0, 2 * np.pi, 3)
+        rmax = int(np.ceil(r_base * (1.0 + AMP))) + 1
+        y0, y1 = max(0, py - rmax), min(ny, py + rmax + 1)
+        x0, x1 = max(0, px - rmax), min(nx, px + rmax + 1)
+        gy, gx = np.ogrid[y0 - py:y1 - py, x0 - px:x1 - px]
+        rr = np.hypot(gy, gx)
+        th = np.arctan2(gy, gx)
+        r_blob = r_base * (1.0 + a[0] * np.cos(th + ph[0])
+                                + a[1] * np.cos(2 * th + ph[1])
+                                + a[2] * np.cos(3 * th + ph[2]))
+        region = out[y0:y1, x0:x1]
+        m = (rr <= r_blob) & (region == SE)
+        c = int(m.sum())
+        if c == 0:
+            continue
+        region[m] = VOID
+        need -= c
+        bm = int(rmax + pr_max + 2)                        # keep pores apart
+        by0, by1 = max(0, py - bm), min(ny, py + bm + 1)
+        bx0, bx1 = max(0, px - bm), min(nx, px + bm + 1)
+        blocked[by0:by1, bx0:bx1] = True
     return out
 
 ROOT = Path(__file__).resolve().parent.parent
