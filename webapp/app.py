@@ -3364,6 +3364,37 @@ def analyze(case_id):
                 json.dump(meta, f, indent=2)
             print(f"  [Network] Lock released ({case_id}), status={net_status}")
 
+        # ── Step 7: Stage E — literature-grounded grain corrections ──
+        # Mirrors the archive-reanalyze pipeline (line ~2540) so that EVERY
+        # analysis path — new upload, 재분석, 재분석(NET) — applies Stage E.
+        # Without this, cases analysed via /analyze had no *_stage_e σ values
+        # and the 종합 등급 'Stage E 보정 적용' axis flagged them B-.
+        #   σ_ionic : Cronau 2022 SE-size factor (×1.0 for r_SE ≥ 0.5 μm)
+        #   σ_e     : Trevisanello 2021 AM-crystallinity × size
+        #   κ       : Wang 2022 phonon GB-scatter
+        # Idempotent — re-running just overwrites *_stage_e keys.
+        try:
+            scripts_dir = app.config['SCRIPTS_FOLDER']
+            stage_e_cmd = ['python3',
+                            os.path.join(scripts_dir, 'run_network_full_corrections.py'),
+                            os.path.basename(results_dir), '--quiet']
+            _se = subprocess.run(stage_e_cmd, capture_output=True,
+                                  text=True, timeout=3600)
+            print(f"  [Stage E] rc={_se.returncode} ({case_id})")
+            if _se.returncode != 0 and _se.stderr:
+                print(f"  [Stage E] stderr (last 300): {_se.stderr[-300:]}")
+            # Refresh validation flags self-report card after Stage E.
+            # backfill_validation_flags.py takes case NAMES as positional args.
+            bf_cmd = ['python3',
+                       os.path.join(scripts_dir, 'backfill_validation_flags.py'),
+                       os.path.basename(results_dir)]
+            try:
+                subprocess.run(bf_cmd, capture_output=True, text=True, timeout=300)
+            except Exception:
+                pass   # backfill is best-effort
+        except Exception as _se_e:
+            print(f"  [Stage E] FAILED ({case_id}): {_se_e}")
+
         # Sync results + updated meta to Supabase
         storage_sync.sync_dir_to_remote(case_dir, f'uploads/{case_id}')
         storage_sync.sync_dir_to_remote(results_dir, f'results/{case_id}')
