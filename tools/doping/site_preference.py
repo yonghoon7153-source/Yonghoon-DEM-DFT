@@ -353,32 +353,40 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
         })
 
     # v4.5.23 — UNION literature-documented sites (per dopant element).
-    # Adds any site in LITERATURE_SITES[element] not already present from
-    # the radius filter, provided the charge sign is compatible (cation↔
-    # cation / anion↔anion). This broadens screening to chemically
-    # documented placements that the Shannon-radius cutoff alone misses,
-    # while the sign rule still blocks non-physical combinations.
+    # POLICY = LITERATURE-PREFERRED (v4.5.24, reviewer-bound):
+    #   If the element is documented in LITERATURE_SITES, the returned set
+    #   is RESTRICTED to its literature sites (charge-sign-gated). This
+    #   DROPS radius-only placements that have no literature support
+    #   (e.g. O→Cl_4d, Sn⁴⁺→Li_24g) — physically implausible substitutions
+    #   the Shannon-radius cutoff alone admitted. Any documented site the
+    #   radius filter missed is still added (so we never lose a real site).
+    #   Undocumented elements fall back to the pure radius filter unchanged.
+    #   Charge-sign rule (cation↔cation / anion↔anion) always applies.
     if element is not None and element in LITERATURE_SITES:
-        present = {c['site_name'] for c in candidates}
         lit = LITERATURE_SITES[element]
+        lit_set = set(lit['sites'])
+        kept = []
+        # (a) keep radius sites that are literature-confirmed; drop the rest
+        for c in candidates:
+            if c['site_name'] in lit_set:
+                c['source'] = 'radius+literature'
+                c['literature_ref'] = lit['ref']
+                kept.append(c)
+            else:
+                # radius-only, no literature support → dropped (logged via source)
+                pass
+        # (b) add documented sites the radius filter missed (sign-gated)
+        present = {c['site_name'] for c in kept}
         for site_name in lit['sites']:
             if site_name in present:
-                # tag the existing radius-derived site as literature-confirmed
-                for c in candidates:
-                    if c['site_name'] == site_name:
-                        c['source'] = 'radius+literature'
-                        c['literature_ref'] = lit['ref']
                 continue
             info = HOST_SITES.get(site_name)
-            if info is None:
-                continue
-            # charge-sign gate still applies (no cation-at-anion etc.)
-            if dopant_charge * info['charge'] <= 0:
+            if info is None or dopant_charge * info['charge'] <= 0:
                 continue
             charge_diff = dopant_charge - info['charge']
             radius_diff = dopant_radius - info['radius']
             compat = 1.0 / (1.0 + abs(radius_diff) + abs(charge_diff) * 0.5)
-            candidates.append({
+            kept.append({
                 'site_name': site_name,
                 'host': info['host'],
                 'host_charge': info['charge'],
@@ -391,6 +399,7 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
                 'source': 'literature',
                 'literature_ref': lit['ref'],
             })
+        candidates = kept
 
     candidates.sort(key=lambda x: -x['compatibility_score'])
     return candidates
