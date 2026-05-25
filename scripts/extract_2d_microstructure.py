@@ -156,10 +156,37 @@ def _am_p_grain_boundaries(labels, pa, pb, grain_size_um):
     return gb & is_amp
 
 
+def _faceted_inside(GA, GB, ac, bc, r, seed):
+    """Rounded, randomly-oriented polygon footprint for a single-crystal
+    (AM_S) particle.
+
+    Single-crystal NCM grows as faceted rhombohedral/hexagonal habit —
+    rounded polyhedra, not spheres (Bi 2020 Science; Kim 2019 ACS Energy
+    Lett).  Polycrystalline secondary particles (AM_P), by contrast, are
+    spheroidal agglomerates → kept circular.  The n-gon inradius is set so
+    area = πr², preserving the AM_S phase fraction.  The facet ORIENTATION
+    is a literature-based habit (DEM provides spheres only), not measured.
+    """
+    rng = np.random.default_rng(int(seed) & 0xFFFFFFFF)
+    n = int(rng.integers(5, 8))                 # 5–7 facets
+    theta0 = rng.uniform(0, 2 * np.pi)
+    r_in = r * np.sqrt(np.pi / (n * np.tan(np.pi / n)))   # area-preserving
+    dx = GA - ac; dy = GB - bc
+    rad = np.hypot(dx, dy)
+    th = np.arctan2(dy, dx)
+    sector = ((th - theta0) % (2 * np.pi / n)) - np.pi / n
+    Rb = r_in / np.cos(sector)
+    Rb = np.minimum(Rb, r * 1.06)               # round the corners
+    amp = rng.uniform(0.0, 0.06); ph = rng.uniform(0, 2 * np.pi)
+    Rb = Rb * (1 + amp * np.cos(3 * (th - ph)))  # slight per-particle irregularity
+    return rad <= Rb
+
+
 def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
                           n_pixels: int = 500, axis: str = 'y',
                           se_continuum: bool = True,
-                          grain_size_um: float = 0.8):
+                          grain_size_um: float = 0.8,
+                          single_crystal_facets: bool = True):
     """Rasterise one planar slice of a case into a 4-phase label grid.
 
     axis = slice-NORMAL direction:
@@ -270,7 +297,10 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
         ga = (np.arange(ix0, ix1 + 1) + 0.5) * pa
         gb = (np.arange(iy0, iy1 + 1) + 0.5) * pb
         GA, GB = np.meshgrid(ga, gb)
-        inside = (GA - ac) ** 2 + (GB - bc) ** 2 <= r_slice ** 2
+        if single_crystal_facets and phases[i] == AM_S:
+            inside = _faceted_inside(GA, GB, ac, bc, r_slice, seed=i)
+        else:
+            inside = (GA - ac) ** 2 + (GB - bc) ** 2 <= r_slice ** 2
         sub_dc = owner_dc[iy0:iy1+1, ix0:ix1+1]
         sub_lab = labels[iy0:iy1+1, ix0:ix1+1]
         win = inside & (dc[i] < sub_dc)
@@ -471,6 +501,9 @@ def main():
     ap.add_argument('--grain-size', type=float, default=0.8,
                     help='AM_P polycrystalline primary grain size μm '
                          '(Trevisanello 2021 ~0.1-1μm; 0=off, AM_S always single-xtal)')
+    ap.add_argument('--no-facets', action='store_true',
+                    help='draw AM_S as plain circles (default: faceted '
+                         'single-crystal habit; AM_P stays spheroidal)')
     ap.add_argument('--out-png', default='docs/figures/microstructure_2d')
     ap.add_argument('--out-npy', default='docs/data/microstructure_2d')
     args = ap.parse_args()
@@ -521,7 +554,8 @@ def main():
                                             n_pixels=args.n_pixels,
                                             axis=args.axis,
                                             se_continuum=not args.no_continuum,
-                                            grain_size_um=args.grain_size)
+                                            grain_size_um=args.grain_size,
+                                            single_crystal_facets=not args.no_facets)
             except Exception as e:
                 print(f'  [{name} z={zf:.2f}] FAILED: {type(e).__name__}: {e}')
                 continue

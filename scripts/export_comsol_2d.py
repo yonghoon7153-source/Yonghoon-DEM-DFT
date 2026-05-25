@@ -284,6 +284,8 @@ def main():
     ap.add_argument('--no-continuum', action='store_true')
     ap.add_argument('--grain-size', type=float, default=0.8,
                     help='AM_P poly grain μm (Trevisanello 2021); 0=off')
+    ap.add_argument('--no-facets', action='store_true',
+                    help='draw AM_S as plain circles (default: faceted single-crystal)')
     ap.add_argument('--out', default='docs/data/comsol_export')
     args = ap.parse_args()
 
@@ -305,7 +307,8 @@ def main():
     sd = slice_microstructure(case_dir, slice_frac=args.slice_frac,
                               n_pixels=args.n_pixels, axis=args.axis,
                               se_continuum=not args.no_continuum,
-                              grain_size_um=args.grain_size)
+                              grain_size_um=args.grain_size,
+                              single_crystal_facets=not args.no_facets)
     if sd is None:
         print('slice failed (missing data)', file=sys.stderr); sys.exit(1)
 
