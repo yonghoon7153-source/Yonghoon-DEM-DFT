@@ -187,6 +187,14 @@ VALIDATION_SET = [
     ('F',   True,  'ACS AMI 2022 fluorine-doped argyrodite'),
     ('Br',  True,  'halogen mixing, common'),
     ('I',   True,  'I-F dual-doped JPCC 2023'),
+    # Reviewer 2026-05-19 additions — catch chemistry/ref regressions in the
+    # weak-confidence region. All must still yield ≥1 site (via radius
+    # fallback after removal from LITERATURE_SITES), but their assignment is
+    # heuristic, not literature-strict:
+    ('B',   True,  'radius→P_4b only; LITERATURE_SITES entry REMOVED (was fabricated Lee2025 ref)'),
+    ('Fe',  True,  'radius→Li_24g; 3d-TM REMOVED from LITERATURE_SITES (phase-separation risk)'),
+    ('Nd',  True,  'Nd³⁺→Li_24g, paper#2 anchor (literature-strict)'),
+    ('Ce',  True,  'radius→Li only; P_4b REMOVED (Ce⁴⁺ r=0.87 too large for P⁵⁺)'),
 ]
 
 
@@ -240,67 +248,85 @@ def validate_against_literature() -> int:
 # VALIDATION_SET refs, and db/literature/*.md (Lee2025 B/Al→PO4 cluster,
 # Adeli2019 halogen-rich, ACS AMI 2021 O→S_16e, ACS AMI 2022 F→Cl_4d).
 LITERATURE_SITES = {
+    # confidence: 'cited' = concrete paper/DOI; 'standard' = textbook
+    # isovalent/aliovalent substitution; 'analogy' = by chemical analogy
+    # (use with caveat). Reviewer audit 2026-05-19 removed fabricated/weak
+    # entries (B, Ce, Re, Bi, 3d-TM Cr/Mn/Fe/Co/Ni) → those now fall back to
+    # the radius filter (honest "radius heuristic, no direct LPSCl report").
     # ---- Anions (S²⁻ / Cl⁻ sublattice) ----
-    'O':  {'sites': ['S_16e', 'S_4a'],  'ref': 'ACS AMI 2021 oxysulfide Li6PS5-xClOx (best=S_16e, PS4-bonded)'},
-    'Se': {'sites': ['S_16e', 'S_4a'],  'ref': 'Se→S isovalent (chalcogen swap)'},
-    'Te': {'sites': ['S_16e', 'S_4a'],  'ref': 'Te→S isovalent (chalcogen swap)'},
-    'F':  {'sites': ['Cl_4d'],          'ref': 'ACS AMI 2022 F-doped argyrodite (F→Cl⁻ halide site)'},
-    'Cl': {'sites': ['Cl_4d', 'S_4a'],  'ref': 'Adeli 2019 halogen-rich (Cl on 4d + free S_4a anion)'},
-    'Br': {'sites': ['Cl_4d', 'S_4a'],  'ref': 'halogen mixing Li6PS5(Cl,Br) (comp2 family)'},
-    'I':  {'sites': ['Cl_4d'],          'ref': 'I-F dual-doped JPCC 2023'},
-    'N':  {'sites': ['S_16e'],          'ref': 'N³⁻ → PS4 S (aliovalent nitride doping)'},
+    'O':  {'sites': ['S_16e', 'S_4a'],  'confidence': 'cited',    'ref': 'Lee 2025 (ScienceDirect S2405829725000790): site-selective O at Wyckoff 16e of PS4; S_4a secondary'},
+    'Se': {'sites': ['S_16e', 'S_4a'],  'confidence': 'standard', 'ref': 'Se→S isovalent chalcogen substitution (standard)'},
+    'Te': {'sites': ['S_16e', 'S_4a'],  'confidence': 'standard', 'ref': 'Te→S isovalent chalcogen substitution (standard)'},
+    'F':  {'sites': ['Cl_4d'],          'confidence': 'cited',    'ref': 'ACS AMI 2024 16(24) 31341 fluorine-like / LiF-doped argyrodite (F→Cl⁻ 4d)'},
+    'Cl': {'sites': ['Cl_4d', 'S_4a'],  'confidence': 'cited',    'ref': 'Adeli 2019 Angew halogen-rich Li6PS5Cl1+x (Cl 4d + free S_4a)'},
+    'Br': {'sites': ['Cl_4d', 'S_4a'],  'confidence': 'cited',    'ref': 'Kraft 2017 JACS halogen mixing Li6PS5(Cl,Br) (comp2 family)'},
+    'I':  {'sites': ['Cl_4d'],          'confidence': 'standard', 'ref': 'I→Cl⁻ halide-site substitution (larger halide)'},
+    'N':  {'sites': ['S_16e'],          'confidence': 'analogy',  'ref': 'N³⁻→PS4 S by analogy to LiPON N→O; NO direct LPSCl report (Li3N batch)'},
     # ---- P-site cations (PS4 tetrahedron center) ----
-    'B':  {'sites': ['P_4b'],           'ref': 'Lee 2025 CEJ: B³⁺ PO4-cluster (P-site acceptor)'},
-    'W':  {'sites': ['P_4b'],           'ref': 'W⁶⁺ thiophosphate donor (DOPANT_DB)'},
-    'Mo': {'sites': ['P_4b'],           'ref': 'Mo⁶⁺ thiophosphate donor (DOPANT_DB)'},
-    'Re': {'sites': ['P_4b'],           'ref': 'Re⁷⁺ high-valence P substitution (DOPANT_DB)'},
-    'Sb': {'sites': ['P_4b'],           'ref': 'Sb⁵⁺→P isovalent (common)'},
-    'As': {'sites': ['P_4b'],           'ref': 'As⁵⁺→P isovalent'},
-    'V':  {'sites': ['P_4b'],           'ref': 'V⁵⁺→P isovalent'},
-    'Nb': {'sites': ['P_4b'],           'ref': 'Nb⁵⁺→P isovalent'},
-    'Ta': {'sites': ['P_4b'],           'ref': 'Ta⁵⁺→P (5d analogue of Nb)'},
-    'Si': {'sites': ['P_4b'],           'ref': 'Si⁴⁺→P acceptor (LGPS family)'},
-    'Ge': {'sites': ['P_4b'],           'ref': 'Ge⁴⁺→P (LGPS family)'},
-    'Sn': {'sites': ['P_4b'],           'ref': 'MDPI Materials 16(7),2751 (2023) Sn-substituted LPSCl'},
-    'Ti': {'sites': ['P_4b'],           'ref': 'Ti⁴⁺→P acceptor'},
-    'Zr': {'sites': ['P_4b'],           'ref': 'Zr⁴⁺→P acceptor'},
-    'Hf': {'sites': ['P_4b'],           'ref': 'Hf⁴⁺→P (5d analogue of Zr)'},
+    'Sb': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Sb⁵⁺→P⁵⁺ isovalent (standard thiophosphate)'},
+    'As': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'As⁵⁺→P⁵⁺ isovalent (standard)'},
+    'V':  {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'V⁵⁺→P⁵⁺ isovalent'},
+    'Nb': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Nb⁵⁺→P⁵⁺ isovalent'},
+    'Ta': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Ta⁵⁺→P⁵⁺ isovalent (5d analogue of Nb)'},
+    'Si': {'sites': ['P_4b'], 'confidence': 'cited',    'ref': 'ScienceDirect S0013468621017217 Si substitution on P-site argyrodite'},
+    'Ge': {'sites': ['P_4b'], 'confidence': 'cited',    'ref': 'Ge⁴⁺→P (LGPS Li10GeP2S12 family, established)'},
+    'Sn': {'sites': ['P_4b'], 'confidence': 'cited',    'ref': 'MDPI Materials 16(7) 2751 (2023) DOI 10.3390/ma16072751: P→Sn, Sn–S bond'},
+    'Ti': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Ti⁴⁺→P acceptor (group-14/-4 analogue)'},
+    'Zr': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Zr⁴⁺→P acceptor'},
+    'Hf': {'sites': ['P_4b'], 'confidence': 'standard', 'ref': 'Hf⁴⁺→P (5d analogue of Zr)'},
+    'W':  {'sites': ['P_4b'], 'confidence': 'analogy',  'ref': 'W⁶⁺→P donor by analogy to WS3 thiophosphate-glass additions; weak direct LPSCl ref'},
+    'Mo': {'sites': ['P_4b'], 'confidence': 'analogy',  'ref': 'Mo⁶⁺→P donor by analogy to MoS3 additions; weak direct LPSCl ref'},
     # ---- Li-site cations (+1 isovalent) ----
-    'Na': {'sites': ['Li_24g', 'Li_48h'], 'ref': 'Na→Li isovalent (common)'},
-    'Cu': {'sites': ['Li_24g', 'Li_48h'], 'ref': 'Cu⁺→Li isovalent'},
-    'Ag': {'sites': ['Li_24g', 'Li_48h'], 'ref': 'Nature Comm 2025 Ag-exsolution argyrodite'},
-    # ---- Li-site cations (+2 alkaline earth / 3d TM) ----
-    'Mg': {'sites': ['Li_24g'],         'ref': 'Mg²⁺→Li aliovalent (common)'},
-    'Zn': {'sites': ['Li_24g'],         'ref': 'Zn²⁺→Li; Sundar 2025 ZnO coating'},
-    'Ca': {'sites': ['Li_24g'],         'ref': 'Li5.35Ca0.1PS4.5Cl1.55, 10.2 mS/cm'},
-    'Sr': {'sites': ['Li_24g'],         'ref': 'Sr²⁺→Li (larger alkaline earth)'},
-    'Ba': {'sites': ['Li_24g'],         'ref': 'PMC 11106650 mechanochemical Li6-aBa_a/2PS5Cl (borderline radius)'},
-    'Mn': {'sites': ['Li_24g'],         'ref': 'Mn²⁺ CN6 → Li site (DOPANT_DB)'},
-    'Co': {'sites': ['Li_24g'],         'ref': 'Co²⁺ → Li site (NMC parent, DOPANT_DB)'},
-    'Ni': {'sites': ['Li_24g'],         'ref': 'Ni²⁺ → Li site (NMC parent, DOPANT_DB)'},
-    # ---- Li-site cations (+3: group-13, 3d, rare-earth) ----
-    'Al': {'sites': ['Li_24g', 'P_4b'], 'ref': 'Li5.4Al0.1PS4.7Cl1.3 7.29mS/cm (Li-site); Al³⁺ also P-acceptor (amphoteric)'},
-    'Ga': {'sites': ['Li_24g'],         'ref': 'Ga³⁺→Li aliovalent'},
-    'In': {'sites': ['Li_24g'],         'ref': 'In³⁺→Li aliovalent'},
-    'Sc': {'sites': ['Li_24g'],         'ref': 'Sc³⁺→Li aliovalent'},
-    'Y':  {'sites': ['Li_24g'],         'ref': 'mechanochemical Y-doped LPSCl'},
-    'Cr': {'sites': ['Li_24g'],         'ref': 'Cr³⁺ CN6 → Li site (DOPANT_DB)'},
-    'Fe': {'sites': ['Li_24g'],         'ref': 'Fe³⁺ CN6 → Li site (DOPANT_DB)'},
-    'Bi': {'sites': ['Li_24g'],         'ref': 'Bi³⁺→Li (Bi2S3/Bi2O3 SE doping)'},
-    'La': {'sites': ['Li_24g'],         'ref': 'La³⁺→Li; Sundar 2025 / paper#2 RE oxide'},
-    'Nd': {'sites': ['Li_24g'],         'ref': 'Nd³⁺→Li; paper#2 Nd2O3 case study'},
-    'Sm': {'sites': ['Li_24g'],         'ref': 'Sm³⁺→Li RE oxide'},
-    'Gd': {'sites': ['Li_24g'],         'ref': 'Gd³⁺→Li RE oxide'},
-    'Eu': {'sites': ['Li_24g'],         'ref': 'Eu³⁺→Li RE'},
-    'Yb': {'sites': ['Li_24g'],         'ref': 'Yb³⁺→Li RE'},
-    'Pr': {'sites': ['Li_24g'],         'ref': 'Pr³⁺→Li RE'},
-    'Tb': {'sites': ['Li_24g'],         'ref': 'Tb³⁺→Li RE'},
-    'Dy': {'sites': ['Li_24g'],         'ref': 'Dy³⁺→Li RE'},
-    'Ho': {'sites': ['Li_24g'],         'ref': 'Ho³⁺→Li RE'},
-    'Er': {'sites': ['Li_24g'],         'ref': 'Er³⁺→Li RE'},
-    'Tm': {'sites': ['Li_24g'],         'ref': 'Tm³⁺→Li RE'},
-    'Lu': {'sites': ['Li_24g'],         'ref': 'Lu³⁺→Li RE (smallest Ln)'},
-    'Ce': {'sites': ['Li_24g', 'P_4b'], 'ref': 'Ce⁴⁺ (CeO2) — Li or P depending on valence'},
+    'Na': {'sites': ['Li_24g', 'Li_48h'], 'confidence': 'standard', 'ref': 'Na⁺→Li⁺ isovalent (standard)'},
+    'Cu': {'sites': ['Li_24g', 'Li_48h'], 'confidence': 'standard', 'ref': 'Cu⁺→Li⁺ isovalent'},
+    'Ag': {'sites': ['Li_24g', 'Li_48h'], 'confidence': 'cited',    'ref': 'Nature Comm 2025 Ag-exsolution argyrodite (verify DOI)'},
+    # ---- Li-site cations (+2 alkaline earth) ----
+    'Mg': {'sites': ['Li_24g'], 'confidence': 'standard', 'ref': 'Mg²⁺→Li aliovalent (standard)'},
+    'Zn': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'Zn²⁺→Li; Sundar 2025 ZnO coating'},
+    'Ca': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'Li5.35Ca0.1PS4.5Cl1.55, 10.2 mS/cm (specific composition)'},
+    'Sr': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Sr²⁺→Li by Ca analogue (larger alkaline earth)'},
+    'Ba': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'PMC 11106650 mechanochemical Li6-aBa_a/2PS5Cl (radius borderline)'},
+    # ---- Li-site cations (+3: group-13, rare-earth) ----
+    # Al: P-site dropped (reviewer 2026-05-19) — Al-doped LPSCl literature is
+    # overwhelmingly Li-site aliovalent; P-site Al unsupported.
+    'Al': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'Li5.4Al0.1PS4.7Cl1.3 7.29mS/cm (PMC9783369, Li-site aliovalent)'},
+    'Ga': {'sites': ['Li_24g'], 'confidence': 'standard', 'ref': 'Ga³⁺→Li aliovalent (group-13)'},
+    'In': {'sites': ['Li_24g'], 'confidence': 'standard', 'ref': 'In³⁺→Li aliovalent (too large for P-site)'},
+    'Sc': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Sc³⁺→Li aliovalent (Y analogue)'},
+    'Y':  {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'mechanochemical Y-doped LPSCl'},
+    'La': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'La³⁺→Li; Sundar 2025 / paper#2 RE oxide'},
+    'Nd': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'Nd³⁺→Li; paper#2 Nd2O3 case study (anchor)'},
+    'Sm': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Sm³⁺→Li by RE analogy (Nd/La anchored)'},
+    'Gd': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Gd³⁺→Li by RE analogy'},
+    'Eu': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Eu³⁺→Li by RE analogy'},
+    'Yb': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Yb³⁺→Li by RE analogy'},
+    'Pr': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Pr³⁺→Li by RE analogy'},
+    'Tb': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Tb³⁺→Li by RE analogy'},
+    'Dy': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Dy³⁺→Li by RE analogy'},
+    'Ho': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Ho³⁺→Li by RE analogy'},
+    'Er': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Er³⁺→Li by RE analogy'},
+    'Tm': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Tm³⁺→Li by RE analogy'},
+    'Lu': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Lu³⁺→Li by RE analogy (smallest Ln)'},
+    # ---- 3d transition metals — RESTRICTED to Li_24g (not removed) ----
+    # Reviewer 2026-05-19: lattice substitution into argyrodite is UNCONFIRMED
+    # (separate sulfide phase FeS/CoS/NiS often more stable). Kept here ONLY to
+    # RESTRICT to the single plausible Li-site — removing them lets the radius
+    # filter spuriously add P_4b (|r_Fe-r_P|<tol), which is worse. Confidence
+    # 'analogy' + phase-separation caveat; treat outputs as heuristic.
+    'Cr': {'sites': ['Li_24g'], 'confidence': 'analogy', 'ref': 'Cr³⁺→Li (heuristic; lattice sub. unconfirmed, may phase-separate)'},
+    'Mn': {'sites': ['Li_24g'], 'confidence': 'analogy', 'ref': 'Mn²⁺→Li (heuristic; lattice sub. unconfirmed)'},
+    'Fe': {'sites': ['Li_24g'], 'confidence': 'analogy', 'ref': 'Fe³⁺→Li (heuristic; FeS phase-separation risk)'},
+    'Co': {'sites': ['Li_24g'], 'confidence': 'analogy', 'ref': 'Co²⁺→Li (heuristic; CoS phase-separation risk)'},
+    'Ni': {'sites': ['Li_24g'], 'confidence': 'analogy', 'ref': 'Ni²⁺→Li (heuristic; NiS phase-separation risk)'},
+    # ---- high-valence donor restricted to P_4b (avoids radius spurious Li) ----
+    'Re': {'sites': ['P_4b'],   'confidence': 'analogy', 'ref': 'Re⁷⁺→P donor (heuristic; very high charge, large Δq compensation)'},
+    # REMOVED entirely (radius fallback is chemically acceptable for these):
+    #   B  — "Lee 2025 CEJ B³⁺ PO4-cluster" FABRICATED (Lee2025 = Li3PO4
+    #        coating paper; LPSCl boron literature is borohydride BH4⁻→Cl⁻
+    #        complex anion, NOT B³⁺ P-site). radius→P_4b only (geometrically
+    #        plausible for small B³⁺; honest: no direct LPSCl report).
+    #   Ce — radius→Li_24g/48h only (Ce⁴⁺ r=0.87 correctly fails P tol).
+    #   Bi — radius→Li_24g/48h (Bi³⁺→Li reasonable).
 }
 
 
@@ -399,7 +425,16 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
                 'source': 'literature',
                 'literature_ref': lit['ref'],
             })
-        candidates = kept
+        # Defensive fallback (reviewer 2026-05-19): if every literature site
+        # was charge-incompatible (misconfigured entry) `kept` is empty —
+        # do NOT silently return zero sites. Keep the radius-filter result
+        # and warn, so a bad LITERATURE_SITES entry can't erase a dopant.
+        if kept:
+            candidates = kept
+        else:
+            print(f"  ⚠ {element}: all LITERATURE_SITES entries charge-"
+                  f"incompatible with dopant charge {dopant_charge:+d}; "
+                  f"falling back to radius filter ({len(candidates)} sites)")
 
     candidates.sort(key=lambda x: -x['compatibility_score'])
     return candidates
