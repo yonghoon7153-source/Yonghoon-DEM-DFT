@@ -86,9 +86,56 @@ def _type_to_phase(type_name: str) -> int:
     return VOID
 
 
+def _am_p_grain_boundaries(labels, pa, pb, grain_size_um):
+    """Generate polycrystalline grain-boundary mask inside AM_P regions.
+
+    Each AM_P secondary particle is internally tessellated into primary
+    grains (~grain_size_um) via nearest-seed (Voronoi) assignment;
+    grain boundaries = AM_P pixels whose 4-neighbour belongs to a
+    different grain.  AM_S (single-crystal) gets NO internal GB.
+
+    Literature: Trevisanello 2021 — poly primary grain ~0.1-1 μm.
+    """
+    is_amp = (labels == AM_P)
+    if is_amp.sum() == 0:
+        return np.zeros_like(labels, dtype=bool)
+    ny, nx = labels.shape
+    # seed density: 1 seed per grain area (πr²) → grain "radius" = grain_size/2
+    g_px = max(2.0, grain_size_um / pa)
+    area_per_grain = np.pi * (g_px / 2) ** 2
+    n_seed = max(4, int(is_amp.sum() / area_per_grain))
+    rng = np.random.default_rng(42)
+    ys, xs = np.where(is_amp)
+    pick = rng.choice(len(xs), size=min(n_seed, len(xs)), replace=False)
+    seed_xy = np.column_stack([xs[pick], ys[pick]])
+    try:
+        from scipy.spatial import cKDTree
+        tree = cKDTree(seed_xy)
+        gy, gx = np.where(is_amp)
+        _, grain_id_flat = tree.query(np.column_stack([gx, gy]))
+        grain_id = np.full((ny, nx), -1, dtype=np.int32)
+        grain_id[gy, gx] = grain_id_flat
+    except Exception:
+        return np.zeros_like(labels, dtype=bool)
+    # boundary = AM_P pixel whose right or down neighbour is a different grain
+    gb = np.zeros((ny, nx), dtype=bool)
+    gid = grain_id
+    valid = gid >= 0
+    # right neighbour
+    diff_r = valid[:, :-1] & valid[:, 1:] & (gid[:, :-1] != gid[:, 1:])
+    gb[:, :-1] |= diff_r
+    gb[:, 1:]  |= diff_r
+    # down neighbour
+    diff_d = valid[:-1, :] & valid[1:, :] & (gid[:-1, :] != gid[1:, :])
+    gb[:-1, :] |= diff_d
+    gb[1:, :]  |= diff_d
+    return gb & is_amp
+
+
 def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
                           n_pixels: int = 500, axis: str = 'y',
-                          se_continuum: bool = True):
+                          se_continuum: bool = True,
+                          grain_size_um: float = 0.8):
     """Rasterise one planar slice of a case into a 4-phase label grid.
 
     axis = slice-NORMAL direction:
@@ -201,6 +248,15 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
         r_se_px = max(1.0, r_se_um / pa)
         labels = _se_to_continuum(labels, r_se_px)
 
+    # ── Morphology: AM_P polycrystalline grains, AM_S single-crystal ───
+    # Trevisanello 2021 (Adv Energy Mater): polycrystalline NCM secondary
+    # particle = many ~0.1–1 μm primary grains w/ grain boundaries;
+    # single-crystal NCM = monolithic, no internal GB.
+    # → grain_boundary mask drawn ONLY inside AM_P (AM_S stays solid).
+    grain_boundary = np.zeros_like(labels, dtype=bool)
+    if grain_size_um and grain_size_um > 0:
+        grain_boundary = _am_p_grain_boundaries(labels, pa, pb, grain_size_um)
+
     # Phase fractions
     total = labels.size
     fracs = {PHASE_NAMES[p]: round(100 * np.sum(labels == p) / total, 2)
@@ -240,6 +296,7 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
         'case_id': case_id, 'case_name': meta.get('name', case_id),
         'mode': meta.get('mode', ''), 'ps_ratio': meta.get('ps_ratio', ''),
         'labels': labels, 'interface': interface,
+        'grain_boundary': grain_boundary, 'grain_size_um': grain_size_um,
         'axis': axis, 'se_continuum': se_continuum,
         'a_label': a_label, 'b_label': b_label,
         'a_extent': a_extent, 'b_extent': b_extent, 'b_origin': b_origin,
@@ -272,14 +329,28 @@ def render_png(data, out_path: Path):
     norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
     ax.imshow(labels, origin='lower', cmap=cmap, norm=norm,
                extent=extent, interpolation='nearest', aspect='equal')
+    # AM_P polycrystalline grain boundaries overlay (Trevisanello 2021)
+    gb = data.get('grain_boundary')
+    gsz = data.get('grain_size_um', 0)
+    if gb is not None and gb.any():
+        gb_overlay = np.ma.masked_where(~gb, np.ones_like(labels))
+        ax.imshow(gb_overlay, origin='lower',
+                   cmap=ListedColormap(['#5b5b78']),   # subtle GB lines
+                   extent=extent, interpolation='nearest', aspect='equal',
+                   alpha=0.9)
     ax.set_xlabel(data['a_label']); ax.set_ylabel(data['b_label'])
     se_tag = ' (continuum)' if data['se_continuum'] else ' (discrete)'
-    ax.set_title(f"4-phase microstructure{se_tag}\n"
+    gb_tag = (f', AM_P poly grain ~{gsz}μm / AM_S single-xtal'
+              if gb is not None and gb.any() else '')
+    ax.set_title(f"4-phase microstructure{se_tag}{gb_tag}\n"
                  f"void {fr['void']}% / AM_P {fr['AM_P']}% / "
                  f"AM_S {fr['AM_S']}% / SE {fr['SE']}%", fontsize=10)
     handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray',
                       label=f'{PHASE_NAMES[p]} ({fr[PHASE_NAMES[p]]}%)')
                for p in (AM_P, AM_S, SE, VOID)]
+    if gb is not None and gb.any():
+        handles.append(Patch(facecolor='#5b5b78',
+                              label='AM_P grain boundary'))
     ax.legend(handles=handles, loc='upper right', fontsize=8.5, framealpha=0.9)
 
     # ── Panel 2: AM-SE coverage (interface) map ───────────────────────
@@ -332,6 +403,9 @@ def main():
                     help='# slices evenly spaced (overrides --slice-frac if >1)')
     ap.add_argument('--no-continuum', action='store_true',
                     help='keep SE as discrete particles (default: merge to continuum)')
+    ap.add_argument('--grain-size', type=float, default=0.8,
+                    help='AM_P polycrystalline primary grain size μm '
+                         '(Trevisanello 2021 ~0.1-1μm; 0=off, AM_S always single-xtal)')
     ap.add_argument('--out-png', default='docs/figures/microstructure_2d')
     ap.add_argument('--out-npy', default='docs/data/microstructure_2d')
     args = ap.parse_args()
@@ -381,7 +455,8 @@ def main():
                 data = slice_microstructure(d, slice_frac=zf,
                                             n_pixels=args.n_pixels,
                                             axis=args.axis,
-                                            se_continuum=not args.no_continuum)
+                                            se_continuum=not args.no_continuum,
+                                            grain_size_um=args.grain_size)
             except Exception as e:
                 print(f'  [{name} z={zf:.2f}] FAILED: {type(e).__name__}: {e}')
                 continue

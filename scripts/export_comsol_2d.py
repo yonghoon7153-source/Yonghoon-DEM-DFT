@@ -280,6 +280,8 @@ def main():
     ap.add_argument('--slice-frac', type=float, default=0.5)
     ap.add_argument('--n-pixels', type=int, default=600)
     ap.add_argument('--no-continuum', action='store_true')
+    ap.add_argument('--grain-size', type=float, default=0.8,
+                    help='AM_P poly grain μm (Trevisanello 2021); 0=off')
     ap.add_argument('--out', default='docs/data/comsol_export')
     args = ap.parse_args()
 
@@ -300,7 +302,8 @@ def main():
     print(f'Slicing {args.case} (axis={args.axis}, continuum={not args.no_continuum})...')
     sd = slice_microstructure(case_dir, slice_frac=args.slice_frac,
                               n_pixels=args.n_pixels, axis=args.axis,
-                              se_continuum=not args.no_continuum)
+                              se_continuum=not args.no_continuum,
+                              grain_size_um=args.grain_size)
     if sd is None:
         print('slice failed (missing data)', file=sys.stderr); sys.exit(1)
 
