@@ -195,12 +195,15 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     if box_x_um <= 0 or box_y_um <= 0:
         return None
 
-    # 3D-measured porosity (full_metrics, %) → fraction.  Used to calibrate
-    # the SE continuum so the 2D void fraction matches the 3D ground truth.
+    # 3D-measured properties (full_metrics, %) → fractions.  Used to pin the
+    # 2D figure to the 3D ground truth: void → porosity, coverage → coverage_AM.
     fm_file = results_dir / 'full_metrics.json'
     fm = json.loads(fm_file.read_text()) if fm_file.exists() else {}
     poro_3d = fm.get('porosity')
     target_void_frac = (float(poro_3d) / 100.0) if poro_3d is not None else None
+    cov_3d = (fm.get('coverage_AM_mean_physics_rough')
+              or fm.get('coverage_AM_mean_physics'))
+    target_coverage_frac = (float(cov_3d) / 100.0) if cov_3d is not None else None
 
     df = pd.read_csv(atoms_csv)
     for col in ('x', 'y', 'z', 'radius', 'type', 'id'):
@@ -317,6 +320,27 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     am_covered  = am_boundary & se_neighbour     # AM perimeter touching SE
     am_uncov    = am_boundary & ~se_neighbour
     n_bnd = int(am_boundary.sum())
+    coverage_inplane_pct = (round(100 * int(am_covered.sum()) / n_bnd, 2)
+                            if n_bnd else 0.0)
+
+    # ── Calibrate covered fraction to the 3D-measured coverage_AM ──────
+    # In-plane adjacency underestimates 3D coverage: a 1-D perimeter samples
+    # a 2-D surface, so SE lying just out-of-plane is missed.  We promote the
+    # uncovered AM-boundary pixels CLOSEST to SE — the locations most likely
+    # SE-covered out-of-plane (SE is a connected continuum) — until the
+    # covered fraction equals coverage_AM (3D).  This pins the figure's
+    # active-interface boundary condition to the same number COMSOL receives.
+    if target_coverage_frac is not None and n_bnd:
+        n_target = int(round(target_coverage_frac * n_bnd))
+        n_promote = n_target - int(am_covered.sum())
+        if n_promote > 0:
+            uy, ux = np.where(am_uncov)
+            if len(uy):
+                dist_se = _ndi.distance_transform_edt(~is_se)
+                order = np.argsort(dist_se[uy, ux])  # nearest-SE perimeter first
+                sel = order[:min(n_promote, len(order))]
+                am_covered[uy[sel], ux[sel]] = True
+                am_uncov[uy[sel], ux[sel]]   = False
     coverage_pct = round(100 * int(am_covered.sum()) / n_bnd, 2) if n_bnd else 0.0
 
     # Interface label grid (for visualization): 0 none / 1 covered / 2 uncovered
@@ -336,7 +360,10 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
         'thickness_um': thickness,
         'n_pixels': nx, 'pa_um': pa, 'pb_um': pb,
         'phase_fracs': fracs,
-        'coverage_2d_pct': coverage_pct,
+        'coverage_2d_pct': coverage_pct,                 # calibrated to 3D
+        'coverage_2d_inplane_pct': coverage_inplane_pct, # raw in-plane only
+        'coverage_3d_target_pct': (round(target_coverage_frac * 100, 2)
+                                   if target_coverage_frac is not None else None),
         'n_am_boundary_px': n_bnd,
         'n_particles_hit': int(hit.sum()),
     }
@@ -397,9 +424,15 @@ def render_png(data, out_path: Path):
                norm=BoundaryNorm([0.5, 1.5, 2.5], 2),
                extent=extent, interpolation='nearest', aspect='equal')
     ax.set_xlabel(data['a_label']); ax.set_ylabel(data['b_label'])
-    ax.set_title(f"AM–SE interface (coverage)\n"
-                 f"2D coverage = {data['coverage_2d_pct']}%  "
-                 f"({data['n_am_boundary_px']} AM-boundary px)", fontsize=10)
+    tgt = data.get('coverage_3d_target_pct')
+    inp = data.get('coverage_2d_inplane_pct')
+    cov_sub = (f"coverage = {data['coverage_2d_pct']}%  (pinned to 3D {tgt}%)"
+               if tgt is not None else f"2D coverage = {data['coverage_2d_pct']}%")
+    cov_note = (f"\nin-plane only = {inp}%  →  +out-of-plane (nearest-SE)"
+                if tgt is not None and inp is not None else "")
+    ax.set_title(f"AM–SE interface (coverage)\n{cov_sub}  "
+                 f"({data['n_am_boundary_px']} AM-boundary px){cov_note}",
+                 fontsize=9.5)
     handles2 = [Patch(facecolor='#10b981', label=f"SE-covered ({data['coverage_2d_pct']}%)"),
                 Patch(facecolor='#ef4444', label=f"uncovered ({round(100-data['coverage_2d_pct'],1)}%)"),
                 Patch(facecolor='#faf3d0', edgecolor='gray', label='SE bulk'),

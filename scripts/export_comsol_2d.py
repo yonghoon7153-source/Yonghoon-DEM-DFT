@@ -123,7 +123,9 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
         ('phi_void_2Dslice', fr['void']/100,                         '1',
          '—', '2D slice void area fraction'),
         ('coverage_2Dslice', slice_data['coverage_2d_pct'],          '%',
-         '—', '2D slice AM-SE coverage (compare vs 3D coverage_AM)'),
+         '—', '2D figure AM-SE coverage (pinned to 3D coverage_AM)'),
+        ('coverage_2Dslice_inplane', slice_data.get('coverage_2d_inplane_pct'), '%',
+         '—', '2D raw in-plane coverage (pre-calibration; underestimates 3D)'),
     ]
     out = []
     for name, val, unit, comsol, src in rows:
