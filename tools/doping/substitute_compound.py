@@ -72,7 +72,10 @@ def compatible_sites_for_element(element: str, db: dict) -> set[str]:
     if element not in db:
         return set()
     info = db[element]
-    matches = site_preference_filter(info['charge'], info['radius'])
+    # v4.5.23: pass element so LITERATURE_SITES union applies (documented
+    # per-dopant sites added to the radius/charge filter result).
+    matches = site_preference_filter(info['charge'], info['radius'],
+                                     element=element)
     return {m['site_name'] for m in matches}
 
 

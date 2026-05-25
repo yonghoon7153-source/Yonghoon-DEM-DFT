@@ -205,7 +205,7 @@ def validate_against_literature() -> int:
             mismatches += 1
             continue
         d = DOPANT_DB[elem]
-        sites = site_preference_filter(d['charge'], d['radius'])
+        sites = site_preference_filter(d['charge'], d['radius'], element=elem)
         got_pass = bool(sites)
         ok = (got_pass == must_pass)
         if not ok:
@@ -219,8 +219,94 @@ def validate_against_literature() -> int:
     return mismatches
 
 
+# ============================================================
+# LITERATURE_SITES — documented per-dopant site preference (v4.5.23)
+# ============================================================
+# Machine-readable form of the site assignments that were previously
+# encoded only as DOPANT_DB comments + VALIDATION_SET references. For a
+# documented element, its listed sites are UNION'd with the radius/charge
+# filter result (see `site_preference_filter(..., element=)`), so a
+# chemically documented site is always tried even if it marginally fails
+# the Shannon-radius cutoff, and a per-site literature `ref` is attached
+# for paper traceability.
+#
+# Policy = UNION (broaden, never remove a radius-valid site). This raises
+# the number of physically-justified (compound, site) screening cases
+# without admitting sign-incompatible placements (the charge-sign rule in
+# site_preference_filter still gates every site). Switch to REPLACE
+# semantics only after reviewer sign-off (single branch in the filter).
+#
+# Sources: DOPANT_DB inline comments (author's literature-informed intent),
+# VALIDATION_SET refs, and db/literature/*.md (Lee2025 B/Al→PO4 cluster,
+# Adeli2019 halogen-rich, ACS AMI 2021 O→S_16e, ACS AMI 2022 F→Cl_4d).
+LITERATURE_SITES = {
+    # ---- Anions (S²⁻ / Cl⁻ sublattice) ----
+    'O':  {'sites': ['S_16e', 'S_4a'],  'ref': 'ACS AMI 2021 oxysulfide Li6PS5-xClOx (best=S_16e, PS4-bonded)'},
+    'Se': {'sites': ['S_16e', 'S_4a'],  'ref': 'Se→S isovalent (chalcogen swap)'},
+    'Te': {'sites': ['S_16e', 'S_4a'],  'ref': 'Te→S isovalent (chalcogen swap)'},
+    'F':  {'sites': ['Cl_4d'],          'ref': 'ACS AMI 2022 F-doped argyrodite (F→Cl⁻ halide site)'},
+    'Cl': {'sites': ['Cl_4d', 'S_4a'],  'ref': 'Adeli 2019 halogen-rich (Cl on 4d + free S_4a anion)'},
+    'Br': {'sites': ['Cl_4d', 'S_4a'],  'ref': 'halogen mixing Li6PS5(Cl,Br) (comp2 family)'},
+    'I':  {'sites': ['Cl_4d'],          'ref': 'I-F dual-doped JPCC 2023'},
+    'N':  {'sites': ['S_16e'],          'ref': 'N³⁻ → PS4 S (aliovalent nitride doping)'},
+    # ---- P-site cations (PS4 tetrahedron center) ----
+    'B':  {'sites': ['P_4b'],           'ref': 'Lee 2025 CEJ: B³⁺ PO4-cluster (P-site acceptor)'},
+    'W':  {'sites': ['P_4b'],           'ref': 'W⁶⁺ thiophosphate donor (DOPANT_DB)'},
+    'Mo': {'sites': ['P_4b'],           'ref': 'Mo⁶⁺ thiophosphate donor (DOPANT_DB)'},
+    'Re': {'sites': ['P_4b'],           'ref': 'Re⁷⁺ high-valence P substitution (DOPANT_DB)'},
+    'Sb': {'sites': ['P_4b'],           'ref': 'Sb⁵⁺→P isovalent (common)'},
+    'As': {'sites': ['P_4b'],           'ref': 'As⁵⁺→P isovalent'},
+    'V':  {'sites': ['P_4b'],           'ref': 'V⁵⁺→P isovalent'},
+    'Nb': {'sites': ['P_4b'],           'ref': 'Nb⁵⁺→P isovalent'},
+    'Ta': {'sites': ['P_4b'],           'ref': 'Ta⁵⁺→P (5d analogue of Nb)'},
+    'Si': {'sites': ['P_4b'],           'ref': 'Si⁴⁺→P acceptor (LGPS family)'},
+    'Ge': {'sites': ['P_4b'],           'ref': 'Ge⁴⁺→P (LGPS family)'},
+    'Sn': {'sites': ['P_4b'],           'ref': 'MDPI Materials 16(7),2751 (2023) Sn-substituted LPSCl'},
+    'Ti': {'sites': ['P_4b'],           'ref': 'Ti⁴⁺→P acceptor'},
+    'Zr': {'sites': ['P_4b'],           'ref': 'Zr⁴⁺→P acceptor'},
+    'Hf': {'sites': ['P_4b'],           'ref': 'Hf⁴⁺→P (5d analogue of Zr)'},
+    # ---- Li-site cations (+1 isovalent) ----
+    'Na': {'sites': ['Li_24g', 'Li_48h'], 'ref': 'Na→Li isovalent (common)'},
+    'Cu': {'sites': ['Li_24g', 'Li_48h'], 'ref': 'Cu⁺→Li isovalent'},
+    'Ag': {'sites': ['Li_24g', 'Li_48h'], 'ref': 'Nature Comm 2025 Ag-exsolution argyrodite'},
+    # ---- Li-site cations (+2 alkaline earth / 3d TM) ----
+    'Mg': {'sites': ['Li_24g'],         'ref': 'Mg²⁺→Li aliovalent (common)'},
+    'Zn': {'sites': ['Li_24g'],         'ref': 'Zn²⁺→Li; Sundar 2025 ZnO coating'},
+    'Ca': {'sites': ['Li_24g'],         'ref': 'Li5.35Ca0.1PS4.5Cl1.55, 10.2 mS/cm'},
+    'Sr': {'sites': ['Li_24g'],         'ref': 'Sr²⁺→Li (larger alkaline earth)'},
+    'Ba': {'sites': ['Li_24g'],         'ref': 'PMC 11106650 mechanochemical Li6-aBa_a/2PS5Cl (borderline radius)'},
+    'Mn': {'sites': ['Li_24g'],         'ref': 'Mn²⁺ CN6 → Li site (DOPANT_DB)'},
+    'Co': {'sites': ['Li_24g'],         'ref': 'Co²⁺ → Li site (NMC parent, DOPANT_DB)'},
+    'Ni': {'sites': ['Li_24g'],         'ref': 'Ni²⁺ → Li site (NMC parent, DOPANT_DB)'},
+    # ---- Li-site cations (+3: group-13, 3d, rare-earth) ----
+    'Al': {'sites': ['Li_24g', 'P_4b'], 'ref': 'Li5.4Al0.1PS4.7Cl1.3 7.29mS/cm (Li-site); Al³⁺ also P-acceptor (amphoteric)'},
+    'Ga': {'sites': ['Li_24g'],         'ref': 'Ga³⁺→Li aliovalent'},
+    'In': {'sites': ['Li_24g'],         'ref': 'In³⁺→Li aliovalent'},
+    'Sc': {'sites': ['Li_24g'],         'ref': 'Sc³⁺→Li aliovalent'},
+    'Y':  {'sites': ['Li_24g'],         'ref': 'mechanochemical Y-doped LPSCl'},
+    'Cr': {'sites': ['Li_24g'],         'ref': 'Cr³⁺ CN6 → Li site (DOPANT_DB)'},
+    'Fe': {'sites': ['Li_24g'],         'ref': 'Fe³⁺ CN6 → Li site (DOPANT_DB)'},
+    'Bi': {'sites': ['Li_24g'],         'ref': 'Bi³⁺→Li (Bi2S3/Bi2O3 SE doping)'},
+    'La': {'sites': ['Li_24g'],         'ref': 'La³⁺→Li; Sundar 2025 / paper#2 RE oxide'},
+    'Nd': {'sites': ['Li_24g'],         'ref': 'Nd³⁺→Li; paper#2 Nd2O3 case study'},
+    'Sm': {'sites': ['Li_24g'],         'ref': 'Sm³⁺→Li RE oxide'},
+    'Gd': {'sites': ['Li_24g'],         'ref': 'Gd³⁺→Li RE oxide'},
+    'Eu': {'sites': ['Li_24g'],         'ref': 'Eu³⁺→Li RE'},
+    'Yb': {'sites': ['Li_24g'],         'ref': 'Yb³⁺→Li RE'},
+    'Pr': {'sites': ['Li_24g'],         'ref': 'Pr³⁺→Li RE'},
+    'Tb': {'sites': ['Li_24g'],         'ref': 'Tb³⁺→Li RE'},
+    'Dy': {'sites': ['Li_24g'],         'ref': 'Dy³⁺→Li RE'},
+    'Ho': {'sites': ['Li_24g'],         'ref': 'Ho³⁺→Li RE'},
+    'Er': {'sites': ['Li_24g'],         'ref': 'Er³⁺→Li RE'},
+    'Tm': {'sites': ['Li_24g'],         'ref': 'Tm³⁺→Li RE'},
+    'Lu': {'sites': ['Li_24g'],         'ref': 'Lu³⁺→Li RE (smallest Ln)'},
+    'Ce': {'sites': ['Li_24g', 'P_4b'], 'ref': 'Ce⁴⁺ (CeO2) — Li or P depending on valence'},
+}
+
+
 def site_preference_filter(dopant_charge: int, dopant_radius: float,
-                          allow_aliovalent: bool = True) -> list[dict]:
+                          allow_aliovalent: bool = True,
+                          element: str | None = None) -> list[dict]:
     """Returns compatible substitution sites for a dopant.
 
     Args:
@@ -263,7 +349,48 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
             'charge_diff': charge_diff,
             'radius_diff': round(radius_diff, 3),
             'compatibility_score': round(compat, 3),
+            'source': 'radius_filter',
         })
+
+    # v4.5.23 — UNION literature-documented sites (per dopant element).
+    # Adds any site in LITERATURE_SITES[element] not already present from
+    # the radius filter, provided the charge sign is compatible (cation↔
+    # cation / anion↔anion). This broadens screening to chemically
+    # documented placements that the Shannon-radius cutoff alone misses,
+    # while the sign rule still blocks non-physical combinations.
+    if element is not None and element in LITERATURE_SITES:
+        present = {c['site_name'] for c in candidates}
+        lit = LITERATURE_SITES[element]
+        for site_name in lit['sites']:
+            if site_name in present:
+                # tag the existing radius-derived site as literature-confirmed
+                for c in candidates:
+                    if c['site_name'] == site_name:
+                        c['source'] = 'radius+literature'
+                        c['literature_ref'] = lit['ref']
+                continue
+            info = HOST_SITES.get(site_name)
+            if info is None:
+                continue
+            # charge-sign gate still applies (no cation-at-anion etc.)
+            if dopant_charge * info['charge'] <= 0:
+                continue
+            charge_diff = dopant_charge - info['charge']
+            radius_diff = dopant_radius - info['radius']
+            compat = 1.0 / (1.0 + abs(radius_diff) + abs(charge_diff) * 0.5)
+            candidates.append({
+                'site_name': site_name,
+                'host': info['host'],
+                'host_charge': info['charge'],
+                'host_radius': info['radius'],
+                'wyckoff': info['wyckoff'],
+                'env': info['env'],
+                'charge_diff': charge_diff,
+                'radius_diff': round(radius_diff, 3),
+                'compatibility_score': round(compat, 3),
+                'source': 'literature',
+                'literature_ref': lit['ref'],
+            })
 
     candidates.sort(key=lambda x: -x['compatibility_score'])
     return candidates
@@ -294,7 +421,7 @@ def evaluate_dopant(element: str, n_dopants: int = 1,
     if element not in DOPANT_DB:
         raise ValueError(f"Element {element} not in DOPANT_DB. Add it manually.")
     d = DOPANT_DB[element]
-    sites = site_preference_filter(d['charge'], d['radius'])
+    sites = site_preference_filter(d['charge'], d['radius'], element=element)
     if not sites:
         return {'element': element, 'compatible_sites': [],
                 'note': 'No compatible site found.'}
