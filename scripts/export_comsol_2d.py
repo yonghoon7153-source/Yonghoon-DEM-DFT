@@ -127,6 +127,10 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
          '—', '2D figure AM-SE coverage (pinned to 3D coverage_AM)'),
         ('coverage_2Dslice_inplane', slice_data.get('coverage_2d_inplane_pct'), '%',
          '—', '2D raw in-plane coverage (pre-calibration; underestimates 3D)'),
+        ('r_AM_P_D50',     slice_data.get('r_AM_P_d50_um'),          'um',
+         'r_AMP', 'AM_P characteristic radius (analysis-summary D50)'),
+        ('r_AM_S_D50',     slice_data.get('r_AM_S_d50_um'),          'um',
+         'r_AMS', 'AM_S characteristic radius (analysis-summary D50)'),
     ]
     out = []
     for name, val, unit, comsol, src in rows:

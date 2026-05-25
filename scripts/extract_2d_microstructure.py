@@ -300,6 +300,18 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
                        for t in df['type'].to_numpy()])
     r_se_um = (ip.get('r_SE') or ip.get('r_SE_sim') or 0.0005) * scale
 
+    # AM characteristic radii (D50) — use the analysis-summary value per case
+    # (input_params r_AM_P/r_AM_S × scale), dynamic per case.  Fall back to the
+    # median of the actual per-particle radii of that phase if not present.
+    def _phase_d50(phase_id, ip_key):
+        v = ip.get(ip_key) or ip.get(ip_key + '_sim')
+        if v:
+            return float(v) * scale
+        rp = rs[phases == phase_id]
+        return float(np.median(rp)) if rp.size else None
+    r_amp_um = _phase_d50(AM_P, 'r_AM_P')
+    r_ams_um = _phase_d50(AM_S, 'r_AM_S')
+
     z_min, z_max = float(np.nanmin(zs - rs)), float(np.nanmax(zs + rs))
     thickness = z_max - z_min
 
@@ -338,10 +350,31 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     idx_hit = np.where(hit)[0]
     order = idx_hit[np.argsort(-dc[idx_hit])]
 
+    # ── D50 size calibration ──────────────────────────────────────────
+    # A planar cut shows chord (sqrt(R²-d²)) radii, so the in-slice particle
+    # D50 is smaller than the true D50.  Scale each AM phase's drawn radii so
+    # the in-slice MEDIAN matches the analysis-summary D50 (r_AM_P / r_AM_S)
+    # per case — individual particles keep their spread, only the median is
+    # pinned to the reported value.  (Increases AM area; void is re-pinned to
+    # porosity afterwards and σ/τ/porosity enter COMSOL numerically.)
+    with np.errstate(invalid='ignore'):
+        r_chord0 = np.sqrt(np.maximum(0.0, rs ** 2 - dc ** 2))
+    def _d50_scale(pid, target):
+        if not target:
+            return 1.0
+        sel = (phases == pid) & hit & (r_chord0 > 0)
+        if not np.any(sel):
+            return 1.0
+        med = float(np.median(r_chord0[sel]))
+        return float(np.clip(target / med, 0.5, 2.5)) if med > 0 else 1.0
+    f_scale = {AM_P: _d50_scale(AM_P, r_amp_um),
+               AM_S: _d50_scale(AM_S, r_ams_um)}
+
     for i in order:
         r_slice = float(np.sqrt(max(0.0, rs[i]**2 - (cc[i] - c0)**2)))
         if r_slice <= 0:
             continue
+        r_slice *= f_scale.get(phases[i], 1.0)   # D50-calibrated draw radius
         ac, bc = ca[i], cb[i] - b_origin   # b coordinate relative to grid origin
         ix0 = max(0, int(np.floor((ac - r_slice) / pa)))
         ix1 = min(nx - 1, int(np.ceil((ac + r_slice) / pa)))
@@ -433,6 +466,15 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     interface[am_covered] = 1
     interface[am_uncov]   = 2
 
+    # Raw (pre-scale) in-slice median radius per AM phase — the chord-reduced
+    # size before D50 calibration, reported so the slice effect is transparent
+    # (raw ≤ D50 because a plane cuts spheres off-centre; we then scale ×D50/raw).
+    def _app_med(pid):
+        sel = (phases == pid) & hit & (r_chord0 > 0)
+        return round(float(np.median(r_chord0[sel])), 3) if np.any(sel) else None
+    r_amp_app = _app_med(AM_P)
+    r_ams_app = _app_med(AM_S)
+
     return {
         'case_id': case_id, 'case_name': meta.get('name', case_id),
         'mode': meta.get('mode', ''), 'ps_ratio': meta.get('ps_ratio', ''),
@@ -451,6 +493,11 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
                                    if target_coverage_frac is not None else None),
         'n_am_boundary_px': n_bnd,
         'n_particles_hit': int(hit.sum()),
+        # AM characteristic size (analysis-summary D50, per case) + apparent
+        'r_AM_P_d50_um': (round(r_amp_um, 3) if r_amp_um else None),
+        'r_AM_S_d50_um': (round(r_ams_um, 3) if r_ams_um else None),
+        'r_AM_P_apparent_um': r_amp_app,
+        'r_AM_S_apparent_um': r_ams_app,
     }
 
 
@@ -486,16 +533,46 @@ def render_png(data, out_path: Path):
     se_tag = ' (continuum)' if data['se_continuum'] else ' (discrete)'
     gb_tag = (f', AM_P poly grain ~{gsz}μm / AM_S single-xtal'
               if gb is not None and gb.any() else '')
+    rP = data.get('r_AM_P_d50_um'); rS = data.get('r_AM_S_d50_um')
+    appP = data.get('r_AM_P_apparent_um'); appS = data.get('r_AM_S_apparent_um')
+    d50_bits = []
+    if rP:
+        d50_bits.append(f"AM_P D50 r={rP:.1f}μm" +
+                        (f" (slice~{appP:.1f})" if appP else ""))
+    if rS:
+        d50_bits.append(f"AM_S D50 r={rS:.1f}μm" +
+                        (f" (slice~{appS:.1f})" if appS else ""))
+    d50_line = ('\n' + '   '.join(d50_bits)) if d50_bits else ''
     ax.set_title(f"4-phase microstructure{se_tag}{gb_tag}\n"
                  f"void {fr['void']}% / AM_P {fr['AM_P']}% / "
-                 f"AM_S {fr['AM_S']}% / SE {fr['SE']}%", fontsize=10)
-    handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray',
-                      label=f'{PHASE_NAMES[p]} ({fr[PHASE_NAMES[p]]}%)')
+                 f"AM_S {fr['AM_S']}% / SE {fr['SE']}%{d50_line}", fontsize=10)
+    # legend labels carry the analysis-summary D50 radius per AM phase
+    r_by_phase = {AM_P: rP, AM_S: rS}
+    def _lab(p):
+        base = f'{PHASE_NAMES[p]} ({fr[PHASE_NAMES[p]]}%)'
+        rr = r_by_phase.get(p)
+        return base + (f', r={rr:.1f}μm' if rr else '')
+    handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray', label=_lab(p))
                for p in (AM_P, AM_S, SE, VOID)]
     if gb is not None and gb.any():
         handles.append(Patch(facecolor='#5b5b78',
                               label='AM_P grain boundary'))
     ax.legend(handles=handles, loc='upper right', fontsize=8.5, framealpha=0.9)
+
+    # D50 reference circles (analysis-summary radius, dashed) — true AM size,
+    # for comparison against the chord-reduced particles in the slice.
+    from matplotlib.patches import Circle
+    x_cursor = 0.04 * a_ext
+    y_base = b0 + 0.035 * b_ext
+    for rr, col, name in [(rP, '#1a1a2e', 'AM_P'), (rS, '#8d99ae', 'AM_S')]:
+        if not rr:
+            continue
+        cxr = x_cursor + rr
+        ax.add_patch(Circle((cxr, y_base + rr), rr, fill=False, ec=col,
+                            lw=1.8, ls='--', alpha=0.95, zorder=5))
+        ax.text(cxr, y_base, f'{name} D50', ha='center', va='top',
+                fontsize=7.5, color=col, weight='bold', zorder=5)
+        x_cursor = cxr + rr + 0.05 * a_ext
 
     # ── Panel 2: AM-SE coverage (interface) map ───────────────────────
     ax = axes[1]
