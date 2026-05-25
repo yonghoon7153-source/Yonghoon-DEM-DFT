@@ -34,6 +34,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from scipy import ndimage as _ndi
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
@@ -139,27 +140,102 @@ def numerical_parameters(case_dir: Path, slice_data: dict) -> list[dict]:
     return out
 
 
-def _contours(mask: np.ndarray, pa: float, pb: float, b0: float):
-    """Extract iso-0.5 contours of a boolean mask as list of Nx2 arrays
-    in μm coordinates.  Uses matplotlib contour (no skimage dependency).
+def _clean_mask(mask: np.ndarray, min_area_px: int,
+                fill_holes: bool = False) -> np.ndarray:
+    """Drop connected components smaller than min_area_px (unmeshable specks
+    that break a COMSOL import) and optionally fill small interior holes.
 
-    Returns list of (x_um, y_um) vertex arrays.
+    fill_holes=True → solid domains (AM particles).
+    fill_holes=False → keep interior pores (SE matrix porosity).
     """
-    fig = plt.figure()
-    ax = fig.add_subplot(111)
-    # contour expects (rows=y, cols=x); levels at 0.5
-    cs = ax.contour(mask.astype(float), levels=[0.5])
+    lbl, n = _ndi.label(mask)
+    if n == 0:
+        return mask
+    sizes = np.bincount(lbl.ravel()); sizes[0] = 0
+    out = (sizes >= min_area_px)[lbl]
+    if fill_holes:
+        out = _ndi.binary_fill_holes(out)
+    return out
+
+
+def _rdp(pts: np.ndarray, eps: float) -> np.ndarray:
+    """Ramer–Douglas–Peucker polyline simplification (iterative, no recursion
+    limit).  Removes the dense voxel-staircase vertices COMSOL chokes on."""
+    n = len(pts)
+    if n < 3:
+        return pts
+    keep = np.zeros(n, dtype=bool); keep[0] = keep[-1] = True
+    stack = [(0, n - 1)]
+    while stack:
+        i0, i1 = stack.pop()
+        if i1 <= i0 + 1:
+            continue
+        a = pts[i0]; ab = pts[i1] - a
+        L2 = float(ab[0] ** 2 + ab[1] ** 2)
+        seg = pts[i0 + 1:i1] - a
+        if L2 == 0.0:
+            d = np.hypot(seg[:, 0], seg[:, 1])
+        else:
+            t = (seg[:, 0] * ab[0] + seg[:, 1] * ab[1]) / L2
+            d = np.hypot(seg[:, 0] - t * ab[0], seg[:, 1] - t * ab[1])
+        if d.size == 0:
+            continue
+        k = int(np.argmax(d))
+        if d[k] > eps:
+            idx = i0 + 1 + k
+            keep[idx] = True
+            stack.append((i0, idx)); stack.append((idx, i1))
+    return pts[keep]
+
+
+def _chaikin(pts: np.ndarray, iters: int, closed: bool) -> np.ndarray:
+    """Chaikin corner-cutting → smooth, rounded polyline (smears voxel steps)."""
+    p = pts
+    for _ in range(iters):
+        if closed:
+            a = p; b = np.roll(p, -1, axis=0)
+        else:
+            a = p[:-1]; b = p[1:]
+        q = a + 0.25 * (b - a)
+        r = a + 0.75 * (b - a)
+        new = np.empty((len(q) + len(r), 2))
+        new[0::2] = q; new[1::2] = r
+        p = new if closed else np.vstack([pts[0], new, pts[-1]])
+    return p
+
+
+def _contours(mask: np.ndarray, pa: float, pb: float, b0: float,
+              smooth: bool = True, min_area_px: int = 15,
+              fill_holes: bool = False):
+    """Extract SMOOTH iso-0.5 contours of a boolean mask as Nx2 arrays in μm.
+
+    Voxel staircases are smeared into clean curves so the result is usable as
+    a COMSOL geometry boundary: (1) prune unmeshable specks, (2) Gaussian
+    sub-pixel iso-contour, (3) RDP vertex reduction, (4) Chaikin rounding.
+    """
+    m = _clean_mask(mask, min_area_px, fill_holes=fill_holes)
+    if m.sum() == 0:
+        return []
+    work = _ndi.gaussian_filter(m.astype(float), sigma=1.0) if smooth \
+        else m.astype(float)
+    fig = plt.figure(); ax = fig.add_subplot(111)
+    cs = ax.contour(work, levels=[0.5])
     segs = []
-    # matplotlib >=3.8 uses .allsegs
     allsegs = getattr(cs, 'allsegs', None)
     if allsegs:
         for level_segs in allsegs:
             for seg in level_segs:
-                if len(seg) >= 3:
-                    # seg columns: (x_idx, y_idx) in array coords
-                    xs = seg[:, 0] * pa
-                    ys = seg[:, 1] * pb + b0
-                    segs.append(np.column_stack([xs, ys]))
+                if len(seg) < 4:
+                    continue
+                xy = np.asarray(seg, dtype=float)
+                closed = bool(np.allclose(xy[0], xy[-1]))
+                if smooth:
+                    xy = _rdp(xy, eps=0.6)
+                    if len(xy) >= 4:
+                        xy = _chaikin(xy, iters=2, closed=closed)
+                xs = xy[:, 0] * pa
+                ys = xy[:, 1] * pb + b0
+                segs.append(np.column_stack([xs, ys]))
     plt.close(fig)
     return segs
 
@@ -325,15 +401,25 @@ def main():
         json.dumps({p['parameter']: p for p in params}, indent=2))
     print(f'  수치 파라미터 → parameters.csv ({len(params)} rows)')
 
-    # ── (2) Geometry — phase contours ─────────────────────────────────
+    # ── (2) Geometry — smooth phase contours (COMSOL-meshable) ─────────
     labels = sd['labels']
     pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
+    # specks below this area can't be meshed cleanly → pruned
+    min_area_px = max(12, int((sd['n_pixels'] / 110) ** 2))
     phase_contours = {}
-    for ph_id, ph_name in [(AM_P, 'AM_P'), (AM_S, 'AM_S'), (SE, 'SE')]:
+    # AM particles = solid domains (fill interior holes); SE keeps its pores;
+    # void = isolated pores exported as their own layer (for SE = Rect − AM −
+    # void Boolean subtraction → watertight interfaces).
+    for ph_id, ph_name, fill in [(AM_P, 'AM_P', True),
+                                 (AM_S, 'AM_S', True),
+                                 (SE,   'SE',   False),
+                                 (VOID, 'void', False)]:
         mask = (labels == ph_id)
         if mask.sum() == 0:
             continue
-        phase_contours[ph_name] = _contours(mask, pa, pb, b0)
+        phase_contours[ph_name] = _contours(mask, pa, pb, b0,
+                                            min_area_px=min_area_px,
+                                            fill_holes=fill)
     n_seg = sum(len(v) for v in phase_contours.values())
 
     # coverage as geometry — split AM outline into covered / inactive arcs
@@ -365,11 +451,23 @@ COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
 ─────────────────────────────────────────────────────────────────
 [A] DOMAIN — Geometry → Import → geometry.dxf
 ─────────────────────────────────────────────────────────────────
-  Layer AM_P  = 대입자 활물질 domain  (closed polyline)
-  Layer AM_S  = 소입자 활물질 domain
-  Layer SE    = 고체전해질 continuum domain
-  void        = SE/AM 사이 빈 영역 → DXF 미포함, COMSOL background로 둠
-                (또는 SE에 흡수시켜도 됨 — porosity는 [B]에서 수치 처리)
+  Layer AM_P  = 대입자 활물질 domain  (다결정, 원형, closed polyline)
+  Layer AM_S  = 소입자 활물질 domain  (단결정, faceted+둥근 모서리)
+  Layer SE    = 고체전해질 CONNECTED continuum domain (단일 연결망)
+  void        = SE 내부의 고립 pore (closed polyline, SE 안의 구멍)
+
+  ★ 경계는 모두 smoothing 처리됨 (Gaussian iso-contour + RDP + Chaikin)
+    → voxel 계단 제거, COMSOL meshing 가능한 매끈한 polyline.
+    작은 speck(메시 불가)은 자동 prune.
+
+  ★ SE 연결성 보장: SE는 단일 percolating network로 만들어짐 (3D 99.5%
+    percolation 반영).  단면이 끊어 보이는 건 slice artifact이므로 closing
+    으로 복원함 — 끊긴 SE면 COMSOL 이온 도메인이 안 풀림.
+
+  ★ 권장 SE 구성 (watertight 계면):
+    COMSOL에서 SE domain = (외곽 Rectangle) − (AM_P ∪ AM_S ∪ void pores)
+    의 Boolean Difference로 만들면 AM-SE 계면이 정확히 공유됨.
+    (geometry.dxf의 SE layer는 시각/검산용; 위 방식이 mesh가 더 깨끗)
 
   축: {sd['a_label']} (가로) × {sd['b_label']} (세로)
   {'※ b축 = z = through-thickness (이온 전달 방향)' if args.axis in ('x','y') else '※ XY 수평 단면'}

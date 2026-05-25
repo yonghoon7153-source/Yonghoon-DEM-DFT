@@ -48,49 +48,76 @@ def _disk(radius_px: int) -> np.ndarray:
 
 def _se_to_continuum(labels: np.ndarray, r_se_px: float,
                       target_void_frac: float | None = None) -> np.ndarray:
-    """Convert discrete SE particles → continuous SE matrix, calibrated to
-    preserve the 3D-measured porosity.
+    """Convert discrete SE particles → a single CONNECTED SE matrix, then
+    re-insert porosity as isolated interior pores.
 
-    Morphological closing bridges the sub-particle gaps that are slice-plane
-    artefacts (in 3D those gaps are filled by SE particles just above/below
-    the cut).  BUT unconstrained closing over-fills — it also eats genuine
-    porosity, inflating SE area fraction above the 3D φ_SE (violates
-    Delesse's stereology principle: slice area fraction = volume fraction).
+    SE percolates ~99.5% top↔bottom in 3D, so the ionic FEM domain must be
+    connected — a thin 2D slice that severs out-of-plane SE bridges would
+    wrongly show isolated SE islands, and COMSOL cannot solve a disconnected
+    electrolyte.  We therefore:
 
-    Calibration: fill only the void pixels CLOSEST to existing SE first
-    (true inter-particle bridges), stopping when void fraction reaches the
-    3D-measured porosity.  This keeps SE connected AND preserves the
-    physics-measured void fraction.
+      (1) close the discrete SE into ONE connected continuum (bridges the
+          sub-slice gaps that 3D SE fills just above/below the cut), then
+      (2) carve the 3D-measured porosity back in as ISOLATED interior pores
+          — holes placed fully inside thick SE.  A hole strictly interior to
+          a connected 2D region never disconnects it, so SE stays a single
+          percolating network while void fraction is pinned to the 3D value.
 
-    target_void_frac : 3D porosity (0-1).  None → fill all closed region
-                       (legacy, may over-fill).
+    target_void_frac : 3D porosity (0-1).  None → fully filled (no pores).
     """
     se = (labels == SE)
     is_am = (labels == AM_P) | (labels == AM_S)
     rad = max(1, int(round(r_se_px)))
     se_closed = _ndi.binary_closing(se, structure=_disk(rad))
-    fillable = se_closed & (~is_am) & (labels == VOID)
     out = labels.copy()
+    out[se_closed & (~is_am) & (labels == VOID)] = SE      # connected SE matrix
 
-    if target_void_frac is None or fillable.sum() == 0:
-        out[fillable] = SE
+    if target_void_frac is None:
         return out
 
-    total = labels.size
-    cur_void = int(np.sum(labels == VOID))
-    target_void = int(round(target_void_frac * total))
-    n_to_fill = cur_void - target_void
-    if n_to_fill <= 0:
-        return out                       # already at/below target — don't fill
-    if n_to_fill >= int(fillable.sum()):
-        out[fillable] = SE               # fill all (still above target)
+    total = out.size
+    need = int(round(target_void_frac * total)) - int(np.sum(out == VOID))
+    if need <= 0:
         return out
-    # distance of every pixel to nearest SE; fill closest fillable first
-    dist = _ndi.distance_transform_edt(~se)
-    fy, fx = np.where(fillable)
-    order = np.argsort(dist[fy, fx])     # closest-to-SE bridges first
-    sel = order[:n_to_fill]
-    out[fy[sel], fx[sel]] = SE
+
+    # Multi-scale isolated pores: big pores first, then smaller to top up to
+    # the target.  Each pore is carved only where it is fully interior to the
+    # CURRENT SE (distance-to-edge > pore radius), so SE never disconnects;
+    # a blocked mask keeps pores apart so they cannot merge into a channel.
+    ny, nx = out.shape
+    rng = np.random.default_rng(0)
+    blocked = np.zeros((ny, nx), dtype=bool)
+    pr0 = max(3, int(round(r_se_px)))
+    for pr in (pr0, max(2, pr0 // 2), 2):
+        if need <= 0:
+            break
+        se_now = (out == SE)
+        dist_edge = _ndi.distance_transform_edt(se_now)
+        cand = se_now & (dist_edge > pr + 1) & (~blocked)
+        cy, cx = np.where(cand)
+        if len(cy) == 0:
+            continue
+        yy, xx = np.ogrid[-pr:pr + 1, -pr:pr + 1]
+        disc = (yy * yy + xx * xx) <= pr * pr
+        for idx in rng.permutation(len(cy)):
+            if need <= 0:
+                break
+            py, px = int(cy[idx]), int(cx[idx])
+            if blocked[py, px]:
+                continue
+            y0, y1, x0, x1 = py - pr, py + pr + 1, px - pr, px + pr + 1
+            if y0 < 0 or x0 < 0 or y1 > ny or x1 > nx:
+                continue
+            region = out[y0:y1, x0:x1]
+            m = disc & (region == SE)
+            c = int(m.sum())
+            if c == 0:
+                continue
+            region[m] = VOID
+            need -= c
+            by0, by1 = max(0, py - 2 * pr), min(ny, py + 2 * pr + 1)
+            bx0, bx1 = max(0, px - 2 * pr), min(nx, px + 2 * pr + 1)
+            blocked[by0:by1, bx0:bx1] = True
     return out
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -157,28 +184,40 @@ def _am_p_grain_boundaries(labels, pa, pb, grain_size_um):
 
 
 def _faceted_inside(GA, GB, ac, bc, r, seed):
-    """Rounded, randomly-oriented polygon footprint for a single-crystal
-    (AM_S) particle.
+    """Sharp, irregular polygon footprint for a single-crystal (AM_S) particle.
 
     Single-crystal NCM grows as faceted rhombohedral/hexagonal habit —
-    rounded polyhedra, not spheres (Bi 2020 Science; Kim 2019 ACS Energy
-    Lett).  Polycrystalline secondary particles (AM_P), by contrast, are
-    spheroidal agglomerates → kept circular.  The n-gon inradius is set so
-    area = πr², preserving the AM_S phase fraction.  The facet ORIENTATION
-    is a literature-based habit (DEM provides spheres only), not measured.
+    angular polyhedra with flat faces, NOT spheres (Bi 2020 Science; Kim
+    2019 ACS Energy Lett).  Each particle gets 5–7 straight facets at
+    INDEPENDENT inradii (per-facet irregularity), so every crystal is a
+    unique convex polygon — realistic SEM habit, unlike idealised regular
+    Voronoi cells.  Polycrystalline secondary particles (AM_P) stay circular
+    (spheroidal agglomerate).  Base inradius is area-preserving (≈πr²); the
+    facet ORIENTATION/shape is a literature-based habit, not measured.
     """
     rng = np.random.default_rng(int(seed) & 0xFFFFFFFF)
-    n = int(rng.integers(5, 8))                 # 5–7 facets
+    n = int(rng.integers(5, 8))                          # 5–7 facets
     theta0 = rng.uniform(0, 2 * np.pi)
-    r_in = r * np.sqrt(np.pi / (n * np.tan(np.pi / n)))   # area-preserving
+    r_in = r * np.sqrt(np.pi / (n * np.tan(np.pi / n)))  # area-preserving base
+    jit = 1.0 + rng.uniform(-0.16, 0.16, n)              # per-facet irregularity
+
+    # Build the sharp polygon radial profile R(θ), then circularly smooth it:
+    # this ROUNDS the sharp corners (cusps in R) while leaving the flat faces
+    # — single-crystal NCM shows faceted faces with smoothly rounded edges.
+    M = 720
+    tt = np.arange(M) * (2 * np.pi / M)
+    rel = (tt - theta0) % (2 * np.pi)
+    k = (np.floor(rel / (2 * np.pi / n)).astype(int)) % n
+    local = rel - (k + 0.5) * (2 * np.pi / n)            # -π/n … π/n within facet
+    R_sharp = (r_in * jit[k]) / np.cos(local)
+    R_round = _ndi.gaussian_filter1d(R_sharp, sigma=M / (n * 7.0), mode='wrap')
+
     dx = GA - ac; dy = GB - bc
     rad = np.hypot(dx, dy)
-    th = np.arctan2(dy, dx)
-    sector = ((th - theta0) % (2 * np.pi / n)) - np.pi / n
-    Rb = r_in / np.cos(sector)
-    Rb = np.minimum(Rb, r * 1.06)               # round the corners
-    amp = rng.uniform(0.0, 0.06); ph = rng.uniform(0, 2 * np.pi)
-    Rb = Rb * (1 + amp * np.cos(3 * (th - ph)))  # slight per-particle irregularity
+    tha = np.arctan2(dy, dx) % (2 * np.pi)
+    xp = np.concatenate([tt, [2 * np.pi]])
+    fp = np.concatenate([R_round, [R_round[0]]])
+    Rb = np.interp(tha.ravel(), xp, fp).reshape(tha.shape)
     return rad <= Rb
 
 
