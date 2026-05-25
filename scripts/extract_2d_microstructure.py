@@ -145,41 +145,105 @@ def slice_microstructure(case_dir: Path, z_frac: float = 0.5,
     fracs = {PHASE_NAMES[p]: round(100 * np.sum(labels == p) / total, 2)
              for p in (VOID, AM_P, AM_S, SE)}
 
+    # ── AM-SE interface (coverage) detection ──────────────────────────
+    # An AM pixel on the boundary is "SE-covered" (active ionic interface)
+    # if any 4-neighbour is SE; "uncovered" if it borders void/AM only.
+    # Per-slice coverage % = covered AM-boundary / total AM-boundary —
+    # the 2D analogue of the dashboard's cov_AM (SE-touching surface).
+    is_am = (labels == AM_P) | (labels == AM_S)
+    is_se = (labels == SE)
+    # shifted neighbour SE presence
+    se_up    = np.zeros_like(is_se); se_up[:-1, :]   = is_se[1:, :]
+    se_down  = np.zeros_like(is_se); se_down[1:, :]  = is_se[:-1, :]
+    se_left  = np.zeros_like(is_se); se_left[:, :-1] = is_se[:, 1:]
+    se_right = np.zeros_like(is_se); se_right[:, 1:] = is_se[:, :-1]
+    se_neighbour = se_up | se_down | se_left | se_right
+    # AM boundary = AM pixel adjacent to a non-AM pixel (any direction)
+    not_am = ~is_am
+    nb_up    = np.zeros_like(not_am); nb_up[:-1, :]   = not_am[1:, :]
+    nb_down  = np.zeros_like(not_am); nb_down[1:, :]  = not_am[:-1, :]
+    nb_left  = np.zeros_like(not_am); nb_left[:, :-1] = not_am[:, 1:]
+    nb_right = np.zeros_like(not_am); nb_right[:, 1:] = not_am[:, :-1]
+    am_boundary = is_am & (nb_up | nb_down | nb_left | nb_right)
+    am_covered  = am_boundary & se_neighbour     # AM perimeter touching SE
+    am_uncov    = am_boundary & ~se_neighbour
+    n_bnd = int(am_boundary.sum())
+    coverage_pct = round(100 * int(am_covered.sum()) / n_bnd, 2) if n_bnd else 0.0
+
+    # Interface label grid (for visualization): 0 none / 1 covered / 2 uncovered
+    interface = np.zeros_like(labels)
+    interface[am_covered] = 1
+    interface[am_uncov]   = 2
+
     return {
         'case_id': case_id, 'case_name': meta.get('name', case_id),
         'mode': meta.get('mode', ''), 'ps_ratio': meta.get('ps_ratio', ''),
-        'labels': labels, 'box_x_um': box_x_um, 'box_y_um': box_y_um,
+        'labels': labels, 'interface': interface,
+        'box_x_um': box_x_um, 'box_y_um': box_y_um,
         'z0_um': z0, 'z_frac': z_frac, 'z_range_um': (z_min, z_max),
         'n_pixels': nx, 'px_um': px,
         'phase_fracs': fracs,
+        'coverage_2d_pct': coverage_pct,
+        'n_am_boundary_px': n_bnd,
         'n_particles_hit': int(hit.sum()),
     }
 
 
 def render_png(data, out_path: Path):
+    from matplotlib.patches import Patch
     labels = data['labels']
+    interface = data['interface']
+    fr = data['phase_fracs']
+    aspect_h = data['box_y_um'] / data['box_x_um']
+    extent = [0, data['box_x_um'], 0, data['box_y_um']]
+
+    fig, axes = plt.subplots(1, 2, figsize=(15, 7 * aspect_h + 1.5))
+
+    # ── Panel 1: 4-phase microstructure ───────────────────────────────
+    ax = axes[0]
     cmap = ListedColormap([PHASE_COLORS[p] for p in (VOID, AM_P, AM_S, SE)])
     norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
-
-    fig, ax = plt.subplots(figsize=(8, 8 * data['box_y_um'] / data['box_x_um'] + 1))
     ax.imshow(labels, origin='lower', cmap=cmap, norm=norm,
-               extent=[0, data['box_x_um'], 0, data['box_y_um']],
-               interpolation='nearest', aspect='equal')
+               extent=extent, interpolation='nearest', aspect='equal')
     ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
-    fr = data['phase_fracs']
-    ax.set_title(
-        f"{data['case_name']} — 2D microstructure slice\n"
-        f"z = {data['z0_um']:.1f} μm ({data['z_frac']:.0%} of {data['z_range_um'][1]:.0f} μm), "
-        f"{data['n_pixels']} px ({data['px_um']:.3f} μm/px)\n"
-        f"void {fr['void']}% / AM_P {fr['AM_P']}% / AM_S {fr['AM_S']}% / SE {fr['SE']}%",
-        fontsize=10)
-    # legend
-    from matplotlib.patches import Patch
+    ax.set_title(f"4-phase microstructure\n"
+                 f"void {fr['void']}% / AM_P {fr['AM_P']}% / "
+                 f"AM_S {fr['AM_S']}% / SE {fr['SE']}%", fontsize=10)
     handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray',
                       label=f'{PHASE_NAMES[p]} ({fr[PHASE_NAMES[p]]}%)')
                for p in (AM_P, AM_S, SE, VOID)]
-    ax.legend(handles=handles, loc='upper right', fontsize=9,
-              framealpha=0.9)
+    ax.legend(handles=handles, loc='upper right', fontsize=8.5, framealpha=0.9)
+
+    # ── Panel 2: AM-SE coverage (interface) map ───────────────────────
+    ax = axes[1]
+    # base: AM faint gray, SE faint gold, void white
+    base = np.zeros_like(labels)
+    cmap_b = ListedColormap(['#ffffff', '#e8e8ee', '#e8e8ee', '#faf3d0'])
+    ax.imshow(labels, origin='lower', cmap=cmap_b,
+               norm=BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], 4),
+               extent=extent, interpolation='nearest', aspect='equal')
+    # overlay covered (green) / uncovered (red) AM boundary
+    cov_overlay = np.ma.masked_where(interface == 0, interface)
+    cmap_ov = ListedColormap(['#10b981', '#ef4444'])   # 1=covered, 2=uncov
+    ax.imshow(cov_overlay, origin='lower', cmap=cmap_ov,
+               norm=BoundaryNorm([0.5, 1.5, 2.5], 2),
+               extent=extent, interpolation='nearest', aspect='equal')
+    ax.set_xlabel('x (μm)'); ax.set_ylabel('y (μm)')
+    ax.set_title(f"AM–SE interface (coverage)\n"
+                 f"2D coverage = {data['coverage_2d_pct']}%  "
+                 f"({data['n_am_boundary_px']} AM-boundary px)", fontsize=10)
+    handles2 = [Patch(facecolor='#10b981', label=f"SE-covered ({data['coverage_2d_pct']}%)"),
+                Patch(facecolor='#ef4444', label=f"uncovered ({round(100-data['coverage_2d_pct'],1)}%)"),
+                Patch(facecolor='#faf3d0', edgecolor='gray', label='SE bulk'),
+                Patch(facecolor='#e8e8ee', edgecolor='gray', label='AM bulk')]
+    ax.legend(handles=handles2, loc='upper right', fontsize=8.5, framealpha=0.9)
+
+    fig.suptitle(
+        f"{data['case_name']} — 2D microstructure  "
+        f"(mode: {data['mode']}, ps: {data['ps_ratio'] or '—'}, "
+        f"z={data['z0_um']:.1f}μm @{data['z_frac']:.0%}, "
+        f"{data['n_pixels']}px / {data['px_um']:.3f}μm·px⁻¹)",
+        fontsize=11, y=1.0)
     fig.tight_layout()
     out_path.parent.mkdir(parents=True, exist_ok=True)
     fig.savefig(out_path, dpi=130, bbox_inches='tight')
@@ -254,7 +318,8 @@ def main():
             fr = data['phase_fracs']
             print(f'  [{tag}] void {fr["void"]}% AM_P {fr["AM_P"]}% '
                   f'AM_S {fr["AM_S"]}% SE {fr["SE"]}%  '
-                  f'({data["n_particles_hit"]} particles in slice)')
+                  f'| AM-SE coverage {data["coverage_2d_pct"]}%  '
+                  f'({data["n_particles_hit"]} particles)')
             n_ok += 1
 
     print(f'\nDone — {n_ok} slices.')
