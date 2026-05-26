@@ -215,6 +215,7 @@
       <button class="btn btn-primary" onclick="load2DViewer(false)">2D 뷰어 로드</button>
       <button class="btn" id="regen2d-btn" onclick="load2DViewer(true)"
               style="display:none">다른 배치 생성 (랜덤)</button>
+      <button class="btn" id="auto2d-btn" onclick="load2DAuto()">생성 + 자동보정</button>
       <a class="btn" id="zip2d-btn" href="/results/{{ case.id }}/2d-export.zip"
          style="display:none">ZIP 다운로드 (PNG·README·CSV)</a>
     </div>
@@ -223,6 +224,9 @@
     <div id="viewer2d-status" style="color:#94a3b8; font-size:13px; padding:8px">
       2D 미세구조 생성 중… (처음 한 번은 수 초 소요)
     </div>
+    <div id="auto2d-report" style="display:none; font-size:12.5px; margin:4px 0 8px;
+         padding:8px 12px; background:#0f172a; border:1px solid #334155; border-radius:8px;
+         color:#cbd5e1; white-space:pre; overflow-x:auto"></div>
     <img id="viewer2d-img" src="" alt="2D microstructure"
          style="display:none; max-width:100%; border-radius:8px; cursor:zoom-in"
          onclick="openModal(this.src, '2D representative microstructure')">
@@ -296,6 +300,58 @@ function load2DViewer(force) {
   let url = `/results/{{ case.id }}/2d-microstructure.png?v=${Date.now()}&seed=${cur2dSeed}`;
   if (force) url += '&fresh=1';
   img.src = url;
+}
+
+// Generate → check → auto fine-tune (coverage offset + SE bridge), then show
+// the figure plus a report of achieved-vs-target metrics.
+function load2DAuto() {
+  const c = document.getElementById('viewer2d-container');
+  c.style.display = 'block';
+  cur2dSeed = Math.floor(Math.random() * 1000000);
+  const img = document.getElementById('viewer2d-img');
+  const status = document.getElementById('viewer2d-status');
+  const zip = document.getElementById('zip2d-btn');
+  const regen = document.getElementById('regen2d-btn');
+  const rep = document.getElementById('auto2d-report');
+  viewer2dLoaded = true;
+  status.textContent = '자동보정 중… (생성→검사→미세조정 반복, 최대 ~1분)';
+  status.style.display = 'block';
+  img.style.display = 'none';
+  rep.style.display = 'none';
+  img.onload = () => {
+    status.style.display = 'none';
+    img.style.display = 'block';
+    zip.style.display = 'inline-block';
+    regen.style.display = 'inline-block';
+    zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;
+    fetch(`/results/{{ case.id }}/2d-auto-report.json?seed=${cur2dSeed}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(j => { if (j) showAutoReport(j); });
+  };
+  img.onerror = () => {
+    status.textContent = '자동보정 실패 — atoms.csv / 파라미터를 확인하세요.';
+    viewer2dLoaded = false;
+  };
+  img.src = `/results/{{ case.id }}/2d-auto.png?v=${Date.now()}&seed=${cur2dSeed}`;
+}
+
+function showAutoReport(j) {
+  const rep = document.getElementById('auto2d-report');
+  const f = j.phase_fracs || {};
+  const fmt = (v) => (v == null ? '—' : (+v).toFixed(1));
+  let s = '자동보정 결과 (achieved → target)\n';
+  s += `  AM_P coverage : ${fmt(j.covP)}%  → ${fmt(j.tgtP)}%\n`;
+  s += `  AM_S coverage : ${fmt(j.covS)}%  → ${fmt(j.tgtS)}%\n`;
+  s += `  SE 연결       : ${fmt(j.se_conn)}%  (이온 경로)\n`;
+  s += `  분율          : void ${fmt(f.void)} / AM_P ${fmt(f.AM_P)} / AM_S ${fmt(f.AM_S)} / SE ${fmt(f.SE)}  (P:S ${j.ps_ratio || '—'})\n`;
+  if (j.report && j.report.length) {
+    s += '  반복:';
+    j.report.forEach(r => {
+      s += ` [#${r.iter} covP ${fmt(r.covP)} covS ${fmt(r.covS)} SE ${fmt(r.se_conn)}%]`;
+    });
+  }
+  rep.textContent = s;
+  rep.style.display = 'block';
 }
 
 function switchTab(btn, id) {

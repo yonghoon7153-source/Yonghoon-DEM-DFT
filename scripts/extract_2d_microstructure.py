@@ -487,7 +487,9 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
 def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                               grain_size_um: float = 0.8,
                               single_crystal_facets: bool = True,
-                              seed: int = 0):
+                              seed: int = 0,
+                              cov_off_p: float = 0.022, cov_off_s: float = 0.030,
+                              bridge_dmax_um: float = 3.0):
     """Build a REPRESENTATIVE 2D microstructure from the 3D statistics
     (not a literal slice).
 
@@ -711,7 +713,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                 continue
             sel = ph_px == phase_val
             if sel.any():
-                off = 0.030 if phase_val == AM_S else 0.022   # shell-widen comp.
+                off = cov_off_s if phase_val == AM_S else cov_off_p  # shell-widen comp.
                 thr = np.quantile(g[sel], min(0.999, cov_t + off))
                 unc[sel] = g[sel] > thr
 
@@ -799,7 +801,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         main = int(sizes.argmax())
         dist_main, (iy, ix) = _ndi.distance_transform_edt(~(lab == main),
                                                           return_indices=True)
-        DMAX = 3.0 / pa                              # ≤3 μm bridges only
+        DMAX = bridge_dmax_um / pa                   # bridge length cap (μm)
         for comp in range(1, ncomp + 1):
             if comp == main:
                 continue
@@ -893,6 +895,57 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         'r_AM_S_apparent_um': (round(r_ams_um, 3) if r_ams_um else None),
         'synthetic': True,
     }
+
+
+def _se_connectivity_pct(labels):
+    """Largest SE connected component as % of all SE (ionic-network health)."""
+    se = (labels == SE)
+    n_se = int(se.sum())
+    if n_se == 0:
+        return 0.0
+    lab, ncomp = _ndi.label(se)
+    if ncomp <= 1:
+        return 100.0
+    sizes = np.bincount(lab.ravel()); sizes[0] = 0
+    return round(100.0 * sizes.max() / n_se, 1)
+
+
+def synthesize_calibrated(case_dir: Path, n_pixels: int = 600, seed: int = 0,
+                          grain_size_um: float = 0.8, iters: int = 5,
+                          cov_tol: float = 1.0, se_target: float = 95.0):
+    """Closed-loop generate → measure → fine-tune.  Repeatedly synthesizes,
+    measures per-phase AM-SE coverage and SE connectivity, and nudges the
+    shell-widen offsets (toward the 3D coverage) and the SE bridge length
+    (toward a connected network), keeping the best result.  Returns
+    (best_data, report_rows)."""
+    off_p, off_s, dmax = 0.022, 0.030, 3.0
+    best, best_score, report = None, 1e18, []
+    for it in range(max(1, iters)):
+        d = synthesize_microstructure(case_dir, n_pixels=n_pixels, seed=seed,
+                                      grain_size_um=grain_size_um,
+                                      cov_off_p=off_p, cov_off_s=off_s,
+                                      bridge_dmax_um=dmax)
+        if d is None:
+            return None, []
+        cp, cs = d.get('coverage_AM_P_pct'), d.get('coverage_AM_S_pct')
+        tp, ts = d.get('coverage_AM_P_target_pct'), d.get('coverage_AM_S_target_pct')
+        se = _se_connectivity_pct(d['labels'])
+        ep = (tp - cp) if (tp is not None and cp is not None) else 0.0
+        es = (ts - cs) if (ts is not None and cs is not None) else 0.0
+        report.append({'iter': it + 1, 'covP': cp, 'tgtP': tp, 'covS': cs,
+                       'tgtS': ts, 'se_conn': se, 'off_p': round(off_p, 3),
+                       'off_s': round(off_s, 3), 'dmax_um': round(dmax, 1)})
+        score = abs(ep) + abs(es) + max(0.0, se_target - se)
+        if score < best_score:
+            best_score, best = score, d
+        if abs(ep) <= cov_tol and abs(es) <= cov_tol and se >= se_target:
+            break
+        # nudge offsets toward target coverage; widen bridge if SE fragmented
+        off_p = float(min(0.2, max(0.0, off_p + ep / 100.0)))
+        off_s = float(min(0.2, max(0.0, off_s + es / 100.0)))
+        if se < se_target:
+            dmax = min(8.0, dmax + 1.5)
+    return best, report
 
 
 def render_png(data, out_path: Path):

@@ -5575,6 +5575,61 @@ def _synth_2d(case_id, px=600, seed=0, force=False):
                       default=lambda o: float(o) if hasattr(o, '__float__') else str(o)))
 
 
+def _synth_2d_auto(case_id, seed=0, px=450, iters=3):
+    """Closed-loop generate→check→fine-tune; caches PNG + a JSON report
+    (achieved vs target coverage, SE connectivity, per-iteration trace)."""
+    import sys as _sys
+    import importlib
+    case_dir = get_case_dir(case_id)
+    results_dir = get_results_dir(case_id)
+    if not os.path.exists(os.path.join(results_dir, 'atoms.csv')):
+        return None
+    _sd = app.config['SCRIPTS_FOLDER']
+    if _sd not in _sys.path:
+        _sys.path.insert(0, _sd)
+    import extract_2d_microstructure as ex2d
+    ex2d = importlib.reload(ex2d)
+    data, report = ex2d.synthesize_calibrated(Path(case_dir), n_pixels=px,
+                                              seed=seed, iters=iters)
+    if data is None:
+        return None
+    png = os.path.join(results_dir, f'microstructure_2d_auto_s{seed}.png')
+    ex2d.render_png(data, Path(png))
+    out = {'report': report, 'se_conn': ex2d._se_connectivity_pct(data['labels']),
+           'phase_fracs': data.get('phase_fracs'), 'ps_ratio': data.get('ps_ratio'),
+           'covP': data.get('coverage_AM_P_pct'), 'tgtP': data.get('coverage_AM_P_target_pct'),
+           'covS': data.get('coverage_AM_S_pct'), 'tgtS': data.get('coverage_AM_S_target_pct')}
+    out = json.loads(json.dumps(out, default=lambda o: float(o) if hasattr(o, '__float__') else str(o)))
+    with open(os.path.join(results_dir, f'microstructure_2d_auto_s{seed}.json'), 'w') as f:
+        json.dump(out, f)
+    return out
+
+
+@app.route('/results/<case_id>/2d-auto.png')
+def serve_2d_auto(case_id):
+    """Generate with the auto-calibration loop and serve the figure."""
+    seed = int(request.args.get('seed', 0))
+    try:
+        rep = _synth_2d_auto(case_id, seed=seed)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    if rep is None:
+        return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
+    png = os.path.join(get_results_dir(case_id), f'microstructure_2d_auto_s{seed}.png')
+    return send_file(png, mimetype='image/png', as_attachment=False,
+                     download_name=f'microstructure_2d_auto_{case_id}_s{seed}.png')
+
+
+@app.route('/results/<case_id>/2d-auto-report.json')
+def serve_2d_auto_report(case_id):
+    seed = int(request.args.get('seed', 0))
+    p = os.path.join(get_results_dir(case_id), f'microstructure_2d_auto_s{seed}.json')
+    if not os.path.exists(p):
+        return jsonify({'error': 'not generated yet'}), 404
+    return send_file(p, mimetype='application/json')
+
+
 @app.route('/results/<case_id>/2d-microstructure.png')
 def serve_2d_microstructure(case_id):
     """Procedural 2D representative microstructure figure (cached PNG)."""
