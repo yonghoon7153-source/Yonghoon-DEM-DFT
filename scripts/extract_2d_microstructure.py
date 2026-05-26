@@ -602,8 +602,11 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                      center_void=False, stratify_z=False):
         if not sampler or need_px <= 0:
             return
-        placed = 0; stale = 0; n_ok = 0
+        placed = 0; stale = 0
         K = 8                                        # z-bands for stratified placement
+        band_n = np.zeros(K)                         # particles placed per band
+        band_stale = np.zeros(K, dtype=int)          # fails since last success per band
+        BAND_SAT = 3000                              # band full once this many fails
         while placed < need_px and stale < stale_max:
             r_px = max(1.5, sampler() / pa)
             rem = need_px - placed                   # bound end-of-fill overshoot
@@ -614,15 +617,21 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if r_px > 0.48 * min(nx, ny):
                 stale += 1; continue
             cx = rng.uniform(r_px, nx - r_px)
-            if stratify_z:                           # spread evenly over height z
-                band = n_ok % K
+            band = -1
+            if stratify_z:
+                # fill the LEAST-occupied non-saturated z-band → even height
+                # distribution without the round-robin trap (a full band can no
+                # longer freeze the whole placement).
+                avail = np.where(band_stale < BAND_SAT)[0]
+                if avail.size == 0:
+                    break
+                mn = band_n[avail].min()
+                band = int(rng.choice(avail[band_n[avail] == mn]))
                 clo = max(r_px, band * ny / K)
                 chi = min(ny - r_px, (band + 1) * ny / K)
                 cy = rng.uniform(clo, chi) if chi > clo else rng.uniform(r_px, ny - r_px)
             else:
                 cy = rng.uniform(r_px, ny - r_px)
-            if center_void and labels[int(cy), int(cx)] != VOID:
-                stale += 1; continue
             # NON-TOUCHING: require a thin SE gap around the particle so no two
             # AM share a boundary (electrons flow via the SE+additive matrix, so
             # AM-AM contact / AM percolation is not needed).  The footprint
@@ -634,23 +643,31 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             GA, GB = np.meshgrid(ga, gb)
             d2 = (GA - cx) ** 2 + (GB - cy) ** 2
             region = labels[y0:y1, x0:x1]
-            if np.any((region != VOID) & (d2 <= rg * rg)):   # would touch another AM
-                stale += 1; continue
-            if faceted and single_crystal_facets:
-                pid[0] += 1
-                mask = _faceted_inside(GA, GB, cx, cy, r_px, seed=seed * 7919 + pid[0])
-            else:
-                mask = d2 <= r_px ** 2
-            new = mask & (region == VOID)
-            if not new.any():
-                stale += 1; continue
+            ok = not (center_void and labels[int(cy), int(cx)] != VOID)
+            if ok and np.any((region != VOID) & (d2 <= rg * rg)):   # would touch AM
+                ok = False
+            if ok:
+                if faceted and single_crystal_facets:
+                    pid[0] += 1
+                    mask = _faceted_inside(GA, GB, cx, cy, r_px, seed=seed * 7919 + pid[0])
+                else:
+                    mask = d2 <= r_px ** 2
+                new = mask & (region == VOID)
+                ok = bool(new.any())
+            if not ok:
+                stale += 1
+                if band >= 0:
+                    band_stale[band] += 1
+                continue
             region[new] = phase
             particles.append((cx, cy, r_px, float(phase)))
-            placed += int(new.sum()); stale = 0; n_ok += 1
+            placed += int(new.sum()); stale = 0
+            if band >= 0:
+                band_n[band] += 1; band_stale[band] = 0
 
-    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 1.5, 16000,
+    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 1.2, 60000,
                  stratify_z=True)
-    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 1.0, 26000,
+    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 1.0, 40000,
                  center_void=True)
 
     # ---- Coverage-driven porosity ---------------------------------------
