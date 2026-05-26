@@ -5563,12 +5563,13 @@ def _synth_2d(case_id, px=600, seed=0, force=False):
     import importlib
     import extract_2d_microstructure as ex2d
     ex2d = importlib.reload(ex2d)                    # pick up edits in a live process
-    data = ex2d.synthesize_microstructure(Path(case_dir), n_pixels=px, seed=seed)
+    data, gap = ex2d.synthesize_adaptive(Path(case_dir), n_pixels=px, seed=seed)
     if data is None:
         return None
     ex2d.render_png(data, Path(png_path))
     summary = {k: data.get(k) for k in _2D_SCALAR_KEYS}
     summary['seed'] = int(seed)                      # remember which seed is shown
+    summary['gap_um'] = round(float(gap), 3)         # auto-picked per case
     with open(sum_path, 'w') as f:                   # np.float64 → float for JSON
         json.dump(summary, f, indent=2,
                   default=lambda o: float(o) if hasattr(o, '__float__') else str(o))
@@ -5743,7 +5744,7 @@ def serve_2d_export_zip(case_id):
         import export_comsol_2d as expc
         ex2d = importlib.reload(ex2d)
         expc = importlib.reload(expc)
-        sd = ex2d.synthesize_microstructure(Path(case_dir), n_pixels=px, seed=seed)
+        sd, _gap = ex2d.synthesize_adaptive(Path(case_dir), n_pixels=px, seed=seed)
         if sd is None:
             return ('2D microstructure generation failed (missing meta/params)', 404)
         out_dir = tempfile.mkdtemp(prefix=f'comsol_{case_id}_')

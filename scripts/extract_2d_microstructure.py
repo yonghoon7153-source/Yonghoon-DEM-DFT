@@ -879,6 +879,8 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         'slice_at_um': 0.0, 'slice_frac': 0.0,
         'thickness_um': thickness,
         'n_pixels': nx, 'pa_um': pa, 'pb_um': pb,
+        'gap_um': gap_um,
+        'phi_AM_target_pct': round(phi_am * 100, 2),
         'phase_fracs': fracs,
         'coverage_2d_pct': coverage_pct,
         'coverage_2d_inplane_pct': coverage_inplane_pct,
@@ -920,12 +922,13 @@ def synthesize_calibrated(case_dir: Path, n_pixels: int = 600, seed: int = 0,
     (toward a connected network), keeping the best result.  Returns
     (best_data, report_rows)."""
     off_p, off_s, dmax = 0.022, 0.030, 3.0
+    gap = _best_gap_for_case(case_dir, seed, grain_size_um=grain_size_um)  # per-case
     best, best_score, report = None, 1e18, []
     for it in range(max(1, iters)):
         d = synthesize_microstructure(case_dir, n_pixels=n_pixels, seed=seed,
                                       grain_size_um=grain_size_um,
                                       cov_off_p=off_p, cov_off_s=off_s,
-                                      bridge_dmax_um=dmax)
+                                      bridge_dmax_um=dmax, gap_um=gap)
         if d is None:
             return None, []
         cp, cs = d.get('coverage_AM_P_pct'), d.get('coverage_AM_S_pct')
@@ -949,6 +952,40 @@ def synthesize_calibrated(case_dir: Path, n_pixels: int = 600, seed: int = 0,
         if se < se_target:
             dmax = min(8.0, dmax + 1.5)
     return best, report
+
+
+def _best_gap_for_case(case_dir, seed, gap_max=0.4, gap_min=0.15, am_tol=1.0,
+                       probe_px=400, **kw):
+    """Pick the LARGEST AM gap (best mesh) that still reaches the target φ_AM,
+    per case.  A low-res probe sweeps gaps high→low and stops at the first that
+    hits φ_AM within am_tol; AM_S-dense cases auto-fall to a smaller gap.
+    (probe slightly underestimates the gap effect, so this leans conservative —
+    picks a marginally smaller gap, which is the safe side for φ_AM.)"""
+    gaps = [g for g in (gap_max, 0.35, 0.3, 0.25, 0.2, gap_min) if gap_min <= g <= gap_max]
+    if gap_max not in gaps:
+        gaps = [gap_max] + gaps
+    chosen = gap_min
+    for g in gaps:
+        d = synthesize_microstructure(case_dir, n_pixels=probe_px, seed=seed,
+                                      gap_um=g, **kw)
+        if d is None:
+            return gap_min
+        f = d['phase_fracs']
+        am = f['AM_P'] + f['AM_S']
+        if am >= d.get('phi_AM_target_pct', am) - am_tol:
+            chosen = g
+            break
+        chosen = g                                   # keep last as fallback
+    return chosen
+
+
+def synthesize_adaptive(case_dir, n_pixels=600, seed=0, gap_max=0.4,
+                        gap_min=0.15, **kw):
+    """synthesize_microstructure with the AM gap auto-tuned per case (largest
+    meshable gap that still hits φ_AM).  Returns (data, chosen_gap_um)."""
+    g = _best_gap_for_case(case_dir, seed, gap_max=gap_max, gap_min=gap_min, **kw)
+    return synthesize_microstructure(case_dir, n_pixels=n_pixels, seed=seed,
+                                     gap_um=g, **kw), g
 
 
 def render_png(data, out_path: Path):
