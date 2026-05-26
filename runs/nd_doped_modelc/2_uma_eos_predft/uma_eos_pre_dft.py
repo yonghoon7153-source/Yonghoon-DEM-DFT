@@ -34,8 +34,9 @@ VOLUME_RATIOS_DENSE = np.round(np.arange(0.96, 1.085, 0.01), 2)  # 0.96..1.08 �
 UMA_MODEL = "uma-s-1p2"
 
 # UMA relax convergence
-FMAX = 0.05  # eV/Å (tight enough for EOS)
+FMAX = 0.05    # eV/Å — full (cell+pos) reference relax
 NSTEPS = 200
+EOS_FMAX = 0.01  # tighter per-volume relax → smooth E(V) (avoids basin-jump noise)
 
 
 _predictor = None
@@ -94,24 +95,45 @@ def relax_positions_only(atoms, calc, fmax=FMAX, nsteps=NSTEPS, label=''):
     return E, atoms
 
 
-def scan_volume(atoms_ref, calc, ratios=VOLUME_RATIOS_DENSE, label='') -> dict:
-    """Scan V/V0 ratios, relax positions at each, return E(V) curve."""
+def scan_volume(atoms_ref, calc, ratios=VOLUME_RATIOS_DENSE, label='', fmax=EOS_FMAX) -> dict:
+    """Scan V/V0 ratios with CONTINUATION relaxation, return E(V) curve.
+
+    Start from the relaxed reference at V0 and step OUTWARD in both directions
+    (V0 -> expansion, V0 -> compression), seeding each volume from the previous
+    relaxed structure (fractional coords carried via scale_atoms). This keeps
+    mobile Li in the same basin across volumes -> smooth E(V). Independent
+    per-volume relax (old behaviour) can jump basins at strained volumes and
+    produce kinks (e.g. a downward spike at +4%) that corrupt the BM3 B0'.
+    """
     cell0 = atoms_ref.cell.array.copy()
     V0 = atoms_ref.get_volume()
-    print(f"  Reference V0 = {V0:.3f} Å³ ({len(atoms_ref)} atoms)")
+    rs = sorted(float(r) for r in ratios)
+    i0 = min(range(len(rs)), key=lambda i: abs(rs[i] - 1.0))
+    print(f"  Reference V0 = {V0:.3f} Å³ ({len(atoms_ref)} atoms); "
+          f"continuation scan from v{int(round(100*rs[i0])):03d}, fmax={fmax}")
+    out = {}
 
-    results = []
-    for ratio in ratios:
-        scale = ratio ** (1/3)
-        atoms = atoms_ref.copy()
-        atoms.set_cell(cell0 * scale, scale_atoms=True)
+    def _do(i, seed):
+        scale = rs[i] ** (1/3)
+        atoms = seed.copy()
+        atoms.set_cell(cell0 * scale, scale_atoms=True)  # carry seed fractional coords
         V = atoms.get_volume()
         t0 = time.time()
-        vlabel = f"v{int(round(100*ratio)):03d}"
-        E, atoms_relaxed = relax_positions_only(atoms, calc, label=f"{label} {vlabel}")
+        vlabel = f"v{int(round(100*rs[i])):03d}"
+        E, relaxed = relax_positions_only(atoms, calc, fmax=fmax, label=f"{label} {vlabel}")
         dt = time.time() - t0
         print(f"    {vlabel} (V={V:.2f} Å³): E={E:+.4f} eV  ({dt:.1f}s)")
-        results.append({'ratio': float(ratio), 'V': float(V), 'E': float(E), 'time_s': dt})
+        out[i] = {'ratio': rs[i], 'V': float(V), 'E': float(E), 'time_s': dt}
+        return relaxed
+
+    seed = atoms_ref
+    for i in range(i0, len(rs)):      # expand outward
+        seed = _do(i, seed)
+    seed = atoms_ref
+    for i in range(i0 - 1, -1, -1):   # compress outward
+        seed = _do(i, seed)
+
+    results = [out[i] for i in range(len(rs))]
     return {'V0_input': float(V0), 'cell0': cell0.tolist(), 'curve': results}
 
 
