@@ -811,7 +811,8 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
 
     return {
         'case_id': case_id, 'case_name': meta.get('name', case_id),
-        'mode': meta.get('mode', ''), 'ps_ratio': meta.get('ps_ratio', ''),
+        'mode': meta.get('mode', ''),
+        'ps_ratio': (meta.get('ps_ratio') or f"{round(f_p*10)}:{round((1-f_p)*10)}"),
         'labels': labels, 'interface': interface,
         'grain_boundary': grain_boundary, 'grain_size_um': grain_size_um,
         'axis': 'synth', 'se_continuum': True,
@@ -873,23 +874,24 @@ def render_png(data, out_path: Path):
               if gb is not None and gb.any() else '')
     rP = data.get('r_AM_P_d50_um'); rS = data.get('r_AM_S_d50_um')
     appP = data.get('r_AM_P_apparent_um'); appS = data.get('r_AM_S_apparent_um')
+    is_syn = data.get('synthetic')
     d50_bits = []
-    if rP:
-        d50_bits.append(f"AM_P D50 r={rP:.1f}μm" +
-                        (f" (slice~{appP:.1f})" if appP else ""))
+    if rP:                                            # D50 = median diameter = 2·radius
+        extra = f" (r={rP:.1f}μm)" if is_syn else (f" (slice~{appP:.1f})" if appP else "")
+        d50_bits.append(f"AM_P D50 {2 * rP:.0f}μm{extra}")
     if rS:
-        d50_bits.append(f"AM_S D50 r={rS:.1f}μm" +
-                        (f" (slice~{appS:.1f})" if appS else ""))
+        extra = f" (r={rS:.1f}μm)" if is_syn else (f" (slice~{appS:.1f})" if appS else "")
+        d50_bits.append(f"AM_S D50 {2 * rS:.0f}μm{extra}")
     d50_line = ('\n' + '   '.join(d50_bits)) if d50_bits else ''
     ax.set_title(f"4-phase microstructure{se_tag}{gb_tag}\n"
                  f"void {fr['void']}% / AM_P {fr['AM_P']}% / "
                  f"AM_S {fr['AM_S']}% / SE {fr['SE']}%{d50_line}", fontsize=10)
-    # legend labels carry the analysis-summary D50 radius per AM phase
+    # legend labels carry the analysis-summary D50 (median DIAMETER) per AM phase
     r_by_phase = {AM_P: rP, AM_S: rS}
     def _lab(p):
         base = f'{PHASE_NAMES[p]} ({fr[PHASE_NAMES[p]]}%)'
         rr = r_by_phase.get(p)
-        return base + (f', r={rr:.1f}μm' if rr else '')
+        return base + (f', D50={2 * rr:.0f}μm' if rr else '')
     handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray', label=_lab(p))
                for p in (AM_P, AM_S, SE, VOID)]
     if gb is not None and gb.any():
@@ -908,7 +910,7 @@ def render_png(data, out_path: Path):
         cxr = x_cursor + rr
         ax.add_patch(Circle((cxr, y_base + rr), rr, fill=False, ec=col,
                             lw=1.8, ls='--', alpha=0.95, zorder=5))
-        ax.text(cxr, y_base, f'{name} D50', ha='center', va='top',
+        ax.text(cxr, y_base, f'{name} D50 {2 * rr:.0f}μm', ha='center', va='top',
                 fontsize=7.5, color=col, weight='bold', zorder=5)
         x_cursor = cxr + rr + 0.05 * a_ext
 

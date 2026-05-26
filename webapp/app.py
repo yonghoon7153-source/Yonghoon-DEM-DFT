@@ -5520,6 +5520,11 @@ _2D_SCALAR_KEYS = (
 )
 
 
+def _synth_2d_png_path(results_dir, seed):
+    """Per-seed cache path so different seeds (regenerate) coexist."""
+    return os.path.join(results_dir, f'microstructure_2d_s{int(seed)}.png')
+
+
 def _synth_2d(case_id, px=600, seed=0, force=False):
     """Synthesize + render the 2D representative microstructure, caching the
     PNG and a scalar summary JSON under the results dir.  Returns the scalar
@@ -5530,8 +5535,8 @@ def _synth_2d(case_id, px=600, seed=0, force=False):
     atoms_csv = os.path.join(results_dir, 'atoms.csv')
     if not os.path.exists(atoms_csv):
         return None
-    png_path = os.path.join(results_dir, 'microstructure_2d.png')
-    sum_path = os.path.join(results_dir, 'microstructure_2d_summary.json')
+    png_path = _synth_2d_png_path(results_dir, seed)
+    sum_path = png_path.replace('.png', '_summary.json')
     _scripts_dir = app.config['SCRIPTS_FOLDER']
     script_path = os.path.join(_scripts_dir, 'extract_2d_microstructure.py')
 
@@ -5583,9 +5588,9 @@ def serve_2d_microstructure(case_id):
         return (f'{type(e).__name__}: {e}', 500)
     if summary is None:
         return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
-    png_path = os.path.join(get_results_dir(case_id), 'microstructure_2d.png')
+    png_path = _synth_2d_png_path(get_results_dir(case_id), seed)
     return send_file(png_path, mimetype='image/png', as_attachment=False,
-                     download_name=f'microstructure_2d_{case_id}.png')
+                     download_name=f'microstructure_2d_{case_id}_s{seed}.png')
 
 
 def _build_2d_readme(case_id, s):

@@ -214,7 +214,7 @@
     <div style="display:flex; gap:8px; align-items:center">
       <button class="btn btn-primary" onclick="load2DViewer(false)">2D 뷰어 로드</button>
       <button class="btn" id="regen2d-btn" onclick="load2DViewer(true)"
-              style="display:none">다시 생성</button>
+              style="display:none">다른 배치 생성 (랜덤)</button>
       <a class="btn" id="zip2d-btn" href="/results/{{ case.id }}/2d-export.zip"
          style="display:none">ZIP 다운로드 (PNG·README·CSV)</a>
     </div>
@@ -267,6 +267,7 @@ async function load3DViewer() {
 }
 
 let viewer2dLoaded = false;
+let cur2dSeed = 0;
 function load2DViewer(force) {
   const c = document.getElementById('viewer2d-container');
   c.style.display = 'block';
@@ -276,6 +277,7 @@ function load2DViewer(force) {
   const status = document.getElementById('viewer2d-status');
   const zip = document.getElementById('zip2d-btn');
   const regen = document.getElementById('regen2d-btn');
+  if (force) cur2dSeed = Math.floor(Math.random() * 1000000);  // new random arrangement
   status.textContent = force ? '2D 미세구조 다시 생성 중… (수 초)' : '2D 미세구조 생성 중… (처음 한 번은 수 초 소요)';
   status.style.display = 'block';
   img.style.display = 'none';
@@ -284,13 +286,14 @@ function load2DViewer(force) {
     img.style.display = 'block';
     zip.style.display = 'inline-block';
     regen.style.display = 'inline-block';
+    zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;  // ZIP matches shown
   };
   img.onerror = () => {
     status.textContent = '2D 미세구조 생성 실패 — atoms.csv / 파라미터를 확인하세요.';
     viewer2dLoaded = false;
   };
-  // image load triggers server-side synthesis (cached; ?fresh=1 forces regen)
-  let url = '/results/{{ case.id }}/2d-microstructure.png?v=' + Date.now();
+  // image load triggers server-side synthesis (per-seed cached; ?fresh=1 forces)
+  let url = `/results/{{ case.id }}/2d-microstructure.png?v=${Date.now()}&seed=${cur2dSeed}`;
   if (force) url += '&fresh=1';
   img.src = url;
 }
