@@ -356,6 +356,116 @@ def write_svg(phase_contours: dict, interface_segs: dict,
     out_path.write_text('\n'.join(parts))
 
 
+def _contour_crop(mask, pa, pb, b0, ox, oy, sigma=0.8):
+    """Smooth iso-0.5 contour of a small cropped mask, returned in μm with the
+    crop offset (ox, oy) in pixels applied."""
+    work = _ndi.gaussian_filter(mask.astype(float), sigma=sigma)
+    fig = plt.figure(); ax = fig.add_subplot(111)
+    cs = ax.contour(work, levels=[0.5])
+    out = []
+    for ls in getattr(cs, 'allsegs', []) or []:
+        for seg in ls:
+            if len(seg) < 4:
+                continue
+            xy = np.asarray(seg, float)
+            closed = bool(np.allclose(xy[0], xy[-1]))
+            xy = _rdp(xy, eps=0.5)
+            if len(xy) >= 4:
+                xy = _chaikin(xy, iters=1, closed=closed)
+            xs = (xy[:, 0] + ox) * pa
+            ys = (xy[:, 1] + oy) * pb + b0
+            out.append(np.column_stack([xs, ys]))
+    plt.close(fig)
+    return out
+
+
+def _grain_polys(am_p_mask, grain_px, pa, pb, b0, seed=0):
+    """Split each AM_P particle into coarse grains (Voronoi at ~grain_px
+    spacing) and return each grain as a closed polygon (μm).  COMSOL Form Union
+    turns these into separate grain domains sharing grain-boundary edges."""
+    from scipy.spatial import cKDTree
+    lab, nlab = _ndi.label(am_p_mask)
+    rng = np.random.default_rng(seed)
+    step = max(4.0, float(grain_px))
+    polys = []
+    for pid in range(1, nlab + 1):
+        ys, xs = np.where(lab == pid)
+        if len(ys) < 30:
+            continue
+        y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+        sub = (lab[y0:y1, x0:x1] == pid)
+        sh, sw = sub.shape
+        seeds = [(yy + rng.uniform(-step * .35, step * .35),
+                  xx + rng.uniform(-step * .35, step * .35))
+                 for yy in np.arange(step / 2, sh, step)
+                 for xx in np.arange(step / 2, sw, step)]
+        if len(seeds) < 2:                              # whole particle = 1 grain
+            polys += _contour_crop(sub, pa, pb, b0, x0, y0)
+            continue
+        tree = cKDTree(np.array(seeds))
+        yy, xx = np.mgrid[0:sh, 0:sw]
+        gid = tree.query(np.column_stack([yy.ravel(), xx.ravel()]))[1].reshape(sh, sw) + 1
+        gid[~sub] = 0
+        for g in np.unique(gid):
+            if g == 0:
+                continue
+            gm = gid == g
+            if gm.sum() < 6:
+                continue
+            polys += _contour_crop(gm, pa, pb, b0, x0, y0)
+    return polys
+
+
+def write_dxf_layers(layers: dict, out_path: Path, colors: dict = None):
+    """Write closed POLYLINEs grouped by layer (generic; for the COMSOL-lean
+    geometry: domain rectangle, AM_P_grain cells, AM_S, void)."""
+    colors = colors or {'domain': 7, 'AM_P_grain': 1, 'AM_S': 3, 'void': 8}
+    lines = []
+    def w(c, v): lines.append(str(c)); lines.append(str(v))
+    w(0, 'SECTION'); w(2, 'HEADER'); w(0, 'ENDSEC')
+    w(0, 'SECTION'); w(2, 'TABLES'); w(0, 'TABLE'); w(2, 'LAYER')
+    for name in layers:
+        w(0, 'LAYER'); w(2, name); w(70, 0); w(62, colors.get(name, 7)); w(6, 'CONTINUOUS')
+    w(0, 'ENDTAB'); w(0, 'ENDSEC')
+    w(0, 'SECTION'); w(2, 'ENTITIES')
+    for name, contours in layers.items():
+        for seg in contours:
+            if len(seg) < 2:
+                continue
+            w(0, 'POLYLINE'); w(8, name); w(66, 1); w(70, 1)   # closed
+            for (x, y) in seg:
+                w(0, 'VERTEX'); w(8, name)
+                w(10, f'{x:.4f}'); w(20, f'{y:.4f}'); w(30, '0.0')
+            w(0, 'SEQEND')
+    w(0, 'ENDSEC'); w(0, 'EOF')
+    Path(out_path).write_text('\n'.join(lines))
+
+
+def write_comsol_geometry(sd, out_dir, grain_um=3.0, min_void_um=1.5, seed=0):
+    """COMSOL-lean DXF: domain rectangle + AM_P split into coarse grain domains
+    + AM_S particles + only the larger void pores (sub-resolution specks pruned;
+    porosity is also captured by the effective σ in parameters).  SE is left for
+    COMSOL to build as Rectangle − (AM ∪ void).  No duplicate interface curves —
+    coverage is encoded by AM-void (inactive) vs AM-SE (active) adjacency."""
+    labels = sd['labels']
+    pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
+    a_ext, b_ext = sd['a_extent'], sd['b_extent']
+    min_area_px = max(12, int((sd['n_pixels'] / 110) ** 2))
+    void_min = max(min_area_px, int(np.pi * (min_void_um / pa / 2.0) ** 2))
+    layers = {
+        'domain': [np.array([[0, b0], [a_ext, b0], [a_ext, b0 + b_ext],
+                             [0, b0 + b_ext], [0, b0]])],
+        'AM_P_grain': _grain_polys(labels == AM_P, grain_um / pa, pa, pb, b0, seed),
+        'AM_S': _contours(labels == AM_S, pa, pb, b0,
+                          min_area_px=min_area_px, fill_holes=True),
+        'void': _contours(labels == VOID, pa, pb, b0,
+                          min_area_px=void_min, fill_holes=False),
+    }
+    write_dxf_layers(layers, Path(out_dir) / 'geometry_comsol.dxf')
+    return {'n_grains': len(layers['AM_P_grain']), 'n_AMS': len(layers['AM_S']),
+            'n_void': len(layers['void'])}
+
+
 def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
                          slice_frac=0.0, no_continuum=False):
     """Write the full COMSOL-import package for a synthesized/sliced
@@ -420,6 +530,17 @@ def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
     write_svg(phase_contours, interface_segs, sd['a_extent'], sd['b_extent'],
               b0, out_dir / 'geometry.svg')
     render_microstructure_png(sd, out_dir / 'geometry.png')
+
+    # COMSOL-lean geometry: AM_P grain domains + AM_S + large void only, SE via
+    # Boolean.  This is the one to import for meshing (geometry.dxf is the full
+    # reference).
+    try:
+        gi = write_comsol_geometry(sd, out_dir, grain_um=3.0, min_void_um=1.5)
+        print(f'  geometry_comsol.dxf → {gi["n_grains"]} AM_P grains + '
+              f'{gi["n_AMS"]} AM_S + {gi["n_void"]} void (lean, meshable)')
+    except Exception as _ge:
+        import traceback; traceback.print_exc()
+        print(f'  [comsol-lean geometry] skipped: {_ge}')
 
     axis_note = ('※ b축 = z = through-thickness (이온 전달 방향)'
                  if axis in ('x', 'y') else '※ XY 수평 단면')
