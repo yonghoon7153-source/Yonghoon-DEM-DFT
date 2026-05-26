@@ -940,9 +940,11 @@ def synthesize_calibrated(case_dir: Path, n_pixels: int = 600, seed: int = 0,
             best_score, best = score, d
         if abs(ep) <= cov_tol and abs(es) <= cov_tol and se >= se_target:
             break
-        # nudge offsets toward target coverage; widen bridge if SE fragmented
-        off_p = float(min(0.2, max(0.0, off_p + ep / 100.0)))
-        off_s = float(min(0.2, max(0.0, off_s + es / 100.0)))
+        # nudge offsets toward target coverage; widen bridge if SE fragmented.
+        # d(coverage%)/d(offset) ≈ 220, so Δoff = err/220 ≈ one-step correction
+        # (gentle gain avoids the overshoot a /100 gain caused).
+        off_p = float(min(0.2, max(0.0, off_p + ep / 220.0)))
+        off_s = float(min(0.2, max(0.0, off_s + es / 220.0)))
         if se < se_target:
             dmax = min(8.0, dmax + 1.5)
     return best, report
