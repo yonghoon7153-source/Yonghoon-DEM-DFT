@@ -56,6 +56,11 @@
 >   본인 env(`/scratch/x3430a02/envs/uma_eos`, `pip install fairchem-core`)로. 단 stable
 >   fairchem엔 `uma-s-1p2` 없음 → `uma-s-1p1` 사용 (B0는 모델 minor차에 둔감). 모델은
 >   login node에서 미리 캐시 + sbatch에 `export HF_HUB_OFFLINE=1`.
+>
+> **3. KISTI sbatch job 이름 = `llm_finetuning_test` (표준, 사용자 2026-05-26)**
+> - 모든 KISTI `#SBATCH -J`는 `llm_finetuning_test`로 통일 (예: qe-perov,
+>   perovskite_finetuning_v08 → 전부 이걸로). `--comment`은 용도대로(qe / pytorch).
+> - 이미 제출된 job 이름은 `scontrol update jobid=<id> name=llm_finetuning_test`로 변경.
 
 ## Project Overview
 PhD research (BML Lab, Hanyang University, 안용훈) on halogen-substituted argyrodite

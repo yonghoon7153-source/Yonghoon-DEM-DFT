@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J perovskite_finetuning_v08
+#SBATCH -J llm_finetuning_test
 #SBATCH -p amd_a100nv_8
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
