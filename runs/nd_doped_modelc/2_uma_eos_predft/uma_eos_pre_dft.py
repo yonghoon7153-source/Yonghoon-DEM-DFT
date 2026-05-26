@@ -25,9 +25,10 @@ from ase.io import read, write
 
 # Volume ratio sweep (matches modelC pattern: v094, v096, ..., v106)
 VOLUME_RATIOS = np.arange(0.94, 1.07, 0.02)  # 0.94, 0.96, ..., 1.06 → 7 points
-# Tight grid for clean BM3 fit: v096..v108 in 1% steps (13 points).
-# np.round avoids float drift; labels still use round() (see scan_volume).
-VOLUME_RATIOS_DENSE = np.round(np.arange(0.96, 1.085, 0.01), 2)  # 0.96..1.08 → 13 points
+# Narrow grid v097..v105 (-3%..+5%, 1% steps, 9 pts). Wider ranges hit
+# extreme-strain basin jumps (Li rearranges at ~-4% / large +%); this window
+# was verified smooth in the continuation run, giving a clean single-basin BM3.
+VOLUME_RATIOS_DENSE = np.round(np.arange(0.97, 1.055, 0.01), 2)  # 0.97..1.05 → 9 points
 
 # UMA model — match Nd anneal champion relax (modelc_nd_doped.json: UMA-s-1p2).
 # If the KISTI/gabia uma env only has 1p1, change this one line back to "uma-s-1p1".
@@ -188,12 +189,28 @@ def recommend_dft_range(V0_BM: float, ratios=VOLUME_RATIOS) -> list[dict]:
     return rec
 
 
+def load_structure(structure=None, pair_dir=None):
+    """Load a start structure: QE input (.in/.pwi, robust), QE output, or champion dir."""
+    if structure:
+        if structure.endswith(('.in', '.pwi')):
+            return read(structure, format='espresso-in')
+        try:
+            return read(structure, index=-1)
+        except Exception:
+            return read(structure, index=-1, format='espresso-out')
+    return read(pick_best_champion(Path(pair_dir)))
+
+
 def process_rank(rank_label: str, calc, out_dir: Path,
-                 structure: str = None, pair_dir: str = None) -> dict:
+                 structure: str = None, pair_dir: str = None, atoms_in=None) -> dict:
     print(f"\n{'='*70}")
     print(f"Processing {rank_label}")
     print(f"{'='*70}")
-    if structure:
+    if atoms_in is not None:
+        atoms = atoms_in.copy()
+        src = '(in-memory seed)'
+        print(f"\n  Using in-memory structure ({len(atoms)} atoms)")
+    elif structure:
         # Start from an explicit structure file.
         #  - QE input (.in/.pwi): clean cell+coords, no eigenvalues → robust.
         #  - QE output (.out/.pwo): ASE's espresso-out parser asserts on
@@ -281,6 +298,10 @@ def main():
                         'DFT relax.out (final coords used); overrides --rank1-dir')
     parser.add_argument('--rank2-structure', help='rank2 explicit structure file (optional)')
     parser.add_argument('--out_dir', default='uma_eos_results', help='Output dir')
+    parser.add_argument('--n_seeds', type=int, default=1,
+                        help='ensemble: N rattled seeds (rank1 only) → B0 mean±std')
+    parser.add_argument('--perturb', type=float, default=0.1,
+                        help='rattle stdev (Å) applied to seeds>0')
     args = parser.parse_args()
     if not (args.rank1_dir or args.rank1_structure):
         parser.error('provide --rank1-structure or --rank1-dir')
@@ -299,6 +320,37 @@ def main():
     print(f"UMA loaded.\n")
 
     results = {}
+
+    if args.n_seeds > 1:
+        # ENSEMBLE (rank1 only): rattle start → full relax → EOS → BM3, per seed.
+        # Robust B0 for soft / Li-mobile / vacancy structures (single curve is
+        # basin-sensitive). Report mean±std over seeds.
+        print(f"\n=== ENSEMBLE: {args.n_seeds} seeds, rattle {args.perturb} Å (rank1 only) ===")
+        base = load_structure(args.rank1_structure, args.rank1_dir)
+        seed_res, B0s, V0s, Bps = [], [], [], []
+        for s in range(args.n_seeds):
+            a = base.copy()
+            if s > 0:
+                a.rattle(stdev=args.perturb, seed=s)
+            r = process_rank(f'rank1_seed{s}', calc, out_dir, atoms_in=a)
+            seed_res.append(r)
+            bm = r['bm_fit']
+            if bm['fit_success'] and bm['B0_GPa'] is not None:
+                B0s.append(bm['B0_GPa']); V0s.append(bm['V0_BM']); Bps.append(bm['B0_prime'])
+        results['rank1_ensemble'] = seed_res
+        json.dump(results, open(out_dir / 'uma_eos_results.json', 'w'), indent=2, default=str)
+        B0s = np.array(B0s)
+        print(f"\n{'='*70}\nrank1 ENSEMBLE B0 ({UMA_MODEL}, n={len(B0s)}/{args.n_seeds} fit OK):")
+        if len(B0s):
+            print(f"  B0  = {B0s.mean():.1f} ± {B0s.std():.1f} GPa")
+            print(f"  V0  = {np.mean(V0s):.1f} ± {np.std(V0s):.1f} A^3")
+            print(f"  B0' = {np.mean(Bps):.2f} ± {np.std(Bps):.2f}")
+            print(f"  per-seed B0: " + ', '.join(f'{b:.1f}' for b in B0s))
+        else:
+            print("  no successful fits")
+        print('='*70)
+        return
+
     results['rank1'] = process_rank('rank1', calc, out_dir,
                                     structure=args.rank1_structure, pair_dir=args.rank1_dir)
     if args.rank2_dir or args.rank2_structure:
@@ -311,7 +363,6 @@ def main():
     json.dump(results, open(out_dir / 'uma_eos_results.json', 'w'), indent=2, default=str)
     print(f"\n{'='*70}")
     print(f"Full results saved: {out_dir}/uma_eos_results.json")
-    print(f"Relaxed structures: {out_dir}/rank{1,2}_relaxed.cif")
     print(f"{'='*70}")
     print(f"\nMLIP EOS done — BM3 fit ({UMA_MODEL}):")
     for rk in results:

@@ -42,14 +42,16 @@ echo "=== UMA tight EOS (v096-v108, uma-s-1p1) — pair1 + pair2 ==="
 echo "Date: $(date)  Host: $(hostname)  Job: $SLURM_JOB_ID"
 nvidia-smi --query-gpu=index,name --format=csv,noheader
 
-# Use relax.in (clean QE input: cell+coords) not relax.out — ASE's espresso-out
-# parser asserts on the incomplete/spin-polarized bands of the scancelled DFT+U
-# run. relax.in holds the UMA-relaxed champion at v100; MLIP re-relaxes anyway
-# so the EOS result is identical.
+# rank1 (Nd dispersed, the real structure) only — rank2 (clustered) is 4.8 eV/cell
+# higher (does not form), dropped. ENSEMBLE of 5 rattled seeds → B0 mean±std,
+# since a single EOS curve of this soft Li-mobile + vacancy structure is
+# basin-sensitive (B0 scattered 16–27 GPa across fits). Narrow v097–v105 grid +
+# continuation relax keep each curve single-basin. Start from relax.in (clean QE
+# input; relax.out trips ASE's espresso-out parser on the spin/incomplete bands).
 python3 -u uma_eos_pre_dft.py \
     --rank1-structure ./pair01_pair_00_reference_1_82/v100/relax.in \
-    --rank2-structure ./pair02_pair_02_close_13_25/v100/relax.in \
-    --out_dir ./uma_eos_tight_both
+    --n_seeds 5 --perturb 0.2 \
+    --out_dir ./uma_eos_ens
 
 echo "=== DONE $(date) ==="
 echo "Results: $WORK/uma_eos_tight_both/uma_eos_results.json"
