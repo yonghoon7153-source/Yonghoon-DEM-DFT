@@ -26,7 +26,7 @@
 #   bash tools/doping/tier_cascade.sh \
 #       db/structures/lpscl_F43m_24G_canonical.cif \
 #       runs/tier_$(date +%F) \
-#       [N_SEEDS=5] [SUPERCELL=1,1,1] [EXOTIC=1]
+#       [N_SEEDS=5] [SUPERCELL=1,1,1] [EXOTIC=0]
 #
 # Resume after crash:
 #   bash tools/doping/tier_cascade.sh <same args>
@@ -38,7 +38,7 @@ BASE="${1:?BASE cif required}"
 OUT="${2:?OUT dir required}"
 N_SEEDS="${3:-5}"
 SUPERCELL="${4:-1,1,1}"
-EXOTIC="${5:-1}"
+EXOTIC="${5:-0}"  # default 0 = literature site_preference filter applied (set 1 to explore chemically-unusual placements)
 
 mkdir -p "$OUT/logs"
 # Resolve REPO_ROOT via this script's own location:

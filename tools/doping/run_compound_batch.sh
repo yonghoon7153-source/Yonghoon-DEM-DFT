@@ -25,7 +25,7 @@ BASE="${1:?BASE cif required}"
 OUT_BASE="${2:?OUT base directory required}"
 N_SEEDS="${3:-3}"
 SUPERCELL="${4:-1,1,1}"
-EXOTIC="${5:-1}"  # default 1 = explore chemically-unusual placements too
+EXOTIC="${5:-0}"  # default 0 = literature site_preference filter applied (set 1 to explore chemically-unusual placements)
 SC_FLAG=$(echo "$SUPERCELL" | tr ',' ' ')
 
 EXOTIC_FLAG=""

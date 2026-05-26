@@ -144,7 +144,7 @@ for i in "${!ALL_TYPE_A[@]}"; do
         bash tools/doping/tier_cascade.sh \
             db/structures/lpscl_F43m_24G_canonical.cif \
             "$OUT" \
-            5 1,1,1 1 \
+            5 1,1,1 0 \
         > "$LOG" 2>&1
 
     rc=$?
