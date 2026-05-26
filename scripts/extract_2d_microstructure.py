@@ -350,31 +350,14 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     idx_hit = np.where(hit)[0]
     order = idx_hit[np.argsort(-dc[idx_hit])]
 
-    # ── D50 size calibration ──────────────────────────────────────────
-    # A planar cut shows chord (sqrt(R²-d²)) radii, so the in-slice particle
-    # D50 is smaller than the true D50.  Scale each AM phase's drawn radii so
-    # the in-slice MEDIAN matches the analysis-summary D50 (r_AM_P / r_AM_S)
-    # per case — individual particles keep their spread, only the median is
-    # pinned to the reported value.  (Increases AM area; void is re-pinned to
-    # porosity afterwards and σ/τ/porosity enter COMSOL numerically.)
+    # raw in-slice chord radii (for reporting the apparent vs D50 size)
     with np.errstate(invalid='ignore'):
         r_chord0 = np.sqrt(np.maximum(0.0, rs ** 2 - dc ** 2))
-    def _d50_scale(pid, target):
-        if not target:
-            return 1.0
-        sel = (phases == pid) & hit & (r_chord0 > 0)
-        if not np.any(sel):
-            return 1.0
-        med = float(np.median(r_chord0[sel]))
-        return float(np.clip(target / med, 0.5, 2.5)) if med > 0 else 1.0
-    f_scale = {AM_P: _d50_scale(AM_P, r_amp_um),
-               AM_S: _d50_scale(AM_S, r_ams_um)}
 
     for i in order:
         r_slice = float(np.sqrt(max(0.0, rs[i]**2 - (cc[i] - c0)**2)))
         if r_slice <= 0:
             continue
-        r_slice *= f_scale.get(phases[i], 1.0)   # D50-calibrated draw radius
         ac, bc = ca[i], cb[i] - b_origin   # b coordinate relative to grid origin
         ix0 = max(0, int(np.floor((ac - r_slice) / pa)))
         ix1 = min(nx - 1, int(np.ceil((ac + r_slice) / pa)))
