@@ -738,20 +738,33 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     coverage_inplane_pct = (round(100 * int(am_covered.sum()) / n_bnd, 2)
                             if n_bnd else 0.0)
     if target_coverage_frac is not None and n_bnd:
-        delta = int(round(target_coverage_frac * n_bnd)) - int(am_covered.sum())
-        dse = _ndi.distance_transform_edt(~is_se)
-        if delta > 0:                                  # promote nearest-SE uncovered
-            uy, ux = np.where(am_uncov)
-            if len(uy):
-                sel = np.argsort(dse[uy, ux])[:min(delta, len(uy))]
-                am_covered[uy[sel], ux[sel]] = True
-                am_uncov[uy[sel], ux[sel]] = False
-        elif delta < 0:                                # demote farthest-from-SE-core covered
-            cyy, cxx = np.where(am_covered)
-            if len(cyy):
-                sel = np.argsort(dse[cyy, cxx])[:min(-delta, len(cyy))]
-                am_covered[cyy[sel], cxx[sel]] = False
-                am_uncov[cyy[sel], cxx[sel]] = True
+        # Synthetic AM sits almost fully in SE (in-plane coverage ~100%), so
+        # to represent the 3D coverage we mark part of each particle's
+        # perimeter uncovered.  Assign ONE contiguous uncovered arc per AM
+        # particle (random start angle), width = (1-coverage)·2π, so every
+        # particle is ~coverage% SE-covered — no raster-order spatial band.
+        lab_am, n_am = _ndi.label(is_am)
+        by, bx = np.where(am_boundary)
+        lb = lab_am[by, bx]
+        cents = np.asarray(_ndi.center_of_mass(
+            is_am, lab_am, np.arange(1, n_am + 1))).reshape(-1, 2)
+        ang = np.arctan2(by - cents[lb - 1, 0], bx - cents[lb - 1, 1])
+        rng2 = np.random.default_rng(seed + 12345)
+        starts = rng2.uniform(0, 2 * np.pi, n_am + 1)
+        rel = (ang - starts[lb]) % (2 * np.pi)
+        want_unc = 1.0 - target_coverage_frac
+        w = want_unc * (2 * np.pi)                     # tune arc width to target
+        for _ in range(6):
+            uncov = rel < w
+            ach = float(uncov.mean())
+            if ach <= 1e-6:
+                break
+            w = min(2 * np.pi, w * want_unc / ach)
+        uncov = rel < w
+        am_covered = np.zeros_like(am_boundary)
+        am_uncov = np.zeros_like(am_boundary)
+        am_covered[by[~uncov], bx[~uncov]] = True
+        am_uncov[by[uncov], bx[uncov]] = True
     coverage_pct = round(100 * int(am_covered.sum()) / n_bnd, 2) if n_bnd else 0.0
     interface = np.zeros_like(labels)
     interface[am_covered] = 1
