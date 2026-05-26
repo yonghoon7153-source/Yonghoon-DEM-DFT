@@ -374,6 +374,29 @@ def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
     (out_dir / 'parameters.json').write_text(
         json.dumps({p['parameter']: p for p in params}, indent=2))
 
+    # COMSOL-ready parameter table: Name, Expression(value+unit), Description.
+    # COMSOL's "Load from File" expects exactly these 3 columns and NO header
+    # (a header row imports as a junk parameter).  Units are attached only when
+    # COMSOL recognises them; everything else is left dimensionless.
+    _U = {'mS/cm': '[mS/cm]', 'S/m': '[S/m]', 'um': '[um]', 'µm': '[um]',
+          'm': '[m]', 'Ohm*cm2': '[ohm*cm^2]', 'ohm*cm2': '[ohm*cm^2]',
+          'Ohm*cm^2': '[ohm*cm^2]'}
+    _seen = set()
+    with open(out_dir / 'parameters_comsol.csv', 'w', newline='') as f:
+        w = csv.writer(f)
+        for p in params:
+            name = (p.get('comsol_name') or p.get('parameter') or '').strip()
+            if not name or name in ('—', '-') or name in _seen:
+                continue
+            val = p.get('value')
+            if val is None or val == '':
+                continue
+            _seen.add(name)
+            unit = (p.get('unit') or '1').strip()
+            expr = f"{val}{_U.get(unit, '')}"          # bracket-unit if recognised
+            desc = (p.get('source') or '').replace('\n', ' ').replace(',', ';')
+            w.writerow([name, expr, desc])
+
     # ── (2) Geometry — smooth phase contours (COMSOL-meshable) ─────────
     labels = sd['labels']
     pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
