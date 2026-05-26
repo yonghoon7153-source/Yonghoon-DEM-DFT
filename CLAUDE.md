@@ -31,6 +31,32 @@
 > - safe wrapper "JOB DONE" check → premature exit on walltime
 > See `CODE_INVENTORY.md` section "사용자 손해 history".
 
+## 🚨 운영 gotchas (2026-05-26 — 반복 금지)
+
+> [!warning] 두 가지 실수 기록 (이번 session에서 발생, 시간/GPU 낭비)
+>
+> **1. doping 배치 재시작 시 `TOP_K_SIGMA=0 TOP_K_NCM=0` 반드시 붙일 것**
+> - `master_batch_273.sh` 기본값은 `TOP_K_SIGMA=2`, `TOP_K_NCM=3` → 그냥 띄우면
+>   Stage 10(σ_Li MD, ~12h/cascade) + Stage 11(cathode)을 **무조건 돌림** (~193일).
+> - 스크리닝 run은 md/cathode OFF가 표준 → 재시작 명령에 env로 0,0 줘야 함:
+>   `TOP_K_SIGMA=0 TOP_K_NCM=0 BATCH_DIR=... nohup bash tools/doping/master_batch_273.sh ...`
+> - 배치 죽일 때: master 그룹만 죽이면 `timeout env ... tier_cascade`가 **다른 PGID라
+>   고아로 살아남음**. `kill $(cat <batch>.pid); pkill -f '<batch_dir_name>'` 로 자식까지.
+> - resume 스캔은 파일 mtime <30분이면 "active"로 **오판해 그 compound를 SKIP** → 방금
+>   죽인 직후 재시작하면 1개 누락됨. idle 후(>30분) mop-up.
+>
+> **2. UMA EOS 시작 구조는 QE `relax.in` 사용 (relax.out 금지)**
+> - `runs/nd_doped_modelc/2_uma_eos_predft/uma_eos_pre_dft.py` + `sbatch_uma_eos_tight.sh`
+>   (tight v096–v108, 1% 13점, relaxed-ion BM3, pair1+pair2 동일모델 비교).
+> - ASE `read_espresso_out`은 scancel/incomplete + DFT+U+ISPIN=2 출력의 eigenvalue
+>   블록에서 `assert len(eigenvalues[0])==len(ibzkpts)` 터짐 → **relax.out 못 읽음**.
+> - `relax.in`은 cell+coords만이라 clean하게 읽힘 (UMA-relaxed champion@v100 좌표라
+>   시작점으로도 적절; MLIP이 재relax하니 결과 동일).
+> - **KISTI uma env 주의**: scratch purge가 `ToBeDelete_` 접두사로 fairchem 깨뜨림 →
+>   본인 env(`/scratch/x3430a02/envs/uma_eos`, `pip install fairchem-core`)로. 단 stable
+>   fairchem엔 `uma-s-1p2` 없음 → `uma-s-1p1` 사용 (B0는 모델 minor차에 둔감). 모델은
+>   login node에서 미리 캐시 + sbatch에 `export HF_HUB_OFFLINE=1`.
+
 ## Project Overview
 PhD research (BML Lab, Hanyang University, 안용훈) on halogen-substituted argyrodite
 solid electrolytes. Goal: predict mechanical properties (B0, E, Cij, Wad) via
