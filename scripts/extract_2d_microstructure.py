@@ -489,7 +489,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                               single_crystal_facets: bool = True,
                               seed: int = 0,
                               cov_off_p: float = 0.022, cov_off_s: float = 0.030,
-                              bridge_dmax_um: float = 3.0):
+                              bridge_dmax_um: float = 3.0, gap_um: float = 0.4):
     """Build a REPRESENTATIVE 2D microstructure from the 3D statistics
     (not a literal slice).
 
@@ -667,9 +667,10 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if band >= 0:
                 band_n[band] += 1; band_stale[band] = 0
 
-    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 1.2, 60000,
+    gap_px = max(1.0, gap_um / pa)               # physical SE-film gap → px
+    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, gap_px, 60000,
                  stratify_z=True)
-    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 1.0, 40000,
+    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, gap_px, 40000,
                  center_void=True)
 
     # ---- Coverage-driven porosity ---------------------------------------
