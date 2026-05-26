@@ -5520,9 +5520,10 @@ _2D_SCALAR_KEYS = (
 )
 
 
-def _synth_2d_png_path(results_dir, seed):
-    """Per-seed cache path so different seeds (regenerate) coexist."""
-    return os.path.join(results_dir, f'microstructure_2d_s{int(seed)}.png')
+def _synth_2d_png_path(results_dir, seed=None):
+    """Single canonical cache — the last generated figure is 'the existing one'
+    shown on load; regenerating overwrites it."""
+    return os.path.join(results_dir, 'microstructure_2d.png')
 
 
 def _synth_2d(case_id, px=600, seed=0, force=False):
@@ -5567,6 +5568,7 @@ def _synth_2d(case_id, px=600, seed=0, force=False):
         return None
     ex2d.render_png(data, Path(png_path))
     summary = {k: data.get(k) for k in _2D_SCALAR_KEYS}
+    summary['seed'] = int(seed)                      # remember which seed is shown
     with open(sum_path, 'w') as f:                   # np.float64 → float for JSON
         json.dump(summary, f, indent=2,
                   default=lambda o: float(o) if hasattr(o, '__float__') else str(o))
@@ -5632,7 +5634,9 @@ def serve_2d_auto_report(case_id):
 
 @app.route('/results/<case_id>/2d-microstructure.png')
 def serve_2d_microstructure(case_id):
-    """Procedural 2D representative microstructure figure (cached PNG)."""
+    """2D microstructure figure.  Without ?fresh=1 it serves the EXISTING
+    cached figure (the last one generated); ?fresh=1 regenerates with the given
+    (random) seed and overwrites the cache."""
     px = max(200, min(1200, int(request.args.get('px', 600))))
     seed = int(request.args.get('seed', 0))
     force = request.args.get('fresh') in ('1', 'true', 'yes')
@@ -5645,7 +5649,23 @@ def serve_2d_microstructure(case_id):
         return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
     png_path = _synth_2d_png_path(get_results_dir(case_id), seed)
     return send_file(png_path, mimetype='image/png', as_attachment=False,
-                     download_name=f'microstructure_2d_{case_id}_s{seed}.png')
+                     download_name=f'microstructure_2d_{case_id}.png')
+
+
+@app.route('/results/<case_id>/2d-summary.json')
+def serve_2d_summary(case_id):
+    """The cached figure's scalar summary (incl. the seed it was made with),
+    so the client can keep the ZIP/regenerate in sync with what's shown."""
+    p = os.path.join(get_results_dir(case_id), 'microstructure_2d_summary.json')
+    if not os.path.exists(p):
+        return jsonify({'exists': False}), 200
+    try:
+        with open(p) as f:
+            s = json.load(f)
+        s['exists'] = True
+        return jsonify(s)
+    except Exception:
+        return jsonify({'exists': False}), 200
 
 
 def _build_2d_readme(case_id, s):

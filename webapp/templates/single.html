@@ -212,7 +212,7 @@
   <div class="card-header-row">
     <h3>2D 대표 미세구조 (COMSOL용)</h3>
     <div style="display:flex; gap:8px; align-items:center">
-      <button class="btn btn-primary" onclick="load2DViewer(true)">2D 미세구조 생성 (랜덤)</button>
+      <button class="btn btn-primary" onclick="load2DViewer()">2D 미세구조 (다시 누르면 재생성)</button>
       <button class="btn" id="auto2d-btn" onclick="load2DAuto()"
               style="display:none">자동보정 (정밀, ~1분)</button>
       <a class="btn" id="zip2d-btn" href="/results/{{ case.id }}/2d-export.zip"
@@ -271,18 +271,20 @@ async function load3DViewer() {
 
 let viewer2dLoaded = false;
 let cur2dSeed = 0;
-function load2DViewer(force) {
+// First press shows the EXISTING (last-generated) figure; pressing again
+// regenerates a new random arrangement.
+function load2DViewer() {
   const c = document.getElementById('viewer2d-container');
   c.style.display = 'block';
-  if (viewer2dLoaded && !force) return;
+  const regenerate = viewer2dLoaded;          // already shown once → this click re-rolls
   viewer2dLoaded = true;
   const img = document.getElementById('viewer2d-img');
   const status = document.getElementById('viewer2d-status');
   const zip = document.getElementById('zip2d-btn');
   const auto = document.getElementById('auto2d-btn');
   const rep = document.getElementById('auto2d-report');
-  if (force) cur2dSeed = Math.floor(Math.random() * 1000000);  // new random arrangement
-  status.textContent = '2D 미세구조 생성 중… (수 초)';
+  status.textContent = regenerate ? '2D 미세구조 재생성 중… (수 초)'
+                                  : '2D 미세구조 불러오는 중…';
   status.style.display = 'block';
   img.style.display = 'none';
   if (rep) rep.style.display = 'none';
@@ -291,16 +293,24 @@ function load2DViewer(force) {
     img.style.display = 'block';
     zip.style.display = 'inline-block';
     auto.style.display = 'inline-block';
-    zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;  // ZIP matches shown
+    if (!regenerate) {          // sync seed to the existing figure (for ZIP/auto)
+      fetch(`/results/{{ case.id }}/2d-summary.json`).then(r => r.json())
+        .then(j => { if (j && j.seed != null) cur2dSeed = j.seed;
+                     zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`; });
+    } else {
+      zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;
+    }
   };
   img.onerror = () => {
     status.textContent = '2D 미세구조 생성 실패 — atoms.csv / 파라미터를 확인하세요.';
     viewer2dLoaded = false;
   };
-  // image load triggers server-side synthesis (per-seed cached; ?fresh=1 forces)
-  let url = `/results/{{ case.id }}/2d-microstructure.png?v=${Date.now()}&seed=${cur2dSeed}`;
-  if (force) url += '&fresh=1';
-  img.src = url;
+  let url = `/results/{{ case.id }}/2d-microstructure.png?v=${Date.now()}`;
+  if (regenerate) {                            // re-roll: new random seed, force rebuild
+    cur2dSeed = Math.floor(Math.random() * 1000000);
+    url += `&seed=${cur2dSeed}&fresh=1`;
+  }
+  img.src = url;                               // no fresh → server serves the existing cache
 }
 
 // Generate → check → auto fine-tune (coverage offset + SE bridge), then show
