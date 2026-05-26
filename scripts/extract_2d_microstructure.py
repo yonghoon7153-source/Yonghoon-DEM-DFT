@@ -526,9 +526,18 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     thickness = float(fm.get('thickness_um') or box_x_um * 2)
     r_se_um = (ip.get('r_SE') or ip.get('r_SE_sim') or 0.0005) * scale
 
-    # AM radius distributions + per-phase volume split from the real atoms
+    # AM_P:AM_S split — use the DESIGN ps_ratio (7:3 is a VOLUME ratio, so
+    # f_p = 7/(7+3) = 0.70); fall back to the atoms-measured volume split.
+    def _parse_ps(s):
+        try:
+            a, b = str(s).split(':'); a = float(a); b = float(b)
+            return a / (a + b) if (a + b) > 0 else None
+        except Exception:
+            return None
+    f_p = _parse_ps(meta.get('ps_ratio')) or _parse_ps(fm.get('ps_ratio'))
+
+    # AM radius distributions from the real atoms (kept for size variation)
     r_amp_arr = np.array([]); r_ams_arr = np.array([])
-    f_p = 0.7
     if atoms_csv.exists():
         df = pd.read_csv(atoms_csv)
         for col in ('radius', 'type'):
@@ -539,9 +548,11 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                        for t in df['type'].to_numpy()])
         r_amp_arr = rr[(ph == AM_P) & np.isfinite(rr)]
         r_ams_arr = rr[(ph == AM_S) & np.isfinite(rr)]
-        v_p = np.sum(r_amp_arr ** 3); v_s = np.sum(r_ams_arr ** 3)
-        if v_p + v_s > 0:
-            f_p = v_p / (v_p + v_s)
+        if f_p is None:                              # fallback: measured split
+            v_p = np.sum(r_amp_arr ** 3); v_s = np.sum(r_ams_arr ** 3)
+            f_p = v_p / (v_p + v_s) if (v_p + v_s) > 0 else 0.7
+    if f_p is None:
+        f_p = 0.7
 
     def _d50_target(ip_key, arr):
         v = ip.get(ip_key) or ip.get(ip_key + '_sim')
@@ -588,6 +599,11 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         placed = 0; stale = 0
         while placed < need_px and stale < stale_max:
             r_px = max(1.5, sampler() / pa)
+            rem = need_px - placed                   # bound end-of-fill overshoot
+            if rem > 0:
+                rcap = (1.4 * rem / np.pi) ** 0.5
+                if r_px > rcap:
+                    r_px = max(1.5, rcap)
             if r_px > 0.48 * min(nx, ny):
                 stale += 1; continue
             cx = rng.uniform(r_px, nx - r_px); cy = rng.uniform(r_px, ny - r_px)
