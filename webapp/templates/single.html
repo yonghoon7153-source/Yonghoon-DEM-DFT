@@ -212,10 +212,9 @@
   <div class="card-header-row">
     <h3>2D 대표 미세구조 (COMSOL용)</h3>
     <div style="display:flex; gap:8px; align-items:center">
-      <button class="btn btn-primary" onclick="load2DViewer(false)">2D 뷰어 로드</button>
-      <button class="btn" id="regen2d-btn" onclick="load2DViewer(true)"
-              style="display:none">다른 배치 생성 (랜덤)</button>
-      <button class="btn" id="auto2d-btn" onclick="load2DAuto()">생성 + 자동보정</button>
+      <button class="btn btn-primary" onclick="load2DViewer(true)">2D 미세구조 생성 (랜덤)</button>
+      <button class="btn" id="auto2d-btn" onclick="load2DAuto()"
+              style="display:none">자동보정 (정밀, ~1분)</button>
       <a class="btn" id="zip2d-btn" href="/results/{{ case.id }}/2d-export.zip"
          style="display:none">ZIP 다운로드 (PNG·README·CSV)</a>
     </div>
@@ -280,16 +279,18 @@ function load2DViewer(force) {
   const img = document.getElementById('viewer2d-img');
   const status = document.getElementById('viewer2d-status');
   const zip = document.getElementById('zip2d-btn');
-  const regen = document.getElementById('regen2d-btn');
+  const auto = document.getElementById('auto2d-btn');
+  const rep = document.getElementById('auto2d-report');
   if (force) cur2dSeed = Math.floor(Math.random() * 1000000);  // new random arrangement
-  status.textContent = force ? '2D 미세구조 다시 생성 중… (수 초)' : '2D 미세구조 생성 중… (처음 한 번은 수 초 소요)';
+  status.textContent = '2D 미세구조 생성 중… (수 초)';
   status.style.display = 'block';
   img.style.display = 'none';
+  if (rep) rep.style.display = 'none';
   img.onload = () => {
     status.style.display = 'none';
     img.style.display = 'block';
     zip.style.display = 'inline-block';
-    regen.style.display = 'inline-block';
+    auto.style.display = 'inline-block';
     zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;  // ZIP matches shown
   };
   img.onerror = () => {
@@ -305,15 +306,11 @@ function load2DViewer(force) {
 // Generate → check → auto fine-tune (coverage offset + SE bridge), then show
 // the figure plus a report of achieved-vs-target metrics.
 function load2DAuto() {
-  const c = document.getElementById('viewer2d-container');
-  c.style.display = 'block';
-  cur2dSeed = Math.floor(Math.random() * 1000000);
+  // Refine the CURRENTLY shown arrangement (cur2dSeed) to exact targets.
   const img = document.getElementById('viewer2d-img');
   const status = document.getElementById('viewer2d-status');
   const zip = document.getElementById('zip2d-btn');
-  const regen = document.getElementById('regen2d-btn');
   const rep = document.getElementById('auto2d-report');
-  viewer2dLoaded = true;
   status.textContent = '자동보정 중… (생성→검사→미세조정 반복, 최대 ~1분)';
   status.style.display = 'block';
   img.style.display = 'none';
@@ -321,8 +318,6 @@ function load2DAuto() {
   img.onload = () => {
     status.style.display = 'none';
     img.style.display = 'block';
-    zip.style.display = 'inline-block';
-    regen.style.display = 'inline-block';
     zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;
     fetch(`/results/{{ case.id }}/2d-auto-report.json?seed=${cur2dSeed}`)
       .then(r => r.ok ? r.json() : null)
@@ -330,7 +325,6 @@ function load2DAuto() {
   };
   img.onerror = () => {
     status.textContent = '자동보정 실패 — atoms.csv / 파라미터를 확인하세요.';
-    viewer2dLoaded = false;
   };
   img.src = `/results/{{ case.id }}/2d-auto.png?v=${Date.now()}&seed=${cur2dSeed}`;
 }
