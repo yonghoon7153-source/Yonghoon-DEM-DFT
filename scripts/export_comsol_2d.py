@@ -412,6 +412,11 @@ def _grain_polys(am_p_mask, grain_px, pa, pb, b0, seed=0):
             gm = gid == g
             if gm.sum() < 6:
                 continue
+            # dilate each grain into the inter-grain gaps (Chaikin smoothing
+            # shrinks cells, leaving slivers between them) and clip to the
+            # particle, so neighbours OVERLAP slightly → COMSOL Form Union
+            # merges them into shared grain-boundary edges with no internal gaps.
+            gm = _ndi.binary_dilation(gm, iterations=2) & sub
             polys += _contour_crop(gm, pa, pb, b0, x0, y0)
     return polys
 
