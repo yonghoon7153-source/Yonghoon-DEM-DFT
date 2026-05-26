@@ -975,9 +975,9 @@ def render_png(data, out_path: Path):
     if gb is not None and gb.any():
         gb_overlay = np.ma.masked_where(~gb, np.ones_like(labels))
         ax.imshow(gb_overlay, origin='lower',
-                   cmap=ListedColormap(['#5b5b78']),   # subtle GB lines
+                   cmap=ListedColormap(['#b6bac6']),   # clear gray GB lines
                    extent=extent, interpolation='nearest', aspect='equal',
-                   alpha=0.9)
+                   alpha=1.0)
     ax.set_xlabel(data['a_label']); ax.set_ylabel(data['b_label'])
     se_tag = ' (continuum)' if data['se_continuum'] else ' (discrete)'
     gb_tag = (f', AM_P poly grain ~{gsz}μm / AM_S single-xtal'
@@ -1005,7 +1005,7 @@ def render_png(data, out_path: Path):
     handles = [Patch(facecolor=PHASE_COLORS[p], edgecolor='gray', label=_lab(p))
                for p in (AM_P, AM_S, SE, VOID)]
     if gb is not None and gb.any():
-        handles.append(Patch(facecolor='#5b5b78',
+        handles.append(Patch(facecolor='#b6bac6',
                               label='AM_P grain boundary'))
     ax.legend(handles=handles, loc='upper right', fontsize=8.5, framealpha=0.9)
 
