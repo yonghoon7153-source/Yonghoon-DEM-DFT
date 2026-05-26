@@ -711,7 +711,8 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                 continue
             sel = ph_px == phase_val
             if sel.any():
-                thr = np.quantile(g[sel], min(0.999, cov_t + 0.018))
+                off = 0.030 if phase_val == AM_S else 0.022   # shell-widen comp.
+                thr = np.quantile(g[sel], min(0.999, cov_t + off))
                 unc[sel] = g[sel] > thr
 
         # Floating guard: every connected AM cluster must keep some SE contact
@@ -782,16 +783,47 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     # non-AM, non-pore → SE matrix; pores stay VOID
     labels[(labels == VOID) & ~pore] = SE
 
-    # Reconnect SE pockets that are split only by THIN AM necks, via a
-    # morphological closing of the SE phase (fills those necks with SE).  This
-    # keeps SE a near-single network for the ionic path WITHOUT carving long
-    # straight channels across the domain.  Genuinely isolated SE pockets —
-    # which are physical in a 2D section of a 3D-percolating network — are left
-    # as they are.
+    # Reconnect the SE network (ionic path).  In AM_S-dense cases the void
+    # (interfacial shells + pores) chops SE into many local pockets that a
+    # morphological closing alone cannot rejoin.  So: (1) light closing fills
+    # thin AM necks, then (2) each remaining SE pocket within DMAX of the main
+    # component is threaded to it with a short 2-px channel.  DMAX caps the
+    # bridge length so this never draws the long cross-domain streaks the old
+    # unconstrained threading did; pockets farther than DMAX (rare) are left.
     se = (labels == SE)
-    se_closed = _ndi.binary_closing(se, iterations=3)
-    bridge = se_closed & is_am0 & ~se            # AM-neck pixels the closing fills
-    labels[bridge] = SE
+    labels[_ndi.binary_closing(se, iterations=2) & is_am0 & ~se] = SE
+    se = (labels == SE)
+    lab, ncomp = _ndi.label(se)
+    if ncomp > 1:
+        sizes = np.bincount(lab.ravel()); sizes[0] = 0
+        main = int(sizes.argmax())
+        dist_main, (iy, ix) = _ndi.distance_transform_edt(~(lab == main),
+                                                          return_indices=True)
+        DMAX = 3.0 / pa                              # ≤3 μm bridges only
+        for comp in range(1, ncomp + 1):
+            if comp == main:
+                continue
+            ys, xs = np.where(lab == comp)
+            k = int(np.argmin(dist_main[ys, xs]))    # pocket pixel nearest main
+            if dist_main[ys[k], xs[k]] > DMAX:
+                continue
+            y0p, x0p = int(ys[k]), int(xs[k])
+            y1p, x1p = int(iy[y0p, x0p]), int(ix[y0p, x0p])
+            dy = abs(y1p - y0p); dx = abs(x1p - x0p)
+            sy = 1 if y0p < y1p else -1
+            sx = 1 if x0p < x1p else -1
+            err = dx - dy; cy0, cx0 = y0p, x0p
+            while True:
+                for ddy in (0, 1):                   # 2-wide → 4-connected
+                    for ddx in (0, 1):
+                        labels[min(ny - 1, cy0 + ddy), min(nx - 1, cx0 + ddx)] = SE
+                if cy0 == y1p and cx0 == x1p:
+                    break
+                e2 = 2 * err
+                if e2 > -dy:
+                    err -= dy; cx0 += sx
+                if e2 < dx:
+                    err += dx; cy0 += sy
 
     # AM_P polycrystalline grain boundaries (AM_S stays single crystal)
     grain_boundary = np.zeros_like(labels, dtype=bool)
