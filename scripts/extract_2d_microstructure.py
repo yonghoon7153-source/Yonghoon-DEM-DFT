@@ -592,6 +592,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     # AM_P (large) placed first to its area target, then AM_S (small) nestles
     # into the gaps with a looser overlap budget so both phases hit target.
     pid = [0]
+    particles = []                                   # (cx, cy, r_px) per particle
     def _place_phase(need_px, phase, sampler, faceted, overlap, stale_max,
                      center_void=False):
         if not sampler or need_px <= 0:
@@ -625,6 +626,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                 stale += 1; continue
             new = mask & (region == VOID)
             region[new] = phase
+            particles.append((cx, cy, r_px))
             placed += int(new.sum()); stale = 0
 
     _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.06, 12000)
@@ -632,12 +634,13 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                  center_void=True)
 
     # ---- Coverage-driven porosity ---------------------------------------
-    # Physically, the part of an AM surface that is "uncovered" is where it is
-    # NOT in contact with SE.  So lay a thin interfacial void shell against a
-    # (1-coverage) arc of each AM particle's perimeter (those arcs then truly
-    # face void, not SE), and fill the rest of the porosity with bulk pores in
-    # the SE interior, away from AM.  Coverage is then a real geometric
-    # adjacency, not an arbitrary label.
+    # The "uncovered" part of an AM surface is where it does NOT touch SE.  We
+    # lay thin interfacial void patches on those parts so coverage is a real
+    # geometric adjacency.  Each particle is treated INDIVIDUALLY (touching
+    # particles are NOT merged), and its uncovered set is a multi-lobe angular
+    # function + a per-particle bias — so coverage alternates SE/void around a
+    # particle (초빨초빨), varies particle-to-particle, and some particles end
+    # up fully isolated from SE (completely inactive).
     is_am0 = (labels == AM_P) | (labels == AM_S)
     na0 = ~is_am0
     nb0 = np.zeros_like(is_am0)
@@ -648,24 +651,22 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     n_bnd0 = int(by.size)
 
     pore = np.zeros((ny, nx), dtype=bool)
-    if target_coverage_frac is not None and n_bnd0:
-        lab_am, n_am = _ndi.label(is_am0)
-        lb = lab_am[by, bx]
-        cents = np.asarray(_ndi.center_of_mass(
-            is_am0, lab_am, np.arange(1, n_am + 1))).reshape(-1, 2)
-        ang = np.arctan2(by - cents[lb - 1, 0], bx - cents[lb - 1, 1])
-        rng2 = np.random.default_rng(seed + 12345)
-        starts = rng2.uniform(0, 2 * np.pi, n_am + 1)
-        rel = (ang - starts[lb]) % (2 * np.pi)
-        want_unc = 1.0 - target_coverage_frac
-        w = want_unc * (2 * np.pi)                  # tune arc to hit target
-        for _ in range(8):
-            unc = rel < w
-            ach = float(unc.mean())
-            if ach <= 1e-6:
-                break
-            w = min(2 * np.pi, w * want_unc / max(ach, 1e-6))
-        unc = rel < w
+    if target_coverage_frac is not None and n_bnd0 and particles:
+        from scipy.spatial import cKDTree
+        P = np.asarray(particles, dtype=float)        # (Np, 3): cx, cy, r_px
+        Np = len(P)
+        rngc = np.random.default_rng(seed + 999)
+        bias = rngc.normal(0.0, 1.3, Np)              # per-particle activity
+        ks = np.array([2.0, 3.0, 5.0])                # angular lobes
+        amp = rngc.uniform(0.25, 0.75, (Np, 3))
+        pha = rngc.uniform(0.0, 2 * np.pi, (Np, 3))
+        idx = cKDTree(P[:, :2]).query(np.column_stack([bx, by]))[1]
+        thb = np.arctan2(by - P[idx, 1], bx - P[idx, 0])
+        g = bias[idx] + sum(amp[idx, k] * np.cos(ks[k] * thb + pha[idx, k])
+                            for k in range(3))
+        # +offset compensates for the 2-px shell widening the void contact
+        thr = np.quantile(g, min(0.999, target_coverage_frac + 0.018))
+        unc = g > thr
         seed_mask = np.zeros((ny, nx), dtype=bool)
         seed_mask[by[unc], bx[unc]] = True
         shell = _ndi.binary_dilation(seed_mask, iterations=2) & na0
