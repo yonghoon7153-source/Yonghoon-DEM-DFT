@@ -20,6 +20,7 @@
 | Method 3 v2 LBFGS 누락 → clamped C=98 anomaly | 작업 시간 손해 |
 | KISTI safe wrapper "JOB DONE" check bug | rank02/03 자동 restart 안 됨, walltime 4h 낭비 |
 | modelC PDOS K=12x12x6 NaN bug | nscf 다시 |
+| master_batch `EXOTIC=1` → reviewer 승인 literature site 필터 우회 (2026-05-26) | multi_category_v22 배치가 비선호 site(Cl4d/P4b) 포함 6-site 전부 enumerate → 결과 폐기, v23으로 전체 재실행 (Z9 참조) |
 
 ==**같은 실수 반복 막기 위해 이 파일 만듦**==.
 
@@ -383,6 +384,7 @@
 |---|---|
 | 2026-05-01 | 초기 catalog 생성 — comp2 v2 C44 anomaly bug 사건 후 |
 | 2026-05-01 | step1_v2.py (comp1 v2) ✅ VERIFIED, comp2 v2 production 코드 ❌ 미확인 |
+| 2026-05-26 | Z9 추가 — doping cascade EXOTIC=1 site-필터 우회 bug FIXED + v23 재실행 검증 |
 
 ---
 
@@ -747,4 +749,41 @@ mechanical analysis.
 **Default Stage 11 behavior (v4.5.3)**: cascade pulls all 6 baselines
 that exist. Estimated cost ~15h on A100 for 6 baselines × 5 seeds.
 Disable individual baselines for cost-sensitive runs.
+
+### Z9. 2026-05-26 EXOTIC flag bug — literature site 필터 우회 (FIXED)
+
+**증상**: gabia `multi_category_2026_05_19_v22` 배치의 모든 compound가 reviewer
+승인한 `site_preference.py` literature 필터를 무시하고 6개 site(`Li24g, Cl4d,
+S16e, S4a, Li48h, P4b`) 전부에 dopant를 배치 → over-enumeration. Li2O_x002
+dataset 검증에서 6-site 균일 분포(`{각 15}`) 확인.
+
+**근본 원인**: cascade의 `EXOTIC` 인자(=`--allow_exotic`, site 필터 skip
+모드)가 **기본값 1**이었고, master batch 호출부도 명시적으로 `1`을 넘김.
+- `master_batch_273.sh:318` / `master_batch_105.sh:147` → `5 1,1,1 1`
+- `tier_cascade.sh:41` / `run_compound_batch.sh:28` → `EXOTIC="${5:-1}"`
+- 참고: `run_compound_batch.sh` usage 주석은 `[EXOTIC=0]`로 적혀 있었으나 코드는 1
+  → **문서/코드 불일치**가 버그를 가림.
+
+**수정** (커밋 `1e897bf`, `517c46d`, branch `claude/unified-2026-05-15`):
+- 두 master 호출부: `5 1,1,1 1` → `5 1,1,1 0`
+- 두 스크립트 기본값: `${5:-1}` → `${5:-0}` (literature 필터가 모든 호출 경로의 기본)
+- `EXOTIC=1`(=`--allow_exotic`)은 이제 **명시적 opt-in 전용**.
+
+**검증** (2026-05-26, gabia `multi_category_2026_05_26_v23`):
+- Stage 01 substitute: Li2O_x002 → `Generated 20 structures`
+- site 토큰 분포: `{Li24g:10, S16e:10, S4a:10, Li48h:10}` — **`Cl4d`/`P4b`(비선호
+  할로겐·인 site) 완전 제거**, 6-site → 4-site. literature 필터 정상 적용 확정.
+
+**조치**: v22 배치 결과 폐기. v23(EXOTIC=0) 재실행으로 대체. 옛 배치 프로세스
+종료 후 새 배치 가동 중.
+
+**status**:
+- `tools/doping/master_batch_273.sh` ✅ FIXED (EXOTIC=0)
+- `tools/doping/master_batch_105.sh` ✅ FIXED (EXOTIC=0)
+- `tools/doping/tier_cascade.sh` ✅ FIXED (default 0)
+- `tools/doping/run_compound_batch.sh` ✅ FIXED (default 0)
+- `tools/doping/site_preference.py` ✅ VERIFIED (필터 로직 자체는 정상 — 호출이 안 됐던 것)
+
+**교훈**: dual-mode flag(필터 on/off)는 **safe 동작을 기본값**으로. 그리고 호출부에서
+flag를 하드코딩으로 override하면 기본값 수정만으론 안 잡힘 → 호출부 + 기본값 둘 다 확인.
 
