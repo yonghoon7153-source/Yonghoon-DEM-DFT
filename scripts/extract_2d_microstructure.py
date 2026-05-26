@@ -520,9 +520,14 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     poro = float(fm.get('porosity') or 14.0) / 100.0
     phi_se = fm.get('phi_se')
     phi_se = float(phi_se) if phi_se is not None else 0.30
-    cov_3d = (fm.get('coverage_AM_mean_physics_rough')
-              or fm.get('coverage_AM_mean_physics'))
-    target_coverage_frac = (float(cov_3d) / 100.0) if cov_3d is not None else None
+    def _cov(base):
+        v = (fm.get(base + '_mean_physics_rough') or fm.get(base + '_mean_physics')
+             or fm.get(base + '_mean'))
+        return float(v) / 100.0 if v is not None else None
+    cov_all = _cov('coverage_AM')
+    cov_P = _cov('coverage_AM_P')                     # per-phase 3D coverage
+    cov_S = _cov('coverage_AM_S')
+    target_coverage_frac = cov_all                    # combined (reporting)
     thickness = float(fm.get('thickness_um') or box_x_um * 2)
     r_se_um = (ip.get('r_SE') or ip.get('r_SE_sim') or 0.0005) * scale
 
@@ -626,7 +631,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                 stale += 1; continue
             new = mask & (region == VOID)
             region[new] = phase
-            particles.append((cx, cy, r_px))
+            particles.append((cx, cy, r_px, float(phase)))
             placed += int(new.sum()); stale = 0
 
     _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.06, 12000)
@@ -651,9 +656,9 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     n_bnd0 = int(by.size)
 
     pore = np.zeros((ny, nx), dtype=bool)
-    if target_coverage_frac is not None and n_bnd0 and particles:
+    if (cov_all or cov_P or cov_S) is not None and n_bnd0 and particles:
         from scipy.spatial import cKDTree
-        P = np.asarray(particles, dtype=float)        # (Np, 3): cx, cy, r_px
+        P = np.asarray(particles, dtype=float)        # (Np,4): cx, cy, r_px, phase
         Np = len(P)
         rngc = np.random.default_rng(seed + 999)
         bias = rngc.normal(0.0, 1.3, Np)              # per-particle activity
@@ -664,9 +669,43 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         thb = np.arctan2(by - P[idx, 1], bx - P[idx, 0])
         g = bias[idx] + sum(amp[idx, k] * np.cos(ks[k] * thb + pha[idx, k])
                             for k in range(3))
-        # +offset compensates for the 2-px shell widening the void contact
-        thr = np.quantile(g, min(0.999, target_coverage_frac + 0.018))
-        unc = g > thr
+        ph_px = labels[by, bx]                        # true phase at the pixel
+        # per-phase threshold: AM_P and AM_S each hit their own 3D coverage
+        # (+offset compensates for the 2-px shell widening the void contact)
+        unc = np.zeros(len(g), dtype=bool)
+        for phase_val, cov_t in ((AM_P, cov_P), (AM_S, cov_S)):
+            cov_t = cov_t if cov_t is not None else cov_all
+            if cov_t is None:
+                continue
+            sel = ph_px == phase_val
+            if sel.any():
+                thr = np.quantile(g[sel], min(0.999, cov_t + 0.018))
+                unc[sel] = g[sel] > thr
+
+        # Floating guard: every connected AM cluster must keep some SE contact
+        # so it is anchored (not floating in void).  Cap each cluster's
+        # uncovered rim — a lone particle therefore can't be 100% void-ringed,
+        # while a particle wedged in a multi-particle cluster may still be fully
+        # inactive (held by its neighbours).
+        lab_am, _ = _ndi.label(is_am0)
+        px_blob = lab_am[by, bx]
+        BLOB_CAP = 0.90
+        order = np.argsort(px_blob, kind='stable')
+        blob_s = px_blob[order]; unc_o = unc[order]; g_o = g[order]
+        ub = np.unique(blob_s)
+        bnds = np.searchsorted(blob_s, np.append(ub, ub[-1] + 1))
+        for i in range(len(ub)):
+            a, b = bnds[i], bnds[i + 1]
+            seg = unc_o[a:b]
+            frac = seg.mean()
+            if frac > BLOB_CAP:
+                nflip = int(round((frac - BLOB_CAP) * (b - a)))
+                loc = np.where(seg)[0]
+                flip = loc[np.argsort(g_o[a:b][loc])[:nflip]]
+                seg[flip] = False
+                unc_o[a:b] = seg
+        unc[order] = unc_o
+
         seed_mask = np.zeros((ny, nx), dtype=bool)
         seed_mask[by[unc], bx[unc]] = True
         shell = _ndi.binary_dilation(seed_mask, iterations=2) & na0
@@ -772,6 +811,14 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     n_bnd = int(am_boundary.sum())
     coverage_pct = round(100 * int(am_covered.sum()) / n_bnd, 2) if n_bnd else 0.0
     coverage_inplane_pct = coverage_pct
+
+    def _phase_cov(phase):
+        pb = (labels == phase) & nb
+        npb = int(pb.sum())
+        return (round(100 * int((pb & se_n).sum()) / npb, 2) if npb else None)
+    coverage_AM_P_pct = _phase_cov(AM_P)
+    coverage_AM_S_pct = _phase_cov(AM_S)
+
     interface = np.zeros_like(labels)
     interface[am_covered] = 1
     interface[am_uncov] = 2
@@ -792,6 +839,10 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         'coverage_2d_inplane_pct': coverage_inplane_pct,
         'coverage_3d_target_pct': (round(target_coverage_frac * 100, 2)
                                    if target_coverage_frac is not None else None),
+        'coverage_AM_P_pct': coverage_AM_P_pct,
+        'coverage_AM_S_pct': coverage_AM_S_pct,
+        'coverage_AM_P_target_pct': (round(cov_P * 100, 2) if cov_P else None),
+        'coverage_AM_S_target_pct': (round(cov_S * 100, 2) if cov_S else None),
         'n_am_boundary_px': n_bnd,
         'n_particles_hit': None,
         'r_AM_P_d50_um': (round(r_amp_um, 3) if r_amp_um else None),
@@ -890,10 +941,17 @@ def render_png(data, out_path: Path):
     tgt = data.get('coverage_3d_target_pct')
     inp = data.get('coverage_2d_inplane_pct')
     if data.get('synthetic'):
+        cp, cs = data.get('coverage_AM_P_pct'), data.get('coverage_AM_S_pct')
+        cpt, cst = data.get('coverage_AM_P_target_pct'), data.get('coverage_AM_S_target_pct')
         cov_sub = (f"coverage = {data['coverage_2d_pct']}%"
                    + (f"  (3D target {tgt}%)" if tgt is not None else ""))
-        cov_note = ("\nuncovered = AM facing void/AM (interfacial pore);  "
-                    "covered = AM facing SE")
+        per = []
+        if cp is not None:
+            per.append(f"AM_P {cp}%" + (f"→{cpt}" if cpt else ""))
+        if cs is not None:
+            per.append(f"AM_S {cs}%" + (f"→{cst}" if cst else ""))
+        cov_note = ("\n" + " / ".join(per) + "  " if per else "\n") + \
+                   "(uncovered = AM facing void/AM;  covered = AM facing SE)"
     else:
         cov_sub = (f"coverage = {data['coverage_2d_pct']}%  (pinned to 3D {tgt}%)"
                    if tgt is not None else f"2D coverage = {data['coverage_2d_pct']}%")
