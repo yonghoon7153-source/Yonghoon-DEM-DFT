@@ -416,10 +416,13 @@ def _grain_polys(am_p_mask, grain_px, pa, pb, b0, seed=0):
     return polys
 
 
-def write_dxf_layers(layers: dict, out_path: Path, colors: dict = None):
-    """Write closed POLYLINEs grouped by layer (generic; for the COMSOL-lean
-    geometry: domain rectangle, AM_P_grain cells, AM_S, void)."""
-    colors = colors or {'domain': 7, 'AM_P_grain': 1, 'AM_S': 3, 'void': 8}
+def write_dxf_layers(layers: dict, out_path: Path, colors: dict = None,
+                     open_layers=()):
+    """Write POLYLINEs grouped by layer.  Layers in `open_layers` are written
+    as OPEN polylines (interface arcs); the rest are closed (domains)."""
+    colors = colors or {'domain': 7, 'AM_P_grain': 1, 'AM_S': 3, 'void': 8,
+                        'AM_SE_interface': 3, 'AM_inactive': 1}
+    open_layers = set(open_layers)
     lines = []
     def w(c, v): lines.append(str(c)); lines.append(str(v))
     w(0, 'SECTION'); w(2, 'HEADER'); w(0, 'ENDSEC')
@@ -429,10 +432,11 @@ def write_dxf_layers(layers: dict, out_path: Path, colors: dict = None):
     w(0, 'ENDTAB'); w(0, 'ENDSEC')
     w(0, 'SECTION'); w(2, 'ENTITIES')
     for name, contours in layers.items():
+        closed_flag = 0 if name in open_layers else 1
         for seg in contours:
             if len(seg) < 2:
                 continue
-            w(0, 'POLYLINE'); w(8, name); w(66, 1); w(70, 1)   # closed
+            w(0, 'POLYLINE'); w(8, name); w(66, 1); w(70, closed_flag)
             for (x, y) in seg:
                 w(0, 'VERTEX'); w(8, name)
                 w(10, f'{x:.4f}'); w(20, f'{y:.4f}'); w(30, '0.0')
@@ -441,17 +445,18 @@ def write_dxf_layers(layers: dict, out_path: Path, colors: dict = None):
     Path(out_path).write_text('\n'.join(lines))
 
 
-def write_comsol_geometry(sd, out_dir, grain_um=3.0, min_void_um=1.5, seed=0):
-    """COMSOL-lean DXF: domain rectangle + AM_P split into coarse grain domains
-    + AM_S particles + only the larger void pores (sub-resolution specks pruned;
-    porosity is also captured by the effective σ in parameters).  SE is left for
-    COMSOL to build as Rectangle − (AM ∪ void).  No duplicate interface curves —
-    coverage is encoded by AM-void (inactive) vs AM-SE (active) adjacency."""
+def write_comsol_geometry(sd, out_dir, grain_um=2.0, min_void_um=0.4, seed=0):
+    """COMSOL geometry DXF: domain rectangle + AM_P split into grain domains
+    + AM_S particles + void pores (small ones around AM kept — they encode the
+    inactive coverage) + the AM-SE interface split as two edge layers:
+      AM_SE_interface (active, reaction BC)  /  AM_inactive (no-flux).
+    SE is left for COMSOL to build as Rectangle − (AM ∪ void)."""
     labels = sd['labels']
     pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
     a_ext, b_ext = sd['a_extent'], sd['b_extent']
-    min_area_px = max(12, int((sd['n_pixels'] / 110) ** 2))
-    void_min = max(min_area_px, int(np.pi * (min_void_um / pa / 2.0) ** 2))
+    min_area_px = max(8, int((sd['n_pixels'] / 150) ** 2))
+    void_min = max(6, int(np.pi * (min_void_um / pa / 2.0) ** 2))
+    iseg = _classify_am_interface(labels, sd['interface'], pa, pb, b0)
     layers = {
         'domain': [np.array([[0, b0], [a_ext, b0], [a_ext, b0 + b_ext],
                              [0, b0 + b_ext], [0, b0]])],
@@ -460,10 +465,15 @@ def write_comsol_geometry(sd, out_dir, grain_um=3.0, min_void_um=1.5, seed=0):
                           min_area_px=min_area_px, fill_holes=True),
         'void': _contours(labels == VOID, pa, pb, b0,
                           min_area_px=void_min, fill_holes=False),
+        'AM_SE_interface': iseg['AM_SE_interface'],   # active arcs (green)
+        'AM_inactive': iseg['AM_inactive'],           # inactive arcs (red)
     }
-    write_dxf_layers(layers, Path(out_dir) / 'geometry_comsol.dxf')
+    write_dxf_layers(layers, Path(out_dir) / 'geometry_comsol.dxf',
+                     open_layers=('AM_SE_interface', 'AM_inactive'))
     return {'n_grains': len(layers['AM_P_grain']), 'n_AMS': len(layers['AM_S']),
-            'n_void': len(layers['void'])}
+            'n_void': len(layers['void']),
+            'n_active': len(layers['AM_SE_interface']),
+            'n_inactive': len(layers['AM_inactive'])}
 
 
 def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
@@ -535,9 +545,10 @@ def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
     # Boolean.  This is the one to import for meshing (geometry.dxf is the full
     # reference).
     try:
-        gi = write_comsol_geometry(sd, out_dir, grain_um=3.0, min_void_um=1.5)
+        gi = write_comsol_geometry(sd, out_dir, grain_um=2.0, min_void_um=0.4)
         print(f'  geometry_comsol.dxf → {gi["n_grains"]} AM_P grains + '
-              f'{gi["n_AMS"]} AM_S + {gi["n_void"]} void (lean, meshable)')
+              f'{gi["n_AMS"]} AM_S + {gi["n_void"]} void + '
+              f'{gi["n_active"]} active / {gi["n_inactive"]} inactive arcs')
     except Exception as _ge:
         import traceback; traceback.print_exc()
         print(f'  [comsol-lean geometry] skipped: {_ge}')
