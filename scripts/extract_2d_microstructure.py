@@ -599,10 +599,11 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     pid = [0]
     particles = []                                   # (cx, cy, r_px) per particle
     def _place_phase(need_px, phase, sampler, faceted, overlap, stale_max,
-                     center_void=False):
+                     center_void=False, stratify_z=False):
         if not sampler or need_px <= 0:
             return
-        placed = 0; stale = 0
+        placed = 0; stale = 0; n_ok = 0
+        K = 8                                        # z-bands for stratified placement
         while placed < need_px and stale < stale_max:
             r_px = max(1.5, sampler() / pa)
             rem = need_px - placed                   # bound end-of-fill overshoot
@@ -612,7 +613,14 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                     r_px = max(1.5, rcap)
             if r_px > 0.48 * min(nx, ny):
                 stale += 1; continue
-            cx = rng.uniform(r_px, nx - r_px); cy = rng.uniform(r_px, ny - r_px)
+            cx = rng.uniform(r_px, nx - r_px)
+            if stratify_z:                           # spread evenly over height z
+                band = n_ok % K
+                clo = max(r_px, band * ny / K)
+                chi = min(ny - r_px, (band + 1) * ny / K)
+                cy = rng.uniform(clo, chi) if chi > clo else rng.uniform(r_px, ny - r_px)
+            else:
+                cy = rng.uniform(r_px, ny - r_px)
             if center_void and labels[int(cy), int(cx)] != VOID:
                 stale += 1; continue
             x0 = max(0, int(np.floor(cx - r_px))); x1 = min(nx, int(np.ceil(cx + r_px)) + 1)
@@ -632,9 +640,10 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             new = mask & (region == VOID)
             region[new] = phase
             particles.append((cx, cy, r_px, float(phase)))
-            placed += int(new.sum()); stale = 0
+            placed += int(new.sum()); stale = 0; n_ok += 1
 
-    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.06, 12000)
+    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.06, 12000,
+                 stratify_z=True)
     _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 0.12, 20000,
                  center_void=True)
 
@@ -750,39 +759,16 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     # non-AM, non-pore → SE matrix; pores stay VOID
     labels[(labels == VOID) & ~pore] = SE
 
-    # Enforce a single connected SE network (ionic path): dense AM can trap
-    # SE in isolated pockets; thread each pocket to the main SE component with
-    # a thin channel carved through the intervening AM.
+    # Reconnect SE pockets that are split only by THIN AM necks, via a
+    # morphological closing of the SE phase (fills those necks with SE).  This
+    # keeps SE a near-single network for the ionic path WITHOUT carving long
+    # straight channels across the domain.  Genuinely isolated SE pockets —
+    # which are physical in a 2D section of a 3D-percolating network — are left
+    # as they are.
     se = (labels == SE)
-    lab, ncomp = _ndi.label(se)
-    if ncomp > 1:
-        sizes = np.bincount(lab.ravel()); sizes[0] = 0
-        main = int(sizes.argmax())
-        _, (iy, ix) = _ndi.distance_transform_edt(~(lab == main),
-                                                  return_indices=True)
-        for comp in range(1, ncomp + 1):
-            if comp == main:
-                continue
-            ys, xs = np.where(lab == comp)
-            j = 0                                    # pocket pixel nearest main
-            y0p, x0p = int(ys[j]), int(xs[j])
-            y1p, x1p = int(iy[y0p, x0p]), int(ix[y0p, x0p])
-            dy = abs(y1p - y0p); dx = abs(x1p - x0p)
-            sy = 1 if y0p < y1p else -1
-            sx = 1 if x0p < x1p else -1
-            err = dx - dy; cy0, cx0 = y0p, x0p
-            while True:
-                for ddy in (0, 1):                   # 2-wide → 4-connected
-                    for ddx in (0, 1):
-                        labels[min(ny - 1, cy0 + ddy),
-                               min(nx - 1, cx0 + ddx)] = SE
-                if cy0 == y1p and cx0 == x1p:
-                    break
-                e2 = 2 * err
-                if e2 > -dy:
-                    err -= dy; cx0 += sx
-                if e2 < dx:
-                    err += dx; cy0 += sy
+    se_closed = _ndi.binary_closing(se, iterations=3)
+    bridge = se_closed & is_am0 & ~se            # AM-neck pixels the closing fills
+    labels[bridge] = SE
 
     # AM_P polycrystalline grain boundaries (AM_S stays single crystal)
     grain_boundary = np.zeros_like(labels, dtype=bool)
