@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
-#SBATCH --time=04:00:00
+#SBATCH --time=12:00:00
 #SBATCH -o logs/uma_eos_tight_%j.out
 #SBATCH -e logs/uma_eos_tight_%j.err
 #SBATCH --comment pytorch
@@ -42,15 +42,17 @@ echo "=== UMA tight EOS (v096-v108, uma-s-1p1) — pair1 + pair2 ==="
 echo "Date: $(date)  Host: $(hostname)  Job: $SLURM_JOB_ID"
 nvidia-smi --query-gpu=index,name --format=csv,noheader
 
-# rank1 (Nd dispersed, the real structure) only — rank2 (clustered) is 4.8 eV/cell
-# higher (does not form), dropped. ENSEMBLE of 5 rattled seeds → B0 mean±std,
-# since a single EOS curve of this soft Li-mobile + vacancy structure is
-# basin-sensitive (B0 scattered 16–27 GPa across fits). Narrow v097–v105 grid +
-# continuation relax keep each curve single-basin. Start from relax.in (clean QE
-# input; relax.out trips ASE's espresso-out parser on the spin/incomplete bands).
+# GOAL: V0 (equilibrium volume) of Nd-doped Model C from the EOS BM3 minimum.
+# rank1 (Nd dispersed) only — rank2 (clustered) is 4.8 eV/cell higher, dropped.
+# ENSEMBLE of 100 rattled seeds → converged V0 ± std; champion = lowest E0_BM →
+# V0 cell (input cell shape scaled to V0_BM, written to V0_champion.cif). B0 is a
+# bonus (vs undoped LPSCl1.6). EOS preserves the argyrodite framework: fixed cell
+# SHAPE + isotropic volume scan + ion-relax (NO vc-relax). Narrow v097–v105 grid +
+# continuation keep each curve single-basin. Start from relax.in (clean QE input).
+# ~hours for 100 seeds; results saved incrementally (survive a walltime kill).
 python3 -u uma_eos_pre_dft.py \
     --rank1-structure ./pair01_pair_00_reference_1_82/v100/relax.in \
-    --n_seeds 5 --perturb 0.2 \
+    --n_seeds 100 --perturb 0.2 \
     --out_dir ./uma_eos_ens
 
 echo "=== DONE $(date) ==="

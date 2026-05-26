@@ -35,8 +35,9 @@ VOLUME_RATIOS_DENSE = np.round(np.arange(0.97, 1.055, 0.01), 2)  # 0.97..1.05 �
 UMA_MODEL = "uma-s-1p2"
 
 # UMA relax convergence
-FMAX = 0.05    # eV/Å — full (cell+pos) reference relax
-NSTEPS = 200
+FMAX = 0.05      # eV/Å — (legacy) loose relax
+REF_FMAX = 0.01  # tight cell+pos vc-relax → accurate equilibrium V0 cell (the goal)
+NSTEPS = 300
 EOS_FMAX = 0.01  # tighter per-volume relax → smooth E(V) (avoids basin-jump noise)
 
 
@@ -231,62 +232,46 @@ def process_rank(rank_label: str, calc, out_dir: Path,
         atoms = read(cif)
         print(f"\n  Loaded {cif.name} ({len(atoms)} atoms)")
 
-    # First: relax fully (cell + positions) to get clean V0
-    print(f"\n  Step 1: Full relax (cell + positions) at reference volume...")
-    from ase.optimize import LBFGS
-    try:
-        from ase.filters import FrechetCellFilter as CellFilter
-    except ImportError:
-        try:
-            from ase.constraints import ExpCellFilter as CellFilter
-        except ImportError:
-            from ase.constraints import UnitCellFilter as CellFilter
-    atoms_full = atoms.copy()
-    atoms_full.calc = calc
-    atoms_full.set_pbc([True, True, True])
-    ucf = CellFilter(atoms_full)
-    opt = LBFGS(ucf, logfile=None)
+    # Step 1: ion-relax at the INPUT cell (cell SHAPE held fixed — preserve the
+    # argyrodite framework; NO vc-relax, which would let the lattice distort off
+    # the parent symmetry). The EOS then scans ISOTROPIC volume scalings of this
+    # cell, so only the volume (V0) is fit from E(V); cell shape is preserved.
+    print(f"\n  Step 1: ion-relax at fixed input cell, fmax={REF_FMAX}...")
+    from ase.geometry import cell_to_cellpar
     t0 = time.time()
-    opt.run(fmax=FMAX, steps=NSTEPS)
-    E_ref = float(atoms_full.get_potential_energy())
+    E_ref, atoms_full = relax_positions_only(atoms, calc, fmax=REF_FMAX,
+                                             nsteps=NSTEPS, label=rank_label)
     V_ref = atoms_full.get_volume()
-    print(f"  Ref relax: V_ref = {V_ref:.3f} Å³, E_ref = {E_ref:+.4f} eV ({(time.time()-t0):.1f}s)")
+    cellpar = [float(x) for x in cell_to_cellpar(atoms_full.cell.array)]
+    cif_path = out_dir / f"{rank_label}_relaxed.cif"
+    write(cif_path, atoms_full)
+    print(f"  V_ref={V_ref:.3f} Å³ (cell shape fixed)  E_ref={E_ref:+.4f} eV  "
+          f"a,b,c={cellpar[0]:.4f},{cellpar[1]:.4f},{cellpar[2]:.4f} ({(time.time()-t0):.1f}s)")
 
-    # Save relaxed structure
-    write(out_dir / f"{rank_label}_relaxed.cif", atoms_full)
-
-    # Second: V scan at fixed cell (positions only)
-    print(f"\n  Step 2: Volume scan ±8% ({len(VOLUME_RATIOS_DENSE)} points)...")
-    scan = scan_volume(atoms_full, calc, ratios=VOLUME_RATIOS_DENSE, label=rank_label)
-    V_arr = [p['V'] for p in scan['curve']]
-    E_arr = [p['E'] for p in scan['curve']]
-
-    # BM fit
-    print(f"\n  Step 3: Birch-Murnaghan EOS fit...")
-    bm = fit_birch_murnaghan(V_arr, E_arr)
-    if bm['fit_success']:
-        print(f"    V0_BM    = {bm['V0_BM']:.3f} Å³")
-        print(f"    B0       = {bm['B0_GPa']:.1f} GPa")
-        print(f"    B0_prime = {bm['B0_prime']:.2f}")
-        print(f"    E0_BM    = {bm['E0_BM']:.4f} eV")
-
-    # DFT recommendation
-    print(f"\n  Step 4: DFT EOS sweep recommendation (matches modelC v094-v106 pattern)...")
-    rec = recommend_dft_range(bm['V0_BM'], ratios=VOLUME_RATIOS)
-    for r in rec:
-        print(f"    {r['label']}: V = {r['volume_A3']:.2f} Å³, cell scale = {r['cell_scale']:.5f}")
-
-    return {
+    result = {
         'rank': rank_label,
         'start_structure': src,
         'uma_model': UMA_MODEL,
         'V_ref_relaxed': V_ref,
         'E_ref_relaxed': E_ref,
         'cell_relaxed': atoms_full.cell.array.tolist(),
-        'eos_scan': scan,
-        'bm_fit': bm,
-        'dft_recommendation': rec,
+        'cellpar': cellpar,
+        'relaxed_cif': str(cif_path),
+        'eos_scan': None,
+        'bm_fit': {'fit_success': False, 'V0_BM': V_ref,
+                   'B0_GPa': None, 'B0_prime': None, 'E0_BM': E_ref},
     }
+
+    # Step 2-3: EOS — isotropic volume scan (shape fixed) + ion-relax + BM3 fit
+    print(f"\n  Step 2: Volume scan ({len(VOLUME_RATIOS_DENSE)} points, continuation, isotropic)...")
+    scan = scan_volume(atoms_full, calc, ratios=VOLUME_RATIOS_DENSE, label=rank_label)
+    bm = fit_birch_murnaghan([p['V'] for p in scan['curve']],
+                             [p['E'] for p in scan['curve']])
+    if bm['fit_success']:
+        print(f"    V0_BM={bm['V0_BM']:.3f} Å³  B0={bm['B0_GPa']:.1f} GPa  B0'={bm['B0_prime']:.2f}")
+    result.update({'eos_scan': scan, 'bm_fit': bm,
+                   'dft_recommendation': recommend_dft_range(bm['V0_BM'], ratios=VOLUME_RATIOS)})
+    return result
 
 
 def main():
@@ -325,29 +310,50 @@ def main():
         # ENSEMBLE (rank1 only): rattle start → full relax → EOS → BM3, per seed.
         # Robust B0 for soft / Li-mobile / vacancy structures (single curve is
         # basin-sensitive). Report mean±std over seeds.
-        print(f"\n=== ENSEMBLE: {args.n_seeds} seeds, rattle {args.perturb} Å (rank1 only) ===")
+        # ALL seeds do the FULL EOS. V0 = BM3 parabola minimum (project standard:
+        # CODE_INVENTORY pipeline-v2 step 4 & 6 — MLIP EOS → BM3 → V0 → V0.xyz).
+        # Ensemble → converged V0 ± std; champion = deepest minimum (lowest E0_BM).
+        print(f"\n=== ENSEMBLE: {args.n_seeds} seeds, rattle {args.perturb} Å (rank1, full EOS) ===")
         base = load_structure(args.rank1_structure, args.rank1_dir)
-        seed_res, B0s, V0s, Bps = [], [], [], []
+        seed_res = []
         for s in range(args.n_seeds):
             a = base.copy()
             if s > 0:
                 a.rattle(stdev=args.perturb, seed=s)
             r = process_rank(f'rank1_seed{s}', calc, out_dir, atoms_in=a)
             seed_res.append(r)
-            bm = r['bm_fit']
-            if bm['fit_success'] and bm['B0_GPa'] is not None:
-                B0s.append(bm['B0_GPa']); V0s.append(bm['V0_BM']); Bps.append(bm['B0_prime'])
-        results['rank1_ensemble'] = seed_res
-        json.dump(results, open(out_dir / 'uma_eos_results.json', 'w'), indent=2, default=str)
-        B0s = np.array(B0s)
-        print(f"\n{'='*70}\nrank1 ENSEMBLE B0 ({UMA_MODEL}, n={len(B0s)}/{args.n_seeds} fit OK):")
-        if len(B0s):
-            print(f"  B0  = {B0s.mean():.1f} ± {B0s.std():.1f} GPa")
-            print(f"  V0  = {np.mean(V0s):.1f} ± {np.std(V0s):.1f} A^3")
-            print(f"  B0' = {np.mean(Bps):.2f} ± {np.std(Bps):.2f}")
-            print(f"  per-seed B0: " + ', '.join(f'{b:.1f}' for b in B0s))
-        else:
-            print("  no successful fits")
+            json.dump({'rank1_ensemble': seed_res},  # incremental (survive walltime kill)
+                      open(out_dir / 'uma_eos_results.json', 'w'), indent=2, default=str)
+
+        ok = [r for r in seed_res
+              if r['bm_fit']['fit_success'] and r['bm_fit']['B0_GPa'] is not None]
+        if not ok:
+            print("\n[no successful BM fits]"); print('='*70); return
+        V0s = np.array([r['bm_fit']['V0_BM'] for r in ok])
+        B0s = np.array([r['bm_fit']['B0_GPa'] for r in ok])
+        # champion = deepest EOS minimum (lowest E0_BM) = best ground state
+        champ = min(ok, key=lambda r: r['bm_fit']['E0_BM'])
+        cbm = champ['bm_fit']
+        # cell at champion V0 = relaxed reference cell scaled to V0_BM (isotropic EOS)
+        from ase.geometry import cell_to_cellpar
+        scale = (cbm['V0_BM'] / champ['V_ref_relaxed']) ** (1.0 / 3.0)
+        cp = cell_to_cellpar(np.array(champ['cell_relaxed']) * scale)
+        cat = read(champ['relaxed_cif'])
+        cat.set_cell(np.array(champ['cell_relaxed']) * scale, scale_atoms=True)
+        write(out_dir / 'V0_champion.cif', cat)
+        print(f"\n{'='*70}\nrank1 ENSEMBLE ({UMA_MODEL}, n={len(ok)}/{args.n_seeds}) — V0 from EOS BM3 minimum")
+        print(f"  ★ V0  = {V0s.mean():.2f} ± {V0s.std():.2f} Å³  "
+              f"(median {np.median(V0s):.2f}, range {V0s.min():.2f}–{V0s.max():.2f})")
+        print(f"  ★ champion V0 = {cbm['V0_BM']:.2f} Å³ (lowest E0={cbm['E0_BM']:.4f} eV, {champ['rank']})")
+        print(f"     V0 cell: a={cp[0]:.4f} b={cp[1]:.4f} c={cp[2]:.4f} Å  "
+              f"α={cp[3]:.2f} β={cp[4]:.2f} γ={cp[5]:.2f}°")
+        print(f"     saved: {out_dir}/V0_champion.cif")
+        print(f"  B0 (bonus, vs LPSCl1.6) = {B0s.mean():.1f} ± {B0s.std():.1f} GPa")
+        print("  per-seed (sorted by E0) [E0(eV)  V0(Å³)  B0  B0']:")
+        for r in sorted(ok, key=lambda r: r['bm_fit']['E0_BM']):
+            b = r['bm_fit']
+            print(f"    {r['rank']:16s} {b['E0_BM']:.4f}  {b['V0_BM']:8.2f}  "
+                  f"{b['B0_GPa']:6.1f}  {b['B0_prime']:6.2f}")
         print('='*70)
         return
 
