@@ -4499,17 +4499,23 @@ def serve_3d_data(case_id):
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
+    # Vectorized build (iterrows is ~100x slower and dominates load time on
+    # particulate cases with 10^5+ atoms).
+    ids = df['id'].astype('int64').tolist()
+    ts = df['type'].astype('int64').tolist()
+    xs = (df['x'] * scale).round(2).tolist()
+    ys = (df['y'] * scale).round(2).tolist()
+    zs = (df['z'] * scale).round(2).tolist()
+    rs = (df['radius'] * scale).round(2).tolist()
+    _tname = {}
     particles = []
-    for _, row in df.iterrows():
-        t = int(row['type'])
-        particles.append({
-            'id': int(row['id']),
-            'type': type_map.get(t, f'T{t}'),
-            'x': round(float(row['x']) * scale, 2),
-            'y': round(float(row['y']) * scale, 2),
-            'z': round(float(row['z']) * scale, 2),
-            'r': round(float(row['radius']) * scale, 2),
-        })
+    for i in range(len(ids)):
+        t = ts[i]
+        nm = _tname.get(t)
+        if nm is None:
+            nm = type_map.get(t, f'T{t}'); _tname[t] = nm
+        particles.append({'id': ids[i], 'type': nm,
+                          'x': xs[i], 'y': ys[i], 'z': zs[i], 'r': rs[i]})
 
     # Box bounds — read from input_params.json if available
     _box_x, _box_y = 0.05, 0.05
@@ -5488,6 +5494,152 @@ def _generate_pdf_report(md_text, name):
         return send_file(buf, mimetype='text/html', as_attachment=True,
                         download_name=f'{name}_report.html')
 
+_2D_SCALAR_KEYS = (
+    'case_id', 'case_name', 'mode', 'ps_ratio', 'phase_fracs',
+    'coverage_2d_pct', 'coverage_3d_target_pct',
+    'coverage_AM_P_pct', 'coverage_AM_S_pct',
+    'coverage_AM_P_target_pct', 'coverage_AM_S_target_pct',
+    'r_AM_P_d50_um', 'r_AM_S_d50_um', 'thickness_um',
+    'a_extent', 'b_extent', 'n_pixels', 'pa_um', 'grain_size_um',
+)
+
+
+def _synth_2d(case_id, px=600, seed=0):
+    """Synthesize + render the 2D representative microstructure, caching the
+    PNG and a scalar summary JSON under the results dir.  Returns the scalar
+    summary dict (or None if the case lacks the required data)."""
+    import sys as _sys
+    case_dir = get_case_dir(case_id)
+    results_dir = get_results_dir(case_id)
+    atoms_csv = os.path.join(results_dir, 'atoms.csv')
+    if not os.path.exists(atoms_csv):
+        return None
+    png_path = os.path.join(results_dir, 'microstructure_2d.png')
+    sum_path = os.path.join(results_dir, 'microstructure_2d_summary.json')
+    fresh = (os.path.exists(png_path) and os.path.exists(sum_path)
+             and os.path.getmtime(png_path) >= os.path.getmtime(atoms_csv))
+    if fresh:
+        try:
+            with open(sum_path) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    _scripts_dir = app.config['SCRIPTS_FOLDER']
+    if _scripts_dir not in _sys.path:
+        _sys.path.insert(0, _scripts_dir)
+    import extract_2d_microstructure as ex2d
+    data = ex2d.synthesize_microstructure(Path(case_dir), n_pixels=px, seed=seed)
+    if data is None:
+        return None
+    ex2d.render_png(data, Path(png_path))
+    summary = {k: data.get(k) for k in _2D_SCALAR_KEYS}
+    with open(sum_path, 'w') as f:                   # np.float64 → float for JSON
+        json.dump(summary, f, indent=2,
+                  default=lambda o: float(o) if hasattr(o, '__float__') else str(o))
+    # round-trip so returned scalars are plain Python (csv/format safe)
+    return json.loads(json.dumps(summary,
+                      default=lambda o: float(o) if hasattr(o, '__float__') else str(o)))
+
+
+@app.route('/results/<case_id>/2d-microstructure.png')
+def serve_2d_microstructure(case_id):
+    """Procedural 2D representative microstructure figure (cached PNG)."""
+    px = max(200, min(1200, int(request.args.get('px', 600))))
+    seed = int(request.args.get('seed', 0))
+    try:
+        summary = _synth_2d(case_id, px=px, seed=seed)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    if summary is None:
+        return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
+    png_path = os.path.join(get_results_dir(case_id), 'microstructure_2d.png')
+    return send_file(png_path, mimetype='image/png', as_attachment=False,
+                     download_name=f'microstructure_2d_{case_id}.png')
+
+
+def _build_2d_readme(case_id, s):
+    f = s.get('phase_fracs') or {}
+    def g(k, d='—'):
+        v = s.get(k)
+        return d if v is None else v
+    return f"""# 2D Representative Microstructure — {s.get('case_name', case_id)}
+
+Procedurally synthesized from the 3D DEM statistics (NOT a literal slice).
+A planar slice cannot show the true particle D50 and the correct area
+fractions at the same time (Wicksell), so AM particles are placed with a
+size distribution whose MEDIAN equals the analysis D50, at the measured
+area fractions; SE forms a single connected matrix; porosity is carved to
+the measured value; and the AM–SE coverage is matched separately for AM_P
+and AM_S.
+
+## Design parameters
+- P:S (AM_P:AM_S): {g('ps_ratio')}  (weight; AM_P/AM_S are the same material,
+  so weight ratio = volume ratio)
+- AM_P D50 radius: {g('r_AM_P_d50_um')} um
+- AM_S D50 radius: {g('r_AM_S_d50_um')} um
+- electrode thickness: {g('thickness_um')} um
+
+## Achieved (this figure)
+- void (porosity): {f.get('void','—')} %
+- AM_P: {f.get('AM_P','—')} %   AM_S: {f.get('AM_S','—')} %   SE: {f.get('SE','—')} %
+- AM–SE coverage (all): {g('coverage_2d_pct')} %   (3D target {g('coverage_3d_target_pct')} %)
+- AM_P coverage: {g('coverage_AM_P_pct')} %  (target {g('coverage_AM_P_target_pct')} %)
+- AM_S coverage: {g('coverage_AM_S_pct')} %  (target {g('coverage_AM_S_target_pct')} %)
+- domain: {g('a_extent')} x {g('b_extent')} um, {g('n_pixels')} px, {g('pa_um')} um/px
+
+## Files in this archive
+- microstructure_2d.png   — 4-phase microstructure (left) + AM–SE coverage (right)
+- summary.csv             — all scalar metrics (key, value)
+- phase_fractions.csv     — phase area fractions (%)
+
+Coverage convention: covered = AM perimeter touching SE; uncovered = AM
+perimeter facing void / another AM (interfacial pore).  Fully-inactive
+particles occur only inside multi-particle clusters (held by neighbours);
+isolated particles keep some SE contact (no floating particles).
+"""
+
+
+@app.route('/results/<case_id>/2d-export.zip')
+def serve_2d_export_zip(case_id):
+    """Bundle the 2D microstructure figure + README + CSV summaries as a zip."""
+    import io as _io
+    import zipfile
+    px = max(200, min(1200, int(request.args.get('px', 600))))
+    seed = int(request.args.get('seed', 0))
+    try:
+        s = _synth_2d(case_id, px=px, seed=seed)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    if s is None:
+        return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
+    png_path = os.path.join(get_results_dir(case_id), 'microstructure_2d.png')
+
+    # summary.csv (key,value)
+    sum_lines = ['key,value']
+    for k in _2D_SCALAR_KEYS:
+        v = s.get(k)
+        if isinstance(v, dict):
+            continue
+        sum_lines.append(f'{k},{"" if v is None else v}')
+    # phase_fractions.csv
+    f = s.get('phase_fracs') or {}
+    frac_lines = ['phase,area_pct'] + [f'{ph},{f.get(ph,"")}'
+                                       for ph in ('void', 'AM_P', 'AM_S', 'SE')]
+
+    buf = _io.BytesIO()
+    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
+        if os.path.exists(png_path):
+            z.write(png_path, 'microstructure_2d.png')
+        z.writestr('README.md', _build_2d_readme(case_id, s))
+        z.writestr('summary.csv', '\n'.join(sum_lines) + '\n')
+        z.writestr('phase_fractions.csv', '\n'.join(frac_lines) + '\n')
+    buf.seek(0)
+    return send_file(buf, mimetype='application/zip', as_attachment=True,
+                     download_name=f'{case_id}_microstructure_2d.zip')
+
+
 @app.route('/download-file/<case_id>/<filename>')
 def download_case_file(case_id, filename):
     """Download an uploaded file from a case."""
@@ -5979,17 +6131,23 @@ def serve_archive_3d_data(folder):
     for col in df.columns:
         df[col] = pd.to_numeric(df[col], errors='coerce')
 
+    # Vectorized build (iterrows is ~100x slower and dominates load time on
+    # particulate cases with 10^5+ atoms).
+    ids = df['id'].astype('int64').tolist()
+    ts = df['type'].astype('int64').tolist()
+    xs = (df['x'] * scale).round(2).tolist()
+    ys = (df['y'] * scale).round(2).tolist()
+    zs = (df['z'] * scale).round(2).tolist()
+    rs = (df['radius'] * scale).round(2).tolist()
+    _tname = {}
     particles = []
-    for _, row in df.iterrows():
-        t = int(row['type'])
-        particles.append({
-            'id': int(row['id']),
-            'type': type_map.get(t, f'T{t}'),
-            'x': round(float(row['x']) * scale, 2),
-            'y': round(float(row['y']) * scale, 2),
-            'z': round(float(row['z']) * scale, 2),
-            'r': round(float(row['radius']) * scale, 2),
-        })
+    for i in range(len(ids)):
+        t = ts[i]
+        nm = _tname.get(t)
+        if nm is None:
+            nm = type_map.get(t, f'T{t}'); _tname[t] = nm
+        particles.append({'id': ids[i], 'type': nm,
+                          'x': xs[i], 'y': ys[i], 'z': zs[i], 'r': rs[i]})
 
     # Box bounds from input_params.json
     _box_x, _box_y = 0.05, 0.05

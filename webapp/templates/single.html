@@ -206,6 +206,28 @@
   </div>
 </div>
 
+{% if not archive_path %}
+<!-- 2D Representative Microstructure (procedural, for COMSOL) -->
+<div class="card">
+  <div class="card-header-row">
+    <h3>2D 대표 미세구조 (COMSOL용)</h3>
+    <div style="display:flex; gap:8px; align-items:center">
+      <button class="btn btn-primary" onclick="load2DViewer()">2D 뷰어 로드</button>
+      <a class="btn" id="zip2d-btn" href="/results/{{ case.id }}/2d-export.zip"
+         style="display:none">ZIP 다운로드 (PNG·README·CSV)</a>
+    </div>
+  </div>
+  <div id="viewer2d-container" style="display:none; margin-top:10px">
+    <div id="viewer2d-status" style="color:#94a3b8; font-size:13px; padding:8px">
+      2D 미세구조 생성 중… (처음 한 번은 수 초 소요)
+    </div>
+    <img id="viewer2d-img" src="" alt="2D microstructure"
+         style="display:none; max-width:100%; border-radius:8px; cursor:zoom-in"
+         onclick="openModal(this.src, '2D representative microstructure')">
+  </div>
+</div>
+{% endif %}
+
 <!-- Image Modal -->
 <div id="modal" class="modal" onclick="this.classList.remove('open')">
   <div class="modal-inner" onclick="event.stopPropagation()">
@@ -240,6 +262,29 @@ async function load3DViewer() {
   {% else %}
   mod.initElectrodeViewer('viewer-container', '/results/{{ case.id }}/3d-data');
   {% endif %}
+}
+
+let viewer2dLoaded = false;
+function load2DViewer() {
+  const c = document.getElementById('viewer2d-container');
+  c.style.display = 'block';
+  if (viewer2dLoaded) return;
+  viewer2dLoaded = true;
+  const img = document.getElementById('viewer2d-img');
+  const status = document.getElementById('viewer2d-status');
+  const zip = document.getElementById('zip2d-btn');
+  status.style.display = 'block';
+  img.onload = () => {
+    status.style.display = 'none';
+    img.style.display = 'block';
+    zip.style.display = 'inline-block';
+  };
+  img.onerror = () => {
+    status.textContent = '2D 미세구조 생성 실패 — atoms.csv / 파라미터를 확인하세요.';
+    viewer2dLoaded = false;
+  };
+  // image load triggers server-side synthesis (cached after first run)
+  img.src = '/results/{{ case.id }}/2d-microstructure.png?v=' + Date.now();
 }
 
 function switchTab(btn, id) {
