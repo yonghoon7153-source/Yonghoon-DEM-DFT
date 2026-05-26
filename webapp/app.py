@@ -5504,7 +5504,7 @@ _2D_SCALAR_KEYS = (
 )
 
 
-def _synth_2d(case_id, px=600, seed=0):
+def _synth_2d(case_id, px=600, seed=0, force=False):
     """Synthesize + render the 2D representative microstructure, caching the
     PNG and a scalar summary JSON under the results dir.  Returns the scalar
     summary dict (or None if the case lacks the required data)."""
@@ -5516,18 +5516,31 @@ def _synth_2d(case_id, px=600, seed=0):
         return None
     png_path = os.path.join(results_dir, 'microstructure_2d.png')
     sum_path = os.path.join(results_dir, 'microstructure_2d_summary.json')
-    fresh = (os.path.exists(png_path) and os.path.exists(sum_path)
-             and os.path.getmtime(png_path) >= os.path.getmtime(atoms_csv))
-    if fresh:
+    _scripts_dir = app.config['SCRIPTS_FOLDER']
+    script_path = os.path.join(_scripts_dir, 'extract_2d_microstructure.py')
+
+    def _stale():
+        if not (os.path.exists(png_path) and os.path.exists(sum_path)):
+            return True
+        cm = os.path.getmtime(png_path)
+        # invalidate when the source data OR the generator script changes
+        if cm < os.path.getmtime(atoms_csv):
+            return True
+        if os.path.exists(script_path) and cm < os.path.getmtime(script_path):
+            return True
+        return False
+
+    if not force and not _stale():
         try:
             with open(sum_path) as f:
                 return json.load(f)
         except Exception:
             pass
-    _scripts_dir = app.config['SCRIPTS_FOLDER']
     if _scripts_dir not in _sys.path:
         _sys.path.insert(0, _scripts_dir)
+    import importlib
     import extract_2d_microstructure as ex2d
+    ex2d = importlib.reload(ex2d)                    # pick up edits in a live process
     data = ex2d.synthesize_microstructure(Path(case_dir), n_pixels=px, seed=seed)
     if data is None:
         return None
@@ -5546,8 +5559,9 @@ def serve_2d_microstructure(case_id):
     """Procedural 2D representative microstructure figure (cached PNG)."""
     px = max(200, min(1200, int(request.args.get('px', 600))))
     seed = int(request.args.get('seed', 0))
+    force = request.args.get('fresh') in ('1', 'true', 'yes')
     try:
-        summary = _synth_2d(case_id, px=px, seed=seed)
+        summary = _synth_2d(case_id, px=px, seed=seed, force=force)
     except Exception as e:
         import traceback; traceback.print_exc()
         return (f'{type(e).__name__}: {e}', 500)
@@ -5607,8 +5621,9 @@ def serve_2d_export_zip(case_id):
     import zipfile
     px = max(200, min(1200, int(request.args.get('px', 600))))
     seed = int(request.args.get('seed', 0))
+    force = request.args.get('fresh') in ('1', 'true', 'yes')
     try:
-        s = _synth_2d(case_id, px=px, seed=seed)
+        s = _synth_2d(case_id, px=px, seed=seed, force=force)
     except Exception as e:
         import traceback; traceback.print_exc()
         return (f'{type(e).__name__}: {e}', 500)
