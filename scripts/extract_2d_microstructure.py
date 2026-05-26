@@ -713,7 +713,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
 
     need_void = int(round(poro * nx * ny))
     non_am = (labels == VOID)
-    pr_max = max(2.0, r_se_um / pa * 2.0)
+    pr_max = max(3.0, r_se_um / pa * 4.0)            # larger → fewer, clumpier pores
     dist_edge = _ndi.distance_transform_edt(non_am & ~pore)
     blocked = np.zeros_like(non_am)
     cy_, cx_ = np.where((non_am & ~pore) & (dist_edge > 1.5))
@@ -726,9 +726,9 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if blocked[py, px]:
                 continue
             room = float(dist_edge[py, px])
-            r_target = 2.0 + (pr_max - 2.0) * rng.random() ** 1.6
+            r_target = 3.0 + (pr_max - 3.0) * rng.random() ** 0.8
             r_base = min(r_target, room - 0.5)
-            if r_base < 1.5:
+            if r_base < 2.5:                          # drop sub-resolution specks
                 continue
             a = rng.uniform(-1, 1, 3) * 0.12
             ph = rng.uniform(0, 2 * np.pi, 3)
@@ -744,7 +744,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if int(m.sum()) == 0:
                 continue
             pore[yy0:yy1, xx0:xx1] |= m
-            bm = int(rmax + 3)
+            bm = max(1, int(rmax * 0.45))            # small → neighbours merge into clusters
             blocked[max(0, py-bm):min(ny, py+bm+1),
                     max(0, px-bm):min(nx, px+bm+1)] = True
     # non-AM, non-pore → SE matrix; pores stay VOID
@@ -943,15 +943,18 @@ def render_png(data, out_path: Path):
     if data.get('synthetic'):
         cp, cs = data.get('coverage_AM_P_pct'), data.get('coverage_AM_S_pct')
         cpt, cst = data.get('coverage_AM_P_target_pct'), data.get('coverage_AM_S_target_pct')
-        cov_sub = (f"coverage = {data['coverage_2d_pct']}%"
-                   + (f"  (3D target {tgt}%)" if tgt is not None else ""))
+        # per-phase coverage is the matched quantity; headline it.  The combined
+        # number is a length-weighted average and won't equal the 3D combined
+        # (different weighting), so present it as an aside, not a "target".
         per = []
         if cp is not None:
-            per.append(f"AM_P {cp}%" + (f"→{cpt}" if cpt else ""))
+            per.append(f"AM_P {cp}%" + (f" (→{cpt})" if cpt else ""))
         if cs is not None:
-            per.append(f"AM_S {cs}%" + (f"→{cst}" if cst else ""))
-        cov_note = ("\n" + " / ".join(per) + "  " if per else "\n") + \
-                   "(uncovered = AM facing void/AM;  covered = AM facing SE)"
+            per.append(f"AM_S {cs}%" + (f" (→{cst})" if cst else ""))
+        cov_sub = " / ".join(per) + "   matched per-phase to 3D" if per else \
+                  f"coverage = {data['coverage_2d_pct']}%"
+        cov_note = (f"\ncombined (length-weighted) = {data['coverage_2d_pct']}%   ·   "
+                    "uncovered = AM facing void/AM,  covered = AM facing SE")
     else:
         cov_sub = (f"coverage = {data['coverage_2d_pct']}%  (pinned to 3D {tgt}%)"
                    if tgt is not None else f"2D coverage = {data['coverage_2d_pct']}%")
