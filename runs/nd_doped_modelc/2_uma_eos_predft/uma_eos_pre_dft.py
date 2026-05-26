@@ -25,8 +25,13 @@ from ase.io import read, write
 
 # Volume ratio sweep (matches modelC pattern: v094, v096, ..., v106)
 VOLUME_RATIOS = np.arange(0.94, 1.07, 0.02)  # 0.94, 0.96, ..., 1.06 → 7 points
-# Use higher density for good BM fit
-VOLUME_RATIOS_DENSE = np.arange(0.92, 1.09, 0.02)  # 9 points
+# Tight grid for clean BM3 fit: v096..v108 in 1% steps (13 points).
+# np.round avoids float drift; labels still use round() (see scan_volume).
+VOLUME_RATIOS_DENSE = np.round(np.arange(0.96, 1.085, 0.01), 2)  # 0.96..1.08 → 13 points
+
+# UMA model — match Nd anneal champion relax (modelc_nd_doped.json: UMA-s-1p2).
+# If the KISTI/gabia uma env only has 1p1, change this one line back to "uma-s-1p1".
+UMA_MODEL = "uma-s-1p2"
 
 # UMA relax convergence
 FMAX = 0.05  # eV/Å (tight enough for EOS)
@@ -39,7 +44,7 @@ def make_calc():
     from fairchem.core import pretrained_mlip
     from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
     if _predictor is None:
-        _predictor = pretrained_mlip.get_predict_unit("uma-s-1p1", device="cuda")
+        _predictor = pretrained_mlip.get_predict_unit(UMA_MODEL, device="cuda")
     return FAIRChemCalculator(_predictor, task_name="omat")
 
 
@@ -102,9 +107,10 @@ def scan_volume(atoms_ref, calc, ratios=VOLUME_RATIOS_DENSE, label='') -> dict:
         atoms.set_cell(cell0 * scale, scale_atoms=True)
         V = atoms.get_volume()
         t0 = time.time()
-        E, atoms_relaxed = relax_positions_only(atoms, calc, label=f"{label} v{int(100*ratio):03d}")
+        vlabel = f"v{int(round(100*ratio)):03d}"
+        E, atoms_relaxed = relax_positions_only(atoms, calc, label=f"{label} {vlabel}")
         dt = time.time() - t0
-        print(f"    v{int(100*ratio):03d} (V={V:.2f} Å³): E={E:+.4f} eV  ({dt:.1f}s)")
+        print(f"    {vlabel} (V={V:.2f} Å³): E={E:+.4f} eV  ({dt:.1f}s)")
         results.append({'ratio': float(ratio), 'V': float(V), 'E': float(E), 'time_s': dt})
     return {'V0_input': float(V0), 'cell0': cell0.tolist(), 'curve': results}
 
@@ -155,18 +161,30 @@ def recommend_dft_range(V0_BM: float, ratios=VOLUME_RATIOS) -> list[dict]:
     for r in ratios:
         scale = r ** (1/3)
         V = V0_BM * r
-        rec.append({'label': f"v{int(100*r):03d}", 'ratio': float(r),
+        rec.append({'label': f"v{int(round(100*r)):03d}", 'ratio': float(r),
                     'volume_A3': float(V), 'cell_scale': float(scale)})
     return rec
 
 
-def process_rank(rank_label: str, pair_dir: Path, calc, out_dir: Path) -> dict:
+def process_rank(rank_label: str, calc, out_dir: Path,
+                 structure: str = None, pair_dir: str = None) -> dict:
     print(f"\n{'='*70}")
-    print(f"Processing {rank_label}: {pair_dir.name}")
+    print(f"Processing {rank_label}")
     print(f"{'='*70}")
-    cif = pick_best_champion(pair_dir)
-    atoms = read(cif)
-    print(f"\n  Loaded {cif.name} ({len(atoms)} atoms)")
+    if structure:
+        # Start from an explicit structure file (e.g. DFT-relaxed final coords).
+        # index=-1 grabs the LAST image = final ionic step of a QE relax.out.
+        src = structure
+        try:
+            atoms = read(structure, index=-1)
+        except Exception:
+            atoms = read(structure, index=-1, format='espresso-out')
+        print(f"\n  Loaded final coords from {src} ({len(atoms)} atoms)")
+    else:
+        cif = pick_best_champion(Path(pair_dir))
+        src = str(cif)
+        atoms = read(cif)
+        print(f"\n  Loaded {cif.name} ({len(atoms)} atoms)")
 
     # First: relax fully (cell + positions) to get clean V0
     print(f"\n  Step 1: Full relax (cell + positions) at reference volume...")
@@ -215,8 +233,8 @@ def process_rank(rank_label: str, pair_dir: Path, calc, out_dir: Path) -> dict:
 
     return {
         'rank': rank_label,
-        'pair_dir': str(pair_dir),
-        'champion_cif': str(cif),
+        'start_structure': src,
+        'uma_model': UMA_MODEL,
         'V_ref_relaxed': V_ref,
         'E_ref_relaxed': E_ref,
         'cell_relaxed': atoms_full.cell.array.tolist(),
@@ -229,10 +247,15 @@ def process_rank(rank_label: str, pair_dir: Path, calc, out_dir: Path) -> dict:
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--rank1-dir', required=True, help='pair_00 (or whatever rank1) directory')
-    parser.add_argument('--rank2-dir', required=True, help='pair_24 (or whatever rank2) directory')
+    parser.add_argument('--rank1-dir', help='rank1 champion dir (picks best .cif)')
+    parser.add_argument('--rank2-dir', help='rank2 champion dir (optional)')
+    parser.add_argument('--rank1-structure', help='rank1 explicit structure file, e.g. a '
+                        'DFT relax.out (final coords used); overrides --rank1-dir')
+    parser.add_argument('--rank2-structure', help='rank2 explicit structure file (optional)')
     parser.add_argument('--out_dir', default='uma_eos_results', help='Output dir')
     args = parser.parse_args()
+    if not (args.rank1_dir or args.rank1_structure):
+        parser.error('provide --rank1-structure or --rank1-dir')
 
     out_dir = Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -248,8 +271,13 @@ def main():
     print(f"UMA loaded.\n")
 
     results = {}
-    results['rank1'] = process_rank('rank1', Path(args.rank1_dir), calc, out_dir)
-    results['rank2'] = process_rank('rank2', Path(args.rank2_dir), calc, out_dir)
+    results['rank1'] = process_rank('rank1', calc, out_dir,
+                                    structure=args.rank1_structure, pair_dir=args.rank1_dir)
+    if args.rank2_dir or args.rank2_structure:
+        results['rank2'] = process_rank('rank2', calc, out_dir,
+                                        structure=args.rank2_structure, pair_dir=args.rank2_dir)
+    else:
+        print("\n[rank2 skipped — no --rank2-dir/--rank2-structure given]")
 
     # Save full results
     json.dump(results, open(out_dir / 'uma_eos_results.json', 'w'), indent=2, default=str)
@@ -257,9 +285,13 @@ def main():
     print(f"Full results saved: {out_dir}/uma_eos_results.json")
     print(f"Relaxed structures: {out_dir}/rank{1,2}_relaxed.cif")
     print(f"{'='*70}")
-    print(f"\nNext step: Use V0_BM values to set up DFT EOS sweep on KISTI sbatch.")
-    print(f"  rank1 V0_BM = {results['rank1']['bm_fit']['V0_BM']:.3f} Å³")
-    print(f"  rank2 V0_BM = {results['rank2']['bm_fit']['V0_BM']:.3f} Å³")
+    print(f"\nMLIP EOS done — BM3 fit ({UMA_MODEL}):")
+    for rk in results:
+        bm = results[rk]['bm_fit']
+        if bm['fit_success']:
+            print(f"  {rk}: V0={bm['V0_BM']:.2f} Å³, B0={bm['B0_GPa']:.1f} GPa, B0'={bm['B0_prime']:.2f}")
+        else:
+            print(f"  {rk}: BM fit FAILED (check curve)")
 
 
 if __name__ == '__main__':
