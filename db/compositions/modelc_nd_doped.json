@@ -48,6 +48,24 @@
     }
   },
 
+  "uma_eos_V0_2026_05_26": {
+    "method": "UMA-s-1p1 isotropic EOS (argyrodite cell SHAPE fixed) + ion-relax + BM3; 100-seed ensemble (0.2 Å rattle); champion = best BM3 fit (max R2 with physical B0'), NOT lowest E",
+    "structure": "Track 1A dispersed-Nd reference (pair_00, Nd=[1,82]); 120-atom dilute primitive supercell",
+    "scripts": [
+      "runs/nd_doped_modelc/2_uma_eos_predft/uma_eos_pre_dft.py",
+      "runs/nd_doped_modelc/2_uma_eos_predft/analyze_v0_ensemble.py"
+    ],
+    "V0_A3": 2399,
+    "V0_good_fit_ensemble": "2396 +/- 4 (median 2399; n=7/100 seeds with physical B0' 5-8)",
+    "champion_seed": "rank1_seed2 (R2=0.99998, B0'=6.13, V0=2399.07)",
+    "V0_cell": {"a": 6.997, "b": 6.913, "c": 69.658, "alpha": 60.54, "beta": 60.06, "gamma": 60.32,
+                "note": "primitive dilute supercell (input shape scaled to V0); a!=c, 60deg angles expected"},
+    "B0_GPa": "20.5 +/- 0.7 (bonus; ~= undoped LPSCl1.6/modelC ~20 -> Nd doping leaves stiffness ~unchanged)",
+    "caveats": "Single EOS curve is basin-sensitive (B0 16-27 GPa across seeds); only ~7/100 give clean single-basin fit. vc-relax NOT used (distorts argyrodite). Narrow v097-v105 grid + continuation relax. uma-s-1p2 absent in KISTI fresh fairchem -> 1p1 (B0 model-minor insensitive).",
+    "results_json": "KISTI 3_dft_eos_v7/uma_eos_ens/uma_eos_results.json",
+    "next": "DFT relax at V0 (closest grid = pair_00 v100) with DFT+U(6eV)+ISPIN=2 -> Step 8 post-processing"
+  },
+
   "experimental_data_PI_provided": {
     "synthesized_compositions_x": [0, 0.02, 0.04, 0.08],
     "current_optimized": "x=0.02: Li5.44P0.98Nd0.02S4.37O0.03Cl1.6",

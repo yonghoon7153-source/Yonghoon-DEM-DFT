@@ -787,3 +787,32 @@ dataset 검증에서 6-site 균일 분포(`{각 15}`) 확인.
 **교훈**: dual-mode flag(필터 on/off)는 **safe 동작을 기본값**으로. 그리고 호출부에서
 flag를 하드코딩으로 override하면 기본값 수정만으론 안 잡힘 → 호출부 + 기본값 둘 다 확인.
 
+---
+
+## Z10. Nd-doped Model C UMA EOS → V0 (2026-05-26)
+
+### Z10-A. `runs/nd_doped_modelc/2_uma_eos_predft/uma_eos_pre_dft.py` ✅ VERIFIED
+- **목적**: argyrodite **셀 SHAPE 고정 + 등방 부피 스캔 + 이온 relax → BM3 → V0**
+  (vc-relax 금지 — 셀 모양 풀면 argyrodite 골격 깨짐). `--n_seeds` 앙상블 지원.
+- **핵심 세팅**: narrow grid v097–v105(1%, 9점) + continuation relax(직전 부피 이어받기,
+  fmax 0.01) → basin 점프 억제. 모델 `uma-s-1p2`(없으면 `uma-s-1p1`).
+- **입력**: QE `relax.in` 사용(=clean cell+coords). `relax.out` 금지 — ASE
+  `read_espresso_out`이 scancel/incomplete + DFT+U+ISPIN=2 eigenvalue 블록에서 assert 터짐.
+- **gotcha**: 단일 곡선 B0는 basin-sensitive(seed마다 16–27 GPa). 반드시 앙상블.
+
+### Z10-B. `runs/nd_doped_modelc/2_uma_eos_predft/analyze_v0_ensemble.py` ✅ VERIFIED
+- **목적**: 앙상블 json 재분석 — 각 seed 곡선 BM3 refit → **champion = best fit(max R²,
+  물리적 B0' 2–8), lowest-E 아님.** good-fit subset(B0' physical) V0/B0 mean±std.
+- **결과 (Nd-doped Model C Track 1A, 100 seed)**: **V0 = 2399 Å³** (good-fit median),
+  cell a=6.997 b=6.913 c=69.658 Å α/β/γ≈60° (primitive dilute 슈퍼셀),
+  **B0 = 20.5 ± 0.7 GPa**(덤; undoped ~20과 동일). 7/100만 clean fit.
+- 상세: `db/compositions/modelc_nd_doped.json` → `uma_eos_V0_2026_05_26`.
+
+### Z10-C. DFT EOS scripts (Nd, KISTI) — `runs/nd_doped_modelc/3_dft_eos/`
+- `prepare_dft_eos_nd.py`, `run_dft_eos_pair.sh`, `sbatch_dft_eos_nd.sh`
+- ⚠️ **`prepare_dft_eos_nd.py` 템플릿엔 DFT+U/ISPIN=2 없음** — 그런데 production
+  (job 733995)은 mag≠0(자성)이었음 → 실제 KISTI relax.in은 +U/ISPIN이 **수동 추가된**
+  버전. **V0 DFT 돌리기 전 relax.in에 `lda_plus_u`/`nspin=2`/`starting_magnetization`
+  있는지 grep 확인 필수.** 없으면 4f 전자구조(paper Fig 3) 못 잡음.
+- V0 DFT = closest grid = `pair01_pair_00_reference_1_82/v100` (UMA V0 2399 ≈ v100 2392.6, 0.3%).
+
