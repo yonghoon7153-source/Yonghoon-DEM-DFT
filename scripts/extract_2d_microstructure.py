@@ -611,8 +611,8 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             region[new] = phase
             placed += int(new.sum()); stale = 0
 
-    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.22, 7000)
-    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 0.55, 14000,
+    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.06, 12000)
+    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 0.12, 20000,
                  center_void=True)
 
     # Porosity: scatter irregular void pores into the non-AM space (may touch
@@ -659,8 +659,42 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             b0y, b1y = max(0, py - bm), min(ny, py + bm + 1)
             b0x, b1x = max(0, px - bm), min(nx, px + bm + 1)
             blocked[b0y:b1y, b0x:b1x] = True
-    # non-AM, non-pore → connected SE matrix; pores stay VOID
+    # non-AM, non-pore → SE matrix; pores stay VOID
     labels[non_am & ~pore] = SE
+
+    # Enforce a single connected SE network (ionic path): dense AM can trap
+    # SE in isolated pockets; thread each pocket to the main SE component with
+    # a thin channel carved through the intervening AM.
+    se = (labels == SE)
+    lab, ncomp = _ndi.label(se)
+    if ncomp > 1:
+        sizes = np.bincount(lab.ravel()); sizes[0] = 0
+        main = int(sizes.argmax())
+        _, (iy, ix) = _ndi.distance_transform_edt(~(lab == main),
+                                                  return_indices=True)
+        for comp in range(1, ncomp + 1):
+            if comp == main:
+                continue
+            ys, xs = np.where(lab == comp)
+            j = 0                                    # pocket pixel nearest main
+            y0p, x0p = int(ys[j]), int(xs[j])
+            y1p, x1p = int(iy[y0p, x0p]), int(ix[y0p, x0p])
+            dy = abs(y1p - y0p); dx = abs(x1p - x0p)
+            sy = 1 if y0p < y1p else -1
+            sx = 1 if x0p < x1p else -1
+            err = dx - dy; cy0, cx0 = y0p, x0p
+            while True:
+                for ddy in (0, 1):                   # 2-wide → 4-connected
+                    for ddx in (0, 1):
+                        labels[min(ny - 1, cy0 + ddy),
+                               min(nx - 1, cx0 + ddx)] = SE
+                if cy0 == y1p and cx0 == x1p:
+                    break
+                e2 = 2 * err
+                if e2 > -dy:
+                    err -= dy; cx0 += sx
+                if e2 < dx:
+                    err += dx; cy0 += sy
 
     # AM_P polycrystalline grain boundaries (AM_S stays single crystal)
     grain_boundary = np.zeros_like(labels, dtype=bool)
