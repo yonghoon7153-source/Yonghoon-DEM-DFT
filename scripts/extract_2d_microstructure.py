@@ -631,21 +631,56 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 0.12, 20000,
                  center_void=True)
 
-    # Porosity: scatter irregular void pores into the non-AM space (may touch
-    # AM, like real inter-particle pores), spaced so SE stays connected, then
-    # everything else non-AM → SE matrix.
-    non_am = (labels == VOID)
+    # ---- Coverage-driven porosity ---------------------------------------
+    # Physically, the part of an AM surface that is "uncovered" is where it is
+    # NOT in contact with SE.  So lay a thin interfacial void shell against a
+    # (1-coverage) arc of each AM particle's perimeter (those arcs then truly
+    # face void, not SE), and fill the rest of the porosity with bulk pores in
+    # the SE interior, away from AM.  Coverage is then a real geometric
+    # adjacency, not an arbitrary label.
+    is_am0 = (labels == AM_P) | (labels == AM_S)
+    na0 = ~is_am0
+    nb0 = np.zeros_like(is_am0)
+    nb0[:-1, :] |= na0[1:, :]; nb0[1:, :] |= na0[:-1, :]
+    nb0[:, :-1] |= na0[:, 1:]; nb0[:, 1:] |= na0[:, :-1]
+    am_bnd0 = is_am0 & nb0
+    by, bx = np.where(am_bnd0)
+    n_bnd0 = int(by.size)
+
+    pore = np.zeros((ny, nx), dtype=bool)
+    if target_coverage_frac is not None and n_bnd0:
+        lab_am, n_am = _ndi.label(is_am0)
+        lb = lab_am[by, bx]
+        cents = np.asarray(_ndi.center_of_mass(
+            is_am0, lab_am, np.arange(1, n_am + 1))).reshape(-1, 2)
+        ang = np.arctan2(by - cents[lb - 1, 0], bx - cents[lb - 1, 1])
+        rng2 = np.random.default_rng(seed + 12345)
+        starts = rng2.uniform(0, 2 * np.pi, n_am + 1)
+        rel = (ang - starts[lb]) % (2 * np.pi)
+        want_unc = 1.0 - target_coverage_frac
+        w = want_unc * (2 * np.pi)                  # tune arc to hit target
+        for _ in range(8):
+            unc = rel < w
+            ach = float(unc.mean())
+            if ach <= 1e-6:
+                break
+            w = min(2 * np.pi, w * want_unc / max(ach, 1e-6))
+        unc = rel < w
+        seed_mask = np.zeros((ny, nx), dtype=bool)
+        seed_mask[by[unc], bx[unc]] = True
+        shell = _ndi.binary_dilation(seed_mask, iterations=2) & na0
+        pore |= shell                               # interfacial void
+
     need_void = int(round(poro * nx * ny))
+    non_am = (labels == VOID)
     pr_max = max(2.0, r_se_um / pa * 2.0)
-    dist_edge = _ndi.distance_transform_edt(non_am)
+    dist_edge = _ndi.distance_transform_edt(non_am & ~pore)
     blocked = np.zeros_like(non_am)
-    pore = np.zeros_like(non_am)
-    cy_, cx_ = np.where(non_am & (dist_edge > 1.5))
+    cy_, cx_ = np.where((non_am & ~pore) & (dist_edge > 1.5))
     if len(cy_):
         order = np.argsort(-dist_edge[cy_, cx_])
-        carved = 0
         for ci in order:
-            if carved >= need_void:
+            if int(pore.sum()) >= need_void:
                 break
             py, px = int(cy_[ci]), int(cx_[ci])
             if blocked[py, px]:
@@ -664,19 +699,16 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             rr = np.hypot(gy, gx); th = np.arctan2(gy, gx)
             rb = r_base * (1 + a[0] * np.cos(th + ph[0]) + a[1] * np.cos(2 * th + ph[1])
                            + a[2] * np.cos(3 * th + ph[2]))
-            sub_pore = pore[yy0:yy1, xx0:xx1]
-            m = (rr <= rb) & non_am[yy0:yy1, xx0:xx1] & (~sub_pore)
-            c = int(m.sum())
-            if c == 0:
+            m = ((rr <= rb) & non_am[yy0:yy1, xx0:xx1]
+                 & (~pore[yy0:yy1, xx0:xx1]))
+            if int(m.sum()) == 0:
                 continue
-            sub_pore[m] = True
-            carved += c
+            pore[yy0:yy1, xx0:xx1] |= m
             bm = int(rmax + 3)
-            b0y, b1y = max(0, py - bm), min(ny, py + bm + 1)
-            b0x, b1x = max(0, px - bm), min(nx, px + bm + 1)
-            blocked[b0y:b1y, b0x:b1x] = True
+            blocked[max(0, py-bm):min(ny, py+bm+1),
+                    max(0, px-bm):min(nx, px+bm+1)] = True
     # non-AM, non-pore → SE matrix; pores stay VOID
-    labels[non_am & ~pore] = SE
+    labels[(labels == VOID) & ~pore] = SE
 
     # Enforce a single connected SE network (ionic path): dense AM can trap
     # SE in isolated pockets; thread each pocket to the main SE component with
@@ -721,7 +753,9 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     fracs = {PHASE_NAMES[p]: round(100 * np.sum(labels == p) / total, 2)
              for p in (VOID, AM_P, AM_S, SE)}
 
-    # AM-SE coverage (same detection + 3D pin as the slice path)
+    # AM-SE coverage — GEOMETRIC: covered = AM perimeter touching SE,
+    # uncovered = touching void/AM (the interfacial void shells above).
+    # No pinning; the value falls out of the actual adjacency.
     is_am = (labels == AM_P) | (labels == AM_S)
     is_se = (labels == SE)
     se_n = np.zeros_like(is_se)
@@ -735,37 +769,8 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     am_covered = am_boundary & se_n
     am_uncov = am_boundary & ~se_n
     n_bnd = int(am_boundary.sum())
-    coverage_inplane_pct = (round(100 * int(am_covered.sum()) / n_bnd, 2)
-                            if n_bnd else 0.0)
-    if target_coverage_frac is not None and n_bnd:
-        # Synthetic AM sits almost fully in SE (in-plane coverage ~100%), so
-        # to represent the 3D coverage we mark part of each particle's
-        # perimeter uncovered.  Assign ONE contiguous uncovered arc per AM
-        # particle (random start angle), width = (1-coverage)·2π, so every
-        # particle is ~coverage% SE-covered — no raster-order spatial band.
-        lab_am, n_am = _ndi.label(is_am)
-        by, bx = np.where(am_boundary)
-        lb = lab_am[by, bx]
-        cents = np.asarray(_ndi.center_of_mass(
-            is_am, lab_am, np.arange(1, n_am + 1))).reshape(-1, 2)
-        ang = np.arctan2(by - cents[lb - 1, 0], bx - cents[lb - 1, 1])
-        rng2 = np.random.default_rng(seed + 12345)
-        starts = rng2.uniform(0, 2 * np.pi, n_am + 1)
-        rel = (ang - starts[lb]) % (2 * np.pi)
-        want_unc = 1.0 - target_coverage_frac
-        w = want_unc * (2 * np.pi)                     # tune arc width to target
-        for _ in range(6):
-            uncov = rel < w
-            ach = float(uncov.mean())
-            if ach <= 1e-6:
-                break
-            w = min(2 * np.pi, w * want_unc / ach)
-        uncov = rel < w
-        am_covered = np.zeros_like(am_boundary)
-        am_uncov = np.zeros_like(am_boundary)
-        am_covered[by[~uncov], bx[~uncov]] = True
-        am_uncov[by[uncov], bx[uncov]] = True
     coverage_pct = round(100 * int(am_covered.sum()) / n_bnd, 2) if n_bnd else 0.0
+    coverage_inplane_pct = coverage_pct
     interface = np.zeros_like(labels)
     interface[am_covered] = 1
     interface[am_uncov] = 2
@@ -883,10 +888,16 @@ def render_png(data, out_path: Path):
     ax.set_xlabel(data['a_label']); ax.set_ylabel(data['b_label'])
     tgt = data.get('coverage_3d_target_pct')
     inp = data.get('coverage_2d_inplane_pct')
-    cov_sub = (f"coverage = {data['coverage_2d_pct']}%  (pinned to 3D {tgt}%)"
-               if tgt is not None else f"2D coverage = {data['coverage_2d_pct']}%")
-    cov_note = (f"\nin-plane only = {inp}%  →  +out-of-plane (nearest-SE)"
-                if tgt is not None and inp is not None else "")
+    if data.get('synthetic'):
+        cov_sub = (f"coverage = {data['coverage_2d_pct']}%"
+                   + (f"  (3D target {tgt}%)" if tgt is not None else ""))
+        cov_note = ("\nuncovered = AM facing void/AM (interfacial pore);  "
+                    "covered = AM facing SE")
+    else:
+        cov_sub = (f"coverage = {data['coverage_2d_pct']}%  (pinned to 3D {tgt}%)"
+                   if tgt is not None else f"2D coverage = {data['coverage_2d_pct']}%")
+        cov_note = (f"\nin-plane only = {inp}%  →  +out-of-plane (nearest-SE)"
+                    if tgt is not None and inp is not None else "")
     ax.set_title(f"AM–SE interface (coverage)\n{cov_sub}  "
                  f"({data['n_am_boundary_px']} AM-boundary px){cov_note}",
                  fontsize=9.5)
