@@ -356,6 +356,118 @@ def write_svg(phase_contours: dict, interface_segs: dict,
     out_path.write_text('\n'.join(parts))
 
 
+def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
+                         slice_frac=0.0, no_continuum=False):
+    """Write the full COMSOL-import package for a synthesized/sliced
+    microstructure: geometry.dxf (+svg/png), parameters.csv/json (3D effective
+    materials), coverage-as-boundary layers, microstructure.npy and a README
+    with COMSOL import steps.  Used by the CLI and the webapp ZIP route."""
+    out_dir = Path(out_dir)
+    out_dir.mkdir(parents=True, exist_ok=True)
+
+    # ── (1) Numerical parameters ──────────────────────────────────────
+    params = numerical_parameters(case_dir, sd)
+    with open(out_dir / 'parameters.csv', 'w', newline='') as f:
+        w = csv.DictWriter(f, fieldnames=['parameter', 'value', 'unit',
+                                          'comsol_name', 'source'])
+        w.writeheader(); w.writerows(params)
+    (out_dir / 'parameters.json').write_text(
+        json.dumps({p['parameter']: p for p in params}, indent=2))
+
+    # ── (2) Geometry — smooth phase contours (COMSOL-meshable) ─────────
+    labels = sd['labels']
+    pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
+    min_area_px = max(12, int((sd['n_pixels'] / 110) ** 2))
+    phase_contours = {}
+    for ph_id, ph_name, fill in [(AM_P, 'AM_P', True), (AM_S, 'AM_S', True),
+                                 (SE, 'SE', False), (VOID, 'void', False)]:
+        mask = (labels == ph_id)
+        if mask.sum() == 0:
+            continue
+        phase_contours[ph_name] = _contours(mask, pa, pb, b0,
+                                            min_area_px=min_area_px,
+                                            fill_holes=fill)
+    n_seg = sum(len(v) for v in phase_contours.values())
+    interface_segs = _classify_am_interface(labels, sd['interface'], pa, pb, b0)
+    n_cov = len(interface_segs['AM_SE_interface'])
+    n_ina = len(interface_segs['AM_inactive'])
+
+    np.save(out_dir / 'microstructure.npy', labels)
+    write_dxf(phase_contours, interface_segs, out_dir / 'geometry.dxf')
+    write_svg(phase_contours, interface_segs, sd['a_extent'], sd['b_extent'],
+              b0, out_dir / 'geometry.svg')
+    render_microstructure_png(sd, out_dir / 'geometry.png')
+
+    axis_note = ('※ b축 = z = through-thickness (이온 전달 방향)'
+                 if axis in ('x', 'y') else '※ XY 수평 단면')
+    se_note = ('continuum (입자 병합)' if not no_continuum else 'discrete particles')
+    readme = f"""COMSOL 2D import — {case_name}
+=================================================================
+COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
+이 export는 그 3가지에 각각 매핑되도록 분리:
+
+  [A] DOMAIN (형상)      → geometry.dxf  (phase 영역)
+  [B] MATERIAL (수치)    → parameters.csv (3D 유효 물성)
+  [C] BOUNDARY (계면)    → geometry.dxf 의 AM_SE_interface / AM_inactive layer
+
+─────────────────────────────────────────────────────────────────
+[A] DOMAIN — Geometry → Import → geometry.dxf
+─────────────────────────────────────────────────────────────────
+  Layer AM_P  = 대입자 활물질 domain  (다결정, 원형, closed polyline)
+  Layer AM_S  = 소입자 활물질 domain  (단결정, faceted+둥근 모서리)
+  Layer SE    = 고체전해질 CONNECTED continuum domain (단일 연결망)
+  void        = SE 내부의 고립 pore (closed polyline, SE 안의 구멍)
+
+  ★ 경계는 모두 smoothing 처리됨 (Gaussian iso-contour + RDP + Chaikin)
+    → voxel 계단 제거, COMSOL meshing 가능한 매끈한 polyline.
+    작은 speck(메시 불가)은 자동 prune.
+
+  ★ 권장 SE 구성 (watertight 계면):
+    COMSOL에서 SE domain = (외곽 Rectangle) − (AM_P ∪ AM_S ∪ void pores)
+    의 Boolean Difference로 만들면 AM-SE 계면이 정확히 공유됨.
+    (geometry.dxf의 SE layer는 시각/검산용; 위 방식이 mesh가 더 깨끗)
+
+  축: {sd['a_label']} (가로) × {sd['b_label']} (세로)
+  {axis_note}
+
+─────────────────────────────────────────────────────────────────
+[B] MATERIAL — Global Definitions → Parameters (parameters.csv)
+─────────────────────────────────────────────────────────────────
+  각 domain에 부여할 3D-측정 EFFECTIVE 물성.  2D 형상 위에 3D 유효
+  물성을 올려서 2D-FEM이 3D 결과를 재현하게 함.
+
+  SE domain:
+    sigma_i  = σ_ionic effective (mS/cm)
+    tau_eff  = τ_Laplace,eff   ← σ_eff = σ_grain / (φ·tau_eff²) 검산용
+  AM domain:
+    sigma_e  = σ_electronic (mS/cm),  kappa = thermal
+  cell-level (post-processing 검증):
+    ASR_i = L_cat / σ_ionic,  perc = percolation %
+
+─────────────────────────────────────────────────────────────────
+[C] BOUNDARY — coverage를 geometry로
+─────────────────────────────────────────────────────────────────
+  AM 입자 둘레가 두 layer로 분리됨:
+    Layer AM_SE_interface  (green)  = SE에 닿은 활성 계면
+        → Li+ flux / charge-transfer BC 부여 (electrode reaction)
+    Layer AM_inactive      (red)    = void/AM에 닿은 비활성 둘레
+        → insulated (no-flux) BC
+
+  2D coverage = {sd['coverage_2d_pct']}%  (active 계면 길이 분율)
+  AM_P {sd.get('coverage_AM_P_pct')}% / AM_S {sd.get('coverage_AM_S_pct')}% (각 상별, 3D 일치)
+  → COMSOL에서 AM_SE_interface edge만 선택해 반응 경계조건 적용.
+
+─────────────────────────────────────────────────────────────────
+설정: SE = {se_note},  {sd['n_pixels']}px / {pa:.3f} μm·px⁻¹
+주의 (2D vs 3D): geometry는 2D, 물성은 3D-effective.
+"""
+    (out_dir / 'README.txt').write_text(readme)
+    return {'n_seg': n_seg, 'n_cov': n_cov, 'n_ina': n_ina, 'out_dir': str(out_dir),
+            'files': ['geometry.dxf', 'geometry.svg', 'geometry.png',
+                      'microstructure.npy', 'parameters.csv', 'parameters.json',
+                      'README.txt']}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('case')
@@ -407,127 +519,13 @@ def main():
         print('generation failed (missing data)', file=sys.stderr); sys.exit(1)
 
     out_dir = ROOT / args.out / args.case
-    out_dir.mkdir(parents=True, exist_ok=True)
-
-    # ── (1) Numerical parameters ──────────────────────────────────────
-    params = numerical_parameters(case_dir, sd)
-    with open(out_dir / 'parameters.csv', 'w', newline='') as f:
-        w = csv.DictWriter(f, fieldnames=['parameter', 'value', 'unit',
-                                            'comsol_name', 'source'])
-        w.writeheader(); w.writerows(params)
-    (out_dir / 'parameters.json').write_text(
-        json.dumps({p['parameter']: p for p in params}, indent=2))
-    print(f'  수치 파라미터 → parameters.csv ({len(params)} rows)')
-
-    # ── (2) Geometry — smooth phase contours (COMSOL-meshable) ─────────
-    labels = sd['labels']
-    pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
-    # specks below this area can't be meshed cleanly → pruned
-    min_area_px = max(12, int((sd['n_pixels'] / 110) ** 2))
-    phase_contours = {}
-    # AM particles = solid domains (fill interior holes); SE keeps its pores;
-    # void = isolated pores exported as their own layer (for SE = Rect − AM −
-    # void Boolean subtraction → watertight interfaces).
-    for ph_id, ph_name, fill in [(AM_P, 'AM_P', True),
-                                 (AM_S, 'AM_S', True),
-                                 (SE,   'SE',   False),
-                                 (VOID, 'void', False)]:
-        mask = (labels == ph_id)
-        if mask.sum() == 0:
-            continue
-        phase_contours[ph_name] = _contours(mask, pa, pb, b0,
-                                            min_area_px=min_area_px,
-                                            fill_holes=fill)
-    n_seg = sum(len(v) for v in phase_contours.values())
-
-    # coverage as geometry — split AM outline into covered / inactive arcs
-    interface_segs = _classify_am_interface(labels, sd['interface'], pa, pb, b0)
-    n_cov = len(interface_segs['AM_SE_interface'])
-    n_ina = len(interface_segs['AM_inactive'])
-
-    np.save(out_dir / 'microstructure.npy', labels)
-    write_dxf(phase_contours, interface_segs, out_dir / 'geometry.dxf')
-    write_svg(phase_contours, interface_segs, sd['a_extent'], sd['b_extent'],
-              b0, out_dir / 'geometry.svg')
-    # PNG preview — 2-panel (phase domain + AM-SE coverage interface)
-    render_microstructure_png(sd, out_dir / 'geometry.png')
-    print(f'  geometry → geometry.dxf + geometry.svg + geometry.png + microstructure.npy')
-    print(f'    phase boundaries: {n_seg} polylines')
-    print(f'    AM-SE coverage as geometry: {n_cov} covered arcs + '
-          f'{n_ina} inactive arcs (2D coverage {sd["coverage_2d_pct"]}%)')
-
-    # ── README ─────────────────────────────────────────────────────────
-    readme = f"""COMSOL 2D import — {args.case}
-=================================================================
-COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
-이 export는 그 3가지에 각각 매핑되도록 분리:
-
-  [A] DOMAIN (형상)      → geometry.dxf  (phase 영역)
-  [B] MATERIAL (수치)    → parameters.csv (3D 유효 물성)
-  [C] BOUNDARY (계면)    → geometry.dxf 의 AM_SE_interface / AM_inactive layer
-
-─────────────────────────────────────────────────────────────────
-[A] DOMAIN — Geometry → Import → geometry.dxf
-─────────────────────────────────────────────────────────────────
-  Layer AM_P  = 대입자 활물질 domain  (다결정, 원형, closed polyline)
-  Layer AM_S  = 소입자 활물질 domain  (단결정, faceted+둥근 모서리)
-  Layer SE    = 고체전해질 CONNECTED continuum domain (단일 연결망)
-  void        = SE 내부의 고립 pore (closed polyline, SE 안의 구멍)
-
-  ★ 경계는 모두 smoothing 처리됨 (Gaussian iso-contour + RDP + Chaikin)
-    → voxel 계단 제거, COMSOL meshing 가능한 매끈한 polyline.
-    작은 speck(메시 불가)은 자동 prune.
-
-  ★ SE 연결성 보장: SE는 단일 percolating network로 만들어짐 (3D 99.5%
-    percolation 반영).  단면이 끊어 보이는 건 slice artifact이므로 closing
-    으로 복원함 — 끊긴 SE면 COMSOL 이온 도메인이 안 풀림.
-
-  ★ 권장 SE 구성 (watertight 계면):
-    COMSOL에서 SE domain = (외곽 Rectangle) − (AM_P ∪ AM_S ∪ void pores)
-    의 Boolean Difference로 만들면 AM-SE 계면이 정확히 공유됨.
-    (geometry.dxf의 SE layer는 시각/검산용; 위 방식이 mesh가 더 깨끗)
-
-  축: {sd['a_label']} (가로) × {sd['b_label']} (세로)
-  {'※ b축 = z = through-thickness (이온 전달 방향)' if args.axis in ('x','y') else '※ XY 수평 단면'}
-
-─────────────────────────────────────────────────────────────────
-[B] MATERIAL — Global Definitions → Parameters (parameters.csv)
-─────────────────────────────────────────────────────────────────
-  각 domain에 부여할 3D-측정 EFFECTIVE 물성.  2D 형상 위에 3D 유효
-  물성을 올려서 2D-FEM이 3D 결과를 재현하게 함.
-
-  SE domain:
-    sigma_i  = σ_ionic effective (mS/cm)
-    tau_eff  = τ_Laplace,eff   ← σ_eff = σ_grain / (φ·tau_eff²) 검산용
-  AM domain:
-    sigma_e  = σ_electronic (mS/cm),  kappa = thermal
-  cell-level (post-processing 검증):
-    ASR_i = L_cat / σ_ionic,  perc = percolation %
-
-─────────────────────────────────────────────────────────────────
-[C] BOUNDARY — coverage를 geometry로 (★ 사용자 요청)
-─────────────────────────────────────────────────────────────────
-  AM 입자 둘레가 두 layer로 분리됨:
-    Layer AM_SE_interface  (green)  = SE에 닿은 활성 계면
-        → Li+ flux / charge-transfer BC 부여 (electrode reaction)
-    Layer AM_inactive      (red)    = void/AM에 닿은 비활성 둘레
-        → insulated (no-flux) BC
-
-  2D coverage = {sd['coverage_2d_pct']}%  (이 비율이 active 계면 길이 분율)
-  → COMSOL에서 AM_SE_interface edge만 선택해 반응 경계조건 적용 가능.
-
-─────────────────────────────────────────────────────────────────
-설정: axis={args.axis} @ {sd['slice_at_um']:.1f}μm ({args.slice_frac:.0%}),
-      {sd['n_pixels']}px / {pa:.3f} μm·px⁻¹,
-      SE = {'continuum (입자 병합)' if not args.no_continuum else 'discrete particles'}
-
-주의 (2D vs 3D): geometry는 2D, 물성은 3D-effective.  순수 2D-geometric
-tortuosity가 필요하면 COMSOL이 형상에서 직접 계산하고, 3D 비교는
-parameters.csv의 tau_eff(=3D 측정값)와 대조.
-"""
-    (out_dir / 'README.txt').write_text(readme)
-    print(f'  README.txt 작성')
-    print(f'\nDone → {out_dir}')
+    info = write_comsol_package(args.case, case_dir, sd, out_dir,
+                                axis=args.axis, slice_frac=args.slice_frac,
+                                no_continuum=args.no_continuum)
+    print(f'  수치 파라미터 → parameters.csv')
+    print(f"  geometry → dxf+svg+png ({info['n_seg']} polylines, "
+          f"{info['n_cov']} covered + {info['n_ina']} inactive arcs)")
+    print(f"\nDone → {info['out_dir']}")
 
 
 if __name__ == '__main__':

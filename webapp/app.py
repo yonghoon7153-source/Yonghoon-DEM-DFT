@@ -5632,43 +5632,61 @@ isolated particles keep some SE contact (no floating particles).
 
 @app.route('/results/<case_id>/2d-export.zip')
 def serve_2d_export_zip(case_id):
-    """Bundle the 2D microstructure figure + README + CSV summaries as a zip."""
+    """Bundle the full COMSOL-import package: geometry.dxf (vector domains +
+    coverage-as-boundary layers), parameters.csv/json (3D effective materials),
+    geometry.svg/png preview, microstructure.npy, phase_fractions.csv, and a
+    README with COMSOL import steps."""
     import io as _io
     import zipfile
+    import sys as _sys
+    import importlib
+    import tempfile
     px = max(200, min(1200, int(request.args.get('px', 600))))
     seed = int(request.args.get('seed', 0))
-    force = request.args.get('fresh') in ('1', 'true', 'yes')
+    case_dir = get_case_dir(case_id)
+    results_dir = get_results_dir(case_id)
+    if not os.path.exists(os.path.join(results_dir, 'atoms.csv')):
+        return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
+    meta_file = os.path.join(case_dir, 'meta.json')
+    case_name = case_id
+    if os.path.exists(meta_file):
+        try:
+            case_name = json.load(open(meta_file)).get('name', case_id)
+        except Exception:
+            pass
+    _scripts_dir = app.config['SCRIPTS_FOLDER']
+    if _scripts_dir not in _sys.path:
+        _sys.path.insert(0, _scripts_dir)
+    out_dir = None
     try:
-        s = _synth_2d(case_id, px=px, seed=seed, force=force)
+        import extract_2d_microstructure as ex2d
+        import export_comsol_2d as expc
+        ex2d = importlib.reload(ex2d)
+        expc = importlib.reload(expc)
+        sd = ex2d.synthesize_microstructure(Path(case_dir), n_pixels=px, seed=seed)
+        if sd is None:
+            return ('2D microstructure generation failed (missing meta/params)', 404)
+        out_dir = tempfile.mkdtemp(prefix=f'comsol_{case_id}_')
+        expc.write_comsol_package(case_name, Path(case_dir), sd, out_dir, axis='synth')
+        # phase_fractions.csv (convenience; not in the package)
+        fr = sd.get('phase_fracs') or {}
+        with open(os.path.join(out_dir, 'phase_fractions.csv'), 'w') as f:
+            f.write('phase,area_pct\n')
+            for ph in ('void', 'AM_P', 'AM_S', 'SE'):
+                f.write(f'{ph},{fr.get(ph, "")}\n')
+        buf = _io.BytesIO()
+        with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
+            for fn in sorted(os.listdir(out_dir)):
+                z.write(os.path.join(out_dir, fn), fn)
+        buf.seek(0)
     except Exception as e:
         import traceback; traceback.print_exc()
         return (f'{type(e).__name__}: {e}', 500)
-    if s is None:
-        return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
-    png_path = os.path.join(get_results_dir(case_id), 'microstructure_2d.png')
-
-    # summary.csv (key,value)
-    sum_lines = ['key,value']
-    for k in _2D_SCALAR_KEYS:
-        v = s.get(k)
-        if isinstance(v, dict):
-            continue
-        sum_lines.append(f'{k},{"" if v is None else v}')
-    # phase_fractions.csv
-    f = s.get('phase_fracs') or {}
-    frac_lines = ['phase,area_pct'] + [f'{ph},{f.get(ph,"")}'
-                                       for ph in ('void', 'AM_P', 'AM_S', 'SE')]
-
-    buf = _io.BytesIO()
-    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
-        if os.path.exists(png_path):
-            z.write(png_path, 'microstructure_2d.png')
-        z.writestr('README.md', _build_2d_readme(case_id, s))
-        z.writestr('summary.csv', '\n'.join(sum_lines) + '\n')
-        z.writestr('phase_fractions.csv', '\n'.join(frac_lines) + '\n')
-    buf.seek(0)
+    finally:
+        if out_dir:
+            shutil.rmtree(out_dir, ignore_errors=True)
     return send_file(buf, mimetype='application/zip', as_attachment=True,
-                     download_name=f'{case_id}_microstructure_2d.zip')
+                     download_name=f'{case_name}_comsol_2d.zip')
 
 
 @app.route('/download-file/<case_id>/<filename>')
