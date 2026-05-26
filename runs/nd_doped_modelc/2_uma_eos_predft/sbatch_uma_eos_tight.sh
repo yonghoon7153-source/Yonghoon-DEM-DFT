@@ -42,9 +42,13 @@ echo "=== UMA tight EOS (v096-v108, uma-s-1p1) — pair1 + pair2 ==="
 echo "Date: $(date)  Host: $(hostname)  Job: $SLURM_JOB_ID"
 nvidia-smi --query-gpu=index,name --format=csv,noheader
 
+# Use relax.in (clean QE input: cell+coords) not relax.out — ASE's espresso-out
+# parser asserts on the incomplete/spin-polarized bands of the scancelled DFT+U
+# run. relax.in holds the UMA-relaxed champion at v100; MLIP re-relaxes anyway
+# so the EOS result is identical.
 python3 -u uma_eos_pre_dft.py \
-    --rank1-structure ./pair01_pair_00_reference_1_82/v100/relax.out \
-    --rank2-structure ./pair02_pair_02_close_13_25/v100/relax.out \
+    --rank1-structure ./pair01_pair_00_reference_1_82/v100/relax.in \
+    --rank2-structure ./pair02_pair_02_close_13_25/v100/relax.in \
     --out_dir ./uma_eos_tight_both
 
 echo "=== DONE $(date) ==="

@@ -172,14 +172,20 @@ def process_rank(rank_label: str, calc, out_dir: Path,
     print(f"Processing {rank_label}")
     print(f"{'='*70}")
     if structure:
-        # Start from an explicit structure file (e.g. DFT-relaxed final coords).
-        # index=-1 grabs the LAST image = final ionic step of a QE relax.out.
+        # Start from an explicit structure file.
+        #  - QE input (.in/.pwi): clean cell+coords, no eigenvalues → robust.
+        #  - QE output (.out/.pwo): ASE's espresso-out parser asserts on
+        #    incomplete / spin-polarized band data (common for scancelled or
+        #    DFT+U+ISPIN=2 runs), so prefer the .in.
         src = structure
-        try:
-            atoms = read(structure, index=-1)
-        except Exception:
-            atoms = read(structure, index=-1, format='espresso-out')
-        print(f"\n  Loaded final coords from {src} ({len(atoms)} atoms)")
+        if structure.endswith(('.in', '.pwi')):
+            atoms = read(structure, format='espresso-in')
+        else:
+            try:
+                atoms = read(structure, index=-1)
+            except Exception:
+                atoms = read(structure, index=-1, format='espresso-out')
+        print(f"\n  Loaded structure from {src} ({len(atoms)} atoms)")
     else:
         cif = pick_best_champion(Path(pair_dir))
         src = str(cif)
