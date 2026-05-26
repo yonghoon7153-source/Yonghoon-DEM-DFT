@@ -484,6 +484,255 @@ def slice_microstructure(case_dir: Path, slice_frac: float = 0.5,
     }
 
 
+def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
+                              grain_size_um: float = 0.8,
+                              single_crystal_facets: bool = True,
+                              seed: int = 0):
+    """Build a REPRESENTATIVE 2D microstructure from the 3D statistics
+    (not a literal slice).
+
+    A planar slice cannot show true particle D50 and the right area fractions
+    at once (Wicksell).  Instead we synthesize: place AM particles whose size
+    distribution has the analysis-summary D50 as its MEDIAN (variation kept)
+    at the 3D-measured area fractions, fill a CONNECTED SE matrix, carve void
+    pores to the porosity, and pin coverage to the 3D value.  AM_P = circular
+    polycrystalline (grain boundaries), AM_S = faceted single crystal.  Result
+    reproduces D50, φ_AM_P/φ_AM_S, porosity, coverage, and SE connectivity.
+    """
+    case_id = case_dir.name
+    results_dir = ROOT / 'webapp' / 'results' / case_id
+    meta_file = case_dir / 'meta.json'
+    ip_file = results_dir / 'input_params.json'
+    atoms_csv = results_dir / 'atoms.csv'
+    fm_file = results_dir / 'full_metrics.json'
+    if not meta_file.exists():
+        return None
+    meta = json.loads(meta_file.read_text())
+    scale = meta.get('scale', 1000)
+    type_map = {}
+    for item in meta.get('type_map', '1:AM,2:SE').split(','):
+        k, v = item.split(':')
+        type_map[int(k)] = v.strip()
+    ip = json.loads(ip_file.read_text()) if ip_file.exists() else {}
+    fm = json.loads(fm_file.read_text()) if fm_file.exists() else {}
+
+    box_x_um = (ip.get('box_x') or 0.05) * scale
+    poro = float(fm.get('porosity') or 14.0) / 100.0
+    phi_se = fm.get('phi_se')
+    phi_se = float(phi_se) if phi_se is not None else 0.30
+    cov_3d = (fm.get('coverage_AM_mean_physics_rough')
+              or fm.get('coverage_AM_mean_physics'))
+    target_coverage_frac = (float(cov_3d) / 100.0) if cov_3d is not None else None
+    thickness = float(fm.get('thickness_um') or box_x_um * 2)
+    r_se_um = (ip.get('r_SE') or ip.get('r_SE_sim') or 0.0005) * scale
+
+    # AM radius distributions + per-phase volume split from the real atoms
+    r_amp_arr = np.array([]); r_ams_arr = np.array([])
+    f_p = 0.7
+    if atoms_csv.exists():
+        df = pd.read_csv(atoms_csv)
+        for col in ('radius', 'type'):
+            if col in df.columns:
+                df[col] = pd.to_numeric(df[col], errors='coerce')
+        rr = df['radius'].to_numpy() * scale
+        ph = np.array([_type_to_phase(type_map.get(int(t), ''))
+                       for t in df['type'].to_numpy()])
+        r_amp_arr = rr[(ph == AM_P) & np.isfinite(rr)]
+        r_ams_arr = rr[(ph == AM_S) & np.isfinite(rr)]
+        v_p = np.sum(r_amp_arr ** 3); v_s = np.sum(r_ams_arr ** 3)
+        if v_p + v_s > 0:
+            f_p = v_p / (v_p + v_s)
+
+    def _d50_target(ip_key, arr):
+        v = ip.get(ip_key) or ip.get(ip_key + '_sim')
+        if v:
+            return float(v) * scale
+        return float(np.median(arr)) if arr.size else None
+    r_amp_um = _d50_target('r_AM_P', r_amp_arr)
+    r_ams_um = _d50_target('r_AM_S', r_ams_arr)
+
+    # rescale the actual radius distribution so its median == analysis D50
+    def _make_sampler(arr, target, rng):
+        if arr.size and target:
+            med = float(np.median(arr))
+            scaled = arr * (target / med) if med > 0 else arr
+            return lambda: float(rng.choice(scaled))
+        if target:                                   # fallback: lognormal
+            return lambda: float(target * np.exp(rng.normal(0, 0.22)))
+        return None
+
+    phi_am = max(0.0, 1.0 - poro - phi_se)
+    phi_amp = phi_am * f_p
+    phi_ams = phi_am * (1.0 - f_p)
+
+    a_extent, b_extent = box_x_um, thickness
+    nx = n_pixels
+    ny = max(1, int(round(nx * b_extent / a_extent)))
+    pa = a_extent / nx
+    pb = b_extent / ny
+    labels = np.zeros((ny, nx), dtype=np.int8)
+
+    rng = np.random.default_rng(seed)
+    sampler_p = _make_sampler(r_amp_arr, r_amp_um, rng)
+    sampler_s = _make_sampler(r_ams_arr, r_ams_um, rng)
+
+    # Random sequential addition, allowing modest overlap so AM particles
+    # CONTACT (AM-AM boundaries → coverage < 100%, like a compacted electrode).
+    # AM_P (large) placed first to its area target, then AM_S (small) nestles
+    # into the gaps with a looser overlap budget so both phases hit target.
+    pid = [0]
+    def _place_phase(need_px, phase, sampler, faceted, overlap, stale_max,
+                     center_void=False):
+        if not sampler or need_px <= 0:
+            return
+        placed = 0; stale = 0
+        while placed < need_px and stale < stale_max:
+            r_px = max(1.5, sampler() / pa)
+            if r_px > 0.48 * min(nx, ny):
+                stale += 1; continue
+            cx = rng.uniform(r_px, nx - r_px); cy = rng.uniform(r_px, ny - r_px)
+            if center_void and labels[int(cy), int(cx)] != VOID:
+                stale += 1; continue
+            x0 = max(0, int(np.floor(cx - r_px))); x1 = min(nx, int(np.ceil(cx + r_px)) + 1)
+            y0 = max(0, int(np.floor(cy - r_px))); y1 = min(ny, int(np.ceil(cy + r_px)) + 1)
+            ga = np.arange(x0, x1) + 0.5; gb = np.arange(y0, y1) + 0.5
+            GA, GB = np.meshgrid(ga, gb)
+            if faceted and single_crystal_facets:
+                pid[0] += 1
+                mask = _faceted_inside(GA, GB, cx, cy, r_px, seed=seed * 7919 + pid[0])
+            else:
+                mask = (GA - cx) ** 2 + (GB - cy) ** 2 <= r_px ** 2
+            region = labels[y0:y1, x0:x1]
+            tot = int(mask.sum())
+            occ = int(np.sum((region != VOID) & mask))
+            if tot == 0 or occ > overlap * tot:
+                stale += 1; continue
+            new = mask & (region == VOID)
+            region[new] = phase
+            placed += int(new.sum()); stale = 0
+
+    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.22, 7000)
+    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 0.55, 14000,
+                 center_void=True)
+
+    # Porosity: scatter irregular void pores into the non-AM space (may touch
+    # AM, like real inter-particle pores), spaced so SE stays connected, then
+    # everything else non-AM → SE matrix.
+    non_am = (labels == VOID)
+    need_void = int(round(poro * nx * ny))
+    pr_max = max(2.0, r_se_um / pa * 2.0)
+    dist_edge = _ndi.distance_transform_edt(non_am)
+    blocked = np.zeros_like(non_am)
+    pore = np.zeros_like(non_am)
+    cy_, cx_ = np.where(non_am & (dist_edge > 1.5))
+    if len(cy_):
+        order = np.argsort(-dist_edge[cy_, cx_])
+        carved = 0
+        for ci in order:
+            if carved >= need_void:
+                break
+            py, px = int(cy_[ci]), int(cx_[ci])
+            if blocked[py, px]:
+                continue
+            room = float(dist_edge[py, px])
+            r_target = 2.0 + (pr_max - 2.0) * rng.random() ** 1.6
+            r_base = min(r_target, room - 0.5)
+            if r_base < 1.5:
+                continue
+            a = rng.uniform(-1, 1, 3) * 0.12
+            ph = rng.uniform(0, 2 * np.pi, 3)
+            rmax = int(np.ceil(r_base * 1.4)) + 1
+            yy0, yy1 = max(0, py - rmax), min(ny, py + rmax + 1)
+            xx0, xx1 = max(0, px - rmax), min(nx, px + rmax + 1)
+            gy, gx = np.ogrid[yy0 - py:yy1 - py, xx0 - px:xx1 - px]
+            rr = np.hypot(gy, gx); th = np.arctan2(gy, gx)
+            rb = r_base * (1 + a[0] * np.cos(th + ph[0]) + a[1] * np.cos(2 * th + ph[1])
+                           + a[2] * np.cos(3 * th + ph[2]))
+            sub_pore = pore[yy0:yy1, xx0:xx1]
+            m = (rr <= rb) & non_am[yy0:yy1, xx0:xx1] & (~sub_pore)
+            c = int(m.sum())
+            if c == 0:
+                continue
+            sub_pore[m] = True
+            carved += c
+            bm = int(rmax + 3)
+            b0y, b1y = max(0, py - bm), min(ny, py + bm + 1)
+            b0x, b1x = max(0, px - bm), min(nx, px + bm + 1)
+            blocked[b0y:b1y, b0x:b1x] = True
+    # non-AM, non-pore → connected SE matrix; pores stay VOID
+    labels[non_am & ~pore] = SE
+
+    # AM_P polycrystalline grain boundaries (AM_S stays single crystal)
+    grain_boundary = np.zeros_like(labels, dtype=bool)
+    if grain_size_um and grain_size_um > 0:
+        grain_boundary = _am_p_grain_boundaries(labels, pa, pb, grain_size_um)
+
+    total = labels.size
+    fracs = {PHASE_NAMES[p]: round(100 * np.sum(labels == p) / total, 2)
+             for p in (VOID, AM_P, AM_S, SE)}
+
+    # AM-SE coverage (same detection + 3D pin as the slice path)
+    is_am = (labels == AM_P) | (labels == AM_S)
+    is_se = (labels == SE)
+    se_n = np.zeros_like(is_se)
+    se_n[:-1, :] |= is_se[1:, :]; se_n[1:, :] |= is_se[:-1, :]
+    se_n[:, :-1] |= is_se[:, 1:]; se_n[:, 1:] |= is_se[:, :-1]
+    not_am = ~is_am
+    nb = np.zeros_like(not_am)
+    nb[:-1, :] |= not_am[1:, :]; nb[1:, :] |= not_am[:-1, :]
+    nb[:, :-1] |= not_am[:, 1:]; nb[:, 1:] |= not_am[:, :-1]
+    am_boundary = is_am & nb
+    am_covered = am_boundary & se_n
+    am_uncov = am_boundary & ~se_n
+    n_bnd = int(am_boundary.sum())
+    coverage_inplane_pct = (round(100 * int(am_covered.sum()) / n_bnd, 2)
+                            if n_bnd else 0.0)
+    if target_coverage_frac is not None and n_bnd:
+        delta = int(round(target_coverage_frac * n_bnd)) - int(am_covered.sum())
+        dse = _ndi.distance_transform_edt(~is_se)
+        if delta > 0:                                  # promote nearest-SE uncovered
+            uy, ux = np.where(am_uncov)
+            if len(uy):
+                sel = np.argsort(dse[uy, ux])[:min(delta, len(uy))]
+                am_covered[uy[sel], ux[sel]] = True
+                am_uncov[uy[sel], ux[sel]] = False
+        elif delta < 0:                                # demote farthest-from-SE-core covered
+            cyy, cxx = np.where(am_covered)
+            if len(cyy):
+                sel = np.argsort(dse[cyy, cxx])[:min(-delta, len(cyy))]
+                am_covered[cyy[sel], cxx[sel]] = False
+                am_uncov[cyy[sel], cxx[sel]] = True
+    coverage_pct = round(100 * int(am_covered.sum()) / n_bnd, 2) if n_bnd else 0.0
+    interface = np.zeros_like(labels)
+    interface[am_covered] = 1
+    interface[am_uncov] = 2
+
+    return {
+        'case_id': case_id, 'case_name': meta.get('name', case_id),
+        'mode': meta.get('mode', ''), 'ps_ratio': meta.get('ps_ratio', ''),
+        'labels': labels, 'interface': interface,
+        'grain_boundary': grain_boundary, 'grain_size_um': grain_size_um,
+        'axis': 'synth', 'se_continuum': True,
+        'a_label': 'x (μm)', 'b_label': 'z (μm)',
+        'a_extent': a_extent, 'b_extent': b_extent, 'b_origin': 0.0,
+        'slice_at_um': 0.0, 'slice_frac': 0.0,
+        'thickness_um': thickness,
+        'n_pixels': nx, 'pa_um': pa, 'pb_um': pb,
+        'phase_fracs': fracs,
+        'coverage_2d_pct': coverage_pct,
+        'coverage_2d_inplane_pct': coverage_inplane_pct,
+        'coverage_3d_target_pct': (round(target_coverage_frac * 100, 2)
+                                   if target_coverage_frac is not None else None),
+        'n_am_boundary_px': n_bnd,
+        'n_particles_hit': None,
+        'r_AM_P_d50_um': (round(r_amp_um, 3) if r_amp_um else None),
+        'r_AM_S_d50_um': (round(r_ams_um, 3) if r_ams_um else None),
+        'r_AM_P_apparent_um': (round(r_amp_um, 3) if r_amp_um else None),
+        'r_AM_S_apparent_um': (round(r_ams_um, 3) if r_ams_um else None),
+        'synthetic': True,
+    }
+
+
 def render_png(data, out_path: Path):
     from matplotlib.patches import Patch
     labels = data['labels']
@@ -619,6 +868,11 @@ def main():
     ap.add_argument('--no-facets', action='store_true',
                     help='draw AM_S as plain circles (default: faceted '
                          'single-crystal habit; AM_P stays spheroidal)')
+    ap.add_argument('--procedural', action='store_true',
+                    help='synthesize a representative microstructure from 3D '
+                         'stats (AM D50-matched, area/porosity/coverage pinned) '
+                         'instead of slicing')
+    ap.add_argument('--seed', type=int, default=0, help='procedural RNG seed')
     ap.add_argument('--out-png', default='docs/figures/microstructure_2d')
     ap.add_argument('--out-npy', default='docs/data/microstructure_2d')
     args = ap.parse_args()
@@ -665,7 +919,12 @@ def main():
     for name, d in candidates:
         for zf in fracs_list:
             try:
-                data = slice_microstructure(d, slice_frac=zf,
+                if args.procedural:
+                    data = synthesize_microstructure(
+                        d, n_pixels=args.n_pixels, grain_size_um=args.grain_size,
+                        single_crystal_facets=not args.no_facets, seed=args.seed)
+                else:
+                    data = slice_microstructure(d, slice_frac=zf,
                                             n_pixels=args.n_pixels,
                                             axis=args.axis,
                                             se_continuum=not args.no_continuum,

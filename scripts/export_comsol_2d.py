@@ -39,7 +39,8 @@ from scipy import ndimage as _ndi
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / 'scripts'))
 from extract_2d_microstructure import (   # noqa: E402
-    slice_microstructure, render_png as render_microstructure_png,
+    slice_microstructure, synthesize_microstructure,
+    render_png as render_microstructure_png,
     VOID, AM_P, AM_S, SE, PHASE_NAMES,
 )
 
@@ -366,6 +367,11 @@ def main():
                     help='AM_P poly grain μm (Trevisanello 2021); 0=off')
     ap.add_argument('--no-facets', action='store_true',
                     help='draw AM_S as plain circles (default: faceted single-crystal)')
+    ap.add_argument('--procedural', action='store_true',
+                    help='synthesize a representative microstructure from 3D '
+                         'stats (AM D50-matched, area/porosity/coverage pinned) '
+                         'instead of a literal slice')
+    ap.add_argument('--seed', type=int, default=0, help='procedural RNG seed')
     ap.add_argument('--out', default='docs/data/comsol_export')
     args = ap.parse_args()
 
@@ -383,14 +389,22 @@ def main():
     if case_dir is None:
         print(f'Case "{args.case}" not found', file=sys.stderr); sys.exit(1)
 
-    print(f'Slicing {args.case} (axis={args.axis}, continuum={not args.no_continuum})...')
-    sd = slice_microstructure(case_dir, slice_frac=args.slice_frac,
-                              n_pixels=args.n_pixels, axis=args.axis,
-                              se_continuum=not args.no_continuum,
-                              grain_size_um=args.grain_size,
-                              single_crystal_facets=not args.no_facets)
+    if args.procedural:
+        print(f'Synthesizing representative microstructure for {args.case} '
+              f'(D50-matched, area/porosity/coverage pinned)...')
+        sd = synthesize_microstructure(case_dir, n_pixels=args.n_pixels,
+                                       grain_size_um=args.grain_size,
+                                       single_crystal_facets=not args.no_facets,
+                                       seed=args.seed)
+    else:
+        print(f'Slicing {args.case} (axis={args.axis}, continuum={not args.no_continuum})...')
+        sd = slice_microstructure(case_dir, slice_frac=args.slice_frac,
+                                  n_pixels=args.n_pixels, axis=args.axis,
+                                  se_continuum=not args.no_continuum,
+                                  grain_size_um=args.grain_size,
+                                  single_crystal_facets=not args.no_facets)
     if sd is None:
-        print('slice failed (missing data)', file=sys.stderr); sys.exit(1)
+        print('generation failed (missing data)', file=sys.stderr); sys.exit(1)
 
     out_dir = ROOT / args.out / args.case
     out_dir.mkdir(parents=True, exist_ok=True)
