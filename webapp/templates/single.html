@@ -304,9 +304,52 @@ function switchTab(btn, id) {
 
 function openModal(src, title) {
   document.getElementById('modal-img').src = src;
-  document.getElementById('modal-title').textContent = title;
+  document.getElementById('modal-title').textContent =
+    (title ? title + '  ·  ' : '') + 'Ctrl+C 로 이미지 복사';
   document.getElementById('modal').classList.add('open');
 }
+
+function _imgToast(msg) {
+  let t = document.getElementById('img-copy-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'img-copy-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);' +
+      'background:#10b981;color:#fff;padding:8px 16px;border-radius:8px;font-size:14px;' +
+      'z-index:10000;box-shadow:0 4px 12px rgba(0,0,0,.3);transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._h);
+  t._h = setTimeout(() => { t.style.opacity = '0'; }, 1600);
+}
+
+async function copyModalImage() {
+  const img = document.getElementById('modal-img');
+  if (!img || !img.src || !img.naturalWidth) return;
+  try {
+    const c = document.createElement('canvas');
+    c.width = img.naturalWidth; c.height = img.naturalHeight;
+    c.getContext('2d').drawImage(img, 0, 0);
+    const blob = await new Promise(r => c.toBlob(r, 'image/png'));
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    _imgToast('이미지가 클립보드에 복사되었습니다');
+  } catch (err) {
+    _imgToast('복사 실패: ' + (err.message || err));
+  }
+}
+
+// Ctrl/Cmd+C copies the open modal image (unless the user is selecting text)
+document.addEventListener('keydown', (e) => {
+  const modal = document.getElementById('modal');
+  if (!modal || !modal.classList.contains('open')) return;
+  if ((e.ctrlKey || e.metaKey) && (e.key === 'c' || e.key === 'C')) {
+    if (window.getSelection && String(window.getSelection())) return;
+    e.preventDefault();
+    copyModalImage();
+  }
+});
 
 function copyReport() {
   const text = document.getElementById('report-content').textContent;
