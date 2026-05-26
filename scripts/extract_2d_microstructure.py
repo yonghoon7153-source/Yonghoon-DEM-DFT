@@ -598,7 +598,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     # into the gaps with a looser overlap budget so both phases hit target.
     pid = [0]
     particles = []                                   # (cx, cy, r_px) per particle
-    def _place_phase(need_px, phase, sampler, faceted, overlap, stale_max,
+    def _place_phase(need_px, phase, sampler, faceted, gap_px, stale_max,
                      center_void=False, stratify_z=False):
         if not sampler or need_px <= 0:
             return
@@ -623,28 +623,34 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                 cy = rng.uniform(r_px, ny - r_px)
             if center_void and labels[int(cy), int(cx)] != VOID:
                 stale += 1; continue
-            x0 = max(0, int(np.floor(cx - r_px))); x1 = min(nx, int(np.ceil(cx + r_px)) + 1)
-            y0 = max(0, int(np.floor(cy - r_px))); y1 = min(ny, int(np.ceil(cy + r_px)) + 1)
+            # NON-TOUCHING: require a thin SE gap around the particle so no two
+            # AM share a boundary (electrons flow via the SE+additive matrix, so
+            # AM-AM contact / AM percolation is not needed).  The footprint
+            # dilated by `gap_px` must be entirely VOID.
+            rg = r_px + gap_px
+            x0 = max(0, int(np.floor(cx - rg))); x1 = min(nx, int(np.ceil(cx + rg)) + 1)
+            y0 = max(0, int(np.floor(cy - rg))); y1 = min(ny, int(np.ceil(cy + rg)) + 1)
             ga = np.arange(x0, x1) + 0.5; gb = np.arange(y0, y1) + 0.5
             GA, GB = np.meshgrid(ga, gb)
+            d2 = (GA - cx) ** 2 + (GB - cy) ** 2
+            region = labels[y0:y1, x0:x1]
+            if np.any((region != VOID) & (d2 <= rg * rg)):   # would touch another AM
+                stale += 1; continue
             if faceted and single_crystal_facets:
                 pid[0] += 1
                 mask = _faceted_inside(GA, GB, cx, cy, r_px, seed=seed * 7919 + pid[0])
             else:
-                mask = (GA - cx) ** 2 + (GB - cy) ** 2 <= r_px ** 2
-            region = labels[y0:y1, x0:x1]
-            tot = int(mask.sum())
-            occ = int(np.sum((region != VOID) & mask))
-            if tot == 0 or occ > overlap * tot:
-                stale += 1; continue
+                mask = d2 <= r_px ** 2
             new = mask & (region == VOID)
+            if not new.any():
+                stale += 1; continue
             region[new] = phase
             particles.append((cx, cy, r_px, float(phase)))
             placed += int(new.sum()); stale = 0; n_ok += 1
 
-    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 0.06, 12000,
+    _place_phase(phi_amp * nx * ny, AM_P, sampler_p, False, 1.5, 16000,
                  stratify_z=True)
-    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 0.12, 20000,
+    _place_phase(phi_ams * nx * ny, AM_S, sampler_s, True, 1.0, 26000,
                  center_void=True)
 
     # ---- Coverage-driven porosity ---------------------------------------
