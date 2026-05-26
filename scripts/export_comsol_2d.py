@@ -380,9 +380,72 @@ def _contour_crop(mask, pa, pb, b0, ox, oy, sigma=0.8):
 
 
 def _grain_polys(am_p_mask, grain_px, pa, pb, b0, seed=0):
-    """Split each AM_P particle into coarse grains (Voronoi at ~grain_px
-    spacing) and return each grain as a closed polygon (μm).  COMSOL Form Union
-    turns these into separate grain domains sharing grain-boundary edges."""
+    """Split each AM_P particle into grains.  If shapely is available, use exact
+    shared-edge Voronoi cells clipped to the particle (no gaps/overlaps — the
+    natural, clean tiling); otherwise fall back to the raster-dilation method."""
+    try:
+        from shapely.geometry import Polygon, MultiPoint, Point
+        from shapely.ops import voronoi_diagram
+    except Exception:
+        return _grain_polys_dilate(am_p_mask, grain_px, pa, pb, b0, seed)
+
+    lab, nlab = _ndi.label(am_p_mask)
+    rng = np.random.default_rng(seed)
+    step = max(4.0, float(grain_px))
+    polys = []
+    for pid in range(1, nlab + 1):
+        ys, xs = np.where(lab == pid)
+        if len(ys) < 30:
+            continue
+        y0, y1, x0, x1 = ys.min(), ys.max() + 1, xs.min(), xs.max() + 1
+        sub = (lab[y0:y1, x0:x1] == pid)
+        sh, sw = sub.shape
+        # pad so the particle never touches the crop edge (else matplotlib
+        # contour breaks the rim into open arcs and the outline polygon is wrong)
+        pad = 3
+        subp = np.zeros((sh + 2 * pad, sw + 2 * pad), dtype=bool)
+        subp[pad:pad + sh, pad:pad + sw] = sub
+        outline = _contour_crop(subp, pa, pb, b0, x0 - pad, y0 - pad)  # closed rim
+        if not outline:
+            continue
+        try:
+            ppoly = Polygon(max(outline, key=len))
+            if not ppoly.is_valid:
+                ppoly = ppoly.buffer(0)
+        except Exception:
+            ppoly = None
+        if ppoly is None or ppoly.is_empty or ppoly.area <= 0:
+            continue
+        seeds = []
+        for yy in np.arange(step / 2, sh, step):
+            for xx in np.arange(step / 2, sw, step):
+                jx = (x0 + xx + rng.uniform(-step * .35, step * .35)) * pa
+                jy = (y0 + yy + rng.uniform(-step * .35, step * .35)) * pb + b0
+                if ppoly.contains(Point(jx, jy)):
+                    seeds.append((jx, jy))
+        if len(seeds) < 2:                                   # whole particle = 1 grain
+            polys.append(np.asarray(ppoly.exterior.coords))
+            continue
+        try:
+            vd = voronoi_diagram(MultiPoint(seeds), envelope=ppoly)
+        except Exception:
+            polys.append(np.asarray(ppoly.exterior.coords))
+            continue
+        for cell in vd.geoms:                                # Voronoi cells share ridges
+            inter = cell.intersection(ppoly)
+            if inter.is_empty:
+                continue
+            parts = inter.geoms if inter.geom_type == 'MultiPolygon' else [inter]
+            for poly in parts:
+                if getattr(poly, 'geom_type', '') == 'Polygon' and poly.area > 0:
+                    polys.append(np.asarray(poly.exterior.coords))
+    return polys
+
+
+def _grain_polys_dilate(am_p_mask, grain_px, pa, pb, b0, seed=0):
+    """Fallback (no shapely): raster Voronoi labels, each grain dilated 1 px and
+    clipped to the particle so neighbours overlap slightly (no inter-grain gaps;
+    COMSOL Form Union merges the overlaps)."""
     from scipy.spatial import cKDTree
     lab, nlab = _ndi.label(am_p_mask)
     rng = np.random.default_rng(seed)
@@ -399,7 +462,7 @@ def _grain_polys(am_p_mask, grain_px, pa, pb, b0, seed=0):
                   xx + rng.uniform(-step * .35, step * .35))
                  for yy in np.arange(step / 2, sh, step)
                  for xx in np.arange(step / 2, sw, step)]
-        if len(seeds) < 2:                              # whole particle = 1 grain
+        if len(seeds) < 2:
             polys += _contour_crop(sub, pa, pb, b0, x0, y0)
             continue
         tree = cKDTree(np.array(seeds))
@@ -412,10 +475,6 @@ def _grain_polys(am_p_mask, grain_px, pa, pb, b0, seed=0):
             gm = gid == g
             if gm.sum() < 6:
                 continue
-            # dilate each grain into the inter-grain gaps (Chaikin smoothing
-            # shrinks cells, leaving slivers between them) and clip to the
-            # particle, so neighbours OVERLAP slightly → COMSOL Form Union
-            # merges them into shared grain-boundary edges with no internal gaps.
             gm = _ndi.binary_dilation(gm, iterations=1) & sub
             polys += _contour_crop(gm, pa, pb, b0, x0, y0)
     return polys

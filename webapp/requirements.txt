@@ -11,3 +11,4 @@ anthropic
 tabulate
 gunicorn
 requests
+shapely  # optional: exact shared-edge Voronoi grains in the COMSOL geometry export
