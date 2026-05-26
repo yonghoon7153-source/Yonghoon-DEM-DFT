@@ -713,7 +713,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
 
     need_void = int(round(poro * nx * ny))
     non_am = (labels == VOID)
-    pr_max = max(3.0, r_se_um / pa * 4.0)            # larger → fewer, clumpier pores
+    pr_max = max(2.0, r_se_um / pa * 2.0)
     dist_edge = _ndi.distance_transform_edt(non_am & ~pore)
     blocked = np.zeros_like(non_am)
     cy_, cx_ = np.where((non_am & ~pore) & (dist_edge > 1.5))
@@ -726,9 +726,9 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if blocked[py, px]:
                 continue
             room = float(dist_edge[py, px])
-            r_target = 3.0 + (pr_max - 3.0) * rng.random() ** 0.8
+            r_target = 2.0 + (pr_max - 2.0) * rng.random() ** 1.6
             r_base = min(r_target, room - 0.5)
-            if r_base < 2.5:                          # drop sub-resolution specks
+            if r_base < 1.5:
                 continue
             a = rng.uniform(-1, 1, 3) * 0.12
             ph = rng.uniform(0, 2 * np.pi, 3)
@@ -744,7 +744,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if int(m.sum()) == 0:
                 continue
             pore[yy0:yy1, xx0:xx1] |= m
-            bm = max(1, int(rmax * 0.45))            # small → neighbours merge into clusters
+            bm = int(rmax + 3)
             blocked[max(0, py-bm):min(ny, py+bm+1),
                     max(0, px-bm):min(nx, px+bm+1)] = True
     # non-AM, non-pore → SE matrix; pores stay VOID
