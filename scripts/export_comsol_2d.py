@@ -446,17 +446,17 @@ def write_dxf_layers(layers: dict, out_path: Path, colors: dict = None,
 
 
 def write_comsol_geometry(sd, out_dir, grain_um=2.0, min_void_um=0.4, seed=0):
-    """COMSOL geometry DXF: domain rectangle + AM_P split into grain domains
-    + AM_S particles + void pores (small ones around AM kept — they encode the
-    inactive coverage) + the AM-SE interface split as two edge layers:
-      AM_SE_interface (active, reaction BC)  /  AM_inactive (no-flux).
-    SE is left for COMSOL to build as Rectangle − (AM ∪ void)."""
+    """COMSOL geometry DXF — CLOSED faces only so COMSOL Form Union makes
+    selectable domains: domain rectangle + AM_P split into grain domains +
+    AM_S particles + void pores (small ones around AM kept).  SE is the
+    left-over face.  Active vs inactive AM boundary is read from adjacency:
+    AM∩SE = active (reaction), AM∩void = inactive (no-flux).  (No open
+    interface-arc curves — they prevented face partitioning in COMSOL.)"""
     labels = sd['labels']
     pa, pb, b0 = sd['pa_um'], sd['pb_um'], sd['b_origin']
     a_ext, b_ext = sd['a_extent'], sd['b_extent']
     min_area_px = max(8, int((sd['n_pixels'] / 150) ** 2))
     void_min = max(6, int(np.pi * (min_void_um / pa / 2.0) ** 2))
-    iseg = _classify_am_interface(labels, sd['interface'], pa, pb, b0)
     layers = {
         'domain': [np.array([[0, b0], [a_ext, b0], [a_ext, b0 + b_ext],
                              [0, b0 + b_ext], [0, b0]])],
@@ -465,15 +465,10 @@ def write_comsol_geometry(sd, out_dir, grain_um=2.0, min_void_um=0.4, seed=0):
                           min_area_px=min_area_px, fill_holes=True),
         'void': _contours(labels == VOID, pa, pb, b0,
                           min_area_px=void_min, fill_holes=False),
-        'AM_SE_interface': iseg['AM_SE_interface'],   # active arcs (green)
-        'AM_inactive': iseg['AM_inactive'],           # inactive arcs (red)
     }
-    write_dxf_layers(layers, Path(out_dir) / 'geometry_comsol.dxf',
-                     open_layers=('AM_SE_interface', 'AM_inactive'))
+    write_dxf_layers(layers, Path(out_dir) / 'geometry_comsol.dxf')
     return {'n_grains': len(layers['AM_P_grain']), 'n_AMS': len(layers['AM_S']),
-            'n_void': len(layers['void']),
-            'n_active': len(layers['AM_SE_interface']),
-            'n_inactive': len(layers['AM_inactive'])}
+            'n_void': len(layers['void'])}
 
 
 def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
@@ -547,8 +542,7 @@ def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
     try:
         gi = write_comsol_geometry(sd, out_dir, grain_um=2.0, min_void_um=0.4)
         print(f'  geometry_comsol.dxf → {gi["n_grains"]} AM_P grains + '
-              f'{gi["n_AMS"]} AM_S + {gi["n_void"]} void + '
-              f'{gi["n_active"]} active / {gi["n_inactive"]} inactive arcs')
+              f'{gi["n_AMS"]} AM_S + {gi["n_void"]} void (closed faces)')
     except Exception as _ge:
         import traceback; traceback.print_exc()
         print(f'  [comsol-lean geometry] skipped: {_ge}')
