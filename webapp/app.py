@@ -6672,37 +6672,56 @@ _AUDIT_GATES = list(_AUDIT_GATE_TIPS.keys())
 
 
 def _audit_discover_cases():
-    """Yield (display_id, url, results_dir) for every case that has a
-    full_metrics.json regardless of archive vs results location."""
+    """Yield (display_id, url, results_dir, archive_rel) for each case that has
+    a full_metrics.json, de-duplicated by case NAME across results + archive.
+    A case present in both a local results dir and the archive (or under both an
+    id- and a name-keyed entry) is listed ONCE; the live local results copy is
+    preferred over the archived one."""
     out = []
-    archive_root = app.config.get('ARCHIVE_FOLDER')
+    seen = set()                       # canonical case names already added
     results_root = app.config.get('RESULTS_FOLDER')
-    seen = set()
+    archive_root = app.config.get('ARCHIVE_FOLDER')
 
-    # archive cases (path-based view URL)
+    def _canon(name):
+        return (name or '').strip().lower()
+
+    def _results_name(case_id, results_dir):
+        for p in (os.path.join(app.config['UPLOAD_FOLDER'], case_id, 'meta.json'),
+                  os.path.join(results_dir, 'meta.json')):
+            if os.path.exists(p):
+                try:
+                    nm = json.load(open(p)).get('name')
+                    if nm:
+                        return nm
+                except Exception:
+                    pass
+        return case_id
+
+    # local results FIRST (live/current copy preferred over an archived one)
+    if results_root and os.path.isdir(results_root):
+        for case_id in sorted(os.listdir(results_root)):
+            d = os.path.join(results_root, case_id)
+            if not (os.path.isdir(d)
+                    and os.path.exists(os.path.join(d, 'full_metrics.json'))):
+                continue
+            nm = _results_name(case_id, d)
+            key = _canon(nm)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append((nm, url_for('single', case_id=case_id), d, None))
+
+    # archive cases — only if that NAME isn't already shown from results
     if archive_root and os.path.isdir(archive_root):
         for dirpath, _, files in os.walk(archive_root):
             if 'full_metrics.json' in files and 'atoms.csv' in files:
                 rel = os.path.relpath(dirpath, archive_root)
-                if rel in seen:
+                nm = os.path.basename(dirpath)
+                key = _canon(nm)
+                if key in seen:
                     continue
-                seen.add(rel)
-                out.append((os.path.basename(dirpath),
-                            url_for('archive_view', folder=rel),
-                            dirpath, rel))
-
-    # local results cases (id-based view URL)
-    if results_root and os.path.isdir(results_root):
-        for case_id in os.listdir(results_root):
-            d = os.path.join(results_root, case_id)
-            if (os.path.isdir(d)
-                    and os.path.exists(os.path.join(d, 'full_metrics.json'))):
-                if case_id in seen:
-                    continue
-                seen.add(case_id)
-                out.append((case_id,
-                            url_for('single', case_id=case_id),
-                            d, None))
+                seen.add(key)
+                out.append((nm, url_for('archive_view', folder=rel), dirpath, rel))
     return out
 
 
