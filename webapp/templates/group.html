@@ -184,14 +184,13 @@
       </div>
       <div class="plot-row">
         <label class="plot-checkbox"><input type="checkbox" value="network_sigma"> Ionic: Network Solver</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_scaling_fit"> Ionic: v12-clean v3 Fit (parity)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="ionic_scaling_fit"> Ionic: v12-clean v3 Fit (parity, Hertzian)</label>
         <label class="plot-checkbox"><input type="checkbox" value="multiscale_sigma"> Ionic: v12-clean v3 (per-config, Hertzian)</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_perconfig_physics"> Ionic: PHYSICS per-config (fixed form)</label>
-        <label class="plot-checkbox"><input type="checkbox" value="formx_decomposition"> Ionic: 분해 (factor decomp)</label>
         <label class="plot-checkbox"><input type="checkbox" value="ionic_solver_vs_stage_e"> Ionic: Network solver vs Stage E</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_fit_stage_e"> Ionic: Stage E 물리식 재적합</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_outliers_stage_e"> Ionic: Stage E outlier 진단</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_phic_scan_stage_e"> Ionic: Stage E CN²+φc 스캔</label>
+        <label class="plot-checkbox"><input type="checkbox" value="ionic_fit_stage_e"> Ionic: PHYSICS fit (fixed form, parity)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="ionic_decomp_physics"> Ionic: PHYSICS factor decomposition</label>
+        <label class="plot-checkbox"><input type="checkbox" value="ionic_perconfig_physics"> Ionic: PHYSICS per-config (fixed form)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="ionic_outliers_stage_e"> Ionic: PHYSICS fit outlier 진단</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy: FORM X로 대체"><input type="checkbox" value="rgb_fitting"> [Legacy] BLM Proxy</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy: FORM X로 대체"><input type="checkbox" value="gb_corrected"> [Legacy] Proxy σ_eff</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy v3"><input type="checkbox" value="v3_fitting"> [Legacy] v3 Fitting</label>
@@ -848,7 +847,7 @@ async function generatePlots() {
   try {
     // Global R_gb: always use all data combined for rgb_fitting/gb_corrected
     // Plots that need ALL groups combined (not per-group)
-    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e', 'ionic_phic_scan_stage_e'];
+    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e'];
     const needsGlobalRgb = validPGs.length > 1 &&
       plotTypes.some(p => globalOnlyTypes.includes(p));
     let globalRgb = '';
@@ -1030,6 +1029,7 @@ async function generatePlots() {
 function createPlotItem(session, p) {
   const item = document.createElement('div');
   item.className = 'plot-item';
+  const isOutlier = p.file === 'ionic_outliers_stage_e.png';
   item.innerHTML = `
     <img src="/group/plot-image/${session}/${p.file}" alt="${p.title}"
          onclick="openPlotModal(this.src, '${p.title}')">
@@ -1037,9 +1037,46 @@ function createPlotItem(session, p) {
       <h4>${p.title}</h4>
       <p class="plot-desc">${p.description.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</p>
       <details class="plot-origin"><summary>Origin 설정</summary><pre>${p.origin_tip}</pre></details>
+      ${isOutlier ? `<button class="btn btn-sm btn-primary" style="margin-top:10px"
+          onclick="showOutlierPopup('${session}')">📋 outlier 케이스·이유 보기</button>` : ''}
       ${p.csv ? `<a href="/group/plot-image/${session}/${p.csv}" class="btn btn-sm btn-dl" style="margin-top:10px" download>CSV 다운로드</a>` : ''}
     </div>`;
   return item;
+}
+
+async function showOutlierPopup(session) {
+  let data;
+  try {
+    const r = await fetch(`/group/plot-image/${session}/ionic_outliers_stage_e_data.json`);
+    data = await r.json();
+  } catch (e) { alert('outlier 데이터를 불러오지 못했습니다: ' + e); return; }
+  let modal = document.getElementById('outlier-modal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'outlier-modal'; modal.className = 'modal';
+    modal.innerHTML = `<div class="modal-content" style="max-width:760px;max-height:85vh;overflow:auto">
+      <button class="modal-close" onclick="document.getElementById('outlier-modal').classList.remove('open')">&times;</button>
+      <div id="outlier-modal-body"></div></div>`;
+    document.body.appendChild(modal);
+  }
+  const corr = (data.top_corr || []).map(c => `${c.feature}: ${c.r >= 0 ? '+' : ''}${c.r}`).join(' · ');
+  const rows = (data.outliers || []).map(o => `
+    <tr>
+      <td style="padding:5px 8px;font-weight:600">${o.case}</td>
+      <td style="padding:5px 8px;text-align:right;color:${o.direction === 'over' ? '#ff6b6b' : '#4dabf7'}">${o.err_pct >= 0 ? '+' : ''}${o.err_pct}%</td>
+      <td style="padding:5px 8px;color:var(--dim);font-size:.85em">${o.reason}</td>
+    </tr>`).join('');
+  document.getElementById('outlier-modal-body').innerHTML = `
+    <h3 style="margin-top:0">σ_ionic fit outliers — ${data.n_outliers}/${data.n} (>±20%)</h3>
+    <p style="color:var(--dim);font-size:.85em">잔차 최강 상관 feature: ${corr || '—'}</p>
+    <table style="width:100%;border-collapse:collapse;font-size:.9em">
+      <thead><tr style="border-bottom:1px solid #2a2d3e">
+        <th style="text-align:left;padding:5px 8px">케이스</th>
+        <th style="text-align:right;padding:5px 8px">오차%</th>
+        <th style="text-align:left;padding:5px 8px">outlier 이유</th>
+      </tr></thead><tbody>${rows || '<tr><td colspan="3" style="padding:10px;color:var(--dim)">outlier 없음</td></tr>'}</tbody>
+    </table>`;
+  modal.classList.add('open');
 }
 
 function createDerivationBox() {

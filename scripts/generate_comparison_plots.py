@@ -2131,7 +2131,7 @@ def plot_formx_decomposition(data_list, names, outdir):
         ('C(τ)', log_Csig, '#FFC000'),
     ]
 
-    fig, (ax, ax2) = plt.subplots(2, 1, figsize=(max(8, n*0.8), 10), gridspec_kw={'height_ratios': [3, 2]})
+    fig, (ax, ax2) = plt.subplots(2, 1, figsize=(max(8, n*0.8), max(10, n*0.32)), gridspec_kw={'height_ratios': [3, 2]})
 
     # Top: stacked bar (relative to ref)
     x = np.arange(n)
@@ -2176,6 +2176,82 @@ def plot_formx_decomposition(data_list, names, outdir):
                list(log_phiex), list(log_cn), list(log_cov), list(log_Csig),
                [sorted([(l, v[i]-v[ref]) for l,v,_ in factors], key=lambda x:-abs(x[1]))[0][0] for i in range(n)])
     return _save(fig, outdir, "formx_decomposition.png")
+
+
+def plot_ionic_decomp_physics(data_list, names, outdir):
+    """PHYSICS fixed-form factor decomposition: each factor's Δlog
+    contribution vs the reference (max-σ) case for
+    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³ (physics target)."""
+    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    n = len(data_list)
+    phi = [_get(d, 'phi_se') for d in data_list]
+    cn = [_get(d, 'se_se_cn', 0) for d in data_list]
+    cov = [(_cov_frac(d, physics=True) or _cov_frac(d, physics=False)) for d in data_list]
+    fp = [_get(d, 'percolation_pct', 0)/100.0 for d in data_list]
+    tau = [_get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 1)) for d in data_list]
+    log_phi = np.array([0.5*np.log(max(phi[i]-PHI_C, 1e-4)) if phi[i] > PHI_C else 0 for i in range(n)])
+    log_cn = np.array([CN_EXP*np.log(cn[i]) if cn[i] > 0 else 0 for i in range(n)])
+    log_cov = np.array([COV_EXP*np.log(cov[i]) if cov[i] and cov[i] > 0 else 0 for i in range(n)])
+    log_fp = np.array([3.0*np.log(max(fp[i], 1e-3)) if fp[i] > 0 else 0 for i in range(n)])
+    # C_blend(τ): fit on valid cases, contribution = pred − base
+    idx = [i for i in range(n)
+           if phi[i] > PHI_C and cn[i] > 0 and cov[i] and cov[i] > 0 and fp[i] > 0
+           and tau[i] > 0 and _stage_e_sigma(data_list[i])]
+    log_cb = np.zeros(n)
+    if len(idx) >= 8:
+        base = np.array([np.log(SG)+log_phi[i]+log_cn[i]+log_cov[i]+log_fp[i] for i in idx])
+        logsf = np.array([np.log(_stage_e_sigma(data_list[i])) for i in idx])
+        taus = np.array([tau[i] for i in idx])
+        _r2, _lo, _Ct, _Cn, pred, _, _ = _cblend_fit_score(base, logsf, taus)
+        for j, i in enumerate(idx):
+            log_cb[i] = pred[j] - base[j]
+    sig = [_stage_e_sigma(d) or 0 for d in data_list]
+    ref = int(np.argmax(sig)) if any(s > 0 for s in sig) else 0
+    factors = [
+        ('(φ−0.19)^0.5', log_phi, '#4472C4'),
+        ('CN²', log_cn, '#ED7D31'),
+        ('cov^0.5', log_cov, '#A5A5A5'),
+        ('f_p³', log_fp, '#70AD47'),
+        ('C_blend(τ)', log_cb, '#FFC000'),
+    ]
+    fig, (ax, ax2) = plt.subplots(2, 1, figsize=(max(8, n*0.8), max(10, n*0.32)),
+                                  gridspec_kw={'height_ratios': [3, 2]})
+    x = np.arange(n); bpos = np.zeros(n); bneg = np.zeros(n)
+    for label, vals, color in factors:
+        delta = vals - vals[ref]
+        pos = np.clip(delta, 0, None); neg = np.clip(delta, None, 0)
+        ax.bar(x, pos, bottom=bpos, color=color, label=label, width=0.7,
+               edgecolor='white', linewidth=0.5)
+        ax.bar(x, neg, bottom=bneg, color=color, width=0.7, edgecolor='white', linewidth=0.5)
+        bpos += pos; bneg += neg
+    ax.axhline(0, color='gray', linewidth=0.5)
+    _apply_style(ax, 'delta-log(factor) from ref', names, data_list)
+    x_labels = [t.get_text() for t in ax.get_xticklabels()]
+    if not any(x_labels):
+        x_labels = list(names)
+    ax.set_title('PHYSICS fixed-form factor decomposition (ref: %s)'
+                 % (x_labels[ref] if ref < len(x_labels) else names[ref]),
+                 fontsize=12, fontweight='bold')
+    ax.legend(fontsize=9, loc='upper left', ncol=5)
+    ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
+    for i in range(n):
+        deltas = sorted([(l, v[i]-v[ref]) for l, v, _ in factors],
+                        key=lambda t: -abs(t[1]))
+        dom = deltas[0][0]; col = [c for l, _, c in factors if l == dom][0]
+        ax2.barh(i, deltas[0][1], color=col, height=0.6, edgecolor='white', linewidth=0.5)
+        ax2.text(deltas[0][1], i, f' {dom}', va='center', fontsize=7)
+    ax2.set_yticks(range(n)); ax2.set_yticklabels([x_labels[i][:20] for i in range(n)], fontsize=7)
+    ax2.set_xlabel('Dominant factor delta-log', fontsize=10)
+    ax2.set_title('Dominant factor per case', fontsize=11, fontweight='bold')
+    ax2.axvline(0, color='gray', linewidth=0.5)
+    ax2.spines['top'].set_visible(False); ax2.spines['right'].set_visible(False)
+    fig.tight_layout()
+    _write_csv(outdir, 'ionic_decomp_physics.csv',
+               ['(phi-0.19)^0.5', 'CN^2', 'cov^0.5', 'f_p^3', 'C_blend', 'dominant'],
+               x_labels, list(log_phi), list(log_cn), list(log_cov), list(log_fp), list(log_cb),
+               [sorted([(l, v[i]-v[ref]) for l, v, _ in factors], key=lambda t: -abs(t[1]))[0][0]
+                for i in range(n)])
+    return _save(fig, outdir, "ionic_decomp_physics.png")
 
 
 def _load_electronic_sigma(data_list):
@@ -4187,24 +4263,69 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
     ax.set_ylabel('σ_predicted (v12 form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
-    ax.set_title(f"Stage-E σ fit outliers  (n={n}, {int(is_out.sum())} >20%)\n"
-                 f"잔차 최강 상관 feature → {top_corr}", fontsize=8)
+    ax.set_title(f"Stage-E sigma fit outliers  (n={n}, {int(is_out.sum())} >20%)\n"
+                 f"top residual-corr features -> {top_corr}", fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_outliers_stage_e.png")
+
+    feat_keys = [k for k, _ in _OUTLIER_DIAG_FEATS] + ['cov_asym']
+    # Feature medians/stds for per-case z-scores (reason inference)
+    fmed, fstd = {}, {}
+    for k in feat_keys:
+        vv = np.array([feat_rows[i].get(k, np.nan) for i in range(n)])
+        vv = vv[np.isfinite(vv)]
+        if len(vv) >= 5:
+            fmed[k] = float(np.median(vv)); fstd[k] = float(np.std(vv)) or 1.0
+
+    def _ps_note(name):
+        nm = (name or '').replace(' ', '')
+        for ps in ('0:10', '10:0', '7:3', '3:7', '5:5', '8:2', '2:8'):
+            if ps in nm:
+                return ps
+        return ''
+
+    def _reason(i):
+        parts = []
+        ps = _ps_note(labs[i])
+        if ps == '0:10':
+            parts.append('순수 AM_S(0:10) — 임계 근처·packing 다름')
+        elif ps == '10:0':
+            parts.append('순수 AM_P(10:0)')
+        elif ps:
+            parts.append(f'P:S={ps}')
+        parts.append('과대예측(σ_pred>실측)' if err_pct[i] > 0 else '과소예측(σ_pred<실측)')
+        best, bz = None, 0.0
+        for k in feat_keys:
+            v = feat_rows[i].get(k, np.nan)
+            if k in fmed and np.isfinite(v):
+                z = (v - fmed[k]) / fstd[k]
+                if abs(z) > abs(bz):
+                    bz, best = z, k
+        if best and abs(bz) > 1.2:
+            parts.append(f'{best} {"높음" if bz > 0 else "낮음"} (z={bz:+.1f})')
+        return ' · '.join(parts)
+
+    outliers = [{'case': labs[i], 'err_pct': round(float(err_pct[i]), 1),
+                 'sigma_act': round(float(sig_act[i]), 4),
+                 'sigma_pred': round(float(sig_pred[i]), 4),
+                 'direction': 'over' if err_pct[i] > 0 else 'under',
+                 'reason': _reason(i)}
+                for i in order if is_out[i]]
+    import json as _json
+    with open(os.path.join(outdir, "ionic_outliers_stage_e_data.json"), 'w',
+              encoding='utf-8') as jf:
+        _json.dump({'n': n, 'n_outliers': int(is_out.sum()),
+                    'top_corr': [{'feature': k, 'r': round(r, 3)} for k, r, _ in feat_corr[:5]],
+                    'outliers': outliers}, jf, ensure_ascii=False, indent=1)
     with open(os.path.join(outdir, "ionic_outliers_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        feat_keys = [k for k, _ in _OUTLIER_DIAG_FEATS] + ['cov_asym']
-        wr.writerow(['Case', 'sigma_act', 'sigma_pred', 'err_%'] + feat_keys)
+        wr.writerow(['Case', 'sigma_act', 'sigma_pred', 'err_%', 'reason'] + feat_keys)
         for i in order:
             wr.writerow([labs[i], round(sig_act[i], 4), round(sig_pred[i], 4),
-                         round(err_pct[i], 1)]
+                         round(err_pct[i], 1), _reason(i) if is_out[i] else '']
                         + [('' if not np.isfinite(feat_rows[i].get(k, np.nan))
                             else round(feat_rows[i][k], 4)) for k in feat_keys])
-        wr.writerow([])
-        wr.writerow(['# residual-feature correlation (signed)'])
-        for k, r, nn in feat_corr:
-            wr.writerow([k, round(r, 3), f'n={nn}'])
     return outpath
 
 
@@ -4457,12 +4578,12 @@ PLOT_REGISTRY["ionic_fit_stage_e"] = {
     "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 물리 고정식(√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³)에 C_blend(τ)만 재적합 (parity + R²/LOOCV).\n지수는 물리값으로 고정(과적합 방지). 자유지수 진단치는 CSV에 함께 기록 — physics 타깃이 같은 지수를 원하는지 확인용.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 물리식 + C_blend(Ct/Cn).",
 }
-PLOT_REGISTRY["ionic_phic_scan_stage_e"] = {
-    "func": plot_ionic_phic_scan_stage_e,
-    "file": "ionic_phic_scan_stage_e.png",
-    "title": "σ_ionic Stage E — CN² + φc 스캔",
-    "description": "CN²·(φ−φc)^0.5·cov^0.5·f_p³·C_blend(τ) 고정형에서 percolation 임계 φc를 스캔해 LOOCV 최적값 탐색 (각 φc마다 C_blend 재적합).\n제목/CSV에 best φc + R²/LOOCV + 동결할 C_blend(Ct/Cn).",
-    "origin_tip": "Line: R²/LOOCV vs φc. best φc 빨강 점선, v12(0.20) 회색.",
+PLOT_REGISTRY["ionic_decomp_physics"] = {
+    "func": plot_ionic_decomp_physics,
+    "file": "ionic_decomp_physics.png",
+    "title": "σ_ionic PHYSICS factor decomposition",
+    "description": "PHYSICS 고정식의 5개 factor 전부를 stack으로 분해: (φ−0.19)^0.5 · CN² · cov^0.5 · f_p³ · C_blend(τ). τ는 C_blend(τ)로 포함. 각 factor의 Δlog 기여를 ref(최고 σ) 대비 표시.",
+    "origin_tip": "상단 stacked bar(factor별 Δlog), 하단 case별 dominant factor.",
 }
 PLOT_REGISTRY["ionic_perconfig_physics"] = {
     "func": plot_ionic_perconfig_physics,
