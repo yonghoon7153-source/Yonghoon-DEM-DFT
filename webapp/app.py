@@ -5515,11 +5515,16 @@ def serve_report(case_id):
         L.append('')
 
     L.append('### Scaling Law Reference\n')
-    L.append('| Formula | R² |')
-    L.append('|---------|-----|')
-    L.append('| σ_ion = σ_brug × C × (G_path × GB_d²)^(1/4) × CN² | 0.947 |')
-    L.append('| σ_el = 0.015 × σ_AM × φ_AM^(3/2) × CN_AM² × exp(π/(T/d)) | 0.89 |')
-    L.append('| σ_th = 286 × σ_ion^(3/4) × φ_AM² / CN_SE | 0.90 |')
+    L.append('| Channel | Formula | R² |')
+    L.append('|---------|---------|-----|')
+    L.append('| σ_ion (v12-clean v3, final) | σ_grain × √(φ−0.2) × CN^(3/2) × cov^(2/5) × f_p³ × C_blend(τ) | 0.981 |')
+    L.append('| σ_el | 0.015 × σ_AM × φ_AM^(3/2) × CN_AM² × exp(π/(T/d)) | 0.89 |')
+    L.append('| σ_th | 286 × σ_ion^(3/4) × φ_AM² / CN_SE | 0.90 |')
+    L.append('')
+    L.append('> σ_ion is the v12-clean v3 production model (n=57, LOOCV=0.979): '
+             'σ_grain=3.0 mS/cm, φc=0.20; the τ dependence is carried by the '
+             'sigmoid-blended prefactor C_blend(τ). See '
+             'docs/ionic_scaling_law_experiments.md.')
     L.append('')
     section += 1
 

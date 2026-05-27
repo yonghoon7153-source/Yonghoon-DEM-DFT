@@ -22,6 +22,68 @@ warnings.filterwarnings('ignore')
 SIGMA_GRAIN = 3.0       # mS/cm (SE grain interior)
 SIGMA_AM = 50.0         # mS/cm (NCM811)
 
+# ═══ Ionic scaling law — v12-clean v3 (FINAL PRODUCTION MODEL, 2026-04-18) ═══
+# σ_ionic = C_blend(τ) × σ_grain × √(φ−φc) × CN^(3/2) × cov^(2/5) × f_p³
+#   R²=0.9813, LOOCV=0.9791 (n=57).  See docs/ionic_scaling_law_experiments.md.
+# Half-integer exponents are within 5% of the data-native fit. The τ
+# dependence lives entirely in C_blend(τ) — a sigmoid blend of a v5 two-level
+# prefactor and a poly3-in-lnτ prefactor — whose coefficients are fit live
+# from the corpus (self-calibrating). k, τc fixed per the doc (LOOCV-flat).
+PHI_C_V12 = 0.20          # percolation threshold (fixed)
+PHI_EX_FLOOR = 1e-4       # critical: 0.001 floor over-predicted sub-φc cases
+V12_TAU_K = 20.0          # blend sigmoid steepness w(τ)=σ(k(τ−τc))
+V12_TAU_C = 1.92          # blend sigmoid center
+V12_V5_K = 5.0            # C_v5 inner sigmoid steepness
+V12_V5_C = 2.1            # C_v5 inner sigmoid center
+
+
+def _v12_base_log(phi_se, cn, tau, cov_frac, f_perc_frac):
+    """log of the v12-clean v3 base term (no C_blend prefactor)."""
+    phi_ex = max(phi_se - PHI_C_V12, PHI_EX_FLOOR)
+    return (np.log(SIGMA_GRAIN) + 0.5 * np.log(phi_ex) + 1.5 * np.log(max(cn, 1e-6))
+            + 0.4 * np.log(max(cov_frac, 1e-6)) + 3.0 * np.log(max(f_perc_frac, 1e-3)))
+
+
+def fit_ionic_v12(rows):
+    """Fit C_blend(τ) for the v12-clean v3 ionic law from corpus rows.
+
+    Returns a params dict (b_v5: 2-vec for [1, w_v5]; b_p3: 4-vec for
+    [1, lnτ, lnτ², lnτ³]) or None when too few usable rows."""
+    log_resid, taus = [], []
+    for r in rows:
+        phi_se, cn, tau = r.get('phi_se', 0), r.get('cn', 0), r.get('tau', 0)
+        sig = r.get('sigma_ion', 0)
+        cov = max(r.get('coverage', 0.20), 0.01)
+        fp = max(r.get('f_perc', 0) / 100.0, 1e-3)
+        if not (phi_se > PHI_C_V12 and cn > 0 and tau > 0 and sig > 0.01):
+            continue
+        log_resid.append(np.log(sig) - _v12_base_log(phi_se, cn, tau, cov, fp))
+        taus.append(tau)
+    if len(taus) < 5:
+        return None
+    taus = np.asarray(taus)
+    y = np.asarray(log_resid)
+    w_v5 = 1.0 / (1.0 + np.exp(-V12_V5_K * (taus - V12_V5_C)))
+    log_tau = np.log(np.maximum(taus, 1e-6))
+    X_v5 = np.column_stack([np.ones(len(taus)), w_v5])
+    X_p3 = np.column_stack([np.ones(len(taus)), log_tau, log_tau**2, log_tau**3])
+    b_v5 = np.linalg.lstsq(X_v5, y, rcond=None)[0]
+    b_p3 = np.linalg.lstsq(X_p3, y, rcond=None)[0]
+    return {'b_v5': b_v5.tolist(), 'b_p3': b_p3.tolist()}
+
+
+def predict_ionic_v12(params, phi_se, cn, tau, cov_frac, f_perc_frac):
+    """Predict σ_ionic (mS/cm) with the v12-clean v3 law + fitted C_blend(τ)."""
+    if not params:
+        return 0.0
+    base = np.exp(_v12_base_log(phi_se, cn, tau, cov_frac, f_perc_frac))
+    log_t = np.log(max(tau, 1e-6))
+    pv = params['b_v5'][0] + params['b_v5'][1] / (1.0 + np.exp(-V12_V5_K * (tau - V12_V5_C)))
+    pp = (params['b_p3'][0] + params['b_p3'][1] * log_t
+          + params['b_p3'][2] * log_t**2 + params['b_p3'][3] * log_t**3)
+    w = 1.0 / (1.0 + np.exp(-V12_TAU_K * (tau - V12_TAU_C)))
+    return float(base * np.exp((1 - w) * pv + w * pp))
+
 INPUT_FEATURES = [
     'd_se', 'd_am', 'am_pct', 'ps_frac', 'rve', 'loading',
     'd_ratio', 'am_loading', 'se_density_proxy', 'layer_count',
@@ -462,7 +524,7 @@ def train_models(results_folder, archive_folder):
     log_rhs_X = []
     log_act_X = []
     for r in rows:
-        phi_ex = max(r['phi_se'] - PHI_C, 0.001)
+        phi_ex = max(r['phi_se'] - PHI_C, PHI_EX_FLOOR)
         cov_frac = max(r.get('coverage', 0.20), 0.01)
         if phi_ex > 0 and r['cn'] > 0 and r['tau'] > 0 and r['sigma_ion'] > 0.01:
             rhs = SIGMA_GRAIN * phi_ex**0.75 * r['cn'] * np.sqrt(cov_frac) / np.sqrt(r['tau'])
@@ -484,9 +546,13 @@ def train_models(results_folder, archive_folder):
     if log_rhs_v3:
         C_v3 = float(np.exp(np.mean(np.array(log_act_v3) - np.array(log_rhs_v3))))
 
+    # v12-clean v3 (FINAL): base × C_blend(τ), fit live from corpus
+    ionic_v12 = fit_ionic_v12(rows)
+
     _cached_models = {
         'models': models,
-        'C_ionic': C_formX,  # FORM X as primary
+        'ionic_v12': ionic_v12,  # v12-clean v3 — primary when available
+        'C_ionic': C_formX,  # FORM X — fallback / comparison
         'C_v3': C_v3,        # v3 for comparison
         'PHI_C': PHI_C,
         'count': len(rows),
@@ -496,7 +562,8 @@ def train_models(results_folder, archive_folder):
 
     return {'success': True, 'count': len(rows), 'scores': scores,
             'cv_scores': cv_scores,
-            'C_formX': round(C_formX, 4), 'C_v3': round(C_v3, 4)}
+            'C_formX': round(C_formX, 4), 'C_v3': round(C_v3, 4),
+            'ionic_v12': ionic_v12 is not None}
 
 
 def get_data_count(results_folder, archive_folder):
@@ -589,16 +656,23 @@ def predict(d_se, d_am, am_pct, ps_frac, loading, rve, temperature=298, additive
     hop_area = micro.get('hop_area', {}).get('value', 0)
     sigma_brug_ratio = micro.get('sigma_brug', {}).get('value', 0)
 
-    # Ionic conductivity — FORM X (v4++ champion)
-    # σ = C × σ_grain × (φ-φc)^(3/4) × CN × √coverage / √τ
+    # Ionic conductivity — v12-clean v3 (FINAL, R²=0.9813):
+    #   σ = C_blend(τ) × σ_grain × √(φ−φc) × CN^(3/2) × cov^(2/5) × f_p³
+    # Falls back to FORM X (φ^¾·CN·√cov/√τ) when the v12 blend isn't fitted.
     PHI_C = _cached_models.get('PHI_C', 0.185)
     sigma_brug = SIGMA_GRAIN * sigma_brug_ratio
     coverage_pred = micro.get('coverage', {}).get('value', 0.20) if isinstance(micro.get('coverage'), dict) else 0.20
     coverage_frac = max(0.01, min(1.0, coverage_pred))
-    phi_excess = max(phi_se - PHI_C, 0.001)
+    f_perc_frac = max(0.0, min(1.0, f_perc / 100.0))
 
     sigma_ionic = 0
-    if phi_excess > 0 and cn > 0 and tau > 0:
+    ionic_v12 = _cached_models.get('ionic_v12')
+    if ionic_v12 and phi_se > PHI_C_V12 and cn > 0 and tau > 0:
+        sigma_ionic = predict_ionic_v12(ionic_v12, phi_se, cn, tau,
+                                        coverage_frac, f_perc_frac)
+    elif (phi_se - PHI_C) > PHI_EX_FLOOR and cn > 0 and tau > 0:
+        # FORM X fallback (clamp 1e-4 per the doc's sub-threshold fix)
+        phi_excess = max(phi_se - PHI_C, PHI_EX_FLOOR)
         sigma_ionic = C_ionic * SIGMA_GRAIN * phi_excess**0.75 * cn * np.sqrt(coverage_frac) / np.sqrt(tau)
 
     # v3 legacy (for comparison)
