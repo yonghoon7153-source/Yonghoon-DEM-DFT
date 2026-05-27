@@ -4627,25 +4627,41 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     asym = np.array(asym); pfr = np.array(pfr)
     g_phi = 1.0/(1.0+np.exp(K_G*(phis-PHI_GATE)))
     g_mix = np.exp(-0.5*((pfr-0.5)/P_MIX_W)**2)
+    # Composition sigmoid along the P:S axis: smoothly ON toward 0:10 (p→0),
+    # OFF toward 10:0 (p→1) — the 10:0↔0:10 transition is a sigmoid, not a step.
+    K_PS = 10.0; P_C = 0.5
+    g_010 = 1.0/(1.0+np.exp(K_PS*(pfr - P_C)))
     sfeat = g_phi*szlog            # SE-size feature (centered inside the fit)
     afeat = g_mix*asym             # AM-asymmetry feature
 
-    # Near-threshold SATURATION base, GATED per-case so the rounding only acts
-    # where it's needed (0:10 / near φc).  φ_eff = sqrt((φ−φc)² + (δ·g_φ)²):
-    #   g_φ→0 (SE-rich)        ⇒ φ_eff = φ−φc  (no change),
-    #   g_φ→1 (0:10/threshold) ⇒ full δ rounding of the √ singularity.
-    # δ (the max rounding) is SCANNED for the LOOCV-optimal value (δ=0 ≡ √ form).
-    phi_ex = np.maximum(phis - PHI_C, 1e-6)
-    def _sat_base(delta):
-        eff = np.sqrt(phi_ex**2 + (delta*g_phi)**2)
-        return base_log + 0.5*(np.log(eff) - np.log(phi_ex))
-    delta_grid = np.round(np.linspace(0.0, 0.12, 25), 4)
-    sat_scan = []
-    for _dlt in delta_grid:
-        _r2d, _lod, *_ = _cblend_fit_score(_sat_base(float(_dlt)), logsf, taus)
-        sat_scan.append((float(_dlt), float(_r2d), float(_lod)))
-    DELTA = max(sat_scan, key=lambda t: t[2])[0]   # LOOCV-optimal δ*
-    base_log_sat = _sat_base(DELTA)
+    # COMPOSITION-DEPENDENT threshold + near-threshold SATURATION, both blended
+    # by the P:S sigmoid g_010 (same idea as C_blend(τ)=(1−w)·A+w·B):
+    #   φc_eff(p) = (1−g_010)·φc_P + g_010·φc_S      ← threshold shifts with P:S
+    #   φ_term    = 0.5·log( √( (φ−φc_eff)² + (δ·g_010)² ) )   ← rounded near 0:10
+    # 10:0 (g_010→0): plain √(φ−φc_P);  0:10 (g_010→1): rounded √ about φc_S.
+    # Re-screen (φc_P, φc_S, δ) JOINTLY for the LOOCV optimum — because rounding
+    # removes the singularity, the φc avoided before (0.205) is back in play, and
+    # physically each P:S has its own percolation threshold.
+    base_no_phi = base_log - 0.5*np.log(np.maximum(phis - PHI_C, 1e-9))
+    def _sat_base(phicP, phicS, delta):
+        phic = (1.0 - g_010)*phicP + g_010*phicS
+        pex = phis - phic
+        phi_term = 0.5*np.log(np.sqrt(pex**2 + (delta*g_010)**2) + 1e-12)
+        return base_no_phi + phi_term
+    phicP_grid = np.round(np.linspace(0.18, 0.215, 8), 4)   # P-heavy (10:0) threshold
+    phicS_grid = np.round(np.linspace(0.15, 0.215, 14), 4)  # S-heavy (0:10) threshold
+    delta_grid = np.round(np.linspace(0.0, 0.10, 6), 4)
+    joint = []
+    for _pP in phicP_grid:
+        for _pS in phicS_grid:
+            for _dl in delta_grid:
+                _r2d, _lod, *_ = _cblend_fit_score(_sat_base(float(_pP), float(_pS), float(_dl)), logsf, taus)
+                joint.append((float(_pP), float(_pS), float(_dl), float(_r2d), float(_lod)))
+    PHICP_STAR, PHICS_STAR, DELTA = max(joint, key=lambda t: t[4])[:3]
+    base_log_sat = _sat_base(PHICP_STAR, PHICS_STAR, DELTA)
+    # 1-D slice for the inset: LOOCV vs φc_S at (φc_P*, δ*) — the 0:10 threshold
+    phicS_scan = [(pS, l) for (pP, pS, d, r, l) in joint
+                  if abs(pP - PHICP_STAR) < 1e-9 and abs(d - DELTA) < 1e-9]
 
     r2_n, lo_n, _, _, pred_n, _, _ = _cblend_fit_score(base_log, logsf, taus)
     r2_s, lo_s, b_s, pred_s = _cblend_extra_score(base_log, logsf, taus, sfeat)
@@ -4662,8 +4678,9 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
               ('+ SE-size (g_phi)', pred_s, r2_s, lo_s, f'beta_s={b_s[0]:+.3f}'),
               ('+ AM-asym (g_mix)', pred_a, r2_a, lo_a, f'beta_a={b_a[0]:+.3f}'),
               ('+ BOTH (size+asym)', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}'),
-              ('SAT-gated phic (d*=%.3f·g_phi scan)' % DELTA, pred_t, r2_t, lo_t, ''),
-              ('SAT-gated(d*=%.3f) + AM-asym' % DELTA, pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
+              ('SAT phic_P*=%.3f phic_S*=%.3f d*=%.3f' % (PHICP_STAR, PHICS_STAR, DELTA),
+               pred_t, r2_t, lo_t, ''),
+              ('SAT(blended phic) + AM-asym', pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
 
     def _is(nm, ps):
         return ps in (nm or '').replace(' ', '')
@@ -4700,16 +4717,18 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     # the picked δ* marked, so the rounding optimum is visible (δ*=0 ⇒ √ is best).
     ax_sat = axes.ravel()[4]
     ins = ax_sat.inset_axes([0.58, 0.10, 0.38, 0.34])
-    _dg = [t[0] for t in sat_scan]; _lo = [t[2] for t in sat_scan]
-    ins.plot(_dg, _lo, '-o', color=PURPLE, ms=2.5, lw=1)
-    ins.axvline(DELTA, color=RED, ls='--', lw=1)
+    _pg = [t[0] for t in phicS_scan]; _lo = [t[1] for t in phicS_scan]
+    ins.plot(_pg, _lo, '-o', color=PURPLE, ms=2.5, lw=1)
+    ins.axvline(PHICS_STAR, color=RED, ls='--', lw=1)
     ins.axhline(lo_n, color=GRAY, ls=':', lw=0.8)  # NO-extra LOOCV reference
-    ins.set_title('LOOCV vs δ  (δ*=%.3f)' % DELTA, fontsize=6)
-    ins.tick_params(labelsize=5); ins.set_xlabel('δ', fontsize=5); ins.grid(True, alpha=0.3)
+    ins.set_title('LOOCV vs phic_S (S* =%.3f)' % PHICS_STAR, fontsize=6)
+    ins.tick_params(labelsize=5); ins.set_xlabel('phic_S (0:10)', fontsize=5); ins.grid(True, alpha=0.3)
     fig.suptitle("Correction-term test (n=%d): size / AM-asym / rounded-phic SAT — catch 0:10(62:38)?\n"
                  "size=r_SE|1/gb_density  asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
-                 "g_mix=gauss(p;0.5,%g)  SAT(gated): phi_eff=sqrt((phi-%.2f)^2+(d*g_phi)^2), d*=%.3f (LOOCV-scan)"
-                 % (n, K_G, PHI_GATE, P_MIX_W, PHI_C, DELTA), fontsize=9)
+                 "g_mix=gauss(p;0.5,%g)  SAT: phic_eff=(1-g010)phicP+g010 phicS, "
+                 "phi_eff=sqrt((phi-phic_eff)^2+(d*g010)^2), g010=sig(-%g(p-%g))  "
+                 "JOINT scan -> phicP*=%.3f phicS*=%.3f d*=%.3f"
+                 % (n, K_G, PHI_GATE, P_MIX_W, K_PS, P_C, PHICP_STAR, PHICS_STAR, DELTA), fontsize=9)
     fig.tight_layout(rect=[0, 0, 1, 0.94])
     outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
 
@@ -4742,10 +4761,9 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
                                      'beta_a': round(b_ta[0], 4),
                                      'n_out': int(_out(pred_ta).sum()),
                                      'out_010': _cnt(pred_ta, m010), 'out_mix': _cnt(pred_ta, mmix)}},
-                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W,
-                    'delta_star': DELTA,
-                    'delta_scan': [{'delta': d, 'r2': round(r, 4), 'loocv': round(l, 4)}
-                                   for d, r, l in sat_scan]},
+                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W, 'k_ps': K_PS,
+                    'phic_P_star': PHICP_STAR, 'phic_S_star': PHICS_STAR, 'delta_star': DELTA,
+                    'phicS_scan': [{'phic_S': pS, 'loocv': round(l, 4)} for pS, l in phicS_scan]},
                    jf, ensure_ascii=False, indent=1)
     return outpath
 
