@@ -22,6 +22,11 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+try:                       # grade-axis values (Q/ASR/τ_Laplace/…) for param compare
+    import grade_engine as _grade_engine
+except Exception:
+    _grade_engine = None
+
 
 # ─── Color palette ────────────────────────────────────────────────────────────
 BLUE = "#4472C4"
@@ -3529,12 +3534,46 @@ def _merged_params(d):
                 out['bn_below_frac'] = nb / ne
             if aux.get('se_bn_median_norm') is not None:
                 out['bn_median_norm'] = float(aux['se_bn_median_norm'])
+    # Grade-engine derived metrics (Q, ASR, τ_Laplace, cycle-stable …) exposed
+    # as 'grade:<label>' params — values the raw metrics don't carry directly.
+    if src and _grade_engine is not None:
+        cdir = os.path.dirname(src)
+        ip = _load_json(os.path.join(cdir, 'input_params.json'))
+        meta = _load_json(os.path.join(cdir, 'meta.json'))
+        se_aux = None
+        ax = _load_json(os.path.join(cdir, 'viewer_aux.json'))
+        if ax:
+            apts = ax.get('se_articulation_points')
+            se_aux = {
+                'n_percolating':        ax.get('se_n_percolating'),
+                'n_articulation_points': (ax.get('se_n_articulation_points')
+                                          if ax.get('se_n_articulation_points') is not None
+                                          else (len(apts) if isinstance(apts, list) else None)),
+                'n_bn_below_threshold': ax.get('se_n_bn_below_threshold'),
+                'n_perc_edges':         ax.get('se_n_perc_edges'),
+                'bn_median_norm':       ax.get('se_bn_median_norm'),
+            }
+        try:
+            prepared = {**d, **_grade_engine.map_input_params(ip, meta)}
+            for label, val in _grade_engine.axis_values(prepared, se_aux).items():
+                out[f'grade:{label}'] = float(val)
+        except Exception:
+            pass
     return out
 
 
+def _load_json(path):
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (OSError, ValueError):
+        return None
+
+
 def _param_label(key):
-    """Display label for a metric key (strip the aux: prefix)."""
-    return key[4:] + ' (3D)' if key.startswith('aux:') else key
+    """Display label for a metric key (strip aux: prefix, decorative stars)."""
+    lbl = key[4:] + ' (3D)' if key.startswith('aux:') else key
+    return lbl.replace('⭐', '').replace('★', '').replace('  ', ' ').strip()
 
 
 def _case_colors(n):

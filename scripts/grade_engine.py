@@ -1289,6 +1289,73 @@ def _resolve_value(axis: dict, metrics: dict) -> float | None:
         return None
 
 
+# Derived axes whose VALUE is already exposed elsewhere (viewer_aux-derived
+# raw keys in the plot param pool) — skip to avoid duplicate parameters.
+_AXIS_VALUE_SKIP = {'__cut_fraction', '__bn_below_frac', '__bn_median_norm'}
+
+
+def map_input_params(ip: dict | None, meta: dict | None) -> dict:
+    """Map raw input_params.json + meta.json into the _input_*/_meta_* keys
+    that the design-info / composition grade axes read.  Shared by the plot
+    parameter-comparison tool (and mirrors webapp _inject_input_params)."""
+    inj: dict = {}
+    ip = ip or {}
+    meta = meta or {}
+    ratio = ip.get('am_se_ratio') or ip.get('AM_SE_ratio')
+    if ratio:
+        inj['_input_am_se_ratio'] = str(ratio)
+    bx = ip.get('box_x'); by = ip.get('box_y'); scale = ip.get('scale') or 1000
+    try:
+        if bx is not None and by is not None:
+            inj['_input_box_x'] = float(bx) * float(scale)
+            inj['_input_box_y'] = float(by) * float(scale)
+    except (TypeError, ValueError):
+        pass
+    for k_src, k_dst in (('r_SE', '_input_r_SE_um'),
+                          ('r_AM_P', '_input_r_AM_P_um'),
+                          ('r_AM_S', '_input_r_AM_S_um')):
+        v = ip.get(k_src) or ip.get(k_src + '_sim')
+        try:
+            if v is not None:
+                inj[k_dst] = float(v) * float(scale)
+        except (TypeError, ValueError):
+            continue
+    tp = ip.get('target_press_sim') or ip.get('target_pressure_MPa')
+    try:
+        if tp is not None:
+            inj['_input_target_press_MPa'] = (float(tp) * 1000 if float(tp) < 10
+                                              else float(tp))
+    except (TypeError, ValueError):
+        pass
+    if meta.get('mode'):
+        inj['_meta_mode'] = meta['mode']
+    if meta.get('ps_ratio'):
+        inj['_meta_ps_ratio'] = meta['ps_ratio']
+    return inj
+
+
+def axis_values(metrics: dict, se_aux: dict | None = None,
+                derived_only: bool = True) -> dict:
+    """Resolve each grade axis's VALUE (not score — no corpus needed) for one
+    case.  Returns {axis_label: float}.  Used to expose the grade engine's
+    computed metrics (Q_gravimetric, ASR_*, τ_Laplace, cycle-stable, 분극 η …)
+    as plottable parameters.  derived_only=True returns only the '__'-derived
+    axes (the values not already present as raw full_metrics/viewer_aux keys),
+    skipping those already exposed in the plot pool."""
+    m = {**metrics, '_aux_se_diag': se_aux} if se_aux else metrics
+    out: dict = {}
+    for ax in AXES:
+        key = ax.get('key', '')
+        if derived_only and not key.startswith('__'):
+            continue
+        if key in _AXIS_VALUE_SKIP:
+            continue
+        v = _resolve_value(ax, m)
+        if v is not None:
+            out[ax['label']] = v
+    return out
+
+
 def _grade_axis(axis: dict, metrics: dict,
                  corpus_rows: list[dict]) -> dict:
     """Return scored row for one axis: value, score, grade, basis text."""

@@ -4464,6 +4464,47 @@ def group_param_options():
                 keys.add('bn_below_frac')
             if a.get('se_bn_median_norm') is not None:
                 keys.add('bn_median_norm')
+        # Grade-engine derived metrics (Q/ASR/τ_Laplace/cycle-stable …) →
+        # 'grade:<label>' params (mirrors generate_comparison_plots._merged_params)
+        if os.path.exists(fm):
+            try:
+                import sys as _sys
+                _sd = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+                if _sd not in _sys.path:
+                    _sys.path.insert(0, _sd)
+                import grade_engine as _ge
+                with open(fm) as f:
+                    _m = json.load(f)
+                _ip = {}
+                _ipp = os.path.join(case_path, 'input_params.json')
+                if os.path.exists(_ipp):
+                    with open(_ipp) as f:
+                        _ip = json.load(f)
+                _meta = {}
+                _mp = os.path.join(case_path, 'meta.json')
+                if os.path.exists(_mp):
+                    with open(_mp) as f:
+                        _meta = json.load(f)
+                _se = None
+                _ap = os.path.join(case_path, 'viewer_aux.json')
+                if os.path.exists(_ap):
+                    with open(_ap) as f:
+                        _a = json.load(f)
+                    _apts = _a.get('se_articulation_points')
+                    _se = {
+                        'n_percolating': _a.get('se_n_percolating'),
+                        'n_articulation_points': (_a.get('se_n_articulation_points')
+                            if _a.get('se_n_articulation_points') is not None
+                            else (len(_apts) if isinstance(_apts, list) else None)),
+                        'n_bn_below_threshold': _a.get('se_n_bn_below_threshold'),
+                        'n_perc_edges': _a.get('se_n_perc_edges'),
+                        'bn_median_norm': _a.get('se_bn_median_norm'),
+                    }
+                _prepared = {**_m, **_ge.map_input_params(_ip, _meta)}
+                for _lbl in _ge.axis_values(_prepared, _se):
+                    keys.add(f'grade:{_lbl}')
+            except Exception:
+                pass
     return jsonify({'params': sorted(keys)})
 
 
