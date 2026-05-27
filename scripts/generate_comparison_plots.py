@@ -3541,6 +3541,89 @@ def _case_colors(n):
     return [GROUP_COLORS[i % len(GROUP_COLORS)] for i in range(n)]
 
 
+_FRAC_STAGES = [('intact', 'Intact', '#4caf50'),
+                ('microcrack', 'Microcrack', '#a9d18e'),
+                ('multicrack', 'Multi-crack', '#ffd43b'),
+                ('fragmentation', 'Fragmentation', '#ff922b'),
+                ('pulverization', 'Pulverization', '#e03131')]
+_FRAC_PAIRS = ['AM_P-AM_P', 'AM_P-AM_S', 'AM_S-AM_S']
+
+
+def plot_fracture_stages(data_list, names, outdir):
+    """Stacked bar of the force-based fracture-stage distribution (intact →
+    pulverization) per case — the Auerbach/Lawn compaction-time damage mix."""
+    rows = []
+    for d in data_list:
+        others = sum(_get(d, f'frac_{s}_force_pct')
+                     for s, _, _ in _FRAC_STAGES if s != 'intact')
+        iv = d.get('frac_intact_force_pct')
+        intact = float(iv) if iv is not None else max(0.0, 100.0 - others)
+        rows.append([intact if s == 'intact' else _get(d, f'frac_{s}_force_pct')
+                     for s, _, _ in _FRAC_STAGES])
+    arr = np.array(rows, dtype=float)
+    if arr.shape[0] == 0 or not np.any(arr[:, 1:] > 0):
+        print("  [SKIP] fracture_stages: no AM-AM fracture data")
+        return None
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    x = np.arange(len(names)); bottom = np.zeros(len(names))
+    for i, (_s, lbl, col) in enumerate(_FRAC_STAGES):
+        ax.bar(x, arr[:, i], bottom=bottom, color=col, label=lbl, width=0.62)
+        bottom += arr[:, i]
+    ax.set_xticks(x); ax.set_xticklabels(names, rotation=30, ha='right', fontsize=8)
+    ax.set_ylabel('contact fraction (%)'); ax.set_ylim(0, 100)
+    ax.set_title('Fracture stage distribution (force-based)', fontsize=10)
+    ax.legend(fontsize=7, ncol=5, loc='upper center', bbox_to_anchor=(0.5, -0.16))
+    outpath = _save(fig, outdir, "fracture_stages.png")
+    with open(os.path.join(outdir, "fracture_stages.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        w = csv.writer(f)
+        w.writerow(['Case'] + [lbl for _s, lbl, _c in _FRAC_STAGES])
+        for nm, r in zip(names, rows):
+            w.writerow([nm] + [round(v, 3) for v in r])
+    return outpath
+
+
+def plot_fracture_pairtype(data_list, names, outdir):
+    """Grouped bar of severe % (fragmentation + pulverization, force-based) per
+    AM-AM pair type — shows which contact type actually fails."""
+    sev = {pt: [] for pt in _FRAC_PAIRS}
+    present = []
+    for pt in _FRAC_PAIRS:
+        any_here = False
+        for d in data_list:
+            n = (d.get(f'n_total_force_{pt}') or d.get(f'n_total_{pt}') or 0)
+            s = (_get(d, f'frac_fragmentation_force_{pt}_pct')
+                 + _get(d, f'frac_pulverization_force_{pt}_pct'))
+            sev[pt].append(s if n else 0.0)
+            if n:
+                any_here = True
+        if any_here:
+            present.append(pt)
+    if not present:
+        print("  [SKIP] fracture_pairtype: no pair-type fracture data")
+        return None
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    x = np.arange(len(names)); nbar = len(present)
+    bw = 0.8 / max(nbar, 1)
+    pair_col = {'AM_P-AM_P': '#e03131', 'AM_P-AM_S': '#ffd43b', 'AM_S-AM_S': '#4caf50'}
+    for j, pt in enumerate(present):
+        ax.bar(x + j * bw - 0.4 + bw / 2, sev[pt], bw, label=pt,
+               color=pair_col.get(pt, GRAY))
+    ax.set_xticks(x); ax.set_xticklabels(names, rotation=30, ha='right', fontsize=8)
+    ax.set_ylabel('severe % (frag + pulv)')
+    ax.set_title('Severe fracture by AM-AM pair type (force-based)', fontsize=10)
+    ax.legend(fontsize=7)
+    ax.grid(True, axis='y', alpha=0.25)
+    outpath = _save(fig, outdir, "fracture_pairtype.png")
+    with open(os.path.join(outdir, "fracture_pairtype.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        w = csv.writer(f)
+        w.writerow(['Case'] + present)
+        for i, nm in enumerate(names):
+            w.writerow([nm] + [round(sev[pt][i], 3) for pt in present])
+    return outpath
+
+
 def plot_param_scatter(data_list, names, outdir):
     """X–Y scatter of any two metrics across the selected cases, with a
     least-squares trend line and Pearson r."""
@@ -3692,6 +3775,20 @@ PLOT_REGISTRY["param_corr"] = {
     "title": "파라미터 상관 Heatmap",
     "description": "선택한 파라미터들 사이의 Pearson 상관계수 행렬.\n어떤 지표가 함께 움직이는지(+1) / 반대로 움직이는지(−1) 한눈에.\n케이스 ≥3개, 변동 있는 파라미터 ≥2개 필요.",
     "origin_tip": "Heatmap (RdBu, −1~+1). 셀에 r 값 표기.",
+}
+PLOT_REGISTRY["fracture_stages"] = {
+    "func": plot_fracture_stages,
+    "file": "fracture_stages.png",
+    "title": "취성 파괴 단계 분포 (Stacked)",
+    "description": "케이스별 force-based 파괴 단계(intact→micro→multi→frag→pulv)를\nstacked bar로 비교. 압착 시점 손상 mix를 한눈에.\n(generic 산점도로는 못 보는 5단계 조성 비교)",
+    "origin_tip": "Stacked Column → X: case, 5 stages 누적. 색: green→red.",
+}
+PLOT_REGISTRY["fracture_pairtype"] = {
+    "func": plot_fracture_pairtype,
+    "file": "fracture_pairtype.png",
+    "title": "취성 파괴 — pair-type별 Severe%",
+    "description": "AM_P-AM_P / AM_P-AM_S / AM_S-AM_S 별 severe%(frag+pulv) 비교.\n어떤 접촉 타입이 실제로 깨지는지 식별 (보통 AM_P-AM_P가 위험).",
+    "origin_tip": "Grouped Column → X: case, 색: pair type.",
 }
 
 
