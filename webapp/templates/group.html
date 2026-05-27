@@ -943,7 +943,7 @@ async function generatePlots() {
   try {
     // Global R_gb: always use all data combined for rgb_fitting/gb_corrected
     // Plots that need ALL groups combined (not per-group)
-    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e'];
+    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e', 'ionic_sizeterm_test'];
     // Force the global path in focus mode too, so fit plots fit on the FULL
     // set (gform always gets all cases) even for a single plot group.
     const needsGlobalRgb = (validPGs.length > 1 || focusEnabled) &&
@@ -1041,14 +1041,17 @@ async function generatePlots() {
     if (validPGs.length === 1) {
       // Single plot group: original layout
       const r = allResults[0];
-      // Focus mode: fit plots came from the forced global path — show their
-      // 1-1 (focus) views only (fit on full set, selected samples drawn).
+      // Focus mode: fit plots came from the forced global path. Show their 1-1
+      // (focus) views, and keep any global plot WITHOUT a focus sibling
+      // (outliers, size-term test, …) — only the full parity is hidden.
       if (focusEnabled && globalRgbPlots && globalRgbPlots.plots) {
-        globalRgbPlots.plots.forEach(p => {
-          if (p.is_focus) {
-            if (p.file.indexOf('ionic_scaling_fit') === 0 && !document.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
-            grid.appendChild(createPlotItem(globalRgbPlots.session, p));
-          }
+        const gp = globalRgbPlots.plots;
+        const focusParents = new Set(gp.filter(p => p.is_focus).map(p => p.parent));
+        gp.forEach(p => {
+          const key = p.file.replace('.png', '');
+          if (!p.is_focus && focusParents.has(key)) return;  // hide full parity
+          if (p.file.indexOf('ionic_scaling_fit') === 0 && !document.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
+          grid.appendChild(createPlotItem(globalRgbPlots.session, p));
         });
       }
       (r ? r.plots : []).forEach(p => {
@@ -1083,12 +1086,12 @@ async function generatePlots() {
         // ionic_fit_stage_e) are displayed, not silently dropped.
         if (globalOnlyTypes.includes(pt)) {
           if (globalPlotMap[file]) {
+            const hasFocus = !!globalPlotMap[pt + '_focus.png'];
             if (pt === 'ionic_scaling_fit' && !grid.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
-            // Focus mode: hide the full (항목1) parity, keep only the 1-1 view.
-            if (!focusEnabled) grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[file]));
-            if (globalPlotMap[pt + '_focus.png']) {
-              grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[pt + '_focus.png']));
-            }
+            // Focus mode: hide the full (항목1) ONLY for plots that have a 1-1
+            // view (parity). Others without a focus sibling (outliers, …) stay.
+            if (!(focusEnabled && hasFocus)) grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[file]));
+            if (hasFocus) grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[pt + '_focus.png']));
           }
           // Skip per-group rendering (handled globally or unavailable)
           continue;

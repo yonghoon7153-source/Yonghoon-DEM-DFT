@@ -25,25 +25,38 @@ import numpy as np
 
 
 def _register_cjk_fallback():
-    """Append a CJK-capable font to the sans-serif list so Korean group/case
-    names (e.g. '박막') render via per-glyph fallback (matplotlib ≥3.6) instead
-    of tofu boxes — without changing the default Latin look (DejaVu stays first)."""
+    """Register a Korean-capable font so Hangul in titles/labels renders instead
+    of tofu boxes.  Searches Linux, WSL-mounted Windows, and macOS locations and
+    sets it as the PRIMARY sans-serif (Korean fonts carry Latin glyphs too, so
+    the look stays clean and Hangul is guaranteed regardless of mpl fallback)."""
     from matplotlib import font_manager as _fm
-    import os as _os
+    import os as _os, glob as _glob
     candidates = [
-        '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc',
         '/usr/share/fonts/truetype/nanum/NanumGothic.ttf',
         '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+        '/usr/share/fonts/opentype/noto/NotoSansCJKkr-Regular.otf',
+        '/usr/share/fonts/truetype/nanum/NanumBarunGothic.ttf',
+        '/mnt/c/Windows/Fonts/malgun.ttf',     # WSL → Windows Malgun Gothic
+        '/mnt/c/Windows/Fonts/malgunbd.ttf',
+        '/mnt/c/Windows/Fonts/gulim.ttc',
+        '/mnt/c/Windows/Fonts/batang.ttc',
         'C:/Windows/Fonts/malgun.ttf',
+        '/Library/Fonts/AppleGothic.ttf',
+        '/System/Library/Fonts/AppleSDGothicNeo.ttc',
+        '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc',
     ]
+    for pat in ('/usr/share/fonts/**/*Nanum*.ttf',
+                '/usr/share/fonts/**/NotoSansCJK*',
+                '/usr/share/fonts/**/NotoSansKR*'):
+        candidates += sorted(_glob.glob(pat, recursive=True))
     for path in candidates:
-        if _os.path.exists(path):
+        if path and _os.path.exists(path):
             try:
                 _fm.fontManager.addfont(path)
                 name = _fm.FontProperties(fname=path).get_name()
-                sl = matplotlib.rcParams['font.sans-serif']
-                if name not in sl:
-                    matplotlib.rcParams['font.sans-serif'] = list(sl) + [name]
+                sl = [f for f in matplotlib.rcParams['font.sans-serif'] if f != name]
+                matplotlib.rcParams['font.sans-serif'] = [name] + sl
+                matplotlib.rcParams['font.family'] = 'sans-serif'
                 matplotlib.rcParams['axes.unicode_minus'] = False
                 return name
             except Exception:
