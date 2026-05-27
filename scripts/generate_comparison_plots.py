@@ -4694,6 +4694,16 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
         ax.set_title(f"{ttl}\nR2={r2:.3f} LOOCV={lo:.3f}  out={int(out.sum())} "
                      f"(0:10 {n010}, mix {nmix})  {btxt}", fontsize=8)
         ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=6.5, loc='upper left')
+    # δ-as-variable: show the LOOCV-vs-δ scan as an inset on the SAT panel, with
+    # the picked δ* marked, so the rounding optimum is visible (δ*=0 ⇒ √ is best).
+    ax_sat = axes.ravel()[4]
+    ins = ax_sat.inset_axes([0.58, 0.10, 0.38, 0.34])
+    _dg = [t[0] for t in sat_scan]; _lo = [t[2] for t in sat_scan]
+    ins.plot(_dg, _lo, '-o', color=PURPLE, ms=2.5, lw=1)
+    ins.axvline(DELTA, color=RED, ls='--', lw=1)
+    ins.axhline(lo_n, color=GRAY, ls=':', lw=0.8)  # NO-extra LOOCV reference
+    ins.set_title('LOOCV vs δ  (δ*=%.3f)' % DELTA, fontsize=6)
+    ins.tick_params(labelsize=5); ins.set_xlabel('δ', fontsize=5); ins.grid(True, alpha=0.3)
     fig.suptitle("Correction-term test (n=%d): size / AM-asym / rounded-phic SAT — catch 0:10(62:38)?\n"
                  "size=r_SE|1/gb_density  asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
                  "g_mix=gauss(p;0.5,%g)  SAT: phi_eff=sqrt((phi-%.2f)^2+d^2), d*=%.3f (LOOCV-scan)"
