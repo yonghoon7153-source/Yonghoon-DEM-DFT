@@ -5969,43 +5969,69 @@ def archive_folders_list():
                 folders.append(name)
     return jsonify({'folders': folders})
 
-@app.route('/archive/save-case', methods=['POST'])
-def archive_save_case():
-    """Save a case's results to archive folder."""
-    case_id = request.form.get('case_id', '')
-    folder = request.form.get('folder', '')
+def _save_case_to_archive(case_id, folder=''):
+    """Copy a live case (results + meta + raw uploads) into the archive
+    (보관함) so it survives results/uploads being cleared, and sync to remote.
+    Returns (save_dir, None) on success or (None, error_message)."""
     results_dir = get_results_dir(case_id)
     case_dir = get_case_dir(case_id)
     meta_file = os.path.join(case_dir, 'meta.json')
-
     if not os.path.exists(meta_file):
-        return jsonify({'error': '케이스를 찾을 수 없습니다.'}), 404
-
+        return None, '케이스를 찾을 수 없습니다.'
     with open(meta_file) as f:
         meta = json.load(f)
-
     case_name = meta.get('name', case_id)
     dst = _safe_path(folder) if folder else _archive_root()
     if not dst:
-        return jsonify({'error': '잘못된 경로입니다.'}), 400
-
+        return None, '잘못된 경로입니다.'
     save_dir = os.path.join(dst, case_name)
     if os.path.exists(save_dir):
         save_dir = save_dir + '_' + datetime.now().strftime('%H%M%S')
     shutil.copytree(results_dir, save_dir, dirs_exist_ok=True)
-    # Also copy meta
     shutil.copy2(meta_file, os.path.join(save_dir, 'meta.json'))
-    # Also copy original uploaded files (atom, contact, mesh, input .liggghts)
     raw_dir = os.path.join(save_dir, 'raw_files')
     os.makedirs(raw_dir, exist_ok=True)
     for fname in os.listdir(case_dir):
         fpath = os.path.join(case_dir, fname)
         if os.path.isfile(fpath) and fname != 'meta.json':
             shutil.copy2(fpath, os.path.join(raw_dir, fname))
-    # Sync archive to Supabase
     rel = os.path.relpath(save_dir, app.config['ARCHIVE_FOLDER'])
     storage_sync.sync_dir_to_remote(save_dir, f'archive/{rel}')
+    return save_dir, None
+
+
+@app.route('/archive/save-case', methods=['POST'])
+def archive_save_case():
+    """Save a case's results to archive folder."""
+    save_dir, err = _save_case_to_archive(request.form.get('case_id', ''),
+                                          request.form.get('folder', ''))
+    if err:
+        return jsonify({'error': err}), (404 if '찾을' in err else 400)
     return jsonify({'success': True, 'saved_to': save_dir})
+
+
+@app.route('/group/save-cases', methods=['POST'])
+def group_save_cases():
+    """Save all selected LOCAL cases in the group view to the archive in one
+    click (archive: cases are already persisted, so they're skipped)."""
+    case_ids = request.form.getlist('cases')
+    folder = request.form.get('folder', '')
+    saved, skipped, errors = [], 0, []
+    for cid in case_ids:
+        cid = (cid or '').strip()
+        if not cid or cid.startswith('archive:'):
+            skipped += 1
+            continue
+        try:
+            sd, err = _save_case_to_archive(cid, folder)
+            if err:
+                errors.append(f'{cid}: {err}')
+            else:
+                saved.append(os.path.basename(sd))
+        except Exception as e:
+            errors.append(f'{cid}: {type(e).__name__}: {e}')
+    return jsonify({'success': True, 'saved': saved,
+                    'skipped': skipped, 'errors': errors})
 
 @app.route('/archive/reanalyze/<path:folder>', methods=['POST'])
 def archive_reanalyze(folder):
