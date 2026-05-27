@@ -1119,6 +1119,29 @@ def render_png(data, out_path: Path):
     plt.close(fig)
 
 
+def render_geometry_png(data, out_path: Path, min_px: int = 1800):
+    """Clean geometry-only export of the LEFT phase map: the pure 4-phase
+    raster (+ AM_P grain-boundary overlay) with NO axes, ticks, labels,
+    legend, title, or reference circles.  Nearest-neighbour integer upscale
+    keeps phase edges crisp at high resolution.  Returns the output path."""
+    from matplotlib.colors import to_rgb
+    labels = data['labels']
+    ny, nx = labels.shape
+    rgb = np.zeros((ny, nx, 3), dtype=np.float32)
+    for p in (VOID, AM_P, AM_S, SE):
+        rgb[labels == p] = to_rgb(PHASE_COLORS[p])
+    gb = data.get('grain_boundary')
+    if gb is not None and gb.any():
+        rgb[np.asarray(gb, dtype=bool)] = to_rgb('#b6bac6')
+    factor = max(1, int(np.ceil(min_px / max(nx, 1))))
+    if factor > 1:
+        rgb = np.repeat(np.repeat(rgb, factor, axis=0), factor, axis=1)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    # origin='lower' mirrors the imshow orientation in render_png
+    plt.imsave(str(out_path), np.clip(rgb, 0, 1), origin='lower')
+    return out_path
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('cases', nargs='*', help='case names or "--all"')

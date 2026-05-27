@@ -224,6 +224,8 @@
               style="display:none">자동보정 (정밀, ~1분)</button>
       <a class="btn" id="zip2d-btn" href="/results/{{ case.id }}/2d-export.zip"
          style="display:none">ZIP 다운로드 (PNG·README·CSV)</a>
+      <a class="btn" id="geo2d-btn" href="/results/{{ case.id }}/2d-geometry.png"
+         style="display:none" title="왼쪽 geometry만 — 축·라벨·범례 없이 고화질 PNG">geometry PNG (축·라벨 없음)</a>
     </div>
   </div>
   <div id="viewer2d-container" style="display:none; margin-top:10px">
@@ -288,6 +290,7 @@ function load2DViewer() {
   const img = document.getElementById('viewer2d-img');
   const status = document.getElementById('viewer2d-status');
   const zip = document.getElementById('zip2d-btn');
+  const geo = document.getElementById('geo2d-btn');
   const auto = document.getElementById('auto2d-btn');
   const rep = document.getElementById('auto2d-report');
   status.textContent = regenerate ? '2D 미세구조 재생성 중… (수 초)'
@@ -299,13 +302,16 @@ function load2DViewer() {
     status.style.display = 'none';
     img.style.display = 'block';
     zip.style.display = 'inline-block';
+    if (geo) geo.style.display = 'inline-block';
     auto.style.display = 'inline-block';
     if (!regenerate) {          // sync seed to the existing figure (for ZIP/auto)
       fetch(`/results/{{ case.id }}/2d-summary.json`).then(r => r.json())
         .then(j => { if (j && j.seed != null) cur2dSeed = j.seed;
-                     zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`; });
+                     zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;
+                     if (geo) geo.href = `/results/{{ case.id }}/2d-geometry.png?seed=${cur2dSeed}`; });
     } else {
       zip.href = `/results/{{ case.id }}/2d-export.zip?seed=${cur2dSeed}`;
+      if (geo) geo.href = `/results/{{ case.id }}/2d-geometry.png?seed=${cur2dSeed}&fresh=1`;
     }
   };
   img.onerror = () => {

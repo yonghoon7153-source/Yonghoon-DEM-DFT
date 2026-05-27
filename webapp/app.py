@@ -6163,6 +6163,12 @@ def _synth_2d(case_id, px=600, seed=0, force=False):
     if data is None:
         return None
     ex2d.render_png(data, Path(png_path))
+    # Clean geometry-only export (LEFT phase map, no axes/labels/legend), kept
+    # in sync with the displayed figure.
+    try:
+        ex2d.render_geometry_png(data, Path(png_path.replace('.png', '_geometry.png')))
+    except Exception:
+        import traceback; traceback.print_exc()
     summary = {k: data.get(k) for k in _2D_SCALAR_KEYS}
     summary['seed'] = int(seed)                      # remember which seed is shown
     summary['gap_um'] = round(float(gap), 3)         # auto-picked per case
@@ -6247,6 +6253,28 @@ def serve_2d_microstructure(case_id):
     png_path = _synth_2d_png_path(get_results_dir(case_id), seed)
     return send_file(png_path, mimetype='image/png', as_attachment=False,
                      download_name=f'microstructure_2d_{case_id}.png')
+
+
+@app.route('/results/<case_id>/2d-geometry.png')
+def serve_2d_geometry(case_id):
+    """Clean geometry-only export of the LEFT phase map (4-phase raster +
+    AM_P grain boundaries) — NO axes/ticks/labels/legend/title, high-res.
+    Downloads as an attachment.  Stays in sync with the displayed figure."""
+    px = max(200, min(1200, int(request.args.get('px', 600))))
+    seed = int(request.args.get('seed', 0))
+    geo_path = _synth_2d_png_path(get_results_dir(case_id), seed).replace('.png', '_geometry.png')
+    force = request.args.get('fresh') in ('1', 'true', 'yes') or not os.path.exists(geo_path)
+    try:
+        summary = _synth_2d(case_id, px=px, seed=seed, force=force)
+    except Exception as e:
+        import traceback; traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    if summary is None:
+        return ('2D microstructure unavailable (need atoms.csv + meta/params)', 404)
+    if not os.path.exists(geo_path):
+        return ('geometry export unavailable', 404)
+    return send_file(geo_path, mimetype='image/png', as_attachment=True,
+                     download_name=f'microstructure_2d_geometry_{case_id}.png')
 
 
 @app.route('/results/<case_id>/2d-summary.json')
