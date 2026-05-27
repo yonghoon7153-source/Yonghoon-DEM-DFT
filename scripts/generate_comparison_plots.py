@@ -3677,12 +3677,16 @@ def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
 
 
 def plot_ionic_fit_stage_e(data_list, names, outdir):
-    """OPEN data-native fit of σ_ionic (Stage-E target) to log-linear physics
-    features — lets the exponents float (no fixed form) and prints the
-    discovered formula + R²/LOOCV.  Answers 'fit the physics/Stage-E σ
-    open-mindedly and show it as a formula'."""
-    SG = 3.0; PHI_C = 0.20
-    rows = []
+    """PHYSICAL v12-clean v3 form refit to the Stage-E/Physics σ target.
+
+    Keeps the physically-grounded fixed exponents — √(φ−0.2)·CN^(3/2)·
+    cov^(2/5)·f_p³ (φc=0.20) — and only re-learns the τ prefactor C_blend(τ)
+    (v5 2-level asymptote ⊕ poly3-in-lnτ) + scale for the new target.  A free
+    data-native exponent fit is still computed and written to CSV as a
+    diagnostic (to confirm the physics target wants the same exponents), but
+    the plotted/printed formula stays physical."""
+    SG = 3.0; PHI_C = 0.20; KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    base_log, logsf, taus, free_rows = [], [], [], []
     for d in data_list:
         sig = _stage_e_sigma(d)
         phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
@@ -3692,29 +3696,47 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        rows.append((np.log(phi - PHI_C), np.log(cn), np.log(cov),
-                     np.log(fp), np.log(tau), np.log(sig / SG)))
-    if len(rows) < 8:
-        print(f"  [SKIP] ionic_fit_stage_e: only {len(rows)} usable cases (<8)")
+        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + 1.5*np.log(cn)
+                        + 0.4*np.log(cov) + 3.0*np.log(fp))
+        logsf.append(np.log(sig)); taus.append(tau)
+        free_rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
+                          np.log(fp), np.log(tau), np.log(sig/SG)))
+    n = len(taus)
+    if n < 8:
+        print(f"  [SKIP] ionic_fit_stage_e: only {n} usable cases (<8)")
         return None
-    arr = np.array(rows)
-    Xf = np.column_stack([arr[:, :5], np.ones(len(arr))])   # 5 feats + intercept
-    yv = arr[:, 5]
-    coef, *_ = np.linalg.lstsq(Xf, yv, rcond=None)
-    pred = Xf @ coef
-    ss_tot = np.sum((yv - yv.mean())**2)
-    r2 = 1 - np.sum((yv - pred)**2) / ss_tot if ss_tot > 0 else 0.0
-    # LOOCV
+    base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
+    resid = logsf - base_log
+    w_v5 = 1.0 / (1.0 + np.exp(-KV5 * (taus - CV5)))
+    lt = np.log(taus)
+    Xv5 = np.column_stack([np.ones(n), w_v5])
+    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
+    w_bl = 1.0 / (1.0 + np.exp(-KBL * (taus - CBL)))
+
+    def _cblend_log(bv5, bp3, idx=slice(None)):
+        return (1 - w_bl[idx]) * (Xv5[idx] @ bv5) + w_bl[idx] * (Xp3[idx] @ bp3)
+
+    bv5, *_ = np.linalg.lstsq(Xv5, resid, rcond=None)
+    bp3, *_ = np.linalg.lstsq(Xp3, resid, rcond=None)
+    pred_log = base_log + _cblend_log(bv5, bp3)
+    ss_tot = np.sum((logsf - logsf.mean())**2)
+    r2 = 1 - np.sum((logsf - pred_log)**2) / ss_tot if ss_tot > 0 else 0.0
     sse = 0.0
-    n = len(arr)
     for i in range(n):
         mk = np.ones(n, bool); mk[i] = False
-        c_i, *_ = np.linalg.lstsq(Xf[mk], yv[mk], rcond=None)
-        sse += (yv[i] - Xf[i] @ c_i)**2
+        bv5_i, *_ = np.linalg.lstsq(Xv5[mk], resid[mk], rcond=None)
+        bp3_i, *_ = np.linalg.lstsq(Xp3[mk], resid[mk], rcond=None)
+        cb_i = (1 - w_bl[i]) * (Xv5[i] @ bv5_i) + w_bl[i] * (Xp3[i] @ bp3_i)
+        sse += (logsf[i] - (base_log[i] + cb_i))**2
     loocv = 1 - sse / ss_tot if ss_tot > 0 else 0.0
-    a, b, c, dd, e, ln_c0 = coef
-    sig_pred = np.exp(pred) * SG
-    sig_act = np.exp(yv) * SG
+    Ct = float(np.exp(bv5[0])); Cn = float(np.exp(bv5[0] + bv5[1]))
+
+    # Free data-native fit (diagnostic only — written to CSV)
+    fa = np.array(free_rows)
+    Xf = np.column_stack([fa[:, :5], np.ones(n)])
+    fcoef, *_ = np.linalg.lstsq(Xf, fa[:, 5], rcond=None)
+
+    sig_pred = np.exp(pred_log); sig_act = np.exp(logsf)
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     ax.scatter(sig_act, sig_pred, s=55, c=BLUE, edgecolors='white', zorder=3)
     lim = [min(sig_act.min(), sig_pred.min()) * 0.8,
@@ -3724,21 +3746,24 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
                     color=GREEN, alpha=0.12, label='±20%')
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
-    ax.set_ylabel('σ_predicted (open fit, mS/cm)')
-    formula = (f"σ = {np.exp(ln_c0):.3g}·σ_grain · (φ−0.2)^{a:.2f} · CN^{b:.2f} "
-               f"· cov^{c:.2f} · f_p^{dd:.2f} · τ^{e:.2f}")
-    ax.set_title(f"OPEN fit → Stage-E σ_ionic   (n={n})\n{formula}\n"
-                 f"R²={r2:.3f}, LOOCV={loocv:.3f}", fontsize=8)
+    ax.set_ylabel('σ_predicted (v12 form, mS/cm)')
+    ax.set_title("Stage-E σ_ionic — physical v12 form refit  (n=%d)\n"
+                 "σ = C_blend(τ)·σ_grain·√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³"
+                 "   [Ct=%.4f, Cn=%.4f]\nR²=%.3f, LOOCV=%.3f"
+                 % (n, Ct, Cn, r2, loocv), fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_fit_stage_e.png")
     with open(os.path.join(outdir, "ionic_fit_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['exponent', 'value'])
-        for nm_, val in zip(['ln_C0', 'phi-0.2', 'CN', 'cov', 'f_p', 'tau'],
-                            [ln_c0, a, b, c, dd, e]):
-            wr.writerow([nm_, round(val, 4)])
+        wr.writerow(['# physical v12 form refit to Stage-E target'])
+        wr.writerow(['param', 'value'])
+        wr.writerow(['C_thick (Ct)', round(Ct, 5)]); wr.writerow(['C_thin (Cn)', round(Cn, 5)])
         wr.writerow(['R2', round(r2, 4)]); wr.writerow(['LOOCV', round(loocv, 4)])
+        wr.writerow([])
+        wr.writerow(['# free data-native exponents (diagnostic — physical=0.5/1.5/0.4/3)'])
+        for nm_, val in zip(['phi-0.2', 'CN', 'cov', 'f_p', 'tau', 'ln_C0'], fcoef):
+            wr.writerow([nm_, round(float(val), 4)])
     return outpath
 
 
@@ -3987,9 +4012,9 @@ PLOT_REGISTRY["ionic_solver_vs_stage_e"] = {
 PLOT_REGISTRY["ionic_fit_stage_e"] = {
     "func": plot_ionic_fit_stage_e,
     "file": "ionic_fit_stage_e.png",
-    "title": "σ_ionic OPEN fit → Stage E (식 탐색)",
-    "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 고정식 없이 log-선형 회귀로 지수를 데이터에서 직접 찾아 식으로 표시 (parity + R²/LOOCV).\n물리 base(v12)와 비교해 physics/Stage-E가 다른 지수를 원하는지 확인.",
-    "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 발견된 식.",
+    "title": "σ_ionic → Stage E (물리식 재적합)",
+    "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 물리 고정식(√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³)에 C_blend(τ)만 재적합 (parity + R²/LOOCV).\n지수는 물리값으로 고정(과적합 방지). 자유지수 진단치는 CSV에 함께 기록 — physics 타깃이 같은 지수를 원하는지 확인용.",
+    "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 물리식 + C_blend(Ct/Cn).",
 }
 PLOT_REGISTRY["fracture_stages"] = {
     "func": plot_fracture_stages,
