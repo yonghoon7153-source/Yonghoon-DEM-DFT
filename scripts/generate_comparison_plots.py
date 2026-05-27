@@ -4383,8 +4383,7 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
-                        + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
         logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
         real_labs.append(real_all[idx])
         fr = {}
@@ -4441,9 +4440,9 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
                     color=GREEN, alpha=0.12)
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
-    ax.set_ylabel('σ_predicted (v12 form)')
+    ax.set_ylabel('σ_predicted (SAT-blend form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
-    ax.set_title(f"Stage-E sigma fit outliers  (n={n}, {int(is_out.sum())} >20%)\n"
+    ax.set_title(f"Stage-E sigma fit outliers [SAT-blend phic]  (n={n}, {int(is_out.sum())} >20%)\n"
                  f"top residual-corr features -> {top_corr}", fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_outliers_stage_e.png")
@@ -4470,7 +4469,7 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
                              color=GREEN, alpha=0.12)
             fax.set_xscale('log'); fax.set_yscale('log'); fax.set_xlim(lim); fax.set_ylim(lim)
             fax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
-            fax.set_ylabel('σ_predicted (v12 form)')
+            fax.set_ylabel('σ_predicted (SAT-blend form)')
             fax.set_title("선택 샘플만 — outlier 판정(전체 fit 기준)  "
                           "(%d개 중 %d outlier)" % (int(fmask.sum()), int(fi_out.sum())),
                           fontsize=8)
