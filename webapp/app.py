@@ -4,6 +4,7 @@ DEM Analysis Web Application
 - Group mode: Upload multiple cases → comparison plots + summary report
 """
 import os
+import re
 import csv
 import json
 import uuid
@@ -3799,78 +3800,60 @@ def batch_rerun_physics_status():
     return jsonify(status)
 
 
-@app.route('/single/<case_id>')
-def single(case_id):
-    """View single case results.
-    Falls back to archive/<folder>/<case_id>/ if results/ is empty (archive-migrated cases)."""
-    case_dir = get_case_dir(case_id)
+def _resolve_results_dir(case_id, meta):
+    """Return (results_dir, archive_rel) for a case, falling back to archive/
+    when the live results/ dir has no analysis data (archive-migrated cases).
+    archive_rel is the path under archive/ when the fallback triggered, else
+    None.  Shared by the /single dashboard and the report exporter so both see
+    the same data."""
     results_dir = get_results_dir(case_id)
-    meta_file = os.path.join(case_dir, 'meta.json')
 
-    if not os.path.exists(meta_file):
-        return redirect(url_for('index'))
-
-    with open(meta_file) as f:
-        meta = json.load(f)
-    meta['id'] = case_id
-
-    # ── Archive fallback: if results/ is empty, find case in archive/ ──
-    def _results_has_data(d):
-        if not os.path.isdir(d): return False
+    def _has_data(d):
+        if not os.path.isdir(d):
+            return False
         return any(os.path.exists(os.path.join(d, n + '.csv'))
-                   for n in ['atom_statistics', 'contact_summary', 'coordination_summary', 'network_summary']) \
+                   for n in ['atom_statistics', 'contact_summary',
+                             'coordination_summary', 'network_summary']) \
             or os.path.exists(os.path.join(d, 'full_metrics.json'))
 
-    archive_path = None  # relative path under archive/ if fallback triggered
-    if not _results_has_data(results_dir):
-        archive_root = app.config.get('ARCHIVE_FOLDER')
-        if archive_root and os.path.isdir(archive_root):
-            # Try case_id (timestamp) first, then meta.name/label/case_id/case_name
-            # (webapp manages cases by timestamp but archive dirs use display names)
-            search_keys = [case_id]
-            for k in ('name', 'label', 'case_id', 'case_name'):
-                v = meta.get(k)
-                if isinstance(v, str) and v and v not in search_keys:
-                    search_keys.append(v)
-            for dirpath, dirs, _ in os.walk(archive_root):
-                for key in search_keys:
-                    if key in dirs:
-                        candidate = os.path.join(dirpath, key)
-                        if _results_has_data(candidate):
-                            results_dir = candidate
-                            archive_path = os.path.relpath(candidate, archive_root)
-                            break
-                if archive_path:
-                    break
+    if _has_data(results_dir):
+        return results_dir, None
 
-    # Collect figures
-    figures = []
-    figures_dir = os.path.join(results_dir, 'figures')
-    if os.path.isdir(figures_dir):
-        for png in sorted(globmod.glob(os.path.join(figures_dir, '*.png'))):
-            figures.append(os.path.basename(png))
+    archive_root = app.config.get('ARCHIVE_FOLDER')
+    if archive_root and os.path.isdir(archive_root):
+        search_keys = [case_id]
+        for k in ('name', 'label', 'case_id', 'case_name'):
+            v = meta.get(k)
+            if isinstance(v, str) and v and v not in search_keys:
+                search_keys.append(v)
+        for dirpath, dirs, _ in os.walk(archive_root):
+            for key in search_keys:
+                if key in dirs:
+                    candidate = os.path.join(dirpath, key)
+                    if _has_data(candidate):
+                        return candidate, os.path.relpath(candidate, archive_root)
+    return results_dir, None
 
-    # Load report
-    report = ''
-    report_path = os.path.join(results_dir, 'report.md')
-    if os.path.exists(report_path):
-        with open(report_path) as f:
-            report = f.read()
 
-    # Load CSVs for tables (atom_statistics first, no force_summary)
+def _load_case_tables(results_dir, meta):
+    """Assemble the analysis-summary `tables` dict (입자 정보 / 접촉 요약 /
+    배위수 / 네트워크 지표 / 취성 파괴 / 종합 등급) plus the metrics and
+    input_params exactly as the single-case dashboard does, so MD/PDF reports
+    stay byte-for-byte consistent with what the page shows.
+
+    Returns (tables, metrics, input_params)."""
+    import pandas as pd
     tables = {}
     for csv_name in ['atom_statistics', 'contact_summary', 'coordination_summary',
                      'network_summary']:
         csv_path = os.path.join(results_dir, f'{csv_name}.csv')
         if os.path.exists(csv_path):
-            import pandas as pd
             df = pd.read_csv(csv_path)
             tables[csv_name] = {
                 'columns': df.columns.tolist(),
-                'data': df.values.tolist()
+                'data': df.values.tolist(),
             }
 
-    # Load full_metrics.json (needed for placeholder patching + physics injection)
     metrics = {}
     metrics_path = os.path.join(results_dir, 'full_metrics.json')
     if os.path.exists(metrics_path):
@@ -3909,8 +3892,7 @@ def single(case_id):
                         idx, ['σ_Bruggeman (mS/cm)', sigma_brug_mScm])
                     break
 
-    # Load input_params.json first — needed by inject_cell_asr_rows for
-    # RVE area (box_x × box_y × scale²)
+    # input_params (RVE area for inject_cell_asr_rows)
     input_params = {}
     params_path = os.path.join(results_dir, 'input_params.json')
     if os.path.exists(params_path):
@@ -3919,26 +3901,59 @@ def single(case_id):
     if input_params and 'scale' not in input_params:
         input_params['scale'] = meta.get('scale', 1)
 
-    # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
+    # 4-column transform + section injection — shared helpers
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
     inject_stage_e_rows(tables, metrics)
     inject_cell_asr_rows(tables, metrics, input_params)
-    # Final pre-rename pass: enforce identical row layout across all cases
     normalize_network_summary_layout(tables, metrics)
-    # Final pass: replace informal labels with paper-style academic notation
     apply_paper_labels(tables)
 
-    # Brittle-fracture summary tab (auto-built from full_metrics.json keys)
     fracture_tbl = build_fracture_summary_table(metrics)
     if fracture_tbl is not None:
         tables['fracture_summary'] = fracture_tbl
 
-    # Multi-axis grading tab — last in the tab bar. Reads SE diag aux from
-    # viewer_aux.json cache when available; falls back to no-aux scoring.
-    overall_tbl = build_overall_grade_table(metrics, get_results_dir(case_id))
+    overall_tbl = build_overall_grade_table(metrics, results_dir)
     if overall_tbl is not None:
         tables['overall_grade'] = overall_tbl
+
+    return tables, metrics, input_params
+
+
+@app.route('/single/<case_id>')
+def single(case_id):
+    """View single case results.
+    Falls back to archive/<folder>/<case_id>/ if results/ is empty (archive-migrated cases)."""
+    case_dir = get_case_dir(case_id)
+    results_dir = get_results_dir(case_id)
+    meta_file = os.path.join(case_dir, 'meta.json')
+
+    if not os.path.exists(meta_file):
+        return redirect(url_for('index'))
+
+    with open(meta_file) as f:
+        meta = json.load(f)
+    meta['id'] = case_id
+
+    # ── Archive fallback: if results/ is empty, find case in archive/ ──
+    results_dir, archive_path = _resolve_results_dir(case_id, meta)
+
+    # Collect figures
+    figures = []
+    figures_dir = os.path.join(results_dir, 'figures')
+    if os.path.isdir(figures_dir):
+        for png in sorted(globmod.glob(os.path.join(figures_dir, '*.png'))):
+            figures.append(os.path.basename(png))
+
+    # Load report
+    report = ''
+    report_path = os.path.join(results_dir, 'report.md')
+    if os.path.exists(report_path):
+        with open(report_path) as f:
+            report = f.read()
+
+    # Summary tables + metrics + input_params (shared with the report exporter)
+    tables, metrics, input_params = _load_case_tables(results_dir, meta)
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
@@ -5286,178 +5301,241 @@ def serve_coverage_z_csv(case_id):
     return _coverage_z_csv_response(get_results_dir(case_id), case_id)
 
 
+def _report_strip_html(s):
+    """Plain-text a possibly-HTML cell for markdown: <br> → '; ', drop tags,
+    unescape common entities, collapse whitespace, escape pipes."""
+    if s is None:
+        return ''
+    s = str(s)
+    s = re.sub(r'<\s*br\s*/?\s*>', '; ', s, flags=re.I)
+    s = re.sub(r'<[^>]+>', '', s)
+    s = (s.replace('&lt;', '<').replace('&gt;', '>')
+          .replace('&amp;', '&').replace('&nbsp;', ' ')
+          .replace('&#10;', ' '))
+    s = re.sub(r'\s+', ' ', s).strip()
+    return s.replace('|', '\\|')
+
+
+def _report_fmt_cell(v):
+    """Format one table cell for markdown output (nan→'-', trim floats,
+    strip any HTML)."""
+    if isinstance(v, float):
+        if v != v:  # NaN
+            return '-'
+        v = f'{v:.4g}'
+    return _report_strip_html(v)
+
+
+def _report_md_table(tbl):
+    """Render a dashboard `tables[...]` entry (columns + data, possibly with
+    HTML cells and '── section ──' header rows) as a GitHub-flavoured
+    markdown table.  Section-header rows become bold separator rows."""
+    cols = [str(c) for c in tbl.get('columns', [])]
+    ncol = max(len(cols), 1)
+    out = ['| ' + ' | '.join(cols) + ' |',
+           '|' + '|'.join(['---'] * ncol) + '|']
+    for row in tbl.get('data', []):
+        row = list(row)
+        first = str(row[0]) if row else ''
+        if first.strip().startswith('──') or len(row) == 1:
+            label = _report_strip_html(first).strip().strip('─ ').strip()
+            out.append(f'| **{label}** |' + ' |' * (ncol - 1))
+            continue
+        cells = [_report_fmt_cell(c) for c in row[:ncol]]
+        cells += [''] * (ncol - len(cells))
+        out.append('| ' + ' | '.join(cells) + ' |')
+    return '\n'.join(out)
+
+
 @app.route('/results/<case_id>/report')
 def serve_report(case_id):
-    """Generate comprehensive MD report v2.0 from analysis results."""
-    import pandas as pd
-    results_dir = get_results_dir(case_id)
+    """Generate a comprehensive MD/PDF report that mirrors the full single-case
+    dashboard: 개요 badges, Trust card, every analysis-summary tab (입자/접촉/
+    배위수/네트워크/취성/종합 등급), physics derivations and figures."""
     case_dir = get_case_dir(case_id)
     meta_file = os.path.join(case_dir, 'meta.json')
-
     meta = {}
     if os.path.exists(meta_file):
         with open(meta_file) as f:
             meta = json.load(f)
 
-    metrics = {}
-    metrics_path = os.path.join(results_dir, 'full_metrics.json')
-    if os.path.exists(metrics_path):
-        with open(metrics_path) as f:
-            metrics = json.load(f)
-
-    input_params = {}
-    params_path = os.path.join(results_dir, 'input_params.json')
-    if os.path.exists(params_path):
-        with open(params_path) as f:
-            input_params = json.load(f)
+    results_dir, archive_rel = _resolve_results_dir(case_id, meta)
+    tables, metrics, input_params = _load_case_tables(results_dir, meta)
+    trust_card = _build_trust_card(metrics)
 
     name = meta.get('name', case_id)
-    now = datetime.now().strftime('%y%m%d')
+    scale = meta.get('scale', 1) or 1
     L = []
 
-    # Header
+    # ── Header ──
     L.append(f'# DEM Analysis Report: {name}')
-    L.append(f'> DEM Analyzer v2.0 | {datetime.now().strftime("%Y-%m-%d")}')
+    L.append(f'> DEM Analyzer v2.0 | {datetime.now().strftime("%Y-%m-%d")}'
+             + (f' | archive: `{archive_rel}`' if archive_rel else ''))
     L.append('')
-    L.append('| Parameter | Value |')
-    L.append('|-----------|-------|')
-    L.append(f'| Mode | {meta.get("mode", "-")} |')
-    if metrics.get('ps_ratio'):
-        L.append(f'| P:S ratio | {metrics["ps_ratio"]} |')
-    if input_params.get('am_se_ratio'):
-        L.append(f'| AM:SE ratio | {input_params["am_se_ratio"]} |')
-    if metrics.get('thickness_um'):
-        L.append(f'| Thickness | {metrics["thickness_um"]:.1f} μm |')
-    if metrics.get('porosity'):
-        L.append(f'| Porosity | {metrics["porosity"]:.1f}% |')
-    if input_params.get('target_press_sim'):
-        L.append(f'| Target Pressure | {input_params["target_press_sim"] * 1000:.1f} MPa |')
-    L.append('')
-    L.append('---\n')
 
     section = 1
 
-    # ── 구조/접촉 ──
-    L.append(f'## {section}. Structure & Contact\n')
-    struct_items = [
-        ('SE-SE CN', metrics.get('se_se_cn')),
-        ('SE-SE CN std', metrics.get('se_se_cn_std')),
-        ('AM-SE CN', metrics.get('am_se_cn_mean')),
-        ('AM-AM CN', metrics.get('am_am_cn')),
-        ('SE Volume Fraction', metrics.get('phi_se')),
-        ('AM Volume Fraction', metrics.get('phi_am')),
-    ]
-    for label, val in struct_items:
-        if val is not None:
-            L.append(f'- **{label}**: {val:.3f}' if isinstance(val, float) else f'- **{label}**: {val}')
-    L.append('')
-    section += 1
-
-    # ── Percolation & Tortuosity ──
-    L.append(f'## {section}. Percolation & Tortuosity\n')
-    perc_items = [
-        ('SE Percolation', metrics.get('percolation_pct'), '%'),
-        ('Top Reachable', metrics.get('top_reachable_pct'), '%'),
-        ('Ionic Active AM', metrics.get('ionic_active_pct'), '%'),
-        ('Tortuosity (mean)', metrics.get('tortuosity_mean'), ''),
-        ('Tortuosity (median)', metrics.get('tortuosity_median'), ''),
-        ('Tortuosity (std)', metrics.get('tortuosity_std'), ''),
-        ('GB Density', metrics.get('gb_density_mean'), ' hops/μm'),
-    ]
-    for label, val, unit in perc_items:
-        if val is not None:
-            L.append(f'- **{label}**: {val:.2f}{unit}' if isinstance(val, float) else f'- **{label}**: {val}{unit}')
-    L.append('')
-    section += 1
-
-    # ── Ionic Conductivity ──
-    L.append(f'## {section}. Ionic Conductivity\n')
-    sigma_ratio = metrics.get('sigma_ratio')
-    sigma_brug = sigma_ratio * 3.0 if sigma_ratio else None
-    sigma_net = metrics.get('sigma_full_mScm')
-
-    L.append('### Bruggeman Estimate (접촉 저항 무시)')
-    L.append('```')
-    L.append('σ_Bruggeman = σ_grain × φ_SE × f_perc / τ²')
-    if sigma_ratio and metrics.get('phi_se') and metrics.get('tortuosity_mean'):
-        tau = metrics.get('tortuosity_recommended', metrics.get('tortuosity_mean', 1))
-        f_perc = metrics.get('percolation_pct', 100) / 100
-        L.append(f'           = 3.0 × {metrics["phi_se"]:.3f} × {f_perc:.3f} / {tau:.2f}²')
-        L.append(f'           = {sigma_brug:.4f} mS/cm')
-    L.append('```')
+    # ── 1. 케이스 개요 (header badges) ──
+    L.append(f'## {section}. 케이스 개요 (Overview)\n')
+    L.append('| 항목 | 값 |')
+    L.append('|------|-----|')
+    L.append(f'| Mode | {meta.get("mode", "-")} |')
+    L.append(f'| Scale | {scale}× |')
+    if meta.get('type_map'):
+        L.append(f'| Type map | {meta["type_map"]} |')
+    ps = meta.get('ps_ratio') or metrics.get('ps_ratio')
+    if ps:
+        L.append(f'| P:S (AM_P:AM_S 부피비) | {ps} |')
+    am_se = metrics.get('am_se_ratio') or input_params.get('am_se_ratio')
+    if am_se:
+        tgt = input_params.get('am_se_ratio')
+        if tgt and metrics.get('am_se_ratio') and tgt != metrics.get('am_se_ratio'):
+            L.append(f'| AM:SE (무게비, 실측/target) | {metrics["am_se_ratio"]} ({tgt}) |')
+        else:
+            L.append(f'| AM:SE (무게비) | {am_se} |')
+    if input_params.get('box_x') is not None and input_params.get('box_y') is not None:
+        L.append(f'| RVE 단면적 | {input_params["box_x"]*scale:.0f}×'
+                 f'{input_params["box_y"]*scale:.0f} μm |')
+    if metrics.get('porosity') is not None:
+        L.append(f'| Porosity (기공률) | {metrics["porosity"]:.1f}% |')
+    if metrics.get('thickness_um') is not None:
+        L.append(f'| 두께 (가압 후) | {metrics["thickness_um"]:.1f} μm |')
+    if metrics.get('percolation_pct') is not None:
+        L.append(f'| SE Percolation | {metrics["percolation_pct"]:.1f}% |')
+    if metrics.get('ionic_active_pct') is not None:
+        L.append(f'| Ionic Active AM | {metrics["ionic_active_pct"]:.1f}% |')
+    if metrics.get('e_se_eff_gpa') is not None:
+        L.append(f'| E_SE_eff | {metrics["e_se_eff_gpa"]:.2f} GPa (bulk LPSCl: 24 GPa) |')
+    if metrics.get('target_pressure_mpa') is not None:
+        L.append(f'| Target Pressure | {metrics["target_pressure_mpa"]} MPa |')
+    elif input_params.get('target_press_sim') is not None:
+        L.append(f'| Target Pressure | {input_params["target_press_sim"]*1000:.1f} MPa |')
     L.append('')
 
-    if sigma_net:
-        L.append('### Network Solver (Ground Truth)')
-        L.append('```')
-        L.append(f'σ_ionic = {sigma_net:.4f} mS/cm  (Kirchhoff solver, Holm 1967)')
-        L.append(f'σ_brug / σ_ionic = {sigma_brug/sigma_net:.1f}×  (Bruggeman overestimation)' if sigma_brug else '')
-        if metrics.get('bulk_resistance_fraction'):
-            L.append(f'Constriction fraction = {(1-metrics["bulk_resistance_fraction"])*100:.1f}%')
-        L.append('```')
-        L.append('')
-    section += 1
-
-    # ── Electronic Conductivity ──
-    sigma_el = metrics.get('electronic_sigma_full_mScm')
-    if sigma_el is not None:
-        L.append(f'## {section}. Electronic Conductivity\n')
-        L.append(f'- **σ_electronic**: {sigma_el:.2f} mS/cm')
-        if metrics.get('electronic_percolating_fraction') is not None:
-            L.append(f'- **AM Percolation**: {metrics["electronic_percolating_fraction"]*100:.1f}%')
-        if metrics.get('electronic_active_fraction') is not None:
-            L.append(f'- **Electronic Active AM**: {metrics["electronic_active_fraction"]*100:.1f}%')
-            dead = (1 - metrics['electronic_active_fraction']) * 100
-            if dead > 10:
-                L.append(f'- **Dead AM**: {dead:.1f}% → 도전재 추가 검토 필요')
-        L.append('')
-        section += 1
-
-    # ── Thermal Conductivity ──
-    sigma_th = metrics.get('thermal_sigma_full_mScm')
-    if sigma_th is not None:
-        L.append(f'## {section}. Thermal Conductivity\n')
-        L.append(f'- **σ_thermal**: {sigma_th:.3f} mS/cm equiv')
-        L.append('')
-        section += 1
-
-    # ── Stress ──
-    if metrics.get('stress_cv'):
-        L.append(f'## {section}. Mechanical Stress\n')
-        L.append(f'- **Stress CV**: {metrics["stress_cv"]:.1f}%')
-        for key in ['sigma_AM_P_ratio', 'sigma_AM_S_ratio', 'sigma_SE_ratio']:
-            val = metrics.get(key)
-            if val:
-                label = key.replace('sigma_', 'σ_').replace('_ratio', '/σ_mean')
-                L.append(f'- **{label}**: {val:.3f}')
-        L.append('')
-        section += 1
-
-    # ── Warnings ──
+    # Warnings
     warnings = metrics.get('warnings', [])
     if warnings:
-        L.append(f'## {section}. Warnings\n')
+        L.append('**⚠ Warnings**')
+        L.append('')
         for w in warnings:
             icon = '🔴' if w.get('severity') == 'critical' else '🟡'
             L.append(f'- {icon} {w.get("msg", "")}')
         L.append('')
+    L.append('---\n')
+    section += 1
+
+    # ── 2. Trust Card ──
+    if trust_card:
+        L.append(f'## {section}. Trust Card (Stage E self-report)\n')
+        L.append(f'**Verdict: {_report_strip_html(trust_card["verdict"])}** '
+                 f'— {trust_card["verdict_summary"]}')
+        L.append('')
+        L.append(f'> {_report_strip_html(trust_card["verdict_kr"])}')
+        L.append('')
+        L.append('| Gate | 상태 | 값 | 기준 (criterion) |')
+        L.append('|------|------|-----|------------------|')
+        state_map = {'pass': '✓ PASS', 'fail': '✗ FAIL', 'na': '— N/A'}
+        for g in trust_card['leds']:
+            L.append(f'| {_report_strip_html(g["label"])} '
+                     f'| {state_map.get(g["cls"], g["cls"])} '
+                     f'| {_report_strip_html(g["value"])} '
+                     f'| {_report_strip_html(g["criterion"])} |')
+        L.append('')
+        L.append('---\n')
         section += 1
 
-    # ── Scaling Law Predictions ──
-    L.append(f'## {section}. Scaling Law Reference\n')
+    # ── Analysis-summary tables (mirror dashboard tab order) ──
+    tab_titles = [
+        ('atom_statistics',      '입자 정보 (Particle Statistics)'),
+        ('contact_summary',      '접촉 요약 (Contact Summary)'),
+        ('coordination_summary', '배위수 (Coordination Number)'),
+        ('network_summary',      '네트워크 지표 (Network Metrics)'),
+        ('fracture_summary',     '취성 파괴 (Auerbach Fracture)'),
+        ('overall_grade',        '종합 등급 (Overall Grade)'),
+    ]
+    for key, title in tab_titles:
+        tbl = tables.get(key)
+        if not tbl or not tbl.get('data'):
+            continue
+        L.append(f'## {section}. {title}\n')
+        L.append(_report_md_table(tbl))
+        L.append('')
+        section += 1
+
+    # ── Physics derivations (formula-level detail beyond the tables) ──
+    L.append(f'## {section}. Physics Derivations\n')
+    sigma_ratio = metrics.get('sigma_ratio')
+    sigma_brug = sigma_ratio * 3.0 if sigma_ratio else None
+    sigma_net = metrics.get('sigma_full_mScm')
+
+    L.append('### Ionic Conductivity — Bruggeman vs Network Solver\n')
+    L.append('```')
+    L.append('σ_Bruggeman = σ_grain × φ_SE × f_perc / τ²   (접촉 저항 무시)')
+    if sigma_ratio and metrics.get('phi_se') and metrics.get('tortuosity_mean'):
+        tau = metrics.get('tortuosity_recommended', metrics.get('tortuosity_mean', 1))
+        f_perc = metrics.get('percolation_pct', 100) / 100
+        L.append(f'            = 3.0 × {metrics["phi_se"]:.3f} × {f_perc:.3f} / {tau:.2f}²')
+        L.append(f'            = {sigma_brug:.4f} mS/cm')
+    if sigma_net:
+        L.append('')
+        L.append(f'σ_ionic     = {sigma_net:.4f} mS/cm   (Kirchhoff network solver, Holm 1967)')
+        if sigma_brug:
+            L.append(f'σ_brug/σ_ionic = {sigma_brug/sigma_net:.1f}×   (Bruggeman overestimation)')
+        if metrics.get('bulk_resistance_fraction') is not None:
+            L.append(f'Constriction fraction = {(1-metrics["bulk_resistance_fraction"])*100:.1f}%')
+    L.append('```')
+    L.append('')
+
+    sigma_el = metrics.get('electronic_sigma_full_mScm')
+    sigma_th = metrics.get('thermal_sigma_full_mScm')
+    if sigma_el is not None or sigma_th is not None or metrics.get('stress_cv'):
+        L.append('### Electronic / Thermal / Mechanical\n')
+        if sigma_el is not None:
+            L.append(f'- **σ_electronic**: {sigma_el:.2f} mS/cm')
+            if metrics.get('electronic_percolating_fraction') is not None:
+                L.append(f'- **AM Percolation (전자)**: {metrics["electronic_percolating_fraction"]*100:.1f}%')
+            if metrics.get('electronic_active_fraction') is not None:
+                L.append(f'- **Electronic Active AM**: {metrics["electronic_active_fraction"]*100:.1f}%')
+                dead = (1 - metrics['electronic_active_fraction']) * 100
+                if dead > 10:
+                    L.append(f'- **Dead AM**: {dead:.1f}% → 도전재 추가 검토 필요')
+        if sigma_th is not None:
+            L.append(f'- **σ_thermal**: {sigma_th:.3f} mS/cm equiv')
+        if metrics.get('stress_cv'):
+            L.append(f'- **Stress CV**: {metrics["stress_cv"]:.1f}%')
+            for skey in ['sigma_AM_P_ratio', 'sigma_AM_S_ratio', 'sigma_SE_ratio']:
+                val = metrics.get(skey)
+                if val:
+                    slabel = skey.replace('sigma_', 'σ_').replace('_ratio', '/σ_mean')
+                    L.append(f'- **{slabel}**: {val:.3f}')
+        L.append('')
+
+    L.append('### Scaling Law Reference\n')
     L.append('| Formula | R² |')
     L.append('|---------|-----|')
     L.append('| σ_ion = σ_brug × C × (G_path × GB_d²)^(1/4) × CN² | 0.947 |')
     L.append('| σ_el = 0.015 × σ_AM × φ_AM^(3/2) × CN_AM² × exp(π/(T/d)) | 0.89 |')
     L.append('| σ_th = 286 × σ_ion^(3/4) × φ_AM² / CN_SE | 0.90 |')
     L.append('')
+    section += 1
+
+    # ── Figures ──
+    figures_dir = os.path.join(results_dir, 'figures')
+    if os.path.isdir(figures_dir):
+        pngs = sorted(os.path.basename(p)
+                      for p in globmod.glob(os.path.join(figures_dir, '*.png')))
+        if pngs:
+            L.append(f'## {section}. Figures ({len(pngs)})\n')
+            for fn in pngs:
+                L.append(f'### {fn}\n')
+                L.append(f'![{fn}](figures/{fn})\n')
+            section += 1
 
     L.append('---\n')
     L.append('*Generated by DEM Analyzer v2.0 — Kirchhoff Network Solver + Physics Scaling Laws*\n')
 
     report = '\n'.join(L)
 
-    # Return as downloadable MD
     from io import BytesIO
     fmt = request.args.get('format', 'md')
     if fmt == 'pdf':
@@ -6132,7 +6210,6 @@ def archive_reanalyze_status(folder):
 @app.route('/archive/view/<path:folder>')
 def archive_view(folder):
     """View archive case results like single page."""
-    import pandas as pd
     target = _safe_path(folder)
     if not target or not os.path.isdir(target):
         return redirect(url_for('archive'))
@@ -6163,75 +6240,8 @@ def archive_view(folder):
         with open(report_path) as f:
             report = f.read()
 
-    # CSVs
-    tables = {}
-    for csv_name in ['atom_statistics', 'contact_summary', 'coordination_summary', 'network_summary']:
-        csv_path = os.path.join(results_dir, f'{csv_name}.csv')
-        if os.path.exists(csv_path):
-            df = pd.read_csv(csv_path)
-            tables[csv_name] = {'columns': df.columns.tolist(), 'data': df.values.tolist()}
-
-    # Metrics
-    metrics = {}
-    metrics_path = os.path.join(results_dir, 'full_metrics.json')
-    if os.path.exists(metrics_path):
-        with open(metrics_path) as f:
-            metrics = json.load(f)
-
-    # Patch placeholder '-' values from full_metrics.json BEFORE 4-col transform
-    if 'network_summary' in tables and metrics:
-        n_large = metrics.get('n_large_components')
-        if n_large is not None:
-            for row in tables['network_summary']['data']:
-                if str(row[0]) == 'SE Cluster 수' and '≥10' not in str(row[1]):
-                    row[1] = f"{n_large}(≥10) / {row[1]}"
-        placeholder_map = {
-            'GB Density(hops/μm)': 'gb_density_mean',
-            'Path Hop Area mean(μm²)': 'path_hop_area_mean',
-            'Path Bottleneck(μm²)': 'path_hop_area_min_mean',
-            'Path Conductance(μm²)': 'path_conductance_mean',
-        }
-        for row in tables['network_summary']['data']:
-            label = str(row[0])
-            if label in placeholder_map and str(row[1]).strip() in ('-', ''):
-                val = metrics.get(placeholder_map[label])
-                if val is not None:
-                    row[1] = val
-
-    # Load input_params first — needed for cell-ASR RVE area
-    input_params = {}
-    params_path = os.path.join(results_dir, 'input_params.json')
-    if os.path.exists(params_path):
-        with open(params_path) as f:
-            input_params = json.load(f)
-    if input_params and 'scale' not in input_params:
-        input_params['scale'] = meta.get('scale', 1)
-
-    # 4-column transform + section injection (Network Solver + AM-AM) — shared helper
-    transform_network_summary_4col(tables, metrics, meta)
-
-    # Stage E (literature-grounded σ_grain corrections + 7-Layer solver
-    # defence + Bruggeman fallback). Mirrors the /single route so archive
-    # views surface the same Stage E rows / fallback tags.
-    inject_stage_e_rows(tables, metrics)
-    # Cell-level ASR (Ohm slab using L_cathode and RVE area)
-    inject_cell_asr_rows(tables, metrics, input_params)
-    # Final pre-rename pass: enforce identical row layout across all cases
-    normalize_network_summary_layout(tables, metrics)
-    # Paper-style label rename (mirror /single ordering)
-    apply_paper_labels(tables)
-
-    # Brittle-fracture summary tab (built from full_metrics.json keys produced
-    # by dem_analysis_core.calc_fracture_stages — auto-DB pipeline). Empty
-    # for cases without AM-AM contacts; UI hides the tab when None.
-    fracture_tbl = build_fracture_summary_table(metrics)
-    if fracture_tbl is not None:
-        tables['fracture_summary'] = fracture_tbl
-
-    # Multi-axis grading tab (mirrors /single).
-    overall_tbl = build_overall_grade_table(metrics, results_dir)
-    if overall_tbl is not None:
-        tables['overall_grade'] = overall_tbl
+    # Summary tables + metrics + input_params (shared with /single + report)
+    tables, metrics, input_params = _load_case_tables(results_dir, meta)
 
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
