@@ -856,7 +856,7 @@ function appendFocusFields(form) {
   const labels = [];
   document.querySelectorAll('#focus-picker-list .focus-group').forEach(sec => {
     const cbs = sec.querySelectorAll('input.focus-checkbox-input');
-    if (cbs.length && [...cbs].every(c => c.checked)) labels.push(sec.dataset.groupName);
+    if (cbs.length && [...cbs].some(c => c.checked)) labels.push(sec.dataset.groupName);
   });
   if (labels.length) form.append('focus_label', labels.join(', '));
 }
@@ -921,6 +921,12 @@ async function generatePlots() {
   const plotTypes = Array.from(checks).map(c => c.value);
   if (!plotTypes.length) return alert('플롯을 선택하세요.');
 
+  // "1-1" focus mode: when ON with selected samples, hide the full (항목1) view
+  // and render only the selected samples (fit plots still fit on the full set).
+  const focusEnabled = !!document.getElementById('focus-enable')?.checked &&
+    document.querySelectorAll('#focus-picker-list input.focus-checkbox-input:checked').length > 0;
+  const selectedFocusIds = new Set([...document.querySelectorAll('#focus-picker-list input.focus-checkbox-input:checked')].map(c => c.value));
+
   const btn = document.getElementById('plot-btn');
   const loading = document.getElementById('plots-loading');
   btn.disabled = true; btn.textContent = '생성 중...';
@@ -938,7 +944,9 @@ async function generatePlots() {
     // Global R_gb: always use all data combined for rgb_fitting/gb_corrected
     // Plots that need ALL groups combined (not per-group)
     const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e'];
-    const needsGlobalRgb = validPGs.length > 1 &&
+    // Force the global path in focus mode too, so fit plots fit on the FULL
+    // set (gform always gets all cases) even for a single plot group.
+    const needsGlobalRgb = (validPGs.length > 1 || focusEnabled) &&
       plotTypes.some(p => globalOnlyTypes.includes(p));
     let globalRgb = '';
     let globalCIon = '';
@@ -995,7 +1003,15 @@ async function generatePlots() {
     const allResults = []; // [{pgIdx, pgName, session, plots}]
     for (let pgIdx = 0; pgIdx < validPGs.length; pgIdx++) {
       const pg = validPGs[pgIdx];
-      const pgCaseGroups = pg.caseGroupIdxs.map(i => caseGroups[i]);
+      let pgCaseGroups = pg.caseGroupIdxs.map(i => caseGroups[i]);
+      // Focus mode: render only the selected samples (non-fit plots) — filter
+      // each case group's cases to the selected set; skip groups with none.
+      if (focusEnabled) {
+        pgCaseGroups = pgCaseGroups
+          .map(g => ({...g, cases: (g.cases || []).filter(c => selectedFocusIds.has(c))}))
+          .filter(g => g.cases.length);
+        if (!pgCaseGroups.length) continue;
+      }
       btn.textContent = `생성 중... (${pgIdx+1}/${validPGs.length})`;
 
       const form = new FormData();
@@ -1025,7 +1041,17 @@ async function generatePlots() {
     if (validPGs.length === 1) {
       // Single plot group: original layout
       const r = allResults[0];
-      r.plots.forEach(p => {
+      // Focus mode: fit plots came from the forced global path — show their
+      // 1-1 (focus) views only (fit on full set, selected samples drawn).
+      if (focusEnabled && globalRgbPlots && globalRgbPlots.plots) {
+        globalRgbPlots.plots.forEach(p => {
+          if (p.is_focus) {
+            if (p.file.indexOf('ionic_scaling_fit') === 0 && !document.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
+            grid.appendChild(createPlotItem(globalRgbPlots.session, p));
+          }
+        });
+      }
+      (r ? r.plots : []).forEach(p => {
         if (p.file === 'ionic_scaling_fit.png' && !document.querySelector('.derivation-box')) { grid.appendChild(createDerivationBox()); }
         grid.appendChild(createPlotItem(r.session, p));
       });
@@ -1058,8 +1084,8 @@ async function generatePlots() {
         if (globalOnlyTypes.includes(pt)) {
           if (globalPlotMap[file]) {
             if (pt === 'ionic_scaling_fit' && !grid.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
-            grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[file]));
-            // "1-1" focus view (same global fit, selected samples only)
+            // Focus mode: hide the full (항목1) parity, keep only the 1-1 view.
+            if (!focusEnabled) grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[file]));
             if (globalPlotMap[pt + '_focus.png']) {
               grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[pt + '_focus.png']));
             }
