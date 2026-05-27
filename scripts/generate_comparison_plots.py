@@ -3580,6 +3580,149 @@ def _case_colors(n):
     return [GROUP_COLORS[i % len(GROUP_COLORS)] for i in range(n)]
 
 
+_STAGE_E_SIGMA_KEYS = ('sigma_full_mScm_stage_e_physics', 'sigma_full_mScm_physics',
+                       'sigma_full_mScm_stage_e', 'sigma_full_mScm')
+
+
+def _stage_e_sigma(d):
+    """Best available Stage-E (or physics) σ_ionic for a case."""
+    for k in _STAGE_E_SIGMA_KEYS:
+        v = d.get(k)
+        if v is not None and v > 0:
+            return float(v)
+    return None
+
+
+def _cov_frac(d, physics=True):
+    """Mean AM coverage as a fraction (mode-matched)."""
+    keys = (['coverage_AM_mean_physics', 'coverage_AM_P_mean_physics',
+             'coverage_AM_S_mean_physics'] if physics else
+            ['coverage_AM_mean', 'coverage_AM_P_mean', 'coverage_AM_S_mean'])
+    vs = [d.get(k) for k in keys]
+    vs = [v for v in vs if v and v > 0]
+    return (sum(vs) / len(vs) / 100.0) if vs else None
+
+
+def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
+    """Per-case σ_ionic from the raw Hertzian network solver vs the Physics
+    solver vs the Stage-E final value — shows how much the Tabor+volume
+    contact model and the literature grain corrections shift σ_ionic away
+    from the DEM-native Hertzian solve."""
+    H, P, E, labs = [], [], [], []
+    for d, nm in zip(data_list, names):
+        h = d.get('sigma_full_mScm')
+        p = d.get('sigma_full_mScm_physics')
+        e = _stage_e_sigma(d)
+        if not (h or p or e):
+            continue
+        H.append(h if h else np.nan)
+        P.append(p if p else np.nan)
+        E.append(e if e else np.nan)
+        labs.append(nm)
+    if not labs:
+        print("  [SKIP] ionic_solver_vs_stage_e: no σ data")
+        return None
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    x = np.arange(len(labs)); w = 0.27
+    ax.bar(x - w, H, w, label='Network solver (Hertzian)', color=BLUE)
+    ax.bar(x,     P, w, label='Network solver (Physics)', color=GREEN)
+    ax.bar(x + w, E, w, label='Stage E final', color=RED)
+    # Δ% Physics vs Hertzian annotation
+    for i in range(len(labs)):
+        if H[i] and P[i] and not (np.isnan(H[i]) or np.isnan(P[i])) and H[i] > 0:
+            d_pct = (P[i] - H[i]) / H[i] * 100
+            ax.annotate(f'{d_pct:+.0f}%', (x[i], max(H[i], P[i])),
+                        fontsize=6, ha='center', va='bottom', color=GRAY)
+    ax.set_xticks(x); ax.set_xticklabels(labs, rotation=30, ha='right', fontsize=8)
+    ax.set_ylabel('σ_ionic (mS/cm)')
+    ax.set_title('σ_ionic: Network solver (Hertzian/Physics) vs Stage E', fontsize=10)
+    ax.legend(fontsize=8); ax.grid(True, axis='y', alpha=0.25)
+    outpath = _save(fig, outdir, "ionic_solver_vs_stage_e.png")
+    with open(os.path.join(outdir, "ionic_solver_vs_stage_e.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        wr = csv.writer(f)
+        wr.writerow(['Case', 'Hertzian', 'Physics', 'Stage_E',
+                     'Phys_vs_Hertz_%', 'StageE_vs_Phys_%'])
+        for i, nm in enumerate(labs):
+            dvh = ((P[i]-H[i])/H[i]*100) if (H[i] and not np.isnan(H[i])
+                                             and not np.isnan(P[i]) and H[i] > 0) else ''
+            dep = ((E[i]-P[i])/P[i]*100) if (P[i] and not np.isnan(P[i])
+                                             and not np.isnan(E[i]) and P[i] > 0) else ''
+            wr.writerow([nm,
+                         '' if np.isnan(H[i]) else round(H[i], 4),
+                         '' if np.isnan(P[i]) else round(P[i], 4),
+                         '' if np.isnan(E[i]) else round(E[i], 4),
+                         round(dvh, 1) if dvh != '' else '',
+                         round(dep, 1) if dep != '' else ''])
+    return outpath
+
+
+def plot_ionic_fit_stage_e(data_list, names, outdir):
+    """OPEN data-native fit of σ_ionic (Stage-E target) to log-linear physics
+    features — lets the exponents float (no fixed form) and prints the
+    discovered formula + R²/LOOCV.  Answers 'fit the physics/Stage-E σ
+    open-mindedly and show it as a formula'."""
+    SG = 3.0; PHI_C = 0.20
+    rows = []
+    for d in data_list:
+        sig = _stage_e_sigma(d)
+        phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct') / 100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
+                and fp > 0 and tau > 0):
+            continue
+        rows.append((np.log(phi - PHI_C), np.log(cn), np.log(cov),
+                     np.log(fp), np.log(tau), np.log(sig / SG)))
+    if len(rows) < 8:
+        print(f"  [SKIP] ionic_fit_stage_e: only {len(rows)} usable cases (<8)")
+        return None
+    arr = np.array(rows)
+    Xf = np.column_stack([arr[:, :5], np.ones(len(arr))])   # 5 feats + intercept
+    yv = arr[:, 5]
+    coef, *_ = np.linalg.lstsq(Xf, yv, rcond=None)
+    pred = Xf @ coef
+    ss_tot = np.sum((yv - yv.mean())**2)
+    r2 = 1 - np.sum((yv - pred)**2) / ss_tot if ss_tot > 0 else 0.0
+    # LOOCV
+    sse = 0.0
+    n = len(arr)
+    for i in range(n):
+        mk = np.ones(n, bool); mk[i] = False
+        c_i, *_ = np.linalg.lstsq(Xf[mk], yv[mk], rcond=None)
+        sse += (yv[i] - Xf[i] @ c_i)**2
+    loocv = 1 - sse / ss_tot if ss_tot > 0 else 0.0
+    a, b, c, dd, e, ln_c0 = coef
+    sig_pred = np.exp(pred) * SG
+    sig_act = np.exp(yv) * SG
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    ax.scatter(sig_act, sig_pred, s=55, c=BLUE, edgecolors='white', zorder=3)
+    lim = [min(sig_act.min(), sig_pred.min()) * 0.8,
+           max(sig_act.max(), sig_pred.max()) * 1.2]
+    ax.plot(lim, lim, '--', color=GRAY, label='1:1')
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12, label='±20%')
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
+    ax.set_ylabel('σ_predicted (open fit, mS/cm)')
+    formula = (f"σ = {np.exp(ln_c0):.3g}·σ_grain · (φ−0.2)^{a:.2f} · CN^{b:.2f} "
+               f"· cov^{c:.2f} · f_p^{dd:.2f} · τ^{e:.2f}")
+    ax.set_title(f"OPEN fit → Stage-E σ_ionic   (n={n})\n{formula}\n"
+                 f"R²={r2:.3f}, LOOCV={loocv:.3f}", fontsize=8)
+    ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
+    outpath = _save(fig, outdir, "ionic_fit_stage_e.png")
+    with open(os.path.join(outdir, "ionic_fit_stage_e.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        wr = csv.writer(f)
+        wr.writerow(['exponent', 'value'])
+        for nm_, val in zip(['ln_C0', 'phi-0.2', 'CN', 'cov', 'f_p', 'tau'],
+                            [ln_c0, a, b, c, dd, e]):
+            wr.writerow([nm_, round(val, 4)])
+        wr.writerow(['R2', round(r2, 4)]); wr.writerow(['LOOCV', round(loocv, 4)])
+    return outpath
+
+
 _FRAC_STAGES = [('intact', 'Intact', '#4caf50'),
                 ('microcrack', 'Microcrack', '#a9d18e'),
                 ('multicrack', 'Multi-crack', '#ffd43b'),
@@ -3814,6 +3957,20 @@ PLOT_REGISTRY["param_corr"] = {
     "title": "파라미터 상관 Heatmap",
     "description": "선택한 파라미터들 사이의 Pearson 상관계수 행렬.\n어떤 지표가 함께 움직이는지(+1) / 반대로 움직이는지(−1) 한눈에.\n케이스 ≥3개, 변동 있는 파라미터 ≥2개 필요.",
     "origin_tip": "Heatmap (RdBu, −1~+1). 셀에 r 값 표기.",
+}
+PLOT_REGISTRY["ionic_solver_vs_stage_e"] = {
+    "func": plot_ionic_solver_vs_stage_e,
+    "file": "ionic_solver_vs_stage_e.png",
+    "title": "σ_ionic: Network solver vs Stage E",
+    "description": "케이스별 σ_ionic을 (1) Hertzian network solver, (2) Physics(Tabor+volume) solver, (3) Stage E final 셋으로 나란히 비교.\nHertzian→Physics 접촉모델 변화 + Stage E grain 보정이 σ를 얼마나 바꾸는지 한눈에.",
+    "origin_tip": "Grouped Column → X: case, 3 bars (Hertzian/Physics/StageE).",
+}
+PLOT_REGISTRY["ionic_fit_stage_e"] = {
+    "func": plot_ionic_fit_stage_e,
+    "file": "ionic_fit_stage_e.png",
+    "title": "σ_ionic OPEN fit → Stage E (식 탐색)",
+    "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 고정식 없이 log-선형 회귀로 지수를 데이터에서 직접 찾아 식으로 표시 (parity + R²/LOOCV).\n물리 base(v12)와 비교해 physics/Stage-E가 다른 지수를 원하는지 확인.",
+    "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 발견된 식.",
 }
 PLOT_REGISTRY["fracture_stages"] = {
     "func": plot_fracture_stages,
