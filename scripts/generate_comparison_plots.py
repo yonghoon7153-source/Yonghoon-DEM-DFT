@@ -1659,7 +1659,7 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     # text as -0.75/+1.62/-1.99/+0.35, which misled readers after a refit.
     _g = _V32_FITTED_GAMMAS if _V32_FITTED_GAMMAS is not None else _V32_GAMMAS
     _refit_tag = 'refit' if _V32_FITTED_GAMMAS is not None else 'default'
-    _title_formula = (f"Ionic v32 = v29_FINAL × exp("
+    _title_formula = (f"σ_ion — v12-clean v3 (=v29/v32) × exp("
                       f"{_g['LIGG_LB_PCT']:+.2f}·LIGG_LB "
                       f"{_g['THIN_X_GEOM']:+.2f}·w_thin·GEOM "
                       f"{_g['P50_DR_DEV']:+.2f}·(p₅₀δR−0.2) "
@@ -2010,7 +2010,7 @@ def plot_multiscale_sigma(data_list, names, outdir):
     lw = _line_width(len(names))
 
     ax.plot(x, sigma_ms, 's-', color=RED, markersize=ms, linewidth=lw,
-            label="FORM X v32 (mS/cm)")
+            label="v12-clean v3 (mS/cm)")
     # ±22% error band (DEM stochastic variability)
     _ms_arr = np.array(sigma_ms)
     _ms_lo = _ms_arr * 0.78; _ms_hi = _ms_arr * 1.22
@@ -2036,7 +2036,7 @@ def plot_multiscale_sigma(data_list, names, outdir):
     _g2 = _V32_FITTED_GAMMAS if _V32_FITTED_GAMMAS is not None else _V32_GAMMAS
     _tag2 = 'refit' if _V32_FITTED_GAMMAS is not None else 'default'
     ax.set_title(
-        f"FORM X v32 = v29_FINAL × exp("
+        f"σ_ion — v12-clean v3 (=v29/v32) × exp("
         f"{_g2['LIGG_LB_PCT']:+.2f}·LIGG_LB "
         f"{_g2['THIN_X_GEOM']:+.2f}·w_thin·GEOM "
         f"{_g2['P50_DR_DEV']:+.2f}·(p₅₀δR−0.2) "
