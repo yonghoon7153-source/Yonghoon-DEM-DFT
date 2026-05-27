@@ -841,31 +841,60 @@ function appendParamFields(form) {
 }
 
 // "1-1" focus: append selected saved case names (fit stays on the full set;
-// only the displayed points are filtered to these samples).
+// only the displayed points are filtered to these samples). Dedup in case a
+// case appears under more than one plot group.
 function appendFocusFields(form) {
-  document.querySelectorAll('#focus-picker-list input:checked')
-    .forEach(c => form.append('focus_cases', c.value));
+  const seen = new Set();
+  document.querySelectorAll('#focus-picker-list input:checked').forEach(c => {
+    if (!seen.has(c.value)) { seen.add(c.value); form.append('focus_cases', c.value); }
+  });
 }
 
-// Build the focus-sample checklist from the cases currently in the plot groups.
+// Build the focus-sample checklist, organized BY plot group (like the groups
+// above) with a per-group "그룹 전체" toggle so a whole group can be picked at once.
 function refreshFocusPicker() {
   const list = document.getElementById('focus-picker-list');
   if (!list) return;
-  const ids = new Set();
-  caseGroups.forEach(g => (g.cases || []).forEach(c => ids.add(c)));
   const prev = new Set([...list.querySelectorAll('input:checked')].map(c => c.value));
+  const groups = caseGroups.map((g, gi) => ({gi, g}))
+                           .filter(x => x.g.cases && x.g.cases.length);
   list.innerHTML = '';
-  if (!ids.size) {
+  list.style.flexDirection = 'column';
+  if (!groups.length) {
     list.innerHTML = '<span style="font-size:.75rem;color:var(--dim)">플롯 그룹에 케이스를 추가하면 여기서 1-1 표시할 sample을 고를 수 있어요.</span>';
     return;
   }
-  [...ids].forEach(id => {
-    const nm = (CASE_NAMES[id] || id);
-    const lbl = document.createElement('label');
-    lbl.className = 'plot-checkbox';
-    lbl.style.cssText = 'font-size:.74rem';
-    lbl.innerHTML = `<input type="checkbox" value="${nm.replace(/"/g,'&quot;')}" ${prev.has(nm)?'checked':''}> ${nm}`;
-    list.appendChild(lbl);
+  groups.forEach(({gi, g}) => {
+    const color = GROUP_COLORS[gi % GROUP_COLORS.length];
+    const gname = g.name || `Case ${GROUP_LETTERS[gi] || (gi + 1)}`;
+    const sec = document.createElement('div');
+    sec.style.cssText = `border-left:3px solid ${color};padding:4px 0 6px 8px;margin-bottom:6px`;
+    const head = document.createElement('div');
+    head.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:3px';
+    head.innerHTML = `<span style="font-size:.78rem;font-weight:700;color:${color}">${gname}</span>`;
+    const allBtn = document.createElement('button');
+    allBtn.type = 'button'; allBtn.className = 'btn btn-sm btn-secondary';
+    allBtn.style.cssText = 'padding:1px 8px;font-size:.7rem';
+    allBtn.textContent = '그룹 전체';
+    allBtn.onclick = () => {
+      const cbs = sec.querySelectorAll('input[type=checkbox]');
+      const anyOff = [...cbs].some(c => !c.checked);
+      cbs.forEach(c => { c.checked = anyOff; });
+    };
+    head.appendChild(allBtn);
+    sec.appendChild(head);
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px';
+    g.cases.forEach(id => {
+      const nm = (CASE_NAMES[id] || id);
+      const lbl = document.createElement('label');
+      lbl.className = 'plot-checkbox';
+      lbl.style.cssText = 'font-size:.74rem';
+      lbl.innerHTML = `<input type="checkbox" value="${nm.replace(/"/g,'&quot;')}" ${prev.has(nm)?'checked':''}> ${nm}`;
+      row.appendChild(lbl);
+    });
+    sec.appendChild(row);
+    list.appendChild(sec);
   });
 }
 
