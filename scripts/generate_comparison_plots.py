@@ -23,6 +23,36 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+
+def _register_cjk_fallback():
+    """Append a CJK-capable font to the sans-serif list so Korean group/case
+    names (e.g. '박막') render via per-glyph fallback (matplotlib ≥3.6) instead
+    of tofu boxes — without changing the default Latin look (DejaVu stays first)."""
+    from matplotlib import font_manager as _fm
+    import os as _os
+    candidates = [
+        '/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc',
+        '/usr/share/fonts/truetype/nanum/NanumGothic.ttf',
+        '/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',
+        'C:/Windows/Fonts/malgun.ttf',
+    ]
+    for path in candidates:
+        if _os.path.exists(path):
+            try:
+                _fm.fontManager.addfont(path)
+                name = _fm.FontProperties(fname=path).get_name()
+                sl = matplotlib.rcParams['font.sans-serif']
+                if name not in sl:
+                    matplotlib.rcParams['font.sans-serif'] = list(sl) + [name]
+                matplotlib.rcParams['axes.unicode_minus'] = False
+                return name
+            except Exception:
+                continue
+    return None
+
+
+_register_cjk_fallback()
+
 try:                       # grade-axis values (Q/ASR/τ_Laplace/…) for param compare
     import grade_engine as _grade_engine
 except Exception:
@@ -56,6 +86,7 @@ _GLOBAL_PS_SIGMOID = None   # v19: (k_pf, pc_pf, beta1, beta2, w_pf_mean, pf_t_m
 _ALL_DATA = None  # all_data for _apply_style auto-detect
 _REAL_NAMES = None  # saved case names (args.names), aligned with _ALL_DATA
 _FOCUS_CASES = set()  # subset of saved names to show in the "1-1" focus parity
+_FOCUS_LABEL = ""     # group name(s) of fully-selected groups, shown on the 1-1 plot
 
 # Generic parameter-comparison selections (set by main() from CLI args).
 _PARAM_X = None       # X-axis metric key (scatter)
@@ -304,6 +335,8 @@ def _focus_parity(outdir, file_base, sig_act, sig_pred, kept_names,
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel(xlabel); ax.set_ylabel(ylabel)
+    if _FOCUS_LABEL:
+        title = title + "\n그룹: " + _FOCUS_LABEL
     ax.set_title(title, fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     return _save(fig, outdir, file_base + "_focus.png")
@@ -4898,14 +4931,16 @@ def main():
     parser.add_argument("--param-list", default="")  # comma-separated keys (bar/corr)
     parser.add_argument("--param-norm", action="store_true")  # normalize bar to max
     parser.add_argument("--focus-cases", default="")  # \\t-separated saved names → "1-1" focus parity
+    parser.add_argument("--focus-label", default="")  # group name(s) shown on the 1-1 plot
     args = parser.parse_args()
 
-    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM, _FOCUS_CASES
+    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM, _FOCUS_CASES, _FOCUS_LABEL
     _PARAM_X = args.param_x or None
     _PARAM_Y = args.param_y or None
     _PARAM_LIST = [k for k in args.param_list.split(',') if k] or None
     _PARAM_NORM = bool(args.param_norm)
     _FOCUS_CASES = set(s for s in args.focus_cases.split('\t') if s)
+    _FOCUS_LABEL = args.focus_label or ""
 
     # Parse group info
     if args.group_sizes:

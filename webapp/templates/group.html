@@ -156,7 +156,10 @@
       <summary style="cursor:pointer;font-size:.82rem;font-weight:700;color:var(--text)">
         항목 1-1 개별 보기 <span style="font-weight:400;color:var(--dim)">— fit 식·계수는 전체(항목1) 그대로, 선택한 sample 점만 표시 (parity / Hertzian parity)</span>
       </summary>
-      <div id="focus-picker-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+      <label style="display:inline-flex;align-items:center;gap:6px;margin:8px 0;font-size:.8rem;font-weight:700;color:var(--text);cursor:pointer">
+        <input type="checkbox" id="focus-enable"> 1-1 항목 ON <span style="font-weight:400;color:var(--dim)">(끄면 1-1 그래프 생성 안 함)</span>
+      </label>
+      <div id="focus-picker-list" style="display:flex;flex-direction:column;gap:6px;margin-top:4px"></div>
     </details>
   </div>
   <div class="plot-select-grid">
@@ -841,13 +844,21 @@ function appendParamFields(form) {
 }
 
 // "1-1" focus: append selected saved case names (fit stays on the full set;
-// only the displayed points are filtered to these samples). Dedup in case a
-// case appears under more than one plot group.
+// only the displayed points are filtered to these samples). No-op unless the
+// 1-1 master toggle is ON. Dedup; also pass names of fully-selected groups.
 function appendFocusFields(form) {
+  if (!document.getElementById('focus-enable')?.checked) return;
   const seen = new Set();
-  document.querySelectorAll('#focus-picker-list input:checked').forEach(c => {
+  document.querySelectorAll('#focus-picker-list input.focus-checkbox-input:checked').forEach(c => {
     if (!seen.has(c.value)) { seen.add(c.value); form.append('focus_cases', c.value); }
   });
+  if (!seen.size) return;
+  const labels = [];
+  document.querySelectorAll('#focus-picker-list .focus-group').forEach(sec => {
+    const cbs = sec.querySelectorAll('input.focus-checkbox-input');
+    if (cbs.length && [...cbs].every(c => c.checked)) labels.push(sec.dataset.groupName);
+  });
+  if (labels.length) form.append('focus_label', labels.join(', '));
 }
 
 // Build the focus-sample checklist, organized BY plot group (like the groups
@@ -868,6 +879,8 @@ function refreshFocusPicker() {
     const color = GROUP_COLORS[gi % GROUP_COLORS.length];
     const gname = g.name || `Case ${GROUP_LETTERS[gi] || (gi + 1)}`;
     const sec = document.createElement('div');
+    sec.className = 'focus-group';
+    sec.dataset.groupName = gname;
     sec.style.cssText = `border-left:3px solid ${color};padding:4px 0 6px 8px;margin-bottom:6px`;
     const head = document.createElement('div');
     head.style.cssText = 'display:flex;align-items:center;gap:8px;margin-bottom:3px';
@@ -876,8 +889,9 @@ function refreshFocusPicker() {
     allBtn.type = 'button'; allBtn.className = 'btn btn-sm btn-secondary';
     allBtn.style.cssText = 'padding:1px 8px;font-size:.7rem';
     allBtn.textContent = '그룹 전체';
+    // Only toggles THIS group's focus checkboxes (independent of "모두 선택").
     allBtn.onclick = () => {
-      const cbs = sec.querySelectorAll('input[type=checkbox]');
+      const cbs = sec.querySelectorAll('input.focus-checkbox-input');
       const anyOff = [...cbs].some(c => !c.checked);
       cbs.forEach(c => { c.checked = anyOff; });
     };
@@ -887,10 +901,12 @@ function refreshFocusPicker() {
     row.style.cssText = 'display:flex;flex-wrap:wrap;gap:6px';
     g.cases.forEach(id => {
       const nm = (CASE_NAMES[id] || id);
+      // NOTE: NOT class "plot-checkbox" — keeps these out of "모두 선택" and the
+      // plotTypes collector. Own class + input class for scoped queries.
       const lbl = document.createElement('label');
-      lbl.className = 'plot-checkbox';
-      lbl.style.cssText = 'font-size:.74rem';
-      lbl.innerHTML = `<input type="checkbox" value="${nm.replace(/"/g,'&quot;')}" ${prev.has(nm)?'checked':''}> ${nm}`;
+      lbl.className = 'focus-checkbox';
+      lbl.style.cssText = 'font-size:.74rem;display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:var(--bg-2)';
+      lbl.innerHTML = `<input type="checkbox" class="focus-checkbox-input" value="${nm.replace(/"/g,'&quot;')}" ${prev.has(nm)?'checked':''}> ${nm}`;
       row.appendChild(lbl);
     });
     sec.appendChild(row);

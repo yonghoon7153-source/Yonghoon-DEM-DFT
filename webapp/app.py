@@ -4403,6 +4403,9 @@ def group_plots():
     focus_cases = request.form.getlist('focus_cases')
     if focus_cases:
         cmd += ['--focus-cases', '\t'.join(focus_cases)]
+        focus_label = request.form.get('focus_label', '').strip()
+        if focus_label:
+            cmd += ['--focus-label', focus_label]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
     if result.stdout:
         print(f"[plots] stdout:\n{result.stdout}")
