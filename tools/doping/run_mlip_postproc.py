@@ -139,6 +139,48 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
                 'fit_error': str(e)}
 
 
+def eos_ensemble(atoms_ref, calc, n_seeds=5, perturb=0.1,
+                 fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06),
+                 fmax=0.05, relax_steps=500):
+    """Run eos_sweep on N rattled copies of atoms_ref and keep the BEST BM3 fit.
+
+    MLIP single-curve EOS is basin-sensitive: a stray Li/ion rearrangement at one
+    volume kinks the curve and gives an unphysical B0' (e.g. the Nd-doped case had
+    B0' from -64 to +16 across seeds while the clean fits clustered at ~6). The
+    best-of-N curve avoids that. Returns the selected curve's dict (SAME schema as
+    eos_sweep, so downstream is unchanged) plus an 'ensemble' summary (per-seed +
+    mean/std). Selection: highest r² among physical fits (fit_ok and 0<B0'<15);
+    fall back to highest r² with a B0; else the first result.
+    """
+    results = []
+    for s in range(n_seeds):
+        a = atoms_ref.copy()
+        if s > 0:
+            a.rattle(stdev=perturb, seed=s)
+        results.append(eos_sweep(a, calc, fractions=fractions, fmax=fmax,
+                                 relax_steps=relax_steps))
+    physical = [r for r in results
+                if r.get('fit_quality_ok') and r.get('B0_GPa') is not None
+                and r.get('Bp') is not None and 0.0 < r['Bp'] < 15.0]
+    pool = physical or [r for r in results if r.get('B0_GPa') is not None] or results
+    best = dict(max(pool, key=lambda r: r.get('r2', -1.0)))
+    b0s = [r['B0_GPa'] for r in results if r.get('B0_GPa') is not None]
+    best['ensemble'] = {
+        'n_seeds': int(n_seeds), 'perturb': float(perturb),
+        'n_fit_ok': int(sum(1 for r in results if r.get('fit_quality_ok'))),
+        'n_physical_Bp': len(physical),
+        'B0_GPa_mean': float(np.mean(b0s)) if b0s else None,
+        'B0_GPa_std': float(np.std(b0s)) if b0s else None,
+        'B0_GPa_median': float(np.median(b0s)) if b0s else None,
+        'selection': ('max_r2_physical_Bp' if physical
+                      else ('max_r2_any' if b0s else 'all_failed')),
+        'per_seed': [{'B0_GPa': r.get('B0_GPa'), 'V0_per_atom': r.get('V0_per_atom'),
+                      'Bp': r.get('Bp'), 'r2': r.get('r2'),
+                      'fit_quality_ok': r.get('fit_quality_ok')} for r in results],
+    }
+    return best
+
+
 def elastic_finite_strain(atoms_ref, calc, eps=0.005, fmax=0.05,
                           relax_steps=300):
     """6 independent Voigt strains × ±eps. Compute stress → Cij.
@@ -253,13 +295,21 @@ def process_one(xyz_path, calc, out_dir, args):
     record['E_post_anneal_per_atom'] = atoms.get_potential_energy() / len(atoms)
     write(work / 'post_anneal.xyz', atoms)
 
-    # 2. EOS
+    # 2. EOS (optionally an ensemble of N rattled seeds, best BM3 fit kept)
     if not args.no_eos:
         t0 = time.time()
-        record['eos'] = eos_sweep(atoms, calc,
-                                  fractions=tuple(args.eos_fractions),
-                                  fmax=args.eos_fmax,
-                                  relax_steps=args.relax_steps)
+        if args.n_eos_seeds > 1:
+            record['eos'] = eos_ensemble(atoms, calc,
+                                         n_seeds=args.n_eos_seeds,
+                                         perturb=args.eos_perturb,
+                                         fractions=tuple(args.eos_fractions),
+                                         fmax=args.eos_fmax,
+                                         relax_steps=args.relax_steps)
+        else:
+            record['eos'] = eos_sweep(atoms, calc,
+                                      fractions=tuple(args.eos_fractions),
+                                      fmax=args.eos_fmax,
+                                      relax_steps=args.relax_steps)
         record['eos']['t_s'] = time.time() - t0
 
     # 3. Elastic
@@ -296,6 +346,11 @@ def main():
     p.add_argument('--eos_fractions', nargs='+', type=float,
                   default=[0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.06])
     p.add_argument('--eos_fmax', type=float, default=0.05)
+    p.add_argument('--n_eos_seeds', type=int, default=1,
+                   help='EOS ensemble size: N rattled seeds, best BM3 fit kept '
+                        '(1 = single curve, current behaviour)')
+    p.add_argument('--eos_perturb', type=float, default=0.1,
+                   help='rattle stdev (Å) applied to EOS seeds > 0')
     # Elastic params
     p.add_argument('--elastic_eps', type=float, default=0.005,
                   help='Voigt strain magnitude')

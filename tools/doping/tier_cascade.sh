@@ -222,6 +222,7 @@ STAGE 07 eos \
         --xyz $(ls "$OUT"/04_anneal/*/post_relax.xyz 2>/dev/null | tr '\n' ' ') \
         --out "$OUT/07_eos" \
         --no_anneal --no_elastic \
+        --n_eos_seeds 5 \
         --device cuda
 
 # Stage 08 — MLIP elastic (clamped-ion Cij at 0K, then VRH average)
