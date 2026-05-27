@@ -4633,9 +4633,17 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     # Near-threshold SATURATION base: round the percolation singularity so the
     # 62:38 / 0:10 cases (φ≈φc, where √(φ−φc) is hyper-sensitive) are tamed.
     # φ_eff = sqrt((φ−φc)² + δ²)  →  ≈ φ−φc far above φc, floors at δ near it.
-    DELTA = 0.03
+    # δ is SCANNED for the LOOCV-optimal value (δ=0 ≡ the original √ form).
     phi_ex = np.maximum(phis - PHI_C, 1e-6)
-    base_log_sat = base_log + 0.5*(np.log(np.sqrt(phi_ex**2 + DELTA**2)) - np.log(phi_ex))
+    def _sat_base(delta):
+        return base_log + 0.5*(np.log(np.sqrt(phi_ex**2 + delta**2)) - np.log(phi_ex))
+    delta_grid = np.round(np.linspace(0.0, 0.06, 13), 4)
+    sat_scan = []
+    for _dlt in delta_grid:
+        _r2d, _lod, *_ = _cblend_fit_score(_sat_base(float(_dlt)), logsf, taus)
+        sat_scan.append((float(_dlt), float(_r2d), float(_lod)))
+    DELTA = max(sat_scan, key=lambda t: t[2])[0]   # LOOCV-optimal δ*
+    base_log_sat = _sat_base(DELTA)
 
     r2_n, lo_n, _, _, pred_n, _, _ = _cblend_fit_score(base_log, logsf, taus)
     r2_s, lo_s, b_s, pred_s = _cblend_extra_score(base_log, logsf, taus, sfeat)
@@ -4652,8 +4660,8 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
               ('+ SE-size (g_phi)', pred_s, r2_s, lo_s, f'beta_s={b_s[0]:+.3f}'),
               ('+ AM-asym (g_mix)', pred_a, r2_a, lo_a, f'beta_a={b_a[0]:+.3f}'),
               ('+ BOTH (size+asym)', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}'),
-              ('SAT phic (rounded, d=%.2f)' % DELTA, pred_t, r2_t, lo_t, ''),
-              ('SAT + AM-asym', pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
+              ('SAT phic (rounded, d*=%.3f scan)' % DELTA, pred_t, r2_t, lo_t, ''),
+              ('SAT(d*=%.3f) + AM-asym' % DELTA, pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
 
     def _is(nm, ps):
         return ps in (nm or '').replace(' ', '')
@@ -4688,7 +4696,7 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
         ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=6.5, loc='upper left')
     fig.suptitle("Correction-term test (n=%d): size / AM-asym / rounded-phic SAT — catch 0:10(62:38)?\n"
                  "size=r_SE|1/gb_density  asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
-                 "g_mix=gauss(p;0.5,%g)  SAT: phi_eff=sqrt((phi-%.2f)^2+%.2f^2)"
+                 "g_mix=gauss(p;0.5,%g)  SAT: phi_eff=sqrt((phi-%.2f)^2+d^2), d*=%.3f (LOOCV-scan)"
                  % (n, K_G, PHI_GATE, P_MIX_W, PHI_C, DELTA), fontsize=9)
     fig.tight_layout(rect=[0, 0, 1, 0.94])
     outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
@@ -4722,7 +4730,10 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
                                      'beta_a': round(b_ta[0], 4),
                                      'n_out': int(_out(pred_ta).sum()),
                                      'out_010': _cnt(pred_ta, m010), 'out_mix': _cnt(pred_ta, mmix)}},
-                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W, 'delta': DELTA},
+                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W,
+                    'delta_star': DELTA,
+                    'delta_scan': [{'delta': d, 'r2': round(r, 4), 'loocv': round(l, 4)}
+                                   for d, r, l in sat_scan]},
                    jf, ensure_ascii=False, indent=1)
     return outpath
 
