@@ -41,6 +41,7 @@ sys.path.insert(0, str(ROOT / 'scripts'))
 from extract_2d_microstructure import (   # noqa: E402
     slice_microstructure, synthesize_microstructure,
     render_png as render_microstructure_png,
+    render_geometry_png,
     VOID, AM_P, AM_S, SE, PHASE_NAMES,
 )
 
@@ -599,6 +600,11 @@ def write_comsol_package(case_name, case_dir, sd, out_dir, axis='synth',
     write_svg(phase_contours, interface_segs, sd['a_extent'], sd['b_extent'],
               b0, out_dir / 'geometry.svg')
     render_microstructure_png(sd, out_dir / 'geometry.png')
+    # Clean geometry-only export (no axes/ticks/labels/legend/title), high-res
+    try:
+        render_geometry_png(sd, out_dir / 'geometry_clean_hires.png')
+    except Exception:
+        import traceback; traceback.print_exc()
 
     # COMSOL-lean geometry: AM_P grain domains + AM_S + large void only, SE via
     # Boolean.  This is the one to import for meshing (geometry.dxf is the full
@@ -677,6 +683,7 @@ COMSOL 모델은 (A) DOMAIN, (B) MATERIAL(수치), (C) BOUNDARY 로 구성.
     (out_dir / 'README.txt').write_text(readme)
     return {'n_seg': n_seg, 'n_cov': n_cov, 'n_ina': n_ina, 'out_dir': str(out_dir),
             'files': ['geometry.dxf', 'geometry.svg', 'geometry.png',
+                      'geometry_clean_hires.png',
                       'microstructure.npy', 'parameters.csv', 'parameters.json',
                       'README.txt']}
 
