@@ -3637,6 +3637,22 @@ def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
     ax.set_ylabel('σ_ionic (mS/cm)')
     ax.set_title('σ_ionic: Network solver (Hertzian/Physics) vs Stage E', fontsize=10)
     ax.legend(fontsize=8); ax.grid(True, axis='y', alpha=0.25)
+    # Case-group separators + labels (same style as the per-config line plots)
+    if _GROUP_INFO and len(_GROUP_INFO[0]) > 1:
+        sizes, gnames = _GROUP_INFO
+        pos = 0
+        for gi, sz in enumerate(sizes):
+            if gi > 0:
+                ax.axvline(pos - 0.5, color='#888888', linestyle='--',
+                           linewidth=1, alpha=0.6)
+            mid = pos + sz / 2 - 0.5
+            ax.text(mid, -0.30 if gi % 2 else -0.22, gnames[gi], ha='center',
+                    va='top', transform=ax.get_xaxis_transform(), fontsize=7,
+                    fontweight='bold', color=GROUP_COLORS[gi % len(GROUP_COLORS)],
+                    bbox=dict(boxstyle='round,pad=0.2', facecolor='white',
+                              edgecolor=GROUP_COLORS[gi % len(GROUP_COLORS)], alpha=0.8))
+            pos += sz
+        fig.subplots_adjust(bottom=0.32)
     outpath = _save(fig, outdir, "ionic_solver_vs_stage_e.png")
     with open(os.path.join(outdir, "ionic_solver_vs_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:

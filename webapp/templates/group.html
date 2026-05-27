@@ -845,7 +845,7 @@ async function generatePlots() {
   try {
     // Global R_gb: always use all data combined for rgb_fitting/gb_corrected
     // Plots that need ALL groups combined (not per-group)
-    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit'];
+    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e'];
     const needsGlobalRgb = validPGs.length > 1 &&
       plotTypes.some(p => globalOnlyTypes.includes(p));
     let globalRgb = '';
