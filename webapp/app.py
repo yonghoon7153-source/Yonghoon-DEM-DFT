@@ -813,7 +813,7 @@ def build_fracture_summary_table(metrics):
                  int(n_total)       if n_total       else '-',
                  int(n_total_force) if n_total_force else '-'])
 
-    return {'columns': ['지표', 'δ-based', 'Force-based'], 'data': rows}
+    return {'columns': ['지표', 'δ-based', 'Force-based ★'], 'data': rows}
 
 
 def inject_tier1_patch_rows(tables, metrics):
