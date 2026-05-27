@@ -1064,6 +1064,7 @@ async function showOutlierPopup(session) {
   const rows = (data.outliers || []).map(o => `
     <tr>
       <td style="padding:5px 8px;font-weight:600">${o.case}</td>
+      <td style="padding:5px 8px">${o.ps ? `<span style="background:#2a2d3e;color:#cbd2e0;padding:1px 7px;border-radius:10px;font-size:.85em">P:S ${o.ps}</span>` : ''}</td>
       <td style="padding:5px 8px;text-align:right;color:${o.direction === 'over' ? '#ff6b6b' : '#4dabf7'}">${o.err_pct >= 0 ? '+' : ''}${o.err_pct}%</td>
       <td style="padding:5px 8px;color:var(--dim);font-size:.85em">${o.reason}</td>
     </tr>`).join('');
@@ -1072,10 +1073,11 @@ async function showOutlierPopup(session) {
     <p style="color:var(--dim);font-size:.85em">잔차 최강 상관 feature: ${corr || '—'}</p>
     <table style="width:100%;border-collapse:collapse;font-size:.9em">
       <thead><tr style="border-bottom:1px solid #2a2d3e">
-        <th style="text-align:left;padding:5px 8px">케이스</th>
+        <th style="text-align:left;padding:5px 8px">케이스 (저장 이름)</th>
+        <th style="text-align:left;padding:5px 8px">조성</th>
         <th style="text-align:right;padding:5px 8px">오차%</th>
         <th style="text-align:left;padding:5px 8px">outlier 이유</th>
-      </tr></thead><tbody>${rows || '<tr><td colspan="3" style="padding:10px;color:var(--dim)">outlier 없음</td></tr>'}</tbody>
+      </tr></thead><tbody>${rows || '<tr><td colspan="4" style="padding:10px;color:var(--dim)">outlier 없음</td></tr>'}</tbody>
     </table>`;
   modal.classList.add('open');
 }

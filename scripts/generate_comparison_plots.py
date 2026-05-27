@@ -54,6 +54,7 @@ _GLOBAL_IONIC_SIGMOID = None  # (C_thick, C_thin, tau_c, k) for sigmoid C(τ)
 _GLOBAL_IONIC_POLY3 = None  # (a0, a1, a2, a3) for poly3 part of v9 BLEND
 _GLOBAL_PS_SIGMOID = None   # v19: (k_pf, pc_pf, beta1, beta2, w_pf_mean, pf_t_mean)
 _ALL_DATA = None  # all_data for _apply_style auto-detect
+_REAL_NAMES = None  # saved case names (args.names), aligned with _ALL_DATA
 
 # Generic parameter-comparison selections (set by main() from CLI args).
 _PARAM_X = None       # X-axis metric key (scatter)
@@ -4194,8 +4195,12 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     correlates with most."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
-    base_log, logsf, taus, labs, feat_rows = [], [], [], [], []
-    for d, nm in zip(data_list, names):
+    # Saved case names (args.names) aligned with data_list; the `names` arg is
+    # the P:S ratio used as a short label. Show the saved name + P:S in the table.
+    real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
+                else list(names))
+    base_log, logsf, taus, labs, real_labs, feat_rows = [], [], [], [], [], []
+    for idx, (d, nm) in enumerate(zip(data_list, names)):
         sig = _stage_e_sigma(d)
         phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -4207,6 +4212,7 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
                         + COV_EXP*np.log(cov) + 3.0*np.log(fp))
         logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
+        real_labs.append(real_all[idx])
         fr = {}
         for key, fb in _OUTLIER_DIAG_FEATS:
             v = d.get(key)
@@ -4305,7 +4311,8 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
             parts.append(f'{best} {"높음" if bz > 0 else "낮음"} (z={bz:+.1f})')
         return ' · '.join(parts)
 
-    outliers = [{'case': labs[i], 'err_pct': round(float(err_pct[i]), 1),
+    outliers = [{'case': real_labs[i], 'ps': labs[i],
+                 'err_pct': round(float(err_pct[i]), 1),
                  'sigma_act': round(float(sig_act[i]), 4),
                  'sigma_pred': round(float(sig_pred[i]), 4),
                  'direction': 'over' if err_pct[i] > 0 else 'under',
@@ -4320,9 +4327,9 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     with open(os.path.join(outdir, "ionic_outliers_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['Case', 'sigma_act', 'sigma_pred', 'err_%', 'reason'] + feat_keys)
+        wr.writerow(['Case', 'P:S', 'sigma_act', 'sigma_pred', 'err_%', 'reason'] + feat_keys)
         for i in order:
-            wr.writerow([labs[i], round(sig_act[i], 4), round(sig_pred[i], 4),
+            wr.writerow([real_labs[i], labs[i], round(sig_act[i], 4), round(sig_pred[i], 4),
                          round(err_pct[i], 1), _reason(i) if is_out[i] else '']
                         + [('' if not np.isfinite(feat_rows[i].get(k, np.nan))
                             else round(feat_rows[i][k], 4)) for k in feat_keys])
@@ -4655,7 +4662,7 @@ def main():
         print(f"ERROR: inputs ({len(args.inputs)}) != names ({len(args.names)})")
         sys.exit(1)
 
-    global _ALL_DATA
+    global _ALL_DATA, _REAL_NAMES
     all_data = []
     for path in args.inputs:
         with open(path, "r") as f:
@@ -4663,6 +4670,7 @@ def main():
         d["_source_path"] = path
         all_data.append(d)
     _ALL_DATA = all_data
+    _REAL_NAMES = list(args.names)
 
     # Use P:S ratio as x-axis labels (fallback to case names)
     plot_names = []
