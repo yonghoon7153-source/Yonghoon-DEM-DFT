@@ -4312,6 +4312,7 @@ def group_plots():
     # Collect metrics files and names
     input_files = []
     names = []
+    cid_to_name = {}  # case ID → the name the generator receives (for focus matching)
     for cid in selected:
         if cid.startswith('archive:'):
             archive_rel = cid[len('archive:'):]
@@ -4329,6 +4330,7 @@ def group_plots():
         if os.path.exists(metrics_path):
             input_files.append(metrics_path)
             names.append(case_name)
+            cid_to_name[cid] = case_name
 
     if not input_files:
         return jsonify({'error': '메트릭 데이터가 없습니다.'}), 400
@@ -4400,9 +4402,12 @@ def group_plots():
         cmd += ['--param-norm']
     # "1-1" focus: saved case names to show as a focus parity (tab-separated,
     # since names can contain commas/colons). Fit stays on the full set.
-    focus_cases = request.form.getlist('focus_cases')
-    if focus_cases:
-        cmd += ['--focus-cases', '\t'.join(focus_cases)]
+    # focus_cases arrive as case IDs → translate to the exact names the
+    # generator sees (archive names are basename'd, so name-matching is fragile).
+    focus_cids = request.form.getlist('focus_cases')
+    focus_names = [cid_to_name[c] for c in focus_cids if c in cid_to_name]
+    if focus_names:
+        cmd += ['--focus-cases', '\t'.join(focus_names)]
         focus_label = request.form.get('focus_label', '').strip()
         if focus_label:
             cmd += ['--focus-label', focus_label]

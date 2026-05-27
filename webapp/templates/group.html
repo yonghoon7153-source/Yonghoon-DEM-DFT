@@ -903,10 +903,12 @@ function refreshFocusPicker() {
       const nm = (CASE_NAMES[id] || id);
       // NOTE: NOT class "plot-checkbox" — keeps these out of "모두 선택" and the
       // plotTypes collector. Own class + input class for scoped queries.
+      // value = case ID (server translates to the generator's name — robust
+      // against archive basename'ing).
       const lbl = document.createElement('label');
       lbl.className = 'focus-checkbox';
       lbl.style.cssText = 'font-size:.74rem;display:inline-flex;align-items:center;gap:5px;padding:3px 7px;border:1px solid var(--border);border-radius:5px;cursor:pointer;background:var(--bg-2)';
-      lbl.innerHTML = `<input type="checkbox" class="focus-checkbox-input" value="${nm.replace(/"/g,'&quot;')}" ${prev.has(nm)?'checked':''}> ${nm}`;
+      lbl.innerHTML = `<input type="checkbox" class="focus-checkbox-input" value="${String(id).replace(/"/g,'&quot;')}" ${prev.has(id)?'checked':''}> ${nm}`;
       row.appendChild(lbl);
     });
     sec.appendChild(row);
