@@ -793,11 +793,6 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     # component is threaded to it with a short 2-px channel.  DMAX caps the
     # bridge length so this never draws the long cross-domain streaks the old
     # unconstrained threading did; pockets farther than DMAX (rare) are left.
-    #
-    # Tiny sub-particle SE specks are NOT threaded: a thin line drawn to a
-    # few-pixel dot reads as a stray artifact (the "AM_S 옆 삐져나온 선"),
-    # and such specks carry negligible ionic current — leaving them as small
-    # isolated SE blobs is both cleaner and more honest than bridging them.
     se = (labels == SE)
     labels[_ndi.binary_closing(se, iterations=2) & is_am0 & ~se] = SE
     se = (labels == SE)
@@ -805,8 +800,6 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     if ncomp > 1:
         sizes = np.bincount(lab.ravel()); sizes[0] = 0
         main = int(sizes.argmax())
-        # Skip pockets below ~(0.6 μm)² — sub-SE-particle specks
-        min_pocket_px = max(6, int(round((0.6 / pa) ** 2)))
         dist_main, (iy, ix) = _ndi.distance_transform_edt(~(lab == main),
                                                           return_indices=True)
         DMAX = bridge_dmax_um / pa                   # bridge length cap (μm)
@@ -814,8 +807,6 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if comp == main:
                 continue
             ys, xs = np.where(lab == comp)
-            if ys.size < min_pocket_px:              # tiny speck → don't thread
-                continue
             k = int(np.argmin(dist_main[ys, xs]))    # pocket pixel nearest main
             if dist_main[ys[k], xs[k]] > DMAX:
                 continue
