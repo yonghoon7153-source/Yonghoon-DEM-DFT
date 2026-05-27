@@ -3677,6 +3677,93 @@ def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
     return outpath
 
 
+def _cblend_fit_score(base_log, logsf, taus):
+    """Fit C_blend(τ) (v5 asymptote ⊕ poly3-in-lnτ, fixed w_bl/w_v5) on the
+    log-residual; return (r2, loocv, Ct, Cn, pred_log).  Shared by the
+    Stage-E σ fit experiments."""
+    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    n = len(taus)
+    resid = logsf - base_log
+    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
+    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
+    Xv5 = np.column_stack([np.ones(n), w_v5])
+    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
+    bv5, *_ = np.linalg.lstsq(Xv5, resid, rcond=None)
+    bp3, *_ = np.linalg.lstsq(Xp3, resid, rcond=None)
+    pred = base_log + (1-w_bl)*(Xv5@bv5) + w_bl*(Xp3@bp3)
+    ss = np.sum((logsf-logsf.mean())**2)
+    r2 = 1 - np.sum((logsf-pred)**2)/ss if ss > 0 else 0.0
+    sse = 0.0
+    for i in range(n):
+        mk = np.ones(n, bool); mk[i] = False
+        b5, *_ = np.linalg.lstsq(Xv5[mk], resid[mk], rcond=None)
+        b3, *_ = np.linalg.lstsq(Xp3[mk], resid[mk], rcond=None)
+        cb = (1-w_bl[i])*(Xv5[i]@b5) + w_bl[i]*(Xp3[i]@b3)
+        sse += (logsf[i]-(base_log[i]+cb))**2
+    loocv = 1 - sse/ss if ss > 0 else 0.0
+    return r2, loocv, float(np.exp(bv5[0])), float(np.exp(bv5[0]+bv5[1])), pred
+
+
+def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
+    """Fix CN² · (φ−φc)^0.5 · cov^0.5 · f_p³ (clean integer/half powers) +
+    C_blend(τ), and scan the percolation threshold φc for the LOOCV-optimal
+    value.  C_blend re-fits at EVERY φc so the τ prefactor tracks the new
+    base form.  → 'CN² with a slightly tuned φc' best value + fit quality."""
+    SG = 3.0; CN_EXP = 2.0; PHI_EXP = 0.5; COV_EXP = 0.5; FP_EXP = 3.0
+    recs = []
+    for d in data_list:
+        sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct')/100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if sig and sig > 0 and phi > 0 and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
+            recs.append((phi, cn, cov, fp, tau, sig))
+    if len(recs) < 15:
+        print(f"  [SKIP] ionic_phic_scan_stage_e: only {len(recs)} cases (<15)")
+        return None
+
+    def _fit_at(phic):
+        rows = [r for r in recs if r[0] > phic + 1e-3]
+        if len(rows) < 15:
+            return None
+        a = np.array(rows)
+        base_log = (np.log(SG) + PHI_EXP*np.log(a[:, 0]-phic) + CN_EXP*np.log(a[:, 1])
+                    + COV_EXP*np.log(a[:, 2]) + FP_EXP*np.log(a[:, 3]))
+        r2, loo, Ct, Cn, _ = _cblend_fit_score(base_log, np.log(a[:, 5]), a[:, 4])
+        return phic, r2, loo, len(rows), Ct, Cn
+
+    grid = np.round(np.arange(0.10, 0.225, 0.005), 3)
+    res = [r for r in (_fit_at(p) for p in grid) if r]
+    if not res:
+        print("  [SKIP] ionic_phic_scan_stage_e: no φc fit")
+        return None
+    M = np.array([(p, r2, lo, n) for (p, r2, lo, n, _, _) in res])
+    best = max(res, key=lambda t: t[2])
+    bphic, br2, bloo, bn, bCt, bCn = best
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    ax.plot(M[:, 0], M[:, 1], 's-', color=GRAY, ms=4, label='R² (train)')
+    ax.plot(M[:, 0], M[:, 2], 'o-', color=BLUE, ms=5, label='LOOCV')
+    ax.axvline(bphic, color=RED, ls='--', label=f'best φc={bphic:.3f}')
+    ax.axvline(0.20, color='#aaaaaa', ls=':', label='v12 φc=0.20')
+    ax.set_xlabel('φc (percolation threshold in φ−φc)'); ax.set_ylabel('R²')
+    ax.set_title("CN²·(φ−φc)^0.5·cov^0.5·f_p³·C_blend(τ) — φc scan (Stage-E)\n"
+                 "best φc=%.3f → R²=%.3f, LOOCV=%.3f  [Ct=%.4f, Cn=%.4f, n=%d]"
+                 % (bphic, br2, bloo, bCt, bCn, bn), fontsize=8)
+    ax.legend(fontsize=7); ax.grid(True, alpha=0.25)
+    outpath = _save(fig, outdir, "ionic_phic_scan_stage_e.png")
+    with open(os.path.join(outdir, "ionic_phic_scan_stage_e.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        wr = csv.writer(f)
+        wr.writerow(['phi_c', 'R2', 'LOOCV', 'n_used', 'Ct', 'Cn'])
+        for (p, r2, lo, n, Ct, Cn) in res:
+            wr.writerow([p, round(r2, 4), round(lo, 4), n, round(Ct, 5), round(Cn, 5)])
+        wr.writerow([])
+        wr.writerow(['# best (max LOOCV)', bphic, round(br2, 4), round(bloo, 4), bn,
+                     round(bCt, 5), round(bCn, 5)])
+        wr.writerow(['# fixed form', 'σ = C_blend(τ)·σ_grain·(φ−%.3f)^0.5·CN^2·cov^0.5·f_p^3' % bphic])
+    return outpath
+
+
 def plot_ionic_fit_stage_e(data_list, names, outdir):
     """PHYSICAL v12-clean v3 form refit to the Stage-E/Physics σ target.
 
@@ -4304,6 +4391,13 @@ PLOT_REGISTRY["ionic_fit_stage_e"] = {
     "title": "σ_ionic → Stage E (물리식 재적합)",
     "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 물리 고정식(√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³)에 C_blend(τ)만 재적합 (parity + R²/LOOCV).\n지수는 물리값으로 고정(과적합 방지). 자유지수 진단치는 CSV에 함께 기록 — physics 타깃이 같은 지수를 원하는지 확인용.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 물리식 + C_blend(Ct/Cn).",
+}
+PLOT_REGISTRY["ionic_phic_scan_stage_e"] = {
+    "func": plot_ionic_phic_scan_stage_e,
+    "file": "ionic_phic_scan_stage_e.png",
+    "title": "σ_ionic Stage E — CN² + φc 스캔",
+    "description": "CN²·(φ−φc)^0.5·cov^0.5·f_p³·C_blend(τ) 고정형에서 percolation 임계 φc를 스캔해 LOOCV 최적값 탐색 (각 φc마다 C_blend 재적합).\n제목/CSV에 best φc + R²/LOOCV + 동결할 C_blend(Ct/Cn).",
+    "origin_tip": "Line: R²/LOOCV vs φc. best φc 빨강 점선, v12(0.20) 회색.",
 }
 PLOT_REGISTRY["ionic_formtest_stage_e"] = {
     "func": plot_ionic_formtest_stage_e,
