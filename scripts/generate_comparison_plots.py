@@ -3770,6 +3770,35 @@ def _cov_frac(d, physics=True):
     return (sum(vs) / len(vs) / 100.0) if vs else None
 
 
+# ── Production fixed Stage-E/physics form (SAT-blend) ──────────────────────
+# σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³, with a COMPOSITION-
+# dependent percolation threshold and near-threshold saturation, both blended
+# by the P:S sigmoid g_010 (same structure as C_blend(τ)).  Validated by
+# nested CV (scripts/nested_cv_sat.py): unbiased LOOCV 0.949→0.953 (+0.0045,
+# ~2.8× noise SE).  φc_P / φc_S / δ frozen at the joint-screen optimum.
+SE_SG = 3.0
+SE_PHI_C_P = 0.200   # P-heavy (10:0) percolation threshold
+SE_PHI_C_S = 0.195   # S-heavy (0:10) percolation threshold
+SE_SAT_DELTA = 0.040 # near-threshold rounding (gated to 0:10 via g_010)
+SE_K_PS = 10.0; SE_P_C = 0.5
+SE_CN_EXP = 2.0; SE_COV_EXP = 0.5
+
+
+def _sat_g010(p):
+    """P:S sigmoid: ~1 toward 0:10 (p→0), ~0 toward 10:0 (p→1)."""
+    return 1.0/(1.0 + np.exp(SE_K_PS*(np.asarray(p, float) - SE_P_C)))
+
+
+def _sat_baselog(phi, cn, cov, fp, p):
+    """Log of the production fixed form WITHOUT C_blend(τ) (the τ prefactor is
+    fit separately/live).  Works on scalars or arrays."""
+    g010 = _sat_g010(p)
+    phic = (1.0 - g010)*SE_PHI_C_P + g010*SE_PHI_C_S
+    phi_eff = np.sqrt((np.asarray(phi, float) - phic)**2 + (SE_SAT_DELTA*g010)**2 + 1e-12)
+    return (np.log(SE_SG) + 0.5*np.log(phi_eff) + SE_CN_EXP*np.log(cn)
+            + SE_COV_EXP*np.log(cov) + 3.0*np.log(fp))
+
+
 def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
     """Per-case σ_ionic from the raw Hertzian network solver vs the Physics
     solver vs the Stage-E final value — shows how much the Tabor+volume
@@ -3871,80 +3900,6 @@ def _cblend_fit_score(base_log, logsf, taus):
             pred, bv5, bp3)
 
 
-def _se_size_proxy(d):
-    """SE grain-size proxy in µm (larger ⇒ fewer grain boundaries in series
-    ⇒ higher σ).  Prefer the direct SE radius (design input); fall back to
-    the inverse GB density (more GB ⇒ smaller effective grains)."""
-    for k in ('_input_r_SE_um', '_input_r_SE', 'r_SE_um', 'r_SE'):
-        v = d.get(k)
-        if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
-            # sim units (<0.01) → µm via ×1000 (matches grade_engine).
-            return v * 1000.0 if v < 0.01 else float(v)
-    gb = d.get('gb_density_mean')
-    if isinstance(gb, (int, float)) and not isinstance(gb, bool) and gb > 0:
-        return 1.0 / gb
-    return None
-
-
-def _am_asym_proxy(d):
-    """AM_P/AM_S asymmetry for mixed-AM cases.  Physics coverage asymmetry
-    (cov_AM_P − cov_AM_S, fraction) is the #1 residual correlate; fall back
-    to ln(r_AM_P/r_AM_S) when coverage is unavailable."""
-    cp = d.get('coverage_AM_P_mean_physics'); cs = d.get('coverage_AM_S_mean_physics')
-    if (isinstance(cp, (int, float)) and not isinstance(cp, bool) and
-            isinstance(cs, (int, float)) and not isinstance(cs, bool)):
-        return (cp - cs) / 100.0
-    rp = d.get('_input_r_AM_P_um') or d.get('r_AM_P')
-    rs = d.get('_input_r_AM_S_um') or d.get('r_AM_S')
-    if (isinstance(rp, (int, float)) and isinstance(rs, (int, float))
-            and rp > 0 and rs > 0):
-        return float(np.log(rp / rs))
-    return None
-
-
-def _cblend_extra_score(base_log, logsf, taus, extra):
-    """C_blend(τ) fit + extra multiplicative corrections exp(Σ β_j·extra_j)
-    (β fit jointly on the post-C_blend residual via lstsq; each extra column
-    centered per training set).  `extra` is an (n,k) array or None.  LOOCV
-    refits C_blend AND β every fold so the extra DoF is honestly penalised.
-    Returns (r2, loocv, betas:list, pred_log)."""
-    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
-    n = len(taus)
-    extra = None if extra is None else np.asarray(extra, float).reshape(n, -1)
-    k = 0 if extra is None else extra.shape[1]
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
-
-    def _fit(mask):
-        resid = logsf[mask] - base_log[mask]
-        b5, *_ = np.linalg.lstsq(Xv5[mask], resid, rcond=None)
-        b3, *_ = np.linalg.lstsq(Xp3[mask], resid, rcond=None)
-        cb = (1-w_bl[mask])*(Xv5[mask]@b5) + w_bl[mask]*(Xp3[mask]@b3)
-        if k == 0:
-            return b5, b3, np.zeros(0), np.zeros(0)
-        means = extra[mask].mean(axis=0)
-        Ec = extra[mask] - means
-        betas, *_ = np.linalg.lstsq(Ec, resid - cb, rcond=None)
-        return b5, b3, betas, means
-
-    b5, b3, betas, means = _fit(np.ones(n, bool))
-    cb = (1-w_bl)*(Xv5@b5) + w_bl*(Xp3@b3)
-    pred = base_log + cb + ((extra - means) @ betas if k else 0.0)
-    ss = np.sum((logsf - logsf.mean())**2)
-    r2 = 1 - np.sum((logsf - pred)**2)/ss if ss > 0 else 0.0
-    sse = 0.0
-    for i in range(n):
-        mk = np.ones(n, bool); mk[i] = False
-        b5i, b3i, bi, mi = _fit(mk)
-        cbi = (1-w_bl[i])*(Xv5[i]@b5i) + w_bl[i]*(Xp3[i]@b3i)
-        pi = base_log[i] + cbi + ((extra[i]-mi) @ bi if k else 0.0)
-        sse += (logsf[i] - pi)**2
-    loocv = 1 - sse/ss if ss > 0 else 0.0
-    return r2, loocv, [float(b) for b in betas], pred
-
-
 def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
     """Fix CN² · (φ−φc)^0.5 · cov^0.5 · f_p³ (clean integer/half powers) +
     C_blend(τ), and scan the percolation threshold φc for the LOOCV-optimal
@@ -4037,8 +3992,7 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
-                        + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
         logsf.append(np.log(sig)); taus.append(tau)
         free_rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
                           np.log(fp), np.log(tau), np.log(sig/SG)))
@@ -4089,17 +4043,18 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
     ax.set_ylabel('σ_predicted (fixed form, mS/cm)')
-    ax.set_title("Stage-E σ_ionic — fixed physics form  (n=%d)\n"
-                 "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³"
-                 "   [Ct=%.4f, Cn=%.4f]\nR²=%.3f, LOOCV=%.3f"
-                 % (n, Ct, Cn, r2, loocv), fontsize=8)
+    ax.set_title("Stage-E σ_ionic — fixed physics form, SAT-blend φc  (n=%d)\n"
+                 "σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³  "
+                 "[φc_P=%.3f φc_S=%.3f δ=%.3f]\n"
+                 "[Ct=%.4f Cn=%.4f]  R²=%.3f, LOOCV=%.3f"
+                 % (n, SE_PHI_C_P, SE_PHI_C_S, SE_SAT_DELTA, Ct, Cn, r2, loocv), fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_fit_stage_e.png")
     _focus_parity(outdir, "ionic_fit_stage_e", sig_act, sig_pred, kept_names,
                   'σ_actual (Stage E / Physics, mS/cm)',
                   'σ_predicted (fixed form, mS/cm)',
                   "선택 샘플만 — 식·계수는 전체 fit 그대로\n"
-                  "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³  "
+                  "σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³  SAT-blend φc  "
                   "(fit: 전체 n=%d, R²=%.3f LOOCV=%.3f)" % (n, r2, loocv))
     with open(os.path.join(outdir, "ionic_fit_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:
@@ -4116,9 +4071,9 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
 
 
 def _stage_e_base_arrays(corpus):
-    """Build (base_log, logsf, taus) for the fixed Stage-E physics form over a
+    """Build (base_log, logsf, taus) for the production SAT-blend form over a
     list of metrics dicts (cases failing the validity filter are dropped)."""
-    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    PHI_C = 0.19
     bl, ls, ts = [], [], []
     for d in corpus:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
@@ -4126,8 +4081,7 @@ def _stage_e_base_arrays(corpus):
         fp = _get(d, 'percolation_pct')/100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
-            bl.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
-                      + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+            bl.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
             ls.append(np.log(sig)); ts.append(tau)
     return np.array(bl), np.array(ls), np.array(ts)
 
@@ -4173,8 +4127,7 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
             idx.append(i)
-            base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
-                            + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+            base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
             logsf.append(np.log(sig)); taus.append(tau)
     if len(idx) < 8:
         print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
@@ -4202,8 +4155,8 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
             alpha=0.75, label='Physics network solver (mS/cm)')
     _apply_style(ax, "σ_ionic (mS/cm)", names)
     ax.legend(fontsize=9, loc='upper left')
-    ax.set_title("σ_ionic PHYSICS per-config — fixed form vs Physics solver\n"
-                 "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³   "
+    ax.set_title("σ_ionic PHYSICS per-config — fixed form (SAT-blend φc) vs Physics solver\n"
+                 "σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³   "
                  "전체 fit n=%d  R²=%.3f LOOCV=%.3f" % (n_fit, r2, loo),
                  fontsize=8.5, fontweight='bold')
     if _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
@@ -4586,188 +4539,6 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     return outpath
 
 
-def plot_ionic_sizeterm_test(data_list, names, outdir):
-    """TEST: can GATED multiplicative correction terms pull in the fit
-    outliers without hurting global LOOCV?  4-way comparison of the fixed
-    physics form with NO extra / +SE-size / +AM-asym / +BOTH:
-
-      × exp(β_s · g_φ · [ln(size)−mean])         (SE grain size)
-      × exp(β_a · g_mix · [asym−mean])            (AM_P/AM_S asymmetry)
-
-    g_φ = σ(−K(φ−φ_gate)) turns the SE-size penalty ON near the percolation
-    threshold (sparse SE → GB series resistance bites); g_mix is a Gaussian
-    in the AM_P fraction p centered at 0.5 → ON for mixed-AM (7:3/3:7/5:5),
-    OFF for pure 0:10 / 10:0.  size = r_SE else 1/gb_density; asym = physics
-    coverage(AM_P−AM_S) else ln(r_AM_P/r_AM_S).  β fit by lstsq; LOOCV refits
-    every fold (synthetic null ⇒ β≈0, flat LOOCV)."""
-    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
-    PHI_GATE = 0.30; K_G = 12.0; P_MIX_W = 0.25
-    base_log, logsf, taus, labs, phis, szlog, asym, pfr = [], [], [], [], [], [], [], []
-    for d, nm in zip(data_list, names):
-        sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
-        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
-        fp = _get(d, 'percolation_pct')/100.0
-        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
-        sz = _se_size_proxy(d)
-        if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
-                and fp > 0 and tau > 0 and sz and sz > 0):
-            continue
-        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
-                        + COV_EXP*np.log(cov) + 3.0*np.log(fp))
-        logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
-        phis.append(phi); szlog.append(np.log(sz))
-        av = _am_asym_proxy(d); asym.append(av if av is not None else 0.0)
-        pfr.append(_ps_fraction(d))
-    n = len(taus)
-    if n < 12:
-        print(f"  [SKIP] ionic_sizeterm_test: only {n} cases (<12) with a size proxy")
-        return None
-    base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
-    phis = np.array(phis); szlog = np.array(szlog)
-    asym = np.array(asym); pfr = np.array(pfr)
-    g_phi = 1.0/(1.0+np.exp(K_G*(phis-PHI_GATE)))
-    g_mix = np.exp(-0.5*((pfr-0.5)/P_MIX_W)**2)
-    # Composition sigmoid along the P:S axis: smoothly ON toward 0:10 (p→0),
-    # OFF toward 10:0 (p→1) — the 10:0↔0:10 transition is a sigmoid, not a step.
-    K_PS = 10.0; P_C = 0.5
-    g_010 = 1.0/(1.0+np.exp(K_PS*(pfr - P_C)))
-    sfeat = g_phi*szlog            # SE-size feature (centered inside the fit)
-    afeat = g_mix*asym             # AM-asymmetry feature
-
-    # COMPOSITION-DEPENDENT threshold + near-threshold SATURATION, both blended
-    # by the P:S sigmoid g_010 (same idea as C_blend(τ)=(1−w)·A+w·B):
-    #   φc_eff(p) = (1−g_010)·φc_P + g_010·φc_S      ← threshold shifts with P:S
-    #   φ_term    = 0.5·log( √( (φ−φc_eff)² + (δ·g_010)² ) )   ← rounded near 0:10
-    # 10:0 (g_010→0): plain √(φ−φc_P);  0:10 (g_010→1): rounded √ about φc_S.
-    # Re-screen (φc_P, φc_S, δ) JOINTLY for the LOOCV optimum — because rounding
-    # removes the singularity, the φc avoided before (0.205) is back in play, and
-    # physically each P:S has its own percolation threshold.
-    base_no_phi = base_log - 0.5*np.log(np.maximum(phis - PHI_C, 1e-9))
-    def _sat_base(phicP, phicS, delta):
-        phic = (1.0 - g_010)*phicP + g_010*phicS
-        pex = phis - phic
-        phi_term = 0.5*np.log(np.sqrt(pex**2 + (delta*g_010)**2) + 1e-12)
-        return base_no_phi + phi_term
-    phicP_grid = np.round(np.linspace(0.18, 0.215, 8), 4)   # P-heavy (10:0) threshold
-    phicS_grid = np.round(np.linspace(0.15, 0.215, 14), 4)  # S-heavy (0:10) threshold
-    delta_grid = np.round(np.linspace(0.0, 0.10, 6), 4)
-    joint = []
-    for _pP in phicP_grid:
-        for _pS in phicS_grid:
-            for _dl in delta_grid:
-                _r2d, _lod, *_ = _cblend_fit_score(_sat_base(float(_pP), float(_pS), float(_dl)), logsf, taus)
-                joint.append((float(_pP), float(_pS), float(_dl), float(_r2d), float(_lod)))
-    PHICP_STAR, PHICS_STAR, DELTA = max(joint, key=lambda t: t[4])[:3]
-    base_log_sat = _sat_base(PHICP_STAR, PHICS_STAR, DELTA)
-    # 1-D slice for the inset: LOOCV vs φc_S at (φc_P*, δ*) — the 0:10 threshold
-    phicS_scan = [(pS, l) for (pP, pS, d, r, l) in joint
-                  if abs(pP - PHICP_STAR) < 1e-9 and abs(d - DELTA) < 1e-9]
-
-    r2_n, lo_n, _, _, pred_n, _, _ = _cblend_fit_score(base_log, logsf, taus)
-    r2_s, lo_s, b_s, pred_s = _cblend_extra_score(base_log, logsf, taus, sfeat)
-    r2_a, lo_a, b_a, pred_a = _cblend_extra_score(base_log, logsf, taus, afeat)
-    r2_b, lo_b, b_b, pred_b = _cblend_extra_score(
-        base_log, logsf, taus, np.column_stack([sfeat, afeat]))
-    r2_t, lo_t, _, _, pred_t, _, _ = _cblend_fit_score(base_log_sat, logsf, taus)
-    r2_ta, lo_ta, b_ta, pred_ta = _cblend_extra_score(base_log_sat, logsf, taus, afeat)
-
-    act = np.exp(logsf)
-    def _out(pred):
-        return np.abs((np.exp(pred)-act)/act*100.0) > 20.0
-    panels = [('NO extra term', pred_n, r2_n, lo_n, ''),
-              ('+ SE-size (g_phi)', pred_s, r2_s, lo_s, f'beta_s={b_s[0]:+.3f}'),
-              ('+ AM-asym (g_mix)', pred_a, r2_a, lo_a, f'beta_a={b_a[0]:+.3f}'),
-              ('+ BOTH (size+asym)', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}'),
-              ('SAT phic_P*=%.3f phic_S*=%.3f d*=%.3f' % (PHICP_STAR, PHICS_STAR, DELTA),
-               pred_t, r2_t, lo_t, ''),
-              ('SAT(blended phic) + AM-asym', pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
-
-    def _is(nm, ps):
-        return ps in (nm or '').replace(' ', '')
-    m010 = np.array([_is(l, '0:10') for l in labs])
-    mmix = np.array([(_is(l, '7:3') or _is(l, '3:7') or _is(l, '5:5')) for l in labs])
-
-    fig, axes = plt.subplots(2, 3, figsize=(17, 10))
-    for ax, (ttl, pred, r2, lo, btxt) in zip(axes.ravel(), panels):
-        sp = np.exp(pred); out = _out(pred)
-        base_m = ~m010 & ~mmix
-        ax.scatter(act[base_m & ~out], sp[base_m & ~out], s=30, c=BLUE,
-                   edgecolors='white', zorder=3, label='other')
-        if (out & base_m).any():
-            ax.scatter(act[out & base_m], sp[out & base_m], s=55, c=RED,
-                       edgecolors='black', zorder=4, label='outlier(>20%)')
-        if m010.any():
-            ax.scatter(act[m010], sp[m010], s=64, marker='D', c=ORANGE,
-                       edgecolors='black', zorder=5, label='0:10')
-        if mmix.any():
-            ax.scatter(act[mmix], sp[mmix], s=64, marker='s', c=PURPLE,
-                       edgecolors='black', zorder=5, label='7:3/3:7/5:5')
-        lim = [min(act.min(), sp.min())*0.8, max(act.max(), sp.max())*1.2]
-        ax.plot(lim, lim, '--', color=GRAY)
-        ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
-                        color=GREEN, alpha=0.12)
-        ax.set_xscale('log'); ax.set_yscale('log')
-        ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
-        ax.set_ylabel('σ_predicted (mS/cm)')
-        n010 = int((out & m010).sum()); nmix = int((out & mmix).sum())
-        ax.set_title(f"{ttl}\nR2={r2:.3f} LOOCV={lo:.3f}  out={int(out.sum())} "
-                     f"(0:10 {n010}, mix {nmix})  {btxt}", fontsize=8)
-        ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=6.5, loc='upper left')
-    # δ-as-variable: show the LOOCV-vs-δ scan as an inset on the SAT panel, with
-    # the picked δ* marked, so the rounding optimum is visible (δ*=0 ⇒ √ is best).
-    ax_sat = axes.ravel()[4]
-    ins = ax_sat.inset_axes([0.58, 0.10, 0.38, 0.34])
-    _pg = [t[0] for t in phicS_scan]; _lo = [t[1] for t in phicS_scan]
-    ins.plot(_pg, _lo, '-o', color=PURPLE, ms=2.5, lw=1)
-    ins.axvline(PHICS_STAR, color=RED, ls='--', lw=1)
-    ins.axhline(lo_n, color=GRAY, ls=':', lw=0.8)  # NO-extra LOOCV reference
-    ins.set_title('LOOCV vs phic_S (S* =%.3f)' % PHICS_STAR, fontsize=6)
-    ins.tick_params(labelsize=5); ins.set_xlabel('phic_S (0:10)', fontsize=5); ins.grid(True, alpha=0.3)
-    fig.suptitle("Correction-term test (n=%d): size / AM-asym / rounded-phic SAT — catch 0:10(62:38)?\n"
-                 "size=r_SE|1/gb_density  asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
-                 "g_mix=gauss(p;0.5,%g)  SAT: phic_eff=(1-g010)phicP+g010 phicS, "
-                 "phi_eff=sqrt((phi-phic_eff)^2+(d*g010)^2), g010=sig(-%g(p-%g))  "
-                 "JOINT scan -> phicP*=%.3f phicS*=%.3f d*=%.3f"
-                 % (n, K_G, PHI_GATE, P_MIX_W, K_PS, P_C, PHICP_STAR, PHICS_STAR, DELTA), fontsize=9)
-    fig.tight_layout(rect=[0, 0, 1, 0.94])
-    outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
-
-    def _cnt(pred, mask):
-        return int((_out(pred) & mask).sum())
-    import json as _json
-    with open(os.path.join(outdir, "ionic_sizeterm_test.json"), 'w',
-              encoding='utf-8') as jf:
-        _json.dump({'n': n,
-                    'models': {
-                        'none': {'r2': round(r2_n, 4), 'loocv': round(lo_n, 4),
-                                 'n_out': int(_out(pred_n).sum()),
-                                 'out_010': _cnt(pred_n, m010), 'out_mix': _cnt(pred_n, mmix)},
-                        'size': {'r2': round(r2_s, 4), 'loocv': round(lo_s, 4),
-                                 'beta_s': round(b_s[0], 4),
-                                 'n_out': int(_out(pred_s).sum()),
-                                 'out_010': _cnt(pred_s, m010), 'out_mix': _cnt(pred_s, mmix)},
-                        'asym': {'r2': round(r2_a, 4), 'loocv': round(lo_a, 4),
-                                 'beta_a': round(b_a[0], 4),
-                                 'n_out': int(_out(pred_a).sum()),
-                                 'out_010': _cnt(pred_a, m010), 'out_mix': _cnt(pred_a, mmix)},
-                        'both': {'r2': round(r2_b, 4), 'loocv': round(lo_b, 4),
-                                 'beta_s': round(b_b[0], 4), 'beta_a': round(b_b[1], 4),
-                                 'n_out': int(_out(pred_b).sum()),
-                                 'out_010': _cnt(pred_b, m010), 'out_mix': _cnt(pred_b, mmix)},
-                        'sat': {'r2': round(r2_t, 4), 'loocv': round(lo_t, 4),
-                                'n_out': int(_out(pred_t).sum()),
-                                'out_010': _cnt(pred_t, m010), 'out_mix': _cnt(pred_t, mmix)},
-                        'sat_asym': {'r2': round(r2_ta, 4), 'loocv': round(lo_ta, 4),
-                                     'beta_a': round(b_ta[0], 4),
-                                     'n_out': int(_out(pred_ta).sum()),
-                                     'out_010': _cnt(pred_ta, m010), 'out_mix': _cnt(pred_ta, mmix)}},
-                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W, 'k_ps': K_PS,
-                    'phic_P_star': PHICP_STAR, 'phic_S_star': PHICS_STAR, 'delta_star': DELTA,
-                    'phicS_scan': [{'phic_S': pS, 'loocv': round(l, 4)} for pS, l in phicS_scan]},
-                   jf, ensure_ascii=False, indent=1)
-    return outpath
-
-
 _FRAC_STAGES = [('intact', 'Intact', '#4caf50'),
                 ('microcrack', 'Microcrack', '#a9d18e'),
                 ('multicrack', 'Multi-crack', '#ffd43b'),
@@ -5037,13 +4808,6 @@ PLOT_REGISTRY["ionic_outliers_stage_e"] = {
     "title": "σ_ionic Stage E — outlier 진단",
     "description": "물리 v12 fit의 worst-fit 케이스(>±20%)를 빨강+이름으로 강조하고, 잔차와 가장 상관 높은 구조 feature를 표시 (= base 식이 놓친 물리 = 다음에 곱할 후보).\nCSV: |err| 내림차순 케이스별 feature + 잔차-feature 상관.",
     "origin_tip": "Parity(log-log), outlier 빨강 라벨. CSV로 outlier 원인 분석.",
-}
-PLOT_REGISTRY["ionic_sizeterm_test"] = {
-    "func": plot_ionic_sizeterm_test,
-    "file": "ionic_sizeterm_test.png",
-    "title": "σ_ionic 게이트 보정항 TEST (SE-size · AM-asym · 둘다)",
-    "description": "고정 물리식에 게이트 곱셈 보정항을 넣어 4-way(無 / +SE-입자크기 / +AM비대칭 / +둘다) parity로 비교.\n①SE-size × exp(β_s·g_φ·[ln(size)−mean]) — g_φ=σ(−12(φ−0.30))로 임계 근처(0:10·저-SE)에서만 ON, GB 직렬저항. ②AM-asym × exp(β_a·g_mix·[asym−mean]) — g_mix=가우시안(p;0.5)로 mixed-AM(7:3·3:7·5:5)에서만 ON, AM_P/AM_S 피복 비대칭. size=r_SE|1/gb_density, asym=physics cov(P−S)|ln(rP/rS).\n각 패널 제목에 R²·LOOCV·outlier 수(전체·0:10·mix)·β. LOOCV가 fold마다 β 재적합 → 과적합 정직 판정.",
-    "origin_tip": "2×2 parity. 0:10=주황 다이아, 7:3/3:7/5:5=보라 사각. LOOCV 개선 + outlier 감소를 동시에 확인.",
 }
 PLOT_REGISTRY["fracture_stages"] = {
     "func": plot_fracture_stages,
