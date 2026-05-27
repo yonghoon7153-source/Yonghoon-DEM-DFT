@@ -3701,7 +3701,8 @@ def _cblend_fit_score(base_log, logsf, taus):
         cb = (1-w_bl[i])*(Xv5[i]@b5) + w_bl[i]*(Xp3[i]@b3)
         sse += (logsf[i]-(base_log[i]+cb))**2
     loocv = 1 - sse/ss if ss > 0 else 0.0
-    return r2, loocv, float(np.exp(bv5[0])), float(np.exp(bv5[0]+bv5[1])), pred
+    return (r2, loocv, float(np.exp(bv5[0])), float(np.exp(bv5[0]+bv5[1])),
+            pred, bv5, bp3)
 
 
 def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
@@ -3729,17 +3730,17 @@ def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
         a = np.array(rows)
         base_log = (np.log(SG) + PHI_EXP*np.log(a[:, 0]-phic) + CN_EXP*np.log(a[:, 1])
                     + COV_EXP*np.log(a[:, 2]) + FP_EXP*np.log(a[:, 3]))
-        r2, loo, Ct, Cn, _ = _cblend_fit_score(base_log, np.log(a[:, 5]), a[:, 4])
-        return phic, r2, loo, len(rows), Ct, Cn
+        r2, loo, Ct, Cn, _, bv5, bp3 = _cblend_fit_score(base_log, np.log(a[:, 5]), a[:, 4])
+        return phic, r2, loo, len(rows), Ct, Cn, bv5, bp3
 
     grid = np.round(np.arange(0.10, 0.225, 0.005), 3)
     res = [r for r in (_fit_at(p) for p in grid) if r]
     if not res:
         print("  [SKIP] ionic_phic_scan_stage_e: no φc fit")
         return None
-    M = np.array([(p, r2, lo, n) for (p, r2, lo, n, _, _) in res])
+    M = np.array([(p, r2, lo, n) for (p, r2, lo, n, _, _, _, _) in res])
     best = max(res, key=lambda t: t[2])
-    bphic, br2, bloo, bn, bCt, bCn = best
+    bphic, br2, bloo, bn, bCt, bCn, bbv5, bbp3 = best
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     ax.plot(M[:, 0], M[:, 1], 's-', color=GRAY, ms=4, label='R² (train)')
     ax.plot(M[:, 0], M[:, 2], 'o-', color=BLUE, ms=5, label='LOOCV')
@@ -3755,12 +3756,22 @@ def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
               encoding='utf-8') as f:
         wr = csv.writer(f)
         wr.writerow(['phi_c', 'R2', 'LOOCV', 'n_used', 'Ct', 'Cn'])
-        for (p, r2, lo, n, Ct, Cn) in res:
+        for (p, r2, lo, n, Ct, Cn, _v5, _p3) in res:
             wr.writerow([p, round(r2, 4), round(lo, 4), n, round(Ct, 5), round(Cn, 5)])
         wr.writerow([])
         wr.writerow(['# best (max LOOCV)', bphic, round(br2, 4), round(bloo, 4), bn,
                      round(bCt, 5), round(bCn, 5)])
-        wr.writerow(['# fixed form', 'σ = C_blend(τ)·σ_grain·(φ−%.3f)^0.5·CN^2·cov^0.5·f_p^3' % bphic])
+        # FULL frozen C_blend spec at best φc — everything needed to hardcode
+        wr.writerow([])
+        wr.writerow(['# === FROZEN FORMULA (hardcode these) ==='])
+        wr.writerow(['# σ = C_blend(τ)·σ_grain·(φ−%.3f)^0.5·CN^2·cov^0.5·f_p^3'
+                     % bphic, 'σ_grain=3.0'])
+        wr.writerow(['# C_blend(τ) = (1−w_bl)·exp(C_v5) + w_bl·exp(C_p3)'])
+        wr.writerow(['C_v5 b0 (=lnCt)', round(float(bbv5[0]), 5),
+                     'b1', round(float(bbv5[1]), 5)])
+        wr.writerow(['C_p3 a0', round(float(bbp3[0]), 5), 'a1', round(float(bbp3[1]), 5),
+                     'a2', round(float(bbp3[2]), 5), 'a3', round(float(bbp3[3]), 5)])
+        wr.writerow(['w_v5 = σ(5·(τ−2.1))', 'w_bl = σ(20·(τ−1.92))', 'fixed'])
     return outpath
 
 
