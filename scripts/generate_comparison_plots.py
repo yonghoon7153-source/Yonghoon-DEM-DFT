@@ -3866,6 +3866,59 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     return outpath
 
 
+def plot_ionic_perconfig_physics(data_list, names, outdir):
+    """PHYSICS-mode per-config (P:S) line plot: the fixed physics formula
+    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³ (C_blend refit live)
+    vs the PHYSICS network solver σ, grouped (group separators via _GROUP_INFO).
+    The Stage-E/physics analogue of multiscale_sigma (which uses Hertzian)."""
+    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    netP = [None]*len(data_list)
+    idx, base_log, logsf, taus = [], [], [], []
+    for i, d in enumerate(data_list):
+        sig = _stage_e_sigma(d)        # physics / Stage-E target
+        netP[i] = sig if (sig and sig > 0) else None
+        phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct')/100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
+            idx.append(i)
+            base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
+                            + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+            logsf.append(np.log(sig)); taus.append(tau)
+    if len(idx) < 8:
+        print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
+        return None
+    r2, loo, Ct, Cn, pred_log, _, _ = _cblend_fit_score(
+        np.array(base_log), np.array(logsf), np.array(taus))
+    pred = np.full(len(data_list), np.nan)
+    for j, i in enumerate(idx):
+        pred[i] = float(np.exp(pred_log[j]))
+    net = np.array([n if (n and n > 0) else np.nan for n in netP])
+
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    x = np.arange(len(names)); ms = _marker_size(len(names)); lw = _line_width(len(names))
+    ax.plot(x, pred, 's-', color=RED, markersize=ms, linewidth=lw,
+            label='fixed physics form (mS/cm)')
+    ax.fill_between(x, pred*0.78, pred*1.22, color=RED, alpha=0.10, label='±22% band')
+    ax.plot(x, net, 'D--', color='#2ecc71', markersize=max(ms-2, 3), linewidth=lw-0.5,
+            alpha=0.75, label='Physics network solver (mS/cm)')
+    _apply_style(ax, "σ_ionic (mS/cm)", names)
+    ax.legend(fontsize=9, loc='upper left')
+    ax.set_title("σ_ionic PHYSICS per-config — fixed form vs Physics solver\n"
+                 "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³   "
+                 "R²=%.3f LOOCV=%.3f" % (r2, loo), fontsize=8.5, fontweight='bold')
+    if _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
+        ax.set_ylim(0, _Y_MAX_SIGMA)
+    outpath = _save(fig, outdir, "ionic_perconfig_physics.png")
+    _write_csv(outdir, "ionic_perconfig_physics.csv",
+               ['sigma_pred(phys form)', 'sigma_physics_solver'],
+               names,
+               [None if np.isnan(pred[i]) else round(float(pred[i]), 4) for i in range(len(names))],
+               [None if np.isnan(net[i]) else round(float(net[i]), 4) for i in range(len(names))])
+    return outpath
+
+
 def plot_ionic_formtest_stage_e(data_list, names, outdir):
     """Is a COMPLETELY DIFFERENT functional form worth it? Compare, on the
     SAME features {ln(φ−0.2), lnCN, lncov, lnf_p, lnτ}, the power-law
@@ -4410,6 +4463,13 @@ PLOT_REGISTRY["ionic_phic_scan_stage_e"] = {
     "title": "σ_ionic Stage E — CN² + φc 스캔",
     "description": "CN²·(φ−φc)^0.5·cov^0.5·f_p³·C_blend(τ) 고정형에서 percolation 임계 φc를 스캔해 LOOCV 최적값 탐색 (각 φc마다 C_blend 재적합).\n제목/CSV에 best φc + R²/LOOCV + 동결할 C_blend(Ct/Cn).",
     "origin_tip": "Line: R²/LOOCV vs φc. best φc 빨강 점선, v12(0.20) 회색.",
+}
+PLOT_REGISTRY["ionic_perconfig_physics"] = {
+    "func": plot_ionic_perconfig_physics,
+    "file": "ionic_perconfig_physics.png",
+    "title": "σ_ionic PHYSICS per-config (fixed form)",
+    "description": "PHYSICS 모드 per-config 라인 plot: 고정 physics식 (C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³) vs PHYSICS 네트워크 솔버 σ, 그룹별 구분선.\nHertzian을 쓰는 multiscale 대신 physics 버전.",
+    "origin_tip": "Line: 빨강=고정 physics식, 초록 점선=physics solver. 그룹 구분선.",
 }
 PLOT_REGISTRY["ionic_outliers_stage_e"] = {
     "func": plot_ionic_outliers_stage_e,
