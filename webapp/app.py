@@ -1443,23 +1443,27 @@ def normalize_network_summary_layout(tables, metrics):
     # respective channel was numerically zero. We still want a placeholder
     # row for layout uniformity (audit-ui = 1 variant goal).
     def _ensure_baseline_row(label, h_key, p_key, fmt='%.2f'):
-        present = any(
-            r and isinstance(r[0], str) and r[0].strip() == label
-            for r in data if isinstance(r, list))
-        if present:
-            return
+        # full_metrics.json is the source of truth for these baseline σ values.
+        # Render None (solver returned no value — didn't converge / didn't
+        # percolate) as '—' so "not computed" is visually distinct from a
+        # genuine ~0.  Refresh any pre-existing (possibly stale) CSV row from
+        # metrics rather than leaving a misleading '0.00'.
         h_val = metrics.get(h_key) if metrics else None
         p_val = metrics.get(p_key) if metrics else None
-        h_str = f'{h_val:{fmt[1:]}}' if h_val else '0.00'
+        h_str = f'{h_val:{fmt[1:]}}' if h_val else '—'
         if p_val is not None:
             p_str = f'{p_val:{fmt[1:]}}'
-            if h_val:
-                d_str = f'{(p_val - h_val) / h_val * 100:+.1f}%'
-            else:
-                d_str = '0%'
+            d_str = f'{(p_val - h_val) / h_val * 100:+.1f}%' if h_val else '0%'
         else:
-            p_str = h_str; d_str = '0%'
-        new_row = [label, h_str, p_str, d_str]
+            p_str = h_str
+            d_str = '0%'
+        new_cells = [h_str, p_str, d_str]
+        for r in data:
+            if (isinstance(r, list) and r and isinstance(r[0], str)
+                    and r[0].strip() == label and len(r) >= 4):
+                r[1], r[2], r[3] = new_cells
+                return
+        new_row = [label, *new_cells]
         tau_idx = None
         for i, r in enumerate(data):
             if r and isinstance(r[0], str) and (
