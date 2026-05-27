@@ -3776,15 +3776,15 @@ def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
 
 
 def plot_ionic_fit_stage_e(data_list, names, outdir):
-    """PHYSICAL v12-clean v3 form refit to the Stage-E/Physics σ target.
+    """FINAL fixed physics form for the Stage-E/Physics σ target:
+    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^(1/2)·f_p³.
 
-    Keeps the physically-grounded fixed exponents — √(φ−0.2)·CN^(3/2)·
-    cov^(2/5)·f_p³ (φc=0.20) — and only re-learns the τ prefactor C_blend(τ)
-    (v5 2-level asymptote ⊕ poly3-in-lnτ) + scale for the new target.  A free
-    data-native exponent fit is still computed and written to CSV as a
-    diagnostic (to confirm the physics target wants the same exponents), but
-    the plotted/printed formula stays physical."""
-    SG = 3.0; PHI_C = 0.20; KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    Exponents + φc are FIXED single values (chosen from the n=91 φc scan:
+    CN² clean integer, φc=0.19 = robust n=91 peak that avoids the φc=0.20
+    singularity).  Only the τ prefactor C_blend(τ) re-fits to the corpus.
+    A free data-native exponent fit is kept in the CSV as a diagnostic."""
+    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
     base_log, logsf, taus, free_rows = [], [], [], []
     for d in data_list:
         sig = _stage_e_sigma(d)
@@ -3795,8 +3795,8 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + 1.5*np.log(cn)
-                        + 0.4*np.log(cov) + 3.0*np.log(fp))
+        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
+                        + COV_EXP*np.log(cov) + 3.0*np.log(fp))
         logsf.append(np.log(sig)); taus.append(tau)
         free_rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
                           np.log(fp), np.log(tau), np.log(sig/SG)))
@@ -3845,9 +3845,9 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
                     color=GREEN, alpha=0.12, label='±20%')
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
-    ax.set_ylabel('σ_predicted (v12 form, mS/cm)')
-    ax.set_title("Stage-E σ_ionic — physical v12 form refit  (n=%d)\n"
-                 "σ = C_blend(τ)·σ_grain·√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³"
+    ax.set_ylabel('σ_predicted (fixed form, mS/cm)')
+    ax.set_title("Stage-E σ_ionic — fixed physics form  (n=%d)\n"
+                 "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³"
                  "   [Ct=%.4f, Cn=%.4f]\nR²=%.3f, LOOCV=%.3f"
                  % (n, Ct, Cn, r2, loocv), fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
@@ -4059,11 +4059,12 @@ _OUTLIER_DIAG_FEATS = [
 
 
 def plot_ionic_outliers_stage_e(data_list, names, outdir):
-    """Outlier-focused diagnostic for the Stage-E σ fit: fits the physical
-    v12 form + C_blend(τ), highlights the worst-fit cases, and reports which
-    structural feature their log-residual correlates with most — i.e. what
-    physics the base form is missing (the lever to add next)."""
-    SG = 3.0; PHI_C = 0.20; KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    """Outlier-focused diagnostic for the Stage-E σ fit: fits the FINAL fixed
+    physics form (CN²·(φ−0.19)^0.5·cov^0.5·f_p³·C_blend(τ)), highlights the
+    worst-fit cases, and reports which structural feature their log-residual
+    correlates with most."""
+    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
     base_log, logsf, taus, labs, feat_rows = [], [], [], [], []
     for d, nm in zip(data_list, names):
         sig = _stage_e_sigma(d)
@@ -4074,8 +4075,8 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + 1.5*np.log(cn)
-                        + 0.4*np.log(cov) + 3.0*np.log(fp))
+        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
+                        + COV_EXP*np.log(cov) + 3.0*np.log(fp))
         logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
         fr = {}
         for key, fb in _OUTLIER_DIAG_FEATS:
@@ -4409,20 +4410,6 @@ PLOT_REGISTRY["ionic_phic_scan_stage_e"] = {
     "title": "σ_ionic Stage E — CN² + φc 스캔",
     "description": "CN²·(φ−φc)^0.5·cov^0.5·f_p³·C_blend(τ) 고정형에서 percolation 임계 φc를 스캔해 LOOCV 최적값 탐색 (각 φc마다 C_blend 재적합).\n제목/CSV에 best φc + R²/LOOCV + 동결할 C_blend(Ct/Cn).",
     "origin_tip": "Line: R²/LOOCV vs φc. best φc 빨강 점선, v12(0.20) 회색.",
-}
-PLOT_REGISTRY["ionic_formtest_stage_e"] = {
-    "func": plot_ionic_formtest_stage_e,
-    "file": "ionic_formtest_stage_e.png",
-    "title": "σ_ionic Stage E — 새 함수형 효과 test",
-    "description": "같은 feature로 power-law(로그선형) vs 유연형(2차 다항+교호항)을 LOOCV로 비교 (GPR/RF 대용).\nΔLOOCV>0.01이면 새 형태로 더 맞출 여지 있음, 아니면 노이즈 천장 = 어떤 식도 못 넘음.",
-    "origin_tip": "Bar: 두 모델 R²(train)+LOOCV. ΔLOOCV로 판정.",
-}
-PLOT_REGISTRY["ionic_refit_stage_e"] = {
-    "func": plot_ionic_refit_stage_e,
-    "file": "ionic_refit_stage_e.png",
-    "title": "σ_ionic Stage E — 지수 재적합 test",
-    "description": "physics/Stage-E 타깃에 φ/CN/cov 지수만 자유 재적합(f_p=3·C_blend 고정), LOOCV로 v12 고정지수(0.5/1.5/0.4)와 비교.\nΔLOOCV>0.002면 실제 개선, 아니면 과적합/미미. 새 feature는 안 곱함(잔차 상관 ~0).",
-    "origin_tip": "Parity(log-log). 제목에 재적합 지수 + refit vs fixed LOOCV.",
 }
 PLOT_REGISTRY["ionic_outliers_stage_e"] = {
     "func": plot_ionic_outliers_stage_e,

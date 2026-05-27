@@ -190,8 +190,6 @@
         <label class="plot-checkbox"><input type="checkbox" value="ionic_solver_vs_stage_e"> Ionic: Network solver vs Stage E</label>
         <label class="plot-checkbox"><input type="checkbox" value="ionic_fit_stage_e"> Ionic: Stage E 물리식 재적합</label>
         <label class="plot-checkbox"><input type="checkbox" value="ionic_outliers_stage_e"> Ionic: Stage E outlier 진단</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_refit_stage_e"> Ionic: Stage E 지수 재적합 test</label>
-        <label class="plot-checkbox"><input type="checkbox" value="ionic_formtest_stage_e"> Ionic: Stage E 새 함수형 test</label>
         <label class="plot-checkbox"><input type="checkbox" value="ionic_phic_scan_stage_e"> Ionic: Stage E CN²+φc 스캔</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy: FORM X로 대체"><input type="checkbox" value="rgb_fitting"> [Legacy] BLM Proxy</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy: FORM X로 대체"><input type="checkbox" value="gb_corrected"> [Legacy] Proxy σ_eff</label>
@@ -849,7 +847,7 @@ async function generatePlots() {
   try {
     // Global R_gb: always use all data combined for rgb_fitting/gb_corrected
     // Plots that need ALL groups combined (not per-group)
-    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e', 'ionic_refit_stage_e', 'ionic_formtest_stage_e', 'ionic_phic_scan_stage_e'];
+    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e', 'ionic_phic_scan_stage_e'];
     const needsGlobalRgb = validPGs.length > 1 &&
       plotTypes.some(p => globalOnlyTypes.includes(p));
     let globalRgb = '';
