@@ -100,6 +100,7 @@ _ALL_DATA = None  # all_data for _apply_style auto-detect
 _REAL_NAMES = None  # saved case names (args.names), aligned with _ALL_DATA
 _FOCUS_CASES = set()  # subset of saved names to show in the "1-1" focus parity
 _FOCUS_LABEL = ""     # group name(s) of fully-selected groups, shown on the 1-1 plot
+_FIT_CORPUS = []      # full-corpus metrics dicts for global (n=all) fit stats
 
 # Generic parameter-comparison selections (set by main() from CLI args).
 _PARAM_X = None       # X-axis metric key (scatter)
@@ -4114,11 +4115,52 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     return outpath
 
 
+def _stage_e_base_arrays(corpus):
+    """Build (base_log, logsf, taus) for the fixed Stage-E physics form over a
+    list of metrics dicts (cases failing the validity filter are dropped)."""
+    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    bl, ls, ts = [], [], []
+    for d in corpus:
+        sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct')/100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
+            bl.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
+                      + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+            ls.append(np.log(sig)); ts.append(tau)
+    return np.array(bl), np.array(ls), np.array(ts)
+
+
+def _stage_e_global_fit():
+    """Fit C_blend on the FULL corpus (_FIT_CORPUS) → (r2, loocv, bv5, bp3, n).
+    Returns None if no/insufficient corpus was supplied."""
+    if not _FIT_CORPUS:
+        return None
+    bl, ls, ts = _stage_e_base_arrays(_FIT_CORPUS)
+    if len(ts) < 8:
+        return None
+    r2, loo, _Ct, _Cn, _pred, bv5, bp3 = _cblend_fit_score(bl, ls, ts)
+    return r2, loo, bv5, bp3, len(ts)
+
+
+def _cblend_predict_log(base_log, taus, bv5, bp3):
+    """Apply fixed-shape C_blend(τ) with given coefficients to predict log σ."""
+    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    base_log = np.asarray(base_log); taus = np.asarray(taus)
+    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
+    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
+    Xv5 = np.column_stack([np.ones(len(taus)), w_v5])
+    Xp3 = np.column_stack([np.ones(len(taus)), lt, lt**2, lt**3])
+    return base_log + (1-w_bl)*(Xv5@bv5) + w_bl*(Xp3@bp3)
+
+
 def plot_ionic_perconfig_physics(data_list, names, outdir):
     """PHYSICS-mode per-config (P:S) line plot: the fixed physics formula
-    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³ (C_blend refit live)
-    vs the PHYSICS network solver σ, grouped (group separators via _GROUP_INFO).
-    The Stage-E/physics analogue of multiscale_sigma (which uses Hertzian)."""
+    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³ vs the PHYSICS network
+    solver σ.  C_blend + R²/LOOCV are taken from the GLOBAL (full-corpus) fit
+    when a fit corpus is supplied, so every per-group panel reports the same
+    n=all fit; otherwise it refits on the cases shown."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     netP = [None]*len(data_list)
     idx, base_log, logsf, taus = [], [], [], []
@@ -4137,8 +4179,15 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
     if len(idx) < 8:
         print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
         return None
-    r2, loo, Ct, Cn, pred_log, _, _ = _cblend_fit_score(
-        np.array(base_log), np.array(logsf), np.array(taus))
+    gfit = _stage_e_global_fit()
+    if gfit:
+        # GLOBAL fit (full corpus): same coeffs + R²/LOOCV on every panel.
+        r2, loo, bv5, bp3, n_fit = gfit
+        pred_log = _cblend_predict_log(np.array(base_log), np.array(taus), bv5, bp3)
+    else:
+        r2, loo, Ct, Cn, pred_log, _, _ = _cblend_fit_score(
+            np.array(base_log), np.array(logsf), np.array(taus))
+        n_fit = len(idx)
     pred = np.full(len(data_list), np.nan)
     for j, i in enumerate(idx):
         pred[i] = float(np.exp(pred_log[j]))
@@ -4155,7 +4204,8 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
     ax.legend(fontsize=9, loc='upper left')
     ax.set_title("σ_ionic PHYSICS per-config — fixed form vs Physics solver\n"
                  "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³   "
-                 "R²=%.3f LOOCV=%.3f" % (r2, loo), fontsize=8.5, fontweight='bold')
+                 "전체 fit n=%d  R²=%.3f LOOCV=%.3f" % (n_fit, r2, loo),
+                 fontsize=8.5, fontweight='bold')
     if _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
         ax.set_ylim(0, _Y_MAX_SIGMA)
     outpath = _save(fig, outdir, "ionic_perconfig_physics.png")
@@ -4945,15 +4995,23 @@ def main():
     parser.add_argument("--param-norm", action="store_true")  # normalize bar to max
     parser.add_argument("--focus-cases", default="")  # \\t-separated saved names → "1-1" focus parity
     parser.add_argument("--focus-label", default="")  # group name(s) shown on the 1-1 plot
+    parser.add_argument("--fit-corpus-inputs", nargs="*", default=[])  # full corpus for global fit stats
     args = parser.parse_args()
 
-    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM, _FOCUS_CASES, _FOCUS_LABEL
+    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM, _FOCUS_CASES, _FOCUS_LABEL, _FIT_CORPUS
     _PARAM_X = args.param_x or None
     _PARAM_Y = args.param_y or None
     _PARAM_LIST = [k for k in args.param_list.split(',') if k] or None
     _PARAM_NORM = bool(args.param_norm)
     _FOCUS_CASES = set(s for s in args.focus_cases.split('\t') if s)
     _FOCUS_LABEL = args.focus_label or ""
+    _FIT_CORPUS = []
+    for _p in (args.fit_corpus_inputs or []):
+        try:
+            with open(_p) as _f:
+                _FIT_CORPUS.append(json.load(_f))
+        except Exception:
+            pass
 
     # Parse group info
     if args.group_sizes:

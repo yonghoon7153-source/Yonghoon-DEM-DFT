@@ -861,6 +861,15 @@ function appendFocusFields(form) {
   if (labels.length) form.append('focus_label', labels.join(', '));
 }
 
+// Full corpus (union of ALL plot groups' cases) → per-group fit plots report
+// the global n=all R²/LOOCV instead of a per-group fit.
+function appendFitCorpus(form) {
+  const ids = new Set();
+  plotGroups.filter(pg => pg.caseGroupIdxs.length > 0).forEach(pg =>
+    pg.caseGroupIdxs.forEach(i => (caseGroups[i]?.cases || []).forEach(c => ids.add(c))));
+  ids.forEach(c => form.append('fit_corpus_cases', c));
+}
+
 // Build the focus-sample checklist, organized BY plot group (like the groups
 // above) with a per-group "그룹 전체" toggle so a whole group can be picked at once.
 function refreshFocusPicker() {
@@ -1029,6 +1038,7 @@ async function generatePlots() {
       // Generic parameter-comparison selections (param_scatter/bar/corr)
       appendParamFields(form);
       appendFocusFields(form);
+      appendFitCorpus(form);
 
       const res = await fetch('/group/plots', { method: 'POST', body: form });
       const data = await res.json();

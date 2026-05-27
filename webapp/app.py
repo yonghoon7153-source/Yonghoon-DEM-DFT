@@ -4411,6 +4411,17 @@ def group_plots():
         focus_label = request.form.get('focus_label', '').strip()
         if focus_label:
             cmd += ['--focus-label', focus_label]
+    # Full-corpus metrics for global (n=all) fit stats on per-group fit plots.
+    fit_corpus_paths = []
+    for cid in request.form.getlist('fit_corpus_cases'):
+        if cid.startswith('archive:'):
+            mp = os.path.join(app.config['ARCHIVE_FOLDER'], cid[len('archive:'):], 'full_metrics.json')
+        else:
+            mp = os.path.join(get_results_dir(cid), 'full_metrics.json')
+        if os.path.exists(mp):
+            fit_corpus_paths.append(mp)
+    if fit_corpus_paths:
+        cmd += ['--fit-corpus-inputs'] + fit_corpus_paths
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
     if result.stdout:
         print(f"[plots] stdout:\n{result.stdout}")
