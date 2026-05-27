@@ -537,21 +537,10 @@ def _inject_input_params(metrics, results_dir):
     return {**metrics, **inj}
 
 
-def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
-    """Build a 'overall_grade' table by calling scripts/grade_engine.
-
-    Layout (4 columns) matches the other analysis-summary tabs:
-        지표  |  값  |  등급  |  근거
-    The 'category' label of each axis becomes a section header row
-    (prefix '── … ──') so the template renders as a separator.
-
-    When `carbon_wt_pct` is set (>0), the grade engine applies the
-    What-if carbon-additive model so σ_e + ASR_electronic axes use
-    the hypothetical σ_e_new.  This is what powers the live ON/OFF
-    toggle in the 종합 등급 tab.
-
-    Returns None if metrics is empty or the engine couldn't score any axis.
-    """
+def _grade_engine_result(metrics, results_dir=None, carbon_wt_pct=None):
+    """Run scripts/grade_engine.build_overall_grade with the corpus CSV +
+    SE-diagnostics aux wired in (shared by the 종합 등급 table and the grade
+    guide).  Returns the raw result dict or None."""
     if not metrics:
         return None
     try:
@@ -559,7 +548,7 @@ def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
         scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
         if scripts_dir not in _sys.path:
             _sys.path.insert(0, scripts_dir)
-        from grade_engine import build_overall_grade, GRADE_COLOR
+        from grade_engine import build_overall_grade
     except ImportError:
         return None
 
@@ -588,8 +577,39 @@ def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
                 pass
 
     metrics = _inject_input_params(metrics, results_dir)
-    result = build_overall_grade(metrics, corpus_csv, se_aux,
-                                  carbon_wt_pct=carbon_wt_pct)
+    return build_overall_grade(metrics, corpus_csv, se_aux,
+                               carbon_wt_pct=carbon_wt_pct)
+
+
+def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
+    """Build a 'overall_grade' table by calling scripts/grade_engine.
+
+    Layout (4 columns) matches the other analysis-summary tabs:
+        지표  |  값  |  등급  |  근거
+    The 'category' label of each axis becomes a section header row
+    (prefix '── … ──') so the template renders as a separator.
+
+    When `carbon_wt_pct` is set (>0), the grade engine applies the
+    What-if carbon-additive model so σ_e + ASR_electronic axes use
+    the hypothetical σ_e_new.  This is what powers the live ON/OFF
+    toggle in the 종합 등급 tab.
+
+    Returns None if metrics is empty or the engine couldn't score any axis.
+    """
+    if not metrics:
+        return None
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        from grade_engine import GRADE_COLOR
+    except ImportError:
+        return None
+
+    result = _grade_engine_result(metrics, results_dir, carbon_wt_pct)
+    if result is None:
+        return None
 
     rows = []
     last_cat = None
@@ -5553,6 +5573,138 @@ def serve_report(case_id):
     buf = BytesIO(report.encode('utf-8'))
     return send_file(buf, mimetype='text/markdown', as_attachment=True,
                     download_name=f'{name}_report.md')
+
+
+_GRADE_DIR_KR = {
+    'higher':        '높을수록 ↑ 좋음',
+    'lower':         '낮을수록 ↓ 좋음',
+    'band':          '적정 band (optimum 근처일수록 좋음)',
+    'higher_corpus': 'corpus 대비 높을수록 ↑ 좋음 (percentile)',
+    'lower_corpus':  'corpus 대비 낮을수록 ↓ 좋음 (percentile)',
+}
+
+
+def _build_grade_guide_md(case_id):
+    """Build a per-case '평가표 상세 설명 / grade 근거' document: the grading
+    rubric (scale, weighting, corpus rule) plus every axis with this case's
+    value+grade+basis and its meaning/formula — pulled live from
+    scripts/grade_engine so it never drifts from the 종합 등급 tab."""
+    import sys as _sys
+    scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if scripts_dir not in _sys.path:
+        _sys.path.insert(0, scripts_dir)
+    from grade_engine import AXES, GRADE_SCALE  # noqa: E402
+
+    case_dir = get_case_dir(case_id)
+    meta = {}
+    meta_file = os.path.join(case_dir, 'meta.json')
+    if os.path.exists(meta_file):
+        with open(meta_file) as f:
+            meta = json.load(f)
+    results_dir, _arch = _resolve_results_dir(case_id, meta)
+    metrics = {}
+    mp = os.path.join(results_dir, 'full_metrics.json')
+    if os.path.exists(mp):
+        with open(mp) as f:
+            metrics = json.load(f)
+
+    result = _grade_engine_result(metrics, results_dir)
+    name = meta.get('name', case_id)
+    # axis metadata (weight/formula) by label for merging with scored axes
+    meta_by_label = {ax['label']: ax for ax in AXES}
+
+    L = [f'# 종합 등급 평가표 상세 설명: {name}',
+         f'> Grade rubric & rationale | {datetime.now().strftime("%Y-%m-%d")}',
+         '']
+    # Grade scale
+    L.append('## 등급 척도 (Grade scale)\n')
+    L.append('| 등급 | 최소 점수 | GPA |')
+    L.append('|------|-----------|-----|')
+    for label, cutoff, gpa in GRADE_SCALE:
+        L.append(f'| {label} | {cutoff} | {gpa} |')
+    L.append('')
+    # How scoring works
+    L.append('## 채점 방식 (How each axis is scored)\n')
+    L.append('- **higher / lower**: 고정 문헌-기반 임계값 6개(A→C)에 값을 보간해 점수화.')
+    L.append('- **band**: optimum 근처일수록 A, |값−optimum| 이 커질수록 감점.')
+    L.append('- **corpus (higher_corpus / lower_corpus)**: 고정 임계 대신 **레퍼런스 '
+             'corpus(se_diagnostics_82.csv)의 백분위**로 채점. corpus에서 '
+             '(percolating 필터를 통과하는) 유효 케이스가 **5개 미만이면 채점 불가 → '
+             '"—"**. 예) *Bottleneck burden* 은 corpus의 `bn_below_frac` 컬럼이 '
+             '5개 미만이라 종종 "—" 로 표시됩니다 (값 자체는 있어도 비교 기준이 없음). '
+             '또 이 케이스의 SE 진단값(viewer_aux.json)이 없으면(3D 뷰어 미로드) '
+             '값 자체가 없어 "—" 가 됩니다.')
+    L.append('- **종합**: 점수가 매겨진 axis들의 **가중평균** (weight 열). '
+             '카테고리 평균은 해당 카테고리 axis 점수의 단순평균.')
+    L.append('')
+
+    # Per-category axis tables
+    if result and result.get('axes'):
+        last_cat = None
+        for ax in result['axes']:
+            cat = ax['category']
+            if cat != last_cat:
+                if last_cat is not None:
+                    L.append('')
+                L.append(f'## {cat}\n')
+                L.append('| 지표 | 이 케이스 값 | 등급(점수) | 방향 | 가중치 | 채점 기준 | 의미 / 근거 |')
+                L.append('|------|------|------|------|------|------|------|')
+                last_cat = cat
+            v = ax['value']
+            if v is None:
+                vstr = '—'
+            elif abs(v) >= 100:
+                vstr = f'{v:.1f}'
+            elif abs(v) >= 1:
+                vstr = f'{v:.3g}'
+            else:
+                vstr = f'{v:.4g}'
+            score = ax['score']
+            gstr = f'{ax["grade"]}({score:.0f})' if score is not None else '—(—)'
+            wt = meta_by_label.get(ax['label'], {}).get('weight', ax.get('weight', '—'))
+            dir_kr = _GRADE_DIR_KR.get(ax.get('direction'), ax.get('direction') or '—')
+            L.append('| ' + ' | '.join(_report_strip_html(x) for x in [
+                ax['label'], vstr, gstr, dir_kr, str(wt),
+                ax.get('formula', ''),
+                (ax.get('meaning', '') + ('  [기준: ' + ax['basis'] + ']'
+                                          if ax.get('basis') and ax['basis'] != 'no data'
+                                          else '')),
+            ]) + ' |')
+        L.append('')
+        comp = result.get('composite', {})
+        L.append('## 종합 (Composite)\n')
+        L.append(f'- **Overall**: {comp.get("grade","—")} '
+                 f'({comp.get("score","—")} / 100, '
+                 f'GPA {comp.get("gpa","—")} / 4.3) — '
+                 f'{comp.get("n_axes","?")}/{comp.get("n_total","?")} axes scored')
+        cs = result.get('category_scores', {})
+        if cs:
+            L.append('')
+            L.append('| 카테고리 | 평균 점수 |')
+            L.append('|----------|-----------|')
+            for c, s in cs.items():
+                L.append(f'| {_report_strip_html(c)} | {s:.1f} |')
+        L.append('')
+    else:
+        L.append('> 이 케이스는 종합 등급을 산출할 수 없습니다 (full_metrics.json 없음 '
+                 '또는 채점 가능한 axis 없음).')
+        L.append('')
+
+    L.append('---\n')
+    L.append('*Generated by DEM Analyzer — grade rubric from scripts/grade_engine.py*')
+    return '\n'.join(L), name
+
+
+@app.route('/results/<case_id>/grade-guide')
+def serve_grade_guide(case_id):
+    """평가표 상세 설명 + grade 근거 문서 (MD 기본, ?format=pdf 로 PDF)."""
+    from io import BytesIO
+    report, name = _build_grade_guide_md(case_id)
+    if request.args.get('format') == 'pdf':
+        return _generate_pdf_report(report, f'{name}_grade_guide')
+    buf = BytesIO(report.encode('utf-8'))
+    return send_file(buf, mimetype='text/markdown', as_attachment=True,
+                    download_name=f'{name}_grade_guide.md')
 
 
 def _generate_pdf_report(md_text, name):

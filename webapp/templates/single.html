@@ -128,7 +128,14 @@
   </div>
   {% for name, tbl in tables.items() %}
   <div id="tab-{{ name }}" class="tab-panel {% if loop.first %}active{% endif %}">
-    <div class="tab-toolbar" style="display:flex;justify-content:flex-end;margin-bottom:8px">
+    <div class="tab-toolbar" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
+      {% if name == 'overall_grade' and not archive_path %}
+      <a class="btn btn-secondary" href="/results/{{ case.id }}/grade-guide?format=pdf"
+         target="_blank"
+         title="각 평가표 지표의 의미·채점 기준·이 케이스의 grade 근거를 정리한 PDF (corpus 미랭킹 사유 포함)">
+        📖 등급 기준 설명 (PDF)
+      </a>
+      {% endif %}
       <button class="btn btn-secondary btn-copy-tab" data-tab="{{ name }}"
               data-tab-label="{{ tab_names.get(name, name.replace('_', ' ').title()) }}"
               onclick="copyTabTable('{{ name }}', this)"
