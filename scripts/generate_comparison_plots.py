@@ -3767,6 +3767,112 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     return outpath
 
 
+_OUTLIER_DIAG_FEATS = [
+    ('phi_se', None), ('se_se_cn', None),
+    ('tortuosity_recommended', 'tortuosity_mean'),
+    ('gb_density_mean', None), ('path_hop_area_min_mean', None),
+    ('se_se_cn_std', None), ('bulk_resistance_fraction', None),
+    ('am_se_cn_mean', None), ('path_conductance_mean', None),
+    ('path_hop_area_mean_physics', 'path_hop_area_mean'),
+]
+
+
+def plot_ionic_outliers_stage_e(data_list, names, outdir):
+    """Outlier-focused diagnostic for the Stage-E σ fit: fits the physical
+    v12 form + C_blend(τ), highlights the worst-fit cases, and reports which
+    structural feature their log-residual correlates with most — i.e. what
+    physics the base form is missing (the lever to add next)."""
+    SG = 3.0; PHI_C = 0.20; KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    base_log, logsf, taus, labs, feat_rows = [], [], [], [], []
+    for d, nm in zip(data_list, names):
+        sig = _stage_e_sigma(d)
+        phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct') / 100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
+                and fp > 0 and tau > 0):
+            continue
+        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + 1.5*np.log(cn)
+                        + 0.4*np.log(cov) + 3.0*np.log(fp))
+        logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
+        fr = {}
+        for key, fb in _OUTLIER_DIAG_FEATS:
+            v = d.get(key)
+            if v is None and fb:
+                v = d.get(fb)
+            fr[key] = float(v) if isinstance(v, (int, float)) else np.nan
+        fr['cov_asym'] = ((d.get('coverage_AM_P_mean_physics') or 0)
+                          - (d.get('coverage_AM_S_mean_physics') or 0))
+        feat_rows.append(fr)
+    n = len(taus)
+    if n < 8:
+        print(f"  [SKIP] ionic_outliers_stage_e: only {n} usable cases (<8)")
+        return None
+    base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
+    resid0 = logsf - base_log
+    w_v5 = 1.0 / (1.0 + np.exp(-KV5 * (taus - CV5)))
+    lt = np.log(taus)
+    Xv5 = np.column_stack([np.ones(n), w_v5])
+    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
+    w_bl = 1.0 / (1.0 + np.exp(-KBL * (taus - CBL)))
+    bv5, *_ = np.linalg.lstsq(Xv5, resid0, rcond=None)
+    bp3, *_ = np.linalg.lstsq(Xp3, resid0, rcond=None)
+    pred_log = base_log + (1 - w_bl) * (Xv5 @ bv5) + w_bl * (Xp3 @ bp3)
+    resid = logsf - pred_log
+    err_pct = (np.exp(pred_log) - np.exp(logsf)) / np.exp(logsf) * 100.0
+    order = np.argsort(-np.abs(err_pct))
+
+    feat_corr = []
+    for key in [k for k, _ in _OUTLIER_DIAG_FEATS] + ['cov_asym']:
+        vals = np.array([feat_rows[i].get(key, np.nan) for i in range(n)])
+        m = np.isfinite(vals) & np.isfinite(resid)
+        if m.sum() >= 8 and np.std(vals[m]) > 1e-12:
+            feat_corr.append((key, float(np.corrcoef(vals[m], resid[m])[0, 1]),
+                              int(m.sum())))
+    feat_corr.sort(key=lambda t: -abs(t[1]))
+
+    sig_act = np.exp(logsf); sig_pred = np.exp(pred_log)
+    is_out = np.abs(err_pct) > 20.0
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    ax.scatter(sig_act[~is_out], sig_pred[~is_out], s=45, c=BLUE,
+               edgecolors='white', zorder=3, label='within ±20%')
+    if is_out.any():
+        ax.scatter(sig_act[is_out], sig_pred[is_out], s=70, c=RED,
+                   edgecolors='black', zorder=4, label='outlier (>20%)')
+    for i in order[:min(6, n)]:
+        ax.annotate(f'{labs[i]} ({err_pct[i]:+.0f}%)', (sig_act[i], sig_pred[i]),
+                    fontsize=6, color=RED if is_out[i] else GRAY,
+                    xytext=(4, 3), textcoords='offset points')
+    lim = [min(sig_act.min(), sig_pred.min())*0.8, max(sig_act.max(), sig_pred.max())*1.2]
+    ax.plot(lim, lim, '--', color=GRAY)
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12)
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
+    ax.set_ylabel('σ_predicted (v12 form)')
+    top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
+    ax.set_title(f"Stage-E σ fit outliers  (n={n}, {int(is_out.sum())} >20%)\n"
+                 f"잔차 최강 상관 feature → {top_corr}", fontsize=8)
+    ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
+    outpath = _save(fig, outdir, "ionic_outliers_stage_e.png")
+    with open(os.path.join(outdir, "ionic_outliers_stage_e.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        wr = csv.writer(f)
+        feat_keys = [k for k, _ in _OUTLIER_DIAG_FEATS] + ['cov_asym']
+        wr.writerow(['Case', 'sigma_act', 'sigma_pred', 'err_%'] + feat_keys)
+        for i in order:
+            wr.writerow([labs[i], round(sig_act[i], 4), round(sig_pred[i], 4),
+                         round(err_pct[i], 1)]
+                        + [('' if not np.isfinite(feat_rows[i].get(k, np.nan))
+                            else round(feat_rows[i][k], 4)) for k in feat_keys])
+        wr.writerow([])
+        wr.writerow(['# residual-feature correlation (signed)'])
+        for k, r, nn in feat_corr:
+            wr.writerow([k, round(r, 3), f'n={nn}'])
+    return outpath
+
+
 _FRAC_STAGES = [('intact', 'Intact', '#4caf50'),
                 ('microcrack', 'Microcrack', '#a9d18e'),
                 ('multicrack', 'Multi-crack', '#ffd43b'),
@@ -4015,6 +4121,13 @@ PLOT_REGISTRY["ionic_fit_stage_e"] = {
     "title": "σ_ionic → Stage E (물리식 재적합)",
     "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 물리 고정식(√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³)에 C_blend(τ)만 재적합 (parity + R²/LOOCV).\n지수는 물리값으로 고정(과적합 방지). 자유지수 진단치는 CSV에 함께 기록 — physics 타깃이 같은 지수를 원하는지 확인용.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 물리식 + C_blend(Ct/Cn).",
+}
+PLOT_REGISTRY["ionic_outliers_stage_e"] = {
+    "func": plot_ionic_outliers_stage_e,
+    "file": "ionic_outliers_stage_e.png",
+    "title": "σ_ionic Stage E — outlier 진단",
+    "description": "물리 v12 fit의 worst-fit 케이스(>±20%)를 빨강+이름으로 강조하고, 잔차와 가장 상관 높은 구조 feature를 표시 (= base 식이 놓친 물리 = 다음에 곱할 후보).\nCSV: |err| 내림차순 케이스별 feature + 잔차-feature 상관.",
+    "origin_tip": "Parity(log-log), outlier 빨강 라벨. CSV로 outlier 원인 분석.",
 }
 PLOT_REGISTRY["fracture_stages"] = {
     "func": plot_fracture_stages,
