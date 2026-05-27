@@ -67,9 +67,11 @@ def load_corpus():
             if key in seen:
                 continue
             seen.add(key)
-            rows.append((phi, cn, cov, fp, tau, float(sig), p))
+            sz = gcp._se_size_proxy(d)
+            rows.append((phi, cn, cov, fp, tau, float(sig), p,
+                         float(sz) if sz else np.nan))
     a = np.array(rows, float)
-    return a  # columns: phi, cn, cov, fp, tau, sigma, p
+    return a  # columns: phi, cn, cov, fp, tau, sigma, p, se_size
 
 
 def base_no_phi(a):
@@ -163,6 +165,65 @@ def nested_cv_sat(a, logsf, taus, k_inner=5, seed=0):
     return 1 - sse/ss, picks
 
 
+# ── SAT + r_SE size term (does catching 62:38 add REAL gain?) ───────────────
+SIZE_K_PHI = 12.0; SIZE_PHI_GATE = 0.30   # near-threshold gate for the size term
+
+
+def size_feat(a):
+    """Near-threshold-gated, log SE-size feature (raw, un-centered)."""
+    phi, sz = a[:, 0], a[:, 7]
+    g = 1.0/(1.0+np.exp(SIZE_K_PHI*(phi - SIZE_PHI_GATE)))
+    ls = np.log(np.where(np.isfinite(sz) & (sz > 0), sz, np.nan))
+    ls = np.where(np.isfinite(ls), ls, np.nanmedian(ls[np.isfinite(ls)]) if np.isfinite(ls).any() else 0.0)
+    return g * ls
+
+
+def cblend_size_fit(base, logsf, taus, sf):
+    """C_blend fit + a size coefficient β on the post-C_blend residual
+    (sf centered here)."""
+    bv5, bp3 = cblend_fit(base, logsf, taus)
+    resid = logsf - cblend_pred(base, taus, bv5, bp3)
+    smean = sf.mean(); sc = sf - smean
+    beta = float(np.dot(sc, resid)/np.dot(sc, sc)) if np.dot(sc, sc) > 1e-12 else 0.0
+    return bv5, bp3, beta, smean
+
+
+def cblend_size_pred(base, taus, sf, bv5, bp3, beta, smean):
+    return cblend_pred(base, taus, bv5, bp3) + beta*(sf - smean)
+
+
+def nested_cv_sat_size(a, logsf, taus, k_inner=5, seed=0):
+    """As nested_cv_sat but the per-fold model is SAT-blend + β·size_feat
+    (β fit inside each fold; (φc_P,φc_S,δ) re-selected by inner k-fold)."""
+    n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0
+    sf_all = size_feat(a); betas = []
+    rng = np.random.default_rng(seed)
+    for i in range(n):
+        tr = np.array([j for j in range(n) if j != i])
+        a_tr, ls_tr, ta_tr = a[tr], logsf[tr], taus[tr]
+        order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
+        best, best_sse = None, np.inf
+        for pP in PHICP_GRID:
+            for pS in PHICS_GRID:
+                for dl in DELTA_GRID:
+                    b = base_log_sat(a_tr, pP, pS, dl); s_tr = size_feat(a_tr)
+                    fsse = 0.0
+                    for val in folds:
+                        m = np.ones(len(tr), bool); m[val] = False
+                        bv5, bp3, beta, sm = cblend_size_fit(b[m], ls_tr[m], ta_tr[m], s_tr[m])
+                        pv = cblend_size_pred(b[val], ta_tr[val], s_tr[val], bv5, bp3, beta, sm)
+                        fsse += np.sum((ls_tr[val]-pv)**2)
+                    if fsse < best_sse:
+                        best_sse, best = fsse, (pP, pS, dl)
+        pP, pS, dl = best
+        b = base_log_sat(a, pP, pS, dl)
+        bv5, bp3, beta, sm = cblend_size_fit(b[tr], ls_tr, ta_tr, sf_all[tr])
+        betas.append(beta)
+        pi = cblend_size_pred(b[i:i+1], taus[i:i+1], sf_all[i:i+1], bv5, bp3, beta, sm)[0]
+        sse += (logsf[i]-pi)**2
+    return 1 - sse/ss, float(np.mean(betas))
+
+
 def main():
     a = load_corpus()
     n = len(a)
@@ -210,6 +271,21 @@ def main():
         vals, cnts = np.unique(picks[:, j], return_counts=True)
         top = sorted(zip(cnts, vals), reverse=True)[:3]
         print(f"  inner-picked {name:5s}: " + ", ".join(f"{v:.3f}×{c}" for c, v in top))
+
+    # 4) does adding an r_SE size term (target 62:38) help OVER SAT-blend?
+    n_size = int(np.isfinite(a[:, 7]).sum())
+    if n_size >= 0.6*n:
+        lo_size_nested, beta_mean = nested_cv_sat_size(a, logsf, taus)
+        print("=" * 64)
+        print(f"SAT + r_SE size term (target 62:38)   [{n_size}/{n} have r_SE]")
+        print(f"  SAT+size NESTED-CV (unbiased)     : {lo_size_nested:.4f}   (mean β_size={beta_mean:+.3f})")
+        print(f"  size adds over SAT (nested−nested): {lo_size_nested - lo_sat_nested:+.4f}")
+        v2 = ("PASS — size term adds real gain → catches 62:38"
+              if lo_size_nested - lo_sat_nested > se else
+              "FAIL — size gain within noise (62:38 is ~6-case / intrinsic) → keep SAT, get more data")
+        print(f"  VERDICT: {v2}")
+    else:
+        print(f"  [skip size term: only {n_size}/{n} cases expose r_SE]")
 
 
 if __name__ == "__main__":
