@@ -4495,6 +4495,35 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_outliers_stage_e.png")
 
+    # "1-1" focus: classify outlier vs not ONLY among the selected samples
+    # (residuals/fit from the full corpus; just the displayed subset changes).
+    if _FOCUS_CASES:
+        fmask = np.array([(rl in _FOCUS_CASES) for rl in real_labs])
+        if fmask.any():
+            ff, fax = plt.subplots(figsize=FIG_SINGLE)
+            fi_out = fmask & is_out; fi_in = fmask & ~is_out
+            fax.scatter(sig_act[fi_in], sig_pred[fi_in], s=55, c=BLUE,
+                        edgecolors='white', zorder=3, label='within ±20%')
+            if fi_out.any():
+                fax.scatter(sig_act[fi_out], sig_pred[fi_out], s=80, c=RED,
+                            edgecolors='black', zorder=4, label='outlier (>20%)')
+            for i in np.where(fmask)[0]:
+                fax.annotate(f'{real_labs[i]} ({err_pct[i]:+.0f}%)',
+                             (sig_act[i], sig_pred[i]), fontsize=6,
+                             color=RED if is_out[i] else GRAY,
+                             xytext=(4, 3), textcoords='offset points')
+            fax.plot(lim, lim, '--', color=GRAY)
+            fax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                             color=GREEN, alpha=0.12)
+            fax.set_xscale('log'); fax.set_yscale('log'); fax.set_xlim(lim); fax.set_ylim(lim)
+            fax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
+            fax.set_ylabel('σ_predicted (v12 form)')
+            fax.set_title("선택 샘플만 — outlier 판정(전체 fit 기준)  "
+                          "(%d개 중 %d outlier)" % (int(fmask.sum()), int(fi_out.sum())),
+                          fontsize=8)
+            fax.legend(fontsize=8, loc='upper left'); fax.grid(True, alpha=0.25, which='both')
+            _save(ff, outdir, "ionic_outliers_stage_e_focus.png")
+
     feat_keys = [k for k, _ in _OUTLIER_DIAG_FEATS] + ['cov_asym']
     # Feature medians/stds for per-case z-scores (reason inference)
     fmed, fstd = {}, {}
@@ -4601,11 +4630,20 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     sfeat = g_phi*szlog            # SE-size feature (centered inside the fit)
     afeat = g_mix*asym             # AM-asymmetry feature
 
+    # Near-threshold SATURATION base: round the percolation singularity so the
+    # 62:38 / 0:10 cases (φ≈φc, where √(φ−φc) is hyper-sensitive) are tamed.
+    # φ_eff = sqrt((φ−φc)² + δ²)  →  ≈ φ−φc far above φc, floors at δ near it.
+    DELTA = 0.03
+    phi_ex = np.maximum(phis - PHI_C, 1e-6)
+    base_log_sat = base_log + 0.5*(np.log(np.sqrt(phi_ex**2 + DELTA**2)) - np.log(phi_ex))
+
     r2_n, lo_n, _, _, pred_n, _, _ = _cblend_fit_score(base_log, logsf, taus)
     r2_s, lo_s, b_s, pred_s = _cblend_extra_score(base_log, logsf, taus, sfeat)
     r2_a, lo_a, b_a, pred_a = _cblend_extra_score(base_log, logsf, taus, afeat)
     r2_b, lo_b, b_b, pred_b = _cblend_extra_score(
         base_log, logsf, taus, np.column_stack([sfeat, afeat]))
+    r2_t, lo_t, _, _, pred_t, _, _ = _cblend_fit_score(base_log_sat, logsf, taus)
+    r2_ta, lo_ta, b_ta, pred_ta = _cblend_extra_score(base_log_sat, logsf, taus, afeat)
 
     act = np.exp(logsf)
     def _out(pred):
@@ -4613,14 +4651,16 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     panels = [('NO extra term', pred_n, r2_n, lo_n, ''),
               ('+ SE-size (g_phi)', pred_s, r2_s, lo_s, f'beta_s={b_s[0]:+.3f}'),
               ('+ AM-asym (g_mix)', pred_a, r2_a, lo_a, f'beta_a={b_a[0]:+.3f}'),
-              ('+ BOTH', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}')]
+              ('+ BOTH (size+asym)', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}'),
+              ('SAT phic (rounded, d=%.2f)' % DELTA, pred_t, r2_t, lo_t, ''),
+              ('SAT + AM-asym', pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
 
     def _is(nm, ps):
         return ps in (nm or '').replace(' ', '')
     m010 = np.array([_is(l, '0:10') for l in labs])
     mmix = np.array([(_is(l, '7:3') or _is(l, '3:7') or _is(l, '5:5')) for l in labs])
 
-    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    fig, axes = plt.subplots(2, 3, figsize=(17, 10))
     for ax, (ttl, pred, r2, lo, btxt) in zip(axes.ravel(), panels):
         sp = np.exp(pred); out = _out(pred)
         base_m = ~m010 & ~mmix
@@ -4646,10 +4686,10 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
         ax.set_title(f"{ttl}\nR2={r2:.3f} LOOCV={lo:.3f}  out={int(out.sum())} "
                      f"(0:10 {n010}, mix {nmix})  {btxt}", fontsize=8)
         ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=6.5, loc='upper left')
-    fig.suptitle("Gated correction-term test (n=%d): SE-size near threshold + "
-                 "AM-asymmetry for mixed-AM\nsize=r_SE|1/gb_density  "
-                 "asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
-                 "g_mix=gauss(p;0.5,%g)" % (n, K_G, PHI_GATE, P_MIX_W), fontsize=9)
+    fig.suptitle("Correction-term test (n=%d): size / AM-asym / rounded-phic SAT — catch 0:10(62:38)?\n"
+                 "size=r_SE|1/gb_density  asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
+                 "g_mix=gauss(p;0.5,%g)  SAT: phi_eff=sqrt((phi-%.2f)^2+%.2f^2)"
+                 % (n, K_G, PHI_GATE, P_MIX_W, PHI_C, DELTA), fontsize=9)
     fig.tight_layout(rect=[0, 0, 1, 0.94])
     outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
 
@@ -4674,8 +4714,15 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
                         'both': {'r2': round(r2_b, 4), 'loocv': round(lo_b, 4),
                                  'beta_s': round(b_b[0], 4), 'beta_a': round(b_b[1], 4),
                                  'n_out': int(_out(pred_b).sum()),
-                                 'out_010': _cnt(pred_b, m010), 'out_mix': _cnt(pred_b, mmix)}},
-                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W},
+                                 'out_010': _cnt(pred_b, m010), 'out_mix': _cnt(pred_b, mmix)},
+                        'sat': {'r2': round(r2_t, 4), 'loocv': round(lo_t, 4),
+                                'n_out': int(_out(pred_t).sum()),
+                                'out_010': _cnt(pred_t, m010), 'out_mix': _cnt(pred_t, mmix)},
+                        'sat_asym': {'r2': round(r2_ta, 4), 'loocv': round(lo_ta, 4),
+                                     'beta_a': round(b_ta[0], 4),
+                                     'n_out': int(_out(pred_ta).sum()),
+                                     'out_010': _cnt(pred_ta, m010), 'out_mix': _cnt(pred_ta, mmix)}},
+                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W, 'delta': DELTA},
                    jf, ensure_ascii=False, indent=1)
     return outpath
 
