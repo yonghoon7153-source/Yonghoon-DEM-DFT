@@ -1415,7 +1415,8 @@ def build_overall_grade(metrics: dict,
                          corpus_csv: str | None = None,
                          se_aux: dict | None = None,
                          carbon_wt_pct: float | None = None,
-                         case_id: str | None = None) -> dict:
+                         case_id: str | None = None,
+                         corpus_rows: list[dict] | None = None) -> dict:
     """Compute multi-axis grades for one case.
 
     Args:
@@ -1427,6 +1428,11 @@ def build_overall_grade(metrics: dict,
         carbon_wt_pct:  when >0, apply the What-if carbon-additive model
                         to override σ_e (and downstream ASR_e) before
                         grading.  Other axes are unaffected.
+        corpus_rows:    optional pre-built corpus (list of dicts).  When
+                        provided it is used directly instead of reading
+                        corpus_csv — this is how the webapp passes a dynamic
+                        corpus (static baseline ∪ all live cases) so
+                        percentile-ranked axes reflect the growing dataset.
     """
     inject = {}
     if se_aux:
@@ -1441,7 +1447,8 @@ def build_overall_grade(metrics: dict,
     if inject:
         metrics = {**metrics, **inject}
 
-    corpus_rows = _load_corpus(corpus_csv)
+    if corpus_rows is None:
+        corpus_rows = _load_corpus(corpus_csv)
     axes_out = [_grade_axis(ax, metrics, corpus_rows) for ax in AXES]
 
     # Composite weighted average over axes with a score

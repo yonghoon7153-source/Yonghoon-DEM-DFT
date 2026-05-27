@@ -537,10 +537,82 @@ def _inject_input_params(metrics, results_dir):
     return {**metrics, **inj}
 
 
+def _se_aux_to_corpus_row(aux):
+    """Derive a grade-corpus row (cut_fraction / bn_below_frac / bn_median_norm
+    / n_percolating) from a case's viewer_aux.json — same formulas the grade
+    engine uses for the case's own value (grade_engine._derived_value)."""
+    n_perc = aux.get('se_n_percolating') or aux.get('n_percolating')
+    apts = aux.get('se_articulation_points') or aux.get('articulation_points')
+    n_cut = aux.get('se_n_articulation_points')
+    if n_cut is None and isinstance(apts, list):
+        n_cut = len(apts)
+    nb = aux.get('se_n_bn_below_threshold')
+    ne = aux.get('se_n_perc_edges')
+    bmn = aux.get('se_bn_median_norm')
+    if not n_perc:
+        return None
+    row = {'n_percolating': n_perc}
+    if n_cut is not None:
+        row['cut_fraction'] = n_cut / n_perc
+    if nb is not None and ne:
+        row['bn_below_frac'] = nb / ne
+    if bmn is not None:
+        row['bn_median_norm'] = bmn
+    return row
+
+
+_DYN_CORPUS_CACHE = {'rows': None, 'ts': 0.0}
+_DYN_CORPUS_TTL = 120  # seconds — re-scan live cases at most this often
+
+
+def _build_dynamic_corpus_rows(static_csv):
+    """Corpus for percentile-ranked grade axes = static baseline (paper's
+    se_diagnostics_82.csv) ∪ every live case's SE-diagnostics (viewer_aux.json
+    under results/ + archive/).  This makes corpus-relative grades reflect the
+    growing dataset and lets sparse columns (e.g. bn_below_frac) become
+    scorable once ≥5 cases have them.  Cached for _DYN_CORPUS_TTL seconds."""
+    import time
+    now = time.time()
+    if (_DYN_CORPUS_CACHE['rows'] is not None
+            and now - _DYN_CORPUS_CACHE['ts'] < _DYN_CORPUS_TTL):
+        return _DYN_CORPUS_CACHE['rows']
+
+    rows = []
+    if static_csv and os.path.exists(static_csv):
+        try:
+            with open(static_csv, newline='') as f:
+                rows.extend(list(csv.DictReader(f)))
+        except OSError:
+            pass
+
+    seen = set()  # dedup live cases by case-dir basename (results preferred)
+    for root in (app.config.get('RESULTS_FOLDER'), app.config.get('ARCHIVE_FOLDER')):
+        if not root or not os.path.isdir(root):
+            continue
+        for aux_path in globmod.glob(os.path.join(root, '**', 'viewer_aux.json'),
+                                     recursive=True):
+            cid = os.path.basename(os.path.dirname(aux_path))
+            if cid in seen:
+                continue
+            try:
+                with open(aux_path) as f:
+                    aux = json.load(f)
+            except (OSError, ValueError):
+                continue
+            r = _se_aux_to_corpus_row(aux)
+            if r:
+                rows.append(r)
+                seen.add(cid)
+
+    _DYN_CORPUS_CACHE['rows'] = rows
+    _DYN_CORPUS_CACHE['ts'] = now
+    return rows
+
+
 def _grade_engine_result(metrics, results_dir=None, carbon_wt_pct=None):
-    """Run scripts/grade_engine.build_overall_grade with the corpus CSV +
-    SE-diagnostics aux wired in (shared by the 종합 등급 table and the grade
-    guide).  Returns the raw result dict or None."""
+    """Run scripts/grade_engine.build_overall_grade with a DYNAMIC corpus
+    (static baseline ∪ live cases) + SE-diagnostics aux wired in (shared by
+    the 종합 등급 table and the grade guide).  Returns the result dict or None."""
     if not metrics:
         return None
     try:
@@ -552,10 +624,9 @@ def _grade_engine_result(metrics, results_dir=None, carbon_wt_pct=None):
     except ImportError:
         return None
 
-    corpus_csv = os.path.join(os.path.dirname(__file__), '..',
+    static_csv = os.path.join(os.path.dirname(__file__), '..',
                               'docs', 'data', 'se_diagnostics_82.csv')
-    if not os.path.exists(corpus_csv):
-        corpus_csv = None
+    corpus_rows = _build_dynamic_corpus_rows(static_csv)
 
     # Pull SE diag aux from viewer_aux.json cache if present (avoids
     # recomputing here — the 3D viewer endpoint already populated it).
@@ -577,8 +648,9 @@ def _grade_engine_result(metrics, results_dir=None, carbon_wt_pct=None):
                 pass
 
     metrics = _inject_input_params(metrics, results_dir)
-    return build_overall_grade(metrics, corpus_csv, se_aux,
-                               carbon_wt_pct=carbon_wt_pct)
+    return build_overall_grade(metrics, se_aux=se_aux,
+                               carbon_wt_pct=carbon_wt_pct,
+                               corpus_rows=corpus_rows)
 
 
 def build_overall_grade_table(metrics, results_dir=None, carbon_wt_pct=None):
@@ -5615,9 +5687,10 @@ def _grade_band_desc(ax_meta):
                 f'C ≤{_fmt_num(2.0*bw)} · 그 밖 D')
     if direction in ('higher_corpus', 'lower_corpus'):
         better = '낮을수록' if direction == 'lower_corpus' else '높을수록'
-        return (f'레퍼런스 corpus(se_diagnostics_82.csv)의 백분위로 채점 — '
-                f'{better} 좋은 백분위에 높은 등급. corpus에서 (percolating 필터를 '
-                f'통과하는) 유효 케이스가 5개 미만이면 비교 기준이 없어 "—" (채점 불가).')
+        return (f'동적 corpus(기준 82개 + 현재 분석된 모든 케이스)의 백분위로 채점 — '
+                f'{better} 좋은 백분위에 높은 등급. corpus가 케이스 추가 시 자동으로 '
+                f'커집니다. (percolating 필터를 통과하는) 유효 케이스가 5개 미만이면 '
+                f'비교 기준이 없어 "—" (채점 불가).')
     return '—'
 
 
@@ -5664,13 +5737,14 @@ def _build_grade_guide_md(case_id):
     L.append('## 채점 방식 (How each axis is scored)\n')
     L.append('- **higher / lower**: 고정 문헌-기반 임계값 6개(A→C)에 값을 보간해 점수화.')
     L.append('- **band**: optimum 근처일수록 A, |값−optimum| 이 커질수록 감점.')
-    L.append('- **corpus (higher_corpus / lower_corpus)**: 고정 임계 대신 **레퍼런스 '
-             'corpus(se_diagnostics_82.csv)의 백분위**로 채점. corpus에서 '
-             '(percolating 필터를 통과하는) 유효 케이스가 **5개 미만이면 채점 불가 → '
-             '"—"**. 예) *Bottleneck burden* 은 corpus의 `bn_below_frac` 컬럼이 '
-             '5개 미만이라 종종 "—" 로 표시됩니다 (값 자체는 있어도 비교 기준이 없음). '
-             '또 이 케이스의 SE 진단값(viewer_aux.json)이 없으면(3D 뷰어 미로드) '
-             '값 자체가 없어 "—" 가 됩니다.')
+    L.append('- **corpus (higher_corpus / lower_corpus)**: 고정 임계 대신 **백분위(등수)**'
+             '로 채점. 비교 명단(corpus)은 **동적** — 기준 82개 baseline에 **현재까지 '
+             '분석된(3D 뷰어가 로드된) 모든 케이스를 합쳐** 만들며, 케이스가 추가될수록 '
+             '자동으로 커집니다. (percolating 필터를 통과하는) 유효 케이스가 '
+             '**5개 미만이면 채점 불가 → "—"**. 예) *Bottleneck burden* 은 `bn_below_frac` '
+             '값을 가진 케이스가 아직 5개 미만이면 "—" 로 나오며, 뷰어를 로드한 케이스가 '
+             '쌓이면 자동으로 채점됩니다. 또 이 케이스 자체의 SE 진단값(viewer_aux.json)이 '
+             '없으면(3D 뷰어 미로드) 값이 없어 "—" 가 됩니다.')
     L.append('- **종합**: 점수가 매겨진 axis들의 **가중평균** (weight 열). '
              '카테고리 평균은 해당 카테고리 axis 점수의 단순평균.')
     L.append('')
