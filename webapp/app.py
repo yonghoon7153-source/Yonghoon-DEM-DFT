@@ -5584,6 +5584,43 @@ _GRADE_DIR_KR = {
 }
 
 
+def _fmt_num(v):
+    """Compact number formatting for grade-band cutoffs."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return str(v)
+    if f == int(f):
+        return str(int(f))
+    return f'{f:.4g}'
+
+
+def _grade_band_desc(ax_meta):
+    """Human-readable grade-band breakdown for one axis, derived from its
+    thresholds / band / corpus definition.  Scores anchor at A95 B+88 B80
+    B-72 C+64 C56 (see grade_engine._interp_score)."""
+    direction = ax_meta.get('direction')
+    grades = ['A', 'B+', 'B', 'B-', 'C+', 'C']
+    if direction in ('higher', 'lower'):
+        thr = ax_meta.get('thresholds') or []
+        sym = '≥' if direction == 'higher' else '≤'
+        tail = '그 미만 D' if direction == 'higher' else '그 초과 D'
+        parts = [f'{g} {sym}{_fmt_num(t)}' for g, t in zip(grades, thr)]
+        return ' · '.join(parts) + f' · {tail}'
+    if direction == 'band':
+        opt = ax_meta.get('optimum'); bw = ax_meta.get('band_width', 0)
+        return (f'적정값 {_fmt_num(opt)} 기준 |값−optimum|: '
+                f'A ≤{_fmt_num(0.2*bw)} · B+ ≤{_fmt_num(0.6*bw)} · '
+                f'B ≤{_fmt_num(1.0*bw)} · C+ ≤{_fmt_num(1.5*bw)} · '
+                f'C ≤{_fmt_num(2.0*bw)} · 그 밖 D')
+    if direction in ('higher_corpus', 'lower_corpus'):
+        better = '낮을수록' if direction == 'lower_corpus' else '높을수록'
+        return (f'레퍼런스 corpus(se_diagnostics_82.csv)의 백분위로 채점 — '
+                f'{better} 좋은 백분위에 높은 등급. corpus에서 (percolating 필터를 '
+                f'통과하는) 유효 케이스가 5개 미만이면 비교 기준이 없어 "—" (채점 불가).')
+    return '—'
+
+
 def _build_grade_guide_md(case_id):
     """Build a per-case '평가표 상세 설명 / grade 근거' document: the grading
     rubric (scale, weighting, corpus rule) plus every axis with this case's
@@ -5638,21 +5675,33 @@ def _build_grade_guide_md(case_id):
              '카테고리 평균은 해당 카테고리 axis 점수의 단순평균.')
     L.append('')
 
-    # Per-category axis tables
+    # Quick-scan summary table, then a detailed narrative per axis
     if result and result.get('axes'):
+        L.append('## 한눈에 보기 (요약)\n')
+        L.append('| 카테고리 | 지표 | 값 | 등급 | 가중치 |')
+        L.append('|----------|------|-----|------|--------|')
+        for ax in result['axes']:
+            v = ax['value']
+            vstr = ('—' if v is None else f'{v:.1f}' if abs(v) >= 100
+                    else f'{v:.3g}' if abs(v) >= 1 else f'{v:.4g}')
+            sc = ax['score']
+            gstr = f'{ax["grade"]}({sc:.0f})' if sc is not None else '—'
+            wt = meta_by_label.get(ax['label'], {}).get('weight', ax.get('weight', '—'))
+            L.append('| ' + ' | '.join(_report_strip_html(x) for x in [
+                ax['category'], ax['label'], vstr, gstr, str(wt)]) + ' |')
+        L.append('')
+
+        L.append('---\n')
+        L.append('# 지표별 상세 설명\n')
         last_cat = None
         for ax in result['axes']:
             cat = ax['category']
             if cat != last_cat:
-                if last_cat is not None:
-                    L.append('')
                 L.append(f'## {cat}\n')
-                L.append('| 지표 | 이 케이스 값 | 등급(점수) | 방향 | 가중치 | 채점 기준 | 의미 / 근거 |')
-                L.append('|------|------|------|------|------|------|------|')
                 last_cat = cat
             v = ax['value']
             if v is None:
-                vstr = '—'
+                vstr = '값 없음'
             elif abs(v) >= 100:
                 vstr = f'{v:.1f}'
             elif abs(v) >= 1:
@@ -5660,17 +5709,30 @@ def _build_grade_guide_md(case_id):
             else:
                 vstr = f'{v:.4g}'
             score = ax['score']
-            gstr = f'{ax["grade"]}({score:.0f})' if score is not None else '—(—)'
-            wt = meta_by_label.get(ax['label'], {}).get('weight', ax.get('weight', '—'))
+            gstr = f'{ax["grade"]} ({score:.0f}점)' if score is not None else '— (채점 불가)'
+            ax_meta = meta_by_label.get(ax['label'], {})
+            wt = ax_meta.get('weight', ax.get('weight', '—'))
             dir_kr = _GRADE_DIR_KR.get(ax.get('direction'), ax.get('direction') or '—')
-            L.append('| ' + ' | '.join(_report_strip_html(x) for x in [
-                ax['label'], vstr, gstr, dir_kr, str(wt),
-                ax.get('formula', ''),
-                (ax.get('meaning', '') + ('  [기준: ' + ax['basis'] + ']'
-                                          if ax.get('basis') and ax['basis'] != 'no data'
-                                          else '')),
-            ]) + ' |')
-        L.append('')
+            L.append(f'### {_report_strip_html(ax["label"])}\n')
+            L.append(f'**이 케이스: {gstr} · 값 = {vstr}**')
+            L.append('')
+            L.append(f'- **카테고리**: {_report_strip_html(cat)}')
+            L.append(f'- **가중치**: {wt}  (종합 가중평균에서의 영향력 — 클수록 핵심 지표)')
+            L.append(f'- **방향**: {dir_kr}')
+            if ax.get('formula'):
+                L.append(f'- **계산식**: `{_report_strip_html(ax["formula"])}`')
+            L.append(f'- **등급 구간**: {_report_strip_html(_grade_band_desc(ax_meta))}')
+            basis = ax.get('basis')
+            if basis and basis != 'no data':
+                L.append(f'- **이 케이스 채점 근거**: {_report_strip_html(basis)}')
+            elif basis == 'no data':
+                L.append('- **이 케이스 채점 근거**: 데이터 없음 — 값 또는 '
+                         'corpus 비교군 부족으로 채점되지 않음.')
+            meaning = ax.get('meaning', '')
+            if meaning:
+                L.append('')
+                L.append(f'**의미·근거**: {_report_strip_html(meaning)}')
+            L.append('')
         comp = result.get('composite', {})
         L.append('## 종합 (Composite)\n')
         L.append(f'- **Overall**: {comp.get("grade","—")} '
