@@ -958,9 +958,10 @@ async function generatePlots() {
       for (const pt of plotTypes) {
         const file = pt + '.png';
 
-        // Global-only plots: render as single full-width (all groups combined)
-        const globalOnlyPlots = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit'];
-        if (globalOnlyPlots.includes(pt)) {
+        // Global-only plots: render as single full-width (all groups combined).
+        // Reuse the same list used for routing so new global plots (e.g.
+        // ionic_fit_stage_e) are displayed, not silently dropped.
+        if (globalOnlyTypes.includes(pt)) {
           if (globalPlotMap[file]) {
             if (pt === 'ionic_scaling_fit' && !grid.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
             grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[file]));

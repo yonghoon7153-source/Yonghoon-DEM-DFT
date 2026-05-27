@@ -3636,6 +3636,9 @@ def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
     ax.set_xticks(x); ax.set_xticklabels(labs, rotation=30, ha='right', fontsize=8)
     ax.set_ylabel('σ_ionic (mS/cm)')
     ax.set_title('σ_ionic: Network solver (Hertzian/Physics) vs Stage E', fontsize=10)
+    # Honour the unified y-axis cap (y-max-sigma input) so panels share a scale
+    if _Y_MAX_SIGMA and _Y_MAX_SIGMA > 0:
+        ax.set_ylim(0, _Y_MAX_SIGMA)
     ax.legend(fontsize=8); ax.grid(True, axis='y', alpha=0.25)
     # Case-group separators + labels (same style as the per-config line plots)
     if _GROUP_INFO and len(_GROUP_INFO[0]) > 1:
