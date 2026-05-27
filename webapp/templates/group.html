@@ -220,6 +220,38 @@
         <label class="plot-checkbox"><input type="checkbox" value="stress_ratio"> Stress Ratio</label>
       </div>
     </div>
+    <div class="plot-category" style="grid-column:1/-1">
+      <span class="plot-cat-label">파라미터 비교 (자유 선택 — 분석요약 + 3D뷰어 모든 수치)</span>
+      <div class="plot-row">
+        <label class="plot-checkbox"><input type="checkbox" value="param_scatter"> X–Y 산점도</label>
+        <label class="plot-checkbox"><input type="checkbox" value="param_bar"> 다중 Bar</label>
+        <label class="plot-checkbox"><input type="checkbox" value="param_corr"> 상관 Heatmap</label>
+      </div>
+      <div class="plot-row" style="flex-wrap:wrap;gap:10px;align-items:center">
+        <button type="button" class="btn btn-secondary" style="font-size:12px;padding:4px 10px"
+                onclick="loadParamOptions()"
+                title="현재 선택된 케이스들에서 비교 가능한 모든 수치 파라미터를 불러옵니다">
+          ① 파라미터 불러오기
+        </button>
+        <span id="param-status" style="font-size:11px;color:#94a3b8"></span>
+      </div>
+      <div class="plot-row" style="flex-wrap:wrap;gap:14px;align-items:center;font-size:12px">
+        <label>산점도 X
+          <select id="param-x" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px;max-width:230px"></select>
+        </label>
+        <label>산점도 Y
+          <select id="param-y" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px;max-width:230px"></select>
+        </label>
+        <label class="plot-checkbox"><input type="checkbox" id="param-norm"> Bar 정규화(÷max)</label>
+      </div>
+      <div class="plot-row" style="align-items:flex-start;font-size:12px">
+        <label style="display:flex;flex-direction:column;gap:3px">
+          다중 선택 (Bar / 상관 Heatmap용 — Ctrl/⌘+클릭 다중)
+          <select id="param-multi" multiple size="6"
+                  style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px;min-width:280px"></select>
+        </label>
+      </div>
+    </div>
   </div>
 
   <!-- Data Quality Warnings for selected cases -->
@@ -743,6 +775,49 @@ async function generateReport() {
   output.querySelector('pre').textContent = data.report;
 }
 
+// ── Generic parameter comparison (param_scatter / param_bar / param_corr) ──
+async function loadParamOptions() {
+  const ids = new Set();
+  caseGroups.forEach(g => (g.cases || []).forEach(c => ids.add(c)));
+  document.querySelectorAll('input[name="cases"]:not([disabled]):checked')
+          .forEach(i => ids.add(i.value));
+  const list = [...ids].filter(Boolean);
+  const status = document.getElementById('param-status');
+  if (!list.length) { status.textContent = '먼저 케이스를 선택하세요.'; return; }
+  status.textContent = '불러오는 중…';
+  const body = new URLSearchParams();
+  list.forEach(c => body.append('cases', c));
+  try {
+    const r = await fetch('/group/param-options', { method: 'POST', body });
+    const j = await r.json();
+    const params = j.params || [];
+    const opt = params.map(p => `<option value="${p}">${p}</option>`).join('');
+    const xs = document.getElementById('param-x');
+    const ys = document.getElementById('param-y');
+    const ml = document.getElementById('param-multi');
+    xs.innerHTML = opt; ml.innerHTML = opt;
+    ys.innerHTML = opt;
+    // default Y to a different param than X if possible
+    if (params.length > 1) ys.selectedIndex = 1;
+    status.textContent = `${params.length}개 파라미터 로드됨 (${list.length} 케이스)`;
+  } catch (e) {
+    status.textContent = '불러오기 실패: ' + e;
+  }
+}
+
+function appendParamFields(form) {
+  const xs = document.getElementById('param-x');
+  const ys = document.getElementById('param-y');
+  const ml = document.getElementById('param-multi');
+  if (xs && xs.value) form.append('param_x', xs.value);
+  if (ys && ys.value) form.append('param_y', ys.value);
+  if (ml) {
+    const sel = [...ml.selectedOptions].map(o => o.value);
+    if (sel.length) form.append('param_list', sel.join(','));
+  }
+  if (document.getElementById('param-norm')?.checked) form.append('param_norm', '1');
+}
+
 async function generatePlots() {
   const checks = document.querySelectorAll('.plot-checkbox input:checked');
   const plotTypes = Array.from(checks).map(c => c.value);
@@ -836,6 +911,8 @@ async function generatePlots() {
       if (globalCIon) form.append('global_c_ion', globalCIon);
       const yMaxInput = document.getElementById('y-max-sigma-input');
       if (yMaxInput && yMaxInput.value) form.append('y_max_sigma', yMaxInput.value);
+      // Generic parameter-comparison selections (param_scatter/bar/corr)
+      appendParamFields(form);
 
       const res = await fetch('/group/plots', { method: 'POST', body: form });
       const data = await res.json();

@@ -4386,6 +4386,18 @@ def group_plots():
                 cmd += ['--y-max-sigma', str(_yms)]
         except ValueError:
             pass  # invalid → ignore, fall back to auto
+    # Generic parameter-comparison selections (param_scatter/bar/corr)
+    param_x = request.form.get('param_x', '').strip()
+    param_y = request.form.get('param_y', '').strip()
+    param_list = request.form.get('param_list', '').strip()
+    if param_x:
+        cmd += ['--param-x', param_x]
+    if param_y:
+        cmd += ['--param-y', param_y]
+    if param_list:
+        cmd += ['--param-list', param_list]
+    if request.form.get('param_norm') in ('1', 'true', 'on'):
+        cmd += ['--param-norm']
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
     if result.stdout:
         print(f"[plots] stdout:\n{result.stdout}")
@@ -4409,6 +4421,51 @@ def group_plots():
                 plot_list.append(info[key])
 
     return jsonify({'session': session_id, 'plots': plot_list})
+
+@app.route('/group/param-options', methods=['POST'])
+def group_param_options():
+    """Return the union of comparable numeric parameters across the selected
+    cases — full_metrics.json scalars + derived 3D-viewer (viewer_aux.json)
+    diagnostics — for the generic parameter-comparison picker."""
+    selected = request.form.getlist('cases')
+    keys = set()
+    for cid in selected:
+        if cid.startswith('archive:'):
+            case_path = os.path.join(app.config['ARCHIVE_FOLDER'], cid[len('archive:'):])
+        else:
+            case_path = get_results_dir(cid)
+        fm = os.path.join(case_path, 'full_metrics.json')
+        if os.path.exists(fm):
+            try:
+                with open(fm) as f:
+                    d = json.load(f)
+            except (OSError, ValueError):
+                d = {}
+            for k, v in d.items():
+                if (not k.startswith('_') and isinstance(v, (int, float))
+                        and not isinstance(v, bool)):
+                    keys.add(k)
+        aux = os.path.join(case_path, 'viewer_aux.json')
+        if os.path.exists(aux):
+            try:
+                with open(aux) as f:
+                    a = json.load(f)
+            except (OSError, ValueError):
+                a = {}
+            for k, v in a.items():
+                if isinstance(v, (int, float)) and not isinstance(v, bool):
+                    keys.add(f'aux:{k}')
+            apts = a.get('se_articulation_points')
+            if a.get('se_n_percolating') and (
+                    a.get('se_n_articulation_points') is not None
+                    or isinstance(apts, list)):
+                keys.add('cut_fraction')
+            if a.get('se_n_bn_below_threshold') is not None and a.get('se_n_perc_edges'):
+                keys.add('bn_below_frac')
+            if a.get('se_bn_median_norm') is not None:
+                keys.add('bn_median_norm')
+    return jsonify({'params': sorted(keys)})
+
 
 @app.route('/group/plot-image/<session>/<filename>')
 def serve_group_plot(session, filename):

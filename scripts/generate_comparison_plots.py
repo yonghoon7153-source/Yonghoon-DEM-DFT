@@ -12,6 +12,7 @@ Usage:
 """
 
 import argparse
+import csv
 import json
 import os
 import sys
@@ -47,6 +48,12 @@ _GLOBAL_IONIC_SIGMOID = None  # (C_thick, C_thin, tau_c, k) for sigmoid C(τ)
 _GLOBAL_IONIC_POLY3 = None  # (a0, a1, a2, a3) for poly3 part of v9 BLEND
 _GLOBAL_PS_SIGMOID = None   # v19: (k_pf, pc_pf, beta1, beta2, w_pf_mean, pf_t_mean)
 _ALL_DATA = None  # all_data for _apply_style auto-detect
+
+# Generic parameter-comparison selections (set by main() from CLI args).
+_PARAM_X = None       # X-axis metric key (scatter)
+_PARAM_Y = None       # Y-axis metric key (scatter)
+_PARAM_LIST = None    # list of metric keys (bar / correlation)
+_PARAM_NORM = False   # normalize each param to its max (bar)
 
 # Disk cache of the fitted v29 + v32 params. Webapp spawns a separate
 # subprocess per plot set, so module globals do not survive across
@@ -3480,6 +3487,214 @@ PLOT_REGISTRY["stress_z_layer"] = {
 }
 
 
+# ─── Generic parameter comparison (X-Y scatter / multi-bar / correlation) ─────
+
+def _merged_params(d):
+    """Flatten one case's comparable numeric params: every scalar in
+    full_metrics.json plus derived SE-diagnostics from the sibling
+    viewer_aux.json (3D-viewer values).  Returns {key: float}."""
+    out = {}
+    for k, v in d.items():
+        if k.startswith('_'):
+            continue
+        if isinstance(v, bool):
+            continue
+        if isinstance(v, (int, float)):
+            out[k] = float(v)
+    src = d.get('_source_path')
+    if src:
+        aux_path = os.path.join(os.path.dirname(src), 'viewer_aux.json')
+        if os.path.exists(aux_path):
+            try:
+                with open(aux_path) as f:
+                    aux = json.load(f)
+            except (OSError, ValueError):
+                aux = {}
+            for k, v in aux.items():
+                if isinstance(v, bool):
+                    continue
+                if isinstance(v, (int, float)):
+                    out[f'aux:{k}'] = float(v)
+            # Derived SE-network diagnostics (same formulas grade_engine uses)
+            np_ = aux.get('se_n_percolating')
+            apts = aux.get('se_articulation_points')
+            ncut = aux.get('se_n_articulation_points')
+            if ncut is None and isinstance(apts, list):
+                ncut = len(apts)
+            nb = aux.get('se_n_bn_below_threshold')
+            ne = aux.get('se_n_perc_edges')
+            if np_ and ncut is not None:
+                out['cut_fraction'] = ncut / np_
+            if nb is not None and ne:
+                out['bn_below_frac'] = nb / ne
+            if aux.get('se_bn_median_norm') is not None:
+                out['bn_median_norm'] = float(aux['se_bn_median_norm'])
+    return out
+
+
+def _param_label(key):
+    """Display label for a metric key (strip the aux: prefix)."""
+    return key[4:] + ' (3D)' if key.startswith('aux:') else key
+
+
+def _case_colors(n):
+    return [GROUP_COLORS[i % len(GROUP_COLORS)] for i in range(n)]
+
+
+def plot_param_scatter(data_list, names, outdir):
+    """X–Y scatter of any two metrics across the selected cases, with a
+    least-squares trend line and Pearson r."""
+    px, py = _PARAM_X, _PARAM_Y
+    if not px or not py:
+        print("  [SKIP] param_scatter: param-x/param-y not provided")
+        return None
+    xs, ys, labels = [], [], []
+    for d, nm in zip(data_list, names):
+        mp = _merged_params(d)
+        x, y = mp.get(px), mp.get(py)
+        if x is not None and y is not None:
+            xs.append(x); ys.append(y); labels.append(nm)
+    if len(xs) < 2:
+        print(f"  [SKIP] param_scatter: <2 cases have both {px} & {py}")
+        return None
+    xs_a, ys_a = np.array(xs), np.array(ys)
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    cols = _case_colors(len(xs))
+    ax.scatter(xs_a, ys_a, c=cols, s=70, edgecolors='white', linewidths=0.8, zorder=3)
+    for x, y, nm in zip(xs, ys, labels):
+        ax.annotate(nm, (x, y), fontsize=7, xytext=(4, 4),
+                    textcoords='offset points', color=BLACK)
+    title = f"{_param_label(py)}  vs  {_param_label(px)}"
+    if len(xs) >= 3 and np.std(xs_a) > 0:
+        b1, b0 = np.polyfit(xs_a, ys_a, 1)
+        xr = np.linspace(xs_a.min(), xs_a.max(), 50)
+        ax.plot(xr, b1 * xr + b0, '--', color=GRAY, lw=1.2, zorder=2)
+        r = float(np.corrcoef(xs_a, ys_a)[0, 1])
+        title += f"   (r = {r:+.2f}, n = {len(xs)})"
+    ax.set_xlabel(_param_label(px)); ax.set_ylabel(_param_label(py))
+    ax.set_title(title, fontsize=10)
+    ax.grid(True, alpha=0.25)
+    outpath = _save(fig, outdir, "param_scatter.png")
+    with open(os.path.join(outdir, "param_scatter.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        w = csv.writer(f)
+        w.writerow(['Case', _param_label(px), _param_label(py)])
+        for x, y, nm in zip(xs, ys, labels):
+            w.writerow([nm, round(x, 6), round(y, 6)])
+    return outpath
+
+
+def plot_param_bar(data_list, names, outdir):
+    """Grouped bar of several metrics across cases.  When _PARAM_NORM, each
+    metric is scaled to its max across cases so different units are
+    comparable on one axis."""
+    keys = _PARAM_LIST or []
+    if not keys:
+        print("  [SKIP] param_bar: no params provided")
+        return None
+    mps = [_merged_params(d) for d in data_list]
+    keys = [k for k in keys if any(k in mp for mp in mps)]
+    if not keys:
+        print("  [SKIP] param_bar: none of the params present")
+        return None
+    ncase = len(data_list)
+    fig_w = max(7, 1.1 * len(keys) * max(1, ncase * 0.35))
+    fig, ax = plt.subplots(figsize=(min(fig_w, 18), 5))
+    cols = _case_colors(ncase)
+    group_w = 0.8
+    bar_w = group_w / max(ncase, 1)
+    xbase = np.arange(len(keys))
+    for ci in range(ncase):
+        vals = []
+        for k in keys:
+            v = mps[ci].get(k)
+            if v is not None and _PARAM_NORM:
+                col = [mp.get(k) for mp in mps if mp.get(k) is not None]
+                mx = max((abs(c) for c in col), default=0) or 1.0
+                v = v / mx
+            vals.append(v if v is not None else 0.0)
+        ax.bar(xbase + ci * bar_w - group_w / 2 + bar_w / 2, vals, bar_w,
+               label=names[ci], color=cols[ci])
+    ax.set_xticks(xbase)
+    ax.set_xticklabels([_param_label(k) for k in keys], rotation=30, ha='right',
+                       fontsize=8)
+    ax.set_ylabel('normalized (value / max)' if _PARAM_NORM else 'value')
+    ax.set_title('Parameter comparison' + (' (normalized)' if _PARAM_NORM else ''),
+                 fontsize=10)
+    ax.legend(fontsize=7, ncol=min(ncase, 4))
+    ax.grid(True, axis='y', alpha=0.25)
+    outpath = _save(fig, outdir, "param_bar.png")
+    with open(os.path.join(outdir, "param_bar.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        w = csv.writer(f)
+        w.writerow(['Case'] + [_param_label(k) for k in keys])
+        for ci in range(ncase):
+            w.writerow([names[ci]] + [mps[ci].get(k, '') for k in keys])
+    return outpath
+
+
+def plot_param_corr(data_list, names, outdir):
+    """Pearson correlation heatmap among the selected metrics over the case
+    set (needs ≥3 cases and ≥2 metrics with variation)."""
+    keys = _PARAM_LIST or []
+    mps = [_merged_params(d) for d in data_list]
+    # Keep keys present in every case (so correlation uses a full matrix)
+    keys = [k for k in keys if all(k in mp for mp in mps)]
+    if len(keys) < 2 or len(data_list) < 3:
+        print(f"  [SKIP] param_corr: need ≥2 common params & ≥3 cases "
+              f"(have {len(keys)} params, {len(data_list)} cases)")
+        return None
+    mat = np.array([[mp[k] for k in keys] for mp in mps], dtype=float)  # cases × params
+    # Drop zero-variance columns (corr undefined)
+    keep = [i for i in range(len(keys)) if np.std(mat[:, i]) > 1e-12]
+    if len(keep) < 2:
+        print("  [SKIP] param_corr: <2 params with variation")
+        return None
+    keys = [keys[i] for i in keep]
+    mat = mat[:, keep]
+    corr = np.corrcoef(mat, rowvar=False)
+    n = len(keys)
+    fig, ax = plt.subplots(figsize=(max(5, 0.7 * n + 2), max(4, 0.7 * n + 1.5)))
+    im = ax.imshow(corr, cmap='RdBu_r', vmin=-1, vmax=1)
+    ax.set_xticks(range(n)); ax.set_yticks(range(n))
+    ax.set_xticklabels([_param_label(k) for k in keys], rotation=45, ha='right',
+                       fontsize=7)
+    ax.set_yticklabels([_param_label(k) for k in keys], fontsize=7)
+    for i in range(n):
+        for j in range(n):
+            ax.text(j, i, f'{corr[i, j]:.2f}', ha='center', va='center',
+                    fontsize=6,
+                    color='white' if abs(corr[i, j]) > 0.6 else BLACK)
+    ax.set_title(f'Parameter correlation matrix (Pearson r, n={len(data_list)})',
+                 fontsize=10)
+    fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04)
+    outpath = _save(fig, outdir, "param_corr.png")
+    return outpath
+
+
+PLOT_REGISTRY["param_scatter"] = {
+    "func": plot_param_scatter,
+    "file": "param_scatter.png",
+    "title": "파라미터 X–Y 산점도",
+    "description": "선택한 두 파라미터를 케이스별 점으로 비교.\n추세선 + Pearson 상관계수 r 표시.\n분석요약·3D뷰어의 모든 수치 중 임의 2개 선택 가능.",
+    "origin_tip": "Scatter → X: param-x, Y: param-y. 점에 케이스명 라벨, 점선 추세선.",
+}
+PLOT_REGISTRY["param_bar"] = {
+    "func": plot_param_bar,
+    "file": "param_bar.png",
+    "title": "파라미터 다중 비교 (Bar)",
+    "description": "선택한 여러 파라미터를 케이스별 grouped bar로 비교.\n정규화 옵션이면 각 파라미터를 자기 최댓값으로 나눠 단위가 달라도 한 축에서 비교.",
+    "origin_tip": "Grouped Column → X: parameter, 색: case. 정규화 시 Y=÷max.",
+}
+PLOT_REGISTRY["param_corr"] = {
+    "func": plot_param_corr,
+    "file": "param_corr.png",
+    "title": "파라미터 상관 Heatmap",
+    "description": "선택한 파라미터들 사이의 Pearson 상관계수 행렬.\n어떤 지표가 함께 움직이는지(+1) / 반대로 움직이는지(−1) 한눈에.\n케이스 ≥3개, 변동 있는 파라미터 ≥2개 필요.",
+    "origin_tip": "Heatmap (RdBu, −1~+1). 셀에 r 값 표기.",
+}
+
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
@@ -3495,7 +3710,18 @@ def main():
     parser.add_argument("--global-c-ion", default="")  # e.g. "0.0727" (C from ionic scaling fit)
     parser.add_argument("--y-max-sigma", type=float, default=None,
                         help="Fixed y-axis max (mS/cm) for multiscale σ plots; enables cross-run visual comparison")
+    # Generic parameter-comparison selections
+    parser.add_argument("--param-x", default="")   # scatter X metric key
+    parser.add_argument("--param-y", default="")   # scatter Y metric key
+    parser.add_argument("--param-list", default="")  # comma-separated keys (bar/corr)
+    parser.add_argument("--param-norm", action="store_true")  # normalize bar to max
     args = parser.parse_args()
+
+    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM
+    _PARAM_X = args.param_x or None
+    _PARAM_Y = args.param_y or None
+    _PARAM_LIST = [k for k in args.param_list.split(',') if k] or None
+    _PARAM_NORM = bool(args.param_norm)
 
     # Parse group info
     if args.group_sizes:
