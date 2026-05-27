@@ -3797,13 +3797,32 @@ def _se_size_proxy(d):
     return None
 
 
-def _cblend_size_score(base_log, logsf, taus, sfeat):
-    """C_blend(τ) fit + one extra multiplicative size correction β·sfeat
-    (fit on the post-C_blend residual; sfeat centered per training set).
-    Returns (r2, loocv, beta, pred_log).  LOOCV refits C_blend AND β each
-    fold so the extra DoF is honestly penalised."""
+def _am_asym_proxy(d):
+    """AM_P/AM_S asymmetry for mixed-AM cases.  Physics coverage asymmetry
+    (cov_AM_P − cov_AM_S, fraction) is the #1 residual correlate; fall back
+    to ln(r_AM_P/r_AM_S) when coverage is unavailable."""
+    cp = d.get('coverage_AM_P_mean_physics'); cs = d.get('coverage_AM_S_mean_physics')
+    if (isinstance(cp, (int, float)) and not isinstance(cp, bool) and
+            isinstance(cs, (int, float)) and not isinstance(cs, bool)):
+        return (cp - cs) / 100.0
+    rp = d.get('_input_r_AM_P_um') or d.get('r_AM_P')
+    rs = d.get('_input_r_AM_S_um') or d.get('r_AM_S')
+    if (isinstance(rp, (int, float)) and isinstance(rs, (int, float))
+            and rp > 0 and rs > 0):
+        return float(np.log(rp / rs))
+    return None
+
+
+def _cblend_extra_score(base_log, logsf, taus, extra):
+    """C_blend(τ) fit + extra multiplicative corrections exp(Σ β_j·extra_j)
+    (β fit jointly on the post-C_blend residual via lstsq; each extra column
+    centered per training set).  `extra` is an (n,k) array or None.  LOOCV
+    refits C_blend AND β every fold so the extra DoF is honestly penalised.
+    Returns (r2, loocv, betas:list, pred_log)."""
     KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
     n = len(taus)
+    extra = None if extra is None else np.asarray(extra, float).reshape(n, -1)
+    k = 0 if extra is None else extra.shape[1]
     w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
     w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
     Xv5 = np.column_stack([np.ones(n), w_v5])
@@ -3814,27 +3833,27 @@ def _cblend_size_score(base_log, logsf, taus, sfeat):
         b5, *_ = np.linalg.lstsq(Xv5[mask], resid, rcond=None)
         b3, *_ = np.linalg.lstsq(Xp3[mask], resid, rcond=None)
         cb = (1-w_bl[mask])*(Xv5[mask]@b5) + w_bl[mask]*(Xp3[mask]@b3)
-        smean = sfeat[mask].mean()
-        sc = sfeat[mask] - smean
-        rr = resid - cb
-        denom = float(np.dot(sc, sc))
-        beta = float(np.dot(sc, rr)/denom) if denom > 1e-12 else 0.0
-        return b5, b3, beta, smean
+        if k == 0:
+            return b5, b3, np.zeros(0), np.zeros(0)
+        means = extra[mask].mean(axis=0)
+        Ec = extra[mask] - means
+        betas, *_ = np.linalg.lstsq(Ec, resid - cb, rcond=None)
+        return b5, b3, betas, means
 
-    b5, b3, beta, smean = _fit(np.ones(n, bool))
+    b5, b3, betas, means = _fit(np.ones(n, bool))
     cb = (1-w_bl)*(Xv5@b5) + w_bl*(Xp3@b3)
-    pred = base_log + cb + beta*(sfeat - smean)
+    pred = base_log + cb + ((extra - means) @ betas if k else 0.0)
     ss = np.sum((logsf - logsf.mean())**2)
     r2 = 1 - np.sum((logsf - pred)**2)/ss if ss > 0 else 0.0
     sse = 0.0
     for i in range(n):
         mk = np.ones(n, bool); mk[i] = False
-        b5i, b3i, bi, smi = _fit(mk)
+        b5i, b3i, bi, mi = _fit(mk)
         cbi = (1-w_bl[i])*(Xv5[i]@b5i) + w_bl[i]*(Xp3[i]@b3i)
-        pi = base_log[i] + cbi + bi*(sfeat[i] - smi)
+        pi = base_log[i] + cbi + ((extra[i]-mi) @ bi if k else 0.0)
         sse += (logsf[i] - pi)**2
     loocv = 1 - sse/ss if ss > 0 else 0.0
-    return r2, loocv, float(beta), pred
+    return r2, loocv, [float(b) for b in betas], pred
 
 
 def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
@@ -4392,18 +4411,22 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
 
 
 def plot_ionic_sizeterm_test(data_list, names, outdir):
-    """TEST: does a GATED SE-grain-size multiplicative term pull in the
-    near-threshold (0:10 / sparse-SE) outliers without hurting global LOOCV?
+    """TEST: can GATED multiplicative correction terms pull in the fit
+    outliers without hurting global LOOCV?  4-way comparison of the fixed
+    physics form with NO extra / +SE-size / +AM-asym / +BOTH:
 
-    Compares the fixed physics form WITHOUT vs WITH an extra factor
-        × exp(β · g(φ) · [ln(size) − median])
-    where size = SE grain-size proxy (direct r_SE, else 1/gb_density) and
-    g(φ) = σ(−K·(φ−φ_gate)) gates the penalty ON only near the percolation
-    threshold (sparse SE), where grain-boundary series-resistance bites.
-    β>0 ⇒ larger SE grains → higher σ.  LOOCV refits β each fold."""
+      × exp(β_s · g_φ · [ln(size)−mean])         (SE grain size)
+      × exp(β_a · g_mix · [asym−mean])            (AM_P/AM_S asymmetry)
+
+    g_φ = σ(−K(φ−φ_gate)) turns the SE-size penalty ON near the percolation
+    threshold (sparse SE → GB series resistance bites); g_mix is a Gaussian
+    in the AM_P fraction p centered at 0.5 → ON for mixed-AM (7:3/3:7/5:5),
+    OFF for pure 0:10 / 10:0.  size = r_SE else 1/gb_density; asym = physics
+    coverage(AM_P−AM_S) else ln(r_AM_P/r_AM_S).  β fit by lstsq; LOOCV refits
+    every fold (synthetic null ⇒ β≈0, flat LOOCV)."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
-    PHI_GATE = 0.30; K_G = 12.0
-    base_log, logsf, taus, labs, phis, szlog = [], [], [], [], [], []
+    PHI_GATE = 0.30; K_G = 12.0; P_MIX_W = 0.25
+    base_log, logsf, taus, labs, phis, szlog, asym, pfr = [], [], [], [], [], [], [], []
     for d, nm in zip(data_list, names):
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -4417,39 +4440,54 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
                         + COV_EXP*np.log(cov) + 3.0*np.log(fp))
         logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
         phis.append(phi); szlog.append(np.log(sz))
+        av = _am_asym_proxy(d); asym.append(av if av is not None else 0.0)
+        pfr.append(_ps_fraction(d))
     n = len(taus)
     if n < 12:
         print(f"  [SKIP] ionic_sizeterm_test: only {n} cases (<12) with a size proxy")
         return None
     base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
     phis = np.array(phis); szlog = np.array(szlog)
-    g = 1.0/(1.0+np.exp(K_G*(phis-PHI_GATE)))
-    sfeat = g*(szlog - np.median(szlog))
+    asym = np.array(asym); pfr = np.array(pfr)
+    g_phi = 1.0/(1.0+np.exp(K_G*(phis-PHI_GATE)))
+    g_mix = np.exp(-0.5*((pfr-0.5)/P_MIX_W)**2)
+    sfeat = g_phi*szlog            # SE-size feature (centered inside the fit)
+    afeat = g_mix*asym             # AM-asymmetry feature
 
-    r2_0, lo_0, _, _, pred0, _, _ = _cblend_fit_score(base_log, logsf, taus)
-    r2_1, lo_1, beta, pred1 = _cblend_size_score(base_log, logsf, taus, sfeat)
+    r2_n, lo_n, _, _, pred_n, _, _ = _cblend_fit_score(base_log, logsf, taus)
+    r2_s, lo_s, b_s, pred_s = _cblend_extra_score(base_log, logsf, taus, sfeat)
+    r2_a, lo_a, b_a, pred_a = _cblend_extra_score(base_log, logsf, taus, afeat)
+    r2_b, lo_b, b_b, pred_b = _cblend_extra_score(
+        base_log, logsf, taus, np.column_stack([sfeat, afeat]))
+
     act = np.exp(logsf)
-    err0 = (np.exp(pred0)-act)/act*100.0
-    err1 = (np.exp(pred1)-act)/act*100.0
-    out0 = np.abs(err0) > 20.0; out1 = np.abs(err1) > 20.0
+    def _out(pred):
+        return np.abs((np.exp(pred)-act)/act*100.0) > 20.0
+    panels = [('NO extra term', pred_n, r2_n, lo_n, ''),
+              ('+ SE-size (g_phi)', pred_s, r2_s, lo_s, f'beta_s={b_s[0]:+.3f}'),
+              ('+ AM-asym (g_mix)', pred_a, r2_a, lo_a, f'beta_a={b_a[0]:+.3f}'),
+              ('+ BOTH', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}')]
 
-    def _is010(nm):
-        return '0:10' in (nm or '').replace(' ', '')
-    m010 = np.array([_is010(l) for l in labs])
-    o010_0 = int((out0 & m010).sum()); o010_1 = int((out1 & m010).sum())
+    def _is(nm, ps):
+        return ps in (nm or '').replace(' ', '')
+    m010 = np.array([_is(l, '0:10') for l in labs])
+    mmix = np.array([(_is(l, '7:3') or _is(l, '3:7') or _is(l, '5:5')) for l in labs])
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5.2))
-    for ax, pred, out, ttl in ((axes[0], pred0, out0, 'WITHOUT size term'),
-                               (axes[1], pred1, out1, 'WITH gated size term')):
-        sp = np.exp(pred)
-        ax.scatter(act[~out & ~m010], sp[~out & ~m010], s=38, c=BLUE,
-                   edgecolors='white', zorder=3, label='within ±20%')
-        if (out & ~m010).any():
-            ax.scatter(act[out & ~m010], sp[out & ~m010], s=62, c=RED,
-                       edgecolors='black', zorder=4, label='outlier (>20%)')
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    for ax, (ttl, pred, r2, lo, btxt) in zip(axes.ravel(), panels):
+        sp = np.exp(pred); out = _out(pred)
+        base_m = ~m010 & ~mmix
+        ax.scatter(act[base_m & ~out], sp[base_m & ~out], s=30, c=BLUE,
+                   edgecolors='white', zorder=3, label='other')
+        if (out & base_m).any():
+            ax.scatter(act[out & base_m], sp[out & base_m], s=55, c=RED,
+                       edgecolors='black', zorder=4, label='outlier(>20%)')
         if m010.any():
-            ax.scatter(act[m010], sp[m010], s=70, marker='D', c=ORANGE,
-                       edgecolors='black', zorder=5, label='P:S=0:10')
+            ax.scatter(act[m010], sp[m010], s=64, marker='D', c=ORANGE,
+                       edgecolors='black', zorder=5, label='0:10')
+        if mmix.any():
+            ax.scatter(act[mmix], sp[mmix], s=64, marker='s', c=PURPLE,
+                       edgecolors='black', zorder=5, label='7:3/3:7/5:5')
         lim = [min(act.min(), sp.min())*0.8, max(act.max(), sp.max())*1.2]
         ax.plot(lim, lim, '--', color=GRAY)
         ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
@@ -4457,28 +4495,41 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
         ax.set_xscale('log'); ax.set_yscale('log')
         ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
         ax.set_ylabel('σ_predicted (mS/cm)')
-        ax.set_title(ttl, fontsize=9)
-        ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=7, loc='upper left')
-    fig.suptitle(
-        f"Gated SE-size term test (n={n})   "
-        f"R2 {r2_0:.3f}->{r2_1:.3f}   LOOCV {lo_0:.3f}->{lo_1:.3f}   beta={beta:+.3f}\n"
-        f"outliers(>20%) {int(out0.sum())}->{int(out1.sum())}   "
-        f"of which P:S=0:10  {o010_0}->{o010_1}   "
-        f"[gate g=sigmoid(-{K_G:.0f}(phi-{PHI_GATE}))  size=r_SE or 1/gb_density]",
-        fontsize=9)
-    fig.tight_layout(rect=[0, 0, 1, 0.93])
+        n010 = int((out & m010).sum()); nmix = int((out & mmix).sum())
+        ax.set_title(f"{ttl}\nR2={r2:.3f} LOOCV={lo:.3f}  out={int(out.sum())} "
+                     f"(0:10 {n010}, mix {nmix})  {btxt}", fontsize=8)
+        ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=6.5, loc='upper left')
+    fig.suptitle("Gated correction-term test (n=%d): SE-size near threshold + "
+                 "AM-asymmetry for mixed-AM\nsize=r_SE|1/gb_density  "
+                 "asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
+                 "g_mix=gauss(p;0.5,%g)" % (n, K_G, PHI_GATE, P_MIX_W), fontsize=9)
+    fig.tight_layout(rect=[0, 0, 1, 0.94])
     outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
 
+    def _cnt(pred, mask):
+        return int((_out(pred) & mask).sum())
     import json as _json
     with open(os.path.join(outdir, "ionic_sizeterm_test.json"), 'w',
               encoding='utf-8') as jf:
-        _json.dump({'n': n, 'beta': round(beta, 4),
-                    'r2_no': round(r2_0, 4), 'r2_yes': round(r2_1, 4),
-                    'loocv_no': round(lo_0, 4), 'loocv_yes': round(lo_1, 4),
-                    'n_out_no': int(out0.sum()), 'n_out_yes': int(out1.sum()),
-                    'n_out_010_no': o010_0, 'n_out_010_yes': o010_1,
-                    'phi_gate': PHI_GATE, 'k_gate': K_G}, jf,
-                   ensure_ascii=False, indent=1)
+        _json.dump({'n': n,
+                    'models': {
+                        'none': {'r2': round(r2_n, 4), 'loocv': round(lo_n, 4),
+                                 'n_out': int(_out(pred_n).sum()),
+                                 'out_010': _cnt(pred_n, m010), 'out_mix': _cnt(pred_n, mmix)},
+                        'size': {'r2': round(r2_s, 4), 'loocv': round(lo_s, 4),
+                                 'beta_s': round(b_s[0], 4),
+                                 'n_out': int(_out(pred_s).sum()),
+                                 'out_010': _cnt(pred_s, m010), 'out_mix': _cnt(pred_s, mmix)},
+                        'asym': {'r2': round(r2_a, 4), 'loocv': round(lo_a, 4),
+                                 'beta_a': round(b_a[0], 4),
+                                 'n_out': int(_out(pred_a).sum()),
+                                 'out_010': _cnt(pred_a, m010), 'out_mix': _cnt(pred_a, mmix)},
+                        'both': {'r2': round(r2_b, 4), 'loocv': round(lo_b, 4),
+                                 'beta_s': round(b_b[0], 4), 'beta_a': round(b_b[1], 4),
+                                 'n_out': int(_out(pred_b).sum()),
+                                 'out_010': _cnt(pred_b, m010), 'out_mix': _cnt(pred_b, mmix)}},
+                    'phi_gate': PHI_GATE, 'k_gate': K_G, 'p_mix_w': P_MIX_W},
+                   jf, ensure_ascii=False, indent=1)
     return outpath
 
 
@@ -4755,9 +4806,9 @@ PLOT_REGISTRY["ionic_outliers_stage_e"] = {
 PLOT_REGISTRY["ionic_sizeterm_test"] = {
     "func": plot_ionic_sizeterm_test,
     "file": "ionic_sizeterm_test.png",
-    "title": "σ_ionic SE-입자크기 항 TEST (게이트)",
-    "description": "고정 물리식에 게이트 SE-입자크기 보정 × exp(β·g(φ)·[ln(size)−median])을 곱해, 임계 근처(0:10·저-SE) outlier가 잡히는지 + 전역 LOOCV가 안 깎이는지 좌(無)/우(有) parity로 비교. β>0이면 SE 입자 클수록(=GB 적을수록) σ↑. 게이트 g=σ(−12(φ−0.30))는 SE 희박 영역에서만 보정 ON. size=직접 r_SE, 없으면 1/gb_density.",
-    "origin_tip": "1×2 parity. 제목에 R²/LOOCV 변화·β·outlier 수(전체 및 0:10) 변화.",
+    "title": "σ_ionic 게이트 보정항 TEST (SE-size · AM-asym · 둘다)",
+    "description": "고정 물리식에 게이트 곱셈 보정항을 넣어 4-way(無 / +SE-입자크기 / +AM비대칭 / +둘다) parity로 비교.\n①SE-size × exp(β_s·g_φ·[ln(size)−mean]) — g_φ=σ(−12(φ−0.30))로 임계 근처(0:10·저-SE)에서만 ON, GB 직렬저항. ②AM-asym × exp(β_a·g_mix·[asym−mean]) — g_mix=가우시안(p;0.5)로 mixed-AM(7:3·3:7·5:5)에서만 ON, AM_P/AM_S 피복 비대칭. size=r_SE|1/gb_density, asym=physics cov(P−S)|ln(rP/rS).\n각 패널 제목에 R²·LOOCV·outlier 수(전체·0:10·mix)·β. LOOCV가 fold마다 β 재적합 → 과적합 정직 판정.",
+    "origin_tip": "2×2 parity. 0:10=주황 다이아, 7:3/3:7/5:5=보라 사각. LOOCV 개선 + outlier 감소를 동시에 확인.",
 }
 PLOT_REGISTRY["fracture_stages"] = {
     "func": plot_fracture_stages,
