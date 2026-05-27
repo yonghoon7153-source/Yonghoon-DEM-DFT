@@ -4630,14 +4630,16 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     sfeat = g_phi*szlog            # SE-size feature (centered inside the fit)
     afeat = g_mix*asym             # AM-asymmetry feature
 
-    # Near-threshold SATURATION base: round the percolation singularity so the
-    # 62:38 / 0:10 cases (φ≈φc, where √(φ−φc) is hyper-sensitive) are tamed.
-    # φ_eff = sqrt((φ−φc)² + δ²)  →  ≈ φ−φc far above φc, floors at δ near it.
-    # δ is SCANNED for the LOOCV-optimal value (δ=0 ≡ the original √ form).
+    # Near-threshold SATURATION base, GATED per-case so the rounding only acts
+    # where it's needed (0:10 / near φc).  φ_eff = sqrt((φ−φc)² + (δ·g_φ)²):
+    #   g_φ→0 (SE-rich)        ⇒ φ_eff = φ−φc  (no change),
+    #   g_φ→1 (0:10/threshold) ⇒ full δ rounding of the √ singularity.
+    # δ (the max rounding) is SCANNED for the LOOCV-optimal value (δ=0 ≡ √ form).
     phi_ex = np.maximum(phis - PHI_C, 1e-6)
     def _sat_base(delta):
-        return base_log + 0.5*(np.log(np.sqrt(phi_ex**2 + delta**2)) - np.log(phi_ex))
-    delta_grid = np.round(np.linspace(0.0, 0.06, 13), 4)
+        eff = np.sqrt(phi_ex**2 + (delta*g_phi)**2)
+        return base_log + 0.5*(np.log(eff) - np.log(phi_ex))
+    delta_grid = np.round(np.linspace(0.0, 0.12, 25), 4)
     sat_scan = []
     for _dlt in delta_grid:
         _r2d, _lod, *_ = _cblend_fit_score(_sat_base(float(_dlt)), logsf, taus)
@@ -4660,8 +4662,8 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
               ('+ SE-size (g_phi)', pred_s, r2_s, lo_s, f'beta_s={b_s[0]:+.3f}'),
               ('+ AM-asym (g_mix)', pred_a, r2_a, lo_a, f'beta_a={b_a[0]:+.3f}'),
               ('+ BOTH (size+asym)', pred_b, r2_b, lo_b, f'beta_s={b_b[0]:+.3f} beta_a={b_b[1]:+.3f}'),
-              ('SAT phic (rounded, d*=%.3f scan)' % DELTA, pred_t, r2_t, lo_t, ''),
-              ('SAT(d*=%.3f) + AM-asym' % DELTA, pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
+              ('SAT-gated phic (d*=%.3f·g_phi scan)' % DELTA, pred_t, r2_t, lo_t, ''),
+              ('SAT-gated(d*=%.3f) + AM-asym' % DELTA, pred_ta, r2_ta, lo_ta, f'beta_a={b_ta[0]:+.3f}')]
 
     def _is(nm, ps):
         return ps in (nm or '').replace(' ', '')
@@ -4706,7 +4708,7 @@ def plot_ionic_sizeterm_test(data_list, names, outdir):
     ins.tick_params(labelsize=5); ins.set_xlabel('δ', fontsize=5); ins.grid(True, alpha=0.3)
     fig.suptitle("Correction-term test (n=%d): size / AM-asym / rounded-phic SAT — catch 0:10(62:38)?\n"
                  "size=r_SE|1/gb_density  asym=cov(P-S)|ln(rP/rS)  g_phi=sig(-%g(phi-%g))  "
-                 "g_mix=gauss(p;0.5,%g)  SAT: phi_eff=sqrt((phi-%.2f)^2+d^2), d*=%.3f (LOOCV-scan)"
+                 "g_mix=gauss(p;0.5,%g)  SAT(gated): phi_eff=sqrt((phi-%.2f)^2+(d*g_phi)^2), d*=%.3f (LOOCV-scan)"
                  % (n, K_G, PHI_GATE, P_MIX_W, PHI_C, DELTA), fontsize=9)
     fig.tight_layout(rect=[0, 0, 1, 0.94])
     outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
