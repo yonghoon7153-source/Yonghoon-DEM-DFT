@@ -4398,6 +4398,11 @@ def group_plots():
         cmd += ['--param-list', param_list]
     if request.form.get('param_norm') in ('1', 'true', 'on'):
         cmd += ['--param-norm']
+    # "1-1" focus: saved case names to show as a focus parity (tab-separated,
+    # since names can contain commas/colons). Fit stays on the full set.
+    focus_cases = request.form.getlist('focus_cases')
+    if focus_cases:
+        cmd += ['--focus-cases', '\t'.join(focus_cases)]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=120)
     if result.stdout:
         print(f"[plots] stdout:\n{result.stdout}")
@@ -4419,6 +4424,9 @@ def group_plots():
         for key in plots:
             if key in info:
                 plot_list.append(info[key])
+            # Append the "1-1" focus variant (if any) right after its parent
+            if f"{key}_focus" in info:
+                plot_list.append(info[f"{key}_focus"])
 
     return jsonify({'session': session_id, 'plots': plot_list})
 

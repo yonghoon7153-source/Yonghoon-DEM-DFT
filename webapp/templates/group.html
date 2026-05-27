@@ -152,6 +152,12 @@
       <button class="btn btn-sm btn-secondary" onclick="addPlotGroup()">+ 그룹 추가</button>
     </div>
     <div id="plot-groups-container"></div>
+    <details class="focus-picker" id="focus-picker" style="margin-top:10px;border-top:1px solid var(--border);padding-top:8px" ontoggle="if(this.open)refreshFocusPicker()">
+      <summary style="cursor:pointer;font-size:.82rem;font-weight:700;color:var(--text)">
+        항목 1-1 개별 보기 <span style="font-weight:400;color:var(--dim)">— fit 식·계수는 전체(항목1) 그대로, 선택한 sample 점만 표시 (parity / Hertzian parity)</span>
+      </summary>
+      <div id="focus-picker-list" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"></div>
+    </details>
   </div>
   <div class="plot-select-grid">
     <div class="plot-category">
@@ -354,6 +360,13 @@ async function loadArchiveCases(folder) {
 const CASE_WARNINGS = {
   {% for case in cases %}
   {% if case.warning_msgs %}'{{ case.id }}': {name: '{{ case.name }}', msgs: {{ case.warning_msgs | tojson }}},{% endif %}
+  {% endfor %}
+};
+
+// id → saved name for ALL cases (focus "1-1" picker uses the saved name,
+// which is what the plot generator receives as the case identity).
+const CASE_NAMES = {
+  {% for case in cases %}'{{ case.id }}': {{ case.name | tojson }},
   {% endfor %}
 };
 
@@ -827,6 +840,35 @@ function appendParamFields(form) {
   if (document.getElementById('param-norm')?.checked) form.append('param_norm', '1');
 }
 
+// "1-1" focus: append selected saved case names (fit stays on the full set;
+// only the displayed points are filtered to these samples).
+function appendFocusFields(form) {
+  document.querySelectorAll('#focus-picker-list input:checked')
+    .forEach(c => form.append('focus_cases', c.value));
+}
+
+// Build the focus-sample checklist from the cases currently in the plot groups.
+function refreshFocusPicker() {
+  const list = document.getElementById('focus-picker-list');
+  if (!list) return;
+  const ids = new Set();
+  caseGroups.forEach(g => (g.cases || []).forEach(c => ids.add(c)));
+  const prev = new Set([...list.querySelectorAll('input:checked')].map(c => c.value));
+  list.innerHTML = '';
+  if (!ids.size) {
+    list.innerHTML = '<span style="font-size:.75rem;color:var(--dim)">플롯 그룹에 케이스를 추가하면 여기서 1-1 표시할 sample을 고를 수 있어요.</span>';
+    return;
+  }
+  [...ids].forEach(id => {
+    const nm = (CASE_NAMES[id] || id);
+    const lbl = document.createElement('label');
+    lbl.className = 'plot-checkbox';
+    lbl.style.cssText = 'font-size:.74rem';
+    lbl.innerHTML = `<input type="checkbox" value="${nm.replace(/"/g,'&quot;')}" ${prev.has(nm)?'checked':''}> ${nm}`;
+    list.appendChild(lbl);
+  });
+}
+
 async function generatePlots() {
   const checks = document.querySelectorAll('.plot-checkbox input:checked');
   const plotTypes = Array.from(checks).map(c => c.value);
@@ -875,6 +917,7 @@ async function generatePlots() {
       console.log(`Global plots: ${globalPlotList.join(', ')} | ${allCaseGroups.length} groups, ${totalCases} cases`);
       const _yMaxInputG = document.getElementById('y-max-sigma-input');
       if (_yMaxInputG && _yMaxInputG.value) gform.append('y_max_sigma', _yMaxInputG.value);
+      appendFocusFields(gform);
       const gres = await fetch('/group/plots', { method: 'POST', body: gform });
       const gdata = await gres.json();
       // Extract b and ln_k from the CSV
@@ -922,6 +965,7 @@ async function generatePlots() {
       if (yMaxInput && yMaxInput.value) form.append('y_max_sigma', yMaxInput.value);
       // Generic parameter-comparison selections (param_scatter/bar/corr)
       appendParamFields(form);
+      appendFocusFields(form);
 
       const res = await fetch('/group/plots', { method: 'POST', body: form });
       const data = await res.json();
@@ -968,6 +1012,10 @@ async function generatePlots() {
           if (globalPlotMap[file]) {
             if (pt === 'ionic_scaling_fit' && !grid.querySelector('.derivation-box')) grid.appendChild(createDerivationBox());
             grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[file]));
+            // "1-1" focus view (same global fit, selected samples only)
+            if (globalPlotMap[pt + '_focus.png']) {
+              grid.appendChild(createPlotItem(globalRgbPlots.session, globalPlotMap[pt + '_focus.png']));
+            }
           }
           // Skip per-group rendering (handled globally or unavailable)
           continue;
@@ -1029,13 +1077,16 @@ async function generatePlots() {
 
 function createPlotItem(session, p) {
   const item = document.createElement('div');
-  item.className = 'plot-item';
+  item.className = 'plot-item' + (p.is_focus ? ' plot-item-focus' : '');
+  if (p.is_focus) {
+    item.style.cssText = 'margin-left:28px;border-left:3px solid var(--accent, #6ea8fe);padding-left:10px';
+  }
   const isOutlier = p.file === 'ionic_outliers_stage_e.png';
   item.innerHTML = `
     <img src="/group/plot-image/${session}/${p.file}" alt="${p.title}"
          onclick="openPlotModal(this.src, '${p.title}')">
     <div class="plot-info">
-      <h4>${p.title}</h4>
+      <h4>${p.is_focus ? '↳ ' : ''}${p.title}</h4>
       <p class="plot-desc">${p.description.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</p>
       <details class="plot-origin"><summary>Origin 설정</summary><pre>${p.origin_tip}</pre></details>
       ${isOutlier ? `<button class="btn btn-sm btn-primary" style="margin-top:10px"

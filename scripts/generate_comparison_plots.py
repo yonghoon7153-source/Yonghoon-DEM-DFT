@@ -55,6 +55,7 @@ _GLOBAL_IONIC_POLY3 = None  # (a0, a1, a2, a3) for poly3 part of v9 BLEND
 _GLOBAL_PS_SIGMOID = None   # v19: (k_pf, pc_pf, beta1, beta2, w_pf_mean, pf_t_mean)
 _ALL_DATA = None  # all_data for _apply_style auto-detect
 _REAL_NAMES = None  # saved case names (args.names), aligned with _ALL_DATA
+_FOCUS_CASES = set()  # subset of saved names to show in the "1-1" focus parity
 
 # Generic parameter-comparison selections (set by main() from CLI args).
 _PARAM_X = None       # X-axis metric key (scatter)
@@ -274,6 +275,38 @@ def _save(fig, outdir, fname):
     fig.savefig(path, dpi=DPI, bbox_inches="tight", facecolor='white', pad_inches=0.2)
     plt.close(fig)
     return path
+
+
+def _focus_parity(outdir, file_base, sig_act, sig_pred, kept_names,
+                  xlabel, ylabel, title):
+    """"1-1" view: if _FOCUS_CASES is set, render <file_base>_focus.png with the
+    SAME fit (1:1 + ±20% band + axis limits derived from the full set), but only
+    the selected sample points.  The global fit is reused unchanged — this only
+    filters which points are drawn.  Returns the path or None."""
+    if not _FOCUS_CASES:
+        return None
+    sig_act = np.asarray(sig_act, float); sig_pred = np.asarray(sig_pred, float)
+    foc = np.array([(nm in _FOCUS_CASES) for nm in kept_names])
+    if not foc.any():
+        print(f"  [SKIP] {file_base}_focus: none of the selected samples are in this fit")
+        return None
+    lim = [min(sig_act.min(), sig_pred.min())*0.8,
+           max(sig_act.max(), sig_pred.max())*1.2]
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    ax.plot(lim, lim, '--', color=GRAY, label='1:1')
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12, label='±20%')
+    ax.scatter(sig_act[foc], sig_pred[foc], s=75, c=ORANGE,
+               edgecolors='black', zorder=4, label='선택 샘플')
+    for i in np.where(foc)[0]:
+        ax.annotate(str(kept_names[i]), (sig_act[i], sig_pred[i]), fontsize=6,
+                    color='#333333', xytext=(4, 3), textcoords='offset points')
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlim(lim); ax.set_ylim(lim)
+    ax.set_xlabel(xlabel); ax.set_ylabel(ylabel)
+    ax.set_title(title, fontsize=8)
+    ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
+    return _save(fig, outdir, file_base + "_focus.png")
 
 
 def _get(data, key, default=0.0):
@@ -1689,7 +1722,16 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
                ['σ_actual(mS/cm)', 'σ_predicted(mS/cm)', 'error(%)'],
                [names[i] for i in valid_idx],
                list(s_actual), list(s_pred), list(errors))
-    return _save(fig, outdir, "ionic_scaling_fit.png")
+    outpath = _save(fig, outdir, "ionic_scaling_fit.png")
+    real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
+                else list(names))
+    _focus_parity(outdir, "ionic_scaling_fit", s_actual, s_pred,
+                  [real_all[i] for i in valid_idx],
+                  'σ_actual (Network solver, mS/cm)',
+                  'σ_predicted (Scaling law, mS/cm)',
+                  "선택 샘플만 — Hertzian v12-clean v3 식·계수 전체 fit 그대로 "
+                  "(n=%d, R²=%.3f)" % (len(valid_idx), r2))
+    return outpath
 
 
 def plot_network_sigma(data_list, names, outdir):
@@ -3936,8 +3978,10 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     A free data-native exponent fit is kept in the CSV as a diagnostic."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
-    base_log, logsf, taus, free_rows = [], [], [], []
-    for d in data_list:
+    real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
+                else list(names))
+    base_log, logsf, taus, free_rows, kept_names = [], [], [], [], []
+    for idx, d in enumerate(data_list):
         sig = _stage_e_sigma(d)
         phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -3951,6 +3995,7 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
         logsf.append(np.log(sig)); taus.append(tau)
         free_rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
                           np.log(fp), np.log(tau), np.log(sig/SG)))
+        kept_names.append(real_all[idx])
     n = len(taus)
     if n < 8:
         print(f"  [SKIP] ionic_fit_stage_e: only {n} usable cases (<8)")
@@ -4003,6 +4048,12 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
                  % (n, Ct, Cn, r2, loocv), fontsize=8)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_fit_stage_e.png")
+    _focus_parity(outdir, "ionic_fit_stage_e", sig_act, sig_pred, kept_names,
+                  'σ_actual (Stage E / Physics, mS/cm)',
+                  'σ_predicted (fixed form, mS/cm)',
+                  "선택 샘플만 — 식·계수는 전체 fit 그대로\n"
+                  "σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³  "
+                  "(fit: 전체 n=%d, R²=%.3f LOOCV=%.3f)" % (n, r2, loocv))
     with open(os.path.join(outdir, "ionic_fit_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
@@ -4846,13 +4897,15 @@ def main():
     parser.add_argument("--param-y", default="")   # scatter Y metric key
     parser.add_argument("--param-list", default="")  # comma-separated keys (bar/corr)
     parser.add_argument("--param-norm", action="store_true")  # normalize bar to max
+    parser.add_argument("--focus-cases", default="")  # \\t-separated saved names → "1-1" focus parity
     args = parser.parse_args()
 
-    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM
+    global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM, _FOCUS_CASES
     _PARAM_X = args.param_x or None
     _PARAM_Y = args.param_y or None
     _PARAM_LIST = [k for k in args.param_list.split(',') if k] or None
     _PARAM_NORM = bool(args.param_norm)
+    _FOCUS_CASES = set(s for s in args.focus_cases.split('\t') if s)
 
     # Parse group info
     if args.group_sizes:
@@ -5101,6 +5154,18 @@ def main():
             info_entry['C_ion'] = round(_GLOBAL_C_ION, 6)
         plot_info[plot_name] = info_entry
         print(f"  [OK] {plot_name} -> {outpath}")
+        # "1-1" focus view: register if the plot emitted a *_focus.png
+        focus_file = f"{plot_name}_focus.png"
+        if os.path.exists(os.path.join(args.output, focus_file)):
+            plot_info[f"{plot_name}_focus"] = {
+                "file": focus_file, "csv": None,
+                "title": entry["title"] + " — 1-1 선택 샘플",
+                "description": "항목1의 전체 fit(식·계수·1:1·±20% 동일)을 그대로 두고, "
+                               "선택한 sample의 점만 표시. 재적합 없음.",
+                "origin_tip": "동일 fit 위에 선택 케이스만 scatter.",
+                "is_focus": True, "parent": plot_name,
+            }
+            print(f"  [OK] {plot_name}_focus -> {focus_file}")
 
     # Persist v29 + v32 fits to disk cache (keyed on args.names = case IDs,
     # which are unique — unlike the P:S-ratio label list passed into the
