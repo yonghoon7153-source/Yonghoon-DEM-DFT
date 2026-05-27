@@ -3782,6 +3782,61 @@ def _cblend_fit_score(base_log, logsf, taus):
             pred, bv5, bp3)
 
 
+def _se_size_proxy(d):
+    """SE grain-size proxy in µm (larger ⇒ fewer grain boundaries in series
+    ⇒ higher σ).  Prefer the direct SE radius (design input); fall back to
+    the inverse GB density (more GB ⇒ smaller effective grains)."""
+    for k in ('_input_r_SE_um', '_input_r_SE', 'r_SE_um', 'r_SE'):
+        v = d.get(k)
+        if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+            # sim units (<0.01) → µm via ×1000 (matches grade_engine).
+            return v * 1000.0 if v < 0.01 else float(v)
+    gb = d.get('gb_density_mean')
+    if isinstance(gb, (int, float)) and not isinstance(gb, bool) and gb > 0:
+        return 1.0 / gb
+    return None
+
+
+def _cblend_size_score(base_log, logsf, taus, sfeat):
+    """C_blend(τ) fit + one extra multiplicative size correction β·sfeat
+    (fit on the post-C_blend residual; sfeat centered per training set).
+    Returns (r2, loocv, beta, pred_log).  LOOCV refits C_blend AND β each
+    fold so the extra DoF is honestly penalised."""
+    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    n = len(taus)
+    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
+    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
+    Xv5 = np.column_stack([np.ones(n), w_v5])
+    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
+
+    def _fit(mask):
+        resid = logsf[mask] - base_log[mask]
+        b5, *_ = np.linalg.lstsq(Xv5[mask], resid, rcond=None)
+        b3, *_ = np.linalg.lstsq(Xp3[mask], resid, rcond=None)
+        cb = (1-w_bl[mask])*(Xv5[mask]@b5) + w_bl[mask]*(Xp3[mask]@b3)
+        smean = sfeat[mask].mean()
+        sc = sfeat[mask] - smean
+        rr = resid - cb
+        denom = float(np.dot(sc, sc))
+        beta = float(np.dot(sc, rr)/denom) if denom > 1e-12 else 0.0
+        return b5, b3, beta, smean
+
+    b5, b3, beta, smean = _fit(np.ones(n, bool))
+    cb = (1-w_bl)*(Xv5@b5) + w_bl*(Xp3@b3)
+    pred = base_log + cb + beta*(sfeat - smean)
+    ss = np.sum((logsf - logsf.mean())**2)
+    r2 = 1 - np.sum((logsf - pred)**2)/ss if ss > 0 else 0.0
+    sse = 0.0
+    for i in range(n):
+        mk = np.ones(n, bool); mk[i] = False
+        b5i, b3i, bi, smi = _fit(mk)
+        cbi = (1-w_bl[i])*(Xv5[i]@b5i) + w_bl[i]*(Xp3[i]@b3i)
+        pi = base_log[i] + cbi + bi*(sfeat[i] - smi)
+        sse += (logsf[i] - pi)**2
+    loocv = 1 - sse/ss if ss > 0 else 0.0
+    return r2, loocv, float(beta), pred
+
+
 def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
     """Fix CN² · (φ−φc)^0.5 · cov^0.5 · f_p³ (clean integer/half powers) +
     C_blend(τ), and scan the percolation threshold φc for the LOOCV-optimal
@@ -4336,6 +4391,97 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     return outpath
 
 
+def plot_ionic_sizeterm_test(data_list, names, outdir):
+    """TEST: does a GATED SE-grain-size multiplicative term pull in the
+    near-threshold (0:10 / sparse-SE) outliers without hurting global LOOCV?
+
+    Compares the fixed physics form WITHOUT vs WITH an extra factor
+        × exp(β · g(φ) · [ln(size) − median])
+    where size = SE grain-size proxy (direct r_SE, else 1/gb_density) and
+    g(φ) = σ(−K·(φ−φ_gate)) gates the penalty ON only near the percolation
+    threshold (sparse SE), where grain-boundary series-resistance bites.
+    β>0 ⇒ larger SE grains → higher σ.  LOOCV refits β each fold."""
+    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    PHI_GATE = 0.30; K_G = 12.0
+    base_log, logsf, taus, labs, phis, szlog = [], [], [], [], [], []
+    for d, nm in zip(data_list, names):
+        sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct')/100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        sz = _se_size_proxy(d)
+        if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
+                and fp > 0 and tau > 0 and sz and sz > 0):
+            continue
+        base_log.append(np.log(SG) + 0.5*np.log(phi-PHI_C) + CN_EXP*np.log(cn)
+                        + COV_EXP*np.log(cov) + 3.0*np.log(fp))
+        logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
+        phis.append(phi); szlog.append(np.log(sz))
+    n = len(taus)
+    if n < 12:
+        print(f"  [SKIP] ionic_sizeterm_test: only {n} cases (<12) with a size proxy")
+        return None
+    base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
+    phis = np.array(phis); szlog = np.array(szlog)
+    g = 1.0/(1.0+np.exp(K_G*(phis-PHI_GATE)))
+    sfeat = g*(szlog - np.median(szlog))
+
+    r2_0, lo_0, _, _, pred0, _, _ = _cblend_fit_score(base_log, logsf, taus)
+    r2_1, lo_1, beta, pred1 = _cblend_size_score(base_log, logsf, taus, sfeat)
+    act = np.exp(logsf)
+    err0 = (np.exp(pred0)-act)/act*100.0
+    err1 = (np.exp(pred1)-act)/act*100.0
+    out0 = np.abs(err0) > 20.0; out1 = np.abs(err1) > 20.0
+
+    def _is010(nm):
+        return '0:10' in (nm or '').replace(' ', '')
+    m010 = np.array([_is010(l) for l in labs])
+    o010_0 = int((out0 & m010).sum()); o010_1 = int((out1 & m010).sum())
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 5.2))
+    for ax, pred, out, ttl in ((axes[0], pred0, out0, 'WITHOUT size term'),
+                               (axes[1], pred1, out1, 'WITH gated size term')):
+        sp = np.exp(pred)
+        ax.scatter(act[~out & ~m010], sp[~out & ~m010], s=38, c=BLUE,
+                   edgecolors='white', zorder=3, label='within ±20%')
+        if (out & ~m010).any():
+            ax.scatter(act[out & ~m010], sp[out & ~m010], s=62, c=RED,
+                       edgecolors='black', zorder=4, label='outlier (>20%)')
+        if m010.any():
+            ax.scatter(act[m010], sp[m010], s=70, marker='D', c=ORANGE,
+                       edgecolors='black', zorder=5, label='P:S=0:10')
+        lim = [min(act.min(), sp.min())*0.8, max(act.max(), sp.max())*1.2]
+        ax.plot(lim, lim, '--', color=GRAY)
+        ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                        color=GREEN, alpha=0.12)
+        ax.set_xscale('log'); ax.set_yscale('log')
+        ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
+        ax.set_ylabel('σ_predicted (mS/cm)')
+        ax.set_title(ttl, fontsize=9)
+        ax.grid(True, alpha=0.25, which='both'); ax.legend(fontsize=7, loc='upper left')
+    fig.suptitle(
+        f"Gated SE-size term test (n={n})   "
+        f"R2 {r2_0:.3f}->{r2_1:.3f}   LOOCV {lo_0:.3f}->{lo_1:.3f}   beta={beta:+.3f}\n"
+        f"outliers(>20%) {int(out0.sum())}->{int(out1.sum())}   "
+        f"of which P:S=0:10  {o010_0}->{o010_1}   "
+        f"[gate g=sigmoid(-{K_G:.0f}(phi-{PHI_GATE}))  size=r_SE or 1/gb_density]",
+        fontsize=9)
+    fig.tight_layout(rect=[0, 0, 1, 0.93])
+    outpath = _save(fig, outdir, "ionic_sizeterm_test.png")
+
+    import json as _json
+    with open(os.path.join(outdir, "ionic_sizeterm_test.json"), 'w',
+              encoding='utf-8') as jf:
+        _json.dump({'n': n, 'beta': round(beta, 4),
+                    'r2_no': round(r2_0, 4), 'r2_yes': round(r2_1, 4),
+                    'loocv_no': round(lo_0, 4), 'loocv_yes': round(lo_1, 4),
+                    'n_out_no': int(out0.sum()), 'n_out_yes': int(out1.sum()),
+                    'n_out_010_no': o010_0, 'n_out_010_yes': o010_1,
+                    'phi_gate': PHI_GATE, 'k_gate': K_G}, jf,
+                   ensure_ascii=False, indent=1)
+    return outpath
+
+
 _FRAC_STAGES = [('intact', 'Intact', '#4caf50'),
                 ('microcrack', 'Microcrack', '#a9d18e'),
                 ('multicrack', 'Multi-crack', '#ffd43b'),
@@ -4605,6 +4751,13 @@ PLOT_REGISTRY["ionic_outliers_stage_e"] = {
     "title": "σ_ionic Stage E — outlier 진단",
     "description": "물리 v12 fit의 worst-fit 케이스(>±20%)를 빨강+이름으로 강조하고, 잔차와 가장 상관 높은 구조 feature를 표시 (= base 식이 놓친 물리 = 다음에 곱할 후보).\nCSV: |err| 내림차순 케이스별 feature + 잔차-feature 상관.",
     "origin_tip": "Parity(log-log), outlier 빨강 라벨. CSV로 outlier 원인 분석.",
+}
+PLOT_REGISTRY["ionic_sizeterm_test"] = {
+    "func": plot_ionic_sizeterm_test,
+    "file": "ionic_sizeterm_test.png",
+    "title": "σ_ionic SE-입자크기 항 TEST (게이트)",
+    "description": "고정 물리식에 게이트 SE-입자크기 보정 × exp(β·g(φ)·[ln(size)−median])을 곱해, 임계 근처(0:10·저-SE) outlier가 잡히는지 + 전역 LOOCV가 안 깎이는지 좌(無)/우(有) parity로 비교. β>0이면 SE 입자 클수록(=GB 적을수록) σ↑. 게이트 g=σ(−12(φ−0.30))는 SE 희박 영역에서만 보정 ON. size=직접 r_SE, 없으면 1/gb_density.",
+    "origin_tip": "1×2 parity. 제목에 R²/LOOCV 변화·β·outlier 수(전체 및 0:10) 변화.",
 }
 PLOT_REGISTRY["fracture_stages"] = {
     "func": plot_fracture_stages,
