@@ -13,6 +13,7 @@ Usage:
 
 import argparse
 import csv
+import itertools
 import json
 import os
 import sys
@@ -3767,6 +3768,84 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     return outpath
 
 
+def plot_ionic_formtest_stage_e(data_list, names, outdir):
+    """Is a COMPLETELY DIFFERENT functional form worth it? Compare, on the
+    SAME features {ln(φ−0.2), lnCN, lncov, lnf_p, lnτ}, the power-law
+    (log-linear) vs a flexible degree-2 polynomial (squares + all pairwise
+    interactions) — a sklearn-free stand-in for GPR/RF.  Judged by LOOCV:
+      flexible ≫ power-law  → a better form exists (nonlinearity/interaction);
+      flexible ≈ power-law  → noise/ data ceiling, NO new formula will help."""
+    SG = 3.0; PHI_C = 0.20
+    rows = []
+    for d in data_list:
+        sig = _stage_e_sigma(d)
+        phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct') / 100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
+                and fp > 0 and tau > 0):
+            continue
+        rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
+                     np.log(fp), np.log(tau), np.log(sig)))
+    n = len(rows)
+    if n < 15:
+        print(f"  [SKIP] ionic_formtest_stage_e: only {n} usable cases (<15)")
+        return None
+    A = np.array(rows); F = A[:, :5]; y = A[:, 5]
+    ss_tot = np.sum((y - y.mean())**2)
+
+    def _loocv_r2(X):
+        coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+        r2 = 1 - np.sum((y - X @ coef)**2) / ss_tot
+        sse = 0.0
+        for i in range(n):
+            mk = np.ones(n, bool); mk[i] = False
+            ci, *_ = np.linalg.lstsq(X[mk], y[mk], rcond=None)
+            sse += (y[i] - X[i] @ ci)**2
+        return r2, 1 - sse / ss_tot
+
+    # A: power-law (log-linear)
+    XA = np.column_stack([np.ones(n), F])
+    r2A, looA = _loocv_r2(XA)
+    # B: flexible degree-2 poly (linear + squares + pairwise interactions)
+    cols = [np.ones(n)] + [F[:, j] for j in range(5)] \
+        + [F[:, j]**2 for j in range(5)] \
+        + [F[:, i]*F[:, j] for i, j in itertools.combinations(range(5), 2)]
+    XB = np.column_stack(cols)
+    r2B, looB = _loocv_r2(XB)
+
+    gain = looB - looA
+    verdict = ('새 형태 효과 有 (비선형/교호 신호)' if gain > 0.01
+               else '노이즈 천장 — 새 식 효과 거의 없음')
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    labels = ['Power-law\n(log-linear, %d p)' % XA.shape[1],
+              'Flexible poly-2\n(+sq +교호, %d p)' % XB.shape[1]]
+    xpos = [0, 1]
+    ax.bar([p-0.18 for p in xpos], [r2A, r2B], 0.36, label='R² (train)', color=GRAY)
+    ax.bar([p+0.18 for p in xpos], [looA, looB], 0.36, label='LOOCV', color=BLUE)
+    for p, (tr, lo) in zip(xpos, [(r2A, looA), (r2B, looB)]):
+        ax.text(p-0.18, tr+0.005, f'{tr:.3f}', ha='center', fontsize=8)
+        ax.text(p+0.18, lo+0.005, f'{lo:.3f}', ha='center', fontsize=8,
+                color=BLUE, fontweight='bold')
+    ax.set_xticks(xpos); ax.set_xticklabels(labels, fontsize=8)
+    ax.set_ylabel('R²'); ax.set_ylim(min(looA, looB)-0.05, 1.0)
+    ax.set_title("새 함수형이 효과 있나? (Stage-E σ, n=%d)\n"
+                 "ΔLOOCV(flex−power) = %+.3f → %s" % (n, gain, verdict),
+                 fontsize=9)
+    ax.legend(fontsize=8, loc='lower right'); ax.grid(True, axis='y', alpha=0.25)
+    outpath = _save(fig, outdir, "ionic_formtest_stage_e.png")
+    with open(os.path.join(outdir, "ionic_formtest_stage_e.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        wr = csv.writer(f)
+        wr.writerow(['model', 'n_params', 'R2_train', 'LOOCV'])
+        wr.writerow(['power-law (log-linear)', XA.shape[1], round(r2A, 4), round(looA, 4)])
+        wr.writerow(['flexible poly-2', XB.shape[1], round(r2B, 4), round(looB, 4)])
+        wr.writerow(['ΔLOOCV (flex - power)', '', '', round(gain, 4)])
+        wr.writerow(['verdict', verdict])
+    return outpath
+
+
 def plot_ionic_refit_stage_e(data_list, names, outdir):
     """Test: refit ONLY the φ/CN/cov exponents (f_p=3 + C_blend(τ) kept) for
     the Stage-E/Physics target, LOOCV-validated, and compare to the fixed
@@ -3819,6 +3898,18 @@ def plot_ionic_refit_stage_e(data_list, names, outdir):
     off_free = np.log(SG) + 3.0*lfp
     cf, r2_free, loo_free, pred_free = _fit(Xfree, off_free)
     a, b, c = float(cf[0]), float(cf[1]), float(cf[2])
+    # Standard errors of the exponents → only trust "확실하게 떨어지는" ones.
+    # SE = sqrt(σ²·diag((XᵀX)⁻¹)); large SE/|coef| ⇒ poorly determined.
+    yf = logsf - off_free
+    resid_f = yf - Xfree @ cf
+    dof = max(n - Xfree.shape[1], 1)
+    sigma2 = float(resid_f @ resid_f) / dof
+    try:
+        cov = sigma2 * np.linalg.pinv(Xfree.T @ Xfree)
+        se = np.sqrt(np.clip(np.diag(cov), 0, None))
+        se_a, se_b, se_c = float(se[0]), float(se[1]), float(se[2])
+    except Exception:
+        se_a = se_b = se_c = float('nan')
 
     sig_act = np.exp(logsf); sig_pred = np.exp(pred_free)
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
@@ -3833,13 +3924,13 @@ def plot_ionic_refit_stage_e(data_list, names, outdir):
     gain = loo_free - loo_fix
     ax.set_title(
         "Stage-E σ — refit φ/CN/cov exponents  (n=%d)\n"
-        "(φ−0.2)^%.2f · CN^%.2f · cov^%.2f · f_p³ · C_blend(τ)   "
-        "[v12 고정: 0.50/1.50/0.40]\n"
+        "(φ−0.2)^(%.2f±%.2f) · CN^(%.2f±%.2f) · cov^(%.2f±%.2f) · f_p³ · C_blend(τ)   "
+        "[v12: 0.50/1.50/0.40]\n"
         "refit: R²=%.3f LOOCV=%.3f   vs   fixed-v12: R²=%.3f LOOCV=%.3f   "
         "(ΔLOOCV=%+.3f %s)"
-        % (n, a, b, c, r2_free, loo_free, r2_fix, loo_fix, gain,
+        % (n, a, se_a, b, se_b, c, se_c, r2_free, loo_free, r2_fix, loo_fix, gain,
            '개선' if gain > 0.002 else '미미/과적합'),
-        fontsize=7.5)
+        fontsize=7.2)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_refit_stage_e.png")
     with open(os.path.join(outdir, "ionic_refit_stage_e.csv"), 'w', newline='',
@@ -3849,6 +3940,12 @@ def plot_ionic_refit_stage_e(data_list, names, outdir):
         wr.writerow(['fixed v12', 0.5, 1.5, 0.4, 3, round(r2_fix, 4), round(loo_fix, 4)])
         wr.writerow(['refit φ/CN/cov', round(a, 3), round(b, 3), round(c, 3), 3,
                      round(r2_free, 4), round(loo_free, 4)])
+        wr.writerow(['  ± std error', round(se_a, 3), round(se_b, 3), round(se_c, 3),
+                     '', '', ''])
+        wr.writerow(['  well-determined?',
+                     'Y' if se_a < abs(a)*0.5 else 'N',
+                     'Y' if se_b < abs(b)*0.5 else 'N',
+                     'Y' if se_c < abs(c)*0.5 else 'N', '(SE<50%·|exp|)', '', ''])
         wr.writerow(['ΔLOOCV', '', '', '', '', '', round(gain, 4)])
     return outpath
 
@@ -4207,6 +4304,13 @@ PLOT_REGISTRY["ionic_fit_stage_e"] = {
     "title": "σ_ionic → Stage E (물리식 재적합)",
     "description": "Stage-E(또는 Physics) σ_ionic을 타깃으로, 물리 고정식(√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³)에 C_blend(τ)만 재적합 (parity + R²/LOOCV).\n지수는 물리값으로 고정(과적합 방지). 자유지수 진단치는 CSV에 함께 기록 — physics 타깃이 같은 지수를 원하는지 확인용.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20%. 제목에 물리식 + C_blend(Ct/Cn).",
+}
+PLOT_REGISTRY["ionic_formtest_stage_e"] = {
+    "func": plot_ionic_formtest_stage_e,
+    "file": "ionic_formtest_stage_e.png",
+    "title": "σ_ionic Stage E — 새 함수형 효과 test",
+    "description": "같은 feature로 power-law(로그선형) vs 유연형(2차 다항+교호항)을 LOOCV로 비교 (GPR/RF 대용).\nΔLOOCV>0.01이면 새 형태로 더 맞출 여지 있음, 아니면 노이즈 천장 = 어떤 식도 못 넘음.",
+    "origin_tip": "Bar: 두 모델 R²(train)+LOOCV. ΔLOOCV로 판정.",
 }
 PLOT_REGISTRY["ionic_refit_stage_e"] = {
     "func": plot_ionic_refit_stage_e,
