@@ -120,7 +120,11 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
         # A-3 fix: r² gate. Diverged BM3 fits (r²<0.95) shouldn't poison
         # downstream rankings; flag B0_GPa as None and set fit_quality_ok=False
         # so combine_rankings can drop them.
-        fit_ok = r2 >= 0.95 and 0 < V0 < 5 * V[len(V)//2]
+        # N-? fix: also gate on a physical B0' (0<Bp<15). A BM3 fit can have high
+        # r² yet diverge to garbage (e.g. B0=2.2 GPa, Bp=-306) — those slip past
+        # the r² gate but are unphysical; require a sane B0' so B0_GPa→None.
+        fit_ok = (r2 >= 0.95 and 0 < V0 < 5 * V[len(V)//2]
+                  and 0.0 < Bp < 15.0)
         return {'V_points': V.tolist(), 'E_points': E.tolist(),
                 'fractions': list(fractions),
                 'V0': float(V0) if fit_ok else None,
@@ -132,7 +136,8 @@ def eos_sweep(atoms_ref, calc, fractions=(0.94, 0.96, 0.98, 1.00, 1.02, 1.04, 1.
                 'r2': float(r2),
                 'fit_quality_ok': fit_ok,
                 'fit_quality_reason': ('OK' if fit_ok
-                                      else f'r²={r2:.4f} < 0.95 or V0 unphysical')}
+                                      else f"r2={r2:.4f} / V0 / B0'={Bp:.2f} "
+                                           f"unphysical (need r2>=0.95, 0<B0'<15)")}
     except Exception as e:
         return {'V_points': V.tolist(), 'E_points': E.tolist(),
                 'fractions': list(fractions),
