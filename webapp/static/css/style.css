@@ -280,6 +280,10 @@ tr.tooltip-row .tt-meaning { color: #a5f3c4; margin-top: 8px; }
   font-size: .88rem;
 }
 .data-table.grade-table td:nth-child(3) { text-align: center; }
+/* Align the header cells with their right/center-aligned body cells so the
+   numbers sit directly under the '값' header instead of drifting right. */
+.data-table.grade-table th:nth-child(2) { text-align: right; }
+.data-table.grade-table th:nth-child(3) { text-align: center; }
 .data-table.grade-table .grade-badge { display: inline-block; }
 
 /* What-if 도전재 panel */
