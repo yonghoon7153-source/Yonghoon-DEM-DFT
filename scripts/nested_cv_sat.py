@@ -476,23 +476,28 @@ def main():
     print("  axis (anti-correlated) — adopt only ONE. Testing several arms = mild")
     print("  multiple-comparison; trust a PASS only if Δ clearly exceeds the SE.")
 
+    # Apples-to-apples baseline for sections 5–6: SAT with frozen φc/δ (no inner
+    # scanning), so the Δ reflects ONLY the added effect — not the difference
+    # between scanning vs not scanning.
+    base_fix = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F)
+    lo_fix = loocv_r2(base_fix, logsf, taus)
+
     # 5) composition-dependent φ exponent for 0:10 (a NEW core-physics lever:
     #    the percolation exponent was frozen at 0.5 — never scanned).
     print("=" * 64)
     lo_exp, exps_mean, exps_picks = nested_cv_exp(a, logsf, taus)
     print("Composition-dependent φ exponent — 0:10 exp_S (φc/δ frozen, P-heavy 0.5):")
-    print(f"  SAT+exp_S NESTED-CV={lo_exp:.4f}  Δover SAT={lo_exp - lo_sat_nested:+.4f}  "
+    print(f"  SAT (frozen φc/δ) LOOCV  : {lo_fix:.4f}")
+    print(f"  SAT+exp_S NESTED-CV      : {lo_exp:.4f}   Δover SAT(frozen)={lo_exp - lo_fix:+.4f}   "
           f"mean exp_S={exps_mean:.2f}")
     vv, cc = np.unique(np.round(exps_picks, 2), return_counts=True)
     top = sorted(zip(cc, vv), reverse=True)[:4]
     print("  inner-picked exp_S: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
-    print(f"  VERDICT: {'PASS — 0:10 wants a different exponent' if lo_exp - lo_sat_nested > se else 'FAIL — within noise (0.5 is fine)'}")
+    print(f"  VERDICT: {'PASS — 0:10 wants a different exponent' if lo_exp - lo_fix > se else 'FAIL — exp_S=0.5 is best (no change)'}")
 
     # 6) Stage-E Cronau SE-size factor — APPLIED (fixed literature, NOT fitted),
     #    so no DoF / no selection bias: does mirroring the target's own grain
     #    correction in σ_grain improve the fit?
-    base_fix = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F)
-    lo_fix = loocv_r2(base_fix, logsf, taus)
     cf = cronau_factor(a[:, 8])
     lo_cron = loocv_r2(base_fix + np.log(cf), logsf, taus)
     n_sub = int(np.sum(np.isfinite(a[:, 8]) & (a[:, 8] < 0.5)))

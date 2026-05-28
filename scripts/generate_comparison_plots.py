@@ -3770,12 +3770,15 @@ def _cov_frac(d, physics=True):
     return (sum(vs) / len(vs) / 100.0) if vs else None
 
 
-# ── Production fixed Stage-E/physics form (SAT-blend) ──────────────────────
-# σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³, with a COMPOSITION-
+# ── Production fixed Stage-E/physics form (SAT-blend + Cronau σ_grain) ────
+# σ = C_blend(τ)·σ_grain(r_SE)·(φ_eff)^0.5·CN²·cov^0.5·f_p³, with a COMPOSITION-
 # dependent percolation threshold and near-threshold saturation, both blended
-# by the P:S sigmoid g_010 (same structure as C_blend(τ)).  Validated by
-# nested CV (scripts/nested_cv_sat.py): unbiased LOOCV 0.949→0.953 (+0.0045,
-# ~2.8× noise SE).  φc_P / φc_S / δ frozen at the joint-screen optimum.
+# by the P:S sigmoid g_010 (same structure as C_blend(τ)).  σ_grain is the SE
+# MATERIAL property — size-dependent via the Cronau (2022) factor that the
+# Stage-E target itself applies, so the form mirrors how the target was built.
+# Validated by nested CV (scripts/nested_cv_sat.py): unbiased SAT 0.949→0.953
+# (+0.0045, ~2.8× noise SE); × Cronau then adds Δ=+0.0043 at frozen φc/δ
+# (literature factor, no DoF, deterministic).
 SE_SG = 3.0
 SE_PHI_C_P = 0.200   # P-heavy (10:0) percolation threshold
 SE_PHI_C_S = 0.195   # S-heavy (0:10) percolation threshold
@@ -3789,13 +3792,37 @@ def _sat_g010(p):
     return 1.0/(1.0 + np.exp(SE_K_PS*(np.asarray(p, float) - SE_P_C)))
 
 
-def _sat_baselog(phi, cn, cov, fp, p):
+def _cronau_factor(r_SE_um):
+    """Stage-E σ_ionic SE-size factor (Cronau 2022; from
+    run_network_full_corrections.py:88).  Applied to σ_grain — the SE's
+    intrinsic grain conductivity drops for sub-µm SE (amorphization).
+    r≥0.5µm→1.00, 0.3–0.5→0.90, 0.1–0.3→0.65, 0.03–0.1→smooth interp, <0.03→0.33.
+    Missing / non-positive r_SE → 1.0 (no penalty)."""
+    r = np.asarray(r_SE_um, float)
+    f = np.select([r >= 0.5, r >= 0.3, r >= 0.1, r >= 0.03],
+                  [1.00, 0.90, 0.65, 0.33 + 0.32*(np.clip(r, 0.03, 0.1)-0.03)/0.07],
+                  default=0.33)
+    return np.where(np.isfinite(r) & (r > 0), f, 1.0)
+
+
+def _direct_rse_um(d):
+    """Direct SE radius in µm from the design inputs (None / 0 if unavailable)."""
+    for k in ('_input_r_SE_um', '_input_r_SE', 'r_SE_um', 'r_SE'):
+        v = d.get(k) if hasattr(d, 'get') else None
+        if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+            return v*1000.0 if v < 0.01 else float(v)
+    return None
+
+
+def _sat_baselog(phi, cn, cov, fp, p, r_SE_um=None):
     """Log of the production fixed form WITHOUT C_blend(τ) (the τ prefactor is
-    fit separately/live).  Works on scalars or arrays."""
+    fit separately/live).  σ_grain = 3.0 × Cronau(r_SE) so the form mirrors the
+    Stage-E target's SE-size correction.  Works on scalars or arrays."""
     g010 = _sat_g010(p)
     phic = (1.0 - g010)*SE_PHI_C_P + g010*SE_PHI_C_S
     phi_eff = np.sqrt((np.asarray(phi, float) - phic)**2 + (SE_SAT_DELTA*g010)**2 + 1e-12)
-    return (np.log(SE_SG) + 0.5*np.log(phi_eff) + SE_CN_EXP*np.log(cn)
+    sg = SE_SG * _cronau_factor(r_SE_um) if r_SE_um is not None else SE_SG
+    return (np.log(sg) + 0.5*np.log(phi_eff) + SE_CN_EXP*np.log(cn)
             + SE_COV_EXP*np.log(cov) + 3.0*np.log(fp))
 
 
@@ -3992,7 +4019,7 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
+        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
         logsf.append(np.log(sig)); taus.append(tau)
         free_rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
                           np.log(fp), np.log(tau), np.log(sig/SG)))
@@ -4081,7 +4108,7 @@ def _stage_e_base_arrays(corpus):
         fp = _get(d, 'percolation_pct')/100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
-            bl.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
+            bl.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
             ls.append(np.log(sig)); ts.append(tau)
     return np.array(bl), np.array(ls), np.array(ts)
 
@@ -4127,7 +4154,7 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
             idx.append(i)
-            base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
+            base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
             logsf.append(np.log(sig)); taus.append(tau)
     if len(idx) < 8:
         print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
@@ -4383,7 +4410,7 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d))))
+        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
         logsf.append(np.log(sig)); taus.append(tau); labs.append(nm)
         real_labs.append(real_all[idx])
         fr = {}

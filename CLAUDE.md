@@ -86,6 +86,17 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   sub-µm drop (Δ=+0.074), so the real 62:38 3× spread at fixed (62:38, r_SE)
   is NOT a clean deterministic sub-µm effect — packing/stochastic. Only levers
   left: MORE 62:38×packing data, or probabilistic (±band) prediction.
+- **Cronau σ_grain factor ADOPTED (2026-05-28).** Per Stage-E itself
+  (`run_network_full_corrections.py:88`), σ_grain depends on r_SE: 1.0 ≥0.5µm,
+  0.90 at 0.3–0.5, 0.65 at 0.1–0.3, smooth to 0.33 ≤30nm. This is an SE
+  MATERIAL property (amorphization at sub-µm), NOT a GB/geometric correction.
+  Applied as a FIXED literature factor (no fit, no DoF) to the production
+  σ_grain: `σ_grain_eff = 3.0 × Cronau(r_SE)` in `_sat_baselog`. LOOCV (frozen
+  φc/δ) 0.9579 → 0.9622 (Δ=+0.0043, even with only 1/91 sub-0.5µm in the
+  current corpus). This is why every geometric/coverage/size correction TERM
+  failed — wrong location: the missing physics was in the σ_grain prefactor,
+  not a multiplicative correction term. exp_S scan: 91/91 folds pick 0.5
+  (mean-field) — percolation exponent is fine as-is.
 - **CONTACT-QUALITY hypothesis ALSO rejected (2026-05-28).** The resid diagnostic
   (`scripts/resid_diag_62_38.py`) showed am_se_cn (AM-SE contact COUNT) corr
   **−0.81** and coverage_AM_S **+0.79** in the 62:38 subset (n=15) — looked like
