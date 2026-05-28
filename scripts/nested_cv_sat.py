@@ -238,30 +238,26 @@ def cronau_factor(rse_um, smooth=True):
 PHIC_PROD = 0.195  # composition-neutral φc for the P2 term
 
 
-def p2_feature(phi, r_SE_um, p_amp=None):
-    """P2 augmentation feature: g_010 · (φ−φc_S)² · (r_SE − 0.5)+.
+def p2_feature(phi, r_SE_um, p_amp=None, g_gate=None):
+    """P2 augmentation: g · (φ−φc_S)² · (r_SE − 0.5)+ where g is the gate.
 
-    Zero at r_SE ≤ 0.5µm (Cronau's reference threshold); grows quadratically
-    in SE-volume excess above φc and linearly in grain-size excess above
-    Cronau's plateau.  Physical reading: 'bulk-grain enhancement' at large
-    grain × high SE fraction — natural extension of Cronau curve.
+    The 'bulk-grain enhancement' at large grain × high SE fraction extends
+    Cronau's curve into the super-µm regime.  Gated to fire only at the
+    composition where the 62:38 corner physics lives.
 
-    GATING (added 2026-05-28 after C4 spillover diagnosis): the term is
-    g_010-gated by default — fires only at 0:10 (pure AM_S) where the
-    62:38 corner physics lives.  Without gating, P2 activates for ANY
-    composition with r_SE>0.5 AND φ>φc, causing positive-direction spillover
-    into non-0:10 D1+ cases (1mAh_5_AMP +22→+29%, 6mAh_real_10 NEW +26%,
-    8mAh_real40_9 NEW +22%) — those were ALREADY over-predicted, so P2
-    pushed them further out.  Gating restricts the correction to 0:10
-    where it's physically motivated AND data-validated.
-
-    p_amp = AM_P/(AM_P+AM_S); if None, ungated (legacy C4 behavior)."""
+    Gate priority:
+      g_gate (vector)  — use directly (production: smooth g_phys)
+      p_amp            — fall back to label-based g_010 (legacy)
+      None             — ungated (early diagnostic only)
+    """
     pex = np.maximum(np.asarray(phi, float) - PHIC_PROD, 0.0)
     r = np.asarray(r_SE_um, float)
     r_safe = np.where(np.isfinite(r) & (r > 0), r, 0.5)  # neutral if missing
     rse_hi = np.maximum(r_safe - 0.5, 0.0)
     p2 = pex**2 * rse_hi
-    if p_amp is not None:
+    if g_gate is not None:
+        p2 = g_gate * p2
+    elif p_amp is not None:
         g_010 = 1.0 / (1.0 + np.exp(K_PS * (np.asarray(p_amp, float) - P_C)))
         p2 = g_010 * p2
     return p2
@@ -284,39 +280,63 @@ def cov_delta_feature(cov_delta_pct, center=None):
 
 
 def production_extras(a, cov_delta_center=None, f_intact_log=None):
-    """Compute the production augmentation extras for the C5 form
-    (g_010-gated P2 + Δcov + log f_intact, 2026-05-28).
+    """C5 production extras (2026-05-28): [smooth-g-gated P2, Δcov, log f_intact].
 
-    Returns (extras_list, cov_delta_median) where:
-        extras_list[0] = g_010-gated P2 feature (n-vector)
-        extras_list[1] = centered Δcov feature (n-vector)
-        extras_list[2] = log(f_intact) feature (n-vector)   ← NEW (F4 adoption)
-
-    f_intact_log: optional pre-computed log(f_intact) per case (length n).
-        If None, expects `a` to have column 19 (loaded by load_corpus).
-        log(1 − fracture_aware_excluded_pct/100), clipped at f_intact≥0.05
-        to avoid log(0).  β_F ≈ +0.193 by OLS — corresponds to "partial-
-        conduction" Holm physics (fractured contacts retain ~60% of
-        nominal conductance via micro-asperity / residual Tabor contact)."""
-    p2 = p2_feature(a[:, 0], a[:, 8], p_amp=a[:, 6])   # g_010-gated
+    P2 now uses the SMOOTH size-based gate g_phys (S1 adoption) instead of
+    legacy g_010 — handles borderline cases (e.g. input_S_2 r_AM_S=4µm
+    where label-based g_010 says "fully 0:10" but size-based says
+    "borderline P-heavy")."""
+    g_phys = _g_phys_smooth(a)
+    p2 = p2_feature(a[:, 0], a[:, 8], g_gate=g_phys)   # smooth-gated
     cdc, med = cov_delta_feature(a[:, 12], center=cov_delta_center)
     if f_intact_log is not None:
         f_log = f_intact_log
     elif a.shape[1] >= 20:
-        # f_intact stored in column 19 by load_corpus
         f_log = a[:, 19]
     else:
-        # legacy corpus without f_intact column — fall back to 0 (= f_intact=1)
         f_log = np.zeros(a.shape[0])
     return [p2, cdc, f_log], med
 
 
+def _g_phys_smooth(a):
+    """Smooth size-based gate g_phys (label-free) — replaces legacy g_010.
+
+    g_phys = σ(10·(f_small − 0.5))   with
+    f_small = (1−p)·σ(5·(3.5 − r_AM_S)) + p·σ(5·(3.5 − r_AM_P))
+
+    The threshold 3.5 µm is the midpoint of the audited corpus size gap
+    (max AM_S=4.0µm, min AM_P=5.0µm; convention audit n=183, 0 violations).
+    Numerically equivalent to g_010 for cases following the convention, but
+    DIFFERS for borderline cases like input_S_2 (r_AM_S=4µm) where the
+    smooth gate correctly identifies "AM_S near AM_P size" → treats the
+    case as "borderline P-heavy" instead of "completely S-heavy".
+
+    Falls back to label-based g_010 if r_AM_S (col 17) / r_AM_P (col 18)
+    columns aren't present (legacy corpus before C5).  Adopted 2026-05-28
+    after S1 candidate ★ with Δ_LOOCV +0.0015.
+    """
+    p = a[:, 6]
+    if a.shape[1] < 19:
+        # legacy fallback to g_010
+        return 1.0/(1.0+np.exp(K_PS*(p - P_C)))
+    ras = a[:, 17]; rap = a[:, 18]
+    rs_med = float(np.nanmedian(ras[np.isfinite(ras)])) if np.isfinite(ras).any() else 2.5
+    rp_med = float(np.nanmedian(rap[np.isfinite(rap)])) if np.isfinite(rap).any() else 5.5
+    ras_s = np.where(np.isfinite(ras) & (ras > 0), ras, rs_med)
+    rap_s = np.where(np.isfinite(rap) & (rap > 0), rap, rp_med)
+    sig_S = 1.0/(1.0+np.exp(-5.0*(3.5 - ras_s)))
+    sig_P = 1.0/(1.0+np.exp(-5.0*(3.5 - rap_s)))
+    f_small = (1.0 - p)*sig_S + p*sig_P
+    return 1.0/(1.0+np.exp(-10.0*(f_small - 0.5)))
+
+
 def base_log_sat(a, phicP, phicS, delta):
-    phi, p = a[:, 0], a[:, 6]
-    g010 = 1.0/(1.0+np.exp(K_PS*(p - P_C)))
-    phic = (1.0-g010)*phicP + g010*phicS
+    """SAT-blend base with smooth label-free g_phys (replaces g_010)."""
+    phi = a[:, 0]
+    g_phys = _g_phys_smooth(a)
+    phic = (1.0-g_phys)*phicP + g_phys*phicS
     pex = phi - phic
-    return base_no_phi(a) + 0.5*np.log(np.sqrt(pex**2 + (delta*g010)**2) + 1e-12)
+    return base_no_phi(a) + 0.5*np.log(np.sqrt(pex**2 + (delta*g_phys)**2) + 1e-12)
 
 
 # Frozen SAT-blend optimum (from the joint screen) — fixed while testing exp_S

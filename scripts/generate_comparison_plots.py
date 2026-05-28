@@ -3814,16 +3814,43 @@ def _direct_rse_um(d):
     return None
 
 
-def _sat_baselog(phi, cn, cov, fp, p, r_SE_um=None):
+def _sat_g_smooth(p, r_AM_S_um=None, r_AM_P_um=None):
+    """Smooth size-based gate (label-free) — replaces _sat_g010 in production.
+    Falls back to legacy g_010 if AM sizes unavailable."""
+    if r_AM_S_um is None and r_AM_P_um is None:
+        return _sat_g010(p)
+    ras = r_AM_S_um if (r_AM_S_um and r_AM_S_um > 0) else 2.5  # corpus median
+    rap = r_AM_P_um if (r_AM_P_um and r_AM_P_um > 0) else 5.5
+    sig_S = 1.0/(1.0+np.exp(-5.0*(3.5 - ras)))
+    sig_P = 1.0/(1.0+np.exp(-5.0*(3.5 - rap)))
+    f_small = (1.0 - p)*sig_S + p*sig_P
+    return 1.0/(1.0+np.exp(-10.0*(f_small - 0.5)))
+
+
+def _sat_baselog(phi, cn, cov, fp, p, r_SE_um=None,
+                 r_AM_S_um=None, r_AM_P_um=None):
     """Log of the production fixed form WITHOUT C_blend(τ) (the τ prefactor is
-    fit separately/live).  σ_grain = 3.0 × Cronau(r_SE) so the form mirrors the
-    Stage-E target's SE-size correction.  Works on scalars or arrays."""
-    g010 = _sat_g010(p)
-    phic = (1.0 - g010)*SE_PHI_C_P + g010*SE_PHI_C_S
-    phi_eff = np.sqrt((np.asarray(phi, float) - phic)**2 + (SE_SAT_DELTA*g010)**2 + 1e-12)
+    fit separately/live).  σ_grain = 3.0 × Cronau(r_SE).  Uses SMOOTH size-
+    based g_phys (S1 adoption, 2026-05-28) if AM sizes provided; otherwise
+    falls back to label-based g_010 for back-compat."""
+    g_phys = _sat_g_smooth(p, r_AM_S_um, r_AM_P_um)
+    phic = (1.0 - g_phys)*SE_PHI_C_P + g_phys*SE_PHI_C_S
+    phi_eff = np.sqrt((np.asarray(phi, float) - phic)**2 + (SE_SAT_DELTA*g_phys)**2 + 1e-12)
     sg = SE_SG * _cronau_factor(r_SE_um) if r_SE_um is not None else SE_SG
     return (np.log(sg) + 0.5*np.log(phi_eff) + SE_CN_EXP*np.log(cn)
             + SE_COV_EXP*np.log(cov) + 3.0*np.log(fp))
+
+
+def _r_am_sizes(d):
+    """Extract (r_AM_S_um, r_AM_P_um) scalars from a metrics dict."""
+    def _one(keys):
+        for k in keys:
+            v = d.get(k)
+            if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+                return v*1000.0 if v < 0.01 else float(v)
+        return None
+    return (_one(('_input_r_AM_S_um', '_input_r_AM_S', 'r_AM_S_um', 'r_AM_S')),
+            _one(('_input_r_AM_P_um', '_input_r_AM_P', 'r_AM_P_um', 'r_AM_P')))
 
 
 def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
