@@ -1004,25 +1004,44 @@ def inject_stage_e_rows(tables, metrics):
     sigma_i_e_p  = metrics.get('sigma_full_mScm_stage_e_physics')
     sigma_e_e_p  = metrics.get('electronic_sigma_full_mScm_stage_e_physics')
     sigma_th_e_p = metrics.get('thermal_sigma_full_mScm_stage_e_physics')
-    # ── PHANTOM σ_e SUPPRESSION (2026-05-28) ────────────────────────────
-    # If the raw network-solver electronic output didn't run, Stage E σ_e
-    # is a Bruggeman/Trevisanello phantom fallback (e.g. 1mAh_100_2/_3
-    # showed 54-68 mS/cm with raw electronic_sigma_full_mScm='—').
-    # Suppress display so the case-detail page reads '—' for Stage E σ_e
-    # instead of the phantom value.  Same for thermal κ if its raw solver
-    # output is also missing.  Ionic σ is untouched (ionic pathway has
-    # never been observed to silently fail in the corpus to date).
+    # ── PHANTOM σ_e SUPPRESSION (2026-05-28, v2 with fallback-aware) ────
+    # If the network-solver electronic pathway didn't actually run, Stage E
+    # σ_e is a Bruggeman/Trevisanello phantom fallback (e.g. 1mAh_100_2/_3
+    # showed 54-68 mS/cm).  Two phantom flavors:
+    #   1. raw electronic_sigma_full_mScm = missing/0  → solver didn't run
+    #   2. stage_e_source['sigma_e' / 'sigma_e_physics'] = 'fallback_weighted_factor'
+    #      → solver ran but Stage E filled in via Bruggeman fallback
+    # Suppress BOTH so the case-detail page reads '—' for the phantom cells.
+    # Same for thermal κ pathway.  Ionic σ untouched (ionic pathway hasn't
+    # silently failed in the corpus).
+    src_fb = metrics.get('stage_e_source') or {}
     raw_e   = metrics.get('electronic_sigma_full_mScm')
     raw_e_p = metrics.get('electronic_sigma_full_mScm_physics')
-    if not (isinstance(raw_e, (int, float)) and raw_e and raw_e > 0):
+    e_hertz_phantom = (
+        not (isinstance(raw_e, (int, float)) and raw_e and raw_e > 0)
+        or src_fb.get('sigma_e') == 'fallback_weighted_factor'
+    )
+    e_phys_phantom = (
+        not (isinstance(raw_e_p, (int, float)) and raw_e_p and raw_e_p > 0)
+        or src_fb.get('sigma_e_physics') == 'fallback_weighted_factor'
+    )
+    if e_hertz_phantom:
         sigma_e_e = None
-    if not (isinstance(raw_e_p, (int, float)) and raw_e_p and raw_e_p > 0):
+    if e_phys_phantom:
         sigma_e_e_p = None
     raw_th   = metrics.get('thermal_sigma_full_mScm')
     raw_th_p = metrics.get('thermal_sigma_full_mScm_physics')
-    if not (isinstance(raw_th, (int, float)) and raw_th and raw_th > 0):
+    th_hertz_phantom = (
+        not (isinstance(raw_th, (int, float)) and raw_th and raw_th > 0)
+        or src_fb.get('sigma_thermal') == 'fallback_weighted_factor'
+    )
+    th_phys_phantom = (
+        not (isinstance(raw_th_p, (int, float)) and raw_th_p and raw_th_p > 0)
+        or src_fb.get('sigma_thermal_physics') == 'fallback_weighted_factor'
+    )
+    if th_hertz_phantom:
         sigma_th_e = None
-    if not (isinstance(raw_th_p, (int, float)) and raw_th_p and raw_th_p > 0):
+    if th_phys_phantom:
         sigma_th_e_p = None
     if not (factors or sigma_i_e is not None or sigma_e_e is not None):
         return  # no Stage E data on this case

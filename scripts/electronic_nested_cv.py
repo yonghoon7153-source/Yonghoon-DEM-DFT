@@ -102,6 +102,12 @@ def _stage_e_electronic(d, case_id=None):
         # Network solver electronic didn't actually run → reject any Stage E
         # phantom value to avoid contaminating the corpus.
         return None
+    # Also reject if the Stage E pipeline explicitly marked this case as
+    # using the Bruggeman fallback (v2 phantom flavor — solver ran but
+    # Stage E filled via fallback because solver result was unreliable).
+    src = d.get('stage_e_source') or {}
+    if src.get('sigma_e') == 'fallback_weighted_factor' and src.get('sigma_e_physics') == 'fallback_weighted_factor':
+        return None
     for k in _TARGET_KEYS_E:
         v = d.get(k)
         if (isinstance(v, (int, float)) and not isinstance(v, bool)

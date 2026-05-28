@@ -63,15 +63,21 @@ def main():
             stE = d.get('electronic_sigma_full_mScm_stage_e')
             stEP = d.get('electronic_sigma_full_mScm_stage_e_physics')
 
-            # Look for fallback flag in any text field
+            # Look for fallback flag — check both stage_e_source dict
+            # (structured) and any text field (legacy).
             fallback_hit = False
-            for k, v in d.items():
-                if isinstance(v, str):
-                    if any(s in v.lower() for s in
-                           ['bruggeman fallback', 'layer-6', 'fallback fired',
-                            'bruggeman_fallback']):
-                        fallback_hit = True
-                        break
+            src_fb = d.get('stage_e_source') or {}
+            if (src_fb.get('sigma_e') == 'fallback_weighted_factor'
+                or src_fb.get('sigma_e_physics') == 'fallback_weighted_factor'):
+                fallback_hit = True
+            if not fallback_hit:
+                for k, v in d.items():
+                    if isinstance(v, str):
+                        if any(s in v.lower() for s in
+                               ['bruggeman fallback', 'layer-6', 'fallback fired',
+                                'bruggeman_fallback']):
+                            fallback_hit = True
+                            break
 
             def _num(v):
                 return v if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0 else None
