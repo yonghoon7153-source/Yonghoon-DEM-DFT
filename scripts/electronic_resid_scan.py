@@ -134,7 +134,7 @@ def main():
     print(" Top 30 metrics by |Spearman ρ(residual, metric)|")
     print(" Strong signals (|ρ|>0.4) = candidate missing predictors")
     print("─" * 78)
-    print(f"  {'#':>3s}  {'metric':45s}  {'|ρ|':>5s}  {'ρ':>+6s}  {'p':>8s}  {'n':>4s}")
+    print(f"  {'#':>3s}  {'metric':45s}  {'|ρ|':>5s}  {'ρ':>6s}  {'p':>8s}  {'n':>4s}")
     for i, (absr, rho, k, cnt, pv) in enumerate(sc[:30], 1):
         flag = "  ★" if absr > 0.5 else ("  ←" if absr > 0.4 else "")
         print(f"  {i:>3d}  {k[:45]:45s}  {absr:5.3f}  {rho:+6.3f}  {pv:8.1e}  {cnt:>4d}{flag}")
