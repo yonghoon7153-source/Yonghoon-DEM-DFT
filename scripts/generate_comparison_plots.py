@@ -2362,9 +2362,12 @@ def plot_ionic_decomp_physics(data_list, names, outdir):
     ]
 
     # ── taller figure: top panel ~larger for 8 factors,
-    #     bottom panel ~taller (more vertical room per case row)
-    fig_w = max(11, n*0.95)
-    fig_h = max(16, n*0.60)
+    #     bottom panel ~taller (more vertical room per case row).
+    # CAP both dimensions: PIL has a ~89M-pixel decompression limit;
+    # at DPI=150, fig_w × fig_h × 150² must stay well below 89M.
+    # Cap 40 × 30 → 27M pixels (safe with margin).
+    fig_w = min(max(11, n*0.55), 40)
+    fig_h = min(max(14, n*0.32), 30)
     fig, (ax, ax2) = plt.subplots(
         2, 1, figsize=(fig_w, fig_h),
         gridspec_kw={'height_ratios': [3, 3]})

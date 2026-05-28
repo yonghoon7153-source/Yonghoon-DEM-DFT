@@ -49,13 +49,35 @@ PHI_C_AM = 0.0        # no threshold by default (AM far above percolation)
 _EXCLUDED_NAMES_EL: set[str] = set()
 
 
-def _stage_e_electronic(d):
-    """Stage-E electronic σ with physics corrections (analogue to _stage_e_sigma)."""
-    for k in ('electronic_sigma_full_mScm_stage_e_physics',
-              'electronic_sigma_full_mScm_physics',
-              'electronic_sigma_full_mScm'):
+_TARGET_KEYS_E = (
+    # Priority order — most physically-complete first.
+    # Stage E includes Trevisanello 2021 AM-crystallinity × size corrections
+    # (electronic analog of Cronau 2022 for σ_ionic).  Physics adds Tabor/
+    # plastic via network solver.  Some cases have _stage_e_physics empty
+    # (e.g. input_8mAh_real_10) but _stage_e populated — that's intentional
+    # per-case routing in the Stage E pipeline.  Track which key was used
+    # via _last_used_key so the audit reports coverage transparently.
+    'electronic_sigma_full_mScm_stage_e_physics',   # Stage E × physics
+    'electronic_sigma_full_mScm_stage_e',           # Stage E only (Hertz base + grain)
+    'electronic_sigma_full_mScm_physics',           # physics only (no Stage E corrections)
+    'electronic_sigma_full_mScm',                   # raw Hertz fallback
+)
+
+_last_used_key: dict = {}   # case_id → which σ key supplied its target
+
+
+def _stage_e_electronic(d, case_id=None):
+    """Best available σ_e (analogue of _stage_e_sigma).
+
+    Priority: stage_e_physics → stage_e → physics → raw.  Returns (value, key_used).
+    Stage E is preferred over physics because Stage E includes literature
+    grain corrections (Trevisanello 2021) that the raw solver doesn't have.
+    """
+    for k in _TARGET_KEYS_E:
         v = d.get(k)
         if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+            if case_id is not None:
+                _last_used_key[case_id] = k
             return float(v)
     return None
 
@@ -142,7 +164,8 @@ def load_corpus_e():
                 d = json.load(open(mp))
             except Exception:
                 continue
-            sig = _stage_e_electronic(d)
+            _cid_tmp = mp.parent.name
+            sig = _stage_e_electronic(d, case_id=_cid_tmp)
             phi_am = _phi_am(d)
             cn_am = _am_am_cn(d)
             cov = _cov_am(d)
@@ -222,6 +245,17 @@ def main():
     a, names = load_corpus_e()
     n = len(a)
     print(f"Corpus n = {n} (filtered: phi_AM > {PHI_AM_MIN}, valid CN/cov/fp/τ)")
+
+    # ─── Target-key coverage breakdown ─────────────────────────────
+    if _last_used_key:
+        from collections import Counter
+        key_counts = Counter(_last_used_key.values())
+        print(f"\n  Target-key usage (which σ_e column supplied each case):")
+        for k in _TARGET_KEYS_E:
+            cnt = key_counts.get(k, 0)
+            mark = "  ←" if cnt > 0 else ""
+            print(f"     {k:50s}  n={cnt:3d}{mark}")
+        print(f"  (Stage E preferred — literature grain corrections baked in)")
     if n < 8:
         print("[ABORT] need ≥8 valid cases (some metrics may be missing on disk).")
         print("  Common missing fields: am_am_cn, coverage_AM_AM_mean,")
