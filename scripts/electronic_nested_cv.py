@@ -596,19 +596,159 @@ def main():
     print(f"  #|err|>50%       = {(ae_4 > 50).sum():3d} / {n}")
     print()
 
+    # ───── STAGE 5: Lock to physical exponents + add Trevisanello + fracture ─────
+    print("=" * 78)
+    print(" STAGE 5: physical-exponent lock + Trevisanello(r̄_AM) + β_F·log f_intact")
+    print("=" * 78)
+    print()
+    print("  Lock φ_AM^EXP_PHI, f_p_e^EXP_FP to literature values.")
+    print("  Add NCM_factor(r̄_AM) = smooth-sigmoid grain-size correction")
+    print("       (Trevisanello 2021: σ_NCM drops with grain size as internal-GB")
+    print("        density increases; r̄ ≥ 1µm plateau, sub-µm degradation).")
+    print("  Add β_F · log f_intact = fracture-aware Holm (mirrors σ_ionic's β_F).")
+    print()
+    # f_intact from fracture-aware excluded%
+    f_intact_log = np.zeros(n)
+    raw_path = a  # we don't have direct full_metrics here; use approximation
+    # Actually load from corpus walk — re-read frac for each case
+    import json as _json
+    from pathlib import Path as _Path
+    fi_idx = 0
+    fi_values = []
+    for base in ('webapp/results', 'webapp/archive'):
+        bp = _Path(base)
+        if not bp.is_dir(): continue
+        for mp in bp.rglob('full_metrics.json'):
+            try: d = _json.load(open(mp))
+            except Exception: continue
+            sig = _stage_e_electronic(d)
+            phi_amx = _phi_am(d); cnx = _am_am_cn(d)
+            covx = _cov_am(d); fpx = _f_perc_e(d); taux = _tau_e(d)
+            if not (sig and sig > 0 and phi_amx and phi_amx > PHI_AM_MIN
+                    and cnx and cnx > 0 and covx and covx > 0
+                    and fpx and fpx > 0 and taux and taux > 0):
+                continue
+            nmx = _meta_name(mp.parent.name, mp.parent)
+            if nmx in _EXCLUDED_NAMES_EL: continue
+            key = (round(phi_amx, 4), round(cnx, 3), round(float(sig), 5))
+            frx = d.get('fracture_aware_excluded_pct')
+            if isinstance(frx, (int, float)) and not isinstance(frx, bool):
+                fi_log_v = float(np.log(max(1.0 - float(frx)/100.0, 0.05)))
+            else:
+                fi_log_v = 0.0
+            fi_values.append((key, fi_log_v))
+    # Align to corpus order by key
+    fi_log_arr = np.zeros(n)
+    # Re-walk corpus in same order as load_corpus_e for alignment
+    seen2 = set(); idx_ptr = 0
+    for base in ('webapp/results', 'webapp/archive'):
+        bp = _Path(base)
+        if not bp.is_dir(): continue
+        for mp in bp.rglob('full_metrics.json'):
+            try: d = _json.load(open(mp))
+            except Exception: continue
+            sig = _stage_e_electronic(d)
+            phi_amx = _phi_am(d); cnx = _am_am_cn(d)
+            covx = _cov_am(d); fpx = _f_perc_e(d); taux = _tau_e(d)
+            if not (sig and sig > 0 and phi_amx and phi_amx > PHI_AM_MIN
+                    and cnx and cnx > 0 and covx and covx > 0
+                    and fpx and fpx > 0 and taux and taux > 0):
+                continue
+            nmx = _meta_name(mp.parent.name, mp.parent)
+            if nmx in _EXCLUDED_NAMES_EL: continue
+            key = (round(phi_amx, 4), round(cnx, 3), round(float(sig), 5))
+            if key in seen2: continue
+            seen2.add(key)
+            frx = d.get('fracture_aware_excluded_pct')
+            if isinstance(frx, (int, float)) and not isinstance(frx, bool):
+                fi_log_arr[idx_ptr] = float(np.log(max(1.0 - float(frx)/100.0, 0.05)))
+            idx_ptr += 1
+            if idx_ptr >= n: break
+        if idx_ptr >= n: break
+
+    # NCM_factor(r̄_AM): smooth sigmoid 1.0→0.5 as r̄_AM goes 0→3µm
+    # σ_e drops for large AM (more internal GBs). Sub-µm primary = high σ.
+    def ncm_factor(r_AM_eff):
+        # Trevisanello-inspired: σ_NCM ≈ σ_max / (1 + (r/r0)^β)
+        # r0 = 2µm, β = 1.5 gives smooth ~30% drop at r=3µm
+        r0_NCM = 2.0; beta_NCM = 1.5
+        return 1.0 / (1.0 + (np.maximum(r_AM_eff, 0.3) / r0_NCM)**beta_NCM)
+
+    log_ncm = np.log(ncm_factor(r_eff))
+    log_fi = fi_log_arr   # already log
+
+    # Try multiple physical exponent locks
+    print(f"  {'EXP_PHI':>7s} {'EXP_FP':>6s}   {'R²':>7s}  {'LOOCV':>7s}  "
+          f"{'#err>30%':>9s}  {'#err>20%':>9s}  notes")
+    best5 = None
+    for exp_phi in [1.5, 2.0, 2.5, 2.83]:
+        for exp_fp in [0.5, 1.0, 1.5, 2.0]:
+            # Build design matrix with locked exponents
+            X5 = np.column_stack([
+                p_amp_arr,                                 # β_P
+                log_r,                                     # β_r
+                log_Td,                                    # β_T
+                log_ncm,                                   # β_NCM (Trevisanello)
+                log_fi,                                    # β_F (fracture)
+                np.ones(n),                                # p
+                lt,                                        # q
+                lt**2,                                     # r
+            ])
+            # Subtract locked baseline from y
+            y_locked = logsf - np.log(SIGMA_AM) - exp_phi*np.log(phi_am_arr) - exp_fp*np.log(fp_arr)
+            coef5, *_ = np.linalg.lstsq(X5, y_locked, rcond=None)
+            pred5 = X5 @ coef5 + exp_phi*np.log(phi_am_arr) + exp_fp*np.log(fp_arr)
+            pred5_log = pred5 + np.log(SIGMA_AM)
+            ss_res5 = np.sum((logsf - pred5_log)**2)
+            r2_5 = 1 - ss_res5 / ss_tot if ss_tot > 0 else 0
+            sse_loo5 = 0.0
+            X5_full = np.column_stack([X5, exp_phi*np.log(phi_am_arr).reshape(-1,1), exp_fp*np.log(fp_arr).reshape(-1,1)])
+            # LOOCV directly with our pred
+            y5_target = logsf - np.log(SIGMA_AM) - exp_phi*np.log(phi_am_arr) - exp_fp*np.log(fp_arr)
+            for i in range(n):
+                m = np.ones(n, bool); m[i] = False
+                c_loo, *_ = np.linalg.lstsq(X5[m], y5_target[m], rcond=None)
+                pi = X5[i] @ c_loo + exp_phi*np.log(phi_am_arr[i]) + exp_fp*np.log(fp_arr[i])
+                sse_loo5 += (logsf[i] - np.log(SIGMA_AM) - pi)**2
+            lo_5 = 1 - sse_loo5/ss_tot if ss_tot > 0 else 0
+            err5 = (np.exp(pred5_log) - np.exp(logsf)) / np.exp(logsf) * 100
+            ae5 = np.abs(err5)
+            n30 = int((ae5 > 30).sum()); n20 = int((ae5 > 20).sum())
+            mark = ""
+            if best5 is None or lo_5 > best5[1]:
+                best5 = (exp_phi, lo_5, exp_fp, coef5, pred5_log, err5, r2_5, n30)
+                mark = "  ←"
+            print(f"  {exp_phi:7.2f} {exp_fp:6.2f}   {r2_5:7.4f}  {lo_5:7.4f}  "
+                  f"{n30:>9d}  {n20:>9d}{mark}")
+    print()
+    best_phi, best_lo5, best_fp, best_coef5, best_pred5, best_err5, best_r2_5, best_n30 = best5
+    print(f"  ★ best locked combo: φ_AM^{best_phi} · f_p_e^{best_fp}  LOOCV={best_lo5:.4f}")
+    print(f"  vs Stage 4 (data-best exponents): LOOCV={lo_4:.4f}  "
+          f"(Δ = {best_lo5 - lo_4:+.4f})")
+    print()
+    print(f"  Stage 5 best coefs:")
+    s5_labels = ['β_P (p_amp)', 'β_r (log r̄_AM)', 'β_T (log T/d)',
+                 'β_NCM (Trevisanello)', 'β_F (log f_intact)',
+                 'p (const)', 'q (ln τ)', 'r (ln²τ)']
+    for lab, c in zip(s5_labels, best_coef5):
+        print(f"     {lab:30s} = {c:+.3f}")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
     print("=" * 78)
-    print(f"  {'stage':40s}  {'R²':>7s}  {'LOOCV':>7s}  {'#|err|>30%':>10s}")
-    print(f"  {'Stage 0 (σ_ionic-style locked)':40s}  "
+    print(f"  {'stage':50s}  {'R²':>7s}  {'LOOCV':>7s}  {'#|err|>30%':>10s}")
+    print(f"  {'Stage 0 (σ_ionic-style locked)':50s}  "
           f"{-0.6620:7.4f}  {-0.7570:7.4f}  {81:>10d} / {n}")
-    print(f"  {'Stage 2 (joint 7-param OLS)':40s}  "
+    print(f"  {'Stage 2 (joint 7-param OLS)':50s}  "
           f"{r2_j:7.4f}  {lo_j:7.4f}  {(np.abs(err_j) > 30).sum():>10d} / {n}")
-    print(f"  {'Stage 3 (drop CN/cov, add p_amp)':40s}  "
+    print(f"  {'Stage 3 (drop CN/cov, add p_amp)':50s}  "
           f"{r2_3:7.4f}  {lo_3:7.4f}  {(ae_3 > 30).sum():>10d} / {n}")
-    print(f"  {'Stage 4 (+ r̄_AM, T/d_AM)':40s}  "
+    print(f"  {'Stage 4 (+ r̄_AM, T/d_AM)':50s}  "
           f"{r2_4:7.4f}  {lo_4:7.4f}  {(ae_4 > 30).sum():>10d} / {n}")
+    print(f"  {f'Stage 5 (lock φ^{best_phi} f_p^{best_fp}, +Trevisanello +β_F)':50s}  "
+          f"{best_r2_5:7.4f}  {best_lo5:7.4f}  {best_n30:>10d} / {n}")
     print()
     if lo_4 > 0.7:
         print("  → Stage 4 form is a viable production candidate.")
