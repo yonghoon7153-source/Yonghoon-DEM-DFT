@@ -152,20 +152,34 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   Unify the label to stop confusion. Docs: `docs/ionic_scaling_law_experiments.md`
   (line 122 declares v12-clean v3 FINAL), `docs/Scaling_Law_Report_Full.md`.
 
-### σ_ionic form FINALIZED — T1 production (power gate + cov_Hertz + f_intact) (2026-05-28)
-**The production σ_ionic form has 5 live OLS coefficients, all terms
-have physical meaning (HIGH/MED-HIGH/MED confidence, NO LOW), and is
-at the data noise ceiling.**  Docs in `docs/sigma_ionic_physics_derivation.md`;
+### σ_ionic form FINALIZED — C5 production (power gate + cov_physics + Δcov + f_intact) (2026-05-28)
+**The production σ_ionic form has 6 live OLS coefficients, all terms
+have physical meaning (HIGH/MED-HIGH/MED, with Δcov LOW-MED empirical),
+and is at the data noise ceiling.**  Docs in `docs/sigma_ionic_physics_derivation.md`;
 status in `scripts/final_form_status.py`; key supporting scripts:
 `bidir_62_38_test.py` (C4 leave-corner-out), `test_threshold_form.py`,
 `audit_ps_label_convention.py` (n=183, 0 violations), `screen_form_simplifications.py`,
 `scan_smooth_f_small.py` (power gate ★ vs sigmoid), `integrate_betacov.py`
-(T1 cov_Hertz ★ vs cov_physics+Δcov), `final_pushes.py` (Spearman narrative
+(T1 cov_Hertz tested), `final_pushes.py` (Spearman narrative
 verify + per-composition LOOCV + Huber robust).
 
+⚠ T1 ATTEMPTED-THEN-REVERTED (commit 5c617a2 → b97674c, 2026-05-28).
+T1 (cov_physics → cov_Hertz, drop Δcov) showed +0.0007 LOOCV in
+`integrate_betacov.py` but caused visible dashboard over-prediction:
+   • max |err|  35% → 47%   (+12pp)
+   • |err|>30%   2 →  3      (+1)
+   • |err|>20%   8 → 10      (+2)
+   • plots: red form line systematically above green physics solver
+            across 1mAh/6mAh/8mAh/particulate series (esp. 0:10 SE-rich)
+LOOCV gain was below noise SE (0.0016); the visible regression on the
+dashboard plots was real.  C5 form restored as production.  Do NOT re-try
+"replace cov_physics with cov_Hertz" — the Spearman narrative (cov_H
+0.697 > cov_P 0.476) was misleading because rank-corr ignores magnitude;
+cov_physics carries the magnitude needed for the network-solver match.
+
 THE FINAL EQUATION:
-  σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p^3
-      · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact]
+  σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_physics^½ · f_p^3
+      · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_cov·Δcov + β_F·log f_intact]
 
 Sub-definitions (all FROZEN):
   φ_eff      = √[(φ − φc_eff)² + (δ·g_phys)²]
@@ -173,6 +187,7 @@ Sub-definitions (all FROZEN):
   g_phys     = (min(r_cut / r_AM_eff, 1))^α        [POWER GATE]
   r_AM_eff   = (1 − p)·r_AM_S + p·r_AM_P            (composition-weighted)
   P2         = g_phys · (φ − φc_S)² · (r_SE − 0.5)+ [P2 corner correction]
+  Δcov       = coverage_AM_delta_pct_rough − median(…) [Hertz→physics amplification gap]
   f_intact   = 1 − fracture_aware_excluded_pct/100
   Cronau(r)  = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30)) + 0.10·σ(50(r−0.50))
                                                     [smooth 3-sigmoid]
@@ -184,21 +199,24 @@ Constants:
   r_cut = 3.5 µm          (power-gate cutoff = audit-derived AM_S/AM_P midpoint)
   α = 2                   (power-gate exponent = inverse-square scaling)
 
-5 LIVE-fit params: (a, b, c, β_P2, β_F).  n=90/k=5 = 18:1 (safe).
+6 LIVE-fit params: (a, b, c, β_P2, β_cov, β_F).  n=90/k=6 = 15:1 (safe).
 
 Per-term meaning & confidence:
   σ_grain               HIGH      Cronau 2022 single-crystal literature
   Cronau(r_SE)          HIGH      Cronau 2022 piecewise smoothed (3-sigmoid)
   (φ_eff)^½             MED-HIGH  mean-field 3D percolation; data-locked 91/91
   CN²                   MED-HIGH  Kirchhoff #paths × bond-strength; locked 91/91
-  cov_Hertz^½           HIGH      Holm 1967 + T1 effective-Li-conduction area
-                                  (Spearman: cov_H vs σ 0.697 > cov_P 0.476;
-                                   Tabor adhesion creates mechanical contact area
-                                   but not ionic conduction area)
+  cov_physics^½         HIGH      Holm 1967 at Tabor-corrected contact area
+                                  (matches network solver magnitude; T1 cov_Hertz
+                                   tried & reverted — caused plot over-prediction)
   f_p^3                 MED       3D isotropy P(percolate-x ∧ -y ∧ -z) = f_p³
   C(τ) = a+b·lnτ+c·(lnτ)² MED    logpoly2, beats dual-branch by ΔAIC=-10.6
   β_P2·P2               MED       Cronau super-µm arm: bulk-grain regime at
                                   62:38 D1+ corner; PASSED leave-corner-out
+  β_cov·Δcov            LOW-MED   empirical Hertz→physics amplification correction
+                                  (regularizes the form when Tabor inflation is
+                                   anomalously high/low; needed to stabilize the
+                                   dashboard plots against bulk over-prediction)
   β_F·log f_intact      MED       fracture-aware Holm; β=+0.19 partial-conduction
                                   (broken contacts retain ~60% via micro-asperity)
   g_phys (power gate)   MED-HIGH  inverse-square small-AM dominance, label-free
@@ -211,10 +229,11 @@ Adoption history (full chain, each step separately validated):
   • smooth Cronau (3-sigmoid, fully differentiable)  no LOOCV change
   • smooth f_small → power gate (Alt-C, α=2)         LOOCV 0.9670  Δ+0.0010
   • + β_P2·P2 (g_phys-gated, 62:38 corner)           LOOCV 0.9687  Δ+0.0017
-  • + β_F·log f_intact (fracture-aware Holm)         LOOCV 0.9710  Δ+0.0023
-  • T1: cov_physics → cov_Hertz (drop Δcov term)     LOOCV 0.9712  Δ+0.0002 (k 6→5)
+  • + β_cov·Δcov (Hertz→physics amplification)       LOOCV 0.9700  Δ+0.0013
+  • + β_F·log f_intact (fracture-aware Holm)         LOOCV 0.9724  Δ+0.0024
+  • [T1 cov_Hertz attempted → REVERTED — see warning box above]
 
-FINAL production: LOOCV ≈ 0.971, 5 fit params.
+FINAL production: LOOCV ≈ 0.972, 6 fit params.
 
 Production performance (n=90):
   median |err| ≈ 7%, mean ≈ 10%, 90th pctile ≈ 20%
@@ -235,13 +254,15 @@ form change.  Documented in `scripts/final_pushes.py` for reference.
 With logpoly2 the selection-bias from re-screening is larger (gap +0.0095
 vs +0.0048 with dual-branch).  Production never re-selects → not a problem.
 
-NARRATIVE NOTE: cov_Hertz adoption (T1) is justified by SPEARMAN data —
-Spearman(σ, cov_Hertz)=+0.697 vs Spearman(σ, cov_physics)=+0.476.
-The interpretation is "Li+ effective conduction area" (Hertz) not
-"mechanical bottleneck" (which is closer to cov_physics per Spearman
-with path_hop_area_min).  Tabor adhesion creates physical contact area
-but the vdW gap interferes with ionic transport → effective conduction
-area is smaller than the mechanical area.
+NARRATIVE NOTE on the T1 reversion (2026-05-28): the Spearman signal
+(cov_Hertz vs σ = 0.697 > cov_physics 0.476) suggested cov_Hertz was
+the "real" predictor.  In practice T1 inflated the form's magnitude
+relative to the network solver across the bulk of the dashboard cases:
+rank correlation captures monotonic agreement but not absolute level.
+cov_physics^½ (Tabor-corrected) matches the solver's bulk magnitude;
+β_cov·Δcov is kept as an empirical fine-tune on the inflation gap.
+Lesson: trust the dashboard regression test (form vs network solver line)
+over a single Spearman signal — esp. for ratio-of-physical-quantities terms.
 
   σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov^½ · f_p³ · C_blend(τ)
 
