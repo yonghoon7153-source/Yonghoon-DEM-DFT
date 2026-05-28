@@ -152,15 +152,61 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   Unify the label to stop confusion. Docs: `docs/ionic_scaling_law_experiments.md`
   (line 122 declares v12-clean v3 FINAL), `docs/Scaling_Law_Report_Full.md`.
 
-### σ_ionic form FINALIZED — logpoly2 C_blend + smooth label-free f_small (2026-05-28)
-**The production σ_ionic form has a complete physics derivation and is the
-minimal-parameter form that the data supports.**  See
+### σ_ionic form FINALIZED — gated C4 (logpoly2 + P2 + Δcov + smooth Cronau) (2026-05-28)
+**The production σ_ionic form is augmented with two extra OLS coefficients,
+fully smooth (no inequalities), and at the data noise ceiling.**  See
 `docs/sigma_ionic_physics_derivation.md` for term-by-term derivation;
 `scripts/final_form_status.py` for the equation + error landscape;
+`scripts/bidir_62_38_test.py` for the C4 leave-corner-out validation;
 `scripts/test_threshold_form.py` for form-A-vs-alternatives comparison;
 `scripts/audit_ps_label_convention.py` for the AM_P/AM_S size-convention
 audit (n=183, 0 violations); `scripts/screen_form_simplifications.py` for
 the term-by-term simplification screen.
+
+The FINAL production equation:
+  σ = σ_grain · Cronau_smooth(r_SE) · (φ_eff)^½ · CN² · cov^½ · f_p^3
+      · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_cov·(Δcov − median)]
+
+with:
+  P2       = g_010 · (φ − φc_S)² · (r_SE − 0.5)+    [g_010-GATED]
+  g_010    = σ(−10·(p_AM_P − 0.5))                  ≈1 toward 0:10
+  Δcov     = coverage_AM_S_delta_pct_rough          (Hertz→physics gap)
+  Cronau_smooth(r) = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30))
+                          + 0.10·σ(50(r−0.50))     three-sigmoid
+  (φ_eff)  = √[(φ−φc_eff)² + (δ·g_010)²]
+  φc_eff   = (1−g_010)·0.200 + g_010·0.195
+  δ        = 0.040, σ_grain = 3.0 mS/cm
+
+5 LIVE-fit params: (a, b, c, β_P2, β_cov).  n=90/k=5 = 18:1 (safe).
+Frozen: φc_P, φc_S, δ, σ_grain, Cronau coefs, exponents (½, 2, ½, 3).
+
+Adoption history (each step separately validated):
+  • SAT-blend (frozen φc, δ + g_010 disorder rounding) — +0.0066 LOOCV
+  • Cronau(r_SE) σ_grain factor — Cronau 2022 literature, +0.0062 LOOCV
+  • smooth Cronau (3-sigmoid) — replaces piecewise (≤1% impact),
+    fully differentiable
+  • smooth f_small (label-free g_phys) — equivalent to g_010 on this corpus
+    (n=183 audit), eliminates AM_P/AM_S label convention dependency
+  • C_blend → logpoly2 (3 params instead of dual-branch 6) — +0.0020 LOOCV,
+    ΔAIC -10.6, ΔBIC -18.2
+  • C4 augmentation (g_010-gated P2 + Δcov) — +0.0047 LOOCV, FIRST candidate
+    to PASS leave-corner-out (sign-consistent bulk vs full β, corner RMSE
+    drops 0.292→0.174 with bulk-only β).  Catches all 4 particulate corner
+    cases (62:38 D1+) within ±20%.  GATING (added 2026-05-28 after spillover
+    diagnosis) restricts P2 to 0:10 to avoid pushing non-0:10 D1+ cases
+    further out.
+
+Production performance (n=90, after 1mAh_9 base + particulate_12_S3
+exclusion):
+  LOOCV = 0.9687
+  median |err| = 7.31%, mean = 9.74%, 90th pctile = 20.33%, max = 40.90%
+  |err|≤10%: 60%   |err|≤20%: 89%   |err|≤30%: 97%
+  |err|>30%: 3/90   |err|>50%: 0/90
+
+⚠ NEVER re-screen φc.  φc_P, φc_S, δ stay FROZEN at (0.200, 0.195, 0.040).
+With logpoly2 the selection-bias from re-screening is larger (gap +0.0095
+vs +0.0048 with dual-branch).  Production never re-selects → not a problem.
+Always benchmark against FROZEN-φc LOOCV in `final_form_status.py`.
 
   σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov^½ · f_p³ · C_blend(τ)
 
@@ -201,7 +247,47 @@ Confidence:
     rejected (Q2 percolation merge fails by >0.13 LOOCV, Q3 network merge
     fails by >0.03).
 
-### σ_ionic outlier landscape (after logpoly2 + 1mAh_9 exclusion, 2026-05-28)
+### σ_ionic outlier landscape (after C4 adoption, n=90, LOOCV 0.9687, 2026-05-28)
+With the C4 augmented form, 3 cases remain >30% (down from 4) and 10 cases
+remain >20% (down from 12).  4 particulate-corner cases (particulate_7,
+_10, _5, _12_S2) which all previously sat 22-37% out are now ALL within
+±20%.  The remaining 10 outliers split into three diagnostic classes:
+
+  CLASS A — PER-SEED NOISE (6 cases, unfixable by any form term):
+    input_8mAh_real_10 (-41%): isolated 10:0 r_SE=0.5, 4-edge sensitivity
+    input_1mAh_9_S5    (+32%): sibling tail (within sibling spread)
+    input_1mAh_9_S2    (-29%): sibling tail
+    input_1mAh_8       (+22%): isolated 5:5
+    input_1mAh_8_AMP   (+24%): isolated 10:0
+    input_8mAh_8_AMP   (-20%): isolated 10:0
+  CLASS B — r_SE = 0.5 OVER-PREDICTION (3 cases, P2=0 at r_SE=0.5):
+    input_S_2          (+25%): 0:10 SE-rich
+    input_1mAh_5_AMP   (+30%): 10:0 SE-rich
+    input_6mAh_real_10 (+23%): 10:0 D1+
+  CLASS C — MARGINAL-PERCOLATION EDGE (1 case):
+    input_6mAh_real_6  (+32%): 0:10 r_SE=1.5 BUT CN=2.7 (below typical
+       percolation threshold); form being asked to extrapolate near φc·CN
+       boundary.
+
+Bidirectional 0:10·SE-rich corner now PARTIALLY resolved:
+  • r_SE ≥ 1µm UNDER-prediction side: FIXED (particulate_7 -24→±20%,
+    particulate_10 -37→±20%) by gated P2 term
+  • r_SE = 0.5  OVER-prediction side: PARTIALLY (particulate_5 +22→<20%
+    via Δcov; input_S_2 stays +25% — Δcov insufficient)
+  P2 is mathematically zero at r_SE=0.5 — cannot help the over-prediction
+  side; would need a separate r_SE=0.5-active term but corpus has only
+  3 such corner cases → cannot validate (leave-corner-out would FAIL).
+
+⊗ DO NOT try to add more form terms.  The remaining outliers are data-
+limited (per-seed simulation noise, isolated single cases, marginal-
+percolation edges).  Path forward = MORE multi-seed DATA at:
+  • particulate_5/S_2 design (r_SE=0.5 over-prediction) — to determine
+    if the 25-30% miss is reproducible physics or per-seed noise
+  • 8mAh_real_10 design (4-edge case) — to determine anomaly vs form-limit
+  • 1mAh_9_Sn family — averaging clears the family from outlier list (med
+    σ=0.033, form predicts 0.028 → -15% err < 20%)
+
+### σ_ionic outlier landscape (DEPRECATED, kept for history)
 Corpus n=90, LOOCV 0.9634, |err|>30% in 4 cases.  All 4 individually
 analyzed; NONE are form-of-equation failures, all are data limitations:
 
