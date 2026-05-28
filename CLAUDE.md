@@ -152,61 +152,96 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   Unify the label to stop confusion. Docs: `docs/ionic_scaling_law_experiments.md`
   (line 122 declares v12-clean v3 FINAL), `docs/Scaling_Law_Report_Full.md`.
 
-### σ_ionic form FINALIZED — gated C4 (logpoly2 + P2 + Δcov + smooth Cronau) (2026-05-28)
-**The production σ_ionic form is augmented with two extra OLS coefficients,
-fully smooth (no inequalities), and at the data noise ceiling.**  See
-`docs/sigma_ionic_physics_derivation.md` for term-by-term derivation;
-`scripts/final_form_status.py` for the equation + error landscape;
-`scripts/bidir_62_38_test.py` for the C4 leave-corner-out validation;
-`scripts/test_threshold_form.py` for form-A-vs-alternatives comparison;
-`scripts/audit_ps_label_convention.py` for the AM_P/AM_S size-convention
-audit (n=183, 0 violations); `scripts/screen_form_simplifications.py` for
-the term-by-term simplification screen.
+### σ_ionic form FINALIZED — T1 production (power gate + cov_Hertz + f_intact) (2026-05-28)
+**The production σ_ionic form has 5 live OLS coefficients, all terms
+have physical meaning (HIGH/MED-HIGH/MED confidence, NO LOW), and is
+at the data noise ceiling.**  Docs in `docs/sigma_ionic_physics_derivation.md`;
+status in `scripts/final_form_status.py`; key supporting scripts:
+`bidir_62_38_test.py` (C4 leave-corner-out), `test_threshold_form.py`,
+`audit_ps_label_convention.py` (n=183, 0 violations), `screen_form_simplifications.py`,
+`scan_smooth_f_small.py` (power gate ★ vs sigmoid), `integrate_betacov.py`
+(T1 cov_Hertz ★ vs cov_physics+Δcov), `final_pushes.py` (Spearman narrative
+verify + per-composition LOOCV + Huber robust).
 
-The FINAL production equation:
-  σ = σ_grain · Cronau_smooth(r_SE) · (φ_eff)^½ · CN² · cov^½ · f_p^3
-      · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_cov·(Δcov − median)]
+THE FINAL EQUATION:
+  σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p^3
+      · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact]
 
-with:
-  P2       = g_010 · (φ − φc_S)² · (r_SE − 0.5)+    [g_010-GATED]
-  g_010    = σ(−10·(p_AM_P − 0.5))                  ≈1 toward 0:10
-  Δcov     = coverage_AM_S_delta_pct_rough          (Hertz→physics gap)
-  Cronau_smooth(r) = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30))
-                          + 0.10·σ(50(r−0.50))     three-sigmoid
-  (φ_eff)  = √[(φ−φc_eff)² + (δ·g_010)²]
-  φc_eff   = (1−g_010)·0.200 + g_010·0.195
-  δ        = 0.040, σ_grain = 3.0 mS/cm
+Sub-definitions (all FROZEN):
+  φ_eff      = √[(φ − φc_eff)² + (δ·g_phys)²]
+  φc_eff     = (1 − g_phys)·φc_P + g_phys·φc_S
+  g_phys     = (min(r_cut / r_AM_eff, 1))^α        [POWER GATE]
+  r_AM_eff   = (1 − p)·r_AM_S + p·r_AM_P            (composition-weighted)
+  P2         = g_phys · (φ − φc_S)² · (r_SE − 0.5)+ [P2 corner correction]
+  f_intact   = 1 − fracture_aware_excluded_pct/100
+  Cronau(r)  = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30)) + 0.10·σ(50(r−0.50))
+                                                    [smooth 3-sigmoid]
+Constants:
+  σ_grain = 3.0 mS/cm     (Cronau 2022 Li6PS5Cl single-crystal)
+  φc_P = 0.200            (P-heavy threshold, FROZEN)
+  φc_S = 0.195            (S-heavy threshold, FROZEN)
+  δ = 0.040               (disorder rounding, FROZEN)
+  r_cut = 3.5 µm          (power-gate cutoff = audit-derived AM_S/AM_P midpoint)
+  α = 2                   (power-gate exponent = inverse-square scaling)
 
-5 LIVE-fit params: (a, b, c, β_P2, β_cov).  n=90/k=5 = 18:1 (safe).
-Frozen: φc_P, φc_S, δ, σ_grain, Cronau coefs, exponents (½, 2, ½, 3).
+5 LIVE-fit params: (a, b, c, β_P2, β_F).  n=90/k=5 = 18:1 (safe).
 
-Adoption history (each step separately validated):
-  • SAT-blend (frozen φc, δ + g_010 disorder rounding) — +0.0066 LOOCV
-  • Cronau(r_SE) σ_grain factor — Cronau 2022 literature, +0.0062 LOOCV
-  • smooth Cronau (3-sigmoid) — replaces piecewise (≤1% impact),
-    fully differentiable
-  • smooth f_small (label-free g_phys) — equivalent to g_010 on this corpus
-    (n=183 audit), eliminates AM_P/AM_S label convention dependency
-  • C_blend → logpoly2 (3 params instead of dual-branch 6) — +0.0020 LOOCV,
-    ΔAIC -10.6, ΔBIC -18.2
-  • C4 augmentation (g_010-gated P2 + Δcov) — +0.0047 LOOCV, FIRST candidate
-    to PASS leave-corner-out (sign-consistent bulk vs full β, corner RMSE
-    drops 0.292→0.174 with bulk-only β).  Catches all 4 particulate corner
-    cases (62:38 D1+) within ±20%.  GATING (added 2026-05-28 after spillover
-    diagnosis) restricts P2 to 0:10 to avoid pushing non-0:10 D1+ cases
-    further out.
+Per-term meaning & confidence:
+  σ_grain               HIGH      Cronau 2022 single-crystal literature
+  Cronau(r_SE)          HIGH      Cronau 2022 piecewise smoothed (3-sigmoid)
+  (φ_eff)^½             MED-HIGH  mean-field 3D percolation; data-locked 91/91
+  CN²                   MED-HIGH  Kirchhoff #paths × bond-strength; locked 91/91
+  cov_Hertz^½           HIGH      Holm 1967 + T1 effective-Li-conduction area
+                                  (Spearman: cov_H vs σ 0.697 > cov_P 0.476;
+                                   Tabor adhesion creates mechanical contact area
+                                   but not ionic conduction area)
+  f_p^3                 MED       3D isotropy P(percolate-x ∧ -y ∧ -z) = f_p³
+  C(τ) = a+b·lnτ+c·(lnτ)² MED    logpoly2, beats dual-branch by ΔAIC=-10.6
+  β_P2·P2               MED       Cronau super-µm arm: bulk-grain regime at
+                                  62:38 D1+ corner; PASSED leave-corner-out
+  β_F·log f_intact      MED       fracture-aware Holm; β=+0.19 partial-conduction
+                                  (broken contacts retain ~60% via micro-asperity)
+  g_phys (power gate)   MED-HIGH  inverse-square small-AM dominance, label-free
 
-Production performance (n=90, after 1mAh_9 base + particulate_12_S3
-exclusion):
-  LOOCV = 0.9687
-  median |err| = 7.31%, mean = 9.74%, 90th pctile = 20.33%, max = 40.90%
-  |err|≤10%: 60%   |err|≤20%: 89%   |err|≤30%: 97%
-  |err|>30%: 3/90   |err|>50%: 0/90
+Adoption history (full chain, each step separately validated):
+  • Baseline (bare √φ−0.19)                          LOOCV 0.9499
+  • + SAT-blend (φc_eff, δ disorder rounding)        LOOCV 0.9578  Δ+0.0049
+  • × Cronau(r_SE) σ_grain factor (literature)       LOOCV 0.9640  Δ+0.0062
+  • C_blend → logpoly2 (3 params, dual-branch 6)     LOOCV 0.9660  Δ+0.0020 (+ΔAIC -10.6)
+  • smooth Cronau (3-sigmoid, fully differentiable)  no LOOCV change
+  • smooth f_small → power gate (Alt-C, α=2)         LOOCV 0.9670  Δ+0.0010
+  • + β_P2·P2 (g_phys-gated, 62:38 corner)           LOOCV 0.9687  Δ+0.0017
+  • + β_F·log f_intact (fracture-aware Holm)         LOOCV 0.9710  Δ+0.0023
+  • T1: cov_physics → cov_Hertz (drop Δcov term)     LOOCV 0.9712  Δ+0.0002 (k 6→5)
+
+FINAL production: LOOCV ≈ 0.971, 5 fit params.
+
+Production performance (n=90):
+  median |err| ≈ 7%, mean ≈ 10%, 90th pctile ≈ 20%
+  |err|≤30%: 97%   |err|>30%: 2-3 cases   |err|>50%: 0
+
+Remaining outliers (per-case diagnosis, ALL data-limited not form):
+  input_8mAh_real_10  -31%  isolated 10:0, 4-edge sensitivity (no siblings)
+  input_1mAh_9_S2/_S5 ±30%  per-seed noise within sibling cluster
+  input_S_2           +24%  r_AM_S=4µm borderline (smooth gate handles partially)
+  input_1mAh_8/_AMP   ±30%  isolated single designs
+  input_8mAh_8_AMP    -23%  isolated 10:0
+
+Multi-seed averaging would clean these up further (+0.0041 LOOCV) but
+PRODUCTION USES RAW n=90 — averaging is data-side preprocessing, not
+form change.  Documented in `scripts/final_pushes.py` for reference.
 
 ⚠ NEVER re-screen φc.  φc_P, φc_S, δ stay FROZEN at (0.200, 0.195, 0.040).
 With logpoly2 the selection-bias from re-screening is larger (gap +0.0095
 vs +0.0048 with dual-branch).  Production never re-selects → not a problem.
-Always benchmark against FROZEN-φc LOOCV in `final_form_status.py`.
+
+NARRATIVE NOTE: cov_Hertz adoption (T1) is justified by SPEARMAN data —
+Spearman(σ, cov_Hertz)=+0.697 vs Spearman(σ, cov_physics)=+0.476.
+The interpretation is "Li+ effective conduction area" (Hertz) not
+"mechanical bottleneck" (which is closer to cov_physics per Spearman
+with path_hop_area_min).  Tabor adhesion creates physical contact area
+but the vdW gap interferes with ionic transport → effective conduction
+area is smaller than the mechanical area.
 
   σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov^½ · f_p³ · C_blend(τ)
 

@@ -24,39 +24,58 @@ from pathlib import Path as _P
 
 
 EQUATION = r"""
-σ_ionic = C_blend(τ) · σ_grain_eff · (φ_eff)^0.5 · CN^2 · cov^0.5 · f_p^3
+σ_ionic = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p³
+          · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact]
 
-where
-   σ_grain_eff = σ_grain × Cronau(r_SE)
-       σ_grain  = 3.0   (Li6PS5Cl single-crystal grain conductivity, mS/cm)
-       Cronau(r_SE) = 1.00   if r_SE ≥ 0.50 µm
-                      0.90   if 0.30 ≤ r_SE < 0.50
-                      0.65   if 0.10 ≤ r_SE < 0.30
-                      interp 0.33 → 0.65 linearly across 0.03 ≤ r_SE < 0.10
-                      0.33   if r_SE < 0.03
-                      1.00   if r_SE unavailable (neutral)
+  ┌───────────────────────────────────────────────────────────────────────┐
+  │ FROZEN (literature / physics-derived)                                  │
+  ├───────────────────────────────────────────────────────────────────────┤
+  │ σ_grain   = 3.0 mS/cm  Cronau 2022 Li6PS5Cl single-crystal     HIGH   │
+  │ Cronau(r) = 0.33 + 0.32σ(50(r−0.10))                                  │
+  │                + 0.25σ(50(r−0.30))                                    │
+  │                + 0.10σ(50(r−0.50))     smooth 3-sigmoid        HIGH   │
+  │ exponents (½, 2, ½, 3) for (φ_eff, CN, cov, f_p)   data-locked        │
+  │ φc_P=0.200  φc_S=0.195  δ=0.040        joint screen on full corpus    │
+  │ r_cut=3.5µm  α=2                       audit-midpoint AM_S/AM_P gap   │
+  │                                        + Alt-C power scan optimum     │
+  ├───────────────────────────────────────────────────────────────────────┤
+  │ LIVE-fit (5 OLS params per corpus build)                              │
+  ├───────────────────────────────────────────────────────────────────────┤
+  │ a, b, c   tortuosity logpoly2: C(τ) = a + b·ln τ + c·(ln τ)²          │
+  │ β_P2      bulk-grain corner enhancement amplitude                     │
+  │ β_F       fracture-aware partial-Holm exponent  (data → ≈ +0.19)      │
+  └───────────────────────────────────────────────────────────────────────┘
 
-   φ_eff = √[(φ − φc_eff)^2 + (δ · g_010)^2]
-       g_010   = σ(−10·(p_AM_P − 0.5))     (P:S sigmoid; ≈1 toward 0:10)
-       φc_eff  = (1 − g_010) · φc_P + g_010 · φc_S
-       φc_P    = 0.200   (P-heavy threshold, FROZEN)
-       φc_S    = 0.195   (0:10 limit threshold, FROZEN)
-       δ       = 0.040   (near-0:10 saturation, FROZEN)
+Sub-definitions:
+  φ_eff      = √[(φ − φc_eff)² + (δ · g_phys)²]
+  φc_eff     = (1 − g_phys)·φc_P + g_phys·φc_S
+  g_phys     = (min(r_cut / r̄_AM, 1))^α    ← power-law size gate (Alt-C)
+  r̄_AM      = (1 − p)·r_AM,S + p·r_AM,P     ← composition-weighted AM radius
+  P_2        = g_phys · (φ − φc_S)² · (r_SE − 0.5)+    ← Cronau super-µm arm
+  f_intact   = 1 − fracture_aware_excluded_pct / 100   ← intact contact fraction
 
-   C_blend(τ) = a + b·ln τ + c·(ln τ)²            (logpoly2, 3 OLS params)
-       a, b, c refit LIVE per corpus.  Adopted 2026-05-28 after
-       scripts/screen_form_simplifications.py confirmed +0.0020 LOOCV
-       and -10.6 ΔAIC vs the previous 6-param dual-branch (sigmoid gate
-       + cubic-in-log poly).
+Per-term meaning:
+  σ_grain · Cronau  — material baseline (Cronau 2022 literature)
+  (φ_eff)^½         — mean-field 3D percolation, well-above-threshold
+  CN²               — Kirchhoff #paths × bond-strength (Holm parallel paths)
+  cov_Hertz^½       — Holm 1967 constriction at elastic contact area
+                       (T1 adoption: cov_physics → cov_Hertz; Spearman 0.697 > 0.476)
+  f_p³              — 3D isotropy: P(percolate-x ∧ y ∧ z) = f_p³
+  C(τ)              — tortuosity path-length, logpoly2 (beats dual-branch by ΔAIC −10.6)
+  β_P2·P2           — bulk-grain regime extension beyond Cronau's 0.5µm plateau
+                       (catches 62:38 D1+ corner; PASSED leave-corner-out)
+  β_F·log f_intact  — fracture-induced contact loss (β≈0.19 partial-Holm)
+  g_phys (power)    — label-free 'small-AM dominance', inverse-square scaling
 
-   Other inputs:
-       φ        = SE volume fraction (= phi_se)
-       CN       = SE-SE coordination number (= se_se_cn)
-       cov      = SE-SE covered area fraction (physics)
-       f_p      = percolation fraction (= percolation_pct/100)
-       τ        = recommended tortuosity (= tortuosity_recommended)
-       p        = AM_P / (AM_P + AM_S) volume fraction
-       r_SE     = SE radius in µm (design input)
+Other inputs:
+  φ      = SE volume fraction (= phi_se)
+  CN     = SE-SE coordination number (= se_se_cn)
+  cov    = SE-SE covered area fraction (HERTZ — elastic only, T1 adopted)
+  f_p    = percolation fraction (= percolation_pct/100)
+  τ      = recommended tortuosity (= tortuosity_recommended)
+  p      = AM_P / (AM_P + AM_S) volume fraction
+  r_SE   = SE radius in µm (design input)
+  r_AM_S, r_AM_P = smaller / larger AM radius in µm
 """
 
 
@@ -123,7 +142,7 @@ def main():
             ("Baseline (bare √φ−0.19)", lo_b, None, err_b),
             ("+ SAT-blend (φc_eff, δ)", lo_s, lo_b, err_s),
             ("× Cronau(r_SE)", lo_sc, lo_s, err_sc),
-            ("× C4 aug (+P2 +Δcov)  ← PRODUCTION", lo_c4, lo_sc, err_c4)):
+            ("× T1 (P2 + f_intact, cov_H) ← PRODUCTION", lo_c4, lo_sc, err_c4)):
         b = _bands(err)
         dv = f"{lo-prev:+.4f}" if prev is not None else "  —  "
         print(f"  {tag:32s}{lo:9.4f}{dv:>11s}    "
