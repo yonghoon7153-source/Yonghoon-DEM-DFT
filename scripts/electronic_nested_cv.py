@@ -80,10 +80,28 @@ _last_used_key: dict = {}   # case_id → which σ key supplied its target
 def _stage_e_electronic(d, case_id=None):
     """Best available σ_e (analogue of _stage_e_sigma).
 
-    Priority: stage_e_physics → stage_e → physics → raw.  Returns (value, key_used).
-    Stage E is preferred over physics because Stage E includes literature
-    grain corrections (Trevisanello 2021) that the raw solver doesn't have.
+    CRITICAL SANITY CHECK (2026-05-28): the raw network-solver Hertz
+    `electronic_sigma_full_mScm` MUST be populated.  If it's missing,
+    the network solver electronic pathway didn't run for this case, and
+    any Stage E value present is a FALLBACK PHANTOM (e.g. computed from
+    sigma_bruggeman × Trevisanello mult) that doesn't represent the actual
+    AM-AM Kirchhoff network result.  Found via the 1mAh_100_3 case
+    inspection: raw/phys/stEP all empty, only stE=68.2 populated (phantom).
+
+    After requiring raw > 0:
+      Priority: stage_e (best — Hertz + Trevisanello)
+                → raw (Hertz alone)
+                → stage_e_physics (currently has ~3300× physics-bug for ~9/130)
+                → physics (same bug)
+    Stage E is preferred over physics because Stage E includes Trevisanello
+    grain corrections that the raw solver lacks.
     """
+    raw_v = d.get('electronic_sigma_full_mScm')
+    if not (isinstance(raw_v, (int, float)) and not isinstance(raw_v, bool)
+            and raw_v > 0):
+        # Network solver electronic didn't actually run → reject any Stage E
+        # phantom value to avoid contaminating the corpus.
+        return None
     for k in _TARGET_KEYS_E:
         v = d.get(k)
         if (isinstance(v, (int, float)) and not isinstance(v, bool)
