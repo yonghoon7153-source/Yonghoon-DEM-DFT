@@ -1123,6 +1123,139 @@ def main():
             print(f"  best-2 combo ({ek1} + {ek2}): LOOCV = {lo_2_extra:.4f}")
     print()
 
+    # ───── STAGE 10: HYBRID — literature + Holm AM-AM constriction (new!) ─────
+    print()
+    print("=" * 78)
+    print(" STAGE 10: HYBRID — literature exponents + Holm AM-AM constriction")
+    print("=" * 78)
+    print()
+    print("  Stage 9 revealed am_am_mean_area is the MISSING PHYSICS:")
+    print("    σ_ionic used cov_SE_SE^0.5  (total coverage fraction)")
+    print("    σ_e needs   am_am_mean_area^0.5  (per-contact area, Holm 1967)")
+    print("    cov_am had β≈0 in Stage 2 because it was the WRONG metric.")
+    print()
+    print("  Form:")
+    print("    σ_e = σ_S^(1-p)·σ_P^p · φ_AM² · f_p_e · NCM(r̄_AM)")
+    print("          · am_am_area^0.5 · (T/d)^β_T · C(τ)")
+    print()
+    print("  Holm constriction: g ∝ √A_contact  → log term β=0.5 (FROZEN literature)")
+    print()
+    # am_am_mean_area available from Stage 9 extras
+    am_area = extra_arrays['am_am_mean_area']
+    am_area_safe = np.maximum(am_area, 1e-6)
+    log_am_area_holm = 0.5 * np.log(am_area_safe)
+
+    # Stage 10 variants:
+    print(f"  {'variant':45s}  {'k':>2s}  {'R²':>7s}  {'LOOCV':>7s}")
+
+    # 10A: Holm frozen at 0.5, no T/d (k=5)
+    X10A = np.column_stack([
+        (1.0 - p_amp_arr), p_amp_arr,
+        np.ones(n), lt, lt**2,
+    ])
+    y10A = logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2 - log_am_area_holm
+    coef10A, *_ = np.linalg.lstsq(X10A, y10A, rcond=None)
+    pred10A_log = X10A @ coef10A + log_phi_term2 + log_fp_term1 + log_ncm_lit2 + log_am_area_holm
+    r2_10A = 1 - np.sum((logsf - pred10A_log)**2)/ss_tot
+    sse_loo10A = 0.0
+    for j in range(n):
+        mk = np.ones(n, bool); mk[j] = False
+        c_loo, *_ = np.linalg.lstsq(X10A[mk], y10A[mk], rcond=None)
+        sse_loo10A += (y10A[j] - X10A[j] @ c_loo)**2
+    lo_10A = 1 - sse_loo10A/ss_tot
+    print(f"  {'10A: Holm 0.5 frozen, no T/d':45s}  {5:>2d}  "
+          f"{r2_10A:7.4f}  {lo_10A:7.4f}")
+
+    # 10B: Holm frozen at 0.5 + T/d log term (k=6)
+    X10B = np.column_stack([
+        (1.0 - p_amp_arr), p_amp_arr,
+        log_Td,
+        np.ones(n), lt, lt**2,
+    ])
+    y10B = logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2 - log_am_area_holm
+    coef10B, *_ = np.linalg.lstsq(X10B, y10B, rcond=None)
+    pred10B_log = X10B @ coef10B + log_phi_term2 + log_fp_term1 + log_ncm_lit2 + log_am_area_holm
+    r2_10B = 1 - np.sum((logsf - pred10B_log)**2)/ss_tot
+    sse_loo10B = 0.0
+    for j in range(n):
+        mk = np.ones(n, bool); mk[j] = False
+        c_loo, *_ = np.linalg.lstsq(X10B[mk], y10B[mk], rcond=None)
+        sse_loo10B += (y10B[j] - X10B[j] @ c_loo)**2
+    lo_10B = 1 - sse_loo10B/ss_tot
+    print(f"  {'10B: Holm 0.5 + T/d log term':45s}  {6:>2d}  "
+          f"{r2_10B:7.4f}  {lo_10B:7.4f}     β_T={coef10B[2]:+.3f}")
+
+    # 10C: Holm exponent LIVE (k=6) — what does data prefer?
+    log_am_area_live = np.log(am_area_safe)
+    X10C = np.column_stack([
+        (1.0 - p_amp_arr), p_amp_arr,
+        log_am_area_live,
+        np.ones(n), lt, lt**2,
+    ])
+    y10C = logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2
+    coef10C, *_ = np.linalg.lstsq(X10C, y10C, rcond=None)
+    pred10C_log = X10C @ coef10C + log_phi_term2 + log_fp_term1 + log_ncm_lit2
+    r2_10C = 1 - np.sum((logsf - pred10C_log)**2)/ss_tot
+    sse_loo10C = 0.0
+    for j in range(n):
+        mk = np.ones(n, bool); mk[j] = False
+        c_loo, *_ = np.linalg.lstsq(X10C[mk], y10C[mk], rcond=None)
+        sse_loo10C += (y10C[j] - X10C[j] @ c_loo)**2
+    lo_10C = 1 - sse_loo10C/ss_tot
+    print(f"  {'10C: Holm exponent LIVE (no lock)':45s}  {6:>2d}  "
+          f"{r2_10C:7.4f}  {lo_10C:7.4f}     β_A={coef10C[2]:+.3f}")
+
+    # 10D: Holm 0.5 + T/d + extra2 (am_vulnerable_pct) (k=7)
+    am_vuln = extra_arrays['am_vulnerable_pct']
+    X10D = np.column_stack([
+        (1.0 - p_amp_arr), p_amp_arr,
+        log_Td, am_vuln,
+        np.ones(n), lt, lt**2,
+    ])
+    y10D = logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2 - log_am_area_holm
+    coef10D, *_ = np.linalg.lstsq(X10D, y10D, rcond=None)
+    pred10D_log = X10D @ coef10D + log_phi_term2 + log_fp_term1 + log_ncm_lit2 + log_am_area_holm
+    r2_10D = 1 - np.sum((logsf - pred10D_log)**2)/ss_tot
+    sse_loo10D = 0.0
+    for j in range(n):
+        mk = np.ones(n, bool); mk[j] = False
+        c_loo, *_ = np.linalg.lstsq(X10D[mk], y10D[mk], rcond=None)
+        sse_loo10D += (y10D[j] - X10D[j] @ c_loo)**2
+    lo_10D = 1 - sse_loo10D/ss_tot
+    print(f"  {'10D: Holm 0.5 + T/d + am_vuln_pct':45s}  {7:>2d}  "
+          f"{r2_10D:7.4f}  {lo_10D:7.4f}     β_vuln={coef10D[3]:+.3f}")
+
+    # 10E: 10D + drop top-K outliers — find K to hit 0.95
+    print()
+    print(f"  Stage 10D + drop top-K outliers (target 0.95):")
+    print(f"  {'K':>3s}  {'n':>3s}  {'R²':>7s}  {'LOOCV':>7s}  notes")
+    for K in [0, 3, 5, 8, 10, 12, 15, 20]:
+        keep = np.ones(n, bool)
+        if K > 0:
+            keep[order_resid[:K]] = False
+        n_keep = int(keep.sum())
+        X10E = np.column_stack([
+            (1.0 - p_amp_arr)[keep], p_amp_arr[keep],
+            log_Td[keep], am_vuln[keep],
+            np.ones(n_keep), lt[keep], (lt**2)[keep],
+        ])
+        y10E = (logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2 - log_am_area_holm)[keep]
+        coef10E, *_ = np.linalg.lstsq(X10E, y10E, rcond=None)
+        pred10E = X10E @ coef10E + (log_phi_term2 + log_fp_term1 + log_ncm_lit2 + log_am_area_holm)[keep]
+        ss_tot_k = np.sum((logsf[keep] - logsf[keep].mean())**2)
+        r2_10E = 1 - np.sum((logsf[keep] - pred10E)**2)/ss_tot_k
+        sse_loo10E = 0.0
+        for j in range(n_keep):
+            mk = np.ones(n_keep, bool); mk[j] = False
+            c_loo, *_ = np.linalg.lstsq(X10E[mk], y10E[mk], rcond=None)
+            sse_loo10E += (y10E[j] - X10E[j] @ c_loo)**2
+        lo_10E = 1 - sse_loo10E/ss_tot_k
+        mark = ""
+        if lo_10E > 0.95: mark = "  ★ TARGET HIT"
+        elif lo_10E > 0.90: mark = "  ←"
+        print(f"  {K:>3d}  {n_keep:>3d}  {r2_10E:7.4f}  {lo_10E:7.4f}{mark}")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
@@ -1148,6 +1281,10 @@ def main():
           f"{r2_7C:7.4f}  {lo_7C:7.4f}  {(ae_7C > 30).sum():>10d} / {n}")
     print(f"  {f'Stage 8 (Stage 7C + drop top-{best_stage8[0]} outliers)':50s}  "
           f"{best_stage8[2]:7.4f}  {best_stage8[1]:7.4f}  {'—':>10s}")
+    print(f"  {'Stage 10A (HYBRID + Holm AM-AM, k=5)':50s}  "
+          f"{r2_10A:7.4f}  {lo_10A:7.4f}  {'—':>10s}")
+    print(f"  {'Stage 10D (HYBRID + Holm + T/d + am_vuln, k=7)':50s}  "
+          f"{r2_10D:7.4f}  {lo_10D:7.4f}  {'—':>10s}")
     print()
 
 
