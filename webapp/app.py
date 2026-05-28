@@ -1984,6 +1984,30 @@ def transform_network_summary_4col(tables, metrics, meta):
         'AM-SE A_final(μm²)',
     }
 
+    # ── Phantom σ_e/κ row suppression (2026-05-28, v5 — handles rows
+    # built earlier by analyze_contacts.py and saved to disk).
+    # If stage_e_source flags fallback, the σ_e / κ row values stored
+    # in the pre-built tables were also written from fallback — replace
+    # with '—' here so Network Solver row shows '—' consistently.
+    _src_fb_n = metrics.get('stage_e_source') or {}
+    _phantom_e_h = (_src_fb_n.get('sigma_e') == 'fallback_weighted_factor'
+                    or not metrics.get('electronic_sigma_full_mScm'))
+    _phantom_e_p = (_src_fb_n.get('sigma_e_physics') == 'fallback_weighted_factor'
+                    or not metrics.get('electronic_sigma_full_mScm_physics'))
+    _phantom_th_h = (_src_fb_n.get('sigma_thermal') == 'fallback_weighted_factor'
+                     or not metrics.get('thermal_sigma_full_mScm'))
+    _phantom_th_p = (_src_fb_n.get('sigma_thermal_physics') == 'fallback_weighted_factor'
+                     or not metrics.get('thermal_sigma_full_mScm_physics'))
+    _e_label_keys = {
+        'σ_electronic (mS/cm)':        ('e', 'h'),
+        'σ_e — electronic conductivity (mS/cm)': ('e', 'h'),
+        'σ_electronic [physics] (mS/cm)': ('e', 'p'),
+        'σ_e^physics — Tabor plastic film (mS/cm)': ('e', 'p'),
+        'σ_thermal (mS/cm equiv)':     ('th', 'h'),
+        'κ — thermal conductivity (mS/cm equiv)': ('th', 'h'),
+        'σ_thermal [physics] (mS/cm equiv)': ('th', 'p'),
+        'κ^physics — Tabor plastic film (mS/cm equiv)': ('th', 'p'),
+    }
     expanded = []
     for row in tbl['data']:
         if not row:
@@ -1991,6 +2015,20 @@ def transform_network_summary_4col(tables, metrics, meta):
         label = row[0] if len(row) > 0 else ''
         if isinstance(label, str) and label.strip() in _drop_labels:
             continue
+        # Suppress phantom σ_e / κ row VALUES (label stays for layout)
+        label_clean = str(label).strip() if label else ''
+        if label_clean in _e_label_keys:
+            kind, mode = _e_label_keys[label_clean]
+            is_phantom = ((kind == 'e' and mode == 'h' and _phantom_e_h)
+                          or (kind == 'e' and mode == 'p' and _phantom_e_p)
+                          or (kind == 'th' and mode == 'h' and _phantom_th_h)
+                          or (kind == 'th' and mode == 'p' and _phantom_th_p))
+            if is_phantom:
+                # zero out value column(s)
+                if len(row) >= 4:
+                    row = [row[0], '—', '—', '—']
+                else:
+                    row = [row[0], '—']
         if _is_section_header(label):
             expanded.append([label, '', '', ''])
         elif len(row) >= 4:
