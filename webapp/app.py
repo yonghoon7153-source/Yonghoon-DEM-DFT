@@ -1133,10 +1133,14 @@ def inject_stage_e_rows(tables, metrics):
             d_str = f'{delta_pp:+.1f}%'
         else:
             d_str = '—'
-        # Source tags appended (e.g. '⚡ H-fb' if Hertzian fallback fired)
+        # Source tags appended (e.g. '⚡ H-fb' if Hertzian fallback fired).
+        # 2026-05-28: skip the badge when the value itself was suppressed
+        # (val_h/val_p = None) — phantom indicator alongside '—' is redundant.
         tag_parts = []
-        if src_h == 'fallback_weighted_factor': tag_parts.append('H:⚡')
-        if src_p == 'fallback_weighted_factor': tag_parts.append('P:⚡')
+        if val_h is not None and src_h == 'fallback_weighted_factor':
+            tag_parts.append('H:⚡')
+        if val_p is not None and src_p == 'fallback_weighted_factor':
+            tag_parts.append('P:⚡')
         if tag_parts:
             d_str += '  [' + ' '.join(tag_parts) + ']'
         return [f'  {label}', h_str, p_str, d_str + f'  {unit}']
@@ -1272,6 +1276,27 @@ def inject_cell_asr_rows(tables, metrics, input_params):
         'L = thickness_um (mesh-z), A = box_x × box_y × scale²',
     ])
 
+    # Phantom σ suppression mirror — must match inject_stage_e_into_metrics
+    # 2026-05-28: if the network-solver pathway didn't run OR Stage E used
+    # the Bruggeman fallback, suppress the corresponding ASR Stage E cell
+    # so the dashboard doesn't report ASR derived from phantom σ.
+    _src_fb = metrics.get('stage_e_source') or {}
+    def _is_phantom_h(raw_key, src_key):
+        rv = metrics.get(raw_key)
+        if not (isinstance(rv, (int, float)) and rv and rv > 0):
+            return True
+        return _src_fb.get(src_key) == 'fallback_weighted_factor'
+    _phantom = {
+        'electronic_sigma_full_mScm_stage_e':
+            _is_phantom_h('electronic_sigma_full_mScm', 'sigma_e'),
+        'electronic_sigma_full_mScm_stage_e_physics':
+            _is_phantom_h('electronic_sigma_full_mScm_physics', 'sigma_e_physics'),
+        'thermal_sigma_full_mScm_stage_e':
+            _is_phantom_h('thermal_sigma_full_mScm', 'sigma_thermal'),
+        'thermal_sigma_full_mScm_stage_e_physics':
+            _is_phantom_h('thermal_sigma_full_mScm_physics', 'sigma_thermal_physics'),
+    }
+
     def _row_for(label, k_h, k_p, k_eh, k_ep, unit='Ω·cm²'):
         """Hertzian / Physics + their Stage E counterparts.
         4-col layout: ASR_H | ASR_P | Δ% (Physics-vs-Hertzian, with Stage E
@@ -1279,8 +1304,11 @@ def inject_cell_asr_rows(tables, metrics, input_params):
         Δ-column text so reviewers can read the full picture in one row."""
         asr_h  = _asr_ohm_cm2(metrics.get(k_h))
         asr_p  = _asr_ohm_cm2(metrics.get(k_p) if k_p else None)
-        asr_eh = _asr_ohm_cm2(metrics.get(k_eh) if k_eh else None)
-        asr_ep = _asr_ohm_cm2(metrics.get(k_ep) if k_ep else None)
+        # Stage E ASRs: skip if phantom (mirrors σ-suppression upstream)
+        _eh_val = None if (k_eh and _phantom.get(k_eh)) else (metrics.get(k_eh) if k_eh else None)
+        _ep_val = None if (k_ep and _phantom.get(k_ep)) else (metrics.get(k_ep) if k_ep else None)
+        asr_eh = _asr_ohm_cm2(_eh_val)
+        asr_ep = _asr_ohm_cm2(_ep_val)
         h_str = f'{asr_h:.2f}' if asr_h is not None else '—'
         p_str = f'{asr_p:.2f}' if asr_p is not None else '—'
         # Δ% (Physics-vs-Hertzian baseline, mirrors Network Solver section)
