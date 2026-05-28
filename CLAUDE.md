@@ -97,6 +97,14 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   failed — wrong location: the missing physics was in the σ_grain prefactor,
   not a multiplicative correction term. exp_S scan: 91/91 folds pick 0.5
   (mean-field) — percolation exponent is fine as-is.
+- **Excluded case (per-seed sim anomaly, 2026-05-28).** `input_particulate_12_S3`
+  filtered from the analysis corpus (`nested_cv_sat._EXCLUDED_NAMES`). At the
+  same design point (φ=0.275, CN=3.3, r_SE=1.5µm) the 5 sibling seeds (base, S1,
+  S2, S4, S5) cluster σ_act 0.030–0.045 (median 0.038); S3=0.020 is half the
+  sibling median → isolated seed anomaly, not a form failure. The audit
+  family-check (`scripts/audit_outliers_factors.py`) found it via meta.json
+  sibling lookup.  Production form predicted ~0.034 (matching the sibling
+  range), so the +74% "outlier" was the case, not the model.
 - **POST-Cronau extras ALL rejected; ablation shows form is balanced (2026-05-28).**
   Re-running the residual diagnostic AFTER Cronau adoption surfaced new strong
   signals in the D1/D1.5 62:38 subset (path_hop_area +0.82, se_cn_eff_area +0.80,

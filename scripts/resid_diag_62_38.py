@@ -26,7 +26,8 @@ SCRIPTS = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS))
 import generate_comparison_plots as gcp          # noqa: E402
 from nested_cv_sat import (base_log_sat, cblend_fit, cblend_pred, PHI_C0,  # noqa: E402
-                           cronau_factor, _direct_rse_um)
+                           cronau_factor, _direct_rse_um,
+                           _EXCLUDED_NAMES, _meta_name)
 
 # φc_P*, φc_S*, δ* frozen at the production SAT-blend values
 PHICP, PHICS, DELTA = 0.200, 0.195, 0.040
@@ -60,6 +61,8 @@ def load():
             p = gcp._ps_fraction(d)
             if not (sig and sig > 0 and phi > PHI_C0 and cn > 0 and cov and cov > 0
                     and fp > 0 and tau > 0):
+                continue
+            if _meta_name(mp.parent.name, mp.parent) in _EXCLUDED_NAMES:
                 continue
             key = (round(phi, 4), round(cn, 3), round(float(sig), 5))
             if key in seen:

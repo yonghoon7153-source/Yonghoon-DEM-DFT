@@ -40,6 +40,25 @@ PHICS_GRID = np.round(np.linspace(0.15, 0.215, 14), 4)
 DELTA_GRID = np.round(np.linspace(0.0, 0.10, 6), 4)
 
 
+# Per-seed simulation anomalies — actual σ inconsistent with same-design
+# siblings.  Justified case-by-case in CLAUDE.md (2026-05-28 audit):
+#   input_particulate_12_S3: σ_act=0.020 vs 5 siblings 0.030–0.045 at same
+#       (φ,CN,r_SE) → σ_act ≈ half of sibling median, isolated anomaly.
+_EXCLUDED_NAMES = {'input_particulate_12_S3'}
+
+
+def _meta_name(cid, mp_parent):
+    """Look up the human-readable name from meta.json (matches dashboard names)."""
+    for meta_p in (Path('webapp/uploads') / cid / 'meta.json',
+                   mp_parent / 'meta.json'):
+        if meta_p.exists():
+            try:
+                return __import__('json').load(open(meta_p)).get('name') or cid
+            except Exception:
+                pass
+    return cid
+
+
 def load_corpus():
     """Scan webapp/results + webapp/archive for full_metrics.json and build the
     Stage-E/physics arrays used by the fixed form."""
@@ -62,6 +81,8 @@ def load_corpus():
             p = gcp._ps_fraction(d)
             if not (sig and sig > 0 and phi > PHI_C0 and cn > 0 and cov and cov > 0
                     and fp > 0 and tau > 0):
+                continue
+            if _meta_name(mp.parent.name, mp.parent) in _EXCLUDED_NAMES:
                 continue
             key = (round(phi, 4), round(cn, 3), round(float(sig), 5))
             if key in seen:

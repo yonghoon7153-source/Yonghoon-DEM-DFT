@@ -20,7 +20,7 @@ import generate_comparison_plots as gcp                                # noqa: E
 from nested_cv_sat import (base_log_sat, cblend_fit, cblend_pred,      # noqa: E402
                            cronau_factor, _direct_rse_um, PHI_C0,
                            PHICP_F, PHICS_F, DELTA_F, SG,
-                           K_PS, P_C)
+                           K_PS, P_C, _EXCLUDED_NAMES, _meta_name)
 
 
 def load():
@@ -49,19 +49,11 @@ def load():
                 continue
             seen.add(key)
             rse = _direct_rse_um(d) or np.nan
-            rows.append((phi, cn, cov, fp, tau, float(sig), p, rse))
-            # Prefer the human-readable name from meta.json (matches the dashboard
-            # outlier popup: 'input_particulate_12_S3' etc.); fall back to the cid.
             cid = mp.parent.name
-            nm = cid
-            for meta_p in (Path('webapp/uploads') / cid / 'meta.json',
-                           mp.parent / 'meta.json'):
-                if meta_p.exists():
-                    try:
-                        nm = json.load(open(meta_p)).get('name', cid) or cid
-                        break
-                    except Exception:
-                        pass
+            nm = _meta_name(cid, mp.parent)
+            if nm in _EXCLUDED_NAMES:
+                continue
+            rows.append((phi, cn, cov, fp, tau, float(sig), p, rse))
             names.append(nm)
     return np.array(rows, float), names
 
