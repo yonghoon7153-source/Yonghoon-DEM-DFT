@@ -345,6 +345,28 @@ def scv_feat(a):
     return _logcol(a, 16)
 
 
+# Pinpoint gates for the D1/D1.5 62:38 corner (high-φ SE-rich, optionally 0:10).
+PHI_HIGH = 0.30; K_PHI_HIGH = 15.0
+
+
+def _g_high(a):
+    """SE-rich gate: ~1 for φ>0.30, ~0 below.  Isolates the corner where
+    path_hop_area / area-weighted-CN signal lives (62:38 → φ_se~0.35)."""
+    return 1.0/(1.0+np.exp(-K_PHI_HIGH*(a[:, 0] - PHI_HIGH)))
+
+
+def pha_ghi_feat(a):
+    """g_high × log(path_hop_area) — concentrates the constriction-area signal
+    where it lives (SE-rich corner)."""
+    return _g_high(a) * _logcol(a, 14)
+
+
+def pha_ghi010_feat(a):
+    """g_high × g_010 × log(path_hop_area) — pinpoint D1/D1.5 (SE-rich 0:10)."""
+    g010 = 1.0/(1.0+np.exp(K_PS*(a[:, 6] - P_C)))
+    return _g_high(a) * g010 * _logcol(a, 14)
+
+
 def loocv_with_feat(base, logsf, taus, sfeat):
     """LOOCV with C_blend + β·sfeat fit jointly per fold (β is an OLS coefficient,
     no selection → unbiased). Returns (r2, mean β)."""
@@ -574,7 +596,11 @@ def main():
             ("log se_se_cn_eff_area (area-weighted CN)", cnea_feat, 15,
              "'count×size' that CN² misses; diag +0.80"),
             ("log stress_cv (mech. non-uniformity)", scv_feat, 16,
-             "uniform stress ⇔ good network; diag −0.82")):
+             "uniform stress ⇔ good network; diag −0.82"),
+            ("path_hop_area × g_high (SE-rich gate)", pha_ghi_feat, 14,
+             "gate concentrates signal where it lives (φ>0.30)"),
+            ("path_hop_area × g_high × g_010 (D1/D1.5 pinpoint)", pha_ghi010_feat, 14,
+             "SE-rich AND 0:10 — the actual D1/D1.5 62:38 corner")):
         n_ok = int(np.isfinite(a[:, col]).sum())
         if n_ok < 0.5*n:
             print(f"  [skip {tag}: only {n_ok}/{n} expose the input]")
