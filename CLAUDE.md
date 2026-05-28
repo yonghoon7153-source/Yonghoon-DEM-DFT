@@ -51,10 +51,25 @@ microstructure matching those numbers → eventually stack different
 configs as natural LAYERS inside one composite cathode.
 
 ### 5-phase plan (agreed order: sequential 1→5)
-- **Phase 1 — DONE** (commit 9785bbf): expose grade_engine's ~30 derived
-  metrics (Q_gravimetric, ASR_*, τ_Laplace, cycle-stable, 분극 η …) as
-  `grade:<label>` params in the group-compare tool. Helpers:
-  `grade_engine.axis_values()` + `map_input_params()`.
+- **Phase 1 in progress** — transport-property triad (σ_ionic / σ_electronic /
+  σ_thermal):
+  - σ_ionic — DONE 2026-05-28 (LOOCV 0.9752, n=88, 5 params, Bayesian PI
+    well-calibrated, 3 isolated outliers documented).
+  - σ_electronic — REBUILD PENDING. Legacy form (`σ_el = C × σ_AM × φ_AM^1.5
+    × CN_AM² × exp(π/(T/d_AM))`, 1-param) + all 37 `screening_electronic_*.py`
+    + `electronic_scaling_law.py` + `stress_test_el_th.py` DELETED 2026-05-28
+    ('과감하게 버려' — bold clean slate).  To be rebuilt with the same
+    methodology toolkit that closed out σ_ionic: nested CV, SAT-blend
+    equivalent (P-heavy vs S-heavy AM threshold if applicable), Cronau-
+    equivalent for NCM grain size, Holm 1967 electronic ver. (constriction
+    at AM-AM contact), logpoly2 C_blend(τ_electronic), Bayesian Laplace
+    posterior with physics priors, bootstrap PI.  Ground truth: network
+    solver's `electronic_sigma_full_mScm` (Kirchhoff, untouched).
+  - σ_thermal — pending (was at v4++ era, 1-param).
+- **Phase 1 (grade_engine expose) — DONE** (commit 9785bbf): expose
+  grade_engine's ~30 derived metrics (Q_gravimetric, ASR_*, τ_Laplace,
+  cycle-stable, 분극 η …) as `grade:<label>` params in the group-compare
+  tool. Helpers: `grade_engine.axis_values()` + `map_input_params()`.
 - **Phase 2 — single data layer**: per-case unified vector =
   full_metrics ∪ grade-axis ∪ fracture ∪ viewer_aux; make it the single
   source for ML training matrix + plot pool + predict targets. Extend

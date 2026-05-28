@@ -470,42 +470,19 @@ def generate_report(data_list, names, outdir):
     L.append("```\n")
 
 
-    # Electronic fit
-    el_actual = []
-    el_pred_rhs = []
-    SIGMA_AM = 50.0
-    for d in data_list:
-        sigma_el = d.get('electronic_sigma_full_mScm', 0)
-        phi_am = d.get('phi_am', 0)
-        cn_am = d.get('am_am_cn', 0)
-        T_um = d.get('thickness_um', 0)
-        # d_AM from r_AM_P or r_AM_S (μm diameter)
-        r_am = max(d.get('r_AM_P', 0), d.get('r_AM_S', 0))
-        d_am = r_am * 2 if r_am > 0.1 else 5.0  # fallback 5μm
-        if sigma_el and sigma_el > 0 and phi_am > 0 and cn_am > 0 and T_um > 0 and d_am > 0:
-            ratio = T_um / d_am
-            if ratio > 0:
-                rhs = SIGMA_AM * phi_am**1.5 * cn_am**2 * np.exp(np.pi / ratio)
-                el_actual.append(sigma_el)
-                el_pred_rhs.append(rhs)
-
-    if len(el_actual) >= 3:
-        el_actual = np.array(el_actual)
-        el_pred_rhs = np.array(el_pred_rhs)
-        el_C = float(np.exp(np.mean(np.log(el_actual / el_pred_rhs))))
-        el_pred = el_C * el_pred_rhs
-        # R² in log space
-        log_a, log_p = np.log(el_actual), np.log(el_pred)
-        ss_res = np.sum((log_a - log_p)**2)
-        ss_tot = np.sum((log_a - np.mean(log_a))**2)
-        el_r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
-
-    L.append(f"### Electronic (R²={el_r2:.2f}, 1 free parameter)" if el_r2 else "### Electronic")
-    L.append("```")
-    L.append("σ_el = C × σ_AM × φ_AM^(3/2) × CN_AM² × exp(π/(T/d_AM))")
-    L.append(f"C = {el_C:.4f} (data-fitted)" if el_C else "C ≈ 0.015 (default)")
-    L.append("σ_AM = 50 mS/cm (NCM811)")
-    L.append("```\n")
+    # Electronic — LEGACY form deleted 2026-05-28 ('과감하게 버려').
+    # All 37 screening_electronic_*.py + electronic_scaling_law.py removed.
+    # Phase 1 next sub-step: rebuild σ_electronic with the modern methodology
+    # toolkit (nested CV, SAT-blend equiv, Cronau equiv, logpoly2 C_blend,
+    # Bayesian Laplace, bootstrap PI) that just closed out σ_ionic.
+    # Reports section reserved until the new form is finalized.
+    el_r2 = None; el_C = None; el_actual = []
+    L.append("### Electronic — REBUILD PENDING\n")
+    L.append("Legacy form (`σ_el = C × σ_AM × φ_AM^(3/2) × CN_AM² × exp(π/(T/d_AM))`,")
+    L.append("1-param fit) and all 37 screening_electronic_*.py + electronic_scaling_law.py")
+    L.append("were deleted 2026-05-28 — to be rebuilt with the same nested CV / SAT-blend /")
+    L.append("Cronau-equivalent / Bayesian Laplace / bootstrap PI methodology that just")
+    L.append("finalized σ_ionic.  Section will be updated once the new form lands.\n")
 
     # Thermal fit
     th_actual = []
@@ -544,7 +521,7 @@ def generate_report(data_list, names, outdir):
         L.append(f"| Ionic (T1) | {ion_r2:.3f} | {ion_loo:.3f} | 5 (a,b,c,β_P2,β_F) | {ion_n} |")
     else:
         L.append("| Ionic (T1) | - | - | 5 | 0 |")
-    L.append(f"| Electronic | {el_r2:.2f} | - | 1 (C) | {len(el_actual)} |" if el_r2 else "| Electronic | - | - | 1 | 0 |")
+    L.append("| Electronic | (REBUILD PENDING) | - | - | - |")
     L.append(f"| Thermal | {th_r2:.2f} | - | 1 (C) | {len(th_actual)} |" if th_r2 else "| Thermal | - | - | 1 | 0 |")
     L.append("")
 
