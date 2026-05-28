@@ -201,15 +201,17 @@ Confidence:
     rejected (Q2 percolation merge fails by >0.13 LOOCV, Q3 network merge
     fails by >0.03).
 
-### σ_ionic outlier landscape (after logpoly2 adoption, 2026-05-28)
-Corpus n=91, LOOCV 0.9620, |err|>30% in 5 cases.  All 5 outliers analyzed
-individually; NONE are form-of-equation failures, all are data limitations:
+### σ_ionic outlier landscape (after logpoly2 + 1mAh_9 exclusion, 2026-05-28)
+Corpus n=90, LOOCV 0.9634, |err|>30% in 4 cases.  All 4 individually
+analyzed; NONE are form-of-equation failures, all are data limitations:
 
   1. input_1mAh_9 (base, +45%) — REMOVED as per-seed anomaly (σ_act=0.020
      vs 5 _Sn siblings 0.029-0.035, sibling median 0.033, base = 61%).
      Same pattern as input_particulate_12_S3.  Now in _EXCLUDED_NAMES.
-  2. input_8mAh_real_10 (-44%) — diagnostic: sits at 4 form sensitivity
-     edges simultaneously:
+
+  REMAINING 4 (|err|>30%):
+
+  2. input_8mAh_real_10 (-44%) — 4 form-sensitivity edges simultaneously:
        (i) φ−φc = 0.016 (near-threshold, amplified variance);
        (ii) τ_Laplace=3.53 vs τ_Dijkstra=1.29 (constriction overhead 2.73×,
             form uses Laplace which over-penalizes);
@@ -219,22 +221,47 @@ individually; NONE are form-of-equation failures, all are data limitations:
      Cumulative effect: form predicts ~half of σ_act.  Isolated case
      (no siblings) → cannot distinguish data anomaly from form-region
      limitation.  Keep as outlier; do NOT tune form to fit it.
-  3. input_particulate_10 (-37%) — 62:38 D1.5 corner (last remaining
-     form-region candidate).  P2 term (Δ=+0.0072) caught it but
-     leave-corner-out failed (β sign-flip with bulk).  Awaiting multi-seed
-     62:38 × r_SE≥1µm data to validate.
-  4. input_6mAh_real_6 (+26%) — CN=2.7 marginal-percolation edge.  Form
-     is being asked to extrapolate near percolation threshold; data
-     coverage at CN<3 is sparse → expected uncertainty.
-  5. input_1mAh_9_S5 (+31%) — sibling spread tail (σ_act=0.029, 88% of
+
+  3. input_particulate_10 (-37%) — 62:38 D1.5 corner UNDER-prediction.
+     Paired with #4 input_S_2 below (same regime, opposite r_SE end).
+
+  4. input_S_2 (+32%) — 0:10 SE-rich r_SE=0.5µm OVER-prediction.  Same
+     0:10·SE-rich regime as particulate_10, but at small r_SE.  These
+     two reveal a BIDIRECTIONAL r_SE-dependent error in the 0:10·φ>0.30
+     corner that the form cannot capture with a single multiplicative
+     factor:
+        r_SE = 0.5µm   form OVER-predicts:  input_S_2 +32%, particulate_5 +22%
+        r_SE ≥ 1.0µm   form UNDER-predicts: particulate_7 -24%, particulate_10 -37%
+     Actual σ varies 0.20 (r_SE=0.5) → 0.67 (r_SE=1.5) at the same
+     composition (φ≈0.40, 0:10), a 3× span; form is approximately flat
+     because Cronau(r_SE) saturates to 1.0 for all r_SE ≥ 0.5.
+     P2 = (φ−φc)²·(r_SE−0.5)+ catches the under-prediction side (Δ
+     LOOCV +0.0072) but is mathematically zero at r_SE=0.5 — so it
+     CANNOT fix the over-prediction side.  This is why P2 failed the
+     leave-corner-out test: bulk-only fit found β<0 to compensate the
+     over-prediction at r_SE=0.5, but full-fit needs β>0 for the
+     under-prediction at r_SE≥1.0.  Bidirectional bias = single
+     multiplicative correction insufficient.  Must add MORE DATA on
+     BOTH ends (multi-seed at particulate_5/S_2 AND particulate_7/_10).
+
+  5. input_1mAh_9_S5 (+33%) — sibling spread tail (σ_act=0.029, 88% of
      family median 0.033).  Within sibling spread → NOT removed; logged
      as form-prediction outlier rather than data anomaly.
 
+(Note: input_6mAh_real_6 (CN=2.7 marginal-percolation) is at +28%,
+just under the 30% cutoff after the 1mAh_9 base exclusion shifted the
+overall fit slightly.  Still a form-region edge case; included in the
+"|err|>20%" outlier table.)
+
 Path forward = data, not form:
   • multi-seed at 1mAh_9 design IS available (5 siblings) → if we average
-    σ_act across siblings = 0.032 (med 0.033), form predicts 0.028 (-15% err)
-    → averaging would clear the family from the outlier list
-  • multi-seed at particulate_7 / _10 design would validate or reject P2
+    σ_act across siblings = 0.033 (med), form predicts 0.028 (-15% err)
+    → averaging clears the family from the outlier list
+  • multi-seed at BOTH ends of the 0:10·φ>0.30 r_SE-sweep (particulate_5
+    + S_2 at r_SE=0.5, AND particulate_7/_10 at r_SE≥1.0) would tell us
+    whether the 3× σ_act swing at fixed composition is a clean function
+    of r_SE or per-seed noise.  ONLY then can we decide if a (φ−φc)·r_SE
+    family of corrections is real physics or noise.
   • multi-seed at 8mAh_real_10 design would tell us if -44% is anomaly
     or genuine form limitation in the φ≈φc·10:0 regime
 
