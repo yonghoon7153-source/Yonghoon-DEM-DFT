@@ -269,9 +269,9 @@ def _kfold_sse_sat(a, logsf, taus, phicP, phicS, delta, folds):
     sse = 0.0
     for val in folds:
         tr = np.ones(len(taus), bool); tr[val] = False
-        b = base_log_sat(a, phicP, phicS, delta)
-        b = cblend_fit(b[tr], logsf[tr], taus[tr])
-        pv = cblend_pred(b[val], taus[val], b)
+        bl = base_log_sat(a, phicP, phicS, delta)
+        b_lp = cblend_fit(bl[tr], logsf[tr], taus[tr])
+        pv = cblend_pred(bl[val], taus[val], b_lp)
         sse += np.sum((logsf[val]-pv)**2)
     return sse
 
@@ -297,9 +297,9 @@ def nested_cv_sat(a, logsf, taus, k_inner=5, seed=0):
                         best_sse, best = s, (pP, pS, dl)
         pP, pS, dl = best; picks.append(best)
         # refit on the full outer-train set with the inner-selected combo, predict i
-        b = base_log_sat(a, pP, pS, dl)
-        b = cblend_fit(b[tr_idx], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
+        bl = base_log_sat(a, pP, pS, dl)
+        b_lp = cblend_fit(bl[tr_idx], ls_tr, ta_tr)
+        pi = cblend_pred(bl[i:i+1], taus[i:i+1], b_lp)[0]
         sse += (logsf[i]-pi)**2
     picks = np.array(picks)
     return 1 - sse/ss, picks
@@ -534,19 +534,19 @@ def _nested_cv_exp_scan(a, logsf, taus, grid, build_base, k_inner=5, seed=0):
         order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
         best, best_sse = None, np.inf
         for ev in grid:
-            b = build_base(a[tr], float(ev))
+            bl = build_base(a[tr], float(ev))
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], b)
+                b_lp = cblend_fit(bl[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(bl[val], ta_tr[val], b_lp)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, float(ev)
         picks.append(best)
-        b = build_base(a, best)
-        b = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
+        bl = build_base(a, best)
+        b_lp = cblend_fit(bl[tr], ls_tr, ta_tr)
+        pi = cblend_pred(bl[i:i+1], taus[i:i+1], b_lp)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, float(np.mean(picks)), picks
 
@@ -563,19 +563,19 @@ def nested_cv_exp(a, logsf, taus, k_inner=5, seed=0):
         order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
         best, best_sse = None, np.inf
         for es in EXP_S_GRID:
-            b = base_log_sat_exp(a[tr], float(es))
+            bl = base_log_sat_exp(a[tr], float(es))
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], b)
+                b_lp = cblend_fit(bl[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(bl[val], ta_tr[val], b_lp)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, float(es)
         picks.append(best)
-        b = base_log_sat_exp(a, best)
-        b = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
+        bl = base_log_sat_exp(a, best)
+        b_lp = cblend_fit(bl[tr], ls_tr, ta_tr)
+        pi = cblend_pred(bl[i:i+1], taus[i:i+1], b_lp)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, float(np.mean(picks)), picks
 

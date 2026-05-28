@@ -131,20 +131,20 @@ def nested_cv_smooth(a, logsf, taus, f_small_fn, cut_grid, label, k_inner=5, see
         best, best_sse = None, np.inf
         for ct in cut_grid:
             for K1 in K1_GRID:
-                b = base_log_smooth(a[tr], f_small_fn, float(ct), float(K1)) + np.log(cf[tr])
+                bl = base_log_smooth(a[tr], f_small_fn, float(ct), float(K1)) + np.log(cf[tr])
                 fsse = 0.0
                 for val in folds:
                     m = np.ones(len(tr), bool); m[val] = False
-                    b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                    pv = cblend_pred(b[val], ta_tr[val], b)
+                    b_lp = cblend_fit(bl[m], ls_tr[m], ta_tr[m])
+                    pv = cblend_pred(bl[val], ta_tr[val], b_lp)
                     fsse += np.sum((ls_tr[val]-pv)**2)
                 if fsse < best_sse:
                     best_sse, best = fsse, (float(ct), float(K1))
         picks.append(best)
         ct, K1 = best
-        b = base_log_smooth(a, f_small_fn, ct, K1) + np.log(cf)
-        b = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
+        bl = base_log_smooth(a, f_small_fn, ct, K1) + np.log(cf)
+        b_lp = cblend_fit(bl[tr], ls_tr, ta_tr)
+        pi = cblend_pred(bl[i:i+1], taus[i:i+1], b_lp)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, picks
 
@@ -205,19 +205,19 @@ def nested_cv_bundle(a, logsf, taus, gate_fn, gate_grid, k_inner=5, seed=0):
         order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
         best, best_sse = None, np.inf
         for gp in gate_grid:
-            b = base_log_bundle(a[tr], PHICP_F, PHICS_F, DELTA_F, gate_fn, **gp) + np.log(cf[tr])
+            bl = base_log_bundle(a[tr], PHICP_F, PHICS_F, DELTA_F, gate_fn, **gp) + np.log(cf[tr])
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], b)
+                b_lp = cblend_fit(bl[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(bl[val], ta_tr[val], b_lp)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, dict(gp)
         picks.append(best)
-        b = base_log_bundle(a, PHICP_F, PHICS_F, DELTA_F, gate_fn, **best) + np.log(cf)
-        b = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
+        bl = base_log_bundle(a, PHICP_F, PHICS_F, DELTA_F, gate_fn, **best) + np.log(cf)
+        b_lp = cblend_fit(bl[tr], ls_tr, ta_tr)
+        pi = cblend_pred(bl[i:i+1], taus[i:i+1], b_lp)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, picks
 
@@ -233,19 +233,19 @@ def nested_cv_kappa(a, logsf, taus, k_inner=5, seed=0):
         order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
         best, best_sse = None, np.inf
         for kappa in KAPPA_GRID:
-            b = base_log_rAM(a[tr], kappa=float(kappa)) + np.log(cf[tr])
+            bl = base_log_rAM(a[tr], kappa=float(kappa)) + np.log(cf[tr])
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], b)
+                b_lp = cblend_fit(bl[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(bl[val], ta_tr[val], b_lp)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, float(kappa)
         picks.append(best)
-        b = base_log_rAM(a, kappa=best) + np.log(cf)
-        b = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
+        bl = base_log_rAM(a, kappa=best) + np.log(cf)
+        b_lp = cblend_fit(bl[tr], ls_tr, ta_tr)
+        pi = cblend_pred(bl[i:i+1], taus[i:i+1], b_lp)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, picks
 
