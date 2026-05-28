@@ -1000,12 +1000,30 @@ def inject_stage_e_rows(tables, metrics):
     sigma_i_e    = metrics.get('sigma_full_mScm_stage_e')
     sigma_e_e    = metrics.get('electronic_sigma_full_mScm_stage_e')
     sigma_th_e   = metrics.get('thermal_sigma_full_mScm_stage_e')
-    # Physics-baseline Stage E (NEW — added in run_network_full_corrections
-    # so the UI can show the 4-col Hertzian | Physics | Δ% format mirroring
-    # the Network Solver section)
+    # Physics-baseline Stage E
     sigma_i_e_p  = metrics.get('sigma_full_mScm_stage_e_physics')
     sigma_e_e_p  = metrics.get('electronic_sigma_full_mScm_stage_e_physics')
     sigma_th_e_p = metrics.get('thermal_sigma_full_mScm_stage_e_physics')
+    # ── PHANTOM σ_e SUPPRESSION (2026-05-28) ────────────────────────────
+    # If the raw network-solver electronic output didn't run, Stage E σ_e
+    # is a Bruggeman/Trevisanello phantom fallback (e.g. 1mAh_100_2/_3
+    # showed 54-68 mS/cm with raw electronic_sigma_full_mScm='—').
+    # Suppress display so the case-detail page reads '—' for Stage E σ_e
+    # instead of the phantom value.  Same for thermal κ if its raw solver
+    # output is also missing.  Ionic σ is untouched (ionic pathway has
+    # never been observed to silently fail in the corpus to date).
+    raw_e   = metrics.get('electronic_sigma_full_mScm')
+    raw_e_p = metrics.get('electronic_sigma_full_mScm_physics')
+    if not (isinstance(raw_e, (int, float)) and raw_e and raw_e > 0):
+        sigma_e_e = None
+    if not (isinstance(raw_e_p, (int, float)) and raw_e_p and raw_e_p > 0):
+        sigma_e_e_p = None
+    raw_th   = metrics.get('thermal_sigma_full_mScm')
+    raw_th_p = metrics.get('thermal_sigma_full_mScm_physics')
+    if not (isinstance(raw_th, (int, float)) and raw_th and raw_th > 0):
+        sigma_th_e = None
+    if not (isinstance(raw_th_p, (int, float)) and raw_th_p and raw_th_p > 0):
+        sigma_th_e_p = None
     if not (factors or sigma_i_e is not None or sigma_e_e is not None):
         return  # no Stage E data on this case
 
