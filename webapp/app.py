@@ -1348,12 +1348,23 @@ def inject_cell_asr_rows(tables, metrics, input_params):
     data.extend(rows)
 
 
-def _suppress_phantom_sigma_rows(data, metrics):
+def _suppress_phantom_sigma_rows(data, metrics, debug=False):
     """In-place suppression of σ_e / κ phantom row values.
     Called after layout normalization merges Hertz + Physics rows.
     If stage_e_source flags fallback OR raw network solver output is
     missing, replace the value cells with '—' so dashboard never shows
     Bruggeman-fallback values as if they were real solver output."""
+    if debug:
+        print(f"[phantom_suppress] called, data has {len(data)} rows")
+        print(f"[phantom_suppress] src_fb={metrics.get('stage_e_source')}")
+        print(f"[phantom_suppress] raw_e_p={metrics.get('electronic_sigma_full_mScm_physics')}")
+        # show σ_e/κ-like rows
+        for i, r in enumerate(data):
+            if r and len(r) >= 1 and isinstance(r[0], str):
+                lbl = r[0]
+                if ('σ_e' in lbl or 'σ_electronic' in lbl or
+                    'κ' in lbl or 'σ_thermal' in lbl or 'electronic' in lbl):
+                    print(f"[phantom_suppress] row {i}: {r}")
     src_fb = metrics.get('stage_e_source') or {}
     p_e_h = (src_fb.get('sigma_e') == 'fallback_weighted_factor'
              or not metrics.get('electronic_sigma_full_mScm'))
@@ -1515,7 +1526,7 @@ def normalize_network_summary_layout(tables, metrics):
     # Run AFTER Hertz+Physics merge so we suppress in the unified row.
     # Catches phantom values written from Bruggeman fallback into the raw
     # network solver keys (e.g. 1mAh_100_2 σ_e=61.83).
-    _suppress_phantom_sigma_rows(data, metrics)
+    _suppress_phantom_sigma_rows(data, metrics, debug=True)
 
     # ── Pass B: relocate σ rows wrongly stuck in τ section ──
     misplaced = []
