@@ -1,0 +1,293 @@
+#!/usr/bin/env python3
+"""Deep per-case investigation of the remaining 10 |err|>20% outliers
+after C4 adoption.  Goal: identify what's TRULY different about each
+outlier (which metric is anomalous), then test candidate corrections.
+
+Two sections:
+  PART 1 — PER-CASE ANOMALY DIAGNOSTIC
+    For each outlier, find the top 5 numeric metrics with |z|>1.5
+    across the corpus.  Also show the closest non-outlier (same
+    composition, similar φ) for comparison.
+
+  PART 2 — CANDIDATE TERM TESTS
+    Each new term joint with C4's (P2, Δcov).  Reports:
+    • LOOCV gain over C4
+    • per-outlier err shift (intent: which outlier gets fixed?)
+    • Leave-corner-out sign-consistency check
+
+  Candidate terms:
+    X.   damping for extreme r_SE/r_AM_P ratio
+         (addresses 10:0 r_SE=0.5 high-variance pattern, 4-5 cases)
+    Z.   CN<3 marginal-percolation soft turn-off (addresses 6mAh_real_6)
+    W.   log(path_hop_area_mean) — Holm constriction explicit
+    V.   log(bulk_resistance_fraction) — captures τ_Laplace/τ_Dijkstra ratio
+    U.   am_am_cn (AM-AM contact count) — packing geometry of pure AM
+    T.   stress_cv — particle stress non-uniformity
+
+Run from the repo root:  python3 scripts/deep_outlier_investigation.py
+"""
+from __future__ import annotations
+import sys, json
+from pathlib import Path
+import numpy as np
+
+SCRIPTS = Path(__file__).parent
+sys.path.insert(0, str(SCRIPTS))
+import generate_comparison_plots as gcp  # noqa
+from nested_cv_sat import (load_corpus, base_log_sat, cblend_fit, cblend_pred,
+                           cronau_factor, production_extras,
+                           _meta_name, _EXCLUDED_NAMES,
+                           PHICP_F, PHICS_F, DELTA_F, K_PS, P_C, PHI_C0)
+
+
+def _load_names_and_metrics(a):
+    """Re-walk corpus aligned with `a`, return (names, list_of_full_metrics)."""
+    names, metrics, seen = [], [], set()
+    for base in ('webapp/results', 'webapp/archive'):
+        bp = Path(base)
+        if not bp.is_dir():
+            continue
+        for mp in bp.rglob('full_metrics.json'):
+            try:
+                d = json.load(open(mp))
+            except Exception:
+                continue
+            sig = gcp._stage_e_sigma(d)
+            phi = gcp._get(d, 'phi_se'); cn = gcp._get(d, 'se_se_cn')
+            cov = gcp._cov_frac(d, physics=True) or gcp._cov_frac(d, physics=False)
+            fp = gcp._get(d, 'percolation_pct') / 100.0
+            tau = gcp._get(d, 'tortuosity_recommended', gcp._get(d, 'tortuosity_mean', 0))
+            if not (sig and sig > 0 and phi > PHI_C0 and cn > 0 and cov and cov > 0
+                    and fp > 0 and tau > 0):
+                continue
+            nm = _meta_name(mp.parent.name, mp.parent)
+            if nm in _EXCLUDED_NAMES:
+                continue
+            key = (round(phi, 4), round(cn, 3), round(float(sig), 5))
+            if key in seen:
+                continue
+            seen.add(key)
+            names.append(nm)
+            metrics.append(d)
+    return names, metrics
+
+
+def _is_circular(k):
+    """Flag σ-derived metrics that would be circular features."""
+    kl = k.lower()
+    return any(c in kl for c in ('sigma', 'conduct', 'σ', 'kappa', 'resist',
+                                   'brug', 'tortuosity_laplace', 'tau_laplace'))
+
+
+def _all_numeric_metrics(metrics):
+    """Build a corpus-wide table of numeric metric values."""
+    keys = set()
+    for d in metrics:
+        keys |= {k for k, v in d.items()
+                 if isinstance(v, (int, float)) and not isinstance(v, bool) and np.isfinite(v)}
+    table = {}
+    for k in keys:
+        vals = np.array([d.get(k, np.nan) for d in metrics], float)
+        if np.isfinite(vals).sum() < 0.5 * len(metrics):
+            continue  # too many missing
+        v_ok = vals[np.isfinite(vals)]
+        if np.std(v_ok) < 1e-12:
+            continue  # constant metric
+        table[k] = (vals, float(np.nanmean(vals)), float(np.nanstd(vals)))
+    return table
+
+
+def _z_anomalies(metrics_dict, table, top_k=5, threshold=1.5):
+    """Top-k metric|z|-scores above threshold for one case."""
+    rows = []
+    for k, (vals_all, mean, std) in table.items():
+        v = metrics_dict.get(k)
+        if v is None or not isinstance(v, (int, float)) or not np.isfinite(v):
+            continue
+        z = (float(v) - mean) / std
+        if abs(z) >= threshold:
+            rows.append((abs(z), k, float(v), z))
+    rows.sort(reverse=True)
+    return rows[:top_k]
+
+
+# ── Candidate correction features ─────────────────────────────────────────
+def feat_size_ratio_damp(a, metrics):
+    """X: r_SE / r_AM_eff size ratio (centered).  Hypothesis: extreme ratios
+    (very small SE relative to AM) correlate with form variance at 10:0."""
+    rse = a[:, 8]
+    ram = a[:, 13]  # composition-weighted r_AM
+    rse_med = float(np.nanmedian(rse[np.isfinite(rse)]))
+    ram_med = float(np.nanmedian(ram[np.isfinite(ram)]))
+    rse_safe = np.where(np.isfinite(rse) & (rse > 0), rse, rse_med)
+    ram_safe = np.where(np.isfinite(ram) & (ram > 0), ram, ram_med)
+    ratio = rse_safe / ram_safe
+    med = float(np.nanmedian(ratio))
+    return ratio - med
+
+
+def feat_cn_low_damp(a, metrics):
+    """Z: CN<3 marginal-percolation soft turn-off.  σ(K·(3 − CN)) gives ~1
+    for CN<3 (active) and ~0 for CN>3 (inactive).  Addresses 6mAh_real_6."""
+    cn = a[:, 1]
+    return 1.0 / (1.0 + np.exp(-3.0 * (3.0 - cn)))  # smooth indicator
+
+
+def feat_path_hop_area(a, metrics):
+    """W: log(path_hop_area_mean_physics) — Holm constriction term, explicitly."""
+    vals = np.array([d.get('path_hop_area_mean_physics') or d.get('path_hop_area_mean')
+                     for d in metrics], float)
+    med = float(np.nanmedian(vals[np.isfinite(vals) & (vals > 0)]))
+    safe = np.where(np.isfinite(vals) & (vals > 0), vals, med)
+    return np.log(safe / med)
+
+
+def feat_bulk_resistance_log(a, metrics):
+    """V: log(bulk_resistance_fraction_physics).  σ-derived → flagged circular,
+    but informationally captures τ_Laplace/τ_Dijkstra gap.  Include cautiously."""
+    vals = np.array([d.get('bulk_resistance_fraction_physics') or d.get('bulk_resistance_fraction')
+                     for d in metrics], float)
+    med = float(np.nanmedian(vals[np.isfinite(vals) & (vals > 0)]))
+    safe = np.where(np.isfinite(vals) & (vals > 0), vals, med)
+    return np.log(safe / med)
+
+
+def feat_am_am_cn(a, metrics):
+    """U: log(am_am_cn_mean) — AM-AM coordination count (packing geometry)."""
+    vals = np.array([d.get('am_am_cn_mean') or 0.0 for d in metrics], float)
+    med = float(np.nanmedian(vals[vals > 0])) if (vals > 0).any() else 1.0
+    safe = np.where(vals > 0, vals, med)
+    return np.log(safe / med)
+
+
+def feat_stress_cv(a, metrics):
+    """T: log(stress_cv) — particle stress non-uniformity (mechanical heterogeneity)."""
+    vals = np.array([d.get('stress_cv') or np.nan for d in metrics], float)
+    med = float(np.nanmedian(vals[np.isfinite(vals) & (vals > 0)]))
+    safe = np.where(np.isfinite(vals) & (vals > 0), vals, med)
+    return np.log(safe / med)
+
+
+def _loocv_aug(base, logsf, taus, extras):
+    """LOOCV with C_blend + multiple extras (joint OLS per fold)."""
+    n = len(taus); ss = float(np.sum((logsf-logsf.mean())**2)); sse = 0.0
+    lt = np.log(taus)
+    X_cols = [np.ones(n), lt, lt**2] + list(extras)
+    X = np.column_stack(X_cols)
+    betas_acc = []
+    for i in range(n):
+        m = np.ones(n, bool); m[i] = False
+        coef, *_ = np.linalg.lstsq(X[m], logsf[m] - base[m], rcond=None)
+        pi = base[i] + X[i] @ coef
+        sse += (logsf[i] - pi)**2
+        betas_acc.append(coef)
+    betas_acc = np.array(betas_acc)
+    return 1 - sse/ss, betas_acc.mean(axis=0)
+
+
+def main():
+    a = load_corpus()
+    n = len(a)
+    if n < 20:
+        print(f"[ABORT] only {n} cases (need WSL corpus)."); return
+    names, metrics = _load_names_and_metrics(a)
+    logsf = np.log(a[:, 5]); taus = a[:, 4]
+
+    # Production C4 (gated P2 + Δcov)
+    cf = cronau_factor(a[:, 8])
+    base = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F) + np.log(cf)
+    extras_c4, _med = production_extras(a)
+    lo_c4, b_c4 = _loocv_aug(base, logsf, taus, extras_c4)
+    # single-shot pred for current err
+    n_e = len(extras_c4)
+    lt_all = np.log(taus)
+    X_full = np.column_stack([np.ones(n), lt_all, lt_all**2] + extras_c4)
+    coef_ss, *_ = np.linalg.lstsq(X_full, logsf - base, rcond=None)
+    pred_c4 = base + X_full @ coef_ss
+    err_c4 = (np.exp(pred_c4) - np.exp(logsf)) / np.exp(logsf) * 100.0
+    out_idx = np.where(np.abs(err_c4) > 20.0)[0]
+    out_idx = out_idx[np.argsort(-np.abs(err_c4[out_idx]))]
+
+    print("=" * 90)
+    print(f"DEEP OUTLIER INVESTIGATION   n={n}   C4 LOOCV={lo_c4:.4f}")
+    print(f"   {len(out_idx)} cases with |err|>20%   ({(np.abs(err_c4)>30).sum()} >30%)")
+    print("=" * 90)
+
+    # ===== PART 1 — Per-case anomaly diagnostic =====
+    print("\n" + "█" * 90)
+    print("PART 1 — Per-case anomaly diagnostic (top 5 metrics with |z|>1.5)")
+    print("█" * 90)
+    table = _all_numeric_metrics(metrics)
+    print(f"  Built corpus stats for {len(table)} numeric metrics.\n")
+    for k_rank, i in enumerate(out_idx):
+        nm = names[i]; err = err_c4[i]; phi = a[i, 0]; cn = a[i, 1]; rse = a[i, 8]; p = a[i, 6]
+        sa = float(np.exp(logsf[i])); sp = float(np.exp(pred_c4[i]))
+        print(f"\n  [{k_rank+1}] {nm}   err={err:+.1f}%   σ_act={sa:.3f}  σ_pred={sp:.3f}")
+        print(f"      design: φ={phi:.3f}  CN={cn:.1f}  r_SE={rse:.2f}µm  p_AM_P={p:.2f}")
+        anomalies = _z_anomalies(metrics[i], table, top_k=8, threshold=1.5)
+        for absz, key, v, z in anomalies:
+            flag = " (*circ?)" if _is_circular(key) else ""
+            print(f"        |z|={absz:4.1f}  z={z:+5.1f}  {key[:50]:50s}={v:.4f}{flag}")
+
+    # ===== PART 2 — Candidate term tests =====
+    print("\n" + "█" * 90)
+    print("PART 2 — Candidate term tests   (joint with C4: [P2_gated, Δcov] + new)")
+    print("█" * 90)
+    print(f"  C4 reference: LOOCV={lo_c4:.4f}   "
+          f"|err|>20%={len(out_idx)}   |err|>30%={(np.abs(err_c4)>30).sum()}")
+
+    candidates = [
+        ('X — r_SE/r_AM ratio damping',          feat_size_ratio_damp),
+        ('Z — CN<3 soft turn-off',               feat_cn_low_damp),
+        ('W — log(path_hop_area_physics)',       feat_path_hop_area),
+        ('V — log(bulk_resistance_fraction)',    feat_bulk_resistance_log),
+        ('U — log(am_am_cn_mean)',               feat_am_am_cn),
+        ('T — log(stress_cv)',                   feat_stress_cv),
+    ]
+    se_loocv = 0.0016  # ~noise SE
+
+    print(f"\n  {'candidate':38s} {'LOOCV':>7s} {'Δ':>7s} {'β_new':>9s}   target outlier changes")
+    print("  " + "-" * 88)
+    for tag, featfn in candidates:
+        new_feat = featfn(a, metrics)
+        if not np.all(np.isfinite(new_feat)):
+            print(f"  {tag:38s}  [skip: non-finite values]")
+            continue
+        if np.std(new_feat) < 1e-12:
+            print(f"  {tag:38s}  [skip: constant feature]")
+            continue
+        new_extras = extras_c4 + [new_feat]
+        lo_new, b_new = _loocv_aug(base, logsf, taus, new_extras)
+        # single-shot for per-case err
+        X_new = np.column_stack([np.ones(n), lt_all, lt_all**2] + new_extras)
+        coef_new, *_ = np.linalg.lstsq(X_new, logsf - base, rcond=None)
+        pred_new = base + X_new @ coef_new
+        err_new = (np.exp(pred_new) - np.exp(logsf)) / np.exp(logsf) * 100.0
+        d_lo = lo_new - lo_c4
+        b_new_term = float(coef_new[-1])
+        # Show how the worst 3 outliers changed
+        top3 = out_idx[:3]
+        change_str = ', '.join(f"{names[i][-12:]}:{err_c4[i]:+.0f}→{err_new[i]:+.0f}%" for i in top3)
+        flag = "★" if d_lo > se_loocv else (" " if abs(d_lo) < se_loocv else "⚠")
+        print(f"  {tag:38s} {lo_new:7.4f} {d_lo:+7.4f} {b_new_term:+9.4f}   {change_str}  {flag}")
+        # Also show how MANY outliers move into ±20%
+        n_out_new = int((np.abs(err_new) > 20).sum())
+        n_30_new = int((np.abs(err_new) > 30).sum())
+        print(f"      → |err|>20% = {n_out_new} (Δ {n_out_new - len(out_idx):+d})   "
+              f"|err|>30% = {n_30_new} (Δ {n_30_new - (np.abs(err_c4)>30).sum():+d})")
+        # Per-outlier err change summary
+        improved = [i for i in out_idx if abs(err_new[i]) < abs(err_c4[i]) - 2.0]
+        worsened = [i for i in out_idx if abs(err_new[i]) > abs(err_c4[i]) + 2.0]
+        print(f"      improved ≥2pp: {len(improved)}/{len(out_idx)}   "
+              f"worsened ≥2pp: {len(worsened)}/{len(out_idx)}")
+
+    print("\n" + "=" * 90)
+    print("Interpretation guide:")
+    print("  • ★ candidate: LOOCV beats C4 by > noise SE — worth testing leave-corner-out")
+    print("  • improved≥2pp count high = candidate captures multiple outliers")
+    print("  • β_new sign / magnitude indicates direction of correction")
+    print("  • If multiple candidates ★, try them JOINTLY (next iteration)")
+
+
+if __name__ == "__main__":
+    main()
