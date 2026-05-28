@@ -734,6 +734,185 @@ def main():
         print(f"     {lab:30s} = {c:+.3f}")
     print()
 
+    # ───── STAGE 6: Physically-rooted form (literature-anchored, no empirical β) ─────
+    print("=" * 78)
+    print(" STAGE 6: literature-anchored physical form (no empirical β)")
+    print("=" * 78)
+    print()
+    print("  Form:")
+    print("    σ_e = σ_AM_eff(p) · φ_AM² · f_p_e · NCM(r̄_AM) · G_thick(T/d) · C(τ)")
+    print("  with")
+    print("    σ_AM_eff(p)  = σ_S^(1-p) · σ_P^p         ← geometric mixing")
+    print("    NCM(r̄)       = 1 / (1 + (r̄/2.0)^1.5)    ← Trevisanello (frozen)")
+    print("    G_thick(T/d) = exp(-π·d_AM/T)            ← percolation thin-gate")
+    print("    C(τ)         = exp[p + q·ln τ + r·(ln τ)²]")
+    print()
+    print("  Live params: log σ_S, log σ_P, p, q, r  = 5 (down from Stage 5's 8)")
+    print()
+
+    # Frozen literature factors
+    r0_NCM = 2.0; beta_NCM = 1.5
+    ncm_lit = 1.0 / (1.0 + (r_eff / r0_NCM)**beta_NCM)
+    log_ncm_lit = np.log(ncm_lit)
+
+    # G_thick(T/d) = exp(-π/(T/d)) = exp(-π·d/T)
+    Td_safe = np.maximum(T_safe / d_AM, 0.1)
+    g_thick = np.exp(-np.pi / Td_safe)
+    log_g_thick = np.log(g_thick)
+
+    # Locked exponents (physical clean fractions)
+    EXP_PHI_LIT = 2.0
+    EXP_FP_LIT = 1.0
+    log_phi_term = EXP_PHI_LIT * np.log(phi_am_arr)
+    log_fp_term = EXP_FP_LIT * np.log(fp_arr)
+
+    # OLS design matrix — 5 live params
+    # y = log σ_DEM − (locked + literature terms)
+    # = (1-p_amp)·log σ_S + p_amp·log σ_P + p_blend + q·ln τ + r·ln²τ
+    X6 = np.column_stack([
+        (1.0 - p_amp_arr),   # → log σ_S
+        p_amp_arr,           # → log σ_P
+        np.ones(n),          # p_blend (C(τ) const)
+        lt,                  # q
+        lt**2,               # r
+    ])
+    y6 = logsf - log_phi_term - log_fp_term - log_ncm_lit - log_g_thick
+    coef6, *_ = np.linalg.lstsq(X6, y6, rcond=None)
+    pred6 = X6 @ coef6 + log_phi_term + log_fp_term + log_ncm_lit + log_g_thick
+    ss_res6 = np.sum((logsf - pred6)**2)
+    r2_6 = 1 - ss_res6 / ss_tot if ss_tot > 0 else 0
+    sse_loo6 = 0.0
+    for i in range(n):
+        m = np.ones(n, bool); m[i] = False
+        c_loo, *_ = np.linalg.lstsq(X6[m], y6[m], rcond=None)
+        pi = X6[i] @ c_loo + log_phi_term[i] + log_fp_term[i] + log_ncm_lit[i] + log_g_thick[i]
+        sse_loo6 += (logsf[i] - pi)**2
+    lo_6 = 1 - sse_loo6/ss_tot if ss_tot > 0 else 0
+    err6 = (np.exp(pred6) - np.exp(logsf)) / np.exp(logsf) * 100
+    ae6 = np.abs(err6)
+    sigma_S_fit = float(np.exp(coef6[0]))
+    sigma_P_fit = float(np.exp(coef6[1]))
+    print(f"  Fitted literature anchors:")
+    print(f"    σ_S = {sigma_S_fit:6.2f} mS/cm   (S-heavy NCM, p_amp=0)")
+    print(f"    σ_P = {sigma_P_fit:6.2f} mS/cm   (P-heavy NCM, p_amp=1)")
+    print(f"    composition ratio σ_P/σ_S = {sigma_P_fit/sigma_S_fit:.2f}")
+    print(f"    (literature NCM single-crystal vs poly: typically 5-100× different)")
+    print(f"  C(τ) coefs: p={coef6[2]:+.3f}  q={coef6[3]:+.3f}  r={coef6[4]:+.3f}")
+    print()
+    print(f"  R²    = {r2_6:.4f}    LOOCV = {lo_6:.4f}    (vs Stage 5 best: {best_lo5:.4f})")
+    print(f"  median |err|     = {np.median(ae6):6.2f}%")
+    print(f"  mean   |err|     = {np.mean(ae6):6.2f}%")
+    print(f"  max    |err|     = {np.max(ae6):6.2f}%")
+    print(f"  #|err|>30%       = {(ae6 > 30).sum():3d} / {n}")
+    print(f"  #|err|>50%       = {(ae6 > 50).sum():3d} / {n}")
+    print()
+
+    # ───── Stage 6 outliers ─────
+    print("─" * 78)
+    print(" Top |err|>20% outliers on Stage 6 form")
+    print("─" * 78)
+    print(f"  {'case':32s}  {'σ_DEM':>7s}  {'σ_form':>7s}  {'err%':>7s}  "
+          f"{'φ_AM':>5s} {'p':>5s} {'r̄':>5s}")
+    order = np.argsort(-ae6)
+    shown = 0
+    for i in order:
+        if ae6[i] <= 20 or shown >= 12: break
+        nm = names[i] if i < len(names) else f"(idx{i})"
+        print(f"  {nm[:32]:32s}  {a[i,5]:7.4f}  {float(np.exp(pred6[i])):7.4f}  "
+              f"{err6[i]:+7.1f}  {a[i,0]:5.3f} {a[i,6]:5.2f} {r_eff[i]:5.2f}")
+        shown += 1
+    if shown == 0:
+        print("  (no |err|>20% outliers!)")
+    print()
+
+    # ───── STAGE 7: Minimal physical form (drop thickness + τ variants) ─────
+    print()
+    print("=" * 78)
+    print(" STAGE 7: MINIMAL physical form — drop G_thick, scan τ variants")
+    print("=" * 78)
+    print()
+    print("  Base form (no thickness):")
+    print("    σ_e = σ_AM_eff(p) · φ_AM² · f_p_e · NCM(r̄_AM) · C_τ")
+    print("  where σ_AM_eff(p) = σ_S^(1-p) · σ_P^p  (geometric mixing)")
+    print()
+    print("  Three τ-treatment variants tested:")
+    print("    7A: NO τ           — σ_e independent of τ")
+    print("    7B: τ^(-α)         — single power (simplest non-trivial)")
+    print("    7C: logpoly2(τ)    — same as Stage 6 minus thickness")
+    print()
+    # y common base (without τ)
+    y_base = logsf - log_phi_term - log_fp_term - log_ncm_lit
+
+    def _fit_and_score(X, y, label):
+        coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+        pred_log_offset = X @ coef
+        pred_full_log = pred_log_offset + log_phi_term + log_fp_term + log_ncm_lit
+        ss_res = np.sum((logsf - pred_full_log)**2)
+        r2_v = 1 - ss_res / ss_tot if ss_tot > 0 else 0
+        sse_loo = 0.0
+        for i in range(n):
+            m = np.ones(n, bool); m[i] = False
+            c_loo, *_ = np.linalg.lstsq(X[m], y[m], rcond=None)
+            pi = X[i] @ c_loo + log_phi_term[i] + log_fp_term[i] + log_ncm_lit[i]
+            sse_loo += (logsf[i] - pi)**2
+        lo_v = 1 - sse_loo/ss_tot if ss_tot > 0 else 0
+        err_v = (np.exp(pred_full_log) - np.exp(logsf)) / np.exp(logsf) * 100
+        ae_v = np.abs(err_v)
+        return coef, r2_v, lo_v, ae_v, pred_full_log
+
+    # 7A: σ_AM_eff(p) only, NO τ (2 live params)
+    X7A = np.column_stack([(1.0 - p_amp_arr), p_amp_arr])
+    coef7A, r2_7A, lo_7A, ae_7A, _ = _fit_and_score(X7A, y_base, '7A')
+    sS_7A, sP_7A = float(np.exp(coef7A[0])), float(np.exp(coef7A[1]))
+
+    # 7B: σ_AM_eff(p) + τ^(-α) single power (3 live params)
+    X7B = np.column_stack([(1.0 - p_amp_arr), p_amp_arr, lt])
+    coef7B, r2_7B, lo_7B, ae_7B, _ = _fit_and_score(X7B, y_base, '7B')
+    sS_7B, sP_7B = float(np.exp(coef7B[0])), float(np.exp(coef7B[1]))
+
+    # 7C: σ_AM_eff(p) + logpoly2 τ (5 live params)
+    X7C = np.column_stack([(1.0 - p_amp_arr), p_amp_arr,
+                           np.ones(n), lt, lt**2])
+    coef7C, r2_7C, lo_7C, ae_7C, pred_log_7C = _fit_and_score(X7C, y_base, '7C')
+    sS_7C, sP_7C = float(np.exp(coef7C[0])), float(np.exp(coef7C[1]))
+
+    print(f"  {'variant':40s}  {'k':>2s}  {'R²':>7s}  {'LOOCV':>7s}  "
+          f"{'σ_S':>6s}  {'σ_P':>6s}  {'#err>30%':>9s}")
+    print(f"  {'7A: NO τ                                ':40s}  "
+          f"{2:>2d}  {r2_7A:7.4f}  {lo_7A:7.4f}  {sS_7A:6.2f}  {sP_7A:6.2f}  "
+          f"{(ae_7A>30).sum():>9d}")
+    print(f"  {'7B: τ^(-α) single power                 ':40s}  "
+          f"{3:>2d}  {r2_7B:7.4f}  {lo_7B:7.4f}  {sS_7B:6.2f}  {sP_7B:6.2f}  "
+          f"{(ae_7B>30).sum():>9d}     α_τ = {-coef7B[2]:+.3f}")
+    print(f"  {'7C: logpoly2(τ) (same as Stage 6 -thick)':40s}  "
+          f"{5:>2d}  {r2_7C:7.4f}  {lo_7C:7.4f}  {sS_7C:6.2f}  {sP_7C:6.2f}  "
+          f"{(ae_7C>30).sum():>9d}     C(τ): {coef7C[2]:+.2f}/{coef7C[3]:+.2f}/{coef7C[4]:+.2f}")
+    print()
+
+    # Pick best by LOOCV vs simplicity
+    cands = [('7A', lo_7A, r2_7A, 2), ('7B', lo_7B, r2_7B, 3), ('7C', lo_7C, r2_7C, 5)]
+    cands.sort(key=lambda c: -c[1])  # by LOOCV
+    print(f"  Best by LOOCV: {cands[0][0]}  (LOOCV {cands[0][1]:.4f}, k={cands[0][3]})")
+    print(f"  Best by parsimony: simplest form within Δ=0.02 of best:")
+    threshold = cands[0][1] - 0.02
+    for nm, lo, r2v, k in [('7A', lo_7A, r2_7A, 2), ('7B', lo_7B, r2_7B, 3),
+                            ('7C', lo_7C, r2_7C, 5)]:
+        ok = "  ← parsimony" if lo >= threshold else ""
+        print(f"     {nm}  k={k}  LOOCV={lo:.4f}{ok}")
+    print()
+
+    # Show the FINAL form
+    print("  ▶▶ FULL PHYSICAL FORM (literature-anchored, no empirical β):")
+    print()
+    print("     σ_e = (σ_S^(1-p) · σ_P^p) · φ_AM² · f_p_e · NCM(r̄_AM) · C_τ")
+    print()
+    print("     σ_S^(1-p) · σ_P^p     ← composition geometric mixing")
+    print("     φ_AM²                  ← Kirkpatrick 3D conductivity")
+    print("     f_p_e                  ← linear percolation (deep regime)")
+    print("     NCM(r̄_AM) = 1/(1+(r̄/2)^1.5)   ← Trevisanello 2021 (frozen)")
+    print("     C_τ                    ← variant 7A/B/C per LOOCV preference")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
@@ -747,22 +926,17 @@ def main():
           f"{r2_3:7.4f}  {lo_3:7.4f}  {(ae_3 > 30).sum():>10d} / {n}")
     print(f"  {'Stage 4 (+ r̄_AM, T/d_AM)':50s}  "
           f"{r2_4:7.4f}  {lo_4:7.4f}  {(ae_4 > 30).sum():>10d} / {n}")
-    print(f"  {f'Stage 5 (lock φ^{best_phi} f_p^{best_fp}, +Trevisanello +β_F)':50s}  "
+    print(f"  {f'Stage 5 (lock φ^{best_phi} f_p^{best_fp}, +Trev +β_F, k=8)':50s}  "
           f"{best_r2_5:7.4f}  {best_lo5:7.4f}  {best_n30:>10d} / {n}")
+    print(f"  {'Stage 6 (LITERATURE σ_S/σ_P + NCM + G_thick, k=5)':50s}  "
+          f"{r2_6:7.4f}  {lo_6:7.4f}  {(ae6 > 30).sum():>10d} / {n}")
+    print(f"  {'Stage 7A (minimal: -G_thick, -τ, k=2)':50s}  "
+          f"{r2_7A:7.4f}  {lo_7A:7.4f}  {(ae_7A > 30).sum():>10d} / {n}")
+    print(f"  {'Stage 7B (-G_thick + τ^(-α), k=3)':50s}  "
+          f"{r2_7B:7.4f}  {lo_7B:7.4f}  {(ae_7B > 30).sum():>10d} / {n}")
+    print(f"  {'Stage 7C (-G_thick + logpoly2 τ, k=5)':50s}  "
+          f"{r2_7C:7.4f}  {lo_7C:7.4f}  {(ae_7C > 30).sum():>10d} / {n}")
     print()
-    if lo_4 > 0.7:
-        print("  → Stage 4 form is a viable production candidate.")
-        print("    Next: outlier audit (sibling spreads), Bayesian Laplace.")
-    elif lo_4 > 0.5:
-        print("  → Stage 4 improves on Stage 3 but still has room.  Candidates:")
-        print("    - composition-dependent grain correction (Trevisanello literal)")
-        print("    - AM_P vs AM_S size separation (two β_r terms)")
-        print("    - more thickness terms (sqrt(T/d) or exp form)")
-    else:
-        print("  → Stage 4 still poor.  Form structure may need more redesign:")
-        print("    - check if cov metric is wrong (try cov_physics vs cov_Hertz)")
-        print("    - check if am_am_cn is the right CN (vs am_am_n_contacts)")
-        print("    - sibling-spread outlier check + _EXCLUDED_NAMES")
 
 
 if __name__ == '__main__':
