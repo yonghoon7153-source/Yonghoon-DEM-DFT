@@ -4093,11 +4093,12 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
 
 
 def _stage_e_base_arrays(corpus):
-    """Build (base_log, logsf, taus, phi, rse, dcov, p) for the production
-    SAT-blend × Cronau form over a list of metrics dicts.  Extras: phi, r_SE,
-    Δcov, p_AM_P needed by C4 augmented form (g_010-gated P2 + Δcov)."""
+    """Build (base_log, logsf, taus, phi, rse, dcov, p, fi_log) for the
+    production C5 form.  Extras: phi, r_SE, Δcov, p_AM_P needed by
+    g_010-gated P2 + Δcov; fi_log = log(f_intact) added 2026-05-28 for
+    fracture-aware Holm correction (F4 adoption)."""
     PHI_C = 0.19
-    bl, ls, ts, phi_a, rse_a, dcov_a, p_a = [], [], [], [], [], [], []
+    bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = [], [], [], [], [], [], [], []
     for d in corpus:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -4109,29 +4110,31 @@ def _stage_e_base_arrays(corpus):
             ls.append(np.log(sig)); ts.append(tau)
             phi_a.append(float(phi))
             rse_a.append(float(rse) if rse and np.isfinite(rse) else np.nan)
-            # Use TOTAL-AM Δcov (composition-agnostic) — switching from
-            # AM_S-preferred to coverage_AM_delta_pct_rough so that 10:0
-            # cases (which only have AM_P) get the SAME physical quantity
-            # as 0:10/mixed.  Earlier preference for AM_S was found to
-            # cause +30-40% over-prediction at 10:0 due to Δcov_AM_P being
-            # systematically smaller than the AM_S-dominated corpus median.
+            # TOTAL-AM Δcov (composition-agnostic, fixed 2026-05-28)
             dcv = (d.get('coverage_AM_delta_pct_rough')
                    or d.get('coverage_AM_S_delta_pct_rough'))
             dcov_a.append(float(dcv) if dcv is not None else np.nan)
             p_a.append(float(_ps_fraction(d)))
+            # F4: log(f_intact) = log(1 − fracture_aware_excluded_pct/100)
+            frx = d.get('fracture_aware_excluded_pct')
+            if frx is not None and isinstance(frx, (int, float)):
+                fi_a.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
+            else:
+                fi_a.append(0.0)
     return (np.array(bl), np.array(ls), np.array(ts),
-            np.array(phi_a), np.array(rse_a), np.array(dcov_a), np.array(p_a))
+            np.array(phi_a), np.array(rse_a), np.array(dcov_a),
+            np.array(p_a), np.array(fi_a))
 
 
 def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, p_arr=None,
-                           cov_delta_center=None):
-    """C4 augmentation extras: [g_010-gated P2, Δcov_centered].
+                           fi_log_arr=None, cov_delta_center=None):
+    """C5 augmentation extras (adopted 2026-05-28):
+        [g_010-gated P2, Δcov_centered, log(f_intact)]
 
-    P2 is g_010-gated (fires only at 0:10) to prevent spillover into non-0:10
-    D1+ cases.  Without gating P2 was making 1mAh_5_AMP, 6mAh_real_10,
-    8mAh_real40_9 etc worse since those compositions don't need the bulk-grain
-    enhancement — gating restricts the correction to the 62:38 corner where
-    it's physically motivated AND data-validated."""
+    Returns 3 features (length 3) for the production C5 form.  If
+    fi_log_arr is None (legacy corpus without fracture_aware_excluded),
+    the third extra is zeros (= no fracture correction).
+    """
     # P2 = g_010 · (φ−0.195)² · (r_SE − 0.5)+   ; r_SE NaN → 0.5 neutral
     pex = np.maximum(phi_arr - 0.195, 0.0)
     rse_safe = np.where(np.isfinite(rse_arr) & (rse_arr > 0), rse_arr, 0.5)
@@ -4139,25 +4142,32 @@ def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, p_arr=None,
     if p_arr is not None:
         g_010 = 1.0 / (1.0 + np.exp(10.0 * (np.asarray(p_arr, float) - 0.5)))
         p2 = g_010 * p2
-    # Δcov centered by corpus median; NaN → 0 (no contribution)
+    # Δcov centered (composition-agnostic total-AM)
     if cov_delta_center is None:
         med = float(np.nanmedian(dcov_arr[np.isfinite(dcov_arr)])) if np.isfinite(dcov_arr).any() else 0.0
     else:
         med = float(cov_delta_center)
     dcov_c = np.where(np.isfinite(dcov_arr), dcov_arr - med, 0.0)
-    return [p2, dcov_c], med
+    # log(f_intact) — F4 fracture-aware Holm correction
+    if fi_log_arr is None:
+        fi_log = np.zeros_like(p2)
+    else:
+        fi_log = np.where(np.isfinite(fi_log_arr), fi_log_arr, 0.0)
+    return [p2, dcov_c, fi_log], med
 
 
 def _stage_e_global_fit():
-    """Fit C4 augmented form (logpoly2 + g_010-gated P2 + Δcov) on the FULL
-    corpus (_FIT_CORPUS) → (r2, loocv, b, extras, cov_med, n).  b has 5
-    coefficients [a, b, c, β_P2, β_cov].  Returns None if no/insufficient."""
+    """Fit C5 augmented form (logpoly2 + P2 + Δcov + log f_intact) on the
+    FULL corpus (_FIT_CORPUS) → (r2, loocv, b, extras, cov_med, n).
+    b has 6 coefficients [a, b, c, β_P2, β_cov, β_F].  Returns None if
+    no/insufficient corpus."""
     if not _FIT_CORPUS:
         return None
-    bl, ls, ts, phi_a, rse_a, dcov_a, p_a = _stage_e_base_arrays(_FIT_CORPUS)
+    bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = _stage_e_base_arrays(_FIT_CORPUS)
     if len(ts) < 8:
         return None
-    extras, cov_med = _c4_extras_from_arrays(phi_a, rse_a, dcov_a, p_arr=p_a)
+    extras, cov_med = _c4_extras_from_arrays(phi_a, rse_a, dcov_a,
+                                              p_arr=p_a, fi_log_arr=fi_a)
     r2, loo, _Ct, _Cn, _pred, b, _ = _cblend_fit_score(bl, ls, ts, extras=extras)
     return r2, loo, b, extras, cov_med, len(ts)
 
@@ -4186,7 +4196,7 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     netP = [None]*len(data_list)
     idx, base_log, logsf, taus = [], [], [], []
-    phi_local, rse_local, dcov_local, p_local = [], [], [], []   # C4 extras (per-case)
+    phi_local, rse_local, dcov_local, p_local, fi_local = [], [], [], [], []   # C5 extras (per-case)
     for i, d in enumerate(data_list):
         sig = _stage_e_sigma(d)        # physics / Stage-E target
         netP[i] = sig if (sig and sig > 0) else None
@@ -4201,33 +4211,34 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
             logsf.append(np.log(sig)); taus.append(tau)
             phi_local.append(float(phi))
             rse_local.append(float(rse) if rse and np.isfinite(rse) else np.nan)
-            # Use TOTAL-AM Δcov (composition-agnostic) — switching from
-            # AM_S-preferred to coverage_AM_delta_pct_rough so that 10:0
-            # cases (which only have AM_P) get the SAME physical quantity
-            # as 0:10/mixed.  Earlier preference for AM_S was found to
-            # cause +30-40% over-prediction at 10:0 due to Δcov_AM_P being
-            # systematically smaller than the AM_S-dominated corpus median.
             dcv = (d.get('coverage_AM_delta_pct_rough')
                    or d.get('coverage_AM_S_delta_pct_rough'))
             dcov_local.append(float(dcv) if dcv is not None else np.nan)
             p_local.append(float(_ps_fraction(d)))
+            # C5: log(f_intact) for fracture-aware Holm correction
+            frx = d.get('fracture_aware_excluded_pct')
+            if frx is not None and isinstance(frx, (int, float)):
+                fi_local.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
+            else:
+                fi_local.append(0.0)
     if len(idx) < 8:
         print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
         return None
     gfit = _stage_e_global_fit()
     if gfit:
-        # GLOBAL fit (full corpus) C4: 5-param augmented (g_010-gated P2 + Δcov)
+        # GLOBAL fit (full corpus) C5: 6-param augmented (P2 + Δcov + f_intact)
         r2, loo, b_coef, _extras_global, cov_med, n_fit = gfit
         extras_local, _ = _c4_extras_from_arrays(
             np.array(phi_local), np.array(rse_local), np.array(dcov_local),
-            p_arr=np.array(p_local), cov_delta_center=cov_med)
+            p_arr=np.array(p_local), fi_log_arr=np.array(fi_local),
+            cov_delta_center=cov_med)
         pred_log = _cblend_predict_log(np.array(base_log), np.array(taus),
                                        b_coef, extras=extras_local)
     else:
-        # local fallback also C4 augmented
+        # local fallback also C5 augmented
         extras_local, _med = _c4_extras_from_arrays(
             np.array(phi_local), np.array(rse_local), np.array(dcov_local),
-            p_arr=np.array(p_local))
+            p_arr=np.array(p_local), fi_log_arr=np.array(fi_local))
         r2, loo, Ct, Cn, pred_log, _, _ = _cblend_fit_score(
             np.array(base_log), np.array(logsf), np.array(taus),
             extras=extras_local)
@@ -4491,9 +4502,8 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
     # C4 augmented form (adopted 2026-05-28): logpoly2 + P2 + Δcov
     phi_arr = np.array([_get(data_list[i], 'phi_se') for i in [data_list.index(d) for d in data_list if _stage_e_sigma(d)]][:n])
-    # Build C4 extras directly from data_list aligned to the kept rows
-    # (simpler: re-extract per-case (φ, r_SE, Δcov) for the same filter used above)
-    phi_loc, rse_loc, dcov_loc, p_loc = [], [], [], []
+    # Build C5 extras directly from data_list aligned to the kept rows
+    phi_loc, rse_loc, dcov_loc, p_loc, fi_loc = [], [], [], [], []
     for d in data_list:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -4505,13 +4515,18 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         rse = _direct_rse_um(d)
         phi_loc.append(float(phi))
         rse_loc.append(float(rse) if rse and np.isfinite(rse) else np.nan)
-        dcv = (d.get('coverage_AM_S_delta_pct_rough')
-               or d.get('coverage_AM_delta_pct_rough'))
+        dcv = (d.get('coverage_AM_delta_pct_rough')
+               or d.get('coverage_AM_S_delta_pct_rough'))
         dcov_loc.append(float(dcv) if dcv is not None else np.nan)
         p_loc.append(float(_ps_fraction(d)))
+        frx = d.get('fracture_aware_excluded_pct')
+        if frx is not None and isinstance(frx, (int, float)):
+            fi_loc.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
+        else:
+            fi_loc.append(0.0)
     extras_aug, _med = _c4_extras_from_arrays(
         np.array(phi_loc), np.array(rse_loc), np.array(dcov_loc),
-        p_arr=np.array(p_loc))
+        p_arr=np.array(p_loc), fi_log_arr=np.array(fi_loc))
     resid0 = logsf - base_log
     lt = np.log(taus)
     X = np.column_stack([np.ones(n), lt, lt**2, *extras_aug])

@@ -212,6 +212,67 @@ def feat_fracture_aware_excl_log(a, metrics):
     return np.log(intact)
 
 
+# ── CONNECTIVITY / VULNERABILITY candidates (2026-05-28, NEW after C5
+# adoption left 6mAh_real_6 +35% — its TOP anomaly was ionic_active_pct
+# z=-8.3, which f_intact (= fracture-excluded) DOESN'T capture) ──
+
+def feat_ionic_active_pct_log(a, metrics):
+    """G1: log(ionic_active_pct/100).  Fraction of AM particles touching
+    the SE percolating cluster.  DIFFERENT from f_intact — captures
+    CONNECTIVITY loss not fracture exclusion.  6mAh_real_6 had z=-8.3
+    (only 96% AM active vs corpus 100%).  Expected β > 0: low active% ⇒
+    fewer AM-SE conduction pathways ⇒ lower σ."""
+    vals = np.array([(d.get('ionic_active_pct') or 100.0) / 100.0 for d in metrics], float)
+    safe = np.clip(vals, 0.5, 1.0)
+    return np.log(safe)
+
+
+def feat_am_vulnerable_log(a, metrics):
+    """G2: log(1 + am_vulnerable_pct/100).  AM particles with insufficient
+    SE coverage (vulnerable to performance loss).  6mAh_real_6 had
+    am_vulnerable_pct=2% z=+5.9.  Expected β < 0: more vulnerable AM ⇒
+    network performance degraded."""
+    vals = np.array([(d.get('am_vulnerable_pct') or 0.0) / 100.0 for d in metrics], float)
+    return np.log(1.0 + vals)  # always finite & ≥ 0
+
+
+def feat_top_reachable_log(a, metrics):
+    """G3: log(top_reachable_pct/100).  Fraction of AM reachable from the
+    top current collector.  6mAh_real_6 had 87% z=-5.9 (vs ~100% typical).
+    Expected β > 0: fewer reachable ⇒ broken current path ⇒ lower σ."""
+    vals = np.array([(d.get('top_reachable_pct') or 100.0) / 100.0 for d in metrics], float)
+    safe = np.clip(vals, 0.5, 1.0)
+    return np.log(safe)
+
+
+def feat_smooth_f_small(a, metrics):
+    """S1: smooth size-based label-free gate g_phys.  Replaces g_010
+    (sigmoid in p_AM_P composition) with σ(K·(f_small_smooth − 0.5))
+    where f_small_smooth = (1−p)·σ(5·(3.5 − r_AM_S)) + p·σ(5·(3.5 − r_AM_P)).
+    For input_S_2 (r_AM_S = 4 µm, near-AM_P size) the smooth gate would
+    treat the case as 'borderline' instead of 'pure small-AM' → P2 might
+    fire less aggressively, fixing the +24% over-prediction.
+
+    Returns the DIFFERENCE between smooth-g_phys and current g_010 to test
+    the swap impact (centered, since constant shift absorbed by C_blend a)."""
+    p_arr = a[:, 6]
+    # current g_010 (label-based)
+    g_010_now = 1.0 / (1.0 + np.exp(10.0 * (p_arr - 0.5)))
+    # smooth f_small (size-based, label-free)
+    n_m = len(metrics)
+    ras = np.array([(d.get('_input_r_AM_S_um') or d.get('r_AM_S') or 2.5) for d in metrics], float)
+    rap = np.array([(d.get('_input_r_AM_P_um') or d.get('r_AM_P') or 5.5) for d in metrics], float)
+    # if either missing, use median as fallback
+    ras = np.where(ras > 0, ras, 2.5)
+    rap = np.where(rap > 0, rap, 5.5)
+    sig_S = 1.0 / (1.0 + np.exp(-5.0 * (3.5 - ras)))   # small-AM weight
+    sig_P = 1.0 / (1.0 + np.exp(-5.0 * (3.5 - rap)))   # ≈0 if r_AM_P big
+    f_small = (1.0 - p_arr) * sig_S + p_arr * sig_P
+    g_phys_smooth = 1.0 / (1.0 + np.exp(-10.0 * (f_small - 0.5)))
+    diff = g_phys_smooth - g_010_now  # diff captures the "swap shift"
+    return diff - np.mean(diff)  # center
+
+
 def _loocv_aug(base, logsf, taus, extras):
     """LOOCV with C_blend + multiple extras (joint OLS per fold)."""
     n = len(taus); ss = float(np.sum((logsf-logsf.mean())**2)); sse = 0.0
@@ -292,6 +353,12 @@ def main():
         ('F2 — log(intact_fraction) [non-frac]', feat_intact_pct_log),
         ('F3 — log(ionic_active_pct/100)',       feat_ionic_active_log),
         ('F4 — log(1 − fracture_aware_excluded)', feat_fracture_aware_excl_log),
+        # CONNECTIVITY / VULNERABILITY (after C5 left 6mAh_real_6 unfixed)
+        ('G1 — log(ionic_active_pct/100)',       feat_ionic_active_pct_log),
+        ('G2 — log(1 + am_vulnerable_pct/100)',  feat_am_vulnerable_log),
+        ('G3 — log(top_reachable_pct/100)',      feat_top_reachable_log),
+        # SMOOTH SIZE-BASED gating (for input_S_2 r_AM_S=4µm anomaly)
+        ('S1 — smooth f_small (size-based g)',   feat_smooth_f_small),
     ]
     se_loocv = 0.0016  # ~noise SE
 
