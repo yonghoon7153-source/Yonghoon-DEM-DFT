@@ -68,6 +68,25 @@ configs as natural LAYERS inside one composite cathode.
 - **Phase 5 — layered composite cathode**: per-layer config synth +
   z-stacking with smooth interfaces (synth already does z-bands).
 
+### Stage-E σ_ionic form: SAT-blend ADOPTED; 62:38 ruled out (2026-05-28)
+Production fixed Stage-E/physics form is now **SAT-blend** (in
+`generate_comparison_plots._sat_baselog`, used by `ionic_fit_stage_e`,
+`ionic_perconfig_physics`, the outlier diag, and the global fit corpus):
+`σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³`, with composition-
+dependent threshold `φc_eff=(1−g010)·0.200 + g010·0.195` and near-0:10
+saturation `φ_eff=√((φ−φc_eff)²+(0.040·g010)²)`, `g010=σ(−10·(p−0.5))`,
+p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
+- **Validated by nested CV** (`scripts/nested_cv_sat.py`): unbiased LOOCV
+  0.9488→0.9532 (+0.0045 ≈ 2.8× noise SE) — real, not selection bias
+  (naive full-data LOOCV 0.958 had +0.0046 bias). Replaces bare √(φ−0.19).
+- **62:38 / 0:10 outliers are INTRINSIC — do NOT re-try size/GB terms.**
+  Nested CV rejected both candidates OVER SAT-blend: log r_SE size Δ=−0.0010,
+  sub-µm GB penalty (Cronau-mirror, sigmoid r_SE<0.5µm) Δ=−0.0008 (β=−0.106,
+  right sign but sub-noise). Synthetic proves the GB arm WOULD catch a clean
+  sub-µm drop (Δ=+0.074), so the real 62:38 3× spread at fixed (62:38, r_SE)
+  is NOT a clean deterministic sub-µm effect — packing/stochastic. Only levers
+  left: MORE 62:38×packing data, or probabilistic (±band) prediction.
+
 ### Ionic-conductivity scaling-law reconciliation — RESOLVED (2026-05-27)
 **There is effectively ONE current-best model under three names.**
 - `v12-clean v3` **≡** `v29_FINAL` — IDENTICAL math, verified at
