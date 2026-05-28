@@ -45,10 +45,14 @@ def _v12_base_log(phi_se, cn, tau, cov_frac, f_perc_frac):
 
 
 def fit_ionic_v12(rows):
-    """Fit C_blend(τ) for the v12-clean v3 ionic law from corpus rows.
+    """Fit C_blend(τ) = a + b·ln τ + c·(ln τ)²  (logpoly2, 3 OLS params) for
+    the ionic σ law from corpus rows.
 
-    Returns a params dict (b_v5: 2-vec for [1, w_v5]; b_p3: 4-vec for
-    [1, lnτ, lnτ², lnτ³]) or None when too few usable rows."""
+    Returns a params dict {'b': [a, b, c]} or None when too few usable rows.
+    The legacy {'b_v5', 'b_p3'} dual-branch was retired 2026-05-28 after
+    scripts/screen_form_simplifications.py confirmed logpoly2 wins on LOOCV
+    (0.9620 vs 0.9600) AND AIC (-10.6) AND BIC (-18.2) AT HALF the params.
+    `predict_ionic_v12` accepts both schemas for backwards compatibility."""
     log_resid, taus = [], []
     for r in rows:
         phi_se, cn, tau = r.get('phi_se', 0), r.get('cn', 0), r.get('tau', 0)
@@ -63,21 +67,25 @@ def fit_ionic_v12(rows):
         return None
     taus = np.asarray(taus)
     y = np.asarray(log_resid)
-    w_v5 = 1.0 / (1.0 + np.exp(-V12_V5_K * (taus - V12_V5_C)))
     log_tau = np.log(np.maximum(taus, 1e-6))
-    X_v5 = np.column_stack([np.ones(len(taus)), w_v5])
-    X_p3 = np.column_stack([np.ones(len(taus)), log_tau, log_tau**2, log_tau**3])
-    b_v5 = np.linalg.lstsq(X_v5, y, rcond=None)[0]
-    b_p3 = np.linalg.lstsq(X_p3, y, rcond=None)[0]
-    return {'b_v5': b_v5.tolist(), 'b_p3': b_p3.tolist()}
+    X = np.column_stack([np.ones(len(taus)), log_tau, log_tau**2])
+    b = np.linalg.lstsq(X, y, rcond=None)[0]
+    return {'b': b.tolist()}
 
 
 def predict_ionic_v12(params, phi_se, cn, tau, cov_frac, f_perc_frac):
-    """Predict σ_ionic (mS/cm) with the v12-clean v3 law + fitted C_blend(τ)."""
+    """Predict σ_ionic (mS/cm) with the production law + fitted logpoly2 C_blend(τ).
+    Accepts both the new {'b': [a, b, c]} schema and the legacy
+    {'b_v5', 'b_p3'} dual-branch schema for backwards compatibility."""
     if not params:
         return 0.0
     base = np.exp(_v12_base_log(phi_se, cn, tau, cov_frac, f_perc_frac))
     log_t = np.log(max(tau, 1e-6))
+    if 'b' in params:
+        # Production: logpoly2  a + b·ln τ + c·(ln τ)²
+        a_, b_, c_ = params['b']
+        return float(base * np.exp(a_ + b_*log_t + c_*log_t**2))
+    # Legacy dual-branch schema (kept for old saved fits)
     pv = params['b_v5'][0] + params['b_v5'][1] / (1.0 + np.exp(-V12_V5_K * (tau - V12_V5_C)))
     pp = (params['b_p3'][0] + params['b_p3'][1] * log_t
           + params['b_p3'][2] * log_t**2 + params['b_p3'][3] * log_t**3)

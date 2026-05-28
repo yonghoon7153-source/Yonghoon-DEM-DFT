@@ -43,10 +43,11 @@ where
        φc_S    = 0.195   (0:10 limit threshold, FROZEN)
        δ       = 0.040   (near-0:10 saturation, FROZEN)
 
-   C_blend(τ) = (1 − w_BL)·[a0 + a1·σ(KV5·(τ−CV5))]
-                + w_BL · [b0 + b1·ln τ + b2·(ln τ)^2 + b3·(ln τ)^3]
-       w_BL = σ(KBL·(τ−CBL));  KV5=5, CV5=2.1, KBL=20, CBL=1.92
-       coefficients (a0,a1,b0..b3) refit LIVE per corpus.
+   C_blend(τ) = a + b·ln τ + c·(ln τ)²            (logpoly2, 3 OLS params)
+       a, b, c refit LIVE per corpus.  Adopted 2026-05-28 after
+       scripts/screen_form_simplifications.py confirmed +0.0020 LOOCV
+       and -10.6 ΔAIC vs the previous 6-param dual-branch (sigmoid gate
+       + cubic-in-log poly).
 
    Other inputs:
        φ        = SE volume fraction (= phi_se)
@@ -94,8 +95,8 @@ def main():
     lo_sc = loocv_r2(base_sc, logsf, taus)
     # error in % bands at each layer
     def fit_and_err(base):
-        bv5, bp3 = cblend_fit(base, logsf, taus)
-        pred = cblend_pred(base, taus, bv5, bp3)
+        b = cblend_fit(base, logsf, taus)
+        pred = cblend_pred(base, taus, b)
         err_pct = (np.exp(pred) - np.exp(logsf)) / np.exp(logsf) * 100.0
         return pred, err_pct
     pred_b, err_b = fit_and_err(base_b)

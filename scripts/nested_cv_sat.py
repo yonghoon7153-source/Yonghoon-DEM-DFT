@@ -31,7 +31,9 @@ sys.path.insert(0, str(SCRIPTS))
 import generate_comparison_plots as gcp  # noqa: E402  (reuse exact helpers)
 
 SG = 3.0; PHI_C0 = 0.19; CN_EXP = 2.0; COV_EXP = 0.5      # base fixed form
-KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92              # C_blend(τ) shape
+# C_blend(τ) is now logpoly2 (3 OLS params: a, b, c) — dual-branch retired
+# after scripts/screen_form_simplifications.py confirmed +0.0020 LOOCV
+# and -10.6 ΔAIC at half the parameters (2026-05-28).
 K_PS = 10.0; P_C = 0.5                                    # P:S sigmoid (g_010)
 
 # Joint screen grids (match the plot)
@@ -232,24 +234,23 @@ def base_log_sat_covexp(a, cov_exp):
 
 
 def cblend_fit(base, logsf, taus):
-    """OLS fit of the two C_blend branches on the residual; returns (bv5, bp3)."""
-    n = len(taus)
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
-    resid = logsf - base
-    bv5, *_ = np.linalg.lstsq(Xv5, resid, rcond=None)
-    bp3, *_ = np.linalg.lstsq(Xp3, resid, rcond=None)
-    return bv5, bp3
+    """OLS fit of C_blend(τ) = a + b·ln τ + c·(ln τ)²  on the log-residual.
+
+    Returns the 3-vector b = [a, b, c].  This is the logpoly2 form adopted
+    after `scripts/screen_form_simplifications.py` confirmed it beats the
+    previous dual-branch (6 params): LOOCV 0.9620 vs 0.9600, ΔAIC = -10.6,
+    ΔBIC = -18.2.  Same physics (path-length × bulk-saturation effects)
+    captured with HALF the fit parameters."""
+    lt = np.log(taus)
+    X = np.column_stack([np.ones(len(taus)), lt, lt**2])
+    b, *_ = np.linalg.lstsq(X, logsf - base, rcond=None)
+    return b
 
 
-def cblend_pred(base, taus, bv5, bp3):
-    n = len(taus)
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
-    return base + (1-w_bl)*(Xv5@bv5) + w_bl*(Xp3@bp3)
+def cblend_pred(base, taus, b):
+    """Apply logpoly2 C_blend(τ) with coefficients b = [a, b, c]."""
+    lt = np.log(taus)
+    return base + b[0] + b[1]*lt + b[2]*lt**2
 
 
 def loocv_r2(base, logsf, taus):
@@ -257,8 +258,8 @@ def loocv_r2(base, logsf, taus):
     n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0
     for i in range(n):
         m = np.ones(n, bool); m[i] = False
-        bv5, bp3 = cblend_fit(base[m], logsf[m], taus[m])
-        pi = cblend_pred(base[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(base[m], logsf[m], taus[m])
+        pi = cblend_pred(base[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss
 
@@ -269,8 +270,8 @@ def _kfold_sse_sat(a, logsf, taus, phicP, phicS, delta, folds):
     for val in folds:
         tr = np.ones(len(taus), bool); tr[val] = False
         b = base_log_sat(a, phicP, phicS, delta)
-        bv5, bp3 = cblend_fit(b[tr], logsf[tr], taus[tr])
-        pv = cblend_pred(b[val], taus[val], bv5, bp3)
+        b = cblend_fit(b[tr], logsf[tr], taus[tr])
+        pv = cblend_pred(b[val], taus[val], b)
         sse += np.sum((logsf[val]-pv)**2)
     return sse
 
@@ -297,8 +298,8 @@ def nested_cv_sat(a, logsf, taus, k_inner=5, seed=0):
         pP, pS, dl = best; picks.append(best)
         # refit on the full outer-train set with the inner-selected combo, predict i
         b = base_log_sat(a, pP, pS, dl)
-        bv5, bp3 = cblend_fit(b[tr_idx], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(b[tr_idx], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     picks = np.array(picks)
     return 1 - sse/ss, picks
@@ -481,25 +482,22 @@ def exp_phi_rse_feat(a):
 
 def loocv_with_feat(base, logsf, taus, sfeat):
     """LOOCV with C_blend + β·sfeat fit jointly per fold (β is an OLS coefficient,
-    no selection → unbiased). Returns (r2, mean β)."""
-    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    no selection → unbiased). Returns (r2, mean β).
+    Uses the adopted logpoly2 C_blend: a + b·ln τ + c·(ln τ)² (3 params)."""
     n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0; betas = []
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
+    lt = np.log(taus)
+    X = np.column_stack([np.ones(n), lt, lt**2])
     for i in range(n):
         mk = np.ones(n, bool); mk[i] = False
         resid = logsf[mk] - base[mk]
-        b5, *_ = np.linalg.lstsq(Xv5[mk], resid, rcond=None)
-        b3, *_ = np.linalg.lstsq(Xp3[mk], resid, rcond=None)
-        cb = (1-w_bl[mk])*(Xv5[mk]@b5) + w_bl[mk]*(Xp3[mk]@b3)
+        bX, *_ = np.linalg.lstsq(X[mk], resid, rcond=None)
+        cb = X[mk] @ bX
         sm = sfeat[mk].mean(); sc = sfeat[mk] - sm
         rr = resid - cb
         d = float(np.dot(sc, sc))
         beta = float(np.dot(sc, rr)/d) if d > 1e-12 else 0.0
         betas.append(beta)
-        cbi = (1-w_bl[i])*(Xv5[i]@b5) + w_bl[i]*(Xp3[i]@b3)
+        cbi = X[i] @ bX
         pi = base[i] + cbi + beta*(sfeat[i] - sm)
         sse += (logsf[i] - pi)**2
     return 1 - sse/ss, float(np.mean(betas))
@@ -507,16 +505,17 @@ def loocv_with_feat(base, logsf, taus, sfeat):
 
 def cblend_feat_fit(base, logsf, taus, sf):
     """C_blend fit + one extra coefficient β on the post-C_blend residual
-    (feature sf centered here)."""
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    resid = logsf - cblend_pred(base, taus, bv5, bp3)
+    (feature sf centered here).  Returns (b, beta, smean) — b is the 3-vec
+    logpoly2 coefficients."""
+    b = cblend_fit(base, logsf, taus)
+    resid = logsf - cblend_pred(base, taus, b)
     smean = sf.mean(); sc = sf - smean
     beta = float(np.dot(sc, resid)/np.dot(sc, sc)) if np.dot(sc, sc) > 1e-12 else 0.0
-    return bv5, bp3, beta, smean
+    return b, beta, smean
 
 
-def cblend_feat_pred(base, taus, sf, bv5, bp3, beta, smean):
-    return cblend_pred(base, taus, bv5, bp3) + beta*(sf - smean)
+def cblend_feat_pred(base, taus, sf, b, beta, smean):
+    return cblend_pred(base, taus, b) + beta*(sf - smean)
 
 
 EXP_S_GRID = np.round(np.linspace(0.3, 1.4, 12), 3)   # 0:10 percolation exponent
@@ -539,15 +538,15 @@ def _nested_cv_exp_scan(a, logsf, taus, grid, build_base, k_inner=5, seed=0):
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], b)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, float(ev)
         picks.append(best)
         b = build_base(a, best)
-        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, float(np.mean(picks)), picks
 
@@ -568,15 +567,15 @@ def nested_cv_exp(a, logsf, taus, k_inner=5, seed=0):
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], b)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, float(es)
         picks.append(best)
         b = base_log_sat_exp(a, best)
-        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, float(np.mean(picks)), picks
 
@@ -600,16 +599,16 @@ def nested_cv_sat_feat(a, logsf, taus, featfn, k_inner=5, seed=0):
                     fsse = 0.0
                     for val in folds:
                         m = np.ones(len(tr), bool); m[val] = False
-                        bv5, bp3, beta, sm = cblend_feat_fit(b[m], ls_tr[m], ta_tr[m], s_tr_all[m])
-                        pv = cblend_feat_pred(b[val], ta_tr[val], s_tr_all[val], bv5, bp3, beta, sm)
+                        b_lp, beta, sm = cblend_feat_fit(b[m], ls_tr[m], ta_tr[m], s_tr_all[m])
+                        pv = cblend_feat_pred(b[val], ta_tr[val], s_tr_all[val], b_lp, beta, sm)
                         fsse += np.sum((ls_tr[val]-pv)**2)
                     if fsse < best_sse:
                         best_sse, best = fsse, (pP, pS, dl)
         pP, pS, dl = best
         b = base_log_sat(a, pP, pS, dl)
-        bv5, bp3, beta, sm = cblend_feat_fit(b[tr], ls_tr, ta_tr, sf_all[tr])
+        b_lp, beta, sm = cblend_feat_fit(b[tr], ls_tr, ta_tr, sf_all[tr])
         betas.append(beta)
-        pi = cblend_feat_pred(b[i:i+1], taus[i:i+1], sf_all[i:i+1], bv5, bp3, beta, sm)[0]
+        pi = cblend_feat_pred(b[i:i+1], taus[i:i+1], sf_all[i:i+1], b_lp, beta, sm)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, float(np.mean(betas))
 
@@ -790,8 +789,8 @@ def main():
                           np.isfinite(rse_arr) & (rse_arr >= 1.0))[0]
     idx_serich = np.where((p_arr < 0.05) & (phi_arr > PHI_HIGH))[0]
     # baseline (SAT × Cronau) single-shot prediction for subset RMSE deltas
-    bv5b, bp3b = cblend_fit(base_cron, logsf, taus)
-    pred_b = cblend_pred(base_cron, taus, bv5b, bp3b)
+    bb = cblend_fit(base_cron, logsf, taus)
+    pred_b = cblend_pred(base_cron, taus, bb)
     def _rmse(idx, pred):
         return float('nan') if len(idx) == 0 else float(np.sqrt(np.mean((logsf[idx]-pred[idx])**2)))
     rmse62_b = _rmse(idx_corner, pred_b); rmseSE_b = _rmse(idx_serich, pred_b)
@@ -815,11 +814,11 @@ def main():
             print(f"  [skip {tag}: degenerate]"); continue
         lo_x, beta_x = loocv_with_feat(base_cron, logsf, taus, sf)
         # single-shot pred to measure subset RMSE improvement
-        bv5, bp3 = cblend_fit(base_cron, logsf, taus)
-        resid = logsf - cblend_pred(base_cron, taus, bv5, bp3)
+        b = cblend_fit(base_cron, logsf, taus)
+        resid = logsf - cblend_pred(base_cron, taus, b)
         sm = sf.mean(); sc = sf - sm
         beta_ss = float(np.dot(sc, resid)/np.dot(sc, sc)) if np.dot(sc, sc) > 1e-12 else 0.0
-        pred = cblend_pred(base_cron, taus, bv5, bp3) + beta_ss*(sf - sm)
+        pred = cblend_pred(base_cron, taus, b) + beta_ss*(sf - sm)
         drc = rmse62_b - _rmse(idx_corner, pred)
         drs = rmseSE_b - _rmse(idx_serich, pred)
         d = lo_x - lo_cron

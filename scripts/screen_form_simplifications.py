@@ -59,8 +59,8 @@ def _loocv_const_blend(base, logsf, taus, n_params_fit):
     sse = 0.0
     for i in range(n):
         m = np.ones(n, bool); m[i] = False
-        bv5, bp3 = cblend_fit(base[m], logsf[m], taus[m])
-        pi = cblend_pred(base[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(base[m], logsf[m], taus[m])
+        pi = cblend_pred(base[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i] - pi)**2
     return 1 - sse/ss, sse, n_params_fit
 

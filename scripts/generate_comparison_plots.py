@@ -3900,31 +3900,30 @@ def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
 
 
 def _cblend_fit_score(base_log, logsf, taus):
-    """Fit C_blend(τ) (v5 asymptote ⊕ poly3-in-lnτ, fixed w_bl/w_v5) on the
-    log-residual; return (r2, loocv, Ct, Cn, pred_log).  Shared by the
-    Stage-E σ fit experiments."""
-    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    """Fit C_blend(τ) = a + b·ln τ + c·(ln τ)²  (logpoly2, 3 OLS params) on
+    the log-residual; return (r2, loocv, Ct, Cn, pred_log, b, _).
+    Adopted 2026-05-28 after scripts/screen_form_simplifications.py
+    confirmed +0.0020 LOOCV / -10.6 ΔAIC vs the previous 6-param dual-branch.
+    The trailing tuple slot is kept for backwards-compatible unpacking by
+    callers that previously used (bv5, bp3); it is None for logpoly2."""
     n = len(taus)
     resid = logsf - base_log
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
-    bv5, *_ = np.linalg.lstsq(Xv5, resid, rcond=None)
-    bp3, *_ = np.linalg.lstsq(Xp3, resid, rcond=None)
-    pred = base_log + (1-w_bl)*(Xv5@bv5) + w_bl*(Xp3@bp3)
+    lt = np.log(taus)
+    X = np.column_stack([np.ones(n), lt, lt**2])
+    b, *_ = np.linalg.lstsq(X, resid, rcond=None)
+    pred = base_log + X @ b
     ss = np.sum((logsf-logsf.mean())**2)
     r2 = 1 - np.sum((logsf-pred)**2)/ss if ss > 0 else 0.0
     sse = 0.0
     for i in range(n):
         mk = np.ones(n, bool); mk[i] = False
-        b5, *_ = np.linalg.lstsq(Xv5[mk], resid[mk], rcond=None)
-        b3, *_ = np.linalg.lstsq(Xp3[mk], resid[mk], rcond=None)
-        cb = (1-w_bl[i])*(Xv5[i]@b5) + w_bl[i]*(Xp3[i]@b3)
-        sse += (logsf[i]-(base_log[i]+cb))**2
+        bi, *_ = np.linalg.lstsq(X[mk], resid[mk], rcond=None)
+        sse += (logsf[i] - (base_log[i] + X[i] @ bi))**2
     loocv = 1 - sse/ss if ss > 0 else 0.0
-    return (r2, loocv, float(np.exp(bv5[0])), float(np.exp(bv5[0]+bv5[1])),
-            pred, bv5, bp3)
+    # Legacy "Ct"/"Cn" readouts: keep the log-intercept and τ=e (lt=1) value
+    Ct = float(np.exp(b[0]))                       # σ-multiplier at τ=1
+    Cn = float(np.exp(b[0] + b[1] + b[2]))         # σ-multiplier at τ=e≈2.72
+    return (r2, loocv, Ct, Cn, pred, b, None)
 
 
 def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
@@ -3988,12 +3987,11 @@ def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
         wr.writerow(['# === FROZEN FORMULA (hardcode these) ==='])
         wr.writerow(['# σ = C_blend(τ)·σ_grain·(φ−%.3f)^0.5·CN^2·cov^0.5·f_p^3'
                      % bphic, 'σ_grain=3.0'])
-        wr.writerow(['# C_blend(τ) = (1−w_bl)·exp(C_v5) + w_bl·exp(C_p3)'])
-        wr.writerow(['C_v5 b0 (=lnCt)', round(float(bbv5[0]), 5),
-                     'b1', round(float(bbv5[1]), 5)])
-        wr.writerow(['C_p3 a0', round(float(bbp3[0]), 5), 'a1', round(float(bbp3[1]), 5),
-                     'a2', round(float(bbp3[2]), 5), 'a3', round(float(bbp3[3]), 5)])
-        wr.writerow(['w_v5 = σ(5·(τ−2.1))', 'w_bl = σ(20·(τ−1.92))', 'fixed'])
+        wr.writerow(['# C_blend(τ) = exp(a + b·ln τ + c·(ln τ)²)  (logpoly2)'])
+        # bbv5 holds the 3-vec [a, b, c] in the logpoly2 schema; bbp3 is None.
+        wr.writerow(['a', round(float(bbv5[0]), 5),
+                     'b', round(float(bbv5[1]), 5),
+                     'c', round(float(bbv5[2]), 5)])
     return outpath
 
 
@@ -4006,7 +4004,6 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     singularity).  Only the τ prefactor C_blend(τ) re-fits to the corpus.
     A free data-native exponent fit is kept in the CSV as a diagnostic."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
-    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
     base_log, logsf, taus, free_rows, kept_names = [], [], [], [], []
@@ -4030,29 +4027,21 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
         return None
     base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
     resid = logsf - base_log
-    w_v5 = 1.0 / (1.0 + np.exp(-KV5 * (taus - CV5)))
     lt = np.log(taus)
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
-    w_bl = 1.0 / (1.0 + np.exp(-KBL * (taus - CBL)))
+    X = np.column_stack([np.ones(n), lt, lt**2])    # logpoly2 design matrix
 
-    def _cblend_log(bv5, bp3, idx=slice(None)):
-        return (1 - w_bl[idx]) * (Xv5[idx] @ bv5) + w_bl[idx] * (Xp3[idx] @ bp3)
-
-    bv5, *_ = np.linalg.lstsq(Xv5, resid, rcond=None)
-    bp3, *_ = np.linalg.lstsq(Xp3, resid, rcond=None)
-    pred_log = base_log + _cblend_log(bv5, bp3)
+    bX, *_ = np.linalg.lstsq(X, resid, rcond=None)
+    pred_log = base_log + X @ bX
     ss_tot = np.sum((logsf - logsf.mean())**2)
     r2 = 1 - np.sum((logsf - pred_log)**2) / ss_tot if ss_tot > 0 else 0.0
     sse = 0.0
     for i in range(n):
         mk = np.ones(n, bool); mk[i] = False
-        bv5_i, *_ = np.linalg.lstsq(Xv5[mk], resid[mk], rcond=None)
-        bp3_i, *_ = np.linalg.lstsq(Xp3[mk], resid[mk], rcond=None)
-        cb_i = (1 - w_bl[i]) * (Xv5[i] @ bv5_i) + w_bl[i] * (Xp3[i] @ bp3_i)
-        sse += (logsf[i] - (base_log[i] + cb_i))**2
+        bi, *_ = np.linalg.lstsq(X[mk], resid[mk], rcond=None)
+        sse += (logsf[i] - (base_log[i] + X[i] @ bi))**2
     loocv = 1 - sse / ss_tot if ss_tot > 0 else 0.0
-    Ct = float(np.exp(bv5[0])); Cn = float(np.exp(bv5[0] + bv5[1]))
+    Ct = float(np.exp(bX[0]))                       # σ-multiplier at τ=1
+    Cn = float(np.exp(bX[0] + bX[1] + bX[2]))       # at τ=e (lt=1)
 
     # Free data-native fit (diagnostic only — written to CSV)
     fa = np.array(free_rows)
@@ -4125,15 +4114,13 @@ def _stage_e_global_fit():
     return r2, loo, bv5, bp3, len(ts)
 
 
-def _cblend_predict_log(base_log, taus, bv5, bp3):
-    """Apply fixed-shape C_blend(τ) with given coefficients to predict log σ."""
-    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+def _cblend_predict_log(base_log, taus, b, _unused=None):
+    """Apply logpoly2 C_blend(τ) = a + b·ln τ + c·(ln τ)² with coefficients
+    b = [a, b, c].  The trailing `_unused` slot keeps the old call signature
+    `(base, taus, bv5, bp3)` working for legacy callers."""
     base_log = np.asarray(base_log); taus = np.asarray(taus)
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
-    Xv5 = np.column_stack([np.ones(len(taus)), w_v5])
-    Xp3 = np.column_stack([np.ones(len(taus)), lt, lt**2, lt**3])
-    return base_log + (1-w_bl)*(Xv5@bv5) + w_bl*(Xp3@bp3)
+    lt = np.log(taus)
+    return base_log + b[0] + b[1]*lt + b[2]*lt**2
 
 
 def plot_ionic_perconfig_physics(data_list, names, outdir):
@@ -4282,7 +4269,7 @@ def plot_ionic_refit_stage_e(data_list, names, outdir):
     is linear in its 6 basis terms → exponents + C_blend fit jointly by one
     least-squares.  Answers 'do the physics-target exponents differ, and does
     refitting them beat 0.939 under LOOCV (not just training R²)?'"""
-    SG = 3.0; PHI_C = 0.20; KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    SG = 3.0; PHI_C = 0.20
     lp, lc, lcov, lfp, taus, logsf = [], [], [], [], [], []
     for d in data_list:
         sig = _stage_e_sigma(d)
@@ -4301,10 +4288,9 @@ def plot_ionic_refit_stage_e(data_list, names, outdir):
         return None
     lp = np.array(lp); lc = np.array(lc); lcov = np.array(lcov)
     lfp = np.array(lfp); taus = np.array(taus); logsf = np.array(logsf)
-    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
-    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
-    cblend = np.column_stack([(1-w_bl), (1-w_bl)*w_v5, w_bl,
-                              w_bl*lt, w_bl*lt**2, w_bl*lt**3])
+    lt = np.log(taus)
+    # logpoly2 C_blend basis: [1, ln τ, (ln τ)²]
+    cblend = np.column_stack([np.ones(len(taus)), lt, lt**2])
     ss_tot = np.sum((logsf - logsf.mean())**2)
 
     def _fit(X, offset):

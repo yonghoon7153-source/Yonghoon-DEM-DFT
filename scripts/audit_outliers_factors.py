@@ -65,8 +65,8 @@ def main():
         print(f"[ABORT] only {n} cases (need WSL corpus)."); return
     logsf = np.log(a[:, 5]); taus = a[:, 4]
     base = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F) + np.log(cronau_factor(a[:, 7]))
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    pred = base + (cblend_pred(base, taus, bv5, bp3) - base)
+    b = cblend_fit(base, logsf, taus)
+    pred = base + (cblend_pred(base, taus, b) - base)
     err_pct = (np.exp(pred) - np.exp(logsf))/np.exp(logsf)*100.0
 
     # Per-case TERM contributions (log space).
@@ -83,7 +83,7 @@ def main():
         'CN²':       2.0*np.log(cn),
         'cov^½':     0.5*np.log(cov),
         'f_p³':      3.0*np.log(fp),
-        'C_blend':   cblend_pred(base, taus, bv5, bp3) - base,
+        'C_blend':   cblend_pred(base, taus, b) - base,
     }
     # z-scores of each term across the corpus
     zs = {k: (v - v.mean())/(v.std() if v.std() > 1e-9 else 1.0) for k, v in terms.items()}

@@ -58,8 +58,8 @@ TAG_MAP = {
 def _beta_of(base, logsf, taus, sf):
     """Single-shot OLS β on the post-C_blend residual (matches loocv_with_feat
     inner step but without the leave-one-out)."""
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    resid = logsf - cblend_pred(base, taus, bv5, bp3)
+    b = cblend_fit(base, logsf, taus)
+    resid = logsf - cblend_pred(base, taus, b)
     sm = sf.mean(); sc = sf - sm
     d = float(np.dot(sc, sc))
     return float(np.dot(sc, resid)/d) if d > 1e-12 else 0.0
@@ -70,8 +70,8 @@ def _loocv_r2_const(base, logsf, taus):
     n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0
     for i in range(n):
         m = np.ones(n, bool); m[i] = False
-        bv5, bp3 = cblend_fit(base[m], logsf[m], taus[m])
-        pi = cblend_pred(base[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(base[m], logsf[m], taus[m])
+        pi = cblend_pred(base[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss
 
@@ -81,8 +81,8 @@ def _per_fold_betas(base, logsf, taus, sf):
     n = len(taus); betas = []
     for i in range(n):
         m = np.ones(n, bool); m[i] = False
-        bv5, bp3 = cblend_fit(base[m], logsf[m], taus[m])
-        resid_tr = logsf[m] - cblend_pred(base[m], taus[m], bv5, bp3)
+        b = cblend_fit(base[m], logsf[m], taus[m])
+        resid_tr = logsf[m] - cblend_pred(base[m], taus[m], b)
         sm = sf[m].mean(); sc = sf[m] - sm
         d = float(np.dot(sc, sc))
         b = float(np.dot(sc, resid_tr)/d) if d > 1e-12 else 0.0
@@ -127,8 +127,8 @@ def run(name="E", n_perm=1000, n_boot=2000, n_half=200, seed=0):
     # huge null Δ artifact (NOT what we want).  Correct test = permute sf only,
     # keep y/base/taus aligned; C_blend fit is unaffected; β refits on shuffled sf.
     print(f"[1] PERMUTATION NULL  (n_perm={n_perm}, shuffle FEATURE, β refit)")
-    bv5_ref, bp3_ref = cblend_fit(base, logsf, taus)
-    resid_ref = logsf - cblend_pred(base, taus, bv5_ref, bp3_ref)
+    b_ref = cblend_fit(base, logsf, taus)
+    resid_ref = logsf - cblend_pred(base, taus, b_ref)
     sse_ref_const = float(np.sum(resid_ref**2))
     null_betas = np.empty(n_perm); null_deltas = np.empty(n_perm)
     for k in range(n_perm):
@@ -220,14 +220,14 @@ def run(name="E", n_perm=1000, n_boot=2000, n_half=200, seed=0):
         tr = idx[:n//2]; te = idx[n//2:]
         # fit C_blend + β on train half
         b_tr = base[tr]; y_tr = logsf[tr]; t_tr = taus[tr]; sf_tr = sf[tr]
-        bv5, bp3 = cblend_fit(b_tr, y_tr, t_tr)
-        resid_tr = y_tr - cblend_pred(b_tr, t_tr, bv5, bp3)
+        b = cblend_fit(b_tr, y_tr, t_tr)
+        resid_tr = y_tr - cblend_pred(b_tr, t_tr, b)
         sm = sf_tr.mean(); sc = sf_tr - sm
         d = float(np.dot(sc, sc)); beta_k = float(np.dot(sc, resid_tr)/d) if d>1e-12 else 0.0
         # predict on each half
         for which, idxs, store in (("train", tr, train_R2), ("test", te, test_R2)):
             b_s = base[idxs]; y_s = logsf[idxs]; t_s = taus[idxs]; sf_s = sf[idxs]
-            pred = cblend_pred(b_s, t_s, bv5, bp3) + beta_k*(sf_s - sm)
+            pred = cblend_pred(b_s, t_s, b) + beta_k*(sf_s - sm)
             ss_s = float(np.sum((y_s - y_s.mean())**2)) + 1e-12
             store[k] = 1.0 - float(np.sum((y_s - pred)**2))/ss_s
         split_betas[k] = beta_k
@@ -244,8 +244,8 @@ def run(name="E", n_perm=1000, n_boot=2000, n_half=200, seed=0):
 
     # 5) AIC / BIC comparison
     print(f"\n[5] INFORMATION CRITERION")
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    pred_ref = cblend_pred(base, taus, bv5, bp3)
+    b = cblend_fit(base, logsf, taus)
+    pred_ref = cblend_pred(base, taus, b)
     sse_ref = float(np.sum((logsf - pred_ref)**2))
     sm = sf.mean(); sc = sf - sm
     d = float(np.dot(sc, sc))
@@ -274,11 +274,11 @@ def run(name="E", n_perm=1000, n_boot=2000, n_half=200, seed=0):
         print("    (no corner cases — test n/a)")
     else:
         # baseline: predict the corner with C_blend only (no β)
-        bv5_b, bp3_b = cblend_fit(base[idx_bulk], logsf[idx_bulk], taus[idx_bulk])
-        pred_corner_noβ = cblend_pred(base[idx_corner], taus[idx_corner], bv5_b, bp3_b)
+        b_b = cblend_fit(base[idx_bulk], logsf[idx_bulk], taus[idx_bulk])
+        pred_corner_noβ = cblend_pred(base[idx_corner], taus[idx_corner], b_b)
         rmse_noβ = float(np.sqrt(np.mean((logsf[idx_corner] - pred_corner_noβ)**2)))
         # fit β on bulk only
-        resid_bulk = logsf[idx_bulk] - cblend_pred(base[idx_bulk], taus[idx_bulk], bv5_b, bp3_b)
+        resid_bulk = logsf[idx_bulk] - cblend_pred(base[idx_bulk], taus[idx_bulk], b_b)
         sm_b = sf[idx_bulk].mean(); sc_b = sf[idx_bulk] - sm_b
         d_b = float(np.dot(sc_b, sc_b))
         beta_bulk = float(np.dot(sc_b, resid_bulk)/d_b) if d_b > 1e-12 else 0.0

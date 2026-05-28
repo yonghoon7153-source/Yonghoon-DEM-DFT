@@ -131,8 +131,8 @@ def main():
     logsf = np.log(a[:, 5]); taus = a[:, 4]
     # NEW: production base = SAT-blend × Cronau(r_SE) (mirrors what's adopted).
     base = base_log_sat(a, PHICP, PHICS, DELTA) + np.log(cronau_factor(a[:, 7]))
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    resid = logsf - cblend_pred(base, taus, bv5, bp3)   # POST-Cronau log-residual
+    b = cblend_fit(base, logsf, taus)
+    resid = logsf - cblend_pred(base, taus, b)   # POST-Cronau log-residual
 
     p = a[:, 6]; phi = a[:, 0]
     all_idx = np.arange(n)

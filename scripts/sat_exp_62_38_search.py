@@ -173,12 +173,12 @@ def _rmse_on(idx, logsf, pred):
 def _pred_with_feat(base, logsf, taus, sfeat):
     """Single-shot fit (no LOO) of C_blend + β·sfeat → predicted log σ on
     every case.  Used to quantify the 62:38 RMSE *change* from the term."""
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    resid = logsf - cblend_pred(base, taus, bv5, bp3)
+    b = cblend_fit(base, logsf, taus)
+    resid = logsf - cblend_pred(base, taus, b)
     sm = sfeat.mean(); sc = sfeat - sm
     d = float(np.dot(sc, sc))
     beta = float(np.dot(sc, resid)/d) if d > 1e-12 else 0.0
-    return cblend_pred(base, taus, bv5, bp3) + beta*(sfeat - sm), beta
+    return cblend_pred(base, taus, b) + beta*(sfeat - sm), beta
 
 
 def main():
@@ -195,8 +195,8 @@ def main():
     lo_ref = loocv_r2(base, logsf, taus)
     pred_ref, _ = _pred_with_feat(base, logsf, taus, np.zeros(n))  # β=0, just C_blend
     # actually compute ref pred via cblend_pred directly to avoid degenerate β path
-    bv5, bp3 = cblend_fit(base, logsf, taus)
-    pred_ref = cblend_pred(base, taus, bv5, bp3)
+    b = cblend_fit(base, logsf, taus)
+    pred_ref = cblend_pred(base, taus, b)
 
     idx_corner = _subset_62_38(a)
     idx_serich = _subset_se_rich(a)

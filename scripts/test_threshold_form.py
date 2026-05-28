@@ -135,16 +135,16 @@ def nested_cv_smooth(a, logsf, taus, f_small_fn, cut_grid, label, k_inner=5, see
                 fsse = 0.0
                 for val in folds:
                     m = np.ones(len(tr), bool); m[val] = False
-                    bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                    pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                    b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                    pv = cblend_pred(b[val], ta_tr[val], b)
                     fsse += np.sum((ls_tr[val]-pv)**2)
                 if fsse < best_sse:
                     best_sse, best = fsse, (float(ct), float(K1))
         picks.append(best)
         ct, K1 = best
         b = base_log_smooth(a, f_small_fn, ct, K1) + np.log(cf)
-        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, picks
 
@@ -209,15 +209,15 @@ def nested_cv_bundle(a, logsf, taus, gate_fn, gate_grid, k_inner=5, seed=0):
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], b)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, dict(gp)
         picks.append(best)
         b = base_log_bundle(a, PHICP_F, PHICS_F, DELTA_F, gate_fn, **best) + np.log(cf)
-        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, picks
 
@@ -237,15 +237,15 @@ def nested_cv_kappa(a, logsf, taus, k_inner=5, seed=0):
             fsse = 0.0
             for val in folds:
                 m = np.ones(len(tr), bool); m[val] = False
-                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
-                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                b = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], b)
                 fsse += np.sum((ls_tr[val]-pv)**2)
             if fsse < best_sse:
                 best_sse, best = fsse, float(kappa)
         picks.append(best)
         b = base_log_rAM(a, kappa=best) + np.log(cf)
-        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
-        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        b = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], b)[0]
         sse += (logsf[i]-pi)**2
     return 1 - sse/ss, picks
 
