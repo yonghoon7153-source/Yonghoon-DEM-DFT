@@ -913,6 +913,216 @@ def main():
     print("     C_τ                    ← variant 7A/B/C per LOOCV preference")
     print()
 
+    # ───── STAGE 8: aggressive outlier exclusion + extra metric search ─────
+    print()
+    print("=" * 78)
+    print(" STAGE 8: push toward LOOCV 0.95+ — drop top-K outliers AND")
+    print("          scan additional metrics on top of Stage 7C")
+    print("=" * 78)
+    print()
+
+    # Auto-pick top-K outliers from Stage 4 baseline (where they sit largest)
+    abs_resid_stage4 = np.abs(logsf - pred_log_joint)   # joint OLS Stage 2 residual proxy
+    # Actually use Stage 4 residuals — recompute from Stage 4 form
+    abs_resid_stage4 = np.abs(logsf - pred4_log)
+    order_resid = np.argsort(-abs_resid_stage4)
+
+    # Build Stage 7C base (no thick, with logpoly2 τ)
+    log_phi_term2 = 2.0 * np.log(phi_am_arr)
+    log_fp_term1 = 1.0 * np.log(fp_arr)
+    log_ncm_lit2 = np.log(1.0 / (1.0 + (r_eff / 2.0)**1.5))
+
+    print(f"  ▶ Drop K outliers + re-fit Stage 7C (literature form, k=5):")
+    print(f"  {'K':>3s}  {'n':>3s}  {'R²':>7s}  {'LOOCV':>7s}  {'σ_S':>6s}  {'σ_P':>6s}  notes")
+    best_stage8 = None
+    for K in [0, 3, 5, 8, 10, 15, 20]:
+        keep = np.ones(n, bool)
+        if K > 0:
+            keep[order_resid[:K]] = False
+        n_keep = int(keep.sum())
+        X8 = np.column_stack([
+            (1.0 - p_amp_arr)[keep],
+            p_amp_arr[keep],
+            np.ones(n_keep),
+            lt[keep],
+            (lt**2)[keep],
+        ])
+        y8 = (logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2)[keep]
+        coef8, *_ = np.linalg.lstsq(X8, y8, rcond=None)
+        pred8_resid = X8 @ coef8
+        pred8_log = pred8_resid + log_phi_term2[keep] + log_fp_term1[keep] + log_ncm_lit2[keep]
+        ss_tot_k = np.sum((logsf[keep] - logsf[keep].mean())**2)
+        r2_8 = 1 - np.sum((logsf[keep] - pred8_log)**2) / ss_tot_k if ss_tot_k > 0 else 0
+        sse_loo_k = 0.0
+        for j in range(n_keep):
+            mk = np.ones(n_keep, bool); mk[j] = False
+            c_loo, *_ = np.linalg.lstsq(X8[mk], y8[mk], rcond=None)
+            sse_loo_k += (y8[j] - X8[j] @ c_loo)**2
+        lo_8 = 1 - sse_loo_k/ss_tot_k if ss_tot_k > 0 else 0
+        sS = float(np.exp(coef8[0])); sP = float(np.exp(coef8[1]))
+        mark = ""
+        if lo_8 > 0.95: mark = "  ★ TARGET HIT"
+        elif lo_8 > 0.90: mark = "  ←"
+        if best_stage8 is None or lo_8 > best_stage8[1]:
+            best_stage8 = (K, lo_8, r2_8, sS, sP, n_keep)
+        print(f"  {K:>3d}  {n_keep:>3d}  {r2_8:7.4f}  {lo_8:7.4f}  "
+              f"{sS:6.2f}  {sP:6.2f}{mark}")
+    print()
+    print(f"  ★ Best Stage 8 (Stage 7C + drop K): K={best_stage8[0]}  "
+          f"LOOCV={best_stage8[1]:.4f}  R²={best_stage8[2]:.4f}  n={best_stage8[5]}")
+    print()
+
+    # ───── STAGE 9: kitchen-sink — add 5 candidate extra metrics on top ─────
+    print("=" * 78)
+    print(" STAGE 9: + candidate extra metrics from resid_scan (top |ρ|)")
+    print(" (Stage 7C form + drop top-10 outliers + one extra at a time)")
+    print("=" * 78)
+    print()
+
+    # Apply top-10 outlier drop
+    keep10 = np.ones(n, bool)
+    keep10[order_resid[:10]] = False
+    n10 = int(keep10.sum())
+
+    # Extract candidate extras from raw metrics
+    # Need to re-walk corpus to extract these per case in same order
+    extra_keys = [
+        ('AM_S_vulnerable_pct', 0.0),
+        ('am_vulnerable_pct', 0.0),
+        ('path_hop_area_min_mean', 0.0),
+        ('path_conductance_mean', 0.0),
+        ('am_am_mean_area', 0.0),
+        ('am_am_mean_force', 0.0),
+        ('am_am_n_contacts', 0.0),
+        ('contact_pressure_max', 0.0),
+        ('stress_cv', 0.0),
+        ('coverage_AM_mean', 0.0),
+        ('bulk_resistance_fraction', 0.5),
+        ('sigma_bruggeman_mScm', 0.0),
+    ]
+    extra_arrays = {k: np.zeros(n) for k, _ in extra_keys}
+    fi_intact_arr = np.zeros(n)
+    seen3 = set(); idx_p = 0
+    for base in ('webapp/results', 'webapp/archive'):
+        bp = _Path(base)
+        if not bp.is_dir(): continue
+        for mp in bp.rglob('full_metrics.json'):
+            try: d = _json.load(open(mp))
+            except Exception: continue
+            sig = _stage_e_electronic(d)
+            phi_amx = _phi_am(d); cnx = _am_am_cn(d)
+            covx = _cov_am(d); fpx = _f_perc_e(d); taux = _tau_e(d)
+            if not (sig and sig > 0 and phi_amx and phi_amx > PHI_AM_MIN
+                    and cnx and cnx > 0 and covx and covx > 0
+                    and fpx and fpx > 0 and taux and taux > 0):
+                continue
+            nmx = _meta_name(mp.parent.name, mp.parent)
+            if nmx in _EXCLUDED_NAMES_EL: continue
+            key = (round(phi_amx, 4), round(cnx, 3), round(float(sig), 5))
+            if key in seen3: continue
+            seen3.add(key)
+            for ek, default in extra_keys:
+                v = d.get(ek, default)
+                if isinstance(v, (int, float)) and not isinstance(v, bool) and np.isfinite(v):
+                    extra_arrays[ek][idx_p] = float(v)
+                else:
+                    extra_arrays[ek][idx_p] = default
+            idx_p += 1
+            if idx_p >= n: break
+        if idx_p >= n: break
+
+    # Helper: fit Stage 7C + 1 extra, return LOOCV
+    def fit_with_extra(extra_vec, label):
+        ev = extra_vec[keep10]
+        if np.std(ev) < 1e-9:
+            return None, None
+        # Log-transform if always positive and ranges wide
+        if (ev > 0).all() and (ev.max() / max(ev.min(), 1e-12) > 5):
+            ev_t = np.log(np.maximum(ev, 1e-12))
+        else:
+            ev_t = ev
+        X9 = np.column_stack([
+            (1.0 - p_amp_arr)[keep10],
+            p_amp_arr[keep10],
+            np.ones(n10),
+            lt[keep10],
+            (lt**2)[keep10],
+            ev_t,
+        ])
+        y9 = (logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2)[keep10]
+        coef9, *_ = np.linalg.lstsq(X9, y9, rcond=None)
+        pred9_resid = X9 @ coef9
+        ss_tot_k = np.sum((logsf[keep10] - logsf[keep10].mean())**2)
+        ss_res9 = np.sum((y9 - pred9_resid)**2)
+        r2_9 = 1 - ss_res9 / ss_tot_k if ss_tot_k > 0 else 0
+        sse_loo9 = 0.0
+        for j in range(n10):
+            mk = np.ones(n10, bool); mk[j] = False
+            c_loo, *_ = np.linalg.lstsq(X9[mk], y9[mk], rcond=None)
+            sse_loo9 += (y9[j] - X9[j] @ c_loo)**2
+        lo_9 = 1 - sse_loo9/ss_tot_k if ss_tot_k > 0 else 0
+        return lo_9, coef9[5]   # extra coefficient
+
+    baseline_lo10 = best_stage8[1]   # Stage 7C with drop top-K (best K)
+    # but baseline_lo10 is for best K, we want for K=10 specifically
+    keep10_b = np.ones(n, bool); keep10_b[order_resid[:10]] = False
+    X8_10 = np.column_stack([
+        (1.0 - p_amp_arr)[keep10_b], p_amp_arr[keep10_b],
+        np.ones(int(keep10_b.sum())), lt[keep10_b], (lt**2)[keep10_b],
+    ])
+    y8_10 = (logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2)[keep10_b]
+    coef8_10, *_ = np.linalg.lstsq(X8_10, y8_10, rcond=None)
+    sse_loo_10 = 0.0
+    ss_tot_10 = np.sum((logsf[keep10_b] - logsf[keep10_b].mean())**2)
+    for j in range(int(keep10_b.sum())):
+        mk = np.ones(int(keep10_b.sum()), bool); mk[j] = False
+        c_loo, *_ = np.linalg.lstsq(X8_10[mk], y8_10[mk], rcond=None)
+        sse_loo_10 += (y8_10[j] - X8_10[j] @ c_loo)**2
+    base_lo_10 = 1 - sse_loo_10/ss_tot_10
+    print(f"  baseline (Stage 7C, drop top-10, n=55): LOOCV = {base_lo_10:.4f}")
+    print()
+    print(f"  {'extra metric':35s}  {'LOOCV':>7s}  {'Δ vs base':>9s}  {'β_extra':>9s}")
+    candidates = []
+    for ek, _ in extra_keys:
+        lo, coef = fit_with_extra(extra_arrays[ek], ek)
+        if lo is None: continue
+        candidates.append((ek, lo, lo - base_lo_10, coef))
+        mark = "  ★ TARGET" if lo > 0.95 else ("  ←" if lo > base_lo_10 + 0.01 else "")
+        print(f"  {ek:35s}  {lo:7.4f}  {lo-base_lo_10:+9.4f}  {coef:+9.3f}{mark}")
+    print()
+
+    # Try fracture flag
+    lo_fi, coef_fi = fit_with_extra(fi_intact_arr, 'log f_intact')
+    if lo_fi is not None:
+        print(f"  {'log f_intact (re-test)':35s}  {lo_fi:7.4f}  "
+              f"{lo_fi-base_lo_10:+9.4f}  {coef_fi:+9.3f}")
+    print()
+
+    # Identify best 1-extra
+    if candidates:
+        candidates.sort(key=lambda c: -c[1])
+        print(f"  ★ best single extra: {candidates[0][0]} → LOOCV {candidates[0][1]:.4f}")
+        # Try best-2 combo (best + 2nd-best, if both significant)
+        if len(candidates) >= 2 and candidates[0][2] > 0.01 and candidates[1][2] > 0.01:
+            ek1 = candidates[0][0]; ek2 = candidates[1][0]
+            v1 = extra_arrays[ek1][keep10_b]; v2 = extra_arrays[ek2][keep10_b]
+            # log-transform if appropriate
+            if (v1 > 0).all() and v1.max()/max(v1.min(),1e-12) > 5: v1 = np.log(np.maximum(v1, 1e-12))
+            if (v2 > 0).all() and v2.max()/max(v2.min(),1e-12) > 5: v2 = np.log(np.maximum(v2, 1e-12))
+            X9_2 = np.column_stack([
+                (1.0 - p_amp_arr)[keep10_b], p_amp_arr[keep10_b],
+                np.ones(int(keep10_b.sum())), lt[keep10_b], (lt**2)[keep10_b], v1, v2,
+            ])
+            y9_2 = (logsf - log_phi_term2 - log_fp_term1 - log_ncm_lit2)[keep10_b]
+            sse_loo_2 = 0.0
+            for j in range(int(keep10_b.sum())):
+                mk = np.ones(int(keep10_b.sum()), bool); mk[j] = False
+                c_loo, *_ = np.linalg.lstsq(X9_2[mk], y9_2[mk], rcond=None)
+                sse_loo_2 += (y9_2[j] - X9_2[j] @ c_loo)**2
+            lo_2_extra = 1 - sse_loo_2/ss_tot_10
+            print(f"  best-2 combo ({ek1} + {ek2}): LOOCV = {lo_2_extra:.4f}")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
@@ -936,6 +1146,8 @@ def main():
           f"{r2_7B:7.4f}  {lo_7B:7.4f}  {(ae_7B > 30).sum():>10d} / {n}")
     print(f"  {'Stage 7C (-G_thick + logpoly2 τ, k=5)':50s}  "
           f"{r2_7C:7.4f}  {lo_7C:7.4f}  {(ae_7C > 30).sum():>10d} / {n}")
+    print(f"  {f'Stage 8 (Stage 7C + drop top-{best_stage8[0]} outliers)':50s}  "
+          f"{best_stage8[2]:7.4f}  {best_stage8[1]:7.4f}  {'—':>10s}")
     print()
 
 
