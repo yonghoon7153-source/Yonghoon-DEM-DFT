@@ -68,23 +68,40 @@ def load_corpus():
                 continue
             seen.add(key)
             sz = _size_proxy(d)
-            amcn = (d.get('am_se_cn_mean') or d.get('AM_S_se_cn_mean')
-                    or d.get('am_se_cn_surface_weighted'))
-            cov_s_h = d.get('coverage_AM_S_mean') or d.get('coverage_AM_mean')
-            cov_s_p = (d.get('coverage_AM_S_mean_physics')
-                       or d.get('coverage_AM_mean_physics'))
-            cov_dlt = (d.get('coverage_AM_S_delta_pct')
-                       or d.get('coverage_AM_S_delta_pct_rough')
-                       or d.get('coverage_AM_delta_pct_rough'))
+            # composition-aware AM-SE contact quality (handles 0:10 AM_S-only
+            # AND mixed P:S where both AM_P & AM_S coverage exist):
+            amcn = (d.get('am_se_cn_surface_weighted') or d.get('am_se_cn_mean')
+                    or d.get('AM_S_se_cn_mean'))
+            cov_h = (d.get('coverage_AM_mean') or d.get('coverage_AM_S_mean'))
+            cov_p = (d.get('coverage_AM_mean_physics')
+                     or d.get('coverage_AM_S_mean_physics'))
+            cov_dlt = (d.get('coverage_AM_delta_pct_rough')
+                       or d.get('coverage_AM_S_delta_pct_rough'))
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
                          float(sz) if sz else np.nan, _direct_rse_um(d),
                          float(amcn) if amcn and amcn > 0 else np.nan,
-                         float(cov_s_h)/100.0 if cov_s_h and cov_s_h > 0 else np.nan,
-                         float(cov_s_p)/100.0 if cov_s_p and cov_s_p > 0 else np.nan,
-                         float(cov_dlt) if cov_dlt is not None else np.nan))
+                         float(cov_h)/100.0 if cov_h and cov_h > 0 else np.nan,
+                         float(cov_p)/100.0 if cov_p and cov_p > 0 else np.nan,
+                         float(cov_dlt) if cov_dlt is not None else np.nan,
+                         _direct_ram_um(d, p)))
     a = np.array(rows, float)
-    # cols: phi cn cov fp tau sigma p se_size r_SE_um am_se_cn covS_hertz covS_phys covS_dpct
+    # cols: phi cn cov fp tau sigma p se_size r_SE_um amcn covAM_h covAM_p covAM_dpct r_AM_um
     return a
+
+
+def _direct_ram_um(d, p):
+    """Composition-weighted AM radius in µm: (1−p)·r_AM_S + p·r_AM_P (NaN if none)."""
+    def one(keys):
+        for k in keys:
+            v = d.get(k)
+            if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+                return v*1000.0 if v < 0.01 else float(v)
+        return np.nan
+    rs = one(('_input_r_AM_S_um', '_input_r_AM_S', 'r_AM_S_um', 'r_AM_S'))
+    rp = one(('_input_r_AM_P_um', '_input_r_AM_P', 'r_AM_P_um', 'r_AM_P'))
+    if np.isfinite(rs) and np.isfinite(rp):
+        return (1.0 - p)*rs + p*rp
+    return rs if np.isfinite(rs) else rp
 
 
 def _direct_rse_um(d):
@@ -227,31 +244,49 @@ def _logcol(a, col):
     return np.where(np.isfinite(ls), ls, med)
 
 
+def _g010(a):
+    """P:S sigmoid: ~1 toward 0:10 (p→0), ~0 toward 10:0 (p→1)."""
+    return 1.0/(1.0+np.exp(K_PS*(a[:, 6] - P_C)))
+
+
 def amcn_feat(a):
-    """log AM-SE coordination number (contact COUNT, not area). The diagnostic's
-    strongest geometric signal in the 62:38 residual (corr −0.81): high am_se_cn
-    (small SE, many tiny contacts) ⇒ lower σ; expect a NEGATIVE fitted β."""
+    """log AM-SE coordination (surface-weighted, composition-aware → handles
+    0:10 AM_S-only AND mixed P:S). Diagnostic's top geometric signal in 62:38
+    (corr −0.81): high am_se_cn (small SE / many tiny contacts) ⇒ lower σ."""
     return _logcol(a, 9)
 
 
-def covS_hertz_feat(a):
-    """log AM_S coverage (Hertzian) — contact AREA side of the same axis
-    (diagnostic corr +0.79 in 62:38; model's cov uses the physics-averaged
-    version, so this tests extra signal / exponent mis-spec)."""
+def amcn_g010_feat(a):
+    """am_se_cn gated to 0:10 (signal is 0:10-localized: corr −0.81 in 62:38 but
+    only ~−0.2 globally) — apply the correction where it actually lives."""
+    f = _logcol(a, 9)
+    return _g010(a) * (f - np.mean(f))
+
+
+def covAM_hertz_feat(a):
+    """log AM coverage (total, Hertzian) — contact-AREA side, composition-aware."""
     return _logcol(a, 10)
 
 
-def covS_phys_feat(a):
-    """log AM_S coverage (physics)."""
+def covAM_phys_feat(a):
+    """log AM coverage (total, physics) — model's cov already uses this (control)."""
     return _logcol(a, 11)
 
 
-def covS_dpct_feat(a):
-    """AM_S coverage Hertz→physics amplification % (plastic-flow proxy, raw,
-    NaN → median).  Distinct axis from the static coverage variants."""
+def covAM_dpct_feat(a):
+    """AM coverage Hertz→physics amplification % (plastic-flow proxy)."""
     v = a[:, 12]
     med = np.nanmedian(v[np.isfinite(v)]) if np.isfinite(v).any() else 0.0
     return np.where(np.isfinite(v), v, med)
+
+
+def sizeratio_feat(a):
+    """log(r_SE / r_AM) design size ratio (composition-weighted r_AM). The
+    geometric CAUSE behind am_se_cn — small SE relative to AM ⇒ many contacts."""
+    rse, ram = a[:, 8], a[:, 13]
+    lr = np.log(rse) - np.log(ram)
+    med = np.nanmedian(lr[np.isfinite(lr)]) if np.isfinite(lr).any() else 0.0
+    return np.where(np.isfinite(lr), lr, med)
 
 
 def cblend_feat_fit(base, logsf, taus, sf):
@@ -353,18 +388,20 @@ def main():
     print("=" * 64)
     print("Extra terms targeting 62:38 (nested-CV gain OVER SAT-blend):")
     for tag, featfn, col, why in (
-            ("log r_SE size (g_phi)", size_feat, 7,
-             "few-case / log-linear → expected weak"),
             ("sub-µm GB penalty (Cronau, r_SE<0.5µm)", gb_feat, 8,
-             "mirrors Stage-E grain correction → physical candidate"),
-            ("log am_se_cn (AM-SE contact COUNT)", amcn_feat, 9,
-             "diagnostic's top geometric signal in 62:38 (corr −0.81)"),
-            ("log coverage_AM_S (Hertzian)", covS_hertz_feat, 10,
-             "contact-AREA side (corr +0.79); collinear w/ am_se_cn"),
-            ("log coverage_AM_S (physics)", covS_phys_feat, 11,
-             "physics coverage; model's cov already uses this"),
-            ("coverage_AM_S Hertz→phys Δ% (plastic amp)", covS_dpct_feat, 12,
-             "amplification axis (corr +0.59 in 0:10)")):
+             "FAIL before — kept for record"),
+            ("log am_se_cn surf-wt (count, ungated)", amcn_feat, 9,
+             "composition-aware; top signal but 0:10-localized"),
+            ("log am_se_cn surf-wt × g_010 (gated)", amcn_g010_feat, 9,
+             "PRIMARY: applies the −0.81 signal only where it lives (0:10)"),
+            ("log coverage_AM total (Hertzian)", covAM_hertz_feat, 10,
+             "contact-AREA side, composition-aware"),
+            ("log coverage_AM total (physics)", covAM_phys_feat, 11,
+             "model's cov already uses this (control)"),
+            ("coverage_AM Hertz→phys Δ% (plastic amp)", covAM_dpct_feat, 12,
+             "amplification axis"),
+            ("log(r_SE/r_AM) size ratio", sizeratio_feat, 13,
+             "design-input cause behind am_se_cn")):
         n_ok = int(np.isfinite(a[:, col]).sum())
         if n_ok < 0.4*n:
             print(f"  [skip {tag}: only {n_ok}/{n} expose the input]")
