@@ -59,6 +59,78 @@ def base_log_rAM(a, phi_c0=PHI_C_SINGLE, kappa=0.0, delta=DELTA_F):
 
 KAPPA_GRID = np.round(np.linspace(-0.05, 0.05, 11), 4)
 
+# ── D / E: r_AM-bundled gating (replace g010 entirely) ─────────────────────
+# Physical hypothesis: g010 in form A bundles "AM particle is small AND
+# polydisperse" via the P:S label.  The real variable is the AM particle
+# size (or the SE/AM size ratio).  D and E replace g010 with a sigmoid
+# gate over that physical variable, keeping the rest of form A intact.
+
+R_AM_REF_GRID = np.round(np.linspace(0.4, 1.4, 11), 2)   # crossover AM size (µm)
+K_R_GRID      = np.array([5.0, 10.0, 20.0])              # sigmoid sharpness
+RATIO_REF_GRID = np.round(np.linspace(0.3, 1.5, 7), 2)   # crossover r_SE/r_AM
+
+
+def _g_size_rAM(a, r_ref, K_r):
+    """g_size = σ(K_r·(r_ref − r_AM_eff))  →  ≈1 for small AM, ≈0 for large.
+    NaN r_AM → returns 0.5 (neutral, no preference)."""
+    ram = a[:, 13]
+    ram_med = float(np.nanmedian(ram[np.isfinite(ram)])) if np.isfinite(ram).any() else 1.0
+    ram_safe = np.where(np.isfinite(ram) & (ram > 0), ram, ram_med)
+    return 1.0/(1.0+np.exp(-K_r*(r_ref - ram_safe)))
+
+
+def _g_size_ratio(a, ratio_ref, K_r):
+    """g_size based on r_SE/r_AM size ratio (geometric packing efficiency).
+    σ(K_r·(ratio_ref − ratio))  →  ≈1 for small ratio (small SE / big AM),
+    ≈0 for large ratio (SE comparable to AM).  Matches g010 phenomenology
+    because pure AM_S (small AM) → high ratio; but NO P/S label dependence."""
+    rse = a[:, 8]; ram = a[:, 13]
+    rse_med = float(np.nanmedian(rse[np.isfinite(rse)])) if np.isfinite(rse).any() else 0.5
+    ram_med = float(np.nanmedian(ram[np.isfinite(ram)])) if np.isfinite(ram).any() else 1.0
+    rse_s = np.where(np.isfinite(rse) & (rse > 0), rse, rse_med)
+    ram_s = np.where(np.isfinite(ram) & (ram > 0), ram, ram_med)
+    ratio = rse_s / ram_s
+    return 1.0/(1.0+np.exp(-K_r*(ratio_ref - ratio)))
+
+
+def base_log_bundle(a, phicP, phicS, delta, gate_fn, **gate_kw):
+    """Form A's structure with g010 replaced by a custom `gate_fn(a, **gate_kw)`."""
+    phi = a[:, 0]
+    g = gate_fn(a, **gate_kw)
+    phic = (1.0 - g)*phicP + g*phicS
+    pex = phi - phic
+    return base_no_phi(a) + 0.5*np.log(np.sqrt(pex**2 + (delta*g)**2) + 1e-12)
+
+
+def nested_cv_bundle(a, logsf, taus, gate_fn, gate_grid, k_inner=5, seed=0):
+    """Outer-LOO + inner-k-fold scan of bundle hyperparam (r_ref, K_r);
+    φc_P / φc_S / δ are frozen at A's production values to make the comparison
+    apples-to-apples (only the GATE differs vs form A)."""
+    n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0; picks = []
+    rng = np.random.default_rng(seed)
+    cf = cronau_factor(a[:, 8])
+    for i in range(n):
+        tr = np.array([j for j in range(n) if j != i])
+        ls_tr, ta_tr = logsf[tr], taus[tr]
+        order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
+        best, best_sse = None, np.inf
+        for gp in gate_grid:
+            b = base_log_bundle(a[tr], PHICP_F, PHICS_F, DELTA_F, gate_fn, **gp) + np.log(cf[tr])
+            fsse = 0.0
+            for val in folds:
+                m = np.ones(len(tr), bool); m[val] = False
+                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                fsse += np.sum((ls_tr[val]-pv)**2)
+            if fsse < best_sse:
+                best_sse, best = fsse, dict(gp)
+        picks.append(best)
+        b = base_log_bundle(a, PHICP_F, PHICS_F, DELTA_F, gate_fn, **best) + np.log(cf)
+        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        sse += (logsf[i]-pi)**2
+    return 1 - sse/ss, picks
+
 
 def nested_cv_kappa(a, logsf, taus, k_inner=5, seed=0):
     """Outer-LOO + inner-k-fold selection of κ for the r_AM-blend (form C)."""
@@ -110,6 +182,14 @@ def main():
     # C. r_AM-dependent threshold (nested-CV pick κ)
     lo_C, picks = nested_cv_kappa(a, logsf, taus)
 
+    # D. A's structure but g010 replaced by g_size(r_AM) — physical bundling
+    gate_grid_D = [{'r_ref': r, 'K_r': k} for r in R_AM_REF_GRID for k in K_R_GRID]
+    lo_D, picks_D = nested_cv_bundle(a, logsf, taus, _g_size_rAM, gate_grid_D)
+
+    # E. g_size(r_SE/r_AM) — size ratio bundling (geometric packing variable)
+    gate_grid_E = [{'ratio_ref': r, 'K_r': k} for r in RATIO_REF_GRID for k in K_R_GRID]
+    lo_E, picks_E = nested_cv_bundle(a, logsf, taus, _g_size_ratio, gate_grid_E)
+
     n_ram = int(np.isfinite(a[:, 13]).sum())
 
     print("=" * 78)
@@ -123,22 +203,33 @@ def main():
           f"Δ vs A = {lo_B-lo_A:+.4f}   [φ_c=0.195, δ always]")
     print(f"  C. r_AM-blend (κ inner-CV):     LOOCV = {lo_C:.4f}    "
           f"Δ vs A = {lo_C-lo_A:+.4f}   [φ_c(r_AM) = 0.195 + κ·ln(r_AM)]")
+    print(f"  D. r_AM-gated BUNDLE:           LOOCV = {lo_D:.4f}    "
+          f"Δ vs A = {lo_D-lo_A:+.4f}   [g010 → g_size(r_AM)]")
+    print(f"  E. r_SE/r_AM ratio BUNDLE:      LOOCV = {lo_E:.4f}    "
+          f"Δ vs A = {lo_E-lo_A:+.4f}   [g010 → g_size(r_SE/r_AM)]")
     print()
-    # κ pick distribution
+
+    def _summarize_picks(label, picks, keys):
+        for k in keys:
+            vals = [p[k] for p in picks]
+            vv, cc = np.unique(np.round(vals, 3), return_counts=True)
+            top = sorted(zip(cc, vv), reverse=True)[:4]
+            print(f"  {label}  {k:>9s}: " + ", ".join(f"{v}×{c}" for c, v in top))
+
+    # κ pick distribution for C
     vv, cc = np.unique(np.round(picks, 4), return_counts=True)
     top = sorted(zip(cc, vv), reverse=True)[:5]
-    print(f"  inner-picked κ:  " + ", ".join(f"{v:+.3f}×{c}" for c, v in top))
-    print(f"  mean κ across folds: {np.mean(picks):+.4f}   "
-          f"std = {np.std(picks):.4f}")
+    print(f"  inner-picked κ (C):  " + ", ".join(f"{v:+.3f}×{c}" for c, v in top))
+    _summarize_picks("inner-picked (D)", picks_D, ['r_ref', 'K_r'])
+    _summarize_picks("inner-picked (E)", picks_E, ['ratio_ref', 'K_r'])
     print()
     print("Verdict guide:")
-    print("  • If |Δ_B − Δ_A| < noise SE  → blend is doing nothing;  DROP IT (form B)")
-    print("    (simpler, removes the AM_P/AM_S convention dependence)")
-    print("  • If C wins by > noise SE   → real r_AM dependence;  ADOPT C")
-    print("    (physics-grounded: AM particle size affects SE percolation threshold)")
-    print("  • If neither wins           → keep A but document that the blend")
-    print("    is empirical and has tiny effect; possibly retire φ_c,P=0.200 anyway")
-    print("    (87/91 inner folds already prefer 0.195)")
+    print("  • D or E within noise SE of A → BUNDLED form preserves performance")
+    print("    AND removes AM_P/AM_S convention dependence → ADOPT (more physical)")
+    print("  • D or E exceeds A by > SE   → bundling gives genuine improvement")
+    print("  • B/C significantly worse    → confirms blend does real work (already known)")
+    print("  • If all of B, C, D, E lose  → A is the right form; document that g010")
+    print("    is a CONVENIENT PROXY for AM size disorder, not a P/S label dependence")
 
     # Effective-sigmoid sanity check: print how p distributes across the corpus
     print()
