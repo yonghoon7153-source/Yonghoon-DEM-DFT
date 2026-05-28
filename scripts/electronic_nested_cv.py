@@ -346,18 +346,123 @@ def main():
         print("  (none — baseline captures everything within 20%)")
     print()
 
+    # ───── STAGE 2: Joint 7-param exponent fit + intercept → data-best form ─────
     print("=" * 78)
-    print(" NEXT STEPS (σ_ionic-style methodology)")
+    print(" STAGE 2: Joint fit — all 7 params (a φ_AM, b CN, c cov, d f_p,")
+    print("           + p q r logpoly2) by single OLS in log space")
     print("=" * 78)
-    print("  1. Identify dominant physics from STAGE 1 exponent winners.")
-    print("  2. Add SAT-blend equivalent if composition-dependent threshold")
-    print("     emerges (P-heavy vs S-heavy NCM behavior).")
-    print("  3. Add geometric/Cronau-equivalent for NCM grain-size effect")
-    print("     (literature: NCM Li-depletion layer at sub-µm GB).")
-    print("  4. Holm electronic at AM-AM contact: cov_AM^½ already in;")
-    print("     refine if Hertz vs physics cov diverges.")
-    print("  5. Per-seed anomaly screen (analogous to _EXCLUDED_NAMES audit).")
-    print("  6. Bayesian Laplace + bootstrap PI (reuse σ_ionic toolkit).")
+    print()
+    print("  Log-space regression:  log σ_e = log σ_AM + a·log φ_AM + b·log CN")
+    print("                                  + c·log cov + d·log f_p")
+    print("                                  + p + q·ln τ + r·(ln τ)²")
+    print(f"  σ_AM = {SIGMA_AM} mS/cm reference (intercept p will absorb any offset).")
+    print()
+    phi_am_arr = a[:, 0]; cn_arr = a[:, 1]
+    cov_arr = a[:, 2]; fp_arr = a[:, 3]; tau_arr = a[:, 4]
+    lt = np.log(tau_arr)
+    X = np.column_stack([
+        np.log(phi_am_arr),
+        np.log(cn_arr),
+        np.log(cov_arr),
+        np.log(fp_arr),
+        np.ones(n),
+        lt,
+        lt**2,
+    ])
+    y = logsf - np.log(SIGMA_AM)
+    coef, *_ = np.linalg.lstsq(X, y, rcond=None)
+    pred_y = X @ coef
+    pred_log_joint = pred_y + np.log(SIGMA_AM)
+    ss_res = np.sum((y - pred_y)**2); ss_tot = np.sum((y - y.mean())**2)
+    r2_j = 1 - ss_res/ss_tot if ss_tot > 0 else 0
+    # LOOCV (manual; X is small)
+    sse_loo = 0.0
+    for i in range(n):
+        m = np.ones(n, bool); m[i] = False
+        c_loo, *_ = np.linalg.lstsq(X[m], y[m], rcond=None)
+        pi = X[i] @ c_loo
+        sse_loo += (y[i] - pi)**2
+    lo_j = 1 - sse_loo/ss_tot if ss_tot > 0 else 0
+    err_j = (np.exp(pred_log_joint) - np.exp(logsf)) / np.exp(logsf) * 100
+    ae_j = np.abs(err_j)
+    print(f"  data-best exponents:")
+    print(f"     a (φ_AM)  = {coef[0]:+.3f}")
+    print(f"     b (CN_AM) = {coef[1]:+.3f}")
+    print(f"     c (cov)   = {coef[2]:+.3f}")
+    print(f"     d (f_p_e) = {coef[3]:+.3f}")
+    print(f"  C(τ) coefs:")
+    print(f"     p (const) = {coef[4]:+.3f}")
+    print(f"     q (ln τ)  = {coef[5]:+.3f}")
+    print(f"     r (ln²τ)  = {coef[6]:+.3f}")
+    sigma_am_eff = SIGMA_AM * np.exp(coef[4])
+    print(f"  implied σ_AM_eff = {SIGMA_AM} × exp({coef[4]:+.3f}) = {sigma_am_eff:.2f} mS/cm")
+    print(f"     (literature NCM811 σ_AM range: 1-100 mS/cm depending on poly vs single-crystal)")
+    print()
+    print(f"  R²    = {r2_j:.4f}    LOOCV = {lo_j:.4f}")
+    print(f"  median |err|     = {np.median(ae_j):6.2f}%")
+    print(f"  mean   |err|     = {np.mean(ae_j):6.2f}%")
+    print(f"  max    |err|     = {np.max(ae_j):6.2f}%")
+    print(f"  #|err|>30%       = {(ae_j > 30).sum():3d} / {n}")
+    print(f"  #|err|>50%       = {(ae_j > 50).sum():3d} / {n}")
+    print()
+
+    # ───── Top outliers in joint fit ─────
+    print("─" * 78)
+    print(" Top |err|>20% outliers on JOINT-fit form")
+    print("─" * 78)
+    print(f"  {'case':32s}  {'σ_DEM':>7s}  {'σ_form':>7s}  {'err%':>7s}  "
+          f"{'φ_AM':>5s} {'CN':>5s} {'τ':>4s}")
+    order = np.argsort(-ae_j)
+    shown = 0
+    for i in order:
+        if ae_j[i] <= 20 or shown >= 15: break
+        nm = names[i] if i < len(names) else f"(idx{i})"
+        print(f"  {nm[:32]:32s}  {a[i,5]:7.4f}  "
+              f"{float(np.exp(pred_log_joint[i])):7.4f}  "
+              f"{err_j[i]:+7.1f}  {a[i,0]:5.3f} {a[i,1]:5.2f} {a[i,4]:4.2f}")
+        shown += 1
+    if shown == 0:
+        print("  (joint fit captures everything within 20%)")
+    print()
+
+    # ───── Interpretation ─────
+    print("=" * 78)
+    print(" INTERPRETATION (vs Bruggeman / σ_ionic-form physics)")
+    print("=" * 78)
+    physical_brug = (1.5, 2.0, 0.5, 3.0)  # σ_ionic-style exponents
+    print(f"  {'term':10s}  {'data-best':>11s}  {'Bruggeman':>11s}  {'σ_ionic':>9s}  comment")
+    interp = [
+        ("φ_AM",  coef[0], 1.5, 1.5),
+        ("CN_AM", coef[1], 0.0, 2.0),
+        ("cov",   coef[2], 0.5, 0.5),
+        ("f_p_e", coef[3], 1.0, 3.0),
+    ]
+    for nm, fit_v, brug_v, ion_v in interp:
+        if abs(fit_v - ion_v) < 0.3:
+            cm = "matches σ_ionic structure"
+        elif abs(fit_v - brug_v) < 0.3:
+            cm = "matches plain Bruggeman"
+        elif abs(fit_v) < 0.2:
+            cm = "≈ 0  (term not informative)"
+        elif fit_v < 0:
+            cm = "WRONG SIGN — anti-correlated?"
+        else:
+            cm = "intermediate / novel exponent"
+        print(f"  {nm:10s}  {fit_v:+11.3f}  {brug_v:+11.2f}  {ion_v:+9.2f}  {cm}")
+    print()
+    print("=" * 78)
+    print(" NEXT STEPS")
+    print("=" * 78)
+    print("  1. If LOOCV (Stage 2) > 0.5 → joint fit is the new baseline;")
+    print("     lock exponents to clean fractions near fitted values and")
+    print("     iterate on remaining residual structure.")
+    print("  2. If LOOCV still negative → form structure is wrong.  Try:")
+    print("     - drop CN entirely (b ≈ 0 in fit)")
+    print("     - add thickness term (T/d_AM geometric factor)")
+    print("     - composition-dependent (SAT-blend) AM threshold")
+    print("  3. Outlier audit (analogous to σ_ionic _EXCLUDED_NAMES):")
+    print("     check sibling spreads for the worst |err| cases.")
+    print("  4. Once LOOCV > 0.7 reuse σ_ionic Bayesian / bootstrap toolkit.")
 
 
 if __name__ == '__main__':
