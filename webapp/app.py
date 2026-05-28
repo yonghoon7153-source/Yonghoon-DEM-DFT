@@ -1526,7 +1526,7 @@ def normalize_network_summary_layout(tables, metrics):
     # Run AFTER Hertz+Physics merge so we suppress in the unified row.
     # Catches phantom values written from Bruggeman fallback into the raw
     # network solver keys (e.g. 1mAh_100_2 σ_e=61.83).
-    _suppress_phantom_sigma_rows(data, metrics, debug=True)
+    _suppress_phantom_sigma_rows(data, metrics)
 
     # ── Pass B: relocate σ rows wrongly stuck in τ section ──
     misplaced = []
@@ -4187,7 +4187,7 @@ def _load_case_tables(results_dir, meta):
     # it runs for EVERY case, scanning the FINAL paper-labeled rows.
     if 'network_summary' in tables:
         _suppress_phantom_sigma_rows(tables['network_summary'].get('data', []),
-                                     metrics, debug=True)
+                                     metrics)
 
     fracture_tbl = build_fracture_summary_table(metrics)
     if fracture_tbl is not None:
