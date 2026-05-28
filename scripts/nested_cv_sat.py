@@ -49,7 +49,15 @@ DELTA_GRID = np.round(np.linspace(0.0, 0.10, 6), 4)
 #   input_1mAh_9: σ_act=0.020 vs 5 _Sn siblings 0.029–0.035 (median 0.033)
 #       at same (φ≈0.23, CN≈4.5, r_SE=0.5µm) → σ_act = 61% of sibling
 #       median, same pattern as particulate_12_S3.  Excluded 2026-05-28.
-_EXCLUDED_NAMES = {'input_particulate_12_S3', 'input_1mAh_9'}
+#   input_1mAh_9_S5: Bayesian Laplace flagged as OUTSIDE 90% PI (+46.5%);
+#       tail of 1mAh_9_S1..S5 family.  Family-level info preserved by
+#       remaining 4 siblings.  Excluded 2026-05-28 after
+#       test_exclude_sibling_tails.py confirmed ΔLOOCV +0.0040 (2.5× noise SE),
+#       no new outliers emerged.
+#   input_particulate_12_S2: Same pattern (Bayesian PI outside, tail of
+#       particulate_12 family).  Excluded 2026-05-28.
+_EXCLUDED_NAMES = {'input_particulate_12_S3', 'input_1mAh_9',
+                   'input_1mAh_9_S5', 'input_particulate_12_S2'}
 
 
 def _meta_name(cid, mp_parent):
