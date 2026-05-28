@@ -538,11 +538,14 @@ def generate_report(data_list, names, outdir):
 
     # Summary table
     L.append("### Summary\n")
-    L.append("| Transport | R² | C | n |")
-    L.append("|-----------|-----|---|---|")
-    L.append(f"| Ionic | {ion_r2:.3f} | {ion_C:.4f} | {len(ion_actual)} |" if ion_r2 else "| Ionic | - | - | 0 |")
-    L.append(f"| Electronic | {el_r2:.2f} | {el_C:.4f} | {len(el_actual)} |" if el_r2 else "| Electronic | - | - | 0 |")
-    L.append(f"| Thermal | {th_r2:.2f} | {th_C:.1f} | {len(th_actual)} |" if th_r2 else "| Thermal | - | - | 0 |")
+    L.append("| Transport | R² | LOOCV | free params | n |")
+    L.append("|-----------|-----|-------|------------|---|")
+    if ion_r2 is not None:
+        L.append(f"| Ionic (T1) | {ion_r2:.3f} | {ion_loo:.3f} | 5 (a,b,c,β_P2,β_F) | {ion_n} |")
+    else:
+        L.append("| Ionic (T1) | - | - | 5 | 0 |")
+    L.append(f"| Electronic | {el_r2:.2f} | - | 1 (C) | {len(el_actual)} |" if el_r2 else "| Electronic | - | - | 1 | 0 |")
+    L.append(f"| Thermal | {th_r2:.2f} | - | 1 (C) | {len(th_actual)} |" if th_r2 else "| Thermal | - | - | 1 | 0 |")
     L.append("")
 
     L.append("### Bruggeman Exponent Decomposition")
