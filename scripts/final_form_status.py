@@ -24,8 +24,8 @@ from pathlib import Path as _P
 
 
 EQUATION = r"""
-σ_ionic = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_physics^½ · f_p³
-          · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_cov·Δcov + β_F·log f_intact]
+σ_ionic = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p³
+          · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact]
 
   ┌───────────────────────────────────────────────────────────────────────┐
   │ FROZEN (literature / physics-derived)                                  │
@@ -39,11 +39,10 @@ EQUATION = r"""
   │ r_cut=3.5µm  α=2                       audit-midpoint AM_S/AM_P gap   │
   │                                        + Alt-C power scan optimum     │
   ├───────────────────────────────────────────────────────────────────────┤
-  │ LIVE-fit (6 OLS params per corpus build)                              │
+  │ LIVE-fit (5 OLS params per corpus build)                              │
   ├───────────────────────────────────────────────────────────────────────┤
   │ a, b, c   tortuosity logpoly2: C(τ) = a + b·ln τ + c·(ln τ)²          │
   │ β_P2      bulk-grain corner enhancement amplitude                     │
-  │ β_cov     Hertz→physics amplification gap (centered Δcov)             │
   │ β_F       fracture-aware partial-Holm exponent  (data → ≈ +0.19)      │
   └───────────────────────────────────────────────────────────────────────┘
 
@@ -53,28 +52,29 @@ Sub-definitions:
   g_phys     = (min(r_cut / r̄_AM, 1))^α    ← power-law size gate (Alt-C)
   r̄_AM      = (1 − p)·r_AM,S + p·r_AM,P     ← composition-weighted AM radius
   P_2        = g_phys · (φ − φc_S)² · (r_SE − 0.5)+    ← Cronau super-µm arm
-  Δcov       = coverage_AM_delta_pct_rough − median(…)  ← Tabor amplification gap
   f_intact   = 1 − fracture_aware_excluded_pct / 100   ← intact contact fraction
 
 Per-term meaning:
   σ_grain · Cronau  — material baseline (Cronau 2022 literature)
   (φ_eff)^½         — mean-field 3D percolation, well-above-threshold
   CN²               — Kirchhoff #paths × bond-strength (Holm parallel paths)
-  cov_physics^½     — Holm 1967 constriction at Tabor-corrected contact area
-                       (T1 'cov_Hertz' base attempted 2026-05-28, REVERTED —
-                       caused visible plot over-prediction & worse outliers)
+  cov_Hertz^½       — Holm 1967 constriction at elastic Hertz contact area
+                       (T1 adoption 2026-05-28: cov_physics → cov_Hertz;
+                       Spearman ρ(σ,cov_H)=0.697 > ρ(σ,cov_P)=0.476;
+                       Tabor adhesion creates mechanical contact area but
+                       the vdW gap interferes with ionic transport, so
+                       effective Li⁺ conduction area = Hertz, not physics)
   f_p³              — 3D isotropy: P(percolate-x ∧ y ∧ z) = f_p³
   C(τ)              — tortuosity path-length, logpoly2 (beats dual-branch by ΔAIC −10.6)
   β_P2·P2           — bulk-grain regime extension beyond Cronau's 0.5µm plateau
                        (catches 62:38 D1+ corner; PASSED leave-corner-out)
-  β_cov·Δcov        — empirical correction for Hertz→physics inflation extremes
   β_F·log f_intact  — fracture-induced contact loss (β≈0.19 partial-Holm)
   g_phys (power)    — label-free 'small-AM dominance', inverse-square scaling
 
 Other inputs:
   φ      = SE volume fraction (= phi_se)
   CN     = SE-SE coordination number (= se_se_cn)
-  cov    = SE-SE covered area fraction (PHYSICS — Tabor-corrected)
+  cov    = SE-SE covered area fraction (HERTZ — elastic native, T1 adopted)
   f_p    = percolation fraction (= percolation_pct/100)
   τ      = recommended tortuosity (= tortuosity_recommended)
   p      = AM_P / (AM_P + AM_S) volume fraction
@@ -146,7 +146,7 @@ def main():
             ("Baseline (bare √φ−0.19)", lo_b, None, err_b),
             ("+ SAT-blend (φc_eff, δ)", lo_s, lo_b, err_s),
             ("× Cronau(r_SE)", lo_sc, lo_s, err_sc),
-            ("× C5 (P2 + Δcov + f_intact)   ← PRODUCTION", lo_c4, lo_sc, err_c4)):
+            ("× T1 (P2 + f_intact, cov_H)   ← PRODUCTION", lo_c4, lo_sc, err_c4)):
         b = _bands(err)
         dv = f"{lo-prev:+.4f}" if prev is not None else "  —  "
         print(f"  {tag:32s}{lo:9.4f}{dv:>11s}    "

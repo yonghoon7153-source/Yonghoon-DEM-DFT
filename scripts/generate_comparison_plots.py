@@ -2276,7 +2276,8 @@ def plot_ionic_decomp_physics(data_list, names, outdir):
     n = len(data_list)
     phi = [_get(d, 'phi_se') for d in data_list]
     cn = [_get(d, 'se_se_cn', 0) for d in data_list]
-    cov = [(_cov_frac(d, physics=True) or _cov_frac(d, physics=False)) for d in data_list]
+    # T1: Hertz cov (matches _stage_e_base_arrays / production form)
+    cov = [(_cov_frac(d, physics=False) or _cov_frac(d, physics=True)) for d in data_list]
     fp = [_get(d, 'percolation_pct', 0)/100.0 for d in data_list]
     tau = [_get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 1)) for d in data_list]
     log_phi = np.array([0.5*np.log(max(phi[i]-PHI_C, 1e-4)) if phi[i] > PHI_C else 0 for i in range(n)])
@@ -4222,7 +4223,8 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
         sig = _stage_e_sigma(d)        # physics / Stage-E target
         netP[i] = sig if (sig and sig > 0) else None
         phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
-        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        # T1: Hertz cov (matches global fit base; physics target stays in netP)
+        cov = _cov_frac(d, physics=False) or _cov_frac(d, physics=True)
         fp = _get(d, 'percolation_pct')/100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
@@ -4498,7 +4500,8 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     for idx, (d, nm) in enumerate(zip(data_list, names)):
         sig = _stage_e_sigma(d)
         phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
-        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        # T1: Hertz cov (matches production form base)
+        cov = _cov_frac(d, physics=False) or _cov_frac(d, physics=True)
         fp = _get(d, 'percolation_pct') / 100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
@@ -4527,7 +4530,8 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     phi_loc, rse_loc, dcov_loc, p_loc, fi_loc = [], [], [], [], []
     for d in data_list:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
-        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        # T1: Hertz cov (matches production form base)
+        cov = _cov_frac(d, physics=False) or _cov_frac(d, physics=True)
         fp = _get(d, 'percolation_pct') / 100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
