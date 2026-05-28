@@ -178,6 +178,26 @@ def base_log_sat_exp(a, exp_s, phicP=PHICP_F, phicS=PHICS_F, delta=DELTA_F, exp_
     return base_no_phi(a) + exp_eff*np.log(np.sqrt(pex**2 + (delta*g010)**2) + 1e-12)
 
 
+def base_log_sat_cnexp(a, cn_exp):
+    """SAT-blend base with the CN exponent replaced (production = 2.0).
+    Tests whether the data prefers a different CN scaling — audit shows D1/D1.5
+    have CN² z≈+1.5 but the form still under-predicts, suggesting the exponent
+    may not be optimal."""
+    # base = log(SG·Cronau) + 0.5·log(φ_eff) + cn_exp·log(cn) + 0.5·log(cov) + 3·log(fp)
+    cn = a[:, 1]
+    base = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F) + np.log(cronau_factor(a[:, 8]))
+    # subtract the production CN² and add cn_exp·log(cn)
+    return base - CN_EXP*np.log(cn) + cn_exp*np.log(cn)
+
+
+def base_log_sat_covexp(a, cov_exp):
+    """SAT-blend base with the cov exponent replaced (production = 0.5).
+    cov^½ z is +1.46 in D1/D1.5 — maybe linear (cov^1) catches them better."""
+    cov = a[:, 2]
+    base = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F) + np.log(cronau_factor(a[:, 8]))
+    return base - COV_EXP*np.log(cov) + cov_exp*np.log(cov)
+
+
 def cblend_fit(base, logsf, taus):
     """OLS fit of the two C_blend branches on the residual; returns (bv5, bp3)."""
     n = len(taus)
@@ -408,6 +428,36 @@ def cblend_feat_pred(base, taus, sf, bv5, bp3, beta, smean):
 
 
 EXP_S_GRID = np.round(np.linspace(0.3, 1.4, 12), 3)   # 0:10 percolation exponent
+CN_EXP_GRID = np.round(np.linspace(1.0, 3.0, 11), 3)  # CN exponent (production = 2.0)
+COV_EXP_GRID = np.round(np.linspace(0.2, 1.2, 11), 3) # cov exponent (production = 0.5)
+
+
+def _nested_cv_exp_scan(a, logsf, taus, grid, build_base, k_inner=5, seed=0):
+    """Generic outer-LOO + inner k-fold scan of a single exponent that enters
+    the base directly. `build_base(a_subset, exp_val)` must return base_log."""
+    n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0; picks = []
+    rng = np.random.default_rng(seed)
+    for i in range(n):
+        tr = np.array([j for j in range(n) if j != i])
+        ls_tr, ta_tr = logsf[tr], taus[tr]
+        order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
+        best, best_sse = None, np.inf
+        for ev in grid:
+            b = build_base(a[tr], float(ev))
+            fsse = 0.0
+            for val in folds:
+                m = np.ones(len(tr), bool); m[val] = False
+                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                fsse += np.sum((ls_tr[val]-pv)**2)
+            if fsse < best_sse:
+                best_sse, best = fsse, float(ev)
+        picks.append(best)
+        b = build_base(a, best)
+        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        sse += (logsf[i]-pi)**2
+    return 1 - sse/ss, float(np.mean(picks)), picks
 
 
 def nested_cv_exp(a, logsf, taus, k_inner=5, seed=0):
@@ -571,6 +621,30 @@ def main():
     top = sorted(zip(cc, vv), reverse=True)[:4]
     print("  inner-picked exp_S: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
     print(f"  VERDICT: {'PASS — 0:10 wants a different exponent' if lo_exp - lo_fix > se else 'FAIL — exp_S=0.5 is best (no change)'}")
+
+    # 5b) CN-exponent scan (production=2.0) — audit shows D1/D1.5 have CN² z≈+1.5
+    #     so a different exponent might amplify them correctly.
+    print("=" * 64)
+    lo_cn, cn_mean, cn_picks = _nested_cv_exp_scan(a, logsf, taus, CN_EXP_GRID, base_log_sat_cnexp)
+    print(f"CN exponent scan (production = 2.0):")
+    print(f"  SAT+CN_exp NESTED-CV      : {lo_cn:.4f}   Δover SAT(frozen)={lo_cn - lo_fix:+.4f}   "
+          f"mean CN_exp={cn_mean:.2f}")
+    vv, cc = np.unique(np.round(cn_picks, 2), return_counts=True)
+    top = sorted(zip(cc, vv), reverse=True)[:4]
+    print("  inner-picked CN_exp: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
+    print(f"  VERDICT: {'PASS — data wants CN^' + f'{cn_mean:.2f}' if lo_cn - lo_fix > se else 'FAIL — CN^2 is best (no change)'}")
+
+    # 5c) cov-exponent scan (production=0.5) — audit shows cov^½ z≈+1.5 in D1/D1.5;
+    #     maybe linear (cov^1) amplifies them better.
+    print("=" * 64)
+    lo_cv, cv_mean, cv_picks = _nested_cv_exp_scan(a, logsf, taus, COV_EXP_GRID, base_log_sat_covexp)
+    print(f"cov exponent scan (production = 0.5):")
+    print(f"  SAT+cov_exp NESTED-CV     : {lo_cv:.4f}   Δover SAT(frozen)={lo_cv - lo_fix:+.4f}   "
+          f"mean cov_exp={cv_mean:.2f}")
+    vv, cc = np.unique(np.round(cv_picks, 2), return_counts=True)
+    top = sorted(zip(cc, vv), reverse=True)[:4]
+    print("  inner-picked cov_exp: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
+    print(f"  VERDICT: {'PASS — data wants cov^' + f'{cv_mean:.2f}' if lo_cv - lo_fix > se else 'FAIL — cov^0.5 is best (no change)'}")
 
     # 6) Stage-E Cronau SE-size factor — APPLIED (fixed literature, NOT fitted),
     #    so no DoF / no selection bias: does mirroring the target's own grain
