@@ -330,12 +330,75 @@ def main():
         print(f"      improved ≥2pp: {len(improved)}/{len(out_idx)}   "
               f"worsened ≥2pp: {len(worsened)}/{len(out_idx)}")
 
+    # ===== PART 3 — INTEGRATED FRACTURE-AWARE COV TESTS =====
+    # User direction: "수식을 합리적으로 넣어봐" — put the equation in
+    # reasonably.  Instead of bolt-on β·log(f_intact), MODIFY the existing
+    # cov^½ Holm term to use effective cov = cov · f_intact.  This is
+    # PHYSICALLY MOTIVATED (Holm: g ∝ √A_contact; broken contacts contribute
+    # zero area) and has NO new fit parameter (β is frozen at 0.5 by Holm).
+    # In log space: add 0.5·log(f_intact) to base.  Effectively replaces
+    # cov^½ with (cov·f_intact)^½ throughout the form.
+    print("\n" + "█" * 90)
+    print("PART 3 — INTEGRATED fracture-aware cov  (cov → cov · f_intact, frozen β=0.5)")
+    print("█" * 90)
+    print(f"  C4 reference: LOOCV={lo_c4:.4f}   |err|>20%={len(out_idx)}   |err|>30%={(np.abs(err_c4)>30).sum()}")
+
+    def _f_intact_options(metrics):
+        """3 candidate f_intact definitions (intact fraction of contacts)."""
+        n_m = len(metrics)
+        opts = {}
+        # FI1: 1 - fracture_index (frag+pulv / total contacts)
+        vals = np.array([d.get('fracture_index') or 0.0 for d in metrics], float)
+        opts['FI1: 1 − fracture_index'] = np.clip(1.0 - vals, 0.05, 1.0)
+        # FI2: ionic_active_pct / 100
+        vals = np.array([(d.get('ionic_active_pct') or 100.0) / 100.0 for d in metrics], float)
+        opts['FI2: ionic_active_pct/100'] = np.clip(vals, 0.05, 1.0)
+        # FI3: 1 - fracture_aware_excluded_pct/100
+        vals = np.array([1.0 - (d.get('fracture_aware_excluded_pct') or 0.0) / 100.0
+                         for d in metrics], float)
+        opts['FI3: 1 − fracture_aware_excluded/100'] = np.clip(vals, 0.05, 1.0)
+        return opts
+
+    f_opts = _f_intact_options(metrics)
+    print(f"\n  {'integrated form':40s} {'LOOCV':>7s} {'Δ':>7s}   target outlier changes")
+    print("  " + "-" * 88)
+    for tag, f_int in f_opts.items():
+        # Modified base: add 0.5·log(f_intact) — equivalent to using cov·f_intact in Holm
+        base_mod = base + 0.5 * np.log(f_int)
+        # Fit C4 with this modified base (same extras: P2_gated + Δcov)
+        lo_mod, _ = _loocv_aug(base_mod, logsf, taus, extras_c4)
+        # Single-shot pred for per-case shift
+        X_full = np.column_stack([np.ones(n), lt_all, lt_all**2] + extras_c4)
+        coef_mod, *_ = np.linalg.lstsq(X_full, logsf - base_mod, rcond=None)
+        pred_mod = base_mod + X_full @ coef_mod
+        err_mod = (np.exp(pred_mod) - np.exp(logsf)) / np.exp(logsf) * 100.0
+        d_lo = lo_mod - lo_c4
+        flag = "★" if d_lo > se_loocv else (" " if abs(d_lo) < se_loocv else "⚠")
+        top3 = out_idx[:3]
+        change_str = ', '.join(f"{names[i][-15:]}:{err_c4[i]:+.0f}→{err_mod[i]:+.0f}%" for i in top3)
+        print(f"  {tag:40s} {lo_mod:7.4f} {d_lo:+7.4f}   {change_str}  {flag}")
+        n_out_new = int((np.abs(err_mod) > 20).sum())
+        n_30_new = int((np.abs(err_mod) > 30).sum())
+        improved = [i for i in out_idx if abs(err_mod[i]) < abs(err_c4[i]) - 2.0]
+        worsened = [i for i in out_idx if abs(err_mod[i]) > abs(err_c4[i]) + 2.0]
+        print(f"      → |err|>20% = {n_out_new} (Δ {n_out_new - len(out_idx):+d})   "
+              f"|err|>30% = {n_30_new} (Δ {n_30_new - (np.abs(err_c4)>30).sum():+d})")
+        print(f"      improved ≥2pp: {len(improved)}/{len(out_idx)}   "
+              f"worsened ≥2pp: {len(worsened)}/{len(out_idx)}")
+        # Per-outlier err change for ALL 10 outliers (detail)
+        print(f"      per-outlier shifts:")
+        for i in out_idx:
+            shift = err_mod[i] - err_c4[i]
+            marker = "↓" if abs(err_mod[i]) < abs(err_c4[i]) else ("↑" if abs(err_mod[i]) > abs(err_c4[i]) else "·")
+            print(f"        {names[i][:30]:30s}  {err_c4[i]:+6.1f}% → {err_mod[i]:+6.1f}%  ({shift:+5.1f}pp)  {marker}")
+
     print("\n" + "=" * 90)
     print("Interpretation guide:")
     print("  • ★ candidate: LOOCV beats C4 by > noise SE — worth testing leave-corner-out")
     print("  • improved≥2pp count high = candidate captures multiple outliers")
     print("  • β_new sign / magnitude indicates direction of correction")
-    print("  • If multiple candidates ★, try them JOINTLY (next iteration)")
+    print("  • PART 3 ★ = INTEGRATED form supported by Holm physics (β frozen 0.5)")
+    print("            adopt by modifying _sat_baselog: cov → cov · f_intact")
 
 
 if __name__ == "__main__":

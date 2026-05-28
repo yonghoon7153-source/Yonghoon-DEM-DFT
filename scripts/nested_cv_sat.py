@@ -120,6 +120,16 @@ def load_corpus():
                 return np.nan
             r_AM_S_val = _one_ram(('_input_r_AM_S_um', '_input_r_AM_S', 'r_AM_S_um', 'r_AM_S'))
             r_AM_P_val = _one_ram(('_input_r_AM_P_um', '_input_r_AM_P', 'r_AM_P_um', 'r_AM_P'))
+            # Fracture-aware intact fraction (C5 adoption 2026-05-28):
+            # F4 = log(1 − fracture_aware_excluded_pct/100), clipped to
+            # f_intact >= 0.05 to avoid log(0).  Captures dysfunctional-
+            # contact loss via the fracture-aware solver's bookkeeping.
+            frx = d.get('fracture_aware_excluded_pct')
+            if frx is not None and isinstance(frx, (int, float)):
+                f_int = max(1.0 - float(frx)/100.0, 0.05)
+                f_int_log = float(np.log(f_int))
+            else:
+                f_int_log = 0.0   # no fracture info → f_intact=1 → log=0
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
                          float(sz) if sz else np.nan, _direct_rse_um(d),
                          float(amcn) if amcn and amcn > 0 else np.nan,
@@ -130,9 +140,12 @@ def load_corpus():
                          float(pha) if pha and pha > 0 else np.nan,
                          float(cnea) if cnea and cnea > 0 else np.nan,
                          float(scv) if scv and scv > 0 else np.nan,
-                         r_AM_S_val, r_AM_P_val))
+                         r_AM_S_val, r_AM_P_val, f_int_log))
     a = np.array(rows, float)
-    # cols: phi cn cov fp tau sigma p se_size r_SE_um amcn covAM_h covAM_p covAM_dpct r_AM_um path_hop_area se_cn_eff_area stress_cv r_AM_S r_AM_P
+    # cols: 0 phi  1 cn  2 cov  3 fp  4 tau  5 sigma  6 p  7 se_size  8 r_SE_um
+    #       9 amcn  10 covAM_h  11 covAM_p  12 covAM_dpct  13 r_AM_um
+    #       14 path_hop_area  15 se_cn_eff_area  16 stress_cv
+    #       17 r_AM_S  18 r_AM_P  19 log(f_intact)  ← NEW C5 column
     return a
 
 
@@ -270,17 +283,32 @@ def cov_delta_feature(cov_delta_pct, center=None):
     return np.where(np.isfinite(v), v - med, 0.0), med
 
 
-def production_extras(a, cov_delta_center=None):
-    """Compute the production augmentation extras for the C4 form
-    (g_010-gated P2 + Δcov, 2026-05-28).
+def production_extras(a, cov_delta_center=None, f_intact_log=None):
+    """Compute the production augmentation extras for the C5 form
+    (g_010-gated P2 + Δcov + log f_intact, 2026-05-28).
 
     Returns (extras_list, cov_delta_median) where:
         extras_list[0] = g_010-gated P2 feature (n-vector)
         extras_list[1] = centered Δcov feature (n-vector)
-    Pass extras_list to cblend_fit/pred via the `extras=` argument."""
+        extras_list[2] = log(f_intact) feature (n-vector)   ← NEW (F4 adoption)
+
+    f_intact_log: optional pre-computed log(f_intact) per case (length n).
+        If None, expects `a` to have column 19 (loaded by load_corpus).
+        log(1 − fracture_aware_excluded_pct/100), clipped at f_intact≥0.05
+        to avoid log(0).  β_F ≈ +0.193 by OLS — corresponds to "partial-
+        conduction" Holm physics (fractured contacts retain ~60% of
+        nominal conductance via micro-asperity / residual Tabor contact)."""
     p2 = p2_feature(a[:, 0], a[:, 8], p_amp=a[:, 6])   # g_010-gated
     cdc, med = cov_delta_feature(a[:, 12], center=cov_delta_center)
-    return [p2, cdc], med
+    if f_intact_log is not None:
+        f_log = f_intact_log
+    elif a.shape[1] >= 20:
+        # f_intact stored in column 19 by load_corpus
+        f_log = a[:, 19]
+    else:
+        # legacy corpus without f_intact column — fall back to 0 (= f_intact=1)
+        f_log = np.zeros(a.shape[0])
+    return [p2, cdc, f_log], med
 
 
 def base_log_sat(a, phicP, phicS, delta):
