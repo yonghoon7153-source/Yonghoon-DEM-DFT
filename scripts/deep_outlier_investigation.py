@@ -168,6 +168,50 @@ def feat_stress_cv(a, metrics):
     return np.log(safe / med)
 
 
+# ── FRACTURE candidates (added 2026-05-28 after Part 1 found fracture is
+# the dominant anomaly in 6+ outliers; form's cov^½ implicitly assumes
+# all contacts are intact, but fracture renders many dysfunctional) ──
+
+def feat_fracture_index(a, metrics):
+    """F1: fracture_index (severe / total).  Centered.  Expected β < 0:
+    high fracture should REDUCE σ but form ignores it → form over-predicts."""
+    vals = np.array([d.get('fracture_index') or 0.0 for d in metrics], float)
+    med = float(np.nanmedian(vals[np.isfinite(vals)]))
+    return np.where(np.isfinite(vals), vals - med, 0.0)
+
+
+def feat_intact_pct_log(a, metrics):
+    """F2: log(intact_fraction) where intact = 1 − (frag + pulv).
+    Expected β > 0: more intact ⇒ higher σ.  Form uses cov without
+    fracture correction; this term directly models the broken-contact loss."""
+    intact = []
+    for d in metrics:
+        frag = d.get('frac_fragmentation_pct') or 0.0
+        pulv = d.get('frac_pulverization_pct') or 0.0
+        intact_pct = max(100.0 - frag - pulv, 1.0)
+        intact.append(intact_pct / 100.0)
+    return np.log(np.array(intact))
+
+
+def feat_ionic_active_log(a, metrics):
+    """F3: log(ionic_active_pct / 100).  Directly captures fracture-induced
+    connectivity loss.  Expected β > 0: low active% ⇒ low σ.  6mAh_real_6
+    showed z=-8.3 here (96% vs corpus 100%) — the clearest single signal."""
+    vals = np.array([d.get('ionic_active_pct') or 100.0 for d in metrics], float)
+    safe = np.where(vals > 0, vals / 100.0, 0.5)
+    return np.log(safe)
+
+
+def feat_fracture_aware_excl_log(a, metrics):
+    """F4: log(1 − fracture_aware_excluded_pct/100).  Fraction of contacts
+    NOT excluded by fracture awareness.  Captures dysfunctional contacts
+    differently from frac_pct (uses the fracture-aware solver's own
+    bookkeeping).  1mAh_5_AMP had 82% excluded (z=+2.9)."""
+    vals = np.array([d.get('fracture_aware_excluded_pct') or 0.0 for d in metrics], float)
+    intact = np.maximum(100.0 - vals, 1.0) / 100.0
+    return np.log(intact)
+
+
 def _loocv_aug(base, logsf, taus, extras):
     """LOOCV with C_blend + multiple extras (joint OLS per fold)."""
     n = len(taus); ss = float(np.sum((logsf-logsf.mean())**2)); sse = 0.0
@@ -243,6 +287,11 @@ def main():
         ('V — log(bulk_resistance_fraction)',    feat_bulk_resistance_log),
         ('U — log(am_am_cn_mean)',               feat_am_am_cn),
         ('T — log(stress_cv)',                   feat_stress_cv),
+        # FRACTURE candidates (NEW — Part 1 revealed fracture is dominant anomaly)
+        ('F1 — fracture_index (centered)',       feat_fracture_index),
+        ('F2 — log(intact_fraction) [non-frac]', feat_intact_pct_log),
+        ('F3 — log(ionic_active_pct/100)',       feat_ionic_active_log),
+        ('F4 — log(1 − fracture_aware_excluded)', feat_fracture_aware_excl_log),
     ]
     se_loocv = 0.0016  # ~noise SE
 
