@@ -3899,17 +3899,23 @@ def plot_ionic_solver_vs_stage_e(data_list, names, outdir):
     return outpath
 
 
-def _cblend_fit_score(base_log, logsf, taus):
-    """Fit C_blend(τ) = a + b·ln τ + c·(ln τ)²  (logpoly2, 3 OLS params) on
-    the log-residual; return (r2, loocv, Ct, Cn, pred_log, b, _).
-    Adopted 2026-05-28 after scripts/screen_form_simplifications.py
-    confirmed +0.0020 LOOCV / -10.6 ΔAIC vs the previous 6-param dual-branch.
-    The trailing tuple slot is kept for backwards-compatible unpacking by
-    callers that previously used (bv5, bp3); it is None for logpoly2."""
+def _cblend_fit_score(base_log, logsf, taus, extras=None):
+    """Fit C_blend(τ) = a + b·ln τ + c·(ln τ)²  plus optional `extras`
+    (k extra n-vectors, jointly OLS-fit).  Returns
+        (r2, loocv, Ct, Cn, pred_log, b, None)
+    where b has length 3 + (len(extras) if extras else 0).  The trailing
+    None preserves the legacy (bv5, bp3) unpacking signature.
+
+    C4 PRODUCTION usage (adopted 2026-05-28): pass
+        extras = [p2_feature_vec, cov_delta_centered_vec]
+    to get the augmented 5-param fit (logpoly2 + β_P2 + β_cov)."""
     n = len(taus)
     resid = logsf - base_log
     lt = np.log(taus)
-    X = np.column_stack([np.ones(n), lt, lt**2])
+    X_cols = [np.ones(n), lt, lt**2]
+    if extras is not None:
+        X_cols.extend(extras)
+    X = np.column_stack(X_cols)
     b, *_ = np.linalg.lstsq(X, resid, rcond=None)
     pred = base_log + X @ b
     ss = np.sum((logsf-logsf.mean())**2)
@@ -4087,40 +4093,72 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
 
 
 def _stage_e_base_arrays(corpus):
-    """Build (base_log, logsf, taus) for the production SAT-blend form over a
-    list of metrics dicts (cases failing the validity filter are dropped)."""
+    """Build (base_log, logsf, taus, phi_arr, rse_arr, cov_delta_arr) for the
+    production SAT-blend × Cronau form over a list of metrics dicts (cases
+    failing the validity filter are dropped).  The extra arrays (phi, r_SE,
+    Δcov) are needed by the C4 augmented form (P2 + cov_delta extras)."""
     PHI_C = 0.19
-    bl, ls, ts = [], [], []
+    bl, ls, ts, phi_a, rse_a, dcov_a = [], [], [], [], [], []
     for d in corpus:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
         fp = _get(d, 'percolation_pct')/100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
-            bl.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
+            rse = _direct_rse_um(d)
+            bl.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), rse)))
             ls.append(np.log(sig)); ts.append(tau)
-    return np.array(bl), np.array(ls), np.array(ts)
+            phi_a.append(float(phi))
+            rse_a.append(float(rse) if rse and np.isfinite(rse) else np.nan)
+            dcv = (d.get('coverage_AM_S_delta_pct_rough')
+                   or d.get('coverage_AM_delta_pct_rough'))
+            dcov_a.append(float(dcv) if dcv is not None else np.nan)
+    return (np.array(bl), np.array(ls), np.array(ts),
+            np.array(phi_a), np.array(rse_a), np.array(dcov_a))
+
+
+def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, cov_delta_center=None):
+    """C4 augmentation extras: [P2_feat, Δcov_centered]."""
+    # P2 = (φ−0.195)² · (r_SE − 0.5)+   ; r_SE NaN → 0.5 neutral
+    pex = np.maximum(phi_arr - 0.195, 0.0)
+    rse_safe = np.where(np.isfinite(rse_arr) & (rse_arr > 0), rse_arr, 0.5)
+    p2 = pex**2 * np.maximum(rse_safe - 0.5, 0.0)
+    # Δcov centered by corpus median; NaN → 0 (no contribution)
+    if cov_delta_center is None:
+        med = float(np.nanmedian(dcov_arr[np.isfinite(dcov_arr)])) if np.isfinite(dcov_arr).any() else 0.0
+    else:
+        med = float(cov_delta_center)
+    dcov_c = np.where(np.isfinite(dcov_arr), dcov_arr - med, 0.0)
+    return [p2, dcov_c], med
 
 
 def _stage_e_global_fit():
-    """Fit C_blend on the FULL corpus (_FIT_CORPUS) → (r2, loocv, bv5, bp3, n).
-    Returns None if no/insufficient corpus was supplied."""
+    """Fit C4 augmented form (logpoly2 + P2 + Δcov) on the FULL corpus
+    (_FIT_CORPUS) → (r2, loocv, b, extras, cov_med, n).  b has 5 coefficients
+    [a, b, c, β_P2, β_cov].  Returns None if no/insufficient corpus."""
     if not _FIT_CORPUS:
         return None
-    bl, ls, ts = _stage_e_base_arrays(_FIT_CORPUS)
+    bl, ls, ts, phi_a, rse_a, dcov_a = _stage_e_base_arrays(_FIT_CORPUS)
     if len(ts) < 8:
         return None
-    r2, loo, _Ct, _Cn, _pred, bv5, bp3 = _cblend_fit_score(bl, ls, ts)
-    return r2, loo, bv5, bp3, len(ts)
+    extras, cov_med = _c4_extras_from_arrays(phi_a, rse_a, dcov_a)
+    r2, loo, _Ct, _Cn, _pred, b, _ = _cblend_fit_score(bl, ls, ts, extras=extras)
+    return r2, loo, b, extras, cov_med, len(ts)
 
 
-def _cblend_predict_log(base_log, taus, b, _unused=None):
-    """Apply logpoly2 C_blend(τ) = a + b·ln τ + c·(ln τ)² with coefficients
-    b = [a, b, c].  The trailing `_unused` slot keeps the old call signature
-    `(base, taus, bv5, bp3)` working for legacy callers."""
+def _cblend_predict_log(base_log, taus, b, extras=None):
+    """Apply C_blend(τ) + optional extras with coefficients b.
+    b length = 3 (bare) or 3+len(extras) (C4 augmented).
+    For back-compat with legacy callers passing (..., bv5, bp3=None) the
+    second positional `extras` may be either a list of arrays (new C4 path)
+    or None (legacy logpoly2 path)."""
     base_log = np.asarray(base_log); taus = np.asarray(taus)
     lt = np.log(taus)
-    return base_log + b[0] + b[1]*lt + b[2]*lt**2
+    out = base_log + b[0] + b[1]*lt + b[2]*lt**2
+    if extras is not None and len(b) >= 3 + len(extras):
+        for j, e in enumerate(extras):
+            out = out + b[3+j] * np.asarray(e)
+    return out
 
 
 def plot_ionic_perconfig_physics(data_list, names, outdir):
@@ -4132,6 +4170,7 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     netP = [None]*len(data_list)
     idx, base_log, logsf, taus = [], [], [], []
+    phi_local, rse_local, dcov_local = [], [], []  # C4 extras inputs (per-case)
     for i, d in enumerate(data_list):
         sig = _stage_e_sigma(d)        # physics / Stage-E target
         netP[i] = sig if (sig and sig > 0) else None
@@ -4141,19 +4180,33 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
             idx.append(i)
-            base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
+            rse = _direct_rse_um(d)
+            base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), rse)))
             logsf.append(np.log(sig)); taus.append(tau)
+            phi_local.append(float(phi))
+            rse_local.append(float(rse) if rse and np.isfinite(rse) else np.nan)
+            dcv = (d.get('coverage_AM_S_delta_pct_rough')
+                   or d.get('coverage_AM_delta_pct_rough'))
+            dcov_local.append(float(dcv) if dcv is not None else np.nan)
     if len(idx) < 8:
         print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
         return None
     gfit = _stage_e_global_fit()
     if gfit:
-        # GLOBAL fit (full corpus): same coeffs + R²/LOOCV on every panel.
-        r2, loo, bv5, bp3, n_fit = gfit
-        pred_log = _cblend_predict_log(np.array(base_log), np.array(taus), bv5, bp3)
+        # GLOBAL fit (full corpus) C4: 5-param augmented form with shared β's
+        r2, loo, b_coef, _extras_global, cov_med, n_fit = gfit
+        extras_local, _ = _c4_extras_from_arrays(
+            np.array(phi_local), np.array(rse_local), np.array(dcov_local),
+            cov_delta_center=cov_med)
+        pred_log = _cblend_predict_log(np.array(base_log), np.array(taus),
+                                       b_coef, extras=extras_local)
     else:
+        # local fallback also C4 augmented
+        extras_local, _med = _c4_extras_from_arrays(
+            np.array(phi_local), np.array(rse_local), np.array(dcov_local))
         r2, loo, Ct, Cn, pred_log, _, _ = _cblend_fit_score(
-            np.array(base_log), np.array(logsf), np.array(taus))
+            np.array(base_log), np.array(logsf), np.array(taus),
+            extras=extras_local)
         n_fit = len(idx)
     pred = np.full(len(data_list), np.nan)
     for j, i in enumerate(idx):
@@ -4412,10 +4465,30 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         print(f"  [SKIP] ionic_outliers_stage_e: only {n} usable cases (<8)")
         return None
     base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
+    # C4 augmented form (adopted 2026-05-28): logpoly2 + P2 + Δcov
+    phi_arr = np.array([_get(data_list[i], 'phi_se') for i in [data_list.index(d) for d in data_list if _stage_e_sigma(d)]][:n])
+    # Build C4 extras directly from data_list aligned to the kept rows
+    # (simpler: re-extract per-case (φ, r_SE, Δcov) for the same filter used above)
+    phi_loc, rse_loc, dcov_loc = [], [], []
+    for d in data_list:
+        sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        fp = _get(d, 'percolation_pct') / 100.0
+        tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
+        if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
+                and fp > 0 and tau > 0):
+            continue
+        rse = _direct_rse_um(d)
+        phi_loc.append(float(phi))
+        rse_loc.append(float(rse) if rse and np.isfinite(rse) else np.nan)
+        dcv = (d.get('coverage_AM_S_delta_pct_rough')
+               or d.get('coverage_AM_delta_pct_rough'))
+        dcov_loc.append(float(dcv) if dcv is not None else np.nan)
+    extras_aug, _med = _c4_extras_from_arrays(
+        np.array(phi_loc), np.array(rse_loc), np.array(dcov_loc))
     resid0 = logsf - base_log
     lt = np.log(taus)
-    # logpoly2 C_blend (adopted 2026-05-28): a + b·ln τ + c·(ln τ)²
-    X = np.column_stack([np.ones(n), lt, lt**2])
+    X = np.column_stack([np.ones(n), lt, lt**2, *extras_aug])
     b_lp, *_ = np.linalg.lstsq(X, resid0, rcond=None)
     pred_log = base_log + X @ b_lp
     resid = logsf - pred_log

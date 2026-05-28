@@ -89,19 +89,24 @@ def main():
     # SAT-blend (frozen φc/δ, no Cronau)
     base_s = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F)
     lo_s = loocv_r2(base_s, logsf, taus)
-    # SAT × Cronau (production)
+    # SAT × Cronau (previous production = "C0")
     cf = cronau_factor(a[:, 8])
     base_sc = base_s + np.log(cf)
     lo_sc = loocv_r2(base_sc, logsf, taus)
+    # C4 augmented (NEW PRODUCTION): + β_P2·P2 + β_cov·Δcov
+    from nested_cv_sat import production_extras
+    extras_c4, _med = production_extras(a)
+    lo_c4 = loocv_r2(base_sc, logsf, taus, extras=extras_c4)
     # error in % bands at each layer
-    def fit_and_err(base):
-        b = cblend_fit(base, logsf, taus)
-        pred = cblend_pred(base, taus, b)
+    def fit_and_err(base, extras=None):
+        b = cblend_fit(base, logsf, taus, extras=extras)
+        pred = cblend_pred(base, taus, b, extras=extras)
         err_pct = (np.exp(pred) - np.exp(logsf)) / np.exp(logsf) * 100.0
         return pred, err_pct
     pred_b, err_b = fit_and_err(base_b)
     pred_s, err_s = fit_and_err(base_s)
     pred_sc, err_sc = fit_and_err(base_sc)
+    pred_c4, err_c4 = fit_and_err(base_sc, extras=extras_c4)
 
     def _bands(err):
         ae = np.abs(err)
@@ -117,7 +122,8 @@ def main():
     for tag, lo, prev, err in (
             ("Baseline (bare √φ−0.19)", lo_b, None, err_b),
             ("+ SAT-blend (φc_eff, δ)", lo_s, lo_b, err_s),
-            ("× Cronau(r_SE)  ← PRODUCTION", lo_sc, lo_s, err_sc)):
+            ("× Cronau(r_SE)", lo_sc, lo_s, err_sc),
+            ("× C4 aug (+P2 +Δcov)  ← PRODUCTION", lo_c4, lo_sc, err_c4)):
         b = _bands(err)
         dv = f"{lo-prev:+.4f}" if prev is not None else "  —  "
         print(f"  {tag:32s}{lo:9.4f}{dv:>11s}    "
@@ -148,9 +154,9 @@ def main():
 
     # ===== PER-CASE ERROR LANDSCAPE ============================================
     print("=" * 78)
-    print(f" Per-case |err%| landscape on PRODUCTION (SAT×Cronau, n={n})")
+    print(f" Per-case |err%| landscape on PRODUCTION (C4 augmented, n={n})")
     print("=" * 78)
-    err = err_sc
+    err = err_c4
     ae = np.abs(err)
     print(f"   median |err|     : {np.median(ae):6.2f}%")
     print(f"   mean   |err|     : {np.mean(ae):6.2f}%")
@@ -213,7 +219,7 @@ def main():
     for i in idx_sorted:
         if abs(err[i]) <= 20.0 or shown >= 25: break
         nm = names[i] if i < len(names) else f"(idx{i})"
-        sa = float(np.exp(logsf[i])); sp = float(np.exp(pred_sc[i]))
+        sa = float(np.exp(logsf[i])); sp = float(np.exp(pred_c4[i]))
         cls = _classify(i)
         rse_str = f"{rse_arr[i]:5.2f}" if np.isfinite(rse_arr[i]) else "  —  "
         print(f"   {nm[:32]:32s} {sa:7.3f} {sp:7.3f} {err[i]:+7.1f}  "
