@@ -232,8 +232,9 @@ Adoption history (full chain, each step separately validated):
   • + β_F·log f_intact (fracture-aware Holm)         LOOCV 0.9710  Δ+0.0023
   • T1: cov_physics → cov_Hertz (drop Δcov term)     LOOCV 0.9712  Δ+0.0002 (k 6→5)
         [+ 4 plot callsite patches for consistency]
-  • Exclude sibling tails (1mAh_9_S5, particulate_12_S2)  LOOCV 0.9752  Δ+0.0040
-        n: 90 → 88 (family-level info preserved by remaining 4 siblings each)
+  • DELETE sibling-tail cases (1mAh_9_S5, particulate_12_S2)  LOOCV 0.9752  Δ+0.0040
+        n: 90 → 88 (case folders + CSV rows removed on disk 2026-05-28;
+        family info preserved by remaining 4 siblings each)
 
 FINAL production: LOOCV ≈ 0.975, 5 fit params, n=88.
 
@@ -249,12 +250,15 @@ CLOSE-OUT (2026-05-28) — Bayesian Laplace + form-vs-solver decomposition:
       − 12 INSIDE 90% PI → form correctly states uncertainty; NOT real outliers
       − 5 OUTSIDE PI    → genuine model failures, ALL data-resolution issues
 
-THE 3 REMAINING σ_ionic OUTLIERS (after sibling-tail exclusion 2026-05-28):
+THE 3 REMAINING σ_ionic OUTLIERS (after sibling-tail deletion 2026-05-28):
   Originally 5 Bayesian-PI-outside cases; 2 sibling-tail cases (1mAh_9_S5,
-  particulate_12_S2) added to _EXCLUDED_NAMES based on test_exclude_sibling_tails.py
-  verdict: ΔLOOCV +0.0040 (2.5× noise SE), no new outliers, family-level info
-  preserved by remaining 4 siblings each.  Same pattern as the previously
-  excluded _S3 / 1mAh_9 base.
+  particulate_12_S2) DELETED FROM DISK (case folders + CSV rows in
+  all_dem_porosity.csv / validation_all_cases.csv / docs/case_summary.csv /
+  docs/full_ranking.csv / docs/data/percolation_2d_fit*.csv).
+  Verdict from test_exclude_sibling_tails.py (now deleted as one-shot):
+  ΔLOOCV +0.0040 (2.5× noise SE), no new outliers emerged, family-level info
+  preserved by remaining 4 siblings each.  Older anomalies (input_1mAh_9
+  base + input_particulate_12_S3) remain on disk but stay in _EXCLUDED_NAMES.
 
   Post-exclusion corpus n=88, LOOCV 0.9752 (was 0.9712 at n=90).
 
@@ -290,11 +294,13 @@ Methodology scripts added:
     Top suggestions converge to degenerate (r_AM_S=r_AM_P=4µm, r_SE=1.5µm)
     corner — realistic-region corpus is well covered.
 
-Performance summary (n=90):
-  median |err| ≈ 7%, mean ≈ 10%, 90th pctile ≈ 20%
-  |err|>30%: 2 (1mAh_8, 1mAh_9_S5)   |err|>50%: 0
-  After Bayesian PI: only 5 cases classified as GENUINE failures
-  (all addressable by sibling-median display or pending multi-seed sim).
+Performance summary (n=88, post sibling-tail deletion):
+  median |err| ≈ 7.7%, mean ≈ 9.2%, 90th pctile ≈ 20%
+  |err|>30%: 2 (input_1mAh_8 +41%, input_8mAh_real_10 -31%)
+  |err|>50%: 0
+  3 remaining outliers are ALL isolated-single cases; 2 of 3 directly
+  addressed by user's in-flight multi-seed sim (input_72 / input_AMP /
+  input_AMS × 5 seeds each, 2026-05-28).
 
 ⚠ DO NOT add more form terms.  The form is at the joint info-theoretic
 ceiling of:
