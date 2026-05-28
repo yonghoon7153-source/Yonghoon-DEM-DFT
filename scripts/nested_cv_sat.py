@@ -77,15 +77,24 @@ def load_corpus():
                      or d.get('coverage_AM_S_mean_physics'))
             cov_dlt = (d.get('coverage_AM_delta_pct_rough')
                        or d.get('coverage_AM_S_delta_pct_rough'))
+            # POST-Cronau diagnostic flagged these (62:38 corr +0.80~+0.82) —
+            # geometric (non-circular) constriction-area family, captures the
+            # "few but large contacts" physics for D1/D1.5 that CN² misses.
+            pha = d.get('path_hop_area_mean_physics') or d.get('path_hop_area_mean')
+            cnea = d.get('se_se_cn_eff_area') or d.get('se_se_cn_eff_area_perc')
+            scv = d.get('stress_cv')   # particle-stress non-uniformity (mech.)
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
                          float(sz) if sz else np.nan, _direct_rse_um(d),
                          float(amcn) if amcn and amcn > 0 else np.nan,
                          float(cov_h)/100.0 if cov_h and cov_h > 0 else np.nan,
                          float(cov_p)/100.0 if cov_p and cov_p > 0 else np.nan,
                          float(cov_dlt) if cov_dlt is not None else np.nan,
-                         _direct_ram_um(d, p)))
+                         _direct_ram_um(d, p),
+                         float(pha) if pha and pha > 0 else np.nan,
+                         float(cnea) if cnea and cnea > 0 else np.nan,
+                         float(scv) if scv and scv > 0 else np.nan))
     a = np.array(rows, float)
-    # cols: phi cn cov fp tau sigma p se_size r_SE_um amcn covAM_h covAM_p covAM_dpct r_AM_um
+    # cols: phi cn cov fp tau sigma p se_size r_SE_um amcn covAM_h covAM_p covAM_dpct r_AM_um path_hop_area se_cn_eff_area stress_cv
     return a
 
 
@@ -316,6 +325,52 @@ def sizeratio_feat(a):
     return np.where(np.isfinite(lr), lr, med)
 
 
+# ── POST-Cronau candidates (62:38 D1/D1.5 high-σ residual; diag corr ~+0.8) ──
+def pha_feat(a):
+    """log path_hop_area (physics) — Holm constriction cross-section along the
+    percolation path.  Large SE ⇒ few but wide contacts ⇒ low Holm loss ⇒
+    higher σ.  Diag corr +0.82 in 62:38 (post-Cronau)."""
+    return _logcol(a, 14)
+
+
+def cnea_feat(a):
+    """log se_se_cn_eff_area — SE-SE coordination weighted by contact AREA, the
+    'count×size' combo. Diag corr +0.80 in 62:38 (post-Cronau)."""
+    return _logcol(a, 15)
+
+
+def scv_feat(a):
+    """log stress_cv (von-Mises CV%) — particle-stress non-uniformity. Uniform
+    stress ⇔ well-formed network ⇔ high σ; expect NEGATIVE β. Diag corr −0.82."""
+    return _logcol(a, 16)
+
+
+def loocv_with_feat(base, logsf, taus, sfeat):
+    """LOOCV with C_blend + β·sfeat fit jointly per fold (β is an OLS coefficient,
+    no selection → unbiased). Returns (r2, mean β)."""
+    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
+    n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0; betas = []
+    w_v5 = 1.0/(1.0+np.exp(-KV5*(taus-CV5))); lt = np.log(taus)
+    w_bl = 1.0/(1.0+np.exp(-KBL*(taus-CBL)))
+    Xv5 = np.column_stack([np.ones(n), w_v5])
+    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
+    for i in range(n):
+        mk = np.ones(n, bool); mk[i] = False
+        resid = logsf[mk] - base[mk]
+        b5, *_ = np.linalg.lstsq(Xv5[mk], resid, rcond=None)
+        b3, *_ = np.linalg.lstsq(Xp3[mk], resid, rcond=None)
+        cb = (1-w_bl[mk])*(Xv5[mk]@b5) + w_bl[mk]*(Xp3[mk]@b3)
+        sm = sfeat[mk].mean(); sc = sfeat[mk] - sm
+        rr = resid - cb
+        d = float(np.dot(sc, sc))
+        beta = float(np.dot(sc, rr)/d) if d > 1e-12 else 0.0
+        betas.append(beta)
+        cbi = (1-w_bl[i])*(Xv5[i]@b5) + w_bl[i]*(Xp3[i]@b3)
+        pi = base[i] + cbi + beta*(sfeat[i] - sm)
+        sse += (logsf[i] - pi)**2
+    return 1 - sse/ss, float(np.mean(betas))
+
+
 def cblend_feat_fit(base, logsf, taus, sf):
     """C_blend fit + one extra coefficient β on the post-C_blend residual
     (feature sf centered here)."""
@@ -507,6 +562,29 @@ def main():
     print(f"  SAT × Cronau(r_SE) LOOCV    : {lo_cron:.4f}   Δ={lo_cron - lo_fix:+.4f}   "
           f"[{n_sub}/{n} cases r_SE<0.5µm get a penalty]")
     print(f"  VERDICT: {'ADOPT — literature factor improves the fit' if lo_cron - lo_fix > 0 else 'no gain — target σ apparently already reflects it (or none sub-0.5µm)'}")
+
+    # 7) POST-Cronau candidates — does anything ADD on top of SAT × Cronau?
+    #    (β fit by OLS each fold, no inner selection → unbiased LOOCV.)
+    base_cron = base_fix + np.log(cf)
+    print("=" * 64)
+    print(f"POST-Cronau extras  (base = SAT × Cronau, LOOCV = {lo_cron:.4f}):")
+    for tag, featfn, col, why in (
+            ("log path_hop_area (physics, constriction)", pha_feat, 14,
+             "Holm cross-section; diag corr +0.82 in 62:38"),
+            ("log se_se_cn_eff_area (area-weighted CN)", cnea_feat, 15,
+             "'count×size' that CN² misses; diag +0.80"),
+            ("log stress_cv (mech. non-uniformity)", scv_feat, 16,
+             "uniform stress ⇔ good network; diag −0.82")):
+        n_ok = int(np.isfinite(a[:, col]).sum())
+        if n_ok < 0.5*n:
+            print(f"  [skip {tag}: only {n_ok}/{n} expose the input]")
+            continue
+        lo_x, beta_x = loocv_with_feat(base_cron, logsf, taus, featfn(a))
+        d = lo_x - lo_cron
+        v = "ADOPT — real gain → catches D1/D1.5" if d > se else "FAIL — within noise"
+        print(f"  + {tag}  [{n_ok}/{n}]")
+        print(f"      LOOCV={lo_x:.4f}  Δover (SAT×Cronau)={d:+.4f}  β={beta_x:+.3f}  ({why})")
+        print(f"      VERDICT: {v}")
 
 
 if __name__ == "__main__":
