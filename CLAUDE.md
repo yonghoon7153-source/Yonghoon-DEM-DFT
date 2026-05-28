@@ -97,6 +97,16 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   failed — wrong location: the missing physics was in the σ_grain prefactor,
   not a multiplicative correction term. exp_S scan: 91/91 folds pick 0.5
   (mean-field) — percolation exponent is fine as-is.
+- **POST-Cronau extras ALL rejected; ablation shows form is balanced (2026-05-28).**
+  Re-running the residual diagnostic AFTER Cronau adoption surfaced new strong
+  signals in the D1/D1.5 62:38 subset (path_hop_area +0.82, se_cn_eff_area +0.80,
+  stress_cv −0.82) — but all three failed LOOCV-with-feat (Δ between −0.0015 and
+  −0.0019, β≈0) because the strong signal is concentrated in ~4 cases (62:38
+  large-SE) and dilutes globally. SAME pattern as the rejected contact-quality
+  family. Term-by-term ablation (`section 8` of nested_cv_sat.py) on the full
+  base (LOOCV 0.9622) shows: CN²=−0.307, (φ_eff)^0.5=−0.134, cov^0.5=−0.033,
+  f_p³=−0.015, C_blend(τ)=−0.0057, Cronau=−0.0043. CN² and the percolation φ
+  term carry ~90% of the fit; nothing redundant. ionic σ work is COMPLETE.
 - **CONTACT-QUALITY hypothesis ALSO rejected (2026-05-28).** The resid diagnostic
   (`scripts/resid_diag_62_38.py`) showed am_se_cn (AM-SE contact COUNT) corr
   **−0.81** and coverage_AM_S **+0.79** in the 62:38 subset (n=15) — looked like
