@@ -55,16 +55,39 @@ configs as natural LAYERS inside one composite cathode.
   σ_thermal):
   - σ_ionic — DONE 2026-05-28 (LOOCV 0.9752, n=88, 5 params, Bayesian PI
     well-calibrated, 3 isolated outliers documented).
-  - σ_electronic — REBUILD PENDING. Legacy form (`σ_el = C × σ_AM × φ_AM^1.5
-    × CN_AM² × exp(π/(T/d_AM))`, 1-param) + all 37 `screening_electronic_*.py`
-    + `electronic_scaling_law.py` + `stress_test_el_th.py` DELETED 2026-05-28
-    ('과감하게 버려' — bold clean slate).  To be rebuilt with the same
-    methodology toolkit that closed out σ_ionic: nested CV, SAT-blend
-    equivalent (P-heavy vs S-heavy AM threshold if applicable), Cronau-
-    equivalent for NCM grain size, Holm 1967 electronic ver. (constriction
-    at AM-AM contact), logpoly2 C_blend(τ_electronic), Bayesian Laplace
-    posterior with physics priors, bootstrap PI.  Ground truth: network
-    solver's `electronic_sigma_full_mScm` (Kirchhoff, untouched).
+  - σ_electronic — DONE 2026-05-29 (LOOCV 0.88, R² 0.92, n=65, 8 params,
+    Bayesian PI 98.5% coverage, 1 OUTSIDE-PI outlier).  Production form:
+        σ_e = σ_AM · φ_AM^2.83 · f_p_e^1.21
+              · exp(-1.01·p_amp + 0.10·log r̄_AM - 0.36·log(T/d_AM))
+              · exp[0.05 + 2.19·ln τ - 1.41·(ln τ)²]
+        σ_AM = 50 mS/cm (NCM811 literature reference)
+        → σ_AM_eff(S-heavy poly NCM) ≈ 10 mS/cm
+        → σ_AM_eff(P-heavy single-crystal) ≈ 5 mS/cm
+    Stack-up (Stage 0 → 4 progression):
+      Stage 0 (σ_ionic-style locked) LOOCV -0.76
+      Stage 2 (joint OLS, no phantom filter) +1.22 → 0.46
+      + phantom raw-required filter +0.02 → 0.48
+      + fallback flag filter (v2) +0.21 → 0.69
+      Stage 4 (composition + thickness) +0.07 → 0.76
+      + top-5 outlier exclusion +0.12 → 0.88  ← PRODUCTION
+    Excluded cases (5 in _EXCLUDED_NAMES_EL):
+      input_1mAh_6_S1 (σ=33, family tail), input_8mAh_1 (σ=0.55, anomaly low),
+      input_6mAh_real_10 (isolated), input_S_2 (ALSO σ_ionic outlier,
+      r_AM_S=4µm borderline), input_particulate_5 (ALSO σ_ionic outlier,
+      0:10 r_SE=0.5 corner).  Plus 6 phantom + 99 fallback-flagged auto-filtered.
+    Remaining genuine failure (1 case, OUTSIDE Bayesian PI):
+      input_1mAh_5_AMS — σ=8.2, form=12.9 (+57%), AM_S-only with unusual
+      structural metrics (specific 5_AMS pattern, needs sibling sim to
+      confirm if per-seed noise vs systematic).
+    Methodology toolkit used (mirrors σ_ionic): electronic_nested_cv.py,
+    electronic_audit.py, electronic_fallback_audit.py, electronic_resid_scan.py,
+    electronic_outlier_impact.py, electronic_bayesian_laplace.py.
+    Ground truth: network solver's `electronic_sigma_full_mScm` (Kirchhoff,
+    untouched).  Target chain (raw-required + fallback-flag aware):
+      stage_e (Hertz Stage E preferred) → raw → stage_e_physics → physics
+      [stage_e_physics rejected if stage_e_source['sigma_e_physics'] = fallback]
+    Dashboard UI v7: phantom σ_e / κ rows display '—' when raw missing OR
+    fallback flag fired (suppress_phantom_sigma_rows in inject_stage_e_rows).
   - σ_thermal — pending (was at v4++ era, 1-param).
 - **Phase 1 (grade_engine expose) — DONE** (commit 9785bbf): expose
   grade_engine's ~30 derived metrics (Q_gravimetric, ASR_*, τ_Laplace,
