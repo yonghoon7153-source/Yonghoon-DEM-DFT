@@ -450,19 +450,141 @@ def main():
             cm = "intermediate / novel exponent"
         print(f"  {nm:10s}  {fit_v:+11.3f}  {brug_v:+11.2f}  {ion_v:+9.2f}  {cm}")
     print()
+    # ───── STAGE 3: minimal form + composition (P:S) gate ─────
     print("=" * 78)
-    print(" NEXT STEPS")
+    print(" STAGE 3: minimal form + composition gate")
     print("=" * 78)
-    print("  1. If LOOCV (Stage 2) > 0.5 → joint fit is the new baseline;")
-    print("     lock exponents to clean fractions near fitted values and")
-    print("     iterate on remaining residual structure.")
-    print("  2. If LOOCV still negative → form structure is wrong.  Try:")
-    print("     - drop CN entirely (b ≈ 0 in fit)")
-    print("     - add thickness term (T/d_AM geometric factor)")
-    print("     - composition-dependent (SAT-blend) AM threshold")
-    print("  3. Outlier audit (analogous to σ_ionic _EXCLUDED_NAMES):")
-    print("     check sibling spreads for the worst |err| cases.")
-    print("  4. Once LOOCV > 0.7 reuse σ_ionic Bayesian / bootstrap toolkit.")
+    print()
+    print("  Drop CN (b<0 in Stage 2, wrong sign) and cov (c≈0).")
+    print("  Add p_amp = AM_P fraction as predictor:")
+    print("     log σ_e = log σ_AM + a·log φ_AM + d·log f_p + β_P·p_amp")
+    print("               + p + q·ln τ + r·(ln τ)²")
+    print("  Physics rationale:")
+    print("    σ_AM_P (single-crystal NCM811) ~ 100 mS/cm")
+    print("    σ_AM_S (poly NCM secondary)    ~ 1-10 mS/cm")
+    print("    β_P captures the 10-100× composition spread the form is missing.")
+    print()
+    p_amp_arr = a[:, 6]
+    X3 = np.column_stack([
+        np.log(phi_am_arr),
+        np.log(fp_arr),
+        p_amp_arr,            # composition (0=S-heavy, 1=P-heavy)
+        np.ones(n),
+        lt,
+        lt**2,
+    ])
+    coef3, *_ = np.linalg.lstsq(X3, y, rcond=None)
+    pred3 = X3 @ coef3
+    pred3_log = pred3 + np.log(SIGMA_AM)
+    ss_res3 = np.sum((y - pred3)**2)
+    r2_3 = 1 - ss_res3/ss_tot if ss_tot > 0 else 0
+    sse_loo3 = 0.0
+    for i in range(n):
+        m = np.ones(n, bool); m[i] = False
+        c_loo, *_ = np.linalg.lstsq(X3[m], y[m], rcond=None)
+        sse_loo3 += (y[i] - X3[i] @ c_loo)**2
+    lo_3 = 1 - sse_loo3/ss_tot if ss_tot > 0 else 0
+    err_3 = (np.exp(pred3_log) - np.exp(logsf)) / np.exp(logsf) * 100
+    ae_3 = np.abs(err_3)
+    print(f"  data-best exponents:")
+    print(f"     a (φ_AM)  = {coef3[0]:+.3f}")
+    print(f"     d (f_p_e) = {coef3[1]:+.3f}")
+    print(f"     β_P (p_amp) = {coef3[2]:+.3f}  "
+          f"(σ goes ×{np.exp(coef3[2]):.2f} from S-heavy→P-heavy)")
+    print(f"  C(τ): p={coef3[3]:+.3f}  q={coef3[4]:+.3f}  r={coef3[5]:+.3f}")
+    sigma_S = SIGMA_AM * np.exp(coef3[3])               # p_amp=0 (S-heavy)
+    sigma_P = SIGMA_AM * np.exp(coef3[3] + coef3[2])    # p_amp=1 (P-heavy)
+    print(f"  implied σ_AM_eff(S-heavy) = {sigma_S:.2f} mS/cm")
+    print(f"  implied σ_AM_eff(P-heavy) = {sigma_P:.2f} mS/cm")
+    print()
+    print(f"  R²    = {r2_3:.4f}    LOOCV = {lo_3:.4f}    (vs Stage 2: {r2_j:.4f}/{lo_j:.4f})")
+    print(f"  median |err|     = {np.median(ae_3):6.2f}%")
+    print(f"  mean   |err|     = {np.mean(ae_3):6.2f}%")
+    print(f"  max    |err|     = {np.max(ae_3):6.2f}%")
+    print(f"  #|err|>30%       = {(ae_3 > 30).sum():3d} / {n}")
+    print(f"  #|err|>50%       = {(ae_3 > 50).sum():3d} / {n}")
+    print()
+
+    # ───── STAGE 4: + size/thickness term (Trevisanello / geometric) ─────
+    print("=" * 78)
+    print(" STAGE 4: + r_AM_eff and thickness (T/d_AM) terms")
+    print("=" * 78)
+    print()
+    print("  Add composition-weighted r_AM and electrode T/d_AM ratio.")
+    print("  σ_e = σ_AM · φ^a · f_p^d · exp(β_P·p_amp + β_r·log r̄_AM")
+    print("          + β_T · log(T/d_AM)) · C(τ)")
+    print()
+    r_AM_S = a[:, 8]; r_AM_P = a[:, 9]; T_um = a[:, 10]
+    r_eff = np.where(np.isfinite(r_AM_S), r_AM_S, 2.5)
+    r_eff_P = np.where(np.isfinite(r_AM_P), r_AM_P, 5.5)
+    r_eff = (1.0 - p_amp_arr)*r_eff + p_amp_arr*r_eff_P
+    T_safe = np.where(np.isfinite(T_um) & (T_um > 0), T_um, 100.0)
+    d_AM = 2.0 * r_eff
+    log_r = np.log(np.maximum(r_eff, 0.5))
+    log_Td = np.log(np.maximum(T_safe / d_AM, 0.1))
+    X4 = np.column_stack([
+        np.log(phi_am_arr),
+        np.log(fp_arr),
+        p_amp_arr,
+        log_r,
+        log_Td,
+        np.ones(n),
+        lt,
+        lt**2,
+    ])
+    coef4, *_ = np.linalg.lstsq(X4, y, rcond=None)
+    pred4 = X4 @ coef4
+    pred4_log = pred4 + np.log(SIGMA_AM)
+    ss_res4 = np.sum((y - pred4)**2)
+    r2_4 = 1 - ss_res4/ss_tot if ss_tot > 0 else 0
+    sse_loo4 = 0.0
+    for i in range(n):
+        m = np.ones(n, bool); m[i] = False
+        c_loo, *_ = np.linalg.lstsq(X4[m], y[m], rcond=None)
+        sse_loo4 += (y[i] - X4[i] @ c_loo)**2
+    lo_4 = 1 - sse_loo4/ss_tot if ss_tot > 0 else 0
+    err_4 = (np.exp(pred4_log) - np.exp(logsf)) / np.exp(logsf) * 100
+    ae_4 = np.abs(err_4)
+    print(f"  a (φ_AM)  = {coef4[0]:+.3f}     d (f_p_e) = {coef4[1]:+.3f}")
+    print(f"  β_P (p_amp) = {coef4[2]:+.3f}   β_r (log r̄_AM) = {coef4[3]:+.3f}")
+    print(f"  β_T (log T/d_AM) = {coef4[4]:+.3f}")
+    print(f"  C(τ): p={coef4[5]:+.3f}  q={coef4[6]:+.3f}  r={coef4[7]:+.3f}")
+    print()
+    print(f"  R²    = {r2_4:.4f}    LOOCV = {lo_4:.4f}    (vs Stage 3: {r2_3:.4f}/{lo_3:.4f})")
+    print(f"  median |err|     = {np.median(ae_4):6.2f}%")
+    print(f"  mean   |err|     = {np.mean(ae_4):6.2f}%")
+    print(f"  max    |err|     = {np.max(ae_4):6.2f}%")
+    print(f"  #|err|>30%       = {(ae_4 > 30).sum():3d} / {n}")
+    print(f"  #|err|>50%       = {(ae_4 > 50).sum():3d} / {n}")
+    print()
+
+    # ───── Stage progression summary ─────
+    print("=" * 78)
+    print(" STAGE PROGRESSION SUMMARY")
+    print("=" * 78)
+    print(f"  {'stage':40s}  {'R²':>7s}  {'LOOCV':>7s}  {'#|err|>30%':>10s}")
+    print(f"  {'Stage 0 (σ_ionic-style locked)':40s}  "
+          f"{-0.6620:7.4f}  {-0.7570:7.4f}  {81:>10d} / {n}")
+    print(f"  {'Stage 2 (joint 7-param OLS)':40s}  "
+          f"{r2_j:7.4f}  {lo_j:7.4f}  {(np.abs(err_j) > 30).sum():>10d} / {n}")
+    print(f"  {'Stage 3 (drop CN/cov, add p_amp)':40s}  "
+          f"{r2_3:7.4f}  {lo_3:7.4f}  {(ae_3 > 30).sum():>10d} / {n}")
+    print(f"  {'Stage 4 (+ r̄_AM, T/d_AM)':40s}  "
+          f"{r2_4:7.4f}  {lo_4:7.4f}  {(ae_4 > 30).sum():>10d} / {n}")
+    print()
+    if lo_4 > 0.7:
+        print("  → Stage 4 form is a viable production candidate.")
+        print("    Next: outlier audit (sibling spreads), Bayesian Laplace.")
+    elif lo_4 > 0.5:
+        print("  → Stage 4 improves on Stage 3 but still has room.  Candidates:")
+        print("    - composition-dependent grain correction (Trevisanello literal)")
+        print("    - AM_P vs AM_S size separation (two β_r terms)")
+        print("    - more thickness terms (sqrt(T/d) or exp form)")
+    else:
+        print("  → Stage 4 still poor.  Form structure may need more redesign:")
+        print("    - check if cov metric is wrong (try cov_physics vs cov_Hertz)")
+        print("    - check if am_am_cn is the right CN (vs am_am_n_contacts)")
+        print("    - sibling-spread outlier check + _EXCLUDED_NAMES")
 
 
 if __name__ == '__main__':
