@@ -134,12 +134,39 @@ def base_log_baseline(a):
     return base_no_phi(a) + 0.5*np.log(np.maximum(a[:, 0] - PHI_C0, 1e-9))
 
 
+def cronau_factor(rse_um):
+    """Exact Stage-E σ_ionic SE-size factor (run_network_full_corrections.py:88):
+    r≥0.5µm→1.00, 0.3–0.5→0.90, 0.1–0.3→0.65, 0.03–0.1→interp, <0.03→0.33.
+    Literature-grounded (Cronau 2022) — APPLIED, not fitted.  NaN r_SE → 1.0."""
+    r = np.asarray(rse_um, float)
+    f = np.select([r >= 0.5, r >= 0.3, r >= 0.1, r >= 0.03],
+                  [1.00, 0.90, 0.65, 0.33 + 0.32*(np.clip(r, 0.03, 0.1)-0.03)/0.07],
+                  default=0.33)
+    return np.where(np.isfinite(r) & (r > 0), f, 1.0)
+
+
 def base_log_sat(a, phicP, phicS, delta):
     phi, p = a[:, 0], a[:, 6]
     g010 = 1.0/(1.0+np.exp(K_PS*(p - P_C)))
     phic = (1.0-g010)*phicP + g010*phicS
     pex = phi - phic
     return base_no_phi(a) + 0.5*np.log(np.sqrt(pex**2 + (delta*g010)**2) + 1e-12)
+
+
+# Frozen SAT-blend optimum (from the joint screen) — fixed while testing exp_S
+PHICP_F, PHICS_F, DELTA_F = 0.200, 0.195, 0.040
+
+
+def base_log_sat_exp(a, exp_s, phicP=PHICP_F, phicS=PHICS_F, delta=DELTA_F, exp_p=0.5):
+    """SAT-blend base with a COMPOSITION-DEPENDENT percolation exponent:
+    exp_eff = (1−g010)·exp_p + g010·exp_s  → 0:10 gets the (steeper?) exp_s,
+    P-heavy keeps mean-field 0.5.  Tests whether σ rises sharper above φc in 0:10."""
+    phi, p = a[:, 0], a[:, 6]
+    g010 = 1.0/(1.0+np.exp(K_PS*(p - P_C)))
+    phic = (1.0-g010)*phicP + g010*phicS
+    pex = phi - phic
+    exp_eff = (1.0-g010)*exp_p + g010*exp_s
+    return base_no_phi(a) + exp_eff*np.log(np.sqrt(pex**2 + (delta*g010)**2) + 1e-12)
 
 
 def cblend_fit(base, logsf, taus):
@@ -303,6 +330,38 @@ def cblend_feat_pred(base, taus, sf, bv5, bp3, beta, smean):
     return cblend_pred(base, taus, bv5, bp3) + beta*(sf - smean)
 
 
+EXP_S_GRID = np.round(np.linspace(0.3, 1.4, 12), 3)   # 0:10 percolation exponent
+
+
+def nested_cv_exp(a, logsf, taus, k_inner=5, seed=0):
+    """Outer LOO; inner k-fold selects the 0:10 percolation exponent exp_S
+    (φc/δ frozen at the joint optimum, P-heavy exp fixed 0.5). Returns
+    (r2, mean exp_S, picks)."""
+    n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0; picks = []
+    rng = np.random.default_rng(seed)
+    for i in range(n):
+        tr = np.array([j for j in range(n) if j != i])
+        ls_tr, ta_tr = logsf[tr], taus[tr]
+        order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
+        best, best_sse = None, np.inf
+        for es in EXP_S_GRID:
+            b = base_log_sat_exp(a[tr], float(es))
+            fsse = 0.0
+            for val in folds:
+                m = np.ones(len(tr), bool); m[val] = False
+                bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                fsse += np.sum((ls_tr[val]-pv)**2)
+            if fsse < best_sse:
+                best_sse, best = fsse, float(es)
+        picks.append(best)
+        b = base_log_sat_exp(a, best)
+        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        sse += (logsf[i]-pi)**2
+    return 1 - sse/ss, float(np.mean(picks)), picks
+
+
 def nested_cv_sat_feat(a, logsf, taus, featfn, k_inner=5, seed=0):
     """As nested_cv_sat but the per-fold model is SAT-blend + β·featfn(a)
     (β fit inside each fold; (φc_P,φc_S,δ) re-selected by inner k-fold)."""
@@ -416,6 +475,33 @@ def main():
     print("  NOTE: am_se_cn (count) & coverage (area) are the SAME contact-quality")
     print("  axis (anti-correlated) — adopt only ONE. Testing several arms = mild")
     print("  multiple-comparison; trust a PASS only if Δ clearly exceeds the SE.")
+
+    # 5) composition-dependent φ exponent for 0:10 (a NEW core-physics lever:
+    #    the percolation exponent was frozen at 0.5 — never scanned).
+    print("=" * 64)
+    lo_exp, exps_mean, exps_picks = nested_cv_exp(a, logsf, taus)
+    print("Composition-dependent φ exponent — 0:10 exp_S (φc/δ frozen, P-heavy 0.5):")
+    print(f"  SAT+exp_S NESTED-CV={lo_exp:.4f}  Δover SAT={lo_exp - lo_sat_nested:+.4f}  "
+          f"mean exp_S={exps_mean:.2f}")
+    vv, cc = np.unique(np.round(exps_picks, 2), return_counts=True)
+    top = sorted(zip(cc, vv), reverse=True)[:4]
+    print("  inner-picked exp_S: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
+    print(f"  VERDICT: {'PASS — 0:10 wants a different exponent' if lo_exp - lo_sat_nested > se else 'FAIL — within noise (0.5 is fine)'}")
+
+    # 6) Stage-E Cronau SE-size factor — APPLIED (fixed literature, NOT fitted),
+    #    so no DoF / no selection bias: does mirroring the target's own grain
+    #    correction in σ_grain improve the fit?
+    base_fix = base_log_sat(a, PHICP_F, PHICS_F, DELTA_F)
+    lo_fix = loocv_r2(base_fix, logsf, taus)
+    cf = cronau_factor(a[:, 8])
+    lo_cron = loocv_r2(base_fix + np.log(cf), logsf, taus)
+    n_sub = int(np.sum(np.isfinite(a[:, 8]) & (a[:, 8] < 0.5)))
+    print("=" * 64)
+    print("Stage-E Cronau SE-size factor — APPLIED to σ_grain (fixed, not fitted):")
+    print(f"  SAT (frozen φc/δ) LOOCV     : {lo_fix:.4f}")
+    print(f"  SAT × Cronau(r_SE) LOOCV    : {lo_cron:.4f}   Δ={lo_cron - lo_fix:+.4f}   "
+          f"[{n_sub}/{n} cases r_SE<0.5µm get a penalty]")
+    print(f"  VERDICT: {'ADOPT — literature factor improves the fit' if lo_cron - lo_fix > 0 else 'no gain — target σ apparently already reflects it (or none sub-0.5µm)'}")
 
 
 if __name__ == "__main__":
