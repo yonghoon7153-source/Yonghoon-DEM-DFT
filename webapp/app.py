@@ -4062,6 +4062,28 @@ def _load_case_tables(results_dir, meta):
     if input_params and 'scale' not in input_params:
         input_params['scale'] = meta.get('scale', 1)
 
+    # ── PHANTOM σ_e/κ STRIP (2026-05-28, v4 unified) ────────────────────
+    # If the Stage E pipeline used Bruggeman fallback (stage_e_source flags
+    # 'fallback_weighted_factor'), the value was ALSO written to the raw
+    # network-solver key — causing the Network Solver row to display the
+    # phantom value (e.g. 1mAh_100_2 showed σ_e Physics=61.83 even though
+    # raw electronic was suppressed elsewhere).  Strip those raw keys here
+    # so EVERY downstream renderer (Network Solver row, ASR row, Stage E
+    # row, predictor) sees '—' consistently.
+    _src_fb_global = metrics.get('stage_e_source') or {}
+    _phantom_strip_pairs = [
+        ('electronic_sigma_full_mScm',          'sigma_e'),
+        ('electronic_sigma_full_mScm_physics',  'sigma_e_physics'),
+        ('thermal_sigma_full_mScm',             'sigma_thermal'),
+        ('thermal_sigma_full_mScm_physics',     'sigma_thermal_physics'),
+    ]
+    for _rk, _sk in _phantom_strip_pairs:
+        if _src_fb_global.get(_sk) == 'fallback_weighted_factor':
+            metrics[_rk] = None
+            # also strip Stage E + Stage E physics counterparts
+            metrics[_rk + '_stage_e'] = None
+            metrics[_rk + '_stage_e_physics'] = None
+
     # 4-column transform + section injection — shared helpers
     transform_network_summary_4col(tables, metrics, meta)
     inject_tier1_patch_rows(tables, metrics)
