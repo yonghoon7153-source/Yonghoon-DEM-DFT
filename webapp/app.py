@@ -1348,6 +1348,41 @@ def inject_cell_asr_rows(tables, metrics, input_params):
     data.extend(rows)
 
 
+def _suppress_phantom_sigma_rows(data, metrics):
+    """In-place suppression of σ_e / κ phantom row values.
+    Called after layout normalization merges Hertz + Physics rows.
+    If stage_e_source flags fallback OR raw network solver output is
+    missing, replace the value cells with '—' so dashboard never shows
+    Bruggeman-fallback values as if they were real solver output."""
+    src_fb = metrics.get('stage_e_source') or {}
+    p_e_h = (src_fb.get('sigma_e') == 'fallback_weighted_factor'
+             or not metrics.get('electronic_sigma_full_mScm'))
+    p_e_p = (src_fb.get('sigma_e_physics') == 'fallback_weighted_factor'
+             or not metrics.get('electronic_sigma_full_mScm_physics'))
+    p_th_h = (src_fb.get('sigma_thermal') == 'fallback_weighted_factor'
+              or not metrics.get('thermal_sigma_full_mScm'))
+    p_th_p = (src_fb.get('sigma_thermal_physics') == 'fallback_weighted_factor'
+              or not metrics.get('thermal_sigma_full_mScm_physics'))
+    LABEL_PHANTOM = {
+        'σ_electronic (mS/cm)':                              (p_e_h, p_e_p),
+        'σ_e — electronic conductivity (mS/cm)':             (p_e_h, p_e_p),
+        'σ_electronic [physics] (mS/cm)':                    (p_e_h, p_e_p),
+        'σ_e^physics — Tabor plastic film (mS/cm)':          (p_e_h, p_e_p),
+        'σ_thermal (mS/cm equiv)':                           (p_th_h, p_th_p),
+        'κ — thermal conductivity (mS/cm equiv)':            (p_th_h, p_th_p),
+        'σ_thermal [physics] (mS/cm equiv)':                 (p_th_h, p_th_p),
+        'κ^physics — Tabor plastic film (mS/cm equiv)':      (p_th_h, p_th_p),
+    }
+    for r in data:
+        if not r or not isinstance(r, list) or len(r) < 2: continue
+        lbl = str(r[0]).strip() if r[0] else ''
+        if lbl not in LABEL_PHANTOM: continue
+        h_phantom, p_phantom = LABEL_PHANTOM[lbl]
+        if len(r) >= 2 and h_phantom: r[1] = '—'
+        if len(r) >= 3 and p_phantom: r[2] = '—'
+        if len(r) >= 4 and (h_phantom or p_phantom): r[3] = '—'
+
+
 def normalize_network_summary_layout(tables, metrics):
     """Final structural normalizer — guarantees every case has identical
     row placement regardless of network_summary.csv vintage. Different
@@ -1475,6 +1510,12 @@ def normalize_network_summary_layout(tables, metrics):
             if r and isinstance(r[0], str) and r[0].strip() == HERT_HDR:
                 r[0] = COMBINED_HDR
                 break
+
+    # ── Phantom σ_e / κ suppression (v6 final, 2026-05-28) ──
+    # Run AFTER Hertz+Physics merge so we suppress in the unified row.
+    # Catches phantom values written from Bruggeman fallback into the raw
+    # network solver keys (e.g. 1mAh_100_2 σ_e=61.83).
+    _suppress_phantom_sigma_rows(data, metrics)
 
     # ── Pass B: relocate σ rows wrongly stuck in τ section ──
     misplaced = []
