@@ -4181,6 +4181,13 @@ def _load_case_tables(results_dir, meta):
     inject_cell_asr_rows(tables, metrics, input_params)
     normalize_network_summary_layout(tables, metrics)
     apply_paper_labels(tables)
+    # ── Phantom σ_e / κ suppression (v7 — unconditional, AFTER label rename) ──
+    # v6 placed inside normalize's Hertz+Phys merge if-block, which doesn't
+    # run for already-merged cases.  Now called from the route handler so
+    # it runs for EVERY case, scanning the FINAL paper-labeled rows.
+    if 'network_summary' in tables:
+        _suppress_phantom_sigma_rows(tables['network_summary'].get('data', []),
+                                     metrics, debug=True)
 
     fracture_tbl = build_fracture_summary_table(metrics)
     if fracture_tbl is not None:
