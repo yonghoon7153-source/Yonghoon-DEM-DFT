@@ -4194,6 +4194,82 @@ def _stage_e_global_fit():
     return r2, loo, b, extras, cov_med, len(ts)
 
 
+_BOOTSTRAP_CACHE = {}   # corpus-fingerprint → (b_samples, residual_se_log)
+
+
+def _stage_e_bootstrap_coefs(B=500, seed=42):
+    """Resample the FULL fit corpus B times → array of coefficient vectors.
+    Returns (b_samples [B × k], residual_se_log, n_fit).
+    Cached per corpus fingerprint so repeated plot calls reuse the work."""
+    if not _FIT_CORPUS:
+        return None
+    bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = _stage_e_base_arrays(_FIT_CORPUS)
+    n = len(ts)
+    if n < 8:
+        return None
+    extras, cov_med = _c4_extras_from_arrays(phi_a, rse_a, dcov_a,
+                                              p_arr=p_a, fi_log_arr=fi_a)
+    # Cache key: corpus size + first/last logsf hash (fast fingerprint)
+    key = (n, B, seed, float(ls[0]), float(ls[-1]), float(bl.sum()))
+    if key in _BOOTSTRAP_CACHE:
+        return _BOOTSTRAP_CACHE[key]
+    # MAP fit for residual SE (aleatoric noise estimate)
+    r2_map, loo_map, _Ct, _Cn, pred_map, b_map, _ = _cblend_fit_score(
+        bl, ls, ts, extras=extras)
+    k = len(b_map)
+    resid = ls - pred_map
+    sigma_residual = float(np.sqrt(np.sum(resid**2) / max(n - k, 1)))
+    # Bootstrap refit
+    rng = np.random.default_rng(seed)
+    b_samples = np.empty((B, k))
+    for j in range(B):
+        idx = rng.integers(0, n, n)
+        bl_b = bl[idx]; ls_b = ls[idx]; ts_b = ts[idx]
+        extras_b = [e[idx] for e in extras]
+        try:
+            _, _, _, _, _, b_b, _ = _cblend_fit_score(bl_b, ls_b, ts_b, extras=extras_b)
+            b_samples[j] = b_b
+        except Exception:
+            b_samples[j] = b_map  # fallback
+    result = (b_samples, sigma_residual, n, cov_med)
+    _BOOTSTRAP_CACHE[key] = result
+    return result
+
+
+def _stage_e_pred_band(plot_base, plot_taus, plot_extras, ci=0.68):
+    """Per-case prediction band using bootstrap-derived epistemic uncertainty
+    + MAP residual SE (aleatoric).
+
+    ci=0.68 → ±1σ band (lower=16th, upper=84th equivalent)
+    ci=0.90 → ±1.645σ band
+
+    Returns (pred_median_sigma, lower_sigma, upper_sigma) in mS/cm space.
+    Falls back to None if bootstrap unavailable."""
+    boot = _stage_e_bootstrap_coefs(B=500)
+    if boot is None:
+        return None
+    b_samples, sigma_residual, _n, _cov_med = boot
+    plot_base = np.asarray(plot_base); plot_taus = np.asarray(plot_taus)
+    lt = np.log(plot_taus)
+    # Apply each bootstrap coefficient set to the plot cases
+    B = b_samples.shape[0]
+    pred_log_b = np.empty((B, len(plot_taus)))
+    for j in range(B):
+        b = b_samples[j]
+        out = plot_base + b[0] + b[1]*lt + b[2]*lt**2
+        if plot_extras is not None:
+            for k, e in enumerate(plot_extras):
+                out = out + b[3+k] * np.asarray(e)
+        pred_log_b[j] = out
+    pred_log_median = np.median(pred_log_b, axis=0)
+    sigma_log_epi = np.std(pred_log_b, axis=0, ddof=1)  # epistemic SE per case
+    sigma_log_total = np.sqrt(sigma_log_epi**2 + sigma_residual**2)  # add aleatoric
+    z = 1.0 if ci == 0.68 else 1.645
+    return (np.exp(pred_log_median),
+            np.exp(pred_log_median - z*sigma_log_total),
+            np.exp(pred_log_median + z*sigma_log_total))
+
+
 def _cblend_predict_log(base_log, taus, b, extras=None):
     """Apply C_blend(τ) + optional extras with coefficients b.
     b length = 3 (bare) or 3+len(extras) (C4 augmented).
@@ -4271,11 +4347,24 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
         pred[i] = float(np.exp(pred_log[j]))
     net = np.array([n if (n and n > 0) else np.nan for n in netP])
 
+    # Bootstrap-derived per-case uncertainty (epistemic + aleatoric)
+    # — replaces the legacy hard-coded ±22% band with calibrated 68% PI.
+    band_info = _stage_e_pred_band(np.array(base_log), np.array(taus),
+                                   extras_local, ci=0.68)
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     x = np.arange(len(names)); ms = _marker_size(len(names)); lw = _line_width(len(names))
     ax.plot(x, pred, 's-', color=RED, markersize=ms, linewidth=lw,
             label='fixed physics form (mS/cm)')
-    ax.fill_between(x, pred*0.78, pred*1.22, color=RED, alpha=0.10, label='±22% band')
+    if band_info is not None:
+        _med, _lo, _hi = band_info
+        lo_full = np.full(len(data_list), np.nan); hi_full = np.full(len(data_list), np.nan)
+        for j, i in enumerate(idx):
+            lo_full[i] = float(_lo[j]); hi_full[i] = float(_hi[j])
+        ax.fill_between(x, lo_full, hi_full, color=RED, alpha=0.12,
+                        label='68% PI (bootstrap + residual)')
+    else:
+        ax.fill_between(x, pred*0.78, pred*1.22, color=RED, alpha=0.10,
+                        label='±22% band (legacy)')
     ax.plot(x, net, 'D--', color='#2ecc71', markersize=max(ms-2, 3), linewidth=lw-0.5,
             alpha=0.75, label='Physics network solver (mS/cm)')
     _apply_style(ax, "σ_ionic (mS/cm)", names)
