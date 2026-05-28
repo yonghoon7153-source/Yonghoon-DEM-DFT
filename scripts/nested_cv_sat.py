@@ -67,7 +67,7 @@ def load_corpus():
             if key in seen:
                 continue
             seen.add(key)
-            sz = gcp._se_size_proxy(d)
+            sz = _size_proxy(d)
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
                          float(sz) if sz else np.nan, _direct_rse_um(d)))
     a = np.array(rows, float)
@@ -80,6 +80,17 @@ def _direct_rse_um(d):
         v = d.get(k)
         if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
             return v*1000.0 if v < 0.01 else float(v)
+    return np.nan
+
+
+def _size_proxy(d):
+    """SE grain-size proxy (µm): direct r_SE if present, else 1/gb_density."""
+    r = _direct_rse_um(d)
+    if np.isfinite(r):
+        return r
+    gb = d.get('gb_density_mean')
+    if isinstance(gb, (int, float)) and not isinstance(gb, bool) and gb > 0:
+        return 1.0/gb
     return np.nan
 
 
