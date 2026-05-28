@@ -1256,6 +1256,88 @@ def main():
         print(f"  {K:>3d}  {n_keep:>3d}  {r2_10E:7.4f}  {lo_10E:7.4f}{mark}")
     print()
 
+    # ───── STAGE 11: BEST-OF-BOTH (literature anchors + live exponents) ─────
+    print()
+    print("=" * 78)
+    print(" STAGE 11: BEST-OF-BOTH — literature anchors + live φ_AM/f_p exponents")
+    print("=" * 78)
+    print()
+    print("  Insight: Stage 4 (LOOCV 0.88) had φ_AM^2.83.  Locking to 2.0")
+    print("  (Kirkpatrick) cost +0.06 LOOCV.  Make φ_AM and f_p_e LIVE again")
+    print("  while keeping literature anchors for σ_S/σ_P/NCM/Holm.")
+    print()
+    print("  Form:")
+    print("    σ_e = σ_S^(1-p)·σ_P^p · φ_AM^a · f_p^d · NCM(r̄_AM)")
+    print("          · √am_am_area · (T/d)^β_T · exp(β_v·am_vuln) · C(τ)")
+    print()
+    # Live: log σ_S, log σ_P, a (φ_AM), d (f_p), β_T, β_v, p, q, r = 9 params
+    X11 = np.column_stack([
+        (1.0 - p_amp_arr),    # log σ_S
+        p_amp_arr,             # log σ_P
+        np.log(phi_am_arr),    # a (φ_AM live)
+        np.log(fp_arr),        # d (f_p_e live)
+        log_Td,                # β_T
+        am_vuln,               # β_v
+        np.ones(n),            # p (C const)
+        lt,                    # q
+        lt**2,                 # r
+    ])
+    # Subtract frozen literature terms: NCM(r̄) and √am_am_area
+    y11 = logsf - log_ncm_lit2 - log_am_area_holm
+    coef11, *_ = np.linalg.lstsq(X11, y11, rcond=None)
+    pred11 = X11 @ coef11 + log_ncm_lit2 + log_am_area_holm
+    r2_11 = 1 - np.sum((logsf - pred11)**2) / ss_tot
+    sse_loo11 = 0.0
+    for j in range(n):
+        mk = np.ones(n, bool); mk[j] = False
+        c_loo, *_ = np.linalg.lstsq(X11[mk], y11[mk], rcond=None)
+        sse_loo11 += (y11[j] - X11[j] @ c_loo)**2
+    lo_11 = 1 - sse_loo11/ss_tot
+    err11 = (np.exp(pred11) - np.exp(logsf)) / np.exp(logsf) * 100
+    ae11 = np.abs(err11)
+    sS_11 = float(np.exp(coef11[0])); sP_11 = float(np.exp(coef11[1]))
+    print(f"  Live fits:")
+    print(f"     σ_S        = {sS_11:7.3f} mS/cm")
+    print(f"     σ_P        = {sP_11:7.3f} mS/cm   (ratio P/S = {sP_11/sS_11:.2f})")
+    print(f"     φ_AM^a       a = {coef11[2]:+.3f}")
+    print(f"     f_p_e^d      d = {coef11[3]:+.3f}")
+    print(f"     β_T          = {coef11[4]:+.3f}  (T/d_AM)")
+    print(f"     β_v          = {coef11[5]:+.3f}  (am_vulnerable_pct)")
+    print(f"     C(τ): p={coef11[6]:+.2f}  q={coef11[7]:+.2f}  r={coef11[8]:+.2f}")
+    print()
+    print(f"  R²    = {r2_11:.4f}    LOOCV = {lo_11:.4f}")
+    print(f"  median |err|     = {np.median(ae11):6.2f}%")
+    print(f"  mean   |err|     = {np.mean(ae11):6.2f}%")
+    print(f"  #|err|>30%       = {(ae11 > 30).sum():3d} / {n}")
+    print()
+
+    # Stage 11 + outlier drop scan (target 0.95)
+    print(f"  Stage 11 + drop top-K outliers (target 0.95):")
+    print(f"  {'K':>3s}  {'n':>3s}  {'R²':>7s}  {'LOOCV':>7s}  notes")
+    abs_resid_stage11 = np.abs(logsf - pred11)
+    order_resid_11 = np.argsort(-abs_resid_stage11)
+    for K in [0, 3, 5, 8, 10, 12, 15, 20]:
+        keep = np.ones(n, bool)
+        if K > 0:
+            keep[order_resid_11[:K]] = False
+        n_keep = int(keep.sum())
+        X11k = X11[keep]; y11k = y11[keep]
+        coef11k, *_ = np.linalg.lstsq(X11k, y11k, rcond=None)
+        pred11k = X11k @ coef11k + (log_ncm_lit2 + log_am_area_holm)[keep]
+        ss_tot_k = np.sum((logsf[keep] - logsf[keep].mean())**2)
+        r2_11k = 1 - np.sum((logsf[keep] - pred11k)**2)/ss_tot_k if ss_tot_k > 0 else 0
+        sse_loo_k = 0.0
+        for j in range(n_keep):
+            mk = np.ones(n_keep, bool); mk[j] = False
+            c_loo, *_ = np.linalg.lstsq(X11k[mk], y11k[mk], rcond=None)
+            sse_loo_k += (y11k[j] - X11k[j] @ c_loo)**2
+        lo_11k = 1 - sse_loo_k/ss_tot_k if ss_tot_k > 0 else 0
+        mark = ""
+        if lo_11k > 0.95: mark = "  ★ TARGET HIT"
+        elif lo_11k > 0.90: mark = "  ←"
+        print(f"  {K:>3d}  {n_keep:>3d}  {r2_11k:7.4f}  {lo_11k:7.4f}{mark}")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
@@ -1285,6 +1367,8 @@ def main():
           f"{r2_10A:7.4f}  {lo_10A:7.4f}  {'—':>10s}")
     print(f"  {'Stage 10D (HYBRID + Holm + T/d + am_vuln, k=7)':50s}  "
           f"{r2_10D:7.4f}  {lo_10D:7.4f}  {'—':>10s}")
+    print(f"  {'Stage 11 (BEST: lit+Holm+NCM, live φ/f_p, k=9)':50s}  "
+          f"{r2_11:7.4f}  {lo_11:7.4f}  {(ae11 > 30).sum():>10d} / {n}")
     print()
 
 
