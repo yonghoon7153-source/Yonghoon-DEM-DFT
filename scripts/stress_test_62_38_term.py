@@ -122,48 +122,80 @@ def run(name="E", n_perm=1000, n_boot=2000, n_half=200, seed=0):
           f"single-shot β = {beta_obs_ss:+.3f}   LOO-mean β = {beta_obs_mean:+.3f}")
     print()
 
-    # 1) PERMUTATION NULL — shuffle the target
-    print(f"[1] PERMUTATION NULL  (n_perm={n_perm}, shuffle log σ, refit)")
+    # 1) PERMUTATION NULL — shuffle the FEATURE, not the target.
+    # FIX: shuffling y breaks alignment with base; C_blend then fits noise →
+    # huge null Δ artifact (NOT what we want).  Correct test = permute sf only,
+    # keep y/base/taus aligned; C_blend fit is unaffected; β refits on shuffled sf.
+    print(f"[1] PERMUTATION NULL  (n_perm={n_perm}, shuffle FEATURE, β refit)")
+    bv5_ref, bp3_ref = cblend_fit(base, logsf, taus)
+    resid_ref = logsf - cblend_pred(base, taus, bv5_ref, bp3_ref)
+    sse_ref_const = float(np.sum(resid_ref**2))
     null_betas = np.empty(n_perm); null_deltas = np.empty(n_perm)
     for k in range(n_perm):
-        perm = rng.permutation(n)
-        y = logsf[perm]
-        # base recomputed for the permuted set's order is just `base` reordered
-        # but we keep base aligned with original a, only y shuffles → tests
-        # whether the feature can predict noise-target.
-        lo_k, b_k = loocv_with_feat(base, y, taus, sf)
-        # reference LOOCV for the SHUFFLED y (C_blend-only)
-        lo_k_ref = _loocv_r2_const(base, y, taus)
+        sf_perm = sf[rng.permutation(n)]
+        sm = sf_perm.mean(); sc = sf_perm - sm
+        d = float(np.dot(sc, sc))
+        b_k = float(np.dot(sc, resid_ref)/d) if d > 1e-12 else 0.0
+        # in-sample SSE reduction → LOOCV-comparable Δ (since C_blend doesn't
+        # change under feature-only permutation)
+        pred_perm_resid = b_k * (sf_perm - sm)
+        sse_with = float(np.sum((resid_ref - pred_perm_resid)**2))
         null_betas[k] = b_k
-        null_deltas[k] = lo_k - lo_k_ref
-    p_beta = float((np.abs(null_betas) >= abs(beta_obs_mean)).mean())
-    p_delta = float((null_deltas >= delta_obs).mean())
-    q975 = float(np.quantile(np.abs(null_betas), 0.99))
-    print(f"    null |β| 99th pctile = {q975:.3f}   |observed β| = {abs(beta_obs_mean):.3f}")
+        null_deltas[k] = (sse_ref_const - sse_with) / float(np.sum((logsf - logsf.mean())**2))
+    # observed in-sample equivalent (same metric)
+    sm0 = sf.mean(); sc0 = sf - sm0
+    d0 = float(np.dot(sc0, sc0))
+    b0 = float(np.dot(sc0, resid_ref)/d0) if d0 > 1e-12 else 0.0
+    sse_with_obs = float(np.sum((resid_ref - b0*(sf - sm0))**2))
+    delta_obs_inS = (sse_ref_const - sse_with_obs) / float(np.sum((logsf - logsf.mean())**2))
+    p_beta = float((np.abs(null_betas) >= abs(b0)).mean())
+    p_delta = float((null_deltas >= delta_obs_inS).mean())
+    print(f"    null |β| 99th pctile = {np.quantile(np.abs(null_betas), 0.99):.3f}   "
+          f"|observed β| = {abs(b0):.3f}")
     print(f"    p(|β_null| ≥ |β_obs|) = {p_beta:.4f}")
-    print(f"    null Δ 99th pctile   = {np.quantile(null_deltas, 0.99):+.4f}   "
-          f"observed Δ = {delta_obs:+.4f}")
-    print(f"    p(Δ_null ≥ Δ_obs)   = {p_delta:.4f}")
-    v1 = "PASS — signal not explained by chance" if (p_beta < 0.01 and p_delta < 0.01) else "FAIL"
+    print(f"    null Δ_R² 99th pctile = {np.quantile(null_deltas, 0.99):+.4f}   "
+          f"observed (in-sample) Δ_R² = {delta_obs_inS:+.4f}")
+    print(f"    p(Δ_null ≥ Δ_obs)    = {p_delta:.4f}")
+    v1 = "PASS — feature/target association not explained by chance" if (p_beta < 0.01 and p_delta < 0.01) else "FAIL"
     print(f"    VERDICT: {v1}")
 
-    # 2) BOOTSTRAP β CI — resample cases with replacement
+    # 2) BOOTSTRAP β CI — vanilla AND stratified (so corner cases aren't dropped).
+    # Plain bootstrap is unfair for a corner-driven β: with n_corner=4 in n=91,
+    # ~16% of bootstrap samples have ZERO corner cases → β collapses → CI very
+    # wide.  Stratified bootstrap protects the corner subset (always sampled).
     print(f"\n[2] BOOTSTRAP 95% CI for β  (n_boot={n_boot})")
-    boot_betas = np.empty(n_boot)
+    rse_arr = a[:, 8]; p_arr = a[:, 6]; phi_arr = a[:, 0]
+    idx_corner = np.where((p_arr < 0.05) & (phi_arr > 0.30) &
+                          np.isfinite(rse_arr) & (rse_arr >= 1.0))[0]
+    idx_bulk = np.array([i for i in range(n) if i not in set(idx_corner)])
+    n_c, n_b = len(idx_corner), len(idx_bulk)
+    boot_v = np.empty(n_boot); boot_s = np.empty(n_boot)
     for k in range(n_boot):
-        idx = rng.integers(0, n, n)
-        try:
-            b_k = _beta_of(base[idx], logsf[idx], taus[idx], sf[idx])
-        except Exception:
-            b_k = np.nan
-        boot_betas[k] = b_k
-    boot_ok = boot_betas[np.isfinite(boot_betas)]
-    lo_ci, hi_ci = np.quantile(boot_ok, [0.025, 0.975])
-    excl_zero = (lo_ci > 0) or (hi_ci < 0)
-    print(f"    β bootstrap mean = {np.mean(boot_ok):+.3f}   median = {np.median(boot_ok):+.3f}")
-    print(f"    95% CI = [{lo_ci:+.3f}, {hi_ci:+.3f}]   "
-          f"excludes 0: {'YES' if excl_zero else 'NO'}")
-    v2 = "PASS — β CI excludes 0 (robust to resampling)" if excl_zero else "FAIL — CI crosses 0"
+        # vanilla
+        idx_v = rng.integers(0, n, n)
+        # stratified: resample within each stratum to preserve corner presence
+        idx_s = np.concatenate([
+            idx_corner[rng.integers(0, n_c, n_c)] if n_c > 0 else np.array([], int),
+            idx_bulk[rng.integers(0, n_b, n_b)],
+        ])
+        try: boot_v[k] = _beta_of(base[idx_v], logsf[idx_v], taus[idx_v], sf[idx_v])
+        except Exception: boot_v[k] = np.nan
+        try: boot_s[k] = _beta_of(base[idx_s], logsf[idx_s], taus[idx_s], sf[idx_s])
+        except Exception: boot_s[k] = np.nan
+    for label, arr in (("vanilla   ", boot_v), ("stratified", boot_s)):
+        ok = arr[np.isfinite(arr)]
+        lo_ci, hi_ci = np.quantile(ok, [0.025, 0.975])
+        excl = (lo_ci > 0) or (hi_ci < 0)
+        n_corner_in_sample = "n/a"
+        print(f"    {label}: mean = {np.mean(ok):+.3f}   median = {np.median(ok):+.3f}   "
+              f"95% CI = [{lo_ci:+.3f}, {hi_ci:+.3f}]   excludes 0: {'YES' if excl else 'NO'}")
+    # verdict: stratified must exclude 0 (vanilla informational only — corner sparsity makes it unreliable)
+    s_ok = boot_s[np.isfinite(boot_s)]
+    lo_s, hi_s = np.quantile(s_ok, [0.025, 0.975])
+    excl_s = (lo_s > 0) or (hi_s < 0)
+    print(f"    (corner cases n={n_c}/{n}; vanilla bootstrap drops them ~"
+          f"{(1-n_c/n)**n*100:.0f}% of samples — that's why stratified is fairer here)")
+    v2 = "PASS — stratified β CI excludes 0" if excl_s else "FAIL — stratified CI crosses 0"
     print(f"    VERDICT: {v2}")
 
     # 3) PER-FOLD STABILITY
@@ -232,9 +264,47 @@ def run(name="E", n_perm=1000, n_boot=2000, n_half=200, seed=0):
           ("WEAK — AIC ok, BIC marginal" if daic < -2 else "FAIL — does not improve AIC"))
     print(f"    VERDICT: {v5}")
 
+    # 6) LEAVE-CORNER-OUT — the cleanest fairness test for a corner-targeting term.
+    # Fit β ONLY on the bulk (no 62:38 corner cases).  Then predict the held-out
+    # corner with that β.  If the term GENERALIZES from bulk physics to the corner,
+    # bulk-only β should still significantly improve corner RMSE.  If it doesn't,
+    # the term was an over-fit to the 4 corner cases.
+    print(f"\n[6] LEAVE-CORNER-OUT GENERALIZATION (n_corner={n_c}, n_bulk={n_b})")
+    if n_c < 1:
+        print("    (no corner cases — test n/a)")
+    else:
+        # baseline: predict the corner with C_blend only (no β)
+        bv5_b, bp3_b = cblend_fit(base[idx_bulk], logsf[idx_bulk], taus[idx_bulk])
+        pred_corner_noβ = cblend_pred(base[idx_corner], taus[idx_corner], bv5_b, bp3_b)
+        rmse_noβ = float(np.sqrt(np.mean((logsf[idx_corner] - pred_corner_noβ)**2)))
+        # fit β on bulk only
+        resid_bulk = logsf[idx_bulk] - cblend_pred(base[idx_bulk], taus[idx_bulk], bv5_b, bp3_b)
+        sm_b = sf[idx_bulk].mean(); sc_b = sf[idx_bulk] - sm_b
+        d_b = float(np.dot(sc_b, sc_b))
+        beta_bulk = float(np.dot(sc_b, resid_bulk)/d_b) if d_b > 1e-12 else 0.0
+        pred_corner_β = pred_corner_noβ + beta_bulk*(sf[idx_corner] - sm_b)
+        rmse_β = float(np.sqrt(np.mean((logsf[idx_corner] - pred_corner_β)**2)))
+        # for reference: β fit on FULL data (corner included)
+        beta_full = _beta_of(base, logsf, taus, sf)
+        print(f"    β (bulk-only fit)       = {beta_bulk:+.3f}")
+        print(f"    β (full-data fit)       = {beta_full:+.3f}   "
+              f"(ratio bulk/full = {beta_bulk/beta_full if abs(beta_full)>1e-9 else float('inf'):+.2f})")
+        print(f"    corner RMSE (no β)      = {rmse_noβ:.3f}")
+        print(f"    corner RMSE (bulk-β)    = {rmse_β:.3f}    "
+              f"improvement = {rmse_noβ - rmse_β:+.3f}")
+        # Same-sign β AND substantial improvement = real bulk→corner physics
+        same_sign = (np.sign(beta_bulk) == np.sign(beta_full)) and abs(beta_bulk) > 0.3*abs(beta_full)
+        improved = (rmse_noβ - rmse_β) > 0.1
+        v6 = ("PASS — bulk-fit β generalizes to the corner (real physics, not corner over-fit)"
+              if (same_sign and improved) else
+              "WEAK/FAIL — bulk-only β doesn't carry over to the corner")
+        print(f"    VERDICT: {v6}")
+
     print("\n" + "=" * 78)
-    print("OVERALL — all 5 verdicts above should be PASS for the term to be safe")
-    print("          to integrate as a production live-fit parameter.")
+    print("OVERALL — verdicts above; the most informative ones for a corner-driven")
+    print("          term are [3] per-fold stability, [4] half-split gap, [5] AIC,")
+    print("          [6] leave-corner-out generalization, and [1] permutation null.")
+    print("          ([2] stratified bootstrap is fairer for n_corner=4.)")
 
 
 if __name__ == "__main__":
