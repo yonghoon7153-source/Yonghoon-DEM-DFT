@@ -82,11 +82,19 @@ def _spearman(x, y):
 
 
 def _family_base(nm):
-    """Strip trailing _S<n>, _real_<n>, _<n> to get family base name."""
-    s = re.sub(r'_S\d+$', '', nm)
-    s = re.sub(r'_real_\d+$', '_real', s)
-    s = re.sub(r'_\d+$', '', s)
-    return s
+    """Strip ONLY explicit seed suffixes (_S<n>) to identify true siblings.
+
+    PRIOR VERSION (BUGGY) also stripped trailing _<n>, but that merged
+    DIFFERENT designs (e.g., input_1mAh_5 and input_1mAh_8 are unrelated
+    designs, not seeds of input_1mAh).  Only `_S\\d+$` is the seed marker.
+
+    Real sibling families in corpus:
+      input_1mAh_9_S1..S5    (base removed as anomaly)
+      input_1mAh_6_S1..S5
+      input_particulate_12_S1, _S2, _S4, _S5  (_S3 removed as anomaly)
+      Possibly a few others with _S<n> pattern.
+    """
+    return re.sub(r'_S\d+$', '', nm)
 
 
 def _loocv_with_extras(base, logsf, taus, extras=None):
