@@ -59,6 +59,96 @@ def base_log_rAM(a, phi_c0=PHI_C_SINGLE, kappa=0.0, delta=DELTA_F):
 
 KAPPA_GRID = np.round(np.linspace(-0.05, 0.05, 11), 4)
 
+# ── F / G: SMOOTH two-sigmoid form (no inequalities anywhere) ──────────────
+# User's deeper critique 1: don't use the ps_ratio LABEL to determine which
+# mode is "small" — use the actual r_AM_S / r_AM_P SIZES.
+# User's deeper critique 2: indicator [r_AM < cutoff] in the form is inelegant;
+# replace by a sigmoid for full differentiability.
+# User's deeper critique 3: extend with the dimensionless r_AM/r_SE ratio for
+# scale-invariance (form G).
+#
+# Math (no inequalities anywhere):
+#
+#   f_small  =  (1−p)·σ(K_1·(r_cut − r_AM,S))  +  p·σ(K_1·(r_cut − r_AM,P))     (F)
+#   f_small  =  (1−p)·σ(K_1·(ρ_cut − r_AM,S/r_SE))  +  p·σ(K_1·(ρ_cut − r_AM,P/r_SE))  (G)
+#   g_phys   =  σ(K_2·(f_small − 0.5))            ← replaces g010 in form A
+#
+# Both forms use the SAME outer sigmoid K_2 = 10 (matching g010), differing
+# only in whether the inner sigmoid is on absolute size (F) or dimensionless
+# size ratio (G).  All other base-form structure identical to form A.
+
+CUTOFF_GRID    = np.array([3.0, 3.5, 4.0, 4.5, 5.0, 5.5, 6.0])           # F
+RATIO_CUT_GRID = np.array([1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 8.0, 10.0])     # G
+K1_GRID        = np.array([2.0, 5.0, 10.0, 20.0])                       # inner sharpness
+
+
+def _f_small_abs(a, cutoff, K1):
+    """Form F smooth f_small: σ on absolute r_AM."""
+    p = a[:, 6]
+    r_AM_S = a[:, 17]; r_AM_P = a[:, 18]
+    r_AM_eff = a[:, 13]
+    # NaN backup using composition-weighted r_AM (rare in this corpus)
+    rs = np.where(np.isfinite(r_AM_S), r_AM_S, r_AM_eff)
+    rp = np.where(np.isfinite(r_AM_P), r_AM_P, r_AM_eff)
+    sig_S = 1.0/(1.0+np.exp(-K1*(cutoff - rs)))
+    sig_P = 1.0/(1.0+np.exp(-K1*(cutoff - rp)))
+    return (1-p)*sig_S + p*sig_P
+
+
+def _f_small_ratio(a, ratio_cut, K1):
+    """Form G smooth f_small: σ on dimensionless r_AM / r_SE ratio."""
+    p = a[:, 6]
+    r_AM_S = a[:, 17]; r_AM_P = a[:, 18]; r_SE = a[:, 8]; r_AM_eff = a[:, 13]
+    rs = np.where(np.isfinite(r_AM_S), r_AM_S, r_AM_eff)
+    rp = np.where(np.isfinite(r_AM_P), r_AM_P, r_AM_eff)
+    rse_med = float(np.nanmedian(r_SE[np.isfinite(r_SE)])) if np.isfinite(r_SE).any() else 0.5
+    rse = np.where(np.isfinite(r_SE) & (r_SE > 0), r_SE, rse_med)
+    sig_S = 1.0/(1.0+np.exp(-K1*(ratio_cut - rs/rse)))
+    sig_P = 1.0/(1.0+np.exp(-K1*(ratio_cut - rp/rse)))
+    return (1-p)*sig_S + p*sig_P
+
+
+def base_log_smooth(a, f_small_fn, cutoff_or_ratio, K1, K2=10.0,
+                    phicP=PHICP_F, phicS=PHICS_F, delta=DELTA_F):
+    """Form A's structure with g010 replaced by σ(K_2·(f_small − 0.5))."""
+    phi = a[:, 0]
+    f = f_small_fn(a, cutoff_or_ratio, K1)
+    g = 1.0/(1.0+np.exp(-K2*(f - 0.5)))
+    phic = (1.0 - g)*phicP + g*phicS
+    pex = phi - phic
+    return base_no_phi(a) + 0.5*np.log(np.sqrt(pex**2 + (delta*g)**2) + 1e-12)
+
+
+def nested_cv_smooth(a, logsf, taus, f_small_fn, cut_grid, label, k_inner=5, seed=0):
+    """Outer-LOO + inner-k-fold scan of (cutoff/ratio, K1) jointly."""
+    n = len(taus); ss = np.sum((logsf-logsf.mean())**2); sse = 0.0; picks = []
+    rng = np.random.default_rng(seed)
+    cf = cronau_factor(a[:, 8])
+    for i in range(n):
+        tr = np.array([j for j in range(n) if j != i])
+        ls_tr, ta_tr = logsf[tr], taus[tr]
+        order = rng.permutation(len(tr)); folds = [order[f::k_inner] for f in range(k_inner)]
+        best, best_sse = None, np.inf
+        for ct in cut_grid:
+            for K1 in K1_GRID:
+                b = base_log_smooth(a[tr], f_small_fn, float(ct), float(K1)) + np.log(cf[tr])
+                fsse = 0.0
+                for val in folds:
+                    m = np.ones(len(tr), bool); m[val] = False
+                    bv5, bp3 = cblend_fit(b[m], ls_tr[m], ta_tr[m])
+                    pv = cblend_pred(b[val], ta_tr[val], bv5, bp3)
+                    fsse += np.sum((ls_tr[val]-pv)**2)
+                if fsse < best_sse:
+                    best_sse, best = fsse, (float(ct), float(K1))
+        picks.append(best)
+        ct, K1 = best
+        b = base_log_smooth(a, f_small_fn, ct, K1) + np.log(cf)
+        bv5, bp3 = cblend_fit(b[tr], ls_tr, ta_tr)
+        pi = cblend_pred(b[i:i+1], taus[i:i+1], bv5, bp3)[0]
+        sse += (logsf[i]-pi)**2
+    return 1 - sse/ss, picks
+
+
 # ── D / E: r_AM-bundled gating (replace g010 entirely) ─────────────────────
 # Physical hypothesis: g010 in form A bundles "AM particle is small AND
 # polydisperse" via the P:S label.  The real variable is the AM particle
@@ -190,6 +280,11 @@ def main():
     gate_grid_E = [{'ratio_ref': r, 'K_r': k} for r in RATIO_REF_GRID for k in K_R_GRID]
     lo_E, picks_E = nested_cv_bundle(a, logsf, taus, _g_size_ratio, gate_grid_E)
 
+    # F. SMOOTH two-sigmoid with absolute r_AM cutoff (label-free, differentiable)
+    lo_F, picks_F = nested_cv_smooth(a, logsf, taus, _f_small_abs, CUTOFF_GRID, "F")
+    # G. SMOOTH two-sigmoid with r_AM/r_SE ratio (scale-invariant)
+    lo_G, picks_G = nested_cv_smooth(a, logsf, taus, _f_small_ratio, RATIO_CUT_GRID, "G")
+
     n_ram = int(np.isfinite(a[:, 13]).sum())
 
     print("=" * 78)
@@ -207,6 +302,22 @@ def main():
           f"Δ vs A = {lo_D-lo_A:+.4f}   [g010 → g_size(r_AM)]")
     print(f"  E. r_SE/r_AM ratio BUNDLE:      LOOCV = {lo_E:.4f}    "
           f"Δ vs A = {lo_E-lo_A:+.4f}   [g010 → g_size(r_SE/r_AM)]")
+    print(f"  F. SMOOTH abs cutoff (label-free): LOOCV = {lo_F:.4f}    "
+          f"Δ vs A = {lo_F-lo_A:+.4f}   [f=(1-p)·σ(K(c-rS))+p·σ(K(c-rP))]")
+    print(f"  G. SMOOTH ratio cutoff (scale-inv): LOOCV = {lo_G:.4f}    "
+          f"Δ vs A = {lo_G-lo_A:+.4f}   [f using r_AM/r_SE]")
+    print()
+    # (cutoff, K1) pick distributions for F, G
+    def _summ(label, picks):
+        cts = [p[0] for p in picks]; k1s = [p[1] for p in picks]
+        vv_c, cc_c = np.unique(np.round(cts, 2), return_counts=True)
+        vv_k, cc_k = np.unique(np.round(k1s, 1), return_counts=True)
+        top_c = sorted(zip(cc_c, vv_c), reverse=True)[:4]
+        top_k = sorted(zip(cc_k, vv_k), reverse=True)[:3]
+        print(f"  inner-picked ({label}) cutoff: " + ", ".join(f"{v}×{c}" for c, v in top_c))
+        print(f"  inner-picked ({label}) K_1:    " + ", ".join(f"{v}×{c}" for c, v in top_k))
+    _summ("F", picks_F)
+    _summ("G", picks_G)
     print()
 
     def _summarize_picks(label, picks, keys):

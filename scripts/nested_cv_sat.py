@@ -104,6 +104,17 @@ def load_corpus():
             pha = d.get('path_hop_area_mean_physics') or d.get('path_hop_area_mean')
             cnea = d.get('se_se_cn_eff_area') or d.get('se_se_cn_eff_area_perc')
             scv = d.get('stress_cv')   # particle-stress non-uniformity (mech.)
+            # Extract individual r_AM_S, r_AM_P for label-free physical form
+            # (needed by the smooth two-sigmoid f_small formulation that
+            # replaces g010's label dependence with actual size inputs).
+            def _one_ram(keys):
+                for k in keys:
+                    v = d.get(k)
+                    if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+                        return v*1000.0 if v < 0.01 else float(v)
+                return np.nan
+            r_AM_S_val = _one_ram(('_input_r_AM_S_um', '_input_r_AM_S', 'r_AM_S_um', 'r_AM_S'))
+            r_AM_P_val = _one_ram(('_input_r_AM_P_um', '_input_r_AM_P', 'r_AM_P_um', 'r_AM_P'))
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
                          float(sz) if sz else np.nan, _direct_rse_um(d),
                          float(amcn) if amcn and amcn > 0 else np.nan,
@@ -113,9 +124,10 @@ def load_corpus():
                          _direct_ram_um(d, p),
                          float(pha) if pha and pha > 0 else np.nan,
                          float(cnea) if cnea and cnea > 0 else np.nan,
-                         float(scv) if scv and scv > 0 else np.nan))
+                         float(scv) if scv and scv > 0 else np.nan,
+                         r_AM_S_val, r_AM_P_val))
     a = np.array(rows, float)
-    # cols: phi cn cov fp tau sigma p se_size r_SE_um amcn covAM_h covAM_p covAM_dpct r_AM_um path_hop_area se_cn_eff_area stress_cv
+    # cols: phi cn cov fp tau sigma p se_size r_SE_um amcn covAM_h covAM_p covAM_dpct r_AM_um path_hop_area se_cn_eff_area stress_cv r_AM_S r_AM_P
     return a
 
 

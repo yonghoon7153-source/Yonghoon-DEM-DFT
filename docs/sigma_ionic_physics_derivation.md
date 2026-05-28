@@ -137,17 +137,36 @@ but very different f_S — the FRACTION of small particles, not the
 mean particle size, is what controls packing disorder.  The size-RATIO
 r_SE/r_AM (form E) is also blind to this fraction.
 
-**Convention disambiguation (the original critique).**  The AM_P /
-AM_S labels in this corpus follow a strict size convention: AM_P is the
-larger mode and AM_S is the smaller.  For a **monomodal** AM system the
-particle size itself decides the label (e.g. r_AM ≥ 0.7 µm → AM_P;
-r_AM < 0.7 µm → AM_S).  Under this convention the labels are not
-arbitrary — they are size-derived — so g₀₁₀ is a genuine sigmoid in
-"how much of the AM volume is the small-particle mode," not an
-arbitrary label gate.  **For new data the convention must be enforced:
-the smaller AM mode is always called AM_S; if there is only one mode,
-its label is determined by an absolute size threshold (recommend 0.7 µm,
-the corpus median between AM_S and AM_P populations).**
+**Convention disambiguation (the original critique).**  The
+`_ps_fraction()` helper parses the user-supplied `ps_ratio` string —
+it does NOT check that r_AM_S < r_AM_P automatically.  A monomodal AM
+system could in principle be mis-labeled in either direction.
+`scripts/audit_ps_label_convention.py` audited the corpus (n=183) to
+test whether this risk is real:
+
+| Check | Result |
+|---|---|
+| Bimodal cases checked | 106 |
+| Violations (r_AM_S ≥ r_AM_P) | **0** |
+| Monomodal AM_S-only (label `0:10`) cases | 58, sizes 2.0–4.0 µm |
+| Monomodal AM_P-only (label `10:0`) cases | 19, sizes 5.0–6.0 µm |
+| Size overlap between the two monomodal label classes | **none** |
+| Implicit size cutoff | **≈ 4.5 µm** (max AM_S = 4.0, min AM_P = 5.0) |
+
+**Every case in the corpus follows the size convention strictly** —
+AM_S < AM_P in all bimodal cases, and the monomodal labels are entirely
+separated by a 4.5-µm cutoff.  The g₀₁₀ sigmoid is therefore equivalent
+to σ(K·(f_small − 0.5)) where f_small is the volume fraction of AM
+particles below 4.5 µm — a genuine physical variable, not an arbitrary
+label gate.
+
+**For future data the convention must be enforced** (in this corpus it
+holds empirically but is not enforced by code):
+- bimodal: ensure r_AM_S < r_AM_P at data load
+- monomodal at r_AM ≤ 4 µm → label `0:10` (AM_S only)
+- monomodal at r_AM ≥ 5 µm → label `10:0` (AM_P only)
+- monomodal at 4 µm < r_AM < 5 µm → out-of-corpus regime; ambiguous
+  zone — flag and require disambiguation
 
 **Physical reading of φ_c blending and δ saturation:**
 - φ_c,S = 0.195: small-AM packing fills voids more efficiently, so SE
