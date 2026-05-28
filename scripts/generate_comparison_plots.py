@@ -3815,16 +3815,21 @@ def _direct_rse_um(d):
 
 
 def _sat_g_smooth(p, r_AM_S_um=None, r_AM_P_um=None):
-    """Smooth size-based gate (label-free) — replaces _sat_g010 in production.
+    """Power-law size-based gate (label-free) — replaces _sat_g010 in production.
+    Adopted 2026-05-28 after scan_smooth_f_small.py confirmed Alt-C power
+    beats two-sigmoid by +0.0009 LOOCV with 1 fewer hyperparameter:
+
+        g_phys = min(3.5 / r_AM_eff, 1)^2     with
+        r_AM_eff = (1−p)·r_AM_S + p·r_AM_P
+
     Falls back to legacy g_010 if AM sizes unavailable."""
     if r_AM_S_um is None and r_AM_P_um is None:
         return _sat_g010(p)
     ras = r_AM_S_um if (r_AM_S_um and r_AM_S_um > 0) else 2.5  # corpus median
     rap = r_AM_P_um if (r_AM_P_um and r_AM_P_um > 0) else 5.5
-    sig_S = 1.0/(1.0+np.exp(-5.0*(3.5 - ras)))
-    sig_P = 1.0/(1.0+np.exp(-5.0*(3.5 - rap)))
-    f_small = (1.0 - p)*sig_S + p*sig_P
-    return 1.0/(1.0+np.exp(-10.0*(f_small - 0.5)))
+    r_eff = (1.0 - p)*ras + p*rap
+    ratio = min(3.5 / max(r_eff, 0.5), 1.0)
+    return ratio**2.0
 
 
 def _sat_baselog(phi, cn, cov, fp, p, r_SE_um=None,

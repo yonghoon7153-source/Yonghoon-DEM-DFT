@@ -298,36 +298,45 @@ def production_extras(a, cov_delta_center=None, f_intact_log=None):
     return [p2, cdc, f_log], med
 
 
+R_CUT_AM = 3.5    # reference small-AM size (µm); midpoint of corpus AM_S/AM_P gap
+ALPHA_AM = 2.0    # power for size-ratio gate; data-fit optimum (Alt-C)
+
+
 def _g_phys_smooth(a):
-    """Smooth size-based gate g_phys (label-free) — replaces legacy g_010.
+    """Power-law size-based gate g_phys (label-free) — replaces legacy g_010.
 
-    g_phys = σ(10·(f_small − 0.5))   with
-    f_small = (1−p)·σ(5·(3.5 − r_AM_S)) + p·σ(5·(3.5 − r_AM_P))
+    Production form (adopted 2026-05-28 after scan_smooth_f_small.py
+    confirmed Alt-C power beats two-sigmoid by +0.0009 LOOCV):
 
-    The threshold 3.5 µm is the midpoint of the audited corpus size gap
-    (max AM_S=4.0µm, min AM_P=5.0µm; convention audit n=183, 0 violations).
-    Numerically equivalent to g_010 for cases following the convention, but
-    DIFFERS for borderline cases like input_S_2 (r_AM_S=4µm) where the
-    smooth gate correctly identifies "AM_S near AM_P size" → treats the
-    case as "borderline P-heavy" instead of "completely S-heavy".
+        g_phys = min(r_cut / r_AM_eff, 1)^α          with
+        r_AM_eff = (1−p)·r_AM_S + p·r_AM_P            (composition-weighted)
+        r_cut = 3.5 µm, α = 2
 
-    Falls back to label-based g_010 if r_AM_S (col 17) / r_AM_P (col 18)
-    columns aren't present (legacy corpus before C5).  Adopted 2026-05-28
-    after S1 candidate ★ with Δ_LOOCV +0.0015.
-    """
+    Physical: 'small-AM dominance' — if composition-weighted AM particles
+    are X times bigger than the reference size r_cut, their contribution
+    to the small-AM fraction scales as 1/X² (inverse-square — same
+    dimensional analysis as area/cross-section scaling).  No sigmoid
+    parameters; just 2 frozen constants (r_cut, α).
+
+    For cases following the corpus convention (AM_S ≤ 4µm, AM_P ≥ 5µm,
+    audit n=183), g_phys ≈ g_010 (legacy label-based) numerically.
+    Differs for borderline cases like input_S_2 (r_AM_S=4µm) where the
+    power gate gives g=0.77 (mostly small) vs g_010=0.99 (fully small) —
+    physically more accurate at the borderline.
+
+    Falls back to legacy g_010 if r_AM_S (col 17) / r_AM_P (col 18) columns
+    aren't present (corpus before C5)."""
     p = a[:, 6]
     if a.shape[1] < 19:
-        # legacy fallback to g_010
-        return 1.0/(1.0+np.exp(K_PS*(p - P_C)))
+        return 1.0/(1.0+np.exp(K_PS*(p - P_C)))  # legacy fallback
     ras = a[:, 17]; rap = a[:, 18]
     rs_med = float(np.nanmedian(ras[np.isfinite(ras)])) if np.isfinite(ras).any() else 2.5
     rp_med = float(np.nanmedian(rap[np.isfinite(rap)])) if np.isfinite(rap).any() else 5.5
     ras_s = np.where(np.isfinite(ras) & (ras > 0), ras, rs_med)
     rap_s = np.where(np.isfinite(rap) & (rap > 0), rap, rp_med)
-    sig_S = 1.0/(1.0+np.exp(-5.0*(3.5 - ras_s)))
-    sig_P = 1.0/(1.0+np.exp(-5.0*(3.5 - rap_s)))
-    f_small = (1.0 - p)*sig_S + p*sig_P
-    return 1.0/(1.0+np.exp(-10.0*(f_small - 0.5)))
+    r_eff = (1.0 - p)*ras_s + p*rap_s
+    ratio = np.minimum(R_CUT_AM / np.maximum(r_eff, 0.5), 1.0)
+    return ratio**ALPHA_AM
 
 
 def base_log_sat(a, phicP, phicS, delta):
