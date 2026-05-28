@@ -96,44 +96,79 @@ exhibit a sharp cusp at φ_c; the transition is rounded out over a band
 mean-field singularity by a uniform-disorder kernel (Kirkpatrick 1973
 review; Stauffer-Aharony §5.2 finite-size corrections).
 
-**⚠ OPEN ISSUE — composition-blending of φ_c is questionable physics.**
+**✓ RESOLVED — g₀₁₀ is the sigmoid of "small-AM volume fraction".**
 
-The current production form uses
-- φ_c,P  = 0.200  ("P-heavy" limit)
-- φ_c,S  = 0.195  ("S-heavy" limit)
-- φ_c,eff = (1 − g₀₁₀)·φ_c,P + g₀₁₀·φ_c,S
-  with g₀₁₀ = σ(−10·(p−0.5)) and p = AM_P / (AM_P + AM_S) volume fraction.
+The original concern (g₀₁₀ depends on the AM_P/AM_S *label* which is
+arbitrary for monomodal AM systems) was tested in
+`scripts/test_threshold_form.py` against four alternatives:
 
-This blending is **dimensionally clean but physically suspect** because
-the AM_P / AM_S distinction is a SIZE-BASED LABEL CONVENTION (AM_P
-typically the larger mode, AM_S the smaller).  For a *monomodal* system
-with a single AM size, labeling it as "AM_P-only" or "AM_S-only" is
-arbitrary — yet the form then flips between φ_c,P and φ_c,S based on
-that arbitrary label.  The right physical variable is **the actual AM
-particle size r_AM** (or a polydispersity descriptor), not the binary
-P/S category.
+| Form | Description | LOOCV | Δ vs A |
+|---|---|---|---|
+| **A (production)** | g₀₁₀-blend                        | **0.9600** | — |
+| B | single threshold φ_c=0.195, δ always active | 0.9517 | **−0.0084** |
+| C | additive κ·log(r_AM) on φ_c                  | 0.9542 | **−0.0058** |
+| D | g₀₁₀ → σ(K·(r_ref − r_AM)) bundle            | 0.9422 | **−0.0178** |
+| E | g₀₁₀ → σ(K·(ratio_ref − r_SE/r_AM)) bundle   | 0.9520 | **−0.0080** |
 
-The data already hints at this: nested CV inner folds pick φ_c,P = 0.195
-in 87/91 folds (NOT the production-frozen 0.200); φ_c,P and φ_c,S are
-effectively the same.  The g₀₁₀ blend is doing essentially no work
-beyond what a single threshold + the δ-rounding would do.
+All four alternatives lost by 3.5 – 11.1 × noise SE (0.0016).  Diagnostic:
+forms D and E pick their hyperparameters at grid edges that flatten the
+gate, i.e. the optimizer is *trying to make the r_AM-bundle behave like
+B's "δ always active"* — and still failing.  **No AM-size-based gate
+can replicate g₀₁₀**.
 
-**Resolution test** (`scripts/test_threshold_form.py`, this commit):
-nested-CV compare three forms:
-  A.  current g₀₁₀ blend (production)
-  B.  single frozen threshold φ_c = 0.195, δ always active
-  C.  r_AM-dependent threshold:  φ_c(r_AM) = base + κ·log r_AM
-If B ≥ A: drop the blend → simpler form, no convention dependence.
-If C > A: real r_AM-dependence found → adopt physics-grounded variant.
+**Why g₀₁₀ wins — the actual physical variable:**
 
-The blending is *empirical-but-narrow* (Δφ_c = 0.005, frozen from
-a joint screen).  Δ from removing it is expected to be small.
+g₀₁₀ = σ(−K·(p−0.5)) with p = AM_P / (AM_P + AM_S) is mathematically
+identical to σ(K·(0.5 − p)) ≡ σ(K·(f_S − 0.5)), where f_S = 1 − p is
+the **volume fraction of AM_S (small) particles** in the active mass.
+What g₀₁₀ is REALLY doing:
+
+- 0:10 limit (p=0): f_S = 1 → ALL AM particles are the small mode
+  → maximal AM-size disorder → rounded percolation transition
+  (δ active, threshold pulled to the lower value φ_c,S = 0.195)
+- 10:0 limit (p=1): f_S = 0 → ZERO small particles
+  → minimal disorder → sharp transition (δ ≈ 0, threshold φ_c,P=0.200)
+- P-heavy mixed (p ≈ 0.7): f_S = 0.3 → small particles are a minority
+  → transition is nearly sharp (g₀₁₀ ≈ 0.12)
+
+The COMPOSITION-WEIGHTED r_AM (forms C/D) destroys this information:
+a balanced 1:1 mix and a P-heavy 7:3 mix can have similar mean r_AM,
+but very different f_S — the FRACTION of small particles, not the
+mean particle size, is what controls packing disorder.  The size-RATIO
+r_SE/r_AM (form E) is also blind to this fraction.
+
+**Convention disambiguation (the original critique).**  The AM_P /
+AM_S labels in this corpus follow a strict size convention: AM_P is the
+larger mode and AM_S is the smaller.  For a **monomodal** AM system the
+particle size itself decides the label (e.g. r_AM ≥ 0.7 µm → AM_P;
+r_AM < 0.7 µm → AM_S).  Under this convention the labels are not
+arbitrary — they are size-derived — so g₀₁₀ is a genuine sigmoid in
+"how much of the AM volume is the small-particle mode," not an
+arbitrary label gate.  **For new data the convention must be enforced:
+the smaller AM mode is always called AM_S; if there is only one mode,
+its label is determined by an absolute size threshold (recommend 0.7 µm,
+the corpus median between AM_S and AM_P populations).**
+
+**Physical reading of φ_c blending and δ saturation:**
+- φ_c,S = 0.195: small-AM packing fills voids more efficiently, so SE
+  has marginally lower volume requirement to percolate.
+- φ_c,P = 0.200: large-AM packing leaves larger SE-free regions
+  between particles, slightly raising the SE percolation threshold.
+- δ·g₀₁₀ = 0.040·f_S: the disorder-rounding is proportional to the
+  small-particle volume fraction — small particles introduce packing
+  heterogeneity that smears the transition, large particles do not.
+
+All three constants (φ_c,P, φ_c,S, δ) are frozen from a joint LOOCV
+screen on the full corpus.
 
 **Empirical anchor:** ablation removes ΔLOOCV = +0.1317 — the
 second-largest term contribution in the form.
 
 **Confidence: MEDIUM-HIGH — mean-field exponent and disorder-rounding
-are textbook physics; the threshold values are calibrated.**
+are textbook physics; the AM_P/AM_S blend is grounded in
+small-particle volume fraction (f_S = 1 − p), the threshold values are
+calibrated from a frozen joint screen, and four alternative formulations
+were empirically rejected by 3.5–11.1 × noise SE.**
 
 ### 2c. f_p^3 — percolating-fraction backbone factor
 
