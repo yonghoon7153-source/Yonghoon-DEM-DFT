@@ -89,6 +89,35 @@ def _rank(resid, feats, idx, label):
         print(f"   {r:+.3f}  [{nn:2d}]  {k}{flag}")
 
 
+def _corr(resid, feats, idx, k):
+    v = np.array([feats[i].get(k, np.nan) for i in idx])
+    m = np.isfinite(v) & np.isfinite(resid[idx])
+    if m.sum() >= max(5, int(0.5*len(idx))) and np.std(v[m]) > 1e-12:
+        return float(np.corrcoef(v[m], resid[idx][m])[0, 1]), int(m.sum())
+    return None, int(m.sum())
+
+
+def _rank_substr(resid, feats, idx_sets, substr):
+    """Every field whose name contains `substr`, ranked by |corr| in the
+    62:38 subset, with its correlation in each subset side by side."""
+    keys = set()
+    for f in feats:
+        keys |= {k for k in f if substr in k.lower()}
+    rows = []
+    for k in keys:
+        cols = {lab: _corr(resid, feats, idx, k)[0] for lab, idx in idx_sets.items()}
+        key_sort = abs(cols.get('62:38') or cols.get('0:10') or cols.get('all') or 0)
+        rows.append((key_sort, k, cols))
+    rows.sort(reverse=True)
+    print(f"\n══ ALL '{substr}' fields  (corr with SAT-blend residual) ══")
+    print(f"   {'all':>7} {'0:10':>7} {'62:38':>7}   field")
+    for _, k, cols in rows:
+        cell = lambda x: f"{x:+.2f}" if x is not None else "   ·"
+        flag = ' (*circ?)' if _is_circular(k) else ''
+        print(f"   {cell(cols.get('all')):>7} {cell(cols.get('0:10')):>7} "
+              f"{cell(cols.get('62:38')):>7}   {k}{flag}")
+
+
 def main():
     a, feats = load()
     n = len(a)
@@ -114,7 +143,12 @@ def main():
         _rank(resid, feats, s010, "0:10 subset (pure AM_S)")
     if len(s010_rich) >= 6:
         _rank(resid, feats, s010_rich, "0:10 SE-rich (62:38-type)")
-    print("\n(*circular?) = name implies σ-derived; use only geometric features as predictors.")
+    # Comprehensive view of EVERY coverage / coordination field (many variants)
+    idx_sets = {'all': all_idx, '0:10': s010, '62:38': s010_rich}
+    _rank_substr(resid, feats, idx_sets, 'coverage')
+    _rank_substr(resid, feats, idx_sets, 'cov_')
+    _rank_substr(resid, feats, idx_sets, 'se_cn')
+    print("\n(*circ?) = name implies σ-derived; use only geometric features as predictors.")
 
 
 if __name__ == "__main__":
