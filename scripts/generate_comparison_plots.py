@@ -4109,8 +4109,14 @@ def _stage_e_base_arrays(corpus):
             ls.append(np.log(sig)); ts.append(tau)
             phi_a.append(float(phi))
             rse_a.append(float(rse) if rse and np.isfinite(rse) else np.nan)
-            dcv = (d.get('coverage_AM_S_delta_pct_rough')
-                   or d.get('coverage_AM_delta_pct_rough'))
+            # Use TOTAL-AM Δcov (composition-agnostic) — switching from
+            # AM_S-preferred to coverage_AM_delta_pct_rough so that 10:0
+            # cases (which only have AM_P) get the SAME physical quantity
+            # as 0:10/mixed.  Earlier preference for AM_S was found to
+            # cause +30-40% over-prediction at 10:0 due to Δcov_AM_P being
+            # systematically smaller than the AM_S-dominated corpus median.
+            dcv = (d.get('coverage_AM_delta_pct_rough')
+                   or d.get('coverage_AM_S_delta_pct_rough'))
             dcov_a.append(float(dcv) if dcv is not None else np.nan)
             p_a.append(float(_ps_fraction(d)))
     return (np.array(bl), np.array(ls), np.array(ts),
@@ -4195,8 +4201,14 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
             logsf.append(np.log(sig)); taus.append(tau)
             phi_local.append(float(phi))
             rse_local.append(float(rse) if rse and np.isfinite(rse) else np.nan)
-            dcv = (d.get('coverage_AM_S_delta_pct_rough')
-                   or d.get('coverage_AM_delta_pct_rough'))
+            # Use TOTAL-AM Δcov (composition-agnostic) — switching from
+            # AM_S-preferred to coverage_AM_delta_pct_rough so that 10:0
+            # cases (which only have AM_P) get the SAME physical quantity
+            # as 0:10/mixed.  Earlier preference for AM_S was found to
+            # cause +30-40% over-prediction at 10:0 due to Δcov_AM_P being
+            # systematically smaller than the AM_S-dominated corpus median.
+            dcv = (d.get('coverage_AM_delta_pct_rough')
+                   or d.get('coverage_AM_S_delta_pct_rough'))
             dcov_local.append(float(dcv) if dcv is not None else np.nan)
             p_local.append(float(_ps_fraction(d)))
     if len(idx) < 8:
