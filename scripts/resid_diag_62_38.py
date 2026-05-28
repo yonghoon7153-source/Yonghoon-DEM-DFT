@@ -25,7 +25,8 @@ import numpy as np
 SCRIPTS = Path(__file__).parent
 sys.path.insert(0, str(SCRIPTS))
 import generate_comparison_plots as gcp          # noqa: E402
-from nested_cv_sat import base_log_sat, cblend_fit, cblend_pred, PHI_C0  # noqa: E402
+from nested_cv_sat import (base_log_sat, cblend_fit, cblend_pred, PHI_C0,  # noqa: E402
+                           cronau_factor, _direct_rse_um)
 
 # φc_P*, φc_S*, δ* frozen at the production SAT-blend values
 PHICP, PHICS, DELTA = 0.200, 0.195, 0.040
@@ -64,11 +65,12 @@ def load():
             if key in seen:
                 continue
             seen.add(key)
-            rows.append((phi, cn, cov, fp, tau, float(sig), p))
+            rows.append((phi, cn, cov, fp, tau, float(sig), p,
+                         _direct_rse_um(d) or float('nan')))
             feats.append({k: float(v) for k, v in d.items()
                           if isinstance(v, (int, float)) and not isinstance(v, bool)
                           and np.isfinite(v)})
-    return np.array(rows, float), feats
+    return np.array(rows, float), feats   # cols: phi cn cov fp tau sigma p r_SE_um
 
 
 def _rank(resid, feats, idx, label):
@@ -124,9 +126,10 @@ def main():
     if n < 20:
         print(f"[ABORT] only {n} cases (need WSL corpus)."); return
     logsf = np.log(a[:, 5]); taus = a[:, 4]
-    base = base_log_sat(a, PHICP, PHICS, DELTA)
+    # NEW: production base = SAT-blend × Cronau(r_SE) (mirrors what's adopted).
+    base = base_log_sat(a, PHICP, PHICS, DELTA) + np.log(cronau_factor(a[:, 7]))
     bv5, bp3 = cblend_fit(base, logsf, taus)
-    resid = logsf - cblend_pred(base, taus, bv5, bp3)   # SAT-blend log-residual
+    resid = logsf - cblend_pred(base, taus, bv5, bp3)   # POST-Cronau log-residual
 
     p = a[:, 6]; phi = a[:, 0]
     all_idx = np.arange(n)

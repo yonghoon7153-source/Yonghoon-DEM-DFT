@@ -1744,7 +1744,7 @@ def plot_ionic_scaling_fit(data_list, names, outdir):
     _title_formula = (f"σ_ion — v12-clean v3 (=v29/v32) × exp("
                       f"{_g['LIGG_LB_PCT']:+.2f}·LIGG_LB "
                       f"{_g['THIN_X_GEOM']:+.2f}·w_thin·GEOM "
-                      f"{_g['P50_DR_DEV']:+.2f}·(p₅₀δR−0.2) "
+                      f"{_g['P50_DR_DEV']:+.2f}·(p50_dR-0.2) "
                       f"{_g['PSD_RATIO']:+.2f}·r_SE/r_AM)  [γ:{_refit_tag}]")
     ax.set_title(f"{_title_formula}\n"
                  f"τ-blend(k={best_k:.0f},τc={best_tc:.2f})  P:S(k={best_kp:.0f},pc={best_pc:.2f},β={beta_pf_prod:+.3f})  κ_A={kappa_area:+.3f}  R²={r2:.3f} (v32-applied)  |  v29_base R²={r2_formX:.3f} LOOCV={loocv_formX:.3f}",
@@ -2130,7 +2130,7 @@ def plot_multiscale_sigma(data_list, names, outdir):
         f"σ_ion — v12-clean v3 (=v29/v32) × exp("
         f"{_g2['LIGG_LB_PCT']:+.2f}·LIGG_LB "
         f"{_g2['THIN_X_GEOM']:+.2f}·w_thin·GEOM "
-        f"{_g2['P50_DR_DEV']:+.2f}·(p₅₀δR−0.2) "
+        f"{_g2['P50_DR_DEV']:+.2f}·(p50_dR-0.2) "
         f"{_g2['PSD_RATIO']:+.2f}·r_SE/r_AM)  [γ:{_tag2}]",
         fontsize=8.5, fontweight='bold')
 
