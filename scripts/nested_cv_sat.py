@@ -46,7 +46,10 @@ DELTA_GRID = np.round(np.linspace(0.0, 0.10, 6), 4)
 # siblings.  Justified case-by-case in CLAUDE.md (2026-05-28 audit):
 #   input_particulate_12_S3: σ_act=0.020 vs 5 siblings 0.030–0.045 at same
 #       (φ,CN,r_SE) → σ_act ≈ half of sibling median, isolated anomaly.
-_EXCLUDED_NAMES = {'input_particulate_12_S3'}
+#   input_1mAh_9: σ_act=0.020 vs 5 _Sn siblings 0.029–0.035 (median 0.033)
+#       at same (φ≈0.23, CN≈4.5, r_SE=0.5µm) → σ_act = 61% of sibling
+#       median, same pattern as particulate_12_S3.  Excluded 2026-05-28.
+_EXCLUDED_NAMES = {'input_particulate_12_S3', 'input_1mAh_9'}
 
 
 def _meta_name(cid, mp_parent):
