@@ -116,6 +116,37 @@ def main():
             mz = float(np.mean([zs[k][i] for i in sub]))
             print(f"  {k:>10s}  mean z = {mz:+.2f}")
 
+    # Name-family check — for each TOP-3 outlier, strip a trailing seed suffix
+    # ('_S\d+', '_real_\d+', or trailing '_\d+') and list every corpus case
+    # sharing that base.  If ONE seed is wildly off and siblings are fine → the
+    # outlier is likely a per-seed simulation anomaly (candidate for removal).
+    import re as _re
+    def _family_base(nm):
+        s = _re.sub(r'_S\d+$', '', nm)
+        s = _re.sub(r'_real_\d+$', '_real', s)
+        s = _re.sub(r'_\d+$', '', s)
+        return s
+    seen_bases = set()
+    print("\n══ Name-family check (siblings of the top outliers) ══")
+    for i_top in out_idx[:5]:
+        base_nm = _family_base(names[i_top])
+        if base_nm in seen_bases:
+            continue
+        seen_bases.add(base_nm)
+        sibs = [j for j, nm in enumerate(names) if _family_base(nm) == base_nm]
+        if len(sibs) < 2:
+            continue
+        sibs.sort(key=lambda j: names[j])
+        print(f"\n  family '{base_nm}' — {len(sibs)} cases:")
+        print(f"  {'name':30s}  {'σ_act':>7s}  {'σ_pred':>7s}  {'err%':>6s}  {'φ':>5s}  {'CN':>5s}  {'r_SE':>5s}")
+        for j in sibs:
+            sa, sp = float(np.exp(logsf[j])), float(np.exp(pred[j]))
+            print(f"  {names[j][:30]:30s}  {sa:7.3f}  {sp:7.3f}  {err_pct[j]:+6.1f}  "
+                  f"{a[j,0]:5.3f}  {a[j,1]:5.1f}  "
+                  f"{a[j,7] if np.isfinite(a[j,7]) else float('nan'):5.2f}")
+    print("\n→ If one variant is wildly off vs siblings (similar σ_act range, "
+          "same φ/CN/r_SE) it's likely a per-seed simulation artifact.")
+
 
 if __name__ == "__main__":
     main()
