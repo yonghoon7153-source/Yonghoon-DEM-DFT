@@ -152,6 +152,42 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   Unify the label to stop confusion. Docs: `docs/ionic_scaling_law_experiments.md`
   (line 122 declares v12-clean v3 FINAL), `docs/Scaling_Law_Report_Full.md`.
 
+### σ_ionic form FINALIZED — smooth label-free version (2026-05-28)
+**The production σ_ionic form has a complete physics derivation and a
+canonical smooth statement.**  See `docs/sigma_ionic_physics_derivation.md`
+for term-by-term derivation; `scripts/final_form_status.py` for the
+equation + error landscape; `scripts/test_threshold_form.py` for the
+form-A-vs-alternatives comparison; `scripts/audit_ps_label_convention.py`
+for the AM_P/AM_S size-convention audit (n=183, 0 violations).
+
+  σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov^½ · f_p³ · C_blend(τ)
+
+with smooth label-free g_phys replacing g₀₁₀ (canonical):
+  g_phys   = σ(10·(f_small − 0.5))
+  f_small  = (1−p)·σ(5·(3.5 − r_AM,S)) + p·σ(5·(3.5 − r_AM,P))
+  φ_eff    = √[(φ−φc_eff)² + (δ·g_phys)²]
+  φc_eff   = (1−g_phys)·0.200 + g_phys·0.195
+  δ=0.040; σ_grain=3.0 mS/cm; Cronau piecewise (literature)
+
+Production code STILL uses the equivalent g₀₁₀ path (the corpus enforces
+the size convention so they are numerically identical: F LOOCV 0.9601 vs
+A 0.9600); migration to the smooth f_small form is an optional refactor
+that hardens against future monomodal mis-labeling.
+
+Confidence:
+  • CN² and (φ_eff)^½ — data-locked 91/91, derivable
+  • cov^½ — Holm 1967 constriction (HIGH literature)
+  • σ_grain × Cronau(r_SE) — Cronau 2022 (HIGH literature)
+  • f_p³ — 3D isotropy + Stauffer-Bruggeman backbone scaling
+  • C_blend(τ) — 6-param live-fit, dual-branch tortuosity regime
+  • g_phys (smooth) — empirically validated vs 5 alternatives, all losing
+    3.5–11.1× noise SE.  Audit (n=183) confirmed AM_S ≤ 4 µm AND
+    AM_P ≥ 5 µm with no overlap → label and smooth form equivalent here.
+
+Status: n=91 (after S3 anomaly removal), LOOCV 0.9600–0.9601, median
+|err| 8.5%, |err|>30% in 5/91 cases (per-seed noise ×2, isolated 10:0
+×1, marginal-CN ×1, single 62:38 corner ×1) — form at data noise ceiling.
+
 ### Recently completed (this session)
 - Group-compare "save selected cases to archive"; full MD/PDF report
   mirroring the dashboard; honest "—" for uncomputed base σ_e/κ; v12-clean

@@ -18,7 +18,31 @@ $$
 \underbrace{C_\text{blend}(\tau)}_{\text{Path}}
 $$
 
-n=91, LOOCV R² = 0.9600.  Median |err| 8.5%, 90th pctile 23%, no case >50%.
+where the percolation envelope is rounded by the small-AM-fraction gate
+
+$$
+\phi_\text{eff} = \sqrt{(\phi - \phi_{c,\text{eff}})^2 + (\delta\,g_\text{phys})^2}
+,\quad
+\phi_{c,\text{eff}} = (1 - g_\text{phys})\,\phi_{c,P} + g_\text{phys}\,\phi_{c,S}
+$$
+
+and **g_phys is the smooth, label-free small-AM volume-fraction sigmoid**
+(canonical form, replaces the historic g₀₁₀ with a fully smooth /
+differentiable / size-derived expression):
+
+$$
+\boxed{\,
+g_\text{phys} = \sigma\!\bigl(K_2 (f_\text{small} - 0.5)\bigr)
+,\qquad
+f_\text{small} = (1-p)\,\sigma\!\bigl(K_1(r_\text{cut} - r_{AM,S})\bigr)
+              + p\,\sigma\!\bigl(K_1(r_\text{cut} - r_{AM,P})\bigr)
+\,}
+$$
+
+with σ(·) = (1+e⁻·)⁻¹, K₂ = 10, r_cut = 3.5 µm, K₁ = 5 µm⁻¹
+(see §2b for derivation).
+
+n=91, LOOCV R² = 0.9601.  Median |err| 8.5%, 90th pctile 23%, no case >50%.
 6 of the 7 multiplicative factors have either a literature anchor or a
 physics-derived exponent; the 7th (f_p³) is justified by 3D isotropy and
 matched against Stauffer–Bruggeman backbone-fraction scaling.
@@ -159,6 +183,51 @@ separated by a 4.5-µm cutoff.  The g₀₁₀ sigmoid is therefore equivalent
 to σ(K·(f_small − 0.5)) where f_small is the volume fraction of AM
 particles below 4.5 µm — a genuine physical variable, not an arbitrary
 label gate.
+
+**Canonical smooth form (adopted) — `test_threshold_form.py` confirmed.**
+The label-free SMOOTH two-sigmoid expression replaces the historic g₀₁₀
+without numerical penalty:
+
+$$
+g_\text{phys} = \sigma\!\bigl(K_2(f_\text{small} - 0.5)\bigr)
+,\quad
+f_\text{small} = (1-p)\,\sigma\!\bigl(K_1(r_\text{cut} - r_{AM,S})\bigr)
+              + p\,\sigma\!\bigl(K_1(r_\text{cut} - r_{AM,P})\bigr)
+$$
+
+| Form | Description | LOOCV | Δ vs A |
+|---|---|---|---|
+| A (legacy g₀₁₀)  | uses ps_ratio label and p                       | 0.9600 | reference |
+| **F (smooth abs)** | r_cut = 3.5 µm, K₁ = 5 µm⁻¹ (inner-CV picks 91/91 at 3.5 µm) | **0.9601** | **+0.0001** |
+| G (smooth ratio) | r_AM/r_SE ratio cutoff (scale-invariant variant) | 0.9597 | −0.0003 |
+| B (no blend)     | single threshold, δ always active               | 0.9517 | −0.0084 |
+| C (additive κ)   | φc + κ·log r_AM                                 | 0.9542 | −0.0058 |
+| D (gate on r_AM) | g₀₁₀ → σ(r_AM)                                  | 0.9422 | −0.0178 |
+| E (gate on ratio)| g₀₁₀ → σ(r_SE/r_AM)                             | 0.9520 | −0.0080 |
+
+Form F is the **canonical mathematical statement** of the production form:
+- **No inequalities** anywhere — every classification step is a sigmoid.
+- **Label-free** — directly uses r_AM_S and r_AM_P sizes; correctly
+  handles monomodal AM systems (the size itself decides which inner
+  sigmoid fires).
+- **Robust hyperparameters** — K₁ ranges 2 → 20 with little effect
+  on LOOCV; r_cut = 3.5 µm is locked 91/91 by inner CV (the natural
+  midpoint of the audit-confirmed [AM_S ≤ 4.0, AM_P ≥ 5.0] gap).
+- **Production code does not need to change** — the legacy g₀₁₀ branch
+  is numerically equivalent to F on this corpus, and the corpus enforces
+  the size convention.  Migration to F is an optional refactor that
+  hardens the form against future monomodal mis-labeling.
+
+**For future data the convention must be enforced** (in this corpus it
+holds empirically but is not enforced by code):
+- bimodal: ensure r_AM_S < r_AM_P at data load
+- monomodal at r_AM ≤ 4 µm → label `0:10` (AM_S only)
+- monomodal at r_AM ≥ 5 µm → label `10:0` (AM_P only)
+- monomodal at 4 µm < r_AM < 5 µm → out-of-corpus regime; ambiguous
+  zone — flag and require disambiguation
+- **OR** simply migrate the live fitter to evaluate `f_small` from
+  r_AM_S and r_AM_P directly (form F), in which case the label is no
+  longer load-bearing.
 
 **For future data the convention must be enforced** (in this corpus it
 holds empirically but is not enforced by code):
