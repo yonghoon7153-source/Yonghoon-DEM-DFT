@@ -406,10 +406,14 @@ def main():
             ann = rec.get('anneal', {})
             eos = rec.get('eos', {})
             ela = rec.get('elastic', {})
-            print(f"  E={rec.get('E_post_anneal_per_atom', float('nan')):.4f} "
-                  f"B0={eos.get('B0_GPa', float('nan')):.1f} GPa "
-                  f"E_young={ela.get('E_young_GPa', float('nan')):.1f} GPa "
-                  f"Pugh={ela.get('pugh_ratio_GoverB', float('nan')):.2f}")
+            # dict.get(k, default) only fires when key is ABSENT — None values
+            # (e.g. eos.B0_GPa when Bp-gate rejected the fit) slip through and
+            # crash :.1f format. Coerce None→NaN explicitly.
+            _nz = lambda x: float('nan') if x is None else x
+            print(f"  E={_nz(rec.get('E_post_anneal_per_atom')):.4f} "
+                  f"B0={_nz(eos.get('B0_GPa')):.1f} GPa "
+                  f"E_young={_nz(ela.get('E_young_GPa')):.1f} GPa "
+                  f"Pugh={_nz(ela.get('pugh_ratio_GoverB')):.2f}")
         except Exception as e:
             print(f"  ❌ FAILED: {e}")
             records.append({'name': winner_name(xpath), 'error': str(e)})
