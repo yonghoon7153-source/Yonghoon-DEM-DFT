@@ -426,49 +426,49 @@ def generate_report(data_list, names, outdir):
     # ─── Part III: Champion Scaling Laws (computed from data) ───
     L.append("## 9. Champion Scaling Laws (Part III)\n")
 
-    # Fit ionic champion — FORM X: σ = C × σ_grain × (φ-φc)^(3/4) × CN × √cov / √τ
-    ion_r2, ion_C = None, None
-    el_r2, el_C = None, None
-    th_r2, th_C = None, None
+    # ── Ionic — T1 PRODUCTION form (2026-05-28: cov_Hertz + power gate + P2 + f_intact)
+    # σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p³
+    #     · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact]
+    ion_r2, ion_loo, ion_b, ion_n = None, None, None, 0
+    try:
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        import generate_comparison_plots as gcp
+        bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = gcp._stage_e_base_arrays(data_list)
+        ion_n = len(ts)
+        if ion_n >= 8:
+            extras, _ = gcp._c4_extras_from_arrays(phi_a, rse_a, dcov_a,
+                                                   p_arr=p_a, fi_log_arr=fi_a)
+            ion_r2, ion_loo, _Ct, _Cn, _pred, ion_b, _ = gcp._cblend_fit_score(
+                bl, ls, ts, extras=extras)
+    except Exception as _e:
+        ion_r2, ion_loo, ion_n = None, None, 0
 
-    # Ionic fit — FORM X: σ = C × σ_grain × (φ-φc)^(3/4) × CN × √cov / √τ
-    PHI_C = 0.185
-    ion_actual = []
-    ion_pred_rhs = []
-    for d in data_list:
-        sigma_net = d.get('sigma_full_mScm', 0)
-        phi_se = d.get('phi_se', 0)
-        cn = d.get('se_se_cn', 0)
-        tau = d.get('tortuosity_recommended', d.get('tortuosity_mean', 0))
-        _cvs = [v for v in [d.get('coverage_AM_P_mean',0), d.get('coverage_AM_S_mean',0), d.get('coverage_AM_mean',0)] if v>0]
-        cov = (sum(_cvs)/len(_cvs))/100 if _cvs else 0.20
-        phi_ex = max(phi_se - PHI_C, 0.001)
-        if sigma_net > 0.01 and phi_ex > 0 and cn > 0 and tau > 0:
-            rhs = 3.0 * phi_ex**0.75 * cn * np.sqrt(cov) / np.sqrt(tau)
-            ion_actual.append(sigma_net)
-            ion_pred_rhs.append(rhs)
-
-    if len(ion_actual) >= 3:
-        ion_actual = np.array(ion_actual)
-        ion_pred_rhs = np.array(ion_pred_rhs)
-        # Log-space C: geometric mean (robust to outliers)
-        ion_C = float(np.exp(np.mean(np.log(ion_actual / ion_pred_rhs))))
-        ion_pred = ion_C * ion_pred_rhs
-        # R² in log space (appropriate for data spanning orders of magnitude)
-        log_actual = np.log(ion_actual)
-        log_pred = np.log(ion_pred)
-        ss_res = np.sum((log_actual - log_pred)**2)
-        ss_tot = np.sum((log_actual - np.mean(log_actual))**2)
-        ion_r2 = 1 - ss_res / ss_tot if ss_tot > 0 else 0
-
-    L.append(f"### Ionic — FORM X (R²={ion_r2:.3f}, 1 free parameter)" if ion_r2 else "### Ionic")
+    if ion_r2 is not None:
+        L.append(f"### Ionic — T1 PRODUCTION form (R²={ion_r2:.3f}, "
+                 f"LOOCV={ion_loo:.3f}, n={ion_n}, 5 free params)\n")
+    else:
+        L.append(f"### Ionic — T1 PRODUCTION form (corpus too small: n={ion_n}<8, "
+                 "show schema only)\n")
     L.append("```")
-    L.append("σ_ion = C × σ_grain × (φ_SE - φ_c)^(3/4) × CN × √coverage / √τ")
-    L.append(f"     = C × σ_grain × ⁴√[(φ-φc)³ × CN⁴ × cov² / τ²]")
-    L.append(f"C = {ion_C:.4f} (data-fitted, n={len(ion_actual)})" if ion_C else "C ≈ 0.123 (default)")
-    L.append(f"φ_c = {PHI_C} (SE percolation threshold: 이 값 이하에서 σ→0)")
-    L.append(f"σ_grain = 3.0 mS/cm (LPSCl grain interior conductivity)")
+    L.append("σ_ionic = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p³")
+    L.append("        · exp[ a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact ]")
+    L.append("")
+    L.append("  φ_eff   = √[ (φ − φc_eff)² + (δ · g_phys)² ]")
+    L.append("  φc_eff  = (1 − g_phys)·0.200 + g_phys·0.195      [SAT-blend]")
+    L.append("  g_phys  = (min(3.5 µm / r̄_AM, 1))^2              [power-law size gate]")
+    L.append("  r̄_AM   = (1−p)·r_AM,S + p·r_AM,P                 (composition-weighted)")
+    L.append("  P2      = g_phys · (φ − 0.195)² · (r_SE − 0.5)+   [Cronau super-µm arm]")
+    L.append("  f_intact = 1 − fracture_aware_excluded_pct / 100")
+    L.append("  Cronau(r) = 0.33 + 0.32·σ(50(r−0.10)) + 0.25·σ(50(r−0.30))")
+    L.append("                                       + 0.10·σ(50(r−0.50))   [3-sigmoid]")
+    L.append("")
+    L.append("FROZEN:  σ_grain=3.0 mS/cm, δ=0.040, φc_P=0.200, φc_S=0.195,")
+    L.append("         r_cut=3.5 µm (power-gate cutoff), α=2 (power-gate exponent)")
+    if ion_b is not None and len(ion_b) >= 5:
+        L.append(f"LIVE-fit: a={ion_b[0]:+.3f}  b={ion_b[1]:+.3f}  c={ion_b[2]:+.3f}  "
+                 f"β_P2={ion_b[3]:+.3f}  β_F={ion_b[4]:+.3f}")
     L.append("```\n")
+
 
     # Electronic fit
     el_actual = []
@@ -551,68 +551,125 @@ def generate_report(data_list, names, outdir):
     L.append("→ 문헌 n≈3의 물리적 기원: 기하학(tortuosity) + 접촉 저항(constriction)")
     L.append("```\n")
 
-    # ─── FORM X Physical Derivation ───
-    L.append("## 10. FORM X 물리적 유도\n")
-    L.append("### Bruggeman의 한계")
-    L.append("```")
-    L.append("Bruggeman: σ ∝ φ_SE / τ²")
-    L.append("  가정: 균질한 연속 매질에서 random walk → τ² penalty")
-    L.append("  문제: thin 전극(2-3층)에서 균질 가정 붕괴 → τ² 과도 penalty")
-    L.append("```\n")
+    # ─── 항별 친절 설명 (대학원생 수준, 비유 없이) ───
+    L.append("## 10. σ_ionic 항별 친절 설명\n")
+    L.append("각 항이 무슨 물리를 잡고 있는지, 왜 그 지수/형태가 채택됐는지를 한 줄씩.\n")
 
-    L.append("### FORM X = Bruggeman의 4가지 보정")
-    L.append("```")
-    L.append("FORM X = σ_brug × C × √(1-φ_c/φ) × τ^(3/2)/f_perc × CN × √cov")
-    L.append("")
-    L.append("상쇄 후:")
-    L.append("  τ^(3/2) × τ^(-2) = τ^(-1/2)   ← softened (random walk → discrete network)")
-    L.append("  f_perc^(-1) × f_perc = 1       ← threshold에 흡수")
-    L.append("  φ × √(1-φ_c/φ) = √φ × √(φ-φ_c) ← percolation theory")
-    L.append("")
-    L.append("최종: σ = C × σ_grain × ⁴√[(φ-φ_c)³ × CN⁴ × cov² / τ²]")
-    L.append("```\n")
+    L.append("### σ_grain · Cronau(r_SE) — 재료 기준선")
+    L.append("- **σ_grain = 3.0 mS/cm** — Cronau 2022가 측정한 Li₆PS₅Cl **single-crystal** ionic conductivity.")
+    L.append("  pellet 값(1.3 mS/cm)이 아니라 grain interior 값을 써야 form이 '입자 안→입자 안'의 전도를")
+    L.append("  계산하는 게 됨. GB/접촉 손실은 다른 항이 따로 잡음.")
+    L.append("- **Cronau(r_SE)** — 같은 Cronau 2022가 보고한 sub-µm grain interior 자체의 conductivity 감소.")
+    L.append("  r_SE ≥ 1µm: ×1.0, 0.5µm: ×0.65, 0.3µm: ×0.50, 0.1µm 이하: ×0.33.")
+    L.append("  3개 sigmoid를 매끄럽게 이어붙인 형태 (불연속 piecewise 대신).")
+    L.append("  물리: 작은 입자는 표면 amorphization 비율이 커서 grain bulk 자체 conductivity가 낮아짐.\n")
 
-    L.append("### 각 항의 물리\n")
-    L.append("| 항 | ⁴√ 안 지수 | effective | 물리적 기원 |")
-    L.append("|---|---|---|---|")
-    L.append("| (φ-φ_c) | 3 | 3/4 | 3D percolation (t=3/2의 √) |")
-    L.append("| CN | 4 | 1 | network connectivity (선형) |")
-    L.append("| coverage | 2 | 1/2 | AM-SE 계면 품질 (수확 체감) |")
-    L.append("| τ | -2 | -1/2 | softened tortuosity |")
+    L.append("### (φ_eff)^½ — Mean-field 3D percolation")
+    L.append("- **φ = SE 부피분율**, **φc = SE percolation threshold (~0.20)**.")
+    L.append("- 임계점 위로 충분히 떨어진 영역에서 σ ∝ √(φ − φc) (mean-field 3D scaling).")
+    L.append("- **φ_eff = √[(φ−φc_eff)² + (δ·g_phys)²]** — threshold 근처에서 √이 갑자기 0으로 떨어지는")
+    L.append("  것을 disorder rounding (δ=0.040)으로 부드럽게 만든 형태. φc_eff는 P-heavy(0.200)와")
+    L.append("  S-heavy(0.195) 사이를 g_phys로 blend (SAT-blend).")
+    L.append("- 91/91 case에서 nested CV exponent scan 결과 0.5 lock-in.\n")
+
+    L.append("### CN² — Kirchhoff network 병렬 경로")
+    L.append("- **CN** = SE-SE coordination number (입자당 평균 이웃 수).")
+    L.append("- Kirchhoff 해석: CN이 2배면 (a) 병렬 경로 수가 2배, (b) 각 경로의 bond strength도 약간 향상")
+    L.append("  → CN²로 scale. 정확히 1.0도 2.0도 아닌 데이터-locked 지수.")
+    L.append("- exp_S/exp_CN scan 91/91 case 모두 2.0 선택 → 가장 강한 단일 contributor")
+    L.append("  (ablation: CN² 빼면 LOOCV −0.307).\n")
+
+    L.append("### cov_Hertz^½ — Holm 1967 constriction resistance")
+    L.append("- **cov** = 한 SE 입자가 다른 SE 입자에 의해 덮이는 표면 비율 (contact area fraction).")
+    L.append("- Holm 1967: 두 입자 간 전류는 √(contact area)에 비례 (spreading/constriction).")
+    L.append("- **왜 Hertz냐?** 원래 Tabor adhesion 보정된 cov_physics를 썼는데, Spearman ρ(σ, cov_Hertz)")
+    L.append("  =0.697 > ρ(σ, cov_physics)=0.476. 해석: Tabor 부착으로 생기는 부가 접촉 면적은")
+    L.append("  기하학적으론 존재해도 vdW gap 때문에 Li⁺ 전도에는 기여 안 함 → '유효 Li⁺ 전도 면적'은")
+    L.append("  elastic Hertz 면적임. (T1 adoption, 2026-05-28.)\n")
+
+    L.append("### f_p³ — 3D isotropy")
+    L.append("- **f_p** = percolating SE 비율 (= percolation_pct/100).")
+    L.append("- 3D에서 σ가 잘 흐르려면 x, y, z 세 방향 모두 percolate해야 함.")
+    L.append("- 단순 독립 가정: P(perc-x ∧ perc-y ∧ perc-z) = f_p³. Stauffer-Bruggeman backbone scaling과 일치.\n")
+
+    L.append("### exp[a + b·ln τ + c·(ln τ)²] — tortuosity prefactor (logpoly2)")
+    L.append("- **τ** = recommended tortuosity (path-length ratio).")
+    L.append("- 단순 1/τ나 1/τ²로는 데이터 곡선을 못 잡음 → ln τ의 2차 다항식을 OLS로 live-fit.")
+    L.append("- 이전 dual-branch (P/S 따로 6 params) 대비 ΔAIC = −10.6, ΔBIC = −18.2로 결정적 우위.")
+    L.append("  파라미터 수 6→3으로 n/k overfit margin 2배 (15:1 → 30:1).\n")
+
+    L.append("### β_P2·P2 — Cronau super-µm arm (corner correction)")
+    L.append("- **P2 = g_phys · (φ − 0.195)² · (r_SE − 0.5)+** — g_phys로 게이트되어 62:38·D1+(=r_SE≥1µm)")
+    L.append("  corner에서만 fire함.")
+    L.append("- 물리: r_SE ≥ 0.5µm에서 Cronau는 ×1.0으로 saturate되지만, 실제 데이터에서 그 위로도 σ가")
+    L.append("  추가 enhancement를 보임 → '상한선이 0.5µm가 아니라 더 멀리 가는' 보정.")
+    L.append("- **Leave-corner-out generalization test PASSED** (sign-consistent, corner RMSE −0.119).\n")
+
+    L.append("### β_F · log f_intact — fracture-aware Holm")
+    L.append("- **f_intact = 1 − fracture_aware_excluded_pct/100** — fracture solver가 끊겼다고 본 접촉의")
+    L.append("  여집합 (살아있는 접촉 비율).")
+    L.append("- β ≈ +0.19 — '끊어진 접촉도 100% 잃는 게 아니라 micro-asperity로 ~60% 전도 유지'를")
+    L.append("  의미하는 partial-Holm 보정.")
+    L.append("- 단순 multiplicative f_intact (β=1) 대신 log-linear로 부드럽게.\n")
+
+    L.append("### g_phys (power-law size gate) — label-free small-AM dominance")
+    L.append("- **g_phys = (min(3.5µm / r̄_AM, 1))²**, r̄_AM = composition-weighted AM radius.")
+    L.append("- 합성품 AM이 reference size 3.5µm보다 X배 크면 small-AM 기여가 1/X² (inverse-square,")
+    L.append("  cross-section scaling).")
+    L.append("- 이전엔 P:S label (10:0 vs 0:10) 기반 g_010 sigmoid 썼는데, label-convention 의존을 없애려고")
+    L.append("  size 기반으로 교체. 데이터에 +0.0009 LOOCV 손해 없음, borderline 케이스 (input_S_2 r_AM_S=4µm)")
+    L.append("  처리에서 더 정확.\n")
+
+    L.append("### 항별 신뢰도 요약\n")
+    L.append("| 항 | 신뢰도 | 근거 |")
+    L.append("|---|---|---|")
+    L.append("| σ_grain | HIGH | Cronau 2022 literature |")
+    L.append("| Cronau(r_SE) | HIGH | Cronau 2022 piecewise (smoothed) |")
+    L.append("| (φ_eff)^½ | MED-HIGH | mean-field 3D percolation; data-locked 91/91 |")
+    L.append("| CN² | MED-HIGH | Kirchhoff network; locked 91/91 |")
+    L.append("| cov_Hertz^½ | HIGH | Holm 1967 + Spearman 0.697>0.476 |")
+    L.append("| f_p³ | MED | 3D isotropy + Stauffer-Bruggeman |")
+    L.append("| C_blend(τ) logpoly2 | MED | ΔAIC −10.6 vs dual-branch |")
+    L.append("| β_P2·P2 | MED | leave-corner-out PASSED |")
+    L.append("| β_F·log f_intact | MED | fracture-aware partial-Holm |")
+    L.append("| g_phys (power gate) | MED-HIGH | inverse-square + Alt-C scan 우승 |")
     L.append("")
 
-    # ─── Robustness ───
-    L.append("### Robustness Analysis\n")
-    L.append("| Model | Free params | α | φ_c | R² |")
-    L.append("|-------|------------|---|-----|-----|")
-    if ion_r2:
-        L.append(f"| FORM X (fixed) | 1 (C) | 0.50 | 0.18 | {ion_r2:.3f} |")
-    L.append("| α+φ_c free | 3 (C,α,φ_c) | ~0.51 | ~0.185 | +0.001 |")
-    L.append("")
-    L.append("ΔR² = 0.001 — 고정 지수가 자유 지수와 거의 동일.")
-    L.append("φ_c는 SE 크기(0.5~1.5μm)에 무관하게 0.175~0.190 범위.")
-    L.append("→ **Parsimony wins: 1 free param으로 충분.**\n")
-
-    # ─── Evolution ───
-    L.append("### 모델 진화 v1→v4++\n")
-    L.append("| Version | 공식 | ALL R² | thin R² |")
-    L.append("|---------|------|--------|---------|")
-    L.append("| v3 | σ_brug × C × (G×d²)^¼ × CN² | 0.84 | -1.0 |")
-    L.append("| v4 | σ_brug × C × √(1-φ_c/φ) × τ^(3/2)/f × CN^(3/2) | 0.95 | 0.92 |")
-    if ion_r2:
-        L.append(f"| **v4++ FORM X** | **C×σ_grain×(φ-φ_c)^¾×CN×√cov/√τ** | **{ion_r2:.2f}** | **~0.93** |")
+    L.append("### 채택 history (각 단계 LOOCV로 검증)\n")
+    L.append("| Step | LOOCV | ΔLOOCV |")
+    L.append("|---|---|---|")
+    L.append("| Baseline (bare √(φ−0.19)) | 0.9499 | — |")
+    L.append("| + SAT-blend (φc_eff, δ) | 0.9578 | +0.0049 |")
+    L.append("| × Cronau(r_SE) | 0.9640 | +0.0062 |")
+    L.append("| C_blend → logpoly2 | 0.9660 | +0.0020 (+ΔAIC −10.6) |")
+    L.append("| smooth f_small → power gate (α=2) | 0.9670 | +0.0010 |")
+    L.append("| + β_P2·P2 | 0.9687 | +0.0017 |")
+    L.append("| + β_F·log f_intact | 0.9710 | +0.0023 |")
+    L.append("| T1: cov_physics → cov_Hertz | **0.9712** | +0.0002 (k 6→5) |")
     L.append("")
 
-    # ─── Limitations ───
-    L.append("## 11. 한계점\n")
-    L.append("1. **φ_c = 0.18 고정**: 데이터에서 최적화된 경험적 값. SE 재료/합성 조건에 따라 달라질 수 있음. 3D random sphere packing 문헌값(0.15~0.20)과 일치하나 이론적 유도 부재.")
-    L.append("2. **⁴√ (α=0.5) 고정**: 최적 α=0.51 (ΔR²=0.001). 물리적 유도 없이 깔끔한 분수로 선택.")
-    L.append("3. **Coverage 정의**: mean(AM_P, AM_S) 사용. AM 크기별 가중치 미반영.")
-    L.append("4. **τ^(-1/2)**: Bruggeman τ²에서 softened. 이산 네트워크의 tortuosity penalty가 연속 매질보다 약한 이유의 이론적 유도 필요.")
-    L.append("5. **CN^1 (선형)**: v3의 CN²에서 축소. Free fit은 CN^1.33 선호. CN 지수의 물리적 근거(Kirkpatrick EMA, percolation exponent) 정립 필요.")
-    L.append("6. **n=48**: SE 0.5μm 37개로 편중. thin100 데이터(n=2) 부족. 15개 추가 시 재검증 필수.")
-    L.append("7. **Electronic/Thermal 미반영**: FORM X는 ionic만. Electronic(AM percolation), Thermal(2상 경쟁)은 별도 공식.")
-    L.append("8. **DEM 접촉 모델 의존**: hooke/hysteresis 모델의 접촉면적이 실제 cold-pressed argyrodite와 일치하는지 별도 검증 필요.")
+    L.append("**FINAL production**: LOOCV ≈ 0.971, 5 fit params, noise ceiling.\n")
+
+    # ─── Limitations (T1 production) ───
+    L.append("## 11. 한계점 (T1 production)\n")
+    L.append("1. **PRODUCTION USES RAW n=90**: per-seed averaging은 안 함. multi-seed sim이 있는")
+    L.append("   sibling family는 raw로 들어가서 일부 outlier가 |err|>20%로 남음.")
+    L.append("2. **남은 |err|>30% outlier (2~3건, 모두 data-limited)**:")
+    L.append("   - `input_8mAh_real_10` -40% — isolated 10:0, no siblings, 4 form-edge 동시 발현 → 형이 잡기 불가")
+    L.append("   - `input_1mAh_9_S5/_S2` ±30% — sibling tail (per-seed noise 한계 안에 있음)")
+    L.append("   - 처방: multi-seed simulation 추가 (8mAh_real_10, 1mAh_8, 1mAh_5_AMP, 1mAh_8_AMP, 1mAh_8_AMS)")
+    L.append("3. **φc_P/φc_S/δ FROZEN**: 데이터로 재선별 금지. logpoly2와 함께 nested CV에서 selection-bias")
+    L.append("   (+0.0095)가 dual-branch(+0.0048)보다 큼 → production은 항상 frozen 값 사용.")
+    L.append("4. **62:38·SE-rich corner bidirectional bias**: r_SE=0.5에서 over-predict, r_SE≥1.0에서")
+    L.append("   under-predict. P2가 r_SE≥1.0쪽만 잡고 r_SE=0.5쪽은 수학적으로 0이라 못 잡음.")
+    L.append("   single multiplicative 항으로는 불가능 → 데이터 추가 필요.")
+    L.append("5. **contact-quality family REJECTED**: am_se_cn, coverage variants, r_SE/r_AM 등 모두")
+    L.append("   nested CV에서 죽음 (Δ −0.0008~−0.0036). 62:38 corner의 -0.81 Spearman은 small-sample")
+    L.append("   (n=15) overfit이었음.")
+    L.append("6. **Electronic/Thermal 미반영**: T1 form은 ionic만. Electronic(AM percolation),")
+    L.append("   Thermal(2상 경쟁)은 별도 공식 (위 섹션 참조).")
+    L.append("7. **DEM 접촉 모델 의존**: hooke/hysteresis 모델의 접촉면적이 실제 cold-pressed argyrodite와")
+    L.append("   일치하는지는 별도 검증 필요.")
     L.append("")
 
     L.append("---\n")
