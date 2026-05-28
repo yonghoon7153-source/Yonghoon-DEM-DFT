@@ -68,10 +68,19 @@ def load_corpus():
                 continue
             seen.add(key)
             sz = _size_proxy(d)
+            amcn = (d.get('am_se_cn_mean') or d.get('AM_S_se_cn_mean')
+                    or d.get('am_se_cn_surface_weighted'))
+            cov_s_h = d.get('coverage_AM_S_mean') or d.get('coverage_AM_mean')
+            cov_s_p = (d.get('coverage_AM_S_mean_physics')
+                       or d.get('coverage_AM_mean_physics'))
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
-                         float(sz) if sz else np.nan, _direct_rse_um(d)))
+                         float(sz) if sz else np.nan, _direct_rse_um(d),
+                         float(amcn) if amcn and amcn > 0 else np.nan,
+                         float(cov_s_h)/100.0 if cov_s_h and cov_s_h > 0 else np.nan,
+                         float(cov_s_p)/100.0 if cov_s_p and cov_s_p > 0 else np.nan))
     a = np.array(rows, float)
-    return a  # cols: phi, cn, cov, fp, tau, sigma, p, se_size, r_SE_um(direct)
+    # cols: phi cn cov fp tau sigma p se_size r_SE_um am_se_cn covS_hertz covS_phys
+    return a
 
 
 def _direct_rse_um(d):
@@ -207,6 +216,32 @@ def gb_feat(a):
     return np.where(np.isfinite(rse), f, 0.0)
 
 
+def _logcol(a, col):
+    v = a[:, col]
+    ls = np.log(np.where(np.isfinite(v) & (v > 0), v, np.nan))
+    med = np.nanmedian(ls[np.isfinite(ls)]) if np.isfinite(ls).any() else 0.0
+    return np.where(np.isfinite(ls), ls, med)
+
+
+def amcn_feat(a):
+    """log AM-SE coordination number (contact COUNT, not area). The diagnostic's
+    strongest geometric signal in the 62:38 residual (corr −0.81): high am_se_cn
+    (small SE, many tiny contacts) ⇒ lower σ; expect a NEGATIVE fitted β."""
+    return _logcol(a, 9)
+
+
+def covS_hertz_feat(a):
+    """log AM_S coverage (Hertzian) — contact AREA side of the same axis
+    (diagnostic corr +0.79 in 62:38; model's cov uses the physics-averaged
+    version, so this tests extra signal / exponent mis-spec)."""
+    return _logcol(a, 10)
+
+
+def covS_phys_feat(a):
+    """log AM_S coverage (physics)."""
+    return _logcol(a, 11)
+
+
 def cblend_feat_fit(base, logsf, taus, sf):
     """C_blend fit + one extra coefficient β on the post-C_blend residual
     (feature sf centered here)."""
@@ -309,7 +344,13 @@ def main():
             ("log r_SE size (g_phi)", size_feat, 7,
              "few-case / log-linear → expected weak"),
             ("sub-µm GB penalty (Cronau, r_SE<0.5µm)", gb_feat, 8,
-             "mirrors Stage-E grain correction → physical candidate")):
+             "mirrors Stage-E grain correction → physical candidate"),
+            ("log am_se_cn (AM-SE contact COUNT)", amcn_feat, 9,
+             "diagnostic's top geometric signal in 62:38 (corr −0.81)"),
+            ("log coverage_AM_S (Hertzian)", covS_hertz_feat, 10,
+             "contact-AREA side (corr +0.79); collinear w/ am_se_cn"),
+            ("log coverage_AM_S (physics)", covS_phys_feat, 11,
+             "physics coverage; model's cov already uses this")):
         n_ok = int(np.isfinite(a[:, col]).sum())
         if n_ok < 0.4*n:
             print(f"  [skip {tag}: only {n_ok}/{n} expose the input]")
@@ -320,6 +361,10 @@ def main():
         print(f"  + {tag}  [{n_ok}/{n}]")
         print(f"      nested-CV={lo_x:.4f}  Δover SAT={d:+.4f}  β={beta_x:+.3f}  ({why})")
         print(f"      VERDICT: {v}")
+    print("-" * 64)
+    print("  NOTE: am_se_cn (count) & coverage (area) are the SAME contact-quality")
+    print("  axis (anti-correlated) — adopt only ONE. Testing several arms = mild")
+    print("  multiple-comparison; trust a PASS only if Δ clearly exceeds the SE.")
 
 
 if __name__ == "__main__":
