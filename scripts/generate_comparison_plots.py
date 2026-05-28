@@ -4381,7 +4381,6 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     worst-fit cases, and reports which structural feature their log-residual
     correlates with most."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
-    KV5 = 5.0; CV5 = 2.1; KBL = 20.0; CBL = 1.92
     # Saved case names (args.names) aligned with data_list; the `names` arg is
     # the P:S ratio used as a short label. Show the saved name + P:S in the table.
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
@@ -4414,14 +4413,11 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         return None
     base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
     resid0 = logsf - base_log
-    w_v5 = 1.0 / (1.0 + np.exp(-KV5 * (taus - CV5)))
     lt = np.log(taus)
-    Xv5 = np.column_stack([np.ones(n), w_v5])
-    Xp3 = np.column_stack([np.ones(n), lt, lt**2, lt**3])
-    w_bl = 1.0 / (1.0 + np.exp(-KBL * (taus - CBL)))
-    bv5, *_ = np.linalg.lstsq(Xv5, resid0, rcond=None)
-    bp3, *_ = np.linalg.lstsq(Xp3, resid0, rcond=None)
-    pred_log = base_log + (1 - w_bl) * (Xv5 @ bv5) + w_bl * (Xp3 @ bp3)
+    # logpoly2 C_blend (adopted 2026-05-28): a + b·ln τ + c·(ln τ)²
+    X = np.column_stack([np.ones(n), lt, lt**2])
+    b_lp, *_ = np.linalg.lstsq(X, resid0, rcond=None)
+    pred_log = base_log + X @ b_lp
     resid = logsf - pred_log
     err_pct = (np.exp(pred_log) - np.exp(logsf)) / np.exp(logsf) * 100.0
     order = np.argsort(-np.abs(err_pct))
