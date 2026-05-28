@@ -86,6 +86,17 @@ p=AM_P fraction. C_blend(τ) still refits live; φc_P/φc_S/δ are FROZEN.
   sub-µm drop (Δ=+0.074), so the real 62:38 3× spread at fixed (62:38, r_SE)
   is NOT a clean deterministic sub-µm effect — packing/stochastic. Only levers
   left: MORE 62:38×packing data, or probabilistic (±band) prediction.
+- **CONTACT-QUALITY hypothesis ALSO rejected (2026-05-28).** The resid diagnostic
+  (`scripts/resid_diag_62_38.py`) showed am_se_cn (AM-SE contact COUNT) corr
+  **−0.81** and coverage_AM_S **+0.79** in the 62:38 subset (n=15) — looked like
+  the missing physics (contact quality vs quantity). But nested CV rejected ALL
+  of: am_se_cn surf-wt ungated (Δ=−0.0015) AND g_010-gated (Δ=−0.0023, WORSE),
+  coverage_AM Hertz/physics/Δ% (Δ=−0.0008/−0.0036/−0.0015), r_SE/r_AM size ratio
+  (Δ=−0.0008). The −0.81 was small-sample (n=15) overfitting — does NOT
+  generalize; gating to 0:10 makes it worse. DO NOT re-try am_se_cn / coverage /
+  size-ratio / GB / size terms for 62:38 — the whole contact-quality+size
+  hypothesis space is rigorously exhausted. 62:38 is intrinsic; SAT-blend
+  (0.9488→0.9532) is the ceiling. Levers: data, or probabilistic ±band.
 
 ### Ionic-conductivity scaling-law reconciliation — RESOLVED (2026-05-27)
 **There is effectively ONE current-best model under three names.**
