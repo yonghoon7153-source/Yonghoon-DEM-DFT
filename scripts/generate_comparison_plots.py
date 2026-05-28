@@ -2269,10 +2269,11 @@ def plot_formx_decomposition(data_list, names, outdir):
 
 
 def plot_ionic_decomp_physics(data_list, names, outdir):
-    """PHYSICS fixed-form factor decomposition: each factor's Δlog
-    contribution vs the reference (max-σ) case for
-    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^0.5·f_p³ (physics target)."""
-    SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
+    """PHYSICS fixed-form factor decomposition for the T1 PRODUCTION form
+    (2026-05-28): σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_H^½ · f_p³
+                      · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact].
+    Each factor's Δlog vs the reference (max-σ) case is plotted as a stacked bar."""
+    SG = 3.0; PHI_C = 0.19
     n = len(data_list)
     phi = [_get(d, 'phi_se') for d in data_list]
     cn = [_get(d, 'se_se_cn', 0) for d in data_list]
@@ -2280,50 +2281,113 @@ def plot_ionic_decomp_physics(data_list, names, outdir):
     cov = [(_cov_frac(d, physics=False) or _cov_frac(d, physics=True)) for d in data_list]
     fp = [_get(d, 'percolation_pct', 0)/100.0 for d in data_list]
     tau = [_get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 1)) for d in data_list]
-    log_phi = np.array([0.5*np.log(max(phi[i]-PHI_C, 1e-4)) if phi[i] > PHI_C else 0 for i in range(n)])
-    log_cn = np.array([CN_EXP*np.log(cn[i]) if cn[i] > 0 else 0 for i in range(n)])
-    log_cov = np.array([COV_EXP*np.log(cov[i]) if cov[i] and cov[i] > 0 else 0 for i in range(n)])
-    log_fp = np.array([3.0*np.log(max(fp[i], 1e-3)) if fp[i] > 0 else 0 for i in range(n)])
-    # C_blend(τ): fit on valid cases, contribution = pred − base
+    p_amp = [_ps_fraction(d) for d in data_list]
+    r_SE = [_direct_rse_um(d) for d in data_list]
+    r_AM_S = []; r_AM_P = []
+    for d in data_list:
+        rs, rp = _r_am_sizes(d)
+        r_AM_S.append(rs); r_AM_P.append(rp)
+    # f_intact (fracture-aware Holm input)
+    fi_log = []
+    for d in data_list:
+        frx = d.get('fracture_aware_excluded_pct')
+        if isinstance(frx, (int, float)) and not isinstance(frx, bool):
+            fi_log.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
+        else:
+            fi_log.append(0.0)
+
+    # Per-case sub-factors (each multiplied by its production exponent)
+    # NOTE: φ_eff is SAT-blend with composition-dependent φc, smoothed by δ·g_phys.
+    log_phi_eff = np.zeros(n); log_cronau = np.zeros(n)
+    log_cn = np.zeros(n); log_cov = np.zeros(n); log_fp = np.zeros(n)
+    p2_raw = np.zeros(n); fi_arr = np.array(fi_log, float)
+    for i in range(n):
+        if not (phi[i] and phi[i] > PHI_C and cn[i] and cn[i] > 0
+                and cov[i] and cov[i] > 0 and fp[i] and fp[i] > 0):
+            continue
+        g_p = _sat_g_smooth(p_amp[i], r_AM_S[i], r_AM_P[i])
+        phic = (1.0 - g_p)*SE_PHI_C_P + g_p*SE_PHI_C_S
+        phi_eff = np.sqrt((phi[i] - phic)**2 + (SE_SAT_DELTA*g_p)**2 + 1e-12)
+        cron = float(_cronau_factor(np.array([r_SE[i] if r_SE[i] else 1.0]))[0])
+        log_phi_eff[i] = 0.5 * np.log(phi_eff)
+        log_cronau[i] = np.log(cron)
+        log_cn[i] = SE_CN_EXP * np.log(cn[i])
+        log_cov[i] = SE_COV_EXP * np.log(cov[i])
+        log_fp[i] = 3.0 * np.log(fp[i])
+        pex = max(phi[i] - 0.195, 0.0)
+        r_eff = r_SE[i] if (r_SE[i] and np.isfinite(r_SE[i])) else 0.5
+        p2_raw[i] = g_p * pex**2 * max(r_eff - 0.5, 0.0)
+
+    # Fit T1 production form globally to get logpoly2 + β_P2 + β_F coefficients
     idx = [i for i in range(n)
-           if phi[i] > PHI_C and cn[i] > 0 and cov[i] and cov[i] > 0 and fp[i] > 0
-           and tau[i] > 0 and _stage_e_sigma(data_list[i])]
-    log_cb = np.zeros(n)
+           if phi[i] and phi[i] > PHI_C and cn[i] and cn[i] > 0
+           and cov[i] and cov[i] > 0 and fp[i] and fp[i] > 0
+           and tau[i] and tau[i] > 0 and _stage_e_sigma(data_list[i])]
+    log_cb = np.zeros(n); log_p2_term = np.zeros(n); log_fi_term = np.zeros(n)
+    a_fit = b_fit = c_fit = beta_p2 = beta_f = 0.0
     if len(idx) >= 8:
-        base = np.array([np.log(SG)+log_phi[i]+log_cn[i]+log_cov[i]+log_fp[i] for i in idx])
-        logsf = np.array([np.log(_stage_e_sigma(data_list[i])) for i in idx])
-        taus = np.array([tau[i] for i in idx])
-        _r2, _lo, _Ct, _Cn, pred, _, _ = _cblend_fit_score(base, logsf, taus)
+        base_arr = np.array([np.log(SG)+log_cronau[i]+log_phi_eff[i]+log_cn[i]
+                             +log_cov[i]+log_fp[i] for i in idx])
+        logsf_arr = np.array([np.log(_stage_e_sigma(data_list[i])) for i in idx])
+        taus_arr = np.array([tau[i] for i in idx])
+        extras = [p2_raw[idx], fi_arr[idx]]
+        try:
+            _r2, _lo, _Ct, _Cn, pred, b_coef, _ = _cblend_fit_score(
+                base_arr, logsf_arr, taus_arr, extras=extras)
+            a_fit, b_fit, c_fit = b_coef[0], b_coef[1], b_coef[2]
+            beta_p2 = b_coef[3] if len(b_coef) > 3 else 0.0
+            beta_f = b_coef[4] if len(b_coef) > 4 else 0.0
+        except Exception:
+            pass
+        # Decompose: C_blend(τ) = a + b·ln τ + c·(ln τ)²
         for j, i in enumerate(idx):
-            log_cb[i] = pred[j] - base[j]
+            lt = np.log(tau[i])
+            log_cb[i] = a_fit + b_fit*lt + c_fit*lt**2
+            log_p2_term[i] = beta_p2 * p2_raw[i]
+            log_fi_term[i] = beta_f * fi_arr[i]
+
     sig = [_stage_e_sigma(d) or 0 for d in data_list]
     ref = int(np.argmax(sig)) if any(s > 0 for s in sig) else 0
+
+    # 8 factors with distinct colors (left → right in legend = top → bottom of stack)
     factors = [
-        ('(φ−0.19)^0.5', log_phi, '#4472C4'),
-        ('CN²', log_cn, '#ED7D31'),
-        ('cov^0.5', log_cov, '#A5A5A5'),
-        ('f_p³', log_fp, '#70AD47'),
-        ('C_blend(τ)', log_cb, '#FFC000'),
+        ('(φ_eff)^½',     log_phi_eff,  '#4472C4'),   # blue
+        ('Cronau(r_SE)',  log_cronau,   '#7030A0'),   # purple
+        ('CN²',           log_cn,       '#ED7D31'),   # orange
+        ('cov_H^½',       log_cov,      '#A5A5A5'),   # gray
+        ('f_p³',          log_fp,       '#70AD47'),   # green
+        ('C_blend(τ)',    log_cb,       '#FFC000'),   # yellow
+        ('β_P2·P2',       log_p2_term,  '#5B9BD5'),   # light blue
+        ('β_F·log f_int', log_fi_term,  '#C00000'),   # dark red
     ]
-    fig, (ax, ax2) = plt.subplots(2, 1, figsize=(max(8, n*0.8), max(10, n*0.32)),
-                                  gridspec_kw={'height_ratios': [3, 2]})
+
+    # ── taller figure: top panel ~larger for 8 factors,
+    #     bottom panel ~taller (more vertical room per case row)
+    fig_w = max(11, n*0.95)
+    fig_h = max(16, n*0.60)
+    fig, (ax, ax2) = plt.subplots(
+        2, 1, figsize=(fig_w, fig_h),
+        gridspec_kw={'height_ratios': [3, 3]})
     x = np.arange(n); bpos = np.zeros(n); bneg = np.zeros(n)
     for label, vals, color in factors:
         delta = vals - vals[ref]
         pos = np.clip(delta, 0, None); neg = np.clip(delta, None, 0)
         ax.bar(x, pos, bottom=bpos, color=color, label=label, width=0.7,
                edgecolor='white', linewidth=0.5)
-        ax.bar(x, neg, bottom=bneg, color=color, width=0.7, edgecolor='white', linewidth=0.5)
+        ax.bar(x, neg, bottom=bneg, color=color, width=0.7,
+               edgecolor='white', linewidth=0.5)
         bpos += pos; bneg += neg
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', names, data_list)
     x_labels = [t.get_text() for t in ax.get_xticklabels()]
     if not any(x_labels):
         x_labels = list(names)
-    ax.set_title('PHYSICS fixed-form factor decomposition (ref: %s)'
-                 % (x_labels[ref] if ref < len(x_labels) else names[ref]),
-                 fontsize=12, fontweight='bold')
-    ax.legend(fontsize=9, loc='upper left', ncol=5)
+    title_suffix = (f"  (live fit: a={a_fit:+.2f} b={b_fit:+.2f} c={c_fit:+.2f}"
+                    f" β_P2={beta_p2:+.2f} β_F={beta_f:+.2f})")
+    ax.set_title('T1 PHYSICS form factor decomposition (ref: %s)%s'
+                 % (x_labels[ref] if ref < len(x_labels) else names[ref], title_suffix),
+                 fontsize=11, fontweight='bold')
+    ax.legend(fontsize=9, loc='upper left', ncol=4)
     ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
     for i in range(n):
         deltas = sorted([(l, v[i]-v[ref]) for l, v, _ in factors],
@@ -2331,15 +2395,18 @@ def plot_ionic_decomp_physics(data_list, names, outdir):
         dom = deltas[0][0]; col = [c for l, _, c in factors if l == dom][0]
         ax2.barh(i, deltas[0][1], color=col, height=0.6, edgecolor='white', linewidth=0.5)
         ax2.text(deltas[0][1], i, f' {dom}', va='center', fontsize=7)
-    ax2.set_yticks(range(n)); ax2.set_yticklabels([x_labels[i][:20] for i in range(n)], fontsize=7)
+    ax2.set_yticks(range(n)); ax2.set_yticklabels([x_labels[i][:24] for i in range(n)], fontsize=8)
     ax2.set_xlabel('Dominant factor delta-log', fontsize=10)
     ax2.set_title('Dominant factor per case', fontsize=11, fontweight='bold')
     ax2.axvline(0, color='gray', linewidth=0.5)
     ax2.spines['top'].set_visible(False); ax2.spines['right'].set_visible(False)
     fig.tight_layout()
     _write_csv(outdir, 'ionic_decomp_physics.csv',
-               ['(phi-0.19)^0.5', 'CN^2', 'cov^0.5', 'f_p^3', 'C_blend', 'dominant'],
-               x_labels, list(log_phi), list(log_cn), list(log_cov), list(log_fp), list(log_cb),
+               ['(phi_eff)^0.5', 'Cronau(r_SE)', 'CN^2', 'cov_H^0.5', 'f_p^3',
+                'C_blend(tau)', 'beta_P2*P2', 'beta_F*log_f_intact', 'dominant'],
+               x_labels, list(log_phi_eff), list(log_cronau), list(log_cn),
+               list(log_cov), list(log_fp), list(log_cb),
+               list(log_p2_term), list(log_fi_term),
                [sorted([(l, v[i]-v[ref]) for l, v, _ in factors], key=lambda t: -abs(t[1]))[0][0]
                 for i in range(n)])
     return _save(fig, outdir, "ionic_decomp_physics.png")
