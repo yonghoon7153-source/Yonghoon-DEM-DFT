@@ -50,18 +50,29 @@ _EXCLUDED_NAMES_EL: set[str] = set()
 
 
 _TARGET_KEYS_E = (
-    # Priority order — most physically-complete first.
-    # Stage E includes Trevisanello 2021 AM-crystallinity × size corrections
-    # (electronic analog of Cronau 2022 for σ_ionic).  Physics adds Tabor/
-    # plastic via network solver.  Some cases have _stage_e_physics empty
-    # (e.g. input_8mAh_real_10) but _stage_e populated — that's intentional
-    # per-case routing in the Stage E pipeline.  Track which key was used
-    # via _last_used_key so the audit reports coverage transparently.
-    'electronic_sigma_full_mScm_stage_e_physics',   # Stage E × physics
-    'electronic_sigma_full_mScm_stage_e',           # Stage E only (Hertz base + grain)
-    'electronic_sigma_full_mScm_physics',           # physics only (no Stage E corrections)
+    # Priority order — Hertz-pathway PREFERRED 2026-05-28 after audit found
+    # ~9/130 cases where the physics-pathway electronic solver
+    # (electronic_sigma_full_mScm_physics) produces impossible values
+    # (100K-1M mS/cm = 1000× σ_AM_single = physically nonsense).  The Hertz
+    # pathway (raw + Stage E) gives plausible values (1-280 mS/cm) for the
+    # SAME cases, so we route around the buggy physics solver until upstream
+    # is fixed.
+    #
+    # σ_ionic adopted the same Hertz-preference for T1 (cov_Hertz over
+    # cov_physics) on physics grounds (Tabor adhesion area ≠ Li+ conduction
+    # area).  Same logic applies to electronic: Hertz contact = elastic
+    # area for electron tunneling.
+    #
+    # Track which key was used via _last_used_key so audit shows coverage.
+    'electronic_sigma_full_mScm_stage_e',           # Stage E on Hertz (best — has Trevisanello)
     'electronic_sigma_full_mScm',                   # raw Hertz fallback
+    'electronic_sigma_full_mScm_stage_e_physics',   # Stage E × physics (currently buggy)
+    'electronic_sigma_full_mScm_physics',           # physics only (currently buggy)
 )
+
+# Reject σ_e values above this — composite cannot exceed σ_AM × (volume frac).
+# σ_AM(NCM811) ~ 50 mS/cm literature; cap at 100 mS/cm with 2× margin.
+SIGMA_E_MAX = 100.0
 
 _last_used_key: dict = {}   # case_id → which σ key supplied its target
 
@@ -75,7 +86,8 @@ def _stage_e_electronic(d, case_id=None):
     """
     for k in _TARGET_KEYS_E:
         v = d.get(k)
-        if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
+        if (isinstance(v, (int, float)) and not isinstance(v, bool)
+                and v > 0 and v <= SIGMA_E_MAX):
             if case_id is not None:
                 _last_used_key[case_id] = k
             return float(v)

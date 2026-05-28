@@ -4267,13 +4267,21 @@ def _stage_e_global_fit():
 _BOOTSTRAP_CACHE = {}   # corpus-fingerprint → (b_samples, residual_se_log)
 
 
-def _stage_e_bootstrap_coefs(B=500, seed=42):
+def _stage_e_bootstrap_coefs(B=200, seed=42):
     """Resample the FULL fit corpus B times → array of coefficient vectors.
     Returns (b_samples [B × k], residual_se_log, n_fit).
-    Cached per corpus fingerprint so repeated plot calls reuse the work."""
+    Cached per corpus fingerprint so repeated plot calls reuse the work.
+
+    B=200 chosen as balance: bootstrap SE ~ 1/√B already <1% at B=200,
+    and at n=88 with LOOCV inside _cblend_fit_score, B=500 was 30-60s
+    which can stress webapp subprocess timeouts.  B=200 takes 10-25s."""
     if not _FIT_CORPUS:
         return None
-    bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = _stage_e_base_arrays(_FIT_CORPUS)
+    try:
+        bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = _stage_e_base_arrays(_FIT_CORPUS)
+    except Exception as _e:
+        print(f"  [bootstrap] _stage_e_base_arrays failed: {_e}")
+        return None
     n = len(ts)
     if n < 8:
         return None
@@ -5330,11 +5338,23 @@ def main():
             print(f"  [SKIP] {plot_name}: requires {min_groups}+ case groups (have {n_groups})")
             continue
         func = entry["func"]
-        import inspect
+        import inspect, time, traceback
         params = inspect.signature(func).parameters
         if 'outdir' in params:
             # Standalone plot (creates own fig, saves itself)
-            outpath = func(all_data, plot_names, args.output)
+            t0 = time.time()
+            try:
+                outpath = func(all_data, plot_names, args.output)
+            except Exception as _e:
+                dt = time.time() - t0
+                print(f"  [FAIL] {plot_name}: {type(_e).__name__}: {_e}  "
+                      f"(after {dt:.1f}s)")
+                traceback.print_exc()
+                # Don't kill the whole loop — keep going so other plots work
+                continue
+            dt = time.time() - t0
+            if dt > 2.0:
+                print(f"  [time] {plot_name}: {dt:.1f}s")
             if outpath is None:
                 # R² too low — generate "Bruggeman reference" note
                 if plot_name in ('rgb_fitting', 'gb_corrected'):
@@ -5348,9 +5368,14 @@ def main():
                     }
                 continue
         else:
-            fig, ax = plt.subplots(figsize=FIG_SINGLE)
-            func(all_data, plot_names, ax=ax)
-            outpath = _save(fig, args.output, entry["file"])
+            try:
+                fig, ax = plt.subplots(figsize=FIG_SINGLE)
+                func(all_data, plot_names, ax=ax)
+                outpath = _save(fig, args.output, entry["file"])
+            except Exception as _e:
+                print(f"  [FAIL] {plot_name}: {type(_e).__name__}: {_e}")
+                traceback.print_exc()
+                continue
 
         # Check for CSV from csv_map (legacy) or standalone _write_csv
         csv_file = f"{plot_name}.csv" if plot_name in csv_map else None
