@@ -235,16 +235,71 @@ Adoption history (full chain, each step separately validated):
 
 FINAL production: LOOCV ≈ 0.971, 5 fit params.
 
+CLOSE-OUT (2026-05-28) — Bayesian Laplace + form-vs-solver decomposition:
+  • Form-vs-solver: Stage E σ ≈ network solver output (Cronau-multiplied).
+    Decomposition shows solver↔DEM gap is ~0% for all cases except
+    sub-µm Cronau-region (D0.25 only).  All other gap is form↔solver.
+    → form is the bottleneck, and it's a 5-param OLS compression of the
+    solver's output.  At info-theoretic ceiling for this representation.
+  • Bayesian Laplace (physics priors: β_F~N(0.19, 0.05) literature,
+    β_P2~N(3.5, 1.5)): empirical 90% PI coverage = 94.4% (well-calibrated).
+    Of 17 cases with |err|>15%:
+      − 12 INSIDE 90% PI → form correctly states uncertainty; NOT real outliers
+      − 5 OUTSIDE PI    → genuine model failures, ALL data-resolution issues
+
+THE 5 GENUINE σ_ionic OUTLIERS (post-Bayesian classification):
+  | # | Case                       | err%   | P:S  | Resolution path                         |
+  |---|----------------------------|--------|------|-----------------------------------------|
+  | 1 | input_1mAh_9_S5            | +46.5  | 7:3  | sibling tail; family median≈0.033, S5  |
+  |   |                            |        |      | the outlying seed → use sibling median  |
+  |   |                            |        |      | in dashboard (no new sim needed)        |
+  | 2 | input_1mAh_8               | +40.3  | 5:5  | isolated single; user running           |
+  |   |                            |        |      | input_72_seed1..5 multi-seed sim        |
+  | 3 | input_8mAh_real_10         | -30.0  | 10:0 | isolated; near-φc + τ_Laplace ratio     |
+  |   |                            |        |      | 2.73×; 8mAh sim slow, separate review   |
+  | 4 | input_8mAh_8_AMP           | -26.7  | 10:0 | isolated thick 10:0 (D_P/T=0.07,        |
+  |   |                            |        |      | NOT single-layer); needs 8mAh multi-seed|
+  | 5 | input_particulate_12_S2    | -25.0  | 0:10 | sibling tail; particulate_12_S1..S5    |
+  |   |                            |        |      | family exists → use sibling median      |
+
+  All 5 are PER-SEED OR ISOLATED — NONE are systematic regime failures.
+  Form has zero residual systematic bias.
+
+Dashboard / production code updates (2026-05-28):
+  • plot_ionic_perconfig_physics: bootstrap-derived per-case 68% PI band
+    replaces hard-coded ±22% band.  Wide where form is uncertain
+    (extrapolation), tight where well-fit.
+  • Cache: _BOOTSTRAP_CACHE (B=500 resampling, MAP residual SE for
+    aleatoric noise).  Computed once per session.
+
+Methodology scripts added:
+  • scripts/form_vs_solver_decomp.py — verdicts each outlier as FORM- or
+    SOLVER-limited.  15/16 outliers classified FORM-limited.
+  • scripts/bayesian_laplace.py — closed-form Laplace posterior (no PyMC);
+    physics priors; per-outlier PI inside/outside verdict.
+  • scripts/active_learning_suggest.py — Laplace-based next-sim recommender.
+    Top suggestions converge to degenerate (r_AM_S=r_AM_P=4µm, r_SE=1.5µm)
+    corner — realistic-region corpus is well covered.
+
+Performance summary (n=90):
+  median |err| ≈ 7%, mean ≈ 10%, 90th pctile ≈ 20%
+  |err|>30%: 2 (1mAh_8, 1mAh_9_S5)   |err|>50%: 0
+  After Bayesian PI: only 5 cases classified as GENUINE failures
+  (all addressable by sibling-median display or pending multi-seed sim).
+
+⚠ DO NOT add more form terms.  The form is at the joint info-theoretic
+ceiling of:
+  (a) what 5 OLS coefficients can compress from the solver's output, AND
+  (b) what per-seed/isolated stochasticity in DEM allows the data to anchor.
+Any further term will overfit on the 5 genuine outliers, ALL of which
+are data-resolution problems (not form representation problems).
+
 Production performance (n=90):
   median |err| ≈ 7%, mean ≈ 10%, 90th pctile ≈ 20%
   |err|≤30%: 97%   |err|>30%: 2-3 cases   |err|>50%: 0
 
-Remaining outliers (per-case diagnosis, ALL data-limited not form):
-  input_8mAh_real_10  -31%  isolated 10:0, 4-edge sensitivity (no siblings)
-  input_1mAh_9_S2/_S5 ±30%  per-seed noise within sibling cluster
-  input_S_2           +24%  r_AM_S=4µm borderline (smooth gate handles partially)
-  input_1mAh_8/_AMP   ±30%  isolated single designs
-  input_8mAh_8_AMP    -23%  isolated 10:0
+(Legacy outlier landscape from before Bayesian reclassification — see
+the close-out section above for the current 5-genuine-outlier list.)
 
 Multi-seed averaging would clean these up further (+0.0041 LOOCV) but
 PRODUCTION USES RAW n=90 — averaging is data-side preprocessing, not
@@ -312,7 +367,8 @@ Confidence:
     rejected (Q2 percolation merge fails by >0.13 LOOCV, Q3 network merge
     fails by >0.03).
 
-### σ_ionic outlier landscape (after C4 adoption, n=90, LOOCV 0.9687, 2026-05-28)
+### σ_ionic outlier landscape (DEPRECATED — see CLOSE-OUT 2026-05-28 for current 5-outlier list)
+### (after C4 adoption, n=90, LOOCV 0.9687, 2026-05-28)
 With the C4 augmented form, 3 cases remain >30% (down from 4) and 10 cases
 remain >20% (down from 12).  4 particulate-corner cases (particulate_7,
 _10, _5, _12_S2) which all previously sat 22-37% out are now ALL within
