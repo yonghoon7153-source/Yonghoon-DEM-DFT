@@ -586,6 +586,41 @@ def main():
         print(f"      LOOCV={lo_x:.4f}  Δover (SAT×Cronau)={d:+.4f}  β={beta_x:+.3f}  ({why})")
         print(f"      VERDICT: {v}")
 
+    # 8) Ablation — remove each base term and report LOOCV drop (C_blend refit
+    #    every time, so it captures only what THAT term contributes uniquely).
+    phi, cn_a, cov_a, fp_a = a[:, 0], a[:, 1], a[:, 2], a[:, 3]
+    g010 = 1.0/(1.0+np.exp(K_PS*(a[:, 6] - P_C)))
+    phic = (1.0-g010)*PHICP_F + g010*PHICS_F
+    pex = phi - phic
+    phi_eff = np.sqrt(pex**2 + (DELTA_F*g010)**2 + 1e-12)
+    term_sg   = np.log(SG) * np.ones(n)
+    term_cron = np.log(cronau_factor(a[:, 8]))
+    term_phi  = 0.5 * np.log(phi_eff)
+    term_cn   = 2.0 * np.log(cn_a)
+    term_cov  = 0.5 * np.log(cov_a)
+    term_fp   = 3.0 * np.log(fp_a)
+    full = term_sg + term_cron + term_phi + term_cn + term_cov + term_fp
+    lo_all = loocv_r2(full, logsf, taus)
+    # "No C_blend": replace C_blend(τ) with a single constant fit (intercept only)
+    sse_const = 0.0; ssn = ss
+    for i in range(n):
+        mk = np.ones(n, bool); mk[i] = False
+        c = float(np.mean(logsf[mk] - full[mk]))
+        sse_const += (logsf[i] - full[i] - c)**2
+    lo_noblend = 1 - sse_const/ssn
+    print("=" * 64)
+    print(f"Ablation — LOOCV drop when each term is removed (full={lo_all:.4f}):")
+    print(f"  remove C_blend(τ) → constant C : LOOCV={lo_noblend:.4f}   drop={lo_all - lo_noblend:+.4f}")
+    for tag, term in (("Cronau(r_SE)",      term_cron),
+                      ("(φ_eff)^0.5",       term_phi),
+                      ("CN^2",              term_cn),
+                      ("cov^0.5",           term_cov),
+                      ("f_p^3",             term_fp)):
+        lo_ab = loocv_r2(full - term, logsf, taus)
+        var = float(np.std(term))
+        print(f"  remove {tag:18s}  LOOCV={lo_ab:.4f}   drop={lo_all - lo_ab:+.4f}   "
+              f"(σ(log-term)={var:.2f})")
+
 
 if __name__ == "__main__":
     main()
