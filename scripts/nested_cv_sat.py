@@ -73,13 +73,17 @@ def load_corpus():
             cov_s_h = d.get('coverage_AM_S_mean') or d.get('coverage_AM_mean')
             cov_s_p = (d.get('coverage_AM_S_mean_physics')
                        or d.get('coverage_AM_mean_physics'))
+            cov_dlt = (d.get('coverage_AM_S_delta_pct')
+                       or d.get('coverage_AM_S_delta_pct_rough')
+                       or d.get('coverage_AM_delta_pct_rough'))
             rows.append((phi, cn, cov, fp, tau, float(sig), p,
                          float(sz) if sz else np.nan, _direct_rse_um(d),
                          float(amcn) if amcn and amcn > 0 else np.nan,
                          float(cov_s_h)/100.0 if cov_s_h and cov_s_h > 0 else np.nan,
-                         float(cov_s_p)/100.0 if cov_s_p and cov_s_p > 0 else np.nan))
+                         float(cov_s_p)/100.0 if cov_s_p and cov_s_p > 0 else np.nan,
+                         float(cov_dlt) if cov_dlt is not None else np.nan))
     a = np.array(rows, float)
-    # cols: phi cn cov fp tau sigma p se_size r_SE_um am_se_cn covS_hertz covS_phys
+    # cols: phi cn cov fp tau sigma p se_size r_SE_um am_se_cn covS_hertz covS_phys covS_dpct
     return a
 
 
@@ -242,6 +246,14 @@ def covS_phys_feat(a):
     return _logcol(a, 11)
 
 
+def covS_dpct_feat(a):
+    """AM_S coverage Hertz→physics amplification % (plastic-flow proxy, raw,
+    NaN → median).  Distinct axis from the static coverage variants."""
+    v = a[:, 12]
+    med = np.nanmedian(v[np.isfinite(v)]) if np.isfinite(v).any() else 0.0
+    return np.where(np.isfinite(v), v, med)
+
+
 def cblend_feat_fit(base, logsf, taus, sf):
     """C_blend fit + one extra coefficient β on the post-C_blend residual
     (feature sf centered here)."""
@@ -350,7 +362,9 @@ def main():
             ("log coverage_AM_S (Hertzian)", covS_hertz_feat, 10,
              "contact-AREA side (corr +0.79); collinear w/ am_se_cn"),
             ("log coverage_AM_S (physics)", covS_phys_feat, 11,
-             "physics coverage; model's cov already uses this")):
+             "physics coverage; model's cov already uses this"),
+            ("coverage_AM_S Hertz→phys Δ% (plastic amp)", covS_dpct_feat, 12,
+             "amplification axis (corr +0.59 in 0:10)")):
         n_ok = int(np.isfinite(a[:, col]).sum())
         if n_ok < 0.4*n:
             print(f"  [skip {tag}: only {n_ok}/{n} expose the input]")
