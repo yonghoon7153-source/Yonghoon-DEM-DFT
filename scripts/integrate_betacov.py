@@ -46,7 +46,7 @@ from nested_cv_sat import (load_corpus, base_log_sat, base_no_phi, cblend_fit,
                            cblend_pred, cronau_factor, p2_feature,
                            cov_delta_feature, _g_phys_smooth,
                            _meta_name, _EXCLUDED_NAMES,
-                           PHICP_F, PHICS_F, DELTA_F, SG)
+                           PHICP_F, PHICS_F, DELTA_F, SG, PHI_C0)
 
 
 def _load_aligned_metrics(a):
@@ -62,7 +62,7 @@ def _load_aligned_metrics(a):
             cov = gcp._cov_frac(d, physics=True) or gcp._cov_frac(d, physics=False)
             fp = gcp._get(d, 'percolation_pct') / 100.0
             tau = gcp._get(d, 'tortuosity_recommended', gcp._get(d, 'tortuosity_mean', 0))
-            if not (sig and sig > 0 and phi > 0 and cn > 0 and cov and cov > 0
+            if not (sig and sig > 0 and phi > PHI_C0 and cn > 0 and cov and cov > 0
                     and fp > 0 and tau > 0):
                 continue
             nm = _meta_name(mp.parent.name, mp.parent)
@@ -75,27 +75,31 @@ def _load_aligned_metrics(a):
 
 
 def _find_tabor_field(metrics):
-    """Discover which field holds the Tabor binding-regime share %."""
-    candidates = [
-        'pct_tabor_all', 'regime_share_tabor_all',
-        'binding_share_tabor_all', 'tabor_fraction_all',
-        'regime_share_all_tabor', 'pct_tabor', 'tabor_pct',
-        'tabor_share_pct_all', 'binding_tabor_all_pct',
-    ]
-    found = {}
-    for k in candidates:
-        n_ok = sum(1 for d in metrics if isinstance(d.get(k), (int, float)))
-        if n_ok >= 0.5 * len(metrics):
-            found[k] = n_ok
-    if found:
-        return found
-    # Discovery: scan all numeric fields for "tabor"
+    """Discover which field holds the Tabor binding-regime share %.
+    Scans ALL numeric metric keys for 'tabor' substring (case-insensitive)
+    and also looks for binding-regime-share style names."""
+    # Scan all numeric fields for relevant substrings
     discovered = {}
+    relevant_subs = ('tabor', 'regime', 'binding', 'liggghts', 'plast')
     for d in metrics:
-        for k in d:
-            if 'tabor' in k.lower() and isinstance(d.get(k), (int, float)):
+        for k, v in d.items():
+            if not isinstance(v, (int, float)) or isinstance(v, bool):
+                continue
+            kl = k.lower()
+            if any(s in kl for s in relevant_subs):
                 discovered[k] = discovered.get(k, 0) + 1
-    return {k: v for k, v in discovered.items() if v >= 0.5 * len(metrics)}
+    # Keep only fields available in ≥50% of cases
+    kept = {k: v for k, v in discovered.items() if v >= 0.5 * len(metrics)}
+    # Print full list for diagnosis
+    if kept:
+        print(f"\n  [diagnostic] discovered fields containing tabor/regime/binding/plast:")
+        for k in sorted(kept):
+            # Show a sample value
+            sample = next((d.get(k) for d in metrics if d.get(k) is not None), None)
+            print(f"     {k}  ({kept[k]}/{len(metrics)} cases, sample={sample})")
+    # Return ONLY the tabor-specific fields (other regimes for context)
+    tabor_only = {k: v for k, v in kept.items() if 'tabor' in k.lower()}
+    return tabor_only
 
 
 def _find_hertz_cov_field(metrics):
