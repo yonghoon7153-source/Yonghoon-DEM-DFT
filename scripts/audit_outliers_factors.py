@@ -50,7 +50,19 @@ def load():
             seen.add(key)
             rse = _direct_rse_um(d) or np.nan
             rows.append((phi, cn, cov, fp, tau, float(sig), p, rse))
-            names.append(mp.parent.name)
+            # Prefer the human-readable name from meta.json (matches the dashboard
+            # outlier popup: 'input_particulate_12_S3' etc.); fall back to the cid.
+            cid = mp.parent.name
+            nm = cid
+            for meta_p in (Path('webapp/uploads') / cid / 'meta.json',
+                           mp.parent / 'meta.json'):
+                if meta_p.exists():
+                    try:
+                        nm = json.load(open(meta_p)).get('name', cid) or cid
+                        break
+                    except Exception:
+                        pass
+            names.append(nm)
     return np.array(rows, float), names
 
 

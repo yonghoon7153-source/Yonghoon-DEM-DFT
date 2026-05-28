@@ -622,29 +622,33 @@ def main():
     print("  inner-picked exp_S: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
     print(f"  VERDICT: {'PASS — 0:10 wants a different exponent' if lo_exp - lo_fix > se else 'FAIL — exp_S=0.5 is best (no change)'}")
 
-    # 5b) CN-exponent scan (production=2.0) — audit shows D1/D1.5 have CN² z≈+1.5
-    #     so a different exponent might amplify them correctly.
+    # 5b) CN-exponent scan (production=2.0) — apples-to-apples vs the SAT×Cronau
+    #     base at the SAME exponent (production), so the Δ reflects only the
+    #     scan, not the (separately measured) Cronau gain.
     print("=" * 64)
     lo_cn, cn_mean, cn_picks = _nested_cv_exp_scan(a, logsf, taus, CN_EXP_GRID, base_log_sat_cnexp)
-    print(f"CN exponent scan (production = 2.0):")
-    print(f"  SAT+CN_exp NESTED-CV      : {lo_cn:.4f}   Δover SAT(frozen)={lo_cn - lo_fix:+.4f}   "
-          f"mean CN_exp={cn_mean:.2f}")
+    lo_cn_ref = loocv_r2(base_log_sat_cnexp(a, CN_EXP), logsf, taus)   # CN^2 reference
+    print(f"CN exponent scan (production = {CN_EXP}):")
+    print(f"  SAT×Cronau, CN^{CN_EXP} (ref) LOOCV : {lo_cn_ref:.4f}")
+    print(f"  SAT+scanned CN_exp NESTED-CV     : {lo_cn:.4f}   "
+          f"Δ vs ref = {lo_cn - lo_cn_ref:+.4f}   mean CN_exp = {cn_mean:.2f}")
     vv, cc = np.unique(np.round(cn_picks, 2), return_counts=True)
     top = sorted(zip(cc, vv), reverse=True)[:4]
     print("  inner-picked CN_exp: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
-    print(f"  VERDICT: {'PASS — data wants CN^' + f'{cn_mean:.2f}' if lo_cn - lo_fix > se else 'FAIL — CN^2 is best (no change)'}")
+    print(f"  VERDICT: {'PASS — data wants CN^' + f'{cn_mean:.2f}' if lo_cn - lo_cn_ref > se else f'FAIL — CN^{CN_EXP} is best (no change)'}")
 
-    # 5c) cov-exponent scan (production=0.5) — audit shows cov^½ z≈+1.5 in D1/D1.5;
-    #     maybe linear (cov^1) amplifies them better.
+    # 5c) cov-exponent scan (production=0.5) — same apples-to-apples comparison.
     print("=" * 64)
     lo_cv, cv_mean, cv_picks = _nested_cv_exp_scan(a, logsf, taus, COV_EXP_GRID, base_log_sat_covexp)
-    print(f"cov exponent scan (production = 0.5):")
-    print(f"  SAT+cov_exp NESTED-CV     : {lo_cv:.4f}   Δover SAT(frozen)={lo_cv - lo_fix:+.4f}   "
-          f"mean cov_exp={cv_mean:.2f}")
+    lo_cv_ref = loocv_r2(base_log_sat_covexp(a, COV_EXP), logsf, taus)
+    print(f"cov exponent scan (production = {COV_EXP}):")
+    print(f"  SAT×Cronau, cov^{COV_EXP} (ref) LOOCV: {lo_cv_ref:.4f}")
+    print(f"  SAT+scanned cov_exp NESTED-CV     : {lo_cv:.4f}   "
+          f"Δ vs ref = {lo_cv - lo_cv_ref:+.4f}   mean cov_exp = {cv_mean:.2f}")
     vv, cc = np.unique(np.round(cv_picks, 2), return_counts=True)
     top = sorted(zip(cc, vv), reverse=True)[:4]
     print("  inner-picked cov_exp: " + ", ".join(f"{v:.2f}×{c}" for c, v in top))
-    print(f"  VERDICT: {'PASS — data wants cov^' + f'{cv_mean:.2f}' if lo_cv - lo_fix > se else 'FAIL — cov^0.5 is best (no change)'}")
+    print(f"  VERDICT: {'PASS — data wants cov^' + f'{cv_mean:.2f}' if lo_cv - lo_cv_ref > se else f'FAIL — cov^{COV_EXP} is best (no change)'}")
 
     # 6) Stage-E Cronau SE-size factor — APPLIED (fixed literature, NOT fitted),
     #    so no DoF / no selection bias: does mirroring the target's own grain
