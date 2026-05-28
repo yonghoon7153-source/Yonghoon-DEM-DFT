@@ -122,6 +122,33 @@ def _make_features(a, alpha_grid=None):
     # N. surface vs bulk: φ_SE × r_SE - reference power
     feats["N_(φ-φc)^0.5·log(r_SE)"] = np.sqrt(pex + 1e-9) * np.log(np.maximum(rse_safe, 1e-3))
 
+    # ── INTEGRATED candidates (modify an existing term instead of bolt-on) ──
+    # Same DoF (one β), but the form has physical meaning rather than additive.
+    # Goal: a "meaningful" σ_ionic equation, not σ × exp(β·blob).
+    p_arr = a[:, 6]
+    g010 = 1.0/(1.0+np.exp(10.0*(p_arr - 0.5)))
+    phic_blend = (1.0 - g010)*0.200 + g010*0.195
+    pex_blend = phi - phic_blend
+    phi_eff_blend = np.sqrt(pex_blend**2 + (0.040*g010)**2 + 1e-12)
+    log_phi_eff = np.log(phi_eff_blend)
+    # O.  φ_eff exponent depends on grain size: (φ_eff)^(0.5 + κ·r_SE)
+    #     → log term = κ · r_SE · log(φ_eff)   [INTEGRATED into (φ_eff)^0.5]
+    feats["O_r_SE·log(φ_eff)  [φ_eff exponent ~ r_SE]"] = rse_safe * log_phi_eff
+    feats["O2_(r_SE-0.5)·log(φ_eff)  [centered at Cronau ref]"] = (rse_safe - 0.5) * log_phi_eff
+    # P.  Cronau extended to high-r_SE × high-φ (bulk-grain saturation)
+    #     → log term = γ · (φ−φc) · (r_SE − 0.5)_+ when r_SE > 0.5µm AND φ > φc
+    rse_hi = np.maximum(rse_safe - 0.5, 0.0)
+    feats["P_(φ-φc)·(r_SE-0.5)+  [Cronau high-r_SE arm]"] = pex_blend.clip(min=0) * rse_hi
+    feats["P2_(φ-φc)²·(r_SE-0.5)+ [Cronau, quadratic-φ]"] = pex_blend.clip(min=0)**2 * rse_hi
+    # Q.  CN exponent depends on grain size: CN^(2 + κ·r_SE)
+    #     → log term = κ · r_SE · log(CN)   [INTEGRATED into CN²]
+    feats["Q_r_SE·log(CN)  [CN exponent ~ r_SE]"] = rse_safe * np.log(np.maximum(cn, 1e-6))
+    feats["Q2_(r_SE-0.5)·log(CN)  [centered]"] = (rse_safe - 0.5) * np.log(np.maximum(cn, 1e-6))
+    # R.  cov exponent depends on grain size (long-shot)
+    #     → log term = κ · r_SE · log(cov)   [INTEGRATED into cov^0.5]
+    cov_arr = a[:, 2]
+    feats["R_r_SE·log(cov)  [cov exponent ~ r_SE]"] = rse_safe * np.log(np.maximum(cov_arr, 1e-9))
+
     return feats
 
 
