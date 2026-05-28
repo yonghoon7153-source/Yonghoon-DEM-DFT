@@ -4126,15 +4126,14 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
 
 def _stage_e_base_arrays(corpus):
     """Build (base_log, logsf, taus, phi, rse, dcov, p, fi_log) for the
-    FINAL production form (T1 + power-gate + f_intact).  T1 adoption
-    (2026-05-28) uses cov_Hertz in the base — Holm at elastic contact.
-    Δcov array still returned for back-compat (now unused in fit)."""
+    production C5 form.  Extras: phi, r_SE, Δcov, p_AM_P needed by
+    g_010-gated P2 + Δcov; fi_log = log(f_intact) added 2026-05-28 for
+    fracture-aware Holm correction (F4 adoption)."""
     PHI_C = 0.19
     bl, ls, ts, phi_a, rse_a, dcov_a, p_a, fi_a = [], [], [], [], [], [], [], []
     for d in corpus:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
-        # T1: prefer Hertz cov over physics (Holm at elastic contact)
-        cov = _cov_frac(d, physics=False) or _cov_frac(d, physics=True)
+        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
         fp = _get(d, 'percolation_pct')/100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0 and fp > 0 and tau > 0:
@@ -4143,11 +4142,12 @@ def _stage_e_base_arrays(corpus):
             ls.append(np.log(sig)); ts.append(tau)
             phi_a.append(float(phi))
             rse_a.append(float(rse) if rse and np.isfinite(rse) else np.nan)
+            # TOTAL-AM Δcov (composition-agnostic, fixed 2026-05-28)
             dcv = (d.get('coverage_AM_delta_pct_rough')
                    or d.get('coverage_AM_S_delta_pct_rough'))
             dcov_a.append(float(dcv) if dcv is not None else np.nan)
             p_a.append(float(_ps_fraction(d)))
-            # F4 fracture-aware (kept)
+            # F4: log(f_intact) = log(1 − fracture_aware_excluded_pct/100)
             frx = d.get('fracture_aware_excluded_pct')
             if frx is not None and isinstance(frx, (int, float)):
                 fi_a.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
@@ -4160,21 +4160,32 @@ def _stage_e_base_arrays(corpus):
 
 def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, p_arr=None,
                            fi_log_arr=None, cov_delta_center=None):
-    """FINAL production extras (T1 adopted 2026-05-28): [P2, log f_intact].
-    Δcov dropped — base uses cov_Hertz directly (Holm at elastic contact).
-    Returns 2 features.  Args dcov_arr / cov_delta_center kept for back-
-    compat with callers that supply them; ignored."""
+    """C5 augmentation extras (adopted 2026-05-28):
+        [g_010-gated P2, Δcov_centered, log(f_intact)]
+
+    Returns 3 features (length 3) for the production C5 form.  If
+    fi_log_arr is None (legacy corpus without fracture_aware_excluded),
+    the third extra is zeros (= no fracture correction).
+    """
+    # P2 = g_010 · (φ−0.195)² · (r_SE − 0.5)+   ; r_SE NaN → 0.5 neutral
     pex = np.maximum(phi_arr - 0.195, 0.0)
     rse_safe = np.where(np.isfinite(rse_arr) & (rse_arr > 0), rse_arr, 0.5)
     p2 = pex**2 * np.maximum(rse_safe - 0.5, 0.0)
     if p_arr is not None:
         g_010 = 1.0 / (1.0 + np.exp(10.0 * (np.asarray(p_arr, float) - 0.5)))
         p2 = g_010 * p2
+    # Δcov centered (composition-agnostic total-AM)
+    if cov_delta_center is None:
+        med = float(np.nanmedian(dcov_arr[np.isfinite(dcov_arr)])) if np.isfinite(dcov_arr).any() else 0.0
+    else:
+        med = float(cov_delta_center)
+    dcov_c = np.where(np.isfinite(dcov_arr), dcov_arr - med, 0.0)
+    # log(f_intact) — F4 fracture-aware Holm correction
     if fi_log_arr is None:
         fi_log = np.zeros_like(p2)
     else:
         fi_log = np.where(np.isfinite(fi_log_arr), fi_log_arr, 0.0)
-    return [p2, fi_log], None
+    return [p2, dcov_c, fi_log], med
 
 
 def _stage_e_global_fit():

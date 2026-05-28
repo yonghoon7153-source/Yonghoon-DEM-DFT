@@ -80,11 +80,7 @@ def load_corpus():
                 continue
             sig = gcp._stage_e_sigma(d)
             phi = gcp._get(d, 'phi_se'); cn = gcp._get(d, 'se_se_cn')
-            # T1 ADOPTED 2026-05-28: use cov_Hertz (elastic native) for Holm.
-            # Tabor-adhesion contact area exists but contributes less to Li+
-            # conduction (vdW gap / adhesion layer interferes with ion path).
-            # cov_physics fall-back only if Hertz unavailable.
-            cov = gcp._cov_frac(d, physics=False) or gcp._cov_frac(d, physics=True)
+            cov = gcp._cov_frac(d, physics=True) or gcp._cov_frac(d, physics=False)
             fp = gcp._get(d, 'percolation_pct') / 100.0
             tau = gcp._get(d, 'tortuosity_recommended', gcp._get(d, 'tortuosity_mean', 0))
             p = gcp._ps_fraction(d)
@@ -284,22 +280,22 @@ def cov_delta_feature(cov_delta_pct, center=None):
 
 
 def production_extras(a, cov_delta_center=None, f_intact_log=None):
-    """FINAL production extras (T1 adopted 2026-05-28): [P2, log f_intact].
-    Δcov dropped — base now uses cov_Hertz directly (Holm at elastic contact),
-    making the empirical Tabor correction unnecessary (LOOCV +0.0007 with
-    1 fewer fit param; β_cov empirical → cov_Hertz physical (HIGH confidence)).
+    """C5 production extras (2026-05-28): [smooth-g-gated P2, Δcov, log f_intact].
 
-    Returns ([p2, f_intact_log], None).  The cov_delta_center arg is kept
-    in the signature for back-compat with callers that pass it; ignored."""
+    P2 now uses the SMOOTH size-based gate g_phys (S1 adoption) instead of
+    legacy g_010 — handles borderline cases (e.g. input_S_2 r_AM_S=4µm
+    where label-based g_010 says "fully 0:10" but size-based says
+    "borderline P-heavy")."""
     g_phys = _g_phys_smooth(a)
-    p2 = p2_feature(a[:, 0], a[:, 8], g_gate=g_phys)
+    p2 = p2_feature(a[:, 0], a[:, 8], g_gate=g_phys)   # smooth-gated
+    cdc, med = cov_delta_feature(a[:, 12], center=cov_delta_center)
     if f_intact_log is not None:
         f_log = f_intact_log
     elif a.shape[1] >= 20:
         f_log = a[:, 19]
     else:
         f_log = np.zeros(a.shape[0])
-    return [p2, f_log], None
+    return [p2, cdc, f_log], med
 
 
 R_CUT_AM = 3.5    # reference small-AM size (µm); midpoint of corpus AM_S/AM_P gap
