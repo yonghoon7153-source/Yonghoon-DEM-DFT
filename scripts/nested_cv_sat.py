@@ -408,6 +408,65 @@ def pha_ghi010_feat(a):
     return _g_high(a) * g010 * _logcol(a, 14)
 
 
+# ── 62:38 EXP/SATURATION/COUPLED candidates ──────────────────────────────────
+# Origin: scripts/sat_exp_62_38_search.py scan; rationale = at extreme SE
+# fraction (φ>0.30) with large SE grains the response is exponential / coupled
+# in (φ×r_SE) — bulk-grain dominance.  Top ★ candidates from the search:
+#   L  +0.0065  β=+1.43  ↓RMSE_62=+0.289   (gated D1/D1.5 corner pinpoint)
+#   E  +0.0060  β=+2.41  ↓RMSE_62=+0.282   (ungated power coupling, cleanest)
+#   M2 +0.0057  β=+0.82  ↓RMSE_62=+0.266   (gated LINEAR, control vs L)
+#   D  +0.0019  β=+0.62  ↓RMSE_62=+0.191   (ungated LINEAR, control vs E)
+#   F  +0.0020  β=+0.034 ↓RMSE_62=+0.184   (pure exp(φ·r_SE)−1, γ=3)
+# pure φ-saturation (A) and pure CN/τ exp (J/K) all FAILED → the lever is the
+# φ×r_SE COUPLING (bulk-grain × extreme SE), exactly the user's intuition.
+
+PHIC_NEUTRAL = 0.195   # composition-neutral threshold for the (φ−φc) base
+
+
+def _rse_safe(a):
+    """r_SE in µm with NaN → median fallback (neutral for cases lacking input)."""
+    rse = a[:, 8]
+    if np.isfinite(rse).any():
+        med = float(np.nanmedian(rse[np.isfinite(rse)]))
+    else:
+        med = 1.0
+    return np.where(np.isfinite(rse) & (rse > 0), rse, med)
+
+
+def bulk_couple_feat(a):
+    """E:  (φ−φc)² · r_SE  — ungated power coupling.  Captures bulk-grain
+    dominance at extreme SE: σ rises faster than (φ_eff)^0.5 once φ−φc is large
+    AND the grains are big (fewer GBs per volume).  Top ungated candidate."""
+    pex = np.maximum(a[:, 0] - PHIC_NEUTRAL, 0.0)
+    return pex**2 * _rse_safe(a)
+
+
+def bulk_couple_lin_feat(a):
+    """D:  (φ−φc) · r_SE  — linear control for E (does quadratic actually win?)."""
+    pex = np.maximum(a[:, 0] - PHIC_NEUTRAL, 0.0)
+    return pex * _rse_safe(a)
+
+
+def corner_log_couple_feat(a):
+    """L:  g_high · g_010 · log(1 + (φ−0.30)·r_SE)  — D1/D1.5 pinpoint with a
+    saturating log-coupled exp form.  Gates: φ>0.30 (SE-rich) AND p<0.5 (0:10).
+    The α=1 variant wins the search (β=+1.43)."""
+    pex_h = np.maximum(a[:, 0] - PHI_HIGH, 0.0)
+    return _g_high(a) * _g010(a) * np.log1p(pex_h * _rse_safe(a))
+
+
+def corner_lin_couple_feat(a):
+    """M2:  g_high · g_010 · (φ−φc) · r_SE  — linear control for L."""
+    pex = np.maximum(a[:, 0] - PHIC_NEUTRAL, 0.0)
+    return _g_high(a) * _g010(a) * pex * _rse_safe(a)
+
+
+def exp_phi_rse_feat(a):
+    """F:  exp(3·φ·r_SE) − 1  — pure-exp form (no gates, no (φ−φc) shift).
+    Sanity check that the lever lives at (φ·r_SE) coupling regardless of form."""
+    return np.exp(3.0 * a[:, 0] * _rse_safe(a)) - 1.0
+
+
 def loocv_with_feat(base, logsf, taus, sfeat):
     """LOOCV with C_blend + β·sfeat fit jointly per fold (β is an OLS coefficient,
     no selection → unbiased). Returns (r2, mean β)."""
@@ -709,6 +768,69 @@ def main():
         v = "ADOPT — real gain → catches D1/D1.5" if d > se else "FAIL — within noise"
         print(f"  + {tag}  [{n_ok}/{n}]")
         print(f"      LOOCV={lo_x:.4f}  Δover (SAT×Cronau)={d:+.4f}  β={beta_x:+.3f}  ({why})")
+        print(f"      VERDICT: {v}")
+
+    # 7b) 62:38 EXP/SAT/COUPLED candidates (sat_exp_62_38_search.py finalists).
+    #     LOOCV unbiased β; ALSO report subset RMSE so we can see if it actually
+    #     catches the D1/D1.5 corner (which is the whole point).
+    p_arr, phi_arr, rse_arr = a[:, 6], a[:, 0], a[:, 8]
+    idx_corner = np.where((p_arr < 0.05) & (phi_arr > PHI_HIGH) &
+                          np.isfinite(rse_arr) & (rse_arr >= 1.0))[0]
+    idx_serich = np.where((p_arr < 0.05) & (phi_arr > PHI_HIGH))[0]
+    # baseline (SAT × Cronau) single-shot prediction for subset RMSE deltas
+    bv5b, bp3b = cblend_fit(base_cron, logsf, taus)
+    pred_b = cblend_pred(base_cron, taus, bv5b, bp3b)
+    def _rmse(idx, pred):
+        return float('nan') if len(idx) == 0 else float(np.sqrt(np.mean((logsf[idx]-pred[idx])**2)))
+    rmse62_b = _rmse(idx_corner, pred_b); rmseSE_b = _rmse(idx_serich, pred_b)
+    print("=" * 64)
+    print(f"62:38 EXP/SAT/COUPLED extras  (base = SAT × Cronau, LOOCV = {lo_cron:.4f}):")
+    print(f"  baseline subset RMSE — 62:38 corner [n={len(idx_corner)}]: {rmse62_b:.3f}  "
+          f"|  SE-rich 0:10 [n={len(idx_serich)}]: {rmseSE_b:.3f}")
+    for tag, featfn, why in (
+            ("E:  (φ−φc)²·r_SE  (ungated power coupling)", bulk_couple_feat,
+             "cleanest — no gates; natural nonlinearity of (φ_eff)^0.5"),
+            ("D:  (φ−φc)·r_SE  (LINEAR control for E)", bulk_couple_lin_feat,
+             "tests whether the QUADRATIC really wins over linear"),
+            ("L:  g_hi·g_010·log(1+(φ−0.30)·r_SE)  (D1/D1.5 pinpoint)", corner_log_couple_feat,
+             "gated to SE-rich 0:10; β=+1.43 in the search"),
+            ("M2: g_hi·g_010·(φ−φc)·r_SE  (LINEAR control for L)", corner_lin_couple_feat,
+             "gated linear — tests if the log-saturation form matters"),
+            ("F:  exp(3·φ·r_SE)−1  (pure exp; ungated)", exp_phi_rse_feat,
+             "sanity: lever is at (φ·r_SE) coupling regardless of form")):
+        sf = featfn(a)
+        if not np.all(np.isfinite(sf)) or np.std(sf) < 1e-12:
+            print(f"  [skip {tag}: degenerate]"); continue
+        lo_x, beta_x = loocv_with_feat(base_cron, logsf, taus, sf)
+        # single-shot pred to measure subset RMSE improvement
+        bv5, bp3 = cblend_fit(base_cron, logsf, taus)
+        resid = logsf - cblend_pred(base_cron, taus, bv5, bp3)
+        sm = sf.mean(); sc = sf - sm
+        beta_ss = float(np.dot(sc, resid)/np.dot(sc, sc)) if np.dot(sc, sc) > 1e-12 else 0.0
+        pred = cblend_pred(base_cron, taus, bv5, bp3) + beta_ss*(sf - sm)
+        drc = rmse62_b - _rmse(idx_corner, pred)
+        drs = rmseSE_b - _rmse(idx_serich, pred)
+        d = lo_x - lo_cron
+        v = ("ADOPT — global gain > noise AND catches 62:38" if (d > se and drc > 0) else
+             "FAIL — within noise / no 62:38 gain")
+        print(f"  + {tag}")
+        print(f"      LOOCV={lo_x:.4f}  Δ={d:+.4f}  β={beta_x:+.3f}  "
+              f"↓rmse_62={drc:+.3f}  ↓rmse_SE={drs:+.3f}  ({why})")
+        print(f"      VERDICT: {v}")
+
+    # 7c) Top candidates — FULL nested CV (re-select φc_P/φc_S/δ inside each
+    # outer fold WITH the candidate β fit jointly).  This is the rigorous
+    # verdict: gain that survives BOTH hyper re-selection AND single-coef LOO.
+    print("=" * 64)
+    print("Nested-CV verdict on TOP candidates (re-selects φc/δ + β per fold):")
+    for tag, featfn in (("E:  (φ−φc)²·r_SE", bulk_couple_feat),
+                        ("L:  g_hi·g_010·log(1+(φ−0.30)·r_SE)", corner_log_couple_feat)):
+        lo_nx, beta_nx = nested_cv_sat_feat(a, logsf, taus, featfn)
+        d = lo_nx - lo_sat_nested
+        v = ("ADOPT — survives full nested re-selection"
+             if d > se else "FAIL — nested gain within noise")
+        print(f"  + {tag}")
+        print(f"      nested-CV={lo_nx:.4f}  Δover SAT-nested={d:+.4f}  β={beta_nx:+.3f}")
         print(f"      VERDICT: {v}")
 
     # 8) Ablation — remove each base term and report LOOCV drop (C_blend refit
