@@ -4093,12 +4093,11 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
 
 
 def _stage_e_base_arrays(corpus):
-    """Build (base_log, logsf, taus, phi_arr, rse_arr, cov_delta_arr) for the
-    production SAT-blend × Cronau form over a list of metrics dicts (cases
-    failing the validity filter are dropped).  The extra arrays (phi, r_SE,
-    Δcov) are needed by the C4 augmented form (P2 + cov_delta extras)."""
+    """Build (base_log, logsf, taus, phi, rse, dcov, p) for the production
+    SAT-blend × Cronau form over a list of metrics dicts.  Extras: phi, r_SE,
+    Δcov, p_AM_P needed by C4 augmented form (g_010-gated P2 + Δcov)."""
     PHI_C = 0.19
-    bl, ls, ts, phi_a, rse_a, dcov_a = [], [], [], [], [], []
+    bl, ls, ts, phi_a, rse_a, dcov_a, p_a = [], [], [], [], [], [], []
     for d in corpus:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -4113,16 +4112,27 @@ def _stage_e_base_arrays(corpus):
             dcv = (d.get('coverage_AM_S_delta_pct_rough')
                    or d.get('coverage_AM_delta_pct_rough'))
             dcov_a.append(float(dcv) if dcv is not None else np.nan)
+            p_a.append(float(_ps_fraction(d)))
     return (np.array(bl), np.array(ls), np.array(ts),
-            np.array(phi_a), np.array(rse_a), np.array(dcov_a))
+            np.array(phi_a), np.array(rse_a), np.array(dcov_a), np.array(p_a))
 
 
-def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, cov_delta_center=None):
-    """C4 augmentation extras: [P2_feat, Δcov_centered]."""
-    # P2 = (φ−0.195)² · (r_SE − 0.5)+   ; r_SE NaN → 0.5 neutral
+def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, p_arr=None,
+                           cov_delta_center=None):
+    """C4 augmentation extras: [g_010-gated P2, Δcov_centered].
+
+    P2 is g_010-gated (fires only at 0:10) to prevent spillover into non-0:10
+    D1+ cases.  Without gating P2 was making 1mAh_5_AMP, 6mAh_real_10,
+    8mAh_real40_9 etc worse since those compositions don't need the bulk-grain
+    enhancement — gating restricts the correction to the 62:38 corner where
+    it's physically motivated AND data-validated."""
+    # P2 = g_010 · (φ−0.195)² · (r_SE − 0.5)+   ; r_SE NaN → 0.5 neutral
     pex = np.maximum(phi_arr - 0.195, 0.0)
     rse_safe = np.where(np.isfinite(rse_arr) & (rse_arr > 0), rse_arr, 0.5)
     p2 = pex**2 * np.maximum(rse_safe - 0.5, 0.0)
+    if p_arr is not None:
+        g_010 = 1.0 / (1.0 + np.exp(10.0 * (np.asarray(p_arr, float) - 0.5)))
+        p2 = g_010 * p2
     # Δcov centered by corpus median; NaN → 0 (no contribution)
     if cov_delta_center is None:
         med = float(np.nanmedian(dcov_arr[np.isfinite(dcov_arr)])) if np.isfinite(dcov_arr).any() else 0.0
@@ -4133,15 +4143,15 @@ def _c4_extras_from_arrays(phi_arr, rse_arr, dcov_arr, cov_delta_center=None):
 
 
 def _stage_e_global_fit():
-    """Fit C4 augmented form (logpoly2 + P2 + Δcov) on the FULL corpus
-    (_FIT_CORPUS) → (r2, loocv, b, extras, cov_med, n).  b has 5 coefficients
-    [a, b, c, β_P2, β_cov].  Returns None if no/insufficient corpus."""
+    """Fit C4 augmented form (logpoly2 + g_010-gated P2 + Δcov) on the FULL
+    corpus (_FIT_CORPUS) → (r2, loocv, b, extras, cov_med, n).  b has 5
+    coefficients [a, b, c, β_P2, β_cov].  Returns None if no/insufficient."""
     if not _FIT_CORPUS:
         return None
-    bl, ls, ts, phi_a, rse_a, dcov_a = _stage_e_base_arrays(_FIT_CORPUS)
+    bl, ls, ts, phi_a, rse_a, dcov_a, p_a = _stage_e_base_arrays(_FIT_CORPUS)
     if len(ts) < 8:
         return None
-    extras, cov_med = _c4_extras_from_arrays(phi_a, rse_a, dcov_a)
+    extras, cov_med = _c4_extras_from_arrays(phi_a, rse_a, dcov_a, p_arr=p_a)
     r2, loo, _Ct, _Cn, _pred, b, _ = _cblend_fit_score(bl, ls, ts, extras=extras)
     return r2, loo, b, extras, cov_med, len(ts)
 
@@ -4170,7 +4180,7 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     netP = [None]*len(data_list)
     idx, base_log, logsf, taus = [], [], [], []
-    phi_local, rse_local, dcov_local = [], [], []  # C4 extras inputs (per-case)
+    phi_local, rse_local, dcov_local, p_local = [], [], [], []   # C4 extras (per-case)
     for i, d in enumerate(data_list):
         sig = _stage_e_sigma(d)        # physics / Stage-E target
         netP[i] = sig if (sig and sig > 0) else None
@@ -4188,22 +4198,24 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
             dcv = (d.get('coverage_AM_S_delta_pct_rough')
                    or d.get('coverage_AM_delta_pct_rough'))
             dcov_local.append(float(dcv) if dcv is not None else np.nan)
+            p_local.append(float(_ps_fraction(d)))
     if len(idx) < 8:
         print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
         return None
     gfit = _stage_e_global_fit()
     if gfit:
-        # GLOBAL fit (full corpus) C4: 5-param augmented form with shared β's
+        # GLOBAL fit (full corpus) C4: 5-param augmented (g_010-gated P2 + Δcov)
         r2, loo, b_coef, _extras_global, cov_med, n_fit = gfit
         extras_local, _ = _c4_extras_from_arrays(
             np.array(phi_local), np.array(rse_local), np.array(dcov_local),
-            cov_delta_center=cov_med)
+            p_arr=np.array(p_local), cov_delta_center=cov_med)
         pred_log = _cblend_predict_log(np.array(base_log), np.array(taus),
                                        b_coef, extras=extras_local)
     else:
         # local fallback also C4 augmented
         extras_local, _med = _c4_extras_from_arrays(
-            np.array(phi_local), np.array(rse_local), np.array(dcov_local))
+            np.array(phi_local), np.array(rse_local), np.array(dcov_local),
+            p_arr=np.array(p_local))
         r2, loo, Ct, Cn, pred_log, _, _ = _cblend_fit_score(
             np.array(base_log), np.array(logsf), np.array(taus),
             extras=extras_local)
@@ -4469,7 +4481,7 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
     phi_arr = np.array([_get(data_list[i], 'phi_se') for i in [data_list.index(d) for d in data_list if _stage_e_sigma(d)]][:n])
     # Build C4 extras directly from data_list aligned to the kept rows
     # (simpler: re-extract per-case (φ, r_SE, Δcov) for the same filter used above)
-    phi_loc, rse_loc, dcov_loc = [], [], []
+    phi_loc, rse_loc, dcov_loc, p_loc = [], [], [], []
     for d in data_list:
         sig = _stage_e_sigma(d); phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
         cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
@@ -4484,8 +4496,10 @@ def plot_ionic_outliers_stage_e(data_list, names, outdir):
         dcv = (d.get('coverage_AM_S_delta_pct_rough')
                or d.get('coverage_AM_delta_pct_rough'))
         dcov_loc.append(float(dcv) if dcv is not None else np.nan)
+        p_loc.append(float(_ps_fraction(d)))
     extras_aug, _med = _c4_extras_from_arrays(
-        np.array(phi_loc), np.array(rse_loc), np.array(dcov_loc))
+        np.array(phi_loc), np.array(rse_loc), np.array(dcov_loc),
+        p_arr=np.array(p_loc))
     resid0 = logsf - base_log
     lt = np.log(taus)
     X = np.column_stack([np.ones(n), lt, lt**2, *extras_aug])

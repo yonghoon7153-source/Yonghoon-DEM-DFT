@@ -225,17 +225,33 @@ def cronau_factor(rse_um, smooth=True):
 PHIC_PROD = 0.195  # composition-neutral φc for the P2 term
 
 
-def p2_feature(phi, r_SE_um):
-    """P2 augmentation feature: (φ−φc_S)² · (r_SE − 0.5)+.
+def p2_feature(phi, r_SE_um, p_amp=None):
+    """P2 augmentation feature: g_010 · (φ−φc_S)² · (r_SE − 0.5)+.
+
     Zero at r_SE ≤ 0.5µm (Cronau's reference threshold); grows quadratically
     in SE-volume excess above φc and linearly in grain-size excess above
     Cronau's plateau.  Physical reading: 'bulk-grain enhancement' at large
-    grain × high SE fraction — natural extension of Cronau curve."""
+    grain × high SE fraction — natural extension of Cronau curve.
+
+    GATING (added 2026-05-28 after C4 spillover diagnosis): the term is
+    g_010-gated by default — fires only at 0:10 (pure AM_S) where the
+    62:38 corner physics lives.  Without gating, P2 activates for ANY
+    composition with r_SE>0.5 AND φ>φc, causing positive-direction spillover
+    into non-0:10 D1+ cases (1mAh_5_AMP +22→+29%, 6mAh_real_10 NEW +26%,
+    8mAh_real40_9 NEW +22%) — those were ALREADY over-predicted, so P2
+    pushed them further out.  Gating restricts the correction to 0:10
+    where it's physically motivated AND data-validated.
+
+    p_amp = AM_P/(AM_P+AM_S); if None, ungated (legacy C4 behavior)."""
     pex = np.maximum(np.asarray(phi, float) - PHIC_PROD, 0.0)
     r = np.asarray(r_SE_um, float)
     r_safe = np.where(np.isfinite(r) & (r > 0), r, 0.5)  # neutral if missing
     rse_hi = np.maximum(r_safe - 0.5, 0.0)
-    return pex**2 * rse_hi
+    p2 = pex**2 * rse_hi
+    if p_amp is not None:
+        g_010 = 1.0 / (1.0 + np.exp(K_PS * (np.asarray(p_amp, float) - P_C)))
+        p2 = g_010 * p2
+    return p2
 
 
 def cov_delta_feature(cov_delta_pct, center=None):
@@ -255,13 +271,14 @@ def cov_delta_feature(cov_delta_pct, center=None):
 
 
 def production_extras(a, cov_delta_center=None):
-    """Compute the production augmentation extras for the C4 form.
+    """Compute the production augmentation extras for the C4 form
+    (g_010-gated P2 + Δcov, 2026-05-28).
 
     Returns (extras_list, cov_delta_median) where:
-        extras_list[0] = P2 feature (n-vector)
+        extras_list[0] = g_010-gated P2 feature (n-vector)
         extras_list[1] = centered Δcov feature (n-vector)
     Pass extras_list to cblend_fit/pred via the `extras=` argument."""
-    p2 = p2_feature(a[:, 0], a[:, 8])
+    p2 = p2_feature(a[:, 0], a[:, 8], p_amp=a[:, 6])   # g_010-gated
     cdc, med = cov_delta_feature(a[:, 12], center=cov_delta_center)
     return [p2, cdc], med
 
