@@ -17,8 +17,23 @@ PREFIX=$(grep "^\s*prefix" "$WORK/relax.in" | head -1 | sed -E "s/.*'(.+)'.*/\1/
 cd "$WORK"
 mkdir -p tmp logs
 
+# GPU QE 7.4.1 (NVHPC build) requires mpirun for MPI_Init to succeed.
+# Single rank is fine for a 1-GPU job.
+export OMPI_ALLOW_RUN_AS_ROOT=1
+export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+# Pick whichever mpirun the QE GPU build expects (try NVHPC path first)
+if [ -x /data/apps/qe-7.4.1-gpu/mpi/bin/mpirun ]; then
+    MPIRUN=/data/apps/qe-7.4.1-gpu/mpi/bin/mpirun
+elif command -v mpirun >/dev/null 2>&1; then
+    MPIRUN=$(command -v mpirun)
+else
+    echo "[$(date)] ERROR: no mpirun found" >&2
+    exit 1
+fi
+
 echo "[$(date)] LiNiO2 DFT+U slab relax: $WORK"
 echo "[$(date)] host=$(hostname)  prefix=$PREFIX"
+echo "[$(date)] mpirun=$MPIRUN  pw=$QE"
 nvidia-smi --query-gpu=index,name,utilization.gpu,memory.used --format=csv,noheader
 
 # Already converged?
@@ -39,7 +54,7 @@ else
 fi
 
 T0=$(date +%s)
-$QE -input relax.in > relax.out 2>&1 || echo "[$(date)] pw.x exited with non-zero (may still have output)"
+$MPIRUN -np 1 $QE -input relax.in > relax.out 2>&1 || echo "[$(date)] pw.x exited with non-zero (may still have output)"
 DT=$(( $(date +%s) - T0 ))
 
 echo "[$(date)] elapsed ${DT}s"
