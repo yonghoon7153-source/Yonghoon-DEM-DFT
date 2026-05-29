@@ -63,17 +63,32 @@ def build_linio2_slab_ortho(facet=(1, 0, 4), min_slab=8.0, min_vac=2.0):
 
 
 def freeze_bottom_layers(atoms, n_freeze_layers=2):
-    """Sort atoms by z, mark bottom n layers as fixed (FixAtoms)."""
+    """Freeze bottom atomic layers. Layers detected by z-clustering with
+    a gap threshold (handles LiNiO2 (104) which has sub-layered Li/Ni/O).
+    Falls back to count-based (bottom 50%) if clustering finds <2 groups.
+    """
     from ase.constraints import FixAtoms
     z = atoms.positions[:, 2]
-    z_sorted = np.sort(np.unique(np.round(z, 2)))
-    if len(z_sorted) <= n_freeze_layers:
-        z_cut = z_sorted[-1]
+    z_sorted_idx = np.argsort(z)
+    z_sorted = z[z_sorted_idx]
+
+    # Detect physical layers: gaps > 0.8 Å in z
+    gaps = np.diff(z_sorted)
+    layer_boundaries = np.where(gaps > 0.8)[0]  # indices where new layer starts
+
+    if len(layer_boundaries) >= n_freeze_layers:
+        # Take z-cutoff at the end of n_freeze_layers'th physical layer
+        cut_idx = layer_boundaries[n_freeze_layers - 1]
+        z_cut = (z_sorted[cut_idx] + z_sorted[cut_idx + 1]) / 2
     else:
-        z_cut = z_sorted[n_freeze_layers - 1] + 0.5
+        # Not enough discernible layers — fall back to bottom 50% by count
+        z_cut = z_sorted[len(atoms) // 2]
+        print(f"  (layer clustering ambiguous — using bottom 50% by count)")
+
     mask = z < z_cut
     atoms.set_constraint(FixAtoms(mask=mask))
-    print(f"  Frozen: {mask.sum()}/{len(atoms)} atoms (z < {z_cut:.2f} Å)")
+    print(f"  Frozen: {mask.sum()}/{len(atoms)} atoms (z < {z_cut:.2f} Å, "
+          f"{mask.sum()*100/len(atoms):.0f}%)")
     return atoms
 
 
@@ -91,7 +106,9 @@ def main():
                     help="bottom layers to freeze during relax (default 2)")
     ap.add_argument("--fmax", type=float, default=0.05,
                     help="UMA relax force threshold eV/Å")
-    ap.add_argument("--max_steps", type=int, default=200)
+    ap.add_argument("--max_steps", type=int, default=500)
+    ap.add_argument("--optimizer", default="lbfgs", choices=("fire", "lbfgs"),
+                    help="lbfgs converges DFT-grade slabs faster than FIRE")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--no_relax", action="store_true",
                     help="skip UMA relax (just build + save initial)")
@@ -149,8 +166,9 @@ def main():
     calc = FAIRChemCalculator(predictor, task_name="omat")
     slab.calc = calc
 
-    from ase.optimize import FIRE
-    opt = FIRE(slab, logfile=str(out_dir / "relax.log"))
+    from ase.optimize import FIRE, LBFGS
+    Opt = LBFGS if args.optimizer == "lbfgs" else FIRE
+    opt = Opt(slab, logfile=str(out_dir / "relax.log"))
     opt.run(fmax=args.fmax, steps=args.max_steps)
 
     E = float(slab.get_potential_energy())
