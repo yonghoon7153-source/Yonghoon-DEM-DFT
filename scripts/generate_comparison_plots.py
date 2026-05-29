@@ -2484,13 +2484,18 @@ _ELECTRONIC_GLOBAL_FIT_CACHE = None   # (coef, sigma_S, sigma_P, β_AC, n_fit)
 
 
 def _electronic_global_fit():
-    """Walk webapp/results + webapp/archive ONCE, fit Stage 15 form on the
+    """Walk webapp/results + webapp/archive ONCE, fit Stage 16 form on the
     full corpus with proper name-based exclusion (_EXCLUDED_NAMES_EL), cache
     result globally.  Used by plot_electronic_sigma to overlay form prediction
-    consistently across all group panels — replaces the previous broken
-    behaviors:
-      (1) per-group local fit on tiny N → underdetermined 8-param fit
-      (2) _FIT_CORPUS path used synthetic names → exclusion didn't fire
+    consistently across all group panels.
+
+    IMPORTANT (2026-05-29 fix): SKIPS cases that have no friendly meta-name
+    (i.e. their default 'name' fell back to the directory case_id like
+    '260421_xxxxxx_xxxxxx').  Those nameless cases are real DEM sims but
+    are NOT in the curated _EXCLUDED_NAMES_EL list, so they pass through
+    untracked and POLLUTE the global fit — dilutes β_AC from −0.45 (audit
+    n=63) to −0.06 (global n=77), making form predictions wildly off in
+    dashboard per-config plots.  Matches electronic_shape_audit walk policy.
     Returns coef array (8,) or None if corpus too small.
     """
     global _ELECTRONIC_GLOBAL_FIT_CACHE
@@ -2500,18 +2505,26 @@ def _electronic_global_fit():
     data_list = []
     names = []
     seen = set()
-    for base in ('webapp/results', 'webapp/archive'):
+    nameless_skipped = 0
+    for base in ('webapp/archive', 'webapp/results'):   # archive first (friendly names)
         bp = _P(base)
         if not bp.is_dir():
             continue
         for mp in bp.rglob('full_metrics.json'):
             meta_p = mp.parent / 'meta.json'
-            nm = mp.parent.name
+            cid = mp.parent.name
+            nm = cid
             if meta_p.exists():
                 try:
-                    nm = json.load(open(meta_p)).get('name', nm) or nm
+                    meta_name = json.load(open(meta_p)).get('name', '') or ''
+                    if meta_name: nm = meta_name
                 except Exception:
                     pass
+            # SKIP cases without a friendly name (case_id fallback) — they
+            # bypass _EXCLUDED_NAMES_EL and pollute β_AC.
+            if nm == cid and not nm.startswith('input_'):
+                nameless_skipped += 1
+                continue
             if nm in seen:
                 continue
             seen.add(nm)
@@ -2534,8 +2547,9 @@ def _electronic_global_fit():
     sS = float(np.exp(coef[0])); sP = float(np.exp(coef[1]))
     bAC = float(coef[7])
     _ELECTRONIC_GLOBAL_FIT_CACHE = (coef, sS, sP, bAC, fit['n_fit'])
-    print(f"  [electronic_global_fit] n_corpus={len(data_list)}, "
-          f"n_fit={fit['n_fit']} (excl={int(arr['excluded'].sum())}), "
+    print(f"  [electronic_global_fit] n_corpus={len(data_list)} "
+          f"(skipped {nameless_skipped} nameless), n_fit={fit['n_fit']} "
+          f"(excl={int(arr['excluded'].sum())}), "
           f"σ_S={sS:.2f}, σ_P={sP:.2f}, β_AC={bAC:+.3f}, "
           f"R²={fit['r2']:.3f}, LOOCV={fit['loocv']:.3f}")
     return _ELECTRONIC_GLOBAL_FIT_CACHE
