@@ -2416,12 +2416,33 @@ def plot_ionic_decomp_physics(data_list, names, outdir):
 
 
 def _load_electronic_sigma(data_list):
-    """Load electronic σ_full from full_metrics or network_conductivity.json."""
+    """Load electronic σ_full for plotting — PREFERS Stage E target over raw.
+    Stage E is what the production form (electronic_fit_final) fits to and
+    represents the physically realistic composite σ_e after literature
+    corrections (Cronau / Trevisanello).  Raw Hertz σ_e can be much larger
+    (e.g. input_1mAh_5: raw 51.89 vs Stage E 9.01) because the network
+    solver doesn't apply AM-crystallinity / fracture corrections.
+
+    Priority:
+      Stage E target (electronic_sigma_full_mScm_stage_e, if raw>0 and
+                      not Bruggeman-fallback phantom)
+        → falls back to raw if Stage E missing
+        → final fallback: legacy network_conductivity.json raw value
+    """
     vals = [0.0] * len(data_list)
     for i, d in enumerate(data_list):
-        v = _get(d, "electronic_sigma_full_mScm", 0)
+        # Try Stage E target chain (raw-required, fallback-aware, cap 100)
+        try:
+            v = _stage_e_electronic_target(d)
+        except Exception:
+            v = None
         if v and v > 0:
-            vals[i] = v
+            vals[i] = float(v)
+            continue
+        # Fallback: legacy raw (for non-σ_e plots that just need a number)
+        raw = _get(d, "electronic_sigma_full_mScm", 0)
+        if raw and raw > 0 and raw <= _SIGMA_E_MAX:
+            vals[i] = float(raw)
         else:
             src = _get(d, "_source_path", "")
             if src:
@@ -2430,7 +2451,9 @@ def _load_electronic_sigma(data_list):
                     try:
                         with open(net_path) as _nf:
                             nd = json.load(_nf)
-                        vals[i] = nd.get("electronic_sigma_full_mScm", 0) or 0
+                        nv = nd.get("electronic_sigma_full_mScm", 0) or 0
+                        if nv and 0 < nv <= _SIGMA_E_MAX:
+                            vals[i] = float(nv)
                     except:
                         pass
     return vals
@@ -2490,10 +2513,11 @@ def plot_electronic_sigma(data_list, names, outdir):
                 markeredgewidth=2,
                 label="σ_e phantom (raw missing / fallback / >100 mS/cm)")
 
-    _apply_style(ax, "σ_electronic (mS/cm)", names)
+    _apply_style(ax, "σ_e Stage E (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    ax.set_title("Electronic Conductivity (AM-AM Network)\nσ_AM = 0.05 S/cm  "
-                 "[phantom cases (raw missing, fallback flag, or σ>100mS/cm) X-marked]",
+    ax.set_title("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
+                 "σ_AM_ref = 50 mS/cm  [Stage E = raw Hertz × AM-crystallinity correction; "
+                 "phantom X-marked]",
                  fontsize=9, fontweight='bold')
 
     # Annotation: range (excluding zeros / phantoms)
@@ -3665,11 +3689,13 @@ def plot_electronic_active_am(data_list, names, outdir):
     if x_phantom:
         ax2.plot(x_phantom, [0]*len(x_phantom), 'x', color='#222', markersize=ms+3,
                  markeredgewidth=2, label='σ_e phantom (raw missing / fallback / >100 mS/cm)')
-    ax2.set_ylabel('σ_electronic (mS/cm)', color='#9b59b6', fontsize=11)
+    ax2.set_ylabel('σ_e Stage E (mS/cm)', color='#9b59b6', fontsize=11)
     ax2.tick_params(axis='y', labelcolor='#9b59b6')
 
     _apply_style(ax1, '', names)
-    ax1.set_title('Electronic Active AM & Dead AM Analysis\nGreen≥95%, Yellow≥80%, Red<80%',
+    ax1.set_title('Electronic Active AM & Dead AM Analysis  '
+                  '[σ_e shown = Stage E target (Trevisanello-corrected)]\n'
+                  'Green≥95%, Yellow≥80%, Red<80%',
                   fontsize=10, fontweight='bold')
     lines1, labels1 = ax1.get_legend_handles_labels()
     lines2, labels2 = ax2.get_legend_handles_labels()
