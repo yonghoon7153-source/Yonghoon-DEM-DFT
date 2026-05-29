@@ -211,9 +211,9 @@
       <div class="plot-row">
         <label class="plot-checkbox"><input type="checkbox" value="electronic_active_am"> Electronic Active AM (Dead AM)</label>
         <label class="plot-checkbox"><input type="checkbox" value="electronic_sigma"> Electronic σ (AM-AM)</label>
-        <label class="plot-checkbox"><input type="checkbox" value="electronic_fit_final"> Electronic: Stage 12 fit (a=4 production, parity)</label>
-        <label class="plot-checkbox"><input type="checkbox" value="electronic_outliers_final"> Electronic: Stage 12 outlier 진단 (X = audit 제외)</label>
-        <label class="plot-checkbox"><input type="checkbox" value="electronic_decomp_final"> Electronic: Stage 12 factor decomposition</label>
+        <label class="plot-checkbox"><input type="checkbox" value="electronic_fit_final"> Electronic: Stage 15 fit (a=4 + φ·logCN, parity)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="electronic_outliers_final"> Electronic: Stage 15 outlier 진단 (audit 제외 분리)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="electronic_decomp_final"> Electronic: Stage 15 factor decomposition</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy v3-style decomposition; replaced by electronic_decomp_final"><input type="checkbox" value="electronic_scaling"> [Legacy] Electronic Scaling Law</label>
         <label class="plot-checkbox" style="opacity:0.5" title="Legacy v3-style decomposition; replaced by electronic_decomp_final"><input type="checkbox" value="electronic_decomposition"> [Legacy] Electronic Factor Decomposition</label>
         <label class="plot-checkbox"><input type="checkbox" value="thermal_sigma"> Thermal k (ALL)</label>
@@ -1288,7 +1288,7 @@ function createDerivationBox() {
           <div class="deriv-section">
             <div class="deriv-label">Robustness / 한계</div>
             <div class="deriv-desc">noise floor LOOCV-SE ≈ 0.0045 → LOOCV 0.975 가 실질 ceiling.  더 올리려면 데이터, 아니면 probabilistic ±band 가서야</div>
-            <div class="deriv-desc">DO NOT 재시도: 62:38 stochastic-packing 결론 (E term `(φ−φc)²·r_SE` 등) — 작은 noise SE × 2.3 정도라 borderline, 데이터 더 모은 후 재검토</div>
+            <div class="deriv-desc">DO NOT 재시도: 62:38 stochastic-packing 결론 (E term "(φ−φc)²·r_SE" 등) — 작은 noise SE × 2.3 정도라 borderline, 데이터 더 모은 후 재검토</div>
             <div class="deriv-desc">DO NOT 재선택: φc_P, φc_S, δ — re-screening 의 selection bias 가 +0.0095 → 실 LOOCV 손실</div>
           </div>
 
