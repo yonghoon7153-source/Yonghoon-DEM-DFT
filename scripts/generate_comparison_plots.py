@@ -2481,9 +2481,13 @@ def _load_thermal_sigma(data_list):
 
 
 def plot_electronic_sigma(data_list, names, outdir):
-    """Electronic conductivity from AM-AM network.  Phantom cases (no raw
-    network-solver value, Bruggeman fallback, or physics-pathway >100 mS/cm
-    buggy values) are X-marked instead of plotted at silly magnitudes."""
+    """Electronic conductivity from AM-AM network.  Now overlays Stage 15
+    production form prediction (red dashed + diamond) on top of the
+    Stage E target line (red squares), mirroring σ_ionic_perconfig_physics
+    style.  Phantom cases are X-marked instead of plotted at silly magnitudes.
+
+    Form prediction uses global _FIT_CORPUS if populated (consistent
+    coefficients across panels); falls back to local data_list fit if not."""
     sigma_el_raw = _load_electronic_sigma(data_list)
     phantom = [_phantom_electronic_sigma(d) for d in data_list]
     sigma_el = [(0.0 if (phantom[i] or sigma_el_raw[i] > _SIGMA_E_MAX)
@@ -2491,6 +2495,34 @@ def plot_electronic_sigma(data_list, names, outdir):
                 for i in range(len(sigma_el_raw))]
     if not any(s > 0 for s in sigma_el) and not any(phantom):
         return None
+
+    # ───── Stage 15 form prediction overlay (NEW, mirrors σ_ionic perconfig) ─────
+    form_pred = [np.nan] * len(data_list)
+    form_ok = False
+    try:
+        # Global fit if _FIT_CORPUS populated; else local data_list fit
+        fit_source = _FIT_CORPUS if _FIT_CORPUS else data_list
+        fit_names = [f'fit_{i}' for i in range(len(fit_source))] \
+                    if fit_source is _FIT_CORPUS else list(names)
+        arr_fit = _electronic_form_arrays(fit_source, fit_names)
+        if arr_fit is not None:
+            fit_mask = ~arr_fit['excluded']
+            fit_result = _electronic_fit(arr_fit, fit_mask=fit_mask)
+            coef = fit_result['coef']
+            # Now predict for each case in data_list (which may differ from fit_source)
+            arr_disp = _electronic_form_arrays(data_list, list(names))
+            if arr_disp is not None:
+                pred_disp = np.exp(arr_disp['X'] @ coef + arr_disp['log_offset'])
+                # Cap predictions at SIGMA_E_MAX so unphysical Stage 15
+                # extrapolations don't break the plot scale.
+                pred_disp = np.minimum(pred_disp, _SIGMA_E_MAX)
+                # Map back to data_list indices via keep_idx
+                for k, idx in enumerate(arr_disp['keep_idx']):
+                    if idx < len(form_pred) and not phantom[idx]:
+                        form_pred[idx] = float(pred_disp[k])
+                form_ok = True
+    except Exception as _e:
+        print(f"  [plot_electronic_sigma] form overlay skipped: {_e}")
 
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     x = np.arange(len(names))
@@ -2503,8 +2535,15 @@ def plot_electronic_sigma(data_list, names, outdir):
                    if (sigma_el[i] <= 0 and not phantom[i])]
     x_phantom = [x[i] for i in range(len(names)) if phantom[i]]
 
+    # Stage E target (kept as the headline series — red squares solid)
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
-            label="σ_electronic (mS/cm)")
+            label="σ_e Stage E target (Trevisanello, mS/cm)")
+    # Stage 15 form prediction overlay (NEW — green dashed + diamond)
+    if form_ok:
+        y_form = np.array(form_pred)
+        ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
+                linewidth=lw, alpha=0.85,
+                label="σ_e Stage 15 form prediction (mS/cm)")
     if x_perc_none:
         ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
                 label="No AM percolation")
@@ -2513,12 +2552,15 @@ def plot_electronic_sigma(data_list, names, outdir):
                 markeredgewidth=2,
                 label="σ_e phantom (raw missing / fallback / >100 mS/cm)")
 
-    _apply_style(ax, "σ_e Stage E (mS/cm)", names)
+    _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    ax.set_title("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
-                 "σ_AM_ref = 50 mS/cm  [Stage E = raw Hertz × AM-crystallinity correction; "
-                 "phantom hidden]",
-                 fontsize=9, fontweight='bold')
+    title = ("Electronic Conductivity — Stage E target vs Stage 15 form prediction\n"
+             "σ_AM_ref = 50 mS/cm  [target = raw Hertz × AM-crystallinity (Trevisanello); "
+             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ)]")
+    if not form_ok:
+        title = ("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
+                 "σ_AM_ref = 50 mS/cm  [form overlay unavailable — corpus too small or fit failed]")
+    ax.set_title(title, fontsize=8, fontweight='bold')
 
     # Annotation: range (excluding zeros / phantoms)
     valid_vals = [s for s in sigma_el if s > 0]
@@ -2532,7 +2574,8 @@ def plot_electronic_sigma(data_list, names, outdir):
                 bbox=dict(boxstyle='round,pad=0.4', facecolor='#ffeaea', alpha=0.8))
 
     _write_csv(outdir, 'electronic_sigma.csv',
-               ['σ_electronic(mS/cm)'], names, sigma_el)
+               ['σ_e_Stage_E(mS/cm)', 'σ_e_Stage_15_form(mS/cm)'],
+               names, sigma_el, form_pred)
     return _save(fig, outdir, "electronic_sigma.png")
 
 
@@ -4163,31 +4206,47 @@ def plot_ionic_phic_scan_stage_e(data_list, names, outdir):
 
 
 def plot_ionic_fit_stage_e(data_list, names, outdir):
-    """FINAL fixed physics form for the Stage-E/Physics σ target:
-    σ = C_blend(τ)·σ_grain·(φ−0.19)^0.5·CN²·cov^(1/2)·f_p³.
+    """FINAL T1 production form parity (UNIFIED with plot_ionic_outliers_stage_e):
+       σ = σ_grain·Cronau(r_SE)·(φ_eff)^0.5·CN²·cov_Hertz^0.5·f_p³
+           · exp[a + b·ln τ + c·(ln τ)² + β_P2·P2 + β_F·log f_intact]
 
-    Exponents + φc are FIXED single values (chosen from the n=91 φc scan:
-    CN² clean integer, φc=0.19 = robust n=91 peak that avoids the φc=0.20
-    singularity).  Only the τ prefactor C_blend(τ) re-fits to the corpus.
-    A free data-native exponent fit is kept in the CSV as a diagnostic."""
+    All ingredients match _stage_e_base_arrays (T1 adopted 2026-05-28):
+    Hertz cov (Holm at elastic contact), C4 augmented extras (P2 + log
+    f_intact).  Previously this plot used logpoly2-only refit while the
+    outliers plot used C4 augmented — user-observed discrepancy fixed."""
     SG = 3.0; PHI_C = 0.19; CN_EXP = 2.0; COV_EXP = 0.5
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
     base_log, logsf, taus, free_rows, kept_names = [], [], [], [], []
+    phi_loc, rse_loc, dcov_loc, p_loc, fi_loc = [], [], [], [], []
     for idx, d in enumerate(data_list):
         sig = _stage_e_sigma(d)
         phi = _get(d, 'phi_se'); cn = _get(d, 'se_se_cn')
-        cov = _cov_frac(d, physics=True) or _cov_frac(d, physics=False)
+        # T1: Hertz cov (matches production form base, matches outliers plot)
+        cov = _cov_frac(d, physics=False) or _cov_frac(d, physics=True)
         fp = _get(d, 'percolation_pct') / 100.0
         tau = _get(d, 'tortuosity_recommended', _get(d, 'tortuosity_mean', 0))
         if not (sig and sig > 0 and phi > PHI_C and cn > 0 and cov and cov > 0
                 and fp > 0 and tau > 0):
             continue
-        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), _direct_rse_um(d))))
+        rse = _direct_rse_um(d)
+        base_log.append(float(_sat_baselog(phi, cn, cov, fp, _ps_fraction(d), rse)))
         logsf.append(np.log(sig)); taus.append(tau)
         free_rows.append((np.log(phi-PHI_C), np.log(cn), np.log(cov),
                           np.log(fp), np.log(tau), np.log(sig/SG)))
         kept_names.append(real_all[idx])
+        # C4 extras inputs (matching plot_ionic_outliers_stage_e)
+        phi_loc.append(float(phi))
+        rse_loc.append(float(rse) if rse and np.isfinite(rse) else np.nan)
+        dcv = (d.get('coverage_AM_delta_pct_rough')
+               or d.get('coverage_AM_S_delta_pct_rough'))
+        dcov_loc.append(float(dcv) if dcv is not None else np.nan)
+        p_loc.append(float(_ps_fraction(d)))
+        frx = d.get('fracture_aware_excluded_pct')
+        if frx is not None and isinstance(frx, (int, float)):
+            fi_loc.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
+        else:
+            fi_loc.append(0.0)
     n = len(taus)
     if n < 8:
         print(f"  [SKIP] ionic_fit_stage_e: only {n} usable cases (<8)")
@@ -4195,7 +4254,12 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     base_log = np.array(base_log); logsf = np.array(logsf); taus = np.array(taus)
     resid = logsf - base_log
     lt = np.log(taus)
-    X = np.column_stack([np.ones(n), lt, lt**2])    # logpoly2 design matrix
+
+    # C4 augmented extras (T1 production: P2 + log f_intact)
+    extras_aug, _med = _c4_extras_from_arrays(
+        np.array(phi_loc), np.array(rse_loc), np.array(dcov_loc),
+        p_arr=np.array(p_loc), fi_log_arr=np.array(fi_loc))
+    X = np.column_stack([np.ones(n), lt, lt**2, *extras_aug])    # T1: 5 params
 
     bX, *_ = np.linalg.lstsq(X, resid, rcond=None)
     pred_log = base_log + X @ bX
@@ -4209,6 +4273,8 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
     loocv = 1 - sse / ss_tot if ss_tot > 0 else 0.0
     Ct = float(np.exp(bX[0]))                       # σ-multiplier at τ=1
     Cn = float(np.exp(bX[0] + bX[1] + bX[2]))       # at τ=e (lt=1)
+    beta_P2 = float(bX[3]) if len(bX) > 3 else 0.0
+    beta_F = float(bX[4]) if len(bX) > 4 else 0.0
 
     # Free data-native fit (diagnostic only — written to CSV)
     fa = np.array(free_rows)
@@ -4225,26 +4291,31 @@ def plot_ionic_fit_stage_e(data_list, names, outdir):
                     color=GREEN, alpha=0.12, label='±20%')
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlabel('σ_actual (Stage E / Physics, mS/cm)')
-    ax.set_ylabel('σ_predicted (fixed form, mS/cm)')
-    ax.set_title("Stage-E σ_ionic — fixed physics form, SAT-blend φc  (n=%d)\n"
-                 "σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³  "
-                 "[φc_P=%.3f φc_S=%.3f δ=%.3f]\n"
-                 "[Ct=%.4f Cn=%.4f]  R²=%.3f, LOOCV=%.3f"
-                 % (n, SE_PHI_C_P, SE_PHI_C_S, SE_SAT_DELTA, Ct, Cn, r2, loocv), fontsize=8)
+    ax.set_ylabel('σ_predicted (T1 production form, mS/cm)')
+    ax.set_title("Stage-E σ_ionic — T1 production form (UNIFIED w/ outliers plot)  (n=%d)\n"
+                 "σ = σ_grain·Cronau(r_SE)·(φ_eff)^0.5·CN²·cov_H^0.5·f_p³ · "
+                 "exp[a+b·lnτ+c·ln²τ + β_P2·P2 + β_F·log f_intact]\n"
+                 "[φc_P=%.3f φc_S=%.3f δ=%.3f] [β_P2=%+.2f β_F=%+.2f] [Ct=%.4f Cn=%.4f]  "
+                 "R²=%.3f, LOOCV=%.3f"
+                 % (n, SE_PHI_C_P, SE_PHI_C_S, SE_SAT_DELTA, beta_P2, beta_F,
+                    Ct, Cn, r2, loocv), fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "ionic_fit_stage_e.png")
     _focus_parity(outdir, "ionic_fit_stage_e", sig_act, sig_pred, kept_names,
                   'σ_actual (Stage E / Physics, mS/cm)',
-                  'σ_predicted (fixed form, mS/cm)',
-                  "선택 샘플만 — 식·계수는 전체 fit 그대로\n"
-                  "σ = C_blend(τ)·σ_grain·(φ_eff)^0.5·CN²·cov^0.5·f_p³  SAT-blend φc  "
+                  'σ_predicted (T1 production form, mS/cm)',
+                  "선택 샘플만 — 식·계수는 전체 fit 그대로 (T1 production)\n"
+                  "σ = σ_grain·Cronau·(φ_eff)^0.5·CN²·cov_H^0.5·f_p³ · "
+                  "exp[a+b·lnτ+c·ln²τ + β_P2·P2 + β_F·logf_intact]  "
                   "(fit: 전체 n=%d, R²=%.3f LOOCV=%.3f)" % (n, r2, loocv))
     with open(os.path.join(outdir, "ionic_fit_stage_e.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['# physical v12 form refit to Stage-E target'])
+        wr.writerow(['# T1 production form refit to Stage-E target (UNIFIED w/ outliers)'])
         wr.writerow(['param', 'value'])
         wr.writerow(['C_thick (Ct)', round(Ct, 5)]); wr.writerow(['C_thin (Cn)', round(Cn, 5)])
+        wr.writerow(['beta_P2', round(beta_P2, 5)])
+        wr.writerow(['beta_F (log f_intact)', round(beta_F, 5)])
         wr.writerow(['R2', round(r2, 4)]); wr.writerow(['LOOCV', round(loocv, 4)])
         wr.writerow([])
         wr.writerow(['# free data-native exponents (diagnostic — physical=0.5/1.5/0.4/3)'])
