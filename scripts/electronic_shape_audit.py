@@ -70,23 +70,39 @@ def main():
     matplotlib.use('Agg')
     import generate_comparison_plots as gcp
 
-    # ───── Walk corpus ─────
+    # ───── Walk corpus (archive first so friendly names take priority,
+    # then results for case_ids not yet covered) ─────
     data_list, names = [], []
     seen = set()
-    for base in ('webapp/results', 'webapp/archive'):
+    nameless_count = 0
+    for base in ('webapp/archive', 'webapp/results'):
         bp = Path(base)
         if not bp.is_dir(): continue
         for mp in bp.rglob('full_metrics.json'):
             meta_p = mp.parent / 'meta.json'
-            nm = mp.parent.name
+            cid = mp.parent.name
+            nm = cid   # fallback default
             if meta_p.exists():
-                try: nm = json.load(open(meta_p)).get('name', nm) or nm
+                try:
+                    meta_name = json.load(open(meta_p)).get('name', '') or ''
+                    if meta_name: nm = meta_name
                 except Exception: pass
+            # Skip cases that fall back to bare case_id (no friendly name)
+            # for the family-categorization step.  They'll still be in the
+            # corpus via input_params-based clustering if needed, but for
+            # the broad 1mAh/6mAh/8mAh family bucketing we need names.
+            if nm == cid and not nm.startswith('input_'):
+                nameless_count += 1
+                continue
             if nm in seen: continue
             seen.add(nm)
             try: d = json.load(open(mp))
             except Exception: continue
             data_list.append(d); names.append(nm)
+    if nameless_count:
+        print(f"  [walk] {nameless_count} case_id-named (no friendly meta) cases SKIPPED")
+        print(f"         (they would all fall into 'other' family — pollutes analysis)")
+        print()
 
     # ───── Global Stage 15 fit (using dashboard's helpers) ─────
     arr = gcp._electronic_form_arrays(data_list, names)
@@ -114,10 +130,20 @@ def main():
     # ───── Group cases by family ─────
     by_broad = defaultdict(list)
     by_sub = defaultdict(list)
+    other_examples = []
     for i, nm in enumerate(arr['names']):
         broad, sub = _family_base(nm)
         by_broad[broad].append(i)
         by_sub[sub].append(i)
+        if broad == 'other' and len(other_examples) < 10:
+            other_examples.append(nm)
+    if other_examples:
+        print(f"  [DEBUG] First 10 'other'-family names (likely case_ids, not friendly names):")
+        for e in other_examples:
+            print(f"     {e!r}")
+        print(f"  → If these are case_ids (e.g. '260421_xxxxxx_xxxxxx'), meta.json")
+        print(f"    'name' field is missing or matches the case_id.")
+        print()
 
     # ───── Per-family bias ─────
     print("─" * 100)
