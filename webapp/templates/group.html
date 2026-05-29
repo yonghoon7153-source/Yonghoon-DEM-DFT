@@ -1169,7 +1169,16 @@ function createPlotItem(session, p) {
   if (p.is_focus) {
     item.style.cssText = 'margin-left:28px;border-left:3px solid var(--accent, #6ea8fe);padding-left:10px';
   }
-  const isOutlier = p.file === 'ionic_outliers_stage_e.png';
+  // Outlier-button enabled for both σ_ionic and σ_electronic outlier plots.
+  // Each plot writes its own *_data.json with the same schema (n, n_outliers,
+  // top_corr, outliers[]) so the same modal renders both.
+  const OUTLIER_PLOTS = {
+    'ionic_outliers_stage_e.png':    { json: 'ionic_outliers_stage_e_data.json',
+                                       title: 'σ_ionic fit outliers' },
+    'electronic_outliers_final.png': { json: 'electronic_outliers_final_data.json',
+                                       title: 'σ_electronic Stage 15 outliers' },
+  };
+  const outlierMeta = OUTLIER_PLOTS[p.file];
   item.innerHTML = `
     <img src="/group/plot-image/${session}/${p.file}" alt="${p.title}"
          onclick="openPlotModal(this.src, '${p.title}')">
@@ -1177,17 +1186,19 @@ function createPlotItem(session, p) {
       <h4>${p.is_focus ? '↳ ' : ''}${p.title}</h4>
       <p class="plot-desc">${p.description.replace(/\\n/g,'<br>').replace(/\n/g,'<br>')}</p>
       <details class="plot-origin"><summary>Origin 설정</summary><pre>${p.origin_tip}</pre></details>
-      ${isOutlier ? `<button class="btn btn-sm btn-primary" style="margin-top:10px"
-          onclick="showOutlierPopup('${session}')">📋 outlier 케이스·이유 보기</button>` : ''}
+      ${outlierMeta ? `<button class="btn btn-sm btn-primary" style="margin-top:10px"
+          onclick="showOutlierPopup('${session}','${outlierMeta.json}','${outlierMeta.title}')">📋 outlier 케이스·이유 보기</button>` : ''}
       ${p.csv ? `<a href="/group/plot-image/${session}/${p.csv}" class="btn btn-sm btn-dl" style="margin-top:10px" download>CSV 다운로드</a>` : ''}
     </div>`;
   return item;
 }
 
-async function showOutlierPopup(session) {
+async function showOutlierPopup(session, jsonName, modalTitle) {
+  // Back-compat: callers pre-Stage-15 pass just (session) — default to σ_ionic.
+  if (!jsonName) { jsonName = 'ionic_outliers_stage_e_data.json'; modalTitle = 'σ_ionic fit outliers'; }
   let data;
   try {
-    const r = await fetch(`/group/plot-image/${session}/ionic_outliers_stage_e_data.json`);
+    const r = await fetch(`/group/plot-image/${session}/${jsonName}`);
     data = await r.json();
   } catch (e) { alert('outlier 데이터를 불러오지 못했습니다: ' + e); return; }
   let modal = document.getElementById('outlier-modal');
@@ -1209,7 +1220,7 @@ async function showOutlierPopup(session) {
       <td style="padding:5px 8px;color:var(--dim);font-size:.85em">${o.reason}</td>
     </tr>`).join('');
   document.getElementById('outlier-modal-body').innerHTML = `
-    <h3 style="margin-top:0">σ_ionic fit outliers — ${data.n_outliers}/${data.n} (>±20%)</h3>
+    <h3 style="margin-top:0">${modalTitle} — ${data.n_outliers}/${data.n} (>±20%)</h3>
     <p style="color:var(--dim);font-size:.85em">잔차 최강 상관 feature: ${corr || '—'}</p>
     <table style="width:100%;border-collapse:collapse;font-size:.9em">
       <thead><tr style="border-bottom:1px solid #2a2d3e">

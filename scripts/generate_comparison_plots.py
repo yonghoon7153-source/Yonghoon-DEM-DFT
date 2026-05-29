@@ -5305,14 +5305,22 @@ def _f_perc_e_target(d):
 
 
 def _electronic_form_arrays(data_list, names):
-    """Walk data_list, filter to Stage 12 valid cases (matches
+    """Walk data_list, filter to Stage 15 valid cases (matches
     electronic_nested_cv.load_corpus_e exactly: sig + phi_am + am_am_cn +
     cov_AM + f_perc + tau ALL > 0, dedup by (phi, cn, sig) key).
-    Returns dict or None if <8 usable cases."""
+    Returns dict or None if <8 usable cases.
+
+    Stage 15 form (production, 8 live OLS):
+      σ_e = σ_S^(1-p)·σ_P^p · φ_AM^4 · NCM(r̄) · √A_AM-AM
+            · (T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ)
+    The φ_AM × log(am_am_cn) term (β_AC, typically negative ≈ -0.46) is
+    a 'dense+over-coordinated' saturation correction that catches the
+    input_8mAh_real_10 / input_6mAh_real_5 cases the Stage 12 form missed.
+    Validated by Stage 14 nested CV (Δ LOOCV +0.024, β_AC<0)."""
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
     keep_idx, kept_names, sigs = [], [], []
-    phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a = ([] for _ in range(7))
+    phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a, cn_a = ([] for _ in range(8))
     excluded = []
     seen = set()
     for i, d in enumerate(data_list):
@@ -5353,7 +5361,7 @@ def _electronic_form_arrays(data_list, names):
         if not isinstance(av, (int, float)):
             av = d.get('am_vulnerable_pct', 0)
         keep_idx.append(i); kept_names.append(real_all[i]); sigs.append(float(sig))
-        phi_a.append(float(phi)); p_a.append(p)
+        phi_a.append(float(phi)); p_a.append(p); cn_a.append(float(cn))
         r_eff_a.append(r_eff); T_a.append(T_safe); am_vuln_a.append(float(av or 0))
         am_area_a.append(float(am_area)); tau_a.append(float(tau))
         excluded.append(real_all[i] in _EXCLUDED_NAMES_EL)
@@ -5362,7 +5370,7 @@ def _electronic_form_arrays(data_list, names):
         return None
     phi_a = np.array(phi_a); p_a = np.array(p_a); r_eff_a = np.array(r_eff_a)
     T_a = np.array(T_a); am_vuln_a = np.array(am_vuln_a)
-    am_area_a = np.array(am_area_a); tau_a = np.array(tau_a)
+    am_area_a = np.array(am_area_a); tau_a = np.array(tau_a); cn_a = np.array(cn_a)
     sigs = np.array(sigs); logsf = np.log(sigs)
     excluded = np.array(excluded, bool)
 
@@ -5375,6 +5383,9 @@ def _electronic_form_arrays(data_list, names):
     log_phi4 = 4.0 * np.log(phi_a)
     log_offset = log_ncm + log_holm + log_phi4
 
+    # Stage 15: 8th column = φ_AM × log(am_am_cn)  (saturation correction)
+    phi_logcn = phi_a * np.log(np.maximum(cn_a, 1e-3))
+
     X_design = np.column_stack([
         (1.0 - p_a),       # log σ_S
         p_a,               # log σ_P
@@ -5383,6 +5394,7 @@ def _electronic_form_arrays(data_list, names):
         np.ones(n),        # p_τ (const)
         lt,                # q_τ (lnτ)
         lt**2,             # r_τ (ln²τ)
+        phi_logcn,         # β_AC (Stage 15: dense+CN saturation)
     ])
     y_resid = logsf - log_offset
     return {
@@ -5392,6 +5404,7 @@ def _electronic_form_arrays(data_list, names):
         'excluded': excluded,
         'phi': phi_a, 'p_amp': p_a, 'r_eff': r_eff_a, 'T': T_a,
         'tau': tau_a, 'am_vuln': am_vuln_a, 'am_area': am_area_a,
+        'cn_am': cn_a, 'phi_logcn': phi_logcn,
     }
 
 
@@ -5438,6 +5451,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
     sigma_S = float(np.exp(coef[0])); sigma_P = float(np.exp(coef[1]))
     beta_T = float(coef[2]); beta_v = float(coef[3])
     p_tau, q_tau, r_tau = (float(c) for c in coef[4:7])
+    beta_AC = float(coef[7])  # Stage 15: φ_AM × log(am_am_cn)
 
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     excl = arr['excluded']
@@ -5461,15 +5475,15 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 12 form, mS/cm)')
+    ax.set_ylabel('σ_e predicted (Stage 15 form, mS/cm)')
     ax.set_title(
-        "σ_electronic — Stage 12 production form (a=4 locked)  "
+        "σ_electronic — Stage 15 production form (a=4 locked, +φ_AM·logCN)  "
         "(n_fit=%d, excluded=%d)\n"
         "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄) · √A_AM-AM · (T/d)^β_T "
-        "· exp(β_v·v_AM) · C(τ)\n"
-        "[σ_S=%.2f σ_P=%.2f β_T=%+.3f β_v=%+.3f]  "
+        "· exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ)\n"
+        "[σ_S=%.2f σ_P=%.2f β_T=%+.3f β_v=%+.3f β_AC=%+.3f]  "
         "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]  R²=%.3f LOOCV=%.3f"
-        % (n_fit, int(excl.sum()), sigma_S, sigma_P, beta_T, beta_v,
+        % (n_fit, int(excl.sum()), sigma_S, sigma_P, beta_T, beta_v, beta_AC,
            p_tau, q_tau, r_tau, fit['r2'], fit['loocv']),
         fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
@@ -5479,12 +5493,13 @@ def plot_electronic_fit_final(data_list, names, outdir):
     with open(os.path.join(outdir, "electronic_fit_final.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['# σ_electronic Stage 12 production form (a=4)'])
+        wr.writerow(['# σ_electronic Stage 15 production form (a=4, +φ_AM·log(am_am_cn))'])
         wr.writerow(['param', 'value'])
         wr.writerow(['sigma_S_mScm', round(sigma_S, 3)])
         wr.writerow(['sigma_P_mScm', round(sigma_P, 3)])
         wr.writerow(['beta_T', round(beta_T, 4)])
         wr.writerow(['beta_v', round(beta_v, 4)])
+        wr.writerow(['beta_AC (phi_AM*log(am_am_cn))', round(beta_AC, 4)])
         wr.writerow(['p_tau', round(p_tau, 4)])
         wr.writerow(['q_tau (lnτ)', round(q_tau, 4)])
         wr.writerow(['r_tau (ln²τ)', round(r_tau, 4)])
@@ -5589,10 +5604,10 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 12 form)')
+    ax.set_ylabel('σ_e predicted (Stage 15 form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
-        f"σ_electronic Stage 12 outliers  (n={arr['n']}, "
+        f"σ_electronic Stage 15 outliers (a=4, +φ_AM·logCN)  (n={arr['n']}, "
         f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded X)\n"
         f"top residual-corr features -> {top_corr}", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
@@ -5648,6 +5663,8 @@ def plot_electronic_outliers_final(data_list, names, outdir):
             'sigma_act': round(float(sig_act[i]), 4),
             'sigma_pred': round(float(sig_pred[i]), 4),
             'excluded': bool(excl[i]),
+            'ps': f'{int(round(arr["p_amp"][i]*10))}:{10-int(round(arr["p_amp"][i]*10))}',
+            'direction': 'over' if err_pct[i] > 0 else 'under',
             'reason': _reason(i),
         })
     with open(os.path.join(outdir, "electronic_outliers_final_data.json"), 'w',
@@ -5663,24 +5680,28 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 12 (a=4 production)",
-    "description": "Stage 12 σ_electronic 생산식 (φ_AM⁴ 잠금, 7 live-fit OLS):\n"
-                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM "
-                   "· (T/d_AM)^β_T · exp(β_v·v_AM) · C(τ).\n"
-                   "Audit-trail 제외 5개 케이스 (_EXCLUDED_NAMES_EL) 는 빨강 ✗ 마크.\n"
-                   "σ_S/σ_P: Trevisanello 단결정/다결정 NCM. √A: Holm 1967. NCM: 입자 크기 GB.",
+    "title": "σ_electronic → Stage 15 (a=4 + φ_AM·logCN)",
+    "description": "Stage 15 σ_electronic 생산식 (φ_AM⁴ 잠금, 8 live-fit OLS):\n"
+                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · (T/d_AM)^β_T\n"
+                   "      · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ).\n"
+                   "β_AC<0: dense+over-coordinated saturation correction "
+                   "(Stage 14 nested CV: Δ+0.024).\n"
+                   "Audit-trail 제외 케이스는 빨강 ✗ 마크. "
+                   "σ_S/σ_P: Trevisanello. √A: Holm 1967. NCM: 입자 크기 GB.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20% band. ✗ 표시 = audit 제외.",
 }
 
 PLOT_REGISTRY["electronic_outliers_final"] = {
     "func": plot_electronic_outliers_final,
     "file": "electronic_outliers_final.png",
-    "title": "σ_electronic Stage 12 — outlier 진단",
-    "description": "Stage 12 form 의 worst-fit 케이스 (>±20%) 빨강 + 이름 강조, "
-                   "audit-trail 제외 5개 (_EXCLUDED_NAMES_EL) 는 ✗ 마크.\n"
+    "title": "σ_electronic Stage 15 — outlier 진단",
+    "description": "Stage 15 form (a=4 + φ_AM·log(am_am_cn)) 의 worst-fit "
+                   "케이스 (>±20%) 빨강 + 이름 강조, "
+                   "audit-trail 제외 케이스는 ✗ 마크.\n"
                    "잔차와 가장 상관 높은 구조 feature 표시 (= form 이 놓친 다음 후보).\n"
                    "CSV: |err| 내림차순 outlier + 제외 케이스 + reason + feature dump.",
-    "origin_tip": "Parity (log-log). 빨강 = err 큰 케이스, ✗ = audit 제외, 회색 = within.",
+    "origin_tip": "Parity (log-log). 빨강 = err 큰 케이스, ✗ = audit 제외, 회색 = within. "
+                  "케이스 클릭하여 reason 보기 (electronic_outliers_final_data.json).",
 }
 
 
@@ -5708,11 +5729,12 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     sigma_S = float(np.exp(coef[0])); sigma_P = float(np.exp(coef[1]))
     beta_T = float(coef[2]); beta_v = float(coef[3])
     p_tau, q_tau, r_tau = (float(c) for c in coef[4:7])
+    beta_AC = float(coef[7])  # Stage 15
 
     n = arr['n']
     phi = arr['phi']; p_amp = arr['p_amp']; r_eff = arr['r_eff']
     T_a = arr['T']; tau = arr['tau']; am_vuln = arr['am_vuln']; am_area = arr['am_area']
-    sig_act = arr['sig_act']
+    sig_act = arr['sig_act']; phi_logcn = arr['phi_logcn']
 
     d_AM = 2.0 * r_eff
     log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
@@ -5726,19 +5748,21 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     log_Td_term = beta_T * log_Td
     log_vuln = beta_v * am_vuln
     log_ctau = p_tau + q_tau*lt + r_tau*lt**2
+    log_phi_logcn = beta_AC * phi_logcn   # Stage 15
 
     # Reference = max-σ case
     ref = int(np.argmax(sig_act))
 
-    # 7 factors with distinct colors
+    # 8 factors with distinct colors (Stage 15: + β_AC·φ_AM·logCN)
     factors = [
-        ('mix σ_S/σ_P',    log_mix,      '#4472C4'),   # blue
-        ('φ_AM⁴',          log_phi4,     '#7030A0'),   # purple
-        ('NCM(r̄)',         log_ncm,      '#ED7D31'),   # orange
-        ('√A_AM-AM',       log_holm,     '#A5A5A5'),   # gray
-        ('β_T·log(T/d)',   log_Td_term,  '#70AD47'),   # green
-        ('β_v·v_AM',       log_vuln,     '#FFC000'),   # yellow
-        ('C(τ) logpoly2',  log_ctau,     '#C00000'),   # dark red
+        ('mix σ_S/σ_P',     log_mix,         '#4472C4'),   # blue
+        ('φ_AM⁴',           log_phi4,        '#7030A0'),   # purple
+        ('NCM(r̄)',          log_ncm,         '#ED7D31'),   # orange
+        ('√A_AM-AM',        log_holm,        '#A5A5A5'),   # gray
+        ('β_T·log(T/d)',    log_Td_term,     '#70AD47'),   # green
+        ('β_v·v_AM',        log_vuln,        '#FFC000'),   # yellow
+        ('β_AC·φ_AM·logCN', log_phi_logcn,   '#1F77B4'),   # navy (Stage 15)
+        ('C(τ) logpoly2',   log_ctau,        '#C00000'),   # dark red
     ]
 
     # Figure sizing — cap to avoid PIL decompression limit
@@ -5759,11 +5783,11 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', arr['names'], None)
     x_labels = arr['names']
-    title = ("σ_electronic Stage 12 factor decomposition (ref: %s)  "
-             "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f]  "
+    title = ("σ_electronic Stage 15 factor decomposition (ref: %s)  "
+             "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f]  "
              "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]"
              % (x_labels[ref][:28] if ref < len(x_labels) else 'ref',
-                sigma_S, sigma_P, beta_T, beta_v,
+                sigma_S, sigma_P, beta_T, beta_v, beta_AC,
                 p_tau, q_tau, r_tau))
     ax.set_title(title, fontsize=10, fontweight='bold')
     ax.legend(fontsize=9, loc='upper left', ncol=4)
@@ -5788,11 +5812,12 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 
     _write_csv(outdir, 'electronic_decomp_final.csv',
                ['mix(σ_S/σ_P)', 'phi_AM^4', 'NCM(r_AM)', 'sqrt(A_AM_AM)',
-                'beta_T*log(T/d)', 'beta_v*v_AM', 'C(tau)_logpoly2',
-                'sigma_actual_mScm', 'dominant'],
+                'beta_T*log(T/d)', 'beta_v*v_AM',
+                'beta_AC*phi_AM*log(am_am_cn)',
+                'C(tau)_logpoly2', 'sigma_actual_mScm', 'dominant'],
                x_labels, list(log_mix), list(log_phi4), list(log_ncm),
                list(log_holm), list(log_Td_term), list(log_vuln),
-               list(log_ctau), list(sig_act),
+               list(log_phi_logcn), list(log_ctau), list(sig_act),
                [sorted([(l, v[i]-v[ref]) for l, v, _ in factors],
                        key=lambda t: -abs(t[1]))[0][0]
                 for i in range(n)])
@@ -5802,10 +5827,10 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_decomp_final"] = {
     "func": plot_electronic_decomp_final,
     "file": "electronic_decomp_final.png",
-    "title": "σ_electronic Stage 12 factor decomposition",
-    "description": "Stage 12 production form 의 7 factor 를 stack 으로 분해:\n"
+    "title": "σ_electronic Stage 15 factor decomposition",
+    "description": "Stage 15 production form 의 8 factor 를 stack 으로 분해:\n"
                    "  mix σ_S/σ_P · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · "
-                   "(T/d)^β_T · exp(β_v·v_AM) · C(τ).\n"
+                   "(T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ).\n"
                    "각 factor 의 Δlog 기여를 ref (최고 σ_e 케이스) 대비 표시.\n"
                    "하단 panel: 케이스별 dominant factor.",
     "origin_tip": "상단 stacked bar (factor 별 Δlog), 하단 case 별 dominant.",
