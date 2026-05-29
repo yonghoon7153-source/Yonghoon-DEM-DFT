@@ -105,10 +105,15 @@ def place_molecule_at(slab, mol_template, anchor_idx, dx_frac, dy_frac, dz_A):
 def load_uma(device, task="omat"):
     from fairchem.core.units.mlip_unit.api.inference import InferenceSettings
     from fairchem.core import pretrained_mlip, FAIRChemCalculator
+    # merge_mole=False — without this, the first SP's element composition
+    # is cached and the next call with a different composition fails:
+    #   AssertionError: Compositions differ from merged model
+    # Our scan deliberately calls 3 different compositions (slab, mol, complex)
+    # so we must allow composition changes between predictions.
     predictor = pretrained_mlip.get_predict_unit(
         "uma-s-1p1", device=device,
         inference_settings=InferenceSettings(
-            tf32=True, activation_checkpointing=False, merge_mole=True,
+            tf32=True, activation_checkpointing=False, merge_mole=False,
             compile=False, wigner_cuda=False,
         ),
     )
