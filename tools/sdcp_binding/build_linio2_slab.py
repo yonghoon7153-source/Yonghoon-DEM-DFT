@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Build a small LiNiO2 (104) slab + UMA relax → reference for SDCP binding scan.
 
-Re-uses tools/build_ncm_interface.py::build_ncm_slab (LiNiO2 = NCM x_Ni=1.0).
+For high-index facets like (104), pymatgen's SlabGenerator can return slabs
+where the c-vector is NOT perpendicular to the ab plane (non-orthogonal
+α, β). That makes lateral xy repeats balloon the atoms in z (we saw
+z-range 66 Å for a "thin" slab). We call Slab.get_orthogonal_c_slab() to
+force c ⊥ ab before xy-repeat + vacuum.
 
 Output:
     <out_dir>/slab_init.xyz       (post-build, pre-relax)
@@ -11,14 +15,51 @@ Output:
 Smaller than the cascade NCM slab — SDCP molecule is ~10-12 Å, so a ~15 Å
 surface with ~3 atomic layers + 15 Å vacuum is plenty for binding scan.
 """
-import argparse, json, sys
+import argparse, json
 from pathlib import Path
 import numpy as np
 
-# Add repo root to path so build_ncm_interface is importable
-REPO = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(REPO))
-from tools.build_ncm_interface import build_ncm_slab
+
+def build_linio2_slab_ortho(facet=(1, 0, 4), min_slab=8.0, min_vac=2.0):
+    """LiNiO2 (R-3m) slab at requested facet, c-orthogonal to ab.
+
+    Returns ase.Atoms with the slab compactly stacked along z (vacuum is
+    set later by caller).
+    """
+    from pymatgen.core import Structure, Lattice
+    from pymatgen.core.surface import SlabGenerator
+    from pymatgen.io.ase import AseAtomsAdaptor
+
+    # LiNiO2 bulk (R-3m, hexagonal setting)
+    bulk = Structure(
+        Lattice.hexagonal(2.878, 14.19),
+        ["Li", "Ni", "O", "O"],
+        [[0, 0, 0.5], [0, 0, 0], [0, 0, 0.2584], [0, 0, 0.7416]],
+    )
+    gen = SlabGenerator(
+        bulk, miller_index=facet,
+        min_slab_size=min_slab, min_vacuum_size=min_vac,
+        center_slab=True, in_unit_planes=False,
+    )
+    slabs = gen.get_slabs(symmetrize=False)
+    if not slabs:
+        raise RuntimeError(f"No slabs found for facet {facet}")
+    slab = slabs[0]
+    print(f"  raw slab: {len(slab)} atoms, "
+          f"a={slab.lattice.a:.2f}, b={slab.lattice.b:.2f}, "
+          f"c={slab.lattice.c:.2f}, "
+          f"α={slab.lattice.alpha:.1f}°, β={slab.lattice.beta:.1f}°, "
+          f"γ={slab.lattice.gamma:.1f}°")
+
+    # Force c ⊥ ab (fixes high-index facet z-tilt)
+    slab = slab.get_orthogonal_c_slab()
+    print(f"  after ortho-c: {len(slab)} atoms, "
+          f"a={slab.lattice.a:.2f}, b={slab.lattice.b:.2f}, "
+          f"c={slab.lattice.c:.2f}, "
+          f"α={slab.lattice.alpha:.1f}°, β={slab.lattice.beta:.1f}°, "
+          f"γ={slab.lattice.gamma:.1f}°")
+
+    return AseAtomsAdaptor.get_atoms(slab)
 
 
 def freeze_bottom_layers(atoms, n_freeze_layers=2):
@@ -59,9 +100,9 @@ def main():
     out_dir = Path(args.out_dir); out_dir.mkdir(parents=True, exist_ok=True)
     facet = tuple(int(c) for c in args.facet)
 
-    # 1) Build bulk slab via existing helper
+    # 1) Build orthogonalized slab (c ⊥ ab)
     print(f"=== Build LiNiO2 ({args.facet}) slab ===")
-    slab = build_ncm_slab(facet=facet, min_slab=args.min_slab, min_vac=1.0)
+    slab = build_linio2_slab_ortho(facet=facet, min_slab=args.min_slab, min_vac=1.0)
 
     # 2) xy repeat
     nx, ny = args.repeat_xy
