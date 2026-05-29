@@ -17,17 +17,20 @@ PREFIX=$(grep "^\s*prefix" "$WORK/relax.in" | head -1 | sed -E "s/.*'(.+)'.*/\1/
 cd "$WORK"
 mkdir -p tmp logs
 
-# GPU QE 7.4.1 (NVHPC build) requires mpirun for MPI_Init to succeed.
-# Single rank is fine for a 1-GPU job.
+# GPU QE 7.4.1 (NVHPC build) requires NVHPC's bundled HPCX MPI — the
+# system /usr/bin/mpirun is ABI-incompatible with libmpi_*.so.40 that
+# pw.x is linked against. Source HPCX init to set OPAL_PREFIX + PATH
+# + LD_LIBRARY_PATH correctly.
+HPCX_INIT=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/hpcx-init.sh
+if [ -f "$HPCX_INIT" ]; then
+    source "$HPCX_INIT"
+    hpcx_load 2>/dev/null || true
+fi
 export OMPI_ALLOW_RUN_AS_ROOT=1
 export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-# Pick whichever mpirun the QE GPU build expects (try NVHPC path first)
-if [ -x /data/apps/qe-7.4.1-gpu/mpi/bin/mpirun ]; then
-    MPIRUN=/data/apps/qe-7.4.1-gpu/mpi/bin/mpirun
-elif command -v mpirun >/dev/null 2>&1; then
-    MPIRUN=$(command -v mpirun)
-else
-    echo "[$(date)] ERROR: no mpirun found" >&2
+MPIRUN=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+if [ ! -x "$MPIRUN" ]; then
+    echo "[$(date)] ERROR: NVHPC HPCX mpirun not found at $MPIRUN" >&2
     exit 1
 fi
 
