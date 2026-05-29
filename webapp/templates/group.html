@@ -1247,48 +1247,55 @@ function createDerivationBox() {
   const box = document.createElement('div');
   box.className = 'derivation-box';
         box.innerHTML = `
-          <h4>📐 유효 이온전도도 — v12-clean v3 (= v29_FINAL)</h4>
-          <div class="deriv-desc" style="opacity:.7;margin-bottom:8px">n=92 (코퍼스 성장 중) | corpus에 live-refit | thick+thin universal | σ_grain=3.0 mS/cm</div>
+          <h4>📐 유효 이온전도도 — T1 production form (2026-05-29 최신)</h4>
+          <div class="deriv-desc" style="opacity:.7;margin-bottom:8px">n≈92 (multi-seed 추가 진행 중) | corpus에 live-refit | σ_grain=3.0 mS/cm (Cronau 2022, Li₆PS₅Cl 단결정)</div>
+
           <div class="deriv-section">
-            <div class="deriv-label">Champion Formula (v12-clean v3)</div>
-            <div class="deriv-formula">σ_ion = C_blend(τ) × σ_grain × √(φ−0.2) × CN^(3/2) × cov^(2/5) × f_p³</div>
-            <div class="deriv-desc">지수 α=½, β=3/2, γ=2/5, δ=3 (전부 단순분수, 데이터-native fit의 ±5% 이내) | φ_c=0.20</div>
-            <div class="deriv-desc">R² ≈ 0.975, LOOCV ≈ 0.968 (n=92) | n=57일 때 0.9813 / 0.9791 — 케이스 다양화로 소폭 하락(정상)</div>
+            <div class="deriv-label">Production Formula (T1, 2026-05-28 채택)</div>
+            <div class="deriv-formula">σ_ion = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p³ · exp[a + b·lnτ + c·(lnτ)² + β_P2·P2 + β_F·log f_intact]</div>
+            <div class="deriv-desc">5 live OLS params (a, b, c, β_P2, β_F) + 모든 exponent / φ_c FROZEN | R² ≈ 0.975, LOOCV ≈ 0.97 (n≈92, multi-seed 정리 후)</div>
+            <div class="deriv-desc">⚠ φc_P=0.200, φc_S=0.195, δ=0.040 FROZEN — 재선택 금지 (selection bias).  C_blend → logpoly2 단순 prefactor로 회귀 (dual-branch v12 대비 ΔAIC=−10.6 우월).</div>
           </div>
-          <div class="deriv-section">
-            <div class="deriv-label">C_blend(τ) — τ 의존성을 담는 prefactor (신규 설명)</div>
-            <div class="deriv-formula">C_blend(τ) = (1−w(τ))·C_v5(τ) + w(τ)·C_p3(τ)</div>
-            <div class="deriv-desc"><b>C_v5(τ)</b> = Ct + (Cn−Ct)·σ(5·(τ−2.1)) — thick↔thin 2단 asymptote (두꺼운/얇은 전극 prefactor)</div>
-            <div class="deriv-desc"><b>C_p3(τ)</b> = exp(a₀ + a₁·lnτ + a₂·(lnτ)² + a₃·(lnτ)³) — poly3-in-lnτ 곡선</div>
-            <div class="deriv-desc"><b>w(τ)</b> = σ(k·(τ−τc)), k≈20, τc≈1.92 — 두 prefactor를 sigmoid로 부드럽게 blend (LOOCV-flat)</div>
-            <div class="deriv-desc">→ τ 거동(저τ 직선 ~ 고τ endpoint-dominated)을 고정 1/√τ 대신 데이터로 학습해 담음. 계수는 corpus에 live-fit.</div>
-          </div>
+
           <div class="deriv-section">
             <div class="deriv-label">각 항의 물리</div>
-            <div class="deriv-desc"><b>√(φ−0.2)</b>: mean-field / quasi-2D percolation, φ_c=0.20 이하에서 σ→0</div>
-            <div class="deriv-desc"><b>CN^(3/2)</b>: SE‑SE network connectivity (Kirkpatrick, 병렬 경로 수)</div>
-            <div class="deriv-desc"><b>cov^(2/5)</b>: AM‑SE 계면 품질 (이온이 AM에 도달하는 경로)</div>
-            <div class="deriv-desc"><b>f_p³</b>: cubic percolation fraction (신규 발견 — 연결된 SE 비율의 3제곱)</div>
-            <div class="deriv-desc"><b>C_blend(τ)</b>: softened tortuosity, 위 참조</div>
+            <div class="deriv-desc"><b>σ_grain = 3.0 mS/cm</b>: Cronau 2022 Li₆PS₅Cl 단결정 grain conductivity (literature anchor, HIGH confidence)</div>
+            <div class="deriv-desc"><b>Cronau(r_SE)</b>: 3-sigmoid 부드러운 SE 크기 보정. r_SE ≥ 0.5μm 평탄(=1), sub-µm 영역 amorphization 감쇠 (Cronau 2022 piecewise smooth)</div>
+            <div class="deriv-desc"><b>(φ_eff)^½</b>: SAT-blend percolation. φ_eff = √[(φ−φc_eff)² + (δ·g_phys)²] — 0:10 corner 안전성 위한 disorder rounding</div>
+            <div class="deriv-desc">  └ φc_eff = (1−g_phys)·0.200 + g_phys·0.195 (composition-dependent threshold)</div>
+            <div class="deriv-desc">  └ g_phys = (min(r_cut/r_AM_eff, 1))^α, α=2, r_cut=3.5µm — POWER GATE (label-free, smooth)</div>
+            <div class="deriv-desc"><b>CN²</b>: SE‑SE 병렬 경로 수 (Kirchhoff #paths × bond-strength). data-locked 91/91, ablation impact: −0.26 LOOCV</div>
+            <div class="deriv-desc"><b>cov_Hertz^½</b>: Holm 1967 constriction at ELASTIC contact area.  T1 채택 이유: Spearman ρ(σ, cov_H)=+0.697 > ρ(σ, cov_P)=+0.476 — Tabor adhesion 으로 부풀려진 cov_physics 가 아닌, 진짜 Li⁺ 통과 면적 (vdW gap 으로 ionic 차단)</div>
+            <div class="deriv-desc"><b>f_p³</b>: 3D isotropy P(percolate-x ∧ -y ∧ -z) = f_p³, cubic</div>
+            <div class="deriv-desc"><b>C(τ) = exp(a + b·lnτ + c·(lnτ)²)</b>: logpoly2 tortuosity blend (단순, 3 params).  dual-branch 대비 ΔAIC=−10.6 우월</div>
           </div>
+
           <div class="deriv-section">
-            <div class="deriv-label">잔차 보정 — base × C_blend 뒤에 추가로 곱해지는 항 (× exp(Σ))</div>
-            <div class="deriv-formula">σ_ion = [base × σ_grain × C_blend(τ)] × exp(β_pf·Δw_pf + β_lin·Δlin + β_gb·Δw_gb)</div>
-            <div class="deriv-desc">물리 base만으론 못 잡는 <b>국소·그룹 잔차</b>를 세 sigmoid/window 항으로 보정 (R² ~0.95 → ~0.975~0.98). 각 β는 corpus에 live-fit, Δ는 평균 제거(중심화).</div>
-            <div class="deriv-desc"><b>① β_pf · w_pf(P:S)</b>: w_pf = σ(K_PF·(p−PC_PF)). P:S(=AM_P 비율 p)가 임계 넘으면 켜지는 sigmoid → <b>P-heavy 케이스의 체계적 편차</b> 보정.</div>
-            <div class="deriv-desc"><b>② β_lin · p · w_win(τ)</b>: w_win = exp(−½·((τ−τc)/σ_tw)²) Gaussian 윈도우 × P 비율 → <b>특정 τ 구간 + P-heavy</b> 조합에서만 작동하는 국소 보정.</div>
-            <div class="deriv-desc"><b>③ β_gb · w_gb(GB density)</b>: w_gb = σ(4·(ln·GB_d − 중앙값)). 입계 밀도(grain-boundary density)가 높은 케이스의 추가 저항 보정.</div>
-            <div class="deriv-desc">※ 모두 <b>곱셈 보정</b>(exp 안의 합 = σ에 대한 곱). 음수 β면 감소, 양수면 증가. 작은 보정이라 base의 물리적 의미는 유지.</div>
+            <div class="deriv-label">잔차 보정 — base 뒤에 추가로 곱해지는 두 항 (× exp(Σ))</div>
+            <div class="deriv-desc"><b>β_P2 · P2</b>: P2 = g_phys · (φ−φc_S)² · max(r_SE − 0.5, 0). Cronau super-µm 영역 (62:38 D1+ corner) 의 bulk-grain regime 보정.  leave-corner-out test PASS.</div>
+            <div class="deriv-desc"><b>β_F · log f_intact</b>: f_intact = 1 − fracture_aware_excluded_pct/100. fracture-aware Holm — β≈+0.19 (literature partial-conduction: 깨진 a-spot 도 micro-asperity 로 ~60% 유지)</div>
+            <div class="deriv-desc">※ 이전 v32 의 sigmoid/window 잔차 보정 (β_pf, β_lin, β_gb) 는 모두 ≈0 refit 되어 폐기.  현 T1 의 2개 잔차 항이 ablation 으로 검증됨.</div>
           </div>
+
+          <div class="deriv-section">
+            <div class="deriv-label">Outlier landscape (close-out 2026-05-29, n=91, 9 outliers >±20%)</div>
+            <div class="deriv-desc">남은 outliers 의 origin (Bayesian Laplace + family audit 으로 확정):</div>
+            <div class="deriv-desc"><b>data-side per-seed anomaly</b> (form 잘못 아님): input_1mAh_8 / _1mAh_8_AMS base + input_1mAh_8_S5 — multi-seed family 통계로 식별, 디스크에서 삭제됨</div>
+            <div class="deriv-desc"><b>1mAh family-wide systematic bias</b> (form 한계): input_1mAh_8_S1/_S3, _1mAh_5_AMP/_AMS, _1mAh_8_AMP 등 1mAh family-wide +25~37% over.  데이터 부족 영역 (corpus 가 6/8mAh 편중) — 추가 1mAh seed 만이 진짜 해결책</div>
+            <div class="deriv-desc"><b>특이 케이스</b>: input_8mAh_real_10 (−40%, isolated dense 4-edge), input_S_2 / input_particulate_5 (0:10 SE-rich corner 의 reverse bias)</div>
+          </div>
+
           <div class="deriv-section">
             <div class="deriv-label">Robustness / 한계</div>
-            <div class="deriv-desc">noise floor LOOCV-SE ≈ 0.0045 → R² 0.98 / LOOCV 0.976이 실질 ceiling (n=57 기준)</div>
-            <div class="deriv-desc">v32 추가 보정항(LIGG_LB, w_thin·GEOM, p₅₀δR, r_SE/r_AM) 전부 ≈0 refit → 개선 없음</div>
-            <div class="deriv-desc">v59/v60 실제-저항-가중 τ(τ_Dijkstra_R) 실험 → 개선 없음(inconclusive). 더 올리는 레버는 데이터(CN≥7, 중간두께)</div>
+            <div class="deriv-desc">noise floor LOOCV-SE ≈ 0.0045 → LOOCV 0.975 가 실질 ceiling.  더 올리려면 데이터, 아니면 probabilistic ±band 가서야</div>
+            <div class="deriv-desc">DO NOT 재시도: 62:38 stochastic-packing 결론 (E term `(φ−φc)²·r_SE` 등) — 작은 noise SE × 2.3 정도라 borderline, 데이터 더 모은 후 재검토</div>
+            <div class="deriv-desc">DO NOT 재선택: φc_P, φc_S, δ — re-screening 의 selection bias 가 +0.0095 → 실 LOOCV 손실</div>
           </div>
+
           <div class="deriv-section">
-            <div class="deriv-label">이전 버전 (legacy)</div>
-            <div class="deriv-desc"><b>FORM X v4++</b>: σ_ion = C·σ_grain·(φ−0.185)^¾·CN·√cov/√τ, R²≈0.96 — 이전 champion, 현재 fallback. τ를 고정 1/√τ로 처리(blend 없음).</div>
+            <div class="deriv-label">v12-clean v3 / v29_FINAL (legacy)</div>
+            <div class="deriv-desc"><b>v12-clean v3</b>: σ = C_blend(τ)·σ_grain·√(φ−0.2)·CN^(3/2)·cov^(2/5)·f_p³ — 2026 초 champion.  현 T1 대비: Cronau 보정 없음, dual-branch C_blend (logpoly2 보다 ΔAIC -10.6 열등), 잔차 보정 3개 sigmoid 가 0 refit 되어 폐기.  현재는 비교 reference 만 보존.</div>
+            <div class="deriv-desc"><b>FORM X v4++</b>: σ = C·σ_grain·(φ−0.185)^¾·CN·√cov/√τ — 2025 말 champion.  현재 deprecated.</div>
           </div>`;
   return box;
 }
