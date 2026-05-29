@@ -17,22 +17,19 @@ PREFIX=$(grep "^\s*prefix" "$WORK/relax.in" | head -1 | sed -E "s/.*'(.+)'.*/\1/
 cd "$WORK"
 mkdir -p tmp logs
 
-# GPU QE 7.4.1 (NVHPC build) requires NVHPC's bundled HPCX MPI — the
-# system /usr/bin/mpirun is ABI-incompatible with libmpi_*.so.40 that
-# pw.x is linked against. Source HPCX init to set OPAL_PREFIX + PATH
-# + LD_LIBRARY_PATH correctly.
-HPCX_INIT=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/hpcx-init.sh
-if [ -f "$HPCX_INIT" ]; then
-    source "$HPCX_INIT"
-    hpcx_load 2>/dev/null || true
-fi
+# Env identical to the working /data/work/comp3_v2_eos/run_comp3_v2_eos.sh
+# pattern on this box. Key items: NVHPC HPCX mpirun on PATH first,
+# matching LD_LIBRARY_PATH (HPCX + NVHPC compilers + CUDA), OPAL_PREFIX
+# explicit, and OMP_NUM_THREADS=1 (without this, pw.x crashes with
+# "libgomp: TODO" at MPI_Init).
+export PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin:/usr/local/bin:/usr/bin:/bin
+export LD_LIBRARY_PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
+export OPAL_PREFIX=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi
+export OMP_NUM_THREADS=1
+export CUDA_VISIBLE_DEVICES=0
 export OMPI_ALLOW_RUN_AS_ROOT=1
 export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 MPIRUN=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
-if [ ! -x "$MPIRUN" ]; then
-    echo "[$(date)] ERROR: NVHPC HPCX mpirun not found at $MPIRUN" >&2
-    exit 1
-fi
 
 echo "[$(date)] LiNiO2 DFT+U slab relax: $WORK"
 echo "[$(date)] host=$(hostname)  prefix=$PREFIX"
@@ -57,7 +54,7 @@ else
 fi
 
 T0=$(date +%s)
-$MPIRUN -np 1 $QE -input relax.in > relax.out 2>&1 || echo "[$(date)] pw.x exited with non-zero (may still have output)"
+$MPIRUN -np 1 $QE -in relax.in > relax.out 2>&1 || echo "[$(date)] pw.x exited with non-zero (may still have output)"
 DT=$(( $(date +%s) - T0 ))
 
 echo "[$(date)] elapsed ${DT}s"
