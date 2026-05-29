@@ -2517,7 +2517,7 @@ def plot_electronic_sigma(data_list, names, outdir):
     ax.legend(fontsize=8, loc='upper left')
     ax.set_title("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
                  "σ_AM_ref = 50 mS/cm  [Stage E = raw Hertz × AM-crystallinity correction; "
-                 "phantom X-marked]",
+                 "phantom hidden]",
                  fontsize=9, fontweight='bold')
 
     # Annotation: range (excluding zeros / phantoms)
@@ -2526,7 +2526,7 @@ def plot_electronic_sigma(data_list, names, outdir):
         n_phantom = sum(1 for p in phantom if p)
         note = f"Range: {min(valid_vals):.2f} ~ {max(valid_vals):.2f} mS/cm"
         if n_phantom:
-            note += f"   ({n_phantom} phantom X)"
+            note += f"   ({n_phantom} phantom skipped)"
         ax.text(0.95, 0.95, note,
                 transform=ax.transAxes, fontsize=9, ha='right', va='top',
                 bbox=dict(boxstyle='round,pad=0.4', facecolor='#ffeaea', alpha=0.8))
@@ -5608,7 +5608,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
         f"σ_electronic Stage 15 outliers (a=4, +φ_AM·logCN)  (n={arr['n']}, "
-        f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded X)\n"
+        f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded)\n"
         f"top residual-corr features -> {top_corr}", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_outliers_final.png")
@@ -5667,6 +5667,10 @@ def plot_electronic_outliers_final(data_list, names, outdir):
             'direction': 'over' if err_pct[i] > 0 else 'under',
             'reason': _reason(i),
         })
+    # Sort: real outliers first (by |err%|), AUDIT EXCLUDED at the bottom
+    # (excluded cases have large form vs anomaly-low err by design — they
+    # are NOT form failures and shouldn't dominate the user-facing list).
+    outliers_data.sort(key=lambda o: (o['excluded'], -abs(o['err_pct'])))
     with open(os.path.join(outdir, "electronic_outliers_final_data.json"), 'w',
               encoding='utf-8') as jf:
         _json.dump({'n': arr['n'], 'n_outliers': int(is_out.sum()),
