@@ -211,6 +211,8 @@
       <div class="plot-row">
         <label class="plot-checkbox"><input type="checkbox" value="electronic_active_am"> Electronic Active AM (Dead AM)</label>
         <label class="plot-checkbox"><input type="checkbox" value="electronic_sigma"> Electronic σ (AM-AM)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="electronic_fit_final"> Electronic: Stage 12 fit (a=4 production, parity)</label>
+        <label class="plot-checkbox"><input type="checkbox" value="electronic_outliers_final"> Electronic: Stage 12 outlier 진단 (✗ = audit 제외)</label>
         <label class="plot-checkbox"><input type="checkbox" value="electronic_scaling"> Electronic Scaling Law</label>
         <label class="plot-checkbox"><input type="checkbox" value="electronic_decomposition"> Electronic Factor Decomposition</label>
         <label class="plot-checkbox"><input type="checkbox" value="thermal_sigma"> Thermal k (ALL)</label>
@@ -951,7 +953,7 @@ async function generatePlots() {
   try {
     // Global R_gb: always use all data combined for rgb_fitting/gb_corrected
     // Plots that need ALL groups combined (not per-group)
-    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e'];
+    const globalOnlyTypes = ['rgb_fitting', 'gb_corrected', 'ionic_scaling_fit', 'ionic_fit_stage_e', 'ionic_outliers_stage_e', 'electronic_fit_final', 'electronic_outliers_final'];
     // Force the global path in focus mode too, so fit plots fit on the FULL
     // set (gform always gets all cases) even for a single plot group.
     const needsGlobalRgb = (validPGs.length > 1 || focusEnabled) &&

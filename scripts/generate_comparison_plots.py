@@ -5139,6 +5139,415 @@ PLOT_REGISTRY["fracture_pairtype"] = {
 }
 
 
+# ═════════════════════════════════════════════════════════════════════════════
+# σ_electronic — Stage 12 production form (a=4 locked)
+# ═════════════════════════════════════════════════════════════════════════════
+# Form:  σ_e = σ_S^(1-p)·σ_P^p · φ_AM^4 · NCM(r̄) · √A_AM-AM
+#              · (T/d_AM)^β_T · exp(β_v·am_vuln) · C(τ)
+# 7 live-fit OLS: log σ_S, log σ_P, β_T, β_v, p_τ, q_τ, r_τ
+# Locked: a=4 (φ_AM), d=0 (f_p_e), Trevisanello NCM, Holm √A
+# Audit-trail exclusions (5 cases — see scripts/electronic_nested_cv.py
+# _EXCLUDED_NAMES_EL).  In dashboard plots these are X-marked, NOT dropped
+# from the corpus for the fit (so the form sees them as outliers honestly).
+
+_EXCLUDED_NAMES_EL = frozenset([
+    'input_1mAh_6_S1',
+    'input_8mAh_1',
+    'input_6mAh_real_10',
+    'input_S_2',
+    'input_particulate_5',
+])
+
+_SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
+_PHI_AM_MIN = 0.30
+
+
+def _stage_e_electronic_target(d):
+    """σ_e target with Stage E priority + Bruggeman-fallback rejection.
+    Mirrors scripts/electronic_nested_cv.py:_stage_e_electronic exactly:
+       stage_e → raw → stage_e_physics → physics
+    Rejects any 'fallback_weighted_factor' source (Bruggeman phantom)."""
+    src = d.get('stage_e_source') or {}
+    raw = d.get('electronic_sigma_full_mScm')
+    is_raw_real = isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0
+
+    stE = d.get('electronic_sigma_full_mScm_stage_e')
+    if isinstance(stE, (int, float)) and stE > 0 and is_raw_real \
+            and src.get('sigma_e') != 'fallback_weighted_factor':
+        return float(stE)
+    if is_raw_real:
+        return float(raw)
+    stEP = d.get('electronic_sigma_full_mScm_stage_e_physics')
+    if isinstance(stEP, (int, float)) and stEP > 0 \
+            and src.get('sigma_e_physics') != 'fallback_weighted_factor':
+        return float(stEP)
+    phys = d.get('electronic_sigma_full_mScm_physics')
+    return float(phys) if isinstance(phys, (int, float)) and phys > 0 else None
+
+
+def _electronic_form_arrays(data_list, names):
+    """Walk data_list, filter to Stage 12 valid cases, build design matrix.
+    Returns dict with keys: ok (mask), logsf, y_resid, X_design, names_kept,
+    sig_act, log_offset (fixed exponent contributions), excluded_mask.
+    Excluded cases are KEPT in the corpus but flagged via excluded_mask
+    for downstream X-marking on plots."""
+    real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
+                else list(names))
+    keep_idx, kept_names, sigs = [], [], []
+    phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a = ([] for _ in range(7))
+    excluded = []
+    for i, d in enumerate(data_list):
+        sig = _stage_e_electronic_target(d)
+        phi = _get(d, 'phi_am')
+        cn = _get(d, 'am_am_cn')
+        tau = _get(d, 'tortuosity_electronic_recommended',
+                   _get(d, 'tortuosity_electronic_mean',
+                        _get(d, 'tortuosity_recommended',
+                             _get(d, 'tortuosity_mean', 0))))
+        am_area = _get(d, 'am_am_mean_area', 0)
+        if not (sig and sig > 0 and phi and phi > _PHI_AM_MIN
+                and cn and cn > 0 and tau and tau > 0 and am_area and am_area > 0):
+            continue
+        ras, rap = _r_am_sizes(d)
+        ras = ras if (ras and np.isfinite(ras)) else 2.5
+        rap = rap if (rap and np.isfinite(rap)) else 5.5
+        p = float(_ps_fraction(d) or 0)
+        r_eff = (1.0 - p)*ras + p*rap
+        T = _get(d, 'thickness_um', 0)
+        T_safe = float(T) if (T and T > 0) else 100.0
+        av = _get(d, 'AM_S_vulnerable_pct', _get(d, 'am_vulnerable_pct', 0))
+        keep_idx.append(i); kept_names.append(real_all[i]); sigs.append(float(sig))
+        phi_a.append(float(phi)); p_a.append(p)
+        r_eff_a.append(r_eff); T_a.append(T_safe); am_vuln_a.append(float(av))
+        am_area_a.append(float(am_area)); tau_a.append(float(tau))
+        excluded.append(real_all[i] in _EXCLUDED_NAMES_EL)
+    n = len(keep_idx)
+    if n < 8:
+        return None
+    phi_a = np.array(phi_a); p_a = np.array(p_a); r_eff_a = np.array(r_eff_a)
+    T_a = np.array(T_a); am_vuln_a = np.array(am_vuln_a)
+    am_area_a = np.array(am_area_a); tau_a = np.array(tau_a)
+    sigs = np.array(sigs); logsf = np.log(sigs)
+    excluded = np.array(excluded, bool)
+
+    d_AM = 2.0 * r_eff_a
+    log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
+    lt = np.log(tau_a)
+    ncm = 1.0 / (1.0 + np.power(np.maximum(r_eff_a, 0.05) / 2.0, 1.5))
+    log_ncm = np.log(np.maximum(ncm, 1e-6))
+    log_holm = 0.5 * np.log(np.maximum(am_area_a, 1e-12))
+    log_phi4 = 4.0 * np.log(phi_a)
+    log_offset = log_ncm + log_holm + log_phi4
+
+    X_design = np.column_stack([
+        (1.0 - p_a),       # log σ_S
+        p_a,               # log σ_P
+        log_Td,            # β_T
+        am_vuln_a,         # β_v
+        np.ones(n),        # p_τ (const)
+        lt,                # q_τ (lnτ)
+        lt**2,             # r_τ (ln²τ)
+    ])
+    y_resid = logsf - log_offset
+    return {
+        'n': n, 'keep_idx': np.array(keep_idx), 'names': kept_names,
+        'logsf': logsf, 'sig_act': sigs,
+        'X': X_design, 'y_resid': y_resid, 'log_offset': log_offset,
+        'excluded': excluded,
+        'phi': phi_a, 'p_amp': p_a, 'r_eff': r_eff_a, 'T': T_a,
+        'tau': tau_a, 'am_vuln': am_vuln_a, 'am_area': am_area_a,
+    }
+
+
+def _electronic_fit(arr, fit_mask=None):
+    """OLS fit Stage 12 form on arr['X'], arr['y_resid'] (optionally masked).
+    Returns dict with coef, pred_log (full corpus), r2, loocv (on fit_mask)."""
+    X = arr['X']; y = arr['y_resid']; n = arr['n']
+    if fit_mask is None:
+        fit_mask = np.ones(n, bool)
+    Xf = X[fit_mask]; yf = y[fit_mask]
+    nf = int(fit_mask.sum())
+    coef, *_ = np.linalg.lstsq(Xf, yf, rcond=None)
+    pred_full = X @ coef + arr['log_offset']
+    pred_log_fit = (Xf @ coef) + arr['log_offset'][fit_mask]
+    logsf_f = arr['logsf'][fit_mask]
+    ss_tot = float(np.sum((logsf_f - logsf_f.mean())**2))
+    r2 = 1 - float(np.sum((logsf_f - pred_log_fit)**2)) / ss_tot if ss_tot > 0 else 0.0
+    sse_loo = 0.0
+    for j in range(nf):
+        m = np.ones(nf, bool); m[j] = False
+        c_loo, *_ = np.linalg.lstsq(Xf[m], yf[m], rcond=None)
+        sse_loo += (yf[j] - Xf[j] @ c_loo)**2
+    loocv = 1 - float(sse_loo) / ss_tot if ss_tot > 0 else 0.0
+    return {'coef': coef, 'pred_log': pred_full,
+            'r2': r2, 'loocv': loocv, 'n_fit': nf}
+
+
+def plot_electronic_fit_final(data_list, names, outdir):
+    """σ_electronic parity for Stage 12 production form (a=4 locked).
+    Excluded cases (_EXCLUDED_NAMES_EL) are X-marked but DO contribute to fit
+    so the form sees them honestly as outliers (they get caught in the
+    outlier-diag plot).  σ_S, σ_P, β_T, β_v, C(τ) live-fit on the corpus."""
+    arr = _electronic_form_arrays(data_list, names)
+    if arr is None:
+        print(f"  [SKIP] electronic_fit_final: <8 usable cases")
+        return None
+    # Exclude the 5 audit-trail cases from the FIT (matches Stage 12 _EXCLUDED)
+    fit_mask = ~arr['excluded']
+    fit = _electronic_fit(arr, fit_mask=fit_mask)
+    coef = fit['coef']
+    sig_act = arr['sig_act']
+    sig_pred = np.exp(fit['pred_log'])
+    n = arr['n']; n_fit = fit['n_fit']
+    sigma_S = float(np.exp(coef[0])); sigma_P = float(np.exp(coef[1]))
+    beta_T = float(coef[2]); beta_v = float(coef[3])
+    p_tau, q_tau, r_tau = (float(c) for c in coef[4:7])
+
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    excl = arr['excluded']
+    # Within-fit cases
+    ax.scatter(sig_act[~excl], sig_pred[~excl], s=55, c=BLUE,
+               edgecolors='white', zorder=3, label=f'fit corpus (n={n_fit})')
+    # Excluded cases marked with X
+    if excl.any():
+        ax.scatter(sig_act[excl], sig_pred[excl], s=120, c='none',
+                   edgecolors=RED, linewidths=2, marker='x', zorder=4,
+                   label=f'_EXCLUDED_NAMES_EL ({int(excl.sum())})')
+        for i in np.where(excl)[0]:
+            ax.annotate(arr['names'][i], (sig_act[i], sig_pred[i]),
+                        fontsize=6, color=RED, xytext=(5, 3),
+                        textcoords='offset points')
+    lim = [min(sig_act.min(), sig_pred.min()) * 0.6,
+           max(sig_act.max(), sig_pred.max()) * 1.6]
+    ax.plot(lim, lim, '--', color=GRAY, label='1:1')
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12, label='±20%')
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlim(lim); ax.set_ylim(lim)
+    ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
+    ax.set_ylabel('σ_e predicted (Stage 12 form, mS/cm)')
+    ax.set_title(
+        "σ_electronic — Stage 12 production form (a=4 locked)  "
+        "(n_fit=%d, excluded=%d)\n"
+        "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄) · √A_AM-AM · (T/d)^β_T "
+        "· exp(β_v·v_AM) · C(τ)\n"
+        "[σ_S=%.2f σ_P=%.2f β_T=%+.3f β_v=%+.3f]  "
+        "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]  R²=%.3f LOOCV=%.3f"
+        % (n_fit, int(excl.sum()), sigma_S, sigma_P, beta_T, beta_v,
+           p_tau, q_tau, r_tau, fit['r2'], fit['loocv']),
+        fontsize=7.5)
+    ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
+    outpath = _save(fig, outdir, "electronic_fit_final.png")
+
+    # CSV
+    with open(os.path.join(outdir, "electronic_fit_final.csv"), 'w', newline='',
+              encoding='utf-8') as f:
+        wr = csv.writer(f)
+        wr.writerow(['# σ_electronic Stage 12 production form (a=4)'])
+        wr.writerow(['param', 'value'])
+        wr.writerow(['sigma_S_mScm', round(sigma_S, 3)])
+        wr.writerow(['sigma_P_mScm', round(sigma_P, 3)])
+        wr.writerow(['beta_T', round(beta_T, 4)])
+        wr.writerow(['beta_v', round(beta_v, 4)])
+        wr.writerow(['p_tau', round(p_tau, 4)])
+        wr.writerow(['q_tau (lnτ)', round(q_tau, 4)])
+        wr.writerow(['r_tau (ln²τ)', round(r_tau, 4)])
+        wr.writerow(['R2', round(fit['r2'], 4)])
+        wr.writerow(['LOOCV', round(fit['loocv'], 4)])
+        wr.writerow(['n_fit', n_fit])
+        wr.writerow(['n_excluded', int(excl.sum())])
+        wr.writerow([])
+        wr.writerow(['Case', 'sigma_act_mScm', 'sigma_pred_mScm',
+                     'err_pct', 'in_fit'])
+        err_pct = (sig_pred - sig_act) / sig_act * 100.0
+        for i in range(n):
+            wr.writerow([arr['names'][i], round(sig_act[i], 4),
+                         round(sig_pred[i], 4), round(float(err_pct[i]), 1),
+                         'no_excluded' if excl[i] else 'yes'])
+    return outpath
+
+
+_EL_OUTLIER_FEATS = [
+    ('phi_am', None), ('am_am_cn', None),
+    ('am_am_mean_area', None), ('am_am_mean_force', None),
+    ('am_am_n_contacts', None),
+    ('AM_S_vulnerable_pct', 'am_vulnerable_pct'),
+    ('coverage_AM_mean', None), ('thickness_um', None),
+    ('tortuosity_electronic_recommended', 'tortuosity_recommended'),
+]
+
+
+def plot_electronic_outliers_final(data_list, names, outdir):
+    """σ_electronic outlier diagnosis: same Stage 12 form, identify >±20%
+    err cases.  Audit-trail _EXCLUDED_NAMES_EL marked with ✗ regardless of
+    err — these are documented exclusions.  Top residual-correlated
+    structural features reported (which axis the form is failing on)."""
+    arr = _electronic_form_arrays(data_list, names)
+    if arr is None:
+        print(f"  [SKIP] electronic_outliers_final: <8 usable cases")
+        return None
+
+    # Pull diagnostic features per kept case
+    feat_rows = []
+    for idx_in_full in arr['keep_idx']:
+        d = data_list[idx_in_full]
+        fr = {}
+        for key, fb in _EL_OUTLIER_FEATS:
+            v = d.get(key)
+            if v is None and fb:
+                v = d.get(fb)
+            fr[key] = float(v) if isinstance(v, (int, float)) else np.nan
+        feat_rows.append(fr)
+    feat_keys = [k for k, _ in _EL_OUTLIER_FEATS]
+
+    # Fit on non-excluded; predict on all
+    fit_mask = ~arr['excluded']
+    fit = _electronic_fit(arr, fit_mask=fit_mask)
+    sig_act = arr['sig_act']
+    sig_pred = np.exp(fit['pred_log'])
+    err_pct = (sig_pred - sig_act) / sig_act * 100.0
+    resid = arr['logsf'] - fit['pred_log']
+
+    feat_corr = []
+    for key in feat_keys:
+        vals = np.array([fr.get(key, np.nan) for fr in feat_rows])
+        m = np.isfinite(vals) & np.isfinite(resid) & (~arr['excluded'])
+        if m.sum() >= 8 and np.std(vals[m]) > 1e-12:
+            feat_corr.append((key, float(np.corrcoef(vals[m], resid[m])[0, 1]),
+                              int(m.sum())))
+    feat_corr.sort(key=lambda t: -abs(t[1]))
+
+    is_out = (np.abs(err_pct) > 20.0) & (~arr['excluded'])
+    excl = arr['excluded']
+
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    in_band = (~is_out) & (~excl)
+    ax.scatter(sig_act[in_band], sig_pred[in_band], s=45, c=BLUE,
+               edgecolors='white', zorder=3, label='within ±20%')
+    if is_out.any():
+        ax.scatter(sig_act[is_out], sig_pred[is_out], s=70, c=RED,
+                   edgecolors='black', zorder=4,
+                   label=f'outlier >±20% ({int(is_out.sum())})')
+    if excl.any():
+        ax.scatter(sig_act[excl], sig_pred[excl], s=140, c='none',
+                   edgecolors='#222', linewidths=2.2, marker='x', zorder=5,
+                   label=f'audit excluded ({int(excl.sum())})')
+
+    # Annotate top-N outliers + ALL excluded
+    order = np.argsort(-np.abs(err_pct))
+    annot = list(np.where(excl)[0])
+    for i in order[:6]:
+        if i not in annot:
+            annot.append(i)
+    for i in annot:
+        col = '#222' if excl[i] else (RED if is_out[i] else GRAY)
+        ax.annotate(f'{arr["names"][i]} ({err_pct[i]:+.0f}%)',
+                    (sig_act[i], sig_pred[i]), fontsize=6, color=col,
+                    xytext=(4, 3), textcoords='offset points')
+
+    lim = [min(sig_act.min(), sig_pred.min()) * 0.6,
+           max(sig_act.max(), sig_pred.max()) * 1.6]
+    ax.plot(lim, lim, '--', color=GRAY)
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12)
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlim(lim); ax.set_ylim(lim)
+    ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
+    ax.set_ylabel('σ_e predicted (Stage 12 form)')
+    top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
+    ax.set_title(
+        f"σ_electronic Stage 12 outliers  (n={arr['n']}, "
+        f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded ✗)\n"
+        f"top residual-corr features → {top_corr}", fontsize=7.5)
+    ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
+    outpath = _save(fig, outdir, "electronic_outliers_final.png")
+
+    # CSV: outlier list with reasons
+    def _reason(i):
+        nm = arr['names'][i]
+        parts = []
+        if excl[i]:
+            parts.append('AUDIT EXCLUDED (_EXCLUDED_NAMES_EL)')
+        p_amp = arr['p_amp'][i]
+        ps = f'{int(round(p_amp*10))}:{10-int(round(p_amp*10))}'
+        parts.append(f'P:S={ps}')
+        parts.append('over-pred' if err_pct[i] > 0 else 'under-pred')
+        # Top z-score feature
+        best, bz = None, 0.0
+        for k in feat_keys:
+            v = feat_rows[i].get(k, np.nan)
+            vv = np.array([fr.get(k, np.nan) for fr in feat_rows])
+            vv_v = vv[np.isfinite(vv)]
+            if len(vv_v) >= 5 and np.isfinite(v) and np.std(vv_v) > 1e-9:
+                z = (v - np.median(vv_v)) / (np.std(vv_v) or 1.0)
+                if abs(z) > abs(bz):
+                    bz, best = z, k
+        if best and abs(bz) > 1.2:
+            parts.append(f'{best} {"높음" if bz > 0 else "낮음"} (z={bz:+.1f})')
+        return ' · '.join(parts)
+
+    flagged = list(np.where(is_out | excl)[0])
+    flagged.sort(key=lambda i: (-1 if excl[i] else 0, -abs(err_pct[i])))
+    with open(os.path.join(outdir, "electronic_outliers_final.csv"), 'w',
+              newline='', encoding='utf-8') as f:
+        wr = csv.writer(f)
+        wr.writerow(['Case', 'P:S', 'σ_act', 'σ_pred', 'err_%',
+                     'flag', 'reason'] + feat_keys)
+        for i in order:
+            flag = 'EXCLUDED' if excl[i] else ('OUTLIER' if is_out[i] else '')
+            wr.writerow([arr['names'][i],
+                         f'{int(round(arr["p_amp"][i]*10))}:{10-int(round(arr["p_amp"][i]*10))}',
+                         round(sig_act[i], 4), round(sig_pred[i], 4),
+                         round(float(err_pct[i]), 1), flag,
+                         _reason(i) if (excl[i] or is_out[i]) else '']
+                        + [('' if not np.isfinite(feat_rows[i].get(k, np.nan))
+                            else round(feat_rows[i][k], 4)) for k in feat_keys])
+
+    import json as _json
+    outliers_data = []
+    for i in flagged:
+        outliers_data.append({
+            'case': arr['names'][i],
+            'err_pct': round(float(err_pct[i]), 1),
+            'sigma_act': round(float(sig_act[i]), 4),
+            'sigma_pred': round(float(sig_pred[i]), 4),
+            'excluded': bool(excl[i]),
+            'reason': _reason(i),
+        })
+    with open(os.path.join(outdir, "electronic_outliers_final_data.json"), 'w',
+              encoding='utf-8') as jf:
+        _json.dump({'n': arr['n'], 'n_outliers': int(is_out.sum()),
+                    'n_excluded': int(excl.sum()),
+                    'top_corr': [{'feature': k, 'r': round(r, 3)}
+                                 for k, r, _ in feat_corr[:5]],
+                    'outliers': outliers_data}, jf, ensure_ascii=False, indent=1)
+    return outpath
+
+
+PLOT_REGISTRY["electronic_fit_final"] = {
+    "func": plot_electronic_fit_final,
+    "file": "electronic_fit_final.png",
+    "title": "σ_electronic → Stage 12 (a=4 production)",
+    "description": "Stage 12 σ_electronic 생산식 (φ_AM⁴ 잠금, 7 live-fit OLS):\n"
+                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM "
+                   "· (T/d_AM)^β_T · exp(β_v·v_AM) · C(τ).\n"
+                   "Audit-trail 제외 5개 케이스 (_EXCLUDED_NAMES_EL) 는 빨강 ✗ 마크.\n"
+                   "σ_S/σ_P: Trevisanello 단결정/다결정 NCM. √A: Holm 1967. NCM: 입자 크기 GB.",
+    "origin_tip": "Scatter parity (log-log) + 1:1 + ±20% band. ✗ 표시 = audit 제외.",
+}
+
+PLOT_REGISTRY["electronic_outliers_final"] = {
+    "func": plot_electronic_outliers_final,
+    "file": "electronic_outliers_final.png",
+    "title": "σ_electronic Stage 12 — outlier 진단",
+    "description": "Stage 12 form 의 worst-fit 케이스 (>±20%) 빨강 + 이름 강조, "
+                   "audit-trail 제외 5개 (_EXCLUDED_NAMES_EL) 는 ✗ 마크.\n"
+                   "잔차와 가장 상관 높은 구조 feature 표시 (= form 이 놓친 다음 후보).\n"
+                   "CSV: |err| 내림차순 outlier + 제외 케이스 + reason + feature dump.",
+    "origin_tip": "Parity (log-log). 빨강 = err 큰 케이스, ✗ = audit 제외, 회색 = within.",
+}
+
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
