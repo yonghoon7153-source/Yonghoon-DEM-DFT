@@ -2502,7 +2502,7 @@ def plot_electronic_sigma(data_list, names, outdir):
         n_phantom = sum(1 for p in phantom if p)
         note = f"Range: {min(valid_vals):.2f} ~ {max(valid_vals):.2f} mS/cm"
         if n_phantom:
-            note += f"   ({n_phantom} phantom ✗)"
+            note += f"   ({n_phantom} phantom X)"
         ax.text(0.95, 0.95, note,
                 transform=ax.transAxes, fontsize=9, ha='right', va='top',
                 bbox=dict(boxstyle='round,pad=0.4', facecolor='#ffeaea', alpha=0.8))
@@ -2568,6 +2568,10 @@ def plot_electronic_scaling(data_list, names, outdir):
     # Use screening_electronic_sweep.load_all_electronic() for reliable dedup
     import importlib.util as _ilu
     _sweep_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'screening_electronic_sweep.py')
+    if not os.path.exists(_sweep_path):
+        # Legacy dep removed; skip plot rather than crash other plots in batch
+        print(f"  [SKIP] electronic_scaling: missing dep {os.path.basename(_sweep_path)}")
+        return None
     _spec = _ilu.spec_from_file_location("sweep", _sweep_path)
     _mod = _ilu.module_from_spec(_spec)
     _spec.loader.exec_module(_mod)
@@ -5558,8 +5562,8 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
         f"σ_electronic Stage 12 outliers  (n={arr['n']}, "
-        f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded ✗)\n"
-        f"top residual-corr features → {top_corr}", fontsize=7.5)
+        f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded X)\n"
+        f"top residual-corr features -> {top_corr}", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_outliers_final.png")
 
