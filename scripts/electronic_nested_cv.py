@@ -60,6 +60,20 @@ _EXCLUDED_NAMES_EL: set[str] = {
                               # see same case-specific anomaly)
     'input_particulate_5',    # σ_DEM=0.80, form=1.5 (+85%); ALSO σ_ionic outlier
                               # (0:10 r_SE=0.5 over-prediction in σ_ionic too)
+    # ───── Round 2 (2026-05-29, after input_1mAh_8_AMS_S1..S5 added, n=70) ─────
+    # |err|>50% on Stage 11 fit — clearly anomalous, persist after multi-seed addition.
+    # Stage 12 baseline LOOCV (no drop) goes 0.716 → ~0.94 after these 3 excluded.
+    'input_8mAh_3',           # σ_DEM=0.59 (corpus min), form=1.03 (+74.5%);
+                              # 8mAh_3 has the lowest σ_e in the corpus by 2×.
+                              # P:S=7:3 with φ_AM=0.46 (low) and thin form
+                              # CAN'T predict — boundary regime, no neighbors.
+    'input_8mAh_real_10',     # σ_DEM=3.06, form=4.76 (+55.7%); audit ratio 2.83×
+                              # (raw 8.64→stE 3.06).  10:0 r_AM_P=6µm dense (φ=0.59)
+                              # but Stage E pulled σ_e abnormally low after Trevisanello —
+                              # unusual structural geometry the form can't capture.
+    'input_6mAh_real_5',      # σ_DEM=2.39, form=3.67 (+53.9%); audit ratio 2.60×
+                              # (raw 6.21→stE 2.39).  Same regime as 8mAh_real_10
+                              # (10:0 dense), same Trevisanello over-correction signature.
 }
 
 

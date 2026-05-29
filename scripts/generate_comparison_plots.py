@@ -5209,11 +5209,16 @@ PLOT_REGISTRY["fracture_pairtype"] = {
 # from the corpus for the fit (so the form sees them as outliers honestly).
 
 _EXCLUDED_NAMES_EL = frozenset([
-    'input_1mAh_6_S1',
-    'input_8mAh_1',
-    'input_6mAh_real_10',
-    'input_S_2',
-    'input_particulate_5',
+    # Round 1 (2026-05-28, after phantom filter): top-5 outliers, |log resid|>0.6
+    'input_1mAh_6_S1',        # 1mAh_6 family tail (σ=33, sibling cluster 9-13)
+    'input_8mAh_1',           # isolated σ=0.55 anomaly low
+    'input_6mAh_real_10',     # isolated σ=1.5 (-104%)
+    'input_S_2',              # σ_ionic outlier too (r_AM_S=4µm borderline)
+    'input_particulate_5',    # σ_ionic outlier too (0:10 r_SE=0.5 corner)
+    # Round 2 (2026-05-29, after 1mAh_8_AMS_S1..S5 added, n=70): |err|>50%
+    'input_8mAh_3',           # σ=0.59 corpus min (+74%, thin/low-φ boundary)
+    'input_8mAh_real_10',     # +55%, audit ratio 2.83× — Trevisanello over-correction
+    'input_6mAh_real_5',      # +54%, audit ratio 2.60× — same dense 10:0 regime
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
