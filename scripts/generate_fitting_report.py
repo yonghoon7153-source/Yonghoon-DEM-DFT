@@ -221,23 +221,18 @@ def generate_report(data_list, names, outdir):
     best = models[0] if models else None
 
     L = []
-    L.append(f"# GB Correction Fitting Analysis Report (v2.0)")
+    L.append(f"# Production Scaling Laws Report")
     L.append(f"*Generated: {now} | n = {n} cases | DEM Analyzer v2.0*\n")
+
+    L.append("**T1 (σ_ionic) + Stage 15 (σ_electronic) production forms — corpus 최신 fit.**")
+    L.append("legacy proxy model (BLM+Constriction R 비교) / 9-model bake-off 등은 폐기됨.\n")
 
     # ─── 1. 목적 ───
     L.append("## 1. 목적\n")
-    L.append("Bruggeman 추정치(σ_brug)와 실측 proxy(σ_proxy)의 비율 **R = σ_brug / σ_proxy**가")
-    L.append("GB density(GB_d)와 전극 두께(T)에 어떻게 의존하는지를 다양한 회귀 모델로 비교하여 최적 모델을 선정한다.\n")
-
-    L.append("### 정의\n")
-    L.append("| 변수 | 정의 | 단위 |")
-    L.append("|------|------|------|")
-    L.append("| R | σ_brug / σ_proxy (과대평가 비율) | - |")
-    L.append("| σ_brug | σ_bulk × φ_SE × f_perc / τ² (Bruggeman, GB 무시) | ratio |")
-    L.append("| σ_proxy | G_path × f_perc / τ (접촉면적 기반 실측) | ratio |")
-    L.append("| GB_d | 입계 밀도 | hops/μm |")
-    L.append("| T | 전극 두께 | μm |")
-    L.append("")
+    L.append("DEM corpus 의 두 production scaling law (σ_ionic T1, σ_electronic Stage 15) 에 대해")
+    L.append("현재 데이터로 live-refit 후 결과를 한 문서에 정리.\n")
+    L.append("- **T1 (σ_ionic)**: 2026-05-28 채택. cov_Hertz + power-gate g_phys + Cronau + P2 + log f_intact")
+    L.append("- **Stage 15 (σ_electronic)**: 2026-05-29 채택. φ_AM⁴ + NCM(r̄) + √A_AM-AM + β_AC·φ_AM·log(CN)\n")
 
     # ─── 2. 데이터 요약 ───
     L.append("## 2. 데이터 요약\n")
@@ -261,131 +256,8 @@ def generate_report(data_list, names, outdir):
                  f"{r['sigma_proxy']:.6f} | {r['R']:.1f} |")
     L.append("")
 
-    # ─── 3. 모델 비교 ───
-    L.append("## 3. 후보 모델 비교\n")
-    L.append("| 순위 | ID | 모델 | R² | 파라미터 수 | 수식 |")
-    L.append("|------|----|------|-----|-----------|------|")
-    for rank, m in enumerate(models, 1):
-        L.append(f"| {rank} | {m['id']} | {m['name']} | **{m['R2']:.4f}** | {m['n_params']} | {m['formula']} |")
-    L.append("")
-
-    # ─── 4. 각 모델 상세 ───
-    L.append("## 4. 모델 상세 분석\n")
-    tier1_cutoff = 0.90
-    tier1 = [m for m in models if m['R2'] >= tier1_cutoff]
-    tier2 = [m for m in models if m['R2'] < tier1_cutoff]
-
-    if tier1:
-        L.append(f"### Tier 1: R² ≥ {tier1_cutoff} (유효 모델)\n")
-        for m in tier1:
-            rec = " ★ **추천**" if m['id'] == 'M15' else ""
-            L.append(f"#### {m['id']}. {m['name']}{rec}\n")
-            L.append(f"**수식:** `{m['formula_R']}`\n")
-            L.append("| 파라미터 | 값 |")
-            L.append("|----------|-----|")
-            for k, v in m['params'].items():
-                L.append(f"| {k} | {v} |")
-            L.append(f"| **R²** | **{m['R2']}** |")
-            L.append(f"| n | {m['n']} |")
-            L.append(f"\n**물리적 근거:** {m['physics']}\n")
-
-    if tier2:
-        L.append(f"\n### Tier 2: R² < {tier1_cutoff} (탈락 모델)\n")
-        for m in tier2:
-            L.append(f"#### {m['id']}. {m['name']}\n")
-            L.append(f"**수식:** `{m['formula_R']}`  |  R² = {m['R2']}  |  파라미터 {m['n_params']}개\n")
-            L.append(f"**물리적 근거:** {m['physics']}\n")
-            L.append(f"**탈락 사유:** R² < {tier1_cutoff}\n")
-
-    # ─── 5. BLM+Constriction 유도 ───
-    L.append("## 5. 추천 모델 유도: BLM + Constriction\n")
-    L.append("### Step 1: Bruggeman (출발점)\n")
-    L.append("σ_eff/σ_bulk = φ_SE × f_perc / τ²\n")
-    L.append("문헌에서 확립된 effective medium theory. 입계(GB) 저항을 무시 → 과대평가.\n")
-
-    L.append("### Step 2: Brick Layer Model (BLM)\n")
-    L.append("소결 세라믹 이온전도체에서 확립된 모델:\n")
-    L.append("R_gb = ρ_gb × w_gb × L / (L_g × A)\n")
-    L.append("- L = 전극 두께 (= T)")
-    L.append("- L_g = grain size ∝ 1/GB_d\n")
-    L.append("정리: **R_gb ∝ GB_d × T** (입계 수 = 밀도 × 거리)\n")
-
-    L.append("### Step 3: Maxwell Constriction Resistance\n")
-    L.append("DEM 복합양극은 점 접촉 → spreading resistance:\n")
-    L.append("R_constriction = ρ / (2a), a = 접촉 반경\n")
-    L.append("- a ∝ r_SE ∝ 1/GB_d (작은 SE → 작은 접촉)\n")
-    L.append("- **R_per_GB ∝ 1/a ∝ GB_d**\n")
-
-    L.append("### Step 4: 결합 — GB_d² × T 유도\n")
-    L.append("```")
-    L.append("R_total = N_GB × R_per_GB")
-    L.append("       = (GB_d × T)  ×  GB_d")
-    L.append("         [BLM:총수]    [Constriction:개별저항]")
-    L.append("       = GB_d² × T")
-    L.append("```\n")
-    L.append("| 항 | 출처 | 의미 |")
-    L.append("|-----|------|------|")
-    L.append("| 1st GB_d | BLM | μm당 입계 수 |")
-    L.append("| 2nd GB_d | Maxwell constriction | 점접촉 → 접촉반경↓ → 저항↑ |")
-    L.append("| T | BLM | 총 경로 길이 |")
-    L.append("")
-    L.append("### τ²와의 구조적 유사성\n")
-    L.append("| | 1번째 | 2번째 | 출처 |")
-    L.append("|---|-------|-------|------|")
-    L.append("| τ² | 경로 길이 ↑ | 유효 단면적 ↓ | Bruggeman |")
-    L.append("| GB_d² | 입계 수 ↑ (BLM) | 입계당 저항 ↑ (Constriction) | BLM + Maxwell |")
-    L.append("")
-
-    # ─── 6. Fitting 결과 ───
-    if m15:
-        L.append("### Step 5: 데이터 검증\n")
-        alpha = m15['params']['α']
-        ln_C = m15['params']['ln(C)']
-        C_val = math.exp(ln_C)
-        L.append(f"R = C × (GB_d² × T)^α\n")
-        L.append(f"| 파라미터 | 값 | 비고 |")
-        L.append(f"|----------|-----|------|")
-        L.append(f"| α | {alpha} | ≈2 (Hertz 접촉 비선형성) |")
-        L.append(f"| C | {C_val:.4f} | exp({ln_C}) |")
-        L.append(f"| R² | {m15['R2']} | n = {n} |")
-        L.append("")
-
-    # ─── 7. 최종 유효 이온전도도 ───
-    L.append("## 6. 최종 유효 이온전도도 공식\n")
-    L.append("```")
-    L.append("σ_eff = σ_bulk × φ_SE × f_perc / (τ² × C × (GB_d² × T)^α)")
-    L.append("```\n")
-    L.append("| 항 | 값 | 출처 | 의미 |")
-    L.append("|-----|-----|------|------|")
-    L.append("| σ_bulk | 3.0 mS/cm | SE grain interior (Li₆PS₅Cl) | σ_grain (NOT σ_pellet 1.3) |")
-    L.append("| φ_SE | DEM 계산 | 부피분율 | SE 양 |")
-    L.append("| f_perc | DEM 계산 | percolation | 연결된 SE 비율 |")
-    L.append("| τ² | DEM 계산 | Bruggeman | 경로 기하 손실 |")
-    L.append("| GB_d² | DEM 계산 | BLM + Constriction | 입계 접촉 손실 |")
-    L.append("| T | 전극 두께 | 설계 변수 | 경로 길이 |")
-    if m15:
-        L.append(f"| α | {m15['params']['α']} | fitting | ~2 (비선형 보정) |")
-        L.append(f"| C | {C_val:.4f} | fitting | 비례상수 |")
-    L.append("")
-
-    L.append("**유도 경로:** Bruggeman(τ²) + Brick Layer Model(GB_d×T) + Maxwell Constriction(GB_d) → GB_d²×T\n")
-
-    # ─── 8. 결론 ───
-    L.append("## 7. 결론\n")
-    L.append(f"1. **{n}개 데이터**에 대해 {len(models)}개 후보 모델 비교")
-    if m15:
-        L.append(f"2. **BLM+Constriction 모델 (M15)** R² = {m15['R2']} — 파라미터 2개, 물리적 유도 가능")
-    if best and best['id'] != 'M15':
-        L.append(f"3. 최고 R² 모델: **{best['name']} ({best['id']})** R² = {best['R2']} (파라미터 {best['n_params']}개)")
-    L.append(f"4. 선형/직렬저항 모델은 전부 탈락 — 데이터가 본질적으로 비선형")
-    L.append(f"5. τ²와 GB_d²가 같은 물리 구조 — 경로 기하 손실 vs 입계 접촉 손실\n")
-
-    L.append("> 위 proxy 모델은 Part I(상대적 스케일링 발견)으로서 유효하나,\n"
-             "> 절대값 정확도는 Network Solver(Part II)를 참조.\n")
-
-    # ─── Part II: Network Solver + Champion Formula ───
-    L.append("---\n")
-    L.append("## 8. Network Solver 결과 (Part II)\n")
+    # ─── 3. Network Solver 결과 (formerly Section 8) ───
+    L.append("## 3. Network Solver (Kirchhoff) 결과\n")
     L.append("Proxy R=15~1600은 single-path 근사에 의한 과장.\n"
              "Kirchhoff network solver(R_bulk + R_constriction per edge, Holm 1967)로\n"
              "Contact-free/Full ratio = **3~10×** 확인.\n")
@@ -423,8 +295,8 @@ def generate_report(data_list, names, outdir):
     else:
         L.append("*Network solver 결과 없음 (Network Solver 재실행 필요)*\n")
 
-    # ─── Part III: Champion Scaling Laws (computed from data) ───
-    L.append("## 9. Champion Scaling Laws (Part III)\n")
+    # ─── 4. Production Scaling Laws (live-fit on corpus) ───
+    L.append("## 4. Production Scaling Laws (live-fit)\n")
 
     # ── Ionic — T1 PRODUCTION form (2026-05-28: cov_Hertz + power gate + P2 + f_intact)
     # σ = σ_grain · Cronau(r_SE) · (φ_eff)^½ · CN² · cov_Hertz^½ · f_p³
@@ -470,19 +342,48 @@ def generate_report(data_list, names, outdir):
     L.append("```\n")
 
 
-    # Electronic — LEGACY form deleted 2026-05-28 ('과감하게 버려').
-    # All 37 screening_electronic_*.py + electronic_scaling_law.py removed.
-    # Phase 1 next sub-step: rebuild σ_electronic with the modern methodology
-    # toolkit (nested CV, SAT-blend equiv, Cronau equiv, logpoly2 C_blend,
-    # Bayesian Laplace, bootstrap PI) that just closed out σ_ionic.
-    # Reports section reserved until the new form is finalized.
-    el_r2 = None; el_C = None; el_actual = []
-    L.append("### Electronic — REBUILD PENDING\n")
-    L.append("Legacy form (`σ_el = C × σ_AM × φ_AM^(3/2) × CN_AM² × exp(π/(T/d_AM))`,")
-    L.append("1-param fit) and all 37 screening_electronic_*.py + electronic_scaling_law.py")
-    L.append("were deleted 2026-05-28 — to be rebuilt with the same nested CV / SAT-blend /")
-    L.append("Cronau-equivalent / Bayesian Laplace / bootstrap PI methodology that just")
-    L.append("finalized σ_ionic.  Section will be updated once the new form lands.\n")
+    # ── Electronic — Stage 15 PRODUCTION form (2026-05-29: a=4 + φ_AM·log(am_am_cn))
+    # σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄) · √A_AM-AM
+    #       · (T/d_AM)^β_T · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ)
+    el_r2, el_loo, el_b, el_n = None, None, None, 0
+    try:
+        # Use the same _electronic_form_arrays + _electronic_fit as the dashboard plot
+        # so coefficients here match electronic_fit_final.png.
+        arr_e = gcp._electronic_form_arrays(data_list, list(names))
+        if arr_e is not None and arr_e['n'] >= 8:
+            fit_mask = ~arr_e['excluded']
+            fit_e = gcp._electronic_fit(arr_e, fit_mask=fit_mask)
+            el_r2, el_loo = fit_e['r2'], fit_e['loocv']
+            el_b = fit_e['coef']; el_n = fit_e['n_fit']
+    except Exception:
+        el_r2, el_loo, el_n = None, None, 0
+
+    if el_r2 is not None:
+        L.append(f"### Electronic — Stage 15 PRODUCTION form (R²={el_r2:.3f}, "
+                 f"LOOCV={el_loo:.3f}, n={el_n}, 8 free params)\n")
+    else:
+        L.append(f"### Electronic — Stage 15 PRODUCTION form (corpus too small: n={el_n}<8, "
+                 "show schema only)\n")
+    L.append("```")
+    L.append("σ_e = σ_S^(1-p) · σ_P^p · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · (T/d_AM)^β_T")
+    L.append("      · exp[ β_v · v_AM + β_AC · φ_AM · log(am_am_cn) ] · C(τ)")
+    L.append("")
+    L.append("  σ_S, σ_P : Trevisanello 단결정/다결정 NCM811 endpoints (geometric mix)")
+    L.append("  φ_AM⁴    : dense-network percolation (locked exponent 4)")
+    L.append("  NCM(r̄)   = 1 / (1 + (r̄/2µm)^1.5)   Trevisanello 2021 GB density")
+    L.append("  √A_AM-AM : Holm 1967 a-spot constriction (per-contact area)")
+    L.append("  (T/d_AM)^β_T : thin-electrode geometric penalty")
+    L.append("  β_AC < 0 : dense + over-coordinated saturation correction")
+    L.append("             (Stage 14 nested CV: Δ+0.024, β_AC ≈ -0.46)")
+    L.append("  C(τ)     = exp(p + q·lnτ + r·ln²τ)   logpoly2 tortuosity")
+    L.append("")
+    L.append("FROZEN:  a (φ_AM exponent) = 4, NCM exponent 1.5, Holm exponent 0.5")
+    if el_b is not None and len(el_b) >= 8:
+        sS = float(np.exp(el_b[0])); sP = float(np.exp(el_b[1]))
+        L.append(f"LIVE-fit: σ_S={sS:.2f} mS/cm  σ_P={sP:.2f} mS/cm  "
+                 f"β_T={el_b[2]:+.3f}  β_v={el_b[3]:+.3f}  β_AC={el_b[7]:+.3f}")
+        L.append(f"          C(τ) = {el_b[4]:+.2f}{el_b[5]:+.2f}·lnτ{el_b[6]:+.2f}·ln²τ")
+    L.append("```\n")
 
     # Thermal fit
     th_actual = []
@@ -521,18 +422,15 @@ def generate_report(data_list, names, outdir):
         L.append(f"| Ionic (T1) | {ion_r2:.3f} | {ion_loo:.3f} | 5 (a,b,c,β_P2,β_F) | {ion_n} |")
     else:
         L.append("| Ionic (T1) | - | - | 5 | 0 |")
-    L.append("| Electronic | (REBUILD PENDING) | - | - | - |")
+    if el_r2 is not None:
+        L.append(f"| Electronic (Stage 15) | {el_r2:.3f} | {el_loo:.3f} | 8 (σ_S,σ_P,β_T,β_v,p,q,r,β_AC) | {el_n} |")
+    else:
+        L.append("| Electronic (Stage 15) | - | - | 8 | 0 |")
     L.append(f"| Thermal | {th_r2:.2f} | - | 1 (C) | {len(th_actual)} |" if th_r2 else "| Thermal | - | - | 1 | 0 |")
     L.append("")
 
-    L.append("### Bruggeman Exponent Decomposition")
-    L.append("```")
-    L.append("n_eff = n_geo + n_contact ≈ 3.37")
-    L.append("→ 문헌 n≈3의 물리적 기원: 기하학(tortuosity) + 접촉 저항(constriction)")
-    L.append("```\n")
-
-    # ─── 항별 친절 설명 (대학원생 수준, 비유 없이) ───
-    L.append("## 10. σ_ionic 항별 친절 설명\n")
+    # ─── 5. σ_ionic 항별 친절 설명 (formerly Section 10) ───
+    L.append("## 5. σ_ionic (T1) 항별 친절 설명\n")
     L.append("각 항이 무슨 물리를 잡고 있는지, 왜 그 지수/형태가 채택됐는지를 한 줄씩.\n")
 
     L.append("### σ_grain · Cronau(r_SE) — 재료 기준선")
@@ -628,34 +526,51 @@ def generate_report(data_list, names, outdir):
     L.append("| T1: cov_physics → cov_Hertz | **0.9712** | +0.0002 (k 6→5) |")
     L.append("")
 
-    L.append("**FINAL production**: LOOCV ≈ 0.971, 5 fit params, noise ceiling.\n")
+    L.append("**FINAL production**: LOOCV ≈ 0.975 (n=88-92), 5 fit params, noise ceiling.\n")
 
-    # ─── Limitations (T1 production) ───
-    L.append("## 11. 한계점 (T1 production)\n")
-    L.append("1. **PRODUCTION USES RAW n=90**: per-seed averaging은 안 함. multi-seed sim이 있는")
-    L.append("   sibling family는 raw로 들어가서 일부 outlier가 |err|>20%로 남음.")
-    L.append("2. **남은 |err|>30% outlier (2건, 모두 data-limited isolated single)**:")
-    L.append("   - `input_8mAh_real_10` -31% — isolated 10:0, no siblings, 4 form-edge 동시 발현 → 형이 잡기 불가")
-    L.append("   - `input_1mAh_8` +41% — isolated single 5:5, multi-seed sim 진행 중 (input_72_seed1..5)")
-    L.append("   - 처방: 1mAh_8 / 1mAh_8_AMP는 multi-seed sim 곧 해소. 8mAh_real_10은 slow sim 별도 검토.")
-    L.append("   - (참고: sibling-tail outlier들 (1mAh_9_S5, particulate_12_S2)은 2026-05-28 삭제,")
-    L.append("     LOOCV 0.9712 → 0.9752, family 정보는 나머지 4 sibling으로 유지)")
-    L.append("3. **φc_P/φc_S/δ FROZEN**: 데이터로 재선별 금지. logpoly2와 함께 nested CV에서 selection-bias")
-    L.append("   (+0.0095)가 dual-branch(+0.0048)보다 큼 → production은 항상 frozen 값 사용.")
-    L.append("4. **62:38·SE-rich corner bidirectional bias**: r_SE=0.5에서 over-predict, r_SE≥1.0에서")
-    L.append("   under-predict. P2가 r_SE≥1.0쪽만 잡고 r_SE=0.5쪽은 수학적으로 0이라 못 잡음.")
-    L.append("   single multiplicative 항으로는 불가능 → 데이터 추가 필요.")
-    L.append("5. **contact-quality family REJECTED**: am_se_cn, coverage variants, r_SE/r_AM 등 모두")
-    L.append("   nested CV에서 죽음 (Δ −0.0008~−0.0036). 62:38 corner의 -0.81 Spearman은 small-sample")
-    L.append("   (n=15) overfit이었음.")
-    L.append("6. **Electronic/Thermal 미반영**: T1 form은 ionic만. Electronic(AM percolation),")
-    L.append("   Thermal(2상 경쟁)은 별도 공식 (위 섹션 참조).")
-    L.append("7. **DEM 접촉 모델 의존**: hooke/hysteresis 모델의 접촉면적이 실제 cold-pressed argyrodite와")
-    L.append("   일치하는지는 별도 검증 필요.")
+    # ─── 6. 한계점 (T1 + Stage 15) ───
+    L.append("## 6. 한계점 (T1 + Stage 15)\n")
+    L.append("### σ_ionic (T1) — 데이터-편향 outlier 잔재\n")
+    L.append("- **sibling-tail per-seed anomaly 삭제 완료** (2026-05-29): input_1mAh_9_S5,")
+    L.append("  particulate_12_S2, **input_1mAh_8 base + _S5** (new), **input_1mAh_8_AMS base + S4** (new).")
+    L.append("  family-level 통계로 식별 후 디스크 삭제. 남은 4-5 sibling 으로 design point 유지.")
+    L.append("- **1mAh family-wide systematic bias** (form 한계, 데이터 부족 영역):")
+    L.append("  input_1mAh_8_S1/_S3, _1mAh_5_AMP/_AMS, _1mAh_8_AMP 등 1mAh 전반 +25~37% over-prediction.")
+    L.append("  → corpus 의 6/8mAh 편중 때문에 σ_S endpoint 가 6/8mAh 쪽으로 calibrated.")
+    L.append("  → 진짜 해결: 1mAh seed 추가 (현재 input_1mAh_8_AMS x5, input_1mAh_8 x4 들어옴).")
+    L.append("- **특이 케이스 (form-limited isolated single)**:")
+    L.append("  - input_8mAh_real_10 (−40%, 4-form-edge 동시 발현)")
+    L.append("  - input_S_2 (+27%, 0:10 r_AM_S=4µm borderline)")
+    L.append("  - input_particulate_5 (+27%, 0:10 r_SE=0.5 corner)")
+    L.append("- **φc_P/φc_S/δ FROZEN**: 재선별 금지 — selection bias (+0.0095) > 노이즈 SE.\n")
+
+    L.append("### σ_electronic (Stage 15) — 1mAh family-wide bias + 데이터 공백\n")
+    L.append("- **1mAh family over-prediction +30~45%**: input_1mAh_5 / _5_AMP / _5_AMS,")
+    L.append("  input_1mAh_8_AMS_S3 등.  Stage 12 → Stage 15 (φ_AM·log(CN) saturation) 으로")
+    L.append("  input_8mAh_real_10 (+56% → +32%), input_6mAh_real_5 (+54% → +34%) 등 dense+CN")
+    L.append("  영역은 부분 해결.  그러나 1mAh-specific bias 잔존.")
+    L.append("- **데이터 공백 (4개 metric 미수집)**: am_am_n_contacts, am_am_mean_force,")
+    L.append("  am_am_n × A total area, coverage_AM_mean — 모두 Stage 14 nested CV 의 다음 후보")
+    L.append("  였으나 corpus 의 모든 case 에서 0 → 테스트 불가.  analyze_contacts.py 가 출력하지 않음.")
+    L.append("- **β_AC = -0.50** (Stage 14 prediction -0.46 일치): dense+over-coordinated saturation")
+    L.append("  의 진정한 물리적 보정.  Stage 14 nested CV Δ+0.024 그대로 production 에 반영.")
+    L.append("- **σ_S/σ_P 비대칭 (12.18 / 5.29)**: Trevisanello 단결정/다결정 NCM 보고와 일치.")
+    L.append("  Pure-case median ratio 2.39× (audit 검증).\n")
+
+    L.append("### Thermal — 별도 form 없음\n")
+    L.append("- 임시 1-param `σ_th = C · σ_ion^(3/4) · φ_AM² / CN_SE` (R²≈0.22). production 아님.")
+    L.append("- nested-CV / Bayesian Laplace / Cronau-equivalent 방법론으로 Phase 1 마지막 sub-step 으로")
+    L.append("  σ_thermal form 별도 finalization 예정.\n")
+
+    L.append("### 일반\n")
+    L.append("- **DEM 접촉 모델 의존**: hooke/hysteresis 모델의 접촉면적이 실제 cold-pressed")
+    L.append("  argyrodite 와 일치하는지는 별도 검증 필요.")
+    L.append("- **노이즈 floor**: LOOCV-SE ≈ 0.0045 (σ_ionic) / 0.005 (σ_e). 두 channel 모두")
+    L.append("  데이터 ceiling 근접.  더 올리려면 데이터, 아니면 Bayesian Laplace ±band 가서야.")
     L.append("")
 
     L.append("---\n")
-    L.append(f"*Report generated by DEM Analyzer v2.0 — Kirchhoff Network Solver + Physics Scaling Laws*")
+    L.append(f"*Report generated by DEM Analyzer v2.0 — Kirchhoff Network Solver + T1/Stage 15 Production Scaling Laws*")
 
     report_text = '\n'.join(L)
     # Clean up excessive blank lines
