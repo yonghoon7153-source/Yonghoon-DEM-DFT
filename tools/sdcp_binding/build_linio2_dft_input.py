@@ -171,19 +171,16 @@ def main():
     pot_extrapolation = 'none'   ! Nd-debug lesson: prevents negative rho
     wfc_extrapolation = 'none'
 /
-&CELL
-    cell_dofree = 'none'
-/
-
-HUBBARD ortho-atomic
-U Ni1-3d {args.U_Ni}
-U Ni2-3d {args.U_Ni}
 
 ATOMIC_SPECIES
   Li   6.94  {args.li_pseudo}
   Ni1 58.69  {args.ni_pseudo}
   Ni2 58.69  {args.ni_pseudo}
   O   16.00  {args.o_pseudo}
+
+HUBBARD ortho-atomic
+U Ni1-3d {args.U_Ni}
+U Ni2-3d {args.U_Ni}
 
 CELL_PARAMETERS angstrom
   {cell[0,0]:18.12f} {cell[0,1]:18.12f} {cell[0,2]:18.12f}
