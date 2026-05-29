@@ -2480,14 +2480,77 @@ def _load_thermal_sigma(data_list):
     return vals
 
 
+_ELECTRONIC_GLOBAL_FIT_CACHE = None   # (coef, sigma_S, sigma_P, β_AC, n_fit)
+
+
+def _electronic_global_fit():
+    """Walk webapp/results + webapp/archive ONCE, fit Stage 15 form on the
+    full corpus with proper name-based exclusion (_EXCLUDED_NAMES_EL), cache
+    result globally.  Used by plot_electronic_sigma to overlay form prediction
+    consistently across all group panels — replaces the previous broken
+    behaviors:
+      (1) per-group local fit on tiny N → underdetermined 8-param fit
+      (2) _FIT_CORPUS path used synthetic names → exclusion didn't fire
+    Returns coef array (8,) or None if corpus too small.
+    """
+    global _ELECTRONIC_GLOBAL_FIT_CACHE
+    if _ELECTRONIC_GLOBAL_FIT_CACHE is not None:
+        return _ELECTRONIC_GLOBAL_FIT_CACHE
+    from pathlib import Path as _P
+    data_list = []
+    names = []
+    seen = set()
+    for base in ('webapp/results', 'webapp/archive'):
+        bp = _P(base)
+        if not bp.is_dir():
+            continue
+        for mp in bp.rglob('full_metrics.json'):
+            meta_p = mp.parent / 'meta.json'
+            nm = mp.parent.name
+            if meta_p.exists():
+                try:
+                    nm = json.load(open(meta_p)).get('name', nm) or nm
+                except Exception:
+                    pass
+            if nm in seen:
+                continue
+            seen.add(nm)
+            try:
+                d = json.load(open(mp))
+            except Exception:
+                continue
+            data_list.append(d)
+            names.append(nm)
+    if len(data_list) < 8:
+        _ELECTRONIC_GLOBAL_FIT_CACHE = None
+        return None
+    arr = _electronic_form_arrays(data_list, names)
+    if arr is None:
+        _ELECTRONIC_GLOBAL_FIT_CACHE = None
+        return None
+    fit_mask = ~arr['excluded']
+    fit = _electronic_fit(arr, fit_mask=fit_mask)
+    coef = fit['coef']
+    sS = float(np.exp(coef[0])); sP = float(np.exp(coef[1]))
+    bAC = float(coef[7])
+    _ELECTRONIC_GLOBAL_FIT_CACHE = (coef, sS, sP, bAC, fit['n_fit'])
+    print(f"  [electronic_global_fit] n_corpus={len(data_list)}, "
+          f"n_fit={fit['n_fit']} (excl={int(arr['excluded'].sum())}), "
+          f"σ_S={sS:.2f}, σ_P={sP:.2f}, β_AC={bAC:+.3f}, "
+          f"R²={fit['r2']:.3f}, LOOCV={fit['loocv']:.3f}")
+    return _ELECTRONIC_GLOBAL_FIT_CACHE
+
+
 def plot_electronic_sigma(data_list, names, outdir):
     """Electronic conductivity from AM-AM network.  Now overlays Stage 15
-    production form prediction (red dashed + diamond) on top of the
+    production form prediction (green dashed + diamond) on top of the
     Stage E target line (red squares), mirroring σ_ionic_perconfig_physics
     style.  Phantom cases are X-marked instead of plotted at silly magnitudes.
 
-    Form prediction uses global _FIT_CORPUS if populated (consistent
-    coefficients across panels); falls back to local data_list fit if not."""
+    Form coefficients are GLOBAL — fit once on the full corpus
+    (webapp/results + webapp/archive) with proper name-based exclusion,
+    then cached.  Same coefficients applied to every group panel for
+    cross-panel consistency."""
     sigma_el_raw = _load_electronic_sigma(data_list)
     phantom = [_phantom_electronic_sigma(d) for d in data_list]
     sigma_el = [(0.0 if (phantom[i] or sigma_el_raw[i] > _SIGMA_E_MAX)
@@ -2496,27 +2559,20 @@ def plot_electronic_sigma(data_list, names, outdir):
     if not any(s > 0 for s in sigma_el) and not any(phantom):
         return None
 
-    # ───── Stage 15 form prediction overlay (NEW, mirrors σ_ionic perconfig) ─────
+    # ───── Stage 15 form prediction overlay (GLOBAL fit, cached) ─────
     form_pred = [np.nan] * len(data_list)
     form_ok = False
+    fit_summary = ''
     try:
-        # Global fit if _FIT_CORPUS populated; else local data_list fit
-        fit_source = _FIT_CORPUS if _FIT_CORPUS else data_list
-        fit_names = [f'fit_{i}' for i in range(len(fit_source))] \
-                    if fit_source is _FIT_CORPUS else list(names)
-        arr_fit = _electronic_form_arrays(fit_source, fit_names)
-        if arr_fit is not None:
-            fit_mask = ~arr_fit['excluded']
-            fit_result = _electronic_fit(arr_fit, fit_mask=fit_mask)
-            coef = fit_result['coef']
-            # Now predict for each case in data_list (which may differ from fit_source)
+        global_fit = _electronic_global_fit()
+        if global_fit is not None:
+            coef, sS, sP, bAC, n_fit = global_fit
+            fit_summary = (f"  [global fit n={n_fit}: σ_S={sS:.2f} "
+                           f"σ_P={sP:.2f} β_AC={bAC:+.2f}]")
             arr_disp = _electronic_form_arrays(data_list, list(names))
             if arr_disp is not None:
                 pred_disp = np.exp(arr_disp['X'] @ coef + arr_disp['log_offset'])
-                # Cap predictions at SIGMA_E_MAX so unphysical Stage 15
-                # extrapolations don't break the plot scale.
                 pred_disp = np.minimum(pred_disp, _SIGMA_E_MAX)
-                # Map back to data_list indices via keep_idx
                 for k, idx in enumerate(arr_disp['keep_idx']):
                     if idx < len(form_pred) and not phantom[idx]:
                         form_pred[idx] = float(pred_disp[k])
@@ -2554,9 +2610,10 @@ def plot_electronic_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    title = ("Electronic Conductivity — Stage E target vs Stage 15 form prediction\n"
-             "σ_AM_ref = 50 mS/cm  [target = raw Hertz × AM-crystallinity (Trevisanello); "
-             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ)]")
+    title = ("Electronic Conductivity — Stage E target vs Stage 15 form prediction"
+             + fit_summary + "\n"
+             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM(r̄)·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ)  "
+             "(global fit, cross-panel consistent)")
     if not form_ok:
         title = ("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
                  "σ_AM_ref = 50 mS/cm  [form overlay unavailable — corpus too small or fit failed]")
