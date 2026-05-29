@@ -1338,6 +1338,96 @@ def main():
         print(f"  {K:>3d}  {n_keep:>3d}  {r2_11k:7.4f}  {lo_11k:7.4f}{mark}")
     print()
 
+    # ───── STAGE 12: lock exponents to clean values + outlier detail ─────
+    print()
+    print("=" * 78)
+    print(" STAGE 12: lock (a, d) to clean physical values + show top-15 outliers")
+    print("=" * 78)
+    print()
+    print("  Stage 11 fit: a (φ_AM) = +3.93,  d (f_p_e) = +0.17")
+    print("  Closest clean values: a ∈ {2, 3, 4}, d ∈ {0, 0.5, 1}")
+    print()
+    print(f"  Scan with drop top-15 (same exclusion set as Stage 11 best):")
+    print(f"  {'a (φ_AM)':>10s} {'d (f_p_e)':>10s}  {'R²':>7s}  {'LOOCV':>7s}  notes")
+    keep15 = np.ones(n, bool)
+    keep15[order_resid_11[:15]] = False
+    n15 = int(keep15.sum())
+    best12 = None
+    for a_lock in [2.0, 2.5, 3.0, 3.5, 4.0]:
+        for d_lock in [0.0, 0.5, 1.0]:
+            # log-space offset: lock a·log(φ) + d·log(f_p), let remaining params fit
+            offset = a_lock * np.log(phi_am_arr) + d_lock * np.log(fp_arr)
+            X12 = np.column_stack([
+                (1.0 - p_amp_arr),    # log σ_S
+                p_amp_arr,             # log σ_P
+                log_Td,                # β_T
+                am_vuln,               # β_v
+                np.ones(n),            # p
+                lt,                    # q
+                lt**2,                 # r
+            ])
+            y12 = logsf - log_ncm_lit2 - log_am_area_holm - offset
+            X12k = X12[keep15]; y12k = y12[keep15]
+            coef12, *_ = np.linalg.lstsq(X12k, y12k, rcond=None)
+            pred12 = X12k @ coef12 + (log_ncm_lit2 + log_am_area_holm + offset)[keep15]
+            ss_tot_k = np.sum((logsf[keep15] - logsf[keep15].mean())**2)
+            r2_12 = 1 - np.sum((logsf[keep15] - pred12)**2)/ss_tot_k if ss_tot_k > 0 else 0
+            sse_loo_k = 0.0
+            for j in range(n15):
+                mk = np.ones(n15, bool); mk[j] = False
+                c_loo, *_ = np.linalg.lstsq(X12k[mk], y12k[mk], rcond=None)
+                sse_loo_k += (y12k[j] - X12k[j] @ c_loo)**2
+            lo_12 = 1 - sse_loo_k/ss_tot_k if ss_tot_k > 0 else 0
+            mark = ""
+            if lo_12 > 0.95: mark = "  ★ TARGET"
+            elif lo_12 > 0.92: mark = "  ←"
+            if best12 is None or lo_12 > best12[2]:
+                best12 = (a_lock, d_lock, lo_12, r2_12, coef12)
+            print(f"  φ_AM^{a_lock:<5.1f} f_p^{d_lock:<5.1f}  {r2_12:7.4f}  {lo_12:7.4f}{mark}")
+    print()
+    print(f"  ★ Best Stage 12 (locked): a={best12[0]}, d={best12[1]}  "
+          f"LOOCV={best12[2]:.4f}  R²={best12[3]:.4f}")
+    print()
+    print(f"  Stage 12 coefs:")
+    s12_labels = ['log σ_S', 'log σ_P', 'β_T (T/d)', 'β_v (am_vuln)',
+                  'p (const)', 'q (ln τ)', 'r (ln²τ)']
+    for lab, c in zip(s12_labels, best12[4]):
+        if 'log σ' in lab:
+            print(f"     {lab:25s} = {c:+.3f}  → σ = {np.exp(c):.2f} mS/cm")
+        else:
+            print(f"     {lab:25s} = {c:+.3f}")
+    print()
+
+    # ───── Top-15 outlier detail ─────
+    print("=" * 78)
+    print(" TOP-15 OUTLIERS (from Stage 11 fit on full n=65, sorted by |residual|)")
+    print("=" * 78)
+    print(f"  {'#':>2s}  {'case':32s}  {'σ_DEM':>7s}  {'σ_form':>7s}  "
+          f"{'err%':>7s}  {'φ_AM':>5s} {'p':>4s} {'r̄':>5s} {'T':>5s} {'τ':>4s}")
+    print("  " + "─" * 92)
+    for rank, i in enumerate(order_resid_11[:15], 1):
+        nm = names[i] if i < len(names) else f"(idx{i})"
+        s_form = float(np.exp(pred11[i]))
+        ps_lab = (f"{int(round(p_amp_arr[i]*10))}:{10-int(round(p_amp_arr[i]*10))}"
+                  if np.isfinite(p_amp_arr[i]) else "-")
+        print(f"  {rank:>2d}  {nm[:32]:32s}  {a[i,5]:7.4f}  {s_form:7.4f}  "
+              f"{err11[i]:+7.1f}  {a[i,0]:5.3f} {ps_lab:>4s} "
+              f"{r_eff[i]:5.2f} {T_safe[i]:5.1f} {a[i,4]:4.2f}")
+    print()
+    # Group outliers by family
+    from collections import Counter
+    fam_counts = Counter()
+    for i in order_resid_11[:15]:
+        nm = names[i] if i < len(names) else f"idx{i}"
+        # strip _S<digit> seed suffix to find family
+        import re as _re
+        fam = _re.sub(r'_S\d+$', '', nm)
+        fam_counts[fam] += 1
+    print(f"  Top-15 outlier families (by base case name):")
+    for fam, cnt in fam_counts.most_common():
+        print(f"     {fam:35s} × {cnt}")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
@@ -1369,6 +1459,8 @@ def main():
           f"{r2_10D:7.4f}  {lo_10D:7.4f}  {'—':>10s}")
     print(f"  {'Stage 11 (BEST: lit+Holm+NCM, live φ/f_p, k=9)':50s}  "
           f"{r2_11:7.4f}  {lo_11:7.4f}  {(ae11 > 30).sum():>10d} / {n}")
+    print(f"  {f'Stage 12 (Stage 11 + lock a={best12[0]} d={best12[1]} + drop15)':50s}  "
+          f"{best12[3]:7.4f}  {best12[2]:7.4f}  {'—':>10s}")
     print()
 
 
