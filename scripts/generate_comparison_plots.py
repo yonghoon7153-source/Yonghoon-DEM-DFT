@@ -2599,7 +2599,7 @@ def plot_electronic_sigma(data_list, names, outdir):
         y_form = np.array(form_pred)
         ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
                 linewidth=lw, alpha=0.85,
-                label="σ_e Stage 15 form prediction (mS/cm)")
+                label="σ_e Stage 16 form prediction (mS/cm)")
     if x_perc_none:
         ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
                 label="No AM percolation")
@@ -2610,9 +2610,9 @@ def plot_electronic_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    title = ("Electronic Conductivity — Stage E target vs Stage 15 form prediction"
+    title = ("Electronic Conductivity — Stage E target vs Stage 16 form prediction"
              + fit_summary + "\n"
-             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM(r̄)·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ)  "
+             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM_mix·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ),  NCM_mix = NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p  "
              "(global fit, cross-panel consistent)")
     if not form_ok:
         title = ("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
@@ -5448,7 +5448,8 @@ def _electronic_form_arrays(data_list, names):
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
     keep_idx, kept_names, sigs = [], [], []
-    phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a, cn_a = ([] for _ in range(8))
+    (phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a, cn_a,
+     ras_a, rap_a) = ([] for _ in range(10))
     excluded = []
     seen = set()
     for i, d in enumerate(data_list):
@@ -5492,6 +5493,8 @@ def _electronic_form_arrays(data_list, names):
         phi_a.append(float(phi)); p_a.append(p); cn_a.append(float(cn))
         r_eff_a.append(r_eff); T_a.append(T_safe); am_vuln_a.append(float(av or 0))
         am_area_a.append(float(am_area)); tau_a.append(float(tau))
+        # Stage 16: track per-endpoint r_AM for endpoint-separate NCM mix
+        ras_a.append(float(ras)); rap_a.append(float(rap))
         excluded.append(real_all[i] in _EXCLUDED_NAMES_EL)
     n = len(keep_idx)
     if n < 8:
@@ -5499,14 +5502,25 @@ def _electronic_form_arrays(data_list, names):
     phi_a = np.array(phi_a); p_a = np.array(p_a); r_eff_a = np.array(r_eff_a)
     T_a = np.array(T_a); am_vuln_a = np.array(am_vuln_a)
     am_area_a = np.array(am_area_a); tau_a = np.array(tau_a); cn_a = np.array(cn_a)
+    ras_a = np.array(ras_a); rap_a = np.array(rap_a)
     sigs = np.array(sigs); logsf = np.log(sigs)
     excluded = np.array(excluded, bool)
 
     d_AM = 2.0 * r_eff_a
     log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
     lt = np.log(tau_a)
-    ncm = 1.0 / (1.0 + np.power(np.maximum(r_eff_a, 0.05) / 2.0, 1.5))
-    log_ncm = np.log(np.maximum(ncm, 1e-6))
+    # Stage 16 (2026-05-29): endpoint-separate NCM
+    #   log NCM_mix = (1-p)·log NCM(r_AM_S) + p·log NCM(r_AM_P)
+    # vs Stage 15 single NCM(r̄) with r̄ = composition-weighted mean.
+    # Shape audit showed r_AM_S (ρ=-0.38) and r_AM_P (ρ=+0.24) had
+    # ASYMMETRIC residual correlation → single NCM(r̄) can't capture
+    # the asymmetry.  Endpoint-separate version applies each NCM at its
+    # own AM endpoint then geometric-mixes by composition.
+    ncm_S = 1.0 / (1.0 + np.power(np.maximum(ras_a, 0.05) / 2.0, 1.5))
+    ncm_P = 1.0 / (1.0 + np.power(np.maximum(rap_a, 0.05) / 2.0, 1.5))
+    log_ncm_S = np.log(np.maximum(ncm_S, 1e-6))
+    log_ncm_P = np.log(np.maximum(ncm_P, 1e-6))
+    log_ncm = (1.0 - p_a) * log_ncm_S + p_a * log_ncm_P     # Stage 16
     log_holm = 0.5 * np.log(np.maximum(am_area_a, 1e-12))
     log_phi4 = 4.0 * np.log(phi_a)
     log_offset = log_ncm + log_holm + log_phi4
@@ -5533,6 +5547,7 @@ def _electronic_form_arrays(data_list, names):
         'phi': phi_a, 'p_amp': p_a, 'r_eff': r_eff_a, 'T': T_a,
         'tau': tau_a, 'am_vuln': am_vuln_a, 'am_area': am_area_a,
         'cn_am': cn_a, 'phi_logcn': phi_logcn,
+        'r_AM_S': ras_a, 'r_AM_P': rap_a, 'log_ncm_mix': log_ncm,
     }
 
 
@@ -5603,9 +5618,9 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 15 form, mS/cm)')
+    ax.set_ylabel('σ_e predicted (Stage 16 form, mS/cm)')
     ax.set_title(
-        "σ_electronic — Stage 15 production form (a=4 locked, +φ_AM·logCN)  "
+        "σ_electronic — Stage 16 production form (a=4 + endpoint-NCM + φ_AM·logCN)  "
         "(n_fit=%d, excluded=%d)\n"
         "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄) · √A_AM-AM · (T/d)^β_T "
         "· exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ)\n"
@@ -5621,7 +5636,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
     with open(os.path.join(outdir, "electronic_fit_final.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['# σ_electronic Stage 15 production form (a=4, +φ_AM·log(am_am_cn))'])
+        wr.writerow(['# σ_electronic Stage 16 production form (a=4, endpoint-NCM + φ_AM·logCN)'])
         wr.writerow(['param', 'value'])
         wr.writerow(['sigma_S_mScm', round(sigma_S, 3)])
         wr.writerow(['sigma_P_mScm', round(sigma_P, 3)])
@@ -5732,10 +5747,10 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 15 form)')
+    ax.set_ylabel('σ_e predicted (Stage 16 form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
-        f"σ_electronic Stage 15 outliers (a=4, +φ_AM·logCN)  (n={arr['n']}, "
+        f"σ_electronic Stage 16 outliers (endpoint-NCM)  (n={arr['n']}, "
         f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded)\n"
         f"top residual-corr features -> {top_corr}", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
@@ -5812,9 +5827,9 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 15 (a=4 + φ_AM·logCN)",
-    "description": "Stage 15 σ_electronic 생산식 (φ_AM⁴ 잠금, 8 live-fit OLS):\n"
-                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · (T/d_AM)^β_T\n"
+    "title": "σ_electronic → Stage 16 (endpoint-NCM)",
+    "description": "Stage 16 σ_electronic 생산식 (endpoint-separate NCM) (φ_AM⁴ 잠금, 8 live-fit OLS):\n"
+                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p · √A_AM-AM · (T/d_AM)^β_T\n"
                    "      · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ).\n"
                    "β_AC<0: dense+over-coordinated saturation correction "
                    "(Stage 14 nested CV: Δ+0.024).\n"
@@ -5826,8 +5841,8 @@ PLOT_REGISTRY["electronic_fit_final"] = {
 PLOT_REGISTRY["electronic_outliers_final"] = {
     "func": plot_electronic_outliers_final,
     "file": "electronic_outliers_final.png",
-    "title": "σ_electronic Stage 15 — outlier 진단",
-    "description": "Stage 15 form (a=4 + φ_AM·log(am_am_cn)) 의 worst-fit "
+    "title": "σ_electronic Stage 16 — outlier 진단",
+    "description": "Stage 16 form (a=4 + endpoint-NCM + φ_AM·logCN) 의 worst-fit "
                    "케이스 (>±20%) 빨강 + 이름 강조, "
                    "audit-trail 제외 케이스는 ✗ 마크.\n"
                    "잔차와 가장 상관 높은 구조 feature 표시 (= form 이 놓친 다음 후보).\n"
@@ -5871,16 +5886,16 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     d_AM = 2.0 * r_eff
     log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
     lt = np.log(tau)
-    ncm = 1.0 / (1.0 + np.power(np.maximum(r_eff, 0.05) / 2.0, 1.5))
+    # Stage 16: endpoint-separate NCM (matches _electronic_form_arrays)
+    log_ncm = arr['log_ncm_mix']    # already (1-p)·log NCM(r_AM_S) + p·log NCM(r_AM_P)
 
     log_mix = (1.0 - p_amp)*np.log(sigma_S) + p_amp*np.log(sigma_P)
     log_phi4 = 4.0 * np.log(phi)
-    log_ncm = np.log(np.maximum(ncm, 1e-6))
     log_holm = 0.5 * np.log(np.maximum(am_area, 1e-12))
     log_Td_term = beta_T * log_Td
     log_vuln = beta_v * am_vuln
     log_ctau = p_tau + q_tau*lt + r_tau*lt**2
-    log_phi_logcn = beta_AC * phi_logcn   # Stage 15
+    log_phi_logcn = beta_AC * phi_logcn   # Stage 15 term, kept in Stage 16
 
     # Reference = max-σ case
     ref = int(np.argmax(sig_act))
@@ -5915,7 +5930,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', arr['names'], None)
     x_labels = arr['names']
-    title = ("σ_electronic Stage 15 factor decomposition (ref: %s)  "
+    title = ("σ_electronic Stage 16 factor decomposition (ref: %s)  "
              "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f]  "
              "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]"
              % (x_labels[ref][:28] if ref < len(x_labels) else 'ref',
@@ -5959,8 +5974,8 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_decomp_final"] = {
     "func": plot_electronic_decomp_final,
     "file": "electronic_decomp_final.png",
-    "title": "σ_electronic Stage 15 factor decomposition",
-    "description": "Stage 15 production form 의 8 factor 를 stack 으로 분해:\n"
+    "title": "σ_electronic Stage 16 factor decomposition",
+    "description": "Stage 16 production form 의 8 factor 를 stack 으로 분해:\n"
                    "  mix σ_S/σ_P · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · "
                    "(T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ).\n"
                    "각 factor 의 Δlog 기여를 ref (최고 σ_e 케이스) 대비 표시.\n"
