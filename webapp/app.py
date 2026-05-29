@@ -4256,52 +4256,52 @@ def group():
     if selected:
         # Key metrics grouped by category
         # (label, unit, key, category)
+        # Categories ordered to mirror the σ_ionic/σ_e production forms' inputs:
+        #   composition → structure → SE interface (ionic) → AM interface
+        #   (electronic, Stage 15) → transport (Stage E, all 3 channels) →
+        #   contact mechanics → stress.  Each transport channel shows the
+        #   Stage E value (phantom-filtered) — what the production fit targets.
         display_keys_raw = [
-            # ── 구조/계면 ──
-            ('P:S', '', 'ps_ratio', '구조/계면'),
-            ('Porosity', '(%)', 'porosity', '구조/계면'),
-            ('두께', '(μm)', 'thickness_um', '구조/계면'),
-            ('AM-SE Total', '(μm²)', 'area_AM전체_SE_total', '구조/계면'),
-            ('SE-SE N', '', 'area_SE_SE_n', '구조/계면'),
-            ('SE-SE Mean', '(μm²)', 'area_SE_SE_mean', '구조/계면'),
-            ('SE-SE Total', '(μm²)', 'area_SE_SE_total', '구조/계면'),
-            ('Coverage P', '(%)', 'coverage_AM_P_mean', '구조/계면'),
-            ('Coverage S', '(%)', 'coverage_AM_S_mean', '구조/계면'),
-            # ── 이온경로 ──
-            ('SE-SE CN', '', 'se_se_cn', '이온경로'),
-            ('SE-SE CN std', '', 'se_se_cn_std', '이온경로'),
-            ('SE Cluster', '', 'n_components', '이온경로'),
-            ('Large(≥10)', '', 'n_large_components', '이온경로'),
-            ('Percolation', '(%)', 'percolation_pct', '이온경로'),
-            ('Top Reachable', '(%)', 'top_reachable_pct', '이온경로'),
-            ('Tortuosity', '', 'tortuosity_mean', '이온경로'),
-            ('τ std', '', 'tortuosity_std', '이온경로'),
-            ('GB Density', '(hops/μm)', 'gb_density_mean', '이온경로'),
-            ('Hop Area', '(μm²)', 'path_hop_area_mean', '이온경로'),
-            ('Bottleneck', '(μm²)', 'path_hop_area_min_mean', '이온경로'),
-            ('Path Conductance', '(μm²)', 'path_conductance_mean', '이온경로'),
-            # ── 활성도/전도 ──
-            ('Ionic Active', '(%)', 'ionic_active_pct', '활성도'),
-            ('AM-SE CN', '', 'am_se_cn_mean', '활성도'),
-            ('Vulnerable', '(%)', 'am_vulnerable_pct', '활성도'),
-            ('φ_SE', '', 'phi_se', '활성도'),
-            ('σ_brug/σ_grain', '', 'sigma_ratio', '이온전도'),
-            # ── Network Solver ──
-            ('σ_ionic', '(mS/cm)', 'sigma_full_mScm', 'Network Solver'),
-            ('R_brug', '(×)', 'R_brug_over_full', 'Network Solver'),
-            ('Constriction', '(%)', '_constriction_pct', 'Network Solver'),
-            ('σ_electronic', '(mS/cm)', 'electronic_sigma_full_mScm', 'Network Solver'),
-            ('σ_thermal', '(mS/cm)', 'thermal_sigma_full_mScm', 'Network Solver'),
-            # ── 접촉력/응력 ──
-            ('Fn AM-AM', '(μN)', 'fn_AM_P_AM_P_mean', '접촉력/응력'),
-            ('Fn AM-SE', '(μN)', 'fn_AM_P_SE_mean', '접촉력/응력'),
-            ('Fn SE-SE', '(μN)', 'fn_SE_SE_mean', '접촉력/응력'),
-            ('CP mean', '(MPa)', 'contact_pressure_mean', '접촉력/응력'),
-            ('CP max', '(MPa)', 'contact_pressure_max', '접촉력/응력'),
-            ('Stress CV', '(%)', 'stress_cv', '접촉력/응력'),
-            ('σ_AM_P/σ_mean', '', 'stress_ratio_AM_P', '접촉력/응력'),
-            ('σ_AM_S/σ_mean', '', 'stress_ratio_AM_S', '접촉력/응력'),
-            ('σ_SE/σ_mean', '', 'stress_ratio_SE', '접촉력/응력'),
+            # ── 조성/구조 ──
+            ('P:S', '', 'ps_ratio', '조성/구조'),
+            ('φ_AM', '', 'phi_am', '조성/구조'),
+            ('φ_SE', '', 'phi_se', '조성/구조'),
+            ('Porosity', '(%)', 'porosity', '조성/구조'),
+            ('두께', '(μm)', 'thickness_um', '조성/구조'),
+            # ── SE 계면/네트워크 (σ_ionic form inputs) ──
+            ('SE-SE CN', '', 'se_se_cn', 'SE 네트워크'),
+            ('SE-SE CN std', '', 'se_se_cn_std', 'SE 네트워크'),
+            ('SE-SE Total', '(μm²)', 'area_SE_SE_total', 'SE 네트워크'),
+            ('Coverage P', '(%)', 'coverage_AM_P_mean', 'SE 네트워크'),
+            ('Coverage S', '(%)', 'coverage_AM_S_mean', 'SE 네트워크'),
+            ('Percolation', '(%)', 'percolation_pct', 'SE 네트워크'),
+            ('Tortuosity', '', 'tortuosity_mean', 'SE 네트워크'),
+            ('Hop Area', '(μm²)', 'path_hop_area_mean', 'SE 네트워크'),
+            ('Bottleneck', '(μm²)', 'path_hop_area_min_mean', 'SE 네트워크'),
+            # ── AM 네트워크 (σ_e Stage 15 form inputs) ──
+            ('AM-AM CN', '', 'am_am_cn', 'AM 네트워크'),
+            ('AM-AM Mean Area', '(μm²)', 'am_am_mean_area', 'AM 네트워크'),
+            ('AM-AM N contacts', '', 'am_am_n_contacts', 'AM 네트워크'),
+            ('AM-SE CN', '', 'am_se_cn_mean', 'AM 네트워크'),
+            ('AM Vulnerable', '(%)', 'am_vulnerable_pct', 'AM 네트워크'),
+            ('Ionic Active', '(%)', 'ionic_active_pct', 'AM 네트워크'),
+            # ── Transport (Stage E — production form targets) ──
+            ('σ_ionic (Stage E)', '(mS/cm)', '_sigma_i_stage_e_display', '전송 (Stage E)'),
+            ('σ_electronic (Stage E)', '(mS/cm)', '_sigma_e_stage_e_display', '전송 (Stage E)'),
+            ('σ_thermal (Stage E)', '(mS/cm)', '_sigma_k_stage_e_display', '전송 (Stage E)'),
+            ('R_brug', '(×)', 'R_brug_over_full', '전송 (Stage E)'),
+            ('Constriction', '(%)', '_constriction_pct', '전송 (Stage E)'),
+            # ── 접촉력 (force chain) ──
+            ('Fn AM-AM', '(μN)', 'fn_AM_P_AM_P_mean', '접촉력'),
+            ('Fn AM-SE', '(μN)', 'fn_AM_P_SE_mean', '접촉력'),
+            ('Fn SE-SE', '(μN)', 'fn_SE_SE_mean', '접촉력'),
+            ('CP mean', '(MPa)', 'contact_pressure_mean', '접촉력'),
+            ('CP max', '(MPa)', 'contact_pressure_max', '접촉력'),
+            # ── 응력 분포 ──
+            ('Stress CV', '(%)', 'stress_cv', '응력'),
+            ('σ_AM_P/σ_mean', '', 'stress_ratio_AM_P', '응력'),
+            ('σ_AM_S/σ_mean', '', 'stress_ratio_AM_S', '응력'),
+            ('σ_SE/σ_mean', '', 'stress_ratio_SE', '응력'),
         ]
         display_keys = [(l, u, k) for l, u, k, _ in display_keys_raw]
         # Track category boundaries for column separators
@@ -4337,6 +4337,39 @@ def group():
             bf = metrics.get('bulk_resistance_fraction')
             if bf is not None and bf > 0:
                 metrics['_constriction_pct'] = round((1 - bf) * 100, 1)
+
+            # Stage E σ display (phantom-aware) — matches what production form fits.
+            # For σ_e: requires raw > 0 AND not both-fallback (input_1mAh_5 raw=51.89
+            # would otherwise be misleading vs Stage E=9.014).  Same logic for σ_ionic
+            # and σ_thermal Stage E columns.
+            src = metrics.get('stage_e_source') or {}
+            # σ_e Stage E
+            raw_e = metrics.get('electronic_sigma_full_mScm')
+            if (isinstance(raw_e, (int, float)) and raw_e > 0
+                    and not (src.get('sigma_e') == 'fallback_weighted_factor'
+                             and src.get('sigma_e_physics') == 'fallback_weighted_factor')):
+                stE_e = metrics.get('electronic_sigma_full_mScm_stage_e')
+                metrics['_sigma_e_stage_e_display'] = (
+                    stE_e if isinstance(stE_e, (int, float)) and 0 < stE_e <= 100
+                    else (raw_e if raw_e <= 100 else None))
+            else:
+                metrics['_sigma_e_stage_e_display'] = None
+            # σ_thermal Stage E
+            raw_k = metrics.get('thermal_sigma_full_mScm')
+            if (isinstance(raw_k, (int, float)) and raw_k > 0
+                    and src.get('sigma_thermal') != 'fallback_weighted_factor'):
+                stE_k = metrics.get('thermal_sigma_full_mScm_stage_e')
+                metrics['_sigma_k_stage_e_display'] = (
+                    stE_k if isinstance(stE_k, (int, float)) and stE_k > 0
+                    else raw_k)
+            else:
+                metrics['_sigma_k_stage_e_display'] = None
+            # σ_ionic Stage E (prefer stage_e value; raw fallback)
+            stE_i = metrics.get('sigma_full_mScm_stage_e')
+            raw_i = metrics.get('sigma_full_mScm')
+            metrics['_sigma_i_stage_e_display'] = (
+                stE_i if isinstance(stE_i, (int, float)) and stE_i > 0
+                else (raw_i if isinstance(raw_i, (int, float)) and raw_i > 0 else None))
 
             # Standard 모드: coverage_AM_mean → P:S에 따라 P 또는 S에 매핑
             if 'coverage_AM_mean' in metrics:
