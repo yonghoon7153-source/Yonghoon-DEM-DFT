@@ -5215,10 +5215,10 @@ _EXCLUDED_NAMES_EL = frozenset([
     'input_6mAh_real_10',     # isolated σ=1.5 (-104%)
     'input_S_2',              # σ_ionic outlier too (r_AM_S=4µm borderline)
     'input_particulate_5',    # σ_ionic outlier too (0:10 r_SE=0.5 corner)
-    # Round 2 (2026-05-29, after 1mAh_8_AMS_S1..S5 added, n=70): |err|>50%
-    'input_8mAh_3',           # σ=0.59 corpus min (+74%, thin/low-φ boundary)
-    'input_8mAh_real_10',     # +55%, audit ratio 2.83× — Trevisanello over-correction
-    'input_6mAh_real_5',      # +54%, audit ratio 2.60× — same dense 10:0 regime
+    # Round 2 (2026-05-29): boundary only — Stage 15 form term (φ_AM × log(CN))
+    # catches the dense+high-CN cases (_real_5, _real_10) that were temporarily
+    # in round-2 exclusion.  Only the corpus-min boundary case remains.
+    'input_8mAh_3',           # σ=0.59 corpus min, low-φ + low-CN extreme; no neighbors
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
