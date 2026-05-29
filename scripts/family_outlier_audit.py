@@ -27,8 +27,9 @@ import numpy as np
 
 
 # Sibling-suffix patterns to strip when grouping
-# (matches: _S1..S99, _seed1..seed99, _v1..v99)
-_SUFFIX_RE = re.compile(r'_(S|seed|v)\d+$', re.IGNORECASE)
+# (matches: _S1..S99, _seed1..seed99, _v1..v99, also space/hyphen variants
+#  like " S1", "-S1")
+_SUFFIX_RE = re.compile(r'[ _\-](S|seed|v)\d+$', re.IGNORECASE)
 
 
 def _family_base(nm: str) -> str:
@@ -64,10 +65,16 @@ def _stage_e_electronic_target(d):
 
 
 def _sigma_ionic_target(d):
-    """Best available σ_ionic — Stage E preferred."""
-    for k in ('sigma_ionic_full_mScm_stage_e',
+    """Best available σ_ionic — try multiple naming conventions.
+    Actual full_metrics.json uses 'sigma_full_mScm' (no 'ionic_' prefix);
+    Stage E uses 'sigma_full_mScm_stage_e'."""
+    for k in ('sigma_full_mScm_stage_e',                # Stage E primary
+              'sigma_full_mScm',                        # Hertz network solver
+              'sigma_full_mScm_physics',                # physics path
+              'sigma_full_mScm_stage_e_physics',
+              'sigma_ionic_full_mScm_stage_e',          # legacy variants
               'sigma_ionic_full_mScm',
-              'sigma_ionic_full_mScm_physics'):
+              'multiscale_sigma_full_mScm'):
         v = d.get(k)
         if isinstance(v, (int, float)) and not isinstance(v, bool) and v > 0:
             return float(v)
@@ -106,6 +113,20 @@ def main():
                     (d.get('AM_P_n_particles', 0) or 0) + (d.get('AM_S_n_particles', 0) or 0),
                     1),
             }
+
+    # ───── DEBUG: σ_ionic loading rate + any _AMS-pattern names ─────
+    n_with_ionic = sum(1 for r in records.values() if r['sigma_ionic'] is not None)
+    n_with_e = sum(1 for r in records.values() if r['sigma_e'] is not None)
+    print(f"  with σ_ionic loaded: {n_with_ionic} / {len(records)}")
+    print(f"  with σ_e loaded    : {n_with_e} / {len(records)}")
+    ams_names = sorted([nm for nm in records if '1mAh_8_AMS' in nm or '8_AMS' in nm])
+    if ams_names:
+        print(f"  Names containing '8_AMS' ({len(ams_names)} cases):")
+        for nm in ams_names:
+            sib = '★ sibling' if _is_sibling(nm) else '  base'
+            base = _family_base(nm)
+            print(f"     {nm:45s} {sib}  → family base = '{base}'")
+    print()
 
     # ───── Group by family ─────
     families = defaultdict(list)
