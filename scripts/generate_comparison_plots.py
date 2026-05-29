@@ -2458,9 +2458,15 @@ def _load_thermal_sigma(data_list):
 
 
 def plot_electronic_sigma(data_list, names, outdir):
-    """Electronic conductivity from AM-AM network."""
-    sigma_el = _load_electronic_sigma(data_list)
-    if not any(s > 0 for s in sigma_el):
+    """Electronic conductivity from AM-AM network.  Phantom cases (no raw
+    network-solver value, Bruggeman fallback, or physics-pathway >100 mS/cm
+    buggy values) are X-marked instead of plotted at silly magnitudes."""
+    sigma_el_raw = _load_electronic_sigma(data_list)
+    phantom = [_phantom_electronic_sigma(d) for d in data_list]
+    sigma_el = [(0.0 if (phantom[i] or sigma_el_raw[i] > _SIGMA_E_MAX)
+                 else sigma_el_raw[i])
+                for i in range(len(sigma_el_raw))]
+    if not any(s > 0 for s in sigma_el) and not any(phantom):
         return None
 
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
@@ -2468,25 +2474,36 @@ def plot_electronic_sigma(data_list, names, outdir):
     ms = _marker_size(len(names))
     lw = _line_width(len(names))
 
-    # Use NaN to break line at σ=0 cases (prevents cross-group connection)
+    # Use NaN to break line at σ=0 / phantom cases (prevents cross-group connection)
     y_line = np.array([s if s > 0 else np.nan for s in sigma_el])
-    x_none = [x[i] for i in range(len(names)) if sigma_el[i] <= 0]
+    x_perc_none = [x[i] for i in range(len(names))
+                   if (sigma_el[i] <= 0 and not phantom[i])]
+    x_phantom = [x[i] for i in range(len(names)) if phantom[i]]
 
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
             label="σ_electronic (mS/cm)")
-    if x_none:
-        ax.plot(x_none, [0]*len(x_none), 'x', color='gray', markersize=ms+2,
+    if x_perc_none:
+        ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
                 label="No AM percolation")
+    if x_phantom:
+        ax.plot(x_phantom, [0]*len(x_phantom), 'x', color='#222', markersize=ms+3,
+                markeredgewidth=2,
+                label="σ_e phantom (raw missing / fallback / >100 mS/cm)")
 
     _apply_style(ax, "σ_electronic (mS/cm)", names)
-    ax.legend(fontsize=9, loc='upper left')
-    ax.set_title("Electronic Conductivity (AM-AM Network)\nσ_AM = 0.05 S/cm",
-                 fontsize=10, fontweight='bold')
+    ax.legend(fontsize=8, loc='upper left')
+    ax.set_title("Electronic Conductivity (AM-AM Network)\nσ_AM = 0.05 S/cm  "
+                 "[phantom cases (raw missing, fallback flag, or σ>100mS/cm) X-marked]",
+                 fontsize=9, fontweight='bold')
 
-    # Annotation: range
+    # Annotation: range (excluding zeros / phantoms)
     valid_vals = [s for s in sigma_el if s > 0]
     if valid_vals:
-        ax.text(0.95, 0.95, f"Range: {min(valid_vals):.2f} ~ {max(valid_vals):.2f} mS/cm",
+        n_phantom = sum(1 for p in phantom if p)
+        note = f"Range: {min(valid_vals):.2f} ~ {max(valid_vals):.2f} mS/cm"
+        if n_phantom:
+            note += f"   ({n_phantom} phantom ✗)"
+        ax.text(0.95, 0.95, note,
                 transform=ax.transAxes, fontsize=9, ha='right', va='top',
                 bbox=dict(boxstyle='round,pad=0.4', facecolor='#ffeaea', alpha=0.8))
 
@@ -3602,6 +3619,11 @@ def plot_electronic_active_am(data_list, names, outdir):
     perc = [_get(d, "electronic_percolating_fraction", 0) * 100 for d in data_list]
     phi_am = [_get(d, "phi_am", 0) for d in data_list]
     sigma_el = _load_electronic_sigma(data_list)
+    # Phantom-mask: phantom σ_e cases (no raw / fallback / physics-pathway
+    # buggy >100 mS/cm) get hidden with X instead of plotting silly values.
+    phantom = [_phantom_electronic_sigma(d) for d in data_list]
+    sigma_el = [(np.nan if (phantom[i] or sigma_el[i] > _SIGMA_E_MAX) else sigma_el[i])
+                for i in range(len(sigma_el))]
 
     has_data = any(a > 0 for a in active)
     if not has_data:
@@ -3629,10 +3651,16 @@ def plot_electronic_active_am(data_list, names, outdir):
     ax1.axhline(95, color='#2ecc71', linestyle='--', linewidth=0.8, alpha=0.5)
     ax1.axhline(80, color='#f39c12', linestyle='--', linewidth=0.8, alpha=0.5)
 
-    # Line: σ_electronic
+    # Line: σ_electronic — phantom cases drawn as ✗ at y=0
     ax2 = ax1.twinx()
-    y_el = np.array([s if s > 0 else np.nan for s in sigma_el])
+    y_el = np.array([s if (s is not None and not (s != s) and s > 0) else np.nan
+                     for s in sigma_el])
     ax2.plot(x, y_el, 'D-', color='#9b59b6', markersize=ms, linewidth=lw, label='σ_electronic')
+    # Phantom X-marks: where σ was suppressed for being invalid
+    x_phantom = [x[i] for i in range(len(data_list)) if phantom[i]]
+    if x_phantom:
+        ax2.plot(x_phantom, [0]*len(x_phantom), 'x', color='#222', markersize=ms+3,
+                 markeredgewidth=2, label='σ_e phantom (raw missing / fallback / >100 mS/cm)')
     ax2.set_ylabel('σ_electronic (mS/cm)', color='#9b59b6', fontsize=11)
     ax2.tick_params(axis='y', labelcolor='#9b59b6')
 
@@ -5160,65 +5188,138 @@ _EXCLUDED_NAMES_EL = frozenset([
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
 _PHI_AM_MIN = 0.30
+_SIGMA_E_MAX = 100.0  # composite cannot exceed σ_AM × volume frac;
+                      # cap = 2× σ_AM_single (NCM811) margin.
+                      # Anything > 100 mS/cm is physics-pathway bug (10⁴–10⁶
+                      # nonsense values from electronic_sigma_*_physics).
+
+_TARGET_KEYS_E = (
+    'electronic_sigma_full_mScm_stage_e',           # Stage E + Hertz (best)
+    'electronic_sigma_full_mScm',                   # raw Hertz
+    'electronic_sigma_full_mScm_stage_e_physics',   # Stage E + physics (buggy)
+    'electronic_sigma_full_mScm_physics',           # physics-only (buggy)
+)
 
 
 def _stage_e_electronic_target(d):
-    """σ_e target with Stage E priority + Bruggeman-fallback rejection.
-    Mirrors scripts/electronic_nested_cv.py:_stage_e_electronic exactly:
-       stage_e → raw → stage_e_physics → physics
-    Rejects any 'fallback_weighted_factor' source (Bruggeman phantom)."""
-    src = d.get('stage_e_source') or {}
+    """σ_e target — MIRRORS scripts/electronic_nested_cv.py:_stage_e_electronic.
+    1. raw > 0 REQUIRED (else network solver electronic didn't run → phantom)
+    2. Reject if BOTH src['sigma_e'] AND src['sigma_e_physics'] are
+       'fallback_weighted_factor' (Bruggeman fallback both modes).
+    3. SIGMA_E_MAX = 100 mS/cm cap (physics-pathway can produce 10⁴-10⁶
+       nonsense values — physically impossible composite σ_e).
+    4. Priority: stage_e → raw → stage_e_physics → physics.
+    """
     raw = d.get('electronic_sigma_full_mScm')
-    is_raw_real = isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0
+    if not (isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0):
+        return None
+    src = d.get('stage_e_source') or {}
+    if (src.get('sigma_e') == 'fallback_weighted_factor'
+            and src.get('sigma_e_physics') == 'fallback_weighted_factor'):
+        return None
+    for k in _TARGET_KEYS_E:
+        v = d.get(k)
+        if (isinstance(v, (int, float)) and not isinstance(v, bool)
+                and v > 0 and v <= _SIGMA_E_MAX):
+            return float(v)
+    return None
 
-    stE = d.get('electronic_sigma_full_mScm_stage_e')
-    if isinstance(stE, (int, float)) and stE > 0 and is_raw_real \
-            and src.get('sigma_e') != 'fallback_weighted_factor':
-        return float(stE)
-    if is_raw_real:
-        return float(raw)
-    stEP = d.get('electronic_sigma_full_mScm_stage_e_physics')
-    if isinstance(stEP, (int, float)) and stEP > 0 \
-            and src.get('sigma_e_physics') != 'fallback_weighted_factor':
-        return float(stEP)
-    phys = d.get('electronic_sigma_full_mScm_physics')
-    return float(phys) if isinstance(phys, (int, float)) and phys > 0 else None
+
+def _phantom_electronic_sigma(d):
+    """True iff this case's σ_e is a phantom (no raw solver OR fallback
+    flagged OR physics-pathway buggy >100 mS/cm).  Used by sigma/active_am
+    plots to X-mark instead of plotting silly values."""
+    raw = d.get('electronic_sigma_full_mScm')
+    if not (isinstance(raw, (int, float)) and not isinstance(raw, bool) and raw > 0):
+        return True
+    src = d.get('stage_e_source') or {}
+    if (src.get('sigma_e') == 'fallback_weighted_factor'
+            and src.get('sigma_e_physics') == 'fallback_weighted_factor'):
+        return True
+    # If raw is fine but the value shown elsewhere is buggy-large, flag too
+    for k in ('electronic_sigma_full_mScm_physics',
+              'electronic_sigma_full_mScm_stage_e_physics'):
+        v = d.get(k)
+        if isinstance(v, (int, float)) and v > _SIGMA_E_MAX:
+            return True
+    return False
+
+
+def _cov_am_e(d):
+    """AM-AM coverage (matches electronic_nested_cv._cov_am Hertz path)."""
+    for k in ('coverage_AM_AM_mean', 'coverage_AM_AM'):
+        v = d.get(k)
+        if isinstance(v, (int, float)) and v > 0:
+            return float(v) / 100.0 if v > 1 else float(v)
+    a_avg = d.get('am_am_mean_area', 0)
+    cn = d.get('am_am_cn', 0)
+    r = max(d.get('r_AM_P', 0) or 0, d.get('r_AM_S', 0) or 0, 0)
+    if a_avg and cn and r > 0:
+        sphere_area = 4.0 * np.pi * r * r
+        return max(min((a_avg * cn / 2.0) / sphere_area, 1.0), 1e-4)
+    return None
+
+
+def _f_perc_e_target(d):
+    """Electronic percolating fraction (or proxy)."""
+    v = d.get('electronic_percolating_fraction')
+    if isinstance(v, (int, float)) and v > 0:
+        return float(v)
+    v = d.get('percolation_pct')
+    return float(v) / 100.0 if isinstance(v, (int, float)) and v > 0 else None
 
 
 def _electronic_form_arrays(data_list, names):
-    """Walk data_list, filter to Stage 12 valid cases, build design matrix.
-    Returns dict with keys: ok (mask), logsf, y_resid, X_design, names_kept,
-    sig_act, log_offset (fixed exponent contributions), excluded_mask.
-    Excluded cases are KEPT in the corpus but flagged via excluded_mask
-    for downstream X-marking on plots."""
+    """Walk data_list, filter to Stage 12 valid cases (matches
+    electronic_nested_cv.load_corpus_e exactly: sig + phi_am + am_am_cn +
+    cov_AM + f_perc + tau ALL > 0, dedup by (phi, cn, sig) key).
+    Returns dict or None if <8 usable cases."""
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
     keep_idx, kept_names, sigs = [], [], []
     phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a = ([] for _ in range(7))
     excluded = []
+    seen = set()
     for i, d in enumerate(data_list):
-        sig = _stage_e_electronic_target(d)
-        phi = _get(d, 'phi_am')
-        cn = _get(d, 'am_am_cn')
-        tau = _get(d, 'tortuosity_electronic_recommended',
-                   _get(d, 'tortuosity_electronic_mean',
-                        _get(d, 'tortuosity_recommended',
-                             _get(d, 'tortuosity_mean', 0))))
-        am_area = _get(d, 'am_am_mean_area', 0)
-        if not (sig and sig > 0 and phi and phi > _PHI_AM_MIN
-                and cn and cn > 0 and tau and tau > 0 and am_area and am_area > 0):
+        sig = _stage_e_electronic_target(d)        # raw-req + cap 100 + fallback
+        phi = d.get('phi_am')
+        cn = d.get('am_am_cn')
+        cov = _cov_am_e(d)
+        fp = _f_perc_e_target(d)
+        tau = None
+        for tk in ('tortuosity_electronic_recommended',
+                   'tortuosity_electronic_mean',
+                   'tortuosity_recommended', 'tortuosity_mean'):
+            tv = d.get(tk)
+            if isinstance(tv, (int, float)) and tv > 0:
+                tau = float(tv); break
+        am_area = d.get('am_am_mean_area', 0)
+        if not (sig and sig > 0
+                and isinstance(phi, (int, float)) and phi > _PHI_AM_MIN
+                and isinstance(cn, (int, float)) and cn > 0
+                and cov and cov > 0
+                and fp and fp > 0
+                and tau and tau > 0
+                and am_area and am_area > 0):
             continue
+        # Dedup: same case re-uploaded under different folder
+        key = (round(float(phi), 4), round(float(cn), 3), round(float(sig), 5))
+        if key in seen:
+            continue
+        seen.add(key)
         ras, rap = _r_am_sizes(d)
         ras = ras if (ras and np.isfinite(ras)) else 2.5
         rap = rap if (rap and np.isfinite(rap)) else 5.5
         p = float(_ps_fraction(d) or 0)
         r_eff = (1.0 - p)*ras + p*rap
-        T = _get(d, 'thickness_um', 0)
-        T_safe = float(T) if (T and T > 0) else 100.0
-        av = _get(d, 'AM_S_vulnerable_pct', _get(d, 'am_vulnerable_pct', 0))
+        T = d.get('thickness_um', 0)
+        T_safe = float(T) if (isinstance(T, (int, float)) and T > 0) else 100.0
+        av = d.get('AM_S_vulnerable_pct')
+        if not isinstance(av, (int, float)):
+            av = d.get('am_vulnerable_pct', 0)
         keep_idx.append(i); kept_names.append(real_all[i]); sigs.append(float(sig))
         phi_a.append(float(phi)); p_a.append(p)
-        r_eff_a.append(r_eff); T_a.append(T_safe); am_vuln_a.append(float(av))
+        r_eff_a.append(r_eff); T_a.append(T_safe); am_vuln_a.append(float(av or 0))
         am_area_a.append(float(am_area)); tau_a.append(float(tau))
         excluded.append(real_all[i] in _EXCLUDED_NAMES_EL)
     n = len(keep_idx)
