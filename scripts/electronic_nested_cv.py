@@ -1428,6 +1428,209 @@ def main():
         print(f"     {fam:35s} × {cnt}")
     print()
 
+    # ───── STAGE 13: composite mixing rule comparison ─────
+    print()
+    print("=" * 78)
+    print(" STAGE 13: composite mixing rule comparison (which is right?)")
+    print("=" * 78)
+    print()
+    print("  Question: σ_S^(1-p)·σ_P^p (geometric) was arbitrary choice.")
+    print("  Test 5 literature mixing rules on Stage 12 base (a=3.5, d=0, drop15):")
+    print("    arithmetic (Voigt):  σ = (1-p)·σ_S + p·σ_P     ← parallel, upper bound")
+    print("    harmonic   (Reuss):  1/σ = (1-p)/σ_S + p/σ_P   ← series, lower bound")
+    print("    geometric (current): σ = σ_S^(1-p) · σ_P^p     ← log-linear midddle")
+    print("    bruggeman EMT      : self-consistent quadratic ← random embedding")
+    print("    generalized k LIVE : σ^k = (1-p)·σ_S^k + p·σ_P^k  k → 0 = geometric")
+    print()
+    from scipy.optimize import minimize
+
+    # Use same drop-15 as Stage 11/12
+    keep_s13 = keep15.copy()
+    n_s13 = int(keep_s13.sum())
+    a_phi_lock_s13 = 3.5
+    log_phi_lock = a_phi_lock_s13 * np.log(phi_am_arr[keep_s13])
+    log_ncm_s13 = log_ncm_lit2[keep_s13]
+    log_holm_s13 = log_am_area_holm[keep_s13]
+    p_a_s13 = p_amp_arr[keep_s13]
+    log_Td_s13 = log_Td[keep_s13]
+    am_vuln_s13 = am_vuln[keep_s13]
+    lt_s13 = lt[keep_s13]
+    logsf_s13 = logsf[keep_s13]
+    ss_tot_s13 = np.sum((logsf_s13 - logsf_s13.mean())**2)
+
+    def _forward(params, rule, p_a):
+        """Compute log σ_e prediction.  params = [s_S, s_P, ...]"""
+        if rule == 'generalized':
+            log_sS, log_sP, k_mix = params[0], params[1], params[2]
+            b_T, b_v, p_c, q_c, r_c = params[3:]
+            if abs(k_mix) < 0.02:
+                log_mix = (1.0 - p_a)*log_sS + p_a*log_sP
+            else:
+                inner = ((1.0 - p_a)*np.exp(k_mix*log_sS)
+                         + p_a*np.exp(k_mix*log_sP))
+                inner = np.maximum(inner, 1e-12)
+                log_mix = np.log(inner) / k_mix
+        elif rule == 'bruggeman':
+            log_sS, log_sP, b_T, b_v, p_c, q_c, r_c = params
+            sS = np.exp(log_sS); sP = np.exp(log_sP)
+            log_mix = np.empty_like(p_a)
+            for i in range(len(p_a)):
+                pa = p_a[i]
+                # solve 2-phase Bruggeman EMT:
+                # (1-pa)*(sS - se)/(sS + 2*se) + pa*(sP - se)/(sP + 2*se) = 0
+                # quadratic: se² - 0.5*[(1-pa)(2*sP-sS)+pa(2*sS-sP)]·se - 0.5·sS·sP = 0
+                B = 0.5*((1-pa)*(2*sP - sS) + pa*(2*sS - sP))
+                C = sS*sP*0.5
+                disc = B**2 + 2*C
+                se = (B + np.sqrt(max(disc, 0)))*0.5 + np.sqrt(max(disc, 0))*0.5
+                # Actually correct EMT: σ = (1/4)·(B' + √(B'² + 8·σ_S·σ_P))
+                # where B' = (2p−1)·(σ_P−σ_S)
+                Bprime = (2*pa - 1)*(sP - sS)
+                disc2 = Bprime**2 + 8*sS*sP
+                se = 0.25*(Bprime + np.sqrt(max(disc2, 0)))
+                log_mix[i] = np.log(max(se, 1e-9))
+        else:
+            log_sS, log_sP, b_T, b_v, p_c, q_c, r_c = params
+            if rule == 'geometric':
+                log_mix = (1.0 - p_a)*log_sS + p_a*log_sP
+            elif rule == 'arithmetic':
+                sigma_mix = (1.0 - p_a)*np.exp(log_sS) + p_a*np.exp(log_sP)
+                log_mix = np.log(np.maximum(sigma_mix, 1e-9))
+            elif rule == 'harmonic':
+                inv_mix = (1.0 - p_a)/np.exp(log_sS) + p_a/np.exp(log_sP)
+                log_mix = -np.log(np.maximum(inv_mix, 1e-9))
+            else:
+                raise ValueError(f"unknown rule {rule}")
+        # Linear terms (same for all rules)
+        return (log_mix + log_phi_lock + log_ncm_s13 + log_holm_s13
+                + b_T*log_Td_s13 + b_v*am_vuln_s13
+                + p_c + q_c*lt_s13 + r_c*lt_s13**2)
+
+    def _loss(params, rule):
+        pred = _forward(params, rule, p_a_s13)
+        return float(np.sum((logsf_s13 - pred)**2))
+
+    rules = ['arithmetic', 'harmonic', 'geometric', 'bruggeman', 'generalized']
+    print(f"  {'rule':12s}  {'k':>2s}  {'R²':>7s}  {'LOOCV':>7s}  "
+          f"{'σ_S':>7s}  {'σ_P':>7s}  notes")
+    results13 = {}
+    for rule in rules:
+        # Initial params: σ_S ~ 10, σ_P ~ 5, β_T ~ -0.4, β_v ~ 0.3, then C(τ)
+        if rule == 'generalized':
+            x0 = [np.log(10.0), np.log(5.0), 0.01,
+                  -0.4, 0.3, 0.0, 0.0, 0.0]
+            n_p = 8
+        else:
+            x0 = [np.log(10.0), np.log(5.0),
+                  -0.4, 0.3, 0.0, 0.0, 0.0]
+            n_p = 7
+        # Fit
+        res = minimize(_loss, x0, args=(rule,), method='Nelder-Mead',
+                       options={'maxiter': 5000, 'xatol': 1e-6, 'fatol': 1e-8})
+        params_fit = res.x
+        pred_fit = _forward(params_fit, rule, p_a_s13)
+        ss_res = np.sum((logsf_s13 - pred_fit)**2)
+        r2_v = 1 - ss_res / ss_tot_s13 if ss_tot_s13 > 0 else 0
+
+        # LOOCV — refit per case (small n, fast NM)
+        sse_loo = 0.0
+        for j in range(n_s13):
+            mk = np.ones(n_s13, bool); mk[j] = False
+            # Build local objective with masked data
+            def _loss_loo(params, mask=mk):
+                if rule == 'generalized':
+                    k_mix = params[2]
+                    log_sS, log_sP = params[0], params[1]
+                    b_T, b_v, p_c, q_c, r_c = params[3:]
+                else:
+                    log_sS, log_sP = params[0], params[1]
+                    b_T, b_v, p_c, q_c, r_c = params[2:]
+                pa = p_a_s13[mask]
+                if rule == 'geometric':
+                    lm = (1-pa)*log_sS + pa*log_sP
+                elif rule == 'arithmetic':
+                    sm = (1-pa)*np.exp(log_sS) + pa*np.exp(log_sP)
+                    lm = np.log(np.maximum(sm, 1e-9))
+                elif rule == 'harmonic':
+                    iv = (1-pa)/np.exp(log_sS) + pa/np.exp(log_sP)
+                    lm = -np.log(np.maximum(iv, 1e-9))
+                elif rule == 'bruggeman':
+                    sS = np.exp(log_sS); sP = np.exp(log_sP)
+                    Bprime = (2*pa - 1)*(sP - sS)
+                    disc = Bprime**2 + 8*sS*sP
+                    se = 0.25*(Bprime + np.sqrt(np.maximum(disc, 0)))
+                    lm = np.log(np.maximum(se, 1e-9))
+                elif rule == 'generalized':
+                    if abs(k_mix) < 0.02:
+                        lm = (1-pa)*log_sS + pa*log_sP
+                    else:
+                        inner = (1-pa)*np.exp(k_mix*log_sS) + pa*np.exp(k_mix*log_sP)
+                        lm = np.log(np.maximum(inner, 1e-12)) / k_mix
+                pred = (lm + log_phi_lock[mask] + log_ncm_s13[mask] + log_holm_s13[mask]
+                        + b_T*log_Td_s13[mask] + b_v*am_vuln_s13[mask]
+                        + p_c + q_c*lt_s13[mask] + r_c*lt_s13[mask]**2)
+                return float(np.sum((logsf_s13[mask] - pred)**2))
+            res_loo = minimize(_loss_loo, params_fit, method='Nelder-Mead',
+                               options={'maxiter': 1000, 'xatol': 1e-5})
+            # Predict held-out
+            p_j = params_fit  # use full fit as proxy if loo doesn't move much; use res_loo.x for proper LOOCV
+            p_loo = res_loo.x
+            if rule == 'generalized':
+                k_mix = p_loo[2]
+                log_sS, log_sP = p_loo[0], p_loo[1]
+                b_T, b_v, p_c, q_c, r_c = p_loo[3:]
+            else:
+                log_sS, log_sP = p_loo[0], p_loo[1]
+                b_T, b_v, p_c, q_c, r_c = p_loo[2:]
+            pa = p_a_s13[j]
+            if rule == 'geometric':
+                lm = (1-pa)*log_sS + pa*log_sP
+            elif rule == 'arithmetic':
+                sm = (1-pa)*np.exp(log_sS) + pa*np.exp(log_sP)
+                lm = np.log(max(sm, 1e-9))
+            elif rule == 'harmonic':
+                iv = (1-pa)/np.exp(log_sS) + pa/np.exp(log_sP)
+                lm = -np.log(max(iv, 1e-9))
+            elif rule == 'bruggeman':
+                sS = np.exp(log_sS); sP = np.exp(log_sP)
+                Bprime = (2*pa - 1)*(sP - sS)
+                disc = Bprime**2 + 8*sS*sP
+                se = 0.25*(Bprime + np.sqrt(max(disc, 0)))
+                lm = np.log(max(se, 1e-9))
+            elif rule == 'generalized':
+                if abs(k_mix) < 0.02:
+                    lm = (1-pa)*log_sS + pa*log_sP
+                else:
+                    inner = (1-pa)*np.exp(k_mix*log_sS) + pa*np.exp(k_mix*log_sP)
+                    lm = np.log(max(inner, 1e-12)) / k_mix
+            pred_j = (lm + log_phi_lock[j] + log_ncm_s13[j] + log_holm_s13[j]
+                      + b_T*log_Td_s13[j] + b_v*am_vuln_s13[j]
+                      + p_c + q_c*lt_s13[j] + r_c*lt_s13[j]**2)
+            sse_loo += (logsf_s13[j] - pred_j)**2
+        lo_v = 1 - sse_loo/ss_tot_s13 if ss_tot_s13 > 0 else 0
+        sS = float(np.exp(params_fit[0]))
+        sP = float(np.exp(params_fit[1]))
+        k_str = ""
+        if rule == 'generalized':
+            k_str = f"k={params_fit[2]:+.3f}"
+        notes = ""
+        if sP > sS: notes = "  σ_P > σ_S (literature match!)"
+        results13[rule] = (r2_v, lo_v, sS, sP, params_fit)
+        print(f"  {rule:12s}  {k_str:>2s}  {r2_v:7.4f}  {lo_v:7.4f}  "
+              f"{sS:7.2f}  {sP:7.2f}{notes}")
+    print()
+
+    # Pick best
+    best_rule = max(results13.items(), key=lambda x: x[1][1])
+    print(f"  ★ Best mixing rule (by LOOCV): {best_rule[0]}  "
+          f"LOOCV={best_rule[1][1]:.4f}, R²={best_rule[1][0]:.4f}")
+    print(f"     σ_S = {best_rule[1][2]:.2f} mS/cm,  σ_P = {best_rule[1][3]:.2f} mS/cm")
+    if best_rule[1][3] > best_rule[1][2]:
+        print(f"     → σ_P > σ_S: matches literature (single-crystal > poly NCM)")
+    else:
+        print(f"     → σ_P < σ_S: opposite of literature; size effect entangled")
+    print()
+
     # ───── Stage progression summary ─────
     print("=" * 78)
     print(" STAGE PROGRESSION SUMMARY")
@@ -1461,6 +1664,10 @@ def main():
           f"{r2_11:7.4f}  {lo_11:7.4f}  {(ae11 > 30).sum():>10d} / {n}")
     print(f"  {f'Stage 12 (Stage 11 + lock a={best12[0]} d={best12[1]} + drop15)':50s}  "
           f"{best12[3]:7.4f}  {best12[2]:7.4f}  {'—':>10s}")
+    for _r in rules:
+        r2v, lov, _, _, _ = results13[_r]
+        print(f"  {f'Stage 13 ({_r} mixing, a=3.5 d=0, drop15)':50s}  "
+              f"{r2v:7.4f}  {lov:7.4f}  {'—':>10s}")
     print()
 
 
