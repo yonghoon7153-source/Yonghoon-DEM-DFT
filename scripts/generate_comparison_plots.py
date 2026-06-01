@@ -2484,7 +2484,7 @@ _ELECTRONIC_GLOBAL_FIT_CACHE = None   # Stage 17: (coef[10], sigma_S, sigma_P, �
 
 
 def _electronic_global_fit():
-    """Walk webapp/results + webapp/archive ONCE, fit Stage 19 form on the
+    """Walk webapp/results + webapp/archive ONCE, fit Stage 20 form on the
     full corpus with proper name-based exclusion (_EXCLUDED_NAMES_EL), cache
     result globally.  Used by plot_electronic_sigma to overlay form prediction
     consistently across all group panels.
@@ -2613,7 +2613,7 @@ def plot_electronic_sigma(data_list, names, outdir):
         y_form = np.array(form_pred)
         ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
                 linewidth=lw, alpha=0.85,
-                label="σ_e Stage 19 form prediction (mS/cm)")
+                label="σ_e Stage 20 form prediction (mS/cm)")
     if x_perc_none:
         ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
                 label="No AM percolation")
@@ -2624,7 +2624,7 @@ def plot_electronic_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    title = ("Electronic Conductivity — Stage E target vs Stage 19 form prediction"
+    title = ("Electronic Conductivity — Stage E target vs Stage 20 form prediction"
              + fit_summary + "\n"
              "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM_mix·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ),  NCM_mix = NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p  "
              "(global fit, cross-panel consistent)")
@@ -5490,7 +5490,7 @@ def _electronic_form_arrays(data_list, names):
                 else list(names))
     keep_idx, kept_names, sigs = [], [], []
     (phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a, cn_a,
-     ras_a, rap_a, cov_amp_a) = ([] for _ in range(11))
+     ras_a, rap_a, cov_amp_a, fintact_a) = ([] for _ in range(12))
     excluded = []
     seen = set()
     for i, d in enumerate(data_list):
@@ -5541,6 +5541,14 @@ def _electronic_form_arrays(data_list, names):
         if not isinstance(cap, (int, float)) or cap <= 0:
             cap = d.get('coverage_AM_mean') or 0
         cov_amp_a.append(float(cap) if cap and cap > 0 else 0.1)   # nonzero floor for log
+        # Stage 20: fracture-aware Holm for AM-AM (analog of σ_ionic's f_intact)
+        # Use force-based intact% (dashboard's primary metric).
+        # Only 47/117 cases have this — fallback 1.0 (no contribution: log(1)=0).
+        fi_pct = d.get('frac_intact_force_pct')
+        if isinstance(fi_pct, (int, float)) and 0 < fi_pct <= 100:
+            fintact_a.append(float(fi_pct) / 100.0)
+        else:
+            fintact_a.append(1.0)    # default = 'fully intact' → no contribution
         excluded.append(real_all[i] in _EXCLUDED_NAMES_EL)
     n = len(keep_idx)
     if n < 8:
@@ -5549,6 +5557,7 @@ def _electronic_form_arrays(data_list, names):
     T_a = np.array(T_a); am_vuln_a = np.array(am_vuln_a)
     am_area_a = np.array(am_area_a); tau_a = np.array(tau_a); cn_a = np.array(cn_a)
     ras_a = np.array(ras_a); rap_a = np.array(rap_a); cov_amp_a = np.array(cov_amp_a)
+    fintact_a = np.array(fintact_a)   # Stage 20: AM-AM intact fraction (force-based)
     sigs = np.array(sigs); logsf = np.log(sigs)
     excluded = np.array(excluded, bool)
 
@@ -5596,6 +5605,13 @@ def _electronic_form_arrays(data_list, names):
     # orthogonal to σ_S/σ_P axis so no collinearity.
     bi_coupling = p_a * (1.0 - p_a) * log_phi_AM    # 11th column (Stage 19)
 
+    # Stage 20 (2026-06-01): fracture-aware Holm for σ_e (analog of
+    # σ_ionic T1's β_F·log(f_intact)).  AM-AM contacts that are 'severe'
+    # (frag + pulv) per the force-based fracture criterion still carry
+    # ~60% conduction via micro-asperity contacts (Lawn 1998).  When
+    # data is missing (70/117 cases), f_intact = 1 → log = 0 → no effect.
+    log_fintact_AM = np.log(np.maximum(fintact_a, 0.05))    # 12th column
+
     X_design = np.column_stack([
         (1.0 - p_a),       # log σ_S
         p_a,               # log σ_P
@@ -5608,6 +5624,7 @@ def _electronic_form_arrays(data_list, names):
         thin_phi_term,     # β_phi_thin (Stage 17)
         thin_cov_term,     # β_cov_thin (Stage 17)
         bi_coupling,       # β_bi (Stage 19: bimodal packing peak)
+        log_fintact_AM,    # β_Fe (Stage 20: fracture-aware partial-Holm)
     ])
     y_resid = logsf - log_offset
     return {
@@ -5670,7 +5687,8 @@ def plot_electronic_fit_final(data_list, names, outdir):
     beta_AC = float(coef[7])  # Stage 15: φ_AM × log(am_am_cn)
     beta_phi_thin = float(coef[8]) if len(coef) > 8 else 0.0  # Stage 17: g_thin × log φ_AM
     beta_cov_thin = float(coef[9]) if len(coef) > 9 else 0.0  # Stage 17: g_thin × log cov_AM_P
-    beta_bi = float(coef[10]) if len(coef) > 10 else 0.0      # Stage 19: p(1-p) × log φ_AM (bimodal peak)
+    beta_bi = float(coef[10]) if len(coef) > 10 else 0.0      # Stage 19: p(1-p) × log φ_AM
+    beta_Fe = float(coef[11]) if len(coef) > 11 else 0.0      # Stage 20: log f_intact_AM (fracture-aware Holm)
 
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     excl = arr['excluded']
@@ -5696,14 +5714,14 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
     ax.set_ylabel('σ_e predicted (Stage 17 form, mS/cm)')
     ax.set_title(
-        "σ_electronic — Stage 19 production form (11 OLS params, +bimodal coupling)  "
+        "σ_electronic — Stage 20 production form (12 OLS params, +fracture-aware Holm)  "
         "(n_fit=%d, excluded=%d)\n"
         "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM_S^(1-p)·NCM_P^p · √A · (T/d)^β_T · "
-        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP) + β_bi·p(1-p)·logφ) · C(τ)\n"
-        "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f β_φth=%+.2f β_covth=%+.2f β_bi=%+.2f]  "
+        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP) + β_bi·p(1-p)·logφ + β_Fe·log f_intact_AM) · C(τ)\n"
+        "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f β_φth=%+.2f β_covth=%+.2f β_bi=%+.2f β_Fe=%+.2f]  "
         "R²=%.3f LOOCV=%.3f"
         % (n_fit, int(excl.sum()), sigma_S, sigma_P, beta_T, beta_v, beta_AC,
-           beta_phi_thin, beta_cov_thin, beta_bi, fit['r2'], fit['loocv']),
+           beta_phi_thin, beta_cov_thin, beta_bi, beta_Fe, fit['r2'], fit['loocv']),
         fontsize=7.0)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_fit_final.png")
@@ -5722,6 +5740,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
         wr.writerow(['beta_phi_thin (g_thin*log(phi_AM))', round(beta_phi_thin, 4)])
         wr.writerow(['beta_cov_thin (g_thin*log(cov_AM_P))', round(beta_cov_thin, 4)])
         wr.writerow(['beta_bi (Stage 19: p(1-p)*log(phi_AM) — bimodal packing)', round(beta_bi, 4)])
+        wr.writerow(['beta_Fe (Stage 20: log(f_intact_AM, force-based) — fracture-aware Holm)', round(beta_Fe, 4)])
         wr.writerow(['p_tau', round(p_tau, 4)])
         wr.writerow(['q_tau (lnτ)', round(q_tau, 4)])
         wr.writerow(['r_tau (ln²τ)', round(r_tau, 4)])
@@ -5826,7 +5845,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 19 form)')
+    ax.set_ylabel('σ_e predicted (Stage 20 form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
         f"σ_electronic Stage 16 outliers (endpoint-NCM)  (n={arr['n']}, "
@@ -5906,7 +5925,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 19 (bimodal p(1-p) coupling)",
+    "title": "σ_electronic → Stage 20 (fracture-aware Holm)",
     "description": "Stage 16 σ_electronic 생산식 (endpoint-separate NCM) (φ_AM⁴ 잠금, 8 live-fit OLS):\n"
                    "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p · √A_AM-AM · (T/d_AM)^β_T\n"
                    "      · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ).\n"
@@ -5920,7 +5939,7 @@ PLOT_REGISTRY["electronic_fit_final"] = {
 PLOT_REGISTRY["electronic_outliers_final"] = {
     "func": plot_electronic_outliers_final,
     "file": "electronic_outliers_final.png",
-    "title": "σ_electronic Stage 19 — outlier 진단",
+    "title": "σ_electronic Stage 20 — outlier 진단",
     "description": "Stage 16 form (a=4 + endpoint-NCM + φ_AM·logCN) 의 worst-fit "
                    "케이스 (>±20%) 빨강 + 이름 강조, "
                    "audit-trail 제외 케이스는 ✗ 마크.\n"
@@ -6009,7 +6028,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', arr['names'], None)
     x_labels = arr['names']
-    title = ("σ_electronic Stage 19 factor decomposition (ref: %s)  "
+    title = ("σ_electronic Stage 20 factor decomposition (ref: %s)  "
              "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f]  "
              "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]"
              % (x_labels[ref][:28] if ref < len(x_labels) else 'ref',
@@ -6053,7 +6072,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_decomp_final"] = {
     "func": plot_electronic_decomp_final,
     "file": "electronic_decomp_final.png",
-    "title": "σ_electronic Stage 19 factor decomposition",
+    "title": "σ_electronic Stage 20 factor decomposition",
     "description": "Stage 16 production form 의 8 factor 를 stack 으로 분해:\n"
                    "  mix σ_S/σ_P · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · "
                    "(T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ).\n"
