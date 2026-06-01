@@ -114,13 +114,16 @@ def load_uma(device, task):
     return FAIRChemCalculator(predictor, task_name=task)
 
 
-def freeze_bottom_slab(atoms, n_slab, fraction=0.5):
-    """Freeze bottom `fraction` of slab atoms by z (FixAtoms)."""
+def freeze_slab_atoms(atoms, n_slab):
+    """Freeze ALL slab atoms (paper-standard adsorption convention).
+
+    For adsorbate-on-surface relax, freezing the whole slab eliminates the
+    'slab co-relax' artifact (the slab also rearranging, dragging the
+    molecule energy down to unphysical regions). Only molecule atoms move.
+    """
     from ase.constraints import FixAtoms
-    slab_z = atoms.positions[:n_slab, 2]
-    z_cut = np.sort(slab_z)[int(fraction * n_slab) - 1]
     mask = np.zeros(len(atoms), dtype=bool)
-    mask[:n_slab] = atoms.positions[:n_slab, 2] <= z_cut
+    mask[:n_slab] = True
     atoms.set_constraint(FixAtoms(mask=mask))
     return atoms, int(mask.sum())
 
@@ -186,7 +189,7 @@ def main():
 
     # E_slab_iso with same constraint as Phase B (bottom 50% frozen)
     slab_for_ref = slab.copy()
-    slab_for_ref, n_frozen = freeze_bottom_slab(slab_for_ref, n_slab, fraction=0.5)
+    slab_for_ref, n_frozen = freeze_slab_atoms(slab_for_ref, n_slab)
     slab_for_ref.calc = calc
     print(f"  slab freeze: {n_frozen}/{n_slab} atoms")
     # Note: for relax-consistent reference we should also relax the bare slab,
@@ -228,7 +231,7 @@ def main():
         print(f"\n--- Site {idx+1}/{args.top_k}: ({s['dx_frac']:.2f}, {s['dy_frac']:.2f}, {s['dz_A']:.1f}Å) rigid={s['E_bind_rigid']:.4f} ---")
         complex_atoms = place_molecule_at(slab, mol_orig.copy(), anchor,
                                            s["dx_frac"], s["dy_frac"], s["dz_A"])
-        complex_atoms, _ = freeze_bottom_slab(complex_atoms, n_slab, fraction=0.5)
+        complex_atoms, _ = freeze_slab_atoms(complex_atoms, n_slab)
         complex_atoms.calc = calc
 
         t0 = time.time()
