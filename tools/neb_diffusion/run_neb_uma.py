@@ -67,6 +67,10 @@ def main():
     ap.add_argument("--task", default="oc20")
     ap.add_argument("--climb_after", type=int, default=20,
                     help="enable climbing-image after this many steps (regular NEB first)")
+    ap.add_argument("--optimizer", default="lbfgs", choices=("lbfgs", "fire"),
+                    help="NEB optimizer. FIRE is slower but more stable for tricky "
+                         "paths where LBFGS diverges (e.g. bridge-to-bridge via "
+                         "on-top atom waypoint).")
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir); out_dir.mkdir(parents=True, exist_ok=True)
@@ -79,6 +83,7 @@ def main():
     from ase.io import read, write
     from ase.mep import NEB
     from ase.optimize import LBFGS, FIRE
+    Opt = LBFGS if args.optimizer == "lbfgs" else FIRE
 
     slab = read(args.slab)
     n_slab = len(slab)
@@ -150,7 +155,8 @@ def main():
 
     # === Phase 1: regular NEB ===
     print(f"\n=== NEB regular ({args.climb_after} steps) ===")
-    opt = LBFGS(neb, logfile=str(out_dir / "neb.log"))
+    opt = Opt(neb, logfile=str(out_dir / "neb.log"))
+    print(f"  Optimizer: {args.optimizer.upper()}")
     t0 = time.time()
     opt.run(fmax=max(args.fmax, 0.1), steps=args.climb_after)
     dt1 = time.time() - t0
