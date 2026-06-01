@@ -4598,9 +4598,27 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
                 fi_local.append(float(np.log(max(1.0 - float(frx)/100.0, 0.05))))
             else:
                 fi_local.append(0.0)
-    if len(idx) < 8:
-        print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<8)")
+    # Threshold lowered 8 → 5 (2026-05-29) to accommodate small batches
+    # (e.g. 2mAh) where many cases sit below the form's percolation
+    # threshold (phi < 0.19).  Below-threshold cases ARE shown on the
+    # actual-σ line (gray dots) — they just can't get a form prediction.
+    if len(idx) < 5:
+        print(f"  [SKIP] ionic_perconfig_physics: only {len(idx)} usable cases (<5)")
         return None
+    # ── Below-form-domain cases (phi_se < 0.19) — track their σ_ionic
+    # so they show up on the plot as the green network-solver line even
+    # though no form prediction can be made for them.
+    below_idx = []
+    for i, d in enumerate(data_list):
+        if i in idx: continue
+        sig = _stage_e_sigma(d)
+        if sig is None or sig <= 0: continue
+        phi = _get(d, 'phi_se')
+        # Only include if phi exists (separate from missing data) and
+        # below form domain — these are the 90:10-style cases the user
+        # wants visible to convey "이온전도도 거의 없음".
+        if phi and phi > 0 and phi <= PHI_C:
+            below_idx.append(i)
     gfit = _stage_e_global_fit()
     if gfit:
         # GLOBAL fit (full corpus) C5: 6-param augmented (P2 + Δcov + f_intact)
@@ -4645,6 +4663,15 @@ def plot_ionic_perconfig_physics(data_list, names, outdir):
                         label='±22% band (legacy)')
     ax.plot(x, net, 'D--', color='#2ecc71', markersize=max(ms-2, 3), linewidth=lw-0.5,
             alpha=0.75, label='Physics network solver (mS/cm)')
+    # Mark below-form-domain (phi_se < 0.19) cases with gray crosses on the
+    # actual line — visualizes that the form domain doesn't reach these,
+    # but the data point exists ("90:10 = 이온전도도 거의 없음" 직관).
+    if below_idx:
+        x_below = [x[i] for i in below_idx]
+        y_below = [net[i] for i in below_idx]
+        ax.scatter(x_below, y_below, marker='x', s=ms*6,
+                   color='#888', linewidths=1.5, zorder=4,
+                   label=f'phi_se<0.19 (form domain 밖, n={len(below_idx)})')
     _apply_style(ax, "σ_ionic (mS/cm)", names)
     ax.legend(fontsize=9, loc='upper left')
     ax.set_title("σ_ionic PHYSICS per-config — fixed form (SAT-blend φc) vs Physics solver\n"
