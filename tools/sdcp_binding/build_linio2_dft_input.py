@@ -74,6 +74,9 @@ def main():
     ap.add_argument("--ecutrho", type=float, default=480.0)
     ap.add_argument("--conv_thr", type=float, default=1e-6)
     ap.add_argument("--mixing_beta", type=float, default=0.1)
+    ap.add_argument("--mixing_mode", default="plain",
+                    choices=("plain", "local-TF", "TF"),
+                    help="QE mixing scheme; local-TF helps charge sloshing in oxides")
     ap.add_argument("--electron_maxstep", type=int, default=500)
     ap.add_argument("--nstep", type=int, default=30,
                     help="max ionic steps (30 = partial relax / collapse check)")
@@ -161,7 +164,7 @@ def main():
 &ELECTRONS
     conv_thr        = {args.conv_thr:.1e}
     mixing_beta     = {args.mixing_beta}
-    mixing_mode     = 'plain'
+    mixing_mode     = '{args.mixing_mode}'
     mixing_ndim     = 8
     electron_maxstep = {args.electron_maxstep}
     diagonalization = 'david'
