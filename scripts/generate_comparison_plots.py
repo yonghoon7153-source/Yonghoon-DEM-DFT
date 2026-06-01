@@ -2484,7 +2484,7 @@ _ELECTRONIC_GLOBAL_FIT_CACHE = None   # Stage 17: (coef[10], sigma_S, sigma_P, �
 
 
 def _electronic_global_fit():
-    """Walk webapp/results + webapp/archive ONCE, fit Stage 18 form on the
+    """Walk webapp/results + webapp/archive ONCE, fit Stage 19 form on the
     full corpus with proper name-based exclusion (_EXCLUDED_NAMES_EL), cache
     result globally.  Used by plot_electronic_sigma to overlay form prediction
     consistently across all group panels.
@@ -2613,7 +2613,7 @@ def plot_electronic_sigma(data_list, names, outdir):
         y_form = np.array(form_pred)
         ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
                 linewidth=lw, alpha=0.85,
-                label="σ_e Stage 18 form prediction (mS/cm)")
+                label="σ_e Stage 19 form prediction (mS/cm)")
     if x_perc_none:
         ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
                 label="No AM percolation")
@@ -2624,7 +2624,7 @@ def plot_electronic_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    title = ("Electronic Conductivity — Stage E target vs Stage 18 form prediction"
+    title = ("Electronic Conductivity — Stage E target vs Stage 19 form prediction"
              + fit_summary + "\n"
              "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM_mix·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ),  NCM_mix = NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p  "
              "(global fit, cross-panel consistent)")
@@ -5555,26 +5555,26 @@ def _electronic_form_arrays(data_list, names):
     d_AM = 2.0 * r_eff_a
     log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
     lt = np.log(tau_a)
-    # Stage 16 + 18: NCM moved into X (live-fit r_AM exponents).
-    # Keep log_ncm computed for back-compat (decomp plot uses it as
-    # 'reference NCM with β=1.5 anchored exponent' to show what Stage 18
-    # 's data-driven fit DIFFERS from).
+    # Stage 16 + 19: NCM RESTORED to log_offset (Stage 18 attempt to make
+    # it live-fit caused collinearity with σ_S/σ_P).  Trevisanello β=1.5
+    # fixed exponent is used.
     ncm_S = 1.0 / (1.0 + np.power(np.maximum(ras_a, 0.05) / 2.0, 1.5))
     ncm_P = 1.0 / (1.0 + np.power(np.maximum(rap_a, 0.05) / 2.0, 1.5))
     log_ncm_S = np.log(np.maximum(ncm_S, 1e-6))
     log_ncm_P = np.log(np.maximum(ncm_P, 1e-6))
-    log_ncm = (1.0 - p_a) * log_ncm_S + p_a * log_ncm_P     # Stage 16 (reference only)
+    log_ncm = (1.0 - p_a) * log_ncm_S + p_a * log_ncm_P     # Stage 16
     log_holm = 0.5 * np.log(np.maximum(am_area_a, 1e-12))
     log_phi4 = 4.0 * np.log(phi_a)
-    # Stage 18: log_offset no longer includes log_ncm (NCM is now LIVE-fit
-    # via β_rS·(1-p)·log(r_AM_S) + β_rP·p·log(r_AM_P) in X).
-    log_offset = log_holm + log_phi4
+    log_offset = log_ncm + log_holm + log_phi4     # NCM included (Stage 17/19)
 
     # Stage 15: 8th column = φ_AM × log(am_am_cn)  (saturation correction)
     phi_logcn = phi_a * np.log(np.maximum(cn_a, 1e-3))
 
     # Stage 17: thin-region 2D crossover + interface correction
     #   g_thin(T/d) = sigmoid(-5·(T/d - 8))  → 1 at T/d→0, 0 at T/d>>8
+    # Two new live-fit terms gated to thin regime:
+    #   β_phi_thin · g_thin · log(φ_AM)     ← 3D→2D percolation crossover
+    #   β_cov_thin · g_thin · log(cov_AM_P) ← thin-film interface emphasis
     Td_a = T_a / (2.0 * r_eff_a)
     g_thin = 1.0 / (1.0 + np.exp(5.0 * (Td_a - 8.0)))
     log_phi_AM = np.log(np.maximum(phi_a, 0.01))
@@ -5582,19 +5582,19 @@ def _electronic_form_arrays(data_list, names):
     thin_phi_term = g_thin * log_phi_AM       # 9th column (Stage 17)
     thin_cov_term = g_thin * log_cov_AMP      # 10th column (Stage 17)
 
-    # Stage 18 (2026-06-01): r_AM data-driven exponent — replace fixed
-    # NCM(r) = 1/(1+(r/2)^1.5) with separately-fitted r_AM_S and r_AM_P
-    # log-dependence.  Audit showed r_AM_S ρ=-0.40 STRONG residual signal,
-    # meaning Trevisanello's β=1.5 doesn't fully capture the r_AM_S effect.
-    # The (1-p)·log(r_AM_S) and p·log(r_AM_P) terms let data choose the
-    # effective NCM exponent per endpoint.
-    log_rAM_S = np.log(np.maximum(ras_a, 0.05))
-    log_rAM_P = np.log(np.maximum(rap_a, 0.05))
-    rS_term = (1.0 - p_a) * log_rAM_S          # 11th column (β_rS)
-    rP_term = p_a * log_rAM_P                  # 12th column (β_rP)
-    # The fixed NCM offset is removed from log_offset so the new fitted
-    # terms (β_rS·(1-p)·log rS + β_rP·p·log rP) entirely replace it.
-    # (log_offset still has log_holm + log_phi4; NCM moves into X.)
+    # Stage 18 (reverted 2026-06-01): live-fit r_AM exponents created
+    # collinearity with σ_S/σ_P (both scaled by (1-p) and p).  OLS
+    # equalized σ_S=σ_P=12.55 — physically wrong.  Reverted to fixed
+    # Trevisanello NCM β=1.5 (in log_offset).  See git history for
+    # Stage 18 attempt.
+
+    # Stage 19 (2026-06-01): bimodal-packing coupling — captures the
+    # intermediate-composition peak (target σ peaks at 3:7, not at the
+    # endpoints).  p(1-p) is zero at p=0 or 1, max at p=0.5.  Coupling
+    # via × log(φ_AM) makes the boost largest where φ_AM is highest
+    # (typical near bimodal packing optimum).  ONE new param β_bi,
+    # orthogonal to σ_S/σ_P axis so no collinearity.
+    bi_coupling = p_a * (1.0 - p_a) * log_phi_AM    # 11th column (Stage 19)
 
     X_design = np.column_stack([
         (1.0 - p_a),       # log σ_S
@@ -5607,8 +5607,7 @@ def _electronic_form_arrays(data_list, names):
         phi_logcn,         # β_AC (Stage 15)
         thin_phi_term,     # β_phi_thin (Stage 17)
         thin_cov_term,     # β_cov_thin (Stage 17)
-        rS_term,           # β_rS (Stage 18: r_AM_S NCM exponent, live)
-        rP_term,           # β_rP (Stage 18: r_AM_P NCM exponent, live)
+        bi_coupling,       # β_bi (Stage 19: bimodal packing peak)
     ])
     y_resid = logsf - log_offset
     return {
@@ -5671,8 +5670,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
     beta_AC = float(coef[7])  # Stage 15: φ_AM × log(am_am_cn)
     beta_phi_thin = float(coef[8]) if len(coef) > 8 else 0.0  # Stage 17: g_thin × log φ_AM
     beta_cov_thin = float(coef[9]) if len(coef) > 9 else 0.0  # Stage 17: g_thin × log cov_AM_P
-    beta_rS = float(coef[10]) if len(coef) > 10 else 0.0       # Stage 18: (1-p)·log r_AM_S
-    beta_rP = float(coef[11]) if len(coef) > 11 else 0.0       # Stage 18: p·log r_AM_P
+    beta_bi = float(coef[10]) if len(coef) > 10 else 0.0      # Stage 19: p(1-p) × log φ_AM (bimodal peak)
 
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     excl = arr['excluded']
@@ -5698,14 +5696,14 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
     ax.set_ylabel('σ_e predicted (Stage 17 form, mS/cm)')
     ax.set_title(
-        "σ_electronic — Stage 18 production form (12 OLS params)  "
+        "σ_electronic — Stage 19 production form (11 OLS params, +bimodal coupling)  "
         "(n_fit=%d, excluded=%d)\n"
-        "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · r_AM_S^(β_rS·(1-p)) · r_AM_P^(β_rP·p) · √A · (T/d)^β_T · "
-        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP)) · C(τ)\n"
-        "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f  β_rS=%+.2f β_rP=%+.2f  β_φth=%+.2f β_covth=%+.2f]  "
+        "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM_S^(1-p)·NCM_P^p · √A · (T/d)^β_T · "
+        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP) + β_bi·p(1-p)·logφ) · C(τ)\n"
+        "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f β_φth=%+.2f β_covth=%+.2f β_bi=%+.2f]  "
         "R²=%.3f LOOCV=%.3f"
         % (n_fit, int(excl.sum()), sigma_S, sigma_P, beta_T, beta_v, beta_AC,
-           beta_rS, beta_rP, beta_phi_thin, beta_cov_thin, fit['r2'], fit['loocv']),
+           beta_phi_thin, beta_cov_thin, beta_bi, fit['r2'], fit['loocv']),
         fontsize=7.0)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_fit_final.png")
@@ -5714,7 +5712,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
     with open(os.path.join(outdir, "electronic_fit_final.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['# σ_electronic Stage 18 production form (a=4, endpoint-NCM, φ_AM·logCN, thin-gates)'])
+        wr.writerow(['# σ_electronic Stage 19 production form (a=4, endpoint-NCM, φ_AM·logCN, thin-gates)'])
         wr.writerow(['param', 'value'])
         wr.writerow(['sigma_S_mScm', round(sigma_S, 3)])
         wr.writerow(['sigma_P_mScm', round(sigma_P, 3)])
@@ -5723,9 +5721,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
         wr.writerow(['beta_AC (phi_AM*log(am_am_cn))', round(beta_AC, 4)])
         wr.writerow(['beta_phi_thin (g_thin*log(phi_AM))', round(beta_phi_thin, 4)])
         wr.writerow(['beta_cov_thin (g_thin*log(cov_AM_P))', round(beta_cov_thin, 4)])
-        wr.writerow(['beta_rS (Stage 18: (1-p)*log(r_AM_S))', round(beta_rS, 4)])
-        wr.writerow(['beta_rP (Stage 18: p*log(r_AM_P))', round(beta_rP, 4)])
-        wr.writerow(['Trevisanello reference: NCM(r) = 1/(1+(r/2)^1.5) → β_rS ≈ β_rP ≈ -1.5 if matches'])
+        wr.writerow(['beta_bi (Stage 19: p(1-p)*log(phi_AM) — bimodal packing)', round(beta_bi, 4)])
         wr.writerow(['p_tau', round(p_tau, 4)])
         wr.writerow(['q_tau (lnτ)', round(q_tau, 4)])
         wr.writerow(['r_tau (ln²τ)', round(r_tau, 4)])
@@ -5830,7 +5826,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 18 form)')
+    ax.set_ylabel('σ_e predicted (Stage 19 form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
         f"σ_electronic Stage 16 outliers (endpoint-NCM)  (n={arr['n']}, "
@@ -5910,7 +5906,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 18 (live r_AM exponents)",
+    "title": "σ_electronic → Stage 19 (bimodal p(1-p) coupling)",
     "description": "Stage 16 σ_electronic 생산식 (endpoint-separate NCM) (φ_AM⁴ 잠금, 8 live-fit OLS):\n"
                    "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p · √A_AM-AM · (T/d_AM)^β_T\n"
                    "      · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ).\n"
@@ -5924,7 +5920,7 @@ PLOT_REGISTRY["electronic_fit_final"] = {
 PLOT_REGISTRY["electronic_outliers_final"] = {
     "func": plot_electronic_outliers_final,
     "file": "electronic_outliers_final.png",
-    "title": "σ_electronic Stage 18 — outlier 진단",
+    "title": "σ_electronic Stage 19 — outlier 진단",
     "description": "Stage 16 form (a=4 + endpoint-NCM + φ_AM·logCN) 의 worst-fit "
                    "케이스 (>±20%) 빨강 + 이름 강조, "
                    "audit-trail 제외 케이스는 ✗ 마크.\n"
@@ -6013,7 +6009,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', arr['names'], None)
     x_labels = arr['names']
-    title = ("σ_electronic Stage 18 factor decomposition (ref: %s)  "
+    title = ("σ_electronic Stage 19 factor decomposition (ref: %s)  "
              "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f]  "
              "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]"
              % (x_labels[ref][:28] if ref < len(x_labels) else 'ref',
@@ -6057,7 +6053,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_decomp_final"] = {
     "func": plot_electronic_decomp_final,
     "file": "electronic_decomp_final.png",
-    "title": "σ_electronic Stage 18 factor decomposition",
+    "title": "σ_electronic Stage 19 factor decomposition",
     "description": "Stage 16 production form 의 8 factor 를 stack 으로 분해:\n"
                    "  mix σ_S/σ_P · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · "
                    "(T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ).\n"
