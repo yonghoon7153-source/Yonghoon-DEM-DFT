@@ -60,11 +60,23 @@ doped/neutral 둘 다 같은 workflow → 비교.
 - [x] Grid scan 실행 (doped) — best E_bind = **−4.75 eV**
 - [x] Grid scan 실행 (neutral) — best E_bind = **−2.98 eV**
 - [x] Heatmap 시각화 (compare + 각각 z-profile)
-- [ ] Phase B (top-K local relax)
-- [ ] Phase C (orientation sweep at best site)
-- [ ] Phase A.2 (fine grid around best site)
-- [ ] DFT slab relax 옵션 B (mag±0.3, mixing local-TF, beta 0.3) — 진행 중
+- [x] Phase C (orientation sweep at best): doped 변화 X (θ=0° 이미 best), neutral θ=330°→ −3.02 eV
+- [x] Phase B (top-K local relax, whole-slab frozen): doped −9~−12 eV (인서션, fmax 미수렴),
+      neutral −3.65 eV (잘 수렴, fmax 0.1)
+- [ ] Phase B 정밀화 (max_steps 200, doped fmax 수렴 확인) — TODO
+- [ ] DFT slab relax 옵션 B (mag±0.3, mixing local-TF, beta 0.3)
 - [ ] DFT 검증 (best site complex single-point at QE PBE+D3)
+
+### Phase B/C 결과
+
+| | rigid | Phase C best θ | Phase B best | Phase B dz | fmax |
+|---|---|---|---|---|---|
+| **doped** | −4.75 | −4.75 (θ=0°) | **−12.22 eV** | 2.0 → **0.98 Å** | 5.6 (미수렴) |
+| **neutral** | −2.98 | −3.02 (θ=330°) | **−3.67 eV** | 2.5 → 2.30 Å | 0.10 (수렴 ✓) |
+| Δ (doped 우위) | −1.77 | −1.73 | **−8.55 eV** | | |
+
+**doped는 chemisorption-deep** (sulfonate가 표면 atom과 직접 결합), 
+**neutral은 physisorption** (H가 SO3 옆 차지 → 슬랩 2.3 Å 위 유지). Phase B 정성 결론 robust.
 
 ## Rigid scan 결과 요약 (Phase A, oc20 task)
 
