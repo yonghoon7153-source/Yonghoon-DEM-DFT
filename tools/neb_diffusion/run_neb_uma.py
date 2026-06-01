@@ -55,6 +55,11 @@ def main():
                     help="final Li adatom position 'x,y,z' (Å)")
     ap.add_argument("--out_dir", required=True)
     ap.add_argument("--n_images", type=int, default=7)
+    ap.add_argument("--waypoint", default=None,
+                    help="optional intermediate adatom position 'x,y,z' (Å). "
+                         "Builds 2-segment NEB: init→waypoint→final. Useful for "
+                         "bridge→bridge hops where the TS is forced through an "
+                         "on-top atom and linear IDPP cannot find it.")
     ap.add_argument("--fmax", type=float, default=0.05)
     ap.add_argument("--max_steps", type=int, default=200)
     ap.add_argument("--freeze_fraction", type=float, default=0.5)
@@ -105,12 +110,35 @@ def main():
     init = read(out_dir / "neb_init.xyz")
     final = read(out_dir / "neb_final.xyz")
 
-    # Build NEB images via linear interpolation, then IDPP-improve
-    images = [init.copy()] + \
-             [init.copy() for _ in range(args.n_images - 2)] + \
-             [final.copy()]
-    neb = NEB(images, climb=False, allow_shared_calculator=True)
-    neb.interpolate(method="idpp", mic=True)
+    # Build NEB images via linear interpolation, then IDPP-improve.
+    # If --waypoint is given, build two segments: init→waypoint and waypoint→final.
+    if args.waypoint is not None:
+        wp = np.array([float(x) for x in args.waypoint.split(",")])
+        print(f"\nUsing waypoint at {wp} — building 2-segment NEB")
+        # Split N images between two segments (rounding)
+        n_left = args.n_images // 2
+        n_right = args.n_images - n_left - 1  # waypoint counts once
+        # waypoint as an image
+        wp_atoms = init.copy()
+        wp_atoms.positions[-1] = wp  # adatom is last atom
+        # Build left segment via IDPP
+        from ase.mep import NEB as _NEB
+        left = [init.copy()] + [init.copy() for _ in range(n_left - 1)] + [wp_atoms.copy()]
+        _NEB(left, allow_shared_calculator=True).interpolate(method="idpp", mic=True)
+        right = [wp_atoms.copy()] + [wp_atoms.copy() for _ in range(n_right - 1)] + [final.copy()]
+        _NEB(right, allow_shared_calculator=True).interpolate(method="idpp", mic=True)
+        # Stitch: left (without duplicate waypoint at end) + right
+        images = left[:-1] + right
+        print(f"  Built {len(images)} images: left {n_left+1} + right {n_right} ")
+        neb = NEB(images, climb=False, allow_shared_calculator=True,
+                  method="improvedtangent")
+    else:
+        images = [init.copy()] + \
+                 [init.copy() for _ in range(args.n_images - 2)] + \
+                 [final.copy()]
+        neb = NEB(images, climb=False, allow_shared_calculator=True,
+                  method="improvedtangent")
+        neb.interpolate(method="idpp", mic=True)
 
     # Attach calc + freeze
     for img in images:
