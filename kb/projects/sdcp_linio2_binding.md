@@ -52,13 +52,51 @@ doped/neutral 둘 다 같은 workflow → 비교.
 ## Status checkpoint
 
 - [x] SDCP final TZVP-opt 구조 식별 (Windows local)
-- [x] gabia upload (`/data/work/runs/sdcp_linio2_binding/inputs/{doped,neutral}/`)
-- [ ] LiNiO₂ (104) slab build (UMA-relaxed)
-- [ ] `scan_binding.py` 작성
-- [ ] Grid scan 실행 (doped)
-- [ ] Grid scan 실행 (neutral)
-- [ ] Analysis + heatmap
-- [ ] (선택) DFT 검증
+- [x] gabia upload (`/data/work/runs/sdcp_linio2_binding/inputs/{sdcp_doped,sdcp_neutral}/`)
+- [x] LiNiO₂ (104) slab build (4×4×4 layer, c=25 Å, 96 atoms, γ=71.6° oblique)
+- [x] UMA-omat slab relax 시도 → **collapse** (omat이 polar magnetic surface 약함)
+- [x] `scan_binding_rigid.py` 작성 + cell-c expand fix + `merge_mole=False` fix
+- [x] **task=oc20**로 rigid scan 정상화 (omat E_slab +2167 → oc20 −173.7 eV)
+- [x] Grid scan 실행 (doped) — best E_bind = **−4.75 eV**
+- [x] Grid scan 실행 (neutral) — best E_bind = **−2.98 eV**
+- [x] Heatmap 시각화 (compare + 각각 z-profile)
+- [ ] Phase B (top-K local relax)
+- [ ] Phase C (orientation sweep at best site)
+- [ ] Phase A.2 (fine grid around best site)
+- [ ] DFT slab relax 옵션 B (mag±0.3, mixing local-TF, beta 0.3) — 진행 중
+- [ ] DFT 검증 (best site complex single-point at QE PBE+D3)
+
+## Rigid scan 결과 요약 (Phase A, oc20 task)
+
+| | doped (−SO₃⁻) | neutral (−SO₃H) | Δ |
+|---|---|---|---|
+| **best E_bind** | **−4.75 eV** | **−2.98 eV** | **−1.77 eV** |
+| E_complex | −366.53 eV | −369.88 eV | |
+| E_slab_iso | −173.67 eV | −173.67 eV | 0 (참조 일치 ✓) |
+| E_SDCP_iso | −188.11 eV | −193.23 eV | +5.12 (anion 덜 안정 정상) |
+| best (dx, dy, dz) | (0.30, 0.10, **2.0 Å**) | (0.10, 0.10, **2.5 Å**) | |
+| nearest sulfonate O→slab gap | **0.68 Å** | 1.28 Å | |
+| median E_bind | −1.54 | −1.50 | ≈ 0 |
+| fraction < −1 eV | 94.2% | 86.2% | +8% |
+| 결합 종류 (구조 분석) | **chemisorption** (직접 O–surface) | physisorption + 약한 H 효과 |
+| Z-profile | monotonic 감소 (no barrier) | well + slight wall at dz=2.0 |
+| Heatmap pattern | atomic-resolution checkerboard | smooth dy stripes |
+
+**결론 (Phase A 시점)**: 자기-도핑된 sulfonate(−SO₃⁻)가 LiNiO₂(104)에 **1.77 eV 더 강하게**, 그리고 **0.5 Å 더 가까이 anchoring**. 표면 Ni/Li site와 직접 화학결합 vs neutral의 약한 dipole 결합. **paper-grade 1차 evidence**.
+
+Caveats:
+- 단일 orientation (sulfonate-down) — Phase C로 rotation 검증 필요
+- Rigid (no relax) — Phase B에서 ~0.5-1 eV 추가 안정화 예상
+- UMA-oc20 MLIP — DFT 검증 필요
+- Grid step ~1.2 Å (lateral) → atomic-level site preference 일부 alias
+
+산출물 (gabia):
+```
+/data/work/runs/sdcp_linio2_binding/outputs/sdcp_doped/{scan_rigid_doped.json, best_site_doped.xyz, scan.log}
+/data/work/runs/sdcp_linio2_binding/outputs/sdcp_neutral/{scan_rigid_neutral.json, best_site_neutral.xyz, scan.log}
+/data/work/runs/sdcp_linio2_binding/outputs/figs/{heatmap_doped.png, heatmap_neutral.png, heatmap_compare.png}
+```
+로컬 시각화: `D:\QE\6. orca_sdcp\{figs/, best_doped_oc20.xyz, best_neutral_oc20.xyz}`
 
 ## 다른 트랙과의 충돌
 
