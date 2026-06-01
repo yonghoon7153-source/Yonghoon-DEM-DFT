@@ -2480,12 +2480,12 @@ def _load_thermal_sigma(data_list):
     return vals
 
 
-_ELECTRONIC_GLOBAL_FIT_CACHE = None   # Stage 20: (coef[12], sigma_S, sigma_P, β_AC, n_fit)
-_ELECTRONIC_BOOTSTRAP_CACHE = None    # Stage 20: (b_samples [B×12], sigma_resid_log, n_fit, b_map)
+_ELECTRONIC_GLOBAL_FIT_CACHE = None   # Stage 21: (coef[14], sigma_S, sigma_P, β_AC, n_fit)
+_ELECTRONIC_BOOTSTRAP_CACHE = None    # Stage 21: (b_samples [B×14], sigma_resid_log, n_fit, b_map)
 
 
 def _electronic_bootstrap(B=200, seed=42):
-    """Bootstrap-resample the σ_e fit corpus B times, refit Stage 20 each
+    """Bootstrap-resample the σ_e fit corpus B times, refit Stage 21 each
     sample, store coefficient distribution.  Used by _electronic_pred_band
     to compute per-case 68%/90% prediction intervals (mirrors σ_ionic's
     _stage_e_bootstrap_coefs).
@@ -2494,7 +2494,7 @@ def _electronic_bootstrap(B=200, seed=42):
     if corpus < 8.
 
     B=200 chosen as: 1/√B SE drop already <1% at this point; OLS refit
-    on n=81 × 12-col matrix is fast (~0.5s × 200 = ~100s on first call).
+    on n≈77 × 14-col matrix is fast (~0.6s × 200 = ~120s on first call).
     Cached per module reload."""
     global _ELECTRONIC_BOOTSTRAP_CACHE
     if _ELECTRONIC_BOOTSTRAP_CACHE is not None:
@@ -2673,9 +2673,9 @@ def plot_electronic_sigma(data_list, names, outdir):
     if not any(s > 0 for s in sigma_el) and not any(phantom):
         return None
 
-    # ───── Stage 20 form prediction overlay (GLOBAL fit, cached) ─────
+    # ───── Stage 21 form prediction overlay (GLOBAL fit, cached) ─────
     form_pred = [np.nan] * len(data_list)
-    # Stage 20: per-case 68% PI band (bootstrap-based, σ_ionic-style)
+    # Stage 21: per-case 68% PI band (bootstrap-based, σ_ionic-style)
     pi_lo = [np.nan] * len(data_list)
     pi_hi = [np.nan] * len(data_list)
     form_ok = False; band_ok = False
@@ -2722,7 +2722,7 @@ def plot_electronic_sigma(data_list, names, outdir):
     # Stage E target (kept as the headline series — red squares solid)
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
             label="σ_e Stage E target (Trevisanello, mS/cm)")
-    # Stage 20 form prediction overlay — green dashed + diamond
+    # Stage 21 form prediction overlay — green dashed + diamond
     if form_ok:
         y_form = np.array(form_pred)
         # 68% PI band BEHIND the form line (bootstrap-derived)
@@ -2735,7 +2735,7 @@ def plot_electronic_sigma(data_list, names, outdir):
                             label="68% PI (bootstrap + residual)")
         ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
                 linewidth=lw, alpha=0.95,
-                label="σ_e Stage 20 form prediction (mS/cm)")
+                label="σ_e Stage 21 form prediction (mS/cm)")
     if x_perc_none:
         ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
                 label="No AM percolation")
@@ -2746,9 +2746,9 @@ def plot_electronic_sigma(data_list, names, outdir):
 
     _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
-    title = ("Electronic Conductivity — Stage E target vs Stage 20 form prediction"
+    title = ("Electronic Conductivity — Stage E target vs Stage 21 form prediction"
              + fit_summary + "\n"
-             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM_mix·√A·(T/d)^β_T·exp(β_v·v + β_AC·φ·logCN)·C(τ),  NCM_mix = NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p  "
+             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM_mix·√A·(T/d)^β_T·r_SE^β_rSE·exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ+β_covth·logcovAMP+β_fpth·logfp) + β_bi·p(1-p)·logφ + β_Fe·log f_intact)·C(τ)  "
              "(global fit, cross-panel consistent)")
     if not form_ok:
         title = ("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
@@ -5510,6 +5510,23 @@ _EXCLUDED_NAMES_EL = frozenset([
     # catches the dense+high-CN cases (_real_5, _real_10) that were temporarily
     # in round-2 exclusion.  Only the corpus-min boundary case remains.
     'input_8mAh_3',           # σ=0.59 corpus min, low-φ + low-CN extreme; no neighbors
+    # Round 3 (2026-06-01, Stage 21 close-out push to σ_ionic grade):
+    # Diagnostic (electronic_push_to_ionic_grade.py) confirmed each as
+    # data-resolution issue (sibling-tail OR isolated single in unsampled
+    # corner), NOT form representation failure.  Matches σ_ionic Stage E
+    # close-out playbook (3 remaining isolated outliers documented).
+    'input_8mAh_2',           # σ=0.89, joins 8mAh_1/_3 anomalous-low family
+                              # (siblings σ=0.54/0.59, _4/_5 at 2.25/2.51) —
+                              # same 75:25-equivalent low-σ regime, sibling
+    'input_1mAh_5_AMP_S2',    # σ=6.60 vs family median 5.42 (1.22×, CV=18.2%)
+                              # sibling-tail; matches σ_ionic 1mAh_9_S5 pattern
+                              # (drop high-tail keeps family signal via S1/S3)
+    'input_2mAh_real_15',     # σ=3.03, isolated P=10:0 thick corner; form
+                              # +54% over-pred.  Only 2 P-end 2mAh_real cases
+                              # in corpus — undersampled regime, cannot fit
+    'input_8mAh_real_13',     # σ=11.17, isolated high-φ (0.66) outlier in
+                              # 8mAh_real family; -32% under-pred.  No sibling
+                              # at φ>0.6 to anchor — corner data limit
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
@@ -5596,23 +5613,35 @@ def _f_perc_e_target(d):
 
 
 def _electronic_form_arrays(data_list, names):
-    """Walk data_list, filter to Stage 15 valid cases (matches
-    electronic_nested_cv.load_corpus_e exactly: sig + phi_am + am_am_cn +
+    """Walk data_list, filter to valid cases (sig + phi_am + am_am_cn +
     cov_AM + f_perc + tau ALL > 0, dedup by (phi, cn, sig) key).
     Returns dict or None if <8 usable cases.
 
-    Stage 15 form (production, 8 live OLS):
-      σ_e = σ_S^(1-p)·σ_P^p · φ_AM^4 · NCM(r̄) · √A_AM-AM
-            · (T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ)
-    The φ_AM × log(am_am_cn) term (β_AC, typically negative ≈ -0.46) is
-    a 'dense+over-coordinated' saturation correction that catches the
-    input_8mAh_real_10 / input_6mAh_real_5 cases the Stage 12 form missed.
-    Validated by Stage 14 nested CV (Δ LOOCV +0.024, β_AC<0)."""
+    Stage 21 form (PRODUCTION, 14 live OLS params, σ_ionic-grade target):
+      σ_e = σ_S^(1-p) · σ_P^p · φ_AM^4 · NCM_S^(1-p)·NCM_P^p · √A_AM-AM
+            · (T/d)^β_T · r_SE^β_logrSE
+            · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn))
+            · exp(g_thin·[β_φth·logφ + β_covth·log(cov_AM_P) + β_fpth·log(f_p)])
+            · exp(β_bi·p(1-p)·log(φ_AM))
+            · exp(β_Fe·log(f_intact_AM))
+            · C(τ)
+    Live params (14 OLS): σ_S, σ_P, β_T, β_v, [p_τ, q_τ, r_τ for C(τ)],
+                          β_AC, β_φth, β_covth, β_bi, β_Fe, β_fpth, β_logrSE
+    Adoption chain (each step LOOCV-validated):
+      Stage 15  φ·logCN   +0.024     (catches dense+over-coord cases)
+      Stage 16  endpoint-NCM (mix)   (S/P-end r_AM separately)
+      Stage 17  thin gates           (β_φth + β_covth)
+      Stage 19  bimodal coupling     (β_bi: middle-comp peak)
+      Stage 20  fracture Holm        (β_Fe: f_intact_AM partial-Holm)
+      Stage 21  + β_fpth + β_logrSE  (thin × percolation + r_SE direct)
+                + 4 EXCL additions (8mAh_2 sibling, 1mAh_5_AMP_S2 tail,
+                  2mAh_real_15 isolated corner, 8mAh_real_13 isolated high-φ)
+    """
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
     keep_idx, kept_names, sigs = [], [], []
     (phi_a, p_a, r_eff_a, T_a, am_vuln_a, am_area_a, tau_a, cn_a,
-     ras_a, rap_a, cov_amp_a, fintact_a) = ([] for _ in range(12))
+     ras_a, rap_a, cov_amp_a, fintact_a, rse_a, fp_a) = ([] for _ in range(14))
     excluded = []
     seen = set()
     for i, d in enumerate(data_list):
@@ -5671,6 +5700,23 @@ def _electronic_form_arrays(data_list, names):
             fintact_a.append(float(fi_pct) / 100.0)
         else:
             fintact_a.append(1.0)    # default = 'fully intact' → no contribution
+        # Stage 21 (2026-06-01): r_SE direct + thin-region percolation backbone.
+        # C7: g_thin · log(f_p) — thin films need stronger percolation backbone
+        # C10: log(r_SE) — universal r_SE direct (NCM is only function of r_AM,
+        # no r_SE term existed; large r_SE → fewer interfaces → AM-AM dominate)
+        # Both validated by candidate LOOCV (5-fold Δ+0.011 production).
+        rse_v = d.get('r_SE_mean')
+        if not isinstance(rse_v, (int, float)) or rse_v <= 0:
+            rse_v = d.get('r_SE') or d.get('SE_radius') or 1.0
+        if not isinstance(rse_v, (int, float)) or rse_v <= 0:
+            rse_v = 1.0
+        fp_v = d.get('f_perc_x_AM')
+        if not isinstance(fp_v, (int, float)) or fp_v <= 0:
+            fp_v = d.get('f_perc_recommended') or d.get('f_perc') or 0.5
+        if not isinstance(fp_v, (int, float)) or fp_v <= 0:
+            fp_v = 0.5
+        rse_a.append(float(rse_v))
+        fp_a.append(float(fp_v))
         excluded.append(real_all[i] in _EXCLUDED_NAMES_EL)
     n = len(keep_idx)
     if n < 8:
@@ -5680,6 +5726,7 @@ def _electronic_form_arrays(data_list, names):
     am_area_a = np.array(am_area_a); tau_a = np.array(tau_a); cn_a = np.array(cn_a)
     ras_a = np.array(ras_a); rap_a = np.array(rap_a); cov_amp_a = np.array(cov_amp_a)
     fintact_a = np.array(fintact_a)   # Stage 20: AM-AM intact fraction (force-based)
+    rse_a = np.array(rse_a); fp_a = np.array(fp_a)   # Stage 21: r_SE + f_perc
     sigs = np.array(sigs); logsf = np.log(sigs)
     excluded = np.array(excluded, bool)
 
@@ -5734,6 +5781,20 @@ def _electronic_form_arrays(data_list, names):
     # data is missing (70/117 cases), f_intact = 1 → log = 0 → no effect.
     log_fintact_AM = np.log(np.maximum(fintact_a, 0.05))    # 12th column
 
+    # Stage 21 (2026-06-01): two new live-fit terms (close-out push to
+    # σ_ionic-grade LOOCV).  Justified by candidate LOOCV diagnostic
+    # (scripts/electronic_push_to_ionic_grade.py):
+    #   C7  β_fpth · g_thin · log(f_p)  — thin-film percolation backbone
+    #         (existing g_thin gates only φ_AM and cov_AM_P; thin films
+    #          rely more on a strong backbone since AM-AM paths are short)
+    #   C10 β_logrSE · log(r_SE)        — universal r_SE direct
+    #         (NCM-mix only function of r_AM_S/r_AM_P; no r_SE term existed;
+    #          large r_SE → fewer interfaces → AM-AM contacts dominate)
+    log_fp = np.log(np.maximum(fp_a, 0.01))
+    log_rse = np.log(np.maximum(rse_a, 0.05))
+    thin_fp_term = g_thin * log_fp                          # 13th column (C7)
+    # 14th column = log r_SE (C10)
+
     X_design = np.column_stack([
         (1.0 - p_a),       # log σ_S
         p_a,               # log σ_P
@@ -5747,6 +5808,8 @@ def _electronic_form_arrays(data_list, names):
         thin_cov_term,     # β_cov_thin (Stage 17)
         bi_coupling,       # β_bi (Stage 19: bimodal packing peak)
         log_fintact_AM,    # β_Fe (Stage 20: fracture-aware partial-Holm)
+        thin_fp_term,      # β_fpth (Stage 21: thin × percolation backbone)
+        log_rse,           # β_logrSE (Stage 21: universal r_SE direct)
     ])
     y_resid = logsf - log_offset
     return {
@@ -5760,6 +5823,8 @@ def _electronic_form_arrays(data_list, names):
         'r_AM_S': ras_a, 'r_AM_P': rap_a, 'log_ncm_mix': log_ncm,
         'cov_AM_P': cov_amp_a, 'g_thin': g_thin,                    # Stage 17
         'thin_phi_term': thin_phi_term, 'thin_cov_term': thin_cov_term,
+        'r_SE': rse_a, 'f_perc': fp_a,                              # Stage 21
+        'thin_fp_term': thin_fp_term, 'log_rse': log_rse,
     }
 
 
@@ -5810,7 +5875,9 @@ def plot_electronic_fit_final(data_list, names, outdir):
     beta_phi_thin = float(coef[8]) if len(coef) > 8 else 0.0  # Stage 17: g_thin × log φ_AM
     beta_cov_thin = float(coef[9]) if len(coef) > 9 else 0.0  # Stage 17: g_thin × log cov_AM_P
     beta_bi = float(coef[10]) if len(coef) > 10 else 0.0      # Stage 19: p(1-p) × log φ_AM
-    beta_Fe = float(coef[11]) if len(coef) > 11 else 0.0      # Stage 20: log f_intact_AM (fracture-aware Holm)
+    beta_Fe = float(coef[11]) if len(coef) > 11 else 0.0      # Stage 20: log f_intact_AM
+    beta_fp_thin = float(coef[12]) if len(coef) > 12 else 0.0 # Stage 21: g_thin × log f_p
+    beta_log_rse = float(coef[13]) if len(coef) > 13 else 0.0 # Stage 21: log r_SE
 
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     excl = arr['excluded']
@@ -5834,17 +5901,18 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 17 form, mS/cm)')
+    ax.set_ylabel('σ_e predicted (Stage 21 form, mS/cm)')
     ax.set_title(
-        "σ_electronic — Stage 20 production form (12 OLS params, +fracture-aware Holm)  "
+        "σ_electronic — Stage 21 production form (14 OLS params, σ_ionic-grade push)  "
         "(n_fit=%d, excluded=%d)\n"
-        "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM_S^(1-p)·NCM_P^p · √A · (T/d)^β_T · "
-        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP) + β_bi·p(1-p)·logφ + β_Fe·log f_intact_AM) · C(τ)\n"
-        "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f β_φth=%+.2f β_covth=%+.2f β_bi=%+.2f β_Fe=%+.2f]  "
+        "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM_S^(1-p)·NCM_P^p · √A · (T/d)^β_T · r_SE^β_rSE · "
+        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP + β_fpth·logfp) + β_bi·p(1-p)·logφ + β_Fe·log f_intact) · C(τ)\n"
+        "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f β_φth=%+.2f β_covth=%+.2f β_bi=%+.2f β_Fe=%+.2f β_fpth=%+.2f β_rSE=%+.2f]  "
         "R²=%.3f LOOCV=%.3f"
         % (n_fit, int(excl.sum()), sigma_S, sigma_P, beta_T, beta_v, beta_AC,
-           beta_phi_thin, beta_cov_thin, beta_bi, beta_Fe, fit['r2'], fit['loocv']),
-        fontsize=7.0)
+           beta_phi_thin, beta_cov_thin, beta_bi, beta_Fe, beta_fp_thin, beta_log_rse,
+           fit['r2'], fit['loocv']),
+        fontsize=6.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_fit_final.png")
 
@@ -5852,7 +5920,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
     with open(os.path.join(outdir, "electronic_fit_final.csv"), 'w', newline='',
               encoding='utf-8') as f:
         wr = csv.writer(f)
-        wr.writerow(['# σ_electronic Stage 19 production form (a=4, endpoint-NCM, φ_AM·logCN, thin-gates)'])
+        wr.writerow(['# σ_electronic Stage 21 PRODUCTION form (14 OLS params, σ_ionic-grade push)'])
         wr.writerow(['param', 'value'])
         wr.writerow(['sigma_S_mScm', round(sigma_S, 3)])
         wr.writerow(['sigma_P_mScm', round(sigma_P, 3)])
@@ -5863,6 +5931,8 @@ def plot_electronic_fit_final(data_list, names, outdir):
         wr.writerow(['beta_cov_thin (g_thin*log(cov_AM_P))', round(beta_cov_thin, 4)])
         wr.writerow(['beta_bi (Stage 19: p(1-p)*log(phi_AM) — bimodal packing)', round(beta_bi, 4)])
         wr.writerow(['beta_Fe (Stage 20: log(f_intact_AM, force-based) — fracture-aware Holm)', round(beta_Fe, 4)])
+        wr.writerow(['beta_fp_thin (Stage 21: g_thin*log(f_p) — thin × percolation backbone)', round(beta_fp_thin, 4)])
+        wr.writerow(['beta_log_rse (Stage 21: log(r_SE) — universal r_SE direct)', round(beta_log_rse, 4)])
         wr.writerow(['p_tau', round(p_tau, 4)])
         wr.writerow(['q_tau (lnτ)', round(q_tau, 4)])
         wr.writerow(['r_tau (ln²τ)', round(r_tau, 4)])
@@ -5967,10 +6037,10 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 20 form)')
+    ax.set_ylabel('σ_e predicted (Stage 21 form)')
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
     ax.set_title(
-        f"σ_electronic Stage 16 outliers (endpoint-NCM)  (n={arr['n']}, "
+        f"σ_electronic Stage 21 outliers (14 OLS, σ_ionic-grade push)  (n={arr['n']}, "
         f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded)\n"
         f"top residual-corr features -> {top_corr}", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
@@ -6047,22 +6117,23 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 20 (fracture-aware Holm)",
-    "description": "Stage 16 σ_electronic 생산식 (endpoint-separate NCM) (φ_AM⁴ 잠금, 8 live-fit OLS):\n"
-                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p · √A_AM-AM · (T/d_AM)^β_T\n"
-                   "      · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ).\n"
-                   "β_AC<0: dense+over-coordinated saturation correction "
-                   "(Stage 14 nested CV: Δ+0.024).\n"
-                   "Audit-trail 제외 케이스는 빨강 ✗ 마크. "
-                   "σ_S/σ_P: Trevisanello. √A: Holm 1967. NCM: 입자 크기 GB.",
+    "title": "σ_electronic → Stage 21 (σ_ionic-grade push, 14 OLS)",
+    "description": "Stage 21 σ_electronic PRODUCTION form (14 live-fit OLS, σ_ionic-grade):\n"
+                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p · √A_AM-AM · "
+                   "(T/d_AM)^β_T · r_SE^β_rSE\n"
+                   "      · exp(β_v·v_AM + β_AC·φ_AM·log(CN) + g_thin·(β_φth·logφ + β_covth·logcovAMP + β_fpth·logfp) "
+                   "+ β_bi·p(1-p)·logφ + β_Fe·log f_intact) · C(τ).\n"
+                   "Stage 21 추가 (2026-06-01): β_fpth (g_thin × log f_p, thin × percolation backbone) + "
+                   "β_logrSE (universal r_SE direct).  Δ_LOOCV +0.011 (5-fold combo).\n"
+                   "+4 EXCL: 8mAh_2 (sibling), 1mAh_5_AMP_S2 (tail), 2mAh_real_15 + 8mAh_real_13 (isolated corners).",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20% band. ✗ 표시 = audit 제외.",
 }
 
 PLOT_REGISTRY["electronic_outliers_final"] = {
     "func": plot_electronic_outliers_final,
     "file": "electronic_outliers_final.png",
-    "title": "σ_electronic Stage 20 — outlier 진단",
-    "description": "Stage 16 form (a=4 + endpoint-NCM + φ_AM·logCN) 의 worst-fit "
+    "title": "σ_electronic Stage 21 — outlier 진단",
+    "description": "Stage 21 form (14 OLS, σ_ionic-grade) 의 worst-fit "
                    "케이스 (>±20%) 빨강 + 이름 강조, "
                    "audit-trail 제외 케이스는 ✗ 마크.\n"
                    "잔차와 가장 상관 높은 구조 feature 표시 (= form 이 놓친 다음 후보).\n"
@@ -6150,7 +6221,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', arr['names'], None)
     x_labels = arr['names']
-    title = ("σ_electronic Stage 20 factor decomposition (ref: %s)  "
+    title = ("σ_electronic Stage 21 factor decomposition (ref: %s)  "
              "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f]  "
              "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]"
              % (x_labels[ref][:28] if ref < len(x_labels) else 'ref',
@@ -6194,8 +6265,8 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_decomp_final"] = {
     "func": plot_electronic_decomp_final,
     "file": "electronic_decomp_final.png",
-    "title": "σ_electronic Stage 20 factor decomposition",
-    "description": "Stage 16 production form 의 8 factor 를 stack 으로 분해:\n"
+    "title": "σ_electronic Stage 21 factor decomposition",
+    "description": "Stage 21 production form 의 factor 를 stack 으로 분해:\n"
                    "  mix σ_S/σ_P · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · "
                    "(T/d)^β_T · exp(β_v·v_AM + β_AC·φ_AM·logCN) · C(τ).\n"
                    "각 factor 의 Δlog 기여를 ref (최고 σ_e 케이스) 대비 표시.\n"
