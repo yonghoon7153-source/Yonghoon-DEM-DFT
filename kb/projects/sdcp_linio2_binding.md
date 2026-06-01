@@ -67,24 +67,32 @@ doped/neutral 둘 다 같은 workflow → 비교.
 - [ ] DFT slab relax 옵션 B (mag±0.3, mixing local-TF, beta 0.3)
 - [ ] DFT 검증 (best site complex single-point at QE PBE+D3)
 
-### Phase B/C 결과 (max_steps=300, fmax=0.05 수렴)
+### Phase B/C 결과 (self-consistent: Phase B starts from Phase C's best θ)
 
 | | rigid | Phase C best θ | Phase B best | Phase B dz | fmax |
 |---|---|---|---|---|---|
 | **doped** | −4.75 | −4.75 (θ=0°) | **−18.17 eV** | 2.0 → **1.26 Å** | 0.040 ✓ |
-| **neutral** | −2.98 | −3.02 (θ=330°) | **−3.67 eV** | 2.5 → 2.30 Å | 0.10 ✓ |
-| Δ (doped 우위) | −1.77 | −1.73 | **−14.50 eV** | 1.04 Å | |
+| **neutral** | −2.98 | −3.02 (θ=330°) | **−6.33 eV** | 2.5 → **1.41 Å** | 0.046 ✓ |
+| Δ (doped 우위) | −1.77 | −1.73 | **−11.84 eV** | 0.15 Å | |
 
-doped Phase B: 4개 site가 모두 **−18.14 ± 0.04 eV, dz=1.26 Å**로 동일 minimum 수렴
-→ robust chemisorption basin. site 5만 다른 starting (dz=2.5)에서 −13.9 미수렴 (300 step에서 끊김, fmax 0.55).
+각 site 5개 모두 같은 minimum 수렴 → robust basin:
+- doped: −18.14 ± 0.04 eV at dz=1.26 Å (4 sites; site 5만 −13.9 fmax=0.55 미수렴)
+- neutral: −6.27 ± 0.07 eV at dz=1.43 ± 0.03 Å (5 sites 균일)
+
+**중요 관찰**: neutral Phase B는 starting orientation에 매우 민감:
+- θ=0° (이전, sub-optimal): −3.67 eV, dz=2.30 Å (얕은 minimum, H가 표면 접근 방해)
+- θ=330° (Phase C best, self-consistent): **−6.33 eV, dz=1.41 Å** (OH 옆 빠짐 → sulfonate 가라앉음)
+→ rotation-aware Phase B 필수. 더 많은 starting orientation 탐색하면 더 깊은 basin 발견 가능 (TODO?)
 
 해석:
-- doped (−SO₃⁻): sulfonate가 표면 Li-O bilayer 안으로 부분 **인서션**, anion이 표면 cation site 부분 점유. **deep chemisorption**.
-- neutral (−SO₃H): H가 SO₃ 옆 자리 점유 → 표면 2.30 Å 위에 머무름. **physisorption / van der Waals 영역**.
+- doped (−SO₃⁻): sulfonate가 표면 Li-O bilayer 안으로 부분 **insertion**, anion이 표면 cation site 부분 점유. **deep chemisorption** (−18 eV).
+- neutral (−SO₃H): θ 조정 후엔 **shallow chemisorption** (−6.3 eV, dz 1.4 Å). H가 sulfonate–슬랩 직접 접근은 막지만 옆으로 비키면 sulfonate가 표면 도달.
 
-→ **Self-doping이 LiNiO₂ 표면 anchoring을 14.5 eV 강화**. paper headline 수치.
+→ **Self-doping이 anchoring을 11.84 eV 강화 (paper headline 수치)**. 둘 다 chemisorb하지만 anion이 표면과 ionic + covalent 결합 더 깊게.
 
-⚠️ UMA-oc20 MLIP 예측. 절댓값은 DFT 검증 필수 (실제 결합에너지는 더 보수적일 가능성).
+⚠️ UMA-oc20 MLIP 예측. 절댓값은 DFT 검증 필수.
+- −18 eV (doped) 는 통상 가벼운 화학결합보다 큰 값. DFT에서 −5~−10 eV 정도로 보수적이 될 가능성.
+- 정성적 결론 (doped >> neutral, chemisorption character) 은 robust.
 
 ## Rigid scan 결과 요약 (Phase A, oc20 task)
 
