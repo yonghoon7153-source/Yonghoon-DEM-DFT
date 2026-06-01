@@ -225,11 +225,20 @@ def main():
     print(f"  (rigid scan was at θ=0°, E_bind={top_sites[0]['E_bind_rigid']:.4f} eV)")
 
     # === Phase B: local relax on top-K sites ===
-    print(f"\n=== Phase B: local relax on top-{args.top_k} sites ===")
+    # ★ Apply Phase C best orientation (θ) so Phase B starts from the most
+    # favorable rotation found above — self-consistent. For doped this is
+    # usually θ=0° (no-op); for neutral it's typically a nonzero θ.
+    best_theta = best_C["theta_deg"]
+    print(f"\n=== Phase B: local relax on top-{args.top_k} sites "
+          f"(starting orientation: θ={best_theta:.1f}° from Phase C) ===")
     phaseB_results = []
     for idx, s in enumerate(top_sites):
-        print(f"\n--- Site {idx+1}/{args.top_k}: ({s['dx_frac']:.2f}, {s['dy_frac']:.2f}, {s['dz_A']:.1f}Å) rigid={s['E_bind_rigid']:.4f} ---")
-        complex_atoms = place_molecule_at(slab, mol_orig.copy(), anchor,
+        print(f"\n--- Site {idx+1}/{args.top_k}: ({s['dx_frac']:.2f}, {s['dy_frac']:.2f}, {s['dz_A']:.1f}Å) "
+              f"rigid={s['E_bind_rigid']:.4f} θ={best_theta:.1f}° ---")
+        m = mol_orig.copy()
+        if abs(best_theta) > 1e-3:
+            m = rotate_around_z(m, anchor, best_theta)
+        complex_atoms = place_molecule_at(slab, m, anchor,
                                            s["dx_frac"], s["dy_frac"], s["dz_A"])
         complex_atoms, _ = freeze_slab_atoms(complex_atoms, n_slab)
         complex_atoms.calc = calc
@@ -249,6 +258,7 @@ def main():
 
         rec = {
             **s,
+            "start_theta_deg": float(best_theta),
             "E_complex_relax": E_relax,
             "E_bind_relax": E_bind_relax,
             "fmax_final": fmax_final,
