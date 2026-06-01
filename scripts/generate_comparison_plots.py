@@ -2480,7 +2480,107 @@ def _load_thermal_sigma(data_list):
     return vals
 
 
-_ELECTRONIC_GLOBAL_FIT_CACHE = None   # Stage 17: (coef[10], sigma_S, sigma_P, β_AC, n_fit)
+_ELECTRONIC_GLOBAL_FIT_CACHE = None   # Stage 20: (coef[12], sigma_S, sigma_P, β_AC, n_fit)
+_ELECTRONIC_BOOTSTRAP_CACHE = None    # Stage 20: (b_samples [B×12], sigma_resid_log, n_fit, b_map)
+
+
+def _electronic_bootstrap(B=200, seed=42):
+    """Bootstrap-resample the σ_e fit corpus B times, refit Stage 20 each
+    sample, store coefficient distribution.  Used by _electronic_pred_band
+    to compute per-case 68%/90% prediction intervals (mirrors σ_ionic's
+    _stage_e_bootstrap_coefs).
+
+    Returns (b_samples [B×k], sigma_residual_log, n_fit, b_map) or None
+    if corpus < 8.
+
+    B=200 chosen as: 1/√B SE drop already <1% at this point; OLS refit
+    on n=81 × 12-col matrix is fast (~0.5s × 200 = ~100s on first call).
+    Cached per module reload."""
+    global _ELECTRONIC_BOOTSTRAP_CACHE
+    if _ELECTRONIC_BOOTSTRAP_CACHE is not None:
+        return _ELECTRONIC_BOOTSTRAP_CACHE
+    from pathlib import Path as _P
+    # Walk corpus same way as _electronic_global_fit (skip nameless).
+    data_list = []; names = []; seen = set()
+    for base in ('webapp/archive', 'webapp/results'):
+        bp = _P(base)
+        if not bp.is_dir(): continue
+        for mp in bp.rglob('full_metrics.json'):
+            meta_p = mp.parent / 'meta.json'
+            cid = mp.parent.name
+            nm = cid
+            if meta_p.exists():
+                try:
+                    meta_name = json.load(open(meta_p)).get('name', '') or ''
+                    if meta_name: nm = meta_name
+                except Exception: pass
+            if nm == cid and not nm.startswith('input_'):
+                continue
+            if nm in seen: continue
+            seen.add(nm)
+            try: d = json.load(open(mp))
+            except Exception: continue
+            data_list.append(d); names.append(nm)
+    if len(data_list) < 8:
+        _ELECTRONIC_BOOTSTRAP_CACHE = None
+        return None
+    arr = _electronic_form_arrays(data_list, names)
+    if arr is None:
+        _ELECTRONIC_BOOTSTRAP_CACHE = None
+        return None
+    fit_mask = ~arr['excluded']
+    X_full = arr['X'][fit_mask]
+    y_full = arr['y_resid'][fit_mask]
+    logsf_full = arr['logsf'][fit_mask]
+    log_offset_full = arr['log_offset'][fit_mask]
+    n_fit = len(y_full)
+    k = X_full.shape[1]
+    # MAP fit + residual SE (aleatoric noise)
+    b_map, *_ = np.linalg.lstsq(X_full, y_full, rcond=None)
+    pred_log_map = X_full @ b_map + log_offset_full
+    resid = logsf_full - pred_log_map
+    sigma_residual = float(np.sqrt(np.sum(resid**2) / max(n_fit - k, 1)))
+    # Bootstrap resample
+    rng = np.random.default_rng(seed)
+    b_samples = np.empty((B, k))
+    for j in range(B):
+        idx = rng.integers(0, n_fit, n_fit)
+        Xb = X_full[idx]; yb = y_full[idx]
+        try:
+            bb, *_ = np.linalg.lstsq(Xb, yb, rcond=None)
+            b_samples[j] = bb
+        except Exception:
+            b_samples[j] = b_map
+    _ELECTRONIC_BOOTSTRAP_CACHE = (b_samples, sigma_residual, n_fit, b_map)
+    print(f"  [electronic_bootstrap] B={B}, n_fit={n_fit}, k={k}, "
+          f"σ_residual_log={sigma_residual:.4f} (aleatoric noise estimate)")
+    return _ELECTRONIC_BOOTSTRAP_CACHE
+
+
+def _electronic_pred_band(arr_disp, ci=0.68):
+    """Compute per-case prediction band (epistemic + aleatoric).
+    Returns (pred_median_sigma, lower_sigma, upper_sigma) arrays in mS/cm
+    space, or None if bootstrap unavailable.
+
+    ci=0.68 → ±1σ band (calibrated by both bootstrap coef spread AND
+    fit residual noise).  ci=0.90 → ±1.645σ band."""
+    boot = _electronic_bootstrap(B=200)
+    if boot is None:
+        return None
+    b_samples, sigma_residual, _n, _b_map = boot
+    X_disp = arr_disp['X']
+    log_offset_disp = arr_disp['log_offset']
+    B = b_samples.shape[0]
+    pred_log_b = np.empty((B, X_disp.shape[0]))
+    for j in range(B):
+        pred_log_b[j] = X_disp @ b_samples[j] + log_offset_disp
+    pred_log_median = np.median(pred_log_b, axis=0)
+    sigma_log_epi = np.std(pred_log_b, axis=0, ddof=1)
+    sigma_log_total = np.sqrt(sigma_log_epi**2 + sigma_residual**2)
+    z = 1.0 if ci == 0.68 else 1.645
+    return (np.exp(pred_log_median),
+            np.exp(np.maximum(pred_log_median - z*sigma_log_total, -10)),
+            np.exp(np.minimum(pred_log_median + z*sigma_log_total, 10)))
 
 
 def _electronic_global_fit():
@@ -2573,9 +2673,12 @@ def plot_electronic_sigma(data_list, names, outdir):
     if not any(s > 0 for s in sigma_el) and not any(phantom):
         return None
 
-    # ───── Stage 15 form prediction overlay (GLOBAL fit, cached) ─────
+    # ───── Stage 20 form prediction overlay (GLOBAL fit, cached) ─────
     form_pred = [np.nan] * len(data_list)
-    form_ok = False
+    # Stage 20: per-case 68% PI band (bootstrap-based, σ_ionic-style)
+    pi_lo = [np.nan] * len(data_list)
+    pi_hi = [np.nan] * len(data_list)
+    form_ok = False; band_ok = False
     fit_summary = ''
     try:
         global_fit = _electronic_global_fit()
@@ -2591,6 +2694,17 @@ def plot_electronic_sigma(data_list, names, outdir):
                     if idx < len(form_pred) and not phantom[idx]:
                         form_pred[idx] = float(pred_disp[k])
                 form_ok = True
+                # 68% PI band from bootstrap
+                band = _electronic_pred_band(arr_disp, ci=0.68)
+                if band is not None:
+                    pred_med, pred_lo, pred_hi = band
+                    pred_lo = np.minimum(pred_lo, _SIGMA_E_MAX)
+                    pred_hi = np.minimum(pred_hi, _SIGMA_E_MAX)
+                    for k, idx in enumerate(arr_disp['keep_idx']):
+                        if idx < len(pi_lo) and not phantom[idx]:
+                            pi_lo[idx] = float(pred_lo[k])
+                            pi_hi[idx] = float(pred_hi[k])
+                    band_ok = True
     except Exception as _e:
         print(f"  [plot_electronic_sigma] form overlay skipped: {_e}")
 
@@ -2608,11 +2722,19 @@ def plot_electronic_sigma(data_list, names, outdir):
     # Stage E target (kept as the headline series — red squares solid)
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
             label="σ_e Stage E target (Trevisanello, mS/cm)")
-    # Stage 15 form prediction overlay (NEW — green dashed + diamond)
+    # Stage 20 form prediction overlay — green dashed + diamond
     if form_ok:
         y_form = np.array(form_pred)
+        # 68% PI band BEHIND the form line (bootstrap-derived)
+        if band_ok:
+            lo = np.array(pi_lo); hi = np.array(pi_hi)
+            # Mask NaN segments so fill doesn't span across phantom/missing
+            valid = np.isfinite(lo) & np.isfinite(hi)
+            ax.fill_between(x, lo, hi, where=valid, color='#2e8b57',
+                            alpha=0.18, linewidth=0,
+                            label="68% PI (bootstrap + residual)")
         ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
-                linewidth=lw, alpha=0.85,
+                linewidth=lw, alpha=0.95,
                 label="σ_e Stage 20 form prediction (mS/cm)")
     if x_perc_none:
         ax.plot(x_perc_none, [0]*len(x_perc_none), 'x', color='gray', markersize=ms+2,
