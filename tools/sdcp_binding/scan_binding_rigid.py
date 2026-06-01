@@ -155,6 +155,21 @@ def main():
     print(f"  after orient: anchor at {mol.positions[anchor]}, "
           f"COM at {mol.positions.mean(axis=0)}")
 
+    # ★ Expand cell z so molecule never z-PBC-wraps into slab
+    # slab atoms occupy [0, z_top]; molecule above ranges (z_top+dz) to
+    # (z_top+dz+mol_height). With dz up to args.dz[1] (=6) and mol_height
+    # ~12 Å, need cell c >= z_top + 6 + 12 + vacuum_above (15 Å).
+    z_top = slab.positions[:, 2].max()
+    mol_z_extent = mol.positions[:, 2].max() - mol.positions[:, 2].min()
+    new_c = z_top + args.dz[1] + mol_z_extent + 15.0
+    if new_c > slab.cell.array[2, 2]:
+        old_c = slab.cell.array[2, 2]
+        new_cell = slab.cell.array.copy()
+        new_cell[2] = [0, 0, new_c]
+        slab.set_cell(new_cell, scale_atoms=False)
+        print(f"  ★ Expanded cell c: {old_c:.2f} → {new_c:.2f} Å "
+              f"(z_top={z_top:.2f}, dz_max={args.dz[1]}, mol_z={mol_z_extent:.2f}, vacuum=15)")
+
     # Setup grid
     dz_vals = np.arange(args.dz[0], args.dz[1] + 1e-6, args.dz[2])
     dx_vals = np.linspace(0.0, 1.0, args.nx, endpoint=False)
