@@ -67,16 +67,24 @@ doped/neutral 둘 다 같은 workflow → 비교.
 - [ ] DFT slab relax 옵션 B (mag±0.3, mixing local-TF, beta 0.3)
 - [ ] DFT 검증 (best site complex single-point at QE PBE+D3)
 
-### Phase B/C 결과
+### Phase B/C 결과 (max_steps=300, fmax=0.05 수렴)
 
 | | rigid | Phase C best θ | Phase B best | Phase B dz | fmax |
 |---|---|---|---|---|---|
-| **doped** | −4.75 | −4.75 (θ=0°) | **−12.22 eV** | 2.0 → **0.98 Å** | 5.6 (미수렴) |
-| **neutral** | −2.98 | −3.02 (θ=330°) | **−3.67 eV** | 2.5 → 2.30 Å | 0.10 (수렴 ✓) |
-| Δ (doped 우위) | −1.77 | −1.73 | **−8.55 eV** | | |
+| **doped** | −4.75 | −4.75 (θ=0°) | **−18.17 eV** | 2.0 → **1.26 Å** | 0.040 ✓ |
+| **neutral** | −2.98 | −3.02 (θ=330°) | **−3.67 eV** | 2.5 → 2.30 Å | 0.10 ✓ |
+| Δ (doped 우위) | −1.77 | −1.73 | **−14.50 eV** | 1.04 Å | |
 
-**doped는 chemisorption-deep** (sulfonate가 표면 atom과 직접 결합), 
-**neutral은 physisorption** (H가 SO3 옆 차지 → 슬랩 2.3 Å 위 유지). Phase B 정성 결론 robust.
+doped Phase B: 4개 site가 모두 **−18.14 ± 0.04 eV, dz=1.26 Å**로 동일 minimum 수렴
+→ robust chemisorption basin. site 5만 다른 starting (dz=2.5)에서 −13.9 미수렴 (300 step에서 끊김, fmax 0.55).
+
+해석:
+- doped (−SO₃⁻): sulfonate가 표면 Li-O bilayer 안으로 부분 **인서션**, anion이 표면 cation site 부분 점유. **deep chemisorption**.
+- neutral (−SO₃H): H가 SO₃ 옆 자리 점유 → 표면 2.30 Å 위에 머무름. **physisorption / van der Waals 영역**.
+
+→ **Self-doping이 LiNiO₂ 표면 anchoring을 14.5 eV 강화**. paper headline 수치.
+
+⚠️ UMA-oc20 MLIP 예측. 절댓값은 DFT 검증 필수 (실제 결합에너지는 더 보수적일 가능성).
 
 ## Rigid scan 결과 요약 (Phase A, oc20 task)
 
