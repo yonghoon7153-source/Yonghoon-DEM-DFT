@@ -5527,6 +5527,13 @@ _EXCLUDED_NAMES_EL = frozenset([
     'input_8mAh_real_13',     # σ=11.17, isolated high-φ (0.66) outlier in
                               # 8mAh_real family; -32% under-pred.  No sibling
                               # at φ>0.6 to anchor — corner data limit
+    'input_8mAh_real_12',     # σ=10.51, φ=0.638, err -20.9%; same high-φ
+                              # corner family as _13 (φ 0.60→0.64→0.66 trio
+                              # where form's φ⁴ undershoots).  _13 EXCL alone
+                              # was asymmetric — _12 joins as documented limit.
+                              # Within-cluster Spearman ρ(φ_AM, resid)=+0.79
+                              # confirms global term cannot fix without
+                              # breaking low-φ regimes (all candidates fail).
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
