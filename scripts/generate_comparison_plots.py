@@ -2680,6 +2680,13 @@ def plot_electronic_sigma(data_list, names, outdir):
     pi_hi = [np.nan] * len(data_list)
     form_ok = False; band_ok = False
     fit_summary = ''
+    # Stage 21 (2026-06-02): track cases that have σ_e raw BUT lack form
+    # arrays input (cov_AM_mean / f_perc / cn / tau / area missing).  These
+    # appeared as red squares on plot without green form line / PI band,
+    # confusing user.  Now classify as "form_missing" → gray X mark, hide
+    # raw σ from the data line (NaN), so visual is consistent: only cases
+    # with BOTH raw σ AND form metrics show as full data/form/band trio.
+    form_missing = [False] * len(data_list)
     try:
         global_fit = _electronic_global_fit()
         if global_fit is not None:
@@ -2690,10 +2697,15 @@ def plot_electronic_sigma(data_list, names, outdir):
             if arr_disp is not None:
                 pred_disp = np.exp(arr_disp['X'] @ coef + arr_disp['log_offset'])
                 pred_disp = np.minimum(pred_disp, _SIGMA_E_MAX)
+                in_arr = set(int(idx) for idx in arr_disp['keep_idx'])
                 for k, idx in enumerate(arr_disp['keep_idx']):
                     if idx < len(form_pred) and not phantom[idx]:
                         form_pred[idx] = float(pred_disp[k])
                 form_ok = True
+                # Mark cases with σ raw but not in form arrays (cov/fp/etc. missing)
+                for i in range(len(data_list)):
+                    if (not phantom[i]) and sigma_el[i] > 0 and (i not in in_arr):
+                        form_missing[i] = True
                 # 68% PI band from bootstrap
                 band = _electronic_pred_band(arr_disp, ci=0.68)
                 if band is not None:
@@ -2713,11 +2725,14 @@ def plot_electronic_sigma(data_list, names, outdir):
     ms = _marker_size(len(names))
     lw = _line_width(len(names))
 
-    # Use NaN to break line at σ=0 / phantom cases (prevents cross-group connection)
-    y_line = np.array([s if s > 0 else np.nan for s in sigma_el])
+    # Use NaN to break line at σ=0 / phantom / form_missing cases
+    # (prevents red data line from showing where form can't predict)
+    y_line = np.array([s if (s > 0 and not form_missing[i]) else np.nan
+                       for i, s in enumerate(sigma_el)])
     x_perc_none = [x[i] for i in range(len(names))
-                   if (sigma_el[i] <= 0 and not phantom[i])]
+                   if (sigma_el[i] <= 0 and not phantom[i] and not form_missing[i])]
     x_phantom = [x[i] for i in range(len(names)) if phantom[i]]
+    x_form_missing = [x[i] for i in range(len(names)) if form_missing[i]]
 
     # Stage E target (kept as the headline series — red squares solid)
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
@@ -2743,6 +2758,17 @@ def plot_electronic_sigma(data_list, names, outdir):
         ax.plot(x_phantom, [0]*len(x_phantom), 'x', color='#222', markersize=ms+3,
                 markeredgewidth=2,
                 label="σ_e phantom (raw missing / fallback / >100 mS/cm)")
+    # Stage 21 (2026-06-02): cases with σ_e raw BUT missing form-array
+    # inputs (cov_AM / f_perc / am_am_cn / etc.) — form cannot predict,
+    # PI band absent.  Mark with hollow gray square + X overlay so user
+    # sees "data exists but form unavailable" explicitly.
+    if x_form_missing:
+        # Plot the raw σ value with a hollow gray square (data is real)
+        y_fm = [sigma_el[i] for i in range(len(names)) if form_missing[i]]
+        ax.plot(x_form_missing, y_fm, 's', color='#999',
+                markerfacecolor='none', markeredgecolor='#999',
+                markersize=ms+1, markeredgewidth=1.2,
+                label=f"σ_e raw, form unavailable (metrics incomplete, n={len(x_form_missing)})")
 
     _apply_style(ax, "σ_e (mS/cm)", names)
     ax.legend(fontsize=8, loc='upper left')
