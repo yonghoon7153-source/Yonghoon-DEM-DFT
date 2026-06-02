@@ -2698,6 +2698,7 @@ def plot_electronic_sigma(data_list, names, outdir):
     # raw σ from the data line (NaN), so visual is consistent: only cases
     # with BOTH raw σ AND form metrics show as full data/form/band trio.
     form_missing = [False] * len(data_list)
+    excl_idx_set = set()    # AUDIT EXCLUDED cases — marked separately on plot
     try:
         global_fit = _electronic_global_fit()
         if global_fit is not None:
@@ -2710,9 +2711,14 @@ def plot_electronic_sigma(data_list, names, outdir):
                 pred_disp = np.exp(arr_disp['X'] @ coef + arr_disp['log_offset'])
                 pred_disp = np.minimum(pred_disp, _SIGMA_E_MAX)
                 in_arr = set(int(idx) for idx in arr_disp['keep_idx'])
+                # Track AUDIT EXCLUDED cases (in arr but flagged in _EXCLUDED_NAMES_EL)
+                # so per-config plot can mark them like parity plot does
+                excl_idx_set = set()
                 for k, idx in enumerate(arr_disp['keep_idx']):
                     if idx < len(form_pred) and not phantom[idx]:
                         form_pred[idx] = float(pred_disp[k])
+                    if bool(arr_disp['excluded'][k]):
+                        excl_idx_set.add(int(idx))
                 form_ok = True
                 # Mark cases with σ raw but not in form arrays (cov/fp/etc. missing)
                 for i in range(len(data_list)):
@@ -2749,6 +2755,15 @@ def plot_electronic_sigma(data_list, names, outdir):
     # Stage E target (kept as the headline series — red squares solid)
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
             label="σ_e Stage E target (Trevisanello, mS/cm)")
+    # AUDIT EXCLUDED overlay on per-config plot (mirror parity plot's
+    # treatment) — gray ✗ on top of EXCL data points so user immediately
+    # sees which red square is documented anomaly (not form fail).
+    if excl_idx_set:
+        x_excl = [x[i] for i in range(len(names)) if i in excl_idx_set]
+        y_excl = [sigma_el[i] for i in range(len(names)) if i in excl_idx_set]
+        ax.scatter(x_excl, y_excl, s=(ms+6)**2, marker='x', c='#666',
+                   linewidths=1.8, zorder=5,
+                   label=f"AUDIT excluded ({len(excl_idx_set)}) — documented anomaly")
     # Stage 21 form prediction overlay — green dashed + diamond
     if form_ok:
         y_form = np.array(form_pred)
