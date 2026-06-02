@@ -119,6 +119,11 @@ def main():
     ap.add_argument("--out", default=None)
     ap.add_argument("--no_symmetrize", action="store_true",
                     help="report raw Cij (no Cij ↔ Cji averaging)")
+    ap.add_argument("--no_qe_sign_flip", action="store_true",
+                    help="disable the QE stress sign convention flip. "
+                         "QE prints σ_ij = -(1/V) ∂E/∂ε_ij so for stable "
+                         "material with positive Cij, σ(+ε) < 0 → raw "
+                         "(σ(+h)-σ(-h))/(2h) is NEGATIVE of Cij. Default: flip.")
     args = ap.parse_args()
 
     work = Path(args.workdir)
@@ -153,6 +158,11 @@ def main():
         strain_voigt = 2.0 * h if is_shear else h
         # ΔC_:k = (σ(+) - σ(-)) / (2 * applied_voigt_strain)
         col = (sigma_p - sigma_m) / (2.0 * strain_voigt)
+        # QE stress convention σ_ij = -(1/V) ∂E/∂ε_ij ⇒ flip sign to get
+        # physical Cij (positive for stable material). See db/properties/
+        # elastic.json: "QE sign flip" is standard for finite-strain Cij.
+        if not args.no_qe_sign_flip:
+            col = -col
         # kbar → GPa
         col_GPa = col * KBAR_TO_GPA
         Cij[:, k] = col_GPa
