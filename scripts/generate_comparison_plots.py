@@ -2784,6 +2784,14 @@ def plot_electronic_sigma(data_list, names, outdir):
                 label=f"σ_e raw, form unavailable (metrics incomplete, n={len(x_form_missing)})")
 
     _apply_style(ax, "σ_e (mS/cm)", names)
+    # σ_AM(e) UI input → also sets y-axis MAX so user sees "headroom"
+    # vs their chosen reference (e.g., σ_AM=50 → y-axis 0-50 to see how
+    # far below single-crystal max the composite sits).  Falls back to
+    # auto-scale if y-max-sigma input set (priority: --y-max-sigma > σ_S(e)).
+    if _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
+        ax.set_ylim(0, _Y_MAX_SIGMA)
+    elif _SIGMA_S_LOCKED > 11.0:    # user set σ_AM(e) above Trevisanello default
+        ax.set_ylim(0, _SIGMA_S_LOCKED * 1.05)
     ax.legend(fontsize=8, loc='upper left')
     stage_n = "Stage 22 (Trevisanello-locked σ_S=10, σ_P=5)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit σ_S/σ_P)"
     title = (f"Electronic Conductivity — Stage E target vs {stage_n} prediction"
