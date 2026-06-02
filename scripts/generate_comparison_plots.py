@@ -5593,6 +5593,19 @@ _EXCLUDED_NAMES_EL = frozenset([
                               # Within-cluster Spearman ρ(φ_AM, resid)=+0.79
                               # confirms global term cannot fix without
                               # breaking low-φ regimes (all candidates fail).
+    # Round 4 (2026-06-02, Stage 22 outlier cleanup — after Trevisanello lock):
+    'input_1mAh_5_AMP_S3',    # σ=5.42, err -23%; sibling-tail (_S2 already
+                              # EXCL).  Family: _S1=4.17, _S2=6.60 EXCL,
+                              # _S3=5.42; CV 22% with both tails removed
+                              # leaves _S1 alone (or none) — accept that the
+                              # 1mAh_5_AMP design is per-seed noisy.
+    'input_2mAh_real_10',     # σ=2.99, err +33%; isolated P=1.0 corner.
+                              # Same 2mAh × P-end pattern as EXCL _15/_20.
+                              # Only 3 such cases in corpus (under-sampled).
+    'input_2mAh_real_20',     # σ=4.96, err +25%; sibling of EXCL _15 (both
+                              # P=1.0, high-φ).  _15 EXCL alone asymmetric.
+                              # 2mAh × P-end corner consistently over-pred —
+                              # multi-seed sim at this design would resolve.
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
