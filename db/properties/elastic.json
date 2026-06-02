@@ -103,11 +103,46 @@
 
   "mlip_600K_snapshot_v3": {
     "_version": "v3 (modelC_v3 only — annealed Li, DFT-relaxed V0 starting structure)",
-    "_purpose": "Re-run of MLIP 600K snapshot starting from modelC_v3 V0 (Pipeline v2 §8e). Same composition (Li5.4PS4.4Cl1.6) as modelc in v1 row above but different starting structure (annealed champion, DFT-relaxed). Expected to converge to similar finite-T Cij ensemble; quantifies how much starting structure matters at 600 K.",
-    "method": "UMA-s-1p1 (task=omat), Langevin 600 K, equilib 10 ps + prod 20 ps, 5 snapshots, FIRE quench (fmax 0.01), stress-strain Cij full 6×6 with sign flip",
+    "_purpose": "Re-run of MLIP 600K snapshot starting from modelC_v3 V0. Same composition (Li5.4PS4.4Cl1.6) as modelc in v1 row above but DIFFERENT MLIP (UMA-s-1p1 foundation model, NOT MACE) and different starting structure.",
+    "method": "UMA-s-1p1 (task=omat) Langevin 600 K, equilib 10 ps + prod 20 ps, 5 snapshots, FIRE quench (fmax 0.01), per-strain FIRE RELAXED-ION Cij (fmax 0.05) full 6×6, no QE sign flip (FAIRChem returns physical-convention stress).",
     "script": "tools/modelc_v3/elastic_mlip_600K.py",
-    "status": "queued",
-    "results": []
+    "completed_date": "2026-06-02",
+    "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json",
+    "results": [
+      {
+        "id": "modelc_v3",
+        "version": "v3",
+        "C11": 55.71, "C11_std": 1.85,
+        "C12": 15.26, "C12_std": 0.79,
+        "C44": 23.00, "C44_std": 0.55,
+        "K_VRH": 29.94, "K_VRH_std": 0.85,
+        "G_VRH": 21.85, "G_VRH_std": 0.63,
+        "E_VRH": 52.72, "E_VRH_std": 1.42,
+        "nu": 0.206, "nu_std": 0.006,
+        "Zener_A": 1.137,
+        "n_snapshots": 5,
+        "T_K": 600,
+        "equilib_ps": 10,
+        "prod_ps": 20,
+        "strain_ion_method": "per-strain FIRE relax (fmax 0.05) — true finite-T elastic",
+        "vs_v1_modelc_MACE_600K": {
+          "C11_delta_pct": "+41.8% (39.3 → 55.7) — UMA stiffer than MACE",
+          "C12_delta_pct": "-0.9% (15.4 → 15.26) — essentially identical",
+          "C44_delta_pct": "+78.3% (12.9 → 23.0) — UMA significantly stiffer in shear",
+          "K_VRH_delta_pct": "+28.0% (23.4 → 29.94)",
+          "G_VRH_delta_pct": "+68.1% (13.0 → 21.85)",
+          "E_VRH_delta_pct": "+60.2% (32.9 → 52.72)",
+          "interpretation": "UMA-s-1p1 foundation model gives systematically stiffer shear modulus than custom-trained MACE for LPSCl. Bulk modulus closer to DFT clamped-ion (44.5) than MACE (23.4)."
+        },
+        "vs_v3_DFT_0K_clamped": {
+          "K_pct": "-32.7% (DFT 44.47 → MLIP 600K 29.94) — Li disorder + thermal softening of bulk modulus",
+          "G_pct": "+9.0% (DFT 20.05 → MLIP 21.85) — UMA slightly stiffer than DFT in shear",
+          "E_pct": "+0.8% (DFT 52.30 → MLIP 52.72) — Young's modulus nearly invariant 0K-clamped vs 600K-relaxed",
+          "nu_delta": "-0.098 (DFT 0.304 → MLIP 0.206) — finite-T reduces Poisson ratio",
+          "Zener_delta": "+0.72 (DFT 0.42 → MLIP 1.14) — Li disorder + thermal averaging restores cubic isotropy"
+        }
+      }
+    ]
   },
 
   "comp5_basin_comparison": {
