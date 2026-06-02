@@ -27,6 +27,7 @@ Usage (raw energies, eV relative to image 0):
 """
 import argparse
 import json
+import sys
 from pathlib import Path
 import numpy as np
 import matplotlib.pyplot as plt
@@ -80,6 +81,13 @@ def main():
     args = ap.parse_args()
 
     entries = []
+    # NOTE: --systems and --raw are honored in the order they appear on the
+    # command line by concatenating, but for backward-compat with previous
+    # behavior we issue a warning when both are used (mixed order is fragile).
+    if args.systems and args.raw:
+        print("[plot_neb_path_compare] WARNING: mixing --systems and --raw "
+              "fixes processing order (systems first, then raw). For correct "
+              "label alignment, prefer one mode only.", file=sys.stderr)
     for s in args.systems:
         entries.append(_load_rel_energies(s))
     for s in args.raw:
