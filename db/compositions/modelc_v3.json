@@ -1,0 +1,78 @@
+{
+  "id": "modelc_v3",
+  "formula": "Li5.4PS4.4Cl1.6",
+  "formula_html": "Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>1.6</sub>",
+  "family": "Li5.4",
+  "atoms": 62,
+  "cell_type": "rhombohedral",
+  "formula_units": 5,
+  "halogen": {"Cl": 8, "Br": 0},
+  "li_per_fu": 5.4,
+  "s_per_fu": 4.4,
+  "has_vacancy": true,
+  "vacancy_per_fu": 0.6,
+  "lineage": [
+    "modelc (v1, B0=21.7 GPa DFT BM-EOS) → ",
+    "modelc_v2_mlip (annealing champion, B0=20.0 GPa MLIP, -2.1 GPa softer) → ",
+    "modelc_v3 (Pipeline v2 §8 DFT post-processing: bonds, coordination, Voronoi, BVSE, Bader, DOS/PDOS, elastic_static)"
+  ],
+  "container_path": "/home/ubuntu/work/runs/modelC_v3/",
+
+  "v3_postprocess_pipeline_v2_8": {
+    "8a_V0_relax": {
+      "status": "done",
+      "outputs": ["V0_relax.in/out", "V0_init.cif", "V0_init.xyz"],
+      "starting_from": "v101 scale 1.000033",
+      "convergence": "1-step (already optimized)"
+    },
+    "8b_bond_lengths": {
+      "status": "done",
+      "output": "V0_bond_stats.json"
+    },
+    "8c_coordination_voronoi": {
+      "status": "done",
+      "outputs": ["V0_coordination.json", "V0_voronoi.json"]
+    },
+    "8d_bvse": {
+      "status": "done",
+      "outputs": ["V0_bvs_map.npy", "V0_bvse_map.npy", "V0_bvse_summary.json"]
+    },
+    "8e_bader": {
+      "status": "done",
+      "method": "Henkelman bader v1.05 on plot_num=17 (AE density)",
+      "outputs": ["V0_AEdens.cube", "ACF.dat", "BCF.dat", "V0_bader_charges.json"],
+      "notes": "365 maxima associated to 62 atoms by MIC; per-atom charges: Li +0.882, Cl -0.916, S/P/N..."
+    },
+    "8f_dos_pdos": {
+      "status": "done",
+      "outputs": ["nscf.out", "V0_dos.dat", "V0_dos_pdos.png", "V0_dos_summary.json", "151 PDOS files"],
+      "band_gap_eV": 1.80,
+      "gap_search_range_eV": [2.74, 4.54],
+      "notes": "Initial detection issues (E_F inside valence band, vacuum region detection) resolved by restricting search to E > -3 eV."
+    },
+    "8d_elastic_static": {
+      "status": "12_strain_SCF_done_fit_pending",
+      "method": "stress-strain finite-difference (12 SCFs ±0.005, 6 Voigt patterns)",
+      "outputs": ["elastic_static/strain_*.in/out (12 files)"],
+      "next": "tools/modelc_v3/fit_elastic_cij_stress.py",
+      "expected_outputs": "full 6x6 Cij + VRH (B, G, E, ν, Zener A)",
+      "energies_Ry": {
+        "strain_11_p": -1262.91136269, "strain_11_m": -1262.91223819,
+        "strain_22_p": -1262.91095339, "strain_22_m": -1262.91255067,
+        "strain_33_p": -1262.91265426, "strain_33_m": -1262.91085620,
+        "strain_23_p": -1262.91155724, "strain_23_m": -1262.91285625,
+        "strain_13_p": -1262.91125779, "strain_13_m": -1262.91308253,
+        "strain_12_p": -1262.91263525, "strain_12_m": -1262.91178006
+      }
+    }
+  },
+
+  "comparison_targets": {
+    "modelc_v1_DFT_K": 21.7,
+    "modelc_v2_mlip_K": 20.0,
+    "expected_v3_K_range_GPa": [18, 24],
+    "notes": "modelC_v3 B_VRH (from stress-strain Cij) provides INDEPENDENT cross-check vs the BM-EOS K values from earlier runs. ±5% agreement = both methods consistent."
+  },
+
+  "references_inherits_from": "modelc"
+}

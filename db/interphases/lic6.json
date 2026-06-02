@@ -1,0 +1,39 @@
+{
+  "id": "lic6",
+  "category": "anode_side_baseline",
+  "formula": "LiC6",
+  "formula_html": "LiC<sub>6</sub>",
+  "role": "Lithiated carbon — baseline anode for comparison against nitrate-derived Li3N interphase. In anode-free SSB without AgNO3, carbon host gets lithiated, and Li adatom diffusion on graphene basal plane sets the lateral homogenization rate.",
+  "crystal_structure": {
+    "type": "stage-1 graphite intercalation compound",
+    "in_plane": "sqrt(3) x sqrt(3) R30°",
+    "lattice_a": 4.26,
+    "lattice_c": 7.40,
+    "li_filling_per_layer": "1/6",
+    "li_position": "hexagon center (hex hollow) of carbon layer"
+  },
+  "slabs_used": {
+    "(0001)": {
+      "supercell": "2x2x2",
+      "n_atoms_total": 112,
+      "n_atoms_after_top_li_trim": 108,
+      "vacuum_A": 15,
+      "top_layer_composition_after_trim": "24 C (graphene-terminated)",
+      "frozen_atoms": "bottom 50%",
+      "path_used": "gabia:/data/work/runs/li_neb_diffusion/lic6_0001/lic6_0001_init.xyz"
+    }
+  },
+  "neb_paths_tested": {
+    "hex_hollow_to_hex_hollow": {
+      "distance_A": 2.46,
+      "ts_site": "bridge between two carbons (above C-C bond)",
+      "minima": "two adjacent hex hollows (true minima, no further bridge correction)",
+      "barrier_eV_uma": 0.241,
+      "barrier_eV_dft_scf": 0.287,
+      "endpoint_asymmetry_dft_eV": -0.022
+    }
+  },
+  "diffusion_barriers": {
+    "see": "db/properties/diffusion.json — results filtered by system=LiC6"
+  }
+}

@@ -1,0 +1,120 @@
+{
+  "id": "comp4",
+  "formula": "Li5.4PS4.4Cl0.8Br0.8",
+  "formula_html": "Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>0.8</sub>Br<sub>0.8</sub>",
+  "family": "Li5.4",
+  "atoms": 62,
+  "cell_type": "rhombohedral",
+  "formula_units": 5,
+  "halogen": {
+    "Cl": 4,
+    "Br": 4
+  },
+  "li_per_fu": 5.4,
+  "s_per_fu": 4.4,
+  "has_vacancy": true,
+  "vacancy_per_fu": 0.6,
+  "eos": {
+    "B0_GPa": 20.8,
+    "B0_prime": 6.33,
+    "n_points": 10,
+    "R_squared": 0.999996,
+    "status": "confirmed",
+    "pipeline": "v1"
+  },
+  "band_gap_eV": 1.96,
+  "vbm_character": "S 3p + Br 4p",
+  "cbm_character": "Li 2s, P 3s",
+  "elastic_dft_0K_GPa": {
+    "C11": 85.5,
+    "C12": 20.9,
+    "C44": 27.3,
+    "K": 42.4,
+    "G": 29.1,
+    "E": 71.5,
+    "nu": 0.2
+  },
+  "elastic_mlip_300K_GPa": {
+    "unit_cell": {
+      "C11": 46.2,
+      "C12": 7.7,
+      "C44": 13.9,
+      "K": 20.5,
+      "G": 15.1,
+      "E": 36.4
+    },
+    "supercell_2x2x1": {
+      "C11": 48.6,
+      "C12": 8.1,
+      "C44": 14.6,
+      "K": 21.5,
+      "G": 16.0,
+      "E": 38.5
+    }
+  },
+  "elastic_mlip_600K_GPa": {
+    "method": "600K_snapshot_x5",
+    "C11": 33.4,
+    "C11_std": 1.1,
+    "C12": 14.1,
+    "C12_std": 0.5,
+    "C44": 10.7,
+    "C44_std": 0.6,
+    "E_VRH": 26.4,
+    "E_std": 1.6,
+    "K_VRH": 20.5,
+    "G_VRH": 10.3
+  },
+  "surface_energy_Jm2": 0.45,
+  "two_gamma_Jm2": 0.9,
+  "adhesion_v1": {
+    "Wad_Jm2": 1.2,
+    "Wad_aJ_r10nm": 377
+  },
+  "adhesion_v5": {
+    "method": "crystalline_slab_surface_MQA",
+    "SE_cell": "2x2x1_248at",
+    "NCM_cell": "5x5x1_300at",
+    "strain_pct": 1.1,
+    "status": "in_progress"
+  },
+  "practical_notes": "Optimal composition candidate: E down 9%, Wad up (1.200), basin stable. Best balance of compliance + adhesion + reproducibility.",
+  "references": [
+    "adeli2019",
+    "kraft2018"
+  ],
+  "bader_charge_v1": {
+    "Li": 0.853,
+    "P": 3.631,
+    "S": -1.551,
+    "Cl": -0.885,
+    "Br": -0.881,
+    "Li_std": 0.013,
+    "P_std": 0.488,
+    "S_std": 0.381,
+    "Cl_std": 0.005,
+    "Br_std": 0.009,
+    "P_range": [3.200, 4.367],
+    "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp4_ACF.dat (KISTI 2026-05-04 measured)",
+    "P_VALUE_WARNING": "DO NOT cite P=+3.631 in paper without v2 cross-check. v1 Bader pipeline anomaly known (comp1 v1 P=+3.27 vs comp1 v2 +4.686). comp4 P=+3.631 may be partly v1 systematic + partly comp4 frustration. Need v2 anneal + Bader to disentangle.",
+    "notes": "TRIPLE ANOMALY (v1): P=+3.631 (lowest), S=-1.551 (lowest |q|), HIGH std (0.49, 0.38). Cl=Br=0.8 maximum frustration disrupts both covalent (PS4) and ionic backbone. Microscopic origin candidate for comp4 E -9%, but v1 Bader pipeline reliability question requires v2 confirmation."
+  },
+  "bond_lengths_v1_measured": {
+    "Li-Cl": {"mean": 2.495, "std": 0.142, "n": 19},
+    "Li-Br": {"mean": 2.723, "std": 0.114, "n": 22},
+    "Li-S": {"mean": 2.479, "std": 0.123, "n": 70},
+    "P-S": {"mean": 2.065, "std": 0.013, "n": 20},
+    "source": "KISTI post_relax/comp4_post_relax.out (mic, same cutoffs as comp3)"
+  },
+  "q1q2_over_r_eV_v1bader": {
+    "Li-Cl": 4.32,
+    "Li-Br": 4.0,
+    "Li-S": 7.57,
+    "P-S": 39.3,
+    "P-S_calc": "3.631 * 1.551 / 2.065 * 14.4 = 39.3 eV",
+    "P-S_vs_comp1_v2": "-33.4% (huge weakening)",
+    "P-S_vs_comp3_v1": "-27.9% (mixing penalty on PS4)",
+    "P-S_vs_modelC_v2": "-25.1%",
+    "narrative": "comp4 PS4 covalent stiffness is 1/3 weaker than other comps. Direct microscopic origin of E -9%. Combined with Li-S q^2/r low (7.57) = both backbones simultaneously weakened."
+  }
+}

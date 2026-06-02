@@ -1,0 +1,45 @@
+{
+  "id": "li3n",
+  "category": "anode_side_interphase",
+  "formula": "Li3N",
+  "formula_html": "Li<sub>3</sub>N",
+  "role": "Nitrate-derived SEI in anode-free SSB with AgNO3 additive (per XPS N 1s evidence: LiNO3 + LiNO2 + Li3N + LiNxOy peaks → Li3N is the dominant final species).",
+  "crystal_structure": {
+    "space_group": "P6/mmm",
+    "lattice_a": 3.65,
+    "lattice_c": 3.87,
+    "wyckoff": {
+      "N":  "1a (0, 0, 0)",
+      "Li1": "1b (0, 0, 1/2)  — between layers",
+      "Li2": "2c (1/3, 2/3, 0) and (2/3, 1/3, 0)  — in basal plane"
+    },
+    "reference": "Wang 1981"
+  },
+  "slabs_used": {
+    "(001)": {
+      "supercell": "3x3 in-plane x 4 atomic layers",
+      "n_atoms_total": 144,
+      "n_atoms_after_top_trim": 135,
+      "vacuum_A": 15,
+      "top_layer_composition_after_trim": "18 Li(2) + 9 N (mixed N + Li2 termination matching paper Fig 2a)",
+      "frozen_atoms": "bottom 50% (fixed substrate)",
+      "path_used": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/li3n_001_init_Ntermin.xyz"
+    }
+  },
+  "neb_paths_tested": {
+    "pathA": "N → adjacent N along a-axis, distance 3.65 Å — symmetric, paper-equivalent",
+    "pathB": "N → adjacent N along 60° rotated axis — symmetry-equivalent",
+    "pathC": "N → adjacent N along other 60° axis — symmetry-equivalent",
+    "pathD_bridge_bridge": "bridge → bridge direct — diverged with both LBFGS and FIRE, deduced arithmetically as TS−bridge = 0.054 eV (UMA) / 0.049 eV (DFT SCF)"
+  },
+  "li_adatom_binding_eV": {
+    "on_top_N_uma": "computed via NEB endpoint relax",
+    "bridge_uma": -0.032,
+    "ref_cui_2023": -3.44,
+    "note": "Cui paper binding energy is relative to atomic Li reference; our values are relative to UMA-relaxed endpoint."
+  },
+  "diffusion_barriers": {
+    "see": "db/properties/diffusion.json — results filtered by system=Li3N"
+  },
+  "references": ["cui2023_acs_nano_li3n_diffusion"]
+}

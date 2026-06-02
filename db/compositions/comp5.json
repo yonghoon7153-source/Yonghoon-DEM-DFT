@@ -1,0 +1,237 @@
+{
+  "id": "comp5",
+  "formula": "Li5.4PS4.4Cl0.6Br1.0",
+  "formula_html": "Li<sub>5.4</sub>PS<sub>4.4</sub>Cl<sub>0.6</sub>Br<sub>1.0</sub>",
+  "family": "Li5.4",
+  "atoms": 62,
+  "cell_type": "rhombohedral",
+  "formula_units": 5,
+  "halogen": {
+    "Cl": 3,
+    "Br": 5
+  },
+  "li_per_fu": 5.4,
+  "s_per_fu": 4.4,
+  "has_vacancy": true,
+  "vacancy_per_fu": 0.6,
+  "eos": {
+    "basin_A": {
+      "B0_GPa": 22.9,
+      "B0_prime": 5.21,
+      "n_points": 10,
+      "R_squared": 0.999995,
+      "volume_range": "v096-v106",
+      "status": "confirmed_final"
+    },
+    "basin_B": {
+      "B0_GPa": 21.8,
+      "B0_prime": 4.9,
+      "n_points": 7,
+      "R_squared": 1.0,
+      "status": "confirmed"
+    },
+    "delta_B0_basin_AB_GPa": 1.1,
+    "notes": "Basin A is 421 meV more stable than Basin B. v108 shows full rearrangement (31/62 atoms) -> excluded from EOS."
+  },
+  "band_gap_eV": {
+    "basin_A": 1.77,
+    "basin_B": 2.06,
+    "delta": -0.29
+  },
+  "vbm_character": {
+    "basin_A": "S(93%) > Li(5%) > Br(1%)",
+    "basin_B": "S 3p + Br 4p (Br contribution higher)"
+  },
+  "cbm_character": {
+    "basin_A": "S(44%) + P(36%) + Li(19%)",
+    "basin_B": "Li 2s, P 3s"
+  },
+  "bond_lengths_A": {
+    "basin_A": {
+      "Li-Cl": 2.466,
+      "Li-Br": 2.713,
+      "Li-S": 2.463,
+      "P-S": 2.066
+    },
+    "basin_B": {
+      "Li-Cl": 2.466,
+      "Li-Br": 2.725,
+      "Li-S": 2.469,
+      "P-S": 2.067
+    },
+    "delta_AB": {
+      "Li-Cl": 0.0,
+      "Li-Br": -0.012,
+      "Li-S": -0.006,
+      "P-S": -0.001
+    }
+  },
+  "elastic_dft_0K_GPa": {
+    "basin_A": {
+      "C11": 87.4,
+      "C12": 20.6,
+      "C44": 39.9,
+      "K": 42.9,
+      "G": 37.1,
+      "E": 86.5,
+      "nu": 0.164
+    },
+    "basin_B": {
+      "C11": 84.6,
+      "C12": 20.4,
+      "C44": 27.2,
+      "K": 41.8,
+      "G": 29.1,
+      "E": 70.9,
+      "nu": 0.196
+    },
+    "delta_AB": {
+      "C11": 2.8,
+      "C12": 0.2,
+      "C44": 12.7,
+      "K": 1.1,
+      "G": 8.0,
+      "E": 15.6
+    },
+    "notes": "C44 most sensitive to Li ordering: DC44=12.7 GPa (47%). Shear > compression sensitivity."
+  },
+  "elastic_mlip_600K_GPa": {
+    "basin_A": {
+      "C11": 34.9,
+      "C11_std": 1.5,
+      "C12": 17.1,
+      "C12_std": 0.7,
+      "C44": 14.0,
+      "C44_std": 0.8,
+      "E_VRH": 30.0
+    },
+    "basin_B": {
+      "C11": 32.8,
+      "C11_std": 1.2,
+      "C12": 13.1,
+      "C12_std": 0.4,
+      "C44": 10.2,
+      "C44_std": 0.3,
+      "E_VRH": 25.8,
+      "E_std": 0.8
+    },
+    "delta_AB_E": 4.2,
+    "notes": "Basin B E=25.8 used for paper trend (thermal average closer to B). Basin A E=30.0 would reverse trend."
+  },
+  "elastic_mlip_300K_GPa": {
+    "basin_A": {
+      "unit_cell": {
+        "C11": 26.1,
+        "C12": 14.2,
+        "C44": 12.1,
+        "K": 18.2,
+        "G": 8.4,
+        "E": 21.7,
+        "nu": 0.289
+      },
+      "supercell_2x2x1": {
+        "C11": 30.3,
+        "C12": 15.0,
+        "C44": 8.4,
+        "K": 20.1,
+        "G": 8.7,
+        "E": 23.0,
+        "nu": 0.319
+      }
+    },
+    "basin_B": {
+      "unit_cell": {
+        "C11": 44.7,
+        "C12": 11.4,
+        "C44": 14.2,
+        "K": 22.4,
+        "G": 14.6,
+        "E": 36.0,
+        "nu": 0.233
+      },
+      "supercell_2x2x1": {
+        "C11": 48.1,
+        "C12": 8.1,
+        "C44": 13.9,
+        "K": 21.3,
+        "G": 15.2,
+        "E": 36.9,
+        "nu": 0.212
+      }
+    }
+  },
+  "surface_energy_Jm2": 0.47,
+  "two_gamma_Jm2": 0.94,
+  "basin_analysis": {
+    "basin_A_energy_Ry": -1330.49061,
+    "basin_B_energy_Ry": -1330.45964,
+    "basin_C_energy_Ry": -1330.47775,
+    "A_vs_B_meV": 421,
+    "A_vs_C_meV": 175,
+    "key_displacement": {
+      "A_to_B": {
+        "n_moved": 2,
+        "atoms": [
+          "Li14 (Dy=+0.161 frac, vacancy hop)",
+          "Br59 (Dy=-0.062, relaxation)"
+        ],
+        "nature": "local_Li_hop"
+      },
+      "A_to_v108": {
+        "n_moved": 31,
+        "nature": "full_rearrangement",
+        "mean_disp_by_element": {
+          "Li": 0.049,
+          "S": 0.039,
+          "Br": 0.046,
+          "P": 0.031,
+          "Cl": 0.023
+        },
+        "max_disp_by_element": {
+          "Li": 0.198,
+          "S": 0.145,
+          "Br": 0.073,
+          "P": 0.057,
+          "Cl": 0.036
+        },
+        "notes": "Volume expansion +8% triggers multi-atom rearrangement including S movement."
+      }
+    }
+  },
+  "references": [
+    "adeli2019",
+    "kraft2018",
+    "pustorino2025",
+    "deng2016"
+  ],
+  "bader_charge_v1": {
+    "Li": 0.879,
+    "P": 4.403,
+    "S": -1.752,
+    "Cl": -0.913,
+    "Br": -0.896,
+    "Li_std": 0.007,
+    "P_std": 0.399,
+    "S_std": 0.280,
+    "Cl_std": 0.007,
+    "Br_std": 0.007,
+    "P_range": [4.039, 4.893],
+    "source": "/scratch/x3430a02/kgy/manuscript_support/post_relax/comp5/ACF.dat (KISTI 2026-05-04 measured)",
+    "P_VALUE_WARNING": "v1 Bader pipeline showed anomaly elsewhere (comp1 v1 P=+3.27 vs v2 +4.686). comp5 v1 P=+4.403 looks more reasonable (closer to v2 anchor range +4.34~+4.89), but cite with caution. Use v2 if needed.",
+    "notes": "Cl-Br gap +1.7% (less anomalous than v1 db noted +11%, may be earlier averaging artifact). P=+4.403 with std 0.399 — moderate heterogeneity from Cl=3/Br=5 mixed environment."
+  },
+  "bond_lengths_v1_measured": {
+    "Li-Cl": {"mean": 2.466, "std": 0.079, "n": 14},
+    "Li-Br": {"mean": 2.724, "std": 0.125, "n": 27},
+    "Li-S": {"mean": 2.451, "std": 0.068, "n": 67},
+    "P-S": {"mean": 2.066, "std": 0.014, "n": 20},
+    "source": "KISTI post_relax/comp5/comp5_relax.out"
+  },
+  "q1q2_over_r_eV_v1bader": {
+    "Li-Cl": 4.69,
+    "Li-Br": 4.16,
+    "Li-S": 8.99,
+    "P-S": 53.8,
+    "P-S_calc": "4.403 * 1.752 / 2.066 * 14.4 = 53.8 eV"
+  }
+}
