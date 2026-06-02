@@ -6144,15 +6144,20 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     fig, ax = plt.subplots(figsize=FIG_SINGLE)
     in_band = (~is_out) & (~excl)
     ax.scatter(sig_act[in_band], sig_pred[in_band], s=45, c=BLUE,
-               edgecolors='white', zorder=3, label='within ±20%')
+               edgecolors='white', zorder=3,
+               label=f'within ±20% (n={int(in_band.sum())})')
     if is_out.any():
-        ax.scatter(sig_act[is_out], sig_pred[is_out], s=70, c=RED,
-                   edgecolors='black', zorder=4,
-                   label=f'outlier >±20% ({int(is_out.sum())})')
+        ax.scatter(sig_act[is_out], sig_pred[is_out], s=80, c=RED,
+                   edgecolors='black', linewidths=1.5, zorder=4,
+                   label=f'FIT outlier >±20% ({int(is_out.sum())}) — form fail')
     if excl.any():
-        ax.scatter(sig_act[excl], sig_pred[excl], s=140, c='none',
-                   edgecolors='#222', linewidths=2.2, marker='x', zorder=5,
-                   label=f'audit excluded ({int(excl.sum())})')
+        # AUDIT EXCLUDED — distinct gray hollow squares + ✗ overlay so user
+        # immediately sees these are intentionally outside fit (not form fail)
+        ax.scatter(sig_act[excl], sig_pred[excl], s=110, c='#f5f5f5',
+                   edgecolors='#888', linewidths=1.8, marker='s', zorder=4.5,
+                   label=f'AUDIT excluded ({int(excl.sum())}) — documented anomaly, NOT form fail')
+        ax.scatter(sig_act[excl], sig_pred[excl], s=80, c='#888',
+                   marker='x', linewidths=1.5, zorder=5)
 
     # Annotate top-N outliers + ALL excluded
     order = np.argsort(-np.abs(err_pct))
@@ -6161,9 +6166,17 @@ def plot_electronic_outliers_final(data_list, names, outdir):
         if i not in annot:
             annot.append(i)
     for i in annot:
-        col = '#222' if excl[i] else (RED if is_out[i] else GRAY)
-        ax.annotate(f'{arr["names"][i]} ({err_pct[i]:+.0f}%)',
+        # Color & style distinguish: gray italic for EXCL (documented),
+        # red bold for FIT outliers (form-fail)
+        if excl[i]:
+            col = '#777'; weight = 'normal'; prefix = '[AUDIT] '
+        elif is_out[i]:
+            col = RED;    weight = 'bold';   prefix = ''
+        else:
+            col = GRAY;   weight = 'normal'; prefix = ''
+        ax.annotate(f'{prefix}{arr["names"][i]} ({err_pct[i]:+.0f}%)',
                     (sig_act[i], sig_pred[i]), fontsize=6, color=col,
+                    fontweight=weight, fontstyle='italic' if excl[i] else 'normal',
                     xytext=(4, 3), textcoords='offset points')
 
     lim = [min(sig_act.min(), sig_pred.min()) * 0.6,
