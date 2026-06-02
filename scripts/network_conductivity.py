@@ -44,7 +44,37 @@ except Exception:
 SIGMA_BULK_DEFAULT = 3.0e-3  # S/cm (grain interior, ionic)
 
 # NCM electronic conductivity (typical, SOC-dependent)
-SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, discharged NCM)
+SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
+
+# ───────────────────────────────────────────────────────────────────────
+# Trevisanello 2021 size + crystallinity correction for NCM σ_AM
+# ───────────────────────────────────────────────────────────────────────
+# Per-particle effective σ_AM depends on:
+#   - AM_S (small primary single-crystal, ≈2.5 µm): minimal grain-boundary effect
+#     → σ_eff ≈ σ_grain (1.0× literature bulk)
+#   - AM_P (large polycrystalline secondary aggregate, ≈5 µm): strong GB reduction
+#     → σ_eff = σ_grain / (1 + (r/r0)^β)  Trevisanello formula
+#
+# Adding this to the solver means R_bulk reflects intrinsic crystallinity +
+# size effects directly (rather than form post-correcting).  The form's
+# σ_S/σ_P endpoint mix term should naturally simplify after this refactor.
+NCM_AM_REF_R = 2.0       # µm reference radius (Trevisanello)
+NCM_AM_GB_EXPONENT = 1.5  # Trevisanello β
+
+def sigma_AM_relative(r_um, particle_type):
+    """Relative σ_AM vs grain interior (Trevisanello 2021).
+    Returns 1.0 if no GB scaling (single-crystal or non-AM particle).
+    Returns < 1.0 for polycrystalline secondary aggregates with internal GBs.
+
+    Convention (consistent with input_params type_map):
+      AM_S = small primary single-crystal NCM    → no GB scaling, ratio = 1.0
+      AM_P = large polycrystalline secondary NCM → GB reduction by Trevisanello
+      SE, others                                 → ratio = 1.0 (not used in AM-AM)
+    """
+    if particle_type == 'AM_P':
+        return 1.0 / (1.0 + (max(r_um, 0.1) / NCM_AM_REF_R) ** NCM_AM_GB_EXPONENT)
+    # AM_S, SE, or other: no scaling
+    return 1.0
 
 # Thermal conductivity (W/(m·K) = W/(m·K) × 10⁻⁴ = W/(cm·K))
 K_AM_THERMAL = 4.0e-2   # W/(cm·K) ≈ 4 W/(m·K), NCM
@@ -264,9 +294,21 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
             k_weight = 1.0
 
         # Normalized resistances (ρ=1, scaled by k_weight for thermal):
-        # R_bulk = d / (k_weight × π × r²)
-        R_bulk_1 = (d_ij / 2) / (k_weight * np.pi * r1**2) if r1 > 0 else 0
-        R_bulk_2 = (d_ij / 2) / (k_weight * np.pi * r2**2) if r2 > 0 else 0
+        # R_bulk = d / (k_weight × σ_rel × π × r²)
+        #
+        # For ELECTRONIC mode, σ_rel applies Trevisanello 2021 size +
+        # crystallinity correction (AM_P polycrystalline gets r-dependent
+        # GB reduction, AM_S single-crystal stays at 1.0).  This bakes the
+        # NCM literature physics into the solver — the form's σ_S/σ_P
+        # endpoint mix and NCM correction become redundant after refactor.
+        if mode == 'electronic':
+            sigma_rel_1 = sigma_AM_relative(r1, a1.get('type', ''))
+            sigma_rel_2 = sigma_AM_relative(r2, a2.get('type', ''))
+        else:
+            sigma_rel_1 = 1.0
+            sigma_rel_2 = 1.0
+        R_bulk_1 = (d_ij / 2) / (sigma_rel_1 * k_weight * np.pi * r1**2) if r1 > 0 else 0
+        R_bulk_2 = (d_ij / 2) / (sigma_rel_2 * k_weight * np.pi * r2**2) if r2 > 0 else 0
         R_bulk = R_bulk_1 + R_bulk_2
 
         # Contact resistance.
@@ -281,14 +323,18 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         #     Replaces the earlier phenomenological 'Maxwell + 2δ/A film'
         #     ansatz — same qualitative saturation behaviour but derived.
         r_min_real = min(r1, r2)  # μm (smaller sphere's radius)
-        R_Maxwell = 1.0 / (k_weight * 2 * a_contact) if a_contact > 0 else 1e12
+        # For electronic mode: Holm constriction uses the LOWER-σ side
+        # (bottleneck) — use minimum of two σ_rel values to be conservative
+        # (electron path through constriction limited by lowest-σ region).
+        sigma_rel_contact = min(sigma_rel_1, sigma_rel_2)
+        R_Maxwell = 1.0 / (sigma_rel_contact * k_weight * 2 * a_contact) if a_contact > 0 else 1e12
         if contact_mode == 'physics' and a_contact > 0 and r_min_real > 0:
             # Clamp a to r_min — our plastic cap 2πR_min² gives a > r_min, which
             # is geometrically impossible for a disk contact between spheres.
             a_eff = min(a_contact, r_min_real)
             psi = max(1.0 - a_eff / r_min_real, 0.0) ** 1.5
             if psi > 1e-4:
-                R_constriction = 1.0 / (k_weight * 2 * a_eff * psi)
+                R_constriction = 1.0 / (sigma_rel_contact * k_weight * 2 * a_eff * psi)
             else:
                 # Full contact limit: spreading vanishes, R_bulk carries it.
                 R_constriction = 0.0
