@@ -60,26 +60,49 @@ def apply_voigt_strain(atoms_in, k, h):
     return a
 
 
-def stress_strain_cij(atoms_quenched, calc_factory, strain_h, sign_flip):
+def stress_strain_cij(atoms_quenched, calc_factory, strain_h, sign_flip,
+                       relaxed_ion=True, ion_fmax=0.05, ion_max_steps=200,
+                       log_dir=None, snap_idx=None):
     """Return 6×6 Cij (GPa) for one quenched snapshot via stress-strain.
 
-    For each Voigt direction k, apply ±h strain → MLIP stress → column k of Cij.
+    relaxed_ion=True (default, the "paper" method):
+      For each strain, FIRE-relax internal atomic positions at the strained
+      cell (cell fixed) before measuring stress. Yields physical finite-T
+      Cij including internal/optical phonon contributions to softening.
+
+    relaxed_ion=False (clamped-ion):
+      Single-point stress at the strained configuration (atoms scale with
+      cell). Gives the stiff "0K-like" Cij that ignores internal relaxation.
+
+    For our system the relaxed-ion variant typically gives 30-50% lower
+    moduli at 600 K than clamped-ion, matching the existing modelc MLIP
+    600K row (E ≈ 33 GPa) in db/properties/elastic.json.
     """
+    from ase.optimize import FIRE
+    from ase.constraints import FixSymmetry  # not used, just to be safe
     Cij = np.zeros((6, 6))
     for k in range(6):
         sigmas = []
         for sign in (+1, -1):
             a_strain = apply_voigt_strain(atoms_quenched, k, sign * strain_h)
             a_strain.calc = calc_factory()
-            s_3x3 = a_strain.get_stress(voigt=False)   # eV/Å³
+            if relaxed_ion:
+                # Relax internal positions, KEEP cell fixed (no UnitCellFilter)
+                logf = None
+                if log_dir is not None and snap_idx is not None:
+                    logf = str(Path(log_dir) /
+                               f"strain_relax_snap{snap_idx}_k{k}_s{int(sign)}.log")
+                opt = FIRE(a_strain, logfile=logf)
+                opt.run(fmax=ion_fmax, steps=ion_max_steps)
+            s_3x3 = a_strain.get_stress(voigt=False)
             sigmas.append(stress_to_voigt(s_3x3))
         is_shear = (k >= 3)
         strain_voigt = 2.0 * strain_h if is_shear else strain_h
-        col = (sigmas[0] - sigmas[1]) / (2.0 * strain_voigt)  # eV/Å³ per strain
+        col = (sigmas[0] - sigmas[1]) / (2.0 * strain_voigt)
         if sign_flip:
             col = -col
         Cij[:, k] = col * EV_PER_A3_TO_GPA
-    return 0.5 * (Cij + Cij.T)  # symmetrize
+    return 0.5 * (Cij + Cij.T)
 
 
 def vrh_full(C):
@@ -118,10 +141,21 @@ def main():
     ap.add_argument("--uma_task", default="omat",
                     help="omat (bulk material) for SE; oc20 reserved for surfaces")
     ap.add_argument("--device", default="cuda")
-    ap.add_argument("--no_sign_flip", action="store_true",
-                    help="disable QE-style stress sign flip "
-                         "(FAIRChem ASE may already return physical sign)")
+    ap.add_argument("--qe_sign_flip", action="store_true",
+                    help="apply QE-style stress sign flip. Default OFF since "
+                         "FAIRChem ASE Calculator returns physical convention "
+                         "(σ > 0 for tensile). Only enable if your calculator "
+                         "follows QE convention σ = -(1/V) ∂E/∂ε.")
+    ap.add_argument("--clamped_ion", action="store_true",
+                    help="single-point stress at strained config (no internal "
+                         "relaxation). Default is relaxed-ion (per-strain FIRE) "
+                         "which is the paper method for finite-T MLIP elastic.")
+    ap.add_argument("--ion_fmax", type=float, default=0.05,
+                    help="fmax for per-strain internal FIRE relax")
+    ap.add_argument("--ion_max_steps", type=int, default=200)
     args = ap.parse_args()
+    sign_flip = args.qe_sign_flip
+    relaxed_ion = not args.clamped_ion
 
     out_dir = Path(args.out_dir); out_dir.mkdir(parents=True, exist_ok=True)
     t_start = time.time()
