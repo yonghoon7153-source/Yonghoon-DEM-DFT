@@ -153,6 +153,10 @@ def main():
     ap.add_argument("--ion_fmax", type=float, default=0.05,
                     help="fmax for per-strain internal FIRE relax")
     ap.add_argument("--ion_max_steps", type=int, default=200)
+    ap.add_argument("--resume_from_snapshots", action="store_true",
+                    help="skip MD; reload snapshot_{0..N-1}.xyz from out_dir "
+                         "and proceed to quench + Cij. Use this if MD already "
+                         "finished and only the post-processing crashed.")
     args = ap.parse_args()
     sign_flip = args.qe_sign_flip
     relaxed_ion = not args.clamped_ion
@@ -181,38 +185,47 @@ def main():
                   for s in sorted(set(atoms.get_chemical_symbols()))}
     print(f"  composition: {sym_counts}")
 
-    # Initialize velocities at T_K
-    MaxwellBoltzmannDistribution(atoms, temperature_K=args.T_K)
+    if args.resume_from_snapshots:
+        print(f"\n[resume mode] skipping MD, loading saved snapshots from {out_dir}")
+        snapshots = []
+        for i in range(args.n_snapshots):
+            p = out_dir / f"snapshot_{i}.xyz"
+            if not p.exists():
+                raise SystemExit(f"resume_from_snapshots: missing {p}")
+            snapshots.append(read(str(p)))
+            print(f"  snapshot {i+1}/{args.n_snapshots}: {p}")
+    else:
+        # Initialize velocities at T_K
+        MaxwellBoltzmannDistribution(atoms, temperature_K=args.T_K)
 
-    # Langevin MD: equilibration
-    dt = args.timestep_fs * units.fs
-    md = Langevin(atoms, dt, temperature_K=args.T_K,
-                  friction=args.friction, logfile=str(out_dir / "md.log"))
-    eq_steps = int(args.equilib_ps * 1000 / args.timestep_fs)
-    print(f"\nEquilibration: {eq_steps} steps")
-    t0 = time.time()
-    md.run(eq_steps)
-    print(f"  done in {(time.time()-t0)/60:.1f} min")
+        # Langevin MD: equilibration
+        dt = args.timestep_fs * units.fs
+        md = Langevin(atoms, dt, temperature_K=args.T_K,
+                      friction=args.friction, logfile=str(out_dir / "md.log"))
+        eq_steps = int(args.equilib_ps * 1000 / args.timestep_fs)
+        print(f"\nEquilibration: {eq_steps} steps")
+        t0 = time.time()
+        md.run(eq_steps)
+        print(f"  done in {(time.time()-t0)/60:.1f} min")
 
-    # Production with snapshots
-    prod_steps = int(args.prod_ps * 1000 / args.timestep_fs)
-    sample_interval = prod_steps // args.n_snapshots
-    snapshots = []
-    print(f"\nProduction: {prod_steps} steps, sample every {sample_interval} steps")
-    for i in range(args.n_snapshots):
-        md.run(sample_interval)
-        snap = atoms.copy()
-        snapshots.append(snap)
-        write(out_dir / f"snapshot_{i}.xyz", snap)
-        print(f"  snapshot {i+1}/{args.n_snapshots}: "
-              f"t = {(i+1)*sample_interval*args.timestep_fs/1000:.1f} ps")
-    print(f"  MD total: {(time.time()-t0)/60:.1f} min")
+        # Production with snapshots
+        prod_steps = int(args.prod_ps * 1000 / args.timestep_fs)
+        sample_interval = prod_steps // args.n_snapshots
+        snapshots = []
+        print(f"\nProduction: {prod_steps} steps, sample every {sample_interval} steps")
+        for i in range(args.n_snapshots):
+            md.run(sample_interval)
+            snap = atoms.copy()
+            snapshots.append(snap)
+            write(out_dir / f"snapshot_{i}.xyz", snap)
+            print(f"  snapshot {i+1}/{args.n_snapshots}: "
+                  f"t = {(i+1)*sample_interval*args.timestep_fs/1000:.1f} ps")
+        print(f"  MD total: {(time.time()-t0)/60:.1f} min")
 
     # Quench + Cij per snapshot
     Cij_list = []
     vrh_list = []
-    sign_flip = not args.no_sign_flip
-    print(f"\nStress sign flip: {sign_flip}")
+    print(f"\nStress sign flip: {sign_flip}   |   Relaxed-ion strain: {relaxed_ion}")
     for i, snap in enumerate(snapshots):
         print(f"\n=== Snapshot {i+1}/{args.n_snapshots} ===")
         t1 = time.time()
@@ -222,7 +235,11 @@ def main():
         write(out_dir / f"snapshot_{i}_quenched.xyz", snap)
         print(f"  quench done in {(time.time()-t1)/60:.1f} min")
 
-        Cij = stress_strain_cij(snap, calc_factory, args.strain, sign_flip)
+        Cij = stress_strain_cij(snap, calc_factory, args.strain, sign_flip,
+                                 relaxed_ion=relaxed_ion,
+                                 ion_fmax=args.ion_fmax,
+                                 ion_max_steps=args.ion_max_steps,
+                                 log_dir=out_dir, snap_idx=i)
         Cij_list.append(Cij)
         v = vrh_full(Cij)
         vrh_list.append(v)
