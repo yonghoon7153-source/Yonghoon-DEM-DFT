@@ -90,7 +90,17 @@ def main():
     from ase.mep import NEB
     from ase.optimize import BFGS, FIRE
     from ase.constraints import FixAtoms
-    from ase.calculators.espresso import Espresso
+    from ase.calculators.espresso import Espresso, EspressoProfile
+
+    # Espresso profile (ASE 3.23+ explicit config — required, ASE_ESPRESSO_COMMAND
+    # env var alone is no longer enough; ASE raises BadConfiguration without this)
+    profile = EspressoProfile(
+        command=f"{args.mpirun} -np {args.mpi_np} {args.qe_bin}",
+        pseudo_dir=args.pseudo_dir,
+    )
+    print(f"[run_neb_qe] EspressoProfile:")
+    print(f"  command    = {args.mpirun} -np {args.mpi_np} {args.qe_bin}")
+    print(f"  pseudo_dir = {args.pseudo_dir}")
 
     # Load warm start
     print(f"[run_neb_qe] warm start: {args.warm_start}")
@@ -143,6 +153,7 @@ def main():
             "electrons": common_electrons,
         }
         img.calc = Espresso(
+            profile=profile,
             pseudopotentials=pseudos,
             kpts=tuple(args.kgrid),
             input_data=input_data,
