@@ -2723,6 +2723,19 @@ def plot_electronic_sigma(data_list, names, outdir):
                     if bool(arr_disp['excluded'][k]):
                         excl_idx_set.add(int(idx))
                 form_ok = True
+                # SECOND pass with allow_no_sigma=True — fills form_pred for
+                # phantom cases (raw σ missing) that have all OTHER features.
+                # User: "X로 빈곳도 초록색으로 표현"
+                arr_inc = _electronic_form_arrays(data_list, list(names),
+                                                  allow_no_sigma=True)
+                if arr_inc is not None:
+                    pred_inc = np.exp(arr_inc['X'] @ coef + arr_inc['log_offset'])
+                    pred_inc = np.minimum(pred_inc, _SIGMA_E_MAX)
+                    for k, idx in enumerate(arr_inc['keep_idx']):
+                        if (idx < len(form_pred)
+                                and not np.isfinite(form_pred[idx])
+                                and np.isfinite(pred_inc[k])):
+                            form_pred[idx] = float(pred_inc[k])
                 # Mark cases with σ raw but not in form arrays (cov/fp/etc. missing)
                 for i in range(len(data_list)):
                     if (not phantom[i]) and sigma_el[i] > 0 and (i not in in_arr):
@@ -5722,10 +5735,16 @@ def _f_perc_e_target(d):
     return float(v) / 100.0 if isinstance(v, (int, float)) and v > 0 else None
 
 
-def _electronic_form_arrays(data_list, names):
+def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
     """Walk data_list, filter to valid cases (sig + phi_am + am_am_cn +
     cov_AM + f_perc + tau ALL > 0, dedup by (phi, cn, sig) key).
     Returns dict or None if <8 usable cases.
+
+    allow_no_sigma=True: relaxes σ requirement so phantom cases (raw σ
+    missing) can enter arr for PREDICTION-ONLY purposes.  Used by
+    plot_electronic_sigma to show form prediction at X (phantom) positions.
+    These cases get sig=NaN (won't affect fit if filtered) but their
+    feature row enters X and form can predict them.
 
     Stage 22 PRODUCTION form — physically organized in 4 blocks:
 
@@ -5787,18 +5806,30 @@ def _electronic_form_arrays(data_list, names):
             if isinstance(tv, (int, float)) and tv > 0:
                 tau = float(tv); break
         am_area = d.get('am_am_mean_area', 0)
-        if not (sig and sig > 0
-                and isinstance(phi, (int, float)) and phi > _PHI_AM_MIN
+        # σ requirement: STRICT for fitting; RELAXED for prediction-only
+        sigma_ok = (sig and sig > 0)
+        if not allow_no_sigma and not sigma_ok:
+            continue
+        # All other features REQUIRED (form can't predict without them)
+        if not (isinstance(phi, (int, float)) and phi > _PHI_AM_MIN
                 and isinstance(cn, (int, float)) and cn > 0
                 and cov and cov > 0
                 and fp and fp > 0
                 and tau and tau > 0
                 and am_area and am_area > 0):
             continue
-        # Dedup: same case re-uploaded under different folder
-        key = (round(float(phi), 4), round(float(cn), 3), round(float(sig), 5))
+        # Dedup: same case re-uploaded under different folder.  When σ
+        # missing (allow_no_sigma case), include case index in key so
+        # phantom cases don't collide on sig=0.
+        if sigma_ok:
+            key = (round(float(phi), 4), round(float(cn), 3), round(float(sig), 5))
+        else:
+            key = ('phantom', i, round(float(phi), 4), round(float(cn), 3))
         if key in seen:
             continue
+        # Effective σ used downstream (for sigs array + logsf).  Phantom
+        # cases get sig=NaN so the fit-residual code naturally excludes them.
+        sig_use = float(sig) if sigma_ok else float('nan')
         seen.add(key)
         ras, rap = _r_am_sizes(d)
         ras = ras if (ras and np.isfinite(ras)) else 2.5
@@ -5810,7 +5841,7 @@ def _electronic_form_arrays(data_list, names):
         av = d.get('AM_S_vulnerable_pct')
         if not isinstance(av, (int, float)):
             av = d.get('am_vulnerable_pct', 0)
-        keep_idx.append(i); kept_names.append(real_all[i]); sigs.append(float(sig))
+        keep_idx.append(i); kept_names.append(real_all[i]); sigs.append(sig_use)
         phi_a.append(float(phi)); p_a.append(p); cn_a.append(float(cn))
         r_eff_a.append(r_eff); T_a.append(T_safe); am_vuln_a.append(float(av or 0))
         am_area_a.append(float(am_area)); tau_a.append(float(tau))
