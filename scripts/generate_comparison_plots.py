@@ -2793,11 +2793,22 @@ def plot_electronic_sigma(data_list, names, outdir):
     elif _SIGMA_S_LOCKED > 11.0:    # user set σ_AM(e) above Trevisanello default
         ax.set_ylim(0, _SIGMA_S_LOCKED * 1.05)
     ax.legend(fontsize=8, loc='upper left')
-    stage_n = "Stage 22 (Trevisanello-locked σ_S=10, σ_P=5)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit σ_S/σ_P)"
-    title = (f"Electronic Conductivity — Stage E target vs {stage_n} prediction"
-             + fit_summary + "\n"
-             "form = σ_S^(1-p)·σ_P^p·φ⁴·NCM_mix·√A·(T/d)^β_T·r_SE^β_rSE·exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ+β_covth·logcovAMP+β_fpth·logfp) + β_bi·p(1-p)·logφ + β_Fe·log f_intact)·C(τ)  "
-             "(global fit, cross-panel consistent)")
+    stage_n = "Stage 22 (Trevisanello-locked)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit)"
+    # Physically-organized form display (Stage 22 reorganization):
+    #   Block 1: AM material (Trevisanello literature)
+    #   Block 2: Geometric (Bruggeman + Holm)
+    #   Block 3: Network corrections
+    #   Block 4: Thin-film gates
+    #   Block 5: Fracture + Tortuosity
+    title = (f"σ_electronic — Stage E target vs {stage_n}" + fit_summary + "\n"
+             "σ_e = (σ_S·NCM_S)^(1-p)·(σ_P·NCM_P)^p  ←AM material (Trevisanello)   "
+             "× φ_AM⁴·√A_AM-AM  ←Bruggeman×Holm   "
+             "× (T/d)^β_T·r_SE^β_rSE  ←geometry\n"
+             "       × exp[β_AC·φ·logCN + β_v·v_AM]  ←network   "
+             "× exp[β_bi·p(1-p)·logφ]  ←composition coupling   "
+             "× exp[β_Fe·log f_intact]  ←fracture (Holm partial)\n"
+             "       × exp[g_thin·(β_φth·logφ + β_covth·log cov_AM,P + β_fpth·log f_p)]  ←thin film   "
+             "× C(τ) = exp[p_τ + q_τ·lnτ + r_τ·ln²τ]  ←tortuosity")
     if not form_ok:
         title = ("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
                  "σ_AM_ref = 50 mS/cm  [form overlay unavailable — corpus too small or fit failed]")
@@ -5685,25 +5696,44 @@ def _electronic_form_arrays(data_list, names):
     cov_AM + f_perc + tau ALL > 0, dedup by (phi, cn, sig) key).
     Returns dict or None if <8 usable cases.
 
-    Stage 21 form (PRODUCTION, 14 live OLS params, σ_ionic-grade target):
-      σ_e = σ_S^(1-p) · σ_P^p · φ_AM^4 · NCM_S^(1-p)·NCM_P^p · √A_AM-AM
-            · (T/d)^β_T · r_SE^β_logrSE
-            · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn))
-            · exp(g_thin·[β_φth·logφ + β_covth·log(cov_AM_P) + β_fpth·log(f_p)])
-            · exp(β_bi·p(1-p)·log(φ_AM))
-            · exp(β_Fe·log(f_intact_AM))
-            · C(τ)
-    Live params (14 OLS): σ_S, σ_P, β_T, β_v, [p_τ, q_τ, r_τ for C(τ)],
-                          β_AC, β_φth, β_covth, β_bi, β_Fe, β_fpth, β_logrSE
+    Stage 22 PRODUCTION form — physically organized in 4 blocks:
+
+    BLOCK 1 — AM material (Trevisanello 2021 literature LOCKED):
+      σ_e ∝ (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p
+        σ_S=10, σ_P=5 mS/cm    (S-end vs P-end effective AM, ratio 2.0 ✓ data)
+        NCM(r) = 1 / (1 + (r/2)^1.5)   (Trevisanello grain-boundary correction)
+
+    BLOCK 2 — Geometric scaling (locked exponents):
+      · φ_AM^4              Bruggeman/percolation, exponent=4 Stage 14 lock
+      · √A_AM-AM            Holm 1967 constriction (literature exponent 0.5)
+      · (T/d_AM)^β_T        Pouillet thickness, β_T live-fit
+      · r_SE^β_logrSE       SE size direct (Stage 21), β_logrSE live-fit
+
+    BLOCK 3 — Network corrections (live-fit, physics-motivated):
+      · exp(β_AC · φ · log CN)             dense+over-coord saturation (Stage 15)
+      · exp(β_v · v_AM)                     AM vulnerability (fracture-aware)
+      · exp(β_bi · p(1-p) · log φ_AM)       bimodal packing peak (Stage 19)
+      · exp(β_Fe · log f_intact_AM)         fracture Holm partial (Stage 20)
+
+    BLOCK 4 — Thin-film gates + tortuosity:
+      · exp(g_thin · [β_φth·logφ + β_covth·log cov_AM,P + β_fpth·log f_p])
+        g_thin = σ(-5·(T/d_AM − 8))   thin-film 3D→2D crossover gate (Stage 17/21)
+      · C(τ) = exp(p_τ + q_τ·lnτ + r_τ·ln²τ)   logpoly2 tortuosity (σ_ionic T1 mirror)
+
+    Live params (12 OLS, σ_S/σ_P LOCKED at Trevisanello literature):
+      β_T, β_v, [p_τ, q_τ, r_τ for C(τ)], β_AC, β_φth, β_covth,
+      β_bi, β_Fe, β_fpth, β_logrSE
+
     Adoption chain (each step LOOCV-validated):
-      Stage 15  φ·logCN   +0.024     (catches dense+over-coord cases)
-      Stage 16  endpoint-NCM (mix)   (S/P-end r_AM separately)
-      Stage 17  thin gates           (β_φth + β_covth)
-      Stage 19  bimodal coupling     (β_bi: middle-comp peak)
-      Stage 20  fracture Holm        (β_Fe: f_intact_AM partial-Holm)
-      Stage 21  + β_fpth + β_logrSE  (thin × percolation + r_SE direct)
-                + 4 EXCL additions (8mAh_2 sibling, 1mAh_5_AMP_S2 tail,
-                  2mAh_real_15 isolated corner, 8mAh_real_13 isolated high-φ)
+      Stage 15  φ·logCN saturation        ΔLOOCV +0.024
+      Stage 16  endpoint-NCM (S/P r_AM)   structural improvement
+      Stage 17  thin gates (β_φth, β_covth)  +0.012
+      Stage 19  bimodal coupling β_bi    +0.008
+      Stage 20  fracture Holm β_Fe       +0.020
+      Stage 21  + β_fpth + β_logrSE      +0.003 + EXCL refinement
+      Stage 22  LOCK σ_S=10, σ_P=5 (Trevisanello)
+                  ΔLOOCV ≈ 0 (data-confirmed ratio 2× sweet spot)
+                  → 12 OLS, more defensible, n/k 84/12 = 7.0 (was 6.0)
     """
     real_all = (_REAL_NAMES if (_REAL_NAMES and len(_REAL_NAMES) == len(data_list))
                 else list(names))
@@ -5991,18 +6021,22 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
     stage_str = ("Stage 22 (Trevisanello LOCKED σ_S/σ_P, 12 OLS params)"
                  if _LOCK_ENDPOINTS else "Stage 21 (14 OLS params, live-fit σ_S/σ_P)")
-    sig_str = (f"[σ_S={sigma_S:.1f} LOCKED, σ_P={sigma_P:.1f} LOCKED (Trevisanello 2021)"
-               if _LOCK_ENDPOINTS else f"[σ_S={sigma_S:.2f} σ_P={sigma_P:.2f}")
-    ax.set_ylabel(f'σ_e predicted ({stage_str.split()[0]} {stage_str.split()[1]} form, mS/cm)')
+    sig_str = (f"σ_S={sigma_S:.1f} LOCKED, σ_P={sigma_P:.1f} LOCKED (Trevisanello 2021)"
+               if _LOCK_ENDPOINTS else f"σ_S={sigma_S:.2f} σ_P={sigma_P:.2f}")
+    ax.set_ylabel('σ_e predicted (Stage 22 form, mS/cm)' if _LOCK_ENDPOINTS
+                  else 'σ_e predicted (Stage 21 form, mS/cm)')
+    # Physically-grouped 4-block layout (Stage 22 reorganization):
     ax.set_title(
-        f"σ_electronic — {stage_str}  "
-        f"(n_fit={n_fit}, excluded={int(excl.sum())})\n"
-        "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM_S^(1-p)·NCM_P^p · √A · (T/d)^β_T · r_SE^β_rSE · "
-        "exp(β_v·v + β_AC·φ·logCN + g_thin·(β_φth·logφ + β_covth·logcovAMP + β_fpth·logfp) + β_bi·p(1-p)·logφ + β_Fe·log f_intact) · C(τ)\n"
-        f"{sig_str} β_T={beta_T:+.2f} β_v={beta_v:+.2f} β_AC={beta_AC:+.2f} β_φth={beta_phi_thin:+.2f} "
-        f"β_covth={beta_cov_thin:+.2f} β_bi={beta_bi:+.2f} β_Fe={beta_Fe:+.2f} β_fpth={beta_fp_thin:+.2f} β_rSE={beta_log_rse:+.2f}]  "
+        f"σ_electronic — {stage_str}  (n_fit={n_fit}, excluded={int(excl.sum())})\n"
+        "BLOCK 1 (material): σ_e ∝ (σ_S·NCM_S)^(1-p) · (σ_P·NCM_P)^p     "
+        "BLOCK 2 (geometry): · φ_AM⁴ · √A_AM-AM · (T/d)^β_T · r_SE^β_rSE\n"
+        "BLOCK 3 (network corrections): · exp[β_AC·φ·logCN + β_v·v_AM + β_bi·p(1-p)·logφ + β_Fe·log f_intact_AM]\n"
+        "BLOCK 4 (thin-film + tortuosity): · exp[g_thin·(β_φth·logφ + β_covth·logcov_AM,P + β_fpth·logf_p)] · C(τ)\n"
+        f"[{sig_str}]   "
+        f"β_T={beta_T:+.2f} β_v={beta_v:+.2f} β_AC={beta_AC:+.2f} β_φth={beta_phi_thin:+.2f} "
+        f"β_covth={beta_cov_thin:+.2f} β_bi={beta_bi:+.2f} β_Fe={beta_Fe:+.2f} β_fpth={beta_fp_thin:+.2f} β_rSE={beta_log_rse:+.2f}   "
         f"R²={fit['r2']:.3f} LOOCV={fit['loocv']:.3f}",
-        fontsize=6.5)
+        fontsize=6.0)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_fit_final.png")
 
@@ -6207,15 +6241,28 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 21 (σ_ionic-grade push, 14 OLS)",
-    "description": "Stage 21 σ_electronic PRODUCTION form (14 live-fit OLS, σ_ionic-grade):\n"
-                   "σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r_AM_S)^(1-p)·NCM(r_AM_P)^p · √A_AM-AM · "
-                   "(T/d_AM)^β_T · r_SE^β_rSE\n"
-                   "      · exp(β_v·v_AM + β_AC·φ_AM·log(CN) + g_thin·(β_φth·logφ + β_covth·logcovAMP + β_fpth·logfp) "
-                   "+ β_bi·p(1-p)·logφ + β_Fe·log f_intact) · C(τ).\n"
-                   "Stage 21 추가 (2026-06-01): β_fpth (g_thin × log f_p, thin × percolation backbone) + "
-                   "β_logrSE (universal r_SE direct).  Δ_LOOCV +0.011 (5-fold combo).\n"
-                   "+4 EXCL: 8mAh_2 (sibling), 1mAh_5_AMP_S2 (tail), 2mAh_real_15 + 8mAh_real_13 (isolated corners).",
+    "title": "σ_electronic → Stage 22 (Trevisanello-locked, 12 OLS) — 물리 4-block 정돈",
+    "description": "Stage 22 PRODUCTION form, 4 physical block 으로 정돈:\n\n"
+                   "BLOCK 1 — AM material (literature locked):\n"
+                   "  σ_e ∝ (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p\n"
+                   "  σ_S=10, σ_P=5 (Trevisanello 2021 NCM polycrystalline vs single-crystal)\n"
+                   "  NCM(r) = 1 / (1 + (r/2)^1.5)  (Trevisanello grain-boundary 보정)\n\n"
+                   "BLOCK 2 — Geometric (literature locked exponents):\n"
+                   "  · φ_AM⁴  (Bruggeman 3D percolation, Stage 14 데이터 lock)\n"
+                   "  · √A_AM-AM  (Holm 1967 constriction resistance)\n"
+                   "  · (T/d_AM)^β_T  (Pouillet thickness penalty)\n"
+                   "  · r_SE^β_rSE  (SE 입자 size 직접 효과, Stage 21)\n\n"
+                   "BLOCK 3 — Network corrections (live-fit, physics-motivated):\n"
+                   "  · exp(β_AC · φ · log CN)  (dense + over-coord 포화 — Stage 15)\n"
+                   "  · exp(β_v · v_AM)  (AM 취약도 — fracture-aware)\n"
+                   "  · exp(β_bi · p(1-p) · log φ)  (bimodal packing peak — Stage 19)\n"
+                   "  · exp(β_Fe · log f_intact_AM)  (fracture-aware Holm — Stage 20)\n\n"
+                   "BLOCK 4 — Thin-film gates + tortuosity:\n"
+                   "  · exp(g_thin · (β_φth·logφ + β_covth·logcov_AM,P + β_fpth·logf_p))\n"
+                   "  g_thin = σ(-5(T/d − 8))  (thin-film 3D→2D crossover gate, Stage 17/21)\n"
+                   "  · C(τ) = exp(p_τ + q_τ·lnτ + r_τ·ln²τ)  (logpoly2, σ_ionic T1 mirror)\n\n"
+                   "Trevisanello 2× ratio 검증: 데이터 sensitivity test 결과 ratio 2.0 이 sweet spot\n"
+                   "(LOOCV 0.945), ratio 1.43 (10/7) → 0.914, 3.33 (10/3) → 0.921, 1.0 → 0.841.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20% band. ✗ 표시 = audit 제외.",
 }
 
