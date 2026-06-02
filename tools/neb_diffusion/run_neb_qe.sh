@@ -14,9 +14,9 @@ WORK="${1:?usage: $0 <work_dir> <li3n|lic6> [warm_start_xyz]}"
 SYSTEM="${2:?usage: $0 <work_dir> <li3n|lic6> [warm_start_xyz]}"
 WARM_ARG="${3:-}"
 
-# ---- NVHPC HPCX env (same as other gabia QE GPU runs) ----
-export PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin:/usr/local/bin:/usr/bin:/bin
-export LD_LIBRARY_PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
+# ---- NVHPC HPCX env (PREPENDED so conda env python with ASE/numpy survives) ----
+export PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin:$PATH
+export LD_LIBRARY_PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64:${LD_LIBRARY_PATH:-}
 export OPAL_PREFIX=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi
 export OMP_NUM_THREADS=1
 export CUDA_VISIBLE_DEVICES=0
@@ -25,6 +25,12 @@ export OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 
 QE=/data/apps/qe-7.4.1-gpu/bin/pw.x
 MPIRUN=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+
+# Pick conda env python (the launching shell must have ASE+numpy)
+PYTHON_BIN="${PYTHON_BIN:-$(command -v python3)}"
+echo "Using python: $PYTHON_BIN"
+$PYTHON_BIN -c "import numpy, ase; print('  numpy', numpy.__version__); print('  ase  ', ase.__version__)" \
+    || { echo "ERROR: numpy/ase not importable by $PYTHON_BIN — activate uma env first"; exit 2; }
 
 # ASE Espresso command (uses ASE_ESPRESSO_COMMAND in calculator)
 export ASE_ESPRESSO_COMMAND="$MPIRUN -np 1 $QE -in PREFIX.pwi > PREFIX.pwo"
@@ -52,7 +58,7 @@ echo "  WARM_START  = $WARM"
 echo "  PSEUDOS     = ${PSEUDOS[*]}"
 nvidia-smi --query-gpu=index,name --format=csv,noheader
 
-exec python3 "$(dirname "$0")/run_neb_qe.py" \
+exec "$PYTHON_BIN" "$(dirname "$0")/run_neb_qe.py" \
     --warm_start "$WARM" \
     --work_dir   "$WORK" \
     --pseudos    "${PSEUDOS[@]}" \
