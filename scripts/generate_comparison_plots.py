@@ -6161,12 +6161,14 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    ax.set_ylabel('σ_e predicted (Stage 21 form)')
-    top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:3])
+    stage_lbl = "Stage 22 (Trevisanello-locked, 12 OLS)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit, 14 OLS)"
+    ax.set_ylabel(f'σ_e predicted ({stage_lbl} form)')
+    # Show 5 top features to match modal (was 3 — inconsistency with modal display)
+    top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:5])
     ax.set_title(
-        f"σ_electronic Stage 21 outliers (14 OLS, σ_ionic-grade push)  (n={arr['n']}, "
-        f"{int(is_out.sum())} >20%, {int(excl.sum())} excluded)\n"
-        f"top residual-corr features -> {top_corr}", fontsize=7.5)
+        f"σ_electronic {stage_lbl} outliers  (n={arr['n']}, "
+        f"{int(is_out.sum())} >±20%, {int(excl.sum())} excluded)\n"
+        f"top residual-corr features → {top_corr}", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_outliers_final.png")
 
