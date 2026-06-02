@@ -51,11 +51,26 @@
       "notes": "Initial detection issues (E_F inside valence band, vacuum region detection) resolved by restricting search to E > -3 eV."
     },
     "8d_elastic_static": {
-      "status": "12_strain_SCF_done_fit_pending",
-      "method": "stress-strain finite-difference (12 SCFs ±0.005, 6 Voigt patterns)",
-      "outputs": ["elastic_static/strain_*.in/out (12 files)"],
-      "next": "tools/modelc_v3/fit_elastic_cij_stress.py",
-      "expected_outputs": "full 6x6 Cij + VRH (B, G, E, ν, Zener A)",
+      "status": "12_strain_SCF_done_Cij_fit_done_2026_06_02",
+      "method": "stress-strain finite-difference (12 SCFs ±0.005, 6 Voigt patterns), full 6×6 Cij via stress tensor σ = -(1/V) ∂E/∂ε with QE sign flip",
+      "script": "tools/modelc_v3/fit_elastic_cij_stress.py",
+      "outputs": ["elastic_static/strain_*.in/out (12 files)", "elastic_static/elastic_results_stress.json"],
+      "Cij_GPa": {
+        "C11_avg": 89.87, "C11_std": 3.16,
+        "C12_avg": 21.82, "C12_std": 2.43,
+        "C44_avg": 14.43, "C44_std": 1.25,
+        "C11_C22_C33": [85.40, 92.30, 91.90],
+        "C12_C13_C23": [20.30, 25.25, 19.90],
+        "C44_C55_C66": [13.55, 16.20, 13.55]
+      },
+      "VRH_engineering": {
+        "B_VRH": 44.47, "G_VRH": 20.05, "E_VRH": 52.30,
+        "nu": 0.3040, "Zener_A": 0.416,
+        "B_Voigt": 44.50, "B_Reuss": 44.44,
+        "G_Voigt": 22.27, "G_Reuss": 17.83
+      },
+      "mechanically_stable": true,
+      "eigenvalues_GPa": [11.56, 12.67, 18.14, 63.78, 73.14, 133.61],
       "energies_Ry": {
         "strain_11_p": -1262.91136269, "strain_11_m": -1262.91223819,
         "strain_22_p": -1262.91095339, "strain_22_m": -1262.91255067,
@@ -64,6 +79,18 @@
         "strain_13_p": -1262.91125779, "strain_13_m": -1262.91308253,
         "strain_12_p": -1262.91263525, "strain_12_m": -1262.91178006
       }
+    }
+  },
+
+  "elastic_dft_0K_GPa": {
+    "method": "stress-strain full Cij with QE sign flip (12 SCFs, 2026-06-02)",
+    "C11": 89.87, "C12": 21.82, "C44": 14.43,
+    "B_VRH": 44.47, "G_VRH": 20.05, "E_VRH": 52.30,
+    "nu": 0.304, "Zener_A": 0.416,
+    "validation": {
+      "vs_modelc_v1_DFT_K": {"modelc_v1_K": 43.7, "modelc_v3_K": 44.47, "delta_pct": "+1.8% — cross-validates stress-strain method"},
+      "vs_modelc_v1_DFT_C11": {"modelc_v1": 85.3, "modelc_v3": 89.87, "delta_pct": "+5.4%"},
+      "vs_modelc_v1_DFT_C44": {"modelc_v1": 28.0, "modelc_v3": 14.43, "delta_pct": "-48.6% — Li disorder basin (v3 disordered, v1 ordered 0K)"}
     }
   },
 
