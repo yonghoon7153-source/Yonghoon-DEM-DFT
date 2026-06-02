@@ -6372,6 +6372,10 @@ def main():
     parser.add_argument("--global-c-ion", default="")  # e.g. "0.0727" (C from ionic scaling fit)
     parser.add_argument("--y-max-sigma", type=float, default=None,
                         help="Fixed y-axis max (mS/cm) for multiscale σ plots; enables cross-run visual comparison")
+    parser.add_argument("--sigma-S", type=float, default=None,
+                        help="σ_e form: S-end AM conductivity (mS/cm). Default=10 (Trevisanello locked). Set to override.")
+    parser.add_argument("--sigma-P", type=float, default=None,
+                        help="σ_e form: P-end AM conductivity (mS/cm). Default=5 (Trevisanello locked). Set to override.")
     # Generic parameter-comparison selections
     parser.add_argument("--param-x", default="")   # scatter X metric key
     parser.add_argument("--param-y", default="")   # scatter Y metric key
@@ -6381,6 +6385,17 @@ def main():
     parser.add_argument("--focus-label", default="")  # group name(s) shown on the 1-1 plot
     parser.add_argument("--fit-corpus-inputs", nargs="*", default=[])  # full corpus for global fit stats
     args = parser.parse_args()
+
+    # σ_e endpoint override (user-set σ_S/σ_P from UI) — applies to Stage 22
+    # locked form.  If both blank → use Trevisanello defaults (10, 5).
+    # If user sets either, override the module constant before any plot runs.
+    global _SIGMA_S_LOCKED, _SIGMA_P_LOCKED
+    if args.sigma_S is not None and args.sigma_S > 0:
+        _SIGMA_S_LOCKED = float(args.sigma_S)
+        print(f"  [σ_e] σ_S OVERRIDE: {_SIGMA_S_LOCKED:.2f} mS/cm (user set)")
+    if args.sigma_P is not None and args.sigma_P > 0:
+        _SIGMA_P_LOCKED = float(args.sigma_P)
+        print(f"  [σ_e] σ_P OVERRIDE: {_SIGMA_P_LOCKED:.2f} mS/cm (user set)")
 
     global _PARAM_X, _PARAM_Y, _PARAM_LIST, _PARAM_NORM, _FOCUS_CASES, _FOCUS_LABEL, _FIT_CORPUS
     _PARAM_X = args.param_x or None

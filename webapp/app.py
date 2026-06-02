@@ -4605,6 +4605,24 @@ def group_plots():
                 cmd += ['--y-max-sigma', str(_yms)]
         except ValueError:
             pass  # invalid → ignore, fall back to auto
+    # σ_e endpoint overrides (Stage 22 form): user can set σ_S/σ_P via UI
+    # to test custom literature anchors (default Trevisanello 10/5)
+    sigma_S_e = request.form.get('sigma_S_e', '').strip()
+    sigma_P_e = request.form.get('sigma_P_e', '').strip()
+    if sigma_S_e:
+        try:
+            _sS = float(sigma_S_e)
+            if _sS > 0:
+                cmd += ['--sigma-S', str(_sS)]
+        except ValueError:
+            pass
+    if sigma_P_e:
+        try:
+            _sP = float(sigma_P_e)
+            if _sP > 0:
+                cmd += ['--sigma-P', str(_sP)]
+        except ValueError:
+            pass
     # Generic parameter-comparison selections (param_scatter/bar/corr)
     param_x = request.form.get('param_x', '').strip()
     param_y = request.form.get('param_y', '').strip()

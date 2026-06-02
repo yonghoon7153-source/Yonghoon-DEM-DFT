@@ -137,6 +137,18 @@
         <input type="number" id="y-max-sigma-input" step="0.05" min="0.01" placeholder="auto"
                style="width:70px;padding:3px 6px;font-size:.78rem;border:1px solid var(--border);border-radius:4px;background:var(--bg-2);color:var(--text)">
       </label>
+      <label style="font-size:.78rem;color:var(--dim);display:flex;align-items:center;gap:4px"
+             title="σ_e Stage 22 form 의 σ_S (S-end AM 효과적 전도도, mS/cm). 비우면 Trevisanello 기본값 10 사용. 변경 후 '선택 플롯 생성' 클릭.">
+        σ_S(e)
+        <input type="number" id="sigma-S-e-input" step="0.1" min="0.1" placeholder="10"
+               style="width:55px;padding:3px 6px;font-size:.78rem;border:1px solid var(--border);border-radius:4px;background:var(--bg-2);color:var(--text)">
+      </label>
+      <label style="font-size:.78rem;color:var(--dim);display:flex;align-items:center;gap:4px"
+             title="σ_e Stage 22 form 의 σ_P (P-end AM 효과적 전도도, mS/cm). 비우면 Trevisanello 기본값 5 사용.">
+        σ_P(e)
+        <input type="number" id="sigma-P-e-input" step="0.1" min="0.1" placeholder="5"
+               style="width:55px;padding:3px 6px;font-size:.78rem;border:1px solid var(--border);border-radius:4px;background:var(--bg-2);color:var(--text)">
+      </label>
       <button class="btn btn-secondary" onclick="document.querySelectorAll('.plot-checkbox:not([style*=opacity]) input').forEach(c=>c.checked=true)">모두 선택</button>
       <button class="btn btn-primary" onclick="generatePlots()" id="plot-btn">선택 플롯 생성</button>
       <button class="btn btn-secondary" onclick="generateFittingReport()" id="fitting-btn" disabled title="플롯 생성 후 사용 가능" style="opacity:0.5">📊 Fitting Report</button>
@@ -983,6 +995,10 @@ async function generatePlots() {
       console.log(`Global plots: ${globalPlotList.join(', ')} | ${allCaseGroups.length} groups, ${totalCases} cases`);
       const _yMaxInputG = document.getElementById('y-max-sigma-input');
       if (_yMaxInputG && _yMaxInputG.value) gform.append('y_max_sigma', _yMaxInputG.value);
+      const _sSeG = document.getElementById('sigma-S-e-input');
+      const _sPeG = document.getElementById('sigma-P-e-input');
+      if (_sSeG && _sSeG.value) gform.append('sigma_S_e', _sSeG.value);
+      if (_sPeG && _sPeG.value) gform.append('sigma_P_e', _sPeG.value);
       appendFocusFields(gform);
       const gres = await fetch('/group/plots', { method: 'POST', body: gform });
       const gdata = await gres.json();
@@ -1037,6 +1053,11 @@ async function generatePlots() {
       if (globalCIon) form.append('global_c_ion', globalCIon);
       const yMaxInput = document.getElementById('y-max-sigma-input');
       if (yMaxInput && yMaxInput.value) form.append('y_max_sigma', yMaxInput.value);
+      // σ_e Stage 22 endpoint overrides (UI inputs σ_S(e) and σ_P(e))
+      const _sSe = document.getElementById('sigma-S-e-input');
+      const _sPe = document.getElementById('sigma-P-e-input');
+      if (_sSe && _sSe.value) form.append('sigma_S_e', _sSe.value);
+      if (_sPe && _sPe.value) form.append('sigma_P_e', _sPe.value);
       // Generic parameter-comparison selections (param_scatter/bar/corr)
       appendParamFields(form);
       appendFocusFields(form);
