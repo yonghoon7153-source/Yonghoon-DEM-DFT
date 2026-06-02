@@ -3,16 +3,17 @@
   "description": "Elastic constants: DFT 0K clamped-ion, MLIP 300K unit cell, MLIP 300K 2x2x1 SC, MLIP 600K snapshot (paper)",
 
   "dft_0K_clamped_ion": {
+    "_version": "v1 (legacy, ordered-Li 0K, energy-curvature C_ii + cubic-symmetry C12 from BM K)",
     "method": "QE finite strain ±0.005, 6 patterns x pos/neg = 12 SCF, kbar->GPa, QE sign flip",
-    "notes": "Ordered Li -> cooperative shear -> C44 overestimated. Reference only, NOT for paper.",
+    "notes": "Ordered Li -> cooperative shear -> C44 overestimated. Reference only, NOT for paper. For paper-quality finite-T values, see mlip_600K_snapshot (also v1 lineage) or the new dft_0K_clamped_ion_stress_strain_full_Cij (v3 lineage, annealed Li, full 6×6 Cij).",
     "results": [
-      {"id": "comp1",  "C11": 74.4, "C12": 29.4, "C44": 37.9, "K": 44.4, "G": 30.3, "E": 76.9, "nu": 0.178},
-      {"id": "comp2",  "C11": 73.4, "C12": 29.2, "C44": 37.4, "K": 43.9, "G": 29.7, "E": 75.9, "nu": 0.178},
-      {"id": "comp3",  "C11": 85.6, "C12": 21.0, "C44": 27.5, "K": 42.5, "G": 29.2, "E": 71.7, "nu": 0.200},
-      {"id": "comp4",  "C11": 85.5, "C12": 20.9, "C44": 27.3, "K": 42.4, "G": 29.1, "E": 71.5, "nu": 0.200},
-      {"id": "comp5_A","C11": 87.4, "C12": 20.6, "C44": 39.9, "K": 42.9, "G": 37.1, "E": 86.5, "nu": 0.164},
-      {"id": "comp5_B","C11": 84.6, "C12": 20.4, "C44": 27.2, "K": 41.8, "G": 29.1, "E": 70.9, "nu": 0.196},
-      {"id": "modelc", "C11": 85.3, "C12": 25.6, "C44": 28.0, "K": 43.7, "G": 30.0, "E": 73.3, "nu": 0.221}
+      {"id": "comp1",   "version": "v1", "C11": 74.4, "C12": 29.4, "C44": 37.9, "K": 44.4, "G": 30.3, "E": 76.9, "nu": 0.178},
+      {"id": "comp2",   "version": "v1", "C11": 73.4, "C12": 29.2, "C44": 37.4, "K": 43.9, "G": 29.7, "E": 75.9, "nu": 0.178},
+      {"id": "comp3",   "version": "v1", "C11": 85.6, "C12": 21.0, "C44": 27.5, "K": 42.5, "G": 29.2, "E": 71.7, "nu": 0.200},
+      {"id": "comp4",   "version": "v1", "C11": 85.5, "C12": 20.9, "C44": 27.3, "K": 42.4, "G": 29.1, "E": 71.5, "nu": 0.200},
+      {"id": "comp5_A", "version": "v1", "C11": 87.4, "C12": 20.6, "C44": 39.9, "K": 42.9, "G": 37.1, "E": 86.5, "nu": 0.164},
+      {"id": "comp5_B", "version": "v1", "C11": 84.6, "C12": 20.4, "C44": 27.2, "K": 41.8, "G": 29.1, "E": 70.9, "nu": 0.196},
+      {"id": "modelc",  "version": "v1", "C11": 85.3, "C12": 25.6, "C44": 28.0, "K": 43.7, "G": 30.0, "E": 73.3, "nu": 0.221, "notes": "ordered Li 0K, supersedes_by: modelc_v3 (annealed)"}
     ]
   },
 
@@ -54,18 +55,20 @@
   },
 
   "mlip_300K_unit_cell": {
+    "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
     "method": "MACE CPU, 300K Langevin 5ps -> quench -> relaxed-ion Cij",
     "results": [
-      {"id": "comp1",  "C11": 40.1, "C12": 15.7, "C44": 25.0, "K": 23.7, "G": 18.6, "E": 44.3, "nu": 0.188},
-      {"id": "comp2",  "C11": 39.5, "C12": 17.0, "C44": 22.8, "K": 24.4, "G": 17.0, "E": 41.4, "nu": 0.217},
-      {"id": "comp3",  "C11": 54.3, "C12": 15.0, "C44": 14.5, "K": 28.1, "G": 15.3, "E": 39.0, "nu": 0.269},
-      {"id": "comp4",  "C11": 46.2, "C12": 7.7,  "C44": 13.9, "K": 20.5, "G": 15.1, "E": 36.4, "nu": 0.204},
-      {"id": "comp5_A","C11": 26.1, "C12": 14.2, "C44": 12.1, "K": 18.2, "G": 8.4,  "E": 21.7, "nu": 0.289},
-      {"id": "comp5_B","C11": 44.7, "C12": 11.4, "C44": 14.2, "K": 22.4, "G": 14.6, "E": 36.0, "nu": 0.233}
+      {"id": "comp1",  "version": "v1", "C11": 40.1, "C12": 15.7, "C44": 25.0, "K": 23.7, "G": 18.6, "E": 44.3, "nu": 0.188},
+      {"id": "comp2",  "version": "v1", "C11": 39.5, "C12": 17.0, "C44": 22.8, "K": 24.4, "G": 17.0, "E": 41.4, "nu": 0.217},
+      {"id": "comp3",  "version": "v1", "C11": 54.3, "C12": 15.0, "C44": 14.5, "K": 28.1, "G": 15.3, "E": 39.0, "nu": 0.269},
+      {"id": "comp4",  "version": "v1", "C11": 46.2, "C12": 7.7,  "C44": 13.9, "K": 20.5, "G": 15.1, "E": 36.4, "nu": 0.204},
+      {"id": "comp5_A","version": "v1", "C11": 26.1, "C12": 14.2, "C44": 12.1, "K": 18.2, "G": 8.4,  "E": 21.7, "nu": 0.289},
+      {"id": "comp5_B","version": "v1", "C11": 44.7, "C12": 11.4, "C44": 14.2, "K": 22.4, "G": 14.6, "E": 36.0, "nu": 0.233}
     ]
   },
 
   "mlip_300K_supercell_2x2x1": {
+    "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
     "method": "MACE, 2x2x1 SC (208-248 atoms), 300K MD -> quench -> Cij",
     "results": [
       {"id": "comp1",  "C11": 48.8, "C12": 25.2, "C44": 24.7, "K": 33.0, "G": 18.3, "E": 46.4, "nu": 0.266},
@@ -78,22 +81,33 @@
   },
 
   "mlip_600K_snapshot": {
-    "method": "600K MD 10-18ps -> 5 snapshots -> quench -> FIRE relax -> finite-strain Cij -> VRH avg +/- SD",
+    "_version": "v1 (legacy MACE, ordered-Li 0K starting structure → 600 K MD)",
+    "_lineage_note": "comp1-5, modelc rows below all START from v1 ordered-Li structures. For modelC_v3 (annealed Li + DFT-relaxed V0), see mlip_600K_snapshot_v3 section below.",
+    "method": "MACE, 600K MD 10-18ps -> 5 snapshots -> quench -> FIRE relax -> finite-strain Cij -> VRH avg +/- SD",
     "temperature_K": 600,
     "n_snapshots": 5,
     "includes_Li_disorder": true,
     "includes_thermal_vibration": false,
     "paper_values": true,
     "results": [
-      {"id": "comp1",  "C11": 33.1, "C11_std": 1.2, "C12": 15.0, "C12_std": 0.5, "C44": 13.1, "C44_std": 0.6, "K": 21.0, "G": 11.5, "E": 29.1, "E_std": 1.1},
-      {"id": "comp2",  "C11": 33.1, "C11_std": 1.0, "C12": 15.2, "C12_std": 0.4, "C44": 12.7, "C44_std": 0.5, "K": 21.2, "G": 11.2, "E": 28.6, "E_std": 1.1, "expt_E": null},
-      {"id": "comp3",  "C11": 34.5, "C11_std": 0.8, "C12": 14.0, "C12_std": 0.3, "C44": 10.9, "C44_std": 0.4, "K": 20.9, "G": 10.6, "E": 27.3, "E_std": 0.4, "expt_E": null},
-      {"id": "comp4",  "C11": 33.4, "C11_std": 1.1, "C12": 14.1, "C12_std": 0.5, "C44": 10.7, "C44_std": 0.6, "K": 20.5, "G": 10.3, "E": 26.4, "E_std": 1.6, "expt_E": null},
-      {"id": "comp5_A","C11": 34.9, "C11_std": 1.5, "C12": 17.1, "C12_std": 0.7, "C44": 14.0, "C44_std": 0.8, "K": 23.0, "G": 11.7, "E": 30.0, "expt_E": null},
-      {"id": "comp5_B","C11": 32.8, "C11_std": 1.2, "C12": 13.1, "C12_std": 0.4, "C44": 10.2, "C44_std": 0.3, "K": 19.6, "G": 10.1, "E": 25.8, "E_std": 0.8, "expt_E": null},
-      {"id": "modelc", "C11": 39.3, "C11_std": 1.1, "C12": 15.4, "C12_std": 0.7, "C44": 12.9, "C44_std": 0.7, "K": 23.4, "G": 13.0, "E": 32.9, "E_std": 0.9, "expt_E": null, "notes": "Sign-corrected. Cl-only, highest E!"}
+      {"id": "comp1",  "version": "v1", "C11": 33.1, "C11_std": 1.2, "C12": 15.0, "C12_std": 0.5, "C44": 13.1, "C44_std": 0.6, "K": 21.0, "G": 11.5, "E": 29.1, "E_std": 1.1},
+      {"id": "comp2",  "version": "v1", "C11": 33.1, "C11_std": 1.0, "C12": 15.2, "C12_std": 0.4, "C44": 12.7, "C44_std": 0.5, "K": 21.2, "G": 11.2, "E": 28.6, "E_std": 1.1, "expt_E": null},
+      {"id": "comp3",  "version": "v1", "C11": 34.5, "C11_std": 0.8, "C12": 14.0, "C12_std": 0.3, "C44": 10.9, "C44_std": 0.4, "K": 20.9, "G": 10.6, "E": 27.3, "E_std": 0.4, "expt_E": null},
+      {"id": "comp4",  "version": "v1", "C11": 33.4, "C11_std": 1.1, "C12": 14.1, "C12_std": 0.5, "C44": 10.7, "C44_std": 0.6, "K": 20.5, "G": 10.3, "E": 26.4, "E_std": 1.6, "expt_E": null},
+      {"id": "comp5_A","version": "v1", "C11": 34.9, "C11_std": 1.5, "C12": 17.1, "C12_std": 0.7, "C44": 14.0, "C44_std": 0.8, "K": 23.0, "G": 11.7, "E": 30.0, "expt_E": null},
+      {"id": "comp5_B","version": "v1", "C11": 32.8, "C11_std": 1.2, "C12": 13.1, "C12_std": 0.4, "C44": 10.2, "C44_std": 0.3, "K": 19.6, "G": 10.1, "E": 25.8, "E_std": 0.8, "expt_E": null},
+      {"id": "modelc", "version": "v1", "C11": 39.3, "C11_std": 1.1, "C12": 15.4, "C12_std": 0.7, "C44": 12.9, "C44_std": 0.7, "K": 23.4, "G": 13.0, "E": 32.9, "E_std": 0.9, "expt_E": null, "notes": "Sign-corrected. Cl-only, highest E! v1 ordered-Li start; superseded by modelc_v3 once new MLIP 600K snapshot (Pipeline v2 §8e v3) finishes."}
     ],
     "trend": "With ModelC: ModelC(32.6) > comp1(29.1) > comp2(28.6) > comp3(27.3) > comp4(26.4) > comp5(25.8). Br up E down, Cl-only = most rigid."
+  },
+
+  "mlip_600K_snapshot_v3": {
+    "_version": "v3 (modelC_v3 only — annealed Li, DFT-relaxed V0 starting structure)",
+    "_purpose": "Re-run of MLIP 600K snapshot starting from modelC_v3 V0 (Pipeline v2 §8e). Same composition (Li5.4PS4.4Cl1.6) as modelc in v1 row above but different starting structure (annealed champion, DFT-relaxed). Expected to converge to similar finite-T Cij ensemble; quantifies how much starting structure matters at 600 K.",
+    "method": "UMA-s-1p1 (task=omat), Langevin 600 K, equilib 10 ps + prod 20 ps, 5 snapshots, FIRE quench (fmax 0.01), stress-strain Cij full 6×6 with sign flip",
+    "script": "tools/modelc_v3/elastic_mlip_600K.py",
+    "status": "queued",
+    "results": []
   },
 
   "comp5_basin_comparison": {
