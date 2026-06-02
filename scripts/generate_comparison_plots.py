@@ -2714,8 +2714,11 @@ def plot_electronic_sigma(data_list, names, outdir):
                 # Track AUDIT EXCLUDED cases (in arr but flagged in _EXCLUDED_NAMES_EL)
                 # so per-config plot can mark them like parity plot does
                 excl_idx_set = set()
+                # User feedback: extend form prediction to phantom cases too —
+                # if the case is in arr_disp (form-array valid), form CAN predict
+                # even when raw σ is missing (phantom).  Drop `not phantom` filter.
                 for k, idx in enumerate(arr_disp['keep_idx']):
-                    if idx < len(form_pred) and not phantom[idx]:
+                    if idx < len(form_pred):
                         form_pred[idx] = float(pred_disp[k])
                     if bool(arr_disp['excluded'][k]):
                         excl_idx_set.add(int(idx))
@@ -2724,14 +2727,14 @@ def plot_electronic_sigma(data_list, names, outdir):
                 for i in range(len(data_list)):
                     if (not phantom[i]) and sigma_el[i] > 0 and (i not in in_arr):
                         form_missing[i] = True
-                # 68% PI band from bootstrap
+                # 68% PI band from bootstrap — also extend to phantom cases
                 band = _electronic_pred_band(arr_disp, ci=0.68)
                 if band is not None:
                     pred_med, pred_lo, pred_hi = band
                     pred_lo = np.minimum(pred_lo, _SIGMA_E_MAX)
                     pred_hi = np.minimum(pred_hi, _SIGMA_E_MAX)
                     for k, idx in enumerate(arr_disp['keep_idx']):
-                        if idx < len(pi_lo) and not phantom[idx]:
+                        if idx < len(pi_lo):
                             pi_lo[idx] = float(pred_lo[k])
                             pi_hi[idx] = float(pred_hi[k])
                     band_ok = True
