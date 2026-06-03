@@ -342,9 +342,15 @@ def generate_report(data_list, names, outdir):
     L.append("```\n")
 
 
-    # ── Electronic — Stage 15 PRODUCTION form (2026-05-29: a=4 + φ_AM·log(am_am_cn))
-    # σ_e = σ_S^(1-p)·σ_P^p · φ_AM⁴ · NCM(r̄) · √A_AM-AM
-    #       · (T/d_AM)^β_T · exp(β_v·v_AM + β_AC·φ_AM·log(am_am_cn)) · C(τ)
+    # ── Electronic — Stage 22 PRODUCTION form (2026-06-03, Trevisanello-locked)
+    # σ_e = (σ_S·NCM_S)^(1-p) · (σ_P·NCM_P)^p           ← AM material (Trevisanello LOCKED)
+    #       · φ_AM⁴ · √A_AM-AM                            ← Bruggeman × Holm (structure)
+    #       · (T/d_AM)^β_T · r_SE^β_logrSE                ← geometry
+    #       · exp[β_AC·φ·logCN + β_v·v_AM]               ← network corrections
+    #       · exp[β_bi·p(1-p)·logφ]                       ← composition coupling
+    #       · exp[β_Fe·log f_intact]                      ← fracture (Holm partial)
+    #       · exp[g_thin·(β_φth·logφ + β_covth·log cov + β_fpth·log fp)]  ← thin film
+    #       · C(τ) = exp[p_τ + q_τ·lnτ + r_τ·ln²τ]        ← tortuosity
     el_r2, el_loo, el_b, el_n = None, None, None, 0
     try:
         # Use the same _electronic_form_arrays + _electronic_fit as the dashboard plot
@@ -359,30 +365,34 @@ def generate_report(data_list, names, outdir):
         el_r2, el_loo, el_n = None, None, 0
 
     if el_r2 is not None:
-        L.append(f"### Electronic — Stage 15 PRODUCTION form (R²={el_r2:.3f}, "
-                 f"LOOCV={el_loo:.3f}, n={el_n}, 8 free params)\n")
+        L.append(f"### Electronic — Stage 22 PRODUCTION form (R²={el_r2:.3f}, "
+                 f"LOOCV={el_loo:.3f}, n={el_n}, 12 free params + 2 LOCKED endpoints)\n")
     else:
-        L.append(f"### Electronic — Stage 15 PRODUCTION form (corpus too small: n={el_n}<8, "
+        L.append(f"### Electronic — Stage 22 PRODUCTION form (corpus too small: n={el_n}<8, "
                  "show schema only)\n")
     L.append("```")
-    L.append("σ_e = σ_S^(1-p) · σ_P^p · φ_AM⁴ · NCM(r̄_AM) · √A_AM-AM · (T/d_AM)^β_T")
-    L.append("      · exp[ β_v · v_AM + β_AC · φ_AM · log(am_am_cn) ] · C(τ)")
+    L.append("σ_e = (σ_S·NCM_S)^(1-p) · (σ_P·NCM_P)^p")
+    L.append("      · φ_AM⁴ · √A_AM-AM · (T/d_AM)^β_T · r_SE^β_logrSE")
+    L.append("      · exp[β_AC·φ·log(CN) + β_v·v_AM + β_bi·p(1-p)·logφ + β_Fe·log f_intact]")
+    L.append("      · exp[g_thin·(β_φth·logφ + β_covth·log cov_AM,P + β_fpth·log f_p)]")
+    L.append("      · C(τ),   C(τ) = exp[p_τ + q_τ·lnτ + r_τ·ln²τ]")
     L.append("")
-    L.append("  σ_S, σ_P : Trevisanello 단결정/다결정 NCM811 endpoints (geometric mix)")
-    L.append("  φ_AM⁴    : dense-network percolation (locked exponent 4)")
-    L.append("  NCM(r̄)   = 1 / (1 + (r̄/2µm)^1.5)   Trevisanello 2021 GB density")
-    L.append("  √A_AM-AM : Holm 1967 a-spot constriction (per-contact area)")
-    L.append("  (T/d_AM)^β_T : thin-electrode geometric penalty")
-    L.append("  β_AC < 0 : dense + over-coordinated saturation correction")
-    L.append("             (Stage 14 nested CV: Δ+0.024, β_AC ≈ -0.46)")
-    L.append("  C(τ)     = exp(p + q·lnτ + r·ln²τ)   logpoly2 tortuosity")
+    L.append("  σ_S = 10 mS/cm LOCKED, σ_P = 5 mS/cm LOCKED  (Trevisanello 2021)")
+    L.append("  NCM(r) = 1 / (1 + (r/2µm)^1.5)   per-endpoint GB correction")
+    L.append("  p      = AM_P mass fraction (= 1 means pure AM_P, = 0 means pure AM_S)")
+    L.append("  φ_AM⁴  : dense-network percolation (locked exponent 4, Stage 14 nested CV)")
+    L.append("  √A_AM-AM : Holm 1967 a-spot constriction")
+    L.append("  g_thin = σ(-5·(T/d - 8))   thin-film 3D→2D crossover gate")
+    L.append("  f_intact = 1 − fracture_aware_excluded_pct/100  살아있는 접촉 비율")
     L.append("")
-    L.append("FROZEN:  a (φ_AM exponent) = 4, NCM exponent 1.5, Holm exponent 0.5")
-    if el_b is not None and len(el_b) >= 8:
+    L.append("FROZEN: σ_S, σ_P (Trevisanello), a=4 (φ_AM exp), 0.5 (Holm), 1.5 (NCM)")
+    if el_b is not None and len(el_b) >= 12:
         sS = float(np.exp(el_b[0])); sP = float(np.exp(el_b[1]))
-        L.append(f"LIVE-fit: σ_S={sS:.2f} mS/cm  σ_P={sP:.2f} mS/cm  "
-                 f"β_T={el_b[2]:+.3f}  β_v={el_b[3]:+.3f}  β_AC={el_b[7]:+.3f}")
-        L.append(f"          C(τ) = {el_b[4]:+.2f}{el_b[5]:+.2f}·lnτ{el_b[6]:+.2f}·ln²τ")
+        L.append(f"LIVE (12 OLS):  β_T={el_b[2]:+.3f}  β_v={el_b[3]:+.3f}  β_AC={el_b[7]:+.3f}")
+        L.append(f"                β_φth={el_b[8]:+.3f}  β_covth={el_b[9]:+.3f}  β_bi={el_b[10]:+.3f}")
+        L.append(f"                β_Fe={el_b[11]:+.3f}  β_fpth={el_b[12]:+.3f}  β_logrSE={el_b[13]:+.3f}")
+        L.append(f"                C(τ) = {el_b[4]:+.2f}{el_b[5]:+.2f}·lnτ{el_b[6]:+.2f}·ln²τ")
+        L.append(f"LOCKED:         σ_S={sS:.2f} mS/cm  σ_P={sP:.2f} mS/cm")
     L.append("```\n")
 
     # Thermal fit
@@ -528,8 +538,139 @@ def generate_report(data_list, names, outdir):
 
     L.append("**FINAL production**: LOOCV ≈ 0.975 (n=88-92), 5 fit params, noise ceiling.\n")
 
-    # ─── 6. 한계점 (T1 + Stage 15) ───
-    L.append("## 6. 한계점 (T1 + Stage 15)\n")
+    # ─── 6. σ_electronic 항별 친절 설명 ───
+    L.append("## 6. σ_electronic (Stage 22) 항별 친절 설명\n")
+    L.append("σ_ionic과 마찬가지로 각 항이 무슨 물리를 잡고 있는지, 왜 그 형태가 채택됐는지 한 줄씩.")
+    L.append("σ_e form은 14개 항으로 구성되지만 물리적으로는 **3 카테고리**:\n")
+    L.append("- 🟢 **재료 한계** — AM 재료 자체가 최대 얼마까지 전도 가능한가")
+    L.append("- 🔵 **구조 손실** — AM 네트워크 모양/연결성에 의한 감소")
+    L.append("- 🟡 **경로 보정** — 미세 환경 보정 (saturation, fracture, thin-film, tortuosity)\n")
+
+    # ── 🟢 재료 한계 (Material limits) ──
+    L.append("### 🟢 재료 한계 (재료 자체의 전도 가능 최대치)\n")
+
+    L.append("#### (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p — Trevisanello endpoint mix")
+    L.append("- **σ_S = 10 mS/cm, σ_P = 5 mS/cm — Trevisanello 2021 LOCKED**.")
+    L.append("  S-rich polycrystalline NCM (작은 단결정 입자 집합체)는 큰 입자 NCM_P 보다 2배 σ_e 높음.")
+    L.append("  Stage 21까지는 live-fit (data가 σ_S≈9, σ_P≈4로 학습), Stage 22에서 문헌값으로 lock.")
+    L.append("- **p = AM_P mass fraction** (0이면 순수 AM_S, 1이면 순수 AM_P).")
+    L.append("- **(1−p) / p 지수**: 두 endpoint의 geometric mix — Bruggeman effective medium에서 자연스러운 형태.")
+    L.append("  '복합체 σ_e는 두 종류 AM 단결정 conductivity의 (mass-weighted) 기하 평균'.")
+    L.append("- **물리**: 같은 양이라도 P-rich(큰 단결정)이 S-rich(다결정 집합체)보다 전자 conductivity 절반.")
+    L.append("  Trevisanello 2021 실측 (단결정 vs 다결정 NMC811): ratio ≈ 2.0× 일치.\n")
+
+    L.append("#### NCM_S, NCM_P = 1/(1 + (r/2µm)^1.5) — Trevisanello GB correction")
+    L.append("- **각 endpoint의 입자 크기에 따른 grain-boundary penalty**.")
+    L.append("  r = particle radius (µm). r=2µm 기준점에서 ×0.5, r=5µm에서 ×0.18.")
+    L.append("- **물리**: 다결정 NCM 입자 내부에는 primary-grain 경계 (GB)가 있어 전자 전도 막음.")
+    L.append("  큰 secondary particle일수록 내부 GB 더 많음 → σ_e 감소.")
+    L.append("- 지수 1.5는 Trevisanello 2021 fit. r_AM_S와 r_AM_P 각각 따로 적용 (Stage 16 endpoint-separate).\n")
+
+    # ── 🔵 구조 손실 (Structural losses) ──
+    L.append("### 🔵 구조 손실 (네트워크 모양/연결성에 의한 감소)\n")
+
+    L.append("#### φ_AM⁴ — Bruggeman / percolation power law")
+    L.append("- **φ_AM = AM 부피분율**. 4제곱 = AM 부피분율 작아지면 σ_e가 매우 급격히 감소.")
+    L.append("- **물리**: AM-AM 네트워크가 percolating cluster 형성해야 전자 흐름. AM 적으면 cluster 작아짐 → 길 끊김.")
+    L.append("- Bruggeman EMT의 standard 3D 분산상 exponent. Stage 14 nested CV가 4를 lock-in.")
+    L.append("  '전해질 충분히 있어야 이온 통로 형성된다'를 mirroring한 '활물질 충분히 있어야 전자 통로 형성'.\n")
+
+    L.append("#### √A_AM-AM — Holm 1967 constriction")
+    L.append("- **A_AM-AM = AM-AM 평균 접촉 면적 (μm²)**.")
+    L.append("- Holm 1967: 두 입자 사이 전류는 √(contact area)에 비례 (spreading/constriction resistance).")
+    L.append("- **물리**: 접촉 면적 클수록 전자 잘 흐름. 단순 비례 아니라 √ — 면적 2배되면 전류 √2배만 늘어남.")
+    L.append("  (current spreads through narrow 'a-spot' constriction at the contact.)")
+    L.append("- σ_ionic의 cov_Hertz^½ 와 같은 물리. σ_e는 AM-AM 면적, σ_ionic은 SE-SE 면적.\n")
+
+    L.append("#### (T/d_AM)^β_T — Pouillet thickness penalty")
+    L.append("- **T = 전극 두께, d_AM = 평균 AM 직경**. T/d_AM = 전극 두께가 AM 입자 크기의 몇 배인가.")
+    L.append("- **β_T 음수 (live-fit)** → 두꺼울수록 σ_e 감소.")
+    L.append("- **물리**: 전자가 위→아래로 가는 길이 길수록 저항 커짐 (Pouillet law). 단순 1/T 아니라")
+    L.append("  d_AM으로 정규화 — 같은 두께라도 AM이 크면 (= 적은 layer 수) 길이 짧음.\n")
+
+    L.append("#### r_SE^β_logrSE — SE size effect on AM-AM contacts")
+    L.append("- **r_SE = SE 입자 반지름 (µm)**. β_logrSE 양수 (live-fit) → SE 클수록 σ_e 증가.")
+    L.append("- **물리**: 작은 SE는 AM-AM 접촉 사이에 끼어들어 직접 contact을 막음. 큰 SE는 그렇게 못 들어감.")
+    L.append("  → AM-AM 직접 접촉 늘어남 → σ_e 증가. Stage 21에서 추가 (Δ +0.003 LOOCV).\n")
+
+    # ── 🟡 경로 보정 (Path corrections) ──
+    L.append("### 🟡 경로 보정 (미세 환경 보정)\n")
+
+    L.append("#### exp(β_AC · φ_AM · log CN_AM-AM) — saturation correction")
+    L.append("- **CN_AM-AM = AM 입자당 평균 이웃 수 (coordination number)**.")
+    L.append("- **β_AC**: data-locked. Stage 22에선 ≈ −0.02~+0.06 (corpus에 따라 변동).")
+    L.append("- **물리**: AM 너무 밀집 + 이웃 너무 많으면 saturation — 추가 이웃이 σ_e에 더 기여 안 함.")
+    L.append("  Kirchhoff 네트워크의 redundant 병렬 경로 한계. φ × log(CN) coupling 형태 (Stage 15 nested CV).\n")
+
+    L.append("#### exp(β_v · v_AM) — AM vulnerability")
+    L.append("- **v_AM = AM_S_vulnerable_pct/100** — coverage 낮아 SE에 노출 덜 된 AM 비율.")
+    L.append("- **물리**: 'vulnerable'한 AM은 fracture 위험 → 일부 전도 잃음. β_v 음수 (vulnerable 많을수록 σ_e 감소).\n")
+
+    L.append("#### exp(β_bi · p(1-p) · log φ_AM) — bimodal coupling")
+    L.append("- **p(1-p)**: 0 (순수 P-rich) ~ 0.25 (50:50 mixed) ~ 0 (순수 S-rich).")
+    L.append("- **물리**: P-S 혼합이 단일 endpoint보다 packing 효율 좋음 (bimodal sphere packing).")
+    L.append("  φ가 같아도 mixed가 더 dense network → σ_e 더 큼. β_bi 음수면 mixed가 +ve boost.")
+    L.append("- Stage 19에서 추가 (ΔLOOCV +0.008).\n")
+
+    L.append("#### exp(β_Fe · log f_intact) — fracture-aware Holm")
+    L.append("- **f_intact = 1 − fracture_severe_pct/100** — 부서지지 않고 살아있는 AM-AM 접촉 비율.")
+    L.append("- **물리**: 압착 중 일부 접촉 균열 발생 (Lawn 1998). 완전히 끊긴 게 아니라 micro-asperity로")
+    L.append("  부분 전도 유지. β_Fe ≈ +0.05 (σ_ionic의 +0.19보다 작음 — AM-AM은 SE-SE보다 fracture 민감도 낮음).")
+    L.append("- '부서진 접촉도 완전 손실 아님' — σ_ionic의 fracture term과 같은 사상.\n")
+
+    L.append("#### g_thin · [β_φth·logφ + β_covth·log cov_AM,P + β_fpth·log f_p] — thin-film gate")
+    L.append("- **g_thin = σ(-5·(T/d_AM − 8))** — sigmoid gate. T/d_AM > 8 (= 두꺼운 전극)이면 g_thin ≈ 0")
+    L.append("  → 이 보정 비활성. T/d_AM < 8 (= 얇은 전극)이면 g_thin ≈ 1 → 보정 활성.")
+    L.append("- **물리**: 얇은 박막에서는 3D bulk percolation 가정 깨짐 — 2D-like effects 등장:")
+    L.append("  - β_φth·logφ — φ 의존성 추가 보정 (3D φ⁴ exponent로는 부족)")
+    L.append("  - β_covth·log cov_AM,P — AM_P coverage가 더 중요 (얇으면 AM_P 직접 다리 역할)")
+    L.append("  - β_fpth·log f_p — percolation prob의 thin-film 보정 (Stage 21 추가)")
+    L.append("- Stage 17/21에서 단계적으로 추가. 모든 thin 케이스 (1mAh family)에서만 fire.\n")
+
+    L.append("#### C(τ) = exp(p_τ + q_τ·lnτ + r_τ·ln²τ) — tortuosity logpoly2")
+    L.append("- **τ = tortuosity_electronic_recommended** (전자 경로의 굴곡도).")
+    L.append("- **logpoly2** = ln τ의 2차 다항식. σ_ionic과 같은 형태.")
+    L.append("- **물리**: 전자 가는 길이 직선에 가까울수록 σ_e ↑. 굴곡이 심하면 그만큼 저항 증가.")
+    L.append("  단순 1/τ 또는 1/τ² 안 맞음 → 데이터-driven 2차 다항식이 다양한 굴곡 형태를 흡수.")
+    L.append("- 3개 OLS 파라미터 (p_τ, q_τ, r_τ).\n")
+
+    # ── 항별 신뢰도 + 채택 history ──
+    L.append("### 항별 신뢰도 요약\n")
+    L.append("| 항 | 신뢰도 | 근거 |")
+    L.append("|---|---|---|")
+    L.append("| σ_S, σ_P (Trevisanello LOCKED) | HIGH | Trevisanello 2021 literature |")
+    L.append("| NCM(r) | HIGH | Trevisanello 2021 측정 (단결정 vs 다결정) |")
+    L.append("| φ_AM⁴ | MED-HIGH | Bruggeman EMT + Stage 14 nested CV lock |")
+    L.append("| √A_AM-AM | HIGH | Holm 1967 (literature 정확히 -½) |")
+    L.append("| (T/d_AM)^β_T | MED | Pouillet 두께 의존성 (data-fit) |")
+    L.append("| r_SE^β_logrSE | MED | Stage 21 추가, β > 0 직관과 일치 |")
+    L.append("| β_AC·φ·log CN | MED | Stage 15 nested CV ΔLOOCV +0.024 |")
+    L.append("| β_v·v_AM | MED | fracture-aware, sign 직관 일치 |")
+    L.append("| β_bi·p(1-p)·log φ | MED | bimodal packing, Stage 19 추가 |")
+    L.append("| β_Fe·log f_intact | MED | Lawn 1998 partial-Holm, β ≈ +0.05 |")
+    L.append("| Thin-film gate (3 params) | MED | Stage 17/21 thin-only 활성 |")
+    L.append("| C(τ) logpoly2 | MED | σ_ionic T1과 동일 구조 |\n")
+
+    L.append("### 채택 history (각 단계 LOOCV로 검증)\n")
+    L.append("| Step | LOOCV | ΔLOOCV |")
+    L.append("|---|---|---|")
+    L.append("| Stage 0 baseline (σ_ionic-style locked) | −0.76 | — |")
+    L.append("| Stage 2 joint OLS + raw-required | +0.48 | +1.22 |")
+    L.append("| Stage 4 composition + thickness | 0.76 | +0.07 |")
+    L.append("| Stage 12 + outlier exclusion (R1) | 0.88 | +0.12 |")
+    L.append("| Stage 15 + β_AC·φ·log CN saturation | 0.91 | +0.024 |")
+    L.append("| Stage 17 + thin gates (β_φth, β_covth) | 0.92 | +0.012 |")
+    L.append("| Stage 19 + β_bi bimodal coupling | 0.93 | +0.008 |")
+    L.append("| Stage 20 + β_Fe·log f_intact (fracture) | 0.95 | +0.020 |")
+    L.append("| Stage 21 + β_fpth + β_logrSE | 0.96 | +0.003 |")
+    L.append("| Stage 22 σ_S/σ_P LOCKED Trevisanello | **0.96+** | (literature anchor) |\n")
+
+    L.append("**FINAL production**: LOOCV ≈ 0.95+ (n=76 post Round 6 EXCL), 12 fit + 2 LOCKED params.\n")
+
+    # ─── 7. 한계점 (T1 + Stage 22) ───
+    L.append("## 7. 한계점 (T1 + Stage 22)\n")
+    L.append("> ⚠ 아래 σ_electronic 항목 일부는 Stage 15 시점 (2026-05-29) 기준 — Stage 22 (2026-06-03)\n")
+    L.append("> 까지의 진화를 반영하지 못함. 6번 섹션 (친절 설명)이 최신.\n")
     L.append("### σ_ionic (T1) — 데이터-편향 outlier 잔재\n")
     L.append("- **sibling-tail per-seed anomaly 삭제 완료** (2026-05-29): input_1mAh_9_S5,")
     L.append("  particulate_12_S2, **input_1mAh_8 base + _S5** (new), **input_1mAh_8_AMS base + S4** (new).")
