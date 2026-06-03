@@ -3014,6 +3014,8 @@ def _generate_ai_analysis(all_metrics, case_names, title, notes):
     import pandas as pd
     display_keys = [
         ('P:S', 'ps_ratio'), ('Porosity(%)', 'porosity'),
+        ('Porosity union(%)', 'porosity_union'),
+        ('Overlap(%)', 'overlap_fraction_pct'),
         ('Thickness(μm)', 'thickness_um'),
         ('AM-SE Total(μm²)', 'area_AM전체_SE_total'),
         ('SE-SE Total(μm²)', 'area_SE_SE_total'),
@@ -4267,6 +4269,8 @@ def group():
             ('φ_AM', '', 'phi_am', '조성/구조'),
             ('φ_SE', '', 'phi_se', '조성/구조'),
             ('Porosity', '(%)', 'porosity', '조성/구조'),
+            ('Porosity (union)', '(%)', 'porosity_union', '조성/구조'),
+            ('Overlap fraction', '(%)', 'overlap_fraction_pct', '조성/구조'),
             ('두께', '(μm)', 'thickness_um', '조성/구조'),
             # ── SE 계면/네트워크 (σ_ionic form inputs) ──
             ('SE-SE CN', '', 'se_se_cn', 'SE 네트워크'),
@@ -4821,6 +4825,8 @@ def group_report():
     overview_rows = []
     display_keys = [
         ('P:S', 'ps_ratio'), ('Porosity(%)', 'porosity'),
+        ('Porosity union(%)', 'porosity_union'),
+        ('Overlap(%)', 'overlap_fraction_pct'),
         ('Thickness(μm)', 'thickness_um'),
         ('AM-SE Total(μm²)', 'area_AM전체_SE_total'),
         ('SE-SE Total(μm²)', 'area_SE_SE_total'),
@@ -5846,7 +5852,11 @@ def serve_report(case_id):
         L.append(f'| RVE 단면적 | {input_params["box_x"]*scale:.0f}×'
                  f'{input_params["box_y"]*scale:.0f} μm |')
     if metrics.get('porosity') is not None:
-        L.append(f'| Porosity (기공률) | {metrics["porosity"]:.1f}% |')
+        L.append(f'| Porosity (sphere-sum, production) | {metrics["porosity"]:.1f}% |')
+    if metrics.get('porosity_union') is not None:
+        L.append(f'| Porosity (union, overlap-corrected) | {metrics["porosity_union"]:.1f}% |')
+    if metrics.get('overlap_fraction_pct') is not None:
+        L.append(f'| Overlap fraction (plastic deformation) | {metrics["overlap_fraction_pct"]:.2f}% |')
     if metrics.get('thickness_um') is not None:
         L.append(f'| 두께 (가압 후) | {metrics["thickness_um"]:.1f} μm |')
     if metrics.get('percolation_pct') is not None:
@@ -6013,8 +6023,15 @@ _GRADE_DIR_KR = {
 # key), written for a first-time reader.  The technical `meaning` from
 # grade_engine is kept intact; the guide shows this friendly version first.
 _GRADE_PLAIN = {
-    'porosity': '전극 안의 빈 공간 비율이에요. 빈틈이 너무 많으면 이온·전자가 지날 길이 '
-        '끊기고, 너무 빽빽하면 충·방전 때 부풀다 깨질 수 있어요. 그래서 적당한 값(약 13%)이 가장 좋습니다.',
+    'porosity': '전극 안의 빈 공간 비율이에요 (sphere-sum 방식, production calibration anchor). '
+        '빈틈이 너무 많으면 이온·전자가 지날 길이 끊기고, 너무 빽빽하면 충·방전 때 부풀다 깨질 수 있어요. '
+        '그래서 적당한 값(약 13%)이 가장 좋습니다.',
+    'porosity_union': '같은 빈 공간 비율인데, 입자끼리 겹친 부피(overlap)를 빼고 계산한 버전이에요 (문헌 비교용). '
+        'Sphere-sum보다 항상 살짝 큽니다 — 겹친 만큼 빈공간이 더 보이니까요. 보조 지표이고, '
+        'production form은 sphere-sum 값을 씁니다.',
+    'overlap_fraction_pct': '입자들이 서로 얼마나 겹쳤는지(소성변형 정도)를 백분율로 나타낸 값이에요. '
+        '380 MPa 압력에서 SE 입자는 문헌상 5-10% 정도 소성변형하는데, 그 범위 안이면 정상. '
+        '10% 넘으면 과압축 의심.',
     'thickness_um': '전극을 얼마나 두껍게 쌓았는지예요. 너무 얇으면 실험용 샘플 수준이고, '
         '너무 두꺼우면 이온이 끝까지 가기 힘들어 저항이 커집니다. 60~130μm가 실제 배터리에 쓰는 범위예요.',
     'percolation_pct': '이온이 다니는 고체전해질 길이 위에서 아래까지 끊김 없이 이어진 비율이에요. '

@@ -1065,9 +1065,13 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
 
     print(f"  box_xy = {box_x:.4f} x {box_y:.4f}, plate_z = {plate_z:.6f} ({pz_source}), thickness = {thickness_um:.1f} μm")
 
-    # 1. Porosity
-    porosity = calc_porosity(atoms_raw, plate_z, box_xy_val)
-    print(f"  Porosity: {porosity:.2f}%")
+    # 1. Porosity — sphere-sum (production calibration anchor) + union (overlap-corrected,
+    # literature-comparable) + overlap_fraction (plastic deformation indicator).
+    poro_dual = calc_porosity_dual(atoms_raw, contacts_raw, plate_z, box_xy_val)
+    porosity = poro_dual['porosity_spheresum']       # back-compat: 'porosity' key stays sphere-sum
+    porosity_union = poro_dual['porosity_union']
+    overlap_fraction_pct = poro_dual['overlap_fraction_pct']
+    print(f"  Porosity: {porosity:.2f}% (sphere-sum)  |  union {porosity_union:.2f}%  |  overlap {overlap_fraction_pct:.2f}%")
 
     # 2. Interface Area
     iface = calc_interface_area(atoms_raw, contacts_raw, type_map, scale)
@@ -1166,6 +1170,9 @@ def run_full_analysis(atoms_raw, contacts_raw, type_map, scale, results_dir, box
         'plate_z_source': pz_source,
         'thickness_um': thickness_um,
         'porosity': porosity,
+        'porosity_spheresum': porosity,
+        'porosity_union': porosity_union,
+        'overlap_fraction_pct': overlap_fraction_pct,
         'interface': iface,
         'coverage': cov,
         'se_se_cn': cn,

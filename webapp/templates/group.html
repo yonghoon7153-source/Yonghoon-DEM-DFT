@@ -172,7 +172,9 @@
     <div class="plot-category">
       <span class="plot-cat-label">구조/계면</span>
       <div class="plot-row">
-        <label class="plot-checkbox"><input type="checkbox" value="porosity" checked> Porosity</label>
+        <label class="plot-checkbox" title="Sphere-sum porosity (production calibration anchor)"><input type="checkbox" value="porosity" checked> Porosity</label>
+        <label class="plot-checkbox" title="Union porosity (overlap-corrected; literature comparison)"><input type="checkbox" value="porosity_union"> Porosity (union)</label>
+        <label class="plot-checkbox" title="V_lens / V_sphere_sum × 100; plastic deformation indicator (Cronau floor 5–10%)"><input type="checkbox" value="overlap_fraction_pct"> Overlap %</label>
         <label class="plot-checkbox"><input type="checkbox" value="am_se_interface" checked> AM-SE 계면적</label>
       </div>
       <div class="plot-row">
