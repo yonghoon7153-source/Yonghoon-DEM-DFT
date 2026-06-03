@@ -89,6 +89,44 @@
     ]
   },
 
+  "dft_0K_relaxed_ion_stress_strain_full_Cij": {
+    "method": "Same 12 strain SCFs (±0.005, 6 Voigt) but with atoms ALLOWED TO RELAX at each fixed strained cell (calculation='relax', cell_dofree='none' implicit, BFGS conv_thr 1e-4 Ry/au). Stress measured AT the relaxed atomic positions → includes ionic Born screening. Compared to clamped-ion which freezes atoms at V0 positions.",
+    "vacancy_paradox_role": "Clamped-ion DFT systematically over-estimates argyrodite elastic moduli (E_VRH 52.31 GPa for LPSCl vs experiment ~23 GPa, ~2.3× too stiff). Allowing ion relaxation recovers experimentally consistent values. This is the physics behind why the 'clamped-ion vacancy paradox' (LPSCl ≈ LPSCl1.6 elastically at static 0K) needs finite-T or relaxed-ion to resolve.",
+    "results": [
+      {
+        "id": "comp1_v3",
+        "composition": "Li6PS5Cl",
+        "lineage": "comp1 V0_relax at BM-EOS V0 → 12 strain relax SCFs (BFGS atom-only, fixed strained cell)",
+        "C11_avg": 37.67, "C11_std": 1.56, "C11_C22_C33_individual": [35.50, 39.10, 38.40],
+        "C12_avg": 19.98, "C12_std": 0.94, "C12_C13_C23_individual": [19.50, 19.15, 21.30],
+        "C44_avg": 8.03, "C44_std": 0.90, "C44_C55_C66_individual": [9.30, 7.40, 7.40],
+        "B_Voigt": 25.88, "B_Reuss": 24.48, "B_VRH": 25.18,
+        "G_Voigt": 8.36, "G_Reuss": 8.16, "G_VRH": 8.26,
+        "E_VRH": 22.33, "nu": 0.3522, "Zener_A": 1.162,
+        "eigenvalues_GPa": [6.90, 7.90, 8.65, 17.45, 17.98, 78.22],
+        "mechanically_stable": true,
+        "strain_step": 0.005, "n_scfs": 12,
+        "qe_sign_flip_applied": true,
+        "completed_date": "2026-06-03",
+        "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/elastic_relaxed_ion/elastic_results_stress.json",
+        "vs_experiment": "E_VRH = 22.33 GPa matches literature LPSCl (~23 GPa, e.g. He et al.). G_VRH = 8.26 matches ~8 GPa expt. B_VRH = 25.18 close to BM-EOS B0 = 26.23 GPa — internal cross-check.",
+        "vs_clamped_ion": {
+          "C11_ratio": "37.67 / 74.23 = 0.51 (clamped 2.0× stiffer)",
+          "C44_ratio": "8.03 / 18.98 = 0.42 (clamped 2.4× stiffer in shear)",
+          "B_VRH_ratio": "25.18 / 43.59 = 0.58 (clamped 1.7× stiffer in bulk)",
+          "E_VRH_ratio": "22.33 / 52.31 = 0.43 (clamped 2.3× over-estimate)",
+          "headline": "Clamped-ion DFT massively over-estimates elastic moduli. Ion relaxation under strain recovers experimentally consistent values. Argyrodite Li sublattice softness is the dominant ion-screening contribution."
+        }
+      },
+      {
+        "id": "modelc_v3",
+        "composition": "Li5.4PS4.4Cl1.6",
+        "status": "12_strain_relax_SCFs_running_on_GPU_started_19:42",
+        "expected_completion": "container:wall_time +2.5h"
+      }
+    ]
+  },
+
   "mlip_300K_unit_cell": {
     "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
     "method": "MACE CPU, 300K Langevin 5ps -> quench -> relaxed-ion Cij",
