@@ -42,6 +42,49 @@ def parse_fermi_eV(nscf_out_path):
     return None
 
 
+def reorder_bands_by_continuity(bands_mat, k_dist=None, segment_break_tol=0.05):
+    """Re-assign band indices using a Hungarian-algorithm continuity matching.
+
+    bands.x sorts eigenvalues by energy at each k-point. When two bands cross,
+    the sorted index swaps and a band-index plot shows the "rogue" zig-zag
+    that crosses the gap. Standard fix: at each k → k+1 transition, find the
+    permutation of bands that minimises Σ|E_new[i] − E_prev[i]|, solved by
+    scipy's linear_sum_assignment. This reconnects physical bands across all
+    crossings without needing any symmetry/character info.
+
+    Optional: detect segment breaks (large k-jump) and reset ordering at the
+    new segment so we don't try to track across discontinuous directions.
+
+    Args:
+        bands_mat : (nbnd, nk) energy matrix.
+        k_dist    : (nk,) cumulative k-distance (used to detect segment breaks).
+        segment_break_tol : if successive k_dist differ by more than this, treat
+                              as a new BZ segment (re-sort by energy from scratch).
+    """
+    from scipy.optimize import linear_sum_assignment
+    nbnd, nk = bands_mat.shape
+    out = bands_mat.copy()
+    if k_dist is not None:
+        dk = np.diff(k_dist)
+        # typical step
+        med_dk = float(np.median(dk[dk > 0])) if np.any(dk > 0) else 0.0
+        seg_breaks = set(np.where(dk > max(segment_break_tol, 5 * med_dk))[0] + 1)
+    else:
+        seg_breaks = set()
+    for ik in range(1, nk):
+        if ik in seg_breaks:
+            # don't try to match across a discontinuity — keep energy-sorted
+            continue
+        E_prev = out[:, ik - 1]
+        E_curr = bands_mat[:, ik]
+        cost = np.abs(E_prev[:, None] - E_curr[None, :])
+        # solve linear assignment: row i (prev band index) ↔ col col_ind[i]
+        row_ind, col_ind = linear_sum_assignment(cost)
+        # row_ind is 0..nbnd-1 sorted; col_ind gives the matched current column
+        out[:, ik] = bands_mat[col_ind, ik]
+    return out
+
+
 def parse_bands_gnu(dat_gnu_path):
     """Returns (k_dists, bands_matrix) — bands_matrix shape (nbnd, nk).
 
@@ -130,6 +173,12 @@ def main():
 
     ks, bands_mat = parse_bands_gnu(gnu)
     print(f"Loaded {bands_mat.shape[0]} bands × {bands_mat.shape[1]} k-points")
+
+    # Hungarian-algorithm band continuity reassignment — removes the
+    # "rogue diagonal" artifact that comes from energy-sorted indexing
+    # across band crossings.
+    bands_mat = reorder_bands_by_continuity(bands_mat, ks)
+    print(f"  bands reordered by continuity (Hungarian)")
 
     EF = parse_fermi_eV(work / "nscf_bands.out")
     if EF is None:
