@@ -18,9 +18,13 @@
     {"id": "comp5",            "version": "v1", "B0_GPa": 22.9, "B0_prime": 5.21, "pts": 10, "R2": 0.999995, "status": "confirmed",          "basin": "A", "notes": "Basin B: 21.8 GPa"},
     {"id": "modelc",           "version": "v1", "B0_GPa": 21.7, "B0_prime": 4.31, "pts": 10, "R2": 0.999988, "status": "confirmed",          "basin": "A", "notes": "ordered Li 0K. Basin B found: 16.6 meV more stable but EOS unstable. Superseded by modelc_v3 for paper values."},
     {"id": "modelc_v2_mlip",   "version": "v2_mlip", "B0_GPa": 20.0, "B0_prime": 7.50, "pts": 15, "R2": 0.999289, "status": "mlip_preliminary","notes": "Annealing champion -258.2051 eV. Delta vs v1 DFT: -1.7 GPa. DFT BM-EOS pending (v2). DFT stress-strain K available (v3)."},
-    {"id": "modelc_v3",        "version": "v3", "B0_GPa": 44.47, "B0_prime": null, "pts": null, "R2": null, "status": "confirmed_via_stress_strain",
-                                "method_override": "K = B_VRH from full Cij stress-strain (no BM-EOS)",
-                                "notes": "Cross-check vs modelc v1 K=43.7 (clamped-ion DFT 0K) → +1.8% match. Stress-strain method validates. Note: this is the CLAMPED-ION bulk modulus, NOT the BM-EOS relaxed-ion B0 (~21.7). See elastic.json dft_0K_clamped_ion_stress_strain_full_Cij section for full Cij."}
+    {"id": "modelc_v3",        "version": "v3", "B0_GPa": 19.59, "B0_prime": 4.31, "B0_prime_free": 2.92, "V0_A3": 1214.5, "pts": 11, "R2": 0.998, "status": "confirmed_inherited_from_v2",
+                                "v0_volume_range": "v096-v106",
+                                "data_source": "lpscl16_verify_20260520/modelC_v2_results.json (DFT BM-EOS, annealed Li champion)",
+                                "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
+                                "notes": "v3 BM-EOS = v2 BM-EOS (same composition + same V0 used for all §8 post-processing). V0=1214.5 Å³ from this fit was used for V0_relax → §8 bonds/Voronoi/BVSE/Bader/DOS/PDOS/elastic/AIMD/ELF/band-structure.",
+                                "stress_strain_K_VRH_GPa": 44.47,
+                                "stress_strain_vs_BM_EOS": "K_VRH (clamped, 44.47) ≠ B0 (relaxed-ion, 19.59) — different physical quantities. For paper comparison with comp1 use same method (both have stress-strain Cij)."}
   ],
 
   "trends": {
