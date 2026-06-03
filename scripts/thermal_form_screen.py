@@ -95,13 +95,33 @@ def load_corpus():
         d_AM = 2.0 * ((1-p)*ras + p*rap)
         f_severe = (d.get('frac_severe_force_pct') or 0) / 100
         f_intact = max(1.0 - f_severe, 0.05)
+        # Additional thermal-relevant metrics
+        am_se_cn = d.get('am_se_cn_mean', 0) or 0
+        se_se_cn = d.get('se_se_cn', 0) or 0
+        am_am_cn = d.get('am_am_cn', 0) or 0
+        cov_amp = d.get('coverage_AM_P_mean', 0) or 0
+        cov_ams = d.get('coverage_AM_S_mean', 0) or 0
+        cov_am = max(cov_amp, cov_ams)
+        perc_pct = d.get('percolation_pct', 0) or 0
+        elec_perc = d.get('electronic_percolating_fraction', 0) or 0
+        bulk_frac = d.get('thermal_bulk_frac', 0) or d.get('bulk_resistance_fraction', 0) or 0
+        tau_e = (d.get('tortuosity_electronic_recommended') or
+                 d.get('tortuosity_electronic_mean') or 0)
         rows.append({
             'name': nm, 'kappa': float(kappa),
             'p': float(p), 'phi_am': float(phi_am), 'phi_se': float(phi_se),
             'ras': ras, 'rap': rap, 'rse': float(rse),
             'A_total': float(A_total), 'tau': float(tau),
+            'tau_e': float(tau_e) if tau_e > 0 else float(tau),
             'T_d': float(T) / max(d_AM, 1.0),
             'f_intact': float(f_intact),
+            'am_se_cn': float(am_se_cn),
+            'se_se_cn': float(se_se_cn),
+            'am_am_cn': float(am_am_cn),
+            'cov_am': float(cov_am) if cov_am > 0 else 1.0,
+            'perc_pct': float(perc_pct) / 100 if perc_pct > 0 else 0.5,
+            'elec_perc': float(elec_perc) if elec_perc > 0 else 0.5,
+            'bulk_frac': float(bulk_frac) if bulk_frac > 0 else 0.5,
         })
     if skip_high:
         print(f"\n  ⚠ {len(skip_high)} cases SKIPPED (κ > {KAPPA_MAX_SANE} mScm — solver pathology):")
@@ -178,16 +198,36 @@ def main():
     f_wang_P     = ('log Wang_P',    lambda r: -np.log(1.0 + (r['rap']/2.0)**1.5))
     f_log_rse    = ('log r_SE',      lambda r: np.log(max(r['rse'], 0.05)))
 
+    # New thermal-specific features (round 2 — based on V4 baseline)
+    f_log_am_se_cn = ('log(am_se_cn)', lambda r: np.log(max(r['am_se_cn'], 0.1)))
+    f_log_se_se_cn = ('log(se_se_cn)', lambda r: np.log(max(r['se_se_cn'], 0.1)))
+    f_log_am_am_cn = ('log(am_am_cn)', lambda r: np.log(max(r['am_am_cn'], 0.1)))
+    f_log_cov_am   = ('log(cov_AM)',   lambda r: np.log(max(r['cov_am'], 0.1)))
+    f_log_perc     = ('log(perc_pct)', lambda r: np.log(max(r['perc_pct'], 0.05)))
+    f_log_bulk     = ('log(bulk_frac)', lambda r: np.log(max(r['bulk_frac'], 0.05)))
+    f_q_tau_e      = ('q_τe·lnτ_e',    lambda r: np.log(max(r['tau_e'], 0.1)))
+
+    # V4 baseline (best from previous round)
+    V4_base = [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A, f_q_tau, f_r_tau]
+
     variants = [
         ("V0: intercept only",                            []),
         ("V1: + φ_AM, φ_SE",                              [f_log_phi_am, f_log_phi_se]),
-        ("V2: V1 + AM endpoint mix (κ_S, κ_P live)",     [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P]),
-        ("V3: V2 + Holm log(A_total)",                    [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A]),
-        ("V4: V3 + C(τ) ln+ln²",                          [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A, f_q_tau, f_r_tau]),
-        ("V5: V4 + β_T·log(T/d)",                         [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A, f_q_tau, f_r_tau, f_log_Td]),
-        ("V6: V5 + β_Fe·log(f_intact)",                   [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A, f_q_tau, f_r_tau, f_log_Td, f_log_fint]),
-        ("V7: V6 + log Wang(r_AM_P)",                     [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A, f_q_tau, f_r_tau, f_log_Td, f_log_fint, f_wang_P]),
-        ("V8: V7 + log r_SE",                             [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A, f_q_tau, f_r_tau, f_log_Td, f_log_fint, f_wang_P, f_log_rse]),
+        ("V2: V1 + AM endpoint mix",                      [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P]),
+        ("V3: V2 + Holm log(A_total)",                    V4_base[:5]),
+        ("V4: V3 + C(τ_ionic) trio",                      V4_base),
+        # Round 2: thermal-specific features
+        ("V9:  V4 + log(am_se_cn) — interface CN",        V4_base + [f_log_am_se_cn]),
+        ("V10: V4 + log(se_se_cn) — SE backbone CN",      V4_base + [f_log_se_se_cn]),
+        ("V11: V4 + log(am_am_cn) — AM scaffold CN",      V4_base + [f_log_am_am_cn]),
+        ("V12: V4 + log(coverage_AM)",                    V4_base + [f_log_cov_am]),
+        ("V13: V4 + log(perc_pct) SE percolation",        V4_base + [f_log_perc]),
+        ("V14: V4 + log(bulk_frac) solver internal",      V4_base + [f_log_bulk]),
+        ("V15: V4 + tau_electronic instead of ionic",    [f_log_phi_am, f_log_phi_se, f_endpt_S, f_endpt_P, f_log_A,
+                                                           f_q_tau_e, ('r_τe·ln²τ_e', lambda r: np.log(max(r['tau_e'], 0.1))**2)]),
+        # COMBO: best individual additions stacked
+        ("V16: V4 + am_se_cn + cov_AM + perc_pct (BIG)",  V4_base + [f_log_am_se_cn, f_log_cov_am, f_log_perc]),
+        ("V17: V16 + bulk_frac (BIGGEST)",                V4_base + [f_log_am_se_cn, f_log_cov_am, f_log_perc, f_log_bulk]),
     ]
 
     print()
