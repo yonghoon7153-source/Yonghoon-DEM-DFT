@@ -295,25 +295,45 @@ glue를 강화한다는 것을 의미.
 | 3D iso 레벨 | [pending] | 0.75 |
 
 
-## 12. LOBSTER ICOHP (per-bond 평균, eV)
+## 12. LOBSTER ICOHP (per-bond 평균, eV) — **paper-grade extended basis**
 
-음수일수록 bonding 강함. 0에 가까울수록 약함.
+ext basis (Li 1s 2s 2p, P/S/Cl 3s 3p 3d) + PAW kjpaw pseudo +
+charge-spilling < 2% (target paper-quality).
 
-| 결합 종류 | LPSCl v3 | LPSCl1.6 v3 | 해석 |
+| 결합 종류 | **LPSCl v3 ext** | **LPSCl1.6 v3 ext** | Δ % (LPSCl1.6 / LPSCl − 1) |
 |---|---|---|---|
-| **P–S** | [pending] | **−5.123** | PS4 강한 공유결합 backbone |
-| Li–Cl | [pending] | **−1.214** | 이온 + 약간 공유 |
-| Li–S | [pending] | **−0.614** | 약함, 주로 전기 정적 |
-| S–S | [pending] | **−0.061** | 거의 0 (cage S 직접 결합 없음) |
+| **P–S** | **−5.944** (16 bonds) | **−6.000** (20) | +0.9% (PS4 거의 동일) |
+| **Li–Cl** | **−1.855** (24 bonds) | **−2.103** (42) | **+13.4% (LPSCl1.6 더 강함)** |
+| **Li–S** | **−1.592** (120 bonds) | **−1.717** (113) | **+7.9%** |
+| S–S | **−0.107** (56 bonds) | **−0.110** (58) | ~0 |
 
-**ICOHP 위계 (modelc_v3)**: P–S (−5.12) ≫ Li–Cl (−1.21) > Li–S (−0.61) ≫ S–S (~0)
+**Charge spilling**: comp1 **1.46%**, modelc_v3 **1.16%** — 둘 다 paper 표준
+< 5% 만족 ✓. 절대값 paper에 그대로 사용 가능.
 
-**Charge spilling**: comp1 [pending], **modelc_v3 17%** ⚠️ (표준 <5%, 허용 <10%
-초과). 원인: sparse basis (Li 2s 2p, P/S/Cl 3s 3p, no d). 정성적 추세
-(P–S ≫ Li–Cl > Li–S) 는 robust. paper에서 절대값보다는 ratio + 추세로 보고.
+### 핵심 paper 메시지
 
-**Note**: 4a-Cl vs 4d-Cl 사이트별 Li-Cl ICOHP 분리는 향후 분석 (현재 평균만).
-4d Cl이 단단한 결합 (Li-Cl 2.36 Å)이라 ICOHP_4d-Cl > ICOHP_4a-Cl 예상.
+1. **모든 ionic bond가 LPSCl1.6에서 더 강함** (특히 Li-Cl +13.4%). vacancy +
+   Cl 치환이 약화가 아니라 **강화**.
+2. **위계 보존**: P-S (covalent backbone) ≫ Li-Cl > Li-S ≫ S-S (둘 다)
+3. **Li-Cl > Li-S in both**: Wilkening ionic-potential framework 일치
+4. **4d-Cl anti-site** (modelc 8개 중 1개)이 짧고 강한 Li-Cl 결합 형성 →
+   평균 ICOHP 강화에 기여
+5. **PS4 backbone robust**: 두 시스템 P-S ICOHP 거의 동일 (−5.94 vs −6.00),
+   화학 환경 변화에 영향 안 받음 — paper 결과 4 (PS4 안정성) 확인
+
+### old basis (17% spill) → ext basis (1.16-1.46% spill) 비교
+
+ext basis 적용 후 모든 ICOHP가 약 +17–180% 강해짐 (old basis가 심하게
+under-estimate). 절대값이 paper에 들어가야 함. 단, 두 시스템 위계 + ratio는
+old basis에서도 robust했음 — paper에 ext 값만 보고하고 sparse basis 결과는
+report안 함.
+
+| Bond | comp1 old (17%) | comp1 ext (1.46%) | modelc old (17%) | modelc ext (1.16%) |
+|---|---|---|---|---|
+| P-S | n/a | -5.944 | -5.123 | **-6.000** |
+| Li-Cl | n/a | -1.855 | -1.214 | **-2.103** |
+| Li-S | n/a | -1.592 | -0.614 | **-1.717** |
+| S-S | n/a | -0.107 | -0.061 | **-0.110** |
 
 
 ## 13. 시스템 내부 교차검증 (intra-system cross-checks)
