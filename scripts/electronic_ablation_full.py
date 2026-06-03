@@ -52,6 +52,9 @@ TESTS = [
     # Group ablations
     ("ALL 3 thin-film (φth+covth+fpth)", [8, 9, 12], "🟡 group"),
     ("WEAK BLOCK (β_v+β_AC+β_fpth+β_logrSE)", [3, 7, 12, 13], "🟡 group"),
+    # MINIMAL FORM test (drop all 9 SAFE candidates → keep only β_T + C(τ) + β_bi)
+    ("MINIMAL FORM (drop 9 SAFE → keep β_T+C(τ)+β_bi)",
+     [3, 7, 8, 9, 11, 12, 13],     "⭐ minimal"),
 ]
 
 
