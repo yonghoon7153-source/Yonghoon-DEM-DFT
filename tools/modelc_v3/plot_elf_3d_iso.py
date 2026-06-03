@@ -86,8 +86,8 @@ def main():
                     help="ELF isosurface transparency")
     ap.add_argument("--iso_color", default="#FDD96A")
     ap.add_argument("--bg", default="white")
-    ap.add_argument("--show_atoms",
-                    action="store_true", default=True)
+    ap.add_argument("--show_atoms", action="store_true", default=False,
+                    help="overlay atoms as small markers (off → clean iso only)")
     ap.add_argument("--dpi", type=int, default=300)
     args = ap.parse_args()
 
@@ -119,16 +119,13 @@ def main():
                               linewidth=0)
     ax.add_collection3d(mesh)
 
-    # Atoms as spheres
+    # Atoms as small markers (only if requested)
     if args.show_atoms:
         for Z, xyz in atoms:
             sym = Z_to_symbol(Z)
             col = ELEM_COLOR.get(sym, "#888")
-            r = ELEM_R.get(sym, 0.7)
-            xs, ys, zs = sphere_mesh(xyz, r)
-            ax.plot_surface(xs, ys, zs, color=col, edgecolor='k',
-                             linewidth=0.1, alpha=1.0, antialiased=True,
-                             shade=True)
+            ax.scatter(xyz[0], xyz[1], xyz[2], c=col, s=35,
+                       edgecolors='k', linewidths=0.4, depthshade=False)
 
     # Cell bounding box
     cell = voxels * np.array(data.shape)[:, None]

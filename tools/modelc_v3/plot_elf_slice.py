@@ -135,6 +135,8 @@ def main():
     ap.add_argument("--vmax", type=float, default=1.0)
     ap.add_argument("--atom_z_window", type=float, default=2.0,
                     help="show atoms within this Å of the slice plane")
+    ap.add_argument("--no_atoms", action="store_true", default=False,
+                    help="suppress atom overlay (cleaner ELF-only view)")
     ap.add_argument("--dpi", type=int, default=300)
     ap.add_argument("--show_isolines",
                     action="store_true", default=False,
@@ -167,23 +169,24 @@ def main():
                     linewidths=[1.0, 1.0], linestyles=['--', '-'])
 
     # Project atoms onto slice plane within a z-window
-    axis_idx = "xyz".index(args.axis)
-    plane_pos = origin[axis_idx] + voxels[axis_idx, axis_idx] * idx
-    # Plot atoms close to the slice plane
-    plot_axes = [i for i in range(3) if i != axis_idx]
-    for Z, xyz in atoms:
-        if abs(xyz[axis_idx] - plane_pos) > args.atom_z_window:
-            continue
-        sym = Z_to_symbol(Z)
-        u = xyz[plot_axes[0]] - origin[plot_axes[0]]
-        v = xyz[plot_axes[1]] - origin[plot_axes[1]]
-        col = ELEM_COLOR.get(sym, "#888")
-        r = ELEM_R_DISPLAY.get(sym, 0.4)
-        ax.add_patch(Circle((u, v), r, facecolor=col,
-                             edgecolor='k', linewidth=0.5, zorder=5))
-        # Label
-        ax.text(u + r * 1.2, v, sym, fontsize=9, color='k',
-                ha='left', va='center', zorder=6)
+    if not args.no_atoms:
+        axis_idx = "xyz".index(args.axis)
+        plane_pos = origin[axis_idx] + voxels[axis_idx, axis_idx] * idx
+        plot_axes = [i for i in range(3) if i != axis_idx]
+        for Z, xyz in atoms:
+            if abs(xyz[axis_idx] - plane_pos) > args.atom_z_window:
+                continue
+            sym = Z_to_symbol(Z)
+            u = xyz[plot_axes[0]] - origin[plot_axes[0]]
+            v = xyz[plot_axes[1]] - origin[plot_axes[1]]
+            col = ELEM_COLOR.get(sym, "#888")
+            # Small marker (not Circle patch) — paper figure friendly
+            ax.plot(u, v, 'o', markerfacecolor=col, markeredgecolor='white',
+                    markeredgewidth=0.8, markersize=8, zorder=5)
+            ax.text(u + 0.35, v + 0.35, sym, fontsize=8, color='white',
+                    ha='left', va='bottom', zorder=6,
+                    bbox=dict(boxstyle='round,pad=0.15',
+                              facecolor='black', alpha=0.55, edgecolor='none'))
 
     ax.set_xlabel(xlab); ax.set_ylabel(ylab)
     ax.set_xlim(extent[0], extent[1]); ax.set_ylim(extent[2], extent[3])
