@@ -2547,7 +2547,7 @@ def _electronic_bootstrap(B=200, seed=42):
     pred_log_map = X_full @ b_map + log_offset_full
     resid = logsf_full - pred_log_map
     sigma_residual = float(np.sqrt(np.sum(resid**2) / max(n_fit - k, 1)))
-    # Bootstrap resample (lock endpoints if Stage 22)
+    # Bootstrap resample — must mirror _electronic_fit's Stage 22/22.5 drop logic
     rng = np.random.default_rng(seed)
     b_samples = np.empty((B, k))
     for j in range(B):
@@ -2556,8 +2556,18 @@ def _electronic_bootstrap(B=200, seed=42):
         try:
             if _LOCK_ENDPOINTS:
                 y_adj_b = yb - Xb[:, 0]*sS_log - Xb[:, 1]*sP_log
-                bb_other, *_ = np.linalg.lstsq(Xb[:, 2:], y_adj_b, rcond=None)
-                bb = np.concatenate([[sS_log, sP_log], bb_other])
+                n_rest_b = Xb.shape[1] - 2
+                if _STAGE_FORM_VERSION >= 22.5:
+                    live_rest_idx = [jj for jj in range(n_rest_b)
+                                      if (jj + 2) not in _STAGE_22_5_DROP_COLS]
+                    Xb_live = Xb[:, 2:][:, live_rest_idx]
+                    c_live, *_ = np.linalg.lstsq(Xb_live, y_adj_b, rcond=None)
+                    bb_rest = np.zeros(n_rest_b)
+                    for ki, jj in enumerate(live_rest_idx):
+                        bb_rest[jj] = c_live[ki]
+                else:
+                    bb_rest, *_ = np.linalg.lstsq(Xb[:, 2:], y_adj_b, rcond=None)
+                bb = np.concatenate([[sS_log, sP_log], bb_rest])
             else:
                 bb, *_ = np.linalg.lstsq(Xb, yb, rcond=None)
             b_samples[j] = bb
@@ -2792,7 +2802,7 @@ def plot_electronic_sigma(data_list, names, outdir):
             ax.fill_between(x, lo, hi, where=valid, color='#2e8b57',
                             alpha=0.18, linewidth=0,
                             label="68% PI (bootstrap + residual)")
-        stage_label = "Stage 22" if _LOCK_ENDPOINTS else "Stage 21"
+        stage_label = (f"Stage 22.5" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22") if _LOCK_ENDPOINTS else "Stage 21"
         ax.plot(x, y_form, 'D--', color='#2e8b57', markersize=ms-1,
                 linewidth=lw, alpha=0.95,
                 label=f"σ_e {stage_label} form prediction (mS/cm)")
@@ -2826,7 +2836,7 @@ def plot_electronic_sigma(data_list, names, outdir):
     elif _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
         ax.set_ylim(0, _Y_MAX_SIGMA)
     ax.legend(fontsize=8, loc='upper left')
-    stage_n = "Stage 22 (Trevisanello-locked)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit)"
+    stage_n = ((f"Stage 22.5 (Trevisanello, 8 LIVE)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (Trevisanello-locked)") if _LOCK_ENDPOINTS else "Stage 21 (live-fit)")
     # Physically-organized form display (Stage 22 reorganization):
     #   Block 1: AM material (Trevisanello literature)
     #   Block 2: Geometric (Bruggeman + Holm)
@@ -5696,6 +5706,21 @@ _SIGMA_S_LOCKED = 10.0   # S-heavy polycrystalline NCM, Trevisanello 2021
 _SIGMA_P_LOCKED = 5.0    # P-heavy single-crystal NCM, Trevisanello 2021
 _LOCK_ENDPOINTS = True   # toggle: True = Stage 22 locked, False = Stage 21 live-fit
 
+# Stage 22.5 (2026-06-03): drop WEAK BLOCK identified by full ablation
+# (scripts/electronic_ablation_full.py).  Removing 4 weak terms improves
+# LOOCV by +0.006 (0.9471 → 0.9531) and brings n/k from 6.3 to 9.5.
+#
+# Cols dropped (set coef = 0):
+#   3:  β_v       (AM vulnerability)        Δ = +0.0009 (no info)
+#   7:  β_AC      (φ·log CN saturation)     Δ = +0.0017 (sign unstable)
+#   12: β_fpth    (thin·log f_p)            Δ = +0.0081 (Stage 21 marginal)
+#   13: β_logrSE  (r_SE size on AM-AM)      Δ = +0.0014 (Stage 21 marginal)
+#
+# Keep (8 LIVE OLS): β_T, [p_τ, q_τ, r_τ], β_φth, β_covth, β_bi, β_Fe
+# Plus 2 LOCKED: σ_S, σ_P (Trevisanello literature)
+_STAGE_FORM_VERSION = 22.5      # 22.0 = full 12 OLS, 22.5 = drop 4 weak → 8 LIVE
+_STAGE_22_5_DROP_COLS = frozenset([3, 7, 12, 13])
+
 _TARGET_KEYS_E = (
     'electronic_sigma_full_mScm_stage_e',           # Stage E + Hertz (best)
     'electronic_sigma_full_mScm',                   # raw Hertz
@@ -6027,13 +6052,21 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
 
 
 def _electronic_fit(arr, fit_mask=None, lock_endpoints=None):
-    """OLS fit Stage 22 form on arr['X'], arr['y_resid'] (optionally masked).
-    Returns dict with coef, pred_log (full corpus), r2, loocv (on fit_mask).
+    """OLS fit σ_e form (Stage 22 / 22.5) on arr['X'], arr['y_resid']
+    (optionally masked).  Returns dict with coef, pred_log (full corpus),
+    r2, loocv (on fit_mask).
 
-    Stage 22 (default): coef[0]=log σ_S, coef[1]=log σ_P are LOCKED at
-    _SIGMA_S_LOCKED, _SIGMA_P_LOCKED (Trevisanello 2021).  Only the 12
-    remaining coefs are fitted.  Stage 21 live-fit available via
-    lock_endpoints=False."""
+    Stage 22 (full):    coef[0,1] LOCKED, 12 LIVE OLS (cols 2-13).
+    Stage 22.5 (default): coef[0,1] LOCKED, 8 LIVE OLS.  4 weak terms
+        dropped (cols 3, 7, 12, 13 = β_v, β_AC, β_fpth, β_logrSE)
+        per ablation screen (LOOCV 0.9471 → 0.9531, n/k 6.3 → 9.5).
+        Dropped coefs are forced to 0 in returned coef vector so
+        downstream X @ coef arithmetic is unaffected.
+    Stage 21 (live-fit): lock_endpoints=False; all 14 cols fitted.
+
+    Module flag _STAGE_FORM_VERSION (= 22.0 or 22.5) controls which
+    locked variant runs.  Default 22.5.
+    """
     if lock_endpoints is None:
         lock_endpoints = _LOCK_ENDPOINTS
     X = arr['X']; y = arr['y_resid']; n = arr['n']
@@ -6041,12 +6074,28 @@ def _electronic_fit(arr, fit_mask=None, lock_endpoints=None):
         fit_mask = np.ones(n, bool)
     Xf = X[fit_mask]; yf = y[fit_mask]
     nf = int(fit_mask.sum())
-    if lock_endpoints:
+
+    def _fit_locked(Xf_, y_):
+        """Lock cols 0,1; fit cols 2..end with Stage 22 vs 22.5 drop logic.
+        Returns full coef vector (length = X.shape[1]) with locked + fitted
+        values, and 0 for dropped cols in Stage 22.5."""
         sS_log = np.log(_SIGMA_S_LOCKED); sP_log = np.log(_SIGMA_P_LOCKED)
-        # Subtract locked endpoint contribution, fit remaining 12 cols
-        y_adj = yf - Xf[:, 0]*sS_log - Xf[:, 1]*sP_log
-        coef_other, *_ = np.linalg.lstsq(Xf[:, 2:], y_adj, rcond=None)
-        coef = np.concatenate([[sS_log, sP_log], coef_other])
+        y_adj = y_ - Xf_[:, 0]*sS_log - Xf_[:, 1]*sP_log
+        n_rest = Xf_.shape[1] - 2
+        if _STAGE_FORM_VERSION >= 22.5:
+            # Drop weak cols → fit only the kept subset, pad zeros for dropped
+            live_rest_idx = [j for j in range(n_rest) if (j + 2) not in _STAGE_22_5_DROP_COLS]
+            Xf_live = Xf_[:, 2:][:, live_rest_idx]
+            c_live, *_ = np.linalg.lstsq(Xf_live, y_adj, rcond=None)
+            coef_rest = np.zeros(n_rest)
+            for ki, j in enumerate(live_rest_idx):
+                coef_rest[j] = c_live[ki]
+        else:
+            coef_rest, *_ = np.linalg.lstsq(Xf_[:, 2:], y_adj, rcond=None)
+        return np.concatenate([[sS_log, sP_log], coef_rest])
+
+    if lock_endpoints:
+        coef = _fit_locked(Xf, yf)
     else:
         coef, *_ = np.linalg.lstsq(Xf, yf, rcond=None)
     pred_full = X @ coef + arr['log_offset']
@@ -6058,16 +6107,15 @@ def _electronic_fit(arr, fit_mask=None, lock_endpoints=None):
     for j in range(nf):
         m = np.ones(nf, bool); m[j] = False
         if lock_endpoints:
-            y_adj_loo = yf[m] - Xf[m, 0]*sS_log - Xf[m, 1]*sP_log
-            c_other_loo, *_ = np.linalg.lstsq(Xf[m, 2:], y_adj_loo, rcond=None)
-            c_loo = np.concatenate([[sS_log, sP_log], c_other_loo])
+            c_loo = _fit_locked(Xf[m], yf[m])
         else:
             c_loo, *_ = np.linalg.lstsq(Xf[m], yf[m], rcond=None)
         sse_loo += (yf[j] - Xf[j] @ c_loo)**2
     loocv = 1 - float(sse_loo) / ss_tot if ss_tot > 0 else 0.0
     return {'coef': coef, 'pred_log': pred_full,
             'r2': r2, 'loocv': loocv, 'n_fit': nf,
-            'lock_endpoints': lock_endpoints}
+            'lock_endpoints': lock_endpoints,
+            'form_version': _STAGE_FORM_VERSION}
 
 
 def plot_electronic_fit_final(data_list, names, outdir):
@@ -6119,7 +6167,7 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    stage_str = ("Stage 22 (Trevisanello LOCKED σ_S/σ_P, 12 OLS params)"
+    stage_str = ((f"Stage 22.5 (Trevisanello LOCKED σ_S/σ_P, 8 LIVE OLS)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (Trevisanello LOCKED σ_S/σ_P, 12 OLS params)")
                  if _LOCK_ENDPOINTS else "Stage 21 (14 OLS params, live-fit σ_S/σ_P)")
     sig_str = (f"σ_S={sigma_S:.1f} LOCKED, σ_P={sigma_P:.1f} LOCKED (Trevisanello 2021)"
                if _LOCK_ENDPOINTS else f"σ_S={sigma_S:.2f} σ_P={sigma_P:.2f}")
@@ -6274,7 +6322,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    stage_lbl = "Stage 22 (Trevisanello-locked, 12 OLS)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit, 14 OLS)"
+    stage_lbl = ((f"Stage 22.5 (Trevisanello-locked, 8 LIVE OLS)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (Trevisanello-locked, 12 OLS)") if _LOCK_ENDPOINTS else "Stage 21 (live-fit, 14 OLS)")
     ax.set_ylabel(f'σ_e predicted ({stage_lbl} form)')
     # Show 5 top features to match modal (was 3 — inconsistency with modal display)
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:5])
