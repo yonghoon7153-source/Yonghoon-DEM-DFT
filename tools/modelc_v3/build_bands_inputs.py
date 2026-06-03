@@ -257,23 +257,53 @@ def main():
     control = nls["CONTROL"]
     control = re.sub(r"calculation\s*=\s*'[^']*'",
                      "calculation = 'bands'", control)
+
+    def insert_before_namelist_close(text, new_line):
+        """Insert new_line just before the closing '/' of the namelist.
+        Matches '/' on its OWN line (with optional whitespace), NOT any '/'
+        that may appear inside string values like pseudo_dir paths.
+        """
+        return re.sub(r"(\n)(\s*/\s*)(\n|$)",
+                       r"\1  " + new_line + r"\1\2\3",
+                       text, count=1)
+
     if "verbosity" not in control:
-        control = control.replace("/", "  verbosity = 'high'\n/", 1)
-    # Also ensure restart_mode='from_scratch' (NSCF needs fresh wf-read)
+        control = insert_before_namelist_close(control, "verbosity = 'high'")
     if "restart_mode" not in control:
-        control = control.replace("/", "  restart_mode = 'from_scratch'\n/", 1)
+        control = insert_before_namelist_close(control, "restart_mode = 'from_scratch'")
 
     # SYSTEM: add nbnd buffer (~1.3× occupied) — auto-estimate is fine via QE,
     # but explicitly set ~50% above default for clean dispersion plotting.
     system = nls["SYSTEM"]
     # leave SYSTEM as-is; bands inherits nbnd from SCF wfc
 
+    def _trim_card(card_text, allowed_first):
+        """Keep only the lines belonging to a single card.
+
+        Cuts at any line whose first token matches a different QE card
+        keyword (K_POINTS / CELL_PARAMETERS / ATOMIC_POSITIONS / OCCUPATIONS
+        / HUBBARD). Defensive against parser leakage."""
+        if not card_text:
+            return ""
+        other_cards = {"ATOMIC_SPECIES", "K_POINTS", "CELL_PARAMETERS",
+                        "ATOMIC_POSITIONS", "OCCUPATIONS", "HUBBARD"}
+        other_cards.discard(allowed_first)
+        out = []
+        for line in card_text.splitlines():
+            tok = line.strip().split(maxsplit=1)
+            if tok and tok[0] in other_cards:
+                break
+            out.append(line)
+        return "\n".join(out)
+
+    atomic_species = _trim_card(cards.get("ATOMIC_SPECIES", ""), "ATOMIC_SPECIES")
+
     # Assemble nscf_bands.in
     bands_input = (
         control + "\n" +
         system + "\n" +
         nls.get("ELECTRONS", "&ELECTRONS\n  conv_thr = 1.0d-8\n/") + "\n" +
-        cards.get("ATOMIC_SPECIES", "") + "\n" +
+        atomic_species + "\n" +
         kpoints_card + "\n" +
         (cell_block + "\n" if cell_block else "") +
         pos_block + "\n"
