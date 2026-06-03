@@ -90,6 +90,7 @@ GROUP_COLORS = ['#6c8cff', '#ff6b6b', '#51cf66', '#ffd43b', '#cc5de8', '#ff922b'
 
 _GROUP_INFO = None  # Set by main()
 _Y_MAX_SIGMA = None  # Override y-axis max (mS/cm) for multiscale σ plots; set by main()
+_Y_MAX_SIGMA_E = None  # Override y-axis max (mS/cm) specifically for σ_e plots (set by main via --y-max-sigma-e / webapp σ_AM(e) input)
 _GLOBAL_RGB = None  # (b, ln_k) from global fit across all plot groups
 _GLOBAL_C_ION = None  # Fitted C for ionic scaling law (from global/ionic_scaling_fit)
 _GLOBAL_FORMX_R2 = None  # (r2, loocv) from FORM X fit
@@ -2815,14 +2816,15 @@ def plot_electronic_sigma(data_list, names, outdir):
                 label=f"σ_e raw, form unavailable (metrics incomplete, n={len(x_form_missing)})")
 
     _apply_style(ax, "σ_e (mS/cm)", names)
-    # σ_AM(e) UI input → also sets y-axis MAX so user sees "headroom"
-    # vs their chosen reference (e.g., σ_AM=50 → y-axis 0-50 to see how
-    # far below single-crystal max the composite sits).  Falls back to
-    # auto-scale if y-max-sigma input set (priority: --y-max-sigma > σ_S(e)).
-    if _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
+    # σ_e plot y-axis priority:
+    #   1. --y-max-sigma-e  (user σ_AM(e) UI input — preferred, σ_e-specific)
+    #   2. --y-max-sigma    (unified σ y-max — shared with σ_ionic)
+    #   3. auto-scale       (matplotlib default)
+    # σ_AM(e) NEVER touches form anchors — form keeps Trevisanello defaults.
+    if _Y_MAX_SIGMA_E is not None and _Y_MAX_SIGMA_E > 0:
+        ax.set_ylim(0, _Y_MAX_SIGMA_E)
+    elif _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
         ax.set_ylim(0, _Y_MAX_SIGMA)
-    elif _SIGMA_S_LOCKED > 11.0:    # user set σ_AM(e) above Trevisanello default
-        ax.set_ylim(0, _SIGMA_S_LOCKED * 1.05)
     ax.legend(fontsize=8, loc='upper left')
     stage_n = "Stage 22 (Trevisanello-locked)" if _LOCK_ENDPOINTS else "Stage 21 (live-fit)"
     # Physically-organized form display (Stage 22 reorganization):
@@ -6519,7 +6521,10 @@ def main():
     parser.add_argument("--global-rgb", default="")   # e.g. "5.21,0.20" (b,ln_k from global fit)
     parser.add_argument("--global-c-ion", default="")  # e.g. "0.0727" (C from ionic scaling fit)
     parser.add_argument("--y-max-sigma", type=float, default=None,
-                        help="Fixed y-axis max (mS/cm) for multiscale σ plots; enables cross-run visual comparison")
+                        help="Fixed y-axis max (mS/cm) for σ_ionic / multiscale σ plots")
+    parser.add_argument("--y-max-sigma-e", type=float, default=None,
+                        help="Fixed y-axis max (mS/cm) for σ_electronic plots (user σ_AM(e) input). "
+                             "Does NOT lock form anchors — form keeps Trevisanello defaults.")
     parser.add_argument("--sigma-S", type=float, default=None,
                         help="σ_e form: S-end AM conductivity (mS/cm). Default=10 (Trevisanello locked). Set to override.")
     parser.add_argument("--sigma-P", type=float, default=None,
@@ -6615,6 +6620,8 @@ def main():
     else:
         _GROUP_INFO = None
     _Y_MAX_SIGMA = args.y_max_sigma  # None = auto, else fixed (cross-run unified)
+    global _Y_MAX_SIGMA_E
+    _Y_MAX_SIGMA_E = args.y_max_sigma_e  # σ_e plots only (user σ_AM(e) input)
 
     # Set global R_gb if provided (from combined fit across all plot groups)
     if args.global_rgb:

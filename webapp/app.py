@@ -4609,17 +4609,17 @@ def group_plots():
                 cmd += ['--y-max-sigma', str(_yms)]
         except ValueError:
             pass  # invalid → ignore, fall back to auto
-    # σ_e Stage 22 form: user-set σ_AM(e) (single value, mS/cm).
-    # σ_S = user input, σ_P = user input / 2 (Trevisanello 2× ratio auto)
+    # σ_e Y-axis max — user-set σ_AM(e) (mS/cm) ONLY controls plot y-axis ceiling
+    # for σ_e plots.  Does NOT change form σ_S/σ_P anchors (those stay locked
+    # at Trevisanello 10/5 literature defaults per Stage 22 design).
     sigma_AM_e = request.form.get('sigma_AM_e', '').strip()
     if sigma_AM_e:
         try:
             _sAM = float(sigma_AM_e)
             if _sAM > 0:
-                cmd += ['--sigma-S', str(_sAM)]
-                cmd += ['--sigma-P', str(_sAM / 2.0)]
+                cmd += ['--y-max-sigma-e', str(_sAM)]
         except ValueError:
-            pass  # invalid → ignore, use Trevisanello defaults (σ_S=10, σ_P=5)
+            pass  # invalid → ignore, auto-scale
     # Generic parameter-comparison selections (param_scatter/bar/corr)
     param_x = request.form.get('param_x', '').strip()
     param_y = request.form.get('param_y', '').strip()
