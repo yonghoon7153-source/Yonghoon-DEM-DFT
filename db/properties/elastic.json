@@ -22,6 +22,34 @@
     "advantage_over_energy_method": "Energy curvature only recovers diagonal Voigt C_ii. Stress-strain gives the full 6×6 matrix in the same 12 SCFs, including the off-diagonal cross-coupling, with a built-in cross-check (Cij = Cji symmetry).",
     "results": [
       {
+        "id": "comp1_v3",
+        "composition": "Li6PS5Cl",
+        "lineage": "comp1 v2 (annealed Li champion) → v3 stress-strain refit with same tools/modelc_v3/fit_elastic_cij_stress.py as modelc_v3",
+        "C11_avg": 79.27, "C11_std": 0.52, "C11_C22_C33_individual": [78.80, 80.00, 79.00],
+        "C12_avg": 29.68, "C12_std": 0.25, "C12_C13_C23_individual": [29.75, 29.35, 29.95],
+        "C44_avg": 19.43, "C44_std": 0.09, "C44_C55_C66_individual": [19.50, 19.30, 19.50],
+        "B_Voigt": 46.21, "B_Reuss": 46.20, "B_VRH": 46.21,
+        "G_Voigt": 21.58, "G_Reuss": 21.24, "G_VRH": 21.41,
+        "E_VRH": 55.64, "nu": 0.2993, "Zener_A": 0.795,
+        "eigenvalues_GPa": [19.14, 19.40, 19.65, 49.60, 49.67, 138.64],
+        "mechanically_stable": true,
+        "strain_step": 0.005, "n_scfs": 12,
+        "qe_sign_flip_applied": true,
+        "completed_date": "2026-06-03",
+        "data_path": "container:/home/ubuntu/work/runs/comp1_v3/elastic_fit_ready/elastic_results_stress.json",
+        "scf_source": "gabia:/data/work/bml/manuscript_support/post_relax_comp1_v2/comp1v2_elastic_{1..6}{p,m}.out",
+        "vs_modelc_v3_same_method": {
+          "C11_pct": "−11.8% (89.87 → 79.27): comp1 softer in normal (Li6 ordered, but Cl-rich modelc_v3 has stiffer ionic backbone)",
+          "C12_pct": "+36% (21.82 → 29.68): comp1 vacancy-free → stronger cross-coupling",
+          "C44_pct": "+35% (14.43 → 19.43): comp1 NO vacancy → much stiffer shear",
+          "B_VRH_pct": "+3.9% (44.47 → 46.21): bulk modulus comparable",
+          "G_VRH_pct": "+6.8% (20.05 → 21.41): shear slightly higher",
+          "E_VRH_pct": "+6.4% (52.30 → 55.64): Young's modulus comp1 slightly higher",
+          "Zener_A_delta": "0.416 → 0.795: comp1 nearly isotropic (Li6 clean ordering), modelc_v3 anisotropic (vacancy disorder)",
+          "headline": "Vacancy (Li6 → Li5.4) reduces C44/C12 by ~30%, leaves B/G/E within ±6%. Anisotropy doubles in vacancy structure."
+        }
+      },
+      {
         "id": "modelc_v3",
         "composition": "Li5.4PS4.4Cl1.6",
         "C11_avg": 89.87, "C11_std": 3.16, "C11_C22_C33_individual": [85.40, 92.30, 91.90],
