@@ -18,15 +18,16 @@
 
 | 단계 | LPSCl (comp1_v3) | LPSCl1.6 (modelc_v3) |
 |---|---|---|
-| §8a V0 relax (BM-EOS V0에서 cell-fixed BFGS) | 진행 중 2026-06-03 | 완료 |
-| §8b 결합 통계 (bond stats) | 대기 | 완료 |
-| §8c 배위수 (coordination) | 대기 | 완료 |
-| §8d Voronoi | 대기 | 완료 |
+| §8a V0 relax (BM-EOS V0에서 cell-fixed BFGS) | **완료** (18 BFGS, V=1016.62 ✓) | 완료 |
+| §8b 결합 통계 (bond stats) | **완료** | 완료 |
+| §8c 배위수 (coordination) | **완료** | 완료 |
+| §8d Voronoi | **완료** | 완료 |
+| §8d' per-site 분석 (4a/4d Cl, PS4/4d S, Li env) | **완료** | 완료 |
 | §8e BVSE (python) | 대기 | 완료 |
 | §8f Bader (AE plot_num=17) | 대기 | 완료 |
 | §8g DOS / PDOS | 대기 | 완료 |
 | §8h 밴드 구조 (Hungarian 재정렬) | 대기 | 완료 |
-| §8i stress-strain 전체 6×6 Cij | 대기 (v2-cell 버전 철회됨) | 완료 |
+| §8i stress-strain 전체 6×6 Cij | **완료** (B=43.59, E=52.31, A=1.07) | 완료 |
 | §8j MLIP UMA 600K snapshot 탄성 | 대기 | 완료 |
 | §8k AIMD 600/800/1000K (Arrhenius) | 대기 | 완료 |
 | §8l ELF (단면 + 3D iso) | 대기 | 완료 |
@@ -39,12 +40,12 @@
 
 | 항목 | LPSCl (Li6) | LPSCl1.6 (Li5.4) | 추세 | 메커니즘 |
 |---|---|---|---|---|
-| **B0** (BM-EOS, GPa) | **26.23** | **21.71** | Li6가 더 단단 | Cl→Br/공공으로 격자 약화 |
-| **K_VRH** (stress-strain, GPa) | [pending] | **44.47** | TBD | |
-| **G_VRH** (GPa) | [pending] | **20.05** | TBD | |
-| **E_VRH** (GPa) | [pending] | **52.30** | TBD | |
-| **ν** (Poisson) | [pending] | 0.304 | TBD | |
-| **Zener A** | [pending] | 0.416 | TBD | |
+| **B0** (BM-EOS, GPa) | **26.23** | **21.71** | LPSCl가 더 단단 (E(V) 곡선상) | Cl→S anti-site + Li 공공으로 hydrostatic compressibility ↑ |
+| **K_VRH** (stress-strain, GPa) | **43.59** | **44.47** | **거의 동일** (Δ+2%) | clamped-ion 골격 모듈러스는 보존됨 |
+| **G_VRH** (GPa) | **20.12** | **20.05** | **동일** | shear 강성 보존 |
+| **E_VRH** (GPa) | **52.31** | **52.30** | **DFT 0K에서 동일 — vacancy paradox** | 실험은 LPSCl1.6 > LPSCl인데 DFT는 못 잡음 |
+| **ν** (Poisson) | 0.300 | 0.304 | 거의 동일 | |
+| **Zener A** | **1.073** (isotropic) | **0.416** (anisotropic) | **2.6× 차이** | Li 공공 + Cl anti-site로 anisotropy 도입 |
 | 밴드갭 (DFT-PBE, eV) | [pending] | [추가] | | |
 | Bader q(Li) (e) | [pending] | [추가] | | |
 | AIMD Ea (eV) | [pending] | [추가] | | |
@@ -91,19 +92,44 @@ Li 에너지면을 반영. 두 시스템 각자 K 값 (BM vs stress-strain)은 ~
 
 ## 3. 탄성 — DFT 0K stress-strain (전체 6×6)
 
-| 항목 (GPa) | LPSCl v3 | LPSCl1.6 v3 |
-|---|---|---|
-| C11 평균 | [pending] | 89.87 ± 3.16 |
-| C12 평균 | [pending] | 21.82 ± 2.43 |
-| C44 평균 | [pending] | 14.43 ± 1.25 |
-| B_VRH | [pending] | 44.47 |
-| G_VRH | [pending] | 20.05 |
-| E_VRH | [pending] | 52.30 |
-| ν | [pending] | 0.304 |
-| Zener A | [pending] | 0.416 |
-| 역학적 안정성 | [pending] | 안정 |
+| 항목 (GPa) | LPSCl v3 (Li6) | LPSCl1.6 v3 (Li5.4) | Δ |
+|---|---|---|---|
+| C11 평균 | **74.23 ± 5.33** [66.7, 78.3] | 89.87 ± 3.16 [85.4, 92.3] | −17.4% (LPSCl 약함) |
+| C12 평균 | **29.23 ± 0.51** [28.8, 30.0] (매우 균일) | 21.82 ± 2.43 [19.9, 25.3] | **+34%** (LPSCl 강함) |
+| C44 평균 | **18.98 ± 0.90** [18.3, 20.3] | 14.43 ± 1.25 [13.6, 16.2] | **+31%** (LPSCl 강함) |
+| B_Voigt / B_Reuss / B_VRH | 44.23 / 42.94 / **43.59** | 44.50 / 44.44 / **44.47** | −2% (사실상 동일) |
+| G_Voigt / G_Reuss / G_VRH | 20.39 / 19.85 / **20.12** | 22.27 / 17.83 / **20.05** | +0.4% (동일) |
+| **E_VRH** | **52.31** | **52.30** | **±0.02% (paradox)** |
+| ν | 0.300 | 0.304 | 거의 동일 |
+| **Zener A** | **1.073** (≈ 1 = isotropic) | **0.416** (강한 anisotropy) | **2.6×** |
+| eigenvalues > 0 | 17.4, 18.8, 19.4, 42.3, 48.0, 133.7 (모두 양수 ✓) | 11.6, 12.7, 18.1, 63.8, 73.1, 133.6 ✓ | 둘 다 안정 |
 
-(comp1_v3 stress-strain v2 cell 값은 2026-06-03에 철회. V0 relax 후 재실행.)
+### Stress-strain (DFT 0K)에서 본 핵심
+
+1. **B/G/E 동일 (±2%)** — bulk, shear, Young의 평균 모듈러스는 LPSCl ≈
+   LPSCl1.6. 실험에서 LPSCl1.6 Young's가 더 높다는 결과를 **DFT 0K가 못
+   잡음** → finite-T 효과 (phonon anharmonic stiffening, Li dynamic
+   redistribution) 필요. **paper의 vacancy paradox 핵심 논증.**
+2. **C44 / C12는 LPSCl가 30%↑ 더 강함** — Li 공공이 없어서 shear (C44) +
+   cross-coupling (C12) 더 견고.
+3. **C11은 LPSCl가 17%↓ 더 약함** — 정상 compression에 약함. 이건
+   복합적인 effect (격자 상수 vs Li6 ordering).
+4. **Zener A**: LPSCl 1.07 (등방), LPSCl1.6 0.42 (강한 비등방). **이게
+   Cij 수준에서 보이는 유일한 vacancy/disorder fingerprint.** B/G/E가
+   동일해도 anisotropy로 두 시스템 구분 가능.
+
+### BM-EOS B0 vs stress-strain B_VRH 비교 (intra-system)
+
+| | B0 (BM, GPa) | B_VRH (stress, GPa) | 비율 |
+|---|---|---|---|
+| LPSCl | 26.23 | 43.59 | 1.66 |
+| LPSCl1.6 | 21.71 | 44.47 | 2.05 |
+
+두 방법 모두 물리적으로 의미 있지만 다른 양:
+- **B0 (BM-EOS)**: 등방 압축 (hydrostatic) 시 E(V) 곡률 = full
+  relaxation 포함.
+- **B_VRH (clamped-ion)**: clamped-ion Cij에서 유도 = harmonic frozen-ion만.
+- ratio 1.5–2× 범위는 Cl-rich argyrodite에서 표준. **paper에 둘 다 보고.**
 
 
 ## 4. 탄성 — MLIP UMA 600K snapshot

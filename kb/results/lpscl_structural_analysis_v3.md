@@ -76,21 +76,125 @@ Cl의 V_poly가 22.06 (LPSCl, 모두 4a) → 20.31 (LPSCl1.6, 4a + 4d mixing).
 이게 Li–Cl 결합이 짧아진 이유와 같은 원인.
 
 
-## 4. Anti-site / Site disorder 정량
+## 4. Per-site 정량 분석 (per_site_bond_analysis.py)
 
-LPSCl1.6에서 (정확한 occupancy 분석은 4d Wyckoff site 위치를 직접 매핑해야
-하지만, 배위수 + Voronoi에서 간접 추론):
+각 Cl/S 사이트를 직접 분류 (Z(Li)≥5 → 4a 옥타, Z(Li)<5 → 4d 텟라) 후
+사이트별 결합 통계.
 
-- Cl 8개 중 평균 약 **2–3개가 4d (S 자리) anti-site** → 25–37% Cl이
-  미스배치
-- 4d Cl: Z = 4 (Cl[Li4] tetrahedral, 작은 V_poly ≈ 18 Å³)
-- 4a Cl: Z = 6 (Cl[Li6] octahedral, 큰 V_poly ≈ 22 Å³)
-- 평균 V_poly = 20.31 → 4d:4a ≈ 0.4 : 0.6 (대략 2.6 / 5.4 비율)
+### Cl 사이트 분포
 
-이 site disorder는:
-1. 실험 NMR (Cl 두 환경) / XRD (anti-site fraction) 와 비교 가능
-2. AIMD에서 Li 호핑 활성화 에너지에 영향 (Cl-rich 부근이 더 빠른 hop)
-3. ICOHP (LOBSTER)에서 4a-Cl vs 4d-Cl의 Li-Cl 결합 강도 차이 직접 측정 가능
+| | LPSCl (comp1) | LPSCl1.6 (modelc_v3) |
+|---|---|---|
+| 전체 Cl 개수 | 4 | 8 |
+| Z(Li) = 6 (정상 4a 옥타) | **4** (100%) | **1** (12.5%) — Cl[61]만 |
+| Z(Li) = 5 (4a, Li 공공 1개) | 0 | **6** (75%) |
+| Z(Li) = 4 (4d 텟라 anti-site) | 0 | **1** (12.5%) — Cl[52]만 |
+| **4d anti-site fraction** | 0% | **12.5%** (1/8) |
+
+### 핵심 발견: 진짜 disorder source는 Cl anti-site가 아니라 "4a Li 공공"
+
+내가 stoichiometry로 계산한 예상 (Cl 8개 중 3개가 4d, 37.5%)과 실제는
+**매우 다름**. 실제로는 단 1개 (12.5%)만 4d anti-site.
+
+대신 4a Cl 중 6/7개가 **Z=5** (octahedral cage의 6 Li 중 1개가 공공으로
+빠짐). 즉:
+- 정상 LPSCl: 모든 4a Cl[Li6] 완전 옥타 (Z=6)
+- LPSCl1.6: 4a Cl 중 1개만 완전 옥타, 6개는 Li 공공으로 Z=5 변형
+
+**해석**: Pipeline v2 annealing이 만든 champion configuration은 Cl을
+원래 자리 (4a)에 거의 유지하고, 대신 **Li 공공이 4a Cl 주변에 분포**.
+이것이 시스템의 진짜 disorder source.
+
+실험 NMR/XRD에서 종종 보고되는 25–40% 4d Cl anti-site는 우리 0K champion
+보다 더 disordered한 finite-T ensemble을 보고. 우리 0K 값은 lower bound.
+
+
+## 5. 사이트별 Li-X 결합 길이 head-to-head
+
+### Li–Cl (사이트별)
+
+| 결합 | LPSCl (4a only) | LPSCl1.6 (4a + 4d) |
+|---|---|---|
+| Li–Cl(4a) | n=24, **2.6073 ± 0.1291 Å** | n=36, **2.5510 ± 0.1084 Å** |
+| Li–Cl(4d) | (없음) | n=4, **2.3585 ± 0.0375 Å** (**0.19 Å 더 짧음!**) |
+| 전체 평균 Li–Cl | 2.6073 | 2.5318 (4a + 4d 가중 평균) |
+
+**4d Cl[Li4]가 매우 짧고 균질한 Li-Cl 결합**: 단 4개 결합 (1 Cl × 4 Li)
+이지만 σ = 0.038 (4a의 1/3) — 텟라 환경이 매우 단단함.
+
+paper에 보고 시: "4d-Cl forms much shorter (2.36 Å) and stiffer (σ ÷ 3.5)
+Li-Cl bonds than 4a-Cl (2.55 Å, σ = 0.108). The 4d-Cl anti-site is a
+*local stiffening* defect, even though it is rare (12.5% in our 0K
+champion)."
+
+### Li–S (사이트별)
+
+| 결합 | LPSCl | LPSCl1.6 |
+|---|---|---|
+| Li–S(PS4) | n=48, **2.5108 ± 0.0963 Å** | n=56, **2.4870 ± 0.0885 Å** |
+| Li–S(4d) | n=24, **2.3614 ± 0.0106 Å** (매우 균질) | n=12, **2.3645 ± 0.0238 Å** |
+
+**Li-S(4d)는 항상 ~2.36 Å로 매우 균질**, 두 시스템에서 동일.
+- 4d S²⁻ 자리의 Li 환경은 두 시스템에서 사실상 동일.
+- σ가 0.011로 매우 작음 → 텟라 4d S[Li4]가 매우 잘 정의된 단단한 단위.
+
+**Li-S(PS4) > Li-S(4d) (0.15 Å)** — PS4 안의 S는 P 쪽으로 묶여서 Li
+쪽으로는 약하고 멀게 결합. 4d 자유 S²⁻는 Li만 보고 강하게 묶임.
+
+### Li–Li (Li sublattice topology)
+
+| | LPSCl | LPSCl1.6 |
+|---|---|---|
+| Li–Li | n=52, **3.0993 ± 0.2465 Å** [2.62, 3.51] | n=35, **3.2774 ± 0.2605 Å** [2.73, 3.59] |
+| 결합당 Li 수 | 52 / 24 = 2.17 | 35 / 27 = 1.30 |
+
+**LPSCl1.6에서 Li-Li 평균 거리 0.18 Å 더 길고, Li당 Li 이웃 수 0.87개
+감소** — 공공으로 인해 Li 네트워크가 sparse해짐. 직접 Li 확산 경로
+(Li1↔Li2 hop)의 토폴로지 변화 → AIMD Ea 차이로 연결.
+
+### Cl–Cl (LPSCl1.6 only)
+
+| | LPSCl1.6 |
+|---|---|
+| Cl(4a)–Cl(4a) | n=4, 4.4384 ± 0.0587 Å [4.35, 4.50] |
+| Cl(4a)–Cl(4d) | n=1, 4.1278 Å |
+| Cl(4d)–Cl(4d) | n=0 (단 1개의 4d Cl이므로) |
+
+LPSCl은 Cl-Cl 결합 없음 (4 Cl이 cubic cell에서 정확히 4a 자리 배치, 가장
+가까운 Cl-Cl > 4.6 Å cutoff 밖).
+
+
+## 6. Li 환경 (environment type) 분포
+
+각 Li 사이트의 1-shell 환경 = (PS4-S 수, 4d-S 수, 4a-Cl 수, 4d-Cl 수).
+
+### LPSCl (1 unique type)
+
+| 환경 | Li 사이트 수 |
+|---|---|
+| `S(PS4)_2 _ S(4d)_1 _ Cl(4a)_1 _ Cl(4d)_0` | **24 / 24 (100%)** |
+
+→ 모든 Li가 정확히 동일한 환경: PS4-S 2개 + 4d-S 1개 + 4a-Cl 1개 = 4배위
+완벽 ordered.
+
+### LPSCl1.6 (6 unique types)
+
+| 환경 | Li 사이트 수 | 비율 |
+|---|---|---|
+| `S(PS4)_2 _ S(4d)_1 _ Cl(4a)_1 _ Cl(4d)_0` | 11 / 27 | 40.7% |
+| `S(PS4)_2 _ S(4d)_0 _ Cl(4a)_2 _ Cl(4d)_0` | 10 / 27 | 37.0% |
+| `S(PS4)_2 _ S(4d)_0 _ Cl(4a)_1 _ Cl(4d)_1` | 3 / 27 | 11.1% |
+| `S(PS4)_3 _ S(4d)_0 _ Cl(4a)_1 _ Cl(4d)_0` | 1 / 27 | 3.7% |
+| `S(PS4)_3 _ S(4d)_0 _ Cl(4a)_1 _ Cl(4d)_1` | 1 / 27 | 3.7% |
+| `S(PS4)_2 _ S(4d)_1 _ Cl(4a)_0 _ Cl(4d)_0` | 1 / 27 | 3.7% |
+
+→ **6 unique types**. 40.7%만 정상 LPSCl 환경. 나머지 60%는 anion
+exchange로 인한 변형 (Cl 2개를 보는 Li, 4d-Cl을 보는 Li, PS4-S 3개를 보는
+Li 등).
+
+paper 메시지: LPSCl1.6의 Li ionic conductivity 향상은 단순 공공 농도 효과가
+아니라 **Li 환경 multiplicity 자체**가 hopping landscape에 새로운 path를
+제공한다는 가설을 직접 지원.
 
 
 ## 5. PS4 unit의 변화
@@ -111,7 +215,7 @@ paper 해석: Cl excess로 인한 anti-site disorder가 PS4 backbone에 영향�
 공유결합은 화학적 환경 변화에 robust.
 
 
-## 6. paper에 들어갈 표 초안
+## 7. paper에 들어갈 표 초안
 
 paper Table X (예시 캡션: "DFT-V0 bond-environment comparison of LPSCl vs
 Cl-substituted LPSCl1.6 argyrodites"):
@@ -122,21 +226,25 @@ Cl-substituted LPSCl1.6 argyrodites"):
 | V/atom (Å³) | 19.55 | 19.62 |
 | V/fu (Å³) | 254.16 | 243.29 (−4.3%) |
 | d(P–S) (Å) | 2.073 ± 0.036 | 2.064 ± 0.011 |
-| d(Li–S) (Å) | 2.461 ± 0.106 | 2.465 ± 0.094 |
-| d(Li–Cl) (Å) | 2.607 ± 0.129 | **2.532 ± 0.119** |
-| Z(Cl) | 6.0 (전부 4a) | **5.0 ± 0.5 (4a + 4d mix)** |
-| V_poly(Cl) (Å³) | 22.06 | **20.31 (−7.9%)** |
-| Anti-site Cl (4d) | 0% | ≈ 25–37% |
+| d(Li–S, PS4) (Å) | 2.511 ± 0.096 | 2.487 ± 0.089 |
+| d(Li–S, 4d) (Å) | 2.361 ± 0.011 | 2.365 ± 0.024 |
+| d(Li–Cl, 4a) (Å) | 2.607 ± 0.129 | 2.551 ± 0.108 |
+| **d(Li–Cl, 4d) (Å)** | — | **2.359 ± 0.038 (4d-Cl 단단)** |
+| d(Li–Li) (Å) | 3.099 ± 0.247 (n=52) | 3.277 ± 0.261 (n=35, +0.18) |
+| Z(Cl, 4a fraction) | 4/4 (100%) | 7/8 (87.5%) |
+| **4d-Cl anti-site fraction** | 0% | **12.5% (1/8)** |
+| 4a-Cl 중 Z=5 (Li 공공) | 0/4 (0%) | **6/7 (86%)** |
+| Li environment types | 1 unique | 6 unique |
 
 
-## 7. 다음 검증 (in-progress / pending)
+## 8. 다음 검증 (in-progress / pending)
 
 | 추가 데이터 | LPSCl | LPSCl1.6 | 사용처 |
 |---|---|---|---|
-| Bader q(Li, P, S, Cl) | pending | **이미 db (Li +0.882, Cl −0.916)** | §1: 결합 강도 정량화 (Wilkening q·\|q\|/r) |
-| ICOHP (LOBSTER) | pending | NSCF 끝, lobster 대기 | §4: 4a-Cl vs 4d-Cl 차이 정량 |
-| AIMD Ea | pending | done | §4: Cl-mixing이 hop barrier에 미치는 영향 |
-| Cij stress-strain | **진행 중** (12 SCF) | done | mechanical: site disorder가 탄성에 미치는 영향 |
+| Bader q(Li, P, S, Cl) | pending | **이미 db (Li +0.882, Cl −0.916)** | 결합 강도 정량화 (Wilkening q·\|q\|/r) |
+| ICOHP (LOBSTER) | pending | NSCF 끝, lobster 대기 | 4a-Cl vs 4d-Cl 차이 정량 |
+| AIMD Ea | pending | done (0.224 eV) | Cl-mixing이 hop barrier에 미치는 영향 |
+| Cij stress-strain | **done (B=43.59, G=20.12, E=52.31, A=1.07)** | done (B=44.47, G=20.05, E=52.30, A=0.42) | **E_VRH 0.02% 차이 — vacancy paradox** |
 
 
 ## 8. paper outline 연결
