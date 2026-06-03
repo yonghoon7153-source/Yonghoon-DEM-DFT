@@ -172,47 +172,54 @@ def build_k_path(v0_in_path, v0_out_path, n_kpoints, pos_block):
     return bp, atoms
 
 
-def write_kpts_crystal_b(bp, n_per_seg=30):
-    """Format the k-path as QE K_POINTS crystal_b cards (one line per special pt)."""
-    # crystal_b: each line is "kx ky kz n_divisions_to_next"
-    # Parse path string like "GXMGRX|MR" into segments
-    path = bp.path
-    segments = path.split(",") if "," in path else path.split("|")
-    # Actually QE crystal_b expects special-points + segments. Simpler:
-    # list special pts + n_pts to next (0 = endpoint)
+def write_kpts_crystal_b(bp, n_per_seg=30, manual_path=None):
+    """Format the k-path as QE K_POINTS crystal_b cards.
+
+    If manual_path is given (e.g. "G X W K G L U W L K U X" or list), use
+    those special-point labels in order. Else use bp.path (auto-detected).
+    """
     special = bp.special_points
     if not special:
-        raise SystemExit("BandPath has no special points; specify --special_path manually")
-    lines = []
-    pts = []
-    # Walk through path char by char
-    i = 0
-    chunks = []
-    while i < len(path):
-        c = path[i]
-        if c in ",|":
-            i += 1; continue
-        # match potential 2-char point name (e.g., G1, X2)
-        if i + 1 < len(path) and path[i+1] not in ",|" and path[i+1] in "₀₁₂345":
-            name = path[i:i+2]; i += 2
+        raise SystemExit("BandPath has no special points; specify --manual_path manually")
+    print(f"  available special points: {sorted(special.keys())}")
+
+    # Parse path: handle multi-char labels like B1, P1, S0 (ASCII digit subscripts)
+    if manual_path:
+        if isinstance(manual_path, str):
+            cur = manual_path.split()
         else:
-            name = c; i += 1
-        chunks.append((name, c in [path[-1]] or i >= len(path) or path[i] in ",|"))
-    # Re-pack: just list special points in order with n_per_seg, last gets 1
-    seq = []
-    cur = []
-    for name, _ in chunks:
-        cur.append(name)
-    # Output
+            cur = list(manual_path)
+    else:
+        path = bp.path
+        cur = []
+        i = 0
+        while i < len(path):
+            c = path[i]
+            if c in ",|":
+                i += 1; continue
+            # multi-char: label + ASCII digit (B1, P1) OR Unicode subscript (B₁)
+            if i + 1 < len(path) and (path[i+1] in "0123456789"
+                                        or path[i+1] in "₀₁₂₃₄₅₆₇₈₉"):
+                name = path[i:i+2]; i += 2
+            else:
+                name = c; i += 1
+            cur.append(name)
+
     lines = []
-    n_pts = len(cur)
-    for j, name in enumerate(cur):
+    valid = []
+    for name in cur:
         if name not in special:
             print(f"  [warn] {name} not in special_points; skipping")
             continue
+        valid.append(name)
+    if len(valid) < 2:
+        raise SystemExit(
+            f"Need ≥2 valid special points; got {valid}. "
+            f"Pass --manual_path with available: {sorted(special.keys())}")
+
+    for j, name in enumerate(valid):
         kx, ky, kz = special[name]
-        is_last = (j == len(cur) - 1)
-        n_div = 0 if is_last else n_per_seg
+        n_div = 0 if j == len(valid) - 1 else n_per_seg
         lines.append(f"  {kx:10.6f} {ky:10.6f} {kz:10.6f}  {n_div}   ! {name}")
     return "K_POINTS crystal_b\n" + f"  {len(lines)}\n" + "\n".join(lines) + "\n"
 
@@ -226,6 +233,10 @@ def main():
                     help="k-points per segment")
     ap.add_argument("--prefix", default="V0",
                     help="QE prefix (must match V0_relax)")
+    ap.add_argument("--manual_path", default=None,
+                    help="space-separated special-point labels overriding "
+                         "auto-detected path, e.g. 'G X W K G L U W L K U X' "
+                         "for cubic FCC. Available labels printed by script.")
     args = ap.parse_args()
 
     out_dir = Path(args.out_dir)
@@ -238,7 +249,8 @@ def main():
 
     # Build k-path (with fallback for ASE espresso parse failure)
     bp, atoms = build_k_path(v0_in, v0_out, args.n_kpoints, pos_block)
-    kpoints_card = write_kpts_crystal_b(bp, n_per_seg=args.n_kpoints)
+    kpoints_card = write_kpts_crystal_b(bp, n_per_seg=args.n_kpoints,
+                                          manual_path=args.manual_path)
 
     # Build CONTROL for bands calc
     # Modify calculation='bands', verbosity='high', tprnfor/tstress can be false
