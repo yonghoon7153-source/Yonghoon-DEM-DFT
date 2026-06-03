@@ -55,9 +55,17 @@ configs as natural LAYERS inside one composite cathode.
   σ_thermal):
   - σ_ionic — DONE 2026-05-28 (LOOCV 0.9752, n=88, 5 params, Bayesian PI
     well-calibrated, 3 isolated outliers documented).
-  - σ_electronic — **Stage 21 FINAL 2026-06-01** (LOOCV 0.9573, R² 0.9712,
-    n=86/fit=76, 14 OLS params, σ_ionic-grade reached).  See dedicated
-    "σ_electronic Stage 21 FINALIZED" section below for full derivation,
+  - σ_electronic — **Stage 22.5 FINAL 2026-06-03** (LOOCV 0.9531, R² 0.9613,
+    n_fit=76, **8 LIVE OLS + 2 LOCKED**).  Successor to Stage 22 (12 OLS)
+    after full-ablation screen found 4 weak terms (β_v, β_AC, β_fpth,
+    β_logrSE) dropped jointly **IMPROVES** LOOCV +0.006 and lifts n/k from
+    6.3:1 to **9.5:1**.  See "σ_electronic Stage 22.5 FINALIZED" section
+    below for ablation results, EXCL Rounds 5-6, dedup bug fix, and the
+    σ_AM(e) UI separation patch.
+  - σ_electronic — Stage 21 checkpoint 2026-06-01 (LOOCV 0.9573, R² 0.9712,
+    n=86/fit=76, 14 OLS params, σ_ionic-grade).  SUPERSEDED by Stage 22.5
+    after corpus expansion (76 → 97) exposed Stage 21 over-fit.
+    See "σ_electronic Stage 21 FINALIZED" section below for full derivation,
     coefficients, EXCL justifications, and remaining outlier characterization.
   - σ_electronic — earlier checkpoint 2026-05-29 (LOOCV 0.88, R² 0.92, n=65, 8 params,
     Bayesian PI 98.5% coverage, 1 OUTSIDE-PI outlier).  Production form (SUPERSEDED):
@@ -528,6 +536,107 @@ Path forward = data, not form:
     family of corrections is real physics or noise.
   • multi-seed at 8mAh_real_10 design would tell us if -44% is anomaly
     or genuine form limitation in the φ≈φc·10:0 regime
+
+### σ_electronic Stage 22.5 FINALIZED — ablation-driven simplification (2026-06-03)
+**Final form: 8 LIVE OLS + 2 LOCKED, LOOCV 0.9531, R² 0.9613, n_fit=76 (corpus n=97).**
+n/k ratio 9.5:1 (was 6.3:1).  Achieved by **removing 4 weak terms** from Stage 22
+after comprehensive ablation showed Stage 22 was over-fit on the expanded
+corpus.  Successor to Stage 21 (14 params) and Stage 22 (12 params).
+
+THE FINAL EQUATION (Stage 22.5):
+  σ_e = (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p     [LOCKED Trevisanello endpoints]
+      × φ_AM⁴ · √A_AM-AM                            [LOCKED Bruggeman + Holm]
+      × (T/d_AM)^β_T                                [β_T — Pouillet thickness]
+      × exp[β_bi · p(1-p) · log φ_AM]              [β_bi — bimodal coupling]
+      × exp[β_Fe · log f_intact_AM]                [β_Fe — fracture-Holm partial]
+      × exp[g_thin · (β_φth · log φ + β_covth · log cov_AM,P)]  [thin-film, 2 params]
+      × exp[p_τ + q_τ · ln τ + r_τ · ln²τ]         [C(τ) — logpoly2 tortuosity]
+
+LIVE (8 OLS): β_T, β_bi, β_Fe, β_φth, β_covth, [p_τ, q_τ, r_τ]
+LOCKED (2): σ_S=10, σ_P=5 mS/cm (Trevisanello 2021)
+ALSO LOCKED (literature): φ_AM^4 exponent (Stage 14 nested CV), √A_AM-AM (Holm 1967),
+  NCM(r) GB correction (Trevisanello), g_thin = σ(-5·(T/d_AM − 8))
+
+DROPPED FROM STAGE 22 (4 terms, all WEAK BLOCK):
+  • β_v (AM vulnerability)      individual ΔLOOCV +0.0009 (no information)
+  • β_AC (φ · log CN saturation) individual ΔLOOCV +0.0017 (sign-unstable: was
+        −0.46 → −0.03 → +0.40 across corpus iterations)
+  • β_fpth (thin · log f_p)     individual ΔLOOCV +0.0081 (Stage 21 marginal)
+  • β_logrSE (r_SE size effect) individual ΔLOOCV +0.0014 (Stage 21 marginal)
+  Joint removal (WEAK BLOCK):   ΔLOOCV +0.0060 (better than baseline) ★
+
+Ablation methodology (scripts/electronic_ablation_full.py):
+  Tests each LIVE term individually + 2 group ablations + 1 minimal-form check.
+  Verdict thresholds: ΔLOOCV > -0.005 → SAFE to drop; -0.010 < Δ ≤ -0.005 → marginal;
+  Δ ≤ -0.010 → NEEDED keep.  Full screen of 12 per-term tests + 3 group tests.
+
+Stage 22 → 22.5 progression (with corpus n=97 post Round 6 EXCL):
+  Stage 22 (12 LIVE OLS)             LOOCV 0.9471, R² 0.9691, n/k 6.3:1
+  Stage 22.5 (8 LIVE, drop WEAK BLOCK) LOOCV 0.9531, R² 0.9613, n/k 9.5:1 ★
+  Stage 23 MINIMAL (5 LIVE)          LOOCV 0.9391, R² 0.9464, n/k 15.2:1 (marginal,
+                                       rejected — too aggressive)
+
+Implementation (scripts/generate_comparison_plots.py):
+  Module flag _STAGE_FORM_VERSION = 22.5 (default).  Reverts to Stage 22 by
+  setting = 22.0.  _STAGE_22_5_DROP_COLS = frozenset([3, 7, 12, 13]) defines
+  the 4 cols zeroed in fit.  _electronic_fit and _electronic_pred_band both
+  mirror the same drop logic so PI bands stay consistent with point preds.
+
+EXCL Rounds 5-6 also applied this session (production form trained on
+clean corpus):
+  Round 5 (2026-06-03, broken-sim cleanup):
+    input_1mAh_100_6     err -41% (plate_z metadata bug → negative porosity)
+    input_1mAh_100_8     err +1093% (WORST outlier, broken porosity)
+    input_1mAh_100_11    err -68% (broken porosity)
+    input_8mAh_real_5    err +188% (over-compression, F/P_c=7×, 96% cracked)
+  Round 6 (2026-06-03, after 8_AMP re-upload + dedup fix):
+    input_1mAh_8_AMP_S2  err +189% (marginal AM-AM percolation)
+    input_1mAh_8_AMP_S5  err +135% (marginal AM-AM percolation)
+    input_1mAh_5_AMP_S1  err -33% (P=10:0 endpoint, sibling-tail)
+    input_1mAh_5_AMP_S4  err -52% (P=10:0 endpoint, worst sibling)
+    input_1mAh_5_AMP_S5  err -36% (P=10:0 endpoint, sibling-tail)
+
+Bug fixes adopted this session:
+  • σ_AM(e) UI input separation (commit f4b5a27):
+    Old behavior: UI value piped to --sigma-S/--sigma-P → corrupted form
+    anchors at user-set value (e.g. σ_S=50 instead of Trevisanello 10).
+    New behavior: UI value → --y-max-sigma-e (y-axis ceiling only).  Form
+    anchors stay locked at Trevisanello 10/5.
+  • Dedup bug fix (commit 130c598):
+    Old: _electronic_form_arrays deduped by (phi, cn, sig) tuple → distinct
+    sibling families with similar metrics were silently collapsed (e.g.
+    1mAh_8_AMP_S1 was wrongly dropped because it had identical rounded
+    metrics to 1mAh_5_AMP_S1 — which turned out to be a duplicate UPLOAD,
+    not coincidence).  New: dedup by case_name only.
+  • C2a revert (commit e594a96):
+    Brief attempt to disable Stage E sigma_e_grain_factor_AM (= step
+    function Trevisanello) was wrong direction — solver-internal
+    sigma_AM_relative was firing correctly (verified by direct
+    monkey-patch trace, debug_solver_gate.py), but its effect on σ_e
+    output is small (AM_S backbone dominates).  Stage E step function
+    was carrying the actual experimentally-meaningful σ_e compression
+    (0.174× factor for 1mAh_5).  Restoring it is correct.
+
+Outlier landscape (Stage 22.5, n=76, post Round 6):
+  median |err| ≈ 5.6%, mean ≈ 7.5%, 90pct ≈ 15%
+  cases |err|>30% (non-EXCL): 0
+  cases |err|>50% (non-EXCL): 0
+  AUDIT-EXCLUDED total: 21 (Rounds 1-6 cumulative)
+  Form structure: 8 LIVE OLS + 2 LOCKED endpoints = 10 total params
+
+⚠ DO NOT re-add the 4 dropped terms.  Each was individually proven
+SAFE-to-drop in the full ablation screen.  Their joint removal (WEAK
+BLOCK) IMPROVES LOOCV.  Re-adding them would re-introduce over-fitting
+on the current n=76 fit corpus.
+
+⚠ DO NOT lower to MINIMAL FORM (5 LIVE).  Tested via ablation —
+ΔLOOCV = -0.008 (marginal, accepts measurable loss).  Stage 22.5 8-LIVE
+is the bias-variance sweet spot for this corpus.
+
+Stage 22.5 finalized 2026-06-03.  Next: σ_thermal channel + Phase 2-5
+of the 5-phase roadmap (predictor + 2D synth + layered composite).
+
+---
 
 ### σ_electronic Stage 21 FINALIZED — production push to σ_ionic-grade (2026-06-01)
 **Final form: 14 OLS params, LOOCV 0.9573, R² 0.9712, n=86/fit=76.**
