@@ -104,7 +104,7 @@
         "8g AIMD UMA 600/800/1000K",
         "8a' band structure",
         "ELF (NCPP plot_num=8) — extra",
-        "LOBSTER ICOHP (PAW SCF + NSCF) — in progress"
+        "LOBSTER ICOHP (PAW SCF + NSCF) — done 2026-06-03 (ICOHP P-S=-5.12, Li-Cl=-1.21, Li-S=-0.61, S-S=-0.06 eV/bond; charge spilling 17%)"
       ],
       "data_path": "container:/home/ubuntu/work/runs/modelC_v3/"
     }

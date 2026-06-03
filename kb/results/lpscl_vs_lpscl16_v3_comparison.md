@@ -254,14 +254,21 @@ glue를 강화한다는 것을 의미.
 
 음수일수록 bonding 강함. 0에 가까울수록 약함.
 
-| 결합 종류 | LPSCl v3 | LPSCl1.6 v3 |
-|---|---|---|
-| P–S | [pending] | [pending — lobster 대기 중] |
-| S–S | [pending] | [pending] |
-| Li–S | [pending] | [pending] |
-| Li–Cl | [pending] | [pending] |
+| 결합 종류 | LPSCl v3 | LPSCl1.6 v3 | 해석 |
+|---|---|---|---|
+| **P–S** | [pending] | **−5.123** | PS4 강한 공유결합 backbone |
+| Li–Cl | [pending] | **−1.214** | 이온 + 약간 공유 |
+| Li–S | [pending] | **−0.614** | 약함, 주로 전기 정적 |
+| S–S | [pending] | **−0.061** | 거의 0 (cage S 직접 결합 없음) |
 
-Charge spilling (lobsterout): comp1 [pending], modelc_v3 [pending].
+**ICOHP 위계 (modelc_v3)**: P–S (−5.12) ≫ Li–Cl (−1.21) > Li–S (−0.61) ≫ S–S (~0)
+
+**Charge spilling**: comp1 [pending], **modelc_v3 17%** ⚠️ (표준 <5%, 허용 <10%
+초과). 원인: sparse basis (Li 2s 2p, P/S/Cl 3s 3p, no d). 정성적 추세
+(P–S ≫ Li–Cl > Li–S) 는 robust. paper에서 절대값보다는 ratio + 추세로 보고.
+
+**Note**: 4a-Cl vs 4d-Cl 사이트별 Li-Cl ICOHP 분리는 향후 분석 (현재 평균만).
+4d Cl이 단단한 결합 (Li-Cl 2.36 Å)이라 ICOHP_4d-Cl > ICOHP_4a-Cl 예상.
 
 
 ## 13. 시스템 내부 교차검증 (intra-system cross-checks)
