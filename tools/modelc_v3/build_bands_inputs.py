@@ -244,6 +244,15 @@ def main():
     assert v0_in.exists() and v0_out.exists()
 
     nls, cards = parse_v0_relax_input(v0_in)
+    # Auto-detect prefix from CONTROL (overrides --prefix CLI default).
+    pref_m = re.search(r"prefix\s*=\s*'([^']+)'", nls["CONTROL"])
+    qe_prefix = pref_m.group(1) if pref_m else args.prefix
+    if pref_m and qe_prefix != args.prefix:
+        print(f"  prefix from V0_relax.in CONTROL: '{qe_prefix}' "
+              f"(overrides CLI default '{args.prefix}')")
+    # Also detect outdir
+    outdir_m = re.search(r"outdir\s*=\s*'([^']+)'", nls["CONTROL"])
+    qe_outdir = outdir_m.group(1) if outdir_m else f"./tmp_{qe_prefix}/"
     cell_block, pos_block = parse_final_coords_from_out(v0_out)
     print(f"Final coords parsed from {v0_out.name}")
 
@@ -324,10 +333,10 @@ def main():
     out_dir.joinpath("nscf_bands.in").write_text(bands_input)
     print(f"  → {out_dir / 'nscf_bands.in'}")
 
-    # bands_post.in for bands.x
+    # bands_post.in for bands.x (use auto-detected prefix + outdir from CONTROL)
     bands_post = f"""&BANDS
-  prefix = '{args.prefix}'
-  outdir = './tmp_{args.prefix}/'
+  prefix = '{qe_prefix}'
+  outdir = '{qe_outdir}'
   filband = 'bands.dat'
   lsym = .true.
 /
