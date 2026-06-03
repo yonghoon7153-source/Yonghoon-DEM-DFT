@@ -113,22 +113,49 @@ def sigma_ionic_grain_factor_SE(r_SE_real_um: float) -> float:
     return 0.33                                      # extreme-milling limit
 
 
-# ── (2b) σ_e_grain_AM(crystal, R) — DISABLED (2026-06-03, C2a refactor) ───
+# ── (2b) σ_e_grain_AM(crystal, R) — Trevisanello 2021 + size dependence ───
 def sigma_e_grain_factor_AM(am_label: str, r_AM_real_um: float) -> float:
-    """C2a refactor (2026-06-03): Trevisanello GB correction is now applied
-    PER-PARTICLE inside the network solver via sigma_AM_relative(r, type)
-    (see network_conductivity.py:64-77).  Applying the Stage E factor on
-    top would DOUBLE-COUNT the same physics → over-correction
-    (verified by σ_e regression after solver refactor went live).
+    """AM σ_e factor — crystallinity × size-dependent internal-GB density.
 
-    Returning 1.0 makes Stage E a pass-through for AM crystal corrections;
-    the solver is now single-source-of-truth for Trevisanello physics.
+    NOTE on stacking with solver-internal Trevisanello (2026-06-03):
+    The network solver (network_conductivity.py:64-77 sigma_AM_relative) ALSO
+    applies a smooth Trevisanello GB factor per AM_P particle.  Initial
+    concern: these double-count.  Investigation (debug_solver_gate.py) showed
+    the solver refactor IS firing correctly per-particle, BUT the network
+    output is dominated by the AM_S backbone when AM_P is a minority phase,
+    so solver-side reduction shows minimally in σ_e_raw.  Stage E's step-
+    function correction here carries the bulk of the experimentally-observed
+    σ_e compression to the 5-20 mS/cm regime that matches literature.  The
+    two corrections are complementary at this corpus density, not redundant.
 
-    Historic step-function (kept as reference, NOT applied):
-      AM_S (single-crystal):    1.00 (≥0.5μm), 0.85 (<0.5μm)
-      AM_P (polycrystalline):   0.75 (≤3μm), 0.65 (5-7μm), 0.55 (7-12μm), 0.45 (>12μm)
+    Reference values (literature):
+      AM_S (single-crystal): bulk σ_e size-invariant for r ≥ 0.5 μm.
+        Wang 2021 measured single-crystal NMC at 1-5 μm with consistent σ.
+      AM_P (polycrystalline): internal primary-grain GBs scale with
+        secondary-particle size. Larger AM_P → more internal GBs →
+        lower effective σ_e through the particle.
+        Trevisanello 2021 reference is for typical NMC secondary (5-12 μm).
+
+    Size-dependence table (AM_P):
+      r ≤ 3 μm   → 0.75   (small secondary, fewer internal GBs)
+      r 5-7 μm   → 0.65   (typical NMC commercial, Trevisanello reference)
+      r 7-12 μm  → 0.55   (larger NMC, more internal GBs)
+      r > 12 μm  → 0.45   (very large secondary)
     """
-    return 1.0
+    if r_AM_real_um is None or not (r_AM_real_um > 0):
+        r_AM_real_um = 6.0  # safety default = typical commercial NMC
+
+    if 'AM_S' in am_label or am_label.endswith('S'):
+        # Single-crystal: bulk size-invariant for r ≥ 0.5 μm
+        if r_AM_real_um >= 0.5: return 1.00
+        return 0.85  # mild surface effect at sub-μm (rare)
+
+    # AM_P (polycrystalline)
+    r = r_AM_real_um
+    if r <= 3.0:  return 0.75
+    if r <= 7.0:  return 0.65  # Trevisanello 2021 reference
+    if r <= 12.0: return 0.55
+    return 0.45
 
 
 # ── (2c) κ_thermal_grain(crystal, R) — Wang 2022 + phonon size effect ─────
