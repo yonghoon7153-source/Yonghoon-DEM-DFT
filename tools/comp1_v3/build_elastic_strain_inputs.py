@@ -104,6 +104,9 @@ def main():
     ap.add_argument("--strain", type=float, default=0.005)
     ap.add_argument("--prefix_base", default="strain")
     ap.add_argument("--kpoints", default="2 2 1 0 0 0")
+    ap.add_argument("--relaxed_ion", action="store_true",
+                    help="generate relax inputs (atoms relax at fixed strained "
+                         "cell) → relaxed-ion stress-strain Cij")
     args = ap.parse_args()
 
     wd = Path(args.workdir); wd.mkdir(parents=True, exist_ok=True)
@@ -142,10 +145,11 @@ def main():
             F = deformation_matrix(k, sign * h)
             new_cell = F @ cell
             tag = f"{args.prefix_base}_{voigt_tag[k]}_{sign_label}"
-            # &CONTROL: SCF + force + stress
+            # &CONTROL: SCF (clamped) or relax (relaxed-ion) + force + stress
             control = nls["CONTROL"]
+            calc_tag = "relax" if args.relaxed_ion else "scf"
             control = re.sub(r"calculation\s*=\s*'[^']*'",
-                             "calculation='scf'", control)
+                             f"calculation='{calc_tag}'", control)
             control = re.sub(r"prefix\s*=\s*'[^']*'",
                              f"prefix='{tag}'", control)
             control = re.sub(r"outdir\s*=\s*'[^']*'",
@@ -160,6 +164,10 @@ def main():
             system = nls["SYSTEM"]
             electrons = nls.get(
                 "ELECTRONS", "&ELECTRONS\n  conv_thr=1.0d-9\n/")
+            ions_block = ""
+            if args.relaxed_ion:
+                ions_block = ("&IONS\n  ion_dynamics='bfgs'\n"
+                              "/\n")  # cell stays fixed automatically for 'relax'
 
             cell_lines = ["CELL_PARAMETERS angstrom"]
             for row in new_cell:
@@ -171,6 +179,7 @@ def main():
                 control + "\n" +
                 system + "\n" +
                 electrons + "\n" +
+                ions_block +
                 species + "\n" +
                 kpts + "\n" +
                 cell_card + "\n" +
@@ -183,9 +192,10 @@ def main():
             print(f"  {tag}: V={V_str:.4f} Å³  (det F={np.linalg.det(F):.6f})")
 
     # Sequential runner
+    mode_str = "relaxed-ion (relax)" if args.relaxed_ion else "clamped-ion (SCF)"
     runner = wd / "run_elastic.sh"
     runner.write_text(f"""#!/bin/bash
-# Sequential stress-strain SCF runner — 12 jobs, ε = ±{h}
+# Sequential stress-strain runner — 12 jobs, ε = ±{h}, mode: {mode_str}
 set -e
 cd $(dirname $(realpath $0))
 export OMP_NUM_THREADS=8
