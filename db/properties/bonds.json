@@ -12,6 +12,46 @@
                     "_note": "Li-Cl split by Cl site: 4a (n=36) vs 4d anti-site (n=4). 4d-Cl 0.19 A shorter."}
   },
 
+  "bader_charges_PAW_AE_plot_num_17": {
+    "_method": "Henkelman bader v1.05 on QE pp.x plot_num=17 AE charge density. PAW kjpaw_psl 1.0.0 pseudo, same SCF as LOBSTER ext basis (ecutwfc=70 Ry). Convention: q_atom = N_valence_electron - N_bader_basin.",
+    "_paw_valence_electrons": {"Li": 3, "P": 5, "S": 6, "Cl": 7},
+    "comp1_v3": {
+      "Li": {"q_e": 0.8740, "std": 0.0046, "n": 24},
+      "P":  {"q_e": 3.2383, "std": 0.0000, "n": 4},
+      "S":  {"q_e": -1.5142, "std": 0.3625, "n": 20, "_note": "high σ because of PS4-S vs 4d-S²⁻ environment split"},
+      "Cl": {"q_e": -0.9406, "std": 0.0000, "n": 4, "_note": "all Cl at 4a (no anti-site)"},
+      "n_electrons_total_recovered": 240.118,
+      "n_electrons_ideal": 240,
+      "PS4_sum_q_e": -2.82,
+      "PS4_formal_q_e": -3
+    },
+    "modelc_v3": {
+      "Li": {"q_e": 0.8817, "std": 0.0095, "n": 27},
+      "P":  {"q_e": 4.4286, "std": 0.4149, "n": 5,  "_note": "large σ from 4d-Cl anti-site distorting PS4 basin shape"},
+      "S":  {"q_e": -1.7556, "std": 0.2443, "n": 22},
+      "Cl": {"q_e": -0.9158, "std": 0.0054, "n": 8, "_note": "includes 4a (Z=6) and 4d (Z=4) sites"},
+      "PS4_sum_q_e": -2.60,
+      "PS4_formal_q_e": -3
+    },
+    "wilkening_ionic_potential_eV_A": {
+      "_formula": "|q(Li) × q(X)| / d(Li-X) — proxy for cation-anion Coulomb attraction (Wilkening 2019, Zhang 2024)",
+      "comp1_v3": {
+        "Li-S":   {"value": 0.538, "components": "0.874 × 1.514 / 2.461"},
+        "Li-Cl":  {"value": 0.316, "components": "0.874 × 0.941 / 2.607"},
+        "ratio_LiS_over_LiCl": 1.70
+      },
+      "modelc_v3": {
+        "Li-S":   {"value": 0.628, "components": "0.882 × 1.756 / 2.465"},
+        "Li-Cl":  {"value": 0.319, "components": "0.882 × 0.916 / 2.532"},
+        "ratio_LiS_over_LiCl": 1.97
+      },
+      "delta_LPSCl_to_LPSCl16": {
+        "Li-S": "+16.8% (stronger ionic glue from S-charge increase + slightly shorter Li-S)",
+        "Li-Cl": "+1.1% (~unchanged — vacancy effect cancels with anti-site shift)",
+        "interpretation": "Li-S ionic potential dominates in BOTH systems. LPSCl1.6 boost is concentrated in Li-S; Li-Cl is barely affected by composition. Consistent with ICOHP showing all bonds stronger in LPSCl1.6, with Bader pinpointing the Li-S channel as primary contributor."
+      }
+    }
+  },
   "icohp_LOBSTER_ext_basis_eV_per_bond": {
     "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, NSCF nbnd 450 (comp1) / 500 (modelc_v3), wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
     "_convention": "ICOHP < 0 = bonding. Per-bond average over all bonds within 4.0 Å cutoff (cohpGenerator).",

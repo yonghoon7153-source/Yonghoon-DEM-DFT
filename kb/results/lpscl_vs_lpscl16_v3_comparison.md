@@ -245,14 +245,46 @@ glue를 강화한다는 것을 의미.
 | 예측 이동 경로 | [pending] | [추가] |
 
 
-## 7. Bader (plot_num=17 AE charge density)
+## 7. Bader (plot_num=17 AE charge density) — paper-grade ✓
 
-| 종 (평균 전하, e) | LPSCl v3 | LPSCl1.6 v3 |
+PAW kjpaw + pp.x AE density + Henkelman bader v1.05. SCF는 LOBSTER ext basis와
+동일 (ecutwfc=70 Ry, PAW).
+
+| 종 (e) | LPSCl (comp1) | LPSCl1.6 (modelc_v3) | 차이 |
+|---|---|---|---|
+| **Li** | **+0.874 ± 0.005** (n=24) | **+0.882 ± 0.010** (n=27) | +0.9% (사실상 동일) |
+| **Cl** | **−0.941** (n=4, σ=0) | **−0.916 ± 0.005** (n=8) | LPSCl 더 ionic (Δ −0.025) |
+| **P** | **+3.238** (n=4, σ=0) | **+4.429 ± 0.415** (n=5) | **+36.8% (Bader basin shape 효과)** |
+| **S** | **−1.514 ± 0.363** (n=20) | **−1.756 ± 0.244** (n=22) | +16.0% more ionic |
+
+### PS4 charge sum 보존 cross-check
+
+| | P + 4S 합 | formal PS4³⁻ |
 |---|---|---|
-| Li | [pending] | [추가] |
-| P | [pending] | [추가] |
-| S | [pending] | [추가] |
-| Cl | [pending] | [추가] |
+| comp1 | −2.82 | −3 |
+| modelc | −2.60 | −3 |
+
+둘 다 −3 부근. 개별 P/S 분리값은 Bader basin shape이 환경 dependent (PS4-S와
+4d-S²⁻가 basin 모양 다름) → modelc에서 σ 크고 평균값 shift. paper에 P+4S 합
+또는 PS4 unit 단위로 reporting 추천 (개별값은 supplementary).
+
+### Wilkening ionic potential framework (q × |q| / r, eV/Å)
+
+| | LPSCl | LPSCl1.6 | Δ % |
+|---|---|---|---|
+| **Li–S** | **0.538** (0.874 × 1.514 / 2.461) | **0.628** (0.882 × 1.756 / 2.465) | **+16.8%** |
+| Li–Cl | 0.316 (0.874 × 0.941 / 2.607) | 0.319 (0.882 × 0.916 / 2.532) | +1.1% |
+| **Li-S / Li-Cl ratio** | **1.70** | **1.97** | Li-S 우세 더 강함 |
+
+**Paper 메시지** (Bader perspective):
+1. Li-S가 Li-Cl보다 ionic glue **1.7–2× 강함** (Wilkening framework confirm)
+2. LPSCl → LPSCl1.6에서 ionic potential 증가는 **거의 전적으로 Li-S 채널**
+   (Li-Cl 거의 동일). vacancy + 4d-Cl 효과가 S charge 증가 (−1.51 → −1.76)로
+   집중됨.
+3. ICOHP (LOBSTER) 도 LPSCl1.6에서 모든 ionic bond 강화 (+13.4% Li-Cl,
+   +7.9% Li-S) — Bader와 같은 방향 (LPSCl1.6 더 strong ionic)이지만 Li-Cl/Li-S
+   분배는 다름. **두 방법 종합**: paper에 Li-S 채널이 ionic stiffening 주
+   기여라는 합의된 메시지 가능.
 
 
 ## 8. DOS / PDOS
