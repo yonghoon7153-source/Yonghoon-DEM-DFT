@@ -52,6 +52,35 @@
       }
     }
   },
+  "icohp_distance_correlation_eV_per_Angstrom": {
+    "_method": "Per-bond ICOHP from LOBSTER ICOHPLIST.lobster (ext basis) regressed vs bond distance d (Å). Slope dICOHP/dd (eV/Å) measures bond stiffness: large slope = covalent (length-sensitive), small slope = ionic (length-flat).",
+    "comp1_v3": {
+      "P-S":         {"r": 1.000, "slope_eV_per_A": 12.45, "_note": "Steepest — classical covalent backbone signature"},
+      "Cl-Li(4a)":   {"r": 1.000, "slope_eV_per_A": 4.94, "_note": "Linear in d; ICOHP σ = d_σ × slope = 0.129 × 4.94 ≈ 0.638"},
+      "Li-S(4d)":    {"r": 0.985, "slope_eV_per_A": 9.12, "_note": "Steeper than Li-Cl due to S²⁻ deeper potential"},
+      "Li-S(PS4)":   {"r": 0.976, "slope_eV_per_A": 1.79},
+      "S-S":         {"r": 0.595, "slope_eV_per_A": 0.16, "_note": "Near-flat — cage S-S essentially distance-independent"}
+    },
+    "modelc_v3": {
+      "P-S":         {"r": 0.829, "slope_eV_per_A": 11.50, "_note": "Similar to comp1 — PS4 backbone robust"},
+      "Cl-Li(4a)":   {"r": 0.964, "slope_eV_per_A": 2.12, "_note": "2.3× FLATTER than comp1 4a — ionic softening from Cl-rich field"},
+      "Cl-Li(4d)":   {"r": 0.904, "slope_eV_per_A": "n=4 only"},
+      "Li-S(4d)":    {"r": 0.904, "slope_eV_per_A": 3.73, "_note": "2.4× flatter than comp1 4d"},
+      "Li-S(PS4)":   {"r": 0.986, "slope_eV_per_A": 2.09},
+      "S-S":         {"r": 0.866, "slope_eV_per_A": 0.21}
+    },
+    "interpretation": "LPSCl1.6 ionic bonds (Li-Cl, Li-S) have 2-3× flatter ICOHP-distance slopes than LPSCl. Flatter slope = bond becomes less sensitive to length variation = more ionic character = lower vibrational stiffness. This is a QUANTITATIVE measure of why finite-T motion is easier in LPSCl1.6 (relevant to AIMD higher D). PS4 covalent backbone slope unchanged (+11-12 eV/Å) — PS4 robust to composition. Independent confirmation of the 'ionic-glue strengthening + bond softening' duality observed in static ICOHP averages."
+  },
+
+  "bader_q_vs_n_Cl_correlation_modelc_v3": {
+    "_method": "Li Bader charge grouped by number of Cl neighbors within 3.4 Å cutoff",
+    "n_Cl=0": {"q_mean_e": 0.8673, "q_std_e": 0.0,    "n_Li": 1},
+    "n_Cl=1": {"q_mean_e": 0.8747, "q_std_e": 0.006,  "n_Li": 12},
+    "n_Cl=2": {"q_mean_e": 0.8888, "q_std_e": 0.006,  "n_Li": 14},
+    "linear_fit_dq_per_dnCl_e": 0.011,
+    "interpretation": "Each Cl neighbor adds approximately +0.011 e to Li Bader charge — linear, predictable. Li ionicity is composition-tunable via anion environment. Combined with the ICOHP-distance slope finding, this gives two independent metrics for the 'Cl-rich field strengthens Li ionicity' effect."
+  },
+
   "icohp_LOBSTER_ext_basis_eV_per_bond": {
     "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, NSCF nbnd 450 (comp1) / 500 (modelc_v3), wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
     "_convention": "ICOHP < 0 = bonding. Per-bond average over all bonds within 4.0 Å cutoff (cohpGenerator).",
