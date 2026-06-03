@@ -122,7 +122,10 @@ def parse_icohplist(path: Path):
                 a1 = re.sub(r"\d", "", parts[1])
                 a2 = re.sub(r"\d", "", parts[2])
                 icohp = float(parts[7]) if len(parts) > 7 else float(parts[-1])
-                key = f"{a1}-{a2}"
+                # Normalize key so Li-S and S-Li (LOBSTER lists same bond
+                # under either direction depending on atom-ordering convention)
+                # land in the same bucket.
+                key = "-".join(sorted([a1, a2]))
                 icohp_per_bond_idx.setdefault(key, []).append(icohp)
             except (ValueError, IndexError):
                 continue
@@ -145,8 +148,7 @@ def aggregate_bond_pair(E, bonds_meta, icohp_data, match_keys, exclude=None):
         return np.zeros_like(E), 0.0, 0
     summed = np.sum([bm["pcohp"] for bm in matched], axis=0)
     a, b = match_keys
-    icohp_per_bond_avg = icohp_data.get(
-        f"{a}-{b}", icohp_data.get(f"{b}-{a}", 0.0))
+    icohp_per_bond_avg = icohp_data.get("-".join(sorted([a, b])), 0.0)
     return summed, icohp_per_bond_avg, len(matched)
 
 
