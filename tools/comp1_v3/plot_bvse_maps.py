@@ -158,14 +158,26 @@ def plot_iso(npy_path, cif_path, iso_above_min, out_path,
                         c=ELEM_COLOR.get(sym, "#888"),
                         edgecolors="black", lw=0.6, depthshade=False)
 
-    # Axes
-    L = np.diag(cell)
-    ax.set_xlim(0, L[0]); ax.set_ylim(0, L[1]); ax.set_zlim(0, L[2])
+    # Axes — bounding box from ALL 8 cell corners (handles non-orthorhombic
+    # cells like rhombohedral where cell vectors aren't aligned with xyz).
+    corners = np.array([fa * cell[0] + fb * cell[1] + fc * cell[2]
+                          for fa in (0, 1) for fb in (0, 1) for fc in (0, 1)])
+    xmin, xmax = corners[:, 0].min(), corners[:, 0].max()
+    ymin, ymax = corners[:, 1].min(), corners[:, 1].max()
+    zmin, zmax = corners[:, 2].min(), corners[:, 2].max()
+    ax.set_xlim(xmin, xmax); ax.set_ylim(ymin, ymax); ax.set_zlim(zmin, zmax)
+    # Draw cell edges (12 edges of parallelepiped) for orientation reference
+    edges = [(0,1),(0,2),(0,4),(1,3),(1,5),(2,3),(2,6),(3,7),(4,5),(4,6),(5,7),(6,7)]
+    for e in edges:
+        ax.plot([corners[e[0],0], corners[e[1],0]],
+                [corners[e[0],1], corners[e[1],1]],
+                [corners[e[0],2], corners[e[1],2]],
+                color='#888', lw=0.6, alpha=0.5)
     ax.set_xlabel("x (Å)"); ax.set_ylabel("y (Å)"); ax.set_zlabel("z (Å)")
     ax.view_init(*view_angles)
     ax.set_title(f"BVSE iso = {iso_level:.3f} (min + {iso_above_min})  "
                   f"— Li channel surface", fontsize=10)
-    ax.set_box_aspect([L[0], L[1], L[2]])
+    ax.set_box_aspect([xmax - xmin, ymax - ymin, zmax - zmin])
     plt.tight_layout()
     plt.savefig(out_path, dpi=300, bbox_inches="tight", facecolor="white")
     print(f"→ {out_path}")
