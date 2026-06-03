@@ -58,13 +58,17 @@ def parse_cohpcar(path: Path):
 
     bonds_meta = []  # list of {id, a, b, distance}
     iline = 2
-    # 'Average' line then n_bonds bond defs. Some LOBSTER builds skip 'Average'.
+    # 'Average' line then bond defs. LOBSTER 5.x: meta n_bonds counts Average.
     if lines[iline].strip().lower().startswith("average"):
         iline += 1
     bond_re = re.compile(
         r"No\.(\d+):\s*([A-Za-z]+)\d+->\s*([A-Za-z]+)\d+\(([\d.]+)\)")
-    while len(bonds_meta) < n_bonds and iline < len(lines):
-        m = bond_re.match(lines[iline].strip())
+    while iline < len(lines):
+        line_stripped = lines[iline].strip()
+        if not line_stripped:
+            iline += 1
+            continue
+        m = bond_re.match(line_stripped)
         if m:
             bonds_meta.append({
                 "id": int(m.group(1)),
@@ -74,7 +78,8 @@ def parse_cohpcar(path: Path):
             })
             iline += 1
         else:
-            iline += 1  # skip any unexpected line (rare)
+            # First non-bond line → energy block starts here.
+            break
     n_bonds_actual = len(bonds_meta)
 
     # Parse energy block. Column layout per row:
