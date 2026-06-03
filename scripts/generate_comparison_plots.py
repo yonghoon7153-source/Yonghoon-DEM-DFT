@@ -6444,18 +6444,26 @@ PLOT_REGISTRY["electronic_outliers_final"] = {
 
 
 def plot_electronic_decomp_final(data_list, names, outdir):
-    """σ_electronic Stage 12 (a=4) factor decomposition.  Mirrors
-    plot_ionic_decomp_physics structure: each of the 7 factors plotted as
-    Δlog vs reference (max-σ case).  Bottom panel: dominant factor per case.
+    """σ_electronic Stage 22.5 factor decomposition.  Each LIVE/LOCKED factor
+    plotted as Δlog vs reference (max-σ case).  Bottom panel: dominant factor
+    per case.
 
-    Factors (in stack order):
-      1. composition mix : (1-p)·log σ_S + p·log σ_P   (live-fit endpoints)
-      2. φ_AM⁴           : 4·log φ_AM                   (dense-network percol)
-      3. NCM(r̄_AM)      : log NCM(r̄), r̄=(1-p)r_S + p·r_P  (Trevisanello)
-      4. √A_AM-AM        : 0.5·log A                    (Holm 1967 a-spot)
-      5. β_T·log(T/d)    : geometric thin-electrode
-      6. β_v·v_AM        : interface vulnerability
-      7. C(τ) = p+q·lnτ+r·ln²τ : tortuosity logpoly2
+    Stage 22.5 factors (10 total; dropped weak terms NOT shown):
+      LOCKED (literature anchors):
+        1. mix σ_S/σ_P    : (1-p)·log σ_S + p·log σ_P     Trevisanello endpoints
+        2. φ_AM⁴          : 4·log φ_AM                     Stauffer-Bruggeman backbone
+        3. NCM(r̄)         : (1-p)·log NCM_S + p·log NCM_P  Trevisanello GB correction
+        4. √A_AM-AM       : 0.5·log A_AM-AM                 Holm 1967 constriction
+      LIVE (6 OLS params, 5 if counting C(τ) trio as 1 effective):
+        5. β_T·log(T/d)            geometric Pouillet thickness
+        6. β_bi·p(1-p)·log φ_AM    bimodal packing coupling (Stage 19)
+        7. β_Fe·log f_intact_AM    fracture-aware Holm partial (Stage 20)
+        8. β_φth·g_thin·log φ      thin-film 3D→2D φ-gate (Stage 17)
+        9. β_covth·g_thin·log cov  thin-film 3D→2D cov-gate (Stage 17)
+       10. C(τ) = exp(p+q·lnτ+r·ln²τ)  tortuosity logpoly2
+
+    DROPPED Stage 22.5 (NOT shown — coef forced to 0):
+        β_v, β_AC, β_fpth, β_logrSE (WEAK BLOCK ablation, +0.006 LOOCV improvement)
     """
     arr = _electronic_form_arrays(data_list, names)
     if arr is None:
@@ -6465,42 +6473,50 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     fit = _electronic_fit(arr, fit_mask=fit_mask)
     coef = fit['coef']
     sigma_S = float(np.exp(coef[0])); sigma_P = float(np.exp(coef[1]))
-    beta_T = float(coef[2]); beta_v = float(coef[3])
+    beta_T = float(coef[2])
     p_tau, q_tau, r_tau = (float(c) for c in coef[4:7])
-    beta_AC = float(coef[7])  # Stage 15
+    beta_phith = float(coef[8]); beta_covth = float(coef[9])
+    beta_bi = float(coef[10]); beta_Fe = float(coef[11])
 
     n = arr['n']
     phi = arr['phi']; p_amp = arr['p_amp']; r_eff = arr['r_eff']
-    T_a = arr['T']; tau = arr['tau']; am_vuln = arr['am_vuln']; am_area = arr['am_area']
-    sig_act = arr['sig_act']; phi_logcn = arr['phi_logcn']
+    T_a = arr['T']; tau = arr['tau']; am_area = arr['am_area']
+    sig_act = arr['sig_act']
+    X = arr['X']
 
     d_AM = 2.0 * r_eff
     log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
     lt = np.log(tau)
-    # Stage 16: endpoint-separate NCM (matches _electronic_form_arrays)
-    log_ncm = arr['log_ncm_mix']    # already (1-p)·log NCM(r_AM_S) + p·log NCM(r_AM_P)
+    log_ncm = arr['log_ncm_mix']
 
+    # Compute per-factor log contribution to predicted log σ_e
     log_mix = (1.0 - p_amp)*np.log(sigma_S) + p_amp*np.log(sigma_P)
     log_phi4 = 4.0 * np.log(phi)
     log_holm = 0.5 * np.log(np.maximum(am_area, 1e-12))
     log_Td_term = beta_T * log_Td
-    log_vuln = beta_v * am_vuln
+    log_thin_phi = beta_phith * X[:, 8]    # β_φth × g_thin·log φ
+    log_thin_cov = beta_covth * X[:, 9]    # β_covth × g_thin·log cov_AM,P
+    log_bi = beta_bi * X[:, 10]            # β_bi × p(1-p)·log φ
+    log_fe = beta_Fe * X[:, 11]            # β_Fe × log f_intact
     log_ctau = p_tau + q_tau*lt + r_tau*lt**2
-    log_phi_logcn = beta_AC * phi_logcn   # Stage 15 term, kept in Stage 16
 
     # Reference = max-σ case
     ref = int(np.argmax(sig_act))
 
-    # 8 factors with distinct colors (Stage 15: + β_AC·φ_AM·logCN)
+    # 10 factors with distinct colors organized by category
     factors = [
-        ('mix σ_S/σ_P',     log_mix,         '#4472C4'),   # blue
-        ('φ_AM⁴',           log_phi4,        '#7030A0'),   # purple
-        ('NCM(r̄)',          log_ncm,         '#ED7D31'),   # orange
-        ('√A_AM-AM',        log_holm,        '#A5A5A5'),   # gray
-        ('β_T·log(T/d)',    log_Td_term,     '#70AD47'),   # green
-        ('β_v·v_AM',        log_vuln,        '#FFC000'),   # yellow
-        ('β_AC·φ_AM·logCN', log_phi_logcn,   '#1F77B4'),   # navy (Stage 15)
-        ('C(τ) logpoly2',   log_ctau,        '#C00000'),   # dark red
+        # LOCKED (literature anchors) — cool/structural colors
+        ('mix σ_S/σ_P LOCKED',  log_mix,         '#4472C4'),   # blue
+        ('φ_AM⁴ LOCKED',        log_phi4,        '#7030A0'),   # purple
+        ('NCM(r̄) LOCKED',       log_ncm,         '#ED7D31'),   # orange
+        ('√A_AM-AM LOCKED',     log_holm,        '#A5A5A5'),   # gray
+        # LIVE — warm/distinct colors
+        ('β_T·log(T/d)',        log_Td_term,     '#70AD47'),   # green
+        ('β_bi·p(1-p)·logφ',    log_bi,          '#FFC000'),   # yellow
+        ('β_Fe·log f_intact',   log_fe,          '#C00000'),   # dark red
+        ('β_φth·g_thin·logφ',   log_thin_phi,    '#9DC3E6'),   # light blue
+        ('β_covth·g_thin·logcov', log_thin_cov,  '#A9D18E'),   # light green
+        ('C(τ) logpoly2',       log_ctau,        '#8B0000'),   # darker red
     ]
 
     # Figure sizing — cap to avoid PIL decompression limit
@@ -6521,14 +6537,16 @@ def plot_electronic_decomp_final(data_list, names, outdir):
     ax.axhline(0, color='gray', linewidth=0.5)
     _apply_style(ax, 'delta-log(factor) from ref', arr['names'], None)
     x_labels = arr['names']
-    title = ("σ_electronic Stage 21 factor decomposition (ref: %s)  "
-             "[σ_S=%.2f σ_P=%.2f β_T=%+.2f β_v=%+.2f β_AC=%+.2f]  "
+    title = ("σ_electronic Stage 22.5 factor decomposition (ref: %s)  "
+             "[σ_S=%.2f σ_P=%.2f LOCKED | β_T=%+.2f β_bi=%+.2f β_Fe=%+.2f "
+             "β_φth=%+.2f β_covth=%+.2f]  "
              "[C(τ)=%+.2f%+.2f·lnτ%+.2f·ln²τ]"
              % (x_labels[ref][:28] if ref < len(x_labels) else 'ref',
-                sigma_S, sigma_P, beta_T, beta_v, beta_AC,
+                sigma_S, sigma_P, beta_T, beta_bi, beta_Fe,
+                beta_phith, beta_covth,
                 p_tau, q_tau, r_tau))
-    ax.set_title(title, fontsize=10, fontweight='bold')
-    ax.legend(fontsize=9, loc='upper left', ncol=4)
+    ax.set_title(title, fontsize=9, fontweight='bold')
+    ax.legend(fontsize=8, loc='upper left', ncol=5)
     ax.spines['top'].set_visible(False); ax.spines['right'].set_visible(False)
 
     # Bottom: dominant factor per case
@@ -6550,8 +6568,9 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 
     _write_csv(outdir, 'electronic_decomp_final.csv',
                ['mix(σ_S/σ_P)', 'phi_AM^4', 'NCM(r_AM)', 'sqrt(A_AM_AM)',
-                'beta_T*log(T/d)', 'beta_v*v_AM',
-                'beta_AC*phi_AM*log(am_am_cn)',
+                'beta_T*log(T/d)', 'beta_bi*p(1-p)*log_phi',
+                'beta_Fe*log_fintact', 'beta_phith*g_thin*log_phi',
+                'beta_covth*g_thin*log_cov',
                 'C(tau)_logpoly2', 'sigma_actual_mScm', 'dominant'],
                x_labels, list(log_mix), list(log_phi4), list(log_ncm),
                list(log_holm), list(log_Td_term), list(log_vuln),
