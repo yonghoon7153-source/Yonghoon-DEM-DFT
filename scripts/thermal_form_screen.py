@@ -76,6 +76,7 @@ def load_thermal_corpus():
     import glob
     rows = []
     skipped = {'no_kappa': 0, 'no_phi': 0, 'no_tau': 0, 'no_area': 0, 'other': 0}
+    tau_key_count = {'tau_i_only': 0, 'tau_e_only': 0, 'both': 0, 'neither': 0}
     for f in sorted(glob.glob('webapp/archive/**/full_metrics.json', recursive=True)):
         nm = Path(f).parent.name
         if not nm.startswith('input_'): continue
@@ -92,12 +93,21 @@ def load_thermal_corpus():
         if phi_am <= 0 or phi_se <= 0:
             skipped['no_phi'] += 1; continue
 
+        # Tortuosity — be permissive: accept either ionic OR electronic
         tau_i = (d.get('tortuosity_recommended') or
                  d.get('tortuosity_mean') or 0)
         tau_e = (d.get('tortuosity_electronic_recommended') or
                  d.get('tortuosity_electronic_mean') or 0)
-        if tau_i <= 0 or tau_e <= 0:
+        # Track availability for diagnostic
+        if tau_i > 0 and tau_e > 0:   tau_key_count['both'] += 1
+        elif tau_i > 0:                tau_key_count['tau_i_only'] += 1
+        elif tau_e > 0:                tau_key_count['tau_e_only'] += 1
+        else:                          tau_key_count['neither'] += 1
+        # Fallback: if one missing, use the other for both
+        if tau_i <= 0 and tau_e <= 0:
             skipped['no_tau'] += 1; continue
+        if tau_i <= 0: tau_i = tau_e
+        if tau_e <= 0: tau_e = tau_i
 
         A_am_am = d.get('am_am_mean_area', 0) or 0
         A_am_se_t = d.get('area_AM전체_SE_total', 0) or 0
@@ -126,6 +136,7 @@ def load_thermal_corpus():
             'T_d': T / max(d_AM, 1.0),
             'f_intact': f_intact,
         })
+    skipped['_tau_avail'] = tau_key_count
     return rows, skipped
 
 
