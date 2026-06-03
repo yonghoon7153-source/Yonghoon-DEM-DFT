@@ -56,6 +56,8 @@ def main():
     ap.add_argument("--pattern", default="v*.out")
     ap.add_argument("--out", default=None)
     ap.add_argument("--out_png", default=None)
+    ap.add_argument("--b0p_fixed", type=float, default=None,
+                    help="constrain B0' to this value (e.g. 4.31 to match db v2 protocol)")
     args = ap.parse_args()
 
     d = Path(args.dir)
@@ -80,14 +82,31 @@ def main():
     # Initial guesses
     V0_guess = Vs[np.argmin(Es)]
     E0_guess = Es.min()
-    p0 = [V0_guess, E0_guess, 20.0, 4.0]  # B0=20 GPa, B0'=4
 
-    try:
-        popt, pcov = curve_fit(bm3, Vs, Es, p0=p0, maxfev=20000)
-    except RuntimeError as e:
-        raise SystemExit(f"BM3 fit failed: {e}")
-    V0, E0, B0_GPa, B0p = popt
-    perr = np.sqrt(np.diag(pcov))
+    if args.b0p_fixed is not None:
+        # Fix B0' — 3-parameter fit (V0, E0, B0)
+        b0p_fixed = args.b0p_fixed
+        def bm3_fixed(V, V0, E0, B0_GPa):
+            return bm3(V, V0, E0, B0_GPa, b0p_fixed)
+        p0 = [V0_guess, E0_guess, 20.0]
+        try:
+            popt3, pcov3 = curve_fit(bm3_fixed, Vs, Es, p0=p0, maxfev=20000)
+        except RuntimeError as e:
+            raise SystemExit(f"BM3 (B0' fixed) fit failed: {e}")
+        V0, E0, B0_GPa = popt3
+        B0p = b0p_fixed
+        perr3 = np.sqrt(np.diag(pcov3))
+        perr = np.array([perr3[0], perr3[1], perr3[2], 0.0])
+        print(f"\n  fit mode: B0' CONSTRAINED to {b0p_fixed}")
+    else:
+        p0 = [V0_guess, E0_guess, 20.0, 4.0]
+        try:
+            popt, pcov = curve_fit(bm3, Vs, Es, p0=p0, maxfev=20000)
+        except RuntimeError as e:
+            raise SystemExit(f"BM3 fit failed: {e}")
+        V0, E0, B0_GPa, B0p = popt
+        perr = np.sqrt(np.diag(pcov))
+        print(f"\n  fit mode: B0' FREE (4-parameter)")
 
     # R²
     E_fit = bm3(Vs, *popt)

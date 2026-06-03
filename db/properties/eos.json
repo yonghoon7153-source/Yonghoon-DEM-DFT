@@ -18,13 +18,22 @@
     {"id": "comp5",            "version": "v1", "B0_GPa": 22.9, "B0_prime": 5.21, "pts": 10, "R2": 0.999995, "status": "confirmed",          "basin": "A", "notes": "Basin B: 21.8 GPa"},
     {"id": "modelc",           "version": "v1", "B0_GPa": 21.7, "B0_prime": 4.31, "pts": 10, "R2": 0.999988, "status": "confirmed",          "basin": "A", "notes": "ordered Li 0K. Basin B found: 16.6 meV more stable but EOS unstable. Superseded by modelc_v3 for paper values."},
     {"id": "modelc_v2_mlip",   "version": "v2_mlip", "B0_GPa": 20.0, "B0_prime": 7.50, "pts": 15, "R2": 0.999289, "status": "mlip_preliminary","notes": "Annealing champion -258.2051 eV. Delta vs v1 DFT: -1.7 GPa. DFT BM-EOS pending (v2). DFT stress-strain K available (v3)."},
-    {"id": "modelc_v3",        "version": "v3", "B0_GPa": 19.59, "B0_prime": 4.31, "B0_prime_free": 2.92, "V0_A3": 1214.5, "pts": 11, "R2": 0.998, "status": "confirmed_inherited_from_v2",
-                                "v0_volume_range": "v096-v106",
-                                "data_source": "lpscl16_verify_20260520/modelC_v2_results.json (DFT BM-EOS, annealed Li champion)",
+    {"id": "modelc_v3", "version": "v3", "B0_GPa": 21.71, "B0_prime": 7.01, "V0_A3": 1216.44, "pts": 11, "R2": 0.999012, "status": "PRIMARY_paper_value",
+                                "fit_protocol": "scipy.optimize.curve_fit free-fit BM3 (4 params V0/E0/B0/B0'), tools/modelc_v3/fit_bm_eos.py, 2026-06-03",
+                                "data_source": "lpscl16_verify_20260520/modelC_v2_eos_v{096..106}.out (11 DFT relax points, JOB DONE)",
+                                "B0_std": 0.27, "V0_std": 0.52, "B0_prime_std": 1.37,
+                                "fit_result_json": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_results.json",
+                                "fit_plot_png": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_fit.png",
+                                "notes": "PRIMARY value for paper. Free-fit BM3 on the 11 DFT volume points. NOT the same as the legacy entry below (different fitter / fit protocol gave slightly different B0 / B0' for the same underlying points)."
+    },
+    {"id": "modelc_v3_legacy_v2_fit", "version": "v3_legacy_backup", "B0_GPa": 19.59, "B0_prime_used": 4.31, "B0_prime_free": 2.92, "V0_A3": 1214.5, "pts": 11, "R2": 0.998, "status": "LEGACY_kept_for_history_only",
+                                "fit_protocol": "v2 KISTI dft_eos pipeline (likely BM3 with B0'_constr 4.31 + free; multi-model: BM3/Vinet/Murnaghan, all B0 in [19.58, 19.59])",
+                                "data_source": "Same 11 .out files as PRIMARY above",
                                 "kisti_path": "/scratch/x3430a02/kgy/manuscript_support/pipeline_v2/modelC_lpsc16/dft_eos/",
-                                "notes": "v3 BM-EOS = v2 BM-EOS (same composition + same V0 used for all §8 post-processing). V0=1214.5 Å³ from this fit was used for V0_relax → §8 bonds/Voronoi/BVSE/Bader/DOS/PDOS/elastic/AIMD/ELF/band-structure.",
-                                "stress_strain_K_VRH_GPa": 44.47,
-                                "stress_strain_vs_BM_EOS": "K_VRH (clamped, 44.47) ≠ B0 (relaxed-ion, 19.59) — different physical quantities. For paper comparison with comp1 use same method (both have stress-strain Cij)."}
+                                "_why_kept": "Reproducibility / methodology audit. Do NOT use for paper headline — superseded by PRIMARY (re-fit 2026-06-03 with curve_fit on same data).",
+                                "_warning": "Different B0 (19.59 vs primary 21.71) and B0' (2.92 free vs primary 7.01) come from fitter / B0' constraint choice, not different data. Both R²≈0.999. Free fit has large B0-B0' covariance — see fit_plot_png for visualization.",
+                                "stress_strain_K_VRH_GPa_aside": 44.47,
+                                "stress_strain_aside_note": "K_VRH from clamped-ion stress-strain Cij is a DIFFERENT physical quantity from BM-EOS B0; reported in db/properties/elastic.json dft_0K_clamped_ion_stress_strain_full_Cij section."}
   ],
 
   "trends": {
