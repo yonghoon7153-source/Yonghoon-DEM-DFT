@@ -84,18 +84,90 @@ def parse_final_coords_from_out(v0_out_path):
     return cell_block, pos_block
 
 
-def build_k_path(v0_out_path, n_kpoints):
-    """Use ASE to build BandPath from final structure."""
-    from ase.io.espresso import read_espresso_out
+def _parse_cell_from_in(v0_in_path):
+    """Parse initial CELL_PARAMETERS from V0_relax.in (for fixed-cell relax)."""
+    txt = v0_in_path.read_text()
+    m = re.search(
+        r"CELL_PARAMETERS\s*(?:\(?\s*(angstrom|bohr|alat)\s*\)?)?\s*\n"
+        r"((?:[-+\d.E\s]+\n){3})", txt, re.IGNORECASE)
+    if not m:
+        return None, None
+    unit = (m.group(1) or "alat").lower()
+    rows = []
+    for line in m.group(2).strip().splitlines()[:3]:
+        rows.append([float(x) for x in line.split()[:3]])
+    return rows, unit
+
+
+def _parse_alat_bohr(v0_in_path):
+    """Parse celldm(1) (alat in bohr) from V0_relax.in &SYSTEM."""
+    txt = v0_in_path.read_text()
+    m = re.search(r"celldm\(1\)\s*=\s*([-+\d.E]+)", txt)
+    return float(m.group(1)) if m else None
+
+
+def build_k_path(v0_in_path, v0_out_path, n_kpoints, pos_block):
+    """Build BandPath. Fallback: construct ase.Atoms from raw cell + positions."""
+    from ase import Atoms
     from ase.io import read
-    # Try reading via ASE espresso parser
+    from pathlib import Path
+    import numpy as np
+
+    # Try ASE Espresso parser first
+    atoms = None
     try:
+        from ase.io.espresso import read_espresso_out
         atoms = list(read_espresso_out(str(v0_out_path), index=slice(-1, None)))[-1]
-    except Exception:
-        # Fallback: read crystal coords + cell manually is messy; require user
-        raise SystemExit(f"ASE failed to read {v0_out_path} — install latest ase")
-    # Get auto BandPath
-    bp = atoms.cell.bandpath(npoints=n_kpoints * 5)  # auto
+        print(f"  cell from ASE espresso parser")
+    except Exception as e:
+        print(f"  ASE espresso parser failed ({type(e).__name__}); fallback to raw parse")
+
+    if atoms is None:
+        # Fallback: parse cell from V0_relax.in, positions from V0_relax.out
+        BOHR_TO_A = 0.5291772108
+        cell_rows, unit = _parse_cell_from_in(v0_in_path)
+        if cell_rows is None:
+            raise SystemExit(
+                f"Could not parse CELL_PARAMETERS from {v0_in_path}; "
+                "edit script to specify cell manually.")
+        cell = np.array(cell_rows)
+        if unit == "bohr":
+            cell *= BOHR_TO_A
+        elif unit == "alat":
+            alat_bohr = _parse_alat_bohr(v0_in_path)
+            if alat_bohr is None:
+                raise SystemExit("CELL_PARAMETERS alat but no celldm(1) in &SYSTEM")
+            cell *= (alat_bohr * BOHR_TO_A)
+        # angstrom: keep as-is
+
+        # Parse positions from already-extracted pos_block
+        # pos_block format: "ATOMIC_POSITIONS (units)\n<element> x y z\n..."
+        lines = pos_block.strip().splitlines()
+        units_pos = re.search(r"\(([^)]+)\)", lines[0]).group(1).strip().lower()
+        syms = []; coords = []
+        for ln in lines[1:]:
+            parts = ln.split()
+            if len(parts) < 4:
+                continue
+            syms.append(parts[0])
+            coords.append([float(x) for x in parts[1:4]])
+        coords = np.array(coords)
+        if units_pos == "crystal":
+            atoms = Atoms(symbols=syms, scaled_positions=coords, cell=cell, pbc=True)
+        elif units_pos in ("bohr",):
+            atoms = Atoms(symbols=syms, positions=coords * BOHR_TO_A, cell=cell, pbc=True)
+        elif units_pos == "alat":
+            alat_bohr = _parse_alat_bohr(v0_in_path)
+            atoms = Atoms(symbols=syms, positions=coords * alat_bohr * BOHR_TO_A,
+                          cell=cell, pbc=True)
+        else:  # angstrom
+            atoms = Atoms(symbols=syms, positions=coords, cell=cell, pbc=True)
+        print(f"  cell + positions parsed manually (units pos={units_pos})")
+        print(f"  cell:\n{atoms.cell.array}")
+        print(f"  n_atoms = {len(atoms)}")
+
+    # Auto BandPath
+    bp = atoms.cell.bandpath(npoints=n_kpoints * 5)
     print(f"  Auto k-path: {bp.path}  ({len(bp.kpts)} k-points)")
     return bp, atoms
 
@@ -164,8 +236,8 @@ def main():
     cell_block, pos_block = parse_final_coords_from_out(v0_out)
     print(f"Final coords parsed from {v0_out.name}")
 
-    # Build k-path
-    bp, atoms = build_k_path(v0_out, args.n_kpoints)
+    # Build k-path (with fallback for ASE espresso parse failure)
+    bp, atoms = build_k_path(v0_in, v0_out, args.n_kpoints, pos_block)
     kpoints_card = write_kpts_crystal_b(bp, n_per_seg=args.n_kpoints)
 
     # Build CONTROL for bands calc
