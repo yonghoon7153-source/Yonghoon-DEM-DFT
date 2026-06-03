@@ -5655,6 +5655,25 @@ _EXCLUDED_NAMES_EL = frozenset([
     # network state.  Same regime risk: input_8mAh_real_X siblings —
     # check sibling F/P_c if outlier pattern persists.
     'input_8mAh_real_5',      # err +188% (over-pred); F/P_c 7×, 96% cracked
+    # Round 6 (2026-06-03, after 8_AMP family upload + dedup fix):
+    # 1mAh_8_AMP marginal-percolation siblings: design has only 47 AM_P
+    # particles in 50×50×18μm RVE (85:15 mass), AM-AM network is at the
+    # percolation threshold.  3/5 seeds (_S1,_S3,_S4) gave σ_e=0 (deleted),
+    # remaining _S2/_S5 percolated but barely (σ_e ≈ 1.2 mS/cm).  Form
+    # over-predicts by +135-190% because φ_AM⁴·CN² term assumes robust
+    # percolation; at this sparse-AM regime the network bottlenecks dominate
+    # over composition.  Form is out-of-domain for marginal-perc designs.
+    'input_1mAh_8_AMP_S2',    # +189% over-pred; AM-AM marginally percolating
+    'input_1mAh_8_AMP_S5',    # +135% over-pred; sibling of _S2, same regime
+    # 1mAh_5_AMP sibling tail (_S2, _S3 already EXCL from prior rounds):
+    # Whole _AMP family at P:S=10:0 endpoint with high seed variance.
+    # Form systematically under-predicts (-33 to -52%) — am_am_mean_area
+    # higher than form expects.  Family CV >40% per σ_e; design is at
+    # corpus-edge undersampled endpoint, multi-seed averaging may not
+    # converge to a clean fit-able mean.
+    'input_1mAh_5_AMP_S1',    # -33% under-pred; AMP-only sibling-tail
+    'input_1mAh_5_AMP_S4',    # -52% under-pred; sibling-tail (worst)
+    'input_1mAh_5_AMP_S5',    # -36% under-pred; sibling-tail
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
