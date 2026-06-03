@@ -5,7 +5,43 @@
   "results": {
     "comp2": {"Li-Cl": 2.51, "Li-Br": 2.71, "P-S": 2.06},
     "comp5_A": {"Li-Cl": 2.466, "Li-Br": 2.713, "Li-S": 2.463, "P-S": 2.066},
-    "comp5_B": {"Li-Cl": 2.466, "Li-Br": 2.725, "Li-S": 2.469, "P-S": 2.067}
+    "comp5_B": {"Li-Cl": 2.466, "Li-Br": 2.725, "Li-S": 2.469, "P-S": 2.067},
+    "comp1_v3":   {"Li-Cl": 2.607, "Li-S": 2.461, "P-S": 2.073, "S-S": 3.595},
+    "modelc_v3":  {"Li-Cl": 2.532, "Li-S": 2.465, "P-S": 2.064, "S-S": 3.519,
+                    "Li-Cl_4a": 2.551, "Li-Cl_4d": 2.359,
+                    "_note": "Li-Cl split by Cl site: 4a (n=36) vs 4d anti-site (n=4). 4d-Cl 0.19 A shorter."}
+  },
+
+  "icohp_LOBSTER_ext_basis_eV_per_bond": {
+    "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, NSCF nbnd 450 (comp1) / 500 (modelc_v3), wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
+    "_convention": "ICOHP < 0 = bonding. Per-bond average over all bonds within 4.0 Å cutoff (cohpGenerator).",
+    "comp1_v3": {
+      "P-S":   {"icohp_eV": -5.944, "n_bonds": 16,  "_note": "PS4 covalent backbone"},
+      "Li-Cl": {"icohp_eV": -1.855, "n_bonds": 24,  "_note": "Cl all at 4a (no anti-site)"},
+      "Li-S":  {"icohp_eV": -1.592, "n_bonds": 120, "_note": "PS4-S + 4d-S²⁻ Li interactions"},
+      "S-S":   {"icohp_eV": -0.107, "n_bonds": 56,  "_note": "cage, weak"},
+      "spilling_pct": 1.46,
+      "electrons_recovered": "239.9974 / 240"
+    },
+    "modelc_v3": {
+      "P-S":   {"icohp_eV": -6.000, "n_bonds": 20},
+      "Li-Cl": {"icohp_eV": -2.103, "n_bonds": 42, "_note": "Includes both 4a-Cl (7) and 4d-Cl anti-site (1)"},
+      "Li-S":  {"icohp_eV": -1.717, "n_bonds": 113},
+      "S-S":   {"icohp_eV": -0.110, "n_bonds": 58},
+      "spilling_pct": 1.16,
+      "electrons_recovered": "294.0000 / 294"
+    },
+    "headline_comparison": {
+      "Li-Cl_delta_pct": "+13.4% (LPSCl1.6 stronger; driven by short 4d-Cl Li-Cl bonds and overall Cl-rich ionic field)",
+      "Li-S_delta_pct":  "+7.9% (LPSCl1.6 stronger; vacancy concentrates remaining Li-S bonds)",
+      "P-S_delta_pct":   "+0.9% (~unchanged; PS4 backbone robust to Cl substitution)",
+      "S-S_delta_pct":   "+2.8% (~unchanged; cage geometry preserved)",
+      "paper_message": "Vacancy + Cl substitution STRENGTHENS rather than weakens ionic bonding in LPSCl1.6. Wilkening ionic potential framework (q·|q|/r) consistent: shorter Li-Cl(4d) bonds = larger ICOHP magnitude."
+    },
+    "_data_paths": {
+      "comp1":   "container:/home/ubuntu/work/runs/comp1_v3/v3_post/lobster_ext/",
+      "modelc":  "container:/home/ubuntu/work/runs/modelC_v3/lobster_ext/"
+    }
   },
 
   "trends": {
