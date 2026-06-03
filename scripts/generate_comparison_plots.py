@@ -5637,6 +5637,22 @@ _EXCLUDED_NAMES_EL = frozenset([
                               # P=1.0, high-φ).  _15 EXCL alone asymmetric.
                               # 2mAh × P-end corner consistently over-pred —
                               # multi-seed sim at this design would resolve.
+    # Round 5 (2026-06-03, broken-sim cleanup):
+    # input_1mAh_100_X family: plate_z metadata bug → negative sphere-sum
+    # porosity → solver outputs nonsense σ_e.  Documented in
+    # scripts/recompute_porosity_dual.py sanity filter (14 cases skipped).
+    # Extend this list as more 1mAh_100_N cases enter corpus.
+    'input_1mAh_100_6',       # err -41% (under-pred); negative porosity
+    'input_1mAh_100_8',       # err +1093% (over-pred); WORST outlier;
+                              # ε_spheresum = -12.6% (broken plate_z)
+    'input_1mAh_100_11',      # err -68% (under-pred); negative porosity
+    # input_8mAh_real_5: over-compression — F/P_c = 7.075× (7× Auerbach
+    # critical), 96% AM-AM contacts cracked (force-based), 24.7% severe.
+    # DEM rigid-sphere treats this as elastic; real material would shatter.
+    # σ_e = 0.523 mS/cm reflects extreme fracture penalty on an unphysical
+    # network state.  Same regime risk: input_8mAh_real_X siblings —
+    # check sibling F/P_c if outlier pattern persists.
+    'input_8mAh_real_5',      # err +188% (over-pred); F/P_c 7×, 96% cracked
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
