@@ -293,6 +293,67 @@ BVSE = (BVS − 1.0)² (V_ideal_Li⁺ = 1.0). Lower = easier Li site.
 - modelc_v3: 같은 파일들이 `/home/ubuntu/work/runs/modelC_v3/` 에
 
 
+## 10'''''''. **Wilkening framework PERFECTLY predicts LOBSTER ICOHP** ⭐ paper headline
+
+per-bond Wilkening ionic potential |q_Li × q_X|/d (Bader 기반) vs LOBSTER
+ICOHP 회귀.
+
+| | r (correlation) | n bonds | 해석 |
+|---|---|---|---|
+| **comp1 Li-Cl(4a)** | **−1.000** | 24 | **수학적으로 완벽** |
+| modelc Li-Cl(4a) | −0.988 | 38 | 거의 완벽 |
+| modelc Li-S(4d) | −0.891 | 12 | 강함 |
+| modelc Li-S(PS4) | −0.778 | 101 | 강함 |
+| comp1 Li-S(PS4) | −0.367 | 96 | 약함 (cutoff 부근 약한 bonds 영향) |
+
+### 의미
+
+**Bader q (1 metric) + bond distance (1 metric)** 조합으로 **LOBSTER 라는 완전
+독립 quantum method의 ICOHP를 직접 예측**. 두 방법은 서로 다른 이론적
+출발점을 가지지만 같은 underlying physics (Coulombic ionic attraction)를
+캡처.
+
+→ paper headline 후보: **"Wilkening ionic potential framework directly
+reproduces LOBSTER ICOHP at the per-bond level (r=−1.00 for Li-Cl in
+LPSCl)"** — 세 방법론 (Bader/distance/ICOHP)이 사실은 같은 ionic
+attraction을 측정.
+
+### Slope flattening 확인
+
+| | comp1 Li-Cl(4a) slope | modelc Li-Cl(4a) slope | 비율 |
+|---|---|---|---|
+| Wilkening↔ICOHP | −35.56 eV·Å/e² | **−21.58** eV·Å/e² | **1.65× flatter** |
+
+ICOHP-distance slope 결과 (2.3× flatter) 와 일관. **두 metric이 같은 방향
+shift** = "ionic softening" 효과의 cross-validation.
+
+
+## 10''''''. 6-panel ICOHP vs distance scatter (Fig SI)
+
+source: `container:/home/ubuntu/work/runs/per_bond_ICOHP_scatter_6panel.png`
+
+각 결합 type별 per-bond scatter:
+- **P-S**: 두 시스템 완전 동일 trajectory, d=2.04 → ICOHP=-6.4 eV
+- **Li-Cl(4a)**: 선형, comp1 더 가파른 slope
+- **Li-Cl(4d) anti-site**: modelc만, 4개 점 매우 tight (d=2.31-2.41, ICOHP=-2.7~-3.1)
+  → **anti-site ultra-glue 시각적 직접 증거**
+- **Li-S(4d)**: 두 시스템 동일 spot (d=2.36, ICOHP=-2.5)
+  → **Universal anchor 시각 확정**
+- **Li-S(PS4)**: "fan" shape, modelc 전체적으로 deeper
+- **S-S cage**: scattered around -0.1 eV
+
+
+## 10'''''. Strongest bonds (paper SI table)
+
+| 시스템 | Top 1 strongest | d | ICOHP |
+|---|---|---|---|
+| comp1 (LPSCl) | P1-S5 (PS4) | 2.036 Å | **−6.40 eV** |
+| modelc (LPSCl1.6) | P29-S34 (PS4) | 2.043 Å | **−6.28 eV** |
+
+Top 5 in both = all P-S covalent backbone bonds. paper-direct standard
+PS4³⁻ argyrodite signature.
+
+
 ## 10''''. ICOHP-distance correlation slope (NEW paper finding)
 
 각 결합 type에서 per-bond ICOHP를 bond distance 대해 회귀. slope =

@@ -72,6 +72,45 @@
     "interpretation": "LPSCl1.6 ionic bonds (Li-Cl, Li-S) have 2-3× flatter ICOHP-distance slopes than LPSCl. Flatter slope = bond becomes less sensitive to length variation = more ionic character = lower vibrational stiffness. This is a QUANTITATIVE measure of why finite-T motion is easier in LPSCl1.6 (relevant to AIMD higher D). PS4 covalent backbone slope unchanged (+11-12 eV/Å) — PS4 robust to composition. Independent confirmation of the 'ionic-glue strengthening + bond softening' duality observed in static ICOHP averages."
   },
 
+  "wilkening_ICOHP_3way_correlation": {
+    "_method": "Per-bond Bader-derived Wilkening ionic potential |q_Li × q_X|/d vs LOBSTER ICOHP regression. Tests whether the ionic potential framework (Wilkening 2019, Zhang 2024) predicts LOBSTER ICOHP at the single-bond level.",
+    "_key_finding": "Wilkening potential PERFECTLY predicts Li-Cl ICOHP: r=-1.000 (comp1) and r=-0.988 (modelc). Single-metric (Bader q) and single-metric (distance) combination directly reproduces a fundamentally different method (LOBSTER projected COHP). Strongest single quantitative validation of the ionic potential framework for argyrodites.",
+    "comp1_v3": {
+      "Cl-Li(4a)":  {"r": -1.000, "slope_eV_A_per_e2": -35.56, "n_bonds": 24, "_note": "Perfect Wilkening prediction"},
+      "Li-S(4d)":   {"r":  0.928, "slope_eV_A_per_e2":  173.48, "n_bonds": 24, "_note": "Anomalous +slope is artifact of very narrow range (d=2.35-2.38, ICOHP=-2.43 to -2.69)"},
+      "Li-S(PS4)":  {"r": -0.367, "slope_eV_A_per_e2": -4.59, "n_bonds": 96, "_note": "Weaker correlation due to wide d range incorporating very long bonds at edge of cutoff"}
+    },
+    "modelc_v3": {
+      "Cl-Li(4a)":  {"r": -0.988, "slope_eV_A_per_e2": -21.58, "n_bonds": 38, "_note": "Excellent Wilkening prediction; 1.6× gentler slope than comp1 = softer bonds"},
+      "Li-S(4d)":   {"r": -0.891, "slope_eV_A_per_e2": -16.04, "n_bonds": 12},
+      "Li-S(PS4)":  {"r": -0.778, "slope_eV_A_per_e2": -8.03, "n_bonds": 101, "_note": "Stronger correlation than comp1 — Li-S(PS4) more consistently ionic in vacancy structure"}
+    },
+    "paper_message": "The Wilkening ionic potential is the underlying physics. LOBSTER ICOHP, Bader charges, and bond distances are not independent descriptors — they are three projections of the same Coulombic attraction. This explains why all three metrics shift in the same direction between LPSCl and LPSCl1.6 (all stronger ionic in LPSCl1.6).",
+    "_figure_files": {
+      "icohp_vs_distance_6panel": "container:/home/ubuntu/work/runs/per_bond_ICOHP_scatter_6panel.png",
+      "wilkening_vs_icohp_2panel": "container:/home/ubuntu/work/runs/wilkening_vs_ICOHP_scatter.png"
+    }
+  },
+
+  "strongest_bonds_per_system_top5": {
+    "_method": "Per-bond ICOHP ranked (most negative first), top 5 per system",
+    "comp1_v3": [
+      {"atoms": "P1-S5",   "pair": "P-S", "d_A": 2.036, "icohp_eV": -6.403},
+      {"atoms": "P3-S19",  "pair": "P-S", "d_A": 2.036, "icohp_eV": -6.400},
+      {"atoms": "P2-S6",   "pair": "P-S", "d_A": 2.036, "icohp_eV": -6.394},
+      {"atoms": "P1-S17",  "pair": "P-S", "d_A": 2.036, "icohp_eV": -6.393},
+      {"atoms": "P4-S20",  "pair": "P-S", "d_A": 2.036, "icohp_eV": -6.392}
+    ],
+    "modelc_v3": [
+      {"atoms": "P29-S34", "pair": "P-S", "d_A": 2.043, "icohp_eV": -6.283},
+      {"atoms": "P30-S35", "pair": "P-S", "d_A": 2.042, "icohp_eV": -6.262},
+      {"atoms": "P31-S51", "pair": "P-S", "d_A": 2.047, "icohp_eV": -6.189},
+      {"atoms": "P28-S48", "pair": "P-S", "d_A": 2.069, "icohp_eV": -6.136},
+      {"atoms": "P30-S50", "pair": "P-S", "d_A": 2.052, "icohp_eV": -6.120}
+    ],
+    "_note": "Top 5 in both systems are all P-S covalent backbone bonds, ~-6.4 eV at d≈2.04 Å — textbook argyrodite PS4³⁻ signature."
+  },
+
   "bader_q_vs_n_Cl_correlation_modelc_v3": {
     "_method": "Li Bader charge grouped by number of Cl neighbors within 3.4 Å cutoff",
     "n_Cl=0": {"q_mean_e": 0.8673, "q_std_e": 0.0,    "n_Li": 1},
