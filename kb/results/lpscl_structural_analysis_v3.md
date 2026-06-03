@@ -293,6 +293,56 @@ BVSE = (BVS − 1.0)² (V_ideal_Li⁺ = 1.0). Lower = easier Li site.
 - modelc_v3: 같은 파일들이 `/home/ubuntu/work/runs/modelC_v3/` 에
 
 
+## 10''. Li-Bader by environment type (modelc_v3, paper-grade)
+
+`Li_per_env_Bader.json`: 27 Li 사이트의 Bader q를 환경 type별로 그룹핑
+(Cl 이웃 수 + S 이웃 type).
+
+| Env (Li 1-shell) | n | q (e) | 메모 |
+|---|---|---|---|
+| 0 Cl neighbor | 1 | **+0.867** | 가장 약한 ionic (Cl-free 환경) |
+| 1 Cl(4a), 2 PS4-S, 1 4d-S | 11 | +0.874 ± 0.006 | 정상 LPSCl-like (majority) |
+| 1 Cl(4a)+1 Cl(4d) | 3 | +0.886 ± 0.003 | anti-site 인접 |
+| 2 Cl(4a) | 10 | +0.888 ± 0.006 | Cl-rich 환경 |
+| 3 PS4-S + 1 4a-Cl + 1 4d-Cl | 1 | **+0.901** | **가장 ionic — anti-site 인접 Li** |
+
+**Trend**: **Cl 이웃 수 ↑ → Li ionic ↑** (+0.034 e 차이, 4% 변동).
+
+paper 메시지: 4d-Cl anti-site는 자신뿐 아니라 **인접 Li까지 polarize** —
+가장 ionic Li (q=+0.901)이 anti-site 옆에 위치. local polarization 효과
+직접 정량.
+
+
+## 10'''. Li-S ICOHP per-site split (paper-grade)
+
+각 S을 PS4 (P 이웃 있음) vs 4d (free S²⁻) 로 분류하고 Li-S ICOHP 평균:
+
+| | LPSCl (comp1) | LPSCl1.6 (modelc) |
+|---|---|---|
+| Li-S(PS4) | −1.348 ± 1.224 (n=96) | **−1.622 ± 1.266 (n=101)** (+20%) |
+| Li-S(4d) | **−2.566 ± 0.098** (n=24) | **−2.516 ± 0.098** (n=12) | **동일 within 2%!** |
+| Δ (4d − PS4) | −1.22 | −0.89 | |
+| Ratio | 1.90× | 1.55× | |
+
+### **두 가지 핵심 발견**
+
+1. **Li-S(4d)는 두 시스템 거의 동일 (~−2.5 eV/bond)** + σ 매우 작음 (0.098)
+   → 4d S²⁻ 자리는 **universal Li anchor** — composition 무관하게 고정된
+   anchor 역할. full ionic 결합 (PS4 covalent 묶임 없음).
+
+2. **Li-S(PS4)는 modelc에서 +20% 강함** (−1.35 → −1.62)
+   → vacancy + Cl-rich 환경이 PS4-S까지 ionic field 강화시킴
+   → 직접 4d S²⁻에서 멀리 떨어진 PS4-S까지 영향 전파
+
+### Paper Fig 1c 해석 강화
+
+Li-S panel의 LPSCl1.6 broader bonding distribution = (a) Li-S(4d) deep tight
+peak at ~−5 eV (anchor) + (b) Li-S(PS4) broader peak ~−3 eV (heterogeneous
+ionic). comp1는 같은 두 peak이지만 PS4 부분이 더 얕음.
+
+source: `container:/home/ubuntu/work/runs/Li_S_per_site_ICOHP.json`
+
+
 ## 10'. Li-Cl ICOHP per-site split (paper-grade quantitative)
 
 Per-bond ICOHP analysis using `ICOHPLIST.lobster` + per-site analyzer

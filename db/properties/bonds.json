@@ -61,7 +61,14 @@
       "Li-S":  {"icohp_eV": -1.592, "n_bonds": 120, "_note": "PS4-S + 4d-S²⁻ Li interactions"},
       "S-S":   {"icohp_eV": -0.107, "n_bonds": 56,  "_note": "cage, weak"},
       "spilling_pct": 1.46,
-      "electrons_recovered": "239.9974 / 240"
+      "electrons_recovered": "239.9974 / 240",
+      "Li_S_per_site_split": {
+        "Li-S(PS4)": {"icohp_eV": -1.348, "std_eV": 1.224, "n_bonds": 96, "_note": "PS4-bound S, baseline LPSCl"},
+        "Li-S(4d)":  {"icohp_eV": -2.566, "std_eV": 0.098, "n_bonds": 24, "_note": "Free S²⁻ at 4d; universal anchor (≈ same in modelc_v3)"},
+        "delta_eV": -1.218,
+        "ratio_4d_over_PS4": 1.90,
+        "headline": "Same Li-S(4d) ICOHP as modelc_v3 (-2.57 vs -2.52, <2% difference) → 4d S²⁻ universal Li anchor confirmed independent of composition."
+      }
     },
     "modelc_v3": {
       "P-S":   {"icohp_eV": -6.000, "n_bonds": 20},
@@ -76,6 +83,13 @@
         "delta_eV": -0.809,
         "ratio_4d_over_4a": 1.40,
         "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel."
+      },
+      "Li_S_per_site_split": {
+        "Li-S(PS4)":  {"icohp_eV": -1.622, "std_eV": 1.266, "n_bonds": 101, "_note": "PS4-bound S; ionic glue varies by Li env"},
+        "Li-S(4d)":   {"icohp_eV": -2.516, "std_eV": 0.098, "n_bonds":  12, "_note": "Free S²⁻ at 4d site; tight σ → universal Li-S anchor"},
+        "delta_eV": -0.894,
+        "ratio_4d_over_PS4": 1.55,
+        "headline": "Free 4d S²⁻ forms 55% stronger and 13× more uniform Li-S bonds than PS4-bound S. 4d-S²⁻ is a universal Li anchor invariant to composition (cf. comp1 4d-S²⁻ ICOHP = -2.566, only 2% different)."
       }
     },
     "headline_comparison": {
