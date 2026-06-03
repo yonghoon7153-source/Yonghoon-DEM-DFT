@@ -30,8 +30,10 @@ import numpy as np
 
 
 def read_atoms(atoms_path):
-    """Parse LIGGGHTS atom dump or atoms.csv.  Returns dict {id: {x,y,z,radius,type}}."""
+    """Parse LIGGGHTS atom dump or atoms.csv.  Returns dict {id: {x,y,z,radius,type}}.
+    Also extracts box bounds from header (LIGGGHTS dump) → returns tuple (atoms, box_xy)."""
     atoms = {}
+    box_xy = None
     suffix = atoms_path.suffix
     with open(atoms_path) as f:
         if suffix == '.csv':
@@ -50,11 +52,25 @@ def read_atoms(atoms_path):
             # LIGGGHTS dump format
             lines = f.readlines()
             data_start = None
+            # Parse box bounds — usually lines after "ITEM: BOX BOUNDS"
             for i, line in enumerate(lines):
+                if line.startswith('ITEM: BOX BOUNDS'):
+                    # next 3 lines are x_lo x_hi, y_lo y_hi, z_lo z_hi
+                    try:
+                        xbounds = lines[i+1].split()
+                        ybounds = lines[i+2].split()
+                        x_lo, x_hi = float(xbounds[0]), float(xbounds[1])
+                        y_lo, y_hi = float(ybounds[0]), float(ybounds[1])
+                        # Use mean of x/y range for box_xy (square box assumed)
+                        box_xy_x = x_hi - x_lo
+                        box_xy_y = y_hi - y_lo
+                        box_xy = (box_xy_x + box_xy_y) / 2.0  # average
+                    except (ValueError, IndexError):
+                        pass
                 if line.startswith('ITEM: ATOMS'):
                     data_start = i + 1; break
             if data_start is None:
-                return None
+                return None, box_xy
             for line in lines[data_start:]:
                 parts = line.split()
                 if len(parts) < 6: continue
@@ -67,7 +83,7 @@ def read_atoms(atoms_path):
                     }
                 except (ValueError, IndexError):
                     continue
-    return atoms
+    return atoms, box_xy
 
 
 def read_contacts(contacts_path):
@@ -241,7 +257,13 @@ def main():
                 continue
 
             try:
-                atoms = read_atoms(atoms_path)
+                atoms_result = read_atoms(atoms_path)
+                # Backward compat — read_atoms now returns (atoms, box_xy)
+                if isinstance(atoms_result, tuple):
+                    atoms, box_xy_from_dump = atoms_result
+                else:
+                    atoms = atoms_result
+                    box_xy_from_dump = None
                 contacts = read_contacts(contacts_path)
             except Exception as e:
                 cases_data.append({
@@ -263,11 +285,14 @@ def main():
                 })
                 continue
 
-            eps_s, eps_u, ov_pct = compute_dual(atoms, contacts, plate_z)
+            # Use box_xy from atoms dump (more accurate per-case), fallback to 0.05
+            box_xy_use = box_xy_from_dump if box_xy_from_dump and box_xy_from_dump > 0 else 0.05
+            eps_s, eps_u, ov_pct = compute_dual(atoms, contacts, plate_z, box_xy=box_xy_use)
             row = {
                 'name': nm,
                 'status': 'OK',
                 'plate_z_um': plate_z * 1000,
+                'box_xy_mm': box_xy_use * 1000,
                 'N_atoms': len(atoms),
                 'N_contacts': len(contacts) if contacts else 0,
                 'porosity_old': old_poro,
@@ -293,7 +318,7 @@ def main():
 
     # Write CSV summary
     if cases_data:
-        keys = ['name', 'status', 'plate_z_um', 'N_atoms', 'N_contacts',
+        keys = ['name', 'status', 'plate_z_um', 'box_xy_mm', 'N_atoms', 'N_contacts',
                 'porosity_old', 'porosity_spheresum', 'porosity_union',
                 'overlap_pct', 'delta_old_vs_new', 'delta_union_vs_sphere']
         with open(args.csv_out, 'w', newline='') as f:
