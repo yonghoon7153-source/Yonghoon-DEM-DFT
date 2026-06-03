@@ -69,7 +69,14 @@
       "Li-S":  {"icohp_eV": -1.717, "n_bonds": 113},
       "S-S":   {"icohp_eV": -0.110, "n_bonds": 58},
       "spilling_pct": 1.16,
-      "electrons_recovered": "294.0000 / 294"
+      "electrons_recovered": "294.0000 / 294",
+      "Li_Cl_per_site_split": {
+        "Li-Cl(4a)": {"icohp_eV": -2.026, "std_eV": 0.532, "n_bonds": 38, "_note": "Normal 4a octahedral Cl[Li6→Li5 with vacancy]; large σ from Li-vacancy environment heterogeneity"},
+        "Li-Cl(4d)": {"icohp_eV": -2.836, "std_eV": 0.115, "n_bonds": 4,  "_note": "Anti-site tet Cl[Li4]; tight σ from well-defined environment (single Cl, 4 Li neighbors)"},
+        "delta_eV": -0.809,
+        "ratio_4d_over_4a": 1.40,
+        "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel."
+      }
     },
     "headline_comparison": {
       "Li-Cl_delta_pct": "+13.4% (LPSCl1.6 stronger; driven by short 4d-Cl Li-Cl bonds and overall Cl-rich ionic field)",
