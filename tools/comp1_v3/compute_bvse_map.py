@@ -74,24 +74,44 @@ def compute_bvs_map(atoms, grid_shape, cutoff_A=5.0):
     return bvs_map, bvse_map
 
 
-def existing_li_bvs(atoms, bvs_map, grid_shape):
-    """Sample BVS at existing Li positions (fractional coord → grid index)."""
-    cell = atoms.get_cell()
-    inv_cell = np.linalg.inv(np.array(cell))
-    li_idx = [i for i, s in enumerate(atoms.get_chemical_symbols()) if s == "Li"]
-    if not li_idx:
+def existing_li_bvs(atoms, grid_shape=None, cutoff_A=5.0):
+    """Compute BVS at each Li position via DIRECT summation over anions
+    (with PBC), not via grid sampling — avoids 0.5-Å grid-snap artifacts
+    that gave spurious BVS=10+ at some Li sites in disordered structures.
+    """
+    cell_arr = np.array(atoms.get_cell())
+    inv_cell = np.linalg.inv(cell_arr)
+    symbols = atoms.get_chemical_symbols()
+    positions = atoms.get_positions()
+    li_idx = [i for i, s in enumerate(symbols) if s == "Li"]
+    anion_idx = [i for i, s in enumerate(symbols) if s in BV_PARAMS]
+    if not li_idx or not anion_idx:
         return None
-    li_cart = atoms.get_positions()[li_idx]
-    li_frac = (li_cart @ inv_cell) % 1.0
-    # Nearest grid index for each Li
-    nx, ny, nz = grid_shape
-    idx = (li_frac * np.array([nx, ny, nz])).astype(int) % np.array([nx, ny, nz])
-    vals = bvs_map[idx[:, 0], idx[:, 1], idx[:, 2]]
+
+    vals = []
+    for i in li_idx:
+        li_pos = positions[i]
+        bvs_li = 0.0
+        for j in anion_idx:
+            d_cart = positions[j] - li_pos
+            d_frac = d_cart @ inv_cell
+            d_frac -= np.round(d_frac)
+            d_mic = d_frac @ cell_arr
+            d = np.linalg.norm(d_mic)
+            if d < cutoff_A:
+                R0 = BV_PARAMS[symbols[j]]["R0"]
+                b  = BV_PARAMS[symbols[j]]["b"]
+                bvs_li += np.exp((R0 - d) / b)
+        vals.append(bvs_li)
+    vals = np.array(vals)
     return {
         "mean": float(vals.mean()),
         "std":  float(vals.std()),
         "min":  float(vals.min()),
         "max":  float(vals.max()),
+        "per_atom_idx": [int(i) for i in li_idx],
+        "per_atom_bvs": [float(v) for v in vals],
+        "_method": "direct PBC sum at exact Li position (no grid sampling)",
     }
 
 
@@ -116,7 +136,7 @@ def main():
     print(f"BVS range:  [{bvs.min():.4f}, {bvs.max():.4f}], median={np.median(bvs):.4f}")
     print(f"BVSE range: [{bvse.min():.4f}, {bvse.max():.4f}]")
 
-    li_stats = existing_li_bvs(atoms, bvs, grid_shape)
+    li_stats = existing_li_bvs(atoms, grid_shape, args.cutoff)
     if li_stats:
         print(f"BVS at existing Li sites: mean={li_stats['mean']:.4f} "
               f"± {li_stats['std']:.4f}  [{li_stats['min']:.4f}, {li_stats['max']:.4f}]")
