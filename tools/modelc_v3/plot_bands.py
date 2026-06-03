@@ -43,21 +43,61 @@ def parse_fermi_eV(nscf_out_path):
 
 
 def parse_bands_gnu(dat_gnu_path):
-    """Returns (k_dists, bands_matrix) — bands_matrix shape (nbnd, nk)."""
-    txt = dat_gnu_path.read_text()
-    blocks = [b.strip() for b in txt.split("\n\n") if b.strip()]
-    bands = []
-    for blk in blocks:
-        ks, es = [], []
-        for line in blk.splitlines():
-            parts = line.split()
-            if len(parts) >= 2:
-                ks.append(float(parts[0])); es.append(float(parts[1]))
-        bands.append((np.array(ks), np.array(es)))
-    if not bands:
+    """Returns (k_dists, bands_matrix) — bands_matrix shape (nbnd, nk).
+
+    QE bands.dat.gnu format: each band is a sequence of (k_dist, energy) lines.
+    Bands are separated by blank lines OR are concatenated with no separator
+    (depending on QE version). We robustly detect band boundaries by spotting
+    where k_dist either resets to (≈)0 or decreases.
+    """
+    raw_lines = []
+    for line in dat_gnu_path.read_text().splitlines():
+        ln = line.strip()
+        if not ln:
+            raw_lines.append(None)  # blank-line marker
+            continue
+        parts = ln.split()
+        if len(parts) >= 2:
+            try:
+                raw_lines.append((float(parts[0]), float(parts[1])))
+            except ValueError:
+                continue
+
+    # Split into bands. Strategy:
+    # 1) if blank-line markers present, split there
+    # 2) else: detect k_dist reset (next k <= previous k by more than tolerance)
+    bands_raw = []
+    cur = []
+    has_blanks = any(x is None for x in raw_lines)
+    if has_blanks:
+        for x in raw_lines:
+            if x is None:
+                if cur:
+                    bands_raw.append(cur); cur = []
+            else:
+                cur.append(x)
+        if cur:
+            bands_raw.append(cur)
+    else:
+        prev_k = -1e9
+        for x in raw_lines:
+            k, e = x
+            if k < prev_k - 1e-6 and cur:
+                # k went backwards → new band
+                bands_raw.append(cur); cur = []
+            cur.append((k, e))
+            prev_k = k
+        if cur:
+            bands_raw.append(cur)
+
+    if not bands_raw:
         raise SystemExit(f"no bands parsed from {dat_gnu_path}")
-    k0 = bands[0][0]
-    mat = np.array([b[1] for b in bands])  # (nbnd, nk)
+
+    # Align all bands to same k-points (use first band's k as reference)
+    k0 = np.array([p[0] for p in bands_raw[0]])
+    mat = np.array([[p[1] for p in b] for b in bands_raw if len(b) == len(k0)])
+    print(f"  parsed {mat.shape[0]} bands × {mat.shape[1]} k-points "
+          f"(found {len(bands_raw)} band-blocks, kept those matching ref k-length)")
     return k0, mat
 
 
