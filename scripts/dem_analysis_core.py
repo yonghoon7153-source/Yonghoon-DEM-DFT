@@ -34,7 +34,7 @@ SHAPE_FACTOR = {
 
 def calc_porosity(atoms, plate_z, box_xy=0.05):
     """
-    Porosity = 1 - V_solid / V_box
+    Porosity = 1 - V_solid / V_box (sphere-sum convention, current production)
     V_box uses mesh plate_z (= actual electrode thickness).
     All in sim units.
     """
@@ -42,6 +42,70 @@ def calc_porosity(atoms, plate_z, box_xy=0.05):
     V_box = box_xy * box_xy * plate_z
     porosity = (1 - V_solid / V_box) * 100
     return porosity
+
+
+def calc_porosity_dual(atoms, contacts, plate_z, box_xy=0.05):
+    """Multiple porosity definitions for full diagnostic (Stage 2026-06-03).
+
+    Returns dict with:
+      porosity_spheresum   : 1 - N×V_sphere / V_box     (current production method)
+      porosity_union       : 1 - V_union / V_box        (overlap-corrected, literature)
+      overlap_fraction_pct : V_lens / V_sphere_sum × 100  (plastic deformation indicator)
+
+    V_lens computed from each contact's delta (overlap depth).
+    For equal-radius spheres: V_lens = π × δ² × (6r - δ) / 12
+    For unequal: more general formula (used when r1 ≠ r2).
+
+    Used to expose:
+      - Real geometric ε (union) for literature comparison
+      - Plastic compaction extent via overlap fraction
+      - Both stored alongside legacy 'porosity' field for backward compat.
+    """
+    # Sphere-sum (legacy)
+    V_sphere_sum = sum(4/3 * np.pi * a['radius']**3 for a in atoms.values())
+    V_box = box_xy * box_xy * plate_z
+    eps_spheresum = (1 - V_sphere_sum / V_box) * 100
+
+    # Lens volume from contacts (overlap-corrected union)
+    V_lens_total = 0.0
+    for c in contacts:
+        # contacts may be list of dict or list of dict-like
+        delta = c.get('delta') if isinstance(c, dict) else getattr(c, 'delta', None)
+        id1 = c.get('id1') if isinstance(c, dict) else getattr(c, 'id1', None)
+        id2 = c.get('id2') if isinstance(c, dict) else getattr(c, 'id2', None)
+        if delta is None or delta <= 0:
+            continue
+        if id1 in atoms and id2 in atoms:
+            r1 = atoms[id1]['radius']
+            r2 = atoms[id2]['radius']
+        else:
+            # Fallback: use mean radius (all same for monodisperse)
+            r1 = r2 = next(iter(atoms.values()))['radius']
+        # Two-sphere lens volume:
+        # V_lens = (π × δ² × (3(r1+r2) - δ)) / 12 × correction
+        # Simpler: for equal r, V_lens = π δ² (6r - δ) / 12
+        # For unequal, use general formula with d = r1+r2-δ
+        d = r1 + r2 - delta
+        if d <= 0: continue
+        # General two-sphere intersection lens volume:
+        V_lens = (np.pi * delta**2 / (12 * d)) * (
+            d**2 + 2*d*(r1 + r2) - 3*(r1 - r2)**2
+        )
+        if V_lens > 0:
+            V_lens_total += V_lens
+
+    V_union = V_sphere_sum - V_lens_total
+    eps_union = (1 - V_union / V_box) * 100
+    overlap_pct = (V_lens_total / V_sphere_sum * 100) if V_sphere_sum > 0 else 0.0
+
+    return {
+        'porosity_spheresum': eps_spheresum,           # legacy = current production
+        'porosity_union': eps_union,                    # overlap-corrected (literature)
+        'overlap_fraction_pct': overlap_pct,            # plastic deformation indicator
+        'V_sphere_sum_sim': V_sphere_sum,
+        'V_lens_total_sim': V_lens_total,
+        'V_box_sim': V_box,
+    }
 
 
 def get_plate_z(results_dir, atoms, scale):
