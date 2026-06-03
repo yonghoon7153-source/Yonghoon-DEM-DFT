@@ -4,8 +4,12 @@
 (Pipeline v2: MLIP anneal → DFT BM-EOS V0 → DFT §8) 사용. 데이터 들어올
 때마다 [pending] 자리 채움.
 
-- **LPSCl** = comp1_v3, Li6PS5Cl, 52 atoms, V0 = 1016.62 Å³ (a = 10.055 Å)
-- **LPSCl1.6** = modelc_v3, Li5.4PS4.4Cl1.6, ~104 atoms, V0 = 1216.44 Å³
+- **LPSCl** = comp1_v3, Li6PS5Cl, **4 fu = 52 atoms**, cubic V0 = 1016.62 Å³
+  (a = 10.055 Å)
+- **LPSCl1.6** = modelc_v3, Li5.4PS4.4Cl1.6, **5 fu = 62 atoms**, rhombohedral
+  supercell V0 = 1216.44 Å³
+- **공정 비교는 무조건 V/atom 또는 V/fu로!** 두 시스템 supercell 크기가
+  다름 (4 fu vs 5 fu)이라 raw V0 비교는 의미 없음.
 
 마지막 업데이트: 2026-06-03
 
@@ -57,15 +61,27 @@ DFT가 유한온도의 비조화 강화(anharmonic stiffening) 및 Li 동적 재
 
 ## 2. EOS (BM3, free 4-parameter fit)
 
-| | LPSCl v3 | LPSCl1.6 v3 |
+| | LPSCl v3 (4 fu) | LPSCl1.6 v3 (5 fu) |
 |---|---|---|
-| V0 (Å³) | 1016.62 | 1216.44 |
-| a (Å, cubic) | 10.0547 | ≈ 10.674 |
+| nat | 52 | 62 |
+| supercell type | cubic conventional | rhombohedral |
+| V0 raw (Å³) | 1016.62 | 1216.44 |
+| **V0 / atom (Å³)** | **19.55** | **19.62** (+0.4%) |
+| **V0 / fu (Å³)** | **254.16** | **243.29** (−4.3%) |
+| a equivalent (cubic 환산, Å) | 10.0547 | ≈ 9.910 (10.674는 5-fu supercell에 한정, 직접 비교 X) |
 | B0 (GPa) | 26.233 ± 0.004 | 21.71 ± 0.27 |
 | B0' | 4.171 ± 0.011 | 7.01 ± 1.37 |
 | R² | 1.000000 | 0.999012 |
 | n_points | 8 | 11 |
 | Fit 날짜 | 2026-06-03 | 2026-06-03 |
+
+**핵심**:
+- supercell 크기가 4 fu vs 5 fu라서 V0 raw 직접 비교 ❌. 반드시
+  V/atom 또는 V/fu로 정규화.
+- **V/fu로 보면 LPSCl1.6가 −4.3% 작음** → Cl→S 치환 + Li 공공으로 fu 부피
+  소폭 수축. 실험 lattice 경향 일치.
+- **V/atom은 +0.4%로 거의 동일** → 원자 1개가 차지하는 평균 부피는 같다는
+  뜻 (argyrodite framework이 보존됨).
 
 **B0' 차이에 대한 노트**: comp1의 B0' = 4.17 (교과서 범위), modelc_v3 B0' =
 7.01 (높고 σ도 큼). modelc의 큰 B0' 불확실성은 더 넓은 부피 sweep + 평탄한
