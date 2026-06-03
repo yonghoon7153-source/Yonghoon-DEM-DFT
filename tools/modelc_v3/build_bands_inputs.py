@@ -298,6 +298,19 @@ def main():
 
     atomic_species = _trim_card(cards.get("ATOMIC_SPECIES", ""), "ATOMIC_SPECIES")
 
+    # ibrav=0 requires CELL_PARAMETERS. If output had none (fixed-cell relax),
+    # fall back to the cell from V0_relax.in.
+    if not cell_block:
+        cell_block_in = _trim_card(cards.get("CELL_PARAMETERS", ""),
+                                     "CELL_PARAMETERS")
+        if cell_block_in:
+            cell_block = cell_block_in
+            print(f"  using CELL_PARAMETERS from V0_relax.in (fixed-cell relax)")
+        else:
+            raise SystemExit(
+                "Neither V0_relax.out nor V0_relax.in has CELL_PARAMETERS; "
+                "but ibrav=0 in &SYSTEM requires it.")
+
     # Assemble nscf_bands.in
     bands_input = (
         control + "\n" +
@@ -305,7 +318,7 @@ def main():
         nls.get("ELECTRONS", "&ELECTRONS\n  conv_thr = 1.0d-8\n/") + "\n" +
         atomic_species + "\n" +
         kpoints_card + "\n" +
-        (cell_block + "\n" if cell_block else "") +
+        cell_block + "\n" +
         pos_block + "\n"
     )
     out_dir.joinpath("nscf_bands.in").write_text(bands_input)
