@@ -134,11 +134,14 @@ def main():
     kpts = f"K_POINTS automatic\n  {args.kpoints}\n"
     new_pos = f"ATOMIC_POSITIONS ({pos_unit})\n{pos_block}"
 
+    # Voigt index → modelc_v3 fit-compatible Voigt 2-digit tag
+    voigt_tag = {1: "11", 2: "22", 3: "33", 4: "23", 5: "13", 6: "12"}
+
     for k in range(1, 7):
         for sign_label, sign in [("p", +1), ("m", -1)]:
             F = deformation_matrix(k, sign * h)
             new_cell = F @ cell
-            tag = f"{args.prefix_base}_{k}{sign_label}"
+            tag = f"{args.prefix_base}_{voigt_tag[k]}_{sign_label}"
             # &CONTROL: SCF + force + stress
             control = nls["CONTROL"]
             control = re.sub(r"calculation\s*=\s*'[^']*'",
@@ -187,9 +190,10 @@ set -e
 cd $(dirname $(realpath $0))
 export OMP_NUM_THREADS=8
 
+declare -A VTAG=( [1]=11 [2]=22 [3]=33 [4]=23 [5]=13 [6]=12 )
 for k in 1 2 3 4 5 6; do
     for s in p m; do
-        tag={args.prefix_base}_${{k}}${{s}}
+        tag={args.prefix_base}_${{VTAG[$k]}}_${{s}}
         if [ -f ${{tag}}.out ] && grep -q "JOB DONE" ${{tag}}.out; then
             echo "[$(date +%H:%M:%S)] $tag: already done"
             continue

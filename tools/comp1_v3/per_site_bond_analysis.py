@@ -36,7 +36,8 @@ CUTOFFS = {
 
 
 def pair_cut(a, b):
-    return CUTOFFS.get(tuple(sorted([a, b])), 0.0)
+    """Symmetric lookup — try both orderings."""
+    return CUTOFFS.get((a, b), CUTOFFS.get((b, a), 0.0))
 
 
 def neighbors_within(i_idx, j_idx, d, sym, idx, target=None, cut=None):
