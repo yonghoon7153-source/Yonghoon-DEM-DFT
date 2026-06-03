@@ -53,8 +53,16 @@ def _r_am_sizes(d):
     return d.get('r_AM_S', 2.5), d.get('r_AM_P', 5.5)
 
 
+KAPPA_MAX_SANE = 50.0    # mScm-equiv — anything above is solver pathology
+                          # (matches σ_e _SIGMA_E_MAX = 100; thermal is bounded
+                          # by k_ratio × σ_grain ≈ 5.7 × 3 ≈ 17 max ideal,
+                          # plus margin → 50 as conservative cap)
+KAPPA_MIN_SANE = 0.05    # below: broken sim (similar to σ_e 'phantom' threshold)
+
+
 def load_corpus():
     rows = []
+    skip_high = []; skip_low = []
     for f in sorted(glob.glob('webapp/archive/**/full_metrics.json', recursive=True)):
         nm = Path(f).parent.name
         if not nm.startswith('input_'): continue
@@ -63,6 +71,11 @@ def load_corpus():
         kappa = (d.get('thermal_sigma_full_mScm_stage_e') or
                  d.get('thermal_sigma_full_mScm') or 0)
         if not (kappa and kappa > 0): continue
+        # Sanity filter — like σ_e phantom detection
+        if kappa > KAPPA_MAX_SANE:
+            skip_high.append((nm, kappa)); continue
+        if kappa < KAPPA_MIN_SANE:
+            skip_low.append((nm, kappa)); continue
         phi_am = d.get('phi_am', 0) or 0
         phi_se = d.get('phi_se', 0) or 0
         if phi_am <= 0 or phi_se <= 0: continue
@@ -90,6 +103,16 @@ def load_corpus():
             'T_d': float(T) / max(d_AM, 1.0),
             'f_intact': float(f_intact),
         })
+    if skip_high:
+        print(f"\n  ⚠ {len(skip_high)} cases SKIPPED (κ > {KAPPA_MAX_SANE} mScm — solver pathology):")
+        for nm, k in sorted(skip_high, key=lambda t: -t[1])[:10]:
+            print(f"      {nm:35s}  κ = {k:>12.2f}")
+        if len(skip_high) > 10:
+            print(f"      ... +{len(skip_high)-10} more")
+    if skip_low:
+        print(f"\n  ⚠ {len(skip_low)} cases SKIPPED (κ < {KAPPA_MIN_SANE} mScm — broken sim):")
+        for nm, k in skip_low[:10]:
+            print(f"      {nm:35s}  κ = {k:.4f}")
     return rows
 
 
