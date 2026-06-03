@@ -12,11 +12,110 @@
   "has_vacancy": true,
   "vacancy_per_fu": 0.6,
   "lineage": [
-    "modelc (v1, B0=21.7 GPa DFT BM-EOS) → ",
+    "modelc (v1, B0=21.7 GPa DFT BM-EOS, ordered Li 0K — legacy) → ",
     "modelc_v2_mlip (annealing champion, B0=20.0 GPa MLIP, -2.1 GPa softer) → ",
-    "modelc_v3 (Pipeline v2 §8 DFT post-processing: bonds, coordination, Voronoi, BVSE, Bader, DOS/PDOS, elastic_static)"
+    "modelc_v3 (Pipeline v2 §8 DFT post-processing at the annealing-champion V0)"
   ],
   "container_path": "/home/ubuntu/work/runs/modelC_v3/",
+
+  "pipeline_v2_lineage_full": {
+    "_description": "Full step-by-step trail from anion ordering to §8 properties (paper-grade audit).",
+    "step_1_halogen_enumeration": {
+      "description": "Anion site disorder (S²⁻ ↔ Cl⁻) at 4a / 4d Wyckoff. Cl-only here so trivial (Cl always on 8 free sites).",
+      "configurations": 45,
+      "status": "done (v2 pipeline)"
+    },
+    "step_2_two_stage_MLIP_screening": {
+      "description": "Halogen → Li screening with UMA-s-1p1 (omat). 45 halogen × 100 Li = 4500 trials.",
+      "champion_so_far_eV": -258.0913,
+      "li_spread_within_best_halogen_meV": 0.1,
+      "step1_best_halogen_indices": [1, 4],
+      "data": "lpscl16_verify_20260520/modelC_v2_results.json (step1_best_halogen + step2 spreads)"
+    },
+    "step_3_li_anneal": {
+      "description": "Li sublattice anneal: UMA-MD Langevin 500 K, 50 ps per Li trial × top 20.",
+      "method": "Langevin (UMA-s-1p1 omat), T=500 K, t=50 ps",
+      "champion_rank": 0,
+      "champion_li_trial": 15,
+      "champion_energy_eV": -258.2051,
+      "annealing_gain_meV": 114,
+      "outputs": [
+        "modelC_v2_champion.xyz",
+        "modelC_v2_anneal_rank{0,1,2,3,4}.xyz (top-5)"
+      ],
+      "data_path": "container:/home/ubuntu/work/runs/lpscl16_verify_20260520/"
+    },
+    "step_4_mlip_eos": {
+      "description": "MLIP volume sweep around champion V to bracket DFT V0.",
+      "method": "UMA-s-1p1 EOS sweep, BM3 fit",
+      "B0_GPa_mlip": 20.0,
+      "B0_prime_mlip": 7.5,
+      "V0_pct": 100.7,
+      "R_squared": 0.9993,
+      "data": "modelc_v2_mlip in db/properties/eos.json (legacy MLIP entry)"
+    },
+    "step_5_dft_relax_at_champion": {
+      "description": "DFT relax of champion structure at V_init (champion volume). Yields starting coords for BM-EOS.",
+      "status": "done (precursor to step 6)"
+    },
+    "step_6_dft_eos_11pts": {
+      "description": "DFT volume sweep at champion: 11 volumes v096-v106, each cell-fixed relax.",
+      "outputs_each_volume": "modelC_v2_eos_v{096..106}.{in,out}",
+      "all_JOB_DONE": true,
+      "data_path": "container:/home/ubuntu/work/runs/lpscl16_verify_20260520/",
+      "BM3_fit_PRIMARY": {
+        "B0_GPa": 21.71,
+        "V0_A3": 1216.44,
+        "B0_prime": 7.01,
+        "R_squared": 0.999012,
+        "n_points": 11,
+        "fit_done": "2026-06-03 via tools/modelc_v3/fit_bm_eos.py (scipy free-fit BM3)",
+        "fit_result_json": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_results.json",
+        "fit_plot_png": "container:/home/ubuntu/work/runs/modelC_v3/V0_BM_EOS_fit.png"
+      },
+      "BM3_fit_LEGACY_v2": {
+        "B0_GPa": 19.59,
+        "V0_A3": 1214.5,
+        "B0_prime_used": 4.31,
+        "B0_prime_free_fit": 2.92,
+        "_status": "LEGACY backup only — superseded by PRIMARY",
+        "_kept_for": "reproducibility audit; do NOT report in paper headline"
+      }
+    },
+    "step_7_v0_confirmation": {
+      "description": "Take v101 (= minimum volume) coords, perform additional BFGS relax → final V0_relax. Cell essentially identical to v101 (Δ ≤ 5e-4 in lattice vector components); atomic positions refined by ~0.001 frac (BFGS micro-step).",
+      "input_starting": "v101 from step 6 (V ≈ 1216 Å³)",
+      "output": "V0_relax.in/out (calculation='relax', fixed-cell)",
+      "cell_v101_vs_V0_relax": "agreement to 4-5 decimal places",
+      "atom_position_diff": "max ~0.001 frac (small BFGS refinement)",
+      "data_path": "container:/home/ubuntu/work/runs/modelC_v3/V0_relax.{in,out}"
+    },
+    "step_8_post_processing": {
+      "description": "All §8a-h done at the V0_relax coordinates (see v3_postprocess_pipeline_v2_8 section below).",
+      "list": [
+        "8a V0_relax",
+        "8b bond_stats",
+        "8c coordination + Voronoi",
+        "8d BVSE",
+        "8e Bader (AE)",
+        "8f DOS/PDOS",
+        "8d' elastic_static stress-strain Cij",
+        "8e elastic_MLIP_600K (UMA, relaxed-ion)",
+        "8g AIMD UMA 600/800/1000K",
+        "8a' band structure",
+        "ELF (NCPP plot_num=8) — extra",
+        "LOBSTER ICOHP (PAW SCF + NSCF) — in progress"
+      ],
+      "data_path": "container:/home/ubuntu/work/runs/modelC_v3/"
+    }
+  },
+
+  "all_pipeline_steps_consistent_check": {
+    "v101_cell_vs_V0_relax_cell_match": "4-5 decimal places (lattice vectors)",
+    "V0_BM_EOS_min": 1216.44,
+    "V0_relax_actual": "~1216.4 Å³ (identical within numerical precision)",
+    "conclusion": "All §8 post-processing operates at the BM-EOS-determined V0 of the annealing champion structure. The full pipeline (steps 1-7) supports the §8 results without any inconsistency."
+  },
 
   "v3_postprocess_pipeline_v2_8": {
     "8a_V0_relax": {
