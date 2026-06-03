@@ -182,14 +182,24 @@ def find_input_files(case_dir):
     return None
 
 
-def get_plate_z(case_dir):
-    """Read plate_z from mesh_info.json or most recent mesh STL."""
+def get_plate_z(case_dir, atoms=None):
+    """Read plate_z from mesh_info.json or most recent mesh STL.
+    If atoms provided, validates against particle distribution and uses
+    max(particle z + radius) when STL value is implausibly small.
+
+    Some old sims have mesh_info.json with INITIAL plate position (before
+    compaction) which gives ridiculous porosity.  We sanity-check by comparing
+    against the actual particle bed extent."""
+    stl_plate_z = None
+    info_plate_z = None
+
     mesh_info = Path(case_dir) / 'mesh_info.json'
     if mesh_info.exists():
         try:
-            return float(json.load(open(mesh_info)).get('plate_z', 0))
+            info_plate_z = float(json.load(open(mesh_info)).get('plate_z', 0))
         except: pass
-    # Try STL files
+
+    # Try STL files (latest timestep)
     case = Path(case_dir)
     post_dirs = list(case.glob('post_*'))
     for pd in post_dirs:
@@ -201,8 +211,24 @@ def get_plate_z(case_dir):
             zs = [float(line.split()[3]) for line in txt.split('\n')
                   if 'vertex' in line]
             if zs:
-                return max(zs)
-    return None
+                stl_plate_z = max(zs)
+                break
+
+    # Best candidate from files
+    file_plate_z = stl_plate_z if stl_plate_z and stl_plate_z > 0 else info_plate_z
+
+    # Sanity check against particles (if provided)
+    if atoms:
+        particle_top = max(a['z'] + a['radius'] for a in atoms.values())
+        # Add tiny margin (r/10 typical) to account for plate sitting on top
+        particle_bed_z = particle_top * 1.005  # 0.5% margin
+        # If STL plate_z is way smaller than particle bed → STL wrong, use particle bed
+        if file_plate_z is None or file_plate_z < particle_top * 0.95:
+            return particle_bed_z
+        # If STL plate_z reasonable, use it
+        return file_plate_z
+
+    return file_plate_z
 
 
 def main():
@@ -245,20 +271,9 @@ def main():
                 continue
             atoms_path, contacts_path = files
 
-            plate_z = get_plate_z(case_dir)
-            if plate_z is None or plate_z <= 0:
-                cases_data.append({
-                    'name': nm, 'status': 'no_plate_z',
-                    'porosity_old': old_poro,
-                    'porosity_spheresum': None,
-                    'porosity_union': None,
-                    'overlap_pct': None,
-                })
-                continue
-
+            # Read atoms FIRST (needed for plate_z sanity check)
             try:
                 atoms_result = read_atoms(atoms_path)
-                # Backward compat — read_atoms now returns (atoms, box_xy)
                 if isinstance(atoms_result, tuple):
                     atoms, box_xy_from_dump = atoms_result
                 else:
@@ -285,12 +300,31 @@ def main():
                 })
                 continue
 
+            # plate_z with atoms-based sanity check (fixes 1mAh_100_X anomaly)
+            plate_z = get_plate_z(case_dir, atoms=atoms)
+            if plate_z is None or plate_z <= 0:
+                cases_data.append({
+                    'name': nm, 'status': 'no_plate_z',
+                    'porosity_old': old_poro,
+                    'porosity_spheresum': None,
+                    'porosity_union': None,
+                    'overlap_pct': None,
+                })
+                continue
+
             # Use box_xy from atoms dump (more accurate per-case), fallback to 0.05
             box_xy_use = box_xy_from_dump if box_xy_from_dump and box_xy_from_dump > 0 else 0.05
             eps_s, eps_u, ov_pct = compute_dual(atoms, contacts, plate_z, box_xy=box_xy_use)
+
+            # Sanity check — physically plausible porosity range
+            # Sphere-sum: -50% (severe plastic compaction) to +85% (loose packing)
+            # Outside this range usually means plate_z or box_xy is mis-read
+            status = 'OK'
+            if eps_s is None or not (-50.0 < eps_s < 85.0):
+                status = f'implausible (ε_sphere={eps_s:.1f}%)'
             row = {
                 'name': nm,
-                'status': 'OK',
+                'status': status,
                 'plate_z_um': plate_z * 1000,
                 'box_xy_mm': box_xy_use * 1000,
                 'N_atoms': len(atoms),
@@ -305,16 +339,18 @@ def main():
             cases_data.append(row)
 
             if not args.dry_run:
-                # Backup once
-                bak = metrics_path.with_suffix('.json.poro_bak')
-                if not bak.exists():
-                    shutil.copy(metrics_path, bak)
-                d['porosity_spheresum'] = eps_s
-                d['porosity_union'] = eps_u
-                d['overlap_fraction_pct'] = ov_pct
-                # Keep legacy 'porosity' UNCHANGED
-                with open(metrics_path, 'w') as f:
-                    json.dump(d, f, indent=2, ensure_ascii=False)
+                # Only update DB if porosity is plausible (avoid corrupting)
+                if status == 'OK':
+                    # Backup once
+                    bak = metrics_path.with_suffix('.json.poro_bak')
+                    if not bak.exists():
+                        shutil.copy(metrics_path, bak)
+                    d['porosity_spheresum'] = eps_s
+                    d['porosity_union'] = eps_u
+                    d['overlap_fraction_pct'] = ov_pct
+                    # Keep legacy 'porosity' UNCHANGED
+                    with open(metrics_path, 'w') as f:
+                        json.dump(d, f, indent=2, ensure_ascii=False)
 
     # Write CSV summary
     if cases_data:
