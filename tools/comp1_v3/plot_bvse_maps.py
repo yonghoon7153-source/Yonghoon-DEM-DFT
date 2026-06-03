@@ -30,7 +30,7 @@ ELEM_R = {"Li": 0.50, "P": 0.85, "S": 0.85, "Cl": 0.85}
 
 
 def plot_slice(npy_path, cif_path, axis, frac, out_path,
-                vmax=None, cmap="viridis_r"):
+                vmax=None, cmap="viridis_r", atoms_on=True):
     bvse = np.load(npy_path)
     atoms = read(cif_path)
     cell = np.array(atoms.get_cell())
@@ -69,6 +69,16 @@ def plot_slice(npy_path, cif_path, axis, frac, out_path,
     cbar.set_label(r"BVSE = (BVS − 1)$^2$", fontsize=12)
 
     # Atom overlay — project atoms onto this plane if within slice thickness
+    if not atoms_on:
+        ax.set_xlabel(u_label, fontsize=12)
+        ax.set_ylabel(v_label, fontsize=12)
+        ax.set_title(f"BVSE slice along {axis}={frac:.2f}  "
+                      f"(min={float(slice_2d.min()):.3f}, "
+                      f"vmax={vmax:.3f})", fontsize=11)
+        plt.tight_layout()
+        plt.savefig(out_path, dpi=300, bbox_inches="tight", facecolor="white")
+        print(f"→ {out_path}")
+        return
     inv_cell = np.linalg.inv(cell)
     frac_thick = 1.0 / (2 * n_axis)  # ± half-grid
     for at in atoms:
@@ -182,7 +192,8 @@ def main():
 
     if args.mode == "slice":
         plot_slice(args.npy, args.cif, args.axis, args.frac,
-                    args.out, vmax=args.vmax, cmap=args.cmap)
+                    args.out, vmax=args.vmax, cmap=args.cmap,
+                    atoms_on=not args.no_atoms)
     else:
         plot_iso(args.npy, args.cif, args.iso_above_min, args.out,
                   view_angles=tuple(args.view),
