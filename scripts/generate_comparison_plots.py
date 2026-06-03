@@ -6326,10 +6326,18 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_ylabel(f'σ_e predicted ({stage_lbl} form)')
     # Show 5 top features to match modal (was 3 — inconsistency with modal display)
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:5])
+    # Filter-count disclosure: how many disk cases dropped before reaching form.
+    # arr['n'] = cases that passed strict form filter.  Total disk cases requires
+    # walking the filesystem — too slow here; expose just the form count and
+    # note that the form may have filtered some disk cases due to missing
+    # metrics (σ_e=0, τ=0, etc.). User can run scripts/diag_corpus_count.py
+    # for full breakdown.
     ax.set_title(
-        f"σ_electronic {stage_lbl} outliers  (n={arr['n']}, "
-        f"{int(is_out.sum())} >±20%, {int(excl.sum())} excluded)\n"
-        f"top residual-corr features → {top_corr}", fontsize=7.5)
+        f"σ_electronic {stage_lbl} outliers  (form n={arr['n']}, "
+        f"{int(is_out.sum())} >±20%, {int(excl.sum())} AUDIT EXCL)\n"
+        f"top residual-corr features → {top_corr}\n"
+        f"※ disk cases with σ_e=0 / τ=0 / φ_AM<0.30 etc. silently filtered "
+        f"before form (run diag_corpus_count.py for details)", fontsize=7.5)
     ax.legend(fontsize=8, loc='upper left'); ax.grid(True, alpha=0.25, which='both')
     outpath = _save(fig, outdir, "electronic_outliers_final.png")
 
