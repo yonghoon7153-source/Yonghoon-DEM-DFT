@@ -95,6 +95,13 @@ def load_corpus():
         d_AM = 2.0 * ((1-p)*ras + p*rap)
         f_severe = (d.get('frac_severe_force_pct') or 0) / 100
         f_intact = max(1.0 - f_severe, 0.05)
+        # σ_ionic and σ_electronic as predictors (key insight from old form:
+        # σ_thermal correlates with σ_ionic^(3/4); both flow through same network)
+        sigma_ion = (d.get('sigma_full_mScm_stage_e') or
+                     d.get('sigma_full_mScm') or 0)
+        sigma_e   = (d.get('electronic_sigma_full_mScm_stage_e') or
+                     d.get('electronic_sigma_full_mScm') or 0)
+
         # Additional thermal-relevant metrics
         am_se_cn = d.get('am_se_cn_mean', 0) or 0
         se_se_cn = d.get('se_se_cn', 0) or 0
@@ -109,6 +116,8 @@ def load_corpus():
                  d.get('tortuosity_electronic_mean') or 0)
         rows.append({
             'name': nm, 'kappa': float(kappa),
+            'sigma_ion': float(sigma_ion) if sigma_ion > 0 else 0.1,
+            'sigma_e':   float(sigma_e) if sigma_e > 0 else 0.1,
             'p': float(p), 'phi_am': float(phi_am), 'phi_se': float(phi_se),
             'ras': ras, 'rap': rap, 'rse': float(rse),
             'A_total': float(A_total), 'tau': float(tau),
@@ -198,6 +207,10 @@ def main():
     f_wang_P     = ('log Wang_P',    lambda r: -np.log(1.0 + (r['rap']/2.0)**1.5))
     f_log_rse    = ('log r_SE',      lambda r: np.log(max(r['rse'], 0.05)))
 
+    # σ_ionic / σ_e predictor features (KEY — old form's R²=0.9 came from this)
+    f_log_sigma_ion = ('log(σ_ionic)', lambda r: np.log(max(r['sigma_ion'], 0.01)))
+    f_log_sigma_e   = ('log(σ_e)',     lambda r: np.log(max(r['sigma_e'], 0.01)))
+
     # New thermal-specific features (round 2 — based on V4 baseline)
     f_log_am_se_cn = ('log(am_se_cn)', lambda r: np.log(max(r['am_se_cn'], 0.1)))
     f_log_se_se_cn = ('log(se_se_cn)', lambda r: np.log(max(r['se_se_cn'], 0.1)))
@@ -228,6 +241,17 @@ def main():
         # COMBO: best individual additions stacked
         ("V16: V4 + am_se_cn + cov_AM + perc_pct (BIG)",  V4_base + [f_log_am_se_cn, f_log_cov_am, f_log_perc]),
         ("V17: V16 + bulk_frac (BIGGEST)",                V4_base + [f_log_am_se_cn, f_log_cov_am, f_log_perc, f_log_bulk]),
+        # ─── KEY: σ_ionic / σ_e as predictor (old form's R²=0.9 came from this!) ───
+        ("V20: V4 + log(σ_ionic)  [old form's secret]",   V4_base + [f_log_sigma_ion]),
+        ("V21: V4 + log(σ_e)                            ", V4_base + [f_log_sigma_e]),
+        ("V22: V4 + log(σ_ionic) + log(σ_e)             ", V4_base + [f_log_sigma_ion, f_log_sigma_e]),
+        ("V23: V16 + log(σ_ionic)                       ", V4_base + [f_log_am_se_cn, f_log_cov_am, f_log_perc, f_log_sigma_ion]),
+        ("V24: V16 + log(σ_ionic) + log(σ_e) — FULL    ", V4_base + [f_log_am_se_cn, f_log_cov_am, f_log_perc,
+                                                                       f_log_sigma_ion, f_log_sigma_e]),
+        # OLD FORM (literal) — for direct comparison
+        ("V_OLD: log_σ_th = α + 0.75·log_σ_ion + 2·log_φ_AM - log_CN_SE",
+                                                          [f_log_sigma_ion, f_log_phi_am,
+                                                           ('-log(se_se_cn)', lambda r: -np.log(max(r['se_se_cn'], 0.1)))]),
     ]
 
     print()
