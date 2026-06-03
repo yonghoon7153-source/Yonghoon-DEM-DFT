@@ -116,19 +116,43 @@ Li 에너지면을 반영. 두 시스템 각자 K 값 (BM vs stress-strain)은 ~
 
 ## 5. 결합 환경 (DFT V0)
 
-Bond stats: 평균 d, σ, n_bonds. Coordination: 평균 Z. Voronoi: 다면체 부피.
+Bond stats: 평균 d, σ, n_bonds (방향 한 번씩 카운트, 이중 카운트 제거).
+Coordination: 평균 Z (cutoff 같음). Voronoi: 사이트당 다면체 부피.
 
-| 결합 종류 | LPSCl 평균 d (Å) | LPSCl1.6 평균 d (Å) |
-|---|---|---|
-| P–S | [pending] | [db에서 추가] |
-| Li–S | [pending] | [db에서 추가] |
-| Li–Cl | [pending] | [db에서 추가] |
-| S–S (cage) | [pending] | [db에서 추가] |
+**Cutoff 통일**: P–S 2.3, Li–S 3.2, Li–Cl 3.4, S–S 4.0 Å (argyrodite 표준).
 
-| 사이트 | LPSCl 배위수 | LPSCl1.6 배위수 |
+### Bond lengths
+
+| 결합 | LPSCl v3 (n / mean ± σ / [min, max] Å) | LPSCl1.6 v3 |
 |---|---|---|
-| Li 평균 | [pending] | [추가] |
-| P (PS4 단위) | [pending] | 4 (tetrahedral) |
+| **P–S** | 16 / **2.0726 ± 0.0362** / [2.036, 2.109] | [추가] |
+| **Li–S** | 72 / **2.4610 ± 0.1057** / [2.353, 2.644] | [추가] |
+| **Li–Cl** | 24 / **2.6073 ± 0.1291** / [2.425, 2.699] | [추가] |
+| S–S (cage) | 56 / 3.5948 ± 0.1986 / [3.335, 3.823] | [추가] |
+
+### Coordination
+
+| 사이트 | LPSCl v3 (avg Z ± σ / [min, max]) | LPSCl1.6 v3 |
+|---|---|---|
+| Li | **4.00 ± 0.00** (정확히 4, 모든 24 Li 사이트) | [추가] |
+| P  | **4.00 ± 0.00** (PS4 tetrahedra, 4개) | 4 (tetrahedral) |
+| S  | **10.00 ± 1.67** [8, 12] (PS4 + Li/S cage) | [추가] |
+| Cl | **6.00 ± 0.00** (Cl[Li6] 정팔면체 4개) | [추가] |
+
+### Voronoi (다면체 부피)
+
+| 종 | LPSCl v3 V_poly (Å³) | LPSCl1.6 v3 |
+|---|---|---|
+| Li | **19.560 ± 0.214** | [추가] |
+| P  | **14.052 ± 0.000** (PS4 강한 정사면체) | [추가] |
+| S  | **20.137 ± 3.408** (이중 환경: PS4 + cage) | [추가] |
+| Cl | **22.057 ± 0.000** (Cl[Li6] 단일 환경) | [추가] |
+
+**LPSCl 해석**:
+- Li–Cl (2.61 Å) > Li–S (2.46 Å) → Li–S가 더 짧음 (S²⁻ 이중 음전하로 강한
+  쿨롱 인력). paper의 "Li-Cl이 더 짧다" 주장 반박 자료와 일치.
+- Cl[Li6] 6배위 → argyrodite 완전 4a Cl 사이트.
+- Li가 정확히 4배위 (PS3Cl 또는 PS4 텟라) — 표준 argyrodite.
 
 
 ## 6. BVSE (Python 구현)
