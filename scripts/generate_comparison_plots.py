@@ -5836,13 +5836,14 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
                 and tau and tau > 0
                 and am_area and am_area > 0):
             continue
-        # Dedup: same case re-uploaded under different folder.  When σ
-        # missing (allow_no_sigma case), include case index in key so
-        # phantom cases don't collide on sig=0.
-        if sigma_ok:
-            key = (round(float(phi), 4), round(float(cn), 3), round(float(sig), 5))
-        else:
-            key = ('phantom', i, round(float(phi), 4), round(float(cn), 3))
+        # Dedup: same case re-uploaded under different folder.  Dedup by
+        # case NAME only — distinct designs may coincidentally share
+        # (phi, cn, sig) rounded values (e.g., 1mAh_5_AMP_Sn vs
+        # 1mAh_8_AMP_Sn both P:S=10:0 with similar packing → identical
+        # rounded metrics).  Using metric-tuple key would wrongly collapse
+        # these distinct sibling families.
+        case_name = real_all[i] if i < len(real_all) else f'_idx_{i}'
+        key = case_name
         if key in seen:
             continue
         # Effective σ used downstream (for sigs array + logsf).  Phantom
