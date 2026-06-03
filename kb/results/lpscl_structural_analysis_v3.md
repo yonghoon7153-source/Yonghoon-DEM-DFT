@@ -293,6 +293,71 @@ BVSE = (BVS − 1.0)² (V_ideal_Li⁺ = 1.0). Lower = easier Li site.
 - modelc_v3: 같은 파일들이 `/home/ubuntu/work/runs/modelC_v3/` 에
 
 
+## 10. LOBSTER COHP visual analysis (ext basis, paper-grade)
+
+ext basis (Li 1s 2s 2p, P/S/Cl 3s 3p 3d) PAW LOBSTER, spilling < 1.5%
+양쪽 모두. paper figure quality.
+
+### 4-panel COHP 시각 차이
+
+| 패널 | LPSCl (comp1) | LPSCl1.6 (modelc_v3) | 의미 |
+|---|---|---|---|
+| **a) P–S** | 좁고 깊은 bonding −4~−6 eV | 같은 위치, 살짝 더 깊고 broader | PS4 두 시스템 모두 안정 |
+| **b) S–S** | 약한 cage bonding −2~−4 eV | 동일 | cage 구조 보존 |
+| **c) Li–S** | 좁은 단일 peak −2~−4 eV | **넓고 다층 bonding −2~−5 eV** | Li 환경 1 type → 6 type 다양화 |
+| **d) Li–Cl** | **단일 sharp peak −4 eV** | **2-peak (−4 eV + 깊은 −5 eV)** | **4a-Cl + 4d-Cl anti-site 직접 fingerprint** |
+
+### **핵심 paper finding**: Li-Cl 패널의 2-peak structure
+
+LPSCl1.6의 d panel에서 **추가 deeper peak (~ −5 eV)** = 4d-Cl anti-site의
+Li-Cl(4d) 결합. 평균 길이 2.36 Å로 4a-Cl(2.55 Å)보다 0.19 Å 짧고, 더 깊은
+bonding (더 큰 |ICOHP|) 생성. paper Figure 1d 캡션에 직접 인용 가능:
+
+> "The 4d-Cl anti-site produces a distinct deeper bonding peak around
+> −5 eV in LPSCl1.6's Li–Cl panel, absent in stoichiometric LPSCl. This
+> visual fingerprint corroborates the per-site analysis showing 12.5%
+> of Cl atoms (1 of 8) occupy the 4d S²⁻ site."
+
+### Antibonding 비교 (E > E_F)
+
+modelc_v3 antibonding intensity > comp1 (특히 Li-Cl, P-S):
+- disorder + anti-site 추가가 high-energy 상태 분산
+- E_F 위쪽이므로 결합 강도엔 영향 없음 (빈 상태)
+- disorder fingerprint로만 의미
+
+### ICOHP 정량 (E_F까지 적분)
+
+| 결합 | LPSCl | LPSCl1.6 | Δ% |
+|---|---|---|---|
+| P–S | −5.944 | −6.000 | +0.9% (PS4 robust) |
+| Li–Cl | −1.855 | **−2.103** | **+13.4%** (4d-Cl 기여) |
+| Li–S | −1.592 | **−1.717** | **+7.9%** |
+| S–S | −0.107 | −0.110 | ~0% |
+
+**LPSCl1.6의 모든 ionic bond가 LPSCl보다 강함**. 직관 반대 (vacancy → 약화
+예상이지만 실제 강화). Wilkening ionic potential framework (q × |q| / r)
+프레임으로 일관: shorter 4d-Cl Li-Cl bonds + Cl-rich anion sublattice =
+ionic glue 강화.
+
+
+## 11. BVSE 5×5×5 cubic supercell (시각화 + 정량 channel volume)
+
+paper figure를 위한 cubic 박스 — 5 fu rhombohedral은 z=35 Å로 elongated.
+5×5×5 = 500 fu (정확한 정수 stoich, 반올림 없음, comp1 6500 atoms, modelc
+6200 atoms), a=50.3 Å cube, grid=100.
+
+| 지표 | LPSCl 5×5×5 | LPSCl1.6 5×5×5 |
+|---|---|---|
+| 원자수 | 6500 | 6200 |
+| 셀 부피 (Å³) | 127000 | 127077 |
+| Li BVS mean | 1.626 (단일 환경) | 1.721 (6 환경) |
+| **Channel fraction (BVSE ≤ min+0.5)** | **9.84%** | **3.33% (−66%)** |
+
+**Paper 메시지**: vacancy disorder가 LPSCl1.6의 정적 channel 부피를 3× 줄임.
+하지만 실험상 LPSCl1.6이 더 빠른 conductor → AIMD finite-T 동적 channel이
+진짜 원인 (BVSE static map의 한계).
+
+
 ## 8. 다음 검증 (in-progress / pending)
 
 | 추가 데이터 | LPSCl | LPSCl1.6 | 사용처 |
