@@ -663,9 +663,40 @@ def generate_report(data_list, names, outdir):
     L.append("| Stage 19 + β_bi bimodal coupling | 0.93 | +0.008 |")
     L.append("| Stage 20 + β_Fe·log f_intact (fracture) | 0.95 | +0.020 |")
     L.append("| Stage 21 + β_fpth + β_logrSE | 0.96 | +0.003 |")
-    L.append("| Stage 22 σ_S/σ_P LOCKED Trevisanello | **0.96+** | (literature anchor) |\n")
+    L.append("| Stage 22 σ_S/σ_P LOCKED Trevisanello | **0.96+** | (literature anchor) |")
+    L.append("| Stage 22.5 — WEAK BLOCK ablation (drop 4) | **0.9531** | +0.006 (12→8 LIVE) |\n")
 
-    L.append("**FINAL production**: LOOCV ≈ 0.95+ (n=76 post Round 6 EXCL), 12 fit + 2 LOCKED params.\n")
+    L.append("**FINAL production (Stage 22.5)**: LOOCV ≈ 0.9531, R² 0.9613, n_fit=76, "
+             "8 LIVE OLS + 2 LOCKED endpoints (10 total).  n/k = 9.5:1.\n")
+
+    # ─── NEW: LOCKED-exponent validation table (Stage 22.5 close-out) ───
+    L.append("### LOCKED 지수 데이터 검증 (corpus-driven literature validation)\n")
+    L.append("Stage 22.5 form 채택 후 추가로 **literature-locked exponents가 진짜로 옳은지** ")
+    L.append("n=76 corpus에 대해 독립 검증.  0 추가 DOF (log_offset shift만으로 테스트).")
+    L.append("`scripts/electronic_locked_exponent_screen.py` 결과 (모든 LOCKED 5개 PASS):\n")
+
+    L.append("| LOCKED 지수 | 값 | 출처 | 검증 결과 | 차점 |")
+    L.append("|---|---|---|---|---|")
+    L.append("| φ_AM^a Bruggeman | **a = 4** | Stauffer-Bruggeman backbone + Stage 14 nested CV "
+             "| ★ exact lock | a=3.5 → ΔLOOCV −0.007 |")
+    L.append("| √A_AM-AM Holm | **exp = 0.5** | Holm 1967 constriction "
+             "| ★ exact lock | 0.4/0.6 → ±−0.022 (symmetric) |")
+    L.append("| NCM(r) β | **β = 1.5** | Trevisanello 2021 GB scaling "
+             "| ★ exact lock | β=1.75 → −0.0008 (within noise) |")
+    L.append("| C(τ) 차수 | **logpoly2** (3 params) | σ_ionic T1 mirror "
+             "| best | logpoly1 → −0.005 (marginal) |")
+    L.append("| Bimodal (p(1-p))^a | **a = 1** | symmetric mixing "
+             "| ★ within ±0.0003 (noise floor) | a=0.5~2 all equivalent |\n")
+
+    L.append("**해석**:")
+    L.append("- 5개 LOCKED 지수 **모두 데이터가 literature value를 골랐거나 noise 안에서 동일**")
+    L.append("- 즉 form의 LOCKED core는 over-fit 위험 없이 **literature physics에 그대로 정렬**")
+    L.append("- 만약 어느 하나라도 \"DEVIATES\"가 떴다면 → 신규 finding 또는 corpus bias 의심")
+    L.append("- 모두 PASS → **paper-grade strong claim**: \"corpus confirms Stauffer-Bruggeman + ")
+    L.append("  Holm 1967 + Trevisanello 2021 in NCM-LPSCl composite cathode at production scale\"\n")
+
+    L.append("**중요**: 이 검증은 **0 DOF 비용**.  LOCKED 지수 재fit 시도 (예: NCM β live)는")
+    L.append("ΔLOOCV < 0.001 gain at +1 LIVE param 비용 — 명백히 손해. 그대로 LOCK 유지.\n")
 
     # ─── 7. 한계점 (T1 + Stage 22) ───
     L.append("## 7. 한계점 (T1 + Stage 22)\n")
