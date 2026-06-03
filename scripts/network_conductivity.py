@@ -301,14 +301,21 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         # GB reduction, AM_S single-crystal stays at 1.0).  This bakes the
         # NCM literature physics into the solver — the form's σ_S/σ_P
         # endpoint mix and NCM correction become redundant after refactor.
-        # Per-particle σ for electronic mode (Trevisanello)
-        # IMPORTANT: a['type'] is INTEGER (1, 2, 3) per atoms.csv parsing.
-        # Convert to label via type_map before sigma_AM_relative comparison.
-        if mode == 'electronic':
-            type_1_label = type_map.get(a1['type'], '') if type_map else ''
-            type_2_label = type_map.get(a2['type'], '') if type_map else ''
-            sigma_rel_1 = sigma_AM_relative(r1, type_1_label)
-            sigma_rel_2 = sigma_AM_relative(r2, type_2_label)
+        # Per-particle σ for electronic mode (Trevisanello).
+        # Detect electronic mode from target_types + type_map (mode parameter
+        # is unreliable — caller may not set it correctly).  Electronic =
+        # AM-only network (no SE in targets).  Ionic = SE-only.  Thermal = all.
+        # sigma_AM_relative returns 1.0 for SE/non-AM particles, so applying
+        # universally is safe for ionic mode (SE-SE: both σ_rel=1, no effect).
+        # But for thermal we want to keep current behavior (no GB correction
+        # for thermal — phonon GB effect has different β), so gate on mode.
+        if mode == 'electronic' or (type_map and target_types and
+                all('AM' in type_map.get(t, '') for t in target_types)
+                and not any(type_map.get(t, '') == 'SE' for t in target_types)):
+            t1_lbl = type_map.get(a1['type'], '') if type_map else ''
+            t2_lbl = type_map.get(a2['type'], '') if type_map else ''
+            sigma_rel_1 = sigma_AM_relative(r1, t1_lbl)
+            sigma_rel_2 = sigma_AM_relative(r2, t2_lbl)
         else:
             sigma_rel_1 = 1.0
             sigma_rel_2 = 1.0
