@@ -14,6 +14,7 @@
 
   "bader_charges_PAW_AE_plot_num_17": {
     "_method": "Henkelman bader v1.05 on QE pp.x plot_num=17 AE charge density. PAW kjpaw_psl 1.0.0 pseudo, same SCF as LOBSTER ext basis (ecutwfc=70 Ry). Convention: q_atom = N_valence_electron - N_bader_basin.",
+    "_k_mesh_provenance": "comp1_v3 k=4x4x4 (2026-06-04 k-fix; values Li+0.874 P+3.27 S-1.52 Cl-0.925 — within <0.02 e of pre-fix, Bader k-robust), modelc_v3 k=6x6x3. Regenerated via analyze_per_bond_icohp.py. Raw: db/properties/per_bond_json/.",
     "_paw_valence_electrons": {"Li": 3, "P": 5, "S": 6, "Cl": 7},
     "comp1_v3": {
       "Li": {"q_e": 0.8740, "std": 0.0046, "n": 24},
@@ -121,7 +122,8 @@
   },
 
   "icohp_LOBSTER_ext_basis_eV_per_bond": {
-    "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, NSCF nbnd 450 (comp1) / 500 (modelc_v3), wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
+    "_method": "LOBSTER 5.1.1, PAW kjpaw_psl 1.0.0 pseudo, ecutwfc=70 Ry, wf_collect, nosym. Extended basis: Li 1s 2s 2p, P/S/Cl 3s 3p 3d. Charge spilling < 1.5% for both. Paper-grade absolute values.",
+    "_k_mesh_provenance": "comp1_v3 k=4x4x4 (kxL=40 Å; 2026-06-04 redo after k=2x2x1 contamination found) | modelc_v3 k=6x6x3 (kxL=42 Å). Each at its OWN converged mesh (kxL~40-42 equivalent — comp1 cubic 10.05 Å, modelc rhombo a=7/c=35). ICOHP is a LOCAL bonding measure → k-robust (comp1 2x2x1→4x4x4 ICOHP shifted <0.006 eV), so cross-system comparison valid despite different meshes. Both regenerated 2026-06-05 via tools/comp1_v3/analyze_per_bond_icohp.py (identical tool). Raw: db/properties/per_bond_json/.",
     "_convention": "ICOHP < 0 = bonding. Per-bond average over all bonds within 4.0 Å cutoff (cohpGenerator).",
     "comp1_v3": {
       "P-S":   {"icohp_eV": -5.944, "n_bonds": 16,  "_note": "PS4 covalent backbone"},
