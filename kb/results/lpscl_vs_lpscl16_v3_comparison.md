@@ -25,8 +25,8 @@
 | §8d' per-site 분석 (4a/4d Cl, PS4/4d S, Li env) | **완료** | 완료 |
 | §8e BVSE (python) | 대기 | 완료 |
 | §8f Bader (AE plot_num=17) | 대기 | 완료 |
-| §8g DOS / PDOS | 대기 | 완료 |
-| §8h 밴드 구조 (Hungarian 재정렬) | 대기 | 완료 |
+| §8g DOS / PDOS | **완료** (paper-grade, 2026-06-04) | **완료** + 재분석 (paper-grade) |
+| §8h 밴드 구조 (Hungarian 재정렬) | 대기 (NSCF 진행 예정) | 완료 |
 | §8i stress-strain 전체 6×6 Cij | **완료** (B=43.59, E=52.31, A=1.07) | 완료 |
 | §8j MLIP UMA 600K snapshot 탄성 | 대기 | 완료 |
 | §8k AIMD 600/800/1000K (Arrhenius) | 대기 | 완료 |
@@ -46,7 +46,7 @@
 | **E_VRH** (GPa) | **52.31** | **52.30** | **DFT 0K에서 동일 — vacancy paradox** | 실험은 LPSCl1.6 > LPSCl인데 DFT는 못 잡음 |
 | **ν** (Poisson) | 0.300 | 0.304 | 거의 동일 | |
 | **Zener A** | **1.073** (isotropic) | **0.416** (anisotropic) | **2.6× 차이** | Li 공공 + Cl anti-site로 anisotropy 도입 |
-| 밴드갭 (DFT-PBE, eV) | [pending] | [추가] | | |
+| 밴드갭 (DFT-PBE, CBM−VBM, eV) | **1.50** | **1.82** | LPSCl1.6 +0.32 eV (방향은 literature trend 일치, 절대값은 의심 — §15 참조) | Cl 3p가 S 3p보다 깊음 → S→Cl 치환이 VBM 내려 → gap 넓어짐 (원리상) |
 | Bader q(Li) (e) | [pending] | [추가] | | |
 | AIMD Ea (eV) | [pending] | [추가] | | |
 | AIMD D₀ at 300K (cm²/s) | [pending] | [추가] | | |
@@ -402,6 +402,90 @@ report안 함.
 4. **B0 vs K_VRH 불일치**: 물리적으로 의미 있음 — BM-EOS B0는 등방 압축
    (hydrostatic) bulk modulus, K_VRH from clamped-ion Cij는 harmonic-only
    frozen-ion 값. Cl-rich soft phase일수록 둘의 갭이 큼. Paper에 둘 다 보고.
+
+
+## 15. 전자구조 (DOS/PDOS) — paper-grade + 문헌 대조 (2026-06-04)
+
+### 15.1 측정값
+
+| 항목 | comp1_v3 (LPSCl) | modelc_v3 (LPSCl1.6) | Δ |
+|---|---|---|---|
+| EF (eV, QE) | 2.821 | 2.445 | -0.376 |
+| VBM (eV) | 2.48 | 2.72 | +0.24 |
+| CBM (eV) | 3.98 | 4.54 | +0.56 |
+| **gap (CBM−VBM, eV)** | **1.50** | **1.82** | **+0.32** |
+| VBM character | S p (91%) + Li p (6%) | S p (92%) + Li p (6%) | 동일 |
+| CBM character | S p (42%) + P s (27%) + Li p (15%) | S p (45%) + P s (27%) + Li p (13%) | 거의 동일 |
+
+방법: QE 7.4.1 PBE, USPP(Li,S,Cl)/RRKJUS(P), MV smearing (degauss=0.01
+Ry SCF), dos.x + projwfc.x on V0 relax .save. Gap = low-DOS run
+(DOS<0.5 states/eV/cell) straddling EF; orbital character = PDOS in
+0.5 eV window adjacent to edge. (`tools/modelc_v3/plot_dos.py`)
+
+### 15.2 문헌 PBE 대조
+
+| 출처 | Method | gap (eV) |
+|---|---|---|
+| 우리 comp1_v3 | PBE / USPP | 1.50 |
+| Batteries 12(2):60 (2026) | PBE | 2.45 |
+| First-principles PMC9661960 | PBE | ~2.15 |
+| Sci. Direct S0921452623002995 | PBEsol + TB-mBJ | 3.11 |
+| HSE06 (다수) | HSE06 | 3.30 – 3.52 |
+| G0W0 (PMC9661960) | G0W0 | ~5.13 |
+| 실험 (간접 추정) | optical | 3.0 – 3.5 |
+
+**우리 PBE 값 1.50 eV가 literature PBE 2.15-2.45 보다 0.65-0.95 eV 낮음.**  
+- 우리 cell이 supercell (4 fu, 1×1×1 k일 가능성)이라 dispersion이 적게 잡힘 → 가짜로 좁은 gap
+- Smearing 0.27 eV로 broadened edge → DOS threshold가 band edge를 1 grid 안쪽으로 끌어들임  
+→ **§8h bands.x로 진짜 gap을 검증해야 함 (다음 단계)**
+
+### 15.3 Defect band 진단 (`analyze_defect_band.py`)
+
+modelc에서 EF=2.445 < VBM=2.72라는 점이 anomalous (insulator는 VBM<EF<CBM이어야).
+`analyze_defect_band.py`로 [EF, VBM] = [2.445, 2.72] 윈도우 분석:
+
+| | modelc | comp1 (같은 폭 EF 윈도우) |
+|---|---|---|
+| 총 적분 PDOS (states) | **0.74** | 0.037 (20× 적음) |
+| S 3p 기여 | 93% | 94% (broadening tail만) |
+| Top 원자 | S #34 (12%), S #35 (11%), S #50 (9.5%), … (10개 S에 ~70%) | 8개 S에 균등 9.33% each (= 균질 tail) |
+
+→ **modelc에는 특정 S 원자 (#34, #35, #50, #39, #40 등)에 국소화된 S 3p 상태가
+   진짜 존재**.
+
+### 15.4 해석 갈래 — bands 검증 필요
+
+| 시나리오 | 의미 |
+|---|---|
+| (A) 진짜 defect band | 우리 supercell의 specific Cl-S/Li vacancy 배치가 local non-neutrality (예: Li vacancy가 S의 nearest neighbor에 비대칭) → S 3p hole 국소화. 문헌 (Adeli 2019, arXiv:2503.13142)에서는 "ordered" 또는 평균 disorder 가정으로 이 효과 안 봄. |
+| (B) Smearing artifact | 0.136 eV smearing + 0.5 threshold로 valence band 상단 tail을 "defect band"로 오인. 실제 VBM은 EF 근처 ≈ 2.45 eV. |
+| 두 시나리오 구별법 | **bands.x** 결과의 EF 위치를 확인하면 결정적. (A)면 flat localized band가 보임, (B)면 dispersive band edge가 EF 근처로 자연스럽게 마감. |
+
+### 15.5 Charge balance 사실 확인
+
+valence electron 수 (확인용):
+- Li6PS5Cl: 6 + 5 + 5×6 + 7 = 48 e/fu
+- Li5.4PS4.4Cl1.6: 5.4 + 5 + 4.4×6 + 1.6×7 = 48 e/fu (정확히 같음)
+
+두 시스템 모두 **stoichiometric insulator로 charge-compensated** —  
+EF가 modelc에서 VBM 아래에 있다면 그건 charge 불균형이 아니라 **(A) 국소
+배치 효과 또는 (B) smearing artifact**.
+
+### 15.6 결론 (현재까지)
+
+1. CBM−VBM 절대값은 우리 PBE에서 literature 대비 낮음 → **bands.x 검증 필요**
+2. 두 시스템 **Δgap = +0.32 eV** (LPSCl1.6이 넓음) — 방향은 literature 원리 (Cl 3p 깊음 → 이온성 강화)와 일치
+3. **VBM/CBM orbital character는 두 시스템에서 동일** (S 3p VBM, S 3p + P 3s CBM) → Δgap은 hybridization이 아니라 electrostatic shift
+4. modelc의 EF-VBM 사이 0.74 states는 **specific 배치 효과**일 가능성 있음 — bands로 검증 후 paper에 어떻게 다룰지 결정
+5. 다음: V0 SCF k-mesh 확인 → 필요시 dense NSCF (6×6×3 + tetrahedra) → 그 위에서 dos.x 재계산 → bands.x
+
+Sources (문헌):
+- [Sci. Direct S0921452623002995 — TB-mBJ 3.11 eV](https://www.sciencedirect.com/science/article/abs/pii/S0921452623002995)
+- [PMC9661960 — HSE06, G0W0](https://pmc.ncbi.nlm.nih.gov/articles/PMC9661960/)
+- [Batteries 12(2):60 — PBE 2.45 eV](https://doi.org/10.3390/batteries12020060)
+- [Adeli 2019 Angew Chem — LPSCl1.5 (charge-compensated)](https://onlinelibrary.wiley.com/doi/10.1002/anie.201814222)
+- [Devil in the Defects (Chem Mater 2021) — LPSCl intrinsic n-type](https://pubs.acs.org/doi/10.1021/acs.chemmater.1c02345)
+- [arXiv:2503.13142 — LPSCl1.5 disorder (no mid-gap state)](https://arxiv.org/pdf/2503.13142)
 
 
 ## 각주
