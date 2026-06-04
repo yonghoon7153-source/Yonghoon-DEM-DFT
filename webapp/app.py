@@ -389,16 +389,28 @@ def list_cases():
             # cases analyzed before /analyze was wired to run Stage E, or
             # when Stage E physics-mode failed silently.
             #
-            # Render as PHY-σ ✓ / PHY-σ ∅ next to existing PHYS badge so user
-            # immediately sees which legacy cases still need re-run.
+            # Distinguish:
+            #   - Has Hertz Stage E but missing Physics → backfill possible (orange ⚠)
+            #   - No Stage E at all → needs full re-analysis (no badge — covered by
+            #     NET ✗ / PHYS ∅ already)
+            #   - All 3 Physics channels present → green ✓
+            _has_i_h = bool(m.get('sigma_full_mScm_stage_e'))
+            _has_e_h = bool(m.get('electronic_sigma_full_mScm_stage_e'))
+            _has_k_h = bool(m.get('thermal_sigma_full_mScm_stage_e'))
+            _any_hertz_se = _has_i_h or _has_e_h or _has_k_h
             _has_i_p = bool(m.get('sigma_full_mScm_stage_e_physics'))
             _has_e_p = bool(m.get('electronic_sigma_full_mScm_stage_e_physics'))
             _has_k_p = bool(m.get('thermal_sigma_full_mScm_stage_e_physics'))
             meta['stage_e_physics_complete'] = (_has_i_p and _has_e_p and _has_k_p)
+            # Only flag ⚠ if BOTH (a) the case has Hertz Stage E AND
+            # (b) some Physics channels missing.  Otherwise the case either
+            # needs full re-analysis (already covered by NET/PHYS badges) or
+            # is fully complete.
             meta['stage_e_physics_missing'] = []
-            if not _has_i_p: meta['stage_e_physics_missing'].append('σ_ionic')
-            if not _has_e_p: meta['stage_e_physics_missing'].append('σ_e')
-            if not _has_k_p: meta['stage_e_physics_missing'].append('κ')
+            if _any_hertz_se and not (_has_i_p and _has_e_p and _has_k_p):
+                if not _has_i_p: meta['stage_e_physics_missing'].append('σ_ionic')
+                if not _has_e_p: meta['stage_e_physics_missing'].append('σ_e')
+                if not _has_k_p: meta['stage_e_physics_missing'].append('κ')
 
             # Composite score (overall grade) — used for the 랭킹 filter.
             # Cheap to compute (no SE-aux dependency at the list level;
