@@ -74,7 +74,7 @@ def read_pdos_files(pdos_dir: Path, prefix: str):
     return E_ref, per_elem
 
 
-def find_gap(E, DOS, EF, e_min=-3.0, dos_thresh=1e-2):
+def find_gap(E, DOS, EF, e_min=-3.0, dos_thresh=0.5):
     """Find VBM/CBM. Prefer the contiguous low-DOS run that contains/straddles EF;
     fall back to the longest run above e_min if none contains EF.
 
@@ -178,8 +178,10 @@ def main():
     ap.add_argument("--out_prefix", default=None, help="prefix for png/json (default = --prefix)")
     ap.add_argument("--e_min", type=float, default=-3.0,
                     help="lower E cutoff for gap search (skip semicores)")
-    ap.add_argument("--dos_thresh", type=float, default=1e-2,
-                    help="DOS threshold to be considered 'in the gap'")
+    ap.add_argument("--dos_thresh", type=float, default=0.5,
+                    help="DOS threshold (states/eV/cell) for 'in the gap'. "
+                         "0.5 captures broadening-tail band edges; lower for "
+                         "sharper edge, higher for noisier DOS.")
     ap.add_argument("--xlim", type=float, nargs=2, default=[-15, 10])
     args = ap.parse_args()
 
@@ -195,7 +197,14 @@ def main():
 
     vbm, cbm, gap, vbm_peak, cbm_peak = find_gap(
         E, DOS, EF, e_min=args.e_min, dos_thresh=args.dos_thresh)
-    print(f"VBM={vbm} CBM={cbm} gap={gap}")
+    if vbm is not None:
+        i_vbm = int(np.argmin(np.abs(E - vbm)))
+        i_cbm = int(np.argmin(np.abs(E - cbm)))
+        print(f"VBM={vbm:.3f} eV (DOS={DOS[i_vbm]:.3f})  "
+              f"CBM={cbm:.3f} eV (DOS={DOS[i_cbm]:.3f})  gap={gap:.3f} eV  "
+              f"(threshold={args.dos_thresh})")
+    else:
+        print(f"no gap found above E_min={args.e_min} with threshold {args.dos_thresh}")
 
     summary = {
         "EF_eV_qe": EF,
