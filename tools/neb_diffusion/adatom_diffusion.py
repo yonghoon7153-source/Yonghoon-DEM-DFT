@@ -122,6 +122,9 @@ def stage_sites(args):
     slab = read(str(out / "slab_relaxed.xyz"))
     meta = json.loads((out / "slab_meta.json").read_text())
     frozen = meta["frozen_indices"]
+    if args.rigid:
+        frozen = list(range(len(slab)))  # freeze entire substrate
+        print(f"[sites] RIGID: all {len(frozen)} substrate atoms frozen")
     z_top = meta["z_top"]
     E_slab = meta["E_slab_eV"]
     cell = np.array(slab.cell)
@@ -232,6 +235,9 @@ def stage_neb(args):
     frozen = meta["frozen_indices"]
     init = read(str(out / f"site_{args.site_a}.xyz"))
     final = read(str(out / f"site_{args.site_b}.xyz"))
+    if args.rigid:
+        frozen = list(range(len(init) - 1))  # all but adatom (last)
+        print(f"[neb] RIGID: all {len(frozen)} substrate atoms frozen")
     print(f"[neb] {args.site_a}→{args.site_b}, {args.images} images")
 
     from ase.constraints import FixedPlane
@@ -329,6 +335,9 @@ def stage_drag(args):
     frozen = list(meta["frozen_indices"])
     A = read(str(out / f"site_{args.site_a}.xyz"))
     B = read(str(out / f"site_{args.site_b}.xyz"))
+    if args.rigid:
+        frozen = list(range(len(A) - 1))  # all substrate atoms
+        print(f"[drag] RIGID: all {len(frozen)} substrate atoms frozen")
     posA = A.positions[-1].copy()
     posB = B.positions[-1].copy()
     z_ads = args.ad_z if args.ad_z is not None else float(posA[2])
@@ -405,6 +414,10 @@ def main():
     common.add_argument("--device", default="cuda")
     common.add_argument("--fmax", type=float, default=0.03)
     common.add_argument("--max_steps", type=int, default=300)
+    common.add_argument("--rigid", action="store_true",
+                        help="freeze ALL substrate atoms (only adatom moves) — "
+                             "rigid surface, prevents reconstruction/incorporation. "
+                             "Matches reference 'bulk fixed, adatom relaxes' setup.")
 
     pr = sub.add_parser("relax", parents=[common])
     pr.add_argument("--slab", required=True)
