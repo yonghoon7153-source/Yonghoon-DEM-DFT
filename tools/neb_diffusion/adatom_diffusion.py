@@ -246,7 +246,7 @@ def stage_neb(args):
         im.set_constraint(cons)
     neb = NEB(images, k=args.spring_k, climb=False, method="improvedtangent",
               allow_shared_calculator=False)
-    neb.interpolate(mic=True)
+    neb.interpolate(mic=True, apply_constraint=False)
     if args.constrain_z:
         # force all interpolated images to the endpoint adatom height
         z_ad = init.positions[ad_idx, 2]
