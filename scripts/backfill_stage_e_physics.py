@@ -16,24 +16,32 @@ from pathlib import Path
 
 
 def find_incomplete():
-    """Return case names that have Hertz Stage E but missing Physics Stage E."""
+    """Return case names that have Hertz Stage E but missing Physics Stage E.
+    Scans BOTH webapp/archive AND webapp/results — these are the two places
+    where full_metrics.json lives (results = live cases, archive = saved)."""
     incomplete = []
-    for f in sorted(glob.glob('webapp/archive/**/full_metrics.json', recursive=True)):
-        nm = Path(f).parent.name
-        try: d = json.load(open(f))
-        except: continue
-        # Has Hertz Stage E (production)?
-        has_hertz = any(d.get(k) for k in (
-            'sigma_full_mScm_stage_e',
-            'electronic_sigma_full_mScm_stage_e',
-            'thermal_sigma_full_mScm_stage_e'))
-        # Missing any Physics Stage E?
-        missing = [k for k in (
-            'sigma_full_mScm_stage_e_physics',
-            'electronic_sigma_full_mScm_stage_e_physics',
-            'thermal_sigma_full_mScm_stage_e_physics') if not d.get(k)]
-        if has_hertz and missing:
-            incomplete.append((nm, missing))
+    seen = set()
+    for base in ('webapp/archive', 'webapp/results'):
+        for f in sorted(glob.glob(f'{base}/**/full_metrics.json', recursive=True)):
+            nm = Path(f).parent.name
+            if nm in seen: continue
+            try: d = json.load(open(f))
+            except: continue
+            # Has Hertz Stage E (production)?
+            has_hertz = any(d.get(k) for k in (
+                'sigma_full_mScm_stage_e',
+                'electronic_sigma_full_mScm_stage_e',
+                'thermal_sigma_full_mScm_stage_e'))
+            # Missing any Physics Stage E?
+            missing = [k for k in (
+                'sigma_full_mScm_stage_e_physics',
+                'electronic_sigma_full_mScm_stage_e_physics',
+                'thermal_sigma_full_mScm_stage_e_physics') if not d.get(k)]
+            if has_hertz and missing:
+                incomplete.append((nm, missing))
+                seen.add(nm)
+            else:
+                seen.add(nm)
     return incomplete
 
 
