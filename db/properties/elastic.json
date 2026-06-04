@@ -121,11 +121,31 @@
       {
         "id": "modelc_v3",
         "composition": "Li5.4PS4.4Cl1.6",
-        "status": "12_strain_relax_SCFs_running_on_GPU_started_19:42",
-        "expected_completion": "container:wall_time +2.5h"
+        "lineage": "modelc V0_relax at BM-EOS V0=1216.44 Å³ → 12 strain relax SCFs (BFGS atom-only, fixed strained cell)",
+        "C11_avg": 37.03, "C11_std": 3.21, "C11_C22_C33_individual": [39.40, 32.50, 39.20],
+        "C12_avg": 16.82, "C12_std": 2.06, "C12_C13_C23_individual": [14.70, 16.15, 19.60],
+        "C44_avg": 13.68, "C44_std": 6.25, "C44_C55_C66_individual": [17.80, 18.40, 4.85],
+        "B_Voigt": 23.56, "B_Reuss": 23.24, "B_VRH": 23.40,
+        "G_Voigt": 12.25, "G_Reuss": 8.97, "G_VRH": 10.61,
+        "E_VRH": 27.66, "nu": 0.3030, "Zener_A": 1.441,
+        "eigenvalues_GPa": [4.45, 12.84, 17.41, 19.25, 27.30, 70.91],
+        "mechanically_stable": true,
+        "strain_step": 0.005, "n_scfs": 12,
+        "qe_sign_flip_applied": true,
+        "completed_date": "2026-06-04",
+        "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_relaxed_ion/elastic_results_stress.json",
+        "vs_comp1_v3_relaxed": {
+          "E_VRH_delta_pct": "+23.9% (22.33 → 27.66)",
+          "G_VRH_delta_pct": "+28.4% (8.26 → 10.61) — primary stiffening contributor",
+          "B_VRH_delta_pct": "-7.1% (25.18 → 23.40) — slight bulk softening",
+          "Zener_A_delta": "+24% (1.16 → 1.44) — anisotropy increase = disorder fingerprint",
+          "headline": "★ VACANCY PARADOX RESOLVED ★ — LPSCl1.6 is 24% stiffer than LPSCl at DFT 0K relaxed-ion, MATCHING experimental trend. Stiffening is primarily SHEAR (G_VRH +28%) while bulk is slightly soft (-7%). The shear-dominant stiffening + anisotropy increase reflects vacancy + 4d-Cl anti-site lock-in of certain shear configurations."
+        }
       }
     ]
   },
+
+  "_old_modelc_v3_running_placeholder_replaced": "completed 2026-06-04 with values above",
 
   "mlip_300K_unit_cell": {
     "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",

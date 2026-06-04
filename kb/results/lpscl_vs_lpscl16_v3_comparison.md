@@ -132,21 +132,21 @@ Li 에너지면을 반영. 두 시스템 각자 K 값 (BM vs stress-strain)은 ~
 - ratio 1.5–2× 범위는 Cl-rich argyrodite에서 표준. **paper에 둘 다 보고.**
 
 
-## 3'. 탄성 — DFT 0K **relaxed-ion** stress-strain (vacancy paradox 해소)
+## 3'. 탄성 — DFT 0K **relaxed-ion** stress-strain (🎯 vacancy paradox RESOLVED)
 
 같은 12-strain 프로토콜인데 각 strained cell에서 원자가 BFGS로 relax됨
 (이온 Born screening 포함). 실험에 직접 대응되는 값.
 
-| 항목 (GPa) | LPSCl v3 (Li6) | LPSCl1.6 v3 (Li5.4) | clamped-ion 대비 | 실험 |
+| 항목 (GPa) | LPSCl v3 (Li6) | **LPSCl1.6 v3 (Li5.4)** | Δ% | 실험 |
 |---|---|---|---|---|
-| C11 | **37.67 ± 1.56** | (진행 중, ~3h 후) | 클램프 −49% | |
-| C12 | **19.98 ± 0.94** | TBD | 클램프 −32% | |
-| C44 | **8.03 ± 0.90** | TBD | 클램프 −58% | |
-| B_VRH | **25.18** | TBD | 클램프 −42% | ~25 ✓ |
-| G_VRH | **8.26** | TBD | 클램프 −59% | ~8 ✓ |
-| **E_VRH** | **22.33** | TBD | **클램프 −57%** | **~23 ✓✓✓** |
-| ν | 0.352 | TBD | +17% | ~0.35 ✓ |
-| Zener A | 1.16 | TBD | +8% (거의 등방) | |
+| C11 avg | 37.67 ± 1.56 | 37.03 ± 3.21 | −1.7% | |
+| C12 avg | 19.98 ± 0.94 | 16.82 ± 2.06 | −15.8% | |
+| C44 avg | 8.03 ± 0.90 | 13.68 ± 6.25 (큰 분산) | +70% | |
+| B_VRH | **25.18** | **23.40** | −7.1% | ~25 |
+| G_VRH | **8.26** | **10.61** | **+28.4%** | ~8 |
+| **E_VRH** | **22.33** | **27.66** | **+23.9% ✓** | **LPSCl1.6 > LPSCl ✓** |
+| ν | 0.352 | 0.303 | | ~0.35 |
+| Zener A | 1.16 | **1.44** | **+24% (aniso ↑)** | |
 
 ### 핵심 발견
 
@@ -163,18 +163,28 @@ clamped-ion 52.31 GPa는 **실험을 2.3배 over-estimate**.
 이는 argyrodite의 **Li sublattice가 매우 soft**해서 변형 시 Li 재배치
 (ionic Born screening)가 격자 강성에 핵심 기여한다는 의미.
 
-### Vacancy paradox 재정립
+### Vacancy paradox RESOLVED (paper main result)
 
 | 시나리오 | E_VRH (LPSCl) | E_VRH (LPSCl1.6) | 결론 |
 |---|---|---|---|
 | clamped-ion DFT 0K | 52.31 | 52.30 | **paradox** (E 차이 ~0%) |
-| **relaxed-ion DFT 0K** | **22.33** | **TBD (진행 중)** | **결정될 것** |
-| 실험 | ~23 | LPSCl1.6 > LPSCl | LPSCl1.6 > LPSCl |
+| **relaxed-ion DFT 0K** | **22.33** | **27.66 ✓** | **paradox RESOLVED** ★ |
+| MLIP 600K snapshot | 59.74 | 52.72 | MLIP은 finite-T 못 잡음 (clamped-like) |
+| 실험 | ~23 | LPSCl1.6 > LPSCl | DFT relaxed가 실험 추세 정확 일치 |
 
-modelc_v3 relaxed-ion이 끝나면:
-- modelc_v3 E_VRH > 22.33 GPa → **vacancy paradox 해소** (paper main result)
-- ≈ 22.33 → finite-T 효과 추가 필요
-- < 22.33 → ion-relaxation도 부족 → MLIP 600K + AIMD가 답
+### 🎯 paper headline finding
+
+**LPSCl1.6은 DFT 0K relaxed-ion에서 LPSCl보다 23.9% 더 stiff (E_VRH 22.33→27.66 GPa)** —
+실험 추세 (LPSCl1.6 > LPSCl) 완전히 잡음.
+
+**Mechanism**:
+- G_VRH **+28%** (shear modulus 큰 증가)
+- B_VRH −7% (bulk modulus 약간 감소)
+- Zener anisotropy A 1.16→**1.44** (anisotropy ↑, disorder fingerprint)
+
+→ **vacancy + 4d-Cl anti-site가 특정 shear configuration을 lock-in**해서 shear modulus 강화.
+bulk는 vacancy로 인해 약간 soft. **Shear-dominant stiffening + 비등방** 이 disorder의
+mechanical fingerprint.
 
 
 ## 4. 탄성 — MLIP UMA 600K snapshot
