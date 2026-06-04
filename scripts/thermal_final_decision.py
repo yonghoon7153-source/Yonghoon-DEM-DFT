@@ -177,12 +177,18 @@ def main():
         cols = []
         for fk, do_log in feat_list:
             vals = feat_arr(cases, fk)
-            if not np.all(np.isfinite(vals)): return None
+            if not np.all(np.isfinite(vals)):
+                # nan present — fill with median (mirror Ridge robustness)
+                med = np.nanmedian(vals)
+                vals = np.where(np.isfinite(vals), vals, med)
             if do_log:
-                if np.min(vals) <= 0: return None
+                if np.min(vals) <= 0:
+                    # shift to positive for log (symlog-like)
+                    vals = np.where(vals > 0, vals, np.nanmin(vals[vals > 0]) if np.any(vals > 0) else 1e-6)
                 cols.append(np.log(vals))
             else:
                 cols.append(vals)
+        if not cols: return None
         return np.column_stack(cols)
 
     X_full = build_X(feats_16)
