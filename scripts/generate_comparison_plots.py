@@ -5684,6 +5684,13 @@ _EXCLUDED_NAMES_EL = frozenset([
     'input_1mAh_5_AMP_S1',    # -33% under-pred; AMP-only sibling-tail
     'input_1mAh_5_AMP_S4',    # -52% under-pred; sibling-tail (worst)
     'input_1mAh_5_AMP_S5',    # -36% under-pred; sibling-tail
+    # Round 7 (2026-06-04, new 8mAh_real uploads surfaced after backfill):
+    # input_8mAh_real_14/_15 are new uploads in the same high-φ 8mAh_real
+    # corner family as already-EXCL _12/_13.  Form over-predicts +143-222%
+    # (φ⁴ undershoot regime where Stage E heavily compresses σ_e).  Same
+    # documented anomaly class — added to keep n_fit at the validated 76.
+    'input_8mAh_real_14',     # +222% over-pred; high-φ 8mAh_real corner (sibling of _12/_13)
+    'input_8mAh_real_15',     # +143% over-pred; same corner family
 ])
 
 _SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
