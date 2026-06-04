@@ -74,34 +74,47 @@ def read_pdos_files(pdos_dir: Path, prefix: str):
     return E_ref, per_elem
 
 
-def find_gap(E, DOS, EF, e_min=-3.0, dos_thresh=1e-3):
-    """Find VBM/CBM by longest low-DOS interval above e_min.
+def find_gap(E, DOS, EF, e_min=-3.0, dos_thresh=1e-2):
+    """Find VBM/CBM. Prefer the contiguous low-DOS run that contains/straddles EF;
+    fall back to the longest run above e_min if none contains EF.
 
     Returns (VBM, CBM, gap, VBM_peak, CBM_peak).
     """
     mask = E >= e_min
     Em = E[mask]; Dm = DOS[mask]
     low = Dm < dos_thresh
-    # find contiguous runs of low
-    best_start, best_len = -1, 0
+    runs = []  # (start_idx, length)
     i = 0
     while i < len(low):
         if low[i]:
             j = i
             while j < len(low) and low[j]:
                 j += 1
-            if (j - i) > best_len:
-                best_len = j - i
-                best_start = i
+            runs.append((i, j - i))
             i = j
         else:
             i += 1
-    if best_start < 0 or best_len < 3:
+    runs = [r for r in runs if r[1] >= 3]
+    if not runs:
         return None, None, None, None, None
-    vbm = float(Em[best_start - 1]) if best_start > 0 else float(Em[best_start])
-    cbm = float(Em[best_start + best_len])
+
+    chosen = None
+    if EF is not None:
+        for (s, n) in runs:
+            e_lo = Em[s]
+            e_hi = Em[min(s + n - 1, len(Em) - 1)]
+            if e_lo <= EF <= e_hi:
+                chosen = (s, n)
+                break
+    if chosen is None:
+        chosen = max(runs, key=lambda r: r[1])
+
+    best_start, best_len = chosen
+    vbm_idx = max(best_start - 1, 0)
+    cbm_idx = min(best_start + best_len, len(Em) - 1)
+    vbm = float(Em[vbm_idx])
+    cbm = float(Em[cbm_idx])
     gap = cbm - vbm
-    # Peak positions = E with highest DOS on either side of the gap
     valence_mask = (E < vbm) & (E >= e_min)
     cond_mask = E > cbm
     vbm_peak = float(E[valence_mask][np.argmax(DOS[valence_mask])]) if valence_mask.any() else None
@@ -165,7 +178,7 @@ def main():
     ap.add_argument("--out_prefix", default=None, help="prefix for png/json (default = --prefix)")
     ap.add_argument("--e_min", type=float, default=-3.0,
                     help="lower E cutoff for gap search (skip semicores)")
-    ap.add_argument("--dos_thresh", type=float, default=1e-3,
+    ap.add_argument("--dos_thresh", type=float, default=1e-2,
                     help="DOS threshold to be considered 'in the gap'")
     ap.add_argument("--xlim", type=float, nargs=2, default=[-15, 10])
     args = ap.parse_args()
