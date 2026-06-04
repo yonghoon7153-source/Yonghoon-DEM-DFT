@@ -39,8 +39,48 @@
       "vbm": "S(93%)>Li(5%)>Br(1%)",
       "cbm": "S(44%)+P(36%)+Li(19%)",
       "basin": "A"
+    },
+    {
+      "id": "comp1_v3",
+      "composition": "Li6PS5Cl",
+      "gap_eV": 1.50,
+      "EF_eV_qe": 2.821,
+      "VBM_eV": 2.48,
+      "CBM_eV": 3.98,
+      "VBM_peak_eV": 1.62,
+      "CBM_peak_eV": 4.20,
+      "vbm": "S p (91%) + Li p (6%) + Li s (1%) + Cl p (1%)",
+      "cbm": "S p (42%) + P s (27%) + Li p (15%) + S s (13%) + P p (3%)",
+      "method": "QE7.4.1 (PBE), USPP/RRKJUS, dos.x + projwfc.x on V0 relax .save, MV smearing (degauss=0.01 Ry SCF, 0.02 Ry post). Gap determined from low-DOS run straddling EF with DOS<0.5 states/eV/cell. Character: PDOS integrated in 0.5 eV window adjacent to band edge.",
+      "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/V0_dos_summary.json",
+      "completed_date": "2026-06-04"
+    },
+    {
+      "id": "modelc_v3",
+      "composition": "Li5.4PS4.4Cl1.6",
+      "gap_eV": 1.82,
+      "EF_eV_qe": 2.445,
+      "VBM_eV": 2.72,
+      "CBM_eV": 4.54,
+      "VBM_peak_eV": 1.84,
+      "CBM_peak_eV": 5.72,
+      "vbm": "S p (92%) + Li p (6%) + Cl p (1%) + Li s (1%)",
+      "cbm": "S p (45%) + P s (27%) + Li p (13%) + S s (8%) + P p (5%)",
+      "method": "Same as comp1_v3. Re-analyzed 2026-06-04 with plot_dos.py (paper-grade); matches original 2026-06-01 result (gap 1.80 → 1.82, within DeltaE=0.02 grid).",
+      "data_path": "container:/home/ubuntu/work/runs/modelC_v3/V0_dos_summary.json",
+      "completed_date": "2026-06-04"
     }
   ],
+  "comparison_comp1_v3_vs_modelc_v3": {
+    "gap_eV_comp1": 1.50,
+    "gap_eV_modelc": 1.82,
+    "delta_gap_eV": -0.32,
+    "delta_gap_pct": -17.6,
+    "interpretation": "LPSCl (vacancy-free) is 0.32 eV NARROWER than LPSCl1.6 (Li-deficient). Both have nearly identical orbital character at VBM (S 3p ~91-92%) and CBM (S 3p ~42-45% + P 3s ~27% + Li ~13-15%) → gap reduction is NOT due to hybridization change but to electrostatic/Madelung field shift caused by composition (lower Cl content + no Li vacancies in comp1 vs anti-site Cl + Li vacancies in modelc).",
+    "EF_shift_eV": "comp1 EF = 2.821 vs modelc EF = 2.445. modelc EF is pinned ~0.27 eV below its VBM (Li vacancy creates partial DOS near EF), while comp1 EF sits comfortably in the gap (insulator).",
+    "expt_LPSCl_gap_range_eV": "~2.0-2.5 (typical experimental Eg for Li6PS5Cl)",
+    "PBE_underestimate": "Both values consistent with PBE underestimating gap by ~30-40% vs experiment; relative trend (comp1 < modelc by 0.3 eV) is the paper-relevant comparison."
+  },
   "trends": {
     "gap_range": "1.77-2.28 eV",
     "Br_effect": "Br 4p contributes to VBM -> slight gap reduction",
