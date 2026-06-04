@@ -234,12 +234,25 @@ def stage_neb(args):
     final = read(str(out / f"site_{args.site_b}.xyz"))
     print(f"[neb] {args.site_a}→{args.site_b}, {args.images} images")
 
+    from ase.constraints import FixedPlane
+    ad_idx = len(init) - 1  # adatom is last atom
     images = [init.copy() for _ in range(args.images - 1)] + [final.copy()]
     for im in images:
-        im.set_constraint(FixAtoms(indices=frozen))
+        cons = [FixAtoms(indices=frozen)]
+        if args.constrain_z:
+            # adatom may move only in xy (z pinned) → no incorporation dive,
+            # NEB still finds the curved in-plane minimum-energy path
+            cons.append(FixedPlane(ad_idx, direction=[0, 0, 1]))
+        im.set_constraint(cons)
     neb = NEB(images, k=args.spring_k, climb=False, method="improvedtangent",
               allow_shared_calculator=False)
     neb.interpolate(mic=True)
+    if args.constrain_z:
+        # force all interpolated images to the endpoint adatom height
+        z_ad = init.positions[ad_idx, 2]
+        for im in images:
+            im.positions[ad_idx, 2] = z_ad
+        print(f"[neb] adatom z constrained to {z_ad:.2f} Å (planar diffusion)")
 
     pred = make_predictor(args.model, args.device)
     for im in images:
@@ -418,6 +431,9 @@ def main():
     pn.add_argument("--optimizer", choices=["bfgs", "fire"], default="fire")
     pn.add_argument("--valley_tol", type=float, default=0.01,
                     help="interior dips more than this below endpoints → valley flag")
+    pn.add_argument("--constrain_z", action="store_true",
+                    help="pin adatom z (move only in xy) — prevents incorporation "
+                         "dive, NEB still finds curved in-plane MEP")
 
     pd = sub.add_parser("drag", parents=[common])
     pd.add_argument("--site_a", type=int, required=True)
