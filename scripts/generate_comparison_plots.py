@@ -6650,7 +6650,12 @@ _THERMAL_TARGET_KEYS = (
     'thermal_sigma_full_mScm',                   # raw Hertz fallback
 )
 
-# Features selected by greedy forward selection (LOOCV order)
+# Features selected by greedy forward selection (LOOCV order).
+# Stage T1 refinement (2026-06-04, thermal_refine_finalized.py): dropped
+# 2 over-fitting features (n_large_components + A_binding_share.elastic).
+# Forward selection showed LOOCV PEAKS at 14 features (0.869 finalized /
+# 0.849 full corpus) then DROPS when those 2 are added back (0.825/0.844).
+# 14-feature form: better LOOCV + n/k 5.4→6.0.  Dropping further (12) loses.
 _THERMAL_T1_FEATURES = [
     # name in full_metrics.json, log-transform?
     ('porosity',                                          False),
@@ -6658,17 +6663,18 @@ _THERMAL_T1_FEATURES = [
     ('tortuosity_std',                                    False),
     ('gb_density_mean',                                   True),
     ('validation_flags.asr_ionic_Ohm_cm2',                True),
-    ('n_large_components',                                True),
     ('am_vulnerable_pct',                                 False),
     ('se_se_cn_std',                                      False),
     ('electronic_active_fraction',                        True),
     ('R_brug_over_full_physics',                          True),
     ('validation_flags.bruggeman_fallback_fired_any',     False),
     ('area_SE_SE_total_physics',                          False),
-    ('A_binding_share_total_pct.elastic',                 False),
     ('area_AM전체_SE_total_physics',                      False),
     ('tortuosity_median',                                 False),
     ('e_se_eff_gpa',                                      True),
+    # DROPPED (Stage T1 refinement — over-fit, LOOCV improves when removed):
+    #   ('n_large_components', True)                  — forward Step 15 drops LOOCV
+    #   ('A_binding_share_total_pct.elastic', False)  — forward Step 16 drops LOOCV
 ]
 
 
