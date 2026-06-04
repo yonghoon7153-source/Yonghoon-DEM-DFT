@@ -66,9 +66,51 @@ def main():
               "run_network_full_corrections.py")
         return
     names = [nm for nm, _ in incomplete]
+
+    # PRESERVE existing Hertz Stage E values — run_network_full_corrections.py
+    # recomputes ALL Stage E channels (Hertz + Physics), but its Hertz σ_e
+    # output can differ from the validated production values (fracture factor
+    # over-application observed 2026-06-04: σ_e Hertz Stage E compressed 5-6×).
+    # We only WANT the new Physics Stage E; the Hertz Stage E must stay as-is.
+    # Snapshot Hertz Stage E before, restore after.
+    HERTZ_KEYS = ['electronic_sigma_full_mScm_stage_e',
+                  'sigma_full_mScm_stage_e',
+                  'thermal_sigma_full_mScm_stage_e']
+    snapshot = {}   # case_name → {key: value}
+    for nm in names:
+        for base in ('webapp/archive', 'webapp/results'):
+            fp = list(Path(base).rglob(f'{nm}/full_metrics.json'))
+            if fp:
+                try:
+                    d = json.load(open(fp[0]))
+                    snapshot[nm] = {k: d.get(k) for k in HERTZ_KEYS if d.get(k)}
+                except: pass
+                break
+
     print(f"\nInvoking run_network_full_corrections.py on {len(names)} cases...\n")
     cmd = ['python3', 'scripts/run_network_full_corrections.py', '--quiet'] + names
     subprocess.run(cmd)
+
+    # Restore Hertz Stage E from snapshot (keep new Physics Stage E)
+    n_restored = 0
+    for nm, saved in snapshot.items():
+        if not saved: continue
+        for base in ('webapp/archive', 'webapp/results'):
+            fp = list(Path(base).rglob(f'{nm}/full_metrics.json'))
+            if fp:
+                try:
+                    d = json.load(open(fp[0]))
+                    changed = False
+                    for k, v in saved.items():
+                        if v and d.get(k) != v:
+                            d[k] = v; changed = True
+                    if changed:
+                        json.dump(d, open(fp[0], 'w'), indent=2, ensure_ascii=False)
+                        n_restored += 1
+                except: pass
+                break
+    print(f"  Restored Hertz Stage E in {n_restored} cases (preserved production values)")
+
     # Verify
     print("\n── Verification ──")
     still_missing = find_incomplete()
