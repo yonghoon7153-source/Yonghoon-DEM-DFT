@@ -1,0 +1,118 @@
+{
+  "system": "modelc_v3",
+  "_provenance": "k444 (paper-grade): LOBSTER ext-basis 70/560 + Bader AE plot_num=17, one-shot via analyze_per_bond_icohp.py",
+  "bader_charges": {
+    "Li": {
+      "q_e": 0.8817,
+      "std": 0.0095,
+      "n": 27
+    },
+    "P": {
+      "q_e": 4.4286,
+      "std": 0.4149,
+      "n": 5
+    },
+    "S": {
+      "q_e": -1.7556,
+      "std": 0.2443,
+      "n": 22
+    },
+    "Cl": {
+      "q_e": -0.9158,
+      "std": 0.0054,
+      "n": 8
+    }
+  },
+  "n_electrons_recovered": 293.999,
+  "PS4_sum_q_e": -13.112,
+  "icohp_per_bond_type_eV": {
+    "Cl-Li": {
+      "icohp_eV": -2.1033,
+      "n_bonds": 42
+    },
+    "Li-S": {
+      "icohp_eV": -1.7173,
+      "n_bonds": 113
+    },
+    "P-S": {
+      "icohp_eV": -5.9997,
+      "n_bonds": 20
+    },
+    "S-S": {
+      "icohp_eV": -0.1104,
+      "n_bonds": 58
+    }
+  },
+  "icohp_per_site": {
+    "Li-S(PS4)": {
+      "icohp_eV": -1.6224,
+      "std_eV": 1.2655,
+      "n_bonds": 101,
+      "dist_slope_eV_per_A": 2.091,
+      "wilkening_r": -0.778,
+      "wilkening_slope": -8.029
+    },
+    "Li-S(4d)": {
+      "icohp_eV": -2.5158,
+      "std_eV": 0.0983,
+      "n_bonds": 12,
+      "dist_slope_eV_per_A": 3.731,
+      "wilkening_r": -0.891,
+      "wilkening_slope": -16.042
+    },
+    "Li-Cl(4d)": {
+      "icohp_eV": -2.8355,
+      "std_eV": 0.1147,
+      "n_bonds": 4,
+      "dist_slope_eV_per_A": 2.932,
+      "wilkening_r": -0.992,
+      "wilkening_slope": -37.634
+    },
+    "Li-Cl(4a)": {
+      "icohp_eV": -2.0262,
+      "std_eV": 0.5317,
+      "n_bonds": 38,
+      "dist_slope_eV_per_A": 2.123,
+      "wilkening_r": -0.988,
+      "wilkening_slope": -21.581
+    }
+  },
+  "strongest_bonds_top5": [
+    {
+      "atoms": "P29-S34",
+      "pair": "P-S",
+      "d_A": 2.043,
+      "icohp_eV": -6.283
+    },
+    {
+      "atoms": "P30-S35",
+      "pair": "P-S",
+      "d_A": 2.042,
+      "icohp_eV": -6.262
+    },
+    {
+      "atoms": "P31-S51",
+      "pair": "P-S",
+      "d_A": 2.047,
+      "icohp_eV": -6.189
+    },
+    {
+      "atoms": "P28-S48",
+      "pair": "P-S",
+      "d_A": 2.069,
+      "icohp_eV": -6.136
+    },
+    {
+      "atoms": "P30-S50",
+      "pair": "P-S",
+      "d_A": 2.052,
+      "icohp_eV": -6.12
+    }
+  ],
+  "site_counts": {
+    "Cl_4a": 7,
+    "Cl_4d": 1,
+    "S_PS4": 20,
+    "S_4d": 2
+  }
+}

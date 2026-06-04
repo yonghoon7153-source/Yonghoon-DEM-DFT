@@ -1,0 +1,110 @@
+{
+  "system": "comp1_v3",
+  "_provenance": "k444 (paper-grade): LOBSTER ext-basis 70/560 + Bader AE plot_num=17, one-shot via analyze_per_bond_icohp.py",
+  "bader_charges": {
+    "P": {
+      "q_e": 3.2705,
+      "std": 0.0,
+      "n": 4
+    },
+    "S": {
+      "q_e": -1.5181,
+      "std": 0.3626,
+      "n": 20
+    },
+    "Li": {
+      "q_e": 0.8741,
+      "std": 0.0045,
+      "n": 24
+    },
+    "Cl": {
+      "q_e": -0.9246,
+      "std": 0.0,
+      "n": 4
+    }
+  },
+  "n_electrons_recovered": 240.0,
+  "PS4_sum_q_e": -10.511,
+  "icohp_per_bond_type_eV": {
+    "Cl-Li": {
+      "icohp_eV": -1.861,
+      "n_bonds": 24
+    },
+    "Li-S": {
+      "icohp_eV": -1.5886,
+      "n_bonds": 120
+    },
+    "P-S": {
+      "icohp_eV": -5.9381,
+      "n_bonds": 16
+    },
+    "S-S": {
+      "icohp_eV": -0.1073,
+      "n_bonds": 56
+    }
+  },
+  "icohp_per_site": {
+    "Li-S(PS4)": {
+      "icohp_eV": -1.3438,
+      "std_eV": 1.2212,
+      "n_bonds": 96,
+      "dist_slope_eV_per_A": 1.789,
+      "wilkening_r": -0.372,
+      "wilkening_slope": -4.636
+    },
+    "Li-S(4d)": {
+      "icohp_eV": -2.5677,
+      "std_eV": 0.0912,
+      "n_bonds": 24,
+      "dist_slope_eV_per_A": 8.992,
+      "wilkening_r": 1.0,
+      "wilkening_slope": 168.02
+    },
+    "Li-Cl(4a)": {
+      "icohp_eV": -1.861,
+      "std_eV": 0.6309,
+      "n_bonds": 24,
+      "dist_slope_eV_per_A": 4.92,
+      "wilkening_r": -1.0,
+      "wilkening_slope": -36.049
+    }
+  },
+  "strongest_bonds_top5": [
+    {
+      "atoms": "P3-S19",
+      "pair": "P-S",
+      "d_A": 2.036,
+      "icohp_eV": -6.385
+    },
+    {
+      "atoms": "P1-S5",
+      "pair": "P-S",
+      "d_A": 2.036,
+      "icohp_eV": -6.384
+    },
+    {
+      "atoms": "P2-S6",
+      "pair": "P-S",
+      "d_A": 2.036,
+      "icohp_eV": -6.384
+    },
+    {
+      "atoms": "P4-S20",
+      "pair": "P-S",
+      "d_A": 2.036,
+      "icohp_eV": -6.384
+    },
+    {
+      "atoms": "P1-S17",
+      "pair": "P-S",
+      "d_A": 2.036,
+      "icohp_eV": -6.382
+    }
+  ],
+  "site_counts": {
+    "Cl_4a": 4,
+    "Cl_4d": 0,
+    "S_PS4": 16,
+    "S_4d": 4
+  }
+}
