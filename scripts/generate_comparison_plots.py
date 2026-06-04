@@ -6654,6 +6654,7 @@ _THERMAL_T1_FEATURES = [
     ('A_binding_share_total_pct.elastic',                 False),
     ('area_AM전체_SE_total_physics',                      False),
     ('tortuosity_median',                                 False),
+    ('se_se_cn_std',                                      True),   # log version (greedy Step 17)
     ('e_se_eff_gpa',                                      True),
 ]
 
