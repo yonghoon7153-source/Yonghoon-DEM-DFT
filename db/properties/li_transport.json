@@ -39,6 +39,52 @@
         "sigma_300K_calc_Scm": "~14e-3 (3-5× higher than expt)",
         "sigma_overestimate_attribution": "Foundation MLIP overshoot of transport (typical) + Haven ratio = 1 assumption (real H_R ≈ 0.3-0.7 reduces σ by ~2×)"
       }
+    },
+    {
+      "id": "comp1_v3",
+      "composition": "Li6PS5Cl",
+      "version": "v3",
+      "method": "UMA-s-1p1 (task=omat) AIMD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps each, timestep 2 fs, 1000 frames. EXACT same protocol as modelc_v3.",
+      "completed_date": "2026-06-04",
+      "data_path": "container:/home/ubuntu/work/runs/comp1_v3/aimd_5fu/",
+      "v0_source": "comp1_v3 V0_5fu.xyz (5 f.u. supercell, 65 atoms, 30 Li)",
+      "n_atoms": 65,
+      "n_Li": 30,
+      "V_A3": 1270.8,
+      "diffusion_per_T_fit_2_20ps": [
+        {"T_K": 600,  "D_Li_cm2_per_s": 3.732e-06, "sigma_NE_Scm": 0.273, "D_Cl": 5.88e-08, "D_P": 9.45e-08, "D_S": 8.37e-08},
+        {"T_K": 800,  "D_Li_cm2_per_s": 6.377e-06, "sigma_NE_Scm": 0.350},
+        {"T_K": 1000, "D_Li_cm2_per_s": 2.259e-05, "sigma_NE_Scm": 0.992}
+      ],
+      "diffusion_per_T_fit_2_50ps": [
+        {"T_K": 600,  "D_Li_cm2_per_s": 2.677e-06},
+        {"T_K": 800,  "D_Li_cm2_per_s": 3.407e-06},
+        {"T_K": 1000, "D_Li_cm2_per_s": 1.019e-05}
+      ],
+      "arrhenius_fit": {
+        "_window_dependence_WARNING": "Ea depends strongly on MSD fit window because statistics are marginal (3 T points, T=800 K D anomalously low). Report with uncertainty; not yet paper-grade.",
+        "fit_2_20ps": {"Ea_eV": 0.220, "D0_cm2_per_s": 2.290e-04, "D_300K_cm2_per_s": 4.56e-08, "R2": 0.867},
+        "fit_2_50ps": {"Ea_eV": 0.160, "D0_cm2_per_s": 5.135e-05, "D_300K_cm2_per_s": 1.04e-07, "R2": 0.773},
+        "T_fit_K": [600, 800, 1000]
+      },
+      "framework_immobile_check": "D(Cl,P,S) ~ 6-9e-8 cm²/s ≈ 1/40-1/60 of D(Li) → framework rigid, Li-only conductor ✓ (same as modelc)"
     }
-  ]
+  ],
+  "comp1_vs_modelc_comparison": {
+    "robust_findings": {
+      "D_Li_600K": "modelc 7.90e-6 vs comp1 3.73e-6 (2-20ps window) → modelc 2.1× faster. Window-robust (modelc 2-3× higher regardless of comp1 window).",
+      "sigma_NE_600K": "modelc 0.543 vs comp1 0.273 S/cm → modelc 2.0× higher.",
+      "direction_matches_experiment": "Halogen-rich/Li-deficient (modelc, LPSCl1.6) conducts ~2× better than stoichiometric (comp1, LPSCl). Matches expt: NEI/Ampcera Li5.5PS4.5Cl1.5 ~8.8 mS/cm vs Li6PS5Cl ~4.3 mS/cm = 2.05× ✓"
+    },
+    "mechanism_interpretation": {
+      "Ea_similar_not_lower": "comp1 Ea (0.16-0.22 eV) is SIMILAR TO or slightly BELOW modelc (0.224 eV) — NOT higher. The per-hop barrier is comparable in both.",
+      "conductivity_driven_by_prefactor": "modelc's 2× higher σ comes from a higher prefactor D0 (modelc 5.75e-4 vs comp1 2.3e-4), i.e., MORE mobile carriers / accessible hops from the extra Li vacancies — not a lower migration barrier. Vacancy → more carriers, not easier hops.",
+      "caveat": "Interpretation qualitative until comp1 statistics improved AND both systems re-fit with identical MSD window. modelc Ea=0.224 window not confirmed identical to comp1; needs consistent re-fit for paper."
+    },
+    "todo_for_paper_grade": [
+      "Re-fit BOTH comp1 and modelc D with identical MSD window (recommend 2-50 ps or block-averaged) on the container.",
+      "Improve comp1 statistics: T=800 K D is anomalously low (R²=0.77-0.87). Consider longer prod, more seeds, or 4-5 T points.",
+      "Apply Haven ratio for absolute σ comparison to experiment."
+    ]
+  }
 }

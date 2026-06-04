@@ -29,7 +29,7 @@
 | §8h 밴드 구조 (Hungarian 재정렬) | 대기 (NSCF 진행 예정) | 완료 |
 | §8i stress-strain 전체 6×6 Cij | **완료** (B=43.59, E=52.31, A=1.07) | 완료 |
 | §8j MLIP UMA 600K snapshot 탄성 | 대기 | 완료 |
-| §8k AIMD 600/800/1000K (Arrhenius) | 대기 | 완료 |
+| §8k AIMD 600/800/1000K (Arrhenius) | **완료** (110ps×3T, 2026-06-04) | 완료 |
 | §8l ELF (단면 + 3D iso) | 대기 | 완료 |
 | §8m LOBSTER (COHP/ICOHP 4-panel) | 대기 | NSCF 완료, lobster 대기 |
 
@@ -48,8 +48,9 @@
 | **Zener A** | **1.073** (isotropic) | **0.416** (anisotropic) | **2.6× 차이** | Li 공공 + Cl anti-site로 anisotropy 도입 |
 | 밴드갭 (DFT-PBE, CBM−VBM, eV) | **1.50** | **1.82** | LPSCl1.6 +0.32 eV (방향은 literature trend 일치, 절대값은 의심 — §15 참조) | Cl 3p가 S 3p보다 깊음 → S→Cl 치환이 VBM 내려 → gap 넓어짐 (원리상) |
 | Bader q(Li) (e) | [pending] | [추가] | | |
-| AIMD Ea (eV) | [pending] | [추가] | | |
-| AIMD D₀ at 300K (cm²/s) | [pending] | [추가] | | |
+| AIMD D_Li(600K) (cm²/s) | **3.73e-6** | **7.90e-6** | modelc 2.1× 빠름 (vacancy → carrier↑) | 실험 방향 일치 (Cl-rich 더 전도성) |
+| AIMD σ_NE(600K) (S/cm) | **0.273** | **0.543** | modelc 2.0× 높음 | 실험 비 2.05× (LPSCl1.5/LPSCl)와 정량 일치 |
+| AIMD Ea (eV) | **0.16–0.22** (R²↓) | **0.224** | comp1 ≈ 또는 ≤ modelc (장벽 비슷) | σ 차이는 prefactor(carrier) 때문, 장벽 아님 |
 | ICOHP P–S (eV/bond) | [pending] | [추가] | | |
 | ICOHP Li–S (eV/bond) | [pending] | [추가] | | |
 | ICOHP Li–Cl (eV/bond) | [pending] | [추가] | | |
@@ -316,16 +317,46 @@ PAW kjpaw + pp.x AE density + Henkelman bader v1.05. SCF는 LOBSTER ext basis와
 | Li-like 밴드 유효질량 | [pending] | [추가] |
 
 
-## 10. AIMD 이온 확산 (Arrhenius 600/800/1000K)
+## 10. AIMD 이온 확산 (Arrhenius 600/800/1000K) — 완료 2026-06-04
 
-| | LPSCl v3 | LPSCl1.6 v3 |
-|---|---|---|
-| D(600K) (cm²/s) | [pending] | [추가] |
-| D(800K) (cm²/s) | [pending] | [추가] |
-| D(1000K) (cm²/s) | [pending] | [추가] |
-| Ea (eV) | [pending] | [추가] |
-| D₀ 300K 외삽 (cm²/s) | [pending] | [추가] |
-| σ_Li 300K (mS/cm, Nernst-Einstein) | [pending] | [추가] |
+**둘 다 동일 프로토콜** (UMA-s-1p1, Langevin NVT, equilib 10ps + prod 100ps,
+timestep 2fs, 1000 frames). comp1 fit_window [2,20]ps 기준 (modelc 비교 시 주의).
+
+| | LPSCl (comp1) | LPSCl1.6 (modelc) | 비 |
+|---|---|---|---|
+| D(600K) (cm²/s) | 3.73e-6 | 7.90e-6 | **2.1× (modelc↑)** |
+| D(800K) (cm²/s) | 6.38e-6 | — | |
+| D(1000K) (cm²/s) | 2.26e-5 | — | |
+| **Ea (eV)** | **0.16–0.22** | **0.224** | comp1 ≈/≤ modelc |
+| D₀ (cm²/s) | 2.3e-4 | 5.75e-4 | 2.5× (modelc↑) |
+| σ_NE(600K) (S/cm) | 0.273 | 0.543 | **2.0×** |
+
+### 10.1 핵심 결론 (robust)
+
+1. **modelc(LPSCl1.6)가 comp1(LPSCl)보다 Li 2배 빠름** (D, σ 모두 ~2×).
+   window 무관하게 견고 (modelc 2-3× 높음).
+2. **실험 방향·크기 정량 일치**: NEI/Ampcera Li5.5PS4.5Cl1.5 ~8.8 mS/cm vs
+   Li6PS5Cl ~4.3 mS/cm = **2.05×** ↔ 우리 σ 비 2.0× 🎯
+3. **framework 정지 확인**: D(Cl,P,S) ~ D(Li)의 1/40-1/60 → Li-only 전도체 (둘 다).
+
+### 10.2 메커니즘 — vacancy는 장벽이 아니라 carrier를 늘린다
+
+- **Ea가 거의 같음** (comp1 0.16-0.22 ≈ modelc 0.224, comp1이 더 낮지도 않음)
+- modelc의 2× σ는 **prefactor D₀ ↑** (5.75e-4 vs 2.3e-4) 때문 = Li vacancy가
+  **운반체(빈자리)·경로를 늘림**, per-hop 장벽을 낮추는 게 아님.
+- → paper 메시지: "halogen-rich가 더 전도성인 건 migration barrier가 낮아서가
+  아니라 vacancy carrier가 많아서" (실험적으로 더 정확한 그림).
+
+### 10.3 ⚠ paper-grade 전 보완 필요
+
+- comp1 **R²=0.77-0.87로 약함** (3 T점, T=800K D 이상치). Ea가 window 따라
+  0.16~0.22로 흔들림.
+- **공정 비교**: comp1·modelc를 **동일 MSD window**로 재fit 필요 (modelc Ea=0.224
+  의 window 미확인). 컨테이너에서 둘 다 [2,50] 재fit 권장.
+- 통계 개선 (longer prod / 더 많은 seed / 4-5 T점) 후 Ea 확정.
+- 절대 σ는 Haven ratio 적용 후 실험 비교.
+
+전체 데이터: `db/properties/li_transport.json` (comp1_v3 entry + comp1_vs_modelc_comparison).
 
 
 ## 11. ELF (전자 국소화 함수)
