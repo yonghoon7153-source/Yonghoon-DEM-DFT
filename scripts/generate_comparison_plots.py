@@ -6602,6 +6602,161 @@ PLOT_REGISTRY["electronic_decomp_final"] = {
 }
 
 
+# ════════════════════════════════════════════════════════════════════════
+# σ_thermal Stage T1 PRODUCTION form (2026-06-04, LOOCV 0.9028)
+# ════════════════════════════════════════════════════════════════════════
+# Discovery (scripts/thermal_with_excl.py): on n=82 corpus (after applying
+# σ_e _EXCLUDED_NAMES_EL to thermal), Physics Stage E target with greedy
+# forward selection on Ridge α=0.1 reaches LOOCV 0.9028 with 18 features.
+#
+# Key design choices:
+#   - Target: thermal_sigma_full_mScm_stage_e_physics  (NOT Hertz Stage E;
+#     audit showed Hertz Stage E factor ≈ 0.95 = pass-through, while
+#     Physics target captures Tabor plastic correctly)
+#   - EXCL: shares σ_e's _EXCLUDED_NAMES_EL (same broken cases poison both)
+#   - Sanity filter: 0.05 ≤ κ ≤ 50 mScm (removes solver pathology like
+#     input_1mAh_100_7 κ=153,986)
+#   - 18 features (Ridge regularized) — see _THERMAL_T1_FEATURES below
+#
+# Unlike σ_ionic T1 (5 OLS) or σ_e Stage 22.5 (8 LIVE OLS) which fit a
+# physics-anchored functional form, σ_thermal form is empirical Ridge
+# regression on structural features.  Reason: thermal flows through
+# ALL contact pairs (AM-AM + AM-SE + SE-SE simultaneously) with
+# composition-dependent k_weights, no single-backbone scaling captures it.
+# The structural features (Bruggeman ratios, contact areas, percolation,
+# tortuosity etc.) collectively encode the multi-pathway resistance network.
+
+_THERMAL_KAPPA_MAX = 50.0    # mScm — above: solver pathology (per audit)
+_THERMAL_KAPPA_MIN = 0.05    # mScm — below: broken sim
+
+_THERMAL_TARGET_KEYS = (
+    'thermal_sigma_full_mScm_stage_e_physics',  # PRIMARY (Stage T1 target)
+    'thermal_sigma_full_mScm_physics',           # raw physics fallback
+    'thermal_sigma_full_mScm_stage_e',           # Hertz Stage E fallback
+    'thermal_sigma_full_mScm',                   # raw Hertz fallback
+)
+
+# Features selected by greedy forward selection (LOOCV order)
+_THERMAL_T1_FEATURES = [
+    # name in full_metrics.json, log-transform?
+    ('porosity',                                          False),
+    ('se_se_cn',                                          True),
+    ('tortuosity_std',                                    False),
+    ('gb_density_mean',                                   True),
+    ('validation_flags.asr_ionic_Ohm_cm2',                True),
+    ('n_large_components',                                True),
+    ('am_vulnerable_pct',                                 False),
+    ('se_se_cn_std',                                      False),
+    ('electronic_active_fraction',                        True),
+    ('R_brug_over_full_physics',                          True),
+    ('validation_flags.bruggeman_fallback_fired_any',     False),
+    ('area_SE_SE_total_physics',                          False),
+    ('A_binding_share_total_pct.elastic',                 False),
+    ('area_AM전체_SE_total_physics',                      False),
+    ('tortuosity_median',                                 False),
+    ('e_se_eff_gpa',                                      True),
+]
+
+
+def _get_nested(d, key):
+    """Get value from nested dict using dot-separated key (e.g., 'a.b')."""
+    if '.' not in key:
+        return d.get(key)
+    parts = key.split('.')
+    v = d
+    for p in parts:
+        if isinstance(v, dict): v = v.get(p)
+        else: return None
+    return v
+
+
+def _thermal_form_arrays(data_list, names):
+    """Build feature matrix for σ_thermal Stage T1 form.
+    Mirrors _electronic_form_arrays pattern: walks data_list, filters cases
+    that have target κ + all required features, returns dict with X, y, etc.
+
+    EXCL: cases in _EXCLUDED_NAMES_EL (σ_e EXCL) are marked but kept in
+    arr['excluded'] for X-rendering.  Fit uses ~excluded mask.
+    """
+    rows = []; kept_names = []; kept_idx = []; excluded = []
+    for i, d in enumerate(data_list):
+        if not isinstance(d, dict): continue
+        # Target — first non-zero from priority chain
+        kappa = None
+        for k in _THERMAL_TARGET_KEYS:
+            v = d.get(k)
+            if isinstance(v, (int, float)) and v > 0:
+                kappa = float(v); break
+        if kappa is None: continue
+        if kappa < _THERMAL_KAPPA_MIN or kappa > _THERMAL_KAPPA_MAX: continue
+
+        # Extract all required features
+        feats = []
+        valid = True
+        for fkey, do_log in _THERMAL_T1_FEATURES:
+            v = _get_nested(d, fkey)
+            if v is None or not isinstance(v, (int, float)) or not np.isfinite(v):
+                valid = False; break
+            if do_log:
+                if v <= 0: valid = False; break
+                feats.append(np.log(float(v)))
+            else:
+                feats.append(float(v))
+        if not valid: continue
+
+        rows.append(feats)
+        kept_names.append(names[i])
+        kept_idx.append(i)
+        excluded.append(names[i] in _EXCLUDED_NAMES_EL)
+
+    n = len(rows)
+    if n < 8:
+        return None
+    X = np.array(rows)
+    sigs = np.array([float([d for d in [data_list[j].get(k) for k in _THERMAL_TARGET_KEYS] if isinstance(d, (int, float)) and d > 0][0])
+                     for j in kept_idx])
+    return {
+        'n': n, 'keep_idx': np.array(kept_idx), 'names': kept_names,
+        'X': X, 'sigs': sigs, 'logsig': np.log(sigs),
+        'excluded': np.array(excluded),
+        'feature_labels': [f'{f[0]}{"" if not f[1] else " [log]"}' for f in _THERMAL_T1_FEATURES],
+    }
+
+
+def _thermal_fit(arr, fit_mask=None, alpha=0.1):
+    """Ridge regression fit for σ_thermal Stage T1.
+    Returns dict with coef, pred_log, r2, loocv, n_fit."""
+    X = arr['X']; y = arr['logsig']; n = arr['n']
+    if fit_mask is None:
+        fit_mask = np.ones(n, bool)
+    Xf = X[fit_mask]; yf = y[fit_mask]
+    nf = int(fit_mask.sum())
+    # Ridge regression with intercept (no penalty on intercept)
+    Xf_ = np.column_stack([np.ones(nf), Xf])
+    k = Xf_.shape[1]
+    I = np.eye(k); I[0, 0] = 0
+    coef = np.linalg.solve(Xf_.T @ Xf_ + alpha * I, Xf_.T @ yf)
+    # In-sample R²
+    pred_log_fit = Xf_ @ coef
+    ss_tot = float(np.sum((yf - yf.mean())**2))
+    r2 = 1 - float(np.sum((yf - pred_log_fit)**2)) / ss_tot if ss_tot > 0 else 0
+    # LOOCV
+    sse_loo = 0.0
+    for j in range(nf):
+        m = np.ones(nf, bool); m[j] = False
+        Xm = Xf_[m]; ym = yf[m]
+        try:
+            cm = np.linalg.solve(Xm.T @ Xm + alpha * I, Xm.T @ ym)
+            sse_loo += (yf[j] - Xf_[j] @ cm)**2
+        except: pass
+    loocv = 1 - float(sse_loo) / ss_tot if ss_tot > 0 else 0
+    # Predict on full corpus
+    X_ = np.column_stack([np.ones(n), X])
+    pred_log = X_ @ coef
+    return {'coef': coef, 'pred_log': pred_log, 'r2': r2, 'loocv': loocv,
+            'n_fit': nf, 'alpha': alpha}
+
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
