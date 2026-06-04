@@ -6801,9 +6801,12 @@ def plot_thermal_fit_final(data_list, names, outdir):
                edgecolors='white', zorder=3,
                label=f'fit ({int(fit_band.sum())})')
     if excl.any():
+        # AUDIT EXCLUDED — gray hollow square + ✗ (shared σ_e EXCL list).
+        # These are documented anomalies (broken sim / marginal-perc /
+        # sibling-tail), NOT form failures.
         ax.scatter(kappa_act[excl], kappa_pred[excl], s=110, c='#f5f5f5',
                    edgecolors='#888', linewidths=1.8, marker='s', zorder=4,
-                   label=f'AUDIT excluded ({int(excl.sum())})')
+                   label=f'AUDIT excluded ({int(excl.sum())}) — documented anomaly, shared w/ σ_e')
         ax.scatter(kappa_act[excl], kappa_pred[excl], s=80, c='#888',
                    marker='x', linewidths=1.5, zorder=5)
     lim = [kappa_act.min()*0.6, kappa_act.max()*1.6]
@@ -6813,7 +6816,7 @@ def plot_thermal_fit_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('κ actual (Stage E Physics target, mScm-equiv)')
-    ax.set_ylabel('κ predicted (Stage T1 form, Ridge α=0.1)')
+    ax.set_ylabel('κ predicted (Stage T1 form, Ridge α=0.05)')
     ax.set_title(
         f"σ_thermal Stage T1 production form  "
         f"(R²={fit['r2']:.3f}  LOOCV={fit['loocv']:.3f}  n_fit={fit['n_fit']}  "
@@ -6856,22 +6859,32 @@ def plot_thermal_outliers_final(data_list, names, outdir):
     if is_out.any():
         ax.scatter(kappa_act[is_out], kappa_pred[is_out], s=80, c=RED,
                    edgecolors='black', linewidths=1.5, zorder=4,
-                   label=f'FIT outlier >±20% ({int(is_out.sum())})')
+                   label=f'FIT outlier >±20% ({int(is_out.sum())}) — form fail')
     if excl.any():
+        # AUDIT EXCLUDED — distinct gray hollow squares + ✗ overlay (mirror
+        # σ_electronic plot) so user immediately sees these are intentionally
+        # outside the fit, NOT form failures.  EXCL list shared with σ_e.
         ax.scatter(kappa_act[excl], kappa_pred[excl], s=110, c='#f5f5f5',
-                   edgecolors='#888', linewidths=1.8, marker='s', zorder=4,
-                   label=f'AUDIT excluded ({int(excl.sum())})')
+                   edgecolors='#888', linewidths=1.8, marker='s', zorder=4.5,
+                   label=f'AUDIT excluded ({int(excl.sum())}) — documented anomaly, NOT form fail')
         ax.scatter(kappa_act[excl], kappa_pred[excl], s=80, c='#888',
                    marker='x', linewidths=1.5, zorder=5)
-    # Annotate top-6 outliers + all EXCL
+    # Annotate top-6 fit-outliers + ALL excluded (gray italic [AUDIT] prefix
+    # for EXCL, red bold for genuine form outliers — same scheme as σ_e)
     order = np.argsort(-np.abs(err_pct))
     annot = list(np.where(excl)[0])
     for i in order[:6]:
         if i not in annot: annot.append(i)
     for i in annot:
-        col = '#777' if excl[i] else (RED if is_out[i] else GRAY)
-        ax.annotate(f'{arr["names"][i][:24]} ({err_pct[i]:+.0f}%)',
+        if excl[i]:
+            col = '#777'; weight = 'normal'; prefix = '[AUDIT] '; style = 'italic'
+        elif is_out[i]:
+            col = RED; weight = 'bold'; prefix = ''; style = 'normal'
+        else:
+            col = GRAY; weight = 'normal'; prefix = ''; style = 'normal'
+        ax.annotate(f'{prefix}{arr["names"][i][:22]} ({err_pct[i]:+.0f}%)',
                     (kappa_act[i], kappa_pred[i]), fontsize=6, color=col,
+                    fontweight=weight, fontstyle=style,
                     xytext=(4, 3), textcoords='offset points')
     lim = [kappa_act.min()*0.6, kappa_act.max()*1.6]
     ax.plot(lim, lim, '--', color=GRAY)
