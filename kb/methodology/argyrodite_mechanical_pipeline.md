@@ -234,10 +234,31 @@ mean ± std 또는 dopant relative ΔB₀로 보고.
 
 EOS V₀에 가장 가까운 grid point 좌표 채택. 없으면:
 1. 인접 volume의 relaxed 좌표 → V₀ cell에 삽입
-2. DFT relax 1회 추가
-3. Tight SCF: `conv_thr = 1×10⁻¹⁰`, dense FFT grid
+2. DFT relax 1회 추가 — **⚠ k-mesh 수렴 필수 (아래)**
+3. Tight SCF: `conv_thr = 1×10⁻¹⁰`, dense FFT grid (`ecutrho`)
 
 → Step 8 post-processing 출발 좌표.
+
+### ⚠ k-mesh 수렴 — 절대 빠뜨리지 말 것 (comp1_v3 2026-06-04 사고)
+
+**"Tight SCF"는 conv_thr + ecutrho 만으로 정의되지 않는다. k-mesh가 핵심이다.**
+
+- 기준: **k × L ≥ 40 Å** (각 축에서 `N_k × |a_축|`), = k-spacing ≤ 0.16 Å⁻¹
+- cubic 10 Å 셀 → 최소 **4×4×4** (k×L=40), 안전하게 6×6×6
+- 긴 축(예: rhombo c=35 Å)은 k 적어도 됨 (modelc 6×6×3 → k×L = 42/42/105 ✓)
+- **비대칭 k (예: cubic 셀에 2×2×1) 금지** — z만 다르게 sampling되어 cubic 대칭이 인위적으로 깨짐
+
+**진단법 (사후 검증)**: 완성된 V₀에서 production k-mesh로 single-point SCF →
+1. 잔류 force가 forc_conv_thr 근처여야 함 (PS4 S에 0.26 eV/Å 같은 큰 force = 실패)
+2. cubic 셀이면 stress가 등방이어야 함 (σ_xx≈σ_yy≈σ_zz, shear≈0). 비등방 = 좌표가 잘못 relax됨.
+
+**도구**: `tools/comp1_v3/kconv_scan.py` — 여러 k에서 E/atom, P, stress 비등방도를
+스캔해 production mesh를 측정으로 결정. 새 조성 시작 시 **Step 6(EOS) 전에 1회 실행 권장**.
+
+**comp1_v3 사고 요약**: V₀ relax + elastic + LOBSTER + DOS 모두 k=2×2×1 (k×L=10 Å,
+modelc의 1/4)로 실행됨. conv_thr=1e-10이라 "tight"로 착각. 결과: gap 1.50 (literature
+PBE 2.2-2.45 대비 과소), PS4 좌표 0.26 eV/Å 어긋남, cubic 셀에 비등방 stress.
+→ V₀ 위치 re-relax (셀 고정) + property 전체 재계산 필요. modelc(6×6×3)는 영향 없음.
 
 ---
 
