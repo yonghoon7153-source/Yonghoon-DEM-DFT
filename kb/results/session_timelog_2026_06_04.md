@@ -8,7 +8,7 @@
 | 머신 | 트랙 | GPU |
 |---|---|---|
 | **v100** (container 915bdbbd37ca) | comp1_v3 properties 재계산 (k-mesh 사고 복구) | 1× 32GB |
-| **kserver116-27** (=gabia) | LiNiO₂ DFT+U, Li3N DFT drag | 1× A6000 48GB |
+| **kserver116-27** (=gabia) | LiNiO₂ DFT+U, Li3N DFT drag, **273 doping cascade** | 1× A6000 48GB |
 | **KISTI glogin01** | Nd-doped modelc relax (job 748804) | amd_a100nv_8 |
 | (로컬 repo) | DB/문서 갱신 | — |
 
@@ -73,14 +73,27 @@
 - **수정 중**: relax.out의 BFGS29 최종좌표를 텍스트로 추출(ASE는 Nd1/Nd2 못 읽음) → relax_run4.in ATOMIC_POSITIONS에 주입 → 좌표+density 일치하면 from_scratch여도 빨리 수렴
 - **SLURM**: 748804 PENDING (amd_a100nv_8, 65 대기, 예상시작 6/6 13:18, 2일 walltime, 2 GPU). 좌표 주입 후 재제출 예정
 
+## 트랙 5: kserver — 273 doping cascade resume (concentration-aware Layer 2 ML)
+
+- **목적**: 91 compound × 3 conc(2/5/10%) = 273 cascade, paper-grade Layer 2 ML 학습용 (concentration-aware feature)
+- **batch**: `/data/work/runs/multi_category_2026_05_26_v23` (v4.5.20 multi-concentration, Li2O_x002 식 라벨)
+- **죽었던 원인 2건 (해결)**:
+  1. **스크립트 부재** — `tier_cascade.sh`/`master_batch_273.sh`가 현재 작업 브랜치(`configure-spawn-halogen`)에 없음. argyrodite-ml-migration에도 없었고 → **`origin/claude/unified-2026-05-15`의 `tools/doping/`에 30개 전부** 있었음 (`git checkout origin/claude/unified-2026-05-15 -- tools/doping/`로 복구). 이전 `kill -CONT`로 깨운 master가 스크립트 못 찾아 **rc=127로 step 25~273 전부 FAIL**났던 게 이거.
+  2. **stale `.master_lock` 266개** — master는 lock을 만들기만 하고 cascade 끝나도/죽어도 안 지움. 죽은 master의 유령 lock 266개가 cascade_status Layer4에서 "active"로 오인 → 재런 시 248개 전부 SKIP, 즉시 종료. `find -name .master_lock -delete`로 청소 후 정상.
+- **resume 상태 (2026-06-05 08:25)**: `Will SKIP 25 (25 done) / Will START 248`. master PID 1778481. Step 26 `BaO_x005`부터 진행. rc=127로 마커 안 찍힌 FAIL들은 pending으로 깨끗하게 재실행.
+- **주의**: 완료 개수 셀 때 `STAGE_12.DONE`만 (cascade당 `STAGE_12.DONE`+`STAGE_12b.DONE` 2개라 `STAGE_12*`로 세면 ×2 뻥튀기).
+- **재시작 명령**: `cd /data/work/repo; BATCH_DIR=<v23> nohup bash tools/doping/master_batch_273.sh ...` (반드시 repo cwd + BATCH_DIR override; 기본값 `_v22`라 override 안 하면 빈 디렉터리에서 273개 처음부터).
+
 ---
 
 ## 즉시 할 일 (다음 세션 시작점)
 
 1. **KISTI**: relax_run4.in 좌표 주입 검증 → `scancel 748804; sbatch sbatch_run4_fresh.sh`
 2. **v100**: elastic 12/12 → `fit_elastic_cij_stress.py` → E_VRH (vacancy paradox). ELF/bands plot
-3. **kserver**: LiNiO₂ ecutrho480 단독 재시작 (Li3N drag와 순차) / Li3N drag 진행도 (느리면 rigid)
-4. **DB**: elastic 결과 → elastic.json, ELF/bands → 비교 md
+3. **kserver**: Li3N drag(rigid p0~p8) 진행 + 273 cascade 동시 (A6000 48GB, drag 18.8GB + UMA ~10GB, 29GB 여유). drag 9점 끝나면 barrier plot
+4. **kserver**: LiNiO₂ ecutrho480 단독 재시작 (drag/cascade와 GPU 경쟁 — 메모리 보고 순차)
+5. **273 cascade**: 완료 개수 모니터(`STAGE_12.DONE` only), FINAL_RANKING / unified_dataset_273.csv 누적
+6. **DB**: elastic 결과 → elastic.json, ELF/bands → 비교 md
 
 ## 도구 (이번 세션 작성/수정)
 - `tools/modelc_v3/plot_dos.py` — DOS+PDOS, gap+orbital character (paper-grade)
@@ -88,4 +101,7 @@
 - `tools/comp1_v3/kconv_scan.py` — k 수렴 스캔 (E/atom, stress 비등방)
 - `tools/neb_diffusion/adatom_diffusion.py` — binding-site discovery + CI-NEB (--rigid/--constrain_z)
 - `tools/neb_diffusion/dft_drag.py` — DFT drag scan (레퍼런스 방법)
+- `tools/comp1_v3/analyze_per_bond_icohp.py` — bonds.json 전 섹션 one-shot 재생성 (ICOHPLIST+ACF+struct → Bader/ICOHP/Wilkening/per-site)
+- ♻ `tools/doping/` 30개 — `origin/claude/unified-2026-05-15`에서 복구 (현재 브랜치엔 make_run4_relax_input.py만 있었음). tier_cascade.sh(v2)/master_batch_273.sh(v4.5.20) 포함
 - ⚠ `build_elastic_strain_inputs.py`, `build_lobster_paw_inputs.py` — `--kpoints` shift(0 0 0) 누락 버그 (sed 우회 중, 나중에 고칠 것)
+- ⚠ `master_batch_273.sh` — `.master_lock` 안 지우는 버그 (죽으면 stale lock이 다음 run을 "active"로 막음). 재런 전 `find -name .master_lock -delete` 필요
