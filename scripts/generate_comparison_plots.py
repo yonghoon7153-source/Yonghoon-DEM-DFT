@@ -6654,7 +6654,6 @@ _THERMAL_T1_FEATURES = [
     ('A_binding_share_total_pct.elastic',                 False),
     ('area_AM전체_SE_total_physics',                      False),
     ('tortuosity_median',                                 False),
-    ('se_se_cn_std',                                      True),   # log version (greedy Step 17)
     ('e_se_eff_gpa',                                      True),
 ]
 
@@ -6682,6 +6681,13 @@ def _thermal_form_arrays(data_list, names):
     rows = []; kept_names = []; kept_idx = []; excluded = []
     for i, d in enumerate(data_list):
         if not isinstance(d, dict): continue
+        # Skip hash-named test/upload cases (260603_233847_... etc.) — only
+        # real named cases (input_*) belong in the production corpus.  Hash
+        # cases are intermediate test uploads that pollute the fit (LOOCV
+        # 0.62 with hash cases vs 0.90 without; verified thermal_alpha_tune.py).
+        nm = names[i] if i < len(names) else ''
+        if not nm.startswith('input_'):
+            continue
         # Target — first non-zero from priority chain
         kappa = None
         for k in _THERMAL_TARGET_KEYS:
@@ -6724,7 +6730,7 @@ def _thermal_form_arrays(data_list, names):
     }
 
 
-def _thermal_fit(arr, fit_mask=None, alpha=0.1):
+def _thermal_fit(arr, fit_mask=None, alpha=0.05):
     """Ridge regression fit for σ_thermal Stage T1.
     Returns dict with coef, pred_log, r2, loocv, n_fit."""
     X = arr['X']; y = arr['logsig']; n = arr['n']
