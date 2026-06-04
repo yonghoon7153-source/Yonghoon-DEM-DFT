@@ -383,6 +383,23 @@ def list_cases():
             meta['physics_resistance_model'] = phys_model
             meta['physics_solver_at'] = m.get('physics_solver_at', '')
 
+            # Stage E completion — for the 3 channels.  Missing Stage E means
+            # network_solver ran but run_network_full_corrections.py post-
+            # processing didn't fill in *_stage_e_physics keys.  Common for
+            # cases analyzed before /analyze was wired to run Stage E, or
+            # when Stage E physics-mode failed silently.
+            #
+            # Render as PHY-σ ✓ / PHY-σ ∅ next to existing PHYS badge so user
+            # immediately sees which legacy cases still need re-run.
+            _has_i_p = bool(m.get('sigma_full_mScm_stage_e_physics'))
+            _has_e_p = bool(m.get('electronic_sigma_full_mScm_stage_e_physics'))
+            _has_k_p = bool(m.get('thermal_sigma_full_mScm_stage_e_physics'))
+            meta['stage_e_physics_complete'] = (_has_i_p and _has_e_p and _has_k_p)
+            meta['stage_e_physics_missing'] = []
+            if not _has_i_p: meta['stage_e_physics_missing'].append('σ_ionic')
+            if not _has_e_p: meta['stage_e_physics_missing'].append('σ_e')
+            if not _has_k_p: meta['stage_e_physics_missing'].append('κ')
+
             # Composite score (overall grade) — used for the 랭킹 filter.
             # Cheap to compute (no SE-aux dependency at the list level;
             # corpus-relative axes drop to N/A here, which is fine).
@@ -3637,6 +3654,27 @@ def analyze(case_id):
             print(f"  [Stage E] rc={_se.returncode} ({case_id})")
             if _se.returncode != 0 and _se.stderr:
                 print(f"  [Stage E] stderr (last 300): {_se.stderr[-300:]}")
+            # POST-CHECK: verify Stage E populated all 3 channels in BOTH
+            # contact modes (Hertz + Physics).  If any channel-mode missing,
+            # log a warning so user can see in case list (Stage-E-P badge).
+            # Common missed case: thermal_sigma_full_mScm_stage_e_physics fell
+            # through silently when physics-mode solver returned None.
+            try:
+                fm_path = os.path.join(results_dir, 'full_metrics.json')
+                if os.path.exists(fm_path):
+                    with open(fm_path) as _f:
+                        _fm = json.load(_f)
+                    _missing = []
+                    for _k in ('sigma_full_mScm_stage_e_physics',
+                                'electronic_sigma_full_mScm_stage_e_physics',
+                                'thermal_sigma_full_mScm_stage_e_physics'):
+                        if not _fm.get(_k):
+                            _missing.append(_k.replace('_stage_e_physics', '').replace('_full_mScm', ''))
+                    if _missing:
+                        print(f"  [Stage E] ⚠ Physics-mode incomplete: {', '.join(_missing)} "
+                              f"({case_id}) — will show 'Stage-E-P ⚠' badge in case list")
+            except Exception as _exc:
+                print(f"  [Stage E post-check] {type(_exc).__name__}: {_exc}")
             # Refresh validation flags self-report card after Stage E.
             # backfill_validation_flags.py takes case NAMES as positional args.
             bf_cmd = ['python3',
