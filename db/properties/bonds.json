@@ -152,6 +152,22 @@
         "ratio_4d_over_4a": 1.40,
         "headline": "4d-Cl anti-site forms 40% stronger Li-Cl bonds than 4a-Cl. Despite being only 12.5% of Cl (1/8), it contributes substantially to mean ICOHP (-2.103 avg vs -2.026 if 4a-only). Direct quantitative origin of the deeper second peak in Li-Cl pCOHP panel."
       },
+      "Li_Cl_vacancy_antisite_decomposition": {
+        "_method": "Compare comp1 4a-only ICOHP (no vacancy) with modelc 4a (with vacancy) to isolate vacancy effect, then compare modelc 4a with modelc 4d to isolate anti-site effect.",
+        "comp1_4a_baseline_eV": -1.855,
+        "modelc_4a_eV": -2.026,
+        "modelc_4d_eV": -2.836,
+        "vacancy_effect_eV_per_bond": -0.171,
+        "_vacancy_effect_pct": "+9.2% per bond (comp1 -1.855 → modelc 4a -2.026)",
+        "antisite_effect_eV_per_bond": -0.809,
+        "_antisite_effect_pct": "+39.9% per bond (modelc 4a -2.026 → 4d -2.836)",
+        "total_LPSCl_to_LPSCl16_eV": -0.249,
+        "vacancy_total_contribution_eV": -0.171,
+        "antisite_total_contribution_eV": -0.077,
+        "vacancy_pct_of_total": 68.7,
+        "antisite_pct_of_total": 31.3,
+        "headline": "Vacancy/Cl-rich field is the MAIN driver of Li-Cl strengthening (69% of total), affecting all 90% of Cl atoms uniformly. Anti-site provides INTENSE per-bond enhancement (40% stronger) but on only 10% of Cl, contributing 31% to total. The two effects together explain the +13.4% overall Li-Cl ICOHP increase."
+      },
       "Li_S_per_site_split": {
         "Li-S(PS4)":  {"icohp_eV": -1.622, "std_eV": 1.266, "n_bonds": 101, "_note": "PS4-bound S; ionic glue varies by Li env"},
         "Li-S(4d)":   {"icohp_eV": -2.516, "std_eV": 0.098, "n_bonds":  12, "_note": "Free S²⁻ at 4d site; tight σ → universal Li-S anchor"},
