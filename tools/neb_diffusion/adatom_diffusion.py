@@ -299,6 +299,88 @@ def stage_neb(args):
     print(f"\n[neb] → neb_result_{args.site_a}_{args.site_b}.json")
 
 
+# --------------------------------------------------------------------------
+# stage: DRAG scan (reference method — adatom xy pinned along path, substrate
+# relaxed). Robust when the adatom would otherwise incorporate into the slab,
+# which makes free NEB collapse. Matches Kim & Cui's "threshold energies
+# needed to adsorb Li adatom across the diffusion pathway".
+# --------------------------------------------------------------------------
+def stage_drag(args):
+    from ase import Atom
+    from ase.io import read, write
+    from ase.optimize import BFGS
+    from ase.constraints import FixAtoms, FixedLine
+
+    out = Path(args.out)
+    meta = json.loads((out / "slab_meta.json").read_text())
+    frozen = list(meta["frozen_indices"])
+    A = read(str(out / f"site_{args.site_a}.xyz"))
+    B = read(str(out / f"site_{args.site_b}.xyz"))
+    posA = A.positions[-1].copy()
+    posB = B.positions[-1].copy()
+    z_ads = args.ad_z if args.ad_z is not None else float(posA[2])
+    slab = A[:-1]  # substrate only (adatom is last)
+    ad_idx = len(slab)
+    print(f"[drag] {args.site_a}→{args.site_b}, {args.n_points} points, "
+          f"adatom z={'relaxed-in-z' if args.relax_z else f'fixed {z_ads:.2f}'}")
+    print(f"[drag] xyA=({posA[0]:.2f},{posA[1]:.2f}) xyB=({posB[0]:.2f},{posB[1]:.2f})  "
+          f"dist={np.hypot(*(posB[:2]-posA[:2])):.2f} Å")
+
+    pred = make_predictor(args.model, args.device)
+    energies, zs, xys = [], [], []
+    for k in range(args.n_points):
+        t = k / (args.n_points - 1)
+        xy = (1 - t) * posA[:2] + t * posB[:2]
+        atoms = slab.copy()
+        atoms.append(Atom(args.adatom, (xy[0], xy[1], z_ads)))
+        if args.relax_z:
+            # adatom may move only along z (xy pinned); substrate free
+            cons = [FixAtoms(indices=frozen),
+                    FixedLine(ad_idx, direction=[0, 0, 1])]
+        else:
+            # adatom fully pinned (xyz); substrate free — rigid "threshold E"
+            cons = [FixAtoms(indices=frozen + [ad_idx])]
+        atoms.set_constraint(cons)
+        atoms.calc = calc_from(pred, args.task)
+        opt = BFGS(atoms, logfile=None)
+        opt.run(fmax=args.fmax, steps=args.max_steps)
+        E = atoms.get_potential_energy()
+        energies.append(E); zs.append(float(atoms.positions[-1, 2]))
+        xys.append([float(xy[0]), float(xy[1])])
+        print(f"  pt {k}/{args.n_points-1} t={t:.2f} xy=({xy[0]:.2f},{xy[1]:.2f}) "
+              f"z={atoms.positions[-1,2]:.2f}  E={E:.4f}")
+
+    e0 = energies[0]
+    rel = [e - e0 for e in energies]
+    imax = int(np.argmax(rel))
+    barrier_fwd = rel[imax] - rel[0]
+    barrier_rev = rel[imax] - rel[-1]
+    asym = abs(rel[0] - rel[-1])
+    print(f"\n[drag] === profile ===")
+    for k, r in enumerate(rel):
+        mark = " ← max" if k == imax else ""
+        print(f"  pt {k}: {r:+.4f} eV  (z={zs[k]:.2f}){mark}")
+    print(f"\n  forward barrier : {barrier_fwd:.4f} eV")
+    print(f"  reverse barrier : {barrier_rev:.4f} eV")
+    print(f"  endpoint asym   : {asym:.4f} eV")
+    # diving check: did the adatom drop far below its start height?
+    if min(zs) < z_ads - args.dive_tol:
+        print(f"  ⚠ adatom dropped to z={min(zs):.2f} (start {z_ads:.2f}) — "
+              f"incorporation leaking in; use rigid mode (omit --relax_z) or raise floor")
+    else:
+        print(f"  ✓ adatom stayed on surface (z {min(zs):.2f}–{max(zs):.2f})")
+
+    res = {"mode": "drag", "relax_z": args.relax_z, "site_a": args.site_a,
+           "site_b": args.site_b, "n_points": args.n_points, "z_ads": z_ads,
+           "energies_eV": energies, "rel_energies_eV": rel, "z_path": zs,
+           "xy_path": xys, "barrier_fwd_eV": barrier_fwd,
+           "barrier_rev_eV": barrier_rev, "endpoint_asymmetry_eV": asym,
+           "max_point": imax, "model": args.model, "task": args.task}
+    (out / f"drag_result_{args.site_a}_{args.site_b}.json").write_text(
+        json.dumps(res, indent=2))
+    print(f"\n[drag] → drag_result_{args.site_a}_{args.site_b}.json")
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -337,8 +419,21 @@ def main():
     pn.add_argument("--valley_tol", type=float, default=0.01,
                     help="interior dips more than this below endpoints → valley flag")
 
+    pd = sub.add_parser("drag", parents=[common])
+    pd.add_argument("--site_a", type=int, required=True)
+    pd.add_argument("--site_b", type=int, required=True)
+    pd.add_argument("--adatom", default="Li")
+    pd.add_argument("--n_points", type=int, default=9)
+    pd.add_argument("--ad_z", type=float, default=None,
+                    help="fixed adatom height (default: site_a adatom z)")
+    pd.add_argument("--relax_z", action="store_true",
+                    help="let adatom relax along z (xy still pinned); default rigid xyz")
+    pd.add_argument("--dive_tol", type=float, default=1.0,
+                    help="flag if adatom z drops more than this below z_ads")
+
     args = ap.parse_args()
-    {"relax": stage_relax, "sites": stage_sites, "neb": stage_neb}[args.cmd](args)
+    {"relax": stage_relax, "sites": stage_sites,
+     "neb": stage_neb, "drag": stage_drag}[args.cmd](args)
 
 
 if __name__ == "__main__":
