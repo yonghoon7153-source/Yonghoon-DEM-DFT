@@ -5855,6 +5855,13 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
     excluded = []
     seen = set()
     for i, d in enumerate(data_list):
+        # Skip hash-named test/upload cases (260603_233847_... etc.) — only
+        # real named cases (input_*) belong in the production corpus.  Hash
+        # cases got Stage E physics values via backfill (2026-06-04) and were
+        # polluting the fit (LOOCV 0.95 → 0.69).  Same filter as σ_thermal.
+        _nm = real_all[i] if i < len(real_all) else ''
+        if not str(_nm).startswith('input_'):
+            continue
         sig = _stage_e_electronic_target(d)        # raw-req + cap 100 + fallback
         phi = d.get('phi_am')
         cn = d.get('am_am_cn')
@@ -7016,7 +7023,14 @@ def main():
     _FOCUS_LABEL = args.focus_label or ""
     _FIT_CORPUS = []
     for _p in (args.fit_corpus_inputs or []):
+        # Skip hash-named test/upload cases (path contains 260603_233847_...
+        # rather than input_*).  These got Stage E values via backfill
+        # (2026-06-04) and pollute the σ_ionic global fit corpus.
+        # Path layout: .../webapp/results/<case_name>/full_metrics.json
         try:
+            _case_nm = os.path.basename(os.path.dirname(_p))
+            if not _case_nm.startswith('input_'):
+                continue
             with open(_p) as _f:
                 _FIT_CORPUS.append(json.load(_f))
         except Exception:
