@@ -16,22 +16,40 @@
 
 ## 0. Pipeline §8 진행 현황
 
-| 단계 | LPSCl (comp1_v3) | LPSCl1.6 (modelc_v3) |
+⚠ **k-mesh 사고 (2026-06-04)**: comp1의 기존 §8b-i는 전부 **k=2×2×1 (k×L=10 Å, 4배 부족)**로
+실행됨 → DFT 전자/탄성 property 오염. **새 V0를 k=4×4×4로 re-relax (force 0.26→0.0066 eV/Å)
+후 52/520/4×4×4로 전부 재계산 중.** geometry는 거의 안 바뀜(RMS 0.003 Å)이라 좌표 기반
+(bond/coord/BVSE)은 값 유지, 전자/탄성(gap/Cij/Bader/LOBSTER)은 진짜 영향받아 재계산 필수.
+modelc(6×6×3)는 영향 없음.
+
+| 단계 | LPSCl (comp1_v3) k444 | LPSCl1.6 (modelc_v3) |
 |---|---|---|
-| §8a V0 relax (BM-EOS V0에서 cell-fixed BFGS) | **완료** (18 BFGS, V=1016.62 ✓) | 완료 |
-| §8b 결합 통계 (bond stats) | **완료** | 완료 |
-| §8c 배위수 (coordination) | **완료** | 완료 |
-| §8d Voronoi | **완료** | 완료 |
-| §8d' per-site 분석 (4a/4d Cl, PS4/4d S, Li env) | **완료** | 완료 |
-| §8e BVSE (python) | 대기 | 완료 |
-| §8f Bader (AE plot_num=17) | 대기 | 완료 |
-| §8g DOS / PDOS | **완료** (paper-grade, 2026-06-04) | **완료** + 재분석 (paper-grade) |
-| §8h 밴드 구조 (Hungarian 재정렬) | 대기 (NSCF 진행 예정) | 완료 |
-| §8i stress-strain 전체 6×6 Cij | **완료** (B=43.59, E=52.31, A=1.07) | 완료 |
-| §8j MLIP UMA 600K snapshot 탄성 | 대기 | 완료 |
-| §8k AIMD 600/800/1000K (Arrhenius) | **완료** (110ps×3T, 2026-06-04) | 완료 |
-| §8l ELF (단면 + 3D iso) | 대기 | 완료 |
-| §8m LOBSTER (COHP/ICOHP 4-panel) | 대기 | NSCF 완료, lobster 대기 |
+| §8a V0 relax | **✅ k444 재완료** (18 BFGS, force 0.0066 eV/Å) | 완료 (6×6×3) |
+| §8b 결합 통계 | **✅ k444** (Cl 전부 4a=ordered, Li-Cl 2.607, P-S 2.072) | 완료 |
+| §8c 배위수 | **✅ k444** (Li env 1종, 완전 대칭) | 완료 |
+| §8d Voronoi | **✅ k444** | 완료 |
+| §8d' per-site (4a/4d Cl, PS4/4d S, Li env) | **✅ k444** (Cl 4a×4, 4d×0) | 완료 |
+| §8e BVSE | **✅ k444** (bvse_k444/) | 완료 |
+| §8f Bader (AE plot_num=17) | **✅ k444** (Li+0.87, Cl−0.93, S−1.52, P+3.27) | 완료 |
+| §8g DOS / PDOS | **✅ k444** (gap **1.76**, ≈modelc 1.82; 이전 1.50은 k artifact) | 완료 |
+| §8h 밴드 구조 | 🔲 **대기** (NSCF k-path + bands.x) | 완료 |
+| §8i stress-strain Cij | ⏳ **k444 실행 중** (12 strain relax, 밤샘) — vacancy paradox 재검증 | 완료 |
+| §8j MLIP UMA 600K snapshot 탄성 | 🔲 확인 필요 (mlip_600K_snapshot/) | 완료 |
+| §8k AIMD Arrhenius | **✅ Ea=0.172 R²=0.999** (800K 재실행으로 fluke 해결) | 완료 (Ea 0.224) |
+| §8l ELF (단면 + 3D iso) | 🔲 **대기** (SCF + pp.x plot_num=8) | 완료 |
+| §8m LOBSTER (COHP/ICOHP) | 🔲 **대기** (PAW ext-basis, k444, elastic 후 GPU) | NSCF 완료, lobster 대기 |
+
+### comp1 남은 작업 (전부 k444, GPU 순차)
+1. **§8i elastic** ⏳ 밤샘 중 → fit → **E_VRH (vacancy paradox 확정)**
+2. **§8m LOBSTER** — PAW ext-basis SCF + lobster (elastic 후)
+3. **§8l ELF** — ONCV SCF + pp.x plot_num=8 (단면/3D)
+4. **§8h bands** — NSCF k-path + bands.x
+5. **§8j MLIP 600K elastic** — 상태 확인 (이미 했을 수도)
+
+### 다른 트랙 (별도 머신, 병행)
+- **kserver LiNiO₂ DFT+U SCF** (U6.2/tot_mag=0) — 수렴 확인 중
+- **kserver Li3N DFT drag** (9점, adatom 고정) — UMA 붕괴 회피, 레퍼런스 0.133 재현 목표
+- **modelc_v3 LOBSTER** — NSCF 완료, lobster 실행 대기
 
 
 ## 1. Paper 헤드라인 값 (잠정)
