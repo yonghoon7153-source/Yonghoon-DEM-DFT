@@ -45,6 +45,29 @@ def load():
     return cases
 
 
+# Features that leak the target (solver direct outputs) — NEVER use as predictor
+TARGET_LEAK = (
+    'thermal_sigma', 'sigma_full_mScm', 'electronic_sigma_full_mScm',
+    'stage_e_le_baseline_kappa',  # = κ baseline, direct leak
+)
+def is_leak(k):
+    return any(p in k for p in TARGET_LEAK)
+
+
+def safe_log_feature(vals):
+    """Transform any real-valued feature into a log-space predictor.
+    - all-positive: log(v)
+    - has non-positive: signed symlog = sign(v)·log(1+|v|)
+    Returns (transformed_array, mode) or None if constant."""
+    vals = np.asarray(vals, dtype=float)
+    if not np.all(np.isfinite(vals)): return None
+    if np.std(vals) < 1e-12: return None
+    if np.min(vals) > 0:
+        return np.log(vals), 'log'
+    # signed symlog for features with zeros/negatives (R_brug ratios etc.)
+    return np.sign(vals) * np.log1p(np.abs(vals)), 'symlog'
+
+
 def _get_nested(d, key):
     if '.' not in key: return d.get(key)
     v = d
@@ -82,25 +105,24 @@ def main():
     print(f"\nCorpus (post-EXCL): {n}\n")
     y = np.log(np.array([c['_kappa'] for c in cases]))
 
-    # ─── A. Current 16 features but ALL-LOG (pure power-law) ───
+    # ─── A. Current 16 features but SYMLOG (pure power-law, signed) ───
     print("=" * 90)
-    print("  A. Current 16 features → ALL-LOG (pure multiplicative power-law)")
+    print("  A. Current 16 features → SYMLOG (pure multiplicative, signed for ratios)")
     print("=" * 90)
     feats_16 = [f[0] for f in gcp._THERMAL_T1_FEATURES]
     cols = []; labels = []; dropped = []
     for fk in feats_16:
-        vals = np.array([_get_nested(c, fk) or np.nan for c in cases], dtype=float)
-        if not np.all(np.isfinite(vals)): dropped.append(fk); continue
-        if np.min(vals) <= 0:
-            # can't log non-positive — shift or skip
-            dropped.append(f"{fk}(non-positive)"); continue
-        cols.append(np.log(vals)); labels.append(f'log({fk})')
+        vals = np.array([_get_nested(c, fk) if _get_nested(c, fk) is not None else np.nan
+                         for c in cases], dtype=float)
+        tr = safe_log_feature(vals)
+        if tr is None: dropped.append(fk); continue
+        cols.append(tr[0]); labels.append(f'{tr[1]}({fk})')
     if dropped:
-        print(f"  dropped (non-loggable): {dropped}")
+        print(f"  dropped (constant/nan): {dropped}")
     X = np.column_stack(cols)
     res = fit_loocv(X, y)
-    print(f"  ALL-LOG ({len(labels)} feat): R²={res[0]:.4f}  LOOCV={res[1]:.4f}")
-    print(f"  → κ = exp(c0) · " + " · ".join(f"{l.replace('log(','').replace(')','')}^c{i+1}" for i,l in enumerate(labels[:4])) + " · ...")
+    print(f"  SYMLOG ({len(labels)} feat): R²={res[0]:.4f}  LOOCV={res[1]:.4f}")
+    print(f"  → κ = exp(c0) · ∏ feature_i^c_i  (signed-log for ratio features)")
     print()
 
     # ─── B. 2-phase EMT backbone ───
@@ -135,11 +157,11 @@ def main():
         cols = []; ok = True
         for fk in fks:
             vals = np.array([feat(c, fk, np.nan) for c in cases])
-            if not np.all(np.isfinite(vals)) or np.min(vals) <= 0:
-                ok = False; break
-            cols.append(np.log(vals))
+            tr = safe_log_feature(vals)
+            if tr is None: ok = False; break
+            cols.append(tr[0])
         if not ok:
-            print(f"  {label:50s}  (skip — non-loggable feature)")
+            print(f"  {label:50s}  (skip — constant/nan feature)")
             continue
         X = np.column_stack(cols)
         res = fit_loocv(X, y)
@@ -148,11 +170,10 @@ def main():
         print(f"  {label:50s} {k:>3d} {n/k:>6.1f} {res[0]:>6.3f} {res[1]:>6.3f}{flag}")
     print()
 
-    # ─── C. Compact greedy on log-only features ───
+    # ─── C. Compact greedy on symlog features (target-leak excluded) ───
     print("=" * 90)
-    print("  C. Compact greedy (log-only features, stop at plateau)")
+    print("  C. Compact greedy (symlog features, NO target-leak, stop at plateau)")
     print("=" * 90)
-    # All candidate log features (positive-valued numeric)
     candidates = {}
     common = Counter()
     for c in cases:
@@ -164,10 +185,13 @@ def main():
                     if isinstance(sv, (int, float)): common[f'{k}.{sk}'] += 1
     for k, ct in common.items():
         if ct/n < 0.9: continue
-        vals = np.array([_get_nested(c, k) or np.nan for c in cases], dtype=float)
-        if np.all(np.isfinite(vals)) and np.min(vals) > 0:
-            candidates[f'log({k})'] = np.log(vals)
-    print(f"  loggable candidates: {len(candidates)}")
+        if is_leak(k): continue   # exclude solver direct outputs (target leak)
+        vals = np.array([_get_nested(c, k) if _get_nested(c, k) is not None else np.nan
+                         for c in cases], dtype=float)
+        tr = safe_log_feature(vals)
+        if tr is not None:
+            candidates[f'{tr[1]}({k})'] = tr[0]
+    print(f"  symlog candidates (leak-free): {len(candidates)}")
     cand_items = list(candidates.items())
     selected = []; sel_arrs = []; best = -np.inf
     hist = []
