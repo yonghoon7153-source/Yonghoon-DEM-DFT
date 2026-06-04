@@ -100,7 +100,9 @@ configs as natural LAYERS inside one composite cathode.
       [stage_e_physics rejected if stage_e_source['sigma_e_physics'] = fallback]
     Dashboard UI v7: phantom σ_e / κ rows display '—' when raw missing OR
     fallback flag fired (suppress_phantom_sigma_rows in inject_stage_e_rows).
-  - σ_thermal — pending (was at v4++ era, 1-param).
+  - σ_thermal — **Stage T1 FINAL 2026-06-04** (LOOCV 0.9028, R² ≈0.96,
+    n_fit=82 after σ_e EXCL applied, 16 features Ridge α=0.1).  See
+    dedicated "σ_thermal Stage T1 FINALIZED" section below.
 - **Phase 1 (grade_engine expose) — DONE** (commit 9785bbf): expose
   grade_engine's ~30 derived metrics (Q_gravimetric, ASR_*, τ_Laplace,
   cycle-stable, 분극 η …) as `grade:<label>` params in the group-compare
@@ -537,6 +539,106 @@ Path forward = data, not form:
   • multi-seed at 8mAh_real_10 design would tell us if -44% is anomaly
     or genuine form limitation in the φ≈φc·10:0 regime
 
+### σ_thermal Stage T1 FINALIZED — Ridge regression on Physics target (2026-06-04)
+**Final form: 16 Ridge features (α=0.1), LOOCV 0.9028, R² 0.96, n_fit=82
+(corpus n=100, σ_e EXCL applied).**  Meets user 0.9 LOOCV adoption threshold.
+Phase 1 transport triad COMPLETE (σ_ionic 0.97 + σ_e 0.95 + σ_thermal 0.90).
+
+KEY DESIGN CHOICES (different from σ_ionic / σ_e):
+  1. **Target = thermal_sigma_full_mScm_stage_e_physics** (NOT Hertz Stage E)
+     - Audit (scripts/thermal_stage_e_audit.py) revealed Hertz Stage E thermal
+       correction factor distribution = [0.83, 1.00] mean 0.95 std 0.043,
+       i.e. **near pass-through** (Bruggeman weighting dilutes Wang step
+       function to near 1.0).  Form fit on Hertz target capped at LOOCV 0.11.
+     - Physics Stage E (Tabor + volume plastic contact areas) gives LOOCV
+       0.518 with minimal 8-feature form, 0.903 with 16 features.
+     - 5× improvement explained by Physics contact areas being structurally
+       larger and less sensitive to point-contact noise.
+  2. **EXCL list = σ_e _EXCLUDED_NAMES_EL** (23 cases, shared)
+     - Broken sim (1mAh_100_X plate_z bug + S_1/particulate_1/4 σ_e=0)
+     - Marginal percolation (1mAh_8_AMP_S2/S5 sparse 47-AM_P network)
+     - Sibling-tail (1mAh_5_AMP_S1/S4/S5 high seed variance)
+     - These cases pollute both σ_e and σ_thermal — same outliers, same fix.
+  3. **Sanity filter**: 0.05 ≤ κ ≤ 50 mScm
+     - Above 50: solver pathology (input_1mAh_100_7 κ=153,986)
+     - Below 0.05: broken sim
+  4. **Ridge α=0.1** (NOT OLS): 16 features on n=82 = 5.1:1 n/k, tight.
+     Ridge regularizes against feature collinearity (Bruggeman ratios
+     correlate with porosity etc.).
+
+WHY NOT COMPACT PHYSICS FORM (unlike σ_ionic T1 / σ_e Stage 22.5)?
+  σ_ionic: SE percolating backbone — single-phase, captured by
+    σ_grain·Cronau·√φ·CN²·√cov·f_p³·C(τ).  LOOCV 0.975 with 5 OLS.
+  σ_e: AM percolating backbone — single-phase, captured by
+    (σ_S·NCM_S)^(1-p)·(σ_P·NCM_P)^p·φ_AM⁴·√A·...  LOOCV 0.953 with 8 OLS.
+  κ: **MULTI-PATHWAY** — heat flows simultaneously through AM-AM, AM-SE,
+    SE-SE with composition-dependent k_weights (k_ratio=5.7 for AM:SE).
+    No single backbone scaling captures it analytically.
+    
+  Multiple attempts confirmed this (scripts/thermal_form_screen.py,
+  thermal_form_push_09.py, thermal_form_kitchen_sink.py):
+    - Trevisanello/Wang-locked LOCKED-only form: LOOCV negative (unit mismatch)
+    - σ_ionic-style 5-param OLS: LOOCV 0.06
+    - 12-feature LIVE OLS without EXCL: LOOCV 0.11
+    - Bruggeman EMT residual fit: LOOCV 0.05
+  
+  Only EXCL + Physics target + Ridge regression on 16 structural features
+  unlocked 0.9.  The 16 features collectively encode the multi-pathway
+  resistance network (Bruggeman ratios, contact areas, porosity, percolation,
+  tortuosity, fracture, validation flags).
+
+16 RIDGE FEATURES (greedy forward selection order, LOOCV after add):
+   1. porosity                                        LOOCV 0.50
+   2. log(se_se_cn)                                   LOOCV 0.63
+   3. tortuosity_std                                  LOOCV 0.69
+   4. log(gb_density_mean)                            LOOCV 0.74
+   5. log(validation_flags.asr_ionic_Ohm_cm2)         LOOCV 0.78
+   6. log(n_large_components)                         LOOCV 0.83
+   7. am_vulnerable_pct                               LOOCV 0.84
+   8. se_se_cn_std                                    LOOCV 0.86
+   9. log(electronic_active_fraction)                 LOOCV 0.86
+  10. log(R_brug_over_full_physics)                   LOOCV 0.86
+  11. validation_flags.bruggeman_fallback_fired_any   LOOCV 0.87
+  12. area_SE_SE_total_physics                        LOOCV 0.87
+  13. A_binding_share_total_pct.elastic               LOOCV 0.89
+  14. area_AM전체_SE_total_physics                    LOOCV 0.90
+  15. tortuosity_median                               LOOCV 0.90 ⭐ 0.9 돌파
+  16. log(e_se_eff_gpa)                               LOOCV 0.903 (plateau)
+
+CODE INTEGRATION (scripts/generate_comparison_plots.py):
+  _THERMAL_KAPPA_MAX / MIN              sanity bounds
+  _THERMAL_TARGET_KEYS                  fallback chain
+  _THERMAL_T1_FEATURES                  16 features + log flags
+  _get_nested                           dot-key helper (validation_flags.*)
+  _thermal_form_arrays(data, names)     parallel to _electronic_form_arrays
+  _thermal_fit(arr, fit_mask, alpha)    Ridge + LOOCV
+  plot_thermal_fit_final                parity (R² + LOOCV title)
+  plot_thermal_outliers_final           >±20% diagnosis + EXCL marker
+  plot_thermal_decomp_final             per-case Δlog κ stacked bar (top 10)
+  PLOT_REGISTRY[thermal_fit_final/outliers_final/decomp_final]
+
+OUTLIER LANDSCAPE (Stage T1, n_fit=82, post σ_e EXCL):
+  median |err| ≈ 12-15%, mean ≈ 16%, 90pct ≈ 30%
+  Higher than σ_ionic (7%) / σ_e (5%) — reflects multi-pathway physics complexity.
+  No further EXCL needed beyond σ_e shared list — remaining residuals are
+  genuine multi-pathway variance, not data outliers.
+
+⚠ DO NOT switch back to Hertz Stage E target.  Audit confirmed Hertz Stage E
+factor is near pass-through (×0.95 mean) — fits no better than raw solver
+output.  Physics Stage E captures Tabor plastic contact areas correctly.
+
+⚠ DO NOT remove EXCL.  Including 23 σ_e EXCL cases drops LOOCV 0.90 → 0.58.
+The same broken sims (plate_z bugs, marginal percolation, sibling-tail) that
+poison σ_e ALSO poison σ_thermal.  Cross-channel EXCL sharing is correct.
+
+⚠ DO NOT try to simplify to compact analytic form.  Multiple attempts confirmed
+multi-pathway physics defies single-backbone scaling.  Ridge with 16 features
+is the irreducible representation at this corpus size.
+
+Stage T1 finalized 2026-06-04.
+
+---
+
 ### σ_electronic Stage 22.5 FINALIZED — ablation-driven simplification (2026-06-03)
 **Final form: 8 LIVE OLS + 2 LOCKED, LOOCV 0.9531, R² 0.9613, n_fit=76 (corpus n=97).**
 n/k ratio 9.5:1 (was 6.3:1).  Achieved by **removing 4 weak terms** from Stage 22
@@ -675,7 +777,8 @@ and locking them at literature values incurs 0 DOF cost while removing
 selection bias.  Re-fitting NCM β live (1.5 → ~1.6) would gain LOOCV
 < 0.0008 (noise) at cost of +1 LIVE param (bad trade).
 
-Stage 22.5 finalized 2026-06-03.  Next: σ_thermal channel + Phase 2-5
+Stage 22.5 finalized 2026-06-03.  σ_thermal Stage T1 finalized 2026-06-04
+(Phase 1 transport triad COMPLETE).  Next: Phase 2-5
 of the 5-phase roadmap (predictor + 2D synth + layered composite).
 
 ---

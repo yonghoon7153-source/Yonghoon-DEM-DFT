@@ -6757,6 +6757,206 @@ def _thermal_fit(arr, fit_mask=None, alpha=0.1):
             'n_fit': nf, 'alpha': alpha}
 
 
+# ─── σ_thermal Stage T1 plot functions ─────────────────────────────────
+
+
+def plot_thermal_fit_final(data_list, names, outdir):
+    """σ_thermal Stage T1 parity plot: actual κ vs Ridge form prediction.
+    Mirror of plot_electronic_fit_final structure adapted for κ.
+    """
+    arr = _thermal_form_arrays(data_list, names)
+    if arr is None:
+        print(f"  [SKIP] thermal_fit_final: <8 usable cases"); return None
+    fit_mask = ~arr['excluded']
+    fit = _thermal_fit(arr, fit_mask=fit_mask)
+    kappa_act = arr['sigs']
+    kappa_pred = np.exp(fit['pred_log'])
+    err_pct = (kappa_pred - kappa_act) / kappa_act * 100
+    excl = arr['excluded']
+
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    fit_band = ~excl
+    ax.scatter(kappa_act[fit_band], kappa_pred[fit_band], s=45, c=BLUE,
+               edgecolors='white', zorder=3,
+               label=f'fit ({int(fit_band.sum())})')
+    if excl.any():
+        ax.scatter(kappa_act[excl], kappa_pred[excl], s=110, c='#f5f5f5',
+                   edgecolors='#888', linewidths=1.8, marker='s', zorder=4,
+                   label=f'AUDIT excluded ({int(excl.sum())})')
+        ax.scatter(kappa_act[excl], kappa_pred[excl], s=80, c='#888',
+                   marker='x', linewidths=1.5, zorder=5)
+    lim = [kappa_act.min()*0.6, kappa_act.max()*1.6]
+    ax.plot(lim, lim, '--', color=GRAY)
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12)
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlim(lim); ax.set_ylim(lim)
+    ax.set_xlabel('κ actual (Stage E Physics target, mScm-equiv)')
+    ax.set_ylabel('κ predicted (Stage T1 form, Ridge α=0.1)')
+    ax.set_title(
+        f"σ_thermal Stage T1 production form  "
+        f"(R²={fit['r2']:.3f}  LOOCV={fit['loocv']:.3f}  n_fit={fit['n_fit']}  "
+        f"{len(_THERMAL_T1_FEATURES)} Ridge features)\n"
+        f"target = thermal_sigma_full_mScm_stage_e_physics  |  "
+        f"EXCL shares _EXCLUDED_NAMES_EL", fontsize=8)
+    ax.legend(fontsize=9, loc='upper left')
+    ax.grid(True, alpha=0.25, which='both')
+    return _save(fig, outdir, "thermal_fit_final.png")
+
+
+PLOT_REGISTRY["thermal_fit_final"] = {
+    "func": plot_thermal_fit_final,
+    "file": "thermal_fit_final.png",
+    "title": "σ_thermal → Stage T1 (Ridge, Physics target) parity",
+    "desc": "σ_thermal Stage T1 production form: 16 structural features, Ridge α=0.1, "
+            "target = thermal_sigma_full_mScm_stage_e_physics, LOOCV 0.903 on n=82.",
+    "origin_tip": "log-log parity, ±20% green band, AUDIT EXCL (σ_e EXCL 공유) X-marked.",
+}
+
+
+def plot_thermal_outliers_final(data_list, names, outdir):
+    """σ_thermal Stage T1 outlier diagnosis: >±20% err cases."""
+    arr = _thermal_form_arrays(data_list, names)
+    if arr is None:
+        print(f"  [SKIP] thermal_outliers_final"); return None
+    fit_mask = ~arr['excluded']
+    fit = _thermal_fit(arr, fit_mask=fit_mask)
+    kappa_act = arr['sigs']
+    kappa_pred = np.exp(fit['pred_log'])
+    err_pct = (kappa_pred - kappa_act) / kappa_act * 100
+    excl = arr['excluded']
+    is_out = (np.abs(err_pct) > 20.0) & (~excl)
+
+    fig, ax = plt.subplots(figsize=FIG_SINGLE)
+    in_band = (~is_out) & (~excl)
+    ax.scatter(kappa_act[in_band], kappa_pred[in_band], s=45, c=BLUE,
+               edgecolors='white', zorder=3,
+               label=f'within ±20% (n={int(in_band.sum())})')
+    if is_out.any():
+        ax.scatter(kappa_act[is_out], kappa_pred[is_out], s=80, c=RED,
+                   edgecolors='black', linewidths=1.5, zorder=4,
+                   label=f'FIT outlier >±20% ({int(is_out.sum())})')
+    if excl.any():
+        ax.scatter(kappa_act[excl], kappa_pred[excl], s=110, c='#f5f5f5',
+                   edgecolors='#888', linewidths=1.8, marker='s', zorder=4,
+                   label=f'AUDIT excluded ({int(excl.sum())})')
+        ax.scatter(kappa_act[excl], kappa_pred[excl], s=80, c='#888',
+                   marker='x', linewidths=1.5, zorder=5)
+    # Annotate top-6 outliers + all EXCL
+    order = np.argsort(-np.abs(err_pct))
+    annot = list(np.where(excl)[0])
+    for i in order[:6]:
+        if i not in annot: annot.append(i)
+    for i in annot:
+        col = '#777' if excl[i] else (RED if is_out[i] else GRAY)
+        ax.annotate(f'{arr["names"][i][:24]} ({err_pct[i]:+.0f}%)',
+                    (kappa_act[i], kappa_pred[i]), fontsize=6, color=col,
+                    xytext=(4, 3), textcoords='offset points')
+    lim = [kappa_act.min()*0.6, kappa_act.max()*1.6]
+    ax.plot(lim, lim, '--', color=GRAY)
+    ax.fill_between(lim, [v*0.8 for v in lim], [v*1.2 for v in lim],
+                    color=GREEN, alpha=0.12)
+    ax.set_xscale('log'); ax.set_yscale('log')
+    ax.set_xlim(lim); ax.set_ylim(lim)
+    ax.set_xlabel('κ actual (Stage E Physics target, mScm-equiv)')
+    ax.set_ylabel('κ predicted (Stage T1 form)')
+    ax.set_title(
+        f"σ_thermal Stage T1 outliers  "
+        f"(n={arr['n']}, {int(is_out.sum())} >±20%, {int(excl.sum())} AUDIT EXCL)",
+        fontsize=9)
+    ax.legend(fontsize=8, loc='upper left')
+    ax.grid(True, alpha=0.25, which='both')
+    return _save(fig, outdir, "thermal_outliers_final.png")
+
+
+PLOT_REGISTRY["thermal_outliers_final"] = {
+    "func": plot_thermal_outliers_final,
+    "file": "thermal_outliers_final.png",
+    "title": "σ_thermal Stage T1 outlier diagnosis",
+    "desc": "Cases >±20% err annotated, top-6 by |err| + all EXCL.  "
+            "Heat flow's multi-pathway nature makes residual outliers harder to remove "
+            "than σ_ionic/σ_e — Bruggeman ratio features capture most variance.",
+    "origin_tip": "log-log; ±20% green band; RED bold = form outlier, gray X = EXCL.",
+}
+
+
+def plot_thermal_decomp_final(data_list, names, outdir):
+    """σ_thermal Stage T1 factor decomposition: top-10 contributors per case.
+    Unlike σ_e Stage 22.5 (LOCKED + LIVE multiplicative form), σ_thermal is
+    additive in log-space (Ridge regression), so decomposition shows each
+    feature's coef × value contribution to log κ.
+    """
+    arr = _thermal_form_arrays(data_list, names)
+    if arr is None:
+        print(f"  [SKIP] thermal_decomp_final"); return None
+    fit_mask = ~arr['excluded']
+    fit = _thermal_fit(arr, fit_mask=fit_mask)
+    coef = fit['coef']           # length k+1 (intercept + features)
+    X = arr['X']                  # n × k feature matrix
+    n = arr['n']
+    # Per-case feature contribution: coef[i+1] * X[:, i] for each feature
+    contribs = X * coef[1:]       # n × k
+    feature_labels = arr['feature_labels']
+    # Sort features by mean |contribution| across cases (most impactful first)
+    mean_abs = np.mean(np.abs(contribs), axis=0)
+    order = np.argsort(-mean_abs)[:10]   # top 10
+    top_labels = [feature_labels[i] for i in order]
+    top_contribs = contribs[:, order]
+
+    ref_idx = int(np.argmax(arr['sigs']))   # max-κ case as reference
+    deltas = top_contribs - top_contribs[ref_idx]   # Δlog vs ref
+
+    fig_w = min(max(11, n*0.5), 36)
+    fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(fig_w, 10),
+                                     gridspec_kw={'height_ratios': [3, 3]})
+    # Top: stacked bar of feature deltas (top 10 features)
+    colors = plt.cm.tab10(np.linspace(0, 1, 10))
+    x = np.arange(n); bpos = np.zeros(n); bneg = np.zeros(n)
+    for j in range(10):
+        delta = deltas[:, j]
+        pos = np.clip(delta, 0, None); neg = np.clip(delta, None, 0)
+        ax1.bar(x, pos, bottom=bpos, color=colors[j], label=top_labels[j],
+                width=0.7, edgecolor='white', linewidth=0.5)
+        ax1.bar(x, neg, bottom=bneg, color=colors[j],
+                width=0.7, edgecolor='white', linewidth=0.5)
+        bpos += pos; bneg += neg
+    ax1.axhline(0, color='gray', linewidth=0.5)
+    ax1.set_xticks(x)
+    ax1.set_xticklabels([nm[:20] for nm in arr['names']], rotation=80, fontsize=6)
+    ax1.set_ylabel('Δlog κ from ref')
+    ax1.set_title(
+        f"σ_thermal Stage T1 factor decomposition (ref: {arr['names'][ref_idx][:24]})  "
+        f"[Ridge α=0.1, top 10/{len(_THERMAL_T1_FEATURES)} features by |Δ|]",
+        fontsize=9)
+    ax1.legend(fontsize=7, loc='upper left', ncol=5)
+
+    # Bottom: dominant feature per case
+    for i in range(n):
+        idx = int(np.argmax(np.abs(deltas[i])))
+        ax2.barh(i, deltas[i, idx], color=colors[idx], height=0.6,
+                 edgecolor='white', linewidth=0.5)
+        ax2.text(deltas[i, idx], i, f' {top_labels[idx][:30]}',
+                 va='center', fontsize=6)
+    ax2.set_yticks(range(n))
+    ax2.set_yticklabels([nm[:22] for nm in arr['names']], fontsize=6)
+    ax2.set_xlabel('Dominant feature Δlog κ')
+    ax2.set_title('Dominant feature per case', fontsize=10)
+    ax2.axvline(0, color='gray', linewidth=0.5)
+    fig.tight_layout()
+    return _save(fig, outdir, "thermal_decomp_final.png")
+
+
+PLOT_REGISTRY["thermal_decomp_final"] = {
+    "func": plot_thermal_decomp_final,
+    "file": "thermal_decomp_final.png",
+    "title": "σ_thermal Stage T1 factor decomposition",
+    "desc": "Per-case Δlog κ vs reference, decomposed into top-10 Ridge feature "
+            "contributions (coef × value).  Reveals which structural axis drives "
+            "each case's κ deviation.",
+    "origin_tip": "stacked bar (positive 위, 음수 아래), 하단 dominant feature.",
+}
+
+
 # ─── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
