@@ -26,6 +26,7 @@ Examples (on a node with fairchem + GPU):
   python3 li3n_uma_investigate.py sweep --task oc20
 """
 import argparse, json, itertools
+from pathlib import Path
 import numpy as np
 from ase import Atom, Atoms
 from ase.constraints import FixAtoms
@@ -144,6 +145,86 @@ def cmd_neb(A):
     return barrier
 
 
+def cmd_dft_sites(A):
+    """Generate DFT (QE) relax inputs for adatom at on-N / hollow / bridge on a SMALL
+    N-exposed slab. The DECISIVE arbiter of UMA's hollow vs DFT's on-N preference:
+    DFT, not UMA, decides the route. Adatom xy-pinned (z+substrate free) so each
+    lateral site's energy is read cleanly (on-N can't slide to hollow before measure).
+    BFGS relax, NOT NEB -> hours, not days. Lowest final energy = DFT-preferred site."""
+    from dft_drag import grab_card
+    from ase import Atom
+    sx, sy = A.supercell
+    slab = build_li3n_001(nlayers=A.layers, supercell=(sx, sy, 1), terminate="N")
+    fixed = set(freeze_bottom(slab, relax_top_layers=max(1, A.layers - 2), nlayers=A.layers))
+    sites = candidate_sites(slab)
+    tmpl = Path(A.template).read_text()
+    species = grab_card(tmpl, "ATOMIC_SPECIES")
+    ntyp = len(set(slab.get_chemical_symbols()))            # Li, N -> 2 (adatom is Li)
+    cell = slab.cell.array
+    kx = max(1, round(22.0 / (3.65 * sx))); ky = max(1, round(22.0 / (3.65 * sy)))
+    out = Path(A.out); out.mkdir(parents=True, exist_ok=True)
+    cellstr = "CELL_PARAMETERS angstrom\n" + "\n".join(
+        f"  {cell[i,0]:.10f} {cell[i,1]:.10f} {cell[i,2]:.10f}" for i in range(3))
+    names = ["on_N", "hollow", "bridge"]
+    print(f"[dft_sites] {len(slab)+1} atoms ({sx}x{sy}x{A.layers} N-exposed), "
+          f"{len(fixed)} fixed, k={kx}x{ky}x1, adatom pin={A.pin}")
+    for name in names:
+        at = slab.copy(); at += Atom("Li", position=sites[name])
+        syms = at.get_chemical_symbols(); pos = at.get_positions(); nat = len(at)
+        plines = ["ATOMIC_POSITIONS angstrom"]
+        for k in range(nat):
+            if k == nat - 1:
+                fl = "0 0 1" if A.pin == "xy" else "1 1 1"     # adatom xy-pin (z free) or free
+            else:
+                fl = "0 0 0" if k in fixed else "1 1 1"
+            plines.append(f"  {syms[k]:3s} {pos[k,0]:.8f} {pos[k,1]:.8f} {pos[k,2]:.8f}  {fl}")
+        ctrl = ("&CONTROL\n  calculation = 'relax'\n  prefix = 'li3n_dftsite_%s'\n"
+                "  pseudo_dir = '/data/work/pseudo'\n  outdir = './tmp_%s/'\n"
+                "  tprnfor = .true.\n  tstress = .false.\n  verbosity = 'low'\n  disk_io = 'low'\n"
+                "  nstep = 100\n  forc_conv_thr = 1.0d-3\n  etot_conv_thr = 1.0d-5\n/\n" % (name, name))
+        syst = ("&SYSTEM\n  ibrav=0\n  nat=%d\n  ntyp=%d\n  ecutwfc=60.0\n  ecutrho=480.0\n"
+                "  occupations='smearing'\n  smearing='mv'\n  degauss=0.01\n  nosym=.true.\n/\n" % (nat, ntyp))
+        elec = ("&ELECTRONS\n  conv_thr=1.0e-08\n  mixing_beta=0.3\n  electron_maxstep=300\n/\n")
+        ions = ("&IONS\n  ion_dynamics='bfgs'\n  pot_extrapolation='none'\n  wfc_extrapolation='none'\n/\n")
+        kpt = f"K_POINTS automatic\n  {kx} {ky} 1  0 0 0"
+        inp = (ctrl + syst + elec + ions + "\n" + species + "\n\n" + kpt + "\n\n"
+               + cellstr + "\n\n" + "\n".join(plines) + "\n")
+        (out / f"{name}.in").write_text(inp)
+        print(f"  wrote {name}.in")
+    (out / "run_dft_sites.sh").write_text(_DFT_SITES_LAUNCHER)
+    print(f"-> {out}/  : bash run_dft_sites.sh  (3 DFT relax, ranks E -> DFT-preferred site)")
+
+
+_DFT_SITES_LAUNCHER = r"""#!/bin/bash
+set -e
+cd "$(dirname "$(realpath "$0")")"
+export PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin:$PATH
+export LD_LIBRARY_PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
+export OPAL_PREFIX=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi
+export OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0 OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+QE=/data/apps/qe-7.4.1-gpu/bin/pw.x
+MPIRUN=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun
+for f in on_N hollow bridge; do
+  [ -f "$f.out" ] && grep -q "JOB DONE" "$f.out" && { echo "skip $f"; continue; }
+  echo "=== $f ==="; $MPIRUN --bind-to none -np 1 $QE -inp "$f.in" > "$f.out" 2>&1 || echo "  nonzero"
+done
+echo; echo "=== DFT site preference (lower = preferred; UMA said hollow, paper/chem say on_N) ==="
+python3 - <<'PY'
+import re,glob
+r=[]
+for f in ("on_N","hollow","bridge"):
+    try: t=open(f+".out").read()
+    except FileNotFoundError: continue
+    m=re.findall(r"!\s+total energy\s+=\s+(-?\d+\.\d+)",t)
+    if m: r.append((f,float(m[-1])*13.605693))
+if r:
+    e0=min(e for _,e in r)
+    for f,e in sorted(r,key=lambda x:x[1]): print(f"  {f:7s}  {e-e0:+.4f} eV (rel)")
+    print(f"  -> DFT-preferred site: {min(r,key=lambda x:x[1])[0]}")
+PY
+"""
+
+
 def cmd_sweep(A):
     print("[sweep] scanning termination/thickness/size knobs (on_N->on_N_adj barrier)")
     grid = dict(term=["N", "Li"], layers=[4, 6, 8], supercell=[(3, 3), (4, 4)])
@@ -167,7 +248,7 @@ def cmd_sweep(A):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    for name in ("sites", "neb", "sweep"):
+    for name in ("sites", "neb", "sweep", "dft_sites"):
         p = sub.add_parser(name)
         p.add_argument("--task", default="oc20", help="UMA task (oc20=surface; omat=bulk, avoid)")
         p.add_argument("--term", default="N", choices=["N", "Li"],
@@ -177,6 +258,12 @@ def main():
         p.add_argument("--supercell", type=int, nargs=2, default=[3, 3])
         p.add_argument("--relax_top", type=int, default=5)
         p.add_argument("--out", default="li3n_uma")
+        if name == "dft_sites":
+            p.set_defaults(layers=5, supercell=[2, 2], out="li3n_dft_sites")
+            p.add_argument("--template", required=True,
+                           help="QE input with Li/N ATOMIC_SPECIES (e.g. li3n_dft_drag/drag_p0.in)")
+            p.add_argument("--pin", default="xy", choices=["xy", "free"],
+                           help="adatom: xy-pinned z-free (clean site energy) or fully free")
         if name == "neb":
             p.add_argument("--start", default="on_N",
                            choices=["on_N", "on_N_adj", "bridge", "hollow", "hollow_adj"])
@@ -188,7 +275,8 @@ def main():
             p.add_argument("--images", type=int, default=7)
             p.add_argument("--fmax", type=float, default=0.05)
     A = ap.parse_args()
-    {"sites": cmd_sites, "neb": cmd_neb, "sweep": cmd_sweep}[A.cmd](A)
+    {"sites": cmd_sites, "neb": cmd_neb, "sweep": cmd_sweep,
+     "dft_sites": cmd_dft_sites}[A.cmd](A)
 
 
 if __name__ == "__main__":
