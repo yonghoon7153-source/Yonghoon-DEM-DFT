@@ -130,7 +130,10 @@ def run_uma(args):
             a = base.copy()
             p = a.positions.copy(); p[ad] = [xy[0], xy[1], base.positions[ad, 2]]
             a.set_positions(p)
-            a.set_constraint([FixAtoms(bottom), FixCartesian(ad, mask=(True, True, False))])
+            if args.pin == "full":
+                a.set_constraint(FixAtoms(bottom + [ad]))        # adatom fully pinned (no desorb)
+            else:
+                a.set_constraint([FixAtoms(bottom), FixCartesian(ad, mask=(True, True, False))])
             a.calc = calc
             try:
                 FIRE(a, logfile=str(out / "uma_fire.log")).run(fmax=0.05, steps=300)
@@ -198,6 +201,9 @@ def main():
     ap.add_argument("--uma_model", default="uma-s-1p1")
     ap.add_argument("--uma_task", default="omat")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--pin", choices=["xy", "full"], default="xy",
+                    help="uma: adatom xy-pinned z-free (xy) OR fully pinned (full, "
+                         "avoids z-desorption that flattens the PES)")
     a = ap.parse_args()
     if a.parse:
         parse(a.parse)
