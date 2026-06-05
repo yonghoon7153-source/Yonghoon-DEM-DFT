@@ -37,9 +37,15 @@ from ase.optimize import BFGS
 from ase.io import write
 
 
-def build_li3n_001(nlayers=6, supercell=(3, 3, 1), vacuum=15.0):
-    """alpha-Li3N (P6/mmm, a=3.65, c=3.87). (001) slab terminated on the
-    Li2N plane (exposes N -> lithiophilic surface, the paper's dominant facet)."""
+def build_li3n_001(nlayers=6, supercell=(3, 3, 1), vacuum=15.0, terminate="N"):
+    """alpha-Li3N (P6/mmm, a=3.65, c=3.87). (001) slab.
+
+    alpha-Li3N stacks alternating planes along c: a **Li2N plane** (N + 2 Li2) at
+    z=0 and a **pure-Li plane** (Li1) at z=c/2. `ase.build.surface` cuts on the
+    pure-Li plane by default -> N buried. The paper's lithiophilic surface is the
+    **N-exposed Li2N termination** (Fig 2a, "mixed N + Li2"). terminate='N' deletes
+    the outermost pure-Li planes so Li2N is exposed on BOTH faces (symmetric slab);
+    terminate='Li' keeps the default pure-Li termination (for comparison)."""
     a, c = 3.65, 3.87
     bulk = crystal(
         symbols=["N", "Li", "Li"],
@@ -47,10 +53,32 @@ def build_li3n_001(nlayers=6, supercell=(3, 3, 1), vacuum=15.0):
         spacegroup=191,  # P6/mmm
         cellpar=[a, a, c, 90, 90, 120],
     )
-    slab = surface(bulk, (0, 0, 1), layers=nlayers, vacuum=vacuum)
+    slab = surface(bulk, (0, 0, 1), layers=nlayers + 1, vacuum=0.0)
+    if terminate == "N":
+        _expose_Li2N(slab)
     slab = make_supercell(slab, np.diag(supercell))
     slab.center(vacuum=vacuum, axis=2)
     return slab
+
+
+def _expose_Li2N(slab, tol=0.3):
+    """Delete the topmost and bottommost pure-Li planes so the Li2N plane (the one
+    containing N) is the outermost plane on both faces -> N-exposed surface."""
+    sym = np.array(slab.get_chemical_symbols())
+    z = slab.positions[:, 2]
+    planes = np.sort(np.unique(np.round(z, 2)))
+    has_N = {p: bool(((np.abs(z - p) < tol) & (sym == "N")).any()) for p in planes}
+    # walk in from the top; drop leading pure-Li planes until we hit a Li2N plane
+    drop = set()
+    for p in planes[::-1]:
+        if has_N[p]:
+            break
+        drop |= set(np.where(np.abs(z - p) < tol)[0])
+    for p in planes:
+        if has_N[p]:
+            break
+        drop |= set(np.where(np.abs(z - p) < tol)[0])
+    del slab[sorted(drop, reverse=True)]
 
 
 def freeze_bottom(slab, relax_top_layers=5, nlayers=6):
