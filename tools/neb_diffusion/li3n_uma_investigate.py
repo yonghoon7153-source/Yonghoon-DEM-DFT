@@ -57,14 +57,21 @@ def candidate_sites(slab, h=1.9):
     p0 = P[0]
     d = np.linalg.norm(P[:, :2] - p0[:2], axis=1); d[d < 1e-3] = 1e9
     j = int(np.argmin(d)); p1 = P[j]
-    # hollow = centroid of 3 nearest top-N around p0
-    order = np.argsort(np.linalg.norm(P[:, :2] - p0[:2], axis=1))
-    tri = P[order[:3]]
+    # the two N completing triangles on either side of the p0-p1 edge ->
+    # gives two ADJACENT hollow sites (share that edge) = a hollow->hollow hop,
+    # which is UMA's true MEP (UMA minimum is the hollow, not on-N).
+    ds = np.linalg.norm(P[:, :2] - p0[:2], axis=1) + np.linalg.norm(P[:, :2] - p1[:2], axis=1)
+    ds[np.linalg.norm(P[:, :2] - p0[:2], axis=1) < 1e-3] = 1e9
+    ds[np.linalg.norm(P[:, :2] - p1[:2], axis=1) < 1e-3] = 1e9
+    near = np.argsort(ds)
+    pa, pb = P[near[0]], P[near[1]]
+    cen = lambda *ps: [np.mean([q[0] for q in ps]), np.mean([q[1] for q in ps]), z + h * 0.9]
     sites = {
-        "on_N":     [p0[0], p0[1], z + h],
-        "on_N_adj": [p1[0], p1[1], z + h],
-        "bridge":   [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2, z + h * 0.9],
-        "hollow":   [tri[:, 0].mean(), tri[:, 1].mean(), z + h * 0.9],
+        "on_N":       [p0[0], p0[1], z + h],
+        "on_N_adj":   [p1[0], p1[1], z + h],
+        "bridge":     [(p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2, z + h * 0.9],
+        "hollow":     cen(p0, p1, pa),
+        "hollow_adj": cen(p0, p1, pb),
     }
     return sites
 
@@ -172,9 +179,9 @@ def main():
         p.add_argument("--out", default="li3n_uma")
         if name == "neb":
             p.add_argument("--start", default="on_N",
-                           choices=["on_N", "on_N_adj", "bridge", "hollow"])
+                           choices=["on_N", "on_N_adj", "bridge", "hollow", "hollow_adj"])
             p.add_argument("--end", default="on_N_adj",
-                           choices=["on_N", "on_N_adj", "bridge", "hollow"])
+                           choices=["on_N", "on_N_adj", "bridge", "hollow", "hollow_adj"])
             p.add_argument("--images", type=int, default=7)
             p.add_argument("--fmax", type=float, default=0.05)
         if name == "sweep":
