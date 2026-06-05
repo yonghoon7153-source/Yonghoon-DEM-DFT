@@ -8,3 +8,4 @@ webapp/archive/
 
 # Generated schematic figures (source = scripts/make_network_schematic.py)
 docs/figures/network_solver_schematic*.png
+docs/figures/network_2d_real*.png
