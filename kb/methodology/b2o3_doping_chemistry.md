@@ -334,6 +334,31 @@ PS₃O, PS₂O₂) 공존 분포"**. (borophosphate glass NMR 거동과 정합.)
 도구 체인: `b2o3_enumerate.py`(Stage0) → `b2o3_uma_relax.py`(Stage1 motif) →
 `b2o3_o_distribution.py`(O 전수 + unit) → (Stage2 DFT, TODO).
 
+## 6c. HSAB 해석 — O-distribution의 화학적 "why" (DFT 대조 예측)
+
+| 종 | HSAB | |
+|---|---|---|
+| B³⁺, P⁵⁺ | **hard acid** (작고 고전하) | borate/phosphate 안정 = O 선호 |
+| Li⁺ | borderline-hard | |
+| O²⁻ | **hard base** / S²⁻ | **soft base** / Cl⁻ borderline |
+
+**예측 ① O는 hard acid(P/B) corner로, free-S(4a) soft Li-cage는 회피**
+- O–P/B = hard–hard 매칭 ✅ / O at 4a = hard base가 hard-acid 파트너 없이 Li cage에만 = 불리
+- → **UMA 결과 "free-S 회피 ~1.3 eV/O" 정확히 설명** ✓
+
+**예측 ② B³⁺·P⁵⁺ 둘 다 hard → O 쟁탈 → near-degenerate, 단 B 약간 우세**
+- 둘 다 O를 원함 → O-on-B vs O-on-P 작은 차이 = **bo4≈distributed degeneracy 설명** ✓
+- 미세 우위: P⁵⁺는 이미 PS₄³⁻로 만족, B³⁺는 sulfide 환경 불편(B-O/B-S 강도차 > P-O/P-S)
+  → **B가 O 더 끌어 BS₃O-rich** = bo4 17/20 근소우세와 일치
+
+**method 함의**: UMA(B 화학 학습 희소)는 B-O 선호를 **과소평가** 가능 → HSAB는 **DFT가 UMA보다
+B-O(BS₃O) 선호를 더 뚜렷하게** 줄 것으로 예측. **DFT(Stage 2)가 이 HSAB 예측 검증이 핵심** —
+DFT가 BS₃O-rich + free-S 0이면 HSAB-일관, 어긋나면 흥미로운 발견.
+
+**paper 내러티브 (XPS 부재 방어)**: "O²⁻(hard base)가 hard acid B³⁺/P⁵⁺ corner를 선호, soft
+Li-cage free-chalcogenide(4a) 회피. 더 oxophilic한 B³⁺가 thiophosphate로 만족한 P⁵⁺를 근소
+앞질러 BS₃O-rich mixed-unit 분포 — HSAB-rationalized, ¹¹B/³¹P NMR-testable prediction."
+
 ---
 
 ## 7. References
