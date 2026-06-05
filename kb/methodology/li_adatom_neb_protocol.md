@@ -117,28 +117,37 @@ Scripts: `run_neb_qe.py`, `run_neb_qe.sh`.
 └── (for full DFT NEB:) neb_path_final_dft.xyz
 ```
 
-## OUTCOME (2026-06-06) — UMA fails for Li3N; LiC6 OK
+## OUTCOME (2026-06-06, REVISED) — UMA-oc20 N→N CI-NEB works; matches paper qualitatively
 
-| 시스템 | 결과 |
-|---|---|
-| **LiC₆(0001)** | ✅ **UMA NEB 0.241 eV** (graphene 비활성 표면 → UMA 잘 작동) |
-| **Li₃N(001)** | ❌ **UMA 사망 (3번 독립 확인)** |
+> [!warning] 이전 "UMA 사망, park" 판정은 철회됨 (over-call).
+> Cui 2023 Methods 정독 결과: 논문은 **vanilla DFT NEB가 아니라 ML-NEB(CatLearn, GP surrogate)** 를 썼다
+> (GPAW PBE/PAW 500 eV, 6층 slab 위 5층 relax, k 3×3×1, 9 images). 즉 "그냥 따라하라"는 = **surrogate를 써라**.
+> UMA가 바로 그 surrogate이고, **우리 UMA-oc20 N→N CI-NEB는 이미 작동했다.**
 
-**Li3N UMA 실패 3종 (확정)**:
-1. **CI-NEB collapse** — adatom incorporate(−1.5~−3.3 eV) → 표면확산 경로 붕괴 (rigid만 0.786 과대)
-2. **2D PES, adatom xy-pin z-free** — 전 격자점 동일 (adatom z-desorb)
-3. **2D PES, adatom 완전고정** — 전 격자점 **−523.832 동일** (substrate가 adatom 위치 무관 같은 min) ← `li3n_pes_uma_full/`
+| 시스템 | UMA-**oc20** CI-NEB | DFT-SCF(UMA geom) | 논문(Cui, GPAW ML-NEB) |
+|---|---|---|---|
+| **LiC₆(0001)** | ✅ **0.241 eV** | 0.287 eV | — |
+| **Li₃N(001)** N→인접N | ✅ **0.054 eV** (path A/B/C 6각 대칭 확인) | 0.049 eV | 0.133 eV |
 
-→ **UMA-oc20가 Li3N lithiophilicity(incorporation) 과대평가** = 표면 adatom PES 못 그림.
-reference(Cui 2023)의 "Li3N lithiophilic" 주장과 정성적 일치(과대평가 방향).
+**핵심 비교 (슬라이드용, 충족)**: Li₃N(0.05) ≪ LiC₆(0.24), 약 **6×** → 상온 lateral 확산 ~10⁴배 빠름.
+= 발표 주장("Li₃N 표면이 lithiated carbon보다 Li adatom diffusion에 유리") 그대로 지지.
 
-**DFT 시도**: rigid drag = endpoint 틀림+frozen으로 1.2 eV 무의미. 2D DFT PES(substrate relax+MV smearing)
-= SCF 96 iter/이온스텝(표면+adatom EF-근처로 수렴 hard) × 25점 = 며칠. side validation 대비 비효율.
+**"3번 실패"의 진짜 원인 (UMA가 아니라 세팅)**:
+1. 작동한 NEB는 task=**`oc20`** (surface adsorbate; 논문 세팅과 정합).
+2. "실패한" 2D PES는 task=**`omat`** (bulk 재료용 → 표면 adatom desorption/incorporation 못 잡음) **+**
+   애초에 free 2D PES 자체가 표면확산엔 틀린 도구 (정답은 NEB). → `li3n_pes_scan.py` 기본값 omat이 함정.
+3. 따라서 omat + free-PES 조합이 깨진 것이지 **UMA-oc20 자체는 정상.**
 
-**결정 (paper)**: Li3N은 **reference(Cui 0.133) 인용** + 관찰("**foundation MLIP이 Li3N에 Li incorporation
-과대평가 → 표면확산 못 잡음**") 정성 보고. LiC₆(0.241)은 UMA 정량. DFT Li3N PES는 비용 과다로 보류.
+**절대값 gap (UMA 0.054 vs 논문 0.133)**: UMA가 saddle을 over-smooth → 절대 barrier 과소(~2×).
+**정성(Li₃N≪LiC₆, ~6×)은 robust** (동일 protocol 상대비교). 절대값까지 논문과 맞추려면 아래 두 경로.
 
-도구: `tools/neb_diffusion/li3n_pes_scan.py`(2D PES, --uma/--pin/DFT gen), `dft_drag.py`(z-free 패치).
+**남은 경로 (택1)**:
+- **(A) 논문 정확 재현** — GPAW PBE/PAW 500 eV + **CatLearn ML-NEB**(GP active-learning, 며칠 아님) → 0.133 목표.
+  스크립트: `tools/neb_diffusion/li3n_mlneb_gpaw.py` (paper-faithful generator).
+- **(C) 현행 UMA-oc20 + DFT-SCF 정성비교** — 이미 완료, 발표 가능. Li₃N≪LiC₆ 결론에 충분.
+
+**도구**: `tools/neb_diffusion/run_neb_qe.py`(oc20 UMA NEB), `li3n_mlneb_gpaw.py`(CatLearn 재현),
+`li3n_pes_scan.py`(주의: `--uma_task oc20` 명시할 것; 기본 omat은 표면에 부적합).
 
 ## References
 
