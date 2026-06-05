@@ -359,6 +359,29 @@ DFT가 BS₃O-rich + free-S 0이면 HSAB-일관, 어긋나면 흥미로운 발�
 Li-cage free-chalcogenide(4a) 회피. 더 oxophilic한 B³⁺가 thiophosphate로 만족한 P⁵⁺를 근소
 앞질러 BS₃O-rich mixed-unit 분포 — HSAB-rationalized, ¹¹B/³¹P NMR-testable prediction."
 
+> ⚠ **2026-06-05 실측으로 이 예측 일부 정정됨 — §6d 참조** (O는 B가 아니라 P로 감).
+
+## 6d. ★ Stage 1 O-distribution 실측 (2026-06-05, cfg0019) — 메커니즘 반전
+
+C(40,3)=9880 전수 + UMA relax → ground state unit 분포:
+
+| unit | ground | 300K ens | |
+|---|---|---|---|
+| **BS₄** | **2** | 2.00 | **B 둘 다 BS₄ (O 0개!)** |
+| PS₄ | 6 | 6.0 | |
+| PS₃O | 1 | 1.0 | |
+| PS₂O₂ | 1 | 1.0 | |
+
+**O 3개 전부 P로 (PS₃O+PS₂O₂), B는 BS₄ 유지 (O 회피), free-S 0.** 사용자 직관 "BS₄+PS₃O"가
+ground state로 확인 ✓. top motif: `PS₂O₂+PS₃O` vs `PS₃O×3` 근소차(~2 meV/atom).
+
+**정정**: §6c "B oxophilic" 틀림 → **P⁵⁺(+5) > B³⁺(+3) hardness → O가 더 hard한 P로** (PO₄>BO₄,
+HSAB 일관). **paper Fig 1b "BO unit" 가정과 반대** = "B→BS₄, O→PS₃O 따로".
+
+**⚠ UMA의 B 화학 부정확 + ~meV scale → DFT(Stage 2) 확정 필수.** DFT가 O-on-P면 메커니즘 수정
+(신규 발견), O-on-B면 UMA bias. → `b2o3_stage2_dft.py`: 같은 base 위 O-on-P(top) vs
+O-on-B(bo4 motif) DFT relax 비교 (6원소 Li P B S O Cl, B 비자성·U 불필요).
+
 ---
 
 ## 7. References
