@@ -29,6 +29,7 @@
 | **AIMD Ea** (eV) | **0.172** (R²0.999) | **0.224** (R²0.992) | comp1 장벽 낮음, 그런데도 modelc가 빠름 (아래) |
 | **D_Li(600K)** (cm²/s) | 2.68e-6 | 7.90e-6 | **modelc ~3× 빠름** (vacancy carrier·prefactor↑) |
 | **D₀ prefactor** (cm²/s) | ~7.5e-5 | ~5.8e-4 | **modelc ~8×** — 빠름의 진짜 원인 |
+| **저온 trade-off** | 저온 유리 (Ea↓) | 저온 불리 (Ea↑) | 교차온도 ~290K (II.5.3); modelc 우위는 고온 한정 |
 | **밴드갭** (PBE, eV) | **1.76** | **1.82** | Δ−0.06 = **사실상 동일** (조성 둔감) |
 | **Bader q(Li / Cl / S / P)** (e) | +0.87 / −0.92 / −1.52 / +3.27 | +0.88 / −0.92 / −1.76 / +4.43 | Li·Cl 동일, S/P는 basin shape 효과 |
 | **ICOHP P–S** (eV) | −5.94 | −6.00 | **PS₄ 골격 불변** (±1%) |
@@ -47,9 +48,12 @@
    CBM=S 3p+P 3s로 궤도 성격도 동일. → "Cl 증가가 gap을 크게 바꾼다"는 통념 반박.
    (이전에 보였던 Δ0.32 eV는 **comp1의 k=2×2×1 수치 오류**였고, 수렴 k에서 사라짐.)
 
-2. **전도도 차이는 장벽이 아니라 carrier 수.** comp1이 오히려 per-hop 장벽이 낮음
-   (0.172 < 0.224)인데도 modelc가 ~3× 빠른 건 vacancy가 **운반체·경로를 ~8× 늘리기**
-   때문 (prefactor 지배). 실험에서 Cl-rich가 더 전도성인 이유의 정확한 미시 그림.
+2. **전도도 차이는 장벽이 아니라 carrier 수 (단, 고온 한정).** comp1이 오히려 per-hop
+   장벽이 낮음(0.172 < 0.224)인데도 modelc가 ~3× 빠른 건 vacancy가 **운반체·경로를 ~8×
+   늘리기** 때문 (prefactor 지배). 실험에서 Cl-rich가 더 전도성인 이유의 정확한 미시
+   그림. **단 vacancy는 양날** — D₀는 키우지만 Ea도 올려서, **LPSCl1.6은 원리상 저온
+   특성이 불리**(Ea↑ → 저온 σ 급감, 교차온도 ~RT). Cl-rich 우위는 고온/작동온도의
+   prefactor 효과 (II.5.3).
 
 3. **이온 glue는 Cl-rich에서 강화된다.** 모든 Li–anion 결합이 modelc에서 강해짐
    (Li–Cl +13%, Li–S +8%) — Bader·LOBSTER·Wilkening 세 방법 일치. 핵심 동력은
@@ -259,6 +263,31 @@ window** (comp1 800K fluke는 fresh seed로 재실행 해결, R² 0.77→0.999).
 - framework 정지: D(Cl,P,S) ~ D(Li)의 1/40-1/60 → Li-only 전도체 (둘 다).
 - 절대 σ는 UMA가 3-5× overshoot + Haven ratio=1 가정 → 비(ratio)만 robust. 300K 외삽
   (3 T점)은 over-interpret 금지.
+
+### II.5.3 ★ 저온 특성 trade-off — 높은 Ea의 대가 (vacancy의 양날)
+
+**핵심 통찰**: LPSCl1.6의 더 높은 Ea(0.224 > 0.172)는 곧 **σ가 온도 강하에 더 가파르게
+떨어진다**는 뜻 → **원리상 LPSCl1.6은 저온 특성이 더 불리**하다.
+
+`D = D₀·exp(−Ea/kT)`에서 modelc는 큰 D₀로 측정구간을 이기지만, T가 내려갈수록
+Boltzmann 항 `exp(−Ea/kT)`의 패널티가 Ea에 비례해 커진다. 두 Arrhenius 직선이 만나는
+**교차온도**:
+
+$$T_{cross}=\frac{\Delta E_a}{k\,\ln(D_{0,m}/D_{0,c})}=\frac{0.052\ \text{eV}}{k\cdot\ln(8.04)}\approx 290\ \text{K}$$
+
+| 온도 영역 | 더 빠른 쪽 | 이유 |
+|---|---|---|
+| **T ≳ 290 K** (작동·측정구간) | **LPSCl1.6** | prefactor D₀(~8×, vacancy carrier/path) 지배 |
+| **T ≲ 290 K** (심부 저온) | **LPSCl** (원리상) | 낮은 per-hop 장벽(0.172)이 유리해짐 |
+
+- **paper 메시지**: vacancy는 양날 — **D₀(통로·운반체)는 키우지만 per-hop 장벽도 올린다.**
+  그래서 Cl-rich의 전도도 우위는 **고온/작동온도에 한정된 prefactor 효과**이고, 충분히
+  낮은 T에선 stoichiometric LPSCl의 낮은 장벽이 역전 우위를 가진다. = **온도 의존성이
+  조성 설계의 trade-off 축**임을 보여주는 결과.
+- ⚠ **정량 caveat**: 교차점 290K는 3점 외삽 + comp1 Ea(0.172)가 다소 낮게 잡혔을 가능성
+  (R²0.999지만 3점)으로 **불확실**. 실제 실험은 RT에서 modelc가 ~2× 더 전도성 → 진짜
+  교차점은 RT보다 아래일 것. 따라서 "**원리상 저온 불리**"는 robust한 정성 결론이지만,
+  교차 절대온도는 paper에서 단정하지 말고 "Ea 차이에서 따라오는 경향"으로 보고.
 
 전체 데이터: `db/properties/li_transport.json`.
 
