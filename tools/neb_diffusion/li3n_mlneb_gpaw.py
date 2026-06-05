@@ -58,6 +58,7 @@ def build_li3n_001(nlayers=6, supercell=(3, 3, 1), vacuum=15.0, terminate="N"):
         _expose_Li2N(slab)
     slab = make_supercell(slab, np.diag(supercell))
     slab.center(vacuum=vacuum, axis=2)
+    slab.pbc = (True, True, True)   # fairchem requires uniform PBC (vacuum in z is fine)
     return slab
 
 
