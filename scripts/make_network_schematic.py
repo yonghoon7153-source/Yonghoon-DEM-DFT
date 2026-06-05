@@ -1,65 +1,73 @@
 #!/usr/bin/env python3
-"""Figure 1(b) — Network solver schematic (matplotlib, precise control).
+"""Figure 1(b) — Network solver schematic v2 (physics-correct backbones).
 
-Renders the dual-percolating-network cathode schematic with:
-  • SE = yellow majority matrix (many small circles)
-  • AM = gray minority islands (few large circles)
-  • 3 edge colors: SE-SE (yellow), AM-SE (blue), AM-AM (red)
-  • phase-selective boundaries:
-      top (SUS, red bar):  ONLY AM touches; SE floats below with gap
-      bottom (bulk, tan):  ONLY SE touches; AM floats above with gap
-  • two bold backbones:
-      yellow SE backbone → touches bulk (bottom), ✕ break below SUS
-      red AM backbone    → touches SUS (top),    ✕ break above bulk
-  • NO text inside plot; separate legend on right.
+Key fix over v1: backbones connect ONLY same-phase particles.
+  - SE (yellow) backbone: chains SE→SE→SE particles via SE-SE edges,
+    reaches the bulk (bottom), ✕ break below SUS.
+  - AM (gray) backbone: chains AM→AM→AM particles via AM-AM edges,
+    reaches the SUS (top), ✕ break above bulk.
 
-Output: docs/figures/network_solver_schematic.png
+The backbone particles are PLACED FIRST (a real connected chain of the
+correct phase), then filler particles fill the rest.  This guarantees the
+highlighted path passes only through its own phase.
 """
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, Circle
-from matplotlib.lines import Line2D
 
-rng = np.random.default_rng(42)
+rng = np.random.default_rng(7)
 
-# ── canvas ──
 fig, ax = plt.subplots(figsize=(9, 8))
-ax.set_xlim(0, 10); ax.set_ylim(0, 11)
-ax.axis('off')
+ax.set_xlim(0, 10); ax.set_ylim(0, 11); ax.axis('off')
 
-# ── collector bars ──
 SUS_Y = 10.0; BULK_Y = 1.0
-ax.add_patch(FancyBboxPatch((0.3, SUS_Y), 7.4, 0.8, boxstyle='round,pad=0.05',
-             fc='#f5b8b8', ec='#c44', lw=1.5, zorder=1))   # SUS red-tint
-ax.add_patch(FancyBboxPatch((0.3, BULK_Y-0.8), 7.4, 0.8, boxstyle='round,pad=0.05',
-             fc='#f0deb0', ec='#b89030', lw=1.5, zorder=1)) # bulk tan
+X0, X1 = 0.6, 7.6
 
-# phase-selective contact zones (subtle bands)
-ax.add_patch(plt.Rectangle((0.3, SUS_Y-0.45), 7.4, 0.45, fc='#c44', alpha=0.10, zorder=0))
-ax.add_patch(plt.Rectangle((0.3, BULK_Y), 7.4, 0.45, fc='#b89030', alpha=0.10, zorder=0))
+# collector bars
+ax.add_patch(FancyBboxPatch((X0-0.3, SUS_Y), (X1-X0)+0.6, 0.8, boxstyle='round,pad=0.05',
+             fc='#f5b8b8', ec='#c44', lw=1.5, zorder=1))
+ax.add_patch(FancyBboxPatch((X0-0.3, BULK_Y-0.8), (X1-X0)+0.6, 0.8, boxstyle='round,pad=0.05',
+             fc='#f0deb0', ec='#b89030', lw=1.5, zorder=1))
 
-# ── generate particle positions (SE majority, AM minority) ──
-# Grid jittered. SE small numerous, AM large sparse.
-xs = np.linspace(0.8, 7.2, 11)
-ys = np.linspace(BULK_Y+0.3, SUS_Y-0.3, 12)
-nodes = []  # (x, y, phase, r)  phase: 'SE' or 'AM'
-for j, y in enumerate(ys):
-    for i, x in enumerate(xs):
-        xx = x + rng.uniform(-0.18, 0.18)
-        yy = y + rng.uniform(-0.18, 0.18)
-        # AM only ~15%, larger; avoid AM at very bottom row, SE at very top row
-        is_am = rng.random() < 0.15
-        if j == 0:  is_am = False          # bottom row: SE only (touches bulk)
-        if j == len(ys)-1: is_am = True    # top row: AM only (touches SUS)
-        if is_am:
-            nodes.append((xx, yy, 'AM', rng.uniform(0.16, 0.24)))
-        else:
-            nodes.append((xx, yy, 'SE', 0.10))
+nodes = []   # (x, y, phase, r, is_backbone)
 
-# ── draw edges (thin background) between nearby nodes ──
-def near(a, b, d=1.1):
+# ── 1. SE backbone chain: SE particles bottom→top, ends below SUS (gap) ──
+se_bb_y = np.linspace(BULK_Y+0.05, SUS_Y-1.4, 9)   # last point ~8.6, gap to SUS(10)
+se_bb_x = 2.3 + 0.35*np.sin(np.linspace(0, 3.2, 9))
+se_bb = list(zip(se_bb_x, se_bb_y))
+for (x, y) in se_bb:
+    nodes.append((x, y, 'SE', 0.13, True))
+
+# ── 2. AM backbone chain: AM particles top→bottom, ends above bulk (gap) ──
+am_bb_y = np.linspace(SUS_Y-0.05, BULK_Y+1.4, 8)    # last ~2.4, gap to bulk(1)
+am_bb_x = 5.6 + 0.3*np.sin(np.linspace(0, 3.0, 8))
+am_bb = list(zip(am_bb_x, am_bb_y))
+for (x, y) in am_bb:
+    nodes.append((x, y, 'AM', 0.22, True))
+
+# ── 3. filler particles (SE majority, AM minority), avoid overlap with bb ──
+def too_close(x, y, r):
+    for (nx, ny, ph, nr, bb) in nodes:
+        if (x-nx)**2 + (y-ny)**2 < (r+nr+0.05)**2:
+            return True
+    return False
+
+gx = np.linspace(X0+0.3, X1-0.3, 12)
+gy = np.linspace(BULK_Y+0.3, SUS_Y-0.3, 13)
+for j, y in enumerate(gy):
+    for i, x in enumerate(gx):
+        xx = x + rng.uniform(-0.16, 0.16); yy = y + rng.uniform(-0.16, 0.16)
+        is_am = rng.random() < 0.13
+        if j == 0: is_am = False             # bottom row SE-only (touch bulk)
+        if j == len(gy)-1: is_am = True      # top row AM-only (touch SUS)
+        r = rng.uniform(0.17, 0.23) if is_am else 0.095
+        if too_close(xx, yy, r): continue
+        nodes.append((xx, yy, 'AM' if is_am else 'SE', r, False))
+
+# ── edges (thin background, color by pair) ──
+def near(a, b, d=1.05):
     return (a[0]-b[0])**2 + (a[1]-b[1])**2 < d*d
 
 for i in range(len(nodes)):
@@ -70,60 +78,50 @@ for i in range(len(nodes)):
         if pa=='SE' and pb=='SE':   col='#f5c518'; lw=0.7
         elif pa=='AM' and pb=='AM': col='#e03030'; lw=0.9
         else:                        col='#5b9bd5'; lw=0.8
-        # phase-selective: don't draw SE-SE or AM-SE into SUS zone top;
-        # don't draw AM-AM or AM-SE into bulk zone — handled by row rule above
-        ax.plot([a[0], b[0]], [a[1], b[1]], color=col, lw=lw, alpha=0.45,
-                zorder=2, solid_capstyle='round')
+        ax.plot([a[0], b[0]], [a[1], b[1]], color=col, lw=lw, alpha=0.40, zorder=2)
 
-# ── draw nodes ──
-for x, y, ph, r in nodes:
+# ── bold backbone highlights (under the nodes) ──
+ax.plot([p[0] for p in se_bb], [p[1] for p in se_bb], color='#f5a800', lw=6,
+        alpha=0.55, zorder=3, solid_capstyle='round')
+ax.plot([p[0] for p in am_bb], [p[1] for p in am_bb], color='#e02020', lw=6,
+        alpha=0.55, zorder=3, solid_capstyle='round')
+# ✕ breaks at the non-touching end
+ax.plot(se_bb[-1][0], se_bb[-1][1]+0.5, marker='x', ms=15, mew=4, color='#f5a800', zorder=7)
+ax.plot(am_bb[-1][0], am_bb[-1][1]-0.5, marker='x', ms=15, mew=4, color='#e02020', zorder=7)
+
+# ── nodes on top ──
+for x, y, ph, r, bb in nodes:
     if ph == 'SE':
-        ax.add_patch(Circle((x, y), r, fc='#f5c518', ec='#b8950f', lw=0.8, zorder=4))
+        ax.add_patch(Circle((x, y), r, fc='#f5c518', ec='#b8950f',
+                            lw=1.3 if bb else 0.8, zorder=5))
     else:
-        ax.add_patch(Circle((x, y), r, fc='#808080', ec='#404040', lw=0.8, zorder=4))
+        ax.add_patch(Circle((x, y), r, fc='#808080', ec='#404040',
+                            lw=1.3 if bb else 0.8, zorder=5))
 
-# ── bold backbones ──
-# Yellow SE backbone: from bulk (bottom, touches) up to ~80% then ✕ (no SUS)
-se_path_x = [2.3, 2.5, 2.2, 2.6, 2.4, 2.7]
-se_path_y = [BULK_Y, 2.6, 4.2, 5.8, 7.4, 8.6]   # ends at 8.6, below SUS(10) → gap
-ax.plot(se_path_x, se_path_y, color='#f5a800', lw=5, alpha=0.85, zorder=5,
-        solid_capstyle='round')
-ax.plot(se_path_x[-1], se_path_y[-1], marker='x', ms=14, mew=4,
-        color='#f5a800', zorder=6)  # ✕ break (no SUS)
-
-# Red AM backbone: from SUS (top, touches) down to ~20% then ✕ (no bulk)
-am_path_x = [5.6, 5.4, 5.7, 5.3, 5.6, 5.4]
-am_path_y = [SUS_Y, 8.8, 7.0, 5.2, 3.4, 2.2]   # ends at 2.2, above bulk(1) → gap
-ax.plot(am_path_x, am_path_y, color='#e02020', lw=5, alpha=0.85, zorder=5,
-        solid_capstyle='round')
-ax.plot(am_path_x[-1], am_path_y[-1], marker='x', ms=14, mew=4,
-        color='#e02020', zorder=6)  # ✕ break (no bulk)
-
-# ── legend (right side, separate) ──
-leg_x = 8.0
+# ── legend ──
+leg_x = 8.1; ly = 9.3
 items = [
-    ('circle', '#f5c518', 'SE (ionic, majority)'),
-    ('circle', '#808080', 'AM (electronic, minority)'),
-    ('edge',   '#f5c518', 'SE-SE contact'),
-    ('edge',   '#5b9bd5', 'AM-SE contact'),
-    ('edge',   '#e03030', 'AM-AM contact'),
-    ('bb',     '#f5a800', 'SE backbone -> bulk (Li+)'),
-    ('bb',     '#e02020', 'AM backbone -> SUS (e-)'),
+    ('c', '#f5c518', 'SE (ionic, majority matrix)'),
+    ('c', '#808080', 'AM (electronic, minority)'),
+    ('e', '#f5c518', 'SE-SE contact'),
+    ('e', '#5b9bd5', 'AM-SE contact'),
+    ('e', '#e03030', 'AM-AM contact'),
+    ('b', '#f5a800', 'SE backbone -> bulk (Li+)'),
+    ('b', '#e02020', 'AM backbone -> SUS (e-)'),
 ]
-ly = 9.5
 for kind, col, lbl in items:
-    if kind == 'circle':
-        ax.add_patch(Circle((leg_x, ly), 0.12, fc=col, ec='#333', lw=0.8))
-    elif kind == 'edge':
-        xx = np.linspace(leg_x-0.18, leg_x+0.18, 20)
-        ax.plot(xx, ly + 0.05*np.sin((xx-leg_x)*40), color=col, lw=1.2)
+    if kind=='c':
+        ax.add_patch(Circle((leg_x, ly), 0.13, fc=col, ec='#333', lw=0.8))
+    elif kind=='e':
+        xx=np.linspace(leg_x-0.2, leg_x+0.2, 24)
+        ax.plot(xx, ly+0.05*np.sin((xx-leg_x)*45), color=col, lw=1.3)
     else:
-        ax.plot([leg_x-0.2, leg_x+0.2], [ly, ly], color=col, lw=4)
-    ax.text(leg_x+0.35, ly, lbl, fontsize=8.5, va='center')
-    ly -= 0.75
+        ax.plot([leg_x-0.22, leg_x+0.22], [ly, ly], color=col, lw=5)
+    ax.text(leg_x+0.4, ly, lbl, fontsize=8.5, va='center')
+    ly -= 0.78
 
 plt.tight_layout()
-out = 'docs/figures/network_solver_schematic.png'
 import os; os.makedirs('docs/figures', exist_ok=True)
+out='docs/figures/network_solver_schematic_v2.png'
 plt.savefig(out, dpi=200, bbox_inches='tight')
 print(f"saved: {out}")
