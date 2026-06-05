@@ -36,11 +36,11 @@
 | **ICOHP Li–Cl** (eV) | −1.86 | −2.10 | **modelc +13% 강함** (4d-Cl anti-site) |
 | **ICOHP Li–S** (eV) | −1.59 | −1.72 | modelc +8% 강함 |
 | **Li–S(4d) anchor** (eV) | −2.57 | −2.52 | **조성 무관 universal anchor** (free S²⁻) |
-| **E_VRH relaxed-ion** (GPa) | 22.33† | **27.66** | **vacancy paradox 해소** (modelc +24%) †comp1 k444 재확인 중 |
+| **E_VRH relaxed-ion** (GPa) | **22.06** | **27.66** | **vacancy paradox 해소** (modelc +25.4%, k444 확정) |
 | **B0 (BM-EOS)** (GPa) | 26.23 | 21.71 | hydrostatic는 comp1이 단단 |
 | **Zener A** | ~1.1 | ~1.4 | modelc 비등방 ↑ (disorder fingerprint) |
 
-†elastic comp1만 k444로 재계산 중 (geometry RMS 0.003 Å라 값 거의 동일 예상, 확정 시 갱신).
+elastic relaxed-ion **k444 확정 완료** (E_VRH 22.06, 직전 provisional 22.33과 ±1% 일치 — geometry RMS 0.003 Å라 elastic 불변).
 
 ## I.2 Paper 4대 메시지 (슬라이드 bullet)
 
@@ -101,7 +101,7 @@
 | §8f Bader (AE plot_num=17) | ✅ | ✅ |
 | §8g DOS / PDOS | ✅ (gap **1.76**) | ✅ (gap 1.82) |
 | §8h 밴드 구조 | ✅ **cube/dat 완성** (NSCF k-path + bands.x, 422 kpt) | ✅ |
-| §8i stress-strain Cij | ⏳ **k444 재계산 중** (relaxed-ion 6/12 strain) | ✅ |
+| §8i stress-strain Cij | ✅ **k444 확정** (relaxed-ion 12/12, E_VRH 22.06) | ✅ |
 | §8j MLIP 600K snapshot 탄성 | 🔲 상태 확인 | ✅ (E_VRH 52.72) |
 | §8k AIMD Arrhenius | ✅ **Ea=0.172 R²=0.999** | ✅ Ea=0.224 |
 | §8l ELF | ✅ **V0_ELF.cube 완성** (ONCV 80/320 + pp.x plot_num=8) | ✅ |
@@ -392,39 +392,42 @@ ELF maxima + Li 주위 ionic depletion (Bader/ICOHP와 일관).
 
 ### II.8.2 relaxed-ion (이온 Born screening 포함, 실험 대응) — 🎯 paradox 해소
 
-| 항목 (GPa) | LPSCl† | LPSCl1.6 | Δ% | 실험 |
+| 항목 (GPa) | LPSCl (k444 확정) | LPSCl1.6 | Δ% | 실험 |
 |---|---|---|---|---|
-| B_VRH | 25.18 | 23.40 | −7.1% | ~25 |
-| G_VRH | 8.26 | 10.61 | **+28.4%** | ~8 |
-| **E_VRH** | **22.33** | **27.66** | **+23.9% ✓** | **LPSCl1.6 > LPSCl ✓** |
-| ν | 0.352 | 0.303 | | ~0.35 |
-| Zener A | 1.16 | 1.44 | aniso ↑ | |
+| C11 / C12 / C44 | 37.67 / 20.43 / 7.98 | 37.03 / 16.82 / 13.68 | | |
+| B_VRH | 25.51 | 23.40 | −8.3% | ~25 |
+| G_VRH | 8.13 | 10.61 | **+30.5%** | ~8 |
+| **E_VRH** | **22.06** | **27.66** | **+25.4% ✓** | **LPSCl1.6 > LPSCl ✓** |
+| ν | 0.356 | 0.303 | | ~0.35 |
+| Zener A | 1.144 | 1.44 | aniso ↑ | |
+| eigenvalues | 전부 >0 (안정) | 전부 >0 | | |
 
-†comp1 k444 재확인 중. **LPSCl relaxed-ion E_VRH 22.33 ≈ 실험 ~23** (clamped 52.31은 2.3× 과대).
+**LPSCl relaxed-ion E_VRH = 22.06 GPa ≈ 실험 ~23** (clamped 52.31은 2.3× 과대). k444 확정값이
+직전 k221 provisional(22.33)과 ±1% 일치 — geometry RMS 0.003 Å라 elastic도 거의 불변(예측대로).
 
 ### II.8.3 vacancy paradox 종합
 
 | 시나리오 | E_VRH LPSCl | E_VRH LPSCl1.6 | 결론 |
 |---|---|---|---|
 | clamped-ion DFT 0K | 52.31 | 52.30 | **paradox** (차이 0%) |
-| **relaxed-ion DFT 0K** | **22.33†** | **27.66** | **paradox 해소** ★ |
+| **relaxed-ion DFT 0K (k444 확정)** | **22.06** | **27.66** | **paradox 해소 ★ (+25.4%)** |
 | MLIP 600K snapshot | [확인 중] | 52.72 | MLIP은 clamped-like |
 | 실험 | ~23 | LPSCl1.6 > LPSCl | relaxed-ion이 추세 정확 |
 
 **메커니즘**: Li sublattice가 매우 soft → 변형 시 Li 재배치(ionic Born screening)가 강성에
-핵심. vacancy + 4d-Cl anti-site가 특정 shear configuration을 lock-in → **G_VRH +28%
-(shear-dominant stiffening) + Zener A 1.16→1.44 (비등방)**. bulk는 vacancy로 약간 soft (−7%).
+핵심. vacancy + 4d-Cl anti-site가 특정 shear configuration을 lock-in → **G_VRH +30%
+(shear-dominant stiffening) + Zener A 1.14→1.44 (비등방)**. bulk는 vacancy로 약간 soft (−8%).
 = disorder의 mechanical fingerprint.
 
 ### II.8.4 B0(BM-EOS) vs B_VRH(stress) 교차검증
 
 | | B0 (BM, GPa) | B_VRH (stress) | 비율 |
 |---|---|---|---|
-| LPSCl | 26.23 | 43.59(clamped)/25.18(relaxed) | — |
+| LPSCl | 26.23 | 43.59(clamped)/25.51(relaxed) | — |
 | LPSCl1.6 | 21.71 | 44.47(clamped)/23.40(relaxed) | — |
 
 B0(등방 hydrostatic, full relax)와 B_VRH(clamped-ion Cij 유도)는 물리적으로 다른 양.
-**relaxed-ion B_VRH가 BM-EOS B0에 근접** (LPSCl 25.18 vs 26.23) → 두 독립 방법 교차검증 ✓.
+**relaxed-ion B_VRH가 BM-EOS B0에 근접** (LPSCl 25.51 vs 26.23, Δ3%) → 두 독립 방법 교차검증 ✓.
 
 ## II.9 BVSE (Python proxy)
 
