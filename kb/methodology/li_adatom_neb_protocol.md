@@ -117,6 +117,29 @@ Scripts: `run_neb_qe.py`, `run_neb_qe.sh`.
 └── (for full DFT NEB:) neb_path_final_dft.xyz
 ```
 
+## OUTCOME (2026-06-06) — UMA fails for Li3N; LiC6 OK
+
+| 시스템 | 결과 |
+|---|---|
+| **LiC₆(0001)** | ✅ **UMA NEB 0.241 eV** (graphene 비활성 표면 → UMA 잘 작동) |
+| **Li₃N(001)** | ❌ **UMA 사망 (3번 독립 확인)** |
+
+**Li3N UMA 실패 3종 (확정)**:
+1. **CI-NEB collapse** — adatom incorporate(−1.5~−3.3 eV) → 표면확산 경로 붕괴 (rigid만 0.786 과대)
+2. **2D PES, adatom xy-pin z-free** — 전 격자점 동일 (adatom z-desorb)
+3. **2D PES, adatom 완전고정** — 전 격자점 **−523.832 동일** (substrate가 adatom 위치 무관 같은 min) ← `li3n_pes_uma_full/`
+
+→ **UMA-oc20가 Li3N lithiophilicity(incorporation) 과대평가** = 표면 adatom PES 못 그림.
+reference(Cui 2023)의 "Li3N lithiophilic" 주장과 정성적 일치(과대평가 방향).
+
+**DFT 시도**: rigid drag = endpoint 틀림+frozen으로 1.2 eV 무의미. 2D DFT PES(substrate relax+MV smearing)
+= SCF 96 iter/이온스텝(표면+adatom EF-근처로 수렴 hard) × 25점 = 며칠. side validation 대비 비효율.
+
+**결정 (paper)**: Li3N은 **reference(Cui 0.133) 인용** + 관찰("**foundation MLIP이 Li3N에 Li incorporation
+과대평가 → 표면확산 못 잡음**") 정성 보고. LiC₆(0.241)은 UMA 정량. DFT Li3N PES는 비용 과다로 보류.
+
+도구: `tools/neb_diffusion/li3n_pes_scan.py`(2D PES, --uma/--pin/DFT gen), `dft_drag.py`(z-free 패치).
+
 ## References
 
 - Cui et al. ACS Nano 2023, **17**, 3168 — Li3N (001) 0.133 eV target.
