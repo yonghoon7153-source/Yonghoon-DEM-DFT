@@ -102,6 +102,58 @@ echo "ALL PES DONE — parse: python3 li3n_pes_scan.py --parse ."
     print(f"[pes] wrote {n} inputs + run_pes.sh -> {out}")
 
 
+def run_uma(args):
+    """In-process UMA PES: adatom xy-pinned (z free), bottom slab fixed, FIRE relax.
+    xy-pin prevents the lateral incorporation that collapses free UMA NEBs -> fast,
+    safe landscape map. ~seconds/point."""
+    from ase.constraints import FixAtoms, FixCartesian
+    from ase.optimize import FIRE
+    from fairchem.core import pretrained_mlip
+    from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
+    calc = FAIRChemCalculator(pretrained_mlip.get_predict_unit(args.uma_model, device=args.device),
+                              task_name=args.uma_task)
+    out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)
+    base = read(args.struct)
+    cell = np.array(base.cell); nat = len(base); ad = nat - 1
+    zs = base.positions[:, 2]
+    z_slab = np.array([zs[i] for i in range(nat) if i != ad])
+    z_cut = z_slab.min() + (1 - args.relax_top_frac) * (z_slab.max() - z_slab.min())
+    bottom = [i for i in range(nat) if i != ad and zs[i] < z_cut]
+    a_ip, b_ip = cell[0, :2], cell[1, :2]; f = args.supercell_frac
+    print(f"[uma-pes] {nat} atoms, {len(bottom)} fixed bottom, adatom xy-pin z-free, "
+          f"grid {args.grid}², {f}× cell")
+    grid = {}
+    for i in range(args.grid):
+        for j in range(args.grid):
+            u, v = f * i / args.grid, f * j / args.grid
+            xy = u * a_ip + v * b_ip
+            a = base.copy()
+            p = a.positions.copy(); p[ad] = [xy[0], xy[1], base.positions[ad, 2]]
+            a.set_positions(p)
+            a.set_constraint([FixAtoms(bottom), FixCartesian(ad, mask=(True, True, False))])
+            a.calc = calc
+            try:
+                FIRE(a, logfile=str(out / "uma_fire.log")).run(fmax=0.05, steps=300)
+                grid[(i, j)] = a.get_potential_energy()
+            except Exception as e:
+                print(f"  ({i},{j}) FAIL {e}")
+            if (i * args.grid + j) % 5 == 0:
+                print(f"  ({i},{j}) E={grid.get((i,j),float('nan')):.3f}", flush=True)
+    e0 = min(grid.values())
+    json.dump({f"{i}_{j}": grid[(i, j)] for (i, j) in grid}, open(out / "uma_pes.json", "w"), indent=1)
+    n = args.grid
+    print(f"\n[uma-pes] rel-E grid (eV, '.'=fail):")
+    for i in range(n):
+        print("  " + " ".join(f"{grid[(i,j)]-e0:5.2f}" if (i,j) in grid else "  .  " for j in range(n)))
+    mins = sorted(grid.items(), key=lambda kv: kv[1])[:3]
+    rowmax = [max(grid[(i,j)] for j in range(n) if (i,j) in grid) for i in range(n)]
+    colmax = [max(grid[(i,j)] for i in range(n) if (i,j) in grid) for j in range(n)]
+    barr = min(min(rowmax), min(colmax)) - e0   # crude MEP saddle estimate
+    print(f"  binding site (min): {mins[0][0]}  | next: {[m[0] for m in mins[1:]]}")
+    print(f"  crude barrier estimate (lowest ridge): {barr:.3f} eV  (ref Li3N 0.133)")
+    print(f"  -> identify min & saddle from grid, then DFT-confirm just those points")
+
+
 def parse(d):
     d = Path(d)
     grid = {}
@@ -141,9 +193,17 @@ def main():
     ap.add_argument("--relax_top_frac", type=float, default=0.5,
                     help="top fraction of slab thickness to relax (rest fixed by z)")
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
+    ap.add_argument("--uma", action="store_true",
+                    help="run PES in-process with UMA (fast pre-screen; xy-pin avoids collapse)")
+    ap.add_argument("--uma_model", default="uma-s-1p1")
+    ap.add_argument("--uma_task", default="omat")
+    ap.add_argument("--device", default="cuda")
     a = ap.parse_args()
     if a.parse:
         parse(a.parse)
+    elif a.uma:
+        assert a.struct and a.out_dir, "need --struct --out_dir"
+        run_uma(a)
     else:
         assert a.struct and a.template and a.out_dir, "need --struct --template --out_dir"
         gen(a)

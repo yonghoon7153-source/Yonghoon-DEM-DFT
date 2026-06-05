@@ -45,9 +45,9 @@ def corner_S(atoms):
     for cen in ("P", "B"):
         ii, jj = neighbor_list("ij", atoms, {(cen, "S"): 2.5})
         for a, b in zip(ii, jj):
-            if s[a] == "S": out.add(a)
-            if s[b] == "S": out.add(b)
-    return sorted(out)
+            if s[a] == "S": out.add(int(a))
+            if s[b] == "S": out.add(int(b))
+    return sorted(int(i) for i in out)
 
 
 def classify_units(atoms):
