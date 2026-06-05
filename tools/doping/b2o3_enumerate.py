@@ -115,8 +115,8 @@ def site_pools(atoms):
 # ----------------------------------------------------------------------
 # Li-vacancy candidate sites
 # ----------------------------------------------------------------------
-def li_vacancy_candidates(atoms, n_need, min_anion=1.9, max_anion=2.95,
-                          min_cation=1.7, grid=0.45):
+def li_vacancy_candidates(atoms, n_need, min_anion=2.3, max_anion=2.95,
+                          min_cation=1.7, grid=0.4):
     """spglib symmetry-completion of the Li sublattice; void-finder fallback."""
     s = atoms.get_chemical_symbols()
     occ_Li = atoms.get_positions()[[i for i in range(len(atoms)) if s[i] == "Li"]]
@@ -148,7 +148,10 @@ def li_vacancy_candidates(atoms, n_need, min_anion=1.9, max_anion=2.95,
                 return np.array(cand), "spglib_symmetry"
     except Exception:
         pass
-    # --- void-finder fallback (grid pockets in anion framework) ---
+    # --- void-finder fallback (grid pockets with REAL Li coordination) ---
+    # require Li-like environment: nearest anion in bond range AND >=3 anions
+    # coordinating (within 3.25 A) -> rejects surface/over-large pockets that the
+    # loose criterion over-generates.
     anion = atoms.get_positions()[[i for i in range(len(atoms)) if s[i] in ("S", "Cl", "O")]]
     cation = atoms.get_positions()[[i for i in range(len(atoms)) if s[i] in ("Li", "P", "B")]]
     na = (np.linalg.norm(cell, axis=1) / grid).astype(int)
@@ -157,14 +160,25 @@ def li_vacancy_candidates(atoms, n_need, min_anion=1.9, max_anion=2.95,
     gz = np.linspace(0, 1, na[2], endpoint=False)
     gf = np.array(np.meshgrid(gx, gy, gz)).reshape(3, -1).T
     gc = gf @ cell
-    keep = []
+    inv = np.linalg.inv(cell)
+    keep, score = [], []
     for p in gc:
-        da = min_dist(p, anion, cell)
-        if min_anion < da < max_anion and min_dist(p, cation, cell) > min_cation:
-            keep.append(p)
-    cand = dedup_cart(keep, cell, 1.0)
-    cand = [c for c in cand if min_dist(c, occ_Li, cell) > 0.8]
+        da_all = anion_dists(p, anion, inv, cell)
+        da = da_all.min()
+        ncoord = int((da_all < 3.25).sum())
+        if min_anion < da < max_anion and ncoord >= 3 and min_dist(p, cation, cell) > min_cation:
+            keep.append(p); score.append(ncoord)
+    # dedup keeping higher-coordination representative
+    order = np.argsort(score)[::-1]
+    cand = dedup_cart([keep[i] for i in order], cell, 1.2)
+    cand = [c for c in cand if min_dist(c, occ_Li, cell) > 0.9]
     return np.array(cand), "void_finder"
+
+
+def anion_dists(p, pts, inv, cell):
+    d = p[None, :] - pts
+    f = (d @ inv + 0.5) % 1.0 - 0.5
+    return np.linalg.norm(f @ cell, axis=1)
 
 
 def min_dist(p, pts, cell):
