@@ -664,7 +664,20 @@ n grew 57→92).  Production reports the FINALIZED metric (n=82, 0.90).
 The +8 cases scatter ±25-59% (not a single family) → multi-pathway
 variance, NOT removable outliers.
 
-Stage T1 finalized 2026-06-04.
+PUSH-HIGHER EXHAUSTED (2026-06-05, scripts/thermal_push_higher.py):
+Every remaining lever tried on full corpus to raise above 0.85 — all fail:
+  • α fine sweep 0.005-0.3:      best 0.817 (α=0.1, ≈ baseline)
+  • cross-products/ratios:        best 0.830 (se_se_cn × R_brug, +0.017 noise)
+  • full greedy ALL 246 features: 0.817 (curated 14 already optimal)
+  • porosity polynomial (²/log/√): 0.820 (marginal)
+  • target transform:             log κ best (√κ 0.69, raw κ 0.45)
+Production 14-feat = 0.849 (full corpus) is the ceiling.  The lone
+meaningful interaction (se_se_cn × R_brug = SE-backbone × Bruggeman-EMT
+efficiency) gains only +0.017 = noise floor.  σ_thermal multi-pathway
+genuinely caps at ~0.85-0.90; no form change crosses it.
+⚠ DO NOT re-attempt to push thermal higher — exhausted all levers.
+
+Stage T1 finalized 2026-06-04 (push-higher exhausted 2026-06-05).
 
 ---
 
