@@ -375,6 +375,10 @@ C(40,3)=9880 전수 + UMA relax → ground state unit 분포:
 **O 3개 전부 P로 (PS₃O+PS₂O₂), B는 BS₄ 유지 (O 회피), free-S 0.** 사용자 직관 "BS₄+PS₃O"가
 ground state로 확인 ✓. top motif: `PS₂O₂+PS₃O` vs `PS₃O×3` 근소차(~2 meV/atom).
 
+**robustness (2026-06-05, 4 base config)**: cfg0000/0005/0010/0019 **전부 BS₄×2 (O 0개), O→P**
+→ cfg0019 우연 아니라 **base 무관 robust**. (cfg0005만 PS₃O×3, 나머지 PS₂O₂+PS₃O — P 사면체 간
+O 분배만 차이, "B가 O 회피"는 4/4 불변.) `b2o3_Odist_cfg{0000,0005,0010,0019}/`.
+
 **정정**: §6c "B oxophilic" 틀림 → **P⁵⁺(+5) > B³⁺(+3) hardness → O가 더 hard한 P로** (PO₄>BO₄,
 HSAB 일관). **paper Fig 1b "BO unit" 가정과 반대** = "B→BS₄, O→PS₃O 따로".
 
