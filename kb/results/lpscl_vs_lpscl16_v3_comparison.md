@@ -192,13 +192,35 @@ Cutoff 통일: P–S 2.3, Li–S 3.2, Li–Cl 3.4, S–S 4.0 Å (argyrodite 표�
 
 1. **Li–Cl 단축 (−0.076 Å)** — 직관 반대. Cl excess → 일부 Cl이 4d(S²⁻ 자리)로 →
    Li–Cl 거리 ↓. Voronoi Cl −1.7 Å³가 같은 그림.
-2. **Cl 배위수 6→5 (anti-site)** — 8개 Cl 중 평균 1개가 4d. site disorder 직접 증거
-   (per-bond json: comp1 Cl 4a×4/4d×0, modelc 4a×7/4d×1).
+2. **Cl 배위수 6→5 (anti-site)** — 8개 Cl 중 일부가 4d. site disorder 직접 증거.
 3. **PS4 backbone 안정** — P–S 평균 동일 + σ 1/3 감소.
 4. **Li 배위 평균 동일·분산 발생** — modelc 일부 Li가 3-/5-배위 (vacancy + anti-site).
 
 **Paper 함의**: "Cl 증가 = Li–Cl 약화"라는 단순 가정 반박. Cl excess는 일부 Cl을 4d로
 보내 **오히려 짧고 강한 Li–Cl ionic bond** 형성 (Wilkening q·|q|/r glue 강화).
+
+### II.2.5 ★ 음이온 자리 (16e / 4a / 4d) 점유 — disorder 본질 (구조 분석)
+
+argyrodite 음이온은 **세 종류 자리**:
+
+| 자리 | Wyckoff | 환경 | comp1 (LPSCl, ordered) | modelc (LPSCl1.6, Cl-rich) |
+|---|---|---|---|---|
+| **PS₄-S** | 16e | P 공유결합 (사면체 corner) | S²⁻ 16 | S²⁻ 20 |
+| **halide 자리** | **4a** (xy≈0,0) | Li 팔면체 cage | **Cl⁻ 4 (전부)** | **Cl⁻ 5 (전부)** |
+| **chalcogenide 자리** | **4d/4c** (xy≈¼¼¼) | Li cage (free 음이온) | **S²⁻ 4 (전부)** | **S²⁻ 2 + Cl⁻ 3 (혼합!)** |
+
+**핵심 (modelc V0 k663 좌표 분석)**:
+- **comp1 = ordered**: 4a 전부 Cl, 4d 전부 free-S²⁻ → 두 자리 100% 분리, mixing 0.
+- **modelc = Cl-rich disordered**: 4a 전부 Cl인데, **늘어난 Cl(excess)이 4d(원래 S²⁻ 자리)를 침입**
+  → **4d = S²⁻ 2개 + Cl 3개 anti-site**. free-S²⁻는 idx 54·57 (사면체 안 붙은 외톨이),
+  4d anti-site Cl은 idx 53·55·56 (xy≈0.3 부격자), 4a Cl은 idx 58–62 (xy≈0,0).
+
+→ **이것이 "Cl-rich = chalcogenide 자리 Cl 치환"의 직접 구조 증거.** PS₄-S(16e)는 두 조성 동일
+(골격 불변); 차이는 **4d 자리의 S²⁻↔Cl⁻ 점유**에만 있음.
+
+⚠ per-bond json(`bonds_modelc_k663.json`)의 Cl 4a×7/4d×1은 **Li-배위 cutoff proxy** 기준 —
+위 **위치(fractional) 기준 4a×5/4d×3**가 결정학적으로 더 정확 (relaxed rhombohedral이라 배위수
+distorted). 구조 = `db/structures/modelc_V0_k663.cif`.
 
 ## II.3 Bader (plot_num=17 AE charge density) — paper-grade
 
