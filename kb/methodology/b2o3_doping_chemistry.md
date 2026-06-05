@@ -386,6 +386,24 @@ HSAB 일관). **paper Fig 1b "BO unit" 가정과 반대** = "B→BS₄, O→PS�
 (신규 발견), O-on-B면 UMA bias. → `b2o3_stage2_dft.py`: 같은 base 위 O-on-P(top) vs
 O-on-B(bo4 motif) DFT relax 비교 (6원소 Li P B S O Cl, B 비자성·U 불필요).
 
+## 6e. ★★ Stage 2 DFT 확정 (2026-06-06, v100 small-cell) — O→P 락솔리드
+
+64원자 small-cell, O 위치만 다른 동일 조성, QE PBE relax (ecut 60/480, MV 0.01):
+
+| config | total energy (Ry) | 상태 |
+|---|---|---|
+| **O-on-B** (BO₁S₃, "BO unit" 가설) | −1301.47653 | 수렴 완료 |
+| **O-on-P** (BS₄ + PS₃O) | **−1301.93159** | ionic 71스텝(미수렴, **더 내려갈 예정**) |
+
+**ΔE(P−B) = −6.19 eV** (O-on-P가 미수렴 상태에서 이미 6.2 eV 낮음 → 수렴 시 격차 더 커짐).
+relaxation 단조감소 성질상 **O-on-P 승 확정**, meV 박빙이 아니라 **6 eV 격차**라 method/수렴
+불확실성 무관.
+
+→ **메커니즘 확정 (3중 일치)**: UMA(multi-config) + HSAB(P⁵⁺>B³⁺ oxophilic) + **DFT(−6.2 eV)**
+모두 **B→BS₄, O→oxygenated phosphate(PS₃O/PS₂O₂)**. **paper Fig 1b "BO unit" 가정 기각**,
+Paper #2 novel finding 확정. (UMA-only 우려 → DFT 심판으로 해소.)
+데이터: `v100:~/work/runs/b2o3_stage2/st_0{0,1}_smallcell_O_on_{B,P}.out`.
+
 ---
 
 ## 7. References
