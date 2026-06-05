@@ -115,7 +115,10 @@ def main():
         lines = ["ATOMIC_POSITIONS angstrom"]
         for i in range(nat):
             if i == ad:
-                fl = "0 0 0"                       # adatom fully pinned
+                # adatom: xy pinned (drag coordinate), z FREE in relax so it finds
+                # its adsorption height at each xy (reference drag method, Kim&Cui).
+                # rigid = fully frozen single-point (crude upper bound only).
+                fl = "0 0 0" if args.mode == "rigid" else "0 0 1"
             elif args.mode == "rigid":
                 fl = "0 0 0"                       # whole slab frozen
             else:
