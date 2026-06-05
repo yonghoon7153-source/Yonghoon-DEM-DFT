@@ -25,9 +25,23 @@ Examples (on a node with fairchem + GPU):
           --start on_N --end on_N_adj --images 7
   python3 li3n_uma_investigate.py sweep --task oc20
 """
-import argparse, json, itertools
+import argparse, json, itertools, re
 from pathlib import Path
 import numpy as np
+
+
+def grab_card(txt, name):
+    """Extract a QE card (e.g. ATOMIC_SPECIES) verbatim from an input string."""
+    out, cap = [], False
+    for ln in txt.splitlines():
+        if ln.strip().upper().startswith(name):
+            cap = True; out.append(ln); continue
+        if cap:
+            s = ln.strip()
+            if s == "" or re.match(r"^[A-Z_]{3,}", s):
+                break
+            out.append(ln)
+    return "\n".join(out)
 from ase import Atom, Atoms
 from ase.constraints import FixAtoms
 from ase.optimize import BFGS
@@ -151,7 +165,6 @@ def cmd_dft_sites(A):
     DFT, not UMA, decides the route. Adatom xy-pinned (z+substrate free) so each
     lateral site's energy is read cleanly (on-N can't slide to hollow before measure).
     BFGS relax, NOT NEB -> hours, not days. Lowest final energy = DFT-preferred site."""
-    from dft_drag import grab_card
     from ase import Atom
     sx, sy = A.supercell
     slab = build_li3n_001(nlayers=A.layers, supercell=(sx, sy, 1), terminate="N")
