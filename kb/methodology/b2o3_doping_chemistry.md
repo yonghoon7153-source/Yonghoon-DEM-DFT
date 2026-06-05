@@ -393,11 +393,11 @@ O-on-B(bo4 motif) DFT relax 비교 (6원소 Li P B S O Cl, B 비자성·U 불필
 | config | total energy (Ry) | 상태 |
 |---|---|---|
 | **O-on-B** (BO₁S₃, "BO unit" 가설) | −1301.47653 | 수렴 완료 |
-| **O-on-P** (BS₄ + PS₃O) | **−1301.93159** | ionic 71스텝(미수렴, **더 내려갈 예정**) |
+| **O-on-P** (BS₄ + PS₃O) | **−1301.96393** | ionic 88스텝(미수렴 kill, 계속 하강 중이었음) |
 
-**ΔE(P−B) = −6.19 eV** (O-on-P가 미수렴 상태에서 이미 6.2 eV 낮음 → 수렴 시 격차 더 커짐).
-relaxation 단조감소 성질상 **O-on-P 승 확정**, meV 박빙이 아니라 **6 eV 격차**라 method/수렴
-불확실성 무관.
+**ΔE(P−B) = −6.63 eV** (step71 −6.19 → step88 −6.63, 단조 하강 확인 후 kill — 더 내려갈 것).
+relaxation 단조감소 성질상 **O-on-P 승 확정**, meV 박빙이 아니라 **6.6 eV 격차**라 method/수렴
+불확실성 완전 무관. (verdict 확정되어 st_01 미수렴 상태로 종료, GPU 회수.)
 
 → **메커니즘 확정 (3중 일치)**: UMA(multi-config) + HSAB(P⁵⁺>B³⁺ oxophilic) + **DFT(−6.2 eV)**
 모두 **B→BS₄, O→oxygenated phosphate(PS₃O/PS₂O₂)**. **paper Fig 1b "BO unit" 가정 기각**,
