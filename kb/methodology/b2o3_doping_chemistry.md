@@ -241,6 +241,51 @@ for top_struct in unique_1a[:10]:
 # === Stage 1c, 2, 3: as above ===
 ```
 
+### 5.7 ★ UPGRADED protocol (2026-06-05) — Ewald joint pre-rank
+
+§5.3의 sequential hierarchical(B→halogen→O→Li, 각 단계 "대표 Li 1개")은 작동하지만
+**두 가지 정확도 risk**가 있어 paper-grade ground-state 탐색엔 부족:
+
+1. **Li-ordering noise 오염**: Li spread = **1162 meV**(본 그룹 측정) ≫ B/halogen/O config 간
+   에너지차(수십~수백 meV) → "대표 Li 1개" 고정 시 ranking이 Li noise에 묻혀 top-N 컷에서
+   진짜 ground state 누락 위험.
+2. **Sequential greedy → coupled minimum 누락**: B 위치를 O·Li 모르고 1a에서 확정하나,
+   **B-O coupling**(BO₄ 형성) + **acceptor-vacancy association**(채울 Li⁺ 공공이 B³⁺ 음전하
+   근처로 끌림)이 강하게 coupled → greedy가 미리 자르면 정보 손실.
+3. (부차) **UMA가 B/O 화학에 약함**: oc20/omat 학습엔 mixed BOₓS₄₋ₓ 사면체·B-S 결합 희소
+   → ranking systematic bias 가능 → top-5만 DFT 검증은 위험.
+
+**해결 = Ewald 정전기 joint pre-rank** (이온 site-ordering은 장거리 정전기 지배 → point-charge
+Ewald가 ms/config로 coupling을 rigorous하게 잡음, 표준 기법):
+
+| 단계 | 방법 | 목적 |
+|---|---|---|
+| **Stage 0 (신규)** | B@P + halogen(S/Cl) + O@S + Li-fill을 **joint**로 구성 → **Ewald 에너지 전체 ranking** → top ~300 | greedy·Li-noise·B-O coupling·acceptor-vacancy를 한 번에 (cheap) |
+| Stage 1 | Ewald top-300 → **UMA relax** → top-30 | MLIP은 정전기-검증된 상위만 (config 폭발 회피, UMA 시간 ↓) |
+| Stage 2 | UMA top-30 → **DFT SCF** (top-5 아님!) | UMA의 B/O 부정확 방어 — 넓게 검증 |
+| Stage 3 | DFT top-5 → relax + 500K anneal | 최종 ground state |
+| **별도** | **BO₄ vs O-distributed를 motif family로 명시 구성·비교** | 핵심 물리(O 군집 여부)를 enumeration 운에 안 맡기고 직접 결론 |
+
+**구현 메모** (`tools/doping/b2o3_enumerate.py`):
+- Ewald는 **전하 다른 DOF만** ranking (B@P +3/+5, halogen S²⁻/Cl⁻, Li-fill +1). **O는 isovalent
+  (O²⁻=S²⁻ 전하 동일) → Ewald-blind** → O는 BO₄/distributed/free_s **motif로 생성**해 UMA/DFT가
+  공유결합성으로 판가름.
+- random sampling은 joint 공간(~1e14)에 부족 → **B(C(10,2)=45) × halogen(C(20,4)=4845) 전수
+  enumerate + Li는 greedy 정전기 최적배치**(acceptor-vacancy association + Li-Li 반발 정확 반영).
+  218k base config, 각 Ewald = q·M·q (geometric kernel M 1회 precompute).
+- **Li-vacancy 후보 = spglib 대칭완성** (깨끗한 ~66 자리). spglib 없으면 void-finder fallback(과생성,
+  부정확) → **v100에선 spglib 필수**.
+- 모든 config 중립(B −4 ↔ +4 Li) → Ewald 배경항 불필요. config-key 정확 dedup.
+
+**비용**: Ewald pre-rank 수만 config = 분 단위. UMA를 5000개 다 도는 대신 top-300만 → UMA 시간
+오히려 ↓. DFT를 top-30으로 넓힌 게 유일한 순증(~3-5h). **정확도/robustness ↑↑, reviewer
+방어(greedy/Li-ordering 질문) 차단.**
+
+**Charge accounting (중립성, 10 fu / 124-atom 1×1×2 cell)**:
+- base modelC×(1,1,2) = Li54 P10 S44 Cl16 (중립 ✓)
+- 2 P→2 B: −4 (acceptor) / 3 S→3 O: 0 (isovalent) / free-site S↔Cl 재배열: 0 (개수 보존)
+- → **+4 Li**(공공 6개 중 4개 채움) → **Li58 P8 B2 S41 O3 Cl16** (중립 ✓, 공공 2개 잔존)
+
 ---
 
 ## 6. Computational checklist before script generation
@@ -251,11 +296,13 @@ for top_struct in unique_1a[:10]:
 - [x] Enumeration scope (43B configs full → ~5K via pymatgen sym reduction at Stage 1a)
 - [x] Hierarchical stages 1a/1b/1c/2/3 designed (~17h on 1× A100)
 - [x] B (largest perturbation) → halogen (medium) → O (local) → Li ordering
-- [ ] **lpscl16_verify champion** ready (gabia, ~22h after Li2O cascade ends)
-- [ ] pymatgen + enumlib install on gabia (`pip install enumlib`)
-- [ ] B2O3 enumerate script (lpscl16_champion + structure)
-- [ ] DFT settings for B-doped LPSCl (likely same as Nd-doped but no ISPIN/U
-      since B has no f-electrons)
+- [x] **UPGRADED protocol (§5.7)**: Ewald joint pre-rank → UMA top-300 → DFT top-30 → anneal
+- [x] **lpscl16 champion ready** = `db/structures/modelc_V0_k663.xyz` (62-atom, k663 V0, PS4 intact,
+      rhombohedral a=b=7.007 c=35.036; modelc_v3 paper structure). 1×1×2 → 124 atoms.
+- [x] B2O3 enumerate Stage-0 script = `tools/doping/b2o3_enumerate.py` (joint Ewald pre-rank)
+- [ ] v100에 pymatgen 설치 확인 (`python3 -c "import pymatgen"`) — enumlib는 선택(stochastic+Ewald는 불필요)
+- [ ] Stage 0 실행 (v100) → top-300 → Stage 1 UMA relax
+- [ ] DFT settings for B-doped LPSCl (Nd-doped와 동일하나 B는 f-전자 없어 ISPIN/U 불필요)
 
 ---
 
@@ -277,5 +324,5 @@ for top_struct in unique_1a[:10]:
 | 날짜 | 변경 | 출처 |
 |---|---|---|
 | 2026-05-19 | v1 초안 (literature search + chemistry framework) | this session |
-| (TODO) | enumerate script 생성 후 §5 update | future |
-| (TODO) | lpscl16_verify champion 결정 후 §6 first checklist 완료 | future |
+| 2026-06-05 | §5.7 UPGRADED protocol (Ewald joint pre-rank + DFT top-30 + BO₄ motif), §6 checklist 갱신 (champion=modelc_V0_k663, script 생성), 웹검색 재확인 (B@P novel-but-supportable) | this session |
+| (TODO) | Stage 0 실행 결과 후 ground-state 구조 §5 update | future |
