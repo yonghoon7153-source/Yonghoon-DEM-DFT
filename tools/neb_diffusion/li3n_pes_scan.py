@@ -35,12 +35,18 @@ def gen(args):
     cell = np.array(A.cell); syms = A.get_chemical_symbols(); nat = len(A)
     ad = nat - 1
     z_ad = A.positions[ad, 2]
-    fixed = set()
-    for c in A.constraints:
-        if c.__class__.__name__ == "FixAtoms":
-            fixed.update(int(i) for i in c.index)
-    print(f"[pes] {nat} atoms, adatom idx {ad} ({syms[ad]}), {len(fixed)} fixed, "
-          f"z_ad={z_ad:.2f}; grid {args.grid}×{args.grid} over {args.supercell_frac}× surface cell")
+    # Fix BOTTOM slab layers by z (do NOT inherit the structure's constraints — a
+    # rigid drag input has ALL atoms fixed, which would freeze the substrate and
+    # defeat the scan). Relax the top relax_top_frac of the slab + the adatom.
+    zs = A.positions[:, 2]
+    z_slab = np.array([zs[i] for i in range(nat) if i != ad])
+    zmin, zmax = z_slab.min(), z_slab.max()
+    z_cut = zmin + (1.0 - args.relax_top_frac) * (zmax - zmin)
+    fixed = set(i for i in range(nat) if i != ad and zs[i] < z_cut)
+    print(f"[pes] {nat} atoms, adatom idx {ad} ({syms[ad]}), z_ad={z_ad:.2f}; "
+          f"slab z[{zmin:.2f},{zmax:.2f}] cut={z_cut:.2f} -> {len(fixed)} fixed (bottom) / "
+          f"{nat-1-len(fixed)} free (top) + adatom z-free; "
+          f"grid {args.grid}×{args.grid} over {args.supercell_frac}× surface cell")
 
     tmpl = Path(args.template).read_text()
     species = grab_card(tmpl, "ATOMIC_SPECIES")
@@ -132,6 +138,8 @@ def main():
     ap.add_argument("--out_dir"); ap.add_argument("--grid", type=int, default=5)
     ap.add_argument("--supercell_frac", type=float, default=1.0,
                     help="fraction of surface cell to span (1.0 = one full cell)")
+    ap.add_argument("--relax_top_frac", type=float, default=0.5,
+                    help="top fraction of slab thickness to relax (rest fixed by z)")
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     a = ap.parse_args()
     if a.parse:
