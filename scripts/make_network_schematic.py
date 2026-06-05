@@ -1,21 +1,27 @@
 #!/usr/bin/env python3
 """Figure 1(b) — clean network-solver schematic (matplotlib).
 
-Style target: the reference figure — SE yellow majority matrix, AM gray
-minority islands, zigzag resistor edges colored by REAL endpoint pair
-(SE-SE yellow / AM-SE blue / AM-AM red), two highlighted backbones, SUS
-(red) and bulk (tan) bars, separate right-side legend, NO in-plot text.
+Two percolating backbones with PHASE-SELECTIVE boundaries:
+  • SE backbone (yellow) reaches the BULK reservoir (bottom) carrying Li+,
+    but does NOT reach the SUS collector (top)  -> ✕ break at top.
+  • AM backbone (red) reaches the SUS collector (top) carrying e-,
+    but does NOT reach the BULK reservoir (bottom) -> ✕ break at bottom.
 
-Edge color is NEVER guessed: each edge's color is set from the two
-particle phases it connects.  Backbones are placed as connected chains of
-a single phase, so the highlighted path passes only through its own phase.
+The ✕ marks are TRUE terminations, enforced geometrically:
+  - NO SE particle exists above SE_TOP  → no SE-SE edge can bridge to SUS.
+  - NO AM particle exists below AM_BOT   → no AM-AM edge can bridge to bulk.
+  - A clear EMPTY POCKET is carved around each ✕ (no filler of any phase),
+    so the break sits in blank space (no stray red/blue edge next to it).
+
+Edge color is NEVER guessed: each edge's color comes from the two
+particle phases it connects (SE-SE yellow / AM-SE blue / AM-AM red).
+NO in-plot text.
 """
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import FancyBboxPatch, Circle
-from matplotlib.lines import Line2D
 
 rng = np.random.default_rng(3)
 
@@ -33,6 +39,8 @@ lax.set_xlim(0, 10); lax.set_ylim(0, 11); lax.axis('off')
 
 SUS_Y, BULK_Y = 10.0, 1.0
 X0, X1 = 0.5, 9.5
+SE_TOP = 8.3      # SE matrix stops here; gap above to SUS (AM-only zone)
+AM_BOT = 2.7      # AM islands stop here; gap below to bulk (SE-only zone)
 
 # ── collector bars + phase-selective tint bands ──
 ax.add_patch(FancyBboxPatch((X0-0.2, SUS_Y), (X1-X0)+0.4, 0.85,
@@ -44,37 +52,46 @@ ax.add_patch(plt.Rectangle((X0-0.2, BULK_Y), (X1-X0)+0.4, 0.5, fc='#ecd9a8', alp
 
 nodes = []   # (x,y,phase,r,backbone)
 
-# ── 1. SE backbone chain (bottom→top), touches bulk, ✕ below SUS ──
+# ── 1. SE backbone chain: bulk (bottom) → SE_TOP, then ✕ below SUS ──
 n_se = 9
-se_y = np.linspace(BULK_Y+0.05, SUS_Y-1.5, n_se)
-se_x = 3.0 + 0.55*np.sin(np.linspace(0.2, 3.4, n_se))
+se_y = np.linspace(BULK_Y+0.15, SE_TOP, n_se)
+se_x = 3.0 + 0.50*np.sin(np.linspace(0.2, 3.4, n_se))
 se_chain = list(zip(se_x, se_y))
 for (x, y) in se_chain:
     nodes.append((x, y, 'SE', 0.20, True))
+SE_GAP_X = se_chain[-1][0]          # x of the SE break pocket
 
-# ── 2. AM backbone chain (top→bottom), touches SUS, ✕ above bulk ──
-n_am = 8
-am_y = np.linspace(SUS_Y-0.05, BULK_Y+1.5, n_am)
-am_x = 6.7 + 0.45*np.sin(np.linspace(0.0, 3.0, n_am))
+# ── 2. AM backbone chain: SUS (top) → AM_BOT, then ✕ above bulk ──
+n_am = 9
+am_y = np.linspace(SUS_Y-0.15, AM_BOT, n_am)
+am_x = 6.7 + 0.40*np.sin(np.linspace(0.0, 3.0, n_am))
 am_chain = list(zip(am_x, am_y))
 for (x, y) in am_chain:
     nodes.append((x, y, 'AM', 0.30, True))
+AM_GAP_X = am_chain[-1][0]          # x of the AM break pocket
 
-# ── 3. filler particles: SE majority, AM minority ──
+# ── 3. filler: SE majority matrix + AM minority islands ──
+#     enforced zones:  y>SE_TOP → AM only   |   y<AM_BOT → SE only
+#     empty pockets carved around each ✕ so the break sits in blank space
 def clash(x, y, r, pad=0.04):
     for (nx, ny, ph, nr, bb) in nodes:
         if (x-nx)**2 + (y-ny)**2 < (r+nr+pad)**2:
             return True
     return False
 
-gx = np.linspace(X0+0.35, X1-0.35, 13)
+gx = np.linspace(X0+0.4, X1-0.4, 12)
 gy = np.linspace(BULK_Y+0.35, SUS_Y-0.35, 13)
-for j, y in enumerate(gy):
-    for i, x in enumerate(gx):
-        xx = x + rng.uniform(-0.18, 0.18); yy = y + rng.uniform(-0.18, 0.18)
-        is_am = rng.random() < 0.14
-        if j == 0:            is_am = False     # bottom row SE-only → touch bulk
-        if j == len(gy)-1:    is_am = True      # top row AM-only → touch SUS
+for y in gy:
+    for x in gx:
+        xx = x + rng.uniform(-0.16, 0.16); yy = y + rng.uniform(-0.16, 0.16)
+        # carve empty pockets around the two ✕ breaks (no particle of ANY phase)
+        if yy > SE_TOP and abs(xx - SE_GAP_X) < 0.75:   # SE break pocket (top)
+            continue
+        if yy < AM_BOT and abs(xx - AM_GAP_X) < 0.75:   # AM break pocket (bottom)
+            continue
+        if yy > SE_TOP:        is_am = True              # top zone: AM only → touches SUS
+        elif yy < AM_BOT:      is_am = False             # bottom zone: SE only → touches bulk
+        else:                  is_am = rng.random() < 0.13
         r = rng.uniform(0.26, 0.34) if is_am else 0.16
         if clash(xx, yy, r): continue
         nodes.append((xx, yy, 'AM' if is_am else 'SE', r, False))
@@ -91,40 +108,39 @@ def zigzag(p, q, n=7, amp=0.05):
     pts = np.array(pts)
     return pts[:, 0], pts[:, 1]
 
-# ── draw edges (color from REAL endpoint phases) ──
+# ── draw edges (color strictly from REAL endpoint phases) ──
 SE = {'SE'}
 def near(a, b, d=1.15):
     return (a[0]-b[0])**2 + (a[1]-b[1])**2 < d*d
 
-drawn = set()
 for i in range(len(nodes)):
     for k in range(i+1, len(nodes)):
         a, b = nodes[i], nodes[k]
         if not near(a, b): continue
         s1 = a[2] in SE; s2 = b[2] in SE
-        if s1 and s2:        col = E_SESE; lw = 1.0
+        if s1 and s2:               col = E_SESE; lw = 1.0
         elif (not s1) and (not s2): col = E_AMAM; lw = 1.2
-        else:                col = E_AMSE; lw = 1.1
+        else:                       col = E_AMSE; lw = 1.1
         zx, zy = zigzag((a[0], a[1]), (b[0], b[1]), amp=0.045)
         ax.plot(zx, zy, color=col, lw=lw, alpha=0.85, zorder=3,
                 solid_capstyle='round')
 
-# ── backbone glow (under nodes) ──
+# ── backbone glow + bold zigzag (over the chain) ──
 ax.plot([p[0] for p in se_chain], [p[1] for p in se_chain],
         color=BB_Y, lw=7, alpha=0.40, zorder=2, solid_capstyle='round')
 ax.plot([p[0] for p in am_chain], [p[1] for p in am_chain],
         color=BB_R, lw=7, alpha=0.40, zorder=2, solid_capstyle='round')
-# zigzag bold backbone edges over the chain
 for chain, col in [(se_chain, BB_Y), (am_chain, BB_R)]:
     for m in range(len(chain)-1):
         zx, zy = zigzag(chain[m], chain[m+1], amp=0.05)
         ax.plot(zx, zy, color=col, lw=3.0, alpha=0.95, zorder=5,
                 solid_capstyle='round')
-# ✕ breaks at non-touching ends
-ax.plot(se_chain[-1][0], se_chain[-1][1]+0.55, marker='x', ms=16, mew=4,
-        color=BB_Y, zorder=8)
-ax.plot(am_chain[-1][0], am_chain[-1][1]-0.55, marker='x', ms=16, mew=4,
-        color=BB_R, zorder=8)
+
+# ── ✕ breaks: sit in carved empty pockets, so they are TRUE terminations ──
+sx, sy = se_chain[-1]
+ax.plot(sx, sy + 0.75, marker='x', ms=18, mew=4.5, color=BB_Y, zorder=8)
+ax_, ay = am_chain[-1]
+ax.plot(ax_, ay - 0.75, marker='x', ms=18, mew=4.5, color=BB_R, zorder=8)
 
 # ── nodes on top ──
 for x, y, ph, r, bb in nodes:
@@ -154,8 +170,8 @@ L_zig(6.8, E_SESE, 'yellow = SE-SE')
 L_zig(6.2, E_AMSE, 'blue   = AM-SE')
 L_zig(5.6, E_AMAM, 'red    = AM-AM')
 lax.text(0.6, 4.6, 'BACKBONES', fontsize=12, fontweight='bold')
-L_bb(3.9, BB_Y, 'yellow -> bulk (Li+ path)')
-L_bb(3.1, BB_R, 'red    -> SUS (e- path)')
+L_bb(3.9, BB_Y, 'yellow -> bulk (Li+ path); break = no SE to SUS')
+L_bb(3.1, BB_R, 'red    -> SUS (e- path);  break = no AM to bulk')
 
 import os; os.makedirs('docs/figures', exist_ok=True)
 out = 'docs/figures/network_solver_schematic.png'
