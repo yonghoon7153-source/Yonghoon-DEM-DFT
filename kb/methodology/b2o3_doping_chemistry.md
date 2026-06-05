@@ -306,6 +306,36 @@ Ewald가 ms/config로 coupling을 rigorous하게 잡음, 표준 기법):
 
 ---
 
+## 6b. Stage 0/1 실행 결과 (2026-06-05) + O-distribution 정밀화
+
+**Stage 0 (Ewald, v100)**: 218k config (B 45 × halogen 4845, greedy-Li) → top-300. top 조성
+`Li58 P8 B2 S41 O3 Cl16` (charge 0). Li 후보는 void-finder(modelc relaxed P1이라 spglib 실패).
+
+**Stage 1 (UMA-s-1p1 relax, 360개)**: O-motif(bo4/distributed/free_s) 비교 →
+- **win count: bo4 17 / distributed 3 / free_s 0**
+- spread 분석(중요): median 29.7 meV/atom인데 **거의 free_s 페널티**. 분리하면:
+  - **tetrahedral(bo4/distributed) vs free_s(4a)**: **~30 meV/atom ≈ 1.3 eV/O** → **O는 free-S²⁻ cage 자리 강력 회피** (robust)
+  - **bo4 vs distributed**: **~1-3 meV/atom ≈ 0.09 eV/O** → **거의 degenerate** (bo4 근소 우세, ≪ kT)
+
+**정직한 결론**: "O가 BO₄로 강하게 뭉친다"는 과장. 정확히는 **"O는 PS₄/BO₄ 사면체 corner 치환자
+(free-S 회피), 사면체 중 B 약간 선호하나 PS₄와 near-degenerate → 여러 mixed unit(BS₄, BO_xS,
+PS₃O, PS₂O₂) 공존 분포"**. (borophosphate glass NMR 거동과 정합.)
+
+**O-distribution 정밀 해석 (best method, `b2o3_o_distribution.py`)**:
+1. global-best (B,halogen,Li) config 위 **O를 40 tetrahedral corner에 C(40,3)=9880 전수 배치**
+2. **UMA single-point screen** → 상위 ~50 **relax**
+3. **local-unit 분류** (각 P/B 사면체 corner O 수 → BS₄/BO_xS_4-x/PS_4-y O_y) → ground-state +
+   300K-weighted ensemble unit 분포
+4. ⚠ **bo4/distributed가 ~meV/atom이라 UMA 신뢰한계 아래 + UMA의 B 화학 부정확** →
+   **Stage 2 DFT가 unit 분포 확정에 필수** (UMA=경향, DFT=확정).
+5. **XPS 대체 가치**: DFT 확정 unit 분포 = **¹¹B/³¹P NMR·B XPS testable prediction** →
+   실험 못 찍어도 "computation predicts BO_x/PS_yO distribution" 으로 방어.
+
+도구 체인: `b2o3_enumerate.py`(Stage0) → `b2o3_uma_relax.py`(Stage1 motif) →
+`b2o3_o_distribution.py`(O 전수 + unit) → (Stage2 DFT, TODO).
+
+---
+
 ## 7. References
 
 - US Patent 9142861 — Lithium ionic conductor (Li-P-B-S, β-Li3PS4-B)
