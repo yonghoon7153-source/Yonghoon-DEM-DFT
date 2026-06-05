@@ -149,8 +149,48 @@ Scripts: `run_neb_qe.py`, `run_neb_qe.sh`.
 **도구**: `tools/neb_diffusion/run_neb_qe.py`(oc20 UMA NEB), `li3n_mlneb_gpaw.py`(CatLearn 재현),
 `li3n_pes_scan.py`(주의: `--uma_task oc20` 명시할 것; 기본 omat은 표면에 부적합).
 
-## References
+## OUTCOME v3 (2026-06-06, FINAL) — proper-slab UMA dig: topology inversion confirmed
 
-- Cui et al. ACS Nano 2023, **17**, 3168 — Li3N (001) 0.133 eV target.
+> [!important] 결정판. v2의 0.054도 **thin-slab artifact로 폐기**. 제대로 된 논문-충실 slab으로 재조사한 결과.
+
+**셋업 (논문 Cui 2023 충실 재현)**: Li3N(001) **6층 N-노출 Li2N termination**, 3×3, 243 atoms, top 5 relax,
+UMA-s-1p1. (`li3n_uma_investigate.py`, `build_li3n_001(terminate='N')`)
+
+**① 흡착 site 에너지 (UMA, oc20 & omat 동일 순서)**:
+
+| site | E_bind (oc20) | 순위 |
+|---|---|---|
+| hollow | −2.093 | 🥇 **UMA 최소** |
+| bridge | −2.073 | 🥈 |
+| on-N | −1.903 | 🥉 **최약** |
+| *paper on-N* | *−3.44* | *DFT 최소* |
+
+→ **Topology inversion**: UMA는 hollow 최소, on-N 최약. 논문 DFT는 on-N이 최소(우물). oc20·omat 둘 다 동일.
+
+**② NEB (각 방법 자기 최소점끼리)**:
+
+| 경로 | barrier | 의미 |
+|---|---|---|
+| hollow → hollow_adj | **0.237 eV** | UMA 정직한 장벽 (자기 최소점 hollow 기준) |
+| on-N → on-N_adj | **0.025 eV ≈ 0** | on-N 끝점이 off-site로 relax → **UMA에 on-N 우물 없음 확증** |
+
+**메커니즘 (왜 깨지나)**: Li adatom(δ+)–N³⁻ **on-top 정전기+전자전달 결합**이 DFT의 on-N 우물(0.133)을 만듦.
+단거리 MLIP인 UMA는 이 전하이동 on-top 결합을 못 담아 → adatom을 generic하게 hollow로 떨굼(= LiC6식 거동).
+그래서 (a) 최소 site가 틀리고(hollow), (b) 장벽이 carbon급(0.237 ≈ LiC6 0.241)으로 부풀려져 **"Li3N이
+carbon보다 안 빠르다"는 가짜 결론**을 줌.
+
+**왜 LPSCl/LiC6은 멀쩡한데 Li3N만**: LPSCl = 평형 벌크·풍부 화학(sulfide/halide)·상대비교 → in-distribution.
+LiC6 = Li가 hollow 선호(약한 상호작용) → UMA가 맞춤(0.241 vs DFT 0.287). Li3N = 강한 ionic nitride·극성표면·
+on-top 전하이동·0.13 eV 미세신호 → out-of-distribution. (`why-uma-fails-li3n` 분석)
+
+**결정**:
+- **Li3N 장벽은 UMA로 불가** (0.054도 0.237도 신뢰 X — topology 자체가 틀림). **UMA를 path-finder로도 쓰면 안 됨**(hollow 오도).
+- **루트 = on-N → 인접 on-N** (논문 + 화학 + UMA의 "on-N 우물 없음"이 역설적 확인). 절대값은 **DFT** 필요.
+- 며칠 안 날리는 확정법: **DFT static 3방**(on-N/hollow/bridge relax)으로 DFT 최소 site 재확인(몇 시간) → on-N 확정 시 **CatLearn ML-NEB**(`li3n_mlneb_gpaw.py`)로 0.133.
+- 발표 수치: **Li3N 0.133(문헌) vs carbon 0.24–0.30 → ~2×** (옛 6×·10⁴배 주장은 thin-slab artifact, 폐기).
+
+**도구**: `li3n_uma_investigate.py` (sites/neb/sweep, term/두께/task knob), `li3n_mlneb_gpaw.py` (논문 ML-NEB).
+
+
 - ASE 3.23+ docs: `ase.mep.NEB`, `EspressoProfile`.
 - UMA-s-1p1: FAIRChem (Meta) foundation MLIP.

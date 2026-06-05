@@ -1,139 +1,188 @@
 {
-  "property": "li_adatom_diffusion_barrier",
-  "description": "Li adatom diffusion barrier on anode-side interphase surfaces. Two-track: (1) MLIP UMA-oc20 fast screening, (2) DFT verification (SCF on UMA geometry + full DFT NEB).",
-  "method_notes": {
-    "uma_oc20": "ASE NEB with FAIRChemCalculator (UMA-s-1p1, task=oc20). 7 images, IDPP interpolation, CI-NEB after relax. Fast screening (~min). Absolute barrier known to underestimate vs DFT by 2-3x.",
-    "dft_scf_on_uma": "QE pw.x PBE+USPP SCF (ecutwfc 60 Ry, ecutrho 480 Ry, k 2x2x1, conv_thr 1e-8, MV smearing) on UMA-NEB-relaxed image coordinates (geometry frozen). Effective barrier = E(TS) - E(bridge_min). Underestimates true DFT TS height (UMA over-smooths saddle).",
-    "dft_full_neb": "ASE NEB driving QE pw.x as calculator — each image geometry relaxed under DFT forces. CI-NEB after 5-step regular NEB warmup. fmax 0.05 eV/A. Slab bottom 50% frozen. Warm-start from UMA path. ~5-7 days/system on single A6000."
-  },
-  "results": [
-    {
-      "id": "li3n_001_pathA_uma",
-      "system": "Li3N",
-      "facet": "(001)",
-      "path": "A (N → adjacent N along a-axis)",
-      "method": "UMA-oc20 + CI-NEB",
-      "n_images": 7,
-      "endpoint_distance_A": 3.65,
-      "effective_barrier_eV": 0.054,
-      "endpoint_barrier_eV": 0.022,
-      "bridge_depth_eV": -0.032,
-      "ts_image_idx": 5,
-      "bridge_image_idx": 3,
-      "status": "completed",
-      "notes": "A/B/C paths verified hexagonal symmetry (avg 0.022 ± 0.001 eV endpoint barrier). Bridge minimum below endpoint — Li adatom prefers bridge between two N over on-top N."
+    "property": "li_adatom_diffusion_barrier",
+    "description": "Li adatom diffusion barrier on anode-side interphase surfaces. Two-track: (1) MLIP UMA-oc20 fast screening, (2) DFT verification (SCF on UMA geometry + full DFT NEB).",
+    "method_notes": {
+        "uma_oc20": "ASE NEB with FAIRChemCalculator (UMA-s-1p1, task=oc20). 7 images, IDPP interpolation, CI-NEB after relax. Fast screening (~min). Absolute barrier known to underestimate vs DFT by 2-3x.",
+        "dft_scf_on_uma": "QE pw.x PBE+USPP SCF (ecutwfc 60 Ry, ecutrho 480 Ry, k 2x2x1, conv_thr 1e-8, MV smearing) on UMA-NEB-relaxed image coordinates (geometry frozen). Effective barrier = E(TS) - E(bridge_min). Underestimates true DFT TS height (UMA over-smooths saddle).",
+        "dft_full_neb": "ASE NEB driving QE pw.x as calculator \u2014 each image geometry relaxed under DFT forces. CI-NEB after 5-step regular NEB warmup. fmax 0.05 eV/A. Slab bottom 50% frozen. Warm-start from UMA path. ~5-7 days/system on single A6000."
     },
-    {
-      "id": "li3n_001_pathA_dft_scf",
-      "system": "Li3N",
-      "facet": "(001)",
-      "path": "A",
-      "method": "DFT SCF on UMA-NEB geometry (7 images)",
-      "effective_barrier_eV": 0.0486,
-      "endpoint_barrier_eV": 0.039,
-      "bridge_depth_eV": -0.010,
-      "ts_image_idx": 4,
-      "bridge_image_idx": 3,
-      "rel_energies_eV": [0.0, 0.0279, 0.0365, -0.0100, 0.0386, 0.0272, 0.00018],
-      "status": "completed",
-      "data_path": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_verify_pathA/dft_neb_results.json",
-      "vs_paper": {
-        "paper_value_eV": 0.133,
-        "paper_source": "Cui et al. ACS Nano 2023, 17, 3168 (full DFT NEB, PBE)",
-        "delta_eV": -0.084,
-        "interpretation": "Our 0.049 underestimates literature 0.133 because we did DFT SCF on UMA-NEB geometry, not full DFT NEB. UMA over-smooths the transition state."
-      }
+    "results": [
+        {
+            "id": "li3n_001_pathA_uma",
+            "system": "Li3N",
+            "facet": "(001)",
+            "path": "A (N \u2192 adjacent N along a-axis)",
+            "method": "UMA-oc20 + CI-NEB",
+            "n_images": 7,
+            "endpoint_distance_A": 3.65,
+            "effective_barrier_eV": 0.054,
+            "endpoint_barrier_eV": 0.022,
+            "bridge_depth_eV": -0.032,
+            "ts_image_idx": 5,
+            "bridge_image_idx": 3,
+            "status": "SUPERSEDED_thin_slab_artifact",
+            "notes": "A/B/C paths verified hexagonal symmetry (avg 0.022 \u00b1 0.001 eV endpoint barrier). Bridge minimum below endpoint \u2014 Li adatom prefers bridge between two N over on-top N.",
+            "superseded_note": "4-layer slab (135 atoms) gave 0.054 eV; later found to be a thin-slab/termination artifact. Correct 6-layer N-exposed Li2N slab (243 atoms) gives a very different result \u2014 see li3n_001_uma_v2_proper_slab."
+        },
+        {
+            "id": "li3n_001_pathA_dft_scf",
+            "system": "Li3N",
+            "facet": "(001)",
+            "path": "A",
+            "method": "DFT SCF on UMA-NEB geometry (7 images)",
+            "effective_barrier_eV": 0.0486,
+            "endpoint_barrier_eV": 0.039,
+            "bridge_depth_eV": -0.01,
+            "ts_image_idx": 4,
+            "bridge_image_idx": 3,
+            "rel_energies_eV": [
+                0.0,
+                0.0279,
+                0.0365,
+                -0.01,
+                0.0386,
+                0.0272,
+                0.00018
+            ],
+            "status": "completed",
+            "data_path": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_verify_pathA/dft_neb_results.json",
+            "vs_paper": {
+                "paper_value_eV": 0.133,
+                "paper_source": "Cui et al. ACS Nano 2023, 17, 3168 (full DFT NEB, PBE)",
+                "delta_eV": -0.084,
+                "interpretation": "Our 0.049 underestimates literature 0.133 because we did DFT SCF on UMA-NEB geometry, not full DFT NEB. UMA over-smooths the transition state."
+            }
+        },
+        {
+            "id": "li3n_001_pathA_dft_full",
+            "system": "Li3N",
+            "facet": "(001)",
+            "method": "Full DFT NEB (ASE + QE Espresso)",
+            "status": "running",
+            "started": "2026-06-02",
+            "expected_completion_days": 5,
+            "expected_barrier_eV": 0.13,
+            "data_path": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_neb/"
+        },
+        {
+            "id": "lic6_0001_uma",
+            "system": "LiC6",
+            "facet": "(0001)",
+            "path": "hex_hollow \u2192 bridge-C TS \u2192 hex_hollow",
+            "method": "UMA-oc20 + CI-NEB",
+            "n_images": 7,
+            "endpoint_distance_A": 2.46,
+            "barrier_eV": 0.241,
+            "ts_image_idx": 4,
+            "status": "completed",
+            "notes": "hex hollows are true minima; no bridge correction needed."
+        },
+        {
+            "id": "lic6_0001_dft_scf",
+            "system": "LiC6",
+            "facet": "(0001)",
+            "method": "DFT SCF on UMA-NEB geometry (7 images)",
+            "effective_barrier_eV": 0.309,
+            "endpoint_barrier_eV": 0.287,
+            "endpoint_asymmetry_eV": -0.022,
+            "ts_image_idx": 3,
+            "rel_energies_eV": [
+                0.0,
+                0.1674,
+                0.2818,
+                0.2866,
+                0.2764,
+                0.1583,
+                -0.0222
+            ],
+            "status": "completed",
+            "data_path": "gabia:/data/work/runs/li_neb_diffusion/lic6_0001/dft_verify/dft_neb_results.json"
+        },
+        {
+            "id": "lic6_0001_dft_full",
+            "system": "LiC6",
+            "facet": "(0001)",
+            "method": "Full DFT NEB (ASE + QE Espresso)",
+            "status": "queued_after_li3n",
+            "expected_start": "2026-06-09"
+        },
+        {
+            "id": "li3n_001_uma_v2_proper_slab",
+            "system": "Li3N",
+            "facet": "(001)",
+            "method": "UMA-s-1p1 (oc20) CI-NEB, paper-faithful slab",
+            "slab": "6-layer N-exposed Li2N termination, 3x3, 243 atoms, top 5 relaxed (matches Cui 2023)",
+            "date": "2026-06-06",
+            "site_energies_eV": {
+                "hollow": -2.093,
+                "bridge": -2.073,
+                "on_N": -1.903,
+                "note": "UMA minimum = HOLLOW; on-N is LEAST stable. INVERTED vs DFT/paper (on-N is the well)."
+            },
+            "neb": {
+                "hollow_to_hollow_adj": {
+                    "barrier_eV": 0.237,
+                    "meaning": "UMA honest barrier between its own (hollow) minima"
+                },
+                "on_N_to_on_N_adj": {
+                    "barrier_eV": 0.025,
+                    "meaning": "~0: on-N endpoints relax off-site -> confirms UMA has NO on-N well"
+                }
+            },
+            "verdict": "UMA-oc20 (and omat) invert the Li3N(001) adsorption topology: they prefer hollow/bridge and miss the Li+ - N3- on-top charge-transfer well that defines the DFT minimum. Consequently UMA gives 0.237 eV (hollow route) ~ LiC6 0.241, i.e. it WRONGLY implies Li3N is no faster than carbon. The paper DFT on-N route (0.133) is the correct value. UMA must NOT be used for the Li3N barrier; it is also unsafe as a path-finder here (points to the wrong hollow route).",
+            "task_robustness": "site inversion identical for oc20 and omat tasks (hollow<bridge<on_N both).",
+            "old_value_retracted": "0.054 eV (thin 4-layer slab) \u2014 artifact, superseded."
+        }
+    ],
+    "headline_comparison_DFT_SCF": {
+        "li3n_eV": 0.049,
+        "lic6_eV": 0.287,
+        "ratio_lic6_over_li3n": 5.86,
+        "delta_eV": 0.238,
+        "rate_ratio_300K": 9700,
+        "rate_ratio_formula": "exp(delta_E / kT) with kT(300K) = 0.0257 eV",
+        "interpretation": "Same-protocol DFT shows LiC6 has ~6x higher Li adatom diffusion barrier vs Li3N (001), corresponding to ~10^4-fold slower Li lateral diffusion at room temperature. Robust against functional/pseudo choice since both systems use identical DFT settings.",
+        "CAVEAT_2026-06-06": "The Li3N 0.049/0.054 values came from a thin-slab UMA path now retracted. Proper-slab UMA gives 0.237 (hollow, wrong topology). For the Li3N vs LiC6 claim, use DFT/literature: Li3N(on-N) 0.133 vs carbon ~0.24-0.30 -> ~2x (NOT 6x, NOT 10^4 rate). UMA is unreliable for Li3N barrier (topology inversion)."
     },
-    {
-      "id": "li3n_001_pathA_dft_full",
-      "system": "Li3N",
-      "facet": "(001)",
-      "method": "Full DFT NEB (ASE + QE Espresso)",
-      "status": "running",
-      "started": "2026-06-02",
-      "expected_completion_days": 5,
-      "expected_barrier_eV": 0.13,
-      "data_path": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_neb/"
+    "literature_sei_barriers_eV": {
+        "source": "Cui et al. ACS Nano 2023, 17, 3168, Fig 2e",
+        "method": "Full DFT NEB (PBE)",
+        "values": {
+            "Li2O": 0.319,
+            "Li2CO3": 0.232,
+            "LiF": 0.169,
+            "LiOH": 0.141,
+            "Li3N_001": 0.133
+        },
+        "ranking": "Li3N has lowest barrier among 5 common SEI inorganics \u2192 most favorable for uniform Li redistribution at anode interphase."
     },
-    {
-      "id": "lic6_0001_uma",
-      "system": "LiC6",
-      "facet": "(0001)",
-      "path": "hex_hollow → bridge-C TS → hex_hollow",
-      "method": "UMA-oc20 + CI-NEB",
-      "n_images": 7,
-      "endpoint_distance_A": 2.46,
-      "barrier_eV": 0.241,
-      "ts_image_idx": 4,
-      "status": "completed",
-      "notes": "hex hollows are true minima; no bridge correction needed."
+    "paper_claim": {
+        "system": "AgNO3-derived nitrate-rich SEI for anode-free SSB",
+        "claim": "Li3N interphase (from AgNO3 decomposition) provides 5.9x lower Li adatom diffusion barrier than lithiated carbon (LiC6), enabling ~10^4-fold faster Li lateral redistribution that homogenizes Li flux and yields dendrite-free morphology in anode-free configuration.",
+        "supporting_figures": [
+            "g (top-view paths)",
+            "h (barrier bar chart)",
+            "h-alt (E vs reaction coord, same protocol)"
+        ],
+        "caveats_for_methods_section": [
+            "Absolute barrier (0.049 eV for Li3N) underestimates Cui 2023 full DFT NEB (0.133 eV) because we used DFT SCF on UMA-relaxed geometry, not full DFT NEB.",
+            "Same-protocol ratio (5.9x) is the robust paper claim \u2014 functional/pseudo choice robust.",
+            "Full DFT NEB started 2026-06-02 for both systems will replace these numbers with literature-matched absolute values."
+        ]
     },
-    {
-      "id": "lic6_0001_dft_scf",
-      "system": "LiC6",
-      "facet": "(0001)",
-      "method": "DFT SCF on UMA-NEB geometry (7 images)",
-      "effective_barrier_eV": 0.309,
-      "endpoint_barrier_eV": 0.287,
-      "endpoint_asymmetry_eV": -0.022,
-      "ts_image_idx": 3,
-      "rel_energies_eV": [0.0, 0.1674, 0.2818, 0.2866, 0.2764, 0.1583, -0.0222],
-      "status": "completed",
-      "data_path": "gabia:/data/work/runs/li_neb_diffusion/lic6_0001/dft_verify/dft_neb_results.json"
+    "scripts": {
+        "build_li3n_slab": "tools/neb_diffusion/build_li3n_slab.py",
+        "build_lic6_slab": "tools/neb_diffusion/build_lic6_slab.py",
+        "run_neb_uma": "tools/neb_diffusion/run_neb_uma.py",
+        "build_dft_neb_inputs": "tools/neb_diffusion/build_dft_neb_inputs.py",
+        "run_dft_neb": "tools/neb_diffusion/run_dft_neb.sh",
+        "run_neb_qe_full_dft": "tools/neb_diffusion/run_neb_qe.{py,sh}",
+        "plot_barrier_bar": "tools/neb_diffusion/plot_diffusion_barrier.py",
+        "plot_path_compare": "tools/neb_diffusion/plot_neb_path_compare.py",
+        "plot_topview": "tools/neb_diffusion/plot_neb_topview_v3.py"
     },
-    {
-      "id": "lic6_0001_dft_full",
-      "system": "LiC6",
-      "facet": "(0001)",
-      "method": "Full DFT NEB (ASE + QE Espresso)",
-      "status": "queued_after_li3n",
-      "expected_start": "2026-06-09"
+    "kb_links": {
+        "project": "kb/projects/li_neb_anode_free.md",
+        "results_report": "kb/results/li_neb_anode_free_report.md"
     }
-  ],
-  "headline_comparison_DFT_SCF": {
-    "li3n_eV": 0.049,
-    "lic6_eV": 0.287,
-    "ratio_lic6_over_li3n": 5.86,
-    "delta_eV": 0.238,
-    "rate_ratio_300K": 9700,
-    "rate_ratio_formula": "exp(delta_E / kT) with kT(300K) = 0.0257 eV",
-    "interpretation": "Same-protocol DFT shows LiC6 has ~6x higher Li adatom diffusion barrier vs Li3N (001), corresponding to ~10^4-fold slower Li lateral diffusion at room temperature. Robust against functional/pseudo choice since both systems use identical DFT settings."
-  },
-  "literature_sei_barriers_eV": {
-    "source": "Cui et al. ACS Nano 2023, 17, 3168, Fig 2e",
-    "method": "Full DFT NEB (PBE)",
-    "values": {
-      "Li2O": 0.319,
-      "Li2CO3": 0.232,
-      "LiF": 0.169,
-      "LiOH": 0.141,
-      "Li3N_001": 0.133
-    },
-    "ranking": "Li3N has lowest barrier among 5 common SEI inorganics → most favorable for uniform Li redistribution at anode interphase."
-  },
-  "paper_claim": {
-    "system": "AgNO3-derived nitrate-rich SEI for anode-free SSB",
-    "claim": "Li3N interphase (from AgNO3 decomposition) provides 5.9x lower Li adatom diffusion barrier than lithiated carbon (LiC6), enabling ~10^4-fold faster Li lateral redistribution that homogenizes Li flux and yields dendrite-free morphology in anode-free configuration.",
-    "supporting_figures": ["g (top-view paths)", "h (barrier bar chart)", "h-alt (E vs reaction coord, same protocol)"],
-    "caveats_for_methods_section": [
-      "Absolute barrier (0.049 eV for Li3N) underestimates Cui 2023 full DFT NEB (0.133 eV) because we used DFT SCF on UMA-relaxed geometry, not full DFT NEB.",
-      "Same-protocol ratio (5.9x) is the robust paper claim — functional/pseudo choice robust.",
-      "Full DFT NEB started 2026-06-02 for both systems will replace these numbers with literature-matched absolute values."
-    ]
-  },
-  "scripts": {
-    "build_li3n_slab": "tools/neb_diffusion/build_li3n_slab.py",
-    "build_lic6_slab": "tools/neb_diffusion/build_lic6_slab.py",
-    "run_neb_uma": "tools/neb_diffusion/run_neb_uma.py",
-    "build_dft_neb_inputs": "tools/neb_diffusion/build_dft_neb_inputs.py",
-    "run_dft_neb": "tools/neb_diffusion/run_dft_neb.sh",
-    "run_neb_qe_full_dft": "tools/neb_diffusion/run_neb_qe.{py,sh}",
-    "plot_barrier_bar": "tools/neb_diffusion/plot_diffusion_barrier.py",
-    "plot_path_compare": "tools/neb_diffusion/plot_neb_path_compare.py",
-    "plot_topview": "tools/neb_diffusion/plot_neb_topview_v3.py"
-  },
-  "kb_links": {
-    "project": "kb/projects/li_neb_anode_free.md",
-    "results_report": "kb/results/li_neb_anode_free_report.md"
-  }
 }
