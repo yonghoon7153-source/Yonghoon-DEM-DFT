@@ -404,6 +404,31 @@ relaxation 단조감소 성질상 **O-on-P 승 확정**, meV 박빙이 아니라
 Paper #2 novel finding 확정. (UMA-only 우려 → DFT 심판으로 해소.)
 데이터: `v100:~/work/runs/b2o3_stage2/st_0{0,1}_smallcell_O_on_{B,P}.out`.
 
+## 6f. ★ Champion 도핑 구조 확정 (2026-06-06) — Step 3 anneal 대상
+
+screening 순위 정리 (128-atom, 2 B + 3 O = B₂O₃ 1 f.u. on modelc-base):
+
+**⚠ Stage 1 coarse-motif 랭킹은 폐기.** `stage1_b2o3_ranked.csv`는 motif=**bo4(O-on-B)** 우승
+(cfg0019, −4.24541 eV/atom), bo4가 distributed보다 ~30 meV/atom 낮다고 보고 — **그러나 이건
+§6e DFT가 −6.2 eV로 뒤집은 UMA의 부정확한 B-화학(~meV).** champion은 bo4가 아니라 **O-on-P 최저**여야 함.
+
+**O-on-P champion (DFT-정합 motif 중 최저, b2o3_Odist 4-base 비교)**:
+
+| base | O-on-P 최저 E (eV, 128at) | |
+|---|---|---|
+| **cfg0000** | **−542.8175** (−4.24076/at) | 🥇 **champion** |
+| cfg0005 | −542.7516 | |
+| cfg0019 | −542.7267 | (Stage1 bo4 1위였으나 O-on-P선 3위 — base 순위가 motif 따라 뒤집힘 = UMA B-화학 불안정 방증) |
+| cfg0010 | −542.6373 | |
+
+**champion = cfg0000 / o019** (`O_sites=[39,49,107]`, `units={BO0S4:2, PO0S4:6, PO2S2:1, PO1S3:1}`)
+= **B 둘 다 BS₄ + 3 O가 2개 P로(PS₂O₂+PS₃O)**. 파일: `v100:~/work/runs/b2o3_Odist_cfg0000/relaxed/o019.cif`.
+
+**Stage 2 small-cell DFT(st_01 O-on-P)**: O-on-P 승 확정 후 미수렴 상태로 kill (verdict 불변, −6.2 eV).
+
+**다음 (pipeline v2)**: champion o019 → **Step 3 500K UMA anneal**(`b2o3_anneal.py`) → Step 4 MLIP EOS
+→ Step 5–6 DFT EOS(B₀) → Step 8 물성. modelc(무도핑)와 ΔB₀/Δσ 비교 = Paper #2 정량 효과.
+
 ---
 
 ## 7. References
