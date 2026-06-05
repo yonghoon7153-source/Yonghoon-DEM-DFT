@@ -445,6 +445,12 @@ B0(등방 hydrostatic, full relax)와 B_VRH(clamped-ion Cij 유도)는 물리적
 
 ## 각주 / 출처
 
+- **comp1 최종 구조 (AUTHORITATIVE)**: `db/structures/comp1_V0_k444.cif` (+.xyz). 출처 =
+  container `comp1_v3/v3_post/k444_redo/relax_k444.out` (4×4×4 relax, k×L=40). PS₄ intact
+  (P-S 2.072±0.036), V0=1016.62, a=10.0551, **ordered** (Cl & free-S²⁻ 자리 분리, mixing 없음),
+  E0=−13917.8916 (EOS E0와 일치). **figure·구조 분석 모두 이걸 사용.**
+  ⚠ `lpscl_relaxed_conv_52atoms.cif`는 conventional-cell 변환 사고로 **PS₄ 해리(P당 S 1~2개,
+  나머지 4.3Å)** → `*.BROKEN_PS4_dissociated`로 마킹, 사용 금지. (k-mesh 문제 아님, CIF 변환 버그.)
 - modelc_v3 Pipeline v2 lineage: `db/compositions/modelc_v3.json` (Step 1–8 audit).
 - comp1 v2 §8 (a=9.929)는 컨테이너 `archive_v2_post/`에 archive (재현용, paper 미사용).
 - per-bond 권위값: `db/properties/per_bond_json/{bonds_comp1_k444.json, bonds_modelc_k663.json}`

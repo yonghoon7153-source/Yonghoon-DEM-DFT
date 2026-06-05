@@ -26,7 +26,10 @@
                                 "data_source": "comp1_lpsc10/eos/restart/comp1_r2_v{096,097,098,099,100,102,104,106}.out — 8 pts (v101/v103/v105 not in restart)",
                                 "fit_result_json": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_results.json",
                                 "fit_plot_png": "container:/home/ubuntu/work/runs/comp1_v3/comp1_BM_EOS_fit.png",
+                                "AUTHORITATIVE_structure": "db/structures/comp1_V0_k444.cif (+.xyz) — FINAL comp1 V0. Source: container /home/ubuntu/work/runs/comp1_v3/v3_post/k444_redo/relax_k444.out (4x4x4 relax, kxL=40). PS4 intact P-S 2.072±0.036, V0=1016.62, a=10.0551, ordered (Cl & free-S2- on distinct sites, no mixing). E0=-13917.8916 eV matches EOS E0 -13917.8927. USE THIS for figures AND property cross-checks.",
+                                "DEPRECATED_structure": "db/structures/lpscl_relaxed_conv_52atoms.cif.BROKEN_PS4_dissociated — DO NOT USE. conventional-cell export was corrupted (each P had only 1-2 S within 2.5 Å, rest at 4.3 Å = PS4 dissociated). NOT a k-mesh effect; bad CIF conversion. Superseded by comp1_V0_k444.",
                                 "vs_db_v2_value": "26.5 (v2 BM-EOS DFT, 11 pts) vs 26.23 (this re-fit, 8 pts) → 1% agreement, both legitimate",
+                                "k_mesh_note": "B0 is k-robust (EOS = isotropic-volume energy curvature; systematic k-errors cancel). Unlike gap/elastic, B0=26.2 is consistent across v1/v2/v3 (26.2/26.5/26.23, ~1%) so no k444 EOS re-run needed.",
                                 "stress_strain_K_VRH_GPa_aside": 46.21,
                                 "notes": "PRIMARY for paper. Free-fit BM3 on 8 DFT volume points. Perfect R²=1.000 with tight B0' = 4.17 (vs modelc_v3 which had B0'=7.01 ± 1.4 = noisier). Comparison clean."
     },
