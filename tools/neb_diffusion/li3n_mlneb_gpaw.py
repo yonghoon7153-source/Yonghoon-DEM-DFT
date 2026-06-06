@@ -104,9 +104,14 @@ def top_N_sites(slab):
 
 def make_calc(which, uma_task, device):
     if which == "gpaw":
-        from gpaw import GPAW, PW, FermiDirac
+        from gpaw import GPAW, PW, FermiDirac, Mixer
+        # Li3N polar slab + adatom charge-sloshes badly (QE-plain & local-TF both
+        # diverged to >1 Ry). Strong density mixing (low beta, long history) damps it;
+        # PAW + GPAW slab SCF is what Cui 2023 used to get 0.133 eV.
         return GPAW(mode=PW(500), xc="PBE", kpts=(3, 3, 1),
-                    occupations=FermiDirac(0.05), txt="gpaw.txt")
+                    occupations=FermiDirac(0.05),
+                    mixer=Mixer(0.05, 7, 50), maxiter=600,
+                    txt="gpaw.txt")
     elif which == "uma":
         from fairchem.core import pretrained_mlip
         from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
