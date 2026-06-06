@@ -1,0 +1,6 @@
+E_SE_GPa,seed,eps_sphere_pct,eps_union_pct,overlap_pct,delta_mean_um,thickness_um,SE_perc_pct,AM_perc_pct,f_AM_cc_pct,sigma_ionic_H_mScm,sigma_ionic_P_mScm,sigma_e_stageE_mScm,kappa_stageE,tau_dijkstra,source
+1.35,78401,13.47,14.98,1.75,0.0739,33.98,99.3,69.6,71.3,0.1682,0.1076,1.056,7.516,1.48,raw+webapp(original input_2mAh_real_9)
+1.5,S_a,12.64,14.22,1.81,0.0757,33.60,,,,,,,,,raw(b8c56a96 structure only)
+1.5,58573,13.19,14.64,1.66,0.0723,33.85,99.2,79.0,82.1,0.1797,0.1143,1.087,7.706,1.48,raw+webapp(S2)
+1.5,58661,12.47,14.01,1.76,0.0748,33.58,99.4,75.0,77.5,0.2032,0.1271,1.062,8.105,1.49,raw+webapp(S3)
+2.0,d9c8cebf,15.01,16.18,1.38,0.0660,34.60,,,,,,,,,raw(structure only)
