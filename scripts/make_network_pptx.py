@@ -33,14 +33,11 @@ cc = D['consts']
 X0, X1 = cc['X0'], cc['X1']
 SUS_Y, BULK_Y = cc['SUS_Y'], cc['BULK_Y']
 
-# ── data-coord → slide inches (ANISOTROPIC, matches matplotlib panel) ──
-#   matplotlib main axes: 0.63*13.6 in wide / xlim 10  -> SX
-#                         0.94*7.2  in tall / ylim 11  -> SY
-SX = 0.63 * 13.6 / 10.0     # 0.857 in per x-unit
-SY = 0.94 * 7.2 / 11.0      # 0.615 in per y-unit
+# ── data-coord → slide inches (EQUAL x/y scale → round particles) ──
+S = 0.58
 MX, MY = 0.35, 0.30
-def sx(x): return MX + x * SX
-def sy(y): return MY + (11 - y) * SY
+def sx(x): return MX + x * S
+def sy(y): return MY + (11 - y) * S
 EMU = 914400
 def E(inch): return Emu(int(round(inch * EMU)))
 
@@ -52,7 +49,7 @@ shapes = slide.shapes
 def add_bar(y_top, y_bot, fc, ec):
     sh = shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
                           E(sx(X0-0.2)), E(sy(y_top)),
-                          E((X1-X0+0.4)*SX), E((y_top-y_bot)*SY))
+                          E((X1-X0+0.4)*S), E((y_top-y_bot)*S))
     sh.fill.solid(); sh.fill.fore_color.rgb = fc
     sh.line.color.rgb = ec; sh.line.width = Pt(1.5); sh.shadow.inherit = False
 add_bar(SUS_Y+0.9, SUS_Y, SUS_FC, SUS_EC)
@@ -74,11 +71,20 @@ for chain, col in [(se_chain, BB_Y), (am_chain, BB_R)]:
     for m in range(len(chain)-1):
         add_spring(spring(chain[m], chain[m+1]), col, 3.4)
 
+SHADE = {'SE': (C('FFF1C0'), C('E0A808'), C_SE_E),    # (light, dark, edge)
+         'AM': (C('DCDCDC'), C('6E6E6E'), C_AM_E)}
 def add_node(x, y, ph, r, bb):
-    fc, ec = (C_SE, C_SE_E) if ph == 'SE' else (C_AM, C_AM_E)
-    w = E(2*r*SX); h = E(2*r*SY)
-    sh = shapes.add_shape(MSO_SHAPE.OVAL, E(sx(x)-r*SX), E(sy(y)-r*SY), w, h)
-    sh.fill.solid(); sh.fill.fore_color.rgb = fc
+    light, dark, ec = SHADE[ph]
+    d = E(2*r*S)
+    sh = shapes.add_shape(MSO_SHAPE.OVAL, E(sx(x)-r*S), E(sy(y)-r*S), d, d)
+    try:                       # 3D sphere look via gradient (light top-left -> dark)
+        sh.fill.gradient()
+        sh.fill.gradient_angle = 45.0
+        stops = sh.fill.gradient_stops
+        stops[0].position = 0.0; stops[0].color.rgb = light
+        stops[1].position = 1.0; stops[1].color.rgb = dark
+    except Exception:
+        sh.fill.solid(); sh.fill.fore_color.rgb = dark
     sh.line.color.rgb = ec; sh.line.width = Pt(1.6 if bb else 1.0); sh.shadow.inherit = False
 for (x, y, ph, r, bb) in nodes: add_node(x, y, ph, r, bb)
 

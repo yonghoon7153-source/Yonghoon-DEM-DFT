@@ -1,92 +1,103 @@
 #!/usr/bin/env python3
 """Single source of truth for the network-solver schematic geometry.
 
-Particle positions are FROZEN to explicit (x, y) coordinates stored in
-network_schematic_nodes.json.  build() loads those fixed coordinates, so
-the figure is byte-for-byte reproducible forever (independent of numpy /
-rng version).  Regenerate the frozen coords only with:
+NO randomness.  Particle coordinates are fully DETERMINISTIC and fixed:
+  • AM (gray) islands + the two backbones are explicit hand-set coordinates
+    tracing the reference layout (left yellow SE backbone, right red AM
+    backbone column, top AM cluster touching SUS, scattered AM islands).
+  • SE (yellow) matrix is filled with a deterministic golden-ratio (R2)
+    low-discrepancy sequence — organic-looking but reproducible, not a grid
+    and not random.
 
-    python3 scripts/network_schematic_data.py --freeze
+Coordinates are frozen to network_schematic_nodes.json; build() loads them.
+Re-author / re-emit with:  python3 scripts/network_schematic_data.py --freeze
 
-Both the matplotlib preview and the editable PPTX import build(), so they
-always render the identical locked layout.  Edge color is COMPUTED from
-the two endpoint phases — never guessed:
+Edge color is COMPUTED from the two endpoint phases — never guessed:
   SE-SE -> yellow,  AM-SE -> blue,  AM-AM -> red.
 """
 import os
 import json
 import numpy as np
 
-# ── layout constants (data space, x in [0,10], y in [0,11]) ──
-X0, X1 = 0.5, 9.5
+# ── layout constants (data space) — wider than tall, like the reference ──
+X0, X1 = 0.5, 11.5
 SUS_Y, BULK_Y = 10.0, 1.0
 SE_TOP, AM_BOT = 8.3, 2.7
 
-# ── density knobs (used ONLY when re-freezing fresh coordinates) ──
-GRID_NX, GRID_NY = 10, 10
-AM_FRAC = 0.13
-R_SE = 0.17
-R_AM = (0.28, 0.36)
+R_SE_MIN, R_SE_VAR = 0.160, 0.055     # SE radius base + deterministic variation
+PAD = 0.30                            # min gap between particles (airy spacing)
 NEAR_D = 1.25
-JITTER = 0.16
-SEED = 3
 
 NODES_JSON = os.path.join(os.path.dirname(__file__), 'network_schematic_nodes.json')
 
+# ── explicit AM islands (gray), (x, y, r) — traced from the reference ──
+AM_ISLANDS = [
+    (2.4, 9.25, 0.34), (3.3, 9.00, 0.30), (5.0, 9.30, 0.36),    # top cluster (touch SUS)
+    (5.9, 9.05, 0.32), (7.0, 9.05, 0.30),
+    (1.45, 7.55, 0.44),                                          # large upper-left
+    (2.15, 5.35, 0.34), (2.95, 5.00, 0.30),                      # mid-left pair
+    (5.45, 6.05, 0.42), (5.05, 4.05, 0.34), (6.55, 4.85, 0.28),  # center
+    (9.75, 6.45, 0.44), (10.5, 4.60, 0.34), (10.6, 7.55, 0.30),  # right scattered
+]
 
-def _generate(rng):
-    """Generate particle coordinates + backbone chains from rng (for freezing)."""
+# ── SE backbone (left yellow column), (x, y) bulk -> SE_TOP ──
+SE_BACKBONE = [
+    (3.55, 1.20), (3.65, 2.10), (3.72, 3.00), (3.60, 3.90), (3.48, 4.80),
+    (3.42, 5.70), (3.50, 6.60), (3.62, 7.50), (3.52, 8.30),
+]
+# ── AM backbone (right red column), (x, y) SUS -> AM_BOT ──
+AM_BACKBONE = [
+    (8.50, 9.70), (8.60, 8.80), (8.70, 7.90), (8.58, 7.00), (8.68, 6.10),
+    (8.78, 5.20), (8.66, 4.30), (8.56, 3.45), (8.66, 2.80),
+]
+
+
+def _generate():
+    """Deterministic layout (no rng)."""
     nodes = []
-    n_se = 9
-    se_y = np.linspace(BULK_Y + 0.15, SE_TOP, n_se)
-    se_x = 3.0 + 0.50 * np.sin(np.linspace(0.2, 3.4, n_se))
-    se_chain = [(float(x), float(y)) for x, y in zip(se_x, se_y)]
+
+    se_chain = [(float(x), float(y)) for x, y in SE_BACKBONE]
     for (x, y) in se_chain:
-        nodes.append((x, y, 'SE', 0.20, True))
+        nodes.append((x, y, 'SE', 0.19, True))
     se_gap_x = se_chain[-1][0]
 
-    n_am = 9
-    am_y = np.linspace(SUS_Y - 0.15, AM_BOT, n_am)
-    am_x = 6.7 + 0.40 * np.sin(np.linspace(0.0, 3.0, n_am))
-    am_chain = [(float(x), float(y)) for x, y in zip(am_x, am_y)]
+    am_chain = [(float(x), float(y)) for x, y in AM_BACKBONE]
     for (x, y) in am_chain:
-        nodes.append((x, y, 'AM', 0.30, True))
+        nodes.append((x, y, 'AM', 0.33, True))
     am_gap_x = am_chain[-1][0]
 
-    def clash(x, y, r, pad=0.06):
+    for (x, y, r) in AM_ISLANDS:
+        nodes.append((float(x), float(y), 'AM', float(r), False))
+
+    def clash(x, y, r, pad=PAD):
         for (nx, ny, ph, nr, bb) in nodes:
             if (x - nx) ** 2 + (y - ny) ** 2 < (r + nr + pad) ** 2:
                 return True
         return False
 
-    gx = np.linspace(X0 + 0.45, X1 - 0.45, GRID_NX)
-    gy = np.linspace(BULK_Y + 0.4, SUS_Y - 0.4, GRID_NY)
-    for y in gy:
-        for x in gx:
-            xx = float(x + rng.uniform(-JITTER, JITTER))
-            yy = float(y + rng.uniform(-JITTER, JITTER))
-            if yy > SE_TOP and abs(xx - se_gap_x) < 0.8:
-                continue
-            if yy < AM_BOT and abs(xx - am_gap_x) < 0.8:
-                continue
-            if yy > SE_TOP:
-                is_am = True
-            elif yy < AM_BOT:
-                is_am = False
-            else:
-                is_am = rng.random() < AM_FRAC
-            r = float(rng.uniform(*R_AM)) if is_am else R_SE
-            if clash(xx, yy, r):
-                continue
-            nodes.append((xx, yy, 'AM' if is_am else 'SE', r, False))
+    # SE matrix: deterministic golden-ratio (R2) low-discrepancy sequence
+    g = 1.32471795724474602596          # plastic number
+    a1, a2 = 1.0 / g, 1.0 / (g * g)
+    xlo, xhi = X0 + 0.25, X1 - 0.25
+    ylo, yhi = BULK_Y + 0.18, SUS_Y - 0.18
+    N = 300
+    for i in range(1, N + 1):
+        ux = (0.5 + a1 * i) % 1.0
+        uy = (0.5 + a2 * i) % 1.0
+        x = xlo + ux * (xhi - xlo)
+        y = ylo + uy * (yhi - ylo)
+        if y > SE_TOP:                  # top zone is AM-only (touches SUS)
+            continue
+        r = R_SE_MIN + R_SE_VAR * ((i * 0.61803398875) % 1.0)
+        if clash(x, y, r):
+            continue
+        nodes.append((float(x), float(y), 'SE', float(r), False))
 
     return nodes, se_chain, am_chain, se_gap_x, am_gap_x
 
 
 def freeze():
-    """Generate fresh coordinates and write them to NODES_JSON (locks layout)."""
-    rng = np.random.default_rng(SEED)
-    nodes, se_chain, am_chain, se_gap_x, am_gap_x = _generate(rng)
+    nodes, se_chain, am_chain, se_gap_x, am_gap_x = _generate()
     payload = {
         'nodes': [[x, y, ph, r, bb] for (x, y, ph, r, bb) in nodes],
         'se_chain': se_chain, 'am_chain': am_chain,
@@ -94,7 +105,8 @@ def freeze():
     }
     with open(NODES_JSON, 'w') as f:
         json.dump(payload, f, indent=1)
-    print(f"froze {len(nodes)} particles -> {NODES_JSON}")
+    n_am = sum(1 for n in nodes if n[2] == 'AM')
+    print(f"froze {len(nodes)} particles ({n_am} AM / {len(nodes)-n_am} SE) -> {NODES_JSON}")
     return payload
 
 
@@ -119,7 +131,6 @@ def _classify(nodes):
 
 
 def build():
-    """Load FROZEN coordinates (or generate+freeze on first run) and classify edges."""
     if not os.path.exists(NODES_JSON):
         freeze()
     data = json.load(open(NODES_JSON))
@@ -136,8 +147,7 @@ def build():
     }
 
 
-def spring(p, q, amp=0.062, period=0.30):
-    """Uniform resistor zigzag polyline between p and q (list of (x,y))."""
+def spring(p, q, amp=0.055, period=0.26):
     p = np.array(p, float); q = np.array(q, float)
     v = q - p; L = np.hypot(*v)
     if L < 1e-6:
@@ -161,4 +171,4 @@ if __name__ == '__main__':
     d = build()
     e = d['edges']
     print(f"nodes={len(d['nodes'])}  AM-AM={len(e['AM-AM'])}  "
-          f"AM-SE={len(e['AM-SE'])}  SE-SE={len(e['SE-SE'])}  (frozen={os.path.basename(NODES_JSON)})")
+          f"AM-SE={len(e['AM-SE'])}  SE-SE={len(e['SE-SE'])}")
