@@ -429,6 +429,29 @@ screening 순위 정리 (128-atom, 2 B + 3 O = B₂O₃ 1 f.u. on modelc-base):
 **다음 (pipeline v2)**: champion o019 → **Step 3 500K UMA anneal**(`b2o3_anneal.py`) → Step 4 MLIP EOS
 → Step 5–6 DFT EOS(B₀) → Step 8 물성. modelc(무도핑)와 ΔB₀/Δσ 비교 = Paper #2 정량 효과.
 
+## 6g. ★ Step 3 anneal → V0 확정 (2026-06-06)
+
+top-5 O-on-P 후보 500K UMA-MD anneal(heat5/anneal50/quench10 ps + relax). annealed E:
+
+| E/atom | E (eV) | config |
+|---|---|---|
+| **−4.25007** | **−544.0091** | **cfg0000 o019 ← V0** |
+| −4.24812 | −543.7599 | cfg0000 o010 |
+| −4.24608 | −543.4988 | cfg0000 o001 |
+| −4.24530 | −543.3978 | cfg0005 o007 |
+| −4.24469 | −543.3198 | cfg0000 o022 |
+
+**V0 = cfg0000 o019 (0K·annealed 모두 1위 = robust).** anneal이 −542.8175→**−544.0091**(−9 meV/atom 더 깊은
+basin) → annealed 좌표가 V0. 중간순위 뒤집힘(o010 0K하위→annealed 2위) = top-5 한 보람.
+
+**V0 구조 (확인됨)**: `Li58 P8 B2 S41 O3 Cl16` (128 atoms), rhombohedral a=b=6.96/c=70.08 Å/60°,
+V=2404 Å³ (18.78/atom) = **2×modelc + B₂O₃ (2B@P=BS₄, 3O@P=PS₂O₂+PS₃O, +4Li 공석 채움 → §4.1 설계 일치)**.
+조성/fu Li5.8P0.8B0.2S4.1O0.3Cl1.6. 파일: `v100:~/work/runs/anneal_0000_o019/annealed_relaxed.cif`.
+
+**Step 4 (효율 경로)**: `b2o3_eos.py` UMA EOS **ensemble**(o019 re-anneal N seeds → EOS each → V₀/B₀ mean±std;
+EOS는 deterministic이라 변동은 anneal seed에서 나옴, 파이프라인 §0.2 Li-ordering ±15 GPa). → **DFT는 V₀
+한 점만** relax + finite-strain elastic(C_ij→B₀). 느린 7점 DFT EOS 생략, modelc(elastic k444)와 동일 방식.
+
 ---
 
 ## 7. References

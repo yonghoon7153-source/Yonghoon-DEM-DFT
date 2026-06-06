@@ -60,8 +60,17 @@ def main():
     ap.add_argument("--friction", type=float, default=0.02)
     ap.add_argument("--task", default="omat", help="bulk doped crystal -> omat (NOT oc20)")
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--seed", type=int, default=0,
+                    help="RNG seed for MD velocities/Langevin. Vary it for an ENSEMBLE: "
+                         "the EOS is deterministic, the anneal seed is the only stochastic "
+                         "part -> N seeds give V0/B0 mean±std (Li-ordering variance).")
     A = ap.parse_args()
     out = Path(A.out); out.mkdir(parents=True, exist_ok=True)
+    np.random.seed(A.seed)
+    try:
+        import torch; torch.manual_seed(A.seed)
+    except Exception:
+        pass
 
     atoms = read(A.struct)
     atoms.calc = make_calc(A.task, A.device)
