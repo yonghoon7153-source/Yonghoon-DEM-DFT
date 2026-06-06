@@ -11,3 +11,8 @@ docs/figures/network_solver_schematic*.png
 docs/figures/network_schematic_stage*.png
 docs/figures/network_solver_schematic*.pptx
 docs/figures/network_2d_real*.png
+
+# Generated MPM figures (source = scripts/mpm*.py)
+docs/figures/mpm2d_*.png
+docs/figures/mpm3d_*.png
+docs/figures/mpm2d_furnas12.png
