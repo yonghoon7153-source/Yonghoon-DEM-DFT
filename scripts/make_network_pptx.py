@@ -33,11 +33,14 @@ cc = D['consts']
 X0, X1 = cc['X0'], cc['X1']
 SUS_Y, BULK_Y = cc['SUS_Y'], cc['BULK_Y']
 
-# ── data-coord → slide inches (equal x/y scale → circles stay round) ──
-S = 0.62
+# ── data-coord → slide inches (ANISOTROPIC, matches matplotlib panel) ──
+#   matplotlib main axes: 0.63*13.6 in wide / xlim 10  -> SX
+#                         0.94*7.2  in tall / ylim 11  -> SY
+SX = 0.63 * 13.6 / 10.0     # 0.857 in per x-unit
+SY = 0.94 * 7.2 / 11.0      # 0.615 in per y-unit
 MX, MY = 0.35, 0.30
-def sx(x): return MX + x * S
-def sy(y): return MY + (11 - y) * S
+def sx(x): return MX + x * SX
+def sy(y): return MY + (11 - y) * SY
 EMU = 914400
 def E(inch): return Emu(int(round(inch * EMU)))
 
@@ -49,7 +52,7 @@ shapes = slide.shapes
 def add_bar(y_top, y_bot, fc, ec):
     sh = shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
                           E(sx(X0-0.2)), E(sy(y_top)),
-                          E((X1-X0+0.4)*S), E((y_top-y_bot)*S))
+                          E((X1-X0+0.4)*SX), E((y_top-y_bot)*SY))
     sh.fill.solid(); sh.fill.fore_color.rgb = fc
     sh.line.color.rgb = ec; sh.line.width = Pt(1.5); sh.shadow.inherit = False
 add_bar(SUS_Y+0.9, SUS_Y, SUS_FC, SUS_EC)
@@ -73,18 +76,11 @@ for chain, col in [(se_chain, BB_Y), (am_chain, BB_R)]:
 
 def add_node(x, y, ph, r, bb):
     fc, ec = (C_SE, C_SE_E) if ph == 'SE' else (C_AM, C_AM_E)
-    d = E(2*r*S)
-    sh = shapes.add_shape(MSO_SHAPE.OVAL, E(sx(x)-r*S), E(sy(y)-r*S), d, d)
+    w = E(2*r*SX); h = E(2*r*SY)
+    sh = shapes.add_shape(MSO_SHAPE.OVAL, E(sx(x)-r*SX), E(sy(y)-r*SY), w, h)
     sh.fill.solid(); sh.fill.fore_color.rgb = fc
     sh.line.color.rgb = ec; sh.line.width = Pt(1.6 if bb else 1.0); sh.shadow.inherit = False
 for (x, y, ph, r, bb) in nodes: add_node(x, y, ph, r, bb)
-
-def add_X(xc, yc, color, half=0.28):
-    for p, q in [((xc-half, yc-half), (xc+half, yc+half)),
-                 ((xc-half, yc+half), (xc+half, yc-half))]:
-        add_spring([p, q], color, 4.0)
-sx_, sy_ = se_chain[-1]; add_X(sx_, sy_+0.75, BB_Y)
-ax_, ay_ = am_chain[-1]; add_X(ax_, ay_-0.75, BB_R)
 
 # ── legend ──
 LX, LY, LW, LH = 9.0, 0.5, 4.0, 6.6
@@ -119,8 +115,8 @@ leg_zig(LX+0.35, LY+2.30, E_SESE); txt(LX+1.15, LY+2.18, 'yellow = SE-SE', 11)
 leg_zig(LX+0.35, LY+2.72, E_AMSE); txt(LX+1.15, LY+2.60, 'blue  = AM-SE', 11)
 leg_zig(LX+0.35, LY+3.14, E_AMAM); txt(LX+1.15, LY+3.02, 'red   = AM-AM', 11)
 txt(LX+0.25, LY+3.75, 'BACKBONES', 13, True)
-leg_zig(LX+0.35, LY+4.30, BB_Y, 3.0); txt(LX+1.15, LY+4.18, 'yellow → bulk (Li+ path); X = no SE to SUS', 10)
-leg_zig(LX+0.35, LY+4.78, BB_R, 3.0); txt(LX+1.15, LY+4.66, 'red → SUS (e- path); X = no AM to bulk', 10)
+leg_zig(LX+0.35, LY+4.30, BB_Y, 3.0); txt(LX+1.15, LY+4.18, 'yellow → bulk (Li+ ionic path)', 11)
+leg_zig(LX+0.35, LY+4.78, BB_R, 3.0); txt(LX+1.15, LY+4.66, 'red → SUS (e- electronic path)', 11)
 
 import os; os.makedirs('docs/figures', exist_ok=True)
 out = 'docs/figures/network_solver_schematic.pptx'

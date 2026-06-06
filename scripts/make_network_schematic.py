@@ -69,10 +69,6 @@ if STAGE >= 5:
             ax.plot(zx, zy, color=bcol, lw=3.4, alpha=0.97, zorder=5,
                     solid_capstyle='round', solid_joinstyle='round',
                     path_effects=GLOW(gcol, 11))
-    sx, sy = se_chain[-1]
-    ax.plot(sx, sy+0.75, marker='x', ms=18, mew=4.5, color=BB_Y, zorder=8, path_effects=GLOW('#ffd86b', 9))
-    axb, ayb = am_chain[-1]
-    ax.plot(axb, ayb-0.75, marker='x', ms=18, mew=4.5, color=BB_R, zorder=8, path_effects=GLOW('#ff8a8a', 9))
 
 SHADOW = [pe.withSimplePatchShadow(offset=(2.2, -2.2), alpha=0.22, shadow_rgbFace='#777')]
 for x, y, ph, r, bb in nodes:
@@ -107,8 +103,8 @@ if STAGE >= 2:
     if STAGE >= 4: L_zig(5.6, E_SESE, 'yellow = SE-SE')
 if STAGE >= 5:
     lax.text(0.55, 4.6, 'BACKBONES', fontsize=12.5, fontweight='bold')
-    L_bb(3.9, BB_Y, '#ffd86b', 'yellow -> bulk (Li+ path); break = no SE to SUS')
-    L_bb(3.1, BB_R, '#ff8a8a', 'red    -> SUS (e- path);  break = no AM to bulk')
+    L_bb(3.9, BB_Y, '#ffd86b', 'yellow -> bulk (Li+ ionic path)')
+    L_bb(3.1, BB_R, '#ff8a8a', 'red    -> SUS (e- electronic path)')
 
 import os; os.makedirs('docs/figures', exist_ok=True)
 out = f'docs/figures/network_schematic_stage{STAGE}.png'
