@@ -45,6 +45,30 @@ model identifier in commits/PRs. sklearn is NOT installed in the cloud
 container → predictor (GPR/RF) training can only be statically checked
 here; real training verified on the user's WSL machine.
 
+### E_SE calibration — 2mAh_real_9 → KEEP E_SE = 1.35 GPa (2026-06-06)
+Decision DONE.  Compared E_SE = 1.35 / 1.5 (×3 seeds) / 2.0 GPa on
+`input_2mAh_real_9` (bimodal, AM:SE 82:18, P:S 7:3, 300 MPa).  Full measured
+data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
+`docs/data/esse_calibration_2mAh_real_9.csv`.
+- **1.35 ≡ 1.5 — identical regime** across structure, mechanics, transport.
+  overlap 1.75 vs 1.74% and ⟨δ⟩ 0.0739 vs 0.0743µm are the SAME (1.35 sits
+  mid-band of the 1.5 three-seed spread) → E_SE 1.35↔1.5 does not change
+  compaction mechanics.
+- ε_sphere: 1.35=13.47%, 1.5=12.77±0.31% (3 seeds 12.64/13.19/12.47),
+  2.0=15.01%.  Non-monotonic; the 1.35–1.5 +0.7%p gap is a single-seed
+  PACKING offset (plate stopped 0.3µm higher), NOT an E effect (overlap same).
+- σ_ionic tracks POROSITY not E (ε↓ → σ_ionic↑ monotone: σ_ionic_P
+  0.108/0.114/0.127 for ε 13.47/13.19/12.47).
+- Dead-AM warning (f_AM^cc<80%) is seed-borderline, NOT 1.35-specific:
+  1.35=71%, 1.5-S3=77.5% (also ⚠), 1.5-S2=82%.  StageE σ_e (1.056–1.087) and
+  κ (7.5–8.1) constant — AM-network spread washes out post-StageE.
+- **Only 2.0 is distinct** (overlap 1.38 −21%, ε +2.2%p — stiffer) → rejected.
+- Verdict: **keep 1.35** (≡1.5 physically + matches ~13.5% exp porosity +
+  production continuity; both within LPSCl cold-press ~1–2 GPa lit range).
+- Open (low pri, all-E common): measured overlap 1.4–1.8% << Cronau floor
+  5–10% @380MPa — SE-radius lens underestimate + lower 300 MPa target; does
+  NOT affect 1.35-vs-1.5.
+
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
 microstructure matching those numbers → eventually stack different
