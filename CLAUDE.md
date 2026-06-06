@@ -75,6 +75,35 @@ data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
   The 1.75% ↔ 12% gap quantifies AM shielding.  Note dense SE-only gives
   NEGATIVE/near-zero ε_sphere-sum (V_sphere>V_box overlap artifact) → use
   ε_union for those.  Data appended to docs/data/esse_calibration_2mAh_real_9.csv.
+- Porosity convention: ε_sphere-sum is the PHYSICALLY CORRECT void for
+  plastic compaction (material-conserving — displaced contact material
+  re-emerges as a bulge, so solid = Σ original sphere vol).  ε_union assumes
+  rigid geometric interpenetration → under-counts solid; it is only a sanity
+  cross-check / upper bound.  In the composite the two differ by ~1.5%p
+  (13.47 vs 14.98) — within noise because overlap is small (AM-shielded) →
+  use ε_sphere (what webapp/production already does).
+- Over-compression is capped in the CONTACT-AREA metric, not porosity: the
+  5-regime decomposition (`network_conductivity.py:240-264`)
+  A_physics = max(lower[A_hertz=πR*δ, A_ligg], min(caps[A_tabor=F/H,
+  A_volume=V/h_min, A_geom=2πR_min²])).  The min(caps) ceiling stops a
+  deeply-overlapped contact from over-reporting area → coverage stays
+  physical even where ε_sphere would go negative.  (Same over-compression
+  problem the porosity method hits, already solved on the area side.)
+- Elastic-model caveat (resolved): hooke/hysteresis loading is ~linear-Hertz,
+  so it UNDER-deforms vs true plasticity (no local pressure cap at H → reaches
+  300 MPa target with less overlap).  This is exactly why E_eff is softened
+  18× (24→1.35 GPa): the softening compensates the elastic under-deformation
+  so the model compacts like real plastic powder — independently confirmed by
+  the pure-SE Cronau match (11-12% overlap).  Stage-E Physics (Tabor+volume)
+  area re-derivation is the 2nd correction layer (elastic overlap → plastic
+  area).  Residual approximation (low impact): composite AM↔SE load split
+  assumes elastic-stiffness routing ≈ plastic routing.
+- Cross-case TRENDS are safe: every case uses the same ε_sphere convention
+  and the same 5-regime capped areas, so the convention offset is uniform and
+  does not distort relative trends / scaling laws.  Only mixing degenerate
+  pure-SE (negative-ε) cases into a composite corpus would break a trend —
+  those stay out of the production corpus.  → E_SE = 1.35 FINAL (no switch
+  to 1.5; common model bias cancels in the relative comparison).
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
