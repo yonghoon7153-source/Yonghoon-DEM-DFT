@@ -104,6 +104,29 @@ data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
   pure-SE (negative-ε) cases into a composite corpus would break a trend —
   those stay out of the production corpus.  → E_SE = 1.35 FINAL (no switch
   to 1.5; common model bias cancels in the relative comparison).
+- E_eff = 1.35 GPa CROSS-VALIDATED by independent true-plastic MPM (2026-06-06).
+  Built a GPU MPM (Taichi, von Mises/J2 plasticity, scripts/mpm*.py — 2D/3D,
+  AM rigid + SE plastic) as an INDEPENDENT compaction reference.  pure-SE
+  calibration sweep @300 MPa:
+    • E_SE = 24 (bulk single-crystal): porosity 33–38% — stuck near RCP
+      (σ_y barely matters); too stiff → builds pressure before densifying.
+    • E_SE = 1.35 (DEM effective): porosity ~8% — matches DEM ε_union ~10% /
+      experiment ~10–15%.
+  KEY findings: (1) the BULK MODULUS E is the dominant lever, NOT σ_y;
+  (2) the SAME 18× softening (24→1.35) that DEM uses is INDEPENDENTLY required
+  by the MPM to densify realistically.  Physical reason: neither a rigid-sphere
+  DEM nor a single-phase MPM continuum captures granular rearrangement /
+  grain-boundary sliding / brittle fracture, so both must LUMP those missing
+  mechanisms into an effective (softened) modulus.  → E_eff=1.35 is physically
+  justified, not arbitrary.  THIRD independent confirmation of the softening
+  (after pure-SE Cronau overlap and plastic-vs-rigid).
+  MPM also reproduced: void-filling plastic flow (porosity drops BELOW RCP via
+  volume-preserving shape change), plastic SE densifies ~14%p more than rigid
+  SE, and the Furnas dip emerges only at the real 12:4:1 size ratio (bimodal).
+  Production E_SE/σ_y for MPM = 1.35 GPa / 0.3 GPa (pure-SE ≈ 8%).
+  CAVEAT: MPM is a continuum → NO explicit contact network → it validates
+  mechanics/porosity but does NOT replace DEM for transport σ (which needs the
+  Kirchhoff contact network).  DEM = transport, MPM = mechanics/porosity check.
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
