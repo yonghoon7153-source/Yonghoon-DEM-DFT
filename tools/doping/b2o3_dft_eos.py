@@ -69,6 +69,7 @@ def main():
     ap.add_argument("--out", required=True)
     ap.add_argument("--pseudo_dir", default="/home/ubuntu/pseudo")
     ap.add_argument("--ktarget", type=float, default=30.0, help="k*L target (match modelC density)")
+    ap.add_argument("--kpoints", default="", help="override auto-k, e.g. '2 2 1' (match modelC exactly)")
     A = ap.parse_args()
     out = Path(A.out); out.mkdir(parents=True, exist_ok=True)
     species = grab_card(Path(A.species_template).read_text(), "ATOMIC_SPECIES")
@@ -84,8 +85,11 @@ def main():
             print(f"  ⚠ {cf}: template missing {elems-tmpl_el} pseudos!")
         ntyp = len(elems)
         L = a.cell.lengths()
-        kx, ky, kz = [max(1, round(A.ktarget / x)) for x in L]
-        tag = re.search(r"v_([\d.]+)", cf).group(1)
+        if A.kpoints.strip():
+            kx, ky, kz = [int(x) for x in A.kpoints.split()]
+        else:
+            kx, ky, kz = [max(1, round(A.ktarget / x)) for x in L]
+        tag = re.search(r"v_(\d+\.\d+)", cf).group(1)
         cell = a.cell.array
         cellstr = "CELL_PARAMETERS angstrom\n" + "\n".join(
             f"  {cell[i,0]:.10f} {cell[i,1]:.10f} {cell[i,2]:.10f}" for i in range(3))
