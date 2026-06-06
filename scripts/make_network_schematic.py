@@ -72,37 +72,18 @@ if STAGE >= 5:
                     solid_capstyle='round', solid_joinstyle='round',
                     path_effects=GLOW(gcol, 11))
 
-import matplotlib.colors as mcolors
-SHADOW = [pe.withSimplePatchShadow(offset=(2.2, -2.2), alpha=0.22, shadow_rgbFace='#777')]
-# per-phase (rim/dark, mid, highlight/light) for sphere shading
-SHADE = {'SE': ('#caa00a', '#f6c623', '#fff6d2'),
-         'AM': ('#6f6f6f', '#9b9b9b', '#e2e2e2')}
-def _lerp(c1, c2, t):
-    a = np.array(mcolors.to_rgb(c1)); b = np.array(mcolors.to_rgb(c2))
-    return tuple(a + (b - a) * t)
-def draw_sphere(x, y, r, ph, bb):
-    dark, mid, light = SHADE[ph]
-    ec = C_SE_E if ph == 'SE' else C_AM_E
-    lw = 1.6 if (bb and STAGE >= 5) else 1.0
-    # base disc with darker rim
-    ax.add_patch(Circle((x, y), r, fc=dark, ec=ec, lw=lw, zorder=6, path_effects=SHADOW))
-    # concentric light-ward layers -> lit-from-upper-left sphere
-    n = 7
-    for j in range(1, n + 1):
-        t = j / n
-        rr = r * (1 - 0.66 * t)
-        cx = x - 0.24 * r * t; cy = y + 0.24 * r * t
-        ax.add_patch(Circle((cx, cy), rr, fc=_lerp(mid, light, t * t),
-                            ec='none', zorder=7))
+# flat solid fill (PPT-style single-color), thin outline, no shading
 for x, y, ph, r, bb in nodes:
-    draw_sphere(x, y, r, ph, bb)
+    fc, ec = (C_SE, C_SE_E) if ph == 'SE' else (C_AM, C_AM_E)
+    lw = 1.6 if (bb and STAGE >= 5) else 1.0
+    ax.add_patch(Circle((x, y), r, fc=fc, ec=ec, lw=lw, zorder=6))
 
 # legend (adaptive)
 lax.add_patch(FancyBboxPatch((0.2, 0.3), 9.6, 10.4, boxstyle='round,pad=0.12',
               fc='white', ec='#333', lw=1.4,
               path_effects=[pe.withSimplePatchShadow(offset=(3,-3), alpha=0.12)]))
 def L_circle(y, fc, ec, txt, rr=0.28):
-    lax.add_patch(Circle((1.0, y), rr, fc=fc, ec=ec, lw=1.2, path_effects=SHADOW))
+    lax.add_patch(Circle((1.0, y), rr, fc=fc, ec=ec, lw=1.2))
     lax.text(1.95, y, txt, fontsize=11.5, va='center')
 def L_zig(y, col, txt, w=1.8):
     zx, zy = zip(*spring((0.55, y), (1.55, y), amp=0.07, period=0.16))

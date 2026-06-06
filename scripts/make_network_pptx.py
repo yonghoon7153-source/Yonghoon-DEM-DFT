@@ -75,20 +75,11 @@ for chain, col in [(se_chain, BB_Y), (am_chain, BB_R)]:
     for m in range(len(chain)-1):
         add_spring(spring(chain[m], chain[m+1]), col, 3.4)
 
-SHADE = {'SE': (C('FFF1C0'), C('E0A808'), C_SE_E),    # (light, dark, edge)
-         'AM': (C('DCDCDC'), C('6E6E6E'), C_AM_E)}
 def add_node(x, y, ph, r, bb):
-    light, dark, ec = SHADE[ph]
+    fc, ec = (C_SE, C_SE_E) if ph == 'SE' else (C_AM, C_AM_E)
     d = E(2*r*S)
     sh = shapes.add_shape(MSO_SHAPE.OVAL, E(sx(x)-r*S), E(sy(y)-r*S), d, d)
-    try:                       # 3D sphere look via gradient (light top-left -> dark)
-        sh.fill.gradient()
-        sh.fill.gradient_angle = 45.0
-        stops = sh.fill.gradient_stops
-        stops[0].position = 0.0; stops[0].color.rgb = light
-        stops[1].position = 1.0; stops[1].color.rgb = dark
-    except Exception:
-        sh.fill.solid(); sh.fill.fore_color.rgb = dark
+    sh.fill.solid(); sh.fill.fore_color.rgb = fc        # flat single color (PPT-style)
     sh.line.color.rgb = ec; sh.line.width = Pt(1.6 if bb else 1.0); sh.shadow.inherit = False
 for (x, y, ph, r, bb) in nodes: add_node(x, y, ph, r, bb)
 
