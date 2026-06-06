@@ -4,3 +4,5 @@ E_SE_GPa,seed,eps_sphere_pct,eps_union_pct,overlap_pct,delta_mean_um,thickness_u
 1.5,58573,13.19,14.64,1.66,0.0723,33.85,99.2,79.0,82.1,0.1797,0.1143,1.087,7.706,1.48,raw+webapp(S2)
 1.5,58661,12.47,14.01,1.76,0.0748,33.58,99.4,75.0,77.5,0.2032,0.1271,1.062,8.105,1.49,raw+webapp(S3)
 2.0,d9c8cebf,15.01,16.18,1.38,0.0660,34.60,,,,,,,,,raw(structure only)
+1.35,SE_only_20vol,-2.34,10.08,12.13,0.1116,8.24,,,,,,,,,raw(SE-only 20vol% load-bearing; Cronau validation)
+1.35,SE_only_25wt,0.23,11.64,11.44,0.1083,12.31,,,,,,,,,raw(SE-only 25wt% load-bearing; Cronau validation)

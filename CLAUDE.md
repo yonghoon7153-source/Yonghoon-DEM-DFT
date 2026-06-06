@@ -65,9 +65,16 @@ data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
 - **Only 2.0 is distinct** (overlap 1.38 −21%, ε +2.2%p — stiffer) → rejected.
 - Verdict: **keep 1.35** (≡1.5 physically + matches ~13.5% exp porosity +
   production continuity; both within LPSCl cold-press ~1–2 GPa lit range).
-- Open (low pri, all-E common): measured overlap 1.4–1.8% << Cronau floor
-  5–10% @380MPa — SE-radius lens underestimate + lower 300 MPa target; does
-  NOT affect 1.35-vs-1.5.
+- Cronau overlap gap RESOLVED (2026-06-06, SE-only validation): composite
+  SE overlap 1.75% looked << Cronau 5–10% floor, but PURE-SE @ 1.35 GPa
+  (SE load-bearing, lens approx EXACT) gives overlap 11–12% across 2 loadings
+  (SE 20vol% 12.13%, SE 25wt% 11.44%; ⟨δ⟩ ≈ 11% of diameter) — i.e. AT/above
+  Cronau.  → 1.35 GPa SE material model reproduces the Cronau plastic floor;
+  the composite's low 1.75% is correct AM load-SHIELDING (rigid 140 GPa AM
+  skeleton carries the 300 MPa, SE only lightly loaded), NOT a model defect.
+  The 1.75% ↔ 12% gap quantifies AM shielding.  Note dense SE-only gives
+  NEGATIVE/near-zero ε_sphere-sum (V_sphere>V_box overlap artifact) → use
+  ε_union for those.  Data appended to docs/data/esse_calibration_2mAh_real_9.csv.
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D

@@ -57,10 +57,27 @@ valid twin; 2.0 is rejected (too stiff). Both 1.35 and 1.5 lie within the
 literature range for cold-pressed LPSCl effective modulus (~1–2 GPa, ~12–18×
 softer than 24 GPa bulk via grain-boundary sliding + residual porosity).
 
-Caveat (open, low priority): measured overlap 1.4–1.8% is far below the
-Cronau plastic floor (5–10% at 380 MPa) — attributable to the SE-radius lens
-approximation (underestimate) and lower target (300 vs 380 MPa); this applies
-to all E_SE equally and does not affect the 1.35-vs-1.5 verdict.
+## Cronau overlap gap — RESOLVED (SE-only validation, 2026-06-06)
+
+The composite SE overlap (1.75%) looked far below the Cronau plastic floor
+(5–10%).  Two **pure-SE** runs at the same E_SE = 1.35 GPa (SE bears the full
+300 MPa load; the SE-SE lens volume is then EXACT, no AM approximation)
+settle the question:
+
+| SE-only case | N | T µm | ε_sphere | ε_union | overlap% | ⟨δ⟩ (% of d) |
+|------|------|------|------|------|------|------|
+| SE 20 vol% | 40,250 | 8.24 | −2.34 | 10.08 | **12.13** | 11.2 |
+| SE 25 wt%  | 58,633 | 12.31 | +0.23 | 11.64 | **11.44** | 10.8 |
+
+→ Pure SE at 1.35 GPa gives **11–12% overlap (⟨δ⟩ ≈ 11% of diameter)** —
+at/above the Cronau 5–10% floor.  **The 1.35 GPa SE material model reproduces
+the Cronau plastic floor.**  The composite's low 1.75% is therefore correct
+**AM load-shielding** — the rigid 140 GPa AM skeleton carries the 300 MPa, so
+the SE between AM grains is only lightly compressed.  The 1.75% ↔ 12% contrast
+is a quantitative measure of that shielding, not a model defect.
+
+Practical note: dense SE-only states give a **negative / near-zero
+ε_sphere-sum** (V_sphere > V_box overlap artifact) — use ε_union for those.
 
 _Saved 2026-06-06 (cloud session). Source raw dumps: upload 01f30198
 (1.35 + 1.5 S2/S3), b8c56a96 (1.5 S_a), d9c8cebf (2.0)._
