@@ -33,11 +33,13 @@ nodes = D['nodes']; edges = D['edges']
 se_chain = D['se_chain']; am_chain = D['am_chain']
 c = D['consts']
 SUS_Y, BULK_Y, X0, X1 = c['SUS_Y'], c['BULK_Y'], c['X0'], c['X1']
+TOP, BOT = c['TOP'], c['BOT']
 
 fig = plt.figure(figsize=(15.0, 7.6), facecolor=BG)
 ax = fig.add_axes([0.015, 0.03, 0.66, 0.94]); ax.set_facecolor(BG)
 lax = fig.add_axes([0.70, 0.03, 0.29, 0.94])
-ax.set_xlim(0, 12); ax.set_ylim(0, 11); ax.set_aspect('equal'); ax.axis('off')
+ax.set_xlim(X0 - 0.8, X1 + 0.8); ax.set_ylim(BOT - 0.3, TOP + 0.3)
+ax.set_aspect('equal'); ax.axis('off')
 lax.set_xlim(0, 10); lax.set_ylim(0, 11); lax.axis('off')
 
 # collector bars + tint bands

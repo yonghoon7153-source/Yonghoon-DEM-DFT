@@ -32,14 +32,18 @@ se_chain = D['se_chain']; am_chain = D['am_chain']
 cc = D['consts']
 X0, X1 = cc['X0'], cc['X1']
 SUS_Y, BULK_Y = cc['SUS_Y'], cc['BULK_Y']
+TOP, BOT = cc['TOP'], cc['BOT']
 
 # ── data-coord → slide inches (EQUAL x/y scale → round particles) ──
-S = 0.58
 MX, MY = 0.35, 0.30
-def sx(x): return MX + x * S
-def sy(y): return MY + (11 - y) * S
+XSPAN = (X1 - X0) + 1.6
+S = 7.0 / XSPAN                         # panel ~7 inches wide
+XREF = X0 - 0.8                         # left edge reference
+def sx(x): return MX + (x - XREF) * S
+def sy(y): return MY + (TOP - y) * S    # flip: y up
 EMU = 914400
 def E(inch): return Emu(int(round(inch * EMU)))
+PANEL_R = MX + ((X1 + 0.8) - XREF) * S  # right edge of panel (inches)
 
 prs = Presentation()
 prs.slide_width = Inches(13.33); prs.slide_height = Inches(7.5)
@@ -89,7 +93,7 @@ def add_node(x, y, ph, r, bb):
 for (x, y, ph, r, bb) in nodes: add_node(x, y, ph, r, bb)
 
 # ── legend ──
-LX, LY, LW, LH = 9.0, 0.5, 4.0, 6.6
+LX, LY, LW, LH = PANEL_R + 0.3, 0.5, 4.0, 6.6
 box = shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(LX), Inches(LY), Inches(LW), Inches(LH))
 box.fill.solid(); box.fill.fore_color.rgb = C('FFFFFF')
 box.line.color.rgb = C('333333'); box.line.width = Pt(1.4); box.shadow.inherit = False
