@@ -2039,6 +2039,41 @@ def apply_paper_labels(tables):
             row[0] = prefix + new
 
 
+def inject_dual_porosity_rows(tables, metrics):
+    """Insert ε_union + overlap rows directly under the Porosity row of the
+    network_summary structure section.  Values from recompute_porosity_dual.py
+    (porosity_union, overlap_fraction_pct).  Porosity is contact-model-
+    independent → both columns carry the same value, Δ = 0%.  No-op until the
+    dual-porosity fields exist (run recompute_porosity_dual.py or re-analyze).
+    Called LAST (after apply_paper_labels) so layout/relabel passes do not move
+    the rows; matches the renamed 'Porosity ε (%)' label via startswith."""
+    if 'network_summary' not in tables:
+        return
+    data = tables['network_summary'].get('data')
+    if not isinstance(data, list):
+        return
+    eps_u = metrics.get('porosity_union')
+    ov = metrics.get('overlap_fraction_pct')
+    if eps_u is None and ov is None:
+        return
+    ncol = len(tables['network_summary'].get('columns') or []) or 4
+    for i, row in enumerate(data):
+        if (isinstance(row, list) and row and isinstance(row[0], str)
+                and row[0].lstrip().startswith('Porosity')):
+            prefix = row[0][: len(row[0]) - len(row[0].lstrip())]
+            ins = []
+            if eps_u is not None:
+                u = f'{eps_u:.1f}'
+                ins.append([prefix + 'Porosity ε_union (overlap-corrected, %)', u, u, '0%'])
+            if ov is not None:
+                o = f'{ov:.2f}'
+                ins.append([prefix + 'Overlap fraction (plastic deformation, %)', o, o, '0%'])
+            ins = [r[:ncol] + [''] * (ncol - len(r)) for r in ins]
+            for k, nr in enumerate(ins):
+                data.insert(i + 1 + k, nr)
+            break
+
+
 def transform_network_summary_4col(tables, metrics, meta):
     """Convert network_summary table to 4-column (지표 | Hertzian | Physics | Δ%)
     and inject Network Solver + AM-AM sections from full_metrics.json.
@@ -4268,6 +4303,7 @@ def _load_case_tables(results_dir, meta):
     inject_cell_asr_rows(tables, metrics, input_params)
     normalize_network_summary_layout(tables, metrics)
     apply_paper_labels(tables)
+    inject_dual_porosity_rows(tables, metrics)
     # ── Phantom σ_e / κ suppression (v7 — unconditional, AFTER label rename) ──
     # v6 placed inside normalize's Hertz+Phys merge if-block, which doesn't
     # run for already-merged cases.  Now called from the route handler so
