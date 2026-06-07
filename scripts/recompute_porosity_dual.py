@@ -257,7 +257,13 @@ def main():
                     mn = json.load(open(meta)).get('name', '') or ''
                     if mn: nm = mn
                 except: pass
-            if not args.dir and not nm.startswith('input_'): continue
+            # uploads/<timestamp>/ dirs aren't input_-prefixed (the real name
+            # lives in meta.json); the webapp SERVES from there, so process them
+            # regardless of dir name.  archive/results stay input_-filtered.
+            if (not args.dir
+                    and 'uploads' not in str(metrics_path)
+                    and not nm.startswith('input_')):
+                continue
 
             try:
                 d = json.load(open(metrics_path))
