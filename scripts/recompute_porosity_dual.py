@@ -257,13 +257,14 @@ def main():
                     mn = json.load(open(meta)).get('name', '') or ''
                     if mn: nm = mn
                 except: pass
-            # uploads/<timestamp>/ dirs aren't input_-prefixed (the real name
-            # lives in meta.json); the webapp SERVES from there, so process them
-            # regardless of dir name.  archive/results stay input_-filtered.
-            if (not args.dir
-                    and 'uploads' not in str(metrics_path)
-                    and not nm.startswith('input_')):
-                continue
+            # Process EVERY dir that has a full_metrics.json.  Case dirs under
+            # results/ (and uploads/) are TIMESTAMP-named — no input_ prefix and
+            # often NO meta.json — and the webapp SERVES metrics from
+            # results/<case_id>/, so filtering by the input_ name skips exactly
+            # the copies the UI reads (the bug we hit).  find_input_files() below
+            # returns no_input_files for any dir lacking atoms (never written),
+            # so processing everything here is safe.
+            _ = nm  # (name kept only for the CSV/report label)
 
             try:
                 d = json.load(open(metrics_path))
