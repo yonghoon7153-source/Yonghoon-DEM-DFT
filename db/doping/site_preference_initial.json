@@ -15,6 +15,9 @@
         "charge_diff": 0,
         "radius_diff": 0.26,
         "compatibility_score": 0.794,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "Na+\u2192Li+ common",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -29,6 +32,7 @@
         "charge_diff": 0,
         "radius_diff": 0.26,
         "compatibility_score": 0.794,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -56,6 +60,7 @@
         "charge_diff": 0,
         "radius_diff": 0.01,
         "compatibility_score": 0.99,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -70,6 +75,7 @@
         "charge_diff": 0,
         "radius_diff": 0.01,
         "compatibility_score": 0.99,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -92,6 +98,9 @@
         "charge_diff": 0,
         "radius_diff": 0.39,
         "compatibility_score": 0.719,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "Nature Comm 2025 silver-exsolution argyrodite",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -106,6 +115,7 @@
         "charge_diff": 0,
         "radius_diff": 0.39,
         "compatibility_score": 0.719,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -128,6 +138,9 @@
         "charge_diff": 1,
         "radius_diff": -0.04,
         "compatibility_score": 0.649,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "PMC 9054619 multivalent-cation-doped LPSCl",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -145,6 +158,7 @@
         "charge_diff": 1,
         "radius_diff": -0.04,
         "compatibility_score": 0.649,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -162,6 +176,7 @@
         "charge_diff": -3,
         "radius_diff": 0.55,
         "compatibility_score": 0.328,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -187,6 +202,9 @@
         "charge_diff": 1,
         "radius_diff": -0.02,
         "compatibility_score": 0.658,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "PMC 9054619 multivalent-cation-doped LPSCl",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -204,6 +222,7 @@
         "charge_diff": 1,
         "radius_diff": -0.02,
         "compatibility_score": 0.658,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -229,6 +248,9 @@
         "charge_diff": 1,
         "radius_diff": 0.24,
         "compatibility_score": 0.575,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "Li5.35Ca0.1PS4.5Cl1.55, 10.2 mS/cm",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -246,6 +268,7 @@
         "charge_diff": 1,
         "radius_diff": 0.24,
         "compatibility_score": 0.575,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -271,6 +294,7 @@
         "charge_diff": 1,
         "radius_diff": 0.42,
         "compatibility_score": 0.521,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -288,6 +312,7 @@
         "charge_diff": 1,
         "radius_diff": 0.42,
         "compatibility_score": 0.521,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -312,7 +337,10 @@
         "env": "tetrahedral, Li sublattice",
         "charge_diff": 1,
         "radius_diff": 0.59,
-        "compatibility_score": 0.478,
+        "compatibility_score": 0.5,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "PMC 11106650 mechanochemical Li6-aBa_a/2PS5Cl",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -330,6 +358,7 @@
         "charge_diff": 1,
         "radius_diff": 0.59,
         "compatibility_score": 0.478,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -354,7 +383,10 @@
         "env": "tetrahedral, Li sublattice",
         "charge_diff": 2,
         "radius_diff": -0.225,
-        "compatibility_score": 0.449,
+        "compatibility_score": 0.5,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "MDPI Nanomaterials 12(24),4355 (2022) \u2014 Al3+\u2192Li+, lattice CONTRACTION confirms Li site (P-site would expand; not seen)",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -372,6 +404,7 @@
         "charge_diff": 2,
         "radius_diff": -0.225,
         "compatibility_score": 0.449,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -389,6 +422,7 @@
         "charge_diff": -2,
         "radius_diff": 0.365,
         "compatibility_score": 0.423,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -414,6 +448,7 @@
         "charge_diff": 2,
         "radius_diff": -0.14,
         "compatibility_score": 0.467,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -431,6 +466,7 @@
         "charge_diff": 2,
         "radius_diff": -0.14,
         "compatibility_score": 0.467,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -448,6 +484,7 @@
         "charge_diff": -2,
         "radius_diff": 0.45,
         "compatibility_score": 0.408,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -473,6 +510,7 @@
         "charge_diff": 2,
         "radius_diff": 0.04,
         "compatibility_score": 0.49,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -490,6 +528,7 @@
         "charge_diff": 2,
         "radius_diff": 0.04,
         "compatibility_score": 0.49,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -515,6 +554,7 @@
         "charge_diff": 2,
         "radius_diff": -0.015,
         "compatibility_score": 0.496,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -532,6 +572,7 @@
         "charge_diff": 2,
         "radius_diff": -0.015,
         "compatibility_score": 0.496,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -548,6 +589,26 @@
     "n_dopants": 1,
     "compatible_sites": [
       {
+        "site_name": "P_4b",
+        "host": "P",
+        "host_charge": 5,
+        "host_radius": 0.17,
+        "wyckoff": "4b",
+        "env": "PS4 tetrahedron center",
+        "charge_diff": -2,
+        "radius_diff": 0.73,
+        "compatibility_score": 0.5,
+        "source": "literature",
+        "evidence": "rietveld",
+        "reference": "J. Power Sources 2022 S0378775322008357 \u2014 Y3+\u2192P5+ by Rietveld ONLY, no ab-initio; |\u0394r|=0.73>cutoff. VERIFY w/ our DFT",
+        "compensation": "aliovalent_acceptor",
+        "extra_defects": [
+          "anion_vacancy",
+          "cation_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
         "site_name": "Li_24g",
         "host": "Li",
         "host_charge": 1,
@@ -557,6 +618,7 @@
         "charge_diff": 2,
         "radius_diff": 0.14,
         "compatibility_score": 0.467,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -574,6 +636,53 @@
         "charge_diff": 2,
         "radius_diff": 0.14,
         "compatibility_score": 0.467,
+        "source": "heuristic",
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      }
+    ]
+  },
+  {
+    "element": "La",
+    "charge": 3,
+    "radius_A": 1.03,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 2,
+        "radius_diff": 0.27,
+        "compatibility_score": 0.5,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "La3+\u2192Li+ rare-earth large-cation doping (donor, Li-vac comp)",
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 2
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 2,
+        "radius_diff": 0.27,
+        "compatibility_score": 0.441,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -599,6 +708,9 @@
         "charge_diff": 0,
         "radius_diff": 0.43,
         "compatibility_score": 0.699,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "Sb5+\u2192P5+ isovalent group 15",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -613,6 +725,7 @@
         "charge_diff": 4,
         "radius_diff": -0.16,
         "compatibility_score": 0.316,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -630,6 +743,7 @@
         "charge_diff": 4,
         "radius_diff": -0.16,
         "compatibility_score": 0.316,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -655,6 +769,9 @@
         "charge_diff": 0,
         "radius_diff": 0.29,
         "compatibility_score": 0.775,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "As5+\u2192P5+ isovalent group 15",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -669,6 +786,7 @@
         "charge_diff": 4,
         "radius_diff": -0.3,
         "compatibility_score": 0.303,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -686,6 +804,7 @@
         "charge_diff": 4,
         "radius_diff": -0.3,
         "compatibility_score": 0.303,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -711,6 +830,9 @@
         "charge_diff": 0,
         "radius_diff": 0.37,
         "compatibility_score": 0.73,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "V5+\u2192P5+ tetrahedral VS4",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -725,6 +847,7 @@
         "charge_diff": 4,
         "radius_diff": -0.22,
         "compatibility_score": 0.311,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -742,6 +865,7 @@
         "charge_diff": 4,
         "radius_diff": -0.22,
         "compatibility_score": 0.311,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -767,6 +891,9 @@
         "charge_diff": 0,
         "radius_diff": 0.47,
         "compatibility_score": 0.68,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "Nb5+\u2192P5+ (A=\u2026,V,Nb,Ta family)",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -781,6 +908,7 @@
         "charge_diff": 4,
         "radius_diff": -0.12,
         "compatibility_score": 0.321,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -798,6 +926,68 @@
         "charge_diff": 4,
         "radius_diff": -0.12,
         "compatibility_score": 0.321,
+        "source": "heuristic",
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      }
+    ]
+  },
+  {
+    "element": "Ta",
+    "charge": 5,
+    "radius_A": 0.64,
+    "n_dopants": 1,
+    "compatible_sites": [
+      {
+        "site_name": "P_4b",
+        "host": "P",
+        "host_charge": 5,
+        "host_radius": 0.17,
+        "wyckoff": "4b",
+        "env": "PS4 tetrahedron center",
+        "charge_diff": 0,
+        "radius_diff": 0.47,
+        "compatibility_score": 0.68,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "Ta5+\u2192P5+ group-5 (Nb 5d analogue), isovalent (no \u0394q)",
+        "compensation": "isovalent",
+        "extra_defects": null,
+        "n_extra": 0
+      },
+      {
+        "site_name": "Li_24g",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "24g",
+        "env": "tetrahedral, Li sublattice",
+        "charge_diff": 4,
+        "radius_diff": -0.12,
+        "compatibility_score": 0.321,
+        "source": "heuristic",
+        "compensation": "aliovalent_donor",
+        "extra_defects": [
+          "cation_vacancy",
+          "anion_higher_charge_substitution"
+        ],
+        "n_extra": 4
+      },
+      {
+        "site_name": "Li_48h",
+        "host": "Li",
+        "host_charge": 1,
+        "host_radius": 0.76,
+        "wyckoff": "48h",
+        "env": "partial occupancy site",
+        "charge_diff": 4,
+        "radius_diff": -0.12,
+        "compatibility_score": 0.321,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -823,6 +1013,9 @@
         "charge_diff": -1,
         "radius_diff": 0.23,
         "compatibility_score": 0.578,
+        "source": "literature",
+        "evidence": "dft_exp",
+        "reference": "RSC Mater. Adv. 2024 D3MA01042B + LGPS-type \u2014 Si4+\u2192P5+",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -840,6 +1033,7 @@
         "charge_diff": 3,
         "radius_diff": -0.36,
         "compatibility_score": 0.35,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -857,6 +1051,7 @@
         "charge_diff": 3,
         "radius_diff": -0.36,
         "compatibility_score": 0.35,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -882,6 +1077,9 @@
         "charge_diff": -1,
         "radius_diff": 0.36,
         "compatibility_score": 0.538,
+        "source": "literature",
+        "evidence": "dft_exp",
+        "reference": "thio-LISICON Li10GeP2S12 \u2014 Ge4+\u2192P5+",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -899,6 +1097,7 @@
         "charge_diff": 3,
         "radius_diff": -0.23,
         "compatibility_score": 0.366,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -916,6 +1115,7 @@
         "charge_diff": 3,
         "radius_diff": -0.23,
         "compatibility_score": 0.366,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -940,7 +1140,10 @@
         "env": "PS4 tetrahedron center",
         "charge_diff": -1,
         "radius_diff": 0.52,
-        "compatibility_score": 0.495,
+        "compatibility_score": 0.5,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "MDPI Materials 16(7),2751 (2023); RSC MCF 2025 D5QM00394F \u2014 Sn4+\u2192P5+ (easier in LPSBr/LPSI; small Cl framework limits)",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -958,6 +1161,7 @@
         "charge_diff": 3,
         "radius_diff": -0.07,
         "compatibility_score": 0.389,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -975,6 +1179,7 @@
         "charge_diff": 3,
         "radius_diff": -0.07,
         "compatibility_score": 0.389,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1000,6 +1205,9 @@
         "charge_diff": -1,
         "radius_diff": 0.435,
         "compatibility_score": 0.517,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "Ti4+\u2192P5+ (A=Ti family; early-TM, weaker than +5 cases)",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1017,6 +1225,7 @@
         "charge_diff": 3,
         "radius_diff": -0.155,
         "compatibility_score": 0.377,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1034,6 +1243,7 @@
         "charge_diff": 3,
         "radius_diff": -0.155,
         "compatibility_score": 0.377,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1058,7 +1268,10 @@
         "env": "PS4 tetrahedron center",
         "charge_diff": -1,
         "radius_diff": 0.55,
-        "compatibility_score": 0.488,
+        "compatibility_score": 0.5,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "Zr4+\u2192P5+ (A=Zr family; early-TM, weaker)",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1076,6 +1289,7 @@
         "charge_diff": 3,
         "radius_diff": -0.04,
         "compatibility_score": 0.394,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1093,6 +1307,7 @@
         "charge_diff": 3,
         "radius_diff": -0.04,
         "compatibility_score": 0.394,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1118,6 +1333,9 @@
         "charge_diff": 0,
         "radius_diff": -0.44,
         "compatibility_score": 0.694,
+        "source": "literature",
+        "evidence": "dft_exp",
+        "reference": "ACS AMI 2021 Li6PS5-xClOx \u2014 O\u2192S_16e (P-O covalent) > S_4a",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1132,6 +1350,7 @@
         "charge_diff": 0,
         "radius_diff": -0.44,
         "compatibility_score": 0.694,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1146,6 +1365,7 @@
         "charge_diff": -1,
         "radius_diff": -0.41,
         "compatibility_score": 0.524,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1171,6 +1391,9 @@
         "charge_diff": 0,
         "radius_diff": 0.14,
         "compatibility_score": 0.877,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "Se2-\u2192S2-",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1185,6 +1408,7 @@
         "charge_diff": 0,
         "radius_diff": 0.14,
         "compatibility_score": 0.877,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1199,6 +1423,7 @@
         "charge_diff": -1,
         "radius_diff": 0.17,
         "compatibility_score": 0.599,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1224,6 +1449,9 @@
         "charge_diff": 0,
         "radius_diff": 0.37,
         "compatibility_score": 0.73,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "Te2-\u2192S2-",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1238,6 +1466,7 @@
         "charge_diff": 0,
         "radius_diff": 0.37,
         "compatibility_score": 0.73,
+        "source": "heuristic",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1252,6 +1481,7 @@
         "charge_diff": -1,
         "radius_diff": 0.4,
         "compatibility_score": 0.526,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1277,6 +1507,9 @@
         "charge_diff": 0,
         "radius_diff": -0.48,
         "compatibility_score": 0.676,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "ACS AMI 2022 fluorine-doped argyrodite",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1299,6 +1532,9 @@
         "charge_diff": 0,
         "radius_diff": 0.15,
         "compatibility_score": 0.87,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "halogen mixing",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1313,6 +1549,7 @@
         "charge_diff": 1,
         "radius_diff": 0.12,
         "compatibility_score": 0.617,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1330,6 +1567,7 @@
         "charge_diff": 1,
         "radius_diff": 0.12,
         "compatibility_score": 0.617,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1355,6 +1593,9 @@
         "charge_diff": 0,
         "radius_diff": 0.39,
         "compatibility_score": 0.719,
+        "source": "literature",
+        "evidence": "exp",
+        "reference": "I-F dual-doped JPCC 2023; Li6PS5I",
         "compensation": "isovalent",
         "extra_defects": null,
         "n_extra": 0
@@ -1369,6 +1610,7 @@
         "charge_diff": 1,
         "radius_diff": 0.36,
         "compatibility_score": 0.538,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1386,6 +1628,7 @@
         "charge_diff": 1,
         "radius_diff": 0.36,
         "compatibility_score": 0.538,
+        "source": "heuristic",
         "compensation": "aliovalent_donor",
         "extra_defects": [
           "cation_vacancy",
@@ -1411,6 +1654,9 @@
         "charge_diff": -1,
         "radius_diff": -0.38,
         "compatibility_score": 0.532,
+        "source": "literature",
+        "evidence": "analog",
+        "reference": "N3-\u2192S2- ALIOVALENT (-1, acceptor \u2192 Li interstitial); nitrogen anion doping, computational/inferred",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1428,6 +1674,7 @@
         "charge_diff": -1,
         "radius_diff": -0.38,
         "compatibility_score": 0.532,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",
@@ -1445,6 +1692,7 @@
         "charge_diff": -2,
         "radius_diff": -0.35,
         "compatibility_score": 0.426,
+        "source": "heuristic",
         "compensation": "aliovalent_acceptor",
         "extra_defects": [
           "anion_vacancy",

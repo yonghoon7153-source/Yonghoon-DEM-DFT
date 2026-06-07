@@ -18,6 +18,7 @@ Usage:
       --dopant Mg --site Li_24g --conc 0.10 --out test_struct/
 """
 import argparse
+import itertools
 import json
 from pathlib import Path
 import numpy as np
@@ -31,6 +32,11 @@ SITE_TO_HOST = {
     'S_16e': 'S', 'S_4a': 'S',
     'Cl_4d': 'Cl',
 }
+
+# Evidence strength rank (lower = stronger). Used by --min_evidence to optionally
+# skip weak LITERATURE sites (e.g. 'rietveld' XRD-only) in production runs while
+# still generating them by default. Heuristic sites (evidence=None) are unaffected.
+EVIDENCE_RANK = {'dft_exp': 0, 'exp': 1, 'analog': 2, 'rietveld': 3}
 
 
 def fetch_lpscl_from_mp(api_key: str = None, mp_id: str = 'mp-985592') -> Atoms:
@@ -105,11 +111,74 @@ def add_li_vacancy(atoms: Atoms, n_vac: int = 1, method: str = 'spread',
     return atoms[keep]
 
 
+def find_interstitial_sites(atoms: Atoms, n_sites: int, seed: int = 42,
+                            d_min: float = 1.7, d_anion_max: float = 3.0,
+                            grid_spacing: float = 0.7) -> list:
+    """Find ``n_sites`` Li-interstitial positions = empty anion-coordinated
+    pockets, for ACCEPTOR charge compensation (dopant charge < host charge).
+
+    Method (deps: numpy + scipy only): scan a coarse fractional grid; keep grid
+    points that are (a) >= ``d_min`` Å from EVERY atom (min-image, no overlap)
+    and (b) within ``d_anion_max`` Å of >= 2 anions (S/Cl/O/...) so the spot is a
+    real Li coordination pocket, not vacuum. Pick ``n_sites`` by farthest-first
+    to spread them. Positions are APPROXIMATE — downstream UMA/DFT relaxation
+    moves Li to its true site; the only requirement here is a charge-neutral,
+    non-overlapping starting cell. Returns up to ``n_sites`` cartesian positions
+    (fewer if no suitable pocket exists)."""
+    from scipy.spatial import cKDTree
+    cell = np.asarray(atoms.get_cell())
+    pos = atoms.get_positions()
+    sym = np.array(atoms.get_chemical_symbols())
+    anion = np.isin(sym, ['S', 'Cl', 'O', 'Se', 'Te', 'Br', 'I', 'F', 'N'])
+    # 3x3x3 periodic images so grid→atom distances are min-image correct
+    shifts = np.array(list(itertools.product([-1, 0, 1], repeat=3))) @ cell
+    img = (pos[None, :, :] + shifts[:, None, :]).reshape(-1, 3)
+    img_anion = np.tile(anion, len(shifts))
+    tree_all = cKDTree(img)
+    tree_an = cKDTree(img[img_anion]) if img_anion.any() else None
+    n = [max(3, int(round(np.linalg.norm(cell[i]) / grid_spacing))) for i in range(3)]
+    fr = np.stack(np.meshgrid(
+        *[np.linspace(0, 1, n[i], endpoint=False) for i in range(3)],
+        indexing='ij'), -1).reshape(-1, 3)
+    cart = fr @ cell
+    keep = tree_all.query(cart)[0] >= d_min
+    if tree_an is not None:
+        keep &= (tree_an.query_ball_point(cart, d_anion_max, return_length=True) >= 2)
+    cand = cart[keep]
+    if len(cand) == 0:
+        return []
+    rng = np.random.default_rng(seed)
+    chosen = [cand[rng.integers(len(cand))]]
+    while len(chosen) < n_sites and len(chosen) < len(cand):
+        d = np.min([np.linalg.norm(cand - c, axis=1) for c in chosen], axis=0)
+        chosen.append(cand[int(np.argmax(d))])
+    return chosen[:n_sites]
+
+
+def add_li_interstitial(atoms: Atoms, n_add: int, seed: int = 42):
+    """Add ``n_add`` Li at interstitial pockets (acceptor compensation).
+    Returns (new_atoms, ok); ok=False if fewer than ``n_add`` pockets were found
+    so the caller can gate the (then charge-unbalanced) cell out."""
+    sites = find_interstitial_sites(atoms, n_add, seed=seed)
+    if len(sites) < n_add:
+        return atoms, False
+    new = atoms.copy()
+    for p in sites:
+        new += Atoms('Li', positions=[p])
+    return new, True
+
+
 def apply_charge_compensation(atoms: Atoms, host_charge: int,
                               dopant_charge: int, n_dopants: int,
                               vacancy_method: str = 'spread',
                               seed: int = 42) -> Atoms:
-    """Apply automatic charge compensation."""
+    """Apply automatic charge compensation.
+
+    Donor (Δq>0): remove Li (vacancy). Acceptor (Δq<0): ADD Li at interstitial
+    pockets. If no pocket can be found the cell is left uncompensated and labelled
+    'imbalanced_*' — generate_for_dopant gates those out so an unphysical charged
+    cell never reaches UMA/DFT (which would otherwise score it high-energy for the
+    wrong reason and spuriously 'refute' a real substitution)."""
     delta_q = (dopant_charge - host_charge) * n_dopants
     if delta_q == 0:
         return atoms, 'isovalent'
@@ -118,8 +187,10 @@ def apply_charge_compensation(atoms: Atoms, host_charge: int,
         return add_li_vacancy(atoms, n_vac=delta_q, method=vacancy_method,
                               seed=seed), f'Li_vac_{delta_q}'
     else:
-        # Acceptor: simplest = add Li interstitial. For now, leave imbalanced
-        # with note. (Proper treatment needs Li interstitial site finding.)
+        # Acceptor: add |delta_q| Li interstitials to neutralize the cell.
+        new, ok = add_li_interstitial(atoms, n_add=-delta_q, seed=seed + 2)
+        if ok:
+            return new, f'Li_int_{-delta_q}'
         return atoms, f'imbalanced_{delta_q}'
 
 
@@ -128,7 +199,8 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
                        dopant_db: dict, method: str = 'spread',
                        n_seeds: int = 1, base_seed: int = 42,
                        polymorph: str = 'unknown',
-                       li_ordering: str = 'unknown') -> list[dict]:
+                       li_ordering: str = 'unknown',
+                       min_evidence: str = None) -> list[dict]:
     """Generate structures for one dopant across all sites + concentrations.
 
     method: 'spread' (deterministic, default) or 'random' (paired with n_seeds).
@@ -149,6 +221,14 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
     generated = []
     for site_info in dopant_entry.get('compatible_sites', []):
         site = site_info['site_name']
+        # Optional evidence gate: skip weak LITERATURE sites (e.g. 'rietveld') in
+        # production. Heuristic sites (no evidence) and strong literature pass.
+        if min_evidence and site_info.get('source') == 'literature':
+            ev = site_info.get('evidence')
+            if ev is not None and EVIDENCE_RANK.get(ev, 99) > EVIDENCE_RANK[min_evidence]:
+                print(f"  ⏭ skip {element} on {site}: evidence '{ev}' weaker than "
+                      f"--min_evidence '{min_evidence}'")
+                continue
         host = SITE_TO_HOST[site]
         host_indices = find_host_indices(base_atoms, host)
         n_host = len(host_indices)
@@ -163,6 +243,15 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
                     doped, comp_label = apply_charge_compensation(
                         doped, site_info['host_charge'], d_info['charge'],
                         n_sub, vacancy_method=method, seed=seed)
+
+                    # GATE: never emit a charge-unbalanced cell — UMA/DFT would
+                    # score it high-energy for the wrong reason (missing
+                    # compensation, not bad site) and spuriously refute the site.
+                    if comp_label.startswith('imbalanced'):
+                        print(f"  ⏭ skip {element} on {site} conc={conc:.2f}: "
+                              f"{comp_label} (no interstitial pocket found — "
+                              f"charge-unbalanced cell gated out)")
+                        continue
 
                     base_name = (f"{element}_{site}_x{int(actual_conc*1000):03d}"
                                  f"_{comp_label}")
@@ -180,6 +269,12 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
                         'n_sub': n_sub,
                         'charge_compensation': comp_label,
                         'compatibility_score': site_info['compatibility_score'],
+                        # provenance from site_preference: literature vs heuristic,
+                        # evidence strength + citation (carried so downstream
+                        # analyze_screening can tier/flag by evidence).
+                        'site_source': site_info.get('source'),
+                        'evidence': site_info.get('evidence'),
+                        'reference': site_info.get('reference'),
                         'n_atoms': len(doped),
                         'composition': dict(zip(*np.unique(
                             doped.get_chemical_symbols(), return_counts=True))),
@@ -230,6 +325,12 @@ def main():
                             'mean±std B0/E (Pustorino 2025: ~16 GPa B0 spread).')
     parser.add_argument('--seed', type=int, default=42,
                        help='Base RNG seed (used directly when --method!=random).')
+    parser.add_argument('--min_evidence', default=None,
+                       choices=['dft_exp', 'exp', 'analog', 'rietveld'],
+                       help="Skip LITERATURE sites weaker than this evidence level "
+                            "(e.g. 'analog' drops rietveld-only claims like Y in "
+                            "production). Default: generate all. Heuristic sites "
+                            'are never gated by this.')
     args = parser.parse_args()
 
     if args.method == 'random' and args.n_seeds < 2:
@@ -257,7 +358,7 @@ def main():
 
     common_kw = dict(method=args.method, n_seeds=args.n_seeds,
                      base_seed=args.seed, polymorph=args.polymorph,
-                     li_ordering=args.li_ordering)
+                     li_ordering=args.li_ordering, min_evidence=args.min_evidence)
 
     if args.site_pref:
         site_pref_data = json.loads(Path(args.site_pref).read_text())

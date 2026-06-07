@@ -51,12 +51,14 @@ DOPANT_DB = {
     'In':  {'charge': +3, 'radius': 0.80},
     'Sc':  {'charge': +3, 'radius': 0.745},
     'Y':   {'charge': +3, 'radius': 0.90},
+    'La':  {'charge': +3, 'radius': 1.03},   # rare-earth, Li-site (donor)
     # Cations for P site
     'P':   {'charge': +5, 'radius': 0.17},
     'Sb':  {'charge': +5, 'radius': 0.60},
     'As':  {'charge': +5, 'radius': 0.46},
     'V':   {'charge': +5, 'radius': 0.54},
     'Nb':  {'charge': +5, 'radius': 0.64},
+    'Ta':  {'charge': +5, 'radius': 0.64},   # group-5 (Nb 5d analogue), P-site isovalent
     'Si':  {'charge': +4, 'radius': 0.40},
     'Ge':  {'charge': +4, 'radius': 0.53},
     'Sn':  {'charge': +4, 'radius': 0.69},
@@ -141,9 +143,10 @@ KNOWN_SUBSTITUTIONS = {
     'As': {'P_4b': ('analog', 'As5+→P5+ isovalent group 15')},
     'V':  {'P_4b': ('analog', 'V5+→P5+ tetrahedral VS4')},
     'Nb': {'P_4b': ('analog', 'Nb5+→P5+ (A=…,V,Nb,Ta family)')},
-    'Ti': {'P_4b': ('analog', 'Ti4+→P5+ (A=Ti family)')},
-    'Zr': {'P_4b': ('analog', 'Zr4+→P5+ (A=Zr family)')},
-    # (Ta5+, Bi5+ also reported for P — add to DOPANT_DB if screened)
+    'Ti': {'P_4b': ('analog', 'Ti4+→P5+ (A=Ti family; early-TM, weaker than +5 cases)')},
+    'Zr': {'P_4b': ('analog', 'Zr4+→P5+ (A=Zr family; early-TM, weaker)')},
+    'Ta': {'P_4b': ('analog', 'Ta5+→P5+ group-5 (Nb 5d analogue), isovalent (no Δq)')},
+    # (Bi mostly +3/lone-pair, not a clean P5+ substituent — intentionally omitted)
     # ---- Li_24g (Li sublattice) ----
     'Al': {'Li_24g': ('exp', 'MDPI Nanomaterials 12(24),4355 (2022) — Al3+→Li+, lattice '
                       'CONTRACTION confirms Li site (P-site would expand; not seen)')},
@@ -153,6 +156,7 @@ KNOWN_SUBSTITUTIONS = {
     'Ba': {'Li_24g': ('exp', 'PMC 11106650 mechanochemical Li6-aBa_a/2PS5Cl')},
     'Mg': {'Li_24g': ('exp', 'PMC 9054619 multivalent-cation-doped LPSCl')},
     'Zn': {'Li_24g': ('exp', 'PMC 9054619 multivalent-cation-doped LPSCl')},
+    'La': {'Li_24g': ('exp', 'La3+→Li+ rare-earth large-cation doping (donor, Li-vac comp)')},
     # ---- anion sites ----
     'O':  {'S_16e': ('dft_exp', 'ACS AMI 2021 Li6PS5-xClOx — O→S_16e (P-O covalent) > S_4a')},
     'Se': {'S_16e': ('exp', 'Se2-→S2-')},
@@ -160,8 +164,34 @@ KNOWN_SUBSTITUTIONS = {
     'F':  {'Cl_4d': ('exp', 'ACS AMI 2022 fluorine-doped argyrodite')},
     'Br': {'Cl_4d': ('exp', 'halogen mixing')},
     'I':  {'Cl_4d': ('exp', 'I-F dual-doped JPCC 2023; Li6PS5I')},
-    'N':  {'S_16e': ('analog', 'anion disorder (nitrogen)')},
+    'N':  {'S_16e': ('analog', 'N3-→S2- ALIOVALENT (-1, acceptor → Li interstitial); '
+                    'nitrogen anion doping, computational/inferred')},
 }
+
+
+# Allowed evidence levels (strong → weak). Used by the schema check below and by
+# any downstream consumer that tiers/gates by evidence.
+EVIDENCE_LEVELS = ('dft_exp', 'exp', 'analog', 'rietveld')
+
+
+def _validate_known_substitutions():
+    """Fail fast at import on a malformed KNOWN_SUBSTITUTIONS hand-edit (a bare
+    string, wrong-arity tuple, unknown site, or bad evidence level) instead of
+    blowing up mid-run inside the filter."""
+    for el, sites in KNOWN_SUBSTITUTIONS.items():
+        assert isinstance(sites, dict), f"KNOWN_SUBSTITUTIONS[{el!r}] must be a dict"
+        for site, val in sites.items():
+            assert site in HOST_SITES, f"{el}: unknown site {site!r}"
+            assert isinstance(val, tuple) and len(val) == 2, (
+                f"{el}/{site}: value must be a (evidence, reference) 2-tuple, "
+                f"got {val!r}")
+            ev, ref = val
+            assert ev in EVIDENCE_LEVELS, (
+                f"{el}/{site}: evidence {ev!r} not in {EVIDENCE_LEVELS}")
+            assert isinstance(ref, str) and ref, f"{el}/{site}: reference must be non-empty"
+
+
+_validate_known_substitutions()
 
 
 # Literature validation set: (element, expected_pass_or_fail, reference).
@@ -179,12 +209,15 @@ VALIDATION_SET = [
                    '(NOTE: known to work but radius=1.35 outside our cutoff; '
                    'expected to be borderline)'),
     ('K',   False, 'Pure-K argyrodite only; Li-K mixed not reported'),
-    ('Al',  True,  'Li5.4Al0.1PS4.7Cl1.3, 7.29 mS/cm'),
-    ('Y',   True,  'mechanochemical Y-doped LPSCl'),
-    ('Sb',  True,  'Sb→P, common'),
-    ('Sn',  True,  'MDPI Materials 16(7), 2751 (2023) Sn-substituted LPSCl'),
-    ('Ge',  True,  'Ge→P, common'),
-    ('O',   True,  'ACS AMI 2021 Li6PS5-xClOx oxysulfide (best site = S_16e)'),
+    ('Al',  True,  'Li5.4Al0.1PS4.7Cl1.3, 7.29 mS/cm', {'Li_24g': 'literature'}),
+    ('Y',   True,  'J.Power Sources 2022 Y3+→P5+ (rietveld)',
+                   {'P_4b': 'literature', 'Li_24g': 'heuristic'}),
+    ('Sb',  True,  'Sb→P, common', {'P_4b': 'literature'}),
+    ('Sn',  True,  'MDPI Materials 16(7), 2751 (2023) Sn-substituted LPSCl',
+                   {'P_4b': 'literature'}),
+    ('Ge',  True,  'Ge→P, common', {'P_4b': 'literature'}),
+    ('O',   True,  'ACS AMI 2021 Li6PS5-xClOx oxysulfide (best site = S_16e)',
+                   {'S_16e': 'literature'}),
     ('Se',  True,  'Se→S, common'),
     ('Te',  True,  'Te→S, common'),
     ('F',   True,  'ACS AMI 2022 fluorine-doped argyrodite'),
@@ -202,7 +235,13 @@ def validate_against_literature() -> int:
     print(f"{'Elem':<6}{'Expect':<8}{'Got':<8}{'OK?':<6}{'Note'}")
     print('-' * 72)
     mismatches = 0
-    for elem, must_pass, note in VALIDATION_SET:
+    for entry in VALIDATION_SET:
+        elem, must_pass, note = entry[0], entry[1], entry[2]
+        # optional 4th element: {site_name: expected_source} — verifies that the
+        # RIGHT site appears with the RIGHT source, so a typo'd KNOWN_SUBSTITUTIONS
+        # site (e.g. 'P_5a') can't slip through just because a heuristic Li site
+        # also passed (the silent gap flagged in review #6).
+        expect_sites = entry[3] if len(entry) > 3 else None
         if elem not in DOPANT_DB:
             print(f"{elem:<6}{'?':<8}{'(missing in DB)':<8}{'⚠':<6}{note}")
             mismatches += 1
@@ -211,12 +250,20 @@ def validate_against_literature() -> int:
         sites = site_preference_filter(d['charge'], d['radius'], element=elem)
         got_pass = bool(sites)
         ok = (got_pass == must_pass)
+        site_note = ''
+        if expect_sites:
+            got = {s['site_name']: s['source'] for s in sites}
+            bad = {k: (v, got.get(k)) for k, v in expect_sites.items()
+                   if got.get(k) != v}
+            if bad:
+                ok = False
+                site_note = f" site✗{bad}"
         if not ok:
             mismatches += 1
         mark = '✓' if ok else '✗'
         expected = 'PASS' if must_pass else 'FAIL'
         actual = 'pass' if got_pass else 'fail'
-        print(f"{elem:<6}{expected:<8}{actual:<8}{mark:<6}{note[:55]}")
+        print(f"{elem:<6}{expected:<8}{actual:<8}{mark:<6}{(note[:45]+site_note)}")
     print('-' * 72)
     print(f"Mismatches: {mismatches} / {len(VALIDATION_SET)}")
     return mismatches
@@ -246,6 +293,12 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
         charge_diff = dopant_charge - info['charge']
         radius_diff = dopant_radius - info['radius']
         compat = 1.0 / (1.0 + abs(radius_diff) + abs(charge_diff) * 0.5)
+        # Literature sites are admitted DESPITE a large |Δr|; don't then let that
+        # same |Δr| penalize them in the downstream site-preference score. Floor
+        # to 0.5 so a documented site is never ranked below a heuristic one for
+        # the radius the override exists to forgive (P1-3 in review).
+        if source == 'literature':
+            compat = max(compat, 0.5)
         rec = {
             'site_name': site_name, 'host': info['host'],
             'host_charge': info['charge'], 'host_radius': info['radius'],
