@@ -98,6 +98,7 @@ def predict_honest(am_se_wt, p_s_vol):
 
 
 def main():
+    global F_PERC
     measured = {
         (85, 15): {'p_s': (7, 3), 'eps': 0.157},
         (80, 20): {'p_s': (7, 3), 'eps': 0.165},
@@ -146,7 +147,6 @@ def main():
     colors_p = ['tab:blue', 'tab:green', 'crimson', 'tab:purple']
 
     for f_p_val, c in zip(f_perc_values, colors_p):
-        global F_PERC
         F_PERC_save = F_PERC
         F_PERC = f_p_val
         ys = []
