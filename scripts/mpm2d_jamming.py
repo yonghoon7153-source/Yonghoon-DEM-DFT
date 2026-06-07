@@ -277,7 +277,7 @@ def sweep(ng, seeds, yield_se, out_csv):
     print(f"\n  saved {out_csv}  (n_grid={ng}, dt={dt:.2e}, sub={sub}, seeds={seeds})")
 
 
-def compare(csv_a, csv_b):
+def compare(csv_a, csv_b, geom_path=None):
     import csv
     def load_csv(path):
         with open(path) as fh:
@@ -291,7 +291,8 @@ def compare(csv_a, csv_b):
     import os
     geo = None
     here = os.path.dirname(os.path.abspath(__file__))
-    cand = ['docs/data/packing_dip_model.csv', 'packing_dip_model.csv',
+    cand = ([geom_path] if geom_path else []) + \
+           ['docs/data/packing_dip_model.csv', 'packing_dip_model.csv',
             os.path.join(here, '..', 'docs', 'data', 'packing_dip_model.csv')]
     for path in cand:
         try:
@@ -376,18 +377,24 @@ def compare(csv_a, csv_b):
 
 
 def main():
+    global PS
     ap = argparse.ArgumentParser()
     ap.add_argument('--n-grid', type=int, default=320)
     ap.add_argument('--seeds', type=int, default=3)
     ap.add_argument('--yield-se', type=float, default=1.0e4,
                     help='1e4 = rigid (pure geometry, default); 0.3 = frame σ_y')
+    ap.add_argument('--ps', default='7:3', help='AM_P:AM_S split, e.g. 7:3, 5:5, 3:7')
     ap.add_argument('--out', type=str, default=None)
     ap.add_argument('--compare', nargs=2, metavar=('CSV_A', 'CSV_B'), default=None)
+    ap.add_argument('--geom', type=str, default=None,
+                    help='geometric overlay CSV for --compare (match the P:S)')
     a = ap.parse_args()
+    p, s = (int(z) for z in a.ps.split(':'))
+    PS = (p, s)
     if a.compare:
-        compare(*a.compare); return
-    out = a.out or f"jam_{a.n_grid}.csv"
-    print(f"RIGID-jamming sweep  n_grid={a.n_grid}  seeds={a.seeds}  "
+        compare(*a.compare, geom_path=a.geom); return
+    out = a.out or f"jam_{a.n_grid}_ps{p}{s}.csv"
+    print(f"RIGID-jamming sweep  n_grid={a.n_grid}  seeds={a.seeds}  P:S={p}:{s}  "
           f"yield_se={a.yield_se:g} (SE {'RIGID' if a.yield_se > 100 else 'σ_y='+str(a.yield_se)})")
     sweep(a.n_grid, a.seeds, a.yield_se, out)
 

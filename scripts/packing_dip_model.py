@@ -172,19 +172,26 @@ def ascii_trend(am, por, width=52):
 
 
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument('--ps', default='7:3', help='AM_P:AM_S split, e.g. 7:3, 5:5, 3:7')
+    a = ap.parse_args()
+    p, s = (int(z) for z in a.ps.split(':'))
+    ps = (p, s); tag = f"ps{p}{s}"
+
     passed = self_validate()
 
     am = np.arange(0, 101, 5.0)
     K = 9.0                                   # vibrated+pressed (hundreds of MPa)
     print("=" * 74)
-    print(f"POROSITY vs AM wt%   (P:S = 7:3, sizes 12:4:1, de Larrard K={K:.0f})")
+    print(f"POROSITY vs AM wt%   (P:S = {p}:{s}, sizes 12:4:1, de Larrard K={K:.0f})")
     print("  grid-free / resolution-free by construction — no MPM grid involved")
     print("=" * 74)
 
     rows = [('AM_wt%',)]
     curves = {}
     for beta in (0.88, 0.86, 0.84, 0.80, 0.74, 0.64):
-        por = porosity_curve(am, beta, K)
+        por = porosity_curve(am, beta, K, ps=ps)
         curves[beta] = por
         di = int(np.nanargmin(por))
         end = 0.5 * (por[0] + por[-1])
@@ -199,16 +206,20 @@ def main():
     print("\n  ---- ASCII trend at beta=0.64 (3D RCP, textbook McGeary scale) ----")
     ascii_trend(am, curves[0.64])
 
-    # CSV
+    # CSV — tagged per P:S; also keep the plain name for the 7:3 default (compat)
     os.makedirs('docs/data', exist_ok=True)
     betas = sorted(curves.keys())
     hdr = 'AM_wt%,' + ','.join(f'poros_beta{b:.2f}' for b in betas)
     lines = [hdr]
     for i, a in enumerate(am):
         lines.append(f"{a:.0f}," + ','.join(f"{curves[b][i]:.3f}" for b in betas))
-    with open('docs/data/packing_dip_model.csv', 'w') as fh:
-        fh.write('\n'.join(lines) + '\n')
-    print("\n  saved docs/data/packing_dip_model.csv")
+    out_paths = [f'docs/data/packing_dip_model_{tag}.csv']
+    if ps == (7, 3):
+        out_paths.append('docs/data/packing_dip_model.csv')
+    for op in out_paths:
+        with open(op, 'w') as fh:
+            fh.write('\n'.join(lines) + '\n')
+    print(f"\n  saved {', '.join(out_paths)}")
 
     # optional plot (works on WSL/uma where matplotlib exists)
     try:
@@ -221,13 +232,13 @@ def main():
         ax.set_xlabel('AM weight fraction (%)')
         ax.set_ylabel('porosity (%)')
         ax.set_title('Resolution-FREE geometric packing dip (de Larrard)\n'
-                     'sizes 12:4:1, P:S=7:3, K=9 — no grid, no pressure read-out',
+                     f'sizes 12:4:1, P:S={p}:{s}, K=9 — no grid, no pressure read-out',
                      fontsize=10)
         ax.legend(fontsize=8); ax.grid(alpha=0.3)
         plt.tight_layout()
         os.makedirs('docs/figures', exist_ok=True)
-        plt.savefig('docs/figures/packing_dip_model.png', dpi=130)
-        print("  saved docs/figures/packing_dip_model.png")
+        plt.savefig(f'docs/figures/packing_dip_model_{tag}.png', dpi=130)
+        print(f"  saved docs/figures/packing_dip_model_{tag}.png")
     except Exception as e:
         print(f"  (plot skipped — no matplotlib here: {e})")
 
