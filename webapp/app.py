@@ -456,6 +456,13 @@ def list_cases():
                 meta['is_unit_cell']     = False
                 meta['rve_area_um2']     = None
                 meta['base_case']        = None
+        # Porosity for the list view (prefer recomputed sphere-sum; fall back to
+        # legacy 'porosity').  union + overlap shown in the row tooltip.
+        meta['porosity'] = (m.get('porosity_spheresum')
+                            if m.get('porosity_spheresum') is not None
+                            else m.get('porosity'))
+        meta['porosity_union']        = m.get('porosity_union')
+        meta['overlap_fraction_pct']  = m.get('overlap_fraction_pct')
         cases.append(meta)
     return cases
 
@@ -2832,6 +2839,20 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
             log.append({'step': 'Stage E (literature-grounded grain corrections)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
+        # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
+        # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
+        try:
+            dual_cmd = ['python3',
+                        os.path.join(scripts, 'recompute_porosity_dual.py'),
+                        '--dir', results_dir]
+            dual_res = subprocess.run(dual_cmd, capture_output=True, text=True, timeout=None)
+            log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
+                        'stdout': dual_res.stdout, 'stderr': dual_res.stderr,
+                        'rc': dual_res.returncode})
+        except Exception as _e:
+            log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
+                        'stdout': '', 'stderr': str(_e), 'rc': 1})
+
         # Step 3: Basic figures
         cmd = ['python3', os.path.join(scripts, 'generate_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
@@ -2925,6 +2946,20 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
                         'rc': stage_e_result.returncode})
         except Exception as _e:
             log.append({'step': 'Stage E (literature-grounded grain corrections)',
+                        'stdout': '', 'stderr': str(_e), 'rc': 1})
+
+        # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
+        # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
+        try:
+            dual_cmd = ['python3',
+                        os.path.join(scripts, 'recompute_porosity_dual.py'),
+                        '--dir', results_dir]
+            dual_res = subprocess.run(dual_cmd, capture_output=True, text=True, timeout=None)
+            log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
+                        'stdout': dual_res.stdout, 'stderr': dual_res.stderr,
+                        'rc': dual_res.returncode})
+        except Exception as _e:
+            log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
         cmd = ['python3', os.path.join(scripts, 'generate_figures.py'),

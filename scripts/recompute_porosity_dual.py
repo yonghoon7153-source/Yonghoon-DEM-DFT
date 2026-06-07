@@ -235,8 +235,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true', help='Preview without writing')
     ap.add_argument('--roots', nargs='+', default=['webapp/archive', 'webapp/results'])
+    ap.add_argument('--dir', default=None,
+                    help='Process ONLY this one case dir (bypasses the input_ name '
+                         'filter; used by the upload pipeline for auto-compute)')
     ap.add_argument('--csv-out', default='/tmp/porosity_dual_comparison.csv')
     args = ap.parse_args()
+    if args.dir:
+        args.roots = [args.dir]
 
     cases_data = []
     for root in args.roots:
@@ -251,7 +256,7 @@ def main():
                     mn = json.load(open(meta)).get('name', '') or ''
                     if mn: nm = mn
                 except: pass
-            if not nm.startswith('input_'): continue
+            if not args.dir and not nm.startswith('input_'): continue
 
             try:
                 d = json.load(open(metrics_path))
