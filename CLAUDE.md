@@ -1,5 +1,83 @@
 # Project conventions for Claude Code sessions
 
+## ★★★ DEM ↔ MPM Complementary Simulation Frame (FINALIZED 2026-06-07) ★★★
+
+This is the controlling epistemology for all compaction/transport work.
+Do NOT calibrate one model to the other — calibrate each INDEPENDENTLY to
+experiment, then compare.  Agreement = cross-validation; disagreement =
+quantified model limit (information, not failure).
+
+**[1] MPM (true plasticity reference — J2, volume-preserving flow, Taichi GPU)**
+Role: experimental-anchored *true plastic* compaction reference.
+Calibration anchors (experiment, NOT DEM):
+  • pure-SE porosity ≈ 10% @ 300 MPa  (Minnmann et al., LPSCl cold-press)
+  • SEM-like core-preserved + boundary-flattening morphology  (qualitative)
+  • σ_y in literature range 0.05–0.30 GPa  (LPSCl single-crystal → granular)
+Production calibration (2D): E_eff = 1.53 GPa, σ_y = 0.15 GPa.  Pure-SE
+yielded ≈ 86%, plastic-dominant pattern matches SEM (vis_zoom ④).
+Outputs MPM uniquely provides: particle shape change, accumulated plastic
+strain, stress field, volume-preserving flow into voids, compaction
+mechanism visualization.
+LIMITS: MPM is a continuum — NO explicit contact network → cannot give
+transport σ.  2D ≠ 3D in absolute scale.  Single-anchor calibration → multi-
+pressure / springback validation pending.
+
+**[2] DEM (hooke/hysteresis, no explicit plasticity)**
+Role: macroscopic compaction + contact-network transport solver.
+DEM has NO plasticity by construction (particles are eternal rigid spheres).
+The 18× softening (E_SE bulk 24 → effective 1.35 GPa) lumps the missing
+granular mechanisms (rearrangement, GB sliding, micro-fracture) into an
+effective elastic modulus so that macroscopic porosity matches experiment.
+Stage-E Physics (Tabor + volume contact-area re-derivation) is a 2nd
+post-correction for plastic *contact area* — but particle shape itself is
+NEVER deformed.
+Calibration anchors (experiment): porosity @ 300 MPa + pure-SE Cronau
+overlap 11–12%.
+
+**[3] Macroscopic cross-validation = Heckel + porosity-vs-AM% (dip)**
+Both DEM and MPM checked against universal compaction physics:
+  • Heckel linearity ln(1/(1-D)) = K·P + A
+    - DEM (pure-SE, E=1.35, 4 pressures): R² = 0.965, P_y = 138 MPa,
+      σ_y_eff = 46 MPa  (6.5× softer than LPSCl single crystal 300 MPa —
+      consistent with granular softening lumping)
+    - MPM Heckel sweep pending (planned: same 4 pressures)
+  • Furnas dip (porosity vs AM%):
+    - DEM/v4 shows dip at AM ~75–85 wt% (Bouvard/McGeary geometric packing)
+    - MPM RCP-like sweep (E=24, σ_y=0.3) reproduces dip — confirms it is
+      a GEOMETRIC packing effect, independent of plasticity model
+    - MPM true-plastic sweep: dip survives partially (P:S=7:3, AM 70-80%)
+      with attenuation at high pressure → consistent with "plastic flow
+      partially erases packing dip" but doesn't eliminate it
+NOTE: Experimental multi-pressure Heckel for LPSCl powder is the missing
+direct validation; literature data could close this loop.
+
+**[4] Epistemology — DO NOT cross-fit DEM and MPM**
+Each model is calibrated to EXPERIMENT independently.  If results converge:
+cross-validation evidence.  If they diverge: quantified DEM-elastic-softening
+limit, or quantified MPM-continuum-approximation limit — both are
+publishable findings, NOT failures.  Forcing DEM↔MPM agreement (e.g.
+tuning MPM σ_y to match DEM Heckel-derived σ_y_eff) is circular.
+
+**[5] Division of labor (complementary, both required)**
+DEM unique:
+  • Explicit particle contact network → ionic/electronic/thermal σ
+    (Kirchhoff solver, Holm constriction, Stage-E)
+  • Percolation, coverage, force chains, fracture (Auerbach)
+  • Coverage of AM by SE (Stage-E shape-corrected)
+MPM unique:
+  • True plastic particle shape change
+  • Volume-preserving void-fill flow
+  • Spatial accumulated plastic strain / stress fields
+  • Heckel σ_y_eff at the granular-medium scale
+Both:
+  • Macroscopic porosity vs (P, composition, P:S, AM%)
+  • Furnas dip presence/depth/location
+  • Heckel linearity & P_y
+→ DEM = TRANSPORT.  MPM = MECHANICS.  Both required; neither replaces
+the other; their agreement quantifies model trust.
+
+---
+
 ## Viewing figures / PDFs on this WSL machine
 
 WSL paths (`/home/yonghoon/...`) cannot be opened directly with
