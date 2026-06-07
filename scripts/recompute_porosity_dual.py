@@ -234,7 +234,8 @@ def get_plate_z(case_dir, atoms=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--dry-run', action='store_true', help='Preview without writing')
-    ap.add_argument('--roots', nargs='+', default=['webapp/archive', 'webapp/results'])
+    ap.add_argument('--roots', nargs='+',
+                    default=['webapp/archive', 'webapp/results', 'webapp/uploads'])
     ap.add_argument('--dir', default=None,
                     help='Process ONLY this one case dir (bypasses the input_ name '
                          'filter; used by the upload pipeline for auto-compute)')
