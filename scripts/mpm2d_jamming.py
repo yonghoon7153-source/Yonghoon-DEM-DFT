@@ -287,25 +287,47 @@ def compare(csv_a, csv_b):
         return am, eps
     am_a, ea = load_csv(csv_a)
     am_b, eb = load_csv(csv_b)
-    # geometric reference (de Larrard), if available
+    # geometric reference (de Larrard) — search several locations (cwd-robust)
+    import os
     geo = None
-    try:
-        import csv as _c
-        with open('docs/data/packing_dip_model.csv') as fh:
-            gr = list(_c.DictReader(fh))
-        gam = np.array([float(x['AM_wt%']) for x in gr])
-        gep = np.array([float(x['poros_beta0.84']) for x in gr])
-        geo = (gam, gep)
-    except Exception:
-        pass
+    here = os.path.dirname(os.path.abspath(__file__))
+    cand = ['docs/data/packing_dip_model.csv', 'packing_dip_model.csv',
+            os.path.join(here, '..', 'docs', 'data', 'packing_dip_model.csv')]
+    for path in cand:
+        try:
+            import csv as _c
+            with open(path) as fh:
+                gr = list(_c.DictReader(fh))
+            gam = np.array([float(x['AM_wt%']) for x in gr])
+            gep = np.array([float(x['poros_beta0.84']) for x in gr])
+            geo = (gam, gep)
+            print(f"  geometric overlay: {path}")
+            break
+        except Exception:
+            continue
+    if geo is None:
+        print("  (geometric overlay CSV not found — run packing_dip_model.py first; "
+              "RMSE below is still valid)")
     print("\n  AM%   eps_A(320)  eps_B(512)   |Δ|     geom(de Larrard)")
+    eb_on_a = np.interp(am_a, am_b, eb)
     for i, a in enumerate(am_a):
-        j = int(np.argmin(np.abs(am_b - a)))
         g = float(np.interp(a, geo[0], geo[1])) if geo else float('nan')
-        print(f"  {a:4.0f}   {ea[i]:8.2f}   {eb[j]:8.2f}   {abs(ea[i]-eb[j]):5.2f}   {g:8.2f}")
-    rmse = float(np.sqrt(np.mean((ea - np.interp(am_a, am_b, eb)) ** 2)))
-    print(f"\n  320<->512 RMSE = {rmse:.2f} %p  "
+        print(f"  {a:4.0f}   {ea[i]:8.2f}   {eb_on_a[i]:8.2f}   {abs(ea[i]-eb_on_a[i]):5.2f}   {g:8.2f}")
+    rmse = float(np.sqrt(np.mean((ea - eb_on_a) ** 2)))
+    maxd = float(np.max(np.abs(ea - eb_on_a)))
+    print(f"\n  320<->512 RMSE = {rmse:.2f} %p,  max|Δ| = {maxd:.2f} %p  "
           f"(small => trend is RESOLUTION-INVARIANT; that is the goal)")
+    # always write a combined CSV so the overlay plot can be made on ANY machine
+    try:
+        comb = 'jamming_resolution_compare.csv'
+        with open(comb, 'w') as fh:
+            fh.write("AM_wt%,eps_320,eps_512,geom_deLarrard_b084\n")
+            for i, a in enumerate(am_a):
+                g = float(np.interp(a, geo[0], geo[1])) if geo else float('nan')
+                fh.write(f"{a:.0f},{ea[i]:.3f},{eb_on_a[i]:.3f},{g:.3f}\n")
+        print(f"  saved {comb}  (scp to WSL to plot if this box has no matplotlib)")
+    except Exception as e:
+        print(f"  (combined CSV write skipped: {e})")
     try:
         import matplotlib; matplotlib.use('Agg')
         import matplotlib.pyplot as plt
