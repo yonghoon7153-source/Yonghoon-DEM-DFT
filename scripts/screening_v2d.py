@@ -309,7 +309,8 @@ def main():
 
     # Take top 5 from PART 3 and try rounding
     for r in results_23[:5]:
-        print(f"\n  Free fit: {' × '.join(f'{v}^{r['coefs'][i]:.2f}' for i, v in enumerate(r['vnames']))}")
+        _terms = ' × '.join(f'{v}^{r["coefs"][i]:.2f}' for i, v in enumerate(r['vnames']))
+        print(f"\n  Free fit: {_terms}")
         print(f"    R²={r['r2']:.4f}, LOOCV={r['r2_cv']:.4f}")
 
         # Try rounding each exponent to nearest 0.5
