@@ -315,8 +315,23 @@ def compare(csv_a, csv_b):
         print(f"  {a:4.0f}   {ea[i]:8.2f}   {eb_on_a[i]:8.2f}   {abs(ea[i]-eb_on_a[i]):5.2f}   {g:8.2f}")
     rmse = float(np.sqrt(np.mean((ea - eb_on_a) ** 2)))
     maxd = float(np.max(np.abs(ea - eb_on_a)))
-    print(f"\n  320<->512 RMSE = {rmse:.2f} %p,  max|Δ| = {maxd:.2f} %p  "
-          f"(small => trend is RESOLUTION-INVARIANT; that is the goal)")
+    # SHAPE vs OFFSET decomposition — the trend (shape) is what must be
+    # resolution-invariant; a constant vertical offset is just absolute
+    # calibration (user: "절대값 무관, 트랜드").
+    offset = float(np.mean(ea - eb_on_a))
+    shape_rmse = float(np.sqrt(np.mean(((ea - ea.mean()) - (eb_on_a - eb_on_a.mean())) ** 2)))
+    pear = float(np.corrcoef(ea, eb_on_a)[0, 1])
+    dipA = float(am_a[int(np.argmin(ea))]); dipB = float(am_a[int(np.argmin(eb_on_a))])
+    print(f"\n  320<->512 raw RMSE = {rmse:.2f} %p,  max|Δ| = {maxd:.2f} %p  "
+          f"(constant offset = {offset:.2f} %p, 512 lower)")
+    print(f"  SHAPE-RMSE (de-meaned) = {shape_rmse:.2f} %p,  Pearson = {pear:.4f}  "
+          f"<- trend match (small/high => RESOLUTION-INVARIANT trend)")
+    print(f"  dip location: 320 @ AM={dipA:.0f}%   512 @ AM={dipB:.0f}%   (same => invariant)")
+    if geo:
+        d320 = float(np.mean(np.abs(ea - np.interp(am_a, geo[0], geo[1]))))
+        d512 = float(np.mean(np.abs(eb_on_a - np.interp(am_a, geo[0], geo[1]))))
+        print(f"  convergence to grid-free geometry: |320-geom|={d320:.1f} -> "
+              f"|512-geom|={d512:.1f} %p  ({'closer at 512 (converging)' if d512 < d320 else 'NOT converging'})")
     # always write a combined CSV so the overlay plot can be made on ANY machine
     try:
         comb = 'jamming_resolution_compare.csv'
@@ -332,16 +347,27 @@ def compare(csv_a, csv_b):
         import matplotlib; matplotlib.use('Agg')
         import matplotlib.pyplot as plt
         import os
-        fig, ax = plt.subplots(figsize=(7.6, 5.2))
-        ax.plot(am_a, ea, '-o', color='#c0392b', lw=2, ms=6, label='MPM rigid jam, n_grid=320')
-        ax.plot(am_b, eb, '-s', color='#2980b9', lw=2, ms=6, label='MPM rigid jam, n_grid=512')
+        fig, (axL, axR) = plt.subplots(1, 2, figsize=(12.4, 5.2))
+        # LEFT: raw absolute curves + geometry
+        axL.plot(am_a, ea, '-o', color='#c0392b', lw=2, ms=6, label='MPM rigid jam 320')
+        axL.plot(am_a, eb_on_a, '-s', color='#2980b9', lw=2, ms=6, label='MPM rigid jam 512')
         if geo:
-            ax.plot(geo[0], geo[1], '--', color='#2e8b57', lw=2,
-                    label='grid-free geometric (de Larrard β=0.84)')
-        ax.set_xlabel('AM weight fraction (%)'); ax.set_ylabel('jamming porosity (%)')
-        ax.set_title('RIGID-jamming dip — resolution invariance check\n'
-                     '320 vs 512 should OVERLAP (RMSE in title)', fontsize=10)
-        ax.legend(fontsize=8); ax.grid(alpha=0.3)
+            axL.plot(geo[0], geo[1], '--', color='#2e8b57', lw=2,
+                     label='grid-free geometric (de Larrard β=0.84)')
+        axL.set_xlabel('AM weight fraction (%)'); axL.set_ylabel('jamming porosity (%)')
+        axL.set_title(f'RAW absolute  (offset {offset:.1f}%p; 512 converging toward geometry)',
+                      fontsize=9)
+        axL.legend(fontsize=8); axL.grid(alpha=0.3)
+        # RIGHT: de-meaned shapes overlaid -> collapse iff trend is resolution-invariant
+        axR.plot(am_a, ea - ea.mean(), '-o', color='#c0392b', lw=2, ms=6, label='320 (de-meaned)')
+        axR.plot(am_a, eb_on_a - eb_on_a.mean(), '-s', color='#2980b9', lw=2, ms=6, label='512 (de-meaned)')
+        if geo:
+            gg = np.interp(am_a, geo[0], geo[1])
+            axR.plot(am_a, gg - gg.mean(), '--', color='#2e8b57', lw=2, label='geometry (de-meaned)')
+        axR.set_xlabel('AM weight fraction (%)'); axR.set_ylabel('porosity − mean (%p)')
+        axR.set_title(f'SHAPE (offset removed): RMSE={shape_rmse:.2f}%p  r={pear:.3f}\n'
+                      f'curves collapse => trend is RESOLUTION-INVARIANT', fontsize=9)
+        axR.legend(fontsize=8); axR.grid(alpha=0.3)
         plt.tight_layout(); os.makedirs('docs/figures', exist_ok=True)
         plt.savefig('docs/figures/mpm2d_jamming_resolution.png', dpi=130)
         print("  saved docs/figures/mpm2d_jamming_resolution.png")
