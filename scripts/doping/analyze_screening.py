@@ -66,6 +66,15 @@ def compute_composite_score(records: list[dict],
         r['composite_score'] = (
             w_e * ne + w_v * nv + w_s * ns + w_c * nc
         )
+        # carry the site-assignment provenance through to the ranked output so a
+        # candidate that sits on a WEAK (rietveld-only) literature site or a bare
+        # heuristic site is traceable in the paper, not silently equal to a
+        # DFT/experiment-backed one. (Does not change the score — flag only.)
+        ev = r.get('evidence')
+        r['evidence_tier'] = (
+            'literature_strong' if ev in ('dft_exp', 'exp') else
+            'literature_weak' if ev in ('analog', 'rietveld') else
+            'heuristic')
     return converged
 
 
@@ -73,15 +82,18 @@ def print_top_table(ranked: list[dict], n: int = 20):
     """Print human-readable Top-N table."""
     print(f"\n{'='*100}")
     print(f"{'Rank':<5}{'Dopant':<8}{'Site':<10}{'x':<8}"
-          f"{'ΔE/atom':<12}{'ΔV/V0':<10}{'CompScore':<12}{'Charge_comp':<20}")
-    print('-' * 100)
+          f"{'ΔE/atom':<12}{'ΔV/V0':<10}{'CompScore':<11}{'Evidence':<18}{'Charge_comp':<14}")
+    print('-' * 110)
+    _tier_short = {'literature_strong': 'lit_strong', 'literature_weak': 'lit_WEAK',
+                   'heuristic': 'heuristic'}
     for i, r in enumerate(ranked[:n], 1):
         print(f"{i:<5}{r['dopant']:<8}{r['site']:<10}"
               f"{r['concentration']*100:>5.1f}% "
               f"{r['uma_relaxed']['de_per_atom_vs_baseline']:>+8.4f} eV  "
               f"{r['dV_over_V0']*100:>+6.2f}%  "
-              f"{r['composite_score']:>8.4f}    "
-              f"{r['charge_compensation']:<20}")
+              f"{r['composite_score']:>8.4f}  "
+              f"{_tier_short.get(r.get('evidence_tier'), '-'):<18}"
+              f"{r['charge_compensation']:<14}")
     print('=' * 100)
 
 

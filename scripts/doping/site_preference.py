@@ -173,6 +173,12 @@ KNOWN_SUBSTITUTIONS = {
 # any downstream consumer that tiers/gates by evidence.
 EVIDENCE_LEVELS = ('dft_exp', 'exp', 'analog', 'rietveld')
 
+# Evidence-graded floor for a literature site's compatibility_score (see _make).
+# Strong evidence floored above the heuristic mean (~0.49) so it is protected;
+# weak 'rietveld' floored BELOW it so a dubious XRD-only claim is not promoted
+# above a more plausible heuristic alternative for the same dopant.
+_LIT_SCORE_FLOOR = {'dft_exp': 0.60, 'exp': 0.55, 'analog': 0.50, 'rietveld': 0.42}
+
 
 def _validate_known_substitutions():
     """Fail fast at import on a malformed KNOWN_SUBSTITUTIONS hand-edit (a bare
@@ -295,10 +301,12 @@ def site_preference_filter(dopant_charge: int, dopant_radius: float,
         compat = 1.0 / (1.0 + abs(radius_diff) + abs(charge_diff) * 0.5)
         # Literature sites are admitted DESPITE a large |Δr|; don't then let that
         # same |Δr| penalize them in the downstream site-preference score. Floor
-        # to 0.5 so a documented site is never ranked below a heuristic one for
-        # the radius the override exists to forgive (P1-3 in review).
+        # by EVIDENCE strength (not a flat value): strong evidence is protected
+        # above the heuristic mean (~0.49), but a weak rietveld-only claim is
+        # floored BELOW it so the override doesn't artificially promote a dubious
+        # site (e.g. Y@P rietveld) above a more plausible heuristic site (Y@Li).
         if source == 'literature':
-            compat = max(compat, 0.5)
+            compat = max(compat, _LIT_SCORE_FLOOR.get(evidence, 0.5))
         rec = {
             'site_name': site_name, 'host': info['host'],
             'host_charge': info['charge'], 'host_radius': info['radius'],

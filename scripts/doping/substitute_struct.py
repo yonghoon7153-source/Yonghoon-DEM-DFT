@@ -112,8 +112,8 @@ def add_li_vacancy(atoms: Atoms, n_vac: int = 1, method: str = 'spread',
 
 
 def find_interstitial_sites(atoms: Atoms, n_sites: int, seed: int = 42,
-                            d_min: float = 1.7, d_anion_max: float = 3.0,
-                            grid_spacing: float = 0.7) -> list:
+                            d_min: float = 2.0, d_anion_max: float = 3.0,
+                            grid_spacing: float = 0.6) -> list:
     """Find ``n_sites`` Li-interstitial positions = empty anion-coordinated
     pockets, for ACCEPTOR charge compensation (dopant charge < host charge).
 
@@ -253,6 +253,17 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
                               f"charge-unbalanced cell gated out)")
                         continue
 
+                    # diagnostic: closest approach of any added Li interstitial to
+                    # the rest of the cell — lets downstream flag a relax that may
+                    # diverge from a too-tight start (should be >~2.0 Å).
+                    min_int_dist = None
+                    if comp_label.startswith('Li_int'):
+                        k = int(comp_label.split('_')[-1])
+                        dmat = doped.get_all_distances(mic=True)
+                        others = list(range(len(doped) - k))
+                        min_int_dist = float(min(
+                            dmat[i][others].min() for i in range(len(doped) - k, len(doped))))
+
                     base_name = (f"{element}_{site}_x{int(actual_conc*1000):03d}"
                                  f"_{comp_label}")
                     name = (base_name if method != 'random'
@@ -275,6 +286,7 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
                         'site_source': site_info.get('source'),
                         'evidence': site_info.get('evidence'),
                         'reference': site_info.get('reference'),
+                        'min_int_dist': min_int_dist,
                         'n_atoms': len(doped),
                         'composition': dict(zip(*np.unique(
                             doped.get_chemical_symbols(), return_counts=True))),
