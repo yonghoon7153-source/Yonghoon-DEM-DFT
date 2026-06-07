@@ -114,6 +114,56 @@ RADIUS_TOL = {
 }
 
 
+# Literature-reported dopant→site assignments, tagged by EVIDENCE STRENGTH.
+# These are admitted as candidate sites regardless of the RADIUS_TOL cutoff
+# (so we never silently drop a reported case like Y→P), but they are NOT treated
+# as ground truth — each carries an evidence level so the downstream UMA/DFT
+# screening can ADJUDICATE. The pipeline's job is precisely to confirm or refute
+# weak claims by energy, not to trust them blindly.
+#
+#   EVIDENCE levels (strong → weak):
+#     'dft_exp'  : ab-initio + experiment agree (trust; e.g. Si/Ge thio-LISICON)
+#     'exp'      : solid experimental (multiple probes / well-established chemistry)
+#     'analog'   : inferred from isovalent group analog (chemically safe, e.g. As/Sb)
+#     'rietveld' : XRD Rietveld site assignment ONLY, no computation — WEAK for a
+#                  dilute dopant (Y@P vs Y@Li poorly separable by XRD); GENERATE
+#                  and let our UMA/DFT decide (may refute the paper).
+# Format: element -> {site: (evidence, reference)}.
+KNOWN_SUBSTITUTIONS = {
+    # ---- P_4b (PS4 center, replaces P5+) ----
+    'Y':  {'P_4b': ('rietveld', 'J. Power Sources 2022 S0378775322008357 — Y3+→P5+ '
+                    'by Rietveld ONLY, no ab-initio; |Δr|=0.73>cutoff. VERIFY w/ our DFT')},
+    'Si': {'P_4b': ('dft_exp', 'RSC Mater. Adv. 2024 D3MA01042B + LGPS-type — Si4+→P5+')},
+    'Ge': {'P_4b': ('dft_exp', 'thio-LISICON Li10GeP2S12 — Ge4+→P5+')},
+    'Sn': {'P_4b': ('exp', 'MDPI Materials 16(7),2751 (2023); RSC MCF 2025 D5QM00394F — '
+                    'Sn4+→P5+ (easier in LPSBr/LPSI; small Cl framework limits)')},
+    'Sb': {'P_4b': ('analog', 'Sb5+→P5+ isovalent group 15')},
+    'As': {'P_4b': ('analog', 'As5+→P5+ isovalent group 15')},
+    'V':  {'P_4b': ('analog', 'V5+→P5+ tetrahedral VS4')},
+    'Nb': {'P_4b': ('analog', 'Nb5+→P5+ (A=…,V,Nb,Ta family)')},
+    'Ti': {'P_4b': ('analog', 'Ti4+→P5+ (A=Ti family)')},
+    'Zr': {'P_4b': ('analog', 'Zr4+→P5+ (A=Zr family)')},
+    # (Ta5+, Bi5+ also reported for P — add to DOPANT_DB if screened)
+    # ---- Li_24g (Li sublattice) ----
+    'Al': {'Li_24g': ('exp', 'MDPI Nanomaterials 12(24),4355 (2022) — Al3+→Li+, lattice '
+                      'CONTRACTION confirms Li site (P-site would expand; not seen)')},
+    'Ag': {'Li_24g': ('exp', 'Nature Comm 2025 silver-exsolution argyrodite')},
+    'Na': {'Li_24g': ('exp', 'Na+→Li+ common')},
+    'Ca': {'Li_24g': ('exp', 'Li5.35Ca0.1PS4.5Cl1.55, 10.2 mS/cm')},
+    'Ba': {'Li_24g': ('exp', 'PMC 11106650 mechanochemical Li6-aBa_a/2PS5Cl')},
+    'Mg': {'Li_24g': ('exp', 'PMC 9054619 multivalent-cation-doped LPSCl')},
+    'Zn': {'Li_24g': ('exp', 'PMC 9054619 multivalent-cation-doped LPSCl')},
+    # ---- anion sites ----
+    'O':  {'S_16e': ('dft_exp', 'ACS AMI 2021 Li6PS5-xClOx — O→S_16e (P-O covalent) > S_4a')},
+    'Se': {'S_16e': ('exp', 'Se2-→S2-')},
+    'Te': {'S_16e': ('exp', 'Te2-→S2-')},
+    'F':  {'Cl_4d': ('exp', 'ACS AMI 2022 fluorine-doped argyrodite')},
+    'Br': {'Cl_4d': ('exp', 'halogen mixing')},
+    'I':  {'Cl_4d': ('exp', 'I-F dual-doped JPCC 2023; Li6PS5I')},
+    'N':  {'S_16e': ('analog', 'anion disorder (nitrogen)')},
+}
+
+
 # Literature validation set: (element, expected_pass_or_fail, reference).
 # Used by `--validate` to make sure RADIUS_TOL cutoffs reproduce the
 # experimentally observed pattern.
@@ -158,7 +208,7 @@ def validate_against_literature() -> int:
             mismatches += 1
             continue
         d = DOPANT_DB[elem]
-        sites = site_preference_filter(d['charge'], d['radius'])
+        sites = site_preference_filter(d['charge'], d['radius'], element=elem)
         got_pass = bool(sites)
         ok = (got_pass == must_pass)
         if not ok:
@@ -173,52 +223,73 @@ def validate_against_literature() -> int:
 
 
 def site_preference_filter(dopant_charge: int, dopant_radius: float,
-                          allow_aliovalent: bool = True) -> list[dict]:
+                          allow_aliovalent: bool = True,
+                          element: str = None) -> list[dict]:
     """Returns compatible substitution sites for a dopant.
 
     Args:
         dopant_charge: signed integer charge (+1, +2, -1, -2, ...)
         dopant_radius: ionic radius in Å (Shannon)
         allow_aliovalent: if False, only same-charge substitution allowed.
+        element: dopant symbol. If given and present in KNOWN_SUBSTITUTIONS,
+            its literature-reported sites are admitted REGARDLESS of the radius
+            cutoff (source='literature', tagged with evidence level); the radius
+            heuristic then only adds further sites (source='heuristic'). Without
+            `element`, behaviour is the pure radius heuristic (unchanged).
 
     Returns:
         list of {site_name, host, host_charge, host_radius, charge_diff,
-                 radius_diff, compatibility_score} for compatible sites,
-        sorted by best fit first.
+                 radius_diff, compatibility_score, source[, evidence, reference]},
+        literature sites first then heuristic, each by best fit.
     """
-    candidates = []
-    for site_name, info in HOST_SITES.items():
-        # (1) Sign of charge must match (cation ↔ cation, anion ↔ anion)
-        if dopant_charge * info['charge'] <= 0:
-            continue
-
-        # (2) If isovalent only, skip aliovalent
+    def _make(site_name, info, source, evidence=None, ref=None):
         charge_diff = dopant_charge - info['charge']
-        if (not allow_aliovalent) and (charge_diff != 0):
-            continue
-
-        # (3) Radius tolerance — per-site cutoff calibrated from observed
-        #     LPSCl substitutions (see RADIUS_TOL docstring above for refs).
-        tol = RADIUS_TOL[site_name]
         radius_diff = dopant_radius - info['radius']
-        if abs(radius_diff) > tol:
-            continue
-
-        # (4) Score: smaller |radius_diff| + smaller |charge_diff| = better
         compat = 1.0 / (1.0 + abs(radius_diff) + abs(charge_diff) * 0.5)
-        candidates.append({
-            'site_name': site_name,
-            'host': info['host'],
-            'host_charge': info['charge'],
-            'host_radius': info['radius'],
-            'wyckoff': info['wyckoff'],
-            'env': info['env'],
-            'charge_diff': charge_diff,
-            'radius_diff': round(radius_diff, 3),
-            'compatibility_score': round(compat, 3),
-        })
+        rec = {
+            'site_name': site_name, 'host': info['host'],
+            'host_charge': info['charge'], 'host_radius': info['radius'],
+            'wyckoff': info['wyckoff'], 'env': info['env'],
+            'charge_diff': charge_diff, 'radius_diff': round(radius_diff, 3),
+            'compatibility_score': round(compat, 3), 'source': source,
+        }
+        if evidence:
+            rec['evidence'] = evidence
+        if ref:
+            rec['reference'] = ref
+        return rec
 
-    candidates.sort(key=lambda x: -x['compatibility_score'])
+    candidates = []
+    seen = set()
+
+    # (0) Literature-reported sites — admit regardless of RADIUS_TOL (cutoff is a
+    #     fallback, not a gate). Weak evidence (e.g. 'rietveld') still generated so
+    #     the downstream UMA/DFT can confirm or refute it by energy.
+    for site_name, (evidence, ref) in KNOWN_SUBSTITUTIONS.get(element, {}).items():
+        if site_name not in HOST_SITES:
+            continue
+        if dopant_charge * HOST_SITES[site_name]['charge'] <= 0:
+            continue  # sign sanity only
+        candidates.append(_make(site_name, HOST_SITES[site_name],
+                                'literature', evidence, ref))
+        seen.add(site_name)
+
+    # (1)-(3) Radius/charge heuristic for the remaining sites.
+    for site_name, info in HOST_SITES.items():
+        if site_name in seen:
+            continue
+        if dopant_charge * info['charge'] <= 0:          # (1) charge sign match
+            continue
+        charge_diff = dopant_charge - info['charge']
+        if (not allow_aliovalent) and (charge_diff != 0):  # (2) isovalent-only
+            continue
+        if abs(dopant_radius - info['radius']) > RADIUS_TOL[site_name]:  # (3) radius
+            continue
+        candidates.append(_make(site_name, info, 'heuristic'))
+
+    # literature sites first (documented), then heuristic; each by score desc
+    candidates.sort(key=lambda x: (x['source'] != 'literature',
+                                   -x['compatibility_score']))
     return candidates
 
 
@@ -247,7 +318,7 @@ def evaluate_dopant(element: str, n_dopants: int = 1,
     if element not in DOPANT_DB:
         raise ValueError(f"Element {element} not in DOPANT_DB. Add it manually.")
     d = DOPANT_DB[element]
-    sites = site_preference_filter(d['charge'], d['radius'])
+    sites = site_preference_filter(d['charge'], d['radius'], element=element)
     if not sites:
         return {'element': element, 'compatible_sites': [],
                 'note': 'No compatible site found.'}
