@@ -77,7 +77,12 @@ def init_sim(ng):
     global x, v, C, F, mu_p, la_p, yld_p, press, grid_v, grid_m, wall_y, N
     import taichi as _ti
     ti = _ti
-    ti.init(arch=ti.gpu, default_fp=ti.f32, random_seed=2)
+    try:
+        ti.init(arch=ti.gpu, default_fp=ti.f32, random_seed=2)
+        print("  [taichi] arch=GPU")
+    except Exception as e:
+        print(f"  [taichi] GPU init failed ({e}); falling back to CPU")
+        ti.init(arch=ti.cpu, default_fp=ti.f32, random_seed=2)
     n_grid = ng; dx = 1.0 / ng; inv_dx = float(ng)
     dt = DT0 * NREF / ng                       # CFL: dt ∝ dx
     sub = max(1, int(round(SUB0 * ng / NREF))) # keep sub*dt (phys time/frame) const
