@@ -328,6 +328,16 @@ def main():
             # Use box_xy from atoms dump (more accurate per-case), fallback to 0.05
             box_xy_use = box_xy_from_dump if box_xy_from_dump and box_xy_from_dump > 0 else 0.05
             eps_s, eps_u, ov_pct = compute_dual(atoms, contacts, plate_z, box_xy=box_xy_use)
+            # Anchor to the ORIGINAL analysis porosity (correct RVE) + the box-FREE
+            # overlap.  compute_dual's box is GUESSED from the dump bounds and can
+            # mis-grab the RVE on some cases (notably thick 'real' campaigns) ->
+            # wildly wrong eps_union (e.g. 45.8% when eps_sphere=13.85%, overlap=1.65%,
+            # true union ~15.3%).  overlap = V_lens/V_sphere is box-independent, so
+            # trust it and REBUILD eps_sphere/eps_union from the legacy porosity:
+            #   eps_union = eps_sphere + overlap*(1 - eps_sphere)
+            if old_poro is not None and ov_pct is not None:
+                eps_s = old_poro
+                eps_u = old_poro + ov_pct * (1.0 - old_poro / 100.0)
 
             # Sanity check — physically plausible porosity range
             # Sphere-sum: -50% (severe plastic compaction) to +85% (loose packing)
