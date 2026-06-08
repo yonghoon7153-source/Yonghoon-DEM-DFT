@@ -4,6 +4,7 @@ DEM Analysis Web Application
 - Group mode: Upload multiple cases → comparison plots + summary report
 """
 import os
+import sys
 import re
 import csv
 import json
@@ -2737,7 +2738,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
             # parse atoms alone and return — webapp will still serve 3D viewer.
             if atom_files and not contact_files:
                 log = []
-                cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+                cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
                 cmd += atom_files + mesh_files + input_files + ['-o', results_dir]
                 result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
                 log.append({'step': 'Parse (atoms only)', 'stdout': result.stdout,
@@ -2787,7 +2788,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
 
     if atom_files and contact_files:
         # Normal path: parse LIGGGHTS dumps
-        cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+        cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
         cmd += atom_files + contact_files + mesh_files + input_files + ['-o', results_dir]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Parse', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
@@ -2796,7 +2797,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
     elif has_pre_atoms_only and contact_files:
         # Hybrid: atoms.csv (pre-copied into results_dir above) + contact_*.liggghts.
         # parse_liggghts detects the existing atoms.csv and skips atom parsing.
-        cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+        cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
         cmd += contact_files + mesh_files + input_files + ['-o', results_dir]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Parse (hybrid: atoms.csv + contact LIGGGHTS)',
@@ -2814,7 +2815,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
 
     if mode == 'bimodal':
         # Step 2: Bimodal contact analysis
-        cmd = ['python3', os.path.join(scripts, 'analyze_contacts_bimodal.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'analyze_contacts_bimodal.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
@@ -2823,13 +2824,13 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # Step 2b: Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Writes coverage_AM_*_mean_physics, area_AM전체_SE_total_physics,
         # area_SE_SE_total_physics into full_metrics.json + coverage_per_am.csv.
-        cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
+        cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
                     'stderr': result.stderr, 'rc': result.returncode})
 
         # Step 2c: Network solver (both contact modes) → sigma_*_mScm
-        cmd = ['python3', os.path.join(scripts, 'network_conductivity.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale),
                '--contact-mode', 'both']
@@ -2864,7 +2865,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # numerically unstable. Writes *_stage_e + stage_e_source into
         # full_metrics.json so the UI Stage E section auto-populates.
         try:
-            stage_e_cmd = ['python3',
+            stage_e_cmd = [sys.executable,
                             os.path.join(scripts, 'run_network_full_corrections.py'),
                             os.path.basename(results_dir), '--quiet']
             stage_e_result = subprocess.run(stage_e_cmd, capture_output=True,
@@ -2880,7 +2881,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
         # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
         try:
-            dual_cmd = ['python3',
+            dual_cmd = [sys.executable,
                         os.path.join(scripts, 'recompute_porosity_dual.py'),
                         '--dir', results_dir]
             dual_res = subprocess.run(dual_cmd, capture_output=True, text=True, timeout=None)
@@ -2892,7 +2893,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
         # Step 3: Basic figures
-        cmd = ['python3', os.path.join(scripts, 'generate_figures_bimodal.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'generate_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Basic Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
@@ -2900,25 +2901,25 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # Step 4: Advanced
         atoms_analyzed = os.path.join(results_dir, 'atoms_analyzed.csv')
         contacts_analyzed = os.path.join(results_dir, 'contacts_analyzed.csv')
-        cmd = ['python3', os.path.join(scripts, 'advanced_analysis_bimodal.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'advanced_analysis_bimodal.py'),
                atoms_analyzed, contacts_analyzed, '-o', results_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Advanced Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
 
-        cmd = ['python3', os.path.join(scripts, 'generate_advanced_figures_bimodal.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures_bimodal.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Advanced Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
 
         # Step 5: Bimodal specific
-        cmd = ['python3', os.path.join(scripts, 'bimodal_specific_analysis.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'bimodal_specific_analysis.py'),
                atoms_analyzed, contacts_analyzed, '-o', results_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Bimodal Specific', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
 
     else:
         # Standard mode
-        cmd = ['python3', os.path.join(scripts, 'analyze_contacts.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'analyze_contacts.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
@@ -2927,7 +2928,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # Dual-mode coverage + AM-SE/SE-SE totals (Hertzian vs Physics).
         # Populates *_mean_physics and area_*_total_physics keys in
         # full_metrics.json + coverage_per_am.csv (COMSOL-ready).
-        cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
+        cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'), case_id]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Coverage Physics vs Hertzian', 'stdout': result.stdout,
                     'stderr': result.stderr, 'rc': result.returncode})
@@ -2936,7 +2937,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # Writes sigma_full_mScm, sigma_bulk_net_mScm, electronic_*, thermal_*
         # into network_conductivity_*.json, then merges into full_metrics.json
         # so the analysis-summary tab Network Solver section auto-populates.
-        cmd = ['python3', os.path.join(scripts, 'network_conductivity.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'network_conductivity.py'),
                atoms_csv, contacts_csv, '-o', results_dir,
                '-t', type_map, '-s', str(scale),
                '--contact-mode', 'both']
@@ -2973,7 +2974,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         #   κ       : AM crystallinity (Wang 2022) AM_S=1.0, AM_P=0.50
         #            SE size-invariant (sulfide already glassy)
         try:
-            stage_e_cmd = ['python3',
+            stage_e_cmd = [sys.executable,
                             os.path.join(scripts, 'run_network_full_corrections.py'),
                             os.path.basename(results_dir), '--quiet']
             stage_e_result = subprocess.run(stage_e_cmd, capture_output=True,
@@ -2989,7 +2990,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         # Step 2e: Dual porosity (sphere-sum + union + overlap%) — auto-compute
         # so the UI shows ε_sphere / ε_union / overlap without a manual rerun.
         try:
-            dual_cmd = ['python3',
+            dual_cmd = [sys.executable,
                         os.path.join(scripts, 'recompute_porosity_dual.py'),
                         '--dir', results_dir]
             dual_res = subprocess.run(dual_cmd, capture_output=True, text=True, timeout=None)
@@ -3000,7 +3001,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
             log.append({'step': 'Dual porosity (sphere-sum / union / overlap)',
                         'stdout': '', 'stderr': str(_e), 'rc': 1})
 
-        cmd = ['python3', os.path.join(scripts, 'generate_figures.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'generate_figures.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Basic Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
@@ -3008,12 +3009,12 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
         atoms_analyzed = os.path.join(results_dir, 'atoms_analyzed.csv')
         contacts_analyzed = os.path.join(results_dir, 'contacts_analyzed.csv')
 
-        cmd = ['python3', os.path.join(scripts, 'advanced_analysis.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'advanced_analysis.py'),
                atoms_analyzed, contacts_analyzed, '-o', results_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Advanced Analysis', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
 
-        cmd = ['python3', os.path.join(scripts, 'generate_advanced_figures.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'generate_advanced_figures.py'),
                results_dir, '-o', figures_dir, '-s', str(scale)]
         result = subprocess.run(cmd, capture_output=True, text=True, timeout=None)
         log.append({'step': 'Advanced Figures', 'stdout': result.stdout, 'stderr': result.stderr, 'rc': result.returncode})
@@ -3028,7 +3029,7 @@ def run_pipeline(case_id, mode, type_map, scale=1000):
     # (typically a few seconds for one case).
     try:
         subprocess.Popen(
-            ['python3', os.path.join(scripts, 'build_metrics_db.py')],
+            [sys.executable, os.path.join(scripts, 'build_metrics_db.py')],
             cwd=os.path.dirname(scripts),
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
         )
@@ -3671,7 +3672,7 @@ def analyze(case_id):
                 else:
                     import time as _time
                     _t0 = _time.time()
-                    net_cmd = ['python3', os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
+                    net_cmd = [sys.executable, os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
                                atoms_csv, contacts_csv, '-o', results_dir,
                                '-t', meta['type_map'], '-s', str(meta.get('scale', 1000)),
                                '--contact-mode', 'both']
@@ -3731,7 +3732,7 @@ def analyze(case_id):
         # Idempotent — re-running just overwrites *_stage_e keys.
         try:
             scripts_dir = app.config['SCRIPTS_FOLDER']
-            stage_e_cmd = ['python3',
+            stage_e_cmd = [sys.executable,
                             os.path.join(scripts_dir, 'run_network_full_corrections.py'),
                             os.path.basename(results_dir), '--quiet']
             _se = subprocess.run(stage_e_cmd, capture_output=True,
@@ -3762,7 +3763,7 @@ def analyze(case_id):
                 print(f"  [Stage E post-check] {type(_exc).__name__}: {_exc}")
             # Refresh validation flags self-report card after Stage E.
             # backfill_validation_flags.py takes case NAMES as positional args.
-            bf_cmd = ['python3',
+            bf_cmd = [sys.executable,
                        os.path.join(scripts_dir, 'backfill_validation_flags.py'),
                        os.path.basename(results_dir)]
             try:
@@ -3857,7 +3858,7 @@ def retry_network(case_id):
                     net_error_msg = f"Missing CSV files"
                 else:
                     _t0 = _time.time()
-                    net_cmd = ['python3', os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
+                    net_cmd = [sys.executable, os.path.join(app.config['SCRIPTS_FOLDER'], 'network_conductivity.py'),
                                atoms_csv, contacts_csv, '-o', results_dir,
                                '-t', meta.get('type_map', '1:AM,2:SE'), '-s', str(meta.get('scale', 1000)),
                                '--contact-mode', 'both']
@@ -3922,7 +3923,7 @@ def retry_network(case_id):
                         # regenerated to stay in sync.  Same call shape as
                         # /analyze and archive_reanalyze.
                         try:
-                            subprocess.run(['python3',
+                            subprocess.run([sys.executable,
                                              os.path.join(app.config['SCRIPTS_FOLDER'],
                                                           'run_network_full_corrections.py'),
                                              case_id, '--quiet'],
@@ -4034,7 +4035,7 @@ def batch_rerun_physics():
 
                 # 1) Structure summary (τ_Dij, CN, coverage_hertz, path_hop_hertz, ...)
                 ac_script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
-                subprocess.run(['python3', os.path.join(scripts, ac_script),
+                subprocess.run([sys.executable, os.path.join(scripts, ac_script),
                                 c['atoms'], c['contacts'], '-o', c['results_dir'],
                                 '-t', type_map, '-s', scale],
                                capture_output=True, text=True, timeout=None)
@@ -4046,7 +4047,7 @@ def batch_rerun_physics():
                 #    legacy network_conductivity.json are all rewritten fresh
                 #    — no stale pre-patch data slipping into the merge.
                 with _network_solver_lock:
-                    subprocess.run(['python3', os.path.join(scripts, 'network_conductivity.py'),
+                    subprocess.run([sys.executable, os.path.join(scripts, 'network_conductivity.py'),
                                     c['atoms'], c['contacts'], '-o', c['results_dir'],
                                     '-t', type_map, '-s', scale,
                                     '--contact-mode', 'both'],
@@ -4114,7 +4115,7 @@ def batch_rerun_physics():
 
                 # 4) Physics coverage + path-physics metrics (read-modify-write,
                 #    preserves everything above).
-                subprocess.run(['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+                subprocess.run([sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                                 '--case-dir', c['case_dir']],
                                capture_output=True, text=True, timeout=None)
 
@@ -4124,7 +4125,7 @@ def batch_rerun_physics():
                 #    Same call shape as the /analyze pipeline; without this the
                 #    Trust card stays blank and the /audit dashboard shows the
                 #    case as 'no-stage-e' after a batch rerun.
-                subprocess.run(['python3',
+                subprocess.run([sys.executable,
                                  os.path.join(scripts, 'run_network_full_corrections.py'),
                                  c['cid'], '--quiet'],
                                capture_output=True, text=True, timeout=None)
@@ -4716,7 +4717,7 @@ def group_plots():
     y_max_sigma = request.form.get('y_max_sigma', '')  # optional unified σ y-axis (mS/cm)
 
     scripts = app.config['SCRIPTS_FOLDER']
-    cmd = ['python3', os.path.join(scripts, 'generate_comparison_plots.py'),
+    cmd = [sys.executable, os.path.join(scripts, 'generate_comparison_plots.py'),
            '-i'] + input_files + ['-n'] + names + ['-o', plot_dir, '-p'] + plots
     if group_sizes and len(group_sizes) > 1:
         cmd += ['--group-sizes', ','.join(group_sizes),
@@ -7085,14 +7086,14 @@ def archive_reanalyze(folder):
         for pyc in globmod.glob(os.path.join(scripts, '__pycache__', '*.pyc')):
             os.remove(pyc)
 
-        cmd = ['python3', os.path.join(scripts, 'parse_liggghts.py')]
+        cmd = [sys.executable, os.path.join(scripts, 'parse_liggghts.py')]
         cmd += atom_files + contact_files + mesh_files + input_files + ['-o', target]
         subprocess.run(cmd, capture_output=True, text=True, timeout=None)
 
         atoms_csv = os.path.join(target, 'atoms.csv')
         contacts_csv = os.path.join(target, 'contacts.csv')
         script = 'analyze_contacts_bimodal.py' if mode == 'bimodal' else 'analyze_contacts.py'
-        cmd = ['python3', os.path.join(scripts, script),
+        cmd = [sys.executable, os.path.join(scripts, script),
                atoms_csv, contacts_csv, '-o', target,
                '-t', type_map, '-s', str(scale)]
         subprocess.run(cmd, capture_output=True, text=True, timeout=None)
@@ -7100,7 +7101,7 @@ def archive_reanalyze(folder):
         # Dual-mode (Hertzian vs Physics) coverage + path-hop metrics.
         # Uses --case-dir because archive layouts can be nested under
         # webapp/archive/<category>/<case>, so find_case_dir(basename) may fail.
-        cmd = ['python3', os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
+        cmd = [sys.executable, os.path.join(scripts, 'coverage_physics_vs_hertzian.py'),
                '--case-dir', target]
         subprocess.run(cmd, capture_output=True, text=True, timeout=None)
 
@@ -7111,7 +7112,7 @@ def archive_reanalyze(folder):
         # AND the validation_flags self-report card → Trust card on the
         # single.html page header is populated immediately.
         try:
-            stage_e_cmd = ['python3',
+            stage_e_cmd = [sys.executable,
                             os.path.join(scripts, 'run_network_full_corrections.py'),
                             os.path.basename(target), '--quiet']
             subprocess.run(stage_e_cmd, capture_output=True, text=True,
@@ -7826,7 +7827,7 @@ def group_fitting_report():
     os.makedirs(report_dir, exist_ok=True)
 
     scripts = app.config['SCRIPTS_FOLDER']
-    cmd = ['python3', os.path.join(scripts, 'generate_fitting_report.py'),
+    cmd = [sys.executable, os.path.join(scripts, 'generate_fitting_report.py'),
            '-i'] + input_files + ['-n'] + names + ['-o', report_dir]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
 
@@ -7860,7 +7861,7 @@ def scaling_report():
     """Generate and download scaling law report."""
     import subprocess
     scripts = app.config['SCRIPTS_FOLDER']
-    cmd = ['python3', os.path.join(scripts, 'generate_scaling_report.py')]
+    cmd = [sys.executable, os.path.join(scripts, 'generate_scaling_report.py')]
     result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
     if result.returncode != 0:
         return jsonify({'error': result.stderr[-500:]}), 500
