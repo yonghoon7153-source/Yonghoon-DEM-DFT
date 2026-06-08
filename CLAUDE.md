@@ -226,19 +226,26 @@ Two cap-calibration lines (가)/(나):
         Pcur=mean(prs) = COMMON Pmean (resolution-biased — the very problem
         mpm2d_jamming fixed with a self-normalised readout).
       - mpm2d_real9.py = real E=24/σ_y=0.30 J2 attempt (also no cap).
-    Keeps Furnas dip ✓ but pure J2 isochoric → SE shape-flows to fill voids.
-    RESULTS (uma *.npy): RIGID/RCP mpm2d_PS_rcp.npy → dip @ AM~70-80 wt%, all 5
-    P:S (10:0@0.3: AM80=23.6 min,AM90=32,AM100=39) — cross-validates
-    mpm2d_jamming+geometry.  PLASTIC mpm2d_PS_pressure.npy (AM 0/100 only) →
-    pure-SE = 0.0 % at every P.  vis_/viszoom_E1.53_sy0.15.png morphology
-    MATCHES SEM (core-preserved + boundary-flattening) → champion validated on
-    SHAPE.  ⚠ BUT pure-SE porosity 0% ≠ experiment (Minnmann 300→10%): NO cap →
-    no physical residual porosity (wall_floor only blocks negative).  This is
-    where "더 맞는 물리(cap)" is needed.  NOTE a material volumetric cap does
-    NOT trivially fix resolved-grain over-densification (void-filling is
-    isochoric shape-flow, not material volume change) — cap is natural in the
-    homogenized (나); resolved-grain needs jamming/contact-rigidity instead.
-    OPEN — DISCUSS, do NOT solo-decide.
+    RESULTS (uma):
+      - dbg320.log: pure-SE (AM0) @300MPa = 11.4% porosity ✓ (≈ Minnmann
+        300→10%).  450/600MPa readouts = 0.0 are SENTINELS (out.get default —
+        soft SE can't build 450+MPa mean-pressure before the wall hits
+        wall_floor; NOT real 0%).  The old npy AM0=0/0/0 were these sentinels —
+        my earlier "over-densify" reading was WRONG.
+      - vis_/viszoom_E1.53_sy0.15.png morphology MATCHES SEM (core-preserved +
+        boundary-flattening).
+      - RIGID/RCP mpm2d_PS_rcp.npy → Furnas dip @ AM~70-80 wt%, all 5 P:S
+        (10:0@0.3: AM80=23.6 min,AM90=32,AM100=39) — cross-validates
+        mpm2d_jamming + de Larrard geometry.
+    ⇒ champion 1.53/0.15 VALIDATED on BOTH morphology (SEM) AND the pure-SE
+    porosity anchor (300→11.4%).  Softening E 24→1.53 is the PHYSICAL proxy for
+    granular rearrangement/GB-slide/micro-fracture (frame [2], triple cross-
+    validated); real E=24 (mpm2d_real9) UNDER-densifies (33–38%, too stiff) and
+    is NOT more physical (MPM continuum lacks the contact network those
+    mechanisms need — frame [1] LIMITS).
+    OPEN: (i) plastic DIP full sweep (AM 0..100) not yet run — only endpoints;
+    (ii) common-Pmean readout returns 0.0 for unreached high P → use
+    self-normalised readout (mpm2d_jamming) or report por@max-P.  DISCUSS.
   • (나) homogenized REV Drucker-Prager-CAP — scripts/cap_compaction_heckel.py.
     real E=24, plastic VOLUMETRIC compaction, p_c diverges at φ_min → physical
     residual porosity.  Clean multi-pressure Heckel (100→13.9/300→10.0/600→8.3%,
