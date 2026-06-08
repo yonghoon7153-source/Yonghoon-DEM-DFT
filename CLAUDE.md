@@ -206,6 +206,52 @@ data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
   mechanics/porosity but does NOT replace DEM for transport σ (which needs the
   Kirchhoff contact network).  DEM = transport, MPM = mechanics/porosity check.
 
+### ★ MPM cap/champion + dip resolution-invariance (TIMELOG 2026-06-07→08) ★
+Controlling record for the SE plastic-compaction physics.  DO NOT lose this to
+context compaction again (this section exists BECAUSE compaction dropped it once).
+
+SE mechanical parameters — 3 layers (not just one E_eff):
+  • real bulk:        E=24 GPa, σ_y 0.05–0.30 GPa (LPSCl single-crystal lit).
+  • DEM effective:    E_eff=1.35 GPa (18× softened); Heckel σ_y_eff≈46 MPa.
+  • MPM champion:     E_eff=1.53 GPa, σ_y=0.15 GPa (softened-J2) — matches SEM
+                      (vis_zoom ④) + pure-SE ≈86%.  ★ HELD / 유보 (workaround).
+
+Two cap-calibration lines (가)/(나):
+  • (가) resolved-grain MPM — scripts/mpm2d_PS_pressure.py (committed on uma
+    a372a9a, PUSH PENDING — uma has no GitHub auth) + scripts/mpm2d_real9.py
+    (in repo: real E=24, σ_y=0.30, von-Mises J2).  Keeps the Furnas dip ✓ BUT
+    pure J2 is isochoric → grains shape-flow to fill ALL voids → over-densifies
+    toward 0 porosity.  ★ CHOSEN line ("더 맞는 물리" = real E=24 + true
+    plasticity); has progressed (results on uma).  cap status in (가) TBC.
+  • (나) homogenized REV Drucker-Prager-CAP — scripts/cap_compaction_heckel.py.
+    real E=24, plastic VOLUMETRIC compaction, p_c diverges at φ_min → physical
+    residual porosity.  Clean multi-pressure Heckel (100→13.9/300→10.0/600→8.3%,
+    Minnmann 300→10% anchor; φ0=0.5, φ_min=0.03, b=2.5) but NO dip (0D).
+    COMPANION reference for the target curve, NOT the chosen path.
+
+WHY 1.53/0.15 is HELD: softening E 24→1.53 is a workaround for J2's missing
+plastic volume change.  "더 맞는 물리" = real E=24 + a proper volumetric cap so
+(가) keeps the dip AND stops at a physical residual porosity instead of 0.
+OPEN: confirm (가) cap status / cap strategy — DISCUSS, do NOT solo-decide.
+
+Dip resolution-invariance — CONFIRMED (docs/mpm_dip_resolution_invariance.md):
+  • grid-free geometric (de Larrard, self-validated to Furnas ideal): dip @
+    AM 85–90 wt%, robust across β 0.64–0.88 AND P:S 7:3/5:5/3:7.
+  • rigid-jamming MPM (scripts/mpm2d_jamming.py, E=24, self-normalised readout)
+    320 vs 512: shape identical (Pearson ≥0.992; dip pinned AM95% both res; all
+    3 P:S).  Resolution shifts only a ~5%p constant offset, converging toward
+    the grid-free geometry.  → dip trend resolution-invariant (frame [3]),
+    cross-validated by 2 independent tools (frame [4]).
+  • mpm2d_jamming readouts f05(early/geometric)…f50(deep/plastic); --e-se /
+    --yield-se test plastic-SE dip survival.  PLASTIC-SE dip test PENDING.
+
+Stage E webapp coverage (webapp results/<id>/ authoritative):
+  • Tier1 ✓ 104; Tier2 ⚠ 7 (σ_e=None degenerate → "—" correct, EXCL: S_1,
+    particulate_1/4, 1mAh_100_2/3/8, 1mAh_5_AMP_S2); Tier3 ⛔ 16 (no Hertz =
+    never computed → fix by run_network_full_corrections.py <ids>: 1mAh_8_*×8,
+    8mAh_real_6/11/12/13, 2mAh_real_6/11/16, 1mAh_100_4).  Earlier "17 broken"
+    was inflated by 7 archive/timestamp DUPLICATES; real broken = 7.
+
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
 microstructure matching those numbers → eventually stack different
