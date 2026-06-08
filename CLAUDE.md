@@ -269,11 +269,15 @@ Dip resolution-invariance — CONFIRMED (docs/mpm_dip_resolution_invariance.md):
     --yield-se test plastic-SE dip survival.  PLASTIC-SE dip test PENDING.
 
 Stage E webapp coverage (webapp results/<id>/ authoritative):
-  • Tier1 ✓ 104; Tier2 ⚠ 7 (σ_e=None degenerate → "—" correct, EXCL: S_1,
-    particulate_1/4, 1mAh_100_2/3/8, 1mAh_5_AMP_S2); Tier3 ⛔ 16 (no Hertz =
-    never computed → fix by run_network_full_corrections.py <ids>: 1mAh_8_*×8,
-    8mAh_real_6/11/12/13, 2mAh_real_6/11/16, 1mAh_100_4).  Earlier "17 broken"
-    was inflated by 7 archive/timestamp DUPLICATES; real broken = 7.
+  • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
+    run_network_full_corrections.py (2026-06-08): 9 of 16 → complete
+    (1mAh_8_AMS_S1/S2/S3/S5, 2mAh_real_6/11, 8mAh_real_6/12/13; the latter two
+    8mAh got σ_e fracture-reduced 10.5→5.5 / 11.2→3.5).
+  • Tier2 ⚠ now 14 = 7 orig (σ_e=None: S_1, particulate_1/4, 1mAh_100_2/3/8,
+    1mAh_5_AMP_S2) + 7 new degenerate-channel ("—" correct): σ_e=0 AM-no-perc
+    (1mAh_100_4, 1mAh_8_S1/S2/S3/S4), σ_i=0 SE-no-perc (2mAh_real_16,
+    8mAh_real_11).  Tier3 ⛔ 0.  Earlier "17 broken" was inflated by archive
+    DUPLICATES; real un-fixable = these degenerate-network cases only.
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
