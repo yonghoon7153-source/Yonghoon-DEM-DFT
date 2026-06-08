@@ -456,13 +456,16 @@ def list_cases():
                 meta['is_unit_cell']     = False
                 meta['rve_area_um2']     = None
                 meta['base_case']        = None
-        # Porosity for the list view (prefer recomputed sphere-sum; fall back to
-        # legacy 'porosity').  union + overlap shown in the row tooltip.
-        meta['porosity'] = (m.get('porosity_spheresum')
-                            if m.get('porosity_spheresum') is not None
-                            else m.get('porosity'))
-        meta['porosity_union']        = m.get('porosity_union')
-        meta['overlap_fraction_pct']  = m.get('overlap_fraction_pct')
+
+            # Porosity for the list view (prefer recomputed sphere-sum; fall
+            # back to legacy 'porosity').  union + overlap shown in the row
+            # tooltip.  (Inside the metrics-exist guard so `m` is always defined;
+            # cases with no full_metrics.json simply have no porosity keys.)
+            meta['porosity'] = (m.get('porosity_spheresum')
+                                if m.get('porosity_spheresum') is not None
+                                else m.get('porosity'))
+            meta['porosity_union']        = m.get('porosity_union')
+            meta['overlap_fraction_pct']  = m.get('overlap_fraction_pct')
         cases.append(meta)
     return cases
 
