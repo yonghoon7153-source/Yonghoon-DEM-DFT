@@ -1,0 +1,53 @@
+{
+  "property": "literature_tension_audit",
+  "description": "Audit of comp1 (LPSCl) vs modelc (LPSCl1.6) post-processing results that run AGAINST, or whose MECHANISM differs from, the dominant experimental/literature narrative — analogous to the oxidation-stability case. Purpose: pre-empt reviewer/seminar attacks by stating each tension and the intrinsic-vs-extrinsic / bulk-vs-interface / DFT-vs-MLIP reconciliation up front.",
+  "audit_date": "2026-06-08",
+  "tensions": {
+    "1_oxidation_stability": {
+      "severity": "documented (see oxidation_stability.json)",
+      "our_result": "Intrinsic bulk grand-potential ESW: oxidation onset IDENTICAL (~2.14 V, S2--limited) for comp1 and modelc; Cl- inert to ~3.3 V.",
+      "literature": "Zuo et al. Angew 2023: higher-Cl Li5.5PS4.5Cl1.5 is LESS electrochemically stable in real cells (earlier oxidation onset, worse cathode/carbon interface, worse thermal/moisture).",
+      "reconciliation": "Our calc = intrinsic BULK thermodynamics; literature penalty = INTERFACE reactivity + kinetics + weaker self-passivation, which our calc excludes. Both correct for what they measure.",
+      "type": "intrinsic-bulk vs interface/kinetics"
+    },
+    "2_conductivity_mechanism_Ea_vs_prefactor": {
+      "severity": "IMPORTANT — newly surfaced; mechanism partially opposes dominant narrative",
+      "our_result": "UMA-MLIP Arrhenius: modelc (LPSCl1.6) Ea=0.224 eV is HIGHER than comp1 (LPSCl) Ea=0.172 eV. modelc is still 2.9-3.5x faster at 600-1000 K, but via an ~8x larger PREFACTOR D0 (vacancy-rich = more carriers/paths), NOT via a lower barrier.",
+      "literature": "Dominant narrative (Minafra/Kraft 'Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x', Solid State Ionics 2020; Cl-/Al-doped studies): higher Cl + Li vacancy -> larger Cl-/S2- site disorder -> LOWER activation energy -> higher conductivity. i.e. the gain is BARRIER-driven (disorder flattens the landscape).",
+      "tension": "Our MLIP attributes the modelc conductivity gain to CARRIER/PREFACTOR with a slightly HIGHER Ea; the textbook story attributes it to a LOWER Ea from Cl/S disorder. Direction of the Ea change (comp1->modelc) is OPPOSITE to the disorder-lowers-Ea narrative.",
+      "nuance_softening_the_tension": [
+        "Absolute values are NOT off: our modelc Ea=0.224 matches Schlem 2020 Cl-rich (~0.22) exactly; comp1 0.172 is within the LPSCl experimental spread (0.16-0.25). The TENSION is in the relative direction/mechanism, not the magnitudes.",
+        "Experimental Ea for Cl-rich is itself scattered (0.22-0.35 reported) and synthesis-dependent (ball-milled disordered vs crystalline differ); the 'disorder lowers Ea' rule is not universal.",
+        "db li_transport.json already flags: UMA overestimates transport 3-5x; 3-point Arrhenius extrapolation to 300 K is uncertain. The ROBUST claim is the OBSERVED faster modelc D at 600-1000 K (matches experimental sigma(LPSCl1.6)>sigma(LPSCl)), NOT the Ea-vs-prefactor decomposition."
+      ],
+      "recommended_framing": "State the robust, attack-proof claim: modelc conducts faster (matches experiment). Present the Ea-vs-prefactor split as a HYPOTHESIS our MLIP suggests (carrier/vacancy-rich prefactor), explicitly noting it differs from the disorder-lowers-Ea narrative and that the mechanism decomposition carries MLIP+extrapolation uncertainty. Do NOT assert 'the gain is purely prefactor, not barrier' as settled.",
+      "type": "DFT/MLIP-mechanism vs experimental-narrative"
+    },
+    "3_elastic_vacancy_paradox": {
+      "severity": "documented (see elastic.json intrinsic_vs_extrinsic + vs_modelc_v3_same_method headline)",
+      "our_result": "DFT 0K clamped-ion: comp1 ~ modelc E_VRH identical (52.31 vs 52.30, +-2%). BM-EOS bulk B0: modelc SOFTER (21.7 vs 26.2). Within-family 'halide up -> E down' (Br softer than Cl).",
+      "literature": "Experiment reports polycrystalline LPSCl1.6 STIFFER than LPSCl (Young's modulus trend reversed vs the intrinsic Br-up->E-down rule).",
+      "reconciliation": "Intrinsic single-crystal DFT (bulk) shows ~identical/softer; the experimental stiffening is EXTRINSIC — grain-boundary pinning by Li vacancies in the polycrystal (GB-mediated, not a bulk-modulus effect). Same intrinsic-vs-extrinsic split as oxidation. DFT 0K legitimately 'misses' the experimental Young's modulus delta because it is a microstructural effect.",
+      "type": "intrinsic-bulk vs extrinsic-polycrystalline(GB)"
+    },
+    "4_band_gap_absolute": {
+      "severity": "minor — absolute offset, comparison still valid",
+      "our_result": "Eg ~1.76 (comp1) / 1.82 (modelc) eV, USPP-PBE + DOS-threshold.",
+      "literature": "PBE PAW/band-structure for Li6PS5Cl ~2.15-2.45 eV (and optical experimental higher still).",
+      "reconciliation": "~0.3-0.4 eV underestimate from USPP + DOS-threshold method; the offset is the SAME for both systems, so the comp1-vs-modelc DELTA (modelc gap slightly larger) is robust. CAVEAT: do not quote our absolute 1.76 eV against literature without the method note.",
+      "type": "method (pseudo/threshold) underestimate"
+    },
+    "5_li3n_uma_topology_failure": {
+      "severity": "documented (see diffusion.json) — method failure, parked",
+      "our_result": "UMA-s-1p1 (oc20/omat) inverts the Li3N(001) adsorption topology: prefers hollow/bridge, misses the Li+-N3- on-top charge-transfer well; gives 0.237 eV (hollow) vs DFT/paper on-N well 0.133 eV (Cui 2023).",
+      "literature": "Cui et al. 2023 DFT-NEB: on-N is the minimum, barrier 0.133 eV.",
+      "reconciliation": "Foundation MLIP failure for the ionic Li3N charge-transfer surface; NOT used for the paper. Paper claim falls back to DFT/literature (Li3N ~0.133 vs carbon ~0.24-0.30 -> ~2x). This is a model-limitation tension, not a physics claim against literature.",
+      "type": "MLIP-failure vs DFT/experiment"
+    }
+  },
+  "summary": {
+    "same_flavor_as_oxidation": ["1_oxidation_stability", "3_elastic_vacancy_paradox"],
+    "most_important_new_finding": "2_conductivity_mechanism_Ea_vs_prefactor — our MLIP suggests a prefactor/carrier-driven gain (slightly HIGHER Ea for Cl-rich), whereas the dominant literature narrative is disorder-LOWERED Ea. Needs the same careful 'robust observation vs uncertain mechanism' framing we used for oxidation.",
+    "unifying_theme": "Wherever a property is governed by the PS4 covalent framework or single-crystal bulk thermodynamics (bonding, oxidation onset, clamped elastic, gap shape), comp1 ~ modelc and our intrinsic calcs are clean. Wherever the real-world behavior is governed by EXTRINSIC factors (interfaces, grain boundaries, kinetics, carrier counting, microstructure), the literature trend diverges from our intrinsic calc — and that divergence is itself the story (intrinsic bulk unchanged; the Cl/vacancy effect is extrinsic/kinetic)."
+  }
+}
