@@ -291,6 +291,10 @@ Stage E webapp coverage (webapp results/<id>/ authoritative):
     (1mAh_100_4, 1mAh_8_S1/S2/S3/S4), σ_i=0 SE-no-perc (2mAh_real_16,
     8mAh_real_11).  Tier3 ⛔ 0.  Earlier "17 broken" was inflated by archive
     DUPLICATES; real un-fixable = these degenerate-network cases only.
+  • ⚠ GOTCHA: webapp reads results/<TIMESTAMP-cid>/; run_network_full_corrections
+    matches by leaf name, so the first backfill on readable case-names updated
+    only the archive/readable copies (webapp unchanged).  Had to RE-RUN on the
+    TIMESTAMP cids (the uploads/ dir names) to update the SERVED copies.
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
