@@ -175,9 +175,9 @@ def main():
         lab = labels[k] if k < len(labels) else f'snap{k}'
         ax.set_title(f'{lab}\nporosity {por*100:.0f}%', fontsize=10)
     fig.colorbar(sc, ax=axs.tolist(), shrink=0.7, label='SE accumulated plastic strain Σdg')
-    fig.suptitle(f'(가) champion MPM morphology — AM {AM_WT:.0f}wt% P:S {PP}:{SS}, '
-                 f'E=1.53/σ_y=0.15 (n_grid={n_grid})\n'
-                 'AM rigid (grey) · SE plastic (hot=more flow) → core-preserved + boundary-flattening',
+    fig.suptitle(f'champion MPM morphology (line-ga) — AM {AM_WT:.0f}wt% P:S {PP}:{SS}, '
+                 f'E=1.53/sy=0.15 (n_grid={n_grid})\n'
+                 'AM rigid (grey) - SE plastic (hot=more flow) -> core-preserved + boundary-flattening',
                  fontsize=11)
     out = f'mpm2d_morphology_AM{int(AM_WT)}_n{n_grid}.png'
     plt.savefig(out, dpi=130, bbox_inches='tight'); print(f"saved {out}", flush=True)
