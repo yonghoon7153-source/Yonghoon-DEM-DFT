@@ -80,13 +80,15 @@ def analyze(pd, comp, mu_Li_ref, label, comp_str):
     steps = []
     for p in profile:
         mu = float(p["chempot"])
-        steps.append({
+        step = {
             "mu_Li_eV": round(mu, 4),
             "V_vs_Li": round(mu_Li_ref - mu, 3),
             "evolution_Li": round(float(p["evolution"]), 4),
             "reaction": rxn_to_str(p["reaction"]),
-            "energy_per_atom": round(float(p["energy"]), 5),
-        })
+        }
+        if "energy" in p and p["energy"] is not None:
+            step["energy_per_atom"] = round(float(p["energy"]), 5)
+        steps.append(step)
 
     # The "as-synthesized" composition is stable where its equilibrium Li
     # content equals the nominal Li content (evolution == n_Li_nominal).
