@@ -266,7 +266,20 @@ Dip resolution-invariance — CONFIRMED (docs/mpm_dip_resolution_invariance.md):
     the grid-free geometry.  → dip trend resolution-invariant (frame [3]),
     cross-validated by 2 independent tools (frame [4]).
   • mpm2d_jamming readouts f05(early/geometric)…f50(deep/plastic); --e-se /
-    --yield-se test plastic-SE dip survival.  PLASTIC-SE dip test PENDING.
+    --yield-se test plastic-SE dip survival.  PLASTIC-SE dip test DONE
+    2026-06-08 (champion E=1.53/σ_y=0.15, 320 vs 512):
+      - Absolute porosity now REALISTIC: f50 512 = 9–16% (AM90 10.6%) ≈
+        Minnmann/exp ~10–16% (vs rigid 30–50%) — plasticity truly densifies.
+      - dip APPEARS (min AM70–90, uptick AM100) BUT attenuated + LESS
+        resolution-invariant: Pearson(320,512) f05=0.89 / f50=0.80 (vs rigid
+        0.99); dip location shifts (f50 320@85 vs 512@70).  Deeper compaction
+        (f50) is LESS invariant than early (f05) → plasticity erodes the
+        resolution-invariance.
+      - PHYSICS: clean resolution-invariant dip is a GEOMETRIC property
+        (rigid); plastic flow of the small SE (resolution-sensitive) partially
+        erases the dip AND its resolution-invariance (frame [3] quantified +
+        new finding).  → champion plastic = real porosity/morphology;
+        geometry/rigid = clean dip trend (frame [5] division).
 
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
