@@ -89,6 +89,9 @@ def main():
     ap.add_argument("--show_atoms", action="store_true", default=False,
                     help="overlay atoms as small markers (off → clean iso only)")
     ap.add_argument("--dpi", type=int, default=300)
+    ap.add_argument("--label", default="modelC_v3 (LPSCl1.6)",
+                    help="system label shown in the plot title "
+                         "(e.g. 'comp1 (LPSCl)')")
     args = ap.parse_args()
 
     try:
@@ -148,7 +151,7 @@ def main():
     ax.set_xlim(xmin, xmax); ax.set_ylim(ymin, ymax); ax.set_zlim(zmin, zmax)
     ax.set_box_aspect((xmax-xmin, ymax-ymin, zmax-zmin))
     ax.set_xlabel("x (Å)"); ax.set_ylabel("y (Å)"); ax.set_zlabel("z (Å)")
-    ax.set_title(f"ELF iso-surface @ {args.iso} — modelC_v3 (LPSCl1.6)",
+    ax.set_title(f"ELF iso-surface @ {args.iso} — {args.label}",
                  fontsize=12)
     # Remove grid
     for axis in (ax.xaxis, ax.yaxis, ax.zaxis):

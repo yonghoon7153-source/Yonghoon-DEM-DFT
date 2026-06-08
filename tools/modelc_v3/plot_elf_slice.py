@@ -141,6 +141,9 @@ def main():
     ap.add_argument("--show_isolines",
                     action="store_true", default=False,
                     help="overlay ELF iso-contours at 0.5 and 0.75")
+    ap.add_argument("--label", default="modelC_v3 (LPSCl1.6)",
+                    help="system label shown in the plot title "
+                         "(e.g. 'comp1 (LPSCl)')")
     args = ap.parse_args()
 
     data, origin, voxels, atoms = read_cube(Path(args.cube))
@@ -190,7 +193,7 @@ def main():
 
     ax.set_xlabel(xlab); ax.set_ylabel(ylab)
     ax.set_xlim(extent[0], extent[1]); ax.set_ylim(extent[2], extent[3])
-    ax.set_title(f"ELF slice ({args.axis}={args.frac:.2f}) — modelC_v3 (LPSCl1.6)",
+    ax.set_title(f"ELF slice ({args.axis}={args.frac:.2f}) — {args.label}",
                  fontsize=12)
     plt.tight_layout()
     plt.savefig(args.out, dpi=args.dpi, bbox_inches='tight', facecolor='white')
