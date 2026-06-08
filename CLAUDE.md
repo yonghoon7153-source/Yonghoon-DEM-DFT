@@ -217,12 +217,28 @@ SE mechanical parameters — 3 layers (not just one E_eff):
                       (vis_zoom ④) + pure-SE ≈86%.  ★ HELD / 유보 (workaround).
 
 Two cap-calibration lines (가)/(나):
-  • (가) resolved-grain MPM — scripts/mpm2d_PS_pressure.py (committed on uma
-    a372a9a, PUSH PENDING — uma has no GitHub auth) + scripts/mpm2d_real9.py
-    (in repo: real E=24, σ_y=0.30, von-Mises J2).  Keeps the Furnas dip ✓ BUT
-    pure J2 is isochoric → grains shape-flow to fill ALL voids → over-densifies
-    toward 0 porosity.  ★ CHOSEN line ("더 맞는 물리" = real E=24 + true
-    plasticity); has progressed (results on uma).  cap status in (가) TBC.
+  • (가) resolved-grain MPM (uma ~/work/mpm/, PUSH PENDING — uma no GitHub auth).
+    CODE READ 2026-06-08:
+      - mpm2d_PS_pressure.py = ★CHAMPION run: lame(1.53,0.30)+YIELD_SE=0.15
+        (E=1.53/σ_y=0.15), HARD_SE=10 work-hardening, von-Mises J2 (+0.5·tr →
+        STILL isochoric, NO cap).  Over-compression blocked by wall_floor=
+        top_full+0.002 (geometric full-pack clamp, NOT a cap).  Readout =
+        Pcur=mean(prs) = COMMON Pmean (resolution-biased — the very problem
+        mpm2d_jamming fixed with a self-normalised readout).
+      - mpm2d_real9.py = real E=24/σ_y=0.30 J2 attempt (also no cap).
+    Keeps Furnas dip ✓ but pure J2 isochoric → SE shape-flows to fill voids.
+    RESULTS (uma *.npy): RIGID/RCP mpm2d_PS_rcp.npy → dip @ AM~70-80 wt%, all 5
+    P:S (10:0@0.3: AM80=23.6 min,AM90=32,AM100=39) — cross-validates
+    mpm2d_jamming+geometry.  PLASTIC mpm2d_PS_pressure.npy (AM 0/100 only) →
+    pure-SE = 0.0 % at every P.  vis_/viszoom_E1.53_sy0.15.png morphology
+    MATCHES SEM (core-preserved + boundary-flattening) → champion validated on
+    SHAPE.  ⚠ BUT pure-SE porosity 0% ≠ experiment (Minnmann 300→10%): NO cap →
+    no physical residual porosity (wall_floor only blocks negative).  This is
+    where "더 맞는 물리(cap)" is needed.  NOTE a material volumetric cap does
+    NOT trivially fix resolved-grain over-densification (void-filling is
+    isochoric shape-flow, not material volume change) — cap is natural in the
+    homogenized (나); resolved-grain needs jamming/contact-rigidity instead.
+    OPEN — DISCUSS, do NOT solo-decide.
   • (나) homogenized REV Drucker-Prager-CAP — scripts/cap_compaction_heckel.py.
     real E=24, plastic VOLUMETRIC compaction, p_c diverges at φ_min → physical
     residual porosity.  Clean multi-pressure Heckel (100→13.9/300→10.0/600→8.3%,
