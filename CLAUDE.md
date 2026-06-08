@@ -280,6 +280,14 @@ Dip resolution-invariance — CONFIRMED (docs/mpm_dip_resolution_invariance.md):
         erases the dip AND its resolution-invariance (frame [3] quantified +
         new finding).  → champion plastic = real porosity/morphology;
         geometry/rigid = clean dip trend (frame [5] division).
+      - 768 CONVERGENCE (2026-06-08): Pearson(512,768) f50 = 0.94 (UP from 0.80
+        at 320,512); dip pinned AM70 at BOTH 512 & 768; f50 abs 8–9% ≈ exp.
+        ⇒ the plastic dip's grid-sensitivity is an UNDER-RESOLUTION artifact of
+        the small SE — as the grid refines (768) the SE plastic flow converges
+        and the plastic dip BECOMES resolution-invariant too.  (f50 does NOT
+        converge to the geometry curve — plastic densifies BELOW rigid packing,
+        as expected.)  MPM 4-step COMPLETE: rigid-invariant / plastic-converges /
+        champion morphology+porosity validated / cap dead-end.
 
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
