@@ -197,13 +197,49 @@
   },
 
   "mlip_600K_snapshot_v3": {
-    "_version": "v3 (modelC_v3 only — annealed Li, DFT-relaxed V0 starting structure)",
-    "_purpose": "Re-run of MLIP 600K snapshot starting from modelC_v3 V0. Same composition (Li5.4PS4.4Cl1.6) as modelc in v1 row above but DIFFERENT MLIP (UMA-s-1p1 foundation model, NOT MACE) and different starting structure.",
+    "_version": "v3 (comp1_v3 + modelC_v3 — BOTH annealed Li, DFT-relaxed V0 starting structures, SAME UMA + SAME script → directly comparable)",
+    "_purpose": "MLIP 600K snapshot elastic for the Paper#1 pair. comp1_v3 (LPSCl) added 2026-06-08 (v100 PID 1851258, runtime 46.7 min); modelC_v3 (LPSCl1.6) from 2026-06-02. Identical method/params → the comp1-vs-modelc 600K comparison is method-clean (UMA-vs-UMA). Do NOT cross-compare absolute magnitude with the DFT-0K rows (UMA≠QE absolute scale); only within-method comparisons are valid.",
     "method": "UMA-s-1p1 (task=omat) Langevin 600 K, equilib 10 ps + prod 20 ps, 5 snapshots, FIRE quench (fmax 0.01), per-strain FIRE RELAXED-ION Cij (fmax 0.05) full 6×6, no QE sign flip (FAIRChem returns physical-convention stress).",
     "script": "tools/modelc_v3/elastic_mlip_600K.py",
-    "completed_date": "2026-06-02",
-    "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json",
+    "completed_date": "2026-06-02 (modelc_v3); 2026-06-08 (comp1_v3)",
+    "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json ; container:/home/ubuntu/work/runs/comp1_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json",
+    "_three_regime_synthesis": {
+      "headline": "modelc's compositional disorder PRE-JAMS (already at 0K) the soft collective Li-sublattice shear mode that comp1 only loses upon heating. → the relaxed-ion 0K inversion (comp1<modelc) DISAPPEARS/RE-FLIPS at 600K (comp1>modelc).",
+      "clamped_0K_DFT": "comp1 ≈ modelc (E≈52.3, G≈20.1, identical) — frozen-ion = pure PS4 framework bonding stiffness, which Cl-enrichment+vacancy leaves UNCHANGED.",
+      "relaxed_ion_0K_DFT": "comp1 (E=22.06, G=8.13) < modelc (E=27.66, G≈10) — INVERSION. comp1's fully ordered Li sublattice keeps a soft collective shear mode alive (Born screening collapses G); modelc's Cl-excess + Li-vacancy disorder jams that mode → stiffer.",
+      "mlip_600K_UMA": "comp1 (E=59.71, G=24.60) > modelc (E=52.72, G=21.85) — inversion GONE. Thermal motion disorders comp1's Li sublattice too, jamming its soft mode (G 8.1→24.6, ~3×); modelc was already jammed so rises less; comp1 ends slightly stiffer (no permanent vacancies as residual soft spots).",
+      "operating_T_takeaway": "At device temperature both are jammed → PS4 framework dominates → similar stiffness; modelc marginally softer due to permanent Li-vacancy soft spots. Conductivity gain (modelc 2.9–3.5× faster Li) does NOT come at a mechanical-rigidity cost at operating T.",
+      "cross_method_caveat": "UMA-600K vs DFT-0K absolute magnitudes are NOT comparable (different reference). E.g. comp1 600K E=59.7 > clamped-0K E=52.3 is a UMA-vs-QE scale artifact, not real thermal stiffening. Compare ONLY within method."
+    },
     "results": [
+      {
+        "id": "comp1_v3",
+        "version": "v3",
+        "C11": 64.50, "C11_std": 2.39,
+        "C12": 19.87, "C12_std": 0.42,
+        "C44": 26.27, "C44_std": 0.89,
+        "K_VRH": 34.74, "K_VRH_std": 0.44,
+        "G_VRH": 24.60, "G_VRH_std": 0.36,
+        "E_VRH": 59.71, "E_VRH_std": 0.82,
+        "nu": 0.2136, "nu_std": 0.0018,
+        "Zener_A": 1.136,
+        "n_snapshots": 5,
+        "T_K": 600,
+        "equilib_ps": 10,
+        "prod_ps": 20,
+        "strain_ion_method": "per-strain FIRE relax (fmax 0.05) — true finite-T elastic",
+        "v0_source": "db/structures/comp1_V0_k444.xyz",
+        "runtime_min": 46.7,
+        "Cij_diag_raw": "C11=[65.68,62.53,65.30] C44=[25.87,26.19,26.74] (near-isotropic, Zener 1.14)",
+        "vs_modelc_v3_600K_SAME_METHOD": {
+          "C11": "+15.8% (55.71 → 64.50) comp1 stiffer",
+          "C44": "+14.2% (23.00 → 26.27) comp1 stiffer shear",
+          "K_VRH": "+16.0% (29.94 → 34.74)",
+          "G_VRH": "+12.6% (21.85 → 24.60)",
+          "E_VRH": "+13.2% (52.72 → 59.71)",
+          "interpretation": "comp1 STIFFER than modelc at 600K — OPPOSITE of the relaxed-ion 0K DFT inversion (comp1 22.06 < modelc 27.66). Thermal disorder jams comp1's soft Li-sublattice shear mode (G 8.1→24.6) past modelc, which was already disorder-jammed at 0K. modelc's residual permanent Li vacancies keep it marginally softer."
+        }
+      },
       {
         "id": "modelc_v3",
         "version": "v3",
