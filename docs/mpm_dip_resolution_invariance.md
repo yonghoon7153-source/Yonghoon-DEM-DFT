@@ -77,3 +77,22 @@ python3 scripts/mpm2d_jamming.py --compare jam_320.csv jam_512.csv
 
 Data: `docs/data/packing_dip_model.csv`, `jam_320.csv`, `jam_512.csv`,
 `jamming_resolution_compare.csv`.
+
+## Composition robustness (C, 2026-06-07) — 3 P:S, all resolution-invariant
+Same rigid-jamming sweep at three AM_P:AM_S splits (uma, 320 vs 512, 3 seeds).
+SHAPE = de-meaned (offset removed); dip = f05 minimum location.
+
+| P:S | SHAPE-RMSE | Pearson | dip @320 | dip @512 | geom dip | offset | converge to geom |
+|-----|-----------|---------|----------|----------|----------|--------|------------------|
+| 7:3 | 1.46 %p   | 0.9924  | AM95 %   | AM95 %   | AM90 %   | 4.9 %p | 21.1 -> 16.2 %p  |
+| 5:5 | 1.06 %p   | 0.9976  | AM95 %   | AM95 %   | AM90 %   | 5.3 %p | 20.7 -> 15.4 %p  |
+| 3:7 | 0.91 %p   | 0.9985  | AM95 %   | AM95 %   | AM85 %   | 5.3 %p | 20.4 -> 15.1 %p  |
+
+Verdict: the resolution-invariant dip is ROBUST across composition. In all three,
+320 and 512 collapse in shape (Pearson >= 0.992), the MPM dip pins at AM95 % at
+BOTH resolutions, and the ~5 %p absolute offset converges toward the grid-free
+geometry as the grid refines. (MPM dip location is composition-insensitive at
+AM95 % whereas geometry shifts 90->85 % as P->S; both show the high-AM dip — MPM
+captures existence + resolution-invariance, geometry captures the finer
+composition shift. Frame [5]: MPM = trend/mechanics, DEM/geometry = packing detail.)
+Data: docs/data/jam_{320,512}_ps{73,55,37}.csv, packing_dip_model_ps{73,55,37}.csv.
