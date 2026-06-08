@@ -611,21 +611,27 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
                        for k in ('AM_P', 'AM_S', 'SE'))
         return False
 
-    skip_ionic = _factor_is_unity('ionic')
-    skip_e     = _factor_is_unity('e')
-    skip_kappa = _factor_is_unity('kappa')
-
-    # Run solver only for channels that actually have corrections to apply
-    res_ionic = None if skip_ionic else _run_solver(case_dir, df_ionic, type_map_str, scale)
-    res_e     = None if skip_e     else _run_solver(case_dir, df_e,     type_map_str, scale)
-    res_kappa = None if skip_kappa else _run_solver(case_dir, df_kappa, type_map_str, scale)
-
     fm_path = case_dir / 'full_metrics.json'
     try:
         with open(fm_path) as f:
             fm = json.load(f)
     except Exception as e:
         return (case_dir.name, False, f'fm read failed: {e}')
+
+    skip_ionic = _factor_is_unity('ionic')
+    skip_e     = _factor_is_unity('e')
+    # Thermal uses ALL contacts (AM-AM ∪ AM-SE ∪ SE-SE), so it MUST percolate
+    # wherever ionic OR electronic does.  A baseline κ=0 alongside a non-zero
+    # ionic/electronic is therefore a broken/missed baseline, NOT a real
+    # degeneracy — re-solve thermal instead of reusing that 0 (skip only when the
+    # correction factor is unity AND the baseline κ is already valid > 0).
+    skip_kappa = (_factor_is_unity('kappa')
+                  and (fm.get('thermal_sigma_full_mScm') or 0) > 0)
+
+    # Run solver only for channels that need it (a correction OR a broken baseline)
+    res_ionic = None if skip_ionic else _run_solver(case_dir, df_ionic, type_map_str, scale)
+    res_e     = None if skip_e     else _run_solver(case_dir, df_e,     type_map_str, scale)
+    res_kappa = None if skip_kappa else _run_solver(case_dir, df_kappa, type_map_str, scale)
 
     # When solver was skipped (factor ≡ 1.0), reuse baseline values from
     # the pre-existing full_metrics.json (= the network solver baseline).
