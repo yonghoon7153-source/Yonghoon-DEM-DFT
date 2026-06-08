@@ -386,7 +386,10 @@ def main():
     ap.add_argument('--n-grid', type=int, default=320)
     ap.add_argument('--seeds', type=int, default=3)
     ap.add_argument('--yield-se', type=float, default=1.0e4,
-                    help='1e4 = rigid (pure geometry, default); 0.3 = frame σ_y')
+                    help='1e4 = rigid (pure geometry, default); 0.15 = MPM 2D production σ_y')
+    ap.add_argument('--e-se', type=float, default=24.0,
+                    help='SE Young modulus GPa. 24 = real/rigid (geometric dip, default); '
+                         '1.53 = MPM 2D production E_eff (true-plastic dip test)')
     ap.add_argument('--ps', default='7:3', help='AM_P:AM_S split, e.g. 7:3, 5:5, 3:7')
     ap.add_argument('--out', type=str, default=None)
     ap.add_argument('--compare', nargs=2, metavar=('CSV_A', 'CSV_B'), default=None)
