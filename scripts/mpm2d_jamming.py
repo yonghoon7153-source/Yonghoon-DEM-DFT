@@ -224,10 +224,12 @@ def compress_curve(xy, mus, las, ylds, solid_area):
     return np.array(por_s), np.array(p_s), n
 
 
-def jam_porosity(por, p, fracs=(0.02, 0.05, 0.10)):
-    """RESOLUTION-INVARIANT jamming porosity: porosity where P first reaches a
-    small FRACTION of the run's deep-compression pressure (self-normalised so
-    the resolution amplitude factor cancels) + the steepest-knee porosity."""
+def jam_porosity(por, p, fracs=(0.02, 0.05, 0.10, 0.25, 0.50)):
+    """RESOLUTION-INVARIANT porosity at self-normalised pressure fractions.
+    Low f (2-10%) = EARLY compaction (geometric packing dominates); high f
+    (25-50%) = DEEP compaction (plastic flow has acted -> tests whether the
+    packing dip survives plasticity).  Self-normalised so the resolution
+    amplitude factor cancels.  Plus the steepest-knee porosity."""
     p = np.maximum(p, 0.0)
     p_ref = float(np.max(p[-5:])) if len(p) >= 5 else float(np.max(p))
     out = {}
@@ -252,7 +254,7 @@ def sweep(ng, seeds, yield_se, out_csv):
     comps = [0, 10, 20, 30, 40, 50, 60, 70, 80, 85, 90, 95, 100]
     rows = []
     for am in comps:
-        accum = {f: [] for f in (0.02, 0.05, 0.10, 'knee')}
+        accum = {f: [] for f in (0.02, 0.05, 0.10, 0.25, 0.50, 'knee')}
         npts = 0
         for sd in range(seeds):
             rng = np.random.default_rng(100 + sd)
@@ -266,25 +268,27 @@ def sweep(ng, seeds, yield_se, out_csv):
         mean = {k: float(np.mean(v)) for k, v in accum.items()}
         std = {k: float(np.std(v)) for k, v in accum.items()}
         rows.append((am, mean, std, npts))
-        print(f"  AM {am:3d}wt%  jam ε(2%/5%/10%/knee)= "
-              f"{mean[0.02]:5.1f}/{mean[0.05]:5.1f}/{mean[0.10]:5.1f}/{mean['knee']:5.1f}% "
-              f"(±{std[0.05]:.1f})  pts={npts}")
+        print(f"  AM {am:3d}wt%  ε(f05/f10/f25/f50)= "
+              f"{mean[0.05]:5.1f}/{mean[0.10]:5.1f}/{mean[0.25]:5.1f}/{mean[0.50]:5.1f}% "
+              f"(±{std[0.25]:.1f})  pts={npts}")
     with open(out_csv, 'w') as fh:
-        fh.write("AM_wt%,eps_f02,eps_f05,eps_f10,eps_knee,std_f05,n_pts\n")
+        fh.write("AM_wt%,eps_f02,eps_f05,eps_f10,eps_f25,eps_f50,eps_knee,std_f05,n_pts\n")
         for am, m, s, npts in rows:
-            fh.write(f"{am},{m[0.02]:.3f},{m[0.05]:.3f},{m[0.10]:.3f},"
-                     f"{m['knee']:.3f},{s[0.05]:.3f},{npts}\n")
+            fh.write(f"{am},{m[0.02]:.3f},{m[0.05]:.3f},{m[0.10]:.3f},{m[0.25]:.3f},"
+                     f"{m[0.50]:.3f},{m['knee']:.3f},{s[0.05]:.3f},{npts}\n")
     print(f"\n  saved {out_csv}  (n_grid={ng}, dt={dt:.2e}, sub={sub}, seeds={seeds})")
 
 
-def compare(csv_a, csv_b, geom_path=None):
+def compare(csv_a, csv_b, geom_path=None, col='eps_f05'):
     import csv
     def load_csv(path):
         with open(path) as fh:
             r = list(csv.DictReader(fh))
         am = np.array([float(x['AM_wt%']) for x in r])
-        eps = np.array([float(x['eps_f05']) for x in r])
+        key = col if (r and col in r[0]) else 'eps_f05'
+        eps = np.array([float(x[key]) for x in r])
         return am, eps
+    print(f"  [compare column = {col}]  (f05=early/geometric, f50=deep/plastic)")
     am_a, ea = load_csv(csv_a)
     am_b, eb = load_csv(csv_b)
     # geometric reference (de Larrard) — search several locations (cwd-robust)
@@ -388,11 +392,14 @@ def main():
     ap.add_argument('--compare', nargs=2, metavar=('CSV_A', 'CSV_B'), default=None)
     ap.add_argument('--geom', type=str, default=None,
                     help='geometric overlay CSV for --compare (match the P:S)')
+    ap.add_argument('--col', type=str, default='eps_f05',
+                    help='which readout column to compare: eps_f05 (early/geometric) '
+                         '.. eps_f50 (deep/plastic)')
     a = ap.parse_args()
     p, s = (int(z) for z in a.ps.split(':'))
     PS = (p, s)
     if a.compare:
-        compare(*a.compare, geom_path=a.geom); return
+        compare(*a.compare, geom_path=a.geom, col=a.col); return
     out = a.out or f"jam_{a.n_grid}_ps{p}{s}.csv"
     print(f"RIGID-jamming sweep  n_grid={a.n_grid}  seeds={a.seeds}  P:S={p}:{s}  "
           f"yield_se={a.yield_se:g} (SE {'RIGID' if a.yield_se > 100 else 'σ_y='+str(a.yield_se)})")
