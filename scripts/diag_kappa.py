@@ -30,6 +30,11 @@ import sys
 
 import numpy as np
 
+# Force the solver's internal diagnostics on so we see the EXACT reason a
+# percolating network still yields σ=None (sigma_ratio>1.5 guard vs V_source≤0
+# vs G/Σg ill-conditioning) — these prints are gated on NETWORK_DEBUG.
+os.environ['NETWORK_DEBUG'] = '1'
+
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 
