@@ -226,5 +226,31 @@
         "P-S": 52.5
       }
     }
+  },
+  "elf_comparison_v3": {
+    "_method": "ONCV NC pseudo, ecutwfc 80 / ecutrho 320 Ry, pp.x plot_num=8 -> V0_ELF.cube; metrics sampled directly from cube (min-image, Bohr).",
+    "_cube_files": {
+      "comp1": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/elf/V0_ELF.cube",
+      "modelc": "container:/home/ubuntu/work/runs/modelC_v3/V0_ELF.cube"
+    },
+    "_figures": "ELF_{comp1,modelC}_{Pz,xy_mid,iso}.png in the cube dirs (slice + 3D iso 0.85). plot tools: tools/modelc_v3/plot_elf_{slice,3d_iso}.py (--label).",
+    "P_S_bridge_ELF": {
+      "comp1_v3": 0.946,
+      "modelc_v3": 0.944,
+      "definition": "ELF at P-S bond midpoint (covalency probe; nuclei avoided)",
+      "note": "~0.94-0.95 both -> strong covalent P-S; IDENTICAL within noise (d=0.002) -> PS4 framework covalency UNCHANGED by Cl-enrichment/vacancy. Consistent with ICOHP(P-S) -5.94 vs -6.0."
+    },
+    "Li_basin_min_ELF": {
+      "comp1_v3": 0.072,
+      "modelc_v3": 0.065,
+      "single_min": {
+        "comp1": 0.07,
+        "modelc": 0.042
+      },
+      "definition": "minimum ELF along Li->nearest-anion line (ionic depletion basin floor; midpoint/at-nucleus sampling fail -> core/anion-shell artifacts)",
+      "note": "~0.07 both, very low -> Li+ ionic (valence donated, no covalent bridge). modelc slightly LOWER (0.065; single-min 0.042) = marginally more depleted/ionic Li, the ELF signature of the disordered vacancy-rich Li sublattice."
+    },
+    "interpretation": "ELF closes the bond->Bader->COHP->ELF chain: covalent P-S (0.94) vs ionic Li (0.07) = ~13x contrast. The covalent PS4 backbone is preserved across BOTH systems (d ELF ~0.002); the only ELF difference from LPSCl1.6's Cl-enrichment+vacancy is a slightly deeper Li depletion basin (disorder). => structural / Li-sublattice difference, NOT framework-electronic. Same conclusion as bond-length (2.07/2.06), Bader PS4 (-2.8/-2.6), ICOHP (-5.9/-6.0).",
+    "status": "FILLED 2026-06-08 (was 'analysis pending' in kb/results/lpscl_vs_lpscl16_v3_comparison.md SII.7)"
   }
 }
