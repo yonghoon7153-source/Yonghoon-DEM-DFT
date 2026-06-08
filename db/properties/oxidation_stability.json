@@ -1,0 +1,70 @@
+{
+  "property": "oxidation_reduction_electrochemical_stability_window",
+  "description": "Intrinsic electrochemical stability window (ESW) of comp1 (LPSCl) vs modelc (LPSCl1.6) from the grand-potential phase-diagram method (Mo/Ong/Ceder 2012). Real ESW (Li reservoir opened, μ_Li scanned) — NOT the qualitative competing-phase-span hint from tools/doping/esw_check.py.",
+  "method": {
+    "approach": "pymatgen PhaseDiagram.get_element_profile(Li, composition) over the MP GGA_GGA+U corrected Li-P-S-Cl convex hull (108 entries). Needs only the COMPOSITION + MP hull, so comp1 (in MP) and modelc (Li5.4PS4.4Cl1.6, non-stoichiometric, NOT in MP) are handled on identical footing.",
+    "tool": "tools/oxidation/esw_grand_potential.py",
+    "voltage_convention": "V (vs Li/Li+) = mu_Li(metal) - mu_Li ; e=1; 0 V = Li metal. evolution>0 = Li taken up (reduction); evolution<0 = Li released (oxidation); evolution~0 = neutral self-decomposition at OCV.",
+    "mu_Li_ref_eV": -1.9089,
+    "run_machine": "gabia (kserver116-27), MP_API_KEY set",
+    "run_date": "2026-06-08",
+    "mp_thermo_type": "GGA_GGA+U (pinned; avoids R2SCAN mixing noise, matches Mo/Ong literature numbers)"
+  },
+  "results": {
+    "comp1": {
+      "composition": "Li6PS5Cl",
+      "in_MP": true,
+      "ocv_self_decomposition_V": 1.72,
+      "ocv_self_decomposition_rxn": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl",
+      "reduction_limit_V": 1.24,
+      "oxidation_limit_V": 2.14,
+      "oxidation_onset_rxn": "Li6PS5Cl -> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li",
+      "key_breakpoints_V": {
+        "0.00": "Li6PS5Cl + 8 Li -> Li3P + 5 Li2S + LiCl (full reduction at Li metal)",
+        "1.24": "Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P",
+        "1.72": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl (neutral, no Li flux)",
+        "2.14": "-> Li3PS4 + 0.25 LiS4 + LiCl + 1.75 Li (S2- -> polysulfide, FIRST oxidation)",
+        "2.36": "-> 0.5 P2S7 + 0.375 LiS4 + LiCl + 1.75 Li (P-S oxidation)",
+        "3.06": "-> 0.5 P2S7 + LiCl + 1.5 S + 5 Li (elemental S)",
+        "3.33": "-> 0.5 P2S7 + 0.5 S + SCl + 6 Li (Cl oxidation finally)"
+      }
+    },
+    "modelc": {
+      "composition": "Li5.4PS4.4Cl1.6",
+      "in_MP": false,
+      "ocv_self_decomposition_V": 1.72,
+      "ocv_self_decomposition_rxn": "Li5.4PS4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl",
+      "reduction_limit_V": 1.24,
+      "oxidation_limit_V": 2.14,
+      "oxidation_onset_rxn": "Li5.4PS4.4Cl1.6 -> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li",
+      "key_breakpoints_V": {
+        "0.00": "Li5.4PS4.4Cl1.6 + 8 Li -> Li3P + 4.4 Li2S + 1.6 LiCl",
+        "1.24": "+ 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
+        "1.72": "-> Li3PS4 + 0.4 Li2S + 1.6 LiCl (neutral)",
+        "2.14": "-> Li3PS4 + 0.1 LiS4 + 1.6 LiCl + 0.7 Li (S2- -> polysulfide, FIRST oxidation)",
+        "2.36": "-> 0.5 P2S7 + 0.225 LiS4 + 1.6 LiCl + 3.575 Li",
+        "3.06": "-> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li",
+        "3.33": "-> 0.5 P2S7 + 0.7 LiCl + 0.9 SCl + 4.7 Li",
+        "3.39": "-> 0.4588 P2S7 + 0.08235 PCl5 + 1.188 SCl + 5.4 Li (Cl oxidation: SCl + PCl5)"
+      }
+    }
+  },
+  "comparison_and_interpretation": {
+    "headline": "comp1 and modelc have essentially IDENTICAL intrinsic ESW (reduction ~1.2-1.7 V, OCV self-decomposition 1.72 V, oxidation onset 2.14 V). Cl-enrichment does NOT improve the oxidation limit because oxidation is S2- -> polysulfide LIMITED in both — S2- oxidizes at ~2.1 V, far below Cl- (~3.3 V).",
+    "oxidation_limit_identical": "Both oxidize first at 2.14 V via S2- -> LiS4 (polysulfide). Cl- is electrochemically inert until ~3.3 V (SCl) / ~3.4 V (PCl5, modelc only). Since S is present and is the VBM in both (S 3p), the oxidation onset is set by S, not Cl.",
+    "consistency_with_electronic_structure": "Fully consistent with the electronic/bonding inventory: S 3p is the VBM in BOTH (DOS/bands), ICOHP(P-S) -5.94 (comp1) vs -6.0 (modelc), ELF(P-S bridge) 0.946 vs 0.944. Same oxidation-susceptible species (S2-) and near-identical P-S covalency -> same oxidation onset.",
+    "quantitative_differences": {
+      "more_inert_LiCl": "modelc retains 1.6 LiCl vs comp1's 1.0 LiCl in the decomposition products — double the electrochemically inert halide fraction (LiCl stable to ~4 V).",
+      "milder_oxidation_extent": "At the 2.14 V oxidation onset, modelc releases only 0.7 Li vs comp1's 1.75 Li — the oxidative decomposition EXTENT (Li capacity reacted) is ~2.5x smaller in modelc, even though the onset VOLTAGE is identical. modelc has less oxidizable S per formula (4.4 vs 5 S; 1 P vs 1 P) and more of the S is locked behind the stable Li3PS4 + LiCl assemblage.",
+      "high_voltage_Cl_chemistry": "Only at >3.3 V does the higher Cl content of modelc manifest (SCl at 3.33 V, PCl5 at 3.39 V) — far above the operative S-limited window, so not relevant to practical stability."
+    },
+    "both_metastable_at_OCV": "BOTH decompose at OCV (~1.72 V) to Li3PS4 + Li2S + LiCl with NO Li exchange — i.e. neither has a true thermodynamic stability plateau; the as-synthesized argyrodite is metastable. Practical stability is kinetic (sluggish decomposition). This is the well-known limitation of sulfide solid electrolytes (Zhu/He/Mo 2015).",
+    "reduction_identical": "Below ~1.7 V both reduce identically: P5+ -> P3-/P0 (Li3PS4 -> P -> LiP -> Li3P) and S2- stays as Li2S, plus LiCl. At Li-metal contact (0 V): Li3P + Li2S + LiCl (the known SEI). Cl-enrichment does not change reduction chemistry.",
+    "seminar_message": "Paper#1 conductivity-vs-stability: modelc (LPSCl1.6) gains 2.9-3.5x faster Li conduction WITHOUT sacrificing the electrochemical stability window (oxidation onset identical at ~2.1 V, S-limited in both; modelc's oxidative decomposition is actually marginally milder in extent due to 2x inert LiCl). The conductivity gain is essentially 'free' on the oxidation-stability axis — same conclusion as the mechanical analysis (elastic clamped-ion identical)."
+  },
+  "caveats": [
+    "Intrinsic (bulk thermodynamic) ESW only — does NOT include cathode/anode INTERFACE reactivity (which narrows the practical window further; would need pairwise InterfacialReactivity vs electrode).",
+    "MP GGA_GGA+U energies; argyrodite ordered phase is ~tens meV/atom metastable in MP. The composition-based get_element_profile gives the window of the composition's hull-equilibrium assemblage (standard for non-MP / metastable phases).",
+    "modelc Li5.4PS4.4Cl1.6 treated as a composition (no MP entry, no MP-scale total energy of its own); window derived from MP hull phases at that composition — consistent with comp1's treatment."
+  ]
+}

@@ -75,7 +75,7 @@ def analyze(pd, comp, mu_Li_ref, label, comp_str):
     # DECREASING chempot (i.e. increasing voltage).
     profile = pd.get_element_profile(Li, comp)
 
-    n_Li_nominal = comp[Li]  # moles of Li in the nominal composition
+    n_Li_nominal = comp[Li]  # moles of Li in the nominal composition (info only)
 
     steps = []
     for p in profile:
@@ -90,49 +90,43 @@ def analyze(pd, comp, mu_Li_ref, label, comp_str):
             step["energy_per_atom"] = round(float(p["energy"]), 5)
         steps.append(step)
 
-    # The "as-synthesized" composition is stable where its equilibrium Li
-    # content equals the nominal Li content (evolution == n_Li_nominal).
-    # That plateau's μ_Li bounds are the ESW edges.
-    tol = 1e-4
-    plateau = [s for s in steps
-               if abs(s["evolution_Li"] - n_Li_nominal) < tol]
-    window = None
-    if plateau:
-        v_lo = min(s["V_vs_Li"] for s in plateau)
-        v_hi = max(s["V_vs_Li"] for s in plateau)
-        window = (v_lo, v_hi)
-
-    # Fallback / robust read: the highest-V step before Li starts LEAVING
-    # (oxidation onset) and the lowest-V step before Li starts being ADDED
-    # (reduction onset), read straight off the monotone evolution curve.
-    # steps are sorted decreasing mu => increasing V.
+    # ESW limits from the open-Li evolution curve. `evolution` is the moles of
+    # Li EXCHANGED with the reservoir (not the total Li content):
+    #   evolution > 0  → Li taken UP   (reduction / cathodic)
+    #   evolution < 0  → Li RELEASED   (oxidation / anodic)
+    #   evolution ~ 0  → neutral self-decomposition at OCV
+    # Reduction (cathodic) limit = highest V at which Li is still taken up
+    #                              (below it the framework is reduced).
+    # Oxidation (anodic)   limit = lowest V at which Li is released
+    #                              (above it the framework is oxidized).
+    # For a metastable phase the two can pinch to the neutral point.
     s_byV = sorted(steps, key=lambda s: s["V_vs_Li"])
-    ox_limit = red_limit = None
-    for i, s in enumerate(s_byV):
-        if abs(s["evolution_Li"] - n_Li_nominal) < tol:
-            red_limit = s["V_vs_Li"] if red_limit is None else red_limit
-            ox_limit = s["V_vs_Li"]
-    # decomposition products immediately past each limit
-    def products_at(volt_target):
-        # nearest step at or beyond the limit
-        best = min(steps, key=lambda s: abs(s["V_vs_Li"] - volt_target))
+    pos = [s for s in s_byV if s["evolution_Li"] > 1e-6]    # reduction
+    neg = [s for s in s_byV if s["evolution_Li"] < -1e-6]   # oxidation
+    neutral = [s for s in s_byV if abs(s["evolution_Li"]) <= 1e-6]
+
+    reduction_limit = max((s["V_vs_Li"] for s in pos), default=None)
+    oxidation_limit = min((s["V_vs_Li"] for s in neg), default=None)
+    v_neutral = min((s["V_vs_Li"] for s in neutral), default=None)
+
+    def reaction_at(volt):
+        best = min(steps, key=lambda s: abs(s["V_vs_Li"] - volt))
         return best["reaction"]
 
     print(f"\n=== {label}  {comp_str}  ===")
     print(f"  nominal Li content n_Li = {float(n_Li_nominal):.3f}")
-    if window:
-        print(f"  ESW (composition stable plateau): "
-              f"{window[0]:.2f} – {window[1]:.2f} V vs Li  "
-              f"(width {window[1]-window[0]:.2f} V)")
-        print(f"  ↓ reduction (cathodic) limit {window[0]:.2f} V  "
-              f"→ below: {products_at(window[0]-0.01)}")
-        print(f"  ↑ oxidation (anodic)   limit {window[1]:.2f} V  "
-              f"→ above: {products_at(window[1]+0.01)}")
-    else:
-        print("  [warn] no Li-content plateau == nominal; dumping full profile")
+    if v_neutral is not None:
+        print(f"  OCV self-decomposition (no Li flux) @ {v_neutral:.2f} V "
+              f"→ {reaction_at(v_neutral)}")
+    if reduction_limit is not None:
+        print(f"  ↓ reduction (cathodic) limit ≈ {reduction_limit:.2f} V "
+              f"(below: framework reduced → Li2S/LiP/Li3P)")
+    if oxidation_limit is not None:
+        print(f"  ↑ oxidation (anodic)   limit ≈ {oxidation_limit:.2f} V "
+              f"→ {reaction_at(oxidation_limit)}")
     print(f"  full profile ({len(steps)} breakpoints):")
     for s in steps:
-        print(f"    V={s['V_vs_Li']:>5.2f}  Li={s['evolution_Li']:>6.3f}  "
+        print(f"    V={s['V_vs_Li']:>5.2f}  Li={s['evolution_Li']:>7.3f}  "
               f"{s['reaction']}")
 
     return {
@@ -140,9 +134,13 @@ def analyze(pd, comp, mu_Li_ref, label, comp_str):
         "label": label,
         "n_Li_nominal": float(n_Li_nominal),
         "mu_Li_ref_eV": round(mu_Li_ref, 4),
-        "esw_cathodic_V": round(window[0], 3) if window else None,
-        "esw_anodic_V": round(window[1], 3) if window else None,
-        "esw_width_V": round(window[1] - window[0], 3) if window else None,
+        "ocv_self_decomposition_V": v_neutral,
+        "ocv_self_decomposition_rxn": (reaction_at(v_neutral)
+                                       if v_neutral is not None else None),
+        "reduction_limit_V": reduction_limit,
+        "oxidation_limit_V": oxidation_limit,
+        "oxidation_onset_rxn": (reaction_at(oxidation_limit)
+                                if oxidation_limit is not None else None),
         "profile": steps,
     }
 
