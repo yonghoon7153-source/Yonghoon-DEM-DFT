@@ -79,15 +79,23 @@ def run_match(args):
     # perturbation to the MPM baseline → MPM_E = 1.53·(DEM_E/1.35).  This tests
     # whether the porosity RESPONSE to E matches, without cross-fitting absolute E.
     MPM_E_CHAMPION = 1.53; DEM_E_BASE = 1.35
-    MU_SE, LA_SE = lame(MPM_E_CHAMPION, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
+    MODEL = args.model                      # 'vonmises' (champion, default) | 'dpc'
+    # --e-se overrides the SE base modulus (e.g. real E=24 for the cap cross-check;
+    # the cap, not a softened E, then supplies the realistic residual porosity).
+    E_se_base = float(args.e_se) if args.e_se else MPM_E_CHAMPION
+    MU_SE, LA_SE = lame(E_se_base, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
     YIELD_SE = 0.15; YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
     MAXP = 2_500_000
     x = ti.Vector.field(2, ti.f32, MAXP); v = ti.Vector.field(2, ti.f32, MAXP)
     C = ti.Matrix.field(2, 2, ti.f32, MAXP); F = ti.Matrix.field(2, 2, ti.f32, MAXP)
     mu_p = ti.field(ti.f32, MAXP); la_p = ti.field(ti.f32, MAXP); yld_p = ti.field(ti.f32, MAXP)
     m_p = ti.field(ti.f32, MAXP); prs = ti.field(ti.f32, MAXP); epl = ti.field(ti.f32, MAXP)
+    avp = ti.field(ti.f32, MAXP)   # accumulated volumetric plastic compaction (hardens the cap)
     grid_v = ti.Vector.field(2, ti.f32, (ng, ng)); grid_m = ti.field(ti.f32, (ng, ng))
     wall_y = ti.field(ti.f32, ()); N = ti.field(ti.i32, ())
+    # DPC cap params (runtime so --heckel can sweep): pressure-dependent shear
+    # (cap_fric) + hardening cap  p_b(avp) = cap_pb0·exp(cap_h·avp)  (GPa).
+    cap_pb0 = ti.field(ti.f32, ()); cap_h = ti.field(ti.f32, ()); cap_fric = ti.field(ti.f32, ())
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), mu: ti.types.ndarray(), la: ti.types.ndarray(),
@@ -96,7 +104,8 @@ def run_match(args):
         for p in range(n):
             x[p] = ti.Vector([xy[p, 0], xy[p, 1]]); v[p] = ti.Vector([0.0, 0.0])
             C[p] = ti.Matrix.zero(ti.f32, 2, 2); F[p] = ti.Matrix.identity(ti.f32, 2)
-            mu_p[p] = mu[p]; la_p[p] = la[p]; yld_p[p] = yl[p]; m_p[p] = ms[p]; epl[p] = 0.0
+            mu_p[p] = mu[p]; la_p[p] = la[p]; yld_p[p] = yl[p]; m_p[p] = ms[p]
+            epl[p] = 0.0; avp[p] = 0.0
 
     @ti.kernel
     def substep():
@@ -131,11 +140,36 @@ def run_match(args):
             U, sig, V = ti.svd(F[p])
             e0 = ti.log(ti.max(sig[0, 0], 1e-4)); e1 = ti.log(ti.max(sig[1, 1], 1e-4))
             tr = e0 + e1; d0 = e0 - 0.5 * tr; d1 = e1 - 0.5 * tr; dn = ti.sqrt(d0 * d0 + d1 * d1) + 1e-9
-            dg = dn - (yld_p[p] * (1.0 + HARD_SE * epl[p])) / (2 * mu_p[p])
-            if dg > 0:
-                epl[p] += dg
-                m0 = (d0 - dg * d0 / dn) + 0.5 * tr; m1 = (d1 - dg * d1 / dn) + 0.5 * tr
-                F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
+            if ti.static(MODEL == 'vonmises'):
+                # ── champion: von Mises J2, deviatoric clamp, ISOCHORIC (no cap) ──
+                dg = dn - (yld_p[p] * (1.0 + HARD_SE * epl[p])) / (2 * mu_p[p])
+                if dg > 0:
+                    epl[p] += dg
+                    m0 = (d0 - dg * d0 / dn) + 0.5 * tr; m1 = (d1 - dg * d1 / dn) + 0.5 * tr
+                    F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
+            else:
+                # ── Drucker-Prager + Cap (DPC) on the SE phase only (AM stays elastic) ──
+                # (1) deviatoric: pressure-dependent shear yield  τ_y = σ_y + μ_fric·p
+                #     (Klár 2016 friction → granular grains resist shear/rearrangement
+                #      more as confining pressure rises = jamming the continuum lacks).
+                # (2) volumetric cap: hydrostatic yield p_b(avp)=pb0·exp(h·avp) hardens
+                #     with accumulated plastic compaction → densification stops at a
+                #     physical residual porosity (DPC powder-compaction standard).
+                if yld_p[p] < 1.0:   # SE
+                    Kb = la_p[p]                           # vol stiffness, matches P2G la·J·(J-1)
+                    pmean = -Kb * tr                       # pressure (compression tr<0 → p>0)
+                    y_dev = yld_p[p] * (1.0 + HARD_SE * epl[p]) + cap_fric[None] * ti.max(pmean, 0.0)
+                    dg = dn - y_dev / (2 * mu_p[p])
+                    if dg > 0:                             # shear return (project deviatoric)
+                        epl[p] += dg
+                        d0 = d0 - dg * d0 / dn; d1 = d1 - dg * d1 / dn
+                    pb = cap_pb0[None] * ti.exp(cap_h[None] * avp[p])
+                    if pmean > pb:                         # cap return → permanent densification
+                        tr_new = -pb / Kb                  # relax elastic compression to the cap
+                        avp[p] += (tr_new - tr)            # +ve compaction → hardens pb
+                        tr = tr_new
+                    g0 = d0 + 0.5 * tr; g1 = d1 + 0.5 * tr
+                    F[p] = U @ ti.Matrix([[ti.exp(g0), 0.0], [0.0, ti.exp(g1)]]) @ V.transpose()
             x[p] += dt * v[p]
 
     def build(R_AMP, R_AMS, fAP, fAS, fSE, rng, mu_se=MU_SE, la_se=LA_SE):
@@ -171,7 +205,10 @@ def run_match(args):
         return (np.array(xs, np.float32), np.array(mu, np.float32), np.array(la, np.float32),
                 np.array(yl, np.float32), np.array(ms, np.float32))
 
-    def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=MPM_E_CHAMPION):
+    def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=None, p_read=None):
+        cap_pb0[None] = args.cap_pb0; cap_h[None] = args.cap_h; cap_fric[None] = args.cap_fric
+        if e_se_mpm is None: e_se_mpm = E_se_base
+        pr = p_read if p_read else args.p_read
         rng = np.random.default_rng(seed)
         mu_se, la_se = lame(e_se_mpm, 0.30)
         xy, mu, la, yl, ms = build(R_AMP, R_AMS, fAP, fAS, fSE, rng,
@@ -184,13 +221,30 @@ def run_match(args):
             for _ in range(25): substep()
             Pcur = float(np.mean(prs.to_numpy()[:n])); top = wall_y[None]
             por = max(0.0, 1.0 - sa / (WIDTH * (top - FLOOR))) * 100
-            if Pcur >= args.p_read:
+            if Pcur >= pr:
                 got = por; break
             if Pcur >= P_STOP or top <= wall_floor + 1e-4:
                 got = por; break
             if top > wall_floor:
                 wall_y[None] = max(top - WALL_V * 25 * dt, wall_floor)
         return got
+
+    # ── Heckel calibration: pure-SE at several pressures → residual porosity ──
+    # Verifies the DPC cap BEFORE composites: a correct cap densifies and the
+    # porosity drops with pressure toward a residual (target ~Minnmann 10% @ 300).
+    if args.heckel:
+        print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, "
+              f"cap_pb0={args.cap_pb0} cap_h={args.cap_h} cap_fric={args.cap_fric}, n_grid={ng}")
+        print(f"  {'P(MPa)':>7s} {'porosity%':>10s}")
+        for pmpa in (100.0, 300.0, 600.0):
+            vals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, p_read=pmpa / 1000.0)
+                    for i in range(args.seeds)]
+            vals = [x for x in vals if x == x]
+            por = float(np.mean(vals)) if vals else float('nan')
+            print(f"  {pmpa:7.0f} {por:10.1f}", flush=True)
+        print("  (target ≈ 13.9 / 10.0 / 8.3 % from cap_compaction_heckel.py; "
+              "tune cap_pb0·cap_h so 300→~10%)")
+        return
 
     dps = load_design(names=set(args.names) if args.names else None,
                       real_only=args.real_only, particulate=args.particulate,
@@ -202,8 +256,10 @@ def run_match(args):
         R_AMP = R_SE_MPM * d['ratio_P']; R_AMS = R_SE_MPM * d['ratio_S']
         p, s = (int(z) for z in d['PS'].split(':')); tot = p + s
         fAP = d['phi_am'] * p / tot; fAS = d['phi_am'] * s / tot; fSE = d['phi_se']
-        # per-case MPM SE modulus: same relative perturbation as the DEM case
-        e_se_mpm = MPM_E_CHAMPION * d['e_se_gpa'] / DEM_E_BASE
+        # per-case MPM SE modulus.  Default (champion, no cap): same relative
+        # perturbation as the DEM E-variant → 1.53·(DEM_E/1.35).  With --e-se
+        # (cap cross-check) use the fixed base E for every case instead.
+        e_se_mpm = E_se_base if args.e_se else (MPM_E_CHAMPION * d['e_se_gpa'] / DEM_E_BASE)
         vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, e_se_mpm)
                 for i in range(args.seeds)]
         vals = [x for x in vals if x == x]  # drop nan
@@ -310,6 +366,23 @@ def main():
     ap.add_argument('--plot', action='store_true', help='parity scatter (DEM vs MPM)')
     ap.add_argument('--group-plot', action='store_true',
                     help='trend: porosity vs AM wt% per SE radius, DEM vs MPM')
+    # ── constitutive model (champion vs cap) ──────────────────────────────
+    ap.add_argument('--model', choices=['vonmises', 'dpc'], default='vonmises',
+                    help="SE plasticity: 'vonmises' (champion J2, no cap) | 'dpc' "
+                         "(Drucker-Prager + hardening cap, powder-compaction standard)")
+    ap.add_argument('--e-se', type=float, default=None,
+                    help='fixed SE Young modulus GPa (e.g. 24 real bulk); with cap this '
+                         'replaces the softened champion. Omit = champion 1.53 + E-variant scaling')
+    ap.add_argument('--cap-pb0', type=float, default=0.05,
+                    help='DPC initial hydrostatic cap yield p_b0 (GPa) — low → powder '
+                         'compacts easily, then hardens')
+    ap.add_argument('--cap-h', type=float, default=10.0,
+                    help='DPC cap hardening rate: p_b = p_b0·exp(cap_h·avp). Higher → '
+                         'stops sooner → higher residual porosity (tune to Heckel)')
+    ap.add_argument('--cap-fric', type=float, default=0.5,
+                    help='DPC Drucker-Prager friction: τ_y = σ_y + cap_fric·p')
+    ap.add_argument('--heckel', action='store_true',
+                    help='pure-SE pressure sweep (100/300/600 MPa) to calibrate/verify the cap')
     a = ap.parse_args()
     if a.plot:
         plot(); return
