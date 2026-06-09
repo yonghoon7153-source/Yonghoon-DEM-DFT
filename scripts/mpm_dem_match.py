@@ -93,6 +93,7 @@ def run_match(args):
     avp = ti.field(ti.f32, MAXP)   # accumulated volumetric plastic compaction (hardens the cap)
     grid_v = ti.Vector.field(2, ti.f32, (ng, ng)); grid_m = ti.field(ti.f32, (ng, ng))
     wall_y = ti.field(ti.f32, ()); N = ti.field(ti.i32, ())
+    wall_vf = ti.field(ti.f32, ())   # servo wall speed — slows as Pcur→p_read (no overshoot)
     # DPC cap params (runtime so --heckel can sweep): pressure-dependent shear
     # (cap_fric) + DIVERGENT hardening cap  p_b(avp) = cap_pb0·(avpmax/(avpmax-avp))^cap_h
     # → p_b → ∞ as avp → cap_avpmax (residual floor φ_min), so densification
@@ -129,7 +130,7 @@ def run_match(args):
             if grid_m[I] > 0:
                 grid_v[I] /= grid_m[I]; i, j = I[0], I[1]
                 if j * dx < FLOOR and grid_v[I][1] < 0: grid_v[I][1] = 0.0
-                if j * dx > wall_y[None]: grid_v[I][1] = ti.min(grid_v[I][1], -WALL_V)
+                if j * dx > wall_y[None]: grid_v[I][1] = ti.min(grid_v[I][1], -wall_vf[None])
                 if i * dx < SW_L and grid_v[I][0] < 0: grid_v[I][0] = 0.0
                 if i * dx > SW_R and grid_v[I][0] > 0: grid_v[I][0] = 0.0
         for p in range(N[None]):
@@ -219,7 +220,7 @@ def run_match(args):
         xy, mu, la, yl, ms = build(R_AMP, R_AMS, fAP, fAS, fSE, rng,
                                    mu_se=mu_se, la_se=la_se); n = len(xy)
         if n == 0: return float('nan')
-        sa = n * p_vol; load(xy, mu, la, yl, ms, n); wall_y[None] = WALL0
+        sa = n * p_vol; load(xy, mu, la, yl, ms, n); wall_y[None] = WALL0; wall_vf[None] = WALL_V
         top_full = FLOOR + sa / WIDTH; wall_floor = top_full + 0.002
         got = float('nan')
         for fr in range(int(8000 * ng / 320)):
@@ -231,7 +232,12 @@ def run_match(args):
             if Pcur >= P_STOP or top <= wall_floor + 1e-4:
                 got = por; break
             if top > wall_floor:
-                wall_y[None] = max(top - WALL_V * 25 * dt, wall_floor)
+                # servo: full speed while far from target pressure, ramp to a slow
+                # crawl as Pcur→pr so the wall settles at equilibrium instead of
+                # overshooting to geometric full-pack (the 600-MPa collapse).
+                servo = min(1.0, max(0.04, (pr - Pcur) / pr))
+                wall_vf[None] = WALL_V * servo
+                wall_y[None] = max(top - wall_vf[None] * 25 * dt, wall_floor)
         return got
 
     # ── Heckel calibration: pure-SE at several pressures → residual porosity ──
