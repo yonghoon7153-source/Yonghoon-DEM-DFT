@@ -66,10 +66,15 @@ def main():
         phi_am = _f(r, 'fm__phi_am'); phi_se = _f(r, 'fm__phi_se')
         poro = _f(r, 'fm__porosity'); P = _f(r, 'fm__target_pressure_mpa')
         thick = _f(r, 'fm__thickness_um')
-        if None in (rAP, rAS, rSE, phi_am, phi_se, poro):
+        # Monomodal AM (P:S=0:10) cases have NO AM_P → r_AM_P is blank.  Don't
+        # require it; AM_S + SE is a valid 2-size system.  ratio_P just becomes 0
+        # (the MPM build then skips the empty AM_P phase).
+        if None in (rAS, rSE, phi_am, phi_se, poro):
             continue
-        if rSE <= 0 or rAP <= 0:
+        if rSE <= 0 or rAS <= 0:
             continue
+        if rAP is None or rAP <= 0:
+            rAP = 0.0
         if P is not None and abs(P - a.pressure) > a.tol:
             continue
         if a.real_only and 'real' not in name:
@@ -84,7 +89,8 @@ def main():
         if mm:
             mah = mm.group(1)
         out.append(dict(name=name, r_AM_P=rAP, r_AM_S=rAS, r_SE=rSE,
-                        ratio_P=round(rAP / rSE, 3), ratio_S=round(rAS / rSE, 3),
+                        ratio_P=round(rAP / rSE, 3) if rAP > 0 else 0.0,
+                        ratio_S=round(rAS / rSE, 3),
                         phi_am=phi_am, phi_se=phi_se, AM_wt=round(am_wt, 1),
                         PS=f'{p}:{s}', mAh=mah, thickness_um=thick or '',
                         P_MPa=P or a.pressure, dem_porosity=round(poro, 3)))

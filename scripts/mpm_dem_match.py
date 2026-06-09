@@ -34,7 +34,12 @@ WALL0 = 0.66; WALL_MIN = 0.05; WALL_V = 0.18
 P_STOP = 0.70
 
 
-def load_design(names=None, real_only=False, max_n=None):
+def _is_particulate(nm):
+    n = nm.lower()
+    return ('particulate' in n) or n.startswith('input_s_') or n == 'input_s'
+
+
+def load_design(names=None, real_only=False, particulate=False, max_n=None):
     with open(DP) as fh:
         rows = list(csv.DictReader(fh))
     out = []
@@ -42,13 +47,16 @@ def load_design(names=None, real_only=False, max_n=None):
         nm = r['name']
         if real_only and 'real' not in nm:
             continue
+        if particulate and not _is_particulate(nm):
+            continue
         if names and nm not in names:
             continue
         out.append(dict(
             name=nm,
             ratio_P=float(r['ratio_P']), ratio_S=float(r['ratio_S']),
             phi_am=float(r['phi_am']), phi_se=float(r['phi_se']),
-            PS=r['PS'], dem=float(r['dem_porosity'])))
+            PS=r['PS'], dem=float(r['dem_porosity']),
+            r_SE=float(r['r_SE']), AM_wt=float(r['AM_wt'])))
     if max_n:
         out = out[:max_n]
     return out
@@ -176,7 +184,8 @@ def run_match(args):
         return got
 
     dps = load_design(names=set(args.names) if args.names else None,
-                      real_only=args.real_only, max_n=args.max_n)
+                      real_only=args.real_only, particulate=args.particulate,
+                      max_n=args.max_n)
     print(f"matching {len(dps)} DEM design points @ {args.p_read*1000:.0f} MPa, "
           f"n_grid={ng}, seeds={args.seeds}")
     rows = []
@@ -188,11 +197,13 @@ def run_match(args):
         vals = [x for x in vals if x == x]  # drop nan
         mpm = float(np.mean(vals)) if vals else float('nan')
         std = float(np.std(vals)) if len(vals) > 1 else 0.0
-        rows.append((d['name'], d['dem'], mpm, std))
-        print(f"  {d['name'][:30]:30s} DEM={d['dem']:5.1f}%  MPM={mpm:5.1f}±{std:.1f}%  "
-              f"Δ={mpm-d['dem']:+5.1f}", flush=True)
+        rows.append((d['name'], d['dem'], mpm, std, d['r_SE'], d['AM_wt']))
+        print(f"  {d['name'][:30]:30s} rSE={d['r_SE']:.2f} AMwt={d['AM_wt']:4.0f}  "
+              f"DEM={d['dem']:5.1f}%  MPM={mpm:5.1f}±{std:.1f}%  Δ={mpm-d['dem']:+5.1f}",
+              flush=True)
     with open(OUT, 'w', newline='') as fh:
-        w = csv.writer(fh); w.writerow(['name', 'dem_porosity', 'mpm_porosity', 'mpm_std'])
+        w = csv.writer(fh)
+        w.writerow(['name', 'dem_porosity', 'mpm_porosity', 'mpm_std', 'r_SE', 'AM_wt'])
         for r in rows: w.writerow(r)
     import numpy as np  # noqa (already imported above; keep for clarity)
     dems = np.array([r[1] for r in rows]); mpms = np.array([r[2] for r in rows])
@@ -227,18 +238,65 @@ def plot():
     plt.savefig(out, dpi=130); print(f"saved {out}")
 
 
+def group_plot():
+    """Trend plot: porosity vs AM wt%, grouped by SE radius, DEM (solid) vs MPM
+    (dashed).  Shows whether the DEM size-dependent crossover (small-SE
+    descending / large-SE ascending) survives under true-plastic MPM."""
+    import numpy as np
+    import matplotlib; matplotlib.use('Agg'); import matplotlib.pyplot as plt
+    with open(OUT) as fh:
+        r = list(csv.DictReader(fh))
+    if not r or 'r_SE' not in r[0]:
+        print("CSV has no r_SE/AM_wt columns — re-run the match first (not --plot)."); return
+    # group rows by SE radius
+    groups = {}
+    for x in r:
+        try:
+            rse = float(x['r_SE']); amw = float(x['AM_wt'])
+            dem = float(x['dem_porosity']); mpm = float(x['mpm_porosity'])
+        except (KeyError, ValueError):
+            continue
+        if not np.isfinite(mpm):
+            continue
+        groups.setdefault(round(rse, 3), []).append((amw, dem, mpm))
+    fig, ax = plt.subplots(figsize=(7.6, 5.4))
+    cmap = plt.get_cmap('viridis')
+    rkeys = sorted(groups)
+    for i, rse in enumerate(rkeys):
+        pts = sorted(groups[rse])
+        amw = [p[0] for p in pts]; dem = [p[1] for p in pts]; mpm = [p[2] for p in pts]
+        c = cmap(i / max(len(rkeys) - 1, 1))
+        ax.plot(amw, dem, '-o', color=c, lw=2, ms=6, label=f'DEM  r_SE={rse}')
+        ax.plot(amw, mpm, '--s', color=c, lw=1.6, ms=6, mfc='none', alpha=0.9,
+                label=f'MPM r_SE={rse}')
+    ax.set_xlabel('AM wt%'); ax.set_ylabel('Porosity (%)')
+    ax.set_title('DEM (solid) vs true-plastic MPM (dashed) porosity\n'
+                 'per SE radius — does the size-dependent crossover survive plasticity?',
+                 fontsize=10)
+    ax.grid(alpha=0.3); ax.legend(fontsize=7, ncol=2)
+    plt.tight_layout(); os.makedirs(os.path.join(HERE, '..', 'docs', 'figures'), exist_ok=True)
+    out = os.path.join(HERE, '..', 'docs', 'figures', 'mpm_dem_match_trend.png')
+    plt.savefig(out, dpi=130); print(f"saved {out}")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--n-grid', type=int, default=320)
     ap.add_argument('--seeds', type=int, default=2)
     ap.add_argument('--real-only', action='store_true')
+    ap.add_argument('--particulate', action='store_true',
+                    help='only input_particulate_* / input_S_* (monomodal SE-size sweep)')
     ap.add_argument('--max-n', type=int, default=None)
     ap.add_argument('--names', nargs='*', default=None)
     ap.add_argument('--p-read', type=float, default=0.30, help='read pressure GPa (0.30 = 300 MPa)')
-    ap.add_argument('--plot', action='store_true')
+    ap.add_argument('--plot', action='store_true', help='parity scatter (DEM vs MPM)')
+    ap.add_argument('--group-plot', action='store_true',
+                    help='trend: porosity vs AM wt% per SE radius, DEM vs MPM')
     a = ap.parse_args()
     if a.plot:
         plot(); return
+    if a.group_plot:
+        group_plot(); return
     run_match(a)
 
 
