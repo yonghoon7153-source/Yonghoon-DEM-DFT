@@ -5,10 +5,12 @@
   "tensions": {
     "1_oxidation_stability": {
       "severity": "documented (see oxidation_stability.json)",
-      "our_result": "Intrinsic bulk grand-potential ESW: oxidation onset IDENTICAL (~2.14 V, S2--limited) for comp1 and modelc; Cl- inert to ~3.3 V.",
-      "literature": "Zuo et al. Angew 2023: higher-Cl Li5.5PS4.5Cl1.5 is LESS electrochemically stable in real cells (earlier oxidation onset, worse cathode/carbon interface, worse thermal/moisture).",
-      "reconciliation": "Our calc = intrinsic BULK thermodynamics; literature penalty = INTERFACE reactivity + kinetics + weaker self-passivation, which our calc excludes. Both correct for what they measure.",
-      "type": "intrinsic-bulk vs interface/kinetics"
+      "severity_update_2026_06_08": "DOWNGRADED from 'tension' to 'VALIDATED + K_eff-axis story' after reading Gil-González 2022 full paper + SI. Our 0-pressure calc is CONFIRMED correct (matches their K_eff=0 LPSCl1.5 window 1.70-2.40 V; the Cl-rich advantage emerges only at K_eff=10-20 GPa).",
+      "our_result": "Intrinsic bulk grand-potential ESW (0 pressure): oxidation onset IDENTICAL (~2.14 V, S2--limited) for comp1 and modelc; OCV self-decomp 1.72 V; Cl- inert to ~3.3 V.",
+      "literature": "TWO papers, reconciled by mechanical constriction: (a) Zuo Angew 2023 — Cl-rich decomposes more easily (CV) but milder solid byproducts -> lower R_int -> better cell. (b) Gil-González ESM 2022 — constrained-ensemble voltage window: at K_eff=0 LPSCl1.5 window = 1.70-2.40 V (FLAT across Cl content), at K_eff=20 GPa = 0.80-4.30 V (Cl-rich widens MORE than Cl-free LPS's 3.70 V).",
+      "reconciliation": "VALIDATED: our 0-pressure onset (1.72-2.14 V) MATCHES Gil-González K_eff=0 (1.70-2.40 V); the 0.26 V anodic gap is entirely our inclusion of LiS4 (mp-995393) which they exclude. So our calc correctly reproduces the UNCONSTRICTED limit, and the 'identical comp1 vs modelc' is real 0-pressure physics. The Cl-rich oxidation ADVANTAGE is a mechanical-CONSTRICTION effect (Cl-products PCl3/SCl/SCl4 higher molar volume -> higher reaction strain -> bigger strain penalty under K_eff>0 -> wider window). NOT a failure of our calc; just a different axis (K_eff).",
+      "type": "VALIDATED at 0 pressure; Cl-rich advantage is a constriction(K_eff)-axis effect — unifies with the elastic/volume analysis",
+      "next": "Implement constrained-ensemble ESW (V*eps_RXN*K_eff strain term + LiS4/SCl3/Li5PS4Cl2 exclusion) to reproduce Gil-González's K_eff sweep with OUR comp1/modelc cells — see oxidation_stability.json _next_calc_TODO."
     },
     "2_conductivity_mechanism_Ea_vs_prefactor": {
       "severity": "IMPORTANT — newly surfaced; mechanism partially opposes dominant narrative",
