@@ -1,19 +1,20 @@
 {
   "property": "literature_tension_audit",
-  "description": "Audit of comp1 (LPSCl) vs modelc (LPSCl1.6) post-processing results that run AGAINST, or whose MECHANISM differs from, the dominant experimental/literature narrative — analogous to the oxidation-stability case. Purpose: pre-empt reviewer/seminar attacks by stating each tension and the intrinsic-vs-extrinsic / bulk-vs-interface / DFT-vs-MLIP reconciliation up front.",
+  "description": "Audit of comp1 (LPSCl) vs modelc (LPSCl1.6) post-processing results that run AGAINST, or whose MECHANISM differs from, the dominant experimental/literature narrative \u2014 analogous to the oxidation-stability case. Purpose: pre-empt reviewer/seminar attacks by stating each tension and the intrinsic-vs-extrinsic / bulk-vs-interface / DFT-vs-MLIP reconciliation up front.",
   "audit_date": "2026-06-08",
   "tensions": {
     "1_oxidation_stability": {
       "severity": "documented (see oxidation_stability.json)",
-      "severity_update_2026_06_08": "DOWNGRADED from 'tension' to 'VALIDATED + K_eff-axis story' after reading Gil-González 2022 full paper + SI. Our 0-pressure calc is CONFIRMED correct (matches their K_eff=0 LPSCl1.5 window 1.70-2.40 V; the Cl-rich advantage emerges only at K_eff=10-20 GPa).",
+      "severity_update_2026_06_08": "DOWNGRADED from 'tension' to 'VALIDATED + K_eff-axis story' after reading Gil-Gonz\u00e1lez 2022 full paper + SI. Our 0-pressure calc is CONFIRMED correct (matches their K_eff=0 LPSCl1.5 window 1.70-2.40 V; the Cl-rich advantage emerges only at K_eff=10-20 GPa).",
       "our_result": "Intrinsic bulk grand-potential ESW (0 pressure): oxidation onset IDENTICAL (~2.14 V, S2--limited) for comp1 and modelc; OCV self-decomp 1.72 V; Cl- inert to ~3.3 V.",
-      "literature": "TWO papers, reconciled by mechanical constriction: (a) Zuo Angew 2023 — Cl-rich decomposes more easily (CV) but milder solid byproducts -> lower R_int -> better cell. (b) Gil-González ESM 2022 — constrained-ensemble voltage window: at K_eff=0 LPSCl1.5 window = 1.70-2.40 V (FLAT across Cl content), at K_eff=20 GPa = 0.80-4.30 V (Cl-rich widens MORE than Cl-free LPS's 3.70 V).",
-      "reconciliation": "VALIDATED: our 0-pressure onset (1.72-2.14 V) MATCHES Gil-González K_eff=0 (1.70-2.40 V); the 0.26 V anodic gap is entirely our inclusion of LiS4 (mp-995393) which they exclude. So our calc correctly reproduces the UNCONSTRICTED limit, and the 'identical comp1 vs modelc' is real 0-pressure physics. The Cl-rich oxidation ADVANTAGE is a mechanical-CONSTRICTION effect (Cl-products PCl3/SCl/SCl4 higher molar volume -> higher reaction strain -> bigger strain penalty under K_eff>0 -> wider window). NOT a failure of our calc; just a different axis (K_eff).",
-      "type": "VALIDATED at 0 pressure; Cl-rich advantage is a constriction(K_eff)-axis effect — unifies with the elastic/volume analysis",
-      "next": "Implement constrained-ensemble ESW (V*eps_RXN*K_eff strain term + LiS4/SCl3/Li5PS4Cl2 exclusion) to reproduce Gil-González's K_eff sweep with OUR comp1/modelc cells — see oxidation_stability.json _next_calc_TODO."
+      "literature": "TWO papers, reconciled by mechanical constriction: (a) Zuo Angew 2023 \u2014 Cl-rich decomposes more easily (CV) but milder solid byproducts -> lower R_int -> better cell. (b) Gil-Gonz\u00e1lez ESM 2022 \u2014 constrained-ensemble voltage window: at K_eff=0 LPSCl1.5 window = 1.70-2.40 V (FLAT across Cl content), at K_eff=20 GPa = 0.80-4.30 V (Cl-rich widens MORE than Cl-free LPS's 3.70 V).",
+      "reconciliation": "VALIDATED: our 0-pressure onset (1.72-2.14 V) MATCHES Gil-Gonz\u00e1lez K_eff=0 (1.70-2.40 V); the 0.26 V anodic gap is entirely our inclusion of LiS4 (mp-995393) which they exclude. So our calc correctly reproduces the UNCONSTRICTED limit, and the 'identical comp1 vs modelc' is real 0-pressure physics. The Cl-rich oxidation ADVANTAGE is a mechanical-CONSTRICTION effect (Cl-products PCl3/SCl/SCl4 higher molar volume -> higher reaction strain -> bigger strain penalty under K_eff>0 -> wider window). NOT a failure of our calc; just a different axis (K_eff).",
+      "type": "VALIDATED at 0 pressure; Cl-rich advantage is a constriction(K_eff)-axis effect \u2014 unifies with the elastic/volume analysis",
+      "next": "Implement constrained-ensemble ESW (V*eps_RXN*K_eff strain term + LiS4/SCl3/Li5PS4Cl2 exclusion) to reproduce Gil-Gonz\u00e1lez's K_eff sweep with OUR comp1/modelc cells \u2014 see oxidation_stability.json _next_calc_TODO.",
+      "caveat_strengthening_2026_06_09": "Constrained ESW Cl-scan (constrained_esw.py --mode=leading, 5 compositions LPSCl0.5/1.0/1.5/modelc/2.0 at K_eff=0/10/20 GPa) reproduces Gil-Gonzalez Fig 1a qualitatively: 0 GPa flat across Cl content, K_eff > 0 widens monotonically with Cl up to 1.6, falls back at Cl=2.0 (different decomp path P2S7). modelc Cl=1.6 sits at the sweet spot. See docs/oxidation/constrained_esw_cl_scan_2026_06_09.md."
     },
     "2_conductivity_mechanism_Ea_vs_prefactor": {
-      "severity": "IMPORTANT — newly surfaced; mechanism partially opposes dominant narrative",
+      "severity": "IMPORTANT \u2014 newly surfaced; mechanism partially opposes dominant narrative",
       "our_result": "UMA-MLIP Arrhenius: modelc (LPSCl1.6) Ea=0.224 eV is HIGHER than comp1 (LPSCl) Ea=0.172 eV. modelc is still 2.9-3.5x faster at 600-1000 K, but via an ~8x larger PREFACTOR D0 (vacancy-rich = more carriers/paths), NOT via a lower barrier.",
       "literature": "Dominant narrative (Minafra/Kraft 'Enhanced ion conduction by enforcing structural disorder in Li-deficient argyrodites Li6-xPS5-xCl1+x', Solid State Ionics 2020; Cl-/Al-doped studies): higher Cl + Li vacancy -> larger Cl-/S2- site disorder -> LOWER activation energy -> higher conductivity. i.e. the gain is BARRIER-driven (disorder flattens the landscape).",
       "tension": "Our MLIP attributes the modelc conductivity gain to CARRIER/PREFACTOR with a slightly HIGHER Ea; the textbook story attributes it to a LOWER Ea from Cl/S disorder. Direction of the Ea change (comp1->modelc) is OPPOSITE to the disorder-lowers-Ea narrative.",
@@ -23,25 +24,26 @@
         "db li_transport.json already flags: UMA overestimates transport 3-5x; 3-point Arrhenius extrapolation to 300 K is uncertain. The ROBUST claim is the OBSERVED faster modelc D at 600-1000 K (matches experimental sigma(LPSCl1.6)>sigma(LPSCl)), NOT the Ea-vs-prefactor decomposition."
       ],
       "recommended_framing": "State the robust, attack-proof claim: modelc conducts faster (matches experiment). Present the Ea-vs-prefactor split as a HYPOTHESIS our MLIP suggests (carrier/vacancy-rich prefactor), explicitly noting it differs from the disorder-lowers-Ea narrative and that the mechanism decomposition carries MLIP+extrapolation uncertainty. Do NOT assert 'the gain is purely prefactor, not barrier' as settled.",
-      "type": "DFT/MLIP-mechanism vs experimental-narrative"
+      "type": "DFT/MLIP-mechanism vs experimental-narrative",
+      "caveat_strengthening_2026_06_09": "Disorder ensemble (UMA AIMD v100): comp1 d=0.0 Ea = 1.17 eV is a kinetic-frozen LOW-T STATISTICS ARTIFACT (D ~1e-7 cm^2/s at 600 K, below noise floor); not a physical barrier. comp1 d=0.5 Ea = 0.18 +/- 0.03 eV MATCHES Minafra/Kraft + Schlem experimental range 0.16-0.25 eV. The 0.172/0.224 comp1/modelc ordering in li_transport.json mechanism_interpretation came from under-disordered cells; modelc d=0.5 will decide barrier-vs-prefactor at matched disorder. See docs/transport/disorder_ensemble_2026_06_09.md."
     },
     "3_elastic_vacancy_paradox": {
       "severity": "documented (see elastic.json intrinsic_vs_extrinsic + vs_modelc_v3_same_method headline)",
-      "severity_update_2026_06_08": "RESOLVED after reading Kim ACS Mater. Lett. 2025 (mechanical paper #4). It was NEVER a real tension once the RELAXED-ION DFT is used — it was a clamped-vs-relaxed artifact.",
-      "our_result": "DFT 0K CLAMPED-ion: comp1 ~ modelc E_VRH identical (52.31 vs 52.30) = frozen PS4-framework baseline. DFT 0K RELAXED-ion (physical): modelc E_VRH 27.66 > comp1 22.06 (+24%, shear-dominant G +28%) = Cl-rich STIFFER. BM-EOS bulk B0: modelc SOFTER (21.7 vs 26.2) — different modulus (hydrostatic).",
+      "severity_update_2026_06_08": "RESOLVED after reading Kim ACS Mater. Lett. 2025 (mechanical paper #4). It was NEVER a real tension once the RELAXED-ION DFT is used \u2014 it was a clamped-vs-relaxed artifact.",
+      "our_result": "DFT 0K CLAMPED-ion: comp1 ~ modelc E_VRH identical (52.31 vs 52.30) = frozen PS4-framework baseline. DFT 0K RELAXED-ion (physical): modelc E_VRH 27.66 > comp1 22.06 (+24%, shear-dominant G +28%) = Cl-rich STIFFER. BM-EOS bulk B0: modelc SOFTER (21.7 vs 26.2) \u2014 different modulus (hydrostatic).",
       "literature": "Kim ACS Mater. Lett. 2025 (Li7-zPS6-zCl(z-x)Brx, UPE Young's E): Cl up -> E UP (stiffer, crystalline HT 'E increased sharply'); Br up -> E down. Our AFM (weekly report): LPSCl1.6 14.9 GPa, NdO 15.8 GPa.",
       "reconciliation": "RESOLVED: our RELAXED-ION E (modelc stiffer, +24%) MATCHES Kim's Cl->E-up; the 'DFT misses stiffening' claim only held for the CLAMPED-ion (frozen) baseline. Mechanism (ours, now experimentally confirmed): Cl-rich vacancy + 4d-Cl anti-site disorder jams soft shear configs -> higher G/E when ions relax. Modulus type matters: E/G HIGHER for Cl-rich (shear; relaxed-ion DFT + Kim UPE), BULK B0 LOWER for Cl-rich (EOS; more vacancy = softer hydrostatic). Quote the right modulus for the right claim.",
-      "type": "RESOLVED — clamped-vs-relaxed-ion artifact; relaxed-ion E matches experiment (Kim 2025)"
+      "type": "RESOLVED \u2014 clamped-vs-relaxed-ion artifact; relaxed-ion E matches experiment (Kim 2025)"
     },
     "4_band_gap_absolute": {
-      "severity": "minor — absolute offset, comparison still valid",
+      "severity": "minor \u2014 absolute offset, comparison still valid",
       "our_result": "Eg ~1.76 (comp1) / 1.82 (modelc) eV, USPP-PBE + DOS-threshold.",
       "literature": "PBE PAW/band-structure for Li6PS5Cl ~2.15-2.45 eV (and optical experimental higher still).",
       "reconciliation": "~0.3-0.4 eV underestimate from USPP + DOS-threshold method; the offset is the SAME for both systems, so the comp1-vs-modelc DELTA (modelc gap slightly larger) is robust. CAVEAT: do not quote our absolute 1.76 eV against literature without the method note.",
       "type": "method (pseudo/threshold) underestimate"
     },
     "5_li3n_uma_topology_failure": {
-      "severity": "documented (see diffusion.json) — method failure, parked",
+      "severity": "documented (see diffusion.json) \u2014 method failure, parked",
       "our_result": "UMA-s-1p1 (oc20/omat) inverts the Li3N(001) adsorption topology: prefers hollow/bridge, misses the Li+-N3- on-top charge-transfer well; gives 0.237 eV (hollow) vs DFT/paper on-N well 0.133 eV (Cui 2023).",
       "literature": "Cui et al. 2023 DFT-NEB: on-N is the minimum, barrier 0.133 eV.",
       "reconciliation": "Foundation MLIP failure for the ionic Li3N charge-transfer surface; NOT used for the paper. Paper claim falls back to DFT/literature (Li3N ~0.133 vs carbon ~0.24-0.30 -> ~2x). This is a model-limitation tension, not a physics claim against literature.",
@@ -49,8 +51,16 @@
     }
   },
   "summary": {
-    "same_flavor_as_oxidation": ["1_oxidation_stability", "3_elastic_vacancy_paradox"],
-    "most_important_new_finding": "2_conductivity_mechanism_Ea_vs_prefactor — our MLIP suggests a prefactor/carrier-driven gain (slightly HIGHER Ea for Cl-rich), whereas the dominant literature narrative is disorder-LOWERED Ea. Needs the same careful 'robust observation vs uncertain mechanism' framing we used for oxidation.",
-    "unifying_theme": "Wherever a property is governed by the PS4 covalent framework or single-crystal bulk thermodynamics (bonding, oxidation onset, clamped elastic, gap shape), comp1 ~ modelc and our intrinsic calcs are clean. Wherever the real-world behavior is governed by EXTRINSIC factors (interfaces, grain boundaries, kinetics, carrier counting, microstructure), the literature trend diverges from our intrinsic calc — and that divergence is itself the story (intrinsic bulk unchanged; the Cl/vacancy effect is extrinsic/kinetic)."
-  }
+    "same_flavor_as_oxidation": [
+      "1_oxidation_stability",
+      "3_elastic_vacancy_paradox"
+    ],
+    "most_important_new_finding": "2_conductivity_mechanism_Ea_vs_prefactor \u2014 our MLIP suggests a prefactor/carrier-driven gain (slightly HIGHER Ea for Cl-rich), whereas the dominant literature narrative is disorder-LOWERED Ea. Needs the same careful 'robust observation vs uncertain mechanism' framing we used for oxidation.",
+    "unifying_theme": "Wherever a property is governed by the PS4 covalent framework or single-crystal bulk thermodynamics (bonding, oxidation onset, clamped elastic, gap shape), comp1 ~ modelc and our intrinsic calcs are clean. Wherever the real-world behavior is governed by EXTRINSIC factors (interfaces, grain boundaries, kinetics, carrier counting, microstructure), the literature trend diverges from our intrinsic calc \u2014 and that divergence is itself the story (intrinsic bulk unchanged; the Cl/vacancy effect is extrinsic/kinetic).",
+    "caveat_strengthening_2026_06_09": {
+      "bvse_anti_site_375pct": "Was caveat (\"over-disordered\" vs nominal 12.5%). Now stoichiometric necessity: cubic 5x5x5 modelc 1.6 Cl/fu MUST place 300 Cl on 4d (anti-site) because the 500 4a sites are full -> 37.5% is the LOWER BOUND. The 12.5% in primitive rhombo is a specific ordered choice, not a universal upper limit. Experimental synthesised samples are 25-50%. Our 37.5% sits in the experimental range as stoichiometric necessity. Caveat eliminated by analysis, NOT by additional simulation. See modelc_v3.json bvse_5x5x5_paired_2026_06_03.bimodal_split_paper_grade.anti_site_Cl_fraction_in_this_cell + anti_site_sweep_analysis_2026_06_09.",
+      "cross_validation_added": "Voronoi 4-sublattice fingerprint (comp1 also computed 2026-06-09): P 0->0.37, Cl 0->0.74, Li 0.21->1.15 (5.5x), S 3.41->2.05 (HOMOGENIZED). The S inversion is a non-trivial finding -- anti-site Cl partially replaces free 4d-S2- positions, smearing the comp1 PS4-S vs free-S split. Three independent post-processings (BVSE bimodal + LOBSTER ICOHP +40% + Voronoi 4-sublattice) converge."
+    }
+  },
+  "_session_2026_06_09_master": "See docs/MASTER_session_2026_06_09.md for the full cross-link index of this session."
 }
