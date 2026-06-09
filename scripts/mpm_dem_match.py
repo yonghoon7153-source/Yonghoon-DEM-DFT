@@ -32,6 +32,31 @@ INIT_SOLID = 0.50
 FLOOR = 0.08; SW_L, SW_R = 0.08, 0.92; WIDTH = SW_R - SW_L
 WALL0 = 0.66; WALL_MIN = 0.05; WALL_V = 0.18
 P_STOP = 0.70
+F50_POR_FLOOR = 5.0   # stop the f50 sweep once clearly over-compressed (≈ jamming POR_FLOOR 0.05)
+
+
+def _f50_porosity(por, p):
+    """Self-normalised f50 readout (port of mpm2d_jamming.jam_porosity, f=0.50):
+    porosity (%) where the bed's mean pressure first reaches 50% of its OWN max.
+
+    The absolute mean-pressure amplitude is RESOLUTION-SCALED, so reading porosity
+    at a COMMON absolute pressure (e.g. 300 MPa) is grid-biased — pure-SE collapsed
+    11%@320 → 0.8%@512.  At f50 the resolution amplitude factor cancels
+    (mpm2d_jamming 320≡512≡768, Pearson 0.94) and the champion's f50 already lands
+    at the experimental ~10-15%.  This is an INTERNAL MPM readout-consistency fix
+    (reads the MPM's own P-φ curve at a resolution-invariant point) — it uses NO DEM
+    data, so it is NOT a DEM↔MPM cross-fit (frame [4] safe)."""
+    import numpy as np
+    por = np.asarray(por, float); p = np.maximum(np.asarray(p, float), 0.0)
+    if len(por) == 0:
+        return float('nan')
+    p_ref = float(np.max(p[-5:])) if len(p) >= 5 else float(np.max(p))
+    if p_ref <= 0:
+        return float(por[-1])
+    order = np.argsort(por)[::-1]            # loose → compressed (porosity descending)
+    pp, qq = por[order], p[order]
+    idx = np.where(qq >= 0.50 * p_ref)[0]
+    return float(pp[idx[0]]) if len(idx) else float(pp[-1])
 
 
 def _is_particulate(nm):
@@ -230,7 +255,8 @@ def run_match(args):
         return (np.array(xs, np.float32), np.array(mu, np.float32), np.array(la, np.float32),
                 np.array(yl, np.float32), np.array(ms, np.float32))
 
-    def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=None, p_read=None):
+    def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=None, p_read=None,
+                 readout='f50'):
         cap_pb0[None] = args.cap_pb0; cap_h[None] = args.cap_h; cap_fric[None] = args.cap_fric
         cap_avpmax[None] = args.cap_avpmax
         jam_phimin[None] = args.jam_phimin; jam_k[None] = args.jam_k
@@ -245,6 +271,25 @@ def run_match(args):
         top_full = FLOOR + sa / WIDTH; wall_floor = top_full + 0.002
         por0 = max(0.0, 1.0 - sa / (WIDTH * (WALL0 - FLOOR))) * 100   # initial porosity %
         jam_poro0[None] = por0; jam_poro[None] = por0
+        if readout == 'f50':
+            # ── self-normalised f50 readout (resolution-invariant) ──────────────
+            # FIXED slow-velocity sweep → record the full P(porosity) curve → read
+            # porosity where the bed's pressure first hits 50% of its OWN max.  The
+            # resolution-scaled amplitude cancels (320≡512), unlike the absolute
+            # 300-MPa readout below which collapses pure-SE 11%@320 → 0.8%@512.
+            por_s = []; p_s = []
+            for fr in range(int(8000 * ng / 320)):
+                for _ in range(25): substep()
+                top = wall_y[None]
+                por = max(0.0, 1.0 - sa / (WIDTH * (top - FLOOR))) * 100
+                jam_poro[None] = por                       # feed jam model (no-op for vonmises)
+                por_s.append(por); p_s.append(float(np.mean(prs.to_numpy()[:n])))
+                if top <= wall_floor + 1e-4 or por <= F50_POR_FLOOR:
+                    break
+                wall_y[None] = max(top - WALL_V * 25 * dt, wall_floor)   # fixed v, NO servo
+            return _f50_porosity(por_s, p_s)
+        # ── legacy ABSOLUTE-pressure readout (servo wall) — --heckel diagnostic only.
+        #    KEPT to demonstrate the resolution bias; NOT used for the per-case match.
         got = float('nan')
         for fr in range(int(8000 * ng / 320)):
             for _ in range(25): substep()
@@ -272,13 +317,21 @@ def run_match(args):
                else f"cap_pb0={args.cap_pb0} cap_h={args.cap_h} "
                     f"cap_avpmax={args.cap_avpmax} cap_fric={args.cap_fric}")
         print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, {_pp}, n_grid={ng}")
-        print(f"  {'P(MPa)':>7s} {'porosity%':>10s}")
+        print(f"  {'P(MPa)':>7s} {'porosity%':>10s}   (absolute-P readout = RESOLUTION-BIASED diagnostic)")
         for pmpa in (100.0, 300.0, 600.0):
-            vals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, p_read=pmpa / 1000.0)
+            vals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, p_read=pmpa / 1000.0,
+                             readout='absP')
                     for i in range(args.seeds)]
             vals = [x for x in vals if x == x]
             por = float(np.mean(vals)) if vals else float('nan')
             print(f"  {pmpa:7.0f} {por:10.1f}", flush=True)
+        # self-normalised f50 anchor — resolution-INVARIANT, the number the matcher uses
+        fvals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, readout='f50')
+                 for i in range(args.seeds)]
+        fvals = [x for x in fvals if x == x]
+        f50 = float(np.mean(fvals)) if fvals else float('nan')
+        print(f"  f50 self-normalised (resolution-INVARIANT anchor): {f50:5.1f}%  "
+              f"— champion target ~10-15%; compare 320 vs 512", flush=True)
         print("  (target ≈ 13.9 / 10.0 / 8.3 % from cap_compaction_heckel.py; "
               "tune cap_pb0·cap_h so 300→~10%)")
         return
