@@ -412,6 +412,18 @@ def run_match(args):
         print(f"\n  saved {OUT}  |  DEM↔MPM parity R²(1:1)={r2:.3f}, "
               f"mean|Δ|={np.mean(np.abs(dems[ok]-mpms[ok])):.1f}%p, "
               f"Pearson={np.corrcoef(dems[ok],mpms[ok])[0,1]:.3f}")
+        # per-r_SE-band breakdown — the single 1:1 R² is dominated by the big-AM/small-SE
+        # (rSE≤0.5) rigid force-chain divergence; partition by SE size to show WHERE the
+        # continuum agrees with DEM (rSE≈1.0, pure-SE) vs diverges at the extremes (frame [4]).
+        rse = np.array([r[4] for r in rows])
+        print(f"  {'band':10s} {'n':>3s} {'meanΔ':>6s} {'mean|Δ|':>7s} {'Pearson':>8s}")
+        for lo, hi, lab in [(0.0, 0.75, 'rSE≤0.5'), (0.75, 1.25, 'rSE≈1.0'), (1.25, 9.9, 'rSE≥1.5')]:
+            m = ok & (rse >= lo) & (rse < hi)
+            if m.sum() == 0:
+                continue
+            dd, mm = dems[m], mpms[m]
+            pear = np.corrcoef(dd, mm)[0, 1] if m.sum() >= 2 else float('nan')
+            print(f"  {lab:10s} {m.sum():3d} {np.mean(mm-dd):+6.1f} {np.mean(np.abs(mm-dd)):7.1f} {pear:+8.3f}")
 
 
 def plot():
