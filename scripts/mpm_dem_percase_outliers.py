@@ -82,6 +82,11 @@ def main():
 
     rows.sort(key=lambda r: r[0])
     n = len(rows); inb = sum(1 for r in rows if r[0] == 0)
+    if n == 0:
+        print(f"No cases found under {a.results} (full_metrics.json with "
+              f"phi_am/phi_se/porosity).\nRun this on the machine that has "
+              f"webapp/results/ (the WSL box), or pass --results <path>.")
+        return
     print(f"per-case DEM vs champion [plastic,rigid] band — n={n}, "
           f"in band {inb} ({100*inb/max(n,1):.0f}%)\n")
     hdr = f"  {'resid':>6s} {'DEM':>5s} {'plas':>5s} {'rig':>5s} {'SE/sol':>6s}  {'AMP/AMS/SE':>11s}  case"
