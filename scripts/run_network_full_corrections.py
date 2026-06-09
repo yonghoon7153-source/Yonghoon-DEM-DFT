@@ -440,7 +440,13 @@ def _run_solver(case_dir: Path, contacts_modified: pd.DataFrame, type_map_str: s
         # CRITICAL: copy input_params.json so network_conductivity reads
         # correct box_x, box_y (otherwise defaults to 0.05×0.05 and σ is
         # off by box-area ratio). Same for meta.json (some helpers read it).
-        for aux in ('input_params.json', 'meta.json'):
+        # mesh_info.json is REQUIRED too: without it network_conductivity falls
+        # back to plate_z = max(atom z), which for cases with a sparse top tail
+        # overshoots the true plate plane (e.g. 0.0506 vs true 0.0165 → 3×).
+        # That collapses the top electrode (top_ids → 1 atom) and breaks the
+        # whole geometry — the THERMAL (all-contact) solve then fails to
+        # percolate and returns None (κ=0), while φ and σ come out wrong.
+        for aux in ('input_params.json', 'meta.json', 'mesh_info.json'):
             src = case_dir / aux
             if src.exists():
                 shutil.copy2(src, tmp / aux)
