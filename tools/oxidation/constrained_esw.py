@@ -154,11 +154,16 @@ def main():
     ap.add_argument("--v_se_A3", nargs="+", type=float, required=True)
     ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
     ap.add_argument("--k_eff", nargs="+", type=float, default=[0, 10, 20])
-    ap.add_argument("--mode", choices=["leading", "relax"], default="leading",
+    ap.add_argument("--mode", choices=["leading", "relax", "hybrid"], default="leading",
                     help="leading = leading-order edge shift (fast, K_eff=0 onset reused). "
-                         "relax = full Fitzhugh re-minimisation (rebuild augmented hull at "
-                         "each K_eff so the optimal product set itself changes -- matches "
-                         "Gil-González Table S1 product-set switching).")
+                         "relax = full Fitzhugh re-min (augmented hull per K_eff; reports the "
+                         "switched product set; absolute edge voltages come from breakpoints "
+                         "which are composition-INVARIANT, so prefer hybrid for the comp1-vs-"
+                         "modelc trend). "
+                         "hybrid = use relax mode to DETECT product-set switching, then apply "
+                         "leading-order phi += K_eff*DeltaV/n_e with the SWITCHED reaction's "
+                         "DeltaV/n_e -- gives both the Gil-González product physics AND the "
+                         "composition-resolved widening.")
     ap.add_argument("--out", default="constrained_esw_results.json")
     args = ap.parse_args()
 
@@ -213,7 +218,7 @@ def main():
                 if red_info and red_info["n_e"]:
                     phi_red = red_info["phi0_V"] - k * red_info["DeltaV_A3"] * GPA_A3_TO_EV / red_info["n_e"]
                     red_rxn_k = red_info["rxn"]
-            else:  # relax: rebuild augmented hull at each K_eff, re-extract onsets
+            else:  # relax or hybrid: rebuild augmented hull at each K_eff
                 if k == 0:
                     pd_k, mu_k = pd, mu_ref
                 else:
@@ -225,12 +230,23 @@ def main():
                     print(f"    K={k:>4.0f} GPa: ERROR {type(e).__name__}: {e}")
                     win[str(k)] = {"error": str(e)}
                     continue
-                if ox_k:
-                    phi_ox = ox_k["V"]
-                    ox_rxn_k = str(ox_k["rxn"])
-                if red_k:
-                    phi_red = red_k["V"]
-                    red_rxn_k = str(red_k["rxn"])
+                if args.mode == "relax":
+                    # raw breakpoint voltages (composition-INVARIANT, all same)
+                    if ox_k:
+                        phi_ox = ox_k["V"]; ox_rxn_k = str(ox_k["rxn"])
+                    if red_k:
+                        phi_red = red_k["V"]; red_rxn_k = str(red_k["rxn"])
+                else:  # hybrid: leading-order shift using the SWITCHED rxn's DeltaV/n_e
+                    if ox_k and ox_info:
+                        dVx, nex, _, _, _ = reaction_strain(ox_k["rxn"], vpa, v_se)
+                        if nex:
+                            phi_ox = ox_info["phi0_V"] + k * dVx * GPA_A3_TO_EV / nex
+                            ox_rxn_k = f"{str(ox_k['rxn'])} [DeltaV={dVx:+.1f} n_e={nex:.2f}]"
+                    if red_k and red_info:
+                        dVr, ner, _, _, _ = reaction_strain(red_k["rxn"], vpa, v_se)
+                        if ner:
+                            phi_red = red_info["phi0_V"] - k * dVr * GPA_A3_TO_EV / ner
+                            red_rxn_k = f"{str(red_k['rxn'])} [DeltaV={dVr:+.1f} n_e={ner:.2f}]"
             width = (phi_ox - phi_red) if (phi_ox is not None and phi_red is not None) else None
             win[str(k)] = {"reduction_V": round(phi_red, 3) if phi_red is not None else None,
                            "oxidation_V": round(phi_ox, 3) if phi_ox is not None else None,
@@ -239,8 +255,11 @@ def main():
                            "reduction_rxn": red_rxn_k}
             print(f"    K={k:>4.0f} GPa: {win[str(k)]['reduction_V']} - "
                   f"{win[str(k)]['oxidation_V']} V  (width {win[str(k)]['width_V']})")
-            if args.mode == "relax" and ox_rxn_k and ox_rxn_k != (ox_info["rxn"] if ox_info else None):
-                print(f"      [re-min] anodic rxn switched to: {ox_rxn_k}")
+            if args.mode in ("relax", "hybrid") and ox_rxn_k:
+                base_rxn = ox_info["rxn"] if ox_info else None
+                switched = (ox_rxn_k.split(" [")[0] != base_rxn) if base_rxn else False
+                if switched:
+                    print(f"      [re-min] anodic rxn switched to: {ox_rxn_k}")
         print()
         results[lab] = {"composition": cs, "v_se_A3_per_fu": v_se,
                         "oxidation_onset_K0": ox_info, "reduction_onset_K0": red_info,
@@ -258,13 +277,17 @@ def main():
                       f"(DeltaV {ox['DeltaV_A3']:+.1f} Å^3, n_e {ox['n_e']})")
         print("  -> larger eps_RXN / (DeltaV/n_e) widens MORE under constriction.")
 
-    method_desc = (
-        "strain-explicit constrained ESW (Fitzhugh leading-order edge shift "
-        "phi += K_eff*DeltaV/n_e)" if args.mode == "leading" else
-        "Fitzhugh full re-minimisation (augmented hull E_i += K_eff*V_i for every "
-        "SOLID phase; Li metal unaugmented; get_element_profile re-run per K_eff so "
-        "the optimal product set itself can switch)"
-    )
+    if args.mode == "leading":
+        method_desc = ("strain-explicit constrained ESW (Fitzhugh leading-order "
+                       "edge shift phi += K_eff*DeltaV/n_e using K_eff=0 onset rxn)")
+    elif args.mode == "hybrid":
+        method_desc = ("Fitzhugh hybrid: augmented hull per K_eff to DETECT product-set "
+                       "switching, then leading-order shift with the SWITCHED rxn's "
+                       "DeltaV/n_e -- gives both product physics and composition-resolved widening")
+    else:
+        method_desc = ("Fitzhugh full re-minimisation (augmented hull E_i += K_eff*V_i "
+                       "for SOLID phases; Li metal unaugmented; raw breakpoint voltages -- "
+                       "composition-INVARIANT, use only for product-set diagnostics)")
     Path(args.out).write_text(json.dumps({
         "method": method_desc + ". MP GGA_GGA+U hull; LiS4/SCl3/Li5PS4Cl2 excluded.",
         "mode": args.mode,
