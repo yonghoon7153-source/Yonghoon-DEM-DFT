@@ -289,6 +289,37 @@ Dip resolution-invariance — CONFIRMED (docs/mpm_dip_resolution_invariance.md):
         as expected.)  MPM 4-step COMPLETE: rigid-invariant / plastic-converges /
         champion morphology+porosity validated / cap dead-end.
 
+### ★ DPC volumetric cap × resolved-grain — CROSS-CHECK (2026-06-09) ★
+Built DPC (Drucker-Prager + divergent hardening cap) as `--model dpc` in
+scripts/mpm_dem_match.py (servo wall, --heckel pure-SE calibration, --e-se to
+swap real E=24 vs softened 1.53).  VERDICT: **the volumetric cap does NOT fit
+the resolved grain.**  Full finding + data: docs/mpm_dpc_cap_crosscheck.md +
+docs/data/mpm_dpc_heckel_sweep.csv.
+  • Physics: a volumetric cap = particle VOLUME shrinkage.  SE (LPSCl) is a
+    solid, bulk modulus 24 GPa ≫ 300 MPa → particles don't densify internally;
+    powder densifies by rearrangement + isochoric shape change.  So the cap is
+    unphysical for resolved grains → it makes the bed compact MORE, not less.
+  • Data (pure-SE Heckel 100/300/600 MPa, servo): champion (E=1.53, no cap)
+    300→11%; ADD cap → 300→0.8% (WORSE).  E=24+cap under-densifies low-P
+    (100→26-35% vs Heckel ~14%, real E too stiff).  Neither E matches Heckel
+    with the cap.  Empirically confirms the old note "cap doesn't fit
+    resolved-grain: void-fill is isochoric shape-flow."
+  • Where the cap IS correct: HOMOGENIZED REV (cap_compaction_heckel.py, 나) —
+    point=powder-with-voids, volumetric compaction = void reduction → clean
+    Heckel 13.9/10/8.3.  Frame [5] division: resolved-grain champion = TREND;
+    homogenized DPC = ABSOLUTE; DEM = transport.
+  • ⇒ softening E_eff=1.53 is IRREDUCIBLE for the resolved grain (lumps the
+    contact-network jamming the continuum lacks).  "real E + cap = 더 맞는 물리"
+    NOT realised here.  NACC has the same volumetric-hardening flaw → skip for
+    resolved grain.
+  • Small-SE trend reported BRACKETED [rigid DEM ~21% upper, plastic-continuum
+    ~0.9% lower]; gap = quantified missing jamming (frame [1] LIMIT).
+  • NEXT (user wants to DEPICT SE with this tool): the physically-correct way
+    to stop the resolved-grain over-flow WITHOUT particle shrinkage is a
+    DENSITY-DEPENDENT DEVIATORIC (shear) yield that diverges as local packing
+    → φ_max (isochoric jamming) → `--model jam` (in progress).  Goal = realistic
+    SE compaction morphology AND porosity in the resolved grain.
+
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete

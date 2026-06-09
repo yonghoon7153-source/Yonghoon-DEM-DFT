@@ -1,0 +1,9 @@
+model,e_se_gpa,cap_avpmax,cap_pb0,cap_fric,n_grid,por_100MPa,por_300MPa,por_600MPa,note
+dpc,24,0.5,0.05,0.5,320,34.9,16.2,2.4,real-E under-densifies low-P; 600 floors
+dpc,24,0.7,0.05,0.5,320,30.3,4.9,0.9,
+dpc,24,0.9,0.05,0.5,320,26.0,0.9,0.8,300/600 collapse (cap floor below wall_floor)
+dpc,1.53,0.5,0.05,0.5,320,19.8,0.8,0.8,soft-E + cap collapses 300/600
+dpc,1.53,0.7,0.05,0.5,320,14.1,0.8,0.8,
+dpc,1.53,0.9,0.05,0.5,320,7.8,0.8,0.8,
+champion_nocap,1.53,,,,320,,11.0,,pure-SE dbg320; adding cap makes 300 -> 0.8 (WORSE)
+homogenized_dpc_REV,24,,,,,13.9,10.0,8.3,cap_compaction_heckel.py target (cap is correct in REV)
