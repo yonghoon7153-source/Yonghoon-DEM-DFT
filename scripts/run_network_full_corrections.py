@@ -753,6 +753,26 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     fm['stage_e_fracture_stage_counts'] = factors['fracture_stage_counts']
     fm['fracture_aware_method_full']    = 'Stage E (fracture + grain corrections)'
 
+    # ── Heal a stale/missing THERMAL baseline ────────────────────────────
+    # The pre-fix solver stored κ_baseline=0 for cases the single-phase
+    # sigma_ratio>1.5 guard wrongly rejected (thermal is the multi-phase
+    # superset network — see network_conductivity.solve_network).  The webapp
+    # phantom-suppresses the κ rows whenever `thermal_sigma_full_mScm` is
+    # falsy (app.py: p_th_h = ... or not metrics.get('thermal_sigma_full_mScm')),
+    # so a stale 0 would keep κ shown as '—' even though we just recomputed a
+    # valid Stage-E κ.  When we DID re-solve (skip_kappa False) and the stored
+    # baseline is still 0/None but Stage-E κ is valid, recover the raw baseline
+    # from the corrected value and the Bruggeman-weighted κ factor — the exact
+    # inverse of the framework's own σ_stage_e ≈ σ_baseline·Σ(g·f)/Σg relation.
+    # Only thermal: electronic/ionic baseline=0 is genuine non-percolation
+    # (single-phase, the guard correctly rejects) and must stay '—'.
+    if (not skip_kappa) and not (fm.get('thermal_sigma_full_mScm') or 0) > 0:
+        _fk = factors.get('weighted_factor_kappa')
+        if sigma_th_e and sigma_th_e > 0 and _fk and _fk > 0:
+            fm['thermal_sigma_full_mScm'] = round(sigma_th_e / _fk, 6)
+        if sigma_th_e_p and sigma_th_e_p > 0 and _fk and _fk > 0:
+            fm['thermal_sigma_full_mScm_physics'] = round(sigma_th_e_p / _fk, 6)
+
     # Loss percentages (vs baseline σ_e_full / σ_th_full)
     base_ionic = fm.get('sigma_full_mScm')
     base_e     = fm.get('electronic_sigma_full_mScm')
