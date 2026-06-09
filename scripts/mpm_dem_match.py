@@ -125,8 +125,20 @@ def run_match(args):
             base = (x[p] * inv_dx - 0.5).cast(int); fx = x[p] * inv_dx - base.cast(ti.f32)
             w = [0.5 * (1.5 - fx) ** 2, 0.75 - (fx - 1.0) ** 2, 0.5 * (fx - 0.5) ** 2]
             U, sig, V = ti.svd(F[p]); J = sig[0, 0] * sig[1, 1]
+            la_e = la_p[p]
+            if ti.static(MODEL == 'jam'):
+                # ── volumetric jamming: the bed's effective BULK modulus diverges
+                # as global porosity → jam_phimin (packing → φ_max).  Loose powder
+                # is compliant (la=softened base → compacts by rearrangement);
+                # jammed powder is incompressible (la→∞ → resists the wall) — this
+                # resists the volumetric wall load, unlike a shear yield, and is
+                # NOT particle shrinkage (it's the packing stiffness).
+                if yld_p[p] < 1.0:
+                    fr = ti.max((jam_poro[None] - jam_phimin[None]) /
+                                ti.max(jam_poro0[None] - jam_phimin[None], 1e-3), 1e-3)
+                    la_e = la_p[p] / ti.pow(fr, jam_k[None])
             st = (2 * mu_p[p] * (F[p] - U @ V.transpose()) @ F[p].transpose()
-                  + ti.Matrix.identity(ti.f32, 2) * la_p[p] * J * (J - 1))
+                  + ti.Matrix.identity(ti.f32, 2) * la_e * J * (J - 1))
             prs[p] = -0.5 * (st[0, 0] + st[1, 1]) / ti.max(J, 1e-4)
             st = (-dt * p_vol * 4 * inv_dx * inv_dx) * st; aff = st + m_p[p] * C[p]
             for a, b in ti.static(ti.ndrange(3, 3)):
@@ -150,27 +162,15 @@ def run_match(args):
             U, sig, V = ti.svd(F[p])
             e0 = ti.log(ti.max(sig[0, 0], 1e-4)); e1 = ti.log(ti.max(sig[1, 1], 1e-4))
             tr = e0 + e1; d0 = e0 - 0.5 * tr; d1 = e1 - 0.5 * tr; dn = ti.sqrt(d0 * d0 + d1 * d1) + 1e-9
-            if ti.static(MODEL == 'vonmises'):
-                # ── champion: von Mises J2, deviatoric clamp, ISOCHORIC (no cap) ──
+            if ti.static(MODEL == 'vonmises' or MODEL == 'jam'):
+                # champion von Mises deviatoric clamp, ISOCHORIC.  For 'jam' the
+                # jamming is supplied by the density-dependent BULK modulus in the
+                # P2G stress above (volumetric), NOT by the shear yield.
                 dg = dn - (yld_p[p] * (1.0 + HARD_SE * epl[p])) / (2 * mu_p[p])
                 if dg > 0:
                     epl[p] += dg
                     m0 = (d0 - dg * d0 / dn) + 0.5 * tr; m1 = (d1 - dg * d1 / dn) + 0.5 * tr
                     F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
-            elif ti.static(MODEL == 'jam'):
-                # ── JAMMING: isochoric von Mises with a shear yield that DIVERGES
-                # as the bed packs (global porosity → jam_phimin).  Rearrangement
-                # (void-filling) locks up at the residual WITHOUT shrinking the
-                # incompressible SE particles — the physically-correct fix.
-                if yld_p[p] < 1.0:   # SE
-                    frac = ti.max((jam_poro[None] - jam_phimin[None]) /
-                                  ti.max(jam_poro0[None] - jam_phimin[None], 1e-3), 1e-3)
-                    y_eff = (yld_p[p] * (1.0 + HARD_SE * epl[p])) / ti.pow(frac, jam_k[None])
-                    dg = dn - y_eff / (2 * mu_p[p])
-                    if dg > 0:
-                        epl[p] += dg
-                        m0 = (d0 - dg * d0 / dn) + 0.5 * tr; m1 = (d1 - dg * d1 / dn) + 0.5 * tr
-                        F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
             else:
                 # ── Drucker-Prager + Cap (DPC) on the SE phase only (AM stays elastic) ──
                 # (1) deviatoric: pressure-dependent shear yield  τ_y = σ_y + μ_fric·p
