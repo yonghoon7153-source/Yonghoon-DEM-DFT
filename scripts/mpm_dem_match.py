@@ -295,35 +295,32 @@ def run_match(args):
             return _f50_porosity(por_s, p_s)
         if readout == 'wallP':
             # ── resolution-INVARIANT *absolute* readout: servo to the WALL REACTION stress ──
-            # mean(prs) is a VOLUME average → the well-resolved soft SE dilutes it, so at 512
-            # the bed over-compresses (→0.8%) before the mean hits 300 MPa.  The wall reaction
+            # mean(prs) is a VOLUME average → the well-resolved soft SE dilutes it (512 over-
+            # compresses to 0.8% before the mean hits 300 MPa).  The wall reaction
             # Σ grid_m·(v+wall_vf)/(n_sub·dt·WIDTH) = boundary force / area is a force balance →
             # ≈ constitutive stress (GPa), dx/n_sub/ρ cancelling.  The TRUE experimental BC.
-            # ROBUST servo for big rigid-AM + soft-SE composites:
-            #   (1) SUSTAINED-load stop — median over a WIN-frame window, never in the first WIN
-            #       frames — so a first-contact rigid-AM TRANSIENT spike can't freeze the wall at
-            #       the initial porosity (the AM-rich rSE=0.5 "stuck at 56%" failure).
-            #   (2) gentle speed cap (0.40 vs 1.0) — the soft SE can't servo-OVERFLOW past target
-            #       (the SE-rich rSE=0.5 over-compaction, MPM 5.9±3.0 failure).
-            WIN = 5
-            got = float('nan'); hist = []
+            # ARM-after-compaction guard (the ONLY robustness add — a median/window stop instead
+            # over-compresses universally and inverts the good rSE=1.0 band): a big rigid-AM bed
+            # (rSE=0.5) is NOT geometrically jammed at its initial ~56% porosity (AM area ~37% <<
+            # 2D jamming ~67%), so the first-contact wall spike there is a TRANSIENT.  Disarm the
+            # stop until the bed has actually compacted (por ≤ por0−2) so that transient can't
+            # freeze the wall at the initial porosity; the instantaneous stop (which already
+            # gives Δ≈−2~−3 in the resolved rSE=1.0 band) is otherwise UNCHANGED.
+            got = float('nan'); armed = False
             for fr in range(int(8000 * ng / 320)):
                 wall_imp[None] = 0.0
                 for _ in range(25): substep()
                 top = wall_y[None]
                 por = max(0.0, 1.0 - sa / (WIDTH * (top - FLOOR))) * 100
                 ws = wall_imp[None] / (25.0 * dt * WIDTH)          # GPa, resolution-invariant
-                hist.append(ws)
-                if len(hist) > WIN: hist.pop(0)
-                wavg = sum(hist) / len(hist)
-                wmed = sorted(hist)[len(hist) // 2]                # median → rejects 1-2 spike frames
                 jam_poro[None] = por
-                if len(hist) >= WIN and wmed >= pr:               # SUSTAINED (not a transient spike)
+                if por <= por0 - 2.0: armed = True                 # real compaction has begun
+                if armed and ws >= pr:
                     got = por; break
                 if top <= wall_floor + 1e-4:
                     got = por; break
                 if top > wall_floor:
-                    servo = min(0.40, max(0.03, (pr - wavg) / pr))  # gentle cap → no SE over-flow
+                    servo = min(1.0, max(0.04, (pr - ws) / pr))
                     wall_vf[None] = WALL_V * servo
                     wall_y[None] = max(top - wall_vf[None] * 25 * dt, wall_floor)
             return got
