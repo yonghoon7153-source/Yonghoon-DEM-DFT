@@ -100,6 +100,12 @@ def run_match(args):
     # stops at a physical residual instead of collapsing to 0 (DPC/Cam-Clay).
     cap_pb0 = ti.field(ti.f32, ()); cap_h = ti.field(ti.f32, ())
     cap_fric = ti.field(ti.f32, ()); cap_avpmax = ti.field(ti.f32, ())
+    # JAM model params: deviatoric (shear) yield diverges as the GLOBAL porosity
+    # → jam_phimin (local packing → φ_max), σ_y_eff = σ_y/frac^jam_k with
+    # frac=(poro-phimin)/(poro0-phimin).  Isochoric — NO particle shrinkage; the
+    # physically-correct way to stop rearrangement at the residual (jamming).
+    jam_poro = ti.field(ti.f32, ()); jam_poro0 = ti.field(ti.f32, ())
+    jam_phimin = ti.field(ti.f32, ()); jam_k = ti.field(ti.f32, ())
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), mu: ti.types.ndarray(), la: ti.types.ndarray(),
@@ -151,6 +157,20 @@ def run_match(args):
                     epl[p] += dg
                     m0 = (d0 - dg * d0 / dn) + 0.5 * tr; m1 = (d1 - dg * d1 / dn) + 0.5 * tr
                     F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
+            elif ti.static(MODEL == 'jam'):
+                # ── JAMMING: isochoric von Mises with a shear yield that DIVERGES
+                # as the bed packs (global porosity → jam_phimin).  Rearrangement
+                # (void-filling) locks up at the residual WITHOUT shrinking the
+                # incompressible SE particles — the physically-correct fix.
+                if yld_p[p] < 1.0:   # SE
+                    frac = ti.max((jam_poro[None] - jam_phimin[None]) /
+                                  ti.max(jam_poro0[None] - jam_phimin[None], 1e-3), 1e-3)
+                    y_eff = (yld_p[p] * (1.0 + HARD_SE * epl[p])) / ti.pow(frac, jam_k[None])
+                    dg = dn - y_eff / (2 * mu_p[p])
+                    if dg > 0:
+                        epl[p] += dg
+                        m0 = (d0 - dg * d0 / dn) + 0.5 * tr; m1 = (d1 - dg * d1 / dn) + 0.5 * tr
+                        F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
             else:
                 # ── Drucker-Prager + Cap (DPC) on the SE phase only (AM stays elastic) ──
                 # (1) deviatoric: pressure-dependent shear yield  τ_y = σ_y + μ_fric·p
@@ -213,6 +233,7 @@ def run_match(args):
     def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=None, p_read=None):
         cap_pb0[None] = args.cap_pb0; cap_h[None] = args.cap_h; cap_fric[None] = args.cap_fric
         cap_avpmax[None] = args.cap_avpmax
+        jam_phimin[None] = args.jam_phimin; jam_k[None] = args.jam_k
         if e_se_mpm is None: e_se_mpm = E_se_base
         pr = p_read if p_read else args.p_read
         rng = np.random.default_rng(seed)
@@ -222,11 +243,14 @@ def run_match(args):
         if n == 0: return float('nan')
         sa = n * p_vol; load(xy, mu, la, yl, ms, n); wall_y[None] = WALL0; wall_vf[None] = WALL_V
         top_full = FLOOR + sa / WIDTH; wall_floor = top_full + 0.002
+        por0 = max(0.0, 1.0 - sa / (WIDTH * (WALL0 - FLOOR))) * 100   # initial porosity %
+        jam_poro0[None] = por0; jam_poro[None] = por0
         got = float('nan')
         for fr in range(int(8000 * ng / 320)):
             for _ in range(25): substep()
             Pcur = float(np.mean(prs.to_numpy()[:n])); top = wall_y[None]
             por = max(0.0, 1.0 - sa / (WIDTH * (top - FLOOR))) * 100
+            jam_poro[None] = por                          # feed global packing back to jamming yield
             if Pcur >= pr:
                 got = por; break
             if Pcur >= P_STOP or top <= wall_floor + 1e-4:
@@ -244,8 +268,10 @@ def run_match(args):
     # Verifies the DPC cap BEFORE composites: a correct cap densifies and the
     # porosity drops with pressure toward a residual (target ~Minnmann 10% @ 300).
     if args.heckel:
-        print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, cap_pb0={args.cap_pb0} "
-              f"cap_h={args.cap_h} cap_avpmax={args.cap_avpmax} cap_fric={args.cap_fric}, n_grid={ng}")
+        _pp = (f"jam_phimin={args.jam_phimin} jam_k={args.jam_k}" if MODEL == 'jam'
+               else f"cap_pb0={args.cap_pb0} cap_h={args.cap_h} "
+                    f"cap_avpmax={args.cap_avpmax} cap_fric={args.cap_fric}")
+        print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, {_pp}, n_grid={ng}")
         print(f"  {'P(MPa)':>7s} {'porosity%':>10s}")
         for pmpa in (100.0, 300.0, 600.0):
             vals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, p_read=pmpa / 1000.0)
@@ -378,9 +404,11 @@ def main():
     ap.add_argument('--group-plot', action='store_true',
                     help='trend: porosity vs AM wt% per SE radius, DEM vs MPM')
     # ── constitutive model (champion vs cap) ──────────────────────────────
-    ap.add_argument('--model', choices=['vonmises', 'dpc'], default='vonmises',
+    ap.add_argument('--model', choices=['vonmises', 'dpc', 'jam'], default='vonmises',
                     help="SE plasticity: 'vonmises' (champion J2, no cap) | 'dpc' "
-                         "(Drucker-Prager + hardening cap, powder-compaction standard)")
+                         "(Drucker-Prager+cap, wrong for resolved grain — see "
+                         "docs/mpm_dpc_cap_crosscheck.md) | 'jam' (isochoric "
+                         "density-dependent shear yield = correct jamming)")
     ap.add_argument('--e-se', type=float, default=None,
                     help='fixed SE Young modulus GPa (e.g. 24 real bulk); with cap this '
                          'replaces the softened champion. Omit = champion 1.53 + E-variant scaling')
@@ -394,8 +422,12 @@ def main():
                          '(≙ φ_min). LOWER → higher residual porosity (main Heckel knob)')
     ap.add_argument('--cap-fric', type=float, default=0.5,
                     help='DPC Drucker-Prager friction: τ_y = σ_y + cap_fric·p')
+    ap.add_argument('--jam-phimin', type=float, default=8.0,
+                    help='JAM residual porosity floor %% (φ_min) where shear yield diverges')
+    ap.add_argument('--jam-k', type=float, default=2.0,
+                    help='JAM divergence exponent: σ_y_eff = σ_y/frac^jam_k')
     ap.add_argument('--heckel', action='store_true',
-                    help='pure-SE pressure sweep (100/300/600 MPa) to calibrate/verify the cap')
+                    help='pure-SE pressure sweep (100/300/600 MPa) to calibrate/verify')
     a = ap.parse_args()
     if a.plot:
         plot(); return
