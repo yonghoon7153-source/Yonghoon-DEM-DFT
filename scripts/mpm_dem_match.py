@@ -94,8 +94,11 @@ def run_match(args):
     grid_v = ti.Vector.field(2, ti.f32, (ng, ng)); grid_m = ti.field(ti.f32, (ng, ng))
     wall_y = ti.field(ti.f32, ()); N = ti.field(ti.i32, ())
     # DPC cap params (runtime so --heckel can sweep): pressure-dependent shear
-    # (cap_fric) + hardening cap  p_b(avp) = cap_pb0·exp(cap_h·avp)  (GPa).
-    cap_pb0 = ti.field(ti.f32, ()); cap_h = ti.field(ti.f32, ()); cap_fric = ti.field(ti.f32, ())
+    # (cap_fric) + DIVERGENT hardening cap  p_b(avp) = cap_pb0·(avpmax/(avpmax-avp))^cap_h
+    # → p_b → ∞ as avp → cap_avpmax (residual floor φ_min), so densification
+    # stops at a physical residual instead of collapsing to 0 (DPC/Cam-Clay).
+    cap_pb0 = ti.field(ti.f32, ()); cap_h = ti.field(ti.f32, ())
+    cap_fric = ti.field(ti.f32, ()); cap_avpmax = ti.field(ti.f32, ())
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), mu: ti.types.ndarray(), la: ti.types.ndarray(),
@@ -163,10 +166,11 @@ def run_match(args):
                     if dg > 0:                             # shear return (project deviatoric)
                         epl[p] += dg
                         d0 = d0 - dg * d0 / dn; d1 = d1 - dg * d1 / dn
-                    pb = cap_pb0[None] * ti.exp(cap_h[None] * avp[p])
+                    amax = cap_avpmax[None]                # divergent cap: p_b → ∞ at avp→amax
+                    pb = cap_pb0[None] * ti.pow(amax / ti.max(amax - avp[p], 1e-3), cap_h[None])
                     if pmean > pb:                         # cap return → permanent densification
                         tr_new = -pb / Kb                  # relax elastic compression to the cap
-                        avp[p] += (tr_new - tr)            # +ve compaction → hardens pb
+                        avp[p] = ti.min(avp[p] + (tr_new - tr), amax - 1e-3)   # +ve, floored at amax
                         tr = tr_new
                     g0 = d0 + 0.5 * tr; g1 = d1 + 0.5 * tr
                     F[p] = U @ ti.Matrix([[ti.exp(g0), 0.0], [0.0, ti.exp(g1)]]) @ V.transpose()
@@ -207,6 +211,7 @@ def run_match(args):
 
     def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=None, p_read=None):
         cap_pb0[None] = args.cap_pb0; cap_h[None] = args.cap_h; cap_fric[None] = args.cap_fric
+        cap_avpmax[None] = args.cap_avpmax
         if e_se_mpm is None: e_se_mpm = E_se_base
         pr = p_read if p_read else args.p_read
         rng = np.random.default_rng(seed)
@@ -233,8 +238,8 @@ def run_match(args):
     # Verifies the DPC cap BEFORE composites: a correct cap densifies and the
     # porosity drops with pressure toward a residual (target ~Minnmann 10% @ 300).
     if args.heckel:
-        print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, "
-              f"cap_pb0={args.cap_pb0} cap_h={args.cap_h} cap_fric={args.cap_fric}, n_grid={ng}")
+        print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, cap_pb0={args.cap_pb0} "
+              f"cap_h={args.cap_h} cap_avpmax={args.cap_avpmax} cap_fric={args.cap_fric}, n_grid={ng}")
         print(f"  {'P(MPa)':>7s} {'porosity%':>10s}")
         for pmpa in (100.0, 300.0, 600.0):
             vals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, p_read=pmpa / 1000.0)
@@ -376,9 +381,11 @@ def main():
     ap.add_argument('--cap-pb0', type=float, default=0.05,
                     help='DPC initial hydrostatic cap yield p_b0 (GPa) — low → powder '
                          'compacts easily, then hardens')
-    ap.add_argument('--cap-h', type=float, default=10.0,
-                    help='DPC cap hardening rate: p_b = p_b0·exp(cap_h·avp). Higher → '
-                         'stops sooner → higher residual porosity (tune to Heckel)')
+    ap.add_argument('--cap-h', type=float, default=1.0,
+                    help='DPC cap divergence exponent: p_b = p_b0·(avpmax/(avpmax-avp))^cap_h')
+    ap.add_argument('--cap-avpmax', type=float, default=0.9,
+                    help='DPC residual floor: plastic compaction avp at which p_b diverges '
+                         '(≙ φ_min). LOWER → higher residual porosity (main Heckel knob)')
     ap.add_argument('--cap-fric', type=float, default=0.5,
                     help='DPC Drucker-Prager friction: τ_y = σ_y + cap_fric·p')
     ap.add_argument('--heckel', action='store_true',
