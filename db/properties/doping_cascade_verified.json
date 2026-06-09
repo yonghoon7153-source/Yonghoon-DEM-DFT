@@ -1,0 +1,24 @@
+{
+  "property": "doping_cascade_verified_subset",
+  "description": "VERIFIED subset of the 273/multi-category doping cascade (tools/doping) results, copied to the vm repo so they are queryable here. The FULL registered cascade (39+ compounds) lives in doping_cascade.json on gabia (kserver116-27) and is pending PAT sync. This file holds compounds whose champion/convergence/EOS/elastic were directly read from the gabia run dirs and confirmed.",
+  "_source": "gabia:/data/work/runs/multi_category_2026_05_26_v23/<compound>_<x>/  (cascade git_commit 9ce6ca3, UMA-s-1p1 task=omat, run 2026-06-07). Champion xyz also at gabia:/data/work/repo/db/structures/doping/<compound>_<x>_champion.xyz.",
+  "method_notes": {
+    "score_fields": "de_post_anneal = energy/atom vs baseline AFTER anneal (eV/atom, negative = more stable than undoped baseline). dV_anneal_pct = volume change pre->post anneal. converged_post_anneal = champion geometry converged.",
+    "elastic": "UMA-s-1p1 relaxed-ion Cij -> Voigt-Reuss-Hill (B_hill/G_hill = B_VRH/G_VRH); E_VRH = 9BG/(3B+G). Absolute UMA elastic runs HIGH vs experimental AFM/UPE (12-22 GPa) — compare WITHIN cascade (UMA-vs-UMA) only.",
+    "eos": "UMA-s-1p1 Birch-Murnaghan B0 (hydrostatic). Distinct quantity from elastic B_VRH (harmonic Cij); EOS B0 < B_VRH typically (~2x for soft argyrodites)."
+  },
+  "compounds": {
+    "Al2O3": {
+      "verified_date": "2026-06-09",
+      "champion_site": "Li_24g (Al3+ -> Li site, DONOR substitution) + O -> S_16e anion site; Li compensated (champion cells 47-48 atoms = base 52 - 7 Li + 2 Al + 3 O approx).",
+      "all_concentrations_converged": true,
+      "concentrations": {
+        "x002": {"champion": "Al2O3_x020_cLi24gaS16e_s00", "variant": "Al2O3", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.791, "dV_anneal_pct": -4.36, "converged": true, "EOS_B0_GPa": 11.49, "elastic_B_VRH_GPa": 22.93, "elastic_G_VRH_GPa": 16.43, "elastic_E_VRH_GPa": 39.80, "nu": 0.211},
+        "x005": {"champion": "Al2O3_x050_cLi24gaS16e_s02", "variant": "Al2O3", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.809, "dV_anneal_pct": -4.96, "converged": true, "EOS_B0_GPa": 18.08, "elastic_B_VRH_GPa": 15.88, "elastic_G_VRH_GPa": 12.30, "elastic_E_VRH_GPa": 29.32, "nu": 0.192, "_note": "softest of the three -> best low-modulus coating candidate"},
+        "x010": {"champion": "Al2O3_x100_chain_Cl_x200_cLi24gaS16e_s00", "variant": "Al2O3+Clrich", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.818, "dV_anneal_pct": -5.72, "converged": true, "EOS_B0_GPa": 16.49, "elastic_B_VRH_GPa": 21.57, "elastic_G_VRH_GPa": 17.24, "elastic_E_VRH_GPa": 40.83, "nu": 0.185}
+      },
+      "verdict": "CLEAN. Al consistently goes to the Li_24g site (donor), O to S_16e, all concentrations converged, formation energy favorable (de < 0, Al-O bonding). Full pipeline 00_preflight..09e_ehull completed. EOS B0 11.5-18.1 GPa (softer than undoped modelc UMA ~20). x005 is the softest (E_VRH 29.3, B0 18.1) -> best fit for the Hyundai low-modulus coating-layer goal. Non-monotonic stiffness across x is champion-config + small-cell UMA noise.",
+      "answers_old_question": "Confirms 'Al goes to the Li site' (user asked 'Al은 대부분 Li 사이트로 간 건가?') -> YES, Li_24g for all concentrations."
+    }
+  }
+}
