@@ -330,6 +330,48 @@ docs/data/mpm_dpc_heckel_sweep.csv.
     mpm2d_PS_pressure champion harness), NOT the Heckel porosity number.
     Full record: docs/mpm_dpc_cap_crosscheck.md.
 
+### ★ WHY DEM electrode porosity OUTLIERS occur (DEM↔MPM, 2026-06-09) ★
+⚠ The trend comparison below used mpm2d_composition.py = a TRUE-PLASTIC sweep at
+E=24 GPa / σ_y=0.6 (frame [3] RCP-style), NOT the production CHAMPION (E=1.53/
+σ_y=0.15, which morphology + the matcher use).  So it is "DEM vs a true-plastic
+MPM (24/0.6)", and the definitive "DEM vs champion" is the PER-CASE 512 matcher
+(1.53/0.15) being set up.  (2D throughout.)
+Cross-validated the DEM corpus (132 webapp cases) against the independent
+true-plastic MPM (mpm2d_composition.py, plastic & rigid SE, E=24/σy=0.6).  Tools:
+scripts/mpm_dem_composition_compare.py (trend, 2-panel) + mpm_dem_percase_outliers.py
+(named, [plastic,rigid] band residual) + mpm_dem_match.py (per-case at real sizes).
+  • CROSS-VALIDATION: in the production core (AM 70-85 wt% ≡ SE 30-50 % of
+    SOLID, 117/132) the DEM median tracks the PLASTIC MPM within ±1 %p
+    (DEM 13.9/16.3/17.2 vs MPM-plastic 13.7/15.9/18.1).  DEM is NOT off — it
+    agrees with an independently-calibrated plastic reference where the AM
+    skeleton governs.
+  • OUTLIERS = composition/size diversity the single champion slice (P:S=7:3,
+    fixed sizes) can't span — NOT model failure:
+    (1) DENSER than plastic (≈72 cases): the DEM's explicit multi-size Furnas
+        packing — small SE geometrically fills large-AM voids (12:4:1) — plus
+        softened-E overlap → ultra-dense corners (e.g. 39:17:41 → 3.3 %).
+    (2) MORE POROUS than rigid (≈12 cases): MONOMODAL AM (P:S=10:0 or 0:10,
+        ONE AM size → no bimodal void-filling) vs the BIMODAL champion ref.
+        ~1 genuine degenerate (260601_122815 = σ_i=0 SE-no-perc).
+  • DEM MECHANISM (from input_real_9.liggghts): RIGID spheres + hooke/hysteresis
+    CONTACT plasticity (NOT particle shape flow) + softened E_eff=1.35 GPa
+    (SE youngsModulus 0.135e7).  Densification = rearrangement + size-packing +
+    OVERLAP, where the softened-E overlap is the PROXY for the void-filling flow
+    a rigid sphere can't do (overlap = "displaced material re-emerges as bulge"
+    = ε_sphere convention).  This is why softening is irreducible on the DEM
+    side too (mirror of the MPM cap/jam dead-end).
+  • SIZE EFFECT is PACKING, not overlap: bigger SE → lower porosity at SE-rich
+    BUT higher at AM-rich (crossover flips with composition: D0.5 21.2/16.1,
+    D1.5 5.7/20.1 at AM62/AM82).  Overlap (δ/R ≈ size-scale-invariant at fixed
+    P) can't flip with composition → the size-ordering is geometric Furnas
+    packing; overlap only sets the absolute level.  ε_sphere over-compression
+    (negative) is a SEPARATE extreme (dense pure-SE load-bearing), capped by
+    AM-shielding + ε_union + Stage-E area min-caps.
+  • PER-CASE 512 matcher (docs/data/dem_design_points.csv = 132 real-size cases:
+    19 mono-AM_P / 37 mono-AM_S / 76 bimodal) PENDING — to confirm the Furnas
+    dip + size-crossover emerge in the true-plastic MPM per-case.  (320 matcher
+    has +14 %p under-resolution offset + SE-rich servo over-flow.)
+
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete
