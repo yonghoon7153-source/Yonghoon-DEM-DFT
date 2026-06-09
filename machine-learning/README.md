@@ -15,3 +15,4 @@ Department of Data Science, Hanyang University
 | Lecture 3 | Linear Regression | [lecture03-linear-regression.md](lectures/lecture03-linear-regression.md) |
 | Lecture 4 | Classification, Logistic Regression, k-NN, SVM | [lecture04-classification-logistic-svm.md](lectures/lecture04-classification-logistic-svm.md) |
 | Lecture 5 | SVM (cont.), Features, Multiclass Classification | [lecture05-svm-features-multiclass.md](lectures/lecture05-svm-features-multiclass.md) |
+| Lecture 8 | Multiclass Classification, Softmax, CE Loss | [lecture08-multiclass-classification.md](lectures/lecture08-multiclass-classification.md) |
