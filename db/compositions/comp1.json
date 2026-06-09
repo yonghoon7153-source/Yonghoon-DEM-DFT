@@ -139,5 +139,14 @@
     }
   },
 
-  "references": ["deiseroth2006", "kraft2018", "adeli2019", "deng2016"]
+  "references": ["deiseroth2006", "kraft2018", "adeli2019", "deng2016"],
+
+  "bvse_5x5x5_paired_2026_06_03": {
+    "_cross_link": "Cubic 5x5x5 supercell BVSE for comp1 (Li6PS5Cl, 6500 atoms, 3000 Li). Built from comp1_v3 V0_init.cif tiled 5x5x5. Paired with modelc (modelc_v3.json bvse_5x5x5_paired_2026_06_03) which is the SAME cell with 300 S->Cl + 300 Li removals applied -- equal lattice, grid, cutoff for an apples-to-apples slide comparison.",
+    "path": "container:/home/ubuntu/work/runs/bvse_cubic_5x5x5/comp1_5x5x5/",
+    "grid_shape": [100, 100, 100], "cutoff_A": 5.0,
+    "Li_BVS_mean": 1.626, "Li_BVS_std": 0.016,
+    "low_bvse_channel_fraction": 0.0875,
+    "see_modelc_v3_for_full_pair_block": "db/compositions/modelc_v3.json -> v3_postprocess_pipeline_v2_8.bvse_5x5x5_paired_2026_06_03"
+  }
 }
