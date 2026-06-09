@@ -27,10 +27,11 @@
     },
     "3_elastic_vacancy_paradox": {
       "severity": "documented (see elastic.json intrinsic_vs_extrinsic + vs_modelc_v3_same_method headline)",
-      "our_result": "DFT 0K clamped-ion: comp1 ~ modelc E_VRH identical (52.31 vs 52.30, +-2%). BM-EOS bulk B0: modelc SOFTER (21.7 vs 26.2). Within-family 'halide up -> E down' (Br softer than Cl).",
-      "literature": "Experiment reports polycrystalline LPSCl1.6 STIFFER than LPSCl (Young's modulus trend reversed vs the intrinsic Br-up->E-down rule).",
-      "reconciliation": "Intrinsic single-crystal DFT (bulk) shows ~identical/softer; the experimental stiffening is EXTRINSIC — grain-boundary pinning by Li vacancies in the polycrystal (GB-mediated, not a bulk-modulus effect). Same intrinsic-vs-extrinsic split as oxidation. DFT 0K legitimately 'misses' the experimental Young's modulus delta because it is a microstructural effect.",
-      "type": "intrinsic-bulk vs extrinsic-polycrystalline(GB)"
+      "severity_update_2026_06_08": "RESOLVED after reading Kim ACS Mater. Lett. 2025 (mechanical paper #4). It was NEVER a real tension once the RELAXED-ION DFT is used — it was a clamped-vs-relaxed artifact.",
+      "our_result": "DFT 0K CLAMPED-ion: comp1 ~ modelc E_VRH identical (52.31 vs 52.30) = frozen PS4-framework baseline. DFT 0K RELAXED-ion (physical): modelc E_VRH 27.66 > comp1 22.06 (+24%, shear-dominant G +28%) = Cl-rich STIFFER. BM-EOS bulk B0: modelc SOFTER (21.7 vs 26.2) — different modulus (hydrostatic).",
+      "literature": "Kim ACS Mater. Lett. 2025 (Li7-zPS6-zCl(z-x)Brx, UPE Young's E): Cl up -> E UP (stiffer, crystalline HT 'E increased sharply'); Br up -> E down. Our AFM (weekly report): LPSCl1.6 14.9 GPa, NdO 15.8 GPa.",
+      "reconciliation": "RESOLVED: our RELAXED-ION E (modelc stiffer, +24%) MATCHES Kim's Cl->E-up; the 'DFT misses stiffening' claim only held for the CLAMPED-ion (frozen) baseline. Mechanism (ours, now experimentally confirmed): Cl-rich vacancy + 4d-Cl anti-site disorder jams soft shear configs -> higher G/E when ions relax. Modulus type matters: E/G HIGHER for Cl-rich (shear; relaxed-ion DFT + Kim UPE), BULK B0 LOWER for Cl-rich (EOS; more vacancy = softer hydrostatic). Quote the right modulus for the right claim.",
+      "type": "RESOLVED — clamped-vs-relaxed-ion artifact; relaxed-ion E matches experiment (Kim 2025)"
     },
     "4_band_gap_absolute": {
       "severity": "minor — absolute offset, comparison still valid",

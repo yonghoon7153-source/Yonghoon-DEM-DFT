@@ -302,6 +302,21 @@
     "intrinsic_calc": "Br up -> E down (29.1 > 28.6 > 27.3 > 26.4 > 25.8)",
     "extrinsic_expt": "Li5.4 > Li6 REVERSED due to GB pinning by vacancy",
     "within_family": "Br up -> E down in both calc and expt",
-    "cross_family": "Vacancy -> GB pinning -> polycrystal stiffer -> trend reversal"
+    "cross_family": "Vacancy -> GB pinning -> polycrystal stiffer -> trend reversal",
+    "_UPDATE_kim2025": "Refined by Kim ACS Mater. Lett. 2025 (see literature_kim_2025_halogen_modulus): the Cl-rich stiffening is NOT only extrinsic GB pinning — it is ALSO intrinsic (Cl smaller anion -> higher ion-packing density -> higher Young's E), and our RELAXED-ION DFT already captures it (modelc E 27.66 > comp1 22.06, +24%). The clamped-ion 'identical E' (line 48) was a frozen-framework baseline that created the APPARENT paradox; the physical relaxed-ion E resolves it and agrees with Kim's Cl->E up trend."
+  },
+  "literature_kim_2025_halogen_modulus": {
+    "_paper": "Young Jung Kim, Sahn Nahm, Jong-Ho Lee, Hyoungchul Kim, 'Comprehensive Analysis of Halogen-Rich Argyrodite Sulfides from a Multi-Level Perspective: Li-Ion Conduction and Elastic Modulus', ACS Materials Lett. 2025, 7, 724-729. DOI 10.1021/acsmaterialslett.4c02029. FULL PDF read 2026-06-08. (Mechanical paper #4 in the group weekly report.)",
+    "system": "Li7-zPS6-zCl(z-x)Brx (AZBrX), 1.0<=z<=1.6, 0<=x<=1.6, 42 compositions. The x=0 (pure-Cl) edge is EXACTLY our comp1 (z=1, Li6PS5Cl) -> modelc (z=1.6, Li5.4PS4.4Cl1.6) series.",
+    "method": "sigma_Li by EIS; E by ultrasonic pulse-echo (UPE) on pellets pressed at 370 MPa (= PELLET/microstructure Young's modulus, not single-crystal). Two sets: BM-AZBrX (ball-milled, low crystallinity, partial argyrodite) and HT-AZBrX (heat-treated 500C/2h, high crystallinity).",
+    "key_trends": {
+      "Cl_up_E_up": "Increasing Cl content -> HIGHER Young's E (stiffer), pronounced in crystalline HT samples ('E increased sharply'). Cl- (167 pm) smaller than S2- -> higher ion-packing density -> stiffer.",
+      "Br_up_E_down": "Increasing Br -> LOWER E (softer); Br- (182 pm) larger -> more free volume / lower packing density -> E down to 12.59 GPa (BM). Matches OUR DFT comp-series 'Br up -> E down'.",
+      "crystallinity": "Heat treatment (crystallinity) raises E ~25% (BM 12-17 GPa -> HT 15-22 GPa) and raises sigma_Li (up to 9.9 mS/cm, 4.9x BM). The HT increase is largely microstructural (denser, better-crystallized pellet).",
+      "sigma_drivers": "High sigma_Li needs total halogen z>=1.4 AND Cl-rich (smaller radius); also anion (Cl/Br) site disorder helps. Optimized region for ASSB = low E (<=18 GPa) + high sigma (>=8 mS/cm) = mixed-halogen + specific Cl (where anion disorder AND low packing density coexist)."
+    },
+    "RESOLVES_our_vacancy_paradox": "Kim's experimental 'Cl -> E up' (Young's) CONFIRMS our DFT RELAXED-ION result (modelc E_VRH 27.66 > comp1 22.06, +24%; shear-dominant G +28%) — see dft_0K_relaxed_ion_stress_strain_full_Cij headline 'VACANCY PARADOX RESOLVED'. The apparent paradox came from the CLAMPED-ion comparison (E identical 52.31=52.30, frozen PS4 framework). Physically, when ions relax (Born screening), the Cl-rich vacancy + 4d-Cl anti-site disorder JAMS soft shear configurations -> higher G/E. So: (i) clamped-ion identical = unchanged PS4 bonding framework (consistent with our ELF/COHP/Bader); (ii) relaxed-ion modelc stiffer = the real Young's modulus, matching Kim. Modulus type matters: E and G are HIGHER for Cl-rich (shear, our relaxed-ion + Kim), while BULK B0 is LOWER for Cl-rich (our EOS 21.7 < 26.2; more Li vacancy = easier hydrostatic compression). Quote the right modulus for the right claim.",
+    "absolute_value_context": "Kim UPE E (pellet) 15-22 GPa (HT) / 12-17 (BM); our AFM (weekly report) LPSCl1.6 14.9 GPa, NdO-LPSCl1.6 15.8 GPa; our DFT relaxed-ion E 22-28 GPa (ideal single crystal, upper bound). Real pellets are softer than ideal crystal (porosity/GB), so DFT > UPE > nothing-contradictory. TREND (Cl-rich stiffer in E/G) consistent across DFT relaxed-ion, Kim UPE, and our AFM direction (NdO doping 14.9->15.8).",
+    "relevance_to_group": "Kim's chemo-mechanical map (low-E + high-sigma optimization) directly supports the Hyundai coating-layer design goal (low modulus + high oxidation stability electrolyte = NdO-LPSC) in the weekly report."
   }
 }
