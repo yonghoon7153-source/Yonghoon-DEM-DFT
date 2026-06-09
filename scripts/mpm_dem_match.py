@@ -296,24 +296,34 @@ def run_match(args):
         if readout == 'wallP':
             # ── resolution-INVARIANT *absolute* readout: servo to the WALL REACTION stress ──
             # mean(prs) is a VOLUME average → the well-resolved soft SE dilutes it, so at 512
-            # the bed must over-compress (→0.8%) before the mean hits 300 MPa.  The wall
-            # reaction Σ grid_m·(v+wall_vf)/(n_sub·dt·WIDTH) = boundary force / area is a force
-            # balance → ≈ the constitutive stress (GPa) with dx/n_sub/ρ cancelling (320≡512).
-            # This is the TRUE experimental boundary condition: press the powder AT 300 MPa.
-            got = float('nan')
+            # the bed over-compresses (→0.8%) before the mean hits 300 MPa.  The wall reaction
+            # Σ grid_m·(v+wall_vf)/(n_sub·dt·WIDTH) = boundary force / area is a force balance →
+            # ≈ constitutive stress (GPa), dx/n_sub/ρ cancelling.  The TRUE experimental BC.
+            # ROBUST servo for big rigid-AM + soft-SE composites:
+            #   (1) SUSTAINED-load stop — median over a WIN-frame window, never in the first WIN
+            #       frames — so a first-contact rigid-AM TRANSIENT spike can't freeze the wall at
+            #       the initial porosity (the AM-rich rSE=0.5 "stuck at 56%" failure).
+            #   (2) gentle speed cap (0.40 vs 1.0) — the soft SE can't servo-OVERFLOW past target
+            #       (the SE-rich rSE=0.5 over-compaction, MPM 5.9±3.0 failure).
+            WIN = 5
+            got = float('nan'); hist = []
             for fr in range(int(8000 * ng / 320)):
                 wall_imp[None] = 0.0
                 for _ in range(25): substep()
                 top = wall_y[None]
                 por = max(0.0, 1.0 - sa / (WIDTH * (top - FLOOR))) * 100
-                wstress = wall_imp[None] / (25.0 * dt * WIDTH)     # GPa, resolution-invariant
+                ws = wall_imp[None] / (25.0 * dt * WIDTH)          # GPa, resolution-invariant
+                hist.append(ws)
+                if len(hist) > WIN: hist.pop(0)
+                wavg = sum(hist) / len(hist)
+                wmed = sorted(hist)[len(hist) // 2]                # median → rejects 1-2 spike frames
                 jam_poro[None] = por
-                if wstress >= pr:
+                if len(hist) >= WIN and wmed >= pr:               # SUSTAINED (not a transient spike)
                     got = por; break
                 if top <= wall_floor + 1e-4:
                     got = por; break
                 if top > wall_floor:
-                    servo = min(1.0, max(0.04, (pr - wstress) / pr))
+                    servo = min(0.40, max(0.03, (pr - wavg) / pr))  # gentle cap → no SE over-flow
                     wall_vf[None] = WALL_V * servo
                     wall_y[None] = max(top - wall_vf[None] * 25 * dt, wall_floor)
             return got
