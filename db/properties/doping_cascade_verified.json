@@ -7,18 +7,107 @@
     "elastic": "UMA-s-1p1 relaxed-ion Cij -> Voigt-Reuss-Hill (B_hill/G_hill = B_VRH/G_VRH); E_VRH = 9BG/(3B+G). Absolute UMA elastic runs HIGH vs experimental AFM/UPE (12-22 GPa) — compare WITHIN cascade (UMA-vs-UMA) only.",
     "eos": "UMA-s-1p1 Birch-Murnaghan B0 (hydrostatic). Distinct quantity from elastic B_VRH (harmonic Cij); EOS B0 < B_VRH typically (~2x for soft argyrodites)."
   },
+  "_full_audit_2026_06_09": "14 dopants x 3 concentrations + Sc2O3 x002 = 41 champions, ALL converged. See docs/cascade/cascade_dopants_2026_06_09.md for the full table + interpretation. Key findings: 38/41 champions on Li_24g, 3/41 on Li_48h (Li2O all, Cu2O x002/x010, Ag2O x010, Na2O x005), 0/41 on P_4b. Top by formation energy: Sc2O3 (-0.974) > Al2O3 cluster (-0.79..-0.82) > Mn/Co/Ca/Ba cluster (-0.57..-0.66) > rest (-0.48..-0.56). Top by softness (low E_VRH = coating candidate): Sc2O3_x002 18.7 > Al2O3_x005 29.3 > Li2O_x005 32.4 > MnO_x005 32.6 > NiO_x010 33.9. Three cases (MnO_x002, CoO_x010, ZnO_x010) returned B0=0 (EOS fit failure) but Cij/E_VRH still good. Markdown owns the narrative; this JSON holds queryable headline numbers per dopant.",
   "compounds": {
+    "Sc2O3": {
+      "verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"variant": "Sc2O3+Clrich", "site": "Li_24g", "de_post_anneal_eV_atom": -0.974, "dV_anneal_pct": -3.54, "converged": true, "EOS_B0_GPa": 17.8, "E_VRH_GPa": 18.7}
+      },
+      "verdict": "STRONGEST cascade winner. Highest formation favorability (-0.974) AND lowest E_VRH (18.7) -> most promising single coating candidate. Only x=0.02 currently; x=0.05/0.10 follow-up recommended."
+    },
     "Al2O3": {
-      "verified_date": "2026-06-09",
-      "champion_site": "Li_24g (Al3+ -> Li site, DONOR substitution) + O -> S_16e anion site; Li compensated (champion cells 47-48 atoms = base 52 - 7 Li + 2 Al + 3 O approx).",
+      "verified_date": "2026-06-09", "champion_site_all_x": "Li_24g (Al3+ -> Li site, DONOR) + O -> S_16e",
       "all_concentrations_converged": true,
       "concentrations": {
-        "x002": {"champion": "Al2O3_x020_cLi24gaS16e_s00", "variant": "Al2O3", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.791, "dV_anneal_pct": -4.36, "converged": true, "EOS_B0_GPa": 11.49, "elastic_B_VRH_GPa": 22.93, "elastic_G_VRH_GPa": 16.43, "elastic_E_VRH_GPa": 39.80, "nu": 0.211},
-        "x005": {"champion": "Al2O3_x050_cLi24gaS16e_s02", "variant": "Al2O3", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.809, "dV_anneal_pct": -4.96, "converged": true, "EOS_B0_GPa": 18.08, "elastic_B_VRH_GPa": 15.88, "elastic_G_VRH_GPa": 12.30, "elastic_E_VRH_GPa": 29.32, "nu": 0.192, "_note": "softest of the three -> best low-modulus coating candidate"},
-        "x010": {"champion": "Al2O3_x100_chain_Cl_x200_cLi24gaS16e_s00", "variant": "Al2O3+Clrich", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.818, "dV_anneal_pct": -5.72, "converged": true, "EOS_B0_GPa": 16.49, "elastic_B_VRH_GPa": 21.57, "elastic_G_VRH_GPa": 17.24, "elastic_E_VRH_GPa": 40.83, "nu": 0.185}
+        "x002": {"champion": "Al2O3_x020_cLi24gaS16e_s00", "variant": "Al2O3", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.791, "dV_anneal_pct": -4.36, "converged": true, "EOS_B0_GPa": 11.49, "elastic_B_VRH_GPa": 22.93, "elastic_G_VRH_GPa": 16.43, "E_VRH_GPa": 39.80, "nu": 0.211},
+        "x005": {"champion": "Al2O3_x050_cLi24gaS16e_s02", "variant": "Al2O3", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.809, "dV_anneal_pct": -4.96, "converged": true, "EOS_B0_GPa": 18.08, "elastic_B_VRH_GPa": 15.88, "elastic_G_VRH_GPa": 12.30, "E_VRH_GPa": 29.32, "nu": 0.192, "_note": "softest Al2O3, best low-modulus coating candidate"},
+        "x010": {"champion": "Al2O3_x100_chain_Cl_x200_cLi24gaS16e_s00", "variant": "Al2O3+Clrich", "site": "Li_24g/S_16e", "de_post_anneal_eV_atom": -0.818, "dV_anneal_pct": -5.72, "converged": true, "EOS_B0_GPa": 16.49, "elastic_B_VRH_GPa": 21.57, "elastic_G_VRH_GPa": 17.24, "E_VRH_GPa": 40.83, "nu": 0.185}
       },
-      "verdict": "CLEAN. Al consistently goes to the Li_24g site (donor), O to S_16e, all concentrations converged, formation energy favorable (de < 0, Al-O bonding). Full pipeline 00_preflight..09e_ehull completed. EOS B0 11.5-18.1 GPa (softer than undoped modelc UMA ~20). x005 is the softest (E_VRH 29.3, B0 18.1) -> best fit for the Hyundai low-modulus coating-layer goal. Non-monotonic stiffness across x is champion-config + small-cell UMA noise.",
-      "answers_old_question": "Confirms 'Al goes to the Li site' (user asked 'Al은 대부분 Li 사이트로 간 건가?') -> YES, Li_24g for all concentrations."
-    }
+      "verdict": "Robust across all 3 x. x005 is softest (E_VRH 29.3, B0 18.1) and remains the Al2O3 coating-candidate pick."
+    },
+    "MnO": {
+      "verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"variant": "MnO", "de_post_anneal_eV_atom": -0.652, "dV_anneal_pct": -5.90, "EOS_B0_GPa_FIT_FAIL": 0.0, "E_VRH_GPa": 37.7},
+        "x005": {"variant": "MnO", "de_post_anneal_eV_atom": -0.662, "dV_anneal_pct": -2.44, "EOS_B0_GPa": 18.2, "E_VRH_GPa": 32.6, "_note": "soft + low dV + good de"},
+        "x010": {"variant": "MnO", "de_post_anneal_eV_atom": -0.639, "dV_anneal_pct": -0.46, "EOS_B0_GPa": 18.0, "E_VRH_GPa": 35.9, "_note": "smallest |dV| of cascade"}
+      },
+      "verdict": "Strong dE cluster (-0.64..-0.66), minimal lattice strain, soft E. x005 best balanced; x002 B0 fit failed (Cij still good)."
+    },
+    "CoO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"de_post_anneal_eV_atom": -0.583, "dV_anneal_pct": -5.32, "EOS_B0_GPa": 22.3, "E_VRH_GPa": 49.1},
+        "x005": {"de_post_anneal_eV_atom": -0.568, "dV_anneal_pct": -2.66, "EOS_B0_GPa": 19.3, "E_VRH_GPa": 42.9},
+        "x010": {"de_post_anneal_eV_atom": -0.566, "dV_anneal_pct": -3.26, "EOS_B0_GPa_FIT_FAIL": 0.0, "E_VRH_GPa": 47.7}
+      }, "verdict": "Mid cluster, stiff. x010 B0 fit failed."},
+    "NiO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"de_post_anneal_eV_atom": -0.532, "dV_anneal_pct": -3.11, "EOS_B0_GPa": 18.9, "E_VRH_GPa": 37.7},
+        "x005": {"de_post_anneal_eV_atom": -0.569, "dV_anneal_pct": -5.85, "EOS_B0_GPa": 20.9, "E_VRH_GPa": 49.6},
+        "x010": {"de_post_anneal_eV_atom": -0.551, "dV_anneal_pct": -3.75, "EOS_B0_GPa": 19.2, "E_VRH_GPa": 33.9}
+      }, "verdict": "Direction consistent with earlier db NiO entry (0.81/0.85/0.70). x010 softest."},
+    "CaO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"de_post_anneal_eV_atom": -0.580, "dV_anneal_pct": -5.40, "EOS_B0_GPa": 23.5, "E_VRH_GPa": 49.1},
+        "x005": {"de_post_anneal_eV_atom": -0.570, "dV_anneal_pct": -2.11, "EOS_B0_GPa": 16.2, "E_VRH_GPa": 39.5},
+        "x010": {"de_post_anneal_eV_atom": -0.577, "dV_anneal_pct": -3.78, "EOS_B0_GPa": 21.2, "E_VRH_GPa": 44.4}
+      }, "verdict": "Mid cluster. x005 lowest B0."},
+    "BaO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"de_post_anneal_eV_atom": -0.577, "dV_anneal_pct": -4.79, "EOS_B0_GPa": 23.2, "E_VRH_GPa": 50.4},
+        "x005": {"de_post_anneal_eV_atom": -0.571, "dV_anneal_pct": -3.71, "EOS_B0_GPa": 20.0, "E_VRH_GPa": 36.2},
+        "x010": {"de_post_anneal_eV_atom": -0.579, "dV_anneal_pct": -4.17, "EOS_B0_GPa": 21.8, "E_VRH_GPa": 48.7}
+      }, "verdict": "Mid cluster, stiff in E."},
+    "SrO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"de_post_anneal_eV_atom": -0.507, "dV_anneal_pct": -3.78, "EOS_B0_GPa": 16.4, "E_VRH_GPa": 42.3},
+        "x005": {"de_post_anneal_eV_atom": -0.546, "dV_anneal_pct": -1.20, "EOS_B0_GPa": 19.2, "E_VRH_GPa": 46.6, "_note": "smallest |dV| in cascade (-1.20%)"},
+        "x010": {"de_post_anneal_eV_atom": -0.522, "dV_anneal_pct": -2.65, "EOS_B0_GPa": 17.9, "E_VRH_GPa": 42.7}
+      }, "verdict": "Lowest lattice strain on doping."},
+    "MgO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"variant": "MgO+Clrich", "de_post_anneal_eV_atom": -0.544, "dV_anneal_pct": -7.65, "EOS_B0_GPa": 22.9, "E_VRH_GPa": 58.7},
+        "x005": {"variant": "MgO+Clrich", "de_post_anneal_eV_atom": -0.555, "dV_anneal_pct": -8.64, "EOS_B0_GPa": 24.3, "E_VRH_GPa": 52.6},
+        "x010": {"variant": "MgO", "de_post_anneal_eV_atom": -0.531, "dV_anneal_pct": -9.12, "EOS_B0_GPa": 17.2, "E_VRH_GPa": 44.4}
+      }, "verdict": "Mg prefers co-Cl-enrichment at x<=0.05. Large |dV| (-7 to -9%)."},
+    "Li2O": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_48h (Li dopant goes to smaller site)",
+      "concentrations": {
+        "x002": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.553, "dV_anneal_pct": -7.77, "EOS_B0_GPa": 23.1, "E_VRH_GPa": 37.5},
+        "x005": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.531, "dV_anneal_pct": -5.47, "EOS_B0_GPa": 23.8, "E_VRH_GPa": 32.4, "_note": "softest of the monovalent dopants"},
+        "x010": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.550, "dV_anneal_pct": -9.69, "EOS_B0_GPa": 21.2, "E_VRH_GPa": 40.2, "_note": "largest |dV| of cascade (-9.69%)"}
+      }, "verdict": "Self-similar substitution (Li+->Li+) prefers smaller 48h sites in all x."},
+    "Cu2O": {"verified_date": "2026-06-09",
+      "concentrations": {
+        "x002": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.542, "dV_anneal_pct": -6.17, "EOS_B0_GPa": 19.4, "E_VRH_GPa": 40.8},
+        "x005": {"site": "Li_24g", "de_post_anneal_eV_atom": -0.559, "dV_anneal_pct": -8.55, "EOS_B0_GPa": 26.1, "E_VRH_GPa": 54.7},
+        "x010": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.540, "dV_anneal_pct": -5.25, "EOS_B0_GPa": 18.9, "E_VRH_GPa": 44.2}
+      }, "verdict": "Small Cu+ prefers Li_48h at low+high x but Li_24g at x=0.05 (concentration crossover). Stiff E."},
+    "Ag2O": {"verified_date": "2026-06-09",
+      "concentrations": {
+        "x002": {"site": "Li_24g", "de_post_anneal_eV_atom": -0.507, "dV_anneal_pct": -7.97, "EOS_B0_GPa": 26.5, "E_VRH_GPa": 48.3},
+        "x005": {"site": "Li_24g", "de_post_anneal_eV_atom": -0.499, "dV_anneal_pct": -3.69, "EOS_B0_GPa": 18.5, "E_VRH_GPa": 38.6},
+        "x010": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.506, "dV_anneal_pct": -5.50, "EOS_B0_GPa": 18.0, "E_VRH_GPa": 40.4}
+      }, "verdict": "Like Cu+: small monovalent cation, 48h at high x."},
+    "Na2O": {"verified_date": "2026-06-09",
+      "concentrations": {
+        "x002": {"site": "Li_24g", "de_post_anneal_eV_atom": -0.500, "dV_anneal_pct": -2.80, "EOS_B0_GPa": 21.3, "E_VRH_GPa": 37.4},
+        "x005": {"site": "Li_48h", "de_post_anneal_eV_atom": -0.486, "dV_anneal_pct": -3.41, "EOS_B0_GPa": 19.4, "E_VRH_GPa": 48.3},
+        "x010": {"site": "Li_24g", "de_post_anneal_eV_atom": -0.483, "dV_anneal_pct": -4.90, "EOS_B0_GPa": 21.7, "E_VRH_GPa": 39.1}
+      }, "verdict": "Weakest dE cluster. 48h at x=0.05 is a tie-breaker, not a chemistry signal."},
+    "ZnO": {"verified_date": "2026-06-09", "champion_site_all_x": "Li_24g",
+      "concentrations": {
+        "x002": {"de_post_anneal_eV_atom": -0.504, "dV_anneal_pct": -4.35, "EOS_B0_GPa": 18.0, "E_VRH_GPa": 46.4},
+        "x005": {"de_post_anneal_eV_atom": -0.501, "dV_anneal_pct": -3.83, "EOS_B0_GPa": 22.6, "E_VRH_GPa": 59.9, "_note": "stiffest E_VRH in cascade"},
+        "x010": {"de_post_anneal_eV_atom": -0.500, "dV_anneal_pct": -5.21, "EOS_B0_GPa_FIT_FAIL": 0.0, "E_VRH_GPa": 45.6}
+      }, "verdict": "Stiff, weakest dE. x010 B0 fit failed."}
+  },
+  "coating_candidates_ranked_by_E_VRH": {
+    "_purpose": "For Hyundai low-modulus coating-layer goal (weekly report). Sorted ascending in E_VRH (softer first); only champions with both favorable dE and good EOS+elastic data.",
+    "rank1_Sc2O3_x002": {"E_VRH": 18.7, "dE_post": -0.974, "site": "Li_24g+Clrich", "note": "best overall: softest AND strongest formation"},
+    "rank2_Al2O3_x005": {"E_VRH": 29.3, "dE_post": -0.809, "site": "Li_24g", "note": "literature-known route"},
+    "rank3_Li2O_x005":  {"E_VRH": 32.4, "dE_post": -0.531, "site": "Li_48h", "note": "softest monovalent"},
+    "rank4_MnO_x005":   {"E_VRH": 32.6, "dE_post": -0.662, "site": "Li_24g", "note": "low dV (-2.4%) + good dE"},
+    "rank5_NiO_x010":   {"E_VRH": 33.9, "dE_post": -0.551, "site": "Li_24g", "note": "matches earlier db NiO direction"}
   }
 }
