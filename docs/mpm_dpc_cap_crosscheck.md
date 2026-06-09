@@ -78,3 +78,39 @@ Neither E baseline matches Heckel with the cap → the cap is the wrong tool her
 
 Cross-check tooling: `scripts/mpm_dem_match.py --model dpc --heckel`
 (servo wall, divergent cap).  Data: `docs/data/mpm_dpc_heckel_sweep.csv`.
+
+## Follow-up: `--model jam` (density-dependent jamming) — also can't match Heckel
+
+Pursued the physically-correct alternative to the cap (no particle shrinkage):
+stop the rearrangement over-flow with a jamming mechanism keyed to packing
+density.  Tried two, both as `--model jam`:
+
+1. **Shear (deviatoric) jamming** — σ_y_eff = σ_y/frac^k, frac=(poro-phimin)/
+   (poro0-phimin).  FAILED: jam_phimin had no effect, 600 MPa still collapsed.
+   The wall loads the bed VOLUMETRICALLY; a diverging SHEAR yield can't resist
+   volumetric compression, so the soft elastic bulk lets the wall push past
+   phimin to full-pack.
+
+2. **Volumetric (bulk-modulus) jamming** — la_eff = la/frac^k (the packing's
+   effective bulk modulus diverges as poro→phimin; NOT particle shrinkage).
+   ENGAGES correctly (jam_phimin now moves the 600-MPa value, no collapse:
+   600→22-24% across phimin 5-11) — so the mechanism is right — but it
+   OVER-stiffens (pure-SE 36/27/22% vs Heckel 14/10/8) because a continuum has
+   no self-consistent local packing density to keep "loose=compliant,
+   jammed=rigid" sharp.
+
+Champion baseline in the SAME matcher harness (von Mises, E=1.53): pure-SE
+31.4/7.1/0.8 % at 100/300/600 — does NOT match the Heckel shape either, and
+collapses at 600 (and differs from the dedicated champion script
+mpm2d_PS_pressure.py's 11.4 % @ 300 — harness difference).
+
+**Conclusion (triple-confirmed: cap / shear-jam / bulk-jam): the resolved-grain
+continuum MPM cannot quantitatively reproduce the experimental Heckel curve,
+independent of the constitutive model.** Compaction Heckel is a contact-network
+phenomenon (rearrangement + jamming) — DEM and the homogenized-REV DPC own it.
+The resolved-grain MPM owns MORPHOLOGY (shape change), which the champion
+reproduces against SEM (core-preserved + boundary-flattening, mpm2d_morphology.py).
+The softening E_eff=1.53 is irreducible at BOTH the plastic level (cap fails)
+and the elastic level (real E=24 under-densifies even with correct jamming).
+→ "depict SE with this tool" = the morphology, not the Heckel number.
+

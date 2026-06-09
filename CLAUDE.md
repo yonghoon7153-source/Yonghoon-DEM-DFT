@@ -314,11 +314,21 @@ docs/data/mpm_dpc_heckel_sweep.csv.
     resolved grain.
   • Small-SE trend reported BRACKETED [rigid DEM ~21% upper, plastic-continuum
     ~0.9% lower]; gap = quantified missing jamming (frame [1] LIMIT).
-  • NEXT (user wants to DEPICT SE with this tool): the physically-correct way
-    to stop the resolved-grain over-flow WITHOUT particle shrinkage is a
-    DENSITY-DEPENDENT DEVIATORIC (shear) yield that diverges as local packing
-    → φ_max (isochoric jamming) → `--model jam` (in progress).  Goal = realistic
-    SE compaction morphology AND porosity in the resolved grain.
+  • `--model jam` DONE (2026-06-09): tried density-dependent jamming (no
+    particle shrinkage).  Shear-jam (σ_y/frac^k) FAILED — a diverging SHEAR
+    yield can't resist the VOLUMETRIC wall load (600 still collapsed, phimin
+    no effect).  Bulk-jam (la_eff=la/frac^k, packing bulk modulus diverges at
+    φ_max) ENGAGES (phimin moves 600, no collapse) but OVER-stiffens (pure-SE
+    36/27/22% vs Heckel 14/10/8) — continuum has no self-consistent local
+    packing density.  Champion baseline same harness: 31/7/0.8 (also no
+    Heckel match, collapses @600).  ⇒ TRIPLE-CONFIRMED (cap/shear-jam/bulk-jam):
+    resolved-grain continuum MPM CANNOT reproduce the experimental Heckel —
+    compaction Heckel is a contact-network phenomenon (DEM + homogenized-REV
+    DPC own it); MPM owns MORPHOLOGY (champion ≈ SEM).  softening irreducible
+    at BOTH plastic (cap fails) and elastic (real E under-densifies) levels.
+    → "DEPICT SE with this tool" = the MORPHOLOGY (mpm2d_morphology.py /
+    mpm2d_PS_pressure champion harness), NOT the Heckel porosity number.
+    Full record: docs/mpm_dpc_cap_crosscheck.md.
 
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
