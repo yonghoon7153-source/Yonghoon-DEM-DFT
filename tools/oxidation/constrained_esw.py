@@ -125,6 +125,28 @@ def reaction_strain(rxn, vpa, v_se):
     return dV, n_Li, eps, " + ".join(parts), missing
 
 
+def augmented_pd_relax(entries, k_eff):
+    """Augmented PhaseDiagram for Fitzhugh re-min: E_i -> E_i + K_eff*V_i for every
+    SOLID phase; Li metal kept UNAUGMENTED (open-element reservoir at the anode).
+    Volume-expanding decompositions are penalised; optimal product set re-selected
+    at each K_eff (reproduces Gil-González Table S1 product-set switching:
+    PCl3/P2S7/SCl at 0 GPa -> SCl4/Li2PS3/S at 20 GPa)."""
+    from pymatgen.analysis.phase_diagram import PhaseDiagram, PDEntry
+    pd_entries = []
+    for e in entries:
+        els = e.composition.elements
+        is_Li_metal = (len(els) == 1 and els[0].symbol == "Li")
+        try:
+            V = float(e.structure.volume)
+        except Exception:
+            V = None
+        if V is None or is_Li_metal:
+            pd_entries.append(PDEntry(e.composition, e.energy))
+        else:
+            pd_entries.append(PDEntry(e.composition, e.energy + k_eff * V * GPA_A3_TO_EV))
+    return PhaseDiagram(pd_entries)
+
+
 def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -132,6 +154,11 @@ def main():
     ap.add_argument("--v_se_A3", nargs="+", type=float, required=True)
     ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
     ap.add_argument("--k_eff", nargs="+", type=float, default=[0, 10, 20])
+    ap.add_argument("--mode", choices=["leading", "relax"], default="leading",
+                    help="leading = leading-order edge shift (fast, K_eff=0 onset reused). "
+                         "relax = full Fitzhugh re-minimisation (rebuild augmented hull at "
+                         "each K_eff so the optimal product set itself changes -- matches "
+                         "Gil-González Table S1 product-set switching).")
     ap.add_argument("--out", default="constrained_esw_results.json")
     args = ap.parse_args()
 
@@ -173,24 +200,50 @@ def main():
             print(f"  RED onset {red['V']:.2f} V | n_e={ner:.2f} | "
                   f"DeltaV={dVr:+.1f} Å^3 | eps_RXN={epsr:+.3f} | {red['rxn']}")
 
-        # leading-order window vs K_eff
+        # window vs K_eff: leading-order or full Fitzhugh re-min
         win = {}
-        print("  window vs K_eff:")
+        print(f"  window vs K_eff ({args.mode} mode):")
         for k in args.k_eff:
             phi_ox = phi_red = None
-            if ox_info and ox_info["n_e"]:
-                phi_ox = ox_info["phi0_V"] + k * ox_info["DeltaV_A3"] * GPA_A3_TO_EV / ox_info["n_e"]
-            if red_info and red_info["n_e"]:
-                phi_red = red_info["phi0_V"] - k * red_info["DeltaV_A3"] * GPA_A3_TO_EV / red_info["n_e"]
+            ox_rxn_k = red_rxn_k = None
+            if args.mode == "leading":
+                if ox_info and ox_info["n_e"]:
+                    phi_ox = ox_info["phi0_V"] + k * ox_info["DeltaV_A3"] * GPA_A3_TO_EV / ox_info["n_e"]
+                    ox_rxn_k = ox_info["rxn"]
+                if red_info and red_info["n_e"]:
+                    phi_red = red_info["phi0_V"] - k * red_info["DeltaV_A3"] * GPA_A3_TO_EV / red_info["n_e"]
+                    red_rxn_k = red_info["rxn"]
+            else:  # relax: rebuild augmented hull at each K_eff, re-extract onsets
+                if k == 0:
+                    pd_k, mu_k = pd, mu_ref
+                else:
+                    pd_k = augmented_pd_relax(entries, k)
+                    mu_k = pd_k.el_refs[Li].energy_per_atom
+                try:
+                    red_k, ox_k, _ = onset_reactions(pd_k, comp, mu_k)
+                except Exception as e:
+                    print(f"    K={k:>4.0f} GPa: ERROR {type(e).__name__}: {e}")
+                    win[str(k)] = {"error": str(e)}
+                    continue
+                if ox_k:
+                    phi_ox = ox_k["V"]
+                    ox_rxn_k = str(ox_k["rxn"])
+                if red_k:
+                    phi_red = red_k["V"]
+                    red_rxn_k = str(red_k["rxn"])
             width = (phi_ox - phi_red) if (phi_ox is not None and phi_red is not None) else None
             win[str(k)] = {"reduction_V": round(phi_red, 3) if phi_red is not None else None,
                            "oxidation_V": round(phi_ox, 3) if phi_ox is not None else None,
-                           "width_V": round(width, 3) if width is not None else None}
+                           "width_V": round(width, 3) if width is not None else None,
+                           "oxidation_rxn": ox_rxn_k,
+                           "reduction_rxn": red_rxn_k}
             print(f"    K={k:>4.0f} GPa: {win[str(k)]['reduction_V']} - "
                   f"{win[str(k)]['oxidation_V']} V  (width {win[str(k)]['width_V']})")
+            if args.mode == "relax" and ox_rxn_k and ox_rxn_k != (ox_info["rxn"] if ox_info else None):
+                print(f"      [re-min] anodic rxn switched to: {ox_rxn_k}")
         print()
         results[lab] = {"composition": cs, "v_se_A3_per_fu": v_se,
-                        "oxidation_onset": ox_info, "reduction_onset": red_info,
+                        "oxidation_onset_K0": ox_info, "reduction_onset_K0": red_info,
                         "window_vs_k_eff": win}
 
     # comp1 vs modelc widening comparison
@@ -205,10 +258,16 @@ def main():
                       f"(DeltaV {ox['DeltaV_A3']:+.1f} Å^3, n_e {ox['n_e']})")
         print("  -> larger eps_RXN / (DeltaV/n_e) widens MORE under constriction.")
 
+    method_desc = (
+        "strain-explicit constrained ESW (Fitzhugh leading-order edge shift "
+        "phi += K_eff*DeltaV/n_e)" if args.mode == "leading" else
+        "Fitzhugh full re-minimisation (augmented hull E_i += K_eff*V_i for every "
+        "SOLID phase; Li metal unaugmented; get_element_profile re-run per K_eff so "
+        "the optimal product set itself can switch)"
+    )
     Path(args.out).write_text(json.dumps({
-        "method": "strain-explicit constrained ESW (Fitzhugh leading-order edge "
-                  "shift phi += K_eff*DeltaV/n_e). MP GGA_GGA+U volumes; "
-                  "LiS4/SCl3/Li5PS4Cl2 excluded.",
+        "method": method_desc + ". MP GGA_GGA+U hull; LiS4/SCl3/Li5PS4Cl2 excluded.",
+        "mode": args.mode,
         "k_eff_GPa": args.k_eff, "results": results,
     }, indent=2))
     print(f"→ {args.out}")
