@@ -2,53 +2,47 @@
 """constrained_esw.py — Mechanically-CONSTRAINED electrochemical stability window
 (Gil-González/Fitzhugh constrained-ensemble method), our-cells implementation.
 
-Extends the 0-pressure grand-potential ESW (esw_grand_potential.py) with the
-Fitzhugh strain term so we reproduce Gil-González (Energy Storage Mater. 2022)
-with OUR comp1 / modelc compositions and show that the Cl-rich oxidation window
-widens MORE under mechanical constriction.
+Reproduces the composition dependence of Gil-González (Energy Storage Mater. 2022)
+for OUR comp1 / modelc by computing the REACTION VOLUMETRIC STRAIN of the
+decomposition explicitly and applying the Fitzhugh strain term as a leading-order
+shift of the window edges.
 
-Method (exact reduction of Fitzhugh Eq.1)
------------------------------------------
-The constrained decomposition driving force (Gil-González Eq.1) is
-    d_sD G' = (G_D - G_SE) + V*eps_RXN*K_eff ,
-with eps_RXN = (V_products - V_SE)/V_SE the reaction volumetric strain and K_eff
-the effective bulk modulus (mechanical-constriction level). Since
-    V*eps_RXN*K_eff = K_eff*(V_products - V_SE) ,
-the strain penalty is a per-phase PV term: augmenting every phase energy by
-    E_i -> E_i + K_eff * V_i        (P = K_eff effective pressure)
-adds K_eff*V_products to any decomposition and K_eff*V_SE to the parent (a
-constant), so the grand-potential hull built from the augmented entries selects
-exactly the strain-minimised decomposition. Volume-EXPANDING decompositions
-(eps_RXN>0) are suppressed -> the SE is stabilised -> the window WIDENS, and the
-optimal product set itself changes with K_eff (reproducing their Table S1, e.g.
-PCl3/P2S7/SCl at 0 GPa -> SCl4/Li2PS3/S at 20 GPa). This is the LINEAR strain
-model (work against an effective back-pressure P=K_eff).
+Why strain-explicit (not augmented-hull)
+----------------------------------------
+get_element_profile gives edge voltages set by PHASE stability, which are
+composition-INDEPENDENT (comp1 and modelc share the same Li-P-S-Cl decomposition
+phases -> identical edges). Gil-González's Cl-rich-widens-more result instead
+comes from the composition-dependent REACTION STRAIN. Here we:
+  1. Get the K_eff=0 oxidation-onset and reduction-onset reactions per
+     composition (clean MP hull, LiS4/SCl3/Li5PS4Cl2 excluded).
+  2. Compute the reaction volume change DeltaV = V_products(solids) - V_SE from
+     MP molar volumes (released/consumed Li goes to/from the anode reservoir and
+     does NOT count in the constrained solid volume).
+  3. Apply Fitzhugh Eq.1 at the onset: the decomposition driving force
+     d_sD G' = dG_chem + K_eff*DeltaV ; near the K_eff=0 onset dG_chem grows
+     ~ -n_e*(phi - phi0)*e, so the edge shifts by
+        anodic : phi_ox(K)  = phi_ox0  + K_eff*DeltaV_ox  / n_e_ox
+        cathodic: phi_red(K) = phi_red0 - K_eff*DeltaV_red / n_e_red
+     (units: GPa*Å^3 -> eV via 6.242e-3; per electron -> Volts.) A volume-
+     EXPANDING decomposition (DeltaV>0) is suppressed -> the window WIDENS, and
+     a composition whose decomposition expands MORE per electron widens MORE.
 
-Phase set: excludes LiS4 (mp-995393), SCl3 (mp-1186934), Li5PS4Cl2 (mp-1040450),
-matching Gil-González SI.
-
-Voltage convention: V = mu_Li(metal, augmented frame) - mu_Li ; 0 V = Li metal.
-(The Li reference is taken in the SAME augmented frame, so comp1 and modelc are
-compared consistently; an overall reference offset cancels in the comparison.)
-
-Usage (gabia / kserver116-27, MP_API_KEY set):
+Usage (gabia, MP_API_KEY set):
     python3 constrained_esw.py \
         --target "Li6PS5Cl:comp1" "Li5.4P1S4.4Cl1.6:modelc" \
         --v_se_A3 254.16 243.29 \
         --k_eff 0 10 20 \
         --out constrained_esw_results.json
-
-  --v_se_A3 : SE molar volume per FORMULA UNIT (Å^3/fu) for each target, used
-              only for the eps_RXN diagnostic print (the hull uses MP volumes).
-              comp1 EOS V0 1016.62/4fu = 254.16 ; modelc 1216.44/5fu = 243.29.
+  --v_se_A3 : SE molar volume per FORMULA UNIT (Å^3): comp1 1016.62/4=254.16,
+              modelc 1216.44/5=243.29.
 """
 import argparse
 import json
 import os
 from pathlib import Path
 
-GPA_A3_TO_EV = 6.241509074e-3  # 1 GPa*Å^3 in eV
-EXCLUDE_IDS = {"mp-995393", "mp-1186934", "mp-1040450"}  # LiS4, SCl3, Li5PS4Cl2
+GPA_A3_TO_EV = 6.241509074e-3
+EXCLUDE_FORMULAS = {"LiS4", "SCl3", "Li5PS4Cl2"}  # Gil-González SI exclusions
 
 
 def get_entries(elements):
@@ -57,140 +51,167 @@ def get_entries(elements):
     with MPRester(key) as mpr:
         entries = mpr.get_entries_in_chemsys(
             elements, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
-    kept, dropped, novol = [], [], 0
+    kept, dropped = [], []
     for e in entries:
-        eid = str(getattr(e, "entry_id", ""))
-        if any(x in eid for x in EXCLUDE_IDS):
-            dropped.append(eid); continue
+        if e.composition.reduced_formula in EXCLUDE_FORMULAS:
+            dropped.append(e.composition.reduced_formula); continue
         kept.append(e)
-    print(f"[mp_api] {len(entries)} entries; dropped {dropped}; kept {len(kept)}")
+    print(f"[mp_api] {len(entries)} entries; dropped {sorted(set(dropped))}; "
+          f"kept {len(kept)}")
     return kept
 
 
-def entry_volume(e):
-    try:
-        return float(e.structure.volume)
-    except Exception:
-        v = getattr(e, "data", {}) or {}
-        return float(v.get("volume")) if v.get("volume") else None
-
-
-def augmented_pd(entries, k_eff):
-    """PhaseDiagram with each phase energy -> E + K_eff*V (effective pressure)."""
-    from pymatgen.analysis.phase_diagram import PhaseDiagram, PDEntry
-    pd_entries, missing = [], 0
+def vol_per_atom_table(entries):
+    """reduced_formula -> volume per atom (Å^3) from the lowest-energy entry."""
+    best = {}
+    vpa = {}
     for e in entries:
-        V = entry_volume(e)
-        # Do NOT augment the open-element reservoir (elemental Li at the anode is
-        # NOT under the cathode-side constriction). Keeping Li metal unaugmented
-        # fixes the voltage reference so the window WIDENS (anodic up, cathodic
-        # down) instead of rigidly shifting up.
-        els = e.composition.elements
-        is_Li_metal = (len(els) == 1 and els[0].symbol == "Li")
-        if V is None or is_Li_metal:
-            if V is None and not is_Li_metal:
-                missing += 1
-            pd_entries.append(PDEntry(e.composition, e.energy)); continue
-        aug = e.energy + k_eff * V * GPA_A3_TO_EV
-        pd_entries.append(PDEntry(e.composition, aug))
-    if missing:
-        print(f"   [warn] {missing} entries had no volume (no augmentation)")
-    return PhaseDiagram(pd_entries)
+        rf = e.composition.reduced_formula
+        epa = e.energy_per_atom
+        if rf not in best or epa < best[rf]:
+            best[rf] = epa
+            try:
+                vpa[rf] = float(e.structure.volume) / e.composition.num_atoms
+            except Exception:
+                pass
+    return vpa
 
 
-def window_from_profile(pd, comp, mu_Li_ref):
+def onset_reactions(pd, comp, mu_Li_ref):
+    """K_eff=0: return (red_limit_V, red_rxn, ox_limit_V, ox_rxn, full_steps)."""
     from pymatgen.core import Element
     Li = Element("Li")
     profile = pd.get_element_profile(Li, comp)
     steps = []
     for p in profile:
-        mu = float(p["chempot"])
-        steps.append({
-            "V": round(mu_Li_ref - mu, 3),
-            "evo": round(float(p["evolution"]), 4),
-            "rxn": str(p["reaction"]),
-        })
+        steps.append({"V": round(mu_Li_ref - float(p["chempot"]), 3),
+                      "evo": round(float(p["evolution"]), 4),
+                      "rxn": p["reaction"]})
     s = sorted(steps, key=lambda x: x["V"])
-    pos = [x for x in s if x["evo"] > 1e-6]    # reduction (Li uptake)
-    neg = [x for x in s if x["evo"] < -1e-6]   # oxidation (Li release)
-    red = max((x["V"] for x in pos), default=None)   # cathodic limit
-    ox = min((x["V"] for x in neg), default=None)     # anodic limit
-    ox_rxn = next((x["rxn"] for x in s if x["V"] == ox), None) if ox else None
-    return red, ox, ox_rxn, steps
+    pos = [x for x in s if x["evo"] > 1e-6]   # reduction (Li uptake)
+    neg = [x for x in s if x["evo"] < -1e-6]  # oxidation (Li release)
+    red = max(pos, key=lambda x: x["V"]) if pos else None
+    ox = min(neg, key=lambda x: x["V"]) if neg else None
+    return red, ox, steps
+
+
+def reaction_strain(rxn, vpa, v_se):
+    """DeltaV = V_products(solids) - V_SE, n_e = |Li exchanged|. Returns
+    (DeltaV_A3_per_fu, n_e, eps_RXN, product_str, missing[list])."""
+    from pymatgen.core import Composition, Element
+    Li = Composition("Li").reduced_formula
+    vol_prod = 0.0
+    n_Li = 0.0
+    missing = []
+    parts = []
+    for c in rxn.products:
+        coeff = abs(rxn.get_coeff(c))
+        rf = c.reduced_formula
+        if rf == "Li":
+            n_Li += coeff * c.num_atoms
+            continue
+        vpa_i = vpa.get(rf)
+        if vpa_i is None:
+            missing.append(rf); continue
+        v = coeff * c.num_atoms * vpa_i
+        vol_prod += v
+        parts.append(f"{coeff:.3g}{rf}({v:.1f})")
+    # Li may instead be a REACTANT (reduction) -> count it as Li exchanged too
+    for c in rxn.reactants:
+        if c.reduced_formula == "Li":
+            n_Li += abs(rxn.get_coeff(c)) * c.num_atoms
+    dV = vol_prod - v_se
+    eps = dV / v_se if v_se else None
+    return dV, n_Li, eps, " + ".join(parts), missing
 
 
 def main():
     ap = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--target", nargs="+", required=True,
-                    help='comp:label, e.g. "Li6PS5Cl:comp1" "Li5.4P1S4.4Cl1.6:modelc"')
-    ap.add_argument("--v_se_A3", nargs="+", type=float, default=None,
-                    help="SE molar volume per fu (Å^3), same order as --target (diagnostic only)")
+    ap.add_argument("--target", nargs="+", required=True)
+    ap.add_argument("--v_se_A3", nargs="+", type=float, required=True)
     ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
-    ap.add_argument("--k_eff", nargs="+", type=float, default=[0, 10, 20],
-                    help="effective bulk moduli (GPa) to scan")
+    ap.add_argument("--k_eff", nargs="+", type=float, default=[0, 10, 20])
     ap.add_argument("--out", default="constrained_esw_results.json")
     args = ap.parse_args()
 
     from pymatgen.core import Element, Composition
+    from pymatgen.analysis.phase_diagram import PhaseDiagram
     Li = Element("Li")
-    entries = get_entries(args.elements)
 
-    # consistent Li reference per K_eff (augmented frame)
+    entries = get_entries(args.elements)
+    vpa = vol_per_atom_table(entries)
+    pd = PhaseDiagram(entries)
+    mu_ref = pd.el_refs[Li].energy_per_atom
+    print(f"mu_Li(metal) = {mu_ref:.4f} eV/atom\n")
+
     results = {}
-    targets = []
     for i, spec in enumerate(args.target):
         cs, _, lab = spec.partition(":")
-        v_se = args.v_se_A3[i] if args.v_se_A3 and i < len(args.v_se_A3) else None
-        targets.append((cs, lab or cs, v_se))
-        results[lab or cs] = {"composition": cs, "v_se_A3_per_fu": v_se,
-                              "by_k_eff": {}}
+        lab = lab or cs
+        v_se = args.v_se_A3[i]
+        comp = Composition(cs)
+        red, ox, steps = onset_reactions(pd, comp, mu_ref)
 
-    for k in args.k_eff:
-        print(f"\n========== K_eff = {k} GPa ==========")
-        pd = augmented_pd(entries, k)
-        mu_ref = pd.el_refs[Li].energy_per_atom
-        for cs, lab, v_se in targets:
-            comp = Composition(cs)
-            try:
-                red, ox, ox_rxn, steps = window_from_profile(pd, comp, mu_ref)
-            except Exception as e:
-                print(f"  [err] {lab} K={k}: {type(e).__name__}: {e}")
-                results[lab]["by_k_eff"][str(k)] = {"error": str(e)}
-                continue
-            width = (ox - red) if (red is not None and ox is not None) else None
-            print(f"  {lab:8s} K={k:>4.0f}: window {red} - {ox} V "
-                  f"(width {width})  anodic-rxn: {ox_rxn}")
-            results[lab]["by_k_eff"][str(k)] = {
-                "reduction_limit_V": red, "oxidation_limit_V": ox,
-                "window_width_V": round(width, 3) if width is not None else None,
-                "oxidation_onset_rxn": ox_rxn,
-                "profile": steps,
-            }
+        print(f"=== {lab}  ({cs})   V_SE = {v_se:.1f} Å^3/fu ===")
+        ox_info = red_info = None
+        if ox:
+            dV, ne, eps, pstr, miss = reaction_strain(ox["rxn"], vpa, v_se)
+            ox_info = {"phi0_V": ox["V"], "rxn": str(ox["rxn"]),
+                       "DeltaV_A3": round(dV, 1), "n_e": round(ne, 3),
+                       "eps_RXN": round(eps, 4) if eps is not None else None,
+                       "products_vol": pstr, "missing_vol": miss}
+            print(f"  OX  onset {ox['V']:.2f} V | n_e={ne:.2f} | "
+                  f"DeltaV={dV:+.1f} Å^3 | eps_RXN={eps:+.3f} | {ox['rxn']}")
+            if miss: print(f"      [warn] no MP volume for: {miss}")
+        if red:
+            dVr, ner, epsr, pstrr, missr = reaction_strain(red["rxn"], vpa, v_se)
+            red_info = {"phi0_V": red["V"], "rxn": str(red["rxn"]),
+                        "DeltaV_A3": round(dVr, 1), "n_e": round(ner, 3),
+                        "eps_RXN": round(epsr, 4) if epsr is not None else None,
+                        "products_vol": pstrr, "missing_vol": missr}
+            print(f"  RED onset {red['V']:.2f} V | n_e={ner:.2f} | "
+                  f"DeltaV={dVr:+.1f} Å^3 | eps_RXN={epsr:+.3f} | {red['rxn']}")
 
-    # summary table: window vs K_eff per target + widening
-    print("\n================ SUMMARY ================")
-    for lab in results:
-        bk = results[lab]["by_k_eff"]
-        print(f"\n{lab} ({results[lab]['composition']}):")
-        base = bk.get("0", {})
-        for k, d in bk.items():
-            if "error" in d:
-                print(f"  K={k:>4} GPa: ERROR"); continue
-            dw = ""
-            if base and base.get("window_width_V") is not None and d.get("window_width_V") is not None:
-                dw = f"  (Δwidth vs 0 GPa: {d['window_width_V']-base['window_width_V']:+.2f} V)"
-            print(f"  K={k:>4} GPa: {d['reduction_limit_V']} - "
-                  f"{d['oxidation_limit_V']} V, width {d['window_width_V']}{dw}")
+        # leading-order window vs K_eff
+        win = {}
+        print("  window vs K_eff:")
+        for k in args.k_eff:
+            phi_ox = phi_red = None
+            if ox_info and ox_info["n_e"]:
+                phi_ox = ox_info["phi0_V"] + k * ox_info["DeltaV_A3"] * GPA_A3_TO_EV / ox_info["n_e"]
+            if red_info and red_info["n_e"]:
+                phi_red = red_info["phi0_V"] - k * red_info["DeltaV_A3"] * GPA_A3_TO_EV / red_info["n_e"]
+            width = (phi_ox - phi_red) if (phi_ox is not None and phi_red is not None) else None
+            win[str(k)] = {"reduction_V": round(phi_red, 3) if phi_red is not None else None,
+                           "oxidation_V": round(phi_ox, 3) if phi_ox is not None else None,
+                           "width_V": round(width, 3) if width is not None else None}
+            print(f"    K={k:>4.0f} GPa: {win[str(k)]['reduction_V']} - "
+                  f"{win[str(k)]['oxidation_V']} V  (width {win[str(k)]['width_V']})")
+        print()
+        results[lab] = {"composition": cs, "v_se_A3_per_fu": v_se,
+                        "oxidation_onset": ox_info, "reduction_onset": red_info,
+                        "window_vs_k_eff": win}
+
+    # comp1 vs modelc widening comparison
+    labs = list(results)
+    if len(labs) == 2:
+        a, b = labs
+        print("================ comp1 vs modelc ================")
+        for lab in (a, b):
+            ox = results[lab]["oxidation_onset"]
+            if ox:
+                print(f"  {lab}: oxidation eps_RXN = {ox['eps_RXN']:+.3f} "
+                      f"(DeltaV {ox['DeltaV_A3']:+.1f} Å^3, n_e {ox['n_e']})")
+        print("  -> larger eps_RXN / (DeltaV/n_e) widens MORE under constriction.")
 
     Path(args.out).write_text(json.dumps({
-        "method": "constrained-ensemble ESW (Fitzhugh strain = +K_eff*V per phase) "
-                  "on MP GGA_GGA+U hull, LiS4/SCl3/Li5PS4Cl2 excluded.",
-        "excluded_mp_ids": sorted(EXCLUDE_IDS),
-        "k_eff_GPa": args.k_eff,
-        "results": results,
+        "method": "strain-explicit constrained ESW (Fitzhugh leading-order edge "
+                  "shift phi += K_eff*DeltaV/n_e). MP GGA_GGA+U volumes; "
+                  "LiS4/SCl3/Li5PS4Cl2 excluded.",
+        "k_eff_GPa": args.k_eff, "results": results,
     }, indent=2))
-    print(f"\n→ {args.out}")
+    print(f"→ {args.out}")
 
 
 if __name__ == "__main__":
