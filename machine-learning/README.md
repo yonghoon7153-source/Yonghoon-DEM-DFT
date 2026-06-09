@@ -16,3 +16,8 @@ Department of Data Science, Hanyang University
 | Lecture 4 | Classification, Logistic Regression, k-NN, SVM | [lecture04-classification-logistic-svm.md](lectures/lecture04-classification-logistic-svm.md) |
 | Lecture 5 | SVM (cont.), Features, Multiclass Classification | [lecture05-svm-features-multiclass.md](lectures/lecture05-svm-features-multiclass.md) |
 | Lecture 8 | Multiclass Classification, Softmax, CE Loss | [lecture08-multiclass-classification.md](lectures/lecture08-multiclass-classification.md) |
+| Lecture 9 | Optimization (Gradient Descent, SGD, Mini-batch) | [lecture09-optimization.md](lectures/lecture09-optimization.md) |
+
+## 시험 범위
+- **기말 (Final)**: Lecture 8 ~ 17
+- **중간 (Midterm, 참고용)**: Lecture 2 ~ 5
