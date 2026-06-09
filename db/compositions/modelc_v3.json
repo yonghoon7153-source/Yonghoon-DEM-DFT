@@ -156,7 +156,15 @@
         "Li_BVS_mean": 1.769, "Li_BVS_std": 0.118,
         "low_bvse_channel_fraction": 0.074
       },
-      "headline": "Same lattice + same grid + same cutoff. modelc differs from comp1 by 300 S->Cl + 300 Li removals only. Result: Li-BVS std 0.016 -> 0.118 (~7.4x wider distribution) while mean rises only 1.626 -> 1.769 (+8.8%). low-BVSE channel fraction drops slightly (0.088 -> 0.074). Reading: vacancy + Cl/S anti-site introduces a WIDER spread of Li environments (disorder fingerprint), not fewer channels per se -- consistent with disorder-MD Ea = 0.18 eV (li_transport.json disorder_ensemble_2026_06_09).",
+      "headline": "Same lattice + same grid + same cutoff. modelc differs from comp1 by 300 S->Cl + 300 Li removals only. Result: BIMODAL split, NOT continuous broadening. comp1 has 2 narrow BVS peaks at 1.60/1.63/1.64 (~1000 Li each, σ=0.016). modelc has the SAME 2 peaks for 39.8% of Li (1074 / 2700 -- comp1-like environment, far from anti-site Cl) PLUS 3 NEW peaks at 1.83/1.88/1.89 for 60.2% of Li (1626 / 2700 -- adjacent to anti-site Cl, +15% BVS). The 'σ=0.118' summary statistic is the spacing between the two groups, not a continuous spread.",
+      "bimodal_split_paper_grade": {
+        "comp1": "3000 Li, all in 2 peaks at 1.60-1.64 (uniform comp1 environment).",
+        "modelc_low_BVS_group": "1074 Li (39.8%), peaks at 1.60-1.64 = comp1-like, far from anti-site Cl.",
+        "modelc_high_BVS_group": "1626 Li (60.2%), peaks at 1.83-1.89 = adjacent to anti-site Cl, BVS +15% vs comp1.",
+        "anti_site_Cl_fraction_in_this_cell": "300/800 = 37.5% (above modelc nominal 12.5% in primitive rhombohedral unit cell; within experimental range 25-50% for synthesised samples per Minafra/Kraft etc.)",
+        "Li_per_anti_site_Cl": "1626 high-BVS Li / 300 anti-site Cl = ~5.4 Li directly affected per anti-site Cl (consistent with first-shell Li-Cl coordination ~4-6).",
+        "cross_validation_with_ICOHP": "bonds.json icohp_LOBSTER_ext_basis_eV_per_bond.modelc_v3.Li_Cl_per_site_split reports the 4d-anti-site Cl Li-Cl bond is +40% stronger (ICOHP) than 4a-Cl Li-Cl bond. The +15% BVS (this work) and the +40% ICOHP (LOBSTER, modelc_v3 unit cell) are the SAME anti-site Cl effect measured by two independent post-processings -- paper-grade cross-validation."
+      },
       "figures_pregenerated_in_each_dir": [
         "V0_BVSE.cube (Gaussian cube for VESTA)",
         "V0_BVSE_iso_min030.png (3D isovalue 0.30 -- shallow main channels)",
