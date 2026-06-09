@@ -126,5 +126,20 @@
     "Intrinsic (bulk thermodynamic) ESW only — does NOT include electrochemical (bias-driven) interface decomposition; our InterfacialReactivity is CHEMICAL (zero-bias) only, hence carbon shows 0 reaction.",
     "MP GGA_GGA+U energies; argyrodite ordered phase is ~tens meV/atom metastable in MP. The composition-based get_element_profile gives the window of the composition's hull-equilibrium assemblage (standard for non-MP / metastable phases).",
     "modelc Li5.4PS4.4Cl1.6 treated as a composition (no MP entry, no MP-scale total energy of its own); window derived from MP hull phases at that composition — consistent with comp1's treatment."
-  ]
+  ],
+  "constrained_esw_OUR_CALC": {
+    "_status": "AXIS 2 CLOSED WITH OUR OWN CALCULATION (2026-06-09). tools/oxidation/constrained_esw.py, strain-explicit Fitzhugh leading-order on MP GGA_GGA+U hull (LiS4/SCl3/Li5PS4Cl2 excluded). Reproduces Gil-González's Cl-rich-widens-more result for OUR comp1/modelc cells.",
+    "method": "Per composition, get the K_eff=0 oxidation/reduction onset reaction; compute reaction volume change DeltaV = V_products(solids) - V_SE from MP molar volumes (released/consumed Li -> anode reservoir, excluded from solid volume); apply Fitzhugh Eq.1 edge shift phi_ox += K_eff*DeltaV_ox/n_e (anodic up if products EXPAND), phi_red -= K_eff*DeltaV_red/n_e. V_SE from our EOS V0 (comp1 254.16, modelc 243.29 A^3/fu).",
+    "key_result_oxidation_reaction_strain": {
+      "comp1": "onset 2.26 V, Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li ; n_e=2.0, DeltaV=-9.2 A^3, eps_RXN=-0.036 (oxidation products SHRINK -> constriction does NOT suppress oxidation).",
+      "modelc": "onset 2.26 V, Li5.4PS4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li ; n_e=0.8, DeltaV=+5.5 A^3, eps_RXN=+0.023 (oxidation products EXPAND, bulky 1.6 LiCl -> constriction SUPPRESSES oxidation -> anodic limit RISES)."
+    },
+    "window_vs_K_eff": {
+      "comp1": {"0": "1.24-2.26 (w 1.01)", "10": "0.63-1.97 (w 1.34)", "20": "0.02-1.68 (w 1.66)"},
+      "modelc": {"0": "1.24-2.26 (w 1.01)", "10": "0.53-2.69 (w 2.16)", "20": "-0.18-3.11 (w 3.30)"}
+    },
+    "headline": "At K_eff=0 comp1 and modelc are identical (1.24-2.26 V; matches Gil-González K_eff=0 ~1.7-2.4 and our 0-pressure grand-potential). Under constriction modelc WIDENS ~2x MORE than comp1 (w 3.30 vs 1.66 V at 20 GPa), and crucially modelc's ANODIC (oxidation) limit RISES 2.26->3.11 V while comp1's drops 2.26->1.68 V. Cause: modelc's Cl-rich oxidation decomposition EXPANDS (eps_RXN +0.023, bulky LiCl) so the strain penalty suppresses it, whereas comp1's oxidation products are denser (eps_RXN -0.036). Reproduces Gil-González's mechanism (Cl-bearing products higher molar volume -> larger reaction strain -> stronger constriction stabilization) with OUR cells -> Cl-rich (modelc) MORE oxidation-stable under mechanical constriction.",
+    "caveats": "Leading-order edge shift (not full Fitzhugh Lagrange re-minimisation); absolute voltages differ from Gil-González (different reference / linearization) but the comp1-vs-modelc trend, the anodic-rise mechanism, and the eps_RXN sign difference are robust. comp1's anodic DROP under constriction comes from its specific dense onset products (Li3PS4+LiCl+S); comp1 still net-widens via the reduction side.",
+    "data_path": "gabia:/data/work/repo/constrained_esw_results.json ; tool tools/oxidation/constrained_esw.py"
+  }
 }
