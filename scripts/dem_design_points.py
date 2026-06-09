@@ -66,6 +66,7 @@ def main():
         phi_am = _f(r, 'fm__phi_am'); phi_se = _f(r, 'fm__phi_se')
         poro = _f(r, 'fm__porosity'); P = _f(r, 'fm__target_pressure_mpa')
         thick = _f(r, 'fm__thickness_um')
+        e_se = _f(r, 'fm__e_se_eff_gpa')   # SE Young's modulus (E05/E15 variants differ)
         # Monomodal AM (P:S=0:10) cases have NO AM_P → r_AM_P is blank.  Don't
         # require it; AM_S + SE is a valid 2-size system.  ratio_P just becomes 0
         # (the MPM build then skips the empty AM_P phase).
@@ -93,12 +94,13 @@ def main():
                         ratio_S=round(rAS / rSE, 3),
                         phi_am=phi_am, phi_se=phi_se, AM_wt=round(am_wt, 1),
                         PS=f'{p}:{s}', mAh=mah, thickness_um=thick or '',
-                        P_MPa=P or a.pressure, dem_porosity=round(poro, 3)))
+                        P_MPa=P or a.pressure, dem_porosity=round(poro, 3),
+                        e_se_gpa=round(e_se, 4) if e_se else 1.35))
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     cols = ['name', 'r_AM_P', 'r_AM_S', 'r_SE', 'ratio_P', 'ratio_S',
             'phi_am', 'phi_se', 'AM_wt', 'PS', 'mAh', 'thickness_um',
-            'P_MPa', 'dem_porosity']
+            'P_MPa', 'dem_porosity', 'e_se_gpa']
     with open(OUT, 'w', newline='') as fh:
         w = csv.DictWriter(fh, fieldnames=cols); w.writeheader()
         for d in out:

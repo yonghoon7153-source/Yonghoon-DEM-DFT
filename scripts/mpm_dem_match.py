@@ -56,7 +56,8 @@ def load_design(names=None, real_only=False, particulate=False, max_n=None):
             ratio_P=float(r['ratio_P']), ratio_S=float(r['ratio_S']),
             phi_am=float(r['phi_am']), phi_se=float(r['phi_se']),
             PS=r['PS'], dem=float(r['dem_porosity']),
-            r_SE=float(r['r_SE']), AM_wt=float(r['AM_wt'])))
+            r_SE=float(r['r_SE']), AM_wt=float(r['AM_wt']),
+            e_se_gpa=float(r.get('e_se_gpa') or 1.35)))
     if max_n:
         out = out[:max_n]
     return out
@@ -72,7 +73,13 @@ def run_match(args):
         print(f'  [taichi] GPU failed ({e}); CPU'); ti.init(arch=ti.cpu, default_fp=ti.f32, random_seed=7)
     dx = 1.0 / ng; inv_dx = float(ng); dt = 8.0e-5 * 320.0 / ng; p_vol = (dx * 0.5) ** 2
     def lame(E, nu): return E / (2 * (1 + nu)), E * nu / ((1 + nu) * (1 - 2 * nu))
-    MU_SE, LA_SE = lame(1.53, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
+    # Champion MPM SE modulus 1.53 GPa ↔ DEM effective 1.35 GPa: each is its
+    # OWN experiment-calibrated baseline (frame [4]).  For the E-sweep cases
+    # (particulate_9_E05/E15 = DEM E ×0.5/×1.5) we apply the SAME relative
+    # perturbation to the MPM baseline → MPM_E = 1.53·(DEM_E/1.35).  This tests
+    # whether the porosity RESPONSE to E matches, without cross-fitting absolute E.
+    MPM_E_CHAMPION = 1.53; DEM_E_BASE = 1.35
+    MU_SE, LA_SE = lame(MPM_E_CHAMPION, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
     YIELD_SE = 0.15; YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
     MAXP = 2_500_000
     x = ti.Vector.field(2, ti.f32, MAXP); v = ti.Vector.field(2, ti.f32, MAXP)
@@ -131,7 +138,7 @@ def run_match(args):
                 F[p] = U @ ti.Matrix([[ti.exp(m0), 0.0], [0.0, ti.exp(m1)]]) @ V.transpose()
             x[p] += dt * v[p]
 
-    def build(R_AMP, R_AMS, fAP, fAS, fSE, rng):
+    def build(R_AMP, R_AMS, fAP, fAS, fSE, rng, mu_se=MU_SE, la_se=LA_SE):
         fill_h = WALL0 - 0.02; box = WIDTH * (fill_h - FLOOR); target = INIT_SOLID * box
         placed = []; cell = max(R_AMP, R_SE_MPM) * 1.05; Hm = {}
         def clash(cx, cy, r):
@@ -145,7 +152,7 @@ def run_match(args):
             placed.append((cx, cy, r)); Hm.setdefault((int(cx / cell), int(cy / cell)), []).append((cx, cy, r))
         plan = [(R_AMP, fAP, MU_AM, LA_AM, YIELD_AM, RHO_AM),
                 (R_AMS, fAS, MU_AM, LA_AM, YIELD_AM, RHO_AM),
-                (R_SE_MPM, fSE, MU_SE, LA_SE, YIELD_SE, RHO_SE)]
+                (R_SE_MPM, fSE, mu_se, la_se, YIELD_SE, RHO_SE)]
         xs = []; mu = []; la = []; yl = []; ms = []
         for (r, frac, mm, ll, yy, rho) in plan:
             if frac <= 1e-6: continue
@@ -164,9 +171,11 @@ def run_match(args):
         return (np.array(xs, np.float32), np.array(mu, np.float32), np.array(la, np.float32),
                 np.array(yl, np.float32), np.array(ms, np.float32))
 
-    def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed):
+    def run_once(R_AMP, R_AMS, fAP, fAS, fSE, seed, e_se_mpm=MPM_E_CHAMPION):
         rng = np.random.default_rng(seed)
-        xy, mu, la, yl, ms = build(R_AMP, R_AMS, fAP, fAS, fSE, rng); n = len(xy)
+        mu_se, la_se = lame(e_se_mpm, 0.30)
+        xy, mu, la, yl, ms = build(R_AMP, R_AMS, fAP, fAS, fSE, rng,
+                                   mu_se=mu_se, la_se=la_se); n = len(xy)
         if n == 0: return float('nan')
         sa = n * p_vol; load(xy, mu, la, yl, ms, n); wall_y[None] = WALL0
         top_full = FLOOR + sa / WIDTH; wall_floor = top_full + 0.002
@@ -193,17 +202,23 @@ def run_match(args):
         R_AMP = R_SE_MPM * d['ratio_P']; R_AMS = R_SE_MPM * d['ratio_S']
         p, s = (int(z) for z in d['PS'].split(':')); tot = p + s
         fAP = d['phi_am'] * p / tot; fAS = d['phi_am'] * s / tot; fSE = d['phi_se']
-        vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i) for i in range(args.seeds)]
+        # per-case MPM SE modulus: same relative perturbation as the DEM case
+        e_se_mpm = MPM_E_CHAMPION * d['e_se_gpa'] / DEM_E_BASE
+        vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, e_se_mpm)
+                for i in range(args.seeds)]
         vals = [x for x in vals if x == x]  # drop nan
         mpm = float(np.mean(vals)) if vals else float('nan')
         std = float(np.std(vals)) if len(vals) > 1 else 0.0
-        rows.append((d['name'], d['dem'], mpm, std, d['r_SE'], d['AM_wt']))
-        print(f"  {d['name'][:30]:30s} rSE={d['r_SE']:.2f} AMwt={d['AM_wt']:4.0f}  "
+        rows.append((d['name'], d['dem'], mpm, std, d['r_SE'], d['AM_wt'],
+                     d['e_se_gpa'], round(e_se_mpm, 3)))
+        print(f"  {d['name'][:30]:30s} rSE={d['r_SE']:.2f} AMwt={d['AM_wt']:4.0f} "
+              f"E_dem={d['e_se_gpa']:.3f}→E_mpm={e_se_mpm:.2f}  "
               f"DEM={d['dem']:5.1f}%  MPM={mpm:5.1f}±{std:.1f}%  Δ={mpm-d['dem']:+5.1f}",
               flush=True)
     with open(OUT, 'w', newline='') as fh:
         w = csv.writer(fh)
-        w.writerow(['name', 'dem_porosity', 'mpm_porosity', 'mpm_std', 'r_SE', 'AM_wt'])
+        w.writerow(['name', 'dem_porosity', 'mpm_porosity', 'mpm_std', 'r_SE', 'AM_wt',
+                    'e_se_gpa', 'e_se_mpm'])
         for r in rows: w.writerow(r)
     import numpy as np  # noqa (already imported above; keep for clarity)
     dems = np.array([r[1] for r in rows]); mpms = np.array([r[2] for r in rows])
@@ -248,15 +263,18 @@ def group_plot():
         r = list(csv.DictReader(fh))
     if not r or 'r_SE' not in r[0]:
         print("CSV has no r_SE/AM_wt columns — re-run the match first (not --plot)."); return
-    # group rows by SE radius
+    # group rows by SE radius (size sweep).  Skip non-base-E variants
+    # (e_se ≠ 1.35) so the size trend stays clean — the E-sensitivity is a
+    # separate axis, read it from the run's printed E_dem→E_mpm lines.
     groups = {}
     for x in r:
         try:
             rse = float(x['r_SE']); amw = float(x['AM_wt'])
             dem = float(x['dem_porosity']); mpm = float(x['mpm_porosity'])
+            ese = float(x.get('e_se_gpa') or 1.35)
         except (KeyError, ValueError):
             continue
-        if not np.isfinite(mpm):
+        if not np.isfinite(mpm) or abs(ese - 1.35) > 1e-3:
             continue
         groups.setdefault(round(rse, 3), []).append((amw, dem, mpm))
     fig, ax = plt.subplots(figsize=(7.6, 5.4))
