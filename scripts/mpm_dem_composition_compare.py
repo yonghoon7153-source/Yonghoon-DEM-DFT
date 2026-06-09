@@ -4,13 +4,13 @@ corpus — the DEM↔MPM behaviour cross-check (frame [4]).
 
 Champion sweep numbers are baked in from a run of scripts/mpm2d_composition.py
 (n_grid=128, plastic SE = LPSCl-like, rigid SE = DEM-overlap-like).  DEM
-porosity-vs-AM is read live from docs/case_summary.csv (weight fraction from
-phi_am/phi_se via ρ_AM=4.8, ρ_SE=2.0).
+porosity-vs-AM (weight fraction from phi_am/phi_se via ρ_AM=4.8, ρ_SE=2.0) is
+baked in too (85 cases from docs/case_summary.csv) so the script is
+self-contained — runs anywhere with matplotlib, no data files needed.
 
 Run:  python3 scripts/mpm_dem_composition_compare.py
 Out:  docs/figures/mpm_dem_composition_compare.png
 """
-import csv
 import os
 
 import numpy as np
@@ -19,34 +19,35 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SUMMARY = os.path.join(HERE, '..', 'docs', 'case_summary.csv')
 OUT = os.path.join(HERE, '..', 'docs', 'figures', 'mpm_dem_composition_compare.png')
-RHO_AM, RHO_SE = 4.8, 2.0
 
 # champion MPM sweep (scripts/mpm2d_composition.py, AM wt% : ε_plastic, ε_rigid)
 CHAMP_AM = [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
 CHAMP_PLASTIC = [6.5, 7.2, 8.2, 8.9, 10.0, 11.2, 11.4, 13.5, 16.4, 20.2, 28.2]
 CHAMP_RIGID = [8.1, 9.1, 11.5, 12.7, 15.4, 17.0, 17.5, 18.4, 21.2, 24.0, 28.7]
 
-
-def dem_points():
-    pts = []
-    with open(SUMMARY) as fh:
-        for r in csv.DictReader(fh):
-            try:
-                pa = float(r['fm__phi_am']); ps = float(r['fm__phi_se'])
-                po = float(r['fm__porosity'])
-            except (KeyError, ValueError):
-                continue
-            if pa + ps <= 0:
-                continue
-            wam = pa * RHO_AM; wse = ps * RHO_SE
-            pts.append((100.0 * wam / (wam + wse), po))
-    return np.array(pts)
+# DEM corpus (AM wt%, porosity %) — 85 cases, baked from docs/case_summary.csv
+DEM_PTS = [(62.0, 21.2), (62.1, 19.7), (62.2, 5.7), (62.2, 6.6), (62.4, 16.8),
+           (72.1, 10.4), (72.1, 11.4), (72.1, 17.2), (72.3, 16.4), (75.3, 18.9),
+           (75.4, 18.0), (75.5, 13.4), (75.6, 18.2), (75.7, 12.4), (76.1, 15.2),
+           (76.5, 14.1), (76.7, 10.1), (76.8, 11.1), (80.0, 15.5), (80.0, 16.3),
+           (80.0, 16.5), (80.0, 18.9), (80.1, 16.3), (80.1, 16.4), (80.2, 14.4),
+           (80.3, 16.0), (80.3, 18.1), (80.4, 16.0), (80.4, 16.6), (80.4, 17.8),
+           (80.5, 16.3), (80.5, 16.7), (81.6, 12.4), (81.6, 18.4), (81.6, 18.6),
+           (81.6, 18.9), (81.6, 20.9), (81.7, 12.9), (81.7, 13.1), (81.7, 14.3),
+           (81.7, 14.5), (81.7, 15.2), (81.7, 15.5), (81.7, 17.1), (81.7, 17.8),
+           (81.7, 28.3), (81.8, 15.9), (81.8, 15.9), (81.8, 17.2), (81.8, 17.5),
+           (81.9, 15.0), (82.0, 13.9), (82.0, 14.0), (82.0, 15.8), (82.0, 17.1),
+           (82.0, 18.9), (82.0, 19.7), (82.0, 19.8), (82.0, 20.1), (82.0, 20.4),
+           (82.1, 15.1), (82.1, 16.1), (82.1, 16.2), (82.1, 16.3), (82.1, 19.8),
+           (82.2, 14.3), (85.0, 16.8), (85.0, 17.7), (85.0, 19.8), (85.0, 20.1),
+           (85.0, 21.6), (85.0, 22.3), (85.0, 23.8), (85.1, 15.7), (85.1, 17.5),
+           (85.1, 22.1), (85.2, 24.5), (85.6, 20.5), (85.7, 20.9), (85.7, 22.1),
+           (86.7, 16.7), (86.7, 18.2), (86.7, 18.3), (86.7, 23.9), (86.8, 32.8)]
 
 
 def main():
-    dem = dem_points()
+    dem = np.array(DEM_PTS)
     # DEM binned median
     bins = {}
     for amwt, po in dem:
