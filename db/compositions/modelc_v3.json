@@ -143,7 +143,32 @@
         },
         "monotone_ordering": "std(P) 0.37 << std(Cl) 0.74 < std(Li) 1.15 < std(S) 2.05 -- monotonic in 'amount of structural disorder felt'",
         "headline": "P-volume std (0.37 Å³) is 5.5x smaller than S-volume std (2.05 Å³) within the SAME cell. Disorder cannot touch the framework P; it falls entirely on Li (sublattice) and S (free anion + anti-site neighbours). Direct geometric proof of the 'PS4 invariant' message without needing comp1 comparison.",
-        "comp1_voronoi": "NOT computed (V0_voronoi.json absent in comp1_v3/v3_post/k444_props/). modelc self-comparison is sufficient and arguably cleaner -- compare elements WITHIN the same cell rather than across cells with different cell geometry."
+        "comp1_voronoi_2026_06_09": {
+          "_status": "Computed 2026-06-09 (scipy.spatial.Voronoi 3x3x3 PBC tile + ConvexHull volume; total sum = cell volume to ratio 1.000, exact).",
+          "data_path": "container:/tmp/voronoi_comp1/comp1_v3_voronoi.json",
+          "cell_volume_A3": 1016.62, "n_atoms": 52,
+          "per_element": {
+            "P":  {"n": 4,  "mean_A3": 14.05, "std_A3": 0.00, "spread_A3": 0.00, "_role": "perfect ordered, all 4 P equivalent (F-43m)"},
+            "Cl": {"n": 4,  "mean_A3": 22.04, "std_A3": 0.00, "spread_A3": 0.00, "_role": "perfect ordered, all 4 Cl at equivalent 4a sites"},
+            "Li": {"n": 24, "mean_A3": 19.56, "std_A3": 0.21, "spread_A3": 0.46, "_role": "small std from 24g/48h two Wyckoff orbitals"},
+            "S":  {"n": 20, "mean_A3": 20.14, "std_A3": 3.41, "spread_A3": 8.91, "_role": "two groups split: 16 PS4-S2- (compact, ~16-17 Å³) + 4 free 4d-S2- (large, ~25+ Å³)"}
+          }
+        },
+        "comp1_vs_modelc_cross_comparison_2026_06_09": {
+          "_method": "Same scipy Voronoi protocol on both cells.",
+          "per_element_std_A3_table": {
+            "P":  {"comp1": 0.00, "modelc": 0.37, "ratio": "INF (comp1=0)", "msg": "comp1 ideal ordered, modelc has small anti-site fingerprint on PS4"},
+            "Cl": {"comp1": 0.00, "modelc": 0.74, "ratio": "INF (comp1=0)", "msg": "comp1 ideal 4a, modelc has 4a + 4d-anti-site two groups"},
+            "Li": {"comp1": 0.21, "modelc": 1.15, "ratio": "5.5x",         "msg": "PRIMARY DISORDER FINGERPRINT: Li sublattice 5.5x wider std"},
+            "S":  {"comp1": 3.41, "modelc": 2.05, "ratio": "0.6x",         "msg": "INVERTED: comp1 S std LARGER. Reason: comp1 has clean PS4-S vs free-S2- two-group split (Δ ~5 Å³); modelc anti-site Cl partially replaces free-S2- positions and SMEARS the two groups together. The Cl_v3 anti-site CONVERGES the S environments."}
+          },
+          "paper_grade_message": "Voronoi cross-comparison reveals the FOUR distinct sublattice responses to disorder in modelc: (P) PS4 framework barely touched (std 0->0.37); (Cl) splits into two new groups (0->0.74) from 4a + 4d-anti-site; (Li) primary disorder fingerprint at 5.5x wider spread; (S) UNUSUALLY HOMOGENIZED because anti-site Cl bridges the comp1 PS4-S vs free-S gap. This per-sublattice fingerprint is consistent with the BVSE bimodal split (Li 60.2% anti-site-adjacent) and the LOBSTER ICOHP +40% per-bond Li-Cl strengthening at 4d-Cl. Three independent post-processings, four sublattices, one coherent picture.",
+          "see_also": [
+            "bvse_5x5x5_paired_2026_06_03.bimodal_split_paper_grade",
+            "../properties/bonds.json -> icohp_LOBSTER_ext_basis_eV_per_bond.modelc_v3.Li_Cl_per_site_split (4d-Cl Li-Cl +40%)",
+            "../properties/bonds.json -> icohp_LOBSTER_ext_basis_eV_per_bond.modelc_v3.Li_Cl_vacancy_antisite_decomposition (vacancy 69% + anti-site 31% of total Li-Cl strengthening)"
+          ]
+        }
       }
     },
     "8d_bvse": {
