@@ -59,8 +59,8 @@ def get_entries(elements):
             elements, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
     kept, dropped, novol = [], [], 0
     for e in entries:
-        eid = str(getattr(e, "entry_id", "")).split("-GGA")[0]
-        if eid in EXCLUDE_IDS:
+        eid = str(getattr(e, "entry_id", ""))
+        if any(x in eid for x in EXCLUDE_IDS):
             dropped.append(eid); continue
         kept.append(e)
     print(f"[mp_api] {len(entries)} entries; dropped {dropped}; kept {len(kept)}")
@@ -81,8 +81,15 @@ def augmented_pd(entries, k_eff):
     pd_entries, missing = [], 0
     for e in entries:
         V = entry_volume(e)
-        if V is None:
-            missing += 1
+        # Do NOT augment the open-element reservoir (elemental Li at the anode is
+        # NOT under the cathode-side constriction). Keeping Li metal unaugmented
+        # fixes the voltage reference so the window WIDENS (anodic up, cathodic
+        # down) instead of rigidly shifting up.
+        els = e.composition.elements
+        is_Li_metal = (len(els) == 1 and els[0].symbol == "Li")
+        if V is None or is_Li_metal:
+            if V is None and not is_Li_metal:
+                missing += 1
             pd_entries.append(PDEntry(e.composition, e.energy)); continue
         aug = e.energy + k_eff * V * GPA_A3_TO_EV
         pd_entries.append(PDEntry(e.composition, aug))
