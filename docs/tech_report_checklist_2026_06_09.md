@@ -18,27 +18,64 @@
 
 ## 1. Bonding / electronic structure (Paper #1)
 
-### Must report
-- **PS4 framework invariance** comp1 ↔ modelc:
-  - Bond length P–S 2.073 vs 2.064 Å (`db/properties/bonds.json`).
-  - Bader PS4 charge −2.82 / −2.60 (`db/properties/electronic.json`).
-  - ICOHP P–S −5.94 / −6.0 eV/bond (`db/properties/electronic.json` and `bonds.json` LOBSTER section).
-  - ELF P–S bridge 0.946 / 0.944 (`db/properties/electronic.json` `elf_comparison_v3`).
-- **Li / Cl sub-lattice changes** (Cl-rich + vacancy):
-  - 4d-Cl anti-site fraction in modelc = 12.5 % (`bonds.json` `Li_Cl_per_site_split` headline). NOT the synthetic Minafra/Schlem level — see §4 disorder caveat.
-  - ICOHP-distance slope flatter for modelc Li–Cl, Li–S (more ionic, `bonds.json` `icohp_distance_correlation_eV_per_Angstrom`).
-  - Wilkening 3-way correlation: Bader q × distance ↔ ICOHP same coupling for both (one Coulombic axis underlies bond, COHP, ELF).
-- **Band gap**:
-  - USPP-PBE + DOS-threshold: comp1 1.76 eV, modelc 1.82 eV (modelc gap slightly larger; same VBM = S 3p).
-  - Method offset vs PAW-PBE literature (~2.2–2.5 eV) is consistent for both — quote the delta, caveat the absolute.
-  - `db/properties/electronic.json` `comparison_comp1_v3_vs_modelc_v3.absolute_vs_literature`.
+### 1.1 Bond lengths (`db/properties/bonds.json` `results`)
+
+| Bond | comp1_v3 (Å) | modelc_v3 (Å) | Δ |
+|---|---|---|---|
+| P–S | **2.073** | **2.064** | −0.4 % (PS4 invariant) |
+| Li–S | 2.461 | 2.465 | ~0 |
+| Li–Cl (mean) | 2.607 | 2.532 | **−2.9 %** (Cl-rich + vacancy shortens Li–Cl) |
+| S–S | 3.595 | 3.519 | −2.1 % |
+| Li–Cl_4a (modelc only) | — | 2.551 | — |
+| Li–Cl_4d (modelc anti-site only) | — | **2.359** | −0.19 Å vs 4a, deeper Li-anchor |
+| `comp2` (LPSCl0.5+Br): Li-Cl/Li-Br/P-S | — | — | (for halide-series trend) |
+| `comp5_A`, `comp5_B`: Li-Cl/Li-Br/Li-S/P-S | — | — | (for halide-series trend) |
+
+### 1.2 Bader charges (`db/properties/electronic.json` `bader` + `bader_full_matrix`)
+
+- **PS4 invariance (key finding):** Σ Bader(P + 4S) almost the same for comp1 vs modelc (-2.82 / -2.60); the PS4 unit is electrochemically invariant across compositions. `bader.PS4_invariance` headline.
+- **Cl is MORE ionic than Br** by ~6 % (Bader |q|). Drives the Cl/Br trend within the LPSCl/LPSBr/LPSI family. `bader_full_matrix.trends_quantitative.Cl_more_ionic_than_Br_pct`.
+- **Br polarisability effect:** Br stiffens PS4 anchor; vacancy softens it. Combined Li5.4-Br prediction 4.54 (= 4.686 + 0.207 − 0.346). `P_three_anchor_separation` headline.
+- **Anomalies recorded:** comp3 anomaly (|q(Br)| > |q(Cl)| — site disorder), comp4 S anomaly (mixed-Br/Cl environment), comp2_v2 P anomaly (Br dual effect on PS4). Recorded in `bader_full_matrix.trends_quantitative` for reviewer Q.
+- **rhombo_issue:** Bader for the original modelc rhombohedral cell needed care; resolved in v3.
+
+### 1.3 ICOHP (LOBSTER, `bonds.json` `icohp_LOBSTER_ext_basis_eV_per_bond`)
+
+- **P–S −5.94 / −6.0 eV/bond** comp1 / modelc — identical within noise (PS4 covalency conserved).
+- **Li–S(4d) ICOHP −2.57 vs −2.52** = "4d S²⁻ is a universal Li anchor independent of composition" (headline statement).
+- **4d-Cl anti-site Li–Cl bond is 40 % STRONGER per bond** than 4a-Cl Li–Cl. Despite anti-site being only 12.5 % of Cl in modelc, the mean Li–Cl ICOHP rises from −2.026 (4a-only) to −2.103 → "Direct quantitative origin of the deeper second peak in the Li–Cl pCOHP panel" (paper-grade statement).
+- **Li-Cl strengthening decomposition:** **vacancy / Cl-rich field is 69 % of the total Li–Cl strengthening (acts on all 90 % of Cl uniformly); anti-site contributes 31 %** (intense but localised on 10 % of Cl). Combined → +13.4 % Li–Cl ICOHP modelc vs comp1.
+- **Free 4d S²⁻ forms 55 % stronger and 13× more uniform Li–S bonds than PS4-bound S.** Composition-invariant: comp1 4d-S²⁻ ICOHP −2.566 vs modelc −2.52 (2 %).
+- **ICOHP–distance correlation** (`bonds.json` `icohp_distance_correlation_eV_per_Angstrom`): modelc ionic bonds (Li–Cl, Li–S) have **2–3× FLATTER** slope dICOHP/dd than comp1 → quantitative ionicity metric (more ionic = less length-sensitive). Paper-grade.
+- **Wilkening 3-way correlation** (`bonds.json` `wilkening_ICOHP_3way_correlation`): per-bond `|q_Li × q_X|/d` (Wilkening ionic potential) regressed against LOBSTER ICOHP. **Bond length, Bader charge, ICOHP are NOT independent — they are three projections of the same Coulombic attraction.** Paper message.
+- **Strongest bonds per system top-5** ranked in `strongest_bonds_per_system_top5`.
+
+### 1.4 ELF (`db/properties/electronic.json` `elf_comparison_v3`)
+
+- **P–S bridge midpoint:** comp1 0.946, modelc 0.944 → covalent ~0.94–0.95 both, IDENTICAL within noise (d=0.002). PS4 framework covalency UNCHANGED by Cl-enrichment / vacancy.
+- **Li basin minimum** (line minimum Li → nearest anion): comp1 0.072, modelc 0.065 (single-min 0.07 vs 0.042). Both very low → **Li⁺ ionic**. modelc slightly LOWER = marginally more depleted / ionic Li sublattice, ELF signature of disordered vacancy-rich Li sublattice.
+- **Sampling artifact note:** at-nucleus sampling gives Li=1.0 (1s cusp) and S=0.005 (core node). Use bridge midpoint (P-S) and line-minimum (Li basin), NOT at-nucleus values.
+- Cube files: `db/properties/electronic.json` `elf_comparison_v3` records paths on container.
+
+### 1.5 Band gap (`db/properties/electronic.json` `band_gaps` + `comparison_comp1_v3_vs_modelc_v3`)
+
+- USPP-PBE + DOS-threshold: comp1_v3 **1.76 eV**, modelc_v3 **1.82 eV** (modelc gap slightly larger).
+- VBM = S 3p for both → drives identical oxidation onset (§3 axis 1).
+- Method offset vs PAW-PBE literature ~2.15–2.45 eV (and optical experimental higher): ~0.3–0.4 eV consistent for both → quote Δ, caveat absolute.
+
+### 1.6 Sub-lattice changes (the disorder axis modelc differs on)
+
+- **4d-Cl anti-site fraction in modelc = 12.5 % (1/8)**. Recorded in `bonds.json` `Li_Cl_per_site_split` headline. NOT the synthetic Minafra/Schlem level (~25–50 %) — see §4 disorder caveat: this is why d=0.5 ensemble run is needed.
+- modelc Li-vacancy concentration follows from Li5.4 stoichiometry (0.6 vacancy/fu).
 
 ### Must caveat
 - ELF / Bader / ICOHP **single-crystal 0 K**; no GB / interface / kinetic effects.
 - USPP gap underestimate ~0.3–0.4 eV (consistent for both; delta robust).
+- modelc is under-disordered vs synthetic samples (12.5 % anti-site).
 
 ### Cross-links
-- PS4 invariance → §3 oxidation onset identical at 0 GPa; §2 clamped-ion elastic identical; §4 conductivity prefactor story.
+- PS4 invariance → §3 axis 1 (0-pressure oxidation onset identical), §2 clamped-ion elastic identical, §1.3 Wilkening 3-way: one Coulombic axis.
+- Anti-site 4d-Cl strengthens Li–Cl → §2 relaxed-ion stiffening (Li sublattice jam), §4 disorder-Ea coupling.
 
 ---
 
@@ -155,6 +192,58 @@
 - comp1 / modelc earlier Arrhenius: `db/properties/li_transport.json`.
 - Disorder ensemble tool: `tools/modelc_v3/disorder_ensemble_diffusion.py`.
 - Per-T data: `container:/home/ubuntu/work/runs/comp1_v3/disorder_diffusion/ensemble_results.json`.
+
+---
+
+## 4b. BVSE Li-percolation maps (Paper #1 supplement)
+
+### Must report
+- **Tool**: `tools/comp1_v3/compute_bvse_map.py` (build BVS/BVSE 3-D map) + `tools/comp1_v3/plot_bvse_maps.py`.
+- **Status**: computed (`db/compositions/modelc_v3.json` `v3_postprocess_pipeline_v2_8.8d_bvse.status = done`). Outputs `V0_bvs_map.npy`, `V0_bvse_map.npy`, `V0_bvse_summary.json` (on container).
+- **Use case (paper)**: cross-check on the AIMD diffusion result — BVSE map should show the Li hop pathways the MD finds. Especially relevant for **disorder vs ordered** comparison: BVSE on the d=0.5 disordered modelc cell should show flattened pathways (lower barriers) vs the d=0 ordered cell.
+- **TODO**: extract the per-bond percolation Ea from `V0_bvse_summary.json` for both comp1_v3 and modelc_v3 and add a `bvse_summary` block to `db/properties/li_transport.json`. The maps themselves are too large to commit; cite by container path.
+
+### Must caveat
+- BVSE is an empirical force-field-style proxy, NOT a real activation barrier. Useful as percolation visual + AIMD cross-check only.
+
+### Cross-links
+- §4 disorder Ea = 0.18 eV → BVSE pathway map should reproduce qualitatively.
+- §1 bonds: BVS depends on Bader / bond length, ties §1 bonding inventory to §4 transport.
+
+---
+
+## 4c. Adhesion / SE‖NCM interface (Paper #2 candidate main finding)
+
+### Must report
+- **`db/properties/adhesion.json`** — work of adhesion `Wad` (J/m²) for SE‖NCM (typically NCM811 / LiNiO₂) interface, multiple methods.
+- **v2 (3000 K melt protocol):** `comp1 1.107 ± 0.027`, `comp2 1.046 ± 0.074` (5 seeds each, Wad in J/m²). Trend: **Br up → Wad down within the Li6 family** (comp1 > comp2). `comp3–5 not reportable` (PBC artifact, SE rhombo 5×1×1 vs NCM 3×3×1, ±20 % lattice mismatch).
+- **v5 / crystalline slab:** crystalline-slab protocol, multiple z-cut + xy-shift sweeps; previous z-cut definitions deprecated and replaced.
+- **Phase 1 rigid binding (2026-05-06):** structured `se_slabs × ncm_slabs × registries × d_values` table.
+- **★ Paper #2 main finding candidate (`adhesion_v2025_05_07_v9_to_v22.current_paper2_main_finding_candidate`)**:
+  > "Atomic MLIP energy descriptor (`W_eq`) does NOT correlate with experimental SE/NCM adhesion (**R = −0.76, anti-correlated**). However, GEOMETRIC bond density at equilibrium gap reproduces experimental ranking: **Li–O attractive (R = +0.82) and Cl–O anti-correlated (R = −0.91)**. Composite (Li–O − α · Cl–O) descriptor matches experimental trend."
+  This is the headline statement for the Paper #2 adhesion story — energy proxy fails, geometric/bond-count descriptor works.
+- **Sessions / iterations:** v9→v22 (`session_log`, `context`, `method_iterations`, `current_paper2_main_finding_candidate`, `relax_vs_rigid_bond_count_argument`); v23→v26 (`v23_statistical_robustness`, `v24_max_extract`, `v25_remaining_extract`, `v26_method_independence`).
+- **`vacancy_adhesion_mechanism`** + **`debug_history`** in adhesion.json — methodology trail for reviewer.
+
+### Must caveat
+- comp3–5 v2 Wad values are **PBC artifacts** (large lattice mismatch). Drop comp3–5 from any Wad ranking.
+- Energy descriptor `W_eq` is anti-correlated with experiment → do NOT report W_eq directly as the adhesion ranking.
+
+### Cross-links
+- **§7 cascade dopants (coating)** — the low-modulus coating layer is meant to interface with NCM cathode; adhesion `Wad` is the same axis. Sc2O3 / Al2O3 / Li2O coating candidates need adhesion `Wad` evaluation in follow-up.
+- **§1 Bader Cl_more_ionic_than_Br** + Li–O / Cl–O bond-density descriptor — the Cl ionicity drives the Cl–O anti-correlation.
+
+---
+
+## 4d. Alpha sensitivity (composite Li–O / Cl–O descriptor)
+
+### Must report
+- **`db/properties/alpha_sensitivity_FINAL.json`** — composite descriptor `Wad ~ Li-O - α · Cl-O` scanned over `α = 0.0 .. 1.5` (16 points, 0.1 step).
+- Per-comp + uniform-α results recorded. Used to choose the **optimal α** that maximises correlation with experimental adhesion ranking.
+- This is the FINAL version (replaced earlier α-sensitivity drafts).
+
+### Cross-links
+- §4c adhesion: α-sensitivity is how the composite (Li–O − α·Cl–O) descriptor was tuned.
 
 ---
 
