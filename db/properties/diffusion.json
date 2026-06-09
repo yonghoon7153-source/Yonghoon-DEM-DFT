@@ -4,14 +4,14 @@
     "method_notes": {
         "uma_oc20": "ASE NEB with FAIRChemCalculator (UMA-s-1p1, task=oc20). 7 images, IDPP interpolation, CI-NEB after relax. Fast screening (~min). Absolute barrier known to underestimate vs DFT by 2-3x.",
         "dft_scf_on_uma": "QE pw.x PBE+USPP SCF (ecutwfc 60 Ry, ecutrho 480 Ry, k 2x2x1, conv_thr 1e-8, MV smearing) on UMA-NEB-relaxed image coordinates (geometry frozen). Effective barrier = E(TS) - E(bridge_min). Underestimates true DFT TS height (UMA over-smooths saddle).",
-        "dft_full_neb": "ASE NEB driving QE pw.x as calculator \u2014 each image geometry relaxed under DFT forces. CI-NEB after 5-step regular NEB warmup. fmax 0.05 eV/A. Slab bottom 50% frozen. Warm-start from UMA path. ~5-7 days/system on single A6000."
+        "dft_full_neb": "ASE NEB driving QE pw.x as calculator — each image geometry relaxed under DFT forces. CI-NEB after 5-step regular NEB warmup. fmax 0.05 eV/A. Slab bottom 50% frozen. Warm-start from UMA path. ~5-7 days/system on single A6000."
     },
     "results": [
         {
             "id": "li3n_001_pathA_uma",
             "system": "Li3N",
             "facet": "(001)",
-            "path": "A (N \u2192 adjacent N along a-axis)",
+            "path": "A (N → adjacent N along a-axis)",
             "method": "UMA-oc20 + CI-NEB",
             "n_images": 7,
             "endpoint_distance_A": 3.65,
@@ -21,8 +21,8 @@
             "ts_image_idx": 5,
             "bridge_image_idx": 3,
             "status": "SUPERSEDED_thin_slab_artifact",
-            "notes": "A/B/C paths verified hexagonal symmetry (avg 0.022 \u00b1 0.001 eV endpoint barrier). Bridge minimum below endpoint \u2014 Li adatom prefers bridge between two N over on-top N.",
-            "superseded_note": "4-layer slab (135 atoms) gave 0.054 eV; later found to be a thin-slab/termination artifact. Correct 6-layer N-exposed Li2N slab (243 atoms) gives a very different result \u2014 see li3n_001_uma_v2_proper_slab."
+            "notes": "A/B/C paths verified hexagonal symmetry (avg 0.022 ± 0.001 eV endpoint barrier). Bridge minimum below endpoint — Li adatom prefers bridge between two N over on-top N.",
+            "superseded_note": "4-layer slab (135 atoms) gave 0.054 eV; later found to be a thin-slab/termination artifact. Correct 6-layer N-exposed Li2N slab (243 atoms) gives a very different result — see li3n_001_uma_v2_proper_slab."
         },
         {
             "id": "li3n_001_pathA_dft_scf",
@@ -68,7 +68,7 @@
             "id": "lic6_0001_uma",
             "system": "LiC6",
             "facet": "(0001)",
-            "path": "hex_hollow \u2192 bridge-C TS \u2192 hex_hollow",
+            "path": "hex_hollow → bridge-C TS → hex_hollow",
             "method": "UMA-oc20 + CI-NEB",
             "n_images": 7,
             "endpoint_distance_A": 2.46,
@@ -131,7 +131,7 @@
             },
             "verdict": "UMA-oc20 (and omat) invert the Li3N(001) adsorption topology: they prefer hollow/bridge and miss the Li+ - N3- on-top charge-transfer well that defines the DFT minimum. Consequently UMA gives 0.237 eV (hollow route) ~ LiC6 0.241, i.e. it WRONGLY implies Li3N is no faster than carbon. The paper DFT on-N route (0.133) is the correct value. UMA must NOT be used for the Li3N barrier; it is also unsafe as a path-finder here (points to the wrong hollow route).",
             "task_robustness": "site inversion identical for oc20 and omat tasks (hollow<bridge<on_N both).",
-            "old_value_retracted": "0.054 eV (thin 4-layer slab) \u2014 artifact, superseded."
+            "old_value_retracted": "0.054 eV (thin 4-layer slab) — artifact, superseded."
         }
     ],
     "headline_comparison_DFT_SCF": {
@@ -154,7 +154,7 @@
             "LiOH": 0.141,
             "Li3N_001": 0.133
         },
-        "ranking": "Li3N has lowest barrier among 5 common SEI inorganics \u2192 most favorable for uniform Li redistribution at anode interphase."
+        "ranking": "Li3N has lowest barrier among 5 common SEI inorganics → most favorable for uniform Li redistribution at anode interphase."
     },
     "paper_claim": {
         "system": "AgNO3-derived nitrate-rich SEI for anode-free SSB",
@@ -166,8 +166,9 @@
         ],
         "caveats_for_methods_section": [
             "Absolute barrier (0.049 eV for Li3N) underestimates Cui 2023 full DFT NEB (0.133 eV) because we used DFT SCF on UMA-relaxed geometry, not full DFT NEB.",
-            "Same-protocol ratio (5.9x) is the robust paper claim \u2014 functional/pseudo choice robust.",
-            "Full DFT NEB started 2026-06-02 for both systems will replace these numbers with literature-matched absolute values."
+            "Same-protocol ratio (5.9x) is the robust paper claim — functional/pseudo choice robust.",
+            "Full DFT NEB started 2026-06-02 for both systems will replace these numbers with literature-matched absolute values.",
+            "The 'hollow' metastable site (+181 meV above on-N) is, upon coordinate analysis of the relaxed structure, identified as the on-Li site -- Li adatom sits 1.3 Å above a substrate in-plane Li at the 3-N centroid. Li+-Li+ electrostatic repulsion explains its higher energy. See hollow_site_identification_2026_06_09."
         ]
     },
     "scripts": {
@@ -184,5 +185,25 @@
     "kb_links": {
         "project": "kb/projects/li_neb_anode_free.md",
         "results_report": "kb/results/li_neb_anode_free_report.md"
+    },
+    "hollow_site_identification_2026_06_09": {
+        "_added_2026_06_09": "Post-relaxation site identification, NOT in the original Cui 2023 paper. From hollow_s2 final ATOMIC_POSITIONS analysis of relaxed coordinates.",
+        "discovery": "The site we were calling 'hollow' (the metastable basin at +181 meV above on-N) is geometrically NOT a vacuum hole between N atoms — it is the **on-Li site**, i.e. Li adatom sits ~1.3 Å directly ABOVE a substrate in-plane Li atom (which sits at the 3-N centroid in the Li2N termination plane).",
+        "evidence": {
+            "Li_adatom_xy_initial": "(0.000, 2.107) Å",
+            "Li_adatom_xy_relaxed": "(-0.000, 2.107) Å (unchanged in xy)",
+            "Li_adatom_z_relaxed": "35.641 Å",
+            "substrate_in_plane_Li_xy": "(0.000, 2.107) Å -- EXACT match with adatom xy",
+            "substrate_in_plane_Li_z": "34.351 Å (top surface layer)",
+            "Δz_above_substrate_Li": "+1.29 Å (adatom sits above substrate Li, no horizontal displacement)",
+            "three_N_centroid_check": "N atoms at (0,0), (-1.825, 3.161), (1.825, 3.161) → centroid = (0, 2.107) = substrate Li xy = adatom xy. CONFIRMED: hollow = on-Li."
+        },
+        "chemical_interpretation": "Li adatom resting on top of a substrate Li(+) atom experiences Li(+)-Li(+) electrostatic REPULSION → destabilizes the site by +181 meV vs on-N (where Li adatom binds to N lone pair via charge transfer). This is consistent with the on-N being the well and 'hollow' being the metastable basin.",
+        "naming_correction": {
+            "old_term": "hollow basin / 3-N centroid hollow",
+            "new_term": "on-Li site (3-N centroid, occupied by substrate in-plane Li)",
+            "paper_writeup_recommendation": "Use 'on-Li metastable site' or 'above-substrate-Li metastable site' instead of 'hollow' to be physically accurate. Cui 2023 also identifies this site but does not explicitly compute its energy (focuses on the on-N → bridge → on-N main path)."
+        },
+        "implication_for_UMA_failure": "The previous interpretation that 'UMA places Li adatom at hollow (3-N geometric centroid)' was misleading. The actual UMA failure is that UMA predicted the on-Li site (above substrate Li) as a minimum or even global well due to packing-only chemistry, missing the on-N stabilization from N lone pair → Li 1s charge transfer. DFT correctly identifies on-N as the well because it captures this charge transfer."
     }
 }
