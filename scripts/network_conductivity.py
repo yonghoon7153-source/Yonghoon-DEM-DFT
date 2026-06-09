@@ -387,6 +387,12 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         'box_y': box_y,
         'scale': scale,
         'contact_mode': contact_mode,
+        # Thermal is the multi-phase superset network (all AM+SE contacts),
+        # so σ_eff/σ_bulk_SE can exceed 1 — the single-phase sigma_ratio>1.5
+        # guard in solve_network does NOT apply to it (see the guard there).
+        # Set by mode here; run_decomposition also forces it on for the
+        # production thermal call (which leaves mode at its 'ionic' default).
+        'is_thermal': (mode == 'thermal'),
         # Resistance-model tag:
         #   'maxwell' (point-contact only) for Hertzian
         #   'mikic'   (Mikic 1974 constriction w/ finite-cylinder correction)
@@ -745,11 +751,29 @@ def solve_network(network_data, mode='full', return_field=False):
     # indicate the solver mis-converged to a non-physical state for this
     # topology — even when G/Σg appears valid, the absolute σ_ratio
     # being > 1 violates a different physical bound. Reject.
-    if sigma_ratio > 1.5:
+    # The σ_eff ≤ σ_bulk bound (and so the sigma_ratio>1.5 reject) is a
+    # SINGLE-PHASE statement: it holds for the ionic (SE-only) and electronic
+    # (AM-only) networks, where every grain shares one σ_bulk and void can only
+    # reduce the effective conductivity. THERMAL is the multi-phase SUPERSET
+    # network — all AM-AM + AM-SE + SE-SE contacts of an ~87 %-dense skeleton —
+    # normalised by the WEAKEST phase (σ_bulk = K_SE_THERMAL), with AM bonds
+    # carrying ~5.7× more. There σ_eff/σ_bulk_SE > 1.5 is PHYSICAL, not a
+    # mis-convergence. The genuine, mode-independent bound is G_eff ≤ Σg_bulk
+    # (all edges in parallel); enforce THAT for thermal instead of the
+    # single-phase sigma_ratio cap. (Diagnosed on a real case: G/Σg=0.038 —
+    # bound satisfied — yet sigma_ratio=10.3 was nuking κ to None.)
+    is_thermal = network_data.get('is_thermal', False)
+    reject = ((G_eff > sum_g_check * 1.1) if is_thermal
+              else (sigma_ratio > 1.5))
+    if reject:
         if os.environ.get('NETWORK_DEBUG'):
-            print(f"  ⚠ sigma_ratio={sigma_ratio:.3f} > 1.5 — non-physical "
-                  f"(σ_eff cannot exceed σ_bulk for porous composite). "
-                  f"Returning None.")
+            if is_thermal:
+                print(f"  ⚠ thermal G_eff={G_eff:.3e} > 1.1·Σg={sum_g_check:.3e} "
+                      f"(parallel bound violated) — returning None.")
+            else:
+                print(f"  ⚠ sigma_ratio={sigma_ratio:.3f} > 1.5 — non-physical "
+                      f"(σ_eff cannot exceed σ_bulk for porous composite). "
+                      f"Returning None.")
         if return_field:
             return None, None, None
         return None, None
@@ -867,7 +891,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       plate_z, box_x=0.05, box_y=0.05,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
                       type_map=None, contact_mode='hertzian',
-                      dump_raw_dir=None, dump_tag=None):
+                      dump_raw_dir=None, dump_tag=None, is_thermal=False):
     """
     Run full decomposition analysis:
     1. FULL (R_bulk + R_constriction): physical ground truth
@@ -889,6 +913,14 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     if net is None:
         print("  No network found")
         return None
+
+    # The production thermal call reaches build_network with mode left at its
+    # 'ionic' default (run_decomposition does not forward a material mode), so
+    # net['is_thermal'] would be False there. Force it on when this decomposition
+    # IS the thermal (all-contact) run, so solve_network relaxes the single-phase
+    # sigma_ratio>1.5 guard for it.
+    if is_thermal:
+        net['is_thermal'] = True
 
     n_nodes = len(net['nodes'])
     n_edges = len(net['edges'])
@@ -1046,7 +1078,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                        plate_z, box_x, box_y, sigma_bulk=K_SE_THERMAL,
                                        type_map=type_map,
                                        contact_mode=contact_mode,
-                                       dump_raw_dir=dump_raw_dir, dump_tag=tag_th)
+                                       dump_raw_dir=dump_raw_dir, dump_tag=tag_th,
+                                       is_thermal=True)
     except Exception as e:
         print(f"  Thermal solver failed: {e}")
 
