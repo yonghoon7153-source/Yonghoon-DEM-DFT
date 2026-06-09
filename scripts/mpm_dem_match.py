@@ -119,6 +119,7 @@ def run_match(args):
     grid_v = ti.Vector.field(2, ti.f32, (ng, ng)); grid_m = ti.field(ti.f32, (ng, ng))
     wall_y = ti.field(ti.f32, ()); N = ti.field(ti.i32, ())
     wall_vf = ti.field(ti.f32, ())   # servo wall speed — slows as Pcur→p_read (no overshoot)
+    wall_imp = ti.field(ti.f32, ())  # accumulated wall reaction impulse (Σ m·(v+wall_vf)) → boundary stress
     # DPC cap params (runtime so --heckel can sweep): pressure-dependent shear
     # (cap_fric) + DIVERGENT hardening cap  p_b(avp) = cap_pb0·(avpmax/(avpmax-avp))^cap_h
     # → p_b → ∞ as avp → cap_avpmax (residual floor φ_min), so densification
@@ -173,7 +174,11 @@ def run_match(args):
             if grid_m[I] > 0:
                 grid_v[I] /= grid_m[I]; i, j = I[0], I[1]
                 if j * dx < FLOOR and grid_v[I][1] < 0: grid_v[I][1] = 0.0
-                if j * dx > wall_y[None]: grid_v[I][1] = ti.min(grid_v[I][1], -wall_vf[None])
+                if j * dx > wall_y[None]:
+                    vb = grid_v[I][1]
+                    if vb > -wall_vf[None]:                    # bed stress resists the descending wall
+                        wall_imp[None] += grid_m[I] * (vb + wall_vf[None])   # reaction impulse → boundary load
+                        grid_v[I][1] = -wall_vf[None]          # (= ti.min(vb,-wall_vf) for vb>-wall_vf)
                 if i * dx < SW_L and grid_v[I][0] < 0: grid_v[I][0] = 0.0
                 if i * dx > SW_R and grid_v[I][0] > 0: grid_v[I][0] = 0.0
         for p in range(N[None]):
@@ -288,6 +293,30 @@ def run_match(args):
                     break
                 wall_y[None] = max(top - WALL_V * 25 * dt, wall_floor)   # fixed v, NO servo
             return _f50_porosity(por_s, p_s)
+        if readout == 'wallP':
+            # ── resolution-INVARIANT *absolute* readout: servo to the WALL REACTION stress ──
+            # mean(prs) is a VOLUME average → the well-resolved soft SE dilutes it, so at 512
+            # the bed must over-compress (→0.8%) before the mean hits 300 MPa.  The wall
+            # reaction Σ grid_m·(v+wall_vf)/(n_sub·dt·WIDTH) = boundary force / area is a force
+            # balance → ≈ the constitutive stress (GPa) with dx/n_sub/ρ cancelling (320≡512).
+            # This is the TRUE experimental boundary condition: press the powder AT 300 MPa.
+            got = float('nan')
+            for fr in range(int(8000 * ng / 320)):
+                wall_imp[None] = 0.0
+                for _ in range(25): substep()
+                top = wall_y[None]
+                por = max(0.0, 1.0 - sa / (WIDTH * (top - FLOOR))) * 100
+                wstress = wall_imp[None] / (25.0 * dt * WIDTH)     # GPa, resolution-invariant
+                jam_poro[None] = por
+                if wstress >= pr:
+                    got = por; break
+                if top <= wall_floor + 1e-4:
+                    got = por; break
+                if top > wall_floor:
+                    servo = min(1.0, max(0.04, (pr - wstress) / pr))
+                    wall_vf[None] = WALL_V * servo
+                    wall_y[None] = max(top - wall_vf[None] * 25 * dt, wall_floor)
+            return got
         # ── legacy ABSOLUTE-pressure readout (servo wall) — --heckel diagnostic only.
         #    KEPT to demonstrate the resolution bias; NOT used for the per-case match.
         got = float('nan')
@@ -317,23 +346,25 @@ def run_match(args):
                else f"cap_pb0={args.cap_pb0} cap_h={args.cap_h} "
                     f"cap_avpmax={args.cap_avpmax} cap_fric={args.cap_fric}")
         print(f"Heckel (pure-SE) — model={MODEL}, E_se={E_se_base}, {_pp}, n_grid={ng}")
-        print(f"  {'P(MPa)':>7s} {'porosity%':>10s}   (absolute-P readout = RESOLUTION-BIASED diagnostic)")
-        for pmpa in (100.0, 300.0, 600.0):
+        print(f"  {'P(MPa)':>7s} {'absP%':>8s} {'wallP%':>8s}   "
+              f"(absP=mean-prs RESOLUTION-BIASED; wallP=boundary load, resolution-INVARIANT)")
+
+        def _avg(readout, pmpa):
             vals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, p_read=pmpa / 1000.0,
-                             readout='absP')
-                    for i in range(args.seeds)]
+                             readout=readout) for i in range(args.seeds)]
             vals = [x for x in vals if x == x]
-            por = float(np.mean(vals)) if vals else float('nan')
-            print(f"  {pmpa:7.0f} {por:10.1f}", flush=True)
-        # self-normalised f50 anchor — resolution-INVARIANT, the number the matcher uses
+            return float(np.mean(vals)) if vals else float('nan')
+
+        for pmpa in (100.0, 300.0, 600.0):
+            print(f"  {pmpa:7.0f} {_avg('absP', pmpa):8.1f} {_avg('wallP', pmpa):8.1f}", flush=True)
+        # self-normalised f50 anchor — resolution-INVARIANT TREND readout (offset cancels)
         fvals = [run_once(0.006, 0.006, 0.0, 0.0, 1.0, 7000 + i, readout='f50')
                  for i in range(args.seeds)]
         fvals = [x for x in fvals if x == x]
         f50 = float(np.mean(fvals)) if fvals else float('nan')
-        print(f"  f50 self-normalised (resolution-INVARIANT anchor): {f50:5.1f}%  "
-              f"— champion target ~10-15%; compare 320 vs 512", flush=True)
-        print("  (target ≈ 13.9 / 10.0 / 8.3 % from cap_compaction_heckel.py; "
-              "tune cap_pb0·cap_h so 300→~10%)")
+        print(f"  f50 (self-normalised TREND): {f50:5.1f}%", flush=True)
+        print(f"  → wallP@300 = ABSOLUTE re-anchor candidate; want 320≈512 ~10-15% "
+              f"(Minnmann 300→10%)", flush=True)
         return
 
     dps = load_design(names=set(args.names) if args.names else None,
@@ -350,7 +381,7 @@ def run_match(args):
         # perturbation as the DEM E-variant → 1.53·(DEM_E/1.35).  With --e-se
         # (cap cross-check) use the fixed base E for every case instead.
         e_se_mpm = E_se_base if args.e_se else (MPM_E_CHAMPION * d['e_se_gpa'] / DEM_E_BASE)
-        vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, e_se_mpm)
+        vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, e_se_mpm, readout=args.readout)
                 for i in range(args.seeds)]
         vals = [x for x in vals if x == x]  # drop nan
         mpm = float(np.mean(vals)) if vals else float('nan')
@@ -453,6 +484,10 @@ def main():
     ap.add_argument('--max-n', type=int, default=None)
     ap.add_argument('--names', nargs='*', default=None)
     ap.add_argument('--p-read', type=float, default=0.30, help='read pressure GPa (0.30 = 300 MPa)')
+    ap.add_argument('--readout', choices=['f50', 'wallP', 'absP'], default='f50',
+                    help="porosity readout: f50=self-normalised TREND (resolution-invariant, "
+                         "reads ~22%% absolute); wallP=boundary-load ABSOLUTE (resolution-invariant, "
+                         "servo to wall reaction = p_read); absP=legacy mean-prs (resolution-BIASED)")
     ap.add_argument('--plot', action='store_true', help='parity scatter (DEM vs MPM)')
     ap.add_argument('--group-plot', action='store_true',
                     help='trend: porosity vs AM wt% per SE radius, DEM vs MPM')
