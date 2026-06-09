@@ -84,7 +84,7 @@ def run_match(args):
     # the cap, not a softened E, then supplies the realistic residual porosity).
     E_se_base = float(args.e_se) if args.e_se else MPM_E_CHAMPION
     MU_SE, LA_SE = lame(E_se_base, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
-    YIELD_SE = 0.15; YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
+    YIELD_SE = float(args.yield_se); YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
     MAXP = 2_500_000
     x = ti.Vector.field(2, ti.f32, MAXP); v = ti.Vector.field(2, ti.f32, MAXP)
     C = ti.Matrix.field(2, 2, ti.f32, MAXP); F = ti.Matrix.field(2, 2, ti.f32, MAXP)
@@ -412,6 +412,9 @@ def main():
     ap.add_argument('--e-se', type=float, default=None,
                     help='fixed SE Young modulus GPa (e.g. 24 real bulk); with cap this '
                          'replaces the softened champion. Omit = champion 1.53 + E-variant scaling')
+    ap.add_argument('--yield-se', type=float, default=0.15,
+                    help='SE von Mises yield GPa (0.15 = champion plastic; 1e4 = RIGID '
+                         'bound for the [rigid, plastic] DEM bracket)')
     ap.add_argument('--cap-pb0', type=float, default=0.05,
                     help='DPC initial hydrostatic cap yield p_b0 (GPa) — low → powder '
                          'compacts easily, then hardens')
