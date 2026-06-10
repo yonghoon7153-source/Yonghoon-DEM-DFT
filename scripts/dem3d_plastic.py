@@ -76,7 +76,8 @@ def parse_args(argv):
     ap.set_defaults(plastic=True)
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target (GPa); 0.3=300 MPa')
     ap.add_argument('--mu', type=float, default=0.3, help='Coulomb friction coefficient')
-    ap.add_argument('--phi0', type=float, default=0.45, help='initial solid fraction (loose)')
+    ap.add_argument('--phi0', type=float, default=0.35,
+                    help='initial solid fraction (loose; keep <=0.38, the RSA saturation limit)')
     ap.add_argument('--frames', type=int, default=300, help='MAX frames; servo self-terminates at target')
     ap.add_argument('--sub', type=int, default=50, help='substeps per frame')
     ap.add_argument('--dt', type=float, default=0.04, help='timestep (scaled units)')
@@ -168,14 +169,15 @@ def build_packing(args, rng):
 
     for (r, frac, E, py) in radii_kinds:
         goal = frac * v_solid_tot
-        acc, tries = 0.0, 0
-        while acc < goal and tries < 4_000_000:
-            tries += 1
+        acc, fails = 0.0, 0
+        while acc < goal and fails < 60_000:               # exit when RSA can place no more
             p = (rng.uniform(0, L), rng.uniform(0, L), rng.uniform(floor + r, floor + fill_h - r))
             if fits(p, r):
                 cx.append(p); cr.append(r); cE.append(E); cpy.append(py)
                 grid.setdefault(key(p), []).append((p, r))
-                acc += (4.0 / 3.0) * math.pi * r ** 3
+                acc += (4.0 / 3.0) * math.pi * r ** 3; fails = 0
+            else:
+                fails += 1
     return (np.array(cx, np.float32), np.array(cr, np.float32),
             np.array(cE, np.float32), np.array(cpy, np.float32), L, floor, floor + fill_h)
 
