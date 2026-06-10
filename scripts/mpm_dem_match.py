@@ -109,7 +109,7 @@ def run_match(args):
     # the cap, not a softened E, then supplies the realistic residual porosity).
     E_se_base = float(args.e_se) if args.e_se else MPM_E_CHAMPION
     MU_SE, LA_SE = lame(E_se_base, args.nu_se); MU_AM, LA_AM = lame(140.0, 0.25)
-    YIELD_SE = float(args.yield_se); YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
+    YIELD_SE = float(args.yield_se); YIELD_AM = 1.0e4; HARD_SE = float(args.hard_se); RHO_AM, RHO_SE = 4.8, 2.0
     MAXP = 2_500_000
     x = ti.Vector.field(2, ti.f32, MAXP); v = ti.Vector.field(2, ti.f32, MAXP)
     C = ti.Matrix.field(2, 2, ti.f32, MAXP); F = ti.Matrix.field(2, 2, ti.f32, MAXP)
@@ -377,6 +377,44 @@ def run_match(args):
     dps = load_design(names=set(args.names) if args.names else None,
                       real_only=args.real_only, particulate=args.particulate,
                       max_n=args.max_n)
+    if args.sweep:
+        # ── synthetic composition sweep (AM 0→100 at rSE=0.5, P:S=7:3) ──────────
+        # Map the Furnas dip vs SE MATERIAL params, to find what SE properties best
+        # reproduce the DEM dip — NOT the morphology champion, a best-fit-to-DEM SE
+        # model.  Target = DEM corpus medians (rSE≤0.5) binned by AM%.  The dip is a
+        # LOCAL MINIMUM; champion soft-plastic SE is monotonic (fills it), stiff/high-
+        # yield SE (toward rigid) should restore it — this sweep finds where.
+        dem_bins = {}
+        for d in dps:
+            if d['r_SE'] > 0.5:
+                continue
+            dem_bins.setdefault(int(d['AM_wt'] // 5) * 5, []).append(d['dem'])
+        print(f"composition sweep — rSE=0.5 (12:4:1), P:S=7:3, readout={args.readout}, n_grid={ng}\n"
+              f"  SE: E={E_se_base}  sigma_y={args.yield_se}  nu={args.nu_se}  HARD={args.hard_se}")
+        print(f"  {'AM%':>4s} {'DEM':>6s} {'MPM':>7s}   (DEM = corpus median rSE<=0.5)")
+        R_AMP, R_AMS = R_SE_MPM * 12.0, R_SE_MPM * 4.0
+        rho_am, rho_se = 4.8, 2.0
+        sweep_rows = []
+        for amwt in [0, 20, 40, 55, 62, 70, 75, 80, 85, 90, 95, 100]:
+            wA = amwt / 100.0
+            vA = (wA / rho_am) / ((wA / rho_am) + ((1 - wA) / rho_se)) if 0 < wA < 1 else float(wA >= 1)
+            phi_am = INIT_SOLID * vA; phi_se = INIT_SOLID * (1 - vA)
+            fAP, fAS, fSE = phi_am * 0.7, phi_am * 0.3, phi_se
+            vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, E_se_base, readout=args.readout)
+                    for i in range(args.seeds)]
+            vals = [x for x in vals if x == x]
+            mpm = float(np.mean(vals)) if vals else float('nan')
+            cand = [v for k in dem_bins if abs(k - amwt) <= 5 for v in dem_bins[k]]
+            dm = float(np.median(cand)) if cand else float('nan')
+            print(f"  {amwt:4.0f} {dm:6.1f} {mpm:7.1f}", flush=True)
+            sweep_rows.append((amwt, mpm))
+        body = [(a, m) for a, m in sweep_rows if a >= 55 and m == m]
+        if len(body) >= 3:
+            ams = [b[0] for b in body]; mps = [b[1] for b in body]
+            imin = int(np.argmin(mps)); is_dip = 0 < imin < len(mps) - 1
+            tag = (f'DIP at AM{ams[imin]} ({mps[imin]:.1f})' if is_dip else 'MONOTONIC (no dip)')
+            print(f"  -> MPM {tag};  DEM dips at AM~75", flush=True)
+        return
     print(f"matching {len(dps)} DEM design points @ {args.p_read*1000:.0f} MPa, "
           f"n_grid={ng}, seeds={args.seeds}")
     rows = []
@@ -503,6 +541,14 @@ def main():
     ap.add_argument('--max-n', type=int, default=None)
     ap.add_argument('--names', nargs='*', default=None)
     ap.add_argument('--p-read', type=float, default=0.30, help='read pressure GPa (0.30 = 300 MPa)')
+    ap.add_argument('--hard-se', type=float, default=10.0,
+                    help="SE work-hardening: sigma_y_eff = sigma_y*(1+HARD*eps_pl).  Higher -> SE "
+                         "flow stops sooner (floors void-fill) -> raises the SE-rich flank that the "
+                         "Furnas dip needs.  Lever for fitting the dip (with --yield-se).")
+    ap.add_argument('--sweep', action='store_true',
+                    help="synthetic AM 0->100 composition sweep (rSE=0.5, P:S=7:3) vs the DEM dip "
+                         "medians -- find SE material params that reproduce the Furnas dip (use with "
+                         "--e-se/--yield-se/--nu-se/--hard-se; champion is soft+monotonic).")
     ap.add_argument('--nu-se', type=float, default=0.30,
                     help="SE Poisson ratio.  0.30 = champion (softened E softens BULK too -> "
                          "volumetric over-compaction at SE-rich).  Raise toward ~0.49 to stiffen "
