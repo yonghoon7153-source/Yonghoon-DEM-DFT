@@ -22,6 +22,7 @@ Department of Data Science, Hanyang University
 | Lecture 12 | Backpropagation (Chain rule, gradient flow) | [lecture12-backpropagation.md](lectures/lecture12-backpropagation.md) |
 | Lecture 13 | Training NN (Hyperparameter Tuning) | [lecture13-training-neural-networks.md](lectures/lecture13-training-neural-networks.md) |
 | Lecture 14 | Regularization (L1/L2, Dropout, Ensemble, Augmentation) | [lecture14-regularization.md](lectures/lecture14-regularization.md) |
+| Lecture 15 | Convolutional Neural Networks (CNN) | [lecture15-cnn.md](lectures/lecture15-cnn.md) |
 
 ## 시험 범위
 - **기말 (Final)**: Lecture 8 ~ 17
