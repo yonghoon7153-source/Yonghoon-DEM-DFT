@@ -7,6 +7,41 @@ n_grid=512, 3 seeds.  Tool: `scripts/mpm_dem_match.py --readout wallP`; analysis
 `scripts/analyze_mpm_dem_match.py`.  **This is a frame [4] comparison — DEM and
 MPM are each calibrated to EXPERIMENT independently, never to each other.**
 
+---
+## ⚠ CORRECTIONS (2026-06-10, later) — supersede §3–§5 below
+
+Two headline claims first written below were WRONG and are corrected here; the
+readout (§1–§2) and the per-band absolute numbers stand.
+
+- **CORRECTION 1 — the "force-chain limit" was a SOFT-BULK ARTIFACT, not a
+  continuum limit.**  The 18× E softening softened the SE *bulk* modulus too, so
+  the soft SE volumetrically squishes under 300 MPa and the big rigid AM forms
+  *artificial* force chains (52–56 % porosity, +35 vs DEM).  Real SE (bulk 24 GPa
+  ≫ 300 MPa) is near-incompressible.  `--nu-se` raising SE Poisson→~0.49 (stiff
+  bulk + soft shear = volume-preserving granular flow) DISSOLVES it: AM-rich
+  rSE=0.5 outliers 22→2, full-132 @512 nu0.49 rSE≤0.5 mean|Δ| 8.5→4.6.  ⇒ only the
+  SHEAR softening is the granular proxy; softening the bulk was an unintended side
+  effect.  (nu0.49 over-stiffens comparable-size rSE1.0/1.5 by +5~+10 → it is a
+  production-absolute lever, not a global optimum; nu0.49-vs-SEM morphology
+  unverified.)
+- **CORRECTION 2 — the FURNAS DIP is NOT reproduced by the plastic MPM** ("DIP
+  CO-LOCATES" in §4 was a median-CROSSING misread).  The champion MPM porosity-vs-AM
+  is MONOTONIC (AM60→95: 11.7→18.6→20.1→20.7→24.5); DEM dips at AM70–75.  They only
+  cross near AM75.  A MATERIAL sweep (`--sweep`, champion→rigid) PROVES no SE
+  material reproduces the dip: soft = monotonic; rigid (E=24) = a shallow/mis-located
+  dip but 2–3× too porous; NO setting gives the dip SHAPE *and* the absolute.  ⇒ the
+  dip lives in the INITIAL rigid-sphere packing (Furnas geometry), which DEM has and
+  the plastic continuum CANNOT, material-independently.
+- **REAL-PHYSICS verdict.**  The MPM correctly models the PLASTIC half of reality
+  (SE morphology — SEM ✓; pure-SE density — Minnmann ✓; void-fill flow); the nu fix
+  made it more faithful by removing the force-chain artifact.  It CANNOT model the
+  DISCRETE-PACKING half (the dip).  DEM is the mirror (packing/dip ✓, rigid SE → no
+  plastic morphology).  Neither is complete; each describes a different real half →
+  **frame[5] division empirically confirmed.**  → MPM = morphology/plastic-mechanics;
+  DEM (or de Larrard geometric) = porosity/dip/transport.
+
+---
+
 ## 1. The readout problem (why 512 needed a new readout)
 
 The matcher servoed a wall to a target pressure read as `mean(prs)` — the

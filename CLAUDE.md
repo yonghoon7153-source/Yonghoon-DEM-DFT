@@ -372,7 +372,7 @@ scripts/mpm_dem_composition_compare.py (trend, 2-panel) + mpm_dem_percase_outlie
     dip + size-crossover emerge in the true-plastic MPM per-case.  (320 matcher
     has +14 %p under-resolution offset + SE-rich servo over-flow.)
 
-### ★ PER-CASE 512 matcher DONE — wallP readout + dip cross-validated (2026-06-10) ★
+### ★ PER-CASE 512 matcher — wallP + 2 CORRECTIONS: dip NOT reproduced, force-chain=soft-bulk artifact (2026-06-10) ★
 Resolves the PENDING item above.  Champion MPM (E_SE=1.53/σ_y=0.15, AM rigid)
 vs the 132-case DEM corpus at real 12:4:1 sizes, n_grid=512, 3 seeds.  Full
 record: docs/mpm_dem_wallP_crossvalidation.md.  Tools: scripts/mpm_dem_match.py
@@ -393,30 +393,59 @@ each calibrated to EXPERIMENT, never to each other.)
     the big-AM first-contact transient.  median/window sustained-stop REJECTED —
     it over-compresses universally and INVERTS the good rSE=1.0 band (ρ 0.35→
     −0.22).  Arm-guard left big-AM rSE=0.5 byte-identical to the instant stop →
-    DECISIVE: the high porosity there is NOT a servo artifact but the MPM's
-    genuine answer.
+    it is not a SERVO artifact (read at the time as "the MPM's genuine answer" —
+    but CORRECTION 1 below proves it was a soft-BULK material artifact, removed
+    by --nu-se; the servo is fine, the constitutive bulk modulus was the issue).
   • RESULT (per-r_SE band; single 1:1 R²=−4.4 is MISLEADING):
     - rSE≈1.0 (n5):  Δ −0.0, mean|Δ| 1.5, ρ +0.964  ✅ continuum valid, zero bias
     - rSE≥1.5 (n15): Δ +5.1, ρ +0.774  (big-SE offset, tracks trend)
     - rSE≤0.5 (n112):Δ +5.3, ρ +0.467  (bulk; force-chain outliers scatter ρ)
-  • FORCE-CHAIN LIMIT (frame [4], NOT a bug): 22/112 rSE≤0.5 cases, ALL small-SE
-    (rSE=0.5) + AM-rich (AM 80–92) → big rigid AM bears 300 MPa via FORCE CHAINS
-    at high porosity (MPM 31–46 vs DEM 16–27 %), continuum lacks DEM's discrete
-    rearrangement.  Porosity JUMPS with AM size in MPM (small AM 14 % → big AM
-    56 %), DEM doesn't.  Remove the 22 → rSE≤0.5 bulk bias +5.3→+1.5 %p.  The
-    ~+5 offset elsewhere = pure-SE anchor (12.7 vs 10) + 512 under-resolution.
-  • ★ FURNAS DIP CO-LOCATES (headline): porosity-vs-AM% (rSE≤0.5) median dip
-    minimum at AM 72–78 wt% for BOTH DEM (13.4) and the independent plastic MPM
-    (12.7) — depth within 0.7 %p, rising on both flanks; dip min is BELOW the
-    force-chain onset (AM≈80) → FC-free/clean.  → dip is a real GEOMETRIC packing
-    effect, cross-validated by 2 independent tools (frame [3]/[4]).  size-
-    crossover not captured by the AM78–86 slice (DEM flat there) — AM62-vs-AM82
-    contrast pending.
-  • VERDICT: in the production-core (AM 72–83, the dip region) DEM↔MPM agree
-    within +1.5 %p AND reproduce the dip at the same composition/depth = cross-
-    validation; divergence only at the extremes (AM-rich force-chain over-
-    predict, extreme SE-rich over-compact) = quantified continuum limits.  DEM =
-    transport/discrete network, MPM champion = morphology + dip TREND.
+  • RESULT above (nu=0.30) is the SOFT-BULK baseline — its rSE≤0.5 +5.3/ρ0.47
+    is dominated by 22 force-chain outliers that CORRECTION 1 dissolves.
+  • ★ CORRECTION 1 — the FORCE-CHAIN was a SOFT-BULK ARTIFACT, NOT a continuum
+    limit (earlier "FORCE-CHAIN LIMIT, frame[4], 768 can't fix" was WRONG):
+    the 18× E softening softened the SE BULK modulus too, so under 300 MPa the
+    soft SE volumetrically squishes/escapes → big rigid AM forms ARTIFICIAL force
+    chains bearing the load at high porosity (52–56 %, +35 vs DEM).  REAL SE (bulk
+    24 GPa ≫ 300 MPa) is near-incompressible → no such chain.  --nu-se raises SE
+    Poisson→~0.49 (stiff BULK + soft shear = volume-preserving granular flow) →
+    the force chain DISSOLVES: AM-rich rSE=0.5 outliers 22→2 (the 2 left are
+    ultra-dense-DEM 3–4 %, a different thing).  full-132 @512 nu0.49: rSE≤0.5
+    mean|Δ| 8.5→4.6, bias +5.3→+2.1.  ⇒ softening is NOT irreducible on the BULK
+    axis — only the SHEAR softening is the granular-rearrangement proxy; softening
+    bulk was an unintended side effect.  CAVEAT: nu0.49 OVER-stiffens comparable-
+    size (rSE1.0 0→+5.7, rSE1.5 +5→+10) → nu~0.45–0.49 is a production-ABSOLUTE
+    lever, not a global optimum; and nu0.49 morphology-vs-SEM is UNVERIFIED (nu is
+    bulk, SEM morphology is shear-driven → likely intact, must confirm).
+  • ★ CORRECTION 2 — the FURNAS DIP is NOT reproduced by the plastic MPM (earlier
+    "DIP CO-LOCATES" headline was WRONG — a median-CROSSING misread as a shared dip):
+    the champion MPM porosity-vs-AM curve is MONOTONIC (AM60→95 medians 11.7→18.6→
+    20.1→20.7→24.5), while DEM dips at AM70–75 (13.4) with rising flanks.  They
+    merely CROSS near AM75; the MPM has NO local minimum.  The SE-rich flank (AM<65)
+    is over-compacted (the continuum SE FLOWS into voids where DEM's rigid SE JAMS),
+    so the high SE-rich flank a dip requires is absent.  --sweep (synthetic AM 0–100,
+    MATERIAL sweep champion→rigid) PROVES no SE material reproduces it: soft =
+    monotonic+denser; rigid (E=24) = a shallow / mis-located (AM80) dip BUT 2–3× too
+    porous (32–48 % vs DEM ~16 %); NO setting gives the dip SHAPE AND the absolute
+    together.  ⇒ the Furnas dip lives in the INITIAL rigid-sphere packing (Furnas
+    geometry — the optimal ratio packs DENSER), which DEM has and the plastic
+    continuum CANNOT, MATERIAL-INDEPENDENTLY.  STRONG frame[4]/[5] result (proof by
+    material sweep) — the cap/jam/softening dead-end mapped across the whole SE-
+    material space.  DEM (or de Larrard geometric) OWNS the dip; the resolved-grain
+    plastic MPM cannot, at any calibration.
+  • REAL-PHYSICS VERDICT (what the MPM actually describes — the payoff): the MPM
+    correctly models the PLASTIC half of reality — SE shape-change/morphology
+    (SEM ✓), pure-SE density (Minnmann ~10 % ✓), void-fill flow — and the --nu-se
+    fix removed the soft-bulk force-chain ARTIFACT, making it MORE faithful.  It
+    CANNOT model the DISCRETE-PACKING half (the Furnas dip, rigid-AM rearrangement).
+    DEM is the MIRROR: discrete packing + dip ✓, but rigid SE → NO plastic
+    morphology.  Neither model is complete; each describes a DIFFERENT real half →
+    frame[5] division EMPIRICALLY CONFIRMED (not assumed).  ⇒ MPM = morphology /
+    plastic-mechanics; DEM (or de Larrard geometric) = porosity / dip / transport.
+    For porosity-incl-dip use DEM, NOT the resolved-grain plastic MPM.  wallP @512
+    (nu0.49) gives a usable production-ABSOLUTE porosity (rSE≤0.5 mean|Δ| 4.6 %p,
+    force-chain gone) but NOT the dip/trend.  Tools added: --nu-se, --hard-se,
+    --sweep (scripts/mpm_dem_match.py).
 
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
