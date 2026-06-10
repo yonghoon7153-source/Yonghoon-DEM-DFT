@@ -108,7 +108,7 @@ def run_match(args):
     # --e-se overrides the SE base modulus (e.g. real E=24 for the cap cross-check;
     # the cap, not a softened E, then supplies the realistic residual porosity).
     E_se_base = float(args.e_se) if args.e_se else MPM_E_CHAMPION
-    MU_SE, LA_SE = lame(E_se_base, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
+    MU_SE, LA_SE = lame(E_se_base, args.nu_se); MU_AM, LA_AM = lame(140.0, 0.25)
     YIELD_SE = float(args.yield_se); YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
     MAXP = 2_500_000
     x = ti.Vector.field(2, ti.f32, MAXP); v = ti.Vector.field(2, ti.f32, MAXP)
@@ -268,7 +268,7 @@ def run_match(args):
         if e_se_mpm is None: e_se_mpm = E_se_base
         pr = p_read if p_read else args.p_read
         rng = np.random.default_rng(seed)
-        mu_se, la_se = lame(e_se_mpm, 0.30)
+        mu_se, la_se = lame(e_se_mpm, args.nu_se)
         xy, mu, la, yl, ms = build(R_AMP, R_AMS, fAP, fAS, fSE, rng,
                                    mu_se=mu_se, la_se=la_se); n = len(xy)
         if n == 0: return float('nan')
@@ -503,6 +503,12 @@ def main():
     ap.add_argument('--max-n', type=int, default=None)
     ap.add_argument('--names', nargs='*', default=None)
     ap.add_argument('--p-read', type=float, default=0.30, help='read pressure GPa (0.30 = 300 MPa)')
+    ap.add_argument('--nu-se', type=float, default=0.30,
+                    help="SE Poisson ratio.  0.30 = champion (softened E softens BULK too -> "
+                         "volumetric over-compaction at SE-rich).  Raise toward ~0.49 to stiffen "
+                         "the BULK back to real (volume-preserving granular flow) while keeping "
+                         "shear soft -> kills the over-compaction.  >0.47 is near-incompressible "
+                         "and may need a smaller dt (watch for NaN/blow-up).")
     ap.add_argument('--readout', choices=['f50', 'wallP', 'absP'], default='f50',
                     help="porosity readout: f50=self-normalised TREND (resolution-invariant, "
                          "reads ~22%% absolute); wallP=boundary-load ABSOLUTE (resolution-invariant, "
