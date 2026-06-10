@@ -24,6 +24,7 @@ Department of Data Science, Hanyang University
 | Lecture 14 | Regularization (L1/L2, Dropout, Ensemble, Augmentation) | [lecture14-regularization.md](lectures/lecture14-regularization.md) |
 | Lecture 15 | Convolutional Neural Networks (CNN) | [lecture15-cnn.md](lectures/lecture15-cnn.md) |
 | Lecture 16 | CNN II - Batch Normalization | [lecture16-batch-normalization.md](lectures/lecture16-batch-normalization.md) |
+| Lecture 17 | CNN III - Architectures (AlexNet~ResNet) | [lecture17-cnn-architectures.md](lectures/lecture17-cnn-architectures.md) |
 
 ## 시험 범위
 - **기말 (Final)**: Lecture 8 ~ 17
