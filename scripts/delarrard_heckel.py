@@ -42,14 +42,24 @@ def beta_se(P, K):
     return min(0.999, (1.0 - phi_se(P) / 100.0) * (K + 1.0) / K)
 
 
-def poros(P, am_wt, ps, rP, rS, beta_am, K):
+def poros(P, am_wt, ps, rP, rS, beta_am, K, c=0.0, r0=4.0):
     f = vol_fracs(am_wt, ps)
     diams = [rP, rS, 1.0]; betas = [beta_am, beta_am, beta_se(P, K)]; y = [f['AMP'], f['AMS'], f['SE']]
     nz = [k for k in range(3) if y[k] > 1e-9]
     if not nz:
         return float('nan')
     phi = actual_phi([diams[k] for k in nz], [betas[k] for k in nz], [y[k] for k in nz], K=K)
-    return (1.0 - phi) * 100.0
+    base = (1.0 - phi) * 100.0
+    # extreme size-ratio LOOSENING: real fine-SE filling of coarse-AM voids is sub-ideal
+    # (bridging / wall friction), so de Larrard's IDEAL mixing over-densifies at big AM:SE
+    # ratios.  ratio_eff = (p·rP+s·rS)/(p+s) is the AM:SE size disparity; add porosity above a
+    # threshold r0, faded smoothly to 0 as SE->0 (pure-AM has no fine SE to over-fill).
+    fam = f['AMP'] + f['AMS']
+    if fam > 1e-6 and f['SE'] > 1e-6:
+        ratio_eff = (f['AMP'] * rP + f['AMS'] * rS) / fam
+        w = min(1.0, f['SE'] / 0.05)
+        base += c * max(0.0, ratio_eff - r0) * w
+    return base
 
 
 rows = []
@@ -65,31 +75,32 @@ dem = np.array([r['dem'] for r in rows]); rse = np.array([r['rse'] for r in rows
 
 # fit (beta_AM, K) to DEM @300 (K>=10 keeps beta_SE<=1 for the pure-SE anchor)
 best = None
-for beta_am in np.arange(0.78, 0.905, 0.01):
-    for K in (10, 12, 15, 18, 22, 27, 33, 40, 50):
-        pr = np.array([poros(300.0, r['am'], r['ps'], r['rP'], r['rS'], beta_am, K) for r in rows])
-        mm = np.isfinite(pr)
-        if mm.sum() < 10:
-            continue
-        mae = float(np.mean(np.abs(pr[mm] - dem[mm])))
-        if best is None or mae < best[0]:
-            best = (mae, float(beta_am), K, pr)
-mae, beta_am, K, pr = best; m = np.isfinite(pr)
-print(f"fit to DEM @300:  beta_AM={beta_am:.2f}, K={K}, beta_SE(300)={beta_se(300,K):.3f}")
-print(f"  -> mean|d|={mae:.1f}%p (n={m.sum()})   [de Larrard fixed-K was 3.5]")
+for c in np.arange(0.0, 2.01, 0.2):
+    for beta_am in np.arange(0.78, 0.905, 0.01):
+        for K in (10, 12, 15, 18, 22, 27, 33, 40, 50):
+            pr = np.array([poros(300.0, r['am'], r['ps'], r['rP'], r['rS'], beta_am, K, c) for r in rows])
+            mm = np.isfinite(pr)
+            if mm.sum() < 10:
+                continue
+            mae = float(np.mean(np.abs(pr[mm] - dem[mm])))
+            if best is None or mae < best[0]:
+                best = (mae, float(beta_am), K, float(c), pr)
+mae, beta_am, K, c, pr = best; m = np.isfinite(pr)
+print(f"fit to DEM @300:  beta_AM={beta_am:.2f}, K={K}, c_loosen={c:.1f}, beta_SE(300)={beta_se(300,K):.3f}")
+print(f"  -> mean|d|={mae:.1f}%p (n={m.sum()})   [uncorrected was 6.0; fixed-K de Larrard 3.5]")
 
 print("\n== pure-SE Heckel: model vs Minnmann/cap anchor ==")
 print(f"  {'P(MPa)':>7s} {'model':>6s} {'anchor':>7s}")
 for P, a in sorted(_ANCHOR + [(200.0, None), (1000.0, None)]):
-    mod = poros(P, 0.0, (7, 3), 12.0, 4.0, beta_am, K)
+    mod = poros(P, 0.0, (7, 3), 12.0, 4.0, beta_am, K, c)
     print(f"  {P:7.0f} {mod:6.1f} {('%.1f' % a) if a else '   -':>7s}")
 
 print("\n== composite Heckel + Furnas dip at 3 pressures (12:4:1, 7:3) ==")
 print(f"  {'P(MPa)':>7s} {'AM82':>6s} {'dip@AM':>7s} {'dip_por':>8s}  (dip moves? depth?)")
 ams = np.arange(50, 101, 5)
 for P in (100.0, 300.0, 600.0):
-    c82 = poros(P, 82.0, (7, 3), 12.0, 4.0, beta_am, K)
-    cur = np.array([poros(P, a, (7, 3), 12.0, 4.0, beta_am, K) for a in ams])
+    c82 = poros(P, 82.0, (7, 3), 12.0, 4.0, beta_am, K, c)
+    cur = np.array([poros(P, a, (7, 3), 12.0, 4.0, beta_am, K, c) for a in ams])
     i = int(np.argmin(cur)); depth = 0.5 * (cur[0] + cur[-1]) - cur[i]
     print(f"  {P:7.0f} {c82:6.1f} {('AM%d' % ams[i]):>7s} {cur[i]:8.1f}  depth {depth:.1f}%p")
 
