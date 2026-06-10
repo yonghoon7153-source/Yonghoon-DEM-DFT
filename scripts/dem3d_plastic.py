@@ -59,6 +59,9 @@ RHO = 2.0                       # scaled density (only sets dynamics; static res
 def parse_args(argv):
     ap = argparse.ArgumentParser(description="3D elasto-plastic DEM (Thornton contact).")
     ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'])
+    ap.add_argument('--gpu-mem', type=float, default=2.0,
+                    help='GPU memory pool cap (GB).  Taichi else grabs ~90%% of the card and OOMs '
+                         'when the V100 is shared; our fields are tiny.  Raise only for very large N.')
     ap.add_argument('--material', default='SE', choices=['SE', 'AM', 'mix'])
     ap.add_argument('--n-target', type=int, default=400, help='approx particle count')
     ap.add_argument('--am-wt', type=float, default=0.0, help='AM weight %% (mix only)')
@@ -205,7 +208,10 @@ def main(argv):
     args = parse_args(argv)
     import taichi as ti
     arch = {'gpu': ti.gpu, 'cuda': ti.cuda, 'vulkan': ti.vulkan, 'cpu': ti.cpu}[args.arch]
-    ti.init(arch=arch, default_fp=ti.f32, random_seed=args.seed)
+    init_kw = dict(arch=arch, default_fp=ti.f32, random_seed=args.seed)
+    if args.arch in ('gpu', 'cuda'):
+        init_kw['device_memory_GB'] = args.gpu_mem      # cap the pool (shared V100 → avoid OOM grab)
+    ti.init(**init_kw)
 
     # ── the contact law as a Taichi @ti.func (mirrors thornton_numpy) ───────────
     PLASTIC = int(args.plastic); BETA = float(args.beta_lock); KLOCK = float(args.klock)
