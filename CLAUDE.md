@@ -372,6 +372,52 @@ scripts/mpm_dem_composition_compare.py (trend, 2-panel) + mpm_dem_percase_outlie
     dip + size-crossover emerge in the true-plastic MPM per-case.  (320 matcher
     has +14 %p under-resolution offset + SE-rich servo over-flow.)
 
+### ★ PER-CASE 512 matcher DONE — wallP readout + dip cross-validated (2026-06-10) ★
+Resolves the PENDING item above.  Champion MPM (E_SE=1.53/σ_y=0.15, AM rigid)
+vs the 132-case DEM corpus at real 12:4:1 sizes, n_grid=512, 3 seeds.  Full
+record: docs/mpm_dem_wallP_crossvalidation.md.  Tools: scripts/mpm_dem_match.py
+--readout wallP + scripts/analyze_mpm_dem_match.py.  (2D, frame [4] — DEM & MPM
+each calibrated to EXPERIMENT, never to each other.)
+  • READOUT FIX (the 512 blocker): the matcher servoed to mean(prs) = a VOLUME
+    average → resolution-biased (well-resolved soft SE dilutes the mean → 512
+    over-compresses before the mean hits 300 MPa).  pure-SE absP collapsed 320→
+    512 = 7.2→0.8 % (9×).  NEW **wallP** = wall REACTION stress
+    Σ grid_m·(v+wall_vf)/(n_sub·dt·WIDTH) = boundary force/area; force balance →
+    ≈ constitutive stress (GPa), dx/n_sub/ρ cancel → resolution-invariant AND
+    the TRUE experimental BC (press AT 300 MPa).  pure-SE wallP 320/512 = 23.5/
+    12.7 % (512 ≈ Minnmann 10); the 320→512 shift is genuine small-SE plastic-
+    flow under-resolution that CONVERGES (768), NOT the absP artifact.  (f50
+    self-normalised = 22%, TREND-only, rejected for absolute; --readout {f50,
+    wallP,absP}, default wallP for the matcher.)
+  • SERVO: arm-after-compaction guard (disarm instant-stop until por≤por0−2) for
+    the big-AM first-contact transient.  median/window sustained-stop REJECTED —
+    it over-compresses universally and INVERTS the good rSE=1.0 band (ρ 0.35→
+    −0.22).  Arm-guard left big-AM rSE=0.5 byte-identical to the instant stop →
+    DECISIVE: the high porosity there is NOT a servo artifact but the MPM's
+    genuine answer.
+  • RESULT (per-r_SE band; single 1:1 R²=−4.4 is MISLEADING):
+    - rSE≈1.0 (n5):  Δ −0.0, mean|Δ| 1.5, ρ +0.964  ✅ continuum valid, zero bias
+    - rSE≥1.5 (n15): Δ +5.1, ρ +0.774  (big-SE offset, tracks trend)
+    - rSE≤0.5 (n112):Δ +5.3, ρ +0.467  (bulk; force-chain outliers scatter ρ)
+  • FORCE-CHAIN LIMIT (frame [4], NOT a bug): 22/112 rSE≤0.5 cases, ALL small-SE
+    (rSE=0.5) + AM-rich (AM 80–92) → big rigid AM bears 300 MPa via FORCE CHAINS
+    at high porosity (MPM 31–46 vs DEM 16–27 %), continuum lacks DEM's discrete
+    rearrangement.  Porosity JUMPS with AM size in MPM (small AM 14 % → big AM
+    56 %), DEM doesn't.  Remove the 22 → rSE≤0.5 bulk bias +5.3→+1.5 %p.  The
+    ~+5 offset elsewhere = pure-SE anchor (12.7 vs 10) + 512 under-resolution.
+  • ★ FURNAS DIP CO-LOCATES (headline): porosity-vs-AM% (rSE≤0.5) median dip
+    minimum at AM 72–78 wt% for BOTH DEM (13.4) and the independent plastic MPM
+    (12.7) — depth within 0.7 %p, rising on both flanks; dip min is BELOW the
+    force-chain onset (AM≈80) → FC-free/clean.  → dip is a real GEOMETRIC packing
+    effect, cross-validated by 2 independent tools (frame [3]/[4]).  size-
+    crossover not captured by the AM78–86 slice (DEM flat there) — AM62-vs-AM82
+    contrast pending.
+  • VERDICT: in the production-core (AM 72–83, the dip region) DEM↔MPM agree
+    within +1.5 %p AND reproduce the dip at the same composition/depth = cross-
+    validation; divergence only at the extremes (AM-rich force-chain over-
+    predict, extreme SE-rich over-compact) = quantified continuum limits.  DEM =
+    transport/discrete network, MPM champion = morphology + dip TREND.
+
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete
