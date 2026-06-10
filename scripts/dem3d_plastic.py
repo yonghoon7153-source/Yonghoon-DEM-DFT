@@ -70,6 +70,13 @@ def parse_args(argv):
                     help='SE modulus (GPa).  Use the REAL bulk 24 — the Thornton yield cap '
                          'provides the plasticity, so NO 18× softening (1.53 never reaches yield).')
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE yield stress (GPa)')
+    ap.add_argument('--beta-lock', type=float, default=0.06,
+                    help='incompressibility lock: extra plastic overlap (×R*) of void-filling flow '
+                         'before the contact stiffens to near-rigid.  This is the granular '
+                         'densification limit (displaced material is bulk-incompressible) and is '
+                         'the main knob for the residual porosity.  Calibrate to Minnmann 10%%.')
+    ap.add_argument('--klock', type=float, default=8.0,
+                    help='lock stiffness (×E*·R*); near-rigid incompressible backstop slope')
     grp = ap.add_mutually_exclusive_group()
     grp.add_argument('--plastic', dest='plastic', action='store_true', help='yield cap ON (default)')
     grp.add_argument('--rigid', dest='plastic', action='store_false', help='yield cap OFF (pure Hertz)')
@@ -88,8 +95,22 @@ def parse_args(argv):
     return ap.parse_args(argv)
 
 
-# ── closed-form Thornton normal force (numpy reference = the analytic gate) ──────
-def thornton_numpy(delta, dmax, Rstar, Estar, py, plastic=True):
+# ── closed-form normal force (numpy reference = the analytic gate) ───────────────
+def f_load_numpy(delta, Rstar, Estar, py, dy, beta, klock):
+    """Monotonic loading force: Hertz (jamming) → plastic plateau (void-fill flow) →
+    incompressible lock (granular densification limit)."""
+    k = (4.0 / 3.0) * Estar * math.sqrt(Rstar)
+    if delta <= dy:
+        return k * delta ** 1.5
+    dlock = dy + beta * Rstar
+    Fy = k * dy ** 1.5
+    if delta <= dlock:
+        return Fy + math.pi * py * Rstar * (delta - dy)
+    Flock = Fy + math.pi * py * Rstar * (dlock - dy)
+    return Flock + klock * Estar * Rstar * (delta - dlock)
+
+
+def thornton_numpy(delta, dmax, Rstar, Estar, py, plastic=True, beta=0.06, klock=8.0):
     """Returns (F, new_dmax) for one contact.  numpy mirror of the Taichi @ti.func;
     the unit test asserts the two agree.  plastic=False → pure Hertz (rigid)."""
     if delta <= 0.0:
@@ -98,17 +119,15 @@ def thornton_numpy(delta, dmax, Rstar, Estar, py, plastic=True):
     if not plastic:
         return k * delta ** 1.5, max(dmax, delta)
     dy = Rstar * (math.pi * py / (2.0 * Estar)) ** 2          # yield overlap
-    Fy = k * dy ** 1.5
     dmx = max(dmax, delta)
     if dmx <= dy:                                            # never yielded → Hertz both ways
         return k * delta ** 1.5, dmx
-    # plastic set: peak force + flattened-contact unloading radius + residual overlap
-    Fmax = Fy + math.pi * py * Rstar * (dmx - dy)
+    Fmax = f_load_numpy(dmx, Rstar, Estar, py, dy, beta, klock)
     a_max2 = Rstar * (2.0 * dmx - dy)                        # Thornton plastic contact area /π
-    Rp = (4.0 / 3.0) * Estar * a_max2 ** 1.5 / Fmax          # Rp = (4/3)E* a_max³ / Fmax
+    Rp = (4.0 / 3.0) * Estar * a_max2 ** 1.5 / Fmax          # flattened unloading radius
     d0 = dmx - a_max2 / Rp                                   # residual (permanent) overlap
     if delta >= dmx - 1e-12:                                 # on the loading branch (new max)
-        F = Fy + math.pi * py * Rstar * (delta - dy)
+        F = f_load_numpy(delta, Rstar, Estar, py, dy, beta, klock)
     elif delta > d0:                                         # elastic unloading from the flat
         F = (4.0 / 3.0) * Estar * math.sqrt(Rp) * (delta - d0) ** 1.5
     else:                                                    # separated below residual set
@@ -189,11 +208,26 @@ def main(argv):
     ti.init(arch=arch, default_fp=ti.f32, random_seed=args.seed)
 
     # ── the contact law as a Taichi @ti.func (mirrors thornton_numpy) ───────────
-    PLASTIC = int(args.plastic)
+    PLASTIC = int(args.plastic); BETA = float(args.beta_lock); KLOCK = float(args.klock)
 
     @ti.func
     def pow15(z):                                          # z^1.5, Taichi-safe (no ** in kernels)
         return z * ti.sqrt(ti.max(z, 0.0))
+
+    @ti.func
+    def f_load(delta, Rstar, Estar, py, dy):
+        # monotonic loading: Hertz (jamming) → plastic plateau (void-fill) → incompressible lock
+        k = (4.0 / 3.0) * Estar * ti.sqrt(Rstar)
+        F = k * pow15(delta)
+        if delta > dy:
+            dlock = dy + BETA * Rstar
+            Fy = k * pow15(dy)
+            if delta <= dlock:
+                F = Fy + math.pi * py * Rstar * (delta - dy)           # soft void-filling flow
+            else:
+                Flock = Fy + math.pi * py * Rstar * (dlock - dy)
+                F = Flock + KLOCK * Estar * Rstar * (delta - dlock)    # near-rigid incompressible
+        return F
 
     @ti.func
     def contact_normal(delta, dmax, Rstar, Estar, py):
@@ -206,20 +240,20 @@ def main(argv):
             else:
                 t = math.pi * py / (2.0 * Estar)
                 dy = Rstar * t * t                         # yield overlap
-                Fy = k * pow15(dy)
                 if new_dmax <= dy:
                     F = k * pow15(delta)                   # never yielded → Hertz both ways
                 else:
-                    Fmax = Fy + math.pi * py * Rstar * (new_dmax - dy)
-                    a_max2 = Rstar * (2.0 * new_dmax - dy)
-                    Rp = (4.0 / 3.0) * Estar * pow15(a_max2) / Fmax
-                    d0 = new_dmax - a_max2 / Rp            # residual (permanent) overlap
+                    Fmax = f_load(new_dmax, Rstar, Estar, py, dy)
                     if delta >= new_dmax - 1e-9:
-                        F = Fy + math.pi * py * Rstar * (delta - dy)   # loading plateau
-                    elif delta > d0:
-                        F = (4.0 / 3.0) * Estar * ti.sqrt(Rp) * pow15(delta - d0)  # elastic unload
+                        F = f_load(delta, Rstar, Estar, py, dy)        # on the loading curve
                     else:
-                        F = 0.0                            # separated below residual set
+                        a_max2 = Rstar * (2.0 * new_dmax - dy)
+                        Rp = (4.0 / 3.0) * Estar * pow15(a_max2) / Fmax
+                        d0 = new_dmax - a_max2 / Rp        # residual (permanent) overlap
+                        if delta > d0:
+                            F = (4.0 / 3.0) * Estar * ti.sqrt(Rp) * pow15(delta - d0)  # unload
+                        else:
+                            F = 0.0                        # separated below residual set
         return F, new_dmax
 
     # ── unit test: drive one contact along a load→unload δ path ─────────────────
@@ -245,6 +279,7 @@ def main(argv):
     dmax = ti.field(ti.f32, (N, N))                      # contact history (dense; v2: cell-list slots)
     dmax_fl = ti.field(ti.f32, N); dmax_tp = ti.field(ti.f32, N)
     wall_z = ti.field(ti.f32, ()); wall_force = ti.field(ti.f32, ())
+    overlap_vol = ti.field(ti.f32, ())                  # Σ pairwise lens vol → ε_union correction
     Lx = ti.field(ti.f32, ())
 
     x.from_numpy(np.ascontiguousarray(cx)); rad.from_numpy(cr); Ei.from_numpy(cE)
@@ -269,6 +304,7 @@ def main(argv):
         for i in range(N):
             f[i] = ti.Vector([0.0, 0.0, 0.0])
         wall_force[None] = 0.0
+        overlap_vol[None] = 0.0
         Lc = Lx[None]
         for i in range(N):                                  # parallel over i
             # floor (z = floor): overlap if particle dips below floor+rad
@@ -301,6 +337,12 @@ def main(argv):
                     py = ti.min(pyi[i], pyi[j])
                     Fn, nd = contact_normal(delta, dmax[i, j], Rstar, estar_pair(i, j), py)
                     dmax[i, j] = nd
+                    # inclusion-exclusion lens volume (two spherical caps) → ε_union porosity
+                    x1 = (dist * dist + rad[i] * rad[i] - rad[j] * rad[j]) / (2.0 * dist)
+                    h1 = rad[i] - x1; h2 = rad[j] - (dist - x1)
+                    if h1 > 0.0 and h2 > 0.0:
+                        overlap_vol[None] += (math.pi / 3.0) * (h1 * h1 * (3.0 * rad[i] - h1)
+                                                                + h2 * h2 * (3.0 * rad[j] - h2))
                     nrm = dx / dist
                     vrel = v[i] - v[j]
                     vn = vrel.dot(nrm)
@@ -345,7 +387,8 @@ def main(argv):
         v_wall = -max(-1.0, min(1.0, err)) * vmax           # err>0 → move down (compress)
         wall_z[None] = max(floor_min, wall_z[None] + v_wall)
         height = wall_z[None] - floor
-        por = max(0.0, 1.0 - vol_solid / (area * height)) * 100.0
+        ov = float(overlap_vol[None])                       # double-counted overlap (last substep)
+        por = max(0.0, 1.0 - (vol_solid - ov) / (area * height)) * 100.0   # ε_union (overlap-corrected)
         series.append((frame, p, por, wall_z[None]))
         converged = converged + 1 if abs(p - target) < 0.04 * target else 0
         last = (converged >= 10 and frame > 25) or frame == args.frames - 1
@@ -359,6 +402,9 @@ def main(argv):
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
     print(f"FINAL  pressure={p_fin:.4f} GPa  porosity={por_fin:.2f}%   "
           f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]")
+    if wall_z[None] <= floor_min + 1e-6 and p_fin < 0.9 * target:
+        print(f"  ⚠ platen bottomed out at floor_min={floor_min:.3f} below target → bed TOO SOFT: "
+              f"raise --sigma-y (plateau) or --beta-lock (later lock) to hold {target} GPa")
     return por_fin, p_fin
 
 
@@ -390,7 +436,8 @@ def run_unit_test(ti, contact_normal, args):
     # numpy analytic reference
     Fnp = np.zeros(len(path)); dmax = 0.0
     for s, d in enumerate(path):
-        Fnp[s], dmax = thornton_numpy(float(d), dmax, Rstar, Estar, py, plastic=args.plastic)
+        Fnp[s], dmax = thornton_numpy(float(d), dmax, Rstar, Estar, py, plastic=args.plastic,
+                                      beta=args.beta_lock, klock=args.klock)
     err = float(np.max(np.abs(Fti - Fnp)) / (np.max(np.abs(Fnp)) + 1e-12))
     dy = Rstar * (math.pi * py / (2 * Estar)) ** 2
     print(f"UNIT TEST  Thornton contact  R*={Rstar:.3f}µm  E*={Estar:.3f}GPa  "
