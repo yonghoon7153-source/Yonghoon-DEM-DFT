@@ -19,6 +19,7 @@ Department of Data Science, Hanyang University
 | Lecture 9 | Optimization (Gradient Descent, SGD, Mini-batch) | [lecture09-optimization.md](lectures/lecture09-optimization.md) |
 | Lecture 10 | Optimization II (Momentum, Adam, 2nd-order) | [lecture10-optimization-ii.md](lectures/lecture10-optimization-ii.md) |
 | Lecture 11 | Feedforward Neural Networks (MLP, Activations) | [lecture11-feedforward-neural-networks.md](lectures/lecture11-feedforward-neural-networks.md) |
+| Lecture 12 | Backpropagation (Chain rule, gradient flow) | [lecture12-backpropagation.md](lectures/lecture12-backpropagation.md) |
 
 ## 시험 범위
 - **기말 (Final)**: Lecture 8 ~ 17
