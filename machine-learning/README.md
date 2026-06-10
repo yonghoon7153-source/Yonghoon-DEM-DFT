@@ -20,6 +20,7 @@ Department of Data Science, Hanyang University
 | Lecture 10 | Optimization II (Momentum, Adam, 2nd-order) | [lecture10-optimization-ii.md](lectures/lecture10-optimization-ii.md) |
 | Lecture 11 | Feedforward Neural Networks (MLP, Activations) | [lecture11-feedforward-neural-networks.md](lectures/lecture11-feedforward-neural-networks.md) |
 | Lecture 12 | Backpropagation (Chain rule, gradient flow) | [lecture12-backpropagation.md](lectures/lecture12-backpropagation.md) |
+| Lecture 13 | Training NN (Hyperparameter Tuning) | [lecture13-training-neural-networks.md](lectures/lecture13-training-neural-networks.md) |
 
 ## 시험 범위
 - **기말 (Final)**: Lecture 8 ~ 17
