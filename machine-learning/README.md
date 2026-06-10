@@ -17,6 +17,8 @@ Department of Data Science, Hanyang University
 | Lecture 5 | SVM (cont.), Features, Multiclass Classification | [lecture05-svm-features-multiclass.md](lectures/lecture05-svm-features-multiclass.md) |
 | Lecture 8 | Multiclass Classification, Softmax, CE Loss | [lecture08-multiclass-classification.md](lectures/lecture08-multiclass-classification.md) |
 | Lecture 9 | Optimization (Gradient Descent, SGD, Mini-batch) | [lecture09-optimization.md](lectures/lecture09-optimization.md) |
+| Lecture 10 | Optimization II (Momentum, Adam, 2nd-order) | [lecture10-optimization-ii.md](lectures/lecture10-optimization-ii.md) |
+| Lecture 11 | Feedforward Neural Networks (MLP, Activations) | [lecture11-feedforward-neural-networks.md](lectures/lecture11-feedforward-neural-networks.md) |
 
 ## 시험 범위
 - **기말 (Final)**: Lecture 8 ~ 17
