@@ -26,8 +26,9 @@ ti.init(arch=getattr(ti, ARCH), default_fp=ti.f32, random_seed=7)
 
 dx = 1.0 / n_grid; inv_dx = float(n_grid); dt = 8.0e-5 * 320.0 / n_grid
 p_vol = (dx * 0.5) ** 2
+NU_SE = float(sys.argv[5]) if len(sys.argv) > 5 else 0.30   # 0.30 champion; ~0.49 stiff-bulk porosity-fit (does SEM morphology still hold?)
 def lame(E, nu): return E / (2 * (1 + nu)), E * nu / ((1 + nu) * (1 - 2 * nu))
-MU_SE, LA_SE = lame(1.53, 0.30); MU_AM, LA_AM = lame(140.0, 0.25)
+MU_SE, LA_SE = lame(1.53, NU_SE); MU_AM, LA_AM = lame(140.0, 0.25)
 YIELD_SE = 0.15; YIELD_AM = 1.0e4; HARD_SE = 10.0; RHO_AM, RHO_SE = 4.8, 2.0
 FLOOR = 0.08; SW_L, SW_R = 0.08, 0.92; WIDTH = SW_R - SW_L
 WALL0 = 0.66; WALL_MIN = 0.05; WALL_V = 0.18
@@ -176,10 +177,10 @@ def main():
         ax.set_title(f'{lab}\nporosity {por*100:.0f}%', fontsize=10)
     fig.colorbar(sc, ax=axs.tolist(), shrink=0.7, label='SE accumulated plastic strain Σdg')
     fig.suptitle(f'champion MPM morphology (line-ga) — AM {AM_WT:.0f}wt% P:S {PP}:{SS}, '
-                 f'E=1.53/sy=0.15 (n_grid={n_grid})\n'
+                 f'E=1.53/sy=0.15/nu={NU_SE} (n_grid={n_grid})\n'
                  'AM rigid (grey) - SE plastic (hot=more flow) -> core-preserved + boundary-flattening',
                  fontsize=11)
-    out = f'mpm2d_morphology_AM{int(AM_WT)}_n{n_grid}.png'
+    out = f'mpm2d_morphology_AM{int(AM_WT)}_n{n_grid}_nu{NU_SE:.2f}.png'
     plt.savefig(out, dpi=130, bbox_inches='tight'); print(f"saved {out}", flush=True)
 
 
