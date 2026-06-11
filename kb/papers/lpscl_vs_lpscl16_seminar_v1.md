@@ -429,6 +429,71 @@ CBM character  | S p 42% +   | S p 45% +
 
 ---
 
+## 1F. Slide 6 — M2: σ는 prefactor 우세 (vacancy carrier)
+
+### 페이지 배치 (16:9)
+- 왼쪽: Arrhenius plot (ln D vs 1/T, comp1 ▲ 파랑, modelc ● 빨강)
+- 오른쪽: 표 (T별 D + Ea + D₀ + 비율)
+- 하단: 3 bullet key + 한 줄 결론
+
+### 본문 텍스트
+
+**상단**: "M2: σ 차이는 per-hop barrier가 아니라 prefactor에서"
+
+**표**:
+```
+T (K)         | LPSCl    | LPSCl₁.₆
+──────────────┼──────────┼──────────
+600           | 2.68e-6  | 7.90e-6
+800           | 5.91e-6  | 2.05e-5
+1000          | 1.02e-5  | 4.55e-5
+
+Ea (eV)       | 0.172    | 0.224
+D₀ (cm²/s)    | ~7.5e-5  | ~5.8e-4
+D 비 (600K)   |   1×     |   ~3×
+D₀ 비         |   1×     |   ~8×
+R²            | 0.999    | 0.992
+```
+
+**Key**:
+```
+• comp1 per-hop barrier 더 낮음 (Ea 0.172 < 0.224)
+• 그런데도 modelc가 600 K에서 ~3× 빠름
+• 차이의 정체: D₀가 ~8× 큼 = vacancy carrier 운반체↑
+```
+
+**하단**: "→ halogen rich가 빠른 진짜 이유는 barrier ↓ 아니라 carrier ↑"
+
+### 발표 스크립트 (65–75초)
+
+> "Message 2, σ 차이는 per-hop barrier가 아니라 prefactor에서 옵니다. paper의 가장 counter-intuitive한 부분이라 천천히 풀어드릴게요.
+>
+> 왼쪽 Arrhenius plot 보시면 ln D vs 1/T인데 — comp1의 기울기가 더 완만합니다. Arrhenius slope이 −Ea/k라서, comp1의 per-hop barrier가 더 낮다는 뜻이에요. 0.172 eV vs modelc 0.224 eV.
+>
+> 직관적으로는 'barrier 낮은 comp1이 더 빨라야 한다'고 생각할 텐데, 측정 구간 600 K부터 1000 K까지 modelc가 일관되게 약 3배 빠릅니다.
+>
+> 왜 그럴까요? 표 아래쪽 D₀ 행을 보세요. comp1이 7.5×10⁻⁵, modelc가 5.8×10⁻⁴ — 약 8배 차이입니다. Arrhenius 식 D = D₀ exp(−Ea/kT)에서 prefactor D₀가 운반체 수와 hopping 경로 수에 비례하는데, modelc의 vacancy가 8배 많은 carrier와 path를 만든 거예요.
+>
+> 즉 두 효과가 경쟁합니다 — modelc는 barrier가 약간 높지만(disorder cage), prefactor가 훨씬 큽니다(vacancy). 작동온도 영역에서는 prefactor 효과가 압도해서 modelc가 빠릅니다. 그리고 이게 실험 σ(LPSCl₁.₆) > σ(LPSCl)와 정확히 일치하는 미시 그림이에요.
+>
+> 'Cl을 늘리면 barrier가 낮아져서 빠르다'는 통념과 반대로, 진짜 동력은 vacancy carrier입니다. 다음 sub-slide에서 mechanism 그림을 정리하고, 그 다음 disorder ensemble로 추가 검증한 결과 보여드리겠습니다."
+
+### 시각 디자인 노트
+- Arrhenius plot: x = 1000/T (K⁻¹), y = ln D, marker comp1 ▲ modelc ● + linear fit 선
+- 기울기로 Ea 직관적 보임
+- 표 색 강조: D₀ 행만 진한 음영
+- "barrier ↓ 아니라 carrier ↑" 두 keyword 강조색
+- 하단 한 줄 굵게
+
+### Q&A 보조 노트
+- "왜 600/800/1000K?" → MLIP MD가 안정 sampling되는 최저온이 600K (statistics). 300K 외삽 3-pt
+- "comp1 Ea 0.172가 lit?" → LPSCl bulk 0.16-0.25 범위 내. modelc 0.224 = Schlem 2020 Cl-rich 0.22 정확 일치
+- "D₀ 8× 차이의 정확한 출처?" → AIMD Arrhenius intercept. n_Li(27 vs 30) 만으로는 1/10 못 설명. vacancy site path multiplicity + correlated hop 종합
+- "왜 작동온도에서 modelc 빠르다고 단정?" → 실험 σ(LPSCl₁.₆) > σ(LPSCl) 일관 (Zuo 2.9 vs 7.0 mS/cm). 600-1000K도 동일. 300K 외삽은 6c 슬라이드
+- "framework atom diffusion?" → D(Cl,P,S) ≈ D(Li)/40~60 → framework 정지 = Li-only 전도체
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -440,6 +505,7 @@ CBM character  | S p 42% +   | S p 45% +
 | v1.4 | 2026-06-10 | Slide 2 (Scope) + Slide 3 (3-tier pipeline) drafted. site preference + cell parameter pipeline 압축 |
 | v1.5 | 2026-06-10 | Slide 4 (Headline 4-message table) drafted — Tier 3 §8 post-processing 진입점 |
 | v1.6 | 2026-06-10 | Slide 5 (M1: 전자구조 둔감) drafted — DOS overlay + gap 1.76 vs 1.82 + modelc defect band note |
+| v1.7 | 2026-06-10 | Slide 5a DROPPED (slide 14 audit과 중복). Slide 6 (M2: σ prefactor) drafted — Arrhenius + D₀ 8× narrative |
 
 ---
 
@@ -449,7 +515,8 @@ CBM character  | S p 42% +   | S p 45% +
 - [x] Slide 3 (Pipeline schematic) — drafted 2026-06-10
 - [x] Slide 4 (Headline 표) — drafted 2026-06-10 (Tier 3 post-processing 진입)
 - [x] Slide 5 (M1 — 전자구조 둔감) — drafted 2026-06-10
-- [ ] Slide 5a (sub: k-mesh incident)
+- [x] ~~Slide 5a (sub: k-mesh incident)~~ — **DROPPED** (slide 14 audit과 중복, 총 22→21장)
+- [x] Slide 6 (M2 — σ prefactor) — drafted 2026-06-10
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
 - [ ] Slide 9–13 (Cross-check) 본문 + script
