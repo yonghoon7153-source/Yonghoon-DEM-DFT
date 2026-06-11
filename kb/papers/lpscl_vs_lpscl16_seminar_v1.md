@@ -671,7 +671,7 @@ stiff로 완전히 풀립니다." (M4 복선)
 
 ## 1D. Slide 4 — Headline Table (4 messages preview)
 
-### ★ 실물 검수 기록 (as-built deck slide 7, 2026-06-11 — 수치 전수 검증 PASS, 표기 3건 수정 대기)
+### ★ 실물 확정판 (as-built deck slide 7 FINAL, 2026-06-11 — 수치 전수 검증 PASS, 표기 3건 수정 반영 확인)
 
 ```
 제목(좌상단): DFT
@@ -693,12 +693,10 @@ stiff로 완전히 풀립니다." (M4 복선)
 - ✓ 수치 9행 전부 DB 일치 (Ea 0.2532→0.253, 0.2235→0.224 반올림 정상. D 비 2.56→"2.5x",
   D₀ 비 1.41→"1.4x" 정상. v3 4fu PRIMARY 데이터 사용 확인 — 구 5fu 값 아님)
 - ✓ 4-message 푸터가 v3 dual-mechanism framing과 일치, "MLIP MD" 정직 표기 유지
-- ⚠ 수정 대기 3건:
-  ① 오타: 회전 주석 "Eexperiment" → "Experiment"
-  ② Message 열 대소문자 불일치: "Nearly identical" (gap) vs "nearly identical" (Bader) — 통일
-  ③ 색 규칙: 표 전반이 청=우세/적=열세 (B₀·Zener 행 swap이 그 증거)인데,
-     "nearly identical" 두 행 (gap, Bader)도 적/청 분리되어 있음 — M1 '전자구조 동일'
-     메시지를 깎으므로 두 행은 중립(검정) 권장
+- ✓ 검수 3건 수정 반영 확인 (2026-06-11 FINAL):
+  ① 오타 "Eexperiment" → "Experiment" ② Message 열 소문자 통일 ("nearly identical" ×2)
+  ③ 색 규칙 통일: 청=우세/적=열세 (B₀·Zener 행 반전 유지), "nearly identical" 두 행
+     (gap, Bader)은 중립 검정 — M1 '전자구조 동일' 메시지와 정합
 
 
 Slide 4는 **what & how (Slide 1–3) → why (Slide 5–8)** 전환 pivot.
