@@ -1853,6 +1853,100 @@ Axis | 의미                          | comp1 vs modelc       | Reference
 
 ---
 
+## 1S. Slide 19 — Robustness #3: Constrained ESW Cl-scan + 분해반응
+
+### 페이지 배치 (16:9)
+- 왼쪽: Constrained ESW Cl-scan plot (5 comp × 3 K_eff)
+- 오른쪽: 분해반응 비교 (comp1 vs modelc at oxidation onset)
+- Slide 18 axis 정합 + Zuo 2023 cross-validation
+
+### 본문 텍스트
+
+**제목**: "19. 우리 직접 계산 — Constrained ESW Cl-scan + 분해반응 chemistry"
+
+**Constrained ESW Cl-scan**:
+```
+K_eff (GPa) | Cl 0.5 | Cl 1.0 | Cl 1.5 | Cl 1.6 (modelc) | Cl 2.0
+────────────┼────────┼────────┼────────┼──────────────────┼────────
+  0         | 2.40   | 2.40   | 2.40   | 2.40 (flat)      | 2.40
+ 10         | 3.20   | 3.40   | 3.80   | 4.05 ★           | 3.50 ↓
+ 20         | 3.70   | 4.10   | 4.20   | 4.30 ★★ peak     | 3.60 ↓↓
+
+(anodic limit V vs Li/Li⁺)
+```
+
+**분해 반응 비교 (axis 1, oxidation onset 2.14 V)**:
+```
+comp1:
+  Li₆PS₅Cl → Li₃PS₄ + 0.25 LiS₄ + LiCl + 1.75 Li ↑
+
+modelc:
+  Li₅.₄PS₄.₄Cl₁.₆ → Li₃PS₄ + 0.1 LiS₄ + 1.6 LiCl + 0.7 Li ↑
+                                ────────────  ───────────
+                                +1.6× LiCl    −2.3× Li
+```
+
+**Slide 18 axis 정합**:
+```
+• K_eff=0 flat → axis 1 (DRAW) 직접 backing
+• K_eff=20 Cl=1.6 peak → axis 2 (Cl-rich WINS) 직접 backing
+• 더 inert LiCl + 적은 Li release → axis 3 (Zuo R_int 낮음) 매칭
+```
+
+**Zuo 2023 cross-validation**:
+```
+• comp1 1.75 Li release ↔ Zuo Eq(1) "2 Li"
+• modelc 0.7 Li release ↔ Zuo Eq(2) "1 Li"
+• modelc 1.6 LiCl ↔ Zuo Eq(2) "1.5 LiCl"
+→ 우리 grand-potential 실험 cell chemistry 정량 재현 ★
+```
+
+**Footnote**:
+```
+※ Method: tools/oxidation/constrained_esw.py (leading mode), 2026-06-09
+※ K_eff 0/10/20 GPa, Cl 0.5/1.0/1.5/1.6/2.0 sweep
+※ Zuo Angew 2023: Li₅.₅PS₄.₅Cl₁.₅ Eq(2)와 우리 modelc(Cl=1.6) 일관
+```
+
+### 발표 스크립트 (75–85초)
+
+> "Robustness #3 — slide 18 oxidation 4-axis framework에 우리 직접 계산이 어떻게 backing하는지 정량 보여주는 슬라이드.
+>
+> 왼쪽 ESW Cl-scan. 5 조성 (LPSCl 0.5부터 2.0까지) × 3 K_eff (0/10/20 GPa).
+>
+> K_eff=0, 압력 없으면: 모든 Cl 함량에서 window ~2.4 V flat. Cl이 oxidation onset 안 바꿈. slide 18 axis 1 (DRAW) 직접 evidence.
+>
+> K_eff 10, 20 GPa로 올라가면 Cl 함량 따라 window monotonically 넓어짐. Cl=1.6 modelc에서 peak — K_eff=20에서 0.80-4.30 V. Cl=2.0 다시 좁아짐 (decomposition path P₂S₇로 바뀜). modelc sweet spot. axis 2 직접 backing.
+>
+> 오른쪽 oxidation onset 2.14 V 분해반응 비교. axis 1 onset 동일하지만 분해 chemistry는 완전 다름.
+>
+> comp1 LiCl 1.0 + Li 1.75 방출. modelc LiCl 1.6 + Li 0.7. modelc는 LiCl 1.6× 더 많이 + Li 방출 2.3× 적게.
+>
+> LiCl electrochemically inert (4 V까지), Li active. modelc 분해 = 더 mild solid byproduct + 적은 active Li.
+>
+> Zuo 2023 실험과 quantitative 정합. Eq(1)/(2): Li6PS5Cl → 2 Li, Li5.5PS4.5Cl1.5 → 1 Li가 우리 1.75 vs 0.7 Li와 일치. 우리 grand-potential이 실험 cell chemistry 정량 재현.
+>
+> 종합 — slide 18 lit framework가 정성 보여줬다면, 19는 우리 계산이 정량 backing. Cl-rich axis 1-3 우세는 우리 + 문헌 같은 결과."
+
+### 시각 디자인 노트
+- 왼쪽 Cl-scan: K_eff × Cl 격자 stack-bar 또는 line plot
+- modelc Cl=1.6 column 강조 (★)
+- 오른쪽 분해반응 두 줄, LiCl 증가 + Li 감소 색 강조
+- "Zuo cross-validation" 별도 박스
+- "modelc sweet spot" + "1.75 vs 0.7 Li" 강조
+
+### Q&A
+- "Constrained ESW method?" → Gil-González Eq(1): ΔG' = (G_D − G_SE) + V·ε_RXN·K_eff. Decomp strain penalty K_eff 비례 추가
+- "Cl=2.0 왜 좁아짐?" → Decomp path 바뀜 — Cl=2.0 P₂S₇ 형성, strain penalty 약함
+- "K_eff=20 GPa 실제 cell?" → Gil-González 38 MPa cell + GB 응력 lock-in 합쳐서 estimated effective
+- "0.25 LiS4 fractional 의미?" → pymatgen grand-potential chempot 만족 balance. multi-fu sum이라 fractional 가능
+- "1.6 vs 1.0 LiCl 정말 중요?" → Yes. LiCl 4 V까지 stable + electronic insulator → R_int 성장 늦춤 (Zuo 실험 증거)
+- "1.75 vs Zuo 2 Li ±0.25?" → 우리 LiS4 inclusion, Zuo Eq(1) S elemental. 둘 다 valid
+- "paper main figure?" → Strong 후보. axis 1 (정성 DRAW) + axis 2/3 정량 backing 한 페이지
+- "axis 4 정량 backing?" → 못 함. Wu 2026 thermal/SOC 실험. paper 차후 작업
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1884,6 +1978,7 @@ Axis | 의미                          | comp1 vs modelc       | Reference
 | v1.24 | 2026-06-11 | Slide 15 헤더 명확화 — 발표 DROPPED, paper Methods section 후보로 본문 보존 (ecutwfc, k-mesh, LOBSTER, ELF settings 전부) |
 | v1.25 | 2026-06-11 | Slide 17 (Robustness #1: 3-probe convergence) drafted — Voronoi (geometric) + BVSE (path) + LOBSTER (chemistry) 같은 anti-site Cl 효과 측정. 5.4 Li/AS + 60.2% 정합성 cross-validation. Paper #1 robust referee defense |
 | v1.26 | 2026-06-11 | Slide 18 (Robustness #2: Oxidation 4-axis framework) drafted — Gil-González + Zuo + Wu 통합. Axis 1 (DRAW), 2 (Cl-rich WINS K_eff>0), 3 (Cl-rich WINS R_int), 4 (Cl-rich LOSES calendar). modelc σ 향상이 oxidation penalty 없이 옴, 비용은 thermal shelf life |
+| v1.27 | 2026-06-11 | Slide 19 (Robustness #3: Constrained ESW + 분해반응) drafted — Cl-scan (Cl=1.6 K_eff=20 sweet spot), oxidation onset 2.14V 분해반응 (modelc 0.7 Li vs comp1 1.75 Li, 1.6× LiCl), Zuo 2023 Eq(1)/(2) 정량 cross-validation |
 
 ---
 
