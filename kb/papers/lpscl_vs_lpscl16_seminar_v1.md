@@ -389,6 +389,15 @@ rhombohedral R3m · 5 f.u. · 62 atoms
 > **Tier 2**에서 champion을 DFT 11-volume EOS로 V₀/B₀ paper-grade 확정, **Tier 3**에서 13가지
 > probe를 양쪽에 똑같이 적용했습니다. 다음 슬라이드부터 그 결과입니다."
 
+**4d-disorder 도입 ref (slide 3 우상단, Tabor 형식)**:
+```
+H.-J. Deiseroth et al., Angew. Chem. Int. Ed., 47, 755 (2008).    (원조 4a/4d disorder)
+M. A. Kraft et al., J. Am. Chem. Soc., 139, 10909 (2017).         (Cl 4a/4d ~60:40 정량)
+N. Minafra et al., Solid State Ionics, 346, 115223 (2020).        (disorder→σ 실험)
+B. J. Morgan, Chem. Mater., 33, 2004 (2021).                      (disorder→σ 이론, 우리 직계 선행)
+```
+슬라이드 흐름: ■1 "4d-site disorder = known phenomenon (Deiseroth/Kraft)" → ■2 "We capture it by full enumeration (not assumed)" — 문헌 현상을 가정 없이 절차로 재현하는 구조.
+
 **Q&A v2 추가 카드**:
 - "ordered가 진짜 ground state?" → C(8,4)=70 전수 + Li 20 configs (spread 1.16 eV) + 500 K anneal.
   screening→anneal 랭킹 역전 실제 관측 (#15: 4위→2위) — 다단계 필요성의 증거
@@ -2543,7 +2552,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 - **Minafra/Kraft, Solid State Ionics 2020, 346, 115223** — "Enhanced ion conduction by enforcing structural disorder"
 - **Kim et al., ACS Mater. Lett. 2025** — Cl ↑ → E_Young ↑ (UPE), 우리 relaxed-ion +25% 매칭 ★
 - **Gil-González et al., Energy Storage Mater. 2022, 45, 484** (10.1016/j.ensm.2021.12.008) — Constrained ESW K_eff sweep, Cl-rich K_eff>0 wider window
-- **Deiseroth et al., Angew. Chem. Int. Ed. 2006, 47, 755** — 원조 Li₆PS₅X argyrodite, 4a/4d cage topology
+- **Deiseroth et al., Angew. Chem. Int. Ed. 2008, 47, 755** — 원조 Li₆PS₅X argyrodite, 4a/4d cage topology
 
 ### G. paper #1 framing summary (한 줄)
 > "modelc (LPSCl₁.₆) shows substantial performance gain across all operation-relevant axes (σ +3×, E +25%, R_int −33%, cycling CE +2%). The cost is concentrated in **idle/storage axes** — thermal calendar aging (Wu 2026), moisture sensitivity (Kraft/Janek series), Cl synthesis window limit (Adeli/Yu), and mild mechanical anisotropy (Zener 1.14→1.44) — none of which compromise operation but motivate the additive strategy explored in Paper #2."
