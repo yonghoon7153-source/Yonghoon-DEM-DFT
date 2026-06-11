@@ -1416,7 +1416,12 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 
 ---
 
-## 1H-1. Slide 8a — Shear Mode Lock-in (mechanism 시각화)
+## 1H-1. Slide 8a — Shear Mode Lock-in — **본편 제외, APPENDIX (2026-06-11)**
+
+> as-built 결정: M4 본편의 Q&A 카드("G +30%의 출처는 C44 +72% 하나")가 커버 —
+> Cij 분해 표는 appendix 보관, 트리거: "+30% 어디서 오나" 심화 질문.
+
+## (보존) Slide 8a — Shear Mode Lock-in (mechanism 시각화)
 
 ### 페이지 배치 (16:9)
 - 왼쪽: Cij 원소 분해 표 (C11/C12/C44/Zener/ν)
@@ -1469,7 +1474,13 @@ Zener A=2C44/(C11-C12)|  1.14  |  1.44    | +26% (비등방 ↑)
 
 ---
 
-## 1H-2. Slide 8b — Cross-Check & Referee Defense
+## 1H-2. Slide 8b — Cross-Check & Referee Defense — **본편 제외, APPENDIX (2026-06-11)**
+
+> as-built 결정 (사용자 확인): 본편 M4 footnote의 B_VRH≈B₀(±10%) 한 줄 + Q&A 카드가
+> 커버. appendix 보존 이유: "DFT 22 vs AFM 12 절대값 차이" 단골 질문의 30초 방어 자료
+> (4 cross-check 표). 트리거: 절대값/실험 비교 질문.
+
+## (보존) Slide 8b — Cross-Check & Referee Defense
 
 ### 페이지 배치 (16:9)
 - 중앙: 4행 cross-check 표 (각 행: 측정값 + 비교 대상 + 결론)
