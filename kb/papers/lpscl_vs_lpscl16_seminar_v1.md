@@ -1513,6 +1513,91 @@ ICOHP            | robust   | k-shift Δ<0.006 eV (local probe) ✓
 
 ---
 
+## 1O. Slide 15 — Methods Consistency: 모든 §8 같은 protocol
+
+### 페이지 배치 (16:9)
+- 3 tier box 세로 stack (slide 3과 일관)
+- 컴퓨팅 자원 footer
+- "양쪽 동일 protocol" highlight
+
+### 본문 텍스트
+
+**제목**: "15. Methods Consistency — 양쪽 시스템 완전 동일 protocol"
+
+**Tier 1**:
+```
+MLIP screening (UMA-s-1p1, task=omat)
+  • Halogen enumerate (45 configs, pymatgen)
+  • Li sublattice screen (top-5 halogen × 20 random Li)
+  • Langevin anneal: 500 K, 50 ps, dt 2 fs, friction 0.01/fs
+  • MLIP EOS pre-scan: BM3 fit → V₀ 범위 (DFT EOS 안내)
+```
+
+**Tier 2**:
+```
+DFT validation (Quantum ESPRESSO 7.4.1)
+  • PBE GGA + USPP (SSSP efficiency)
+  • ecutwfc = 60 Ry, ecutrho = 480 Ry
+  • k-mesh: comp1 4×4×4 / modelc 6×6×3 (k×L ≥ 40 Å)
+  • BM3 EOS: 11 volumes V/V₀ = 0.96 - 1.06
+  • V₀ confirmation BFGS: force < 5×10⁻³ eV/Å
+```
+
+**Tier 3** — 모두 양쪽 동일 V₀ 기반:
+```
+§8 Multi-probe (양쪽 동일 V₀)
+  • DOS/PDOS: projwfc.x, MV smearing 0.005, k=6×6×6/6×6×3 NSCF
+  • Bader: pp.x plot_num=17 (AE), Henkelman bader
+  • LOBSTER 5.1.1: PAW kjpaw + ext basis (Li 1s2s2p, P/S/Cl 3s3p3d), 70 Ry
+  • ELF: ONCV NC, ecutwfc 80/320 Ry, pp.x plot_num=8
+  • Elastic: 12 strain × ±0.005, relaxed-ion + clamped-ion 둘 다
+  • AIMD: UMA-s-1p1 Langevin NVT, equilib 10 + prod 100 ps × 3 T
+  • BVSE: pyABS, grid 100³, cutoff 5.0 Å (5×5×5 paired)
+```
+
+**컴퓨팅 자원**:
+```
+• Tier 1 (MLIP): gabia A6000 + Runyour V100
+• Tier 2 (DFT): KISTI Neuron GPU + x3430a02
+• Tier 3 (post-process): 분산 — settings는 통일
+```
+
+**Footnote**:
+```
+※ Pipeline v2 표준 (kb/methodology/argyrodite_mechanical_pipeline.md)
+※ Pseudo 일관: SSSP efficiency (USPP) + ELF 분석만 ONCV NC 별도
+※ 양쪽 동일 protocol = paired comparison 정당성 토대
+```
+
+### 발표 스크립트 (50–60초)
+
+> "Methods Box — paper Methods section 그대로 한 페이지에 압축한 슬라이드. 두 시스템에 완전 동일 protocol 적용이 paired comparison의 정당성 근거예요.
+>
+> 3-tier pipeline 그대로. Tier 1 MLIP screening에서 양쪽 같은 UMA-s-1p1 omat, 45 halogen × 20 Li × 50 ps anneal, MLIP EOS pre-scan까지 identical.
+>
+> Tier 2 DFT validation: 둘 다 QE 7.4.1 PBE/USPP, ecut 60/480 Ry, k×L ≥ 40 Å (cubic 4×4×4 / rhombo 6×6×3), BM3 EOS 11 volumes. comp1과 modelc V₀, B₀가 같은 정확도로 측정.
+>
+> Tier 3 §8 multi-probe — 13개 probe 모두 양쪽 동일 V₀ 기반. DOS/PDOS, Bader, LOBSTER ext basis, ELF (ONCV 별도), Elastic 12 strain, AIMD 3 T × 110 ps, BVSE 5×5×5 paired. 정확히 같은 settings.
+>
+> 컴퓨팅 자원 분산 (gabia + V100 + KISTI Neuron) 했지만 settings 통일.
+>
+> 이 method consistency가 paired comparison 토대 — referee defense 핵심."
+
+### 시각 디자인 노트
+- 3 tier box 세로 stack (slide 3과 일관)
+- 각 tier opaque 청색 (paper formal 톤)
+- "양쪽 동일 protocol" highlight (referee defense)
+- 컴퓨팅 자원 footer 작은 글씨
+
+### Q&A
+- "ELF만 ONCV?" → ELF는 valence wavefunction 정확도 민감, ONCV NC paper-grade
+- "cubic vs rhombo cell?" → comp1 F-43m, modelc R3m natural ground state. paired 비교는 intensive property에서 valid
+- "다른 GPU 머신 reproducibility?" → settings 통일 + cross-check (B₀ 1% 이내)
+- "USPP vs PAW kjpaw?" → main DFT USPP (속도), LOBSTER NSCF만 PAW (orbital projection 필요)
+- "Pipeline reference?" → kb/methodology/argyrodite_mechanical_pipeline.md
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1538,6 +1623,7 @@ ICOHP            | robust   | k-shift Δ<0.006 eV (local probe) ✓
 | v1.18 | 2026-06-11 | Slide 13 (cross-check #5: ELF covalent vs ionic) drafted — P-S bridge ELF 0.95 동일, Li basin <0.1 양쪽 ionic, mechanism 1 (LOBSTER covalent overlap)의 시각 evidence. Cross-check section (9-13) 완성 |
 | v1.19 | 2026-06-11 | Slide 8 footnote 추가: "PS₄ 불변인데 왜 단단해지나" 직관 — PS₄=rigid blocks (M1), Li-anion=mortar (M3 +13%) → shear stiff (G +30%) → E_VRH +25%. M1↔M3↔M4 인과 chain 명시 |
 | v1.20 | 2026-06-11 | Slide 14 (k-mesh audit & method convergence) drafted — comp1 k=2×2×1 incident → k=4×4×4 복구 (gap 1.50 → 1.76, RMS 0.003), property k-sensitivity table, LOBSTER spilling 1.16-1.46% paper-grade. Referee defense 시작 |
+| v1.21 | 2026-06-11 | Slide 15 (Methods consistency: 3 tier 한 페이지) drafted — Tier 1 MLIP / Tier 2 DFT (PBE/USPP/k×L≥40) / Tier 3 §8 (13 probe 양쪽 동일 V₀), 컴퓨팅 자원 분산. Paired comparison 정당성 토대 |
 
 ---
 
