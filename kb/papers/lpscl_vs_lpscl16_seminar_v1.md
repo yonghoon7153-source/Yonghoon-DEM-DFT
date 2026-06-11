@@ -779,10 +779,27 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
   용도: ① "VBM = S 3p 91/92%" 시각 증거 ② Cl 3p 봉우리가 S 3p보다 깊은 −3.3 eV 위치
   (mechanism 2: LOBSTER per-bond covalent 해석 방어, M3/CC#2 Q&A) — 1장 2역.
 
-### 페이지 배치 (16:9)
-- 왼쪽: DOS overlay plot (comp1 파랑, modelc 빨강) + Fermi 점선 + VBM/CBM 음영
-- 오른쪽: gap + EF + VBM/CBM character 표
-- 하단: 3 bullet key points + footnote (modelc defect band)
+### ★ 실물 확정판 (as-built deck slide 8, 2026-06-11 — 검수 PASS, 라벨 1건 수정 대기)
+
+```
+제목(좌상단): DFT / 상단 각주: DOS 정의
+■ M1: Electronic structure is nearly identical
+   · Band gap 1.76 vs 1.82 eV (Δ = 0.06 eV) — too small to explain 2.5× σ or +25% E
+   · Fingerprint of disorder: 0.74 localized in-gap states (LPSCl 0.037, 20×)
+[좌] Origin DOS overlay (LPSCl=적 / LPSCl1.6=청 — slide 7 컬럼 색과 정합 채택),
+     E−EF 축, defect-band 꼬리에 적색 점선 원 + <DOS> 캡션
+[좌하] Fingerprint of disorder — defect band 박스 (EF<VBM → 0.74 / 0.037 20× / S 3p holes)
+[우] 표 7행: gap 1.76/1.82 · Δgap +0.06 · EF 2.82/2.45 · VBM 2.48/2.72 · CBM 4.24/4.54
+     · VBM char S 3p 91/92%+Li p 6% · CBM char S p+P s+Li p (양쪽 동일 표기)
+     EF·VBM(modelc) 셀에 적색 점선 박스 — fingerprint와 시각 연결
+```
+
+검수: ① 값은 edge로 교체 완료 (4.24−2.48=1.76 / 4.54−2.72=1.82 자기검산 ✓) —
+**단 행 라벨이 아직 "VBM peak / CBM peak"** → "VBM / CBM"으로 정정 필요 (값=edge, 라벨=peak 불일치)
+② 곡선 색 LPSCl=적/LPSCl1.6=청은 deck 컬럼 색과 일관 — 의도적 채택으로 확정
+③ fingerprint 박스·그림 원·표 점선박스 삼각 연결 구조 ✓
+
+
 
 ### 본문 텍스트
 
