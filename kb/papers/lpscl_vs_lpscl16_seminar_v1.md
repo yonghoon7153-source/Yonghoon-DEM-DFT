@@ -100,7 +100,26 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 2026년 6월 · Internal Seminar Preview
 ```
 
-### 발표 스크립트 v3 — 정량 minimal (45–50초, 2026-06-10)
+### 발표 스크립트 v4 — 최종 정제 (45초, 2026-06-10) ★ ACTIVE
+
+> "안녕하세요. 오늘은 paper #1 progress preview 드리겠습니다.
+>
+> 주제는 stoichiometric LPSCl과 Cl-rich 변종 LPSCl₁.₆, 이 두 시스템의 정면 비교입니다.
+>
+> 실험적으로 LPSCl₁.₆가 LPSCl보다 빠르고 단단하다는 게 보고되어 있는데, 그 차이가 어디서 오는지가 이번 발표의 질문입니다.
+>
+> 결론부터 말씀드리겠습니다. **전자구조에 작은 차이는 있긴 있습니다. 하지만 그 작은 차이로는 conductivity나 stiffness의 큰 차이를 설명할 수 없습니다**. PS₄ 골격이 두 시스템에서 거의 동일하고, 전자구조의 전반적 패턴도 비슷합니다.
+>
+> **차이의 진짜 source는 구조에 있습니다 — 구체적으로 Li 공공과 4d 자리에 들어간 Cl anti-site, 이 두 가지가 변화의 동력입니다**. 이게 오늘 발표의 thesis입니다.
+>
+> 다음 30분 동안 4개의 메시지로 풀어 드리겠습니다."
+
+#### v3 → v4 변화 노트
+- "PS₄ 골격도, 궤도 character도 사실상 같습니다" → "**PS₄ 골격이 거의 동일하고, 전자구조 전반 패턴도 비슷**" (PS₄ 단정 유지 + 궤도 character는 전자구조 패턴으로 vague)
+- 첫 페이지에서 specific orbital decomposition 단정 회피 (직접 비교 논문 없음)
+- "모든 변화의 동력" → "**변화의 동력**" 축약
+
+### 발표 스크립트 v3 — 정량 minimal (보존용)
 
 > "안녕하세요. 오늘은 paper #1 progress preview 드리겠습니다.
 >
@@ -160,6 +179,7 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 | v1 | 2026-06-10 | 초안 — 전체 22장 구조 + Slide 1 layout 확정. paper #2 분리. adhesion 제외. |
 | v1.1 | 2026-06-10 | Slide 1 script v2 정제: 전자구조 0.06 eV 차이 정직하게 인정, 영문 포뮬러 / paper title 톤 제거 |
 | v1.2 | 2026-06-10 | Slide 1 script v3: 정량 수치 제거 (정성적 표현으로), 첫 페이지 톤 가벼움 |
+| v1.3 | 2026-06-10 | Slide 1 script v4 (★ ACTIVE): "궤도 character" → "전자구조 전반 패턴" vague (직접 비교 문헌 없음 회피). PS₄ 단정 유지 |
 
 ---
 
