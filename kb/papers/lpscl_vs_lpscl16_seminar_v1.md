@@ -431,6 +431,14 @@ CBM character  | S p 42% +   | S p 45% +
 
 ## 1F. Slide 6 — M2: σ는 prefactor 우세 (vacancy carrier)
 
+> ⚠ **HOLD (2026-06-11)** — comp1 **4 f.u. natural-cell MLIP MD** 재실행 중 (gabia GPU 단독, ETA ~12-15h).
+> 현재 Ea 비교(0.172 vs 0.224)는 comp1 5 f.u. 인위 supercell 기반이라 방향이 lit (Cl-rich Ea↓ 통념)과
+> 반대. matched-disorder ensemble (0.177 ≈ 0.173)에서는 동일. 4 f.u. 결과에 따라 세 가지 framing 분기:
+> - 4fu Ea ≈ 0.25-0.30 → "barrier↓ + prefactor↑ 둘 다" (lit 정합)
+> - 4fu Ea ≈ 0.18 → "matched-d Ea 동일, prefactor 우세" (현 v2 유지)
+> - 4fu Ea ≈ 0.17 → "MLIP ordered-LPSCl bias caveat + prefactor 우세"
+> **값 나오면 본문/표/스크립트 확정.** 그 전까지 아래 draft는 잠정본.
+
 ### 페이지 배치 (16:9)
 - 왼쪽: Arrhenius plot (ln D vs 1/T, comp1 ▲ 파랑, modelc ● 빨강)
 - 오른쪽: 표 (T별 D + Ea + D₀ + 비율)
@@ -519,6 +527,81 @@ R²            | 0.999    | 0.992
 
 ---
 
+## 1G. Slide 7 — M3: Ionic glue는 Cl-rich에서 강해진다
+
+### 페이지 배치 (16:9)
+- 왼쪽: ICOHP 막대그래프 (|ICOHP| 결합별 comp1/modelc 쌍)
+- 오른쪽: per-site 분해 표 (M3의 본질 — 시각적으로 크게)
+- 하단: 3 bullet key + 위계 footnote
+
+### 본문 텍스트
+
+**상단**: "M3: 모든 Li–anion 결합이 LPSCl₁.₆에서 강해진다"
+
+**왼쪽 표 (평균 ICOHP, eV/bond)**:
+```
+결합      | LPSCl       | LPSCl₁.₆    | Δ
+──────────┼─────────────┼─────────────┼────────
+P–S       | −5.94 (16)  | −6.00 (20)  | +1.0% (불변)
+Li–Cl     | −1.86 (24)  | −2.10 (42)  | +13.0% ★
+Li–S      | −1.59 (120) | −1.72 (113) | +8.1% ★
+S–S       | −0.11       | −0.11       | ~0
+```
+
+**오른쪽 표 (per-site 분해)**:
+```
+site             | LPSCl   | LPSCl₁.₆
+─────────────────┼─────────┼──────────
+Li–S (PS₄ 묶임)  | −1.34   | −1.62
+Li–S (4d free)   | −2.57   | −2.52  ← universal anchor (Δ2%)
+Li–Cl (4a 정상)  | −1.86   | −2.03
+Li–Cl (4d AS)    |  없음   | −2.84  ★ 4a보다 40% 강함
+```
+
+**Key**:
+```
+• Li–Cl +13%, Li–S +8% — vacancy + Cl 치환은 결합 '강화' (약화 아님)
+• 동력 = 4d-Cl anti-site의 짧고 강한 Li–Cl 결합 (−2.84 eV)
+• Bader · LOBSTER · Wilkening 세 독립 probe 합의
+```
+
+**Footnote**:
+```
+※ 결합 위계 보존: P–S(covalent) ≫ Li–Cl > Li–S ≫ S–S (양쪽 동일)
+※ LOBSTER ext basis, charge spilling 1.46% / 1.16% (< 5% 기준)
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Message 3, ionic glue — Li와 음이온 사이 결합 강도입니다.
+>
+> 직관적으로 'Cl을 더 넣고 Li를 빼면 결합이 약해지지 않을까' 생각하기 쉽습니다. 결과는 정반대였습니다. 왼쪽 표 — Li–Cl 결합이 13%, Li–S 결합이 8% 강해집니다. 반면 PS₄ covalent backbone은 1% — 사실상 불변이고요.
+>
+> 어디서 이 강화가 오는지 per-site로 분해한 게 오른쪽 표입니다. 두 가지가 보입니다.
+>
+> 첫째, 4d 자리의 free S²⁻에 붙은 Li–S 결합은 양쪽 모두 −2.5 정도로 똑같습니다. 조성과 무관한 universal anchor예요.
+>
+> 둘째가 핵심입니다. modelc에만 있는 4d-Cl anti-site의 Li–Cl 결합이 −2.84 eV — 정상 4a 자리보다 40% 강합니다. Slide 2에서 보여드린 그 anti-site Cl이 짧은 거리에서 Li를 강하게 잡으면서 평균을 끌어올린 겁니다.
+>
+> 이 결론은 LOBSTER ICOHP 하나로만 주장하는 게 아닙니다. Bader charge, Wilkening ionic potential까지 세 가지 독립 probe가 같은 방향을 가리킵니다. Bader에서 S charge가 −1.52에서 −1.76으로 더 ionic해지고, Wilkening q·|q|/r에서 Li–S 채널이 17% 강해지는 것도 같은 그림이에요.
+>
+> 정리하면 — 'Cl excess는 결합을 약화시킨다'는 통념과 반대로, anti-site를 통해 ionic glue를 강화합니다. 그리고 이 강화가 다음 메시지, mechanical stiffening의 미시적 기반이 됩니다."
+
+### 시각 디자인 노트
+- 막대그래프: |ICOHP| 절대값, 결합별 comp1(파랑)/modelc(빨강) 쌍
+- ★ 강조: Li–Cl(4d AS) −2.84 행 진한 음영 + 별표
+- "강화" 단어 강조색 (#C8102E)
+- per-site 표를 평균 표보다 크게
+
+### Q&A 보조 노트
+- "ICOHP 단위?" → per bond 평균 적분 COHP (EF까지). 음수 = bonding. |값| 클수록 강함
+- "−2.84가 왜 강하냐?" → 4d는 원래 S²⁻(2가) 자리라 Li 배위 가까움. Cl이 앉으면 짧은 Li–Cl (2.53 vs 4a 2.61 Å) → 강한 결합. slide 10 일관
+- "ext basis?" → sparse basis spilling 17% 부정확 → ext basis (Li 1s2s2p+3d)로 1.2-1.5%. paper엔 ext만
+- "Bader와 LOBSTER 독립?" → Bader = 실공간 분할 (basis-free), LOBSTER = 궤도 projection, Wilkening = 고전 ionic potential. 다른 근사 체계
+- "universal anchor 의미?" → 두 조성 Δ2% 동일 = free S²⁻ 주변 Li 배위 기하가 조성 무관 보존
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -532,6 +615,7 @@ R²            | 0.999    | 0.992
 | v1.6 | 2026-06-10 | Slide 5 (M1: 전자구조 둔감) drafted — DOS overlay + gap 1.76 vs 1.82 + modelc defect band note |
 | v1.7 | 2026-06-10 | Slide 5a DROPPED (slide 14 audit과 중복). Slide 6 (M2: σ prefactor) drafted — Arrhenius + D₀ 8× narrative |
 | v1.8 | 2026-06-10 | Slide 6 footnote + script v2: **실험 macroscopic Ea vs 우리 microscopic Ea framing**. Minafra/Kraft tension 우아하게 해소 (mutually compatible) |
+| v1.9 | 2026-06-11 | Slide 6 **HOLD** (comp1 4 f.u. natural-cell MLIP MD 재실행 중, 결과 따라 3-way framing 분기). Slide 7 (M3 ionic glue) drafted — ICOHP +13%/+8%, 4d-Cl AS −2.84 eV, 3-probe 합의 |
 
 ---
 
@@ -542,7 +626,8 @@ R²            | 0.999    | 0.992
 - [x] Slide 4 (Headline 표) — drafted 2026-06-10 (Tier 3 post-processing 진입)
 - [x] Slide 5 (M1 — 전자구조 둔감) — drafted 2026-06-10
 - [x] ~~Slide 5a (sub: k-mesh incident)~~ — **DROPPED** (slide 14 audit과 중복, 총 22→21장)
-- [x] Slide 6 (M2 — σ prefactor) — drafted 2026-06-10
+- [x] Slide 6 (M2 — σ prefactor) — drafted 2026-06-10, **⚠ HOLD** (comp1 4fu MLIP MD 결과 대기, 3-way framing 분기)
+- [x] Slide 7 (M3 — ionic glue) — drafted 2026-06-11
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
 - [ ] Slide 9–13 (Cross-check) 본문 + script
