@@ -592,6 +592,53 @@ Q&A 한 줄 카드: *"Halogen-only 랭킹은 Li 고정 가정에 민감하다 �
 
 ---
 
+### ★ Slide 5 (sub) — MLIP screening detail (★ NEW 2026-06-12, slide 3↔4 사이 삽입)
+
+> slide 3 pipeline 박스만으로는 "어떻게 정수 occupancy 셀이 정해지나"가 추상적이라
+> sub-slide 한 장으로 MLIP screening 단계를 시각화. 이 슬라이드가 다음 slide 4
+> (Headline 4-message 표) 진입 전 마지막 절차 설명.
+
+**실물 확정판 (v1 FINAL, 2026-06-12)**:
+
+```
+제목(좌상단): DFT
+우상단 refs:  Angew. Chem. Int. Ed., 47, 755 (2008).
+             J. Am. Chem. Soc., 139, 10909 (2017).
+
+■ MLIP screening
+   · Free S²⁻ site preferentially accepts Cl⁻ substitution
+     (emergence of 4d-Cl anti-sites in LPSCl₁.₆)   ← 청색: of 4d-Cl anti-sites
+   · Li sublattice screen + 500 K Langevin anneal → champion (lowest-E after Li relaxation)
+
+[좌상] MLIP screening 박스 (점선 둥근 사각형):
+        1. Halogen enumerate         (₈C₄, ₁₀C₂)        ← LPSCl 70 / LPSCl₁.₆ 45
+        2. Li sublattice screen      (top-5 × 20)
+        3. 500 K Langevin anneal     (Li ordering)
+
+[좌하] 비교 표:
+        |          | LPSCl                | LPSCl₁.₆               |
+        | Structure| Cubic (F-43m)        | Rhombohedral (R3m)     |
+        | atoms    | 52 (4 f.u.)          | 62 (5 f.u.)            |
+        |          | Li₂₄P₄S₂₀Cl₄         | Li₂₇P₅S₂₂Cl₈          |  ← 27/22/8 빨강(변화)
+
+[우] Champions 그림 (좌 cubic ordered ↔ 우 rhombo with 4d-Cl 점선 영역)
+     "4d-Cl anti-sites" 라벨 + < Champions > 캡션
+```
+
+검수 이력:
+① halogen enumerate 표기 (₁₀C₅ → ₁₀C₂) 정정 — C(10,5)=252, C(10,2)=45
+② "Rhombohedral Supercell (P1)" → "Rhombohedral (R3m)" — modelc V0 실제 공간군
+③ Free S²⁻ → Cl⁻ 치환 선호 한 줄 추가 (4d-Cl anti-site 원인 명시)
+④ Li screen + 500 K anneal 한 줄로 압축
+⑤ Champion 그림에 "4d-Cl anti-sites" 라벨 + 점선 영역 → thesis 직결
+
+발표 보충 멘트: "Halogen 단계에서 free S²⁻ 자리가 Cl⁻ 치환을 선호한다는 게 결과로 나옵니다 —
+이게 Cl-rich에서 4d-Cl anti-site가 등장하는 직접적 원인이에요. Li sublattice screen은 halogen이
+fix된 위에서 Li/vacancy 배치를 다시 전수조사하는 단계고, 500 K annealing이 각 후보를 local
+ground state로 relax해서 champion을 확정합니다."
+
+---
+
 ## 1D. Slide 4 — Headline Table (4 messages preview)
 
 ### Tier 3 post-processing 진입점
