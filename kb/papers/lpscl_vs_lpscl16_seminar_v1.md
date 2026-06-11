@@ -2223,6 +2223,54 @@ modelc:
 
 ---
 
+## 1V. References — Trade-off literature 참고 (paper writing용)
+
+> 발표 slides 본문에는 안 들어가지만 paper #1/#2 writeup 시 cite할 수 있도록 모아둠.
+
+### A. Thermal / Calendar shelf life (Cl-rich penalty)
+- **Wu et al., Nano Energy 2026, 147, 111576** (10.1016/j.nanoen.2025.111576) — 90°C 5d calendar aging: L6 68% > L55 48% > L53 (Cl 1.7) 35%, Cl ↑ monotonic. 핵심 Wu paper.
+- **Adeli et al., Angew. Chem. Int. Ed. 2019, 58, 8681** (10.1002/anie.201814222) — Li₅.₄PS₄.₄Cl₁.₆ 합성 + Humidity 노출 H₂S 빠른 방출
+- **Schlem et al., Adv. Energy Mater. 2020, 10, 1903719** — Cl-rich DSC mass loss onset 315°C (Cl-poor 350°C)
+- **Tan et al., ACS Energy Lett. 2021, 6, 1933** — Cl-rich TGA thermal stability 낮음
+
+### B. Moisture sensitivity (Cl-rich penalty)
+- **Strauss/Janek, Chem. Mater. 2018, 30, 6720** — Li₆PS₅Cl + H₂O → LiOH·LiCl + H₂S, Cl-rich 가속
+- **Kim/Janek, ChemSusChem 2020, 13, 4901** — Li₆PS₅X moisture stability: I > Br > Cl > Cl-rich
+- **Kraft et al., J. Am. Chem. Soc. 2017, 139, 10909** — Cl⁻ + H₂O hydroxylation 수월 (vs Br⁻, I⁻)
+- **Bachman et al., Chem. Rev. 2016, 116, 140** — Argyrodite humidity intolerance + Cl-rich 가속
+
+### C. Synthesis window (phase-pure 한계)
+- **Adeli, Angew. Chem. 2019** (위와 동일) — Li₅.₄PS₄.₄Cl₁.₆ 합성 lower bound
+- **Yu et al., Nat. Commun. 2022, 13, 6320** — Li₅.₃PS₄.₃Cl₁.₇ phase-pure 어려움
+- **Wu et al., Nano Energy 2026** (위 A와 동일) — Cl > 1.8 phase-pure 실패
+- **Schlem et al., Adv. Energy Mater. 2020** (위 A와 동일) — Cl 1.5–1.7 sweet spot
+
+### D. Mechanical anisotropy + SSB cycling stress
+- **Pan/Sun et al., ACS Energy Lett. 2021, 6, 4377** — SSB stack pressure 10–100 MPa 영향, 비등방 SE crack initiation
+- **Doux et al., Joule 2020, 4, 2487** — Contact pressure 의존성, 비등방 SE 압력 요구도 ↑
+- **Krauskopf et al., Joule 2020, 4, 2540** — Li flux 비균일성 ↔ mechanical anisotropy
+- **Lewis et al., Joule 2022, 6, 1126** — Heterogeneous Li deposition + mechanical anisotropy
+- **Hatzell et al., J. Power Sources 2020, 459, 228063** — Pressure-dependent ICR, 비등방 SE sensitive
+- **Wang et al., Sci. Adv. 2022, 8, eabm3868** — Polycrystalline SE texture effect σ ±30%
+
+### E. SSB SE 전반 trade-off review
+- **Janek/Zeier, Nat. Energy 2023, 8, 230** — SSB SE 설계: σ ↑ vs stability ↓ universal trade-off
+- **Famprikis/Masquelier, Nat. Mater. 2019, 18, 1278** — Inorganic SE review, Cl-rich argyrodite trade-off
+- **Chen et al., Adv. Energy Mater. 2021, 11, 2002717** — Argyrodite review, Cl 함량 vs property table
+
+### F. Performance side (modelc 우세 backing)
+- **Zuo et al., Angew. Chem. Int. Ed. 2023, 62, e202213228** (10.1002/anie.202213228) — σ(Li₆PS₅Cl) 2.9 vs σ(Li₅.₅PS₄.₅Cl₁.₅) 7.0 mS/cm, R_int 8.9 vs 13.2 Ω·h^0.5, CE 79% vs 77%
+- **Schlem et al., Adv. Energy Mater. 2020** (위와 동일) — Ea (Cl-rich 0.22 / ordered 0.25) ★ 우리 4fu 매칭
+- **Minafra/Kraft, Solid State Ionics 2020, 346, 115223** — "Enhanced ion conduction by enforcing structural disorder"
+- **Kim et al., ACS Mater. Lett. 2025** — Cl ↑ → E_Young ↑ (UPE), 우리 relaxed-ion +25% 매칭 ★
+- **Gil-González et al., Energy Storage Mater. 2022, 45, 484** (10.1016/j.ensm.2021.12.008) — Constrained ESW K_eff sweep, Cl-rich K_eff>0 wider window
+- **Deiseroth et al., Angew. Chem. Int. Ed. 2006, 47, 755** — 원조 Li₆PS₅X argyrodite, 4a/4d cage topology
+
+### G. paper #1 framing summary (한 줄)
+> "modelc (LPSCl₁.₆) shows substantial performance gain across all operation-relevant axes (σ +3×, E +25%, R_int −33%, cycling CE +2%). The cost is concentrated in **idle/storage axes** — thermal calendar aging (Wu 2026), moisture sensitivity (Kraft/Janek series), Cl synthesis window limit (Adeli/Yu), and mild mechanical anisotropy (Zener 1.14→1.44) — none of which compromise operation but motivate the additive strategy explored in Paper #2."
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -2258,6 +2306,7 @@ modelc:
 | v1.28 | 2026-06-11 | Slide 20 (Referee defense #1: 4-tension audit) + Slide 21 (Referee defense #2: 9-caveat consolidated) drafted — paper #1 nuanced honesty + limitations transparency. Section F (Referee defense) 완성 |
 | v1.29 | 2026-06-11 | **comp1 4 f.u. natural MLIP MD 결과 도착**: Ea=0.2532, D₀=4.11e-4, R²=0.9998 — Schlem 2020 LPSCl ordered ~0.25 EXACT match. **Slide 6 HOLD 해제 → v3 ACTIVE**: σ gain = Ea↓ (1.75×) + D₀↑ (1.41×) ≈ 2.5× 둘 다 작용. Minafra/Kraft direction 정합. 5 f.u. (Ea=0.172) = 인위 supercell artifact 확정. **db/properties/li_transport.json 갱신**: comp1_v3_5fu SUPERSEDED, comp1_v3_4fu_natural PRIMARY. Paper #1 mechanism narrative 변경 (prefactor-only → dual mechanism). |
 | v1.30 | 2026-06-11 | Slide 6c v3 ACTIVE — **No T_cross, modelc wins at ALL T**, 저온일수록 σ ratio ↑ (RT 4.3×, 200K 7×). Zuo 2023 RT 측정 2.4× ↔ 우리 외삽 4.3× 자릿수 정합. v1/v2 'vacancy 양날' framing 무효 — 4fu 자료로 reversed. |
+| v1.31 | 2026-06-11 | References 섹션 추가 (slide 본문 외, paper writing용) — Thermal/Calendar (Wu/Adeli/Schlem/Tan), Moisture (Strauss/Janek/Kraft/Bachman), Synthesis window (Adeli/Yu/Wu), Mech anisotropy SSB (Pan/Sun, Doux, Krauskopf, Lewis, Hatzell, Wang), Trade-off review (Janek/Zeier, Famprikis, Chen), Performance backing (Zuo/Schlem/Minafra/Kim/Gil/Deiseroth) + paper #1 framing summary 한 줄 |
 
 ---
 
