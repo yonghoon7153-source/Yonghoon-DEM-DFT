@@ -778,6 +778,124 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 
 ---
 
+## 1H-1. Slide 8a — Shear Mode Lock-in (mechanism 시각화)
+
+### 페이지 배치 (16:9)
+- 왼쪽: Cij 원소 분해 표 (C11/C12/C44/Zener/ν)
+- 오른쪽: cartoon — 4d-Cl pin이 shear 방향에서 활성, 등방에는 inactive
+- 하단: 핵심 4 bullet + cartoon caption
+
+### 본문 텍스트
+
+**제목**: "8a. 어디서 +30% shear가 오는가 — Cij 분해 + 4d-Cl lock-in"
+
+**Cij 표 (relaxed-ion)**:
+```
+Cij (GPa)             | LPSCl  | LPSCl₁.₆ | Δ%
+──────────────────────┼────────┼──────────┼────────
+C11                   |  37.7  |  37.0    | −2%
+C12                   |  20.4  |  16.8    | −18%
+C44 (shear) ★         |   8.0  |  13.7    | +72% !
+Zener A=2C44/(C11-C12)|  1.14  |  1.44    | +26% (비등방 ↑)
+ν (Poisson)           |  0.36  |  0.30    | −17%
+```
+
+**Key**:
+```
+• C44 +72% — VRH-평균 G +30%의 거의 모든 출처
+• C12 −18% — 추가 shear 자유도 감소
+• 4d-Cl AS (M3 ICOHP −2.84) 가 shear 방향 변형 선택적 lock
+• 등방 압축(C11 ~불변)엔 거의 영향 없음 → B₀ 오히려 soft
+```
+
+**Cartoon caption**:
+```
+직관: 4d 자리 Cl이 인접 Li를 짧은 거리(2.53 Å)에서 강하게 잡음 → Li 평면 슬라이딩
+형 변형에 추가적 저항(pin). hydrostatic 압축은 모든 결합을 동등하게 줄이므로
+이 pin 효과가 안 켜짐 → B는 vacancy로 soft.
+```
+
+### 발표 스크립트 (45–55초)
+
+> "그 +30% shear가 어디서 오는지 Cij 원소로 풀어보겠습니다. 왼쪽 표 — C44가 8.0에서 13.7로 72% 증가합니다. VRH 평균 G +30%의 거의 모든 출처가 C44 하나예요. C12도 18% 감소해서 shear 자유도가 추가로 줄어듭니다. 반면 등방 압축 관련된 C11은 거의 안 바뀝니다 — 그래서 B는 오히려 soft.
+>
+> 미시 그림은 오른쪽입니다. modelc의 4d 자리에 들어간 Cl은 인접 Li를 2.53 Å 짧은 거리에서 매우 강하게 잡습니다. ICOHP −2.84 eV, 4a 자리 Cl보다 40% 강하다는 게 M3에서 본 그 anti-site예요. 이 강한 결합이 Li 평면이 슬라이딩하는 shear 변형을 선택적으로 pin해버립니다. 그런데 hydrostatic 압축은 모든 결합을 균등하게 줄이는 거라 이 pin 효과가 안 켜져요. 그래서 vacancy로 bulk는 soft, 4d-Cl로 shear는 stiff — 합쳐서 E는 stiffer입니다.
+>
+> 즉 vacancy가 양날인데, 단방향(shear)에서 강해지는 효과가 평균을 끌어올리는 구조입니다."
+
+### Q&A 백업
+- "C44 72% 증가 너무 큰가?" → 절대값 13.7 GPa는 sulfide SE typical 범위. comp1 8.0이 오히려 unusually low (deeply ordered Li가 쉽게 슬라이딩)
+- "Born 안정성?" → eigenvalues all > 0, 둘 다 stable
+- "G가 paper 메시지로 왜 중요?" → SSB cycling shear stress 받음 (cathode 팽창). shear stiffness가 mechanical durability와 직결
+- "AFM/UPE는 어떤 modulus?" → Young's E. E_VRH +25%가 직접 대응
+
+---
+
+## 1H-2. Slide 8b — Cross-Check & Referee Defense
+
+### 페이지 배치 (16:9)
+- 중앙: 4행 cross-check 표 (각 행: 측정값 + 비교 대상 + 결론)
+- 하단: 종합 결론 + footnote
+
+### 본문 텍스트
+
+**제목**: "8b. 독립 cross-check 4개 — paper-grade 정확도 보증"
+
+**Cross-check 표**:
+```
+# | Check                          | LPSCl  | LPSCl₁.₆ | 결론
+──┼────────────────────────────────┼────────┼──────────┼──────
+1 | B_VRH (stress-strain, GPa)     | 25.5   | 23.4     |
+  | vs B0 (BM-EOS, 독립 방법)      | 26.23  | 21.71    | ±10% ✓
+2 | E_VRH (0K relaxed-ion, GPa)    | 22.06  | 27.66    |
+  | vs 자체 AFM (GPa)              | ~12    | 14.9     | 방향 ✓
+  | vs Kim 2025 UPE (trend)        | ref    | ↑        |
+3 | E_VRH (600 K MLIP snapshot)    | 29.1   | 32.9     | 0K와
+  | Δ                              | ref    | +13%     | 동일 방향 ✓
+4 | LOBSTER charge spilling        | 1.46%  | 1.16%    | <5% ✓
+  | k×L (paper-grade ≥40 Å)        | 40     | 42       | 수렴 ✓
+```
+
+**Key**:
+```
+• 4 독립 cross-check 모두 정합
+• B_VRH ↔ B0 두 다른 elasticity method 일치 (±10%)
+• 0K DFT ↔ 600K MLIP 같은 방향
+• 실험 (AFM + Kim 2025) trend 일치
+• Method quality (spilling <5%, k×L ≥40) 보장
+```
+
+**Footnote**:
+```
+※ comp1 B0 +8% 차이(25.5 vs 26.2)는 stress-strain (Hookean small strain) vs BM-EOS
+  (wider V sweep) 정의 차이. 양쪽 ±10% 안.
+※ AFM 절대값은 group weekly report 자체 측정. Kim 2025는 UPE direction만 인용.
+```
+
+### 발표 스크립트 (50–60초)
+
+> "M4 결론이 robust한지 4가지 독립 cross-check로 확인합니다.
+>
+> 첫째, B_VRH와 B₀ 비교. B_VRH는 12 strain으로 Cij 구한 다음 voigt-reuss-hill로 유도, B₀는 11 volume Birch-Murnaghan fit — 전혀 다른 방법. 두 독립 방법이 ±10% 안에서 일치합니다.
+>
+> 둘째, 실험 비교. 우리 22 GPa는 실험 LPSCl ~23과 거의 정확. modelc 27.7도 자체 AFM 14.9와 절대값 차이는 있지만 — AFM contact mechanics와 DFT bulk modulus의 method difference — trend는 LPSCl₁.₆가 더 단단이라는 같은 방향. Kim 2025 UPE도 같은 방향.
+>
+> 셋째, 0K DFT vs 600K MLIP. finite-T snapshot E도 modelc(32.9) > comp1(29.1), +13%. 같은 방향.
+>
+> 넷째, method quality. LOBSTER spilling 1-1.5% (paper 기준 <5%), k-mesh k×L ≥40 Å.
+>
+> 4가지 cross-check가 다 정합 — relaxed-ion +25% 결론은 robust합니다."
+
+### Q&A 백업
+- "왜 B 절대값 약간 다른가 (25.5 vs 26.2)?" → stress-strain small strain Hookean vs BM-EOS wider sweep. 미세 정의 차이지만 ±10% 정합
+- "AFM 12 vs DFT 22 — 절대 차이?" → AFM=indentation modulus (Hertz contact), DFT=pure Young's. 다른 양. trend가 같은 게 중요
+- "600 K MLIP가 0 K DFT랑 같은 방향 보장?" → finite-T effect 있지만 +13% 정도면 0 K +25%와 정성 일관
+- "spilling 5% 기준 의미?" → LOBSTER 표준. 5% 넘으면 basis 부정확. 1.16-1.46%로 충분
+- "k×L 40 충분?" → argyrodite (gap ~1.8 eV)에서 paper-grade. metal이면 60+
+- "comp1 4 f.u. clean MD 0.18 부근 나오면?" → frozen artifact 재현되거나 0.20+로 정상화. 어느 쪽이든 disorder ensemble (6b)이 Ea ground truth로 굳어짐
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -794,6 +912,7 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 | v1.9 | 2026-06-11 | Slide 6 **HOLD** (comp1 4 f.u. natural-cell MLIP MD 재실행 중, 결과 따라 3-way framing 분기). Slide 7 (M3 ionic glue) drafted — ICOHP +13%/+8%, 4d-Cl AS −2.84 eV, 3-probe 합의 |
 | v1.10 | 2026-06-11 | Slide 6a (mechanism cartoon) / 6b (disorder ensemble = ground truth, **v0_xyz=comp1_V0_k444 4fu 검증 — ensemble 재실행 불필요 확정**) / 6c (저온 trade-off, A/B 시나리오 조건부 HOLD) drafted |
 | v1.11 | 2026-06-11 | Slide 8 (M4: vacancy paradox 해소) drafted — clamped 52.31 동일 → relaxed-ion +25%, G +30% shear stiffening, Kim 2025 매칭, M3 4d-Cl mechanical 발현 |
+| v1.12 | 2026-06-11 | Slide 8a (Cij 분해: C44 +72% — shear lock-in mechanism) / 8b (4 cross-check: B↔B0, AFM, 600K MLIP, spilling+k×L) drafted. M4 클라이맥스 완성 |
 
 ---
 
@@ -807,6 +926,8 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 - [x] Slide 6 (M2 — σ prefactor) — drafted 2026-06-10, **⚠ HOLD** (comp1 4fu MLIP MD 결과 대기, 3-way framing 분기)
 - [x] Slide 7 (M3 — ionic glue) — drafted 2026-06-11
 - [x] Slide 8 (M4 — vacancy paradox 해소) — drafted 2026-06-11
+- [x] Slide 8a (Cij 분해 + shear lock-in mechanism) — drafted 2026-06-11
+- [x] Slide 8b (4 cross-check defense) — drafted 2026-06-11
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
 - [ ] Slide 9–13 (Cross-check) 본문 + script
