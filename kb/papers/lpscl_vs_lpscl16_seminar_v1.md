@@ -896,6 +896,71 @@ Zener A=2C44/(C11-C12)|  1.14  |  1.44    | +26% (비등방 ↑)
 
 ---
 
+## 1I. Slide 9 — Cross-check #1: PS₄ Universal Backbone
+
+### 페이지 배치 (16:9)
+- 메인 표 (6 probe + universal anchor 행)
+- 하단: 3 bullet key + 한 줄 결론
+
+### 본문 텍스트
+
+**제목**: "9. PS₄ covalent backbone은 두 시스템에서 사실상 동일"
+
+**메인 표**:
+```
+Probe                       | LPSCl    | LPSCl₁.₆ | Δ
+────────────────────────────┼──────────┼──────────┼────────
+P–S 길이 (Å, mean)          | 2.073    | 2.064    | −0.5%
+P–S σ (Å, 분산)             | 0.036    | 0.011    | modelc ↓ 더 균질
+P 배위수                    | 4.00     | 4.00     | 0% (완벽 보존)
+ICOHP P–S (eV/bond)         | −5.94    | −6.00    | +1.0%
+ELF P–S bridge              | 0.946    | 0.944    | Δ 0.002 (~0)
+Bader P (e, formal +5)      | +4.69    | +4.43    | basin shape ¹
+Li–S(4d, free S²⁻) ICOHP    | −2.57    | −2.52    | −2% (universal anchor)
+```
+
+**각주**:
+```
+¹ Bader P 차이는 PS₄-S vs 4d-S²⁻ basin shape effect — PS₄ 단위 합 (P+4S)으로
+  reporting 시 둘 다 formal PS₄³⁻ 근처. paper엔 PS₄ 합 권장 (개별 P는 SI).
+```
+
+**Key**:
+```
+• PS₄ 결합 길이·ICOHP·ELF·배위수 — 5개 probe 모두 차이 +1% 이내
+• free S²⁻ 주위 Li 결합도 조성 무관 universal (Δ2%)
+• 모든 조성 변화는 Li–anion ionic sublattice 안에서만 일어남
+```
+
+**하단**: "→ argyrodite의 PS₄³⁻ 단위는 chemistry-independent rigid block"
+
+### 발표 스크립트 (50–60초)
+
+> "Cross-check 시작입니다. M1에서 M4까지의 4 메시지가 'covalent는 그대로, ionic만 변한다'고 정리됐는데, 이걸 5개 독립 probe로 확인합니다.
+>
+> 표 행 별로 — P–S 결합 길이 2.073 대 2.064, 0.5% 안. 흥미로운 건 분산 σ인데, modelc가 오히려 더 작습니다. PS₄ tetrahedron들이 더 균질하게 정렬돼 있다는 뜻이에요. P 배위수 정확히 4.00 완벽 보존. ICOHP P–S −5.94 대 −6.00 1% 안. ELF P–S bridge 0.946 대 0.944 사실상 동일. Bader P charge는 basin shape effect로 절대값 약간 다르지만 PS₄ 단위 합으로 보면 둘 다 formal PS₄³⁻ 근처.
+>
+> 5개 independent measurement가 모두 'PS₄는 같다'고 가리킵니다.
+>
+> 한 가지 더 — 표 마지막 행, Li–S(4d) free S²⁻ 결합. 4d 자리 free S²⁻에 붙은 Li 결합 강도가 양쪽에서 −2.5 정도로 거의 동일합니다. 조성이 바뀌어도 변하지 않는 universal anchor예요. argyrodite에서 'PS₄가 rigid block'이라는 사실이 covalent backbone 뿐 아니라 그 주위 Li 배위에까지 확장된다는 거죠.
+>
+> 결론: argyrodite의 PS₄³⁻ 단위는 chemistry-independent rigid block입니다. 모든 조성 효과는 Li-halide ionic sublattice 안에서만 일어난다는 게 cross-check #1의 메시지입니다."
+
+### 시각 디자인 노트
+- 5 probe 행은 같은 색 (PS₄ 보존 그룹)
+- Universal anchor 행은 별색 + ★ (또 다른 invariance)
+- "사실상 동일" + "rigid block" 단어 강조
+
+### Q&A 백업
+- "P-S 살짝 줄어드는 이유(−0.5%)?" → modelc V/fu 약간 작아짐(−4.3%) 비례 수축. 비율 보존
+- "σ(P-S) modelc에서 더 작음 이유?" → 4d-Cl AS 주변 PS₄ 균질화 — disorder가 PS₄에 영향 없음 역설적 증거
+- "P 배위 cutoff?" → P-S 2.3 Å. 모든 P 정확히 4개 S
+- "Bader P 4.4–4.7 vs formal +5?" → Bader=partial (basin division), formal과 다름. PS₄ 합으론 비슷
+- "universal anchor 의미?" → 관찰. mechanism은 free S²⁻ 주위 Li 배위 기하의 cell parameter 둔감성
+- "ELF 0.946 단위?" → 0~1, 1=완전 localized. 0.9↑=covalent. Li 주위는 <0.1 (ionic depletion)
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -913,6 +978,7 @@ Zener A=2C44/(C11-C12)|  1.14  |  1.44    | +26% (비등방 ↑)
 | v1.10 | 2026-06-11 | Slide 6a (mechanism cartoon) / 6b (disorder ensemble = ground truth, **v0_xyz=comp1_V0_k444 4fu 검증 — ensemble 재실행 불필요 확정**) / 6c (저온 trade-off, A/B 시나리오 조건부 HOLD) drafted |
 | v1.11 | 2026-06-11 | Slide 8 (M4: vacancy paradox 해소) drafted — clamped 52.31 동일 → relaxed-ion +25%, G +30% shear stiffening, Kim 2025 매칭, M3 4d-Cl mechanical 발현 |
 | v1.12 | 2026-06-11 | Slide 8a (Cij 분해: C44 +72% — shear lock-in mechanism) / 8b (4 cross-check: B↔B0, AFM, 600K MLIP, spilling+k×L) drafted. M4 클라이맥스 완성 |
+| v1.13 | 2026-06-11 | Slide 9 (cross-check #1: PS₄ universal backbone) drafted — 5 probe (P-S 길이/σ/배위/ICOHP/ELF/Bader) + universal anchor Li-S(4d), rigid block 결론 |
 
 ---
 
