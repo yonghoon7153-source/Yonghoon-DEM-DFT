@@ -1097,9 +1097,108 @@ add_footer(s, 26)
 
 
 # =====================================================
+# Figure-attachment markers (사진 첨부 표시)
+# =====================================================
+FIG_YELLOW = RGBColor(0xFF, 0xF1, 0x9A)
+FIG_BORDER = RGBColor(0xC8, 0x9A, 0x00)
+FIG_TEXT = RGBColor(0x66, 0x4D, 0x00)
+
+
+def add_fig_chip(slide, label, where="title", w=4.6):
+    """Yellow chip indicating a figure should be inserted.
+    where='title' → top-right of title bar (default, safe for most slides).
+    where='bottom' → just above footer."""
+    if where == "title":
+        left = Inches(13.333 - w - 0.5)
+        top = Inches(0.38)
+    else:
+        left = Inches(13.333 - w - 0.5)
+        top = Inches(6.55)
+    shp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
+                                 left, top, Inches(w), Inches(0.42))
+    shp.fill.solid()
+    shp.fill.fore_color.rgb = FIG_YELLOW
+    shp.line.color.rgb = FIG_BORDER
+    shp.line.width = Pt(1.0)
+    shp.shadow.inherit = False
+    tf = shp.text_frame
+    tf.word_wrap = True
+    tf.margin_left = tf.margin_right = Inches(0.08)
+    tf.margin_top = tf.margin_bottom = Inches(0.02)
+    p = tf.paragraphs[0]
+    p.alignment = PP_ALIGN.LEFT
+    r = p.add_run()
+    r.text = f"📎 사진 첨부: {label}"
+    r.font.size = Pt(10)
+    r.font.bold = True
+    r.font.color.rgb = FIG_TEXT
+    r.font.name = "맑은 고딕"
+
+
+def add_fig_box(slide, left, top, width, height, label):
+    """Large dashed placeholder box with caption, for slides where a figure
+    is the main content. Drawn dashed-yellow."""
+    shp = slide.shapes.add_shape(MSO_SHAPE.RECTANGLE,
+                                 Inches(left), Inches(top),
+                                 Inches(width), Inches(height))
+    shp.fill.solid()
+    shp.fill.fore_color.rgb = RGBColor(0xFF, 0xFB, 0xE6)
+    shp.line.color.rgb = FIG_BORDER
+    shp.line.width = Pt(1.5)
+    ln = shp.line._get_or_add_ln()
+    pr = ln.makeelement(qn("a:prstDash"), {"val": "dash"}, nsmap=None)
+    ln.append(pr)
+    shp.shadow.inherit = False
+    tf = shp.text_frame
+    tf.word_wrap = True
+    p = tf.paragraphs[0]
+    p.alignment = PP_ALIGN.CENTER
+    r = p.add_run()
+    r.text = f"📎 [ 사진/그림 자리 ]\n{label}"
+    r.font.size = Pt(14)
+    r.font.bold = True
+    r.font.color.rgb = FIG_TEXT
+    r.font.name = "맑은 고딕"
+
+
+# Slide order (0-based) → (label, position)
+# Title slide (0) and pure-text summary slides skipped.
+FIG_MARKERS = {
+    1:  ("LPSCl F-43m vs LPSCl₁.₆ R3m 결정구조 (VESTA, 동일 시점)", "title"),
+    2:  ("3-tier pipeline 모식도 (선택)",                              "title"),
+    3:  ("4-message at-a-glance figure",                                "title"),
+    4:  ("PDOS 비교 (comp1 vs modelc, atom-projected)",                "title"),
+    5:  ("σ(T) Arrhenius plot (paired 600/800/1000 K)",               "title"),
+    6:  ("D₀ vs Eₐ 산점도 또는 prefactor 비교 막대",                   "title"),
+    7:  ("Disorder ensemble Eₐ 분포 (matched-d 그룹)",                 "title"),
+    8:  ("σ(T) 저온 외삽 plot (300 K까지)",                            "title"),
+    9:  ("Cohesive / Li–anion ionic glue 모식도 또는 막대",             "title"),
+    10: ("Elastic moduli (B, G, E) clamped vs relaxed 비교 막대",      "title"),
+    11: ("Cij component bar (C44 강조)",                                "title"),
+    12: ("M4 4 cross-check 수렴 그림",                                  "title"),
+    13: ("PS₄ 결합 길이/각도 히스토그램 (두 시스템 overlay)",            "title"),
+    14: ("Li–Cl per-bond 히스토그램 (4a vs 4d-AS 분리)",               "title"),
+    15: ("Voronoi 4-sublattice 모식도 (4a/4b/4c/4d)",                  "title"),
+    16: ("BVSE bimodal 에너지 분포 / pathway 맵",                       "title"),
+    17: ("ELF isosurface (PS₄ covalent + Li–anion ionic)",             "title"),
+    18: ("k-mesh / LOBSTER spilling / AIMD 수렴 plot",                "title"),
+    20: ("3-probe (BVSE · NEB · MD) 수렴 schematic",                  "title"),
+    21: ("Oxidation 4-axis radar 또는 grid",                          "title"),
+    22: ("Constrained ESW Cl-scan + 분해반응 ΔG 막대",                "title"),
+    25: ("Trade-off 4축 + Paper #2 도핑 roadmap",                     "title"),
+}
+
+slide_list = list(prs.slides)
+for idx, (label, where) in FIG_MARKERS.items():
+    if idx < len(slide_list):
+        add_fig_chip(slide_list[idx], label, where=where)
+
+
+# =====================================================
 # Save
 # =====================================================
 out = "/home/user/Yonghoon-DEM-DFT/kb/papers/lpscl_vs_lpscl16_seminar_v1.pptx"
 prs.save(out)
 print(f"saved: {out}")
 print(f"slides: {len(prs.slides)}")
+print(f"fig markers: {len(FIG_MARKERS)}")
