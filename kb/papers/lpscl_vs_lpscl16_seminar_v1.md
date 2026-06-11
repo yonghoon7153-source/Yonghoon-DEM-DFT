@@ -1115,6 +1115,23 @@ D = D₀ · exp(−Ea/kT)
 > 6c 메시지 흡수: 6b 대본 끝에 한 문장 — "두 효과가 같은 방향이라 저온일수록 격차가
 > 커집니다 — RT 외삽 ~4×, Zuo 실험 2.4×와 자릿수 정합. 저온 trade-off는 없습니다."
 
+### ★ 실물 확정판 (as-built deck slide 10 "M2-1", 2026-06-11 — footnote 1건 수정 대기)
+
+```
+제목: DFT / 상단 각주: d 정의 (free S²⁻↔Cl exchange, PS₄ untouched, composition
+conserved) / 우상단 refs: Minafra SSI + Kraft JACS (대본 인용 근거)
+■ M2-1: Ea ground truth — matched disorder, same barrier
+   · Natural cells: Cl-rich is intrinsically lower-Ea, its vacancies are built-in disorder
+   · Matched disorder (d≈0.4–0.5): 0.177 vs 0.173 - same within error (청)
+[좌] 구조 그림: free-anion 영역 청 점선 타원 + 교환 화살표, 라벨 "free S²⁻ ↔ Cl swap"
+[우] 표: clean 행 0.253(적)/0.224(청) · disordered 행 중립 — 색이 "same" 메시지와 호응
+     표 아래: matched disorder: ΔEa = 4 meV (almost same)
+검수: Minafra bullet 3은 의도적 생략 (대본이 커버). 수정 대기 1건 — 하단 footnote가
+"the pure-ordered"에서 잘림 → "a fully ordered cell is kinetically frozen at 600 K
+(apparent 1.17 eV = statistical artifact)"로 교체.
+```
+
+
 > 역할 승격 (2026-06-11): clean-cell Ea의 셀 의존성 발견 후, 이 슬라이드가 M2 Ea 주장의 ground truth.
 > **✓ 검증 완료 (2026-06-11)**: ensemble_results.json의 `"v0_xyz": "db/structures/comp1_V0_k444.xyz"` —
 > comp1 disorder ensemble은 **4 f.u. natural cubic (52 atoms) 기반**으로 이미 돌았음. **재실행 불필요.**
