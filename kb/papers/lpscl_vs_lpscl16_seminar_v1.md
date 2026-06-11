@@ -740,6 +740,17 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 • 메커니즘 = M3 4d-Cl anti-site가 특정 shear 모드를 lock-in
 ```
 
+**Footnote — 청중 핵심 직관 (★ ADDED v1.19)**:
+```
+※ "PS₄ 안 바뀌는데 왜 단단해지나" — argyrodite의 기계적 강성은
+   covalent PS₄ 자체가 아니라 PS₄들을 묶는 ionic Li-anion sublattice가 결정.
+   • PS₄ = "rigid blocks" (M1, slide 9/13 — 불변)
+   • Li-anion = "mortar" (M3 +13% ICOHP — 강화)
+   • 강한 mortar → blocks 사이 sliding 어려움 → shear stiff (G +30%)
+   • Hydrostatic 압축은 vacancy void 효과로 B −8%, 그러나 G 증가가 dominant
+   → E = 9BG/(3B+G), ν~0.3 영역에서 G dominant → E_VRH +25%
+```
+
 **Footnote**:
 ```
 ※ B_VRH 23.4 ≈ B0(BM-EOS) 21.7 — 두 독립 방법 cross-check (±3%)
@@ -1452,6 +1463,7 @@ ELF 0.7~1.0 : localized (lone pair / covalent maximum)
 | v1.16 | 2026-06-11 | Slide 11 (cross-check #3: Voronoi 4-sublattice fingerprint) drafted — P 0→0.37 (framework 일관), Cl 0→0.74 (분기), Li 0.21→1.15 (×5.5 ★), S 3.41→2.05 (역설적 균질화 ★). 3 probe convergence. PDOS Cl 3p −2.5 eV vs S (mechanism 2 confirmed both systems). |
 | v1.17 | 2026-06-11 | Slide 12 (cross-check #4: BVSE bimodal paired 5×5×5) drafted — comp1 단일 peak vs modelc bimodal (39.8% comp1-like + 60.2% +15% shifted), 5.4 Li per AS, BVSE +15% ↔ ICOHP +40% 두 probe 일관, 37.5% AS stoichiometric necessity |
 | v1.18 | 2026-06-11 | Slide 13 (cross-check #5: ELF covalent vs ionic) drafted — P-S bridge ELF 0.95 동일, Li basin <0.1 양쪽 ionic, mechanism 1 (LOBSTER covalent overlap)의 시각 evidence. Cross-check section (9-13) 완성 |
+| v1.19 | 2026-06-11 | Slide 8 footnote 추가: "PS₄ 불변인데 왜 단단해지나" 직관 — PS₄=rigid blocks (M1), Li-anion=mortar (M3 +13%) → shear stiff (G +30%) → E_VRH +25%. M1↔M3↔M4 인과 chain 명시 |
 
 ---
 
