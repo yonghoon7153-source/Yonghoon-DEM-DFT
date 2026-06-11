@@ -1606,6 +1606,81 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 
 ---
 
+## 1P. Slide 16 — Summary: 한 페이지로 보는 paper #1
+
+### 페이지 배치 (16:9)
+- 2-컬럼 대조표 (불변 ↔ 변화)
+- Thesis 박스 + 4 메시지 한 줄씩
+- "covalent skeleton / ionic ligament" 마무리
+
+### 본문 텍스트
+
+**제목**: "16. Summary — 불변 ↔ 변화의 깔끔한 분리"
+
+**대조표**:
+```
+불변 (조성 둔감)              | 변화 (조성 민감)
+─────────────────────────────┼──────────────────────────────
+• PS₄ covalent backbone      | • Li carrier 운반체 (×8)
+  P-S length, ICOHP, ELF      |   prefactor D₀ ★
+• Band gap (Δ 0.06 eV)        | • Li-anion ionic glue
+  VBM/CBM character           |   ICOHP +13% (Cl) / +8% (S)
+• Li-S(4d) universal anchor   | • Shear modulus G (+30%)
+  (Δ 2%)                       |   C44 +72%, Zener A 1.14→1.44
+• Per-anion Coulomb 직관      | • 4d-Cl anti-site (새 결합 family)
+  (S²⁻ 우세)                  |   ICOHP −2.84 eV (+40% per-bond)
+```
+
+**Thesis**:
+```
+"LPSCl → LPSCl₁.₆ 변화는 전자구조가 아니라
+ 구조적 무질서 (Li 공공 + 4d-Cl anti-site)에서 온다."
+
+· σ 향상: vacancy carrier (prefactor 8×) — M2
+· E 강화: shear lock-in (4d-Cl mortar) — M4
+· ICOHP 강화: vacancy field 69% + anti-site 31% — M3
+· 전자구조 보존: PS₄ + 갭 동일 — M1
+```
+
+**마무리**:
+```
+→ 4 메시지 (M1-M4) + 5 cross-check (slides 9-13) 모두 같은 그림
+→ "covalent skeleton 유지 + ionic ligament 재배치" = paper #1 한 문장
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Summary 슬라이드 — paper #1의 모든 결과를 한 페이지로 정리.
+>
+> 좌우 대조표 핵심. 왼쪽 '불변' 컬럼: PS₄ covalent backbone, 밴드갭, Li-S(4d) universal anchor, per-anion Coulomb 직관 — 모두 조성과 무관 보존. 오른쪽 '변화' 컬럼: Li carrier 운반체 8배, ionic glue +13%, shear G +30%, 4d-Cl anti-site 새 결합 family — vacancy + Cl 치환으로 재배치.
+>
+> 좌우 분리 깔끔. 왼쪽은 covalent or framework-level, 오른쪽은 ionic sublattice or carrier-level.
+>
+> Thesis 한 문장: 'LPSCl → LPSCl₁.₆ 변화는 전자구조가 아니라 구조적 무질서, Li 공공 + 4d-Cl anti-site에서 온다.'
+>
+> 4 메시지가 각도별 — M1 전자구조 보존, M2 σ 향상이 prefactor (vacancy carrier), M3 ionic glue 강화의 vacancy 69% + anti-site 31% 분해, M4 E 강화가 shear lock-in (4d-Cl mortar).
+>
+> 5 cross-check (slides 9-13)이 이 4 메시지를 다섯 독립 probe로 confirm — Voronoi, BVSE bimodal, ELF, PDOS, per-site bond. 모두 같은 그림.
+>
+> 한 문장: 'covalent skeleton 유지 + ionic ligament 재배치.' paper #1의 본 모습입니다."
+
+### 시각 디자인 노트
+- 2-컬럼 대조표 중심
+- 왼쪽 청색 톤, 오른쪽 적색 톤
+- 좌/우 ↔ "skeleton" / "ligament" 카피 매칭
+- thesis 박스 별도 강조색
+- 4 메시지 한 줄씩
+- footer: cross-check 5개
+
+### Q&A
+- "왜 '구조적 무질서' thesis 키워드?" → vacancy + anti-site 둘 다 structural disorder, 4 메시지 일관
+- "전자구조 보존 ↔ 기계적 강화 양립?" → PS₄ skeleton 그대로 + Li-anion mortar 강화 (slide 8 footnote)
+- "다른 argyrodite 일반화?" → Br/I variant 유사 예상. paper는 Cl 한정, SI extension 가능
+- "paper main figure 후보?" → 10, 11, 8a, 4
+- "이 summary로 paper conclusion?" → YES, abstract + conclusion 거의 그대로 가능
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1633,6 +1708,7 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 | v1.20 | 2026-06-11 | Slide 14 (k-mesh audit & method convergence) drafted — comp1 k=2×2×1 incident → k=4×4×4 복구 (gap 1.50 → 1.76, RMS 0.003), property k-sensitivity table, LOBSTER spilling 1.16-1.46% paper-grade. Referee defense 시작 |
 | v1.21 | 2026-06-11 | Slide 15 (Methods consistency: 3 tier 한 페이지) drafted — Tier 1 MLIP / Tier 2 DFT (PBE/USPP/k×L≥40) / Tier 3 §8 (13 probe 양쪽 동일 V₀), 컴퓨팅 자원 분산. Paired comparison 정당성 토대 |
 | v1.22 | 2026-06-11 | Slide 15 **DROPPED** (slide 3 pipeline + slide 14 k-mesh audit과 중복). 총 22 → 21장. |
+| v1.23 | 2026-06-11 | Slide 16 (Summary) drafted — 불변/변화 2-컬럼 대조표 + thesis ("covalent skeleton 유지 + ionic ligament 재배치") + 4 메시지 한 줄씩. paper #1 abstract/conclusion 후보 |
 
 ---
 
