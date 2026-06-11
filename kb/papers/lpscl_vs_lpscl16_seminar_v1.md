@@ -296,6 +296,71 @@ mechanical   stress-strain Cij
 
 ---
 
+## 1D. Slide 4 — Headline Table (4 messages preview)
+
+### Tier 3 post-processing 진입점
+
+Slide 4는 **what & how (Slide 1–3) → why (Slide 5–8)** 전환 pivot.
+Tier 3 §8 multi-probe 결과를 한 페이지로 미리보기.
+
+### 페이지 배치 (16:9)
+
+9-행 표 + 색 강조 4행 (M1 파랑 / M2 초록 / M3 주황 / M4 빨강).
+
+### 본문 텍스트
+
+**상단**: "Headline — 한 페이지로 보는 두 시스템 (paper-grade)"
+
+**표**:
+```
+항목              | LPSCl    | LPSCl₁.₆ | 메시지
+─────────────────┼──────────┼──────────┼──────────────────
+밴드갭 (eV)       | 1.76     | 1.82     | 거의 동일       ★M1
+AIMD Ea (eV)      | 0.172    | 0.224    | comp1 낮음
+D(600 K) cm²/s    | 2.68e-6  | 7.90e-6  | modelc 3× 빠름  ★M2
+D₀ prefactor      | ~7.5e-5  | ~5.8e-4  | ~8× ← 진짜 원인
+ICOHP Li–Cl (eV)  | −1.86    | −2.10    | +13% 강화       ★M3
+Bader Li (e)      | +0.874   | +0.882   | 거의 동일
+E_VRH relaxed-ion | 22.06    | 27.66    | +25.4% 단단     ★M4
+B₀ (BM, GPa)      | 26.23    | 21.71    | hydrostatic 반대
+Zener A           | 1.14     | 1.44     | 비등방 ↑
+```
+
+**하단**: "→ 4 messages = 전자구조 둔감 · σ는 prefactor · ionic glue 강화 · vacancy paradox 해소"
+
+### 발표 스크립트 (60–70초)
+
+> "Slide 4는 한 페이지로 전체 결과를 미리 보여드리는 headline 표입니다.
+>
+> 표의 가운데 두 열이 LPSCl과 LPSCl₁.₆ 결과, 오른쪽 열이 그 차이가 의미하는 메시지입니다. 색이 칠해진 4개 행이 paper의 4대 메시지예요.
+>
+> **첫 번째, 파란색 — 밴드갭**. 1.76 vs 1.82 eV, 거의 동일합니다. 전자구조에서 큰 차이가 없다는 첫 신호입니다.
+>
+> **두 번째, 초록색 — 확산 계수와 prefactor**. modelc가 600 K에서 약 3배 빠른데, 흥미로운 건 그 위에 있는 Ea입니다. comp1의 per-hop barrier가 오히려 더 낮아요. 그런데 왜 modelc가 빠르냐? prefactor D₀가 약 8배 크기 때문입니다 — vacancy carrier가 운반체를 늘린 거.
+>
+> **세 번째, 주황색 — ICOHP**. Li–Cl 결합 강도가 13% 강해집니다. 4d 자리 Cl anti-site가 동력이고요.
+>
+> **네 번째, 빨간색 — Young's modulus**. relaxed-ion에서 25% 단단합니다. 흥미로운 건 그 아래 B₀ — 등방 압축에서는 오히려 comp1이 더 단단해요. 이게 vacancy paradox의 핵심 단서입니다.
+>
+> 다음 슬라이드부터 이 4개 메시지를 하나씩 깊게 풀어드리겠습니다."
+
+### 시각 디자인 노트
+- 8행 × 4열 + 헤더, 가운데 정렬
+- 색 강조 4행 약한 배경색 (M1 파랑 / M2 초록 / M3 주황 / M4 빨강)
+- D + D₀ 두 행은 같은 초록 계열 (M2의 두 면)
+- "★" symbol로 메시지 행 표시
+- 표 폰트 18–20pt, 헤더 bold
+- 하단 한 줄은 별도 box
+
+### Q&A 보조 노트
+- "왜 600 K D를 헤드라인?" → AIMD 측정 구간 (600/800/1000 K) 중 가장 낮은 T. 작동온도 근사
+- "B₀와 E_VRH 방향 반대 — 모순?" → 다른 modulus. B₀ = hydrostatic compression resistance (volume), E_VRH = shear-dominant tensile stiffness. modelc는 vacancy로 hydrostatic softer + 4d-Cl로 shear stiffer. slide 8에서 분리
+- "ICOHP negative 이유" → COHP convention: bonding (−) 안정, antibonding (+). |ICOHP| 클수록 결합 강함
+- "Zener A는 뭐냐?" → cubic isotropy 지표, A=1이면 등방. modelc 1.44 = 비등방성 발현
+- "AIMD Ea 0.224는 실험과 일치?" → ✓ Schlem 2020 Cl-rich Ea 0.22 정확 일치
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -305,6 +370,7 @@ mechanical   stress-strain Cij
 | v1.2 | 2026-06-10 | Slide 1 script v3: 정량 수치 제거 (정성적 표현으로), 첫 페이지 톤 가벼움 |
 | v1.3 | 2026-06-10 | Slide 1 script v4 (★ ACTIVE): "궤도 character" → "전자구조 전반 패턴" vague (직접 비교 문헌 없음 회피). PS₄ 단정 유지 |
 | v1.4 | 2026-06-10 | Slide 2 (Scope) + Slide 3 (3-tier pipeline) drafted. site preference + cell parameter pipeline 압축 |
+| v1.5 | 2026-06-10 | Slide 4 (Headline 4-message table) drafted — Tier 3 §8 post-processing 진입점 |
 
 ---
 
@@ -312,7 +378,8 @@ mechanical   stress-strain Cij
 
 - [x] Slide 2 (Scope) — drafted 2026-06-10
 - [x] Slide 3 (Pipeline schematic) — drafted 2026-06-10
-- [ ] Slide 4 (Headline 표) — 색 강조 4행 디자인
+- [x] Slide 4 (Headline 표) — drafted 2026-06-10 (Tier 3 post-processing 진입)
+- [ ] Slide 5 (M1 — 전자구조 둔감)
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
 - [ ] Slide 9–13 (Cross-check) 본문 + script
