@@ -1105,7 +1105,17 @@ D = D₀ · exp(−Ea/kT)
 
 ---
 
-## 1F-2. Slide 6b — Disorder Ensemble: Ea의 ground truth ★
+## 1F-2. Slide 6b — Disorder Ensemble: Ea의 ground truth ★ → **본편 제외, APPENDIX 강등 (2026-06-11)**
+
+> **as-built 결정**: 본편 deck에서 제외, appendix(백업) 슬라이드로 이동 — 내용은 유효
+> (6a처럼 틀린 게 아님)하나 성격이 방어용(referee defense)이라 본편 흐름·시간 절약 우선.
+> 트리거: "Ea가 셀/disorder 정도에 민감하지 않나" 질문 시 appendix로 점프.
+> 연쇄 수정: ① M2 대본 마지막 줄 "다음 슬라이드에서 검증" → 삭제, 2.5× punchline으로 종료
+> ② M2 Q&A 카드가 appendix 6b를 가리키도록 ("검증은 appendix disorder ensemble 참조")
+> ③ 본편 순서: M2(9) → 6c 저온(10) → M3(11). 6c는 본편 유지 — 방어가 아니라
+> 공격 메시지(no trade-off + Zuo RT cross-check)이므로.
+> appendix 제작 시 v3 정합판 사용: clean 행 = 0.253/0.224 (★ Schlem), 1.17은 footnote,
+> "σ 3×" bullet은 2.5×로 정정 또는 삭제.
 
 > 역할 승격 (2026-06-11): clean-cell Ea의 셀 의존성 발견 후, 이 슬라이드가 M2 Ea 주장의 ground truth.
 > **✓ 검증 완료 (2026-06-11)**: ensemble_results.json의 `"v0_xyz": "db/structures/comp1_V0_k444.xyz"` —
