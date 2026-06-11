@@ -1513,7 +1513,15 @@ ICOHP            | robust   | k-shift Δ<0.006 eV (local probe) ✓
 
 ---
 
-## 1O. Slide 15 — Methods Consistency: 모든 §8 같은 protocol
+## 1O. ~~Slide 15 — Methods Consistency~~ — **DROPPED 2026-06-11** (slide 3 pipeline + slide 14 k-mesh audit과 중복). 총 22 → 21장.
+
+(아래 본문 보존용 — 발표 시 14 + 3 합쳐서 충분히 커버됨)
+
+---
+
+### [DROPPED] 본문 (참고용)
+
+#### Slide 15 — Methods Consistency: 모든 §8 같은 protocol
 
 ### 페이지 배치 (16:9)
 - 3 tier box 세로 stack (slide 3과 일관)
@@ -1624,6 +1632,7 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 | v1.19 | 2026-06-11 | Slide 8 footnote 추가: "PS₄ 불변인데 왜 단단해지나" 직관 — PS₄=rigid blocks (M1), Li-anion=mortar (M3 +13%) → shear stiff (G +30%) → E_VRH +25%. M1↔M3↔M4 인과 chain 명시 |
 | v1.20 | 2026-06-11 | Slide 14 (k-mesh audit & method convergence) drafted — comp1 k=2×2×1 incident → k=4×4×4 복구 (gap 1.50 → 1.76, RMS 0.003), property k-sensitivity table, LOBSTER spilling 1.16-1.46% paper-grade. Referee defense 시작 |
 | v1.21 | 2026-06-11 | Slide 15 (Methods consistency: 3 tier 한 페이지) drafted — Tier 1 MLIP / Tier 2 DFT (PBE/USPP/k×L≥40) / Tier 3 §8 (13 probe 양쪽 동일 V₀), 컴퓨팅 자원 분산. Paired comparison 정당성 토대 |
+| v1.22 | 2026-06-11 | Slide 15 **DROPPED** (slide 3 pipeline + slide 14 k-mesh audit과 중복). 총 22 → 21장. |
 
 ---
 
