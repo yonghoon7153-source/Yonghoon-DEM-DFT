@@ -464,7 +464,31 @@ R²            | 0.999    | 0.992
 
 **하단**: "→ halogen rich가 빠른 진짜 이유는 barrier ↓ 아니라 carrier ↑"
 
-### 발표 스크립트 (65–75초)
+**Footnote (★ ADDED v1.8)**:
+```
+※ 실험 Ea (macroscopic): 다결정 impedance + grain boundary + percolation 포함
+  우리 Ea (microscopic): 단결정 bulk per-hop intrinsic barrier
+  → 두 값이 같은 시스템에서도 50–100 meV 다를 수 있음
+  Minafra/Kraft의 ΔEa(disorder)는 macroscopic shift, 우리(prefactor 우세)와 mutually compatible
+```
+
+### 발표 스크립트 v2 — macroscopic vs microscopic Ea framing 추가 (★ ACTIVE)
+
+> "Message 2, σ 차이는 per-hop barrier가 아니라 prefactor에서 옵니다. paper의 가장 counter-intuitive한 부분이라 천천히 풀어드릴게요.
+>
+> 왼쪽 Arrhenius plot 보시면 ln D vs 1/T인데 — comp1의 기울기가 더 완만합니다. Arrhenius slope이 −Ea/k라서, comp1의 per-hop barrier가 더 낮다는 뜻이에요. 0.172 eV vs modelc 0.224 eV.
+>
+> 직관적으로는 'barrier 낮은 comp1이 더 빨라야 한다'고 생각할 텐데, 측정 구간 600 K부터 1000 K까지 modelc가 일관되게 약 3배 빠릅니다.
+>
+> 왜 그럴까요? 표 아래쪽 D₀ 행을 보세요. comp1이 7.5×10⁻⁵, modelc가 5.8×10⁻⁴ — 약 8배 차이입니다. Arrhenius 식 D = D₀ exp(−Ea/kT)에서 prefactor D₀가 운반체 수와 hopping 경로 수에 비례하는데, modelc의 vacancy가 8배 많은 carrier와 path를 만든 거예요.
+>
+> **한 가지 짚고 갑니다. 실험에서 측정하는 Ea는 다결정 + grain boundary 효과까지 포함된 macroscopic 값이고, 우리 MLIP Ea는 단결정 bulk의 per-hop microscopic 값입니다. 같은 시스템에서도 두 값이 다를 수 있고, 이번 발표는 마이크로 관점의 mechanism입니다.**
+>
+> 즉 두 효과가 경쟁합니다 — modelc는 microscopic barrier가 약간 높지만(disorder cage), prefactor가 훨씬 큽니다(vacancy). 작동온도 영역에서는 prefactor 효과가 압도해서 modelc가 빠릅니다. 그리고 이게 실험 σ(LPSCl₁.₆) > σ(LPSCl)와 정확히 일치하는 미시 그림이에요.
+>
+> 진짜 동력은 vacancy carrier입니다."
+
+### 발표 스크립트 v1 (보존용)
 
 > "Message 2, σ 차이는 per-hop barrier가 아니라 prefactor에서 옵니다. paper의 가장 counter-intuitive한 부분이라 천천히 풀어드릴게요.
 >
@@ -491,6 +515,7 @@ R²            | 0.999    | 0.992
 - "D₀ 8× 차이의 정확한 출처?" → AIMD Arrhenius intercept. n_Li(27 vs 30) 만으로는 1/10 못 설명. vacancy site path multiplicity + correlated hop 종합
 - "왜 작동온도에서 modelc 빠르다고 단정?" → 실험 σ(LPSCl₁.₆) > σ(LPSCl) 일관 (Zuo 2.9 vs 7.0 mS/cm). 600-1000K도 동일. 300K 외삽은 6c 슬라이드
 - "framework atom diffusion?" → D(Cl,P,S) ≈ D(Li)/40~60 → framework 정지 = Li-only 전도체
+- **"Minafra/Kraft는 disorder가 Ea를 낮춘다고 했는데?"** → 실험 Ea는 macroscopic (다결정 + GB), 우리 Ea는 microscopic (단결정 bulk per-hop). 50–100 meV 차이 가능. Minafra의 ΔEa는 macroscopic shift, 우리(prefactor 우세)와 mutually compatible. 추가로 disorder ensemble (slide 6b)에서 matched-d일 때 우리 Ea 동일 확인
 
 ---
 
@@ -506,6 +531,7 @@ R²            | 0.999    | 0.992
 | v1.5 | 2026-06-10 | Slide 4 (Headline 4-message table) drafted — Tier 3 §8 post-processing 진입점 |
 | v1.6 | 2026-06-10 | Slide 5 (M1: 전자구조 둔감) drafted — DOS overlay + gap 1.76 vs 1.82 + modelc defect band note |
 | v1.7 | 2026-06-10 | Slide 5a DROPPED (slide 14 audit과 중복). Slide 6 (M2: σ prefactor) drafted — Arrhenius + D₀ 8× narrative |
+| v1.8 | 2026-06-10 | Slide 6 footnote + script v2: **실험 macroscopic Ea vs 우리 microscopic Ea framing**. Minafra/Kraft tension 우아하게 해소 (mutually compatible) |
 
 ---
 
