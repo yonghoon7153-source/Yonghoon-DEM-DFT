@@ -961,6 +961,84 @@ Li–S(4d, free S²⁻) ICOHP    | −2.57    | −2.52    | −2% (universal an
 
 ---
 
+## 1J. Slide 10 — Cross-check #2: 결합 길이의 반직관 (Counter-Intuitive)
+
+### 페이지 배치 (16:9)
+- 메인 결합 표 (P-S / Li-S / Li-Cl / S-S)
+- per-site 분해 (Li-Cl 4a vs 4d AS)
+- Voronoi 부피 보조 증거
+- 하단: 4 bullet key + 한 줄 mechanism 연결
+
+### 본문 텍스트
+
+**제목**: "10. Cl이 많아지면 Li–Cl이 멀어진다? — 반대다."
+
+**메인 표**:
+```
+결합 (Å, mean ± σ)      | LPSCl          | LPSCl₁.₆       | Δ
+────────────────────────┼────────────────┼────────────────┼─────────
+P–S                     | 2.073 ± 0.036  | 2.064 ± 0.011  | −0.5% (불변)
+Li–S                    | 2.461 ± 0.106  | 2.465 ± 0.094  | +0.2% (동일)
+★ Li–Cl                 | 2.607 ± 0.129  | 2.532 ± 0.119  | −3% 짧아짐 ↓
+S–S (cage)              | 3.595 ± 0.199  | 3.519 ± 0.178  | −2% (cage 압축)
+```
+
+**Per-site (Li-Cl만)**:
+```
+종류                     | LPSCl    | LPSCl₁.₆
+─────────────────────────┼──────────┼──────────
+Li–Cl (4a 정상 자리)     | 2.61 Å   | 2.59 Å   (−1%)
+Li–Cl (4d anti-site)     | 없음     | 2.45 Å   ★ 0.16 Å 짧음
+```
+
+**Voronoi 보조**:
+```
+Cl 다면체 V (Å³) | LPSCl 22.06 | LPSCl₁.₆ 20.31  ← Δ−1.7, 4d가 더 작은 증거
+```
+
+**Key**:
+```
+• Cl 늘면 Li–Cl 짧아짐 — 통념과 정반대
+• 동력 = 4d 자리(원래 S²⁻ 크기) Cl이 짧은 Li 배위
+• Voronoi V(Cl) 1.7 Å³ 감소 = 직접 증거
+• cage S–S도 동시 압축 = 4d AS 효과의 추가 증거
+```
+
+**하단**: "→ 짧고 강한 Li–Cl(4d) bond 형성 = M3 ICOHP +13%의 미시 출처"
+
+### 발표 스크립트 (60–65초)
+
+> "Cross-check #2 — 결합 길이의 반직관입니다.
+>
+> 직관적으로 'Cl이 많아지면 cage가 커지고 Li–Cl이 멀어진다'고 생각하기 쉽습니다. 표를 보시면 정반대입니다. Li–Cl이 2.607에서 2.532로 0.076 Å, 약 3% 짧아집니다. 줄어든 거예요.
+>
+> 어디서 짧아지는지 per-site로 풀면 더 명확합니다. 정상 4a 자리의 Li–Cl은 거의 안 변합니다. 진짜 차이는 4d 자리 anti-site에서 — 이 자리의 Li–Cl이 2.45 Å, 4a보다 0.16 Å 짧습니다.
+>
+> 왜 짧은가? 4d 자리는 원래 S²⁻가 앉던 자리예요. S²⁻ ionic radius가 1.84 Å, Cl⁻는 1.81 Å — Cl이 더 작습니다. 작은 Cl이 큰 S²⁻ 자리에 들어가니 주변 Li가 가까이 끌어옵니다. 그래서 짧은 Li–Cl.
+>
+> 진짜인지 cross-check할 수 있는 게 Voronoi 부피입니다. Cl 주위 다면체 부피가 22.06에서 20.31로 1.7 Å³ 줄어듭니다. '4d 자리가 더 작다'는 직접 증거. cage S–S도 같은 양 0.076 Å 압축됐고요.
+>
+> 정리하면 — Slide 7의 ICOHP +13%, 특히 4d-Cl AS의 −2.84 eV가 어디서 오는지의 미시 메커니즘이 여기 있습니다. 짧은 거리 + 적절한 ionic radius 매칭이 강한 결합을 만들고, 이게 M3 ionic glue와 M4 mechanical stiffening까지 다 연결됩니다."
+
+### 시각 디자인 노트
+- Li–Cl 행 + 4d AS 행 빨강 음영 + ★
+- "짧아짐 ↓" 화살표 (반직관 강조)
+- per-site 표는 메인 표 아래 작게
+- Voronoi 행 별도 박스
+- "정반대" + "짧고 강한" 강조
+
+### Q&A 백업
+- "Cl⁻ vs S²⁻ ionic radius?" → Cl⁻ 1.81 Å, S²⁻ 1.84 Å (6-coord Shannon). 작은 차이지만 4d에서 의미 있음
+- "왜 4a는 거의 안 변하나?" → 4a 원래 Cl 자리, sizing optimum. 4d만 mismatch
+- "Voronoi 계산?" → DFT V0에서 pyhull 다면체 분할. 무게 무관 순수 기하
+- "Li–S 왜 안 변하나?" → 두 시스템 모두 free S²⁻ 자리 그대로 (universal anchor, slide 9). PS₄-S는 P가 dominant
+- "cage S–S 압축 메시지?" → "4d AS가 주변 anion까지 끌어당김" 추가 증거. 단독 슬라이드는 아님
+- "측정 cutoff?" → P-S 2.3, Li-S 3.2, Li-Cl 3.4, S-S 4.0 — argyrodite 표준
+- "Wilkening?" → q·|q|/r에서 Li-S +17% (SI). 거리 + Bader charge 둘 다 강화 방향 일치
+- "이게 paper main figure 후보?" → YES. Cl excess paradox 시각화로 가장 강력한 figure
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -979,6 +1057,7 @@ Li–S(4d, free S²⁻) ICOHP    | −2.57    | −2.52    | −2% (universal an
 | v1.11 | 2026-06-11 | Slide 8 (M4: vacancy paradox 해소) drafted — clamped 52.31 동일 → relaxed-ion +25%, G +30% shear stiffening, Kim 2025 매칭, M3 4d-Cl mechanical 발현 |
 | v1.12 | 2026-06-11 | Slide 8a (Cij 분해: C44 +72% — shear lock-in mechanism) / 8b (4 cross-check: B↔B0, AFM, 600K MLIP, spilling+k×L) drafted. M4 클라이맥스 완성 |
 | v1.13 | 2026-06-11 | Slide 9 (cross-check #1: PS₄ universal backbone) drafted — 5 probe (P-S 길이/σ/배위/ICOHP/ELF/Bader) + universal anchor Li-S(4d), rigid block 결론 |
+| v1.14 | 2026-06-11 | Slide 10 (cross-check #2: counter-intuitive bond) drafted — Li–Cl −0.076 Å (4d AS 2.45 Å, 4a보다 0.16 짧음), Cl⁻ vs S²⁻ ionic radius 매칭 + Voronoi V −1.7 Å³ 직접 증거 |
 
 ---
 
