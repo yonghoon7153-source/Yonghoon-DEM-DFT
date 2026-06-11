@@ -869,10 +869,27 @@ CBM character  | S p 42% +   | S p 45% +
 > → **시나리오 A 확정**: 5 f.u. 인위 supercell이 진짜 artifact, 4 f.u. natural에서
 > Cl-rich Ea↓ 통념 (Minafra/Kraft) 정합. paper #1 mechanism: **σ gain = Ea↓ + D₀↑ 둘 다**.
 
-### 페이지 배치 (v3, 16:9)
-- 왼쪽: Arrhenius plot (comp1 4fu vs modelc, 3점 각각 R²=0.9998/0.992)
-- 오른쪽: 표 + 2-mechanism 분해 (1.75× Ea + 1.41× D₀ ≈ 2.5× total)
-- 하단: Schlem 2020 매칭 + 시나리오 A 메시지
+### ★ 실물 확정판 (as-built deck slide 9, 2026-06-11 — 검수 PASS, 수정 2건 대기)
+
+```
+제목: DFT / 우상단 refs: Schlem AEM 10,1903719 + Minafra SSI 346,115223 ✓
+■ M2: σ gain = lower barrier + more carriers (both work)
+   · Ea 0.253 vs 0.224 eV — Cl-rich lower barrier (exp. 0.25/0.22 EXACT)
+   · D₀ 4.11e-4 vs 5.8e-4 (1.4×) — vacancy carriers
+[좌] Origin Arrhenius (적=LPSCl 아래·가파름 / 청=LPSCl1.6 위·완만, fit 선 통과,
+     선 옆 0.253/0.224 라벨) + <Arrhenius plot> 캡션
+[좌하] D = D₀·exp(−Ea/kT) (D₀·Ea 청 강조) + σ 분해: 2.5× = 1.75× (lower Ea) ×
+      1.41× (vacancy carriers, D₀)
+[우] 표 6행: D600/800/1000 (단위 1행에) · Ea · D₀ · R²(중립). Schlem 행은 bullet로 흡수
+```
+
+검수: 수치·fit·색규칙 ✓ (fit은 docs/figures/slide09_arrhenius CSV — DB PRIMARY 재현 확인).
+수정 대기 2건: ① **MLIP MD 표기 부재** — D가 MLIP MD(UMA)임을 각주/캡션에 명시
+(slide 3·7의 honest 표기 결정과 일관 필요) ② **4 f.u. footnote 부재** —
+"※ LPSCl: 4 f.u. natural cubic (5 f.u. Ea 0.172는 artifact — audit trail SI)" 추가.
+다듬기(선택): Ea 라벨에 "Eₐ =", 단위 eV + 라벨 색을 선 색과 일치.
+
+
 
 ### 본문 텍스트 (v3 ACTIVE)
 
