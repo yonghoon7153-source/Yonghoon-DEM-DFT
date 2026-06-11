@@ -883,11 +883,14 @@ CBM character  | S p 42% +   | S p 45% +
 [우] 표 6행: D600/800/1000 (단위 1행에) · Ea · D₀ · R²(중립). Schlem 행은 bullet로 흡수
 ```
 
-검수: 수치·fit·색규칙 ✓ (fit은 docs/figures/slide09_arrhenius CSV — DB PRIMARY 재현 확인).
-수정 대기 2건: ① **MLIP MD 표기 부재** — D가 MLIP MD(UMA)임을 각주/캡션에 명시
-(slide 3·7의 honest 표기 결정과 일관 필요) ② **4 f.u. footnote 부재** —
-"※ LPSCl: 4 f.u. natural cubic (5 f.u. Ea 0.172는 artifact — audit trail SI)" 추가.
-다듬기(선택): Ea 라벨에 "Eₐ =", 단위 eV + 라벨 색을 선 색과 일치.
+검수 → **FINAL 확정 (2026-06-11)**: 수치·fit·색규칙 ✓ (fit은 docs/figures/slide09_arrhenius
+CSV — DB PRIMARY 재현 확인). ① MLIP MD 캡션 추가 확인 — "※ D from MLIP MD (UMA-s-1p1),
+600–1000 K" ② Ea 라벨 선 색과 일치 (0.253 적 / 0.224 청) 적용 확인.
+**결정: 4 f.u./5fu-artifact footnote는 슬라이드에서 생략** — 청중 미공개 수치의 선제 고백은
+불필요 (audit trail은 db/SI 유지). 발표 대본에서도 해당 단락 삭제 → Q&A 카드로 강등:
+"셀 의존성? → 5fu 인위 supercell은 0.172 (artifact), natural 4fu가 Schlem 정확 매칭.
+검증은 6b disorder ensemble이 정면으로 수행." (6b가 받아주는 흐름)
+캡션에 "natural cells" 한 단어 추가는 선택 권장.
 
 
 
