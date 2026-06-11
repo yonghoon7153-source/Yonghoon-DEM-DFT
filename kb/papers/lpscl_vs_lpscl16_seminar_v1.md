@@ -1439,7 +1439,12 @@ isotropic relations. footnote(벽돌-모르타르)는 대본 전담.
 > as-built 결정 (appendix안 철회): 8a(mechanism: C44 +72%) + 8b(robustness: 4
 > cross-check)를 한 장 "M4-1: shear lock-in & 4-way robustness"로 병합, 본편 deck 13.
 > 좌 = Cij 압축 3행 (C44 8.0→13.7 +72% ★ / C12 −18% / C11 −2%) ·
-> 우 = cross-check **2행 확정** (①B_VRH↔B₀ ±10% ②vs exp Kim+AFM 방향).
+> 우 = cross-check **2행 확정** (①B_VRH↔B₀ ±10% ②vs exp — **문헌만**: LPSCl 22.06↔lit.~23 ✓
+> + LPSCl1.6 Kim trend ✓).
+> ⚠ **AFM 사용 금지 (2026-06-11 provenance 감사)**: 구 8b의 "자체 AFM ~12/14.9 방향✓" 행 중
+> 14.9는 2026-06-08 group weekly report **타 멤버 측정** (세트: NdO 15.8, paper #2 비교군) —
+> 인용하려면 측정자 확인 필수. **LPSCl "~12"는 repo 전체에 측정 기록 없음** (Kim UPE BM 하한
+> 12–17과 혼동 추정) — 존재하지 않는 값. 관련 Q&A 카드의 "자체 AFM ~12" 문구도 폐기.
 > #3(600K MLIP +13%)은 Q&A 카드 강등 ("0K 결론 상온 유효?"), #4(spilling·k×L)는
 > k-mesh audit 슬라이드가 원주인이라 중복 제거 (2026-06-11 확정).
 
