@@ -172,6 +172,130 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 
 ---
 
+## 1B. Slide 2 — Scope (두 시스템 소개)
+
+### 페이지 배치 (16:9)
+- 좌·우 panel 나란히 (동격 비교)
+- VESTA 구조 그림 (cubic comp1 vs rhombo modelc, 같은 scale + viewing angle)
+
+### 본문 텍스트
+
+**상단**: "비교 대상: 두 argyrodite"
+
+**왼쪽 panel (comp1)**:
+```
+LPSCl (comp1) — Li₆PS₅Cl
+cubic F-43m · 4 f.u. · 52 atoms
+
+• ordered Li
+• Cl 전부 4a 자리
+• free S²⁻ 4d 자리
+```
+
+**오른쪽 panel (modelc)**:
+```
+LPSCl₁.₆ (modelc) — Li₅.₄PS₄.₄Cl₁.₆
+rhombohedral R3m · 5 f.u. · 62 atoms
+
+• Li 공공 0.6 / f.u.
+• Cl 4a + 4d anti-site
+• 4d 자리: S²⁻ + Cl 혼합
+```
+
+**하단 한 줄**: "→ 동일 protocol · 동일 §8 multi-probe로 paired 비교"
+
+### 발표 스크립트 (40–50초)
+
+> "먼저 비교 대상부터 보겠습니다.
+>
+> 왼쪽은 stoichiometric LPSCl, comp1. Li₆PS₅Cl, cubic argyrodite. **Li가 가득 차 있고, Cl이 전부 4a 한 자리에만, 4d에는 free S²⁻만** — 깨끗한 ordered 구조입니다.
+>
+> 오른쪽은 Cl-rich LPSCl₁.₆, modelc. Li₅.₄PS₄.₄Cl₁.₆, rhombohedral. **여기서 두 가지 disorder가 동시에 등장합니다**. 첫째, Li가 f.u.당 0.6개 빠집니다 — Li 공공. 둘째, 늘어난 Cl이 4a를 채우고 일부가 S²⁻의 자리인 4d로 침입합니다 — 4d-Cl anti-site.
+>
+> Slide 1에서 thesis로 깐 'Li 공공 + 4d-Cl anti-site'가 바로 여기서 시작됩니다.
+>
+> 두 시스템에 **완전히 동일한 §8 multi-probe 파이프라인**을 paired로 적용했습니다. 다음 슬라이드에서 이 pipeline을 보겠습니다."
+
+### 시각 디자인 노트
+- 두 panel 나란히 (동격 비교 강조)
+- VESTA 그림 동일 scale + viewing angle
+- "Li 공공" + "4d-Cl anti-site" 두 단어는 강조색 (#C8102E)
+- 하단 한 줄 굵게 + 화살표
+
+### Q&A 보조 노트
+- "왜 4 f.u. vs 5 f.u.로 cell 크기 다르냐?" → V/atom 19.55 vs 19.62 Å³로 거의 동일 (framework 보존), V/f.u. 254 vs 243 (Cl→S + Li 공공으로 f.u. 부피 수축, 실험 lattice 경향)
+- "k-mesh 다른 거 OK?" → comp1 4×4×4 (k×L=40), modelc 6×6×3 (k×L=42), convergence 동일 (slide 14 k-mesh audit)
+- "anti-site 비율 specific?" → modelc 8 Cl 중 4d에 3개 = 37.5%. stoichiometric 필연 (slide 17 cross-method convergence)
+
+---
+
+## 1C. Slide 3 — 3-Tier Pipeline (MLIP screen → DFT confirm → §8)
+
+### 페이지 배치 (16:9)
+
+3개 box 세로 stack, 위에서 아래로 화살표, gradation 색 (옅은→진한 청).
+
+### 본문 텍스트
+
+**상단**: "Pipeline: MLIP screen → DFT confirm → multi-probe"
+
+**Tier 1 box**:
+```
+Tier 1 · MLIP screening (hours)
+• Halogen enumerate — 45 configs
+• Li sublattice screen — top-5 × 20
+• 500 K Langevin anneal → champion
+UMA-s-1p1 (omat)
+```
+
+**Tier 2 box**:
+```
+Tier 2 · DFT validation (days)
+• BM3 EOS — 11 volumes (V/V₀ 0.96 – 1.06)
+• V₀, B₀ paper-grade (< 1 GPa)
+PBE + USPP, ecut 60 / 480 Ry
+```
+
+**Tier 3 box**:
+```
+Tier 3 · §8 multi-probe (weeks)
+structure    bonds · Voronoi · BVSE
+electronic   DOS · bands · ELF
+bonding      Bader · LOBSTER ICOHP
+transport    AIMD 600/800/1000 K
+mechanical   stress-strain Cij
+```
+
+**하단 한 줄**: "→ 4500 MLIP configs screened · 1 champion DFT-validated · 13 probes measured"
+
+### 발표 스크립트 (50–60초)
+
+> "Slide 3은 어떻게 두 시스템을 비교 가능한 수준으로 만들었는지 pipeline을 보여드립니다.
+>
+> 핵심은 **3-tier 구조**입니다.
+>
+> **Tier 1, MLIP screening**. argyrodite는 음이온이 어느 자리에 앉느냐, Li가 어떻게 배치되느냐가 cell 에너지에 영향을 줍니다. 특히 modelc 같은 Cl-rich에서는 4d 자리에 Cl이 들어가는 패턴이 중요해요. 이걸 DFT로 직접 enumerate하면 셀당 시간이 걸려서 4000개 조합을 다 못 돌립니다. 그래서 UMA foundation MLIP으로 합니다 — halogen enumerate 45개, Li screen top 5 × 20개, 500K annealing까지 hours 안에 끝납니다. 여기서 **champion 구조와 site occupancy**가 나옵니다.
+>
+> **Tier 2, DFT validation**. MLIP champion을 받아서 V₀와 B₀를 paper-grade 정확도로 잡습니다. 11개 volume에서 cell-fixed relax → Birch-Murnaghan 3차 EOS fit. B₀가 < 1 GPa 정확도로 나옵니다.
+>
+> **Tier 3, §8 multi-probe**. 확정된 V₀에서 13가지 probe를 적용합니다. 구조, 전자, 결합, 전송, 기계 — 5개 angle, 각각 multi-method.
+>
+> 두 시스템에 이 pipeline을 paired로 적용했다는 게 이번 비교의 method-consistency 기반입니다. 다음 슬라이드부터 결과 보겠습니다."
+
+### 시각 디자인 노트
+- 3개 box 세로 stack, 위→아래 화살표
+- 색조 gradation: Tier 1 옅은 청 → Tier 2 중간 청 → Tier 3 진한 청 (정밀도 ↑ 시각화)
+- 시간 스케일 (hours/days/weeks) 우측 끝에 회색 작은 글자
+- 하단 요약 굵게
+
+### Q&A 보조 노트
+- "UMA-s-1p1이 뭐냐?" → Meta foundation MLIP, omat task, 다양한 materials 학습. argyrodite는 학습 셋에 없지만 transferable
+- "Tier 1과 Tier 2가 동의하나?" → comp1: MLIP B₀ = 26.9 vs DFT 26.5 (1% 일치). modelc: MLIP 20.0 vs DFT 21.7 (8% 차이, anneal champion 효과 포함)
+- "왜 11개 volume?" → BM3 4 parameter free fit + B₀/B₀' covariance 제거 + R² > 0.999 보장
+- "Tier 1 champion이 진짜 global min?" → MLIP 절대값 unreliable, ranking만 사용. DFT relax로 valid 확인 (modelc anneal gain 114 meV로 실제 더 깊은 basin 발견)
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -180,13 +304,14 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 | v1.1 | 2026-06-10 | Slide 1 script v2 정제: 전자구조 0.06 eV 차이 정직하게 인정, 영문 포뮬러 / paper title 톤 제거 |
 | v1.2 | 2026-06-10 | Slide 1 script v3: 정량 수치 제거 (정성적 표현으로), 첫 페이지 톤 가벼움 |
 | v1.3 | 2026-06-10 | Slide 1 script v4 (★ ACTIVE): "궤도 character" → "전자구조 전반 패턴" vague (직접 비교 문헌 없음 회피). PS₄ 단정 유지 |
+| v1.4 | 2026-06-10 | Slide 2 (Scope) + Slide 3 (3-tier pipeline) drafted. site preference + cell parameter pipeline 압축 |
 
 ---
 
 ## 3. TODO (다음 작업)
 
-- [ ] Slide 2 (Scope) 본문 + script + layout
-- [ ] Slide 3 (Pipeline schematic) — 다이어그램 텍스트
+- [x] Slide 2 (Scope) — drafted 2026-06-10
+- [x] Slide 3 (Pipeline schematic) — drafted 2026-06-10
 - [ ] Slide 4 (Headline 표) — 색 강조 4행 디자인
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
