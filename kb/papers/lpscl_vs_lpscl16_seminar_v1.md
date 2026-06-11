@@ -1105,17 +1105,15 @@ D = D₀ · exp(−Ea/kT)
 
 ---
 
-## 1F-2. Slide 6b — Disorder Ensemble: Ea의 ground truth ★ → **본편 제외, APPENDIX 강등 (2026-06-11)**
+## 1F-2. Slide 6b — Disorder Ensemble: Ea의 ground truth ★ — **본편 유지 확정 (2026-06-11 정정)**
 
-> **as-built 결정**: 본편 deck에서 제외, appendix(백업) 슬라이드로 이동 — 내용은 유효
-> (6a처럼 틀린 게 아님)하나 성격이 방어용(referee defense)이라 본편 흐름·시간 절약 우선.
-> 트리거: "Ea가 셀/disorder 정도에 민감하지 않나" 질문 시 appendix로 점프.
-> 연쇄 수정: ① M2 대본 마지막 줄 "다음 슬라이드에서 검증" → 삭제, 2.5× punchline으로 종료
-> ② M2 Q&A 카드가 appendix 6b를 가리키도록 ("검증은 appendix disorder ensemble 참조")
-> ③ 본편 순서: M2(9) → 6c 저온(10) → M3(11). 6c는 본편 유지 — 방어가 아니라
-> 공격 메시지(no trade-off + Zuo RT cross-check)이므로.
-> appendix 제작 시 v3 정합판 사용: clean 행 = 0.253/0.224 (★ Schlem), 1.17은 footnote,
+> ⚠ 직전 "appendix 강등" 기록은 **사용자 의도 오독으로 철회** — 6b는 본편 유지,
+> 대신 **6c(저온 외삽)를 본편 제외**. 본편 순서: M2(9) → **6b(10)** → M3(11).
+> M2 대본 마지막 줄 "다음 슬라이드에서 정면으로 검증합니다" 핸드오프 유효.
+> as-built 제작 시 v3 정합판 사용: clean 행 = 0.253/0.224 (★ Schlem), 1.17은 footnote,
 > "σ 3×" bullet은 2.5×로 정정 또는 삭제.
+> 6c 메시지 흡수: 6b 대본 끝에 한 문장 — "두 효과가 같은 방향이라 저온일수록 격차가
+> 커집니다 — RT 외삽 ~4×, Zuo 실험 2.4×와 자릿수 정합. 저온 trade-off는 없습니다."
 
 > 역할 승격 (2026-06-11): clean-cell Ea의 셀 의존성 발견 후, 이 슬라이드가 M2 Ea 주장의 ground truth.
 > **✓ 검증 완료 (2026-06-11)**: ensemble_results.json의 `"v0_xyz": "db/structures/comp1_V0_k444.xyz"` —
@@ -1159,7 +1157,14 @@ disordered (d≈0.5)  | 0.177 ± 0.027 (n=3)     | 0.173 ± 0.039 (n=3)
 
 ---
 
-## 1F-3. Slide 6c — 저온 특성: **No T_cross, modelc wins at ALL T** (★ v3 ACTIVE 2026-06-11)
+## 1F-3. ~~Slide 6c — 저온 특성~~ — **발표 본편에서 DROPPED (2026-06-11)**, 내용은 paper/Q&A 보존
+
+> as-built 결정: 본편 제외. 사유 ① 표 7행 중 4행이 외삽(±30%, 200 K는 "불확실" 자인) —
+> 본편에서 공격 포인트화 위험 ② Zuo RT 2.4× ↔ 우리 외삽 4.3×의 1.8× 간극을 "자릿수
+> 정합"으로 부르는 프레임도 시비 여지 ③ 핵심 메시지(no T_cross, 저온 우세)는 6b 대본
+> 마지막 한 문장으로 흡수. Q&A 카드: "RT에선?" → "외삽 4.3×, Zuo 측정 2.4× — 방향·자릿수
+> 일치, 정량은 3-pt 외삽 ±30% 한계 명시. paper에선 600–1000 K 측정값만 인용."
+> 아래 본문은 paper #1 writeup용으로 보존 (★ v3 ACTIVE 2026-06-11 시점 내용).
 
 > **HOLD 해제** — 4fu 결과 확정 후 framing 결정. **T_cross 없음, 저온일수록 modelc 우세 ↑**.
 
