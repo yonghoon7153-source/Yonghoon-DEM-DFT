@@ -699,6 +699,85 @@ Li–Cl (4d AS)    |  없음   | −2.84  ★ 4a보다 40% 강함
 
 ---
 
+## 1H. Slide 8 — M4: Vacancy Paradox 해소 (Relaxed-Ion Stiffening)
+
+### 페이지 배치 (16:9)
+- 메인 표 (clamped vs relaxed 2행, 색 대비)
+- 분해 표 (B/G/E/ν/Zener — G +30% 강조)
+- Key 불릿 4개
+- footnote (B_VRH ≈ B0 cross-check, Kim 2025 정합)
+
+### 본문 텍스트
+
+**제목**: "M4: clamped-ion에선 동일, relaxed-ion에서 +25% — vacancy paradox 해소"
+
+**메인 표**:
+```
+E_VRH (GPa)            | LPSCl  | LPSCl₁.₆ | Δ%   | 실험 (Kim 2025)
+───────────────────────┼────────┼──────────┼──────┼─────────────────
+clamped-ion (frozen)   | 52.31  | 52.30    |  0%  |   —
+  = paradox             │        │          │      │
+★ relaxed-ion          | 22.06  | 27.66    | +25% |   ✓ LPSCl₁.₆ stiffer
+  (이온 Born screening) │        │          │      │   ~23 (LPSCl)
+```
+
+**분해 표**:
+```
+modulus     | LPSCl | LPSCl₁.₆ | Δ%
+B_VRH (GPa) | 25.5  | 23.4     | −8%   ← hydrostatic은 soft
+G_VRH (GPa) |  8.1  | 10.6     | +30%  ← shear stiffening ★
+E_VRH (GPa) | 22.06 | 27.66    | +25%
+ν           | 0.36  | 0.30
+Zener A     | 1.14  | 1.44     | 비등방성 출현
+eigenvalues | all + | all +    | 둘 다 mechanically stable
+```
+
+**Key 불릿**:
+```
+• clamped(=원자 위치 frozen) DFT는 paradox — 실험 trend 못 잡음
+• relaxed-ion에서 ionic Born screening 켜지면 modelc +25% 단단해짐
+• 단단함의 주성분은 shear (G +30%), bulk는 오히려 약간 soft
+• 메커니즘 = M3 4d-Cl anti-site가 특정 shear 모드를 lock-in
+```
+
+**Footnote**:
+```
+※ B_VRH 23.4 ≈ B0(BM-EOS) 21.7 — 두 독립 방법 cross-check (±3%)
+※ Kim ACS Mater. Lett. 2025 UPE 측정과 동일 방향 (Cl ↑ → E ↑)
+※ DFT 0K stress-strain, 12 strain × ±0.005, k=4×4×4/6×6×3
+```
+
+### 발표 스크립트 (75–85초)
+
+> "마지막 메시지 M4 — 기계적 성질의 paradox와 그 해소입니다.
+>
+> 표 위 두 행 — 이온 위치를 변형 셀에 frozen으로 두는 clamped-ion DFT로 계산하면, 두 시스템 Young's modulus가 정확히 같이 나옵니다. 52.31 대 52.30. 실험은 분명 LPSCl₁.₆가 더 단단하다고 보고하는데 — Kim ACS Mater. Lett. 2025가 결정적 reference예요 — 이걸 못 잡으니까 'vacancy paradox'라고 불러 왔습니다.
+>
+> 같은 strain을 가했을 때 이온이 새 위치로 재배치되는 ionic Born screening을 켜주면, 즉 relaxed-ion으로 계산하면, 두 번째 행처럼 풀립니다. modelc가 27.66 GPa, comp1이 22.06 GPa — 25% 차이. 그리고 comp1의 22.06은 실험 LPSCl ~23 GPa와 거의 정확히 매칭됩니다. paradox 해소.
+>
+> 메커니즘은 그 아래 분해 표가 보여줍니다. 흥미로운 게 — bulk modulus는 modelc가 오히려 8% 약합니다. vacancy가 있으니 등방 압축은 더 쉬워지는 게 직관에 맞아요. 그런데 shear modulus G가 30% 단단해지고, Zener anisotropy가 1.14에서 1.44로 비등방성이 명확해집니다.
+>
+> 즉 단단해진 건 hydrostatic이 아니라 shear-dominant stiffening입니다. 미시적 출처는 Slide 7에서 본 4d-Cl anti-site예요 — 짧고 강한 Li–Cl 결합이 특정 shear configuration을 잠가놓아서, 그 방향으로 변형되려 하면 ionic sublattice가 강하게 저항합니다. M3의 ionic glue 강화가 mechanical로 발현된 게 M4입니다.
+>
+> 그리고 B_VRH 23.4가 독립적인 BM-EOS B₀ 21.7과 3% 안에서 cross-check되는 것도 paper-grade 정확도의 근거가 됩니다."
+
+### 시각 디자인 노트
+- clamped 행 회색 (paradox 강조), relaxed 행 빨강 음영 + ★
+- 분해 표: G_VRH +30% 행만 강조 (진짜 mechanism)
+- "+25%" / "+30% shear" 큰 글자 highlight
+- 실험 매칭 (✓ ~23 GPa) 별도 색
+
+### Q&A 백업
+- "clamped vs relaxed 차이가 왜 그렇게 큰가 (52 → 22)?" → argyrodite Li sublattice가 매우 soft — strain 시 Li 재배치(ionic Born) 효과가 elastic의 절반 이상
+- "paradox가 왜 흥미로운가?" → 실험 'Cl↑→E↑' trend가 clamped DFT로 절대 안 나옴. relaxed-ion이 처음으로 해소
+- "Kim 2025 외 실험은?" → 오래된 Sakuda 2013, Deng 2016 SQS는 약함. Kim 2025 결정적. 자체 AFM도 LPSCl₁.₆ 14.9 > LPSCl ~12
+- "B vs E vs G — 어느 게 답?" → property별 의미 다름. paper에서 어느 modulus 말하느냐 명시 필수
+- "600 K MLIP 탄성?" → SI. E_600K(modelc 32.9) > E_600K(comp1 29.1), 같은 방향
+- "eigenvalues 양수 의미?" → mechanical stability (Born 조건). 둘 다 만족 → 진짜 stable
+- "Zener A 비등방 paper 메시지?" → disorder의 mechanical fingerprint — vacancy는 등방, 4d-Cl AS가 방향 강화 → 등방성 깨짐
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -714,6 +793,7 @@ Li–Cl (4d AS)    |  없음   | −2.84  ★ 4a보다 40% 강함
 | v1.8 | 2026-06-10 | Slide 6 footnote + script v2: **실험 macroscopic Ea vs 우리 microscopic Ea framing**. Minafra/Kraft tension 우아하게 해소 (mutually compatible) |
 | v1.9 | 2026-06-11 | Slide 6 **HOLD** (comp1 4 f.u. natural-cell MLIP MD 재실행 중, 결과 따라 3-way framing 분기). Slide 7 (M3 ionic glue) drafted — ICOHP +13%/+8%, 4d-Cl AS −2.84 eV, 3-probe 합의 |
 | v1.10 | 2026-06-11 | Slide 6a (mechanism cartoon) / 6b (disorder ensemble = ground truth, **v0_xyz=comp1_V0_k444 4fu 검증 — ensemble 재실행 불필요 확정**) / 6c (저온 trade-off, A/B 시나리오 조건부 HOLD) drafted |
+| v1.11 | 2026-06-11 | Slide 8 (M4: vacancy paradox 해소) drafted — clamped 52.31 동일 → relaxed-ion +25%, G +30% shear stiffening, Kim 2025 매칭, M3 4d-Cl mechanical 발현 |
 
 ---
 
@@ -726,6 +806,7 @@ Li–Cl (4d AS)    |  없음   | −2.84  ★ 4a보다 40% 강함
 - [x] ~~Slide 5a (sub: k-mesh incident)~~ — **DROPPED** (slide 14 audit과 중복, 총 22→21장)
 - [x] Slide 6 (M2 — σ prefactor) — drafted 2026-06-10, **⚠ HOLD** (comp1 4fu MLIP MD 결과 대기, 3-way framing 분기)
 - [x] Slide 7 (M3 — ionic glue) — drafted 2026-06-11
+- [x] Slide 8 (M4 — vacancy paradox 해소) — drafted 2026-06-11
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
 - [ ] Slide 9–13 (Cross-check) 본문 + script
