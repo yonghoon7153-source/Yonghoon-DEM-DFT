@@ -5,7 +5,7 @@
 > **저장 정책**: 이 문서는 발표 자료의 single source of truth. 새 슬라이드/스크립트
 > 추가될 때마다 이 파일에 append + commit.
 >
-> 마지막 업데이트: 2026-06-10 (slide 1 layout 확정)
+> 마지막 업데이트: 2026-06-11 (v1.33 — comp1 enumeration champion 역전 기록)
 
 ---
 
@@ -242,7 +242,7 @@ rhombohedral R3m · 5 f.u. · 62 atoms
 **Tier 1 box**:
 ```
 Tier 1 · MLIP screening (hours)
-• Halogen enumerate — 45 configs
+• Halogen enumerate — comp1 70 (C(8,4)) · modelc 45 (C(10,2))
 • Li sublattice screen — top-5 × 20
 • 500 K Langevin anneal → champion
 UMA-s-1p1 (omat)
@@ -274,7 +274,7 @@ mechanical   stress-strain Cij
 >
 > 핵심은 **3-tier 구조**입니다.
 >
-> **Tier 1, MLIP screening**. argyrodite는 음이온이 어느 자리에 앉느냐, Li가 어떻게 배치되느냐가 cell 에너지에 영향을 줍니다. 특히 modelc 같은 Cl-rich에서는 4d 자리에 Cl이 들어가는 패턴이 중요해요. 이걸 DFT로 직접 enumerate하면 셀당 시간이 걸려서 4000개 조합을 다 못 돌립니다. 그래서 UMA foundation MLIP으로 합니다 — halogen enumerate 45개, Li screen top 5 × 20개, 500K annealing까지 hours 안에 끝납니다. 여기서 **champion 구조와 site occupancy**가 나옵니다.
+> **Tier 1, MLIP screening**. argyrodite는 음이온이 어느 자리에 앉느냐, Li가 어떻게 배치되느냐가 cell 에너지에 영향을 줍니다. 특히 modelc 같은 Cl-rich에서는 4d 자리에 Cl이 들어가는 패턴이 중요해요. 이걸 DFT로 직접 enumerate하면 셀당 시간이 걸려서 4000개 조합을 다 못 돌립니다. 그래서 UMA foundation MLIP으로 합니다 — halogen enumerate (comp1 70개 = C(8,4), modelc 45개 = C(10,2)), Li screen top 5 × 20개, 500K annealing까지 hours 안에 끝납니다. 여기서 **champion 구조와 site occupancy**가 나옵니다.
 >
 > **Tier 2, DFT validation**. MLIP champion을 받아서 V₀와 B₀를 paper-grade 정확도로 잡습니다. 11개 volume에서 cell-fixed relax → Birch-Murnaghan 3차 EOS fit. B₀가 < 1 GPa 정확도로 나옵니다.
 >
@@ -293,6 +293,28 @@ mechanical   stress-strain Cij
 - "Tier 1과 Tier 2가 동의하나?" → comp1: MLIP B₀ = 26.9 vs DFT 26.5 (1% 일치). modelc: MLIP 20.0 vs DFT 21.7 (8% 차이, anneal champion 효과 포함)
 - "왜 11개 volume?" → BM3 4 parameter free fit + B₀/B₀' covariance 제거 + R² > 0.999 보장
 - "Tier 1 champion이 진짜 global min?" → MLIP 절대값 unreliable, ranking만 사용. DFT relax로 valid 확인 (modelc anneal gain 114 meV로 실제 더 깊은 basin 발견)
+
+### ★ 기록 — comp1 enumeration & champion 역전 (2026-06-11, Q&A 필수 카드)
+
+**comp1도 modelc와 동일하게 full enumeration pipeline을 통과했다** (손으로 ordered를 고른 것 아님):
+
+| 단계 | comp1 (LPSCl) | 결과 |
+|---|---|---|
+| Halogen enumerate | C(8,4) = **70 configs** (anion cage 8자리에 Cl 4개 = free-S 4개 자리 선택) | screening best = #39, **Cl 4a 2개 + 4c 2개 (mixed)** ⚠ Li는 Rietveld 고정 |
+| Li screening | 20 configs, spread **1162 meV** (halogen 단계 차이를 압도) | top5 = [0,1,8,15,9] |
+| 500 K anneal 50 ps | ranking_reversed: true (#15 4위→2위, #1 2위→5위) | champion #0, 2위와 **491 meV** 차 |
+| 최종 champion (→ v3 k444 V0) | **완전 ordered: Cl ×4 전부 4a, free-S ×4 전부 4d** | Voronoi Cl std = 0.00 Å³, S/Cl mixing 없음 |
+
+핵심 서사:
+1. **Li를 Rietveld에 고정한 1단계 halogen 랭킹은 mixed (2/2)를 best로 뽑았다** — 고정된 Li 분포에 맞는 anion 배치가 위로 올라옴.
+2. **Li sublattice를 풀어주는 순간 (screening + annealing) ordered가 역전** — Li–anion 커플링이 ordered 4a-Cl/4d-S를 선택. 1단계에서 멈췄다면 잘못된 mixed 구조로 paper를 쌓았을 것 = 다단계 pipeline의 필요성 입증.
+3. **같은 pipeline이 comp1에서는 ordered를, modelc에서는 12.5% 4d-Cl anti-site champion을 내놨다** → "disorder는 우리가 넣은 게 아니라 조성이 만든다" — paper thesis의 직접 증거.
+4. 실험 NMR/XRD의 25–40% 4d-Cl anti-site (finite-T)와 비교해 우리 0 K champion은 **lower bound** (정직한 caveat, `lpscl_structural_analysis_v3.md`).
+
+Q&A 한 줄 카드: *"Halogen-only 랭킹은 Li 고정 가정에 민감하다 — Li screening + annealing까지 가서야 ordered ground state가 확정됐고, 같은 절차가 modelc에서는 anti-site champion을 내놨다."*
+
+근거 레코드: `db/compositions/comp1.json` (halogen_screening n=70, best #39 / li_screening / li_annealing), `db/properties/elastic.json` (lineage "comp1 v2 anneal champion → V0_relax"), `db/structures/STRUCTURES_NOTE.md` (k444 ordered), `db/compositions/modelc_v3.json` (Voronoi comp1 Cl std 0.00).
+⚠ 로컬 DB에 "champion의 halogen branch" 직접 필드는 없음 — 위 3개 레코드의 조합으로 확정. 100% 못박으려면 container의 v2 screening/anneal 원본 output에서 champion 초기 anion 배치 확인.
 
 ---
 
@@ -2401,6 +2423,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 | v1.30 | 2026-06-11 | Slide 6c v3 ACTIVE — **No T_cross, modelc wins at ALL T**, 저온일수록 σ ratio ↑ (RT 4.3×, 200K 7×). Zuo 2023 RT 측정 2.4× ↔ 우리 외삽 4.3× 자릿수 정합. v1/v2 'vacancy 양날' framing 무효 — 4fu 자료로 reversed. |
 | v1.31 | 2026-06-11 | References 섹션 추가 (slide 본문 외, paper writing용) — Thermal/Calendar (Wu/Adeli/Schlem/Tan), Moisture (Strauss/Janek/Kraft/Bachman), Synthesis window (Adeli/Yu/Wu), Mech anisotropy SSB (Pan/Sun, Doux, Krauskopf, Lewis, Hatzell, Wang), Trade-off review (Janek/Zeier, Famprikis, Chen), Performance backing (Zuo/Schlem/Minafra/Kim/Gil/Deiseroth) + paper #1 framing summary 한 줄 |
 | v1.32 | 2026-06-11 | **Slide 22 (Trade-offs & Outlook: Paper #2 Bridge) drafted ★ FINAL** — Top panel 4 trade-offs (Wu thermal / Strauss moisture / Adeli synthesis window / Zener anisotropy), 공통 원인 4d-Cl AS (M3-M4와 동일). Bottom panel Oxide Doping Strategy: Sc₂O₃ (cascade strongest, de=-0.974) / B₂O₃ (anneal+EOS) / Nd₂O₃ (DFT-relaxed) / Al₂O₃ cluster. "구조적 무질서를 design" 마무리. 21장 deck 완성 |
+| v1.33 | 2026-06-11 | **1C에 comp1 enumeration & champion 역전 기록 추가 (Q&A 필수 카드)** — comp1도 C(8,4)=70 full enumeration 통과. Halogen 단계 (Li Rietveld 고정) best = #39 mixed 2/2였으나 Li screening (spread 1162 meV) + 500 K anneal에서 **ordered (Cl 전부 4a / free-S 전부 4d)로 역전** → v3 k444 V0의 출처. "같은 pipeline이 comp1 ordered / modelc 12.5% anti-site를 내놓음 = disorder는 조성이 만든다" thesis 직접 증거. Slide 3 본문 enumerate 수 정정: 45 → comp1 70 (8C4) · modelc 45 (10C2) |
 
 ---
 

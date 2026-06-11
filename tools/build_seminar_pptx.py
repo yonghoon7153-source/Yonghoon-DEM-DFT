@@ -225,7 +225,7 @@ add_title(s, "3. Pipeline: MLIP screen → DFT confirm → multi-probe")
 # 3 boxes
 tiers = [
     ("Tier 1 · MLIP screening", "hours", LIGHT_BLUE,
-     ["• Halogen enumerate (45 configs)",
+     ["• Halogen enumerate (comp1 70 = C(8,4) · modelc 45 = C(10,2))",
       "• Li sublattice screen (top-5 × 20)",
       "• 500 K Langevin anneal → champion",
       "• MLIP EOS pre-scan → V₀ 범위",
