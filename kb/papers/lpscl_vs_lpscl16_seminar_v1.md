@@ -671,7 +671,35 @@ stiff로 완전히 풀립니다." (M4 복선)
 
 ## 1D. Slide 4 — Headline Table (4 messages preview)
 
-### Tier 3 post-processing 진입점
+### ★ 실물 검수 기록 (as-built deck slide 7, 2026-06-11 — 수치 전수 검증 PASS, 표기 3건 수정 대기)
+
+```
+제목(좌상단): DFT
+상단 각주 (4줄): D₀ (carrier density × attempt frequency) / E_VRH (VRH average, relaxed-ion)
+                / Zener A = 2C₄₄/(C₁₁−C₁₂) / ICOHP 정의
+우상단 ref: Adv. Energy Mater., 10, 1903719 (2020).   ← Schlem (Ea 0.25/0.22 매칭 근거)
+
+■ Results of post-processing — 9행 표 (Property | LPSCl | LPSCl1.6 | Message)
+   gap 1.76/1.82 · Ea(MLIP MD) 0.253/0.224 · D600 3.09e-6/7.90e-6 (2.5×)
+   · D₀ 4.11e-4/5.8e-4 (1.4×, vacancy carriers) · ICOHP Li–Cl −1.86/−2.10 (+13%)
+   · Bader q(Li) +0.874/+0.882 · E_VRH 22.06/27.66 (+25%) · B₀ 26.2/21.7 (hydrostatic 역전)
+   · Zener A 1.14/1.44
+   좌측 회전 주석 (Ea 행): Schlem 실험 0.25/0.22 EXACT matching
+하단: → 4 messages: electronic invariance · dual-mechanism σ · stronger ionic glue
+      · vacancy paradox resolved
+```
+
+검수 결과 (db/properties/li_transport.json `headline_PAPER_GRADE` + master doc v3 대조):
+- ✓ 수치 9행 전부 DB 일치 (Ea 0.2532→0.253, 0.2235→0.224 반올림 정상. D 비 2.56→"2.5x",
+  D₀ 비 1.41→"1.4x" 정상. v3 4fu PRIMARY 데이터 사용 확인 — 구 5fu 값 아님)
+- ✓ 4-message 푸터가 v3 dual-mechanism framing과 일치, "MLIP MD" 정직 표기 유지
+- ⚠ 수정 대기 3건:
+  ① 오타: 회전 주석 "Eexperiment" → "Experiment"
+  ② Message 열 대소문자 불일치: "Nearly identical" (gap) vs "nearly identical" (Bader) — 통일
+  ③ 색 규칙: 표 전반이 청=우세/적=열세 (B₀·Zener 행 swap이 그 증거)인데,
+     "nearly identical" 두 행 (gap, Bader)도 적/청 분리되어 있음 — M1 '전자구조 동일'
+     메시지를 깎으므로 두 행은 중립(검정) 권장
+
 
 Slide 4는 **what & how (Slide 1–3) → why (Slide 5–8)** 전환 pivot.
 Tier 3 §8 multi-probe 결과를 한 페이지로 미리보기.
