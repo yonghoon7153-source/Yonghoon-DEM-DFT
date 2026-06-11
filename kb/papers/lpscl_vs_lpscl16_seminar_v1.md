@@ -5,7 +5,7 @@
 > **저장 정책**: 이 문서는 발표 자료의 single source of truth. 새 슬라이드/스크립트
 > 추가될 때마다 이 파일에 append + commit.
 >
-> 마지막 업데이트: 2026-06-11 (v1.33 — comp1 enumeration champion 역전 기록)
+> 마지막 업데이트: 2026-06-12 (v1.34 — Slide 1 연구실 템플릿 + Slide 2 thesis 통합)
 
 ---
 
@@ -29,7 +29,47 @@
 
 ---
 
-## 1. Slide 1 — Title (Layout v1)
+## 1. Slide 1 — Title (Layout v2 — 연구실 표준 템플릿, 2026-06-12)
+
+> **v2 결정**: 연구실 표준 템플릿 (Research Seminar + 캠퍼스 일러스트 + Part divider) 사용.
+> **Title에는 큰 그림 (thesis) 넣지 않음** — thesis는 Slide 2 (Scope+Thesis 통합)로 이동.
+> 아래 Layout v1 (thesis box 버전)은 보존용.
+
+### 페이지 배치 v2 (연구실 템플릿 기준)
+
+```
+┌──────────────────────────────────────────────┐
+│ ▓▓ (상단 네이비 바)             June XX, 2026 │
+│                                              │
+│  Research Seminar                            │  ← 네이비 bold
+│  LPSCl vs LPSCl₁.₆: A Multi-Probe DFT/AIMD   │  ← 부제 (회색)
+│  Comparison of Argyrodite Solid Electrolytes │
+│                                              │
+│  Yonghoon An                                 │
+│  Division of Materials Science & Engineering,│
+│  Hanyang University                          │
+│  (E-mail : yonghoon71@hanyang.ac.kr)         │
+│                                              │
+│  [한양대 로고]      [캠퍼스 일러스트]           │
+│ ▓▓ (하단 네이비 바)                           │
+└──────────────────────────────────────────────┘
+```
+
+- 부제는 영어 한 줄(또는 두 줄)로만: 시스템 명시 정도. thesis/정량 일절 없음.
+- Part divider 슬라이드 활용 가능: Part 1 = Intro & Pipeline (slides 2–4),
+  Part 2 = 4 Messages (5–8), Part 3 = Cross-check & Defense (9–16),
+  Part 4 = Robustness & Outlook (17–22).
+
+### 발표 스크립트 v5 ★ ACTIVE (15초, title은 인사만)
+
+> "안녕하세요, 오늘 research seminar는 DFT 파트 technical report로,
+> stoichiometric LPSCl과 Cl-rich LPSCl₁.₆ 두 argyrodite의 정면 비교를 다루겠습니다."
+
+(질문 제기 + 결론 선언 + thesis는 전부 Slide 2로 이동)
+
+---
+
+### (보존) Layout v1 — thesis box 버전
 
 ### 페이지 배치 (16:9 가로형 기준)
 
@@ -172,15 +212,37 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 
 ---
 
-## 1B. Slide 2 — Scope (두 시스템 소개)
+## 1B. Slide 2 — Scope + Thesis (★ v2 통합 2026-06-12 — 구 Slide 1 thesis 흡수)
 
-### 페이지 배치 (16:9)
-- 좌·우 panel 나란히 (동격 비교)
-- VESTA 구조 그림 (cubic comp1 vs rhombo modelc, 같은 scale + viewing angle)
+> **v2 결정**: Title이 연구실 표준 템플릿이 되면서, 구 Slide 1의 질문 제기 + 결론 선언 +
+> thesis가 이 슬라이드로 통합됨. "두 시스템 소개"와 "thesis 선언"을 한 장에서 처리.
 
-### 본문 텍스트
+### 페이지 배치 v2 (16:9)
+- **상단 1/4**: 질문 + Thesis 띠 (연회색 box, 좌측 강조선)
+  - "왜 LPSCl₁.₆가 더 빠르고 단단한가?" → "전자구조가 아니라 **Li 공공 + 4d-Cl anti-site 무질서**다"
+- **하단 3/4**: 좌·우 panel 나란히 (동격 비교) + VESTA 구조 그림 (같은 scale + viewing angle)
 
-**상단**: "비교 대상: 두 argyrodite"
+### 발표 스크립트 v2 ★ ACTIVE (70–80초, 구 slide 1 v4 흡수)
+
+> "비교 대상부터 보겠습니다.
+>
+> 왼쪽은 stoichiometric LPSCl, 오른쪽은 Cl-rich 변종 LPSCl₁.₆입니다. 실험적으로 **LPSCl₁.₆가 더 빠르고 더 단단하다**는 게 보고되어 있는데, 그 차이가 어디서 오는지가 이번 파트의 질문입니다.
+>
+> 결론부터 말씀드리겠습니다. **전자구조에 작은 차이는 있긴 있습니다. 하지만 그 작은 차이로는 conductivity나 stiffness의 큰 차이를 설명할 수 없습니다.** 차이의 진짜 source는 구조에 있습니다 — 위 thesis 그대로, **Li 공공과 4d-Cl anti-site 무질서**입니다.
+>
+> 그 두 가지가 어디서 오는지 구조를 보시면 — 왼쪽 comp1은 **Li가 가득 차 있고 Cl이 전부 4a, 4d에는 free S²⁻만** 있는 깨끗한 ordered 구조입니다. 오른쪽 modelc에서 **두 가지 disorder가 동시에 등장합니다**: Li가 f.u.당 0.6개 빠지는 Li 공공, 그리고 늘어난 Cl이 S²⁻ 자리인 4d로 침입하는 anti-site.
+>
+> 두 시스템에 완전히 동일한 multi-probe 파이프라인을 paired로 적용했고, 다음 30분 동안 4개의 메시지로 풀어 드리겠습니다."
+
+### 본문 텍스트 (v2)
+
+**상단 thesis 띠**:
+```
+Q. 왜 LPSCl₁.₆가 더 빠르고 단단한가? (실험: σ ~3×, E +25%)
+A. 차이는 "전자구조"가 아니라 — Li 공공 + 4d-Cl anti-site 무질서에서 온다.
+```
+
+**패널 상단**: "비교 대상: 두 argyrodite"
 
 **왼쪽 panel (comp1)**:
 ```
@@ -204,7 +266,7 @@ rhombohedral R3m · 5 f.u. · 62 atoms
 
 **하단 한 줄**: "→ 동일 protocol · 동일 §8 multi-probe로 paired 비교"
 
-### 발표 스크립트 (40–50초)
+### (보존) 발표 스크립트 v1 — thesis가 slide 1에 있던 버전 (40–50초)
 
 > "먼저 비교 대상부터 보겠습니다.
 >
@@ -2424,6 +2486,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 | v1.31 | 2026-06-11 | References 섹션 추가 (slide 본문 외, paper writing용) — Thermal/Calendar (Wu/Adeli/Schlem/Tan), Moisture (Strauss/Janek/Kraft/Bachman), Synthesis window (Adeli/Yu/Wu), Mech anisotropy SSB (Pan/Sun, Doux, Krauskopf, Lewis, Hatzell, Wang), Trade-off review (Janek/Zeier, Famprikis, Chen), Performance backing (Zuo/Schlem/Minafra/Kim/Gil/Deiseroth) + paper #1 framing summary 한 줄 |
 | v1.32 | 2026-06-11 | **Slide 22 (Trade-offs & Outlook: Paper #2 Bridge) drafted ★ FINAL** — Top panel 4 trade-offs (Wu thermal / Strauss moisture / Adeli synthesis window / Zener anisotropy), 공통 원인 4d-Cl AS (M3-M4와 동일). Bottom panel Oxide Doping Strategy: Sc₂O₃ (cascade strongest, de=-0.974) / B₂O₃ (anneal+EOS) / Nd₂O₃ (DFT-relaxed) / Al₂O₃ cluster. "구조적 무질서를 design" 마무리. 21장 deck 완성 |
 | v1.33 | 2026-06-11 | **1C에 comp1 enumeration & champion 역전 기록 추가 (Q&A 필수 카드)** — comp1도 C(8,4)=70 full enumeration 통과. Halogen 단계 (Li Rietveld 고정) best = #39 mixed 2/2였으나 Li screening (spread 1162 meV) + 500 K anneal에서 **ordered (Cl 전부 4a / free-S 전부 4d)로 역전** → v3 k444 V0의 출처. "같은 pipeline이 comp1 ordered / modelc 12.5% anti-site를 내놓음 = disorder는 조성이 만든다" thesis 직접 증거. Slide 3 본문 enumerate 수 정정: 45 → comp1 70 (8C4) · modelc 45 (10C2) |
+| v1.34 | 2026-06-12 | **Slide 1 → 연구실 표준 템플릿 (Layout v2)**: Research Seminar 타이틀 + Part divider 사용, **title에 thesis 넣지 않음**. 구 slide 1의 질문/결론/thesis는 **Slide 2 (Scope+Thesis 통합, script v2 70–80초)**로 흡수. Part 매핑 제안: P1 Intro(2–4) / P2 4 Messages(5–8) / P3 Cross-check & Defense(9–16) / P4 Robustness & Outlook(17–22). 구 버전 모두 보존 |
 
 ---
 
