@@ -1438,9 +1438,14 @@ isotropic relations. footnote(벽돌-모르타르)는 대본 전담.
 
 > as-built 결정 (appendix안 철회): 8a(mechanism: C44 +72%) + 8b(robustness: 4
 > cross-check)를 한 장 "M4-1: shear lock-in & 4-way robustness"로 병합, 본편 deck 13.
-> 좌 = Cij 압축 3행 (C44 8.0→13.7 +72% ★ / C12 −18% / C11 −2%) ·
-> 우 = cross-check **2행 확정** (①B_VRH↔B₀ ±10% ②vs exp — **문헌만**: LPSCl 22.06↔lit.~23 ✓
-> + LPSCl1.6 Kim trend ✓).
+> **최종 구조 (2026-06-11 확정)**: M4-1 = mechanism 전용 — cross-check 표 전체 제거.
+> ①B↔B₀는 M4 표②의 B행에 "(EOS 26.23/21.71)" 괄호로 인라인 흡수 ✓
+> ②E vs lit.은 구두 (indep. DFT 22.1 일치 + Kim trend) — M4 결정 유지.
+> as-built slide 13: ■ M4-1: Shear lock-in mechanism / 각주 Cij 정의 / bullets 2개
+> (+72% C44 · C11 −2%) / [좌] Cij 표 3행 (C44 8.0적/13.7청/+72%청 · C12 · C11 중립)
+> / [우] 수식 4개: G_V=(C11−C12+3C44)/5, B_V=(C11+2C12)/3, B_VRH=½(B_V+B_R),
+> G_VRH=½(G_V+G_R) + V/R/H 정의 캡션. Reuss는 compliance 일반형만 허용 —
+> cubic 닫힌꼴 G_R은 평균 Cij 검산 함정 (modelc 12.0 vs 실제 8.97) 금지.
 > ⚠ **"실험 ~23 GPa" 프레임도 정정 (2026-06-11 문헌 감사)**: elastic.json의 "matches
 > literature ~23 (He et al.)"은 계산/실험 혼동 — 22.1은 **계산값** (Deng 2016 JES 163,A67
 > DFT SQS; JPCC 2025 제일원리도 22.1/G 8.1). 진짜 실험은 Kim 2025 UPE 펠릿 15–22(HT)/
