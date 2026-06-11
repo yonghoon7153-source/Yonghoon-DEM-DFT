@@ -234,26 +234,32 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 >
 > 두 시스템에 완전히 동일한 multi-probe 파이프라인을 paired로 적용했고, 다음 30분 동안 4개의 메시지로 풀어 드리겠습니다."
 
-### ★ 실물 확정판 (v4, 2026-06-12 — 실제 제작 슬라이드 반영)
+### ★ 실물 확정판 (v4 FINAL, 2026-06-12 — 실제 제작 슬라이드 반영, 검수 완료)
 
 ```
 제목(좌상단): DFT  (Part 1 제목 그대로)
-우상단 각주: f.u.: formula unit / anti-sites: site disorder
-우상단 refs: Angew 62 e202213228 (2023) · Angew 58 8681 (2019) [+ Kim ACS Mater. Lett. 2025 추가 예정]
+우상단 각주: f.u.: formula unit / anti sites: site disorder
+우상단 refs: Angew. Chem. Int. Ed., 62, e202213228 (2023).
+            ACS Mater. Lett., 7, 724 (2025).   ← Y.J. Kim (UPE, stiffness backing)
 
 ■ Two argyrodites: Systems & Key finding
    · Experiments: Li₅.₄PS₄.₄Cl₁.₆ shows ~3× higher σ and +25% stiffness than Li₆PS₅Cl
-       (청색 강조: ~3x higher σ / +25% stiffness)
+       (청색: ~3x higher σ / +25% stiffness)
    · Not electronic structure — It originates from structural disorder: Li vacancies + 4d-Cl anti-sites
        (적색: electronic structure ✗ / 청색: Li vacancies, 4d-Cl anti-sites ✓)
 
-그림: 중앙 하단 Li₆PS₅Cl primitive cell → 좌 "4f.u." 화살표 → cubic Li₆PS₅Cl
-                                       → 우 "5f.u." 화살표 → rhombohedral Li₅.₄PS₄.₄Cl₁.₆
-   ("같은 모체에서 두 시스템" paired 비교를 그림 한 장으로)
+그림: 중앙 하단 <LPSCl primitive cell> Wyckoff 라벨:
+       4a (0,0,0) Cl · 4b (½,½,½) P · 16e (PS₄) · 4d (¾,¾,¾) Free S²⁻
+     → 좌 "4f.u." 화살표 → cubic <LPSCl>
+     → 우 "5f.u." 화살표 → rhombohedral <LPSCl₁.₆> (4a / 4d 화살표 주석)
+     하단 범례: Li(회) P(보라) S(노랑) Cl(초록)
 ```
 
+검수 이력: ① "Not electronic structure" 대비줄 추가 ② Kim ref 채움 (7, 724)
+③ Wyckoff 16e(0,0,0)→4b(½,½,½) 정정, free-S 4c→4d 통일 (본문 4d-Cl과 정합)
+④ modelc 화살표 4c→4d. Wyckoff 라벨은 slide 10/11 (per-bond, Voronoi)에서 재사용 예정.
+
 발표 보충 멘트 (정확성): "+25%는 저희 DFT relaxed-ion 결과고, 실험(Kim 2025 UPE)은 Cl↑→E↑ 경향으로 확인됩니다."
-남은 일: Y. J. Kim et al., ACS Mater. Lett., 7, 724 (2025) — ref 3줄째로 추가 (DOI 10.1021/acsmaterialslett.4c02029).
 
 ### 본문 텍스트 (v3 — 연구실 템플릿 형식, 2026-06-12)
 
