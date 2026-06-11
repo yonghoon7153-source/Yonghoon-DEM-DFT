@@ -1443,9 +1443,10 @@ isotropic relations. footnote(벽돌-모르타르)는 대본 전담.
 > ②E vs lit.은 구두 (indep. DFT 22.1 일치 + Kim trend) — M4 결정 유지.
 > as-built slide 13: ■ M4-1: Shear lock-in mechanism / 각주 Cij 정의 / bullets 2개
 > (+72% C44 · C11 −2%) / [좌] Cij 표 3행 (C44 8.0적/13.7청/+72%청 · C12 · C11 중립)
-> / [우] 수식 4개: G_V=(C11−C12+3C44)/5, B_V=(C11+2C12)/3, B_VRH=½(B_V+B_R),
-> G_VRH=½(G_V+G_R) + V/R/H 정의 캡션. Reuss는 compliance 일반형만 허용 —
-> cubic 닫힌꼴 G_R은 평균 Cij 검산 함정 (modelc 12.0 vs 실제 8.97) 금지.
+> / [우] 수식 6개 FINAL: G_V (C11적·C44청 — bullet 색 호응), B_V, Hill 2개,
+> B_R·G_R compliance 일반형 + "(S=C⁻¹; cubic: B_R=B_V)" 캡션. V/R/H 정의는 상단
+> 각주로 이동. cubic 닫힌꼴 G_R 금지 결정 유지 (검산 함정).
+> **검수 FINAL (2026-06-11)** — 잔여 선택: 표 C_44 → C₄₄ 아래첨자 통일.
 > ⚠ **"실험 ~23 GPa" 프레임도 정정 (2026-06-11 문헌 감사)**: elastic.json의 "matches
 > literature ~23 (He et al.)"은 계산/실험 혼동 — 22.1은 **계산값** (Deng 2016 JES 163,A67
 > DFT SQS; JPCC 2025 제일원리도 22.1/G 8.1). 진짜 실험은 Kim 2025 UPE 펠릿 15–22(HT)/
