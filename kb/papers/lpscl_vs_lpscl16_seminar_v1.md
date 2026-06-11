@@ -429,15 +429,104 @@ CBM character  | S p 42% +   | S p 45% +
 
 ---
 
-## 1F. Slide 6 — M2: σ는 prefactor 우세 (vacancy carrier)
+## 1F. Slide 6 — M2: σ 차이 = barrier↓ + prefactor↑ 둘 다 (★ HOLD 해제 2026-06-11)
 
-> ⚠ **HOLD (2026-06-11)** — comp1 **4 f.u. natural-cell MLIP MD** 재실행 중 (gabia GPU 단독, ETA ~12-15h).
-> 현재 Ea 비교(0.172 vs 0.224)는 comp1 5 f.u. 인위 supercell 기반이라 방향이 lit (Cl-rich Ea↓ 통념)과
-> 반대. matched-disorder ensemble (0.177 ≈ 0.173)에서는 동일. 4 f.u. 결과에 따라 세 가지 framing 분기:
-> - 4fu Ea ≈ 0.25-0.30 → "barrier↓ + prefactor↑ 둘 다" (lit 정합)
-> - 4fu Ea ≈ 0.18 → "matched-d Ea 동일, prefactor 우세" (현 v2 유지)
-> - 4fu Ea ≈ 0.17 → "MLIP ordered-LPSCl bias caveat + prefactor 우세"
-> **값 나오면 본문/표/스크립트 확정.** 그 전까지 아래 draft는 잠정본.
+> ✅ **HOLD 해제 (2026-06-11)** — comp1 4 f.u. natural-cell MLIP MD 결과 확정.
+> **Ea = 0.2532 eV (R²=0.9998)**, Schlem 2020 LPSCl ordered ~0.25 eV 정확 일치.
+> → **시나리오 A 확정**: 5 f.u. 인위 supercell이 진짜 artifact, 4 f.u. natural에서
+> Cl-rich Ea↓ 통념 (Minafra/Kraft) 정합. paper #1 mechanism: **σ gain = Ea↓ + D₀↑ 둘 다**.
+
+### 페이지 배치 (v3, 16:9)
+- 왼쪽: Arrhenius plot (comp1 4fu vs modelc, 3점 각각 R²=0.9998/0.992)
+- 오른쪽: 표 + 2-mechanism 분해 (1.75× Ea + 1.41× D₀ ≈ 2.5× total)
+- 하단: Schlem 2020 매칭 + 시나리오 A 메시지
+
+### 본문 텍스트 (v3 ACTIVE)
+
+**제목**: "M2: σ 차이 = barrier ↓ + prefactor ↑ 둘 다 작용"
+
+**표 (v3)**:
+```
+T (K)                | LPSCl (4fu)  | LPSCl₁.₆ (5fu)
+─────────────────────┼──────────────┼─────────────
+D(600 K) cm²/s       | 3.09e-6      | 7.90e-6
+D(800 K)             | 1.03e-5      | 2.05e-5
+D(1000 K)            | 2.20e-5      | 4.55e-5
+
+Ea (eV)              | 0.253 ★       | 0.224 ★
+D₀ (cm²/s)           | 4.11e-4       | 5.8e-4
+R²                   | 0.9998        | 0.992
+
+Schlem 2020 실험      | LPSCl ~0.25 ✓ | Cl-rich ~0.22 ✓
+```
+
+**2-mechanism 분해 (σ ~2.5× 이유)**:
+```
+σ(modelc) / σ(comp1) = 2.5× at 600 K, 분해:
+
+  Ea contribution:  exp((0.253−0.224)/kT) at 600K = 1.75× (barrier ↓)
+  D₀ contribution:  5.8e-4 / 4.11e-4 = 1.41× (carrier ↑)
+  ─────────────────────────────────────────────
+  Total:             1.75 × 1.41 = 2.47× ≈ 측정값 2.5× ✓
+```
+
+**Key**:
+```
+• Cl-rich가 lower Ea (Minafra/Kraft direction confirmed) + higher D₀
+• 두 효과 거의 동등 기여 (Ea: 1.75×, D₀: 1.41×)
+• Schlem 2020 실험과 EXACT 매칭 (LPSCl 0.25, Cl-rich 0.22)
+• 5 f.u. comp1 (Ea=0.172) = 인위 supercell artifact, 4 f.u. natural로 정정
+```
+
+**Footnote**:
+```
+※ 4 f.u. natural F-43m cubic (comp1_V0_k444.xyz, paper-grade DFT V0) 사용
+※ 5 f.u. (인위 cubic supercell)에서 Ea=0.172은 artifact — 본 paper에서는 4fu 채택
+※ db/properties/li_transport.json (2026-06-11 갱신)
+```
+
+### 발표 스크립트 v3 (75–85초, ★ ACTIVE)
+
+> "Message 2, σ 차이의 mechanism. 두 효과가 함께 작용합니다.
+>
+> 왼쪽 Arrhenius plot — 3점 모두 깨끗하게 직선 위, comp1 R² 0.9998, modelc 0.992. 두 시스템 다 paper-grade fit.
+>
+> 표를 보세요. comp1 Ea = 0.253, modelc Ea = 0.224. **Cl-rich가 lower Ea — Minafra/Kraft '구조적 무질서가 barrier를 낮춘다' narrative와 정확히 정합**합니다. 그리고 **Schlem 2020 실험과도 정확 매칭** — LPSCl ordered 0.25, Cl-rich 0.22.
+>
+> D₀ prefactor도 comp1 4.11×10⁻⁴ vs modelc 5.8×10⁻⁴, modelc가 1.4배 큽니다. vacancy로 carrier density가 늘어난 효과.
+>
+> σ 비율 2.5×를 분해하면 — **Ea contribution은 exp(0.029/kT) = 1.75×** (barrier 효과), **D₀ contribution은 1.41×** (carrier 효과). 둘 다 같은 방향, 거의 동등하게 기여. 곱하면 **2.47×, 측정값 2.5×와 거의 정확** 일치.
+>
+> 정리: **Cl-rich의 σ 향상은 barrier 감소와 carrier 증가 둘 다에서 옵니다**. 이전에 5 f.u. 인위 supercell로 측정했을 때는 comp1 Ea가 0.172로 비정상적으로 낮게 나와서 'prefactor 단독 효과'로 잘못 해석한 적이 있는데, **자연 4 f.u. F-43m cubic으로 재측정하니까 Schlem 실험값과 정확 매칭되면서 dual mechanism이 확정**됩니다.
+>
+> 다음 sub에서 5fu→4fu 정정 과정 자세히, 그 다음 disorder ensemble까지 보여드리겠습니다."
+
+### v1 / v2 보존 (audit trail)
+
+**v1 (5fu, 'prefactor only')**: 
+- Ea(comp1) 0.172 < Ea(modelc) 0.224 (counter-intuitive direction)
+- "차이는 prefactor에서, barrier는 반대 방향" framing
+- 2026-06-10 ~ 06-11 morning
+
+**v2 (5fu + 'macro vs micro' framing)**:
+- Microscopic vs macroscopic Ea distinction 추가
+- "Minafra/Kraft와 mutually compatible" framing
+- 2026-06-11 morning
+
+**v3 (4fu natural, ★ ACTIVE)**:
+- Ea(comp1) 0.253 > Ea(modelc) 0.224 (lit 정합 direction)
+- "barrier + prefactor 둘 다" framing
+- 2026-06-11 evening (comp1 4fu MD 완료)
+
+→ db에 v1/v2/v3 모두 audit trail로 보존. paper에서는 v3 사용.
+
+### Q&A (v3)
+- "왜 5fu가 artifact?" → cubic F-43m natural cell은 4 f.u. (52 atoms). 5 f.u. supercell은 비정수 stoichiometry로 인위 구성, Li sublattice가 정상 ordered 배치 못 함 → effective disorder 주입 → Ea underestimate
+- "Schlem 매칭이 왜 강력?" → Schlem 2020은 paper-grade Cl-content series 측정. 우리 둘 다 ±0.005 안에서 match — same-method comparison의 정확성 입증
+- "Minafra/Kraft narrative 완전 인정?" → Direction 인정. 다만 absolute Ea (실험 macro)와 우리 micro Ea는 여전히 다른 양 — caveat은 유지
+- "5fu 데이터 SI?" → Yes, audit trail로 SI에 포함. transparency 보임
+- "기존 disorder ensemble (Ea=0.177)과 어떻게 정합?" → 6b에서 풀이: 4fu(d=0) 0.253 → 4fu(d=0.5) 0.177로 자연스럽게 줄어듦 (Minafra effect). Disorder가 Ea 진짜 낮춤
+- "modelc도 자연 cell?" → Yes. modelc rhombohedral 5 f.u.가 자연 cell. 비교 cell mismatch (cubic 4 vs rhombo 5) 있지만 intensive property라 OK
 
 ### 페이지 배치 (16:9)
 - 왼쪽: Arrhenius plot (ln D vs 1/T, comp1 ▲ 파랑, modelc ● 빨강)
@@ -2126,6 +2215,7 @@ modelc:
 | v1.26 | 2026-06-11 | Slide 18 (Robustness #2: Oxidation 4-axis framework) drafted — Gil-González + Zuo + Wu 통합. Axis 1 (DRAW), 2 (Cl-rich WINS K_eff>0), 3 (Cl-rich WINS R_int), 4 (Cl-rich LOSES calendar). modelc σ 향상이 oxidation penalty 없이 옴, 비용은 thermal shelf life |
 | v1.27 | 2026-06-11 | Slide 19 (Robustness #3: Constrained ESW + 분해반응) drafted — Cl-scan (Cl=1.6 K_eff=20 sweet spot), oxidation onset 2.14V 분해반응 (modelc 0.7 Li vs comp1 1.75 Li, 1.6× LiCl), Zuo 2023 Eq(1)/(2) 정량 cross-validation |
 | v1.28 | 2026-06-11 | Slide 20 (Referee defense #1: 4-tension audit) + Slide 21 (Referee defense #2: 9-caveat consolidated) drafted — paper #1 nuanced honesty + limitations transparency. Section F (Referee defense) 완성 |
+| v1.29 | 2026-06-11 | **comp1 4 f.u. natural MLIP MD 결과 도착**: Ea=0.2532, D₀=4.11e-4, R²=0.9998 — Schlem 2020 LPSCl ordered ~0.25 EXACT match. **Slide 6 HOLD 해제 → v3 ACTIVE**: σ gain = Ea↓ (1.75×) + D₀↑ (1.41×) ≈ 2.5× 둘 다 작용. Minafra/Kraft direction 정합. 5 f.u. (Ea=0.172) = 인위 supercell artifact 확정. **db/properties/li_transport.json 갱신**: comp1_v3_5fu SUPERSEDED, comp1_v3_4fu_natural PRIMARY. Paper #1 mechanism narrative 변경 (prefactor-only → dual mechanism). |
 
 ---
 

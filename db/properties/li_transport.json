@@ -41,7 +41,8 @@
       }
     },
     {
-      "id": "comp1_v3",
+      "id": "comp1_v3_5fu_SUPERSEDED",
+      "_status": "SUPERSEDED 2026-06-11 by comp1_v3_4fu_natural — 5 f.u. cubic supercell is ARTIFICIAL (cubic F-43m natural cell is 4 f.u.), Ea=0.172 found to be artifact of artificial cell construction. Kept here for audit trail.",
       "composition": "Li6PS5Cl",
       "version": "v3",
       "method": "UMA-s-1p1 (task=omat) AIMD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps each, timestep 2 fs, 1000 frames. EXACT same protocol as modelc_v3.",
@@ -63,31 +64,71 @@
       ],
       "_800K_rerun_note": "Original T800 D was anomalously low (3.41e-6, broke Arrhenius). Re-ran T800 with fresh MaxwellBoltzmann seed, same 110ps/2fs protocol → D=5.91e-6 (monotonic). R² jumped 0.77→0.999.",
       "arrhenius_fit": {
-        "PAPER_GRADE": {"Ea_eV": 0.172, "R2": 0.9986, "window_ps": [2, 50],
-          "note": "800K rerun + [2,50] window (identical to modelc). SOLID — use this."},
-        "fit_2_50ps_FINAL": {"Ea_eV": 0.172, "R2": 0.9986,
+        "_DEPRECATED_5fu_artifact": {"Ea_eV": 0.172, "R2": 0.9986, "window_ps": [2, 50],
+          "note": "ARTIFACT of artificial 5 f.u. supercell construction. Natural 4 f.u. cubic gives Ea=0.253 (Schlem 2020 LPSCl ordered match). See comp1_v3_4fu_natural."},
+        "fit_2_50ps_FINAL_SUPERSEDED": {"Ea_eV": 0.172, "R2": 0.9986,
           "D_600": 2.677e-06, "D_800": 5.907e-06, "D_1000": 1.019e-05},
-        "superseded_fit_2_20ps": {"Ea_eV": 0.220, "R2": 0.867, "_note": "pre-rerun, inconsistent window"},
         "T_fit_K": [600, 800, 1000]
       },
       "framework_immobile_check": "D(Cl,P,S) ~ 6-9e-8 cm²/s ≈ 1/40-1/60 of D(Li) → framework rigid, Li-only conductor ✓ (same as modelc)"
+    },
+    {
+      "id": "comp1_v3_4fu_natural",
+      "_status": "★ PRIMARY paper-grade (2026-06-11) — natural F-43m cubic 4 f.u. conventional cell. Supersedes comp1_v3_5fu (artificial cell artifact).",
+      "composition": "Li6PS5Cl",
+      "version": "v3_4fu",
+      "method": "UMA-s-1p1 (task=omat) MLIP MD, Langevin NVT 600/800/1000 K, equilib 10 ps + prod 100 ps, dt 2 fs, friction 0.01/fs. Same protocol as 5fu but on natural F-43m cubic 4 f.u. cell.",
+      "completed_date": "2026-06-11",
+      "data_path": "gabia:/data/work/runs/mlmd_4fu_comp1/",
+      "v0_source": "db/structures/comp1_V0_k444.xyz (4 f.u. cubic, F-43m natural, paper-grade DFT V0)",
+      "n_atoms": 52,
+      "n_Li": 24,
+      "V_A3": 1016.62,
+      "diffusion_per_T_fit_2_50ps": [
+        {"T_K": 600,  "D_Li_cm2_per_s": 3.086e-06},
+        {"T_K": 800,  "D_Li_cm2_per_s": 1.026e-05},
+        {"T_K": 1000, "D_Li_cm2_per_s": 2.198e-05}
+      ],
+      "arrhenius_fit": {
+        "PAPER_GRADE": {
+          "Ea_eV": 0.2532,
+          "D0_cm2_per_s": 4.110e-04,
+          "R2": 0.9998,
+          "window_ps": [2, 50],
+          "T_fit_K": [600, 800, 1000],
+          "note": "★ HIGH-QUALITY 3-pt fit (R²=0.9998). Ea matches Schlem 2020 LPSCl ordered ~0.25 eV EXACTLY."
+        }
+      },
+      "experimental_match": {
+        "Schlem_2020_LPSCl_ordered": "Ea = 0.25 eV — our 0.2532 within 0.003 eV ★ EXACT MATCH",
+        "experimental_LPSCl_bulk_range": "0.16 - 0.30 eV (synthesis dependent). Our value in mid-range."
+      },
+      "_change_from_5fu": {
+        "Ea": "0.172 (5fu artifact) -> 0.2532 (4fu natural). Δ +0.081 eV.",
+        "D0": "7.5e-5 (5fu) -> 4.11e-4 (4fu). Δ +5.5×.",
+        "D(600K)": "2.68e-6 -> 3.09e-6 (~unchanged, since both Ea and D0 shifted up by similar factor)",
+        "_explanation": "Natural F-43m cubic cell properly captures ordered Li sublattice energetics. Artificial 5 f.u. cell introduces effective disorder (low energy spread 0.1 meV vs natural rough ~1162 meV), lowering effective barrier."
+      },
+      "framework_immobile_check": "PAPER-GRADE D(Li) >> framework D — Li-only conductor confirmed"
     }
   ],
   "comp1_vs_modelc_comparison": {
-    "_status": "PAPER-GRADE: both [2,50] window, both R²~0.99, comp1 800K rerun fixed",
-    "headline": {
-      "comp1_LPSCl":    {"Ea_eV": 0.172, "R2": 0.999, "D600": 2.68e-6, "D800": 5.91e-6, "D1000": 1.02e-5},
-      "modelc_LPSCl16": {"Ea_eV": 0.2235, "R2": 0.992, "D600": 7.90e-6, "D800": 2.05e-5, "D1000": 4.55e-5}
+    "_status": "★ UPDATED 2026-06-11 with comp1 4fu natural cell. Previous 'prefactor-only' framing SUPERSEDED.",
+    "headline_PAPER_GRADE": {
+      "comp1_LPSCl_4fu_natural":  {"Ea_eV": 0.2532, "D0_cm2_per_s": 4.11e-4, "R2": 0.9998, "D600": 3.09e-6, "D800": 1.03e-5, "D1000": 2.20e-5},
+      "modelc_LPSCl16_5fu_natural": {"Ea_eV": 0.2235, "D0_cm2_per_s": 5.8e-4, "R2": 0.992,  "D600": 7.90e-6, "D800": 2.05e-5, "D1000": 4.55e-5}
     },
-    "robust_findings": {
-      "Ea": "comp1 (LPSCl) Ea=0.172 eV < modelc (LPSCl1.6) Ea=0.224 eV. Both within experimental bulk range (LPSCl ~0.16-0.25, Cl-rich Schlem2020 0.22). modelc matches Schlem Cl-rich 0.22 exactly.",
-      "D_at_simulated_T": "modelc 2.9-3.5× faster than comp1 at 600-1000 K, DESPITE higher Ea → modelc has much higher prefactor D0 (modelc ~6e-4 vs comp1 ~7.5e-5, ~8×). Vacancy-rich modelc = many more carriers/paths.",
+    "robust_findings_v2_2026_06_11": {
+      "Ea_direction_CORRECTED": "comp1 4fu Ea=0.2532 > modelc Ea=0.2235 (Δ=0.030 eV). Cl-rich Ea LOWER than ordered LPSCl — CONSISTENT with Minafra/Kraft 'disorder lowers Ea' narrative and Schlem 2020 experimental values (LPSCl ordered ~0.25, Cl-rich ~0.22).",
+      "D_sigma_ratio": "modelc ~2.5x faster than comp1 at 600-1000 K. Matches experimental sigma(LPSCl1.6) > sigma(LPSCl) ~3x (Zuo 2023 2.9 vs 7.0 mS/cm).",
+      "mechanism_dual": "σ gain decomposes into TWO contributions: (1) Ea effect — exp((0.253-0.224)/kT) = 1.75× at 600K from Cl-rich barrier reduction; (2) D0 effect — 5.8e-4/4.11e-4 = 1.41× from modelc vacancy carrier density. Roughly EQUAL contributions, both positive (lit consistent direction).",
       "framework": "both Li-only conductors (framework D ~1/40-1/60 of Li)."
     },
-    "mechanism_interpretation": {
-      "two_competing_effects": "LPSCl1.6 (modelc): higher per-hop barrier (0.224, disordered Cl-rich cage) BUT ~8× higher prefactor (vacancy carriers) → net faster at operating/high T. LPSCl (comp1): lower barrier (0.172) but far fewer carriers.",
-      "prefactor_dominates_in_simulated_range": "At 600-1000K the carrier-rich prefactor wins → modelc faster, matching experimental σ(LPSCl1.6) > σ(LPSCl).",
-      "RT_caveat": "3-point Arrhenius extrapolation to 300K is uncertain; do not over-interpret D(300K). The robust statement is the measured 600-1000K behavior + Ea values."
+    "mechanism_interpretation_v2_2026_06_11": {
+      "dual_mechanism": "Cl-rich LPSCl1.6 is faster than ordered LPSCl due to BOTH lower per-hop barrier (Schlem disorder effect, Minafra/Kraft narrative) AND larger prefactor (vacancy carrier density). Both effects in same direction, both literature-supported. Roughly equal contributions to ~3x σ enhancement.",
+      "paper_message": "σ(LPSCl1.6) > σ(LPSCl) is NOT 'prefactor only' (our earlier 5fu-based reading) NOR 'barrier only' (Minafra simplification). It's BOTH — Cl-rich/vacancy structure simultaneously flattens the Li hopping landscape (Ea↓ via 4d-Cl AS distorting cage) AND increases mobile carrier concentration (vacancy + Cl-substituted sites).",
+      "5fu_to_4fu_correction_2026_06_11": "Earlier comp1 5fu Ea=0.172 was an artifact of artificial 5 f.u. cubic supercell (natural F-43m is 4 f.u.). 4fu natural rerun gives Ea=0.2532 (matches Schlem 2020 LPSCl exactly). modelc 5fu Ea=0.224 unchanged (rhombohedral 5fu is natural). Paper #1 narrative thus reversed from 'prefactor dominant, barrier counter-direction' to 'barrier + prefactor both contribute in literature direction'.",
+      "RT_caveat": "3-point Arrhenius extrapolation to 300K still uncertain; quote 600-1000K values."
     }
   },
   "disorder_ensemble_2026_06_09": {
