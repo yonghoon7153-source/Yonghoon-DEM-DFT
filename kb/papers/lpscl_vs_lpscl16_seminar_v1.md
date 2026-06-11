@@ -1421,7 +1421,9 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 > as-built 결정 (appendix안 철회): 8a(mechanism: C44 +72%) + 8b(robustness: 4
 > cross-check)를 한 장 "M4-1: shear lock-in & 4-way robustness"로 병합, 본편 deck 13.
 > 좌 = Cij 압축 3행 (C44 8.0→13.7 +72% ★ / C12 −18% / C11 −2%) ·
-> 우 = cross-check 압축 4행 (B↔B₀ ±10% / exp Kim+AFM 방향 / 600K MLIP +13% / method).
+> 우 = cross-check **2행 확정** (①B_VRH↔B₀ ±10% ②vs exp Kim+AFM 방향).
+> #3(600K MLIP +13%)은 Q&A 카드 강등 ("0K 결론 상온 유효?"), #4(spilling·k×L)는
+> k-mesh audit 슬라이드가 원주인이라 중복 제거 (2026-06-11 확정).
 
 ## (보존) Slide 8a — Shear Mode Lock-in (mechanism 시각화)
 
