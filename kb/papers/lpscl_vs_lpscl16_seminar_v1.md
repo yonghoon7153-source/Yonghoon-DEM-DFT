@@ -1685,8 +1685,9 @@ Cl 다면체 V (Å³) | LPSCl 22.06 | LPSCl₁.₆ 20.31  ← Δ−1.7, 4d가 �
 ■ M3: Li-anion ionic glue strengthens in LPSCl1.6 / refs Deiseroth+Kraft ✓
 bullets 2개 (3-probe bullet은 의도적 생략 — 대본 커버) ✓
 [좌] 그룹 막대 |ICOHP| 4쌍 + Δ% 화살표 ✓ (라벨 2자리 통일은 선택 잔여)
-[우] Li–Cl per-site 분해 표 3행 (−1.855/24 · −2.026 +9.2%/38 90% · −2.836★청 +40%/4 10%)
-     + "→ contribution to the +13% average: vacancy field 69% + anti-site 31%" ✓
+[우] Li–Cl per-site 분해 표 3행 — 기준 명시 최종: −1.855/24 · −2.026 (+9.2% vs LPSCl)/38
+     90% · −2.836★청 (+40% vs 4a)/4 10% + "→ contribution ... 69% + 31%" ✓
+     막대 라벨 2자리 통일 (6.00/2.10) 반영 ✓
 69/31 유도 기록: 순차 분해 — ①vac field (2.026−1.855)×42=7.18 ②AS 추가 (2.836−2.026)×4=3.24
 → 7.18:3.24 = 69:31, 합 0.248/bond = 평균 +13% 정확 닫힘. (+40%는 4a 수준 대비 관례)
 ```
