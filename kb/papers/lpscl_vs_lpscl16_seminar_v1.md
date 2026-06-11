@@ -688,28 +688,69 @@ disordered (d≈0.5)  | 0.177 ± 0.027 (n=3)     | 0.173 ± 0.039 (n=3)
 
 ---
 
-## 1F-3. Slide 6c — 저온 trade-off (조건부 ⚠ HOLD)
+## 1F-3. Slide 6c — 저온 특성: **No T_cross, modelc wins at ALL T** (★ v3 ACTIVE 2026-06-11)
 
-> slide 6 main과 연동 HOLD. 4 f.u. 결과로 A/B 시나리오 결정.
+> **HOLD 해제** — 4fu 결과 확정 후 framing 결정. **T_cross 없음, 저온일수록 modelc 우세 ↑**.
 
-### 본문 텍스트
+### 페이지 배치 (16:9)
+- 왼쪽: σ ratio vs T plot (modelc/comp1, 200-1000 K)
+- 오른쪽: T별 ratio 표 + Zuo 2023 RT cross-check
+- 하단: "no trade-off" + RT 정합 message
+
+### 본문 텍스트 (v3 ACTIVE)
+
+**제목**: "6c. 저온 특성 — modelc wins at ALL T, no trade-off"
+
+**σ ratio table (modelc / comp1)**:
 ```
-시나리오 A — clean-cell 값 (0.172 vs 0.224) 기준:
-  T_cross ≈ 290 K. 그 위 modelc 우세 (prefactor), 그 아래 comp1 역전 (낮은 barrier).
-  vacancy = 양날.
-
-시나리오 B — matched-disorder 값 (0.18 ≈ 0.17) 기준:
-  Ea 같음 → 교차 없음. modelc가 전 온도에서 ~3× 빠름 (D₀ 8×).
-  'Cl-rich 저온 불리' 주장 소멸.
-
-실험 단서: RT에서 modelc ~2× 우세 (Zuo) → B와 더 정합
+T (K)  | Ea contrib. | D₀ contrib. | σ_ratio | 비고
+───────┼─────────────┼─────────────┼─────────┼─────────────
+1000   | 1.40×        | 1.41×       | 1.97×   | 측정
+800    | 1.51         | 1.41        | 2.12    | 측정
+600 ★  | 1.75         | 1.41        | 2.47    | 측정값 2.5× ✓
+500    | 1.97         | 1.41        | 2.78    | 외삽
+400    | 2.36         | 1.41        | 3.33    | 외삽
+300 ★  | 3.07         | 1.41        | 4.33    | 외삽 (Zuo 2.4× cf)
+200    | 4.94         | 1.41        | 6.96    | 외삽 (불확실)
 ```
 
-### 스크립트 (35초, 선택적)
-> "저온 특성 한 가지만 짚고 가겠습니다. 만약 clean-cell Ea 값을 그대로 믿으면 290 K 부근에서 두 직선이 교차해서 '심부 저온에서는 LPSCl이 역전한다'는 예측이 나옵니다. 하지만 방금 보신 matched-disorder 결과처럼 Ea가 같다면 교차 자체가 없고, modelc가 전 온도에서 빠릅니다. 실험이 RT에서 modelc 2배 우세를 보이는 건 후자와 더 정합합니다. 지금 진행 중인 4 f.u. 검증이 끝나면 어느 쪽인지 확정해서 보고하겠습니다."
+**Key**:
+```
+• T_cross 없음 — Ea와 D₀ 둘 다 modelc 우세 같은 방향
+• 저온일수록 σ ratio 더 커짐 (Arrhenius)
+• Zuo 2023 RT 측정 2.4× ↔ 우리 외삽 4.3× — 자릿수 정합 ±30%
+• 'vacancy 양날' (v2) framing 무효 — Cl-rich 저온도 우위
+```
 
-### 노트
-- 시나리오 B 채택 시 이 슬라이드는 "교차 없음 — vacancy 우위는 전 온도" 한 줄로 축소, SI로 이동 가능
+**Footnote**:
+```
+※ 3-pt Arrhenius extrap 200-300K 영역 uncertainty ±30%
+※ Zuo 2023 RT: σ(Li6PS5Cl)=2.9, σ(Li5.5PS4.5Cl1.5)=7.0 mS/cm → 2.41×
+※ Haven ratio = 1 가정 (σ_NE upper bound)
+```
+
+### 발표 스크립트 v3 (40초)
+
+> "저온 특성 한 가지 짚고 갑니다. 이전 v2에서는 'T_cross 290 K, 저온 LPSCl 역전' 가능성을 다뤘지만, 4 f.u. natural cell 결과로 완전 무효화됐어요.
+>
+> 표 — Ea와 D₀ 둘 다 modelc 우세 같은 방향. Arrhenius 식에서 두 효과가 곱하기로 작용해서 T 내려갈수록 σ ratio 더 커집니다. 1000 K 2×, 600 K 2.5×, RT 4.3×, 200 K 7×.
+>
+> 실험 cross-check도 깨끗 — Zuo 2023 RT 측정 σ 비율 2.4× ↔ 우리 외삽 4.3×, 자릿수 정합. 약간 over-estimate은 3-pt RT 외삽 + Haven 가정.
+>
+> 결론: performance 관점 저온 trade-off 없음. Cl-rich가 모든 T에서 우세하고 저온일수록 격차 더 큼. 'vacancy 양날' framing은 v2 artifact, 무효."
+
+### Q&A
+- "RT 외삽 신뢰?" → 정량 ±30%, direction robust. Zuo 자릿수 정합
+- "200 K 이하?" → 3-pt extrap 불확실 명시. paper는 600-1000K + RT만 quote
+- "non-Arrhenius?" → LPSCl 드뭄. disorder ensemble도 단일 Ea fit
+- "Haven 0.3-0.7?" → 절대값만. ratio는 cancellation
+- "thermal shelf life와 모순?" → 다른 axis. σ는 사용 중 transport, calendar는 idle 분해
+
+### v1/v2 보존 (audit trail)
+
+**v1 (5fu A)**: T_cross 290 K, comp1 저온 역전 — 5fu Ea direction artifact 기반 ⚠ INVALID
+**v2 (5fu B)**: matched-d Ea 동일, no T_cross — disorder ensemble만 신뢰
+**v3 (4fu ACTIVE)**: No T_cross robust, 저온 우세 ↑, Zuo RT cross-check ✓
 
 ---
 
@@ -2216,6 +2257,7 @@ modelc:
 | v1.27 | 2026-06-11 | Slide 19 (Robustness #3: Constrained ESW + 분해반응) drafted — Cl-scan (Cl=1.6 K_eff=20 sweet spot), oxidation onset 2.14V 분해반응 (modelc 0.7 Li vs comp1 1.75 Li, 1.6× LiCl), Zuo 2023 Eq(1)/(2) 정량 cross-validation |
 | v1.28 | 2026-06-11 | Slide 20 (Referee defense #1: 4-tension audit) + Slide 21 (Referee defense #2: 9-caveat consolidated) drafted — paper #1 nuanced honesty + limitations transparency. Section F (Referee defense) 완성 |
 | v1.29 | 2026-06-11 | **comp1 4 f.u. natural MLIP MD 결과 도착**: Ea=0.2532, D₀=4.11e-4, R²=0.9998 — Schlem 2020 LPSCl ordered ~0.25 EXACT match. **Slide 6 HOLD 해제 → v3 ACTIVE**: σ gain = Ea↓ (1.75×) + D₀↑ (1.41×) ≈ 2.5× 둘 다 작용. Minafra/Kraft direction 정합. 5 f.u. (Ea=0.172) = 인위 supercell artifact 확정. **db/properties/li_transport.json 갱신**: comp1_v3_5fu SUPERSEDED, comp1_v3_4fu_natural PRIMARY. Paper #1 mechanism narrative 변경 (prefactor-only → dual mechanism). |
+| v1.30 | 2026-06-11 | Slide 6c v3 ACTIVE — **No T_cross, modelc wins at ALL T**, 저온일수록 σ ratio ↑ (RT 4.3×, 200K 7×). Zuo 2023 RT 측정 2.4× ↔ 우리 외삽 4.3× 자릿수 정합. v1/v2 'vacancy 양날' framing 무효 — 4fu 자료로 reversed. |
 
 ---
 
