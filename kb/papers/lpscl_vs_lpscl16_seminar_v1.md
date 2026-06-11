@@ -354,7 +354,48 @@ rhombohedral R3m · 5 f.u. · 62 atoms
 
 ## 1C. Slide 3 — 3-Tier Pipeline (MLIP screen → DFT confirm → §8)
 
-### 페이지 배치 (16:9)
+### ★ 연구실 템플릿 v2 (2026-06-12 ACTIVE)
+
+**제목**: "Computational Pipeline: MLIP Screening → DFT Validation"
+
+**본문 (■/· 구조)**:
+```
+■ 3-tier pipeline (same protocol for both systems)
+   · Tier 1 — MLIP screening (UMA-s-1p1, ~hours): halogen enumeration
+     (LPSCl 70 = C(8,4) · LPSCl₁.₆ 45 = C(10,2)) → Li screen (top-5 × 20) → 500 K anneal → champion
+   · Tier 2 — DFT validation (~days): BM3 EOS, 11 volumes (V/V₀ 0.96–1.06) → V₀, B₀ < 1 GPa
+   · Tier 3 — Multi-probe (~weeks): structure · electronic · bonding · transport · mechanical (13 probes)
+
+■ Champion = annealed ground state (not hand-picked)
+   · LPSCl: pipeline converged to the ordered cell (Cl@4a, free S²⁻@4d)
+   · LPSCl₁.₆: same pipeline yields a 4d-Cl anti-site champion → disorder comes from composition
+     (적색/굵게: "disorder comes from composition" — thesis 첫 근거)
+```
+
+**하단 한 줄**: "4,500+ MLIP configs screened → 2 champions DFT-validated → 13 probes"
+
+**발표 스크립트 v2 ★ ACTIVE (70–80초)**:
+
+> "이 비교를 가능하게 한 pipeline입니다. 핵심은 3단계 구조예요.
+> **Tier 1, MLIP screening.** Argyrodite는 음이온이 어느 자리에 앉는지, Li가 어떻게 배치되는지가
+> 에너지를 결정합니다. DFT 전수조사는 비용이 감당이 안 되니 UMA foundation MLIP으로 합니다 —
+> halogen 배치 LPSCl 70개, LPSCl₁.₆ 45개 전수 나열, Li 배치 screening, 500 K annealing까지.
+> 몇 시간 안에 champion이 나옵니다.
+> **여기서 강조하고 싶은 게 하나 있습니다.** 왼쪽의 ordered 구조는 '교과서 구조니까' 골라 넣은 게
+> 아닙니다. Halogen 배치만 보면 mixed 배치가 위로 올라오는데, **Li sublattice까지 풀어서 annealing
+> 하면 ordered가 역전해서 ground state로 확정**됩니다. 그리고 **완전히 같은 절차**를 Cl-rich에
+> 적용하면 이번엔 4d-Cl anti-site champion이 나옵니다. 즉 — ordered도 disorder도 저희가 넣은 게
+> 아니라 **조성이 만든 결과**입니다. 오늘 thesis의 첫 번째 근거예요.
+> **Tier 2**에서 champion을 DFT 11-volume EOS로 V₀/B₀ paper-grade 확정, **Tier 3**에서 13가지
+> probe를 양쪽에 똑같이 적용했습니다. 다음 슬라이드부터 그 결과입니다."
+
+**Q&A v2 추가 카드**:
+- "ordered가 진짜 ground state?" → C(8,4)=70 전수 + Li 20 configs (spread 1.16 eV) + 500 K anneal.
+  screening→anneal 랭킹 역전 실제 관측 (#15: 4위→2위) — 다단계 필요성의 증거
+- "anti-site 비율 임의?" → champion의 4d-Cl은 절차의 출력. 실험 25–40% (finite-T) 대비 0 K lower bound 명시
+- "500 K anneal 안 녹나?" → Li sublattice hopping 온도, anion frame 불변 확인, 50 ps Langevin
+
+### (보존) 페이지 배치 v1 (16:9)
 
 3개 box 세로 stack, 위에서 아래로 화살표, gradation 색 (옅은→진한 청).
 
