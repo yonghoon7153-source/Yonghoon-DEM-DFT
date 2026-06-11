@@ -1947,6 +1947,152 @@ modelc:
 
 ---
 
+## 1T. Slide 20 — Referee Defense #1: Literature Tension Audit
+
+### 페이지 배치 (16:9)
+- 4-tension 표 (tension / 우리 결과 / 해소 method)
+- 각 tension의 lit reference + 우리 해소 방법
+
+### 본문 텍스트
+
+**제목**: "20. 4가지 literature tension — 모두 해소"
+
+**4 tension 표**:
+```
+# | Tension                       | 우리 결과              | 해소
+──┼───────────────────────────────┼────────────────────────┼─────────────────────
+1 | Oxidation: Cl-rich 더 안정?   | 0-pressure DRAW         | 4-axis framework
+  | (lit consensus: yes)           | (slide 18 axis 1)       | (slide 18-19)
+2 | Ea-vs-prefactor mechanism     | comp1 Ea < modelc        | macro vs micro Ea
+  | (Minafra: disorder→Ea↓)        | but D₀ 8× explain σ     | + disorder ensemble (6b)
+3 | Elastic vacancy paradox       | clamped 52 vs 52        | relaxed-ion +25%
+  | (Kim 2025: Cl→E up)            | (동일)                  | matches Kim ★
+4 | Band gap absolute             | PBE/USPP 1.76 vs       | method offset, Δgap
+  | (PBE PAW ~2.3)                 | literature ~2.3         | 0.06 robust
+```
+
+**Key**:
+```
+• 4 tension 모두 "method/축 분리"로 해소 — artifact 아님
+• Tension 1: axis 1만 우리; axis 2-3에서 Cl-rich WINS
+• Tension 2: macro vs micro Ea, mutually compatible
+• Tension 3: relaxed-ion 정확한 method로 Kim 직접 정합 ★
+• Tension 4: pseudo offset 양쪽 동일, ratio robust
+```
+
+**Footnote**:
+```
+※ 5번째 tension (UMA Li3N topology)는 paper #2 영역, 본 paper 무관 — 제외
+※ db/properties/literature_tensions_audit.json
+※ Resolved 2026-06-08~09: oxidation + disorder_ensemble + Kim 2025 read
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Referee defense. paper #1 결과가 dominant lit narrative와 부딪히는 4 지점을 정직하게 정리하고 해소 방법.
+>
+> Tension 1 oxidation. 'Cl-rich 더 안정' lit consensus vs 우리 'DRAW' — slide 18 4-axis framework로 해소. 우리 calc는 axis 1 (intrinsic). lit consensus는 axis 2 (constrained) 또는 axis 3 (cell). 다른 measurement axis, 양쪽 valid.
+>
+> Tension 2 conductivity mechanism. Minafra 'disorder→Ea↓' vs 우리 'Cl-rich Ea 약간 높음' direction. 두 가지 해소: macroscopic Ea (실험 GB 포함) vs microscopic Ea (우리 bulk per-hop) 다른 양. 6/9-10 disorder ensemble matched-d에서 둘 다 ~0.18, Minafra ΔEa 우리 noise 아래라 mutually compatible.
+>
+> Tension 3 elastic vacancy paradox. Kim 2025 'Cl→E up' clamped-ion으로 못 잡음. relaxed-ion +25% E 강화 Kim과 직접 정합. clamped vs relaxed 정확한 method 차이.
+>
+> Tension 4 band gap absolute. PBE/USPP 1.76 vs lit PBE PAW 2.15-2.45. USPP + DOS-threshold systematic ~0.4 eV underestimate. 양쪽 동일 적용 Δgap robust.
+>
+> 4 tension 모두 'artifact 아닌 method/축 분리' 해소. paper nuanced honesty 핵심 슬라이드."
+
+### 시각 디자인 노트
+- 4-row 표 중심
+- 각 row 색 구분 + Resolution column 강조
+- "Resolved" 표시 (✓ 또는 ★)
+- footnote에 db reference
+
+### Q&A
+- "왜 5번째 안 포함?" → UMA Li3N paper #2 영역
+- "Tension 1과 4 비슷한 frame?" → Both method-axis distinction
+- "Tension 2 disorder ensemble compatible?" → Strict 우리 해상도 부족, 'rule out 불가' framing
+- "Tension 3 relaxed-ion 새 발견?" → method 표준이지만 LPSCl/LPSCl1.6 paired + Kim 2025 매칭은 우리 contribution
+- "Tension 4 0.4 eV offset 정상?" → USPP + DOS-threshold systematic, lit PBE도 PAW vs USPP 동일
+- "Main paper?" → Short discussion + SI long
+
+---
+
+## 1U. Slide 21 — Referee Defense #2: Caveats Consolidated
+
+### 페이지 배치 (16:9)
+- 9-row caveat 표 (caveat / 우리 대응 / 영향 받는 결과)
+- 요지 box (어떤 caveat도 4 메시지 안 흔듦)
+
+### 본문 텍스트
+
+**제목**: "21. 모든 caveat 한 페이지 — 정직한 method limitation"
+
+**9-row caveat 표**:
+```
+# | Caveat                          | 우리 대응                           | 영향 받는 결과
+──┼─────────────────────────────────┼─────────────────────────────────────┼──────────────
+1 | UMA MLIP σ overshoot ~3-5×       | σ ratio 사용 (절대 σ 인용 X)        | σ absolute
+2 | Haven ratio = 1 가정              | σ_NE는 upper bound로 표기            | σ absolute
+3 | 3-pt Arrhenius 300K 외삽         | 정성적 trend만, 정량 단정 X          | D(300K)
+4 | k-mesh convergence required     | k×L ≥ 40 Å 양쪽 보장                 | gap, elastic, DOS
+5 | LOBSTER charge spilling          | 1.16% / 1.46% (paper <5%)            | ICOHP 정량
+6 | 5 f.u. cell / n=3 configs       | ΔEa < 0.05 eV 해상도 못 잡음        | Ea matched-d
+7 | USPP gap 0.4 eV underestimate   | method offset 명시, Δgap robust      | gap absolute
+8 | 0-pressure ESW only             | K_eff axis 분리                      | oxidation stab.
+9 | Random anti-site disorder model | 실험 charge-coupled placement와       | ensemble Ea
+  |                                  | 다를 수 있음                          |
+```
+
+**요지**:
+```
+• 어떤 caveat도 4 메시지 자체를 흔들지 못함
+• 절대값 영향 caveat 있지만 trend / ratio / mechanism robust
+• Same-protocol paired comparison의 힘
+```
+
+**Footnote**:
+```
+※ Paper limitations section에 그대로 인용 가능
+※ 각 caveat source: db/properties/li_transport.json, electronic.json 등 분산 기록
+※ "솔직히 깔아둠"이 paper의 가장 강력한 referee defense
+```
+
+### 발표 스크립트 (45–55초)
+
+> "Referee defense 마지막 — 모든 caveat 한 페이지 정직하게.
+>
+> 9개 caveat 정리.
+> 1: UMA σ 3-5× overshoot → ratio만 사용.
+> 2: Haven=1 → σ_NE upper bound 표기.
+> 3: 3-pt Arrhenius 300K 외삽 정성적만.
+> 4: k×L ≥ 40 Å 양쪽 보장 (slide 14 incident).
+> 5: LOBSTER spilling 1.16-1.46% (<5% paper 기준).
+> 6: 5 f.u. n=3 noise 0.05 eV — Minafra 0.08 eV 시그널 못 confirm/refute.
+> 7: USPP gap 0.4 eV underestimate, ratio robust.
+> 8: ESW 0-pressure 한정, K_eff axis 분리.
+> 9: random anti-site placement, 실험 charge-coupled와 다를 수 있음.
+>
+> 요지: 어떤 caveat도 4 메시지 자체를 흔들지 못함. 절대값 영향은 있어도 trend/ratio/mechanism robust. same-protocol paired comparison의 힘.
+>
+> 솔직히 깔아두는 게 paper-grade defense 마지막 보루. referee가 'caveat 안 깔았다' 못 잡음."
+
+### 시각 디자인 노트
+- 9-row 표
+- "영향 받는 결과" column 색 분류 (절대값 vs trend)
+- "어떤 caveat도 4 메시지 안 흔듦" 강조
+- paper limitations section 후보 명시
+
+### Q&A
+- "왜 9개?" → 핵심 9개, paper 작성 시 추가 가능
+- "Caveat 6 가장 큰 약점?" → substantive. 다만 disorder ensemble 신규 contribution + 'noise floor 명시'가 정직성
+- "MLIP overshoot ratio도 영향?" → systematic 가능. 실험 σ ratio (Zuo 2.9 vs 7.0) ↔ 우리 3× 정합 → ratio robust
+- "Haven=1 표준?" → 표준 simplification. SI 명시
+- "Caveat 7 paper main?" → No, ratio robust. method 한정 명시
+- "Paper limitations section?" → 직접 인용
+- "솔직성 = defense?" → Yes. limitations 깔면 referee trust; 숨기면 reject
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1979,6 +2125,7 @@ modelc:
 | v1.25 | 2026-06-11 | Slide 17 (Robustness #1: 3-probe convergence) drafted — Voronoi (geometric) + BVSE (path) + LOBSTER (chemistry) 같은 anti-site Cl 효과 측정. 5.4 Li/AS + 60.2% 정합성 cross-validation. Paper #1 robust referee defense |
 | v1.26 | 2026-06-11 | Slide 18 (Robustness #2: Oxidation 4-axis framework) drafted — Gil-González + Zuo + Wu 통합. Axis 1 (DRAW), 2 (Cl-rich WINS K_eff>0), 3 (Cl-rich WINS R_int), 4 (Cl-rich LOSES calendar). modelc σ 향상이 oxidation penalty 없이 옴, 비용은 thermal shelf life |
 | v1.27 | 2026-06-11 | Slide 19 (Robustness #3: Constrained ESW + 분해반응) drafted — Cl-scan (Cl=1.6 K_eff=20 sweet spot), oxidation onset 2.14V 분해반응 (modelc 0.7 Li vs comp1 1.75 Li, 1.6× LiCl), Zuo 2023 Eq(1)/(2) 정량 cross-validation |
+| v1.28 | 2026-06-11 | Slide 20 (Referee defense #1: 4-tension audit) + Slide 21 (Referee defense #2: 9-caveat consolidated) drafted — paper #1 nuanced honesty + limitations transparency. Section F (Referee defense) 완성 |
 
 ---
 
