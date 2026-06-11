@@ -5,7 +5,7 @@
 > **저장 정책**: 이 문서는 발표 자료의 single source of truth. 새 슬라이드/스크립트
 > 추가될 때마다 이 파일에 append + commit.
 >
-> 마지막 업데이트: 2026-06-12 (v1.34 — Slide 1 연구실 템플릿 + Slide 2 thesis 통합)
+> 마지막 업데이트: 2026-06-12 (v1.35 — Slide 2 연구실 템플릿 bullet 형식 + 제목 확정)
 
 ---
 
@@ -234,7 +234,31 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 >
 > 두 시스템에 완전히 동일한 multi-probe 파이프라인을 paired로 적용했고, 다음 30분 동안 4개의 메시지로 풀어 드리겠습니다."
 
-### 본문 텍스트 (v2)
+### 본문 텍스트 (v3 — 연구실 템플릿 형식, 2026-06-12 ★ ACTIVE)
+
+**슬라이드 제목 (좌상단, 네이비 bold)**:
+```
+LPSCl vs LPSCl₁.₆ — Why Faster & Stiffer?
+```
+(대안: "Two Argyrodites: Systems & Key Finding" / "Comparison Overview")
+
+**본문 (템플릿 bullet 구조)**:
+```
+■ Key finding (결론 먼저)
+   · Experiments: LPSCl₁.₆ shows ~3× higher σ and +25% stiffness than LPSCl
+   · The difference does NOT come from electronic structure (Δgap only 0.06 eV)
+   · It originates from structural disorder: Li vacancies + 4d-Cl anti-sites
+
+■ Cell configurations
+   · LPSCl (comp1):    cubic F-43m, 4 f.u., 52 atoms — ordered Li · Cl@4a · free S²⁻@4d
+   · LPSCl₁.₆ (modelc): rhombohedral R3m, 5 f.u., 62 atoms — 0.6 Li vacancy/f.u. · Cl@4a+4d anti-site
+
+[하단: VESTA 구조 그림 좌우 배치 — comp1 cubic / modelc rhombohedral, 동일 scale·시점]
+```
+
+**하단 한 줄 (선택)**: "Same protocol, same multi-probe pipeline — paired comparison"
+
+### 본문 텍스트 (v2 — thesis 띠 버전, 보존)
 
 **상단 thesis 띠**:
 ```
@@ -2487,6 +2511,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 | v1.32 | 2026-06-11 | **Slide 22 (Trade-offs & Outlook: Paper #2 Bridge) drafted ★ FINAL** — Top panel 4 trade-offs (Wu thermal / Strauss moisture / Adeli synthesis window / Zener anisotropy), 공통 원인 4d-Cl AS (M3-M4와 동일). Bottom panel Oxide Doping Strategy: Sc₂O₃ (cascade strongest, de=-0.974) / B₂O₃ (anneal+EOS) / Nd₂O₃ (DFT-relaxed) / Al₂O₃ cluster. "구조적 무질서를 design" 마무리. 21장 deck 완성 |
 | v1.33 | 2026-06-11 | **1C에 comp1 enumeration & champion 역전 기록 추가 (Q&A 필수 카드)** — comp1도 C(8,4)=70 full enumeration 통과. Halogen 단계 (Li Rietveld 고정) best = #39 mixed 2/2였으나 Li screening (spread 1162 meV) + 500 K anneal에서 **ordered (Cl 전부 4a / free-S 전부 4d)로 역전** → v3 k444 V0의 출처. "같은 pipeline이 comp1 ordered / modelc 12.5% anti-site를 내놓음 = disorder는 조성이 만든다" thesis 직접 증거. Slide 3 본문 enumerate 수 정정: 45 → comp1 70 (8C4) · modelc 45 (10C2) |
 | v1.34 | 2026-06-12 | **Slide 1 → 연구실 표준 템플릿 (Layout v2)**: Research Seminar 타이틀 + Part divider 사용, **title에 thesis 넣지 않음**. 구 slide 1의 질문/결론/thesis는 **Slide 2 (Scope+Thesis 통합, script v2 70–80초)**로 흡수. Part 매핑 제안: P1 Intro(2–4) / P2 4 Messages(5–8) / P3 Cross-check & Defense(9–16) / P4 Robustness & Outlook(17–22). 구 버전 모두 보존 |
+| v1.35 | 2026-06-12 | Slide 2 본문 v3 — 연구실 템플릿 bullet 형식 (■ Key finding 결론 먼저 + ■ Cell configurations 한 줄씩). 슬라이드 제목 확정: "LPSCl vs LPSCl₁.₆ — Why Faster & Stiffer?" |
 
 ---
 
