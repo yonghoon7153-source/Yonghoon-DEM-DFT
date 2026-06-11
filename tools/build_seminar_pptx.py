@@ -80,7 +80,7 @@ def add_title(slide, text, color=HANYANG_BLUE, size=24):
              fill=color)
 
 
-def add_footer(slide, num, total=21):
+def add_footer(slide, num, total=26):
     add_text(slide, Inches(0.5), Inches(7.05), Inches(8.0), Inches(0.3),
              "LPSCl ↔ LPSCl₁.₆ — Paper #1 Preview · Yonghoon Kim · 2026.06",
              size=9, color=GRAY)
@@ -91,13 +91,17 @@ def add_footer(slide, num, total=21):
 def add_table(slide, left, top, width, height, data, first_row_header=True,
               first_col_header=False, header_color=HANYANG_BLUE,
               header_text=RGBColor(0xFF, 0xFF, 0xFF), font_size=11,
-              row_colors=None, bold_first_col=False):
+              row_colors=None, bold_first_col=False, col_widths=None):
     """data = list of rows; each row = list of strings.
     row_colors: dict {row_idx: RGBColor} for highlight rows."""
     rows = len(data)
     cols = len(data[0])
     tbl_shape = slide.shapes.add_table(rows, cols, left, top, width, height)
     tbl = tbl_shape.table
+    if col_widths is not None:
+        total = sum(col_widths)
+        for c, frac in enumerate(col_widths):
+            tbl.columns[c].width = Emu(int(width * frac / total))
     for r, row in enumerate(data):
         for c, val in enumerate(row):
             cell = tbl.cell(r, c)
@@ -251,7 +255,7 @@ for title, time, color, bullets in tiers:
              "\n".join(bullets), size=12)
     ty += 1.85
 
-add_text(s, Inches(0.5), Inches(6.95), Inches(12.3), Inches(0.4),
+add_text(s, Inches(0.5), Inches(6.72), Inches(12.3), Inches(0.3),
          "→ 4500 MLIP configs screened · 1 champion DFT-validated · 13 paper-grade probes",
          size=13, bold=True, color=HANYANG_BLUE, align=PP_ALIGN.CENTER)
 add_footer(s, 3)
@@ -622,7 +626,7 @@ cc_data = [
     ["4", "LOBSTER charge spilling\nk×L (paper-grade ≥40 Å)", "1.46%\n40", "1.16%\n42", "<5% / 수렴 ✓"],
 ]
 add_table(s, Inches(0.5), Inches(1.4), Inches(12.4), Inches(4.5),
-          cc_data, font_size=11)
+          cc_data, font_size=11, col_widths=[0.6, 4.2, 2.5, 2.5, 2.6])
 
 add_text(s, Inches(0.5), Inches(6.1), Inches(12.4), Inches(0.7),
          "→ 4 독립 cross-check 모두 정합 — relaxed-ion +25% 결론 robust",
@@ -802,10 +806,10 @@ elf_data = [
     ["Li basin floor", "0.072", "0.065", "ionic depletion 강함"],
     ["Li → nearest anion line min", "0.07", "0.04", "modelc 더 ionic"],
 ]
-add_table(s, Inches(0.5), Inches(5.1), Inches(12.4), Inches(1.7),
+add_table(s, Inches(0.5), Inches(5.05), Inches(12.4), Inches(1.55),
           elf_data, font_size=11, row_colors={1: LIGHT_BLUE})
 
-add_text(s, Inches(0.5), Inches(6.9), Inches(12.4), Inches(0.3),
+add_text(s, Inches(0.5), Inches(6.68), Inches(12.4), Inches(0.3),
          "→ PDOS + LOBSTER + ELF 세 독립 probe — 같은 그림 (covalent + ionic 공존)",
          size=12, bold=True, color=HANYANG_BLUE, align=PP_ALIGN.CENTER)
 add_footer(s, 18)
@@ -1012,7 +1016,7 @@ ten_data = [
      "Method offset 양쪽\n동일, Δgap robust"],
 ]
 add_table(s, Inches(0.3), Inches(1.4), Inches(12.7), Inches(4.7),
-          ten_data, font_size=10)
+          ten_data, font_size=10, col_widths=[0.6, 4.4, 4.0, 3.7])
 
 add_text(s, Inches(0.3), Inches(6.3), Inches(12.7), Inches(0.6),
          "→ 4 tension 모두 'artifact 아닌 method/축 분리'로 해소\n"
@@ -1040,7 +1044,7 @@ cav_data = [
     ["9", "Random anti-site disorder model", "실험 charge-coupled placement 다를 가능성"],
 ]
 add_table(s, Inches(0.5), Inches(1.4), Inches(12.4), Inches(4.7),
-          cav_data, font_size=10)
+          cav_data, font_size=10, col_widths=[0.6, 5.6, 6.2])
 
 add_text(s, Inches(0.5), Inches(6.3), Inches(12.4), Inches(0.6),
          "→ 어떤 caveat도 4 메시지 자체를 흔들지 못함\n"
@@ -1104,32 +1108,32 @@ FIG_BORDER = RGBColor(0xC8, 0x9A, 0x00)
 FIG_TEXT = RGBColor(0x66, 0x4D, 0x00)
 
 
-def add_fig_chip(slide, label, where="title", w=4.6):
+def add_fig_chip(slide, label, where="title", w=5.6):
     """Yellow chip indicating a figure should be inserted.
-    where='title' → top-right of title bar (default, safe for most slides).
-    where='bottom' → just above footer."""
+    where='title' → top-right corner, ABOVE the title text so long titles
+    are never covered. where='bottom' → just above footer."""
     if where == "title":
-        left = Inches(13.333 - w - 0.5)
-        top = Inches(0.38)
+        left = Inches(13.333 - w - 0.15)
+        top = Inches(0.03)
     else:
         left = Inches(13.333 - w - 0.5)
         top = Inches(6.55)
     shp = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
-                                 left, top, Inches(w), Inches(0.42))
+                                 left, top, Inches(w), Inches(0.30))
     shp.fill.solid()
     shp.fill.fore_color.rgb = FIG_YELLOW
     shp.line.color.rgb = FIG_BORDER
     shp.line.width = Pt(1.0)
     shp.shadow.inherit = False
     tf = shp.text_frame
-    tf.word_wrap = True
+    tf.word_wrap = False
     tf.margin_left = tf.margin_right = Inches(0.08)
-    tf.margin_top = tf.margin_bottom = Inches(0.02)
+    tf.margin_top = tf.margin_bottom = Inches(0.01)
     p = tf.paragraphs[0]
-    p.alignment = PP_ALIGN.LEFT
+    p.alignment = PP_ALIGN.CENTER
     r = p.add_run()
     r.text = f"📎 사진 첨부: {label}"
-    r.font.size = Pt(10)
+    r.font.size = Pt(9)
     r.font.bold = True
     r.font.color.rgb = FIG_TEXT
     r.font.name = "맑은 고딕"
@@ -1164,28 +1168,28 @@ def add_fig_box(slide, left, top, width, height, label):
 # Slide order (0-based) → (label, position)
 # Title slide (0) and pure-text summary slides skipped.
 FIG_MARKERS = {
-    1:  ("LPSCl F-43m vs LPSCl₁.₆ R3m 결정구조 (VESTA, 동일 시점)", "title"),
-    2:  ("3-tier pipeline 모식도 (선택)",                              "title"),
-    3:  ("4-message at-a-glance figure",                                "title"),
-    4:  ("PDOS 비교 (comp1 vs modelc, atom-projected)",                "title"),
-    5:  ("σ(T) Arrhenius plot (paired 600/800/1000 K)",               "title"),
-    6:  ("D₀ vs Eₐ 산점도 또는 prefactor 비교 막대",                   "title"),
-    7:  ("Disorder ensemble Eₐ 분포 (matched-d 그룹)",                 "title"),
-    8:  ("σ(T) 저온 외삽 plot (300 K까지)",                            "title"),
-    9:  ("Cohesive / Li–anion ionic glue 모식도 또는 막대",             "title"),
-    10: ("Elastic moduli (B, G, E) clamped vs relaxed 비교 막대",      "title"),
-    11: ("Cij component bar (C44 강조)",                                "title"),
-    12: ("M4 4 cross-check 수렴 그림",                                  "title"),
-    13: ("PS₄ 결합 길이/각도 히스토그램 (두 시스템 overlay)",            "title"),
-    14: ("Li–Cl per-bond 히스토그램 (4a vs 4d-AS 분리)",               "title"),
-    15: ("Voronoi 4-sublattice 모식도 (4a/4b/4c/4d)",                  "title"),
-    16: ("BVSE bimodal 에너지 분포 / pathway 맵",                       "title"),
-    17: ("ELF isosurface (PS₄ covalent + Li–anion ionic)",             "title"),
-    18: ("k-mesh / LOBSTER spilling / AIMD 수렴 plot",                "title"),
-    20: ("3-probe (BVSE · NEB · MD) 수렴 schematic",                  "title"),
-    21: ("Oxidation 4-axis radar 또는 grid",                          "title"),
-    22: ("Constrained ESW Cl-scan + 분해반응 ΔG 막대",                "title"),
-    25: ("Trade-off 4축 + Paper #2 도핑 roadmap",                     "title"),
+    1:  ("결정구조 VESTA (F-43m vs R3m)",        "title"),
+    2:  ("3-tier pipeline 모식도 (선택)",         "title"),
+    3:  ("4-message at-a-glance figure",          "title"),
+    4:  ("PDOS overlay (comp1 vs modelc)",        "title"),
+    5:  ("σ(T) Arrhenius plot (3점 paired)",      "title"),
+    6:  ("D₀ vs Eₐ 산점도 / prefactor 막대",      "title"),
+    7:  ("Disorder ensemble Eₐ 분포",             "title"),
+    8:  ("σ(T) 저온 외삽 plot (300 K)",           "title"),
+    9:  ("Li–anion ionic glue 막대/모식도",        "title"),
+    10: ("B·G·E clamped vs relaxed 막대",         "title"),
+    11: ("Cij component bar (C44 강조)",          "title"),
+    12: ("M4 cross-check 수렴 그림",              "title"),
+    13: ("PS₄ 결합 히스토그램 overlay",            "title"),
+    14: ("Li–Cl per-bond 히스토그램 (4a/4d)",     "title"),
+    15: ("Voronoi 4-sublattice 모식도",           "title"),
+    16: ("BVSE bimodal 분포 / pathway 맵",        "title"),
+    17: ("ELF isosurface (covalent+ionic)",       "title"),
+    18: ("k-mesh / spilling / AIMD 수렴",         "title"),
+    20: ("3-probe 수렴 schematic",                "title"),
+    21: ("Oxidation 4-axis radar/grid",           "title"),
+    22: ("ESW Cl-scan + 분해반응 ΔG 막대",        "title"),
+    25: ("Trade-off 4축 + 도핑 roadmap",          "title"),
 }
 
 slide_list = list(prs.slides)
