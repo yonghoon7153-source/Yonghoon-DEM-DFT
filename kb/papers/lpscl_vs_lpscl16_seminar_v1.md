@@ -1039,6 +1039,166 @@ Cl 다면체 V (Å³) | LPSCl 22.06 | LPSCl₁.₆ 20.31  ← Δ−1.7, 4d가 �
 
 ---
 
+## 1G. Slide 7 — M3: Ionic Glue 강해진다 (v2 갱신 — vacancy + anti-site 분해)
+
+### 페이지 배치 (16:9)
+- 평균 ICOHP 표 + per-bond decomp 표
+- 두 효과 기여도 (vacancy 69% + anti-site 31%)
+- 3-probe 합의 footer
+
+### 본문 텍스트 (v2 ACTIVE)
+
+**제목**: "M3: Li–anion ionic glue가 LPSCl₁.₆에서 강해진다"
+
+**평균 ICOHP 표**:
+```
+결합          | LPSCl    | LPSCl₁.₆ | Δ%
+─────────────┼──────────┼──────────┼─────
+P–S (PS₄)    | −5.94    | −6.00    | +1.0% (불변)
+Li–Cl ★      | −1.86    | −2.10    | +13.0%
+Li–S ★       | −1.59    | −1.72    | +8.1%
+S–S          | −0.11    | −0.11    | ~0
+```
+
+**Vacancy vs Anti-site 분해 표**:
+```
+단계                          | per-bond ICOHP | bond 수 / 영향
+──────────────────────────────┼────────────────┼─────────────────
+comp1 baseline (전부 4a)      | −1.855         | 24 (모든 Cl)
+modelc 4a (+ vacancy)         | −2.026         | 38 (Cl 90%)  +9.2%
+modelc 4d AS (+ anti-site)    | −2.836         |  4 (Cl 10%)  +40%
+```
+
+**기여도 분해**:
+```
++13% 평균 Li-Cl 강화 기여도:
+  • Vacancy field: 69% — 전반 ionic 강화, Cl 90%에 균일 적용
+  • Anti-site: 31% — intense local pin, Cl 10%에만 강력 적용
+```
+
+**Key**:
+```
+• Cl 치환은 결합 '강화' (약화 아님): Li–Cl +13%, Li–S +8%, PS₄ 불변
+• 두 메커니즘 합작: vacancy ionic field (광범위) + 4d-Cl AS (집중)
+• Bader · LOBSTER · Wilkening 세 독립 probe 합의
+```
+
+### 발표 스크립트 v2 ACTIVE (75–85초)
+
+> "Message 3, ionic glue — Li와 음이온 결합 강도입니다.
+>
+> 직관적으로 'Cl 더 넣고 Li 빼면 약해진다'고 생각하기 쉬운데, 결과는 정반대. Li–Cl이 13%, Li–S가 8% 강해집니다. PS₄ covalent backbone은 1%, 불변.
+>
+> Li–Cl 13% 강화 출처를 두 단계로 분해할 수 있습니다.
+>
+> 첫째, comp1의 깨끗한 baseline Li–Cl는 −1.86 eV. 모두 정상 4a 자리.
+>
+> 둘째, modelc의 4a 자리 Cl는 −2.03 eV로 9% 강해집니다. 무엇이 바뀌었느냐 — Li 공공이 들어와서 ionic field가 전반 강화된 거예요. Cl 자체 위치는 그대로지만 주변 Li 환경이 vacancy로 재배치되면서 결합 거리·전하 분포가 살짝 tighten. 이 효과는 modelc Cl 90%에 균일 적용.
+>
+> 셋째, modelc의 새로 등장한 4d anti-site Cl는 −2.84 eV로 40% 강합니다. 짧은 거리 2.45 Å + tetrahedral coordination + Cl 3p와 Li 2s 좋은 orbital overlap. 이 effect는 modelc Cl 10%에만 적용되지만 per-bond로 매우 intense.
+>
+> 두 효과 합쳐서 +13% 평균 강화 기여도는 vacancy field 69% (광범위 약함) + anti-site 31% (소수 강력)입니다.
+>
+> Bader charge, LOBSTER ICOHP, Wilkening ionic potential — 세 독립 probe가 같은 방향을 가리킵니다."
+
+### Q&A
+- "vacancy 효과가 왜 ionic field 강화로 발현?" → Li 1개 빠지면 charge balance 위해 주변 음이온이 전체적으로 강하게 끌어당겨야 함. Bader charge로 Li q +0.011/neighbor Cl 변화 측정됨
+- "왜 ICOHP가 vacancy에 sensitive?" → vacancy → 인접 Li-anion 거리 미세 단축 + 전하 재분포 → COHP가 잡는 overlap 강화
+- "anti-site 31%만 기여?" → 10% Cl만 영향 받으니까 (per-bond는 강해도 셀당 4 bonds만). 다만 mechanical (M4)에서는 anti-site가 dominant — slide 8a 참고
+- "왜 modelc 4a도 강해졌는데?" → vacancy ionic field effect — anti-site와 다른 별도 mechanism, db에서 분해 확정
+- "3-probe 합의는?" → Bader Li q 균질 (Δ 1%), LOBSTER ICOHP +13%, Wilkening Li-S +17%. 세 다른 근사 체계가 같은 방향
+
+---
+
+## 1J. Slide 10 — Counter-Intuitive Bond + Per-bond vs Per-anion (v2)
+
+### 페이지 배치 (16:9)
+- 평균 결합 표 + per-site 분해
+- per-bond vs per-anion 비교 박스 (가장 중요)
+- 3-bullet key
+
+### 본문 텍스트 (v2 ACTIVE)
+
+**제목**: "10. Li–Cl 평균이 짧아짐 — 출처는 4d anti-site (per-bond vs per-anion)"
+
+**메인 결합 표**:
+```
+결합 (Å)              | LPSCl          | LPSCl₁.₆       | Δ
+P–S                   | 2.073 ± 0.036  | 2.064 ± 0.011  | −0.5%
+Li–S                  | 2.461 ± 0.106  | 2.465 ± 0.094  | +0.2%
+★ Li–Cl               | 2.607 ± 0.129  | 2.532 ± 0.119  | −3% 짧아짐 ↓
+S–S (cage)            | 3.595          | 3.519          | −2%
+```
+
+**Per-site 분해**:
+```
+종류                          | 거리(Å) | 비고
+Li–Cl (4a 정상, modelc)       | 2.59    | 거의 불변
+Li–Cl (4d AS, modelc only)    | 2.45    | ★ 0.14 Å 짧음
+```
+
+**Per-bond vs Per-anion 비교 (핵심)**:
+```
+4d anti-site Cl:
+  • coord: Li 4 (tetrahedral, [Cl|Li4])
+  • per-bond ICOHP: −2.84 eV
+  • per-anion total: 4 × −2.84 = −11.3 eV
+
+4d free S²⁻:
+  • coord: Li 6 (octahedral)
+  • per-bond ICOHP: −2.57 eV
+  • per-anion total: 6 × −2.57 = −15.4 eV  ★ 36% 강함
+
+→ per-bond는 LOBSTER orbital overlap (covalent) 우세 측정 → Cl 약간 ↑
+→ per-anion은 Coulomb 직관 회복 → S²⁻ 우세 (q² × coord)
+```
+
+**Key**:
+```
+• Li–Cl 짧아짐은 4d AS 한 종류에서 옴 (4a는 거의 불변)
+• Per-bond ICOHP: Cl(4d AS) 약간 우세 — LOBSTER가 overlap 측정
+• Per-anion total: S²⁻(4d) 36% 우세 — Coulomb 직관 회복
+• 두 양은 다른 물리적 의미, paper에서 분리 reporting
+```
+
+**Footnote**:
+```
+※ LOBSTER COHP는 본질적으로 H_μν·P_νμ (orbital overlap) 적분이라 covalent 우세,
+  classical Madelung Coulomb는 SCF band 위치에만 들어가고 COHP에 직접 안 나타남.
+※ 4d 자리의 짧은 거리는 격자 구조 (Wyckoff topology) + 원래 free S²⁻용 cage
+  최적화된 환경 결과 — 4d로 들어간 Cl AS가 그 환경을 상속.
+※ 격자 4a/4d 구조: Deiseroth Angew 2006 / Kraft JACS 2017 / Adeli Angew 2019.
+```
+
+### 발표 스크립트 v2 ACTIVE (70–80초)
+
+> "결합 길이 cross-check입니다. 가장 흥미로운 발견 하나.
+>
+> 직관적으로 'Cl이 많아지면 cage가 커지고 Li–Cl이 멀어진다'고 생각하기 쉽지만, 표를 보시면 정반대. Li–Cl이 0.076 Å, 약 3% 짧아집니다.
+>
+> 어디서 짧아지는지 per-site로 분해하면 명확합니다. 4a 정상 자리는 거의 안 변해요. 변화는 전적으로 4d anti-site에서 — Li–Cl(4d AS)가 2.45 Å, 4a보다 0.14 Å 짧습니다.
+>
+> 그럼 이 짧은 결합이 정말 더 강한가? 여기 흥미로운 게 나옵니다. 박스의 4d 자리 두 음이온 직접 비교.
+>
+> 4d 자리 free S²⁻는 Li 6개에 둘러싸여 octahedral 배위, per-bond ICOHP −2.57 eV. 4d 자리 Cl anti-site는 Li 4개에 둘러싸여 tetrahedral 배위, per-bond ICOHP −2.84 eV.
+>
+> per-bond로는 Cl이 살짝 강해 보입니다. 이건 LOBSTER가 본질적으로 orbital overlap을 측정하기 때문이에요. classical Coulomb 차이는 COHP에 직접 안 들어가고, 짧은 거리에서 covalent overlap이 우세 잡힙니다.
+>
+> 그런데 per-anion total로 보면 다릅니다. 음이온 하나당 총 결합 에너지를 계산하면 — S²⁻는 6 × −2.57 = −15.4 eV per anion, Cl AS는 4 × −2.84 = −11.3 eV per anion. S²⁻가 36% 강합니다. q=−2가 q=−1보다 더 많이 Li를 끌어모은다는 Coulomb 직관이 회복됩니다.
+>
+> 즉 per-bond와 per-anion은 다른 물리량. LOBSTER가 측정하는 per-bond는 covalent overlap 위주, 음이온 하나가 만드는 total 결합력은 q²/r Coulomb 직관과 일치. paper에서 이 두 측면을 분리해 정직하게 보고합니다.
+>
+> Li–Cl 짧아진 미시 출처는 4d 자리의 짧은 격자 환경, 그게 평균 Li–Cl ICOHP +13% (M3)와 mechanical shear stiffening (M4)까지 다 연결됩니다."
+
+### Q&A
+- "Cl 1.81 vs S 1.84 Å radius로 6% 거리 차이 설명?" → 못 함. 격자 자리 환경 (4d cage geometry) 이 진짜 원인
+- "per-bond vs per-anion 어느 게 paper 메시지?" → 둘 다 — per-bond는 LOBSTER 정량 + per-anion은 Coulomb 일관성 확인. 둘 다 separately reporting
+- "Cl AS의 4-coord은 어떻게 측정?" → bonds.json 명시 "[Cl|Li4]". cutoff 3.4 Å 내 Li 개수 직접 측정
+- "왜 vacancy 효과는 거리 아니라 ICOHP에 나옴?" → 거리는 average 위주, ICOHP는 local 전자환경 sensitive
+- "체크 가능한 추가 분석?" → PDOS Cl 3p 위치 (메커니즘 2), ELF Li-Cl bridge vs Li-S bridge (메커니즘 1) — 둘 다 nice-to-have
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1058,6 +1218,7 @@ Cl 다면체 V (Å³) | LPSCl 22.06 | LPSCl₁.₆ 20.31  ← Δ−1.7, 4d가 �
 | v1.12 | 2026-06-11 | Slide 8a (Cij 분해: C44 +72% — shear lock-in mechanism) / 8b (4 cross-check: B↔B0, AFM, 600K MLIP, spilling+k×L) drafted. M4 클라이맥스 완성 |
 | v1.13 | 2026-06-11 | Slide 9 (cross-check #1: PS₄ universal backbone) drafted — 5 probe (P-S 길이/σ/배위/ICOHP/ELF/Bader) + universal anchor Li-S(4d), rigid block 결론 |
 | v1.14 | 2026-06-11 | Slide 10 (cross-check #2: counter-intuitive bond) drafted — Li–Cl −0.076 Å (4d AS 2.45 Å, 4a보다 0.16 짧음), Cl⁻ vs S²⁻ ionic radius 매칭 + Voronoi V −1.7 Å³ 직접 증거 |
+| v1.15 | 2026-06-11 | **Slide 7 v2 + Slide 10 v2** ACTIVE: vacancy(69%)+anti-site(31%) 분해 정확화, per-bond vs per-anion 명시 (LOBSTER covalent overlap 우세 측정 vs S²⁻ q² × coord total). Coulomb 직관 회복. paper-grade defensible mechanism. |
 
 ---
 
