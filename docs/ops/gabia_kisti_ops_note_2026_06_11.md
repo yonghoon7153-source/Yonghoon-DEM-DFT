@@ -42,7 +42,17 @@
 - ASE 3.28 NEB default가 improved-tangent로 변경 (경고 무해, paper methods에 "CI-NEB, improved-tangent" 명기).
 - `launch_neb.sh`의 `pw=...qe-7.4.1-cpu` echo는 `which` 표시일 뿐 — 실제 계산은 GPU 바이너리 (nvidia-smi로 확인).
 
-### 4. KISTI job 753206의 이름은 가짜
+### 4. (drift 2호) TOP_K_SIGMA / TOP_K_NCM도 env 필수
+- done 39개는 전부 **`TOP_K_SIGMA=0, TOP_K_NCM=0`** (05-26 원래 master)로 완료 — stage 10 (σ-MD)·11 (NCM)은 SKIP, 디렉토리 자체가 없음 (MgO_x002 확인: 09f → 12).
+- 06-08 resume5부터 env가 빠지며 script default (`TOP_K_SIGMA=2, TOP_K_NCM=3`)로 drift → cascade당 24h 초과 → **Sc₂O₃ timeout의 진짜 원인**.
+- 올바른 재시작 (env 3종 모두 명시):
+  ```bash
+  BATCH_DIR=/data/work/runs/multi_category_2026_05_26_v23 TOP_K_SIGMA=0 TOP_K_NCM=0 \
+  nohup bash /data/work/repo/tools/doping/master_batch_273.sh > ...resume<N>.log 2>&1 &
+  ```
+- 재시작 후 헤더에서 `TOP_K_SIGMA=0, TOP_K_NCM=0` 확인. σ-MD/NCM은 batch 완주 후 winner만 `COMPOUND_FILTER=<dopant> TOP_K_SIGMA=2`로 단독 실행.
+
+### 5. KISTI job 753206의 이름은 가짜
 - `JobName=llm_finetuning_test`는 sbatch 템플릿 (`sbatch_ktest.sh`) 잔재. 실체는
   `/scratch/x3430a02/kgy/nd_doped_modelc/3_dft_eos_v7/pair01_pair_00_reference_1_82/v0_champion` k-test (4 4 1 → ...).
 - run4 ×4 + run5 ×4 시도 끝에 도는 중. 다음부터 `#SBATCH -J nd_k441_scf`로 바꿀 것.
