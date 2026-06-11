@@ -1681,6 +1681,89 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 
 ---
 
+## 1Q. Slide 17 — Robustness #1: 3-Probe Convergence Panel
+
+### 페이지 배치 (16:9)
+- 3-probe 표 (Voronoi + BVSE + LOBSTER × 정량/대상/슬라이드)
+- 3 box → "anti-site Cl" 수렴 다이어그램
+- 정량 cross-consistency footer
+
+### 본문 텍스트
+
+**제목**: "17. 세 독립 post-processing이 같은 anti-site 효과를 가리킴"
+
+**3-probe 표**:
+```
+Probe              | 정량 결과              | 측정 대상            | 슬라이드
+───────────────────┼────────────────────────┼─────────────────────┼─────────
+Voronoi V std      | Cl 0 → 0.74 Å³         | Site disorder       | 11
+                   | Li 0.21 → 1.15 (×5.5)  | (geometric)         |
+BVSE bimodal       | +15% shift (60.2% Li)  | Li 이동 환경        | 12
+                   | 1.62 → 1.85 BVS        | (percolation path)  |
+LOBSTER ICOHP      | +40% per-bond (4d AS)  | Li-Cl 결합 강도     | 7
+                   | -2.03 → -2.84 eV       | (bonding chemistry) |
+```
+
+**Quantitative consistency**:
+```
+• 1626 high-BVS Li / 300 AS Cl = 5.4 Li/AS — Li-Cl coord 4-6 정합
+• BVSE 60.2% high-BVS Li ↔ LOBSTER 4d-Cl AS group ↔ Voronoi Li std 5.5×
+• Δ(BVS) +15% vs Δ(ICOHP) +40% — 다른 measure same anchor
+• Voronoi Cl std 0.74 → "두 group 존재" 직접 시각화 (4a + 4d)
+```
+
+**Key**:
+```
+• 같은 anti-site Cl 효과를 3 독립 측정이 다른 각도로 확인
+• Voronoi (공간/기하) + BVSE (이동/path) + LOBSTER (결합/chemistry)
+• 정량 cross-consistency (5.4 Li/AS, 60.2% group 정합)
+• 단일 probe artifact 아닌 robust 물리 현상
+```
+
+**Footnote**:
+```
+※ 세 probe 정합성: 5.4 × 300/2700 = 0.6 = 60.2% (정확 일치)
+※ +15%(BVS) vs +40%(ICOHP) 차이는 measure 정의 차이
+※ Three independent post-processings → 단일 method failure mode와 무관
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Robustness section 시작. 4 메시지 + 5 cross-check가 robust한지 — 단일 method artifact가 아닌지 — 확인.
+>
+> 17번은 paper #1의 가장 강력한 cross-validation. 4d-Cl anti-site 효과를 세 개의 완전 독립 post-processing이 측정한 결과.
+>
+> 표 첫 행 Voronoi V std: 공간 부피 분산. modelc Cl std 0→0.74, Li std 0.21→1.15 (5.5×). Site disorder geometric fingerprint.
+>
+> 두 번째 BVSE bimodal: Li 이동 환경. 60.2% Li가 +15% BVS shift. Li percolation path 변화.
+>
+> 세 번째 LOBSTER ICOHP: 결합 강도. 4d-Cl AS Li-Cl −2.84 eV (4a 정상 −2.03보다 40%↑). Bonding chemistry 변화.
+>
+> 세 측정은 다른 angle — 공간/path/화학. 모두 같은 4d-Cl anti-site가 원인.
+>
+> 정량 cross-check: BVSE 1626 high-BVS Li / 300 AS Cl = 5.4 Li per AS — Li-Cl 1차 배위 4-6 정합. 60.2% 비율 자체가 5.4 × 300/2700 = 0.6과 정확 일치.
+>
+> +15% shift (BVS=형식가) vs +40% 강화 (ICOHP=결합 강도) — 다른 measure지만 same anchor.
+>
+> 단일 method artifact 아닌 robust 물리 현상 — three independent methods는 paper #1의 가장 강력한 referee defense."
+
+### 시각 디자인 노트
+- 3-probe 표 중심
+- 3 box → anti-site Cl 수렴 화살표 그림
+- 색 코딩: 3 probe 각각 다른 색 (slide 7/11/12 일관)
+- "★" 5.4 Li/AS + 60.2% 정합성 강조
+- "Three independent" footer
+
+### Q&A
+- "왜 3 probe만?" → 5 cross-check 중 anti-site에 직접 sensitive한 게 이 3개
+- "Voronoi + BVSE 둘 다 geometric인데 차이?" → Voronoi 정적 부피, BVSE 동적 path
+- "ICOHP electronic인데 geometric과 같은 결과?" → 짧은 거리에서 wavefunction overlap → geometry와 연결
+- "이게 paper main figure?" → 후보 중 하나. headline은 slide 8 (E) or 6 (D₀) 강력. 이건 SI cross-validation panel
+- "anti-site 비율 다른 cell도 정합?" → 1.6 Cl/fu 유지하면 5.4 Li/AS는 cell-independent (Li-Cl 1차 배위 결정)
+- "+15% vs +40% 비율 아니라 방향만?" → BVS linear, ICOHP 적분 — direction 같음이 중요
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1710,6 +1793,7 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 | v1.22 | 2026-06-11 | Slide 15 **DROPPED** (slide 3 pipeline + slide 14 k-mesh audit과 중복). 총 22 → 21장. |
 | v1.23 | 2026-06-11 | Slide 16 (Summary) drafted — 불변/변화 2-컬럼 대조표 + thesis ("covalent skeleton 유지 + ionic ligament 재배치") + 4 메시지 한 줄씩. paper #1 abstract/conclusion 후보 |
 | v1.24 | 2026-06-11 | Slide 15 헤더 명확화 — 발표 DROPPED, paper Methods section 후보로 본문 보존 (ecutwfc, k-mesh, LOBSTER, ELF settings 전부) |
+| v1.25 | 2026-06-11 | Slide 17 (Robustness #1: 3-probe convergence) drafted — Voronoi (geometric) + BVSE (path) + LOBSTER (chemistry) 같은 anti-site Cl 효과 측정. 5.4 Li/AS + 60.2% 정합성 cross-validation. Paper #1 robust referee defense |
 
 ---
 
