@@ -234,7 +234,28 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 >
 > 두 시스템에 완전히 동일한 multi-probe 파이프라인을 paired로 적용했고, 다음 30분 동안 4개의 메시지로 풀어 드리겠습니다."
 
-### 본문 텍스트 (v3 — 연구실 템플릿 형식, 2026-06-12 ★ ACTIVE)
+### ★ 실물 확정판 (v4, 2026-06-12 — 실제 제작 슬라이드 반영)
+
+```
+제목(좌상단): DFT  (Part 1 제목 그대로)
+우상단 각주: f.u.: formula unit / anti-sites: site disorder
+우상단 refs: Angew 62 e202213228 (2023) · Angew 58 8681 (2019) [+ Kim ACS Mater. Lett. 2025 추가 예정]
+
+■ Two argyrodites: Systems & Key finding
+   · Experiments: Li₅.₄PS₄.₄Cl₁.₆ shows ~3× higher σ and +25% stiffness than Li₆PS₅Cl
+       (청색 강조: ~3x higher σ / +25% stiffness)
+   · Not electronic structure — It originates from structural disorder: Li vacancies + 4d-Cl anti-sites
+       (적색: electronic structure ✗ / 청색: Li vacancies, 4d-Cl anti-sites ✓)
+
+그림: 중앙 하단 Li₆PS₅Cl primitive cell → 좌 "4f.u." 화살표 → cubic Li₆PS₅Cl
+                                       → 우 "5f.u." 화살표 → rhombohedral Li₅.₄PS₄.₄Cl₁.₆
+   ("같은 모체에서 두 시스템" paired 비교를 그림 한 장으로)
+```
+
+발표 보충 멘트 (정확성): "+25%는 저희 DFT relaxed-ion 결과고, 실험(Kim 2025 UPE)은 Cl↑→E↑ 경향으로 확인됩니다."
+남은 일: Kim et al., ACS Mater. Lett., 7, XXXX (2025) vol/page 채워서 ref 3줄째 추가.
+
+### 본문 텍스트 (v3 — 연구실 템플릿 형식, 2026-06-12)
 
 **슬라이드 제목 (좌상단, 네이비 bold)**:
 ```
