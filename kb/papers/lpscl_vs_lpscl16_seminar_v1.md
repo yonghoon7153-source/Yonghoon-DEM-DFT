@@ -258,6 +258,16 @@ LPSCl vs LPSCl₁.₆ — Why Faster & Stiffer?
 
 **하단 한 줄 (선택)**: "Same protocol, same multi-probe pipeline — paired comparison"
 
+**Footnote references (Key finding bullet용, 템플릿 하단 회색)**:
+```
+· Experiments: LPSCl₁.₆ shows ~3× higher σ [1,2] and +25% stiffness [4] than LPSCl
+
+[1] T. Zuo et al., Angew. Chem. Int. Ed., vol. 62, e202213228, 2023.        (σ 2.9 vs 7.0 mS/cm RT)
+[2] P. Adeli et al., Angew. Chem. Int. Ed., vol. 58, no. 26, pp. 8681–8686, 2019.  (Li5.4PS4.4Cl1.6 원조 합성)
+[3] R. Schlem et al., Adv. Energy Mater., vol. 10, no. 8, p. 1903719, 2020.  (Ea 0.22/0.25 — 우리 4fu EXACT 매칭)
+[4] Kim et al., ACS Mater. Lett., 2025.  ⚠ vol/page 채워야 함 (UPE Cl↑→E↑)
+```
+
 ### 본문 텍스트 (v2 — thesis 띠 버전, 보존)
 
 **상단 thesis 띠**:
