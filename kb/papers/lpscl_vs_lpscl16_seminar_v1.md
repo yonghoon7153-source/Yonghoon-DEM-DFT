@@ -1282,6 +1282,74 @@ S  → disorder fingerprint #2: 역설적 균질화  (anti-site Cl가 split 메�
 
 ---
 
+## 1L. Slide 12 — Cross-check #4: BVSE Bimodal Split (Paired 5×5×5)
+
+### 페이지 배치 (16:9)
+- 왼쪽: bimodal histogram (Li-BVS 분포)
+- 오른쪽: 3D iso-surface paired (또는 2D slice)
+- 하단: 정량 cross-check + caveat
+
+### 본문 텍스트
+
+**제목**: "12. Li 환경이 둘로 갈라진다 — BVSE bimodal split (paired 5×5×5)"
+
+**Bimodal 표**:
+```
+시스템   | Group               | n_Li  | 비율   | BVS peak  | 환경
+─────────┼─────────────────────┼───────┼────────┼───────────┼──────────
+comp1    | uniform             | 3000  | 100%   | 1.60-1.64 | F-43m ordered
+modelc   | low-BVS (group A)   | 1074  | 39.8%  | 1.60-1.64 | comp1-like, AS 멀리
+modelc   | high-BVS (group B)  | 1626  | 60.2%  | 1.83-1.89 | AS Cl 인접, +15% ★
+```
+
+**Key**:
+```
+• 1626 high-BVS Li / 300 AS Cl = 5.4 Li per AS — Li-Cl 1차 배위(4-6) 정합
+• +15% BVS shift ↔ +40% ICOHP 강화 — 같은 효과 두 probe 정량
+• 37.5% AS = cubic 5×5×5의 stoichiometry 필연 lower bound (over-disordered 아님)
+```
+
+**Footnote**:
+```
+※ 5×5×5 cubic supercell (lattice 50.275 Å), grid 100³, cutoff 5.0 Å
+※ comp1에서 300 S→Cl + 300 Li 제거 (charge-compensated, isovolumetric)
+※ Paired: 격자/grid/cutoff 완전 동일, 차이는 chemistry 변화만
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Cross-check #4 — BVSE bond-valence sum mapping. Li 이동 환경 직접 측정.
+>
+> Paired 5×5×5 supercell 프로토콜 — comp1 셀을 5×5×5 tile (6500 atoms)로 펼치고, modelc는 300 S→Cl + 300 Li 제거만 적용. 격자, grid 100³, cutoff 5 Å — 완전 동일. 차이는 chemistry 그 하나만.
+>
+> 왼쪽 histogram이 핵심. comp1은 단일 좁은 peak — 3000 Li가 1.60-1.64에 모임, σ=0.016. F-43m ordered structure 단일 환경.
+>
+> modelc로 가면 bimodal split. 첫 peak 1.60-1.64에 1074 Li (39.8%) — anti-site에서 멀리 있는 comp1-like. 두 번째 peak 1.83-1.89에 1626 Li (60.2%) — +15% shifted, anti-site 주변 그룹.
+>
+> 정량 cross-check 깨끗. 1626 / 300 AS = 5.4 Li per AS Cl — Li-Cl 1차 배위 4-6과 정합. BVSE +15% shift는 LOBSTER ICOHP +40% 강화의 또 다른 정량 — 두 독립 probe 같은 anti-site 효과.
+>
+> Caveat: AS 37.5%는 cubic 5×5×5에서 stoichiometry 필연 — 4a 500 사이트 다 차고 남은 300이 4d로 가야 함. 실험 25-50% 범위 내. over-disordered 아님.
+>
+> 오른쪽 3D iso-surface는 같은 결과 시각화 — comp1 균질 mobile network, modelc는 anti-site 영역 high-BVSE 집중."
+
+### 시각 디자인 노트
+- 왼쪽 histogram: comp1(파랑) + modelc(빨강) overlay, BVS 분포
+- modelc bimodal 두 peak 음영 + 39.8% / 60.2% 라벨
+- 오른쪽 3D iso-surface 또는 2D slice: 같은 colormap, isovalue 0.30
+- "bimodal split" + "stoichiometric necessity" 강조
+
+### Q&A
+- "BVS 측정 의미?" → 가상 Li 위치 grid point의 valence 합. 실제 자리 ≈ 1.0 ideal, 일탈량이 환경 영향
+- "paired 5×5×5 이유?" → unit cell 격자 다름 (cubic vs rhombo). 같은 cubic으로 paired만 정확
+- "37.5% over-disordered 아님 확신?" → cubic 5×5×5 stoichiometric math 필연 lower bound. 실험 25-50% 범위 내
+- "12.5% (rhombo primitive)와 차이?" → primitive 8 중 1 4d는 특정 ordered choice. 큰 셀에선 그 배치 불가
+- "+15% vs +40% 정량 차이?" → 다른 측정 (BVS=형식가, ICOHP=결합 강도). direction 같음이 중요
+- "5.4 Li per AS Cl 의미?" → bonds.json 4d-Cl coord=4 (tet) + 약간 2차 영향. 1차 배위와 정합
+- "iso-surface 0.30 선택?" → shallow main channel — Li 자유 흐를 수 있는 low-BVSE 영역
+- "60.2% 비율 정확한가?" → 5.4 × 300 = 1620 ≈ 1626 — 모든 AS 주변 첫 Shell이 영향
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1303,6 +1371,7 @@ S  → disorder fingerprint #2: 역설적 균질화  (anti-site Cl가 split 메�
 | v1.14 | 2026-06-11 | Slide 10 (cross-check #2: counter-intuitive bond) drafted — Li–Cl −0.076 Å (4d AS 2.45 Å, 4a보다 0.16 짧음), Cl⁻ vs S²⁻ ionic radius 매칭 + Voronoi V −1.7 Å³ 직접 증거 |
 | v1.15 | 2026-06-11 | **Slide 7 v2 + Slide 10 v2** ACTIVE: vacancy(69%)+anti-site(31%) 분해 정확화, per-bond vs per-anion 명시 (LOBSTER covalent overlap 우세 측정 vs S²⁻ q² × coord total). Coulomb 직관 회복. paper-grade defensible mechanism. |
 | v1.16 | 2026-06-11 | Slide 11 (cross-check #3: Voronoi 4-sublattice fingerprint) drafted — P 0→0.37 (framework 일관), Cl 0→0.74 (분기), Li 0.21→1.15 (×5.5 ★), S 3.41→2.05 (역설적 균질화 ★). 3 probe convergence. PDOS Cl 3p −2.5 eV vs S (mechanism 2 confirmed both systems). |
+| v1.17 | 2026-06-11 | Slide 12 (cross-check #4: BVSE bimodal paired 5×5×5) drafted — comp1 단일 peak vs modelc bimodal (39.8% comp1-like + 60.2% +15% shifted), 5.4 Li per AS, BVSE +15% ↔ ICOHP +40% 두 probe 일관, 37.5% AS stoichiometric necessity |
 
 ---
 
