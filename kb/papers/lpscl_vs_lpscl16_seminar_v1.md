@@ -639,6 +639,36 @@ ground state로 relax해서 champion을 확정합니다."
 
 ---
 
+### ★ Slide 6 (sub) — DFT validation detail (★ NEW 2026-06-12, 실물 확정)
+
+```
+제목(좌상단): DFT
+상단 각주 (4줄):
+  EOS: Equation of State — energy as a function of cell volume
+  BM3: 3rd-order Birch–Murnaghan EOS — extracts V₀, B₀, B₀′ from E(V) curve
+  BFGS: Broyden–Fletcher–Goldfarb–Shanno — quasi-Newton optimizer for atomic relaxation
+  SCF: Self-Consistent Field — DFT electron-density iterative convergence
+우상단 ref: Phys. Rev., 71, 809 (1947).   ← F. Birch (BM EOS 원조)
+
+■ DFT validation
+   · MLIP-champion structures confirmed by DFT — 11-volume Birch–Murnaghan EOS
+   · Cl-rich shows volume contraction with bulk softening — first decoupling signal (적색)
+
+[좌] DFT validation 박스: 1. MLIP EOS pre-scan (V₀ screening) / 2. BM3 EOS 11 volumes
+     (V/V₀ 0.96–1.06) / 3. V₀ confirmation BFGS (force < 5e-3 eV/Å) / 4. k-mesh (k×L ≥ 40 Å, tight SCF)
+[좌하] BM3 수식 + B₀/B₀′ 한 줄 정의
+[우] E(V) curves: Li₆PS₅Cl (V/f.u. 254.16, B₀ 26.2) / Li₅.₄PS₄.₄Cl₁.₆ (243.29, −4.3% 적색, B₀ 21.7)
+```
+
+발표 보충 멘트 ("decoupling signal" 질문 대비):
+"보통 부피가 줄면 단단해질 거라 기대하는데 Cl-rich는 부피 −4.3%이면서 B₀는 26.2→21.7로
+내려갑니다. packing과 bonding이 따로 노는 첫 신호 — M4에서 hydrostatic soft / shear +30%
+stiff로 완전히 풀립니다." (M4 복선)
+
+검산: V/f.u. 254.16=1016.62/4 ✓ · 243.29=1216.44/5 ✓ · force 단위 eV/Å (ASE BFGS fmax) ✓
+
+---
+
 ## 1D. Slide 4 — Headline Table (4 messages preview)
 
 ### Tier 3 post-processing 진입점
