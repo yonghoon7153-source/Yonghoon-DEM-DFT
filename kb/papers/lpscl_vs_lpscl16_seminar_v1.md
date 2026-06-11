@@ -1199,6 +1199,89 @@ Li–Cl (4d AS, modelc only)    | 2.45    | ★ 0.14 Å 짧음
 
 ---
 
+## 1K. Slide 11 — Cross-check #3: Voronoi 4-Sublattice Disorder Fingerprint
+
+### 페이지 배치 (16:9)
+- 메인 4-행 표 (P/Cl/Li/S × comp1/modelc std)
+- 4 sublattice 응답 해석 박스
+- 3 probe convergence footer
+
+### 본문 텍스트
+
+**제목**: "11. Disorder는 4개 sublattice에 어떻게 들어가나 — Voronoi fingerprint"
+
+**메인 표**:
+```
+종 (Voronoi V std, Å³)   | comp1   | modelc  | 변화
+────────────────────────┼─────────┼─────────┼─────────────
+P  (PS₄ framework)      | 0.00    | 0.37    | +0.37
+Cl                      | 0.00    | 0.74    | +0.74
+Li                      | 0.21    | 1.15    | ★ 5.5× 더 흔들림
+S                       | 3.41    | 2.05    | ★ −40% 균질화 (역설!)
+```
+
+**4 sublattice 해석**:
+```
+P  → PS₄ framework 거의 안 흔들림           (M1 backbone 일관)
+Cl → 4a (정상) + 4d AS 두 환경 분기          (M3 +13% ICOHP 출처)
+Li → disorder fingerprint #1: 5.5× 더 흔들림 (vacancy + AS-adjacent 재배치)
+S  → disorder fingerprint #2: 역설적 균질화  (anti-site Cl가 split 메움)
+```
+
+**Key**:
+```
+• 4 sublattice가 모두 다른 방식으로 disorder에 응답
+• P 거의 0, S 역설적 감소, Li 가장 강력 fingerprint
+• 3 독립 probe 수렴 (Voronoi + BVSE bimodal + LOBSTER ICOHP +13%)
+```
+
+**Footnote**:
+```
+※ Method: scipy.spatial.Voronoi 3×3×3 PBC tile + ConvexHull 부피
+  합 = cell 부피 (ratio 1.000, exact 측정)
+※ comp1 P, Cl std=0: F-43m 격자에서 모든 P, Cl이 결정학적 equivalent
+※ Three independent post-processings: bvse_5x5x5_paired + LOBSTER + Voronoi
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Cross-check #3, disorder가 4개 sublattice에 어떻게 들어가는지 Voronoi 부피 std로 잰 결과입니다.
+>
+> 각 원자 주위 다면체 부피의 표준편차를 종별로 측정하면, 그 종 안에서 환경이 얼마나 균질한지가 직접 보입니다.
+>
+> comp1에서는 P, Cl std가 정확히 0. F-43m ordered에서 모두 결정학적으로 equivalent 위치 — 직접 증거입니다. Li std 0.21은 24g/48h 두 Wyckoff orbital 분기.
+>
+> modelc로 가면 4개 sublattice가 각각 다른 방식으로 응답합니다.
+>
+> 첫째, P sublattice: std 0.37, 거의 안 흔들립니다. PS₄ tetrahedron framework 보존의 직접 시각화.
+>
+> 둘째, Cl sublattice: std 0.74로 두 군집 분기. 4a 정상 + 4d anti-site 두 환경 — slide 7 ICOHP per-site split과 직접 대응.
+>
+> 셋째, Li sublattice — 가장 강한 fingerprint: std 1.15로 5.5배 더 흔들립니다. vacancy 재배치 + anti-site 주변 Li 환경 변화 합산.
+>
+> 넷째, S sublattice는 paper의 진짜 highlight: std가 오히려 40% 줄어듭니다, 균질화. 직관에 반하는데 이유는 comp1에서 S가 두 군집 (PS₄-S 작은 부피 + free 4d-S²⁻ 큰 부피)로 splits, 그 격차가 컸어요. modelc에서 4d로 들어간 anti-site Cl이 그 split을 메워서 평균화. anti-site disorder가 단순히 무질서를 더하는 게 아니라 기존 split을 smooth하는 dual effect 발견.
+>
+> 이 fingerprint는 다른 두 독립 post-processing과 수렴. slide 12 BVSE bimodal + slide 7 LOBSTER ICOHP +13%. 세 독립 측정이 같은 방향을 가리킵니다."
+
+### 시각 디자인 노트
+- 4행 표 — 각 행 다른 색 (4 sublattice 구분)
+- ★ Li (×5.5) + ★ S (역설 −40%) 두 행 강조
+- "역설적 균질화" 강조색 — paper highlight
+- 4 sublattice 해석 박스 표 아래 별도
+- 3 probe convergence footer 한 줄
+
+### Q&A
+- "Voronoi 측정 방법?" → scipy.spatial.Voronoi + ConvexHull, 3×3×3 PBC tile, sum ratio 1.000 exact
+- "std (분산) 선택 이유? mean은?" → mean은 종별 평균 크기, std가 "환경 다양성" fingerprint
+- "comp1 std=0의 의미?" → F-43m에서 P, Cl 모두 결정학적 equivalent — ordered 직접 evidence
+- "comp1 Li std도 0 아닌데?" → 24g + 48h 두 Wyckoff sublattice 분기
+- "S 균질화가 왜 surprising?" → 보통 disorder=std 증가 직관, anti-site가 split 줄임 — counter-intuitive
+- "BVSE bimodal과 연결?" → 같은 cell Li 부피 분포 wide → BVSE energy 분포 wider. 같은 원인 두 measure
+- "comp1 S std 3.41 크기 이유?" → free S²⁻(4d) 4개 큰 부피 + PS₄-S 16개 작은 부피 두 군집 split → bimodal V → std 큼
+- "modelc S std 줄어든 메커니즘?" → 4d 자리 일부에 anti-site Cl 들어가면서 PS₄-S vs free-S 중간 부피로 흡수
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1219,6 +1302,7 @@ Li–Cl (4d AS, modelc only)    | 2.45    | ★ 0.14 Å 짧음
 | v1.13 | 2026-06-11 | Slide 9 (cross-check #1: PS₄ universal backbone) drafted — 5 probe (P-S 길이/σ/배위/ICOHP/ELF/Bader) + universal anchor Li-S(4d), rigid block 결론 |
 | v1.14 | 2026-06-11 | Slide 10 (cross-check #2: counter-intuitive bond) drafted — Li–Cl −0.076 Å (4d AS 2.45 Å, 4a보다 0.16 짧음), Cl⁻ vs S²⁻ ionic radius 매칭 + Voronoi V −1.7 Å³ 직접 증거 |
 | v1.15 | 2026-06-11 | **Slide 7 v2 + Slide 10 v2** ACTIVE: vacancy(69%)+anti-site(31%) 분해 정확화, per-bond vs per-anion 명시 (LOBSTER covalent overlap 우세 측정 vs S²⁻ q² × coord total). Coulomb 직관 회복. paper-grade defensible mechanism. |
+| v1.16 | 2026-06-11 | Slide 11 (cross-check #3: Voronoi 4-sublattice fingerprint) drafted — P 0→0.37 (framework 일관), Cl 0→0.74 (분기), Li 0.21→1.15 (×5.5 ★), S 3.41→2.05 (역설적 균질화 ★). 3 probe convergence. PDOS Cl 3p −2.5 eV vs S (mechanism 2 confirmed both systems). |
 
 ---
 
