@@ -354,7 +354,64 @@ rhombohedral R3m · 5 f.u. · 62 atoms
 
 ## 1C. Slide 3 — 3-Tier Pipeline (MLIP screen → DFT confirm → §8)
 
-### ★ 연구실 템플릿 v2 (2026-06-12 ACTIVE)
+### ★ 연구실 템플릿 v3 (2026-06-12 ACTIVE — Rietveld→DFT 간극 도입 강화)
+
+**제목**: "Computational Pipeline: From Rietveld Occupancy to DFT-Ready Cell"
+
+**본문 (■/· 3단 구조)**:
+```
+■ Why a pipeline?
+   · Rietveld CIFs report fractional occupancy (time/space-averaged, room-T)
+   · DFT requires integer occupancy — one atom per site, decided ahead of time
+   · → A separate procedure is needed to assign which site holds which atom
+
+■ 3-tier pipeline (same protocol for both systems)
+   · Tier 1 — MLIP screening (UMA-s-1p1, hours): halogen enumeration
+     (LPSCl 70 = C(8,4) · LPSCl₁.₆ 45 = C(10,2)) → Li screen (top-5 × 20) → 500 K anneal → champion
+   · Tier 2 — DFT validation (days): BM3 EOS, 11 volumes (V/V₀ 0.96–1.06) → V₀, B₀ < 1 GPa
+   · Tier 3 — Multi-probe (weeks): structure · electronic · bonding · transport · mechanical (13 probes)
+
+■ Champion = annealed ground state (not hand-picked)
+   · LPSCl: pipeline converged to the ordered cell (Cl@4a, free S²⁻@4d)
+   · LPSCl₁.₆: same pipeline yields a 4d-Cl anti-site champion → disorder comes from composition
+     (적색/굵게: "disorder comes from composition")
+```
+
+**우상단 refs (4d-disorder 도입용)**:
+```
+H.-J. Deiseroth et al., Angew. Chem. Int. Ed., 47, 755 (2008).
+M. A. Kraft et al., J. Am. Chem. Soc., 139, 10909 (2017).
+N. Minafra et al., Solid State Ionics, 346, 115223 (2020).
+B. J. Morgan, Chem. Mater., 33, 2004 (2021).
+```
+
+**발표 스크립트 v3 ★ ACTIVE (~90초)**:
+
+> "Cell configuration을 결정하기 전에, 저희가 처음 기준으로 삼은 건
+> **'DFT 상에서 가장 안정한 site 배치는 무엇인가, 그리고 그 구조의 기본 물성은 어떤가'** 였습니다.
+>
+> LPSCl의 경우 기존 Rietveld로 정해진 CIF 파일들이 있지만, 이건 **상온 측정의 시간·공간 평균**
+> 이라 한 자리에 Cl 60% / S²⁻ 40% 같은 분율 점유로 표현됩니다. DFT는 그런 분율 점유를
+> 받을 수 없어요 — **site마다 원자 하나, 정수 occupancy**로 결정해야 합니다. 그래서 셀을
+> 짜기 전에 '어느 site에 어느 원자를 박을지'를 결정하는 별도 파이프라인이 필요했습니다.
+>
+> 그래서 만든 게 이 3-tier pipeline입니다.
+>
+> **Tier 1, MLIP screening.** 가능한 음이온/Li 배치를 전수 나열합니다 — LPSCl은 C(8,4)=70개,
+> LPSCl₁.₆는 C(10,2)=45개. 그 위에 Li 배치 screening, 500 K Langevin annealing까지 UMA
+> foundation MLIP으로 몇 시간 안에 돌려서 champion을 뽑습니다.
+>
+> 여기서 강조하고 싶은 게 — **왼쪽의 ordered는 저희가 '교과서니까' 고른 게 아닙니다.**
+> halogen 배치만 보면 mixed 2/2가 위로 올라오는데, **Li sublattice까지 풀어서 annealing
+> 하면 ordered가 역전해서 ground state로 확정**됩니다. 같은 절차를 Cl-rich에 적용하면
+> 이번엔 4d-Cl anti-site champion이 나옵니다. Deiseroth와 Kraft 이후 실험에서 보고된
+> 4d-site disorder를 **가정하지 않고 절차로 재현**한 거예요. 즉 ordered도 disorder도
+> 저희가 넣은 게 아니라 **조성이 만든 결과**입니다. 오늘 thesis의 첫 번째 근거예요.
+>
+> **Tier 2**에서 champion을 DFT 11-volume BM3 EOS로 V₀/B₀ paper-grade(<1 GPa) 확정,
+> **Tier 3**에서 13가지 probe를 양쪽에 똑같이 적용했습니다. 다음 슬라이드부터 결과 보겠습니다."
+
+### (보존) 연구실 템플릿 v2 (2026-06-12 — Rietveld 도입부 추가 전)
 
 **제목**: "Computational Pipeline: MLIP Screening → DFT Validation"
 
