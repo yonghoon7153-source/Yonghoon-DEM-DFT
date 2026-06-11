@@ -2356,6 +2356,24 @@ Axis | 의미                          | comp1 vs modelc       | Reference
 
 ---
 
+### ★ Axis 3 보강 — delithiation-kinetics 메커니즘 (2026-06-12 추가)
+
+> 외부 검토 텍스트 (Zuo 2023 재독해) 채택. Slide 18 발표/Q&A에 추가할 인과 사슬:
+
+**핵심 한 줄**: 산화 분해 = delithiation 반응 → **σ를 올린 바로 그 설계 요인 (Li vacancy +
+4d-Cl AS, 빠른 Li⁺ 수송)이 분해 kinetics도 가속한다.**
+
+- 물질 레벨: Cl-rich가 동일 carbon 접촉에서 더 낮은 전위부터 더 많이 분해 (S⁰/polysulfide/SO₂ ↑, Zuo CV)
+- 단, onset·메커니즘 (S²⁻ → S⁰)은 두 조성 유사 — 우리 axis 1 (0-pressure onset 2.14 V 동일)과 정합
+- cell 레벨: 분해 산물이 더 mild (LiCl ↑) → R_int 더 낮음 (8.9 vs 13.2 Ω·h^0.5) → Zuo 결론은
+  "분해 ↑ but cell 성능 ↑" — axis 3 WINS의 실체
+- **slide 22 duality와 동일 구조**: 4d-Cl AS/vacancy가 σ·E를 주면서 thermal/moisture/분해 kinetics
+  비용도 동시에 만듦 → "공통 원인" 서사에 oxidation kinetics 합류
+
+**Manuscript 지침 (확정)**: 산화 안정성을 Cl-rich의 "장점"으로 절대 쓰지 않음. 표현은 항상
+"onset 동일 (axis 1 DRAW) · 기계적 구속 하 window 확대 (axis 2) · cell-level R_int 우위 (axis 3)
+· 분해 kinetics는 가속 (자재 레벨 비용) · thermal calendar 열위 (axis 4)" — 축 분리로만 서술.
+
 ## 1S. Slide 19 — Robustness #3: Constrained ESW Cl-scan + 분해반응
 
 ### 페이지 배치 (16:9)
