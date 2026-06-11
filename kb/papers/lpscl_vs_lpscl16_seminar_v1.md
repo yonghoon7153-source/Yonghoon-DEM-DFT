@@ -361,6 +361,74 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
 
 ---
 
+## 1E. Slide 5 — M1: 전자구조는 거의 동일
+
+### 페이지 배치 (16:9)
+- 왼쪽: DOS overlay plot (comp1 파랑, modelc 빨강) + Fermi 점선 + VBM/CBM 음영
+- 오른쪽: gap + EF + VBM/CBM character 표
+- 하단: 3 bullet key points + footnote (modelc defect band)
+
+### 본문 텍스트
+
+**상단**: "M1: 전자구조는 두 시스템에서 거의 동일"
+
+**표**:
+```
+항목           | LPSCl       | LPSCl₁.₆
+───────────────┼─────────────┼─────────────
+gap (eV)       | 1.76        | 1.82
+Δgap           |             | +0.06
+EF (eV, QE)    | 2.821       | 2.445
+VBM (eV)       | 2.48        | 2.72
+CBM (eV)       | 4.24        | 4.54
+
+VBM character  | S p 91% +   | S p 92% +
+               | Li p 6%     | Li p 6%
+CBM character  | S p 42% +   | S p 45% +
+               | P s 25% +   | P s 27% +
+               | Li p 14%    | Li p 13%
+```
+
+**Key points**:
+```
+• 갭 차이 Δ = 0.06 eV (작음)
+• VBM = S 3p 91%, CBM = S 3p + P 3s + Li 2p (양쪽 동일 패턴)
+• 0.06 eV로는 σ 3× / E_VRH 25% 차이 설명 불가
+```
+
+**Footnote**:
+```
+※ modelc EF(2.45) < VBM(2.72): 국소 defect-band 0.74 states (comp1 0.037, 20× 적음)
+  → vacancy + 4d-Cl anti-site의 실제 전자적 흔적, S 3p hole localization
+```
+
+### 발표 스크립트 (55–65초)
+
+> "Message 1, 전자구조는 거의 동일하다.
+>
+> 왼쪽 그림이 두 시스템의 DOS overlay입니다. 전체적인 모양이 거의 똑같습니다. VBM 부근, 그러니까 페르미 레벨 바로 아래는 양쪽 다 S 3p가 91% 이상 차지하고, CBM은 S 3p + P 3s + Li 2p 조합으로 동일합니다.
+>
+> 오른쪽 표를 보시면 갭이 1.76 vs 1.82 — 차이 0.06 eV 정도로 modelc가 약간 wide합니다. 하지만 이 작은 차이로는 conductivity 3배, stiffness 25% 차이를 설명할 수 없습니다. 0.06 eV는 thermal kT (300 K에서 26 meV)의 2.3배 정도라서 transport나 mechanical에 의미 있는 contribution을 주기 어려워요.
+>
+> 그런데 흥미로운 게 하나 있습니다. modelc의 페르미 레벨이 VBM보다 아래에 있어요 — 2.45 vs 2.72 eV. 이 사이에 0.74개의 localized state가 들어가 있습니다. comp1은 같은 구간에 0.037개뿐, 20배 차이입니다. 이건 vacancy와 4d-Cl anti-site로 생긴 국소 S 3p hole의 실제 흔적이고, defect band 그 자체죠.
+>
+> 즉 갭은 거의 같지만, modelc는 전자구조에 'disorder의 fingerprint'가 분명 있고, 그 fingerprint가 mechanism에서 나오는 변화의 원인이 됩니다. 그 disorder가 무엇인지가 다음 메시지부터 보여드릴 내용입니다."
+
+### 시각 디자인 노트
+- DOS plot: two systems overlay (comp1 파랑, modelc 빨강) + Fermi level 점선 + VBM/CBM 음영
+- 표 색 강조: gap 행만 약한 음영
+- "거의 동일" 두 단어는 강조색 (#003876)
+- footnote 폰트 작게 (12pt), italic
+
+### Q&A 보조 노트
+- "0.06 eV 차이 통계적으로 의미있나?" → DOS bin 0.005 eV 기준 measurable. USPP/DOS-threshold 0.4 eV 절대오차 있는 상황이라 direction만 robust
+- "modelc EF가 VBM 아래에 있는 게 왜?" → 충분한 disorder가 있으면 PBE에서 partial localization → 부분적으로 채워진 defect state. n-type 거동 시사
+- "literature PBE gap 2.15-2.45 eV인데 우리 1.76?" → USPP + DOS-threshold method offset 0.4 eV. 양쪽 동일 적용되어 Δgap robust
+- "DOS overlay 어떻게 grade?" → V₀ 다른 두 시스템이라 alignment는 EF 기준. 절대 에너지 무의미
+- "defect band 0.74 states 의미?" → 5 f.u. cell당 정수 단위 (~1 hole). n-type pinning 등과 연결 가능
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -371,6 +439,7 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
 | v1.3 | 2026-06-10 | Slide 1 script v4 (★ ACTIVE): "궤도 character" → "전자구조 전반 패턴" vague (직접 비교 문헌 없음 회피). PS₄ 단정 유지 |
 | v1.4 | 2026-06-10 | Slide 2 (Scope) + Slide 3 (3-tier pipeline) drafted. site preference + cell parameter pipeline 압축 |
 | v1.5 | 2026-06-10 | Slide 4 (Headline 4-message table) drafted — Tier 3 §8 post-processing 진입점 |
+| v1.6 | 2026-06-10 | Slide 5 (M1: 전자구조 둔감) drafted — DOS overlay + gap 1.76 vs 1.82 + modelc defect band note |
 
 ---
 
@@ -379,7 +448,8 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
 - [x] Slide 2 (Scope) — drafted 2026-06-10
 - [x] Slide 3 (Pipeline schematic) — drafted 2026-06-10
 - [x] Slide 4 (Headline 표) — drafted 2026-06-10 (Tier 3 post-processing 진입)
-- [ ] Slide 5 (M1 — 전자구조 둔감)
+- [x] Slide 5 (M1 — 전자구조 둔감) — drafted 2026-06-10
+- [ ] Slide 5a (sub: k-mesh incident)
 - [ ] Slide 5–8 (4 메시지 헤더) — 각 슬라이드 본문 + script + figure source
 - [ ] Slide 5a, 6a–6c, 7a–7b, 8a–8b (sub) — 보강 슬라이드들
 - [ ] Slide 9–13 (Cross-check) 본문 + script
