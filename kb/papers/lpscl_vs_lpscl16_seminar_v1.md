@@ -1126,9 +1126,12 @@ conserved) / 우상단 refs: Minafra SSI + Kraft JACS (대본 인용 근거)
 [좌] 구조 그림: free-anion 영역 청 점선 타원 + 교환 화살표, 라벨 "free S²⁻ ↔ Cl swap"
 [우] 표: clean 행 0.253(적)/0.224(청) · disordered 행 중립 — 색이 "same" 메시지와 호응
      표 아래: matched disorder: ΔEa = 4 meV (almost same)
-검수: Minafra bullet 3은 의도적 생략 (대본이 커버). 수정 대기 1건 — 하단 footnote가
-"the pure-ordered"에서 잘림 → "a fully ordered cell is kinetically frozen at 600 K
-(apparent 1.17 eV = statistical artifact)"로 교체.
+검수 → **FINAL 확정 (2026-06-11)**: Minafra bullet 3은 의도적 생략 (대본이 커버).
+**결정: 1.17-frozen footnote 통째 삭제** — M2의 0.172 생략과 동일 논리 (청중 미공개
+내부 검증 스토리, 선제 고백 불필요). 대본의 footnote 단락도 삭제 → Q&A 카드 강등:
+"완전 ordered 극한 직접 측정? → 했음 — 600 K에서 Li frozen (D~10⁻⁷), 겉보기 1.17 eV는
+hop 통계 artifact. 그래서 clean 행은 natural cell 값 사용. 실험 샘플도 ball-milled라
+순수 ordered 극한은 실험적으로도 접근 불가."
 ```
 
 
