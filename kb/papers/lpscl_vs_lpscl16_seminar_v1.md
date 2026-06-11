@@ -1049,9 +1049,17 @@ R²            | 0.999    | 0.992
 
 ---
 
-## 1F-1. Slide 6a — Mechanism Cartoon (carrier vs barrier)
+## 1F-1. ~~Slide 6a — Mechanism Cartoon (carrier vs barrier)~~ — **발표 deck에서 DROPPED** (2026-06-11)
 
-### 페이지 배치 (16:9)
+> ⚠ v1 잔재로 판정, as-built deck에서 제외. 사유: ① "왜 carrier가 **이기는가** — 두 효과의
+> **경쟁**" 프레임은 5fu 시절(comp1 Ea가 더 낮아 barrier↔carrier가 경쟁하던 v1) 산물 —
+> **v3에서는 Ea·D₀ 둘 다 modelc 우세(협력)라 경쟁 프레임 자체가 무효**. ② 우측 패널
+> "~8× 많은 path"도 구 D₀ 8× 수치 잔재 (v3는 1.41×). ③ 분해(1.75×1.41)는 M2 본
+> 슬라이드 하단 박스가 이미 수행. **●●○●● vacancy 직관은 M2 대본 한 문장으로 흡수**:
+> "LPSCl은 Li가 가득 차서 hop하려면 옆자리가 비길 기다려야 하는데, LPSCl₁.₆는 공공이
+> f.u.당 0.6개라 빈자리가 항상 근처에 있습니다 — 그게 D₀ 1.4×의 실체입니다."
+
+### (보존) 페이지 배치 (16:9)
 - 좌우 2-panel cartoon: LPSCl (Li 가득참, hop 대기) vs LPSCl₁.₆ (공공 ○, 상시 hop)
 - 하단: D = D₀·exp(−Ea/kT) 식 + "D₀ 8×가 지배" 한 줄
 
