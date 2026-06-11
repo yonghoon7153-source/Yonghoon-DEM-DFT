@@ -762,6 +762,18 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
 
 ## 1E. Slide 5 — M1: 전자구조는 거의 동일
 
+### ★ Provenance 확정 (2026-06-11, V100 백업 summary.json 대조)
+
+- **comp1 정본**: `runs/comp1_v3/v3_post/k444_props/V0_*` — EF 2.821 / VBM 2.48 / CBM 4.24 /
+  gap 1.76 / VBM char S p 91.3% + Li p 5.7% / CBM char S p 42.3% + P s 24.6% + Li p 14.3% — 표와 전부 일치 ✓
+- **modelc 정본**: `runs/modelC_v3/V0_regen_*` ★ — EF 2.445 / VBM 2.72 / CBM 4.54 / gap 1.82 /
+  VBM char S p 91.6% + Li p 5.6% / CBM char S p 44.7% + P s 27.4% + Li p 12.7% — 표와 전부 일치 ✓
+- ⚠ modelc 구버전 `V0_dos_summary.json` (regen 아님)은 옛 gap-detection (longest-run) — gap 1.80 /
+  VBM 2.74로 미세 차이. **사용 금지**, appendix PNG도 `V0_regen_dos_pdos.png` 사용.
+- ⚠ comp1 `archive_v2_post/post_v2/comp1v2_*`는 v2 아카이브 — 사용 금지.
+- Origin overlay 데이터 (`V0_dos.dat` ×2 → dos_overlay_origin.csv): E−EF gap edge 검산
+  comp1 −0.34/+1.42, modelc +0.28/+2.09 — regen 값과 일치 ✓ (M1 표 7행 provenance 완료)
+
 ### 페이지 배치 (16:9)
 - 왼쪽: DOS overlay plot (comp1 파랑, modelc 빨강) + Fermi 점선 + VBM/CBM 음영
 - 오른쪽: gap + EF + VBM/CBM character 표
