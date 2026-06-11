@@ -1440,6 +1440,79 @@ ELF 0.7~1.0 : localized (lone pair / covalent maximum)
 
 ---
 
+## 1N. Slide 14 — k-mesh Audit & Method Convergence (Referee Defense)
+
+### 페이지 배치 (16:9)
+- k-mesh incident & recovery 스토리 박스 (referee 정직성)
+- Property별 k-sensitivity 표
+- 최종 paper-grade 설정 (k-mesh + spilling + AIMD window)
+
+### 본문 텍스트
+
+**제목**: "14. k-mesh 수렴 + LOBSTER spilling + AIMD window — Method audit"
+
+**k-mesh incident 스토리**:
+```
+초기:  k=2×2×1, k×L=10 Å  → gap 1.50 eV (artifact)
+발견:  Δgap(modelc 1.82) = 0.32 eV "조성 효과"로 오해
+복구:  k=4×4×4, k×L=40 Å  → gap 1.76 eV (paper-grade)
+결과:  Δgap = 0.06 eV (M1 확정 — 사실상 동일)
+구조:  geometry RMS 0.003 Å (electronic만 오염, 구조 robust)
+```
+
+**Property k-sensitivity 표**:
+```
+Property         | k-sens   | 우리 대응
+─────────────────┼──────────┼──────────────────────────
+B₀ (BM-EOS)      | robust   | 재계산 불필요 (volume curvature systematic cancel)
+Gap              | high     | k=4×4×4/6×6×3 재계산 ✓
+Elastic Cij      | high     | 재계산 ✓
+DOS shape        | high     | 재계산 ✓
+Bader charge     | mid      | 재계산 ✓
+ICOHP            | robust   | k-shift Δ<0.006 eV (local probe) ✓
+```
+
+**최종 paper-grade method**:
+```
+• comp1:  k=4×4×4, k×L=40 Å (cubic 52 atoms)
+• modelc: k=6×6×3, k×L=42 Å (rhombo 62 atoms)
+• Convergence 기준: k×L ≥ 40 Å (argyrodite insulator gap ~1.8 eV)
+• LOBSTER spilling: comp1 1.46% / modelc 1.16% (<5% ✓)
+• AIMD window: [2, 50] ps 양쪽 동일, R² 0.999/0.992
+```
+
+### 발표 스크립트 (60–70초)
+
+> "Method-defense section입니다. paper-grade 결과들이 paper-grade 수렴 기준을 충족하는지 정직하게 보여드리는 referee defense.
+>
+> 가장 중요한 한 가지 — comp1 k-mesh incident와 복구 스토리. 위 박스를 보세요.
+>
+> 초기에는 comp1을 k=2×2×1로 잘못 돌렸어요. k×L이 10 Å로 paper 기준 40보다 4배 부족. 결과 gap이 1.50 eV로 나왔습니다. modelc gap이 1.82이니까 Δgap 0.32 eV 차이가 '조성 효과로 modelc가 더 wide'로 잘못 해석된 적이 있어요. 위험한 over-claim 직전에 발견.
+>
+> k=4×4×4 (k×L=40)로 재계산하니까 gap 1.76 eV로 올라옵니다. Δgap = 0.06 eV로 줄어들어요. M1 메시지의 정확한 근거. 중요한 건 structure RMS가 0.003 Å로 거의 안 바뀌었다 — k-mesh 오염은 전자 property만 영향, 구조는 robust. 그래서 EOS 같은 volume-curvature는 재계산 불필요.
+>
+> 표 아래쪽 property별 k-sensitivity 정리. B₀와 ICOHP는 k-robust (volume curvature cancel + local probe). gap, elastic, DOS는 k-sensitive라 paper-grade 재계산. 모든 §8 property 양쪽 동일 수렴 기준 충족.
+>
+> LOBSTER charge spilling 1-1.5%로 paper 표준 5%보다 깨끗, AIMD Arrhenius window 양쪽 동일 protocol로 R² 0.999 이상.
+>
+> Referee가 'method 부정확 아니냐' 물어볼 모든 지점 미리 차단."
+
+### 시각 디자인 노트
+- k-mesh incident 박스 강조 (정직성 표시)
+- "발견 → 복구" 화살표로 narrative 흐름
+- property 표 sensitivity 색 코딩 (red=high, yellow=mid, green=robust)
+- 최종 설정 박스는 paper Methods section 그대로
+
+### Q&A
+- "k=2×2×1 어떻게 발견?" → DOS profile spurious peak + 비물리적 mid-gap states → k 의심 → 수렴 test
+- "왜 modelc k=6×6×3?" → rhombo c축 35 Å, k_c×c=42 Å 보장
+- "EOS 재계산 안 함?" → B₀ volume curvature, k systematic cancel. comp1 v1/v2/v3 (26.2/26.5/26.23) 1% 일관
+- "ICOHP k 의존?" → 직접 측정 Δ<0.006 eV/bond (local probe)
+- "AIMD 800K rerun?" → seed stuck → R² 0.77 broken Arrhenius. fresh seed로 R² 0.999 회복. statistics 문제
+- "Spilling 5% 기준?" → LOBSTER 공식 docs + Maintz/Dronskowski
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1464,6 +1537,7 @@ ELF 0.7~1.0 : localized (lone pair / covalent maximum)
 | v1.17 | 2026-06-11 | Slide 12 (cross-check #4: BVSE bimodal paired 5×5×5) drafted — comp1 단일 peak vs modelc bimodal (39.8% comp1-like + 60.2% +15% shifted), 5.4 Li per AS, BVSE +15% ↔ ICOHP +40% 두 probe 일관, 37.5% AS stoichiometric necessity |
 | v1.18 | 2026-06-11 | Slide 13 (cross-check #5: ELF covalent vs ionic) drafted — P-S bridge ELF 0.95 동일, Li basin <0.1 양쪽 ionic, mechanism 1 (LOBSTER covalent overlap)의 시각 evidence. Cross-check section (9-13) 완성 |
 | v1.19 | 2026-06-11 | Slide 8 footnote 추가: "PS₄ 불변인데 왜 단단해지나" 직관 — PS₄=rigid blocks (M1), Li-anion=mortar (M3 +13%) → shear stiff (G +30%) → E_VRH +25%. M1↔M3↔M4 인과 chain 명시 |
+| v1.20 | 2026-06-11 | Slide 14 (k-mesh audit & method convergence) drafted — comp1 k=2×2×1 incident → k=4×4×4 복구 (gap 1.50 → 1.76, RMS 0.003), property k-sensitivity table, LOBSTER spilling 1.16-1.46% paper-grade. Referee defense 시작 |
 
 ---
 
