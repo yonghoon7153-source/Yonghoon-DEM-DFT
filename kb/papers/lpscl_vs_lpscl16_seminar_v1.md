@@ -1416,6 +1416,24 @@ eigenvalues | all + | all +    | 둘 다 mechanically stable
 
 ---
 
+### ★ 실물 확정판 (as-built deck slide 12 "M4", 2026-06-11 — FINAL)
+
+```
+각주 3줄 (clamped/relaxed/B·G·E·ν 정의) + ref Kim ACS Mater. Lett. 7,724 ✓
+■ M4: Clamped identical → relaxed-ion +25% - vacancy paradox resolved
+   · Clamped ion DFT: 52.31 vs 52.30 — identical (misses the exp. trend = the paradox)
+   · Relaxed-ion: 22.06 vs 27.66 (+25%)
+   · Stiffening is shear-dominant: G +30% (B −8%) — 4d-Cl locks shear modes
+[표①] clamped 행 회색 / relaxed 22.06적·27.66청·+25%청
+[표②] B 25.5청/23.4적 −8% · G 8.1적/10.6청 +30%청 · ν 중립 · Zener 1.14청/1.44적
+[우] E=9BG/(3B+G), ν=(3B−2G)/(2(3B+G)) 수식 — DB full-tensor 값과 정확 닫힘 검증됨
+```
+
+결정: ① 실험 매칭(22.06↔~23, Kim trend)은 슬라이드 생략, **구두 전달** — 대본 문장이
+Kim ref의 앵커 ② Zener 식은 수식 영역에서 의도적 제외 (표 Cij는 방향 평균, A는 축별
+성분이라 검산 함정 — Q&A 카드化) ③ 수식 명칭: VRH averaging (Hill 1952) + standard
+isotropic relations. footnote(벽돌-모르타르)는 대본 전담.
+
 ## 1H-1. Slide 8a — Shear Mode Lock-in — **8b와 병합 → 본편 "M4-1" (2026-06-11 확정)**
 
 > as-built 결정 (appendix안 철회): 8a(mechanism: C44 +72%) + 8b(robustness: 4
