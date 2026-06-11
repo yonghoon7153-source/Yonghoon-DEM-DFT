@@ -356,6 +356,50 @@ rhombohedral R3m · 5 f.u. · 62 atoms
 
 ### ★ 연구실 템플릿 v3 (2026-06-12 ACTIVE — Rietveld→DFT 간극 도입 강화)
 
+**실물 확정판 (v3 FINAL, 2026-06-12 — 실제 제작 슬라이드, 검수 완료)**:
+
+```
+제목(좌상단): DFT
+우상단 각주: MLIP: Machine Learning Interatomic Potential
+우상단 refs:  Angew. Chem. Int. Ed., 47, 755 (2008).   ← Deiseroth (4a/4d disorder 원조)
+             J. Am. Chem. Soc., 139, 10909 (2017).    ← Kraft (Cl 4a/4d 정량)
+
+■ 3-tier pipeline (same protocol for both systems)
+   · Fractional (Rietveld) → integer (DFT): a site-assignment procedure is needed
+   · 3-tier pipeline: (MLIP screening → DFT validation → Post-processing)
+
+3 박스 (점선 둥근 사각형):
+
+  ┌ MLIP screening ┐    ┌ DFT validation ┐    ┌ Post-processing ┐
+  │ 1. Halogen     │    │ 1. MLIP EOS    │    │ 1. Structure    │
+  │    enumerate   │    │    pre-scan    │    │    · Bonds·Voronoi│
+  │ 2. Li sublatt. │    │ 2. BM3 EOS     │    │    · BVSE       │
+  │    screen      │    │    11 volumes  │    │ 2. Electronic   │
+  │ 3. 500 K       │    │ 3. V₀ confirm. │    │    · DOS·Bands·ELF│
+  │    Langevin    │    │    (BFGS)      │    │ 3. Bonding      │
+  │    anneal      │    │ 4. k-mesh conv │    │    · Bader·ICOHP│
+  │                │    │    (tight SCF) │    │ 4. Transport    │
+  │                │    │                │    │    · MLIP MD    │
+  │                │    │                │    │      600/800/1000K│
+  │                │    │                │    │ 5. Mechanical   │
+  │                │    │                │    │    · Stress-strain│
+  │                │    │                │    │      (Cᵢⱼ)       │
+  │                │    │                │    │ 6. Electrochem. │
+  │                │    │                │    │    · Constrained ESW│
+  │                │    │                │    │    · Decomposition│
+  └────────────────┘    └────────────────┘    └─────────────────┘
+```
+
+검수 이력:
+① MLIP EOS pre-scan → DFT validation 박스 1번으로 이동 (MLIP은 champion까지로 끊고
+   DFT가 V₀ 확정 흐름 명확화)
+② Transport "AIMD" → "MLIP MD (UMA)"로 정직 표기 — slide 21 caveat과 일관성
+③ Post-processing 6번 Electrochemical (Constrained ESW + Decomposition) 추가 —
+   slide 18 oxidation 4-axis · slide 19 ESW Cl-scan의 출처 깃발
+④ 우상단 ref "Chem. Int. Ed." → "Angew. Chem. Int. Ed." 표기 정정
+
+### (보존) 연구실 템플릿 v2 (2026-06-12 — Rietveld 도입부 추가 전)
+
 **제목**: "Computational Pipeline: From Rietveld Occupancy to DFT-Ready Cell"
 
 **본문 (■/· 3단 구조)**:
