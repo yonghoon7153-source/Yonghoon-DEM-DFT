@@ -2223,7 +2223,100 @@ modelc:
 
 ---
 
-## 1V. References — Trade-off literature 참고 (paper writing용)
+## 1V. Slide 22 — Trade-offs & Outlook: Paper #2 Bridge (★ FINAL)
+
+### 페이지 배치 (16:9)
+- Top panel: 4 Trade-offs (idle/storage 영역만)
+- Bottom panel: Oxide Doping Mitigation Strategy (Sc₂O₃/B₂O₃/Nd₂O₃ ★)
+- 두 panel 사이 ↓ + "Paper #2 Strategy" 화살표
+
+### 본문 텍스트
+
+**제목**: "22. Trade-offs & Outlook — Paper #2 Doping Strategy로의 다리"
+
+**Top panel — 4 Trade-offs**:
+```
+LPSCl₁.₆ Trade-offs (idle/storage 영역만):
+
+1. Thermal calendar shelf life
+   Wu 2026: 90°C 5일, L6 68% > L55 48% > L53(Cl1.7) 35%
+2. Moisture sensitivity
+   Cl⁻ + H₂O → LiOH·LiCl + H₂S 빠른 방출 (Strauss, Kraft)
+3. Synthesis window
+   Cl ≥ 1.7 phase-pure 어려움 (Adeli, Yu, Wu)
+4. Mechanical anisotropy
+   Zener A 1.14 → 1.44 — mild but cycling fatigue 가능
+
+Common cause: 4d-Cl anti-site disorder
+  → M3 (ICOHP +13%) 및 M4 (E +25%)의 출처와 같음 (양면성)
+```
+
+**Bottom panel — Mitigation Strategy**:
+```
+Mitigation via Oxide Doping (X₂O_y → SE)
+
+Hypothesis:
+  • O²⁻가 PS₄에 부분 치환 또는 4d 자리 점유
+  • O–Li 강한 결합 → thermal stability ↑
+  • Cl/O mixed anion sublattice → anisotropy 완화 + dendrite path 차단
+  • Oxide gettering으로 LiCl 2차상 형성 억제
+
+Active 후보 (14 dopant × 3 conc cascade screening):
+  ★ Sc₂O₃   — cascade strongest winner (de_post=-0.974, E_VRH 18.7 GPa)
+  ★ B₂O₃    — thermal stabilizer, anneal+EOS 진행 (V100 paused)
+  ★ Nd₂O₃   — DFT-relaxed run5 완료 (E=-3566.21 Ry), EOS+post 대기
+  • Al₂O₃ cluster (-0.79..-0.82), MnO/CoO 부드러움 후보
+  • 41 champions: db/properties/doping_cascade_verified.json
+
+Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
+```
+
+**마무리 한 줄**:
+```
+→ Paper #1 (mechanism understanding) ↔ Paper #2 (mitigation engineering)
+  "구조적 무질서의 양면성을 이해했으니, 이제 그 무질서를 'design'할 수 있다."
+```
+
+### 발표 스크립트 (70–80초)
+
+> "마지막 슬라이드 — paper #1 마무리하고 paper #2로 연결.
+>
+> 위 panel — LPSCl₁.₆의 4가지 trade-off. 모두 idle/storage 영역에 집중. Performance는 가지면서 비용은 따로 있음.
+>
+> Wu 2026 thermal calendar 90°C 5일 Cl 함량 따라 retention monotonic 감소. moisture sensitivity Cl⁻+H₂O 반응성 lit consensus. synthesis window Cl 1.7 이상 phase-pure 어려움. mechanical anisotropy Zener A 1.14→1.44 mild but cycling fatigue 가능.
+>
+> 흥미로운 건 — 이 4 trade-off의 공통 원인이 paper #1 M3 메시지의 4d-Cl anti-site disorder 그 자체. M3 ionic glue +13%, M4 shear +30%를 준 source가 동시에 thermal decay 빠르게 하고 moisture 반응성 키움. 양면성.
+>
+> 아래 panel paper #2 strategy. Oxide doping으로 mitigate. O²⁻가 PS₄ 부분 치환 또는 4d 점유 → O-Li 강한 결합 thermal ↑, Cl-O mixed sublattice anisotropy 완화, oxide gettering LiCl 차단.
+>
+> 14 dopant × 3 농도 cascade screening 진행, 41 champion verified. Sc₂O₃ strongest winner (de -0.974, E_VRH 18.7 가장 soft). B₂O₃ Nd₂O₃ DFT validation 진행.
+>
+> Pipeline cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD.
+>
+> 결론: paper #1이 mechanism understanding, paper #2가 mitigation engineering. 구조적 무질서의 양면성을 이해했으니 이제 design할 수 있다는 게 두 paper 묶는 narrative.
+>
+> 감사합니다."
+
+### 시각 디자인 노트
+- Top (trade-offs): 4 항목 적색 톤 (비용)
+- Bottom (mitigation): 청색 톤 (해결)
+- 두 panel 사이 ↓ + "Paper #2 Strategy"
+- ★ Sc₂O₃ / B₂O₃ / Nd₂O₃ 강조
+- "양면성 (duality)" + "design" 강조
+
+### Q&A
+- "왜 oxide doping?" → O²⁻ 강한 Li 결합 + Cl/O mixed sublattice 안정화 + 2차상 차단
+- "Sc₂O₃ 왜 strongest?" → de_post -0.974, E_VRH 18.7 soft, single x002만 완료 (x005/x010 follow-up)
+- "B₂O₃ 진행?" → V100 GPU lock paused. 마지막 EOS v0.98 BFGS step 5. gabia 재개 가능
+- "Nd₂O₃ 4f 어렵?" → DFT+U(U=6) ISPIN=2 처리. PDOS 어렵지만 EOS OK. run5 V0 완료
+- "14 dopant 전체 compare?" → doping_cascade_verified.json 41 champion 완료. paper #2 systematic ranking
+- "Paper #2 main message?" → "trade-off-resolved Cl-rich = best of both worlds"
+- "Outlook이 paper #1에?" → conclusion + future work 단락. paper #2 cross-reference
+- "Paper #1/#2 동시 제출?" → 가능. short report + full → 권장
+
+---
+
+## 1W. References — Trade-off literature 참고 (paper writing용)
 
 > 발표 slides 본문에는 안 들어가지만 paper #1/#2 writeup 시 cite할 수 있도록 모아둠.
 
@@ -2307,6 +2400,7 @@ modelc:
 | v1.29 | 2026-06-11 | **comp1 4 f.u. natural MLIP MD 결과 도착**: Ea=0.2532, D₀=4.11e-4, R²=0.9998 — Schlem 2020 LPSCl ordered ~0.25 EXACT match. **Slide 6 HOLD 해제 → v3 ACTIVE**: σ gain = Ea↓ (1.75×) + D₀↑ (1.41×) ≈ 2.5× 둘 다 작용. Minafra/Kraft direction 정합. 5 f.u. (Ea=0.172) = 인위 supercell artifact 확정. **db/properties/li_transport.json 갱신**: comp1_v3_5fu SUPERSEDED, comp1_v3_4fu_natural PRIMARY. Paper #1 mechanism narrative 변경 (prefactor-only → dual mechanism). |
 | v1.30 | 2026-06-11 | Slide 6c v3 ACTIVE — **No T_cross, modelc wins at ALL T**, 저온일수록 σ ratio ↑ (RT 4.3×, 200K 7×). Zuo 2023 RT 측정 2.4× ↔ 우리 외삽 4.3× 자릿수 정합. v1/v2 'vacancy 양날' framing 무효 — 4fu 자료로 reversed. |
 | v1.31 | 2026-06-11 | References 섹션 추가 (slide 본문 외, paper writing용) — Thermal/Calendar (Wu/Adeli/Schlem/Tan), Moisture (Strauss/Janek/Kraft/Bachman), Synthesis window (Adeli/Yu/Wu), Mech anisotropy SSB (Pan/Sun, Doux, Krauskopf, Lewis, Hatzell, Wang), Trade-off review (Janek/Zeier, Famprikis, Chen), Performance backing (Zuo/Schlem/Minafra/Kim/Gil/Deiseroth) + paper #1 framing summary 한 줄 |
+| v1.32 | 2026-06-11 | **Slide 22 (Trade-offs & Outlook: Paper #2 Bridge) drafted ★ FINAL** — Top panel 4 trade-offs (Wu thermal / Strauss moisture / Adeli synthesis window / Zener anisotropy), 공통 원인 4d-Cl AS (M3-M4와 동일). Bottom panel Oxide Doping Strategy: Sc₂O₃ (cascade strongest, de=-0.974) / B₂O₃ (anneal+EOS) / Nd₂O₃ (DFT-relaxed) / Al₂O₃ cluster. "구조적 무질서를 design" 마무리. 21장 deck 완성 |
 
 ---
 
