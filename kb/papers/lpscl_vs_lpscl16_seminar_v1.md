@@ -1513,9 +1513,9 @@ ICOHP            | robust   | k-shift Δ<0.006 eV (local probe) ✓
 
 ---
 
-## 1O. ~~Slide 15 — Methods Consistency~~ — **DROPPED 2026-06-11** (slide 3 pipeline + slide 14 k-mesh audit과 중복). 총 22 → 21장.
+## 1O. ~~Slide 15 — Methods Consistency~~ — **발표 deck에서 DROPPED** (2026-06-11, slide 3 + slide 14와 중복). 발표 21장으로.
 
-(아래 본문 보존용 — 발표 시 14 + 3 합쳐서 충분히 커버됨)
+> ⚙ **본문은 paper Methods section 후보로 보존** — 발표에는 안 쓰지만 paper writeup 시 그대로 인용 가능한 settings detail box. ecutwfc 60, k-mesh 4×4×4/6×6×3, LOBSTER 5.1.1 ext basis, ELF ONCV 등 paper-grade 정확 settings 모두 정리됨.
 
 ---
 
@@ -1709,6 +1709,7 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 | v1.21 | 2026-06-11 | Slide 15 (Methods consistency: 3 tier 한 페이지) drafted — Tier 1 MLIP / Tier 2 DFT (PBE/USPP/k×L≥40) / Tier 3 §8 (13 probe 양쪽 동일 V₀), 컴퓨팅 자원 분산. Paired comparison 정당성 토대 |
 | v1.22 | 2026-06-11 | Slide 15 **DROPPED** (slide 3 pipeline + slide 14 k-mesh audit과 중복). 총 22 → 21장. |
 | v1.23 | 2026-06-11 | Slide 16 (Summary) drafted — 불변/변화 2-컬럼 대조표 + thesis ("covalent skeleton 유지 + ionic ligament 재배치") + 4 메시지 한 줄씩. paper #1 abstract/conclusion 후보 |
+| v1.24 | 2026-06-11 | Slide 15 헤더 명확화 — 발표 DROPPED, paper Methods section 후보로 본문 보존 (ecutwfc, k-mesh, LOBSTER, ELF settings 전부) |
 
 ---
 
