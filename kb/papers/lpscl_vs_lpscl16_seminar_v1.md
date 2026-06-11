@@ -527,6 +527,103 @@ R²            | 0.999    | 0.992
 
 ---
 
+## 1F-1. Slide 6a — Mechanism Cartoon (carrier vs barrier)
+
+### 페이지 배치 (16:9)
+- 좌우 2-panel cartoon: LPSCl (Li 가득참, hop 대기) vs LPSCl₁.₆ (공공 ○, 상시 hop)
+- 하단: D = D₀·exp(−Ea/kT) 식 + "D₀ 8×가 지배" 한 줄
+
+### 본문 텍스트
+```
+좌 (LPSCl):    Li sublattice 가득참 → hop하려면 옆자리 비기를 '대기' → carrier 부족
+우 (LPSCl₁.₆): Li 공공 0.6/f.u. → 빈자리가 항상 근처 → hop 경로 상시 열림
+
+D = D₀ · exp(−Ea/kT)
+    └ 8× (vacancy)   └ 경쟁 (cell-dependent, slide 6b)
+
+→ 측정 구간(600–1000 K)에서 D₀ 효과가 지배
+```
+
+### 스크립트 (40초)
+> "직관 그림으로 정리하겠습니다. 왼쪽 LPSCl은 Li 자리가 가득 차 있습니다. Li 하나가 hop하려면 옆자리가 비기를 기다려야 해요. 자리가 꽉 차 있으니 동시에 움직일 수 있는 Li 수, 즉 carrier가 제한됩니다.
+> 오른쪽 LPSCl₁.₆는 공공이 f.u.당 0.6개 — 빈자리가 항상 근처에 있습니다. hop 경로가 상시 열려 있고, 이게 D₀ 8배의 실체입니다.
+> Arrhenius 식으로 보면 D₀와 exp(−Ea/kT)가 경쟁하는데, 측정 구간에서는 D₀의 8배가 지배합니다. Ea 쪽 이야기는 다음 슬라이드에서 셀 의존성까지 포함해 정직하게 정리하겠습니다."
+
+### Q&A
+- "carrier 8×가 vacancy 0.6/fu에서 어떻게?" → 단순 공공 수(10%)가 아니라 경로 다양성 (vacancy 주위 다중 hop path + correlated migration). percolation 효과
+- "왜 barrier 높이 차이를 안 강조?" → cell-dependent (6b)
+
+---
+
+## 1F-2. Slide 6b — Disorder Ensemble: Ea의 ground truth ★
+
+> 역할 승격 (2026-06-11): clean-cell Ea의 셀 의존성 발견 후, 이 슬라이드가 M2 Ea 주장의 ground truth.
+> **✓ 검증 완료 (2026-06-11)**: ensemble_results.json의 `"v0_xyz": "db/structures/comp1_V0_k444.xyz"` —
+> comp1 disorder ensemble은 **4 f.u. natural cubic (52 atoms) 기반**으로 이미 돌았음. **재실행 불필요.**
+> d=0.0 frozen (1.17 artifact)도 natural cell의 정직한 결과. 지금 도는 4 f.u. clean MD (100 ps, 3T)는
+> 그 d=0.0 점의 고품질 재측정 — frozen 재현되면 시나리오 B 확정.
+
+### 페이지 배치 (16:9)
+- 중앙: 2×2 매트릭스 표 (조성 × disorder level)
+- 하단: 3 bullet key + 5 f.u. artifact footnote
+
+### 본문 텍스트
+```
+Ea (eV)             | LPSCl (4 f.u. natural) | LPSCl₁.₆ (5 f.u. natural)
+────────────────────┼────────────────────────┼──────────────────────────
+clean (d = 0)       | 1.17 (frozen, artifact) | 0.140
+disordered (d≈0.5)  | 0.177 ± 0.027 (n=3)     | 0.173 ± 0.039 (n=3)
+                                └──── 사실상 동일 (Δ4 meV) ────┘
+
+• ordered LPSCl = kinetically frozen (600 K, D~1e-7) → 1.17은 통계 artifact
+• matched disorder: Ea 동일 (~0.18) — 실험 ball-milled 0.16–0.25와 정합
+• σ 차이의 출처는 Ea가 아니라 D₀ (M2 ground truth)
+
+※ 5 f.u. 인위 supercell의 comp1 'Ea=0.172'는 셀 구성이 우연히 주입한
+  effective disorder 산물 가능성 (4 f.u. 검증 진행 중)
+```
+
+### 스크립트 (60초)
+> "앞 슬라이드의 Ea 숫자에는 사실 미묘한 셀 의존성이 있습니다. 그걸 정면으로 해결한 게 이 disorder ensemble입니다.
+> 두 시스템 × 두 disorder 레벨, 2×2 매트릭스입니다.
+> 먼저 왼쪽 위 — 완전히 ordered한 LPSCl을 natural 4 f.u. 셀에서 돌리면, 600 K에서 Li가 사실상 안 움직입니다. D가 10⁻⁷ 수준. 이때 Arrhenius 기울기는 1.17 eV처럼 보이는데, 이건 물리값이 아니라 저온 통계 부족 artifact입니다. 메시지는: 진짜 ordered LPSCl은 MLIP 마이크로 스케일에서 kinetically frozen이라는 것.
+> 오른쪽 위 — modelc는 clean으로 돌려도 0.140. 본질적 vacancy 때문에 이미 충분히 disordered라서 정상적으로 측정됩니다.
+> 핵심은 아래 행입니다. 같은 수준의 anti-site disorder를 양쪽에 넣고 3개 config 앙상블로 재면 — 0.177 대 0.173, 사실상 같습니다. 그리고 이 0.18이라는 값은 실험 ball-milled LPSCl 범위 0.16–0.25와 정합합니다.
+> 결론: matched disorder에서 per-hop barrier는 두 조성이 같고, σ 3배 차이는 온전히 prefactor — vacancy carrier — 에서 옵니다. 이게 M2의 ground truth입니다."
+
+### Q&A
+- "d=0.5가 물리적으로 의미 있는 수준?" → 실험 합성 샘플 anti-site 25–50% 범위 내
+- "n=3 부족?" → σ(Ea) ±0.03–0.04. ΔEa > 0.08 eV 효과는 배제 가능, 그 이하는 미해결 명시
+- "1.17 artifact 원인?" → 600 K hop 거의 없음 → MSD noise → ln D 기울기 폭주. 통계 문제
+- "Minafra와의 관계?" → 그들의 축 (ordered 0.3 → disordered 0.18)은 2×2의 세로축과 일치. 우리가 더한 건 가로축 — 같은 disorder에서 조성 간 Ea 동일
+
+---
+
+## 1F-3. Slide 6c — 저온 trade-off (조건부 ⚠ HOLD)
+
+> slide 6 main과 연동 HOLD. 4 f.u. 결과로 A/B 시나리오 결정.
+
+### 본문 텍스트
+```
+시나리오 A — clean-cell 값 (0.172 vs 0.224) 기준:
+  T_cross ≈ 290 K. 그 위 modelc 우세 (prefactor), 그 아래 comp1 역전 (낮은 barrier).
+  vacancy = 양날.
+
+시나리오 B — matched-disorder 값 (0.18 ≈ 0.17) 기준:
+  Ea 같음 → 교차 없음. modelc가 전 온도에서 ~3× 빠름 (D₀ 8×).
+  'Cl-rich 저온 불리' 주장 소멸.
+
+실험 단서: RT에서 modelc ~2× 우세 (Zuo) → B와 더 정합
+```
+
+### 스크립트 (35초, 선택적)
+> "저온 특성 한 가지만 짚고 가겠습니다. 만약 clean-cell Ea 값을 그대로 믿으면 290 K 부근에서 두 직선이 교차해서 '심부 저온에서는 LPSCl이 역전한다'는 예측이 나옵니다. 하지만 방금 보신 matched-disorder 결과처럼 Ea가 같다면 교차 자체가 없고, modelc가 전 온도에서 빠릅니다. 실험이 RT에서 modelc 2배 우세를 보이는 건 후자와 더 정합합니다. 지금 진행 중인 4 f.u. 검증이 끝나면 어느 쪽인지 확정해서 보고하겠습니다."
+
+### 노트
+- 시나리오 B 채택 시 이 슬라이드는 "교차 없음 — vacancy 우위는 전 온도" 한 줄로 축소, SI로 이동 가능
+
+---
+
 ## 1G. Slide 7 — M3: Ionic glue는 Cl-rich에서 강해진다
 
 ### 페이지 배치 (16:9)
@@ -616,6 +713,7 @@ Li–Cl (4d AS)    |  없음   | −2.84  ★ 4a보다 40% 강함
 | v1.7 | 2026-06-10 | Slide 5a DROPPED (slide 14 audit과 중복). Slide 6 (M2: σ prefactor) drafted — Arrhenius + D₀ 8× narrative |
 | v1.8 | 2026-06-10 | Slide 6 footnote + script v2: **실험 macroscopic Ea vs 우리 microscopic Ea framing**. Minafra/Kraft tension 우아하게 해소 (mutually compatible) |
 | v1.9 | 2026-06-11 | Slide 6 **HOLD** (comp1 4 f.u. natural-cell MLIP MD 재실행 중, 결과 따라 3-way framing 분기). Slide 7 (M3 ionic glue) drafted — ICOHP +13%/+8%, 4d-Cl AS −2.84 eV, 3-probe 합의 |
+| v1.10 | 2026-06-11 | Slide 6a (mechanism cartoon) / 6b (disorder ensemble = ground truth, **v0_xyz=comp1_V0_k444 4fu 검증 — ensemble 재실행 불필요 확정**) / 6c (저온 trade-off, A/B 시나리오 조건부 HOLD) drafted |
 
 ---
 
