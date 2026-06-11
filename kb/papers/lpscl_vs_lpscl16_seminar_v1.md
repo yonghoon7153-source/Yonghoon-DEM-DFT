@@ -253,7 +253,7 @@ Li 공공 + 4d-Cl anti-site 무질서에서 온다.
 ```
 
 발표 보충 멘트 (정확성): "+25%는 저희 DFT relaxed-ion 결과고, 실험(Kim 2025 UPE)은 Cl↑→E↑ 경향으로 확인됩니다."
-남은 일: Kim et al., ACS Mater. Lett., 7, XXXX (2025) vol/page 채워서 ref 3줄째 추가.
+남은 일: Y. J. Kim et al., ACS Mater. Lett., 7, 724 (2025) — ref 3줄째로 추가 (DOI 10.1021/acsmaterialslett.4c02029).
 
 ### 본문 텍스트 (v3 — 연구실 템플릿 형식, 2026-06-12)
 
@@ -286,7 +286,7 @@ LPSCl vs LPSCl₁.₆ — Why Faster & Stiffer?
 [1] T. Zuo et al., Angew. Chem. Int. Ed., vol. 62, e202213228, 2023.        (σ 2.9 vs 7.0 mS/cm RT)
 [2] P. Adeli et al., Angew. Chem. Int. Ed., vol. 58, no. 26, pp. 8681–8686, 2019.  (Li5.4PS4.4Cl1.6 원조 합성)
 [3] R. Schlem et al., Adv. Energy Mater., vol. 10, no. 8, p. 1903719, 2020.  (Ea 0.22/0.25 — 우리 4fu EXACT 매칭)
-[4] Kim et al., ACS Mater. Lett., 2025.  ⚠ vol/page 채워야 함 (UPE Cl↑→E↑)
+[4] Y. J. Kim et al., ACS Mater. Lett., 7, 724 (2025).  (UPE Cl↑→E↑, DOI 10.1021/acsmaterialslett.4c02029)
 ```
 
 ### 본문 텍스트 (v2 — thesis 띠 버전, 보존)
