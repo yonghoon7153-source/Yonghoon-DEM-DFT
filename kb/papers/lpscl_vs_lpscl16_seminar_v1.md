@@ -1441,6 +1441,12 @@ isotropic relations. footnote(벽돌-모르타르)는 대본 전담.
 > 좌 = Cij 압축 3행 (C44 8.0→13.7 +72% ★ / C12 −18% / C11 −2%) ·
 > 우 = cross-check **2행 확정** (①B_VRH↔B₀ ±10% ②vs exp — **문헌만**: LPSCl 22.06↔lit.~23 ✓
 > + LPSCl1.6 Kim trend ✓).
+> ⚠ **"실험 ~23 GPa" 프레임도 정정 (2026-06-11 문헌 감사)**: elastic.json의 "matches
+> literature ~23 (He et al.)"은 계산/실험 혼동 — 22.1은 **계산값** (Deng 2016 JES 163,A67
+> DFT SQS; JPCC 2025 제일원리도 22.1/G 8.1). 진짜 실험은 Kim 2025 UPE 펠릿 15–22(HT)/
+> 12–17(BM), 다공성 4.7±1.1 (ACS AEM 2024). → row2 최종: "22.06 indep. DFT 22.1 ✓ /
+> 27.66 Kim trend ✓ / calc. agree + exp. trend". M4 구두 멘트도 "실험 ~23 매칭" →
+> "독립 계산 22.1 일치 + 펠릿 상한 정합 + trend 일치"로 교체. refs에 Deng 추가.
 > ⚠ **AFM 사용 금지 (2026-06-11 provenance 감사)**: 구 8b의 "자체 AFM ~12/14.9 방향✓" 행 중
 > 14.9는 2026-06-08 group weekly report **타 멤버 측정** (세트: NdO 15.8, paper #2 비교군) —
 > 인용하려면 측정자 확인 필수. **LPSCl "~12"는 repo 전체에 측정 기록 없음** (Kim UPE BM 하한
