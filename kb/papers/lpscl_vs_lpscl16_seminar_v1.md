@@ -1350,6 +1350,85 @@ modelc   | high-BVS (group B)  | 1626  | 60.2%  | 1.83-1.89 | AS Cl 인접, +15%
 
 ---
 
+## 1M. Slide 13 — Cross-check #5: ELF — Covalent vs Ionic 시각화
+
+### 페이지 배치 (16:9)
+- 좌우 paired ELF 2D slice (comp1 / modelc, 같은 colormap)
+- 정량 측정 표 (P-S bridge / Li basin min / Li-anion line)
+- ELF 의미 reference + 3-probe convergence footer
+
+### 본문 텍스트
+
+**제목**: "13. ELF가 보여주는 결합 character — covalent vs ionic 분리"
+
+**메인 표**:
+```
+Probe location                       | comp1   | modelc  | 의미
+─────────────────────────────────────┼─────────┼─────────┼─────────────
+P–S bond midpoint (PS₄ bridge)       | 0.946   | 0.944   | covalent 동일 ★
+Li basin min (Li 주위 floor)         | 0.072   | 0.065   | ionic depletion 강함
+Li → nearest anion 경로 단일 min     | 0.07    | 0.04    | modelc 더 강함
+```
+
+**Key**:
+```
+• P–S bridge ELF ≈ 0.95 (>0.7 covalent 기준) — PS₄ covalent character 불변
+• Li basin min < 0.1 (이온성 강한 ELF 결핍) — 양쪽 모두 ionic glue
+• 두 character (covalent + ionic)가 같은 cell 안에 공존
+• 조성 변화는 ionic 쪽만 재배치, covalent backbone은 안 건드림
+```
+
+**ELF 의미**:
+```
+ELF 0.0~0.3 : 자유전자 분포 (이온성 / depletion)
+ELF 0.4~0.6 : 중간 (mixed)
+ELF 0.7~1.0 : localized (lone pair / covalent maximum)
+```
+
+**Footnote**:
+```
+※ ONCV NC pseudo, ecutwfc 80 / ecutrho 320 Ry, pp.x plot_num=8
+※ probe sampling: Cartesian midpoint (covalent) + Li-anion line min (ionic depletion)
+※ Mechanism 1 cross-check: PDOS + LOBSTER + ELF 세 독립 probe 일관
+```
+
+### 발표 스크립트 (55–65초)
+
+> "Cross-check #5 — ELF, electron localization function. 결합 character를 공간적으로 직접 가시화하는 마지막 probe입니다.
+>
+> ELF는 0에서 1 사이 값으로, 0에 가까우면 자유전자 분포 (이온성), 1에 가까우면 국소화된 전자 (covalent 또는 lone pair).
+>
+> 양쪽 2D slice plot. 두 시스템에서 동일한 패턴 — PS₄ tetrahedron 주위에 ELF 0.95에 가까운 적색 maxima 또렷. P–S covalent bridge에서 전자가 강하게 국소화 — covalent backbone 직접 시각 증거.
+>
+> 반면 Li atoms 주위는 ELF가 0.07 정도까지 떨어짐. Li가 valence 전자를 거의 다 음이온에 양도하고 자기 주위에 안 갖고 있다는 직접 증거 — 강한 ionic depletion.
+>
+> 정량 표 — P–S bridge ELF 양쪽 0.95 사실상 동일, Δ < 0.002. 즉 covalent character는 조성 무관, ICOHP P–S +1% 차이 (slide 9)와 일관.
+>
+> Li basin floor는 양쪽 0.07 근처 — modelc 약간 더 깊긴 한데 둘 다 강한 ionic 영역.
+>
+> 오늘 추가로 본 PDOS mechanism — Cl 3p가 S 3p보다 깊은 valence 위치 — 와 ELF mid-bond 측정이 모두 mechanism 1 (LOBSTER가 covalent overlap 우세 측정)의 시각/정량 evidence. PDOS + LOBSTER + ELF 세 독립 probe 같은 그림.
+>
+> 종합 — argyrodite는 covalent PS₄ backbone + ionic Li-anion glue 두 character가 같은 cell 안에 공존하고, 조성 변화는 ionic 쪽만 재배치, covalent backbone에는 손대지 않습니다."
+
+### 시각 디자인 노트
+- 2D ELF slice paired: 같은 colormap (viridis 또는 RdYlBu), 같은 scale 0-1
+- PS₄ 보이는 cut plane (예: z=c/2)
+- 빨강(0.9+) = covalent maxima, 파랑(0-0.2) = ionic depletion
+- 4d 자리 별도 표시 (modelc의 AS Cl 위치)
+- 표는 plot 아래 가운데
+
+### Q&A
+- "ELF 정의?" → Becke-Edgecombe 1990, 같은 spin pair 위치 확률. 0=free electron, 1=perfectly localized
+- "0.95 P-S 정량 의미?" → sp³ hybrid covalent bond 전형. CC bond (diamond) ~0.95
+- "Li 0.07 ionic 강도?" → Li metal ELF ~0.6, LiCl/Li2S 결정 Li ~0.05-0.1. 우리 값 정상
+- "pseudo 영향?" → ONCV NC vs USPP 차이 <5%. paper ONCV 통일
+- "4d-Cl AS ELF?" → 정상 Cl과 유사 profile — Cl-Li bond character는 ionic 유지
+- "Mechanism 1 ELF 직접 증거?" → P-S ELF 동일 = covalent 보존. Li-anion bridge ELF 양쪽 ~0.07 = 이온성 동일
+- "ELF가 ICOHP 대체?" → 아니, 보완. ICOHP=정량 결합 강도, ELF=정성 character (covalent vs ionic)
+- "cube file 크기?" → ~100-200 MB. paper SI에 첨부 가능
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1372,6 +1451,7 @@ modelc   | high-BVS (group B)  | 1626  | 60.2%  | 1.83-1.89 | AS Cl 인접, +15%
 | v1.15 | 2026-06-11 | **Slide 7 v2 + Slide 10 v2** ACTIVE: vacancy(69%)+anti-site(31%) 분해 정확화, per-bond vs per-anion 명시 (LOBSTER covalent overlap 우세 측정 vs S²⁻ q² × coord total). Coulomb 직관 회복. paper-grade defensible mechanism. |
 | v1.16 | 2026-06-11 | Slide 11 (cross-check #3: Voronoi 4-sublattice fingerprint) drafted — P 0→0.37 (framework 일관), Cl 0→0.74 (분기), Li 0.21→1.15 (×5.5 ★), S 3.41→2.05 (역설적 균질화 ★). 3 probe convergence. PDOS Cl 3p −2.5 eV vs S (mechanism 2 confirmed both systems). |
 | v1.17 | 2026-06-11 | Slide 12 (cross-check #4: BVSE bimodal paired 5×5×5) drafted — comp1 단일 peak vs modelc bimodal (39.8% comp1-like + 60.2% +15% shifted), 5.4 Li per AS, BVSE +15% ↔ ICOHP +40% 두 probe 일관, 37.5% AS stoichiometric necessity |
+| v1.18 | 2026-06-11 | Slide 13 (cross-check #5: ELF covalent vs ionic) drafted — P-S bridge ELF 0.95 동일, Li basin <0.1 양쪽 ionic, mechanism 1 (LOBSTER covalent overlap)의 시각 evidence. Cross-check section (9-13) 완성 |
 
 ---
 
