@@ -773,6 +773,11 @@ Zener A           | 1.14     | 1.44     | 비등방 ↑
 - ⚠ comp1 `archive_v2_post/post_v2/comp1v2_*`는 v2 아카이브 — 사용 금지.
 - Origin overlay 데이터 (`V0_dos.dat` ×2 → dos_overlay_origin.csv): E−EF gap edge 검산
   comp1 −0.34/+1.42, modelc +0.28/+2.09 — regen 값과 일치 ✓ (M1 표 7행 provenance 완료)
+- **Appendix PDOS 2장 확정 (2026-06-11, `tools/figures/plot_pdos_appendix.py` 재생성, 검수 PASS)**:
+  `D:\comp1_pdos_appendix.png` (gap 1.76 / VBM 2.48 / CBM 4.24) +
+  `D:\modelc_pdos_appendix.png` (gap 1.82 / VBM 2.72 / CBM 4.54) — E−E_VBM 축, 원소분해.
+  용도: ① "VBM = S 3p 91/92%" 시각 증거 ② Cl 3p 봉우리가 S 3p보다 깊은 −3.3 eV 위치
+  (mechanism 2: LOBSTER per-bond covalent 해석 방어, M3/CC#2 Q&A) — 1장 2역.
 
 ### 페이지 배치 (16:9)
 - 왼쪽: DOS overlay plot (comp1 파랑, modelc 빨강) + Fermi 점선 + VBM/CBM 음영
