@@ -1764,6 +1764,95 @@ LOBSTER ICOHP      | +40% per-bond (4d AS)  | Li-Cl 결합 강도     | 7
 
 ---
 
+## 1R. Slide 18 — Robustness #2: Oxidation 4-Axis Framework
+
+### 페이지 배치 (16:9)
+- 4-axis 표 (axis 의미 / comp1 vs modelc / 출처)
+- Axis 1 (우리 grand-potential) 세부 박스
+- "axis 명시 필수" 한 줄 마무리
+
+### 본문 텍스트
+
+**제목**: "18. 'Cl-rich가 더 안정한가?' — 축을 지정해야 답이 된다"
+
+**4-axis 표**:
+```
+Axis | 의미                          | comp1 vs modelc       | Reference
+─────┼───────────────────────────────┼───────────────────────┼─────────────
+  1  | 0-pressure intrinsic          | DRAW ~2.14 V          | 우리 + Gil 2022
+     | bulk redox onset              | (S²⁻ limited)         |
+  2  | Mechanically constrained      | Cl-rich WINS ★        | Gil-González
+     | (K_eff > 0)                   | window 0.80-4.30 V    | ESM 2022
+  3  | Cathode interface cycling     | Cl-rich WINS ★        | Zuo Angew
+     | (R_int growth, CE)            | 8.9 vs 13.2 Ω·h^-0.5  | 2023
+  4  | Thermal / calendar aging      | Cl-rich LOSES         | Wu Nano En
+     | (shelf life 90°C)             | 48% vs 68% (5d)       | 2026
+```
+
+**Axis 1 우리 grand-potential**:
+```
+• Method: pymatgen PhaseDiagram + get_element_profile(Li, composition)
+• MP GGA_GGA+U hull (108 entries Li-P-S-Cl)
+• 0-pressure 양쪽 동일:
+  - OCV self-decomposition: 1.72 V
+  - Oxidation onset: 2.14 V (S²⁻ → polysulfide)
+  - Cl⁻ inert until ~3.3 V
+• Gil-González 2022 K_eff=0 LPSCl1.5: 1.70-2.40 V
+  → 우리와 정합 (±0.26 V LiS4 inclusion 차이)
+```
+
+**Key**:
+```
+• 4축은 서로 다른 물리/실험 set
+• modelc σ 향상이 oxidation penalty 없이 옴 (axis 1-3 neutral or favorable)
+• 비용은 oxidation 아니라 thermal shelf life (axis 4)
+• "Cl-rich 더 안정?" → axis 명시 필수
+```
+
+**Footnote**:
+```
+※ 세 문헌 full-text read 2026-06-08:
+  Gil-González ESM 2022 (10.1016/j.ensm.2021.12.008)
+  Zuo Angew 2023 (10.1002/anie.202213228)
+  Wu Nano En 2026 (10.1016/j.nanoen.2025.111576)
+※ 우리 grand-potential = Mo/Ong/Ceder 2012 framework
+※ K_eff = effective bulk modulus = mechanical constriction (GPa)
+```
+
+### 발표 스크립트 (75–85초)
+
+> "Robustness #2 — 'Cl-rich가 더 안정한가?'에 대한 정직한 답.
+>
+> 단일 답 없음. 4 독립 axis에서 답이 다르고, axis 지정 필수. 문헌 3편 full-text 통합 framework.
+>
+> Axis 1, intrinsic 0-pressure bulk redox onset. 우리 계산 양쪽 동일 2.14 V. S²⁻→polysulfide oxidation, Cl⁻ 3.3 V까지 inert. Gil-González K_eff=0과 ±0.26 V 정합 — 우리 계산이 같은 0-pressure axis cross-validation 깨끗.
+>
+> Axis 2, mechanical constraint K_eff>0. Cl-rich wider window. Gil K_eff=20에서 LPSCl1.5 0.80-4.30 V. Cl-bearing products (PCl3, SCl4) molar volume 커서 strain penalty 더 받음. Cl-rich가 mechanically constrained에서 stable.
+>
+> Axis 3, cathode interface cycling. Cl-rich 우세 — Zuo 2023 NCM85 R_int 성장 8.9 vs 13.2 Ω/h^0.5, CE 79 vs 77, 50cycle 145 vs 133. 실셀에서 Cl-rich 더 좋음.
+>
+> Axis 4, thermal calendar aging. Cl-rich 집니다 — Wu 2026 NCM811/LiIn 90°C 5일: L6 68% > L55 48%. SOC + cathode 큰 lever.
+>
+> 종합: modelc σ 향상이 oxidation penalty 없이 옴. 비용은 thermal shelf life. 'Cl-rich 더 안정?' axis 없이는 잘못된 질문."
+
+### 시각 디자인 노트
+- 4-axis 표 중심
+- ★ axis 2/3 강조 (WINS)
+- axis 4 (LOSES) 다른 색 — trade-off 시각화
+- "축 지정 필수" 마지막 한 줄 강조
+- 인용 footer 작게
+
+### Q&A
+- "왜 4축?" → 실용 4개. moisture 5번째 가능하지만 계산 없음
+- "Axis 1 ↔ 2 connect?" → 우리 0-pressure ↔ Gil 0 GPa 정합. K_eff=0 limit 동일
+- "Zuo 실험 직접 비교?" → Janek group Li5.5PS4.5Cl1.5, 우리 modelc Cl1.6 거의 동일
+- "modelc axis 1만 우리?" → Cl/S anti-site 포함 grand-potential 우리 contribution
+- "Axis 4 LOSES가 thesis 흔드나?" → No. paper #1 σ mechanism이 thesis. axis 4는 paper #2 motivation
+- "main text? SI?" → main short + SI long axis-by-axis. nuanced honesty
+- "정량 cross-check?" → axis 1 ±0.26 V vs Gil K_eff=0, axis 3 우리 interface reactivity vs Zuo -0.33 vs -0.32 eV/atom
+
+---
+
 ## 2. 변경 이력
 
 | 버전 | 날짜 | 변경 |
@@ -1794,6 +1883,7 @@ LOBSTER ICOHP      | +40% per-bond (4d AS)  | Li-Cl 결합 강도     | 7
 | v1.23 | 2026-06-11 | Slide 16 (Summary) drafted — 불변/변화 2-컬럼 대조표 + thesis ("covalent skeleton 유지 + ionic ligament 재배치") + 4 메시지 한 줄씩. paper #1 abstract/conclusion 후보 |
 | v1.24 | 2026-06-11 | Slide 15 헤더 명확화 — 발표 DROPPED, paper Methods section 후보로 본문 보존 (ecutwfc, k-mesh, LOBSTER, ELF settings 전부) |
 | v1.25 | 2026-06-11 | Slide 17 (Robustness #1: 3-probe convergence) drafted — Voronoi (geometric) + BVSE (path) + LOBSTER (chemistry) 같은 anti-site Cl 효과 측정. 5.4 Li/AS + 60.2% 정합성 cross-validation. Paper #1 robust referee defense |
+| v1.26 | 2026-06-11 | Slide 18 (Robustness #2: Oxidation 4-axis framework) drafted — Gil-González + Zuo + Wu 통합. Axis 1 (DRAW), 2 (Cl-rich WINS K_eff>0), 3 (Cl-rich WINS R_int), 4 (Cl-rich LOSES calendar). modelc σ 향상이 oxidation penalty 없이 옴, 비용은 thermal shelf life |
 
 ---
 
