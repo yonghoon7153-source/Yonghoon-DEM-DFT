@@ -2097,6 +2097,20 @@ modelc   | high-BVS (group B)  | 1626  | 60.2%  | 1.83-1.89 | AS Cl 인접, +15%
 
 ---
 
+### ★ CC#4 검증·구성 기록 (deck slide 17, 2026-06-11 — 조립 중)
+
+```
+검증 완료: ① 표 3행 수치 = db modelc_v3.json bvse_5x5x5_paired와 일치
+② per-Li 원본 (V0_bvse_summary.json existing_Li_bvs)에서 split 재현 —
+  n=3000/2700, median 1.634/1.832, threshold 1.74에서 low 39.8%/high 60.2% EXACT
+③ 37.5% 유도 (500 4a sites vs 800 Cl → 300 forced to 4d) — db 기록 채택
+④ channel fraction 8.75%→7.4% (−15%) — iso 그림 정량 라벨로 사용 가능
+그림 결정: iso 1쌍 (제목 "Li-accessible channels — only low-energy regions
+(BVSE ≤ 0.30) shown" — global min=0.000이라 표기 정확) + 캡션 "identical
+lattice·grid·cutoff". bimodal histogram도 생성·검증됨 (D:\bvse_bimodal_hist.png)
+— 최종 그림 선택은 사용자 취향 (둘 다 유효). slice 쌍은 시각 차이 없음으로 폐기.
+```
+
 ## 1M. Slide 13 — Cross-check #5: ELF — Covalent vs Ionic 시각화
 
 ### 페이지 배치 (16:9)
