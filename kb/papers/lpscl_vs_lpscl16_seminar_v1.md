@@ -2756,7 +2756,12 @@ modelc:
 
 ---
 
-## 1T. Slide 20 — Referee Defense #1: Literature Tension Audit
+## 1T. ~~Slide 20 — Tension Audit~~ — **본편 제외 → Q&A 카드 시트 (2026-06-11, 사용자 결정)**
+
+> 4-tension 해소는 이미 본편 inline 처리됨 (①oxidation→deck 20 본편 ②Ea macro/micro→M2
+> Schlem 정합+6b ③vacancy paradox→M4 ④gap offset→M1 Q&A). 카드만 유지.
+
+## (보존) Slide 20 — Referee Defense #1: Literature Tension Audit
 
 ### 페이지 배치 (16:9)
 - 4-tension 표 (tension / 우리 결과 / 해소 method)
@@ -2826,7 +2831,14 @@ modelc:
 
 ---
 
-## 1U. Slide 21 — Referee Defense #2: Caveats Consolidated
+## 1U. ~~Slide 21 — Caveats~~ — **본편 제외 → Q&A 카드 시트 (2026-06-11, 사용자 결정)**
+
+> 9-caveat은 발표 중 인라인 정직 표기(MLIP MD 캡션·ratio-only·외삽 본편 제외)로 대체.
+> paper limitations section용 본문은 아래 보존. 최종 본편 = 21장:
+> 1~7 intro+headline / 8~13 M1~M4(+M2-1,M4-1) / 14~18 CC#1~5 / 19 Summary /
+> 20 Oxidation+ESW / 21 Trade-offs&Outlook.
+
+## (보존) Slide 21 — Referee Defense #2: Caveats Consolidated
 
 ### 페이지 배치 (16:9)
 - 9-row caveat 표 (caveat / 우리 대응 / 영향 받는 결과)
