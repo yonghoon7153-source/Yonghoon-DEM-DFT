@@ -2925,6 +2925,18 @@ modelc:
 
 ---
 
+### ★ 실물 확정판 (as-built deck slide 21 "Trade-offs & Outlook", 2026-06-11 — FINAL, 본편 완결)
+
+```
+■ Trade-offs & Outlook — the same disorder, two faces / ref Wu만 (나머지 구두)
+[상단 적 점선박스] 4 Trade-offs (idle/storage only): thermal 68→48 · moisture H₂S
+  · synthesis Cl≥1.7 · mild anisotropy Zener 1.44적
+↓ 화살표 [하단 청 점선박스] Strategy example: oxide doping 가설 1줄
+  (O–Li thermal↑ · Cl/O anisotropy↓ · gettering blocks LiCl)
+다이어트: 공통원인(4d-Cl AS 양면성)·후보 현황(41 champions, Sc/B/Nd)·design 문장은
+대본 전담. 본편 21장 완결: 1~7 / 8~13(M) / 14~18(CC) / 19 Summary / 20 Ox+ESW / 21 Outlook.
+```
+
 ## 1V. Slide 22 — Trade-offs & Outlook: Paper #2 Bridge (★ FINAL)
 
 ### 페이지 배치 (16:9)
