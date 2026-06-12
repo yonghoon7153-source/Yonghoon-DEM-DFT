@@ -10,8 +10,11 @@ v{096..106}, keeps dB0 vs 21.7 apples-to-apples) as plain-text inputs:
 
   0.98 / 1.00    original .in + LAST complete ATOMIC_POSITIONS block of its .out
   1.02           own cell kept, coords = v1.00 last block x (1.02)^(1/3),
-                 mixing_beta 0.3 -> 0.15 (SCF diverged with the UMA coords)
+                 mixing_beta matched to the siblings (V100-tuned 0.05 local-TF)
   0.96/1.04/1.06 built from the v1.00 input (cell & coords x cbrt(tag))
+
+Any 'restart_mode=restart' leftover from the V100 recovery attempts is stripped
+(fatal on KISTI — the binary outdir did not come over the paste channel).
 
 Every staged input gets pseudo_dir='./pseudo/' (UPFs are too big to paste — on
 KISTI reuse the Nd-run pseudo dir + wget the rest by exact filename; the needed
@@ -134,16 +137,27 @@ def main():
     print(f"cell-ratio check 0.98/1.00: {ratio:.6f} (expect {expect:.6f})")
     assert abs(ratio - expect) < 1e-3, "cells are not a cbrt(0.98) scaling — grid assumption broken"
 
-    # 1) in-flight volumes: restart from their own last coords
-    (stage / "eos_v0.98.in").write_text(replace_positions(in098, u98, blk98))
-    (stage / "eos_v1.00.in").write_text(replace_positions(in100, u100, blk100))
+    def strip_restart(txt):
+        # V100 recovery leftover ('restart_mode=restart') is fatal on KISTI:
+        # no .save came over the paste channel -> pw.x dies reading the outdir
+        txt, n = re.subn(r"[ \t]*restart_mode\s*=\s*'[^']*'[ \t]*\n", "", txt)
+        if n:
+            print(f"  removed restart_mode x{n}")
+        return txt
 
-    # 2) diverged 1.02: keep its cell, transplant scaled v1.00 coords, gentler mixing
+    # 1) in-flight volumes: restart from their own last coords
+    (stage / "eos_v0.98.in").write_text(strip_restart(replace_positions(in098, u98, blk98)))
+    (stage / "eos_v1.00.in").write_text(strip_restart(replace_positions(in100, u100, blk100)))
+
+    # 2) diverged 1.02: keep its cell, transplant scaled v1.00 coords; mixing_beta
+    #    matched to the siblings (V100 already tuned the family to 0.05 local-TF —
+    #    raising it would make 1.02 MORE aggressive than the volumes that worked)
+    beta = re.search(r"mixing_beta\s*=\s*([0-9.dDeE+-]+)", in100).group(1)
     s = 1.02 ** (1 / 3)
     t102 = replace_positions(in102, u100, blk100 if crystal else scale_block(blk100, s))
-    t102, nsub = re.subn(r"mixing_beta\s*=\s*[\d.]+", "mixing_beta=0.15", t102)
+    t102, nsub = re.subn(r"mixing_beta\s*=\s*[0-9.dDeE+-]+", f"mixing_beta={beta}", t102)
     assert nsub == 1, "mixing_beta line not found in eos_v1.02.in"
-    (stage / "eos_v1.02.in").write_text(t102)
+    (stage / "eos_v1.02.in").write_text(strip_restart(t102))
 
     # 3) new volumes from the v1.00 template
     for tag in A.new_tags:
@@ -152,7 +166,7 @@ def main():
                    lambda m: m.group(1) + scale_cell(c100, s), in100, count=1)
         t = replace_positions(t, u100, blk100 if crystal else scale_block(blk100, s))
         t = t.replace("b2o3eos_1.00", f"b2o3eos_{tag}").replace("tmp_1.00", f"tmp_{tag}")
-        (stage / f"eos_v{tag}.in").write_text(t)
+        (stage / f"eos_v{tag}.in").write_text(strip_restart(t))
 
     # 4) UPFs can't be pasted -> inputs point at ./pseudo/, names printed for
     #    KISTI-side reuse (Nd-run dir) or wget by exact filename

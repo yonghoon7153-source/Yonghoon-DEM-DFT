@@ -72,10 +72,18 @@
 |---|---|---|---|
 | 0.98 | BFGS 좌표블록 **61개** 진행 중 | −2621.73962908 | 마지막 좌표로 from_scratch 재시작 |
 | 1.00 | 블록 19개 진행 중 | −2621.75212577 | 〃 |
-| 1.02 | **SCF 발산** (UMA warm-start 좌표, 블록 0) | — | v1.00 좌표 ×cbrt(1.02) 이식 + `mixing_beta 0.15` |
+| 1.02 | **SCF 발산** (UMA warm-start 좌표, 블록 0) | — | v1.00 좌표 ×cbrt(1.02) 이식 + `mixing_beta=0.05`(형제 동일) |
 | 0.96/1.04/1.06 | 미생성 | — | v1.00 템플릿에서 cell·좌표 cbrt(tag) 스케일 신규 |
 
 - 구기록 "v0.98 step 5"는 옛 스냅샷 — 실제 61블록. recover/recover3 시도는 빈 파일(무시).
+- **실입력 검수 (06-12, payload 눈검사)**: V100 입력은 driver 기본값이 아니라 **발산 대응 튜닝본** —
+  `degauss 0.02 / forc_conv 1e-3 / mixing_beta 0.05 + local-TF / electron_maxstep 500 /
+  diago_david_ndim 2 / k 3 3 1`. 그리고 `eos_v0.98.in`에 recover 시절 잔재
+  **`restart_mode='restart'` 발견** — KISTI엔 .save가 없어 그대로면 즉사. restage 도구가
+  자동 제거하도록 패치(+v1.02 beta는 0.15 처방을 철회하고 형제와 동일한 0.05로 매칭).
+  이미 paste한 경우 KISTI에서 `sed -i "/restart_mode/d" eos_v0.98.in` +
+  `sed -i "s/mixing_beta=0.15/mixing_beta=0.05/" eos_v1.02.in` (이 sed 후 두 파일 md5는
+  최초 manifest와 달라지는 게 정상).
 - **3점으로는 BM3 fit 불가**(드라이버 `b2o3_dft_eos.py`부터 n≥4 요구) → modelC와 동일한
   **6점 그리드 0.96–1.06**(v{096..106})로 확장 = ΔB₀ vs 21.71 apples-to-apples.
 - sftp/scp 불가 → **`tools/doping/b2o3_kisti_restage.py`** (WSL에서 실행)가
