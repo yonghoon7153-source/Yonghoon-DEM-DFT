@@ -2117,6 +2117,22 @@ modelc   | high-BVS (group B)  | 1626  | 60.2%  | 1.83-1.89 | AS Cl 인접, +15%
 
 ## 1M. Slide 13 — Cross-check #5: ELF — Covalent vs Ionic 시각화
 
+### ★ 실물 확정판 (as-built deck slide 18 "CC#5", 2026-06-11 — FINAL, cross-check 섹션 완주)
+
+```
+각주: ELF 정의 1줄 압축 / ■ ELF – covalent backbone & ionic glue, visualized
+bullets 3 (0.946/0.944 identical청 · Li basin <0.1 · ionic side only)
+[그림] notitle_ELF_comp1_Pz_slice (10×10, 좌 LPSCl) + notitle_ELF_modelC_Pz_slice
+      (7×7, 우 LPSCl1.6) — contour 쌍, 원자라벨 내장, colormap 0–1 동일.
+      공통 캡션 "ELF slice through a PS4 plane (each cell) — same colormap (0-1)"
+[표] 3행: P–S 0.946/0.944 · Li basin 0.072/0.065 · Li→anion 0.07/0.04
+하단(청): → the fifth probe closes the loop: five independent probes, one picture
+비고: 원본 PNG 제목이 comp1 파일에도 "modelC"로 박힌 생성스크립트 버그 발견 —
+제목 crop으로 해결, 판별 기준 = 축 크기 (10×10 comp1 / 7×7 modelc).
+xy_mid 후보는 modelc 단면에 P 부재로 탈락.
+```
+
+
 ### 페이지 배치 (16:9)
 - 좌우 paired ELF 2D slice (comp1 / modelc, 같은 colormap)
 - 정량 측정 표 (P-S bridge / Li basin min / Li-anion line)
