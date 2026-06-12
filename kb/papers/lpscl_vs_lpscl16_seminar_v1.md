@@ -1914,6 +1914,23 @@ Li–Cl (4d AS, modelc only)    | 2.45    | ★ 0.14 Å 짧음
 
 ---
 
+### ★ 실물 확정판 (as-built deck slide 15 "CC#2", 2026-06-11 — FINAL)
+
+```
+각주 Voronoi V 정의 / ■ Cross-check #2: More Cl → Shorter Li–Cl (counter-intuitive)
+bullets: mean 2.607→2.532 (−3%) · 4d AS = 2.36 Å (0.19 shorter than 4a)
+[좌상] 메인 표 4행 "< Counter-intuitive >" — Li–Cl 행 중립값 + Δ "−3% ↓"만 적
+[좌하] per-bond vs per-anion 표 — 사용자 결정으로 본편 유지 (선제 설명):
+      per-bond −2.57적/−2.84청 "Cl slightly ↑" · per-anion −15.4청/−11.3적
+      "S²⁻ 36% ↑ (Coulomb restored)" — 행별 승자=청 규칙 정합
+[우상] Per-site 박스: 4a 2.55 (−2%) / 4d AS 2.36적 (0.19 shorter) + Voronoi
+      V(Cl) 22.06→20.31적 (−1.7) — ★ V0 직접 계산 검증값 (구 2.59/2.45 출처불명 폐기)
+[우하] 히스토그램 3색 (적/청 4a/초록 4d AS 진하게) + 캡션
+검증 기록: 전체 평균 2.607±0.128 / 2.532±0.119 — V0 재계산 일치 ✓. 4d AS 4개
+= 2.308/2.356/2.357/2.414. 거리 통계 기하 cutoff 3.4 (36+4) vs LOBSTER 페어링
+(38+4) convention 차이 Q&A 카드화. 잔여 선택: 범례 "anti site" 하이픈.
+```
+
 ## 1K. Slide 11 — Cross-check #3: Voronoi 4-Sublattice Disorder Fingerprint
 
 ### 페이지 배치 (16:9)
