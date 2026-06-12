@@ -2106,9 +2106,13 @@ modelc   | high-BVS (group B)  | 1626  | 60.2%  | 1.83-1.89 | AS Cl 인접, +15%
 ③ 37.5% 유도 (500 4a sites vs 800 Cl → 300 forced to 4d) — db 기록 채택
 ④ channel fraction 8.75%→7.4% (−15%) — iso 그림 정량 라벨로 사용 가능
 그림 결정: iso 1쌍 (제목 "Li-accessible channels — only low-energy regions
-(BVSE ≤ 0.30) shown" — global min=0.000이라 표기 정확) + 캡션 "identical
-lattice·grid·cutoff". bimodal histogram도 생성·검증됨 (D:\bvse_bimodal_hist.png)
-— 최종 그림 선택은 사용자 취향 (둘 다 유효). slice 쌍은 시각 차이 없음으로 폐기.
+(BVSE ≤ 0.30) shown" — global min=0.000이라 표기 정확) + 시스템·채널% 라벨
+(8.75% / 7.4% −15%적). slice 쌍·histogram 모두 폐기 (사용자 결정).
+**FINAL (2026-06-11)**: 각주 2줄(BVS+paired 조건) · bullets 3 (5.4 Li per AS) ·
+표 캡션 (125 f.u., 6500/6200, 300 S→Cl/−300 Li) · 표 3행 (BVS peak 색 인코딩:
+적=LPSCl-같은 환경, 청=새 환경 — A행 peak 적색 처리 영리함) · 정량 박스 2줄
+(closure + +15%↔+40% 두 probe). 37.5% footnote는 생략 → Q&A 카드.
+300/2700 출처 카드: 300 = 800(필요 Cl) − 500(4a 자리), 2700 = 5.4×500 = 1074+1626.
 ```
 
 ## 1M. Slide 13 — Cross-check #5: ELF — Covalent vs Ionic 시각화
