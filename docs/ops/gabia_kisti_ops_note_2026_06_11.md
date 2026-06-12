@@ -85,6 +85,11 @@ cat ~/job753206_watch.log   # 끝나면 State/Elapsed/ExitCode 찍힘
 ## 남은 체크포인트
 
 - [ ] Sc2O3_x002 stage 12 완료 확인 (예상: σ-MD 6런 후 수 시간 내)
-- [ ] KISTI 753206 완료 → k661 자동 연계 여부 확인 (안 이어지면 별도 submit)
+- [x] KISTI 753206 완료 → k661 자동 연계 ✓ (2026-06-12 00:27 완료 확인)
+  - **k-수렴 판정 (06-12)**: k441 −3566.23655394 / k661 −3566.23666523 Ry
+    → ΔE = 0.11 mRy 전체 = **0.013 meV/atom (nat=120)** → **EOS는 k441 채택**
+  - 다음: EOS 11 volumes (V/V₀ 0.96–1.06) submit — scripts/adhesion/
+    prepare_dft_eos_nd.py + sbatch_dft_eos_nd.sh 사용, `#SBATCH -J nd_k441_eos`로
+    이름 교체 (함정 #5)
 - [ ] Li3N NEB fmax 수렴 추이 (`neb.log`) — 5–7일 예상
 - [ ] v22에 오늘 생긴 Na2O_x002 stage 10+ 잔해 정리 (무해, optional)
