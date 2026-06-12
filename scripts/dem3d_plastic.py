@@ -285,7 +285,6 @@ def main(argv):
     dmax = ti.field(ti.f32, (N, N))                      # contact history (dense; v2: cell-list slots)
     dmax_fl = ti.field(ti.f32, N); dmax_tp = ti.field(ti.f32, N)
     wall_z = ti.field(ti.f32, ()); wall_force = ti.field(ti.f32, ())
-    overlap_vol = ti.field(ti.f32, ())                  # Σ pairwise lens vol → ε_union correction
     Lx = ti.field(ti.f32, ())
 
     x.from_numpy(np.ascontiguousarray(cx)); rad.from_numpy(cr); Ei.from_numpy(cE)
@@ -352,7 +351,6 @@ def main(argv):
         for i in range(N):
             f[i] = ti.Vector([0.0, 0.0, 0.0])
         wall_force[None] = 0.0
-        overlap_vol[None] = 0.0
         Lc = Lx[None]
         for i in range(N):                                  # parallel over i
             # floor (z = floor): overlap if particle dips below floor+rad
@@ -385,12 +383,6 @@ def main(argv):
                     py = ti.min(pyi[i], pyi[j])
                     Fn, nd = contact_normal(delta, dmax[i, j], Rstar, estar_pair(i, j), py)
                     dmax[i, j] = nd
-                    # inclusion-exclusion lens volume (two spherical caps) → ε_union porosity
-                    x1 = (dist * dist + rad[i] * rad[i] - rad[j] * rad[j]) / (2.0 * dist)
-                    h1 = rad[i] - x1; h2 = rad[j] - (dist - x1)
-                    if h1 > 0.0 and h2 > 0.0:
-                        overlap_vol[None] += (math.pi / 3.0) * (h1 * h1 * (3.0 * rad[i] - h1)
-                                                                + h2 * h2 * (3.0 * rad[j] - h2))
                     nrm = dx / dist
                     vrel = v[i] - v[j]
                     vn = vrel.dot(nrm)
@@ -435,14 +427,16 @@ def main(argv):
         v_wall = -max(-1.0, min(1.0, err)) * vmax           # err>0 → move down (compress)
         wall_z[None] = max(floor_min, wall_z[None] + v_wall)
         height = wall_z[None] - floor
-        ov = float(overlap_vol[None])                       # double-counted overlap (last substep)
-        por = max(0.0, 1.0 - (vol_solid - ov) / (area * height)) * 100.0   # ε_union (overlap-corrected)
+        # ε_sphere = PRODUCTION convention (CLAUDE.md): material-conserving — displaced
+        # lens material re-emerges as bulge, so solid = Σ original sphere vol.  Unclamped
+        # (negative = over-compressed signal).  VOX = exact union, rigid-view UPPER bound.
+        por = (1.0 - vol_solid / (area * height)) * 100.0
         series.append((frame, p, por, wall_z[None]))
         converged = converged + 1 if abs(p - target) < 0.04 * target else 0
         last = (converged >= 10 and frame > 25) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
             pv = porosity_vox()
-            print(f"  frame {frame:3d}  p={p:7.4f} GPa  porosity={por:6.2f}% (vox {pv:5.2f}%)  "
+            print(f"  frame {frame:3d}  p={p:7.4f} GPa  por_sph={por:6.2f}% (vox {pv:5.2f}%)  "
                   f"wall_z={wall_z[None]:6.3f}")
         if converged >= 10 and frame > 25:                  # servo self-terminates at target
             if not args.quiet:
@@ -451,9 +445,9 @@ def main(argv):
     p_fin = float(np.mean([s[1] for s in series[-5:]]))
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
     pv_fin = porosity_vox()
-    print(f"FINAL  pressure={p_fin:.4f} GPa  porosity_lens={por_fin:.2f}%  porosity_VOX={pv_fin:.2f}%   "
+    print(f"FINAL  pressure={p_fin:.4f} GPa  porosity_SPHERE={por_fin:.2f}%  porosity_VOX={pv_fin:.2f}%   "
           f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]  "
-          f"(calibrate on VOX = exact union)")
+          f"(calibrate ε_sphere≈10% = production convention; VOX = rigid-view upper bound)")
     if wall_z[None] <= floor_min + 1e-6 and p_fin < 0.9 * target:
         print(f"  ⚠ platen bottomed out at floor_min={floor_min:.3f} below target → bed TOO SOFT: "
               f"raise --sigma-y (plateau) or --beta-lock (later lock) to hold {target} GPa")
