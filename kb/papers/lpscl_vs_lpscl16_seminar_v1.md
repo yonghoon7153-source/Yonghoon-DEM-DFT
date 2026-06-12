@@ -2460,6 +2460,20 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 
 ---
 
+### ★ 실물 확정판 (as-built deck slide 19 "Summary", 2026-06-11 — FINAL)
+
+```
+■ Summary: what stays invariant – and what composition changes
+[좌 점선박스 검정] INVARIANT 3항 (PS4 backbone ~1% · gap Δ0.06 + character · anchor Δ2%)
+[우 점선박스 청] CHANGED 4항 (transport ×2.5청 600K · glue +13/+8청 · shear +30/C44+72청
+  + Zener 1.44적 · new bond family −2.84) — 번호 1~4가 M2→M3→M4→원인 서사 순
+박스 아래: → all confirmed by 3 independent probes (×5.5 · +15% · +40%) [17 흡수 ✓]
+thesis 띠: "not from electronic structure / from structural disorder" 밑줄 강조
+  + covalent skeleton preserved · ionic ligament rearranged
+색 문법: CHANGED=청(modelc가 가져온 것), 비용 항목(Zener)만 적 — deck 일관 ✓
+4.3 외삽 수치 제거 확인 ✓ (×2.5 측정값만)
+```
+
 ## 1Q. ~~Slide 17 — 3-Probe Convergence~~ — **Summary에 병합 (2026-06-11, 사용자 결정)**
 
 > CC#3·4·5 수치의 재방송 성격 → 별도 슬라이드 대신 Summary의 '변화' 컬럼 하단 한 줄로
