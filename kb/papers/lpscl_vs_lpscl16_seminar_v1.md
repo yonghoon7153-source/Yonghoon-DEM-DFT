@@ -2161,7 +2161,16 @@ ELF 0.7~1.0 : localized (lone pair / covalent maximum)
 
 ---
 
-## 1N. Slide 14 — k-mesh Audit & Method Convergence (Referee Defense)
+## 1N. ~~Slide 14 — k-mesh Audit~~ — **발표 deck에서 DROPPED (2026-06-11, 사용자 결정)**
+
+> 본편 제외. 정보 흔적은 ① caveats 슬라이드의 k×L·spilling 행 ② Q&A 카드 2장:
+> "k 수렴 했나?" → "k×L ≥ 40 Å 양쪽 보장 (4×4×4/6×6×3). 초기 k221에서 gap 1.50
+> 사고를 수렴 테스트로 잡아 paper-grade로 재계산한 이력까지 있습니다 (구조 RMS
+> 0.003 Å — 전자 property만 오염이었음)" / "LOBSTER 믿을 만한가?" → "spilling
+> 1.16–1.46% (<5% 표준)". M4-1 때 '#4 method-quality는 audit 슬라이드로' 했던
+> 위임도 이 Q&A 카드로 최종 귀속. paper Methods엔 본문 그대로 사용.
+
+## (보존) Slide 14 — k-mesh Audit & Method Convergence (Referee Defense)
 
 ### 페이지 배치 (16:9)
 - k-mesh incident & recovery 스토리 박스 (referee 정직성)
