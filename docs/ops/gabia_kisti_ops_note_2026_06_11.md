@@ -62,6 +62,32 @@
 - **잡당 GPU 1개** — 2트랙 병렬 운용 목적: `--ntasks-per-node=1`, `--gres=gpu:1`,
   `mpirun -np 1 ... -npool 1` (⚠ np와 npool은 반드시 함께 1로 — rank 1 + npool 2는 에러)
 - 기존 2-GPU 템플릿(sbatch_ktest.sh)은 참고용으로만. 이미 제출된 잡은 완주 후 적용.
+- 적용 1호: nd_dos 756472(2-GPU) scancel → **756475(1-GPU) 재제출** (06-12).
+
+## B₂O₃ DFT-EOS → KISTI 이관 (2026-06-12, paste 전용)
+
+**V100 사망 시점 상태** (WSL 백업 `runs/b2o3_dft3_run` 전수조사, nat=128, JOB DONE **0개**):
+
+| vol | 상태 | lastE (Ry) | KISTI 조치 |
+|---|---|---|---|
+| 0.98 | BFGS 좌표블록 **61개** 진행 중 | −2621.73962908 | 마지막 좌표로 from_scratch 재시작 |
+| 1.00 | 블록 19개 진행 중 | −2621.75212577 | 〃 |
+| 1.02 | **SCF 발산** (UMA warm-start 좌표, 블록 0) | — | v1.00 좌표 ×cbrt(1.02) 이식 + `mixing_beta 0.15` |
+| 0.96/1.04/1.06 | 미생성 | — | v1.00 템플릿에서 cell·좌표 cbrt(tag) 스케일 신규 |
+
+- 구기록 "v0.98 step 5"는 옛 스냅샷 — 실제 61블록. recover/recover3 시도는 빈 파일(무시).
+- **3점으로는 BM3 fit 불가**(드라이버 `b2o3_dft_eos.py`부터 n≥4 요구) → modelC와 동일한
+  **6점 그리드 0.96–1.06**(v{096..106})로 확장 = ΔB₀ vs 21.71 apples-to-apples.
+- sftp/scp 불가 → **`tools/doping/b2o3_kisti_restage.py`** (WSL에서 실행)가
+  `/mnt/d/v100백업/b2o3_kisti_stage/paste_payloads/`에 **heredoc payload 7개 + payload_ALL.txt**
+  생성 (md5 manifest 출력 → KISTI에서 `md5sum`으로 paste 손상 검증).
+  바이너리(.save/.bfgs)는 버림 — BFGS 히스토리 손실은 SCF 몇 사이클 비용뿐 (표준 복구 경로).
+- UPF는 paste 불가 → 입력은 전부 `pseudo_dir='./pseudo/'`; KISTI에서 Nd-run pseudo 복사
+  + 부족분(B 등) `wget https://pseudopotentials.quantum-espresso.org/upf_files/<정확한 파일명>`.
+- sbatch는 검증된 `run_nd_dos.sh` 헤더 재사용(`awk '/mpirun/{exit} {print}'`) + `-J b2o3_eos`,
+  1-GPU 규약(함정 #6), 실행 순서 0.98→1.00→1.02→0.96→1.04→1.06 (완성 임박 순),
+  JOB DONE skip + **`resume_splice.py` 자동 좌표 이식** → 워크타임 킬 후엔 그냥 재제출.
+- 완료 후: `grep '^!.*total energy' eos_v*.out | tail -1` ×6 (V,E) → BM3 fit(로컬) → ΔB₀ vs 21.71.
 
 ## Watch 명령 모음
 
