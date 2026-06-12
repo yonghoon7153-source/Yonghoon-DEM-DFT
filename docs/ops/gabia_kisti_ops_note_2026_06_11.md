@@ -58,6 +58,11 @@
 - run4 ×4 + run5 ×4 시도 끝에 도는 중. 다음부터 `#SBATCH -J nd_k441_scf`로 바꿀 것.
 - "SCF correction compared to forces is large" 경고: EOS 에너지 목적엔 무시 가능, force 쓸 거면 conv_thr 강화.
 
+### 6. KISTI GPU 규약 (2026-06-12 신설, 사용자 결정)
+- **잡당 GPU 1개** — 2트랙 병렬 운용 목적: `--ntasks-per-node=1`, `--gres=gpu:1`,
+  `mpirun -np 1 ... -npool 1` (⚠ np와 npool은 반드시 함께 1로 — rank 1 + npool 2는 에러)
+- 기존 2-GPU 템플릿(sbatch_ktest.sh)은 참고용으로만. 이미 제출된 잡은 완주 후 적용.
+
 ## Watch 명령 모음
 
 ```bash
