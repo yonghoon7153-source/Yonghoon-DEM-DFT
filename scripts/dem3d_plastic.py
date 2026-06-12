@@ -93,6 +93,10 @@ def parse_args(argv):
     ap.add_argument('--dt', type=float, default=0.04, help='timestep (scaled units)')
     ap.add_argument('--vmax-frac', type=float, default=0.12, help='platen speed cap = frac·r_min per frame')
     ap.add_argument('--seed', type=int, default=1)
+    ap.add_argument('--engine', default='auto', choices=['auto', 'dense', 'cell'],
+                    help='pair engine.  dense = all-pairs + (N,N) history (validated reference, '
+                         'N≲6k).  cell = SE cell-grid + few-big-AM brute + slot history '
+                         '(N~50k bimodal dip runs).  auto picks by N.')
     ap.add_argument('--unit-test', action='store_true', help='single-contact law validation only')
     ap.add_argument('--quiet', action='store_true')
     return ap.parse_args(argv)
@@ -160,9 +164,11 @@ def build_packing(args, rng):
                        (args.r_se, vse, args.e_se, C_H * args.sigma_y)]
     radii_kinds = [rk for rk in radii_kinds if rk[1] > 1e-9]
 
-    # box sized so the target particle count fits at the loose initial solid fraction
-    vbar = sum(frac * (4.0 / 3.0) * math.pi * r ** 3 for (r, frac, *_ ) in radii_kinds)
-    v_solid_tot = args.n_target * vbar
+    # box sized so the TOTAL PARTICLE COUNT ≈ n_target at the loose initial solid
+    # fraction.  count_k = frac_k·V_tot/v_k  ⇒  V_tot = n_target / Σ_k(frac_k/v_k)
+    # (harmonic mixing; a volume-weighted vbar would blow N up at bimodal mixes).
+    inv_vbar = sum(frac / ((4.0 / 3.0) * math.pi * r ** 3) for (r, frac, *_ ) in radii_kinds)
+    v_solid_tot = args.n_target / inv_vbar
     box_vol = v_solid_tot / args.phi0
     fill_h = 8.0 * max(r for (r, *_ ) in radii_kinds)      # fill height ~8 big-diameters
     L = math.sqrt(box_vol / fill_h)
@@ -278,11 +284,29 @@ def main(argv):
     area = L * L
     mass = (RHO * (4.0 / 3.0) * np.pi * cr.astype(np.float64) ** 3).astype(np.float32)
 
+    # ── engine choice (before fields: dense history is (N,N) → N≳6k must use cell) ──
+    ENGINE = args.engine
+    if ENGINE == 'auto':
+        ENGINE = 'cell' if N > 6000 else 'dense'
+    if ENGINE == 'cell':
+        small_np = (cpy < PY_RIGID * 0.5)                  # SE = yielding phase = "small" tier
+        sid_np = np.where(small_np)[0].astype(np.int32)
+        bid_np = np.where(~small_np)[0].astype(np.int32)
+        n_small = int(sid_np.size); n_big = int(bid_np.size)
+        r_small = float(cr[small_np].max()) if n_small else float(cr.min())
+        HC0 = 2.2 * r_small                                # ≥ SE–SE cutoff (2·r_small) + skin
+        NCX = max(1, int(L / HC0)); HCX = L / NCX          # exact periodic tiling in x,y
+        NCZ = max(1, int(math.ceil((fill_top + float(cr.max())) / HCX)) + 1)
+        if NCX < 3:                                        # wrap would double-visit cells
+            print("  (box too small for the cell engine → falling back to dense)")
+            ENGINE = 'dense'
+
     # ── fields ──────────────────────────────────────────────────────────────────
     x = ti.Vector.field(3, ti.f32, N); v = ti.Vector.field(3, ti.f32, N)
     f = ti.Vector.field(3, ti.f32, N)
     rad = ti.field(ti.f32, N); Ei = ti.field(ti.f32, N); pyi = ti.field(ti.f32, N); m = ti.field(ti.f32, N)
-    dmax = ti.field(ti.f32, (N, N))                      # contact history (dense; v2: cell-list slots)
+    # dense contact history (reference engine); dummy 1×1 when the cell engine is active
+    dmax = ti.field(ti.f32, (N, N) if ENGINE == 'dense' else (1, 1))
     dmax_fl = ti.field(ti.f32, N); dmax_tp = ti.field(ti.f32, N)
     wall_z = ti.field(ti.f32, ()); wall_force = ti.field(ti.f32, ())
     Lx = ti.field(ti.f32, ())
@@ -398,6 +422,129 @@ def main(argv):
                 else:
                     dmax[i, j] = 0.0
 
+    # ── cell engine: SE cell-grid + few-big-AM brute + per-owner slot history ────
+    # History OWNER rule: SE–AM history lives on the SE side; SE–SE and AM–AM on the
+    # lower id (= the iterating thread).  An owner's slots are only ever touched from
+    # its own parallel iteration → race-free.  Slot freed on separation = history
+    # reset, identical to the dense engine's dmax[i,j]=0.
+    if ENGINE == 'cell':
+        M = 64                                             # max SE per cell (overflow counted)
+        K = 24                                             # history slots per owner (Z≲12)
+        cell_cnt = ti.field(ti.i32, (NCX, NCX, NCZ))
+        cell_itm = ti.field(ti.i32, (NCX, NCX, NCZ, M))
+        nbr_j = ti.field(ti.i32, (N, K)); nbr_dm = ti.field(ti.f32, (N, K))
+        nbr_j.fill(-1)
+        sid = ti.field(ti.i32, max(n_small, 1)); bid = ti.field(ti.i32, max(n_big, 1))
+        sid.from_numpy(sid_np if n_small else np.zeros(1, np.int32))
+        bid.from_numpy(bid_np if n_big else np.zeros(1, np.int32))
+        ovf = ti.field(ti.i32, ())
+
+        @ti.kernel
+        def build_cells():
+            for I in ti.grouped(cell_cnt):
+                cell_cnt[I] = 0
+            for s in range(n_small):
+                i = sid[s]
+                cxi = ((int(ti.floor(x[i][0] / HCX)) % NCX) + NCX) % NCX
+                cyi = ((int(ti.floor(x[i][1] / HCX)) % NCX) + NCX) % NCX
+                czi = ti.min(NCZ - 1, ti.max(0, int(ti.floor(x[i][2] / HCX))))
+                k = ti.atomic_add(cell_cnt[cxi, cyi, czi], 1)
+                if k < M:
+                    cell_itm[cxi, cyi, czi, k] = i
+                else:
+                    ovf[None] += 1
+
+        @ti.func
+        def do_pair(i, j):                                 # i = history owner
+            Lc = Lx[None]
+            dxv = x[i] - x[j]
+            dxv[0] -= Lc * ti.round(dxv[0] / Lc)
+            dxv[1] -= Lc * ti.round(dxv[1] / Lc)
+            dist = dxv.norm() + 1e-12
+            delta = rad[i] + rad[j] - dist
+            slot = -1; free = -1
+            for k in range(K):
+                if nbr_j[i, k] == j and slot == -1:
+                    slot = k
+                if nbr_j[i, k] == -1 and free == -1:
+                    free = k
+            if delta > 0:
+                if slot == -1:
+                    slot = free                            # claim (owner-thread exclusive)
+                dmv = 0.0
+                if slot >= 0:
+                    if nbr_j[i, slot] != j:
+                        nbr_j[i, slot] = j; nbr_dm[i, slot] = 0.0
+                    dmv = nbr_dm[i, slot]
+                Rstar = rad[i] * rad[j] / (rad[i] + rad[j])
+                pyv = ti.min(pyi[i], pyi[j])
+                Fn, nd = contact_normal(delta, dmv, Rstar, estar_pair(i, j), pyv)
+                if slot >= 0:
+                    nbr_dm[i, slot] = nd
+                nrm = dxv / dist
+                vrel = v[i] - v[j]
+                vn = vrel.dot(nrm)
+                Ftot = Fn - GAMMA_N * vn
+                f[i] += Ftot * nrm
+                f[j] -= Ftot * nrm                         # atomic
+                vt = vrel - vn * nrm
+                vtn = vt.norm()
+                if vtn > 1e-9:
+                    Ft = ti.min(MU * ti.max(Fn, 0.0), 2.0 * vtn)
+                    ftv = -Ft * vt / vtn
+                    f[i] += ftv; f[j] -= ftv
+            else:
+                if slot >= 0:
+                    nbr_j[i, slot] = -1                    # separation resets history
+
+        @ti.kernel
+        def step_cell():
+            for i in range(N):
+                f[i] = ti.Vector([0.0, 0.0, 0.0])
+            wall_force[None] = 0.0
+            for i in range(N):                              # floor + platen (same law as dense)
+                df = floor + rad[i] - x[i][2]
+                if df > 0:
+                    Fn, nd = contact_normal(df, dmax_fl[i], rad[i], estar_wall(i), pyi[i])
+                    dmax_fl[i] = nd
+                    f[i][2] += Fn - GAMMA_N * ti.min(v[i][2], 0.0)
+                else:
+                    dmax_fl[i] = 0.0
+                dtp = x[i][2] + rad[i] - wall_z[None]
+                if dtp > 0:
+                    Fn, nd = contact_normal(dtp, dmax_tp[i], rad[i], estar_wall(i), pyi[i])
+                    dmax_tp[i] = nd
+                    fz = Fn - GAMMA_N * ti.max(v[i][2], 0.0)
+                    f[i][2] -= fz
+                    wall_force[None] += fz
+                else:
+                    dmax_tp[i] = 0.0
+            for s in range(n_small):                        # SE–SE via 27 cells (owner = lower id)
+                i = sid[s]
+                cxi = ((int(ti.floor(x[i][0] / HCX)) % NCX) + NCX) % NCX
+                cyi = ((int(ti.floor(x[i][1] / HCX)) % NCX) + NCX) % NCX
+                czi = ti.min(NCZ - 1, ti.max(0, int(ti.floor(x[i][2] / HCX))))
+                for oxc in range(-1, 2):
+                    for oyc in range(-1, 2):
+                        for ozc in range(-1, 2):
+                            czn = czi + ozc
+                            if 0 <= czn < NCZ:
+                                cxn = (cxi + oxc + NCX) % NCX
+                                cyn = (cyi + oyc + NCX) % NCX
+                                nc = ti.min(cell_cnt[cxn, cyn, czn], M)
+                                for k in range(nc):
+                                    j = cell_itm[cxn, cyn, czn, k]
+                                    if j > i:
+                                        do_pair(i, j)
+            for s in range(n_small):                        # SE–AM brute over the few big
+                i = sid[s]
+                for b in range(n_big):
+                    do_pair(i, bid[b])
+            for b1 in range(n_big):                         # AM–AM brute (owner = loop lower)
+                i = bid[b1]
+                for b2 in range(b1 + 1, n_big):
+                    do_pair(i, bid[b2])
+
     @ti.kernel
     def integrate():
         Lc = Lx[None]
@@ -415,12 +562,17 @@ def main(argv):
     floor_min = floor + 1.5 * cr.max()
     if not args.quiet:
         cap = 'PLASTIC (yield cap ON, H=%.2f GPa)' % (C_H * args.sigma_y) if args.plastic else 'RIGID (pure Hertz)'
-        print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  {cap}  target={target} GPa")
+        eng = ENGINE + (f" (n_small={n_small}, n_big={n_big})" if ENGINE == 'cell' else '')
+        print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  engine={eng}  {cap}  target={target} GPa")
     series = []; converged = 0
     for frame in range(args.frames):
         pacc = 0.0
         for _ in range(args.sub):
-            step(); integrate()
+            if ENGINE == 'cell':
+                build_cells(); step_cell()
+            else:
+                step()
+            integrate()
             pacc += wall_force[None] / area
         p = pacc / args.sub                                 # mean platen pressure this frame (GPa)
         err = (target - p) / max(target, 1e-6)              # +1 → far below target → compress
@@ -451,6 +603,8 @@ def main(argv):
     if wall_z[None] <= floor_min + 1e-6 and p_fin < 0.9 * target:
         print(f"  ⚠ platen bottomed out at floor_min={floor_min:.3f} below target → bed TOO SOFT: "
               f"raise --sigma-y (plateau) or --beta-lock (later lock) to hold {target} GPa")
+    if ENGINE == 'cell' and ovf[None] > 0:
+        print(f"  ⚠ cell-list overflow: {int(ovf[None])} drops (M={M}) — results INVALID, raise M")
     return por_fin, p_fin
 
 
