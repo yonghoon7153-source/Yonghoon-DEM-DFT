@@ -1933,6 +1933,21 @@ bullets: mean 2.607→2.532 (−3%) · 4d AS = 2.36 Å (0.19 shorter than 4a)
 
 ## 1K. Slide 11 — Cross-check #3: Voronoi 4-Sublattice Disorder Fingerprint
 
+### ★ 실물 확정판 (as-built deck slide 16 "CC#3", 2026-06-11 — FINAL, 잔여 2건: DFT 제목·×기호)
+
+```
+■ Cross-check #3: Where does disorder actually go? — a 4-sublattice fingerprint
+bullets: P barely moves (framework intact) · Li ×5.5 (fingerprint #1) ·
+        S more homogeneous (−40%, paradox)
+[좌] Origin 막대 4쌍 + ×5.5/−40% 주석 + 캡션 < Voronoi volume std (Å³) >
+[우] 표 4행 (P 0.00→0.37 / Cl 0.00→0.74 / Li 0.21→1.15 ×5.5 / S 3.41→2.05 −40%)
+     — P·Cl의 0.00 두 셀 적색 점선 박스 (footnote 연결, M1 패턴 재사용)
+footnote: P·Cl std = 0.00 exact (F-43m 동등 자리 증거) + 부피 합 = 셀 부피 1.0000
+검증: 8개 수치 전부 V0 구조 scipy Voronoi 재계산 일치 (2026-06-11,
+docs/figures/slide16_voronoi/). "3 probes converge" 한 줄은 대본이 전담.
+```
+
+
 ### 페이지 배치 (16:9)
 - 메인 4-행 표 (P/Cl/Li/S × comp1/modelc std)
 - 4 sublattice 응답 해석 박스
