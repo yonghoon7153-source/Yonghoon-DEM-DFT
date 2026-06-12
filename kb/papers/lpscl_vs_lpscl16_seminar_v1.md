@@ -2460,7 +2460,13 @@ DFT validation (Quantum ESPRESSO 7.4.1)
 
 ---
 
-## 1Q. Slide 17 — Robustness #1: 3-Probe Convergence Panel
+## 1Q. ~~Slide 17 — 3-Probe Convergence~~ — **Summary에 병합 (2026-06-11, 사용자 결정)**
+
+> CC#3·4·5 수치의 재방송 성격 → 별도 슬라이드 대신 Summary의 '변화' 컬럼 하단 한 줄로
+> 흡수: "→ all confirmed by 3 independent probes (Voronoi ×5.5 · BVSE +15% · ICOHP +40%)".
+> 정량 박스(5.4 Li/AS 등)는 CC#4 슬라이드가 이미 보유.
+
+## (보존) Slide 17 — Robustness #1: 3-Probe Convergence Panel
 
 ### 페이지 배치 (16:9)
 - 3-probe 표 (Voronoi + BVSE + LOBSTER × 정량/대상/슬라이드)
@@ -2543,7 +2549,14 @@ LOBSTER ICOHP      | +40% per-bond (4d AS)  | Li-Cl 결합 강도     | 7
 
 ---
 
-## 1R. Slide 18 — Robustness #2: Oxidation 4-Axis Framework
+## 1R. ~~Slide 18 — Oxidation 4-Axis~~ — **본편 제외 → APPENDIX (2026-06-11, 사용자 결정. Slide 19 ESW와 세트)**
+
+> 본편 흐름(σ·E mechanism)의 곁가지 + 시간 절약. appendix 2장(4-axis + ESW)으로 보존.
+> 트리거 Q&A: "Cl-rich 산화 안정성은?" → "축 4개로 답이 갈립니다 — 0-pressure 동률,
+> 기계 구속(Gil)·계면 cycling(Zuo)은 Cl-rich 우세 (우리 ESW가 정량 backing), thermal
+> calendar만 열세(Wu) — appendix에 정리." 연쇄: tension audit #1의 해소 열 → "(appendix)" 표기.
+
+## (보존) Slide 18 — Robustness #2: Oxidation 4-Axis Framework
 
 ### 페이지 배치 (16:9)
 - 4-axis 표 (axis 의미 / comp1 vs modelc / 출처)
@@ -2632,7 +2645,9 @@ Axis | 의미                          | comp1 vs modelc       | Reference
 
 ---
 
-## 1S. Slide 19 — Robustness #3: Constrained ESW Cl-scan + 분해반응
+## 1S. ~~Slide 19 — Constrained ESW~~ — **본편 제외 → APPENDIX (18과 세트, 위 1R 참조)**
+
+## (보존) Slide 19 — Robustness #3: Constrained ESW Cl-scan + 분해반응
 
 ### 페이지 배치 (16:9)
 - 왼쪽: Constrained ESW Cl-scan plot (5 comp × 3 K_eff)
