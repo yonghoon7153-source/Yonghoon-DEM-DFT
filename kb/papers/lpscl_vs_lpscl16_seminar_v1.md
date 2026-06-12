@@ -1645,6 +1645,24 @@ Li–S(4d, free S²⁻) ICOHP    | −2.57    | −2.52    | −2% (universal an
 
 ---
 
+### ★ 실물 확정판 (as-built deck slide 14 "CC#1", 2026-06-11 — FINAL)
+
+```
+각주: ELF 정의 / refs 없음
+■ Cross-check #1: The PS4 covalent backbone is identical in both
+   · Five probes within ~1%: length · σ · coordination · ICOHP · ELF
+   · Disorder makes PS4 more uniform (σ 0.036 → 0.011) — backbone untouched
+   · Li–S(4d free S²⁻) anchor also composition-independent (Δ2%)
+[좌] P–S 히스토그램 overlay (bin 0.015, Overlap 100/투명 50, 범례+캡션
+     "< P–S bond length distribution (Å) >") — V0 구조 직접 계산 검증 (16/20 bonds,
+     2.072±0.036 / 2.064±0.011, docs/figures/slide14_ps4/)
+[우] 표 6행: 길이·σ(0.036적/0.011청 강조)·배위·ICOHP·ELF·anchor — 나머지 중립
+하단: → PS4³⁻ = chemistry-independent rigid block
+변경: Bader P 행 제외 (basin-shape 함정 → Q&A), σ bullet 승격, comp1 분포
+이봉(8+8, PS4당 2short+2long) Q&A 카드 보유. universal anchor 의미 카드:
+내부 기준점 — 변화의 국소화 + LOBSTER 무편향 보증.
+```
+
 ## 1J. Slide 10 — Cross-check #2: 결합 길이의 반직관 (Counter-Intuitive)
 
 ### 페이지 배치 (16:9)
