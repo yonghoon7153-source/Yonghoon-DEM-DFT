@@ -2563,6 +2563,17 @@ LOBSTER ICOHP      | +40% per-bond (4d AS)  | Li-Cl 결합 강도     | 7
 
 ---
 
+### ★ 실물 확정판 (as-built deck slide 20 "Oxidation+ESW", 2026-06-11 — FINAL)
+
+```
+각주 K_eff/ESW · refs #1 Zuo/#2 Gil/#3 Wu 번호 체계 (표 ref 열·분해 박스가 #참조)
+■ Oxidation stability: specify the axis — and our ESW backs it / bullets 3
+[좌] 4-axis 표 (DRAW 'Ours,#2' / WINS청 '#2' / WINS청 'Ours,#1' / LOSES적 '#3')
+[우상] ESW 풀 표 3×5 — Cl1.6 열 강조 (2.40 flat청 / 4.30 Sweet Spot청 / 20행 연초록)
+[우하] 분해반응 점선 박스 (영어, LPSCl/LPSCl1.6 표기, 1.75/0.7 Li·1.6× LiCl 청,
+      "quantitative match with #1")
+```
+
 ## 1R. Slide 18+19 — **병합 → 본편 1장 "Oxidation: axis-resolved + our ESW backing" (2026-06-11 최종)**
 
 > 직전 appendix안 철회 — 사용자 결정: 18(4-axis)과 19(ESW)를 **한 장으로 병합, 본편 deck 20**.
