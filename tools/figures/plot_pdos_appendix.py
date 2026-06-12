@@ -33,8 +33,10 @@ ELEM_COLOR = {
     "S":  "tab:green",
     "Cl": "tab:purple",
     "Br": "tab:brown",
+    "O":  "tab:red",
+    "Nd": "tab:cyan",
 }
-ELEM_ORDER = ["Li", "P", "S", "Cl", "Br"]
+ELEM_ORDER = ["Li", "P", "S", "Cl", "Br", "O", "Nd"]
 
 
 def read_total_dos(dos_dat: Path):

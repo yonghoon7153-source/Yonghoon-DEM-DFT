@@ -88,8 +88,10 @@ cat ~/job753206_watch.log   # 끝나면 State/Elapsed/ExitCode 찍힘
 - [x] KISTI 753206 완료 → k661 자동 연계 ✓ (2026-06-12 00:27 완료 확인)
   - **k-수렴 판정 (06-12)**: k441 −3566.23655394 / k661 −3566.23666523 Ry
     → ΔE = 0.11 mRy 전체 = **0.013 meV/atom (nat=120)** → **EOS는 k441 채택**
-  - 다음: EOS 11 volumes (V/V₀ 0.96–1.06) submit — scripts/adhesion/
-    prepare_dft_eos_nd.py + sbatch_dft_eos_nd.sh 사용, `#SBATCH -J nd_k441_eos`로
-    이름 교체 (함정 #5)
+  - **결정 (2026-06-12, 사용자)**: k441 tight SCF를 V0 최종으로 확정, **EOS 스킵**
+    → 바로 post-processing. 1번 타자 = DOS/PDOS (NSCF k661 → dos.x → projwfc.x).
+    ⚠ NSCF는 scf_k441.in의 nspin=2/Hubbard U/starting_mag 블록을 그대로 상속할 것
+    (U 값은 입력파일이 정본 — 기록상 6.0/8.0 혼재하므로 grep으로 확인)
+  - plot 도구에 Nd(teal)·O(red) 색 추가 완료 (plot_dos.py, plot_pdos_appendix.py)
 - [ ] Li3N NEB fmax 수렴 추이 (`neb.log`) — 5–7일 예상
 - [ ] v22에 오늘 생긴 Na2O_x002 stage 10+ 잔해 정리 (무해, optional)

@@ -36,8 +36,10 @@ ELEM_COLOR = {
     "S":  "#E0C200",   # yellow-gold
     "Cl": "#3E8E41",   # green
     "Br": "#A0522D",   # sienna
+    "O":  "#D62728",   # red
+    "Nd": "#17BECF",   # teal
 }
-ELEM_ORDER = ["Li", "P", "S", "Cl", "Br"]
+ELEM_ORDER = ["Li", "P", "S", "Cl", "Br", "O", "Nd"]
 ORB_LABEL = {"s": "s", "p": "p", "d": "d", "f": "f"}
 
 
