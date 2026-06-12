@@ -2549,12 +2549,13 @@ LOBSTER ICOHP      | +40% per-bond (4d AS)  | Li-Cl 결합 강도     | 7
 
 ---
 
-## 1R. ~~Slide 18 — Oxidation 4-Axis~~ — **본편 제외 → APPENDIX (2026-06-11, 사용자 결정. Slide 19 ESW와 세트)**
+## 1R. Slide 18+19 — **병합 → 본편 1장 "Oxidation: axis-resolved + our ESW backing" (2026-06-11 최종)**
 
-> 본편 흐름(σ·E mechanism)의 곁가지 + 시간 절약. appendix 2장(4-axis + ESW)으로 보존.
-> 트리거 Q&A: "Cl-rich 산화 안정성은?" → "축 4개로 답이 갈립니다 — 0-pressure 동률,
-> 기계 구속(Gil)·계면 cycling(Zuo)은 Cl-rich 우세 (우리 ESW가 정량 backing), thermal
-> calendar만 열세(Wu) — appendix에 정리." 연쇄: tension audit #1의 해소 열 → "(appendix)" 표기.
+> 직전 appendix안 철회 — 사용자 결정: 18(4-axis)과 19(ESW)를 **한 장으로 병합, 본편 deck 20**.
+> [좌] 4-axis 압축 표 (DRAW/WINS★/WINS★/LOSES✗ + ref 3건) · [우] 우리 ESW 핵심 3줄
+> (K_eff=0 flat→axis1 / K_eff=20 Cl1.6 peak 4.30★ Cl2.0↓→axis2 / 분해 +1.6×LiCl·−2.3×Li
+> →Zuo Eq 정량 재현→axis3). 하단: "σ gain, NO oxidation penalty (1–3); cost = thermal
+> (axis 4) → paper #2". tension audit #1 해소 열은 본편 참조 유지 (appendix 표기 불필요).
 
 ## (보존) Slide 18 — Robustness #2: Oxidation 4-Axis Framework
 
@@ -2645,7 +2646,7 @@ Axis | 의미                          | comp1 vs modelc       | Reference
 
 ---
 
-## 1S. ~~Slide 19 — Constrained ESW~~ — **본편 제외 → APPENDIX (18과 세트, 위 1R 참조)**
+## 1S. Slide 19 — **18과 병합 (위 1R 참조, 본편 deck 20)**
 
 ## (보존) Slide 19 — Robustness #3: Constrained ESW Cl-scan + 분해반응
 
