@@ -119,6 +119,30 @@ nohup bash -c 'while true; do
 
 # KISTI — 753206 완료 기록 watcher (가동 중, PID 934184)
 cat ~/job753206_watch.log   # 끝나면 State/Elapsed/ExitCode 찍힘
+
+# KISTI — 2트랙(756475 nd_dos / 756477 b2o3_eos) 포그라운드 watch (glogin)
+watch -n 60 '
+echo "=== SLURM ==="; squeue -u $USER;
+echo; echo "=== nd_dos (GPU1) ===";
+ND=/scratch/x3430a02/kgy/nd_doped_modelc/3_dft_eos_v7/pair01_pair_00_reference_1_82/v0_champion;
+L=$(ls -t $ND/*.out 2>/dev/null | head -1); echo "latest: $L"; tail -3 "$L" 2>/dev/null;
+echo; echo "=== b2o3_eos (GPU2) ===";
+B=/scratch/x3430a02/kgy/b2o3_eos;
+for o in $B/eos_v*.out; do [ -f "$o" ] || continue;
+  printf "%-16s done=%s steps=%-3s lastE=%s\n" "$(basename $o)" \
+    "$(grep -c "JOB DONE" "$o")" "$(grep -c ATOMIC_POSITIONS "$o")" \
+    "$(grep "^!.*total energy" "$o" | tail -1 | awk "{print \$(NF-1)}")"; done;
+L=$(ls -t $B/eos_v*.out 2>/dev/null | head -1); tail -2 "$L" 2>/dev/null'
+
+# KISTI — 백그라운드 10분 스냅샷 로거 (→ ~/kisti_2track_watch.log; ssh 끊겨도 기록)
+nohup bash -c 'while true; do
+  { date; squeue -u $USER -h;
+    B=/scratch/x3430a02/kgy/b2o3_eos;
+    for o in $B/eos_v*.out; do [ -f "$o" ] || continue;
+      printf "%s done=%s steps=%s lastE=%s\n" "$(basename $o)" \
+        "$(grep -c "JOB DONE" "$o")" "$(grep -c ATOMIC_POSITIONS "$o")" \
+        "$(grep "^!.*total energy" "$o" | tail -1 | awk "{print \$(NF-1)}")"; done;
+    echo ---; } >> ~/kisti_2track_watch.log 2>&1; sleep 600; done' >/dev/null 2>&1 &
 ```
 
 ## 남은 체크포인트
