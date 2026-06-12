@@ -75,9 +75,9 @@ def parse_args(argv):
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE yield stress (GPa)')
     ap.add_argument('--beta-lock', type=float, default=0.06,
                     help='incompressibility lock: extra plastic overlap (×R*) of void-filling flow '
-                         'before the contact stiffens to near-rigid.  This is the granular '
-                         'densification limit (displaced material is bulk-incompressible) and is '
-                         'the main knob for the residual porosity.  Calibrate to Minnmann 10%%.')
+                         'before the contact stiffens to near-rigid.  Main Minnmann knob: real '
+                         'void-fill needs DEEP flattening (δ/R ~ 0.2–0.4) → sweep β ≈ 0.2–0.9; '
+                         'small β locks early and ends up STIFFER than Hertz (porosity above rigid).')
     ap.add_argument('--klock', type=float, default=8.0,
                     help='lock stiffness (×E*·R*); near-rigid incompressible backstop slope')
     grp = ap.add_mutually_exclusive_group()
@@ -292,6 +292,48 @@ def main(argv):
     pyi.from_numpy(cpy); m.from_numpy(mass)
     Lx[None] = L
 
+    # ── voxel union porosity (exact).  The lens-corrected ε_union over-subtracts
+    #    TRIPLE overlaps at deep plastic flattening → reads denser than truth; the
+    #    voxel union has no such error.  Calibrate Minnmann on the VOX readout. ────
+    VG = 192
+    hvox = L / VG
+    VGZ = int(math.ceil((fill_top + float(cr.max())) / hvox)) + 2
+    vox = ti.field(ti.i32, (VG, VG, VGZ))
+
+    @ti.kernel
+    def voxelize():
+        for I in ti.grouped(vox):
+            vox[I] = 0
+        for i in range(N):
+            r = rad[i]
+            kx0 = int(ti.floor((x[i][0] - r) / hvox)); kx1 = int(ti.floor((x[i][0] + r) / hvox)) + 1
+            ky0 = int(ti.floor((x[i][1] - r) / hvox)); ky1 = int(ti.floor((x[i][1] + r) / hvox)) + 1
+            kz0 = ti.max(0, int(ti.floor((x[i][2] - r) / hvox)))
+            kz1 = ti.min(VGZ - 1, int(ti.floor((x[i][2] + r) / hvox)) + 1)
+            for kx in range(kx0, kx1 + 1):
+                for ky in range(ky0, ky1 + 1):
+                    for kz in range(kz0, kz1 + 1):
+                        ddx = (kx + 0.5) * hvox - x[i][0]
+                        ddy = (ky + 0.5) * hvox - x[i][1]
+                        ddz = (kz + 0.5) * hvox - x[i][2]
+                        if ddx * ddx + ddy * ddy + ddz * ddz <= r * r:
+                            vox[((kx % VG) + VG) % VG, ((ky % VG) + VG) % VG, kz] = 1
+
+    @ti.kernel
+    def vox_solid(zmax: ti.f32) -> ti.i32:
+        c = 0
+        for I in ti.grouped(vox):
+            if vox[I] == 1 and (I[2] + 0.5) * hvox < zmax:
+                c += 1
+        return c
+
+    def porosity_vox():
+        voxelize()
+        nz = sum(1 for kz in range(VGZ) if (kz + 0.5) * hvox < wall_z[None])
+        if nz == 0:
+            return float('nan')
+        return max(0.0, 1.0 - vox_solid(wall_z[None]) / (VG * VG * nz)) * 100.0
+
     DT = args.dt
     DAMP = 3.0                       # global viscous (1/time) — drive to quasi-static
     GAMMA_N = 0.25                   # contact normal dashpot (dissipate ringing)
@@ -399,15 +441,19 @@ def main(argv):
         converged = converged + 1 if abs(p - target) < 0.04 * target else 0
         last = (converged >= 10 and frame > 25) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
-            print(f"  frame {frame:3d}  p={p:7.4f} GPa  porosity={por:6.2f}%  wall_z={wall_z[None]:6.3f}")
+            pv = porosity_vox()
+            print(f"  frame {frame:3d}  p={p:7.4f} GPa  porosity={por:6.2f}% (vox {pv:5.2f}%)  "
+                  f"wall_z={wall_z[None]:6.3f}")
         if converged >= 10 and frame > 25:                  # servo self-terminates at target
             if not args.quiet:
                 print(f"  ✓ converged: p within 4% of {target} GPa, porosity stable")
             break
     p_fin = float(np.mean([s[1] for s in series[-5:]]))
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
-    print(f"FINAL  pressure={p_fin:.4f} GPa  porosity={por_fin:.2f}%   "
-          f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]")
+    pv_fin = porosity_vox()
+    print(f"FINAL  pressure={p_fin:.4f} GPa  porosity_lens={por_fin:.2f}%  porosity_VOX={pv_fin:.2f}%   "
+          f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]  "
+          f"(calibrate on VOX = exact union)")
     if wall_z[None] <= floor_min + 1e-6 and p_fin < 0.9 * target:
         print(f"  ⚠ platen bottomed out at floor_min={floor_min:.3f} below target → bed TOO SOFT: "
               f"raise --sigma-y (plateau) or --beta-lock (later lock) to hold {target} GPa")
