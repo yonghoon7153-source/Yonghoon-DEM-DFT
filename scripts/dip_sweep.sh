@@ -13,19 +13,19 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
-N=${N:-20000}; BETA=${BETA:-0.38}; FRAMES=${FRAMES:-800}; ARCH=${ARCH:-cuda}
+N=${N:-20000}; BETA=${BETA:-0.46}; EAM=${EAM:-8}; FRAMES=${FRAMES:-600}; ARCH=${ARCH:-cuda}
 AMS=${AMS:-"55 65 75 85 95"}
 LOG=dip_sweep.log; CSV=dip_results.csv
 
 echo "am,mode,p_gpa,por_sphere,por_vox,n_big,overflow" > "$CSV"
-echo "== dip sweep  N=$N  beta=$BETA  frames=$FRAMES  arch=$ARCH  $(date) ==" | tee "$LOG"
+echo "== dip sweep  N=$N  beta=$BETA  e_am=$EAM  frames=$FRAMES  arch=$ARCH  $(date) ==" | tee "$LOG"
 
 for am in $AMS; do
   for mode in plastic rigid; do
     tag="AM${am}_${mode}"
     echo "=== $tag ===" | tee -a "$LOG"
     out=$(python3 scripts/dem3d_plastic.py --material mix --am-wt "$am" --n-target "$N" \
-          --"$mode" --beta-lock "$BETA" --frames "$FRAMES" --arch "$ARCH" 2>&1)
+          --"$mode" --beta-lock "$BETA" --e-am "$EAM" --frames "$FRAMES" --arch "$ARCH" 2>&1)
     echo "$out" >> "$LOG"
     echo "$out" | grep -E "^3D DEM|^FINAL|platen bottomed|cell-list overflow"
     p=$(echo  "$out" | grep '^FINAL' | grep -oP 'pressure=\K[0-9.]+')
