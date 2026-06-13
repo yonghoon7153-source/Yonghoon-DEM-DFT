@@ -13,7 +13,7 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
-N=${N:-20000}; BETA=${BETA:-0.46}; EAM=${EAM:-8}; FRAMES=${FRAMES:-600}; ARCH=${ARCH:-cuda}
+N=${N:-20000}; BETA=${BETA:-0.40}; EAM=${EAM:-140}; FRAMES=${FRAMES:-600}; ARCH=${ARCH:-cuda}
 AMS=${AMS:-"55 65 75 85 95"}
 LOG=dip_sweep.log; CSV=dip_results.csv
 
