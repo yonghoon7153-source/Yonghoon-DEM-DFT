@@ -345,6 +345,7 @@ def main(argv):
     dmax = ti.field(ti.f32, (N, N) if ENGINE == 'dense' else (1, 1))
     dmax_fl = ti.field(ti.f32, N); dmax_tp = ti.field(ti.f32, N)
     wall_z = ti.field(ti.f32, ()); wall_force = ti.field(ti.f32, ())
+    vir = ti.field(ti.f32, ())                          # Σ F_n·d over pair contacts → bulk virial pressure
     Lx = ti.field(ti.f32, ())
 
     x.from_numpy(np.ascontiguousarray(cx)); rad.from_numpy(cr); Ei.from_numpy(cE)
@@ -411,6 +412,7 @@ def main(argv):
         for i in range(N):
             f[i] = ti.Vector([0.0, 0.0, 0.0])
         wall_force[None] = 0.0
+        vir[None] = 0.0
         Lc = Lx[None]
         for i in range(N):                                  # parallel over i
             # floor (z = floor): overlap if particle dips below floor+rad
@@ -443,6 +445,7 @@ def main(argv):
                     py = ti.min(pyi[i], pyi[j])
                     Fn, nd = contact_normal(delta, dmax[i, j], Rstar, estar_pair(i, j), py)
                     dmax[i, j] = nd
+                    vir[None] += Fn * dx[2] * dx[2] / dist   # axial virial σzz: F_n·d·n_z²
                     nrm = dx / dist
                     vrel = v[i] - v[j]
                     vn = vrel.dot(nrm)
@@ -517,6 +520,7 @@ def main(argv):
                 Fn, nd = contact_normal(delta, dmv, Rstar, estar_pair(i, j), pyv)
                 if slot >= 0:
                     nbr_dm[i, slot] = nd
+                vir[None] += Fn * dxv[2] * dxv[2] / dist    # axial virial σzz: F_n·d·n_z²
                 nrm = dxv / dist
                 vrel = v[i] - v[j]
                 vn = vrel.dot(nrm)
@@ -538,6 +542,7 @@ def main(argv):
             for i in range(N):
                 f[i] = ti.Vector([0.0, 0.0, 0.0])
             wall_force[None] = 0.0
+            vir[None] = 0.0
             for i in range(N):                              # floor + platen (same law as dense)
                 df = floor + rad[i] - x[i][2]
                 if df > 0:
@@ -600,43 +605,40 @@ def main(argv):
         cap = 'PLASTIC (yield cap ON, H=%.2f GPa)' % (C_H * args.sigma_y) if args.plastic else 'RIGID (pure Hertz)'
         eng = ENGINE + (f" (n_small={n_small}, n_big={n_big})" if ENGINE == 'cell' else '')
         print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  engine={eng}  {cap}  target={target} GPa")
-    # STRAIN-CONTROLLED compaction: descend the platen monotonically (no servo limit
-    # cycle) and stop when the SUSTAINED pressure reaches target.  Bimodal beds jam
-    # intermittently (stiff-AM force chains bear ~1 GPa then collapse), so the
-    # instantaneous/median pressure is useless; the LOW envelope (25th pct over the
-    # substeps, EMA'd across frames) is the load the bed holds WITHOUT collapsing =
-    # the true quasi-static pressure.  When that sustained pressure hits target the bed
-    # is genuinely jammed at it → report that porosity.
-    series = []; p_lo_ema = -1.0; hold = 0
+    # STRAIN-CONTROLLED compaction on the BULK VIRIAL pressure.  The platen reaction is
+    # a BOUNDARY measure dominated by the top (locked) layer + force chains → it reads
+    # target while the bulk is still loose (the ~54% stall, AM-stiffness-independent).
+    # The virial p = Σ F_n·d / (3V) averages every contact in the bed = the true bulk
+    # stress; with ~10⁵ contacts it is inherently smooth (no median/EMA needed).  Descend
+    # monotonically until the bulk virial holds target → report that porosity.
+    series = []; hold = 0
     for frame in range(args.frames):
-        pvals = []
+        pv_acc = 0.0
         for _ in range(args.sub):
             if ENGINE == 'cell':
                 build_cells(); step_cell()
             else:
                 step()
             integrate()
-            pvals.append(wall_force[None] / area)
-        parr = np.asarray(pvals)
-        p_lo = float(np.percentile(parr, 25))               # sustained (low-envelope) pressure
-        p_med = float(np.median(parr)); p_max = float(parr.max())
-        p_lo_ema = p_lo if p_lo_ema < 0 else 0.8 * p_lo_ema + 0.2 * p_lo
-        if p_lo_ema < target:                               # monotonic descent until sustained=target
+            pv_acc += vir[None] / (area * (wall_z[None] - floor))   # axial virial σzz = bulk pressure
+        p = pv_acc / args.sub                               # mean bulk axial pressure this frame
+        pw = float(wall_force[None] / area)                 # platen reaction (diagnostic only)
+        if p < target:                                      # monotonic descent until bulk = target
             wall_z[None] = max(floor_min, wall_z[None] - vmax)
             hold = 0
         else:
-            hold += 1                                       # at target → hold to confirm it sustains
+            hold += 1                                       # bulk at target → hold to confirm
         height = wall_z[None] - floor
         por = (1.0 - vol_solid / (area * height)) * 100.0
-        series.append((frame, p_lo_ema, por, wall_z[None]))
+        series.append((frame, p, por, wall_z[None]))
         last = (hold >= 15) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
             pv = porosity_vox()
-            print(f"  frame {frame:3d}  p_sust={p_lo_ema:6.3f} (med {p_med:5.3f}/max {p_max:5.3f}) GPa  "
+            print(f"  frame {frame:3d}  p_vir={p:6.3f} (wall {pw:5.3f}) GPa  "
                   f"por_sph={por:6.2f}% (vox {pv:5.2f}%)  wall_z={wall_z[None]:6.3f}")
-        if hold >= 15:                                      # sustained target for 15 frames → done
+        if hold >= 15:                                      # bulk holds target for 15 frames → done
             if not args.quiet:
-                print(f"  ✓ converged: sustained pressure holds {target} GPa, porosity stable")
+                print(f"  ✓ converged: bulk virial holds {target} GPa, porosity stable")
             break
     p_fin = float(np.mean([s[1] for s in series[-5:]]))
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
