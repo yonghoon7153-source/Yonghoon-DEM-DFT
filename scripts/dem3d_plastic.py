@@ -594,33 +594,31 @@ def main(argv):
         print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  engine={eng}  {cap}  target={target} GPa")
     series = []; converged = 0
     for frame in range(args.frames):
-        pacc = 0.0
+        pvals = []
         for _ in range(args.sub):
             if ENGINE == 'cell':
                 build_cells(); step_cell()
             else:
                 step()
             integrate()
-            pacc += wall_force[None] / area
-        p = pacc / args.sub                                 # mean platen pressure this frame (GPa)
-        err = (target - p) / max(target, 1e-6)              # +1 → far below target → compress
-        v_wall = -max(-1.0, min(1.0, err)) * vmax           # err>0 → move down (compress)
+            pvals.append(wall_force[None] / area)
+        p = float(np.median(pvals))                         # MEDIAN platen pressure: robust to the
+        pmean = float(np.mean(pvals))                       # few-big-AM impact spikes AND unload zeros
+        err = (target - p) / max(target, 1e-6)              # +1 → below target → compress
+        v_wall = -max(-0.3, min(1.0, err)) * vmax           # advance fast, retreat gently (no contact loss)
         wall_z[None] = max(floor_min, wall_z[None] + v_wall)
         height = wall_z[None] - floor
-        # ε_sphere = PRODUCTION convention (CLAUDE.md): material-conserving — displaced
-        # lens material re-emerges as bulge, so solid = Σ original sphere vol.  Unclamped
-        # (negative = over-compressed signal).  VOX = exact union, rigid-view UPPER bound.
         por = (1.0 - vol_solid / (area * height)) * 100.0
         series.append((frame, p, por, wall_z[None]))
-        converged = converged + 1 if abs(p - target) < 0.04 * target else 0
+        converged = converged + 1 if abs(p - target) < 0.06 * target else 0
         last = (converged >= 10 and frame > 25) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
             pv = porosity_vox()
-            print(f"  frame {frame:3d}  p={p:7.4f} GPa  por_sph={por:6.2f}% (vox {pv:5.2f}%)  "
-                  f"wall_z={wall_z[None]:6.3f}")
+            print(f"  frame {frame:3d}  p_med={p:6.3f} p_mean={pmean:6.3f} GPa  "
+                  f"por_sph={por:6.2f}% (vox {pv:5.2f}%)  wall_z={wall_z[None]:6.3f}")
         if converged >= 10 and frame > 25:                  # servo self-terminates at target
             if not args.quiet:
-                print(f"  ✓ converged: p within 4% of {target} GPa, porosity stable")
+                print(f"  ✓ converged: p_med within 6% of {target} GPa, porosity stable")
             break
     p_fin = float(np.mean([s[1] for s in series[-5:]]))
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
