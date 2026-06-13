@@ -72,6 +72,11 @@ def parse_args(argv):
     ap.add_argument('--e-se', type=float, default=24.0,
                     help='SE modulus (GPa).  Use the REAL bulk 24 — the Thornton yield cap '
                          'provides the plasticity, so NO 18× softening (1.53 never reaches yield).')
+    ap.add_argument('--e-am', type=float, default=140.0,
+                    help='AM modulus (GPa).  Default 140 = REAL rigid NCM → at AM-rich the rigid '
+                         'skeleton force-chains and props the bed open (~55%%, the MPM artifact). '
+                         'Soften (e.g. 5-24) to lump AM rearrangement/fracture so the bed densifies '
+                         '— needed for realistic bimodal porosity / the dip sweep.')
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE yield stress (GPa)')
     ap.add_argument('--beta-lock', type=float, default=0.06,
                     help='incompressibility lock: extra plastic overlap (×R*) of void-filling flow '
@@ -155,15 +160,15 @@ def build_packing(args, rng):
     elif args.material == 'AM':
         # AM-only: split P:S by the ps ratio
         fp = ps[0] / (ps[0] + ps[1]); fs = 1.0 - fp
-        radii_kinds = [(args.r_amp, fp, E_AM, PY_RIGID), (args.r_ams, fs, E_AM, PY_RIGID)]
+        radii_kinds = [(args.r_amp, fp, args.e_am, PY_RIGID), (args.r_ams, fs, args.e_am, PY_RIGID)]
     else:                                                   # mix: AM (P,S) + SE by weight + ps
         am = args.am_wt / 100.0
         rho_am, rho_se = 4.8, 1.6                           # g/cm³ → volume fractions from weight
         vam = (am / rho_am) / (am / rho_am + (1 - am) / rho_se)
         vse = 1.0 - vam
         fp = ps[0] / (ps[0] + ps[1]); fs = 1.0 - fp
-        radii_kinds = [(args.r_amp, vam * fp, E_AM, PY_RIGID),
-                       (args.r_ams, vam * fs, E_AM, PY_RIGID),
+        radii_kinds = [(args.r_amp, vam * fp, args.e_am, PY_RIGID),
+                       (args.r_ams, vam * fs, args.e_am, PY_RIGID),
                        (args.r_se, vse, args.e_se, C_H * args.sigma_y)]
     radii_kinds = [rk for rk in radii_kinds if rk[1] > 1e-9]
 
