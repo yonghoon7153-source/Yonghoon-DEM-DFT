@@ -584,9 +584,9 @@ def main(argv):
             x[i][1] -= Lc * ti.floor(x[i][1] / Lc)
 
     # ── compaction loop with proportional servo platen ──────────────────────────
-    wall_z[None] = fill_top + 0.5 * cr.max()
+    wall_z[None] = float((cx[:, 2] + cr).max()) + 0.3 * cr.min()   # snug: just above bed top
     target = args.target_gpa
-    vmax = 0.04 * cr.min()                                  # platen step cap (µm / frame)
+    vmax = 0.04 * cr.max()                                  # platen step ∝ big-particle/box scale
     floor_min = floor + 1.5 * cr.max()
     if not args.quiet:
         cap = 'PLASTIC (yield cap ON, H=%.2f GPa)' % (C_H * args.sigma_y) if args.plastic else 'RIGID (pure Hertz)'
