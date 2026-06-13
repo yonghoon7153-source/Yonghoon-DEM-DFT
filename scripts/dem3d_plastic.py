@@ -91,9 +91,10 @@ def parse_args(argv):
     ap.add_argument('--frames', type=int, default=300, help='MAX frames; servo self-terminates at target')
     ap.add_argument('--sub', type=int, default=50, help='substeps per frame')
     ap.add_argument('--dt', type=float, default=0.04, help='timestep (scaled units)')
-    ap.add_argument('--vmax-frac', type=float, default=0.05,
-                    help='platen advance per frame = frac·r_max (box scale).  Raise to push faster '
-                         'through the plastic-flow regime to the lock; lower if it goes dynamic.')
+    ap.add_argument('--vmax-frac', type=float, default=0.03,
+                    help='monotonic platen advance per frame = frac·r_max (box scale)')
+    ap.add_argument('--damp', type=float, default=6.0, help='global viscous damping (1/time)')
+    ap.add_argument('--gamma-n', type=float, default=1.0, help='contact normal dashpot (kills bounce)')
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--engine', default='auto', choices=['auto', 'dense', 'cell'],
                     help='pair engine.  dense = all-pairs + (N,N) history (validated reference, '
@@ -388,8 +389,8 @@ def main(argv):
         return max(0.0, 1.0 - vox_solid(wall_z[None]) / (VG * VG * nz)) * 100.0
 
     DT = args.dt
-    DAMP = 3.0                       # global viscous (1/time) — drive to quasi-static
-    GAMMA_N = 0.25                   # contact normal dashpot (dissipate ringing)
+    DAMP = args.damp                 # global viscous (1/time) — drive to quasi-static
+    GAMMA_N = args.gamma_n           # contact normal dashpot (dissipate ringing / bounce)
     MU = args.mu
 
     @ti.func
@@ -594,7 +595,14 @@ def main(argv):
         cap = 'PLASTIC (yield cap ON, H=%.2f GPa)' % (C_H * args.sigma_y) if args.plastic else 'RIGID (pure Hertz)'
         eng = ENGINE + (f" (n_small={n_small}, n_big={n_big})" if ENGINE == 'cell' else '')
         print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  engine={eng}  {cap}  target={target} GPa")
-    series = []; converged = 0; p_ema = -1.0
+    # STRAIN-CONTROLLED compaction: descend the platen monotonically (no servo limit
+    # cycle) and stop when the SUSTAINED pressure reaches target.  Bimodal beds jam
+    # intermittently (stiff-AM force chains bear ~1 GPa then collapse), so the
+    # instantaneous/median pressure is useless; the LOW envelope (25th pct over the
+    # substeps, EMA'd across frames) is the load the bed holds WITHOUT collapsing =
+    # the true quasi-static pressure.  When that sustained pressure hits target the bed
+    # is genuinely jammed at it → report that porosity.
+    series = []; p_lo_ema = -1.0; hold = 0
     for frame in range(args.frames):
         pvals = []
         for _ in range(args.sub):
@@ -604,30 +612,26 @@ def main(argv):
                 step()
             integrate()
             pvals.append(wall_force[None] / area)
-        p = float(np.median(pvals))                         # per-frame MEDIAN (spike/zero robust)
-        pmean = float(np.mean(pvals))
-        p_ema = p if p_ema < 0 else 0.7 * p_ema + 0.3 * p   # smooth across frames (kill frame jitter)
-        # bang-bang on the smoothed pressure: drive at full vmax through the plastic-FLOW regime
-        # (bed yields ~constant until contacts deepen to the lock) until p_ema reaches target.
-        if p_ema < target:
-            v_wall = -vmax
-        elif p_ema > 1.10 * target:
-            v_wall = 0.25 * vmax                            # gentle retreat if overshot
+        parr = np.asarray(pvals)
+        p_lo = float(np.percentile(parr, 25))               # sustained (low-envelope) pressure
+        p_med = float(np.median(parr)); p_max = float(parr.max())
+        p_lo_ema = p_lo if p_lo_ema < 0 else 0.8 * p_lo_ema + 0.2 * p_lo
+        if p_lo_ema < target:                               # monotonic descent until sustained=target
+            wall_z[None] = max(floor_min, wall_z[None] - vmax)
+            hold = 0
         else:
-            v_wall = -0.05 * vmax                           # creep near target
-        wall_z[None] = max(floor_min, wall_z[None] + v_wall)
+            hold += 1                                       # at target → hold to confirm it sustains
         height = wall_z[None] - floor
         por = (1.0 - vol_solid / (area * height)) * 100.0
-        series.append((frame, p_ema, por, wall_z[None]))
-        converged = converged + 1 if abs(p_ema - target) < 0.08 * target else 0
-        last = (converged >= 10 and frame > 25) or frame == args.frames - 1
+        series.append((frame, p_lo_ema, por, wall_z[None]))
+        last = (hold >= 15) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
             pv = porosity_vox()
-            print(f"  frame {frame:3d}  p_ema={p_ema:6.3f} (med {p:5.3f}/mean {pmean:5.3f}) GPa  "
+            print(f"  frame {frame:3d}  p_sust={p_lo_ema:6.3f} (med {p_med:5.3f}/max {p_max:5.3f}) GPa  "
                   f"por_sph={por:6.2f}% (vox {pv:5.2f}%)  wall_z={wall_z[None]:6.3f}")
-        if converged >= 10 and frame > 25:                  # servo self-terminates at target
+        if hold >= 15:                                      # sustained target for 15 frames → done
             if not args.quiet:
-                print(f"  ✓ converged: p_ema within 8% of {target} GPa, porosity stable")
+                print(f"  ✓ converged: sustained pressure holds {target} GPa, porosity stable")
             break
     p_fin = float(np.mean([s[1] for s in series[-5:]]))
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
