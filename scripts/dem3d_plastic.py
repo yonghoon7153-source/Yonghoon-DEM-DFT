@@ -173,37 +173,65 @@ def build_packing(args, rng):
     fill_h = 8.0 * max(r for (r, *_ ) in radii_kinds)      # fill height ~8 big-diameters
     L = math.sqrt(box_vol / fill_h)
     floor = 0.0
+    vol = lambda r: (4.0 / 3.0) * math.pi * r ** 3                    # noqa: E731
 
+    # Two-tier RSA (mirrors the sim engine): a uniform grid sized by max(r) is
+    # useless at 12:4:1 (cell ≈ big-AM diameter ⇒ thousands of SE per cell ⇒
+    # O(N²) Python ⇒ hours).  Instead place the FEW big AM first by brute force,
+    # then the many small SE in a FINE grid (SE-scale cell) for SE-SE and brute
+    # against the few big for SE-AM.
+    rmin = min(r for (r, *_ ) in radii_kinds)
+    small_k = [rk for rk in radii_kinds if rk[0] <= 1.5 * rmin]       # SE tier (gridded)
+    big_k = [rk for rk in radii_kinds if rk[0] > 1.5 * rmin]          # AM tier (brute)
     cx, cr, cE, cpy = [], [], [], []
-    cell = max(r for (r, *_ ) in radii_kinds) * 2.05
-    # bin by a coarse grid for fast overlap rejection (periodic x,y)
+    big = []                                                          # (x,y,z,r) of placed big
+
+    def hits_big(p, r):
+        for (qx, qy, qz, qr) in big:
+            dx = p[0] - qx; dy = p[1] - qy
+            dx -= L * round(dx / L); dy -= L * round(dy / L)          # min image (periodic x,y)
+            dz = p[2] - qz
+            if dx * dx + dy * dy + dz * dz < (r + qr + 0.02) ** 2:
+                return True
+        return False
+
+    for (r, frac, E, py) in big_k:                                   # 1) big AM — brute O(n_big²)
+        goal, acc, fails = frac * v_solid_tot, 0.0, 0
+        while acc < goal and fails < 60_000:
+            p = (rng.uniform(0, L), rng.uniform(0, L), rng.uniform(floor + r, floor + fill_h - r))
+            if not hits_big(p, r):
+                big.append((p[0], p[1], p[2], r))
+                cx.append(p); cr.append(r); cE.append(E); cpy.append(py); acc += vol(r); fails = 0
+            else:
+                fails += 1
+
+    cell = 2.0 * rmin                                                # 2) SE — fine grid + brute-big
+    NX = max(3, int(L / cell)); cellx = L / NX
     grid = {}
 
-    def key(p):
-        return (int(p[0] // cell), int(p[1] // cell), int(p[2] // cell))
+    def gkey(p):
+        return (int(p[0] / cellx) % NX, int(p[1] / cellx) % NX, int(p[2] / cellx))
 
-    def fits(p, r):
-        gi = key(p)
-        for a in (-1, 0, 1):
-            for b in (-1, 0, 1):
-                for c in (-1, 0, 1):
-                    for (q, qr) in grid.get((gi[0] + a, gi[1] + b, gi[2] + c), ()):  # noqa
-                        dx = p[0] - q[0]; dy = p[1] - q[1]
-                        dx -= L * round(dx / L); dy -= L * round(dy / L)             # min image
-                        dz = p[2] - q[2]
+    def hits_small(p, r):                                            # SE-SE via 27 fine cells
+        kx, ky, kz = int(p[0] / cellx) % NX, int(p[1] / cellx) % NX, int(p[2] / cellx)
+        for ax in (-1, 0, 1):
+            for ay in (-1, 0, 1):
+                for az in (-1, 0, 1):
+                    for (qx, qy, qz, qr) in grid.get(((kx + ax) % NX, (ky + ay) % NX, kz + az), ()):
+                        dx = p[0] - qx; dy = p[1] - qy
+                        dx -= L * round(dx / L); dy -= L * round(dy / L)
+                        dz = p[2] - qz
                         if dx * dx + dy * dy + dz * dz < (r + qr + 0.02) ** 2:
-                            return False
-        return True
+                            return True
+        return False
 
-    for (r, frac, E, py) in radii_kinds:
-        goal = frac * v_solid_tot
-        acc, fails = 0.0, 0
-        while acc < goal and fails < 60_000:               # exit when RSA can place no more
+    for (r, frac, E, py) in small_k:
+        goal, acc, fails = frac * v_solid_tot, 0.0, 0
+        while acc < goal and fails < 60_000:
             p = (rng.uniform(0, L), rng.uniform(0, L), rng.uniform(floor + r, floor + fill_h - r))
-            if fits(p, r):
-                cx.append(p); cr.append(r); cE.append(E); cpy.append(py)
-                grid.setdefault(key(p), []).append((p, r))
-                acc += (4.0 / 3.0) * math.pi * r ** 3; fails = 0
+            if not hits_small(p, r) and not hits_big(p, r):
+                grid.setdefault(gkey(p), []).append((p[0], p[1], p[2], r))
+                cx.append(p); cr.append(r); cE.append(E); cpy.append(py); acc += vol(r); fails = 0
             else:
                 fails += 1
     return (np.array(cx, np.float32), np.array(cr, np.float32),
