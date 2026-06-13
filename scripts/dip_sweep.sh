@@ -15,17 +15,19 @@ cd "$(dirname "$0")/.."
 
 N=${N:-20000}; BETA=${BETA:-0.40}; EAM=${EAM:-140}; FRAMES=${FRAMES:-600}; ARCH=${ARCH:-cuda}
 AMS=${AMS:-"55 65 75 85 95"}
+SEEDS=${SEEDS:-1}
 LOG=dip_sweep.log; CSV=dip_results.csv
 
-echo "am,mode,p_gpa,por_sphere,por_vox,n_big,overflow" > "$CSV"
-echo "== dip sweep  N=$N  beta=$BETA  e_am=$EAM  frames=$FRAMES  arch=$ARCH  $(date) ==" | tee "$LOG"
+echo "am,mode,seed,p_gpa,por_sphere,por_vox,n_big,overflow" > "$CSV"
+echo "== dip sweep  N=$N  beta=$BETA  e_am=$EAM  frames=$FRAMES  seeds=[$SEEDS]  arch=$ARCH  $(date) ==" | tee "$LOG"
 
 for am in $AMS; do
   for mode in plastic rigid; do
-    tag="AM${am}_${mode}"
+    for seed in $SEEDS; do
+    tag="AM${am}_${mode}_s${seed}"
     echo "=== $tag ===" | tee -a "$LOG"
     out=$(python3 scripts/dem3d_plastic.py --material mix --am-wt "$am" --n-target "$N" \
-          --"$mode" --beta-lock "$BETA" --e-am "$EAM" --frames "$FRAMES" --arch "$ARCH" 2>&1)
+          --"$mode" --beta-lock "$BETA" --e-am "$EAM" --frames "$FRAMES" --seed "$seed" --arch "$ARCH" 2>&1)
     echo "$out" >> "$LOG"
     echo "$out" | grep -E "^3D DEM|^FINAL|platen bottomed|cell-list overflow"
     p=$(echo  "$out" | grep '^FINAL' | grep -oP 'pressure=\K[0-9.]+')
@@ -33,7 +35,8 @@ for am in $AMS; do
     pv=$(echo "$out" | grep '^FINAL' | grep -oP 'porosity_VOX=\K[-0-9.]+')
     nb=$(echo "$out" | grep -oP 'n_big=\K[0-9]+' | head -1)
     ov=$(echo "$out" | grep -c "cell-list overflow")
-    echo "$am,$mode,${p:-NA},${ps:-NA},${pv:-NA},${nb:-NA},$ov" >> "$CSV"
+    echo "$am,$mode,$seed,${p:-NA},${ps:-NA},${pv:-NA},${nb:-NA},$ov" >> "$CSV"
+    done
   done
 done
 echo "== done $(date) ==" | tee -a "$LOG"
