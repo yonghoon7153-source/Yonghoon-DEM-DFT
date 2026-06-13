@@ -5,13 +5,12 @@
   "family": "Li5.4 + Nd2O3-doped",
   "base": "Model C (Li5.4PS4.4Cl1.6)",
   "doping_source": "Nd2O3",
-
   "tracks": {
     "main_Nd_to_Li": {
       "label": "Track 1 (primary, chemically sensible)",
       "formula": "Li_{5.4-3x}Nd_xPS_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
       "scheme": "Nd3+ replaces Li+ at Li site. Charge compensation: -3 Li per Nd (1 for site replacement + 2 for charge balance). O substitutes S in PS4 (16e), Hard-Hard preference (Nd-O proximity).",
-      "x_target": 0.20,
+      "x_target": 0.2,
       "supercell_atoms": 120,
       "composition_at_x_0.20": {
         "Li": 48,
@@ -30,7 +29,7 @@
       "label": "Track 2 (control, demonstrate instability)",
       "formula": "Li_{5.4+2x}P_{1-x}Nd_xS_{4.4-1.5x}O_{1.5x}Cl_{1.6}",
       "scheme": "Nd3+ replaces P5+ at PS4 center. Charge compensation: +2 Li per Nd as interstitials. O substitutes S in PS4. PI-suggested scheme.",
-      "x_target": 0.20,
+      "x_target": 0.2,
       "supercell_atoms": 128,
       "composition_at_x_0.20": {
         "Li": 58,
@@ -47,7 +46,6 @@
       "expected_outcome": "ΔE_form(Nd→P) > ΔE_form(Nd→Li) by ~1-3 eV per Nd. Strong argument for Track 1 in paper."
     }
   },
-
   "uma_eos_V0_2026_05_26": {
     "method": "UMA-s-1p1 isotropic EOS (argyrodite cell SHAPE fixed) + ion-relax + BM3; 100-seed ensemble (0.2 Å rattle); champion = best BM3 fit (max R2 with physical B0'), NOT lowest E",
     "structure": "Track 1A dispersed-Nd reference (pair_00, Nd=[1,82]); 120-atom dilute primitive supercell",
@@ -58,16 +56,27 @@
     "V0_A3": 2399,
     "V0_good_fit_ensemble": "2396 +/- 4 (median 2399; n=7/100 seeds with physical B0' 5-8)",
     "champion_seed": "rank1_seed2 (R2=0.99998, B0'=6.13, V0=2399.07)",
-    "V0_cell": {"a": 6.997, "b": 6.913, "c": 69.658, "alpha": 60.54, "beta": 60.06, "gamma": 60.32,
-                "note": "primitive dilute supercell (input shape scaled to V0); a!=c, 60deg angles expected"},
+    "V0_cell": {
+      "a": 6.997,
+      "b": 6.913,
+      "c": 69.658,
+      "alpha": 60.54,
+      "beta": 60.06,
+      "gamma": 60.32,
+      "note": "primitive dilute supercell (input shape scaled to V0); a!=c, 60deg angles expected"
+    },
     "B0_GPa": "20.5 +/- 0.7 (bonus; ~= undoped LPSCl1.6/modelC ~20 -> Nd doping leaves stiffness ~unchanged)",
     "caveats": "Single EOS curve is basin-sensitive (B0 16-27 GPa across seeds); only ~7/100 give clean single-basin fit. vc-relax NOT used (distorts argyrodite). Narrow v097-v105 grid + continuation relax. uma-s-1p2 absent in KISTI fresh fairchem -> 1p1 (B0 model-minor insensitive).",
     "results_json": "KISTI 3_dft_eos_v7/uma_eos_ens/uma_eos_results.json",
     "next": "DFT relax at V0 (closest grid = pair_00 v100) with DFT+U(6eV)+ISPIN=2 -> Step 8 post-processing"
   },
-
   "experimental_data_PI_provided": {
-    "synthesized_compositions_x": [0, 0.02, 0.04, 0.08],
+    "synthesized_compositions_x": [
+      0,
+      0.02,
+      0.04,
+      0.08
+    ],
     "current_optimized": "x=0.02: Li5.44P0.98Nd0.02S4.37O0.03Cl1.6",
     "electron_conductivity_mS_cm_at_14h": {
       "LPSCl1.6_baseline": 3.45e-10,
@@ -77,13 +86,18 @@
       "trend": "Lowest at x=0.02 (~32% reduction). x=0.08 drops 5 orders (questionable - measurement artifact or amorphization)"
     },
     "mechanical_properties_AFM": {
-      "LPSCl1.6": {"E_GPa": "20.3 ± 0.2", "adhesion_aJ": "356 ± 29"},
-      "Nd2O3_LPSCl1.6": {"E_GPa": "20.7 ± 0.2", "adhesion_aJ": "300 ± 9"},
+      "LPSCl1.6": {
+        "E_GPa": "20.3 ± 0.2",
+        "adhesion_aJ": "356 ± 29"
+      },
+      "Nd2O3_LPSCl1.6": {
+        "E_GPa": "20.7 ± 0.2",
+        "adhesion_aJ": "300 ± 9"
+      },
       "verdict": "Within error - DFT must verify with higher precision"
     },
     "x_target_chosen_DFT_reasoning": "x=0.20 in 120-atom cell required for integer stoichiometry. Experimental x=0.02 would need >600 atoms (infeasible). Use x=0.20 as 'concentrated isolated defect' approximation."
   },
-
   "paper_goals_5_targets": {
     "1_bulk_electron_conductivity": {
       "claim": "Nd 4f orbital reduces bulk e- conductivity",
@@ -95,7 +109,15 @@
       "claim": "Decomposition slower or less in Nd-doped",
       "DFT_method": "Convex hull + reaction energy with Li metal anode",
       "tools": "pymatgen PhaseDiagram",
-      "competing_phases": ["Li2S", "Li3P", "LiCl", "Nd2O3", "NdCl3", "LiNdO2", "Li2O"]
+      "competing_phases": [
+        "Li2S",
+        "Li3P",
+        "LiCl",
+        "Nd2O3",
+        "NdCl3",
+        "LiNdO2",
+        "Li2O"
+      ]
     },
     "3_interface_SEI_band_gap": {
       "claim": "Nd-rich SEI has wide band gap, blocks e- transfer",
@@ -120,7 +142,6 @@
       "expected": "Nd alone: small E change. O sub: P-O strengthening → E up. Combined: net small E up"
     }
   },
-
   "compute_plan_summary": {
     "Track_1_Main_Nd_to_Li": {
       "step_1_enumerate": "Full Nd-Li site sampling + Li vacancy patterns + O placement near Nd. ~500 unique configs after pruning.",
@@ -137,10 +158,11 @@
       "deliverable_for_paper": "Single sentence: 'P-substitution scheme tested but found ~X eV less stable per Nd, confirming Li-substitution as the realistic doping pathway.'"
     }
   },
-
   "DFT_settings": {
     "functional": "PBE-GGA + DFT+U (Dudarev)",
-    "Hubbard_U_eV": {"Nd_4f": 6.0},
+    "Hubbard_U_eV": {
+      "Nd_4f": 6.0
+    },
     "spin_polarization": "ISPIN=2 (Nd3+ has 4f^3, 3 unpaired e-)",
     "ecutwfc_Ry": 60,
     "ecutrho_Ry": 480,
@@ -149,7 +171,6 @@
     "pseudo": "SSSP USPP for Li/P/S/Cl/O. Nd PAW with 4f in valence (Nd_pv-equivalent)",
     "validation": "HSE06 single-point cross-check on champion"
   },
-
   "pipeline_relationship": {
     "current_paper_1": "Model C v2 + comp1-5 mechanical properties (in progress, Pipeline v1+v2)",
     "next_paper_2": "Nd-doped Model C (this composition, extends Pipeline)",
@@ -157,9 +178,13 @@
     "Nd_specific_additions": "DFT+U for 4f, COHP for Nd-X bonds, LiNdO2 SEI phase, spin density",
     "estimated_start": "After paper #1 finalized (Model C v2 + comp2 v2 done)"
   },
-
-  "references": ["xiong2022", "jia2025", "zhao2025", "adeli2019", "deiseroth2006"],
-
+  "references": [
+    "xiong2022",
+    "jia2025",
+    "zhao2025",
+    "adeli2019",
+    "deiseroth2006"
+  ],
   "related_literature_critiques": {
     "zhao2025_Ce_O_co_substitution": {
       "system": "Li_{5.4+x}P_{1-x}Ce_xS_{4.4-2x}O_{2x}Cl_{1.6} (same base = Model C)",
@@ -170,7 +195,6 @@
       "details": "db/literature/zhao2025_critique.md"
     }
   },
-
   "open_methodology_questions_to_address": {
     "O_placement_ambiguity": {
       "issue": "Zhao 2025 places O on 4d (free S²⁻) per Rietveld, NOT 16e (PS4 corner) per main text. Our Track 1A currently places O on 16e (Hard-Hard near Nd). DFT must decide.",
@@ -193,11 +217,14 @@
     },
     "Ce_vs_Nd_chemistry_distinction": "Need to explicitly state in paper: Ce⁴⁺ (0.87 Å, -1, 4f⁰) vs Nd³⁺ (0.983 Å, -2, 4f³). Different mismatch (2.3× vs 2.6×), different charge burden (1× vs 2× Li compensation), different electronic structure (closed vs open shell)."
   },
-
   "track1A_vs_1B_HSAB_mechanistic_insight": {
     "preliminary_result_2026-04-28": {
       "track1A_best_E_per_atom_eV": -4.34844,
-      "track1A_top3_configs": ["cfg141 (-4.34844)", "cfg142 (-4.34812)", "cfg138 (-4.34772)"],
+      "track1A_top3_configs": [
+        "cfg141 (-4.34844)",
+        "cfg142 (-4.34812)",
+        "cfg138 (-4.34772)"
+      ],
       "track1B_best_E_per_atom_eV_so_far": -4.33168,
       "track1B_progress": "30/228 (13.2%) at 2026-04-28 14:14",
       "diff_per_atom_eV": 0.01676,
@@ -215,12 +242,38 @@
     },
     "HSAB_mechanistic_explanation": {
       "ion_classification": {
-        "Nd_3plus": {"r_A": 0.98, "charge": 3, "hardness": "Hard", "4f_state": "4f^3 (3 unpaired e-)"},
-        "Ce_4plus": {"r_A": 0.87, "charge": 4, "hardness": "Hard", "4f_state": "4f^0 (closed shell)"},
-        "O_2minus": {"r_A": 1.40, "charge": -2, "hardness": "Hard"},
-        "S_2minus": {"r_A": 1.84, "charge": -2, "hardness": "Soft"},
-        "Li_plus": {"r_A": 0.76, "charge": 1, "hardness": "borderline"},
-        "P_5plus": {"r_A": 0.38, "charge": 5, "hardness": "Hard"}
+        "Nd_3plus": {
+          "r_A": 0.98,
+          "charge": 3,
+          "hardness": "Hard",
+          "4f_state": "4f^3 (3 unpaired e-)"
+        },
+        "Ce_4plus": {
+          "r_A": 0.87,
+          "charge": 4,
+          "hardness": "Hard",
+          "4f_state": "4f^0 (closed shell)"
+        },
+        "O_2minus": {
+          "r_A": 1.4,
+          "charge": -2,
+          "hardness": "Hard"
+        },
+        "S_2minus": {
+          "r_A": 1.84,
+          "charge": -2,
+          "hardness": "Soft"
+        },
+        "Li_plus": {
+          "r_A": 0.76,
+          "charge": 1,
+          "hardness": "borderline"
+        },
+        "P_5plus": {
+          "r_A": 0.38,
+          "charge": 5,
+          "hardness": "Hard"
+        }
       },
       "why_4f3_enhances_HardHard": [
         "1. Anisotropic charge density: 4f orbitals are lobed → breaks spherical symmetry → directional preference for hard ligand alignment",
@@ -249,8 +302,6 @@
       "4. PAPER_FIGURE: PS3O3 group binding energy + bond length distribution + spin density on Nd 4f^3 (post-DFT) → key paper Figure 3 candidate"
     ]
   },
-
-
   "execution_status_tracking": {
     "phase_1_track1A_enumerate": {
       "status": "DONE",
@@ -287,7 +338,10 @@
       "status": "DONE_2026-04-29",
       "completion_date": "2026-04-29 ~16:00 KST",
       "current_state": "ALL 4 unique frames complete",
-      "process_pids": {"anneal": 337737, "auto_restart": 321685},
+      "process_pids": {
+        "anneal": 337737,
+        "auto_restart": 321685
+      },
       "log": "gabia /data/work/nd_doped_modelc/2_5_anneal_top.log",
       "protocol": "500K NVT 20ps + 5ps 300K quench + LBFGS final relax (timestep 0.5fs, modified protocol with safety check + chunked progress)",
       "total_wall_time": "~5h 53min for 4 frames",
@@ -299,35 +353,117 @@
       },
       "frame_results": {
         "frame_1_cfg141_track1A": {
-          "Nd_pair": [1, 82], "vac": [5, 6, 63, 71], "O_indices": [37, 95, 109],
-          "E_before_eV": -521.8122, "E_after_eV": -521.9585,
+          "Nd_pair": [
+            1,
+            82
+          ],
+          "vac": [
+            5,
+            6,
+            63,
+            71
+          ],
+          "O_indices": [
+            37,
+            95,
+            109
+          ],
+          "E_before_eV": -521.8122,
+          "E_after_eV": -521.9585,
           "dE_meV": -146.3,
           "interpretation": "Track 1A near-ground state, small anneal gain"
         },
         "frame_2_cfg29_track1B": {
-          "Nd_pair": [23, 74], "vac": [19, 77, 84, 86], "O_at_4d": "extracted from manifest",
-          "E_before_eV": -519.80, "E_after_eV": -520.0333,
+          "Nd_pair": [
+            23,
+            74
+          ],
+          "vac": [
+            19,
+            77,
+            84,
+            86
+          ],
+          "O_at_4d": "extracted from manifest",
+          "E_before_eV": -519.8,
+          "E_after_eV": -520.0333,
           "dE_meV": -232.1,
           "interpretation": "Track 1B mid-metastable"
         },
         "frame_3_cfg140_track1B": {
-          "Nd_pair": [20, 63], "vac": [1, 6, 68, 72],
-          "E_before_eV": -519.65, "E_after_eV": -520.0684,
+          "Nd_pair": [
+            20,
+            63
+          ],
+          "vac": [
+            1,
+            6,
+            68,
+            72
+          ],
+          "E_before_eV": -519.65,
+          "E_after_eV": -520.0684,
           "dE_meV": -325.8,
           "interpretation": "Track 1B higher metastable"
         },
         "frame_4_cfg23_track1B": {
-          "Nd_pair": [23, 74], "vac": [2, 12, 64, 66],
-          "E_before_eV": -519.6539, "E_after_eV": -520.3255,
+          "Nd_pair": [
+            23,
+            74
+          ],
+          "vac": [
+            2,
+            12,
+            64,
+            66
+          ],
+          "E_before_eV": -519.6539,
+          "E_after_eV": -520.3255,
           "dE_meV": -671.6,
           "interpretation": "MOST METASTABLE Track 1B config — biggest anneal rearrangement; even with -672 meV gain still 1.63 eV/cell ABOVE Track 1A champion"
         }
       },
       "final_ranking": [
-        {"rank": 1, "cfg": "cfg141", "track": "1A", "E_eV": -521.9585, "Nd": [1, 82]},
-        {"rank": 2, "cfg": "cfg23", "track": "1B", "E_eV": -520.3255, "Nd": [23, 74]},
-        {"rank": 3, "cfg": "cfg140", "track": "1B", "E_eV": -520.0684, "Nd": [20, 63]},
-        {"rank": 4, "cfg": "cfg29", "track": "1B", "E_eV": -520.0333, "Nd": [23, 74]}
+        {
+          "rank": 1,
+          "cfg": "cfg141",
+          "track": "1A",
+          "E_eV": -521.9585,
+          "Nd": [
+            1,
+            82
+          ]
+        },
+        {
+          "rank": 2,
+          "cfg": "cfg23",
+          "track": "1B",
+          "E_eV": -520.3255,
+          "Nd": [
+            23,
+            74
+          ]
+        },
+        {
+          "rank": 3,
+          "cfg": "cfg140",
+          "track": "1B",
+          "E_eV": -520.0684,
+          "Nd": [
+            20,
+            63
+          ]
+        },
+        {
+          "rank": 4,
+          "cfg": "cfg29",
+          "track": "1B",
+          "E_eV": -520.0333,
+          "Nd": [
+            23,
+            74
+          ]
+        }
       ],
       "track1A_vs_1B_post_anneal": {
         "track1A_best_E_eV": -521.9585,
@@ -385,11 +521,17 @@
       "json_file": "gabia /data/work/nd_doped_modelc/Li_random_check.json"
     },
     "phase_3_dft_verify_track1A": {
-      "status": "READY_TO_START",
+      "status": "IN_PROGRESS_KISTI_structure_relaxed_margin_pending",
       "input_dir": "gabia /data/work/nd_doped_modelc/3_dft_verify/top5_for_dft/",
       "next": "Transfer to KISTI, generate QE input with DFT+U Hubbard_U(Nd 4f)=6.0 eV + ISPIN=2 + start_mag(Nd)=0.6, run pw.x relax",
       "expected_cost": "~5 days KISTI GPU per config x 5 configs",
-      "purpose": "Validate MLIP 0.54 eV/O Track 1A advantage with DFT level"
+      "purpose": "Validate MLIP 0.54 eV/O Track 1A advantage with DFT level",
+      "kisti_path": "/scratch/x3430a02/kgy/nd_doped_modelc/3_dft_eos_v7/pair01_pair_00_reference_1_82/v0_champion",
+      "kisti_settings_actual": "DFT+U(Nd 4f) + nspin=2 AFM (start_mag ±0.5, total mag 0.00), HUBBARD ortho-atomic; prefix nd_pair01_v0_k441",
+      "k_convergence": "k441 vs k661 dE = 0.013 meV/atom (nat=120) -> k441 adopted as final V0; EOS skipped by decision -> post-processing (DOS/PDOS)",
+      "structure_output": "paper_figures/nd2o3_doped_modelc_DFTrelax.{cif,xyz}; Li48Nd2P10O3S41Cl16, charge-balanced",
+      "PENDING_dft_reranking_margin": "cfg141 vs #2 (cfg23) at DFT+U level — closes 'UMA noise could flip' objection; not yet recorded",
+      "note": "json previously said READY_TO_START; user actually ran it on KISTI through the k-ladder to k441. Margin slot left open."
     },
     "phase_3_dft_verify_track1B": {
       "status": "PENDING",
@@ -411,6 +553,54 @@
       }
     }
   },
-
-  "notes": "Two-track strategy: MAIN track Nd→Li (chemically sensible, full enumeration); CONTROL track Nd→P (PI's original scheme, only 2-3 configs to demonstrate instability). The control comparison strengthens paper by quantifying why Li-substitution is preferred. Future work after Pipeline #1 completion. Zhao 2025 (Ce/O in same base) addressed via SI critique → does not refute our conclusion; if anything supports Ce@Li-site interpretation."
+  "notes": "Two-track strategy: MAIN track Nd→Li (chemically sensible, full enumeration); CONTROL track Nd→P (PI's original scheme, only 2-3 configs to demonstrate instability). The control comparison strengthens paper by quantifying why Li-substitution is preferred. Future work after Pipeline #1 completion. Zhao 2025 (Ce/O in same base) addressed via SI critique → does not refute our conclusion; if anything supports Ce@Li-site interpretation.",
+  "champion_lineage_closure_2026_06_13": {
+    "cfg141_124atom": {
+      "Nd_pair": [
+        1,
+        82
+      ],
+      "vac": [
+        5,
+        6,
+        63,
+        71
+      ],
+      "O_indices": [
+        37,
+        95,
+        109
+      ]
+    },
+    "after_vacancy_removal": "120-atom primitive; index 82 -> 78. PBC-coordination analysis of the DFT xyz finds Nd at indices [1, 78] -> lineage confirmed end-to-end.",
+    "dft_relaxed_composition": "Li48 Nd2 P10 O3 S41 Cl16 (net charge 0)",
+    "two_inequivalent_Nd_sites": {
+      "Nd_Nd_distance_A": 29.7,
+      "Nd1_oxy_bound": "shell 2 O + 3 S + 1 Cl; Nd-O 2.48/2.61, Nd-S 2.62-3.18, Nd-Cl 2.80",
+      "Nd78_sulfide": "shell 5 S + 1 Cl; Nd-S 2.70-3.00, Nd-Cl 2.75"
+    },
+    "O_fully_dissolved": "all 3 O covalent P-O 1.55-1.60 A (no free O2-). P24=PS2O2 (O29+O34), P25=PS3O (O40); O34/O40 also anchor Nd1.",
+    "framework_integrity": "P-S = 2.064 +/- 0.018 A (n=37 = 10P*4 - 3 O-subst) == undoped modelc 2.064 +/- 0.011",
+    "kisti_tie_in": "scf_k441.in two Nd species (AFM start_mag +/-0.5) = these two sites; DOS first question = Nd 4f site-splitting + gap position"
+  },
+  "screening_funnel_accounting_2026_06_13": {
+    "CONFIRMED_champion_path": "enumerate_track1.py -> 342 configs (Track 1A, Hard-Hard pruning, O@16e near Nd) -> UMA screen -> cfg141",
+    "anneal_margin": "cfg141 vs cfg23 = 1.633 eV/cell = 0.544 eV/O-defect; Boltzmann(500K) P(1B)/P(1A)=4e-17",
+    "robustness_QC": "20 random Li perturbations (<=0.5 A) all higher by 0.4-15.5 meV (mean 2.5) -> cfg141 ROBUST ground state",
+    "COMPREHENSIVE_script_separate": "enumerate_nd_o_all.py designs full C(24,3)=2024 O/pair * ~26 pairs ~= 53k single-points; NOT in json execution status -> whether it ran / reproduced cfg141 is UNVERIFIED",
+    "DO_NOT_CLAIM": "'~50k exhaustive configs' as the champion path until gabia 1_enumerate log confirms which script fed phase 2. '몇십만' is honest only as MD force-eval count (~2e5), not config count.",
+    "PENDING": [
+      "exact executed funnel (342 vs 53k)",
+      "Nd pair count (<=26)",
+      "Phase-3 DFT re-ranking margin"
+    ],
+    "detail_doc": "kb/methodology/dopant_screening_funnel_2026_06_13.md"
+  },
+  "cross_validation_other_cations_2026_06_13": {
+    "Y2O3": "UMA cascade (branch configure-spawn-halogen-lithium-TjDCB, gabia Y2O3_x010, commit 71f12468): winner Y->Li_24g + O->S_16e, margin +0.273 eV/atom over Y->P_4b. SAME motif as Nd on both cation AND anion site. UMA-level, DFT-unverified.",
+    "significance": "2nd +3 datapoint (north-star asked for >1) -> Nd motif promoted from case study to transferable rule: trivalent M3+ -> Li site + O on PS4 corner.",
+    "La2O3": "Step 47 running now; expected Li_24g + S_16e = 3rd point / lanthanide trend.",
+    "detail_doc": "kb/methodology/dopant_screening_funnel_2026_06_13.md (section 3)",
+    "conflict_note": "Y2O3 source data owned by TjDCB branch; recorded here as citation only + in the new MD (this branch). No shared-file edit."
+  }
 }
