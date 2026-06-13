@@ -91,7 +91,9 @@ def parse_args(argv):
     ap.add_argument('--frames', type=int, default=300, help='MAX frames; servo self-terminates at target')
     ap.add_argument('--sub', type=int, default=50, help='substeps per frame')
     ap.add_argument('--dt', type=float, default=0.04, help='timestep (scaled units)')
-    ap.add_argument('--vmax-frac', type=float, default=0.12, help='platen speed cap = frac·r_min per frame')
+    ap.add_argument('--vmax-frac', type=float, default=0.05,
+                    help='platen advance per frame = frac·r_max (box scale).  Raise to push faster '
+                         'through the plastic-flow regime to the lock; lower if it goes dynamic.')
     ap.add_argument('--seed', type=int, default=1)
     ap.add_argument('--engine', default='auto', choices=['auto', 'dense', 'cell'],
                     help='pair engine.  dense = all-pairs + (N,N) history (validated reference, '
@@ -586,13 +588,13 @@ def main(argv):
     # ── compaction loop with proportional servo platen ──────────────────────────
     wall_z[None] = float((cx[:, 2] + cr).max()) + 0.3 * cr.min()   # snug: just above bed top
     target = args.target_gpa
-    vmax = 0.04 * cr.max()                                  # platen step ∝ big-particle/box scale
+    vmax = args.vmax_frac * cr.max()                       # platen advance/frame ∝ box scale
     floor_min = floor + 1.5 * cr.max()
     if not args.quiet:
         cap = 'PLASTIC (yield cap ON, H=%.2f GPa)' % (C_H * args.sigma_y) if args.plastic else 'RIGID (pure Hertz)'
         eng = ENGINE + (f" (n_small={n_small}, n_big={n_big})" if ENGINE == 'cell' else '')
         print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  engine={eng}  {cap}  target={target} GPa")
-    series = []; converged = 0
+    series = []; converged = 0; p_ema = -1.0
     for frame in range(args.frames):
         pvals = []
         for _ in range(args.sub):
@@ -602,23 +604,30 @@ def main(argv):
                 step()
             integrate()
             pvals.append(wall_force[None] / area)
-        p = float(np.median(pvals))                         # MEDIAN platen pressure: robust to the
-        pmean = float(np.mean(pvals))                       # few-big-AM impact spikes AND unload zeros
-        err = (target - p) / max(target, 1e-6)              # +1 → below target → compress
-        v_wall = -max(-0.3, min(1.0, err)) * vmax           # advance fast, retreat gently (no contact loss)
+        p = float(np.median(pvals))                         # per-frame MEDIAN (spike/zero robust)
+        pmean = float(np.mean(pvals))
+        p_ema = p if p_ema < 0 else 0.7 * p_ema + 0.3 * p   # smooth across frames (kill frame jitter)
+        # bang-bang on the smoothed pressure: drive at full vmax through the plastic-FLOW regime
+        # (bed yields ~constant until contacts deepen to the lock) until p_ema reaches target.
+        if p_ema < target:
+            v_wall = -vmax
+        elif p_ema > 1.10 * target:
+            v_wall = 0.25 * vmax                            # gentle retreat if overshot
+        else:
+            v_wall = -0.05 * vmax                           # creep near target
         wall_z[None] = max(floor_min, wall_z[None] + v_wall)
         height = wall_z[None] - floor
         por = (1.0 - vol_solid / (area * height)) * 100.0
-        series.append((frame, p, por, wall_z[None]))
-        converged = converged + 1 if abs(p - target) < 0.06 * target else 0
+        series.append((frame, p_ema, por, wall_z[None]))
+        converged = converged + 1 if abs(p_ema - target) < 0.08 * target else 0
         last = (converged >= 10 and frame > 25) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
             pv = porosity_vox()
-            print(f"  frame {frame:3d}  p_med={p:6.3f} p_mean={pmean:6.3f} GPa  "
+            print(f"  frame {frame:3d}  p_ema={p_ema:6.3f} (med {p:5.3f}/mean {pmean:5.3f}) GPa  "
                   f"por_sph={por:6.2f}% (vox {pv:5.2f}%)  wall_z={wall_z[None]:6.3f}")
         if converged >= 10 and frame > 25:                  # servo self-terminates at target
             if not args.quiet:
-                print(f"  ✓ converged: p_med within 6% of {target} GPa, porosity stable")
+                print(f"  ✓ converged: p_ema within 8% of {target} GPa, porosity stable")
             break
     p_fin = float(np.mean([s[1] for s in series[-5:]]))
     por_fin = float(np.mean([s[2] for s in series[-5:]]))
