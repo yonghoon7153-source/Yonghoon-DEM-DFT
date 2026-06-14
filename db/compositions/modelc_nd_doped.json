@@ -619,7 +619,17 @@
       "DOS_at_EF": 0.0,
       "in_gap_integrated_states_VBM_to_CBM": 0.014,
       "verdict": "clean wide-gap insulator, NO mid-gap defect band (in-gap ~0, even cleaner than undoped modelc 0.037). Nd2O3 co-doping electronically benign — no electronic-conduction leakage.",
-      "caveat": "gap 1.50 eV is k441; QUALITATIVE result (clean gap, 4f out, O incorporated) is k-robust, but the absolute value and any 'narrowing vs undoped 1.82' claim need MATCHED-k (k661) on BOTH systems — do not report narrowing quantitatively without it."
+      "caveat": "gap 1.50 eV is k441; QUALITATIVE result (clean gap, 4f out, O incorporated) is k-robust, but the absolute value and any 'narrowing vs undoped 1.82' claim need MATCHED-k (k661) on BOTH systems — do not report narrowing quantitatively without it.",
+      "CORRECTION_2026_06_14": "이전 기록의 '무도핑 modelc 0.037'은 오류. paper#1 slide8 재확인: 무도핑 modelc(LPSCl1.6) = 0.74 in-gap states (E_F<VBM, disorder S 3p holes), comp1(LPSCl)=0.037. Nd-doping base는 modelc=0.74.",
+      "defect_band_reduction": {
+        "undoped_modelc": "0.74 in-gap states (E_F BELOW VBM -> unoccupied valence-top hole states = disorder fingerprint, S 3p holes near Li-vac + 4d-Cl anti-sites; paper#1 slide8)",
+        "Nd_doped": "0.014 in-gap states; E_F back INSIDE a clean gap (VBM -0.85 rel E_F), DOS@E_F=0",
+        "reduction": "~50x (0.74 -> 0.014)",
+        "mechanism": "O2- from Nd2O3 (substituting S in PS4) passivates the disorder-induced S 3p hole states; Nd3+convac compensation restores E_F into the gap",
+        "paper2_electronic_thesis": "Nd2O3 doping SUPPRESSES electronic conduction by passivating the defect band (mid-gap states), NOT by widening the band gap. Show: gap-zoom DOS, undoped defect band vs doped clean gap.",
+        "CAVEAT": "0.74 (paper#1, rhombo 5fu, k663, window E_F..VBM) vs 0.014 (Nd-doped, 120-atom, k441, window VBM..CBM) = different cell/window/k -> NOT yet matched. Matched-k Phase 2 (undoped modelc supercell at k661, same window) REQUIRED to defend the ~50x number."
+      },
+      "band_gap_width_note": "band gap width (1.82 undoped vs 1.5 doped) is k-confounded AND not the electronic-conduction knob (intrinsic carriers negligible at both); do NOT headline gap narrowing. The defect-band reduction is the real electronic-conduction story."
     },
     "Nd_4f_site_resolved": {
       "both_sites_4f3": "occ:vir ~3.2:~10 at both Nd -> Nd3+ (4f^3) confirmed by DFT+U",
