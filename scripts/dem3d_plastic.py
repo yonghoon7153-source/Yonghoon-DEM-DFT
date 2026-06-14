@@ -91,6 +91,12 @@ def parse_args(argv):
     ap.set_defaults(plastic=True)
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target (GPa); 0.3=300 MPa')
     ap.add_argument('--mu', type=float, default=0.3, help='Coulomb friction coefficient')
+    ap.add_argument('--coh', type=float, default=0.0,
+                    help='cohesion stress (GPa): short-range adhesive pull on SE-involving contacts '
+                         '(EA26-3669 LJ-adhesion analog).  Densifies the composite (closes gaps); '
+                         'calibrate to the measured composite porosity.  0 = off (validated baseline).')
+    ap.add_argument('--coh-range', type=float, default=0.4,
+                    help='cohesion range as a fraction of R* (how far beyond contact the pull acts)')
     ap.add_argument('--phi0', type=float, default=0.35,
                     help='initial solid fraction (loose; keep <=0.38, the RSA saturation limit)')
     ap.add_argument('--frames', type=int, default=300, help='MAX frames; servo self-terminates at target')
@@ -257,6 +263,7 @@ def main(argv):
 
     # ── the contact law as a Taichi @ti.func (mirrors thornton_numpy) ───────────
     PLASTIC = int(args.plastic); BETA = float(args.beta_lock); KLOCK = float(args.klock)
+    COH = float(args.coh); COH_RANGE = float(args.coh_range); PY_HALF = PY_RIGID * 0.5
 
     @ti.func
     def pow15(z):                                          # z^1.5, Taichi-safe (no ** in kernels)
@@ -440,16 +447,20 @@ def main(argv):
                 dx[1] -= Lc * ti.round(dx[1] / Lc)
                 dist = dx.norm() + 1e-12
                 delta = rad[i] + rad[j] - dist
+                Rstar = rad[i] * rad[j] / (rad[i] + rad[j])
                 if delta > 0:
-                    Rstar = rad[i] * rad[j] / (rad[i] + rad[j])
                     py = ti.min(pyi[i], pyi[j])
                     Fn, nd = contact_normal(delta, dmax[i, j], Rstar, estar_pair(i, j), py)
                     dmax[i, j] = nd
-                    vir[None] += Fn * dx[2] * dx[2] / dist   # axial virial σzz: F_n·d·n_z²
+                    Fnet = Fn
+                    if ti.static(COH > 0.0):               # cohesion pull (SE-involving), full at contact
+                        if pyi[i] < PY_HALF or pyi[j] < PY_HALF:
+                            Fnet = Fn - COH * Rstar * Rstar
+                    vir[None] += Fnet * dx[2] * dx[2] / dist   # axial virial σzz: F_net·d·n_z²
                     nrm = dx / dist
                     vrel = v[i] - v[j]
                     vn = vrel.dot(nrm)
-                    Ftot = Fn - GAMMA_N * vn                # normal + dashpot
+                    Ftot = Fnet - GAMMA_N * vn              # net normal + dashpot
                     f[i] += Ftot * nrm; f[j] -= Ftot * nrm
                     # regularized Coulomb friction (no tangential history in v1)
                     vt = vrel - vn * nrm
@@ -460,6 +471,13 @@ def main(argv):
                         f[i] += ft; f[j] -= ft
                 else:
                     dmax[i, j] = 0.0
+                    if ti.static(COH > 0.0):               # cohesion-only (small gap, no contact)
+                        dcoh = COH_RANGE * Rstar
+                        if (pyi[i] < PY_HALF or pyi[j] < PY_HALF) and delta > -dcoh:
+                            Fc = COH * Rstar * Rstar * (1.0 + delta / dcoh)   # ramp 1→0 over range
+                            nrm = dx / dist
+                            vir[None] += (-Fc) * dx[2] * dx[2] / dist
+                            f[i] += (-Fc) * nrm; f[j] -= (-Fc) * nrm
 
     # ── cell engine: SE cell-grid + few-big-AM brute + per-owner slot history ────
     # History OWNER rule: SE–AM history lives on the SE side; SE–SE and AM–AM on the
@@ -501,6 +519,7 @@ def main(argv):
             dxv[1] -= Lc * ti.round(dxv[1] / Lc)
             dist = dxv.norm() + 1e-12
             delta = rad[i] + rad[j] - dist
+            Rstar = rad[i] * rad[j] / (rad[i] + rad[j])
             slot = -1; free = -1
             for k in range(K):
                 if nbr_j[i, k] == j and slot == -1:
@@ -515,16 +534,19 @@ def main(argv):
                     if nbr_j[i, slot] != j:
                         nbr_j[i, slot] = j; nbr_dm[i, slot] = 0.0
                     dmv = nbr_dm[i, slot]
-                Rstar = rad[i] * rad[j] / (rad[i] + rad[j])
                 pyv = ti.min(pyi[i], pyi[j])
                 Fn, nd = contact_normal(delta, dmv, Rstar, estar_pair(i, j), pyv)
                 if slot >= 0:
                     nbr_dm[i, slot] = nd
-                vir[None] += Fn * dxv[2] * dxv[2] / dist    # axial virial σzz: F_n·d·n_z²
+                Fnet = Fn
+                if ti.static(COH > 0.0):                   # cohesion pull (SE-involving), full at contact
+                    if pyi[i] < PY_HALF or pyi[j] < PY_HALF:
+                        Fnet = Fn - COH * Rstar * Rstar
+                vir[None] += Fnet * dxv[2] * dxv[2] / dist  # axial virial σzz: F_net·d·n_z²
                 nrm = dxv / dist
                 vrel = v[i] - v[j]
                 vn = vrel.dot(nrm)
-                Ftot = Fn - GAMMA_N * vn
+                Ftot = Fnet - GAMMA_N * vn
                 f[i] += Ftot * nrm
                 f[j] -= Ftot * nrm                         # atomic
                 vt = vrel - vn * nrm
@@ -536,6 +558,13 @@ def main(argv):
             else:
                 if slot >= 0:
                     nbr_j[i, slot] = -1                    # separation resets history
+                if ti.static(COH > 0.0):                   # cohesion-only (small gap, no contact)
+                    dcoh = COH_RANGE * Rstar
+                    if (pyi[i] < PY_HALF or pyi[j] < PY_HALF) and delta > -dcoh:
+                        Fc = COH * Rstar * Rstar * (1.0 + delta / dcoh)   # ramp 1→0 over range
+                        nrm = dxv / dist
+                        vir[None] += (-Fc) * dxv[2] * dxv[2] / dist
+                        f[i] += (-Fc) * nrm; f[j] -= (-Fc) * nrm
 
         @ti.kernel
         def step_cell():
