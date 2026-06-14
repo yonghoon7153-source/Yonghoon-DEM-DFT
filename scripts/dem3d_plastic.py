@@ -605,13 +605,13 @@ def main(argv):
         cap = 'PLASTIC (yield cap ON, H=%.2f GPa)' % (C_H * args.sigma_y) if args.plastic else 'RIGID (pure Hertz)'
         eng = ENGINE + (f" (n_small={n_small}, n_big={n_big})" if ENGINE == 'cell' else '')
         print(f"3D DEM  N={N}  L={L:.2f}µm  arch={args.arch}  engine={eng}  {cap}  target={target} GPa")
-    # STRAIN-CONTROLLED compaction on the BULK VIRIAL pressure.  The platen reaction is
-    # a BOUNDARY measure dominated by the top (locked) layer + force chains → it reads
-    # target while the bulk is still loose (the ~54% stall, AM-stiffness-independent).
-    # The virial p = Σ F_n·d / (3V) averages every contact in the bed = the true bulk
-    # stress; with ~10⁵ contacts it is inherently smooth (no median/EMA needed).  Descend
-    # monotonically until the bulk virial holds target → report that porosity.
-    series = []; hold = 0
+    # COMPACTION on the BULK VIRIAL pressure σzz = Σ F_n·d·n_z² / V (averages every
+    # contact = true bulk stress, smooth).  Two phases: (1) coarse monotonic descent to
+    # first reach target, then (2) a fine BIDIRECTIONAL servo that EQUILIBRATES at target
+    # — it backs the platen OFF if the bed settles above target (stiff beds otherwise stop
+    # over-dense) and compresses if it relaxes below, so every composition is reported at
+    # the SAME equilibrium 300 MPa.  Report the equilibrated porosity.
+    series = []; reached = False; conv = 0
     for frame in range(args.frames):
         pv_acc = 0.0
         for _ in range(args.sub):
@@ -623,49 +623,41 @@ def main(argv):
             pv_acc += vir[None] / (area * (wall_z[None] - floor))   # axial virial σzz = bulk pressure
         p = pv_acc / args.sub                               # mean bulk axial pressure this frame
         pw = float(wall_force[None] / area)                 # platen reaction (diagnostic only)
-        if p < target:                                      # monotonic descent until bulk = target
-            wall_z[None] = max(floor_min, wall_z[None] - vmax)
-            hold = 0
-        else:
-            hold += 1                                       # bulk at target → hold to confirm
+        if not reached:
+            if p < target:
+                wall_z[None] = max(floor_min, wall_z[None] - vmax)   # coarse descent
+            else:
+                reached = True
+        else:                                               # fine bidirectional servo to equilibrium
+            if p > 1.02 * target:
+                wall_z[None] = max(floor_min, wall_z[None] + 0.12 * vmax)   # over-pressured → relax
+            elif p < 0.98 * target:
+                wall_z[None] = max(floor_min, wall_z[None] - 0.12 * vmax)   # under → compress
+            conv = conv + 1 if abs(p - target) < 0.03 * target else 0
         height = wall_z[None] - floor
         por = (1.0 - vol_solid / (area * height)) * 100.0
         series.append((frame, p, por, wall_z[None]))
-        last = (hold >= 15) or frame == args.frames - 1
+        last = (conv >= 15) or frame == args.frames - 1
         if not args.quiet and (frame % 10 == 0 or last):
             pv = porosity_vox()
-            print(f"  frame {frame:3d}  p_vir={p:6.3f} (wall {pw:5.3f}) GPa  "
-                  f"por_sph={por:6.2f}% (vox {pv:5.2f}%)  wall_z={wall_z[None]:6.3f}")
-        if hold >= 15:                                      # bulk holds target for 15 frames → done
+            print(f"  frame {frame:3d} [{'descend' if not reached else 'servo'}] p_vir={p:6.3f} "
+                  f"(wall {pw:5.3f}) GPa  por_sph={por:6.2f}% (vox {pv:5.2f}%)  wall_z={wall_z[None]:6.3f}")
+        if conv >= 15:                                      # equilibrated at target → done
             if not args.quiet:
-                print(f"  ✓ converged: bulk virial holds {target} GPa, porosity stable")
-            break
-    # Report porosity at EXACTLY p=target by interpolating the (p_vir, porosity)
-    # descent trajectory.  The strain-control overshoots target by a composition-
-    # dependent amount (stiffer beds overshoot more during the hold), which would
-    # otherwise confound a porosity-vs-composition comparison — interpolating to a
-    # common p=target removes that bias so every composition is compared at 300 MPa.
-    ps_tr = [s[1] for s in series]; por_tr = [s[2] for s in series]
-    por_at = por_tr[-1]; got = False
-    for k in range(1, len(ps_tr)):
-        if ps_tr[k] >= target and ps_tr[k - 1] < target:
-            fr = (target - ps_tr[k - 1]) / (ps_tr[k] - ps_tr[k - 1] + 1e-12)
-            por_at = por_tr[k - 1] + fr * (por_tr[k] - por_tr[k - 1])
-            got = True
+                print(f"  ✓ converged: bulk virial equilibrated at {target} GPa, porosity stable")
             break
     p_end = float(np.mean([s[1] for s in series[-5:]]))
     por_end = float(np.mean([s[2] for s in series[-5:]]))
     pv_fin = porosity_vox()
-    flag = '' if got else '  ⚠ target not crossed (report=end)'
-    print(f"FINAL  pressure={target:.3f} GPa  porosity_SPHERE={por_at:.2f}%  porosity_VOX={pv_fin:.2f}%   "
-          f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]  "
-          f"(@target interp; end: por={por_end:.2f}% p={p_end:.3f}){flag}")
+    flag = '' if conv >= 15 else '  ⚠ not equilibrated (hit frame cap → raise --frames)'
+    print(f"FINAL  pressure={p_end:.3f} GPa  porosity_SPHERE={por_end:.2f}%  porosity_VOX={pv_fin:.2f}%   "
+          f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]  (equilibrated @target){flag}")
     if wall_z[None] <= floor_min + 1e-6 and p_end < 0.9 * target:
         print(f"  ⚠ platen bottomed out at floor_min={floor_min:.3f} below target → bed TOO SOFT: "
               f"raise --sigma-y (plateau) or --beta-lock (later lock) to hold {target} GPa")
     if ENGINE == 'cell' and ovf[None] > 0:
         print(f"  ⚠ cell-list overflow: {int(ovf[None])} drops (M={M}) — results INVALID, raise M")
-    return por_at, target
+    return por_end, p_end
 
 
 def run_unit_test(ti, contact_normal, args):
