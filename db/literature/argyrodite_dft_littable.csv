@@ -1,0 +1,27 @@
+﻿No,저자(연도),DOI/locator,조성,유형,물성축,핵심수치,우리값과 비교
+A1,Deiseroth 2006,"Angew. Chem. Int. Ed. 45, 5305",Li6PS5X,Exp,전도도/구조,"첫 합성; F-43m; 4a/4c S·halide disorder",구조·disorder 기준
+A2,Kraft 2018,10.1021/jacs.7b06327,"Li6PS5X (Cl,Br,I)",Exp,전도도,"halide disorder↑·polarizability → σ↑ (EIS)",disorder→σ 서사 근거
+A3,Adeli 2019,"Angew. Chem. Int. Ed. 58, 8681","Li(6-x)PS(5-x)Cl(1+x); x=0.6 = modelc",Exp,전도도,"vacancy 도입 → σ↑; LPSCl1.6 원조 합성",modelc 조성 출처
+A4,Schlem 2020,"Adv. Energy Mater. 10, 1903719",LPSCl / Cl-rich,Exp,전도도,"Ea 0.25 / 0.22 eV (EIS Arrhenius)","우리 4fu 0.253/0.224 EXACT 매칭"
+A5,Zuo 2023,"Angew. Chem. Int. Ed. 62, e202213228",LPSCl vs LPSCl1.6,Exp,전도도,"σ 2.9 vs 7.0 mS/cm (RT) = 2.4x (EIS)","우리 D600 3.09e-6/7.90e-6 = 2.5x"
+A6,Ayadi 2024,CEA report,LPSCl,AIMD,전도도/구조,"Li 단거리질서; vacancy가 불균일 심화",disorder 근거
+B1,Deng 2016,"J. Electrochem. Soc. 163, A67",LPSCl,DFT-SQS,기계,"C11=39.9 C12=23.1 C44=7.8 E=22.1 GPa",clamped-ion 비교 기준
+B2,Torii 2025,10.1021/acs.jpcc.5c05116,LPSCl,DFT-D3,기계,"E=27.4 B=34.7 G=10.0 nu=0.37; C11=47.4 C12=28.4 C44=10.4; Pugh B/G=3.46; 등방 A=1.09; shear fracture 0.7%; Bader Li+0.87 (VASP PBE-D3)","relaxed-ion E 22.06/27.66; Bader 매칭; A=1.09(ordered) vs 우리 Zener 1.14/1.44(disorder)"
+B3,Kozuka 2025,"J. Phys. Chem. C (2025)",LPSCl,DFT-D3,기계,"E=22.1 GPa",B1과 일치
+B4,Pustorino 2025,"Chem. Mater. 37, 313",LPSCl,DFT,기계,"Li 배열 → E 10-30 GPa 변동",Li ordering 민감도 근거
+B5,D'Amore 2022,"Phys. Chem. Chem. Phys. 24, 22978",LPSCl 다형,DFT-QHA,기계,"monoclinic이 더 rigid (B0↑)",다형 비교
+B6,Kim 2025,10.1021/acsmaterialslett.4c02029,LPSCl Cl-rich,Exp(UPE),기계,"Cl↑ → E↑ (경향; 초음파 pulse-echo)","우리 +25%의 방향 확인 (값은 우리 DFT)"
+B7,Sakuda 2013,"Sci. Rep. 3, 2261",sulfide SE,Exp,기계,"입자 vs 펠릿 기계물성 차이 (nanoindentation)",측정법 참고
+B8,Ketter 2025,Nat. Commun. (2025),argyrodite,Exp,기계,"grain boundary가 다결정 기계거동 지배",microstructure 한계
+C1,Batteries 2026 (MDPI),mdpi 2313-0105/12/2/60,LPSCl,DFT/HSE,전자,"PBE 2.45 / HSE06 3.30 eV","우리 1.76 (method offset ~0.7 eV: USPP+DOS-threshold)"
+C2,Li6PS5X first-principles,ScienceDirect S0921452623002995,"LPSCl, LPSI",DFT(mBJ),전자,"mBJ 3.11 eV; VBM = Cl/S-p",gap 비교
+C3,Sundar 2025,(DOI 확인 필요),LPSCl,DFT-HSE06,전자,"3.92 eV (HSE06)",gap 비교
+C4,Ohno 2021,"Adv. Energy Mater. 11, 2100370",argyrodite,DFT+Exp,전자/산화,"band gap ↔ ESW 관계",전자-안정성 연결
+C5,Zhu 2015,"ACS Appl. Mater. Interfaces 7, 23685",SE 일반,DFT,전자/산화,"band gap ↔ 분해전압",ESW 근거
+C6,Ong 2013,"Energy Environ. Sci. 6, 148",LGPS,DFT-PDOS,전자,"PDOS로 ionic/electronic 분리",PDOS 방법 선례
+M1,Birch 1947,"Phys. Rev. 71, 809",-,Theory,방법론,"Birch-Murnaghan EOS 유도",B0 fit 근거
+M2,Angel 2019,"Minerals 9, 745",-,Theory,방법론,"EOS tutorial (2nd-4th order)",B0 fit 근거
+M3,Bader 1990 / Henkelman 2006,"Comput. Mater. Sci. 36, 354",-,Theory,방법론,"Bader charge 분석 이론·구현",전하 분석
+M4,Shannon 1976,"Acta Crystallogr. A 32, 751",-,Reference,방법론,"이온반경: Cl- 1.81, S2- 1.84, Br- 1.96 A",결합길이 해석
+O1,This work — comp1,(우리 계산),Li6PS5Cl,DFT/AIMD,전체,"gap 1.76; E_VRH 22.06; B0 26.23; Ea 0.253; D600 3.09e-6; ICOHP Li-Cl -1.86",기준값
+O2,This work — modelc,(우리 계산),Li5.4PS4.4Cl1.6,DFT/AIMD,전체,"gap 1.82; E_VRH 27.66; B0 21.71; Ea 0.224; D600 7.90e-6; ICOHP Li-Cl -2.10",기준값
