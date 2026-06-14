@@ -1,27 +1,21 @@
-﻿No,저자(연도),DOI/locator,조성,유형,물성축,핵심수치,우리값과 비교
-A1,Deiseroth 2006,"Angew. Chem. Int. Ed. 45, 5305",Li6PS5X,Exp,전도도/구조,"첫 합성; F-43m; 4a/4c S·halide disorder",구조·disorder 기준
-A2,Kraft 2018,10.1021/jacs.7b06327,"Li6PS5X (Cl,Br,I)",Exp,전도도,"halide disorder↑·polarizability → σ↑ (EIS)",disorder→σ 서사 근거
-A3,Adeli 2019,"Angew. Chem. Int. Ed. 58, 8681","Li(6-x)PS(5-x)Cl(1+x); x=0.6 = modelc",Exp,전도도,"vacancy 도입 → σ↑; LPSCl1.6 원조 합성",modelc 조성 출처
-A4,Schlem 2020,"Adv. Energy Mater. 10, 1903719",LPSCl / Cl-rich,Exp,전도도,"Ea 0.25 / 0.22 eV (EIS Arrhenius)","우리 4fu 0.253/0.224 EXACT 매칭"
-A5,Zuo 2023,"Angew. Chem. Int. Ed. 62, e202213228",LPSCl vs LPSCl1.6,Exp,전도도,"σ 2.9 vs 7.0 mS/cm (RT) = 2.4x (EIS)","우리 D600 3.09e-6/7.90e-6 = 2.5x"
-A6,Ayadi 2024,CEA report,LPSCl,AIMD,전도도/구조,"Li 단거리질서; vacancy가 불균일 심화",disorder 근거
-B1,Deng 2016,"J. Electrochem. Soc. 163, A67",LPSCl,DFT-SQS,기계,"C11=39.9 C12=23.1 C44=7.8 E=22.1 GPa",clamped-ion 비교 기준
-B2,Torii 2025,10.1021/acs.jpcc.5c05116,LPSCl,DFT-D3,기계,"E=27.4 B=34.7 G=10.0 nu=0.37; C11=47.4 C12=28.4 C44=10.4; Pugh B/G=3.46; 등방 A=1.09; shear fracture 0.7%; Bader Li+0.87 (VASP PBE-D3)","relaxed-ion E 22.06/27.66; Bader 매칭; A=1.09(ordered) vs 우리 Zener 1.14/1.44(disorder)"
-B3,Kozuka 2025,"J. Phys. Chem. C (2025)",LPSCl,DFT-D3,기계,"E=22.1 GPa",B1과 일치
-B4,Pustorino 2025,"Chem. Mater. 37, 313",LPSCl,DFT,기계,"Li 배열 → E 10-30 GPa 변동",Li ordering 민감도 근거
-B5,D'Amore 2022,"Phys. Chem. Chem. Phys. 24, 22978",LPSCl 다형,DFT-QHA,기계,"monoclinic이 더 rigid (B0↑)",다형 비교
-B6,Kim 2025,10.1021/acsmaterialslett.4c02029,LPSCl Cl-rich,Exp(UPE),기계,"Cl↑ → E↑ (경향; 초음파 pulse-echo)","우리 +25%의 방향 확인 (값은 우리 DFT)"
-B7,Sakuda 2013,"Sci. Rep. 3, 2261",sulfide SE,Exp,기계,"입자 vs 펠릿 기계물성 차이 (nanoindentation)",측정법 참고
-B8,Ketter 2025,Nat. Commun. (2025),argyrodite,Exp,기계,"grain boundary가 다결정 기계거동 지배",microstructure 한계
-C1,Batteries 2026 (MDPI),mdpi 2313-0105/12/2/60,LPSCl,DFT/HSE,전자,"PBE 2.45 / HSE06 3.30 eV","우리 1.76 (method offset ~0.7 eV: USPP+DOS-threshold)"
-C2,Li6PS5X first-principles,ScienceDirect S0921452623002995,"LPSCl, LPSI",DFT(mBJ),전자,"mBJ 3.11 eV; VBM = Cl/S-p",gap 비교
-C3,Sundar 2025,(DOI 확인 필요),LPSCl,DFT-HSE06,전자,"3.92 eV (HSE06)",gap 비교
-C4,Ohno 2021,"Adv. Energy Mater. 11, 2100370",argyrodite,DFT+Exp,전자/산화,"band gap ↔ ESW 관계",전자-안정성 연결
-C5,Zhu 2015,"ACS Appl. Mater. Interfaces 7, 23685",SE 일반,DFT,전자/산화,"band gap ↔ 분해전압",ESW 근거
-C6,Ong 2013,"Energy Environ. Sci. 6, 148",LGPS,DFT-PDOS,전자,"PDOS로 ionic/electronic 분리",PDOS 방법 선례
-M1,Birch 1947,"Phys. Rev. 71, 809",-,Theory,방법론,"Birch-Murnaghan EOS 유도",B0 fit 근거
-M2,Angel 2019,"Minerals 9, 745",-,Theory,방법론,"EOS tutorial (2nd-4th order)",B0 fit 근거
-M3,Bader 1990 / Henkelman 2006,"Comput. Mater. Sci. 36, 354",-,Theory,방법론,"Bader charge 분석 이론·구현",전하 분석
-M4,Shannon 1976,"Acta Crystallogr. A 32, 751",-,Reference,방법론,"이온반경: Cl- 1.81, S2- 1.84, Br- 1.96 A",결합길이 해석
-O1,This work — comp1,(우리 계산),Li6PS5Cl,DFT/AIMD,전체,"gap 1.76; E_VRH 22.06; B0 26.23; Ea 0.253; D600 3.09e-6; ICOHP Li-Cl -1.86",기준값
-O2,This work — modelc,(우리 계산),Li5.4PS4.4Cl1.6,DFT/AIMD,전체,"gap 1.82; E_VRH 27.66; B0 21.71; Ea 0.224; D600 7.90e-6; ICOHP Li-Cl -2.10",기준값
+﻿No,논문 제목,저자·연도,학술지 (권·페이지),DOI,조성,연구 유형,물성 분류,핵심 결과,본 연구와의 관련성
+1,Li6PS5X: A Class of Crystalline Li-Rich Solids With an Unusually High Li+ Mobility,"Deiseroth et al., 2008","Angew. Chem. Int. Ed. 47, 755",10.1002/anie.200703900,"Li6PS5X (X=Cl, Br, I)",실험,전도도·구조,"argyrodite 최초 보고. 입방 F-43m. S2-와 halide가 4a/4c 자리를 공유하는 site disorder. 높은 Li+ 이동성.",두 비교 조성의 모(母)구조와 disorder 개념의 출발점
+2,Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X=Cl/Br/I),"Kraft et al., 2018","J. Am. Chem. Soc. 140, 16330",10.1021/jacs.7b06327,"Li6PS5X (X=Cl, Br, I)",실험,전도도,"halide 자리 무질서와 격자 분극률이 이온전도도를 지배. Li6PS5Cl 활성화에너지 약 0.25 eV.","우리 활성화에너지(0.253 eV)와 비교; '무질서→전도도' 서사의 실험 근거"
+3,Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution,"Adeli et al., 2019","Angew. Chem. Int. Ed. 58, 8681",10.1002/anie.201814222,"Li(6-x)PS(5-x)Cl(1+x) (x ≤ 0.5)",실험,전도도,"Cl/S 비를 높이면 Li 확산 급증. Li5.5PS4.5Cl1.5에서 냉간가압 σ = 9.4 mS/cm (Li6PS5Cl의 약 4배).",우리 Cl-rich 조성(Li5.4PS4.4Cl1.6) 계열의 원조; 공공(vacancy)→전도도 기전
+4,Impact of the Chlorination of Lithium Argyrodites on the Electrolyte/Cathode Interface in Solid-State Batteries,"Zuo et al., 2023","Angew. Chem. Int. Ed. 62, e202213228",10.1002/anie.202213228,"Li6PS5Cl, Li5.5PS4.5Cl1.5",실험,전도도·계면,"Cl 증가가 전도도는 높이나 양극 계면에서 전기화학 분해를 촉진. σ 2.9 → 7.0 mS/cm (해당 측정 조건).",전도도 향상의 이면(산화 안정성 저하) — 우리 산화 안정성 축과 연결
+5,Comprehensive Analysis of Halogen-Rich Argyrodite Sulfides from a Multi-Level Perspective: Li-Ion Conduction and Elastic Modulus,"Kim et al., 2025","ACS Mater. Lett. 7, 724",10.1021/acsmaterialslett.4c02029,"Li(7-z)PS(6-z)Cl(z-x)Br(x) (42종)",실험,기계·전도도,"결정질 시료에서 Cl 증가 시 탄성계수 급증 + σ 9.9 mS/cm까지. E ≤ 18 GPa & σ ≥ 8 mS/cm의 우수영역 식별. (초음파 pulse-echo)","우리 'Cl 증가 → 강성 증가(+25%)' 결과의 실험적 방향 근거 (핵심 인용)"
+6,Elastic Properties of Alkali Superionic Conductor Electrolytes from First Principles Calculations,"Deng et al., 2016","J. Electrochem. Soc. 163, A67",10.1149/2.0061602jes,Li6PS5Cl (외 23종),DFT,기계,"DFT 탄성: C11=39.9, C12=23.1, C44=7.8, E=22.1 GPa. thiophosphate 계열이 가장 연함.",우리 clamped-ion 탄성의 비교 기준값
+7,First-Principles Investigation of Mechanical Properties and Anisotropy of Argyrodite Li6PS5Cl Crystal Electrolytes,"Torii et al., 2025","J. Phys. Chem. C 129, 17882",10.1021/acs.jpcc.5c05116,Li6PS5Cl,DFT (PBE-D3),기계,"E=27.4, B=34.7, G=10.0 GPa. Pugh B/G=3.46(연성). 거의 등방(A=1.09). shear 0.7%에서 취성 파괴, {111}면 취약. Bader Li +0.87.",우리 relaxed-ion E(22.1→27.7)·Bader와 대조; 그들의 '등방' vs 우리 '비등방(무질서 기인)'
+8,Quantum-mechanical exploration of LPSCl polymorphs (pseudo-cubic vs monoclinic),"D'Amore et al., 2022","Phys. Chem. Chem. Phys. 24, 22978",10.1039/D2CP02814D,Li6PS5Cl (다형),DFT (QHA),기계,"단사정(monoclinic)이 의사입방(pseudo-cubic)보다 더 단단(B0 높음). 준조화근사로 B(T) 계산.",구조 다형이 탄성에 미치는 영향 — 비교 맥락
+9,Systematic structure sampling for Li+ distribution in Li6PS5Cl,"Pustorino et al., 2025","Chem. Mater. 37, 313",(DOI 확인 필요),Li6PS5Cl,DFT,기계·구조,"Li+ 배열(24g vs 48h)이 탄성계수를 10–30 GPa나 변화시킴.",우리 결과가 'Li 배열에 민감'하다는 점의 근거
+10,Mechanical properties of sulfide solid-electrolyte particles (nanoindentation),"Sakuda et al., 2013","Sci. Rep. 3, 2261",10.1038/srep02261,sulfide SE,실험,기계,"나노압입으로 단일 입자 vs 펠릿 기계물성 차이 측정.",탄성계수 측정법(실험)의 참고
+11,(제목 확인 필요) Microstructure effects on argyrodite mechanical properties,"Ketter & Zeier, 2025",Nat. Commun. (2025),(DOI 확인 필요),argyrodite,실험,기계,"입계(grain boundary)가 다결정 기계거동을 지배.",단결정 DFT vs 다결정 실험의 간극(한계점)
+12,(밴드갭 출처 1) Li6PS5Cl 반도체 거동 DFT/HSE,"(저자 확인 필요), 2026",Batteries (MDPI) 12(2) 60,10.3390/batteries12020060 (확인 필요),Li6PS5Cl,DFT (PBE/HSE06),전자,"밴드갭 PBE 2.45 eV / HSE06 3.30 eV (직접천이형).",우리 밴드갭(1.76 eV)과 비교 — PBE/방법 offset 설명용
+13,First-principles study of structural/mechanical/optical properties of Li6PS5X (X=Cl/I),"(저자 확인 필요), 2023","Physica B (확인 필요)",10.1016/j.physb.2023.(확인 필요),"Li6PS5Cl, Li6PS5I",DFT (mBJ),전자·기계,"mBJ 밴드갭 3.11 eV. VBM은 Cl-p/S-p로 구성.",밴드갭·전자구조 character 비교
+14,Electronic structure and electrochemical stability of argyrodites,"Ohno et al., 2021","Adv. Energy Mater. 11, 2100370",(DOI 확인 필요),argyrodite,DFT+실험,전자·산화,"밴드갭과 전기화학 안정성 창(ESW)의 관계, SEI 형성.",전자구조-안정성 연결 맥락
+15,Electronic structure and phase stability of Li10GeP2S12 (PDOS),"Ong et al., 2013","Energy Environ. Sci. 6, 148",10.1039/C2EE23355J,Li10GeP2S12,DFT,전자,"PDOS로 이온/전자 전도 기여 분리.",DOS/PDOS 해석 방법의 선례
+16,Elastic Properties of Alkali Superionic Conductors (BM-EOS 방법 원전),"Birch, 1947","Phys. Rev. 71, 809",10.1103/PhysRev.71.809,-,이론,방법론,"Birch-Murnaghan 상태방정식(EOS) 유도.",우리 B0 fit의 이론 근거
+17,Revised effective ionic radii,"Shannon, 1976","Acta Crystallogr. A 32, 751",10.1107/S0567739476001551,-,참고,방법론,"표준 이온반경: Cl- 1.81, S2- 1.84, Br- 1.96 Å.",Li-Cl/Li-S 결합길이 해석 기준
+18,A fast and robust algorithm for Bader decomposition of charge density,"Henkelman et al., 2006","Comput. Mater. Sci. 36, 354",10.1016/j.commatsci.2005.04.010,-,이론,방법론,"전하밀도 Bader 분해 알고리즘.",Bader 전하 분석 방법
+19,[본 연구] Stoichiometric argyrodite,"This work, 2026",-,-,Li6PS5Cl,DFT+AIMD,종합,"밴드갭 1.76 eV; E_VRH 22.06 GPa(relaxed-ion); B0 26.23 GPa; Ea 0.253 eV; D(600K) 3.09e-6 cm2/s; ICOHP(Li-Cl) -1.86",비교 기준 (정렬·무질서 적은 끝)
+20,[본 연구] Cl-rich argyrodite,"This work, 2026",-,-,Li5.4PS4.4Cl1.6,DFT+AIMD,종합,"밴드갭 1.82 eV; E_VRH 27.66 GPa(relaxed-ion); B0 21.71 GPa; Ea 0.224 eV; D(600K) 7.90e-6 cm2/s; ICOHP(Li-Cl) -2.10",비교 기준 (무질서 큰 끝: Li 공공 + 4d-Cl anti-site)
