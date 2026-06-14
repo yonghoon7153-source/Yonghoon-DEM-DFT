@@ -531,7 +531,8 @@
       "k_convergence": "k441 vs k661 dE = 0.013 meV/atom (nat=120) -> k441 adopted as final V0; EOS skipped by decision -> post-processing (DOS/PDOS)",
       "structure_output": "paper_figures/nd2o3_doped_modelc_DFTrelax.{cif,xyz}; Li48Nd2P10O3S41Cl16, charge-balanced",
       "PENDING_dft_reranking_margin": "cfg141 vs #2 (cfg23) at DFT+U level — closes 'UMA noise could flip' objection; not yet recorded",
-      "note": "json previously said READY_TO_START; user actually ran it on KISTI through the k-ladder to k441. Margin slot left open."
+      "note": "json previously said READY_TO_START; user actually ran it on KISTI through the k-ladder to k441. Margin slot left open.",
+      "postprocess_dos": "DONE 2026-06-14 (k441) -> see dos_pdos_postprocess_2026_06_14"
     },
     "phase_3_dft_verify_track1B": {
       "status": "PENDING",
@@ -602,5 +603,43 @@
     "La2O3": "Step 47 running now; expected Li_24g + S_16e = 3rd point / lanthanide trend.",
     "detail_doc": "kb/methodology/dopant_screening_funnel_2026_06_13.md (section 3)",
     "conflict_note": "Y2O3 source data owned by TjDCB branch; recorded here as citation only + in the new MD (this branch). No shared-file edit."
+  },
+  "dos_pdos_postprocess_2026_06_14": {
+    "status": "DONE (dos.x + projwfc.x JOB DONE; 300 pdos files)",
+    "provenance": {
+      "dos_source": "k441 SCF charge density (dos.in prefix nd_pair01_v0_k441, fildos V0_dos.dat, DeltaE 0.02, degauss 0.005)",
+      "k661_nscf": "CRASHED (MPI_ABORT): pw_restart read_collected_wfc — nbnd 466 requested but SCF saved only 359. Fix = set nscf nbnd=359 (match SCF) then rerun on free GPU1; 359 bands already reach +1.9 eV so range is sufficient.",
+      "nspin": "2 (AFM, Nd1/Nd2 opposite start_mag ±0.5); DOS = dosup+dosdw merged",
+      "EF_eV": 4.008
+    },
+    "gap_and_defect_band": {
+      "gap_eV": 1.5,
+      "VBM_rel_EF": -0.85,
+      "CBM_rel_EF": 0.65,
+      "DOS_at_EF": 0.0,
+      "in_gap_integrated_states_VBM_to_CBM": 0.014,
+      "verdict": "clean wide-gap insulator, NO mid-gap defect band (in-gap ~0, even cleaner than undoped modelc 0.037). Nd2O3 co-doping electronically benign — no electronic-conduction leakage.",
+      "caveat": "gap 1.50 eV is k441; QUALITATIVE result (clean gap, 4f out, O incorporated) is k-robust, but the absolute value and any 'narrowing vs undoped 1.82' claim need MATCHED-k (k661) on BOTH systems — do not report narrowing quantitatively without it."
+    },
+    "Nd_4f_site_resolved": {
+      "both_sites_4f3": "occ:vir ~3.2:~10 at both Nd -> Nd3+ (4f^3) confirmed by DFT+U",
+      "Nd1_oxy_bound": "4f main peak +1.91 eV (empty manifold above CBM), occ:vir 3.28:9.15",
+      "Nd2_sulfide": "4f main peak -7.41 eV (filled manifold deep in VB), occ:vir 3.25:10.60",
+      "verdict": "BOTH Nd 4f manifolds OUT of the gap (filled deep in VB, empty above CB). No Nd 4f in gap. Two inequivalent sites (oxy vs sulfide) show distinct 4f spectral distribution = electronic confirmation of the two-site structural motif.",
+      "note": "peak = argmax of summed f-DOS; full manifold shape in nd_pdos_origin.csv (Nd1_4f / Nd2_4f columns)"
+    },
+    "O_2p": {
+      "peak_rel_EF": -3.95,
+      "below_EF_weight": 14.83,
+      "verdict": "O 2p deep in VB, fully filled, no in-gap O level -> ELECTRONIC confirmation of P-O covalent incorporation (structural P-O 1.55-1.60 A). O fully dissolved into PS4 framework, no dangling/defect states."
+    },
+    "outputs": {
+      "origin_csv_total": "nd_dos_origin.csv (E-EF, total, up, -dn)",
+      "origin_csv_pdos": "nd_pdos_origin.csv (E-EF, Li/P/S/Cl/O/Nd totals + Nd1_4f, Nd2_4f site-resolved)",
+      "preview_png": "nd_dos_pdos.png",
+      "generator": "tools/figures/plot_nd_dos.py (committed; nspin=2 up+dn merge, digit-suffixed species regex for Nd1/Nd2)",
+      "location": "KISTI .../pair01_pair_00_reference_1_82/v0_champion/"
+    },
+    "paper2_figure_role": "electronic-structure main figure: 'Nd2O3-doped Cl-rich argyrodite stays a clean wide-gap insulator; trivalent 4f pushed out of the gap; O covalently incorporated' — supports that the screened champion is electronically viable as a solid electrolyte."
   }
 }
