@@ -640,18 +640,32 @@ def main(argv):
             if not args.quiet:
                 print(f"  ✓ converged: bulk virial holds {target} GPa, porosity stable")
             break
-    p_fin = float(np.mean([s[1] for s in series[-5:]]))
-    por_fin = float(np.mean([s[2] for s in series[-5:]]))
+    # Report porosity at EXACTLY p=target by interpolating the (p_vir, porosity)
+    # descent trajectory.  The strain-control overshoots target by a composition-
+    # dependent amount (stiffer beds overshoot more during the hold), which would
+    # otherwise confound a porosity-vs-composition comparison — interpolating to a
+    # common p=target removes that bias so every composition is compared at 300 MPa.
+    ps_tr = [s[1] for s in series]; por_tr = [s[2] for s in series]
+    por_at = por_tr[-1]; got = False
+    for k in range(1, len(ps_tr)):
+        if ps_tr[k] >= target and ps_tr[k - 1] < target:
+            fr = (target - ps_tr[k - 1]) / (ps_tr[k] - ps_tr[k - 1] + 1e-12)
+            por_at = por_tr[k - 1] + fr * (por_tr[k] - por_tr[k - 1])
+            got = True
+            break
+    p_end = float(np.mean([s[1] for s in series[-5:]]))
+    por_end = float(np.mean([s[2] for s in series[-5:]]))
     pv_fin = porosity_vox()
-    print(f"FINAL  pressure={p_fin:.4f} GPa  porosity_SPHERE={por_fin:.2f}%  porosity_VOX={pv_fin:.2f}%   "
+    flag = '' if got else '  ⚠ target not crossed (report=end)'
+    print(f"FINAL  pressure={target:.3f} GPa  porosity_SPHERE={por_at:.2f}%  porosity_VOX={pv_fin:.2f}%   "
           f"[{'PLASTIC' if args.plastic else 'RIGID'}, {args.material}, N={N}]  "
-          f"(calibrate ε_sphere≈10% = production convention; VOX = rigid-view upper bound)")
-    if wall_z[None] <= floor_min + 1e-6 and p_fin < 0.9 * target:
+          f"(@target interp; end: por={por_end:.2f}% p={p_end:.3f}){flag}")
+    if wall_z[None] <= floor_min + 1e-6 and p_end < 0.9 * target:
         print(f"  ⚠ platen bottomed out at floor_min={floor_min:.3f} below target → bed TOO SOFT: "
               f"raise --sigma-y (plateau) or --beta-lock (later lock) to hold {target} GPa")
     if ENGINE == 'cell' and ovf[None] > 0:
         print(f"  ⚠ cell-list overflow: {int(ovf[None])} drops (M={M}) — results INVALID, raise M")
-    return por_fin, p_fin
+    return por_at, target
 
 
 def run_unit_test(ti, contact_normal, args):
