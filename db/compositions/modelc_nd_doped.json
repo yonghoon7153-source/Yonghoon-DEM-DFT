@@ -532,7 +532,16 @@
       "structure_output": "paper_figures/nd2o3_doped_modelc_DFTrelax.{cif,xyz}; Li48Nd2P10O3S41Cl16, charge-balanced",
       "PENDING_dft_reranking_margin": "cfg141 vs #2 (cfg23) at DFT+U level — closes 'UMA noise could flip' objection; not yet recorded",
       "note": "json previously said READY_TO_START; user actually ran it on KISTI through the k-ladder to k441. Margin slot left open.",
-      "postprocess_dos": "DONE 2026-06-14 (k441) -> see dos_pdos_postprocess_2026_06_14"
+      "postprocess_dos": "DONE 2026-06-14 (k441) -> see dos_pdos_postprocess_2026_06_14",
+      "DFT_U_value_actual": "U(Nd1-4f)=U(Nd2-4f)=8.0 eV (HUBBARD ortho-atomic) — scf_k441.in 정본. 기록상 '6.0/8.0 혼재'였으나 실제 실행은 8.0.",
+      "matched_k_phase2_undoped_ref": {
+        "purpose": "무도핑 modelc defect band(0.74)를 matched 조건(같은 셀치수·k661·ecut·smearing)에서 재현 → Nd-도핑과 apples-to-apples defect-band 비교",
+        "structure": "track1_base_124atom.xyz (cfg141 부모, Li54P10S44Cl16, native Li-vac+4d-Cl anti-site disorder)",
+        "settings": "nspin=1, NO Hubbard, ecut 60/480, mv degauss 0.01(relax)/0.005(nscf), nbnd 400, k 4 4 1(relax)→6 6 1(nscf); fixed-cell DFT relax → nscf → dos → projwfc",
+        "cell_match": "부모 셀 |a|≈|b|≈7.0 |c|≈70 Å ≈ 도핑 V0 → 같은 k-mesh로 matched k-density",
+        "workdir": "KISTI /scratch/x3430a02/kgy/nd_doped_modelc/undoped_ref_k661/ (run_undoped.sh)",
+        "status": "SUBMITTED 2026-06-14"
+      }
     },
     "phase_3_dft_verify_track1B": {
       "status": "PENDING",
