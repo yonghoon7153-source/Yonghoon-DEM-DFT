@@ -27,9 +27,19 @@ systems = {
         D600_ref=3.086e-6),
     "LPSCl1.6 (Li5.4PS4.4Cl1.6, modelc 5fu)": dict(
         Ea=0.2234, D0=5.745e-4,      # CSV fit slope/intercept (reproduces stored 1.014e-7)
-        n_Li=27, V_A3=1216.2,        # 5 f.u. cell (n_Li=2.22e22 cm^-3 -> V=1216 A^3)
+        n_Li=27, V_A3=1216.38,       # exact V from db/structures/modelc_V0_k663.xyz lattice vectors
         D600_ref=7.90e-6),
 }
+
+# atom-count cross-check: composition x Z must equal the MD-cell atom count
+_check = {
+    "LPSCl  (Li6PS5Cl, comp1 4fu natural)":   (dict(Li=24, P=4, S=20, Cl=4), 52),
+    "LPSCl1.6 (Li5.4PS4.4Cl1.6, modelc 5fu)": (dict(Li=27, P=5, S=22, Cl=8), 62),
+}
+for nm, (comp, ntot) in _check.items():
+    assert sum(comp.values()) == ntot, f"{nm}: atoms sum {sum(comp.values())} != {ntot}"
+    assert comp["Li"] == systems[nm]["n_Li"], f"{nm}: n_Li mismatch"
+print("atom-count check OK:  comp1 24+4+20+4=52 (Z=4) ;  modelc 27+5+22+8=62 (Z=5)\n")
 
 print("=" * 74)
 print(" 300 K extrapolation + Nernst-Einstein sigma (H_R = 1, z = +1)")
