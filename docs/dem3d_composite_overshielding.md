@@ -22,6 +22,15 @@ large AM voids.
 | AM modulus | e_am 140 → 40 → 12 → 4 | 36 → 37 → 38 → 32 %  (no real change; e_am=4 sphere/vox diverge = soft-AM over-overlap artifact) |
 | friction | mu 0.3 → 0.0 | rigid 37.6 → 37.9, plastic 36.1 → 35.8  (no change) |
 | cohesion (LJ-analog) | coh 0 → 1 → 2 → 4 → 8 GPa | 37.4 → 35.9 → **32.6** → 33.0 → 34.7  (only −5 %p, NON-monotonic: strong cohesion clumps the SE → inter-cluster voids) |
+| AM yield cap | sigma_y_am 0 → 2 → 1 → 0.6 → 0.3 | 35.6 → 35.2 → **34.2** → 35.7 → 35.7  (only −1 %p, non-monotonic) |
+
+FOUR contact-level levers (AM stiffness, friction, cohesion, AM yield) ALL fail.
+This proves the over-porosity is NOT a contact-force problem but a GEOMETRIC one:
+the small SE are not located INSIDE the AM interstices (random RSA jam), and no
+contact parameter can change WHERE the particles sit.  Even the ideal rigid packing
+(SE perfectly in the AM voids, de Larrard ~20 %) is already 2× the measured plastic
+9–19 %; the remaining factor needs the SE to FLOW/shape-change into the sub-gaps =
+the MPM domain.
 
 ## Verdict — fundamental, not tunable
 The composite over-porosity is the **rigid-sphere void-filling limit**.  Even the
