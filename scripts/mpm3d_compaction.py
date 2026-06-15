@@ -14,8 +14,10 @@ true boundary BC and resolution-invariant, whereas the volume-mean Cauchy σzz
 Porosity = 1 − solid_volume/(box_area·height).  Units: length dimensionless [0,1],
 modulus/stress in GPa, so σzz and --target-gpa are literal GPa.
 
-Calibration: pure-SE (--material SE) → tune (--e-se, --sigma-y) so porosity ≈ 10 %
-@ 0.3 GPa (Minnmann).  Then --material mix --am-frac <vol AM> for the composite.
+3D pure-SE calibration (GPU, n_grid=256): E_SE=1.53, ν_SE=0.49 (K≈25.5 GPa, the
+real LPSC bulk → no volumetric over-crush), σy=0.30 → porosity ≈ 10 % @ 0.30 GPa
+(Minnmann).  These are the defaults.  Then --material mix --am-frac <vol AM> for
+the composite.
 
 Run:  python3 scripts/mpm3d_compaction.py --material SE --n-grid 96 --arch cpu
       python3 scripts/mpm3d_compaction.py --material SE --n-grid 256 --arch cuda
@@ -34,10 +36,11 @@ def parse_args(argv):
     ap.add_argument('--am-frac', type=float, default=0.0, help='AM volume fraction of SOLID (mix)')
     ap.add_argument('--e-se', type=float, default=1.53, help='SE modulus (GPa); champion 1.53 (softened)')
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
-    ap.add_argument('--sigma-y', type=float, default=0.15, help='SE von Mises yield (GPa); champion 0.15')
-    ap.add_argument('--nu-se', type=float, default=0.30,
-                    help='SE Poisson ratio; raise to ~0.45-0.49 for stiff bulk + soft shear '
-                         '(near-incompressible granular flow; ν=0.30 over-crushes volumetrically)')
+    ap.add_argument('--sigma-y', type=float, default=0.30,
+                    help='SE von Mises yield (GPa); 3D calib 0.30 -> pure-SE ~0.10 porosity @ 0.30 GPa (Minnmann)')
+    ap.add_argument('--nu-se', type=float, default=0.49,
+                    help='SE Poisson ratio (default 0.49 = 3D calib: K~25.5 GPa, the real LPSC bulk; '
+                         'soft shear -> incompressible granular flow; nu<=0.45 over-crushes to 0 porosity)')
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
     ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
                     help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
