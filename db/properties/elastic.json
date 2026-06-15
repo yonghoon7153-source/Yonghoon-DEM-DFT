@@ -137,11 +137,12 @@
         "completed_date": "2026-06-04",
         "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_relaxed_ion/elastic_results_stress.json",
         "vs_comp1_v3_relaxed": {
-          "E_VRH_delta_pct": "+23.9% (22.33 → 27.66)",
-          "G_VRH_delta_pct": "+28.4% (8.26 → 10.61) — primary stiffening contributor",
-          "B_VRH_delta_pct": "-7.1% (25.18 → 23.40) — slight bulk softening",
-          "Zener_A_delta": "+24% (1.16 → 1.44) — anisotropy increase = disorder fingerprint",
-          "headline": "★ VACANCY PARADOX RESOLVED ★ — LPSCl1.6 is 24% stiffer than LPSCl at DFT 0K relaxed-ion, MATCHING experimental trend. Stiffening is primarily SHEAR (G_VRH +28%) while bulk is slightly soft (-7%). The shear-dominant stiffening + anisotropy increase reflects vacancy + 4d-Cl anti-site lock-in of certain shear configurations."
+          "E_VRH_delta_pct": "+25.4% (22.06 → 27.66)",
+          "G_VRH_delta_pct": "+30.5% (8.13 → 10.61) — primary stiffening contributor",
+          "B_VRH_delta_pct": "-8.3% (25.51 → 23.40) — slight bulk softening",
+          "Zener_A_delta": "+26% (1.14 → 1.44) — anisotropy increase = disorder fingerprint",
+          "_baseline_note": "Deltas use the PAPER-GRADE k444 comp1 relaxed-ion baseline (22.06/25.51/8.13). Earlier k221 baseline (22.33/25.18/8.26) gave +23.9/+28.4/-7.1% — within ~2pp, both legitimate; slide M4 uses these k444 numbers.",
+          "headline": "★ VACANCY PARADOX RESOLVED ★ — LPSCl1.6 is +25% stiffer (E) than LPSCl at DFT 0K relaxed-ion, MATCHING experimental trend (Kim 2025). Stiffening is primarily SHEAR (G_VRH +30%) while bulk is slightly soft (-8%). The shear-dominant stiffening + anisotropy increase reflects vacancy + 4d-Cl anti-site lock-in of certain shear configurations."
         }
       }
     ]
