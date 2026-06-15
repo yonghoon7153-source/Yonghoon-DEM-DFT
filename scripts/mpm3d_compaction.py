@@ -217,7 +217,7 @@ def main(argv):
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {args.material} "
               f"(am_frac={am_frac})  E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} "
               f"K_SE={K_SE:.2f}GPa  target={target} GPa  readout={args.readout}")
-    reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0
+    reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
@@ -227,9 +227,16 @@ def main(argv):
         sig_mean = sacc / args.sub
         wallp = wacc / args.sub
         p = wallp if args.readout == 'wallP' else sig_mean   # servo signal
-        # servo platen to target σzz (descend until target, then fine bidirectional)
+        height = wall_z[None] - FLOOR
+        por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
+        if frame == 0:
+            por0 = por
+        # servo platen to target σzz (descend until target, then fine bidirectional).
+        # arm-after-compaction guard: a big rigid AM hitting the platen on first contact
+        # spikes wallP transiently; refuse to stop until the bed has actually compacted
+        # (por ≤ por0 − 5 %p), else the servo arms prematurely and crawls (under-compacts).
         if not reached:
-            if p < target:
+            if p < target or por > por0 - 5.0:
                 wall_vel[None] = -vmax / (args.sub * dt)
                 wall_z[None] = max(WALL_MIN, wall_z[None] - vmax)
             else:
@@ -243,8 +250,6 @@ def main(argv):
             else:
                 wall_vel[None] = 0.0
             conv = conv + 1 if abs(p - target) < 0.03 * target else 0
-        height = wall_z[None] - FLOOR
-        por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
         por_end = por; p_end = p
         if reached and por_at_target < 0:
             por_at_target = por                              # porosity when target stress was FIRST reached
