@@ -1,0 +1,6 @@
+&PROJWFC
+    prefix='comp1'
+    outdir='./tmp'
+    filpdos='comp1.pdos'
+    DeltaE=0.01
+/

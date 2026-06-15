@@ -1,0 +1,6 @@
+&PROJWFC
+    prefix='modelc'
+    outdir='./tmp'
+    filpdos='modelc.pdos'
+    DeltaE=0.01
+/

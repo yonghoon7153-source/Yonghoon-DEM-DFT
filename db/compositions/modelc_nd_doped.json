@@ -623,6 +623,8 @@
     },
     "gap_and_defect_band": {
       "gap_eV": 1.5,
+      "gap_eV_eigenvalue_k661_STANDARD_2026_06_15": 1.632,
+      "_gap_method_note": "STANDARD eigenvalue gap from nscf_k661.out (VBM/CBM straight from Kohn-Sham eigenvalues, smearing-independent): EF 3.879, VBM 3.081, CBM 4.712 -> 1.632 eV. SUPERSEDES the old 1.50 (k441 + DOS<0.5 threshold, which underestimates because mv-smearing broadens band edges into the gap). Use 1.63 eV as the Nd-doped gap. Tool: tools/electronic/standard_dos/parse_eig_gap.py.",
       "VBM_rel_EF": -0.85,
       "CBM_rel_EF": 0.65,
       "DOS_at_EF": 0.0,
