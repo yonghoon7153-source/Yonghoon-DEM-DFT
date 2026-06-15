@@ -1,0 +1,7 @@
+&DOS
+    prefix = '${PREFIX}'
+    outdir = './tmp'
+    fildos = '${PREFIX}.dos'
+    DeltaE = 0.01
+    ! tetrahedron method inherited from nscf occupations='tetrahedra_opt' (no degauss needed)
+/
