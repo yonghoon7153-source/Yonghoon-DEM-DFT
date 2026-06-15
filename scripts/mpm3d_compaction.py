@@ -133,7 +133,7 @@ def main(argv):
             J = sig[0, 0] * sig[1, 1] * sig[2, 2]
             P = (2 * mu_p[p] * (F[p] - U @ V.transpose()) @ F[p].transpose()
                  + ti.Matrix.identity(ti.f32, 3) * la_p[p] * J * (J - 1))     # Kirchhoff τ = Jσ
-            szz[None] += P[2, 2] / J                                          # Cauchy σzz (axial)
+            szz[None] += -P[2, 2] / J                                         # -σzz = compressive axial pressure (GPa)
             st = (-dt * p_vol * 4 * inv_dx * inv_dx) * P; affine = st + p_mass * C[p]
             for a, b, c in ti.static(ti.ndrange(3, 3, 3)):
                 off = ti.Vector([a, b, c]); dpos = (off.cast(ti.f32) - fx) * dx
