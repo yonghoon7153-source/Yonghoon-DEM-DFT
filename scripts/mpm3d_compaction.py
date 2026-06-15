@@ -6,8 +6,11 @@ material points plastically FLOW (change shape) into the voids, conserving volum
 so the COMPOSITE densifies correctly (the DEM's rigid spheres can't void-fill).
 von Mises (J2) per phase: SE soft+low-yield → flows; AM stiff+high-yield → jams.
 
-Confined (oedometer) compaction by a servo platen to a target axial stress
-(measured as the volume-mean Cauchy σzz = bulk pressure, mirrors the DEM virial).
+Confined (oedometer) compaction by a servo platen to a target axial stress.
+Default readout = wallP (the platen REACTION stress, Σ m·Δv/(dt·area)): it is the
+true boundary BC and resolution-invariant, whereas the volume-mean Cauchy σzz
+(--readout sigzz) is diluted by the well-resolved soft SE and over-compresses (the
+2D "512 blocker" lesson, CLAUDE.md).  Both are printed every frame for comparison.
 Porosity = 1 − solid_volume/(box_area·height).  Units: length dimensionless [0,1],
 modulus/stress in GPa, so σzz and --target-gpa are literal GPa.
 
@@ -33,6 +36,8 @@ def parse_args(argv):
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE von Mises yield (GPa); champion 0.15')
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
+    ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
+                    help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
     ap.add_argument('--init-solid', type=float, default=0.35,
                     help='initial solid fraction (loose; keep <=0.38 RSA saturation)')
     ap.add_argument('--r-am', type=float, default=0.045, help='AM radius (box units; raise n-grid for 12:4:1)')
@@ -137,6 +142,7 @@ def main(argv):
     mu_p = ti.field(ti.f32, n); la_p = ti.field(ti.f32, n); yld_p = ti.field(ti.f32, n)
     grid_v = ti.Vector.field(3, ti.f32, (n_grid,) * 3); grid_m = ti.field(ti.f32, (n_grid,) * 3)
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
+    wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(), ys: ti.types.ndarray()):
@@ -149,7 +155,7 @@ def main(argv):
     def substep():
         for I in ti.grouped(grid_m):
             grid_v[I] = ti.Vector.zero(ti.f32, 3); grid_m[I] = 0.0
-        szz[None] = 0.0
+        szz[None] = 0.0; wallf[None] = 0.0
         for p in range(n):
             base = (x[p] * inv_dx - 0.5).cast(int); fx = x[p] * inv_dx - base.cast(ti.f32)
             w = [0.5 * (1.5 - fx) ** 2, 0.75 - (fx - 1.0) ** 2, 0.5 * (fx - 0.5) ** 2]
@@ -169,7 +175,9 @@ def main(argv):
                 grid_v[I] /= grid_m[I]
                 i, j, k = I[0], I[1], I[2]
                 if k * dx < FLOOR and grid_v[I][2] < 0: grid_v[I][2] = 0.0
-                if k * dx > wall_z[None]: grid_v[I][2] = wall_vel[None]      # servo platen (rigid)
+                if k * dx > wall_z[None]:                                    # servo platen (rigid)
+                    wallf[None] += grid_m[I] * (grid_v[I][2] - wall_vel[None])  # reaction impulse Σ m·Δv
+                    grid_v[I][2] = wall_vel[None]
                 if i * dx < SW[0] and grid_v[I][0] < 0: grid_v[I][0] = 0.0
                 if i * dx > SW[1] and grid_v[I][0] > 0: grid_v[I][0] = 0.0
                 if j * dx < SW[0] and grid_v[I][1] < 0: grid_v[I][1] = 0.0
@@ -202,14 +210,18 @@ def main(argv):
     wall_z[None] = WALL0
     if not args.quiet:
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {args.material} "
-              f"(am_frac={am_frac})  E_SE={args.e_se} σy={args.sigma_y}  target={target} GPa")
+              f"(am_frac={am_frac})  E_SE={args.e_se} σy={args.sigma_y}  target={target} GPa  "
+              f"readout={args.readout}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0
     for frame in range(args.frames):
-        sacc = 0.0
+        sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
             substep()
             sacc += szz[None] / n                            # volume-mean Cauchy σzz (GPa)
-        p = sacc / args.sub
+            wacc += wallf[None] / (dt * area)                # platen reaction stress (GPa), resolution-invariant
+        sig_mean = sacc / args.sub
+        wallp = wacc / args.sub
+        p = wallp if args.readout == 'wallP' else sig_mean   # servo signal
         # servo platen to target σzz (descend until target, then fine bidirectional)
         if not reached:
             if p < target:
@@ -231,13 +243,14 @@ def main(argv):
         por_end = por; p_end = p
         if not args.quiet and (frame % 20 == 0 or conv >= 12):
             print(f"  frame {frame:3d} [{'descend' if not reached else 'servo'}]  "
-                  f"σzz={p:7.4f} GPa  porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}", flush=True)
+                  f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
+                  f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}", flush=True)
         if conv >= 12 and frame > 20:
             if not args.quiet:
                 print("  ✓ converged: σzz equilibrated at target")
             break
-    print(f"FINAL  σzz={p_end:.4f} GPa  porosity={por_end:.2f}%   "
-          f"[MPM, {args.material}, am_frac={am_frac}, n_grid={n_grid}, pts={n}]")
+    print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity={por_end:.2f}%   "
+          f"[MPM, {args.material}, am_frac={am_frac}, n_grid={n_grid}, pts={n}, readout={args.readout}]")
 
 
 if __name__ == '__main__':
