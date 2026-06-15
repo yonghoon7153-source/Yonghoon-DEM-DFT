@@ -68,7 +68,7 @@ def main(argv):
 
     FLOOR = 0.10; SW = (0.18, 0.82)                         # confined box in x,y
     WIDTH = SW[1] - SW[0]
-    WALL0 = 0.60; WALL_MIN = 0.16
+    WALL0 = 0.60; WALL_MIN = 0.105                          # just above FLOOR (servo stops earlier)
     am_frac = args.am_frac if args.material == 'mix' else 0.0
 
     # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
@@ -198,7 +198,7 @@ def main(argv):
     load(xs, mus, las, ylds)
     solid_vol = n * p_vol; area = WIDTH * WIDTH
     target = args.target_gpa
-    vmax = 0.04 * (WALL0 - FLOOR)                            # platen speed (box units / frame)
+    vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
     if not args.quiet:
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {args.material} "
