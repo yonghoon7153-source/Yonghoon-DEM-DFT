@@ -35,6 +35,9 @@ def parse_args(argv):
     ap.add_argument('--e-se', type=float, default=1.53, help='SE modulus (GPa); champion 1.53 (softened)')
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE von Mises yield (GPa); champion 0.15')
+    ap.add_argument('--nu-se', type=float, default=0.30,
+                    help='SE Poisson ratio; raise to ~0.45-0.49 for stiff bulk + soft shear '
+                         '(near-incompressible granular flow; ν=0.30 over-crushes volumetrically)')
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
     ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
                     help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
@@ -64,11 +67,10 @@ def main(argv):
     dx = 1.0 / n_grid; inv_dx = float(n_grid)
     dt = args.dt
     p_vol = (dx * 0.5) ** 3; p_mass = p_vol * 1.0
-    nu = 0.3
-
-    def lame(E):
+    def lame(E, nu):
         return E / (2 * (1 + nu)), E * nu / ((1 + nu) * (1 - 2 * nu))
-    MU_SE, LA_SE = lame(args.e_se); MU_AM, LA_AM = lame(args.e_am)
+    MU_SE, LA_SE = lame(args.e_se, args.nu_se); MU_AM, LA_AM = lame(args.e_am, 0.30)
+    K_SE = LA_SE + 2.0 * MU_SE / 3.0                        # SE bulk modulus (GPa) — stiff if ν→0.49
     YIELD_SE = args.sigma_y; YIELD_AM = 1.0e4               # AM ~rigid (no yield)
 
     FLOOR = 0.10; SW = (0.18, 0.82)                         # confined box in x,y
@@ -210,9 +212,9 @@ def main(argv):
     wall_z[None] = WALL0
     if not args.quiet:
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {args.material} "
-              f"(am_frac={am_frac})  E_SE={args.e_se} σy={args.sigma_y}  target={target} GPa  "
-              f"readout={args.readout}")
-    reached = False; conv = 0; por_end = 0.0; p_end = 0.0
+              f"(am_frac={am_frac})  E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} "
+              f"K_SE={K_SE:.2f}GPa  target={target} GPa  readout={args.readout}")
+    reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
@@ -241,6 +243,8 @@ def main(argv):
         height = wall_z[None] - FLOOR
         por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
         por_end = por; p_end = p
+        if reached and por_at_target < 0:
+            por_at_target = por                              # porosity when target stress was FIRST reached
         if not args.quiet and (frame % 20 == 0 or conv >= 12):
             print(f"  frame {frame:3d} [{'descend' if not reached else 'servo'}]  "
                   f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
@@ -249,8 +253,11 @@ def main(argv):
             if not args.quiet:
                 print("  ✓ converged: σzz equilibrated at target")
             break
-    print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity={por_end:.2f}%   "
-          f"[MPM, {args.material}, am_frac={am_frac}, n_grid={n_grid}, pts={n}, readout={args.readout}]")
+    por_target_str = f"{por_at_target:.2f}%" if por_at_target >= 0 else "n/a (target never reached)"
+    print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity(settled)={por_end:.2f}%  "
+          f"porosity@target={por_target_str}   "
+          f"[MPM, {args.material}, am_frac={am_frac}, n_grid={n_grid}, pts={n}, "
+          f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}]")
 
 
 if __name__ == '__main__':
