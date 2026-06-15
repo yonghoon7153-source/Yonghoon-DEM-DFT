@@ -5,7 +5,7 @@
     "aimd_mlip": "Born-Oppenheimer MD with foundation MLIP (UMA-s-1p1, task=omat) on DFT-relaxed V0 structure. Langevin NVT thermostat, 2 fs timestep, equilibrate 10 ps + production 100 ps per T. Trajectory saved every 100 fs.",
     "msd_fit": "Linear regression MSD = 6 D t in the diffusive regime (2-50 ps).",
     "arrhenius": "ln(D) = ln(D0) - Ea/(kB T) fit across all measured T.",
-    "nernst_einstein": "σ_NE = n_Li z² e² D / (kB T), assuming Haven ratio H_R = 1 (uncorrelated motion). Real σ is typically σ_NE × H_R^-1 with H_R ≈ 0.3-0.7 for SE.",
+    "nernst_einstein": "σ_NE = n_Li z² e² D* / (kB T) using the TRACER D* (from MSD), assuming Haven ratio H_R = D*/D_σ = 1 (uncorrelated hopping). True σ = n_Li z² e² D_σ/(kB T) = σ_NE / H_R; for SE H_R ≈ 0.3-0.7 (<1, concerted motion) so the TRUE intrinsic σ is HIGHER than the H_R=1 estimate. H_R=1 is therefore a conservative lower bound and does NOT explain why σ_NE sits above measured pellet values.",
     "caveats": "Foundation MLIP (UMA-s-1p1) tends to overestimate Li transport by 3-5× vs experiment for LPSCl family. Ea is more robust than absolute σ. 300 K extrapolation from 600-1000 K Arrhenius has additional uncertainty if non-Arrhenius behavior exists near room T (rare for LPSCl)."
   },
   "results": [
@@ -37,7 +37,7 @@
         "Ea_match": "Within experimental range ✓",
         "sigma_300K_expt_LPSCl_Scm": "2e-3 to 5e-3",
         "sigma_300K_calc_Scm": "~14e-3 (3-5× higher than expt)",
-        "sigma_overestimate_attribution": "Foundation MLIP overshoot of transport (typical) + Haven ratio = 1 assumption (real H_R ≈ 0.3-0.7 reduces σ by ~2×)"
+        "sigma_overestimate_attribution": "Dominated by (1) foundation MLIP overshoot of Li diffusivity D* (~2-5x, typical for UMA on LPSCl) and (2) bulk-vs-pellet: MD = perfect single-crystal bulk, experiment = cold-pressed pellet with grain-boundary/porosity resistance (lower). NOTE the H_R=1 assumption is the OPPOSITE sign: real H_R<1 gives true intrinsic σ = σ_NE/H_R HIGHER, so Haven does NOT account for the over-experiment overshoot."
       }
     },
     {
@@ -120,7 +120,7 @@
     "headline_PAPER_GRADE": {
       "comp1_LPSCl_4fu_natural":  {"Ea_eV": 0.2532, "D0_cm2_per_s": 4.11e-4, "R2": 0.9998, "D600": 3.09e-6, "D800": 1.03e-5, "D1000": 2.20e-5, "D300_extrap": 2.29e-8, "sigma_NE_300K_mScm": 3.35},
       "modelc_LPSCl16_5fu_natural": {"Ea_eV": 0.2235, "D0_cm2_per_s": 5.8e-4, "R2": 0.992,  "D600": 7.90e-6, "D800": 2.05e-5, "D1000": 4.55e-5, "D300_extrap": 1.02e-7, "sigma_NE_300K_mScm": 13.96},
-      "sigma_NE_300K_ratio_note": "sigma(LPSCl1.6)/sigma(LPSCl) @300K = 4.2x (D ratio 4.4x); widens from 2.5x@600K because Ea differs (0.224 vs 0.253). Absolute sigma: MLIP overshoot ~3-5x + H_R=1 ~2x -> quote ratio + Ea as robust; absolute in right ballpark vs expt (LPSCl ~1-3, Cl-rich ~7-9 mS/cm)."
+      "sigma_NE_300K_ratio_note": "sigma(LPSCl1.6)/sigma(LPSCl) @300K = 4.2x (D ratio 4.4x); widens from 2.5x@600K because Ea differs (0.224 vs 0.253). Absolute sigma ~1.5-2x above measured pellet (expt LPSCl ~1-3.2 [sintered 3.15], Cl-rich ~7-9.9 mS/cm [Zuo 7.0/Adeli 9.4/Kim 9.9]) due to MLIP D-overshoot + bulk-vs-pellet resistance; H_R=1 is CONSERVATIVE (real H_R<1 -> intrinsic even higher, opposite sign). Robust = Ea (0.25/0.22 matches expt) + ratio."
     },
     "robust_findings_v2_2026_06_11": {
       "Ea_direction_CORRECTED": "comp1 4fu Ea=0.2532 > modelc Ea=0.2235 (Δ=0.030 eV). Cl-rich Ea LOWER than ordered LPSCl — CONSISTENT with Minafra/Kraft 'disorder lowers Ea' narrative and Schlem 2020 experimental values (LPSCl ordered ~0.25, Cl-rich ~0.22).",
