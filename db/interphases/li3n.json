@@ -38,6 +38,20 @@
     "ref_cui_2023": -3.44,
     "note": "Cui paper binding energy is relative to atomic Li reference; our values are relative to UMA-relaxed endpoint."
   },
+  "endpoint_relax_correction_2026_06_16": {
+    "_status": "FIXED — on_N_right endpoint properly relaxed (was a rigid-shift artifact); fresh NEB now valid.",
+    "bug": "on_N_right was on_N_left with the Li adatom shifted +3.65 A RIGIDLY and NEVER relaxed -> spurious +848 meV. Any NEB built on it was invalid.",
+    "fix": "relax_right.py: FixAtoms(z<25.6 bottom slab), ASE BFGS fmax=0.02, QE gpu pw.x (k221, ecutwfc 60/ecutrho 480, PBE). Repeated foreground-session kills -> restarted from last traj frame via setsid (session-independent); ran to convergence.",
+    "result": {
+      "on_N_right_relaxed_E_eV": -20206.2843,
+      "on_N_left_E_eV": -20206.8987,
+      "dE_right_minus_left_eV": 0.614,
+      "converged_fmax_eV_per_A": 0.0200,
+      "interpretation": "on_N_right is NOT equivalent to on_N_left — it is a metastable Li adatom site +0.614 eV higher. The hop is therefore ASYMMETRIC (forward vs reverse barriers differ by 0.614 eV). Record as physics, not artifact (down from the +0.848 rigid-shift value once relaxed)."
+    },
+    "files": "kserver116:/data/work/runs/li_neb_diffusion/li3n_001/dft_neb/relax_right_work/ ; relaxed endpoint ../endpoints/on_N_right.xyz (2026-06-16 01:46)",
+    "next": "Fresh CI-NEB with the corrected on_N_right endpoint (old neb_ci.* used the buggy endpoint -> discard)."
+  },
   "diffusion_barriers": {
     "see": "db/properties/diffusion.json — results filtered by system=Li3N"
   },
