@@ -78,6 +78,11 @@ def parse_args(argv):
                          'Soften (e.g. 5-24) to lump AM rearrangement/fracture so the bed densifies '
                          '— needed for realistic bimodal porosity / the dip sweep.')
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE yield stress (GPa)')
+    ap.add_argument('--sigma-y-am', type=float, default=0.0,
+                    help='AM yield stress (GPa).  0 = rigid (default, py_AM=inf).  Set finite '
+                         '(NCM local yield/microcrack ~0.3-1.0) so the AM-AM force-chain CAGE '
+                         'flattens under the high local contact stress and stops shielding the SE '
+                         '-> the composite can densify.  THE lever for the composite over-shielding.')
     ap.add_argument('--beta-lock', type=float, default=0.06,
                     help='incompressibility lock: extra plastic overlap (×R*) of void-filling flow '
                          'before the contact stiffens to near-rigid.  Main Minnmann knob: real '
@@ -160,21 +165,22 @@ def build_packing(args, rng):
     """Random non-overlapping spheres, periodic x,y, stacked from the floor.  Returns
     centers (N,3), radii, per-particle E, py and box (Lx, Ly, floor, fill_top)."""
     ps = tuple(int(z) for z in args.ps.split(':'))
+    py_am = C_H * args.sigma_y_am if args.sigma_y_am > 0 else PY_RIGID   # AM yield cap (0 = rigid)
     # radii + per-radius solid-volume split by composition
     if args.material == 'SE':
         radii_kinds = [(args.r_se, 1.0, args.e_se, C_H * args.sigma_y)]
     elif args.material == 'AM':
         # AM-only: split P:S by the ps ratio
         fp = ps[0] / (ps[0] + ps[1]); fs = 1.0 - fp
-        radii_kinds = [(args.r_amp, fp, args.e_am, PY_RIGID), (args.r_ams, fs, args.e_am, PY_RIGID)]
+        radii_kinds = [(args.r_amp, fp, args.e_am, py_am), (args.r_ams, fs, args.e_am, py_am)]
     else:                                                   # mix: AM (P,S) + SE by weight + ps
         am = args.am_wt / 100.0
         rho_am, rho_se = 4.8, 1.6                           # g/cm³ → volume fractions from weight
         vam = (am / rho_am) / (am / rho_am + (1 - am) / rho_se)
         vse = 1.0 - vam
         fp = ps[0] / (ps[0] + ps[1]); fs = 1.0 - fp
-        radii_kinds = [(args.r_amp, vam * fp, args.e_am, PY_RIGID),
-                       (args.r_ams, vam * fs, args.e_am, PY_RIGID),
+        radii_kinds = [(args.r_amp, vam * fp, args.e_am, py_am),
+                       (args.r_ams, vam * fs, args.e_am, py_am),
                        (args.r_se, vse, args.e_se, C_H * args.sigma_y)]
     radii_kinds = [rk for rk in radii_kinds if rk[1] > 1e-9]
 
@@ -332,7 +338,7 @@ def main(argv):
     if ENGINE == 'auto':
         ENGINE = 'cell' if N > 6000 else 'dense'
     if ENGINE == 'cell':
-        small_np = (cpy < PY_RIGID * 0.5)                  # SE = yielding phase = "small" tier
+        small_np = (cr <= 1.5 * float(cr.min()))           # small tier = SE-scale radius (py-independent)
         sid_np = np.where(small_np)[0].astype(np.int32)
         bid_np = np.where(~small_np)[0].astype(np.int32)
         n_small = int(sid_np.size); n_big = int(bid_np.size)
