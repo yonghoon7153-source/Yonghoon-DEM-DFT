@@ -1,6 +1,6 @@
 {
   "property": "doping_cascade_verified_subset",
-  "description": "VERIFIED subset of the 273/multi-category doping cascade (tools/doping) results, copied to the vm repo so they are queryable here. The FULL registered cascade (39+ compounds) lives in doping_cascade.json on gabia (kserver116-27) and is pending PAT sync. This file holds compounds whose champion/convergence/EOS/elastic were directly read from the gabia run dirs and confirmed.",
+  "description": "VERIFIED subset of the 273/multi-category doping cascade (tools/doping) results, copied to the vm repo so they are queryable here. The FULL registered cascade (39+ compounds) lives in doping_cascade.json on gabia (kserver116-27) and is pending PAT sync. This file holds compounds whose champion/convergence/EOS/elastic were directly read from the gabia run dirs and confirmed. NOTE: the trivalent M3+ series (Al/Sc/Ga/In/Y/Gd/Sm/Nd/La oxides, ionic-radius sweep) is in db/properties/doping_cascade_trivalent_M3.json (pulled 2026-06-15).",
   "_source": "gabia:/data/work/runs/multi_category_2026_05_26_v23/<compound>_<x>/  (cascade git_commit 9ce6ca3, UMA-s-1p1 task=omat, run 2026-06-07). Champion xyz also at gabia:/data/work/repo/db/structures/doping/<compound>_<x>_champion.xyz.",
   "method_notes": {
     "score_fields": "de_post_anneal = energy/atom vs baseline AFTER anneal (eV/atom, negative = more stable than undoped baseline). dV_anneal_pct = volume change pre->post anneal. converged_post_anneal = champion geometry converged.",
