@@ -33,7 +33,8 @@ def parse_args(argv):
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.15, help='SE von Mises yield (GPa); champion 0.15')
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
-    ap.add_argument('--init-solid', type=float, default=0.45, help='initial solid fraction (loose)')
+    ap.add_argument('--init-solid', type=float, default=0.35,
+                    help='initial solid fraction (loose; keep <=0.38 RSA saturation)')
     ap.add_argument('--r-am', type=float, default=0.045, help='AM radius (box units; raise n-grid for 12:4:1)')
     ap.add_argument('--r-se', type=float, default=0.018, help='SE radius (box units)')
     ap.add_argument('--frames', type=int, default=400)
@@ -70,27 +71,50 @@ def main(argv):
     WALL0 = 0.60; WALL_MIN = 0.16
     am_frac = args.am_frac if args.material == 'mix' else 0.0
 
-    # ── build material points: place spheres (AM + SE), fill with points ────────
+    # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
+    #    fine-grid, like the DEM — a uniform brute is O(N²) and stalls) ───────────
     rng = np.random.default_rng(args.seed)
     fill_h = WALL0 - 0.03
     box_vol = WIDTH * WIDTH * (fill_h - FLOOR)
     target = args.init_solid * box_vol
+    vol = lambda r: (4.0 / 3.0) * np.pi * r ** 3           # noqa: E731
     plan = [(args.r_am, am_frac, MU_AM, LA_AM, YIELD_AM),
             (args.r_se, 1.0 - am_frac, MU_SE, LA_SE, YIELD_SE)]
-    placed = []
+    plan = [pk for pk in plan if pk[1] > 1e-9]
+    rmin = min(pk[0] for pk in plan)
+    cell = 2.0 * rmin
+    placed, big, grid = [], [], {}
+
+    def hits_big(p, r):
+        for (qx, qy, qz, qr) in big:
+            if (p[0] - qx) ** 2 + (p[1] - qy) ** 2 + (p[2] - qz) ** 2 < (r + qr + 0.004) ** 2:
+                return True
+        return False
+
+    def hits_small(p, r):
+        kx, ky, kz = int(p[0] / cell), int(p[1] / cell), int(p[2] / cell)
+        for a in (-1, 0, 1):
+            for b in (-1, 0, 1):
+                for c in (-1, 0, 1):
+                    for (qx, qy, qz, qr) in grid.get((kx + a, ky + b, kz + c), ()):
+                        if (p[0] - qx) ** 2 + (p[1] - qy) ** 2 + (p[2] - qz) ** 2 < (r + qr + 0.004) ** 2:
+                            return True
+        return False
+
     for (r, frac, mu, la, yld) in plan:
-        if frac <= 1e-9:
-            continue
         goal = frac * target; acc = 0.0; fails = 0
-        while acc < goal and fails < 200000:
-            c = (rng.uniform(SW[0] + r, SW[1] - r), rng.uniform(SW[0] + r, SW[1] - r),
+        small = r <= 1.5 * rmin
+        while acc < goal and fails < 60000:
+            p = (rng.uniform(SW[0] + r, SW[1] - r), rng.uniform(SW[0] + r, SW[1] - r),
                  rng.uniform(FLOOR + r, fill_h - r))
-            ok = True
-            for (px, py, pz, pr, *_ ) in placed:
-                if (c[0] - px) ** 2 + (c[1] - py) ** 2 + (c[2] - pz) ** 2 < (r + pr + 0.004) ** 2:
-                    ok = False; break
+            ok = (not hits_big(p, r)) and (not (small and hits_small(p, r)))
             if ok:
-                placed.append((c[0], c[1], c[2], r, mu, la, yld)); acc += (4 / 3) * np.pi * r ** 3; fails = 0
+                placed.append((p[0], p[1], p[2], r, mu, la, yld)); acc += vol(r); fails = 0
+                if small:
+                    grid.setdefault((int(p[0] / cell), int(p[1] / cell), int(p[2] / cell)), []).append(
+                        (p[0], p[1], p[2], r))
+                else:
+                    big.append((p[0], p[1], p[2], r))
             else:
                 fails += 1
     xs, mus, las, ylds = [], [], [], []
