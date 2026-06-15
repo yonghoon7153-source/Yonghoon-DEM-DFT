@@ -33,7 +33,7 @@
     "In2O3": {"r_A": 0.800, "site_all_x": "Li_24g",
       "x002": {"de_post_anneal_eV_atom": -0.668, "E_young_GPa": 45.4, "B0_GPa": 14.3, "G_hill_GPa": 18.9, "poisson_nu": 0.20, "bvs_li_proxy": 0.90, "score_combined": 0.55},
       "x005": {"de_post_anneal_eV_atom": -0.706, "E_young_GPa": 37.3, "B0_GPa": 17.4, "G_hill_GPa": 15.3, "poisson_nu": 0.22, "bvs_li_proxy": 0.89, "score_combined": 0.85},
-      "x010": {"_status": "PENDING (still running 2026-06-15 18:46)"}},
+      "x010": {"de_post_anneal_eV_atom": -0.620, "E_young_GPa": 43.0, "B0_GPa": 16.7, "G_hill_GPa": 17.8, "poisson_nu": 0.21, "bvs_li_proxy": 0.81, "score_combined": 0.71, "_note": "completed 2026-06-16; G_hill est from E/nu (isotropic), others direct from FINAL_RANKING. In2O3 series now complete: avg dE -0.665 (weakest of rare-earth/Sc/Y; group-13)."}},
     "Y2O3": {"r_A": 0.900, "site_all_x": "Li_24g",
       "x002": {"de_post_anneal_eV_atom": -0.915, "E_young_GPa": 57.5, "B0_GPa": 23.4, "G_hill_GPa": 23.4, "poisson_nu": 0.23, "bvs_li_proxy": 0.85, "score_combined": 0.69},
       "x005": {"de_post_anneal_eV_atom": -0.992, "E_young_GPa": 49.0, "B0_GPa": 19.3, "G_hill_GPa": 20.3, "poisson_nu": 0.21, "bvs_li_proxy": 0.91, "score_combined": 0.74},
@@ -69,7 +69,7 @@
   },
   "data_flags": {
     "Nd2O3_x002_elastic_fail": "E=110.9, G=61.9, nu=-0.10 (negative Poisson) -> elastic fit failure; exclude and refit.",
-    "In2O3_x010_pending": "Still running as of 2026-06-15 18:46.",
+    "In2O3_complete_2026_06_16": "All 3 x done. x010 dE -0.620/E43.0/score0.71 (weakest In2O3). M3+ trivalent series now COMPLETE (Al/Ga/Sc/In/Y/Gd/Sm/Nd/La x3, minus Nd x002 elastic-fail).",
     "Ga2O3_x005_low_nu": "nu=0.07 unusually low; verify.",
     "all_UMA": "No DFT yet. Top picks (Gd2O3, Y2O3, Sc2O3, Nd2O3) need same-protocol DFT before any Paper#3 mechanical/stability claim.",
     "snapshot_drift": "Sc2O3 x002 de shifted -0.974 (verified_json Jun-9) -> -0.934 (FINAL_RANKING Jun-15); use FINAL_RANKING as current."
