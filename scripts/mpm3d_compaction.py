@@ -138,7 +138,7 @@ def main(argv):
             gy = (np.arange(lo[1], hi[1]) + 0.5) / n_grid
             gz = (np.arange(lo[2], hi[2]) + 0.5) / n_grid
             X, Y, Z = np.meshgrid(gx, gy, gz, indexing='ij')
-            pin_np[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]][(X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr] = 1
+            pin_np[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]][(X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr] = int(amraw[_i, 0])
         se_target = AM_vol * args.se_frac / (1.0 - args.se_frac)   # SE volume to RSA-fill
         plan = [(r_se3, 1.0, MU_SE, LA_SE, YIELD_SE)]
     elif args.preset == 'real14':
@@ -417,6 +417,24 @@ def main(argv):
           f"porosity@target={por_target_str}{thick_str}   "
           f"[MPM, {comp.split()[0]}, {scaf}, n_grid={n_grid}, pts={n}, "
           f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}]")
+    if args.am_scaffold:
+        # COVERAGE: fraction of each AM-type surface (AM↔non-AM voxel interfaces) that faces SE
+        # (vs void).  The MPM SE plastically conforms to the AM, so this is the REAL coverage —
+        # validates the DEM coverage post-corrections (Hertz / Tabor-physics / B3 shape-corr).
+        xf = x.to_numpy()
+        ci = np.clip((xf * n_grid).astype(int), 0, n_grid - 1)
+        se_occ = np.zeros((n_grid,) * 3, bool)
+        se_occ[ci[:, 0], ci[:, 1], ci[:, 2]] = True
+        for t, nm in ((1, 'AM_P'), (2, 'AM_S')):
+            amt = (pin_np == t); tot = 0; cov = 0
+            for ax in range(3):
+                for s in (1, -1):
+                    iface = amt & (np.roll(pin_np, s, ax) == 0)   # AM_t voxel with a non-AM neighbour
+                    tot += int(iface.sum())
+                    cov += int((iface & np.roll(se_occ, s, ax)).sum())
+            if tot:
+                print(f"  coverage {nm} by SE = {100.0 * cov / tot:5.1f}%   "
+                      f"({cov:,}/{tot:,} surface voxels)")
     if args.save_se:
         np.save(args.save_se, x.to_numpy())                # final SE point cloud (morphology)
         print(f"  saved SE morphology → {args.save_se} ({n} pts)")
