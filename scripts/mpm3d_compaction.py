@@ -37,6 +37,13 @@ def parse_args(argv):
     ap.add_argument('--preset', default='none', choices=['none', 'real14'],
                     help='real14 = production input_real_14 (3-comp AM_P6/AM_S2/SE0.5um = 12:4:1, '
                          'actual vol AM:SE 73:27, 50um RVE → cross-validate porosity vs LIGGGHTS 15.6%)')
+    ap.add_argument('--am-scaffold', default='',
+                    help='CSV of fixed AM (type,x,y,z,r in LIGGGHTS 0..0.05 units): AM become a fixed '
+                         'grid obstacle and only SE is the MPM filler (real skeleton, no RSA AM, light)')
+    ap.add_argument('--save-se', default='', help='write final SE point positions (npy) for morphology')
+    ap.add_argument('--se-frac', type=float, default=0.27,
+                    help='scaffold SE volume fraction of SOLID (default 0.27 = real_14 actual; vary to '
+                         'see porosity respond — final porosity is a RESULT of plastic SE fill, not assumed)')
     ap.add_argument('--e-se', type=float, default=1.53, help='SE modulus (GPa); champion 1.53 (softened)')
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.30,
@@ -87,7 +94,37 @@ def main(argv):
     # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
     #    fine-grid, like the DEM — a uniform brute is O(N²) and stalls) ───────────
     rng = np.random.default_rng(args.seed)
-    if args.preset == 'real14':
+    am_c = None; am_r = None; AM_vol = 0.0; am_top = 0.0       # fixed-AM scaffold bookkeeping
+    if args.am_scaffold:
+        # DEM→MPM scaffold: real AM are FIXED (loaded from the LIGGGHTS dump) and become a grid
+        # obstacle; only SE is the MPM material, RSA-packed into the interstices to a target volume
+        # fraction.  The plate then plastically compacts the SE around the fixed real skeleton, so
+        # the porosity is a RESULT of the SE plastic fill (drops from the rigid-RSA value), not assumed.
+        SW = (0.04, 0.96); WIDTH = SW[1] - SW[0]; FLOOR = 0.05
+        amraw = np.loadtxt(args.am_scaffold, delimiter=',')
+        scl = WIDTH / 0.05                                     # box units per LIGGGHTS unit (50µm→WIDTH)
+        am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
+                                FLOOR + amraw[:, 3] * scl]).astype(np.float64)
+        am_r = (amraw[:, 4] * scl).astype(np.float64)
+        AM_vol = float(np.sum((4.0 / 3.0) * np.pi * am_r ** 3))
+        am_top = float((am_c[:, 2] + am_r).max())
+        WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01
+        r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
+        pin_np = np.zeros((n_grid,) * 3, np.int32)            # grid cells inside any fixed AM
+        for _i in range(len(am_r)):
+            cx, cy, cz = am_c[_i]; rr = float(am_r[_i])
+            lo = np.maximum(np.floor((np.array([cx, cy, cz]) - rr) * n_grid).astype(int), 0)
+            hi = np.minimum(np.ceil((np.array([cx, cy, cz]) + rr) * n_grid).astype(int), n_grid)
+            if np.any(hi <= lo):
+                continue
+            gx = (np.arange(lo[0], hi[0]) + 0.5) / n_grid
+            gy = (np.arange(lo[1], hi[1]) + 0.5) / n_grid
+            gz = (np.arange(lo[2], hi[2]) + 0.5) / n_grid
+            X, Y, Z = np.meshgrid(gx, gy, gz, indexing='ij')
+            pin_np[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]][(X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr] = 1
+        se_target = AM_vol * args.se_frac / (1.0 - args.se_frac)   # SE volume to RSA-fill
+        plan = [(r_se3, 1.0, MU_SE, LA_SE, YIELD_SE)]
+    elif args.preset == 'real14':
         # production input_real_14: 3-component AM_P 6µm + AM_S 2µm + SE 0.5µm (12:4:1),
         # 50×50µm RVE, ACTUAL voxel composition AM_P:AM_S:SE = 0.51:0.22:0.27 (AM:SE 73:27).
         # Map 50µm → the near-full lateral box; tall column for the loose bed.  SE material =
@@ -103,14 +140,21 @@ def main(argv):
     else:
         plan = [(args.r_am, am_frac, MU_AM, LA_AM, YIELD_AM),
                 (args.r_se, 1.0 - am_frac, MU_SE, LA_SE, YIELD_SE)]
-    fill_h = WALL0 - 0.03
+    fill_h = (am_top if args.am_scaffold else WALL0 - 0.03)
     box_vol = WIDTH * WIDTH * (fill_h - FLOOR)
-    target = args.init_solid * box_vol
+    target = (se_target if args.am_scaffold else args.init_solid * box_vol)
     vol = lambda r: (4.0 / 3.0) * np.pi * r ** 3           # noqa: E731
     plan = [pk for pk in plan if pk[1] > 1e-9]
     rmin = min(pk[0] for pk in plan)
     cell = 2.0 * rmin
     placed, big, grid = [], [], {}
+
+    def in_am(p):                                          # O(1) fixed-AM rejection via grid mask
+        if not args.am_scaffold:
+            return False
+        ii = min(int(p[0] * n_grid), n_grid - 1); jj = min(int(p[1] * n_grid), n_grid - 1)
+        kk = min(int(p[2] * n_grid), n_grid - 1)
+        return pin_np[ii, jj, kk] > 0
 
     def hits_big(p, r):
         for (qx, qy, qz, qr) in big:
@@ -134,7 +178,7 @@ def main(argv):
         while acc < goal and fails < 60000:
             p = (rng.uniform(SW[0] + r, SW[1] - r), rng.uniform(SW[0] + r, SW[1] - r),
                  rng.uniform(FLOOR + r, fill_h - r))
-            ok = (not hits_big(p, r)) and (not (small and hits_small(p, r)))
+            ok = (not in_am(p)) and (not hits_big(p, r)) and (not (small and hits_small(p, r)))
             if ok:
                 placed.append((p[0], p[1], p[2], r, mu, la, yld)); acc += vol(r); fails = 0
                 if small:
@@ -175,8 +219,8 @@ def main(argv):
         print("build failed (n<2) — raise --n-grid or --init-solid"); return
     mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
     pvs = np.concatenate(pv_list)
-    solid_vol = float(pvs.sum())                           # voxelized solid vol (Σ per-point vol) —
-    #   same convention as the old n·p_vol so the pure-SE 10% calibration is preserved
+    solid_vol = float(pvs.sum()) + AM_vol                  # voxelized SE vol (Σ per-point) + exact fixed-AM
+    #   vol.  Σ per-point matches the old n·p_vol so the pure-SE 10% calibration is preserved.
 
     x = ti.Vector.field(3, ti.f32, n); v = ti.Vector.field(3, ti.f32, n)
     C = ti.Matrix.field(3, 3, ti.f32, n); F = ti.Matrix.field(3, 3, ti.f32, n)
@@ -185,6 +229,10 @@ def main(argv):
     grid_v = ti.Vector.field(3, ti.f32, (n_grid,) * 3); grid_m = ti.field(ti.f32, (n_grid,) * 3)
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
+    scaffold_on = bool(args.am_scaffold)                        # fixed-AM grid obstacle (real skeleton)
+    am_mask = ti.field(ti.i32, (n_grid,) * 3 if scaffold_on else (1, 1, 1))
+    if scaffold_on:
+        am_mask.from_numpy(pin_np)                              # cells inside fixed AM (built in scaffold branch)
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(),
@@ -217,6 +265,9 @@ def main(argv):
         for I in ti.grouped(grid_m):
             if grid_m[I] > 0:
                 grid_v[I] /= grid_m[I]
+                if ti.static(scaffold_on):                              # fixed AM = rigid obstacle (v=0)
+                    if am_mask[I] > 0:
+                        grid_v[I] = ti.Vector.zero(ti.f32, 3)
                 i, j, k = I[0], I[1], I[2]
                 if k * dx < FLOOR and grid_v[I][2] < 0: grid_v[I][2] = 0.0
                 if k * dx > wall_z[None]:                                    # servo platen (rigid)
@@ -252,7 +303,8 @@ def main(argv):
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
-    comp = ("real14 (3-comp 12:4:1, AM:SE 73:27)" if args.preset == 'real14'
+    comp = (f"scaffold ({len(am_r)} fixed AM + SE se_frac={args.se_frac})" if args.am_scaffold
+            else "real14 (3-comp 12:4:1, AM:SE 73:27)" if args.preset == 'real14'
             else f"{args.material} (am_frac={am_frac})")
     if not args.quiet:
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {comp}  "
@@ -303,10 +355,14 @@ def main(argv):
                 print("  ✓ converged: σzz equilibrated at target")
             break
     por_target_str = f"{por_at_target:.2f}%" if por_at_target >= 0 else "n/a (target never reached)"
+    scaf = f"scaffold {len(am_r)}AM se_frac={args.se_frac}" if args.am_scaffold else f"am_frac={am_frac}"
     print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity(settled)={por_end:.2f}%  "
           f"porosity@target={por_target_str}   "
-          f"[MPM, {args.material}, am_frac={am_frac}, n_grid={n_grid}, pts={n}, "
+          f"[MPM, {comp.split()[0]}, {scaf}, n_grid={n_grid}, pts={n}, "
           f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}]")
+    if args.save_se:
+        np.save(args.save_se, x.to_numpy())                # final SE point cloud (morphology)
+        print(f"  saved SE morphology → {args.save_se} ({n} pts)")
 
 
 if __name__ == '__main__':
