@@ -317,7 +317,9 @@ function load2DViewer() {
     }
   };
   img.onerror = () => {
-    status.textContent = '2D 미세구조 생성 실패 — atoms.csv / 파라미터를 확인하세요.';
+    fetch(img.src).then(r => r.text().then(t =>
+      status.textContent = `2D 생성 실패 (HTTP ${r.status}): ${t.slice(0,200)}`))
+      .catch(() => status.textContent = '2D 미세구조 생성 실패 — atoms.csv / 파라미터를 확인하세요.');
     viewer2dLoaded = false;
   };
   let url = `/results/{{ case.id }}/2d-microstructure.png?v=${Date.now()}`;
@@ -349,7 +351,9 @@ function load2DAuto() {
       .then(j => { if (j) showAutoReport(j); });
   };
   img.onerror = () => {
-    status.textContent = '자동보정 실패 — atoms.csv / 파라미터를 확인하세요.';
+    fetch(img.src).then(r => r.text().then(t =>
+      status.textContent = `자동보정 실패 (HTTP ${r.status}): ${t.slice(0,200)}`))
+      .catch(() => status.textContent = '자동보정 실패 — atoms.csv / 파라미터를 확인하세요.');
   };
   img.src = `/results/{{ case.id }}/2d-auto.png?v=${Date.now()}&seed=${cur2dSeed}`;
 }
