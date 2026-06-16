@@ -34,6 +34,9 @@ def parse_args(argv):
     ap.add_argument('--n-grid', type=int, default=96)
     ap.add_argument('--material', default='SE', choices=['SE', 'mix'])
     ap.add_argument('--am-frac', type=float, default=0.0, help='AM volume fraction of SOLID (mix)')
+    ap.add_argument('--preset', default='none', choices=['none', 'real14'],
+                    help='real14 = production input_real_14 (3-comp AM_P6/AM_S2/SE0.5um = 12:4:1, '
+                         'actual vol AM:SE 73:27, 50um RVE → cross-validate porosity vs LIGGGHTS 15.6%)')
     ap.add_argument('--e-se', type=float, default=1.53, help='SE modulus (GPa); champion 1.53 (softened)')
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.30,
@@ -84,12 +87,26 @@ def main(argv):
     # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
     #    fine-grid, like the DEM — a uniform brute is O(N²) and stalls) ───────────
     rng = np.random.default_rng(args.seed)
+    if args.preset == 'real14':
+        # production input_real_14: 3-component AM_P 6µm + AM_S 2µm + SE 0.5µm (12:4:1),
+        # 50×50µm RVE, ACTUAL voxel composition AM_P:AM_S:SE = 0.51:0.22:0.27 (AM:SE 73:27).
+        # Map 50µm → the near-full lateral box; tall column for the loose bed.  SE material =
+        # our MPM calibration (defaults E=1.53/ν=0.49/σy=0.30), AM ~rigid — NOT the LIGGGHTS
+        # DEM contact params (frame [4]: each model calibrated to experiment independently).
+        SW = (0.02, 0.98); WIDTH = SW[1] - SW[0]
+        FLOOR = 0.05; WALL0 = 0.90; WALL_MIN = 0.055
+        scl = WIDTH / 50.0                                  # box units per µm
+        r_amp, r_ams, r_se3 = 6.0 * scl, 2.0 * scl, 0.5 * scl
+        plan = [(r_amp, 0.51, MU_AM, LA_AM, YIELD_AM),
+                (r_ams, 0.22, MU_AM, LA_AM, YIELD_AM),
+                (r_se3, 0.27, MU_SE, LA_SE, YIELD_SE)]
+    else:
+        plan = [(args.r_am, am_frac, MU_AM, LA_AM, YIELD_AM),
+                (args.r_se, 1.0 - am_frac, MU_SE, LA_SE, YIELD_SE)]
     fill_h = WALL0 - 0.03
     box_vol = WIDTH * WIDTH * (fill_h - FLOOR)
     target = args.init_solid * box_vol
     vol = lambda r: (4.0 / 3.0) * np.pi * r ** 3           # noqa: E731
-    plan = [(args.r_am, am_frac, MU_AM, LA_AM, YIELD_AM),
-            (args.r_se, 1.0 - am_frac, MU_SE, LA_SE, YIELD_SE)]
     plan = [pk for pk in plan if pk[1] > 1e-9]
     rmin = min(pk[0] for pk in plan)
     cell = 2.0 * rmin
@@ -226,10 +243,12 @@ def main(argv):
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
+    comp = ("real14 (3-comp 12:4:1, AM:SE 73:27)" if args.preset == 'real14'
+            else f"{args.material} (am_frac={am_frac})")
     if not args.quiet:
-        print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {args.material} "
-              f"(am_frac={am_frac})  E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} "
-              f"K_SE={K_SE:.2f}GPa  target={target} GPa  readout={args.readout}")
+        print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {comp}  "
+              f"E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} K_SE={K_SE:.2f}GPa  "
+              f"target={target} GPa  readout={args.readout}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
