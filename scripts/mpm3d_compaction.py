@@ -172,53 +172,76 @@ def main(argv):
                             return True
         return False
 
-    for (r, frac, mu, la, yld) in plan:
-        goal = frac * target; acc = 0.0; fails = 0
-        small = r <= 1.5 * rmin
-        while acc < goal and fails < 60000:
-            p = (rng.uniform(SW[0] + r, SW[1] - r), rng.uniform(SW[0] + r, SW[1] - r),
-                 rng.uniform(FLOOR + r, fill_h - r))
-            ok = (not in_am(p)) and (not hits_big(p, r)) and (not (small and hits_small(p, r)))
-            if ok:
-                placed.append((p[0], p[1], p[2], r, mu, la, yld)); acc += vol(r); fails = 0
-                if small:
-                    grid.setdefault((int(p[0] / cell), int(p[1] / cell), int(p[2] / cell)), []).append(
-                        (p[0], p[1], p[2], r))
+    if args.am_scaffold:
+        # ── SE as a CONTINUUM filling the interstitial cells to the target volume fraction
+        #    ("grid SE"): fill a se_target/interstitial-vol fraction of the non-AM bed cells,
+        #    8 points/cell (dx/2 voxel).  Guarantees the SE volume (porosity becomes a result
+        #    of plastic fill, not RSA-packing-limited). ───────────────────────────────────
+        spc = dx * 0.5
+        i0 = int(SW[0] * n_grid) + 1; i1 = int(SW[1] * n_grid)
+        k0 = int(FLOOR * n_grid) + 1; k1 = int(am_top * n_grid)
+        free = pin_np[i0:i1, i0:i1, k0:k1] == 0             # interstitial (non-AM) cells in the bed box
+        inter = np.argwhere(free) + np.array([i0, i0, k0])  # global cell indices [M,3]
+        inter_vol = len(inter) * dx ** 3
+        prob = min(1.0, se_target / max(inter_vol, 1e-12))
+        sel = inter[rng.random(len(inter)) < prob]          # cells to fill with SE [K,3]
+        subo = np.array([[a, b, c] for a in (0.25, 0.75) for b in (0.25, 0.75)
+                         for c in (0.25, 0.75)]) * dx       # 8 sub-positions per cell
+        xs = ((sel[:, None, :] * dx) + subo[None]).reshape(-1, 3).astype(np.float32)
+        n = len(xs)
+        if n < 2:
+            print("scaffold build failed (n<2) — check --am-scaffold / --se-frac"); return
+        mus = np.full(n, MU_SE, np.float32); las = np.full(n, LA_SE, np.float32)
+        ylds = np.full(n, YIELD_SE, np.float32); pvs = np.full(n, spc ** 3, np.float32)
+        print(f"  scaffold: {len(am_r)} fixed AM + {len(sel):,} SE cells ({n:,} pts), "
+              f"interstitial fill {prob*100:.0f}%  (se_frac target {args.se_frac})")
+    else:
+        for (r, frac, mu, la, yld) in plan:
+            goal = frac * target; acc = 0.0; fails = 0
+            small = r <= 1.5 * rmin
+            while acc < goal and fails < 60000:
+                p = (rng.uniform(SW[0] + r, SW[1] - r), rng.uniform(SW[0] + r, SW[1] - r),
+                     rng.uniform(FLOOR + r, fill_h - r))
+                ok = (not in_am(p)) and (not hits_big(p, r)) and (not (small and hits_small(p, r)))
+                if ok:
+                    placed.append((p[0], p[1], p[2], r, mu, la, yld)); acc += vol(r); fails = 0
+                    if small:
+                        grid.setdefault((int(p[0] / cell), int(p[1] / cell), int(p[2] / cell)), []).append(
+                            (p[0], p[1], p[2], r))
+                    else:
+                        big.append((p[0], p[1], p[2], r))
                 else:
-                    big.append((p[0], p[1], p[2], r))
-            else:
-                fails += 1
-    # ── voxelize spheres into material points (numpy-vectorized: per-radius in-sphere
-    #    offset template × particle centers, broadcast + chunked).  Replaces the old
-    #    per-point O(N·k³) Python triple loop that took minutes at n_grid≥512. ────────
-    placed_arr = np.asarray(placed, np.float64)            # [N,7] cx,cy,cz,r,mu,la,yld
-    xs_list, mu_list, la_list, yld_list, pv_list = [], [], [], [], []
-    for r in np.unique(placed_arr[:, 3]):
-        grp = placed_arr[placed_arr[:, 3] == r]
-        mu_v, la_v, yld_v = grp[0, 4], grp[0, 5], grp[0, 6]
-        spc = dx if yld_v > 100.0 else dx * 0.5            # AM (rigid, high yld) coarse; SE fine
-        pvg = spc ** 3                                     # per-point volume (= mass, ρ=1) for this group
-        k = int(r / spc) + 1
-        ax = np.arange(-k, k + 1) * spc
-        ox, oy, oz = np.meshgrid(ax, ax, ax, indexing='ij')
-        off = np.stack([ox.ravel(), oy.ravel(), oz.ravel()], 1)
-        off = off[(off ** 2).sum(1) <= r * r]              # in-sphere offsets [Pin,3]
-        centers = grp[:, :3]
-        chunk = max(1, 16_000_000 // max(1, off.shape[0]))  # cap broadcast intermediate
-        for s in range(0, len(centers), chunk):
-            pts = (centers[s:s + chunk, None, :] + off[None]).reshape(-1, 3)
-            m = pts.shape[0]
-            xs_list.append(pts.astype(np.float32))
-            mu_list.append(np.full(m, mu_v, np.float32))
-            la_list.append(np.full(m, la_v, np.float32))
-            yld_list.append(np.full(m, yld_v, np.float32))
-            pv_list.append(np.full(m, pvg, np.float32))
-    xs = np.concatenate(xs_list)
-    n = len(xs)
-    if n < 2:
-        print("build failed (n<2) — raise --n-grid or --init-solid"); return
-    mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
-    pvs = np.concatenate(pv_list)
+                    fails += 1
+        # ── voxelize spheres into material points (numpy-vectorized: per-radius in-sphere
+        #    offset template × particle centers, broadcast + chunked). ──────────────────
+        placed_arr = np.asarray(placed, np.float64)        # [N,7] cx,cy,cz,r,mu,la,yld
+        xs_list, mu_list, la_list, yld_list, pv_list = [], [], [], [], []
+        for r in np.unique(placed_arr[:, 3]):
+            grp = placed_arr[placed_arr[:, 3] == r]
+            mu_v, la_v, yld_v = grp[0, 4], grp[0, 5], grp[0, 6]
+            spc = dx if yld_v > 100.0 else dx * 0.5        # AM (rigid, high yld) coarse; SE fine
+            pvg = spc ** 3                                 # per-point volume (= mass, ρ=1) for this group
+            k = int(r / spc) + 1
+            ax = np.arange(-k, k + 1) * spc
+            ox, oy, oz = np.meshgrid(ax, ax, ax, indexing='ij')
+            off = np.stack([ox.ravel(), oy.ravel(), oz.ravel()], 1)
+            off = off[(off ** 2).sum(1) <= r * r]          # in-sphere offsets [Pin,3]
+            centers = grp[:, :3]
+            chunk = max(1, 16_000_000 // max(1, off.shape[0]))
+            for s in range(0, len(centers), chunk):
+                pts = (centers[s:s + chunk, None, :] + off[None]).reshape(-1, 3)
+                m = pts.shape[0]
+                xs_list.append(pts.astype(np.float32))
+                mu_list.append(np.full(m, mu_v, np.float32))
+                la_list.append(np.full(m, la_v, np.float32))
+                yld_list.append(np.full(m, yld_v, np.float32))
+                pv_list.append(np.full(m, pvg, np.float32))
+        xs = np.concatenate(xs_list)
+        n = len(xs)
+        if n < 2:
+            print("build failed (n<2) — raise --n-grid or --init-solid"); return
+        mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
+        pvs = np.concatenate(pv_list)
     solid_vol = float(pvs.sum()) + AM_vol                  # voxelized SE vol (Σ per-point) + exact fixed-AM
     #   vol.  Σ per-point matches the old n·p_vol so the pure-SE 10% calibration is preserved.
 
