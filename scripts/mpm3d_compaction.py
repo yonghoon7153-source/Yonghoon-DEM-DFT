@@ -357,11 +357,14 @@ def main(argv):
         if frame == 0:
             por0 = por
         # servo platen to target σzz (descend until target, then fine bidirectional).
-        # arm-after-compaction guard: a big rigid AM hitting the platen on first contact
-        # spikes wallP transiently; refuse to stop until the bed has actually compacted
-        # (por ≤ por0 − 5 %p), else the servo arms prematurely and crawls (under-compacts).
+        # arm-after-compaction guard: a big rigid AM (preset/mix, AM = MATERIAL) hitting the
+        # platen on first contact spikes wallP transiently → refuse to stop until the bed has
+        # actually compacted (por ≤ por0 − 5 %p).  The scaffold (AM = fixed grid mask) has NO
+        # such transient, and the guard there forces a 5 %p over-descent regardless of stress,
+        # which OVER-COMPRESSES dense (high se_frac) beds → disable it for the scaffold.
         if not reached:
-            if p < target or por > por0 - 5.0:
+            guard = (por > por0 - 5.0) and not args.am_scaffold
+            if p < target or guard:
                 wall_vel[None] = -vmax / (args.sub * dt)
                 wall_z[None] = max(WALL_MIN, wall_z[None] - vmax)
             else:
