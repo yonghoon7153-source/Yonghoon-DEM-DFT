@@ -578,6 +578,16 @@
       "ewald": -1443.32148055,
       "hubbard": 0.04317738,
       "paw_one_center": -887.97436303
+    },
+    "pdos_Nd_4f": {
+      "n_pdos_files": 4,
+      "EF_eV": 4.0133,
+      "occupied_4f_peak_E_minus_EF_eV": -7.4,
+      "weight_near_EF_pm1eV": 0.02,
+      "weight_conduction_EF_plus1to3": 10.945,
+      "CONCLUSION": "Nd 4f produces NO in-gap defect states. DFT+U(8.0) pushes occupied 4f ~7.4 eV below E_F (deep valence) and empty 4f manifold to conduction (+1..+3 eV); gap region (E_F±1 eV) has negligible 4f weight (0.020). => Nd doping does not introduce 4f-derived electronic conductivity; ionic conductivity safe from 4f perspective. Consistent with localized 4f moments (abs mag 6.29 uB AFM).",
+      "paper2_use": "slide 22 Nd line + paper #2: 'Nd 4f states sit deep in valence / high in conduction, not in the gap — electronically benign dopant.'",
+      "source": "projwfc PDOS (Jun 15, 301 files), k441 champion, summed Nd1/Nd2 f-projectors"
     }
   }
 }
