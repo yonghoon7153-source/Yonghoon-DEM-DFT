@@ -447,6 +447,45 @@ each calibrated to EXPERIMENT, never to each other.)
     force-chain gone) but NOT the dip/trend.  Tools added: --nu-se, --hard-se,
     --sweep (scripts/mpm_dem_match.py).
 
+### ★ 3D MPM compaction — 3-fix calibration + pure-SE Minnmann + composite (2026-06-16) ★
+Built/calibrated the production 3D MPM `scripts/mpm3d_compaction.py` (MLS-MPM, von
+Mises J2, GPU/Taichi) — the 3D companion to the 2D champion.  Full record:
+`docs/mpm3d_calibration.md`.  Anchors are OURS (Minnmann pure-SE ~10 % @ 300 MPa; our
+rigid 3D DEM composite 36–41 %; de Larrard ~20 %), NOT the EA review paper.
+Production LOCKED defaults: **E_SE=1.53, ν_SE=0.49, σ_y=0.30, target=0.30 GPa,
+readout=wallP**.
+- First GPU runs over-compressed pure-SE to **0 %**.  THREE independent fixes:
+  (1) **wallP readout** = platen reaction Σ m·(v−v_wall)/(dt·area) (boundary force
+      balance, resolution-invariant, true BC) replaces the volume-mean σzz, which is
+      resolution-biased — direct proof: once dense, wallP=1.08 GPa vs volume-mean
+      σzz=0.09 (12× dilution).  `--readout sigzz` keeps the old one; both printed.
+      (At static settling wallP→0 — use the porosity@target readout.)
+  (2) **ν_SE=0.49 (stiff bulk)** — the 18× E softening softened the BULK too (ν=0.30→
+      K=1.27 GPa → ~20 % volumetric over-crush → 0 %).  ν=0.49 → **K=25.5 GPa ≈ real
+      LPSC bulk (24)**, μ=0.51 GPa soft shear = volume-preserving granular flow.
+      ν-sweep: 0.45 (K=5.1)→0.00 %, 0.49 (K=25.5)→6.3 % ✓.  3D mirror of the 2D
+      CORRECTION 1: only SHEAR softening is the granular proxy, bulk-softening was a
+      side effect; SE bulk should be REAL.
+  (3) **servo arm-after-compaction guard** (por≤por0−5 %p) — a big rigid AM hitting the
+      platen on first contact spikes wallP → premature arm → crawl → under-compact
+      (40 %).  Guard ignores the transient; descend continues to the real target.
+      Added porosity@target (porosity when target stress FIRST reached, overshoot-proof).
+- **pure-SE calibration ✓** (ν=0.49, σ_y sweep, settled): 0.15→5.6 / 0.20→6.7 /
+  0.25→9.0 / **0.30→10.0 %** = Minnmann 300→10 %.  σ_y=0.30 = top of LPSC lit range.
+  3D needs stiffer shear than the 2D champion (0.15) — extra flow direction densifies
+  more (geometric 2D↔3D, not a model change).  At ν=0.49 wallP≈volume-mean σzz (uniform
+  internal stress when incompressible) → readout question closed.
+- **composite** (ν=0.49, σ_y=0.30, sizes 2.5:1, settled): am_frac 0.5→**27.6 %**,
+  0.6→**33.2 %**.  TREND ✓ (50<60, more SSE denser).  **plastic < rigid 3D DEM**
+  (27.6 vs 36) → plastic void-fills ~8–10 %p the rigid sphere can't (DEM↔MPM gap
+  quantified).  BUT absolute still high, dominated by the **size ratio** not plasticity:
+  2.5:1 (default) ≪ real 12:4:1 → small SE can't reach the AM interstices; real ratio
+  unresolvable at n_grid=256 (SE <1 cell).  Frame [5]: composite absolute porosity =
+  geometric packing (real sizes, de Larrard/DEM) × plastic flow (MPM); neither half
+  alone hits the dense composite.  → MPM owns the plastic densification increment +
+  composition trend; composite ABSOLUTE stays with de Larrard/DEM.  DON'T chase the
+  composite absolute with the resolved-grain MPM — packing-limited, not a plasticity limit.
+
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete
