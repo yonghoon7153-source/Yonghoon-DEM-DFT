@@ -561,6 +561,8 @@
     "_CONCLUSION": "k441 = k661 to 4e-8 Ry/atom (effectively identical). **Nd EOS chain can use k441** — k661 unnecessary, large cost saving. k-conv criterion (<1 meV/atom) passed by 5 orders of magnitude.",
     "compute": "KISTI Neuron amd_a100nv_8, job 766470 (short 4h backfill, did not preempt b2o3_eos 762968), GPU 1x, 7 iter restart from existing charge density",
     "files": "scf_k441.{in,out} at /scratch/x3430a02/kgy/nd_doped_modelc/3_dft_eos_v7/pair01_pair_00_reference_1_82/v0_champion (to be archived in db/raw/nd_pair01/)",
-    "TODO": "force/stress not confirmed in k441.out (check tprnfor/tstress); EOS 11-pt chain at k441 next"
+    "TODO": "EOS 11-pt chain at k441 (k661 confirmed unnecessary); archive scf_k441.{in,out} to db/raw/nd_pair01/",
+    "tprnfor_tstress": ".true. (both enabled in scf_k441.in)",
+    "force_stress_note": "Earlier k441 run gave Total force 0.014 Ry/bohr, P=0.53 kbar (0.05 GPa) — V0 champion at mechanical equilibrium, confirms EOS V0. SCF correction vs forces flagged large (energy-grade conv_thr; tighten if force-based analysis needed). The 7-iter restart run reported here may have ended before re-printing force/stress block."
   }
 }
