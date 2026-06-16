@@ -88,3 +88,17 @@
 - [ ] Nd SCF CPU 빌드 launcher (별도 명령, 이 세션 회신에 포함)
 - [ ] Headline 표 (slide 7) 영어 표 확정판 검수 — 회전 라벨 오타 수정 후
 - [ ] Slide 8–11 (M1–M4 본문) 템플릿 변환
+
+## ⚠ KISTI sbatch JobName 규칙 (정정 2026-06-16)
+
+**모든 KISTI sbatch는 `#SBATCH -J llm_finetuning_test`로 지을 것.**
+- 0611 노트에서 "JobName=llm_finetuning_test는 템플릿 잔재"라고 적은 건 **오해**였음 —
+  실제로는 KISTI 큐 정책이 이 이름을 요구/기대하는 것 (자유 이름 `nd_k441_short` 등은 지양).
+- `--comment qe` directive도 필수 (없으면 제출 거부, 앱 종류 명시).
+- 따라서 향후 Nd EOS / B₂O₃ 등 모든 KISTI 잡:
+  ```
+  #SBATCH -J llm_finetuning_test
+  #SBATCH --comment qe
+  #SBATCH -p amd_a100nv_8
+  ```
+- 짧은 walltime(4h) backfill 트릭은 유효 (766470이 priority 40으로도 b2o3 762968 안 밀고 먼저 시작).
