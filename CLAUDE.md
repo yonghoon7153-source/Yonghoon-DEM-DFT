@@ -486,6 +486,40 @@ readout=wallP**.
   composition trend; composite ABSOLUTE stays with de Larrard/DEM.  DON'T chase the
   composite absolute with the resolved-grain MPM — packing-limited, not a plasticity limit.
 
+### ★ DEM→MPM SCAFFOLD + cross-validation + frame[5] capability division (2026-06-16) ★
+SOLVES the composite-absolute problem by COUPLING (not the resolved-grain MPM alone).
+Full record: `docs/mpm3d_calibration.md`.  Take the REAL AM positions from the production
+LIGGGHTS dump (input_real_14 → `docs/data/real14_am_scaffold.csv`, 36 AM_P + 421 AM_S, the
+300-MPa-compacted final skeleton), FIX them as a grid obstacle (`--am-scaffold`, am_mask
+pins v=0, NO AM material points → no OOM/CFL, exact geometry), and make SE the only MPM
+material — cell-filled to a target φ (`--se-frac`, "grid SE") then plastically compacted.
+AM packing = DEM's strength, SE morphology = MPM's strength.  DON'T unfreeze the AM:
+(1) the dump AM are already the real 300-MPa equilibrium (unfreezing drifts off the
+measured skeleton); (2) mobile rigid-AM re-introduces over-shielding (force chains shield
+the SE = the 36–41 % problem); (3) fixing forces the SE to bear the load and densify.
+- **CROSS-VALIDATION (n_grid=384, se_frac=0.27, servo, coh=0)**: porosity **16.7 % vs
+  LIGGGHTS 15.6 %**; thickness **30.7 vs 30.28 µm**; **Tabor coverage AM_P/S 49.6/48.2 %
+  vs DEM Physics 48.3/51.8 %** ✓ (Hertz 18 % confirmed too low).  Two independently-
+  calibrated models (DEM E=1.35 hooke/hysteresis+adhesion+StageE vs MPM E=1.53 J2, both
+  anchored only to Minnmann, never each other — frame[4]) AGREE on porosity·thickness·
+  mechanical-coverage.  The Minnmann pure-SE anchor (10 % @300) TRANSFERS to the composite.
+  MPM value is the more physically-grounded (real plastic void-fill, not overlap-proxy).
+- se_frac→porosity MONOTONE (user hypothesis ✓): 0.20→21.3 / 0.27→16.7 / 0.35→7.1 %.
+  cell-fill 24.84 % → 16.7 % = −8.2 %p plastic densification (MPM-only).  B3 surface-
+  roughness coverage = TRANSPORT-only correction the smooth-sphere MPM correctly ignores.
+- REAL-PHYSICS knobs (not target fudges): `--protocol {servo=const-pressure dwell ≈ real
+  press, hold=LIGGGHTS displacement-stop+relax}`, `--coh` (SE cold-weld+vdW adhesion).
+  Residual MPM-vs-LIGGGHTS gap is mostly sub-cell-gap RESOLUTION, not missing physics.
+  Fixed gotchas: arm-guard off for scaffold (over-compressed dense beds), CFL-safe dt +
+  boundary clamp (AM-as-material preset blew up at n_grid≥384), thickness printed in µm.
+- **Frame[5] capability division (concrete)**:  DEM-only = σ_ionic/e/thermal (Kirchhoff),
+  percolation, coordination, tortuosity, fracture (Auerbach), force-chains, conduction
+  coverage (Tabor+B3), AM packing/Furnas-dip.  BOTH (independent cross-check) = porosity,
+  thickness, Tabor/mechanical coverage, stress, composition, composition→porosity trend.
+  MPM-only = SE plastic morphology, plastic-strain field (degradation onset), void-fill
+  mechanism, spatial stress/strain/density fields, SE bridge channel-width, pore-location
+  map.  COUPLING = scaffold.  Viz: `scripts/viz_mpm_morphology.py` (x-z slice: AM+SE+void).
+
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete

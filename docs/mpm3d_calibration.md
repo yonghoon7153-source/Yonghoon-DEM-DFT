@@ -148,7 +148,69 @@ NB the n_grid≥512 build is bottlenecked by the pure-Python material-point gene
 - The MPM's deliverables here: pure-SE Minnmann anchor + the plastic-vs-rigid
   densification increment + the composition trend (50<60).  Transport σ stays with DEM.
 
+## ★ DEM→MPM scaffold + cross-validation on real_14 (2026-06-16) ★
+The composite-absolute problem (the resolved-grain MPM can't pack rigid AM → over-
+shielding; the AM 12:4:1 voxelised as material OOMs/CFL-blows) is solved by COUPLING:
+take the REAL AM positions from the production LIGGGHTS dump (input_real_14, atom dump
+→ `docs/data/real14_am_scaffold.csv`, 36 AM_P + 421 AM_S, the 300-MPa-compacted final
+skeleton) and FIX them as a grid obstacle (`--am-scaffold`, am_mask pins v=0, NO AM
+material points → no OOM/CFL, exact real geometry).  SE is the only MPM material,
+cell-filled into the interstices to a target volume fraction (`--se-frac`, "grid SE"),
+then plastically compacted.  AM-packing = DEM/experiment's strength; SE-morphology =
+MPM's strength → scaffold uses each where it wins (frame [5]).
+
+WHY fix the AM (not let them move): (1) the dump AM are already the real 300-MPa
+equilibrium — unfreezing drifts them off the measured skeleton; (2) mobile rigid-AM
+material re-introduces over-shielding (force chains shield the SE, the 36–41 % problem);
+(3) AM discrete packing is DEM's domain, SE continuum morphology is MPM's.  Fixing forces
+the SE to bear the full load and actually densify.
+
+CROSS-VALIDATION (n_grid=384, se_frac=0.27 = real, servo bidirectional, coh=0):
+  • **porosity 16.7 %** vs LIGGGHTS production DEM **15.6 %**  (within ~1 %p)
+  • **thickness ~30.7 µm** vs LIGGGHTS **30.28 µm**  (consistent: MPM 1 %p less compacted
+    → slightly thicker, slightly more porous)
+  • **coverage (Tabor) AM_P 49.6 / AM_S 48.2 %** vs DEM Physics/Tabor **48.3 / 51.8 %** ✓
+    (and Hertz point-contact 18 % confirmed too low; B3 surface-roughness 34/47 % is a
+    TRANSPORT-only correction the smooth-sphere MPM correctly ignores — frame [5]).
+Two INDEPENDENTLY-calibrated models (DEM E=1.35 hooke/hysteresis+adhesion+Stage-E vs MPM
+E=1.53 J2, both anchored only to Minnmann/cold-press, never to each other — frame [4])
+agree on porosity, thickness AND mechanical coverage.  The MPM value is the more
+physically-grounded one (real plastic void-fill, not the DEM's overlap-proxy+corrections),
+and the pure-SE Minnmann anchor (10 % @ 300 MPa) TRANSFERS to the composite (16.7 ≈ 15.6).
+
+se_frac → porosity (monotone, the user's hypothesis): 0.20→21.3 / 0.27→16.7 / 0.35→7.1 %.
+Initial cell-fill 24.84 % → compacted 16.7 % = the −8.2 %p plastic densification (MPM-only).
+
+REAL-PHYSICS knobs (not target fudges): `--protocol {servo,hold}` (servo = constant-
+pressure dwell ≈ real press; hold = LIGGGHTS displacement-stop+relax), `--coh` (SE
+cohesion: cold-weld+vdW, attractive σ in compression → densifies; the residual MPM-vs-
+LIGGGHTS gap is mostly a sub-cell-gap RESOLUTION effect, not missing physics).
+GOTCHAs fixed: arm-guard over-compresses dense scaffold beds (disabled for scaffold);
+boundary clamp + CFL-safe dt (AM-as-material preset blew up at n_grid≥384); thickness
+printed in µm (wall_z is normalized box units — looked off vs 30.3 µm but agrees).
+
+## ★ Frame [5] capability division — DEM | both | MPM (concrete, this session) ★
+DEM-only (discrete particle = node/edge; the continuum MPM has no contacts):
+  σ_ionic/e/thermal (Kirchhoff), percolation, coordination z, tortuosity (Dijkstra/
+  Laplace), fracture (Auerbach P_c, F/P_c), force chains + constriction (Holm),
+  conduction coverage (Tabor + B3 roughness), AM packing geometry (Furnas dip, jamming).
+BOTH → independent cross-validation (compute the same quantity DIFFERENT ways):
+  pure-SE porosity 10 % @300 MPa (fully independent) · composite porosity 15.6 ≈ 16.7 % ·
+  thickness 30.3 ≈ 30.7 µm · Tabor/mechanical coverage 48 ≈ 49.6 % · stress (DEM per-
+  particle σ_VM ↔ MPM continuum field) · composition φ_SE · composition→porosity trend.
+MPM-only (continuum plastic field; rigid-sphere DEM deforms 0):
+  SE plastic shape-flow/morphology (SEM-match), accumulated plastic-strain field (chemo-
+  mech degradation onset), volume-preserving void-fill (the densification MECHANISM),
+  spatial stress/strain/density fields, SE bridge channel-width (ionic bottleneck geometry),
+  pore-location map.
+COUPLING = scaffold: DEM/experiment AM packing → fix in MPM → SE plastic fill → real
+composite porosity·coverage·morphology.  → DEM = TRANSPORT + discrete packing/fracture;
+MPM = SE plastic morphology/strain/stress fields; both = porosity·thickness·Tabor-coverage
+(independent check); scaffold = combine each at its strength.
+
 ## Tooling (scripts/mpm3d_compaction.py)
 `--readout {wallP,sigzz}`, `--nu-se`, `--sigma-y`, `--am-frac`, `--n-grid`,
-two-tier RSA build, MLS-MPM J2 return map, servo (descend + arm-guard + fine
-bidirectional), wallP reaction accumulator, `porosity@target` capture.
+`--am-scaffold` (+`--se-frac`/`--coh`/`--protocol`/`--save-se`), two-tier RSA / cell-fill
+build, per-point pvol (coarse rigid-AM), MLS-MPM J2 return map, servo (descend + arm-guard
+[off for scaffold] + bidirectional / hold), wallP reaction, `porosity@target`, thickness
+(µm), per-type AM coverage.  Morphology viz: `scripts/viz_mpm_morphology.py`.
