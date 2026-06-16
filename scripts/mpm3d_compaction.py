@@ -71,8 +71,8 @@ def main(argv):
 
     n_grid = args.n_grid
     dx = 1.0 / n_grid; inv_dx = float(n_grid)
-    dt = args.dt
-    p_vol = (dx * 0.5) ** 3; p_mass = p_vol * 1.0
+    dt = args.dt                                           # per-point p_vol/p_mass (set in build):
+    #   soft SE → fine voxelization (dx/2), rigid AM → coarse (dx) to cap memory at 12:1 ratio
     def lame(E, nu):
         return E / (2 * (1 + nu)), E * nu / ((1 + nu) * (1 - 2 * nu))
     MU_SE, LA_SE = lame(args.e_se, args.nu_se); MU_AM, LA_AM = lame(args.e_am, 0.30)
@@ -148,12 +148,14 @@ def main(argv):
     #    offset template × particle centers, broadcast + chunked).  Replaces the old
     #    per-point O(N·k³) Python triple loop that took minutes at n_grid≥512. ────────
     placed_arr = np.asarray(placed, np.float64)            # [N,7] cx,cy,cz,r,mu,la,yld
-    xs_list, mu_list, la_list, yld_list = [], [], [], []
+    xs_list, mu_list, la_list, yld_list, pv_list = [], [], [], [], []
     for r in np.unique(placed_arr[:, 3]):
         grp = placed_arr[placed_arr[:, 3] == r]
         mu_v, la_v, yld_v = grp[0, 4], grp[0, 5], grp[0, 6]
-        k = int(r / (dx * 0.5)) + 1
-        ax = np.arange(-k, k + 1) * (dx * 0.5)
+        spc = dx if yld_v > 100.0 else dx * 0.5            # AM (rigid, high yld) coarse; SE fine
+        pvg = spc ** 3                                     # per-point volume (= mass, ρ=1) for this group
+        k = int(r / spc) + 1
+        ax = np.arange(-k, k + 1) * spc
         ox, oy, oz = np.meshgrid(ax, ax, ax, indexing='ij')
         off = np.stack([ox.ravel(), oy.ravel(), oz.ravel()], 1)
         off = off[(off ** 2).sum(1) <= r * r]              # in-sphere offsets [Pin,3]
@@ -166,25 +168,31 @@ def main(argv):
             mu_list.append(np.full(m, mu_v, np.float32))
             la_list.append(np.full(m, la_v, np.float32))
             yld_list.append(np.full(m, yld_v, np.float32))
+            pv_list.append(np.full(m, pvg, np.float32))
     xs = np.concatenate(xs_list)
     n = len(xs)
     if n < 2:
         print("build failed (n<2) — raise --n-grid or --init-solid"); return
     mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
+    pvs = np.concatenate(pv_list)
+    solid_vol = float(pvs.sum())                           # voxelized solid vol (Σ per-point vol) —
+    #   same convention as the old n·p_vol so the pure-SE 10% calibration is preserved
 
     x = ti.Vector.field(3, ti.f32, n); v = ti.Vector.field(3, ti.f32, n)
     C = ti.Matrix.field(3, 3, ti.f32, n); F = ti.Matrix.field(3, 3, ti.f32, n)
     mu_p = ti.field(ti.f32, n); la_p = ti.field(ti.f32, n); yld_p = ti.field(ti.f32, n)
+    pvol_p = ti.field(ti.f32, n)                                # per-point volume (= mass, ρ=1)
     grid_v = ti.Vector.field(3, ti.f32, (n_grid,) * 3); grid_m = ti.field(ti.f32, (n_grid,) * 3)
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
 
     @ti.kernel
-    def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(), ys: ti.types.ndarray()):
+    def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(),
+             ys: ti.types.ndarray(), pv: ti.types.ndarray()):
         for p in range(n):
             x[p] = ti.Vector([xy[p, 0], xy[p, 1], xy[p, 2]]); v[p] = ti.Vector([0.0, 0.0, 0.0])
             C[p] = ti.Matrix.zero(ti.f32, 3, 3); F[p] = ti.Matrix.identity(ti.f32, 3)
-            mu_p[p] = ms[p]; la_p[p] = ls[p]; yld_p[p] = ys[p]
+            mu_p[p] = ms[p]; la_p[p] = ls[p]; yld_p[p] = ys[p]; pvol_p[p] = pv[p]
 
     @ti.kernel
     def substep():
@@ -199,12 +207,13 @@ def main(argv):
             P = (2 * mu_p[p] * (F[p] - U @ V.transpose()) @ F[p].transpose()
                  + ti.Matrix.identity(ti.f32, 3) * la_p[p] * J * (J - 1))     # Kirchhoff τ = Jσ
             szz[None] += -P[2, 2] / J                                         # -σzz = compressive axial pressure (GPa)
-            st = (-dt * p_vol * 4 * inv_dx * inv_dx) * P; affine = st + p_mass * C[p]
+            pm = pvol_p[p]                                                    # per-point vol = mass (ρ=1)
+            st = (-dt * pm * 4 * inv_dx * inv_dx) * P; affine = st + pm * C[p]
             for a, b, c in ti.static(ti.ndrange(3, 3, 3)):
                 off = ti.Vector([a, b, c]); dpos = (off.cast(ti.f32) - fx) * dx
                 wt = w[a][0] * w[b][1] * w[c][2]
-                grid_v[base + off] += wt * (p_mass * v[p] + affine @ dpos)
-                grid_m[base + off] += wt * p_mass
+                grid_v[base + off] += wt * (pm * v[p] + affine @ dpos)
+                grid_m[base + off] += wt * pm
         for I in ti.grouped(grid_m):
             if grid_m[I] > 0:
                 grid_v[I] /= grid_m[I]
@@ -238,8 +247,8 @@ def main(argv):
                                       [0, 0, ti.exp(e[2])]]) @ V.transpose()
             x[p] += dt * v[p]
 
-    load(xs, mus, las, ylds)
-    solid_vol = n * p_vol; area = WIDTH * WIDTH
+    load(xs, mus, las, ylds, pvs)
+    area = WIDTH * WIDTH                                    # solid_vol = exact Σ sphere vol (set in build)
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
