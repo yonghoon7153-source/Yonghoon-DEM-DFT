@@ -44,6 +44,10 @@ def parse_args(argv):
     ap.add_argument('--se-frac', type=float, default=0.27,
                     help='scaffold SE volume fraction of SOLID (default 0.27 = real_14 actual; vary to '
                          'see porosity respond — final porosity is a RESULT of plastic SE fill, not assumed)')
+    ap.add_argument('--coh', type=float, default=0.0,
+                    help='SE cohesion / adhesion (GPa, Cauchy): cold-weld + vdW of the soft sulfide — '
+                         'an attractive stress that reduces the net contact repulsion → densifies. '
+                         'Real physics (not a target fudge); LPSC ~0.01-0.05 GPa.  Acts in compression.')
     ap.add_argument('--e-se', type=float, default=1.53, help='SE modulus (GPa); champion 1.53 (softened)')
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.30,
@@ -88,6 +92,7 @@ def main(argv):
     MU_SE, LA_SE = lame(args.e_se, args.nu_se); MU_AM, LA_AM = lame(args.e_am, 0.30)
     K_SE = LA_SE + 2.0 * MU_SE / 3.0                        # SE bulk modulus (GPa) — stiff if ν→0.49
     YIELD_SE = args.sigma_y; YIELD_AM = 1.0e4               # AM ~rigid (no yield)
+    COH = float(args.coh)                                   # SE cohesion/adhesion (GPa, Cauchy)
     # CFL-safe dt: cap by the stiffest material P-wave speed c=√((λ+2µ)/ρ), ρ=1.  With AM as a
     # MATERIAL (preset/mix, E_AM=140) the default dt blows up at high n_grid (CUDA illegal
     # address); the scaffold (AM = grid mask, only soft SE) keeps the default dt.
@@ -289,6 +294,9 @@ def main(argv):
             J = sig[0, 0] * sig[1, 1] * sig[2, 2]
             P = (2 * mu_p[p] * (F[p] - U @ V.transpose()) @ F[p].transpose()
                  + ti.Matrix.identity(ti.f32, 3) * la_p[p] * J * (J - 1))     # Kirchhoff τ = Jσ
+            if ti.static(COH > 0.0):                                         # SE cohesion (cold-weld/vdW):
+                if yld_p[p] < 100.0 and J < 1.0:                             # attractive σ in compression →
+                    P += COH * J * ti.Matrix.identity(ti.f32, 3)            # reduces net repulsion → densifies
             szz[None] += -P[2, 2] / J                                         # -σzz = compressive axial pressure (GPa)
             pm = pvol_p[p]                                                    # per-point vol = mass (ρ=1)
             st = (-dt * pm * 4 * inv_dx * inv_dx) * P; affine = st + pm * C[p]
