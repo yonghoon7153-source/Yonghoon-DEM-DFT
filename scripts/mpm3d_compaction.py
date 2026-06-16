@@ -110,7 +110,7 @@ def main(argv):
     # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
     #    fine-grid, like the DEM — a uniform brute is O(N²) and stalls) ───────────
     rng = np.random.default_rng(args.seed)
-    am_c = None; am_r = None; AM_vol = 0.0; am_top = 0.0       # fixed-AM scaffold bookkeeping
+    am_c = None; am_r = None; AM_vol = 0.0; am_top = 0.0; um_box = 0.0   # fixed-AM scaffold bookkeeping
     if args.am_scaffold:
         # DEM→MPM scaffold: real AM are FIXED (loaded from the LIGGGHTS dump) and become a grid
         # obstacle; only SE is the MPM material, RSA-packed into the interstices to a target volume
@@ -126,6 +126,7 @@ def main(argv):
         am_top = float((am_c[:, 2] + am_r).max())
         WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01
         r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
+        um_box = 1000.0 / scl                                 # µm per box unit (50µm RVE = 0.05 LIGGGHTS u)
         pin_np = np.zeros((n_grid,) * 3, np.int32)            # grid cells inside any fixed AM
         for _i in range(len(am_r)):
             cx, cy, cz = am_c[_i]; rr = float(am_r[_i])
@@ -150,6 +151,7 @@ def main(argv):
         FLOOR = 0.05; WALL0 = 0.90; WALL_MIN = 0.055
         scl = WIDTH / 50.0                                  # box units per µm
         r_amp, r_ams, r_se3 = 6.0 * scl, 2.0 * scl, 0.5 * scl
+        um_box = 1.0 / scl                                  # µm per box unit (preset scl = box/µm)
         plan = [(r_amp, 0.51, MU_AM, LA_AM, YIELD_AM),
                 (r_ams, 0.22, MU_AM, LA_AM, YIELD_AM),
                 (r_se3, 0.27, MU_SE, LA_SE, YIELD_SE)]
@@ -410,8 +412,9 @@ def main(argv):
             break
     por_target_str = f"{por_at_target:.2f}%" if por_at_target >= 0 else "n/a (target never reached)"
     scaf = f"scaffold {len(am_r)}AM se_frac={args.se_frac}" if args.am_scaffold else f"am_frac={am_frac}"
+    thick_str = (f"  thickness={(wall_z[None] - FLOOR) * um_box:.2f}µm" if um_box > 0 else "")
     print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity(settled)={por_end:.2f}%  "
-          f"porosity@target={por_target_str}   "
+          f"porosity@target={por_target_str}{thick_str}   "
           f"[MPM, {comp.split()[0]}, {scaf}, n_grid={n_grid}, pts={n}, "
           f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}]")
     if args.save_se:
