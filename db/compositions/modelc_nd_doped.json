@@ -563,6 +563,21 @@
     "files": "scf_k441.{in,out} at /scratch/x3430a02/kgy/nd_doped_modelc/3_dft_eos_v7/pair01_pair_00_reference_1_82/v0_champion (to be archived in db/raw/nd_pair01/)",
     "TODO": "EOS 11-pt chain at k441 (k661 confirmed unnecessary); archive scf_k441.{in,out} to db/raw/nd_pair01/",
     "tprnfor_tstress": ".true. (both enabled in scf_k441.in)",
-    "force_stress_note": "Earlier k441 run gave Total force 0.014 Ry/bohr, P=0.53 kbar (0.05 GPa) — V0 champion at mechanical equilibrium, confirms EOS V0. SCF correction vs forces flagged large (energy-grade conv_thr; tighten if force-based analysis needed). The 7-iter restart run reported here may have ended before re-printing force/stress block."
+    "force_stress_note": "Earlier k441 run gave Total force 0.014 Ry/bohr, P=0.53 kbar (0.05 GPa) — V0 champion at mechanical equilibrium, confirms EOS V0. SCF correction vs forces flagged large (energy-grade conv_thr; tighten if force-based analysis needed). The 7-iter restart run reported here may have ended before re-printing force/stress block.",
+    "magnetization": {
+      "absolute_mag_Bohr_per_cell": 6.29,
+      "total_mag_Bohr_per_cell": -0.0,
+      "interpretation": "2 Nd3+ (4f^3, ~3 uB each) → abs 6.29 uB confirms localized 4f moments; total ~0 = antiferromagnetic alignment of the 2 Nd. ISPIN=2 + DFT+U(8.0) working as intended.",
+      "Hubbard_energy_Ry": 0.04317738,
+      "paper2_relevance": "first quantitative signal for Nd 4f magnetic defect states (target: do they sit in band gap?). PDOS needed to confirm whether 4f states are in-gap (e-conductivity concern) or deep in valence."
+    },
+    "energy_decomposition_Ry": {
+      "one_electron": -1252.92646681,
+      "hartree": 777.28943553,
+      "xc": -759.34685607,
+      "ewald": -1443.32148055,
+      "hubbard": 0.04317738,
+      "paw_one_center": -887.97436303
+    }
   }
 }
