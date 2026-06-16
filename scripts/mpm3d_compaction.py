@@ -127,20 +127,33 @@ def main(argv):
                     big.append((p[0], p[1], p[2], r))
             else:
                 fails += 1
-    xs, mus, las, ylds = [], [], [], []
-    for (cx, cy, cz, r, mu, la, yld) in placed:
+    # ── voxelize spheres into material points (numpy-vectorized: per-radius in-sphere
+    #    offset template × particle centers, broadcast + chunked).  Replaces the old
+    #    per-point O(N·k³) Python triple loop that took minutes at n_grid≥512. ────────
+    placed_arr = np.asarray(placed, np.float64)            # [N,7] cx,cy,cz,r,mu,la,yld
+    xs_list, mu_list, la_list, yld_list = [], [], [], []
+    for r in np.unique(placed_arr[:, 3]):
+        grp = placed_arr[placed_arr[:, 3] == r]
+        mu_v, la_v, yld_v = grp[0, 4], grp[0, 5], grp[0, 6]
         k = int(r / (dx * 0.5)) + 1
-        for a in range(-k, k + 1):
-            for b in range(-k, k + 1):
-                for cc in range(-k, k + 1):
-                    px, py, pz = cx + a * dx * 0.5, cy + b * dx * 0.5, cz + cc * dx * 0.5
-                    if (px - cx) ** 2 + (py - cy) ** 2 + (pz - cz) ** 2 <= r * r:
-                        xs.append((px, py, pz)); mus.append(mu); las.append(la); ylds.append(yld)
-    xs = np.array(xs, np.float32)
+        ax = np.arange(-k, k + 1) * (dx * 0.5)
+        ox, oy, oz = np.meshgrid(ax, ax, ax, indexing='ij')
+        off = np.stack([ox.ravel(), oy.ravel(), oz.ravel()], 1)
+        off = off[(off ** 2).sum(1) <= r * r]              # in-sphere offsets [Pin,3]
+        centers = grp[:, :3]
+        chunk = max(1, 16_000_000 // max(1, off.shape[0]))  # cap broadcast intermediate
+        for s in range(0, len(centers), chunk):
+            pts = (centers[s:s + chunk, None, :] + off[None]).reshape(-1, 3)
+            m = pts.shape[0]
+            xs_list.append(pts.astype(np.float32))
+            mu_list.append(np.full(m, mu_v, np.float32))
+            la_list.append(np.full(m, la_v, np.float32))
+            yld_list.append(np.full(m, yld_v, np.float32))
+    xs = np.concatenate(xs_list)
     n = len(xs)
     if n < 2:
         print("build failed (n<2) — raise --n-grid or --init-solid"); return
-    mus = np.array(mus, np.float32); las = np.array(las, np.float32); ylds = np.array(ylds, np.float32)
+    mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
 
     x = ti.Vector.field(3, ti.f32, n); v = ti.Vector.field(3, ti.f32, n)
     C = ti.Matrix.field(3, 3, ti.f32, n); F = ti.Matrix.field(3, 3, ti.f32, n)

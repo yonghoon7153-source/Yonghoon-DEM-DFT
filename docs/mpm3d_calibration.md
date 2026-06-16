@@ -106,6 +106,38 @@ the packing but (rigid) no plastic flow.  Neither alone hits the dense composite
 both halves are needed.  → for composite ABSOLUTE porosity use real-size packing;
 the MPM owns the *plastic densification increment* and the *composition trend*.
 
+## Size-ratio sweep (am_frac 0.5) — packing is a real but modest lever (2026-06-16)
+Is the composite's high absolute porosity packing-limited (size ratio) or a plastic
+ceiling?  Swept the AM:SE size ratio with r_am fixed (0.045, ~88 AM unchanged), shrinking
+the SE radius.  KEY: r_se must be shrunk WITH n_grid (keep SE ~4.6 cells), else the result
+is confounded by SE under-resolution.
+
+CONFOUND (fixed n_grid=256, r_se down → SE cells down):
+  r_se 0.018 (4.6 cell, 2.5:1) 27.6 % | 0.015 (3.8, 3:1) 28.6 % | 0.012 (3.1, 3.75:1) 31.2 %
+  Porosity *rose* as the SE shrank — an UNDER-RESOLUTION artifact: a sub-3-cell SE cannot
+  plastically flow, so it acts ~rigid and void-fills WORSE.  (Same small-SE under-
+  resolution seen in the 2D plastic dip.)  NOT a clean ratio test.
+
+CLEAN (SE held ~4.6 cells by scaling n_grid with 1/r_se, r_am fixed):
+  256/0.018 (2.5:1) 27.6 %  →  384/0.012 (3.75:1) 26.0 %   = −1.6 %p
+  Direct proof of the confound: the SAME 3.75:1 at 3.1 cell (256)=31.2 % vs 4.6 cell
+  (384)=26.0 % — −5.2 %p just from resolving the SE.
+
+VERDICT: the size ratio IS a real lever (porosity drops monotonically as the ratio rises,
+properly resolved) but MODEST (−1.6 %p for 2.5→3.75:1).  Extrapolated to the real 12:1 it
+lands ~20 % — still ~2× experiment.  So the composite absolute is co-limited by (a)
+geometric packing (the real multimodal 12:4:1, unreachable at feasible MPM resolution — SE
+<1 cell at n_grid 256–512; good AM statistics need n_grid 768+), and (b) the plastic
+continuum's void-fill ceiling.  Neither the plasticity nor the ratio alone reaches the
+experimental density → **frame [5] confirmed**: MPM owns the plastic densification
+increment + the composition trend; the composite ABSOLUTE porosity is owned by de Larrard /
+DEM (real-size geometric packing).  DON'T pour more GPU into the resolved-grain MPM
+composite absolute — it is packing/resolution-limited by construction.
+
+NB the n_grid≥512 build is bottlenecked by the pure-Python material-point generation
+(~66M points, O(N·k³) triple loop, minutes-long, looks "hung" but is not); vectorize
+(numpy meshgrid + mask) before attempting higher resolution.
+
 ## Do / don't
 - DO use the locked defaults (1.53 / 0.49 / 0.30) for pure-SE — Minnmann-matched.
 - DO read `porosity@target` and `porosity(settled)`; ignore the static-settling wallP→0.
