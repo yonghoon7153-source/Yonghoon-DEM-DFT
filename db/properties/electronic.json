@@ -252,5 +252,19 @@
     },
     "interpretation": "ELF closes the bond->Bader->COHP->ELF chain: covalent P-S (0.94) vs ionic Li (0.07) = ~13x contrast. The covalent PS4 backbone is preserved across BOTH systems (d ELF ~0.002); the only ELF difference from LPSCl1.6's Cl-enrichment+vacancy is a slightly deeper Li depletion basin (disorder). => structural / Li-sublattice difference, NOT framework-electronic. Same conclusion as bond-length (2.07/2.06), Bader PS4 (-2.8/-2.6), ICOHP (-5.9/-6.0).",
     "status": "FILLED 2026-06-08 (was 'analysis pending' in kb/results/lpscl_vs_lpscl16_v3_comparison.md SII.7)"
+  },
+  "eigenvalue_gaps_v100_2026_06_16": {
+    "_method": "QE 7.4.1 GPU (V100, NVHPC 24.11 / CUDA 12.6) eigenvalue band gap = CBM(min eig > EF) - VBM(max eig <= EF), literature convention, smearing-independent. Supersedes the DOS-threshold gaps (1.76/1.82) which underestimate ~0.3 eV from MV-smearing tails leaking into the gap.",
+    "comp1":  {"gap_eV": 2.066, "VBM_eV": 2.128, "CBM_eV": 4.194, "EF_eV": 3.724, "kpts": "170 irr (k888 nscf)", "N_EF": 0.0, "note": "clean insulator, EF in gap"},
+    "modelc": {"gap_eV": 2.099, "VBM_eV": 2.445, "CBM_eV": 4.544, "EF_eV": 3.487, "kpts": "68 irr", "N_EF": 0.0, "note": "clean insulator, EF in gap"},
+    "comp1_vs_modelc": "2.066 vs 2.099, delta +0.033 eV -> band gap INSENSITIVE to Cl/Li-vacancy disorder (eigenvalue confirms DOS-threshold trend, delta even smaller). Backup lobster_nscf cross-check: comp1 2.075 / modelc 2.098.",
+    "modelc_defect_band_CORRECTION": "The earlier 'modelc defect band / EF<VBM' (EF_note above) was a DOS-THRESHOLD ARTIFACT. Fresh eigenvalue AND the DOS curve both show modelc CLEAN: N(EF)=0, no mid-gap states, EF mid-gap (2.10 eV gap). comp1 and modelc are BOTH clean insulators.",
+    "U0_matched_undoped": {"gap_eV": 2.184, "VBM_eV": 2.401, "CBM_eV": 4.585, "EF_eV": 3.658, "cell": "120-atom", "kpts": "k661", "note": "undoped modelc in SAME cell/k as Nd-doped = matched baseline for Nd narrowing; also clean (EF mid-gap)"},
+    "Nd2O3_doped": {"gap_eV": 1.632, "VBM_eV": 3.081, "CBM_eV": 4.712, "EF_eV": 3.879, "cell": "120-atom", "kpts": "k661", "method": "DFT+U(Nd 4f, U=8 eV) + nspin2 AFM"},
+    "Nd_narrowing": "MATCHED: U0 2.184 - Nd 1.632 = 0.55 eV REAL narrowing (same 120-atom/k661, cancels cell/k/method). 62-atom modelc baseline (2.099) gives 0.47; the 0.08 difference is cell+k convergence.",
+    "Nd_narrowing_mechanism": "Host-band shift, NOT a dopant level in the gap. PDOS: VBM = S 3p (host); CBM = PS4-derived S/P/Li (host). O 2p deep (~ -4 eV, not at VBM); Nd 4f out of gap (filled -7.4, empty +1.9); Nd 5d/6s just above CBM (not defining it). Driver: O->PS3O modifying the PS4 framework shifts the PS4-derived CBM, + Nd3+/Li-vacancy structural perturbation. Both doped & undoped stay clean (N(EF)=0).",
+    "electron_conductivity_implication": "All three clean (N(EF)=0) -> bulk electronic conduction is gap-limited (intrinsic). Nd narrows the gap 0.55 eV -> bulk intrinsic e- conduction slightly HIGHER for Nd-doped (opposite to the 32% experimental DECREASE). The experimental decrease is therefore an INTERFACE (Nd-rich SEI, wide gap) / microstructure effect, NOT a bulk defect-band mechanism (there is no bulk defect band).",
+    "work_function": "Slab WF (V100 (100)/(001) slabs) ABANDONED: asymmetric slabs -> net dipole -> vacuum potential ramps (no flat plateau) -> spurious WF 6.5-7.2 eV. For absolute band-edge alignment use literature WF (Braga 2026, argyrodite (100) = 3.40 eV) + our bulk edges (comp1~modelc edges ~identical).",
+    "figures": "docs/figures/dos_compare_3.png (comp1/modelc/Nd); docs/figures/nd_dos/nd_dos_pdos_v2.png; data: comp1_pdos_compact.csv, modelc_pdos_compact.csv, nd_dos/nd_pdos_compact.csv; tools: tools/figures/plot_3dos.py, plot_nd_dos_v2.py"
   }
 }
