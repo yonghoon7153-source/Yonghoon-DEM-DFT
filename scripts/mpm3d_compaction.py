@@ -85,6 +85,14 @@ def main(argv):
     MU_SE, LA_SE = lame(args.e_se, args.nu_se); MU_AM, LA_AM = lame(args.e_am, 0.30)
     K_SE = LA_SE + 2.0 * MU_SE / 3.0                        # SE bulk modulus (GPa) — stiff if ν→0.49
     YIELD_SE = args.sigma_y; YIELD_AM = 1.0e4               # AM ~rigid (no yield)
+    # CFL-safe dt: cap by the stiffest material P-wave speed c=√((λ+2µ)/ρ), ρ=1.  With AM as a
+    # MATERIAL (preset/mix, E_AM=140) the default dt blows up at high n_grid (CUDA illegal
+    # address); the scaffold (AM = grid mask, only soft SE) keeps the default dt.
+    _has_am_mat = (args.preset == 'real14') or (args.material == 'mix' and not args.am_scaffold)
+    _M = LA_SE + 2.0 * MU_SE
+    if _has_am_mat:
+        _M = max(_M, LA_AM + 2.0 * MU_AM)
+    dt = min(args.dt, 0.4 * dx / (_M ** 0.5))
 
     FLOOR = 0.10; SW = (0.18, 0.82)                         # confined box in x,y
     WIDTH = SW[1] - SW[0]
@@ -242,6 +250,7 @@ def main(argv):
             print("build failed (n<2) — raise --n-grid or --init-solid"); return
         mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
         pvs = np.concatenate(pv_list)
+    xs = np.clip(xs, 2.0 * dx, 1.0 - 2.0 * dx)             # keep the 3-pt P2G stencil inside [0,n_grid)
     solid_vol = float(pvs.sum()) + AM_vol                  # voxelized SE vol (Σ per-point) + exact fixed-AM
     #   vol.  Σ per-point matches the old n·p_vol so the pure-SE 10% calibration is preserved.
 
