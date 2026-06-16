@@ -54,6 +54,9 @@ def parse_args(argv):
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
     ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
                     help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
+    ap.add_argument('--protocol', default='servo', choices=['servo', 'hold'],
+                    help='servo = bidirectional, equilibrate AT target; hold = LIGGGHTS protocol '
+                         '(descend to target, FIX the platen, relax) — porosity = value at first 300 MPa')
     ap.add_argument('--init-solid', type=float, default=0.35,
                     help='initial solid fraction (loose; keep <=0.38 RSA saturation)')
     ap.add_argument('--r-am', type=float, default=0.045, help='AM radius (box units; raise n-grid for 12:4:1)')
@@ -342,7 +345,7 @@ def main(argv):
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {comp}  "
               f"E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} K_SE={K_SE:.2f}GPa  "
               f"target={target} GPa  readout={args.readout}")
-    reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0
+    reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
@@ -369,8 +372,16 @@ def main(argv):
                 wall_z[None] = max(WALL_MIN, wall_z[None] - vmax)
             else:
                 reached = True; wall_vel[None] = 0.0
+        elif args.protocol == 'hold':
+            # LIGGGHTS protocol: platen FIXED at the first-300-MPa position; relax (stress settles,
+            # plate does not move → porosity stays at porosity@target).  No bidirectional over/under-shoot.
+            wall_vel[None] = 0.0; relax += 1
+            if relax >= 40 and frame > 20:
+                if not args.quiet:
+                    print("  ✓ held at target, relaxed (LIGGGHTS protocol)")
+                break
         else:
-            step = 0.12 * vmax
+            step = 0.12 * vmax                                   # bidirectional: equilibrate AT target
             if p > 1.02 * target:
                 wall_z[None] = min(WALL0, wall_z[None] + step); wall_vel[None] = step / (args.sub * dt)
             elif p < 0.98 * target:
