@@ -121,10 +121,15 @@ def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise, target_porosity=Non
         if n_se <= 0:
             se_mask = np.zeros_like(am)
         else:
-            # KEEP the thin interfacial SE film: non-AM voxels that touch AM and
-            # actually hold SE points MUST stay SE, or the density threshold trims
-            # the AM-SE contact (charge-transfer interface) and coverage collapses.
-            film = free & (cnt >= 1) & _dilate6(am)
+            # KEEP only the GENUINE interfacial SE film: a boundary voxel that
+            # both touches AM AND bridges to the dense bulk SE (and holds points).
+            # Forcing every AM-adjacent voxel with a stray point would skin even
+            # the pore-facing AM surfaces (coverage → ~90%); requiring the bulk-SE
+            # bridge leaves AM faces that front a real pore as void, so coverage
+            # lands near the physical value instead of either extreme.
+            thr0 = np.partition(dens[free], -n_se)[-n_se]
+            bulk0 = (dens >= thr0) & free
+            film = free & (cnt >= 1) & _dilate6(am) & _dilate6(bulk0)
             rest = free & ~film
             n_extra = n_se - int(film.sum())
             if n_extra <= 0:
