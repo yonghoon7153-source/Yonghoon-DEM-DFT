@@ -116,12 +116,23 @@ def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise, target_porosity=Non
         # smoothing also removes the salt-and-pepper, so no morphological denoise.
         from scipy import ndimage as ndi
         dens = ndi.gaussian_filter(cnt.astype(np.float32), 0.8)
-        n_se = int(free.sum()) - int(round(target_porosity * am.size))
+        N = am.size
+        n_se = int(free.sum()) - int(round(target_porosity * N))
         if n_se <= 0:
             se_mask = np.zeros_like(am)
         else:
-            thr = np.partition(dens[free], -n_se)[-n_se]
-            se_mask = (dens >= thr) & free
+            # KEEP the thin interfacial SE film: non-AM voxels that touch AM and
+            # actually hold SE points MUST stay SE, or the density threshold trims
+            # the AM-SE contact (charge-transfer interface) and coverage collapses.
+            film = free & (cnt >= 1) & _dilate6(am)
+            rest = free & ~film
+            n_extra = n_se - int(film.sum())
+            if n_extra <= 0:
+                se_mask = film
+            else:
+                dr = dens[rest]
+                thr = np.partition(dr, -n_extra)[-n_extra] if n_extra < dr.size else dr.min()
+                se_mask = film | (rest & (dens >= thr))
         return am_p, am_s, se_mask, h
     se_mask = (cnt >= se_min_count) & free
     if denoise > 0:
