@@ -134,7 +134,12 @@ def main():
     # NSCF requests nbnd (>> SCF's ~occupied bands); it must NOT try to read the
     # SCF collected wfc (band-count mismatch -> read_collected_wfc error). Force
     # fresh random wfc (density is still read from the SCF via startingpot='file').
-    if "startingwfc" not in nscf.lower():
+    # NOTE: the source scf often already has startingwfc='file' -> must REPLACE it,
+    # not just add-if-absent.
+    if re.search(r"startingwfc", nscf, re.I):
+        nscf = re.sub(r"startingwfc\s*=\s*'[^']*'", "startingwfc = 'random'",
+                      nscf, count=1, flags=re.I)
+    else:
         nscf = re.sub(r"(&ELECTRONS\s*\n)", r"\1  startingwfc = 'random'\n",
                       nscf, count=1, flags=re.I)
     (wd / "lobster_nscf.in").write_text(nscf)
