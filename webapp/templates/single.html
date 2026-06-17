@@ -210,9 +210,9 @@
   <div class="card-header-row">
     <h3>3D 전극 구조</h3>
     <div style="display:flex; gap:6px; flex-wrap:wrap">
-      <button class="btn btn-primary" onclick="load3DViewer('dem')">DEM 3D</button>
-      <button class="btn btn-secondary" onclick="load3DViewer('mpm')">MPM (압축 후)</button>
-      <button class="btn btn-secondary" onclick="load3DViewer('mpm-seed')">MPM (압축 전)</button>
+      <button class="btn btn-3d btn-secondary" data-mode="dem" onclick="load3DViewer('dem')">DEM 3D</button>
+      <button class="btn btn-3d btn-secondary" data-mode="mpm" onclick="load3DViewer('mpm')">MPM (압축 후)</button>
+      <button class="btn btn-3d btn-secondary" data-mode="mpm-seed" onclick="load3DViewer('mpm-seed')">MPM (압축 전)</button>
     </div>
   </div>
   <div id="viewer-container" class="viewer-container" style="display:none">
@@ -234,6 +234,35 @@
       <button class="btn btn-secondary" type="submit">③ 결과 업로드</button>
     </form>
     <span id="mpm-upload-status" style="color:#888; font-size:0.9em"></span>
+  </div>
+  <!-- MPM 결과 파라미터 — 업로드(또는 기존 결과)가 있으면 채워지고 보임 -->
+  <style>
+    .mpm-result-table{border-collapse:collapse;font-size:0.84em;width:100%}
+    .mpm-result-table th{text-align:left;font-weight:500;color:#94a3b8;padding:3px 8px 3px 0;white-space:nowrap}
+    .mpm-result-table td{padding:3px 22px 3px 0;color:#e2e8f0;font-weight:600;font-variant-numeric:tabular-nums}
+  </style>
+  <div id="mpm-result-box" style="display:none; margin-top:14px; padding:10px 14px;
+       background:#0f172a; border:1px solid #334155; border-radius:8px">
+    <div style="font-weight:600; font-size:0.92em; margin-bottom:7px; color:#e2e8f0">MPM 결과 파라미터</div>
+    <table class="mpm-result-table">
+      <tbody>
+        <tr><th>공극률 (porosity)</th><td data-mk="porosity_mpm_pct" data-fmt="pct">—</td>
+            <th>두께 (thickness)</th><td data-mk="thickness_mpm_um" data-fmt="um">—</td></tr>
+        <tr><th>coverage AM_P</th><td data-mk="coverage_AM_P_mpm_pct" data-fmt="pct">—</td>
+            <th>coverage AM_S</th><td data-mk="coverage_AM_S_mpm_pct" data-fmt="pct">—</td></tr>
+        <tr><th>SE 비율 (of solid)</th><td data-mk="se_fraction_pct" data-fmt="pct">—</td>
+            <th>벌크 밀도</th><td data-mk="bulk_density_g_cm3" data-fmt="dens">—</td></tr>
+        <tr><th>E_SE</th><td data-mk="E_SE_GPa" data-fmt="gpa">—</td>
+            <th>ν_SE</th><td data-mk="nu_SE" data-fmt="num">—</td></tr>
+        <tr><th>σ_y</th><td data-mk="sigma_y_GPa" data-fmt="gpa">—</td>
+            <th>K_SE</th><td data-mk="K_SE_GPa" data-fmt="gpa">—</td></tr>
+        <tr><th>압축 압력 (target)</th><td data-mk="target_GPa" data-fmt="gpa">—</td>
+            <th>grid / protocol</th><td><span data-mk="n_grid" data-fmt="int">—</span> /
+              <span data-mk="protocol" data-fmt="raw">—</span></td></tr>
+        <tr><th>AM 개수</th><td data-mk="n_am" data-fmt="int">—</td>
+            <th>SE tris</th><td data-mk="se_surface_tris" data-fmt="int">—</td></tr>
+      </tbody>
+    </table>
   </div>
 </div>
 {% endif %}
@@ -288,6 +317,31 @@
 }
 </script>
 <script>
+// MPM result params → the table in the MPM-pipeline card.  Filled on page load from the
+// server (_INIT_MPM, present if a payload was already uploaded) and again on each upload.
+const _INIT_MPM = {{ (mpm_metrics or {}) | tojson }};
+function fillMpmTable(m) {
+  const box = document.getElementById('mpm-result-box');
+  if (!box || !m || !Object.keys(m).length) return;
+  const fmt = (v, f) => {
+    if (v === null || v === undefined || v === '') return '—';
+    const n = +v;
+    if (f === 'pct')  return n.toFixed(2) + ' %';
+    if (f === 'um')   return n.toFixed(2) + ' µm';
+    if (f === 'gpa')  return n.toFixed(3) + ' GPa';
+    if (f === 'dens') return n.toFixed(3) + ' g/cm³';
+    if (f === 'int')  return Number.isFinite(n) ? n.toLocaleString() : String(v);
+    if (f === 'num')  return n.toFixed(2);
+    return String(v);
+  };
+  box.querySelectorAll('[data-mk]').forEach(el => {
+    const k = el.dataset.mk;
+    if (k in m) el.textContent = fmt(m[k], el.dataset.fmt || 'raw');
+  });
+  box.style.display = 'block';
+}
+fillMpmTable(_INIT_MPM);
+
 async function uploadMpm(e) {
   e.preventDefault();
   const file = document.getElementById('mpm-payload-file').files[0];
@@ -301,6 +355,7 @@ async function uploadMpm(e) {
     status.textContent = j.ok
       ? `✓ porosity ${j.porosity_mpm_pct}% · coverage AM_P ${j.coverage_AM_P_mpm_pct}% · ${j.se_surface_tris} tris — 위 "MPM (압축 후)" 눌러보기`
       : '✗ ' + (j.error || '실패');
+    if (j.ok) fillMpmTable(j.mpm_metrics);
   } catch (err) { status.textContent = '✗ ' + err; }
   return false;
 }
@@ -314,6 +369,12 @@ async function load3DViewer(mode) {
   mode = mode || 'dem';
   const container = document.getElementById('viewer-container');
   container.style.display = 'block';
+  // highlight the active 3D-mode button (primary/blue), the others stay secondary/grey
+  document.querySelectorAll('.btn-3d').forEach(b => {
+    const on = b.dataset.mode === mode;
+    b.classList.toggle('btn-primary', on);
+    b.classList.toggle('btn-secondary', !on);
+  });
   if (cur3dMode === mode) return;
   cur3dMode = mode;
   container.innerHTML = '';                       // drop old canvas → allow re-init

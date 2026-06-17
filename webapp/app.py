@@ -4327,6 +4327,27 @@ def _load_case_tables(results_dir, meta):
     return tables, metrics, input_params
 
 
+def _load_mpm_metrics(results_dir):
+    """MPM result params for the case page — the compact mpm_metrics.json written on
+    upload (falls back to extracting from the heavier mpm_payload.json).  {} when no
+    MPM result has been uploaded yet (→ the result table stays hidden)."""
+    small = os.path.join(results_dir, 'mpm_metrics.json')
+    if os.path.exists(small):
+        try:
+            with open(small) as f:
+                return json.load(f) or {}
+        except Exception:
+            pass
+    payload = os.path.join(results_dir, 'mpm_payload.json')
+    if os.path.exists(payload):
+        try:
+            with open(payload) as f:
+                return (json.load(f) or {}).get('mpm_metrics', {}) or {}
+        except Exception:
+            pass
+    return {}
+
+
 @app.route('/single/<case_id>')
 def single(case_id):
     """View single case results.
@@ -4365,6 +4386,7 @@ def single(case_id):
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
                          input_params=input_params, archive_path=archive_path,
+                         mpm_metrics=_load_mpm_metrics(results_dir),
                          trust_card=_build_trust_card(metrics))
 
 @app.route('/group', methods=['GET', 'POST'])
@@ -5134,8 +5156,12 @@ def mpm_upload(case_id):
         return jsonify({'error': 'not an MPM payload (expected kind=mpm + particles)'}), 400
     with open(os.path.join(results_dir, 'mpm_payload.json'), 'w') as out:
         json.dump(data, out)
-    m = data.get('mpm_metrics', {})
-    return jsonify({'ok': True, 'porosity_mpm_pct': m.get('porosity_mpm_pct'),
+    m = data.get('mpm_metrics', {}) or {}
+    # compact sidecar → the case page's MPM result table reads this, not the 16 MB payload
+    with open(os.path.join(results_dir, 'mpm_metrics.json'), 'w') as mf:
+        json.dump(m, mf)
+    return jsonify({'ok': True, 'mpm_metrics': m,
+                    'porosity_mpm_pct': m.get('porosity_mpm_pct'),
                     'coverage_AM_P_mpm_pct': m.get('coverage_AM_P_mpm_pct'),
                     'n_am': m.get('n_am'), 'se_surface_tris': m.get('se_surface_tris')})
 
@@ -7253,6 +7279,7 @@ def archive_view(folder):
     return render_template('single.html', case=meta, figures=figures,
                          report=report, tables=tables, metrics=metrics,
                          input_params=input_params, archive_path=folder,
+                         mpm_metrics=_load_mpm_metrics(results_dir),
                          trust_card=_build_trust_card(metrics))
 
 

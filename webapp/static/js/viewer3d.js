@@ -108,10 +108,20 @@ function rdylgnColor(t) {
  *   t = 1.0  →  (180,  4,  38)  deep red
  * Linear interpolation in each half. */
 /* ── control-panel HTML ────────────────────────────────────── */
-function buildControls(container) {
+function buildControls(container, isMPM) {
   const div = document.createElement('div');
   div.className = 'viewer-controls';
-  div.innerHTML = `
+  // MPM viewer: minimal panel — AM_P/AM_S + SE (the compacted-SE mesh, data-layer
+  // MESH).  No DEM-only controls (View Mode, Percolating Path, Force Chain, Path
+  // Only View): the MPM payload has no fracture / percolation / force-chain data.
+  div.innerHTML = isMPM ? `
+    <label><input type="checkbox" data-layer="AM_P" checked> AM_P</label>
+    <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
+    <label><input type="checkbox" data-layer="MESH" checked> SE</label>
+    <hr>
+    <button data-action="amCloseup">AM Close-up</button>
+    <button data-action="resetView">Reset</button>
+    <button data-action="screenshot">Screenshot</button>` : `
     <label><input type="checkbox" data-layer="AM_P" checked> AM_P</label>
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
     <label><input type="checkbox" data-layer="SE" checked> SE</label>
@@ -250,8 +260,10 @@ export function initElectrodeViewer(containerId, dataUrl) {
     selectedComponent: null, infoEl: null,
   };
 
-  /* controls panel */
-  const ctrlDiv = buildControls(container);
+  /* controls panel — MPM payloads (/3d-mpm-data) get a minimal panel */
+  const isMPM = (dataUrl || '').includes('3d-mpm-data');
+  state.isMPM = isMPM;
+  const ctrlDiv = buildControls(container, isMPM);
   state.infoEl = ctrlDiv._infoEl || document.getElementById('viewer-info');
 
   /* ── data fetch & build ──────────────────────────────────── */
@@ -494,16 +506,20 @@ function buildScene(scene, camera, controls, data, state) {
 
   Object.values(state.meshes).forEach(m => { if (m) scene.add(m); });
 
-  /* compaction-plate STL mesh (optional) */
+  /* compaction-plate STL mesh (DEM) — OR, for MPM, the compacted-SE surface.
+   * For MPM colour it like the DEM SE (gold), not the blue plate; keep the
+   * see-through opacity so the AM spheres stay visible through the SE shell. */
   if (data.mesh_triangles && data.mesh_triangles.length > 0) {
-    state.meshes.MESH = buildPlateMesh(data.mesh_triangles);
+    state.meshes.MESH = buildPlateMesh(data.mesh_triangles,
+      data.kind === 'mpm' ? { color: COL.SE } : null);
     if (state.meshes.MESH) scene.add(state.meshes.MESH);
   }
 }
 
 /* ── compaction-plate mesh from STL triangles ──────────────── */
-function buildPlateMesh(triangles) {
+function buildPlateMesh(triangles, opts) {
   if (!triangles || !triangles.length) return null;
+  opts = opts || {};
   const positions = new Float32Array(triangles.length * 9);
   let p = 0;
   // Z-up: data (x,y,z) → Three.js (x,z,y)
@@ -518,9 +534,9 @@ function buildPlateMesh(triangles) {
   geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
   geo.computeVertexNormals();
   const mat = new THREE.MeshPhongMaterial({
-    color: COL.MESH,
+    color: opts.color != null ? opts.color : COL.MESH,
     transparent: true,
-    opacity: OPA.MESH,
+    opacity: opts.opacity != null ? opts.opacity : OPA.MESH,
     side: THREE.DoubleSide,
     depthWrite: false,
   });
