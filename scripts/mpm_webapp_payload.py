@@ -36,11 +36,38 @@ def _vc():
     return _VC
 
 
+def seed_se_mask(se_csv, am_shape, h, am_mask):
+    """Voxel union of D1 SE spheres at the SEED (real DEM CSV) positions, on the SAME
+    grid as the compacted voxelisation, minus AM cells → the loose pre-compaction SE
+    (for the before/after view).  Mapping matches viz_mpm_continuum.voxelize exactly."""
+    vc = _vc(); SW = vc.SW; FLOOR = vc.FLOOR
+    scl = (SW[1] - SW[0]) / 0.05
+    raw = np.loadtxt(se_csv, delimiter=',')
+    c = np.column_stack([SW[0] + raw[:, 1] * scl, SW[0] + raw[:, 2] * scl, FLOOR + raw[:, 3] * scl])
+    rr = raw[:, 4] * scl
+    nx, ny, nz = am_shape
+    mask = np.zeros(am_shape, bool)
+    for i in range(len(rr)):
+        cx, cy, cz = c[i]; r = float(rr[i])
+        ix0 = max(0, int((cx - r - SW[0]) / h)); ix1 = min(nx, int((cx + r - SW[0]) / h) + 1)
+        iy0 = max(0, int((cy - r - SW[0]) / h)); iy1 = min(ny, int((cy + r - SW[0]) / h) + 1)
+        iz0 = max(0, int((cz - r - FLOOR) / h)); iz1 = min(nz, int((cz + r - FLOOR) / h) + 1)
+        if ix0 >= ix1 or iy0 >= iy1 or iz0 >= iz1:
+            continue
+        gx = (SW[0] + (np.arange(ix0, ix1) + 0.5) * h - cx)[:, None, None]
+        gy = (SW[0] + (np.arange(iy0, iy1) + 0.5) * h - cy)[None, :, None]
+        gz = (FLOOR + (np.arange(iz0, iz1) + 0.5) * h - cz)[None, None, :]
+        mask[ix0:ix1, iy0:iy1, iz0:iz1] |= (gx * gx + gy * gy + gz * gz <= r * r)
+    return mask & ~am_mask
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', required=True, help='AM scaffold CSV (type,x,y,z,r)')
     ap.add_argument('--se', help='SE point cloud npy [n,3] box units (--save-se)')
     ap.add_argument('--se-proxy', action='store_true', help='no MPM run: cell-fill proxy (test)')
+    ap.add_argument('--se-dump', default='', help='SE seed CSV (real DEM positions): adds the '
+                    'loose PRE-compaction SE surface as seed_mesh_triangles for the before/after view')
     ap.add_argument('--se-frac', type=float, default=0.27)
     ap.add_argument('--n-vox', type=int, default=192, help='voxel resolution for the SE surface')
     ap.add_argument('--tri-step', type=int, default=3,
@@ -96,6 +123,18 @@ def main():
         tris = vu[f].round(3).tolist()                     # [[ [x,y,z]×3 ], ...]
     print(f'  SE surface: {len(tris):,} triangles (n_vox={a.n_vox}, step={a.tri_step})')
 
+    # seed (loose, pre-compaction) SE surface — the real DEM SE spheres on the same grid
+    seed_tris = []
+    seed_por = None
+    if a.se_dump:
+        seed_mask = seed_se_mask(a.se_dump, am_p.shape, h, am)
+        seed_por = 100.0 * (~(am | seed_mask)).mean()
+        smm = vc.mesh_of(seed_mask, a.tri_step, a.smooth)
+        if smm is not None:
+            sv, sf = smm
+            seed_tris = (sv * s).astype(np.float32)[sf].round(3).tolist()
+        print(f'  SEED SE surface: {len(seed_tris):,} triangles  (loose void {seed_por:.1f}%)')
+
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
@@ -125,6 +164,12 @@ def main():
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
     }
+    if seed_por is not None:
+        sim_seed = None                                             # prefer the sim's authoritative seed void
+        if sim_m.get('seed_AM_frac_pct') is not None and sim_m.get('seed_SE_frac_pct') is not None:
+            sim_seed = 100.0 - sim_m['seed_AM_frac_pct'] - sim_m['seed_SE_frac_pct']
+        mpm_metrics['seed_porosity_pct'] = round(sim_seed if sim_seed is not None else seed_por, 2)
+        mpm_metrics['compacted_porosity_pct'] = mpm_metrics['porosity_mpm_pct']
     for k in ('E_SE_GPa', 'nu_SE', 'sigma_y_GPa', 'K_SE_GPa', 'final_stress_GPa', 'target_GPa',
               'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol'):
         if k in sim_m:
@@ -132,8 +177,9 @@ def main():
 
     payload = {
         'kind': 'mpm', 'case': a.case,
-        'particles': particles,                            # AM_P / AM_S spheres
-        'mesh_triangles': tris,                            # SE plastic continuum surface
+        'particles': particles,                            # AM_P / AM_S spheres (same both states)
+        'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
+        'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},
         'atoms_only': False,
