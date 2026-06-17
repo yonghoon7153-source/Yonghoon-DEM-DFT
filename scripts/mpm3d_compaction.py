@@ -44,6 +44,10 @@ def parse_args(argv):
     ap.add_argument('--se-frac', type=float, default=0.27,
                     help='scaffold SE volume fraction of SOLID (default 0.27 = real_14 actual; vary to '
                          'see porosity respond — final porosity is a RESULT of plastic SE fill, not assumed)')
+    ap.add_argument('--se-dump', default='',
+                    help='CSV of REAL SE positions (type,x,y,z,r, same units as --am-scaffold): seed '
+                         'D1 SE spheres at the actual DEM SE centres instead of uniform cell-fill, so '
+                         'SE volume·distribution are REAL → porosity·coverage EMERGE (no se_frac/targeting)')
     ap.add_argument('--coh', type=float, default=0.0,
                     help='SE cohesion / adhesion (GPa, Cauchy): cold-weld + vdW of the soft sulfide — '
                          'an attractive stress that reduces the net contact repulsion → densifies. '
@@ -191,28 +195,60 @@ def main(argv):
         return False
 
     if args.am_scaffold:
-        # ── SE as a CONTINUUM filling the interstitial cells to the target volume fraction
-        #    ("grid SE"): fill a se_target/interstitial-vol fraction of the non-AM bed cells,
-        #    8 points/cell (dx/2 voxel).  Guarantees the SE volume (porosity becomes a result
-        #    of plastic fill, not RSA-packing-limited). ───────────────────────────────────
         spc = dx * 0.5
         i0 = int(SW[0] * n_grid) + 1; i1 = int(SW[1] * n_grid)
         k0 = int(FLOOR * n_grid) + 1; k1 = int(am_top * n_grid)
-        free = pin_np[i0:i1, i0:i1, k0:k1] == 0             # interstitial (non-AM) cells in the bed box
-        inter = np.argwhere(free) + np.array([i0, i0, k0])  # global cell indices [M,3]
-        inter_vol = len(inter) * dx ** 3
-        prob = min(1.0, se_target / max(inter_vol, 1e-12))
-        sel = inter[rng.random(len(inter)) < prob]          # cells to fill with SE [K,3]
+        if args.se_dump:
+            # ── seed SE at the REAL DEM SE centres: rasterise each D1 SE sphere into the grid
+            #    (voxel union → no overlap double-count), keep only non-AM cells.  SE volume and
+            #    spatial distribution are then REAL, so porosity·coverage EMERGE from the data
+            #    (no se_frac, no --target-porosity). ──────────────────────────────────────────
+            seraw = np.loadtxt(args.se_dump, delimiter=',')
+            se_c = np.column_stack([SW[0] + seraw[:, 1] * scl, SW[0] + seraw[:, 2] * scl,
+                                    FLOOR + seraw[:, 3] * scl])
+            se_rr = (seraw[:, 4] * scl).astype(np.float64)
+            se_pin = np.zeros((n_grid,) * 3, bool)
+            for _i in range(len(se_rr)):
+                cx, cy, cz = se_c[_i]; rr = float(se_rr[_i])
+                lo = np.maximum(np.floor((np.array([cx, cy, cz]) - rr) * n_grid).astype(int), 0)
+                hi = np.minimum(np.ceil((np.array([cx, cy, cz]) + rr) * n_grid).astype(int), n_grid)
+                if np.any(hi <= lo):
+                    continue
+                gx = (np.arange(lo[0], hi[0]) + 0.5) / n_grid
+                gy = (np.arange(lo[1], hi[1]) + 0.5) / n_grid
+                gz = (np.arange(lo[2], hi[2]) + 0.5) / n_grid
+                X, Y, Z = np.meshgrid(gx, gy, gz, indexing='ij')
+                se_pin[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]] |= (
+                    (X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr)
+            se_pin &= (pin_np == 0)                          # SE only in non-AM cells
+            sel = np.argwhere(se_pin)
+            seed_str = f"{len(seraw)} real SE spheres → {len(sel):,} SE cells (REAL positions, no targeting)"
+        else:
+            # ── uniform cell-fill: a se_target/interstitial-vol fraction of the non-AM bed cells
+            #    (porosity a RESULT of plastic fill, not RSA-limited). ──────────────────────────
+            free = pin_np[i0:i1, i0:i1, k0:k1] == 0
+            inter = np.argwhere(free) + np.array([i0, i0, k0])
+            prob = min(1.0, se_target / max(len(inter) * dx ** 3, 1e-12))
+            sel = inter[rng.random(len(inter)) < prob]
+            seed_str = f"{len(sel):,} SE cells, interstitial fill {prob*100:.0f}% (se_frac {args.se_frac})"
         subo = np.array([[a, b, c] for a in (0.25, 0.75) for b in (0.25, 0.75)
                          for c in (0.25, 0.75)]) * dx       # 8 sub-positions per cell
         xs = ((sel[:, None, :] * dx) + subo[None]).reshape(-1, 3).astype(np.float32)
         n = len(xs)
         if n < 2:
-            print("scaffold build failed (n<2) — check --am-scaffold / --se-frac"); return
+            print("scaffold build failed (n<2) — check --am-scaffold / --se-frac / --se-dump"); return
         mus = np.full(n, MU_SE, np.float32); las = np.full(n, LA_SE, np.float32)
         ylds = np.full(n, YIELD_SE, np.float32); pvs = np.full(n, spc ** 3, np.float32)
-        print(f"  scaffold: {len(am_r)} fixed AM + {len(sel):,} SE cells ({n:,} pts), "
-              f"interstitial fill {prob*100:.0f}%  (se_frac target {args.se_frac})")
+        # ── density / volume-fraction watch (real ρ: AM 4800, SE 2000 kg/m³ from the LIGGGHTS deck) ──
+        se_solid = len(sel) * dx ** 3
+        am_solid = float((pin_np > 0).sum()) * dx ** 3
+        bed_vol = WIDTH * WIDTH * (am_top - FLOOR)
+        f_am = 100.0 * am_solid / bed_vol; f_se = 100.0 * se_solid / bed_vol
+        bulk_rho = (am_solid * 4800.0 + se_solid * 2000.0) / bed_vol / 1000.0
+        print(f"  scaffold: {len(am_r)} fixed AM + {seed_str} ({n:,} pts)")
+        print(f"  seed density: AM {f_am:.1f}% / SE {f_se:.1f}% / void {max(0.0,100-f_am-f_se):.1f}%  "
+              f"(SE/solid {100*se_solid/max(am_solid+se_solid,1e-12):.1f}%)  "
+              f"ρ_bulk≈{bulk_rho:.2f} g/cm³  bed {(am_top-FLOOR)*um_box:.1f}µm")
     else:
         for (r, frac, mu, la, yld) in plan:
             goal = frac * target; acc = 0.0; fails = 0
@@ -348,7 +384,8 @@ def main(argv):
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
-    comp = (f"scaffold ({len(am_r)} fixed AM + SE se_frac={args.se_frac})" if args.am_scaffold
+    comp = (f"scaffold ({len(am_r)} fixed AM + SE "
+            + ("se_dump REAL positions)" if args.se_dump else f"se_frac={args.se_frac})") if args.am_scaffold
             else "real14 (3-comp 12:4:1, AM:SE 73:27)" if args.preset == 'real14'
             else f"{args.material} (am_frac={am_frac})")
     if not args.quiet:
@@ -403,15 +440,17 @@ def main(argv):
         if reached and por_at_target < 0:
             por_at_target = por                              # porosity when target stress was FIRST reached
         if not args.quiet and (frame % 20 == 0 or conv >= 12):
+            thick = f"  thickness={height*um_box:5.2f}µm" if um_box > 0 else ""
             print(f"  frame {frame:3d} [{'descend' if not reached else 'servo'}]  "
                   f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
-                  f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}", flush=True)
+                  f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}{thick}", flush=True)
         if conv >= 12 and frame > 20:
             if not args.quiet:
                 print("  ✓ converged: σzz equilibrated at target")
             break
     por_target_str = f"{por_at_target:.2f}%" if por_at_target >= 0 else "n/a (target never reached)"
-    scaf = f"scaffold {len(am_r)}AM se_frac={args.se_frac}" if args.am_scaffold else f"am_frac={am_frac}"
+    scaf = (f"scaffold {len(am_r)}AM " + ("se_dump(real)" if args.se_dump else f"se_frac={args.se_frac}")
+            if args.am_scaffold else f"am_frac={am_frac}")
     thick_str = (f"  thickness={(wall_z[None] - FLOOR) * um_box:.2f}µm" if um_box > 0 else "")
     print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity(settled)={por_end:.2f}%  "
           f"porosity@target={por_target_str}{thick_str}   "
