@@ -507,9 +507,21 @@ the SE = the 36–41 % problem); (3) fixing forces the SE to bear the load and d
 - se_frac→porosity MONOTONE (user hypothesis ✓): 0.20→21.3 / 0.27→16.7 / 0.35→7.1 %.
   cell-fill 24.84 % → 16.7 % = −8.2 %p plastic densification (MPM-only).  B3 surface-
   roughness coverage = TRANSPORT-only correction the smooth-sphere MPM correctly ignores.
+- ★ 512 GRID-CONVERGENCE (2026-06-17) — the +1.2 %p gap is CONVERGED, NOT resolution.
+  I hypothesised 16.7 vs 15.6 % was sub-cell SE UNDER-RESOLUTION (finer grid → SE fills AM
+  interstices → lower jamming → toward 15.6).  512 (115 M pts, se_frac=0.27, servo) REFUTES
+  it: porosity 384 16.7 → 512 **16.80 %** (Δ+0.1), thickness 30.71 µm, **wall_z 0.616 at
+  BOTH grids** (jamming position grid-INVARIANT), coverage 49.6/48.2 → 52.5/52.9 % (rose
+  ~3 %p, still in DEM Tabor 48–52 band).  WHY immovable: porosity = 1−solid/(area·(wall_z−
+  FLOOR)); solid pinned (SE=se_frac, AM=scaffold) → porosity = f(wall_z) only, and wall_z
+  locks at 0.616 both grids.  ⇒ the 1.2 %p is a CONVERGED constitutive-model difference
+  (rigid-sphere+overlap-proxy DEM vs plastic-continuum MPM @300 MPa), so the ~1 %p frame[4]
+  agreement is grid-INDEPENDENT — the STRONGER cross-validation: 1.2 %p IS the model-trust
+  bound, not a res artifact.  (se_frac=0.27 = real φ_SE → keep it, report the honest gap.)
 - REAL-PHYSICS knobs (not target fudges): `--protocol {servo=const-pressure dwell ≈ real
-  press, hold=LIGGGHTS displacement-stop+relax}`, `--coh` (SE cold-weld+vdW adhesion).
-  Residual MPM-vs-LIGGGHTS gap is mostly sub-cell-gap RESOLUTION, not missing physics.
+  press, hold=LIGGGHTS displacement-stop+relax}`, `--coh` (SE cold-weld+vdW adhesion =
+  attractive σ in compression → changes wallP but NOT porosity: porosity is pinned by
+  wall_z/jamming geometry, not SE internal stress — confirmed by a coh sweep, all 16.7 %).
   Fixed gotchas: arm-guard off for scaffold (over-compressed dense beds), CFL-safe dt +
   boundary clamp (AM-as-material preset blew up at n_grid≥384), thickness printed in µm.
 - **Frame[5] capability division (concrete)**:  DEM-only = σ_ionic/e/thermal (Kirchhoff),

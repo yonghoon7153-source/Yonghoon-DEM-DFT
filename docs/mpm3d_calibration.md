@@ -165,8 +165,9 @@ material re-introduces over-shielding (force chains shield the SE, the 36–41 %
 (3) AM discrete packing is DEM's domain, SE continuum morphology is MPM's.  Fixing forces
 the SE to bear the full load and actually densify.
 
-CROSS-VALIDATION (n_grid=384, se_frac=0.27 = real, servo bidirectional, coh=0):
-  • **porosity 16.7 %** vs LIGGGHTS production DEM **15.6 %**  (within ~1 %p)
+CROSS-VALIDATION (n_grid=384, se_frac=0.27 = real, servo bidirectional, coh=0;
+512-CONFIRMED — see grid-convergence block below: 384≡512, the gap is converged not res):
+  • **porosity 16.7 %** vs LIGGGHTS production DEM **15.6 %**  (within ~1 %p, grid-converged)
   • **thickness ~30.7 µm** vs LIGGGHTS **30.28 µm**  (consistent: MPM 1 %p less compacted
     → slightly thicker, slightly more porous)
   • **coverage (Tabor) AM_P 49.6 / AM_S 48.2 %** vs DEM Physics/Tabor **48.3 / 51.8 %** ✓
@@ -181,10 +182,29 @@ and the pure-SE Minnmann anchor (10 % @ 300 MPa) TRANSFERS to the composite (16.
 se_frac → porosity (monotone, the user's hypothesis): 0.20→21.3 / 0.27→16.7 / 0.35→7.1 %.
 Initial cell-fill 24.84 % → compacted 16.7 % = the −8.2 %p plastic densification (MPM-only).
 
+★ 512 GRID-CONVERGENCE — the +1.2 %p gap is CONVERGED, NOT resolution (2026-06-17).
+I had hypothesised the residual MPM 16.7 % vs LIGGGHTS 15.6 % gap was sub-cell-gap UNDER-
+RESOLUTION (a finer grid lets the small SE fill the AM interstices, lowering the jamming
+position toward 15.6 %).  The 512 run (115 M pts, se_frac=0.27, servo) **REFUTES** it:
+  • porosity   384 16.7 % →  512 **16.80 %**   (Δ +0.1 %p — identical)
+  • thickness  384 30.7  →  512 **30.71 µm**   (converged; LIGGGHTS 30.28)
+  • wall_z     384 0.616 →  512 **0.616**       (jamming position grid-INVARIANT)
+  • coverage   384 49.6/48.2 → 512 **52.5/52.9 %** (rose ~3 %p — finer SE wraps more AM
+    surface; still in the DEM Tabor 48–52 % band → "Hertz 18 % too low, Tabor ~50 %" robust)
+WHY it can't move: porosity = 1 − solid/(area·(wall_z−FLOOR)); SE volume is pinned by
+se_frac, AM by the scaffold → solid is constant, so porosity is a pure function of wall_z,
+and wall_z locks at 0.616 at BOTH grids.  ⇒ the +1.2 %p is a CONVERGED model difference
+(two independently-calibrated constitutive models — DEM rigid-sphere+overlap-proxy vs MPM
+plastic-continuum — at the same 300 MPa), NOT a resolution artifact.  This is the STRONGER
+frame [4] result: the ~1 %p cross-validation agreement is grid-INDEPENDENT (not a lucky
+resolution coincidence) → the 1.2 %p IS the quantified model-trust bound.  (To hit 15.6 %
+exactly one would nudge se_frac ~0.28, but se_frac=0.27 = the real φ_SE, so we keep it and
+report the honest converged gap.)
+
 REAL-PHYSICS knobs (not target fudges): `--protocol {servo,hold}` (servo = constant-
 pressure dwell ≈ real press; hold = LIGGGHTS displacement-stop+relax), `--coh` (SE
-cohesion: cold-weld+vdW, attractive σ in compression → densifies; the residual MPM-vs-
-LIGGGHTS gap is mostly a sub-cell-gap RESOLUTION effect, not missing physics).
+cohesion: cold-weld+vdW, attractive σ in compression → changes wallP but NOT porosity,
+since porosity is pinned by wall_z/jamming geometry, not by SE internal stress).
 GOTCHAs fixed: arm-guard over-compresses dense scaffold beds (disabled for scaffold);
 boundary clamp + CFL-safe dt (AM-as-material preset blew up at n_grid≥384); thickness
 printed in µm (wall_z is normalized box units — looked off vs 30.3 µm but agrees).
