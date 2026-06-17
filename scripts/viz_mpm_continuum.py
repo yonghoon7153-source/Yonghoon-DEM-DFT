@@ -287,6 +287,45 @@ def write_obj(path, meshes, s):
         fh.write(buf.getvalue())
 
 
+def write_nastran(path, am_p, am_s, se_mask, h):
+    """Hexahedral VOLUME mesh (one CHEXA per solid voxel) in NASTRAN free field —
+    COMSOL imports this directly as a ready, conformal, domain-tagged mesh, with
+    NO 'form solid' step (which fails on the self-intersecting marching-cubes
+    surface).  Shared voxel corners are de-duplicated → the mesh is watertight
+    and the AM-SE interfaces are conformal by construction.  Domains: property
+    1=AM_P, 2=AM_S, 3=SE (void = not meshed)."""
+    lab = np.zeros(am_p.shape, np.int8)
+    lab[se_mask] = 3; lab[am_s] = 2; lab[am_p] = 1        # AM overrides SE on overlap
+    solid = np.argwhere(lab > 0)                          # [M,3] voxel indices
+    if len(solid) == 0:
+        print('  NASTRAN: no solid voxels'); return
+    s = h * UM_BOX
+    offs = np.array([[0, 0, 0], [1, 0, 0], [1, 1, 0], [0, 1, 0],
+                     [0, 0, 1], [1, 0, 1], [1, 1, 1], [0, 1, 1]])   # CHEXA corner order
+    corners = (solid[:, None, :] + offs[None]).reshape(-1, 3)
+    uniq, inv = np.unique(corners, axis=0, return_inverse=True)     # de-dup shared nodes
+    nid = inv.reshape(-1, 8) + 1                          # [M,8] 1-based node ids
+    pid = lab[solid[:, 0], solid[:, 1], solid[:, 2]]
+    import io
+    buf = io.StringIO()
+    buf.write('$ MPM electrode hex mesh (voxel) — domains 1=AM_P 2=AM_S 3=SE\nBEGIN BULK\n')
+    np.savetxt(buf, np.column_stack([np.arange(1, len(uniq) + 1), uniq * s]),
+               fmt='GRID,%d,,%.4f,%.4f,%.4f')
+    lines = []
+    for e in range(len(solid)):
+        g = nid[e]
+        lines.append(f'CHEXA,{e+1},{int(pid[e])},{g[0]},{g[1]},{g[2]},{g[3]},{g[4]},{g[5]},')
+        lines.append(f',{g[6]},{g[7]}')
+    buf.write('\n'.join(lines) + '\n')
+    for p in (1, 2, 3):
+        buf.write(f'PSOLID,{p},{p}\nMAT1,{p},200000.,,0.3\n')   # COMSOL overrides material
+    buf.write('ENDDATA\n')
+    with open(path, 'w') as fh:
+        fh.write(buf.getvalue())
+    print(f'  saved {path}  ({len(solid):,} hex / {len(uniq):,} nodes; '
+          f'domains AM_P/AM_S/SE = property 1/2/3 → COMSOL imports as a ready mesh)')
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', required=True)
@@ -322,6 +361,11 @@ def main():
     ap.add_argument('--measure-only', action='store_true',
                     help='voxelise + print AM/SE/VOID %% then stop (no mesh/render) — '
                          'fast sweep to find the --se-min-count that hits true porosity')
+    ap.add_argument('--nastran', help='ALSO write a hex VOLUME mesh (PREFIX.nas, one CHEXA per '
+                    'solid voxel, domains AM_P/AM_S/SE) — COMSOL imports it directly with NO '
+                    "'form solid' step (which fails on the marching-cubes surface). Robust path.")
+    ap.add_argument('--nastran-nvox', type=int, default=96,
+                    help='resolution for the NASTRAN hex mesh (lower = fewer elements; 96 ≈ 0.7M hex)')
     ap.add_argument('--out', default='mpm_continuum_3d.html')
     a = ap.parse_args()
     col_map = PALETTES[a.palette]
@@ -351,6 +395,13 @@ def main():
     print(f'  coverage by SE:  AM_P {cov["AM_P"]:.1f}%   AM_S {cov["AM_S"]:.1f}%')
     if a.measure_only:                                  # fast --se-min-count sweep
         return
+
+    if a.nastran:                                       # hex VOLUME mesh for COMSOL (no form-solid)
+        nv = a.nastran_nvox
+        print(f'  NASTRAN hex mesh @ n_vox={nv} (re-voxelising coarser for element count)…')
+        amp2, ams2, se2, h2 = voxelize(se, t, c, r, nv, top, a.se_min_count,
+                                       a.denoise, a.target_porosity, a.target_coverage)
+        write_nastran(a.nastran, amp2, ams2, se2, h2)
 
     meshes = []
     for mask, col, name, op in ((am_p, col_map[1], 'AM_P', 1.0),
