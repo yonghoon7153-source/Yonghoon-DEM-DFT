@@ -159,6 +159,9 @@ def main():
     ap.add_argument('--step', type=int, default=2, help='marching-cubes step (2 = coarser/fewer tris)')
     ap.add_argument('--se-opacity', type=float, default=0.55, help='SE matrix transparency')
     ap.add_argument('--engine', choices=['plotly', 'mpl'], default='plotly')
+    ap.add_argument('--measure-only', action='store_true',
+                    help='voxelise + print AM/SE/VOID %% then stop (no mesh/render) — '
+                         'fast sweep to find the --se-min-count that hits true porosity')
     ap.add_argument('--out', default='mpm_continuum_3d.html')
     a = ap.parse_args()
 
@@ -181,6 +184,8 @@ def main():
     print(f'voxel grid {am_p.shape}  (h={h*UM_BOX:.3f} µm)')
     print(f'  AM {100*am.mean():.1f}%  SE {100*se_mask.mean():.1f}%  '
           f'VOID {100*void.mean():.1f}%   ← 3D porosity at this resolution')
+    if a.measure_only:                                  # fast --se-min-count sweep
+        return
 
     meshes = []
     for mask, col, name, op in ((am_p, COL[1], 'AM_P', 1.0),
