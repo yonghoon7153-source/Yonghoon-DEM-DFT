@@ -46,6 +46,44 @@ def _disk(radius_px: int) -> np.ndarray:
     return (xx*xx + yy*yy) <= r*r
 
 
+def _irregular_pore_mask(py, px, r_base, room, rng, ny, nx, rough=0.5):
+    """Boolean mask (+ bounding-box slices) for ONE non-round pore at (py, px).
+
+    Real compaction voids are NOT discs — they are the angular gaps left
+    between jammed grains, so they come out elongated, lobed, wedge-shaped and
+    mildly concave.  We reproduce that population variety per pore with:
+      • anisotropy — a random elongation `aspect` along a random axis `psi`
+        (area-preserving: long axis ×√aspect, short axis ÷√aspect), and
+      • multi-lobe roughness — harmonics 1..5 with a per-pore amplitude, so
+        some pores are nearly smooth and others jagged.
+    The longest radial reach is capped to `room` (distance from the centre to
+    the nearest non-host pixel) so a pore stays strictly interior to its host
+    region and never spans / severs it.  Returns None if there is no room.
+    """
+    psi    = rng.uniform(0.0, np.pi)                       # elongation axis
+    aspect = rng.uniform(1.0, 2.4)                         # long:short ratio
+    elong  = np.sqrt(aspect)
+    K      = 5
+    base   = float(rough) * rng.uniform(0.55, 1.0)        # this pore's roughness
+    a      = rng.uniform(-1.0, 1.0, K) * base / np.arange(1, K + 1) ** 0.7
+    ph     = rng.uniform(0.0, 2 * np.pi, K)
+    ext    = 1.0 + float(np.abs(a).sum())                 # worst-case wobble
+    r_base = min(float(r_base), (room - 1.0) / (elong * ext))
+    if r_base < 1.5:
+        return None
+    reach  = int(np.ceil(r_base * elong * ext)) + 1
+    y0, y1 = max(0, py - reach), min(ny, py + reach + 1)
+    x0, x1 = max(0, px - reach), min(nx, px + reach + 1)
+    gy, gx = np.ogrid[y0 - py:y1 - py, x0 - px:x1 - px]
+    ct, st = np.cos(psi), np.sin(psi)
+    u  = (ct * gx + st * gy) / elong                       # rotate + elongate
+    v  = (-st * gx + ct * gy) * elong
+    rr = np.hypot(u, v)
+    th = np.arctan2(v, u)
+    wob = 1.0 + sum(a[k] * np.cos((k + 1) * th + ph[k]) for k in range(K))
+    return slice(y0, y1), slice(x0, x1), rr <= r_base * wob
+
+
 def _se_to_continuum(labels: np.ndarray, r_se_px: float,
                       target_void_frac: float | None = None) -> np.ndarray:
     """Convert discrete SE particles → a single CONNECTED SE matrix, then
@@ -94,7 +132,6 @@ def _se_to_continuum(labels: np.ndarray, r_se_px: float,
     dist_edge = _ndi.distance_transform_edt(se_now)        # interior room map
     pr_min = 2.0
     pr_max = max(3.0, r_se_px * 1.6)
-    AMP = 0.35                                             # max radial wobble
     cy, cx = np.where(se_now & (dist_edge > pr_min + 1.5))
     if len(cy) == 0:
         return out
@@ -106,31 +143,22 @@ def _se_to_continuum(labels: np.ndarray, r_se_px: float,
         if blocked[py, px]:
             continue
         room = float(dist_edge[py, px])
-        # sample a target radius (skewed small), capped so the wobbly blob
-        # stays fully interior to the original SE
+        # sample a target radius (skewed small); the helper carves an
+        # anisotropic, multi-lobed pore capped to stay fully interior to SE
         r_target = pr_min + (pr_max - pr_min) * rng.random() ** 1.7
-        r_base = min(r_target, (room - 1.5) / (1.0 + AMP))
-        if r_base < pr_min:
+        res = _irregular_pore_mask(py, px, r_target, room, rng, ny, nx, rough=0.5)
+        if res is None:
             continue
-        a = rng.uniform(-1, 1, 3) * (AMP / 3.0)            # 3 harmonics
-        ph = rng.uniform(0, 2 * np.pi, 3)
-        rmax = int(np.ceil(r_base * (1.0 + AMP))) + 1
-        y0, y1 = max(0, py - rmax), min(ny, py + rmax + 1)
-        x0, x1 = max(0, px - rmax), min(nx, px + rmax + 1)
-        gy, gx = np.ogrid[y0 - py:y1 - py, x0 - px:x1 - px]
-        rr = np.hypot(gy, gx)
-        th = np.arctan2(gy, gx)
-        r_blob = r_base * (1.0 + a[0] * np.cos(th + ph[0])
-                                + a[1] * np.cos(2 * th + ph[1])
-                                + a[2] * np.cos(3 * th + ph[2]))
-        region = out[y0:y1, x0:x1]
-        m = (rr <= r_blob) & (region == SE)
+        sy, sx, blob = res
+        region = out[sy, sx]
+        m = blob & (region == SE)
         c = int(m.sum())
         if c == 0:
             continue
         region[m] = VOID
         need -= c
-        bm = int(rmax + pr_max + 2)                        # keep pores apart
+        ry, rx = sy.stop - sy.start, sx.stop - sx.start   # keep pores apart
+        bm = int(max(ry, rx) * 0.6 + pr_max + 2)
         by0, by1 = max(0, py - bm), min(ny, py + bm + 1)
         bx0, bx1 = max(0, px - bm), min(nx, px + bm + 1)
         blocked[by0:by1, bx0:bx1] = True
@@ -762,25 +790,18 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if blocked[py, px]:
                 continue
             room = float(dist_edge[py, px])
+            # anisotropic, multi-lobed pore (elongated/lobed/angular, not a disc)
             r_target = 2.0 + (pr_max - 2.0) * rng.random() ** 1.6
-            r_base = min(r_target, room - 0.5)
-            if r_base < 1.5:
+            res = _irregular_pore_mask(py, px, r_target, room + 0.5, rng, ny, nx, rough=0.55)
+            if res is None:
                 continue
-            a = rng.uniform(-1, 1, 3) * 0.12
-            ph = rng.uniform(0, 2 * np.pi, 3)
-            rmax = int(np.ceil(r_base * 1.4)) + 1
-            yy0, yy1 = max(0, py - rmax), min(ny, py + rmax + 1)
-            xx0, xx1 = max(0, px - rmax), min(nx, px + rmax + 1)
-            gy, gx = np.ogrid[yy0 - py:yy1 - py, xx0 - px:xx1 - px]
-            rr = np.hypot(gy, gx); th = np.arctan2(gy, gx)
-            rb = r_base * (1 + a[0] * np.cos(th + ph[0]) + a[1] * np.cos(2 * th + ph[1])
-                           + a[2] * np.cos(3 * th + ph[2]))
-            m = ((rr <= rb) & non_am[yy0:yy1, xx0:xx1]
-                 & (~pore[yy0:yy1, xx0:xx1]))
+            sy, sx, blob = res
+            m = blob & non_am[sy, sx] & (~pore[sy, sx])
             if int(m.sum()) == 0:
                 continue
-            pore[yy0:yy1, xx0:xx1] |= m
-            bm = int(rmax + 3)
+            pore[sy, sx] |= m
+            ry, rx = sy.stop - sy.start, sx.stop - sx.start
+            bm = int(max(ry, rx) * 0.5 + 3)
             blocked[max(0, py-bm):min(ny, py+bm+1),
                     max(0, px-bm):min(nx, px+bm+1)] = True
     # non-AM, non-pore → SE matrix; pores stay VOID
