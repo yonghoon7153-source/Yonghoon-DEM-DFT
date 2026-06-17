@@ -46,23 +46,28 @@ def _disk(radius_px: int) -> np.ndarray:
     return (xx*xx + yy*yy) <= r*r
 
 
-def _irregular_pore_mask(py, px, r_base, room, rng, ny, nx, rough=0.5):
+def _irregular_pore_mask(py, px, r_base, room, rng, ny, nx, rough=0.5,
+                         psi=None, aspect=None):
     """Boolean mask (+ bounding-box slices) for ONE non-round pore at (py, px).
 
     Real compaction voids are NOT discs — they are the angular gaps left
     between jammed grains, so they come out elongated, lobed, wedge-shaped and
     mildly concave.  We reproduce that population variety per pore with:
-      • anisotropy — a random elongation `aspect` along a random axis `psi`
+      • anisotropy — elongation `aspect` along axis `psi`
         (area-preserving: long axis ×√aspect, short axis ÷√aspect), and
       • multi-lobe roughness — harmonics 1..5 with a per-pore amplitude, so
         some pores are nearly smooth and others jagged.
+    `psi`/`aspect` may be supplied (e.g. aligned to the local SE channel and
+    scaled by a target tortuosity) — otherwise they are sampled at random.
     The longest radial reach is capped to `room` (distance from the centre to
     the nearest non-host pixel) so a pore stays strictly interior to its host
     region and never spans / severs it.  Returns None if there is no room.
     """
-    psi    = rng.uniform(0.0, np.pi)                       # elongation axis
-    aspect = rng.uniform(1.0, 2.4)                         # long:short ratio
-    elong  = np.sqrt(aspect)
+    if psi is None:
+        psi = rng.uniform(0.0, np.pi)                     # elongation axis
+    if aspect is None:
+        aspect = rng.uniform(1.0, 2.4)                    # long:short ratio
+    elong  = np.sqrt(max(1.0, float(aspect)))
     K      = 5
     base   = float(rough) * rng.uniform(0.55, 1.0)        # this pore's roughness
     a      = rng.uniform(-1.0, 1.0, K) * base / np.arange(1, K + 1) ** 0.7
@@ -517,7 +522,8 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                               single_crystal_facets: bool = True,
                               seed: int = 0,
                               cov_off_p: float = 0.022, cov_off_s: float = 0.030,
-                              bridge_dmax_um: float = 3.0, gap_um: float = 0.4):
+                              bridge_dmax_um: float = 3.0, gap_um: float = 0.4,
+                              tortuosity_influence: float = 1.0):
     """Build a REPRESENTATIVE 2D microstructure from the 3D statistics
     (not a literal slice).
 
@@ -548,6 +554,10 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
 
     box_x_um = (ip.get('box_x') or 0.05) * scale
     poro = float(fm.get('porosity') or 14.0) / 100.0
+    # geometric tortuosity → pore elongation: higher τ ⇒ pores stretched along
+    # the SE channels (streaky) ⇒ longer, more winding ionic paths.
+    tau = float(fm.get('tortuosity_recommended') or fm.get('tortuosity_mean')
+                or fm.get('tortuosity_median') or fm.get('tortuosity') or 1.5)
     phi_se = fm.get('phi_se')
     phi_se = float(phi_se) if phi_se is not None else 0.30
     def _cov(base):
@@ -777,22 +787,35 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
 
     need_void = int(round(poro * nx * ny))
     non_am = (labels == VOID)
-    pr_max = max(2.0, r_se_um / pa * 2.0)
-    dist_edge = _ndi.distance_transform_edt(non_am & ~pore)
-    blocked = np.zeros_like(non_am)
-    cy_, cx_ = np.where((non_am & ~pore) & (dist_edge > 1.5))
-    if len(cy_):
-        order = np.argsort(-dist_edge[cy_, cx_])
-        for ci in order:
+    pr_max = max(3.0, r_se_um / pa * 4.0)             # allow multi-µm pores
+    # SE-channel direction = perpendicular to the (smoothed) distance gradient.
+    # Elongating each pore ALONG its channel makes the voids streaky (길쭉) and
+    # winds the SE path — a light GEOMETRIC tortuosity whose strength scales with
+    # the measured τ (× tortuosity_influence; set 0 to disable).
+    de0 = _ndi.distance_transform_edt(non_am).astype(float)
+    gy0, gx0 = np.gradient(_ndi.gaussian_filter(de0, 2.0))
+    chan = np.arctan2(gy0, gx0) + np.pi / 2.0
+    aspect = 1.3 + 2.0 * float(np.clip((tau - 1.0) * tortuosity_influence, 0.0, 1.0))
+    # multi-pass keeps the porosity PINNED even though elongated pores pack less
+    # densely than discs: each pass refills the SE gaps left by the previous one.
+    for _pass in range(5):
+        if int(pore.sum()) >= need_void:
+            break
+        dist_edge = _ndi.distance_transform_edt(non_am & ~pore)
+        blocked = np.zeros_like(non_am)
+        cy_, cx_ = np.where((non_am & ~pore) & (dist_edge > 1.5))
+        if not len(cy_):
+            break
+        for ci in np.argsort(-dist_edge[cy_, cx_]):
             if int(pore.sum()) >= need_void:
                 break
             py, px = int(cy_[ci]), int(cx_[ci])
             if blocked[py, px]:
                 continue
             room = float(dist_edge[py, px])
-            # anisotropic, multi-lobed pore (elongated/lobed/angular, not a disc)
-            r_target = 2.0 + (pr_max - 2.0) * rng.random() ** 1.6
-            res = _irregular_pore_mask(py, px, r_target, room + 0.5, rng, ny, nx, rough=0.55)
+            r_target = 2.0 + (pr_max - 2.0) * rng.random() ** 1.4
+            res = _irregular_pore_mask(py, px, r_target, room + 0.5, rng, ny, nx,
+                                       rough=0.5, psi=float(chan[py, px]), aspect=aspect)
             if res is None:
                 continue
             sy, sx, blob = res
@@ -801,7 +824,7 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                 continue
             pore[sy, sx] |= m
             ry, rx = sy.stop - sy.start, sx.stop - sx.start
-            bm = int(max(ry, rx) * 0.5 + 3)
+            bm = int(min(ry, rx) * 0.5 + 2)           # block on SHORT axis → packs to target
             blocked[max(0, py-bm):min(ny, py+bm+1),
                     max(0, px-bm):min(nx, px+bm+1)] = True
     # non-AM, non-pore → SE matrix; pores stay VOID
