@@ -56,5 +56,17 @@ rare-earths in OXIDE SEs (LLZO). → our **Nd₂O₃-doped LPSCl is largely nove
 the trivalent-aliovalent + RE-oxide-4f analogs above. User also holds experimental **La₂O₃+O ("La+O")** data (σ ↓) as the
 closest experimental precedent.
 
+## CLAIM 6 — Nd / O dopant ROLE (why Nd2O3?) : O = stability at sigma cost; Nd = oxophilic carrier/getter (2026-06-17 search)
+- **"Site-selective oxygen introduction in sulfide argyrodite" 2025** — PII S2405829725000790. O -> structural stabilization + moisture stability.
+- **"Oxysulfide SE: impact of oxygen in sulfides" 2025** — PII S2405829725006671. + **air-stability review** PII S1385894725086310.
+  KEY quote (review): "O improves moisture stability but **significantly degrades ionic conductivity & cell performance**" == our sigma 0.52x.
+- **Metal-oxide H2S getters** (ZnO/Fe2O3/Bi2O3) suppress H2S in sulfides "**at the expense of ionic conductivity**" -> Nd2O3 (basic oxide) fits this archetype.
+- **HSAB**: O2- hard base binds Nd3+ hard acid -> Nd oxophilically ANCHORS O (our P-O-Nd bridges). (soft acids As/Sb/Sn instead protect S.)
+- **Nd3+-LiNiPO4 cathode** — PII S0167577X18318676. Nd in phosphate -> high-voltage structural stability (resonates with NdPO4 motif).
+- **Nd3+ in ceramics** (CeO2:Nd S1567173912003021 etc.): lattice distortion + grain-boundary/sintering/densification = microstructural lever (may touch GB/total conductivity).
+- READING (lit <-> our DFT AGREE): O does the function (oxidation/moisture stability) with a documented sigma penalty; Nd is the
+  oxophilic hard-acid carrier/anchor for O + basic-oxide air-stability getter + microstructure modifier. Nd's standalone gap/sigma
+  effects are neutral-to-negative (our DFT) -> consistent with "RE/oxide doping = stability-for-conductivity trade".
+
 ## DECISIVE FOLLOW-UP CALC (to nail attribution)
 O-only PS₃O+PS₂O₂ cell (remove Nd, Li charge-compensate) → predicted gap widen/unchanged ⇒ proves narrowing is 100% Nd.
