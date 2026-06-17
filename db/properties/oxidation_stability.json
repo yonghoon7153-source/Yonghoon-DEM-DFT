@@ -1,6 +1,16 @@
 {
   "property": "oxidation_reduction_electrochemical_stability_window",
   "description": "Intrinsic electrochemical stability window (ESW) of comp1 (LPSCl) vs modelc (LPSCl1.6) from the grand-potential phase-diagram method (Mo/Ong/Ceder 2012). Real ESW (Li reservoir opened, μ_Li scanned) — NOT the qualitative competing-phase-span hint from tools/doping/esw_check.py.",
+  "nd2o3_interface_reactivity_2026_06_17": {
+    "_run": "tools/oxidation/run_nd_interface.sh on kserver116 (MP GGA_GGA+U; chemsys C-Cl-Co-Li-Nd-O-P-S, 1385 entries)",
+    "method": "pymatgen InterfacialReactivity use_hull_energy vs LiCoO2 + C",
+    "min_dE_rxn_eV_per_atom_vs_LiCoO2": {"comp1": -0.3227, "modelc": -0.3308, "nd_doped": -0.3285},
+    "vs_carbon": "comp1/modelc/nd ALL 0.000 (no spontaneous SE/C reaction at OCV)",
+    "products_vs_LiCoO2": "all -> Co9S8 + Li3PO4 + Li2S + LiCl + Li2SO4 (O for Li3PO4 comes from the CATHODE, so phosphate CEI forms regardless of doping); nd additionally forms Nd2SO2.",
+    "reading": "nd cathode reactivity ~= modelc (only 0.0023 eV/atom less negative = marginal/noise); comp1 least reactive. Nd2O3 partially offsets modelc's Cl-induced higher reactivity but the effect is SMALL. => the experimental cycling improvement is NOT explained by reduced cathode (thermodynamic) reactivity; it points to the ELECTRONIC-conductivity drop (mechanism 1: dendrite/self-discharge suppression, Han 2019) as the driver. Cathode compatibility is maintained (not worsened).",
+    "caveats": "LiCoO2 proxy (experiment may use NCM); thermodynamic reaction energy only (kinetic CEI passivation not captured); reactivity differences are small.",
+    "files": "tools/oxidation/interface_reactivity_nd.json (commit from kserver116)"
+  },
   "method": {
     "approach": "pymatgen PhaseDiagram.get_element_profile(Li, composition) over the MP GGA_GGA+U corrected Li-P-S-Cl convex hull (108 entries). Needs only the COMPOSITION + MP hull, so comp1 (in MP) and modelc (Li5.4PS4.4Cl1.6, non-stoichiometric, NOT in MP) are handled on identical footing.",
     "tool": "tools/oxidation/esw_grand_potential.py",
