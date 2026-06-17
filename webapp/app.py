@@ -5087,6 +5087,59 @@ def serve_3d_mpm_data(case_id):
     return jsonify(payload)
 
 
+@app.route('/results/<case_id>/mpm-input')
+def mpm_input_package(case_id):
+    """[MPM input 변환]: build the per-case MPM input (am/se scaffolds + run_mpm.sh +
+    provenance) from the case's atoms.csv and return it as a zip to run on a GPU box."""
+    import subprocess
+    import tempfile
+    import zipfile
+    import io
+    import shutil
+    results_dir = get_results_dir(case_id)
+    if not os.path.exists(os.path.join(results_dir, 'atoms.csv')):
+        return jsonify({'error': 'no atoms.csv for this case'}), 404
+    repo = os.path.dirname(os.path.dirname(__file__))
+    gen = os.path.join(repo, 'scripts', 'mpm_input_from_case.py')
+    tmp = tempfile.mkdtemp()
+    try:
+        subprocess.run(['python3', gen, '--results', results_dir, '--case', case_id, '--out', tmp],
+                       check=True, cwd=repo, capture_output=True, text=True)
+    except subprocess.CalledProcessError as e:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return jsonify({'error': 'generation failed', 'detail': (e.stderr or '')[-500:]}), 500
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as z:
+        for fn in sorted(os.listdir(tmp)):
+            z.write(os.path.join(tmp, fn), fn)
+    shutil.rmtree(tmp, ignore_errors=True)
+    buf.seek(0)
+    return send_file(buf, mimetype='application/zip', as_attachment=True,
+                     download_name=f'mpm_input_{case_id}.zip')
+
+
+@app.route('/results/<case_id>/mpm-upload', methods=['POST'])
+def mpm_upload(case_id):
+    """Ingest the MPM result (mpm_payload.json produced on the GPU box) back into the
+    case → results/<case_id>/mpm_payload.json, activating the MPM viewer + compare."""
+    results_dir = get_results_dir(case_id)
+    f = request.files.get('payload')
+    if not f:
+        return jsonify({'error': 'no payload file (field "payload")'}), 400
+    try:
+        data = json.load(f.stream)
+    except Exception as e:
+        return jsonify({'error': f'not valid JSON: {e}'}), 400
+    if data.get('kind') != 'mpm' or 'particles' not in data:
+        return jsonify({'error': 'not an MPM payload (expected kind=mpm + particles)'}), 400
+    with open(os.path.join(results_dir, 'mpm_payload.json'), 'w') as out:
+        json.dump(data, out)
+    m = data.get('mpm_metrics', {})
+    return jsonify({'ok': True, 'porosity_mpm_pct': m.get('porosity_mpm_pct'),
+                    'coverage_AM_P_mpm_pct': m.get('coverage_AM_P_mpm_pct'),
+                    'n_am': m.get('n_am'), 'se_surface_tris': m.get('se_surface_tris')})
+
+
 @app.route('/results/<case_id>/3d-data')
 def serve_3d_data(case_id):
     """Serve particle + percolation data for 3D viewer."""

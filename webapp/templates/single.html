@@ -220,6 +220,25 @@
 </div>
 
 {% if not archive_path %}
+<!-- MPM pipeline: DEM → MPM input → (GPU run) → upload → viewer/compare -->
+<div class="card">
+  <div class="card-header-row"><h3>MPM 파이프라인</h3></div>
+  <p style="color:#666; font-size:0.9em; margin:4px 0 10px">
+    DEM 입자 → MPM 입력 변환(① zip) → GPU 서버에서 <code>run_mpm.sh</code> 실행 →
+    결과 <code>mpm_payload.json</code> 업로드(③) → 위 "MPM" 3D 버튼 + 비교표 활성화.
+  </p>
+  <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+    <a class="btn btn-primary" href="/results/{{ case.id }}/mpm-input">① MPM input 변환 (zip)</a>
+    <form style="display:inline-flex; gap:6px; align-items:center" onsubmit="return uploadMpm(event)">
+      <input type="file" id="mpm-payload-file" accept=".json" required>
+      <button class="btn btn-secondary" type="submit">③ 결과 업로드</button>
+    </form>
+    <span id="mpm-upload-status" style="color:#888; font-size:0.9em"></span>
+  </div>
+</div>
+{% endif %}
+
+{% if not archive_path %}
 <!-- 2D Representative Microstructure (procedural, for COMSOL) -->
 <div class="card">
   <div class="card-header-row">
@@ -269,6 +288,23 @@
 }
 </script>
 <script>
+async function uploadMpm(e) {
+  e.preventDefault();
+  const file = document.getElementById('mpm-payload-file').files[0];
+  const status = document.getElementById('mpm-upload-status');
+  if (!file) return false;
+  status.textContent = '업로드 중…';
+  const fd = new FormData(); fd.append('payload', file);
+  try {
+    const r = await fetch('/results/{{ case.id }}/mpm-upload', { method: 'POST', body: fd });
+    const j = await r.json();
+    status.textContent = j.ok
+      ? `✓ porosity ${j.porosity_mpm_pct}% · coverage AM_P ${j.coverage_AM_P_mpm_pct}% · ${j.se_surface_tris} tris — 위 "MPM (압축 후)" 눌러보기`
+      : '✗ ' + (j.error || '실패');
+  } catch (err) { status.textContent = '✗ ' + err; }
+  return false;
+}
+
 let cur3dMode = null;
 
 // DEM particles, or the MPM plastic continuum (compacted / loose-seed before-after).
