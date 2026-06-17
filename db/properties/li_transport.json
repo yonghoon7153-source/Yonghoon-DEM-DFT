@@ -138,7 +138,8 @@
         "Ea_vs_modelc": "nd 0.227 ≈ modelc 0.224 (Δ+0.003) — barrier UNCHANGED by Nd+O. Both < comp1 0.253.",
         "D_ratio_nd_over_modelc": "0.62 (600-1000K), 0.58 (300K extrap) — Nd+O lowers Li diffusivity to ~62% of modelc.",
         "sigma300_ratio_nd_over_modelc": "0.52 (= D ratio 0.58 × n_Li ratio 0.90). nd 7.3 vs modelc 14 mS/cm; nd still > comp1 3.35.",
-        "mechanism": "σ decrease is NOT a barrier effect (Ea unchanged); it is (1) lower diffusivity D (Nd3+ + O@PS4 narrows/blocks Li channels, ×0.62) + (2) fewer Li carriers (n_Li 2.00 vs 2.22e22, Nd3+/O2- Li-vacancy charge compensation, ×0.90).",
+        "mechanism": "σ300 ratio (nd/modelc) 0.52 DECOMPOSES into three multiplicative factors: D0 prefactor 0.65 (nd 3.78e-4 vs modelc 5.80e-4) × n_Li carriers 0.90 (2.00 vs 2.22e22) × Ea barrier factor 0.88 (exp[-(0.227-0.224)/kT@300]). 0.65×0.90×0.88=0.52 ✓. DOMINANT driver = D0 PREFACTOR reduction — Nd3+ + O@PS4 narrows Li pathways / lowers attempt frequency. Carrier reduction (Nd3+/O2- Li-vacancy compensation) secondary; barrier essentially UNCHANGED (negligible Ea factor).",
+        "D0_prefactor_3way_cm2_per_s": {"comp1_LPSCl": 4.11e-4, "modelc_LPSCl16": 5.80e-4, "nd_NdO": 3.78e-4, "_note": "nd D0 LOWEST — Nd+O reduces the attempt-frequency/pathway prefactor below even ordered LPSCl. modelc highest (vacancy-rich, more open pathways)."},
         "experimental_validation": "Matches La+O co-doping (Electrochim. Acta 2025, doi 10.1016/j.electacta.2025.146619): exp sigma 9.58→6.23 mS/cm = 0.65× on La3+ + O. Our Nd3++O DFT-MLIP gives 0.52× — same direction, similar magnitude. Trivalent-lanthanide + O co-doping reduces sigma ~0.5-0.65×."
       },
       "caveat": "UMA Nd-4f transferability unverified (4f sparse in MLIP training). ROBUST claims: Ea direction + nd/modelc D & sigma ratio. Absolute sigma carries usual UMA 3-5× overshoot PLUS Nd-4f uncertainty — do NOT cite 7.29 mS/cm as absolute."
