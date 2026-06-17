@@ -33,6 +33,12 @@ def main():
     ap.add_argument('--slab', type=float, default=0.0, help='slab half-thickness (box units; 0=auto)')
     ap.add_argument('--nx', type=int, default=220, help='image columns (≈ SE point density; '
                     'too high → SE undersampled/sparse, too low → blocky)')
+    ap.add_argument('--se-min-count', type=int, default=1,
+                    help='pixel is SE only if ≥N SE points land in it (1=any point; '
+                         '>1 removes the thin-slab salt-and-pepper false void)')
+    ap.add_argument('--denoise', type=int, default=0,
+                    help='morphological close+open iterations on the SE mask so only '
+                         'COHERENT pores remain (0=off; 1-2 typical, needs scipy)')
     ap.add_argument('--out', default='mpm_morphology.png')
     a = ap.parse_args()
 
@@ -52,12 +58,22 @@ def main():
     X, Z = np.meshgrid(xs, zs)                                  # [nz,nx]
     lab = np.zeros((nz, nx), np.int8)                          # 0 void
 
-    # SE: bin slab points into the (x,z) image → SE where any point falls
+    # SE: bin slab points into the (x,z) image.  Default = SE where any point
+    # lands; with --se-min-count, SE only where ≥N points hit a pixel (removes
+    # the salt-and-pepper false-void of a thin subsampled slab); --denoise then
+    # runs a morphological close+open so only COHERENT pores survive.
     m = np.abs(se[:, 1] - a.y) < half
     sx, sz = se[m, 0], se[m, 2]
     ix = np.clip(((sx - x0) / (x1 - x0) * (nx - 1)).astype(int), 0, nx - 1)
     iz = np.clip(((sz - z0) / (z1 - z0) * (nz - 1)).astype(int), 0, nz - 1)
-    lab[iz, ix] = 3                                            # SE
+    cnt = np.zeros((nz, nx), np.int32)
+    np.add.at(cnt, (iz, ix), 1)
+    se_mask = cnt >= a.se_min_count
+    if a.denoise > 0:
+        from scipy import ndimage as ndi
+        se_mask = ndi.binary_closing(se_mask, iterations=a.denoise)   # fill void specks in SE
+        se_mask = ndi.binary_opening(se_mask, iterations=a.denoise)   # drop SE specks in void
+    lab[se_mask] = 3                                           # SE
 
     # AM cross-section at the slab (overwrites SE/void): circle radius √(r²-(cy-y)²)
     for i in range(len(am_r)):
