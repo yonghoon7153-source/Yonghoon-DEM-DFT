@@ -5,6 +5,17 @@
   "family": "Li5.4 + Nd2O3-doped",
   "base": "Model C (Li5.4PS4.4Cl1.6)",
   "doping_source": "Nd2O3",
+  "relaxed_O_speciation_verified_2026_06_17": {
+    "source_structure": "paper_figures/nd2o3_doped_modelc_DFTrelax.cif (120-atom, x=0.20 main track)",
+    "method": "P-centered anion coordination (<2.2 A) on DFT-relaxed cell",
+    "speciation": {"PS2O2": 1, "PS3O": 1, "PS4_pristine": 8},
+    "details": {
+      "P24_PS2O2": "O29 (P-O 1.55) + O34 (P-O 1.57) + S39 + S44 ; O34 also Nd-coordinated (O-Nd 2.61) -> P-O-Nd bridge",
+      "P25_PS3O": "O40 (P-O 1.60) + S30 + S35 + S45 ; O40 Nd-coordinated (O-Nd 2.48) -> P-O-Nd bridge",
+      "O29": "PS2O2 oxygen, NOT Nd-bonded (O-Nd 4.13)"
+    },
+    "note": "All 3 O are in P tetrahedra (no free O); 2 of 3 O bridge to Nd (P-O-Nd). Earlier 'all PS3O' statement corrected. For an apples-to-apples O-only control, keep THIS speciation (1 PS2O2 + 1 PS3O) and remove only Nd (Li charge-compensate)."
+  },
   "tracks": {
     "main_Nd_to_Li": {
       "label": "Track 1 (primary, chemically sensible)",
