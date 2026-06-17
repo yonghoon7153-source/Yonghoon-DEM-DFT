@@ -60,6 +60,9 @@ def edit(label, sign):
         t = re.sub(r"ion_dynamics\s*=\s*['\"][^'\"]*['\"]", "ion_dynamics = 'bfgs'", t, count=1)
     else:
         t = re.sub(r"(&ELECTRONS.*?\n\s*/\s*\n)", r"\1&IONS\n  ion_dynamics='bfgs'\n/\n", t, count=1, flags=re.S|re.I)
+    # 5) force K_POINTS 2x2x1 (elastic, matches modelc; cheaper for big cell)
+    t = re.sub(r"(K_POINTS\s+automatic\s*\n)\s*\d+\s+\d+\s+\d+\s+\d+\s+\d+\s+\d+\s*\n",
+               r"\g<1>  2 2 1 0 0 0\n", t, count=1, flags=re.I)
     # checks
     for must in ["HUBBARD", "starting_magnetization", "ATOMIC_SPECIES", "relax"]:
         if must.lower() not in t.lower():
