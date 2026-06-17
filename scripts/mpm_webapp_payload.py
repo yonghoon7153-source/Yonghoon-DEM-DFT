@@ -198,9 +198,11 @@ def main():
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
     }
-    if geo_cov:                                                     # DEM-comparable coverage (Hertz/Tabor)
-        mpm_metrics['coverage_AM_P_mpm_pct'] = geo_cov['AM_P']['tabor']
-        mpm_metrics['coverage_AM_S_mpm_pct'] = geo_cov['AM_S']['tabor']
+    # coverage_AM_*_mpm_pct stays the sim's RAW value (direct SE-abutment, from --metrics-json).
+    # geometric Hertz/Tabor are ADDED as extra DEM-comparable columns — nothing is overwritten.
+    if geo_cov:
+        mpm_metrics['coverage_AM_P_tabor_pct'] = geo_cov['AM_P']['tabor']
+        mpm_metrics['coverage_AM_S_tabor_pct'] = geo_cov['AM_S']['tabor']
         mpm_metrics['coverage_AM_P_contact_pct'] = geo_cov['AM_P']['contact']
         mpm_metrics['coverage_AM_S_contact_pct'] = geo_cov['AM_S']['contact']
     if seed_por is not None:
