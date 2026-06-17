@@ -159,16 +159,6 @@ def main():
             seed_tris = (sv * s).astype(np.float32)[sf].round(3).tolist()
         print(f'  SEED SE surface: {len(seed_tris):,} triangles  (loose void {seed_por:.1f}%)')
 
-    # geometric coverage (DEM-comparable Hertz/Tabor) — overrides the sim point-adjacency under-count
-    geo_cov = None
-    if a.se_dump:
-        try:
-            geo_cov = geometric_coverage(a.scaffold, a.se_dump)
-            print(f"  geometric coverage  AM_P {geo_cov['AM_P']['tabor']}%(Tabor)/{geo_cov['AM_P']['contact']}%(contact)"
-                  f"  AM_S {geo_cov['AM_S']['tabor']}/{geo_cov['AM_S']['contact']}%")
-        except Exception as e:
-            print(f'  geometric coverage skipped: {e}')
-
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
@@ -198,13 +188,10 @@ def main():
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
     }
-    # coverage_AM_*_mpm_pct stays the sim's RAW value (direct SE-abutment, from --metrics-json).
-    # geometric Hertz/Tabor are ADDED as extra DEM-comparable columns — nothing is overwritten.
-    if geo_cov:
-        mpm_metrics['coverage_AM_P_tabor_pct'] = geo_cov['AM_P']['tabor']
-        mpm_metrics['coverage_AM_S_tabor_pct'] = geo_cov['AM_S']['tabor']
-        mpm_metrics['coverage_AM_P_contact_pct'] = geo_cov['AM_P']['contact']
-        mpm_metrics['coverage_AM_S_contact_pct'] = geo_cov['AM_S']['contact']
+    # coverage_AM_*_mpm_pct = the sim's RAW value (the MPM DIRECTLY measures the plastic SE-AM
+    # contact from the deformed SE — no Tabor/B3 post-correction, which would re-impose the DEM's
+    # rigid-sphere fix on a model that already deformed plastically).  Compared in /group against
+    # the DEM's Hertz (18) / Tabor (48); the disagreement is the quantified DEM↔MPM model gap.
     if seed_por is not None:
         sim_seed = None                                             # prefer the sim's authoritative seed void
         if sim_m.get('seed_AM_frac_pct') is not None and sim_m.get('seed_SE_frac_pct') is not None:
