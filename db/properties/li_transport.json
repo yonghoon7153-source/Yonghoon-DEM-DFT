@@ -113,6 +113,35 @@
         "_explanation": "Natural F-43m cubic cell properly captures ordered Li sublattice energetics. Artificial 5 f.u. cell introduces effective disorder (low energy spread 0.1 meV vs natural rough ~1162 meV), lowering effective barrier."
       },
       "framework_immobile_check": "PAPER-GRADE D(Li) >> framework D — Li-only conductor confirmed"
+    },
+    {
+      "id": "nd_pair01_Nd2O3_doped",
+      "_status": "★ Nd2O3-doped modelc transport (2026-06-17, V100 UMA-MLIP). CAVEAT: UMA Nd-4f transferability unverified → cite RATIO vs modelc + Ea direction, not absolute sigma.",
+      "composition": "Li4.8Nd0.2PS4.1O0.3Cl1.6 (Li48Nd2P10S41O3Cl16, cfg141, 2 Nd, O@PS4)",
+      "version": "nd_pair01_v0",
+      "method": "UMA-s-1p1 (task=omat) MLIP MD, Langevin NVT 600/800/1000 K, prod each. EXACT same protocol as comp1/modelc. V100.",
+      "completed_date": "2026-06-17",
+      "data_path": "v100:~/v100_stage/nd/nd_sigma_result.json",
+      "n_atoms": 120, "n_Li": 48, "V_A3": 2399.1, "n_Li_cm3": 2.001e22,
+      "diffusion_per_T_fit": [
+        {"T_K": 600,  "D_Li_cm2_per_s": 4.905e-06, "sigma_NE_Scm": 0.304, "msd_final_A2": 22.07},
+        {"T_K": 800,  "D_Li_cm2_per_s": 1.268e-05, "sigma_NE_Scm": 0.590, "msd_final_A2": 49.66},
+        {"T_K": 1000, "D_Li_cm2_per_s": 2.909e-05, "sigma_NE_Scm": 1.082, "msd_final_A2": 108.18}
+      ],
+      "arrhenius_fit": {
+        "Ea_eV": 0.2267, "D0_cm2_per_s": 3.778e-4, "R2": 0.9891,
+        "D_300K_extrapolated_cm2_per_s": 5.88e-8,
+        "sigma_NE_300K_mScm_estimate": 7.29,
+        "n_Li_cm3": 2.001e22, "T_fit_K": [600, 800, 1000]
+      },
+      "comparison_robust": {
+        "Ea_vs_modelc": "nd 0.227 ≈ modelc 0.224 (Δ+0.003) — barrier UNCHANGED by Nd+O. Both < comp1 0.253.",
+        "D_ratio_nd_over_modelc": "0.62 (600-1000K), 0.58 (300K extrap) — Nd+O lowers Li diffusivity to ~62% of modelc.",
+        "sigma300_ratio_nd_over_modelc": "0.52 (= D ratio 0.58 × n_Li ratio 0.90). nd 7.3 vs modelc 14 mS/cm; nd still > comp1 3.35.",
+        "mechanism": "σ decrease is NOT a barrier effect (Ea unchanged); it is (1) lower diffusivity D (Nd3+ + O@PS4 narrows/blocks Li channels, ×0.62) + (2) fewer Li carriers (n_Li 2.00 vs 2.22e22, Nd3+/O2- Li-vacancy charge compensation, ×0.90).",
+        "experimental_validation": "Matches La+O co-doping (Electrochim. Acta 2025, doi 10.1016/j.electacta.2025.146619): exp sigma 9.58→6.23 mS/cm = 0.65× on La3+ + O. Our Nd3++O DFT-MLIP gives 0.52× — same direction, similar magnitude. Trivalent-lanthanide + O co-doping reduces sigma ~0.5-0.65×."
+      },
+      "caveat": "UMA Nd-4f transferability unverified (4f sparse in MLIP training). ROBUST claims: Ea direction + nd/modelc D & sigma ratio. Absolute sigma carries usual UMA 3-5× overshoot PLUS Nd-4f uncertainty — do NOT cite 7.29 mS/cm as absolute."
     }
   ],
   "comp1_vs_modelc_comparison": {
