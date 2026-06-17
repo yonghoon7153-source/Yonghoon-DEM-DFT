@@ -61,6 +61,30 @@ def seed_se_mask(se_csv, am_shape, h, am_mask):
     return mask & ~am_mask
 
 
+def geometric_coverage(am_csv, se_csv, n_samp=600):
+    """MPM/voxel-INDEPENDENT geometric SE coverage of AM (same definition as DEM
+    Hertz/Tabor): fraction of each AM surface within CONTACT (gap≤0 ≈ Hertz) and
+    within 0.14 µm (≈ Tabor plastic-spread) of an SE sphere.  Fixes the point-
+    adjacency under-count (the sim's 'SE point in the next cell' reads ~27 %)."""
+    from scipy.spatial import cKDTree
+    am = np.loadtxt(am_csv, delimiter=','); se = np.loadtxt(se_csv, delimiter=',')
+    tree = cKDTree(se[:, 1:4]); r_se = float(se[0, 4])
+    k = np.arange(n_samp); phi = np.pi * (3 - np.sqrt(5)); z = 1 - 2 * (k + 0.5) / n_samp
+    rr = np.sqrt(1 - z * z); U = np.column_stack([rr * np.cos(phi * k), rr * np.sin(phi * k), z])
+    tabor = 0.00014                                        # 0.14 µm in LIGGGHTS units
+    out = {}
+    for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
+        m = am[:, 0].astype(int) == ty
+        C = am[m, 1:4]; R = am[m, 4]
+        ct = tb = 0.0
+        for i in range(len(C)):
+            d, _ = tree.query(C[i] + R[i] * U); gap = d - r_se
+            ct += float((gap < 0).mean()); tb += float((gap < tabor).mean())
+        out[nm] = {'contact': round(100 * ct / max(len(C), 1), 1),
+                   'tabor': round(100 * tb / max(len(C), 1), 1)}
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', required=True, help='AM scaffold CSV (type,x,y,z,r)')
@@ -135,6 +159,16 @@ def main():
             seed_tris = (sv * s).astype(np.float32)[sf].round(3).tolist()
         print(f'  SEED SE surface: {len(seed_tris):,} triangles  (loose void {seed_por:.1f}%)')
 
+    # geometric coverage (DEM-comparable Hertz/Tabor) — overrides the sim point-adjacency under-count
+    geo_cov = None
+    if a.se_dump:
+        try:
+            geo_cov = geometric_coverage(a.scaffold, a.se_dump)
+            print(f"  geometric coverage  AM_P {geo_cov['AM_P']['tabor']}%(Tabor)/{geo_cov['AM_P']['contact']}%(contact)"
+                  f"  AM_S {geo_cov['AM_S']['tabor']}/{geo_cov['AM_S']['contact']}%")
+        except Exception as e:
+            print(f'  geometric coverage skipped: {e}')
+
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
@@ -164,6 +198,11 @@ def main():
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
     }
+    if geo_cov:                                                     # DEM-comparable coverage (Hertz/Tabor)
+        mpm_metrics['coverage_AM_P_mpm_pct'] = geo_cov['AM_P']['tabor']
+        mpm_metrics['coverage_AM_S_mpm_pct'] = geo_cov['AM_S']['tabor']
+        mpm_metrics['coverage_AM_P_contact_pct'] = geo_cov['AM_P']['contact']
+        mpm_metrics['coverage_AM_S_contact_pct'] = geo_cov['AM_S']['contact']
     if seed_por is not None:
         sim_seed = None                                             # prefer the sim's authoritative seed void
         if sim_m.get('seed_AM_frac_pct') is not None and sim_m.get('seed_SE_frac_pct') is not None:
