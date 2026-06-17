@@ -61,6 +61,24 @@ def seed_se_mask(se_csv, am_shape, h, am_mask):
     return mask & ~am_mask
 
 
+def per_particle_coverage(se_pts, c, r, contact_um, n_samp=400, sub=2_000_000, seed=0):
+    """Per-AM-particle SE coverage: fraction of EACH AM particle's surface within
+    `contact_um` of a DEFORMED MPM SE point (the MPM's own measure, per particle —
+    not a rigid-sphere post-correction).  Returns a coverage % per AM index."""
+    from scipy.spatial import cKDTree
+    rng = np.random.default_rng(seed)
+    pts = se_pts if len(se_pts) <= sub else se_pts[rng.choice(len(se_pts), sub, replace=False)]
+    tree = cKDTree(pts)
+    band = contact_um / _vc().UM_BOX
+    k = np.arange(n_samp); phi = np.pi * (3 - np.sqrt(5)); z = 1 - 2 * (k + 0.5) / n_samp
+    rr = np.sqrt(1 - z * z); U = np.column_stack([rr * np.cos(phi * k), rr * np.sin(phi * k), z])
+    cov = np.zeros(len(r))
+    for i in range(len(r)):
+        d, _ = tree.query(c[i] + r[i] * U)
+        cov[i] = round(100.0 * float((d < band).mean()), 1)
+    return cov
+
+
 def geometric_coverage(am_csv, se_csv, n_samp=600):
     """MPM/voxel-INDEPENDENT geometric SE coverage of AM (same definition as DEM
     Hertz/Tabor): fraction of each AM surface within CONTACT (gap≤0 ≈ Hertz) and
@@ -113,6 +131,9 @@ def main():
     ap.add_argument('--metrics-json', default='',
                     help='RAW MPM metrics JSON from mpm3d_compaction --save-metrics: its authoritative '
                          'porosity/thickness/coverage/density are used instead of the coarse-mesh recompute')
+    ap.add_argument('--coverage-um', type=float, default=0.13,
+                    help='contact distance for per-AM-particle coverage (µm; ~1 voxel/Hertz scale). '
+                         'Each AM sphere gets a coverage %% from the DEFORMED SE points.')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -160,12 +181,16 @@ def main():
         print(f'  SEED SE surface: {len(seed_tris):,} triangles  (loose void {seed_por:.1f}%)')
 
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
+    # per-particle coverage (each AM's own SE coverage, from the DEFORMED SE points) →
+    # the viewer can colour each AM sphere by its coverage (a per-particle heat map).
+    cov_per = per_particle_coverage(se, c, r, a.coverage_um)
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
                   'y': round(float((c[i, 1] - SW[0]) * UM), 3),
                   'z': round(float((c[i, 2] - FLOOR) * UM), 3),
-                  'r': round(float(r[i] * UM), 3)} for i in range(len(r))]
+                  'r': round(float(r[i] * UM), 3),
+                  'coverage': float(cov_per[i])} for i in range(len(r))]
 
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
