@@ -131,6 +131,12 @@ def main():
     scf = set_kpts(edit_system(edit_control(txt, "scf", "ndlob")))
     (wd / "lobster_scf.in").write_text(scf)
     nscf = set_kpts(edit_system(edit_control(txt, "nscf", "ndlob"), nbnd=nbnd))
+    # NSCF requests nbnd (>> SCF's ~occupied bands); it must NOT try to read the
+    # SCF collected wfc (band-count mismatch -> read_collected_wfc error). Force
+    # fresh random wfc (density is still read from the SCF via startingpot='file').
+    if "startingwfc" not in nscf.lower():
+        nscf = re.sub(r"(&ELECTRONS\s*\n)", r"\1  startingwfc = 'random'\n",
+                      nscf, count=1, flags=re.I)
     (wd / "lobster_nscf.in").write_text(nscf)
 
     # 3) lobsterin
