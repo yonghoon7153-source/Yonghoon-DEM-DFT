@@ -41,6 +41,10 @@ def parse_args(argv):
                     help='CSV of fixed AM (type,x,y,z,r in LIGGGHTS 0..0.05 units): AM become a fixed '
                          'grid obstacle and only SE is the MPM filler (real skeleton, no RSA AM, light)')
     ap.add_argument('--save-se', default='', help='write final SE point positions (npy) for morphology')
+    ap.add_argument('--save-metrics', default='',
+                    help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
+                         'grid/material params, stress) to a JSON — the structured source for the '
+                         'webapp compare table + payload (so nothing is recomputed at coarse mesh res)')
     ap.add_argument('--se-frac', type=float, default=0.27,
                     help='scaffold SE volume fraction of SOLID (default 0.27 = real_14 actual; vary to '
                          'see porosity respond — final porosity is a RESULT of plastic SE fill, not assumed)')
@@ -456,6 +460,7 @@ def main(argv):
           f"porosity@target={por_target_str}{thick_str}   "
           f"[MPM, {comp.split()[0]}, {scaf}, n_grid={n_grid}, pts={n}, "
           f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}]")
+    cov_out = {}
     if args.am_scaffold:
         # COVERAGE: fraction of each AM-type surface (AM↔non-AM voxel interfaces) that faces SE
         # (vs void).  The MPM SE plastically conforms to the AM, so this is the REAL coverage —
@@ -464,6 +469,14 @@ def main(argv):
         ci = np.clip((xf * n_grid).astype(int), 0, n_grid - 1)
         se_occ = np.zeros((n_grid,) * 3, bool)
         se_occ[ci[:, 0], ci[:, 1], ci[:, 2]] = True
+        # close the discrete SE occupancy to fill point-sampling holes at the interface —
+        # the raw 'point in the adjacent cell' measure UNDER-counts coverage otherwise
+        # (geometric ground-truth is ~16 % touching / ~49 % within 0.14 µm; raw read ~26 %).
+        try:
+            from scipy import ndimage as _ndi
+            se_occ = _ndi.binary_closing(se_occ, iterations=1)
+        except Exception:
+            pass
         for t, nm in ((1, 'AM_P'), (2, 'AM_S')):
             amt = (pin_np == t); tot = 0; cov = 0
             for ax in range(3):
@@ -471,9 +484,34 @@ def main(argv):
                     iface = amt & (np.roll(pin_np, s, ax) == 0)   # AM_t voxel with a non-AM neighbour
                     tot += int(iface.sum())
                     cov += int((iface & np.roll(se_occ, s, ax)).sum())
+            pct = 100.0 * cov / tot if tot else 0.0
+            cov_out[nm] = round(pct, 1)
             if tot:
-                print(f"  coverage {nm} by SE = {100.0 * cov / tot:5.1f}%   "
-                      f"({cov:,}/{tot:,} surface voxels)")
+                print(f"  coverage {nm} by SE = {pct:5.1f}%   ({cov:,}/{tot:,} surface voxels)")
+    if args.save_metrics:
+        # ── ALL raw MPM outputs → one structured JSON (the webapp's MPM source) ──────────────
+        import json as _json
+        m = {
+            'porosity_settled_pct': round(float(por_end), 3),
+            'porosity_at_target_pct': round(float(por_at_target), 3) if por_at_target >= 0 else None,
+            'thickness_um': round(float((wall_z[None] - FLOOR) * um_box), 3) if um_box > 0 else None,
+            'wall_z': round(float(wall_z[None]), 4),
+            'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
+            'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
+            'n_grid': int(n_grid), 'n_pts': int(n),
+            'E_SE_GPa': float(args.e_se), 'nu_SE': float(args.nu_se),
+            'sigma_y_GPa': float(args.sigma_y), 'K_SE_GPa': round(float(K_SE), 3),
+            'protocol': args.protocol, 'readout': args.readout,
+            'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
+        }
+        if args.am_scaffold:
+            m.update({
+                'seed_AM_frac_pct': round(float(f_am), 2), 'seed_SE_frac_pct': round(float(f_se), 2),
+                'SE_of_solid_pct': round(100.0 * se_solid / max(am_solid + se_solid, 1e-12), 2),
+                'bulk_density_g_cm3': round(float(bulk_rho), 3), 'n_AM': int(len(am_r)),
+            })
+        _json.dump(m, open(args.save_metrics, 'w'), indent=2)
+        print(f"  saved metrics → {args.save_metrics}  ({len(m)} fields)")
     if args.save_se:
         np.save(args.save_se, x.to_numpy())                # final SE point cloud (morphology)
         print(f"  saved SE morphology → {args.save_se} ({n} pts)")

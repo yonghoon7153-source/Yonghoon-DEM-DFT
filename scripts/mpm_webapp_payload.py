@@ -51,6 +51,17 @@ def main():
     ap.add_argument('--denoise', type=int, default=1)
     ap.add_argument('--smooth', type=float, default=1.0)
     ap.add_argument('--case', default='', help='case id (stored in payload meta)')
+    ap.add_argument('--porosity', type=float, default=None,
+                    help='AUTHORITATIVE porosity %% (from the sim, e.g. 15.93) — overrides the '
+                         'mesh-resolution recompute, which is coarse-voxel biased')
+    ap.add_argument('--thickness', type=float, default=None,
+                    help='AUTHORITATIVE thickness µm (sim wall_z, e.g. 29.95) — the continuum box '
+                         'height is NOT the compacted thickness')
+    ap.add_argument('--cov-p', type=float, default=None, help='AUTHORITATIVE AM_P coverage %% (fine-res, e.g. 50)')
+    ap.add_argument('--cov-s', type=float, default=None, help='AUTHORITATIVE AM_S coverage %% (fine-res, e.g. 53)')
+    ap.add_argument('--metrics-json', default='',
+                    help='RAW MPM metrics JSON from mpm3d_compaction --save-metrics: its authoritative '
+                         'porosity/thickness/coverage/density are used instead of the coarse-mesh recompute')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -95,24 +106,39 @@ def main():
 
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
+
+    # authoritative metrics: prefer the sim's --metrics-json (raw, computed at sim grid res),
+    # then explicit overrides, then the (coarse-mesh-biased) recompute as a last resort.
+    sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
+
+    def pick(override, sim_key, computed):
+        if override is not None:
+            return override
+        if sim_m.get(sim_key) is not None:
+            return sim_m[sim_key]
+        return computed
+    mpm_metrics = {
+        'porosity_mpm_pct': round(pick(a.porosity, 'porosity_settled_pct', por), 2),
+        'thickness_mpm_um': round(pick(a.thickness, 'thickness_um', thick), 2),
+        'coverage_AM_P_mpm_pct': round(pick(a.cov_p, 'coverage_AM_P_pct', cov['AM_P']), 1),
+        'coverage_AM_S_mpm_pct': round(pick(a.cov_s, 'coverage_AM_S_pct', cov['AM_S']), 1),
+        'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
+        'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
+    }
+    for k in ('E_SE_GPa', 'nu_SE', 'sigma_y_GPa', 'K_SE_GPa', 'final_stress_GPa', 'target_GPa',
+              'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol'):
+        if k in sim_m:
+            mpm_metrics[k] = sim_m[k]                       # carry through raw sim fields
+
     payload = {
-        'kind': 'mpm',
-        'case': a.case,
+        'kind': 'mpm', 'case': a.case,
         'particles': particles,                            # AM_P / AM_S spheres
         'mesh_triangles': tris,                            # SE plastic continuum surface
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},
         'atoms_only': False,
-        'mpm_metrics': {
-            'porosity_mpm_pct': round(por, 2),
-            'se_fraction_pct': round(f_se, 2),
-            'thickness_mpm_um': round(thick, 2),
-            'coverage_AM_P_mpm_pct': round(cov['AM_P'], 1),
-            'coverage_AM_S_mpm_pct': round(cov['AM_S'], 1),
-            'n_am': len(particles), 'se_surface_tris': len(tris),
-            'n_vox': a.n_vox,
-        },
-        'mpm_source': {'se': a.se or 'proxy', 'scaffold': a.scaffold,
+        'mpm_metrics': mpm_metrics,
+        'mpm_source': {'se': a.se or 'proxy', 'scaffold': a.scaffold, 'metrics_json': a.metrics_json,
                        'target_porosity': a.target_porosity, 'target_coverage': a.target_coverage,
                        'smooth': a.smooth},
     }
