@@ -1,0 +1,13 @@
+# Nd2O3-doped LPSCl: quantitative bond-resolved ELF (from nd_ELF.cube, pp.x plot_num=8)
+# covalent bonds: ELF along bond line, midpoint + bonding-attractor max (higher = more shared/covalent)
+# ionic bonds: min ELF along bond line = depletion floor (lower = more ionic)
+bond,type,n_bonds,d_avg_A,ELF_descriptor,value,std
+P-O,covalent,3,1.57,midpoint,0.838,0.004
+P-O,covalent,3,1.57,bonding_max,0.847,0.003
+P-S,covalent,37,2.06,midpoint,0.870,0.005
+P-S,covalent,37,2.06,bonding_max,0.888,0.005
+Li-O,ionic,4,1.97,min_floor,0.032,0.005
+Li-Cl,ionic,70,2.48,min_floor,0.018,0.005
+Li-S,ionic,120,2.50,min_floor,0.024,0.006
+Nd-O,ionic,2,2.55,min_floor,0.131,0.009
+Nd-S,ionic,8,2.90,min_floor,0.188,0.050
