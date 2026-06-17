@@ -5068,6 +5068,25 @@ def serve_figure(case_id, filename):
     figures_dir = os.path.join(get_results_dir(case_id), 'figures')
     return send_from_directory(figures_dir, filename)
 
+@app.route('/results/<case_id>/3d-mpm-data')
+def serve_3d_mpm_data(case_id):
+    """Serve the pre-built MPM continuum payload (AM spheres + SE plastic-continuum
+    surface mesh + mpm_metrics), in the SAME schema the DEM viewer already renders.
+    Built off-line by scripts/mpm_webapp_payload.py and dropped into
+    results/<case_id>/mpm_payload.json.  ?state=seed swaps in the loose pre-compaction
+    SE surface (before/after view)."""
+    results_dir = get_results_dir(case_id)
+    payload_path = os.path.join(results_dir, 'mpm_payload.json')
+    if not os.path.exists(payload_path):
+        return jsonify({'error': 'No MPM payload for this case', 'kind': 'mpm', 'available': False}), 404
+    with open(payload_path) as f:
+        payload = json.load(f)
+    if request.args.get('state') == 'seed' and payload.get('seed_mesh_triangles'):
+        payload['mesh_triangles'] = payload['seed_mesh_triangles']     # before/after swap
+    payload.pop('seed_mesh_triangles', None)                            # ship only the active mesh
+    return jsonify(payload)
+
+
 @app.route('/results/<case_id>/3d-data')
 def serve_3d_data(case_id):
     """Serve particle + percolation data for 3D viewer."""

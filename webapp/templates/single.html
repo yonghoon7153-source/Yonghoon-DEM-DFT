@@ -209,7 +209,11 @@
 <div class="card">
   <div class="card-header-row">
     <h3>3D 전극 구조</h3>
-    <button class="btn btn-primary" onclick="load3DViewer()">3D 뷰어 로드</button>
+    <div style="display:flex; gap:6px; flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="load3DViewer('dem')">DEM 3D</button>
+      <button class="btn btn-secondary" onclick="load3DViewer('mpm')">MPM (압축 후)</button>
+      <button class="btn btn-secondary" onclick="load3DViewer('mpm-seed')">MPM (압축 전)</button>
+    </div>
   </div>
   <div id="viewer-container" class="viewer-container" style="display:none">
   </div>
@@ -265,19 +269,30 @@
 }
 </script>
 <script>
-let viewer3dLoaded = false;
+let cur3dMode = null;
 
-async function load3DViewer() {
+// DEM particles, or the MPM plastic continuum (compacted / loose-seed before-after).
+// All three share the viewer (same JSON schema); switching clears the old canvas and
+// re-inits with the matching data URL.
+async function load3DViewer(mode) {
+  mode = mode || 'dem';
   const container = document.getElementById('viewer-container');
   container.style.display = 'block';
-  if (viewer3dLoaded) return;
-  viewer3dLoaded = true;
-  const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
+  if (cur3dMode === mode) return;
+  cur3dMode = mode;
+  container.innerHTML = '';                       // drop old canvas → allow re-init
   {% if archive_path %}
-  mod.initElectrodeViewer('viewer-container', '/archive/results/{{ archive_path }}/3d-data');
+  const base = '/archive/results/{{ archive_path }}';
   {% else %}
-  mod.initElectrodeViewer('viewer-container', '/results/{{ case.id }}/3d-data');
+  const base = '/results/{{ case.id }}';
   {% endif %}
+  const urls = {
+    'dem': base + '/3d-data',
+    'mpm': base + '/3d-mpm-data',
+    'mpm-seed': base + '/3d-mpm-data?state=seed',
+  };
+  const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
+  mod.initElectrodeViewer('viewer-container', urls[mode]);
 }
 
 let viewer2dLoaded = false;
