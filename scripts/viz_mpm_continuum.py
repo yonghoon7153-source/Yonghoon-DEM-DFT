@@ -80,7 +80,8 @@ def load_am(path):
     return t, c, r
 
 
-def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise, target_porosity=None):
+def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise,
+             target_porosity=None, target_coverage=None):
     """→ (am_p, am_s, se_mask) boolean grids [nx,ny,nz] (x,y,z order) + h."""
     h = WIDTH / n_vox
     nx = ny = n_vox
@@ -119,26 +120,43 @@ def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise, target_porosity=Non
         N = am.size
         n_se = int(free.sum()) - int(round(target_porosity * N))
         if n_se <= 0:
-            se_mask = np.zeros_like(am)
-        else:
-            # KEEP only the GENUINE interfacial SE film: a boundary voxel that
-            # both touches AM AND bridges to the dense bulk SE (and holds points).
-            # Forcing every AM-adjacent voxel with a stray point would skin even
-            # the pore-facing AM surfaces (coverage → ~90%); requiring the bulk-SE
-            # bridge leaves AM faces that front a real pore as void, so coverage
-            # lands near the physical value instead of either extreme.
-            thr0 = np.partition(dens[free], -n_se)[-n_se]
-            bulk0 = (dens >= thr0) & free
-            film = free & (cnt >= 1) & _dilate6(am) & _dilate6(bulk0)
+            return am_p, am_s, np.zeros_like(am), h
+
+        def se_from_film(film):
+            """SE = film ∪ densest-of-the-rest, total PINNED to n_se → porosity (and
+            every volume fraction) stays fixed; the film only redistributes SE."""
             rest = free & ~film
             n_extra = n_se - int(film.sum())
             if n_extra <= 0:
-                se_mask = film
-            else:
-                dr = dens[rest]
-                thr = np.partition(dr, -n_extra)[-n_extra] if n_extra < dr.size else dr.min()
-                se_mask = film | (rest & (dens >= thr))
-        return am_p, am_s, se_mask, h
+                return film.copy()
+            dr = dens[rest]
+            thr = np.partition(dr, -n_extra)[-n_extra] if n_extra < dr.size else dr.min()
+            return film | (rest & (dens >= thr))
+
+        # interfacial candidates = non-AM voxels that touch AM and hold SE points
+        cand = free & (cnt >= 1) & _dilate6(am)
+        if target_coverage is not None and cand.any():
+            # CALIBRATE the amount of interfacial film so AM-SE coverage matches the
+            # KNOWN data value (52%) — the voxel threshold otherwise distorts it.
+            # Porosity stays pinned (se_from_film holds the SE total); only the
+            # bulk↔interface split moves.  Binary-search the film density cutoff.
+            tgt = target_coverage * 100.0
+            lo, hi = float(dens[cand].min()), float(dens[cand].max())
+            se_mask = se_from_film(cand)
+            for _ in range(24):
+                q = 0.5 * (lo + hi)
+                sm = se_from_film(cand & (dens >= q))
+                cv = coverage(am_p, am_s, sm)
+                if 0.5 * (cv['AM_P'] + cv['AM_S']) > tgt:
+                    lo = q                            # too much film → raise cutoff
+                else:
+                    hi = q
+                se_mask = sm
+            return am_p, am_s, se_mask, h
+        # default (no coverage target): keep only the film that BRIDGES AM to bulk SE
+        thr0 = np.partition(dens[free], -n_se)[-n_se]
+        bulk0 = (dens >= thr0) & free
+        return am_p, am_s, se_from_film(cand & _dilate6(bulk0)), h
     se_mask = (cnt >= se_min_count) & free
     if denoise > 0:
         from scipy import ndimage as ndi
@@ -274,6 +292,10 @@ def main():
                     help='pin VOID to this fraction EXACTLY (e.g. 0.167) via a smoothed-'
                          'density quantile — use this instead of --se-min-count, which is '
                          'too coarse to hit a given porosity (counts cluster). Also denoises.')
+    ap.add_argument('--target-coverage', type=float, default=None,
+                    help='also calibrate AM-SE coverage to this KNOWN value (e.g. 0.52) by '
+                         'tuning how much interfacial SE film to keep — porosity stays '
+                         'pinned (only the bulk↔interface SE split moves). Needs --target-porosity.')
     ap.add_argument('--denoise', type=int, default=1, help='3D close+open iters (speckle removal)')
     ap.add_argument('--cut', choices=['none', 'half', 'corner'], default='corner')
     ap.add_argument('--step', type=int, default=2, help='marching-cubes step (2 = coarser/fewer tris)')
@@ -305,7 +327,7 @@ def main():
         print(f'loaded {len(se):,} SE pts from {a.se}')
 
     am_p, am_s, se_mask, h = voxelize(se, t, c, r, a.n_vox, top, a.se_min_count,
-                                      a.denoise, a.target_porosity)
+                                      a.denoise, a.target_porosity, a.target_coverage)
     am = am_p | am_s
     void = ~(am | se_mask)
     por = 100.0 * void.mean()
