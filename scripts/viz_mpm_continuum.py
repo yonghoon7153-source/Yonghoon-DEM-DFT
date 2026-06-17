@@ -80,7 +80,7 @@ def load_am(path):
     return t, c, r
 
 
-def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise):
+def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise, target_porosity=None):
     """→ (am_p, am_s, se_mask) boolean grids [nx,ny,nz] (x,y,z order) + h."""
     h = WIDTH / n_vox
     nx = ny = n_vox
@@ -107,11 +107,27 @@ def voxelize(se, t, c, r, n_vox, top, se_min_count, denoise):
     iz = np.clip(((se[:, 2] - FLOOR) / h).astype(np.int64), 0, nz - 1)
     cnt = np.zeros((nx, ny, nz), np.int32)
     np.add.at(cnt, (ix, iy, iz), 1)
-    se_mask = (cnt >= se_min_count) & (~am)
+    free = ~am
+    if target_porosity is not None:
+        # The integer point-count threshold is too coarse to hit a given porosity
+        # (the per-voxel counts cluster, so min_count±1 jumps the void several %p).
+        # Instead pick the threshold on a lightly-smoothed (continuous) density so
+        # SE = the densest free voxels and VOID = the known target EXACTLY.  The
+        # smoothing also removes the salt-and-pepper, so no morphological denoise.
+        from scipy import ndimage as ndi
+        dens = ndi.gaussian_filter(cnt.astype(np.float32), 0.8)
+        n_se = int(free.sum()) - int(round(target_porosity * am.size))
+        if n_se <= 0:
+            se_mask = np.zeros_like(am)
+        else:
+            thr = np.partition(dens[free], -n_se)[-n_se]
+            se_mask = (dens >= thr) & free
+        return am_p, am_s, se_mask, h
+    se_mask = (cnt >= se_min_count) & free
     if denoise > 0:
         from scipy import ndimage as ndi
-        se_mask = ndi.binary_closing(se_mask, iterations=denoise) & (~am)  # fill void specks
-        se_mask = ndi.binary_opening(se_mask, iterations=denoise)          # drop SE specks
+        se_mask = ndi.binary_closing(se_mask, iterations=denoise) & free      # fill void specks
+        se_mask = ndi.binary_opening(se_mask, iterations=denoise)             # drop SE specks
     return am_p, am_s, se_mask, h
 
 
@@ -238,6 +254,10 @@ def main():
     ap.add_argument('--n-vox', type=int, default=220, help='lateral voxels (higher = finer; '
                     'plotly HTML grows with surface area — 256 is a good interactive ceiling)')
     ap.add_argument('--se-min-count', type=int, default=1, help='voxel is SE if ≥N points')
+    ap.add_argument('--target-porosity', type=float, default=None,
+                    help='pin VOID to this fraction EXACTLY (e.g. 0.167) via a smoothed-'
+                         'density quantile — use this instead of --se-min-count, which is '
+                         'too coarse to hit a given porosity (counts cluster). Also denoises.')
     ap.add_argument('--denoise', type=int, default=1, help='3D close+open iters (speckle removal)')
     ap.add_argument('--cut', choices=['none', 'half', 'corner'], default='corner')
     ap.add_argument('--step', type=int, default=2, help='marching-cubes step (2 = coarser/fewer tris)')
@@ -268,7 +288,8 @@ def main():
         se = np.load(a.se).astype(np.float64)
         print(f'loaded {len(se):,} SE pts from {a.se}')
 
-    am_p, am_s, se_mask, h = voxelize(se, t, c, r, a.n_vox, top, a.se_min_count, a.denoise)
+    am_p, am_s, se_mask, h = voxelize(se, t, c, r, a.n_vox, top, a.se_min_count,
+                                      a.denoise, a.target_porosity)
     am = am_p | am_s
     void = ~(am | se_mask)
     por = 100.0 * void.mean()
