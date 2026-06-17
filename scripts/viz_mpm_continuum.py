@@ -36,7 +36,38 @@ import numpy as np
 SW = (0.04, 0.96); FLOOR = 0.05
 WIDTH = SW[1] - SW[0]; SCL = WIDTH / 0.05               # box units per LIGGGHTS unit
 UM_BOX = 1000.0 / SCL                                   # µm per box unit
-COL = {1: '#2b2f3a', 2: '#9aa0ad', 3: '#f4d35e'}       # AM_P / AM_S / SE
+# phase palettes — 'phase' = the 2D-viewer convention; 'dem' = the DEM
+# particle-render look (grey AM skeleton + khaki SE matrix) so the MPM
+# continuum and the DEM render read with the same colours side by side.
+PALETTES = {
+    'phase': {1: '#2b2f3a', 2: '#9aa0ad', 3: '#f4d35e'},
+    'dem':   {1: '#5b5b5b', 2: '#8f8f8f', 3: '#c9b88a'},
+}
+COL = PALETTES['phase']                                 # default; --palette overrides
+
+
+def _hex_rgb(h):
+    return tuple(int(h[k:k + 2], 16) for k in (1, 3, 5))
+
+
+def _dilate6(mask):                                     # 6-neighbour dilation
+    out = mask.copy()
+    for ax in range(3):
+        out |= np.roll(mask, 1, ax); out |= np.roll(mask, -1, ax)
+    return out
+
+
+def coverage(am_p, am_s, se_mask):
+    """% of each AM type's SURFACE voxels that face SE (vs void) — the voxel
+    analogue of the DEM/MPM mechanical coverage."""
+    adj_non_am = _dilate6(~(am_p | am_s))
+    adj_se = _dilate6(se_mask)
+    res = {}
+    for nm, m in (('AM_P', am_p), ('AM_S', am_s)):
+        surf = m & adj_non_am
+        n = int(surf.sum())
+        res[nm] = 100.0 * int((surf & adj_se).sum()) / max(1, n)
+    return res
 
 
 def load_am(path):
@@ -106,20 +137,26 @@ def mesh_of(mask, step):
     return v - 1.0, f                                    # undo pad offset (voxel idx)
 
 
-def render_plotly(meshes, h, out):
+def render_plotly(meshes, h, out, subtitle=''):
     import plotly.graph_objects as go
     s = h * UM_BOX                                       # voxel-idx → µm
     data = []
     for (v, f), col, name, op in meshes:
         data.append(go.Mesh3d(x=v[:, 0] * s, y=v[:, 1] * s, z=v[:, 2] * s,
                               i=f[:, 0], j=f[:, 1], k=f[:, 2], color=col,
-                              opacity=op, name=name, showscale=False,
-                              flatshading=True, lighting=dict(ambient=0.45, diffuse=0.8)))
+                              opacity=op, name=name, showscale=False, flatshading=True,
+                              # flat, near-specular-free lighting so each phase shows
+                              # its TRUE colour (no blue specular sky-tint / tan wash)
+                              lighting=dict(ambient=0.72, diffuse=0.6, specular=0.04,
+                                            roughness=0.95, fresnel=0.0),
+                              lightposition=dict(x=120, y=200, z=400)))
     fig = go.Figure(data=data)
-    fig.update_layout(title='MPM composite cathode — 3D continuum '
-                      '(AM skeleton + plastic SE matrix + pores)',
+    ttl = 'MPM composite cathode — 3D continuum'
+    if subtitle:
+        ttl += '<br><sub>' + subtitle + '</sub>'
+    fig.update_layout(title=ttl, paper_bgcolor='white',
                       scene=dict(xaxis_title='x (µm)', yaxis_title='y (µm)',
-                                 zaxis_title='z (µm)', aspectmode='data'))
+                                 zaxis_title='z (µm)', bgcolor='white', aspectmode='data'))
     fig.write_html(out)
     print(f'saved {out}   (plotly interactive)')
 
@@ -145,6 +182,53 @@ def render_mpl(meshes, h, out):
     print(f'saved {out}   (mpl static)')
 
 
+def write_stl(path, v, f, s):
+    """Per-phase binary STL (µm) — for MeshLab/Blender/CAD/3D-print."""
+    tri = (v[f] * s).astype(np.float32)                 # (n,3,3)
+    n = len(tri)
+    e1 = tri[:, 1] - tri[:, 0]; e2 = tri[:, 2] - tri[:, 0]
+    nrm = np.cross(e1, e2); ln = np.linalg.norm(nrm, axis=1, keepdims=True)
+    nrm = (nrm / np.where(ln == 0, 1.0, ln)).astype(np.float32)
+    blk = np.concatenate([nrm, tri.reshape(n, 9)], axis=1).astype('<f4')   # (n,12)
+    rec = np.zeros((n, 50), np.uint8)
+    rec[:, :48] = np.ascontiguousarray(blk).view(np.uint8).reshape(n, 48)
+    with open(path, 'wb') as fh:
+        fh.write(b'\0' * 80); fh.write(np.uint32(n).tobytes()); fh.write(rec.tobytes())
+
+
+def write_ply(path, meshes, s):
+    """Combined binary-LE PLY with per-vertex RGB (µm) — single coloured mesh
+    that ParaView/MeshLab/Blender open with SE/AM in their phase colours."""
+    Vs, Fs, Cs, off = [], [], [], 0
+    for (v, f), col, name, op in meshes:
+        Vs.append((v * s).astype('<f4')); Fs.append((f + off).astype('<i4'))
+        Cs.append(np.tile(_hex_rgb(col), (len(v), 1)).astype(np.uint8)); off += len(v)
+    V = np.vstack(Vs); C = np.vstack(Cs); F = np.vstack(Fs)
+    vbuf = np.zeros(len(V), [('p', '<f4', 3), ('c', 'u1', 3)]); vbuf['p'] = V; vbuf['c'] = C
+    fbuf = np.zeros(len(F), [('n', 'u1'), ('v', '<i4', 3)]); fbuf['n'] = 3; fbuf['v'] = F
+    hdr = ("ply\nformat binary_little_endian 1.0\n"
+           f"element vertex {len(V)}\nproperty float x\nproperty float y\nproperty float z\n"
+           "property uchar red\nproperty uchar green\nproperty uchar blue\n"
+           f"element face {len(F)}\nproperty list uchar int vertex_indices\nend_header\n")
+    with open(path, 'wb') as fh:
+        fh.write(hdr.encode()); fh.write(vbuf.tobytes()); fh.write(fbuf.tobytes())
+
+
+def write_obj(path, meshes, s):
+    """Single OBJ with one named object (`o`) per phase → COMSOL (and Blender /
+    MeshLab) import each phase as a SEPARATE object/domain, so the AM_P / AM_S /
+    SE groups stay split for per-domain material assignment."""
+    import io
+    buf = io.StringIO(); off = 0
+    for (v, f), col, name, op in meshes:
+        buf.write(f'o {name}\n')
+        np.savetxt(buf, v * s, fmt='v %.5f %.5f %.5f')
+        np.savetxt(buf, (f + 1 + off).astype(np.int64), fmt='f %d %d %d')
+        off += len(v)
+    with open(path, 'w') as fh:
+        fh.write(buf.getvalue())
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', required=True)
@@ -158,12 +242,19 @@ def main():
     ap.add_argument('--cut', choices=['none', 'half', 'corner'], default='corner')
     ap.add_argument('--step', type=int, default=2, help='marching-cubes step (2 = coarser/fewer tris)')
     ap.add_argument('--se-opacity', type=float, default=0.55, help='SE matrix transparency')
+    ap.add_argument('--palette', choices=['phase', 'dem'], default='phase',
+                    help="'phase' = 2D-viewer colours; 'dem' = DEM-render look "
+                         "(grey AM + khaki SE) for side-by-side comparison")
     ap.add_argument('--engine', choices=['plotly', 'mpl'], default='plotly')
+    ap.add_argument('--mesh-out', help='also export the continuum as a mesh: '
+                    'PREFIX.ply (combined, vertex-coloured) + PREFIX_{AM_P,AM_S,SE}.stl '
+                    '+ PREFIX.json (phase types, coverage, porosity description)')
     ap.add_argument('--measure-only', action='store_true',
                     help='voxelise + print AM/SE/VOID %% then stop (no mesh/render) — '
                          'fast sweep to find the --se-min-count that hits true porosity')
     ap.add_argument('--out', default='mpm_continuum_3d.html')
     a = ap.parse_args()
+    col_map = PALETTES[a.palette]
 
     t, c, r = load_am(a.scaffold)
     top = float((c[:, 2] + r).max()) + 0.01
@@ -178,19 +269,22 @@ def main():
         print(f'loaded {len(se):,} SE pts from {a.se}')
 
     am_p, am_s, se_mask, h = voxelize(se, t, c, r, a.n_vox, top, a.se_min_count, a.denoise)
-    tot = am_p.size
     am = am_p | am_s
     void = ~(am | se_mask)
+    por = 100.0 * void.mean()
+    f_amp, f_ams, f_se = 100 * am_p.mean(), 100 * am_s.mean(), 100 * se_mask.mean()
     print(f'voxel grid {am_p.shape}  (h={h*UM_BOX:.3f} µm)')
-    print(f'  AM {100*am.mean():.1f}%  SE {100*se_mask.mean():.1f}%  '
-          f'VOID {100*void.mean():.1f}%   ← 3D porosity at this resolution')
+    print(f'  AM_P {f_amp:.1f}%  AM_S {f_ams:.1f}%  SE {f_se:.1f}%  '
+          f'VOID {por:.1f}%   ← 3D porosity at this resolution')
+    cov = coverage(am_p, am_s, se_mask)
+    print(f'  coverage by SE:  AM_P {cov["AM_P"]:.1f}%   AM_S {cov["AM_S"]:.1f}%')
     if a.measure_only:                                  # fast --se-min-count sweep
         return
 
     meshes = []
-    for mask, col, name, op in ((am_p, COL[1], 'AM_P', 1.0),
-                                (am_s, COL[2], 'AM_S', 1.0),
-                                (se_mask, COL[3], 'SE', a.se_opacity)):
+    for mask, col, name, op in ((am_p, col_map[1], 'AM_P', 1.0),
+                                (am_s, col_map[2], 'AM_S', 1.0),
+                                (se_mask, col_map[3], 'SE', a.se_opacity)):
         mm = mesh_of(apply_cut(mask, a.cut), a.step)
         if mm is not None:
             meshes.append((mm, col, name, op))
@@ -200,7 +294,56 @@ def main():
     if a.engine == 'plotly' and ntri > 1_500_000:
         print('  ⚠ >1.5M triangles — HTML may be heavy; lower --n-vox or raise --step')
 
-    (render_plotly if a.engine == 'plotly' else render_mpl)(meshes, h, a.out)
+    if a.mesh_out:                                       # export mesh + description
+        import json
+        s = h * UM_BOX
+        write_ply(a.mesh_out + '.ply', meshes, s)
+        print(f'  saved {a.mesh_out}.ply  (combined, vertex-coloured)')
+        write_obj(a.mesh_out + '.obj', meshes, s)
+        print(f'  saved {a.mesh_out}.obj  (grouped: o AM_P / o AM_S / o SE → COMSOL domains)')
+        for (v, f), col, name, op in meshes:
+            write_stl(f'{a.mesh_out}_{name}.stl', v, f, s)
+            print(f'  saved {a.mesh_out}_{name}.stl  ({len(f):,} tris)  ← import as a domain')
+        desc = {
+            'source': a.se if a.se and not a.se_proxy else 'proxy(cell-fill)',
+            'n_vox': a.n_vox, 'voxel_um': round(h * UM_BOX, 4),
+            'se_min_count': a.se_min_count, 'denoise': a.denoise, 'cut': a.cut,
+            'units': 'micrometre', 'palette': a.palette,
+            'phases': {
+                'AM_P': {'type': 'active material (polycrystal, dark)',
+                         'volume_pct': round(f_amp, 2), 'color': col_map[1]},
+                'AM_S': {'type': 'active material (single-crystal, grey)',
+                         'volume_pct': round(f_ams, 2), 'color': col_map[2]},
+                'SE':   {'type': 'solid electrolyte (plastic matrix, yellow/khaki)',
+                         'volume_pct': round(f_se, 2), 'color': col_map[3]},
+                'void': {'type': 'pore', 'volume_pct': round(por, 2)},
+            },
+            'porosity_pct': round(por, 2),
+            'coverage_by_SE_pct': {'AM_P': round(cov['AM_P'], 2),
+                                   'AM_S': round(cov['AM_S'], 2)},
+            'triangles': {nm: int(len(f)) for (v, f), col, nm, op in meshes},
+            'comsol': {
+                'separate_domains': ['AM_P', 'AM_S', 'SE'],
+                'files': {'grouped_single': a.mesh_out + '.obj (o-groups)',
+                          'per_domain_stl': [f'{a.mesh_out}_{nm}.stl' for nm in
+                                             ('AM_P', 'AM_S', 'SE')],
+                          'coloured_combined': a.mesh_out + '.ply'},
+                'import': 'OBJ keeps the 3 objects split; or import the 3 STLs and '
+                          'Form Assembly + Imprint to share the AM-SE interfaces. '
+                          'MC iso-surfaces are coincident at shared voxel faces.',
+            },
+        }
+        with open(a.mesh_out + '.json', 'w') as fh:
+            json.dump(desc, fh, indent=2, ensure_ascii=False)
+        print(f'  saved {a.mesh_out}.json  (phase types · coverage · porosity)')
+
+    subtitle = (f'porosity {por:.1f}%  ·  SE {f_se:.0f}%  ·  '
+                f'coverage AM_P {cov["AM_P"]:.0f}% / AM_S {cov["AM_S"]:.0f}%  ·  '
+                f'n_vox {a.n_vox} ({h*UM_BOX:.2f} µm/vox)')
+    if a.engine == 'plotly':
+        render_plotly(meshes, h, a.out, subtitle)
+    else:
+        render_mpl(meshes, h, a.out)
 
 
 if __name__ == '__main__':
