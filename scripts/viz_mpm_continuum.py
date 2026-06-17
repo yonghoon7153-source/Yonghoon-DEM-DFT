@@ -177,12 +177,20 @@ def apply_cut(mask, cut):
     return m
 
 
-def mesh_of(mask, step):
+def mesh_of(mask, step, smooth=0.0):
     from skimage.measure import marching_cubes
     if mask.sum() < 8:
         return None
     # pad so surfaces at the array border close into solids
     p = np.pad(mask.astype(np.float32), 1)
+    if smooth > 0.0:
+        # Gaussian-blur the OCCUPANCY FIELD (not the mesh) before marching cubes:
+        # the 0.5 iso of a blurred binary sits at the boundary midpoint, so AM and
+        # SE — blurred with the SAME kernel — both cross 0.5 at the shared interface
+        # → their iso-surfaces stay COINCIDENT (COMSOL can imprint a shared face).
+        # (Smoothing each STL in Blender instead moves the two sides apart → gaps.)
+        from scipy import ndimage as ndi
+        p = ndi.gaussian_filter(p, smooth)
     v, f, _, _ = marching_cubes(p, level=0.5, step_size=step)
     return v - 1.0, f                                    # undo pad offset (voxel idx)
 
@@ -299,6 +307,10 @@ def main():
     ap.add_argument('--denoise', type=int, default=1, help='3D close+open iters (speckle removal)')
     ap.add_argument('--cut', choices=['none', 'half', 'corner'], default='corner')
     ap.add_argument('--step', type=int, default=2, help='marching-cubes step (2 = coarser/fewer tris)')
+    ap.add_argument('--smooth', type=float, default=0.0,
+                    help='Gaussian-blur the voxel field before marching cubes (e.g. 1.0) to remove '
+                         'the stair-steps for a COMSOL-clean mesh — done on the FIELD so AM-SE '
+                         'interfaces stay coincident (do NOT smooth the STLs separately in Blender)')
     ap.add_argument('--se-opacity', type=float, default=0.55, help='SE matrix transparency')
     ap.add_argument('--palette', choices=['phase', 'dem'], default='phase',
                     help="'phase' = 2D-viewer colours; 'dem' = DEM-render look "
@@ -344,7 +356,7 @@ def main():
     for mask, col, name, op in ((am_p, col_map[1], 'AM_P', 1.0),
                                 (am_s, col_map[2], 'AM_S', 1.0),
                                 (se_mask, col_map[3], 'SE', a.se_opacity)):
-        mm = mesh_of(apply_cut(mask, a.cut), a.step)
+        mm = mesh_of(apply_cut(mask, a.cut), a.step, a.smooth)
         if mm is not None:
             meshes.append((mm, col, name, op))
             print(f'  {name}: {len(mm[1]):,} triangles')
