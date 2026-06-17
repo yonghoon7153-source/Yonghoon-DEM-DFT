@@ -532,6 +532,27 @@ the SE = the 36–41 % problem); (3) fixing forces the SE to bear the load and d
   mechanism, spatial stress/strain/density fields, SE bridge channel-width, pore-location
   map.  COUPLING = scaffold.  Viz: `scripts/viz_mpm_morphology.py` (x-z slice: AM+SE+void).
 
+### ★ SE-DUMP scaffold — porosity/thickness EMERGE (no targeting) + coverage ground-truth (2026-06-17) ★
+`--se-dump` (mpm3d_compaction.py): seed a D1 SE sphere at every REAL DEM SE centre
+(`docs/data/real14_se_scaffold.csv`, 32,832 from atom_2060000; voxel union, non-AM cells)
+instead of uniform cell-fill → SE volume·distribution REAL → porosity·thickness EMERGE
+(the user's "real physics, not porosity targeting").
+- USE `--protocol hold`: servo (const-stress) OVER-COMPACTS plastic SE — it yields at ~const
+  stress + relaxes after each press → const-σ ratchets the plate down with no stable stop
+  (15.9→9.5 %).  hold = descend-to-first-300MPa + FIX plate (real LIGGGHTS displacement-stop)
+  → locks porosity.  RESULT (n_grid=384, hold, ZERO targeting): porosity **15.93 %** (real 15.6 ✓),
+  thickness **29.95 µm** (30.28 ✓), SE/solid 25.9 % (≈27 ✓), ρ_bulk 3.27 g/cm³.
+- COVERAGE ground-truth (geometric, MPM-independent — Fibonacci AM-surface + SE-centre KDTree):
+  SE touching AM (gap≤0)=**16 %≈Hertz 18**; within 0.14 µm (1 vox)=**49 %≈Tabor 52**.  BOTH DEM
+  values validated (contact vs plastic-spread).  ⇒ cell-fill 52 % was NOT inflated (= geometric
+  Tabor); the mpm3d --se-dump raw 26 % is an UNDER-COUNT (discrete-point "adjacent-cell" measure
+  has sampling holes).  Report 16 (Hertz) / 52 (Tabor), NOT 26.
+- 3D mesh: `viz_mpm_continuum --target-porosity 0.159 --target-coverage 0.52` pins BOTH →
+  porosity 15.9 % · coverage 50/54 % · SE 28 %, 2.5 M tris, COMSOL-separable (OBJ o-groups +
+  per-phase STL + PLY + JSON, --palette dem).  Targets REPRODUCE validated values at render res
+  (fidelity, not fabrication).  `--target-coverage` binary-searches the interfacial SE film at
+  FIXED SE total (volume fractions unchanged — coverage = where SE sits, not how much).
+
 Stage E webapp coverage (webapp results/<id>/ authoritative):
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete

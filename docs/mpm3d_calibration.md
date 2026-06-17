@@ -228,6 +228,39 @@ composite porosity·coverage·morphology.  → DEM = TRANSPORT + discrete packin
 MPM = SE plastic morphology/strain/stress fields; both = porosity·thickness·Tabor-coverage
 (independent check); scaffold = combine each at its strength.
 
+## ★ DEM SE-dump scaffold — porosity/thickness EMERGE (no targeting) + coverage ground-truth (2026-06-17) ★
+The cell-fill scaffold SET the SE volume (`--se-frac`) and the render FORCED porosity
+(`--target-porosity`).  **`--se-dump`** removes both: seed a D1 SE sphere at every REAL DEM
+SE centre (`docs/data/real14_se_scaffold.csv`, 32,832 extracted from atom_2060000; voxel
+union into non-AM cells, 8 pts/cell), AM = fixed scaffold, then press.  SE volume AND
+spatial distribution are REAL ⇒ porosity·thickness EMERGE (the user's "real physics, not
+liggghts porosity targeting").
+  • PROTOCOL — servo (const-stress) OVER-COMPACTS the plastic SE: a yielding material flows
+    at ~const stress and relaxes after each press, so a const-σ servo ratchets the plate
+    down with no stable stop (heterogeneous real SE → wallP noisy/low-biased → 15.9 → 9.5 %).
+    **`--protocol hold`** (descend to first 300 MPa, FIX plate, relax) = the real LIGGGHTS /
+    experiment displacement-stop → locks porosity.  USE hold for --se-dump.
+  • RESULT (n_grid=384, hold, REAL SE, ZERO targeting):
+      **porosity 15.93 %** (LIGGGHTS 15.6 ✓) · **thickness 29.95 µm** (30.28 ✓) ·
+      SE/solid 25.9 % (≈27 ✓) · ρ_bulk 3.27 g/cm³ · seed void 19.8 → 15.93 (plastic press).
+    Porosity is now an OUTPUT, not a tuned input — the milestone.
+  • COVERAGE — geometric GROUND-TRUTH from the raw dump (MPM-independent: Fibonacci AM-surface
+    sampling + SE-centre KDTree):  SE touching AM (gap≤0) = **16 % ≈ DEM Hertz 18 %**; SE within
+    0.14 µm (1 voxel) = **49 % ≈ DEM Tabor 52 %**.  BOTH DEM coverages are geometrically
+    validated (contact vs plastic-spread — not a contradiction).  ⇒ CORRECTION: the cell-fill
+    52 % was NOT an over-estimate (it = the geometric Tabor level); the mpm3d **--se-dump raw
+    coverage 26 % is an UNDER-COUNT** — its measure ("SE point in the adjacent cell") has
+    discrete-point sampling holes at the interface, so it reads between touching(16) and
+    spread(49).  Report 16 % (Hertz/contact) or 49–52 % (Tabor/conduction), NOT the raw 26 %.
+  • 3D MESH (viz_mpm_continuum on se384_dump.npy, `--target-porosity 0.159 --target-coverage
+    0.52`): BOTH pinned → **porosity 15.9 % · coverage 50.1/53.9 % · SE 28.1 %** (≈ real φ_SE),
+    2.5 M tris, COMSOL-separable (OBJ o-groups + per-phase STL + PLY + JSON, DEM palette).  These
+    targets REPRODUCE validated values (emergent porosity + geometric Tabor coverage) at render
+    resolution — fidelity, not fabrication.
+  • New tools: `--se-dump` + density/thickness watch (mpm3d_compaction.py),
+    `--target-porosity`/`--target-coverage`/`--palette`/`--mesh-out` (viz_mpm_continuum.py),
+    `docs/data/real14_se_scaffold.csv`.
+
 ## Tooling (scripts/mpm3d_compaction.py)
 `--readout {wallP,sigzz}`, `--nu-se`, `--sigma-y`, `--am-frac`, `--n-grid`,
 `--am-scaffold` (+`--se-frac`/`--coh`/`--protocol`/`--save-se`), two-tier RSA / cell-fill
