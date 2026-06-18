@@ -87,6 +87,14 @@ def parse_args(argv):
     ap.add_argument('--dt', type=float, default=2.0e-4)
     ap.add_argument('--seed', type=int, default=3)
     ap.add_argument('--gpu-mem', type=float, default=3.0)
+    ap.add_argument('--lateral-box', type=float, default=0.05,
+                    help='REAL LIGGGHTS lateral box size (the x,y RVE width in dump units; default 0.05 '
+                         '= 50µm).  Scaffold scl = WIDTH/lateral_box; pass the case box_x so non-50µm '
+                         'RVEs map correctly.  (mpm_input_from_case.py wires this from input_params box_x.)')
+    ap.add_argument('--nz', type=int, default=0,
+                    help='vertical grid cells (THICK films): 0 = auto (fit the electrode, ≥ n_grid).  '
+                         'Non-cubic grid n_grid×n_grid×nz, uniform dx=1/n_grid → tall electrodes fit '
+                         'without crushing SE resolution (a 158µm film no longer overflows the unit box).')
     ap.add_argument('--periodic', action='store_true',
                     help='x,y periodic RVE (match the DEM "boundary p p f"): no lateral walls, '
                          'particles + AM/SE masks wrap → boundary grains get bulk compaction + '
@@ -105,7 +113,9 @@ def main(argv):
     ti.init(**kw)
 
     n_grid = args.n_grid
-    dx = 1.0 / n_grid; inv_dx = float(n_grid)
+    dx = 1.0 / n_grid; inv_dx = float(n_grid)               # uniform cell size (lateral-based); z may exceed 1
+    nz = n_grid                                             # vertical grid cells: = n_grid (cubic) unless a
+    #   tall scaffold electrode needs more (set in the scaffold branch).  Fields are (n_grid,n_grid,nz).
     PERIODIC = bool(args.periodic)                          # x,y periodic RVE (opt-in); default lateral walls
     dt = args.dt                                           # per-point p_vol/p_mass (set in build):
     #   soft SE → fine voxelization (dx/2), rigid AM → coarse (dx) to cap memory at 12:1 ratio
@@ -140,7 +150,7 @@ def main(argv):
         # the porosity is a RESULT of the SE plastic fill (drops from the rigid-RSA value), not assumed.
         SW = (0.04, 0.96); WIDTH = SW[1] - SW[0]; FLOOR = 0.05
         amraw = np.loadtxt(args.am_scaffold, delimiter=',')
-        scl = WIDTH / 0.05                                     # box units per LIGGGHTS unit (50µm→WIDTH)
+        scl = WIDTH / args.lateral_box                         # box units per LIGGGHTS unit (lateral→WIDTH)
         am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
                                 FLOOR + amraw[:, 3] * scl]).astype(np.float64)
         am_r = (amraw[:, 4] * scl).astype(np.float64)
@@ -148,7 +158,12 @@ def main(argv):
         am_top = float((am_c[:, 2] + am_r).max())
         WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01
         r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
-        um_box = 1000.0 / scl                                 # µm per box unit (50µm RVE = 0.05 LIGGGHTS u)
+        um_box = 1000.0 / scl                                 # µm per box unit (lateral_box LIGGGHTS u = WIDTH)
+        # THICK-FILM vertical grid: a tall electrode (z_extent > lateral) would overflow the cubic
+        # unit box (158µm/30µm → z maps to ~5).  Size nz so the grid spans [0, WALL0] at the SAME
+        # dx as the lateral cells → SE keeps its calibrated resolution.  nz = n_grid when it fits
+        # (real_14 short film → cubic, unchanged); larger only for thick films.
+        nz = args.nz if args.nz > 0 else max(n_grid, int(np.ceil((WALL0 + 0.02) * n_grid)))
         # periodic (x,y) RVE box in grid cells — matches the DEM 'boundary p p f': a boundary AM/SE
         # gets wrapped images so it compacts + is covered like the bulk (opt-in via --periodic).
         LO_m = int(round(SW[0] * n_grid)); WC_m = int(round((SW[1] - SW[0]) * n_grid))
@@ -157,7 +172,7 @@ def main(argv):
             """rasterise a sphere into the (n_grid³) mask; x,y wrap into [LO_m,LO_m+WC_m) when PERIODIC,
             else clamp to the grid (byte-identical to the old block-slice fill)."""
             iz0 = max(int(np.floor((cz - rr) * n_grid)), 0)
-            iz1 = min(int(np.ceil((cz + rr) * n_grid)), n_grid)
+            iz1 = min(int(np.ceil((cz + rr) * n_grid)), nz)   # z spans nz cells (≥ n_grid for thick films)
             if iz1 <= iz0:
                 return
             if PERIODIC:
@@ -181,7 +196,7 @@ def main(argv):
                 wx, wy = ix[ii], iy[jj]
             mask[wx, wy, iz[kk]] = setval
 
-        pin_np = np.zeros((n_grid,) * 3, np.int32)            # grid cells inside any fixed AM
+        pin_np = np.zeros((n_grid, n_grid, nz), np.int32)     # grid cells inside any fixed AM (z=nz cells)
         for _i in range(len(am_r)):
             cx, cy, cz = am_c[_i]; rr = float(am_r[_i])
             _raster(pin_np, cx, cy, cz, rr, int(amraw[_i, 0]))
@@ -217,7 +232,7 @@ def main(argv):
         if not args.am_scaffold:
             return False
         ii = min(int(p[0] * n_grid), n_grid - 1); jj = min(int(p[1] * n_grid), n_grid - 1)
-        kk = min(int(p[2] * n_grid), n_grid - 1)
+        kk = min(int(p[2] * n_grid), nz - 1)
         return pin_np[ii, jj, kk] > 0
 
     def hits_big(p, r):
@@ -240,7 +255,7 @@ def main(argv):
         spc = dx * 0.5
         i0 = LO_m if PERIODIC else int(SW[0] * n_grid) + 1   # no wall inset when periodic
         i1 = LO_m + WC_m if PERIODIC else int(SW[1] * n_grid)
-        k0 = int(FLOOR * n_grid) + 1; k1 = int(am_top * n_grid)
+        k0 = int(FLOOR * n_grid) + 1; k1 = min(int(am_top * n_grid), nz)
         if args.se_dump:
             # ── seed SE at the REAL DEM SE centres: rasterise each D1 SE sphere into the grid
             #    (voxel union → no overlap double-count), keep only non-AM cells.  SE volume and
@@ -250,7 +265,7 @@ def main(argv):
             se_c = np.column_stack([SW[0] + seraw[:, 1] * scl, SW[0] + seraw[:, 2] * scl,
                                     FLOOR + seraw[:, 3] * scl])
             se_rr = (seraw[:, 4] * scl).astype(np.float64)
-            se_pin = np.zeros((n_grid,) * 3, bool)
+            se_pin = np.zeros((n_grid, n_grid, nz), bool)
             for _i in range(len(se_rr)):
                 cx, cy, cz = se_c[_i]; rr = float(se_rr[_i])
                 _raster(se_pin, cx, cy, cz, rr, True)        # x,y wrap when PERIODIC (boundary SE)
@@ -332,7 +347,8 @@ def main(argv):
             print("build failed (n<2) — raise --n-grid or --init-solid"); return
         mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
         pvs = np.concatenate(pv_list)
-    xs = np.clip(xs, 2.0 * dx, 1.0 - 2.0 * dx)             # keep the 3-pt P2G stencil inside [0,n_grid)
+    xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
+    xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
     solid_vol = float(pvs.sum()) + AM_vol                  # voxelized SE vol (Σ per-point) + exact fixed-AM
     #   vol.  Σ per-point matches the old n·p_vol so the pure-SE 10% calibration is preserved.
     # periodic (x,y) box in grid cells, snapped so the particle wrap (LATW) == the grid wrap (WC·dx)
@@ -346,11 +362,11 @@ def main(argv):
     pvol_p = ti.field(ti.f32, n)                                # per-point volume (= mass, ρ=1)
     dg_acc = ti.field(ti.f32, n)                                # accumulated plastic strain Σdg per point
     eps_acc = ti.field(ti.f32, n)                               # accumulated TOTAL strain (vs seed, incl elastic) per point
-    grid_v = ti.Vector.field(3, ti.f32, (n_grid,) * 3); grid_m = ti.field(ti.f32, (n_grid,) * 3)
+    grid_v = ti.Vector.field(3, ti.f32, (n_grid, n_grid, nz)); grid_m = ti.field(ti.f32, (n_grid, n_grid, nz))
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
     scaffold_on = bool(args.am_scaffold)                        # fixed-AM grid obstacle (real skeleton)
-    am_mask = ti.field(ti.i32, (n_grid,) * 3 if scaffold_on else (1, 1, 1))
+    am_mask = ti.field(ti.i32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))
     if scaffold_on:
         am_mask.from_numpy(pin_np)                              # cells inside fixed AM (built in scaffold branch)
 
@@ -446,7 +462,8 @@ def main(argv):
             else "real14 (3-comp 12:4:1, AM:SE 73:27)" if args.preset == 'real14'
             else f"{args.material} (am_frac={am_frac})")
     if not args.quiet:
-        print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {comp}  "
+        gshape = f"{n_grid}" if nz == n_grid else f"{n_grid}×{n_grid}×{nz}"
+        print(f"3D MPM  grid={gshape}  pts={n}  arch={args.arch}  {comp}  "
               f"E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} K_SE={K_SE:.2f}GPa  "
               f"target={target} GPa  readout={args.readout}  "
               f"xy={'periodic' if PERIODIC else 'walls'}")
@@ -528,8 +545,9 @@ def main(argv):
         # (vs void).  The MPM SE plastically conforms to the AM, so this is the REAL coverage —
         # validates the DEM coverage post-corrections (Hertz / Tabor-physics / B3 shape-corr).
         xf = x.to_numpy()
-        ci = np.clip((xf * n_grid).astype(int), 0, n_grid - 1)
-        se_occ = np.zeros((n_grid,) * 3, bool)
+        ci = (xf * n_grid).astype(int)
+        ci[:, :2] = np.clip(ci[:, :2], 0, n_grid - 1); ci[:, 2] = np.clip(ci[:, 2], 0, nz - 1)
+        se_occ = np.zeros((n_grid, n_grid, nz), bool)
         se_occ[ci[:, 0], ci[:, 1], ci[:, 2]] = True
         # close the discrete SE occupancy to fill point-sampling holes at the interface —
         # the raw 'point in the adjacent cell' measure UNDER-counts coverage otherwise
@@ -565,7 +583,7 @@ def main(argv):
             'wall_z': round(float(wall_z[None]), 4),
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
-            'n_grid': int(n_grid), 'n_pts': int(n),
+            'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),
             'E_SE_GPa': float(args.e_se), 'nu_SE': float(args.nu_se),
             'sigma_y_GPa': float(args.sigma_y), 'K_SE_GPa': round(float(K_SE), 3),
             'protocol': args.protocol, 'readout': args.readout,
