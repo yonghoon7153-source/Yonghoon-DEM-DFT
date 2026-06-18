@@ -248,8 +248,12 @@
       <tbody>
         <tr><th>공극률 (porosity)</th><td data-mk="porosity_mpm_pct" data-fmt="pct">—</td>
             <th>두께 (thickness)</th><td data-mk="thickness_mpm_um" data-fmt="um">—</td></tr>
-        <tr><th>coverage AM_P</th><td data-mk="coverage_AM_P_mpm_pct" data-fmt="pct">—</td>
-            <th>coverage AM_S</th><td data-mk="coverage_AM_S_mpm_pct" data-fmt="pct">—</td></tr>
+        <tr><th>coverage AM_P <span class="cov-band-note"
+              style="font-weight:400;color:#64748b;font-size:0.92em">Hertz/Tabor µm</span></th>
+            <td data-cov="AM_P">—</td>
+            <th>coverage AM_S <span class="cov-band-note"
+              style="font-weight:400;color:#64748b;font-size:0.92em">Hertz/Tabor µm</span></th>
+            <td data-cov="AM_S">—</td></tr>
         <tr><th>SE 비율 (of solid)</th><td data-mk="se_fraction_pct" data-fmt="pct">—</td>
             <th>벌크 밀도</th><td data-mk="bulk_density_g_cm3" data-fmt="dens">—</td></tr>
         <tr><th>E_SE</th><td data-mk="E_SE_GPa" data-fmt="gpa">—</td>
@@ -338,6 +342,20 @@ function fillMpmTable(m) {
     const k = el.dataset.mk;
     if (k in m) el.textContent = fmt(m[k], el.dataset.fmt || 'raw');
   });
+  // coverage: prefer the µm distance-curve (Hertz/Tabor, deformed-points = the value we
+  // trust) over the density-bound voxel measure; fall back to voxel (labelled) for old payloads.
+  ['AM_P', 'AM_S'].forEach(s => {
+    const cell = box.querySelector(`[data-cov="${s}"]`);
+    if (!cell) return;
+    const h = m['coverage_' + s + '_hertz_pct'], tb = m['coverage_' + s + '_tabor_pct'];
+    const vox = m['coverage_' + s + '_mpm_pct'];
+    const f0 = v => (v == null ? '–' : (+v).toFixed(0));
+    if (h != null || tb != null) cell.textContent = `${f0(h)} / ${f0(tb)} %`;
+    else if (vox != null) cell.textContent = `${(+vox).toFixed(1)} % (voxel)`;
+  });
+  if (m.cov_hertz_um != null && m.cov_tabor_um != null)
+    box.querySelectorAll('.cov-band-note').forEach(e =>
+      e.textContent = `Hertz ${m.cov_hertz_um} / Tabor ${m.cov_tabor_um} µm`);
   box.style.display = 'block';
 }
 fillMpmTable(_INIT_MPM);

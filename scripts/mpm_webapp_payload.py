@@ -61,22 +61,31 @@ def seed_se_mask(se_csv, am_shape, h, am_mask):
     return mask & ~am_mask
 
 
-def per_particle_coverage(se_pts, c, r, contact_um, n_samp=400, sub=2_000_000, seed=0):
-    """Per-AM-particle SE coverage: fraction of EACH AM particle's surface within
-    `contact_um` of a DEFORMED MPM SE point (the MPM's own measure, per particle —
-    not a rigid-sphere post-correction).  Returns a coverage % per AM index."""
+def deformed_coverage(se_pts, t, c, r, bands_um, n_samp=400, sub=2_000_000, seed=0):
+    """Continuous SE coverage of AM from the DEFORMED MPM SE points (KDTree to the real
+    plastic SE — NOT a rigid-sphere / Tabor post-correction).  Coverage is a DISTANCE
+    CURVE, so this returns, in ONE KDTree pass:
+      • glob[name]      = per-type mean coverage % at EACH µm band
+                          (bands_um[0] = Hertz/contact ≈0.13µm, [1] = Tabor spread ≈0.26µm)
+      • per_particle[i] = each AM's own coverage % at bands_um[0]  (viewer heat map)
+    The voxel-adjacency 'coverage_AM_*_mpm_pct' is density-bound (doesn't converge); this
+    grid-free curve is the value we report + the DEM Hertz/Tabor cross-comparison."""
     from scipy.spatial import cKDTree
     rng = np.random.default_rng(seed)
     pts = se_pts if len(se_pts) <= sub else se_pts[rng.choice(len(se_pts), sub, replace=False)]
     tree = cKDTree(pts)
-    band = contact_um / _vc().UM_BOX
+    bands = [b / _vc().UM_BOX for b in bands_um]            # µm → box units
     k = np.arange(n_samp); phi = np.pi * (3 - np.sqrt(5)); z = 1 - 2 * (k + 0.5) / n_samp
     rr = np.sqrt(1 - z * z); U = np.column_stack([rr * np.cos(phi * k), rr * np.sin(phi * k), z])
-    cov = np.zeros(len(r))
-    for i in range(len(r)):
-        d, _ = tree.query(c[i] + r[i] * U)
-        cov[i] = round(100.0 * float((d < band).mean()), 1)
-    return cov
+    glob = {}; per_particle = np.zeros(len(r))
+    for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
+        idx = np.where(t == ty)[0]; acc = np.zeros(len(bands))
+        for i in idx:
+            d, _ = tree.query(c[i] + r[i] * U)
+            fr = np.array([float((d < b).mean()) for b in bands])
+            acc += fr; per_particle[i] = round(100.0 * float(fr[0]), 1)
+        glob[nm] = (100.0 * acc / max(len(idx), 1)).round(1).tolist()
+    return glob, per_particle
 
 
 def geometric_coverage(am_csv, se_csv, n_samp=600):
@@ -132,8 +141,10 @@ def main():
                     help='RAW MPM metrics JSON from mpm3d_compaction --save-metrics: its authoritative '
                          'porosity/thickness/coverage/density are used instead of the coarse-mesh recompute')
     ap.add_argument('--coverage-um', type=float, default=0.13,
-                    help='contact distance for per-AM-particle coverage (µm; ~1 voxel/Hertz scale). '
-                         'Each AM sphere gets a coverage %% from the DEFORMED SE points.')
+                    help='Hertz/contact band (µm) for the deformed-points coverage curve '
+                         '(≈ DEM elastic ~0.13µm).  Also the per-AM-particle coverage band.')
+    ap.add_argument('--cov-tabor-um', type=float, default=0.26,
+                    help='Tabor plastic-spread band (µm) for the coverage curve (≈ DEM plastic ~0.26µm).')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -183,7 +194,7 @@ def main():
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     # per-particle coverage (each AM's own SE coverage, from the DEFORMED SE points) →
     # the viewer can colour each AM sphere by its coverage (a per-particle heat map).
-    cov_per = per_particle_coverage(se, c, r, a.coverage_um)
+    cov_bands, cov_per = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um])
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
@@ -212,6 +223,12 @@ def main():
         'coverage_AM_S_mpm_pct': round(pick(a.cov_s, 'coverage_AM_S_pct', cov['AM_S']), 1),
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
+        # µm-distance coverage (deformed-points curve) — the value we REPORT in the case
+        # table, not the density-bound voxel 'coverage_AM_*_mpm_pct'.  Hertz ≈ DEM elastic,
+        # Tabor ≈ DEM plastic-spread → directly cross-comparable with the DEM Hertz/Tabor.
+        'coverage_AM_P_hertz_pct': cov_bands['AM_P'][0], 'coverage_AM_P_tabor_pct': cov_bands['AM_P'][1],
+        'coverage_AM_S_hertz_pct': cov_bands['AM_S'][0], 'coverage_AM_S_tabor_pct': cov_bands['AM_S'][1],
+        'cov_hertz_um': a.coverage_um, 'cov_tabor_um': a.cov_tabor_um,
     }
     # coverage_AM_*_mpm_pct = the sim's RAW value (the MPM DIRECTLY measures the plastic SE-AM
     # contact from the deformed SE — no Tabor/B3 post-correction, which would re-impose the DEM's
