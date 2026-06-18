@@ -22,10 +22,24 @@
 | 물성 | 결과 | 판정 |
 |---|---|---|
 | 밴드갭 (eigenvalue) | undoped 2.184 → Nd+O(x0.2) 1.632 (−0.55) | **Nd 5d가 CBM↓** (O 2p는 deep spectator). 갭 narrowing은 Nd, 전해질엔 단점 |
-| ICOHP (spilling 1.34%) | **P–O −8.43 > P–S −5.98**(host 불변); **Nd–O −0.42 / Nd–S −0.44 / Nd–Cl −0.57**(약·이온) | P–O 공유 강함=**O 효과**; Nd 결합 약함=이온 dopant |
+| ICOHP (spilling 1.34%) | host 결합 comp1/modelc 대비 **전부 ±4% 불변**(§2b); 새 결합 **P–O −8.43**(O); Nd–X **−0.4~−0.6**(약·이온) | host 손 안 댐; O가 강한 P–O; Nd 이온 spectator |
 | oxophilicity (MP) | **Nd 1.75 ≈ Li 1.67**; Al 3.45, Y 2.13 | **Nd 특별한 getter 아님** (≈O 운반체) |
 | 이온전도 σ | nd 0.52× modelc | Nd(큰 immobile)가 Li 막음 → **손해** |
 | 내재 ESW (x0.2 DFT) | nd **1.52–1.92 V** vs modelc 1.24–2.14 | **과도핑이 창 좁힘**(이른 NdP 환원·Nd₁₀S₁₉ 산화) → x=0.02 최적 이유 |
+
+## 2b. ICOHP 정량 비교 (corrected) — comp1 vs modelc vs nd
+전부 **동일 PAW kjpaw_psl 1.0.0, 4.0 Å cutoff, LOBSTER 5.1.1** (basis 동일 → 비교 valid).
+| 결합 (eV/bond) | comp1 | modelc | **nd** | **nd vs modelc** |
+|---|---|---|---|---|
+| P–S | −5.944 | −6.00 | **−5.976** | **+0.4% (불변)** |
+| Li–Cl | −1.855 | −2.103 | **−2.132** | **−1.4% (불변)** |
+| Li–S | −1.592 | −1.717 | **−1.647** | **+4.1% (≈불변)** |
+| S–S | −0.107 | −0.11 | −0.101 | ~0 (둘 다 비결합) |
+| **P–O** | — | — | **−8.43** | nd-only (P–S보다 41%↑, **O 효과**) |
+| Nd–O / Nd–S / Nd–Cl | — | — | **−0.42 / −0.44 / −0.57** | nd-only (**약·이온**) |
+
+> **결론: Nd₂O₃ 도핑은 host 결합망을 거의 안 바꾼다(±4%) — 구조적으로 안전한 도핑.** 유일한 강결합은 P–O(O), Nd는 이온 spectator. **(참고: comp1→modelc Li–Cl/Li–S +13/+8%는 Cl-rich 효과[FULL report]; 거기 Nd를 더해도 결합은 더 안 변함.)**
+> ⚠️ **정정**: 직전 보고의 nd Li–S −2.49(+45%)·Li–Cl −2.27는 **cutoff 아티팩트**(3.2/3.4 Å). 4.0 Å(=comp1/modelc 동일)로 재파싱한 위 값이 정답. db `nd_icohp.json` + `docs/figures/nd_elf/icohp_nd_vs_modelc_comp1.csv` 갱신됨.
 
 ## 3. ★ SEI passivation — anode vs cathode (grand-potential)
 | 계면 | wide-gap 차단상 | 전도성(누설) 산물 | Nd 기여 |
@@ -45,6 +59,21 @@
 4. → **cycle·CE 개선.** (양극계면 반응 "양"은 nd≈modelc → 개선은 분해 "양"이 아니라 산물의 **전자차단성**.)
 
 **caveat**: 1·3은 **추론**(GB 전자수송·계면 미세구조 직접계산 안 함; SEI 산물 갭 + bulk-반대방향 논리 기반). 절대 갭은 4f-U 민감(경향 robust). σ_e(x) 비단조는 [interphase 차단(↓) vs bulk 갭 narrowing(↑)] 경쟁 → x=0.02 최적.
+
+## 4b. 분리막(separator)으로 갔을 때 성능이 좋아진 이유
+실험은 Nd₂O₃-LPSCl1.6을 **벌크 분리막**으로 썼고 σ_e↓·cycle↑. **벌크 결정이 좋아져서가 아님**:
+1. **벌크 결정 자체는 나빠짐** (DFT): 갭 좁아짐(→grain 내부 전자전도 ↑ 방향), 이온 σ↓.
+2. **그런데 측정 σ_e(DC-pol)는 유효/총(percolation)** — grain 내부+입계(GB)+interphase 직렬.
+3. **O-유래 wide-gap 상(Li₃PO₄ 5.73·NdPO₄ 5.55)이 입계(GB)에 생겨 grain 간 전자 percolation을 끊음** → 유효 σ_e↓ (전자가 grain은 통해도 GB에서 막힘). + Li 양극 SEI(Li₂O·LiCl) 차단.
+4. **σ_e↓ → dendrite(내부 Li⁰ 석출)·self-discharge 억제 (Han 2019) → cycle↑.**
+> **핵심: 분리막 개선 = "결정"이 아니라 "입계/계면 전자차단(microstructure)" 효과.** 이온 σ↓는 비용(x=0.02 묽어서 감당). **GB 기전은 추론**(SEI/GB 산물 wide-gap + bulk-반대방향 논리; GB 전자수송 직접계산 X) → SSRM·XPS depth로 검증 필요.
+
+## 4c. 배치 전략 (separator vs catholyte) — DFT 권고
+| 용도 | 작동 기전 | 비용 | DFT 평가 |
+|---|---|---|---|
+| **분리막** | 입계 O-phosphate 전자차단 → dendrite↓ | 이온 σ↓(x=0.02서 감당) | 작동함(실험 검증). 단 이득은 GB, 결정 아님 |
+| **catholyte / cathode 코팅** | 고전압서 NdPO₄·NdCl₃·Li₃PO₄ wide-gap passivation | 이온 손실 덜 치명(경로 짧음) | **강점 극대화**(cathode passivation) |
+> Nd₂O₃의 **결정·이온·갭 페널티는 분리막에서 더 부담**, **고전압 passivation 강점은 cathode에서 극대화** → **catholyte/cathode 쪽이 DFT상 합리적**. 단 분리막도 GB 차단으로 작동(실험). 과도핑(x>0.02)은 어디서든 역효과.
 
 ## 5. "passivation 여러 상 = 더 좋은가?" → 자동 아님 (조건부)
 - **좋으려면**: 생기는 wide-gap 상(Li₃PO₄·NdPO₄·NdCl₃·Li₂O·LiCl)이 **연속 차단층**을 이루고 **Li⁺는 통과**시켜야 함.
