@@ -121,7 +121,7 @@ python3 scripts/mpm3d_compaction.py \\
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
-  --n-vox 192 --tri-step 5 --target-porosity {tgt} \\
+  --n-vox 192 --tri-step 5 --target-porosity {tgt} --dg se_dump_dg.npy \\
   --metrics-json mpm_metrics.json --case {case} --out mpm_payload.json
 
 echo "→ upload mpm_payload.json (and mpm_metrics.json) back to the case in the webapp"

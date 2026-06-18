@@ -18,6 +18,16 @@ const COL = {
 };
 const OPA = { SE: 0.85, MESH: 0.55 };
 
+/* matplotlib 'hot' colormap (black→red→yellow→white) for the SE plastic-strain Σdg field. */
+function hotColor(t, c) {
+  t = Math.max(0, Math.min(1, t));
+  let r, g, b;
+  if (t < 0.365) { r = t / 0.365; g = 0; b = 0; }
+  else if (t < 0.746) { r = 1; g = (t - 0.365) / 0.381; b = 0; }
+  else { r = 1; g = 1; b = (t - 0.746) / 0.254; }
+  c.setRGB(r, g, b); return c;
+}
+
 /* View-mode colour palettes — Auerbach + Lawn 1998 fracture stages.
  * Mapped to ColorBrewer YlOrRd 5-class (sequential), which is the
  * standard academic palette for ordered-severity scalar data: pale
@@ -124,6 +134,7 @@ function buildControls(container, isMPM) {
       <option value="default">Default (AM 종류)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
+      <option value="se_strain">SE 소성변형 (Σdg)</option>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -882,6 +893,16 @@ function applyViewMode(state, mode) {
     if (state.coveragePatchGroup.material) state.coveragePatchGroup.material.dispose();
     state.coveragePatchGroup = null;
   }
+  if (state.strainPointGroup && state.scene) {
+    state.scene.remove(state.strainPointGroup);
+    if (state.strainPointGroup.geometry) state.strainPointGroup.geometry.dispose();
+    if (state.strainPointGroup.material) state.strainPointGroup.material.dispose();
+    state.strainPointGroup = null;
+  }
+  if (state.meshes && state.meshes.MESH) {                 // restore SE mesh (se_strain mode hides it)
+    const _mcb = document.querySelector('.viewer-controls input[data-layer="MESH"]');
+    state.meshes.MESH.visible = _mcb ? _mcb.checked : true;
+  }
   /* Phase B — restore any per-instance scale modifications from se_diagnostics */
   if (state.seInstanceScaleModified) {
     const dummy = new THREE.Object3D();
@@ -1524,6 +1545,42 @@ function applyViewMode(state, mode) {
          <span style="color:#f59e0b">●</span> Tabor spread (≤ ${mm.cov_tabor_um != null ? mm.cov_tabor_um : 0.26} µm)
        </div>
        <span style="color:#9ca3af;font-size:10px">덮인 표면점만 색칠 · 총 ${pts.length.toLocaleString()}점 (contact ${nHi.toLocaleString()})</span>`);
+    return;
+  }
+
+  if (mode === 'se_strain') {
+    /* 3D SE coloured by accumulated plastic strain Σdg (payload se_strain_points) — the
+     * field the 2D morphology shows, now volumetric.  Hide the SE surface mesh; show the
+     * strain point cloud (hot: bright = more plastic flow, at contacts / necks). */
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const pts = (state.data && state.data.se_strain_points) || [];
+    if (state.meshes.MESH) state.meshes.MESH.visible = false;   // strain replaces the SE surface
+    if (!pts.length) {
+      setLegend(state, state.isMPM
+        ? '<i>이 payload엔 SE strain이 없어요 — mpm3d --save-dg 로 돌리고 payload를 --dg 로 재생성하세요.</i>'
+        : '<i>No SE strain data in this payload.</i>');
+      return;
+    }
+    const vmax = (mm.dg_vmax98 && mm.dg_vmax98 > 0) ? mm.dg_vmax98 : 1.0;
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
+    const cc = new THREE.Color();
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
+      hotColor(p[3] / vmax, cc);
+      col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    state.strainPointGroup = new THREE.Points(g, new THREE.PointsMaterial({
+      size: 0.4, vertexColors: true, sizeAttenuation: true }));
+    if (state.scene) state.scene.add(state.strainPointGroup);
+    setLegend(state,
+      `<b>SE 소성변형 Σdg (3D)</b>
+       <div style="margin-top:4px">밝을수록 소성흐름 큼 (접촉·네킹부)</div>
+       <span style="color:#9ca3af;font-size:10px">vmax ${vmax} · mean ${mm.dg_mean ?? '–'} · `
+       + `max ${mm.dg_max ?? '–'} · ${pts.length.toLocaleString()}점</span>`);
     return;
   }
 

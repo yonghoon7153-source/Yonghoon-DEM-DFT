@@ -160,6 +160,9 @@ def main():
                          '(≈ DEM elastic ~0.13µm).  Also the per-AM-particle coverage band.')
     ap.add_argument('--cov-tabor-um', type=float, default=0.26,
                     help='Tabor plastic-spread band (µm) for the coverage curve (≈ DEM plastic ~0.26µm).')
+    ap.add_argument('--dg', default='', help='accumulated plastic strain npy (mpm3d --save-dg) → adds a '
+                    'subsampled SE strain point cloud to the payload for the viewer "SE Σdg" mode')
+    ap.add_argument('--strain-pts', type=int, default=200000, help='max SE strain points carried in the payload')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -193,6 +196,30 @@ def main():
         vu = (v * s).astype(np.float32)                    # µm, origin at bed corner
         tris = vu[f].round(3).tolist()                     # [[ [x,y,z]×3 ], ...]
     print(f'  SE surface: {len(tris):,} triangles (n_vox={a.n_vox}, step={a.tri_step})')
+
+    # SE plastic-strain point cloud (subsampled) → the viewer's "SE Σdg" mode colours the
+    # 3D SE by accumulated plastic strain (the field the 2D morphology shows, now in 3D).
+    se_strain_points = []; strain_stats = {}
+    if a.dg:
+        dg = np.load(a.dg).astype(np.float64)
+        if len(dg) == len(se):
+            N = min(a.strain_pts, len(se))
+            idx = (np.random.default_rng(0).choice(len(se), N, replace=False)
+                   if len(se) > N else np.arange(len(se)))
+            Ps = se[idx]
+            xyzdg = np.column_stack([((Ps[:, 0] - SW[0]) * UM).round(2),
+                                     ((Ps[:, 1] - SW[0]) * UM).round(2),
+                                     ((Ps[:, 2] - FLOOR) * UM).round(2), dg[idx].round(4)])
+            se_strain_points = xyzdg.tolist()
+            pos = dg[dg > 0]
+            strain_stats = {'dg_mean': round(float(dg.mean()), 4), 'dg_max': round(float(dg.max()), 3),
+                            'dg_vmax98': round(float(np.percentile(pos, 98)), 4) if len(pos) else 0.0,
+                            'dg_nonzero_pct': round(100.0 * float((dg > 0).mean()), 1),
+                            'n_strain_pts': len(se_strain_points)}
+            print(f'  SE strain points: {len(se_strain_points):,}  (Σdg mean {strain_stats["dg_mean"]} '
+                  f'max {strain_stats["dg_max"]} vmax98 {strain_stats["dg_vmax98"]})')
+        else:
+            print(f'  ⚠ --dg length {len(dg)} != SE {len(se)} — skipping strain points')
 
     # seed (loose, pre-compaction) SE surface — the real DEM SE spheres on the same grid
     seed_tris = []
@@ -259,11 +286,13 @@ def main():
               'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol'):
         if k in sim_m:
             mpm_metrics[k] = sim_m[k]                       # carry through raw sim fields
+    mpm_metrics.update(strain_stats)                       # Σdg mean/max/vmax98/n_strain_pts (if --dg)
 
     payload = {
         'kind': 'mpm', 'case': a.case,
         'particles': particles,                            # AM_P / AM_S spheres (same both states)
         'am_coverage_patches': cov_patches,                # covered AM-surface points (spatial map)
+        'se_strain_points': se_strain_points,              # [x,y,z,Σdg] µm — viewer "SE 소성변형" mode
         'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
