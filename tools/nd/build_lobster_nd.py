@@ -146,8 +146,8 @@ def main():
 
     # 3) lobsterin
     basis_lines = "\n".join(f"basisfunctions  {sp:4s} {BASIS[sp]}"
-                            for sp in ["Li", "P", "S", "Cl", "O", "Nd1", "Nd2"]
-                            if sp in counts or sp in ("Nd1", "Nd2"))
+                            for sp in ["Li", "P", "S", "Cl", "O"]
+                            if sp in counts)
     lob = f"""COHPstartEnergy  -15
 COHPendEnergy      8
 basisSet         pbeVaspFit2015
@@ -168,11 +168,11 @@ cohpGenerator from 0.5 to 4.0 type S  type S
 ! NEW with O doping
 cohpGenerator from 0.5 to 2.2 type P  type O
 cohpGenerator from 0.5 to 3.0 type Li type O
-! Nd bonds (QUALITATIVE only -- 4f basis uncertain)
-cohpGenerator from 0.5 to 3.3 type Nd1 type O
-cohpGenerator from 0.5 to 3.3 type Nd2 type O
-cohpGenerator from 0.5 to 3.3 type Nd1 type S
-cohpGenerator from 0.5 to 3.3 type Nd2 type S
+! Nd bonds (QUALITATIVE only -- 4f basis uncertain). LOBSTER uses ELEMENT 'Nd',
+! NOT the QE species labels Nd1/Nd2 -> 'type Nd' matches both Nd atoms.
+cohpGenerator from 0.5 to 3.3 type Nd type O
+cohpGenerator from 0.5 to 3.3 type Nd type S
+cohpGenerator from 0.5 to 3.3 type Nd type Cl
 """
     (wd / "lobsterin").write_text(lob)
 
