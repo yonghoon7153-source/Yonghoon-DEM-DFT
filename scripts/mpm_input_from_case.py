@@ -101,11 +101,22 @@ def main():
     write_csv(os.path.join(a.out, 'am_scaffold.csv'), am_rows,
               f'AM scaffold (AM_P=1,AM_S=2) — case {a.case}')
     write_csv(os.path.join(a.out, 'se_scaffold.csv'), se_rows,
-              f'SE seed positions (type 3) — case {a.case}')
+              f'SE seed positions (col 0 = original atom type; MPM uses x,y,z,r) — case {a.case}')
 
     poro = fm.get('porosity')
     tgt = round(float(poro) / 100.0, 4) if poro is not None else 0.16
     case = a.case or os.path.basename(a.results.rstrip('/'))
+    # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
+    # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are
+    # TALLER than this lateral, so MPM auto-extends the z grid (non-cubic) to fit — see run script.
+    box_x = ip.get('box_x') or ip.get('box_x_sim')
+    if not box_x:
+        allxy = [float(r[1]) for r in (am_rows + se_rows)] + [float(r[2]) for r in (am_rows + se_rows)]
+        box_x = max(allxy) if allxy else 0.05
+    box_x = round(float(box_x), 6)
+    # adaptive lateral resolution: keep SE ≈ 3.5 cells (real_14 0.05→384, unchanged) so the
+    # calibration transfers; scales DOWN for smaller RVEs so the tall-nz grid fits GPU memory.
+    n_grid_mpm = max(128, min(384, int(round(384 * box_x / 0.05))))
     # per-case SE stiffness — physically-faithful mapping (CLAUDE.md CORRECTION 1):
     # the DEM E_eff softening (1.35 GPa × the case ratio) is the GRANULAR-REARRANGEMENT
     # proxy = the SHEAR part ONLY.  So scale the MPM shear modulus μ by the case ratio
@@ -133,7 +144,8 @@ def main():
             'dem_e_se_eff_gpa': e_se_dem, 'se_ratio_vs_1p35': round(se_ratio, 4),
             'mpm_e_se_gpa': e_se_mpm, 'mpm_nu_se': nu_se_mpm,
             'mpm_K_se_gpa': round(K_CHAMP, 2), 'mpm_mu_se_gpa': round(mu_se_mpm, 4),
-            'press_gpa': press_gpa, 'target_porosity': tgt}
+            'press_gpa': press_gpa, 'target_porosity': tgt,
+            'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm}
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # run script: edit paths/GPU as needed, then run on a GPU box
@@ -146,9 +158,12 @@ def main():
 #    --periodic: x,y periodic RVE = the DEM 'boundary p p f' (boundary AM/SE get bulk
 #    compaction + coverage).  Validated on real_14: porosity 15.93->15.91% (anchor held),
 #    coverage AM_P/S 26.6/28.1 -> 29.3/30.9% (boundary grains now represented).
+#    --lateral-box {box_x}: real RVE width (NOT assumed 50µm).  n_grid {n_grid_mpm} keeps SE
+#    resolved; MPM auto-extends nz for this thick film (158µm films no longer overflow the box).
+#    If it OOMs, lower --n-grid or raise --gpu-mem.
 python3 scripts/mpm3d_compaction.py \\
   --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv --periodic \\
-  --n-grid 384 --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
+  --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json
 
