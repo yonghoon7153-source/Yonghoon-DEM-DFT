@@ -42,9 +42,14 @@ Modes
   --find_champion --sys NAME --cas CAS  : print champion xyz path (for batch)
   --summary --out OUTROOT               : aggregate all site_pref.json into a table
 """
-import argparse, json, os, re, sys, datetime
+import argparse, json, os, re, sys, datetime, warnings
 from pathlib import Path
 import numpy as np
+
+# FrechetCellFilter computes a matrix logarithm of the cell deformation every
+# step; scipy emits a benign "logm result may be inaccurate" RuntimeWarning
+# (err ~1e-13 = machine precision).  Silence it so relax logs stay readable.
+warnings.filterwarnings("ignore", message="logm result may be inaccurate")
 
 HOST = {"Li", "P", "S", "Cl"}
 ANIONS = {"O", "N", "F", "Br", "I", "Se", "Te"}
@@ -161,7 +166,14 @@ def relax(atoms, calc, fmax, steps, logf):
 def make_calc(model, task, device):
     from fairchem.core import pretrained_mlip
     from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
-    predictor = pretrained_mlip.get_predict_unit(model, device=device)
+    try:
+        predictor = pretrained_mlip.get_predict_unit(model, device=device)
+    except Exception as e:                       # e.g. CUDA OOM / no GPU
+        if device != "cpu":
+            print(f"[warn] device={device} failed ({type(e).__name__}); falling back to cpu")
+            predictor = pretrained_mlip.get_predict_unit(model, device="cpu")
+        else:
+            raise
     return FAIRChemCalculator(predictor, task_name=task)
 
 
