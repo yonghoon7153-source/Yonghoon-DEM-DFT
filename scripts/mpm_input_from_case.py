@@ -143,8 +143,11 @@ def main():
 #   real-LPSC, shear μ={prov['mpm_mu_se_gpa']} GPa = ×{prov['se_ratio_vs_1p35']} of champion;
 #   from DEM E_eff {e_se_dem} GPa), press {press_gpa} GPa
 # 1) plastic compaction of the REAL SE around the fixed AM scaffold + raw metrics
+#    --periodic: x,y periodic RVE = the DEM 'boundary p p f' (boundary AM/SE get bulk
+#    compaction + coverage).  Validated on real_14: porosity 15.93->15.91% (anchor held),
+#    coverage AM_P/S 26.6/28.1 -> 29.3/30.9% (boundary grains now represented).
 python3 scripts/mpm3d_compaction.py \\
-  --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
+  --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv --periodic \\
   --n-grid 384 --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json
