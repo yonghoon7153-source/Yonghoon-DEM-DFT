@@ -124,7 +124,7 @@ def _se_to_continuum(labels: np.ndarray, r_se_px: float,
     # from the pore carve below → a pore-free skin; the void redistributes into the bulk (global
     # porosity preserved because `need` is counted AFTER this fill).
     nyf = out.shape[0]
-    z_skin = int(min(max(2.0 * r_se_px, 0.025 * nyf), 0.15 * nyf))   # skin thickness (px), capped
+    z_skin = int(min(max(round(r_se_px), 2), 0.03 * nyf))   # ~1 SE radius (px), thin seal, capped
     if z_skin > 0:
         skin_row = np.zeros(nyf, dtype=bool); skin_row[:z_skin] = True; skin_row[nyf - z_skin:] = True
         out[skin_row[:, None] & (~is_am) & (out == VOID)] = SE
@@ -808,10 +808,11 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         pore |= shell                               # interfacial void
 
     # dense SE skin at the top/bottom z-faces (the ionic in/out boundaries = separator /
-    # current-collector): keep carved pores + interfacial shells out of a thin band of each
-    # face so the un-pored void there fills to SE below → a pore-free skin; the void
-    # redistributes into the bulk (global porosity preserved via need_void).
-    z_skin = int(min(max(2.0 * (r_se_um / pa), 0.025 * ny), 0.15 * ny))
+    # current-collector): keep carved pores + interfacial shells out of a THIN band of each
+    # face so the un-pored void there fills to SE → a pore-free seal; the post-carve clear
+    # below guarantees the face even if a bulk pore overhangs, so the seal can be ~1 SE radius
+    # (NOT a % of height — that over-thickens tall electrodes).  Void redistributes into the bulk.
+    z_skin = int(min(max(round(r_se_um / pa), 2), 0.03 * ny))   # ~1 SE radius (px), thin, capped
     need_void = int(round(poro * nx * ny))
     non_am = (labels == VOID)
     pr_max = max(3.0, r_se_um / pa * 4.0)             # allow multi-µm pores
