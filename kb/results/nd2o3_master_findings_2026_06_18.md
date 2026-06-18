@@ -41,6 +41,22 @@
 > **결론: Nd₂O₃ 도핑은 host 결합망을 거의 안 바꾼다(±4%) — 구조적으로 안전한 도핑.** 유일한 강결합은 P–O(O), Nd는 이온 spectator. **(참고: comp1→modelc Li–Cl/Li–S +13/+8%는 Cl-rich 효과[FULL report]; 거기 Nd를 더해도 결합은 더 안 변함.)**
 > ⚠️ **정정**: 직전 보고의 nd Li–S −2.49(+45%)·Li–Cl −2.27는 **cutoff 아티팩트**(3.2/3.4 Å). 4.0 Å(=comp1/modelc 동일)로 재파싱한 위 값이 정답. db `nd_icohp.json` + `docs/figures/nd_elf/icohp_nd_vs_modelc_comp1.csv` 갱신됨.
 
+## 2c. ELF — 결합 character (ICOHP 교차검증, "5번째 probe")
+nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이온=depletion floor↓ 낮을수록 이온):
+| bond | ICOHP (세기) | ELF | character |
+|---|---|---|---|
+| P–S | −5.98 | midpoint **0.870** | 강한 공유 백본 |
+| P–O | −8.43 (더 강) | midpoint **0.838 (더 낮음 = 더 polar)** | **강하지만 polar 공유** |
+| Nd–O / Nd–S | −0.42 / −0.44 | floor **0.131 / 0.188** | 약한 공유(5d)·대부분 이온 |
+| Li–O / Li–S / Li–Cl | 약·이온 | floor **0.032 / 0.024 / 0.018** (매우 낮음) | 강한 이온 |
+
+- **P–O는 ICOHP로 더 강(−8.43)인데 ELF midpoint는 더 낮음(0.838<0.870)=더 polar** → O 전기음성도가 전하를 당겨 **"강하지만 이온성 섞인 공유"** (ICOHP·ELF 교차검증, 단일 probe로는 못 보는 것).
+- **Nd–X floor 0.13–0.19 = 순수이온 Li(0.02)보다 높고 공유 P–S(0.87)보다 훨씬 낮음** → **Nd 5d가 약간의 공유성** 부여, 본질은 이온 (앞 "Nd 5d extended → 약한 overlap" 논의와 정합).
+- comp1/modelc ELF(별도 계산): **P–S bridge 0.946/0.944 불변 · Li basin 0.072/0.065 강이온** → host 공유백본 불변(§2b ICOHP P–S 불변과 일치).
+- ⚠️ nd ELF(0.870)와 comp1/modelc ELF(0.946)는 **다른 ELF 계산(cube grid/sampling 상이)이라 절대값 직접비교 X**; 둘 다 "공유백본 intact"라는 동일 물리만 공유.
+
+> **ELF = 5번째 독립 probe**(ICOHP 세기·Bader 전하·결합길이·BVSE와 함께): **host 공유백본 불변 + O는 강·polar P–O + Nd 약·이온(5d 약간) + Li 강이온** — 한 그림으로 수렴.
+
 ## 3. ★ SEI passivation — anode vs cathode (grand-potential)
 | 계면 | wide-gap 차단상 | 전도성(누설) 산물 | Nd 기여 |
 |---|---|---|---|
