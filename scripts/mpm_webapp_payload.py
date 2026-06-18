@@ -129,7 +129,8 @@ def geometric_coverage(am_csv, se_csv, n_samp=600):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--scaffold', required=True, help='AM scaffold CSV (type,x,y,z,r)')
+    ap.add_argument('--scaffold', default='', help='AM scaffold CSV (type,x,y,z,r); omit for an SE-only '
+                    'payload (loose→dense demo — no AM particles, just the SE continuum + strain)')
     ap.add_argument('--se', help='SE point cloud npy [n,3] box units (--save-se)')
     ap.add_argument('--se-proxy', action='store_true', help='no MPM run: cell-fill proxy (test)')
     ap.add_argument('--se-dump', default='', help='SE seed CSV (real DEM positions): adds the '
@@ -169,9 +170,12 @@ def main():
     vc = _vc()
     UM = vc.UM_BOX; SW = vc.SW; FLOOR = vc.FLOOR
 
-    t, c, r = vc.load_am(a.scaffold)
-    top = float((c[:, 2] + r).max()) + 0.01
+    if a.scaffold:
+        t, c, r = vc.load_am(a.scaffold)
+    else:                                                  # SE-only payload (loose→dense demo, no AM)
+        t, c, r = np.zeros(0, int), np.zeros((0, 3)), np.zeros(0)
     if a.se_proxy or not a.se:
+        top = float((c[:, 2] + r).max()) + 0.01            # proxy fill needs the AM skeleton
         v3p = importlib.util.spec_from_file_location(
             'v3', __file__.replace('mpm_webapp_payload', 'viz_mpm_morphology_3d'))
         v3 = importlib.util.module_from_spec(v3p); v3p.loader.exec_module(v3)
@@ -180,6 +184,7 @@ def main():
     else:
         se = np.load(a.se).astype(np.float64)
         print(f'loaded {len(se):,} SE pts from {a.se}')
+        top = (float((c[:, 2] + r).max()) if len(r) else float(se[:, 2].max())) + 0.01
 
     am_p, am_s, se_mask, h = vc.voxelize(se, t, c, r, a.n_vox, top, a.se_min_count,
                                          a.denoise, a.target_porosity, a.target_coverage)
