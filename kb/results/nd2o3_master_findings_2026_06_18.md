@@ -99,18 +99,9 @@ nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이�
 | **catholyte / cathode 코팅** | 고전압서 NdPO₄·NdCl₃·Li₃PO₄ wide-gap passivation | 이온 손실 덜 치명(경로 짧음) | **강점 극대화**(cathode passivation) |
 > Nd₂O₃의 **결정·이온·갭 페널티는 분리막에서 더 부담**, **고전압 passivation 강점은 cathode에서 극대화** → **catholyte/cathode 쪽이 DFT상 합리적**. 단 분리막도 GB 차단으로 작동(실험). 과도핑(x>0.02)은 어디서든 역효과.
 
-## 4d. ★ band gap 해석 — 두 용법 구분 (별개 주제)
-**같은 "DOS band gap"이라도 두 가지 서로 다른 것에 쓰이며, 절대 혼동 금지:**
-| 용법 | band gap이 말하는 것 | 맞나? | 올바른 방법 |
-|---|---|---|---|
-| **(A) 벌크 SE 갭 → 산화안정성** | 분해 onset 전압 | ❌ **아님** | grand-potential 분해창 (별도 보고서; 2.14 V) |
-| **(B) SEI/분해산물 갭 → 분해 억제** | 전자차단 → self-limiting | ✅ **맞음** | 산물별 band gap (wide=전자차단) |
-
-- **Li et al., Energy Storage Materials 77 (2025) 104221** (CuBr₂-도핑 argyrodite, LPSC-CB)이 *"band gaps of LiBr and LiCl were wider than Li₂S (PDOS) … large bandgap implies better electronic insulation … blocks the electronic pathway and **prevents further decomposition**"* 라 하는 건 전부 **(B)**. 그들은 일부러 **"분해 억제/전자차단"** 이라 하지 **"oxidation stability"라고는 안 함** — 정확히 우리 §3·§4 passivation 논리와 동일. (같은 저널·같은 metal-halide-doping 접근.)
-- **우리 SEI 산물 갭(LiCl 6.65·Li₃PO₄ 5.73·NdPO₄ 5.55·Li₂O 5.24)도 (B) 용법** = 전자차단 → 분해 self-limiting → cycle↑ (refs.json NdF₃ 7.69 / BaF₂ 6.59 self-limiting SEI와 동일).
-- ⚠️ 반대로 **(A) 금지**: bulk 갭이 narrowing(Nd 5d, 2.184→1.632) 했다고 "산화 나빠짐"이라 읽으면 **틀림**. 산화 onset은 grand-potential(2.14 V, S²⁻-limited)로. **bulk 갭 ≠ 산화안정성** (UPS·VBM 보고서와 동일 결론).
-
-> **핵심: (A) bulk 갭→산화안정성 ✗ / (B) SEI산물 갭→분해억제 ✓. 문헌의 "band gap→분해억제"는 전부 (B)이고 우리 passivation과 같은 용법. (A)·(B)를 섞지 말 것.**
+## 4d. SEI 산물 band gap = 전자차단(분해억제)
+- SEI/분해산물이 wide-gap(LiCl 6.65·Li₃PO₄ 5.73·NdPO₄ 5.55·Li₂O 5.24)이면 **전자차단 → 분해 self-limiting → cycle↑** (§3·§4). **Li et al., ESM 77 (2025) 104221**(CuBr₂ argyrodite)도 동일: *"LiBr/LiCl gap > Li₂S(PDOS) → blocks the electronic pathway → prevents further decomposition."* (refs.json NdF₃ 7.69 / BaF₂ 6.59 self-limiting SEI와도 동일.)
+- ※ **이건 "분해 억제(전자차단)" 용법**이지 **"oxidation stability"가 아님.** "bulk band gap ≠ 산화안정성 / band gap·VBM을 산화 onset으로 읽으면 안 됨"의 **방법론 구분은 별도 산화안정성 문서**(`kb/results/oxidation_stability_VBM_vs_grandpotential_report_2026_06_18.md` §band-gap 두 용법)로 분리 — 이 Nd 문서엔 안 넣음.
 
 ## 5. "passivation 여러 상 = 더 좋은가?" → 자동 아님 (조건부)
 - **좋으려면**: 생기는 wide-gap 상(Li₃PO₄·NdPO₄·NdCl₃·Li₂O·LiCl)이 **연속 차단층**을 이루고 **Li⁺는 통과**시켜야 함.

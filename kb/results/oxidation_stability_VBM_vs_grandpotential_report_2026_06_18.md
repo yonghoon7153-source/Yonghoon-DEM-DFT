@@ -81,6 +81,19 @@ comp1(52원자) vs modelC(62원자)의 절대 VBM을 비교하려면 진공준�
 
 ---
 
+## 6b. ★ band gap의 두 용법 — 산화안정성 ✗ vs 분해억제 ✓ (혼동 금지)
+같은 "DOS band gap"이 **두 가지 다른 것**에 쓰이며 섞으면 안 됨:
+| 용법 | band gap이 말하는 것 | 맞나 | 올바른 방법 |
+|---|---|---|---|
+| **(A) 벌크 SE 갭 → 산화안정성** | 분해 onset 전압 | ❌ **아님** | grand-potential 분해창 (§7; 2.14 V) |
+| **(B) SEI/분해산물 갭 → 분해 억제** | 전자차단 → self-limiting | ✅ **맞음** | 산물별 band gap (wide=전자차단) |
+
+- 문헌(예: **Li et al., Energy Storage Mater. 77 (2025) 104221**, CuBr₂-doped argyrodite; LiBr/LiCl gap > Li₂S via PDOS)이 *"large bandgap → electronic insulation → blocks the electronic pathway → **prevents further decomposition**"* 라 하는 건 전부 **(B)**. 그들은 일부러 **"분해 억제/전자차단"** 이라 하지 **"oxidation stability"라고는 안 함.**
+- 즉 **"band gap → 분해억제"(SEI 전자차단, kinetic, self-limiting)는 맞고**, **"band gap → 산화안정성"(분해 onset, thermodynamic)은 틀림.** (A)는 §3–5(VBM/bulk gap≠산화 onset) 결론과 동일; (B)는 SEI passivation 영역(전자차단 산물: LiCl 6.65·Li₃PO₄ 5.73·Li₂O 5.24 eV).
+- ⚠️ 예: Nd₂O₃ 도핑서 bulk 갭이 좁아져도(Nd 5d) "산화 나빠짐"이라 읽으면 안 됨 — 산화 onset은 grand-potential(§7).
+
+> **한 줄: (A) bulk 갭→산화안정성 ✗ / (B) SEI산물 갭→분해억제 ✓. 문헌의 "band gap→분해억제"는 전부 (B)이고, VBM/bulk-gap을 산화 onset으로 읽으면 안 됨(§3–8).**
+
 ## 7. 분야 표준 = Grand-Potential 분해창 + 우리 값
 | 단계 | 문헌 | 기여 |
 |---|---|---|
