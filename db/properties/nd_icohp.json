@@ -1,0 +1,81 @@
+{
+ "property": "nd ICOHP (LOBSTER)",
+ "system": "modelc_nd_doped (Li48P10Nd2S41O3Cl16, 120 atoms)",
+ "date": "2026-06-18",
+ "method": "LOBSTER 5.1.1 on QE PAW(kjpaw) SCF+NSCF, k661, nspin2 AFM; ICOHP total = spin1+spin2",
+ "spilling_pct": 1.34,
+ "raw": "db/raw/nd_lobster/ICOHPLIST.lobster",
+ "bonds": {
+  "P-S": {
+   "N": 37,
+   "d_mean_A": 2.064,
+   "ICOHP_total_eV_per_bond": -5.976,
+   "ICOHP_per_spin": -2.988,
+   "ICOHP_min": -6.555,
+   "ICOHP_max": -5.498
+  },
+  "Li-S": {
+   "N": 125,
+   "d_mean_A": 2.521,
+   "ICOHP_total_eV_per_bond": -2.493,
+   "ICOHP_per_spin": -1.247,
+   "ICOHP_min": -3.528,
+   "ICOHP_max": -0.581
+  },
+  "Li-Cl": {
+   "N": 74,
+   "d_mean_A": 2.52,
+   "ICOHP_total_eV_per_bond": -2.265,
+   "ICOHP_per_spin": -1.133,
+   "ICOHP_min": -3.153,
+   "ICOHP_max": -0.572
+  },
+  "P-O": {
+   "N": 3,
+   "d_mean_A": 1.571,
+   "ICOHP_total_eV_per_bond": -8.43,
+   "ICOHP_per_spin": -4.215,
+   "ICOHP_min": -8.843,
+   "ICOHP_max": -7.771
+  },
+  "Li-O": {
+   "N": 5,
+   "d_mean_A": 2.13,
+   "ICOHP_total_eV_per_bond": -2.384,
+   "ICOHP_per_spin": -1.192,
+   "ICOHP_min": -3.302,
+   "ICOHP_max": -0.785
+  },
+  "Nd-O": {
+   "N": 2,
+   "d_mean_A": 2.545,
+   "ICOHP_total_eV_per_bond": -0.42,
+   "ICOHP_per_spin": -0.21,
+   "ICOHP_min": -0.476,
+   "ICOHP_max": -0.364
+  },
+  "Nd-S": {
+   "N": 8,
+   "d_mean_A": 2.898,
+   "ICOHP_total_eV_per_bond": -0.436,
+   "ICOHP_per_spin": -0.218,
+   "ICOHP_min": -0.614,
+   "ICOHP_max": -0.203
+  },
+  "Nd-Cl": {
+   "N": 2,
+   "d_mean_A": 2.772,
+   "ICOHP_total_eV_per_bond": -0.571,
+   "ICOHP_per_spin": -0.286,
+   "ICOHP_min": -0.572,
+   "ICOHP_max": -0.571
+  }
+ },
+ "headline": {
+  "P-O_vs_P-S": "P-O -8.43 vs P-S -5.98 eV/bond -> P-O ~41% stronger (covalent), but more polar (ELF P-O 0.838 < P-S 0.870)",
+  "host_PS4_unchanged": "nd P-S -5.98 ~= modelc -6.00 -> O-doping does not disturb surrounding PS4 backbone",
+  "Nd_ionic": "Nd-O/S/Cl weak (-0.42/-0.44/-0.57) -> Nd3+ ionic aliovalent dopant, not covalent",
+  "speciation_consistent": "P-S N=37 (8 PS4x4 + PS3O 3 + PS2O2 2), P-O N=3 (PS3O 1 + PS2O2 2)"
+ },
+ "caveat": "Absolute Li-X differs from comp1/modelc runs (PAW vs USPP basis); trust WITHIN-nd comparisons. P-S cross-run match (-5.98 vs -6.00) reassuring."
+}
