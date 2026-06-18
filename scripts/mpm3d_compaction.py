@@ -68,6 +68,9 @@ def parse_args(argv):
                     help='SE Poisson ratio (default 0.49 = 3D calib: K~25.5 GPa, the real LPSC bulk; '
                          'soft shear -> incompressible granular flow; nu<=0.45 over-crushes to 0 porosity)')
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
+    ap.add_argument('--compact-to', type=float, default=0.0,
+                    help='displacement-driven: descend the platen until bed porosity ≤ this %% then HOLD, '
+                         'regardless of stress — for a target-density demo (e.g. 15).  0 = stress servo (default)')
     ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
                     help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
     ap.add_argument('--protocol', default='servo', choices=['servo', 'hold'],
@@ -425,13 +428,20 @@ def main(argv):
         # such transient, and the guard there forces a 5 %p over-descent regardless of stress,
         # which OVER-COMPRESSES dense (high se_frac) beds → disable it for the scaffold.
         if not reached:
-            guard = (por > por0 - 5.0) and not args.am_scaffold
-            if p < target or guard:
-                wall_vel[None] = -vmax / (args.sub * dt)
-                wall_z[None] = max(WALL_MIN, wall_z[None] - vmax)
+            step = vmax
+            if args.compact_to > 0:                          # displacement-driven → descend to a target porosity
+                descend = por > args.compact_to
+                if por < args.compact_to + 5.0:              # slow near the target → less overshoot
+                    step = vmax * 0.25
+            else:
+                guard = (por > por0 - 5.0) and not args.am_scaffold
+                descend = (p < target) or guard
+            if descend:
+                wall_vel[None] = -step / (args.sub * dt)
+                wall_z[None] = max(WALL_MIN, wall_z[None] - step)
             else:
                 reached = True; wall_vel[None] = 0.0
-        elif args.protocol == 'hold':
+        elif args.protocol == 'hold' or args.compact_to > 0:
             # LIGGGHTS protocol: platen FIXED at the first-300-MPa position; relax (stress settles,
             # plate does not move → porosity stays at porosity@target).  No bidirectional over/under-shoot.
             wall_vel[None] = 0.0; relax += 1
