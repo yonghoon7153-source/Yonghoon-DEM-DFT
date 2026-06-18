@@ -850,6 +850,9 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
             if res is None:
                 continue
             sy, sx, blob = res
+            if sy.start < z_skin or sy.stop > ny - z_skin:   # pore would overhang the dense skin →
+                continue                                     # skip it (keeps a ROUND bottom; no flat
+                #   clip of the band↔pore boundary, which is what looked welded-on).  Void redistributes.
             m = blob & non_am[sy, sx] & (~pore[sy, sx])
             if int(m.sum()) == 0:
                 continue
