@@ -77,5 +77,71 @@
   "Nd_ionic": "Nd-O/S/Cl weak (-0.42/-0.44/-0.57) -> Nd3+ ionic aliovalent dopant, not covalent",
   "speciation_consistent": "P-S N=37 (8 PS4x4 + PS3O 3 + PS2O2 2), P-O N=3 (PS3O 1 + PS2O2 2)"
  },
- "caveat": "Absolute Li-X differs from comp1/modelc runs (PAW vs USPP basis); trust WITHIN-nd comparisons. P-S cross-run match (-5.98 vs -6.00) reassuring."
+ "caveat": "Absolute Li-X differs from comp1/modelc runs (PAW vs USPP basis); trust WITHIN-nd comparisons. P-S cross-run match (-5.98 vs -6.00) reassuring.",
+ "_CORRECTION_2026_06_18": "Re-parsed at 4.0 A cutoff to MATCH comp1/modelc (PAW kjpaw_psl 1.0.0). Previous Li-S -2.49/+45% & Li-Cl -2.27/+7.7% were CUTOFF ARTIFACTS (3.2/3.4 A). Correct values below; host bonding ~UNCHANGED by Nd2O3.",
+ "bonds_4.0A_cutoff_for_comparison": {
+  "P-S": {
+   "icohp_eV": -5.976,
+   "n_bonds": 37
+  },
+  "Li-S": {
+   "icohp_eV": -1.647,
+   "n_bonds": 199
+  },
+  "Li-Cl": {
+   "icohp_eV": -2.132,
+   "n_bonds": 79
+  },
+  "S-S": {
+   "icohp_eV": -0.101,
+   "n_bonds": 117
+  },
+  "P-O": {
+   "icohp_eV": -8.43,
+   "n_bonds": 3
+  },
+  "Nd-O": {
+   "icohp_eV": -0.42,
+   "n_bonds": 2
+  },
+  "Nd-S": {
+   "icohp_eV": -0.436,
+   "n_bonds": 8
+  },
+  "Nd-Cl": {
+   "icohp_eV": -0.571,
+   "n_bonds": 2
+  }
+ },
+ "comparison_vs_modelc_comp1_PAW_4.0A": {
+  "P-S": {
+   "comp1": -5.944,
+   "modelc": -6.0,
+   "nd": -5.976,
+   "nd_vs_modelc_pct": 0.4
+  },
+  "Li-Cl": {
+   "comp1": -1.855,
+   "modelc": -2.103,
+   "nd": -2.132,
+   "nd_vs_modelc_pct": -1.4
+  },
+  "Li-S": {
+   "comp1": -1.592,
+   "modelc": -1.717,
+   "nd": -1.647,
+   "nd_vs_modelc_pct": 4.1
+  },
+  "S-S": {
+   "comp1": -0.107,
+   "modelc": -0.11,
+   "nd": -0.101
+  }
+ },
+ "headline_CORRECTED": {
+  "host_unchanged": "Nd2O3 leaves host bonding ~unchanged: P-S +0.4%, Li-Cl -1.4%, Li-S +4.1%, S-S~0 (all within +-4%)",
+  "O_adds_PO": "only new strong bond = P-O -8.43 (41% stronger than P-S) -- an O effect",
+  "Nd_ionic": "Nd-O/S/Cl -0.42/-0.44/-0.57 = weak ionic; Nd is a bonding spectator (ionic dopant)",
+  "verdict": "bonding-wise: O is the actor (P-O), Nd is ionic carrier, host network untouched"
+ }
 }
