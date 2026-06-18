@@ -123,6 +123,7 @@ function buildControls(container, isMPM) {
     <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
       <option value="default">Default (AM 종류)</option>
       <option value="coverage">Coverage Heat (AM)</option>
+      <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -875,6 +876,12 @@ function applyViewMode(state, mode) {
     });
     state.combinedOverlay = null;
   }
+  if (state.coveragePatchGroup && state.scene) {
+    state.scene.remove(state.coveragePatchGroup);
+    if (state.coveragePatchGroup.geometry) state.coveragePatchGroup.geometry.dispose();
+    if (state.coveragePatchGroup.material) state.coveragePatchGroup.material.dispose();
+    state.coveragePatchGroup = null;
+  }
   /* Phase B — restore any per-instance scale modifications from se_diagnostics */
   if (state.seInstanceScaleModified) {
     const dummy = new THREE.Object3D();
@@ -1469,6 +1476,54 @@ function applyViewMode(state, mode) {
     if (covBtn && state.isMPM) covBtn.style.display = 'none';   // Z-profile hub is DEM-only
     else if (covBtn) covBtn.addEventListener('click',
       () => showZProfileDataHub(state, 'coverage'));
+    return;
+  }
+
+  if (mode === 'coverage_patches') {
+    /* Spatial coverage — colour ONLY the AM-surface points the deformed SE actually
+     * touches (payload am_coverage_patches), as a dot layer just outside each sphere:
+     * cyan = within Hertz/contact, amber = within Tabor spread.  Bare surface stays
+     * uncoloured → "partial" colouring of just the covered regions of each AM. */
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const pts = (state.data && state.data.am_coverage_patches) || [];
+    ['AM_P', 'AM_S'].forEach(ty => {                        // reset AM so stale heat doesn't bleed
+      const m = state.meshes[ty]; if (!m) return;
+      const base = new THREE.Color(COL[ty]);
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      m.material.opacity = 1.0; m.material.transparent = false;
+    });
+    if (!pts.length) {
+      setLegend(state, state.isMPM
+        ? '<i>이 payload엔 coverage 패치가 없어요 — 최신 mpm_webapp_payload.py로 재생성 후 업로드하면 표시됩니다.</i>'
+        : '<i>No coverage-patch data in this payload.</i>');
+      return;
+    }
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(pts.length * 3);
+    const col = new Float32Array(pts.length * 3);
+    const cHi = new THREE.Color(0x22d3ee), cLo = new THREE.Color(0xf59e0b);
+    let nHi = 0;
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
+      const isHi = p[3] >= 1.0; if (isHi) nHi++;
+      const cc = isHi ? cHi : cLo;
+      col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const cloud = new THREE.Points(g, new THREE.PointsMaterial({
+      size: 0.5, vertexColors: true, sizeAttenuation: true, transparent: true, opacity: 0.95 }));
+    state.coveragePatchGroup = cloud;
+    if (state.scene) state.scene.add(cloud);
+    setLegend(state,
+      `<b>Coverage 패치 — AM 표면의 SE 접촉부 (partial)</b>
+       <div style="margin-top:4px">
+         <span style="color:#22d3ee">●</span> Hertz/contact (≤ ${mm.cov_hertz_um != null ? mm.cov_hertz_um : 0.13} µm)<br>
+         <span style="color:#f59e0b">●</span> Tabor spread (≤ ${mm.cov_tabor_um != null ? mm.cov_tabor_um : 0.26} µm)
+       </div>
+       <span style="color:#9ca3af;font-size:10px">덮인 표면점만 색칠 · 총 ${pts.length.toLocaleString()}점 (contact ${nHi.toLocaleString()})</span>`);
     return;
   }
 

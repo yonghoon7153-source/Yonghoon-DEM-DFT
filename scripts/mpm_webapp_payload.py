@@ -68,24 +68,39 @@ def deformed_coverage(se_pts, t, c, r, bands_um, n_samp=400, sub=2_000_000, seed
       • glob[name]      = per-type mean coverage % at EACH µm band
                           (bands_um[0] = Hertz/contact ≈0.13µm, [1] = Tabor spread ≈0.26µm)
       • per_particle[i] = each AM's own coverage % at bands_um[0]  (viewer heat map)
+      • patches         = the SPATIAL map — covered AM-surface points [x_um,y_um,z_um,strength]
+                          in viewer coords (strength 1.0 within Hertz, 0.5 within Tabor;
+                          uncovered surface dropped) → the viewer colours ONLY the covered
+                          parts of each AM ('partial' surface colouring).
     The voxel-adjacency 'coverage_AM_*_mpm_pct' is density-bound (doesn't converge); this
     grid-free curve is the value we report + the DEM Hertz/Tabor cross-comparison."""
     from scipy.spatial import cKDTree
+    vc = _vc(); UM = vc.UM_BOX; SW0 = vc.SW[0]; FLOOR = vc.FLOOR
     rng = np.random.default_rng(seed)
     pts = se_pts if len(se_pts) <= sub else se_pts[rng.choice(len(se_pts), sub, replace=False)]
     tree = cKDTree(pts)
-    bands = [b / _vc().UM_BOX for b in bands_um]            # µm → box units
+    bands = [b / UM for b in bands_um]                      # µm → box units
+    bh, bt = bands[0], bands[-1]                            # Hertz, Tabor (box units)
     k = np.arange(n_samp); phi = np.pi * (3 - np.sqrt(5)); z = 1 - 2 * (k + 0.5) / n_samp
     rr = np.sqrt(1 - z * z); U = np.column_stack([rr * np.cos(phi * k), rr * np.sin(phi * k), z])
-    glob = {}; per_particle = np.zeros(len(r))
+    glob = {}; per_particle = np.zeros(len(r)); patches = []
     for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
         idx = np.where(t == ty)[0]; acc = np.zeros(len(bands))
         for i in idx:
-            d, _ = tree.query(c[i] + r[i] * U)
+            S = c[i] + r[i] * U
+            d, _ = tree.query(S)
             fr = np.array([float((d < b).mean()) for b in bands])
             acc += fr; per_particle[i] = round(100.0 * float(fr[0]), 1)
+            cov = np.where(d < bt)[0]
+            if len(cov):
+                Pout = c[i] + r[i] * 1.02 * U               # just outside surface (no z-fight)
+                for j in cov:
+                    patches.append([round(float((Pout[j, 0] - SW0) * UM), 2),
+                                    round(float((Pout[j, 1] - SW0) * UM), 2),
+                                    round(float((Pout[j, 2] - FLOOR) * UM), 2),
+                                    1.0 if d[j] < bh else 0.5])
         glob[nm] = (100.0 * acc / max(len(idx), 1)).round(1).tolist()
-    return glob, per_particle
+    return glob, per_particle, patches
 
 
 def geometric_coverage(am_csv, se_csv, n_samp=600):
@@ -194,7 +209,7 @@ def main():
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     # per-particle coverage (each AM's own SE coverage, from the DEFORMED SE points) →
     # the viewer can colour each AM sphere by its coverage (a per-particle heat map).
-    cov_bands, cov_per = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um])
+    cov_bands, cov_per, cov_patches = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um])
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
@@ -248,6 +263,7 @@ def main():
     payload = {
         'kind': 'mpm', 'case': a.case,
         'particles': particles,                            # AM_P / AM_S spheres (same both states)
+        'am_coverage_patches': cov_patches,                # covered AM-surface points (spatial map)
         'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
