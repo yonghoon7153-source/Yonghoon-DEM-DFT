@@ -130,12 +130,13 @@ def main():
     m = np.abs(se[:, 1] - a.y) < half
     slab = se[m]; sx, sz = slab[:, 0], slab[:, 2]
     strain_npy = a.eps or a.dg                                  # TOTAL (vs seed) preferred over PLASTIC
+    field_label = 'total strain ε (vs seed)' if a.eps else 'plastic strain Σdg'
     dg_slab = np.load(strain_npy).astype(np.float64)[m] if strain_npy else None
     dg_vmax = 1.0
     if dg_slab is not None:
         pos = dg_slab[dg_slab > 0]
         dg_vmax = a.dg_vmax if a.dg_vmax > 0 else (float(np.percentile(pos, 98)) if len(pos) else 1.0)
-        print(f'  Σdg: mean {dg_slab.mean():.4f}  max {dg_slab.max():.3f}  '
+        print(f'  {field_label}: mean {dg_slab.mean():.4f}  max {dg_slab.max():.3f}  '
               f'>0 in {100.0*(dg_slab>0).mean():.1f}% of slab pts  → colour vmax={dg_vmax:.3f}')
 
     lab = build_lab(x0, x1, z0, z1, a.nx, sx, sz, am_t, am_c, am_r, a.y,
@@ -205,8 +206,8 @@ def main():
                           fill=False, ec='#c7ccd6', lw=1.0, ls='--'))
     if dgw is not None:
         sc = axz.scatter(xu, zu, c=dgw, s=a.pt_size, cmap='afmhot', vmin=0.0, vmax=dg_vmax, edgecolors='none')
-        fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label='Σdg (plastic strain)')
-        ctag = f'plastic strain Σdg (vmax {dg_vmax:.3f})'
+        fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label=field_label)
+        ctag = f'{field_label} (vmax {dg_vmax:.3f})'
     else:
         axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
         ctag = 'grain-coloured' if a.se_dump else 'SE points'
