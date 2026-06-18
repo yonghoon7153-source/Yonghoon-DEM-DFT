@@ -24,6 +24,8 @@ def main():
     ap.add_argument('--results', required=True, help='case results dir (has atoms.csv, full_metrics.json)')
     ap.add_argument('--case', default='', help='case id (provenance)')
     ap.add_argument('--out', required=True, help='output dir for the MPM input package')
+    ap.add_argument('--type-map', default='', help='LIGGGHTS type map e.g. "1:AM_P,2:AM_S,3:SE" or '
+                    '"1:AM_P,2:SE" — SE is NOT always type 3 (a no-AM_S case is type 2); parsed for SE vs AM')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -49,8 +51,22 @@ def main():
         press_gpa = 0.30
     press_gpa = round(press_gpa, 4)
 
-    # split atoms.csv (id,type,x,y,z,radius; LIGGGHTS box units) → AM / SE scaffolds
-    am_rows, se_rows = [], []
+    # which atom types are SE?  from the type_map — SE is NOT always type 3 (a no-AM_S case is
+    # "1:AM_P,2:SE").  Fallback to the legacy type-3 convention if no map.
+    se_types = set()
+    for tok in (a.type_map or '').split(','):
+        if ':' in tok:
+            tid, lab = tok.split(':', 1)
+            if 'SE' in lab.upper():
+                try:
+                    se_types.add(int(tid))
+                except ValueError:
+                    pass
+    if not se_types:
+        se_types = {3}
+
+    # split atoms.csv (id,type,x,y,z,radius; LIGGGHTS box units): SE by the type map, AM = the rest
+    am_raw, se_rows = [], []
     with open(atoms) as f:
         rd = csv.DictReader(f)
         cols = {c.lower(): c for c in rd.fieldnames}
@@ -58,7 +74,22 @@ def main():
         rk = cols.get('radius') or cols.get('r')
         for row in rd:
             t = int(float(row[tk])); rec = [t, row[xk], row[yk], row[zk], row[rk]]
-            (se_rows if t == 3 else am_rows).append(rec)
+            (se_rows if t in se_types else am_raw).append(rec)
+    if not se_rows:
+        raise SystemExit(f'no SE atoms (se_types={sorted(se_types)}, type_map={a.type_map!r}) — '
+                         f'check the type map / atom types in atoms.csv')
+
+    # AM_P (large) vs AM_S (small) by RADIUS — the physical distinction (AM_P polycrystalline
+    # ~6µm / AM_S single-crystal ~2µm), robust to the type-number convention.  Bimodal → split
+    # at the size-range geometric midpoint; single size → all AM_P (type 1).
+    am_rows = []
+    if am_raw:
+        radii = [float(r[4]) for r in am_raw]
+        rmin, rmax = min(radii), max(radii)
+        thr = (rmin * rmax) ** 0.5 if rmax / max(rmin, 1e-12) > 1.4 else -1.0
+        for rec in am_raw:
+            rec[0] = 1 if (thr < 0 or float(rec[4]) >= thr) else 2          # AM_P=1 / AM_S=2 by size
+            am_rows.append(rec)
 
     def write_csv(path, rows, note):
         with open(path, 'w', newline='') as f:

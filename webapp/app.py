@@ -5125,9 +5125,19 @@ def mpm_input_package(case_id):
     repo = os.path.dirname(os.path.dirname(__file__))
     gen = os.path.join(repo, 'scripts', 'mpm_input_from_case.py')
     tmp = tempfile.mkdtemp()
+    # the case's type map decides which atom type is SE (NOT always type 3)
+    tmap = ''
+    meta_p = os.path.join(get_case_dir(case_id), 'meta.json')
+    if os.path.exists(meta_p):
+        try:
+            tmap = (json.load(open(meta_p)) or {}).get('type_map', '')
+        except Exception:
+            tmap = ''
+    cmd = ['python3', gen, '--results', results_dir, '--case', case_id, '--out', tmp]
+    if tmap:
+        cmd += ['--type-map', tmap]
     try:
-        subprocess.run(['python3', gen, '--results', results_dir, '--case', case_id, '--out', tmp],
-                       check=True, cwd=repo, capture_output=True, text=True)
+        subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
         shutil.rmtree(tmp, ignore_errors=True)
         return jsonify({'error': 'generation failed', 'detail': (e.stderr or '')[-500:]}), 500
