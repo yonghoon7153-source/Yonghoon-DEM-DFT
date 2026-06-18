@@ -88,6 +88,18 @@ def densest_center(sx, sz, x0, x1, z0, z1, w_box, weights=None):
     return 0.5 * (xe[i] + xe[i + 1]), 0.5 * (ze[j] + ze[j + 1])
 
 
+def scatter_phase(ax, px, pz, strain, ph, vmax, ptsize, am_color='#9aa0ad'):
+    """Composite scatter: AM points (ph==0) grey, SE points (ph==1) strain-coloured (afmhot)."""
+    am = ph == 0; se = ph == 1
+    if am.any():
+        ax.scatter(px[am], pz[am], c=am_color, s=ptsize, edgecolors='none')
+    sc = None
+    if se.any():
+        sc = ax.scatter(px[se], pz[se], c=strain[se], s=ptsize, cmap='afmhot',
+                        vmin=0.0, vmax=vmax, edgecolors='none')
+    return sc
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--se', required=True, help='SE point cloud npy ([n,3], box units) from --save-se')
@@ -111,6 +123,8 @@ def main():
                     help='fix the Σdg colour max (0=auto: 98th pct of non-zero strain) — tune contrast')
     ap.add_argument('--hide-am', action='store_true', help='do not draw AM in the zoom (SE shape only)')
     ap.add_argument('--pt-size', type=float, default=6.0, help='zoom scatter point size')
+    ap.add_argument('--phase', default='', help='per-point phase npy (mpm3d --save-phase, 1=SE/0=AM) → composite '
+                    'view: AM points grey, SE points strain-coloured (for --material mix runs)')
     ap.add_argument('--out', default='mpm_morphology.png')
     a = ap.parse_args()
 
@@ -132,6 +146,7 @@ def main():
     strain_npy = a.eps or a.dg                                  # TOTAL (vs seed) preferred over PLASTIC
     field_label = 'total strain ε (vs seed)' if a.eps else 'plastic strain Σdg'
     dg_slab = np.load(strain_npy).astype(np.float64)[m] if strain_npy else None
+    phase_slab = np.load(a.phase).astype(np.int8)[m] if a.phase else None  # 1=SE, 0=AM (composite)
     dg_vmax = 1.0
     if dg_slab is not None:
         pos = dg_slab[dg_slab > 0]
@@ -188,29 +203,44 @@ def main():
         pc = plt.cm.hsv((gid * 0.6180339887) % 1.0)            # golden-ratio hue → adjacent grains differ
 
     fig, (axf, axz) = plt.subplots(1, 2, figsize=(16, 7.6))
-    axf.imshow(lab, origin='lower', cmap=_CMAP, norm=_NORM, interpolation='nearest',
-               extent=ext_full, aspect='equal')
+    if phase_slab is not None:                                  # composite: full panel = AM grey + SE strain scatter
+        nfull = min(150000, len(slab))
+        fi = (np.random.default_rng(1).choice(len(slab), nfull, replace=False)
+              if len(slab) > nfull else np.arange(len(slab)))
+        axf.set_facecolor('white')
+        scatter_phase(axf, (sx[fi] - x0) * UM_BOX, (sz[fi] - z0) * UM_BOX,
+                      dg_slab[fi], phase_slab[fi], dg_vmax, max(0.5, a.pt_size * 0.25))
+        axf.set_xlim(0, (x1 - x0) * UM_BOX); axf.set_ylim(0, (z1 - z0) * UM_BOX); axf.set_aspect('equal')
+    else:
+        axf.imshow(lab, origin='lower', cmap=_CMAP, norm=_NORM, interpolation='nearest',
+                   extent=ext_full, aspect='equal')
     axf.add_patch(mpatches.Rectangle(((zx0 - x0) * UM_BOX, (zz0 - z0) * UM_BOX),
                   (zx1 - zx0) * UM_BOX, (zz1 - zz0) * UM_BOX, fill=False, ec='#06b6d4', lw=2))
     axf.set_xlabel('x (µm)'); axf.set_ylabel('z (µm, compaction ↓)')
     axf.set_title(f'full — AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
 
     axz.set_facecolor('white')
-    if not a.hide_am:                                          # faint AM outlines (context only)
-        for i in range(len(am_r)):
-            cx, cy, cz = am_c[i]; rr = am_r[i]; d = a.y - cy
-            if abs(d) >= rr:
-                continue
-            reff = np.sqrt(rr * rr - d * d)
-            axz.add_patch(plt.Circle(((cx - zx0) * UM_BOX, (cz - zz0) * UM_BOX), reff * UM_BOX,
-                          fill=False, ec='#c7ccd6', lw=1.0, ls='--'))
-    if dgw is not None:
-        sc = axz.scatter(xu, zu, c=dgw, s=a.pt_size, cmap='afmhot', vmin=0.0, vmax=dg_vmax, edgecolors='none')
-        fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label=field_label)
-        ctag = f'{field_label} (vmax {dg_vmax:.3f})'
+    if phase_slab is not None:                                 # composite: AM grey + SE strain
+        sc = scatter_phase(axz, xu, zu, dgw, phase_slab[win], dg_vmax, a.pt_size)
+        if sc is not None:
+            fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label=field_label)
+        ctag = f'AM grey + SE {field_label}'
     else:
-        axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
-        ctag = 'grain-coloured' if a.se_dump else 'SE points'
+        if not a.hide_am:                                      # faint AM outlines (context only)
+            for i in range(len(am_r)):
+                cx, cy, cz = am_c[i]; rr = am_r[i]; d = a.y - cy
+                if abs(d) >= rr:
+                    continue
+                reff = np.sqrt(rr * rr - d * d)
+                axz.add_patch(plt.Circle(((cx - zx0) * UM_BOX, (cz - zz0) * UM_BOX), reff * UM_BOX,
+                              fill=False, ec='#c7ccd6', lw=1.0, ls='--'))
+        if dgw is not None:
+            sc = axz.scatter(xu, zu, c=dgw, s=a.pt_size, cmap='afmhot', vmin=0.0, vmax=dg_vmax, edgecolors='none')
+            fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label=field_label)
+            ctag = f'{field_label} (vmax {dg_vmax:.3f})'
+        else:
+            axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
+            ctag = 'grain-coloured' if a.se_dump else 'SE points'
     axz.set_xlim(0, (zx1 - zx0) * UM_BOX); axz.set_ylim(0, (zz1 - zz0) * UM_BOX)
     axz.set_aspect('equal'); axz.set_xlabel('x (µm)'); axz.set_ylabel('z (µm, compaction ↓)')
     axz.set_title(f'zoom ({a.zoom_w:.0f} µm) — SE material points ({ctag}) · {len(Pw):,} pts', fontsize=10)

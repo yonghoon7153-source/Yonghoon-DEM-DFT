@@ -45,6 +45,8 @@ def parse_args(argv):
                     '(npy, SAME order as --save-se) → colour the morphology slice by plastic strain')
     ap.add_argument('--save-eps', default='', help='write accumulated TOTAL equivalent strain per SE point '
                     '(vs the seed sphere, INCL elastic compression — shows the confined interior too; npy)')
+    ap.add_argument('--save-phase', default='', help='write per-point phase (1=SE, 0=AM) npy, SAME order as '
+                    '--save-se → composite viz can colour SE by strain and draw AM grey')
     ap.add_argument('--save-metrics', default='',
                     help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
                          'grid/material params, stress) to a JSON — the structured source for the '
@@ -543,6 +545,10 @@ def main(argv):
         np.save(args.save_eps, en)                          # accumulated TOTAL strain vs seed (same order)
         print(f"  saved total strain (vs seed) → {args.save_eps} ({n} pts, "
               f"mean {float(en.mean()):.3f} max {float(en.max()):.3f})")
+    if args.save_phase:
+        ph = (yld_p.to_numpy() < 100.0).astype(np.int8)     # 1 = SE (low yield), 0 = AM (rigid)
+        np.save(args.save_phase, ph)
+        print(f"  saved phase (1=SE/0=AM) → {args.save_phase} ({n} pts, SE {100.0*ph.mean():.0f}%)")
 
 
 if __name__ == '__main__':
