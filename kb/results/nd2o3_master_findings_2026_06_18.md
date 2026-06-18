@@ -57,6 +57,14 @@ nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이�
 
 > **ELF = 5번째 독립 probe**(ICOHP 세기·Bader 전하·결합길이·BVSE와 함께): **host 공유백본 불변 + O는 강·polar P–O + Nd 약·이온(5d 약간) + Li 강이온** — 한 그림으로 수렴.
 
+## 2d. Nd 결합 효과 = 없음 (3-probe 수렴)
+| probe | Nd 판정 |
+|---|---|
+| **ELF** | Nd–X floor **0.13–0.19** (Li 순수이온 0.02보다↑, 공유 P–S 0.87보다↓↓) = 약한 5d 공유·대부분 이온 |
+| **ICOHP** | Nd–X **−0.4~−0.6** (P–S −6.0 대비 미미) |
+| **oxophilicity** | Nd **≈ Li** (특별 getter 아님) |
+> **세 독립 probe 전부 "Nd는 결합적으로 거의 무익한 이온 dopant"** 로 수렴. 5d가 완전 spectator는 아니나(floor가 Li의 5~10배) 구조·물성엔 무의미. **결합 actor = O (P–O −8.43), Nd = 이온 carrier.**
+
 ## 3. ★ SEI passivation — anode vs cathode (grand-potential)
 | 계면 | wide-gap 차단상 | 전도성(누설) 산물 | Nd 기여 |
 |---|---|---|---|
@@ -91,6 +99,19 @@ nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이�
 | **catholyte / cathode 코팅** | 고전압서 NdPO₄·NdCl₃·Li₃PO₄ wide-gap passivation | 이온 손실 덜 치명(경로 짧음) | **강점 극대화**(cathode passivation) |
 > Nd₂O₃의 **결정·이온·갭 페널티는 분리막에서 더 부담**, **고전압 passivation 강점은 cathode에서 극대화** → **catholyte/cathode 쪽이 DFT상 합리적**. 단 분리막도 GB 차단으로 작동(실험). 과도핑(x>0.02)은 어디서든 역효과.
 
+## 4d. ★ band gap 해석 — 두 용법 구분 (별개 주제)
+**같은 "DOS band gap"이라도 두 가지 서로 다른 것에 쓰이며, 절대 혼동 금지:**
+| 용법 | band gap이 말하는 것 | 맞나? | 올바른 방법 |
+|---|---|---|---|
+| **(A) 벌크 SE 갭 → 산화안정성** | 분해 onset 전압 | ❌ **아님** | grand-potential 분해창 (별도 보고서; 2.14 V) |
+| **(B) SEI/분해산물 갭 → 분해 억제** | 전자차단 → self-limiting | ✅ **맞음** | 산물별 band gap (wide=전자차단) |
+
+- **Li et al., Energy Storage Materials 77 (2025) 104221** (CuBr₂-도핑 argyrodite, LPSC-CB)이 *"band gaps of LiBr and LiCl were wider than Li₂S (PDOS) … large bandgap implies better electronic insulation … blocks the electronic pathway and **prevents further decomposition**"* 라 하는 건 전부 **(B)**. 그들은 일부러 **"분해 억제/전자차단"** 이라 하지 **"oxidation stability"라고는 안 함** — 정확히 우리 §3·§4 passivation 논리와 동일. (같은 저널·같은 metal-halide-doping 접근.)
+- **우리 SEI 산물 갭(LiCl 6.65·Li₃PO₄ 5.73·NdPO₄ 5.55·Li₂O 5.24)도 (B) 용법** = 전자차단 → 분해 self-limiting → cycle↑ (refs.json NdF₃ 7.69 / BaF₂ 6.59 self-limiting SEI와 동일).
+- ⚠️ 반대로 **(A) 금지**: bulk 갭이 narrowing(Nd 5d, 2.184→1.632) 했다고 "산화 나빠짐"이라 읽으면 **틀림**. 산화 onset은 grand-potential(2.14 V, S²⁻-limited)로. **bulk 갭 ≠ 산화안정성** (UPS·VBM 보고서와 동일 결론).
+
+> **핵심: (A) bulk 갭→산화안정성 ✗ / (B) SEI산물 갭→분해억제 ✓. 문헌의 "band gap→분해억제"는 전부 (B)이고 우리 passivation과 같은 용법. (A)·(B)를 섞지 말 것.**
+
 ## 5. "passivation 여러 상 = 더 좋은가?" → 자동 아님 (조건부)
 - **좋으려면**: 생기는 wide-gap 상(Li₃PO₄·NdPO₄·NdCl₃·Li₂O·LiCl)이 **연속 차단층**을 이루고 **Li⁺는 통과**시켜야 함.
 - **나쁜 경우**: 그 중 **전도성 상(Li₃P·NdP·폴리설파이드·Co₉S₈)이 percolate**하면 전자 누설 → passivation 깨짐. 우리 산물엔 **항상 전도성 상이 섞여 있음**(양극 Li₃P/NdP, 산화 LiS₄).
@@ -110,6 +131,11 @@ nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이�
 - **Nano Energy 142 (2025) 111176** — Li/SE 계면 분해 AIMD + 단위별 분해 ΔG·COHP (page-3 template).
 - **Chem. Eng. J. 507 (2025) 160455** — 계면에너지 + SEI 산물 band gap / Li⁺ barrier.
 - **Energy Storage Mater. 76 (2025) 104125** — MgO 도핑: ELF·sp hybridization·결합.
+- **Li et al., Energy Storage Mater. 77 (2025) 104221** (DOI 10.1016/j.ensm.2025.104221) — **CuBr₂-도핑 argyrodite**(Li₅.₈P₀.₉Cu₀.₁S₄.₅Cl₁.₃Br₀.₂, "LPSC-CB"). **우리와 같은 저널·같은 metal-halide-doping 접근.** 우리 logic 3개를 직접 뒷받침:
+  - **(B) band gap→분해억제**: LiBr/LiCl gap > Li₂S(PDOS) → "blocks electronic pathway → prevents further decomposition" (≠ oxidation stability) — 우리 §4d·SEI passivation과 동일.
+  - **host 불변**: CuBr₂ 도핑이 "minimal effects on the electron distribution of P (P p-bands 유사, P/S 공유결합 보존)" — 우리 ICOHP P–S 불변·ELF 공유백본 intact·PDOS P-성분 불변을 corroborate.
+  - **HSAB cation 도핑**(soft acid Cu) — 우리 Nd³⁺(hard) HSAB 논리와 같은 틀.
+  - ⚠️ **대조(중요)**: 그들 Cu+Br는 **이온 σ 10.3 mS/cm로 향상**(Br anion-disorder + soft-acid Cu가 S²⁻ 전하밀도↓→Li 장벽↓). 우리 **Nd₂O₃는 이온 σ↓**(큰 hard Nd³⁺가 Li 막음). → **같은 metal-halide 도핑이라도 양이온 선택이 이온전도를 가른다**(Cu/Br=이온 친화, Nd=이온 손해). Nd의 niche는 이온이 아니라 cathode passivation.
 - **Ong 2008 / Mo–Ceder 2012 / Schwietert 2020** — grand-potential 분해창 (산화안정성 방법).
 - refs.json: **NdF₃(7.69)/BaF₂(6.59) wide-gap 자기제한 SEI** — 전자차단 passivation 논거 전이.
 - (우리) `db/properties/{nd_icohp, oxophilicity, electronic}.json`, `tools/oxidation/{esw_grand_potential, interface_reactivity, sei_product_gaps, oxophilicity_descriptor}.py`.
