@@ -119,6 +119,13 @@ function buildControls(container, isMPM) {
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
     <label><input type="checkbox" data-layer="MESH" checked> SE</label>
     <hr>
+    <label style="font-size:11px;font-weight:600;margin-bottom:1px">View Mode</label>
+    <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
+      <option value="default">Default (AM 종류)</option>
+      <option value="coverage">Coverage Heat (AM)</option>
+    </select>
+    <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
+    <hr>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>` : `
@@ -1398,12 +1405,15 @@ function applyViewMode(state, mode) {
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p) => {
-        const c = covMap[String(p.id)] ?? covMap[p.id];
+        const c = covMap[String(p.id)] ?? covMap[p.id] ?? p.coverage;
         if (c !== undefined) vals.push(c);
       });
     });
     if (!vals.length) {
-      setLegend(state, '<i>No coverage data — run scripts/coverage_physics_vs_hertzian.py first.</i>');
+      setLegend(state, state.isMPM
+        ? '<i>이 payload엔 per-particle coverage가 없어요 — V100에서 payload 재생성'
+          + '(최신 mpm_webapp_payload.py) 후 다시 업로드하면 색칠됩니다.</i>'
+        : '<i>No coverage data — run scripts/coverage_physics_vs_hertzian.py first.</i>');
       return;
     }
     const sorted = [...vals].sort((a, b) => a - b);
@@ -1419,7 +1429,7 @@ function applyViewMode(state, mode) {
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
-        const c = covMap[String(p.id)] ?? covMap[p.id];
+        const c = covMap[String(p.id)] ?? covMap[p.id] ?? p.coverage;
         if (c === undefined) {
           m.setColorAt(i, colDim);
           nMissing++;
@@ -1456,7 +1466,8 @@ function applyViewMode(state, mode) {
          <span class="ico">📊</span><span>Z-profile 데이터</span>
        </button>`);
     const covBtn = document.getElementById('coverage-z-modal-btn');
-    if (covBtn) covBtn.addEventListener('click',
+    if (covBtn && state.isMPM) covBtn.style.display = 'none';   // Z-profile hub is DEM-only
+    else if (covBtn) covBtn.addEventListener('click',
       () => showZProfileDataHub(state, 'coverage'));
     return;
   }
