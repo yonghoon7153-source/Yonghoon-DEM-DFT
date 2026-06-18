@@ -99,6 +99,8 @@ def main():
                     help='zoom window width (µm) — the SE-shape scatter panel; smaller = more zoom (0=full only)')
     ap.add_argument('--zoom-at', default='', help='zoom centre "cx,cz" µm (default: densest SE)')
     ap.add_argument('--se-dump', default='', help='seed-centre CSV (se_scaffold.csv) → colour SE points by grain')
+    ap.add_argument('--dg', default='', help='accumulated plastic strain npy (mpm3d --save-dg) → colour the SE '
+                    'points by Σdg (afmhot, like the champion morphology); takes priority over grain colour')
     ap.add_argument('--hide-am', action='store_true', help='do not draw AM in the zoom (SE shape only)')
     ap.add_argument('--pt-size', type=float, default=6.0, help='zoom scatter point size')
     ap.add_argument('--out', default='mpm_morphology.png')
@@ -152,16 +154,18 @@ def main():
     Pw = slab[win]                                              # SE material points in the zoom
     xu = (Pw[:, 0] - zx0) * UM_BOX; zu = (Pw[:, 2] - zz0) * UM_BOX
 
-    # colour: by grain (nearest seed centre) if a seed CSV is given → individual SE grains
-    # separate; else a single SE colour (shape still shows via the point cloud + gaps).
-    if a.se_dump and len(Pw):
+    # colour priority: plastic strain Σdg (--dg, the continuous field — like the champion
+    # image, smooth dark-core→bright-rim) > grain (--se-dump, blocky on the gridded points)
+    # > flat SE.  (the gridded look of grain-colour is the voxel-seeded SE lattice.)
+    dgw, pc = None, COLORS[3]
+    if a.dg and len(Pw):
+        dgw = np.load(a.dg).astype(np.float64)[m][win]
+    elif a.se_dump and len(Pw):
         from scipy.spatial import cKDTree
         sd = np.loadtxt(a.se_dump, delimiter=',')
         seeds = np.column_stack([SW[0] + sd[:, 1] * SCL, SW[0] + sd[:, 2] * SCL, FLOOR + sd[:, 3] * SCL])
         gid = cKDTree(seeds).query(Pw)[1]
         pc = plt.cm.hsv((gid * 0.6180339887) % 1.0)            # golden-ratio hue → adjacent grains differ
-    else:
-        pc = COLORS[3]
 
     fig, (axf, axz) = plt.subplots(1, 2, figsize=(16, 7.6))
     axf.imshow(lab, origin='lower', cmap=_CMAP, norm=_NORM, interpolation='nearest',
@@ -180,11 +184,17 @@ def main():
             reff = np.sqrt(rr * rr - d * d)
             axz.add_patch(plt.Circle(((cx - zx0) * UM_BOX, (cz - zz0) * UM_BOX), reff * UM_BOX,
                           fill=False, ec='#c7ccd6', lw=1.0, ls='--'))
-    axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
+    if dgw is not None:
+        vmax = float(np.percentile(dgw, 97)) if len(dgw) and dgw.max() > 0 else 1.0
+        sc = axz.scatter(xu, zu, c=dgw, s=a.pt_size, cmap='afmhot', vmin=0.0, vmax=vmax, edgecolors='none')
+        fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label='Σdg (plastic strain)')
+        ctag = 'plastic strain Σdg'
+    else:
+        axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
+        ctag = 'grain-coloured' if a.se_dump else 'SE points'
     axz.set_xlim(0, (zx1 - zx0) * UM_BOX); axz.set_ylim(0, (zz1 - zz0) * UM_BOX)
     axz.set_aspect('equal'); axz.set_xlabel('x (µm)'); axz.set_ylabel('z (µm, compaction ↓)')
-    gtag = 'grain-coloured' if a.se_dump else 'SE points'
-    axz.set_title(f'zoom ({a.zoom_w:.0f} µm) — SE material points ({gtag}) · {len(Pw):,} pts', fontsize=10)
+    axz.set_title(f'zoom ({a.zoom_w:.0f} µm) — SE material points ({ctag}) · {len(Pw):,} pts', fontsize=10)
     fig.suptitle(f'MPM SE plastic morphology — x-z slab @ y={a.y:.2f}', fontsize=11)
 
     plt.tight_layout(); plt.savefig(a.out, dpi=150)

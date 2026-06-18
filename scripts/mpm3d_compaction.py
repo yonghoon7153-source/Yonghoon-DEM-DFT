@@ -41,6 +41,8 @@ def parse_args(argv):
                     help='CSV of fixed AM (type,x,y,z,r in LIGGGHTS 0..0.05 units): AM become a fixed '
                          'grid obstacle and only SE is the MPM filler (real skeleton, no RSA AM, light)')
     ap.add_argument('--save-se', default='', help='write final SE point positions (npy) for morphology')
+    ap.add_argument('--save-dg', default='', help='write accumulated plastic strain Σdg per SE point '
+                    '(npy, SAME order as --save-se) → colour the morphology slice by plastic strain')
     ap.add_argument('--save-metrics', default='',
                     help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
                          'grid/material params, stress) to a JSON — the structured source for the '
@@ -308,6 +310,7 @@ def main(argv):
     C = ti.Matrix.field(3, 3, ti.f32, n); F = ti.Matrix.field(3, 3, ti.f32, n)
     mu_p = ti.field(ti.f32, n); la_p = ti.field(ti.f32, n); yld_p = ti.field(ti.f32, n)
     pvol_p = ti.field(ti.f32, n)                                # per-point volume (= mass, ρ=1)
+    dg_acc = ti.field(ti.f32, n)                                # accumulated plastic strain Σdg per point
     grid_v = ti.Vector.field(3, ti.f32, (n_grid,) * 3); grid_m = ti.field(ti.f32, (n_grid,) * 3)
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
@@ -378,6 +381,7 @@ def main(argv):
             d = e - ti.Vector([tr, tr, tr]); dn = d.norm() + 1e-9
             dg = dn - yld_p[p] / (2 * mu_p[p])
             if dg > 0:
+                dg_acc[p] += dg                                 # accumulate plastic strain (morphology colour)
                 e = (d - dg * d / dn) + ti.Vector([tr, tr, tr])
                 F[p] = U @ ti.Matrix([[ti.exp(e[0]), 0, 0], [0, ti.exp(e[1]), 0],
                                       [0, 0, ti.exp(e[2])]]) @ V.transpose()
@@ -515,6 +519,11 @@ def main(argv):
     if args.save_se:
         np.save(args.save_se, x.to_numpy())                # final SE point cloud (morphology)
         print(f"  saved SE morphology → {args.save_se} ({n} pts)")
+    if args.save_dg:
+        dgn = dg_acc.to_numpy()
+        np.save(args.save_dg, dgn)                          # accumulated plastic strain (same order)
+        print(f"  saved plastic strain Σdg → {args.save_dg} ({n} pts, "
+              f"mean {float(dgn.mean()):.3f} max {float(dgn.max()):.3f})")
 
 
 if __name__ == '__main__':

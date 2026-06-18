@@ -116,7 +116,7 @@ python3 scripts/mpm3d_compaction.py \\
   --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
   --n-grid 384 --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
-  --save-se se_dump.npy --save-metrics mpm_metrics.json
+  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-metrics mpm_metrics.json
 
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
