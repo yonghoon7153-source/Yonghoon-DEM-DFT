@@ -280,7 +280,7 @@ def main():
     ap.add_argument("--task", default="omat")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--fmax", type=float, default=0.05)
-    ap.add_argument("--steps", type=int, default=300)
+    ap.add_argument("--steps", type=int, default=500)
     ap.add_argument("--find_champion", action="store_true")
     ap.add_argument("--summary", action="store_true")
     args = ap.parse_args()

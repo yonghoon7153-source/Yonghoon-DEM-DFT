@@ -17,7 +17,7 @@ CAS="${CAS:-/data/work/runs/multi_category_2026_05_26_v23}"
 OUT="${OUT:-/data/work/runs/site_preference}"
 DEVICE="${DEVICE:-cuda}"
 FMAX="${FMAX:-0.05}"
-STEPS="${STEPS:-300}"
+STEPS="${STEPS:-500}"
 FORCE="${1:-}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 PY="$HERE/site_preference_swap.py"
@@ -34,8 +34,22 @@ for d in "$CAS"/*_x0*/; do
   [ "$sys" = "_master_logs" ] && continue
   res="$OUT/$sys/site_pref.json"
 
+  # Skip if a real result/skip already exists (status ok or skip).  Big-cation
+  # M@P configs are intrinsically high-strain and may never reach fmax -> we do
+  # NOT redo on non-convergence (that would loop forever); the summary flags
+  # conv=n so those dE are read as upper bounds.  Use --force for a clean
+  # high-steps re-pass.
   if [ -f "$res" ] && [ "$FORCE" != "--force" ]; then
-    echo "skip(done) $sys" | tee -a "$LOG"; n_skip=$((n_skip+1)); continue
+    if python3 - "$res" <<'PY'
+import json, sys
+d = json.load(open(sys.argv[1]))
+sys.exit(0 if d.get("status") in ("ok", "skip") else 1)
+PY
+    then
+      echo "skip(done) $sys" | tee -a "$LOG"; n_skip=$((n_skip+1)); continue
+    else
+      echo "redo(prev-error) $sys" | tee -a "$LOG"
+    fi
   fi
 
   xyz="$(python3 "$PY" --find_champion --sys "$sys" --cas "$CAS" 2>/dev/null)"
