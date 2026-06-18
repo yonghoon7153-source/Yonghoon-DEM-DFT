@@ -87,6 +87,10 @@ def parse_args(argv):
     ap.add_argument('--dt', type=float, default=2.0e-4)
     ap.add_argument('--seed', type=int, default=3)
     ap.add_argument('--gpu-mem', type=float, default=3.0)
+    ap.add_argument('--periodic', action='store_true',
+                    help='x,y periodic RVE (match the DEM "boundary p p f"): no lateral walls, '
+                         'particles + AM/SE masks wrap → boundary grains get bulk compaction + '
+                         'coverage (default = rigid lateral walls, the validated production box)')
     ap.add_argument('--quiet', action='store_true')
     return ap.parse_args(argv)
 
@@ -102,6 +106,7 @@ def main(argv):
 
     n_grid = args.n_grid
     dx = 1.0 / n_grid; inv_dx = float(n_grid)
+    PERIODIC = bool(args.periodic)                          # x,y periodic RVE (opt-in); default lateral walls
     dt = args.dt                                           # per-point p_vol/p_mass (set in build):
     #   soft SE → fine voxelization (dx/2), rigid AM → coarse (dx) to cap memory at 12:1 ratio
     def lame(E, nu):
@@ -144,18 +149,42 @@ def main(argv):
         WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01
         r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
         um_box = 1000.0 / scl                                 # µm per box unit (50µm RVE = 0.05 LIGGGHTS u)
+        # periodic (x,y) RVE box in grid cells — matches the DEM 'boundary p p f': a boundary AM/SE
+        # gets wrapped images so it compacts + is covered like the bulk (opt-in via --periodic).
+        LO_m = int(round(SW[0] * n_grid)); WC_m = int(round((SW[1] - SW[0]) * n_grid))
+
+        def _raster(mask, cx, cy, cz, rr, setval):
+            """rasterise a sphere into the (n_grid³) mask; x,y wrap into [LO_m,LO_m+WC_m) when PERIODIC,
+            else clamp to the grid (byte-identical to the old block-slice fill)."""
+            iz0 = max(int(np.floor((cz - rr) * n_grid)), 0)
+            iz1 = min(int(np.ceil((cz + rr) * n_grid)), n_grid)
+            if iz1 <= iz0:
+                return
+            if PERIODIC:
+                ix = np.arange(int(np.floor((cx - rr) * n_grid)), int(np.ceil((cx + rr) * n_grid)))
+                iy = np.arange(int(np.floor((cy - rr) * n_grid)), int(np.ceil((cy + rr) * n_grid)))
+            else:
+                ix = np.arange(max(int(np.floor((cx - rr) * n_grid)), 0), min(int(np.ceil((cx + rr) * n_grid)), n_grid))
+                iy = np.arange(max(int(np.floor((cy - rr) * n_grid)), 0), min(int(np.ceil((cy + rr) * n_grid)), n_grid))
+            if len(ix) == 0 or len(iy) == 0:
+                return
+            iz = np.arange(iz0, iz1)
+            X, Y, Z = np.meshgrid((ix + 0.5) / n_grid, (iy + 0.5) / n_grid, (iz + 0.5) / n_grid, indexing='ij')
+            inside = (X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr
+            if not inside.any():
+                return
+            ii, jj, kk = np.nonzero(inside)
+            if PERIODIC:
+                wx = LO_m + ((ix[ii] - LO_m) % WC_m + WC_m) % WC_m
+                wy = LO_m + ((iy[jj] - LO_m) % WC_m + WC_m) % WC_m
+            else:
+                wx, wy = ix[ii], iy[jj]
+            mask[wx, wy, iz[kk]] = setval
+
         pin_np = np.zeros((n_grid,) * 3, np.int32)            # grid cells inside any fixed AM
         for _i in range(len(am_r)):
             cx, cy, cz = am_c[_i]; rr = float(am_r[_i])
-            lo = np.maximum(np.floor((np.array([cx, cy, cz]) - rr) * n_grid).astype(int), 0)
-            hi = np.minimum(np.ceil((np.array([cx, cy, cz]) + rr) * n_grid).astype(int), n_grid)
-            if np.any(hi <= lo):
-                continue
-            gx = (np.arange(lo[0], hi[0]) + 0.5) / n_grid
-            gy = (np.arange(lo[1], hi[1]) + 0.5) / n_grid
-            gz = (np.arange(lo[2], hi[2]) + 0.5) / n_grid
-            X, Y, Z = np.meshgrid(gx, gy, gz, indexing='ij')
-            pin_np[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]][(X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr] = int(amraw[_i, 0])
+            _raster(pin_np, cx, cy, cz, rr, int(amraw[_i, 0]))
         se_target = AM_vol * args.se_frac / (1.0 - args.se_frac)   # SE volume to RSA-fill
         plan = [(r_se3, 1.0, MU_SE, LA_SE, YIELD_SE)]
     elif args.preset == 'real14':
@@ -209,7 +238,8 @@ def main(argv):
 
     if args.am_scaffold:
         spc = dx * 0.5
-        i0 = int(SW[0] * n_grid) + 1; i1 = int(SW[1] * n_grid)
+        i0 = LO_m if PERIODIC else int(SW[0] * n_grid) + 1   # no wall inset when periodic
+        i1 = LO_m + WC_m if PERIODIC else int(SW[1] * n_grid)
         k0 = int(FLOOR * n_grid) + 1; k1 = int(am_top * n_grid)
         if args.se_dump:
             # ── seed SE at the REAL DEM SE centres: rasterise each D1 SE sphere into the grid
@@ -223,16 +253,7 @@ def main(argv):
             se_pin = np.zeros((n_grid,) * 3, bool)
             for _i in range(len(se_rr)):
                 cx, cy, cz = se_c[_i]; rr = float(se_rr[_i])
-                lo = np.maximum(np.floor((np.array([cx, cy, cz]) - rr) * n_grid).astype(int), 0)
-                hi = np.minimum(np.ceil((np.array([cx, cy, cz]) + rr) * n_grid).astype(int), n_grid)
-                if np.any(hi <= lo):
-                    continue
-                gx = (np.arange(lo[0], hi[0]) + 0.5) / n_grid
-                gy = (np.arange(lo[1], hi[1]) + 0.5) / n_grid
-                gz = (np.arange(lo[2], hi[2]) + 0.5) / n_grid
-                X, Y, Z = np.meshgrid(gx, gy, gz, indexing='ij')
-                se_pin[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]] |= (
-                    (X - cx) ** 2 + (Y - cy) ** 2 + (Z - cz) ** 2 <= rr * rr)
+                _raster(se_pin, cx, cy, cz, rr, True)        # x,y wrap when PERIODIC (boundary SE)
             se_pin &= (pin_np == 0)                          # SE only in non-AM cells
             sel = np.argwhere(se_pin)
             seed_str = f"{len(seraw)} real SE spheres → {len(sel):,} SE cells (REAL positions, no targeting)"
@@ -266,8 +287,10 @@ def main(argv):
         for (r, frac, mu, la, yld) in plan:
             goal = frac * target; acc = 0.0; fails = 0
             small = r <= 1.5 * rmin
+            xlo = SW[0] if PERIODIC else SW[0] + r           # periodic → fill to the edge (wrap handles it)
+            xhi = SW[1] if PERIODIC else SW[1] - r
             while acc < goal and fails < 60000:
-                p = (rng.uniform(SW[0] + r, SW[1] - r), rng.uniform(SW[0] + r, SW[1] - r),
+                p = (rng.uniform(xlo, xhi), rng.uniform(xlo, xhi),
                      rng.uniform(FLOOR + r, fill_h - r))
                 ok = (not in_am(p)) and (not hits_big(p, r)) and (not (small and hits_small(p, r)))
                 if ok:
@@ -312,6 +335,10 @@ def main(argv):
     xs = np.clip(xs, 2.0 * dx, 1.0 - 2.0 * dx)             # keep the 3-pt P2G stencil inside [0,n_grid)
     solid_vol = float(pvs.sum()) + AM_vol                  # voxelized SE vol (Σ per-point) + exact fixed-AM
     #   vol.  Σ per-point matches the old n·p_vol so the pure-SE 10% calibration is preserved.
+    # periodic (x,y) box in grid cells, snapped so the particle wrap (LATW) == the grid wrap (WC·dx)
+    # exactly → no seam drift.  Origin kept at SW[0] so it matches the mask rasterisation above.
+    _LO = int(round(SW[0] * n_grid)); _WC = int(round((SW[1] - SW[0]) * n_grid))
+    _SW0 = float(SW[0]); _LATW = _WC * dx                   # period (physical) = grid-aligned width
 
     x = ti.Vector.field(3, ti.f32, n); v = ti.Vector.field(3, ti.f32, n)
     C = ti.Matrix.field(3, 3, ti.f32, n); F = ti.Matrix.field(3, 3, ti.f32, n)
@@ -356,8 +383,12 @@ def main(argv):
             for a, b, c in ti.static(ti.ndrange(3, 3, 3)):
                 off = ti.Vector([a, b, c]); dpos = (off.cast(ti.f32) - fx) * dx
                 wt = w[a][0] * w[b][1] * w[c][2]
-                grid_v[base + off] += wt * (pm * v[p] + affine @ dpos)
-                grid_m[base + off] += wt * pm
+                node = base + off
+                if ti.static(PERIODIC):                                  # wrap x,y into the periodic box
+                    node[0] = _LO + ((node[0] - _LO) % _WC + _WC) % _WC
+                    node[1] = _LO + ((node[1] - _LO) % _WC + _WC) % _WC
+                grid_v[node] += wt * (pm * v[p] + affine @ dpos)
+                grid_m[node] += wt * pm
         for I in ti.grouped(grid_m):
             if grid_m[I] > 0:
                 grid_v[I] /= grid_m[I]
@@ -369,17 +400,23 @@ def main(argv):
                 if k * dx > wall_z[None]:                                    # servo platen (rigid)
                     wallf[None] += grid_m[I] * (grid_v[I][2] - wall_vel[None])  # reaction impulse Σ m·Δv
                     grid_v[I][2] = wall_vel[None]
-                if i * dx < SW[0] and grid_v[I][0] < 0: grid_v[I][0] = 0.0
-                if i * dx > SW[1] and grid_v[I][0] > 0: grid_v[I][0] = 0.0
-                if j * dx < SW[0] and grid_v[I][1] < 0: grid_v[I][1] = 0.0
-                if j * dx > SW[1] and grid_v[I][1] > 0: grid_v[I][1] = 0.0
+                if ti.static(not PERIODIC):                                  # rigid lateral walls (else x,y wrap)
+                    if i * dx < SW[0] and grid_v[I][0] < 0: grid_v[I][0] = 0.0
+                    if i * dx > SW[1] and grid_v[I][0] > 0: grid_v[I][0] = 0.0
+                    if j * dx < SW[0] and grid_v[I][1] < 0: grid_v[I][1] = 0.0
+                    if j * dx > SW[1] and grid_v[I][1] > 0: grid_v[I][1] = 0.0
         for p in range(n):
             base = (x[p] * inv_dx - 0.5).cast(int); fx = x[p] * inv_dx - base.cast(ti.f32)
             w = [0.5 * (1.5 - fx) ** 2, 0.75 - (fx - 1.0) ** 2, 0.5 * (fx - 0.5) ** 2]
             nv = ti.Vector.zero(ti.f32, 3); nc = ti.Matrix.zero(ti.f32, 3, 3)
             for a, b, c in ti.static(ti.ndrange(3, 3, 3)):
                 off = ti.Vector([a, b, c]); dpos = off.cast(ti.f32) - fx
-                wt = w[a][0] * w[b][1] * w[c][2]; gv = grid_v[base + off]
+                wt = w[a][0] * w[b][1] * w[c][2]
+                node = base + off
+                if ti.static(PERIODIC):                                  # gather from the wrapped node
+                    node[0] = _LO + ((node[0] - _LO) % _WC + _WC) % _WC
+                    node[1] = _LO + ((node[1] - _LO) % _WC + _WC) % _WC
+                gv = grid_v[node]
                 nv += wt * gv; nc += 4 * inv_dx * wt * gv.outer_product(dpos)
             v[p] = nv; C[p] = nc; F[p] = (ti.Matrix.identity(ti.f32, 3) + dt * nc) @ F[p]
             eps_acc[p] += (0.5 * (nc + nc.transpose())).norm() * dt   # total strain increment (vs seed, incl elastic)
@@ -395,9 +432,12 @@ def main(argv):
                 F[p] = U @ ti.Matrix([[ti.exp(e[0]), 0, 0], [0, ti.exp(e[1]), 0],
                                       [0, 0, ti.exp(e[2])]]) @ V.transpose()
             x[p] += dt * v[p]
+            if ti.static(PERIODIC):                                      # wrap x,y into [SW0, SW0+LATW)
+                x[p][0] -= _LATW * ti.floor((x[p][0] - _SW0) / _LATW)
+                x[p][1] -= _LATW * ti.floor((x[p][1] - _SW0) / _LATW)
 
     load(xs, mus, las, ylds, pvs)
-    area = WIDTH * WIDTH                                    # solid_vol = exact Σ sphere vol (set in build)
+    area = (_LATW * _LATW if PERIODIC else WIDTH * WIDTH)   # periodic → grid-aligned cell area (self-consistent)
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
     wall_z[None] = WALL0
@@ -408,7 +448,8 @@ def main(argv):
     if not args.quiet:
         print(f"3D MPM  n_grid={n_grid}  pts={n}  arch={args.arch}  {comp}  "
               f"E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} K_SE={K_SE:.2f}GPa  "
-              f"target={target} GPa  readout={args.readout}")
+              f"target={target} GPa  readout={args.readout}  "
+              f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
@@ -479,7 +520,8 @@ def main(argv):
     print(f"FINAL  {args.readout}={p_end:.4f} GPa  porosity(settled)={por_end:.2f}%  "
           f"porosity@target={por_target_str}{thick_str}   "
           f"[MPM, {comp.split()[0]}, {scaf}, n_grid={n_grid}, pts={n}, "
-          f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}]")
+          f"E_SE={args.e_se} ν_SE={args.nu_se} K_SE={K_SE:.1f}GPa, readout={args.readout}, "
+          f"xy={'periodic' if PERIODIC else 'walls'}]")
     cov_out = {}
     if args.am_scaffold:
         # COVERAGE: fraction of each AM-type surface (AM↔non-AM voxel interfaces) that faces SE
@@ -497,13 +539,18 @@ def main(argv):
             se_occ = _ndi.binary_closing(se_occ, iterations=1)
         except Exception:
             pass
+        if PERIODIC:                                          # roll must wrap WITHIN the box, not the dead
+            sl = slice(_LO, _LO + _WC)                        # margin → slice the periodic cell for x,y
+            pin_c, se_c2 = pin_np[sl, sl, :], se_occ[sl, sl, :]
+        else:
+            pin_c, se_c2 = pin_np, se_occ
         for t, nm in ((1, 'AM_P'), (2, 'AM_S')):
-            amt = (pin_np == t); tot = 0; cov = 0
+            amt = (pin_c == t); tot = 0; cov = 0
             for ax in range(3):
                 for s in (1, -1):
-                    iface = amt & (np.roll(pin_np, s, ax) == 0)   # AM_t voxel with a non-AM neighbour
+                    iface = amt & (np.roll(pin_c, s, ax) == 0)   # AM_t voxel with a non-AM neighbour
                     tot += int(iface.sum())
-                    cov += int((iface & np.roll(se_occ, s, ax)).sum())
+                    cov += int((iface & np.roll(se_c2, s, ax)).sum())
             pct = 100.0 * cov / tot if tot else 0.0
             cov_out[nm] = round(pct, 1)
             if tot:
@@ -523,6 +570,7 @@ def main(argv):
             'sigma_y_GPa': float(args.sigma_y), 'K_SE_GPa': round(float(K_SE), 3),
             'protocol': args.protocol, 'readout': args.readout,
             'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
+            'periodic': bool(PERIODIC),
         }
         if args.am_scaffold:
             m.update({
