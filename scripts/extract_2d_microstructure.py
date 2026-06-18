@@ -140,7 +140,17 @@ def _se_to_continuum(labels: np.ndarray, r_se_px: float,
     cy, cx = np.where(se_now & (dist_edge > pr_min + 1.5))
     if len(cy) == 0:
         return out
-    order = np.argsort(-dist_edge[cy, cx])                 # thickest SE first
+    # spread the void through the BULK: suppress pores near the top/bottom faces (where SE is
+    # edge-banded and would pile up the pores) and place in RANDOM spatial order — not
+    # thickest-SE-first, which clusters them onto the SE-rich edges.
+    zmargin = max(6.0, 0.06 * ny)
+    zedge = np.minimum(cy, ny - 1 - cy).astype(float)     # px to nearest top/bottom face
+    zw = 0.15 + 0.85 * np.clip(zedge / zmargin, 0.0, 1.0)  # 0.15 at the face → 1.0 in the bulk
+    keep = rng.random(len(cy)) < zw
+    cy, cx = cy[keep], cx[keep]
+    if len(cy) == 0:
+        return out
+    order = rng.permutation(len(cy))                       # uniform spatial order
     for ci in order:
         if need <= 0:
             break
