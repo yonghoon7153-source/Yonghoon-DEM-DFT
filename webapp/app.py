@@ -362,6 +362,7 @@ def list_cases():
         meta['has_figures'] = os.path.isdir(figures_dir) and len(globmod.glob(os.path.join(figures_dir, '*.png'))) > 0
         report_file = os.path.join(results_dir, 'report.md')
         meta['has_report'] = os.path.exists(report_file)
+        meta['has_mpm'] = os.path.exists(os.path.join(results_dir, 'mpm_payload.json'))  # MPM result uploaded?
         # Check for warnings
         metrics_file = os.path.join(results_dir, 'full_metrics.json')
         if os.path.exists(metrics_file):
