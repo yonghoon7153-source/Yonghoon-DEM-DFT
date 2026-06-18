@@ -70,11 +70,14 @@ def build_lab(x0, x1, z0, z1, nx, sx, sz, am_t, am_c, am_r, y, se_min_count, den
     return lab
 
 
-def densest_center(sx, sz, x0, x1, z0, z1, w_box):
-    """Box-unit centre of the SE-densest w_box window (so the zoom lands on real SE)."""
+def densest_center(sx, sz, x0, x1, z0, z1, w_box, weights=None):
+    """Box-unit centre of the densest w_box window — weighted by `weights` if given (e.g.
+    plastic strain → centre on the HIGH-STRAIN region; else by SE point density)."""
+    if not len(sx) or (weights is not None and float(np.nansum(weights)) <= 0):
+        weights = None
     if not len(sx):
         return (x0 + x1) / 2, (z0 + z1) / 2
-    H, xe, ze = np.histogram2d(sx, sz, bins=40, range=[[x0, x1], [z0, z1]])
+    H, xe, ze = np.histogram2d(sx, sz, bins=40, range=[[x0, x1], [z0, z1]], weights=weights)
     try:
         from scipy import ndimage as ndi
         kx = max(1, int(round(w_box / ((x1 - x0) / 40))))
@@ -101,6 +104,8 @@ def main():
     ap.add_argument('--se-dump', default='', help='seed-centre CSV (se_scaffold.csv) → colour SE points by grain')
     ap.add_argument('--dg', default='', help='accumulated plastic strain npy (mpm3d --save-dg) → colour the SE '
                     'points by Σdg (afmhot, like the champion morphology); takes priority over grain colour')
+    ap.add_argument('--dg-vmax', type=float, default=0.0,
+                    help='fix the Σdg colour max (0=auto: 98th pct of non-zero strain) — tune contrast')
     ap.add_argument('--hide-am', action='store_true', help='do not draw AM in the zoom (SE shape only)')
     ap.add_argument('--pt-size', type=float, default=6.0, help='zoom scatter point size')
     ap.add_argument('--out', default='mpm_morphology.png')
@@ -118,6 +123,13 @@ def main():
 
     m = np.abs(se[:, 1] - a.y) < half
     slab = se[m]; sx, sz = slab[:, 0], slab[:, 2]
+    dg_slab = np.load(a.dg).astype(np.float64)[m] if a.dg else None
+    dg_vmax = 1.0
+    if dg_slab is not None:
+        pos = dg_slab[dg_slab > 0]
+        dg_vmax = a.dg_vmax if a.dg_vmax > 0 else (float(np.percentile(pos, 98)) if len(pos) else 1.0)
+        print(f'  Σdg: mean {dg_slab.mean():.4f}  max {dg_slab.max():.3f}  '
+              f'>0 in {100.0*(dg_slab>0).mean():.1f}% of slab pts  → colour vmax={dg_vmax:.3f}')
 
     lab = build_lab(x0, x1, z0, z1, a.nx, sx, sz, am_t, am_c, am_r, a.y,
                     a.se_min_count, a.denoise, a.contact_um)
@@ -142,7 +154,7 @@ def main():
         cxu, czu = [float(v) for v in a.zoom_at.split(',')]
         cx_b, cz_b = x0 + cxu / UM_BOX, z0 + czu / UM_BOX
     else:
-        cx_b, cz_b = densest_center(sx, sz, x0, x1, z0, z1, 2 * hw)
+        cx_b, cz_b = densest_center(sx, sz, x0, x1, z0, z1, 2 * hw, weights=dg_slab)
     zx0, zx1, zz0, zz1 = cx_b - hw, cx_b + hw, cz_b - hw, cz_b + hw
     if zx0 < x0: zx0, zx1 = x0, x0 + 2 * hw           # noqa: E701
     if zx1 > x1: zx0, zx1 = x1 - 2 * hw, x1
@@ -158,8 +170,8 @@ def main():
     # image, smooth dark-core→bright-rim) > grain (--se-dump, blocky on the gridded points)
     # > flat SE.  (the gridded look of grain-colour is the voxel-seeded SE lattice.)
     dgw, pc = None, COLORS[3]
-    if a.dg and len(Pw):
-        dgw = np.load(a.dg).astype(np.float64)[m][win]
+    if dg_slab is not None and len(Pw):
+        dgw = dg_slab[win]
     elif a.se_dump and len(Pw):
         from scipy.spatial import cKDTree
         sd = np.loadtxt(a.se_dump, delimiter=',')
@@ -185,10 +197,9 @@ def main():
             axz.add_patch(plt.Circle(((cx - zx0) * UM_BOX, (cz - zz0) * UM_BOX), reff * UM_BOX,
                           fill=False, ec='#c7ccd6', lw=1.0, ls='--'))
     if dgw is not None:
-        vmax = float(np.percentile(dgw, 97)) if len(dgw) and dgw.max() > 0 else 1.0
-        sc = axz.scatter(xu, zu, c=dgw, s=a.pt_size, cmap='afmhot', vmin=0.0, vmax=vmax, edgecolors='none')
+        sc = axz.scatter(xu, zu, c=dgw, s=a.pt_size, cmap='afmhot', vmin=0.0, vmax=dg_vmax, edgecolors='none')
         fig.colorbar(sc, ax=axz, fraction=0.046, pad=0.04, label='Σdg (plastic strain)')
-        ctag = 'plastic strain Σdg'
+        ctag = f'plastic strain Σdg (vmax {dg_vmax:.3f})'
     else:
         axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
         ctag = 'grain-coloured' if a.se_dump else 'SE points'
