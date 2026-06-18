@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Visualise the MPM scaffold SE morphology: a 2D (x-z) slice of the compacted
-composite showing the fixed AM skeleton + the plastically-conformed SE + void.
+"""Visualise the MPM scaffold SE morphology from a 2D (x-z) slab of the compacted
+composite.  Two panels:
+  • FULL  — a phase raster (AM skeleton / SE / void) overview, SE-AM contact in red.
+  • ZOOM  — the SE rendered as its actual MATERIAL POINTS (a scatter), so you see the
+            real plastic SE *shape* (deformed grains), not a filled blob.  Give
+            --se-dump (the seed-centre CSV) to colour each SE point by its grain →
+            the individual SE grains separate visually (like the 2D-champion morphology).
+            AM is drawn as faint outlines only (—hide-am to drop it entirely).
 
-The MPM SE actually deforms/flows around the real AM (the rigid-sphere DEM
-cannot), so this slice is the SE plastic morphology — the MPM's unique output.
+The MPM SE actually deforms/flows around the rigid real AM (the DEM cannot), so this
+slab IS the SE plastic morphology — the MPM's unique output.
 
-Usage:
-  python3 scripts/viz_mpm_morphology.py --se se_real14.npy \
-      --scaffold docs/data/real14_am_scaffold.csv --y 0.5 --out morph.png
+  python3 scripts/viz_mpm_morphology.py --se se_dump.npy --scaffold am_scaffold.csv \
+      --zoom-w 10 --se-dump se_scaffold.csv --out morph_zoom.png
 """
 import argparse
 import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt                       # noqa: E402
+import matplotlib.patches as mpatches                 # noqa: E402
 from matplotlib.colors import ListedColormap, BoundaryNorm  # noqa: E402
 
 # scaffold box geometry (must match mpm3d_compaction.py --am-scaffold)
@@ -21,8 +27,62 @@ SW = (0.04, 0.96); FLOOR = 0.05
 WIDTH = SW[1] - SW[0]; SCL = WIDTH / 0.05              # box units per LIGGGHTS unit
 UM_BOX = 1000.0 / SCL                                  # µm per box unit
 
-# phase colours (void / AM_P / AM_S / SE) — match the 2D microstructure viewer
-COLORS = ['#ffffff', '#2b2f3a', '#9aa0ad', '#f4d35e']
+# phase colours: void / AM_P / AM_S / SE / SE-AM contact
+COLORS = ['#ffffff', '#2b2f3a', '#9aa0ad', '#f4d35e', '#ef4444']
+_NORM = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5, 4.5], len(COLORS))
+_CMAP = ListedColormap(COLORS)
+
+
+def build_lab(x0, x1, z0, z1, nx, sx, sz, am_t, am_c, am_r, y, se_min_count, denoise, contact_um):
+    """Phase label raster (0 void / 1 AM_P / 2 AM_S / 3 SE / 4 SE-AM contact) for the
+    overview panel.  contact_um = SE within this µm of AM → red (the contact band)."""
+    nz = max(2, int(round(nx * (z1 - z0) / (x1 - x0))))
+    X, Z = np.meshgrid(np.linspace(x0, x1, nx), np.linspace(z0, z1, nz))
+    lab = np.zeros((nz, nx), np.int8)
+    inw = (sx >= x0) & (sx < x1) & (sz >= z0) & (sz < z1)
+    se_mask = np.zeros((nz, nx), bool)
+    if inw.any():
+        ix = np.clip(((sx[inw] - x0) / (x1 - x0) * (nx - 1)).astype(int), 0, nx - 1)
+        iz = np.clip(((sz[inw] - z0) / (z1 - z0) * (nz - 1)).astype(int), 0, nz - 1)
+        cnt = np.zeros((nz, nx), np.int32); np.add.at(cnt, (iz, ix), 1)
+        se_mask = cnt >= se_min_count
+    if denoise > 0:
+        from scipy import ndimage as ndi
+        se_mask = ndi.binary_closing(se_mask, iterations=denoise)
+        se_mask = ndi.binary_opening(se_mask, iterations=denoise)
+    lab[se_mask] = 3
+    am_mask = np.zeros((nz, nx), bool)
+    for i in range(len(am_r)):
+        cx, cy, cz = am_c[i]; rr = am_r[i]; d = y - cy
+        if abs(d) >= rr:
+            continue
+        reff = np.sqrt(rr * rr - d * d)
+        msk = (X - cx) ** 2 + (Z - cz) ** 2 <= reff * reff
+        lab[msk] = am_t[i]; am_mask |= msk
+    if contact_um > 0:
+        um_per_px = (x1 - x0) * UM_BOX / nx
+        it = max(1, int(round(contact_um / max(um_per_px, 1e-9))))
+        try:
+            from scipy import ndimage as ndi
+            lab[(lab == 3) & ndi.binary_dilation(am_mask, iterations=it)] = 4
+        except Exception:
+            pass
+    return lab
+
+
+def densest_center(sx, sz, x0, x1, z0, z1, w_box):
+    """Box-unit centre of the SE-densest w_box window (so the zoom lands on real SE)."""
+    if not len(sx):
+        return (x0 + x1) / 2, (z0 + z1) / 2
+    H, xe, ze = np.histogram2d(sx, sz, bins=40, range=[[x0, x1], [z0, z1]])
+    try:
+        from scipy import ndimage as ndi
+        kx = max(1, int(round(w_box / ((x1 - x0) / 40))))
+        H = ndi.uniform_filter(H, size=kx, mode='constant')
+    except Exception:
+        pass
+    i, j = np.unravel_index(int(np.argmax(H)), H.shape)
+    return 0.5 * (xe[i] + xe[i + 1]), 0.5 * (ze[j] + ze[j + 1])
 
 
 def main():
@@ -30,75 +90,106 @@ def main():
     ap.add_argument('--se', required=True, help='SE point cloud npy ([n,3], box units) from --save-se')
     ap.add_argument('--scaffold', required=True, help='AM scaffold CSV (type,x,y,z,r LIGGGHTS units)')
     ap.add_argument('--y', type=float, default=0.5, help='slab centre (box units, 0.04..0.96)')
-    ap.add_argument('--slab', type=float, default=0.0, help='slab half-thickness (box units; 0=auto)')
-    ap.add_argument('--nx', type=int, default=220, help='image columns (≈ SE point density; '
-                    'too high → SE undersampled/sparse, too low → blocky)')
-    ap.add_argument('--se-min-count', type=int, default=1,
-                    help='pixel is SE only if ≥N SE points land in it (1=any point; '
-                         '>1 removes the thin-slab salt-and-pepper false void)')
-    ap.add_argument('--denoise', type=int, default=0,
-                    help='morphological close+open iterations on the SE mask so only '
-                         'COHERENT pores remain (0=off; 1-2 typical, needs scipy)')
+    ap.add_argument('--slab', type=float, default=0.0, help='slab half-thickness (box units; 0=auto≈1.5 r_se)')
+    ap.add_argument('--nx', type=int, default=220, help='full-panel raster columns')
+    ap.add_argument('--se-min-count', type=int, default=1, help='full panel: pixel is SE if ≥N points')
+    ap.add_argument('--denoise', type=int, default=0, help='full panel: close+open iters on SE mask (scipy)')
+    ap.add_argument('--contact-um', type=float, default=0.26, help='full panel: SE within this µm of AM → red')
+    ap.add_argument('--zoom-w', type=float, default=10.0,
+                    help='zoom window width (µm) — the SE-shape scatter panel; smaller = more zoom (0=full only)')
+    ap.add_argument('--zoom-at', default='', help='zoom centre "cx,cz" µm (default: densest SE)')
+    ap.add_argument('--se-dump', default='', help='seed-centre CSV (se_scaffold.csv) → colour SE points by grain')
+    ap.add_argument('--hide-am', action='store_true', help='do not draw AM in the zoom (SE shape only)')
+    ap.add_argument('--pt-size', type=float, default=6.0, help='zoom scatter point size')
     ap.add_argument('--out', default='mpm_morphology.png')
     a = ap.parse_args()
 
     se = np.load(a.se).astype(np.float64)                       # [n,3] box units
-    am = np.loadtxt(a.scaffold, delimiter=',')                 # type,x,y,z,r (LIGGGHTS)
+    am = np.loadtxt(a.scaffold, delimiter=',')
     am_t = am[:, 0].astype(int)
     am_c = np.column_stack([SW[0] + am[:, 1] * SCL, SW[0] + am[:, 2] * SCL, FLOOR + am[:, 3] * SCL])
     am_r = am[:, 4] * SCL
     r_se = 0.0005 * SCL
-    half = a.slab if a.slab > 0 else 1.5 * r_se                # auto slab ≈ 1.5 SE radii
-
-    # view box: lateral SW, vertical FLOOR..(AM top + margin)
+    half = a.slab if a.slab > 0 else 1.5 * r_se
     z_top = float((am_c[:, 2] + am_r).max()) + 0.01
     x0, x1, z0, z1 = SW[0], SW[1], FLOOR, z_top
-    nx = a.nx; nz = int(nx * (z1 - z0) / (x1 - x0))
-    xs = np.linspace(x0, x1, nx); zs = np.linspace(z0, z1, nz)
-    X, Z = np.meshgrid(xs, zs)                                  # [nz,nx]
-    lab = np.zeros((nz, nx), np.int8)                          # 0 void
 
-    # SE: bin slab points into the (x,z) image.  Default = SE where any point
-    # lands; with --se-min-count, SE only where ≥N points hit a pixel (removes
-    # the salt-and-pepper false-void of a thin subsampled slab); --denoise then
-    # runs a morphological close+open so only COHERENT pores survive.
     m = np.abs(se[:, 1] - a.y) < half
-    sx, sz = se[m, 0], se[m, 2]
-    ix = np.clip(((sx - x0) / (x1 - x0) * (nx - 1)).astype(int), 0, nx - 1)
-    iz = np.clip(((sz - z0) / (z1 - z0) * (nz - 1)).astype(int), 0, nz - 1)
-    cnt = np.zeros((nz, nx), np.int32)
-    np.add.at(cnt, (iz, ix), 1)
-    se_mask = cnt >= a.se_min_count
-    if a.denoise > 0:
-        from scipy import ndimage as ndi
-        se_mask = ndi.binary_closing(se_mask, iterations=a.denoise)   # fill void specks in SE
-        se_mask = ndi.binary_opening(se_mask, iterations=a.denoise)   # drop SE specks in void
-    lab[se_mask] = 3                                           # SE
+    slab = se[m]; sx, sz = slab[:, 0], slab[:, 2]
 
-    # AM cross-section at the slab (overwrites SE/void): circle radius √(r²-(cy-y)²)
-    for i in range(len(am_r)):
-        cx, cy, cz = am_c[i]; rr = am_r[i]
-        d = a.y - cy
-        if abs(d) >= rr:
-            continue
-        reff = np.sqrt(rr * rr - d * d)
-        lab[(X - cx) ** 2 + (Z - cz) ** 2 <= reff * reff] = am_t[i]   # 1 AM_P / 2 AM_S
+    lab = build_lab(x0, x1, z0, z1, a.nx, sx, sz, am_t, am_c, am_r, a.y,
+                    a.se_min_count, a.denoise, a.contact_um)
+    por = 100.0 * (lab == 0).mean(); se_f = 100.0 * ((lab == 3) | (lab == 4)).mean()
+    am_f = 100.0 * ((lab == 1) | (lab == 2)).mean(); ct_f = 100.0 * (lab == 4).mean()
+    ext_full = [0, (x1 - x0) * UM_BOX, 0, (z1 - z0) * UM_BOX]
 
-    por = 100.0 * (lab == 0).mean()
-    se_f = 100.0 * (lab == 3).mean()
-    am_f = 100.0 * ((lab == 1) | (lab == 2)).mean()
+    if a.zoom_w <= 0:
+        fig, ax = plt.subplots(figsize=(9, 9 * (z1 - z0) / (x1 - x0) + 0.6))
+        ax.imshow(lab, origin='lower', cmap=_CMAP, norm=_NORM, interpolation='nearest',
+                  extent=ext_full, aspect='equal')
+        ax.set_xlabel('x (µm)'); ax.set_ylabel('z (µm, compaction ↓)')
+        ax.set_title(f'MPM SE plastic morphology — x-z slice @ y={a.y:.2f}\n'
+                     f'AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
+        plt.tight_layout(); plt.savefig(a.out, dpi=150)
+        print(f'saved {a.out}   AM {am_f:.1f}% / SE {se_f:.1f}% / void {por:.1f}% / contact {ct_f:.1f}%')
+        return
 
-    fig, ax = plt.subplots(figsize=(9, 9 * (z1 - z0) / (x1 - x0) + 0.6))
-    cmap = ListedColormap(COLORS); norm = BoundaryNorm([-0.5, 0.5, 1.5, 2.5, 3.5], cmap.N)
-    ax.imshow(lab, origin='lower', cmap=cmap, norm=norm, interpolation='nearest',
-              extent=[0, (x1 - x0) * UM_BOX, 0, (z1 - z0) * UM_BOX], aspect='equal')
-    ax.set_xlabel('x (µm)'); ax.set_ylabel('z (µm, compaction ↓)')
-    ax.set_title(f'MPM SE plastic morphology — x-z slice @ y={a.y:.2f}\n'
-                 f'AM {am_f:.0f}% (dark=AM_P / gray=AM_S) · SE {se_f:.0f}% (yellow) · '
-                 f'void {por:.0f}% (white)', fontsize=10)
-    plt.tight_layout(); plt.savefig(a.out, dpi=140)
-    print(f'saved {a.out}   slice: AM {am_f:.1f}% / SE {se_f:.1f}% / void {por:.1f}%  '
-          f'(SE pts in slab: {m.sum():,})')
+    # ── zoom window (box units) ──────────────────────────────────────────────
+    hw = (a.zoom_w / UM_BOX) / 2.0
+    if a.zoom_at:
+        cxu, czu = [float(v) for v in a.zoom_at.split(',')]
+        cx_b, cz_b = x0 + cxu / UM_BOX, z0 + czu / UM_BOX
+    else:
+        cx_b, cz_b = densest_center(sx, sz, x0, x1, z0, z1, 2 * hw)
+    zx0, zx1, zz0, zz1 = cx_b - hw, cx_b + hw, cz_b - hw, cz_b + hw
+    if zx0 < x0: zx0, zx1 = x0, x0 + 2 * hw           # noqa: E701
+    if zx1 > x1: zx0, zx1 = x1 - 2 * hw, x1
+    if zz0 < z0: zz0, zz1 = z0, z0 + 2 * hw
+    if zz1 > z1: zz0, zz1 = z1 - 2 * hw, z1
+    zx0, zz0 = max(zx0, x0), max(zz0, z0)
+
+    win = (sx >= zx0) & (sx < zx1) & (sz >= zz0) & (sz < zz1)
+    Pw = slab[win]                                              # SE material points in the zoom
+    xu = (Pw[:, 0] - zx0) * UM_BOX; zu = (Pw[:, 2] - zz0) * UM_BOX
+
+    # colour: by grain (nearest seed centre) if a seed CSV is given → individual SE grains
+    # separate; else a single SE colour (shape still shows via the point cloud + gaps).
+    if a.se_dump and len(Pw):
+        from scipy.spatial import cKDTree
+        sd = np.loadtxt(a.se_dump, delimiter=',')
+        seeds = np.column_stack([SW[0] + sd[:, 1] * SCL, SW[0] + sd[:, 2] * SCL, FLOOR + sd[:, 3] * SCL])
+        gid = cKDTree(seeds).query(Pw)[1]
+        pc = plt.cm.hsv((gid * 0.6180339887) % 1.0)            # golden-ratio hue → adjacent grains differ
+    else:
+        pc = COLORS[3]
+
+    fig, (axf, axz) = plt.subplots(1, 2, figsize=(16, 7.6))
+    axf.imshow(lab, origin='lower', cmap=_CMAP, norm=_NORM, interpolation='nearest',
+               extent=ext_full, aspect='equal')
+    axf.add_patch(mpatches.Rectangle(((zx0 - x0) * UM_BOX, (zz0 - z0) * UM_BOX),
+                  (zx1 - zx0) * UM_BOX, (zz1 - zz0) * UM_BOX, fill=False, ec='#06b6d4', lw=2))
+    axf.set_xlabel('x (µm)'); axf.set_ylabel('z (µm, compaction ↓)')
+    axf.set_title(f'full — AM {am_f:.0f}% · SE {se_f:.0f}% · void {por:.0f}% · contact {ct_f:.1f}% (red)', fontsize=10)
+
+    axz.set_facecolor('white')
+    if not a.hide_am:                                          # faint AM outlines (context only)
+        for i in range(len(am_r)):
+            cx, cy, cz = am_c[i]; rr = am_r[i]; d = a.y - cy
+            if abs(d) >= rr:
+                continue
+            reff = np.sqrt(rr * rr - d * d)
+            axz.add_patch(plt.Circle(((cx - zx0) * UM_BOX, (cz - zz0) * UM_BOX), reff * UM_BOX,
+                          fill=False, ec='#c7ccd6', lw=1.0, ls='--'))
+    axz.scatter(xu, zu, c=pc, s=a.pt_size, edgecolors='none')
+    axz.set_xlim(0, (zx1 - zx0) * UM_BOX); axz.set_ylim(0, (zz1 - zz0) * UM_BOX)
+    axz.set_aspect('equal'); axz.set_xlabel('x (µm)'); axz.set_ylabel('z (µm, compaction ↓)')
+    gtag = 'grain-coloured' if a.se_dump else 'SE points'
+    axz.set_title(f'zoom ({a.zoom_w:.0f} µm) — SE material points ({gtag}) · {len(Pw):,} pts', fontsize=10)
+    fig.suptitle(f'MPM SE plastic morphology — x-z slab @ y={a.y:.2f}', fontsize=11)
+
+    plt.tight_layout(); plt.savefig(a.out, dpi=150)
+    print(f'saved {a.out}   zoom {a.zoom_w:.0f}µm @ ({(cx_b-x0)*UM_BOX:.1f},{(cz_b-z0)*UM_BOX:.1f})µm · '
+          f'{len(Pw):,} SE pts · AM {am_f:.1f}%/SE {se_f:.1f}%/void {por:.1f}%')
 
 
 if __name__ == '__main__':
