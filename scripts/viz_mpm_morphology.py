@@ -91,7 +91,8 @@ def densest_center(sx, sz, x0, x1, z0, z1, w_box, weights=None):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--se', required=True, help='SE point cloud npy ([n,3], box units) from --save-se')
-    ap.add_argument('--scaffold', required=True, help='AM scaffold CSV (type,x,y,z,r LIGGGHTS units)')
+    ap.add_argument('--scaffold', default='', help='AM scaffold CSV (type,x,y,z,r LIGGGHTS units); '
+                    'omit for an SE-only loose→dense demo (no AM)')
     ap.add_argument('--y', type=float, default=0.5, help='slab centre (box units, 0.04..0.96)')
     ap.add_argument('--slab', type=float, default=0.0, help='slab half-thickness (box units; 0=auto≈1.5 r_se)')
     ap.add_argument('--nx', type=int, default=220, help='full-panel raster columns')
@@ -104,6 +105,8 @@ def main():
     ap.add_argument('--se-dump', default='', help='seed-centre CSV (se_scaffold.csv) → colour SE points by grain')
     ap.add_argument('--dg', default='', help='accumulated plastic strain npy (mpm3d --save-dg) → colour the SE '
                     'points by Σdg (afmhot, like the champion morphology); takes priority over grain colour')
+    ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
+                    'seed sphere (incl elastic); PREFERRED over --dg (use for the loose→dense demo)')
     ap.add_argument('--dg-vmax', type=float, default=0.0,
                     help='fix the Σdg colour max (0=auto: 98th pct of non-zero strain) — tune contrast')
     ap.add_argument('--hide-am', action='store_true', help='do not draw AM in the zoom (SE shape only)')
@@ -112,18 +115,22 @@ def main():
     a = ap.parse_args()
 
     se = np.load(a.se).astype(np.float64)                       # [n,3] box units
-    am = np.loadtxt(a.scaffold, delimiter=',')
-    am_t = am[:, 0].astype(int)
-    am_c = np.column_stack([SW[0] + am[:, 1] * SCL, SW[0] + am[:, 2] * SCL, FLOOR + am[:, 3] * SCL])
-    am_r = am[:, 4] * SCL
+    if a.scaffold:
+        am = np.loadtxt(a.scaffold, delimiter=',')
+        am_t = am[:, 0].astype(int)
+        am_c = np.column_stack([SW[0] + am[:, 1] * SCL, SW[0] + am[:, 2] * SCL, FLOOR + am[:, 3] * SCL])
+        am_r = am[:, 4] * SCL
+    else:                                                       # SE-only loose→dense demo (no AM)
+        am_t = np.zeros(0, int); am_c = np.zeros((0, 3)); am_r = np.zeros(0)
     r_se = 0.0005 * SCL
     half = a.slab if a.slab > 0 else 1.5 * r_se
-    z_top = float((am_c[:, 2] + am_r).max()) + 0.01
+    z_top = (float((am_c[:, 2] + am_r).max()) if len(am_r) else float(se[:, 2].max())) + 0.01
     x0, x1, z0, z1 = SW[0], SW[1], FLOOR, z_top
 
     m = np.abs(se[:, 1] - a.y) < half
     slab = se[m]; sx, sz = slab[:, 0], slab[:, 2]
-    dg_slab = np.load(a.dg).astype(np.float64)[m] if a.dg else None
+    strain_npy = a.eps or a.dg                                  # TOTAL (vs seed) preferred over PLASTIC
+    dg_slab = np.load(strain_npy).astype(np.float64)[m] if strain_npy else None
     dg_vmax = 1.0
     if dg_slab is not None:
         pos = dg_slab[dg_slab > 0]

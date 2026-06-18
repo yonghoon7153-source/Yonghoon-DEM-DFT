@@ -282,6 +282,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
   /* controls panel — MPM payloads (/3d-mpm-data) get a minimal panel */
   const isMPM = (dataUrl || '').includes('3d-mpm-data');
   state.isMPM = isMPM;
+  state.isSeed = (dataUrl || '').includes('state=seed');   // 압축 전 (loose) view
   const ctrlDiv = buildControls(container, isMPM);
   state.infoEl = ctrlDiv._infoEl || document.getElementById('viewer-info');
 
@@ -902,6 +903,13 @@ function applyViewMode(state, mode) {
   if (state.meshes && state.meshes.MESH) {                 // restore SE mesh (se_strain mode hides it)
     const _mcb = document.querySelector('.viewer-controls input[data-layer="MESH"]');
     state.meshes.MESH.visible = _mcb ? _mcb.checked : true;
+  }
+  // analysis modes are POST-compaction results — in the "압축 전" (loose seed) view they
+  // don't exist yet, so show the loose SE + a note instead of the (compacted) field.
+  if (state.isSeed && (mode === 'coverage' || mode === 'coverage_patches' || mode === 'se_strain')) {
+    setLegend(state, '<i>이건 <b>압축 후</b> 결과예요 (변형·coverage는 압축의 결과). '
+      + '위 "MPM (압축 후)"에서 보세요 — 여기 "압축 전"은 loose seed라 아직 0이에요.</i>');
+    return;
   }
   /* Phase B — restore any per-instance scale modifications from se_diagnostics */
   if (state.seInstanceScaleModified) {
