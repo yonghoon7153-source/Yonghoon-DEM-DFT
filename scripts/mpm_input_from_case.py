@@ -116,12 +116,12 @@ python3 scripts/mpm3d_compaction.py \\
   --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
   --n-grid 384 --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
-  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-metrics mpm_metrics.json
+  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json
 
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
-  --n-vox 192 --tri-step 5 --target-porosity {tgt} --dg se_dump_dg.npy \\
+  --n-vox 192 --tri-step 5 --target-porosity {tgt} --eps se_dump_eps.npy \\
   --metrics-json mpm_metrics.json --case {case} --out mpm_payload.json
 
 echo "→ upload mpm_payload.json (and mpm_metrics.json) back to the case in the webapp"

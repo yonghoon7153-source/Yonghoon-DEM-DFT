@@ -43,6 +43,8 @@ def parse_args(argv):
     ap.add_argument('--save-se', default='', help='write final SE point positions (npy) for morphology')
     ap.add_argument('--save-dg', default='', help='write accumulated plastic strain Σdg per SE point '
                     '(npy, SAME order as --save-se) → colour the morphology slice by plastic strain')
+    ap.add_argument('--save-eps', default='', help='write accumulated TOTAL equivalent strain per SE point '
+                    '(vs the seed sphere, INCL elastic compression — shows the confined interior too; npy)')
     ap.add_argument('--save-metrics', default='',
                     help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
                          'grid/material params, stress) to a JSON — the structured source for the '
@@ -311,6 +313,7 @@ def main(argv):
     mu_p = ti.field(ti.f32, n); la_p = ti.field(ti.f32, n); yld_p = ti.field(ti.f32, n)
     pvol_p = ti.field(ti.f32, n)                                # per-point volume (= mass, ρ=1)
     dg_acc = ti.field(ti.f32, n)                                # accumulated plastic strain Σdg per point
+    eps_acc = ti.field(ti.f32, n)                               # accumulated TOTAL strain (vs seed, incl elastic) per point
     grid_v = ti.Vector.field(3, ti.f32, (n_grid,) * 3); grid_m = ti.field(ti.f32, (n_grid,) * 3)
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
@@ -374,6 +377,7 @@ def main(argv):
                 wt = w[a][0] * w[b][1] * w[c][2]; gv = grid_v[base + off]
                 nv += wt * gv; nc += 4 * inv_dx * wt * gv.outer_product(dpos)
             v[p] = nv; C[p] = nc; F[p] = (ti.Matrix.identity(ti.f32, 3) + dt * nc) @ F[p]
+            eps_acc[p] += (0.5 * (nc + nc.transpose())).norm() * dt   # total strain increment (vs seed, incl elastic)
             U, sig, V = ti.svd(F[p])
             e = ti.Vector([ti.log(ti.max(sig[0, 0], 1e-4)), ti.log(ti.max(sig[1, 1], 1e-4)),
                            ti.log(ti.max(sig[2, 2], 1e-4))])
@@ -524,6 +528,11 @@ def main(argv):
         np.save(args.save_dg, dgn)                          # accumulated plastic strain (same order)
         print(f"  saved plastic strain Σdg → {args.save_dg} ({n} pts, "
               f"mean {float(dgn.mean()):.3f} max {float(dgn.max()):.3f})")
+    if args.save_eps:
+        en = eps_acc.to_numpy()
+        np.save(args.save_eps, en)                          # accumulated TOTAL strain vs seed (same order)
+        print(f"  saved total strain (vs seed) → {args.save_eps} ({n} pts, "
+              f"mean {float(en.mean()):.3f} max {float(en.max()):.3f})")
 
 
 if __name__ == '__main__':

@@ -160,8 +160,9 @@ def main():
                          '(≈ DEM elastic ~0.13µm).  Also the per-AM-particle coverage band.')
     ap.add_argument('--cov-tabor-um', type=float, default=0.26,
                     help='Tabor plastic-spread band (µm) for the coverage curve (≈ DEM plastic ~0.26µm).')
-    ap.add_argument('--dg', default='', help='accumulated plastic strain npy (mpm3d --save-dg) → adds a '
-                    'subsampled SE strain point cloud to the payload for the viewer "SE Σdg" mode')
+    ap.add_argument('--dg', default='', help='accumulated PLASTIC strain npy (mpm3d --save-dg) → SE strain points')
+    ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
+                    'seed sphere (incl elastic compression of the confined interior); PREFERRED over --dg')
     ap.add_argument('--strain-pts', type=int, default=200000, help='max SE strain points carried in the payload')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
@@ -200,26 +201,28 @@ def main():
     # SE plastic-strain point cloud (subsampled) → the viewer's "SE Σdg" mode colours the
     # 3D SE by accumulated plastic strain (the field the 2D morphology shows, now in 3D).
     se_strain_points = []; strain_stats = {}
-    if a.dg:
-        dg = np.load(a.dg).astype(np.float64)
-        if len(dg) == len(se):
+    strain_npy = a.eps or a.dg                             # TOTAL (vs seed) preferred over PLASTIC
+    if strain_npy:
+        sv = np.load(strain_npy).astype(np.float64)
+        kind = 'total (vs seed)' if a.eps else 'plastic Σdg'
+        if len(sv) == len(se):
             N = min(a.strain_pts, len(se))
             idx = (np.random.default_rng(0).choice(len(se), N, replace=False)
                    if len(se) > N else np.arange(len(se)))
             Ps = se[idx]
             xyzdg = np.column_stack([((Ps[:, 0] - SW[0]) * UM).round(2),
                                      ((Ps[:, 1] - SW[0]) * UM).round(2),
-                                     ((Ps[:, 2] - FLOOR) * UM).round(2), dg[idx].round(4)])
+                                     ((Ps[:, 2] - FLOOR) * UM).round(2), sv[idx].round(4)])
             se_strain_points = xyzdg.tolist()
-            pos = dg[dg > 0]
-            strain_stats = {'dg_mean': round(float(dg.mean()), 4), 'dg_max': round(float(dg.max()), 3),
+            pos = sv[sv > 0]
+            strain_stats = {'dg_mean': round(float(sv.mean()), 4), 'dg_max': round(float(sv.max()), 3),
                             'dg_vmax98': round(float(np.percentile(pos, 98)), 4) if len(pos) else 0.0,
-                            'dg_nonzero_pct': round(100.0 * float((dg > 0).mean()), 1),
-                            'n_strain_pts': len(se_strain_points)}
-            print(f'  SE strain points: {len(se_strain_points):,}  (Σdg mean {strain_stats["dg_mean"]} '
+                            'dg_nonzero_pct': round(100.0 * float((sv > 0).mean()), 1),
+                            'n_strain_pts': len(se_strain_points), 'strain_kind': kind}
+            print(f'  SE strain points: {len(se_strain_points):,}  ({kind}: mean {strain_stats["dg_mean"]} '
                   f'max {strain_stats["dg_max"]} vmax98 {strain_stats["dg_vmax98"]})')
         else:
-            print(f'  ⚠ --dg length {len(dg)} != SE {len(se)} — skipping strain points')
+            print(f'  ⚠ strain npy length {len(sv)} != SE {len(se)} — skipping strain points')
 
     # seed (loose, pre-compaction) SE surface — the real DEM SE spheres on the same grid
     seed_tris = []

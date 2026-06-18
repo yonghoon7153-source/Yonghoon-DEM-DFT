@@ -134,7 +134,7 @@ function buildControls(container, isMPM) {
       <option value="default">Default (AM 종류)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
-      <option value="se_strain">SE 소성변형 (Σdg)</option>
+      <option value="se_strain">SE 변형 (vs seed)</option>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -1576,9 +1576,10 @@ function applyViewMode(state, mode) {
     state.strainPointGroup = new THREE.Points(g, new THREE.PointsMaterial({
       size: 0.4, vertexColors: true, sizeAttenuation: true }));
     if (state.scene) state.scene.add(state.strainPointGroup);
+    const kind = mm.strain_kind || 'Σdg';
     setLegend(state,
-      `<b>SE 소성변형 Σdg (3D)</b>
-       <div style="margin-top:4px">밝을수록 소성흐름 큼 (접촉·네킹부)</div>
+      `<b>SE 변형 (3D) — ${kind}</b>
+       <div style="margin-top:4px">밝을수록 변형 큼 (seed 구 대비). total = 탄성압축 포함(갇힌 안쪽도 보임)</div>
        <span style="color:#9ca3af;font-size:10px">vmax ${vmax} · mean ${mm.dg_mean ?? '–'} · `
        + `max ${mm.dg_max ?? '–'} · ${pts.length.toLocaleString()}점</span>`);
     return;
