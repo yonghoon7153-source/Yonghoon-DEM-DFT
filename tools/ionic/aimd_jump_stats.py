@@ -89,8 +89,12 @@ def main():
                     help="fs between saved frames (auto from aimd_results.json if omitted)")
     ap.add_argument("--lags_ps", type=float, nargs="+", default=[0.5, 2.0, 10.0])
     ap.add_argument("--jump_lag_ps", type=float, default=2.0)
-    ap.add_argument("--hop_persist", type=int, default=5,
-                    help="frames a cage change must persist to count as a real inter-cage hop")
+    ap.add_argument("--hop_smooth_ps", type=float, default=2.0,
+                    help="rolling-mode window (ps) that removes boundary-vibration flicker "
+                         "from the per-frame cage label before counting hops")
+    ap.add_argument("--hop_min_dist", type=float, default=2.5,
+                    help="min unwrapped displacement (A) across a cage transition to count it "
+                         "as a real inter-cage hop (excludes ~1 A rattle)")
     ap.add_argument("--rmax", type=float, default=8.0)
     ap.add_argument("--nbins", type=int, default=160)
     args = ap.parse_args()
@@ -145,30 +149,40 @@ def main():
     np.savetxt(out / f"{args.label}_vanhove.csv", np.c_[vh_cols].T,
                delimiter=",", header=",".join(vh_hdr), comments="")
 
-    # ---- cage-resolved hops (inter-cage) ----
-    cart = pos[:, :, :]                                     # wrapped (MIC each frame)
+    # ---- cage-resolved hops (inter-cage), flicker-robust ----
+    # naive "nearest-centre changed" counts boundary vibration as hops. Instead:
+    #   (1) smooth each Li's per-frame cage label by a rolling MODE (kills flicker)
+    #   (2) count transitions in the smoothed label ONLY if the Li's unwrapped
+    #       displacement across the transition window exceeds --hop_min_dist (a
+    #       real cage-to-cage move, not a ~1 A rattle).
+    cart = pos[:, :, :]
     assign = np.empty((T, len(Li)), int)
     for ti in range(T):
         assign[ti] = np.argmin(mic(cart[ti, Li], cart[ti, cen], cells[ti]), axis=1)
 
-    inter_hops, intra_changes = 0, 0
+    sw = max(3, int(round(args.hop_smooth_ps / dt_ps)))      # rolling-mode window
+    h = sw // 2
+
+    def rolling_mode(a):
+        o = np.empty(len(a), int)
+        for t in range(len(a)):
+            seg = a[max(0, t - h):min(len(a), t + h + 1)]
+            o[t] = np.bincount(seg).argmax()
+        return o
+
+    inter_hops, flick = 0, 0
     hop_dists = []
-    P_frames = args.hop_persist
     for k in range(len(Li)):
         a = assign[:, k]
-        ti = 1
-        while ti < T:
-            if a[ti] != a[ti - 1]:
-                new = a[ti]
-                if ti + P_frames <= T and np.all(a[ti:ti + P_frames] == new):
-                    inter_hops += 1
-                    # displacement over the transition (unwrapped, persist window)
-                    j = min(ti + P_frames - 1, T - 1)
-                    hop_dists.append(np.linalg.norm(Li_uw[j, k] - Li_uw[ti - 1, k]))
-                    ti = j + 1; continue
-                else:
-                    intra_changes += 1
-            ti += 1
+        flick += int((np.diff(a) != 0).sum())
+        sm = rolling_mode(a)
+        for ti in np.where(np.diff(sm) != 0)[0]:
+            lo, hi = max(0, ti - h), min(T - 1, ti + h)
+            d = np.linalg.norm(Li_uw[hi, k] - Li_uw[lo, k])
+            if d >= args.hop_min_dist:
+                inter_hops += 1
+                hop_dists.append(d)
+    intra_changes = flick
     total_ps = T * dt_ps
     rate = inter_hops / len(Li) / (total_ps / 1000.0)       # hops / Li / ns
     hop_dists = np.array(hop_dists)
