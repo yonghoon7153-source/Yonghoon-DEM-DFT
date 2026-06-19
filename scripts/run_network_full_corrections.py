@@ -50,6 +50,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import shutil
 import subprocess
 import sys
@@ -798,8 +799,20 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
     fm['validation_flags'] = _compute_validation_flags(
         fm, factors, sigma_ionic_e, sigma_e_e, sigma_th_e)
 
-    with open(fm_path, 'w') as f:
-        json.dump(fm, f, indent=2, default=str)
+    # atomic write: dump to a temp file in the SAME dir, then os.replace (atomic
+    # rename) → a kill mid-write can never leave a truncated/corrupt full_metrics.json
+    # (the original stays intact until the rename completes; on error the temp is removed).
+    fd, _tmp = tempfile.mkstemp(dir=str(fm_path.parent), prefix='.full_metrics.', suffix='.tmp')
+    try:
+        with os.fdopen(fd, 'w') as f:
+            json.dump(fm, f, indent=2, default=str)
+        os.replace(_tmp, fm_path)
+    except Exception:
+        try:
+            os.unlink(_tmp)
+        except OSError:
+            pass
+        raise
 
     msg = (f'σ_i: {(base_ionic or 0):.3f}→{(sigma_ionic_e or 0):.3f} '
            f'(P:{(base_ionic_p or 0):.3f}→{(sigma_ionic_e_p or 0):.3f}) '
