@@ -326,9 +326,15 @@ def main():
     with open(a.out, 'w') as fh:
         json.dump(payload, fh)
     import os
+    _mp = mpm_metrics                                      # report the AUTHORITATIVE table values (sim
+    #   porosity/thickness/SE-of-solid + point-based deformed coverage) — NOT the n_vox voxel-preview
+    #   (por/f_se/cov), which re-discretise the point cloud and so vary with --n-vox.
     print(f'saved {a.out}  ({os.path.getsize(a.out)/1e6:.1f} MB)  '
-          f'porosity {por:.1f}% · SE {f_se:.1f}% · thickness {thick:.1f}µm · '
-          f'coverage {cov["AM_P"]:.0f}/{cov["AM_S"]:.0f}% · {len(particles)} AM · {len(tris):,} SE tris')
+          f'porosity {_mp["porosity_mpm_pct"]:.1f}% · SE/solid {_mp["se_fraction_pct"]:.1f}% · '
+          f'thickness {_mp["thickness_mpm_um"]:.1f}µm · coverage AM_P Hertz/Tabor '
+          f'{_mp["coverage_AM_P_hertz_pct"]:.0f}/{_mp["coverage_AM_P_tabor_pct"]:.0f}% · '
+          f'{len(particles)} AM · {len(tris):,} SE tris (n_vox={a.n_vox})  '
+          f'[voxel-preview por/SE/cov {por:.0f}/{f_se:.0f}/{cov["AM_P"]:.0f}% vary with n_vox — not reported]')
 
 
 if __name__ == '__main__':
