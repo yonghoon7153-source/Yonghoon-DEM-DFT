@@ -199,8 +199,9 @@ def main():
         "inter_cage_hops": inter_hops,
         "inter_cage_hop_rate_per_Li_per_ns": round(rate, 4),
         "inter_cage_hop_dist_mean_A": round(float(hop_dists.mean()), 3) if len(hop_dists) else None,
-        "transient_cage_flickers": intra_changes,
-        "hop_persist_frames": P_frames,
+        "transient_cage_flickers": flick,
+        "hop_smooth_frames": sw,
+        "hop_min_dist_A": args.hop_min_dist,
         "files": [f"{args.label}_{s}.csv" for s in ("vanhove", "msd", "intercage_hopdist")],
     }
     (out / f"{args.label}_jumpstats.json").write_text(json.dumps(summary, indent=2))
