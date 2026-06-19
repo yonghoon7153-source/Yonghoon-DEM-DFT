@@ -1,0 +1,3 @@
+label,n_atoms,formula,n_PS4,free_anion_centers,centers_S,centers_Cl,cage_center_Cl_fraction,Li_in_S_cages,Li_in_Cl_cages,Li_frac_on_Cl_sites,occupied_cages,Li_per_occ_cage,intra_doublet_min_A,Li_NN_median_A,inter_window_min_A,inter_window_mean_A
+comp1,52,Li24P4S20Cl4,4,8,4,4,0.5,24,0,0.0,4,"[6, 6, 6, 6]",2.624,2.771,3.119,3.12
+modelc,62,Li27P5S22Cl8,5,10,2,8,0.8,12,15,0.556,8,"[6, 6, 4, 2, 2, 1, 3, 3]",2.726,3.133,2.86,3.544
