@@ -235,6 +235,30 @@
     </form>
     <span id="mpm-upload-status" style="color:#888; font-size:0.9em"></span>
   </div>
+  <!-- GPU 서버(V100) 실행 명령어 — ① zip 받은 뒤 복사해서 사용 -->
+  <style>
+    .cmd-block{position:relative;background:#0f172a;border:1px solid #334155;border-radius:8px;margin-top:8px}
+    .cmd-block pre{margin:0;padding:10px 52px 10px 12px;color:#cbd5e1;font-size:0.82em;white-space:pre-wrap;
+      word-break:break-all;font-family:ui-monospace,Menlo,Consolas,monospace}
+    .cmd-copy{position:absolute;top:6px;right:6px;background:#1e293b;color:#94a3b8;border:1px solid #334155;
+      border-radius:5px;cursor:pointer;font-size:0.8em;padding:2px 8px}
+    .cmd-copy:hover{color:#e2e8f0;background:#334155}
+  </style>
+  {% set zip = 'mpm_input_' ~ case.id ~ '.zip' %}
+  <details open style="margin-top:12px">
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(V100) 실행 명령어 — ① zip 받고 복사해서 사용</summary>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 1) WSL → V100 업로드
+scp "/mnt/c/Users/안용훈/Downloads/{{ zip }}" v100:'~/v100_stage/Yonghoon-DEM-DFT/'</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 2) V100에서 실행
+cd ~/v100_stage/Yonghoon-DEM-DFT
+git pull                                       # 최신 코드
+unzip -o {{ zip }}                             # 루트에 풀림
+bash run_mpm.sh</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 3) 결과 V100 → WSL 다운로드 (그다음 위 ③ 업로드)
+scp v100:'~/v100_stage/Yonghoon-DEM-DFT/mpm_payload.json' \
+    v100:'~/v100_stage/Yonghoon-DEM-DFT/mpm_metrics.json' \
+    /mnt/c/Users/안용훈/Downloads/</pre></div>
+  </details>
   <!-- MPM 결과 파라미터 — 업로드(또는 기존 결과)가 있으면 채워지고 보임 -->
   <style>
     .mpm-result-table{border-collapse:collapse;font-size:0.84em;width:100%}
@@ -359,6 +383,14 @@ function fillMpmTable(m) {
   box.style.display = 'block';
 }
 fillMpmTable(_INIT_MPM);
+
+// copy a GPU-server command block to the clipboard
+function copyCmd(btn) {
+  const pre = btn.parentElement.querySelector('pre');
+  navigator.clipboard.writeText(pre.textContent).then(() => {
+    const o = btn.textContent; btn.textContent = '복사됨'; setTimeout(() => { btn.textContent = o; }, 1200);
+  }).catch(() => { btn.textContent = '복사 실패'; });
+}
 
 async function uploadMpm(e) {
   e.preventDefault();
