@@ -468,6 +468,7 @@ def main(argv):
               f"target={target} GPa  readout={args.readout}  "
               f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
+    reach_cnt = 0; STOP_HOLD = 3            # loose→dense mix: need target SUSTAINED this many frames to stop
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
@@ -493,9 +494,17 @@ def main(argv):
                 descend = por > args.compact_to
                 if por < args.compact_to + 5.0:              # slow near the target → less overshoot
                     step = vmax * 0.25
+            elif args.am_scaffold:
+                descend = (p < target)                       # scaffold: instant stop at target (validated)
             else:
-                guard = (por > por0 - 5.0) and not args.am_scaffold
-                descend = (p < target) or guard
+                # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
+                # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
+                # at full vmax until the bed SUSTAINS ≥ target for STOP_HOLD frames (after por≤por0−5);
+                # if it never sustains, the continuum SE is over-flowing (no granular jam) and it
+                # descends to WALL_MIN — itself an informative result (porosity→~0 = over-compaction).
+                guard = (por > por0 - 5.0)
+                reach_cnt = reach_cnt + 1 if (p >= target and not guard) else 0
+                descend = reach_cnt < STOP_HOLD
             if descend:
                 wall_vel[None] = -step / (args.sub * dt)
                 wall_z[None] = max(WALL_MIN, wall_z[None] - step)
