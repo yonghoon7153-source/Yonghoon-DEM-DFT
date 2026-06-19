@@ -590,6 +590,7 @@ def main(argv):
             'porosity_at_target_pct': round(float(por_at_target), 3) if por_at_target >= 0 else None,
             'thickness_um': round(float((wall_z[None] - FLOOR) * um_box), 3) if um_box > 0 else None,
             'wall_z': round(float(wall_z[None]), 4),
+            'um_box_um': round(float(um_box), 4) if um_box > 0 else None,   # µm per box unit (payload scale)
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
             'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),

@@ -41,7 +41,7 @@ def seed_se_mask(se_csv, am_shape, h, am_mask):
     grid as the compacted voxelisation, minus AM cells → the loose pre-compaction SE
     (for the before/after view).  Mapping matches viz_mpm_continuum.voxelize exactly."""
     vc = _vc(); SW = vc.SW; FLOOR = vc.FLOOR
-    scl = (SW[1] - SW[0]) / 0.05
+    scl = vc.SCL                                            # case µm/box scale (overridden for thick-film)
     raw = np.loadtxt(se_csv, delimiter=',')
     c = np.column_stack([SW[0] + raw[:, 1] * scl, SW[0] + raw[:, 2] * scl, FLOOR + raw[:, 3] * scl])
     rr = raw[:, 4] * scl
@@ -168,6 +168,18 @@ def main():
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
+    sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
+    # thick-film / non-50µm-lateral: the viewer hardcodes a 50µm cube (vc.SCL / vc.UM_BOX).  Override
+    # with the case's REAL µm-per-box so AM (LIGGGHTS units → box) aligns with the SE point cloud
+    # (already box units) and the coverage distance bands are in true µm.  Prefer the sim's um_box_um;
+    # else derive it EXACTLY from thickness/(wall_z − FLOOR) (both in the metrics) for older payloads.
+    _umb = sim_m.get('um_box_um')
+    if not _umb:
+        _th, _wz = sim_m.get('thickness_um'), sim_m.get('wall_z')
+        if _th and _wz and (_wz - vc.FLOOR) > 1e-9:
+            _umb = _th / (_wz - vc.FLOOR)
+    if _umb:
+        vc.UM_BOX = float(_umb); vc.SCL = 1000.0 / float(_umb)
     UM = vc.UM_BOX; SW = vc.SW; FLOOR = vc.FLOOR
 
     if a.scaffold:
@@ -258,7 +270,7 @@ def main():
 
     # authoritative metrics: prefer the sim's --metrics-json (raw, computed at sim grid res),
     # then explicit overrides, then the (coarse-mesh-biased) recompute as a last resort.
-    sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
+    # (sim_m was already loaded above, where it set the µm/box scale for thick-film cases.)
 
     def pick(override, sim_key, computed):
         if override is not None:
