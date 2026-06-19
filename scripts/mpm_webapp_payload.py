@@ -161,6 +161,10 @@ def main():
                          '(≈ DEM elastic ~0.13µm).  Also the per-AM-particle coverage band.')
     ap.add_argument('--cov-tabor-um', type=float, default=0.26,
                     help='Tabor plastic-spread band (µm) for the coverage curve (≈ DEM plastic ~0.26µm).')
+    ap.add_argument('--cov-sub', type=int, default=30_000_000,
+                    help='SE points used in the coverage KD-tree (subsampled for speed).  Higher = denser '
+                         'point spacing → captures the tight contact bands on dense thick-film clouds (the '
+                         'old 2M under-counts coverage at >100M pts).  0 = use ALL points (most accurate).')
     ap.add_argument('--dg', default='', help='accumulated PLASTIC strain npy (mpm3d --save-dg) → SE strain points')
     ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
                     'seed sphere (incl elastic compression of the confined interior); PREFERRED over --dg')
@@ -256,7 +260,8 @@ def main():
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     # per-particle coverage (each AM's own SE coverage, from the DEFORMED SE points) →
     # the viewer can colour each AM sphere by its coverage (a per-particle heat map).
-    cov_bands, cov_per, cov_patches = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um])
+    cov_bands, cov_per, cov_patches = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um],
+                                                        sub=(a.cov_sub or len(se)))
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
