@@ -271,6 +271,16 @@ def main():
     # the viewer can colour each AM sphere by its coverage (a per-particle heat map).
     cov_bands, cov_per, cov_patches = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um],
                                                         sub=(a.cov_sub or len(se)))
+    # REPORTED coverage = geometric SE-SPHERE coverage (analytic spheres, gap-based): Hertz = contact
+    # (gap<=0 ≈ DEM elastic), Tabor = within 0.14µm (≈ DEM plastic-spread).  Resolution-INVARIANT (no
+    # point cloud / subsample / n_vox; stable to 0.1%p over n_samp 800..10000) and DEM-comparable —
+    # unlike the deformed point-cloud DISTANCE bands, which inflate with the dense volume cloud.
+    # deformed_coverage stays only for the viewer patches/heat-map (the "near-SE" spatial overlay).
+    geom = geometric_coverage(a.scaffold, a.se_dump, n_samp=2000) if (a.scaffold and a.se_dump) else None
+    def _covg(nm, which):                                  # geometric if available, else deformed band
+        if geom and geom.get(nm):
+            return geom[nm]['contact'] if which == 'h' else geom[nm]['tabor']
+        return cov_bands[nm][0] if which == 'h' else cov_bands[nm][1]
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
@@ -302,9 +312,10 @@ def main():
         # µm-distance coverage (deformed-points curve) — the value we REPORT in the case
         # table, not the density-bound voxel 'coverage_AM_*_mpm_pct'.  Hertz ≈ DEM elastic,
         # Tabor ≈ DEM plastic-spread → directly cross-comparable with the DEM Hertz/Tabor.
-        'coverage_AM_P_hertz_pct': cov_bands['AM_P'][0], 'coverage_AM_P_tabor_pct': cov_bands['AM_P'][1],
-        'coverage_AM_S_hertz_pct': cov_bands['AM_S'][0], 'coverage_AM_S_tabor_pct': cov_bands['AM_S'][1],
-        'cov_hertz_um': a.coverage_um, 'cov_tabor_um': a.cov_tabor_um,
+        'coverage_AM_P_hertz_pct': _covg('AM_P', 'h'), 'coverage_AM_P_tabor_pct': _covg('AM_P', 't'),
+        'coverage_AM_S_hertz_pct': _covg('AM_S', 'h'), 'coverage_AM_S_tabor_pct': _covg('AM_S', 't'),
+        'cov_hertz_um': 'contact', 'cov_tabor_um': 0.14,   # geometric bands (gap<=0 / 0.14µm)
+        'cov_method': 'geometric_se_sphere' if geom else 'deformed_points',
     }
     # coverage_AM_*_mpm_pct = the sim's RAW value (the MPM DIRECTLY measures the plastic SE-AM
     # contact from the deformed SE — no Tabor/B3 post-correction, which would re-impose the DEM's

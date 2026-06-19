@@ -377,9 +377,11 @@ function fillMpmTable(m) {
     if (h != null || tb != null) cell.textContent = `${f0(h)} / ${f0(tb)} %`;
     else if (vox != null) cell.textContent = `${(+vox).toFixed(1)} % (voxel)`;
   });
-  if (m.cov_hertz_um != null && m.cov_tabor_um != null)
+  if (m.cov_hertz_um != null && m.cov_tabor_um != null) {
+    const hb = (m.cov_hertz_um === 'contact') ? '접촉(gap≤0)' : `Hertz ${m.cov_hertz_um}µm`;
     box.querySelectorAll('.cov-band-note').forEach(e =>
-      e.textContent = `Hertz ${m.cov_hertz_um} / Tabor ${m.cov_tabor_um} µm`);
+      e.textContent = `${hb} / Tabor ${m.cov_tabor_um}µm`);
+  }
   box.style.display = 'block';
 }
 fillMpmTable(_INIT_MPM);
