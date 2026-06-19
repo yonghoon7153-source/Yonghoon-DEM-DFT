@@ -79,7 +79,16 @@ def deformed_coverage(se_pts, t, c, r, bands_um, n_samp=400, sub=2_000_000, seed
     rng = np.random.default_rng(seed)
     pts = se_pts if len(se_pts) <= sub else se_pts[rng.choice(len(se_pts), sub, replace=False)]
     tree = cKDTree(pts)
-    bands = [b / UM for b in bands_um]                      # µm → box units
+    # SUBSAMPLE-INVARIANT coverage.  Each SE point represents a sub-volume of radius ~r_pt, so the SE
+    # SURFACE reaches r_pt beyond a point CENTRE.  "AM surface within `band` of the SE surface" ⟺
+    # nearest SE point centre within (band + r_pt).  As the cloud sparsens r_pt grows AND the
+    # nearest-point distance grows by the same r_pt → the two cancel, so the coverage is the SAME at
+    # 2M / 30M / all points (the value no longer depends on --cov-sub).  r_pt = ½ the median
+    # nearest-neighbour spacing of the points actually used.
+    _smp = pts[rng.choice(len(pts), min(4000, len(pts)), replace=False)]
+    _dnn, _ = tree.query(_smp, k=2)                         # k=2: self (0) + nearest neighbour
+    r_pt = 0.5 * float(np.median(_dnn[:, 1]))               # effective SE-point radius (box units)
+    bands = [b / UM + r_pt for b in bands_um]               # µm→box + SE-point radius (surface, not centre)
     bh, bt = bands[0], bands[-1]                            # Hertz, Tabor (box units)
     k = np.arange(n_samp); phi = np.pi * (3 - np.sqrt(5)); z = 1 - 2 * (k + 0.5) / n_samp
     rr = np.sqrt(1 - z * z); U = np.column_stack([rr * np.cos(phi * k), rr * np.sin(phi * k), z])
@@ -161,10 +170,10 @@ def main():
                          '(≈ DEM elastic ~0.13µm).  Also the per-AM-particle coverage band.')
     ap.add_argument('--cov-tabor-um', type=float, default=0.26,
                     help='Tabor plastic-spread band (µm) for the coverage curve (≈ DEM plastic ~0.26µm).')
-    ap.add_argument('--cov-sub', type=int, default=30_000_000,
-                    help='SE points used in the coverage KD-tree (subsampled for speed).  Higher = denser '
-                         'point spacing → captures the tight contact bands on dense thick-film clouds (the '
-                         'old 2M under-counts coverage at >100M pts).  0 = use ALL points (most accurate).')
+    ap.add_argument('--cov-sub', type=int, default=12_000_000,
+                    help='SE points in the coverage KD-tree.  This is now a SPEED knob only — the r_pt '
+                         'surface correction makes the coverage VALUE subsample-invariant (same at 2M / '
+                         '12M / all).  Higher = a touch more stable r_pt estimate; 0 = use all points.')
     ap.add_argument('--dg', default='', help='accumulated PLASTIC strain npy (mpm3d --save-dg) → SE strain points')
     ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
                     'seed sphere (incl elastic compression of the confined interior); PREFERRED over --dg')
