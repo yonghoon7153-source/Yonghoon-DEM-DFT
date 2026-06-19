@@ -366,22 +366,24 @@ function fillMpmTable(m) {
     const k = el.dataset.mk;
     if (k in m) el.textContent = fmt(m[k], el.dataset.fmt || 'raw');
   });
-  // coverage: prefer the µm distance-curve (Hertz/Tabor, deformed-points = the value we
-  // trust) over the density-bound voxel measure; fall back to voxel (labelled) for old payloads.
+  // coverage: PLASTIC (deformed SE, all points = MPM result) with the RIGID geometric-sphere
+  // reference in parentheses; the gap between them is the plastic conforming the MPM adds.
   ['AM_P', 'AM_S'].forEach(s => {
     const cell = box.querySelector(`[data-cov="${s}"]`);
     if (!cell) return;
     const h = m['coverage_' + s + '_hertz_pct'], tb = m['coverage_' + s + '_tabor_pct'];
+    const rh = m['coverage_' + s + '_rigid_hertz_pct'], rt = m['coverage_' + s + '_rigid_tabor_pct'];
     const vox = m['coverage_' + s + '_mpm_pct'];
     const f0 = v => (v == null ? '–' : (+v).toFixed(0));
-    if (h != null || tb != null) cell.textContent = `${f0(h)} / ${f0(tb)} %`;
-    else if (vox != null) cell.textContent = `${(+vox).toFixed(1)} % (voxel)`;
+    if (h != null || tb != null) {
+      let txt = `${f0(h)} / ${f0(tb)} %`;
+      if (rh != null) txt += `  (강체 ${f0(rh)}/${f0(rt)})`;
+      cell.textContent = txt;
+    } else if (vox != null) cell.textContent = `${(+vox).toFixed(1)} % (voxel)`;
   });
-  if (m.cov_hertz_um != null && m.cov_tabor_um != null) {
-    const hb = (m.cov_hertz_um === 'contact') ? '접촉(gap≤0)' : `Hertz ${m.cov_hertz_um}µm`;
+  if (m.cov_hertz_um != null && m.cov_tabor_um != null)
     box.querySelectorAll('.cov-band-note').forEach(e =>
-      e.textContent = `${hb} / Tabor ${m.cov_tabor_um}µm`);
-  }
+      e.textContent = `소성 vs 강체 · Hertz ${m.cov_hertz_um}/Tabor ${m.cov_tabor_um}µm`);
   box.style.display = 'block';
 }
 fillMpmTable(_INIT_MPM);

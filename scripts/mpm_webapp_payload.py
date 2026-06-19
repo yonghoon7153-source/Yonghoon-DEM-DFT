@@ -112,27 +112,29 @@ def deformed_coverage(se_pts, t, c, r, bands_um, n_samp=400, sub=2_000_000, seed
     return glob, per_particle, patches
 
 
-def geometric_coverage(am_csv, se_csv, n_samp=600):
-    """MPM/voxel-INDEPENDENT geometric SE coverage of AM (same definition as DEM
-    Hertz/Tabor): fraction of each AM surface within CONTACT (gap≤0 ≈ Hertz) and
-    within 0.14 µm (≈ Tabor plastic-spread) of an SE sphere.  Fixes the point-
-    adjacency under-count (the sim's 'SE point in the next cell' reads ~27 %)."""
+def geometric_coverage(am_csv, se_csv, n_samp=2000, bands_um=(0.13, 0.26)):
+    """RIGID-sphere SE coverage of AM — the resolution-INVARIANT reference (analytic spheres, no
+    point cloud / subsample / n_vox; stable to 0.1%p over n_samp 800..10000).  Fraction of each AM
+    surface within bands_um[0]/[1] (µm) of an SE SPHERE SURFACE (gap = d_centre − r_SE).  Compare to
+    the DEFORMED-SE coverage (deformed_coverage at all points) at the SAME bands → the difference is
+    the plastic conforming the MPM adds over rigid spheres."""
     from scipy.spatial import cKDTree
     am = np.loadtxt(am_csv, delimiter=','); se = np.loadtxt(se_csv, delimiter=',')
     tree = cKDTree(se[:, 1:4]); r_se = float(se[0, 4])
+    b0, b1 = bands_um[0] / 1000.0, bands_um[1] / 1000.0     # µm → LIGGGHTS units (1 u = 1000 µm)
     k = np.arange(n_samp); phi = np.pi * (3 - np.sqrt(5)); z = 1 - 2 * (k + 0.5) / n_samp
     rr = np.sqrt(1 - z * z); U = np.column_stack([rr * np.cos(phi * k), rr * np.sin(phi * k), z])
-    tabor = 0.00014                                        # 0.14 µm in LIGGGHTS units
     out = {}
     for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
         m = am[:, 0].astype(int) == ty
         C = am[m, 1:4]; R = am[m, 4]
-        ct = tb = 0.0
+        if not len(C):
+            out[nm] = None; continue
+        h = t = 0.0
         for i in range(len(C)):
             d, _ = tree.query(C[i] + R[i] * U); gap = d - r_se
-            ct += float((gap < 0).mean()); tb += float((gap < tabor).mean())
-        out[nm] = {'contact': round(100 * ct / max(len(C), 1), 1),
-                   'tabor': round(100 * tb / max(len(C), 1), 1)}
+            h += float((gap < b0).mean()); t += float((gap < b1).mean())
+        out[nm] = {'hertz': round(100 * h / len(C), 1), 'tabor': round(100 * t / len(C), 1)}
     return out
 
 
@@ -170,10 +172,11 @@ def main():
                          '(≈ DEM elastic ~0.13µm).  Also the per-AM-particle coverage band.')
     ap.add_argument('--cov-tabor-um', type=float, default=0.26,
                     help='Tabor plastic-spread band (µm) for the coverage curve (≈ DEM plastic ~0.26µm).')
-    ap.add_argument('--cov-sub', type=int, default=12_000_000,
-                    help='SE points in the coverage KD-tree.  This is now a SPEED knob only — the r_pt '
-                         'surface correction makes the coverage VALUE subsample-invariant (same at 2M / '
-                         '12M / all).  Higher = a touch more stable r_pt estimate; 0 = use all points.')
+    ap.add_argument('--cov-sub', type=int, default=0,
+                    help='SE points in the PLASTIC (deformed) coverage KD-tree.  0 = ALL points (default) '
+                         '= the CONVERGED value (subsample is the only knob that moves it: 6→45→70 as the '
+                         'dense thick-film surface is under/fully-resolved).  Set e.g. 12000000 for a quick '
+                         'preview.  The RIGID geometric reference is analytic and always exact.')
     ap.add_argument('--dg', default='', help='accumulated PLASTIC strain npy (mpm3d --save-dg) → SE strain points')
     ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
                     'seed sphere (incl elastic compression of the confined interior); PREFERRED over --dg')
@@ -269,18 +272,19 @@ def main():
     # AM particles (spheres) in µm, origin at bed corner — same schema as DEM viewer
     # per-particle coverage (each AM's own SE coverage, from the DEFORMED SE points) →
     # the viewer can colour each AM sphere by its coverage (a per-particle heat map).
+    # PLASTIC coverage = the DEFORMED SE (the MPM result, SE conformed to the AM), measured at ALL
+    # points (--cov-sub 0) so it's CONVERGED — the subsample was the only knob that moved it (6→45→70).
+    # RIGID coverage = geometric SE SPHERES at the SAME bands (analytic, resolution-invariant reference).
+    # Reporting BOTH makes the MPM's contribution explicit: plastic − rigid = the conforming the soft SE
+    # adds over rigid spheres (the rigid leaves interface gaps the plastic SE fills).
     cov_bands, cov_per, cov_patches = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um],
                                                         sub=(a.cov_sub or len(se)))
-    # REPORTED coverage = geometric SE-SPHERE coverage (analytic spheres, gap-based): Hertz = contact
-    # (gap<=0 ≈ DEM elastic), Tabor = within 0.14µm (≈ DEM plastic-spread).  Resolution-INVARIANT (no
-    # point cloud / subsample / n_vox; stable to 0.1%p over n_samp 800..10000) and DEM-comparable —
-    # unlike the deformed point-cloud DISTANCE bands, which inflate with the dense volume cloud.
-    # deformed_coverage stays only for the viewer patches/heat-map (the "near-SE" spatial overlay).
-    geom = geometric_coverage(a.scaffold, a.se_dump, n_samp=2000) if (a.scaffold and a.se_dump) else None
-    def _covg(nm, which):                                  # geometric if available, else deformed band
-        if geom and geom.get(nm):
-            return geom[nm]['contact'] if which == 'h' else geom[nm]['tabor']
-        return cov_bands[nm][0] if which == 'h' else cov_bands[nm][1]
+    geom_rigid = (geometric_coverage(a.scaffold, a.se_dump, bands_um=(a.coverage_um, a.cov_tabor_um))
+                  if (a.scaffold and a.se_dump) else None)
+    def _rigid(nm, which):                                 # geometric rigid-sphere reference (or None)
+        if geom_rigid and geom_rigid.get(nm):
+            return geom_rigid[nm]['hertz'] if which == 'h' else geom_rigid[nm]['tabor']
+        return None
     name = {1: 'AM_P', 2: 'AM_S'}
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
@@ -309,12 +313,13 @@ def main():
         'coverage_AM_S_mpm_pct': round(pick(a.cov_s, 'coverage_AM_S_pct', cov['AM_S']), 1),
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
-        # µm-distance coverage (deformed-points curve) — the value we REPORT in the case
-        # table, not the density-bound voxel 'coverage_AM_*_mpm_pct'.  Hertz ≈ DEM elastic,
-        # Tabor ≈ DEM plastic-spread → directly cross-comparable with the DEM Hertz/Tabor.
-        'coverage_AM_P_hertz_pct': _covg('AM_P', 'h'), 'coverage_AM_P_tabor_pct': _covg('AM_P', 't'),
-        'coverage_AM_S_hertz_pct': _covg('AM_S', 'h'), 'coverage_AM_S_tabor_pct': _covg('AM_S', 't'),
-        'cov_hertz_um': 'contact', 'cov_tabor_um': 0.14,   # geometric bands (gap<=0 / 0.14µm)
+        # coverage within Hertz/Tabor µm of the SE surface.  PLASTIC = deformed SE (MPM, all points);
+        # RIGID = geometric SE spheres (reference).  plastic − rigid = the MPM plastic conforming.
+        'coverage_AM_P_hertz_pct': cov_bands['AM_P'][0], 'coverage_AM_P_tabor_pct': cov_bands['AM_P'][1],
+        'coverage_AM_S_hertz_pct': cov_bands['AM_S'][0], 'coverage_AM_S_tabor_pct': cov_bands['AM_S'][1],
+        'coverage_AM_P_rigid_hertz_pct': _rigid('AM_P', 'h'), 'coverage_AM_P_rigid_tabor_pct': _rigid('AM_P', 't'),
+        'coverage_AM_S_rigid_hertz_pct': _rigid('AM_S', 'h'), 'coverage_AM_S_rigid_tabor_pct': _rigid('AM_S', 't'),
+        'cov_hertz_um': a.coverage_um, 'cov_tabor_um': a.cov_tabor_um,   # distance bands (0.13/0.26µm)
         'cov_method': 'geometric_se_sphere' if geom else 'deformed_points',
     }
     # coverage_AM_*_mpm_pct = the sim's RAW value (the MPM DIRECTLY measures the plastic SE-AM
@@ -351,15 +356,19 @@ def main():
     with open(a.out, 'w') as fh:
         json.dump(payload, fh)
     import os
-    _mp = mpm_metrics                                      # report the AUTHORITATIVE table values (sim
-    #   porosity/thickness/SE-of-solid + point-based deformed coverage) — NOT the n_vox voxel-preview
-    #   (por/f_se/cov), which re-discretise the point cloud and so vary with --n-vox.
+    _mp = mpm_metrics                                      # AUTHORITATIVE table values (sim porosity/
+    #   thickness/SE-of-solid + converged plastic coverage vs rigid reference) — NOT the n_vox
+    #   voxel-preview (por/f_se/cov), which re-discretise the point cloud and vary with --n-vox.
+    rh, rt = _mp.get('coverage_AM_P_rigid_hertz_pct'), _mp.get('coverage_AM_P_rigid_tabor_pct')
+    cov_str = f"AM_P plastic {_mp['coverage_AM_P_hertz_pct']:.0f}/{_mp['coverage_AM_P_tabor_pct']:.0f}%"
+    if rh is not None:
+        cov_str += (f" vs rigid {rh:.0f}/{rt:.0f}% (Δ +{_mp['coverage_AM_P_hertz_pct']-rh:.0f}/"
+                    f"+{_mp['coverage_AM_P_tabor_pct']-rt:.0f} = plastic conforming)")
     print(f'saved {a.out}  ({os.path.getsize(a.out)/1e6:.1f} MB)  '
           f'porosity {_mp["porosity_mpm_pct"]:.1f}% · SE/solid {_mp["se_fraction_pct"]:.1f}% · '
-          f'thickness {_mp["thickness_mpm_um"]:.1f}µm · coverage AM_P Hertz/Tabor '
-          f'{_mp["coverage_AM_P_hertz_pct"]:.0f}/{_mp["coverage_AM_P_tabor_pct"]:.0f}% · '
-          f'{len(particles)} AM · {len(tris):,} SE tris (n_vox={a.n_vox})  '
-          f'[voxel-preview por/SE/cov {por:.0f}/{f_se:.0f}/{cov["AM_P"]:.0f}% vary with n_vox — not reported]')
+          f'thickness {_mp["thickness_mpm_um"]:.1f}µm · coverage(@{a.coverage_um}/{a.cov_tabor_um}µm) {cov_str} · '
+          f'{len(particles)} AM · {len(tris):,} SE tris (n_vox={a.n_vox})'
+          f'  [voxel-preview por/SE/cov {por:.0f}/{f_se:.0f}/{cov["AM_P"]:.0f}% vary with n_vox — not reported]')
 
 
 if __name__ == '__main__':
