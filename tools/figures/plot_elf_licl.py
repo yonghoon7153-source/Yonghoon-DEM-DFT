@@ -100,10 +100,15 @@ def main():
     d1, d2 = np.linalg.norm(l1 - p0), np.linalg.norm(l2 - p0)
     print(f"plane Cl=atom{iCl+1} ; Cl-Li1={d1:.2f} (atom{iL1+1}) Cl-Li2={d2:.2f} (atom{iL2+1}) Å")
 
-    # quantify: ELF at the Cl-Li bond midpoints (ionic -> low)
+    # quantify: ELF at the Cl-Li bond midpoints. NOTE for close-packed ionic
+    # contacts the midpoint sits INSIDE the Cl- closed-shell (so ELF is HIGH =
+    # Cl's own lone-pair density, NOT a shared bond). The ionic signature is the
+    # SPHERICAL Cl shell + absence of a bond attractor between Cl and Li (see the
+    # ELF line profile, plot_elf_profile.py), not a low midpoint value.
     for lbl, lp, dd in (("Li1", l1, d1), ("Li2", l2, d2)):
         mid = 0.5 * (p0 + lp)
-        print(f"  ELF(Cl-{lbl} midpoint) = {elf_at(mid):.3f}   (ionic if <~0.3)")
+        print(f"  ELF(Cl-{lbl} midpoint, d={dd:.2f} A) = {elf_at(mid):.3f}   "
+              f"(high = inside Cl- shell; ionic shown by spherical shell, not this value)")
 
     # in-plane orthonormal basis
     e1 = (l1 - p0); e1 /= np.linalg.norm(e1)
@@ -141,7 +146,8 @@ def main():
         ax.text(u + 0.18, v + 0.18, syms[k], fontsize=9, color="white", zorder=6,
                 bbox=dict(boxstyle="round,pad=0.12", fc="black", alpha=0.55, ec="none"))
     ax.set_xlabel("in-plane x (Å)"); ax.set_ylabel("in-plane y (Å)")
-    ax.set_title(f"ELF on Cl–Li plane (ionic: low ELF between ions) — {args.label}", fontsize=12)
+    ax.set_title(f"ELF Cl–Li plane — spherical Cl⁻ shell, no directional bond (ionic)\n{args.label}",
+                 fontsize=11.5)
     plt.tight_layout()
     plt.savefig(args.out, dpi=220, facecolor="white", bbox_inches="tight")
     print(f"-> {args.out}")

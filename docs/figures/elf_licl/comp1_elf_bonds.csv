@@ -1,0 +1,4 @@
+system,bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,ELF_central_min
+comp1,Cl-Li,24,2.607,0.851,0.031,0.343
+comp1,Li-S,72,2.461,0.933,0.012,0.591
+comp1,P-S,16,2.072,0.944,0.002,0.924
