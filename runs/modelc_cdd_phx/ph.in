@@ -1,0 +1,5 @@
+&inputph
+  prefix='modelc', outdir='./out',
+  epsil=.true., trans=.false., tr2_ph=1d-14, fildyn='modelc.dyn'
+/
+0.0 0.0 0.0

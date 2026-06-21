@@ -1,0 +1,2 @@
+&inputpp  prefix='modelc', outdir='./out', plot_num=0 /
+&plot iflag=3, output_format=6, fileout='modelc_rho_scf.cube' /
