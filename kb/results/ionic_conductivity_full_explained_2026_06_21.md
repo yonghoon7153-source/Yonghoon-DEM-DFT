@@ -40,12 +40,17 @@
 
 **핵심 차이**: Cl-rich 치환은 (1) 자유 S²⁻ 자리(4a/4d)를 **Cl로 치환**(anti-site, Cl 4→8) + (2) 전하보상으로 **Li 제거**(vacancy 0→3). 이 두 변화가 그대로 이중 메커니즘이 됨.
 
+**왜 anti-site가 가능한가 (구조적 전제)**: **S²⁻(1.84 Å)와 Cl⁻(1.81 Å)은 이온반지름이 거의 같음** → 두 음이온이 4a/4d 자리를 **서로 바꿔 앉을 수 있음**(anti-site 혼합). *크기가 비슷한 게 disorder의 전제 조건*이고, 이게 전체 이온전도 스토리의 출발점. (그래서 그림에서도 S(노랑)·Cl(녹색)을 **같은 크기 + 다른 색**으로 그림.)
+
 ---
 
 ## 2. 결과 — σ_Li ~4배 (AIMD-MLIP)
 
 **방법**: UMA-s-1p1 (task=omat) MLIP, Langevin NVT **600/800/1000 K**,
 MSD → D(Einstein) → Arrhenius(Ea) → Nernst–Einstein(σ).
+$$D=\frac{1}{6N_{\rm Li}}\frac{d}{dt}\Big\langle\textstyle\sum_i|\mathbf r_i(t)-\mathbf r_i(0)|^2\Big\rangle,\qquad
+D(T)=D_0\,e^{-E_a/k_BT},\qquad \sigma=\frac{n\,q^2}{k_BT}\,D$$
+(D = 각 T의 MSD 기울기 / Ea = ln D vs 1/T 기울기 / σ = Nernst–Einstein, n = Li 수밀도, q = e)
 
 | | Ea (eV) | D(600K) (cm²/s) | σ(300K) (mS/cm) |
 |---|---|---|---|
