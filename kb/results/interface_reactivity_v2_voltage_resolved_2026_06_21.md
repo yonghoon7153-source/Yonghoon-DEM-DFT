@@ -38,3 +38,18 @@ v2 evaluates the *charged-state* (operating-voltage) condition where degradation
   entry); consistent footing but doesn't capture modelc's metastability.
 - Cathodes are ideal MP phases; real NMC is a disordered solid solution.
 - Thermodynamic driving force only (no kinetic passivation / CEI).
+
+## CHARGED (delithiated) cathodes — confirms & strengthens (2026-06-21)
+Ran with delithiated cathodes (CoO2, Li0.5CoO2, NiO2, Li0.5-NMC811) at V=3.5–4.5
+(`interface_reactivity_charged.json`):
+- **Same trend, robust:** LPSCl MORE reactive than LPSCl1.6 at every charged cathode &
+  voltage; gap grows to **+0.29 eV/atom @4.5 V (CoO2)**.
+- **High-V cathode-independence:** at 4.3 & 4.5 V the LPSCl value is IDENTICAL across all
+  cathodes (−1.5438, −1.7153) = the reaction is the SE's own oxidation (cathode = O sink).
+- **CoO2@4.3 = LiCoO2(v2)@4.3 = −1.5438 exactly** → the grand-potential framework already
+  delithiates the cathode at high V, so lithiated and charged contacts converge there
+  (charged run mainly matters at intermediate V).
+→ Conclusion is robust across cathode chemistry AND lithiation state: **Cl-rich is
+thermodynamically LESS reactive at the cathode interface**; the experimental "Cl-rich worse"
+is kinetic/electronic, not thermodynamic. (Closes the interface-accuracy question.)
+Figure: `docs/figures/oxidation/interface_reactivity_charged.png`.
