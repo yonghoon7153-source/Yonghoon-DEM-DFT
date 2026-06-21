@@ -553,7 +553,36 @@ instead of uniform cell-fill → SE volume·distribution REAL → porosity·thic
   (fidelity, not fabrication).  `--target-coverage` binary-searches the interfacial SE film at
   FIXED SE total (volume fractions unchanged — coverage = where SE sits, not how much).
 
-Stage E webapp coverage (webapp results/<id>/ authoritative):
+### ★ MPM coverage PLASTIC vs RIGID — why the value is USABLE (2026-06-21) ★
+Closes the "값도 바뀌고" coverage saga.  Full record: docs/mpm_coverage_plastic_vs_rigid.md
++ docs/data/mpm_coverage_plastic_vs_rigid.csv.  Report TWO settings-independent measures at
+the SAME bands (Hertz 0.13 / Tabor 0.26 µm); their difference = the MPM's unique plastic
+conforming (a rigid-sphere DEM has zero of it):
+  • RIGID (geometric_coverage) = AM surface → SE SPHERE surface gap, ANALYTIC (no point
+    cloud / n_vox / subsample) → invariant by construction; stable 0.1 %p over n_samp 800–10000.
+  • PLASTIC (deformed_coverage, run at ALL SE points `--cov-sub 0`) = AM surface → nearest
+    DEFORMED SE material point.  All-points = NO subsample → fully determined by the SE cloud.
+    (r_pt = ½-median-NN band correction makes a SURFACE cloud subsample-invariant but only
+    APPROXIMATELY for the volume-filling MPM cloud → that's WHY production runs all-points.)
+  • ⚠ NEVER report the voxel-adjacency `coverage_AM_*_mpm_pct` (~26 %) — density/n_vox-bound,
+    does NOT converge; it is a preview artifact.  The cov_method field = plastic_deformed_vs_
+    rigid_geometric (was a stale `geom` NameError, fixed 2026-06-21 — payload crashed AFTER a
+    good compaction, no mpm_payload.json saved; one-line `geom`→`geom_rigid` fix).
+- MODEST plastic increment is CORRECT physics, not a defect: (1) near-contact bands → rigid
+  packing already wins most coverage, plastic only mops the margin (Tabor Δ < Hertz Δ as
+  expected); (2) σ_y=0.30 GPa = the 300 MPa press → SE on its yield point, moderate flow not
+  liquid smear; (3) AM-rich shields the SE AND its flow closes SE–SE bulk voids (porosity loose
+  24.4→15.9 %, −8.5 %p) not AM wrapping.  Plastic's DRAMATIC signatures are porosity void-fill
+  + morphology (SEM), NOT near-contact coverage.
+- input_S_1 (SE-rich) vs real_14 (AM-rich) PROVES load-shielding on the coverage axis:
+  S_1 plastic 70/91 vs rigid 60/87 (Δ +10/+4); real_14 AM_P plastic 51/73 vs rigid 46/70
+  (Δ +5/+3).  SE-rich covers MORE (even rigid) AND its plastic increment is 2× bigger — because
+  SE-rich SE is load-BEARING (full pressure → flows more) while AM-rich SE is load-SHIELDED by
+  the rigid AM skeleton.  predicted real_14 ~50/73 → measured 51/73 (hit).  MPM is NOT "failing
+  to represent coverage" — the plastic increment IS the MPM-only value, and it behaves correctly
+  across the SE-rich→AM-rich contrast.
+
+
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete
     (1mAh_8_AMS_S1/S2/S3/S5, 2mAh_real_6/11, 8mAh_real_6/12/13; the latter two
