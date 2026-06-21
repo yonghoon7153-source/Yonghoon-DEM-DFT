@@ -1562,13 +1562,16 @@ function applyViewMode(state, mode) {
      * strain point cloud (hot: bright = more plastic flow, at contacts / necks). */
     const mm = (state.data && state.data.mpm_metrics) || {};
     const pts = (state.data && state.data.se_strain_points) || [];
-    if (state.meshes.MESH) state.meshes.MESH.visible = false;   // strain replaces the SE surface
     if (!pts.length) {
+      // no strain field → DON'T blank the SE; keep the surface mesh visible (restored above by
+      // the cleanup) so the user still sees the SE, and explain how to get the strain colours.
       setLegend(state, state.isMPM
-        ? '<i>이 payload엔 SE strain이 없어요 — mpm3d --save-dg 로 돌리고 payload를 --dg 로 재생성하세요.</i>'
-        : '<i>No SE strain data in this payload.</i>');
+        ? '<i>이 payload엔 SE strain이 없어요 — SE 표면만 표시 중. 변형 색을 보려면 mpm3d를 '
+          + '<b>--save-eps</b>(또는 --save-dg)로 돌리고 payload를 <b>--eps</b>(--dg)로 재생성하세요.</i>'
+        : '<i>No SE strain data in this payload — showing SE surface only.</i>');
       return;
     }
+    if (state.meshes.MESH) state.meshes.MESH.visible = false;   // strain replaces the SE surface
     const vmax = (mm.dg_vmax98 && mm.dg_vmax98 > 0) ? mm.dg_vmax98 : 1.0;
     const g = new THREE.BufferGeometry();
     const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
