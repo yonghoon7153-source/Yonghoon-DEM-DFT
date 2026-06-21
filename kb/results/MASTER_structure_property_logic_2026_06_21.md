@@ -36,8 +36,12 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 - **CDD**: 재배치 ~5.8e(comp1)/6.84e(modelc), 둘 다 노랑(P–S 축적)/파랑(Li 결핍) **같은 패턴**.
 → **σ 변화는 공유성/전하 변화가 아니라 순수 구조(공공+무질서)** — 3개 독립 방법이 같은 대조 결론.
 
-### [D] 기계적 강성 +25% (vacancy paradox 해결)
-- **relaxed-ion E_VRH**: comp1 **22.1** → modelc **27.7 GPa (+25%)**. C44(전단) 8.0→13.7로 급증, Zener A 1.14→1.44(비등방↑ = 무질서 지문).
+### [D] 기계적 강성 +25% (vacancy + anti-site disorder 공동, paradox 해결)
+- **relaxed-ion E_VRH**: comp1 **22.1** → modelc **27.7 GPa (+25%)**.
+- **두 구조효과가 공동으로 E를 올림** (σ와 동일한 뿌리):
+  - **anti-site disorder**: C44(전단) 8.0→**13.7** 급증 + Zener A 1.14→**1.44**(비등방↑). 전단·비등방은 *국소 방향성 결합*에 민감 → **disorder의 직접 지문** (vacancy만으론 cubic 대칭 이렇게 안 깨짐).
+  - **Li vacancy**: relaxed-ion lattice 기여 (Born screening 포함).
+  - (정량 분리는 ordered-vacancy vs disordered modelc의 E 비교로 가능 — Ea의 슬라이드7 disorder-control 실험의 기계 버전.)
 - clamped-ion은 52.3으로 둘 다 동일(2.3× 과대) = **paradox 인공물**. 이온 이완(Born screening) 허용해야 실험(~23)·문헌 DFT(SQS 22.1, ensm 27.8–29.9)와 일치.
 - EOS B0(26.2) ≈ relaxed B_VRH(25.5) → 교차검증 통과.
 → Cl-rich가 **더 단단함** (문헌 Kim 초음파는 두 조성 비슷하나, 단결정 DFT는 강화 예측).
