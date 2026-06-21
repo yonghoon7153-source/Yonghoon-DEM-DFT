@@ -320,7 +320,7 @@ def main():
         'coverage_AM_P_rigid_hertz_pct': _rigid('AM_P', 'h'), 'coverage_AM_P_rigid_tabor_pct': _rigid('AM_P', 't'),
         'coverage_AM_S_rigid_hertz_pct': _rigid('AM_S', 'h'), 'coverage_AM_S_rigid_tabor_pct': _rigid('AM_S', 't'),
         'cov_hertz_um': a.coverage_um, 'cov_tabor_um': a.cov_tabor_um,   # distance bands (0.13/0.26µm)
-        'cov_method': 'geometric_se_sphere' if geom else 'deformed_points',
+        'cov_method': 'plastic_deformed_vs_rigid_geometric' if geom_rigid else 'deformed_points',
     }
     # coverage_AM_*_mpm_pct = the sim's RAW value (the MPM DIRECTLY measures the plastic SE-AM
     # contact from the deformed SE — no Tabor/B3 post-correction, which would re-impose the DEM's
