@@ -10,9 +10,9 @@
 /
 ATOMIC_SPECIES
   Li     6.941  li_pbe_v1.4.uspp.F.UPF
-  P     30.974  P_pbe-n-rrkjus_psl_1_0_0.UPF
-  S      32.06  s_pbe_v1_4_uspp_F.UPF
-  Cl     35.45  cl_pbe_v1_4_uspp_F.UPF
+  P     30.974  P.pbe-n-rrkjus_psl.1.0.0.UPF
+  S      32.06  s_pbe_v1.4.uspp.F.UPF
+  Cl     35.45  cl_pbe_v1.4.uspp.F.UPF
 CELL_PARAMETERS angstrom
       7.007118000000     0.000000000000     0.000000000000
       3.503573682450     6.068318707243     0.000000000000
