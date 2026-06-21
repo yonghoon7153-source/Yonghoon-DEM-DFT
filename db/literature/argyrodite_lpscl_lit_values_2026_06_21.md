@@ -49,8 +49,12 @@
 |---|---|---|---|
 | Eg = 2.15–2.45 eV (PBE) | LPSCl | DFT-GGA/PBE | Stamminger *Chem.Mater.* 2019, 10.1021/acs.chemmater.9b02047 |
 | Eg = 3.11 eV (mBJ) / 3.30 (HSE06) | LPSCl | DFT hybrid | SSSci 2023 / Stamminger |
+| **Eg = 4.86 eV (GW) / ~4 eV (광학 UV-vis) / 2.24 (PBE 과소)** | LPSCl | GW + diffuse-reflectance | **Gorai/Canepa** *Chem.Mater.* 2021, 10.1021/acs.chemmater.1c02345 (★full-text 검증) |
 | VBM = S 3p, direct gap @Γ | LPSCl | pDOS/COHP | 다수, RSC Adv 2022 10.1039/d2ra05900b |
-| σ_electronic ≈ 10⁻⁹ S/cm | LPSCl | DC 분극 | "Devil in Defects" *Chem.Mater.* 2021 10.1021/acs.chemmater.1c02345 |
+| **σ_electronic = 5.1×10⁻⁹ – 5.2×10⁻⁸ S/cm** (n-type) | LPSCl | DC 분극(compiled) | **Gorai 2021** citing Zhou/Nazar *ACS EL* 2018 + Deiseroth 2011 (★검증) |
+| σ_electronic = 5.75×10⁻⁸ S/cm | LPSCl | DC 분극 1–2V | arXiv:2010.08805 (조성 caveat) |
+| σ_electronic ~10⁻⁶ (hexane/heptane), ~10⁻⁷ (xylene/toluene) | LPSCl wet-mill | DC 분극 | Lee *Front.Chem.* 2021, 10.3389/fchem.2021.778057 (정확값 미검증) |
+| **σ_electronic 미보고** | **Li5.4PS4.4Cl1.6** | — | (이온전도도만 보고 → novelty) |
 | ESW ~1.7–2.3 V (좁음) | LPSCl | DFT grand-potential | Zhu/He/Mo *ACS AMI* 2015; Richards/Ceder 2016 |
 | ε0/ε∞, n(0) ★검증필요 | LPSCl | DFT | RSC Adv 2022 10.1039/d2ra05900b |
 
@@ -60,18 +64,26 @@
 | **ν1 = 425 cm⁻¹** (PS4³⁻ 대칭신축, 시그니처) | LPSCl | Raman(실험) | 다수(Zeier/Wilkening) |
 | 199, 272 cm⁻¹ (ν2/ν4 굽힘) | LPSCl | Raman | 다수 |
 | 573, 600 cm⁻¹ (ν3 비대칭신축) | LPSCl | Raman | 다수 |
-| ordered 구조 imaginary/soft 포논(0K 동적 불안정) | LPSCl | DFT/DFPT | arXiv:2407.04126; PCCP 2022 |
-| **VDOS가 ω² Debye에서 크게 벗어남(액체형 crossover)** | LPSCl | 중성자+ML-MD | **Nat. Phys. 2025** "Liquid-like dynamics", 10.1038/s41567-024-02707-6 |
+| Raman ν1 halide 경향 425(Cl)/422(Br)/420(I) — 무거운 halide=soft | Li6PS5X | Raman | Kraft/Zeier *JACS* 2017, 10.1021/jacs.7b06327 |
+| Cl-rich PS4 밴드 196,262,**426**,576,601 (ν1 동일) | Li5.5PS4.5Cl1.5 | Raman | Wang *AESR* 2024, 10.1002/aesr.202200197 |
+| **0K imaginary Li 모드 → 300K 비조화로 안정화** | Li6PS5X | DFT 포논 | Park/Xie/Lawson *JAP* 2025, 138, 155101, 10.1063/5.0293851 |
+| VDOS: shoulder ~8 meV, peak ~15 meV, 밴드중심 ~32–33 meV; PS4 ~58 meV(14 THz) | LPSCl | 중성자+ML-MD | **Nat. Phys. 2025**, 10.1038/s41567-024-02707-6 |
+| VDOS ω²(Debye, <400K) → 저주파 linear(superionic, 액체형 crossover) | LPSCl | 중성자+ML-MD | Nat. Phys. 2025 (★MLIP 검증 benchmark) |
 
 → **Nat. Phys. 2025가 우리 MLIP-MD 진동/확산 검증의 최적 benchmark** (quasi-harmonic 붕괴 = 우리도 같은 이유로 AIMD-MLIP 씀).
 
 ## 6. 열역학
 | 값 | 조성 | 방법 | 출처 |
 |---|---|---|---|
-| **E_hull = 21 meV/atom (metastable)** | LPSCl | DFT 0K | Deng/Ong *Chem.Mater.* 2017, 10.1021/acs.chemmater.6b02648 |
-| 분해 → Li2S + Li3PS4 + LiCl | LPSCl | DFT | *JMCA* 2024, 10.1039/d4ta05159a |
+| **E_hull = 19 / 21 / 83 meV/atom** (functional·기준상 의존) | LPSCl | DFT 0K | Deng/Ong 2017 (21); arXiv:2412.02433 (19); arXiv:2502.09970 (83) |
+| 분해 → Li2S + Li3PS4 + LiCl (환원시 Li3P+Li2S+LiCl) | LPSCl | DFT | *JMCA* 2024, 10.1039/d4ta05159a |
 | cubic 안정 > ~613.9 K(계산) / 결정화 ~330°C(DSC) | LPSCl | DFT+Cp / 실험 | *JMCA* 2024 / 다수 |
-| Cp 최초 계산(기존 값 부재) | LPSCl | DFT-AIMD | *JMCA* 2024 |
+| Cp 최초 계산(기존 값 부재); Dulong-Petit ≈ **1.25 J/g·K** | LPSCl | DFT-AIMD / 실험 | *JMCA* 2024 / Böger 2024 |
+| **κ_lattice ≈ 0.66±0.06 W/m·K** (full-density RT, glass-like) | LPSCl | 실험(2채널) | **Böger/Zeier** *ACS AEM* 2024, 10.1021/acsaem.3c01977 (★full-text) |
+| κ ≈ **0.53±0.04 W/m·K** | Li5.5PS4.5Cl1.5 | 실험 | Böger 2024 |
+| κ ≈ 0.45–0.70 W/m·K (glass-like, κ≈κ_min) | LPSCl | 실험 | Cheng/Cahill *Small* 2021, 10.1002/smll.202101693 |
+| 0K imaginary Li 모드는 entropic(포논)으로 고온 안정화 | LPSCl | DFT QHA | *Chem.Mater.* 2023, arXiv:2307.00878 |
+| **runaway**: NMC811+LPSCl 150°C 폭발(Ar); LFP+LPSCl 350°C 무반응 | LPSCl | 실험 DSC | Kim *Chem.Mater.* 2022, 10.1021/acs.chemmater.2c02106 |
 
 ## 7. 이온전도 (LPSCl vs Cl-rich vs **우리 x=0.6**)
 | σ(RT) | 조성 | 제법 | 출처 |
