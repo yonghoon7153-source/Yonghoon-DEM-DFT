@@ -26,14 +26,15 @@ import matplotlib.colors as mcolors
 BLUE, RED, GREEN = "#1f77b4", "#d62728", "#2ca02c"
 
 # (x0, y0, x1, y1, color, dashed) in fractional panel coords (y up). EDIT ME.
-ARROWS_L = [                                   # comp1 (LPSCl)
-    (0.18, 0.55, 0.30, 0.63, BLUE, False),     # intra-cage (in a bright core)
-    (0.24, 0.40, 0.56, 0.40, RED, True),       # inter-cage gap, blocked
+# Tuned to the real c-axis projections of the AIMD Li-density cubes.
+ARROWS_L = [                                   # comp1 (LPSCl): bright core (0.19,0.47)
+    (0.15, 0.44, 0.22, 0.51, BLUE, False),     # intra-cage (inside the bright core)
+    (0.25, 0.47, 0.43, 0.48, RED, True),       # inter-cage -> dark gap (0.44,0.48): blocked
 ]
-ARROWS_R = [                                   # modelc (LPSCl1.6)
-    (0.18, 0.62, 0.30, 0.69, BLUE, False),     # intra-cage
-    (0.20, 0.45, 0.50, 0.50, GREEN, False),    # inter-cage bridge 1
-    (0.50, 0.50, 0.80, 0.56, GREEN, False),    # inter-cage bridge 2 (chain)
+ARROWS_R = [                                   # modelc (LPSCl1.6): bright corridor at left
+    (0.02, 0.60, 0.085, 0.70, BLUE, False),    # intra-cage (in the bright core)
+    (0.10, 0.62, 0.14, 0.40, GREEN, False),    # inter-cage corridor 1 (no dark wall)
+    (0.14, 0.40, 0.42, 0.24, GREEN, False),    # inter-cage corridor 2 (chain -> percolates)
 ]
 
 
