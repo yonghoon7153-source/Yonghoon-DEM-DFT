@@ -36,12 +36,12 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 - **CDD**: 재배치 ~5.8e(comp1)/6.84e(modelc), 둘 다 노랑(P–S 축적)/파랑(Li 결핍) **같은 패턴**.
 → **σ 변화는 공유성/전하 변화가 아니라 순수 구조(공공+무질서)** — 3개 독립 방법이 같은 대조 결론.
 
-### [D] 기계적 강성 +25% (vacancy + anti-site disorder 공동, paradox 해결)
-- **relaxed-ion E_VRH**: comp1 **22.1** → modelc **27.7 GPa (+25%)**.
-- **두 구조효과가 공동으로 E를 올림** (σ와 동일한 뿌리):
-  - **anti-site disorder**: C44(전단) 8.0→**13.7** 급증 + Zener A 1.14→**1.44**(비등방↑). 전단·비등방은 *국소 방향성 결합*에 민감 → **disorder의 직접 지문** (vacancy만으론 cubic 대칭 이렇게 안 깨짐).
-  - **Li vacancy**: relaxed-ion lattice 기여 (Born screening 포함).
-  - (정량 분리는 ordered-vacancy vs disordered modelc의 E 비교로 가능 — Ea의 슬라이드7 disorder-control 실험의 기계 버전.)
+### [D] 기계: B0↓(vacancy) vs E_VRH↑(disorder) — 두 모듈러스가 반대로 (paradox 해결)
+- **B0 (bulk, EOS)**: comp1 **26.2** → modelc **21.7 GPa (−17%)** ← **vacancy**: Li⁺ 빠지면 Coulomb 응집↓ → 부피압축이 쉬워짐(**bulk 연화**).
+- **E_VRH (Young, relaxed-ion)**: comp1 **22.1** → modelc **27.7 GPa (+25%)** ← **anti-site disorder**: C44(전단) 8.0→**13.7** + Zener A 1.14→**1.44** → G(전단)↑. E는 전단 지배라 **E↑**.
+- **★ divergence**: E = 9KG/(3K+G)에서 vacancy의 **K↓**를 disorder의 **G↑**가 이겨 net **E↑**. 즉 **vacancy = bulk 연화 / disorder = shear 강화**, 서로 반대 방향. (vacancy 단독은 오히려 E를 내리는 쪽.)
+- clamped-ion은 둘 다 52.3로 동일(2.3× 과대 = paradox 인공물) → **relaxed-ion이라야 이 divergence가 드러남**. EOS B0(26.2) ≈ relaxed B_VRH(25.5) 교차검증.
+- (정량 분리: ordered-vacancy vs disordered modelc의 C_ij 비교 = Ea 슬라이드7 disorder-control의 기계 버전.)
 - clamped-ion은 52.3으로 둘 다 동일(2.3× 과대) = **paradox 인공물**. 이온 이완(Born screening) 허용해야 실험(~23)·문헌 DFT(SQS 22.1, ensm 27.8–29.9)와 일치.
 - EOS B0(26.2) ≈ relaxed B_VRH(25.5) → 교차검증 통과.
 → Cl-rich가 **더 단단함** (문헌 Kim 초음파는 두 조성 비슷하나, 단결정 DFT는 강화 예측).
@@ -66,7 +66,9 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 | σ₃₀₀ (mS/cm) | ~3.4 | ~14 | **×4** | AIMD+NE |
 | 침투장벽 (eV) | 0.191 | 0.078 | ↓ | Li-density PMF |
 | 결합(ELF/Bader/CDD) | 이온 Li/공유 PS₄ | **동일** | — | 대조군 |
-| E_VRH relaxed (GPa) | 22.1 | 27.7 | **+25%** | 탄성 |
+| **B0 bulk (GPa)** | 26.2 | 21.7 | **−17%** | EOS (vacancy 연화) |
+| C44 shear (GPa) | 8.0 | 13.7 | +71% | disorder |
+| E_VRH relaxed (GPa) | 22.1 | 27.7 | **+25%** | 탄성 (disorder) |
 | 밴드갭 (eV) | 2.066 | 2.099 | ~동일 | eigenvalue |
 | VBM | S 3p | S 3p | 동일 | PDOS |
 | 산화 onset (V) | 2.14 | 2.14 | **동일** | grand-potential |
