@@ -46,7 +46,7 @@ def _mic(d, cell):
 
 
 def anion_sites(Z, R, cell):
-    """Fractional (a,b) of free S2- (S not bonded to any P, >2.6 A) and of Cl."""
+    """Fractional (a,b,c) of free S2- (S not bonded to any P, >2.6 A) and of Cl."""
     Ppos = R[Z == 15]
     inv = np.linalg.inv(cell)
     freeS = [i for i in np.where(Z == 16)[0]
@@ -95,10 +95,14 @@ def find_cores(P, thr, min_dist):
     return [(c[0] / na, c[1] / nb) for c in center_of_mass(P, lab, range(1, n + 1))]
 
 
-def panel(ax, spec, arrows, gamma, show_sites, all_intra, core_thr, core_dist):
+def panel(ax, spec, arrows, gamma, show_sites, all_intra, core_thr, core_dist,
+          crange=(0.0, 1.0)):
     cube, _, title = spec.partition(":"); title = title or cube
     rho, cell, Z, R = read_cube(cube)
-    P = rho.sum(axis=2)                                     # c-axis projection
+    nc = rho.shape[2]                                       # restrict c (avoid
+    c0, c1 = crange                                         # collapsing a tall
+    s0 = int(c0 * nc); s1 = nc if c1 >= 1.0 else int(c1 * nc)  # supercell)
+    P = rho[:, :, s0:s1].sum(axis=2)                        # c-axis projection
     P = P / P.max()
     im = ax.imshow(P.T, origin="lower", extent=[0, 1, 0, 1], aspect="equal",
                    cmap="inferno", norm=mcolors.PowerNorm(gamma, 0, 1))
@@ -106,6 +110,8 @@ def panel(ax, spec, arrows, gamma, show_sites, all_intra, core_thr, core_dist):
     ax.set_xticks([]); ax.set_yticks([])
     if show_sites and len(R):
         fS, cl = anion_sites(Z, R, cell)
+        fS = fS[(fS[:, 2] >= c0) & (fS[:, 2] < c1)] if len(fS) else fS
+        cl = cl[(cl[:, 2] >= c0) & (cl[:, 2] < c1)] if len(cl) else cl
         if len(fS):
             ax.scatter(fS[:, 0], fS[:, 1], s=120, c="#ff8c00",
                        edgecolors="white", linewidths=1.5, zorder=7,
@@ -139,13 +145,19 @@ def main():
                     help="core = local max above this fraction of peak")
     ap.add_argument("--core-dist", type=int, default=7,
                     help="min core separation (voxels)")
+    ap.add_argument("--crange-left", default="0,1",
+                    help='c-slab "min,max" for left panel (avoid supercell collapse)')
+    ap.add_argument("--crange-right", default="0,1",
+                    help='c-slab "min,max" for right panel')
     ap.add_argument("--out", default="intercage_clean.png")
     a = ap.parse_args()
+    crl = tuple(float(x) for x in a.crange_left.split(","))
+    crr = tuple(float(x) for x in a.crange_right.split(","))
     fig, axes = plt.subplots(1, 2, figsize=(13, 6.2))
-    for ax, spec, arrows in ((axes[0], a.left, ARROWS_L),
-                             (axes[1], a.right, ARROWS_R)):
+    for ax, spec, arrows, cr in ((axes[0], a.left, ARROWS_L, crl),
+                                 (axes[1], a.right, ARROWS_R, crr)):
         im = panel(ax, spec, [] if a.no_arrows else arrows, a.gamma, a.sites,
-                   a.all_intra, a.core_thr, a.core_dist)
+                   a.all_intra, a.core_thr, a.core_dist, cr)
         fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04,
                      label=f"Li density (norm, gamma={a.gamma})")
     fig.tight_layout(); fig.savefig(a.out, dpi=150)
