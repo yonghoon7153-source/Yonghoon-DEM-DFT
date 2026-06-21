@@ -5,6 +5,23 @@ QE(NC pseudo, ELF와 동일 ecut 80/320). comp1 예시 — modelc는 prefix/구�
 
 ---
 
+## ★ GPU 빌드(qe-7.4.1-gpu) 실행 — 환경 세팅 (kserver116-27, 검증됨 2026-06-21)
+
+시스템 mpirun(`/usr/bin/mpirun`)으로는 GPU 빌드가 안 뜸. NVHPC HPC-X MPI + 런타임을 써야 함.
+`runs/gpu_env.sh` 를 source (또는 아래 그대로):
+```bash
+conda deactivate                      # conda GNU libgomp 회피 (필수)
+NV=/data/apps/nvhpc/Linux_x86_64/24.11
+export OPAL_PREFIX=$NV/comm_libs/12.6/hpcx/hpcx-2.20/ompi
+export LD_LIBRARY_PATH=$NV/compilers/lib:$NV/cuda/lib64:$NV/math_libs/lib64:$OPAL_PREFIX/lib
+export OMP_NUM_THREADS=1
+G=/data/apps/qe-7.4.1-gpu/bin ; MPIRUN="$OPAL_PREFIX/bin/mpirun -np 1"
+$MPIRUN $G/pw.x -in scf.in > scf.out 2>&1      # GPU SCF (1 rank = 1 GPU)
+```
+겪은 버그 4개: (1) pseudo 점표기, (2) HPC-X mpirun 미스매치, (3) OPAL_PREFIX 미설정(help-file 못 찾음), (4) `libgomp: TODO`(NVHPC `compilers/lib`를 LD_LIBRARY_PATH 맨 앞에). ph.x가 GPU 빌드에 없으면 ph.x만 CPU(`/data/apps/qe-7.4.1-cpu/bin/ph.x`, 시스템 mpirun)로.
+
+---
+
 ## STEP 0. SCF (CDD·ph.x 공용) — 절연체 설정 필수
 `scf.in`:
 ```fortran
