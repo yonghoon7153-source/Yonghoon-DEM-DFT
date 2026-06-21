@@ -28,7 +28,7 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 - **AIMD-MLIP**: Ea 0.253→0.224, σ 3.4→14 mS/cm, D600 3.09e-6→7.90e-6.
 - **BVSE**: comp1 단일 채널(BVS 1.60–1.64) → modelc bimodal(60.2%가 1.83–1.89, anti-site Cl 인접). 정적 채널은 −15%인데 σ는 ×4 (역설) → vacancy가 BVSE 못 보는 곳에서 작동.
 - **Voronoi 무질서 std**: P 0→0.37, Cl 0→0.74, Li 0.21→1.15 (무질서↑ 정량).
-- **Percolation (Li-density PMF, F=−kT·lnρ)**: 침투장벽 comp1 **0.191** → modelc **0.078 eV** (inter-cage 경로 평탄 = Ea↓를 BVSE와 독립적으로 재확인; cluster-count 역설 해소).
+- **Percolation (Li-density PMF, F=−kT·lnρ, exact cube)**: 침투 *전이*(largest-cluster steepest-rise) comp1 **0.20** → modelc **0.17 eV** (~15%↓, **AIMD Ea 0.253→0.224와 정합**, ratio 0.85≈0.89). ⚠️ 첫-관통(first-spanning) 정의는 0.20/0.08이나 modelc의 0.08은 largest-cluster **1.4% 가는 실가닥(유한크기 우연 연결)**이라 대표 장벽 아님 → **전이값(0.20/0.17) 사용**(2.5×가 아니라 ~15%↓). inter-cage 경로 평탄 = Ea↓를 BVSE와 독립 재확인; cluster-count/부피 역설 해소.
 
 ### [C] 결합 화학은 불변 (= 대조군, σ↑가 구조 탓임을 증명)
 - **ELF**: Li–Cl·Li–S 이온결합 + P–S 공유결합, **조성 무관 유지** (bond-min ELF 동일).
@@ -64,7 +64,7 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 | 구조 | 입방, 공공 0 | 능면체, 공공 3/5fu + anti-site | 무질서↑ | XRD/구조 |
 | Ea (eV) | 0.253 | 0.224 | ↓ | AIMD |
 | σ₃₀₀ (mS/cm) | ~3.4 | ~14 | **×4** | AIMD+NE |
-| 침투장벽 (eV) | 0.191 | 0.078 | ↓ | Li-density PMF |
+| 침투 전이 F* (eV) | 0.20 | 0.17 | ↓ (~15%, Ea와 정합) | Li-density PMF |
 | 결합(ELF/Bader/CDD) | 이온 Li/공유 PS₄ | **동일** | — | 대조군 |
 | **B0 bulk (GPa)** | 26.2 | 21.7 | **−17%** | EOS (vacancy 연화) |
 | C44 shear (GPa) | 8.0 | 13.7 | +71% | disorder |

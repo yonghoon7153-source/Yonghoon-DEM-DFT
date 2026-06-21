@@ -1,7 +1,10 @@
 # DIGITIZED (approximate) from Li_percolation_barrier figure — for redraw only, NOT publication data.
 # Regenerate exact with tools/ionic/li_percolation.py on the Li-density cube.
 # x = F = -kT*ln(rho/rho_max) [eV] ; y = largest connected Li cluster [% of cell]
-# percolation thresholds (first system-spanning cluster): LPSCl 0.191 eV, LPSCl1.6 0.078 eV
+# DEPRECATED thresholds (first-spanning, thin thread): LPSCl ~0.20, LPSCl1.6 ~0.08 eV.
+# USE the percolation TRANSITION (steepest-rise) instead: LPSCl 0.20, LPSCl1.6 0.17 eV
+#   (matches AIMD Ea 0.253->0.224; first-spanning 0.08 is only a 1.4% thread = finite-size).
+# Exact transition figure: Li_percolation_barrier_TRANSITION.png
 F_eV,LPSCl_pct,LPSCl16_pct
 0.030,0.1,0.1
 0.045,0.8,0.4

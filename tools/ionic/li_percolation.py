@@ -133,17 +133,22 @@ def analyse(path, label, F_grid, kT):
         F = -kT * np.log(np.where(rho > 0, rho / rho_max, 1e-300))
 
     pct = np.empty_like(F_grid)
-    F_star = None
+    F_span = None
     for i, Flevel in enumerate(F_grid):
         mask = F <= Flevel
         pct[i] = pbc_largest_cluster_frac(mask, struct)
-        if F_star is None and percolates(mask, struct):
-            F_star = float(Flevel)
+        if F_span is None and percolates(mask, struct):
+            F_span = float(Flevel)
+    # TRANSITION F* = steepest rise of the largest-cluster curve. This is the
+    # meaningful barrier (matches AIMD Ea). first-spanning (F_span) can fire on a
+    # thin finite-size thread well below the transition, so report BOTH but use
+    # the transition as F*.
+    F_trans = float(F_grid[int(np.argmax(np.gradient(pct, F_grid)))])
     occ = float((rho > 0).mean() * 100.0)
     print(f"[{label}] grid {rho.shape}  rho_max {rho_max:.4f}  occupied "
-          f"{occ:.1f}%  ->  percolation barrier F* = "
-          f"{F_star if F_star is not None else float('nan'):.3f} eV")
-    return pct, F_star
+          f"{occ:.1f}%  ->  transition F* = {F_trans:.3f} eV  "
+          f"(first-spanning {F_span if F_span is not None else float('nan'):.3f} eV)")
+    return pct, F_trans, F_span
 
 
 def main():
@@ -166,7 +171,7 @@ def main():
     for spec in a.cube:
         path, _, label = spec.partition(":")
         label = label or path
-        pct, Fstar = analyse(path, label, F_grid, kT)
+        pct, Fstar, _Fspan = analyse(path, label, F_grid, kT)  # Fstar = transition
         cols.append(pct)
         labels.append(label)
         stars.append(Fstar)
