@@ -8167,4 +8167,7 @@ def predictor_export():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    # debug OFF by default — host=0.0.0.0 exposes the app, and Flask's debug=True enables the
+    # Werkzeug debugger (remote code execution on a public IP).  Opt in locally with FLASK_DEBUG=1.
+    debug = os.environ.get('FLASK_DEBUG', '').lower() in ('1', 'true', 'yes', 'on')
+    app.run(debug=debug, host='0.0.0.0', port=port)
