@@ -31,11 +31,29 @@ ARROWS_L = [                                   # comp1 (LPSCl): bright core (0.1
     (0.15, 0.44, 0.22, 0.51, BLUE, False),     # intra-cage (inside the bright core)
     (0.25, 0.47, 0.43, 0.48, RED, True),       # inter-cage -> dark gap (0.44,0.48): blocked
 ]
-ARROWS_R = [                                   # modelc (LPSCl1.6): bright corridor at left
+ARROWS_R = [                                   # modelc (LPSCl1.6): percolates via OPEN Cl gateway
     (0.02, 0.60, 0.085, 0.70, BLUE, False),    # intra-cage (in the bright core)
-    (0.10, 0.62, 0.14, 0.40, GREEN, False),    # inter-cage corridor 1 (no dark wall)
-    (0.14, 0.40, 0.42, 0.24, GREEN, False),    # inter-cage corridor 2 (chain -> percolates)
+    (0.08, 0.55, 0.05, 0.16, GREEN, False),    # -> through the BRIGHT Cl gateway (Li dens ~0.75)
+    (0.05, 0.16, 0.40, 0.12, GREEN, False),    # across bright bottom (chain -> percolates)
 ]
+
+
+BOHR = 1.8897259886
+
+
+def _mic(d, cell):
+    f = d @ np.linalg.inv(cell); f -= np.round(f); return f @ cell
+
+
+def anion_sites(Z, R, cell):
+    """Fractional (a,b) of free S2- (S not bonded to any P, >2.6 A) and of Cl."""
+    Ppos = R[Z == 15]
+    inv = np.linalg.inv(cell)
+    freeS = [i for i in np.where(Z == 16)[0]
+             if min(np.linalg.norm(_mic(R[i] - p, cell)) for p in Ppos) / BOHR > 2.6]
+    fS = (R[freeS] @ inv) % 1.0 if freeS else np.empty((0, 3))
+    cl = (R[Z == 17] @ inv) % 1.0 if (Z == 17).any() else np.empty((0, 3))
+    return fS, cl
 
 
 def read_cube(path):
@@ -77,7 +95,7 @@ def find_cores(P, thr, min_dist):
     return [(c[0] / na, c[1] / nb) for c in center_of_mass(P, lab, range(1, n + 1))]
 
 
-def panel(ax, spec, arrows, gamma, show_cl, all_intra, core_thr, core_dist):
+def panel(ax, spec, arrows, gamma, show_sites, all_intra, core_thr, core_dist):
     cube, _, title = spec.partition(":"); title = title or cube
     rho, cell, Z, R = read_cube(cube)
     P = rho.sum(axis=2)                                     # c-axis projection
@@ -86,14 +104,17 @@ def panel(ax, spec, arrows, gamma, show_cl, all_intra, core_thr, core_dist):
                    cmap="inferno", norm=mcolors.PowerNorm(gamma, 0, 1))
     ax.set_title(title, fontsize=14)
     ax.set_xticks([]); ax.set_yticks([])
-    if show_cl and len(R):
-        frac = (R @ np.linalg.inv(cell)) % 1.0
-        cl = Z == 17
-        if cl.any():
-            ax.scatter(frac[cl, 0], frac[cl, 1], s=90, c=GREEN,
-                       edgecolors="white", linewidths=1.5, zorder=6,
-                       label="Cl (inter-cage)")
-            ax.legend(loc="upper left", fontsize=9, framealpha=0.85)
+    if show_sites and len(R):
+        fS, cl = anion_sites(Z, R, cell)
+        if len(fS):
+            ax.scatter(fS[:, 0], fS[:, 1], s=120, c="#ff8c00",
+                       edgecolors="white", linewidths=1.5, zorder=7,
+                       label="free S$^{2-}$ (cage centre)")
+        if len(cl):
+            ax.scatter(cl[:, 0], cl[:, 1], s=120, c=GREEN, marker="s",
+                       edgecolors="white", linewidths=1.5, zorder=7,
+                       label="Cl (inter-cage gateway)")
+        ax.legend(loc="upper left", fontsize=8.5, framealpha=0.9)
     if all_intra:                  # one short blue intra-cage arrow per cage core
         for (x, y) in find_cores(P, core_thr, core_dist):
             draw_arrow(ax, x - 0.022, y - 0.028, x + 0.022, y + 0.028,
@@ -109,7 +130,8 @@ def main():
     ap.add_argument("--left", required=True, help='cube:title')
     ap.add_argument("--right", required=True, help='cube:title')
     ap.add_argument("--gamma", type=float, default=0.45)
-    ap.add_argument("--cl", action="store_true", help="show correct Cl dots")
+    ap.add_argument("--sites", action="store_true",
+                    help="show free S2- (orange) and Cl (green) from the cube")
     ap.add_argument("--no-arrows", action="store_true")
     ap.add_argument("--all-intra", action="store_true",
                     help="blue intra-cage arrow at EVERY cage core")
@@ -122,7 +144,7 @@ def main():
     fig, axes = plt.subplots(1, 2, figsize=(13, 6.2))
     for ax, spec, arrows in ((axes[0], a.left, ARROWS_L),
                              (axes[1], a.right, ARROWS_R)):
-        im = panel(ax, spec, [] if a.no_arrows else arrows, a.gamma, a.cl,
+        im = panel(ax, spec, [] if a.no_arrows else arrows, a.gamma, a.sites,
                    a.all_intra, a.core_thr, a.core_dist)
         fig.colorbar(im, ax=ax, fraction=0.046, pad=0.04,
                      label=f"Li density (norm, gamma={a.gamma})")
