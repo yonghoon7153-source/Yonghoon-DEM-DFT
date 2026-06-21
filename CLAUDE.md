@@ -575,10 +575,13 @@ conforming (a rigid-sphere DEM has zero of it):
   24.4→15.9 %, −8.5 %p) not AM wrapping.  Plastic's DRAMATIC signatures are porosity void-fill
   + morphology (SEM), NOT near-contact coverage.
 - input_S_1 (SE-rich) vs real_14 (AM-rich) PROVES load-shielding on the coverage axis:
-  S_1 plastic 70/91 vs rigid 60/87 (Δ +10/+4); real_14 AM_P plastic 51/73 vs rigid 46/70
-  (Δ +5/+3).  SE-rich covers MORE (even rigid) AND its plastic increment is 2× bigger — because
-  SE-rich SE is load-BEARING (full pressure → flows more) while AM-rich SE is load-SHIELDED by
-  the rigid AM skeleton.  predicted real_14 ~50/73 → measured 51/73 (hit).  MPM is NOT "failing
+  S_1 plastic 70/91 vs rigid 60/87 (Δ +10/+4); real_14 AM_P plastic 52/74 vs rigid 46/70
+  (Δ +6/+3, PERIODIC RVE — porosity held 15.93→15.91 %, AM_P plastic 51/73→52/74; rigid
+  unchanged = same scaffold geometry).  SE-rich covers MORE (even rigid) AND its plastic
+  increment is 2× bigger — because SE-rich SE is load-BEARING (full pressure → flows more)
+  while AM-rich SE is load-SHIELDED by the rigid AM skeleton.  predicted real_14 ~50/73 →
+  measured 52/74 (hit).  (input_S_1 is pre-periodic walls-RVE; periodic bump ~+1–3 %p does
+  not change the SE-rich>AM-rich direction.)  MPM is NOT "failing
   to represent coverage" — the plastic increment IS the MPM-only value, and it behaves correctly
   across the SE-rich→AM-rich contrast.
 

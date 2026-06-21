@@ -83,30 +83,34 @@ boundary-flattening shape change).  Coverage is simply not where plasticity domi
 
 | | **input_S_1** (SE-rich) | **real_14** (AM-rich) |
 |---|---|---|
-| porosity (MPM / DEM) | 20.17 % / 19.7 % | 15.93 % / 15.6 % |
-| thickness (MPM / DEM) | — | 29.9 / 30.28 µm |
-| SE / solid | — | 25.9 % (DEM ~27) |
-| **coverage PLASTIC** (0.13/0.26 µm) | **70 / 91 %** | **51 / 73 %** (AM_P) |
+| porosity (MPM / DEM) | 20.17 % / 19.7 % | 15.91 % / 15.64 % |
+| thickness (MPM / DEM) | — | 29.95 / 30.28 µm |
+| SE / solid | — | 25.8 % (DEM ~27) |
+| **coverage PLASTIC** (0.13/0.26 µm) | **70 / 91 %** | **52 / 74 %** (AM_P) |
 | **coverage RIGID** (0.13/0.26 µm) | **60 / 87 %** | **46 / 70 %** (AM_P) |
-| **plastic conforming Δ** (Hertz) | **+10 %p** | **+5 %p** |
+| **plastic conforming Δ** (Hertz) | **+10 %p** | **+6 %p** |
 | σ_ionic | 0.48 (excellent) | 0.063 |
 | σ_e / AM percolation | 0 / 0 % (electronically dead) | 14.25 / 87 % |
 
-(S_1's reported coverage vs real_14's AM_P; each case's payload also carries the AM_S
-breakdown — small AM_S, being more numerous, typically reads a few %p lower than AM_P.
-The comparison direction below is robust to AM-subtype because it is driven by SE
+(real_14 is the **periodic** RVE production run — x,y periodic = the DEM `boundary p p f`,
+so boundary AM/SE get bulk compaction + coverage; porosity held 15.93→15.91 % and AM_P
+plastic ticked 51/73→52/74.  input_S_1 was run pre-periodic on the now-dead V100, so its
+70/91 is the walls-RVE value; the periodic bump is ~+1–3 %p and does not change the
+comparison direction below.  S_1's reported coverage vs real_14's AM_P; each case's payload
+also carries the AM_S breakdown — small AM_S, being more numerous, typically reads a few %p
+lower than AM_P.  The comparison is robust to AM-subtype because it is driven by SE
 volume fraction, not by which AM it wraps.)
 
 **Two locked conclusions:**
 
 1. **SE-rich covers more — even rigid, and plastic widens the gap.**
-   Rigid alone: S_1 60/87 > real_14 46/70.  Plastic: 70/91 vs 51/73.  More SE volume
+   Rigid alone: S_1 60/87 > real_14 46/70.  Plastic: 70/91 vs 52/74.  More SE volume
    fraction → more SE within reach of the AM surface → geometry already favours S_1, and
-   plasticity amplifies it.  The predicted real_14 ~50/73 came out **51/73** — hit.
+   plasticity amplifies it.  The predicted real_14 ~50/73 came out **52/74** (periodic) — hit.
 
-2. **The plastic increment difference (+10 vs +5) IS the AM load-shielding signature.**
+2. **The plastic increment difference (+10 vs +6) IS the AM load-shielding signature.**
    SE-rich S_1: SE is load-**bearing** → sees full pressure → flows more → +10 %p.
-   AM-rich real_14: SE is load-**shielded** → sees less → flows less → +5 %p.
+   AM-rich real_14: SE is load-**shielded** → sees less → flows less → +6 %p.
    The 2× ratio in the *plastic* increment between the two cases is a direct, coverage-
    side observation of the load-shielding documented for the composite SE overlap
    (rigid AM carries the 300 MPa, SE lightly loaded).  ⇒ MPM is **not** "failing to
