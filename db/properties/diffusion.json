@@ -81,7 +81,12 @@
                 "supersedes": "Retracts the old 5.9x / ~10^4 headline (thin-slab UMA artifact, see CAVEAT_2026-06-06)."
             },
             "data_path": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_neb/",
-            "figure": "docs/figures/li3n_neb/li3n_vs_lic6_REALdata.png (real-data PES from the values above; idealized 'hollow' schematic path removed per 2026-06-21)"
+            "profile_shape_note": "The raw NEB rel_energies are saddle -> on-N WELL -> saddle (a VALLEY with the on-N well at the path midpoint). The physically-meaningful Li hop is on-N -> saddle -> on-N (a HUMP); it is obtained NOT by sign-flipping (which would wrongly invert which site is stable) but by re-framing to the real well->saddle half (img3->img0: -102,-93,-18,0 meV) -> forward barrier ~0.12 eV. A sign flip happens to give the right barrier HEIGHT (well depth = barrier height) but mislabels on-N as unstable, so it is not used.",
+            "figures": [
+                "docs/figures/li3n_neb/li3n_vs_lic6_FINAL.png (RAW NEB, valley/well-centered — honest computed path)",
+                "docs/figures/li3n_neb/li3n_migration_step.png (migration STEP on-N->saddle->on-N, hump — standard paper presentation, ~0.12 eV)",
+                "docs/figures/li3n_neb/li3n_vs_lic6_REALdata.png (earlier real-data PES; idealized 'hollow' schematic removed 2026-06-21)"
+            ]
         },
         {
             "id": "lic6_0001_uma",
