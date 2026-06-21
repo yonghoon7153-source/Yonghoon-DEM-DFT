@@ -5,7 +5,7 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 ---
 
 ## 0. 중심 명제 (one sentence)
-> **할로겐 enrichment(Cl↑)는 "구조 레버"다: 결합 화학은 그대로 둔 채 Li 공공 + anti-site Cl/S 무질서만 주입한다. 이 구조 변화가 이온전도도(×4)와 강성(+25%)을 동시에 올리면서, 내재 산화창은 그대로(S²⁻-limited)이고 양극 열역학 반응성은 오히려 낮춘다. Cl-rich의 알려진 실험적 단점은 열역학이 아니라 kinetic/electronic이다.**
+> **할로겐 enrichment(Cl↑)는 "구조 레버"다: 결합 화학은 그대로 둔 채 Li 공공 + anti-site Cl/S 무질서만 주입한다. 이 구조 변화가 이온전도도(×4)와 강성(+25%)을 동시에 올리면서, 내재 산화창은 그대로(S²⁻-limited)이고 양극 열역학 반응성은 오히려 낮춘다. Cl-rich의 알려진 실험적 단점은 열역학이 아니라 kinetic/interfacial이다 (전자전도도 두 조성이 같아서 원인 아님 — 후보: 이온전도 ×4·CEI passivation, 세부는 본 계산으로 미규명).**
 
 ---
 
@@ -54,7 +54,7 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 ### [F] 산화/전기화학 안정성
 - **내재 ESW (grand-potential)**: 둘 다 환원 1.24 / OCV 1.72 / **산화 onset 2.14 V (S²⁻→폴리설파이드)**. **동일** — Cl⁻는 3.3 V까지 불활성이라 onset 안 바꿈 (S²⁻-limited). VBM 0.32 eV 차이에도 onset 동일 = 산화는 밴드엣지 아니라 분해화학.
 - **계면 반응성 (전압분해, v2)**: LPSCl이 모든 양극·전압에서 **더 반응성**, 격차 +0.04(2.5V)→+0.20(4.3V). Cl이 반응성 S/Li를 희석 → **Cl-rich가 열역학적으로 덜 반응**.
-→ 문헌 "Cl-rich 양극서 더 나쁨(분해전류↑)"은 **열역학 아님 → kinetic/electronic** (전자전도·passivation). 우리 계산이 열역학을 배제함으로써 간접 증명.
+→ 문헌 "Cl-rich 양극서 더 나쁨(분해전류↑)"은 **열역학 아님 → kinetic/interfacial**. ⚠️ **전자전도도 아님** (LPSCl≈LPSCl1.6 갭 2.066≈2.099 → σ_e 동일). 후보: 이온전도 ×4가 분해 kinetics 가속 / CEI passivation 품질 (세부 미규명). 우리 계산이 *열역학·전자구조* 둘 다 배제.
 
 ---
 
@@ -97,4 +97,4 @@ LPSCl (Li₆PS₅Cl) vs LPSCl₁.₆ (Li₅.₄PS₄.₄Cl₁.₆) · 2026-06-21
 - 신규(우리 기여): percolation, 이중메커니즘 분해, CDD 비교, PDOS site, interface v2, ε∞(대기)
 
 ## 5. 한 줄 결론 (발표 마무리)
-> "Cl enrichment는 결합을 바꾸지 않고 **공공+무질서**만으로 σ(×4)·강성(+25%)을 올리며, 내재 산화창(S²⁻-limited, 2.14 V)은 보존하고 양극 열역학 반응성은 낮춘다. 남는 단점은 kinetic/electronic이라 도핑/코팅으로 다룰 영역이다."
+> "Cl enrichment는 결합을 바꾸지 않고 **공공+무질서**만으로 σ(×4)·강성(+25%)을 올리며, 내재 산화창(S²⁻-limited, 2.14 V)은 보존하고 양극 열역학 반응성은 낮춘다. 남는 단점은 kinetic/interfacial(전자전도 아님 — 갭 동일; 이온전도·CEI 후보)이라 코팅/계면설계로 다룰 영역이다."

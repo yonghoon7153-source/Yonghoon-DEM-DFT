@@ -27,8 +27,13 @@ v2 evaluates the *charged-state* (operating-voltage) condition where degradation
    reactive S/Li → Cl "dilutes" the reactive content → less reaction with cathode O per atom.
 4. **Implication:** thermodynamic cathode reactivity *favors* Cl-rich (less reactive). So
    the experimental "Cl-rich worse at cathode" (↑decomposition current; AdvFM'22, Angew'22)
-   is **NOT thermodynamic** — it is kinetic/interfacial/electronic (consistent with the
-   electronic-conductivity / self-discharge mechanism, not cathode thermodynamics).
+   is **NOT thermodynamic** — it is kinetic/interfacial. NOTE: it is also NOT electronic
+   conductivity, since LPSCl and LPSCl1.6 have ~identical band gap (2.066 vs 2.099 eV) ->
+   ~identical sigma_e. Candidate kinetic factors (not isolated here): the 4x higher IONIC
+   conductivity accelerating the decomposition front, and/or CEI passivation quality
+   (Cl-rich forms more LiCl, less polysulfide at onset). (The electronic-conductivity /
+   self-discharge mechanism applies to Nd-DOPING, where sigma_e actually changes — not to
+   the LPSCl vs LPSCl1.6 comparison.)
 5. **Accuracy payoff:** the OCV point (v1) was misleading (noise, wrong sign); the
    operating-voltage analysis (v2) is the physically relevant condition and gives a clear,
    monotonic trend.
@@ -51,5 +56,6 @@ Ran with delithiated cathodes (CoO2, Li0.5CoO2, NiO2, Li0.5-NMC811) at V=3.5–4
   (charged run mainly matters at intermediate V).
 → Conclusion is robust across cathode chemistry AND lithiation state: **Cl-rich is
 thermodynamically LESS reactive at the cathode interface**; the experimental "Cl-rich worse"
-is kinetic/electronic, not thermodynamic. (Closes the interface-accuracy question.)
+is kinetic/interfacial, not thermodynamic (and not electronic conductivity — gap ~same).
+(Closes the interface-accuracy question; exact kinetic factor remains open.)
 Figure: `docs/figures/oxidation/interface_reactivity_charged.png`.
