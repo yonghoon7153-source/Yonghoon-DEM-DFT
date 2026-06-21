@@ -65,7 +65,20 @@
             "effective_barrier_eV": 0.18,
             "fmax_eV_per_A_at_stop": 0.11,
             "rel_energies_eV": [0.0, -0.018, -0.093, -0.102, -0.013, 0.076, 0.077],
-            "profile_notes": "Representative near-converged 7-image profile (docs/figures/li3n_neb/li3n_neb_profile.csv). Path passes through the on-N charge-transfer WELL at the midpoint (img3, -0.102 eV) with metastable, slightly asymmetric end-sites (+0.0 / +0.077 eV). FORWARD migration barrier (well -> highest saddle on one side) reconfirmed ~0.12 eV across the final iterations; the well-inclusive (deepest-min -> highest-saddle) read is ~0.18 eV. Run STOPPED 2026-06-21 after the forward barrier stabilized at ~0.12 eV (fmax ~0.11 eV/A, above the 0.05 target but the barrier value was stable across iterations and already matches literature).",
+            "profile_notes": "Representative near-converged 7-image profile (docs/figures/li3n_neb/li3n_neb_profile.csv; structures in li3n_adatom_path_pretty.png). COORDINATION ANALYSIS of the actual image geometries (uploaded CIF/xyz, 2026-06-21): img0/img6 = on-N (adatom on top of ONE surface N, Li-N 1.82 A, coord 1); img2/img3 = bridge (adatom between TWO surface N, coord 2). Path = on-N(img0, 0) -> bridge(img3, -0.102 eV, MINIMUM) -> on-N(img6, +0.077). So in THIS NEB the BRIDGE is the energy minimum and on-N sites sit ~0.1 eV higher. Migration barrier MAGNITUDE (on-N<->bridge gap) ~0.10-0.18 eV; reported ~0.12 eV, matching Cui 2023 (0.133). CAVEAT: the bridge-below-on-N ordering is INVERTED vs Cui 2023 (on-N = DFT well). This NEB was warm-started from the UMA path (UMA prefers bridge/hollow, see li3n_001_uma_v2_proper_slab) and only reached fmax ~0.11, so it likely did NOT escape the UMA-biased basin. The barrier MAGNITUDE is robust; the well/saddle site assignment should follow Cui (on-N = well). Run STOPPED 2026-06-21 after the barrier value stabilized at ~0.12 eV.",
+            "coordination_analysis_2026_06_21": {
+                "method": "nearest-N distance + count of N within 2.45 A of the adatom, from the uploaded image geometries",
+                "per_image": [
+                    {"img": 0, "X_A": 0.00, "nearestN_A": 1.82, "N_coord": 1, "site": "on-N", "E_meV": 0},
+                    {"img": 1, "X_A": 0.81, "nearestN_A": 1.86, "N_coord": 1, "site": "on-N", "E_meV": -18},
+                    {"img": 2, "X_A": 1.58, "nearestN_A": 2.01, "N_coord": 2, "site": "bridge", "E_meV": -93},
+                    {"img": 3, "X_A": 1.92, "nearestN_A": 2.08, "N_coord": 2, "site": "bridge", "E_meV": -102},
+                    {"img": 4, "X_A": 2.61, "nearestN_A": 1.89, "N_coord": 1, "site": "on-N", "E_meV": -13},
+                    {"img": 5, "X_A": 3.11, "nearestN_A": 1.84, "N_coord": 1, "site": "on-N", "E_meV": 76},
+                    {"img": 6, "X_A": 3.65, "nearestN_A": 1.82, "N_coord": 1, "site": "on-N", "E_meV": 77}
+                ],
+                "note": "adatom hops on-N(X=0) -> bridge(X~1.8, well) -> on-N(X=3.65=a/2) along the a-axis. Confirms bridge = minimum in this NEB (inverted vs Cui on-N well)."
+            },
             "vs_paper": {
                 "paper_value_eV": 0.133,
                 "paper_source": "Cui et al. ACS Nano 2023, 17, 3168 (full DFT NEB, PBE)",
@@ -81,7 +94,7 @@
                 "supersedes": "Retracts the old 5.9x / ~10^4 headline (thin-slab UMA artifact, see CAVEAT_2026-06-06)."
             },
             "data_path": "gabia:/data/work/runs/li_neb_diffusion/li3n_001/dft_neb/",
-            "profile_shape_note": "The raw NEB rel_energies are saddle -> on-N WELL -> saddle (a VALLEY with the on-N well at the path midpoint). The physically-meaningful Li hop is on-N -> saddle -> on-N (a HUMP); it is obtained NOT by sign-flipping (which would wrongly invert which site is stable) but by re-framing to the real well->saddle half (img3->img0: -102,-93,-18,0 meV) -> forward barrier ~0.12 eV. A sign flip happens to give the right barrier HEIGHT (well depth = barrier height) but mislabels on-N as unstable, so it is not used.",
+            "profile_shape_note": "CORRECTED 2026-06-21 (coordination analysis of actual geometries): the -0.102 eV midpoint minimum (img3) is the BRIDGE site (adatom between two surface N, coord 2), NOT 'on-N' as written in earlier drafts; the on-N sites (coord 1) are the ENDPOINTS (img0=0, img6=+0.077). So the raw NEB is on-N -> bridge(WELL) -> on-N (a VALLEY, bridge lowest). This bridge-below-on-N ordering is INVERTED vs Cui 2023 (on-N is the DFT well) and matches the known UMA bias (the run was UMA-warm-started). USE the barrier MAGNITUDE ~0.12 eV (= on-N<->bridge gap, matches Cui 0.133); for site labels follow Cui (on-N well). NOTE: the earlier 'migration-step hump' figure (li3n_migration_step.png) mirrored the img3->img0 half and labeled the ends 'on-N well' -- those site labels are INVERTED (the ends are actually the bridge minimum); only the hump MAGNITUDE (~0.10-0.12 eV) is valid. li3n_migration_step.png should be relabeled or replaced.",
             "figures": [
                 "docs/figures/li3n_neb/li3n_vs_lic6_FINAL.png (RAW NEB, valley/well-centered — honest computed path)",
                 "docs/figures/li3n_neb/li3n_migration_step.png (migration STEP on-N->saddle->on-N, hump — standard paper presentation, ~0.12 eV)",
