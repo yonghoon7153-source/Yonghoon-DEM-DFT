@@ -1,0 +1,13 @@
+source,structure,material_SE,E_SE_GPa,composition,pressure_MPa,porosity_pct,thickness_um_sim,thickness_um_exp,precision,note
+varkey2026,separator,Li3YBrCl6,10.58,SE97_SBR3,0,45,,,porosity_digitized,initial loose
+varkey2026,separator,Li3YBrCl6,10.58,SE97_SBR3,100,35,188.2,186,thickness_exact_porosity_digitized,elastic-plastic knee ~100MPa
+varkey2026,separator,Li3YBrCl6,10.58,SE97_SBR3,200,31,170.3,171,thickness_exact_porosity_digitized,
+varkey2026,separator,Li3YBrCl6,10.58,SE97_SBR3,300,25,152.7,154,thickness_exact_porosity_digitized,
+varkey2026,separator,Li3YBrCl6,10.58,SE97_SBR3,350,21,143.5,145,thickness_exact_porosity_digitized,floor 21pct (stiff halide rigid-sphere)
+varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,0,49,,,porosity_digitized,initial loose bimodal
+varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,125,39,146.6,145.2,thickness_exact_porosity_digitized,
+varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,200,38,141.2,140.5,thickness_exact_porosity_digitized,
+varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,300,37.5,137.7,137.1,thickness_exact_porosity_digitized,
+varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,350,37,135.6,135.3,thickness_exact_porosity_digitized,floor 37pct (AM-rich stiff halide)
+ours_minnmann,separator,Li6PS5Cl,1.35,pure_SE,300,10,,,experiment_anchor,LPSCl cold-press Minnmann (E_eff soft -> denser)
+ours_real14,cathode,Li6PS5Cl,1.35,AM-rich_82_18,300,15.6,,30.28,dem_measured,real_14 DEM (soft E + MPM flow reach below rigid floor)

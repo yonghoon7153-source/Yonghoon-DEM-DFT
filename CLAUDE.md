@@ -585,6 +585,34 @@ conforming (a rigid-sphere DEM has zero of it):
   to represent coverage" — the plastic increment IS the MPM-only value, and it behaves correctly
   across the SE-rich→AM-rich contrast.
 
+### ★ LIT: Varkey 2026 multi-contact elasto-plastic DEM — frame[5] confirmation + porosity data (2026-06-22) ★
+Full record: docs/lit_varkey2026_multicontact_dem.md + docs/data/densification_porosity_db.csv.
+Varkey et al., Adv. Powder Tech. 37 (2026) 105338 (halide Li3YBrCl6 SE + NMC811, NOT our LPSCl).
+  • VERDICT on "does it do plastic deformation?": NO real particle-SHAPE plasticity — it is
+    STILL rigid-sphere DEM; "elasto-plastic" is the CONTACT force law only (δ = geometric proxy).
+    Paper admits "spheres = a compromise, realistic shapes = future work" + "<20% porosity not
+    pursued (cost)".  = the SAME frame[1]/[2] limit our MPM fills.  "plastic deformation of the
+    particle STRUCTURE (bed densifies)" ≠ "of the particle SHAPE (morphology)".
+  • Model = Thornton-Ning contact (Hertz→yield→linear plastic branch F=f_y+π·p_y·R*(δ−δ_y),
+    unload w/ R_p* residual overlap, yield ratio 0.0103) + stress-based MULTI-CONTACT coupling
+    (Giannis: σ^p=1/V^p Σ lⁿ⊗fⁿ, P_ij=(trσ_i+trσ_j)/3, F_mc=β·ν·a_ij·P_ij, β=0.5 — Poisson
+    confinement, matters only ρ>0.7) + Sangrós bond model (SBR+CB binder) + R_p+R_c+R_b ionic
+    network (our Kirchhoff/Holm analog).  Multi-contact = a PHYSICAL alternative to our empirical
+    18× softening for dense-regime over-stiffness (worth a compare study).
+  • FRAME[5] CONFIRMED: a 2026 state-of-the-art DEM, MORE advanced on the contact law than ours,
+    is STILL transport/packing-side and names the sphere-shape / sub-20% limit = independent
+    proof our DEM↔MPM split is not a crutch.  Their deficiencies vs us: no shape change, no
+    void-fill flow, capped ~20% porosity, no strain field, σ_ionic only (no e/thermal triad),
+    contact-area% not coverage, no AM fracture, multi-contact is mean-field (MPM continuum is
+    exact).  They lead on: explicit binder bonds, multi-pressure (100-350 MPa) validation.
+  • POROSITY-RELATION learnable (user goal "porosity 관계식 뽑을거야"): their halide floors
+    (separator 21% / cathode 37% @350 MPa) are ~2× ours (LPSCl 10% / real_14 15.6% @300) because
+    halide E=10.58 GPa is ~8× stiffer than our E_eff 1.35 (stiffer SE → higher floor, matches our
+    MPM E-sweep) AND rigid-sphere caps at ~20% w/o plastic flow.  ⇒ our porosity relation MUST
+    carry an E_SE-stiffness term + composition term; ~20% is the rigid-sphere floor.  Both show
+    an elastic→plastic knee ~100 MPa (our DEM Heckel P_y=138).  Heckel ln(1/(1−D))=K·P+A is the
+    candidate; their data = independent stiffer-SE cross-check.
+
 
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
     run_network_full_corrections.py (2026-06-08): 9 of 16 → complete
