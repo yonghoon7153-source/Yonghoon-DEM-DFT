@@ -7,8 +7,9 @@ DEM10 특별호).  Fraunhofer IST + TU Braunschweig, HELENA 프로젝트 (할라
 
 **소재:** Li₃YBrCl₆ **할라이드** SE (우리의 LPSCl Li₆PS₅Cl 황화물이 **아님**) + NMC-811 + SBR 바인더 + CB.
 
-DB 동반 파일: `docs/data/densification_porosity_db.csv` (우리 porosity 관계식 fit용으로 정리한
-이들의 P-vs-porosity 데이터점).
+DB 동반 파일:
+- `docs/data/densification_porosity_db.csv` — 이들의 P-vs-porosity 데이터점 (우리 porosity 관계식 fit용).
+- `docs/data/varkey2026_ionic_vs_pressure.csv` — Fig 14 σ_ionic + 접촉면적 vs 압력 (stiffer-SE 교차검증용).
 
 ---
 
@@ -181,6 +182,16 @@ DoD = (h_a − h_c)/h_a.  두 곡선 모두 **약 100 MPa에서 기울기 변화
 포함되지 않는 한 약 20 %는 강체 구의 단단한 바닥이다.  Heckel `ln(1/(1−D)) = K·P + A`가
 후보 형태 (우리 DEM에 대해 보유: R²=0.965, P_y=138 MPa); 이들의 독립적(더 뻣뻣한 SE) 데이터로
 K와 탄성→소성 무릎(knee)을 교차검증할 수 있다.
+
+### Fig 14 — σ_ionic & 접촉면적 vs 압력 (separator, 추가 2026-06-22)
+데이터: `docs/data/varkey2026_ionic_vs_pressure.csv` (작은 삽입그림에서 디지타이징 → **추세만**, 절대값 정밀 아님).
+halide separator (SE 97 wt%, E_SE=10.58 GPa), 압력 100→350 MPa:
+- σ_ionic(sim ≈ exp) 약 0.0026 → 0.0048 mS/cm 로 상승 (압력↑ → 접촉↑ → σ↑).
+- "surface area in contact" 약 8 % → 13 % 로 상승 (압력↑ → 접촉면적↑).
+- 본문: 200 MPa 부터 "noticeably 증가".  bulk halide 고유 σ=1.8 mS/cm 가 구속 separator에서
+  0.0025–0.005 mS/cm 로 ~400× 떨어짐 (접촉 제약 + 입계).
+⚠ halide라 LPSCl로 **절대값 전이 불가**.  용도 = stiffer-SE의 σ_ionic-vs-압력 **추세** 교차검증
+(우리 LPSCl은 E_eff 가 ~8× 물러서 같은 압력에서 더 높은 σ + 더 낮은 porosity).
 
 ### 소재 기준값 (Table 1)
 - 할라이드 SE: E=10.58 GPa, ν=0.3, ρ=2.6 g/cm³, d10/50/90 = 1.1/2.1/3.8 µm.
