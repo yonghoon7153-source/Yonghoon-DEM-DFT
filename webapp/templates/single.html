@@ -128,12 +128,6 @@
     </button>
     {% endfor %}
   </div>
-  <div style="display:flex;justify-content:flex-end;margin:6px 0 2px">
-    <button class="btn btn-primary" onclick="copyAllForAI(this)"
-            title="입자 정보 + 네트워크 지표 + 취성 파괴 + MPM 결과 파라미터를 한 번에 텍스트로 복사 (AI 채팅에 붙여넣기용)">
-      📋 전체 복사 (AI 붙여넣기용)
-    </button>
-  </div>
   {% for name, tbl in tables.items() %}
   <div id="tab-{{ name }}" class="tab-panel {% if loop.first %}active{% endif %}">
     <div class="tab-toolbar" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
@@ -228,7 +222,13 @@
 {% if not archive_path %}
 <!-- MPM pipeline: DEM → MPM input → (GPU run) → upload → viewer/compare -->
 <div class="card">
-  <div class="card-header-row"><h3>MPM 파이프라인</h3></div>
+  <div class="card-header-row" style="display:flex;justify-content:space-between;align-items:center">
+    <h3>MPM 파이프라인</h3>
+    <button class="btn btn-primary" onclick="copyAllForAI(this)"
+            title="입자 정보 + 네트워크 지표 + 취성 파괴 + MPM 결과 파라미터를 한 번에 텍스트로 복사 (AI 채팅에 붙여넣기용)">
+      📋 전체 복사 (AI용)
+    </button>
+  </div>
   <p style="color:#666; font-size:0.9em; margin:4px 0 10px">
     DEM 입자 → MPM 입력 변환(① zip) → GPU 서버에서 <code>run_mpm.sh</code> 실행 →
     결과 <code>mpm_payload.json</code> 업로드(③) → 위 "MPM" 3D 버튼 + 비교표 활성화.
