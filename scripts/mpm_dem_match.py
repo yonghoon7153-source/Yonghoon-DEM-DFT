@@ -374,6 +374,46 @@ def run_match(args):
               f"(Minnmann 300→10%)", flush=True)
         return
 
+    if args.ps_am_grid:
+        # ── REAL-value (P:S × AM wt%) porosity grid via the wallP servo (300 MPa, champion SE) ──
+        import os as _os
+        R_AMP, R_AMS = R_SE_MPM * 12.0, R_SE_MPM * 4.0          # real 12:4:1 size ratio
+
+        def _pf(s):
+            if ':' in s:
+                pp, qq = s.split(':'); return float(pp) / (float(pp) + float(qq))
+            return float(s)
+        p_fracs = [_pf(s) for s in args.ps_list]; am_wts = [float(x) for x in args.am_list]
+        rho_am, rho_se = 4.8, 2.0
+        print(f"REAL (P:S × AM wt%) grid — wallP servo @ {args.p_read} GPa, E_se={E_se_base} "
+              f"sigma_y={args.yield_se} nu={args.nu_se}, sizes 12:4:1, n_grid={ng}, seeds={args.seeds}")
+        print(f"  {'P:S':>5s} {'AM%':>4s} {'porosity%':>10s} {'±std':>6s}")
+        grows = []
+        for pf in p_fracs:
+            for amwt in am_wts:
+                wA = amwt / 100.0
+                vA = (wA / rho_am) / ((wA / rho_am) + ((1 - wA) / rho_se)) if 0 < wA < 1 else float(wA >= 1)
+                phi_am = INIT_SOLID * vA; phi_se = INIT_SOLID * (1 - vA)
+                fAP, fAS, fSE = phi_am * pf, phi_am * (1 - pf), phi_se
+                vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, E_se_base, readout='wallP')
+                        for i in range(args.seeds)]
+                vals = [x for x in vals if x == x]
+                por = float(np.mean(vals)) if vals else float('nan')
+                std = float(np.std(vals)) if len(vals) > 1 else 0.0
+                p10 = int(round(pf * 10))
+                print(f"  {p10:2d}:{10 - p10:<2d} {amwt:4.0f} {por:10.2f} {std:6.2f}", flush=True)
+                grows.append((pf, p10, amwt, por, std, len(vals)))
+        _os.makedirs(_os.path.dirname(args.grid_csv) or '.', exist_ok=True)
+        with open(args.grid_csv, 'w') as f:
+            f.write(f"# REAL 2D MPM porosity vs (P:S, AM wt%).  wallP@{args.p_read}GPa E_se={E_se_base} "
+                    f"sigma_y={args.yield_se} nu_se={args.nu_se} sizes 12:4:1 n_grid={ng}\n")
+            f.write("p_frac,ps_label,am_wt,porosity_pct,porosity_std,n_seed\n")
+            for pf, p10, amwt, por, std, ns in grows:
+                f.write(f"{pf:.3f},{p10}:{10 - p10},{amwt:.0f},{por:.3f},{std:.3f},{ns}\n")
+        print(f"\nwrote {args.grid_csv} ({len(grows)} pts) → plot/fit:\n"
+              f"  python3 scripts/mpm2d_ps_am_sweep.py --analyze-only {args.grid_csv}")
+        return
+
     dps = load_design(names=set(args.names) if args.names else None,
                       real_only=args.real_only, particulate=args.particulate,
                       max_n=args.max_n)
@@ -590,6 +630,14 @@ def main():
                     help='JAM divergence exponent: σ_y_eff = σ_y/frac^jam_k')
     ap.add_argument('--heckel', action='store_true',
                     help='pure-SE pressure sweep (100/300/600 MPa) to calibrate/verify')
+    ap.add_argument('--ps-am-grid', action='store_true',
+                    help='REAL-value sweep over the (P:S × AM wt%%) grid via the wallP servo @ --p-read '
+                         '(300 MPa) with champion SE → --grid-csv.  Pass --nu-se 0.49 for the stiff-bulk '
+                         'champion.  Then plot/fit:  mpm2d_ps_am_sweep.py --analyze-only <csv>.')
+    ap.add_argument('--ps-list', nargs='*',
+                    default=['1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1'])
+    ap.add_argument('--am-list', nargs='*', default=['75', '80', '85', '90', '95'])
+    ap.add_argument('--grid-csv', default='docs/data/mpm2d_ps_am_porosity.csv')
     a = ap.parse_args()
     if a.plot:
         plot(); return
