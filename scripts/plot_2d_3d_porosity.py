@@ -64,12 +64,19 @@ def main():
     ax1.plot([lo, hi], [lo, hi], 'k--', lw=1, label='y = x (DEM = MPM)')
     ax1.fill_between([lo, hi], [lo - 1.5, hi - 1.5], [lo + 1.5, hi + 1.5], color='0.85', alpha=0.6,
                      label='±1.5 %p (model-trust)')
-    ax1.scatter(dem, mpm, s=55, c='#c0392b', zorder=3)
+    oc = dem < 8.0                                      # DEM over-compressed (dashboard ⚠ threshold)
+    ax1.scatter(dem[~oc], mpm[~oc], s=55, c='#c0392b', zorder=3, label='DEM reliable (ε≥8%)')
+    if oc.any():
+        ax1.scatter(dem[oc], mpm[oc], s=90, c='#e67e22', edgecolors='k', lw=1.2, marker='D',
+                    zorder=4, label='DEM ⚠ over-compressed (ε<8%)')
     for x, y, n in zip(dem, mpm, names):
         ax1.annotate(n, (x, y), fontsize=7, xytext=(4, 3), textcoords='offset points')
     if len(dem) >= 2:
         d = mpm - dem
-        ax1.set_title(f'DEM vs MPM-3D porosity  (Δ̄={d.mean():+.2f} %p, |Δ|max={np.abs(d).max():.2f})')
+        rel = d[~oc]                                   # model-trust on DEM-reliable cases only
+        rtxt = f'reliable Δ̄={rel.mean():+.2f} %p (n={len(rel)})' if len(rel) else ''
+        otxt = f'  |  ⚠ over-comp Δ up to {d[oc].max():+.1f}' if oc.any() else ''
+        ax1.set_title(f'DEM vs MPM-3D porosity  ({rtxt}{otxt})')
     ax1.set_xlabel('DEM porosity (%)'); ax1.set_ylabel('MPM-3D scaffold porosity (%)')
     ax1.set_xlim(lo, hi); ax1.set_ylim(lo, hi); ax1.legend(fontsize=8); ax1.set_aspect('equal')
 
