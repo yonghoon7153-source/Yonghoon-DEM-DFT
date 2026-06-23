@@ -63,3 +63,12 @@
 
 **결론**: intrinsic onset 무승부(2.14 V, S-limited) / 실사용 계면 Cl-rich 우위(Zuo) / shelf-life Cl-rich 열위(Wu). **축 명명 없이 "Cl-rich가 더·덜 산화안정"이라 말하지 말 것.**
 연결: §B(산화 4축) · `our_dft_baseline.md` · `papers/zuo2022_chlorination_cathode_interface.md` §11.
+
+---
+
+## G. 음극(환원) 계면 & 도핑 축 (Ke 2025, ESM — MgClO)
+- 우리 ESW **환원 한계 1.24 V** / 산화 2.14 V ↔ Ke 인용 분해창 **환원 <1.7 V, 산화 >2.1 V**: 산화 정합(2.1≈2.14), 환원도 같은 결(Cl-rich가 Li과 환원 불안정). 환원 산물도 일치(Li₃P+Li₂S+(LiCl)).
+- **도핑 전략 = 우리 cascade 직접 동기**: MgClO(Mg+Cl+O) 공도핑이 Li/SE 계면을 metallic→gapped로 재배치(s-p/p-p 혼성)해 PS₄³⁻ 환원 분해 차단 → 우리 multi_category cascade(Mg/Cl/O 등 도판트 스크리닝)가 "어떤 도판트가 계면을 고치나"를 답하는 것의 문헌 증명.
+- **차용 descriptor**: 계면 ELF **binding energy(J/m²)**, PDOS **E_F metallic 여부** — 도판트 음극 호환성 평가용.
+- **SEI 설계**: 전자절연(Li₂O 8.37 eV)+친리튬(LiMg) — 우리 **Li₃N**(음극 interphase, 낮은 Li 장벽) 연구와 같은 음극-계면 패밀리.
+- 방법: Ke PBE/PAW/500eV/4×4×4 + ELF/PDOS = 우리와 동일 수준 → 방법 정합.

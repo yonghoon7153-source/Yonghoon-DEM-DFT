@@ -4,6 +4,12 @@
 
 Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 
+## ✅ Digest 완료 (paper-level)
+| slug | 논문 | 축 |
+|---|---|---|
+| `papers/zuo2022_chlorination_cathode_interface.md` | Zuo, Chlorination/cathode interface (Angew 2022) | 양극·산화 |
+| `papers/ke2025_orbital_hybridization_mgclo.md` | Ke, MgClO 공도핑 s-p/p-p 혼성 (ESM 2025) | 음극·환원·도핑 |
+
 
 ## 시트: 실험값  (21 entries)
 
