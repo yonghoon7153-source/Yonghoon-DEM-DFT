@@ -141,6 +141,11 @@ Scheme1(PS₄ redox가 문제) → Fig1(Mg→P, F→Cl 구조) → Fig2(σ 약�
 
 > 영문 원문(대조): "one of the critical limitations for the practical applications of sulfide-SE is their poor (electro)chemical stability towards metallic Li electrode.[5] The sulfide-SE is prone to electrochemical reduced by nucleophilic Li metal, generating the mixed ion-electron conducting interphases (Li₂S, Li₃P, etc.) at the Li/sulfide-SE interface.[6] This uncontrollable parasitic interfacial reaction causes the continuous decomposition of sulfide-SE and promotes the lithium dendrites growth into or inside the sulfide-SE, which deteriorates the battery cyclic performances.[7]"
 
+### [11]→[12] 문단 (intro 후반 — PS₄³⁻ redox 가설 + 본 연구 동기)
+> citation [11][12]은 **이 논문(Liu 2023) 자체 reference 번호** (thesis 옮길 땐 본인 ref로 교체).
+
+실험과 계산에 근거할 때, Li/sulfide-SE에서의 계면 기생반응(interfacial parasitic reaction)은 sulfide-SE 내 PS₄³⁻ 사면체(tetrahedron)와 Li 금속 간의 자발적이고 비가역적인 산화환원 반응(spontaneous irreversible redox reaction)에서 비롯되는 것으로 추정되며(Scheme 1),[11] 이는 전해질의 구조적 붕괴(structural collapse)와 분해를 야기한다. PS₄³⁻ 사면체는 공유결합성 P–S 결합(2p–2p 오비탈 혼성화)으로 구성되어 있어, 전자가 풍부한(electron-rich) Li 원자에 의해 쉽게 공격받아 Li–S 및 Li–P 상호작용을 생성한다. 그 결과 생성되는 분해 산물 — 전자전도성(electron-conducting) Li₂S와 불규칙한(irregular) Li₃P를 포함 — 은 Li/전해질 계면에서 지속적이고 심각한 열화를 초래한다.[12] 이러한 맥락에서, 우리는 sulfide-SE의 계면 안정성 향상이 PS₄³⁻ 사면체의 산화환원 활성(redox activity)을 억제하는 데 달려 있을 수 있다고 추정한다. 그러나 우리가 아는 한, 산화환원 특성을 조절하여 산화환원 저항성(redox-resistible) sulfide-SE를 구축하는 연구는 거의 수행된 바 없으며, 여전히 큰 도전 과제로 남아 있다.
+
 ## 🔑 [5]→[7] 문제의 메커니즘 (anode 환원 불안정 → MIEC → non-self-limiting)
 > 위 motivation 문단의 메커니즘을 단계로 분해. **핵심 문제는 양극이 아니라 *음극(Li metal)* 쪽 환원 불안정성.**
 
