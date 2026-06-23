@@ -12,6 +12,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | Gil-González, constrained ESW 시너지 (ESM 2022) | 산화·기계구속(②)·전도도 |
 | `papers/lu2025_tailoring_cl_rich_anode_licl.md` | Lu, 4d-Cl 자기분해 → LiCl interphase (CEJ 2025) | 음극·환원·자리도핑 |
 | `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | Liu, MgF₂ 공도핑 electron redistribution (Angew 2023) | 음극·환원·도핑(Mg s-p) |
+| `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) | 리뷰·oxide/sulfide·계면 landscape |
 
 
 ## 시트: 실험값  (21 entries)
@@ -83,7 +84,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 12.0 | When Electrolytes Are Semiconductors: A Feature, Not a Bug for Solid-S | 10.3390/batteries12020060 | sulfid | DFT (GGA-PBE / HSE06) + 실험(SKPM, PEIS, CV) 전자 세 황화물 SE 모두 wide-band-gap 반도체(direct: LPSCl 2.45/3.30 eV, LPSBr 2.32/3.34 eV; | 📄 |
 ---
 
-## 📂 보유 PDF (지금까지 "먹인" 논문 — 25개, ~22 unique)
+## 📂 보유 PDF (지금까지 "먹인" 논문 — 26개, ~23 unique)
 
 > status: ✅ digest 완료 · ⬜ PDF 보유·미digest. 디지스트는 `litdb-curator`로 하나씩.
 
@@ -112,5 +113,6 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 21 | 327a5fda (S2405829725002211) | (Energy Storage Mater 2025) | ⬜ |
 | 22 | d68cd77f (S2405829725001254) | (Energy Storage Mater 2025) | ⬜ |
 | 23 | da9a7f39 / 6488e8eb (SI) | Liu, electron redistribution MgF₂ redox-resistible (Angew 2023) — `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | ✅ |
+| 24 | 4229e857 / 98afe5b4 (SI) | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) — `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정)*
