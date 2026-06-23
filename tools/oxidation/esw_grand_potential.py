@@ -154,12 +154,23 @@ def main():
                          '"Li5.4P1S4.4Cl1.6:modelc"')
     ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
     ap.add_argument("--out", default="esw_grand_potential_results.json")
+    ap.add_argument("--exclude_phases", nargs="*", default=[],
+                    help="MP-ids to drop from the hull (Gil-González 2022 set: "
+                         "mp-995393=LiS4 mp-1186934=SCl3 mp-1040450=Li5PS4Cl2)")
     args = ap.parse_args()
 
     from pymatgen.core import Element, Composition
     from pymatgen.analysis.phase_diagram import PhaseDiagram
 
     entries = get_chemsys_entries(args.elements)
+    if args.exclude_phases:
+        ex = set(args.exclude_phases)
+        def _ids(e):
+            return (str(getattr(e, "entry_id", "")) + "|"
+                    + str((getattr(e, "data", {}) or {}).get("material_id", "")))
+        dropped = [_ids(e) for e in entries if any(x in _ids(e) for x in ex)]
+        entries = [e for e in entries if not any(x in _ids(e) for x in ex)]
+        print(f"[exclude] dropped {len(dropped)} entries {sorted(ex)}: {dropped}")
     pd = PhaseDiagram(entries)
     Li = Element("Li")
     mu_Li_ref = pd.el_refs[Li].energy_per_atom
@@ -180,6 +191,7 @@ def main():
         "method": "grand-potential ESW via PhaseDiagram.get_element_profile "
                   "(Mo/Ong/Ceder 2012); MP GGA_GGA+U corrected hull; Li opened.",
         "elements": args.elements,
+        "excluded_phases": args.exclude_phases,
         "mu_Li_ref_eV": round(mu_Li_ref, 4),
         "voltage_convention": "V = mu_Li(metal) - mu_Li; 0 V = Li metal",
         "results": results,
