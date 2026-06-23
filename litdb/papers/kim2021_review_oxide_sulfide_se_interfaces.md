@@ -243,6 +243,41 @@
 
 **인용된 주요 계산그룹**: **Ceder/Mo(MIT→UCB; Richards·Miara·Zhu·He·Wang)** = grand-potential ESW·계면 반응의 원조; **Ong(UCSD; Deng)** = elastic; **Wagemaker(Delft; Schwietert)** = indirect decomposition; **Monroe & Newman** = dendrite elasticity.
 
+## 🧮 [우리 계산] LLZO 산화창이 왜 넓은가 — grand-potential 재현 (anion p-band 깊이)
+> 리뷰는 garnet LLZO의 Calc 산화창을 **2.91 V**(§4 표)로, sulfide(~2.0–2.3 V)보다 넓다고만 적는다. **왜** 넓은지를 우리 `tools/oxidation/esw_grand_potential.py`(= comp1 onset 2.256 V를 뽑은 *바로 그 방법*, MP GGA_GGA+U 훌)로 LLZO에 직접 적용해 규명.
+
+### 핵심 물리 — 산화 onset ≈ **음이온 p-band(VBM) 깊이**
+grand-potential 산화는 μ_Li를 낮추며(V↑) Li를 방출시키다가, 골격이 **자기 음이온을 산화**시키는 순간 분해한다. 따라서 산화 onset 전위는 본질적으로 **그 음이온을 산화(전자 빼내기)하기가 얼마나 어려운가** = **음이온 p-band가 얼마나 깊은가**가 결정한다.
+
+| 음이온 | 성질 (HSAB·전기음성도) | p-band(VBM) 위치 | 산화 난이도 | → 산화 onset |
+|---|---|---|---|---|
+| **S²⁻** (sulfide) | soft·polarizable, χ=2.58 | **S 3p 얕음(높이)** | S²⁻→S₂²⁻/S⁰ **쉬움** | **낮음 ~2.0–2.3 V** |
+| **O²⁻** (garnet) | hard, χ=3.44 | **O 2p 깊음(낮음)** | O²⁻→O₂²⁻/O₂ **어려움** | **높음 ~2.9 V** |
+| **PO₄³⁻** (LATP) | O가 P와 공유결합(polyanion)으로 더 안정화 | O 2p 더 깊음 | 더 어려움 | **더 높음 ~4.2 V** |
+
+- **즉 LLZO의 넓은 산화창 ≈ O 2p가 S 3p보다 훨씬 깊다**는 사실의 직접 귀결. → **우리 PDOS 결과(LPSCl VBM = S 3p; [Banik] HAXPES 확인)와 같은 그림의 양면**: "VBM이 S 3p라 얕다 = 산화 onset이 낮다."
+- 추가로 LLZO 양이온 **Zr⁴⁺(d⁰)·La³⁺(f⁰)** 은 이미 최고 산화상태 → 저전압서 *양이온* 산화 기여 없음. (반대로 환원 쪽에서 Ti⁴⁺/Ge⁴⁺를 가진 LATP/LAGP는 저전압서 환원돼 Li 비호환 — LLZO만 환원 0.05 V로 안정.)
+- **한 줄**: 산화 onset 서열 **S²⁻(sulfide ~2.2) < O²⁻(garnet ~2.9) < PO₄³⁻(phosphate ~4.2)** = 음이온 p-band 깊이(+polyanion 공유 안정화) 순서.
+
+### 실행 (gabia — MP API 필요; 로컬 환경은 `api.materialsproject.org` egress 차단)
+```bash
+cd tools/oxidation                       # 브랜치 pull 후 (print hint 일반화 반영됨)
+python3 esw_grand_potential.py \
+    --target "Li7La3Zr2O12:LLZO" \
+    --elements Li La Zr O \
+    --out esw_llzo.json
+# (선택) 같은 방법으로 sulfide 재대조: --target "Li6PS5Cl:comp1" --elements Li P S Cl
+```
+comp1(LPSCl) 2.256 V와 **동일 방법·동일 GGA_GGA+U 훌** → 절대 비교 가능.
+
+### 결과 (⏳ gabia 실행 후 채움 — 값 날조 금지)
+| 조성 | 환원 한계 (V) | 산화 onset (V) | 산화 onset 반응 | ESW 폭 |
+|---|---|---|---|---|
+| **LLZO** Li₇La₃Zr₂O₁₂ | ⏳ (리뷰 Calc 0.05) | ⏳ (리뷰 Calc **2.91**) | ⏳ (예상: →La₂O₃ + La₂Zr₂O₇/Li₂ZrO₃ + O₂/Li₂O₂ + Li⁺) | ⏳ |
+| LPSCl comp1 (참고, 기존값) | **1.24** | **2.256** | →Li₃PS₄+LiCl+S+2Li⁺ | ~1.0 V |
+
+> **주의(over-claim 방지)**: 위 LLZO 칸은 **리뷰 인용값(Calc)** 일 뿐, *우리* 재현값은 gabia 실행 후 확정. 또 LLZO **실험** 안정창은 ~6 V로 더 넓게 보이는데(Al/Ta 도핑·표면 passivation·kinetics) — 여기서 비교하는 건 **intrinsic grand-potential onset** 한정(우리 comp1 2.256과 같은 잣대). 절대값보다 **S²⁻ vs O²⁻ 음이온 효과(≈+0.65 V)** 가 메시지.
+
 ## 11. 우리 DFT 대비 / 맥락 (comp1=LPSCl / modelc=LPSCl1.6) → `../our_dft_baseline.md`
 
 | 항목 | 이 리뷰 (Rupp 2021) | 우리 (comp1 / modelc) | 관계 / 해석 |

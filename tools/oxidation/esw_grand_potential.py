@@ -120,7 +120,7 @@ def analyze(pd, comp, mu_Li_ref, label, comp_str):
               f"→ {reaction_at(v_neutral)}")
     if reduction_limit is not None:
         print(f"  ↓ reduction (cathodic) limit ≈ {reduction_limit:.2f} V "
-              f"(below: framework reduced → Li2S/LiP/Li3P)")
+              f"→ {reaction_at(reduction_limit)}")
     if oxidation_limit is not None:
         print(f"  ↑ oxidation (anodic)   limit ≈ {oxidation_limit:.2f} V "
               f"→ {reaction_at(oxidation_limit)}")
