@@ -38,3 +38,6 @@
 - 산화/ESW 관련 → `comparison_vs_ours.md`
 - 특정 논문 관련 → 그 논문 `papers/<slug>.md` 의 §Q&A
 **트리거: "Q&A 작성해줘"** (또는 "이 q&A도 적어놔줘") → 직전 질문/답을 자동으로 해당 MD의 "🗨️ Q&A 로그"에 항목 추가.
+
+## 📐 개념/방법 노트 (concepts/)
+- `concepts/dos_vbm_efermi_methods.md` — DOS·PDOS 계산(수식), VBM 절대비교 불가+정렬, 절연체 E_F smearing artifact (코드 재현 포함). 슬라이드 21/24/25 방어용.
