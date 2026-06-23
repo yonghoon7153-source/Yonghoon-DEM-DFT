@@ -42,6 +42,7 @@ def parse_ps(s):
 
 
 def run_sweep(a):
+    os.environ['MPM2D_ARCH'] = a.arch          # picked up by mpm2d_composition's ti.init at import
     import mpm2d_composition as m
     if a.e_se is not None:
         m.MU_SE, m.LA_SE = m.lame(a.e_se)             # override SE modulus (default module 24; champion 1.53)
@@ -151,6 +152,9 @@ def main():
                     default=['1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1'])
     ap.add_argument('--am-wt', nargs='*', default=['75', '80', '85', '90', '95'])
     ap.add_argument('--seeds', type=int, default=3)
+    ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'],
+                    help='Taichi arch.  The 2D grid (128²) is tiny → CPU is usually fine; GPU helps little '
+                         '(the per-case disk placement is CPU-bound).  Use cuda only if the box has a free GPU.')
     ap.add_argument('--e-se', type=float, default=None,
                     help='SE modulus GPa (default module ≈24 RCP-style; champion 1.53)')
     ap.add_argument('--yield-se', type=float, default=0.6, help='SE yield (default 0.6 RCP-style; champion 0.15)')

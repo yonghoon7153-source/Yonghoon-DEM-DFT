@@ -15,10 +15,14 @@ bimodal-packing dip at intermediate AM.
 Run:  python3 scripts/mpm2d_composition.py
 Out:  docs/figures/mpm2d_composition.png
 """
+import os
+
 import numpy as np
 import taichi as ti
 
-ti.init(arch=ti.cpu, default_fp=ti.f32, random_seed=2)
+_ARCH = {'cpu': ti.cpu, 'gpu': ti.gpu, 'cuda': ti.cuda, 'vulkan': ti.vulkan}.get(
+    os.environ.get('MPM2D_ARCH', 'cpu').lower(), ti.cpu)   # sweep driver sets MPM2D_ARCH
+ti.init(arch=_ARCH, default_fp=ti.f32, random_seed=2)
 
 n_grid = 128; dx = 1.0 / n_grid; inv_dx = float(n_grid)
 dt = 2.0e-4
