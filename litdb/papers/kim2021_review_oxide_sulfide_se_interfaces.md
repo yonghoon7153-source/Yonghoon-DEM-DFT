@@ -278,6 +278,9 @@ comp1(LPSCl) 2.256 V와 **동일 방법·동일 GGA_GGA+U 훌** → 절대 비�
 
 → **리뷰 Calc(0.05 / 2.91 V) 거의 정확 재현** (우리 0.04 / 2.88 V, 격차 0.03 V).
 
+![ESW: garnet LLZO vs argyrodite LPSCl (grand-potential)](../figures/esw_llzo_vs_lpscl.png)
+> 그림 `litdb/figures/esw_llzo_vs_lpscl.png` (스크립트 `tools/oxidation/plot_esw_llzo_vs_lpscl.py`, 재현 가능). **(a)** ESW 막대 — LLZO 0.04–2.88 V(폭 2.84) vs LPSCl 1.24–2.26 V(폭 1.0), 산화 onset 격차 **+0.63 V**(음이온 효과). **(b)** 단계적 음이온 산화 사다리 — O²⁻는 peroxide→superoxide→O₂로 *높은* 전위에서, S²⁻는 2.26 V에서 *일찍* 산화.
+
 **산화 staircase (음이온 단계적 산화 = 넓은 창의 정체)**:
 | V | Li 교환 | 반응 (음이온 산화 단계) |
 |---|---|---|
