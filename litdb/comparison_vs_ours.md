@@ -63,6 +63,7 @@
 | PBE 2.10→2.62 (In 도핑) | [Ma] | — | In 0.52 eV↑인데 σ_e 1.2×만 변(=defect-controlled) |
 | PBE 2.45 / **HSE06 3.30** | [Semi] | (우리 PBE 2.07) | PBE는 ~1 eV 과소 → "wide-gap insulator"만 |
 | VBM = S 3p (HAXPES) | [Banik] | 우리 PDOS VBM=S 3p | **✓ 재현** |
+| **산화 onset ≈ 음이온 p-band(VBM) 깊이**: S 3p(얕음)→LPSCl 2.256 V vs O 2p(깊음)→LLZO **2.88 V (+0.63)** | [Rupp] + **우리 LLZO grand-potential**(`papers/kim2021…md` §LLZO) | comp1 VBM=S 3p, onset 2.256 | **✓ VBM character가 onset 지배** (S²⁻→S⁰ vs O²⁻→peroxide) |
 | PS₄ "gap" ~2.0 → MgS₄ ~4.2 eV (도핑이 gap 확대) | [Liu23] | comp1 2.066 ≈ 그들 LPSC ~2.0 (우연) | MP smear 0.2 + PDOS 분리 추정, 엄밀 gap 아님 |
 | **bulk σ_e(실측) = 8.16×10⁻⁹ S/cm** (Mg/F 도핑 시 1.03×10⁻⁹, 8×↓) | [Liu23] (DC분극) | 우리 미측정 | **slide25 σ_e 논의 실측 기준값** |
 | sulfide = "wide-band-gap" (구체 LPSCl gap 미제시; buffer LiI gap 6.4 eV) | **[Rupp]** | comp1 2.066 / modelc 2.098 (PBE) | 리뷰 gap 절대값 無 → "wide-gap insulator" 수준만 일치(비교대상 자체 없음) |

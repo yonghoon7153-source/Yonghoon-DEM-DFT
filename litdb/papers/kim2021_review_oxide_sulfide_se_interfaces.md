@@ -270,13 +270,27 @@ python3 esw_grand_potential.py \
 ```
 comp1(LPSCl) 2.256 V와 **동일 방법·동일 GGA_GGA+U 훌** → 절대 비교 가능.
 
-### 결과 (⏳ gabia 실행 후 채움 — 값 날조 금지)
+### 결과 ✅ (gabia 재현, 2026-06-23 · `tools/oxidation/esw_llzo_result.txt` · MP GGA_GGA+U 143 entries, μ_Li ref −1.9089 eV)
 | 조성 | 환원 한계 (V) | 산화 onset (V) | 산화 onset 반응 | ESW 폭 |
 |---|---|---|---|---|
-| **LLZO** Li₇La₃Zr₂O₁₂ | ⏳ (리뷰 Calc 0.05) | ⏳ (리뷰 Calc **2.91**) | ⏳ (예상: →La₂O₃ + La₂Zr₂O₇/Li₂ZrO₃ + O₂/Li₂O₂ + Li⁺) | ⏳ |
-| LPSCl comp1 (참고, 기존값) | **1.24** | **2.256** | →Li₃PS₄+LiCl+S+2Li⁺ | ~1.0 V |
+| **LLZO** Li₇La₃Zr₂O₁₂ | **0.04** (OCV 자기분해 0.05) | **2.88** | →Li₆Zr₂O₇ + 0.25 **Li₂O₂** + 1.5 La₂O₃ + 0.5 Li (**O²⁻→peroxide**) | **~2.84 V** |
+| LPSCl comp1 (참고, 기존값) | 1.24 | 2.256 | →Li₃PS₄+LiCl+**S**+2Li (**S²⁻→S⁰**) | ~1.0 V |
 
-> **주의(over-claim 방지)**: 위 LLZO 칸은 **리뷰 인용값(Calc)** 일 뿐, *우리* 재현값은 gabia 실행 후 확정. 또 LLZO **실험** 안정창은 ~6 V로 더 넓게 보이는데(Al/Ta 도핑·표면 passivation·kinetics) — 여기서 비교하는 건 **intrinsic grand-potential onset** 한정(우리 comp1 2.256과 같은 잣대). 절대값보다 **S²⁻ vs O²⁻ 음이온 효과(≈+0.65 V)** 가 메시지.
+→ **리뷰 Calc(0.05 / 2.91 V) 거의 정확 재현** (우리 0.04 / 2.88 V, 격차 0.03 V).
+
+**산화 staircase (음이온 단계적 산화 = 넓은 창의 정체)**:
+| V | Li 교환 | 반응 (음이온 산화 단계) |
+|---|---|---|
+| **2.88** | −0.5 | →Li₆Zr₂O₇ + 0.25 **Li₂O₂** + 1.5 La₂O₃ + 0.5 Li — **O²⁻→peroxide(O₂²⁻) onset** |
+| 3.15 | −3.5 | →1.75 Li₂O₂ + La₂Zr₂O₇ + 0.5 La₂O₃ + 3.5 Li (peroxide 확대) |
+| 3.22 | −6.56 | →0.44 **LiO₈**(superoxide류) + La₂Zr₂O₇ + … (더 산화된 O) |
+| **3.84** | −7.0 | →La₂Zr₂O₇ + 0.5 La₂O₃ + 1.75 **O₂↑** + 7 Li — **완전산화(O₂ 기체)** |
+
+**핵심 결론 (음이온 효과 정량)**: 산화 onset **LLZO 2.88 vs LPSCl 2.256 = +0.63 V**. 둘 다 onset이 *음이온 산화*(LLZO O²⁻→peroxide / LPSCl S²⁻→S⁰)인데, **O 2p가 S 3p보다 깊어** +0.63 V 더 높은 전위가 필요. → 위 "anion p-band 깊이" 예측 및 **우리 PDOS VBM=S 3p** 결과와 정확히 일치.
+
+**환원 쪽이 LLZO의 더 큰 무기**: LLZO는 **0.04 V**(=Li 금속 코앞)까지 환원 안정 — Zr⁴⁺(d⁰)·La³⁺(f⁰)이 저전압서 안 환원되기 때문(0.04 V 이하서야 Zr→Zr₃O/Zr₄O 준금속 suboxide + Li₂O). 반면 LPSCl은 1.24 V서 이미 환원. → 총 창 **LLZO 0.04–2.88 (≈2.84 V) ≫ LPSCl 1.24–2.26 (≈1.0 V)**, 특히 *환원* 쪽 차이가 큼(= garnet이 Li 금속에 안정하다는 정설의 근거).
+
+> **주의(over-claim 방지)**: OCV(0.05 V)서 LLZO는 Li 교환 없이도 **Li₆Zr₂O₇ + Li₂O + La₂O₃로 자기분해** — 순수 Li₇La₃Zr₂O₁₂(cubic)가 GGA 훌 위 metastable이라는 뜻(실제로 Al/Ta 도핑으로 cubic 안정화하므로, 도핑 LLZO는 이 자기분해가 억제됨). 또 LLZO **실험** 창은 ~6 V로 더 넓게 보이는데 도핑·표면 passivation·kinetics 때문 — 여기 비교는 comp1과 같은 잣대인 **intrinsic grand-potential onset** 한정.
 
 ## 11. 우리 DFT 대비 / 맥락 (comp1=LPSCl / modelc=LPSCl1.6) → `../our_dft_baseline.md`
 
