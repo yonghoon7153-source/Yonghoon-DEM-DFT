@@ -12,7 +12,9 @@
 | `properties/*.md` | 물성별 교차표 (ionic / oxidation / mechanical / electronic) |
 
 ## 논문 "먹이는" 워크플로우  (= `litdb-curator` 에이전트)
-1. PDF 업로드 → **"이 논문 litdb에 넣어줘"** (또는 litdb-curator 에이전트 호출)
+**트리거: PDF 업로드 후 "논문 에이전트 실행해줘"** (또는 "이 논문 litdb에 넣어줘", "이 논문 정리해줘", "feed this paper")
+→ 에이전트가 **(1) 백그라운드로 digest 저장** + **(2) 사용자에게 자세히·체계적으로 설명** + **(3) 질문 답변(토론)**. digest 깊이 기준 = `papers/zuo2022_chlorination_cathode_interface.md` (논문 정독 수준, 분량 무관).
+1. PDF 업로드 → 트리거 발화
 2. 에이전트가 `_TEMPLATE.md` 양식으로 `papers/<slug>.md` 생성. 특히:
    - **DFT 방법** — code·functional·pseudo·k-points·supercell·U·vdW·무질서 처리
    - **Figure set** — 각 그림이 무엇을 보여주나 + 우리가 참고할 점
