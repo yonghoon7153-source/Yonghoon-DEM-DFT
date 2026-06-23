@@ -31,7 +31,7 @@
 ## B. 산화안정성 — **4축 분리 (축 명명 없이 말하면 틀림)**
 | 축 | 우위 | 출처 | 우리 값 / 재현 |
 |---|---|---|---|
-| **B① intrinsic 0-pressure onset** | **무승부** (~2.1 V, S²⁻-limited) | [GG] K_eff=0 = **1.70–2.40 V** | 우리 grand-potential **OCV 1.72 / onset 2.14**(LiS4 제외 2.26) → **✓✓ 재현** |
+| **B① intrinsic 0-pressure onset** | **무승부** (S²⁻-limited, 둘 다 2.256 V) | [GG] K_eff=0 = **1.70–2.40 V** | 우리 grand-potential OCV 1.717 / **onset 2.256**(LiS4 제외, GG set; 포함 시 2.14) → **✓✓ 재현**, GG 2.40과 격차 0.14 V |
 | **B② 기계 구속 window** | **Cl-rich 승** | [GG] K_eff=20 LPSCl1.5 **0.80–4.30 V** (Cl 산물 고몰부피→strain) | 우리 `constrained_esw.py`가 trend 재현(modelc 더 넓어짐) → **✓** |
 | **B③ cathode 계면 cycling** | **Cl-rich 승** | [Zuo] R_cat 8.9<13.2, CE 79>77% (산물 양호) | 우리 grand-potential이 [Zuo] Eq1/Eq2 분해 stoichiometry 재현 → **✓ 화학** |
 | **B④ calendar/thermal/moisture** | **Cl-poor(LPSCl) 승** | [Wu] 90℃ retention L6 68%>L55 48% | 범위 밖(우리 못 봄) |
@@ -73,8 +73,9 @@
 ## G. ✅ 우리 계산이 문헌을 *검증*하는 지점 (강점)
 | 우리 결과 | = 문헌 | 출처 |
 |---|---|---|
-| grand-potential 분해식 (Eq1/Eq2 stoichiometry) | = [Zuo] 실험 유도 분해식 | [Zuo] |
-| 0-pressure ESW (OCV 1.72, onset 2.14/2.26) | = K_eff=0 (1.70–2.40) | [GG] |
+| **onset 반응 (LiS4 제외)** `Li6PS5Cl→Li3PS4+LiCl+S+2Li` | = **[Zuo] Eq1 정확히 일치** (2 e⁻, 원소 S) | [Zuo] |
+| modelc onset `→Li3PS4+1.6LiCl+0.4S+0.8Li` | = [Zuo] Eq2 거동 (전자 적게·LiCl 많이) | [Zuo] |
+| 0-pressure ESW (OCV 1.717, onset **2.256** LiS4 제외) | = K_eff=0 (1.70–2.40), 격차 0.14 V | [GG] |
 | 구속 ESW Cl-rich 확대 trend | = K_eff=20 거동 | [GG] |
 | AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][Liu] |
 | VBM = S 3p | = HAXPES | [Banik] |
@@ -85,7 +86,7 @@
 |---|---|---|
 | 기체상(SO₂/O₂) 포함 계면 분해 | [Zuo] R_int 메커니즘 | 기체 chempot + NCM O-release |
 | 무질서 E_above_hull (metastability) | [Zuo] DSC/TGA, [Wu] | SQS/enumerate E_hull |
-| LiS4 제외 ESW (onset 2.26) | [GG] phase set | esw에 --exclude_phases |
+| ~~LiS4 제외 ESW~~ ✅ **완료 (2026-06-23)** | [GG] phase set | onset 2.256 V, comp1 rxn=Zuo Eq1 정확 일치 (`our_dft_baseline.md` §ESW 상세) |
 | 구속 ESW 절대값(full Lagrange) | [GG] K_eff=20 정량 | constrained_esw 2nd-order |
 | defect/σ_e 정량 | slide25 틀 | Freysoldt defect calc |
 | slab IP / absolute VBM | UPS 절대 기준 | slab+vacuum |

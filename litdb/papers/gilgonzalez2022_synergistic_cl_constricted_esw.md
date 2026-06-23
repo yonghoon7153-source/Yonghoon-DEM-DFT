@@ -91,16 +91,16 @@ Fig1(σ·ESW synergy, K_eff별) → Fig1b/SI(반응변형이 원인) → Fig2(�
 ## 10. 우리 DFT 대비 (comp1/modelc) → `../our_dft_baseline.md`
 | 항목 | Gil-González | 우리 | 일치/차이 |
 |---|---|---|---|
-| **ESW K_eff=0 (무구속)** | LPSCl1.5 **1.70–2.40 V** | grand-potential OCV 1.72 / onset **2.14**(LiS4 제외 2.26) | **✓✓ 우리 0-pressure ESW가 이들 K_eff=0 재현** (cathodic 1.72≈1.70, anodic 2.14/2.26 vs 2.40 = LiS4 차이) |
+| **ESW K_eff=0 (무구속)** | LPSCl1.5 **1.70–2.40 V** | grand-potential OCV 1.717 / **onset 2.256**(LiS4 제외, 2026-06-23 확인; 포함 2.14) | **✓✓ 재현** (cathodic 1.717≈1.70 거의 완벽, anodic 2.256 vs 2.40 = 0.14 V) |
 | **ESW 구속(K_eff=20)** | LPSCl1.5 0.80–4.30 V, Cl-rich 더 넓어짐 | 우리 **constrained_esw.py** 가 trend 재현(modelc 더 넓어짐) | **✓ axis② 재현** (절대값은 leading-order라 다름) |
-| phase set | LiS4/SCl3/Li5PS4Cl2 **제외** | 우리 onset은 LiS4 **포함**(2.14) | → 제외 시 2.26 = 그들에 근접 (우리 TODO) |
+| phase set | LiS4/SCl3/Li5PS4Cl2 **제외** | 동일 set 제외 → onset **2.256**(완료) | ✅ 격차 0.14 V, comp1 onset rxn=Zuo Eq1 정확 |
 | σ trend | LPSCl1.5 peak(14.55), Cl과 증가 | 우리 AIMD D/Ea도 Cl-rich 빠름 | **✓ 일치** |
 | AIMD setup | 300 eV, Γ, NVT, 2 fs | 우리 AIMD와 동급 | **✓ 방법 정합** |
 
 ## 11. 적용 인사이트 (깊게)
 1. **우리 ESW의 검증 anchor (제일 중요)**: 우리 0-pressure grand-potential(OCV 1.72, onset 2.14) = 이들 **K_eff=0 (1.70–2.40)**. → "우리 계산은 무구속 극한을 정확히 재현"이라고 자신 있게. cathodic 1.72≈1.70은 거의 완벽.
 2. **axis② 정의·재현**: "Cl-rich 산화안정성 우위 = 기계 구속 효과(고몰부피 Cl 산물→반응변형→strain penalty)"가 이 논문 메시지이고 우리 constrained_esw.py가 우리 셀로 재현 → deck의 axis② 근거.
-3. **LiS4 제외 TODO 정당화**: 우리 onset 2.14가 그들 2.40과 0.26 V 차이 나는 건 **LiS4 포함** 때문 — 제외하면 2.26으로 근접. deck엔 "LiS4 제외 시 2.26, 문헌 2.40과 정합" 명시.
+3. **LiS4 제외 ✅완료(2026-06-23)**: 우리 onset 2.14(LiS4 포함)→**2.256**(제외) = 그들 2.40과 0.14 V로 근접, **comp1 onset 반응이 Zuo Eq1과 정확 일치**(원소 S, 2 e⁻). deck엔 "LiS4 제외 시 2.256, 문헌 2.40과 정합" 명시.
 4. **dendrite 반전 통찰**: "moderate instability가 self-limiting"(LPSCl1.0) — 우리가 "Cl-rich가 무조건 좋다"고 하면 안 되는 또 다른 이유(음극 dendrite엔 과안정이 독). axis 명명 강화.
 5. **σ 기전 연결**: 그들 Li 확률밀도 inter-cage jump = 우리 percolation/inter-cage 분석과 같은 물리 → 두 결과 묶기.
 

@@ -125,8 +125,8 @@ S⁻ 증가: LPSCl **6.7×** vs Cl1.5 **10.4×**; Cl⁻: **5.1×** vs **6.7×**.
 ## 11. 우리 DFT 대비 (comp1/modelc) → `../our_dft_baseline.md`
 | 항목 | Zuo(exp) | 우리(DFT) | 일치/차이+이유 |
 |---|---|---|---|
-| 분해 stoichiometry | Eq1 2e⁻+1.0LiCl / Eq2 1e⁻+1.5LiCl | comp1 1.75Li+1.0LiCl / modelc 0.7Li+1.6LiCl | **✓✓ 강한 일치** — grand-potential이 독립 재현(검증) |
-| 산화 onset | same peak + apparent 낮음 | 2.14 V 동일(S²⁻-limited) | **✓ 일치** — Zuo "낮은 onset"=2×전류 apparent |
+| 분해 stoichiometry | Eq1 2e⁻+1.0LiCl / Eq2 1e⁻+1.5LiCl | **LiS4 제외 시** comp1 `→Li3PS4+LiCl+S+2Li`(=**Eq1 정확 일치**) / modelc `→+1.6LiCl+0.4S+0.8Li` | **✓✓✓ 정확 일치** (LiS4 포함=1.75Li 근사, 제외=2Li로 Eq1 동일) |
+| 산화 onset | same peak + apparent 낮음 | **2.256 V** 동일(LiS4 제외; 포함 2.14) S²⁻-limited | **✓ 일치** — Zuo "낮은 onset"=2×전류 apparent |
 | Cl-rich 반응성(CV 2×) | 더 반응 | interface dE +2.5%(noise) | △ **2×≈σ비(2.4×) 접근성**, intrinsic 아님 |
 | 셀 우수(R_cat↓) | gas diversion→얇은 CEI | **못 봄**(closed solid-hull, 기체상 X) | ✗ 한계 → 실험 인용 |
 | metastability(DSC/TGA) | Cl-rich 덜 안정 | composition-기반 ESW ranking 불가 | ✗ 범위밖 → E_above_hull 보강 |

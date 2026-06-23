@@ -11,8 +11,15 @@
 | Ea (활성화에너지) | 0.253 eV | **0.224 eV** | AIMD Arrhenius |
 | D(600 K) | 3.09×10⁻⁶ cm²/s | **7.90×10⁻⁶ cm²/s** | AIMD |
 | ICOHP(Li–Cl) | −1.86 | −2.10 | LOBSTER |
-| 산화 onset (grand-potential) | 2.14 V (LiS4 제외 시 2.26) | 2.14 V | pymatgen `get_element_profile` |
-| 환원 한계 / OCV | 1.24 V / 1.72 V | 1.24 V / 1.72 V | grand-potential |
+| 산화 onset (grand-potential) | **2.256 V** (LiS4 포함 시 2.14) | **2.256 V** (LiS4 포함 시 2.14) | get_element_profile, LiS4/SCl3/Li5PS4Cl2 제외 = GG set |
+| 환원 한계 / OCV | 1.242 V / 1.717 V | 1.242 V / 1.717 V | grand-potential |
+
+### ESW 상세 (LiS4 제외, 2026-06-23 gabia 재계산 — `esw_lis4excluded.json`)
+> LiS4(현 MP id `mp-aaaceqmj`)·SCl3·Li5PS4Cl2 제외(Gil-González 2022 phase set). **두 조성 onset 동일 2.256 V (S²⁻-limited).**
+- **comp1 onset (2.256 V)**: `Li6PS5Cl → Li3PS4 + LiCl + S + 2 Li⁺ + 2 e⁻` ← **Zuo Eq1과 정확히 일치** (원소 S, 2 e⁻)
+- **modelc onset (2.256 V)**: `Li5.4PS4.4Cl1.6 → Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li⁺ + 0.8 e⁻` (Cl-rich: 전자 적게·LiCl 많이 = Zuo Eq2 거동)
+- 이후 단계: 2.385 V(P₂S₇+S), 3.326 V(SCl); modelc만 3.388 V(PCl₅).
+- GG K_eff=0 anodic 2.40 V와 격차 **0.14 V**(LiS4 포함 시 0.26). 환원/OCV(1.242/1.717) 불변.
 
 ## 핵심 발산 (comp1 → modelc, Cl 증가 효과)
 - **이온전도**: D↑(2.6×), Ea↓ — Cl-rich가 더 빠름 (disorder·vacancy)
