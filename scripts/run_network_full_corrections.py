@@ -65,6 +65,21 @@ SCRIPTS  = ROOT / 'scripts'
 WEBAPP   = ROOT / 'webapp'
 NET_PY   = SCRIPTS / 'network_conductivity.py'
 
+# Mirror app.py: load webapp/.env then honor WEBAPP_*_FOLDER so this CLI finds
+# the SAME data the webapp serves — e.g. a worktree runner whose results live in
+# a shared dir (env, no symlink).  Without this, WEBAPP/results is hardcoded and
+# Stage E silently processes the wrong (empty) folder.
+_envf = WEBAPP / '.env'
+if _envf.exists():
+    for _l in _envf.read_text().splitlines():
+        _l = _l.strip()
+        if _l and not _l.startswith('#') and '=' in _l:
+            _k, _v = _l.split('=', 1)
+            os.environ.setdefault(_k.strip(), _v.strip())
+RESULTS_DIR = Path(os.environ.get('WEBAPP_RESULTS_FOLDER') or (WEBAPP / 'results'))
+ARCHIVE_DIR = Path(os.environ.get('WEBAPP_ARCHIVE_FOLDER') or (WEBAPP / 'archive'))
+UPLOADS_DIR = Path(os.environ.get('WEBAPP_UPLOAD_FOLDER') or (WEBAPP / 'uploads'))
+
 sys.path.insert(0, str(SCRIPTS))
 from fracture_model import fracture_classify_force_sim  # noqa: E402
 
@@ -204,8 +219,7 @@ def discover_case_dirs() -> list[Path]:
     archive cases (webapp/archive/category/case_id/)."""
     seen = set()
     out = []
-    for base in ('results', 'archive'):
-        root = WEBAPP / base
+    for root in (RESULTS_DIR, ARCHIVE_DIR):
         if not root.exists(): continue
         for atoms_p in root.rglob('atoms.csv'):
             case_dir = atoms_p.parent
@@ -219,7 +233,7 @@ def discover_case_dirs() -> list[Path]:
 
 def _read_meta(case_dir: Path) -> dict:
     for path in (case_dir / 'meta.json',
-                 WEBAPP / 'uploads' / case_dir.name / 'meta.json'):
+                 UPLOADS_DIR / case_dir.name / 'meta.json'):
         if path.exists():
             try: return json.load(open(path))
             except Exception: pass
@@ -833,8 +847,14 @@ def run_one(case_dir: Path) -> tuple[str, bool, str]:
 def main() -> None:
     ap = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter,
                                   description=__doc__)
-    ap.add_argument('cases', nargs='*', help='Specific case_ids')
+    ap.add_argument('cases', nargs='*', help='Specific case_ids (dir leaf) OR readable names with --name')
     ap.add_argument('--quiet', action='store_true', help='One line per case')
+    ap.add_argument('--name', action='store_true',
+                    help='Match positional args against meta.json["name"] (readable, e.g. '
+                         'input_2mAh_a5_p00) instead of the TIMESTAMP dir leaf')
+    ap.add_argument('--missing-only', action='store_true',
+                    help='Only cases whose full_metrics.json lacks *_stage_e keys — fast '
+                         'backfill of cases that show Stage E "—" (skips already-done cases)')
     args = ap.parse_args()
 
     all_cases = discover_case_dirs()
@@ -842,15 +862,32 @@ def main() -> None:
         # Accept either bare case IDs (`input_6mAh_real40_4`) or full/partial
         # paths (`webapp/archive/후막(6mAh)/input_6mAh_real40_4`). Compare on
         # the leaf name so users can copy-paste the same path they see in the
-        # webapp URL without "No cases found." friction.
+        # webapp URL without "No cases found." friction.  With --name, match the
+        # readable meta name instead (dir leaves are TIMESTAMP cids).
         wanted = {Path(c).name for c in args.cases}
-        cases = [d for d in all_cases if d.name in wanted]
-        missing = wanted - {d.name for d in cases}
+        if args.name:
+            cases = [d for d in all_cases if _read_meta(d).get('name') in wanted]
+            found = {_read_meta(d).get('name') for d in cases}
+        else:
+            cases = [d for d in all_cases if d.name in wanted]
+            found = {d.name for d in cases}
+        missing = wanted - found
         if missing:
             print(f'  warning: not found in archive/results: {sorted(missing)}',
                   flush=True)
     else:
         cases = all_cases
+    if args.missing_only:
+        def _has_stage_e(d: Path) -> bool:
+            try:
+                fm = json.load(open(d / 'full_metrics.json'))
+            except Exception:
+                return False
+            return bool(fm.get('sigma_full_mScm_stage_e'))
+        before = len(cases)
+        cases = [d for d in cases if not _has_stage_e(d)]
+        print(f'  --missing-only: {before - len(cases)} already have Stage E → '
+              f'{len(cases)} to process', flush=True)
     if not cases:
         ap.error('No cases found.')
 
