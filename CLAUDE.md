@@ -612,6 +612,37 @@ Varkey et al., Adv. Powder Tech. 37 (2026) 105338 (halide Li3YBrCl6 SE + NMC811,
     carry an E_SE-stiffness term + composition term; ~20% is the rigid-sphere floor.  Both show
     an elastic→plastic knee ~100 MPa (our DEM Heckel P_y=138).  Heckel ln(1/(1−D))=K·P+A is the
     candidate; their data = independent stiffer-SE cross-check.
+  • Fig 14 σ_ionic+contact-area vs P added (2026-06-23): docs/data/varkey2026_ionic_vs_pressure.csv
+    (separator, 100→350 MPa: σ 0.0026→0.0048 mS/cm, contact-area 8→13%; digitized TREND only,
+    halide → stiffer-SE σ-vs-P cross-check, NOT absolute-transferable to LPSCl).
+
+### ★ LIT: Bazzoun 2026 DEM+FEM+RNM σ_ionic — SAME material/code, frame[4] CROSS-VALIDATION (2026-06-23) ★
+Full record: docs/lit_bazzoun2026_dem_fem_rnm.md + docs/data/bazzoun2026_sigma_ionic.csv +
+pdf docs/literature_coverage/pdfs/Bazzoun_2026_*.pdf.  Bazzoun et al., J. Power Sources 661
+(2026) 238682 (Mercedes-Benz + Stuttgart).  ★ OPPOSITE role to Varkey: Varkey=frame[1]/[2] gap
+our MPM fills; Bazzoun=frame[4] CROSS-VALIDATION of our TRANSPORT side (DEM→Kirchhoff/Holm).
+  • SAME as us: Li6PS5Cl SE + NMC811 CAM (POSCO), LIGGGHTS DEM (Hertz spring+damping), and the
+    RNM = OUR network solver: contact R=1/(2σ·r_c) (eq8) = Holm 1967, Kirchhoff Σ(φi−φj)/R=0
+    (eq12).  E_SE=22.1 GPa (≈ our real 24; E_eff 1.35 is the softened proxy), ν_SE=0.37,
+    E_CAM=161.5.  Network descriptors θ_SE(util)/Z_SE-SE(coord)/R̄_SE-SE = our percolation/CN/cov.
+  • EXPERIMENTAL ANCHORS we lacked (EIS, full-blocking cell, 400 MPa) — the "missing direct
+    validation" CLAUDE.md flagged: σ_eff,ion = 0.137 / 0.101 / 0.065 mS/cm @ f_CAM=70/75/80 wt%
+    (vol% CAM:SE 45:53 / 52:46 / 60:38); bulk LPSCl pellet σ=1.02 mS/cm (GB-incl < Cronau
+    single-crystal 3.0 — consistent).  Multi-pressure σ-vs-P (RNM, 100→400 MPa, SATURATES @400):
+    70% .068→.135 (+98%), 75% .035→.079 (+126%), 80% .008→.031 (+291%, sparsest net gains most).
+  • TREND agreement with us (independent): small SE → σ↑ (more contacts/θ/Z; size=packing); CAM↑
+    → σ↓; pressure↑ → θ↑ Z↑ R̄↓ → σ↑, saturating ~400 MPa (≈ our Heckel knee P_y=138).
+  • THEY lead: experimental EIS validation (compo+pressure) + FEM continuum σ_ionic reference
+    (COMSOL; we have no transport-FEM).  RNM≈FEM at f_CAM 70% but UNDER-predicts at 75-80%
+    (constriction-only, no field spreading; worst at high CAM: 80% RNM .031 ≪ exp .065) — our
+    Stage-E plastic contact-area would partly correct this (compare-study lever).  RNM 32-98× faster
+    than FEM (= our solver speed argument).
+  • WE lead: σ_e+σ_thermal triad (they ionic-only), Stage-E plastic area, fracture-Holm/Auerbach,
+    scaling-law compression (LOOCV 0.97), MPM morphology/void-fill (they sphere-only, no shape).
+  • ACTION: (1) adopt their exp σ_eff,ion as our σ_ionic ABSOLUTE validation points (map their
+    vol% CAM:SE → our φ_SE first); (2) σ-vs-P ↔ our Heckel/σ-vs-ε; (3) RNM(constriction) vs our
+    Stage-E(plastic-area) at same structure = quantify Stage-E contribution; (4) recheck σ_grain
+    double-count (their pellet 1.02 vs our Cronau 3.0 + Cronau(r_SE) GB factor).
 
 
   • Tier1 ✓ 104→113 after backfilling the 16 Tier3 via
