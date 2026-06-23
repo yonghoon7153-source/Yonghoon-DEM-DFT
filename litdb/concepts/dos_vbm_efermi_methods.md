@@ -68,6 +68,17 @@ $$\Delta_{\text{aligned}} = (\text{VBM}_A-R_A)-(\text{VBM}_B-R_B) \;=\; \text{VB
   [align]  공통 기준으로 빼면         → 차이  0.00 eV  (진짜)
 ```
 
+### 2-4. 같은 조성(disorder 배열) vs 다른 조성 — 비교 가능성
+| 경우 | offset | 비교 |
+|---|---|---|
+| **다른 조성** (LPSCl vs LPSCl1.6) | **큼 (~eV)** — 평균전위의 조성·밀도 항(α)이 다름 | ✗ 절대 VBM 비교 불가 |
+| **같은 조성, site disorder 배열끼리** | **작음 (~수십 meV)** — α항 상쇄, 배열·부피 잔여만 | △ 근사 가능, **core-level 정렬로 엄밀화** |
+
+- 같은 조성이면 평균전위의 **α항(조성·부피 의존)이 상쇄** → offset 대부분 사라짐. 단 평균전위는 **배열(arrangement)에도 약하게 의존** + 변동셀 relax 시 V0 미세차 → **작은 잔여 offset** 남음.
+- **엄밀히**: 같은 원자가 양쪽에 있으니 **깊은 core-level(예: P 1s) 정렬**이 쉬움 → 잔여 제거. (또는 같은 부피로 고정 relax 후 비교)
+- **단 의미**: disorder는 VBM character(S 3p)를 안 바꿈(결합 control) → 정렬해도 **절대 VBM 변화는 작고 비-informative**. disorder의 의미는 σ(이온전도)에 있음.
+- **E_F는 조성 같아도 여전히 못 씀** (§3, 절연체 smearing artifact — 조성과 무관).
+
 ---
 
 ## 3. 왜 절연체 E_F를 쓰면 안 되나 (smearing artifact)
