@@ -11,6 +11,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/ke2025_orbital_hybridization_mgclo.md` | Ke, MgClO 공도핑 s-p/p-p 혼성 (ESM 2025) | 음극·환원·도핑 |
 | `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | Gil-González, constrained ESW 시너지 (ESM 2022) | 산화·기계구속(②)·전도도 |
 | `papers/lu2025_tailoring_cl_rich_anode_licl.md` | Lu, 4d-Cl 자기분해 → LiCl interphase (CEJ 2025) | 음극·환원·자리도핑 |
+| `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | Liu, MgF₂ 공도핑 electron redistribution (Angew 2023) | 음극·환원·도핑(Mg s-p) |
 
 
 ## 시트: 실험값  (21 entries)
@@ -110,5 +111,6 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 20 | cf468336 (s4200402200664w) | (Springer) | ⬜ |
 | 21 | 327a5fda (S2405829725002211) | (Energy Storage Mater 2025) | ⬜ |
 | 22 | d68cd77f (S2405829725001254) | (Energy Storage Mater 2025) | ⬜ |
+| 23 | da9a7f39 / 6488e8eb (SI) | Liu, electron redistribution MgF₂ redox-resistible (Angew 2023) — `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정)*
