@@ -1,0 +1,26 @@
+# 🎯 우리 DFT 기준값 (comp1 / modelc) — 모든 문헌 비교의 기준점
+
+> 출처: Excel "DFT 관련" 시트 [본 연구] 0-1 / 0-2 + 세션 결과. 문헌 digest의 §7은 항상 이 표와 대조.
+
+| 물성 | **comp1 = Li₆PS₅Cl** | **modelc = Li₅.₄PS₄.₄Cl₁.₆** | 방법 |
+|---|---|---|---|
+| Band gap | 2.066 eV | 2.098 eV | DFT (PBE) |
+| E_F / VBM / CBM | 3.724 / 2.128 / 4.194 eV | 3.487 / 2.445 / 4.544 eV | DFT |
+| E_VRH (relaxed-ion) | 22.06 GPa | **27.66 GPa** | DFT elastic (C_ij) |
+| B₀ | **26.23 GPa** | 21.71 GPa | EOS BM3 (V0 254.16 / 243.29 Å³·fu⁻¹) |
+| Ea (활성화에너지) | 0.253 eV | **0.224 eV** | AIMD Arrhenius |
+| D(600 K) | 3.09×10⁻⁶ cm²/s | **7.90×10⁻⁶ cm²/s** | AIMD |
+| ICOHP(Li–Cl) | −1.86 | −2.10 | LOBSTER |
+| 산화 onset (grand-potential) | 2.14 V (LiS4 제외 시 2.26) | 2.14 V | pymatgen `get_element_profile` |
+| 환원 한계 / OCV | 1.24 V / 1.72 V | 1.24 V / 1.72 V | grand-potential |
+
+## 핵심 발산 (comp1 → modelc, Cl 증가 효과)
+- **이온전도**: D↑(2.6×), Ea↓ — Cl-rich가 더 빠름 (disorder·vacancy)
+- **기계적**: B₀↓ (26.2→21.7, Coulomb 응집 약화) ↔ E_VRH↑ (22→27.7, C44↑/disorder) — **방향 반대**
+- **전자구조**: gap·VBM character 거의 불변 (둘 다 VBM=S 3p)
+- **산화 onset**: 동일(S²⁻-limited) — Cl는 onset이 아니라 *분해 양·산물·계면*에 작용
+
+## 비교 시 주의 (방법 의존성)
+- **band gap**: PBE는 과소평가(실험·HSE 대비 ~1 eV↓). 무질서 배열·k-mesh로 ±0.2–0.3 eV 흔들림 → 문헌과 절대 gap 직접 비교 금지, "wide-gap insulator" 수준만.
+- **mechanical**: relaxed-ion vs clamped-ion, PBE vs PBEsol/D3 로 E/B/G 크게 달라짐 → functional 명시 후 비교.
+- **ESW**: 0-pressure grand-potential은 S-limited라 조성 무관 onset만 봄. 무질서 metastability·기계 구속·계면은 별도 축.
