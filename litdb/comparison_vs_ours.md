@@ -1,74 +1,104 @@
-# 🔬 문헌 ↔ 우리 DFT — 차이 + 적용 인사이트
+# 🔬 문헌 ↔ 우리 DFT — 물성축별 분류 + 논문 reference
 
-> 기준값: `our_dft_baseline.md`. 각 물성축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
+> 기준값: `our_dft_baseline.md`. **각 주장마다 [출처 논문] 명시.** digest 있는 논문은 `papers/<slug>.md` 링크.
+> 사용법: 새 논문 digest 시 해당 축 표에 행 1개 추가(+출처). 산화 Q&A는 맨 아래 §Q&A 로그.
 
-## A. 이온전도도 (Cl-rich가 빠르다 — 모두 일치)
-- 문헌(다수 exp): Cl 증가(→Cl1.5–1.6) σ 2.5→7–10 mS/cm, Ea 0.34→0.22 eV (Adeli/Anie2019, Liu2022, Zuo2022, Nanolett2021).
-- 우리: D(600K) 3.09→7.90e-6, Ea 0.253→0.224 — **방향·크기 정합.**
-- 인사이트: 우리 AIMD가 실험 trend를 재현 → 신뢰. 단 절대 σ는 RT 외삽이라 실험과 직접 비교는 Arrhenius로.
+## 📑 Reference key (출처 약칭)
+| 약칭 | 논문 (저자·년·저널) | digest/status | 유형 |
+|---|---|---|---|
+| **[Zuo]** | Zuo 2022 Angew — 양극 계면 chlorination | ✅ `papers/zuo2022_chlorination_cathode_interface.md` | exp |
+| **[Ke]** | Ke 2025 ESM — MgClO 음극 혼성 도핑 | ✅ `papers/ke2025_orbital_hybridization_mgclo.md` | exp+DFT |
+| **[GG]** | Gil-González 2022 ESM — constrained ESW (구속) | ✅ `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | DFT+exp |
+| [Wu] | Wu 2026 Nano Energy — calendar aging | 📄 db/properties/oxidation_stability.json | exp |
+| [Banik] | Banik 2022 ACS AEM — HAXPES VBM=S | ⬜ PDF | exp |
+| [Liu] | Liu 2022 AdvFM — Cl 결정화/계면 | ⬜ PDF | exp |
+| [Lu] | Lu 2025 CEJ — anode tailoring, PBE gap 1.88 | ⬜ PDF | DFT |
+| [Ma] | Ma 2026 J.E.S. — In doping, PBE gap 2.10→2.62 | ⬜ PDF | DFT |
+| [Semi] | "When Electrolytes Are Semiconductors" 2026 — HSE06 gap | ⬜ PDF | DFT |
+| [Kaur] | Kaur 2016 JES — elastic SQS E22.1/B28.7/G8.1 | ⬜ PDF | DFT |
+| [JPCC] | First-Principles Mech&Aniso 2025 — D3 E27.4/B34.7/G10.0 | 📄 Excel | DFT |
 
-## B. 산화안정성 — **4축으로 분리 (한 단어로 말하면 틀림)**
-| 축 | 결론 | 근거 |
+---
+
+## A. 이온전도도 — *Cl-rich가 빠르다 (전원 일치)*
+| 주장 | 출처 | 우리 (comp1→modelc) | 일치 |
+|---|---|---|---|
+| Cl↑ → σ 2.5→7–10 mS/cm, Ea 0.34→0.22 eV | [Zuo](2.9→7.0), [GG](AIMD peak 14.55 @Cl1.5), [Liu], Excel exp 다수 | D(600K) 3.09→7.90e-6, Ea 0.253→**0.224** | **✓✓** |
+| σ 기전 = inter-cage Li jump (Cl 4c 무질서) | [GG] (Li 확률밀도, Fig 1e,f) | 우리 percolation/inter-cage 분석과 동일 물리 | ✓ |
+| AIMD setup (300 eV/Γ/NVT) | [GG] | 동급 | ✓ 방법 정합 |
+> 인사이트: 우리 AIMD가 실험·문헌 trend 재현 → 신뢰. 절대 σ는 RT 외삽이라 Arrhenius로 비교.
+
+## B. 산화안정성 — **4축 분리 (축 명명 없이 말하면 틀림)**
+| 축 | 우위 | 출처 | 우리 값 / 재현 |
+|---|---|---|---|
+| **B① intrinsic 0-pressure onset** | **무승부** (~2.1 V, S²⁻-limited) | [GG] K_eff=0 = **1.70–2.40 V** | 우리 grand-potential **OCV 1.72 / onset 2.14**(LiS4 제외 2.26) → **✓✓ 재현** |
+| **B② 기계 구속 window** | **Cl-rich 승** | [GG] K_eff=20 LPSCl1.5 **0.80–4.30 V** (Cl 산물 고몰부피→strain) | 우리 `constrained_esw.py`가 trend 재현(modelc 더 넓어짐) → **✓** |
+| **B③ cathode 계면 cycling** | **Cl-rich 승** | [Zuo] R_cat 8.9<13.2, CE 79>77% (산물 양호) | 우리 grand-potential이 [Zuo] Eq1/Eq2 분해 stoichiometry 재현 → **✓ 화학** |
+| **B④ calendar/thermal/moisture** | **Cl-poor(LPSCl) 승** | [Wu] 90℃ retention L6 68%>L55 48% | 범위 밖(우리 못 봄) |
+> - 우리 ESW는 **B①만** 봄(S-limited 구조적). 분해 *양*([Zuo] CV 2×)·metastability(DSC/TGA)·기체는 못 잡음.
+> - **deck 결론**: "전도도 이득이 산화창 손해 없이(B①–③ 중립~유리), 비용은 shelf-life(B④)." 축 명명 필수.
+> - **LiS4 단서**: 우리 onset 2.14 vs [GG] 2.40 차이 = LiS4(mp-995393) 포함 탓 → 제외 시 2.26 (정합↑).
+
+## C. 기계적 물성 — *값이 functional·정의 의존*
+| 주장 | 출처 | 우리 | 비고 |
+|---|---|---|---|
+| E=22.1/B=28.7/G=8.1 (SQS) | [Kaur] | E_VRH 22.06(comp1) | functional/SQS 차이 |
+| E=27.4/B=34.7/G=10.0, B/G=3.46(연성) | [JPCC] (PBE-D3) | E_VRH 27.66(modelc), B0 26.23→21.71 | D3라 절대값↑ |
+| E 21.3→21.6 (Cl0→1.5 거의 불변) | Excel calc#12 | 우리 E_VRH 22→27.7 (변동) | 무질서/protocol 차이 |
+> 차이 원인: relaxed vs clamped-ion, PBE vs PBEsol/D3 → 절대 E/B ±수 GPa. **비교 전 functional·ion-relax 맞출 것.** B/G 연성 결론만 robust.
+
+## D. 전자구조 / band gap — *방법 의존, 절대 비교 금지*
+| 주장 | 출처 | 우리 | 비고 |
+|---|---|---|---|
+| PBE gap 1.88 eV | [Lu] | comp1 2.066 / modelc 2.098 (PBE) | 무질서·k-mesh ±0.2–0.3 scatter |
+| PBE 2.10→2.62 (In 도핑) | [Ma] | — | In 0.52 eV↑인데 σ_e 1.2×만 변(=defect-controlled) |
+| PBE 2.45 / **HSE06 3.30** | [Semi] | (우리 PBE 2.07) | PBE는 ~1 eV 과소 → "wide-gap insulator"만 |
+| VBM = S 3p (HAXPES) | [Banik] | 우리 PDOS VBM=S 3p | **✓ 재현** |
+> 인사이트: 1.88 vs 2.10은 model scatter일 뿐, **σ_e와 무관**(defect/neζ가 지배, slide25 틀).
+
+## E. 환원 / 음극(Li 금속) 계면
+| 주장 | 출처 | 우리 | 일치 |
+|---|---|---|---|
+| 분해창 환원 <1.7 V / 산화 >2.1 V | [Ke] (인용), [GG] | ESW 환원 **1.24 V** / 산화 **2.14 V** | 산화 ✓(2.1≈2.14); 환원 같은 결 |
+| LPSCl1.5 환원 산물 = Li₂S+Li₃P | [Ke], [GG] | modelc 0V → Li₃P+Li₂S+LiCl | **✓ 동일 chemistry** |
+| **과안정 LPSCl1.5는 dendrite self-limiting 안 됨 → moderate Cl(1.0)이 유리** | [GG] (다층) | — | 음극엔 "Cl 많을수록 좋다" 아님 |
+
+## F. 도핑 (계면 전자구조 엔지니어링)
+| 주장 | 출처 | 우리 연결 |
 |---|---|---|
-| ① intrinsic 0-pressure window | **무승부** (~2.1 V, S²⁻-limited) | 우리 ESW = Gil-González K_eff=0 (1.7–2.4) |
-| ② 기계 구속 window | **Cl-rich 승** (구속 시 더 넓어짐) | Gil-González K_eff=20 + 우리 constrained_esw |
-| ③ cathode 계면 cycling | **Cl-rich 승** (R_int↓, 성능↑) | Zuo (산물 양호) — 우리 stoichiometry 재현 |
-| ④ calendar/thermal/moisture | **Cl-rich 패** | Wu2026 (90 ℃ retention L6 68%>L55 48%) |
-- 우리 한계: ESW는 ①만 봄(S-limited 구조적). 실제 분해 *양*(Zuo CV 2×)·metastability(DSC/TGA)는 못 잡음 → 무질서 E_above_hull 계산이 보강책.
-- 인사이트: deck에서 **"Cl-rich 산화안정성"을 축 명시 없이 말하지 말 것.** 핵심 결론 = "전도도 이득이 산화창 손해 없이(①–③ 중립~유리), 비용은 shelf-life(④)".
+| MgClO(Mg+Cl+O) 공도핑 → 계면 metallic→gapped (s-p/p-p 혼성) → 환원 분해 차단 | [Ke] | **우리 cascade(Mg/Cl/O 도판트 스크리닝)의 직접 문헌 동기** |
+| SEI = 전자절연(Li₂O 8.37 eV)+친리튬(LiMg) | [Ke] | 우리 **Li₃N**(음극 interphase) 연구와 같은 패밀리 |
+| 도판트 음극 호환성 descriptor: 계면 binding energy(J/m²), E_F metallic 여부 | [Ke] | 우리 cascade 평가에 차용 가능 |
 
-## C. 기계적 물성 (값이 functional·정의에 크게 의존)
-- 문헌: Kaur2016(SQS) E=22.1/B=28.7/G=8.1; JPCC2025(D3) E=27.4/B=34.7/G=10.0/(B/G=3.46 연성); AcsMater2025 E 21.3→21.6 (Cl0→1.5 거의 불변).
-- 우리: E_VRH 22.06→27.66, B0 26.23→21.71.
-- **차이 원인**: relaxed-ion vs clamped-ion, PBE vs PBEsol/D3 → E/B 절대값 ±수 GPa. **비교 전 functional·ion-relax 조건 맞출 것.**
-- 인사이트: B/G(Pugh) 연성 결론은 robust(문헌·우리 공통). 절대 modulus는 same-protocol(우리 cascade)에서만 비교.
+## G. ✅ 우리 계산이 문헌을 *검증*하는 지점 (강점)
+| 우리 결과 | = 문헌 | 출처 |
+|---|---|---|
+| grand-potential 분해식 (Eq1/Eq2 stoichiometry) | = [Zuo] 실험 유도 분해식 | [Zuo] |
+| 0-pressure ESW (OCV 1.72, onset 2.14/2.26) | = K_eff=0 (1.70–2.40) | [GG] |
+| 구속 ESW Cl-rich 확대 trend | = K_eff=20 거동 | [GG] |
+| AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][Liu] |
+| VBM = S 3p | = HAXPES | [Banik] |
+| 환원 산물 Li₃P+Li₂S+LiCl | = LPSCl1.5 환원 | [Ke][GG] |
 
-## D. 전자구조 / band gap (방법 의존 — 절대 비교 금지)
-- 문헌: Lu2025(PBE) 1.88; Ma2026(PBE) 2.10→2.62(In); batteries2026 PBE 2.45 / **HSE06 3.30**.
-- 우리: 2.066(comp1)/2.098(modelc) PBE.
-- **차이**: PBE 과소평가(HSE/exp ~3+ eV) + 무질서 배열·k-mesh ±0.2–0.3. → 1.88 vs 2.10은 model scatter, **σ_e와 무관**(In 0.52 eV↑가 σ_e 1.2×만 바꿈 = defect-controlled).
-- 인사이트: gap은 "wide-gap insulator" 수준만. σ_e는 defect(neζ) 얘기로 (슬라이드 25 틀).
-
-## E. 우리 계산이 문헌을 "검증"하는 지점 (강점으로 쓸 것)
-- grand-potential 분해식 = Zuo Eq1/Eq2 재현 (③).
-- 0-pressure ESW = Gil-González K_eff=0 재현 (①).
-- AIMD Ea/D trend = exp 재현 (A).
-- VBM=S 3p = HAXPES(Banik) 재현.
-
-## F. 우리가 아직 못 하는 것 (정직 목록 → 향후)
-- 기체상(SO₂/O₂) 포함 계면 분해 (Zuo의 R_int 메커니즘)
-- 무질서 E_above_hull (DSC/TGA metastability)
-- defect/σ_e 정량 (slide25 틀의 실제 계산)
-- slab IP / absolute VBM (UPS 절대 기준)
+## H. ⚠️ 우리가 아직 못 하는 것 (정직 목록 → 향후)
+| gap | 누가 필요로 함 | 보강책 |
+|---|---|---|
+| 기체상(SO₂/O₂) 포함 계면 분해 | [Zuo] R_int 메커니즘 | 기체 chempot + NCM O-release |
+| 무질서 E_above_hull (metastability) | [Zuo] DSC/TGA, [Wu] | SQS/enumerate E_hull |
+| LiS4 제외 ESW (onset 2.26) | [GG] phase set | esw에 --exclude_phases |
+| 구속 ESW 절대값(full Lagrange) | [GG] K_eff=20 정량 | constrained_esw 2nd-order |
+| defect/σ_e 정량 | slide25 틀 | Freysoldt defect calc |
+| slab IP / absolute VBM | UPS 절대 기준 | slab+vacuum |
 
 ---
 
 ## 🗨️ Q&A 로그
-> 슬라이드·결과를 보며 나온 질문/답을 누적. 새 Q&A는 여기(산화 관련) 또는 해당 논문 digest의 §Q&A에.
+> 슬라이드·결과를 보며 나온 질문/답 누적. "Q&A 작성해줘" 트리거.
 
 ### Q1 · 2026-06-23 · LPSCl vs LPSCl1.6 산화안정성 누가 더 좋나? "우리 동일"과 문헌이 다르면 이유? (slide 27 ESW)
-**한 줄 답**: 단일 승자 없음 — **축을 명명**해야 함. 우리 "동일"은 intrinsic onset(축①) 한정 정답이고, 문헌의 "다름"은 우리 ESW가 측정하지 않는 다른 축들.
-
-| 축 | 우위 | 근거 | 우리 ESW가 보나 |
-|---|---|---|---|
-| ① intrinsic 0-pressure onset | **무승부** (2.14 V, S-limited) | 우리 ESW = Gil-González K_eff=0 (1.7–2.4) | ✅ (이것만) |
-| ② 기계 구속 window | **Cl-rich** | Gil-González K_eff=20 (bulky LiCl→strain) + 우리 constrained_esw | ✗ |
-| ③ cathode 계면 cycling | **Cl-rich** | Zuo (산물 양호→R_int↓→성능↑) | ✗ |
-| ④ calendar/thermal/moisture | **LPSCl(Cl-poor)** | Wu (90℃ retention L6 68%>L55 48%) | ✗ |
-
-**왜 우리 "동일" vs 문헌 "다름"? = 측정 대상이 다름**
-- 우리 grand-potential ESW = **intrinsic 0-pressure 열역학 onset**. 첫 산화 S²⁻→S₂²⁻(황)는 두 조성 공유 → **조성 무관 = 동일**(구조적). 정답이며 Gil-González K_eff=0이 검증.
-- 문헌 "Cl-rich 덜 안정"(Zuo CV 낮은 onset·2×, DSC/TGA): (a) 실제 **무질서 metastability**(우리 ideal 구조 밖), (b) **kinetics/접근성**(2×≈σ비 2.4×), (c) CV onset apparent. **열역학 onset 자체는 동일**(Zuo도 "same peak potentials").
-- 문헌 "Cl-rich 더 안정"(Gil-González 구속, Zuo 계면): 축②③ — 우리 0-pressure ESW가 **구조적으로 제외**하는 기계구속·계면산물.
-
-**결론**: intrinsic onset 무승부(2.14 V, S-limited) / 실사용 계면 Cl-rich 우위(Zuo) / shelf-life Cl-rich 열위(Wu). **축 명명 없이 "Cl-rich가 더·덜 산화안정"이라 말하지 말 것.**
-연결: §B(산화 4축) · `our_dft_baseline.md` · `papers/zuo2022_chlorination_cathode_interface.md` §11.
-
----
-
-## G. 음극(환원) 계면 & 도핑 축 (Ke 2025, ESM — MgClO)
-- 우리 ESW **환원 한계 1.24 V** / 산화 2.14 V ↔ Ke 인용 분해창 **환원 <1.7 V, 산화 >2.1 V**: 산화 정합(2.1≈2.14), 환원도 같은 결(Cl-rich가 Li과 환원 불안정). 환원 산물도 일치(Li₃P+Li₂S+(LiCl)).
-- **도핑 전략 = 우리 cascade 직접 동기**: MgClO(Mg+Cl+O) 공도핑이 Li/SE 계면을 metallic→gapped로 재배치(s-p/p-p 혼성)해 PS₄³⁻ 환원 분해 차단 → 우리 multi_category cascade(Mg/Cl/O 등 도판트 스크리닝)가 "어떤 도판트가 계면을 고치나"를 답하는 것의 문헌 증명.
-- **차용 descriptor**: 계면 ELF **binding energy(J/m²)**, PDOS **E_F metallic 여부** — 도판트 음극 호환성 평가용.
-- **SEI 설계**: 전자절연(Li₂O 8.37 eV)+친리튬(LiMg) — 우리 **Li₃N**(음극 interphase, 낮은 Li 장벽) 연구와 같은 음극-계면 패밀리.
-- 방법: Ke PBE/PAW/500eV/4×4×4 + ELF/PDOS = 우리와 동일 수준 → 방법 정합.
+**한 줄 답**: 단일 승자 없음 — **축을 명명**해야 함. 우리 "동일"은 intrinsic onset(B①) 한정 정답, 문헌의 "다름"은 우리 ESW가 안 보는 다른 축(B②③④).
+- 우리 grand-potential ESW = **intrinsic 0-pressure onset**. 첫 산화 S²⁻→S₂²⁻(황)는 두 조성 공유 → 조성 무관 = 동일. [GG] K_eff=0이 검증.
+- "Cl-rich 덜 안정"([Zuo] CV·DSC/TGA) = (a) 무질서 metastability(우리 ideal 밖), (b) kinetics/접근성(2×≈σ비 2.4×), (c) CV apparent onset. **열역학 onset은 동일**([Zuo] "same peak potentials").
+- "Cl-rich 더 안정"([GG] 구속, [Zuo] 계면) = B②③, 우리 0-pressure가 구조적으로 제외.
+- **결론**: intrinsic 무승부 / 계면 Cl-rich 우위([Zuo]) / shelf-life Cl-rich 열위([Wu]). 축 명명 필수.
+연결: §B · `our_dft_baseline.md` · `papers/zuo2022_chlorination_cathode_interface.md` §11 · `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` §10.
