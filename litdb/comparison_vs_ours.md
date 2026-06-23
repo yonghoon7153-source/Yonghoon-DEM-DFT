@@ -12,7 +12,7 @@
 | [Wu] | Wu 2026 Nano Energy — calendar aging | 📄 db/properties/oxidation_stability.json | exp |
 | [Banik] | Banik 2022 ACS AEM — HAXPES VBM=S | ⬜ PDF | exp |
 | [Liu] | Liu 2022 AdvFM — Cl 결정화/계면 | ⬜ PDF | exp |
-| [Lu] | Lu 2025 CEJ — anode tailoring, PBE gap 1.88 | ⬜ PDF | DFT |
+| **[Lu]** | Lu 2025 CEJ — 음극 4d-Cl 자기분해 → LiCl interphase (gap 1.88/LiCl 6.22) | ✅ `papers/lu2025_tailoring_cl_rich_anode_licl.md` | exp+DFT |
 | [Ma] | Ma 2026 J.E.S. — In doping, PBE gap 2.10→2.62 | ⬜ PDF | DFT |
 | [Semi] | "When Electrolytes Are Semiconductors" 2026 — HSE06 gap | ⬜ PDF | DFT |
 | [Kaur] | Kaur 2016 JES — elastic SQS E22.1/B28.7/G8.1 | ⬜ PDF | DFT |
@@ -50,18 +50,22 @@
 ## D. 전자구조 / band gap — *방법 의존, 절대 비교 금지*
 | 주장 | 출처 | 우리 | 비고 |
 |---|---|---|---|
-| PBE gap 1.88 eV | [Lu] | comp1 2.066 / modelc 2.098 (PBE) | 무질서·k-mesh ±0.2–0.3 scatter |
+| PBE gap **LPSCl 1.88 / LiCl 6.22 eV** | [Lu] | comp1 2.066 / modelc 2.098 (PBE) | 무질서·Γ-only k ±0.2–0.3 scatter. LiCl 6.22 = 전자절연 interphase 기준 |
 | PBE 2.10→2.62 (In 도핑) | [Ma] | — | In 0.52 eV↑인데 σ_e 1.2×만 변(=defect-controlled) |
 | PBE 2.45 / **HSE06 3.30** | [Semi] | (우리 PBE 2.07) | PBE는 ~1 eV 과소 → "wide-gap insulator"만 |
 | VBM = S 3p (HAXPES) | [Banik] | 우리 PDOS VBM=S 3p | **✓ 재현** |
 > 인사이트: 1.88 vs 2.10은 model scatter일 뿐, **σ_e와 무관**(defect/neζ가 지배, slide25 틀).
 
-## E. 환원 / 음극(Li 금속) 계면
+## E. 환원 / 음극(Li 금속) 계면 — **⚠ Cl-rich 유불리 문헌 충돌 (자리 점유가 변수)**
 | 주장 | 출처 | 우리 | 일치 |
 |---|---|---|---|
 | 분해창 환원 <1.7 V / 산화 >2.1 V | [Ke] (인용), [GG] | ESW 환원 **1.24 V** / 산화 **2.14 V** | 산화 ✓(2.1≈2.14); 환원 같은 결 |
-| LPSCl1.5 환원 산물 = Li₂S+Li₃P | [Ke], [GG] | modelc 0V → Li₃P+Li₂S+LiCl | **✓ 동일 chemistry** |
-| **과안정 LPSCl1.5는 dendrite self-limiting 안 됨 → moderate Cl(1.0)이 유리** | [GG] (다층) | — | 음극엔 "Cl 많을수록 좋다" 아님 |
+| LPSCl1.5 환원 산물 = Li₂S+Li₃P **+LiCl** | [Ke], [GG], **[Lu]** | modelc 0V → Li₃P+Li₂S+**LiCl** | **✓ 동일 chemistry** (LiCl 공통) |
+| interphase **LiCl = 전자절연(gap 6.22) + 저Li⁺장벽(0.05) + 연성(Poisson 0.23)** → 좋은 buffer | **[Lu]** Fig6 | modelc가 LiCl 생성 → Lu의 "good passivator"로 해석 | **✓ 우리 LiCl 산물에 의미 부여** |
+| 계면E Li/LPSCl −2.68 ≪ LiCl/LPSCl −0.19 J cm⁻² (LiCl buffer가 Li-S 자발반응 차단) | **[Lu]** Fig6a | 우리 계면 slab 미계산(gap H) | 차용 가능 |
+| **[Lu] 견해**: 4d-Cl 90 % 자기분해 → LiCl passivation → **Cl-rich가 음극 유리** (CCD 0.96, 800h) | **[Lu]** | modelc Cl-rich, 4d 점유↑ 추정 → 부합 | Cl-rich ✓(조건부) |
+| **[GG] 견해**: 과안정 LPSCl1.5는 self-limiting ✗ → **moderate Cl(1.0)이 유리** (다층 전략) | [GG] | — | Cl-rich ✗ |
+> **🔑 화해 (정직)**: 같은 LPSCl1.5인데 [Lu]는 "Cl-rich 유리", [GG]는 "moderate 유리"로 정반대. 둘 다 **"전자절연 passivation(LiCl) 형성 = dendrite 억제 관건"** 엔 동의. 차이는 **Cl '양'이 아니라 Cl '자리(4d)'**: [Lu]의 high-4d-Cl은 metastable(E_hull +15.2)이라 자기분해→LiCl, [GG]의 조성-평균 관점은 이 자리 불안정성을 못 봄. → **deck 결론: "음극엔 Cl-rich 무조건 유리 ✗ / 전자절연 LiCl interphase 형성되면 ✓, 형성 여부는 4d-Cl 점유가 좌우"**. (상세 = `papers/lu2025_tailoring_cl_rich_anode_licl.md` §13)
 
 ## F. 도핑 (계면 전자구조 엔지니어링)
 | 주장 | 출처 | 우리 연결 |
@@ -69,6 +73,8 @@
 | MgClO(Mg+Cl+O) 공도핑 → 계면 metallic→gapped (s-p/p-p 혼성) → 환원 분해 차단 | [Ke] | **우리 cascade(Mg/Cl/O 도판트 스크리닝)의 직접 문헌 동기** |
 | SEI = 전자절연(Li₂O 8.37 eV)+친리튬(LiMg) | [Ke] | 우리 **Li₃N**(음극 interphase) 연구와 같은 패밀리 |
 | 도판트 음극 호환성 descriptor: 계면 binding energy(J/m²), E_F metallic 여부 | [Ke] | 우리 cascade 평가에 차용 가능 |
+| **음이온 자리(4d) Cl 점유 엔지니어링** → 자기분해 LiCl interphase (원소도핑 아닌 *자리* 레버) | **[Lu]** | modelc Cl-rich의 4a/4d 분포 명시하면 Lu와 직접 연결 |
+| **interphase 품질 descriptor 3종**: 전자 gap 넓음 + Li⁺장벽 낮음 + Poisson 연성 | **[Lu]** Fig6d | Ke binding-E와 묶어 음극 interphase 평가셋 완성 |
 
 ## G. ✅ 우리 계산이 문헌을 *검증*하는 지점 (강점)
 | 우리 결과 | = 문헌 | 출처 |
@@ -79,7 +85,7 @@
 | 구속 ESW Cl-rich 확대 trend | = K_eff=20 거동 | [GG] |
 | AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][Liu] |
 | VBM = S 3p | = HAXPES | [Banik] |
-| 환원 산물 Li₃P+Li₂S+LiCl | = LPSCl1.5 환원 | [Ke][GG] |
+| 환원 산물 Li₃P+Li₂S+**LiCl** (LiCl = 전자절연 passivator) | = LPSCl1.5 환원; LiCl이 음극 passivation | [Ke][GG][**Lu**] |
 
 ## H. ⚠️ 우리가 아직 못 하는 것 (정직 목록 → 향후)
 | gap | 누가 필요로 함 | 보강책 |

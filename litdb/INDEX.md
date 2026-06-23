@@ -10,6 +10,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/zuo2022_chlorination_cathode_interface.md` | Zuo, Chlorination/cathode interface (Angew 2022) | 양극·산화 |
 | `papers/ke2025_orbital_hybridization_mgclo.md` | Ke, MgClO 공도핑 s-p/p-p 혼성 (ESM 2025) | 음극·환원·도핑 |
 | `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | Gil-González, constrained ESW 시너지 (ESM 2022) | 산화·기계구속(②)·전도도 |
+| `papers/lu2025_tailoring_cl_rich_anode_licl.md` | Lu, 4d-Cl 자기분해 → LiCl interphase (CEJ 2025) | 음극·환원·자리도핑 |
 
 
 ## 시트: 실험값  (21 entries)
@@ -92,7 +93,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 3 | 0be7bdb0 …Liang… | Liang, quasi-layered argyrodite Li migration (Small 2025) | ⬜ |
 | 4 | 338654f5 / 7440fd1f (S2405829721005894) | Gil-González, synergistic Cl / constrained ESW (ESM 2022) [dup] | ⬜ |
 | 5 | 15bcf906 | Banik, "Can substitutions affect oxidative stability" | ⬜ |
-| 6 | 3de2eeda / ec0fa864 (S1385894725012604) | Lu, tailoring argyrodite / Li anode (CEJ 2025) [dup] | ⬜ |
+| 6 | 2e34de4d / 3de2eeda / ec0fa864 (S1385894725012604) | Lu, tailoring argyrodite / Li anode (CEJ 2025) [dup] — `papers/lu2025_tailoring_cl_rich_anode_licl.md` | ✅ |
 | 7 | bebbf7ed (S2352152X26024643) | Ma, In-doping cathode interface (J Energy Storage 2026) | ⬜ |
 | 8 | ec2b0fc7 | Kaur, elastic properties (J Electrochem Soc 2022) | ⬜ |
 | 9 | f15845cf | Nd2O3Cl1.6_DFT (우리 자체 DFT?) | ⬜ |
