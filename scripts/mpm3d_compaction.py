@@ -83,6 +83,9 @@ def parse_args(argv):
     ap.add_argument('--r-am', type=float, default=0.045, help='AM radius (box units; raise n-grid for 12:4:1)')
     ap.add_argument('--r-se', type=float, default=0.018, help='SE radius (box units)')
     ap.add_argument('--frames', type=int, default=400)
+    ap.add_argument('--print-every', type=int, default=5,
+                    help='print a progress line every N frames (lower = watch a heavy 300M-pt run '
+                         'advance, so it does not look frozen during the 20-frame silence)')
     ap.add_argument('--sub', type=int, default=40)
     ap.add_argument('--dt', type=float, default=2.0e-4)
     ap.add_argument('--seed', type=int, default=3)
@@ -530,7 +533,7 @@ def main(argv):
         por_end = por; p_end = p
         if reached and por_at_target < 0:
             por_at_target = por                              # porosity when target stress was FIRST reached
-        if not args.quiet and (frame % 20 == 0 or conv >= 12):
+        if not args.quiet and (frame % args.print_every == 0 or conv >= 12):
             thick = f"  thickness={height*um_box:5.2f}µm" if um_box > 0 else ""
             print(f"  frame {frame:3d} [{'descend' if not reached else 'servo'}]  "
                   f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f})  "
