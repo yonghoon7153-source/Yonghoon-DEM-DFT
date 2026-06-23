@@ -486,11 +486,11 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
     const data = await res.json();
     if (data.error) {
       alert(data.error);
+    } else if (data.analyzing) {
+      // Backend already kicked off the FULL pipeline (incl. Stage E) on upload.
+      // Just watch progress — do NOT re-POST /analyze (that would double-run).
+      runAnalysis(data.case_id, false, true);
     } else {
-      // Auto-run analysis
-      if (confirm(`업로드 완료 (${data.mode} 모드). 분석을 바로 실행할까요?`)) {
-        await runAnalysis(data.case_id);
-      }
       location.reload();
     }
   } catch (err) {
@@ -500,22 +500,28 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
   uploadBtn.textContent = '업로드';
 });
 
-// Run Analysis
-async function runAnalysis(caseId, forceNetwork) {
+// Run Analysis.  alreadyStarted=true → backend already spawned it (e.g. on
+// upload); skip the POST and go straight to status polling (avoids double-run).
+async function runAnalysis(caseId, forceNetwork, alreadyStarted) {
   forceNetwork = !!forceNetwork;
   if (forceNetwork && !confirm('이 케이스의 Network solver 결과를 폐기하고 강제 재실행합니다.\n병목 케이스는 수~수십분 걸릴 수 있습니다. 계속?')) return;
   const panel = document.getElementById('status-panel');
   const log = document.getElementById('status-log');
   panel.style.display = 'block';
-  log.innerHTML = `<p>분석 시작${forceNetwork ? ' (NET 강제)' : ''}...</p>`;
+  log.innerHTML = `<p>분석 ${alreadyStarted ? '진행중 (업로드 시 자동 시작)' : '시작'}${forceNetwork ? ' (NET 강제)' : ''}...</p>`;
 
   try {
-    const res = await fetch(`/analyze/${caseId}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ force_network: forceNetwork }),
-    });
-    const data = await res.json();
+    let data;
+    if (alreadyStarted) {
+      data = {};   // backend already started the pipeline → fall through to polling
+    } else {
+      const res = await fetch(`/analyze/${caseId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ force_network: forceNetwork }),
+      });
+      data = await res.json();
+    }
     if (data.error) {
       log.innerHTML += `<p class="log-error">오류: ${data.error}</p>`;
     } else if (data.log) {

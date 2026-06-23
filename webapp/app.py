@@ -3501,7 +3501,23 @@ def upload():
     # Sync to Supabase
     storage_sync.sync_dir_to_remote(case_dir, f'uploads/{case_id}')
 
-    return jsonify({'case_id': case_id, 'mode': mode, 'files': filenames})
+    # Auto-trigger the FULL analysis pipeline (incl. Step 7 Stage E) server-side
+    # so it ALWAYS runs on upload, independent of the browser — analyze() spawns
+    # a daemon thread that survives a tab close.  Previously the frontend asked a
+    # cancelable confirm("분석을 바로 실행할까요?"); cancelling (or a stale tab)
+    # left the case at status 'uploaded' with NO *_stage_e σ values — exactly why
+    # the freshly-uploaded p0* grid cases showed Stage E '—'.  Reusing analyze()
+    # via a request context keeps the single tested pipeline (no duplication).
+    analyzing = False
+    try:
+        with app.test_request_context(json={}):
+            analyze(case_id)          # sets status, starts background thread, returns
+        analyzing = True
+    except Exception as _e:
+        app.logger.warning(f'[upload] auto-analyze kick failed ({case_id}): {_e}')
+
+    return jsonify({'case_id': case_id, 'mode': mode, 'files': filenames,
+                    'analyzing': analyzing})
 
 @app.route('/analyze/<case_id>', methods=['POST'])
 def analyze(case_id):
