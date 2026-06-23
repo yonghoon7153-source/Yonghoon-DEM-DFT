@@ -134,6 +134,13 @@ Scheme1(PS₄ redox가 문제) → Fig1(Mg→P, F→Cl 구조) → Fig2(σ 약�
 4. **우리 환원 산물 해석**: 우리 comp1 0V → Li₃P+Li₂S+LiCl = Liu가 "음극 불안정의 분해산물"로 지목한 바로 그것 → "왜 음극 보호가 필요한가"의 근거.
 5. **ELF 활용 사례 추가**: 사용자 ELF 질문(같은 조성서 ELF 보는지/언제 쓰나)에 대한 또 다른 답 — **도핑 전후 같은 골격(MgS₄ vs PS₄)에서 ELF로 전자 재분포 시각화**. [Ke](결합E)·[Liu](전자국재) 두 ELF 용례.
 
+## 📝 서술용 motivation 문단 (한글 — 논문 intro 기반, deck/thesis 재사용)
+> 이 논문 intro(p.1, Scheme 1 직전)의 핵심 동기를 한글로 정리한 문단. citation 표시 [5][6][7]은 **이 논문(Liu 2023)의 자체 reference 번호** (재번호 금지 — thesis에 옮길 땐 본인 ref로 교체).
+
+그러나 sulfide-SE의 실용화에 있어 핵심적인 한계 중 하나는 금속 Li 전극에 대한 낮은 (전기)화학적 안정성이다.[5] Sulfide-SE는 친핵성(nucleophilic) Li 금속에 의해 전기화학적으로 환원되기 쉬우며, Li/sulfide-SE 계면에서 이온-전자 혼합전도성 계면상(mixed ion-electron conducting interphase; Li₂S, Li₃P 등)을 생성한다.[6] 이 제어 불가능한 기생 계면반응(parasitic interfacial reaction)은 sulfide-SE의 지속적인 분해를 유발하고, sulfide-SE 표면 또는 내부로의 리튬 덴드라이트 성장을 촉진하여 전지의 사이클 성능을 저하시킨다.[7]
+
+> 영문 원문(대조): "one of the critical limitations for the practical applications of sulfide-SE is their poor (electro)chemical stability towards metallic Li electrode.[5] The sulfide-SE is prone to electrochemical reduced by nucleophilic Li metal, generating the mixed ion-electron conducting interphases (Li₂S, Li₃P, etc.) at the Li/sulfide-SE interface.[6] This uncontrollable parasitic interfacial reaction causes the continuous decomposition of sulfide-SE and promotes the lithium dendrites growth into or inside the sulfide-SE, which deteriorates the battery cyclic performances.[7]"
+
 ## 11. 인용 가능 문장 (deck/paper용)
 - "The anode-side instability of LPSCl originates from Li-induced redox decomposition of the PS₄³⁻ tetrahedron (→ Li₂S + Li₃P); Mg substitution on the P site redistributes electrons (Mg-s/S-p hybridization) to block electron transfer from Li, widening the PS₄→MgS₄ electronic gap from ~2.0 to ~4.2 eV (Liu 2023, Angew)."
 - "Mg-based doping to suppress anode-side reduction is independently supported by **two studies**: MgClO (Ke 2025, ESM) and MgF₂ (Liu 2023, Angew) — both invoke Mg s-p hybridization enriching electrons around S — directly motivating our Mg/Cl/O/F dopant cascade."
