@@ -149,7 +149,7 @@ def fit_and_plot(rows, out_png):
 def main():
     ap = argparse.ArgumentParser(description='2D MPM porosity sweep over (P:S, AM wt%) + colormap + regression.')
     ap.add_argument('--ps', nargs='*',
-                    default=['1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1'])
+                    default=['0:10', '1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1', '10:0'])
     ap.add_argument('--am-wt', nargs='*', default=['75', '80', '85', '90', '95'])
     ap.add_argument('--seeds', type=int, default=3)
     ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'],

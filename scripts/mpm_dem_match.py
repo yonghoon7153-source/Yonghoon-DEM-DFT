@@ -635,7 +635,7 @@ def main():
                          '(300 MPa) with champion SE → --grid-csv.  Pass --nu-se 0.49 for the stiff-bulk '
                          'champion.  Then plot/fit:  mpm2d_ps_am_sweep.py --analyze-only <csv>.')
     ap.add_argument('--ps-list', nargs='*',
-                    default=['1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1'])
+                    default=['0:10', '1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1', '10:0'])
     ap.add_argument('--am-list', nargs='*', default=['75', '80', '85', '90', '95'])
     ap.add_argument('--grid-csv', default='docs/data/mpm2d_ps_am_porosity.csv')
     a = ap.parse_args()
