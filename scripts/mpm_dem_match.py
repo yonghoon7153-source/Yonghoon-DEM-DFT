@@ -88,6 +88,25 @@ def load_design(names=None, real_only=False, particulate=False, max_n=None):
     return out
 
 
+def _strain_png(outdir, p10, amwt, por, xy, epl):
+    """Save a 2D plastic-strain (Σdg per particle) map PNG for one (P:S, AM%) composition."""
+    import os as _o
+    import numpy as _np
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as _plt
+    _o.makedirs(outdir, exist_ok=True)
+    vmax = (float(_np.percentile(epl, 98)) + 1e-6) if len(epl) else 1.0
+    fig, ax = _plt.subplots(figsize=(4.2, 4.2))
+    sc = ax.scatter(xy[:, 0], xy[:, 1], c=epl, s=2, cmap='inferno', vmin=0.0, vmax=vmax)
+    ax.set_aspect('equal'); ax.axis('off')
+    ax.set_title(f"P:S {p10}:{10 - p10}  AM {int(amwt)}wt%  por={por:.1f}%", fontsize=9)
+    fig.colorbar(sc, ax=ax, label='plastic strain Σdg', shrink=0.8)
+    fig.tight_layout()
+    fig.savefig(_o.path.join(outdir, f"strain_PS{p10}-{10 - p10}_AM{int(amwt)}.png"), dpi=110)
+    _plt.close(fig)
+
+
 def run_match(args):
     import numpy as np
     import taichi as ti
@@ -397,12 +416,16 @@ def run_match(args):
                 fAP, fAS, fSE = phi_am * pf, phi_am * (1 - pf), phi_se
                 vals = [run_once(R_AMP, R_AMS, fAP, fAS, fSE, 7000 + i, E_se_base, readout='wallP')
                         for i in range(args.seeds)]
-                vals = [x for x in vals if x == x]
+                vals = [vv for vv in vals if vv == vv]
                 por = float(np.mean(vals)) if vals else float('nan')
                 std = float(np.std(vals)) if len(vals) > 1 else 0.0
                 p10 = int(round(pf * 10))
                 print(f"  {p10:2d}:{10 - p10:<2d} {amwt:4.0f} {por:10.2f} {std:6.2f}", flush=True)
                 grows.append((pf, p10, amwt, por, std, len(vals)))
+                if args.strain_png_dir:                              # per-point plastic-strain map (last seed)
+                    nn = N[None]
+                    _strain_png(args.strain_png_dir, p10, amwt, por,
+                                x.to_numpy()[:nn], epl.to_numpy()[:nn])
         _os.makedirs(_os.path.dirname(args.grid_csv) or '.', exist_ok=True)
         with open(args.grid_csv, 'w') as f:
             f.write(f"# REAL 2D MPM porosity vs (P:S, AM wt%).  wallP@{args.p_read}GPa E_se={E_se_base} "
@@ -638,6 +661,9 @@ def main():
                     default=['0:10', '1:9', '2:8', '3:7', '4:6', '5:5', '6:4', '7:3', '8:2', '9:1', '10:0'])
     ap.add_argument('--am-list', nargs='*', default=['75', '80', '85', '90', '95'])
     ap.add_argument('--grid-csv', default='docs/data/mpm2d_ps_am_porosity.csv')
+    ap.add_argument('--strain-png-dir', default='',
+                    help='if set, save a per-point plastic-strain map PNG (last seed) for every (P:S, AM%%) '
+                         'grid cell into this dir = the "grid of strain images" (negligible extra compute).')
     a = ap.parse_args()
     if a.plot:
         plot(); return
