@@ -1,0 +1,30 @@
+# 실행 산출물 / 임시
+results/
+**/recovery/
+*.recovery
+*.status
+*.log
+*.tmp
+tmp/
+
+# 서버 접속/비밀 (예시 파일만 추적)
+config/server.env
+config/models/*.env
+!config/server.env.example
+!config/models/*.env.example
+
+# COMSOL batch 부산물
+*.mph.lock
+*.out
+
+# Python 캐시
+__pycache__/
+*.pyc
+
+# OS / 에디터
+.DS_Store
+*.swp
+
+# 단, 벤치마크 요약 CSV는 추적 (이력 보존)
+!benchmarks/
+!benchmarks/*.csv

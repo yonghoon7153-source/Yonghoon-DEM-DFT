@@ -1,0 +1,7 @@
+# COMSOL 모델 파일은 바이너리 → Git LFS 권장 (사용하려면: git lfs install)
+# LFS를 안 쓸 거면 이 줄을 지우고 .mph는 scp로 전송하세요.
+*.mph filter=lfs diff=lfs merge=lfs -text
+
+# 바이너리 취급(잘못된 줄바꿈 변환 방지)
+*.mph binary
+*.mphbin binary
