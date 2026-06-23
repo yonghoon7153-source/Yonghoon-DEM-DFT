@@ -45,8 +45,12 @@ find_comsol(){
   fi
   local p
   for p in /usr/local/comsol*/multiphysics/bin/comsol \
+           /usr/local/comsol*/bin/comsol \
            /opt/comsol*/multiphysics/bin/comsol \
-           "$HOME"/comsol*/multiphysics/bin/comsol; do
+           /opt/comsol*/bin/comsol \
+           /usr/local/COMSOL*/multiphysics/bin/comsol \
+           "$HOME"/comsol*/multiphysics/bin/comsol \
+           "$HOME"/comsol*/bin/comsol; do
     [ -x "$p" ] && { echo "$p"; return 0; }
   done
   return 1

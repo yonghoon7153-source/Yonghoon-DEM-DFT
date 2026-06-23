@@ -72,6 +72,9 @@ comsol-gpu/
 
 ## 2. 사전 준비 (서버에서 1회)
 
+> 서버에 **COMSOL이 아직 없으면** 먼저 [`docs/INSTALL_server.md`](docs/INSTALL_server.md)로
+> 헤드리스 설치(무인 + GPU/cuDSS 포함)부터 끝내세요.
+
 GPU 서버에 SSH 접속 후:
 
 ```bash
