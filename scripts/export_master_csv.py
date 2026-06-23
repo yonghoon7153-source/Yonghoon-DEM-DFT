@@ -100,12 +100,13 @@ def row_for(case_dir: Path) -> dict:
     _flatten(_load(case_dir / 'input_params.json'), 'inp.', row)
     # full metric set (the bulk)
     _flatten(_load(case_dir / 'full_metrics.json'), '', row)
-    # MPM (payload preferred, else metrics)
-    mpm = _load(case_dir / 'mpm_payload.json')
-    mraw = mpm.get('mpm_metrics') if isinstance(mpm.get('mpm_metrics'), dict) else mpm
-    if not mraw:
-        mraw = _load(case_dir / 'mpm_metrics.json')
-    _flatten(mraw, 'mpm.', row)
+    # MPM — merge the standalone sim metrics (mpm_metrics.json, raw 26 fields) with
+    # the webapp payload's authoritative table dict (mpm_payload.json -> mpm_metrics),
+    # payload winning on overlap.  Captures porosity/thickness/coverage/SE-frac/strain.
+    mpm_raw = _load(case_dir / 'mpm_metrics.json')
+    payload = _load(case_dir / 'mpm_payload.json')
+    pm = payload.get('mpm_metrics') if isinstance(payload.get('mpm_metrics'), dict) else {}
+    _flatten({**mpm_raw, **pm}, 'mpm.', row)
     return row
 
 
