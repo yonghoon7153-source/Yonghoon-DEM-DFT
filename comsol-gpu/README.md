@@ -29,7 +29,7 @@ COMSOL의 GPU 가속은 일반 CUDA 앱처럼 모든 시뮬레이션을 가속�
 | **1D / P2D (Newman/DFN)** | 수백~수천 | ❌ **거의 없음** (오히려 전송 오버헤드로 느려질 수 있음) | GPU 말고 **CPU 배치로 파라미터 스윕 throughput**에 집중 |
 | **2D 공간분해** | 1e4~1e5 | △ 중간 (메시·물리에 따라) | cuDSS 시도 + 벤치마크로 확인 |
 | **3D 공간분해** | 1e5~1e7 | ✅ 가능, **단 GPU 메모리(VRAM)에 인수분해가 들어가야 함** | cuDSS, VRAM 초과 시 iterative(CPU)로 폴백 |
-| **Phase field** (dendrite, LFP 상분리, Cahn–Hilliard/Allen–Cahn) | 메시 의존 | ✅ **이득 큼** (비선형·시간의존 → 직접솔버 반복 호출) | cuDSS 1순위, 메시 미세할수록 유리 |
+| **Phase field** (dendrite, LFP 상분리, Cahn–Hilliard/Allen–Cahn) | 메시 의존 | ✅ 이득 가능 (비선형·시간의존 → 직접솔버 반복 호출) | cuDSS 1순위, 메시 미세할수록 유리 |
 
 > **왜 P2D는 GPU가 의미 없나?** P2D(Newman)는 1D 전기화학 + 입자 의사차원(pseudo-dimension)
 > 구조라 미지수가 수백~수천 개뿐입니다. 직접 솔버가 CPU에서 이미 수초 안에 끝나며,
@@ -40,6 +40,19 @@ COMSOL의 GPU 가속은 일반 CUDA 앱처럼 모든 시뮬레이션을 가속�
 > 3D는 이게 매우 커져서 GPU 메모리(예: 24/48/80GB)를 넘으면 cuDSS가 실패하거나 느려집니다.
 > 그 경우 CPU iterative(예: GMRES + Multigrid)가 유일한 현실 해법일 수 있습니다.
 > → 이 파이프라인은 **솔버를 설정으로 바꿔가며 실측**하도록 설계되어 있습니다.
+
+> **현실적 기대치 + 정밀도(precision) 레버 — COMSOL 6.4 공식 데이터 기준:**
+> 공식 예시 speedup은 구조해석 **약 2×**(RTX 5000 Ada vs Xeon), 다물리 음향 **약 5×**(H100 4장)이고,
+> 큰 이득은 보통 **수백만 DOF**부터입니다. `31×31×40` 모델은 대략 10만~수십만 DOF로 추정되어
+> sweet spot보다 작을 수 있으니 **이득이 제한적일 수 있음 → 반드시 벤치마크**(파이프라인이 그 용도).
+>
+> cuDSS는 **배정밀도(double)/단정밀도(single)** 둘 다 지원합니다. single은 메모리를 절반으로 줄여
+> 메모리 바운드 케이스에서 더 빠릅니다.
+> - ★ **RTX A6000은 FP64(배정밀도) 처리율이 약합니다(약 1:32).** 그래서 **double cuDSS는 이득이
+>   작을 수 있고**, A6000의 강한 FP32가 살아나는 **single precision에서 이득이 큽니다.**
+> - 단, 배터리 전기화학은 수치적으로 까다로워 single에서 수렴/정확도가 깨질 수 있습니다.
+>   **double로 정답을 먼저 확인 → single로 속도 시도** 순서를 권장합니다.
+>   (precision은 솔버 설정에서 토글; 자세히는 [`methods/set_cudss_solver.md`](methods/set_cudss_solver.md))
 
 ---
 

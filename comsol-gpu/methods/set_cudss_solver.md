@@ -19,7 +19,12 @@ COMSOL 6.4부터 Direct 솔버 선택지에 기존 3종(MUMPS / PARDISO / SPOOLE
      반복솔버의 전처리기를 Direct로 두고 그 Direct를 cuDSS로 설정)
 3. **Direct** 노드 선택 → Settings 창의 **Solver** 드롭다운을
    **"CUDA Direct Sparse Solver (cuDSS)"** 로 변경
-4. (선택) 정밀도(precision) 등 cuDSS 옵션 확인
+4. **정밀도(precision) 설정 — 중요(특히 A6000):** cuDSS Settings에서 double/single 선택 가능.
+   - **double**(기본)로 먼저 정답을 확인.
+   - 그다음 **single**을 시도 — 메모리 절반 + 더 빠름. ★ **RTX A6000은 FP64가 약해(약 1:32)
+     double에선 이득이 작고, single에서 A6000의 강한 FP32가 살아난다.**
+   - 단 배터리 전기화학은 수치적으로 빡세서 single에서 수렴/정확도가 깨질 수 있으니
+     **결과를 double과 대조 검증**할 것.
 5. **저장**(Ctrl+S). 이 저장된 .mph를 서버로 보낸다.
 
 > GPU 없는 PC(예: 노트북)에서도 cuDSS를 *선택해 저장*하는 것은 가능하다(설정값일 뿐).
