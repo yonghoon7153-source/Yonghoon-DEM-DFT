@@ -51,7 +51,7 @@ def main():
         raise SystemExit(f'no 3D cases in {a.d3} — paste cases through parse_case_paste.py first')
     two = _read(a.d2)
 
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(13, 5.2))
+    fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=(19, 5.2))
 
     # ── panel 1: DEM vs MPM-3D parity ──────────────────────────────────────────
     dem = np.array([_f(r, 'dem_porosity_pct') for r in cases], float)
@@ -98,6 +98,31 @@ def main():
     ax2.set_xlabel('AM wt%'); ax2.set_ylabel('porosity (%)')
     ax2.set_title(f'porosity vs composition  ({len(cases)} 3D cases)')
     ax2.legend(fontsize=7, ncol=1); ax2.grid(alpha=0.3)
+
+    # ── panel 3: porosity vs P:S (Furnas dip), grouped by (mAh, AM wt%) ─────────
+    groups = sorted({(r.get('mAh', ''), r.get('am_wt', '')) for r in cases})
+    cmap3 = plt.cm.plasma
+    for i, (mah, am) in enumerate(groups):
+        sub = [r for r in cases if r.get('mAh') == mah and r.get('am_wt') == am]
+        if len(sub) < 2:
+            continue                                    # need ≥2 P:S to show a dip
+        col = cmap3(i / max(len(groups) - 1, 1))
+        p = np.array([_f(r, 'p_frac') for r in sub], float)
+        order = np.argsort(p)
+        p = p[order]
+        dd = np.array([_f(r, 'dem_porosity_pct') for r in sub], float)[order]
+        mm = np.array([_f(r, 'mpm_porosity_pct') for r in sub], float)[order]
+        lab = f'{mah}mAh AM{am}'
+        ax3.plot(p, dd, 'o-', color=col, label=f'DEM  {lab}')
+        ax3.plot(p, mm, 's--', color=col, mfc='none', label=f'MPM-3D  {lab}')
+        # mark the minimum (Furnas-optimal P:S)
+        j = int(np.argmin(mm))
+        ax3.annotate(f'dip\nP:S {sub[order[j]]["ps_label"]}', (p[j], mm[j]),
+                     fontsize=7, ha='center', xytext=(0, -22), textcoords='offset points',
+                     color=col, arrowprops=dict(arrowstyle='->', color=col, lw=0.8))
+    ax3.set_xlabel('AM_P fraction  (P:S → 10:0 = 1.0)'); ax3.set_ylabel('porosity (%)')
+    ax3.set_title('porosity vs P:S  (Furnas dip)')
+    ax3.legend(fontsize=7); ax3.grid(alpha=0.3)
 
     os.makedirs(os.path.dirname(a.out) or '.', exist_ok=True)
     fig.tight_layout(); fig.savefig(a.out, dpi=130)
