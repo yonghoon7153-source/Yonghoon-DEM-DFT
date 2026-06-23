@@ -128,6 +128,12 @@
     </button>
     {% endfor %}
   </div>
+  <div style="display:flex;justify-content:flex-end;margin:6px 0 2px">
+    <button class="btn btn-primary" onclick="copyAllForAI(this)"
+            title="입자 정보 + 네트워크 지표 + 취성 파괴 + MPM 결과 파라미터를 한 번에 텍스트로 복사 (AI 채팅에 붙여넣기용)">
+      📋 전체 복사 (AI 붙여넣기용)
+    </button>
+  </div>
   {% for name, tbl in tables.items() %}
   <div id="tab-{{ name }}" class="tab-panel {% if loop.first %}active{% endif %}">
     <div class="tab-toolbar" style="display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px">
@@ -712,6 +718,70 @@ function copyTabTable(tabName, btn) {
     } catch (e) {
       _flash('✗ 실패');
     }
+    document.body.removeChild(ta);
+  }
+}
+
+// Copy 입자정보 + 네트워크지표 + 취성파괴 + MPM 결과 파라미터 in one go (AI paste).
+function copyAllForAI(btn) {
+  const caseTitleEl = document.querySelector('.page-header .case-name')
+                      || document.querySelector('h1, h2');
+  const title = caseTitleEl ? caseTitleEl.textContent.trim() : '';
+  const headerBadges = Array.from(document.querySelectorAll('.page-header .badge'))
+    .map(b => b.textContent.trim()).filter(s => s.length);
+  const warnings = Array.from(document.querySelectorAll('.warning-banner .warning-msg'))
+    .map(w => w.textContent.trim()).filter(s => s.length);
+  const analysisCard = (document.getElementById('tab-network_summary')
+                        || document.getElementById('tab-atom_statistics'))?.closest('.card');
+  const analysisBadges = analysisCard
+    ? Array.from(analysisCard.querySelectorAll('.card-header-row .badge'))
+        .map(b => b.textContent.trim()).filter(s => s.length) : [];
+
+  const lines = [];
+  if (title) lines.push(`# ${title}`);
+  if (headerBadges.length) lines.push(headerBadges.map(b => `[${b}]`).join('  '));
+  if (analysisBadges.length) { lines.push(''); lines.push(analysisBadges.map(b => `[${b}]`).join('  ')); }
+  if (warnings.length) { lines.push(''); warnings.forEach(w => lines.push(`⚠ ${w}`)); }
+
+  function dumpTab(name, label) {
+    const tab = document.getElementById('tab-' + name);
+    const table = tab && tab.querySelector('table.data-table');
+    if (!table) return;
+    const cols = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent.trim());
+    lines.push(''); lines.push(`── ${label} ──`); lines.push(cols.join('\t'));
+    table.querySelectorAll('tbody > tr').forEach(tr => {
+      if (tr.classList.contains('tooltip-row')) return;
+      if (tr.classList.contains('section-header')) {
+        lines.push(''); lines.push(tr.querySelector('td').textContent.trim()); return;
+      }
+      lines.push(Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim()).join('\t'));
+    });
+  }
+  dumpTab('atom_statistics', '입자 정보');
+  dumpTab('network_summary', '네트워크 지표');
+  dumpTab('fracture_summary', '취성 파괴 (Auerbach)');
+
+  const mbox = document.getElementById('mpm-result-box');
+  if (mbox && mbox.style.display !== 'none') {
+    lines.push(''); lines.push('── MPM 결과 파라미터 ──');
+    mbox.querySelectorAll('table.mpm-result-table tr').forEach(tr => {
+      lines.push(Array.from(tr.children).map(c => c.textContent.trim().replace(/\s+/g, ' ')).join('\t'));
+    });
+  }
+
+  const text = lines.join('\n');
+  function _flash(msg) {
+    const orig = btn.dataset.origLabel || btn.textContent;
+    btn.dataset.origLabel = orig; btn.textContent = msg;
+    setTimeout(() => { btn.textContent = orig; }, 1500);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(() => _flash('✓ 전체 복사됨')).catch(() => _flash('✗ 실패'));
+  } else {
+    const ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.left = '-9999px';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); _flash('✓ 전체 복사됨'); } catch (e) { _flash('✗ 실패'); }
     document.body.removeChild(ta);
   }
 }
