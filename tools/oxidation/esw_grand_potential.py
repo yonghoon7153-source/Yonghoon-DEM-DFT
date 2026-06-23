@@ -155,8 +155,9 @@ def main():
     ap.add_argument("--elements", nargs="+", default=["Li", "P", "S", "Cl"])
     ap.add_argument("--out", default="esw_grand_potential_results.json")
     ap.add_argument("--exclude_phases", nargs="*", default=[],
-                    help="MP-ids to drop from the hull (Gil-González 2022 set: "
-                         "mp-995393=LiS4 mp-1186934=SCl3 mp-1040450=Li5PS4Cl2)")
+                    help="Phases to drop from the hull, by reduced FORMULA or MP-id "
+                         "(Gil-González 2022 set: LiS4 SCl3 Li5PS4Cl2). Formula match "
+                         "is robust to MP re-ids.")
     args = ap.parse_args()
 
     from pymatgen.core import Element, Composition
@@ -166,8 +167,11 @@ def main():
     if args.exclude_phases:
         ex = set(args.exclude_phases)
         def _ids(e):
+            # match by entry_id OR material_id OR reduced formula (MP re-ids phases,
+            # so formula match is the robust one, e.g. --exclude_phases LiS4 SCl3 Li5PS4Cl2)
             return (str(getattr(e, "entry_id", "")) + "|"
-                    + str((getattr(e, "data", {}) or {}).get("material_id", "")))
+                    + str((getattr(e, "data", {}) or {}).get("material_id", "")) + "|"
+                    + e.composition.reduced_formula)
         dropped = [_ids(e) for e in entries if any(x in _ids(e) for x in ex)]
         entries = [e for e in entries if not any(x in _ids(e) for x in ex)]
         print(f"[exclude] dropped {len(dropped)} entries {sorted(ex)}: {dropped}")
