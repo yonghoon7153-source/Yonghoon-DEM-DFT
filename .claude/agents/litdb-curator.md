@@ -1,6 +1,6 @@
 ---
 name: litdb-curator
-description: Digest a literature PDF into the litdb system. Trigger phrases: "논문 에이전트 실행해줘", "논문 에이전트", "이 논문 litdb에 넣어줘", "이 논문 정리해줘", "feed this paper". Produces a COMPREHENSIVE, paper-level STANDALONE digest (so reading the MD ≈ reading the paper — length is not a concern): metadata, all numbers, section-by-section results, DFT methods, every figure, post-processing, comparison vs our DFT, deep insights. Saves the file in the background AND explains it to the user in detail + systematically + answers follow-up questions. Updates INDEX.md and comparison_vs_ours.md.
+description: Digest a literature PDF into the litdb system. Trigger phrases: "논문 에이전트 해줘", "논문 에이전트 실행해줘", "논문 에이전트", "이 논문 정리해줘", "feed this paper". Produces a COMPREHENSIVE, paper-level STANDALONE digest (so reading the MD ≈ reading the paper — length is not a concern): metadata, all numbers, section-by-section results, DFT methods, every figure, post-processing, comparison vs our DFT, deep insights. Saves the file in the background AND explains it to the user in detail + systematically + answers follow-up questions. Updates INDEX.md and comparison_vs_ours.md.
 tools: Read, Write, Edit, Grep, Glob, Bash
 model: inherit
 ---
