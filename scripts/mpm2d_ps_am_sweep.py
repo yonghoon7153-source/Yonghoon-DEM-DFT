@@ -57,7 +57,7 @@ def run_sweep(a):
                 s, n = m.run_composition(xy, mus, las, ylds, solid)
                 runs.append((pf, am, sd, s))
                 print(f"  P:S={pf:.2f} AM={am:.0f}wt seed{sd}: n={n:5d}  Pmax={s[:, 1].max():.3f}", flush=True)
-    P_COMMON = min(s[:, 1].max() for *_, s in runs) * 0.95   # lowest max → everyone reached it
+    P_COMMON = min(s[:, 1].max() for *_, s in runs) * a.read_frac   # read porosity at this common pressure
     agg = {}
     for pf, am, sd, s in runs:
         order = np.argsort(s[:, 1])
@@ -154,6 +154,10 @@ def main():
     ap.add_argument('--e-se', type=float, default=None,
                     help='SE modulus GPa (default module ≈24 RCP-style; champion 1.53)')
     ap.add_argument('--yield-se', type=float, default=0.6, help='SE yield (default 0.6 RCP-style; champion 0.15)')
+    ap.add_argument('--read-frac', type=float, default=0.4,
+                    help='read porosity at this fraction of the grid common-max pressure.  At ~0.95 (full '
+                         'compaction) the continuum SE over-compacts the SE-rich/AM-75 end to ~0%% (MPM '
+                         'flow artifact); ~0.35-0.5 reads mid-compaction → non-degenerate, sensible surface.')
     ap.add_argument('--out', default='docs/data/mpm2d_ps_am_porosity.csv')
     ap.add_argument('--png', default='docs/figures/mpm2d_ps_am_porosity.png')
     ap.add_argument('--analyze-only', default=None, help='skip the sweep; read this CSV and just fit + plot')
