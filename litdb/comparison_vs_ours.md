@@ -40,3 +40,26 @@
 - 무질서 E_above_hull (DSC/TGA metastability)
 - defect/σ_e 정량 (slide25 틀의 실제 계산)
 - slab IP / absolute VBM (UPS 절대 기준)
+
+---
+
+## 🗨️ Q&A 로그
+> 슬라이드·결과를 보며 나온 질문/답을 누적. 새 Q&A는 여기(산화 관련) 또는 해당 논문 digest의 §Q&A에.
+
+### Q1 · 2026-06-23 · LPSCl vs LPSCl1.6 산화안정성 누가 더 좋나? "우리 동일"과 문헌이 다르면 이유? (slide 27 ESW)
+**한 줄 답**: 단일 승자 없음 — **축을 명명**해야 함. 우리 "동일"은 intrinsic onset(축①) 한정 정답이고, 문헌의 "다름"은 우리 ESW가 측정하지 않는 다른 축들.
+
+| 축 | 우위 | 근거 | 우리 ESW가 보나 |
+|---|---|---|---|
+| ① intrinsic 0-pressure onset | **무승부** (2.14 V, S-limited) | 우리 ESW = Gil-González K_eff=0 (1.7–2.4) | ✅ (이것만) |
+| ② 기계 구속 window | **Cl-rich** | Gil-González K_eff=20 (bulky LiCl→strain) + 우리 constrained_esw | ✗ |
+| ③ cathode 계면 cycling | **Cl-rich** | Zuo (산물 양호→R_int↓→성능↑) | ✗ |
+| ④ calendar/thermal/moisture | **LPSCl(Cl-poor)** | Wu (90℃ retention L6 68%>L55 48%) | ✗ |
+
+**왜 우리 "동일" vs 문헌 "다름"? = 측정 대상이 다름**
+- 우리 grand-potential ESW = **intrinsic 0-pressure 열역학 onset**. 첫 산화 S²⁻→S₂²⁻(황)는 두 조성 공유 → **조성 무관 = 동일**(구조적). 정답이며 Gil-González K_eff=0이 검증.
+- 문헌 "Cl-rich 덜 안정"(Zuo CV 낮은 onset·2×, DSC/TGA): (a) 실제 **무질서 metastability**(우리 ideal 구조 밖), (b) **kinetics/접근성**(2×≈σ비 2.4×), (c) CV onset apparent. **열역학 onset 자체는 동일**(Zuo도 "same peak potentials").
+- 문헌 "Cl-rich 더 안정"(Gil-González 구속, Zuo 계면): 축②③ — 우리 0-pressure ESW가 **구조적으로 제외**하는 기계구속·계면산물.
+
+**결론**: intrinsic onset 무승부(2.14 V, S-limited) / 실사용 계면 Cl-rich 우위(Zuo) / shelf-life Cl-rich 열위(Wu). **축 명명 없이 "Cl-rich가 더·덜 산화안정"이라 말하지 말 것.**
+연결: §B(산화 4축) · `our_dft_baseline.md` · `papers/zuo2022_chlorination_cathode_interface.md` §11.
