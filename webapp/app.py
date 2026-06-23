@@ -268,10 +268,16 @@ def _build_trust_card(metrics: dict) -> dict | None:
                              f'gates passed'),
     }
 
-app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(__file__), 'uploads')
-app.config['RESULTS_FOLDER'] = os.path.join(os.path.dirname(__file__), 'results')
-app.config['SCRIPTS_FOLDER'] = os.path.join(os.path.dirname(os.path.dirname(__file__)), 'scripts')
-app.config['ARCHIVE_FOLDER'] = os.path.join(os.path.dirname(__file__), 'archive')
+_here = os.path.dirname(__file__)
+# Data folders are env-overridable so a SECOND checkout (e.g. a git-worktree
+# webapp runner) can point at a SHARED data dir WITHOUT symlinking results/ —
+# symlinking webapp/results breaks `git pull` because the repo tracks
+# webapp/results/reports/*.md ("beyond a symbolic link").  Set WEBAPP_*_FOLDER
+# (env or .env) to the shared absolute path; defaults stay in-tree.
+app.config['UPLOAD_FOLDER'] = os.environ.get('WEBAPP_UPLOAD_FOLDER') or os.path.join(_here, 'uploads')
+app.config['RESULTS_FOLDER'] = os.environ.get('WEBAPP_RESULTS_FOLDER') or os.path.join(_here, 'results')
+app.config['SCRIPTS_FOLDER'] = os.path.join(os.path.dirname(_here), 'scripts')
+app.config['ARCHIVE_FOLDER'] = os.environ.get('WEBAPP_ARCHIVE_FOLDER') or os.path.join(_here, 'archive')
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['RESULTS_FOLDER'], exist_ok=True)
