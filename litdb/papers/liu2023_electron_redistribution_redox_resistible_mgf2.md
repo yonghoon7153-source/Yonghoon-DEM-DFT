@@ -141,6 +141,21 @@ Scheme1(PS₄ redox가 문제) → Fig1(Mg→P, F→Cl 구조) → Fig2(σ 약�
 
 > 영문 원문(대조): "one of the critical limitations for the practical applications of sulfide-SE is their poor (electro)chemical stability towards metallic Li electrode.[5] The sulfide-SE is prone to electrochemical reduced by nucleophilic Li metal, generating the mixed ion-electron conducting interphases (Li₂S, Li₃P, etc.) at the Li/sulfide-SE interface.[6] This uncontrollable parasitic interfacial reaction causes the continuous decomposition of sulfide-SE and promotes the lithium dendrites growth into or inside the sulfide-SE, which deteriorates the battery cyclic performances.[7]"
 
+## 🔑 [5]→[7] 문제의 메커니즘 (anode 환원 불안정 → MIEC → non-self-limiting)
+> 위 motivation 문단의 메커니즘을 단계로 분해. **핵심 문제는 양극이 아니라 *음극(Li metal)* 쪽 환원 불안정성.**
+
+**문제 제기**: sulfide-SE의 핵심 한계 = **Li metal에 대한 환원 불안정성** (← anode가 문제). 메커니즘이 명확:
+
+1. **Li metal = 강한 친핵체(nucleophile)** → S에 전자를 밀어넣음 (electron donation to S)
+2. → **sulfide-SE가 환원 분해** → **Li₂S, Li₃P** 같은 **MIEC(mixed ion-electron conductor, 혼합 이온-전자 전도) 계면상** 생성
+3. → 이 MIEC 계면상은 **self-limiting이 안 됨** — *전자전도성*이라 전자가 계면상을 통과해 SE로 계속 공급됨 → **반응이 멈추지 않고 진행** → 리튬 **덴드라이트 성장** → **사이클 열화**
+
+> **🔗 litdb 통합 통찰 (self-limiting의 조건)**: 해법의 본질 = **MIEC 계면상을 *전자절연* passivation으로 바꾸기**. 전자절연이면 전자 공급이 끊겨 반응이 스스로 멈춤(self-limiting). litdb의 음극 논문들이 전부 이 원리:
+> - **[Liu23] (본 논문)**: Mg(s-p 혼성)로 전자이동 차단 + **LiF**(전자절연) interphase
+> - **[Lu]**: 4d-Cl 자기분해 → **LiCl**(gap 6.22 eV, 전자절연) interphase
+> - **[Ke]**: MgClO 도핑 → **Li₂O**(8.37 eV) 전자절연 SEI
+> → 즉 "음극 안정 = 계면상이 *전자절연*이라 self-limiting 되느냐"가 단일 판정 기준. (Li₂S/Li₃P = MIEC = 실패 / LiF·LiCl·Li₂O = 절연 = 성공). 상세 `../comparison_vs_ours.md` §E.
+
 ## 11. 인용 가능 문장 (deck/paper용)
 - "The anode-side instability of LPSCl originates from Li-induced redox decomposition of the PS₄³⁻ tetrahedron (→ Li₂S + Li₃P); Mg substitution on the P site redistributes electrons (Mg-s/S-p hybridization) to block electron transfer from Li, widening the PS₄→MgS₄ electronic gap from ~2.0 to ~4.2 eV (Liu 2023, Angew)."
 - "Mg-based doping to suppress anode-side reduction is independently supported by **two studies**: MgClO (Ke 2025, ESM) and MgF₂ (Liu 2023, Angew) — both invoke Mg s-p hybridization enriching electrons around S — directly motivating our Mg/Cl/O/F dopant cascade."
