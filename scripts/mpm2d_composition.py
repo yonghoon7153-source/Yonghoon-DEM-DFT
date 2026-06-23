@@ -45,17 +45,17 @@ grid_v = ti.Vector.field(2, ti.f32, (n_grid, n_grid)); grid_m = ti.field(ti.f32,
 wall_y = ti.field(ti.f32, ()); N = ti.field(ti.i32, ())
 
 
-def area_fracs(am_wt):
+def area_fracs(am_wt, p_frac=0.7):
     w = am_wt / 100.0
     if w <= 0: vam = 0.0
     elif w >= 1: vam = 1.0
     else:
         a = w / RHO_AM; b = (1 - w) / RHO_SE; vam = a / (a + b)
-    return 0.7 * vam, 0.3 * vam, 1.0 - vam     # AM_P, AM_S, SE area fractions
+    return p_frac * vam, (1.0 - p_frac) * vam, 1.0 - vam   # AM_P, AM_S, SE area fracs (P:S = p_frac:(1−p_frac))
 
 
-def build(am_wt, rng, yield_se=YIELD_SE):
-    fAP, fAS, fSE = area_fracs(am_wt)
+def build(am_wt, rng, yield_se=YIELD_SE, p_frac=0.7):
+    fAP, fAS, fSE = area_fracs(am_wt, p_frac)
     fill_h = WALL0 - 0.02
     box_area = WIDTH * (fill_h - FLOOR)
     target = INIT_SOLID * box_area
