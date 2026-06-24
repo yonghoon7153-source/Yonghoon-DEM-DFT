@@ -119,6 +119,7 @@ def parse_cohpcar(path: Path):
     need_cols = 1 + n_spin * spin_block
     E = []
     cohp = [[] for _ in range(n_bonds_actual)]
+    icohp = [[] for _ in range(n_bonds_actual)]   # integrated IpCOHP column
     while iline < len(lines) and len(E) < n_energies:
         parts = lines[iline].split()
         iline += 1
@@ -128,15 +129,19 @@ def parse_cohpcar(path: Path):
             E.append(float(parts[0]))
             for b in range(n_bonds_actual):
                 e = b + 1  # skip 'Average' (entry 0)
-                val = sum(float(parts[1 + s * spin_block + 2 * e])
-                          for s in range(n_spin))
-                cohp[b].append(val)
+                cohp[b].append(sum(float(parts[1 + s * spin_block + 2 * e])
+                                   for s in range(n_spin)))
+                icohp[b].append(sum(float(parts[2 + s * spin_block + 2 * e])
+                                    for s in range(n_spin)))
         except (ValueError, IndexError):
             continue
     E = np.array(E)
+    i0 = int(np.argmin(np.abs(E)))   # E already shifted so E_F = 0
     for b in range(n_bonds_actual):
-        # Flip sign so bonding > 0 on plot x-axis.
+        # Flip sign so bonding > 0 on plot x-axis (pCOHP); ICOHP kept raw
+        # (negative = bonding), read at E_F from the integral column.
         bonds_meta[b]["pcohp"] = -np.array(cohp[b])
+        bonds_meta[b]["icohp"] = icohp[b][i0] if icohp[b] else 0.0
     return E, bonds_meta
 
 
@@ -161,24 +166,25 @@ def parse_icohplist(path: Path):
     return recs
 
 
-def aggregate_bond_pair(E, bonds_meta, icohp_recs, match_keys, exclude=None, dmax=None):
+def aggregate_bond_pair(E, bonds_meta, match_keys, exclude=None, dmax=None):
     """Sum -pCOHP curve + mean ICOHP across bonds matching the element pair.
-    dmax (A) optionally drops long non-bonded contacts within the generator
-    cutoff (e.g. P-S at >2.6 A) so curve and box match the tetrahedral bond.
+    ICOHP box read from COHPCAR's own integral column at E_F (self-consistent
+    with the curve; no ICOHPLIST needed). dmax (A) drops long non-bonded
+    contacts within the generator cutoff (e.g. P-S >2.6 A = the 2 long contacts)
+    so curve and box reflect the tetrahedral bond.
     Returns (cohp_summed, icohp_box_mean, n_matched)."""
     exclude = set(exclude or [])
     target = set(match_keys)
 
-    def ok(a, b, d):
-        return ({a, b} == target and not (exclude & {a, b})
-                and (dmax is None or d <= dmax))
+    def ok(bm):
+        return ({bm["a"], bm["b"]} == target and not (exclude & {bm["a"], bm["b"]})
+                and (dmax is None or bm["distance"] <= dmax))
 
-    matched = [bm for bm in bonds_meta if ok(bm["a"], bm["b"], bm["distance"])]
+    matched = [bm for bm in bonds_meta if ok(bm)]
     if not matched:
         return np.zeros_like(E), 0.0, 0
     summed = np.sum([bm["pcohp"] for bm in matched], axis=0)
-    icv = [r["icohp"] for r in icohp_recs if ok(r["a"], r["b"], r["dist"])]
-    box = float(np.mean(icv)) if icv else 0.0
+    box = float(np.mean([bm["icohp"] for bm in matched]))
     return summed, box, len(matched)
 
 
@@ -268,13 +274,12 @@ def main():
 
     work = Path(args.lobster_dir)
     cohp_path = work / "COHPCAR.lobster"
-    icohp_path = work / "ICOHPLIST.lobster"
-    if not cohp_path.exists() or not icohp_path.exists():
-        raise SystemExit(f"missing LOBSTER files in {work}")
+    if not cohp_path.exists():
+        raise SystemExit(f"missing COHPCAR.lobster in {work}")
 
-    E, bonds_meta = parse_cohpcar(cohp_path)
-    icohp_recs = parse_icohplist(icohp_path)
-    print(f"Parsed {len(bonds_meta)} bond entries × {len(E)} energy points")
+    E, bonds_meta = parse_cohpcar(cohp_path)   # ICOHP read from COHPCAR integral
+    print(f"Parsed {len(bonds_meta)} bond entries × {len(E)} energy points "
+          f"(ICOHP box from COHPCAR integral @E_F)")
 
     n = len(cfg_list)
     fig, axes = plt.subplots(1, n, figsize=(4 * n, 6), sharey=True)
@@ -283,8 +288,7 @@ def main():
     icohp_box = {}
     for ax, cfg in zip(axes, cfg_list):
         cohp_sum, icohp_per_bond, nb = aggregate_bond_pair(
-            E, bonds_meta, icohp_recs, cfg["match_keys"],
-            cfg.get("exclude"), cfg.get("dmax"))
+            E, bonds_meta, cfg["match_keys"], cfg.get("exclude"), cfg.get("dmax"))
         cohp_s = gaussian_smooth(cohp_sum, E, args.smooth)
         curves[cfg["label"]] = cohp_s
         icohp_box[cfg["label"]] = icohp_per_bond
