@@ -105,6 +105,8 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False, label='
     # clamping the max to 1000×(smallest nonzero σ) leaves σ_eff unchanged (<1%) and the solve fast.
     sigma = np.minimum(sigma, float(sigma[cond].min()) * 200.0)
     nx, ny, nz = sigma.shape
+    if label:
+        print(f'\r      [{label}] assembling {N:,} nodes…', end='', flush=True)
     gid = -np.ones(sigma.shape, np.int64)
     gid[cond] = np.arange(N)
     s = sigma
