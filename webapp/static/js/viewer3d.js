@@ -901,9 +901,10 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
       lines.renderOrder = 999; grp.add(lines);
     }
   }
-  // points: SuperP (blobs) always; VGCF/PTFE only when there are NO fibre polylines (fallback)
-  const phasesForPts = fibres.length ? [3] : [2, 3, 4];
-  const pts = pts0.filter(p => (!only || p[3] === only) && phasesForPts.indexOf(p[3]) >= 0);
+  // points: only for phases NOT already drawn as fibre/chain lines (avoids double-render — SuperP is
+  // now branched chains too, so it's in additive_fibres; a payload without fibre data falls back to points)
+  const fibrePhases = new Set(fibres.map(f => f.phase));
+  const pts = pts0.filter(p => (!only || p[3] === only) && !fibrePhases.has(p[3]));
   if (pts.length) {
     const g = new THREE.BufferGeometry();
     const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);

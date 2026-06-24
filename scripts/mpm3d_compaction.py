@@ -116,6 +116,10 @@ def parse_args(argv):
     ap.add_argument('--add-l-cv', type=float, default=0.4,
                     help='fibre length variation (coefficient of variation) for VGCF/PTFE — real fibres '
                          'have a length spread; lognormal mean-preserving so counts/volume unchanged. 0=fixed.')
+    ap.add_argument('--mixing', default='ballmill', choices=['ballmill', 'thinky', 'handmix'],
+                    help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
+                         'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
+                         'clustered agglomerates, non-uniform.  (VGCF/PTFE fibres unaffected.)')
     return ap.parse_args(argv)
 
 
@@ -395,30 +399,28 @@ def main(argv):
                 ii = int(p[0] * n_grid); jj = int(p[1] * n_grid); kk = int(p[2] * n_grid)
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
-            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, is_fibre, L_µm) — VGCF medium-stiff+high-yield (user)
-                'VGCF':   (10.0, 0.30, 2.00, 2, True,  _ad.VGCF_L),
-                'SuperP': (0.50, 0.30, 0.10, 3, False, 0.0),
-                'PTFE':   (0.30, 0.30, 0.05, 4, True,  _ad.PTFE_L),
+            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm).  kind 'fibre' = straight rod (VGCF/PTFE),
+                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L),   # 'cblack' = branched chain + AM-coating
+                'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0),         # (Super P carbon black — lit morphology)
+                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L),
             }
-            fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre id (-1 = SE/SuperP; ≥0 = a fibre) →
-            _gfib = 0                                   # re-group points into individual fibres for line viz
-            for nm, (E, nu, sy, code, is_fib, L_um) in ADD.items():
+            am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
+            fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
+            _gfib = 0                                   # carbon-black chain) → re-group into lines for viz
+            for nm, (E, nu, sy, code, kind, L_um) in ADD.items():
                 if nm not in cnt:
                     continue
-                nobj = cnt[nm]['n']                          # additive points are SPARSE markers (VGCF =
-                #   fibre centreline skeleton, SuperP = aggregate positions) — both under-fill the true
-                #   additive volume by design; the recipe wt%/vol% is tracked in the metrics for Stage-2 σ.
-                #   (count = V/aggregate-vol keeps SuperP's point density comparable to VGCF; a volume-FILL
-                #   count blew it up ~6× and made the VGCF↔SuperP comparison unfair.)
-                if is_fib:
+                nobj = cnt[nm]['n']                          # target point count (VGCF/PTFE = fibre centreline
+                #   skeleton; SuperP = aggregate count) — recipe wt%/vol% tracked in metrics + per-point pvs.
+                if kind == 'fibre':
                     pts, _fid = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
                                                 in_am=lambda q: _in_am_abs(q + off), return_ids=True)
-                else:
-                    pts = _ad.seed_blobs(nobj, bx, rng, in_am=lambda q: _in_am_abs(q + off))
-                    _fid = np.full(len(pts), -1, np.int32)
+                else:                                        # carbon black: branched chains coating the AM
+                    pts, _fid = _ad.seed_carbon_black(nobj, bx, dx, rng, in_am=lambda q: _in_am_abs(q + off),
+                                                      am=am_box, mixing=args.mixing, return_ids=True)
                 if len(pts) == 0:
                     continue
-                if is_fib and len(_fid):                # make fibre ids globally unique across VGCF+PTFE
+                if len(_fid):                           # make fibre/aggregate ids globally unique
                     _fid = _fid + _gfib; _gfib = int(_fid.max()) + 1
                 pts = (pts + off).astype(np.float32)
                 fibre_np = np.concatenate([fibre_np, _fid])

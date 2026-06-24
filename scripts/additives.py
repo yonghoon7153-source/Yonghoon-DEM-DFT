@@ -140,6 +140,63 @@ def seed_blobs(n, box_um, rng, in_am=None):
     return np.array(out, np.float32) if out else np.zeros((0, 3), np.float32)
 
 
+SP_AGG = 0.18         # Super P aggregate size µm (40nm primaries → 150-200nm branched aggregate; lit)
+
+# mixing presets — carbon black morphology depends strongly on the dispersion energy (lit):
+#   ball-mill / Thinky (planetary): high shear breaks agglomerates → SHORT aggregates, UNIFORM,
+#     intimately COATING the active material (high surface fraction, porous network).
+#   hand-mixing: gentle → large AGGLOMERATES survive, LONGER clustered chains, NON-uniform, less coating.
+CB_MIX = {
+    'ballmill': dict(k=3, surface_frac=0.70, step=0.7, clump=1),   # short, uniform, AM-coating
+    'thinky':   dict(k=3, surface_frac=0.70, step=0.7, clump=1),   # planetary ≈ ball-mill dispersion
+    'handmix':  dict(k=8, surface_frac=0.30, step=0.9, clump=4),   # long, clustered agglomerates
+}
+
+
+def seed_carbon_black(n, box_um, dx_um, rng, in_am=None, am=None, mixing='ballmill', return_ids=False):
+    """Carbon black (Super P) — NOT isolated spheres.  Lit: 40nm primaries fuse into 150-200nm BRANCHED
+    (fractal) aggregates that disperse AROUND the active material as a MULTI-CHAIN conductive network,
+    loosely grouping into µm agglomerates.  Each aggregate is seeded as a short random-walk CHAIN (the
+    branched structure); a `surface_frac` fraction nucleate in a thin shell on an AM surface (coating),
+    the rest in the pore space.  `mixing` (ball-mill/Thinky vs hand-mix) sets chain length, surface
+    fraction and agglomerate clustering (CB_MIX).  am=(centres[m,3], radii[m]) in box_um's frame for the
+    coating bias (None → pore-only).  n = target point count → n_agg = n/k aggregates.  Returns the
+    point cloud (+ per-aggregate ids if return_ids) so the viewer draws the chains as short lines."""
+    (Lx, Ly, Lz) = box_um
+    cfg = CB_MIX.get(mixing, CB_MIX['ballmill'])
+    k, sfrac, step, clump = cfg['k'], cfg['surface_frac'], cfg['step'] * dx_um, cfg['clump']
+    have_am = am is not None and len(am[0]) > 0
+    amc, amr = (am if have_am else (None, None))
+    n_agg = max(1, int(round(n / k)))
+    pts_list, ids_list, fid = [], [], 0
+    anchor = None                                              # agglomerate nucleus (hand-mix clusters)
+    for i in range(n_agg):
+        if have_am and rng.random() < sfrac:                  # COAT an AM surface (just outside it)
+            j = int(rng.integers(len(amc)))
+            u = rng.normal(size=3); u /= np.linalg.norm(u) + 1e-12
+            start = amc[j] + u * (amr[j] + (0.3 + 0.9 * rng.random()) * dx_um)
+        elif clump > 1 and anchor is not None and (i % clump):  # cluster near the last nucleus (agglomerate)
+            start = anchor + rng.normal(size=3) * (1.5 * step)
+        else:
+            start = np.array([rng.uniform(0, Lx), rng.uniform(0, Ly), rng.uniform(0, Lz)])
+            anchor = start.copy()
+        p = start.astype(np.float64).copy(); chain = [p.copy()]
+        for _ in range(k - 1):                                # random-walk = branched aggregate
+            u = rng.normal(size=3); u /= np.linalg.norm(u) + 1e-12
+            p = p + u * step; chain.append(p.copy())
+        chain = np.array(chain)
+        chain = chain[(chain[:, 0] >= 0) & (chain[:, 0] < Lx) & (chain[:, 1] >= 0)
+                      & (chain[:, 1] < Ly) & (chain[:, 2] >= 0) & (chain[:, 2] < Lz)]
+        if in_am is not None and len(chain):
+            chain = chain[~np.array([in_am(q) for q in chain])]
+        if len(chain):
+            pts_list.append(chain); ids_list.append(np.full(len(chain), fid, np.int32)); fid += 1
+    P = np.concatenate(pts_list, 0).astype(np.float32) if pts_list else np.zeros((0, 3), np.float32)
+    if return_ids:
+        return P, (np.concatenate(ids_list).astype(np.int32) if ids_list else np.zeros(0, np.int32))
+    return P
+
+
 def parse_recipe(s: str) -> dict:
     """'AM:SE:VGCF:PTFE=80:18:1:1' or 'AM:SE:VGCF=72:27:1' → wt dict."""
     keys, vals = s.split('=')
