@@ -135,7 +135,12 @@ function buildControls(container, isMPM) {
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
       <option value="se_strain">SE 변형 (vs seed)</option>
-      <option value="additives">도전재 (VGCF/PTFE)</option>
+      <optgroup label="도전재 (carbon)">
+        <option value="additives">도전재 — 전체</option>
+        <option value="add_vgcf">　└ VGCF만</option>
+        <option value="add_superp">　└ Super P만</option>
+        <option value="add_ptfe">　└ PTFE만</option>
+      </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -280,8 +285,9 @@ export function initElectrodeViewer(containerId, dataUrl) {
     selectedComponent: null, infoEl: null,
   };
 
-  /* controls panel — MPM payloads (/3d-mpm-data) get a minimal panel */
-  const isMPM = (dataUrl || '').includes('3d-mpm-data');
+  /* controls panel — MPM payloads get the minimal panel.  Both the per-case route
+   * (/3d-mpm-data) and the standalone 도전재 viewer (/mpm-lab/data/…) serve MPM payloads. */
+  const isMPM = (dataUrl || '').includes('3d-mpm-data') || (dataUrl || '').includes('/mpm-lab/');
   state.isMPM = isMPM;
   state.isSeed = (dataUrl || '').includes('state=seed');   // 압축 전 (loose) view
   const ctrlDiv = buildControls(container, isMPM);
@@ -912,6 +918,10 @@ function applyViewMode(state, mode) {
     state.meshes.MESH.visible = _mcb ? _mcb.checked : true;
     state.meshes.MESH.material.opacity = OPA.MESH;         // undo the additives-mode translucency
   }
+  ['AM_P', 'AM_S'].forEach(t => {                          // undo additives/se_engagement AM dimming
+    const m = state.meshes && state.meshes[t];
+    if (m && m.material) { m.material.opacity = 1.0; m.material.transparent = false; }
+  });
   // analysis modes are POST-compaction results — in the "압축 전" (loose seed) view they
   // don't exist yet, so show the loose SE + a note instead of the (compacted) field.
   if (state.isSeed && (mode === 'coverage' || mode === 'coverage_patches' || mode === 'se_strain')) {
@@ -1604,48 +1614,54 @@ function applyViewMode(state, mode) {
     return;
   }
 
-  if (mode === 'additives') {
-    /* conductive additives (payload additive_points: [x,y,z,phase]) drawn as a coloured point
-     * cloud over a translucent SE continuum — VGCF black · Super P grey · PTFE orange.  This is
-     * the 도전재 3D view: where the carbon threads the SE/voids and bridges around the AM. */
+  if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe') {
+    /* conductive additives (payload additive_points: [x,y,z,phase]) as a coloured point cloud over a
+     * dimmed SE+AM — so the carbon threading the SE/voids + bridging the AM reads clearly.  Colours are
+     * BRIGHT (not SEM-black) for contrast on the dark canvas.  Sub-modes filter to one phase. */
+    const PH = { 2: 'VGCF', 3: 'SuperP', 4: 'PTFE' };
+    const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4 : 0;
     const mm = (state.data && state.data.mpm_metrics) || {};
-    const pts = (state.data && state.data.additive_points) || [];
-    if (!pts.length) {
+    const all = (state.data && state.data.additive_points) || [];
+    if (!all.length) {
       setLegend(state, state.isMPM
         ? '<i>이 payload엔 도전재가 없어요 (일반 압축 payload). VGCF/PTFE를 보려면 mpm3d를 '
           + '<b>--add-recipe</b>로 돌리고 payload를 <b>--phase phase.npy</b>로 재생성하세요.</i>'
         : '<i>No conductive-additive data in this payload.</i>');
       return;
     }
-    if (state.meshes.MESH) {                              // dim the SE so the carbon reads against it
+    const pts = only ? all.filter(p => p[3] === only) : all;
+    if (state.meshes.MESH) {                              // dim SE + AM so the carbon pops
       state.meshes.MESH.visible = true;
-      state.meshes.MESH.material.transparent = true;
-      state.meshes.MESH.material.opacity = 0.16;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.10;
     }
-    const PHCOL = { 2: 0x111111, 3: 0x888888, 4: 0xe08214 };   // VGCF / Super P / PTFE
+    [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
+      if (m) { m.material.transparent = true; m.material.opacity = 0.16; }
+    });
+    const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
     const g = new THREE.BufferGeometry();
     const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
     const cc = new THREE.Color();
     for (let i = 0; i < pts.length; i++) {
       const p = pts[i];
       pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
-      cc.set(PHCOL[p[3]] || 0x111111);
+      cc.set(PHCOL[p[3]] || 0x22d3ee);
       col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
     }
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     state.additivePointGroup = new THREE.Points(g, new THREE.PointsMaterial({
-      size: 0.5, vertexColors: true, sizeAttenuation: true }));
+      size: only ? 0.85 : 0.6, vertexColors: true, sizeAttenuation: true }));
     if (state.scene) state.scene.add(state.additivePointGroup);
     const ac = mm.additive_counts || {};
-    const swatch = { VGCF: '#111', SuperP: '#888', PTFE: '#e08214' };
-    const legend = Object.keys(swatch).filter(k => ac[k]).map(k =>
-      `<span style="color:${swatch[k]};font-size:13px">●</span> ${k} ${Number(ac[k]).toLocaleString()}개`).join(' &nbsp; ');
+    const swatch = { VGCF: '#22d3ee', SuperP: '#f1f5f9', PTFE: '#f59e0b' };
+    const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
+    const legend = keys.map(k =>
+      `<span style="color:${swatch[k]};font-size:13px">●</span> ${k} ${Number(ac[k] || 0).toLocaleString()}개`).join(' &nbsp; ');
     setLegend(state,
-      `<b>도전재 (3D) — VGCF / PTFE</b>
+      `<b>도전재 (3D)${only ? ' — ' + PH[only] + '만' : ' — 전체'}</b>
        <div style="margin-top:4px">${legend || '–'}</div>
-       <div style="margin-top:3px;color:#9ca3af;font-size:10px">SE 연속체(반투명) 사이를 카본이 짜고 AM 곁을 지남. `
-       + `표시 ${pts.length.toLocaleString()}점 (부피분율 보존 subsample)</div>`);
+       <div style="margin-top:3px;color:#9ca3af;font-size:10px">SE·AM 반투명, 카본은 밝게. `
+       + `표시 ${pts.length.toLocaleString()}점${only ? '' : ' (부피분율 보존 subsample)'}</div>`);
     return;
   }
 
