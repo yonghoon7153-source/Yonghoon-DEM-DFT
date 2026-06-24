@@ -14,7 +14,7 @@ import re
 COLS = ['case', 'mAh', 'ps_label', 'p_frac', 'am_wt', 'dem_porosity_pct', 'mpm_porosity_pct',
         'dem_cov_amp_hertz', 'dem_cov_amp_tabor', 'mpm_cov_amp_plastic_tabor', 'mpm_cov_amp_rigid_tabor',
         'sigma_ionic_hertz_mScm', 'sigma_ionic_physics_mScm', 'thickness_um', 'fracture_severe_pct',
-        'n_am', 'n_se']
+        'n_am', 'n_se', 'r_se', 'e_se']
 
 
 def _g(pat, txt, grp=1, flags=0):
@@ -50,6 +50,8 @@ def parse(txt):
     n_am = (int(namp) if namp else 0) + (int(nams) if nams else 0)
     d['n_am'] = str(n_am) if n_am else ''
     d['n_se'] = _g(r'\bSE\s*\t(\d+)\t', txt)
+    d['r_se'] = _g(r'\bSE\s*\t\d+\s*\t([\d.]+)', txt)      # SE radius (µm) from particle table — variant axis
+    d['e_se'] = _g(r'E_SE:\s*([\d.]+)', txt)               # DEM E_SE (GPa) from header — variant axis
     return d
 
 
