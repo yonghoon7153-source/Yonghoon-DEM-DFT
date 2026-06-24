@@ -134,6 +134,7 @@ Shannon 이온반지름(6배위): **Cl⁻ 1.81 Å < S²⁻ 1.84 Å**. 단순히 
 - **VBM은 상한선·정렬 재료일 뿐**, 정량은 **grand-potential ΔG**. 분자(HOMO=일대일)와 달리 고체는 Li⁺+e⁻ 동반 분해.
 - **Halide**(deep halogen np)는 VBM proxy 비교적 통함, **Sulfide**(shallow S 3p + S–S 재구성)는 깨짐. 측정은 UPS(VBM/work function) + IPES(CBM) + ΔG(정량).
 - LPSCl vs LPSCl₁.₆: gap 2.25→1.65 eV로 좁아짐(S–S dimer + Cl 3p) → LPSCl₁.₆은 산화 경로에 일부 진입.
+  - ⚠️ **교정 (2026-06-24)**: 이 "2.25→1.65 좁아짐"은 **수렴 k-mesh에서 재현 안 됨**. `db/properties/electronic.json`(_CORRECTION): 이전 0.32 eV 좁아짐은 **k-mesh 아티팩트**, 제대로 수렴하면 comp1 1.76 ≈ modelc 1.82(Δ−0.06 eV), VBM 궤도성격 동일(S 3p ~91%). modelc의 in-gap states(값 0.74)는 **S–S dimer가 아니라 Li-공공/4d-Cl anti-site 무질서 hole**. 또 grand-potential run(`oxidation_stability.json`)에서 **comp1·modelc 산화 onset 동일(2.14 V)** → "modelc가 산화경로 진입"은 성립 안 함(애초에 본 §11 윗 3줄 "gap≠Φ_ox"와도 모순). → 이 줄은 옛 업로드 문서(`260619_DOS_VBM_UPS.md`) 요약이며 **현 수렴계산이 supersede**.
 
 → 이걸 db `db/properties/` 또는 kb 노트로 정식 편입할지 알려주시면 정리해 넣겠습니다.
 

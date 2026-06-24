@@ -76,6 +76,7 @@ nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이�
 - SEI 산물 갭(MP): LiCl 6.65 · Li₃PO₄ 5.73 · NdPO₄ 5.55* · Li₂O 5.24 · NdOCl 4.77* · NdCl₃ 4.30* · LiNdO₂ 4.21* · Li₂S 3.90 · Nd₂O₃ 3.81* · Nd₂S₃ 1.79* · Li₃P 0.70 · **NdS 0.00(금속)** (*Nd=4f 하한값, 실제 더 넓음)
 - interface vs LiCoO₂: nd −0.3285 ≈ modelc −0.3308 (**분해 양은 비슷**, 산물만 wide-gap화).
 - → **formation energy 연결**(왜 wide-gap 산물이 선택되나) + 음극/양극 이점 분리: `kb/results/nd_anode_cathode_sei_formation_2026_06_24.md`. 통합 데이터 store: `db/properties/sei_products.json`.
+- ✅ **직접 convex hull staircase 검증 (2026-06-24)**: nd 조성 자체를 grand-potential ESW 돌려 **위 표를 직접 확정** — O→Li₂O(V=0)·Li₃PO₄(벌크)·**NdPO₄@2.45·NdCl₃@2.62**(양극)가 분해식에서 그대로 나옴. modelc 같은 hull 재실행=완전일치(아티팩트 아님). 🔧 **정정**: nd intrinsic ESW는 오히려 **좁아짐**(0.40 V vs modelc 0.90 V; Nd-S/P/O redox가 창 안에서 일어남) → 이점은 "넓은 창"이 아니라 **산물 전자차단(passivation)**. x=0.2서 O는 Li₃P를 부분만 전환(0.3 Li₂O+0.8 Li₃P). 로그 `tools/oxidation/esw_nd_result.txt`, 데이터 `oxidation_stability.json` nd_doped.
 
 ## 4. 메커니즘 (cycle↑ 인과사슬)
 1. **벌크/GB**: O-유래 Li₃PO₄ 등 wide-gap이 전자 percolation 차단 → **σ_e↓**(DC-pol). (bulk 갭은 오히려 좁아짐 → σ_e↓는 interphase/microstructure 효과, **bulk 아님**.)

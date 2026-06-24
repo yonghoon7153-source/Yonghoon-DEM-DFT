@@ -57,6 +57,39 @@
         "3.33": "-> 0.5 P2S7 + 0.7 LiCl + 0.9 SCl + 4.7 Li",
         "3.39": "-> 0.4588 P2S7 + 0.08235 PCl5 + 1.188 SCl + 5.4 Li (Cl oxidation: SCl + PCl5)"
       }
+    },
+    "nd_doped": {
+      "composition": "Li4.8Nd0.2PS4.1O0.3Cl1.6",
+      "_source_cell": "DFT-relaxed 120-atom Li48Nd2P10O3S41Cl16 / 10 (net charge 0); main-track Nd->Li, x=0.20",
+      "in_MP": false,
+      "_run": "gabia kserver116-27 2026-06-24, esw_grand_potential.py, 6-element Cl-Li-Nd-O-P-S hull (321 entries). Full log: tools/oxidation/esw_nd_result.txt",
+      "ocv_self_decomposition_V": 1.72,
+      "ocv_self_decomposition_rxn": "Li4.8Nd0.2PS4.1O0.3Cl1.6 -> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl",
+      "reduction_limit_V": 1.52,
+      "oxidation_limit_V": 1.92,
+      "oxidation_onset_rxn": "Li4.8Nd0.2PS4.1O0.3Cl1.6 -> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li",
+      "intrinsic_ESW_width_V": 0.40,
+      "key_breakpoints_V": {
+        "0.00": "+ 8 Li -> 0.3 Li2O + 0.8 Li3P + 4.1 Li2S + 0.2 NdP + 1.6 LiCl (ANODE: O->Li2O wide-gap 5.24; Li3P 0.8 still dominant=conductive; Nd->NdP conductive)",
+        "0.69": "+ 7.4 Li -> 0.725 Li3P + 4.1 Li2S + 0.2 NdP + 0.075 Li3PO4 + 1.6 LiCl (Li3PO4 5.73 appears, persists upward)",
+        "1.52": "+ 4.625 Li -> 0.1 Nd2S3 + 3.8 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.925 P (reduction limit)",
+        "1.72": "-> 0.925 Li3PS4 + 0.1 Nd2S3 + 0.1 Li2S + 0.075 Li3PO4 + 1.6 LiCl (neutral OCV; Nd2S3 1.79 conductive + Li3PO4 wide-gap)",
+        "1.92": "-> 0.02 Nd10S19 + 0.925 Li3PS4 + 0.02 Li2S + 0.075 Li3PO4 + 1.6 LiCl + 0.16 Li (oxidation onset = Nd-sulfide, BELOW modelc 2.14)",
+        "2.30": "-> 0.1 Li9Nd2(PS4)5 + 0.425 Li3PS4 + 0.1 LiS4 + 0.075 Li3PO4 + 1.6 LiCl + 0.7 Li (polysulfide LiS4 starts)",
+        "2.45": "-> 0.075 NdPO4 + 0.4 P2S7 + 0.125 NdPS4 + 0.2 LiS4 + 1.6 LiCl + 3 Li (NdPO4 5.55 wide-gap APPEARS @2.45 V)",
+        "2.62": "-> 0.075 NdPO4 + 0.4625 P2S7 + 0.2156 LiS4 + 0.125 NdCl3 + 1.225 LiCl + 3.359 Li (NdCl3 4.30 wide-gap APPEARS @2.62 V)",
+        "3.08": "-> 0.45 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 1.075 LiCl + 0.95 S + 3.7 Li (LiNd(PO3)4 phosphate)",
+        "3.39": "-> 1.001 SCl + 0.01471 PCl5 + 0.4426 P2S7 + 0.025 LiNd(PO3)4 + 0.175 NdCl3 + 4.775 Li (Cl oxidation SCl+PCl5 same as modelc)",
+        "3.66": "-> 1.012 SCl + 0.01765 PCl5 + 0.03333 Nd(PO3)3 + 0.4412 P2S7 + 0.1667 NdCl3 + 4.8 Li (full ox)"
+      },
+      "interpretation_vs_modelc": {
+        "CONTROL_valid": "modelc re-run on the SAME 6-element hull reproduces the 4-element-hull modelc breakpoint-for-breakpoint -> every nd-vs-modelc difference is REAL chemistry (O/Nd), not a hull artifact.",
+        "CONFIRMED_SEI_story": "Direct convex-hull proof of the anode/cathode passivation claim: O->Li2O (5.24) at V=0 [anode]; Li3PO4 (5.73) persistent [bulk/GB]; NdPO4 (5.55)@2.45 + NdCl3 (4.30)@2.62 + LiNd(PO3)4@3.08 + Nd(PO3)3@3.66 [cathode]. modelc gives ONLY conductive P2S7/LiS4/S/SCl/PCl5. Nd anode-bad(NdP/Nd2S3 conductive)/cathode-good(NdPO4/NdCl3 wide-gap) split confirmed.",
+        "CORRECTION_window_narrows": "nd intrinsic ESW is NARROWER (0.40 V; 1.52-1.92) than modelc (0.90 V; 1.24-2.14), NOT wider. Nd-S/Nd-P/Nd-O redox is active inside modelc's window -> nd is intrinsically LESS stable (both ends move inward). The benefit is product electron-blocking (kinetic passivation), not a wider thermodynamic window -- parallel to the bulk-gap narrowing.",
+        "CORRECTION_O_dilute": "At x=0.2, O is too dilute to fully replace Li3P: V=0 gives 0.3 Li2O + 0.8 Li3P (Li3P still dominant). The wide-gap conversion is PARTIAL/ADDITIVE and scales with O; it is a GB/interphase percolation-breaking effect, not a bulk-fraction replacement.",
+        "CORRECTION_polysulfides_remain": "nd does NOT remove the polysulfides; P2S7/SCl/PCl5 still form at high V with NdPO4/NdCl3/Li3PO4 ALONGSIDE. NdPO4 first appears at 2.45 V; the 1.92-2.45 V band oxidizes to non-wide-gap products (Nd10S19/NdS2/Li9Nd2(PS4)5/LiS4). The passivation is a >=2.45 V (cathode operating) effect."
+      },
+      "caveat": "Nd-bearing hull energies are GGA+U(4f) -> product IDENTITY robust, absolute voltages +/-. DFT x=0.2 (10x experimental x=0.02) -> trend robust, dilute limit even more additive."
     }
   },
   "comparison_and_interpretation": {

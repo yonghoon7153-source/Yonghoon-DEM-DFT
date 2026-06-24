@@ -55,6 +55,26 @@
 
 ---
 
+## 3b. ★ 직접 convex hull staircase로 검증됨 (2026-06-24) — 추론 → 증명
+
+nd 조성 자체의 intrinsic ESW staircase를 돌려서(`tools/oxidation/esw_nd_result.txt`, 6원소 hull) **위 음극/양극 스토리를 직접 확인**. modelc를 같은 hull에서 재실행 → 4원소 hull과 breakpoint 완전일치 = **차이는 hull 아티팩트 아니라 진짜 O/Nd 화학**.
+
+| 전압 | nd 산물 (convex hull) | gap |
+|---|---|---|
+| **0.00 V (음극)** | **0.3 Li₂O** + 0.8 Li₃P + 4.1 Li₂S + 0.2 NdP + 1.6 LiCl | Li₂O **5.24** ✓ |
+| 0.69~3.06 V (벌크) | **0.075 Li₃PO₄** 지속 | **5.73** ✓ |
+| **2.45 V (양극)** | **0.075 NdPO₄** + 0.4 P₂S₇ + 0.125 NdPS₄ + 1.6 LiCl | NdPO₄ **5.55** ✓ |
+| **2.62 V** | NdPO₄ + **0.125 NdCl₃** + P₂S₇ + LiCl | NdCl₃ **4.30** ✓ |
+| 3.08·3.66 V | **LiNd(PO₃)₄·Nd(PO₃)₃** + P₂S₇ + SCl | wide-gap phosphate |
+| (대조) modelc | P₂S₇·LiS₄·S·SCl·PCl₅ **전부 전도** | — |
+
+**확인**: O→Li₂O(음극)·Li₃PO₄(벌크)·NdPO₄@2.45·NdCl₃@2.62(양극) 전부 식에서 직접 나옴. Nd는 저전압서 NdP/Nd₂S₃(전도)·고전압서 NdPO₄/NdCl₃(wide-gap) = **음극-나쁨/양극-좋음 split 그대로**.
+
+**🔧 수정/정직 (이번 run에서 새로):**
+1. **nd intrinsic window는 오히려 좁아짐**: nd 0.40 V(1.52–1.92) < modelc 0.90 V(1.24–2.14). Nd-S/P/O redox가 modelc 창 *안에서* 일어남 → nd가 열역학적으론 **덜 안정**. 이점은 **산물 전자차단(kinetic passivation)**이지 넓은 창이 아님 (= bulk gap 좁아짐과 같은 논리).
+2. **x=0.2서 O는 Li₃P를 다 못 바꿈**: V=0서 0.3 Li₂O + **0.8 Li₃P**(여전히 우세). wide-gap화는 **부분·additive**, O량에 비례 (GB/계면 percolation 차단 효과지 bulk 치환 아님). → "Li₂O가 Li₃P 대체" 표현은 "부분 전환"으로 완화.
+3. **폴리설파이드는 안 사라짐**: nd도 P₂S₇/SCl/PCl₅ 생김 + NdPO₄/NdCl₃/Li₃PO₄가 **곁들여** 생기는 것. NdPO₄는 2.45 V부터 → passivation은 **≥2.45 V(양극 작동영역)** 효과 (1.92–2.45 V는 Nd-sulfide로 산화).
+
 ## 4. caveat
 - 산물 **종류·양**(열역학)은 계산했으나 **연속 차단막 여부(morphology/percolation)는 미계산** → XPS depth·ToF-SIMS·SSRM 필요.
 - Nd 함유 gap은 MP 4f 하한(실제 더 넓음); **순수 O상(Li₃PO₄·Li₂O)은 확정** → O 메시지는 robust.

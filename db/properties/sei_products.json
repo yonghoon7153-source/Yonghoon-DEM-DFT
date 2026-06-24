@@ -45,6 +45,22 @@
     }
   },
 
+  "direct_convex_hull_staircase_2026_06_24": {
+    "_what": "Intrinsic grand-potential ESW staircase for the Nd-doped composition itself (esw_grand_potential.py, 6-element Cl-Li-Nd-O-P-S hull). Moves the anode/cathode SEI story from INFERENCE (product gaps + bulk-opposite logic) to DIRECT proof: the convex hull is asked, at each voltage, what the doped cell decomposes into. Full log: tools/oxidation/esw_nd_result.txt ; data: db/properties/oxidation_stability.json (nd_doped).",
+    "_control": "modelc re-run on the SAME 6-element hull reproduces the 4-element-hull modelc breakpoint-for-breakpoint -> the nd-vs-modelc product divergence is REAL chemistry, not a hull artifact.",
+    "CONFIRMED": {
+      "anode_V0": "O -> 0.3 Li2O (5.24) at the Li-metal contact.",
+      "bulk_allV": "0.075 Li3PO4 (5.73) persists ~0.69-3.06 V.",
+      "cathode_highV": "NdPO4 (5.55) @2.45 V ; NdCl3 (4.30) @2.62 V ; LiNd(PO3)4 @3.08 V ; Nd(PO3)3 @3.66 V -- all wide-gap; modelc gives only conductive P2S7/LiS4/S/SCl/PCl5.",
+      "Nd_split": "Nd -> NdP/Nd2S3 (conductive) at low V [anode-bad]; Nd -> NdPO4/NdCl3 (wide-gap) only at high V [cathode-good] -- the anode/cathode split is confirmed by the actual reactions."
+    },
+    "CORRECTIONS": {
+      "intrinsic_window_NARROWS": "nd ESW = 0.40 V (1.52-1.92) vs modelc 0.90 V (1.24-2.14). Nd-S/Nd-P/Nd-O redox is active inside modelc's window -> nd is intrinsically LESS stable, not more. Benefit is product electron-blocking (kinetic passivation), NOT a wider thermodynamic window (parallel to the bulk-gap narrowing).",
+      "O_too_dilute_at_x0.2": "V=0 gives 0.3 Li2O + 0.8 Li3P -> O does NOT fully replace conductive Li3P; the wide-gap conversion is PARTIAL/ADDITIVE and scales with O (a GB/interphase percolation-breaking effect, not bulk replacement). Softens the earlier 'Li2O replaces Li3P' phrasing.",
+      "polysulfides_remain": "nd ADDS NdPO4/NdCl3/Li3PO4 alongside P2S7/SCl/PCl5 (which still form); it does not eliminate them. NdPO4 first appears at 2.45 V, so passivation is a >=2.45 V (cathode operating) effect; 1.92-2.45 V oxidizes to non-wide-gap Nd-sulfides."
+    }
+  },
+
   "oxophilicity_descriptor_eV_per_anion": {
     "_definition": "oxophilicity(M) = Ef/anion(M-sulfide) - Ef/anion(M-oxide); larger = stronger O getter.",
     "_reading": "Nd (1.75) ~= Li (1.67) -> Nd is NOT a special O-getter. The benefit of incorporated O is an O effect, not an Nd effect; Nd is just an O carrier.",
