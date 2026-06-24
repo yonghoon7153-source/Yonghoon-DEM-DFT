@@ -60,7 +60,9 @@
       {% for it in items %}
       <tr data-id="{{ it.id }}" data-add="{{ 1 if it.has_additives else 0 }}"
           style="border-bottom:1px solid #1e293b; color:#e2e8f0">
-        <td style="padding:6px 10px 6px 0; font-weight:600">{{ it.name }}
+        <td style="padding:6px 10px 6px 0; font-weight:600"><span class="lab-name" data-id="{{ it.id }}"
+              onclick="labRenameStart(this)" title="클릭해서 이름 수정"
+              style="cursor:pointer; border-bottom:1px dashed #475569">{{ it.name }}</span>
           {% if it.source_case %}<span style="color:#64748b;font-weight:400;font-size:0.9em"> · {{ it.source_case }}</span>{% endif %}</td>
         <td style="padding:6px 10px">{% if it.has_additives %}<span style="color:#fbbf24">⚡ {{ it.recipe }}</span>{% else %}<span style="color:#64748b">—</span>{% endif %}</td>
         <td style="padding:6px 10px">{{ '%.2f'|format(it.porosity) if it.porosity is not none else '—' }}%</td>
@@ -159,7 +161,8 @@ function labAddRow(it) {
   tr.style.cssText = 'border-bottom:1px solid #1e293b; color:#e2e8f0';
   const f = (v, s, d = '—') => (v === null || v === undefined) ? d : (s ? s(v) : v);
   tr.innerHTML =
-    `<td style="padding:6px 10px 6px 0;font-weight:600">${it.name}` +
+    `<td style="padding:6px 10px 6px 0;font-weight:600"><span class="lab-name" data-id="${it.id}" ` +
+      `onclick="labRenameStart(this)" title="클릭해서 이름 수정" style="cursor:pointer;border-bottom:1px dashed #475569">${it.name}</span>` +
       (it.source_case ? ` <span style="color:#64748b;font-weight:400;font-size:0.9em">· ${it.source_case}</span>` : '') + `</td>` +
     `<td style="padding:6px 10px">${it.has_additives ? `<span style="color:#fbbf24">⚡ ${it.recipe}</span>` : '<span style="color:#64748b">—</span>'}</td>` +
     `<td style="padding:6px 10px">${f(it.porosity, v => (+v).toFixed(2) + '%')}</td>` +
@@ -187,6 +190,38 @@ async function labDelete(id, btn) {
     if (!tb.querySelectorAll('tr').length) document.getElementById('lab-empty').style.display = '';
     if (labCurId === id) document.getElementById('lab-viewer-card').style.display = 'none';
   }
+}
+
+// click a payload name → inline-edit → save (POST /mpm-lab/rename)
+function labRenameStart(span) {
+  if (span.querySelector('input')) return;
+  const id = span.dataset.id, cur = span.textContent.trim();
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.value = cur;
+  inp.style.cssText = 'background:#0f172a;color:#e2e8f0;border:1px solid #6366f1;border-radius:4px;' +
+    'padding:1px 6px;font-size:0.95em;font-weight:600;width:240px';
+  span.textContent = ''; span.appendChild(inp); inp.focus(); inp.select();
+  let done = false;
+  const finish = async (save) => {
+    if (done) return; done = true;
+    const name = inp.value.trim();
+    if (save && name && name !== cur) {
+      try {
+        const r = await fetch('/mpm-lab/rename/' + encodeURIComponent(id),
+          { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
+        const j = await r.json();
+        span.textContent = j.ok ? j.name : cur;
+        if (j.ok && labCurId === id) {
+          const t = document.getElementById('lab-viewer-title'); if (t) t.textContent = j.name;
+        }
+      } catch (e) { span.textContent = cur; }
+    } else { span.textContent = cur; }
+  };
+  inp.addEventListener('blur', () => finish(true));
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); inp.blur(); }
+    else if (e.key === 'Escape') finish(false);
+  });
 }
 </script>
 {% endblock %}

@@ -5286,6 +5286,23 @@ def mpm_lab_data(pid):
     return jsonify(payload)
 
 
+@app.route('/mpm-lab/rename/<pid>', methods=['POST'])
+def mpm_lab_rename(pid):
+    mp = os.path.join(app.config['MPM_LAB_FOLDER'], _mpm_lab_slug(pid), 'meta.json')
+    if not os.path.isfile(mp):
+        return jsonify({'ok': False, 'error': 'not found'}), 404
+    name = ((request.get_json(silent=True) or {}).get('name') if request.is_json
+            else request.form.get('name')) or ''
+    name = name.strip()
+    if not name:
+        return jsonify({'ok': False, 'error': 'empty name'}), 400
+    m = json.load(open(mp))
+    m['name'] = name
+    with open(mp, 'w') as f:
+        json.dump(m, f)
+    return jsonify({'ok': True, 'name': name})
+
+
 @app.route('/mpm-lab/delete/<pid>', methods=['POST'])
 def mpm_lab_delete(pid):
     root = os.path.realpath(app.config['MPM_LAB_FOLDER'])

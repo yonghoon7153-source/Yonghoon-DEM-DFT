@@ -406,6 +406,10 @@ def main(argv):
                 if nm not in cnt:
                     continue
                 nobj = cnt[nm]['n']
+                if not is_fib:                              # blob = 1 point/object → volume-FILL (count =
+                    nobj = int(round(cnt[nm]['vol_um3'] / ((spc * um_box) ** 3)))   # vol / point-vol) so the
+                    #   MPM SuperP volume matches the recipe (the aggregate count would over-count, since
+                    #   each blob is a single dx³ point, not a π/6·D³ sphere — unlike a fibre point-chain).
                 if is_fib:
                     pts, _fid = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
                                                 in_am=lambda q: _in_am_abs(q + off), return_ids=True)
