@@ -1630,14 +1630,14 @@ function applyViewMode(state, mode) {
       return;
     }
     const pts = only ? all.filter(p => p[3] === only) : all;
-    // SE + AM made semi-transparent so the structure still reads; the carbon points draw with
-    // depthTest off (below) so they're visible THROUGH the SE/AM even when SE is turned up.
+    // SE faint shell + AM dimmed so they don't bury the carbon; the points draw x-ray (below) so
+    // they read clearly on top.  AM kept low (0.13) — higher made the view muddy.
     if (state.meshes.MESH) {
       state.meshes.MESH.visible = true;
-      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.22;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.18;
     }
     [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
-      if (m) { m.material.transparent = true; m.material.opacity = 0.22; }
+      if (m) { m.material.transparent = true; m.material.opacity = 0.13; }
     });
     const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
     const g = new THREE.BufferGeometry();
@@ -1652,8 +1652,9 @@ function applyViewMode(state, mode) {
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     state.additivePointGroup = new THREE.Points(g, new THREE.PointsMaterial({
-      size: only ? 0.85 : 0.6, vertexColors: true, sizeAttenuation: true,
-      depthTest: false, depthWrite: false }));   // carbon always on top (x-ray) → visible through SE/AM
+      size: only ? 1.6 : 1.1, vertexColors: true, sizeAttenuation: true,
+      depthTest: false, depthWrite: false,                 // carbon always on top (x-ray)
+      transparent: true, blending: THREE.AdditiveBlending }));   // glow → pops over the dim structure
     state.additivePointGroup.renderOrder = 999;
     if (state.scene) state.scene.add(state.additivePointGroup);
     const ac = mm.additive_counts || {};
