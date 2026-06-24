@@ -261,6 +261,9 @@ def main():
         has = solid.any(axis=2)                            # columns containing any solid
         ztop = np.where(has, nzc - 1 - np.argmax(solid[:, :, ::-1], axis=2), -1)   # highest solid z per column
         gtop = int(np.percentile(ztop[has], 98)) if has.any() else nzc - 1         # GLOBAL bed top (spike-robust)
+        _th = sim_m.get('thickness_um') or sim_m.get('thickness_mpm_um')           # never above the plate position
+        if _th and s > 0:                                  # (a few tall AM poke above the mean bed → headspace)
+            gtop = min(gtop, int(_th / s))
         zz = np.arange(nzc)[None, None, :]
         void = (~solid) & (zz <= gtop) & has[:, :, None]   # pore below the global top, in solid-bearing columns
         vi = np.argwhere(void)
