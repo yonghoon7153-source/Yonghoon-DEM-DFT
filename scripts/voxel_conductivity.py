@@ -46,47 +46,48 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-8, return_field=False):
     """Finite-volume solve of div(σ ∇φ)=0 with φ=1 on the high-`axis` face, φ=0 on
     the low face, no-flux side walls.  σ: 3D float (0 = insulator).  Returns σ_eff
     in the SAME units as σ (geometry cancels)."""
-    sigma = np.moveaxis(sigma, axis, 2)            # solve along z, restore later not needed
+    sigma = np.moveaxis(sigma, axis, 2)            # solve along z
     nx, ny, nz = sigma.shape
     cond = sigma > 0
-    idx = -np.ones(sigma.shape, np.int64)
-    ids = np.argwhere(cond)
-    idx[cond] = np.arange(len(ids))
-    N = len(ids)
+    N = int(cond.sum())
     if N == 0:
         return (0.0, None) if return_field else 0.0
-
-    rows, cols, data = [], [], []
-    b = np.zeros(N)
+    gid = -np.ones(sigma.shape, np.int64)
+    gid[cond] = np.arange(N)
     s = sigma
+    diag = np.zeros(N)
+    rows, cols, data = [], [], []
 
-    def gface(a, c):                                # harmonic-mean face conductance (dx cancels in σ_eff)
-        return 2 * a * c / (a + c) if (a > 0 and c > 0) else 0.0
+    def harm(a, c):                                 # harmonic-mean face conductance (vectorised)
+        out = np.zeros(a.shape)
+        m = (a > 0) & (c > 0)
+        out[m] = 2.0 * a[m] * c[m] / (a[m] + c[m])
+        return out
 
-    for n, (i, j, k) in enumerate(ids):
-        diag = 0.0
-        for di, dj, dk in ((1, 0, 0), (-1, 0, 0), (0, 1, 0), (0, -1, 0), (0, 0, 1), (0, 0, -1)):
-            ii, jj, kk = i + di, j + dj, k + dk
-            if dk == 0 and (ii < 0 or ii >= nx or jj < 0 or jj >= ny):
-                continue                            # side walls: no-flux (Neumann)
-            if kk < 0:                              # bottom face → φ=0 Dirichlet (½-cell ⇒ g=2σ)
-                g = 2.0 * s[i, j, k];  diag += g;  continue
-            if kk >= nz:                            # top face → φ=1 Dirichlet (½-cell ⇒ g=2σ)
-                g = 2.0 * s[i, j, k];  diag += g;  b[n] += g * 1.0;  continue
-            g = gface(s[i, j, k], s[ii, jj, kk])
-            if g > 0:
-                diag += g
-                rows.append(n); cols.append(idx[ii, jj, kk]); data.append(-g)
-        rows.append(n); cols.append(n); data.append(diag if diag > 0 else 1.0)
-    A = csr_matrix((data, (rows, cols)), shape=(N, N))
+    # internal edges along each axis (x,y side walls are no-flux ⇒ just the interior pairs)
+    for ax in (0, 1, 2):
+        sa = [slice(None)] * 3; sa[ax] = slice(0, sigma.shape[ax] - 1)
+        sb = [slice(None)] * 3; sb[ax] = slice(1, sigma.shape[ax])
+        ga = gid[tuple(sa)].ravel(); gb = gid[tuple(sb)].ravel()
+        g = harm(s[tuple(sa)], s[tuple(sb)]).ravel()
+        m = (ga >= 0) & (gb >= 0) & (g > 0)
+        ga, gb, g = ga[m], gb[m], g[m]
+        rows += [ga, gb]; cols += [gb, ga]; data += [-g, -g]
+        np.add.at(diag, ga, g); np.add.at(diag, gb, g)
+
+    # z Dirichlet faces (½-cell ⇒ g=2σ): bottom k=0 → φ=0, top k=nz-1 → φ=1
+    b = np.zeros(N)
+    g0 = gid[:, :, 0].ravel(); s0 = s[:, :, 0].ravel(); m0 = g0 >= 0
+    np.add.at(diag, g0[m0], 2.0 * s0[m0])
+    g1 = gid[:, :, nz - 1].ravel(); s1 = s[:, :, nz - 1].ravel(); m1 = g1 >= 0
+    np.add.at(diag, g1[m1], 2.0 * s1[m1]); b[g1[m1]] += 2.0 * s1[m1]
+
+    rows.append(np.arange(N)); cols.append(np.arange(N)); data.append(np.where(diag > 0, diag, 1.0))
+    A = csr_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(N, N))
     phi, _ = cg(A, b, rtol=tol, maxiter=20000)
 
-    # current through the bottom Dirichlet face: I = Σ g·(φ_voxel − 0)
-    I = 0.0
-    for n, (i, j, k) in enumerate(ids):
-        if k == 0:
-            I += 2.0 * s[i, j, k] * phi[n]          # bottom Dirichlet face g=2σ (½-cell)
-    sigma_eff = I * nz / (nx * ny * 1.0)            # σ_eff = I·L/(A·ΔV), ΔV=1, L=nz, A=nx·ny
+    I = float((2.0 * s0[m0] * phi[g0[m0]]).sum())  # current through the bottom Dirichlet face
+    sigma_eff = I * nz / (nx * ny * 1.0)           # σ_eff = I·L/(A·ΔV), ΔV=1, L=nz, A=nx·ny
     if return_field:
         f = np.zeros(sigma.shape); f[cond] = phi
         return sigma_eff, f
