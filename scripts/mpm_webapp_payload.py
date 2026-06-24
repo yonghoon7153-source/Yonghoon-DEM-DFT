@@ -247,26 +247,29 @@ def main():
     s = h * UM                                             # voxel idx → µm
 
     # void (pore) phase → XCT-like "기공만" viewer mode: INTERNAL pore = complement of solid (AM ∪ SE)
-    # BELOW the per-column electrode top surface, as a subsampled voxel-centre cloud (same µm frame as
-    # the SE mesh / AM / additive_points).  Capping at each column's highest solid cell drops (a) the
-    # empty HEADSPACE above the rough electrode top (the "SE 없는 위층") and (b) fully-empty periodic-edge
-    # columns — so only real internal pores show, not the box void around/above the sample.  Additives
-    # (~4 vol%, sub-grid, sit INSIDE the pores) are NOT subtracted → macro-pore network as XCT segments it.
+    # BELOW the GLOBAL electrode top surface, as a subsampled voxel-centre cloud (same µm frame as the SE
+    # mesh / AM / additive_points).  Cap at the GLOBAL top (a high percentile of the per-column solid tops,
+    # robust to one tall AM) — this drops the empty HEADSPACE above the bed (the "SE 없는 위층") and fully-
+    # empty periodic-edge columns, while KEEPING surface-valley + inter-particle pore (a per-COLUMN cap was
+    # too aggressive: it deleted real pore wherever a column happened to be short).  ⚠ the cloud is a COARSE
+    # n_vox preview — its void fraction under-counts the authoritative sim porosity (mpm_metrics); it shows
+    # WHERE the pores are, not the exact amount.  Additives (~4 vol%, in-pore) are NOT subtracted.
     void_points = []
     if a.void_max > 0:
         solid = am | se_mask                               # (nx, ny, nz)
         nzc = solid.shape[2]
         has = solid.any(axis=2)                            # columns containing any solid
         ztop = np.where(has, nzc - 1 - np.argmax(solid[:, :, ::-1], axis=2), -1)   # highest solid z per column
+        gtop = int(np.percentile(ztop[has], 98)) if has.any() else nzc - 1         # GLOBAL bed top (spike-robust)
         zz = np.arange(nzc)[None, None, :]
-        void = (~solid) & (zz <= ztop[:, :, None])         # pore below the column top; headspace/empty cols dropped
+        void = (~solid) & (zz <= gtop) & has[:, :, None]   # pore below the global top, in solid-bearing columns
         vi = np.argwhere(void)
         nvoid = len(vi)
         if nvoid > a.void_max:
             vi = vi[np.random.default_rng(3).choice(nvoid, a.void_max, replace=False)]
         void_points = ((vi + 0.5) * s).astype(np.float32).round(2).tolist()
         print(f'  void (pore) cloud: {len(void_points):,} of {nvoid:,} internal-pore voxels '
-              f'(headspace + empty periodic-edge columns capped; raw void {int((~solid).sum()):,})')
+              f'(below global top z={gtop}/{nzc}; headspace+empty cols dropped; raw void {int((~solid).sum()):,})')
 
     # SE continuum surface (decimated for the browser)
     mm = vc.mesh_of(se_mask, a.tri_step, a.smooth)
