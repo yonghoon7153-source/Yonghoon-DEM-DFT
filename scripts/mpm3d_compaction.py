@@ -427,7 +427,11 @@ def main(argv):
                 mus = np.concatenate([mus, np.full(len(pts), mu_a, np.float32)])
                 las = np.concatenate([las, np.full(len(pts), la_a, np.float32)])
                 ylds = np.concatenate([ylds, np.full(len(pts), sy, np.float32)])
-                pvs = np.concatenate([pvs, np.full(len(pts), spc ** 3, np.float32)])
+                # each additive point carries an EQUAL SHARE of the additive's recipe volume, so the MPM
+                # additive volume == the recipe (lit-density-derived) regardless of point count — SuperP's
+                # spheres are bigger/heavier than an SE sub-point, VGCF's chain shares the fibre volume.
+                add_pvs = float(cnt[nm]['vol_um3'] / max(len(pts), 1)) / (um_box ** 3)   # box units
+                pvs = np.concatenate([pvs, np.full(len(pts), add_pvs, np.float32)])
                 phase_np = np.concatenate([phase_np, np.full(len(pts), code, np.int8)])
                 _coh = {2: 0.0, 3: 0.0, 4: 0.10}[code]            # VGCF/SuperP not sticky; PTFE binder ≫ SE
                 coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
