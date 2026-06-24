@@ -86,3 +86,20 @@ Bruggeman fallback).  They do NOT fix **σ_ionic** (dead-SE: thin/fragmented SE 
 ## Stage 2 (the real payoff, pending)
 Voxel σ solver on the seeded morphology → quantify "도전재 넣으니 dead-AM 살아나 σ_e ↑".
 This is where CBD nano-porosity (#1) enters as the CBD phase's effective transport property.
+
+## ★ SuperP + PTFE CBD — VALIDATED, code UNCHANGED (2026-06-24)
+Real dry process the user described: ① **Thinky/planetary mix** → SuperP already coats/disperses on the
+AM (carbon black), then ② **hot-roll** → PTFE fibrillates into the binder web.  This maps EXACTLY onto the
+existing code with NO change — the ADD-dict order seeds SuperP (cblack, mixing=thinky → surface_frac 0.70
+coats AM) BEFORE PTFE, and PTFE's `nucleate=carbon_seed` already collects phase codes (2,3) = VGCF AND
+**SuperP**, so the PTFE binder nucleates on + bridges the SuperP.
+- Smoke test with REAL recipe counts (AM:SE:SuperP:PTFE=80:18:1:1, recipe_counts_real): SuperP n≈133 k
+  aggregates (dense), PTFE n≈246 fibres.  SuperP coats AM 65 %; **PTFE within 0.5/1.0 µm of SuperP =
+  26 / 79 %** → binder genuinely nets the carbon = a real CBD.  (An earlier 6 % was a smoke-test artifact
+  of too-few SuperP; the recipe volume-balance fixes it — SuperP is dense, PTFE threads through it.)
+- RUN (dedicated *_carbon filenames so webapp plain-runs can't clobber se_dump; --mixing thinky; n_vox 192):
+  `--add-recipe "AM:SE:SuperP:PTFE=80:18:1:1" --mixing thinky`.  Viewer: SuperP = magenta chains (phase 3,
+  additive_fibres), PTFE = amber web (phase 4).  All-three (VGCF+SuperP+PTFE) also works — just add VGCF to
+  the recipe.
+- OPEN: tune PTFE↔SuperP binding if the real run looks too dispersed (higher nucleate_frac / shorter PTFE for
+  the localized SuperP); confirm on the real GPU run.
