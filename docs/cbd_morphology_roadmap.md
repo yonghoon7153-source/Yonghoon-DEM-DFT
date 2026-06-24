@@ -18,6 +18,19 @@ finer fibrils down to 10s nm; web-like; over-shear → collapse to FILM; branch-
 NOT block pores.  **Length↔Ø inverse** = constant-volume drawing: A=V/L → d ∝ √(V/L)
 (longer ⇒ thinner).  Initial PTFE particle SIZE has a distribution → V_i varies too.
 
+> ★ **SAME-SYSTEM EXPERIMENTAL VALIDATION — Lee 2025, Nat. Commun. 16, 4200** (UCSD+LGES; digest
+> `litdb/papers/lee2025_corolling_dryprocess_lpscl_ptfe.md`).  EXACTLY our materials: **LPSCl + NCM811/82 +
+> VGCF + PTFE (<300 nm)**.  Their **Fig 3h,i + Supplementary Fig 17/18** show by SEM a **"fibrillated
+> binder–VGCF network"** bridging the SSE–electrode interface, and the Fig 3i / SI Fig 18a schematics draw it
+> as **tangled squiggly curved fibrils netting the VGCF** — i.e. our (1) curl(worm-like) + (4) nucleate-on-carbon
+> picture, literally.  SI Fig 18a gives a 5-step fibrillation mechanism (contact → shear particle-movement +
+> binder stress → binder **stretched & fibrillated across interface** → new contacts → repeat每 reduction step) =
+> our shear-DRAW seeding (3, d∝√(V/L)).  PTFE initial particle <300 nm = our V_i seed-size distribution (2,vol_cv).
+> CAVEAT: their fibrillation is the *film-roll-shear fabrication* step, which our RVE does not reproduce — use as
+> CONCEPT/morphology validation, not a claim our sim runs that shear.  Also Lee 2025 SI Fig 5: PTFE 0.5→5 wt%
+> collapses σ_e 34→0.011 + σ_i 0.069→0.007 mS/cm → the **binder insulation/contact-blocking penalty** (Stage-2
+> σ_e correction; today's CBD only ADDS σ_e via the carbon web, no binder penalty).
+
 ## The 5-physics PTFE model — status
 
 ### ✅ DONE (batch 1, commit e2c9371, 2026-06-24) — verify with run real11_VGCF_PTFE_v2

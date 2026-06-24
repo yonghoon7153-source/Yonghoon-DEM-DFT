@@ -9,6 +9,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 
 | 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
 |---|---|---|---|---|---|---|
+| **Lee 2025** | Nat. Commun. 16, 4200 | **LPSCl + NCM811/82 + VGCF + PTFE** (= 우리 소재·도전제 전부) | **실험**(no sim) co-rolling 박막; ★PTFE 0.5/2/5 wt%→σ_e 34/4.5/0.011·σ_i 0.069/0.024/0.007 mS/cm; ★binder-VGCF fibril망(=우리 CBD); ★PC-NCM 깨짐/SC-NCM 무손상; 2 MPa>80% 500cyc; 310 Wh/kg | exp | ✅ | `lee2025_corolling_dryprocess_lpscl_ptfe` |
 | **Bazzoun 2026** | J. Power Sources 661, 238682 | **LPSCl + NMC811** | DEM+FEM+RNM σ_eff,ion; 실험 0.137/0.101/0.065 mS/cm @f_CAM 70/75/80; RNM=Holm/Kirchhoff; E_SE=22.1 | DEM+FEM+RNM | ✅ | `bazzoun2026_dem_fem_rnm_ionic` |
 | **Varkey 2026** | Adv. Powder Tech. 37, 105338 | halide Li₃YBrCl₆ + NMC811 | multi-contact 탄소성 DEM; separator floor 21% / cathode 37% @350MPa; E_SE=10.58; CONTACT-소성만(구) | DEM | ✅ | `varkey2026_multicontact_elastoplastic_dem` |
 | **So 2021** | J. Power Sources 508, 230344 | LPS(Li₂S–P₂S₅) + Si음극 | 3D DEM(소성 cold-press, **H-cap real E=24**); rel.density 0.30→**0.98**@600MPa, φ_SE^crit=0.13, AM-AM 응력 5.9 GPa | DEM | ✅ | `so2021_dem_mold_pressure_assb_coldpress` |
@@ -24,6 +25,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 ## 통합된 기존 노트 (→ papers/ digest로 흡수)
 - `docs/lit_varkey2026_multicontact_dem.md` (한국어 노트) → `papers/varkey2026_*` ✅ + `docs/data/{densification_porosity_db,varkey2026_ionic_vs_pressure}.csv`
 - `docs/lit_bazzoun2026_dem_fem_rnm.md` (한국어 노트) → `papers/bazzoun2026_*` ✅ + `docs/data/bazzoun2026_sigma_ionic.csv`
+- **Lee 2025** (실험 앵커) → `papers/lee2025_*` ✅ + `docs/data/lee2025_transport_anchors.csv` (PTFE% σ 페널티 + 조성별 σ + bulk 앵커); CBD 검증 → `docs/cbd_morphology_roadmap.md`
 - `docs/literature_coverage/` json DB: contact_mechanics_db, coverage_db, packing_regime_db (수치 참조용 유지)
 
 ## 주제별 종합 문서
@@ -31,5 +33,5 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
   (Varkey/So/M&B 종합; ★ So 2021 H-cap = 18× 연화 대체 경로).
 
 ## 현황
-6편 전부 digest ✅ (Bazzoun · Varkey · So2021 · Martin-Bouvard2003 · Bouvard2000 · McGeary1961).
+7편 전부 digest ✅ (**Lee2025**(실험 앵커, =우리 소재 전부) · Bazzoun · Varkey · So2021 · Martin-Bouvard2003 · Bouvard2000 · McGeary1961).
 새 PDF 업로드 후 "논문 에이전트 실행해줘"로 추가.
