@@ -141,6 +141,9 @@ function buildControls(container, isMPM) {
         <option value="add_superp">　└ Super P만</option>
         <option value="add_ptfe">　└ PTFE만</option>
       </optgroup>
+      <optgroup label="기공 (pore / XCT)">
+        <option value="pore">기공만 (pore — XCT처럼)</option>
+      </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
@@ -1003,9 +1006,10 @@ function applyViewMode(state, mode) {
     state.meshes.MESH.visible = _mcb ? _mcb.checked : true;
     state.meshes.MESH.material.opacity = OPA.MESH;         // undo the additives-mode translucency
   }
-  ['AM_P', 'AM_S'].forEach(t => {                          // undo additives/se_engagement AM dimming
+  ['AM_P', 'AM_S'].forEach(t => {                          // undo additives/se_engagement AM dimming + pore-mode hide
     const m = state.meshes && state.meshes[t];
     if (m && m.material) { m.material.opacity = 1.0; m.material.transparent = false; }
+    if (m) { const cb = document.querySelector(`.viewer-controls input[data-layer="${t}"]`); m.visible = cb ? cb.checked : true; }
   });
   // analysis modes are POST-compaction results — in the "압축 전" (loose seed) view they
   // don't exist yet, so show the loose SE + a note instead of the (compacted) field.
@@ -1706,6 +1710,41 @@ function applyViewMode(state, mode) {
     return;
   }
 
+  if (mode === 'pore') {
+    /* XCT-like pore (void) view: electrode-envelope cells that are NOT AM/SE, painted as a point
+     * cloud with all solid hidden — like a segmented FIB-SEM/XCT pore phase.  void_points are voxel
+     * centres in µm (same frame as the SE mesh); additives (~4 vol%, sit inside the pores) not subtracted. */
+    const vp = (state.data && state.data.void_points) || [];
+    if (state.meshes.MESH) state.meshes.MESH.visible = false;
+    ['AM_P', 'AM_S'].forEach(t => { const m = state.meshes && state.meshes[t]; if (m) m.visible = false; });
+    if (!vp.length) {
+      setLegend(state, state.isMPM
+        ? '<i>이 payload엔 기공(void) 데이터가 없어요. payload를 <b>--void-max</b>로 재생성하세요 '
+          + '(mpm_webapp_payload.py — MPM 재실행은 불필요).</i>'
+        : '<i>No void (pore) data in this payload.</i>');
+      return;
+    }
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(vp.length * 3);
+    for (let i = 0; i < vp.length; i++) {
+      const p = vp[i];
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const pm = new THREE.Points(g, new THREE.PointsMaterial({
+      color: 0x38bdf8, size: 0.55, sizeAttenuation: true, transparent: true, opacity: 0.5 }));
+    pm.renderOrder = 5;
+    state.additivePointGroup = pm;                          // reuse the cleanup hook (torn down next mode change)
+    if (state.scene) state.scene.add(pm);
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    setLegend(state,
+      `<b>기공 (pore / XCT)</b>
+       <div style="margin-top:4px"><span style="color:#38bdf8">●</span> void ${vp.length.toLocaleString()} voxels`
+       + ` · 공극률 ${(mm.porosity_mpm_pct || 0).toFixed(1)}%</div>
+       <div style="margin-top:3px;color:#9ca3af;font-size:10px">전극 envelope에서 AM·SE가 아닌 셀 = 기공망 (solid 숨김,
+       XCT/FIB-SEM 분할처럼).  도전재(~4vol%, 기공 내부)는 미차감.</div>`);
+    return;
+  }
   if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe') {
     /* conductive additives (payload additive_points: [x,y,z,phase]) as a coloured point cloud over a
      * dimmed SE+AM — so the carbon threading the SE/voids + bridging the AM reads clearly.  Colours are

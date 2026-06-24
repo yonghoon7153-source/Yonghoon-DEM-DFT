@@ -148,6 +148,8 @@ def main():
                     'loose PRE-compaction SE surface as seed_mesh_triangles for the before/after view')
     ap.add_argument('--se-frac', type=float, default=0.27)
     ap.add_argument('--n-vox', type=int, default=192, help='voxel resolution for the SE surface')
+    ap.add_argument('--void-max', type=int, default=180000, help='max void (pore) voxel centres carried for '
+                    'the XCT-like "기공만" viewer mode (0 = off). Pore = electrode-envelope cells not AM/SE.')
     ap.add_argument('--tri-step', type=int, default=3,
                     help='marching-cubes step for the SERVED mesh (3 ≈ browser-friendly tri count)')
     ap.add_argument('--target-porosity', type=float, default=None)
@@ -243,6 +245,19 @@ def main():
     f_se = 100.0 * se_mask.mean()
     cov = vc.coverage(am_p, am_s, se_mask)
     s = h * UM                                             # voxel idx → µm
+
+    # void (pore) phase → XCT-like "기공만" viewer mode: complement of solid (AM ∪ SE) within the
+    # electrode envelope, as a subsampled voxel-centre cloud (same µm frame as the SE mesh / AM /
+    # additive_points).  Additives (~4 vol%, sub-grid, sit INSIDE the pores) are NOT subtracted →
+    # the pore cloud is the macro-pore network the way XCT / FIB-SEM segments it.
+    void_points = []
+    if a.void_max > 0:
+        vi = np.argwhere(~(am | se_mask))                  # (M,3) pore voxel indices (x,y,z)
+        if len(vi) > a.void_max:
+            vi = vi[np.random.default_rng(3).choice(len(vi), a.void_max, replace=False)]
+        void_points = ((vi + 0.5) * s).astype(np.float32).round(2).tolist()
+        print(f'  void (pore) cloud: {len(void_points):,} voxel centres (of {int((~(am|se_mask)).sum()):,}, '
+              f'porosity {por:.1f}%)')
 
     # SE continuum surface (decimated for the browser)
     mm = vc.mesh_of(se_mask, a.tri_step, a.smooth)
@@ -434,6 +449,7 @@ def main():
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'additive_points': additive_points,                # [x,y,z,phase] µm — VGCF(2)/SuperP(3)/PTFE(4)
         'additive_fibres': additive_fibres,                # [{phase, pts:[[x,y,z],…]}] — VGCF/PTFE as polylines
+        'void_points': void_points,                        # [x,y,z] µm — pore voxel centres (XCT "기공만" mode)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},
         'atoms_only': False,
