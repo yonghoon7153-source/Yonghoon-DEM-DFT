@@ -278,10 +278,14 @@ app.config['UPLOAD_FOLDER'] = os.environ.get('WEBAPP_UPLOAD_FOLDER') or os.path.
 app.config['RESULTS_FOLDER'] = os.environ.get('WEBAPP_RESULTS_FOLDER') or os.path.join(_here, 'results')
 app.config['SCRIPTS_FOLDER'] = os.path.join(os.path.dirname(_here), 'scripts')
 app.config['ARCHIVE_FOLDER'] = os.environ.get('WEBAPP_ARCHIVE_FOLDER') or os.path.join(_here, 'archive')
+# standalone MPM/도전재 payload viewer — independent of the DEM case list (upload mpm_payload.json,
+# view in 3D, keep an accumulating saved list).  Each saved payload = a subfolder with payload.json + meta.json.
+app.config['MPM_LAB_FOLDER'] = os.environ.get('WEBAPP_MPM_LAB_FOLDER') or os.path.join(_here, 'mpm_lab')
 
 os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
 os.makedirs(app.config['RESULTS_FOLDER'], exist_ok=True)
 os.makedirs(app.config['ARCHIVE_FOLDER'], exist_ok=True)
+os.makedirs(app.config['MPM_LAB_FOLDER'], exist_ok=True)
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
@@ -5197,6 +5201,99 @@ def mpm_upload(case_id):
                     'porosity_mpm_pct': m.get('porosity_mpm_pct'),
                     'coverage_AM_P_mpm_pct': m.get('coverage_AM_P_mpm_pct'),
                     'n_am': m.get('n_am'), 'se_surface_tris': m.get('se_surface_tris')})
+
+
+# ── Standalone MPM / 도전재 payload viewer (independent of the DEM case list) ─────────────
+#    Upload an mpm_payload.json, view it in 3D, and keep an accumulating saved list — so an MPM
+#    result that isn't tied to a known DEM case can still be viewed and compared on its own.
+def _mpm_lab_slug(s):
+    return re.sub(r'[^A-Za-z0-9_.-]+', '_', str(s or ''))[:60].strip('_') or 'payload'
+
+
+def _mpm_lab_list():
+    root = app.config['MPM_LAB_FOLDER']
+    out = []
+    if not os.path.isdir(root):
+        return out
+    for name in os.listdir(root):
+        mp = os.path.join(root, name, 'meta.json')
+        if os.path.isfile(mp):
+            try:
+                m = json.load(open(mp))
+                m['id'] = name
+                out.append(m)
+            except Exception:
+                pass
+    out.sort(key=lambda x: x.get('uploaded_at', ''), reverse=True)
+    return out
+
+
+@app.route('/mpm-lab')
+def mpm_lab():
+    return render_template('mpm_lab.html', items=_mpm_lab_list())
+
+
+@app.route('/mpm-lab/upload', methods=['POST'])
+def mpm_lab_upload():
+    f = request.files.get('payload')
+    if not f:
+        return jsonify({'ok': False, 'error': 'no payload file (field "payload")'}), 400
+    try:
+        data = json.load(f.stream)
+    except Exception as e:
+        return jsonify({'ok': False, 'error': f'JSON 파싱 실패: {e}'}), 400
+    if data.get('kind') != 'mpm' or 'particles' not in data:
+        return jsonify({'ok': False, 'error': 'MPM payload이 아님 (kind=mpm + particles 필요). '
+                        'mpm_payload.json을 올리세요 (metrics 파일 아님).'}), 400
+    mm = data.get('mpm_metrics', {}) or {}
+    ac = mm.get('additive_counts') or {}
+    name = (request.form.get('name') or data.get('case') or 'payload').strip()
+    pid = f"{_mpm_lab_slug(name)}_{uuid.uuid4().hex[:6]}"
+    d = os.path.join(app.config['MPM_LAB_FOLDER'], pid)
+    os.makedirs(d, exist_ok=True)
+    with open(os.path.join(d, 'payload.json'), 'w') as out:
+        json.dump(data, out)
+    meta = {
+        'name': name,
+        'source_case': data.get('case', ''),
+        'porosity': mm.get('porosity_mpm_pct'),
+        'thickness': mm.get('thickness_mpm_um'),
+        'se_fraction': mm.get('se_fraction_pct'),
+        'n_am': mm.get('n_am') or len(data.get('particles', [])),
+        'additive_counts': ac,
+        'recipe': ' · '.join(f'{k} {int(v):,}' for k, v in ac.items()) if ac else '',
+        'has_additives': bool(ac),
+        'uploaded_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
+        'size_mb': round(os.path.getsize(os.path.join(d, 'payload.json')) / 1e6, 1),
+    }
+    with open(os.path.join(d, 'meta.json'), 'w') as mf:
+        json.dump(meta, mf)
+    meta['id'] = pid
+    return jsonify({'ok': True, 'item': meta})
+
+
+@app.route('/mpm-lab/data/<pid>')
+def mpm_lab_data(pid):
+    d = os.path.join(app.config['MPM_LAB_FOLDER'], _mpm_lab_slug(pid))
+    p = os.path.join(d, 'payload.json')
+    if not os.path.isfile(p):
+        return jsonify({'error': 'payload not found', 'kind': 'mpm', 'available': False}), 404
+    with open(p) as fh:
+        payload = json.load(fh)
+    if request.args.get('state') == 'seed' and payload.get('seed_mesh_triangles'):
+        payload['mesh_triangles'] = payload['seed_mesh_triangles']
+    payload.pop('seed_mesh_triangles', None)
+    return jsonify(payload)
+
+
+@app.route('/mpm-lab/delete/<pid>', methods=['POST'])
+def mpm_lab_delete(pid):
+    root = os.path.realpath(app.config['MPM_LAB_FOLDER'])
+    d = os.path.realpath(os.path.join(root, _mpm_lab_slug(pid)))
+    if os.path.isdir(d) and os.path.dirname(d) == root:     # stay inside the lab folder
+        shutil.rmtree(d, ignore_errors=True)
+        return jsonify({'ok': True})
+    return jsonify({'ok': False, 'error': 'not found'}), 404
 
 
 @app.route('/results/<case_id>/3d-data')

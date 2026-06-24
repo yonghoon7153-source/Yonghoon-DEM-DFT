@@ -1,0 +1,192 @@
+{% extends "base.html" %}
+{% set active = "mpm_lab" %}
+{% block title %}MPM 뷰어 - DEM Analyzer{% endblock %}
+
+{% block content %}
+<h1>⚡ MPM / 도전재 3D 뷰어</h1>
+<p style="color:#94a3b8; margin:4px 0 16px">
+  DEM 케이스와 <b>독립</b> — GPU에서 나온 <code>mpm_payload.json</code>을 그냥 올려서 3D로 보고,
+  아래 목록에 누적 저장해 비교하세요. <code>--add-recipe</code>로 만든 payload면 VGCF/PTFE 도전재가
+  색으로 표시됩니다 (검정 VGCF · 회색 Super P · 주황 PTFE).
+</p>
+
+<div class="card">
+  <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap">
+    <form id="mpm-lab-form" style="display:inline-flex; gap:8px; align-items:center; flex-wrap:wrap"
+          onsubmit="return labUpload(event)">
+      <input type="text" id="lab-name" placeholder="이름 (예: real8_VGCF_72:27:1)"
+             style="background:#0f172a;color:#e2e8f0;border:1px solid #334155;border-radius:6px;padding:6px 10px;font-size:0.9em;min-width:240px">
+      <input type="file" id="lab-file" accept=".json" required>
+      <button class="btn btn-primary" type="submit">payload 업로드</button>
+    </form>
+    <span id="lab-status" style="color:#94a3b8; font-size:0.9em"></span>
+  </div>
+  <p style="color:#64748b; font-size:0.84em; margin:8px 0 0">
+    파일은 <code>mpm_payload.json</code> (보통 수십~150MB). <code>mpm_metrics.json</code>이 아니라
+    payload를 올리세요. 큰 파일은 업로드에 시간이 걸립니다.
+  </p>
+</div>
+
+<!-- 3D viewer (shown after a payload is opened) -->
+<div class="card" id="lab-viewer-card" style="display:none">
+  <div class="card-header-row" style="display:flex; justify-content:space-between; align-items:center">
+    <h3 style="margin:0">3D — <span id="lab-viewer-title" style="color:#a5b4fc"></span></h3>
+    <div style="display:flex; gap:6px">
+      <button class="btn btn-secondary" id="lab-btn-mpm" onclick="labShow('mpm')">SE / AM</button>
+      <button class="btn btn-secondary" id="lab-btn-add" onclick="labShow('additives')" style="display:none">⚡ 도전재</button>
+    </div>
+  </div>
+  <div id="lab-viewer" class="viewer-container" style="display:block; height:560px; margin-top:8px"></div>
+</div>
+
+<!-- accumulating saved-payload list -->
+<div class="card" style="margin-top:16px">
+  <h3 style="margin:0 0 8px">저장된 payload <span id="lab-count" style="color:#64748b;font-weight:400">({{ items|length }})</span></h3>
+  <table class="lab-table" style="width:100%; border-collapse:collapse; font-size:0.88em">
+    <thead>
+      <tr style="text-align:left; color:#94a3b8; border-bottom:1px solid #334155">
+        <th style="padding:6px 10px 6px 0">이름</th>
+        <th style="padding:6px 10px">도전재</th>
+        <th style="padding:6px 10px">porosity</th>
+        <th style="padding:6px 10px">두께</th>
+        <th style="padding:6px 10px">SE%</th>
+        <th style="padding:6px 10px">AM</th>
+        <th style="padding:6px 10px">업로드</th>
+        <th style="padding:6px 10px">크기</th>
+        <th style="padding:6px 10px">액션</th>
+      </tr>
+    </thead>
+    <tbody id="lab-tbody">
+      {% for it in items %}
+      <tr data-id="{{ it.id }}" data-add="{{ 1 if it.has_additives else 0 }}"
+          style="border-bottom:1px solid #1e293b; color:#e2e8f0">
+        <td style="padding:6px 10px 6px 0; font-weight:600">{{ it.name }}
+          {% if it.source_case %}<span style="color:#64748b;font-weight:400;font-size:0.9em"> · {{ it.source_case }}</span>{% endif %}</td>
+        <td style="padding:6px 10px">{% if it.has_additives %}<span style="color:#fbbf24">⚡ {{ it.recipe }}</span>{% else %}<span style="color:#64748b">—</span>{% endif %}</td>
+        <td style="padding:6px 10px">{{ '%.2f'|format(it.porosity) if it.porosity is not none else '—' }}%</td>
+        <td style="padding:6px 10px">{{ '%.1f'|format(it.thickness) if it.thickness is not none else '—' }}µm</td>
+        <td style="padding:6px 10px">{{ '%.1f'|format(it.se_fraction) if it.se_fraction is not none else '—' }}</td>
+        <td style="padding:6px 10px">{{ it.n_am or '—' }}</td>
+        <td style="padding:6px 10px; color:#94a3b8">{{ it.uploaded_at }}</td>
+        <td style="padding:6px 10px; color:#94a3b8">{{ it.size_mb }}MB</td>
+        <td style="padding:6px 10px; white-space:nowrap">
+          <button class="btn btn-secondary btn-sm" onclick="labOpen('{{ it.id }}', {{ 1 if it.has_additives else 0 }}, this)">보기</button>
+          <button class="btn btn-secondary btn-sm" onclick="labDelete('{{ it.id }}', this)">삭제</button>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p id="lab-empty" style="color:#64748b; margin:10px 0 0; {{ 'display:none' if items else '' }}">
+    아직 저장된 payload가 없습니다 — 위에서 <code>mpm_payload.json</code>을 올려보세요.
+  </p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+<script>
+let labCurId = null, labCurMode = null;
+
+// open a saved payload in the 3D viewer.  mode 'mpm' = SE/AM, 'additives' = auto-pick 도전재 view.
+async function labOpen(id, hasAdd, btn) {
+  const card = document.getElementById('lab-viewer-card');
+  card.style.display = 'block';
+  document.getElementById('lab-btn-add').style.display = hasAdd ? '' : 'none';
+  const row = btn ? btn.closest('tr') : document.querySelector(`tr[data-id="${id}"]`);
+  document.getElementById('lab-viewer-title').textContent =
+    row ? row.querySelector('td').textContent.trim() : id;
+  labCurId = id;
+  await labShow(hasAdd ? 'additives' : 'mpm');
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// (re)render the current payload in the chosen mode
+async function labShow(mode) {
+  if (!labCurId) return;
+  labCurMode = mode;
+  ['lab-btn-mpm', 'lab-btn-add'].forEach(bid => {
+    const b = document.getElementById(bid);
+    const on = (bid === 'lab-btn-mpm' && mode === 'mpm') || (bid === 'lab-btn-add' && mode === 'additives');
+    b.classList.toggle('btn-primary', on); b.classList.toggle('btn-secondary', !on);
+  });
+  const el = document.getElementById('lab-viewer');
+  el.innerHTML = '';
+  const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
+  mod.initElectrodeViewer('lab-viewer', '/mpm-lab/data/' + encodeURIComponent(labCurId));
+  if (mode === 'additives') {            // the View Mode <select> is built async → poll then switch
+    const pick = (n) => {
+      const sel = document.querySelector('#lab-viewer #view-mode') || document.getElementById('view-mode');
+      if (sel) { sel.value = 'additives'; sel.dispatchEvent(new Event('change')); }
+      else if (n < 25) setTimeout(() => pick(n + 1), 150);
+    };
+    pick(0);
+  }
+}
+
+async function labUpload(e) {
+  e.preventDefault();
+  const file = document.getElementById('lab-file').files[0];
+  const name = document.getElementById('lab-name').value;
+  const status = document.getElementById('lab-status');
+  if (!file) return false;
+  status.textContent = `업로드 중… (${(file.size / 1e6).toFixed(0)}MB)`;
+  const fd = new FormData(); fd.append('payload', file); if (name) fd.append('name', name);
+  try {
+    const r = await fetch('/mpm-lab/upload', { method: 'POST', body: fd });
+    const j = await r.json();
+    if (!j.ok) { status.textContent = '✗ ' + (j.error || '실패'); return false; }
+    status.textContent = `✓ 저장됨: ${j.item.name}` + (j.item.has_additives ? ` (${j.item.recipe})` : '');
+    labAddRow(j.item);
+    document.getElementById('mpm-lab-form').reset();
+    labOpen(j.item.id, j.item.has_additives ? 1 : 0, null);   // open it right away
+  } catch (err) { status.textContent = '✗ ' + err; }
+  return false;
+}
+
+function labAddRow(it) {
+  document.getElementById('lab-empty').style.display = 'none';
+  const tb = document.getElementById('lab-tbody');
+  const tr = document.createElement('tr');
+  tr.dataset.id = it.id; tr.dataset.add = it.has_additives ? 1 : 0;
+  tr.style.cssText = 'border-bottom:1px solid #1e293b; color:#e2e8f0';
+  const f = (v, s, d = '—') => (v === null || v === undefined) ? d : (s ? s(v) : v);
+  tr.innerHTML =
+    `<td style="padding:6px 10px 6px 0;font-weight:600">${it.name}` +
+      (it.source_case ? ` <span style="color:#64748b;font-weight:400;font-size:0.9em">· ${it.source_case}</span>` : '') + `</td>` +
+    `<td style="padding:6px 10px">${it.has_additives ? `<span style="color:#fbbf24">⚡ ${it.recipe}</span>` : '<span style="color:#64748b">—</span>'}</td>` +
+    `<td style="padding:6px 10px">${f(it.porosity, v => (+v).toFixed(2) + '%')}</td>` +
+    `<td style="padding:6px 10px">${f(it.thickness, v => (+v).toFixed(1) + 'µm')}</td>` +
+    `<td style="padding:6px 10px">${f(it.se_fraction, v => (+v).toFixed(1))}</td>` +
+    `<td style="padding:6px 10px">${f(it.n_am)}</td>` +
+    `<td style="padding:6px 10px;color:#94a3b8">${it.uploaded_at}</td>` +
+    `<td style="padding:6px 10px;color:#94a3b8">${it.size_mb}MB</td>` +
+    `<td style="padding:6px 10px;white-space:nowrap">` +
+      `<button class="btn btn-secondary btn-sm" onclick="labOpen('${it.id}', ${it.has_additives ? 1 : 0}, this)">보기</button> ` +
+      `<button class="btn btn-secondary btn-sm" onclick="labDelete('${it.id}', this)">삭제</button></td>`;
+  tb.insertBefore(tr, tb.firstChild);
+  const c = document.getElementById('lab-count');
+  c.textContent = `(${tb.querySelectorAll('tr').length})`;
+}
+
+async function labDelete(id, btn) {
+  if (!confirm('이 payload를 삭제할까요?')) return;
+  const r = await fetch('/mpm-lab/delete/' + encodeURIComponent(id), { method: 'POST' });
+  const j = await r.json();
+  if (j.ok) {
+    btn.closest('tr').remove();
+    const tb = document.getElementById('lab-tbody');
+    document.getElementById('lab-count').textContent = `(${tb.querySelectorAll('tr').length})`;
+    if (!tb.querySelectorAll('tr').length) document.getElementById('lab-empty').style.display = '';
+    if (labCurId === id) document.getElementById('lab-viewer-card').style.display = 'none';
+  }
+}
+</script>
+{% endblock %}
