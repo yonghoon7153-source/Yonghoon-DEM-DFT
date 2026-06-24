@@ -181,6 +181,14 @@ def main():
 #   — kept tractable so the run FINISHES.  More SE resolution: regenerate with a higher
 #   --max-points (heavier/slower) or edit --n-grid below.  If it OOMs, lower --n-grid / raise --gpu-mem.
 set -uo pipefail
+# ── one GPU = one run: refuse if an MPM compaction is already active.  Every run writes the SAME
+#    se_dump.npy / phase.npy / mpm_metrics.json, so two at once CLOBBER each other (mixed outputs).
+#    Checked in the foreground (before detach) so the refusal is immediate.  Override: MPM_FORCE=1 ──
+if [ -z "${{MPM_DETACHED:-}}" ] && [ -z "${{MPM_FORCE:-}}" ] && pgrep -f 'scripts/mpm3d_compaction.py' >/dev/null 2>&1; then
+  echo "[run_mpm] ABORT — an MPM run is already active (pgrep mpm3d_compaction).  one GPU = one run."
+  echo "          wait for FINAL / 'kill <PID>' first, or 'MPM_FORCE=1 bash run_mpm.sh' to override."
+  exit 1
+fi
 # ── self-detach: an SSH drop must NOT kill the run (the foreground run kept dying on disconnect). ──
 if [ -z "${{MPM_DETACHED:-}}" ]; then
   export MPM_DETACHED=1
