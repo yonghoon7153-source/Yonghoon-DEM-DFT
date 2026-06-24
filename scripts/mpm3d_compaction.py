@@ -405,11 +405,11 @@ def main(argv):
             for nm, (E, nu, sy, code, is_fib, L_um) in ADD.items():
                 if nm not in cnt:
                     continue
-                nobj = cnt[nm]['n']
-                if not is_fib:                              # blob = 1 point/object → volume-FILL (count =
-                    nobj = int(round(cnt[nm]['vol_um3'] / ((spc * um_box) ** 3)))   # vol / point-vol) so the
-                    #   MPM SuperP volume matches the recipe (the aggregate count would over-count, since
-                    #   each blob is a single dx³ point, not a π/6·D³ sphere — unlike a fibre point-chain).
+                nobj = cnt[nm]['n']                          # additive points are SPARSE markers (VGCF =
+                #   fibre centreline skeleton, SuperP = aggregate positions) — both under-fill the true
+                #   additive volume by design; the recipe wt%/vol% is tracked in the metrics for Stage-2 σ.
+                #   (count = V/aggregate-vol keeps SuperP's point density comparable to VGCF; a volume-FILL
+                #   count blew it up ~6× and made the VGCF↔SuperP comparison unfair.)
                 if is_fib:
                     pts, _fid = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
                                                 in_am=lambda q: _in_am_abs(q + off), return_ids=True)
