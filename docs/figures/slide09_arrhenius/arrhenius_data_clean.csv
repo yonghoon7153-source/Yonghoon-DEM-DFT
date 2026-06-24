@@ -1,0 +1,6 @@
+# AIMD-MLIP (UMA-s-1p1 omat) Li diffusion. lnD=lnD0-Ea/(kB*T).
+"# LPSCl(comp1 4fu): Ea=0.253 eV, D0=4.11e-4 | LPSCl1.6(modelc): Ea=0.224 eV, D0=5.75e-4"
+T_K,1000overT,D_LPSCl_cm2s,D_LPSCl1.6_cm2s,lnD_LPSCl,lnD_LPSCl1.6
+600,1.6667,3.090e-06,7.900e-06,-12.6873,-11.7486
+800,1.2500,1.030e-05,2.050e-05,-11.4834,-10.7951
+1000,1.0000,2.200e-05,4.550e-05,-10.7245,-9.9978
