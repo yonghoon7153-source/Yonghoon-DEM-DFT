@@ -64,7 +64,7 @@
 | PBE 2.45 / **HSE06 3.30** | [Semi] | (우리 PBE 2.07) | PBE는 ~1 eV 과소 → "wide-gap insulator"만 |
 | VBM = S 3p (HAXPES) | [Banik] | 우리 PDOS VBM=S 3p | **✓ 재현** |
 | **산화 onset ≈ 음이온 p-band(VBM) 깊이**: S 3p(얕음)→LPSCl 2.256 V vs O 2p(깊음)→LLZO **2.88 V (+0.63)** | [Rupp] + **우리 LLZO grand-potential**(`papers/kim2021…md` §LLZO) | comp1 VBM=S 3p, onset 2.256 | **✓ VBM character가 onset 지배** (S²⁻→S⁰ vs O²⁻→peroxide) |
-| PS₄ "gap" ~2.0 → MgS₄ ~4.2 eV (도핑이 gap 확대) | [Liu23] | comp1 2.066 ≈ 그들 LPSC ~2.0 (우연) | MP smear 0.2 + PDOS 분리 추정, 엄밀 gap 아님 |
+| PS₄ "gap" ~2.0 → MgS₄ ~4.2 eV (도핑이 gap 확대) | [Liu23] | comp1 2.066 ≈ 그들 LPSC ~2.0 (우연) | MP smear 0.2 + PDOS 분리 추정, 엄밀 gap 아님; **MgS₄ 구조 자체 부실(§12b)** |
 | **bulk σ_e(실측) = 8.16×10⁻⁹ S/cm** (Mg/F 도핑 시 1.03×10⁻⁹, 8×↓) | [Liu23] (DC분극) | 우리 미측정 | **slide25 σ_e 논의 실측 기준값** |
 | sulfide = "wide-band-gap" (구체 LPSCl gap 미제시; buffer LiI gap 6.4 eV) | **[Rupp]** | comp1 2.066 / modelc 2.098 (PBE) | 리뷰 gap 절대값 無 → "wide-gap insulator" 수준만 일치(비교대상 자체 없음) |
 | **interphase는 전자절연이어야 self-limiting** (LPO ALD로 LLZO σ_e 10⁻⁸→10⁻⁹ → dendrite 억제) | **[Rupp]** Fig 13·17 | (우리 σ_e 논의 frame) | [Ke]Li₂O·[Lu]LiCl·[Liu23]LiF 절연 interphase 논리의 **landscape 근거** |
@@ -87,7 +87,7 @@
 | 주장 | 출처 | 우리 연결 |
 |---|---|---|
 | MgClO(Mg+Cl+O) 공도핑 → 계면 metallic→gapped (s-p/p-p 혼성) → 환원 분해 차단 | [Ke] | **우리 cascade(Mg/Cl/O/F 도판트 스크리닝)의 직접 문헌 동기 ①** |
-| **MgF₂(Mg+F) 공도핑** → Mg(s)-S(p) 혼성으로 S 전자풍부 → Li 전자이동 차단 (PS₄ gap 2.0→MgS₄ 4.2); F→in-situ LiF 절연층. **Mg는 P(4b) 자리 선호** | **[Liu23]** | **cascade 동기 ②** — [Ke]와 독립적으로 같은 Mg s-p 방향 검증 |
+| **MgF₂(Mg+F) 공도핑** → 음극 redox 억제(실험: CCD 0.6→1.4, σ_e 8×↓). ⚠메커니즘("MgS₄ 사면체 s-p 혼성, Mg@P자리")은 **구조모델 under-determined**(lab XRD로 Mg@P vs Mg@Li 구분 불가, 자기 ELF는 이온결합, 반경상 Mg→Li) → `papers/liu2023…md` §12b | **[Liu23]** | cascade 동기 ②는 **실험적 방향**(Mg 도핑이 음극 도움)만; *기전*은 미확정으로 인용 |
 | SEI = 전자절연(Li₂O 8.37 eV)+친리튬(LiMg) | [Ke] | 우리 **Li₃N**(음극 interphase) 연구와 같은 패밀리 |
 | 도판트 음극 호환성 descriptor: 계면 binding energy(J/m²), E_F metallic 여부 | [Ke] | 우리 cascade 평가에 차용 가능 |
 | **음이온 자리(4d) Cl 점유 엔지니어링** → 자기분해 LiCl interphase (원소도핑 아닌 *자리* 레버) | **[Lu]** | modelc Cl-rich의 4a/4d 분포 명시하면 Lu와 직접 연결 |
