@@ -49,6 +49,8 @@ def parse_args(argv):
                     '--save-se → composite viz can colour SE by strain and draw AM grey')
     ap.add_argument('--save-fibre', default='', help='write per-point fibre id npy (-1 = SE/SuperP, ≥0 = a '
                     'VGCF/PTFE fibre index), SAME order as --save-se → render each fibre as an individual line')
+    ap.add_argument('--save-fibre-dia', default='', help='write per-point relative fibre diameter npy (0 = SE; '
+                    '∝√(V_i/L_i) for the volume-conserving PTFE draw) → viewer renders fibre thickness')
     ap.add_argument('--save-metrics', default='',
                     help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
                          'grid/material params, stress) to a JSON — the structured source for the '
@@ -376,6 +378,7 @@ def main(argv):
     phase_np = np.where(ylds < 100.0, 1, 0).astype(np.int8)    # base points: 1 SE / 0 AM(mat, mix mode)
     coh_np = np.full(len(xs), COH, np.float32)                 # per-point cohesion: SE = COH (PTFE ≫ below)
     fibre_np = None                                            # set in the additive block if fibres seeded
+    dia_np = None                                              # per-point relative fibre Ø (PTFE draw d∝√(V/L))
     if args.add_recipe:
         if not args.am_scaffold:
             print("  [additives] --add-recipe needs --am-scaffold; skipped")
@@ -399,41 +402,53 @@ def main(argv):
                 ii = int(p[0] * n_grid); jj = int(p[1] * n_grid); kk = int(p[2] * n_grid)
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
-            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm).  kind 'fibre' = straight rod (VGCF/PTFE),
-                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L),   # 'cblack' = branched chain + AM-coating
-                'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0),         # (Super P carbon black — lit morphology)
-                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L),
+            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac).  kind 'fibre' = rod,
+                #   'cblack' = branched chain + AM-coating.  curl>0 → tangled worm-like fibril (PTFE); vol_cv>0 →
+                #   initial node-volume spread (drawn d∝√(V/L)); nuc_frac → fraction nucleating on carbon (CBD).
+                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, 0.0,  0.0, 0.0),   # stiff straight uniform-Ø
+                'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0),   # carbon black (lit morph.)
+                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, 0.40, 0.6, 0.6),   # drawn tangled binder web
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
-            _gfib = 0                                   # carbon-black chain) → re-group into lines for viz
-            for nm, (E, nu, sy, code, kind, L_um) in ADD.items():
+            dia_np = np.zeros(len(xs), np.float32)      # per-point relative fibre Ø (0 = SE/non-fibre; ∝√weight)
+            carbon_seed = []                            # carbon (VGCF/SuperP) pts in seed-box frame → PTFE
+            _gfib = 0                                   # nucleation attractors (binder nets carbon = CBD)
+            for nm, (E, nu, sy, code, kind, L_um, curl, vcv, nucf) in ADD.items():
                 if nm not in cnt:
                     continue
                 nobj = cnt[nm]['n']                          # target point count (VGCF/PTFE = fibre centreline
                 #   skeleton; SuperP = aggregate count) — recipe wt%/vol% tracked in metrics + per-point pvs.
                 if kind == 'fibre':
-                    pts, _fid = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
-                                                in_am=lambda q: _in_am_abs(q + off), return_ids=True)
+                    nuc = np.concatenate(carbon_seed) if (nucf > 0.0 and carbon_seed) else None
+                    pts, _fid, _w = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
+                                                    curl=curl, vol_conserve=(curl > 0.0 or vcv > 0.0),
+                                                    vol_cv=vcv, nucleate=nuc, nucleate_frac=nucf,
+                                                    in_am=lambda q: _in_am_abs(q + off),
+                                                    return_ids=True, return_vol=True)
                 else:                                        # carbon black: branched chains coating the AM
                     pts, _fid = _ad.seed_carbon_black(nobj, bx, dx, rng, in_am=lambda q: _in_am_abs(q + off),
                                                       am=am_box, mixing=args.mixing, return_ids=True)
+                    _w = np.ones(len(pts), np.float32)
                 if len(pts) == 0:
                     continue
+                if code in (2, 3):                      # carbon → attractor for the PTFE binder (CBD co-location)
+                    carbon_seed.append(pts.copy())
                 if len(_fid):                           # make fibre/aggregate ids globally unique
                     _fid = _fid + _gfib; _gfib = int(_fid.max()) + 1
                 pts = (pts + off).astype(np.float32)
                 fibre_np = np.concatenate([fibre_np, _fid])
+                dia_np = np.concatenate([dia_np, np.sqrt(np.maximum(_w, 1e-6)).astype(np.float32)])   # Ø∝√weight
                 mu_a, la_a = lame(E, nu)
                 xs = np.concatenate([xs, pts])
                 mus = np.concatenate([mus, np.full(len(pts), mu_a, np.float32)])
                 las = np.concatenate([las, np.full(len(pts), la_a, np.float32)])
                 ylds = np.concatenate([ylds, np.full(len(pts), sy, np.float32)])
-                # each additive point carries an EQUAL SHARE of the additive's recipe volume, so the MPM
-                # additive volume == the recipe (lit-density-derived) regardless of point count — SuperP's
-                # spheres are bigger/heavier than an SE sub-point, VGCF's chain shares the fibre volume.
+                # each additive point carries its SHARE of the additive's recipe volume (×per-point weight _w,
+                # which is 1 for uniform VGCF and ∝V_i/L_i for the volume-conserving PTFE draw), so the MPM
+                # additive volume == the recipe (lit-density) regardless of point count or fibre Ø spread.
                 add_pvs = float(cnt[nm]['vol_um3'] / max(len(pts), 1)) / (um_box ** 3)   # box units
-                pvs = np.concatenate([pvs, np.full(len(pts), add_pvs, np.float32)])
+                pvs = np.concatenate([pvs, (add_pvs * _w).astype(np.float32)])
                 phase_np = np.concatenate([phase_np, np.full(len(pts), code, np.int8)])
                 _coh = {2: 0.0, 3: 0.0, 4: 0.10}[code]            # VGCF/SuperP not sticky; PTFE binder ≫ SE
                 coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
@@ -724,6 +739,11 @@ def main(argv):
     if args.save_fibre and fibre_np is not None:
         np.save(args.save_fibre, fibre_np)                  # -1 = SE/SuperP, ≥0 = fibre index (VGCF/PTFE)
         print(f"  saved fibre ids → {args.save_fibre} ({n} pts, {int(fibre_np.max()) + 1} fibres)")
+    if args.save_fibre_dia and dia_np is not None:
+        np.save(args.save_fibre_dia, dia_np)                # per-point relative Ø (∝√weight; PTFE draw d∝√(V/L))
+        _fd = dia_np[dia_np > 0]
+        print(f"  saved fibre Ø → {args.save_fibre_dia} ({n} pts, "
+              f"Ø rel {(_fd.min() if len(_fd) else 0):.2f}..{(_fd.max() if len(_fd) else 0):.2f})")
 
 
 if __name__ == '__main__':

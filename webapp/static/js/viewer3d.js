@@ -888,13 +888,19 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
       // out as hard rods.  The dedicated 도전재 / PTFE-only modes keep PTFE amber (colorOverride null).
       const binder = (colorOverride != null && f.phase === 4);
       cc.set(binder ? 0xe6decb : colOf(f.phase));
+      // per-fibre thickness (PTFE roll-fibrillation: d∝√(V_i/L_i) — thick short stub vs thin long strand).
+      // WebGL line width is unreliable, so thickness is shown as BRIGHTNESS: thick fibrils read solid, thin
+      // strands fade out (d is a relative Ø, median ~1; clamp the tail).  Uniform fibres (VGCF, no d) → 1.
+      let tf = 1.0;
+      if (f.d != null) { const d = Math.max(0.5, Math.min(2.0, f.d)); tf = 0.4 + 0.6 * ((d - 0.5) / 1.5); }
+      const cr = cc.r * tf, cg = cc.g * tf, cb = cc.b * tf;
       const P = f.pts;
       const sp = binder ? binPos : segPos, sc = binder ? binCol : segCol;
       for (let i = 0; i + 1 < P.length; i++) {           // Z-up swap (x,z,y) per vertex
         const a = P[i], b = P[i + 1];
         if (Math.abs(a[0] - b[0]) > halfX || Math.abs(a[1] - b[1]) > halfY) continue;   // periodic wrap chord
         sp.push(a[0], a[2], a[1], b[0], b[2], b[1]);
-        sc.push(cc.r, cc.g, cc.b, cc.r, cc.g, cc.b);
+        sc.push(cr, cg, cb, cr, cg, cb);
         n++;
       }
     }

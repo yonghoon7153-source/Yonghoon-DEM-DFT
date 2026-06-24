@@ -90,41 +90,82 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
 
 
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
-                return_lengths=False, return_ids=False):
-    """n random-oriented fibres (SEM-like: long thin rods threading the interstices),
-    each a chain of points spaced ~dx along its axis.  Even distribution = uniform
-    random centres.  Points falling in AM (in_am) are dropped (fibre bends around).
+                curl=0.0, vol_conserve=False, vol_cv=0.0, nucleate=None, nucleate_frac=0.0,
+                return_lengths=False, return_ids=False, return_vol=False):
+    """n random fibres (SEM-like: thin rods/fibrils threading the interstices), each a chain of
+    points spaced ~dx along its path.  Even distribution = uniform random centres.  Points falling
+    in AM (in_am) are dropped (fibre bends around).
 
-    L_cv>0 → per-fibre length is drawn from a lognormal with mean L and coefficient
-    of variation L_cv (real VGCF: lengths spread ~5-20µm from milling/breakage, while
-    Ø stays ~150nm — and Ø is sub-grid here so only length matters).  The lognormal is
-    mean-preserving, so the recipe count/volume is unchanged; only the lengths spread.
-    (Ø variation is intentionally NOT modelled: a fibre is ~1 cell thick at dx≈Ø, so
-    diameter spread can't be resolved on the grid.)"""
+    L_cv>0 → per-fibre length is lognormal (mean L, CV L_cv), mean-preserving: the recipe
+    count/volume is unchanged, only the lengths spread (real VGCF: 5-20µm from milling).
+
+    curl>0 → SOFT fibril: the path is a persistent random walk (worm-like chain) with a per-step
+    direction kick ~curl rad, instead of a straight rod.  curl=0 → straight (stiff VGCF — a real
+    graphite fibre is rigid).  PTFE fibrils are roll-shear-DRAWN into a tangled, curved web → curl≈0.4.
+
+    vol_conserve → CONSTANT-VOLUME DRAWING (PTFE fibrillation): each fibril starts as a PTFE node of
+    volume V_i (varied by vol_cv — real PTFE has a particle/agglomerate SIZE distribution) and is drawn
+    to length L_i, conserving ITS OWN V_i, so cross-section A_i = V_i/L_i → diameter d_i ∝ √(V_i/L_i).
+    TWO independent spreads (initial volume V_i × draw length L_i) ⇒ a diverse fibre population: a big
+    node drawn short = very thick stub, a small node drawn long = very thin strand — exactly PTFE roll-
+    fibrillation.  The per-point volume weight is V_i/k_i ∝ V_i/L_i (a thin-long fibril carries LESS
+    material per point).  return_vol returns that per-point weight, normalised to mean 1 (Σ = n_points),
+    so multiplying by the uniform add_pvs preserves the recipe volume exactly while redistributing it.
+    The diameter stays sub-grid (a fibre is ~1 cell thick); d_i ∝ √weight, so the viewer reconstructs
+    each fibre's thickness from the per-point weight (carried via --save-fibre-dia → payload 'd').
+    vol_conserve=False (VGCF) → uniform weight (a manufactured fibre has constant Ø).
+
+    nucleate (Nx3 attractor points, e.g. the already-seeded carbon) + nucleate_frac → a fraction of
+    fibrils START on a random attractor (small jitter) instead of in free void, so the PTFE binder web
+    co-locates with and NETS the carbon → forms the Carbon-Binder Domain (CBD) rather than floating."""
     (Lx, Ly, Lz) = box_um
-    sigma = np.sqrt(np.log(1.0 + L_cv ** 2)) if L_cv > 0 else 0.0   # lognormal shape, mean-preserving
-    pts, lens, ids = [], [], []
+    sigma = np.sqrt(np.log(1.0 + L_cv ** 2)) if L_cv > 0 else 0.0   # length lognormal, mean-preserving
+    sigma_v = np.sqrt(np.log(1.0 + vol_cv ** 2)) if vol_cv > 0 else 0.0   # INITIAL node-volume spread
+    step = 0.7 * dx_um                                              # point spacing along the fibre path
+    nuc = np.asarray(nucleate, np.float32) if (nucleate is not None and len(nucleate)) else None
+    hi = np.array([Lx - 1e-3, Ly - 1e-3, Lz - 1e-3])
+    pts, lens, ids, wts = [], [], [], []
     fid = 0                                                          # fibre index (so points can be re-grouped
-    for _ in range(n):                                              # into individual fibres for line rendering)
+    for _ in range(n):                                             # into individual fibres for line rendering)
         Li = L if sigma == 0 else float(np.clip(L * np.exp(rng.normal(-0.5 * sigma ** 2, sigma)),
-                                                0.3 * L, 3.0 * L))   # mean(Li)=L, clipped 0.3L..3L
-        k = max(2, int(round(Li / (0.7 * dx_um))))                  # points per fibre (∝ length)
-        t = np.linspace(-Li / 2, Li / 2, k)
-        c = np.array([rng.uniform(0, Lx), rng.uniform(0, Ly), rng.uniform(0, Lz)])
-        d = rng.normal(size=3); d /= np.linalg.norm(d) + 1e-12      # isotropic direction
-        line = c[None, :] + t[:, None] * d[None, :]
+                                                0.3 * L, 3.0 * L))   # draw LENGTH: mean L, clipped 0.3L..3L
+        Vi = 1.0 if sigma_v == 0 else float(np.clip(np.exp(rng.normal(-0.5 * sigma_v ** 2, sigma_v)),
+                                                    0.2, 5.0))      # INITIAL node VOLUME (mean 1): size spread
+        k = max(2, int(round(Li / step)))                           # points per fibre (∝ length)
+        if nuc is not None and rng.random() < nucleate_frac:        # CBD: nucleate on a carbon attractor →
+            c = np.clip(nuc[rng.integers(len(nuc))] + rng.normal(size=3) * (1.5 * step), 0, hi)  # binder nets carbon
+        else:
+            c = np.array([rng.uniform(0, Lx), rng.uniform(0, Ly), rng.uniform(0, Lz)])
+        d0 = rng.normal(size=3); d0 /= np.linalg.norm(d0) + 1e-12   # isotropic initial direction
+        if curl <= 0.0:                                             # straight rod (VGCF)
+            t = np.linspace(-Li / 2, Li / 2, k)
+            line = c[None, :] + t[:, None] * d0[None, :]
+        else:                                                       # persistent random walk (PTFE fibril web)
+            d = d0.copy(); pos = c.copy(); seq = [pos.copy()]
+            for _s in range(k - 1):
+                d = d + rng.normal(size=3) * curl; d /= np.linalg.norm(d) + 1e-12   # turn ~curl rad, persist
+                pos = pos + step * d; seq.append(pos.copy())
+            line = np.asarray(seq)
         line = line[(line[:, 0] >= 0) & (line[:, 0] < Lx) & (line[:, 1] >= 0)
                     & (line[:, 1] < Ly) & (line[:, 2] >= 0) & (line[:, 2] < Lz)]
         if in_am is not None and len(line):
             line = line[~np.array([in_am(p) for p in line])]
         if len(line):
-            pts.append(line); lens.append(Li); ids.append(np.full(len(line), fid, np.int32)); fid += 1
+            pts.append(line); lens.append(Li); ids.append(np.full(len(line), fid, np.int32))
+            wts.append(np.full(len(line), Vi / len(line), np.float32))   # fibre = node-volume Vi → d∝√(Vi/Li)
+            fid += 1
     P = np.concatenate(pts, 0).astype(np.float32) if pts else np.zeros((0, 3), np.float32)
     out = [P]
     if return_lengths:
         out.append(np.array(lens, np.float32))
     if return_ids:                                                  # per-point fibre index (0..n_fibre-1)
         out.append(np.concatenate(ids).astype(np.int32) if ids else np.zeros(0, np.int32))
+    if return_vol:                                                  # per-point volume weight (mean 1)
+        if vol_conserve and pts:
+            w = np.concatenate(wts).astype(np.float32); w *= len(w) / w.sum()   # ∝1/L_i, Σ=n_points
+        else:
+            w = np.ones(len(P), np.float32)                         # uniform Ø (VGCF)
+        out.append(w)
     return out[0] if len(out) == 1 else tuple(out)
 
 

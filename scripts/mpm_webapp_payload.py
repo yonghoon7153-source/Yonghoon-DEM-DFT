@@ -189,6 +189,9 @@ def main():
                     'points into individual fibre polylines (additive_fibres) so the viewer can draw each fibre '
                     'as a line/rod instead of a point cloud.')
     ap.add_argument('--fibre-max', type=int, default=4000, help='max fibres carried as polylines (subsample)')
+    ap.add_argument('--fibre-dia', default='', help='per-point relative fibre diameter npy (mpm3d '
+                    '--save-fibre-dia): attach per-fibre median Ø to additive_fibres so the viewer renders '
+                    'thickness (PTFE draw d∝√(V/L) — thin-long vs thick-short).')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -342,6 +345,12 @@ def main():
     additive_fibres = []
     if a.fibre and phase is not None:
         fid = np.load(a.fibre)
+        dia = None
+        if a.fibre_dia:                                      # per-point relative Ø (PTFE draw d∝√(V/L))
+            dia = np.load(a.fibre_dia)
+            if len(dia) != len(se):
+                print(f'  ⚠ fibre-dia length {len(dia)} != SE {len(se)} — ignoring --fibre-dia')
+                dia = None
         if len(fid) != len(se):
             print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
         else:
@@ -361,8 +370,13 @@ def main():
                     continue
                 coords = np.column_stack([((se[grp, 0] - SW[0]) * UM), ((se[grp, 1] - SW[0]) * UM),
                                           ((se[grp, 2] - FLOOR) * UM)]).round(2)
-                additive_fibres.append({'phase': int(phase[grp[0]]), 'pts': coords.tolist()})
-            print(f'  additive_fibres: {len(additive_fibres)} fibres as polylines (of {n_fib_total} total)')
+                rec = {'phase': int(phase[grp[0]]), 'pts': coords.tolist()}
+                if dia is not None:                          # per-fibre relative thickness → viewer line width
+                    rec['d'] = round(float(np.median(dia[grp])), 3)
+                additive_fibres.append(rec)
+            print(f'  additive_fibres: {len(additive_fibres)} fibres as polylines (of {n_fib_total} total)'
+                  + ('' if dia is None else f'  Ø rel {min(f["d"] for f in additive_fibres):.2f}'
+                     f'..{max(f["d"] for f in additive_fibres):.2f}'))
 
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
