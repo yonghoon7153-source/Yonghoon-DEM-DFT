@@ -31,6 +31,27 @@ PANEL_CONFIG = [
     {"label": "Li–Cl", "color": "#E89C2B", "match_keys": ["Li", "Cl"], "exclude": []},
 ]
 
+# nd (Nd2O3-doped) preset: swap S–S/Li–Cl for the O actor (P–O) + Nd ionic (Nd–S).
+# P–S kept so it overlays vs modelc (host unchanged).
+NDPANEL_CONFIG = [
+    {"label": "P–S",  "color": "#3F7BB6", "match_keys": ["P", "S"],  "exclude": ["Li"]},
+    {"label": "P–O",  "color": "#C44536", "match_keys": ["P", "O"],  "exclude": []},
+    {"label": "Li–S", "color": "#3E8E41", "match_keys": ["Li", "S"], "exclude": []},
+    {"label": "Nd–S", "color": "#7D5BA6", "match_keys": ["Nd", "S"], "exclude": []},
+]
+PRESETS = {"modelc": PANEL_CONFIG, "nd": NDPANEL_CONFIG}
+_PAIR_COLORS = ["#3F7BB6", "#C44536", "#3E8E41", "#E89C2B", "#7D5BA6", "#2BB0A8"]
+
+
+def build_panels(panels_arg):
+    """--panels 'P-S,P-O,Li-S,Nd-S' -> list of panel configs (cycled colors)."""
+    out = []
+    for i, p in enumerate(panels_arg.split(",")):
+        a, _, b = p.strip().partition("-")
+        out.append({"label": f"{a}–{b}", "color": _PAIR_COLORS[i % len(_PAIR_COLORS)],
+                    "match_keys": [a, b], "exclude": []})
+    return out
+
 
 def parse_cohpcar(path: Path):
     """Parse LOBSTER 5.x COHPCAR.lobster.
@@ -213,7 +234,12 @@ def main():
                     help="dir containing COHPCAR.lobster + ICOHPLIST.lobster")
     ap.add_argument("--out_png", required=True)
     ap.add_argument("--ylim", type=float, nargs=2, default=[-12, 6])
+    ap.add_argument("--preset", default="modelc", choices=list(PRESETS),
+                    help="panel set: modelc (P-S/S-S/Li-S/Li-Cl) or nd (P-S/P-O/Li-S/Nd-S)")
+    ap.add_argument("--panels", default=None,
+                    help='override preset, e.g. "P-S,P-O,Li-S,Nd-S"')
     args = ap.parse_args()
+    cfg_list = build_panels(args.panels) if args.panels else PRESETS[args.preset]
 
     work = Path(args.lobster_dir)
     cohp_path = work / "COHPCAR.lobster"
@@ -228,10 +254,12 @@ def main():
     for k, v in sorted(icohp.items()):
         print(f"  {k}: {v:.3f} eV")
 
-    fig, axes = plt.subplots(1, 4, figsize=(16, 6), sharey=True)
-    for ax, cfg in zip(axes, PANEL_CONFIG):
+    n = len(cfg_list)
+    fig, axes = plt.subplots(1, n, figsize=(4 * n, 6), sharey=True)
+    axes = np.atleast_1d(axes)
+    for ax, cfg in zip(axes, cfg_list):
         cohp_sum, icohp_per_bond, nb = aggregate_bond_pair(
-            E, bonds_meta, icohp, cfg["match_keys"], cfg["exclude"])
+            E, bonds_meta, icohp, cfg["match_keys"], cfg.get("exclude"))
         print(f"  panel {cfg['label']}: matched {nb} bonds, "
               f"ICOHP/bond = {icohp_per_bond:.3f} eV")
         plot_panel(ax, E, cohp_sum, cfg["color"], cfg["label"],
@@ -242,7 +270,7 @@ def main():
     axes[0].set_ylabel(r"$E - E_F$  (eV)", fontsize=12)
 
     # subplot letter labels
-    for letter, ax in zip("abcd", axes):
+    for letter, ax in zip("abcdef", axes):
         ax.text(-0.10, 1.02, letter, transform=ax.transAxes,
                 fontsize=16, fontweight='bold', ha='right', va='bottom')
 

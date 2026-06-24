@@ -43,19 +43,17 @@ with open(csv_path, "w", newline="") as f:
         w.writerow([lab, "", "", nd, "nd-only", d, N, ch, grp])
 print("saved:", os.path.abspath(csv_path))
 
-# ---- figure ----
+# ---- figure (modelc = LPSCl1.6 vs nd only) ----
 fig, ax = plt.subplots(figsize=(9.4, 5.4))
-W = 0.26
+W = 0.34
 xh = list(range(len(HOST)))
-c_comp1, c_modelc, c_nd = "#b9b9b9", "#4a7fb5", "#c0392b"
+c_modelc, c_nd = "#4a7fb5", "#c0392b"
 for i, (lab, c1, mc, nd, pct, d, N, ch) in enumerate(HOST):
-    ax.bar(i - W, abs(c1), W, color=c_comp1, edgecolor="k", lw=0.5, zorder=3,
-           label="comp1 (LPSCl)" if i == 0 else None)
-    ax.bar(i,      abs(mc), W, color=c_modelc, edgecolor="k", lw=0.5, zorder=3,
+    ax.bar(i - W/2, abs(mc), W, color=c_modelc, edgecolor="k", lw=0.5, zorder=3,
            label="modelc (LPSCl1.6)" if i == 0 else None)
-    ax.bar(i + W, abs(nd), W, color=c_nd, edgecolor="k", lw=0.5, zorder=3,
+    ax.bar(i + W/2, abs(nd), W, color=c_nd, edgecolor="k", lw=0.5, zorder=3,
            label="nd (Nd₂O₃-doped)" if i == 0 else None)
-    ax.text(i + W, abs(nd) + 0.12, pct, ha="center", va="bottom", fontsize=8,
+    ax.text(i + W/2, abs(nd) + 0.12, pct, ha="center", va="bottom", fontsize=8,
             color="#2e6b2e", fontweight="bold")
 
 # gap then nd-only single bars
@@ -83,8 +81,8 @@ ax.text(1.5, 7.15, "host backbone — ±4% (Nd₂O₃ leaves it intact)",
         ha="center", va="center", fontsize=9, color="0.35")
 ax.set_ylabel("|ICOHP|  (eV / bond)", fontsize=11)
 ax.set_ylim(0, 9.6)
-ax.set_title("ICOHP bond strengths — Nd₂O₃-doped LPSCl1.6 (4.0 Å, LOBSTER)\n"
-             "host unchanged · O actor (P–O −8.43) · Nd ionic spectator",
+ax.set_title("ICOHP — LPSCl1.6 (modelc) vs Nd₂O₃-doped (4.0 Å, LOBSTER)\n"
+             "host unchanged (±4%) · O actor (P–O −8.43) · Nd ionic spectator",
              fontsize=10.5, fontweight="bold")
 ax.legend(loc="upper left", fontsize=8.5, ncol=1, framealpha=0.95)
 for sp in ("top", "right"): ax.spines[sp].set_visible(False)
