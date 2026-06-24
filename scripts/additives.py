@@ -25,8 +25,11 @@ import numpy as np
 DENS = {'AM': 4.80, 'SE': 1.64, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20}  # g/cm³
 PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4}                 # save-phase codes
 # default geometry (µm)
-VGCF_D, VGCF_L = 0.15, 10.0      # fibre diameter, length
-SP_D, PTFE_D   = 0.20, 0.30      # carbon-black aggregate, PTFE domain (effective sphere)
+VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
+SP_D           = 0.20            # Super P / Super C carbon-black aggregate (sphere, particulate)
+PTFE_D, PTFE_L = 0.50, 30.0      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes
+                                 # threads ~1µm×~50µm (branch to 10s nm), spanning tens of NMC; a FIBRE
+                                 # like VGCF but soft binder (RSC D5EE03240G; Front. Energy 2023.1336344)
 
 
 def vol_fracs(wt: dict) -> dict:
@@ -36,14 +39,14 @@ def vol_fracs(wt: dict) -> dict:
     return {k: vv / tot for k, vv in v.items()}
 
 
-def recipe_counts(wt: dict, solid_vol_um3: float,
-                  vgcf_d=VGCF_D, vgcf_l=VGCF_L, sp_d=SP_D, ptfe_d=PTFE_D) -> dict:
-    """Number of VGCF fibres / SuperP / PTFE objects for a recipe + solid volume."""
+def recipe_counts(wt: dict, solid_vol_um3: float, vgcf_d=VGCF_D, vgcf_l=VGCF_L,
+                  sp_d=SP_D, ptfe_d=PTFE_D, ptfe_l=PTFE_L) -> dict:
+    """Number of VGCF fibres / SuperP spheres / PTFE fibrils for a recipe + solid volume."""
     vf = vol_fracs(wt)
     out = {'vol_fracs': vf}
-    v_fib = np.pi * (vgcf_d / 2) ** 2 * vgcf_l                      # µm³ per fibre
-    v_sp = np.pi / 6 * sp_d ** 3
-    v_pt = np.pi / 6 * ptfe_d ** 3
+    v_fib = np.pi * (vgcf_d / 2) ** 2 * vgcf_l                      # µm³ per VGCF fibre
+    v_sp = np.pi / 6 * sp_d ** 3                                    # Super P sphere
+    v_pt = np.pi * (ptfe_d / 2) ** 2 * ptfe_l                       # PTFE fibril (fibre, not sphere)
     for ph, vobj in (('VGCF', v_fib), ('SuperP', v_sp), ('PTFE', v_pt)):
         if vf.get(ph, 0) > 0:
             out[ph] = {'vol_um3': vf[ph] * solid_vol_um3,
