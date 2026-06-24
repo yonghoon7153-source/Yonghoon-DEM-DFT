@@ -1,0 +1,85 @@
+{
+  "property": "SEI / decomposition-product band gaps + interface reactivity for Nd2O3-doped LPSCl1.6",
+  "purpose": "Persist the Materials Project results behind the anode/cathode passivation story (was scattered across MD tables + hard-coded in tools/figures/plot_nd_sei_gaps.py + nd2o3_master_findings §3). Single loadable store. The claim it supports: the doped interphase is ELECTRONICALLY INSULATING (wide-gap) so it blocks e- leakage even though the BULK gap narrowed.",
+  "generated": "2026-06-24",
+  "tools": {
+    "gaps": "tools/oxidation/sei_product_gaps.py (mp_api summary.search, lowest e_above_hull entry per formula; run on gabia/kserver116 where MP_API_KEY set)",
+    "oxophilicity": "tools/oxidation/oxophilicity_descriptor.py (MP binary-oxide vs binary-sulfide formation-energy proxy)",
+    "interface": "tools/oxidation/interface_reactivity.py (OCV) + interface_reactivity_v2.py (voltage-resolved, GrandPotentialInterfacialReactivity)",
+    "figure_csv": "docs/figures/nd_sei/sei_product_gaps.csv ; figure tools/figures/plot_nd_sei_gaps.py -> docs/figures/nd_sei/sei_product_gaps_O.png"
+  },
+
+  "sei_product_band_gaps_MP_eV": {
+    "_method": "MP PBE/PBE+U band gap of the ground-state (lowest e_above_hull) entry per formula.",
+    "_role_threshold": "insulator >=4 eV (e-blocking passivation) / marginal 2-4 / conductor <2 (e- leak).",
+    "_Nd_caveat": "Nd-bearing gaps are a LOWER BOUND (4f mis-placement in MP); real gap larger -> see exp_anchor. Nd-free phases (Li3PO4, Li2O, LiCl, Li3P, Li2S) are reliable.",
+    "products": [
+      {"formula": "LiCl",   "gap_MP": 6.65, "exp_anchor": "~9.4", "O_derived": false, "Nd_bearing": false, "role": "insulator",      "side": "anode+cathode", "note": "anode SEI (with Li2O); also a modelc product"},
+      {"formula": "Li3PO4", "gap_MP": 5.73, "exp_anchor": "~8",   "O_derived": true,  "Nd_bearing": false, "role": "insulator",      "side": "bulk-GB+cathode", "note": "O-derived; cuts GB electron percolation (sigma_e down) + cathode passivation"},
+      {"formula": "NdPO4",  "gap_MP": 5.55, "exp_anchor": "wide (monazite)", "O_derived": true, "Nd_bearing": true, "role": "insulator", "side": "cathode", "note": "Nd3+ survives high V -> cathode passivation"},
+      {"formula": "Li2O",   "gap_MP": 5.24, "exp_anchor": "~7.99","O_derived": true,  "Nd_bearing": false, "role": "insulator",      "side": "anode", "note": "O-derived anode SEI; replaces conductive Li3P"},
+      {"formula": "NdOCl",  "gap_MP": 4.77, "exp_anchor": "~4.5 (Nd2O3 anchor)", "O_derived": true, "Nd_bearing": true, "role": "insulator", "side": "cathode", "note": ""},
+      {"formula": "NdCl3",  "gap_MP": 4.30, "exp_anchor": "~5",   "O_derived": false, "Nd_bearing": true,  "role": "insulator",      "side": "cathode", "note": "Nd3+ survives high V -> cathode passivation"},
+      {"formula": "LiNdO2", "gap_MP": 4.21, "exp_anchor": "~3.5 (est)", "O_derived": true, "Nd_bearing": true, "role": "insulator", "side": "cathode", "note": ""},
+      {"formula": "Li2S",   "gap_MP": 3.90, "exp_anchor": "~3.9", "O_derived": false, "Nd_bearing": false, "role": "marginal",       "side": "anode+cathode", "note": "forms doped & undoped; semi-insulating"},
+      {"formula": "Nd2O3",  "gap_MP": 3.81, "exp_anchor": "~4.7", "O_derived": true,  "Nd_bearing": true,  "role": "marginal",       "side": "cathode", "note": ""},
+      {"formula": "Nd2S3",  "gap_MP": 1.79, "exp_anchor": "",     "O_derived": false, "Nd_bearing": true,  "role": "conductor",      "side": "-", "note": "avoid"},
+      {"formula": "Li3P",   "gap_MP": 0.70, "exp_anchor": "~0.7", "O_derived": false, "Nd_bearing": false, "role": "conductor-LEAK", "side": "anode", "note": "UNDOPED anode leak product -> O replaces it with Li2O/Li3PO4"},
+      {"formula": "NdS",    "gap_MP": 0.00, "exp_anchor": "",     "O_derived": false, "Nd_bearing": true,  "role": "metal",          "side": "-", "note": "avoid (metallic)"}
+    ]
+  },
+
+  "anode_vs_cathode_summary": {
+    "_definition": "side = which interface the product passivates. anode = reduction front V->0 (Li metal contact); cathode = oxidation front V>=2.45 V; bulk-GB = grain-boundary electron network always present.",
+    "anode_side_V_to_0": {
+      "wide_gap_blockers": ["Li2O (5.24, O-derived)", "LiCl (6.65)"],
+      "conductive_leak_replaced": ["Li3P (0.70)", "NdP", "Li2S (3.90, marginal)"],
+      "benefit": "O-derived Li2O (and bulk/GB Li3PO4 5.73) provide a wide-gap, electronically insulating film that REPLACES the conductive Li3P (0.70 eV) that the undoped cell forms against Li metal. Blocks e- leak -> suppresses internal Li0 plating / dendrite / self-discharge (Han 2019).",
+      "Nd_role": "negative at the anode: Nd is reduced to conductive NdP -> Nd itself does NOT help the anode; the anode benefit is the O effect (Li2O/Li3PO4), not Nd."
+    },
+    "cathode_side_V_ge_2.45": {
+      "wide_gap_blockers": ["NdPO4 (5.55, forms ~2.45 V)", "NdCl3 (4.30, forms ~2.62 V)", "Li3PO4 (5.73)", "LiNd(PO3)4"],
+      "modelc_conductive_products": ["P2S7", "SCl", "PCl5", "S", "LiS4 polysulfide"],
+      "benefit": "Nd3+ survives the oxidizing potential (Nd4+ inaccessible) and anchors O into wide-gap NdPO4 / NdCl3 / Li3PO4 passivation, versus modelc's CONDUCTIVE polysulfide/chloride decomposition products. This is where Nd's niche actually is (high-V cathode passivation), not ionic conductivity.",
+      "Nd_role": "positive at the cathode: Nd3+ is the high-V anchor that keeps O/Cl in wide-gap form."
+    }
+  },
+
+  "oxophilicity_descriptor_eV_per_anion": {
+    "_definition": "oxophilicity(M) = Ef/anion(M-sulfide) - Ef/anion(M-oxide); larger = stronger O getter.",
+    "_reading": "Nd (1.75) ~= Li (1.67) -> Nd is NOT a special O-getter. The benefit of incorporated O is an O effect, not an Nd effect; Nd is just an O carrier.",
+    "Al": 3.45, "Y": 2.13, "Nd": 1.75, "Li": 1.67
+  },
+
+  "formation_and_thermodynamics": {
+    "_why_this_matters": "Formation/stability energies explain WHY the wide-gap O/Nd products form preferentially (product SELECTION), while interface reactivity gives the decomposition AMOUNT (similar doped vs undoped).",
+    "Nd2O3_formation_kJ_per_mol": -1808,
+    "Nd2O3_note": "one of the most thermodynamically stable lanthanide oxides -> O is strongly locked as oxide/phosphate, does not release; favors Nd-O / P-O over Nd-S (Nd2S3 less stable). Source: modelc_nd_doped.json.",
+    "O_at_PS4_vs_free_site_eV": -0.67,
+    "O_at_PS4_note": "Track 1A (O substituting a PS4 corner S -> phosphate-like PS3O/PS2O2) is 0.67 eV/O more stable than O at a free 4d site; AIMD shows spontaneous P-O formation at 500 K. -> O preferentially builds the wide-gap phosphate precursor inside the host. Source: modelc_nd_doped.json.",
+    "ICOHP_P_O_eV_per_bond": -8.43,
+    "ICOHP_P_O_note": "P-O is the strongest host bond (+41% vs P-S -5.98) -> O is bonding-locked; reinforces that O stays incorporated and forms phosphate. Source: db/properties/nd_icohp.json."
+  },
+
+  "interface_reactivity_vs_cathode": {
+    "OCV_min_dE_rxn_eV_per_atom_vs_LiCoO2": {"comp1": -0.3227, "modelc": -0.3308, "nd_doped": -0.3285},
+    "OCV_reading": "nd (-0.3285) ~= modelc (-0.3308): the decomposition AMOUNT is essentially the same (only 0.0023 eV/atom less negative). Doping does NOT reduce how much reacts -> the benefit is that the PRODUCTS become wide-gap (electron-blocking), not that less reacts. comp1 least reactive.",
+    "OCV_products": "all -> Co9S8 + Li3PO4 + Li2S + LiCl + Li2SO4 (phosphate O comes from the cathode, so Li3PO4 CEI forms regardless of doping); nd additionally forms Nd2SO2.",
+    "voltage_resolved_v2_note": "Charged-state (operating V) GrandPotentialInterfacialReactivity: both SEs react more strongly with V (-0.6 -> -1.6 eV/atom @4.3 V); Cl-rich (LPSCl1.6) thermodynamically LESS reactive than LPSCl at every V. The Nd cycling benefit is therefore NOT a smaller cathode reaction -> it is the electron-blocking product set. See kb/results/interface_reactivity_v2_voltage_resolved_2026_06_21.md.",
+    "source": "db/properties/oxidation_stability.json (nd2o3_interface_reactivity_2026_06_17)"
+  },
+
+  "caveats": [
+    "Nd-bearing MP gaps are LOWER BOUNDS (4f mis-placement); pure-O phases (Li3PO4 5.73, Li2O 5.24, LiCl 6.65) are reliable -> the O message is independent of Nd-4f uncertainty.",
+    "Roles/sides and the GB electron-blocking mechanism are an INFERENCE from product gaps + the bulk-opposite-direction logic; GB/interface electron transport and SEI morphology were NOT computed directly -> needs XPS depth / ToF-SIMS / SSRM validation.",
+    "Interface reactivity is thermodynamic (zero/grand-potential), kinetic CEI passivation not captured; LiCoO2 proxy (experiment may use NCM).",
+    "DFT doping x=0.2 (10x the experimental x=0.02) -> trends/mechanism robust, absolute values approximate."
+  ],
+  "cross_refs": [
+    "kb/results/nd2o3_master_findings_2026_06_18.md (section 3: SEI passivation anode vs cathode)",
+    "kb/results/nd2o3_O_effect_transfer_2026_06_24.md (section 3: O-centred MP results)",
+    "kb/results/nd_anode_cathode_sei_formation_2026_06_24.md (formation-energy linkage)",
+    "db/properties/oxidation_stability.json, db/properties/nd_icohp.json, db/properties/electronic.json",
+    "db/compositions/modelc_nd_doped.json (Nd2O3 formation, O@PS4 stability, competing phases)"
+  ]
+}

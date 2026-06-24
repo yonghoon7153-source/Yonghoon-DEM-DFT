@@ -75,6 +75,7 @@ nd ELF (nd_ELF.cube, pp.x plot_num=8; 공유=midpoint↑ 클수록 공유, 이�
 
 - SEI 산물 갭(MP): LiCl 6.65 · Li₃PO₄ 5.73 · NdPO₄ 5.55* · Li₂O 5.24 · NdOCl 4.77* · NdCl₃ 4.30* · LiNdO₂ 4.21* · Li₂S 3.90 · Nd₂O₃ 3.81* · Nd₂S₃ 1.79* · Li₃P 0.70 · **NdS 0.00(금속)** (*Nd=4f 하한값, 실제 더 넓음)
 - interface vs LiCoO₂: nd −0.3285 ≈ modelc −0.3308 (**분해 양은 비슷**, 산물만 wide-gap화).
+- → **formation energy 연결**(왜 wide-gap 산물이 선택되나) + 음극/양극 이점 분리: `kb/results/nd_anode_cathode_sei_formation_2026_06_24.md`. 통합 데이터 store: `db/properties/sei_products.json`.
 
 ## 4. 메커니즘 (cycle↑ 인과사슬)
 1. **벌크/GB**: O-유래 Li₃PO₄ 등 wide-gap이 전자 percolation 차단 → **σ_e↓**(DC-pol). (bulk 갭은 오히려 좁아짐 → σ_e↓는 interphase/microstructure 효과, **bulk 아님**.)
