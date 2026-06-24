@@ -1,0 +1,7 @@
+"# AIMD-MLIP (UMA-s-1p1 omat) Li diffusion, nd vs modelc. lnD=lnD0-Ea/(kB*T)."
+"# modelc(LPSCl1.6): Ea=0.2235 eV D0=5.80e-4 sigma300~14mS/cm | nd(Nd2O3-doped): Ea=0.2267 D0=3.78e-4 sigma300~7.3mS/cm | ratio nd/modelc: D 0.62, sigma300 0.52 | comp1(LPSCl ref): Ea=0.2532"
+"# CAVEAT: UMA Nd-4f transferability unverified -> cite RATIO + Ea, not absolute sigma"
+T_K,1000overT,D_modelc_cm2s,D_nd_cm2s,D_comp1_cm2s,lnD_modelc,lnD_nd,lnD_comp1
+600,1.6667,7.900e-06,4.905e-06,3.090e-06,-11.7486,-12.2253,-12.6873
+800,1.2500,2.050e-05,1.268e-05,1.030e-05,-10.7951,-11.2755,-11.4834
+1000,1.0000,4.550e-05,2.909e-05,2.200e-05,-9.9978,-10.4451,-10.7245
