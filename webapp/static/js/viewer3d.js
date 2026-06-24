@@ -872,6 +872,11 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
   const grp = new THREE.Group();
   let n = 0;
   const cc = new THREE.Color();
+  // periodic x,y: when a fibre wraps the boundary its two endpoints sit on opposite sides, so the
+  // polyline would draw a chord across the whole RVE.  Skip any segment that jumps > half the box.
+  const box = (state.data && state.data.box) || {};
+  const halfX = ((box.x_max || 50) - (box.x_min || 0)) * 0.5;
+  const halfY = ((box.y_max || 50) - (box.y_min || 0)) * 0.5;
   // fibres (VGCF/PTFE) → individual lines (a fibre is a discrete rod, not a continuum)
   if (fibres.length) {
     const segPos = [], segCol = [];
@@ -880,7 +885,9 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
       cc.set(colOf(f.phase));
       const P = f.pts;
       for (let i = 0; i + 1 < P.length; i++) {           // Z-up swap (x,z,y) per vertex
-        segPos.push(P[i][0], P[i][2], P[i][1], P[i + 1][0], P[i + 1][2], P[i + 1][1]);
+        const a = P[i], b = P[i + 1];
+        if (Math.abs(a[0] - b[0]) > halfX || Math.abs(a[1] - b[1]) > halfY) continue;   // periodic wrap chord
+        segPos.push(a[0], a[2], a[1], b[0], b[2], b[1]);
         segCol.push(cc.r, cc.g, cc.b, cc.r, cc.g, cc.b);
         n++;
       }
