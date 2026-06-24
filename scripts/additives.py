@@ -89,7 +89,8 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
     return out
 
 
-def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0, return_lengths=False):
+def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
+                return_lengths=False, return_ids=False):
     """n random-oriented fibres (SEM-like: long thin rods threading the interstices),
     each a chain of points spaced ~dx along its axis.  Even distribution = uniform
     random centres.  Points falling in AM (in_am) are dropped (fibre bends around).
@@ -102,8 +103,9 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0, return_le
     diameter spread can't be resolved on the grid.)"""
     (Lx, Ly, Lz) = box_um
     sigma = np.sqrt(np.log(1.0 + L_cv ** 2)) if L_cv > 0 else 0.0   # lognormal shape, mean-preserving
-    pts, lens = [], []
-    for _ in range(n):
+    pts, lens, ids = [], [], []
+    fid = 0                                                          # fibre index (so points can be re-grouped
+    for _ in range(n):                                              # into individual fibres for line rendering)
         Li = L if sigma == 0 else float(np.clip(L * np.exp(rng.normal(-0.5 * sigma ** 2, sigma)),
                                                 0.3 * L, 3.0 * L))   # mean(Li)=L, clipped 0.3L..3L
         k = max(2, int(round(Li / (0.7 * dx_um))))                  # points per fibre (∝ length)
@@ -116,9 +118,14 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0, return_le
         if in_am is not None and len(line):
             line = line[~np.array([in_am(p) for p in line])]
         if len(line):
-            pts.append(line); lens.append(Li)
+            pts.append(line); lens.append(Li); ids.append(np.full(len(line), fid, np.int32)); fid += 1
     P = np.concatenate(pts, 0).astype(np.float32) if pts else np.zeros((0, 3), np.float32)
-    return (P, np.array(lens, np.float32)) if return_lengths else P
+    out = [P]
+    if return_lengths:
+        out.append(np.array(lens, np.float32))
+    if return_ids:                                                  # per-point fibre index (0..n_fibre-1)
+        out.append(np.concatenate(ids).astype(np.int32) if ids else np.zeros(0, np.int32))
+    return out[0] if len(out) == 1 else tuple(out)
 
 
 def seed_blobs(n, box_um, rng, in_am=None):

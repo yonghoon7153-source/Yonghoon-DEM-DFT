@@ -185,6 +185,10 @@ def main():
                     '3 SuperP · 4 PTFE, SAME order as --se.  Splits the cloud → SE meshed as the continuum, '
                     'conductive additives carried as colored points (additive_points) for the 도전재 3D viewer.')
     ap.add_argument('--additive-pts', type=int, default=120000, help='max additive points carried in the payload')
+    ap.add_argument('--fibre', default='', help='per-point fibre-id npy (mpm3d --save-fibre): group VGCF/PTFE '
+                    'points into individual fibre polylines (additive_fibres) so the viewer can draw each fibre '
+                    'as a line/rod instead of a point cloud.')
+    ap.add_argument('--fibre-max', type=int, default=4000, help='max fibres carried as polylines (subsample)')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -333,6 +337,33 @@ def main():
                 f'{nm} {c:,}pts→{min(c, max(1, int(a.additive_pts * c / max(add_tot, 1)))):,} shown'
                 for nm, c in additive_counts.items()))
 
+    # individual fibres (VGCF/PTFE) → polylines, so the viewer can draw each as a line/rod (SE = continuum,
+    # but a fibre is a discrete object).  Group fibre points by id (stable sort keeps the along-axis order).
+    additive_fibres = []
+    if a.fibre and phase is not None:
+        fid = np.load(a.fibre)
+        if len(fid) != len(se):
+            print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
+        else:
+            fib_mask = (phase >= 2) & (fid >= 0)
+            uniq = np.unique(fid[fib_mask])
+            n_fib_total = len(uniq)
+            if len(uniq) > a.fibre_max:
+                uniq = np.random.default_rng(2).choice(uniq, a.fibre_max, replace=False)
+            keep = fib_mask & np.isin(fid, uniq)
+            idx = np.where(keep)[0]
+            order = np.argsort(fid[idx], kind='stable')      # group by fibre, preserve along-axis order
+            idx = idx[order]
+            fsorted = fid[idx]
+            splits = np.where(np.diff(fsorted) != 0)[0] + 1
+            for grp in np.split(idx, splits):
+                if len(grp) < 2:
+                    continue
+                coords = np.column_stack([((se[grp, 0] - SW[0]) * UM), ((se[grp, 1] - SW[0]) * UM),
+                                          ((se[grp, 2] - FLOOR) * UM)]).round(2)
+                additive_fibres.append({'phase': int(phase[grp[0]]), 'pts': coords.tolist()})
+            print(f'  additive_fibres: {len(additive_fibres)} fibres as polylines (of {n_fib_total} total)')
+
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
 
@@ -388,6 +419,7 @@ def main():
         'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'additive_points': additive_points,                # [x,y,z,phase] µm — VGCF(2)/SuperP(3)/PTFE(4)
+        'additive_fibres': additive_fibres,                # [{phase, pts:[[x,y,z],…]}] — VGCF/PTFE as polylines
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},
         'atoms_only': False,

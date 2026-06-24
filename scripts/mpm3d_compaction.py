@@ -47,6 +47,8 @@ def parse_args(argv):
                     '(vs the seed sphere, INCL elastic compression — shows the confined interior too; npy)')
     ap.add_argument('--save-phase', default='', help='write per-point phase (1=SE, 0=AM) npy, SAME order as '
                     '--save-se → composite viz can colour SE by strain and draw AM grey')
+    ap.add_argument('--save-fibre', default='', help='write per-point fibre id npy (-1 = SE/SuperP, ≥0 = a '
+                    'VGCF/PTFE fibre index), SAME order as --save-se → render each fibre as an individual line')
     ap.add_argument('--save-metrics', default='',
                     help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
                          'grid/material params, stress) to a JSON — the structured source for the '
@@ -369,6 +371,7 @@ def main(argv):
     #    P2G/G2P change.  phase code: 1 SE · 2 VGCF · 3 SuperP · 4 PTFE (0 AM = scaffold mask).
     phase_np = np.where(ylds < 100.0, 1, 0).astype(np.int8)    # base points: 1 SE / 0 AM(mat, mix mode)
     coh_np = np.full(len(xs), COH, np.float32)                 # per-point cohesion: SE = COH (PTFE ≫ below)
+    fibre_np = None                                            # set in the additive block if fibres seeded
     if args.add_recipe:
         if not args.am_scaffold:
             print("  [additives] --add-recipe needs --am-scaffold; skipped")
@@ -397,18 +400,24 @@ def main(argv):
                 'SuperP': (0.50, 0.30, 0.10, 3, False, 0.0),
                 'PTFE':   (0.30, 0.30, 0.05, 4, True,  _ad.PTFE_L),
             }
+            fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre id (-1 = SE/SuperP; ≥0 = a fibre) →
+            _gfib = 0                                   # re-group points into individual fibres for line viz
             for nm, (E, nu, sy, code, is_fib, L_um) in ADD.items():
                 if nm not in cnt:
                     continue
                 nobj = cnt[nm]['n']
                 if is_fib:
-                    pts = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box,
-                                          L_cv=args.add_l_cv, in_am=lambda q: _in_am_abs(q + off))
+                    pts, _fid = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
+                                                in_am=lambda q: _in_am_abs(q + off), return_ids=True)
                 else:
                     pts = _ad.seed_blobs(nobj, bx, rng, in_am=lambda q: _in_am_abs(q + off))
+                    _fid = np.full(len(pts), -1, np.int32)
                 if len(pts) == 0:
                     continue
+                if is_fib and len(_fid):                # make fibre ids globally unique across VGCF+PTFE
+                    _fid = _fid + _gfib; _gfib = int(_fid.max()) + 1
                 pts = (pts + off).astype(np.float32)
+                fibre_np = np.concatenate([fibre_np, _fid])
                 mu_a, la_a = lame(E, nu)
                 xs = np.concatenate([xs, pts])
                 mus = np.concatenate([mus, np.full(len(pts), mu_a, np.float32)])
@@ -702,6 +711,9 @@ def main(argv):
         _u, _c = np.unique(phase_np, return_counts=True)
         print(f"  saved phase → {args.save_phase} ({n} pts, "
               + " ".join(f"{int(u)}:{c}" for u, c in zip(_u, _c)) + ")")
+    if args.save_fibre and fibre_np is not None:
+        np.save(args.save_fibre, fibre_np)                  # -1 = SE/SuperP, ≥0 = fibre index (VGCF/PTFE)
+        print(f"  saved fibre ids → {args.save_fibre} ({n} pts, {int(fibre_np.max()) + 1} fibres)")
 
 
 if __name__ == '__main__':
