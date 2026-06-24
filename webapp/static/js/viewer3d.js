@@ -879,27 +879,36 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
   const halfY = ((box.y_max || 50) - (box.y_min || 0)) * 0.5;
   // fibres (VGCF/PTFE) → individual lines (a fibre is a discrete rod, not a continuum)
   if (fibres.length) {
-    const segPos = [], segCol = [];
+    const segPos = [], segCol = [];      // main carbon (per-phase colour, or soft-black in Default)
+    const binPos = [], binCol = [];      // PTFE binder in Default mode → faint whitish, blended-in
     for (const f of fibres) {
       if (only && f.phase !== only) continue;
-      cc.set(colOf(f.phase));
+      // In the Default overlay (colorOverride set), PTFE reads as a faint off-white binder film
+      // (polymer binder is light, not black) so it "blends" into the structure instead of standing
+      // out as hard rods.  The dedicated 도전재 / PTFE-only modes keep PTFE amber (colorOverride null).
+      const binder = (colorOverride != null && f.phase === 4);
+      cc.set(binder ? 0xe6decb : colOf(f.phase));
       const P = f.pts;
+      const sp = binder ? binPos : segPos, sc = binder ? binCol : segCol;
       for (let i = 0; i + 1 < P.length; i++) {           // Z-up swap (x,z,y) per vertex
         const a = P[i], b = P[i + 1];
         if (Math.abs(a[0] - b[0]) > halfX || Math.abs(a[1] - b[1]) > halfY) continue;   // periodic wrap chord
-        segPos.push(a[0], a[2], a[1], b[0], b[2], b[1]);
-        segCol.push(cc.r, cc.g, cc.b, cc.r, cc.g, cc.b);
+        sp.push(a[0], a[2], a[1], b[0], b[2], b[1]);
+        sc.push(cc.r, cc.g, cc.b, cc.r, cc.g, cc.b);
         n++;
       }
     }
-    if (segPos.length) {
+    const mkLines = (pos, colr, opacity) => {
+      if (!pos.length) return;
       const g = new THREE.BufferGeometry();
-      g.setAttribute('position', new THREE.Float32BufferAttribute(segPos, 3));
-      g.setAttribute('color', new THREE.Float32BufferAttribute(segCol, 3));
+      g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+      g.setAttribute('color', new THREE.Float32BufferAttribute(colr, 3));
       const lines = new THREE.LineSegments(g, new THREE.LineBasicMaterial({
-        vertexColors: true, depthTest: false, depthWrite: false, transparent: true }));
+        vertexColors: true, depthTest: false, depthWrite: false, transparent: true, opacity }));
       lines.renderOrder = 999; grp.add(lines);
-    }
+    };
+    mkLines(segPos, segCol, 1.0);
+    mkLines(binPos, binCol, 0.6);        // binder drawn faint so it blends into the Default view
   }
   // points: only for phases NOT already drawn as fibre/chain lines (avoids double-render — SuperP is
   // now branched chains too, so it's in additive_fibres; a payload without fibre data falls back to points)
