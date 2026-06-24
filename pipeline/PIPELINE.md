@@ -109,6 +109,19 @@ is the real loop.
 
 ---
 
+## Stage 1b — webapp additive 3D viewer + save-list   ⏳ (after the additive run produces a payload)
+Depends on the additive payload carrying phase (no phase data → nothing to colour), so build
+AFTER Stage 1 GPU run succeeds and the payload format is set.  Three pieces, one go:
+1. **payload phase** : `mpm_webapp_payload.py --phase phase.npy` → carry per-point/per-tri phase
+   code (1 SE · 2 VGCF · 3 SuperP · 4 PTFE) into `mpm_payload.json`.
+2. **viewer colour** : `single.html` 3D viewer renders by phase (SE grey · VGCF black fibre ·
+   SuperP dot · PTFE orange) — extend the existing SE/AM viewer.
+3. **button + save-list** : a "도전재 3D" button (active only when an additive payload is present)
+   opens that viewer; BELOW it an **accumulating saved-payload list** (one row per recipe —
+   VGCF 72:27:1, VGCF:PTFE 80:18:1:1, …) to save / re-select / compare, like the case-list/archive.
+
+---
+
 ## Cross-validation targets (frame [4])
 - σ_eff(FEM voxel)  vs  σ_ionic(DEM network/Kirchhoff)  — validates Holm/Stage-E (cf. Bazzoun RNM↔FEM)
 - σ_e with carbon   vs  the "도전재 권장 / dead-AM" warning — turns the flag into a quantitative optimum
