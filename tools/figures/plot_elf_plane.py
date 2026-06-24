@@ -61,6 +61,8 @@ def main():
     ap.add_argument("--n", type=int, default=240, help="grid points/side")
     ap.add_argument("--thickness", type=float, default=1.3,
                     help="show atoms within this Å of the plane")
+    ap.add_argument("--clean", action="store_true",
+                    help="ELF-only heatmap: no axes/title/colorbar/atoms/contours")
     args = ap.parse_args()
 
     data, origin, cell, gn, atoms = read_cube(args.cube)
@@ -109,6 +111,15 @@ def main():
                              * (d[2] if dz else 1 - d[2]))
                         val += w * data[(i0[0]+dx) % gn[0], (i0[1]+dy) % gn[1], (i0[2]+dz) % gn[2]]
             img[iy, ix] = val
+
+    if args.clean:                       # ELF-only heatmap (no chrome)
+        fig, ax = plt.subplots(figsize=(6, 6))
+        ax.imshow(img, origin="lower", extent=[-H, H, -H, H], cmap=elf_cmap(),
+                  vmin=0, vmax=1, aspect="equal", interpolation="bilinear")
+        ax.set_axis_off()
+        plt.savefig(args.out, dpi=300, bbox_inches="tight", pad_inches=0)
+        print(f"-> {args.out} (clean)")
+        return
 
     fig, ax = plt.subplots(figsize=(7.5, 7))
     im = ax.imshow(img, origin="lower", extent=[-H, H, -H, H], cmap=elf_cmap(),
