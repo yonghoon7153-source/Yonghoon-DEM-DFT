@@ -21,3 +21,5 @@ docs/figures/mpm_dem_*.png
 mpm2d_real4.png
 mpm2d_real9.png
 mpm2d_furnas*.png
+webapp.log
+docs/db/
