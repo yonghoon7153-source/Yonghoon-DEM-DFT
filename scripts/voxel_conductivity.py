@@ -24,6 +24,32 @@ import numpy as np
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import cg
 
+_USE_GPU = False   # set by --gpu: run the CG on the GPU (CuPy) when available — big speedup for the
+#                    thick-electrode grids (256×256×700+ ≈ 46M cells); falls back to CPU automatically.
+
+
+def _cg_solve(A, b, tol=1e-6):
+    """Jacobi-preconditioned CG for A·x=b.  GPU (CuPy) when --gpu and CuPy import OK (the solve, not
+    just the MPM, then runs on the GPU), else CPU (scipy).  Returns x (numpy)."""
+    Ad = A.diagonal(); minv = 1.0 / np.where(Ad > 0, Ad, 1.0)
+    if _USE_GPU:
+        try:
+            import cupy as cp
+            import cupyx.scipy.sparse as _csp
+            import cupyx.scipy.sparse.linalg as _csl
+            Ag = _csp.csr_matrix(A.astype(np.float64)); bg = cp.asarray(b); Mg = _csp.diags(cp.asarray(minv))
+            try:
+                x = _csl.cg(Ag, bg, tol=tol, maxiter=20000, M=Mg)[0]
+            except TypeError:                              # newer CuPy: rtol instead of tol
+                x = _csl.cg(Ag, bg, rtol=tol, maxiter=20000, M=Mg)[0]
+            return cp.asnumpy(x)
+        except Exception as e:
+            import sys as _sys
+            print(f'    (GPU CG unavailable: {type(e).__name__}: {e} → CPU)', file=_sys.stderr)
+    N = A.shape[0]
+    M = csr_matrix((minv, (np.arange(N), np.arange(N))), shape=(N, N))
+    return cg(A, b, rtol=tol, maxiter=20000, M=M)[0]
+
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
     'ionic':      {'SE': 3.0, 'AM': 0.0, 'VGCF': 0.0, 'SuperP': 0.0, 'PTFE': 0.0},
     'electronic': {'SE': 0.0, 'AM': 50.0, 'VGCF': 5.0e5, 'SuperP': 1.0e5, 'PTFE': 0.0},
@@ -101,13 +127,7 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False):
 
     rows.append(np.arange(N)); cols.append(np.arange(N)); data.append(np.where(diag > 0, diag, 1.0))
     A = csr_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(N, N))
-    Ad = A.diagonal()                              # Jacobi (diagonal) preconditioner — rescales the
-    Minv = csr_matrix((1.0 / np.where(Ad > 0, Ad, 1.0),  # high-contrast Laplacian so CG converges in
-                       (np.arange(N), np.arange(N))), shape=(N, N))  # ~O(10²) iters not O(10⁴)
-    phi, info = cg(A, b, rtol=tol, maxiter=20000, M=Minv)
-    if info != 0:
-        import sys as _sys
-        print(f'    ⚠ CG did not fully converge (info={info}); σ_eff approximate', file=_sys.stderr)
+    phi = _cg_solve(A, b, tol)                     # Jacobi-preconditioned CG (GPU via CuPy if --gpu)
 
     I = float((2.0 * s0[m0] * phi[g0[m0]]).sum())  # current through the bottom Dirichlet face
     sigma_eff = I * nz / (nx * ny * 1.0)           # σ_eff = I·L/(A·ΔV), ΔV=1, L=nz, A=nx·ny
@@ -198,7 +218,6 @@ def se_contact_network(se_pts, se_id, n_vox, thickness_um, sigma_grain=3.0, top=
     Returns dict: σ_ionic (mS/cm, constriction-only), n_particles, n_contacts, A_SE-SE total &
     mean contact area (µm²) — the latter directly comparable to the DEM dashboard A_SE-SE/⟨A_hop⟩."""
     from scipy.sparse import csr_matrix as _csr
-    from scipy.sparse.linalg import cg as _cg
     vc = _vc()
     SW0, FLOOR, WIDTH = vc.SW[0], vc.FLOOR, vc.SW[1] - vc.SW[0]
     keep = se_id >= 0
@@ -276,9 +295,7 @@ def se_contact_network(se_pts, se_id, n_vox, thickness_um, sigma_grain=3.0, top=
     data = np.concatenate([-g, -g, np.where(diag > 0, diag, 1.0)])
     A = _csr((data, (rows, cols)), shape=(npart, npart))
     b = np.zeros(npart); b[top_m] += g_big * 1.0
-    Ad = A.diagonal(); M = _csr((1.0 / np.where(Ad > 0, Ad, 1.0),
-                                 (np.arange(npart), np.arange(npart))), shape=(npart, npart))
-    V, _ = _cg(A, b, rtol=1e-8, maxiter=20000, M=M)
+    V = _cg_solve(A, b, 1e-8)                                        # GPU (CuPy) if --gpu, else CPU
     I = g_big * float(V[bottom].sum())                               # current into the V=0 rail (ΔV=1)
     sigma = sigma_grain * I * thickness_um / (n_vox * h_um) ** 2
     return {**base, 'sigma_ionic_mScm': float(sigma)}
@@ -334,7 +351,12 @@ def _main():
     ap.add_argument('--thickness-um', type=float, default=None,
                     help='electrode thickness in µm (DEM/MPM, e.g. 170.4) — sets the box→µm scale for '
                          'the --se-id contact-network absolute σ_ionic + contact areas.')
+    ap.add_argument('--gpu', action='store_true',
+                    help='run the CG solve on the GPU via CuPy (big speedup for thick-electrode grids, '
+                         'e.g. 256×256×700; the solver is CPU/scipy by default).  Auto-falls back to CPU '
+                         'if CuPy is not installed.')
     a = ap.parse_args()
+    global _USE_GPU; _USE_GPU = a.gpu
     if a.se_id:                                                      # ── SE plastic contact-network mode ──
         if a.thickness_um is None:
             raise SystemExit('--se-id needs --thickness-um (electrode thickness, e.g. 170.4)')
