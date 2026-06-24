@@ -143,14 +143,18 @@ def _vc():
     return m
 
 
-def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None):
+def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_close=True):
     """Per-phase presence grids on the vc grid: AM from the scaffold spheres, SE/VGCF/SuperP/PTFE
     from the MPM point cloud (phase 1/2/3/4).  Returns ({name: bool grid}, h).
     porosity (the MPM void fraction, e.g. 0.174): if given, SE fills its TRUE fraction as the
     densest CONTIGUOUS region (target_porosity) instead of "≥1 point/cell".  Essential for the
     ionic channel — the SE point cloud is NOT space-filling, so "≥1 point/cell" thins out and
     DISCONNECTS as n_vox rises (σ_ionic → 0 spuriously), while AM (spheres) and the AM-carried
-    electronic/thermal channels stay fine.  porosity → resolution-stable, percolating SE."""
+    electronic/thermal channels stay fine.  porosity → resolution-stable, percolating SE.
+    se_close: morphological-close the SE mask by the point spacing s_MPM (in voxels) to bridge the
+    sub-(point-spacing) gaps the cloud leaves, restricted to free space so it never crosses AM.
+    s_MPM≈(bbox/N)^⅓ and the radius grows with n_vox, so SE connectivity is resolution-stable
+    (ground-truth check: analytic space-filling SE gives σ_ionic 1.90 flat across 128/192/256)."""
     vc = _vc()
     t, c, r = vc.load_am(scaffold)                         # AM spheres (box units)
     se1 = se_pts[phase == 1]                               # true SE points → SE occupancy
@@ -159,6 +163,11 @@ def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None):
     am_p, am_s, se_mask, h = vc.voxelize(se1, t, c, r, n_vox, top, 1, False, target_porosity=porosity)
     nx, ny, nz = se_mask.shape
     SW0, FLOOR = vc.SW[0], vc.FLOOR
+    if se_close and len(se1) > 1000:                       # reconnect SE necks (res-stable)
+        from scipy import ndimage as ndi
+        s_mpm = (float(np.prod(se1.max(0) - se1.min(0))) / len(se1)) ** (1.0 / 3.0)
+        r_vox = max(1, int(round(s_mpm / h)))
+        se_mask = ndi.binary_closing(se_mask, iterations=r_vox) & ~(am_p | am_s)
     pres = {'AM': am_p | am_s, 'SE': se_mask}
     for code, name in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE')):
         g = np.zeros((nx, ny, nz), bool)
@@ -216,6 +225,9 @@ def _main():
                          'ionic channel is resolution-stable (without it the SE point cloud thins '
                          'out and σ_ionic spuriously → 0 as n_vox rises).')
     ap.add_argument('--channel', default='all', choices=['ionic', 'electronic', 'thermal', 'all'])
+    ap.add_argument('--no-se-close', action='store_true',
+                    help='disable the SE neck-bridging morphological close (default on; close '
+                         'reconnects the point-cloud SE so σ_ionic is resolution-stable).')
     a = ap.parse_args()
     pts = np.load(a.se).astype(np.float64)
     phase = np.load(a.phase) if a.phase else np.ones(len(pts), dtype=np.int64)  # no --phase → all SE
@@ -226,7 +238,8 @@ def _main():
     if a.porosity is None:
         print('  ⚠ no --porosity → SE = "≥1 point/cell" (NOT space-filling); σ_ionic disconnects'
               ' as n_vox rises.  Pass --porosity <MPM void frac> for a resolution-stable ionic σ.')
-    pres, h = voxelize_phase(pts, phase, a.scaffold, a.n_vox, porosity=a.porosity)
+    pres, h = voxelize_phase(pts, phase, a.scaffold, a.n_vox, porosity=a.porosity,
+                             se_close=not a.no_se_close)
     print('grid', next(iter(pres.values())).shape, ' cells/phase:', {k: int(v.sum()) for k, v in pres.items()})
     chans = ['electronic', 'ionic', 'thermal'] if a.channel == 'all' else [a.channel]
     units = {'electronic': 'mS/cm', 'ionic': 'mS/cm', 'thermal': 'W/m·K'}
