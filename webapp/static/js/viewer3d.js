@@ -862,8 +862,11 @@ function resetSEColors(state) {
  * the scene as state.additivePointGroup.  Used both as a subtle overlay on the Default view (so the
  * carbon is visible inside the normal AM/SE structure) and as the prominent 도전재 mode.  Points draw
  * x-ray (depthTest off, renderOrder 999) so they show through opaque SE/AM.  `only` filters one phase. */
-function buildCarbonOverlay(state, only, size) {
+function buildCarbonOverlay(state, only, size, colorOverride) {
+  // colorOverride: a single colour for all carbon (e.g. soft black in the Default overlay so it reads
+  // SEM-like and doesn't drown the structure).  null → per-phase colours (cyan VGCF) for the 도전재 mode.
   const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
+  const colOf = (ph) => (colorOverride != null ? colorOverride : (PHCOL[ph] || 0x22d3ee));
   const fibres = (state.data && state.data.additive_fibres) || [];   // [{phase, pts:[[x,y,z]…]}]
   const pts0 = (state.data && state.data.additive_points) || [];
   const grp = new THREE.Group();
@@ -874,7 +877,7 @@ function buildCarbonOverlay(state, only, size) {
     const segPos = [], segCol = [];
     for (const f of fibres) {
       if (only && f.phase !== only) continue;
-      cc.set(PHCOL[f.phase] || 0x22d3ee);
+      cc.set(colOf(f.phase));
       const P = f.pts;
       for (let i = 0; i + 1 < P.length; i++) {           // Z-up swap (x,z,y) per vertex
         segPos.push(P[i][0], P[i][2], P[i][1], P[i + 1][0], P[i + 1][2], P[i + 1][1]);
@@ -900,7 +903,7 @@ function buildCarbonOverlay(state, only, size) {
     for (let i = 0; i < pts.length; i++) {
       const p = pts[i];
       pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
-      cc.set(PHCOL[p[3]] || 0x22d3ee);
+      cc.set(colOf(p[3]));
       col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
     }
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
@@ -1025,7 +1028,7 @@ function applyViewMode(state, mode) {
     });
     // overlay the carbon on the NORMAL AM/SE structure (x-ray, modest size) — so VGCF/PTFE are
     // visible right in the default view, not only in the dedicated 도전재 mode.
-    const nCarbon = buildCarbonOverlay(state, 0, 0.55);
+    const nCarbon = buildCarbonOverlay(state, 0, 0.55, 0x3a3a3a);   // soft black in Default (SEM-like, subtle)
     const ac = (state.data && state.data.mpm_metrics && state.data.mpm_metrics.additive_counts) || {};
     const carbonLeg = nCarbon
       ? `<br><span style="color:#22d3ee">●</span> 도전재 overlay (${Object.keys(ac).filter(k => ac[k]).join('/')}) — 자세히는 View Mode "도전재"`
