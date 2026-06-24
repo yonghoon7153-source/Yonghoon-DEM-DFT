@@ -27,9 +27,10 @@ PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4}                 # 
 # default geometry (µm)
 VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
 SP_D           = 0.20            # Super P / Super C carbon-black aggregate (sphere, particulate)
-PTFE_D, PTFE_L = 0.50, 30.0      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes
-                                 # threads ~1µm×~50µm (branch to 10s nm), spanning tens of NMC; a FIBRE
-                                 # like VGCF but soft binder (RSC D5EE03240G; Front. Energy 2023.1336344)
+PTFE_D, PTFE_L = 0.25, 40.0      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes long
+                                 # thin threads (branch to 10s nm) spanning tens of NMC; LONGER + HIGHER
+                                 # aspect (AR≈160) than VGCF (AR≈67) → reads as the spanning binder web,
+                                 # not a short rod.  Soft binder FIBRE (RSC D5EE03240G; Front. Energy 2023.1336344)
 
 
 def vol_fracs(wt: dict) -> dict:
@@ -55,25 +56,36 @@ def recipe_counts(wt: dict, solid_vol_um3: float, vgcf_d=VGCF_D, vgcf_l=VGCF_L,
     return out
 
 
-def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L):
+def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0, return_lengths=False):
     """n random-oriented fibres (SEM-like: long thin rods threading the interstices),
     each a chain of points spaced ~dx along its axis.  Even distribution = uniform
-    random centres.  Points falling in AM (in_am) are dropped (fibre bends around)."""
+    random centres.  Points falling in AM (in_am) are dropped (fibre bends around).
+
+    L_cv>0 → per-fibre length is drawn from a lognormal with mean L and coefficient
+    of variation L_cv (real VGCF: lengths spread ~5-20µm from milling/breakage, while
+    Ø stays ~150nm — and Ø is sub-grid here so only length matters).  The lognormal is
+    mean-preserving, so the recipe count/volume is unchanged; only the lengths spread.
+    (Ø variation is intentionally NOT modelled: a fibre is ~1 cell thick at dx≈Ø, so
+    diameter spread can't be resolved on the grid.)"""
     (Lx, Ly, Lz) = box_um
-    k = max(2, int(round(L / (0.7 * dx_um))))                      # points per fibre
-    t = np.linspace(-L / 2, L / 2, k)
-    pts = []
+    sigma = np.sqrt(np.log(1.0 + L_cv ** 2)) if L_cv > 0 else 0.0   # lognormal shape, mean-preserving
+    pts, lens = [], []
     for _ in range(n):
+        Li = L if sigma == 0 else float(np.clip(L * np.exp(rng.normal(-0.5 * sigma ** 2, sigma)),
+                                                0.3 * L, 3.0 * L))   # mean(Li)=L, clipped 0.3L..3L
+        k = max(2, int(round(Li / (0.7 * dx_um))))                  # points per fibre (∝ length)
+        t = np.linspace(-Li / 2, Li / 2, k)
         c = np.array([rng.uniform(0, Lx), rng.uniform(0, Ly), rng.uniform(0, Lz)])
-        d = rng.normal(size=3); d /= np.linalg.norm(d) + 1e-12     # isotropic direction
+        d = rng.normal(size=3); d /= np.linalg.norm(d) + 1e-12      # isotropic direction
         line = c[None, :] + t[:, None] * d[None, :]
         line = line[(line[:, 0] >= 0) & (line[:, 0] < Lx) & (line[:, 1] >= 0)
                     & (line[:, 1] < Ly) & (line[:, 2] >= 0) & (line[:, 2] < Lz)]
         if in_am is not None and len(line):
             line = line[~np.array([in_am(p) for p in line])]
         if len(line):
-            pts.append(line)
-    return np.concatenate(pts, 0).astype(np.float32) if pts else np.zeros((0, 3), np.float32)
+            pts.append(line); lens.append(Li)
+    P = np.concatenate(pts, 0).astype(np.float32) if pts else np.zeros((0, 3), np.float32)
+    return (P, np.array(lens, np.float32)) if return_lengths else P
 
 
 def seed_blobs(n, box_um, rng, in_am=None):

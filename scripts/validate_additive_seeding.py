@@ -38,6 +38,7 @@ def main():
     ap.add_argument('--um-per-box', type=float, default=1000.0, help='µm per box unit (50µm = 0.05)')
     ap.add_argument('--dx-um', type=float, default=50.0 / 384, help='grid spacing µm (n_grid=384 over 50µm)')
     ap.add_argument('--seed', type=int, default=0)
+    ap.add_argument('--l-cv', type=float, default=0.4, help='fibre length variation (CV); 0=monodisperse')
     ap.add_argument('--slab-frac', type=float, default=0.10, help='half-thickness of the shown z-slab (frac of bed)')
     ap.add_argument('--out', default='docs/figures/additive_seed_check.png')
     ap.add_argument('--save-npy', default='', help='prefix to dump se.npy/phase.npy for viz_additives')
@@ -95,8 +96,10 @@ def main():
         if nm not in cnt:
             continue
         nobj = cnt[nm]['n']
+        lens = None
         if is_fib:
-            raw = ad.seed_fibres(nobj, box, a.dx_um, rng, L=L_um)        # no in_am → seed all, then filter
+            raw, lens = ad.seed_fibres(nobj, box, a.dx_um, rng, L=L_um, L_cv=a.l_cv,
+                                       return_lengths=True)             # no in_am → seed all, then filter
         else:
             raw = ad.seed_blobs(nobj, box, rng)
         if len(raw) == 0:
@@ -107,9 +110,11 @@ def main():
         pts_all.append(kept)
         phase_all.append(np.full(len(kept), code, np.int8))
         coh_all.append(np.full(len(kept), coh, np.float32))
+        lspread = (f'  L {lens.min():.0f}/{lens.mean():.0f}/{lens.max():.0f}µm (min/mean/max, '
+                   f'AR {lens.mean() / (ad.VGCF_D if nm == "VGCF" else ad.PTFE_D):.0f})') if lens is not None else ''
         print(f'  {nm:7s} {nobj:>6,} objects → {len(raw):,} pts, {rej:,} in-AM dropped '
               f'({100 * rej / max(len(raw), 1):.1f}%) → {len(kept):,} kept  '
-              f'(E={E} σ_y={sy} coh={coh}, phase {code})')
+              f'(E={E} σ_y={sy} coh={coh}, phase {code}){lspread}')
 
     pts = np.concatenate(pts_all).astype(np.float32)
     phase = np.concatenate(phase_all)

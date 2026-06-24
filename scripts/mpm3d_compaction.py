@@ -109,6 +109,9 @@ def parse_args(argv):
                          'separate — the recipe picks which).  Counts from wt%+density (additives.py), NOT '
                          'hardcoded; fibres=point-chains, SuperP=blobs, avoid fixed AM.  Auto-enables SE '
                          'cohesion (--coh 0.02) unless --coh given.  Needs --am-scaffold.')
+    ap.add_argument('--add-l-cv', type=float, default=0.4,
+                    help='fibre length variation (coefficient of variation) for VGCF/PTFE — real fibres '
+                         'have a length spread; lognormal mean-preserving so counts/volume unchanged. 0=fixed.')
     return ap.parse_args(argv)
 
 
@@ -392,7 +395,7 @@ def main(argv):
                 nobj = cnt[nm]['n']
                 if is_fib:
                     pts = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box,
-                                          in_am=lambda q: _in_am_abs(q + off))
+                                          L_cv=args.add_l_cv, in_am=lambda q: _in_am_abs(q + off))
                 else:
                     pts = _ad.seed_blobs(nobj, bx, rng, in_am=lambda q: _in_am_abs(q + off))
                 if len(pts) == 0:
