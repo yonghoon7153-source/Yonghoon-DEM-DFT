@@ -36,6 +36,8 @@ def main():
     ap.add_argument('--add-recipe', default='', help='conductive-additive recipe baked into run_mpm.sh, e.g. '
                     '"AM:SE:VGCF=72:27:1" or "AM:SE:VGCF:PTFE=80:18:1:1" (Stage-1 carbon).  Empty = no carbon.')
     ap.add_argument('--add-l-cv', type=float, default=0.4, help='fibre length variation baked into run_mpm.sh.')
+    ap.add_argument('--mixing', default='thinky', choices=['ballmill', 'thinky', 'handmix'],
+                    help='Super P dispersion baked into run_mpm.sh (thinky = lit dry-process coating).')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -171,7 +173,7 @@ def main():
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
     # and carry the per-point phase into the payload (so the 도전재 3D viewer can colour the carbon)
-    add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} '
+    add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''
@@ -213,7 +215,7 @@ python3 scripts/mpm3d_compaction.py \\
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
   --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt} --eps se_dump_eps.npy \\
-  --metrics-json mpm_metrics.json --case {case}{pay_phase} --out mpm_payload.json
+  --void-max 180000 --metrics-json mpm_metrics.json --case {case}{pay_phase} --out mpm_payload.json
 echo "[run_mpm] DONE $(date) → upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
 """
     rp = os.path.join(a.out, 'run_mpm.sh')
