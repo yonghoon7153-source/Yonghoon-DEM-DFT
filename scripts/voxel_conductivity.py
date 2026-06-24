@@ -47,6 +47,18 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-8, return_field=False):
     the low face, no-flux side walls.  σ: 3D float (0 = insulator).  Returns σ_eff
     in the SAME units as σ (geometry cancels)."""
     sigma = np.moveaxis(sigma, axis, 2)            # solve along z
+    # Trim leading/trailing z-slices that hold NO conducting cell so the Dirichlet faces sit on
+    # the conducting phase's OWN envelope.  Without this, an interstitial phase that never reaches
+    # the box floor/ceiling — e.g. SE packed under a rigid AM scaffold that rests on the floor —
+    # reads σ_eff=0 even though it percolates internally (its cells touch the top face but not the
+    # bottom k=0 face, which the AM occupies).  Internal all-insulator gaps are NOT trimmed, so a
+    # genuinely disconnected phase still yields σ_eff=0.  L in σ_eff=I·L/A becomes the conducting
+    # span → the slab's true conductivity, undiluted by headspace.
+    zmask = (sigma > 0).any(axis=(0, 1))
+    if not zmask.any():
+        return (0.0, None) if return_field else 0.0
+    z0 = int(np.argmax(zmask)); z1 = int(len(zmask) - np.argmax(zmask[::-1]))
+    sigma = sigma[:, :, z0:z1]
     nx, ny, nz = sigma.shape
     cond = sigma > 0
     N = int(cond.sum())
