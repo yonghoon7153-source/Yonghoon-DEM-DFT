@@ -863,26 +863,56 @@ function resetSEColors(state) {
  * carbon is visible inside the normal AM/SE structure) and as the prominent 도전재 mode.  Points draw
  * x-ray (depthTest off, renderOrder 999) so they show through opaque SE/AM.  `only` filters one phase. */
 function buildCarbonOverlay(state, only, size) {
-  const all = (state.data && state.data.additive_points) || [];
-  const pts = only ? all.filter(p => p[3] === only) : all;
-  if (!pts.length) return 0;
   const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
-  const g = new THREE.BufferGeometry();
-  const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
+  const fibres = (state.data && state.data.additive_fibres) || [];   // [{phase, pts:[[x,y,z]…]}]
+  const pts0 = (state.data && state.data.additive_points) || [];
+  const grp = new THREE.Group();
+  let n = 0;
   const cc = new THREE.Color();
-  for (let i = 0; i < pts.length; i++) {
-    const p = pts[i];
-    pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
-    cc.set(PHCOL[p[3]] || 0x22d3ee);
-    col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
+  // fibres (VGCF/PTFE) → individual lines (a fibre is a discrete rod, not a continuum)
+  if (fibres.length) {
+    const segPos = [], segCol = [];
+    for (const f of fibres) {
+      if (only && f.phase !== only) continue;
+      cc.set(PHCOL[f.phase] || 0x22d3ee);
+      const P = f.pts;
+      for (let i = 0; i + 1 < P.length; i++) {           // Z-up swap (x,z,y) per vertex
+        segPos.push(P[i][0], P[i][2], P[i][1], P[i + 1][0], P[i + 1][2], P[i + 1][1]);
+        segCol.push(cc.r, cc.g, cc.b, cc.r, cc.g, cc.b);
+        n++;
+      }
+    }
+    if (segPos.length) {
+      const g = new THREE.BufferGeometry();
+      g.setAttribute('position', new THREE.Float32BufferAttribute(segPos, 3));
+      g.setAttribute('color', new THREE.Float32BufferAttribute(segCol, 3));
+      const lines = new THREE.LineSegments(g, new THREE.LineBasicMaterial({
+        vertexColors: true, depthTest: false, depthWrite: false, transparent: true }));
+      lines.renderOrder = 999; grp.add(lines);
+    }
   }
-  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-  state.additivePointGroup = new THREE.Points(g, new THREE.PointsMaterial({
-    size, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false }));
-  state.additivePointGroup.renderOrder = 999;
-  if (state.scene) state.scene.add(state.additivePointGroup);
-  return pts.length;
+  // points: SuperP (blobs) always; VGCF/PTFE only when there are NO fibre polylines (fallback)
+  const phasesForPts = fibres.length ? [3] : [2, 3, 4];
+  const pts = pts0.filter(p => (!only || p[3] === only) && phasesForPts.indexOf(p[3]) >= 0);
+  if (pts.length) {
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
+    for (let i = 0; i < pts.length; i++) {
+      const p = pts[i];
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
+      cc.set(PHCOL[p[3]] || 0x22d3ee);
+      col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const pm = new THREE.Points(g, new THREE.PointsMaterial({
+      size, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false }));
+    pm.renderOrder = 999; grp.add(pm); n += pts.length;
+  }
+  if (n === 0) return 0;
+  state.additivePointGroup = grp;                          // a Group (lines + points) — cleanup traverses it
+  if (state.scene) state.scene.add(grp);
+  return n;
 }
 
 /* ── View-mode rendering — re-colour all instanced meshes ─── */
@@ -934,10 +964,12 @@ function applyViewMode(state, mode) {
     if (state.strainPointGroup.material) state.strainPointGroup.material.dispose();
     state.strainPointGroup = null;
   }
-  if (state.additivePointGroup && state.scene) {          // conductive-additive point cloud
+  if (state.additivePointGroup && state.scene) {          // conductive-additive Group (lines + points)
     state.scene.remove(state.additivePointGroup);
-    if (state.additivePointGroup.geometry) state.additivePointGroup.geometry.dispose();
-    if (state.additivePointGroup.material) state.additivePointGroup.material.dispose();
+    state.additivePointGroup.traverse(o => {
+      if (o.geometry) o.geometry.dispose();
+      if (o.material) o.material.dispose();
+    });
     state.additivePointGroup = null;
   }
   if (state.meshes && state.meshes.MESH) {                 // restore SE mesh (se_strain hides it; additives dims it)
@@ -1673,7 +1705,9 @@ function applyViewMode(state, mode) {
     [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
       if (m) { m.material.transparent = true; m.material.opacity = 0.13; }
     });
-    buildCarbonOverlay(state, only, only ? 1.0 : 0.7);   // solid cyan x-ray points (no glow — was blinding)
+    buildCarbonOverlay(state, only, only ? 1.0 : 0.7);   // fibres → lines, SuperP → points (x-ray)
+    const nFib = ((state.data && state.data.additive_fibres) || [])
+      .filter(f => !only || f.phase === only).length;
     const ac = mm.additive_counts || {};
     const swatch = { VGCF: '#22d3ee', SuperP: '#f1f5f9', PTFE: '#f59e0b' };
     const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
@@ -1682,8 +1716,9 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>도전재 (3D)${only ? ' — ' + PH[only] + '만' : ' — 전체'}</b>
        <div style="margin-top:4px">${legend || '–'}</div>
-       <div style="margin-top:3px;color:#9ca3af;font-size:10px">SE·AM 반투명, 카본은 밝게. `
-       + `표시 ${pts.length.toLocaleString()}점${only ? '' : ' (부피분율 보존 subsample)'}</div>`);
+       <div style="margin-top:3px;color:#9ca3af;font-size:10px">SE·AM 반투명, 카본은 x-ray로 위에. `
+       + (nFib ? `${nFib.toLocaleString()}개 fibre를 개별 line으로 표시 (VGCF 고항복 → 막대 유지)`
+              : `${pts.length.toLocaleString()}점 (fibre 데이터 없음 — point cloud)`) + `</div>`);
     return;
   }
 
