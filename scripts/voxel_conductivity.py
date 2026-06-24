@@ -85,7 +85,7 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-8, return_field=False):
     I = 0.0
     for n, (i, j, k) in enumerate(ids):
         if k == 0:
-            I += s[i, j, k] * (phi[n] - 0.0)        # g(face to φ=0) = s (harmonic of s,s)
+            I += 2.0 * s[i, j, k] * phi[n]          # bottom Dirichlet face g=2σ (½-cell)
     sigma_eff = I * nz / (nx * ny * 1.0)            # σ_eff = I·L/(A·ΔV), ΔV=1, L=nz, A=nx·ny
     if return_field:
         f = np.zeros(sigma.shape); f[cond] = phi
