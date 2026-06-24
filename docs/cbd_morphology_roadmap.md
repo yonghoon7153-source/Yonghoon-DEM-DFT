@@ -49,13 +49,17 @@ NOT block pores.  **Length↔Ø inverse** = constant-volume drawing: A=V/L → d
    `d` carried to payload (`--fibre-dia`), viewer renders thickness as BRIGHTNESS (thick
    solid, thin faint; WebGL line width is unreliable).
 
-### ⏳ PENDING (batch 2 — add AFTER v2 confirms batch 1)
-2. **branching (1차→2차→3차 hierarchy)** — primary fibril spawns thinner secondary/tertiary
-   children from points along it (reduced V, shorter L) → tree topology + finer fibrils.
-   Today the per-fibre Ø spread approximates the thickness RANGE but not the connected tree.
-4. **directed particle→particle bridge** — today: nucleate on carbon then ISOTROPIC walk.
-   Real binder bridges adjacent particles: bias the walk toward a NEIGHBouring attractor so
-   the fibril CONNECTS two particles/carbon clusters (the actual binding action).
+### ✅ DONE (batch 2, 2026-06-24) — re-run VGCF+PTFE to view (with --void-max for the pore view)
+2. **branching (1차→2차 hierarchy)** — `seed_fibres(branch_frac=0.5, branch_n=2, branch_vol=0.3,
+   branch_len=0.5)`: a primary spawns ≤2 thinner secondary fibrils from points along it (child V =
+   branch_vol·V_parent, L = branch_len·L_parent → child d ∝ √(V/L) smaller).  Children are separate
+   fibre ids (own `d`).  Smoke test: 300 primaries → ~500 fibres (+200 children), weight mean 1
+   (recipe volume preserved by the normalisation), per-fibre Ø spread widens at the thin end.
+4. **directed particle→particle bridge** — `seed_fibres(bridge_frac=0.5, bridge_drift=0.15)`: a fibril
+   nucleated on one carbon point picks a NEARBY 2nd carbon (within ~1 fibre length) and STEERS its
+   walk toward it (drift term in `_grow`), so it CONNECTS two carbon clusters instead of wandering —
+   the binding action Lee 2025 SEM shows (binder fibrils fibrillated ACROSS the interface).
+   PTFE ADD-dict in mpm3d_compaction.py now (curl0.4, vol_cv0.6, nuc0.6, branch0.5, bridge0.5).
 
 ### 🚩 DEFERRED — different category, NOT "just forgot" (the user's ①③ — KEEP)
 1. **internal nano-porosity (CBD dual-porosity, 50-70% dense)** — CBD nano-pores 10-100 nm

@@ -91,6 +91,8 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
 
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
                 curl=0.0, vol_conserve=False, vol_cv=0.0, nucleate=None, nucleate_frac=0.0,
+                branch_frac=0.0, branch_n=2, branch_vol=0.3, branch_len=0.5,
+                bridge_frac=0.0, bridge_drift=0.15,
                 return_lengths=False, return_ids=False, return_vol=False):
     """n random fibres (SEM-like: thin rods/fibrils threading the interstices), each a chain of
     points spaced ~dx along its path.  Even distribution = uniform random centres.  Points falling
@@ -117,13 +119,44 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
 
     nucleate (Nx3 attractor points, e.g. the already-seeded carbon) + nucleate_frac → a fraction of
     fibrils START on a random attractor (small jitter) instead of in free void, so the PTFE binder web
-    co-locates with and NETS the carbon → forms the Carbon-Binder Domain (CBD) rather than floating."""
+    co-locates with and NETS the carbon → forms the Carbon-Binder Domain (CBD) rather than floating.
+
+    branch_frac → ② HIERARCHY: a primary fibril spawns up to branch_n thinner secondary fibrils from
+    points along it (child volume = branch_vol·V_parent, length = branch_len·L_parent → child d is
+    smaller → finer fibril), reproducing the lit primary→secondary→tertiary branched web.
+
+    bridge_frac + bridge_drift → ④ DIRECTED BRIDGE: a fibril nucleated on one carbon point also picks a
+    NEARBY second attractor and STEERS its walk toward it (drift term), so the fibril CONNECTS two
+    carbon clusters instead of wandering isotropically — the actual binding action (Lee 2025 SEM: binder
+    fibrils stretched & fibrillated ACROSS the interface, bridging particles)."""
     (Lx, Ly, Lz) = box_um
     sigma = np.sqrt(np.log(1.0 + L_cv ** 2)) if L_cv > 0 else 0.0   # length lognormal, mean-preserving
     sigma_v = np.sqrt(np.log(1.0 + vol_cv ** 2)) if vol_cv > 0 else 0.0   # INITIAL node-volume spread
     step = 0.7 * dx_um                                              # point spacing along the fibre path
     nuc = np.asarray(nucleate, np.float32) if (nucleate is not None and len(nucleate)) else None
     hi = np.array([Lx - 1e-3, Ly - 1e-3, Lz - 1e-3])
+
+    def _grow(c, d0, Li, kk, drift_to):
+        """one fibre path from c along d0 (length Li, kk pts).  curl>0 → worm-like walk; drift_to (a
+        target point) biases the walk toward it (④ directed bridge).  Returns the clipped, AM-dropped line."""
+        if curl <= 0.0 and drift_to is None:                        # straight rod (VGCF)
+            t = np.linspace(-Li / 2, Li / 2, kk)
+            ln = c[None, :] + t[:, None] * d0[None, :]
+        else:                                                       # persistent random walk (PTFE fibril)
+            d = d0.copy(); pos = c.copy(); seq = [pos.copy()]
+            for _s in range(kk - 1):
+                d = d + rng.normal(size=3) * curl                   # turn ~curl rad, persist
+                if drift_to is not None:                            # steer toward the bridge target
+                    to = drift_to - pos; d = d + bridge_drift * to / (np.linalg.norm(to) + 1e-9)
+                d /= np.linalg.norm(d) + 1e-12
+                pos = pos + step * d; seq.append(pos.copy())
+            ln = np.asarray(seq)
+        ln = ln[(ln[:, 0] >= 0) & (ln[:, 0] < Lx) & (ln[:, 1] >= 0)
+                & (ln[:, 1] < Ly) & (ln[:, 2] >= 0) & (ln[:, 2] < Lz)]
+        if in_am is not None and len(ln):
+            ln = ln[~np.array([in_am(p) for p in ln])]
+        return ln
+
     pts, lens, ids, wts = [], [], [], []
     fid = 0                                                          # fibre index (so points can be re-grouped
     for _ in range(n):                                             # into individual fibres for line rendering)
@@ -132,28 +165,34 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
         Vi = 1.0 if sigma_v == 0 else float(np.clip(np.exp(rng.normal(-0.5 * sigma_v ** 2, sigma_v)),
                                                     0.2, 5.0))      # INITIAL node VOLUME (mean 1): size spread
         k = max(2, int(round(Li / step)))                           # points per fibre (∝ length)
+        drift_to = None
         if nuc is not None and rng.random() < nucleate_frac:        # CBD: nucleate on a carbon attractor →
-            c = np.clip(nuc[rng.integers(len(nuc))] + rng.normal(size=3) * (1.5 * step), 0, hi)  # binder nets carbon
+            a = nuc[rng.integers(len(nuc))]
+            c = np.clip(a + rng.normal(size=3) * (1.5 * step), 0, hi)   # binder STARTS on carbon (nets it)
+            if bridge_frac > 0.0 and rng.random() < bridge_frac:    # ④ pick a NEARBY 2nd carbon → bridge to it
+                b = nuc[rng.integers(len(nuc))]
+                if step < np.linalg.norm(b - a) < 1.3 * Li:         # reachable within ~one fibre length
+                    drift_to = b
         else:
             c = np.array([rng.uniform(0, Lx), rng.uniform(0, Ly), rng.uniform(0, Lz)])
-        d0 = rng.normal(size=3); d0 /= np.linalg.norm(d0) + 1e-12   # isotropic initial direction
-        if curl <= 0.0:                                             # straight rod (VGCF)
-            t = np.linspace(-Li / 2, Li / 2, k)
-            line = c[None, :] + t[:, None] * d0[None, :]
-        else:                                                       # persistent random walk (PTFE fibril web)
-            d = d0.copy(); pos = c.copy(); seq = [pos.copy()]
-            for _s in range(k - 1):
-                d = d + rng.normal(size=3) * curl; d /= np.linalg.norm(d) + 1e-12   # turn ~curl rad, persist
-                pos = pos + step * d; seq.append(pos.copy())
-            line = np.asarray(seq)
-        line = line[(line[:, 0] >= 0) & (line[:, 0] < Lx) & (line[:, 1] >= 0)
-                    & (line[:, 1] < Ly) & (line[:, 2] >= 0) & (line[:, 2] < Lz)]
-        if in_am is not None and len(line):
-            line = line[~np.array([in_am(p) for p in line])]
-        if len(line):
-            pts.append(line); lens.append(Li); ids.append(np.full(len(line), fid, np.int32))
-            wts.append(np.full(len(line), Vi / len(line), np.float32))   # fibre = node-volume Vi → d∝√(Vi/Li)
-            fid += 1
+        d0 = (drift_to - c) if drift_to is not None else rng.normal(size=3)   # head toward the bridge target
+        d0 = d0 / (np.linalg.norm(d0) + 1e-12)
+        line = _grow(c, d0, Li, k, drift_to)
+        if not len(line):
+            continue
+        pts.append(line); lens.append(Li); ids.append(np.full(len(line), fid, np.int32))
+        wts.append(np.full(len(line), Vi / len(line), np.float32)); fid += 1   # fibre = node-vol Vi → d∝√(Vi/Li)
+        # ② HIERARCHY: the primary spawns thinner secondary fibrils (1차→2차 branched web)
+        if branch_frac > 0.0 and len(line) > 3 and rng.random() < branch_frac:
+            for _b in range(int(rng.integers(1, branch_n + 1))):
+                bp = line[rng.integers(len(line))]                  # branch point along the primary
+                Vc = Vi * branch_vol * (0.5 + rng.random())         # child thinner (fraction of parent V) →
+                Lc = Li * branch_len * (0.4 + 0.8 * rng.random())   #   shorter; both → smaller child d
+                dc = rng.normal(size=3); dc /= np.linalg.norm(dc) + 1e-12
+                cl = _grow(bp, dc, Lc, max(2, int(round(Lc / step))), None)
+                if len(cl):
+                    pts.append(cl); lens.append(Lc); ids.append(np.full(len(cl), fid, np.int32))
+                    wts.append(np.full(len(cl), Vc / len(cl), np.float32)); fid += 1
     P = np.concatenate(pts, 0).astype(np.float32) if pts else np.zeros((0, 3), np.float32)
     out = [P]
     if return_lengths:

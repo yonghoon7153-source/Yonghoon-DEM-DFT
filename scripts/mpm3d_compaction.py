@@ -402,28 +402,31 @@ def main(argv):
                 ii = int(p[0] * n_grid); jj = int(p[1] * n_grid); kk = int(p[2] * n_grid)
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
-            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac).  kind 'fibre' = rod,
-                #   'cblack' = branched chain + AM-coating.  curl>0 → tangled worm-like fibril (PTFE); vol_cv>0 →
-                #   initial node-volume spread (drawn d∝√(V/L)); nuc_frac → fraction nucleating on carbon (CBD).
-                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, 0.0,  0.0, 0.0),   # stiff straight uniform-Ø
-                'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0),   # carbon black (lit morph.)
-                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, 0.40, 0.6, 0.6),   # drawn tangled binder web
+            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac, branch_frac, bridge_frac).
+                #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl>0 → tangled worm-like fibril (PTFE);
+                #   vol_cv>0 → initial node-volume spread (drawn d∝√(V/L)); nuc_frac → fraction nucleating on carbon
+                #   (CBD); branch_frac → ② spawn thinner secondary fibrils; bridge_frac → ④ steer toward a 2nd carbon.
+                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, 0.0,  0.0, 0.0, 0.0, 0.0),   # stiff straight
+                'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
+                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, 0.40, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
             dia_np = np.zeros(len(xs), np.float32)      # per-point relative fibre Ø (0 = SE/non-fibre; ∝√weight)
             carbon_seed = []                            # carbon (VGCF/SuperP) pts in seed-box frame → PTFE
             _gfib = 0                                   # nucleation attractors (binder nets carbon = CBD)
-            for nm, (E, nu, sy, code, kind, L_um, curl, vcv, nucf) in ADD.items():
+            for nm, (E, nu, sy, code, kind, L_um, curl, vcv, nucf, brf, brgf) in ADD.items():
                 if nm not in cnt:
                     continue
-                nobj = cnt[nm]['n']                          # target point count (VGCF/PTFE = fibre centreline
-                #   skeleton; SuperP = aggregate count) — recipe wt%/vol% tracked in metrics + per-point pvs.
+                nobj = cnt[nm]['n']                          # target PRIMARY-fibre count (VGCF/PTFE centreline
+                #   skeleton; SuperP = aggregate count) — recipe wt%/vol% tracked in metrics + per-point pvs
+                #   (branching adds children but the mean-1 weight normalisation preserves the recipe volume).
                 if kind == 'fibre':
-                    nuc = np.concatenate(carbon_seed) if (nucf > 0.0 and carbon_seed) else None
+                    nuc = np.concatenate(carbon_seed) if ((nucf > 0.0 or brgf > 0.0) and carbon_seed) else None
                     pts, _fid, _w = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
                                                     curl=curl, vol_conserve=(curl > 0.0 or vcv > 0.0),
                                                     vol_cv=vcv, nucleate=nuc, nucleate_frac=nucf,
+                                                    branch_frac=brf, bridge_frac=brgf,
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
                 else:                                        # carbon black: branched chains coating the AM
