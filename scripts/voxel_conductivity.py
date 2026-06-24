@@ -189,12 +189,15 @@ def _main():
     print('grid', next(iter(pres.values())).shape, ' cells/phase:', {k: int(v.sum()) for k, v in pres.items()})
     chans = ['electronic', 'ionic', 'thermal'] if a.channel == 'all' else [a.channel]
     units = {'electronic': 'mS/cm', 'ionic': 'mS/cm', 'thermal': 'W/m·K'}
-    print(f'\n  {"channel":<11}{"WITHOUT CBD":>14}{"WITH CBD":>14}{"gain":>9}')
+    print(f'\n  {"channel":<11}{"WITHOUT CBD":>14}{"WITH CBD":>14}{"gain":>9}', flush=True)
     for ch in chans:
+        # 2 FV solves per channel (±CBD); ionic is now a real SE-network solve (was instant-0
+        # before the envelope-trim fix), so print a live marker instead of a blank header.
+        print(f'  {ch:<11}  …solving (2 FV solves)', end='', flush=True)
         s_wout = effective_sigma(sigma_grid(pres, ch, drop_carbon=True))
         s_with = effective_sigma(sigma_grid(pres, ch, drop_carbon=False))
         gain = f'{s_with / s_wout:>6.1f}x' if s_wout > 1e-9 else '  None→'   # σ_e=None revived
-        print(f'  {ch:<11}{s_wout:>13.4g} {s_with:>13.4g}  {gain:>8}  ({units[ch]})')
+        print(f'\r  {ch:<11}{s_wout:>13.4g} {s_with:>13.4g}  {gain:>8}  ({units[ch]})' + ' ' * 12, flush=True)
     print('\n  electronic: carbon (VGCF/SuperP) BRIDGES dead AM → σ_e None→finite is the CBD payoff.')
     print('  ionic: carbon does NOT help; PTFE blocking shows as lower σ_i (Lee 2025 penalty).')
 
