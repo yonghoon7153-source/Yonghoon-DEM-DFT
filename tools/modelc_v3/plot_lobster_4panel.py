@@ -25,16 +25,16 @@ from matplotlib.patches import FancyBboxPatch
 
 
 PANEL_CONFIG = [
-    {"label": "P–S",   "color": "#3F7BB6", "match_keys": ["P", "S"],   "exclude": ["Li"]},
+    {"label": "P–S",   "color": "#3F7BB6", "match_keys": ["P", "S"],   "exclude": ["Li"], "dmax": 2.6},
     {"label": "S–S",   "color": "#C44536", "match_keys": ["S", "S"],   "exclude": ["P", "Li", "Cl"]},
     {"label": "Li–S",  "color": "#3E8E41", "match_keys": ["Li", "S"],  "exclude": []},
     {"label": "Li–Cl", "color": "#E89C2B", "match_keys": ["Li", "Cl"], "exclude": []},
 ]
 
 # nd (Nd2O3-doped) preset: swap S–S/Li–Cl for the O actor (P–O) + Nd ionic (Nd–S).
-# P–S kept so it overlays vs modelc (host unchanged).
+# P–S kept (dmax 2.6 = tetrahedral only, matches bar -5.98) for host overlay vs modelc.
 NDPANEL_CONFIG = [
-    {"label": "P–S",  "color": "#3F7BB6", "match_keys": ["P", "S"],  "exclude": ["Li"]},
+    {"label": "P–S",  "color": "#3F7BB6", "match_keys": ["P", "S"],  "exclude": ["Li"], "dmax": 2.6},
     {"label": "P–O",  "color": "#C44536", "match_keys": ["P", "O"],  "exclude": []},
     {"label": "Li–S", "color": "#3E8E41", "match_keys": ["Li", "S"], "exclude": []},
     {"label": "Nd–S", "color": "#7D5BA6", "match_keys": ["Nd", "S"], "exclude": []},
@@ -74,7 +74,8 @@ def parse_cohpcar(path: Path):
     # Line 1 header — skip.
     # Line 2 meta
     meta = lines[1].split()
-    n_bonds = int(meta[0])
+    n_bonds = int(meta[0])      # entry count INCLUDING the leading "Average"
+    n_spin = int(meta[1])
     n_energies = int(meta[2])
 
     bonds_meta = []  # list of {id, a, b, distance}
@@ -109,18 +110,28 @@ def parse_cohpcar(path: Path):
     #   col 3 = b1 pCOHP        col 4 = b1 ICOHP
     #   col 5 = b2 pCOHP        col 6 = b2 ICOHP
     #   ...
+    # Column layout per energy row (LOBSTER), n_spin blocks each of size
+    # 2*n_bonds (pCOHP,ICOHP per entry incl. the leading 'Average' = entry 0):
+    #   col 0 = E ; then for spin s, entry e: pCOHP @ 1 + s*spin_block + 2*e
+    # A real bond b (0-based) = file entry e=b+1 (entry 0 is 'Average').
+    # We SUM over spins so n_spin=2 (AFM) gives the total pCOHP (not half).
+    spin_block = 2 * n_bonds
+    need_cols = 1 + n_spin * spin_block
     E = []
     cohp = [[] for _ in range(n_bonds_actual)]
     while iline < len(lines) and len(E) < n_energies:
         parts = lines[iline].split()
         iline += 1
-        if len(parts) < 3 + 2 * n_bonds_actual:
+        if len(parts) < need_cols:
             continue
         try:
             E.append(float(parts[0]))
             for b in range(n_bonds_actual):
-                cohp[b].append(float(parts[3 + 2 * b]))
-        except ValueError:
+                e = b + 1  # skip 'Average' (entry 0)
+                val = sum(float(parts[1 + s * spin_block + 2 * e])
+                          for s in range(n_spin))
+                cohp[b].append(val)
+        except (ValueError, IndexError):
             continue
     E = np.array(E)
     for b in range(n_bonds_actual):
@@ -130,47 +141,45 @@ def parse_cohpcar(path: Path):
 
 
 def parse_icohplist(path: Path):
-    """Parse ICOHPLIST.lobster: returns {bond_label: ICOHP value (eV)}."""
-    icohp_per_bond_idx = {}
+    """Parse ICOHPLIST.lobster -> list of per-bond records {a,b,dist,icohp}.
+    ICOHP is spin-summed (cols 7.. = per-spin ICOHP at E_F)."""
+    recs = []
     for line in path.read_text().splitlines():
         s = line.strip()
-        if not s or s.startswith("#") or s.startswith("COHP") or s.startswith("LABEL"):
+        if not s or s.lower().startswith("cohp") or s.startswith("#") or s.startswith("LABEL"):
             continue
         parts = s.split()
-        if len(parts) >= 7:
+        if len(parts) >= 8:
             try:
-                idx = int(parts[0])
                 a1 = re.sub(r"\d", "", parts[1])
                 a2 = re.sub(r"\d", "", parts[2])
-                icohp = float(parts[7]) if len(parts) > 7 else float(parts[-1])
-                # Normalize key so Li-S and S-Li (LOBSTER lists same bond
-                # under either direction depending on atom-ordering convention)
-                # land in the same bucket.
-                key = "-".join(sorted([a1, a2]))
-                icohp_per_bond_idx.setdefault(key, []).append(icohp)
+                dist = float(parts[3])
+                icohp = sum(float(x) for x in parts[7:])  # sum spins
+                recs.append({"a": a1, "b": a2, "dist": dist, "icohp": icohp})
             except (ValueError, IndexError):
                 continue
-    return {k: float(np.mean(v)) for k, v in icohp_per_bond_idx.items()}
+    return recs
 
 
-def aggregate_bond_pair(E, bonds_meta, icohp_data, match_keys, exclude=None):
-    """Sum -pCOHP across all bonds matching the requested element pair.
-
-    bonds_meta: list of {id, a, b, distance, pcohp}.
-    icohp_data: {f"{elem1}-{elem2}": mean_ICOHP_eV} from ICOHPLIST.
-    Returns (cohp_summed_array, icohp_per_bond_avg, n_matched).
-    """
+def aggregate_bond_pair(E, bonds_meta, icohp_recs, match_keys, exclude=None, dmax=None):
+    """Sum -pCOHP curve + mean ICOHP across bonds matching the element pair.
+    dmax (A) optionally drops long non-bonded contacts within the generator
+    cutoff (e.g. P-S at >2.6 A) so curve and box match the tetrahedral bond.
+    Returns (cohp_summed, icohp_box_mean, n_matched)."""
     exclude = set(exclude or [])
     target = set(match_keys)
-    matched = [bm for bm in bonds_meta
-               if {bm["a"], bm["b"]} == target
-               and not (exclude & {bm["a"], bm["b"]})]
+
+    def ok(a, b, d):
+        return ({a, b} == target and not (exclude & {a, b})
+                and (dmax is None or d <= dmax))
+
+    matched = [bm for bm in bonds_meta if ok(bm["a"], bm["b"], bm["distance"])]
     if not matched:
         return np.zeros_like(E), 0.0, 0
     summed = np.sum([bm["pcohp"] for bm in matched], axis=0)
-    a, b = match_keys
-    icohp_per_bond_avg = icohp_data.get("-".join(sorted([a, b])), 0.0)
-    return summed, icohp_per_bond_avg, len(matched)
+    icv = [r["icohp"] for r in icohp_recs if ok(r["a"], r["b"], r["dist"])]
+    box = float(np.mean(icv)) if icv else 0.0
+    return summed, box, len(matched)
 
 
 def plot_panel(ax, E, cohp, color, label, icohp_value, fermi_ref=0.0,
@@ -248,20 +257,18 @@ def main():
         raise SystemExit(f"missing LOBSTER files in {work}")
 
     E, bonds_meta = parse_cohpcar(cohp_path)
-    icohp = parse_icohplist(icohp_path)
+    icohp_recs = parse_icohplist(icohp_path)
     print(f"Parsed {len(bonds_meta)} bond entries × {len(E)} energy points")
-    print(f"ICOHP averages per element pair:")
-    for k, v in sorted(icohp.items()):
-        print(f"  {k}: {v:.3f} eV")
 
     n = len(cfg_list)
     fig, axes = plt.subplots(1, n, figsize=(4 * n, 6), sharey=True)
     axes = np.atleast_1d(axes)
     for ax, cfg in zip(axes, cfg_list):
         cohp_sum, icohp_per_bond, nb = aggregate_bond_pair(
-            E, bonds_meta, icohp, cfg["match_keys"], cfg.get("exclude"))
-        print(f"  panel {cfg['label']}: matched {nb} bonds, "
-              f"ICOHP/bond = {icohp_per_bond:.3f} eV")
+            E, bonds_meta, icohp_recs, cfg["match_keys"],
+            cfg.get("exclude"), cfg.get("dmax"))
+        print(f"  panel {cfg['label']}: matched {nb} bonds "
+              f"(dmax={cfg.get('dmax')}), ICOHP/bond = {icohp_per_bond:.3f} eV")
         plot_panel(ax, E, cohp_sum, cfg["color"], cfg["label"],
                     icohp_per_bond, ylim=tuple(args.ylim))
         if nb == 0:
