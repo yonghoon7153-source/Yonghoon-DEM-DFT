@@ -183,6 +183,107 @@ def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_c
     return pres, h
 
 
+def se_contact_network(se_pts, se_id, n_vox, thickness_um, sigma_grain=3.0, top=None):
+    """MPM SE-SE PLASTIC contact-network σ_ionic — the per-particle (NOT fused) ionic solve that
+    recovers the constriction the merged-voxel FV misses (which read σ_contact-free).
+
+    Each SE point carries its originating DEM-SE-particle id (mpm3d --save-se-id, Voronoi-tagged).
+    Voxelise SE keeping the id (majority per cell), then between every pair of TOUCHING particles
+    accumulate the real plastic CONTACT AREA a = (#adjacent cell-faces with different ids)·h_um².
+    Build a Holm resistor network — constriction R = 1/(2·σ·r_c), r_c = √(a/π) (Holm 1967, the same
+    law as the DEM Kirchhoff solver) — and solve top↔bottom.  Because the contact areas come from
+    the MPM's actually-deformed SE (not a rigid-sphere Hertz/Tabor approximation), this is an
+    independent, more physical σ_ionic to cross-check the DEM network value.
+
+    Returns dict: σ_ionic (mS/cm, constriction-only), n_particles, n_contacts, A_SE-SE total &
+    mean contact area (µm²) — the latter directly comparable to the DEM dashboard A_SE-SE/⟨A_hop⟩."""
+    from scipy.sparse import csr_matrix as _csr
+    from scipy.sparse.linalg import cg as _cg
+    vc = _vc()
+    SW0, FLOOR, WIDTH = vc.SW[0], vc.FLOOR, vc.SW[1] - vc.SW[0]
+    keep = se_id >= 0
+    P, sid = se_pts[keep], se_id[keep].astype(np.int64)
+    if len(P) < 2:
+        return None
+    if top is None:
+        top = float(P[:, 2].max()) + 1e-9
+    h = WIDTH / n_vox
+    nz = max(int(np.ceil((top - FLOOR) / h)), 2)
+    um_box = thickness_um / max(float(P[:, 2].max()) - FLOOR, 1e-9)   # µm per box unit (from known T)
+    h_um = h * um_box
+    from scipy import ndimage as _ndi
+    from scipy.spatial import cKDTree as _ckd
+    ix = np.clip(((P[:, 0] - SW0) / h).astype(np.int64), 0, n_vox - 1)
+    iy = np.clip(((P[:, 1] - SW0) / h).astype(np.int64), 0, n_vox - 1)
+    iz = np.clip(((P[:, 2] - FLOOR) / h).astype(np.int64), 0, nz - 1)
+    # SE particle centroids (deformed-particle centre = mean of its points).
+    mx = int(sid.max()) + 1
+    csum = np.zeros((mx, 3)); ccnt = np.zeros(mx)
+    np.add.at(csum, sid, P); np.add.at(ccnt, sid, 1.0)
+    cid = np.nonzero(ccnt > 0)[0]; cen = csum[cid] / ccnt[cid, None]
+    # SE occupancy (all points) → CLOSE the sub-(point-spacing) gaps so the SE region is space-filling,
+    # then assign every SE cell to its NEAREST centroid (Voronoi).  This gives a COMPLETE, resolution-
+    # stable particle partition: the boundary between two particles' territories = their plastic contact
+    # face (vs the bare point cloud, whose patchy interfaces shrink the contact area as n_vox rises).
+    occ = np.zeros((n_vox, n_vox, nz), bool); occ[ix, iy, iz] = True
+    s_mpm = (float(np.prod(P.max(0) - P.min(0))) / len(P)) ** (1.0 / 3.0)   # SE point spacing (box)
+    rec_nvox = int(WIDTH / s_mpm)                                    # the critically-sampled resolution
+    occ = _ndi.binary_closing(occ, iterations=max(1, int(np.ceil(s_mpm / h))))
+    sx, sy, sz = np.nonzero(occ)
+    cc = np.column_stack([(sx + 0.5) * h + SW0, (sy + 0.5) * h + SW0, (sz + 0.5) * h + FLOOR])
+    idg = np.full((n_vox, n_vox, nz), -1, np.int64)
+    idg[sx, sy, sz] = cid[_ckd(cen).query(cc, k=1)[1]]
+    # contact faces: adjacent occupied cells with DIFFERENT ids → one h_um² face for that particle pair
+    K = int(sid.max()) + 1
+    keys = []
+    for ax in (0, 1, 2):
+        a = np.moveaxis(idg, ax, 0)
+        m = (a[:-1] >= 0) & (a[1:] >= 0) & (a[:-1] != a[1:])
+        u, v = a[:-1][m], a[1:][m]
+        keys.append(np.minimum(u, v) * K + np.maximum(u, v))
+    keys = np.concatenate(keys) if keys else np.array([], np.int64)
+    parts = np.unique(idg[idg >= 0]); npart = len(parts)
+    if keys.size == 0 or npart < 2:
+        return {'sigma_ionic_mScm': 0.0, 'n_particles': int(npart), 'n_contacts': 0,
+                'A_SE_SE_total_um2': 0.0, 'A_hop_mean_um2': 0.0, 'note': 'no SE-SE contacts'}
+    uk, ck = np.unique(keys, return_counts=True)                     # uk = lo·K+hi, ck = #faces
+    pa, pb = uk // K, uk % K
+    a_um2 = ck * (h_um * h_um)                                       # plastic contact area per pair (µm²)
+    rmap = np.full(int(parts.max()) + 1, -1, np.int64); rmap[parts] = np.arange(npart)
+    pai, pbi = rmap[pa], rmap[pb]
+    # particle z-extent → top/bottom electrode membership (vectorised)
+    occ = idg >= 0
+    pv = rmap[idg[occ]]
+    pz = np.broadcast_to(np.arange(nz)[None, None, :], idg.shape)[occ]
+    zmn = np.full(npart, nz); zmx = np.full(npart, -1)
+    np.minimum.at(zmn, pv, pz); np.maximum.at(zmx, pv, pz)
+    z_lo, z_hi = int(pz.min()), int(pz.max())                        # electrodes = the actual SE extent,
+    bottom, top_m = zmn <= z_lo, zmx >= z_hi                         # not the grid bounds (robust)
+    base = {'n_particles': int(npart), 'n_contacts': int(len(uk)),
+            'A_SE_SE_total_um2': float(a_um2.sum()), 'A_hop_mean_um2': float(a_um2.mean()),
+            'recommended_n_vox': rec_nvox}
+    if not bottom.any() or not top_m.any():
+        return {**base, 'sigma_ionic_mScm': 0.0, 'note': 'no top↔bottom percolation'}
+    # Holm constriction conductance g = 2·r_c (σ=1 normalised; µm), r_c = √(a/π).  Rail: top→V=1,
+    # bottom→V=0 with a stiff g_big.  σ_eff[mS/cm] = σ_grain · G_norm[µm] · L[µm] / A[µm²].
+    g = 2.0 * np.sqrt(a_um2 / np.pi)
+    diag = np.zeros(npart)
+    np.add.at(diag, pai, g); np.add.at(diag, pbi, g)
+    g_big = 1.0e3 * float(g.max())
+    diag[bottom] += g_big; diag[top_m] += g_big
+    rows = np.concatenate([pai, pbi, np.arange(npart)])
+    cols = np.concatenate([pbi, pai, np.arange(npart)])
+    data = np.concatenate([-g, -g, np.where(diag > 0, diag, 1.0)])
+    A = _csr((data, (rows, cols)), shape=(npart, npart))
+    b = np.zeros(npart); b[top_m] += g_big * 1.0
+    Ad = A.diagonal(); M = _csr((1.0 / np.where(Ad > 0, Ad, 1.0),
+                                 (np.arange(npart), np.arange(npart))), shape=(npart, npart))
+    V, _ = _cg(A, b, rtol=1e-8, maxiter=20000, M=M)
+    I = g_big * float(V[bottom].sum())                               # current into the V=0 rail (ΔV=1)
+    sigma = sigma_grain * I * thickness_um / (n_vox * h_um) ** 2
+    return {**base, 'sigma_ionic_mScm': float(sigma)}
+
+
 def sigma_grid(pres, channel, drop_carbon=False):
     """Per-cell σ = MAX σ over the phases present (a sub-grid carbon thread makes its cells
     conduct; for ionic the SE wins; void = 0).
@@ -214,7 +315,7 @@ def _main():
                     help='phase_carbon.npy — per-point phase (1 SE/2 VGCF/3 SuperP/4 PTFE).  '
                          'OMIT for an SE+AM-only (no-CBD) dump → all points treated as SE, so you '
                          'can voxel the plain run and compare σ to the CBD run (rigorous CBD effect).')
-    ap.add_argument('--scaffold', required=True, help='am_scaffold.csv — AM spheres')
+    ap.add_argument('--scaffold', default=None, help='am_scaffold.csv — AM spheres (FV mode only)')
     ap.add_argument('--n-vox', type=int, default=128)
     ap.add_argument('--porosity', type=float, default=None,
                     help='MPM void fraction (e.g. 0.174 from metrics_carbon.json).  STRONGLY '
@@ -226,7 +327,35 @@ def _main():
                     help='OPT-IN: morphologically close the SE necks (default off).  --porosity '
                          'alone is already resolution-stable for a dense cloud (= ground truth); '
                          'use --se-close only as a rescue if the near-threshold SE still scatters.')
+    ap.add_argument('--se-id', default=None,
+                    help='se_id.npy (mpm3d --save-se-id): per-point SE PARTICLE id → run the SE-SE '
+                         'PLASTIC CONTACT-NETWORK σ_ionic (per-particle Holm constriction, the value '
+                         'the fused-voxel FV misses) instead of the FV.  Needs --thickness-um.')
+    ap.add_argument('--thickness-um', type=float, default=None,
+                    help='electrode thickness in µm (DEM/MPM, e.g. 170.4) — sets the box→µm scale for '
+                         'the --se-id contact-network absolute σ_ionic + contact areas.')
     a = ap.parse_args()
+    if a.se_id:                                                      # ── SE plastic contact-network mode ──
+        if a.thickness_um is None:
+            raise SystemExit('--se-id needs --thickness-um (electrode thickness, e.g. 170.4)')
+        pts = np.load(a.se).astype(np.float64); se_id = np.load(a.se_id)
+        if len(pts) != len(se_id):
+            raise SystemExit(f'se {len(pts)} != se_id {len(se_id)} — mismatched run')
+        o = se_contact_network(pts, se_id, a.n_vox, a.thickness_um, sigma_grain=PHASE_SIGMA['ionic']['SE'])
+        if o is None:
+            raise SystemExit('too few SE particle points')
+        print(f'\n  SE-SE PLASTIC contact-network σ_ionic (per-particle Holm constriction, MPM deformed contacts)')
+        print(f'  particles {o["n_particles"]:,}  contacts {o["n_contacts"]:,}  '
+              f'(recommended n_vox ≈ {o["recommended_n_vox"]}, you used {a.n_vox})')
+        print(f'  A_SE-SE total = {o["A_SE_SE_total_um2"]:.0f} µm²   ⟨A_hop⟩ = {o["A_hop_mean_um2"]:.4f} µm²'
+              f'   (compare to DEM dashboard A_SE-SE / ⟨A_hop⟩)')
+        if o.get('note'):
+            print(f'  ⚠ {o["note"]} → σ_ionic = 0')
+        print(f'  ★ σ_ionic (constriction-only, mS/cm) = {o["sigma_ionic_mScm"]:.4f}   '
+              f'(DEM σ_full ≈ this × {0.775:.2f}; cf. DEM dashboard σ_ionic)')
+        return
+    if not a.scaffold:
+        raise SystemExit('FV mode needs --scaffold am_scaffold.csv (or pass --se-id for contact-network mode)')
     pts = np.load(a.se).astype(np.float64)
     phase = np.load(a.phase) if a.phase else np.ones(len(pts), dtype=np.int64)  # no --phase → all SE
     if len(pts) != len(phase):

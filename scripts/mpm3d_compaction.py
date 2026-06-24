@@ -51,6 +51,9 @@ def parse_args(argv):
                     'VGCF/PTFE fibre index), SAME order as --save-se → render each fibre as an individual line')
     ap.add_argument('--save-fibre-dia', default='', help='write per-point relative fibre diameter npy (0 = SE; '
                     '∝√(V_i/L_i) for the volume-conserving PTFE draw) → viewer renders fibre thickness')
+    ap.add_argument('--save-se-id', default='', help='write per-point SE PARTICLE id npy (≥0 = the real DEM SE '
+                    'sphere index it was seeded from via --se-dump, -1 = carbon/none), SAME order as --save-se → '
+                    'lets the voxel solver recover SE-SE plastic CONTACT AREAS (per-particle Holm constriction)')
     ap.add_argument('--save-metrics', default='',
                     help='write ALL raw MPM outputs (porosity, thickness, coverage, seed density, '
                          'grid/material params, stress) to a JSON — the structured source for the '
@@ -275,6 +278,7 @@ def main(argv):
                             return True
         return False
 
+    se_id_base = None                                       # per-base-point SE particle id (set under --se-dump)
     if args.am_scaffold:
         spc = dx * 0.5
         i0 = LO_m if PERIODIC else int(SW[0] * n_grid) + 1   # no wall inset when periodic
@@ -296,6 +300,12 @@ def main(argv):
             se_pin &= (pin_np == 0)                          # SE only in non-AM cells
             sel = np.argwhere(se_pin)
             seed_str = f"{len(seraw)} real SE spheres → {len(sel):,} SE cells (REAL positions, no targeting)"
+            # tag each SE cell with its NEAREST real SE sphere centre (Voronoi) so the original PARTICLE
+            # id survives the union raster → the voxel solver can recover SE-SE plastic CONTACT AREAS
+            # (per-particle Holm constriction) instead of fusing all SE into one blob.
+            from scipy.spatial import cKDTree as _ckd
+            _cid = _ckd(se_c).query((sel + 0.5) * dx, k=1)[1].astype(np.int32)   # cell → nearest SE sphere
+            se_id_base = np.repeat(_cid, 8)                  # 8 sub-points/cell, SAME order as xs below
         else:
             # ── uniform cell-fill: a se_target/interstitial-vol fraction of the non-AM bed cells
             #    (porosity a RESULT of plastic fill, not RSA-limited). ──────────────────────────
@@ -747,6 +757,13 @@ def main(argv):
         _fd = dia_np[dia_np > 0]
         print(f"  saved fibre Ø → {args.save_fibre_dia} ({n} pts, "
               f"Ø rel {(_fd.min() if len(_fd) else 0):.2f}..{(_fd.max() if len(_fd) else 0):.2f})")
+    if args.save_se_id:
+        se_id_full = np.full(n, -1, np.int32)               # carbon / non-SE = -1; base SE pts = particle id
+        if se_id_base is not None:
+            se_id_full[:len(se_id_base)] = se_id_base       # base SE pts are points 0..len-1 (carbon appended)
+        np.save(args.save_se_id, se_id_full)
+        _nid = len(np.unique(se_id_full[se_id_full >= 0]))
+        print(f"  saved SE particle ids → {args.save_se_id} ({n} pts, {_nid} SE particles)")
 
 
 if __name__ == '__main__':
