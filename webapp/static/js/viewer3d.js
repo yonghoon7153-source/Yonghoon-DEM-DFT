@@ -865,7 +865,7 @@ function resetSEColors(state) {
 function buildCarbonOverlay(state, only, size, colorOverride) {
   // colorOverride: a single colour for all carbon (e.g. soft black in the Default overlay so it reads
   // SEM-like and doesn't drown the structure).  null → per-phase colours (cyan VGCF) for the 도전재 mode.
-  const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
+  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b };   // VGCF cyan · Super P magenta · PTFE amber
   const colOf = (ph) => (colorOverride != null ? colorOverride : (PHCOL[ph] || 0x22d3ee));
   const fibres = (state.data && state.data.additive_fibres) || [];   // [{phase, pts:[[x,y,z]…]}]
   const pts0 = (state.data && state.data.additive_points) || [];
@@ -1719,7 +1719,7 @@ function applyViewMode(state, mode) {
     const nFib = ((state.data && state.data.additive_fibres) || [])
       .filter(f => !only || f.phase === only).length;
     const ac = mm.additive_counts || {};
-    const swatch = { VGCF: '#22d3ee', SuperP: '#f1f5f9', PTFE: '#f59e0b' };
+    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b' };
     const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
     const legend = keys.map(k =>
       `<span style="color:${swatch[k]};font-size:13px">●</span> ${k} ${Number(ac[k] || 0).toLocaleString()}개`).join(' &nbsp; ');
