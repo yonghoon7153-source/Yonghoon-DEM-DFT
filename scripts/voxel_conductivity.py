@@ -28,10 +28,18 @@ _USE_GPU = False   # set by --gpu: run the CG on the GPU (CuPy) when available �
 #                    thick-electrode grids (256×256×700+ ≈ 46M cells); falls back to CPU automatically.
 
 
-def _cg_solve(A, b, tol=1e-6):
+def _cg_solve(A, b, tol=1e-6, label=''):
     """Jacobi-preconditioned CG for A·x=b.  GPU (CuPy) when --gpu and CuPy import OK (the solve, not
-    just the MPM, then runs on the GPU), else CPU (scipy).  Returns x (numpy)."""
+    just the MPM, then runs on the GPU), else CPU (scipy).  Returns x (numpy).
+    label: if set, prints a live CG iteration counter so a long solve isn't a silent '…'."""
+    import sys as _sys, time as _time
     Ad = A.diagonal(); minv = 1.0 / np.where(Ad > 0, Ad, 1.0)
+    cnt = [0]; t0 = _time.time()
+
+    def _cb(*_a):
+        cnt[0] += 1
+        if label and cnt[0] % 100 == 0:
+            print(f'\r      [{label}] CG iter {cnt[0]:>5}  ({_time.time()-t0:.0f}s)…', end='', flush=True)
     if _USE_GPU:
         try:
             import cupy as cp
@@ -44,11 +52,13 @@ def _cg_solve(A, b, tol=1e-6):
                 x = _csl.cg(Ag, bg, rtol=tol, maxiter=20000, M=Mg)[0]
             return cp.asnumpy(x)
         except Exception as e:
-            import sys as _sys
             print(f'    (GPU CG unavailable: {type(e).__name__}: {e} → CPU)', file=_sys.stderr)
     N = A.shape[0]
     M = csr_matrix((minv, (np.arange(N), np.arange(N))), shape=(N, N))
-    return cg(A, b, rtol=tol, maxiter=20000, M=M)[0]
+    x = cg(A, b, rtol=tol, maxiter=20000, M=M, callback=_cb)[0]
+    if label and cnt[0] >= 100:
+        print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + ' ' * 12, flush=True)
+    return x
 
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
     'ionic':      {'SE': 3.0, 'AM': 0.0, 'VGCF': 0.0, 'SuperP': 0.0, 'PTFE': 0.0},
@@ -68,7 +78,7 @@ def sigma_from_phase(phase, channel, code2name, sigma_map=None):
     return out
 
 
-def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False):
+def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False, label=''):
     """Finite-volume solve of div(σ ∇φ)=0 with φ=1 on the high-`axis` face, φ=0 on
     the low face, no-flux side walls.  σ: 3D float (0 = insulator).  Returns σ_eff
     in the SAME units as σ (geometry cancels)."""
@@ -130,7 +140,10 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False):
 
     rows.append(np.arange(N)); cols.append(np.arange(N)); data.append(np.where(diag > 0, diag, 1.0))
     A = csr_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(N, N))
-    phi = _cg_solve(A, b, tol)                     # Jacobi-preconditioned CG (GPU via CuPy if --gpu)
+    if label:
+        print(f'\r      [{label}] {N:,} nodes assembled — CG solving on '
+              f'{"GPU" if _USE_GPU else "CPU"}…', end='', flush=True)
+    phi = _cg_solve(A, b, tol, label=label)        # Jacobi-preconditioned CG (GPU via CuPy if --gpu)
 
     I = float((2.0 * s0[m0] * phi[g0[m0]]).sum())  # current through the bottom Dirichlet face
     sigma_eff = I * nz / (nx * ny * 1.0)           # σ_eff = I·L/(A·ΔV), ΔV=1, L=nz, A=nx·ny
@@ -390,20 +403,24 @@ def _main():
     if a.porosity is None:
         print('  ⚠ no --porosity → SE = "≥1 point/cell" (NOT space-filling); σ_ionic disconnects'
               ' as n_vox rises.  Pass --porosity <MPM void frac> for a resolution-stable ionic σ.')
+    import time as _t
+    _tv = _t.time(); print('  voxelising…', end='', flush=True)
     pres, h = voxelize_phase(pts, phase, a.scaffold, a.n_vox, porosity=a.porosity,
                              se_close=a.se_close)
-    print('grid', next(iter(pres.values())).shape, ' cells/phase:', {k: int(v.sum()) for k, v in pres.items()})
+    print(f'\r  voxelised {next(iter(pres.values())).shape} in {_t.time()-_tv:.0f}s — '
+          f'cells/phase: {{{", ".join(f"{k}:{int(v.sum())}" for k, v in pres.items())}}}', flush=True)
     chans = ['electronic', 'ionic', 'thermal'] if a.channel == 'all' else [a.channel]
     units = {'electronic': 'mS/cm', 'ionic': 'mS/cm', 'thermal': 'W/m·K'}
-    print(f'\n  {"channel":<11}{"WITHOUT CBD":>14}{"WITH CBD":>14}{"gain":>9}', flush=True)
+    print(f'\n  {"channel":<11}{"WITHOUT CBD":>14}{"WITH CBD":>14}{"gain":>9}'
+          f"   (solving on {'GPU' if _USE_GPU else 'CPU'})", flush=True)
     for ch in chans:
-        # 2 FV solves per channel (±CBD); ionic is now a real SE-network solve (was instant-0
-        # before the envelope-trim fix), so print a live marker instead of a blank header.
-        print(f'  {ch:<11}  …solving (2 FV solves)', end='', flush=True)
-        s_wout = effective_sigma(sigma_grid(pres, ch, drop_carbon=True))
-        s_with = effective_sigma(sigma_grid(pres, ch, drop_carbon=False))
+        _tc = _t.time()
+        # 2 FV solves per channel (±CBD), each with live [assemble → CG iter] progress on stderr/line.
+        s_wout = effective_sigma(sigma_grid(pres, ch, drop_carbon=True), label=f'{ch} WITHOUT-CBD')
+        s_with = effective_sigma(sigma_grid(pres, ch, drop_carbon=False), label=f'{ch} WITH-CBD')
         gain = f'{s_with / s_wout:>6.1f}x' if s_wout > 1e-9 else '  None→'   # σ_e=None revived
-        print(f'\r  {ch:<11}{s_wout:>13.4g} {s_with:>13.4g}  {gain:>8}  ({units[ch]})' + ' ' * 12, flush=True)
+        print(f'\r  {ch:<11}{s_wout:>13.4g} {s_with:>13.4g}  {gain:>8}  ({units[ch]})  '
+              f'[{_t.time()-_tc:.0f}s]' + ' ' * 16, flush=True)
     print('\n  electronic: WITHOUT = carbon σ off (dead AM exposed), WITH = carbon bridges →')
     print('              gain = σ_with/σ_without > 1 is the CBD electronic payoff.')
     print('  ionic: WITHOUT == WITH (gain 1.0×) BY DESIGN — carbon blocks SE equally in both, a')
