@@ -858,6 +858,33 @@ function resetSEColors(state) {
   mesh.material.opacity = OPA.SE;  // back to 0.85
 }
 
+/* Build the conductive-additive point cloud (payload additive_points: [x,y,z,phase]) and add it to
+ * the scene as state.additivePointGroup.  Used both as a subtle overlay on the Default view (so the
+ * carbon is visible inside the normal AM/SE structure) and as the prominent 도전재 mode.  Points draw
+ * x-ray (depthTest off, renderOrder 999) so they show through opaque SE/AM.  `only` filters one phase. */
+function buildCarbonOverlay(state, only, size) {
+  const all = (state.data && state.data.additive_points) || [];
+  const pts = only ? all.filter(p => p[3] === only) : all;
+  if (!pts.length) return 0;
+  const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
+  const g = new THREE.BufferGeometry();
+  const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
+  const cc = new THREE.Color();
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i];
+    pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
+    cc.set(PHCOL[p[3]] || 0x22d3ee);
+    col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
+  }
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  state.additivePointGroup = new THREE.Points(g, new THREE.PointsMaterial({
+    size, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false }));
+  state.additivePointGroup.renderOrder = 999;
+  if (state.scene) state.scene.add(state.additivePointGroup);
+  return pts.length;
+}
+
 /* ── View-mode rendering — re-colour all instanced meshes ─── */
 function applyViewMode(state, mode) {
   state.viewMode = mode;
@@ -964,11 +991,18 @@ function applyViewMode(state, mode) {
       m.material.opacity = (t === 'SE' ? OPA.SE : 1.0);
       m.material.transparent = (t === 'SE');
     });
+    // overlay the carbon on the NORMAL AM/SE structure (x-ray, modest size) — so VGCF/PTFE are
+    // visible right in the default view, not only in the dedicated 도전재 mode.
+    const nCarbon = buildCarbonOverlay(state, 0, 0.55);
+    const ac = (state.data && state.data.mpm_metrics && state.data.mpm_metrics.additive_counts) || {};
+    const carbonLeg = nCarbon
+      ? `<br><span style="color:#22d3ee">●</span> 도전재 overlay (${Object.keys(ac).filter(k => ac[k]).join('/')}) — 자세히는 View Mode "도전재"`
+      : '';
     setLegend(state,
       `<b>Default — natural particle colours</b>
        <span style="color:#222222">●</span> AM_P (polycrystalline, ~6 µm)
        <span style="color:#888888">●</span> AM_S (single-crystal, ~2 µm)
-       <span style="color:#f5e6a3">●</span> SE (LPSCl, ~0.5 µm, translucent)
+       <span style="color:#f5e6a3">●</span> SE (LPSCl, ~0.5 µm, translucent)${carbonLeg}
        <span style="color:#9ca3af;font-size:10px">
          · View Mode 드롭다운으로 brittle / cluster / stress / coverage 분석 모드 전환
        </span>`);
@@ -1639,24 +1673,7 @@ function applyViewMode(state, mode) {
     [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
       if (m) { m.material.transparent = true; m.material.opacity = 0.13; }
     });
-    const PHCOL = { 2: 0x22d3ee, 3: 0xf1f5f9, 4: 0xf59e0b };   // VGCF cyan · Super P white · PTFE amber
-    const g = new THREE.BufferGeometry();
-    const pos = new Float32Array(pts.length * 3), col = new Float32Array(pts.length * 3);
-    const cc = new THREE.Color();
-    for (let i = 0; i < pts.length; i++) {
-      const p = pts[i];
-      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
-      cc.set(PHCOL[p[3]] || 0x22d3ee);
-      col[3 * i] = cc.r; col[3 * i + 1] = cc.g; col[3 * i + 2] = cc.b;
-    }
-    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    state.additivePointGroup = new THREE.Points(g, new THREE.PointsMaterial({
-      size: only ? 1.6 : 1.1, vertexColors: true, sizeAttenuation: true,
-      depthTest: false, depthWrite: false,                 // carbon always on top (x-ray)
-      transparent: true, blending: THREE.AdditiveBlending }));   // glow → pops over the dim structure
-    state.additivePointGroup.renderOrder = 999;
-    if (state.scene) state.scene.add(state.additivePointGroup);
+    buildCarbonOverlay(state, only, only ? 1.0 : 0.7);   // solid cyan x-ray points (no glow — was blinding)
     const ac = mm.additive_counts || {};
     const swatch = { VGCF: '#22d3ee', SuperP: '#f1f5f9', PTFE: '#f59e0b' };
     const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
