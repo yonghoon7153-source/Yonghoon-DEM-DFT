@@ -186,22 +186,18 @@ def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_c
 def sigma_grid(pres, channel, drop_carbon=False):
     """Per-cell σ = MAX σ over the phases present (a sub-grid carbon thread makes its cells
     conduct; for ionic the SE wins; void = 0).
-    drop_carbon = the WITHOUT-CBD baseline, but it means a DIFFERENT thing per channel:
+    drop_carbon = the WITHOUT-CBD baseline:
       • electronic / thermal: carbon stops conducting (σ_VGCF/SuperP → 0) → reveals the dead AM
         the carbon was BRIDGING → gain = σ_with/σ_without > 1 is the CBD payoff.
-      • ionic: carbon never conducted ions, so zeroing its σ is a NO-OP (with==without, the
-        confusing 1.0×).  But the carbon/PTFE cells are σ=0 OBSTACLES that BLOCK SE percolation
-        (the SE must route around them — that blocking is already inside the with-CBD σ).  To
-        expose it, the without-CBD baseline gives the carbon/PTFE volume back to SE (σ → σ_SE) =
-        the UNBLOCKED SE network → gain = σ_with(blocked)/σ_without(unblocked) < 1 is the Lee-2025
-        ionic blocking penalty.  (Upper bound: assumes that volume would otherwise be conductive
-        SE; the magnitude shrinks as n_vox rises and the over-voxelised carbon thins.)"""
+      • ionic: NO-OP (with == without, gain 1.0×).  Carbon never conducts ions, and the carbon/
+        PTFE cells block SE percolation EQUALLY in both columns, so a single-structure σ-toggle
+        cannot isolate the blocking.  (A carbon→SE "unblock" was tried and removed: the patchy
+        carbon cloud extends/distorts the conduction envelope → spurious gains, e.g. 7.6× with
+        σ_without < σ_with, which is physically impossible.)  Measure the CBD ionic blocking via
+        the STRUCTURAL comparison instead — voxel a no-CBD run and a +CBD run and compare."""
     sig = dict(PHASE_SIGMA[channel])
-    if drop_carbon:
-        if channel == 'ionic':
-            sig['VGCF'] = sig['SuperP'] = sig['PTFE'] = sig['SE']   # carbon space → SE (unblock)
-        else:
-            sig['VGCF'] = 0.0; sig['SuperP'] = 0.0                  # carbon stops conducting
+    if drop_carbon and channel != 'ionic':
+        sig['VGCF'] = 0.0; sig['SuperP'] = 0.0                  # carbon stops conducting (e/thermal)
     out = np.zeros(next(iter(pres.values())).shape, np.float64)
     for name, g in pres.items():
         s = sig.get(name, 0.0)
@@ -256,11 +252,11 @@ def _main():
         print(f'\r  {ch:<11}{s_wout:>13.4g} {s_with:>13.4g}  {gain:>8}  ({units[ch]})' + ' ' * 12, flush=True)
     print('\n  electronic: WITHOUT = carbon σ off (dead AM exposed), WITH = carbon bridges →')
     print('              gain = σ_with/σ_without > 1 is the CBD electronic payoff.')
-    print('  ionic: carbon/PTFE cells BLOCK SE percolation.  WITHOUT = that volume given back to')
-    print('         SE (unblocked), WITH = carbon blocks → gain < 1 is the Lee-2025 ionic penalty')
-    print('         (single-structure UPPER-BOUND proxy; n_vox-sensitive).')
-    print('  ⇒ RIGOROUS CBD effect = run TWO MPM structures (SE+AM only vs +CBD) and compare σ')
-    print('    here — that also captures the SE/AM packing rearrangement the σ-toggle cannot.')
+    print('  ionic: WITHOUT == WITH (gain 1.0×) BY DESIGN — carbon blocks SE equally in both, a')
+    print('         single-structure toggle cannot isolate it.  The printed σ_ionic IS the real')
+    print('         (carbon-blocked) value; use --porosity + n_vox≥192 for a stable reading.')
+    print('  ⇒ CBD ionic BLOCKING = voxel a no-CBD run vs the +CBD run and compare σ_ionic')
+    print('    (that also captures the SE/AM packing rearrangement a σ-toggle never could).')
 
 
 if __name__ == '__main__':
