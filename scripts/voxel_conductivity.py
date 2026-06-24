@@ -116,14 +116,17 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False):
         m = (ga >= 0) & (gb >= 0) & (g > 0)
         ga, gb, g = ga[m], gb[m], g[m]
         rows += [ga, gb]; cols += [gb, ga]; data += [-g, -g]
-        np.add.at(diag, ga, g); np.add.at(diag, gb, g)
+        diag += np.bincount(ga, weights=g, minlength=N) + np.bincount(gb, weights=g, minlength=N)
+        #   ↑ bincount is a C-level scatter-add — ~50-100× faster than np.add.at over the ~10⁸ edges of
+        #     a thick-electrode grid (np.add.at was the real bottleneck, NOT the GPU/CPU CG solve).
 
     # z Dirichlet faces (½-cell ⇒ g=2σ): bottom k=0 → φ=0, top k=nz-1 → φ=1
     b = np.zeros(N)
     g0 = gid[:, :, 0].ravel(); s0 = s[:, :, 0].ravel(); m0 = g0 >= 0
-    np.add.at(diag, g0[m0], 2.0 * s0[m0])
+    diag += np.bincount(g0[m0], weights=2.0 * s0[m0], minlength=N)
     g1 = gid[:, :, nz - 1].ravel(); s1 = s[:, :, nz - 1].ravel(); m1 = g1 >= 0
-    np.add.at(diag, g1[m1], 2.0 * s1[m1]); b[g1[m1]] += 2.0 * s1[m1]
+    diag += np.bincount(g1[m1], weights=2.0 * s1[m1], minlength=N)
+    b += np.bincount(g1[m1], weights=2.0 * s1[m1], minlength=N)
 
     rows.append(np.arange(N)); cols.append(np.arange(N)); data.append(np.where(diag > 0, diag, 1.0))
     A = csr_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(N, N))
