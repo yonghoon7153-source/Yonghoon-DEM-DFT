@@ -385,10 +385,20 @@ def main():
             print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
         else:
             fib_mask = (phase >= 2) & (fid >= 0)
-            uniq = np.unique(fid[fib_mask])
-            n_fib_total = len(uniq)
-            if len(uniq) > a.fibre_max:
-                uniq = np.random.default_rng(2).choice(uniq, a.fibre_max, replace=False)
+            n_fib_total = len(np.unique(fid[fib_mask]))
+            # subsample fibres PER PHASE so a high-count phase (SuperP — ~40k carbon-black chains) doesn't
+            # crowd out the low-count binder web (PTFE — ~300 fibres).  Fewest-fibre phase first gets its
+            # fair share (kept whole if small); its surplus rolls to the larger phases → the PTFE web always
+            # renders (uniform sampling left only ~45/320 PTFE when SuperP dominated the budget).
+            _rng2 = np.random.default_rng(2)
+            _phs = np.unique(phase[fib_mask])
+            _ids_by_ph = {int(ph): np.unique(fid[fib_mask & (phase == ph)]) for ph in _phs}
+            _budget = a.fibre_max; _rem = len(_phs); _keep = []
+            for ph in sorted(_phs, key=lambda p: len(_ids_by_ph[int(p)])):
+                ids_ph = _ids_by_ph[int(ph)]; share = max(1, _budget // max(_rem, 1))
+                _keep.append(ids_ph if len(ids_ph) <= share else _rng2.choice(ids_ph, share, replace=False))
+                _budget -= len(_keep[-1]); _rem -= 1
+            uniq = np.concatenate(_keep) if _keep else np.array([], int)
             keep = fib_mask & np.isin(fid, uniq)
             idx = np.where(keep)[0]
             order = np.argsort(fid[idx], kind='stable')      # group by fibre, preserve along-axis order
