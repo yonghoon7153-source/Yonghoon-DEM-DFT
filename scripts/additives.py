@@ -56,6 +56,39 @@ def recipe_counts(wt: dict, solid_vol_um3: float, vgcf_d=VGCF_D, vgcf_l=VGCF_L,
     return out
 
 
+def additive_wt(wt: dict) -> dict:
+    """Pull just the conductive-additive wt% from a recipe dict, ignoring AM/SE.  So
+    'AM:SE:VGCF=72:27:1' and 'VGCF=1' both give {'VGCF': 1.0} — the AM:SE in the recipe is
+    NOT used (the real scaffold sets it; see recipe_counts_real)."""
+    return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE') if wt.get(k, 0) > 0}
+
+
+def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_d=VGCF_D,
+                       vgcf_l=VGCF_L, sp_d=SP_D, ptfe_d=PTFE_D, ptfe_l=PTFE_L) -> dict:
+    """Additive counts where each additive is `wt%` of the REAL electrode — AM/SE masses come
+    from the actual scaffold (am_vol·ρ_AM + se_vol·ρ_SE), NOT a hardcoded recipe ratio.
+
+    Each additive a is wt_a% of the TOTAL (AM+SE+additives):
+        M_tot = M_solid / (1 − Σwt/100),   M_a = wt_a/100 · M_tot,   V_a = M_a / ρ_a.
+    (ρ cancels into consistent units, so masses ∝ vol·ρ are fine to mix with µm³ volumes.)
+    Returns the realised electrode wt%/vol% so the run can report the true composition."""
+    M_AM = am_vol_um3 * DENS['AM']
+    M_SE = se_vol_um3 * DENS['SE']
+    M_solid = M_AM + M_SE
+    sw = sum(add_wt.values())
+    M_tot = M_solid / max(1.0 - sw / 100.0, 1e-6)
+    solid_vol = am_vol_um3 + se_vol_um3
+    out = {'mode': 'real_scaffold_wt',
+           'am_wt_pct': round(100.0 * M_AM / M_tot, 2), 'se_wt_pct': round(100.0 * M_SE / M_tot, 2)}
+    v_obj = {'VGCF': np.pi * (vgcf_d / 2) ** 2 * vgcf_l, 'SuperP': np.pi / 6 * sp_d ** 3,
+             'PTFE': np.pi * (ptfe_d / 2) ** 2 * ptfe_l}
+    for a, w in add_wt.items():
+        V_a = (w / 100.0) * M_tot / DENS[a]                            # µm³ of additive a
+        out[a] = {'wt_pct': w, 'vol_um3': V_a, 'n': int(round(V_a / v_obj[a])),
+                  'vol_per_obj_um3': v_obj[a], 'vol_pct_of_solid': round(100.0 * V_a / solid_vol, 3)}
+    return out
+
+
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0, return_lengths=False):
     """n random-oriented fibres (SEM-like: long thin rods threading the interstices),
     each a chain of points spaced ~dx along its axis.  Even distribution = uniform

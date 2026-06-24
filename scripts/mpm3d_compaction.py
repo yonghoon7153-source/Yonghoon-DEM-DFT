@@ -104,11 +104,13 @@ def parse_args(argv):
                          'coverage (default = rigid lateral walls, the validated production box)')
     ap.add_argument('--quiet', action='store_true')
     ap.add_argument('--add-recipe', default='',
-                    help='seed conductive additives as extra MPM phases from an electrode recipe, '
-                         'e.g. "AM:SE:VGCF:PTFE=80:18:1:1" or "AM:SE:SuperP=72:27:1" (VGCF & SuperP are '
-                         'separate — the recipe picks which).  Counts from wt%+density (additives.py), NOT '
-                         'hardcoded; fibres=point-chains, SuperP=blobs, avoid fixed AM.  Auto-enables SE '
-                         'cohesion (--coh 0.02) unless --coh given.  Needs --am-scaffold.')
+                    help='seed conductive additives as extra MPM phases.  The ADDITIVE wt% is its share of '
+                         'the 100%% total electrode (AM+SE+additives); the AM:SE in the recipe is IGNORED — '
+                         'AM:SE comes from the REAL scaffold (not hardcoded).  So "AM:SE:VGCF=80:18:1" → VGCF '
+                         '1 wt% (AM:SE fill the other 99%% at the scaffold ratio); "AM:SE:VGCF:PTFE=80:18:1:1" '
+                         '→ VGCF 1 + PTFE 1 wt% (AM:SE = 98%%).  "VGCF=1" works too.  VGCF & SuperP are separate. '
+                         'fibres=point-chains, SuperP=blobs, avoid fixed AM.  Auto-enables SE cohesion '
+                         '(--coh 0.02) unless --coh given.  Needs --am-scaffold.')
     ap.add_argument('--add-l-cv', type=float, default=0.4,
                     help='fibre length variation (coefficient of variation) for VGCF/PTFE — real fibres '
                          'have a length spread; lognormal mean-preserving so counts/volume unchanged. 0=fixed.')
@@ -375,8 +377,14 @@ def main(argv):
             _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
             import additives as _ad
             wt = _ad.parse_recipe(args.add_recipe)
-            solid_um3 = (float(pvs.sum()) + AM_vol) * um_box ** 3        # SE pts + fixed AM → µm³
-            cnt = _ad.recipe_counts(wt, solid_um3)
+            add_wt = _ad.additive_wt(wt)                                # ONLY the additive wt% (AM:SE in
+            #   the recipe is ignored — the additive enters as wt% of the REAL scaffold composition, not a
+            #   hardcoded ratio).  AM/SE masses from the actual fixed-AM + seeded-SE volumes.
+            se_um3 = float(pvs.sum()) * um_box ** 3                     # real SE volume (Σ per-point)
+            am_um3 = AM_vol * um_box ** 3                               # real fixed-AM volume
+            cnt = _ad.recipe_counts_real(add_wt, am_um3, se_um3)
+            print(f"  [additives] realised electrode (from scaffold): AM {cnt['am_wt_pct']} / "
+                  f"SE {cnt['se_wt_pct']} wt% + " + " ".join(f"{k} {add_wt[k]}wt%" for k in add_wt))
             bx = (WIDTH, WIDTH, max(am_top - FLOOR, 4 * dx))            # seed region (box units)
             off = np.array([SW[0], SW[0], FLOOR], np.float32)
 
@@ -410,7 +418,8 @@ def main(argv):
                 phase_np = np.concatenate([phase_np, np.full(len(pts), code, np.int8)])
                 _coh = {2: 0.0, 3: 0.0, 4: 0.10}[code]            # VGCF/SuperP not sticky; PTFE binder ≫ SE
                 coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
-                print(f"  [additives] {nm}: {nobj} objects → {len(pts):,} pts "
+                print(f"  [additives] {nm}: {nobj} objects ({cnt[nm]['wt_pct']}wt% = "
+                      f"{cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
                       f"(E={E} σ_y={sy} coh={_coh}, phase {code})")
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)

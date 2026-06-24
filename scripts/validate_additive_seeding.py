@@ -62,11 +62,13 @@ def main():
     solid_um3 = am_vol + se_vol
 
     wt = ad.parse_recipe(a.recipe)
-    cnt = ad.recipe_counts(wt, solid_um3)
+    add_wt = ad.additive_wt(wt)                              # additive wt% of the 100% total (AM:SE ignored)
+    cnt = ad.recipe_counts_real(add_wt, am_vol, se_vol)      # additive = wt% of the REAL scaffold mass
     print(f'=== {a.recipe} ===')
     print(f'  box {box[0]:.1f}×{box[1]:.1f}×{box[2]:.1f}µm   solid {solid_um3:,.0f}µm³ '
           f'(AM {am_vol:,.0f} + SE {se_vol:,.0f})')
-    print('  vol%: ' + '  '.join(f'{k} {100 * v:.1f}' for k, v in cnt['vol_fracs'].items()))
+    print(f'  realised electrode (from scaffold): AM {cnt["am_wt_pct"]} / SE {cnt["se_wt_pct"]} wt% + '
+          + '  '.join(f'{k} {add_wt[k]}wt%' for k in add_wt))
 
     # AM-avoidance: nearest-AM test (exact for non-overlapping spheres).  cKDTree
     # nearest centre, reject if within that centre's radius.  Same effect as the
