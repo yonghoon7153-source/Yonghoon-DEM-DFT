@@ -213,6 +213,9 @@
       <button class="btn btn-3d btn-secondary" data-mode="dem" onclick="load3DViewer('dem')">DEM 3D</button>
       <button class="btn btn-3d btn-secondary" data-mode="mpm-seed" onclick="load3DViewer('mpm-seed')">MPM (압축 전)</button>
       <button class="btn btn-3d btn-secondary" data-mode="mpm" onclick="load3DViewer('mpm')">MPM (압축 후)</button>
+      <button class="btn btn-3d btn-secondary" data-mode="additives" id="btn-additives-3d"
+              style="display:none" onclick="load3DViewer('additives')"
+              title="VGCF/PTFE 도전재가 SE 사이를 짜고 AM 곁을 지나는 형상 (--add-recipe payload)">⚡ 도전재 3D</button>
     </div>
   </div>
   <div id="viewer-container" class="viewer-container" style="display:none">
@@ -391,6 +394,14 @@ function fillMpmTable(m) {
     box.querySelectorAll('.cov-band-note').forEach(e =>
       e.textContent = `소성 vs 강체 · Hertz ${m.cov_hertz_um}/Tabor ${m.cov_tabor_um}µm`);
   box.style.display = 'block';
+  // a carbon payload (built with --phase) carries additive_counts → reveal the 도전재 3D button
+  const addBtn = document.getElementById('btn-additives-3d');
+  if (addBtn) {
+    const ac = m.additive_counts;
+    addBtn.style.display = (ac && Object.keys(ac).length) ? '' : 'none';
+    if (ac && Object.keys(ac).length)
+      addBtn.title = '도전재: ' + Object.entries(ac).map(([k, v]) => `${k} ${(+v).toLocaleString()}`).join(' · ');
+  }
 }
 fillMpmTable(_INIT_MPM);
 
@@ -447,9 +458,20 @@ async function load3DViewer(mode) {
     'dem': base + '/3d-data',
     'mpm': base + '/3d-mpm-data',
     'mpm-seed': base + '/3d-mpm-data?state=seed',
+    'additives': base + '/3d-mpm-data',          // same compacted payload; auto-pick the 도전재 view mode below
   };
   const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
   mod.initElectrodeViewer('viewer-container', urls[mode]);
+  if (mode === 'additives') {
+    // the View Mode <select> is built asynchronously after the payload loads — poll for it,
+    // then switch to the 도전재 mode (change → applyViewMode renders the carbon point cloud).
+    const pick = (n) => {
+      const sel = document.getElementById('view-mode');
+      if (sel) { sel.value = 'additives'; sel.dispatchEvent(new Event('change')); }
+      else if (n < 25) setTimeout(() => pick(n + 1), 150);
+    };
+    pick(0);
+  }
 }
 
 let viewer2dLoaded = false;

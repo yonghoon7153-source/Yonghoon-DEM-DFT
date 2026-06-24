@@ -181,6 +181,10 @@ def main():
     ap.add_argument('--eps', default='', help='accumulated TOTAL strain npy (mpm3d --save-eps) — deformation vs the '
                     'seed sphere (incl elastic compression of the confined interior); PREFERRED over --dg')
     ap.add_argument('--strain-pts', type=int, default=200000, help='max SE strain points carried in the payload')
+    ap.add_argument('--phase', default='', help='per-point phase npy (mpm3d --save-phase): 1 SE · 2 VGCF · '
+                    '3 SuperP · 4 PTFE, SAME order as --se.  Splits the cloud → SE meshed as the continuum, '
+                    'conductive additives carried as colored points (additive_points) for the 도전재 3D viewer.')
+    ap.add_argument('--additive-pts', type=int, default=120000, help='max additive points carried in the payload')
     ap.add_argument('--out', default='mpm_payload.json')
     a = ap.parse_args()
     vc = _vc()
@@ -214,7 +218,18 @@ def main():
         print(f'loaded {len(se):,} SE pts from {a.se}')
         top = (float((c[:, 2] + r).max()) if len(r) else float(se[:, 2].max())) + 0.01
 
-    am_p, am_s, se_mask, h = vc.voxelize(se, t, c, r, a.n_vox, top, a.se_min_count,
+    # phase split: VGCF/PTFE/SuperP are EXTRA material points appended to the SE cloud (same order as
+    # --save-se).  The SE continuum mesh + AM coverage must use the TRUE SE only (phase==1) — meshing the
+    # additives would fuse the carbon into the SE surface.  Additives are carried separately as points.
+    phase = None
+    if a.phase:
+        phase = np.load(a.phase)
+        if len(phase) != len(se):
+            print(f'  ⚠ phase length {len(phase)} != SE {len(se)} — ignoring --phase')
+            phase = None
+    se_se = se[phase == 1] if phase is not None else se        # true SE for continuum mesh + coverage
+
+    am_p, am_s, se_mask, h = vc.voxelize(se_se, t, c, r, a.n_vox, top, a.se_min_count,
                                          a.denoise, a.target_porosity, a.target_coverage)
     am = am_p | am_s
     por = 100.0 * (~(am | se_mask)).mean()
@@ -277,8 +292,8 @@ def main():
     # RIGID coverage = geometric SE SPHERES at the SAME bands (analytic, resolution-invariant reference).
     # Reporting BOTH makes the MPM's contribution explicit: plastic − rigid = the conforming the soft SE
     # adds over rigid spheres (the rigid leaves interface gaps the plastic SE fills).
-    cov_bands, cov_per, cov_patches = deformed_coverage(se, t, c, r, [a.coverage_um, a.cov_tabor_um],
-                                                        sub=(a.cov_sub or len(se)))
+    cov_bands, cov_per, cov_patches = deformed_coverage(se_se, t, c, r, [a.coverage_um, a.cov_tabor_um],
+                                                        sub=(a.cov_sub or len(se_se)))
     geom_rigid = (geometric_coverage(a.scaffold, a.se_dump, bands_um=(a.coverage_um, a.cov_tabor_um))
                   if (a.scaffold and a.se_dump) else None)
     def _rigid(nm, which):                                 # geometric rigid-sphere reference (or None)
@@ -292,6 +307,31 @@ def main():
                   'z': round(float((c[i, 2] - FLOOR) * UM), 3),
                   'r': round(float(r[i] * UM), 3),
                   'coverage': float(cov_per[i])} for i in range(len(r))]
+
+    # conductive additives (VGCF/SuperP/PTFE) → colored points for the 도전재 3D viewer.  Subsampled
+    # proportionally to the budget; carried as [x,y,z,phase] µm (phase 2 VGCF · 3 SuperP · 4 PTFE).
+    additive_points = []
+    additive_counts = {}
+    if phase is not None:
+        rng_a = np.random.default_rng(1)
+        add_tot = int((phase >= 2).sum())
+        for code, nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE')):
+            m = phase == code
+            cnt = int(m.sum())
+            if cnt == 0:
+                continue
+            additive_counts[nm] = cnt
+            P = se[m]
+            budget = max(1, int(a.additive_pts * cnt / max(add_tot, 1)))
+            if len(P) > budget:
+                P = P[rng_a.choice(len(P), budget, replace=False)]
+            xyz = np.column_stack([((P[:, 0] - SW[0]) * UM).round(2), ((P[:, 1] - SW[0]) * UM).round(2),
+                                   ((P[:, 2] - FLOOR) * UM).round(2), np.full(len(P), code, np.float64)])
+            additive_points.extend(xyz.tolist())
+        if additive_counts:
+            print('  additives → ' + '  '.join(
+                f'{nm} {c:,}pts→{min(c, max(1, int(a.additive_pts * c / max(add_tot, 1)))):,} shown'
+                for nm, c in additive_counts.items()))
 
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
@@ -337,6 +377,8 @@ def main():
         if k in sim_m:
             mpm_metrics[k] = sim_m[k]                       # carry through raw sim fields
     mpm_metrics.update(strain_stats)                       # Σdg mean/max/vmax98/n_strain_pts (if --dg)
+    if additive_counts:
+        mpm_metrics['additive_counts'] = additive_counts   # {VGCF:n, SuperP:n, PTFE:n} total seeded
 
     payload = {
         'kind': 'mpm', 'case': a.case,
@@ -345,6 +387,7 @@ def main():
         'se_strain_points': se_strain_points,              # [x,y,z,Σdg] µm — viewer "SE 소성변형" mode
         'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
+        'additive_points': additive_points,                # [x,y,z,phase] µm — VGCF(2)/SuperP(3)/PTFE(4)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},
         'atoms_only': False,
