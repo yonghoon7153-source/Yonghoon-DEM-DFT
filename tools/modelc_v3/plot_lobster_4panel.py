@@ -182,6 +182,18 @@ def aggregate_bond_pair(E, bonds_meta, icohp_recs, match_keys, exclude=None, dma
     return summed, box, len(matched)
 
 
+def gaussian_smooth(y, E, sigma_eV):
+    """Convolve y(E) with a normalized Gaussian (sigma in eV). Uniform E grid."""
+    if sigma_eV is None or sigma_eV <= 0:
+        return y
+    dE = abs(E[1] - E[0])
+    n = max(1, int(round(4 * sigma_eV / dE)))
+    x = np.arange(-n, n + 1) * dE
+    k = np.exp(-0.5 * (x / sigma_eV) ** 2)
+    k /= k.sum()
+    return np.convolve(y, k, mode="same")
+
+
 def plot_panel(ax, E, cohp, color, label, icohp_value, fermi_ref=0.0,
                 xlim=None, ylim=(-12, 6)):
     """Draw one COHP panel — paper style."""
@@ -247,6 +259,10 @@ def main():
                     help="panel set: modelc (P-S/S-S/Li-S/Li-Cl) or nd (P-S/P-O/Li-S/Nd-S)")
     ap.add_argument("--panels", default=None,
                     help='override preset, e.g. "P-S,P-O,Li-S,Nd-S"')
+    ap.add_argument("--smooth", type=float, default=0.10,
+                    help="extra Gaussian broadening sigma (eV) on -pCOHP curves; 0=off")
+    ap.add_argument("--csv", default=None,
+                    help="also write energy-resolved smoothed -pCOHP table to this CSV")
     args = ap.parse_args()
     cfg_list = build_panels(args.panels) if args.panels else PRESETS[args.preset]
 
@@ -263,18 +279,35 @@ def main():
     n = len(cfg_list)
     fig, axes = plt.subplots(1, n, figsize=(4 * n, 6), sharey=True)
     axes = np.atleast_1d(axes)
+    curves = {}          # label -> smoothed -pCOHP (for CSV)
+    icohp_box = {}
     for ax, cfg in zip(axes, cfg_list):
         cohp_sum, icohp_per_bond, nb = aggregate_bond_pair(
             E, bonds_meta, icohp_recs, cfg["match_keys"],
             cfg.get("exclude"), cfg.get("dmax"))
+        cohp_s = gaussian_smooth(cohp_sum, E, args.smooth)
+        curves[cfg["label"]] = cohp_s
+        icohp_box[cfg["label"]] = icohp_per_bond
         print(f"  panel {cfg['label']}: matched {nb} bonds "
               f"(dmax={cfg.get('dmax')}), ICOHP/bond = {icohp_per_bond:.3f} eV")
-        plot_panel(ax, E, cohp_sum, cfg["color"], cfg["label"],
+        plot_panel(ax, E, cohp_s, cfg["color"], cfg["label"],
                     icohp_per_bond, ylim=tuple(args.ylim))
         if nb == 0:
             ax.text(0.5, 0.5, f"no {cfg['label']} bonds", transform=ax.transAxes,
                     ha='center', color='#999', fontsize=12)
     axes[0].set_ylabel(r"$E - E_F$  (eV)", fontsize=12)
+
+    if args.csv:
+        import csv as _csv
+        with open(args.csv, "w", newline="") as f:
+            w = _csv.writer(f)
+            w.writerow([f"# energy-resolved -pCOHP (bonding>0), Gaussian sigma={args.smooth} eV; "
+                        f"ICOHP(eV/bond): " + ", ".join(f"{k} {v:.3f}" for k, v in icohp_box.items())])
+            w.writerow(["E_minus_EF_eV"] + [f"-pCOHP_{k.replace('–','-')}" for k in curves])
+            cols = list(curves.values())
+            for i, e in enumerate(E):
+                w.writerow([f"{e:.4f}"] + [f"{c[i]:.5f}" for c in cols])
+        print(f"→ CSV {args.csv}")
 
     # subplot letter labels
     for letter, ax in zip("abcdef", axes):
