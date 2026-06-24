@@ -103,6 +103,12 @@ def parse_args(argv):
                          'particles + AM/SE masks wrap → boundary grains get bulk compaction + '
                          'coverage (default = rigid lateral walls, the validated production box)')
     ap.add_argument('--quiet', action='store_true')
+    ap.add_argument('--add-recipe', default='',
+                    help='seed conductive additives as extra MPM phases from an electrode recipe, '
+                         'e.g. "AM:SE:VGCF:PTFE=80:18:1:1" or "AM:SE:SuperP=72:27:1" (VGCF & SuperP are '
+                         'separate — the recipe picks which).  Counts from wt%+density (additives.py), NOT '
+                         'hardcoded; fibres=point-chains, SuperP=blobs, avoid fixed AM.  Auto-enables SE '
+                         'cohesion (--coh 0.02) unless --coh given.  Needs --am-scaffold.')
     return ap.parse_args(argv)
 
 
@@ -128,6 +134,8 @@ def main(argv):
     K_SE = LA_SE + 2.0 * MU_SE / 3.0                        # SE bulk modulus (GPa) — stiff if ν→0.49
     YIELD_SE = args.sigma_y; YIELD_AM = 1.0e4               # AM ~rigid (no yield)
     COH = float(args.coh)                                   # SE cohesion/adhesion (GPa, Cauchy)
+    if args.add_recipe and COH == 0.0:                      # additive regime: SE cold-weld/vdW ON (user
+        COH = 0.02                                          # decision) — plain porosity runs stay coh=0
     # CFL-safe dt: cap by the stiffest material P-wave speed c=√((λ+2µ)/ρ), ρ=1.  With AM as a
     # MATERIAL (preset/mix, E_AM=140) the default dt blows up at high n_grid (CUDA illegal
     # address); the scaffold (AM = grid mask, only soft SE) keeps the default dt.
@@ -350,6 +358,55 @@ def main(argv):
             print("build failed (n<2) — raise --n-grid or --init-solid"); return
         mus = np.concatenate(mu_list); las = np.concatenate(la_list); ylds = np.concatenate(yld_list)
         pvs = np.concatenate(pv_list)
+    # ── Stage 1: conductive additives (VGCF / Super P / PTFE) as extra MPM phases ──────
+    #    recipe wt% → object counts (additives.py) → seed fibre/blob points (avoiding the fixed
+    #    AM) → append with per-additive (µ,λ,σ_y).  Kernel uses only per-point material → no
+    #    P2G/G2P change.  phase code: 1 SE · 2 VGCF · 3 SuperP · 4 PTFE (0 AM = scaffold mask).
+    phase_np = np.where(ylds < 100.0, 1, 0).astype(np.int8)    # base points: 1 SE / 0 AM(mat, mix mode)
+    if args.add_recipe:
+        if not args.am_scaffold:
+            print("  [additives] --add-recipe needs --am-scaffold; skipped")
+        else:
+            import sys as _sys, os as _os
+            _sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+            import additives as _ad
+            wt = _ad.parse_recipe(args.add_recipe)
+            solid_um3 = (float(pvs.sum()) + AM_vol) * um_box ** 3        # SE pts + fixed AM → µm³
+            cnt = _ad.recipe_counts(wt, solid_um3)
+            bx = (WIDTH, WIDTH, max(am_top - FLOOR, 4 * dx))            # seed region (box units)
+            off = np.array([SW[0], SW[0], FLOOR], np.float32)
+
+            def _in_am_abs(p):                                          # p in ABSOLUTE box coords
+                ii = int(p[0] * n_grid); jj = int(p[1] * n_grid); kk = int(p[2] * n_grid)
+                return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
+                        and pin_np[ii, jj, kk] > 0)
+            ADD = {  # phase: (E GPa, ν, σ_y GPa, code, is_fibre, L_µm) — VGCF medium-stiff+high-yield (user)
+                'VGCF':   (10.0, 0.30, 2.00, 2, True,  _ad.VGCF_L),
+                'SuperP': (0.50, 0.30, 0.10, 3, False, 0.0),
+                'PTFE':   (0.30, 0.30, 0.05, 4, True,  _ad.PTFE_L),
+            }
+            for nm, (E, nu, sy, code, is_fib, L_um) in ADD.items():
+                if nm not in cnt:
+                    continue
+                nobj = cnt[nm]['n']
+                if is_fib:
+                    pts = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box,
+                                          in_am=lambda q: _in_am_abs(q + off))
+                else:
+                    pts = _ad.seed_blobs(nobj, bx, rng, in_am=lambda q: _in_am_abs(q + off))
+                if len(pts) == 0:
+                    continue
+                pts = (pts + off).astype(np.float32)
+                mu_a, la_a = lame(E, nu)
+                xs = np.concatenate([xs, pts])
+                mus = np.concatenate([mus, np.full(len(pts), mu_a, np.float32)])
+                las = np.concatenate([las, np.full(len(pts), la_a, np.float32)])
+                ylds = np.concatenate([ylds, np.full(len(pts), sy, np.float32)])
+                pvs = np.concatenate([pvs, np.full(len(pts), spc ** 3, np.float32)])
+                phase_np = np.concatenate([phase_np, np.full(len(pts), code, np.int8)])
+                print(f"  [additives] {nm}: {nobj} objects → {len(pts):,} pts "
+                      f"(E={E} σ_y={sy}, phase {code})")
+    n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
     solid_vol = float(pvs.sum()) + AM_vol                  # voxelized SE vol (Σ per-point) + exact fixed-AM
@@ -625,9 +682,10 @@ def main(argv):
         print(f"  saved total strain (vs seed) → {args.save_eps} ({n} pts, "
               f"mean {float(en.mean()):.3f} max {float(en.max()):.3f})")
     if args.save_phase:
-        ph = (yld_p.to_numpy() < 100.0).astype(np.int8)     # 1 = SE (low yield), 0 = AM (rigid)
-        np.save(args.save_phase, ph)
-        print(f"  saved phase (1=SE/0=AM) → {args.save_phase} ({n} pts, SE {100.0*ph.mean():.0f}%)")
+        np.save(args.save_phase, phase_np)                  # 1 SE · 2 VGCF · 3 SuperP · 4 PTFE (0 AM)
+        _u, _c = np.unique(phase_np, return_counts=True)
+        print(f"  saved phase → {args.save_phase} ({n} pts, "
+              + " ".join(f"{int(u)}:{c}" for u, c in zip(_u, _c)) + ")")
 
 
 if __name__ == '__main__':
