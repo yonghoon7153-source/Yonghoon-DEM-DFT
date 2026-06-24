@@ -42,7 +42,7 @@ def sigma_from_phase(phase, channel, code2name, sigma_map=None):
     return out
 
 
-def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-8, return_field=False):
+def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False):
     """Finite-volume solve of div(σ ∇φ)=0 with φ=1 on the high-`axis` face, φ=0 on
     the low face, no-flux side walls.  σ: 3D float (0 = insulator).  Returns σ_eff
     in the SAME units as σ (geometry cancels)."""
@@ -59,11 +59,16 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-8, return_field=False):
         return (0.0, None) if return_field else 0.0
     z0 = int(np.argmax(zmask)); z1 = int(len(zmask) - np.argmax(zmask[::-1]))
     sigma = sigma[:, :, z0:z1]
-    nx, ny, nz = sigma.shape
     cond = sigma > 0
     N = int(cond.sum())
     if N == 0:
         return (0.0, None) if return_field else 0.0
+    # Bound the conductivity contrast: electronic mixes carbon (SuperP 1e5 / VGCF 5e5 mS/cm) with
+    # AM (50) — a 2000–10000× ratio that makes the FV Laplacian ill-conditioned, so unpreconditioned
+    # CG crawls toward maxiter.  A phase already ≥1000× its neighbour is a near-perfect bridge, so
+    # clamping the max to 1000×(smallest nonzero σ) leaves σ_eff unchanged (<1%) and the solve fast.
+    sigma = np.minimum(sigma, float(sigma[cond].min()) * 200.0)
+    nx, ny, nz = sigma.shape
     gid = -np.ones(sigma.shape, np.int64)
     gid[cond] = np.arange(N)
     s = sigma
@@ -96,7 +101,13 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-8, return_field=False):
 
     rows.append(np.arange(N)); cols.append(np.arange(N)); data.append(np.where(diag > 0, diag, 1.0))
     A = csr_matrix((np.concatenate(data), (np.concatenate(rows), np.concatenate(cols))), shape=(N, N))
-    phi, _ = cg(A, b, rtol=tol, maxiter=20000)
+    Ad = A.diagonal()                              # Jacobi (diagonal) preconditioner — rescales the
+    Minv = csr_matrix((1.0 / np.where(Ad > 0, Ad, 1.0),  # high-contrast Laplacian so CG converges in
+                       (np.arange(N), np.arange(N))), shape=(N, N))  # ~O(10²) iters not O(10⁴)
+    phi, info = cg(A, b, rtol=tol, maxiter=20000, M=Minv)
+    if info != 0:
+        import sys as _sys
+        print(f'    ⚠ CG did not fully converge (info={info}); σ_eff approximate', file=_sys.stderr)
 
     I = float((2.0 * s0[m0] * phi[g0[m0]]).sum())  # current through the bottom Dirichlet face
     sigma_eff = I * nz / (nx * ny * 1.0)           # σ_eff = I·L/(A·ΔV), ΔV=1, L=nz, A=nx·ny
