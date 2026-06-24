@@ -36,12 +36,31 @@ def grab_card(txt, name):
 
 
 LAUNCH = r"""#!/bin/bash
-set -e; cd "$(dirname "$(realpath "$0")")"
+cd "$(dirname "$(realpath "$0")")"
 export PATH=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin:$PATH 2>/dev/null
 QE=${QE:-pw.x}; MPIRUN=${MPIRUN:-mpirun}
+# resume-safe (short-walltime friendly): each volume gets its OWN prefix+outdir so
+# checkpoints never collide; a volume that already has <outdir>/<prefix>.save resumes
+# via restart_mode='restart' instead of restarting from scratch. .out is appended,
+# not clobbered, so coordinate history survives a walltime kill. Re-running (kill ->
+# resubmit) continues exactly where it left off; JOB DONE volumes are skipped.
 for f in eos_v*.in; do
-  o="${f%.in}.out"; [ -f "$o" ] && grep -q "JOB DONE" "$o" && { echo "skip $f"; continue; }
-  echo "=== $f $(date +%H:%M) ==="; $MPIRUN --bind-to none -np 1 $QE -inp "$f" > "$o" 2>&1 || echo "  nonzero"
+  o="${f%.in}.out"; tag="${f#eos_v}"; tag="${tag%.in}"
+  if [ -f "$o" ] && grep -q "JOB DONE" "$o"; then echo "skip $f (JOB DONE)"; continue; fi
+  pfx="eos_v$tag"; od="./tmp_$tag"; mkdir -p "$od"
+  if [ -d "$od/$pfx.save" ]; then mode=restart; else mode=from_scratch; fi
+  python3 - "$f" "$pfx" "$od" "$mode" <<'PY'
+import sys, re
+f, pfx, od, mode = sys.argv[1:5]
+t = open(f).read()
+t = re.sub(r"(?im)^\s*(prefix|outdir|restart_mode)\s*=.*\n", "", t)   # drop old keys
+t = re.sub(r"(?i)(&control[^\n]*\n)",
+           r"\1    prefix = '%s'\n    outdir = '%s'\n    restart_mode = '%s'\n" % (pfx, od, mode),
+           t, count=1)
+open(f, "w").write(t)
+PY
+  echo "=== $f ($mode) $(date '+%F %H:%M') ==="
+  $MPIRUN --bind-to none -np 1 $QE -inp "$f" >> "$o" 2>&1 || echo "  pw.x nonzero — will resume next pass"
 done
 echo "=== BM3 fit -> doped DFT B0 ==="
 python3 - <<'PY'
@@ -49,14 +68,16 @@ import glob,re
 from ase.eos import EquationOfState; from ase.units import kJ
 VE=[]
 for o in sorted(glob.glob("eos_v*.out")):
-    t=open(o).read(); m=re.findall(r"!\s+total energy\s+=\s+(-?\d+\.\d+)",t)
-    v=re.search(r"unit-cell volume\s*=\s*([\d.]+)",t)
-    if m and v: VE.append((float(v.group(1))*0.148184, float(m[-1])*13.605693))  # bohr^3->A^3, Ry->eV
+    t=open(o).read()
+    if "JOB DONE" not in t: continue                                  # only converged volumes
+    m=re.findall(r"!\s+total energy\s+=\s+(-?\d+\.\d+)",t)
+    v=re.findall(r"unit-cell volume\s*=\s*([\d.]+)",t)
+    if m and v: VE.append((float(v[-1])*0.148184, float(m[-1])*13.605693))  # bohr^3->A^3, Ry->eV
 if len(VE)>=4:
     VE.sort(); V=[x[0] for x in VE]; E=[x[1] for x in VE]
     eos=EquationOfState(V,E,eos="birchmurnaghan"); v0,e0,B=eos.fit()
     print(f"  n={len(VE)}  V0={v0:.1f} A3  B0={B/kJ*1e24:.1f} GPa   (modelC DFT 21.7 -> dB0={B/kJ*1e24-21.7:+.1f})")
-else: print(f"  only {len(VE)} pts done")
+else: print(f"  only {len(VE)} pts JOB DONE — need >=4")
 PY
 """
 
