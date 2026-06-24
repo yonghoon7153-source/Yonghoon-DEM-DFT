@@ -110,5 +110,82 @@ def _selftest():
     print(f'  blocked layer (no percol.)  → σ_eff = {effective_sigma(blk):.4f}  (expect 0.000)')
 
 
+# ── real-data path: voxelise the MPM phase cloud (+ AM scaffold) and run all channels ──
+def _vc():
+    import importlib.util, os
+    p = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'viz_mpm_continuum.py')
+    spec = importlib.util.spec_from_file_location('viz_mpm_continuum', p)
+    m = importlib.util.module_from_spec(spec); spec.loader.exec_module(m)
+    return m
+
+
+def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None):
+    """Per-phase presence grids on the vc grid: AM from the scaffold spheres, SE/VGCF/SuperP/PTFE
+    from the MPM point cloud (phase 1/2/3/4).  Returns ({name: bool grid}, h)."""
+    vc = _vc()
+    t, c, r = vc.load_am(scaffold)                         # AM spheres (box units)
+    se1 = se_pts[phase == 1]                               # true SE points → SE occupancy
+    if top is None:
+        top = float(se_pts[:, 2].max()) + 0.01
+    am_p, am_s, se_mask, h = vc.voxelize(se1, t, c, r, n_vox, top, 1, False)
+    nx, ny, nz = se_mask.shape
+    SW0, FLOOR = vc.SW[0], vc.FLOOR
+    pres = {'AM': am_p | am_s, 'SE': se_mask}
+    for code, name in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE')):
+        g = np.zeros((nx, ny, nz), bool)
+        m = phase == code
+        if m.any():
+            p = se_pts[m]
+            ix = np.clip(((p[:, 0] - SW0) / h).astype(np.int64), 0, nx - 1)
+            iy = np.clip(((p[:, 1] - SW0) / h).astype(np.int64), 0, ny - 1)
+            iz = np.clip(((p[:, 2] - FLOOR) / h).astype(np.int64), 0, nz - 1)
+            g[ix, iy, iz] = True
+        pres[name] = g
+    return pres, h
+
+
+def sigma_grid(pres, channel, drop_carbon=False):
+    """Per-cell σ = MAX σ over the phases present (a sub-grid carbon thread makes its cells
+    conduct; for ionic the SE wins; void = 0).  drop_carbon → carbon insulating (WITHOUT-CBD)."""
+    sig = dict(PHASE_SIGMA[channel])
+    if drop_carbon:
+        sig['VGCF'] = 0.0; sig['SuperP'] = 0.0
+    out = np.zeros(next(iter(pres.values())).shape, np.float64)
+    for name, g in pres.items():
+        s = sig.get(name, 0.0)
+        if s > 0:
+            np.maximum(out, np.where(g, s, 0.0), out=out)
+    return out
+
+
+def _main():
+    import argparse
+    ap = argparse.ArgumentParser(description='Stage-2 voxel σ on the MPM phase grid (σ_e/σ_i/κ, ±CBD)')
+    ap.add_argument('--se', required=True, help='se_carbon.npy — all MPM points (box units)')
+    ap.add_argument('--phase', required=True, help='phase_carbon.npy — per-point phase (1 SE/2 VGCF/3 SuperP/4 PTFE)')
+    ap.add_argument('--scaffold', required=True, help='am_scaffold.csv — AM spheres')
+    ap.add_argument('--n-vox', type=int, default=128)
+    ap.add_argument('--channel', default='all', choices=['ionic', 'electronic', 'thermal', 'all'])
+    a = ap.parse_args()
+    pts = np.load(a.se).astype(np.float64); phase = np.load(a.phase)
+    if len(pts) != len(phase):
+        raise SystemExit(f'se {len(pts)} != phase {len(phase)} — mismatched run (se_dump overwritten?)')
+    u, cc = np.unique(phase, return_counts=True)
+    print('phase counts:', {int(p): int(n) for p, n in zip(u, cc)})
+    pres, h = voxelize_phase(pts, phase, a.scaffold, a.n_vox)
+    print('grid', next(iter(pres.values())).shape, ' cells/phase:', {k: int(v.sum()) for k, v in pres.items()})
+    chans = ['electronic', 'ionic', 'thermal'] if a.channel == 'all' else [a.channel]
+    units = {'electronic': 'mS/cm', 'ionic': 'mS/cm', 'thermal': 'W/m·K'}
+    print(f'\n  {"channel":<11}{"WITHOUT CBD":>14}{"WITH CBD":>14}{"gain":>9}')
+    for ch in chans:
+        s_wout = effective_sigma(sigma_grid(pres, ch, drop_carbon=True))
+        s_with = effective_sigma(sigma_grid(pres, ch, drop_carbon=False))
+        gain = f'{s_with / s_wout:>6.1f}x' if s_wout > 1e-9 else '  None→'   # σ_e=None revived
+        print(f'  {ch:<11}{s_wout:>13.4g} {s_with:>13.4g}  {gain:>8}  ({units[ch]})')
+    print('\n  electronic: carbon (VGCF/SuperP) BRIDGES dead AM → σ_e None→finite is the CBD payoff.')
+    print('  ionic: carbon does NOT help; PTFE blocking shows as lower σ_i (Lee 2025 penalty).')
+
+
 if __name__ == '__main__':
-    _selftest()
+    import sys
+    (_main() if '--se' in sys.argv else _selftest())
