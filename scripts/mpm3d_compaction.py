@@ -363,6 +363,7 @@ def main(argv):
     #    AM) → append with per-additive (µ,λ,σ_y).  Kernel uses only per-point material → no
     #    P2G/G2P change.  phase code: 1 SE · 2 VGCF · 3 SuperP · 4 PTFE (0 AM = scaffold mask).
     phase_np = np.where(ylds < 100.0, 1, 0).astype(np.int8)    # base points: 1 SE / 0 AM(mat, mix mode)
+    coh_np = np.full(len(xs), COH, np.float32)                 # per-point cohesion: SE = COH (PTFE ≫ below)
     if args.add_recipe:
         if not args.am_scaffold:
             print("  [additives] --add-recipe needs --am-scaffold; skipped")
@@ -404,8 +405,10 @@ def main(argv):
                 ylds = np.concatenate([ylds, np.full(len(pts), sy, np.float32)])
                 pvs = np.concatenate([pvs, np.full(len(pts), spc ** 3, np.float32)])
                 phase_np = np.concatenate([phase_np, np.full(len(pts), code, np.int8)])
+                _coh = {2: 0.0, 3: 0.0, 4: 0.10}[code]            # VGCF/SuperP not sticky; PTFE binder ≫ SE
+                coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
                 print(f"  [additives] {nm}: {nobj} objects → {len(pts):,} pts "
-                      f"(E={E} σ_y={sy}, phase {code})")
+                      f"(E={E} σ_y={sy} coh={_coh}, phase {code})")
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
@@ -420,6 +423,7 @@ def main(argv):
     C = ti.Matrix.field(3, 3, ti.f32, n); F = ti.Matrix.field(3, 3, ti.f32, n)
     mu_p = ti.field(ti.f32, n); la_p = ti.field(ti.f32, n); yld_p = ti.field(ti.f32, n)
     pvol_p = ti.field(ti.f32, n)                                # per-point volume (= mass, ρ=1)
+    coh_p = ti.field(ti.f32, n)                                 # per-point cohesion (PTFE binder ≫ SE)
     dg_acc = ti.field(ti.f32, n)                                # accumulated plastic strain Σdg per point
     eps_acc = ti.field(ti.f32, n)                               # accumulated TOTAL strain (vs seed, incl elastic) per point
     grid_v = ti.Vector.field(3, ti.f32, (n_grid, n_grid, nz)); grid_m = ti.field(ti.f32, (n_grid, n_grid, nz))
@@ -432,11 +436,11 @@ def main(argv):
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(),
-             ys: ti.types.ndarray(), pv: ti.types.ndarray()):
+             ys: ti.types.ndarray(), pv: ti.types.ndarray(), cz: ti.types.ndarray()):
         for p in range(n):
             x[p] = ti.Vector([xy[p, 0], xy[p, 1], xy[p, 2]]); v[p] = ti.Vector([0.0, 0.0, 0.0])
             C[p] = ti.Matrix.zero(ti.f32, 3, 3); F[p] = ti.Matrix.identity(ti.f32, 3)
-            mu_p[p] = ms[p]; la_p[p] = ls[p]; yld_p[p] = ys[p]; pvol_p[p] = pv[p]
+            mu_p[p] = ms[p]; la_p[p] = ls[p]; yld_p[p] = ys[p]; pvol_p[p] = pv[p]; coh_p[p] = cz[p]
 
     @ti.kernel
     def substep():
@@ -450,9 +454,9 @@ def main(argv):
             J = sig[0, 0] * sig[1, 1] * sig[2, 2]
             P = (2 * mu_p[p] * (F[p] - U @ V.transpose()) @ F[p].transpose()
                  + ti.Matrix.identity(ti.f32, 3) * la_p[p] * J * (J - 1))     # Kirchhoff τ = Jσ
-            if ti.static(COH > 0.0):                                         # SE cohesion (cold-weld/vdW):
-                if yld_p[p] < 100.0 and J < 1.0:                             # attractive σ in compression →
-                    P += COH * J * ti.Matrix.identity(ti.f32, 3)            # reduces net repulsion → densifies
+            if ti.static(COH > 0.0):                                         # per-point cohesion (SE cold-weld/
+                if coh_p[p] > 0.0 and J < 1.0:                               # vdW; PTFE binder ~5× stickier):
+                    P += coh_p[p] * J * ti.Matrix.identity(ti.f32, 3)        # attractive σ in compression → binds
             szz[None] += -P[2, 2] / J                                         # -σzz = compressive axial pressure (GPa)
             pm = pvol_p[p]                                                    # per-point vol = mass (ρ=1)
             st = (-dt * pm * 4 * inv_dx * inv_dx) * P; affine = st + pm * C[p]
@@ -512,7 +516,7 @@ def main(argv):
                 x[p][0] -= _LATW * ti.floor((x[p][0] - _SW0) / _LATW)
                 x[p][1] -= _LATW * ti.floor((x[p][1] - _SW0) / _LATW)
 
-    load(xs, mus, las, ylds, pvs)
+    load(xs, mus, las, ylds, pvs, coh_np)
     area = (_LATW * _LATW if PERIODIC else WIDTH * WIDTH)   # periodic → grid-aligned cell area (self-consistent)
     target = args.target_gpa
     vmax = 0.008 * (WALL0 - FLOOR)                           # platen speed (slow = quasi-static)
