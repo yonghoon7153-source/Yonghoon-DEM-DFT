@@ -60,6 +60,14 @@ self-percolate 불가(carbon-only σ=0; carbon ≈6-7% ≪ 31% 3D 퍼콜 thresho
 - ⚠ 명시: 우리 VGCF(짧고 무작위 배향 섬유) ≠ #275 연속 CNT sheath → 우리 SuperP>VGCF 결론은 **우리
   additive morphology**에 한정.  또한 200× contrast cap이 VGCF 5× intrinsic σ를 묵음(=carbon이 병목
   아닐 때 물리적으로 타당하나, 가정으로 명시).
+- ✅✅ **#275 풀 디제스트 = EXPERIMENTAL PROOF** (`docs/lit_koo2026_swcnt_sheath_thick_electrode.md`):
+  #275 서론이 **"conventional conductive additives fail to form continuous networks AND obstruct
+  ion-transport channels"**라고 명시 → 우리 두 발견을 그대로: (전자) discrete carbon σ=0(연속망 실패),
+  (이온) SuperP가 SE 채널 1.8× 막음.  그들의 해법 = **연속 SWCNT conformal sheath**(NCMA 표면 감싸기,
+  99.7wt% AM, 두꺼운 >11mAh/cm², 3D digital twin 2.5× Li⁺ 확산).  ⇒ ✅#4가 정성정합에서 **실험증명**으로
+  격상.  ★ NEW: SWCNT **conformal sheath = 제3 morphology**(표면-순응형; 우리 additives.py의 SuperP=분산점/
+  VGCF=interstitial 둘 다 아님) — **두꺼운 전극서 실제로 이기는** 형태 → 향후 additive 옵션(`additives.py`
+  seed_sheath 후보).  Li-ion liquid라 절대값 전이는 아니고 carbon-morphology 물리만.
 
 ## ⚠#5 — PTFE를 비전도 장애물(σ=0)로만 모델링 → 역할 일부 누락
 
