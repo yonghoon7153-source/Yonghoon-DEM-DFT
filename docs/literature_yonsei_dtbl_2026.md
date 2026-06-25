@@ -311,7 +311,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | # | 제목(요약) | 저널 | 비고 |
 |---|---|---|---|
 | 280 | 탄성 Li metal anode — 나노-크럼플+마이크로-오목 PDMS 집전체 + 친리튬 TREN SAM (LEAD=Cho/Ko/Back, **Y.M.Lee 공저**). E_host 31.4 MPa·핵생성 124.5→11.0 mV·대칭 ~2,600 h@1/1·~2,100 h@3/3·LFP 90.2%@1,000(1C). 음극 도금 계면공학+액체 LFP → 모델 영향 0; 응력완화 테마만 MPM/#285에 먼 인접. 디제스트 `docs/lit_choi2026_elastomeric_li_metal_anode.md` | Adv. Energy Mater. (25.5) | Li metal anode |
-| 279 | Electronic-ionic polymer, PCET, aqueous Zn-ion | Energy Storage Mater. (19.3) | Zn-ion |
+| 279 | 전자-이온 폴리머 복합막(EIPC=GO+PAA 8:2·~1.5µm) + PCET로 Zn 음극 안정화 (LEAD=Song/Seo/Kwak, **Y.M.Lee 공저**). DOD ≈51%·calendar 300 h·CE 99.70%@3000·MnO₂ 파우치 N/P 0.74·DOD ≈85%·25.8 mg cm⁻²; t_Zn²⁺ 0.82·탈용매 E_a 28.23→9.44 kJ mol⁻¹·I_corr 1.85→0.47·002 I-ratio 0.42→1.13·Zn²⁺흡착 −6.23→−7.42 eV. 수계 Zn²⁺ **음극** 코팅막·PCET·탈용매 → 모델 영향 0; "전자-이온"=음극막 혼합전도(우리 양극 σ_e/σ_ionic triad 아님, 동음이의). 디제스트 `docs/lit_cho2026_eipc_zn_anode_azib.md` | Energy Storage Mater. (19.3) | Zn-ion |
 | 278 | Na 층상 cathode, Bi 치환 공기·수분 안정화 | Chem. Eng. J. (12.5) | Na cathode |
 | 277 | Dual-layer anode 보호, lean-electrolyte Li-S | J. Energy Storage (10.7) | Li-S |
 | 274 | High-Ni cathode, 수분응답 dehumidifying separator | ACS Nano (17.3) | separator/High-Ni |
