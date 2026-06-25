@@ -451,6 +451,44 @@ Jaejin Lim† … **Yong Min Lee\***, Young-Jun Kim\* (SKKU SAINT/SIEST + Yonsei
   - **우리 우위:** post-mortem 측정 + digital-twin(출력단) vs 우리 압력→미세구조→σ triad 예측(입력단)+소성 morphology.
     frame[5] 분업 재확인. ⚠ **#275와 같은 증거 라인(double-count 금지); ⚠#11 σ_e-방향 결판 datapoint 아님(직접 σ_e 부재).**
 
+### #(2025 Battery Energy e70044) — SE-coating-on-CAM 도전재(Super P 0D vs VGCF 1D)가 LPSCl ASSB 복합양극 좌우  ★★ TIER-2 (★★★ 우리 SuperP-vs-VGCF CBD의 同소재계 실험 reference)  ✅ 풀 디제스트 완료
+Battery Energy **4** (2025) e70044, DOI **10.1002/bte2.20250027** (Open Access **CC BY**, © 2025).  Dongyoung
+Kim†, Jongjun Lee† … Hyobin Lee, **Yong Min Lee\*** (**Yonsei DTBL** + DGIST).  ★ **풀 디제스트:**
+`docs/lit_kim2025_conductive_agent_se_coating_assb.md`.  ⚠ **#260–286 리스트엔 없음 — 2025 Battery Energy 별도 논문.**
+★★★ **소재계 = 우리 정확한 소재계 + 우리 정확한 비교, 실험으로:** **NCM711**(D₅₀ 7 µm) + **LPSCl**(D₅₀ 1 µm) +
+**Super P(0D) OR VGCF(1D)** 도전재, **CAM:SE:CA = 68.0:29.1:2.9 wt%, 370 MPa 제조/50 MPa 작동**.  ⚠ **단 carbon이
+"SE를 CAM 표면에 코팅하는 과정(SE-coating-on-CAM)" 안에 들어간다**(우리 voxel의 bulk-interstitial과 다른 regime) →
+**σ값은 복합전극 blocking-cell 측정 = TREND·morphology 증거, σ/porosity 절대앵커 아님**(앵커는 Bazzoun/Minnmann/#266/Varkey).
+- **핵심:** SE@CAM(CA 無)=치밀 SE 코팅 / **SE–SP@CAM(Super P 0D)=Super P-rich 코팅 → CAM 활성표면적↓+전기전도↓ → 성능
+  나쁨** / **SE–VGCF@CAM(VGCF 1D)=VGCF-embedded 다공코팅 → 활성표면적↑+전자전도 촉진 → 성능 좋음(>SE–SP@CAM, ≈SE@CAM)**.
+  ⇒ ★ **실험적으로 VGCF(1D) > Super P(0D), LPSCl ASSB**(Super P가 코팅을 막아 활성면적/전도 깎음).
+- **방법:** ion-blocking cell(Li/LPSCl/composite/LPSCl/Li, AC EIS → σ_ion) + electron-blocking cell(Ti/composite/Ti,
+  DC 50 mV → σ_e) 분리측정; GITT로 상대 활성표면적(ASA); SEM/EDS 코팅 morphology.
+- **★★ EXACT 수치(Fig 3k·4c·5c):** σ_e SE@CAM **3.3e-2** / SE–SP@CAM **1.0e-5**(3桁 폭락) / SE–VGCF@CAM **1.4e-2**(회복)
+  S/cm; σ_ion SE@CAM 1.3e-4 / SE–SP@CAM **0.9e-4**(최저) / SE–VGCF@CAM **1.6e-4**(최고); **상대 ASA SE@CAM 1.00 S vs
+  SE–SP@CAM 0.51 S(절반)**; 초기 방전 SE@CAM 185.3(CE81.6) / SE–SP@CAM 151.6(78.0) / SE–VGCF@CAM 183.5(82.7) mAh/g;
+  200cyc 유지 SE@CAM 113.0·70.9% / SE–VGCF@CAM 117.3·76.8%; 코팅두께 SE@CAM 50–500 nm 치밀 vs SE–SP@CAM 500 nm–2 µm 다공.
+- **★★★ 우리 SuperP-vs-VGCF CBD reconcile (이온=확증 / 전자=regime 차이 + model-setup gap — 디제스트 §7):**
+  - **(a) ✅ 이온축 CONFIRMED:** σ_ion 순서 **SE–SP 0.9 < SE@ 1.3 < VGCF 1.6**(×10⁻⁴) + **ASA 0.51 S(절반)** = **Super P가
+    이온접촉을 셋 중 최저로 막는다** → 우리 voxel **SuperP σ_ionic 0.0168 < VGCF 0.0298(1.8× blocking)**의 **同소재계 실험
+    확증**(주체 다름: 그들=코팅점유로 CAM↔SE 접촉차단, 우리=SE-packing 교란; 방향 동일).
+  - **(b) ⚠ 전자축 REGIME 차이(정직하게):** 실험 **VGCF > Super P**(SE–SP σ_e 1.0e-5 3桁 폭락; Super P-rich 코팅이 CAM↔CAM
+    전기연결 차단) vs 우리 voxel **SuperP 1.3× > VGCF 1.1×**(bulk gap-filler, density beats reach, AM 모든밀도 stable). ★
+    **모순 아니라 carbon 위치가 다른 것** — 우리는 **bulk-interstitial**, 실험 verdict는 **SE-coating-interface**(Super
+    P-rich 코팅이 활성표면/전자연결 막음, 우리 미모델) 좌우. carbon density 부호가 regime 따라 뒤집힘(bulk=mop-up 이점,
+    코팅=차단 단점). ⇒ 우리 SuperP>VGCF는 **bulk-gap-filler corner-only**; 성능-관련 SE-coating regime은 **VGCF wins**.
+  - **(c) ★ 정직한 model-setup gap:** `scripts/additives.py`가 carbon을 **입자간(bulk)에만 seed**하지 **CAM 표면 SE 코팅층
+    내부**로 안 넣음 → **Super P-rich 코팅이 CAM 활성표면을 막아 σ_e 3桁↓ 하는 메커니즘을 표현 못함** → 실험 VGCF>Super P
+    전자 verdict를 **못 잡는다**(우리 셋업의 진짜 한계). → future `additives.py` **`se_coating_interface` carbon 옵션**(AM
+    표면 덮는 SE 코팅 셀에 seed)으로 gap 닫기 제안.
+  - **(d) audit ✅#4 + roadmap(사용자가 fold):** ✅#4를 **"이온: Super P-blocking 同소재계 실험 확증 / 전자: SuperP>VGCF는
+    bulk-gap-filler regime-specific, SE-coating regime은 VGCF wins — additives.py가 SE-coating-interface carbon 미모델하는
+    model-setup gap"**으로 정직하게 규정 제안. roadmap의 SuperP>VGCF 전자 verdict를 **regime-specific 라벨**.
+  - ★ **#275 + Kim 2025 합산 = 같은 그룹(이용민) 同소재계+일반계 실험 2편이 "1D/연속 carbon이 0D/discrete를 ASSB에서 이긴다"
+    증명** — 우리 voxel SuperP>VGCF(전자)는 **bulk-gap-filler corner**의 답이지 SE-coating reality가 아님을 함께 못박음.
+    ⚠ **#275/#284와 혼동 금지:** Kim 2025 = **carbon 위치(SE-coating-interface) 축, 同소재계, 우리 전자 verdict가
+    regime-specific이라는 유일한 同소재계 반례**; #275 = **carbon 연속성 축**(소재 전이 필요); #284 = **carbon 양/두께 축**.
+
 ### #286 — Porosity-Gradient Dry-Processed Graphite + Deformable Primer Layer  ★★  ✅ 풀 디제스트 완료
 Energy Storage Materials (2026), DOI 10.1016/j.ensm.2026.105331 (ENSM 105331, IF 19.3).  Hyundong Yoo†,
 Jaejin Lim† … Yong Min Lee\*, Hansu Kim\* (Hanyang+Yonsei).  ★ **풀 디제스트:**
@@ -719,6 +757,7 @@ positioning**(top-down/bottom-up · multi-scale · 미세구조 descriptor 어�
 | 5.8 | (보충) E.Chem 2024 digital-twin review (=Ref 127 ACS EL 2024 한국어판) | **★ top-down(reconstruction) vs bottom-up(formation) 분류 + atom→pack multi-scale + Fig 1b descriptor + DTP/DTI** | **★★★ positioning NAMING — 우리=bottom-up/formation(process-physics), GeoDict 논문=top-down/reconstruction; Fig 1b descriptor↔우리출력 1:1; positioning_vs_geodict.md 정당화** | ✅ 풀 디제스트 (`lit_choi2024_digital_twin_review_echem.md`); ⚠peer-review 아닌 총설(=위 ACS EL의 한국어판)→번호 없음, framework/positioning 앵커(수치 앵커 아님) |
 | 5.5 | #284 | 탄소코팅↑→전자↑·이온↓, moderate 균형; SSRM/W_adh 분산정량 | **CBD ion/electron trade-off 독립확증 + balance curve sweep + 분산 균일도 metric** | ✅ 풀 디제스트 (`lit_oh2026_...md`); ⚠SiOx흑연/액체→개념·방법만, 수치앵커 아님 |
 | 6 | #275 | 연속 SWCNT sheath, thick 전극; "discrete 도전재 연속망 실패 + 이온채널 막음" | **★★ 우리 voxel CBD 발견(전자 σ=0 퍼콜 + 이온 1.8× blocking)의 EXPERIMENTAL PROOF + 제3 morphology(conformal sheath) + digital-twin(D_eff/PNM) blueprint** | ✅ 풀 디제스트 (`lit_koo2026_...md`); ⚠NCMA/흑연/액체 dry→morphology 물리만, 수치앵커 아님 |
+| 6.5 | (2025 Battery Energy e70044) | **★ SE-coating-on-CAM 도전재 Super P(0D) vs VGCF(1D), LPSCl ASSB 同소재계 실험** — SE–SP@CAM σ_e 1.0e-5(3桁 폭락)+ASA 0.51S(절반) ≪ SE–VGCF@CAM σ_e 1.4e-2(회복); 실험 **VGCF>Super P** | **★★★ 우리 SuperP-vs-VGCF CBD의 同소재계 실험 reference — 이온축 CONFIRMED(Super P 이온접촉 최저=우리 1.8× blocking 확증) / 전자축 REGIME 차이(우리 bulk-gap-filler SuperP>VGCF vs 실험 SE-coating VGCF>Super P) + model-setup gap(additives.py가 SE-coating-interface carbon 미모델 → 전자 verdict 못 잡음, regime-specific)** | ✅ 풀 디제스트 (`lit_kim2025_conductive_agent_se_coating_assb.md`); ⚠SE-coating regime·복합 blocking-cell σ → 同소재계 morphology/방향 증거, σ/porosity 절대앵커 아님; #275(연속성)·#284(양)와 다른 carbon 위치 축 |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
 | 8 | #264 | SBR thiol-ene 개질(접착 grafting + 가교 cross-linking); "가교 modulus가 접착보다 저압 무결성에 결정적"(retention 75 vs 68%, modulus 0.78→14.31 MPa 18×) | **★ MPM binder-cohesion E3 레버 보강(modulus→무결성, #271 PTFE와 쌍둥이 근거); cohesion 최적/상한·바인더≠SE modulus** | ✅ 풀 디제스트 (`lit_park2026_...md`); ⚠우리 소재계나 binder-화학·SBR=wet·0.3 MPa 작동압≠300 MPa 제조압 → 물리만 전이, σ/porosity 앵커 아님 |
 | 8b | #268/#270 | calendering(압연) 계면 재구성 / SE cavity 이온전도 filler | 압축·압력 축 + SE void-fill | 맥락 인용 |
