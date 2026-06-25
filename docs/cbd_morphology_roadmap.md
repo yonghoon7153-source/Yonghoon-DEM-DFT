@@ -103,3 +103,34 @@ coats AM) BEFORE PTFE, and PTFE's `nucleate=carbon_seed` already collects phase 
   the recipe.
 - OPEN: tune PTFE↔SuperP binding if the real run looks too dispersed (higher nucleate_frac / shorter PTFE for
   the localized SuperP); confirm on the real GPU run.
+
+## ★ Voxel CBD electronic FV — SuperP vs VGCF bridging quantified (real_10, 2026-06-25) ★
+
+The transport payoff of the CBD morphology work: run the Stage-2 voxel FV (`scripts/voxel_conductivity.py`)
+on the +CBD MPM dumps and read the electronic WITHOUT→WITH-CBD gain = how much the carbon network bridges
+dead AM.  Case **input_8mAh_real_10** (P:S 10:0, 226 AM_P @6µm + 142,212 SE @0.5µm, DEM σ_e = 8.64 mS/cm,
+i.e. a GOOD AM network).  Two `--add-recipe`s, same 80:18:1:1 wt%, n_grid 266 MPM → n_vox 256 voxel FV, `--gpu`:
+
+| additive | WITHOUT (AM-only) | WITH CBD | **gain** | morphology | voxel carbon cells |
+|---|---|---|---|---|---|
+| **SuperP** | 6.464 | **8.564** | **1.3×** | 1.4 M small aggregates (distributed) | 721 k |
+| **VGCF**   | 6.464 | **7.073** | **1.1×** | 31,789 long fibres (concentrated)   | 669 k |
+
+- **Consistency ✓**: WITHOUT-CBD = 6.464 for BOTH (identical to 4283 CG iters) — same fixed AM scaffold ⇒
+  same AM-only σ_e; the FV solve is deterministic + exact.  (voxel 6.46 < DEM 8.64 = the known electronic
+  neck under-resolution at n_vox 256, converges up with res; the GAIN is the resolution-robust quantity.)
+- **SuperP (1.3×) > VGCF (1.1×) — and it is NOT the σ value**: the 200× contrast cap clamps SuperP (1e5) and
+  VGCF (5e5) to the SAME ~1e4 mS/cm, so the difference is PURE MORPHOLOGY.  SuperP's many distributed
+  aggregates contact MORE dead-AM gaps than VGCF's fewer, longer fibres — for real_10's already-good AM
+  network where carbon only mops up the few isolated AM, "many contacts" beats "long reach".
+- ⚠ **VGCF is likely UNDER-counted**: VGCF fibres are sub-µm thin → at n_vox 256 (cell ≈0.5 µm) they
+  voxelise to 1-cell threads (669 k < 721 k cells) that can break → its long-range bridging is
+  under-resolved.  A fair SuperP-vs-VGCF verdict needs higher n_vox or fibre-aware voxelisation.
+- **Real-physics reading**: for a POOR AM network (many dead AM) VGCF's long fibres should WIN (long
+  bridges span gaps SuperP can't); real_10's AM is good, so SuperP's contact density edges it.  Next:
+  repeat on an AM-poor case to confirm the VGCF crossover + bump VGCF resolution.
+- Pipeline (gabia GPU): `mpm3d_compaction.py --se-dump … --add-recipe "AM:SE:{SuperP|VGCF}:PTFE=80:18:1:1"
+  --save-se se_carbon{,_vgcf}.npy --save-phase phase_carbon{,_vgcf}.npy --save-se-id se_id{,_vgcf}.npy`
+  then `nohup voxel_conductivity.py --se … --phase … --scaffold am_carbon.csv --n-vox 256 --porosity 0.165
+  --channel electronic --gpu > {superp,vgcf}_fv.log 2>&1 &`.  σ_e thick-electrode (708 z-cells, 26 M nodes)
+  ≈ 9–10 min/run on an A6000 with --gpu + bincount assembly + residual-% progress.
