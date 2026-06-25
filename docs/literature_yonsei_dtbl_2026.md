@@ -58,6 +58,52 @@ DOI 10.1021/acsenergylett.5c03923.  ★ **풀 디제스트:** `docs/lit_oh2026_b
   절대 정밀 비교는 σ_ionic·He-porosity로 제한**.  시뮬 = rigid sphere/polyhedron + 연속체(소성 SHAPE 없음 = 우리 DEM과
   같은 한계, MPM이 보완).
 
+### #(2025 Small 2410485) — Virtual Calendering Framework: 3D-재구성 양극으로 가상 캘린더링 검증 + 전극설계 최적화  ⭐⭐ TIER-1 (★ 우리 압축의 가장 직접적 방법론 형제)  ✅ 풀 디제스트 완료
+*Small* **21** (2025) 2410485 (Open Access **CC BY-NC**, IF 11.8), DOI 10.1002/smll.202410485.  **Jaejin Lim†**,
+Jihun Song†, Kyung-Geun Kim, Jin Kyo Koo, **Hyobin Lee**, Dongyoon Kang, Young-Jun Kim, **Joonam Park\*\***(LG에너지솔루션),
+**Yong Min Lee\***.  접수 2024-11-06 / 게재 2025-03-16.  ★ **풀 디제스트:** `docs/lit_lim2025_virtual_calendering_framework.md`.
+⚠ **이 그룹의 "virtual calendering(가상 캘린더링)" headline 논문** = **우리 DEM+MPM 압축(compaction)과 가장 직접
+1:1 대응**(출력 porosity/τ/접촉면적/crack/응력이 우리 압축 출력과 거의 완전 일치).  Lim/H.Lee = DTBL 디지털트윈
+모델러(#262/#266과 동일 모델러진).
+- **소재 ⚠ Li-ion NCM622 + 액체전해질**(1.15 M LiPF₆ in EC/EMC + 2 wt% FEC) — **우리 LPSCl 황화물 ASSB 아님** →
+  셀 절대값(용량·σ_ion·τ) 전이불가.  **METHOD만 전이**(가상 캘린더링 검증 + 밀도 sweep) = 우리 압축의 직접 형제,
+  수치앵커 아님(Bazzoun/Varkey/Minnmann/#266/#271이 담당).
+- **핵심 METHOD(3단계):** (a) **FIB-SEM 토모그래피로 압축-전(uncalendered, 2.3 g/cm³) 양극을 3D 디지털트윈 재구성**
+  → (b) **GeoDict ElastoDict(FVM 선형탄성 대변형)로 "가상 캘린더링"** = 목표밀도 2.4–4.0 g/cm³(총 **11개**)로 압축
+  시뮬 → (c) **실제 캘린더링 3.6 독립 재구성과 대조 검증**(porosity <10% / σ_e ~3.5% / τ 가상2.5 vs 실제2.6 / NCM
+  비표면적 7.04 vs 6.98e5 m²/m³ 오차).  **bimodal NCM622 large 14µm : small 3µm = 8:2 = 우리 AM_P:AM_S.**
+- **★★ EXACT 수치(Fig 1/2/4/S1):**
+  - porosity vs 밀도: **49%(2.3, 초기) → ~10%(4.0)** 단조, 가상↔실제 <10% 오차(Fig 2b).
+  - **전자전도 +130%**(2.3→4.0, Fig 2c/S1a), **접착 +199%**(Fig S1b) — 둘 다 밀도↑로 증가.
+  - **ionic tortuosity** 3.5→3.6 넘어 급증(Fig 2d) → **3.8/4.0 rate 악화 = 이온수송 한계**(전자전도 부족 아님).
+  - **crack(VMS>100–150 MPa crackable%)**: 저밀도 1.5–5% → **3.4–3.6 넘어 ~10%로 지수급증**(Fig 4b); NCM 항복강도
+    **100–150 MPa**.  가상 crackable ≈ 실제 cracked 3D 분포(Fig 4c,d).
+  - **최적 밀도 = 3.4–3.6 g/cm³**(전자전도·접착·이온수송·적당 VMS 균형); 3.4=400cyc **91.9%** 최고 retention,
+    3.0=80%↑ 벤치마크, 2.8=300cyc 못버팀.  과압축 3.8–4.0 = rate·cycle 악화.
+  - digital-twin 부피분율 편차 **<2%p**(uncal NCM 46.2/45.8, pore 48.8/49.0; cal 3.6 NCM 69.0/69.8); **REV 14 ≫ 5**.
+  - 모델물성(Table S4): **E_NCM622 2.61 GPa**(전극유효, ref Song 2023 AEM 같은 그룹) / E_CBD 1.55 / E_Al 68.96, ν 0.30.
+  - P3D 전기화학 5C 검증 오차 **6.1%**(Fig 5); 3.6 = 전두께 SOL 27%↑ 균일.
+- **★★★ 우리 DEM+MPM 압축과 1:1 (CENTERPIECE — frame[5] 단일논문 시연):**
+  - **출력 1:1:** porosity(Fig 2b)↔우리 DEM ε; ionic τ(Fig 2d)↔τ_Dijkstra/τ_Laplace,eff; 접촉면적 NCM-pore/CBD
+    (Fig 2e,f)↔Stage-E coverage; **crack VMS>100/150 MPa(Fig 4)↔Auerbach F/P_c·severe%**; **von Mises 응력장
+    (Fig 4a)↔우리 MPM 응력장**.  → 그들 한 도구(GeoDict)에 우리 frame[5] 분업(DEM=transport, MPM=mechanics)이 다 들어있음.
+  - **★ 출발상태 distinction(positioning 정밀화):** 그들 = **reconstruct-then-compress**(압축-전 FIB-SEM 필요,
+    top-down 출발) ↔ 우리 = **predict-from-powder-then-compress**(토모그래피 불요, DEM packing 예측, bottom-up
+    출발).  ⇒ **같은 "압축 시뮬" 안에서도 우리가 더 상향식** — `positioning_vs_geodict.md`의 top-down/bottom-up을
+    "출발구조가 측정이냐 예측이냐"로 한 단계 정밀화하는 **가장 직접적 사례**(그들 가상 캘린더링조차 출발구조는 GeoDict가
+    못 만들어 FIB-SEM으로 넣어줌).
+  - **bimodal+crack ↔ 우리 AM_P/AM_S+Auerbach:** large 14µm 큰입자 내부 균열(고밀도) ↔ 우리 severe 63%@p10(큰
+    다결정 AM_P 분쇄), 작은입자 intact(#285 단결정 균열억제).
+  - **과압축 caveat 동일:** 그들 3.8–4.0 rate-loss(tortuosity↑) ↔ 우리 over-compression caveat + a9_50 P:S 6:4
+    넘어 σ_ionic 7.7×↓.
+  - **검증 철학 = frame[4]:** 가상압축 vs 실제재구성 대조 + 밀도 sweep + 실험검증 = 우리 DEM/MPM vs 실험(Minnmann/
+    real_14) + 다압력 Heckel.
+  - **★ 도구:** 그들이 **LIGGGHTS/GeoDict/MATBOX/LAMMPS/EDEM + MPSP-DEM(Nikpour)/Ngandjong CGMD/Lenze P2D** 명시
+    인용 → **우리 LIGGGHTS+MPM이 바로 그 필드 표준 가상-전극 도구군** = "비표준 도구" reviewer 반론 직접 반박.
+- ⚠ **전이 경계:** Li-ion 액체 NCM622 → 셀 절대값 X; ElastoDict = 선형탄성+체적보존 resampling(**소성 SHAPE
+  없음 = 우리 DEM 한계, MPM이 보완**); τ = MacMullin류(식1 ε_e·D_e/D_e,eff) ≠ 측지 τ; **spring-back 미반영(둘 다)**.
+  → **method-sibling**(우리 압축 워크플로의 published precedent), 수송 절대값 앵커 아님.
+
 ### #263 — Stochastic 3D Microstructures from 2D Images (polymeric separators)  ⭐Phase 4 청사진
 Advanced Energy Materials 16(10) (2026) e70730 (Back Cover, IF 25.5).  Youyeong Shin†, Suhwan Kim† … Yong Min Lee.  DOI 10.1002/aenm.70730.
 - **핵심:** 2D 이미지에서 구조 파라미터 추출 → **stochastic하게 3D 가상 미세구조 생성** → 전기화학
@@ -572,6 +618,7 @@ positioning**(top-down/bottom-up · multi-scale · 미세구조 descriptor 어�
 | 순위 | 논문 | 인사이트 | 우리 모델 hook | 상태 |
 |---|---|---|---|---|
 | 1 | #266 | bimodal P:S 7:3 → tortuosity↓ → σ↑, 87.8%@200cyc | **P:S 7:3 production + Furnas dip 실험 앵커** | PDF로 수치 추출 → validation corpus |
+| 1.2 | #(2025 Small 2410485) | **★ 가상 캘린더링 = 우리 압축 그 자체** (FIB-SEM 재구성→ElastoDict 압축→밀도 sweep 2.4–4.0 검증; porosity 49→10%, σ_e +130%, 접착 +199%, crack VMS>150MPa 3.4–3.6 지수급증, 최적 3.4–3.6; bimodal 14:3µm 8:2) | **★ 우리 DEM+MPM 압축의 직접 방법론 형제 — 출력 porosity/τ/접촉면적/crack/응력 1:1; reconstruct-then-compress(top-down 출발) vs 우리 predict-from-powder(bottom-up 출발) distinction; LIGGGHTS/GeoDict/MPSP-DEM = 우리 도구군; 과압축 caveat ↔ 우리 over-compression** | ✅ 풀 디제스트 (`lit_lim2025_virtual_calendering_framework.md`); ⚠Li-ion 액체 NCM622 → METHOD만 전이(수치앵커 아님), positioning_vs_geodict 정밀화 |
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
 | 2.5 | #281 | 미세구조→GeoDict effective→1D 전기화학(COMSOL)→방전; 구조변수 decouple | **★ Phase 4 결합 blueprint(=우리 voxel FV→PyBaMM) + DiffuDict(유효 D_eff/τ) 이식 + predictor decouple** | ✅ 풀 디제스트 (`lit_kim2026_...md`); ⚠Li-O₂ 외래→METHODOLOGY만, 수치앵커 아님 |
 | 3 | #271 | ★ LPSCl+NCM ASSB σ_ionic(Pwd 0.087/PTFE 0.064/NBR 0.042) + PTFE void↓(22.3 vs 28.7 vol%) + GeoDict reconstruct | **★ σ_ionic 절대 검증 앵커(Bazzoun에 이은 2번째 같은-소재계, audit #1 다점화) + PTFE 양의 역학효과(audit #5) + positioning 재확인** | ✅ 풀 디제스트 (`lit_hong2026_sulfide_cathode_binder_digitaltwin.md`); ★ 우리 소재계 → 수치 전이됨 |

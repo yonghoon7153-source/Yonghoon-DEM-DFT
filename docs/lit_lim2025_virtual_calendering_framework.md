@@ -110,10 +110,10 @@ Young-Jun Kim⁴, Joonam Park⁵\*\*, **Yong Min Lee**¹²\*, "Validating the Vi
 
 ### 3.1 (a) FIB-SEM 토모그래피 → 3D 디지털 트윈 재구성
 - **장비:** FIB-SEM (Crossbeam 550, ZEISS).
-- **uncalendered(2.3 g/cm³):** pixel 37.22 nm, FIB milling 간격 32.5 nm, **1,500개 단면 이미지**, 도메인
-  ≈ **30 × 90 × 40 µm³** (= a×b×c, SI Table S1).
-- **calendered(3.6 g/cm³):** voxel 42.94 nm, 동일 milling 간격, **1,160(본문)/932(SI)개 단면**, 도메인
-  ≈ **33 × 60 × 56 µm³**.
+- **uncalendered(2.3 g/cm³):** voxel/pixel 37.22 nm, FIB milling 간격 32.5 nm, image 2048×1536×1080, 도메인
+  ≈ **30 × 90 × 40 µm³** (= a×b×c).  단면 수: SI Table S1 **1,080** / 본문 Experimental **1,500** (출처별 상이 — 표기 그대로).
+- **calendered(3.6 g/cm³):** voxel 42.94 nm, 동일 milling 간격, image 2048×1536×1080.  도메인: SI Table S1
+  **30 × 60 × 40 µm³** / 본문 **≈ 33 × 60 × 56 µm³** (출처별 상이).  단면 수 SI **932** / 본문 **1,160**.
 - **이미지 처리(GeoDict, Math2Market):** FFT 필터 + nonlocal means 필터 → trilinear scaling으로 z방향 보정 →
   **gray-value threshold + watershed** 분할 → 3상(pore / NCM622 / CBD) segmentation → 3D 디지털 트윈.
 - **결과(★ digital twin 검증):** **부피분율 디지털트윈 vs 이론계산 편차 모두 <2%p**(Fig 1d,e):
