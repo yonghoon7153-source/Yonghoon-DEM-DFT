@@ -14,11 +14,11 @@ Bazzoun/Varkey)을 벤치마크로 1:1 대조한다.  living 문서: 각 논문 
 
 | # | 모델 요소 (우리) | 문헌 벤치마크 | 우리 값 | 판정 |
 |---|---|---|---|---|
-| 1 | **σ_ionic 절대값** (Kirchhoff/Holm) | Bazzoun 2026 EIS, 동일 LPSCl+NMC811 | 0.0436 mS/cm @85wt%CAM | ✅ 정합 (아래) |
+| 1 | **σ_ionic 절대값** (Kirchhoff/Holm) | Bazzoun + **#271** EIS, 동일 LPSCl+NCM | DEM ~0.04–0.18 mS/cm | ✅✅ 다점 검증 (envelope 0.04–0.14) |
 | 2 | **τ for Phase 4** (σ_ionic-anchored) | #286 XCT τ, #266 bimodal τ↓ | τ_Laplace,eff ~4.0 | ✅ 이중계산 회피 (아래) |
 | 3 | **Bimodal P:S 7:3 / Furnas dip** | #266 ASSB bimodal 7:3 최적 | 7:3 production, dip AM70-85% | ✅ 독립 실험 검증 |
 | 4 | **CBD carbon 퍼콜** (방금 완료) | #275 연속 CNT sheath | 1-4wt% discrete 퍼콜 불가 | ✅ 정합 (아래) |
-| 5 | **PTFE = 비전도 σ=0 장애물** | #271 PTFE void↓, #286 defluorination | additives.py PTFE phase | ⚠ 단순화 (아래) |
+| 5 | **PTFE = 비전도 σ=0 장애물** | **#271** PTFE void−6.4%p·팽창1.74 (정량) | additives.py PTFE phase | ⚠ 양(+)기계역할 누락 → MPM --coh (E3) |
 | 6 | **porosity 규약** (ε_sphere 물질보존) | #266 ASSB cathode (#286은 ✗ 흑연음극) | real_14 15.6% | ⏳ #266 디제스트 |
 | 7 | **poly/single = 크기·σ만 다른 강체구** | #266/#285 poly↔single 역학 차이 | AM_P/AM_S | ⚠ 단순화 (아래) |
 | 8 | **E_eff 18× softening** | Varkey multi-contact DEM (대안) | 1.35(DEM)/1.53(MPM) GPa | ✅ 3중 검증(기존) |
@@ -37,9 +37,15 @@ CLAUDE.md가 "missing direct validation"으로 표시했던 **절대 σ_ionic �
 - 80wt%→85wt% 외삽: 0.065 × ~0.65 ≈ **0.042** → 우리 **0.0436과 거의 일치** ✅.
 - ⇒ 우리 절대 σ_ionic은 실험 EIS 추세 위에 앉는다 = 하자 아님, 오히려 **절대 검증**.
 
-⏳ 완전 검증(PENDING, CLAUDE.md 항목): Bazzoun 4개 조성(vol% CAM:SE)을 우리 φ_SE로 매핑해 다점 비교 +
-multi-pressure σ-vs-P를 우리 Heckel knee(P_y=138)와 대조.  단결정(우리 0:10) vs 다결정(Bazzoun) 차이가
-잔차로 남을 수 있음 → 매핑 후 확정.
+✅✅ **2번째 절대 앵커 = #271 (Hong 2026, 동일 LPSCl+NCM, digital-twin)** — `docs/data/hong2026_sigma_ionic.csv`:
+LPSCl 양극 EIS σ_ionic = **Pwd 0.087 / S-Pwd 0.079 / PTFE 0.064 / NBR 0.042 mS/cm** (350 MPa).  우리 DEM
+production 범위(**~0.04–0.18**) 안에 정확히 들어가고, Bazzoun(0.065–0.137)과 합쳐 **LPSCl+NCM σ_ionic
+엔벨로프 ≈ 0.04–0.14**를 형성 → **우리 DEM 출력이 그 안에 앉는다.**  조성추세도 정합(coverage/φ_SE↓→σ↓:
+Pwd LPSCl-coverage 35%/σ 0.087 → NBR 26%/σ 0.042).  bulk LPSCl **1.87** mS/cm도 (Bazzoun pellet 1.02,
+Cronau single-crystal 3.0) 사이 = GB-incl 다결정 범위로 일관.  ⇒ **audit #1: 1점 외삽(Bazzoun) → 2독립
+EIS 데이터셋이 둘러싸는 다점 검증.**
+⏳ 잔여(point-to-point): 압력 차(Hong 350 / Bazzoun 400 / 우리 300 MPa) + Hong vol% 미제공 → 엔벨로프
+정합이지 1:1은 아님; 압력·vol%→φ_SE 매핑하면 점대점 확정.  하지만 **절대값 검증은 사실상 닫힘**(envelope).
 
 ## ✅#2 — Phase 4 τ는 σ_ionic-anchored라 "기하 τ 이중계산" 함정을 피한다
 
@@ -69,15 +75,20 @@ self-percolate 불가(carbon-only σ=0; carbon ≈6-7% ≪ 31% 3D 퍼콜 thresho
   VGCF=interstitial 둘 다 아님) — **두꺼운 전극서 실제로 이기는** 형태 → 향후 additive 옵션(`additives.py`
   seed_sheath 후보).  Li-ion liquid라 절대값 전이는 아니고 carbon-morphology 물리만.
 
-## ⚠#5 — PTFE를 비전도 장애물(σ=0)로만 모델링 → 역할 일부 누락
+## ⚠#5 — PTFE를 비전도 장애물(σ=0)로만 모델링 → 양(+)의 기계 역할 누락 (#271로 정량)
 
-- #271(동일 sulfide ASSB): **PTFE(dry)가 긴밀 접촉 유지 + void 형성 최소화** → 계면 열화 억제 (NBR은 void
-  성장).  즉 PTFE는 **기계적 void-감소** 이득이 있는데 우리는 σ=0 차단만 → PTFE의 **양(+) 기여를 과소평가**.
-- #286: PTFE **defluorination → LiF + amorphous carbon** 1st-cycle 계면 변화(전기화학).  우리 Stage-2(무전기화학)
-  엔 무관하나 Phase 4에선 고려 대상.
-- 판정: transport-only Stage 2에선 **허용 가능한 단순화**지만, porosity/coverage에 PTFE의 void-fill 기여를
-  넣으면 더 정확.  → MPM에서 PTFE는 이미 상으로 존재(additives.py) → MPM porosity엔 반영, 단 σ 네트워크엔
-  순수 장애물.  하자 아님, 개선 여지.
+- ❗ **#271(동일 LPSCl ASSB, 풀 디제스트) — PTFE의 양(+) 기계 역할이 ASSB에서 실재·지배적**:
+  PTFE(dry, confined fibril) → **pore-vol 28.7→22.3 vol% (−6.4%p, void 억제)**, 부피팽창 1.74 < Pwd 1.88,
+  접착 2×, retention 94.6%(최고).  순 σ_ionic 0.064 = Pwd의 74%(차단−치밀화 상쇄 후).  우리는 **σ=0 차단(음)만**
+  모델 → **void 억제·치밀화(양)를 빠뜨림** → PTFE-case porosity **과대예측** + σ_ionic **과소예측** 위험.
+  ⇒ defluorination(#285/#286, 액체 LIB-only, ASSB 무관)과 **다른 새 축**: "PTFE 기계적 void-억제 미모델".
+  **구현 lever:** MPM에 PTFE를 **cohesion 상**으로(`--coh` PTFE 항) → void-억제·치밀화 재현; 검증 앵커 = #271
+  pore-vol(28.7→22.3)·팽창(1.74).
+- NBR(wet, 광범위 coverage → void 성장, σ 0.042 최저, rock-salt 17-22nm)은 **wet 공정 특화 → 우리 dry-side
+  모델 무관**(전이 안 함).
+- 판정: transport-only Stage 2에선 σ=0 단순화가 **σ_ionic 엔벨로프엔 여전히 정합**(#271 PTFE 0.064도 우리 범위
+  안) → **Stage-2 하자 아님**.  단 PTFE-case **porosity·치밀화 정밀도**를 위해 MPM --coh PTFE 항이 개선 lever
+  (E3).  Phase 4 degradation에선 PTFE void-억제가 retention을 가르므로 필수.
 
 ## ✅/❗ #7 — poly/single 역학 — #285 디제스트로 정량 (rigid-AM ✅ 검증 + 점탄성 spring-back ❗ 한계)
 
