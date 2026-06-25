@@ -168,12 +168,39 @@ IF 19.3).  Rakhwi Hong†, Jingyu Choi† … Yong Min Lee\* (Yonsei DTBL).  접
   - **우리 우위:** 그들은 **post-mortem 2D 재구성 + 연속체 전자전도**; 우리 DEM+MPM은 **압력→미세구조→σ
     triad 예측 + 소성 morphology + 압축역학**. frame[5] 분업 재확인(그들엔 입자스케일 예측 없음).
 
-### #276 — Materials/Process-Driven Microstructural Engineering for Dry-Processed Electrode (리뷰)  ★★
-Materials Horizons 13 (2026) 3149-3177 (Back Cover, IF 11.4).  DOI 10.1039/d5mh02484f.
-- **핵심:** DPE의 재료(AM/도전재/binder/CC) + 공정(혼합/kneading/lamination/**calendering**)을
-  **미세구조 최적화 관점**으로 정리한 리뷰.
-- **매핑:** 우리 DEM+MPM은 DPE 미세구조 도구 그 자체.  calendering→우리 압축, 혼합/분산→CBD seeding.
-  우리 작업의 **positioning/framework 인용**.  (리뷰라 디제스트보다 맥락 참고.)
+### #276 — Materials/Process-Driven Microstructural Engineering for Dry-Processed Electrode (리뷰)  ★★ → ★★★(positioning anchor)  ✅ 풀 디제스트 완료
+Materials Horizons **13** (2026) 3149-3177 (Back Cover, IF 11.4, Open Access).  DOI 10.1039/d5mh02484f.
+Gwonsik Nam†, Jaejin Lim†, Seungyeop Choi† … **Yong Min Lee\*** (Yonsei DTBL + POSCO).  ★ **풀 디제스트:**
+`docs/lit_nam2026_dpe_microstructure_review.md`.
+★ **이 그룹(이용민 DTBL)의 자기 도메인 리뷰 = 우리 DEM+MPM 프로젝트 전체의 FRAMEWORK/POSITIONING 논문.**
+⚠ **일반 Li-ion DPE 리뷰**(우리 LPSCl sulfide ASSB가 specifically 아님) → **정량 셀 절대값(mAh/g·ICE·
+retention)은 Li-ion 맥락**. 그러나 **(a) 미세구조 엔지니어링 framework, (b) 4단계 공정 taxonomy, (c) 미세구조-
+특징 어휘, (d) 정성 DPE 사실/에너지%는 DIRECTLY 전이**(DPE는 ASSB 양극 선도경로 + 미세구조 물리 화학계 무관;
+리뷰가 LPSCl 사례 직접 인용 ref 57·119·148). **수치 σ/porosity 앵커가 아니라 framework 앵커**(앵커는
+Bazzoun/Varkey/Minnmann/#266).
+- **핵심:** DPE 제조를 **4단계(powder mixing · kneading · laminating · **calendering**)**로 해부 + **3대
+  결함(non-uniformity · delamination · heterogeneous densification/crack)**의 기원 + 소재(AM/도전재/binder-
+  PTFE&대안/집전체) 혁신을 **미세구조 최적화 관점**으로 종합. **bi-directional material↔process interplay**가
+  미세구조를 빚는다는 thesis(소재 혁신이 공정한계 완화, 공정전략이 소재제약 수용).
+- **★ 미세구조 5대 핵심특징(= 우리 DEM+MPM 출력 1:1):** ① 각 성분 spatial distribution/morphology, ②
+  **AM–CBD interfacial contact**(= 우리 coverage/Tabor), ③ **effective active surface area(ASA)**(= 우리
+  ASA), ④ **ion-percolation tortuosity**(= 우리 τ_Laplace,eff/τ_Dijkstra + σ_ionic C(τ)), ⑤
+  **electron-conduction continuity**(= 우리 σ_e 접촉망/CN/percolation). → rate/cycle/energy/safety 결정.
+- **★ 정량 DPE 사실(positioning 인용):** drying+회수 = full-cell 제조에너지 **46.84%**; NMP 회수 ~10 kWh/kg
+  (잠열 **45×**); DPE 전환 → **CAPEX·OPEX 각 −20%·장비 −30%·coating +20%·CO₂ −60%**(WPE 2.3 kg CO₂/kWh);
+  loading **20→70 mg/cm²(~75→200 µm)** → 비활성 21→6%·GED 475→541 Wh/kg; binder **<1 wt%** self-standing.
+  PTFE 피브릴화(Maxwell, 2022 Tesla Model Y). LPSCl+PTFE(H) ASSB 사례 209.7 mAh/g·97.4%@300cyc(ref 85).
+- **★ 매핑(positioning의 심장):** 리뷰=**DESCRIPTIVE**(정성), 우리 DEM+MPM=**PREDICTIVE**(압력→미세구조→σ
+  triad + 소성 morphology + fracture). ⇒ 우리 작업 = **이 리뷰가 정의한 미세구조 엔지니어링 framework의 정량
+  엔진.** calendering(§3.4 feed/nip·bimodal void-fill·crack) = 우리 압축; mixing/분산 = CBD seeding(SuperP/
+  VGCF); bimodal PC+SC(Fig 6b/c, ref 116/**119 LPSCl**) = 우리 **Furnas dip + #266 P:S 7:3 + 12:4:1**;
+  frame[5] 분업(transport 특징 = DEM / mechanics 특징 = MPM)을 리뷰가 둘 다 명명 → 분업의 독립 정당화.
+- **★ honest GAP:** **delamination/집전체 adhesion**(§3.3, 3대 결함의 하나) = 우리 미모델(bulk RVE만);
+  kneading 피브릴화 rheology(우리는 fibril 형태만 seeding); calendering 온도/전단장(우리 압력만); PTFE
+  defluorination ICE 손실(우리 PTFE 기계/부피만). → 논문에서 "bulk 미세구조 집중, 집전체 계면은 future work".
+- **ACTION:** intro/significance에서 우리 작업을 **이 framework의 정량 엔진**으로 인용(5특징↔우리출력 표);
+  압축을 "calendering(densification)"으로 재명명; bimodal/dip을 Fig 6b/c 근거로 강화; 에너지% 사실을 "왜
+  DPE/우리 작업이 중요한가" 동기로. ⚠ **수치 앵커 아님 — framework 앵커**(혼동 금지).
 
 ### #275 — Continuous Carbon Nanotube Sheath, Dry-Processed Thick Electrodes  ★★
 Joule 10 (2026) 102392 (IF 37.1).  Jin Kyo Koo†, Jaejin Lim† … Yong Min Lee.
@@ -333,6 +360,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 3 | #271 | PTFE void↓ vs NBR void↑ (digital-twin) | binder→void→σ 축; PTFE additive 검증 | litdb 풀 디제스트(PDF) |
 | 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
+| 5.7 | #276 | **DPE 4단계 taxonomy + 미세구조 5특징 + 양방향 material↔process interplay (리뷰)** | **★ 우리 DEM+MPM 전체의 FRAMEWORK/POSITIONING — 5특징↔우리출력 1:1; calendering=압축; descriptive↔우리 predictive 엔진** | ✅ 풀 디제스트 (`lit_nam2026_...md`); ⚠일반 Li-ion DPE 리뷰→framework/positioning 앵커(수치 앵커 아님) |
 | 5.5 | #284 | 탄소코팅↑→전자↑·이온↓, moderate 균형; SSRM/W_adh 분산정량 | **CBD ion/electron trade-off 독립확증 + balance curve sweep + 분산 균일도 metric** | ✅ 풀 디제스트 (`lit_oh2026_...md`); ⚠SiOx흑연/액체→개념·방법만, 수치앵커 아님 |
 | 6 | #275 | 연속 CNT sheath, thick 전극 | **--fibre 연속 thread / VGCF 검증** | 이미 정합(방금 작업) |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
