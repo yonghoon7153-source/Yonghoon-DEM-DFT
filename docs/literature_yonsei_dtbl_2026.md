@@ -453,6 +453,52 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 
 ---
 
+## ★ 보충 / FRAMEWORK 리뷰 (#260-286 리스트에 번호 없음 — supplementary references)
+
+> 이 그룹의 **peer-reviewed가 아닌 리뷰/매거진 글**(또는 리스트 외 framework 자료).  **수치 앵커가 아니라
+> TAXONOMY/positioning 공급원**.  번호를 부여하지 않고 제목으로 파일링.
+
+### (보충) E.Chem Magazine 2024 digital-twin review — 디지털 트윈 모델링·시뮬레이션 (한국어 총설)  ★★★(positioning NAMING)  ✅ 풀 디제스트 완료
+**E.Chem 매거진(전기화학 매거진) Vol. 16, No. 1 (2024), pp. 20-37** — "디지털 트윈 모델링과 시뮬레이션: 배터리
+연구를 위한 새로운 분석 및 설계 도구."  최준혁·임재진·정승원·홍낙휘·김수환·**이효빈(Hyobin Lee)**·박주남·**이용민
+(Yong Min Lee)\***(연세대 배터리공학·화공생명 = DTBL + DGIST + LG에너지솔루션).  ★ **풀 디제스트:**
+`docs/lit_choi2024_digital_twin_review_echem.md`.
+⚠ **동료심사 저널 논문 아님(일반총설/Korean popular-science review) → #260-286 리스트에 번호 없음 → 번호 안 매김.**
+⚠ **수치 앵커 아님** — LPSCl σ/porosity 절대 앵커는 Bazzoun/Varkey/Minnmann/#266.  **유일한 가치 = TAXONOMY/
+positioning**(top-down/bottom-up · multi-scale · 미세구조 descriptor 어휘 · DTP/DTI).
+- **★★ 결정적:** 본문 Fig 1b/2d/3/4e/5/6/7 전부 **"[Ref 127 재구성 ⓒ 2024 ACS]"** = **S. Kim, H. Lee, J. Lim,
+  J. Park, Y. M. Lee, _ACS Energy Lett._ 2024, 9, 5225-5239**(DOI 10.1021/acsenergylett.4c01931).  ⇒ **이 한국어
+  총설 = 그룹 자신의 ACS EL 2024 도구논문(이효빈·임재진 공저 = DTBL 모델러)의 한국어 확장판** → top-down/bottom-up
+  분류는 **우리가 비교/이식하는 바로 그 그룹의 자기 방법론 진술**(positioning 최강 근거).  ⚠ peer-review 인용은
+  이 총설 대신 **ACS EL 원본(Ref 127)을 쓰는 게 안전** — 후속 디제스트 후보.
+- **핵심:** (1) **atom→particle→electrode→cell→pack** multi-scale 지도(Fig 1a; electrode 스케일 도구 = **DEM·FVM**
+  명시 = 우리 위치); (2) 미세구조 **5요소 descriptor**(Fig 1b: AM size/shape/orientation/coating/**crack** · 도전재
+  shape/distribution/**connection** · binder shape/distribution/**surface coverage** · 전극 **contact area/porosity/
+  tortuosity/pore network**/homogeneity · separator); (3) **DTP(설계측)/DTI(물리연결측)**; (4) ★ **하향식(top-down/
+  reconstruction: XCT/FIB-SEM 측정구조 재구성) vs 상향식(bottom-up/formation: 설계파라미터→DEM/FVM/확률생성)**(Fig 3,
+  LPSCl+NCM 70wt% 예시!); (5) 구조-해상 분석(Fig 4: connectivity·SE void·contact loss; SW Avizo/GeoDict/TauFactor/
+  Fiji); (6) 다중물리(Fig 5: 압축 변위·von Mises·발열); (7) AI surrogate(Fig 6a 100×) + 압연 DEM 공정모델(Fig 6c
+  압축-spring back-접촉/τ) + 동적 시뮬 전망(Fig 7).
+- **★ positioning(이 리뷰의 핵심 활용):** **top-down(reconstruction)/bottom-up(formation) 분류 = `positioning_vs_
+  geodict.md`의 "GeoDict=구조-given 특성화 / 우리=공정→구조 예측"과 정확히 동일.**  ⇒ 우리 DEM+MPM = **bottom-up/
+  formation**(리뷰가 DEM·FVM을 그 도구로 명시; 우리는 그 중 process-physics-driven 하위유형 = 확률배치 아닌 압축역학);
+  GeoDict 논문(#266/#271/#281/#284/#286/#275) = **top-down/reconstruction**.  **Fig 1b descriptor(crack/connection/
+  surface coverage/contact area/porosity/tortuosity/pore network/dead particle) = 우리 출력(fracture/percolation/
+  coverage/StageE/porosity/τ/dead-SE) 1:1.**  리뷰=DESCRIPTIVE(방법론 survey), 우리=PREDICTIVE(압력→미세구조→σ) →
+  우리 = framework의 정량 엔진.  우리 고유 edge = granular constriction σ(Kirchhoff/Holm, 연속체 voxel FV가 놓침).
+- **★ honest gap:** top-down 재구성(우리는 bottom-up 전용 — GeoDict/토모 담당, frame[5]); 입자 orientation/coating
+  (우리 등방 구); **spring-back(Fig 6c)/동적 균열(Fig 7b)**(우리 rate-independent J2 미구현, #285 한계); delamination
+  (bulk RVE만, #276 §3.3 gap); LBM 유동/SEI(ASSB 관련 낮음).
+- **★ #276과 구별:** **#276(Nam 2026, Mater. Horiz.) = DPE 공정 taxonomy**(4단계 mixing/kneading/laminating/
+  **calendering**=압축); **이 리뷰 = 디지털 트윈 방법론 taxonomy**(top-down/bottom-up).  교차인용 — 공정(#276) ×
+  방법론(이 리뷰)의 교차점에 우리 작업.  cross-link: `lit_nam2026_dpe_microstructure_review.md` + `positioning_vs_
+  geodict.md`.
+- **ACTION:** intro/significance에서 top-down/bottom-up을 **Choi 2024 / Ref 127(Kim 2024 ACS EL)** 인용으로 명시
+  ("우리=bottom-up/formation process-physics-driven, GeoDict 논문=top-down/reconstruction"); Fig 1a electrode
+  스케일에 우리 배치(E softening 정당화); Fig 1b descriptor 어휘 채택; 우리를 DTP로 명명.
+
+---
+
 ## · TIER-4 — 타 화학계 (카탈로그만; 우리 모델 직접 관련 낮음)
 
 | # | 제목(요약) | 저널 | 비고 |
@@ -481,6 +527,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
 | 5.7 | #276 | **DPE 4단계 taxonomy + 미세구조 5특징 + 양방향 material↔process interplay (리뷰)** | **★ 우리 DEM+MPM 전체의 FRAMEWORK/POSITIONING — 5특징↔우리출력 1:1; calendering=압축; descriptive↔우리 predictive 엔진** | ✅ 풀 디제스트 (`lit_nam2026_...md`); ⚠일반 Li-ion DPE 리뷰→framework/positioning 앵커(수치 앵커 아님) |
+| 5.8 | (보충) E.Chem 2024 digital-twin review (=Ref 127 ACS EL 2024 한국어판) | **★ top-down(reconstruction) vs bottom-up(formation) 분류 + atom→pack multi-scale + Fig 1b descriptor + DTP/DTI** | **★★★ positioning NAMING — 우리=bottom-up/formation(process-physics), GeoDict 논문=top-down/reconstruction; Fig 1b descriptor↔우리출력 1:1; positioning_vs_geodict.md 정당화** | ✅ 풀 디제스트 (`lit_choi2024_digital_twin_review_echem.md`); ⚠peer-review 아닌 총설→번호 없음, framework/positioning 앵커(수치 앵커 아님) |
 | 5.5 | #284 | 탄소코팅↑→전자↑·이온↓, moderate 균형; SSRM/W_adh 분산정량 | **CBD ion/electron trade-off 독립확증 + balance curve sweep + 분산 균일도 metric** | ✅ 풀 디제스트 (`lit_oh2026_...md`); ⚠SiOx흑연/액체→개념·방법만, 수치앵커 아님 |
 | 6 | #275 | 연속 SWCNT sheath, thick 전극; "discrete 도전재 연속망 실패 + 이온채널 막음" | **★★ 우리 voxel CBD 발견(전자 σ=0 퍼콜 + 이온 1.8× blocking)의 EXPERIMENTAL PROOF + 제3 morphology(conformal sheath) + digital-twin(D_eff/PNM) blueprint** | ✅ 풀 디제스트 (`lit_koo2026_...md`); ⚠NCMA/흑연/액체 dry→morphology 물리만, 수치앵커 아님 |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
