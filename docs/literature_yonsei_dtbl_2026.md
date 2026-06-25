@@ -81,14 +81,47 @@ Journal of Power Sources 686 (2026) 240471 (IF 8.4).
 
 ## ★★ TIER-2 — Dry-processed electrode / ASSB / CBD / 압축 (강하게 관련)
 
-### #285 — Modulating CBD Viscoelasticity Suppresses Time-Dependent Spring-Back (Single-Crystal Cathodes)  ★★★
-Energy Storage Materials, Accepted 2026 (IF 19.3).  Rakhwi Hong†, Jingyu Choi† … Yong Min Lee.
-- **핵심(제목):** **CBD 점탄성**을 조절해 단결정 cathode의 **시간의존 spring-back(압축 후 되튐) 억제**.
-- **우리 모델 매핑:**
-  - **spring-back = 우리 MPM springback/relaxation** (CLAUDE.md "springback validation pending"; MPM
-    `--protocol hold` = 변위정지 후 relax = spring-back 모델링).  이 논문이 **CBD 점탄성 메커니즘** 제공.
-  - 단결정 = 우리 **AM_S**.  CBD 점탄성 → 우리 CBD 상(additives.py)의 기계 물성에 점탄성 추가 후보.
-  - **ACTION:** PDF로 spring-back 정량(시간상수, 압력) 추출 → 우리 MPM hold-relax 검증 앵커.
+### #285 — Modulating CBD Viscoelasticity Suppresses Time-Dependent Spring-Back (Single-Crystal Cathodes)  ★★★  ✅ 풀 디제스트 완료
+Energy Storage Materials (2026), DOI 10.1016/j.ensm.2026.105321 (PII S2405-8297(26)00453-8, ENSM 105321,
+IF 19.3).  Rakhwi Hong†, Jingyu Choi† … Yong Min Lee\* (Yonsei DTBL).  접수 2026-04-03 / 게재확정 2026-06-20.
+★ **풀 디제스트:** `docs/lit_hong2026_cbd_viscoelasticity_springback.md`.
+⚠ **소재 = 단결정 NCMA(LiNi₀.₈₆₅Co₀.₀₅₄Mn₀.₀₇₅Al₀.₀₀₇O₂) 양극 + CBD(Super P+PVDF) + 액체전해질
+(1.15 M LiPF₆ EC/EMC 3:7) 일반 LIB** — **우리 LPSCl sulfide ASSB가 아님** → 전기화학 절대값 전이불가.
+**단 #286(흑연 pore 수송, 무관)과 달리 이 논문은 입자/CBD 역학(단결정 견고성·균열·압축·spring-back·CBD
+점탄성)이 주제 → 역학은 (주의해서) 전이됨.**
+- **핵심:** **단결정 CAM은 견고 → 균열·변형으로 에너지 못 빼므로 압축응력이 무른 점탄성 CBD로 몰림.**
+  CBD 점탄성은 온도의존: **RT(25°C) → 탄성 CBD → 응력저장 → 시간의존 spring-back**(3주 **58→61.7 µm,
+  +4 µm**); **HT(80°C) → 사슬이동도↑ → 점성/compliant CBD → 응력소산 → spring-back 억제**(3주 **+1 µm**).
+  다결정은 입계균열로 소산 → spring-back 무(Table S1: 66 µm 유지). 코드 **RC-P/RC-S/HC-P/HC-S**(RT/HT ×
+  pristine/3주stored).
+- **핵심 수치:** spring-back RC-S +4 µm vs HC-S +1 µm; **500사이클 retention HC-P 69.9% / HC-S 67.2% /
+  RC-P 62.6% / RC-S 32.4%(최악)**; bulk 전자저항 pristine 0.50 → stored 0.56 Ω·cm; **nanoindentation h_max
+  RT 1193 → HT 1948 nm**, **dissipation ratio 0.62 → 0.67**; **DMA E′ HT −41.2%**(tan δ는 온도↑→↑);
+  치밀화효율 RT는 roll gap 60 µm·HT는 70 µm에서 목표밀도; **CAM–CBD 계면접촉 HC-S +25%**, **유효 σ_e
+  +50%**(RC-S 0.19 → HC-S 0.32); CAM/CBD σ_e = **0.7 / 500 S/m**(Table S2). 검증 = 2D SEM 재구성 +
+  GeoDict(MatDict/PoreDict/ConductoDict) + DMA + nanoindentation + HPPC/EIS.
+- **우리 모델 매핑 (★ 역학 검증 + spring-back 한계 지목 — 수치 σ/porosity 앵커는 Bazzoun/Varkey/Minnmann):**
+  - **(a) ✅ 검증:** "단결정=견고 → 압축이 무른 상으로 몰림" = **우리 MPM rigid-AM scaffold + soft-plastic
+    SE 분담의 실험 정당화**(우리 AM_S=single-crystal을 `--am-scaffold` 고정 obstacle로 둔 게 옳음).
+    Stage-2 audit #7의 단결정 견고성 측면을 **검증**으로 굳힘.
+  - **(b) ❗ 균열 GAP:** 다결정 입계균열→에너지소산→spring-back억제는 **역학 균열 역할**. 우리 DEM 균열은
+    **transport(σ↓, Auerbach/Holm)만**, MPM은 균열 자체 없음(AM=rigid). (i)균열→두께 연결 + (ii)poly>single
+    균열경향 **둘 다 없음** → chemo-mechanical(Phase 4) 한계.
+  - **(c) ❗ 시간의존 spring-back 재현 불가(핵심):** 그들 spring-back = **점탄성=시간의존(3주)+온도의존**.
+    우리 MPM = **rate-independent J2**(시간·점성·온도 전무), hold-relax는 ~40 substep **순간 settling**
+    (`mpm3d_compaction.py:636-642`). ⇒ **구조적으로 시간의존 spring-back 재현 불가** = CLAUDE.md "springback
+    validation pending"의 **정체**. **하자 아닌 미구현 물리**(정적 압축 종점은 옳게 줌). 해결 = MPM에
+    **점탄성 요소(SLS=Maxwell+병렬스프링) + η(T)/E(T) DMA 캘리브** 추가. 이 논문이 검증데이터 제공.
+  - **(d) ❗ CBD 역학 활성화:** 그들 **CBD 점탄성 = THE 설계변수**(spring-back 지배). 우리 `additives.py`
+    CBD = 기하/부피/전자블로킹만(역학 없음). spring-back 다루려면 **CBD를 능동 점탄성 역학체로**(MPM에 CBD
+    material point + 점탄성 + σ_e). transport-only Stage-2엔 불필요.
+  - **(e) ❗ Calendering 온도축 GAP:** RT/HT가 그들 핵심 dial. 우리는 압력/변위만(온도·roll gap 없음). η(T)/
+    E(T) 넣어야 온도효과 예측가능. ⚠ ASSB는 cold-press가 표준 → 온도축은 일반 LIB 확장/ASSB 고온공정 시만 우선.
+  - **★ 워크플로 이식:** 2D SEM 재구성→GeoDict(계면접촉면적·pore size·**전류밀도 국소화/분산 맵**·유효 σ_e)
+    = 우리 `voxel_conductivity`/`viz_mpm_continuum` 출력 추가 후보(#286과 동일 도구 — 전류밀도 localization
+    맵은 우리 StageE coverage/force-chain 대응 시각지표).
+  - **우리 우위:** 그들은 **post-mortem 2D 재구성 + 연속체 전자전도**; 우리 DEM+MPM은 **압력→미세구조→σ
+    triad 예측 + 소성 morphology + 압축역학**. frame[5] 분업 재확인(그들엔 입자스케일 예측 없음).
 
 ### #276 — Materials/Process-Driven Microstructural Engineering for Dry-Processed Electrode (리뷰)  ★★
 Materials Horizons 13 (2026) 3149-3177 (Back Cover, IF 11.4).  DOI 10.1039/d5mh02484f.
@@ -201,7 +234,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 1 | #266 | bimodal P:S 7:3 → tortuosity↓ → σ↑, 87.8%@200cyc | **P:S 7:3 production + Furnas dip 실험 앵커** | PDF로 수치 추출 → validation corpus |
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
 | 3 | #271 | PTFE void↓ vs NBR void↑ (digital-twin) | binder→void→σ 축; PTFE additive 검증 | litdb 풀 디제스트(PDF) |
-| 4 | #285 | CBD 점탄성 → spring-back 억제 | **MPM hold-relax springback** 메커니즘 | PDF로 시간상수 |
+| 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
 | 6 | #275 | 연속 CNT sheath, thick 전극 | **--fibre 연속 thread / VGCF 검증** | 이미 정합(방금 작업) |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
