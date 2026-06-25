@@ -89,3 +89,18 @@ Fig들이 "[Ref 127 재구성 ⓒ2024 ACS]")의 한국어 확장판.  ⚠ 디스
 그 bottom-up 안에서도 **"process-physics-driven" 최강 sub-type**(확률적 배치 #263가 아니라 압축역학 인과).
 (단 그들 Fig 6c "압연 DEM 공정모델: 압축–spring-back–접촉/다공/굴곡"의 **spring-back은 우리 MPM 미구현 gap
 #285** — 그 그림은 청사진이자 우리 future-work 근거.)
+
+## ★★ 시조까지 거슬러 — 계보의 ROOT(2020)조차 GeoDict 규칙배치 (#22 Park 2020)
+
+풀 디제스트 `docs/lit_park2020_digitaltwin_assb_foundational.md`.  **Park, …, Yoon Seok Jung, Yong Min Lee,
+"Digital Twin-Driven All-Solid-State Battery," Adv. Energy Mater. 2020, 10, 2001563** — 이 디지털트윈-ASSB
+계보의 **시조(2020)**, 우리 정확한 소재계(LiNbO₃-NCM711+LPSCl+NBR).  ★ 논문 Experimental이 **GrainGeo
+(GeoDict 2020)로 입자 배치 + BatteryDict/ConductoDict/PoroDict로 물성**이라 명시 — 즉 **시조부터 GeoDict**.
+구조 형성법 = "변형성 LPSCl을 입자 간극에 **규칙으로 배치**(reflecting PSA sizes → minimal porosity), NBR을
+사이에 추가" = **press를 시뮬하지 않음**(top-down/reconstruction × 규칙배치, #263 bucket).  ⇒ 디지털트윈-ASSB
+계보가 **시조(2020 Park) → 2023 Battery Energy → #271 → #266 → #281 → #286 → 2024 #18 taxonomy까지 전부
+top-down/GeoDict 규칙배치**; 우리 DEM+MPM process-physics(압력·조성 → 구조 인과)는 **그 계보 전체의 ROOT를
+능가하는 유일한 bottom-up**.  ★ Park의 *"deformable LPSCl → minimal porosity"* 규칙 = 우리 **MPM 소성
+void-fill의 2020 언어 원형**(frame[5]): 그들은 **말로 규칙**, 우리는 **물리로 계산**.  ⇒ positioning 한 문장에
+추가 가능: *"… 본 접근은 디지털트윈-ASSB 계보의 시조(Park 2020)부터 최신 리뷰(#18 2024)까지 일관된
+GeoDict 규칙배치(top-down)와 달리, 공정 압축역학에서 구조를 인과적으로 예측하는 bottom-up이다."*

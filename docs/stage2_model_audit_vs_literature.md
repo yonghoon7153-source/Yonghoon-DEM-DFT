@@ -172,6 +172,13 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   DEM rigid 12.70%는 rigid floor로 위(소성흐름 없음) → **물리값=MPM, dip모양=DEM** (frame[5] 깨끗).
 - **#1 (σ_ionic 절대값) ✅✅** — Bazzoun + #271 + #266 = 3 독립 LPSCl+NCM EIS가 우리 DEM(~0.04–0.18)을
   감싸는 엔벨로프 ~0.03–0.14 형성.
+- **★ #22 Park 2020 (FOUNDATIONAL ROOT) ✅ frame[4] 4건** (`docs/lit_park2020_digitaltwin_assb_foundational.md`):
+  계보 시조(2020) — 우리 정확한 소재계(LiNbO₃-NCM711+LPSCl+NBR) + 조성축(NCM 60–90wt%).  ① 최적창 NCM
+  60–80wt%(dead LPSCl ≤0.5%→90wt%서 6–20%) ↔ 우리 dead-AM 회피대; ② **NCM 90wt% σ_eff,ion=계산불가
+  (LPSCl 퍼콜 단절, Fig S10) ↔ 우리 σ_ionic SE-no-perc degenerate(2mAh_real_16, 8mAh_real_11) 1:1**;
+  ③ dead-SE 6–20% ↔ 우리 SE-퍼콜 취약 corner; ④ σ_eff,ion↓ with NCM ↔ 우리 form.  ⚠ σ_eff=intrinsic×ε/τ
+  연속체(voxel-FV) **출력**(접촉망 아님) → 추세·자릿수만, 절대앵커는 Bazzoun/#271/#266 유지.  ★ positioning:
+  **시조 논문조차 GeoDict 규칙배치**(GrainGeo+BatteryDict; press 미시뮬) → 우리 process-physics가 계보 ROOT 능가.
 - **#5 (PTFE) — #271로 정량** (void −6.4%p) + **E3 lever 보강(#264)**: SBR 가교도 modulus↑→무결성 = 같은
   결론(PTFE/SBR 수렴).  #264 힌트: `--coh`는 **비단조(과가교 X14 agglomeration→하락) cap 곡선** + binder
   modulus(MPa)는 SE E_eff(1.53 GPa)와 **별개 항**(3–4 자릿수 차).
@@ -182,6 +189,10 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   NCM811 가정은 single이 높음).  → **하자라기보다 재료-특이 가정**이지만, CLAUDE.md σ_e endpoint(σ_S=10/
   σ_P=5)가 #266 재료엔 sign-flip → **σ_e form 재검토 대상**(Phase 3 predictor 전, 조성-σ_e 방향을 재료별로
   분리하거나 σ_AM을 입력으로).  porosity/σ_ion 검증과 **분리해서** 관리.
+  ★ #22 Park 2020: **σ_eff,e↑ with NCM wt%** = 부피분율 지배 → 우리 **φ_AM⁴ 항 방향 확증**(부피축); Park은
+  입경/σ_S/σ_P endpoint 축은 안 다룸(NCM711 고정) → endpoint 순서(single>poly)는 **Trevisanello 2021 digest
+  (Tier1, 진행중)**가 1차 출처로 확정 예정 — single-결정 무내부GB→intrinsic σ_e↑가 #266 W-doped-NCWA poly와
+  재료-의존으로 갈리는지 거기서 판정.
 
 **최종 결론 (논문 13편 디제스트 후):** Stage-2 transport 모델 **명백한 하자(❗) 없음** — σ_ionic 절대값(3 EIS
 앵커 envelope), bimodal dip(#266 1:1), CBD 퍼콜(#275 실험증명), PTFE σ=0(#271 정량, E3 lever), E_eff
