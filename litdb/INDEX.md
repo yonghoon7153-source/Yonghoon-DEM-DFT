@@ -14,6 +14,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | Liu, MgF₂ 공도핑 electron redistribution (Angew 2023) | 음극·환원·도핑(Mg s-p) |
 | `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) | 리뷰·oxide/sulfide·계면 landscape |
 | `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | **[우리 그룹]** Kim/Cho/Y.M.Lee, ICCF(이온성액체 cavity filler) → σ 회복 155 % + 음극 in-situ LiF-rich SEI (CEJ 2026) | 시트 미세구조·σ 회복·음극 in-situ SEI·계면(실험) |
+| `papers/kim2025_conductive_agent_se_coating_cathode.md` | **[우리 그룹]** Kim/Y.M.Lee, SE 코팅 중 도전재(CA) 차원 효과 — 0D Super P(나쁨) vs 1D VGCF(좋음, ≈CA無 dense) (Battery Energy 2025) | 양극복합체·코팅형상·전자전도경로·CA 차원(실험, 계산無) |
 
 
 ## 시트: 실험값  (21 entries)
@@ -41,6 +42,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 19.0 | Ultra-densified solid electrolyte enabling high-current and long-cycli | https://doi.org/10.1016/j.cej.2026.178175 | 2026.0 | Li5.5PS4.5Cl1.5 (375MPa) 7.1 mS/cm 17~18 GPa; Li5.5PS4.5Cl1.5 (750MPa) 7.1 mS/cm 16~17 GPa; Li5.5PS4.5Cl1.5 (1.5GPa) 7.0 mS/cm 16GPa | 📄 |
 | 20.0 | Tailoring the Work Function of Oxyhalide Solid Electrolytes via Sulfur | https://doi.org/10.1002/smll.74036 | 2026.0 | LiTaOCl₄ 12.4 mS/cm Work function ( 3.96 eV ); LiTaO0.5 S0.5 Cl 1.89 mS/cm Work function( 4.54 eV ) | 📄 |
 | 21.0 | Enhancing Compatibility of Halide with Sulﬁde-Electrolytesvia High Oxy | https://doi.org/10.1002/adfm.202510497 | 2025.0 | Li₂ZrCl₆ Oxidation potential : 3.42 V; Li₄ZrCl₄O₂ Oxidation potential : 3.48 V; .0.......................................................... | 📄 |
+| 22.0 | **[우리 그룹]** Impact of Conductive Agents in Sulfide Electrolyte Coating on Cathode Active Materials (composite electrode, ASSB) | 10.1002/bte2.20250027 | 2025.0 | Li₆PS₅Cl(=comp1) on LiNbO₃-NCM711; **CA 차원 효과**: SE@CAM(dense, σ_e 3.3e-2 S/cm, 185.3 mAh/g) vs SE-SP@CAM(0D, σ_e 1.0e-5, 활성면적 0.51, 151.6) vs SE-VGCF@CAM(1D, σ_e 1.4e-2, 183.5, 200cyc 76.8%). 계산無·전극제작 — `papers/kim2025_conductive_agent_se_coating_cathode.md` | ✅ |
 
 ## 시트: 계산값  (18 entries)
 
@@ -85,7 +87,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 12.0 | When Electrolytes Are Semiconductors: A Feature, Not a Bug for Solid-S | 10.3390/batteries12020060 | sulfid | DFT (GGA-PBE / HSE06) + 실험(SKPM, PEIS, CV) 전자 세 황화물 SE 모두 wide-band-gap 반도체(direct: LPSCl 2.45/3.30 eV, LPSBr 2.32/3.34 eV; | 📄 |
 ---
 
-## 📂 보유 PDF (지금까지 "먹인" 논문 — 26개, ~23 unique)
+## 📂 보유 PDF (지금까지 "먹인" 논문 — 27개, ~24 unique)
 
 > status: ✅ digest 완료 · ⬜ PDF 보유·미digest. 디지스트는 `litdb-curator`로 하나씩.
 
@@ -116,5 +118,6 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 23 | da9a7f39 / 6488e8eb (SI) | Liu, electron redistribution MgF₂ redox-resistible (Angew 2023) — `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | ✅ |
 | 24 | 4229e857 / 98afe5b4 (SI) | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) — `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | ✅ |
 | 25 | 6bc71e96 / 0a75f53b (SI) | **[우리 그룹]** Kim/Cho/Y.M.Lee, ICCF molten-salt cavity filler → σ 회복 155 % + 음극 in-situ LiF SEI (CEJ 2026) — `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | ✅ |
+| 26 | bed8fa69 / 00e03394 (SI) | **[우리 그룹]** Kim/Y.M.Lee, 도전재(CA) 차원 효과 in SE 코팅 — 0D Super P vs 1D VGCF, 양극복합체 (Battery Energy 2025) — `papers/kim2025_conductive_agent_se_coating_cathode.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정)*

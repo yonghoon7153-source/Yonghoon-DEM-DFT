@@ -20,12 +20,17 @@
 | [JPCC] | First-Principles Mech&Aniso 2025 — D3 E27.4/B34.7/G10.0 | 📄 Excel | DFT |
 | **[Rupp]** | Kim/Balaish/Rupp 2021 AEM — oxide vs sulfide SE + 계면 landscape 리뷰 (63 pp) | ✅ `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | review |
 | **[KimICCF]** ⭐우리그룹 | Kim/Cho/Y.M.Lee 2026 CEJ — ICCF(IL cavity filler) → σ 회복 155 % + 음극 in-situ LiF-rich SEI (한양대 Cho + Yonsei Lee) | ✅ `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | exp(+분자 HOMO/LUMO·GeoDict) |
+| **[KimCA]** ⭐우리그룹 | Kim/Y.M.Lee 2025 Battery Energy — SE 코팅 중 도전재(CA) 차원 효과: 0D Super P(나쁨) vs 1D VGCF(좋음, ≈CA無 dense). 양극복합체 σ_e·활성표면적·형상 (Yonsei Lee + DGIST) | ✅ `papers/kim2025_conductive_agent_se_coating_cathode.md` | exp(계산無) |
 
 ---
 
 > 🗺️ **Landscape note [Rupp]** (digest `papers/kim2021_review_oxide_sulfide_se_interfaces.md`): 우리 LPSCl/LPSCl1.6의 좌표계 논문. **oxide(garnet LLZO: σ~1 mS/cm·환원 0.05 V·산화 2.9 V·E 140–160 GPa·취성) vs sulfide(argyrodite Li₆PS₅X: σ~10⁻³·환원 1.7 V·산화 2.0–2.2 V·E~10–37 GPa·연성)** 의 head-to-head + 양극/음극 계면 카탈로그(Table 1·2·3·4, SI Table 1). 우리 숫자(ESW band·환원산물·연성)를 *검증*이 아니라 *문헌 줄에 정렬*하는 용도. **Cl-rich(LPSCl1.5/1.6) 자체는 안 다룸** → 우리 비교는 리뷰 너머의 기여.
 
 > ⭐ **우리 그룹 동반 논문 note [KimICCF]** (digest `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md`): **한양대 Kuk Young Cho + Yonsei Yong Min Lee** (우리 LPSCl DFT 계보)의 **실험** 논문. SE = **Li₆PS₅Cl(=우리 comp1)**. 격자 도핑이 아니라 **액체 cavity-filler(ICCF=IL [EMIM][TFSI]+LiTFSI+FEC)** 로 **(1) σ 회복(시트 1.44→2.23 mS/cm, 155 %, 펠릿 70 %)** + **(2) 음극 in-situ LiF-rich SEI**(XPS F1s 684 eV, Li₂S 억제) 달성. **🔑 두 개의 평행:** (a) **σ 손실 원인 = 공동(미세구조 34.2 %), bulk 결정 아님** → 우리 "σ_e/σ는 interphase·microstructure 레버, bulk 아님" 결론과 **양 날개**. (b) **LiF-rich SEI가 SE 분해 억제 = 우리 'electron-blocking(전자절연) interphase'(Li₂O/Li₃PO₄/NdPO₄/LiCl) 메커니즘의 실험 카운터파트** (LiF·LiCl·Li₂O 모두 wide-gap 절연 패밀리). DFT는 분자 HOMO/LUMO(B3LYP/6-311++G)+GeoDict digital-twin뿐 → **bulk 결정 DFT 수치 직접 대조는 부적절, 개념(목표·레버) 정렬 용도.** ⚠ Cl 1.0(comp1)만; modelc(Cl 1.6) 없음.
+
+> ⭐ **우리 그룹 동반 논문 note [KimCA]** (digest `papers/kim2025_conductive_agent_se_coating_cathode.md`): **Yonsei Yong Min Lee + DGIST** (우리 LPSCl DFT 계보)의 또 다른 **순수 실험·전극공정** 논문. SE = **Li₆PS₅Cl(=우리 comp1**, POSCO JK, D50 1 µm), 양극 = LiNbO₃-NCM711. **격자 도핑이 아니라 양극 복합체 측** — SE를 CAM에 코팅할 때 **도전재(CA) 차원**이 코팅 형상·전자전도 경로를 지배함을 보임: **SE@CAM(CA無, dense, σ_e 3.3×10⁻² S/cm·185.3 mAh/g·CE 81.6 %)** vs **SE-SP@CAM(0D Super P, Super-P-rich, σ_e 1.0×10⁻⁵=3,000배↓·활성표면적 1.00→0.51·151.6 mAh/g)** vs **SE-VGCF@CAM(1D VGCF-embedded porous, σ_e 1.4×10⁻²=SE@CAM 수준 회복·183.5 mAh/g·CE 82.7 %·200 cyc 76.8 %)**. **🔑 핵심**: ASSB 성능 레버 = **코팅층 형상 + 전자전도 경로(CA 차원·mixing protocol)**, bulk 결정 아님 → 우리 "lever = interphase/microstructure, not bulk lattice" 결론의 **양극(cathode) 측 실험 보강**. ⚠ **계산 전혀 없음 → DFT 수치 직접 비교 절대 금지**; σ_e/σ_i 절대값도 device(복합양극) σ라 우리 bulk와 대상 다름. 비교는 **동일 SE(comp1) + 개념(레버=미세구조) + 같은 그룹 동반** 수준만. modelc(Cl 1.6) 없음.
+
+> 🗺️ **Landscape note — 같은 그룹 3각 구도 [KimICCF] × [KimCA] × 우리 DFT**: 한 그룹(Yonsei Y.M.Lee + 한양대 Cho + DGIST) 안에서 ASSB의 전 영역이 **분업·수렴**한다 — **(a) bulk 격자·산화창·Li 이동도·환원산물 = 우리 DFT(comp1/modelc/Nd)**, **(b) 시트 σ 회복(공동 채움) + 음극 in-situ LiF-rich SEI = [KimICCF]**(sheet/anode-side), **(c) 양극 복합체 전자전도·코팅 형상(CA 차원) = [KimCA]**(cathode-side). 세 논문 모두 SE = **Li₆PS₅Cl(=comp1)**. **🔑 공통 결론**: ASSB의 실현 성능을 좌우하는 레버는 **bulk 결정이 아니라 미세구조·계면·전자전도**다 — [KimICCF]는 "σ 손실=공동(미세구조)·SEI=계면화학", [KimCA]는 "양극 성능=코팅형상·전자경로(CA 차원)", 우리 DFT는 "bulk는 wide-gap·S-limited onset·Cl이 σ↑/onset 불변 → 차별화 여지가 interphase에 있음". → deck "우리 연구의 위치" 슬라이드: **우리 DFT(bulk) + 두 동반 실험(cathode·sheet/anode) = '레버는 interphase/microstructure'에 양·음극 양면으로 수렴**. ⚠ 두 실험 논문 모두 **modelc(Cl-rich) 없음**(comp1만), [KimCA]는 **계산 0**(개념 비교만).
 
 ## A. 이온전도도 — *Cl-rich가 빠르다 (전원 일치)*
 | 주장 | 출처 | 우리 (comp1→modelc) | 일치 |
@@ -35,7 +40,8 @@
 | **Li₆PS₅Cl = S²⁻/Cl⁻ 완전 disordered → 가장 빠른 Li⁺** (Cl이 X=Cl,Br,I 중 disorder 최대) | **[Rupp]** p.9 | comp1→modelc D↑·Ea↓ (Cl-rich 빠름) | **✓ 구조적 근거** (Cl disorder = σ↑ 원인) |
 | AIMD setup (300 eV/Γ/NVT) | [GG] | 동급 | ✓ 방법 정합 |
 | **device σ ≠ bulk σ: 손실 원인 = 미세구조(공동), bulk 결정 아님** (시트 1.44 ↔ 펠릿 3.2 mS/cm; 공동 채우면 2.23=155 %) | **[KimICCF]** (Li₆PS₅Cl=comp1, GeoDict digital-twin) | 우리 bulk AIMD RT-외삽 σ ≫ 실현 σ | **🔑 개념 평행**: 우리 "σ는 interphase·percolation 변수"와 일치. **둘 다 "bulk 잠재력 ≫ device σ"** → 미세구조가 병목. 절대값 직접 비교는 금지(bulk 단결정 vs 시트 실측) |
-> 인사이트: 우리 AIMD가 실험·문헌 trend 재현 → 신뢰. 절대 σ는 RT 외삽이라 Arrhenius로 비교. **[KimICCF]: 같은 그룹 실험이 "σ 병목은 bulk가 아니라 미세구조(공동)" 를 직접 보여줘 우리 'lever=interphase' 결론을 실험으로 보강** (GeoDict σ 1.96/2.10 sim ≈ 1.95/2.17 exp).
+| **device 전자전도 σ_e = 코팅 형상·도전재 분포가 지배(양 아니라 연결성)** — 양극 복합체 σ_e가 3,000배 변동(3.3×10⁻²↔1.0×10⁻⁵ S/cm), 활성표면적 1.00↔0.51; **CA 차원(0D Super P 나쁨 / 1D VGCF 좋음)** 이 레버 | **[KimCA]** ⭐ (Li₆PS₅Cl=comp1, 계산無) | 우리 bulk σ_e 미측정(gap 2.066/2.098 eV=wide-gap insulator); device σ_e 못 봄 | **🔑 개념 평행(양극측)**: ASSB 성능 레버 = 코팅 형상·전자전도 경로(미세구조), bulk 결정 아님 → 우리 "lever=interphase/microstructure" 결론의 cathode-side 보강. ⚠ **계산 0 → DFT 수치 비교 금지**; σ_e 절대값도 device(복합양극)라 우리 bulk와 대상 다름 |
+> 인사이트: 우리 AIMD가 실험·문헌 trend 재현 → 신뢰. 절대 σ는 RT 외삽이라 Arrhenius로 비교. **[KimICCF]: 같은 그룹 실험이 "σ 병목은 bulk가 아니라 미세구조(공동)" 를 직접 보여줘 우리 'lever=interphase' 결론을 실험으로 보강** (GeoDict σ 1.96/2.10 sim ≈ 1.95/2.17 exp). **[KimCA]: 같은 그룹이 양극 측에서 "device σ_e·성능은 코팅 형상·도전재 차원(미세구조)이 지배, bulk 아님" 을 직접 보여줘 같은 결론을 cathode-side로 확장** (CA 양 아니라 분포·연결성; Super P 과잉이 오히려 σ_e 3,000배↓). → **[KimICCF](sheet/anode) + [KimCA](cathode) = 우리 'lever=interphase/microstructure' 결론에 양면 수렴.**
 
 ## B. 산화안정성 — **4축 분리 (축 명명 없이 말하면 틀림)**
 | 축 | 우위 | 출처 | 우리 값 / 재현 |
