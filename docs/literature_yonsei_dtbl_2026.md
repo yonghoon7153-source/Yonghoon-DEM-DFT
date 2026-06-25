@@ -71,11 +71,56 @@ Small 22(3) (2026) e07883 (IF 11.8).  Jaejin Lim†, Junhyeok Choi† … Hyobin
     degradation metric 아이디어.
   - digital-twin이 우리 프레임과 동일 → 그들의 결합 방식(Phase 4 PyBaMM과 연결될) 참고.
 
-### #281 — Microstructure-Guided Reactant Transport, 3D Air Electrodes (Li-O₂)  ★★
-Journal of Power Sources 686 (2026) 240471 (IF 8.4).
-- **핵심:** architected 3D air electrode 미세구조 → reactant 수송 엔지니어링 (다른 화학계지만 동일 원리:
-  미세구조 설계 → 수송 최적).
-- **매핑:** 미세구조→수송 설계 원리 공유; 우리 transport triad와 같은 사고.  주변부(다른 시스템).
+### #281 — Microstructure-Guided Reactant Transport, Architected 3D Air Electrodes (Li-O₂)  ★★ (→ Phase 4 blueprint급)  ✅ 풀 디제스트 완료
+Journal of Power Sources **686** (2026) 240471 (IF 8.4), DOI 10.1016/j.jpowsour.2026.240471.  Suhwan Kim†,
+Seungwon Jung† … Seokwoo Jeon\*(KU), Yong-Mook Kang\*(KU/UCSD), Yong Min Lee\*(Yonsei DTBL).  접수
+2026-04-16 / 게재확정 2026-05-19.  MDB 2025 특별호.  ★ **풀 디제스트:**
+`docs/lit_kim2026_a3d_air_electrode_microstructure_transport.md`.
+⚠ **소재 = Li–O₂ 전지(금속-공기) 공기극** — Li metal 음극, **O₂ 가스**(주변 공기) + 액체전해질
+(**1 M LiCF₃SO₃ in TEGDME**) 중 Li⁺, 방전생성물 **Li₂O₂**, 양극 골격 **Ni**(A3D BCT/diamond 또는 foam).
+**우리 LPSCl sulfide ASSB가 전혀 아님** → **모든 전기화학·구조 절대값(용량·과전압·SSA·D_O₂·σ) 전이불가**.
+가져올 것은 **METHODOLOGY 3종**(아래) — 수치 σ/porosity 앵커 아님(Bazzoun/Varkey/Minnmann/#266이 담당).
+- **핵심:** **3D 디지털트윈 구조분석(GeoDict) + 1D 전기화학 모델(COMSOL) 결합**으로 architected-3D(A3D)
+  공기극 미세구조 → reactant(O₂·Li⁺) 수송 엔지니어링. **구조변수(SSA·porosity·유효 D_O₂·유효 σ_e/σ_ion)를
+  독립 변화시켜 산소수송·반응국소화·방전용량·과전압을 분리(decouple)**. ★ **단위셀 주기↓ → SSA↑(반응
+  site↑) but pore 좁아짐 → 유효 D_O₂↓ → 고율 용량 제한(trade-off)** → **diamond 단위셀(잘 연결된 pore
+  network) + electropolishing 표면공학(D300EP)**으로 SSA↑를 산소수송 보존과 양립 → **+37% 용량**.
+- **방법:** **GeoDict 2025**(STL→voxel **0.01 µm**; ProcessGeo 'Repeat'·GrainGeo 'Roughen Surface'·
+  FoamGeo·**MatDict**=SSA·**ConductoDict**=유효 σ_e/σ_ion·**DiffuDict**=유효 D_O₂) + **COMSOL 6.3 1D
+  전기화학**(방전 ORR만; separator|air electrode|GDL 3도메인; 'Lithium-Ion Battery'+'Transport of Diluted
+  Species in Porous Media'+'Domain ODEs and DAEs'; Li₂O₂ **film형 성장**(50 Ω·m²) → SSA·porosity↓·기공막힘).
+  = 이 그룹 **3번째 GeoDict 활용**(#286 τ/PNM, #284 W_adh 다음).
+- **핵심 수치:** A3D vs foam — 유효 **σ_e 2.51×10⁵ vs 0.40×10⁴ S/cm**(6배↑), **SSA 1.02×10⁷ vs 0.88×10⁵
+  m²/m³**(~116배↑), porosity 45.6 vs 80.2 %; BCT B600/B500/B400/B300(Table S3) **SSA 1.02/1.69/2.10/2.88
+  ×10⁷**(period↓ 단조↑), **유효 D_O₂ 0.92/1.67/1.29/1.46 ×10⁻⁸ cm²/s**(비단조, B500 최대), porosity
+  45.6/56.9/51.1/54.3 %; 고율 용량 **B500 최대**(SSA 최고 B300 아님 — D_O₂가 지배), 과전압 B300 최소;
+  decouple — **0.01 mA/cm²(저율): porosity가 용량 지배**(±15%p→±~30% 용량), **0.05(고율): SSA가 지배**
+  (절반→−34.6%, 2배→+37.9%), **D_O₂ 비단조**(고율 1.5×에서 anomalous 열화→국소집중·기공막힘); 전자/이온
+  전도도 변화는 무영향(rate-limiting 아님); **D300EP areal capacity B500/D400 대비 +37%**(고율). 1D 모델
+  Table S2 전체셋(공기극 8/GDL 192/separator 420 µm; t₊ 0.92; D_O₂ 4.17e-8; O₂농도 9.46 mol/m³; 전류
+  0.01/0.05/0.10 mA/cm²).
+- **우리 모델 매핑 (★ METHODOLOGY 3종 — 수치 앵커는 Bazzoun/Varkey/Minnmann/#266):**
+  - **(a) ✅ GeoDict ConductoDict/DiffuDict ↔ 우리 `voxel_conductivity.py` FV:** 둘 다 voxel에 ∇·(σ∇φ)=0
+    (전도)/정상상태 Fick(확산) → 균질화 유효물성. **수학적으로 동일**(상용판). ✅ 우리 voxel FV 접근 확증.
+    우리가 이미 정리한 한계(점접촉 sub-voxel→constriction 못 잡음, `voxel_conductivity_crossvalidation.md`)
+    동일 적용 — 정렬골격(A3D/AM)엔 맞고 granular SE엔 DEM Holm 필요(frame[5]). ★ **DiffuDict(유효 D_eff/τ)는
+    우리에게 없음** → voxel FV에 확산모드 추가 → contact-network τ와 frame[4] 교차검증 이식 후보.
+  - **(b) ★★ 미세구조→effective→COMSOL 1D ↔ 우리 미세구조→effective→PyBaMM Phase 4 = published blueprint:**
+    그들 COMSOL 1D(effective ε/τ/σ/D 주입→방전곡선, Table S2) = 우리 PyBaMM DFN
+    (`{"transport efficiency":"tortuosity factor"}`로 τ 주입 + σ 주입). 결합 디테일 3종 직접채택:
+    (i)핵심전극=측정 effective·보조도메인=Bruggeman ε^1.5 혼용, (ii)동역학 파라미터는 문헌+실험fit 후 고정·
+    구조변수만 변화, (iii)방전부터·충전은 추가물리로 분리. ⚠ 방정식/물성은 Li-O₂ 특유→ASSB로 교체
+    (단일이온 t₊≈1·접촉저항·무O₂).
+  - **(c) ★ 구조변수 decouple→성능 귀속 ↔ 우리 predictor(knobs→metrics→성능):** 사고 동형(그들=물리모델
+    1변수 sweep, 우리=ML 다변수). ★ **DOD colormap(작동조건이 어느 변수 지배) + 5축 레이더(다목적 구조-물성
+    균형)** 시각화를 우리 predictor 출력에 이식 후보.
+  - **우리 우위:** 그들은 **고정 미세구조(CAD/리소그래피) + GeoDict + 1D 전기화학(출력단)**; 우리 DEM+MPM은
+    **압력→미세구조 예측(입력단) + 소성 morphology + 접촉 σ triad + granular constriction + fracture**. ⇒
+    이상 워크플로 = 우리가 미세구조 생성/예측 → GeoDict식 effective(우리 voxel FV) → 그들식 1D 전기화학
+    (우리 Phase 4). frame[5] 분업 재확인(그들엔 입자스케일 압축예측·접촉 σ triad 없음 — 논문도 자인:
+    "1D framework relies on volume-averaged effective properties... cannot capture pore-scale
+    heterogeneities"). ⚠ Stage-2 audit 영향 없음(Li-O₂ 외래 + Phase-4 결합 방법론 → transport 판정에 새
+    벤치 없음); Phase 4 결합 프로토콜은 `stage4_electrochem_research.md` 반영 가치.
 
 ---
 
@@ -284,6 +329,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 |---|---|---|---|---|
 | 1 | #266 | bimodal P:S 7:3 → tortuosity↓ → σ↑, 87.8%@200cyc | **P:S 7:3 production + Furnas dip 실험 앵커** | PDF로 수치 추출 → validation corpus |
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
+| 2.5 | #281 | 미세구조→GeoDict effective→1D 전기화학(COMSOL)→방전; 구조변수 decouple | **★ Phase 4 결합 blueprint(=우리 voxel FV→PyBaMM) + DiffuDict(유효 D_eff/τ) 이식 + predictor decouple** | ✅ 풀 디제스트 (`lit_kim2026_...md`); ⚠Li-O₂ 외래→METHODOLOGY만, 수치앵커 아님 |
 | 3 | #271 | PTFE void↓ vs NBR void↑ (digital-twin) | binder→void→σ 축; PTFE additive 검증 | litdb 풀 디제스트(PDF) |
 | 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
