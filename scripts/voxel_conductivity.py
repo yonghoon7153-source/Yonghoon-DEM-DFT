@@ -27,6 +27,10 @@ from scipy.sparse.linalg import cg
 _USE_GPU = False   # set by --gpu: run the CG on the GPU (CuPy) when available — big speedup for the
 #                    thick-electrode grids (256×256×700+ ≈ 46M cells); falls back to CPU automatically.
 
+_SIGMA_AM_E = None  # set by --sigma-am-e: override the AM electronic σ (mS/cm).  0 → AM is a NON-conducting
+#                     obstacle so CARBON is the sole e-path → isolates the carbon-only percolation regime
+#                     (the literature 1D-VGCF vs 0D-SuperP comparison, where the AM is not the conductor).
+
 
 def _cg_solve(A, b, tol=1e-6, label=''):
     """Jacobi-preconditioned CG for A·x=b.  GPU (CuPy) when --gpu and CuPy import OK (the solve, not
@@ -397,6 +401,8 @@ def sigma_grid(pres, channel, drop_carbon=False):
         σ_without < σ_with, which is physically impossible.)  Measure the CBD ionic blocking via
         the STRUCTURAL comparison instead — voxel a no-CBD run and a +CBD run and compare."""
     sig = dict(PHASE_SIGMA[channel])
+    if channel == 'electronic' and _SIGMA_AM_E is not None:
+        sig['AM'] = _SIGMA_AM_E                                 # --sigma-am-e: AM e-σ override (0 → carbon-only)
     if drop_carbon and channel != 'ionic':
         sig['VGCF'] = 0.0; sig['SuperP'] = 0.0                  # carbon stops conducting (e/thermal)
     out = np.zeros(next(iter(pres.values())).shape, np.float64)
@@ -443,8 +449,14 @@ def _main():
                     help='run the CG solve on the GPU via CuPy (big speedup for thick-electrode grids, '
                          'e.g. 256×256×700; the solver is CPU/scipy by default).  Auto-falls back to CPU '
                          'if CuPy is not installed.')
+    ap.add_argument('--sigma-am-e', type=float, default=None,
+                    help='override the AM electronic σ (mS/cm; default 50 = NCM811, Trevisanello).  Set 0 to '
+                         'make AM a NON-conducting obstacle so CARBON is the SOLE e-path → isolates the '
+                         'carbon-only percolation (the literature 1D-VGCF vs 0D-SuperP regime: which carbon '
+                         'morphology percolates at a given loading when the AM is not the conductor).')
     a = ap.parse_args()
     global _USE_GPU; _USE_GPU = a.gpu
+    global _SIGMA_AM_E; _SIGMA_AM_E = a.sigma_am_e
     if a.se_id:                                                      # ── SE plastic contact-network mode ──
         if a.thickness_um is None:
             raise SystemExit('--se-id needs --thickness-um (electrode thickness, e.g. 170.4)')
