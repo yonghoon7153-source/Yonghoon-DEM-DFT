@@ -148,11 +148,13 @@ i.e. a GOOD AM network).  Two `--add-recipe`s, same 80:18:1:1 wt%, n_grid 266 MP
   mask; the blocking is MPM SE-rearrangement, not voxel occupancy).  Net for real_10:
   | channel | SuperP | VGCF | favours | regime note |
   |---|---|---|---|---|
-  | electronic | **1.3×** | 1.1× | **SuperP** | AM-GOOD (carbon supplementary); flips to VGCF when AM-poor (lit) |
+  | electronic | **1.3×** | 1.1× | **SuperP** | SuperP wins at EVERY alive AM density (TESTED — AM-poor probe below); 1 wt% carbon stays a gap-filler |
   | ionic (σ_ionic) | 0.0168 | **0.0298** | **VGCF** | VGCF leaves SE packing intact, SuperP blocks 1.8× more |
-  ⇒ VGCF is the all-round-safer additive (better ionic always + better electronic in the AM-poor regime
-  that actually needs carbon); SuperP only edges electronic in an already-good AM network where the
-  carbon gain is marginal (1.3× vs 1.1× of a 6.46 base).
+  ⇒ VGCF wins ionic ALWAYS; SuperP wins electronic in real_10's 1 wt% gap-filler regime at ALL AM densities.
+  The earlier "flips to VGCF when AM-poor" prediction was TESTED (decimation sweep below) and does NOT hold —
+  the real lever for a VGCF electronic win is carbon LOADING / a thin electrode (carbon-as-backbone), not
+  AM-poorness.  So VGCF is still the all-round-safer additive (ionic always + the higher-loading electronic
+  regime), but on real_10 specifically SuperP edges electronic at every AM density.
 - Pipeline (gabia GPU): `mpm3d_compaction.py --se-dump … --add-recipe "AM:SE:{SuperP|VGCF}:PTFE=80:18:1:1"
   --save-se se_carbon{,_vgcf}.npy --save-phase phase_carbon{,_vgcf}.npy --save-se-id se_id{,_vgcf}.npy
   --save-fibre fibre_carbon{,_vgcf}.npy` then `nohup voxel_conductivity.py --se … --phase … --scaffold
@@ -160,3 +162,45 @@ i.e. a GOOD AM network).  Two `--add-recipe`s, same 80:18:1:1 wt%, n_grid 266 MP
   > {superp,vgcf}_fv_fibre.log 2>&1 &`.  σ_e thick-electrode (708 z-cells, 26 M nodes) ≈ 9–10 min/run on
   an A6000 with --gpu + bincount assembly + residual-% progress.  (`--fibre` is a no-op for SuperP — its
   0D aggregates carry fibre id −1 — so SuperP gain is unchanged with or without it.)
+
+## ★ AM-poor crossover probe — NO crossover; SuperP wins at EVERY alive AM density (real_10, 2026-06-25) ★
+
+Direct test of the literature prediction (P11/P12: 1D VGCF beats 0D SuperP when AM is poor).  Method: keep
+the SAME real_10 SE + carbon MPM dump and just DECIMATE the AM scaffold (`scripts/decimate_scaffold.py`,
+fixed seed → the SAME decimated file for BOTH additives), re-run the electronic FV — **only AM density
+changes**.  n_vox 256, --porosity 0.165, --fibre (VGCF), --gpu.
+
+| AM kept | n_AM_P | WITHOUT (AM-only) | SuperP WITH (gain) | VGCF WITH (gain) | winner | SuperP edge |
+|---|---|---|---|---|---|---|
+| 100 % | 226 | 6.464 | **8.564** (1.3×) | 7.414 (1.1×) | SuperP | +15.5 % |
+| 90 %  | 203 | 4.794 | **6.617** (1.4×) | 5.684 (1.2×) | SuperP | +16.4 % |
+| 75 %  | 170 | 1.895 | **3.107** (1.6×) | 2.74  (1.4×) | SuperP | +13.4 % |
+| 60 %  | 136 | 1.436 | **2.001** (1.4×) | 1.71  (1.2×) | SuperP | +17.0 % |
+| 50 %  | 113 | 0 | 0 | 0 | both dead | — |
+| 30 %  | 68  | 0 | 0 | 0 | both dead | — |
+
+**VERDICT: the crossover does NOT happen.**  SuperP beats VGCF by a STABLE **~13–17 %** at every alive AM
+density (100→60 %).  The CBD gain peaks at AM 75 % (carbon matters most when the AM backbone is
+weakest-but-alive: SuperP 1.6× / VGCF 1.4×), yet SuperP still wins.  Below ~50 % the AM-AM contact network
+collapses (sharp percolation threshold ~50–55 %) and NEITHER 1 wt% carbon can re-backbone the 708-cell-thick
+electrode → both 0 (VGCF could NOT revive the dead network either).
+
+WHY no crossover (the real physics, this is the result):
+- **At 1 wt% carbon in a THICK electrode the carbon never self-percolates → it is ALWAYS a gap-FILLER on the
+  AM backbone, never the backbone itself.**  Making AM poorer does not change that role.
+- **Gap-filling rewards DENSITY, not reach.**  SuperP's 1.4 M distributed aggregates blanket the volume →
+  one statistically always sits on the critical AM gap.  VGCF's 32 k sparse fibres only help if a fibre
+  happens to lie across a critical gap — rare at 1 wt%.  A ~6 µm gap (one removed AM_P sphere) is short
+  enough for SuperP's dense cloud to chain across, so VGCF's long reach buys nothing.
+- **Even at near-threshold AM 60–75 %** (long thin critical AM paths — where reach SHOULD matter most)
+  SuperP still wins → VGCF's reach advantage is genuinely absent in the 1 wt% gap-filler regime.
+
+⇒ **The literature VGCF>SuperP regime is reached by carbon LOADING / thin electrode (carbon-as-BACKBONE),
+NOT by AM-poorness.**  At real_10's 1 wt% + thick geometry electronic bridging is density-limited → SuperP
+wins at all AM densities.  This QUANTIFIES the boundary of the literature claim (it needs enough fibres to
+self-percolate or span the thickness; AM-poorness alone is insufficient) and confirms the AM-GOOD
+"real-physics reading" was the whole story, not a special case.
+- ionic verdict UNCHANGED (VGCF 0.0298 > SuperP 0.0168) — a separate SE-packing axis, AM-density independent.
+- ⏳ PENDING (proper VGCF-regime test): re-run at HIGHER carbon loading (e.g. AM:SE:C:PTFE 80:15:4:1, 4 wt%)
+  so carbon can self-percolate — THAT is where VGCF's 1D advantage should finally beat SuperP.  Needs a new
+  MPM dump per additive.  Tool for the AM-density axis: `scripts/decimate_scaffold.py`.
