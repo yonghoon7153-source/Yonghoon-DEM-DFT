@@ -23,6 +23,7 @@ Bazzoun/Varkey)을 벤치마크로 1:1 대조한다.  living 문서: 각 논문 
 | 7 | **poly/single = 크기·σ만 다른 강체구** | #266/#285 poly↔single 역학 차이 | AM_P/AM_S | ⚠ 단순화 (아래) |
 | 8 | **E_eff 18× softening** | Varkey multi-contact DEM (대안) | 1.35(DEM)/1.53(MPM) GPa | ✅ 3중 검증(기존) |
 | 9 | **σ_thermal multi-pathway Ridge 14항** | (직접 벤치 없음) | LOOCV 0.90 | ⚠ 최소 물리근거 |
+| 10 | **time-dependent spring-back** (장기보관 두께회복) | #285 점탄성 CBD (RT+4/HT+1µm/3주) | rate-indep J2 = 재현불가 | ❗ 범위 밖 (Stage-2 아님, Phase4+; #7 참조) |
 
 ---
 
@@ -70,13 +71,25 @@ self-percolate 불가(carbon-only σ=0; carbon ≈6-7% ≪ 31% 3D 퍼콜 thresho
   넣으면 더 정확.  → MPM에서 PTFE는 이미 상으로 존재(additives.py) → MPM porosity엔 반영, 단 σ 네트워크엔
   순수 장애물.  하자 아님, 개선 여지.
 
-## ⚠#7 — 다결정(AM_P)/단결정(AM_S)을 크기·σ만 다른 강체구로 취급
+## ✅/❗ #7 — poly/single 역학 — #285 디제스트로 정량 (rigid-AM ✅ 검증 + 점탄성 spring-back ❗ 한계)
 
-- #266(bimodal): large **polycrystalline** + small **single-crystalline**의 이점은 패킹뿐 아니라 **역학**(다결정은
-  입계 균열 경향, 단결정은 견고)에도 기인.  #285: 단결정 cathode의 **시간의존 spring-back**(CBD 점탄성).
-- 우리 DEM/MPM은 AM_P/AM_S를 **크기 + σ_AM(전자)** 로만 구분, **파괴·springback 역학 차이 없음**(둘 다 강체구).
-- 판정: porosity/packing(Furnas)·transport엔 영향 작음(✅ #266 7:3 정합) → **transport 하자는 아님**.  단
-  chemo-mechanical(Phase 4 degradation, #262/#266/#285)으로 가면 poly↔single 역학 구분이 필요 → **향후 한계**.
+`docs/lit_hong2026_cbd_viscoelasticity_springback.md`.  #285는 단결정 NCMA(액체 LIB) — 전기화학 절대값은
+전이불가지만 **입자/CBD 역학은 전이됨**(우리 AM_S=단결정).  세 갈래로 갈림:
+- ✅ **rigid-AM 검증:** #285 핵심 = **단결정 CAM은 견고(monolithic)해 파괴로 에너지를 못 푼다 → 압축응력이
+  CBD로 간다**.  이것이 정확히 **우리 MPM의 rigid-AM scaffold + 소성 soft상** 그림 → 우리 rigid-AM 가정이
+  단결정에 대해 **실험 정당화**됨(단순화가 아니라 **맞는 모델**).
+- ✅ **D1 사실상 충족 (force-based Auerbach):** a9_50_p00(0:10 전부 단결정)에서 우리 **force-based Auerbach(★
+  production) = 4.18% microcrack**(severe 0) = #285의 "단결정 균열 억제"와 정합.  δ-based 17.23%는 단결정엔
+  **과대**(보수적 보조 readout) → 단결정 케이스 보고는 force-based(★)가 옳음.  **추가 P_c 보정 불필요**
+  (#285는 CBD/spring-back 논문이라 정량 P_c factor를 안 줌; force-based가 이미 단결정-적합).
+- ❗ **점탄성 time-dependent spring-back = 정직한 한계(미구현 물리):** #285의 spring-back은 **점탄성 = 시간(주)·
+  온도 의존**(RT 3주 +4µm vs HT 80°C +1µm).  우리 MPM은 **rate-independent von Mises J2**(시간축 없음),
+  `--protocol hold`의 relax는 ~40 substep **순간 settling** → **구조적으로 시간의존 spring-back 재현 불가**.
+  이것이 CLAUDE.md "springback validation pending"의 **구체적 정체**.  ⚠ 단 — 이건 **Stage-2 transport 하자가
+  아님**: spring-back은 **장기 보관(주 단위)** 두께회복이고, 우리가 모델링하는 건 **as-compacted(압축 직후)**
+  구조의 transport.  → **Phase 4(degradation)·장기거동으로 갈 때의 한계**, Stage-2 무결성엔 영향 없음.
+  해결책(향후): MPM에 **Maxwell/Kelvin 점탄성 CBD 요소**(시간상수 + 온도의존 tan δ) 추가 → 그때 #285의
+  DMA tan δ·3주 두께회복 데이터가 검증 앵커.
 
 ## ⚠#9 — σ_thermal Ridge(14항)는 triad 중 물리근거 최소
 
