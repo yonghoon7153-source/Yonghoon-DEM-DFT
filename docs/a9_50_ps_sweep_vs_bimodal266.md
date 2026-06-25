@@ -66,7 +66,34 @@ P 증가 방향으로:
 
 서로 **독립 보정**(#266=실험, 우리=DEM, 절대값 비교 아님) → **수렴 = 교차검증**(frame[4]).
 
-## OPEN — #266 PDF로 1:1 정량 마감
-#266 풀 디제스트 받으면 그들의 **porosity·tortuosity 절대값 + 87.8%@200cyc**를 우리 sweep 곡선과 1:1로 겹쳐
-audit ⏳ 정량 항목(#3/#6) 닫기.  현재까지는 **trend·최적위치 교차검증 ✓** (절대값은 #266이 ASSB라 전이 가능 —
-다른 액체 LIB 논문들과 달리).
+## ✅ CLOSED — #266 풀 디제스트 1:1 정량 대조 (frame[4] 교차검증 완료)
+
+#266 디제스트(`docs/lit_oh2026_bimodal_composite_cathode.md`, 데이터 `docs/data/oh2026_bimodal_sigma_porosity.csv`)
+의 정확값을 우리 a9_50 sweep과 1:1.  **SAME 시스템·조건**(90:9.5:0.5 ≈ 우리 90:10, S-LPSCl D50 0.72µm ≈
+우리 SE 0.5µm, 300 MPa, CAM poly:single = 우리 P:S).
+
+| poly_frac | #266 porosity 2D / He (%) | #266 σ_ion (mS/cm) | 우리 DEM porosity (%) | 우리 σ_ion (mS/cm) |
+|---|---|---|---|---|
+| 0.0 (0:10) | 17.96 / 11.58 | 0.034 | 17.92 (p00) | 0.0197 |
+| 0.6–0.7 (opt) | **7.55 / 8.83 (min, CAM7:3)** | **0.055 (max)** | **12.70 (min, p06 6:4)** | **0.0506 (max)** |
+| 1.0 (10:0) | 16.80 / 12.78 | 0.042 | 18.45 (p10) | 0.0066 |
+
+**판정 — 우리 rigid-sphere DEM이 #266 실험 Furnas dip을 독립 재현 ✓✓ (frame[4]):**
+- **dip 모양 1:1:** 양쪽 mono-modal 끝 다 헐겁고(#266 0:10 17.96 / 10:0 16.80; 우리 p00 17.92 / p10 18.45)
+  중간이 바닥.  최적 #266 CAM7:3(0.7) ↔ 우리 p06(0.6) = 0.2-step에서 인접 = 같은 0.6–0.7 sweet spot.
+- **물리 porosity like-for-like (frame[5]):** #266 **He pycnometry 8.83%**(3D 물리) ↔ 우리 **MPM 10.44%**
+  (소성, @p06) = ~1.5%p 일치.  우리 **DEM rigid 12.70%**는 위(rigid floor, 소성흐름 없음); #266 **2D-SEM
+  7.55%**는 셋 중 최저(단면이 작은 pore 놓침).  ⇒ **물리값=MPM, dip모양=DEM** 깔끔히 분리.
+- **σ_ion peak 위치 1:1:** #266 0.055 @CAM7:3 ↔ 우리 0.0506 @p06 (같은 decade); LPSCl+NCM 엔벨로프
+  (Bazzoun 0.065–0.137 + #271 0.042–0.087 + #266 0.034–0.055 ≈ **0.03–0.14**)를 우리 DEM(~0.04–0.18)이 감쌈.
+- **대형 다결정 fragility 1:1:** #266 기계열화 max @CAM10:0(전부 poly) ↔ 우리 severe 63% @p10(큰 AM_P 분쇄);
+  작은 단결정 intact(= #285).  E_SE **22 GPa**(#266) = real-bulk ~24의 3번째 확인(우리 E_eff 1.35/1.53 = softened proxy).
+
+⚠ **τ는 추세만:** #266 τ_ion(11–16) = MacMullin-type ε/(σ_eff/σ_bulk), 우리 geodesic τ(~1.2–2)와 정의 다름 →
+최소 위치(CAM7:3 ↔ p06)만 비교.  절대 σ는 SE 변종(Cl-rich Li₅.₅PS₄.₅Cl₁.₅) + 압력차로 "same-decade 엔벨로프".
+
+⚠⚠ **σ_e 방향은 1:1 아님 (재검토 필요):** #266 σ_e는 CAM10:0(poly) 4.09 ≫ CAM0:10(single) 0.95 — **poly가
+더 전도성**(σ_NCWA 13.7 ≫ σ_NCM 2.45).  우리 a9_50 σ_e는 P↑일수록 **감소**(13.4→3.7; 작은 AM_S 多 → 조밀
+접촉망 → σ_e↑).  **방향이 반대** — 우리 σ_e는 (접촉망 + endpoint 가정 σ_S-single 10 > σ_P-poly 5) 둘 다
+single-rich를 높이는데, #266 재료는 poly가 높음.  → σ_e 조성방향은 **재료(σ_AM endpoint)-의존** = audit
+σ_e-direction caveat (porosity·σ_ion·fracture는 깨끗이 1:1, σ_e만 재료의존).

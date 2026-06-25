@@ -379,12 +379,37 @@ Bazzoun/Varkey/Minnmann이 담당).
     소성 morphology + voxel FV(carbon σ_e gain·σ_ionic blocking mechanistic 정량 = 그들 SSRM의 인과버전)**.
     frame[5] 분업 재확인(그들엔 입자스케일 예측·접촉 σ 없음). ⚠ 절대 전기화학값(Rct·ICE) 전이불가(액체/음극).
 
-### #264 — Multi-Faceted Binder via Thiol-Ene Click, Low-Pressure-Operable ASSB  ★★
-Advanced Functional Materials 36(15) (2026) e16017 (IF 19.9).  Young Jun Park … Yong Min Lee, Yoon Seok Jung.  DOI 10.1002/adfm.202516017.
-- **핵심:** SBR binder를 thiol-ene click으로 개질(COOH 접착 + TMPT 가교).  **저압 작동** ASSB.
-  가교가 접착보다 저압 성능에 더 중요.  전기-화학-기계 안정성.
-- **매핑:** **저압 ASSB = 우리 압축 압력 축**; binder 가교 → strain 저항 → 우리 MPM 기계/coverage 유지.
-  binder 기계물성이 압축에 영향 → --coh(cohesion)와 연결.
+### #264 — Multi-Faceted Binder via Thiol-Ene Click, Low-Pressure-Operable ASSB  ★★ TIER-2 (우리 소재계지만 BINDER 화학)  ✅ 풀 디제스트 완료
+Advanced Functional Materials **36** (2026) e16017 (Open Access, IF 19.9).  Young Joon Park, Kyu Tae Kim …
+**Yong Min Lee**(공저), … **Yoon Seok Jung\***(교신, Yonsei) + DGIST + LG Energy Solution.
+DOI 10.1002/adfm.202516017.  접수 2025-06-23 / online 2026-01-28.  ★ **풀 디제스트:**
+`docs/lit_park2026_thiolene_sbr_binder_assb.md`.
+★ **소재 = Li₆PS₅Cl(LPSCl) + 단결정 NCM, ASSB = 우리 소재계**(#271/Bazzoun과 동일).  **그러나 주제 =
+BINDER 화학** → **TIER-2**(σ/porosity 절대 앵커 아님; 관련도 = 중간, binder-mechanics 레버 중심).
+⚠ **#271(Hong S-B, σ 절대 앵커)과 역할 다름** — 혼동 금지(#264=Park/Jung/SBR-wet/물리만 전이,
+#271=Hong/PTFE·NBR/수치 전이).
+- **핵심:** **SBR(슬러리/wet 바인더)를 thiol-ene click으로 두 갈래 개질** — (i) **3MPA grafting**(COOH →
+  접착↑) (ii) **TMPT cross-linking**(삼관능 thiol → 3D 망 → modulus·탄성↑).  ★ **"가교(modulus)가 접착보다
+  저압 성능에 훨씬 결정적".**  in-situ click(전구체를 슬러리에 함께 넣고 건조 중 반응 → 슬러리 공정성 유지).
+  - **검증 수치:** retention **X-SBR(X10) 75% vs SBR 68%** @100cyc; 초기 방전 **163 vs 133 mAh/g**(g-SBR
+    138 — 접착 최고지만 marginal); **Young's modulus SBR 0.78 → X6 6.36 → X10 14.31 → X14 23.53 MPa**
+    (X10 = 18×; X14는 과가교 agglomeration으로 retention 하락 → **X10 최적, 비단조**); 가교밀도 15.7/19.5/
+    25.6 ×10⁻⁵ mol/cm³; **vinyl/trans 1.327→0.914→0.854**(thiol이 vinyl 우선 반응); SAICAS g-SBR 389(@계면)
+    /peel 150 N/m(접착 압도); 나노인덴 탄성회복 **X10 66.3 vs SBR 38.2%**; DCIR **X10 92.2 vs SBR 124.5 Ω**;
+    OEP ΔP·in-situ XRD·단면 SEM 균열면적 **6→4%**(가교가 NCM 부피변화 delamination 억제); LPSCl 내성(SI
+    Note 1) pristine **2.6 → p-xylene 1.6 mS/cm**(공정 안전성, σ 앵커 아님).  **작동압 0.3 MPa**(70 MPa 비교).
+- **★ 우리 매핑(정직한 중간 관련도 — binder-mechanics 레버):**
+  - **(A) MPM binder-cohesion E3 레버 보강 ★:** "cross-link → modulus↑ → strain 저항 → 전극 무결성" =
+    우리 **MPM `--coh`(binder-cohesion, audit E3)**의 물리.  현재 E3는 #271 PTFE(dry) void-억제로 동기 →
+    **#264가 SBR(wet) 쪽 동일 결론 추가**(두 입력원 수렴: binder 기계물성/분포 → ASSB 무결성).
+  - **(B) cohesion은 "최적점 있는" 항:** X14 과가교→agglomeration→retention↓(비단조) → `--coh`를 단조가
+    아닌 **상한/최적 곡선**으로; **바인더 modulus(MPa)는 SE E_eff(1.53 GPa)와 별개 항**으로 분리.
+  - **(C) "접착보다 modulus"**: g-SBR(접착 최고) marginal vs X-SBR(modulus) dominant → 우리 `--coh`가
+    adhesion 별항보다 cohesion(망 강성) 우선하는 방향 확증.
+- ⚠ **비전이/주의:** (a) **SBR=wet/슬러리 공정**(우리 dry PTFE·#271 NBR과 같은 부류, 합성 화학은 우리 물리
+  밖); (b) **0.3 MPa = 셀 작동/스택압 ≠ 우리 300 MPa 제조압**(다른 압력 축 — 섞지 말 것; #264 자체도 70 MPa
+  고압선에선 바인더 차이 작음); (c) **σ_ionic 절대 앵커 아님**(양극 σ 표 없음 — LPSCl+NCM σ 앵커는 #271/
+  Bazzoun 유지); (d) 시간(cycling) 화학-기계 열화 = 우리 단일 스냅샷 밖(Phase 4 후보, #271과 공통 GAP).
 
 ### #270 — Ion-Conducting Cavity Filler, In-Situ SEI in Sulfide SE Sheets (ASSB)  ★★
 Chemical Engineering Journal 529 (2026) 173036 (IF 12.5).  Minjae Kim†, Yongjun Kwon† … Yong Min Lee.
@@ -459,7 +484,8 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 5.5 | #284 | 탄소코팅↑→전자↑·이온↓, moderate 균형; SSRM/W_adh 분산정량 | **CBD ion/electron trade-off 독립확증 + balance curve sweep + 분산 균일도 metric** | ✅ 풀 디제스트 (`lit_oh2026_...md`); ⚠SiOx흑연/액체→개념·방법만, 수치앵커 아님 |
 | 6 | #275 | 연속 SWCNT sheath, thick 전극; "discrete 도전재 연속망 실패 + 이온채널 막음" | **★★ 우리 voxel CBD 발견(전자 σ=0 퍼콜 + 이온 1.8× blocking)의 EXPERIMENTAL PROOF + 제3 morphology(conformal sheath) + digital-twin(D_eff/PNM) blueprint** | ✅ 풀 디제스트 (`lit_koo2026_...md`); ⚠NCMA/흑연/액체 dry→morphology 물리만, 수치앵커 아님 |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
-| 8 | #264/#268/#270 | 저압 ASSB / calendering / SE cavity-fill | 압축·압력 축 + SE void-fill | 맥락 인용 |
+| 8 | #264 | SBR thiol-ene 개질(접착 grafting + 가교 cross-linking); "가교 modulus가 접착보다 저압 무결성에 결정적"(retention 75 vs 68%, modulus 0.78→14.31 MPa 18×) | **★ MPM binder-cohesion E3 레버 보강(modulus→무결성, #271 PTFE와 쌍둥이 근거); cohesion 최적/상한·바인더≠SE modulus** | ✅ 풀 디제스트 (`lit_park2026_...md`); ⚠우리 소재계나 binder-화학·SBR=wet·0.3 MPa 작동압≠300 MPa 제조압 → 물리만 전이, σ/porosity 앵커 아님 |
+| 8b | #268/#270 | calendering(압연) 계면 재구성 / SE cavity 이온전도 filler | 압축·압력 축 + SE void-fill | 맥락 인용 |
 
 **다음 단계:** 위 #266/#263/#271/#285/#262 PDF를 받으면 각각 `docs/lit_<author>2026_<topic>.md`로
 litdb-curator 풀 디제스트(수치·그림·방법 전체) → comparison_vs_ours에 우리 DEM+MPM과 1:1 비교 추가.
