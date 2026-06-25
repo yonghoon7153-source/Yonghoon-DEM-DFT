@@ -206,7 +206,30 @@ def _vc():
     return m
 
 
-def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_close=False):
+def _densify_fibres(p, fid, h):
+    """Fill the gaps between consecutive points of each fibre (same id, kept in centreline order) with
+    interpolated points spaced ≤ h, so a thin sub-voxel fibre rasterises to a CONNECTED voxel thread
+    instead of a dotted line (the VGCF/PTFE centrelines are seeded ~1.5 µm apart ≫ a 0.5 µm cell, so
+    the bare point cloud breaks into disconnected dots and the fibre stops conducting)."""
+    if len(p) < 2:
+        return p
+    o = np.argsort(fid, kind='stable'); p, fid = p[o], fid[o]
+    same = fid[1:] == fid[:-1]
+    a, b = p[:-1][same], p[1:][same]
+    if len(a) == 0:
+        return p
+    seg = b - a
+    nfill = np.ceil(np.linalg.norm(seg, axis=1) / max(h, 1e-9)).astype(np.int64)
+    out = [p]
+    for k in range(1, int(nfill.max()) if len(nfill) else 0):     # interior fill points along each segment
+        msk = nfill > k
+        if not msk.any():
+            break
+        out.append(a[msk] + (k / nfill[msk].astype(np.float64))[:, None] * seg[msk])
+    return np.vstack(out)
+
+
+def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_close=False, fibre=None):
     """Per-phase presence grids on the vc grid: AM from the scaffold spheres, SE/VGCF/SuperP/PTFE
     from the MPM point cloud (phase 1/2/3/4).  Returns ({name: bool grid}, h).
     porosity (the MPM void fraction, e.g. 0.174): if given, SE fills its TRUE fraction as the
@@ -238,6 +261,8 @@ def voxelize_phase(se_pts, phase, scaffold, n_vox, top=None, porosity=None, se_c
         m = phase == code
         if m.any():
             p = se_pts[m]
+            if fibre is not None and code in (2, 4):     # VGCF/PTFE are 1-D fibres → fill to a thread
+                p = _densify_fibres(p, np.asarray(fibre)[m], h)
             ix = np.clip(((p[:, 0] - SW0) / h).astype(np.int64), 0, nx - 1)
             iy = np.clip(((p[:, 1] - SW0) / h).astype(np.int64), 0, ny - 1)
             iz = np.clip(((p[:, 2] - FLOOR) / h).astype(np.int64), 0, nz - 1)
@@ -383,6 +408,11 @@ def _main():
                          'ionic channel is resolution-stable (without it the SE point cloud thins '
                          'out and σ_ionic spuriously → 0 as n_vox rises).')
     ap.add_argument('--channel', default='all', choices=['ionic', 'electronic', 'thermal', 'all'])
+    ap.add_argument('--fibre', default=None,
+                    help='fibre_carbon.npy (mpm3d --save-fibre): per-point fibre id.  When given, VGCF/PTFE '
+                         'fibres are filled along their centreline into CONNECTED voxel threads (the bare '
+                         'point cloud is ~1.5µm-spaced ≫ cell → a dotted line that stops conducting).  '
+                         'Use for a FAIR electronic SuperP-vs-VGCF comparison.')
     ap.add_argument('--se-close', action='store_true',
                     help='OPT-IN: morphologically close the SE necks (default off).  --porosity '
                          'alone is already resolution-stable for a dense cloud (= ground truth); '
@@ -432,8 +462,9 @@ def _main():
               ' as n_vox rises.  Pass --porosity <MPM void frac> for a resolution-stable ionic σ.')
     import time as _t
     _tv = _t.time(); print('  voxelising…', end='', flush=True)
+    _fib = np.load(a.fibre) if a.fibre else None
     pres, h = voxelize_phase(pts, phase, a.scaffold, a.n_vox, porosity=a.porosity,
-                             se_close=a.se_close)
+                             se_close=a.se_close, fibre=_fib)
     print(f'\r  voxelised {next(iter(pres.values())).shape} in {_t.time()-_tv:.0f}s — '
           f'cells/phase: {{{", ".join(f"{k}:{int(v.sum())}" for k, v in pres.items())}}}', flush=True)
     chans = ['electronic', 'ionic', 'thermal'] if a.channel == 'all' else [a.channel]
