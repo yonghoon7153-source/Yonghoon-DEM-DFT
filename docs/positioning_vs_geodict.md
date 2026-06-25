@@ -74,9 +74,13 @@ DEM+MPM = 공정에서 구조-예측(bottom-up)"은 **내가 발명한 구분이
 한 문장에 추가: *"… 본 연구의 bottom-up/formation 접근(Choi et al., E.Chem 2024 분류)은 top-down/
 reconstruction 도구(GeoDict 기반 선행연구)와 상보적이되, 공정→구조 예측 + 접촉망 constriction σ에서 그를 넘어선다."*
 
-★★★ **peer-review 인용은 ACS EL 원본을 써라:** E.Chem 총설은 그룹의 peer-reviewed **ACS Energy Lett. 2024,
-9, 5225-5239** (S. Kim, **H. Lee, J. Lim**, J. Park, **Y. M. Lee**, "Digital Twin Battery Modeling and
-Simulations…", = DTBL 모델러들; 총설 Fig들이 "[Ref 127 재구성 ⓒ2024 ACS]")의 한국어 확장판.  ⇒ taxonomy의
+★★★ **peer-review 인용은 ACS EL 원본을 써라:** E.Chem 총설은 그룹의 peer-reviewed **Suhwan Kim, Hyobin Lee,
+Jaejin Lim, Joonam Park, Yong Min Lee, "Digital Twin Battery Modeling and Simulations: A New Analysis and
+Design Tool for Rechargeable Batteries," ACS Energy Lett. 2024, 9, 5225-5239, DOI 10.1021/acsenergylett.4c01931**
+(Focus Review; **H. Lee·J. Lim 공동1저자** = 우리가 positioning 대상으로 삼는 #266/#271/#262 모델러들; 총설
+Fig들이 "[Ref 127 재구성 ⓒ2024 ACS]")의 한국어 확장판.  ⚠ 디스크립터 정합: ACS EL 원본은 **electrode =
+"percolation pathway"**, **"pore network" = separator** (총설이 pore-network를 electrode로 오기) → 라벨은
+원본 기준.  풀 디제스트 `docs/lit_kim2024_digital_twin_acsenergyletters.md`.  ⇒ taxonomy의
 출처는 **우리가 positioning 대상으로 삼는 바로 그 그룹의 peer-reviewed 자기 논문** = 최강 근거.  논문엔 ACS EL
 원본을 인용.
 ★ 추가 결정타(원본/총설 §3): **bottom-up 정의가 "DEM·FVM 등이 활용되며, 입자 간 상호작용과 압축 하의 형상
