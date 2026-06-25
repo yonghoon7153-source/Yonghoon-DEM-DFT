@@ -74,6 +74,17 @@ def _cg_solve(A, b, tol=1e-6, label=''):
         print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s\033[K', flush=True)
     return x
 
+# Per-phase conductivity for the FV solve.  void = 0 always.  Units: ionic/electronic mS/cm, thermal W/m·K.
+# PROVENANCE (so these aren't magic numbers) — keep as-is; tighten citations for the manuscript later:
+#   • SE 3.0 (ionic)        = Cronau 2022 Li6PS5Cl single-crystal σ_grain (the DEM σ_grain).  ✅ literature.
+#   • AM 50 (electronic)    = project σ_AM (NCM811, Trevisanello 2021 — same value the DEM σ_e form uses). ✅
+#   • SuperP 1e5 / VGCF 5e5 (electronic) = 100 / 500 S/cm — carbon-black (~10–100 S/cm) & VGCF
+#       (~100–1000 S/cm) MATERIAL-conductivity literature BALLPARK, rounded O(magnitude) (⚠ not a single
+#       cited digit).  The exact value barely matters: the 200× contrast cap in effective_sigma clamps any
+#       carbon ≥200×AM to ~1e4 mS/cm (that conductive = already a perfect bridge), so SuperP vs VGCF differ
+#       ONLY by MORPHOLOGY (fibre reach vs aggregate), NOT by 1e5 vs 5e5.
+#   • thermal SE 0.7 / AM 4.0 (LPSCl / NMC lit); carbon VGCF 20 / SuperP 5 / PTFE 0.25 (graphitic / binder
+#       ballpark).  All thermal numbers are representative, not single-source-cited.
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
     'ionic':      {'SE': 3.0, 'AM': 0.0, 'VGCF': 0.0, 'SuperP': 0.0, 'PTFE': 0.0},
     'electronic': {'SE': 0.0, 'AM': 50.0, 'VGCF': 5.0e5, 'SuperP': 1.0e5, 'PTFE': 0.0},
