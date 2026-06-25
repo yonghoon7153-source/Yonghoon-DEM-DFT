@@ -151,10 +151,12 @@ packing + Auerbach fracture.
 
 | ID | 출처 | DEM에 적용할 것 | 상태 |
 |---|---|---|---|
-| **D1** | #285 | **poly/single-aware Auerbach P_c** — 단결정은 monolithic이라 입계균열 억제(높은 P_c·균열저항), 다결정은 입계따라 쉽게 파괴(낮은 P_c). 현재 DEM Auerbach P_c는 **poly/single 미구분**(generic). | ⏳ #285 디제스트(진행중)에서 P_c factor 받아 적용 |
+| **D1** | #285 | **poly/single-aware Auerbach P_c** — 단결정 균열억제(높은 P_c), 다결정 입계파괴(낮은 P_c). | ✅ **이미 충족·검증** — a9_50_p02(bimodal)에서 우리 Auerbach가 AM_S P_c 5.357 > AM_P 1.446 mN → AM_S intact(95.7%)/AM_P 파괴(F/P_c 15.96) = #285 정합. 추가 보정 불요 |
 | **D2** | #286 | **pore-side τ frame[4] cross-check** — 현재 DEM은 contact-side만(z_SE-SE). #286의 (i) pore-network 배위수+connectivity-bandwidth(watershed pore 분할), (ii) 확산-sim τ(ε/τ²·D)를 이식 → 우리 contact-σ τ_Laplace의 독립 교차검증. | 📋 scoped enhancement (metric 추가) |
 | **D3** | #286 | **through-plane porosity(z) 프로파일 + top↔bottom Δ** metric — 현재 단일 porosity만 보고. z-구배 정량 필요(Phase 5 연계). | 📋 dashboard/synth metric |
 | **D4** | #266 | bimodal P:S — DEM이 **이미 보유**(P:S sweep). 변경 불필요, **검증 인용**만. | ✅ 보유 |
+| **E1** | #284 | **CBD 이온/전자 balance 곡선** — #284가 carbon-coating 두께로 "전자↑·이온↓, 중간 최적"을 실험확인(우리 SuperP/VGCF trade-off의 거울 → **독립 검증, 모델신뢰↑**). carbon-loading sweep(0.5→4wt%)로 voxel σ_e gain vs σ_ionic loss를 **한 곡선**에 → 우리 balance point 정량. | 📋 (pending 4wt% VGCF가 시작점) |
+| **E2** | #284 | **voxel 분산균일도 metric** — #284는 SSRM+work-of-adhesion+rheology로 분산을 3중 정량. 우리는 morphology 근접만. **carbon-occupancy CoV / 최근접-carbon 거리분포**로 SuperP(분산)↔VGCF(응집)를 한 숫자로(=SSRM의 메커니즘판) + carbon↔SE/AM work-of-adhesion으로 nucleate_frac/surface_frac 물리근거화. | 📋 scoped |
 
 ⚠ **새 케이스 a9_50_p00이 D1을 즉시 건드림:** 0:10 = **전부 단결정(AM_S)**인데 Auerbach가 δ-based **17.23%
 microcrack** (force-based 4.18%, severe 0).  #285에 따르면 단결정은 **균열을 restrain** → 우리 δ-based
