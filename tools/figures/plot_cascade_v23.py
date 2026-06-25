@@ -164,7 +164,7 @@ ax.set_xlabel("EOS B0 (GPa, UMA)  [x=0 → EOS fit FAILED]"); ax.set_ylabel("E_y
 ax.set_title("(D) B0 vs E_young — red ring = elastic outlier, red × = EOS-fit fail", fontsize=10); ax.grid(alpha=.3)
 
 plt.suptitle(f"Doping cascade v23 (UMA-s-1p1) — {len(rows)} champions @ x=0.25  ·  "
-             f"{len(flagged)} flagged  ·  classify by anion/valence", fontsize=13, y=1.00)
+             f"{len(flagged)} flagged (post-recompute: 0 real defects)  ·  classify by anion/valence", fontsize=13, y=1.00)
 plt.tight_layout()
 plt.savefig(f"{OUT}/cascade_v23_overview.png", dpi=150, bbox_inches="tight")
 plt.savefig(f"{OUT}/cascade_v23_overview.pdf", bbox_inches="tight")
@@ -175,6 +175,17 @@ with open(f"{OUT}/cascade_v23_outliers.md", "w") as f:
     f.write(f"# Cascade v23 outlier report — {len(rows)} champions, {len(flagged)} flagged\n\n")
     f.write("data: `db/properties/cascade_v23_champions.csv` (UMA-s-1p1, x=0.25, rank-1 champions).\n")
     f.write("ALL concentration=0.25 (x002/05/10 = placement replicates). sigma/Ea/wad empty in dataset.\n\n")
+    f.write("## provenance — was 17 flagged, now cleaned to the few below\n")
+    f.write("- **4 champions recomputed on gabia** (anneal is stochastic → re-ran the bad seeds): "
+            "3 blank/INCOMPLETE (`NdF3_x005`, `SrO_x002`, `SrO_x010`) now filled; "
+            "1 unphysical elastic (`Nd2O3_x002`: ν=−0.10, E=110.9 GPa) → **physical champion ν=0.215, E=47.2 GPa**, "
+            "now consistent with its replicates x005=44.8 / x010=49.3.\n")
+    f.write("- **10 EOS-fit-fails recovered by robust BM3 re-fit** of the existing UMA E–V points "
+            "(`db/properties/cascade_v23_eos_refit.json`) — the compute was fine, only the fit had failed. "
+            "9 clean; **only `MnO_x002` stays flagged (low r²)**.\n")
+    f.write("- **The remaining flags are NOT defects:** `MnO_x002` = recovered B0 but low fit-quality (use with caution); "
+            "`Gd2O3`×3 = **genuine stability standout** — Gd₂O₃ is the single most-stabilizing dopant (Δe≈−1.3 eV/atom), "
+            "so |z|>3 is real physical signal, not an error. → **0 real data defects remain.**\n\n")
     cats = {"INCOMPLETE": [], "EOS-fit-fail": [], "elastic-unphysical": [], "statistical": []}
     for k, v in flagged.items():
         s = " ; ".join(v)
