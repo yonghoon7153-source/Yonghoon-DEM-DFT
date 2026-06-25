@@ -164,8 +164,14 @@
   {% endif %}
 </div>
 
-<!-- Running Status -->
-<div id="status-panel" class="card" style="display:none">
+<!-- Running Status (fixed popup overlay so it's visible no matter how long the case list is) -->
+<div id="status-panel" class="card" style="display:none; position:fixed; top:72px; left:50%;
+     transform:translateX(-50%); width:640px; max-width:92vw; max-height:74vh; overflow:auto;
+     z-index:9000; box-shadow:0 12px 50px rgba(0,0,0,.65)">
+  <button type="button" title="닫기"
+          onclick="document.getElementById('status-panel').style.display='none'"
+          style="position:absolute; top:8px; right:14px; background:none; border:none;
+                 color:var(--dim,#888); font-size:1.5em; line-height:1; cursor:pointer">&times;</button>
   <h3>분석 진행 상황</h3>
   <div id="status-log" class="log-output"></div>
 </div>
@@ -486,12 +492,12 @@ document.getElementById('upload-form').addEventListener('submit', async (e) => {
     const data = await res.json();
     if (data.error) {
       alert(data.error);
-    } else if (data.analyzing) {
-      // Backend already kicked off the FULL pipeline (incl. Stage E) on upload.
-      // Just watch progress — do NOT re-POST /analyze (that would double-run).
-      runAnalysis(data.case_id, false, true);
+    } else if (confirm(`감지된 모드: ${data.mode}\n\n이 모드로 분석을 실행할까요?\n` +
+                       `(취소하면 목록에 '대기중'으로 남고, '재분석'으로 나중에 실행 가능)`)) {
+      // user confirmed the detected mode → run the FULL pipeline (incl Stage E) via /analyze
+      runAnalysis(data.case_id, false, false);
     } else {
-      location.reload();
+      location.reload();   // uploaded but not run — recoverable from the list ('재분석')
     }
   } catch (err) {
     alert('업로드 실패: ' + err.message);
