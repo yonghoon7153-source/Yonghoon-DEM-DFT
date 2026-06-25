@@ -383,7 +383,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 278 | Na 층상 cathode, Bi 치환 공기·수분 안정화 | Chem. Eng. J. (12.5) | Na cathode |
 | 277 | Dual-layer anode 보호, lean-electrolyte Li-S | J. Energy Storage (10.7) | Li-S |
 | 274 | High-Ni cathode, 수분응답 dehumidifying separator | ACS Nano (17.3) | separator/High-Ni |
-| 273 | Ultra-thin ceramic-coated dry-stretched PP separator | Chem. Eng. J. (12.5) | separator |
+| 273 | 초박막 세라믹(Al₂O₃ ~22.7 nm RF 스퍼터, 바인더-free) 코팅 건식 이축연신 PP 분리막(C-DB-PP) — 이온수송↔내부단락 균형 (LEAD=**Y.M.Lee 교신**). DB-PP porosity 64%·σ_ionic 0.982 → C-DB-PP 1.254 mS/cm(+27.7%)·접촉각 103.5→80.7°·전해질흡수 92.8→145%·열수축유지 88.8→95.1%·T_sc 46→77 h(+67.4%, 이론 331)·Li‖NCM622 >70%@600cyc(DB-PP는 400cyc 급락). 분리막 막공학+액체 Li metal LIB → 모델 영향 0; porosity-tortuosity→이온수송 정성물리만 우리 σ_ionic C(τ)에 먼 인접(연신-고분자막 다공 ≠ 입상 압축양극 다공). 디제스트 `docs/lit_park2026_ceramic_pp_separator.md` | Chem. Eng. J. (12.5) | separator |
 | 272 | Passivation 불균일 제거, Li/Zn/Mg 도금 | Chem (19.1) | metal plating |
 | 269 | Stepwise activation Zn 증착, flowless Zn-Br | Small (11.8) | Zn-Br |
 | 265 | Nb-doped Ni-rich multiphase cathode 소재 | Nature Nanotech. (37.5) | cathode 소재 |
