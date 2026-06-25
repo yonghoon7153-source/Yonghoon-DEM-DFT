@@ -19,10 +19,13 @@
 | [Kaur] | Kaur 2016 JES — elastic SQS E22.1/B28.7/G8.1 | ⬜ PDF | DFT |
 | [JPCC] | First-Principles Mech&Aniso 2025 — D3 E27.4/B34.7/G10.0 | 📄 Excel | DFT |
 | **[Rupp]** | Kim/Balaish/Rupp 2021 AEM — oxide vs sulfide SE + 계면 landscape 리뷰 (63 pp) | ✅ `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | review |
+| **[KimICCF]** ⭐우리그룹 | Kim/Cho/Y.M.Lee 2026 CEJ — ICCF(IL cavity filler) → σ 회복 155 % + 음극 in-situ LiF-rich SEI (한양대 Cho + Yonsei Lee) | ✅ `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | exp(+분자 HOMO/LUMO·GeoDict) |
 
 ---
 
 > 🗺️ **Landscape note [Rupp]** (digest `papers/kim2021_review_oxide_sulfide_se_interfaces.md`): 우리 LPSCl/LPSCl1.6의 좌표계 논문. **oxide(garnet LLZO: σ~1 mS/cm·환원 0.05 V·산화 2.9 V·E 140–160 GPa·취성) vs sulfide(argyrodite Li₆PS₅X: σ~10⁻³·환원 1.7 V·산화 2.0–2.2 V·E~10–37 GPa·연성)** 의 head-to-head + 양극/음극 계면 카탈로그(Table 1·2·3·4, SI Table 1). 우리 숫자(ESW band·환원산물·연성)를 *검증*이 아니라 *문헌 줄에 정렬*하는 용도. **Cl-rich(LPSCl1.5/1.6) 자체는 안 다룸** → 우리 비교는 리뷰 너머의 기여.
+
+> ⭐ **우리 그룹 동반 논문 note [KimICCF]** (digest `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md`): **한양대 Kuk Young Cho + Yonsei Yong Min Lee** (우리 LPSCl DFT 계보)의 **실험** 논문. SE = **Li₆PS₅Cl(=우리 comp1)**. 격자 도핑이 아니라 **액체 cavity-filler(ICCF=IL [EMIM][TFSI]+LiTFSI+FEC)** 로 **(1) σ 회복(시트 1.44→2.23 mS/cm, 155 %, 펠릿 70 %)** + **(2) 음극 in-situ LiF-rich SEI**(XPS F1s 684 eV, Li₂S 억제) 달성. **🔑 두 개의 평행:** (a) **σ 손실 원인 = 공동(미세구조 34.2 %), bulk 결정 아님** → 우리 "σ_e/σ는 interphase·microstructure 레버, bulk 아님" 결론과 **양 날개**. (b) **LiF-rich SEI가 SE 분해 억제 = 우리 'electron-blocking(전자절연) interphase'(Li₂O/Li₃PO₄/NdPO₄/LiCl) 메커니즘의 실험 카운터파트** (LiF·LiCl·Li₂O 모두 wide-gap 절연 패밀리). DFT는 분자 HOMO/LUMO(B3LYP/6-311++G)+GeoDict digital-twin뿐 → **bulk 결정 DFT 수치 직접 대조는 부적절, 개념(목표·레버) 정렬 용도.** ⚠ Cl 1.0(comp1)만; modelc(Cl 1.6) 없음.
 
 ## A. 이온전도도 — *Cl-rich가 빠르다 (전원 일치)*
 | 주장 | 출처 | 우리 (comp1→modelc) | 일치 |
@@ -31,7 +34,8 @@
 | σ 기전 = inter-cage Li jump (Cl 4c 무질서) | [GG] (Li 확률밀도, Fig 1e,f) | 우리 percolation/inter-cage 분석과 동일 물리 | ✓ |
 | **Li₆PS₅Cl = S²⁻/Cl⁻ 완전 disordered → 가장 빠른 Li⁺** (Cl이 X=Cl,Br,I 중 disorder 최대) | **[Rupp]** p.9 | comp1→modelc D↑·Ea↓ (Cl-rich 빠름) | **✓ 구조적 근거** (Cl disorder = σ↑ 원인) |
 | AIMD setup (300 eV/Γ/NVT) | [GG] | 동급 | ✓ 방법 정합 |
-> 인사이트: 우리 AIMD가 실험·문헌 trend 재현 → 신뢰. 절대 σ는 RT 외삽이라 Arrhenius로 비교.
+| **device σ ≠ bulk σ: 손실 원인 = 미세구조(공동), bulk 결정 아님** (시트 1.44 ↔ 펠릿 3.2 mS/cm; 공동 채우면 2.23=155 %) | **[KimICCF]** (Li₆PS₅Cl=comp1, GeoDict digital-twin) | 우리 bulk AIMD RT-외삽 σ ≫ 실현 σ | **🔑 개념 평행**: 우리 "σ는 interphase·percolation 변수"와 일치. **둘 다 "bulk 잠재력 ≫ device σ"** → 미세구조가 병목. 절대값 직접 비교는 금지(bulk 단결정 vs 시트 실측) |
+> 인사이트: 우리 AIMD가 실험·문헌 trend 재현 → 신뢰. 절대 σ는 RT 외삽이라 Arrhenius로 비교. **[KimICCF]: 같은 그룹 실험이 "σ 병목은 bulk가 아니라 미세구조(공동)" 를 직접 보여줘 우리 'lever=interphase' 결론을 실험으로 보강** (GeoDict σ 1.96/2.10 sim ≈ 1.95/2.17 exp).
 
 ## B. 산화안정성 — **4축 분리 (축 명명 없이 말하면 틀림)**
 | 축 | 우위 | 출처 | 우리 값 / 재현 |
@@ -78,6 +82,7 @@
 | **Li₆PS₅X 환원전위 1.7 V vs Li → Li₃P+Li₂S+LiX (passivation)** | **[Rupp]** Table 3 (in-situ XPS+EIS) | comp1/modelc 환원 1.24 V → Li₃P+Li₂S+LiCl | **✓ 동일 chemistry**, 전위 절대값은 방법차(우리 0-pressure vs 인용 indirect/실험). **LiX=LiCl이 passivation 산물** = modelc Cl-rich 이점 단서 |
 | **도핑 route**: PS₄³⁻의 Li-유발 redox 분해를 **Mg(s-p 혼성, S 전자풍부→전자이동 차단)+F(in-situ LiF 절연층)** 로 억제 (MgS₄는 무분해) | **[Liu23]**(MgF₂), [Ke](MgClO) | modelc 환원산물 = 그들이 억제하려는 분해산물 | 별도 축(조성 아닌 *도핑*); cascade 동기 |
 | interphase **LiCl = 전자절연(gap 6.22) + 저Li⁺장벽(0.05) + 연성(Poisson 0.23)** → 좋은 buffer | **[Lu]** Fig6 | modelc가 LiCl 생성 → Lu의 "good passivator"로 해석 | **✓ 우리 LiCl 산물에 의미 부여** |
+| **in-situ LiF-rich SEI(액체 처방 FEC→LiF)가 SE 분해(Li₂S) 억제 → 균일 Li flux·dendrite 억제** (XPS F1s 684 / S2p Li₂S↓; overpot 154→55 mV; CCD 0.8→1.5) | **[KimICCF]** Fig 5 | comp1/modelc native 환원산물 = Li₂S/Li₃P/LiCl (그중 Li₂S=전자전도 우려) | **🔑 = 우리 'electron-blocking interphase' 메커니즘의 실험 카운터파트**. 우리 DFT=어떤 산물이 절연(LiF/LiCl/Li₂O/Li₃PO₄/NdPO₄), 이들=그 절연 SEI를 액체 처방(FEC)으로 **in-situ 형성**. LiF·LiCl·Li₂O·Li₃PO₄ = wide-gap 절연 패밀리 일관. ⚠ σ_e 실측 아님(간접추론) |
 | 계면E Li/LPSCl −2.68 ≪ LiCl/LPSCl −0.19 J cm⁻² (LiCl buffer가 Li-S 자발반응 차단) | **[Lu]** Fig6a | 우리 계면 slab 미계산(gap H) | 차용 가능 |
 | **[Lu] 견해**: 4d-Cl 90 % 자기분해 → LiCl passivation → **Cl-rich가 음극 유리** (CCD 0.96, 800h) | **[Lu]** | modelc Cl-rich, 4d 점유↑ 추정 → 부합 | Cl-rich ✓(조건부) |
 | **[GG] 견해**: 과안정 LPSCl1.5는 self-limiting ✗ → **moderate Cl(1.0)이 유리** (다층 전략) | [GG] | — | Cl-rich ✗ |
@@ -103,12 +108,16 @@
 | AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][Liu] |
 | VBM = S 3p | = HAXPES | [Banik] |
 | 환원 산물 Li₃P+Li₂S+**LiCl** (LiCl = 전자절연 passivator) | = LPSCl(1.5) 환원; LiCl이 음극 passivation | [Ke][GG][**Lu**][**Liu23**] |
+| **"electron-blocking interphase가 분해 차단" 메커니즘** (우리 중심 주장) | = **LiF-rich SEI가 SE 분해(Li₂S) 억제** (실험 XPS) → 같은 그룹이 실험 입증 | **[KimICCF]** ⭐ |
+| **"σ 병목 = interphase/microstructure, bulk 결정 아님"** | = 시트 σ 손실 원인 = 공동(34.2 %), 채우면 155 % 회복 | **[KimICCF]** ⭐ |
 
 ## H. ⚠️ 우리가 아직 못 하는 것 (정직 목록 → 향후)
 | gap | 누가 필요로 함 | 보강책 |
 |---|---|---|
 | 기체상(SO₂/O₂) 포함 계면 분해 | [Zuo] R_int 메커니즘 | 기체 chempot + NCM O-release |
 | 무질서 E_above_hull (metastability) | [Zuo] DSC/TGA, [Wu] | SQS/enumerate E_hull |
+| **시트/펠릿 microstructure σ(공동·percolation) — 우리는 bulk 단결정 AIMD만** | **[KimICCF]** (device σ ≠ bulk σ) | **GeoDict digital-twin**(GrainGeo+ConductoDict, contact 0.07 + biphasic 0.08 Ω·cm²) = bulk↔device σ 다리 |
+| 음극 in-situ SEI *실측* 산물·전자절연성 | **[KimICCF]** XPS LiF/Li₂S | 우리 grand-potential 환원산물 예측의 실험 카운터파트(이미 [KimICCF]가 제공) |
 | ~~LiS4 제외 ESW~~ ✅ **완료 (2026-06-23)** | [GG] phase set | onset 2.256 V, comp1 rxn=Zuo Eq1 정확 일치 (`our_dft_baseline.md` §ESW 상세) |
 | 구속 ESW 절대값(full Lagrange) | [GG] K_eff=20 정량 | constrained_esw 2nd-order |
 | defect/σ_e 정량 | slide25 틀 | Freysoldt defect calc |

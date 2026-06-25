@@ -13,6 +13,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/lu2025_tailoring_cl_rich_anode_licl.md` | Lu, 4d-Cl 자기분해 → LiCl interphase (CEJ 2025) | 음극·환원·자리도핑 |
 | `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | Liu, MgF₂ 공도핑 electron redistribution (Angew 2023) | 음극·환원·도핑(Mg s-p) |
 | `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) | 리뷰·oxide/sulfide·계면 landscape |
+| `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | **[우리 그룹]** Kim/Cho/Y.M.Lee, ICCF(이온성액체 cavity filler) → σ 회복 155 % + 음극 in-situ LiF-rich SEI (CEJ 2026) | 시트 미세구조·σ 회복·음극 in-situ SEI·계면(실험) |
 
 
 ## 시트: 실험값  (21 entries)
@@ -114,5 +115,6 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 22 | d68cd77f (S2405829725001254) | (Energy Storage Mater 2025) | ⬜ |
 | 23 | da9a7f39 / 6488e8eb (SI) | Liu, electron redistribution MgF₂ redox-resistible (Angew 2023) — `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | ✅ |
 | 24 | 4229e857 / 98afe5b4 (SI) | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) — `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | ✅ |
+| 25 | 6bc71e96 / 0a75f53b (SI) | **[우리 그룹]** Kim/Cho/Y.M.Lee, ICCF molten-salt cavity filler → σ 회복 155 % + 음극 in-situ LiF SEI (CEJ 2026) — `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정)*
