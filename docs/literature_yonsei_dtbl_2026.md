@@ -15,21 +15,48 @@ PDF 받으면 `docs/lit_<author>2026_<topic>.md`로 litdb-curator 풀 디제스�
 
 ## ★★★ TIER-1 — 우리 방법론 그 자체 (digital-twin / 2D→3D / bimodal)
 
-### #266 — Bimodal Composite Cathodes, Chemo-Mechanical Integrity & Kinetics for ASSB  ⭐최우선
-ACS Energy Letters 11(2) (2026) 2103-2114 (Open Access, IF 17.5).  Hyeonseong Oh†, Uigyeong Jeong† … Yong Min Lee, … Yoon Seok Jung 공저.
-DOI 10.1021/acsenergylett.5c03923.
-- **핵심:** bimodal = **큰 polycrystalline + 작은 single-crystalline CAM** 블렌드 → 입자 패킹·porosity
-  최적화 → **ionic tortuosity↓ → Li⁺ 전달↑**.  CAM 90 wt%에서 **P:S = 7:3** (poly:single) 조성이
-  87.8% retention @200 cyc, unimodal 능가.
-- **우리 모델 매핑 (DIRECT 실험 검증):**
-  - **P:S 7:3 = 우리 production calibration point 그 자체** (CLAUDE.md "Production calibration (2D)…
-    P:S 7:3").  이 논문이 7:3을 실험 최적으로 보고 → 우리 7:3 선택의 **독립 실험 앵커**.
-  - **bimodal packing → tortuosity↓ → σ_ionic↑** = 우리 **Furnas dip** (frame[3], porosity-vs-AM% dip @
-    AM 70-85wt%) + 우리 σ_ionic의 τ·CN 항을 **실험으로 직접 확증**.  "큰poly+작은single이 더 조밀"이
-    우리 12:4:1 size ratio bimodal void-filling과 동일 물리.
-  - large-poly = 우리 **AM_P**, small-single = 우리 **AM_S** (라벨 정의 일치).
-  - **ACTION:** 우리 bimodal/dip/P:S-7:3 서사의 headline 실험 검증으로 인용.  87.8%@200cyc +
-    tortuosity 데이터를 validation corpus에 추가 (PDF에서 수치 추출).
+### #266 — Bimodal Composite Cathodes, Chemo-Mechanical Integrity & Kinetics for ASSB  ⭐최우선  ✅✅ 풀 디제스트 완료 (HEADLINE 1:1 검증)
+ACS Energy Letters **11** (2026) 2103-2114 (Open Access **CC-BY 4.0**, IF 17.5).  Hyeonseong Oh†, Uigyeong Jeong† …
+**Yong Min Lee**, Jongsoon Kim, Junyoung Mun, … **Jong-Won Lee\*, Sang-Young Lee\*, Hun-Gi Jung\***.
+DOI 10.1021/acsenergylett.5c03923.  ★ **풀 디제스트:** `docs/lit_oh2026_bimodal_composite_cathode.md`.
+⚠ **저자 정정:** 초안의 "Yoon Seok Jung 공저"는 **오류** — 실제 저자에 Yoon Seok Jung 없음, 교신은 **Hun-Gi Jung**(KIST).
+★★ **소재계 = 우리 정확한 소재계 + 정확한 조건:** 큰 다결정 **NCWA**(LiNi₀.₈₈Co₀.₁₀W₀.₀₁Al₀.₀₁O₂, D₅₀ 10.2 µm =
+우리 **AM_P**) + 작은 단결정 **NCM**(LiNi₀.₈₂Co₀.₁₃Mn₀.₀₅O₂, D₅₀ 5.5 µm = 우리 **AM_S**) + **S-LPSCl1.5**(argyrodite
+황화물, D₅₀ 0.72 µm, σ 3.09 mS/cm) + Super P + LTO 음극, **CAM:SSE:CC 90:9.5:0.5 wt%, 300 MPa 냉간압축**.  ⇒
+**우리 `input_2mAh_a9_50` P:S sweep(AM:SE 90:10, P:S 0:10→10:0, 300 MPa)과 정확히 같은 실험**(P:S = poly:single =
+큰:작은, 라벨까지 일치).
+- **핵심:** bimodal = 큰 다결정 + 작은 단결정 CAM 블렌드 → packing↑·porosity↓ → **ionic tortuosity↓ → Li⁺ 전달↑**
+  + (응력 *완화* 아닌) **균일 응력 *분산*으로 chemo-mechanical 건전성↑**.  **CAM7:3(poly:single 7:3)이 최적** —
+  최저 porosity(2D 7.55% / He 8.83%) · 최저 τ_ion(11.13) · 최고 rate · VED 2649 Wh/L · **87.80% retention @200 cyc**.
+- **★★ EXACT 수치(Table S1/S5/S6/S9/S12/S15):**
+  - porosity 2D: 16.80/10.18/**7.55**(7:3 min)/10.93/17.96 %; He pycnometry: 12.78/10.28/**8.83**(7:3 min)/10.57/11.58 %.
+  - τ_ion(MacMullin류 ε/(σ_eff/σ_bulk)): 13.08/12.13/**11.13**(7:3 min)/12.84/16.08.
+  - σ_eff,ion: 0.042/0.049/**0.055**(7:3 peak)/0.046/0.034 mS/cm; σ_eff,e: 4.09/2.99/2.37/2.16/0.95 mS/cm(큰 NCWA↑→σ_e↑).
+  - tap density 복합: 3.28/3.45/**3.59**(7:3)/3.43/3.26 g/cc; SE 부피 17.7–19.8 vol%.
+  - 시뮬(GeoDict FVM + COMSOL FEM, 40×40×t µm³, voxel 0.1µm) ↔ 실측 편차 σ_ion **1.98%** / σ_e **3.66%**(그들 frame[4]).
+  - ★★ **재료 물성(Table S15): E_SE = 22 GPa**(= 우리 real 24·Bazzoun 22.1과 정합; 우리 E_eff 1.35는 softened proxy),
+    ν_SE 0.30, σ_SE 10, σ_NCWA **13.7** ≫ σ_NCM **2.45** mS/cm(σ_e가 큰 NCWA서 높은 이유), Holm형 R_c(SE-SE 4.5e-6 Ω·m²).
+- **★★★ 우리 a9_50 sweep과 1:1 (frame[4] 교차검증 — HEADLINE):**
+  - **porosity dip ✅ 모양 1:1:** #266 2D 7.55/He 8.83 @CAM7:3(양 끝 UCC↑) ↔ 우리 DEM 12.70 @p06(양 끝 mono-modal↑).
+    Furnas/de Larrard bimodal dip을 우리 rigid DEM이 독립 재현.  최적위치 #266 7:3(poly 0.7) ↔ 우리 6:4(poly 0.6) =
+    sweep 간격 0.2에서 인접 = **0.6–0.7 sweet spot**.
+  - **물리 porosity 절대값 ✅ like-for-like:** #266 He pycnometry(8.83% @CAM7:3, 3D 물리) ↔ 우리 **MPM 소성**(10.44%
+    @p06) — **~1.5%p 차로 매칭**(MPM이 #266 He 범위).  우리 **DEM rigid**(12.70%)는 He보다 약간 위(= rigid floor,
+    소성 flow 부재); **2D-SEM(7.55%)은 셋 중 최저**(단면 누락).  → **#266 He = MPM(소성); dip 모양 = DEM(rigid Furnas)**.
+  - **σ_ionic peak ✅ 위치 1:1:** #266 0.055 @CAM7:3 ↔ 우리 0.0506 @p06.  절대 같은 자릿수(envelope 0.03–0.14 mS/cm,
+    Bazzoun+#271+#266 통합).  τ dip도 우리 τ_Laplace,eff(3.29 @p06) ↔ #266 τ_ion(11.13)으로 추세 1:1(정의 달라 절대 X).
+  - **기계취약 = 큰 다결정 ✅ 1:1:** #266 ΔP·D1(기계열화) max @CAM10:0 ↔ 우리 fracture severe 63% @p10(큰 다결정 분쇄);
+    작은 단결정은 #266 ΔP min·우리 AM_S intact(#285 단결정 균열억제 일관).
+  - ⚠ **σ_e 방향은 가정-의존:** #266 σ_NCWA 13.7 ≫ σ_NCM 2.45(큰 NCWA→σ_e↑) vs 우리 σ_e는 입자수·접촉수 지배로 작은
+    NCM서↑ → 표면 부호 반대.  ⚠ **우리 σ_e 끝점 가정(σ_S-poly 10 > σ_P-single 5)이 #266과 부호 반대** → 재검토 항목.
+- **★ audit 마감(유저가 fold):** #3(bimodal) ✅ qualitative → **✅ QUANTITATIVE**(우리 a9_50이 dip·최적·σ_ion·끝점 1:1 재현);
+  #6(porosity) ⏳ pending → **✅**(우리 MPM 10.44% ↔ #266 He 8.83% like-for-like; DEM = rigid-floor offset 명시 조건부).
+- **★ DB 후보(직접 추가 안 함, 디제스트 §9):** densification_porosity_db.csv에 oh2026 per-composition He porosity 5행
+  (E_SE=22, He=물리); 새 `docs/data/oh2026_sigma_ionic.csv`에 σ_ion/σ_e/τ_ion 5행(LPSCl1.5 100 MPa, 같은 자릿수 envelope).
+- ⚠ **전이 경계:** SE = Li₅.₅PS₄.₅Cl₁.₅(Cl-rich, σ_bulk 3.09) ≠ 우리 Li₆PS₅Cl(같은 argyrodite, Cl↑); porosity(370 MPa
+  He 펠릿)·σ(100 MPa)·양극(300 MPa) 압력 상이; τ_ion = MacMullin류(11–16) ≠ 우리 측지 τ → **추세·peak·자릿수 1:1,
+  절대 정밀 비교는 σ_ionic·He-porosity로 제한**.  시뮬 = rigid sphere/polyhedron + 연속체(소성 SHAPE 없음 = 우리 DEM과
+  같은 한계, MPM이 보완).
 
 ### #263 — Stochastic 3D Microstructures from 2D Images (polymeric separators)  ⭐Phase 4 청사진
 Advanced Energy Materials 16(10) (2026) e70730 (Back Cover, IF 25.5).  Youyeong Shin†, Suhwan Kim† … Yong Min Lee.  DOI 10.1002/aenm.70730.
