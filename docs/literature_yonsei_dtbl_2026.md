@@ -15,6 +15,59 @@ PDF 받으면 `docs/lit_<author>2026_<topic>.md`로 litdb-curator 풀 디제스�
 
 ## ★★★ TIER-1 — 우리 방법론 그 자체 (digital-twin / 2D→3D / bimodal)
 
+### ★ FOUNDATIONAL ROOT (2020) — Park 2020 (Adv. Energy Mater. 10, 2001563): Digital-Twin-Driven ASSB, 물리·전기화학 거동 규명  ⭐⭐⭐ 이 계보 전체의 시조 + 우리 정확한 소재계  ✅ 풀 디제스트 완료
+Advanced Energy Materials **10** (2020) 2001563, DOI **10.1002/aenm.202001563** (© 2020 WILEY-VCH).  접수 2020-05-08 /
+게재 2020-07-26.  **Joonam Park**, Kyu Tae Kim, Dae Yang Oh, Dahee Jin, Dohwan Kim, **Yoon Seok Jung\***(한양대),
+**Yong Min Lee\***(DGIST→연세 DTBL).  ★ **풀 디제스트:** `docs/lit_park2020_digitaltwin_assb_foundational.md`.
+⚠ **#260-286 리스트엔 번호 없음**(2026 리스트 밖, **2020 논문**) → **이 그룹 디지털트윈-ASSB 프로그램 전체의 발원지(ROOT)**.
+⚠ 출판본 주소블록이 K.T.Kim/D.Y.Oh/Y.S.Jung을 "Yonsei"와 "Hanyang"으로 동시표기(조판 오류) — SI 정본 = **Hanyang**.
+★★ **소재 = LiNbO₃-coated LiNi₀.₇₀Co₀.₁₅Mn₀.₁₅O₂(NCM711) + Li₆PS₅Cl(LPSCl) + NBR = 우리 정확한 SE·CAM 계열**(Bazzoun
+NMC811·#271 NCM·#266 NCWA와 같은 LPSCl+Ni-rich 군; 그 중 **가장 이른 2020 시조**).  ★ **조성축 = NCM:LPSCl = 60:38/
+70:28/80:18/90:8 wt%(NCM 35.1/40.4/45.0/49.4 vol%) = 우리 AM:SE sweep, multi-seed(seed 1–5)**.
+⚠ **이게 #18(Kim 2024 ACS EL) taxonomy가 명명한 top-down/reconstruction + 규칙기반 배치의 첫 ASSB 적용** = #271/#266/
+#281/#286/2023-Battery-Energy GeoDict 라인의 **계보 뿌리**.  모델러 계보: Joonam Park(2020) → Hyobin Lee·Jaejin Lim(2023+).
+- **★ 구축방법(positioning 핵심) = GeoDict GrainGeo 규칙배치(top-down/reconstruction × stochastic/rule-based, #263 부류,
+  NOT 압축물리):** (p2+p8) ① PSA로 임시 구형 NCM → ② SEM 다면체 1차입자를 구형 위에 흩뿌려 bumpy 이차입자 모사(구형 제거)
+  → ③ ★ **"LPSCl은 가압 중 deformable → PSA 크기로 AM 간극에 배치 → 최소 porosity + 충분한 Li⁺ 퍼콜레이션, 비활성 void
+  제한"**(규칙배치, 압축 시뮬 아님) → ④ NBR 추가.  voxel 0.5µm, 50×50×~39µm.  부피분율 목표 대비 **±2% 오차**.  ⇒ ★
+  **시조 논문조차 press를 시뮬 안 하고 측정 PSA/SEM에서 규칙배치** — 우리 공정-물리 bottom-up(압력→구조 *계산*)이 계보
+  뿌리에 대한 상향식 진보.  §2-3단계 "deformable LPSCl→최소 porosity" = 우리 MPM 소성 void-fill의 **2020 언어적 원형**.
+- **★★ EXACT 수치(본문 + Fig S6/S7/S8 + Table S1/S2):**
+  - **조성표:** NCM:LPSCl:NBR 60:38:2(35.1:47.7:5.2vol%)/70:28:2(40.4:34.7:5.1)/80:18:2(45.0:21.7:5.0)/90:8:2(49.4:9.4:4.9);
+    로딩 10mg/cm²·두께~39µm·전극밀도 2.5–2.6 g/cm³; 재료밀도 NCM 4.44(입자por 32.7%)/LPSCl 2.07/NBR 1.00 g/cm³.
+  - **dead particle(stated):** NCM <1%(60wt%서 max 0.94%, 70/80/90wt% ~0%); ★ **LPSCl ≤0.5%(60–80wt%) → 90wt%서 6–20%
+    급증**(seed1 19.82/나머지 6.16–9.56%) → ★ **최적 설계창 = NCM 60–80wt%(LPSCl 38–18wt%), dead 최소**.
+  - **유효 전도도(Fig 2a,b, Ohm's law σ_eff=ε·σ_intrinsic/τ, 시뮬≈실험):** ★ **σ_eff,e ↑ with NCM wt%**(전자재료 NCM↑) /
+    ★ **σ_eff,ion ↓ with NCM wt%**(이온재료 LPSCl↓); ★★ **NCM 90wt% σ_eff,ion = 계산 불가(LPSCl 퍼콜 실패, Fig S10)**.
+    intrinsic σ(Table S1): NCM 전자 8.5×10⁻⁴ / LPSCl 이온 4.64×10⁻³ S/cm, t₊≈0.99.  ⚠ σ_eff 절대값은 digitized TREND.
+  - **specific contact area(Fig S8):** ~95,000→~35,000 1/m(NCM 60→90wt%, =우리 coverage/A_AM-SE), **dead 영향 insignificant**.
+  - **전기화학(Fig 3–6, Fig S13 식3–9 BV+질량보존, Table S2):** specific capacity ↓ with NCM wt%(0.1C서도 60→80wt% ~20
+    mAh/g↓=15%); **1C 평균 용량편차 ~11 mAh/g**(타 모델 >12.5, Fig S14 실험검증); NCM 80wt% rate 저하 = 낮은 contact area+
+    높은 과전압(Fig 6)+좁은 ion pathway(Fig 5).  ★ Phase-4 ANCESTOR(우리 PyBaMM DFN 원형).
+- **★★★ 우리 DEM+MPM 매핑 (frame[4] 교차검증 + frame[5] positioning):**
+  - **(a) ✅ frame[4] 교차검증 4건(같은 소재계·같은 조성축):** ① NCM 60–80wt% 최적창 ↔ 우리 dead-AM warning(f_AM^cc<80%)
+    회피구간; ② **NCM 90wt% 이온-퍼콜 실패(σ_eff,ion=N/A)** ↔ 우리 **σ_ionic SE-no-perc degenerate**(2mAh_real_16/8mAh_
+    real_11); ③ LPSCl dead 6–20%@90wt% ↔ 우리 SE-퍼콜 취약 코너; ④ σ_eff,ion↓-with-NCM ↔ 우리 σ_ionic 폼(φ_SE↓→σ↓).
+    **방향·코너 1:1.** ⚠ **σ_eff = intrinsic σ × ε/τ 연속체 출력**(우리 Kirchhoff from-scratch와 위상 다름) → **추세·자릿수
+    reference, 점대점 절대 앵커 아님**(절대 σ 앵커는 Bazzoun 0.065–0.137/#271 0.042–0.087/Varkey/Minnmann/#266 유지).
+  - **(b) ★ σ_e 방향(audit #11) 부분 확증:** Park **NCM wt%↑→σ_eff,e↑ = 부피분율 지배(intrinsic·연속체)** → 우리 σ_e **φ_AM⁴
+    항과 동방향(검증)**.  단 우리 **입경/접촉수 축(작은 AM→σ_e↑)은 Park이 안 다룸 → 직교**; **σ_S/σ_P 끝점 순서**(우리 poly10>
+    single5)는 **#266(큰 입자 σ_e↑)·Park(큰/많은 AM→σ_e↑)과 재대조 필요**(별도 audit 항목).
+  - **(c) ★★★ positioning ROOT:** §2-3단계 "deformable LPSCl→AM 간극→최소 porosity"는 우리 **MPM 소성 void-fill을 *물리적으로
+    계산*하는 것의 2020 *규칙* 원형**(그들=규칙으로 *놓기*, 우리=압력에서 *흐르기*; Fig 5 "better deformation property for
+    minimizing tortuosity" = 저자 자인).  ⇒ **창립 디지털트윈조차 GeoDict 규칙배치(press 미시뮬)** → `positioning_vs_geodict.
+    md`의 "GeoDict=구조-given / 우리=공정→구조 예측"을 **2020 발원 사례로 소급**(본체는 유저 fold).
+  - **우리 우위:** 공정→구조 *예측*(그들 규칙배치/재구성) + σ triad(σ_e+σ_thermal, 그들 이온/전자만) + Kirchhoff/Holm
+    granular constriction(연속체 ε/τ가 못 잡음) + MPM 소성 SHAPE morphology/void-fill + fracture + Furnas dip + scaling-law.
+    **그들 우위:** 전기화학(BV+질량보존) 3D 결합(Phase-4 원형) + 셀-수준 실험검증(Fig S14, 1C 편차 11 mAh/g) + 시공간
+    lithiation/flux/과전압 맵.
+- **★ Phase-4 이식(stage4_electrochem_research.md):** Fig S13 식3–9(j_se=2k√(c_s·c_e·(c_max−c_s))sinh[(φ_s−φ_e−E_eq)F/2RT]
+  +질량보존6/7+전류8/9) + Table S2(D_s 3e-15/D_e 1.2e-13/k 1e-7/c_max 47054/t₊0.99/OCV 6-가우시안) + 단일이온 flux + "핵심전극
+  구조분해·보조 연속체·방전부터" = 우리 PyBaMM DFN 결합의 **2020 레시피**(#281 COMSOL 1D·#17 structure-resolved이 후손).
+- ⚠ **전이 경계:** σ_eff=intrinsic×ε/τ(from-scratch 아님)→추세만; **LPSCl 이차입자 ~8µm**(Fig S1)=우리·Bazzoun·#266 D50
+  0.7–1.5µm 작은 SE와 다름(2020 큰 SE)→contact area/dead-SE 절대값 SE-입도 민감; **압력 sweep 없음**(최소-porosity 규칙배치
+  →Heckel 앵커 아님, porosity 직접보고 없음); NBR(wet)·도전탄소 미포함·단일 스냅샷(cycling 열화 없음)=우리 모델 밖/공통 GAP.
+
 ### #17(EES 2025) — Microstructural Electrochemo-Mechanical Digital-Twin, High-Ni Composite Electrodes (입자↔셀 bridge)  ⭐Phase-4 sibling + 바인더 점소성  ✅ 풀 디제스트 완료
 Energy & Environmental Science **18** (2025) 3129-3147 (Open Access **CC BY-NC 3.0**, IF ~32, ★cover).
 Jihun Song, Royal C. Ihuaenyi, **Jaejin Lim**, Zihan Wang, Wei Li, Ruqing Fang, Amin Kazem Ghamsari,
@@ -831,6 +884,7 @@ positioning**(top-down/bottom-up · multi-scale · 미세구조 descriptor 어�
 
 | 순위 | 논문 | 인사이트 | 우리 모델 hook | 상태 |
 |---|---|---|---|---|
+| 0.5 (ROOT) | **★ Park 2020 (AEM 10, 2001563)** | **★ DTBL 디지털트윈-ASSB 계보의 시조(2020)** — LiNbO₃-NCM711+LPSCl+NBR, NCM 60/70/80/90wt% sweep; GeoDict GrainGeo **규칙배치(press 미시뮬, top-down)**; **dead LPSCl 90wt%서 6–20% → 최적 NCM 60–80wt%**; σ_eff,e↑·σ_eff,ion↓ with NCM; **NCM 90wt% σ_eff,ion=N/A(퍼콜 실패)**; contact area 95k→35k 1/m; 전기화학(BV) 3D 결합 1C 편차 11 mAh/g | **★★★ 계보 ROOT + frame[4] 교차검증 4건(60–80wt% 최적창·90wt% SE-no-perc·dead-SE·σ_ionic↓ = 우리 1:1) + σ_e 방향(audit #11: Park 부피분율 지배↑=우리 φ_AM⁴ 동방향, 입경축 직교) + positioning("deformable LPSCl→최소 porosity" 규칙 = 우리 MPM void-fill의 2020 언어 원형; 시조도 GeoDict 규칙배치) + Phase-4 ANCESTOR(Fig S13 식·Table S2)** | ✅ 풀 디제스트 (`lit_park2020_digitaltwin_assb_foundational.md`); ⚠σ=intrinsic×ε/τ 출력→추세·자릿수만(절대 앵커는 Bazzoun/#271); LPSCl 8µm·압력 sweep 없음 |
 | 1 | #266 | bimodal P:S 7:3 → tortuosity↓ → σ↑, 87.8%@200cyc | **P:S 7:3 production + Furnas dip 실험 앵커** | PDF로 수치 추출 → validation corpus |
 | 1.2 | #(2025 Small 2410485) | **★ 가상 캘린더링 = 우리 압축 그 자체** (FIB-SEM 재구성→ElastoDict 압축→밀도 sweep 2.4–4.0 검증; porosity 49→10%, σ_e +130%, 접착 +199%, crack VMS>150MPa 3.4–3.6 지수급증, 최적 3.4–3.6; bimodal 14:3µm 8:2) | **★ 우리 DEM+MPM 압축의 직접 방법론 형제 — 출력 porosity/τ/접촉면적/crack/응력 1:1; reconstruct-then-compress(top-down 출발) vs 우리 predict-from-powder(bottom-up 출발) distinction; LIGGGHTS/GeoDict/MPSP-DEM = 우리 도구군; 과압축 caveat ↔ 우리 over-compression** | ✅ 풀 디제스트 (`lit_lim2025_virtual_calendering_framework.md`); ⚠Li-ion 액체 NCM622 → METHOD만 전이(수치앵커 아님), positioning_vs_geodict 정밀화 |
 | 1.5 | #17 (EES 2025, DTBL+Juner Zhu) | **★ Phase-4 sibling + 바인더 점소성** (FIB-SEM 재구성→structure-resolved electrochemo-mechanical→셀전압 >98%; 입자↔셀 괴리 3메커니즘 [반응면적↓ ASA 61.76%/확산길이↑/전해질↓ 94%@4C]; **PVDF 바인더 Perzyna+Ludwick 점소성** E 1.05 GPa·σ_y 19.36 MPa·5cyc yield 24→42.10 MPa; CBM 전류 ≫ 활물질 1000%+) | **★★★ Phase-4 결합 = 우리 미세구조 metric→PyBaMM 셀전압(3메커니즘=coverage/τ/porosity 1:1, #281 NEXT structure-resolved); ★ 바인더 점소성 정식 = 우리 MPM rate-indep J2 없는 물리 → E3 `--coh` 점성화 + #285 spring-back gap 직접 구현 레시피("무엇을"#285 + "어떻게"이 논문)** | ✅ 풀 디제스트 (`lit_song2025_electrochemo_mechanical_microelectrode_ees.md`); ⚠NMC+액체 LIB → METHODOLOGY·3메커니즘·점소성 정식만 전이(수치앵커 ✗), stage4+audit⚠#10/E3 cross-ref |
