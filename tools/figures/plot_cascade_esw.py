@@ -45,16 +45,33 @@ def parse(d):
     return cat[0],anion,val,grp
 GRPC={"lanthanide":"#ec407a","TM":"#5c6bc0","main-group":"#26a69a","alk.earth":"#7cb342","alkali":"#9e9e9e"}
 
-# ---- write CSV ----
+# ---- O-variant (ox,red) map, for the O/F-degeneracy honesty flag ----
+_ovar={}
+for _d,(_ox,_red,_ocv,_win) in ESW.items():
+    _c,_a,_v,_g=parse(_d)
+    if _a=="O": _ovar[_c]=(_ox,_red)
+def esw_note(d):
+    ox,red,ocv,win=ESW[d]; cat,an,val,grp=parse(d)
+    n=[]
+    if win<0.05: n.append("collapse")                                    # late-TM M-redox eats the window -> avoid
+    if an=="F" and _ovar.get(cat)==(ox,red): n.append("O/F-degenerate")  # F-variant ESW == its O-sibling -> cation proxy only
+    if d in CLRICH_OX: n.append(f"Cl-rich:ox->{CLRICH_OX[d]}")            # +Cl-rich buffer raises oxidation onset
+    return ";".join(n)
+
+# ---- write CSV (clean: leading '#' provenance is raw-written [no quoting], header is a real row) ----
 with open("db/properties/oxidation_stability_cascade.csv","w",newline="") as f:
+    f.write("# grand-potential ESW per cascade dopant (UMA champion composition, MP GGA_GGA+U hull). "
+            "Source: esw_cascade_batch.py @ gabia, PLAIN variant. Read with pandas.read_csv(comment='#').\n")
+    f.write("# ref undoped: comp1/modelc ox=2.14 red=1.24 ocv=1.72 ; nd ox=1.92 (matches Nd2O3 here). "
+            "Composition+MP-hull based => UNAFFECTED by the elastic/EOS recompute.\n")
+    f.write("# note flags: collapse=window<0.05 V (avoid, late-TM Fe/Co/Ni/Mn); "
+            "O/F-degenerate=F-variant ESW equals its O-sibling (anion did not shift the limiting reaction, so it is a cation proxy); "
+            "Cl-rich:ox->X=+Cl-rich buffer raises the oxidation onset to X V.\n")
     w=csv.writer(f)
-    w.writerow(["# grand-potential ESW per cascade dopant (UMA champion composition, MP GGA_GGA+U hull).",
-                "esw_cascade_batch.py @ gabia. PLAIN variant; clrich_ox = +Cl-rich oxidation onset (higher)."])
-    w.writerow(["# ref undoped: comp1/modelc ox=2.14 red=1.24 ocv=1.72 ; nd ox=1.92 (matches Nd2O3 here)."])
-    w.writerow(["dopant","anion","valence","group","ox_V","red_V","ocv_V","window_V","clrich_ox_V"])
+    w.writerow(["dopant","anion","valence","group","ox_V","red_V","ocv_V","window_V","clrich_ox_V","note"])
     for d in sorted(ESW):
         ox,red,ocv,win=ESW[d]; cat,an,val,grp=parse(d)
-        w.writerow([d,an,val,grp,ox,red,ocv if ocv else "",win,CLRICH_OX.get(d,"")])
+        w.writerow([d,an,val,grp,ox,red,ocv if ocv else "",win,CLRICH_OX.get(d,""),esw_note(d)])
 print("saved db/properties/oxidation_stability_cascade.csv")
 
 # ================= figure =================
