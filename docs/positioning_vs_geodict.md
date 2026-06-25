@@ -58,3 +58,30 @@ GeoDict = **구조 → 유효물성 특성화 엔진**.  **주어진(given) 미�
 
 → #281 frame[5](입력측 예측 vs 출력측 특성화) + #276(descriptive 리뷰 vs predictive 엔진)과 동일 논지의,
 **가장 구체적·검증가능한 버전**(GeoDict이라는 명시적 비교 대상).
+
+## ★★ 결정적 강화 — 이 분류는 "내가 만든 distinction"이 아니라 **필드(이 그룹)의 자기 taxonomy**
+
+`docs/lit_choi2024_digital_twin_review_echem.md` (이용민 DTBL의 디지털트윈 방법론 총설, E.Chem 매거진 Vol16):
+이 리뷰가 §"3D 디지털 트윈 구조체 형성 방법론"에서 **하향식(top-down / reconstruction)** vs **상향식(bottom-up
+/ formation)** 두 범주를 **명시적으로 정의**한다.  ⇒ 위의 "GeoDict = 구조-given 특성화(top-down) ↔ 우리
+DEM+MPM = 공정에서 구조-예측(bottom-up)"은 **내가 발명한 구분이 아니라 우리가 비교/이식하는 바로 그 그룹의
+자기 방법론 리뷰가 NAMING한 필드 표준 taxonomy**다.
+- 우리 DEM+MPM = **상향식(bottom-up / formation)** 범주에 정확히 속함.
+- GeoDict 사용 논문(#266/#271/#281/#284/#286/#275) = **하향식(top-down / reconstruction)** 범주.
+- 추가로 그 리뷰의 **DTP(digital twin prototype, design-side, 물리시스템 미연결) vs DTI(instance, 연결)**
+  구분에서 우리 DEM+MPM = **DTP**(설계측 예측).
+⇒ positioning이 **"우리가 만든 distinction" → "필드 taxonomy 안에서 우리 위치"**로 격상 = peer-review 최강.
+한 문장에 추가: *"… 본 연구의 bottom-up/formation 접근(Choi et al., E.Chem 2024 분류)은 top-down/
+reconstruction 도구(GeoDict 기반 선행연구)와 상보적이되, 공정→구조 예측 + 접촉망 constriction σ에서 그를 넘어선다."*
+
+★★★ **peer-review 인용은 ACS EL 원본을 써라:** E.Chem 총설은 그룹의 peer-reviewed **ACS Energy Lett. 2024,
+9, 5225-5239** (S. Kim, **H. Lee, J. Lim**, J. Park, **Y. M. Lee**, "Digital Twin Battery Modeling and
+Simulations…", = DTBL 모델러들; 총설 Fig들이 "[Ref 127 재구성 ⓒ2024 ACS]")의 한국어 확장판.  ⇒ taxonomy의
+출처는 **우리가 positioning 대상으로 삼는 바로 그 그룹의 peer-reviewed 자기 논문** = 최강 근거.  논문엔 ACS EL
+원본을 인용.
+★ 추가 결정타(원본/총설 §3): **bottom-up 정의가 "DEM·FVM 등이 활용되며, 입자 간 상호작용과 압축 하의 형상
+변화를 모델링"이라고 DEM/FVM을 명시**하고, **그 bottom-up 예시가 LPSCl + NCM 70 wt%**(우리 정확한 소재계).
+즉 그들 taxonomy가 **우리 도구(DEM+MPM)와 우리 시스템(LPSCl+NCM)을 bottom-up의 본보기로 직접 거명**.  우리는
+그 bottom-up 안에서도 **"process-physics-driven" 최강 sub-type**(확률적 배치 #263가 아니라 압축역학 인과).
+(단 그들 Fig 6c "압연 DEM 공정모델: 압축–spring-back–접촉/다공/굴곡"의 **spring-back은 우리 MPM 미구현 gap
+#285** — 그 그림은 청사진이자 우리 future-work 근거.)
