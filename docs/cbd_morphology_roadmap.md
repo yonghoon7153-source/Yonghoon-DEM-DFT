@@ -163,6 +163,31 @@ i.e. a GOOD AM network).  Two `--add-recipe`s, same 80:18:1:1 wt%, n_grid 266 MP
   an A6000 with --gpu + bincount assembly + residual-% progress.  (`--fibre` is a no-op for SuperP — its
   0D aggregates carry fibre id −1 — so SuperP gain is unchanged with or without it.)
 
+### ★ #19 (Kim 2025, Battery Energy) — SAME-SYSTEM (LPSCl+NCM) experiment CLOSES the regime question (2026-06-25) ★
+`docs/lit_kim2025_conductive_agent_se_coating_assb.md`.  Kim et al. mix the conductive agent (CA) into the
+**SE-coating-on-CAM** (not the bulk interstitial) and measure, in OUR LPSCl+NCM system: σ_e SE@CAM 3.3e-2
+→ **SE–SuperP 1.0e-5 (3-decade COLLAPSE — a Super-P-rich coating blankets the CAM surface and severs the
+percolation path)** → SE–VGCF 1.4e-2 (recovered); σ_ion **SE–SuperP 0.9 < SE@ 1.3 < SE–VGCF 1.6 (×1e-4)**,
+SuperP halves the active-surface-area (ASA 0.51).  ⇒ experimentally **VGCF (1D) > Super P (0D)** on BOTH axes
+in this coating regime.  Reconciliation with our real_10 voxel result — **two axes, do NOT conflate:**
+- **(ionic axis) ✅ CONFIRMED same-system**: SuperP blocks ionic more — our voxel (SuperP σ_ion 0.0168 <
+  VGCF 0.0298, 1.8×) had the **same direction**, now anchored by a direct LPSCl+NCM *experiment* (#275 needed
+  an NCMA/liquid transfer; #19 is our exact chemistry).  We match the *ordering* (VGCF less blocking), not the
+  literal 1.8×.
+- **(electronic axis) ⚠ REGIME DIFFERENCE, not a contradiction**: experiment VGCF>SuperP lives in the
+  **SE-coating-on-CAM** regime (carbon ON the CAM surface → a dense Super-P coating *blocks* the contact);
+  our SuperP>VGCF lives in the **bulk gap-filler** regime (1 wt% carbon in the interstitial voids → distributed
+  Super-P *mops up* dead AM).  **Carbon LOCATION flips the sign of "more distributed Super-P contacts":** in the
+  bulk it is a *benefit* (lands near more dead-AM gaps), on the coating it is a *blocker* (blankets the CAM face,
+  3-decade σ_e collapse).  ⇒ our "SuperP > VGCF electronic" is **correct but bulk-gap-filler-corner-specific**;
+  the performance-deciding **SE-coating regime → VGCF wins** (matches #19 + #275 same-group: in ASSB the
+  1D/continuous carbon beats 0D/discrete).
+- **❗ MODEL-SETUP gap (audit E4)**: `additives.py` seeds carbon **only in the bulk interstitial** → it
+  *structurally cannot* represent the SE-coating-on-CAM Super-P blocking (the 3-decade σ_e collapse #19
+  measures).  Fix = a future `se_coating_interface` carbon option (carbon seeded as a CAM-surface film, not a
+  bulk point cloud).  Until then: report our SuperP>VGCF electronic as **bulk-regime-only**, and cite #19 for
+  the coating-regime VGCF win.  Folded into `stage2_model_audit_vs_literature.md` ✅⚠#4.
+
 ## ★ AM-poor crossover probe — NO crossover; SuperP wins at EVERY alive AM density (real_10, 2026-06-25) ★
 
 Direct test of the literature prediction (P11/P12: 1D VGCF beats 0D SuperP when AM is poor).  Method: keep

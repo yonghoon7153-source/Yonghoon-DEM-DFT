@@ -75,6 +75,18 @@ self-percolate 불가(carbon-only σ=0; carbon ≈6-7% ≪ 31% 3D 퍼콜 thresho
   격상.  ★ NEW: SWCNT **conformal sheath = 제3 morphology**(표면-순응형; 우리 additives.py의 SuperP=분산점/
   VGCF=interstitial 둘 다 아님) — **두꺼운 전극서 실제로 이기는** 형태 → 향후 additive 옵션(`additives.py`
   seed_sheath 후보).  Li-ion liquid라 절대값 전이는 아니고 carbon-morphology 물리만.
+- ✅⚠ **#19 (Kim 2025, Battery Energy) = SAME-SYSTEM(LPSCl+NCM) 실험 — ✅#4 두 축으로 정밀화** (`docs/lit_kim2025_conductive_agent_se_coating_assb.md`):
+  CA를 **SE-coating-on-CAM**에 혼입.  σ_e SE@CAM 3.3e-2 → **SE-SP 1.0e-5(3자릿수 붕괴, Super-P-rich 코팅이 CAM
+  표면 차단)** → SE-VGCF 1.4e-2(회복); σ_ion **SE-SP 0.9 < SE@ 1.3 < VGCF 1.6 (×1e-4)**, ASA SP가 절반(0.51).
+  ⇒ **VGCF(1D) > Super P(0D) 실험**.
+  - **(이온축) ✅ 강화**: SuperP가 이온 더 막음 = 우리 voxel(SuperP 0.0168 < VGCF 0.0298) **방향을 같은 LPSCl
+    시스템 실험으로 직접 확인**(#275는 NCMA/liquid 전이 필요했지만 #19는 직접).  단 directional ordering(절대 1.8× 아님).
+  - **(전자축) ⚠ regime 차이**: 실험 VGCF>SuperP(**SE-coating**), 우리 voxel SuperP>VGCF(**bulk gap-filler** 1wt%,
+    density가 dead-AM mop-up).  **carbon 위치가 "density"의 부호를 뒤집음**(bulk=이득 / coating=차단).  우리
+    SuperP>VGCF는 **bulk-gap-filler corner 한정 맞음**; 성능 가르는 SE-coating regime은 VGCF 승.
+  - **❗ 모델-setup gap (E4)**: `additives.py`가 carbon을 **bulk 간극에만** seed → SE-coating-on-CAM의 Super-P-rich
+    차단(σ_e 3자릿수 붕괴)을 **표현 못 함** → 향후 `se_coating_interface` carbon 옵션이 fix.  #19+#275(같은 그룹)
+    = ASSB서 1D/연속 carbon이 0D/discrete를 이김(same-system + general 둘 다).
 
 ## ⚠#5 — PTFE를 비전도 장애물(σ=0)로만 모델링 → 양(+)의 기계 역할 누락 (#271로 정량)
 
