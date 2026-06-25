@@ -239,7 +239,25 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 - **#283** Primer Layer Design, Dry Electrode-CC Interfaces — *ACS Energy Letters* (IF 17.5).  dry 전극 접착/계면(주변부).
 - **#267** Surface/Interfacial Cutting, Adhesive Strength Measurement — *J. Energy Storage* 150 (IF 10.7).
   접착강도 = 우리 binder/cohesion(--coh) 측정법.
-- **#282** Charge-Engineered Cellulose Nanofibril Binders, PFAS-free High-Loading — *Nature Communications* (IF 18.1).  binder(주변부).
+- **#282** Charge-Engineered Cellulose Nanofibril Binders, PFAS-free High-Loading — *Nature Communications* (2026),
+  DOI 10.1038/s41467-026-73909-0 (Open Access).  Sang-Woo Kim†, Nag-Young Kim† … **Yong Min Lee(공저)** …
+  Won Bo Lee\*(SNU), Sang-Young Lee\*(Yonsei) + UNIST.  ✅ **풀 디제스트:** `docs/lit_kim2026_charge_engineered_cnf_binder.md`.
+  ⚠ **LEAD = Sang-Young Lee + Won Bo Lee + UNIST; Yong Min Lee는 공저자(주도 아님)** → DTBL 핵심(#266/#285/#286)보다 협업·주변부.
+  - **핵심:** 목재 유래 셀룰로오스 나노피브릴을 **4급 암모늄(−N(CH₃)₃⁺)으로 양이온화(c-CNF, ζ +31.9 mV·DS 0.39·직경 38 nm)** →
+    슬러리에서 **정전기 반발로 분산 안정화** + 건조 후 **강한 수소결합으로 접착·구조 무결성** → **PFAS(PVDF)·NMP 없이**
+    초고로딩 **113 mg/cm²·밀도 3.65 g/cm³·면적용량 22.5 mAh/cm²·1781.5 Wh/L·431.8 Wh/kg**(바인더 1 wt%) NCM811 양극.
+    PVDF 대비: t_Li+ **0.83 vs 0.54**, 토르투오시티 **3.6 vs 6.8**, 접착일(Fowkes) 활물질/도전재 **107.1/103.6 vs 78.40/77.56 mN/m**,
+    peel 접착 **157.3 vs 14.2 N/m**, 전극전도도 0.23 vs 0.16 S/cm, 흑연‖NCM811 300cyc **88% vs 80%**.
+  - **DFT:** **VASP GGA-PBE PAW(cutoff 450 eV)** — MEP/ESP 맵(c-CNF 양전하) + 결합에너지(−OH···−OH **−0.64 eV** ≈ 10× PVDF −F···H− −0.07;
+    MD Al₂O₃ 슬랩 c-CNF **−1204.8 vs** PVDF **−530.26 kJ/mol**) + 음이온 교환(TFSI⁻ MEP −0.025 Ha/e·ΔG −46.7 kJ/mol → PF6⁻ 자발 치환).
+    보충데이터 16종 = Gaussian-cube SCF density/ESP(PVDF/b-CNF/c-CNF/TFSI/PF6/Cl).
+  - **우리 모델 매핑 (★ TIER-3 / 주변부 — 모델 영향 0):** ⚠ **분자스케일 바인더 화학 + 액체전해질 NCM811 LIB** —
+    우리 LPSCl sulfide ASSB의 연속체/접촉망 DEM+MPM과 소재·스케일·물리 모두 다름.  접점은 **맥락 3가지뿐**:
+    (a) **PFAS-free 바인더 = 우리 additives.py가 기하로만 모델하는 PTFE(역시 PFAS)의 대안 맥락**(바인더 화학 미모델);
+    (b) **전하→분산 개념이 우리 CBD 분산균일도(E2)에 개념적 인접**하나 메커니즘 다름(분자 표면전하/DLVO vs 기하 seeding) → 수치 전이 無;
+    (c) **고로딩 양극 맥락**(단 그들 한계=Peclet 수직분리·전해질 침투는 ASSB엔 없음).  ✗ **transport/압축/σ 앵커 아님**(Bazzoun/Varkey/Minnmann/#266 담당).
+    ✗ **#284와 혼동 금지** — 이건 바인더 교체(c-CNF가 분산·접착·t_Li+·전도 all-win)이라 우리 SuperP-vs-VGCF **ion/electron trade-off와 대응 안 됨**
+    (그 trade-off 확증·분산정량법은 #284가 공급).  ✗ 그들 DFT=분자 MEP, 우리 DFT-DEM=입자스케일 → 스케일 달라 상보 아님.  **TIER-3 유지.**
 
 ---
 
