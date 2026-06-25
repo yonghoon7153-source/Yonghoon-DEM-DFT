@@ -310,7 +310,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 
 | # | 제목(요약) | 저널 | 비고 |
 |---|---|---|---|
-| 280 | Elastomeric Li metal anode, nano-crumpled architecture | Adv. Energy Mater. (25.5) | Li metal anode |
+| 280 | 탄성 Li metal anode — 나노-크럼플+마이크로-오목 PDMS 집전체 + 친리튬 TREN SAM (LEAD=Cho/Ko/Back, **Y.M.Lee 공저**). E_host 31.4 MPa·핵생성 124.5→11.0 mV·대칭 ~2,600 h@1/1·~2,100 h@3/3·LFP 90.2%@1,000(1C). 음극 도금 계면공학+액체 LFP → 모델 영향 0; 응력완화 테마만 MPM/#285에 먼 인접. 디제스트 `docs/lit_choi2026_elastomeric_li_metal_anode.md` | Adv. Energy Mater. (25.5) | Li metal anode |
 | 279 | Electronic-ionic polymer, PCET, aqueous Zn-ion | Energy Storage Mater. (19.3) | Zn-ion |
 | 278 | Na 층상 cathode, Bi 치환 공기·수분 안정화 | Chem. Eng. J. (12.5) | Na cathode |
 | 277 | Dual-layer anode 보호, lean-electrolyte Li-S | J. Energy Storage (10.7) | Li-S |

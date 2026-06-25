@@ -114,3 +114,33 @@ event-driven) — the GUI reference; we replicate its physics with PyBaMM + our 
 5. Stage-3 coupling: H2→H3 ΔV → DEM/MPM fracture → contact/σ loss → fade (the mechano-electrochem loop).
 6. Stage-5 ML: the technique outputs become predictor targets (design → instant performance + inverse design).
 Refs: lpscl params doc, the DOIs above, PyBaMM docs.docs.pybamm.org.
+
+## 7. ★ #281 (Kim 2026, A3D air electrode) — Phase-4 결합 청사진 검증 + 채택 레시피 (2026-06-25)
+
+`docs/lit_kim2026_a3d_air_electrode_microstructure_transport.md` (litdb 풀 디제스트).  Yong Min Lee 그룹
+#281이 **정확히 우리 Phase-4 파이프라인의 published 버전**: digital-twin 미세구조 → **GeoDict 유효물성**
+(ConductoDict σ / **DiffuDict** 유효 D / MatDict SSA) → **COMSOL 1D 전기화학**(방전 ORR) → 방전곡선.
+Li-O₂라 절대값 전이 ✗, **결합 METHODOLOGY는 그대로 채택** (이 그룹 GeoDict 3번째: #286 τ, #284 W_adh, #281 결합).
+
+### 채택할 3개 결합 디테일 (그들이 이미 검증)
+1. **core 전극 = 측정 유효물성, 보조 도메인 = Bruggeman.**  그들은 공기극=GeoDict 유효물성, GDL=Bruggeman로
+   섞음 → 우리도 PyBaMM에서 **양극만 우리 τ_Laplace,eff / σ 주입**(§2의 `"Positive electrode tortuosity
+   factor"`), **분리막은 default Bruggeman**.  (전부 우리 값으로 바꾸지 말 것 — 측정한 도메인만.)
+2. **비구조 동역학(exchange current j₀, D_s, 반응상수)은 baseline에서 1번만 fit → 그 다음 구조(ε/τ/σ)만 변화.**
+   구조효과를 깨끗이 분리(structure-attribution) → §6 plan 2~4단계에 적용.  (그들의 핵심 실험설계.)
+3. **방전(또는 CC/CV) 먼저 검증 → 충전/OER·degradation은 분리.**  추가물리(그들 Li₂O₂ film, 우리 Stage-3 fade)는
+   별도 레이어 — 1차 검증을 단순하게.
+
+### DiffuDict = 우리 voxel가 없는 한 조각 (frame[4] 확장 후보)
+GeoDict ConductoDict/DiffuDict는 우리 `voxel_conductivity.py`의 상용 쌍둥이(둘 다 voxel ∇·(σ∇φ)=0 / 정상
+Fick → 균질화 유효물성).  **DiffuDict(유효 D_eff/τ)만 우리한테 없음** → voxel에 **확산 모드 추가**(steady Fick)
+→ 유효 D_eff/τ를 contact-network τ(Laplace/Dijkstra)와 **frame[4] 교차검증**, 그리고 그 τ가 위 ①의 PyBaMM
+주입값.  ⚠ 우리 voxel 한계 그대로 전이: **연속 골격은 OK, granular SE 점접촉은 sub-voxel → DEM Holm 필요**
+(frame[5]) — voxel τ는 contact-free 상한, 생산 τ는 DEM.
+
+### frame[5] — 우리 edge
+#281은 **출력측**(고정 CAD 미세구조 → 성능; 논문 자인 "1D는 pore-scale heterogeneity 못 잡음").  우리는
+**입력측**(압력→미세구조 예측 + 소성 morphology + 접촉 σ triad + granular constriction + fracture).  ⇒ 이상적
+워크플로 = **우리 DEM+MPM이 미세구조 생성/예측 → voxel 유효물성 → #281식 1D 전기화학(우리 PyBaMM Phase 4)**.
+부가: 그들의 "(구조변수 × 작동조건) → 성능 colormap + 다축 radar" = 우리 predictor 시각화(knob×조건 민감도
+heatmap + per-case radar)와 대응 → Phase 5 시각화에 차용.
