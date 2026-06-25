@@ -173,11 +173,44 @@ ASSB가 아님** → 절대 transport 값 전이불가. 가져올 것은 **설�
     예측 + 소성 morphology + 접촉 σ triad + fracture**. ⇒ 이상 워크플로 = 우리가 미세구조 생성/예측 →
     그들식 토모-정량 검증 → 그들식 전기화학시뮬로 농도분극 닫기. frame[5] 분업 재확인.
 
-### #284 — Optimized Carbon Coating on SiOx, Balanced Ion/Electron Transport + Uniform Dispersion  ★★
-Journal of Power Sources 689(15) (2026) 240698 (IF 8.4).  Jihwan Oh†, Seungyeop Choi† … Yong Min Lee.
-- **핵심(제목):** carbon coating이 **이온/전자 수송 균형 + 균일 분산**.
-- **매핑:** ion vs electron 수송 **trade-off** = 우리 σ_ionic↔σ_electronic; **균일 분산** = 우리 CBD seeding
-  형태(SuperP 분산 vs VGCF 응집).  우리 CBD ionic-blocking vs electronic-bridging trade-off와 동일 긴장.
+### #284 — Optimized Carbon Coating on SiOx, Balanced Ion/Electron Transport + Uniform Dispersion  ★★  ✅ 풀 디제스트 완료
+Journal of Power Sources **689** (2026) 240698 (IF 8.4), DOI 10.1016/j.jpowsour.2026.240698.  Jihwan Oh†,
+Seungyeop Choi† … Yong Min Lee\* (Yonsei DTBL + ActRO Corp.).  접수 2026-04-04 / 게재확정 2026-06-10.
+MDB 2025 특별호.  ★ **풀 디제스트:** `docs/lit_oh2026_carbon_coating_siox_ion_electron_balance.md`.
+⚠ **소재 = SiOx(0<x<2) + 인조흑연 음극 + 액체전해질(1.15 M LiPF₆ EC/EMC 3:7 + 10% FEC) 일반 LIB**,
+full-cell 양극 NCM622 — **우리 LPSCl sulfide ASSB가 아님** → 전기화학 절대값(용량·ICE·Rct·rate) 전이불가.
+가져올 것은 **이온/전자 trade-off 개념 + 분산 측정법(SSRM/W_adh) + 정성추세**(수치 σ/porosity 앵커 아님 —
+Bazzoun/Varkey/Minnmann이 담당).
+- **핵심:** **CVD 아세틸렌 탄소코팅 두께(thin/moderate/thick = TGA 0.95/2.91/4.18 wt%)가 이온↔전자 수송
+  BALANCE를 지배.** **두꺼운 코팅 → 전자전도↑(연속 도전망) BUT Li⁺ 수송 차단 → Rct↑·분극↑**; **얇은 코팅 →
+  전자경로 불충분**; ★ **moderate(~2.91 wt%) = 균형 → 최저 임피던스·최고 rate·최고 cycling.** 또 탄소코팅이
+  SiOx **표면에너지를 CBD에 가깝게** 바꿔(γᵖ 21.6→11–14) **SiOx–CBD 상호작용↑ → CBD 균일분산**(bare는 응집).
+- **검증:** TEM(코팅두께) + TGA(C wt%) + **SSRM 저항맵(분산)** + OWRK 표면에너지/work-of-adhesion + 유변학 +
+  EIS/DCIR/GITT/CV/DRT + SiOx/graphite‖NCM622 full-cell + 48 mAh pouch + SAICAS + post-mortem SEM/XPS.
+- **핵심 수치:** TEM thin **~4–5 nm conformal**, thick **조밀**; bulk 전기저항률 bare **0.033 → thin 0.018 →
+  moderate 0.013 → thick 0.012 Ω·cm**(moderate≈thick saturate); 계면 전기저항 **1.7→1.0→0.6→0.5 mΩ·cm²**;
+  **ICE half 73.6/80.0/81.6/81.5%, full 58.7/69.1/73.1/71.8%**(moderate≈thick saturate); **work-of-adhesion
+  (SiOx↔CBD) bare 99.9 → thin 107.3 / moderate 108.6 / thick 107.9 mN/m**(moderate 최고); DCIR·DRT(Z_W·Rct·
+  R_SEI) **moderate 최소**(thick은 Rct↑=Li⁺ 차단); 70사이클 후 단면 두께 **bare ~93 vs moderate ~70 µm**;
+  **SAICAS cohesive 112.3/129.0/147.0/134.6 N/m, adhesive 120.2/138.5/196.5/149.9 N/m**(moderate 최고).
+  조성: SiOx/graphite 음극 80:9:1:5:1.5:5(SiOx:흑연:Super C65T:MWCNT:Na-CMC:SBR), NCM622 양극 96:2:2.
+- **우리 모델 매핑 (★ CBD ion/electron trade-off 독립확증 + 분산 측정법 — 수치 σ 앵커는 Bazzoun/Varkey/Minnmann):**
+  - **(a) ✅ 이온/전자 trade-off 독립확증:** 그들 "탄소↑→전자↑·이온↓, moderate 균형" = 우리 CBD
+    **"SuperP 전자 1.3× win BUT 이온 1.8× blocking(σ_ionic 0.0168 < VGCF 0.0298)"**(`docs/cbd_morphology_roadmap.md`)와
+    **동일 ion/electron 긴장**(그들=탄소 양/두께 축, 우리=도전재 종류/분산 축). → 우리 CBD blocking이
+    **시뮬 artifact 아닌 일반 trade-off**임을 강화(모델 신뢰도↑, flaw 아님 = trade-off 그림 enrich).
+  - **(b) ★ balance point 개념:** 우리 CBD는 **채널별 승자**(SuperP=전자, VGCF=이온)만 보고, **종합 최적
+    탄소량(balance optimum)은 미정량**. 그들 **moderate-C 명시적 최적**이 동기 → ★ **탄소 wt% 0.5→4 sweep
+    하며 voxel σ_e gain vs σ_ionic loss 동시 plot → 우리 balance curve**(roadmap PENDING 4 wt% 테스트가 시작점).
+  - **(c) ★ 분산 측정법 이식:** 그들 **SSRM 저항맵 공간균질도 + W_adh(표면에너지 매칭) + 유변학**. 우리는
+    분산을 morphology 근접도로만 봄(균일도 스칼라 無) → **voxel carbon occupancy 변동계수(CV) / nearest-carbon
+    거리분포**로 SuperP(분산=낮은 CV) vs VGCF(응집=높은 CV) 단일수치화; **carbon↔SE/AM W_adh**로 우리
+    `nucleate_frac`/`surface_frac` 경험치 물리근거화(단 LPSCl 표면에너지 우리 측정 필요).
+  - **(d) thick-C 이온차단 = 우리 blocking 방향일치(다른 주체):** 그들 thick=**연속 코팅층 barrier(Rct↑,
+    전해질-매개)**, 우리 SuperP=**분산 입자 SE-packing 교란(σ_ionic↓)** → 방향 동일, 주체 다름.
+  - **우리 우위:** 그들은 **post-mortem 측정(고정 구조)**; 우리 DEM+MPM은 **압력→미세구조→σ triad 예측 +
+    소성 morphology + voxel FV(carbon σ_e gain·σ_ionic blocking mechanistic 정량 = 그들 SSRM의 인과버전)**.
+    frame[5] 분업 재확인(그들엔 입자스케일 예측·접촉 σ 없음). ⚠ 절대 전기화학값(Rct·ICE) 전이불가(액체/음극).
 
 ### #264 — Multi-Faceted Binder via Thiol-Ene Click, Low-Pressure-Operable ASSB  ★★
 Advanced Functional Materials 36(15) (2026) e16017 (IF 19.9).  Young Jun Park … Yong Min Lee, Yoon Seok Jung.  DOI 10.1002/adfm.202516017.
@@ -236,6 +269,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 3 | #271 | PTFE void↓ vs NBR void↑ (digital-twin) | binder→void→σ 축; PTFE additive 검증 | litdb 풀 디제스트(PDF) |
 | 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
+| 5.5 | #284 | 탄소코팅↑→전자↑·이온↓, moderate 균형; SSRM/W_adh 분산정량 | **CBD ion/electron trade-off 독립확증 + balance curve sweep + 분산 균일도 metric** | ✅ 풀 디제스트 (`lit_oh2026_...md`); ⚠SiOx흑연/액체→개념·방법만, 수치앵커 아님 |
 | 6 | #275 | 연속 CNT sheath, thick 전극 | **--fibre 연속 thread / VGCF 검증** | 이미 정합(방금 작업) |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
 | 8 | #264/#268/#270 | 저압 ASSB / calendering / SE cavity-fill | 압축·압력 축 + SE void-fill | 맥락 인용 |
