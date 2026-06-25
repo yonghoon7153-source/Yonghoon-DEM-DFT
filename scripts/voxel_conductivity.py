@@ -63,8 +63,7 @@ def _cg_solve(A, b, tol=1e-6, label=''):
             except TypeError:                              # newer CuPy: rtol instead of tol
                 x = _csl.cg(Ag, bg, rtol=tol, maxiter=20000, M=Mg, callback=cb)[0]
             if label:
-                print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + ' ' * 18,
-                      flush=True)
+                print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + '\033[K', flush=True)
             return cp.asnumpy(x)
         except Exception as e:
             print(f'    (GPU CG unavailable: {type(e).__name__}: {e} → CPU)', file=_sys.stderr)
@@ -72,7 +71,7 @@ def _cg_solve(A, b, tol=1e-6, label=''):
     M = csr_matrix((minv, (np.arange(N), np.arange(N))), shape=(N, N))
     x = cg(A, b, rtol=tol, maxiter=20000, M=M, callback=_mk_cb(A, b, np))[0]
     if label:
-        print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + ' ' * 18, flush=True)
+        print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s\033[K', flush=True)
     return x
 
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
