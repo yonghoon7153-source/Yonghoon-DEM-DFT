@@ -31,33 +31,48 @@ _USE_GPU = False   # set by --gpu: run the CG on the GPU (CuPy) when available �
 def _cg_solve(A, b, tol=1e-6, label=''):
     """Jacobi-preconditioned CG for A·x=b.  GPU (CuPy) when --gpu and CuPy import OK (the solve, not
     just the MPM, then runs on the GPU), else CPU (scipy).  Returns x (numpy).
-    label: if set, prints a live CG iteration counter so a long solve isn't a silent '…'."""
+    label: print a residual-based % progress every ~1.5 s (both GPU & CPU) so a long solve is never
+    a silent '…' — keeps the output flowing so a remote SSH session doesn't time out / broken-pipe."""
     import sys as _sys, time as _time
+    N = A.shape[0]
     Ad = A.diagonal(); minv = 1.0 / np.where(Ad > 0, Ad, 1.0)
-    cnt = [0]; t0 = _time.time()
+    bnorm = float(np.linalg.norm(b)) or 1.0
+    denom = -np.log10(tol) or 6.0                       # residual must drop this many decades → 100%
+    cnt = [0]; t0 = _time.time(); last = [t0]
 
-    def _cb(*_a):
-        cnt[0] += 1
-        if label and cnt[0] % 100 == 0:
-            print(f'\r      [{label}] CG iter {cnt[0]:>5}  ({_time.time()-t0:.0f}s)…', end='', flush=True)
+    def _mk_cb(Amat, bvec, xp):
+        def cb(xk):                                     # CG callback gets the current solution xk
+            cnt[0] += 1
+            now = _time.time()
+            if label and now - last[0] > 1.5:           # throttle to ~1.5 s (cheap: 1 matvec per print)
+                last[0] = now
+                r = float(xp.linalg.norm(bvec - Amat.dot(xk)))
+                pct = min(100.0, max(0.0, 100.0 * np.log10(bnorm / max(r, 1e-30)) / denom))
+                print(f'\r      [{label}] CG ~{pct:5.1f}%  (iter {cnt[0]}, {now - t0:.0f}s)',
+                      end='', flush=True)
+        return cb
     if _USE_GPU:
         try:
             import cupy as cp
             import cupyx.scipy.sparse as _csp
             import cupyx.scipy.sparse.linalg as _csl
             Ag = _csp.csr_matrix(A.astype(np.float64)); bg = cp.asarray(b); Mg = _csp.diags(cp.asarray(minv))
+            cb = _mk_cb(Ag, bg, cp)
             try:
-                x = _csl.cg(Ag, bg, tol=tol, maxiter=20000, M=Mg)[0]
+                x = _csl.cg(Ag, bg, tol=tol, maxiter=20000, M=Mg, callback=cb)[0]
             except TypeError:                              # newer CuPy: rtol instead of tol
-                x = _csl.cg(Ag, bg, rtol=tol, maxiter=20000, M=Mg)[0]
+                x = _csl.cg(Ag, bg, rtol=tol, maxiter=20000, M=Mg, callback=cb)[0]
+            if label:
+                print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + ' ' * 18,
+                      flush=True)
             return cp.asnumpy(x)
         except Exception as e:
             print(f'    (GPU CG unavailable: {type(e).__name__}: {e} → CPU)', file=_sys.stderr)
-    N = A.shape[0]
+            cnt[0] = 0; t0 = _time.time(); last[0] = t0
     M = csr_matrix((minv, (np.arange(N), np.arange(N))), shape=(N, N))
-    x = cg(A, b, rtol=tol, maxiter=20000, M=M, callback=_cb)[0]
-    if label and cnt[0] >= 100:
-        print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + ' ' * 12, flush=True)
+    x = cg(A, b, rtol=tol, maxiter=20000, M=M, callback=_mk_cb(A, b, np))[0]
+    if label:
+        print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + ' ' * 18, flush=True)
     return x
 
 PHASE_SIGMA = {  # per channel; void always 0.  ionic/electronic mS/cm, thermal W/m·K
