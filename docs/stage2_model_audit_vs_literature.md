@@ -128,3 +128,26 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
 정합.  남은 것은 (a) 단순화 2건(PTFE void 기여=일반LIB만, poly/single 역학=chemo-mech 단계 한계) 명시,
 (b) σ_ionic·porosity·τ **다점 정량 검증**(#266 PDF), (c) **enhancement 2건**: Phase 5 graded-z-stack(#286) +
 pore-side 확산-τ frame[4] cross-check(#286).  ⇒ Stage-2 무결성 OK, 개선 2건은 하자 아닌 기능 추가.
+
+---
+
+## DEM 모델 — 적용 큐 (apply queue, MPM뿐 아니라 DEM도)
+
+문헌 인사이트가 MPM/morphology로 기울지 않게 **DEM 전용**으로 분리 정리.  DEM = transport(Kirchhoff/Holm) +
+packing + Auerbach fracture.
+
+| ID | 출처 | DEM에 적용할 것 | 상태 |
+|---|---|---|---|
+| **D1** | #285 | **poly/single-aware Auerbach P_c** — 단결정은 monolithic이라 입계균열 억제(높은 P_c·균열저항), 다결정은 입계따라 쉽게 파괴(낮은 P_c). 현재 DEM Auerbach P_c는 **poly/single 미구분**(generic). | ⏳ #285 디제스트(진행중)에서 P_c factor 받아 적용 |
+| **D2** | #286 | **pore-side τ frame[4] cross-check** — 현재 DEM은 contact-side만(z_SE-SE). #286의 (i) pore-network 배위수+connectivity-bandwidth(watershed pore 분할), (ii) 확산-sim τ(ε/τ²·D)를 이식 → 우리 contact-σ τ_Laplace의 독립 교차검증. | 📋 scoped enhancement (metric 추가) |
+| **D3** | #286 | **through-plane porosity(z) 프로파일 + top↔bottom Δ** metric — 현재 단일 porosity만 보고. z-구배 정량 필요(Phase 5 연계). | 📋 dashboard/synth metric |
+| **D4** | #266 | bimodal P:S — DEM이 **이미 보유**(P:S sweep). 변경 불필요, **검증 인용**만. | ✅ 보유 |
+
+⚠ **새 케이스 a9_50_p00이 D1을 즉시 건드림:** 0:10 = **전부 단결정(AM_S)**인데 Auerbach가 δ-based **17.23%
+microcrack** (force-based 4.18%, severe 0).  #285에 따르면 단결정은 **균열을 restrain** → 우리 δ-based
+microcrack 17%가 단결정엔 **과대일 수 있음** (force-based 4%가 더 맞을 가능성).  → #285 디제스트로 단결정
+P_c 보정계수 받으면, AM_S P_c를 올려(또는 force-based를 단결정 기본으로) 재계산.  **D1 우선순위 ↑.**
+(severe=0이라 σ엔 영향 작음 → 하자 아닌 **정밀화**.)
+
+**apply 원칙:** 반쯤 디제스트된 논문으로 코드를 미리 바꾸지 않음.  각 DEM 항목은 해당 논문 **풀 디제스트
+완료 후** 정량값(P_c factor 등) 확보되면 적용.  D1은 #285 끝나면 바로, D2/D3는 scoped 후 별도 적용.
