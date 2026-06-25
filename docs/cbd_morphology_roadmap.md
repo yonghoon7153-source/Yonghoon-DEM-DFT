@@ -113,32 +113,50 @@ i.e. a GOOD AM network).  Two `--add-recipe`s, same 80:18:1:1 wt%, n_grid 266 MP
 
 | additive | WITHOUT (AM-only) | WITH CBD | **gain** | morphology | voxel carbon cells |
 |---|---|---|---|---|---|
-| **SuperP** | 6.464 | **8.564** | **1.3×** | 1.4 M small aggregates (distributed) | 721 k |
-| **VGCF**   | 6.464 | **7.073** | **1.1×** | 31,789 long fibres (concentrated)   | 669 k |
+| **SuperP**        | 6.464 | **8.564** | **1.3×** | 1.4 M small aggregates (distributed)        | 721 k |
+| **VGCF** (bare)   | 6.464 | 7.073     | 1.1×     | 31,789 long fibres (concentrated)           | 669 k |
+| **VGCF** (`--fibre`) | 6.464 | **7.414** | **1.1×** | fibres centreline-connected into threads | **853 k** |
 
-- **Consistency ✓**: WITHOUT-CBD = 6.464 for BOTH (identical to 4283 CG iters) — same fixed AM scaffold ⇒
+- **Consistency ✓**: WITHOUT-CBD = 6.464 for ALL THREE (identical 4283 CG iters) — same fixed AM scaffold ⇒
   same AM-only σ_e; the FV solve is deterministic + exact.  (voxel 6.46 < DEM 8.64 = the known electronic
   neck under-resolution at n_vox 256, converges up with res; the GAIN is the resolution-robust quantity.)
 - **SuperP (1.3×) > VGCF (1.1×) — and it is NOT the σ value**: the 200× contrast cap clamps SuperP (1e5) and
   VGCF (5e5) to the SAME ~1e4 mS/cm, so the difference is PURE MORPHOLOGY.  SuperP's many distributed
   aggregates contact MORE dead-AM gaps than VGCF's fewer, longer fibres — for real_10's already-good AM
   network where carbon only mops up the few isolated AM, "many contacts" beats "long reach".
-- ⚠ **VGCF is likely UNDER-counted**: VGCF fibres are sub-µm thin → at n_vox 256 (cell ≈0.5 µm) they
-  voxelise to 1-cell threads (669 k < 721 k cells) that can break → its long-range bridging is
-  under-resolved.  A fair SuperP-vs-VGCF verdict needs higher n_vox or fibre-aware voxelisation.
-- **Real-physics reading**: for a POOR AM network (many dead AM) VGCF's long fibres should WIN (long
-  bridges span gaps SuperP can't); real_10's AM is good, so SuperP's contact density edges it.
-- ⚠ **The SuperP > VGCF verdict is NOT yet safe — gated on the VGCF under-resolution above.**  Two reasons it
-  likely FLIPS once VGCF is properly resolved:
-  (1) **Code fix shipped**: `voxel_conductivity.py --fibre fibre_carbon.npy` now interpolates each VGCF/PTFE
-      centreline into a CONNECTED voxel thread (bare cloud ~1.5µm-spaced ≫ 0.5µm cell → dotted line → no
-      conduction).  Re-run BOTH SuperP and VGCF with `--fibre` for the fair comparison.  PENDING.
-  (2) **Literature** (docs/literature_dry_assb.md P11/P12): in the SAME sulfide class, 1D CNF/VGCF
-      (150 nm × 15 µm) BEATS 0D Super-P (40 nm) on electronic percolation — VGCF SHOULD win.  So the current
-      1.3× > 1.1× is most likely the under-resolved-fibre artifact, not a real morphology verdict.
-  Next: `--fibre` re-run (both) + an AM-poor case to confirm the VGCF crossover.
+- ✅ **UNDER-RESOLUTION RULED OUT (2026-06-25, `--fibre` re-run, was the open gate)**: the fibre-aware
+  voxelisation densified VGCF 669 k → **853 k cells (now MORE than SuperP's 721 k)** and connected the
+  centrelines into continuous threads — yet VGCF only moved **7.073 → 7.414 (+5 %, still 1.1×)**, nowhere
+  near SuperP's 1.3×.  More cells + connected threads + STILL lower gain ⇒ the difference is **not**
+  resolution, it is **morphology**.  If anything VGCF is now slightly OVER-counted: a 150 nm fibre at
+  cell ≈0.5 µm voxelises to a 1-cell-thick thread (cross-section over-represented ~3×), so the true VGCF
+  gain is ≤ 1.1× → **SuperP > VGCF on real_10 is REAL and the gap is conservative.**
+- **Real-physics reading CONFIRMED (not the earlier "likely flips")**: real_10 has a GOOD AM network
+  (DEM σ_e 8.64, WITHOUT-CBD already 6.46) → carbon is a SUPPLEMENT that mops up the few isolated AM, not
+  the percolation backbone.  For mopping up scattered dead-AM, SuperP's 1.4 M distributed contacts land
+  near more gaps than VGCF's 32 k concentrated fibres → SuperP wins.
+- **NOT a literature contradiction — CASE-DEPENDENT (the resolution of the P11/P12 gate)**: lit
+  (docs/literature_dry_assb.md P11/P12) measures 1D VGCF > 0D Super-P in the **percolation-limited /
+  AM-poor** regime where the carbon IS the electronic backbone (long fibres span gaps Super-P can't reach).
+  real_10's AM already percolates, so carbon is supplementary → the regime flips.  **Prediction (still
+  PENDING test): on an AM-POOR case VGCF crosses over and wins** — that is the lit regime.  So both
+  verdicts hold in their own regime; no contradiction.
+- **Cross-channel picture (electronic + ionic together)**: the ionic CBD-blocking run (no-CBD vs +CBD
+  σ_ionic, --porosity 0.165, n_vox 256) gives **VGCF 0.0298 > SuperP 0.0168** — SuperP disrupts the SE
+  ionic packing ~1.8× more (its distributed aggregates intersperse through the SE; VGCF's concentrated
+  fibres leave SE mostly intact).  `--fibre` does NOT change ionic (carbon never enters the SE σ_ionic
+  mask; the blocking is MPM SE-rearrangement, not voxel occupancy).  Net for real_10:
+  | channel | SuperP | VGCF | favours | regime note |
+  |---|---|---|---|---|
+  | electronic | **1.3×** | 1.1× | **SuperP** | AM-GOOD (carbon supplementary); flips to VGCF when AM-poor (lit) |
+  | ionic (σ_ionic) | 0.0168 | **0.0298** | **VGCF** | VGCF leaves SE packing intact, SuperP blocks 1.8× more |
+  ⇒ VGCF is the all-round-safer additive (better ionic always + better electronic in the AM-poor regime
+  that actually needs carbon); SuperP only edges electronic in an already-good AM network where the
+  carbon gain is marginal (1.3× vs 1.1× of a 6.46 base).
 - Pipeline (gabia GPU): `mpm3d_compaction.py --se-dump … --add-recipe "AM:SE:{SuperP|VGCF}:PTFE=80:18:1:1"
-  --save-se se_carbon{,_vgcf}.npy --save-phase phase_carbon{,_vgcf}.npy --save-se-id se_id{,_vgcf}.npy`
-  then `nohup voxel_conductivity.py --se … --phase … --scaffold am_carbon.csv --n-vox 256 --porosity 0.165
-  --channel electronic --gpu > {superp,vgcf}_fv.log 2>&1 &`.  σ_e thick-electrode (708 z-cells, 26 M nodes)
-  ≈ 9–10 min/run on an A6000 with --gpu + bincount assembly + residual-% progress.
+  --save-se se_carbon{,_vgcf}.npy --save-phase phase_carbon{,_vgcf}.npy --save-se-id se_id{,_vgcf}.npy
+  --save-fibre fibre_carbon{,_vgcf}.npy` then `nohup voxel_conductivity.py --se … --phase … --scaffold
+  am_carbon.csv --fibre fibre_carbon{,_vgcf}.npy --n-vox 256 --porosity 0.165 --channel electronic --gpu
+  > {superp,vgcf}_fv_fibre.log 2>&1 &`.  σ_e thick-electrode (708 z-cells, 26 M nodes) ≈ 9–10 min/run on
+  an A6000 with --gpu + bincount assembly + residual-% progress.  (`--fibre` is a no-op for SuperP — its
+  0D aggregates carry fibre id −1 — so SuperP gain is unchanged with or without it.)
