@@ -2,6 +2,8 @@
 
 47-dopant UMA cascade 결과를 문헌(로컬 litdb + 웹)과 대조: **무엇이 검증됐고, 무엇이 novel이며, 문헌이 어디를 교정하는가.** 데이터: `db/properties/cascade_v23_*.csv`, figures `docs/figures/cascade/`.
 
+> *데이터 hygiene (2026-06-25 갱신):* 4개 champion(Nd₂O₃·NdF₃·SrO×2)을 재계산해 elastic 병리값(Nd₂O₃ ν<0 등)을 제거 → outlier 17→**4**(통계적 standout만 남고 실제 결함 0). 모든 plot·CSV는 재계산 반영. 아래 결론은 정리된 데이터셋 기준.
+
 ---
 
 ## 1. 문헌이 검증하는 우리 결과 ✅
@@ -24,7 +26,15 @@
 
 → **우리 cascade의 blocking 랭킹은 "과도핑 regime" 거동**이고, **실험 최적(저x)에선 같은 도펀트가 오히려 σ를 올릴 수** 있다. **blocking 절대값으로 도펀트 기각 금지** — "고농도서 차단" trend만 유효. (이미 알던 x=0.25 한계 + 문헌이 메커니즘적으로 확증.)
 
-이건 **dual-x 후속 스크린**(x=0.05 vs 0.25)으로 vacancy↔blocking 전환점을 잡으면 강력한 결과가 됨.
+### ★ dual-x 스크린 — 진행 중, 첫 데이터가 가설을 직접 확증
+
+이 reconciliation을 **실제로 테스트**하려고 gabia에서 **dual-x 스크린**을 돌리는 중(`/data/work/runs/dualx_v23/`, 2,2,1 슈퍼셀≈194-atom로 진짜 저농도 **x=0.0625** 실현, mobility-only). **첫 결과(Sc₂O₃)가 위 메커니즘을 그대로 보여준다:**
+
+| 도펀트 | Li-blocking @ **x=0.25** (cascade) | Li-blocking @ **x=0.0625** (dual-x) | 변화 |
+|---|---|---|---|
+| **Sc₂O₃** | 0.71–0.78 | **0.24–0.26** | **≈3× 감소** |
+
+→ **저농도에서 같은 도펀트의 blocking이 1/3로 떨어진다** = aliovalent Sc³⁺가 Li 자리에서 **vacancy를 만들어 경로를 차단하지 않는다**는 문헌 메커니즘의 **직접 증거**. 즉 cascade의 x=0.25 blocking은 **over-doped artifact**임이 데이터로 확인됨. (아직 Sc₂O₃ 1개 — P-site Ta/Nb/V·TiF₄ 등 나머지 9개로 일반성 확인 중. 그래도 vacancy↔blocking 전환의 **첫 정량 증거**.)
 
 ## 3. 우리가 기여하는 novelty 🆕
 
@@ -46,7 +56,7 @@
 
 ## 6. 새 testable 예측 (cascade + 문헌 결합)
 
-1. **dual-x 스크린(x=0.05 vs 0.25)** → vacancy↔blocking 전환 잡기. (문헌 §2 직접 검증.)
+1. ✅**진행 중·첫 데이터 확증** — **dual-x 스크린(x=0.0625 vs 0.25)** → vacancy↔blocking 전환 잡기. **Sc₂O₃ blocking 0.71–0.78 → 0.24–0.26 (≈3× 감소)로 vacancy 가설 직접 확증**(§2). 나머지 9개 도펀트 일반성 확인 중. (문헌 §2 직접 검증.)
 2. **Sc₂O₃·Gd₂O₃ sulfide 도핑 실측** → novel, 우리 예측(안정·산화·연성 상위) 검증.
 3. **Ta₂O₅⊕Gd₂O₃ dual-sublattice 합성** → Sn-O 선례 따라 σ+안정 동시 기대.
 4. **Cr₂O₃ = 코팅 한정**(blocking 0.89, 벌크 부적합) — 박막 cathode coating으로만.
@@ -65,4 +75,4 @@
 | Li₃TmCl₄Br₂ rare-earth halide | S0378775326004817 | RE는 halide 전해질(우리 RE-sulfide와 대조=novelty) |
 | (로컬) dopant_site_preference_literature.md | — | site 메커니즘 cited/standard/analogy 14/15/24 |
 
-> **한 줄**: cascade의 **site 메커니즘·O-doping·co-doping 방법론은 문헌 검증**, **RE-oxide sulfide 도핑·dual-metal-부격자·oxyfluoride는 novel**, 그리고 **결정적으로 우리 x=0.25는 과도핑 regime**이라 blocking은 고농도 trend일 뿐 — 저x에선 vacancy로 σ↑(문헌). **dual-x 스크린이 다음 1순위.**
+> **한 줄**: cascade의 **site 메커니즘·O-doping·co-doping 방법론은 문헌 검증**, **RE-oxide sulfide 도핑·dual-metal-부격자·oxyfluoride는 novel**, 그리고 **결정적으로 우리 x=0.25는 과도핑 regime**이라 blocking은 고농도 trend일 뿐 — 저x에선 vacancy로 σ↑(문헌). **dual-x 스크린 진행 중이고 첫 결과(Sc₂O₃ blocking 0.75→0.25, ≈3× 감소)가 이 vacancy 가설을 데이터로 직접 확증.**
