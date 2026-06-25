@@ -202,14 +202,55 @@ Bazzoun/Varkey/Minnmann/#266).
   압축을 "calendering(densification)"으로 재명명; bimodal/dip을 Fig 6b/c 근거로 강화; 에너지% 사실을 "왜
   DPE/우리 작업이 중요한가" 동기로. ⚠ **수치 앵커 아님 — framework 앵커**(혼동 금지).
 
-### #275 — Continuous Carbon Nanotube Sheath, Dry-Processed Thick Electrodes  ★★
-Joule 10 (2026) 102392 (IF 37.1).  Jin Kyo Koo†, Jaejin Lim† … Yong Min Lee.
-- **핵심(제목):** **연속 CNT sheath**로 dry-processed **두꺼운 전극**에서 초고에너지밀도 + 급속충전.
-- **우리 모델 매핑 (방금 끝낸 SuperP-vs-VGCF와 직결):**
-  - "연속 1D CNT 망" = 우리 **VGCF/fibre additive + `--fibre` densification(연속 thread)**.  우리가 방금
-    VGCF 섬유를 연속 thread로 잇는 게 정확히 이 "continuous sheath" 개념.
-  - **두꺼운 전극** = 우리 real_10 708-cell thick.  연속 1D 도전망이 두꺼운 전극에 유리 → 우리 AM-poor
-    crossover 논의(연속 VGCF망 vs 분산 SuperP)의 문헌 근거.
+### #275 — Continuous Carbon Nanotube Sheath, Dry-Processed Thick Electrodes  ★★  ✅ 풀 디제스트 완료
+Joule **10** (2026) 102392 (IF 37.1), DOI 10.1016/j.joule.2026.102392.  Jin Kyo Koo†, Jaejin Lim† …
+Hyun-seung Kim\*, **Yong Min Lee\***, Young-Jun Kim\* (SKKU SAINT/SIEST + Yonsei DTBL).  ★ **풀 디제스트:**
+`docs/lit_koo2026_swcnt_sheath_thick_electrode.md`.
+⚠ **소재 = NCMA(LiNi₀.₈Co₀.₁₅Mn₀.₀₃Al₀.₀₂O₂) 양극 + 인조흑연 음극 + 액체전해질(1.15 M LiPF₆ EC:DEC:DMC
+25:45:30 +1% VC +1% LiPO₂F₂) dry-to-dry 일반 LIB** — **우리 LPSCl sulfide ASSB가 아님** → 셀 전기화학
+절대값(Wh/L·SOC·τ·D_eff) 전이불가. ★ **단 CARBON-MORPHOLOGY 물리(연속 1D sheath가 두꺼운 전극 전도를
+이기고, discrete 도전재는 이온채널을 막음)는 소재-일반 → 우리 voxel CBD 발견에 직접 전이.** 수치 σ/porosity
+앵커 아님(Bazzoun/Varkey/Minnmann/#266 담당).
+- **핵심:** NCMA 입자를 **SWCNT로 zeta-potential 변조 wrapping**(양이온 고분자 PDDA: NCMA −33.8 → PDDA-NCMA
+  +14.2 → SWCNT −35.0 부착 → 합성물 **−1.92 mV near-neutral** = 완전 conformal coverage) → **연속·vein-like
+  도전 sheath**. 도전재 별도첨가 0(SWCNT 0.2 wt%만) + PTFE 0.3 wt% → **활물질 99.7 wt%, ρ ~4.0 g/cm³**,
+  초후막 >11 mAh/cm²(~200 µm). **"통합 활물질-도전재"** = 도전재를 표면통합해 기공(이온채널)을 비움 → 전자·
+  이온 동시 균질.
+- **검증:** FE-SEM/HR-TEM/AFM(conformal wrapping) + zeta + EDS(C가 Ni/Co/Mn/Al co-localized) + Raman(RBM+G/D) +
+  XRD(구조 유지) + 분말전도 + KPFM(work function=SOC 균질도) + SAICAS + SSRM(사이클 전후) + HAADF-STEM/EELS +
+  **3D digital twin(FIB-SEM 토모 820장 → GeoDict 2023 effective + PNM + 2C 방전 전기화학 2.15% 오차 + VMS)**.
+- **핵심 수치:** zeta **−33.8/+14.2/−35.0/−1.92 mV**; 분말전도 (NCMA+CB)0.06 vs SWCNT-NCMA **0.20 S/cm**(>3×);
+  4종 전극 밀도 CB-wet 3.6 / SWCNT-wet 3.8 / **SWCNT-dry 4.0** g/cm³(조성 99.7(99.5:0.2):0:0.3 = AM:CB:PTFE);
+  저항 vs Q_areal CB-wet 10→40 Ω·cm+균열 vs **SWCNT-dry 5–10 안정**; KPFM CB-wet 넓은분포(heterogeneous SOC)
+  vs **SWCNT-dry 5.95 eV 단일peak(homogeneous SOC)**; SAICAS 접착 SWCNT-dry 0.47(0.3% PTFE) vs CB-wet 0.43 N
+  (1.0% PVDF); digital-twin **closed pore CB-wet 2× / tortuosity 2.31 vs 1.28 / 유효확산 D_eff 1.0e-11 vs
+  2.5e-11 m²/s(2.5×) / 전해질구배 29.7 vs 7.8 mM/µm**; 30cyc 유지 SWCNT 84–90% vs CB 58–68%; **300cyc 81%·
+  CE 99.64% vs CB-wet 72.7%·99.43%**; SSRM 300cyc 저항 CB-wet 6.62 vs SWCNT-dry 0.6 GΩ; rock-salt CB-wet ~9
+  vs SWCNT-dry ~2–4 nm; 급속충전 3C **80% SOC 20분(SWCNT-dry) vs 30분(CB-wet)**, CC-mode SOC 92 vs 65%;
+  **10 Ah pouch VED 945 Wh/L · GED 315 Wh/kg**(Table S10; +33% vs conventional @3C), **78%@500cyc**.
+- **우리 모델 매핑 (★★ 우리 voxel CBD 발견의 EXPERIMENTAL PROOF — 전자+이온 두 축; 수치 σ 앵커는 Bazzoun/Varkey/Minnmann):**
+  - **(a) ✅✅ 전자축 증명:** #275 서론 **"conventional additives… fail to form continuous networks"** =
+    우리 carbon-only **σ=0**(discrete carbon 6-7% 셀 ≪ 31% 3D 퍼콜 threshold → 두꺼운 전극 self-percolate
+    불가, gap-filler). #275는 정확히 이걸 **continuous SWCNT sheath**로 해결(Fig 2C CB-wet 10→40 Ω·cm+균열 vs
+    SWCNT-dry 5–10; KPFM 균일 SOC) → **우리 전자 발견의 실험적 증명**(시뮬 artifact 아님 = 두꺼운 전극 실제 제약).
+  - **(b) ✅✅ 이온축 증명:** #275 서론 **"obstruct ion-transport channels"** = 우리 **SuperP σ_ionic
+    0.0168 < VGCF 0.0298(1.8× blocking)**. #275는 도전재를 표면통합해 채널을 비움(digital-twin closed pore
+    2×·τ2.31·D_eff 2.5×·농도구배 큼) → **우리 이온 발견의 실험적 증명**(주체 다름: 그들 전해질기공 vs 우리 SE망,
+    물리방향 동일=discrete가 이온채널 막음).
+  - **(c) ★ 제3 morphology(미모델):** SWCNT **conformal sheath(surface-conformal, vein-like)** = 우리
+    SuperP(분산점)도 VGCF(interstitial 섬유)도 아닌 **제3 morphology** — 두꺼운 전극의 실제 승자(우리 1 wt%
+    SuperP/VGCF는 둘 다 gap-filler, 945 Wh/L 못 줌). → 우리 SuperP-vs-VGCF 결론은 **interstitial/distributed
+    한정**(정직한 한계); ★ **`additives.py`에 `surface_conformal`(AM 표면 voxel 도전상 코팅) future 옵션** 추가
+    → voxel σ_e가 두꺼운 전극서 percolate하는지 + LPSCl SE 이온접촉 trade-off 테스트.
+  - **(d) ★ digital twin = 우리 voxel/Phase-4 blueprint:** GeoDict effective(τ/D_eff 2.5×/closed pore/PNM) +
+    1D 전기화학(2.15%) = 우리 voxel FV(σ)+PyBaMM(#281/#286 동일 도구). ★ 이식: **(i) voxel FV에 확산모드 →
+    D_eff/τ 출력**(그들 2.5× ↔ 우리 contact-network τ frame[4] 교차검증; #281 DiffuDict); **(ii) PNM pore-side
+    지표**(기공 CN·connectivity·closed pore = 우리 dead-SE 고립채널 기공판).
+  - **우리 우위:** 그들은 **post-mortem 측정(SSRM/KPFM/EELS) + digital-twin(고정 토모 미세구조)**; 우리 DEM+MPM은
+    **압력→미세구조→σ triad 예측 + 소성 morphology + voxel FV로 carbon σ_e gain·σ_ionic blocking mechanistic
+    정량(그들 digital-twin의 인과버전)**. frame[5] 분업 재확인(그들엔 입자스케일 압축예측·접촉 σ triad·소성 없음).
+    ⚠ **#284와 혼동 금지:** #275 = **morphology(연속 sheath가 discrete를 이김 = 우리 SuperP/VGCF 발견 증명 +
+    제3 morphology)**; #284 = **양/두께(탄소↑→전자↑·이온↓, 중간 최적 = balance curve)** — 서로 보완.
 
 ### #286 — Porosity-Gradient Dry-Processed Graphite + Deformable Primer Layer  ★★  ✅ 풀 디제스트 완료
 Energy Storage Materials (2026), DOI 10.1016/j.ensm.2026.105331 (ENSM 105331, IF 19.3).  Hyundong Yoo†,
@@ -362,7 +403,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
 | 5.7 | #276 | **DPE 4단계 taxonomy + 미세구조 5특징 + 양방향 material↔process interplay (리뷰)** | **★ 우리 DEM+MPM 전체의 FRAMEWORK/POSITIONING — 5특징↔우리출력 1:1; calendering=압축; descriptive↔우리 predictive 엔진** | ✅ 풀 디제스트 (`lit_nam2026_...md`); ⚠일반 Li-ion DPE 리뷰→framework/positioning 앵커(수치 앵커 아님) |
 | 5.5 | #284 | 탄소코팅↑→전자↑·이온↓, moderate 균형; SSRM/W_adh 분산정량 | **CBD ion/electron trade-off 독립확증 + balance curve sweep + 분산 균일도 metric** | ✅ 풀 디제스트 (`lit_oh2026_...md`); ⚠SiOx흑연/액체→개념·방법만, 수치앵커 아님 |
-| 6 | #275 | 연속 CNT sheath, thick 전극 | **--fibre 연속 thread / VGCF 검증** | 이미 정합(방금 작업) |
+| 6 | #275 | 연속 SWCNT sheath, thick 전극; "discrete 도전재 연속망 실패 + 이온채널 막음" | **★★ 우리 voxel CBD 발견(전자 σ=0 퍼콜 + 이온 1.8× blocking)의 EXPERIMENTAL PROOF + 제3 morphology(conformal sheath) + digital-twin(D_eff/PNM) blueprint** | ✅ 풀 디제스트 (`lit_koo2026_...md`); ⚠NCMA/흑연/액체 dry→morphology 물리만, 수치앵커 아님 |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
 | 8 | #264/#268/#270 | 저압 ASSB / calendering / SE cavity-fill | 압축·압력 축 + SE void-fill | 맥락 인용 |
 
