@@ -106,12 +106,39 @@ Joule 10 (2026) 102392 (IF 37.1).  Jin Kyo Koo†, Jaejin Lim† … Yong Min Le
   - **두꺼운 전극** = 우리 real_10 708-cell thick.  연속 1D 도전망이 두꺼운 전극에 유리 → 우리 AM-poor
     crossover 논의(연속 VGCF망 vs 분산 SuperP)의 문헌 근거.
 
-### #286 — Porosity-Gradient Dry-Processed Graphite + Deformable Primer Layer  ★★
-Energy Storage Materials, Accepted 2026 (IF 19.3).  Hyundong Yoo†, Jaejin Lim† … Yong Min Lee, Hansu Kim.
-- **핵심(제목):** **porosity 구배(z-방향)** dry graphite 전극 + 변형가능 primer → 급속충전.
-- **우리 모델 매핑:**
-  - **porosity-gradient = 우리 Phase 5 layered/z-band 합성** (synth가 z-band 지원).  graded-porosity
-    설계의 실험 근거 → 우리 z-stacking 층마다 porosity 다르게.
+### #286 — Porosity-Gradient Dry-Processed Graphite + Deformable Primer Layer  ★★  ✅ 풀 디제스트 완료
+Energy Storage Materials (2026), DOI 10.1016/j.ensm.2026.105331 (ENSM 105331, IF 19.3).  Hyundong Yoo†,
+Jaejin Lim† … Yong Min Lee\*, Hansu Kim\* (Hanyang+Yonsei).  ★ **풀 디제스트:**
+`docs/lit_yoo2026_porosity_gradient_dry_electrode.md`.
+⚠ **소재 = 천연흑연 음극 + 액체전해질(1M LiPF₆ EC/EMC 3:7 +10% FEC) 일반 LIB** — **우리 LPSCl sulfide
+ASSB가 아님** → 절대 transport 값 전이불가. 가져올 것은 **설계개념·측정방법·정성추세**(수치 앵커 아님).
+- **핵심:** **PL(primer layer) binder 변형성**(PVDF가 가장 무름, 압축/탄성계수 **6.31/15.99 MPa** vs
+  PAA·CMC 약 2배)을 선택하면 라미네이션 **비대칭응력 → 자발적 z-porosity 구배**(위 다공·아래 치밀).
+  전체 porosity는 같아도(MIP **32.2–33.3%**) z-분포만 다름. **DPE@PVDF-PL = 가장 가파른 구배(top↔bottom
+  Δ24.5%p vs WPE 5.6%p)**.
+- **검증:** 3D XCT(250 nm) + FIB-SEM 토모(46.52 nm, 800장, CNN 분할) + GeoDict 확산-τ + PNM(MATLAB) +
+  BESTmicro 3D 전기화학시뮬.
+- **핵심 수치:** tortuosity **PVDF 1.86 < PAA 1.98 < WPE 3.09**(확산시뮬, EIS도 같은 순서); PNM
+  coordination number **PVDF 4.20 / PAA 4.44 ≫ WPE 2.94**; connectivity bandwidth 표준편차
+  0.1581/0.1309/0.0976(PVDF 장거리연결 최고); **3C 방전 305 vs WPE 258 mAh/g**, 3C CC용량 **80.2 vs 23.3**;
+  full-cell 3C CC-SOC **PVDF 27.89% vs WPE 14.31%**; AM↔PL 접촉면적 PVDF +45%(표면높이차 12.1 µm);
+  ICE DPE 85–87% < WPE 92.7%(**PTFE 탈불소화** → LiF+비정질탄소, dQ/dV 0.2–0.8 V·XPS).
+- **우리 모델 매핑 (★ 방법/설계 청사진 — 수치 앵커는 Bazzoun#가 담당):**
+  - **(a) Phase 5 z-layer:** porosity-gradient = 우리 **z-band 합성**(`extract_2d_microstructure.py`
+    K=8 stratified, line 668) + tortuosity pore elongation(line 826)의 **published 실증** → Phase 5를
+    **band별 다른 porosity 구배**로; 출력에 **"두께방향 porosity(z) 프로파일" + top↔bottom Δ** metric 추가.
+  - **(b) tortuosity:** 그들 **EIS 식(1) ↔ 확산시뮬 식(2, ε/τ²·D_e)** 2-방법 교차검증 = 우리 σ_ionic
+    C(τ)의 τ(Laplace/Dijkstra) 선택 템플릿(우리는 실측 τ 없음). ⚠ pore-도메인 Bruggeman형 → 폼 차용 금지.
+  - **(c) PTFE:** 그들 1D피브릴 pore↑ = 우리 `additives.py` PTFE fibril 형태 반영됨; **탈불소화 ICE손실은
+    우리 미모델**(일반 LIB 확장시 ICE 항 후보; ASSB는 관련 낮음).
+  - **(d) 토모그래피:** FIB-SEM→GeoDict-τ + PNM(coordination·connectivity matrix)을 우리
+    `voxel_conductivity`/`mpm3d`에 이식 — 특히 **pore-side 지표**(우리는 particle-contact CN만) +
+    확산-τ↔contact-σ frame[4] 교차검증.
+  - **(e) 농도분극:** BESTmicro 3D FVM(BV+Fick, 3C CC-CV 0.005 V cutoff) = 우리 **Phase 4(PyBaMM) 흑연계
+    reference workflow**. ⚠ ASSB는 전해질농도분극 대신 SE-network σ가 지배 → 적응 필요.
+  - **우리 우위:** 그들은 **post-mortem 고정 미세구조 + 연속체 확산**; 우리 DEM+MPM은 **압력→미세구조→σ
+    예측 + 소성 morphology + 접촉 σ triad + fracture**. ⇒ 이상 워크플로 = 우리가 미세구조 생성/예측 →
+    그들식 토모-정량 검증 → 그들식 전기화학시뮬로 농도분극 닫기. frame[5] 분업 재확인.
 
 ### #284 — Optimized Carbon Coating on SiOx, Balanced Ion/Electron Transport + Uniform Dispersion  ★★
 Journal of Power Sources 689(15) (2026) 240698 (IF 8.4).  Jihwan Oh†, Seungyeop Choi† … Yong Min Lee.
@@ -175,7 +202,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
 | 3 | #271 | PTFE void↓ vs NBR void↑ (digital-twin) | binder→void→σ 축; PTFE additive 검증 | litdb 풀 디제스트(PDF) |
 | 4 | #285 | CBD 점탄성 → spring-back 억제 | **MPM hold-relax springback** 메커니즘 | PDF로 시간상수 |
-| 5 | #286 | porosity 구배(z) 전극 | **Phase 5 z-layer porosity gradient** | 합성에 반영 |
+| 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
 | 6 | #275 | 연속 CNT sheath, thick 전극 | **--fibre 연속 thread / VGCF 검증** | 이미 정합(방금 작업) |
 | 7 | #262 | FIB-SEM 3D + 결합 chemo-mech, 응력 파괴 | digital-twin 프레임 + fracture | Phase 4 연결 |
 | 8 | #264/#268/#270 | 저압 ASSB / calendering / SE cavity-fill | 압축·압력 축 + SE void-fill | 맥락 인용 |
