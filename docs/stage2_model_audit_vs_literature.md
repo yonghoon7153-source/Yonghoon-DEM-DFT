@@ -172,6 +172,16 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   DEM rigid 12.70%는 rigid floor로 위(소성흐름 없음) → **물리값=MPM, dip모양=DEM** (frame[5] 깨끗).
 - **#1 (σ_ionic 절대값) ✅✅** — Bazzoun + #271 + #266 = 3 독립 LPSCl+NCM EIS가 우리 DEM(~0.04–0.18)을
   감싸는 엔벨로프 ~0.03–0.14 형성.
+- **★ Tier-1 Cronau 2021 (σ_grain 출처) — 값 OK / 라벨 3중 오류** (`docs/lit_cronau2021_stack_pressure_ionic_conductivity.md`):
+  우리 σ_grain=3.0 mS/cm "**Cronau 2022 Li6PS5Cl single-crystal**"은 **(i) 연도 2022→2021, (ii) 소재 Cl→실제 Br
+  (그 논문은 Li6PS5Cl 미측정; Li6PS5Br만), (iii) "single-crystal" 거짓 — 전부 GB-포함 pellet σ**.  실제 최댓값은
+  µC-Li6PS5Br **2.40 mS/cm**(550℃ anneal, 392MPa-fab).  ⇒ **값 3.0은 방어가능**(2.4 plateau + 타 LPSCl 1–6 문헌
+  blend, well-sintered 상단) but **라벨 정정 필요**(연도·Br·GB-pellet; NOT single-crystal).  Cronau(r_SE) 서브-µm
+  sigmoid도 **반경법칙 아님**(논문은 σ-vs-radius 미플롯) — 실제는 **결정성(sintering) class 효과**(µC→GB gap→σ↓)
+  → 방향만 맞고 breakpoint(0.5/0.3/0.1/0.03µm)는 **경험적 외삽** → "particle-size decay"를 **"crystallinity/
+  grain-contact 효율 인자"로 재명명** 권고(값·LOOCV +0.0043 유지).  ★ 보너스: **fabrication(300MPa) vs
+  stack(40–70MPa) 압력 분리** + inter-lab **10× 분산**(Ohno/Zeier round-robin) = 우리 envelope 허용폭 + E_eff
+  softening + Heckel P_y=138 + σ-vs-P ~400MPa saturation을 **"압력이 grain contact를 닫아 σ 포화"** 서사로 통합.
 - **★ #22 Park 2020 (FOUNDATIONAL ROOT) ✅ frame[4] 4건** (`docs/lit_park2020_digitaltwin_assb_foundational.md`):
   계보 시조(2020) — 우리 정확한 소재계(LiNbO₃-NCM711+LPSCl+NBR) + 조성축(NCM 60–90wt%).  ① 최적창 NCM
   60–80wt%(dead LPSCl ≤0.5%→90wt%서 6–20%) ↔ 우리 dead-AM 회피대; ② **NCM 90wt% σ_eff,ion=계산불가
@@ -190,14 +200,29 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   σ_P=5)가 #266 재료엔 sign-flip → **σ_e form 재검토 대상**(Phase 3 predictor 전, 조성-σ_e 방향을 재료별로
   분리하거나 σ_AM을 입력으로).  porosity/σ_ion 검증과 **분리해서** 관리.
   ★ #22 Park 2020: **σ_eff,e↑ with NCM wt%** = 부피분율 지배 → 우리 **φ_AM⁴ 항 방향 확증**(부피축); Park은
-  입경/σ_S/σ_P endpoint 축은 안 다룸(NCM711 고정) → endpoint 순서(single>poly)는 **Trevisanello 2021 digest
-  (Tier1, 진행중)**가 1차 출처로 확정 예정 — single-결정 무내부GB→intrinsic σ_e↑가 #266 W-doped-NCWA poly와
-  재료-의존으로 갈리는지 거기서 판정.
+  입경/σ_S/σ_P endpoint 축은 안 다룸(NCM711 고정).
+  ★★ **#11 VERDICT — σ_S/σ_P "Trevisanello" 출처 = MIS-ATTRIBUTION 확정** (Tier-1 Trevisanello 2021 digest +
+  코드 grep, 2026-06-25; `docs/lit_trevisanello2021_sc_pc_ncm_cracking_diffusion.md`): Trevisanello 2021은
+  **단·다결정 NCM의 bulk 전자전도도 σ_e를 측정한 적이 없다** — Li⁺ 화학확산(cm²/s)·BET 활성표면적·R_ct(液체셀)
+  만 측정.  우리 σ_S=10/σ_P=5 mS/cm + "Trevisanello" 인용은 **값·출처 둘 다 오배선**(코드
+  `generate_comparison_plots.py:5712-13` 주석은 S=poly/P=single로 **라벨 혼동**까지).  게다가 그 논문 유일한
+  단·다결정 비율(기하표면적 **SC 0.84 > PC 0.17 m²/g**)은 오히려 "single이 높음" 가정과 **반대**.  ⇒ #11은
+  "재료-의존 caveat"가 아니라 **확정 mis-attribution + 미검증 sign 가정**.  #266(W-doped NCWA poly 13.7≫single
+  2.45)은 Trevisanello와 **모순 아님**(그 논문이 σ_e에 침묵) → σ_AM은 **재료·도핑-특이**가 맞다.
+  ★ **권고 (Phase 3 전; 코드변경은 사용자 승인 후)**: (1) σ_S/σ_P를 **재료-특이 INPUT**으로(LOCKED single>poly
+  sign 제거); (2) 전자 endpoint의 Trevisanello 인용 수정/제거 + S/P 라벨 혼동 정리; (3) NCM(r)=1/(1+(r/2)^1.5)는
+  **방향만 Trevisanello 지지**(큰 poly 동역학 불리, PSD median ~2µm로 r0=2 검증), 형태·β=1.5는 **우리
+  corpus-fit** → "Trevisanello β=1.5" 표기를 "Trevisanello spirit + corpus-fit"으로 재표기, 전자-GB가 아니라
+  확산/dead-AM 채널로 옮길지 검토.  ⚠ liquid-vs-ASSB: 그 논문 "crack=이득(액체 침투→표면적↑·R_ct↓)"은 ASSB서
+  **부호 반대**(고체 SE는 crack 못 메움 → 접촉손실=손해) → 우리 fracture/Auerbach 채널이 이미 **고체 부호
+  (crack=손해)**로 옳음(대조 교차검증).  SC=무결정립=우리 작은 AM_S(F/P_c<1, #285) phenotype 일치.
 
 **최종 결론 (논문 13편 디제스트 후):** Stage-2 transport 모델 **명백한 하자(❗) 없음** — σ_ionic 절대값(3 EIS
 앵커 envelope), bimodal dip(#266 1:1), CBD 퍼콜(#275 실험증명), PTFE σ=0(#271 정량, E3 lever), E_eff
-softening(#266 E_SE 22 = 3중 확인) 모두 독립 문헌과 정합/검증.  남은 것: (a) **σ_e 조성방향 재검토**(⚠#11,
-재료-의존 — Phase 3 전), (b) 단순화/범위밖 명시(점탄성 spring-back #10, poly/single 역학 #7), (c) enhancement
+softening(#266 E_SE 22 = 3중 확인) 모두 독립 문헌과 정합/검증.  남은 것: (a) **σ_e endpoint mis-attribution 수정
++ σ_AM 재료-input화**(⚠#11 **CONFIRMED** — Trevisanello엔 단·다결정 σ_e 없음; Phase 3 전, 코드변경 사용자승인),
+(b) 단순화/범위밖 명시(점탄성 spring-back #10, poly/single 역학 #7; **scaffold MPM SE-poor over-compression
+regime限** = DEM 영역, 별도 기록), (c) enhancement
 (Phase5 graded-z #286, pore-τ #286/#281 DiffuDict, MPM --coh PTFE/SBR E3, dispersion CoV E2).  ⇒ **Stage-2
 무결성 OK + 정량 검증 닫힘**; σ_e 방향만 Phase 3 전 점검.
 
