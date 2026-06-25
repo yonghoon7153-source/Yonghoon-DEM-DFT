@@ -306,6 +306,57 @@ Hyun-seung Kim\*, **Yong Min Lee\***, Young-Jun Kim\* (SKKU SAINT/SIEST + Yonsei
     ⚠ **#284와 혼동 금지:** #275 = **morphology(연속 sheath가 discrete를 이김 = 우리 SuperP/VGCF 발견 증명 +
     제3 morphology)**; #284 = **양/두께(탄소↑→전자↑·이온↓, 중간 최적 = balance curve)** — 서로 보완.
 
+### #15(2025 PRECURSOR of #275) — anti-solvent MWCNT-wrapped 단결정 SC-NCA Dry Cathode (99.6 wt%, 4.0 g/cm³)  ★★  ✅ 풀 디제스트 완료
+Energy Storage Materials **78** (2025) 104270 (IF 19.3), DOI 10.1016/j.ensm.2025.104270.  Jin Kyo Koo†,
+Jaejin Lim† … **Yong Min Lee\***, Young-Jun Kim\* (SKKU SAINT/SIEST + Yonsei DTBL + DGIST).  접수
+2025-01-21 / 게재확정 2025-04-18.  ★ **풀 디제스트:** `docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md`.
+★★ **#275(Joule 2026, SWCNT sheath)의 직계 PRECURSOR/SISTER — 같은 lead 저자(Jin Kyo Koo, Jaejin Lim)·
+같은 컨셉(CNT로 Ni-rich 입자 wrapping → 도전재 별도첨가 0 → dry 초고밀도).** 2025-list 외(2025 ESM) →
+**#275에 cross-link**.  ⚠ **소재 = 단결정 SC-NCA(LiNi₀.₈Co₀.₁₅Al₀.₀₅O₂) 양극 + 인조흑연 음극 + 액체전해질
+(1.15 M LiPF₆ EC:EMC:DMC 2.4:4:4 +1% LiPO₂F₂) dry-to-dry 일반 LIB** — **우리 LPSCl sulfide ASSB가 아님** →
+셀 절대값(VED/GED/Q/τ/σ_s,eff) 전이불가. ★ **CARBON-MORPHOLOGY 물리(연속 wrapping이 discrete CB 이김 + discrete가
+이온채널 막음)는 소재-일반 → 우리 voxel CBD 발견에 전이.** 수치 σ/porosity 앵커 아님(Bazzoun/Varkey/Minnmann/
+#266/#271 담당).
+- **핵심(#275와 공통):** 단결정 SC-NCA를 **MWCNT(외경 ~18 nm)로 wrapping**(★ **#275 대비 NEW = anti-solvent
+  "salting-out" 방법**: NaCl이 DMF에 안 녹다가 EtOH 첨가 시 이온화 → ion depletion·삼투압 stress → CNT 석출/부착 +
+  **PAN nitrile–OH 수소결합**으로 표면 고정; #275의 zeta/PDDA 정전조립과 다른 화학) → 연속 도전층. 도전재 별도첨가 0
+  (CNT 0.4 wt%) + PTFE 0.4 wt% → **활물질 99.6 wt%, ρ 4.0 g/cm³, Q_vol 835 mAh/cm³**. CNT ink 0.75 wt% 최적
+  (1.0은 잉여 응집). 분말전도 SC-NCA+CB 0.047 vs SC-NCA@CNT **0.23 S/cm(4×)** + packing↑.
+- **★★ #275 대비 NEW 4가지:** (a) **단결정 SC-NCA 초점 + SC-vs-PC 비교**(우리 AM_S/AM_P + #266/#285/⚠#11);
+  (b) **anti-solvent salting-out** wrapping(vs #275 zeta/PDDA); (c) **MWCNT**(외경 18 nm, 2D Raman peak, I_D/I_G=1.01;
+  vs #275 **SWCNT** ~2 nm RBM); (d) **2025 digital-twin GeoDict 2022**(vs #275 GeoDict 2023 — 본질 동일 워크플로).
+- **검증:** FE-SEM/HR-TEM(MWCNT 부착) + BET SSA + 탄소함량(CS) + XRD(구조유지) + Raman(MWCNT 2D peak) + 분말전도 +
+  SSRM(저항맵) + 대칭셀 EIS R_ion + **3D digital twin(FIB-SEM 토모 840장 → GeoDict 2022 effective σ/D/τ + PNM +
+  BESTmicro 5C 방전 1D)**.  (★ #275엔 있던 KPFM/SAICAS/EELS는 여기 없음; SC-vs-PC 입자강도는 여기만.)
+- **핵심 수치:** 조성 SC-NCA@CNT:PTFE **99.6:0.4**(CNT 0.4/NCA 99.2), 밀도 **CB-wet 3.6 / CNT-dry 4.0** g/cm³;
+  분말전도 **0.047 vs 0.23 S/cm**(4×); 면저항 CNT-dry **5–7** vs CB-wet 15–25 vs CB-dry 26–34 Ω·cm; R_ion EIS
+  **8.84 vs 7.85 Ω**; **τ EIS-TLM 1.75 vs 1.03 / digital-twin 2.05 vs 1.26**(⚠ 두 방법 다름); **closed pore 17.72 vs
+  2.4 %**; **σ_s,eff CNT-dry 3.1×**(exp≈sim, ~4.5 vs ~14 S/m); PNM 등가반경 1.903 vs 2.723 µm·coordination 3 vs 4;
+  rate 5C **75 vs 62 %**; 0.2C **208 vs 202 mAh/g**, **Q_vol 835 vs 738**; **full cell 500cyc 80–85 %**; **10 Ah
+  pouch VED 858.1 Wh/L · GED 303.9 Wh/kg**(Table S6).
+  ★★ **SC-vs-PC(SI Fig S23 + intro):** **입자강도 SC 111.63 ≫ PC 48.96 MPa**(SC 2.3× 견고); **균열 PC@3.6 g/cc
+  7.8 % vs SC@4.0 g/cc 0 %**(단결정 무균열 고밀도화); **SSA SC 0.88 vs PC 0.31 m²/g**; σ_s(활물질) 4.03/29.03 S/m
+  (문헌값).
+- **우리 모델 매핑 (★ audit ✅#4 REINFORCE — double-count 금지 + ⚠#11 + positioning; 수치 σ 앵커는 Bazzoun/Varkey/Minnmann):**
+  - **(a) ✅ audit ✅#4 REINFORCE만:** discrete CB(응집·점접촉·고립기공 17.72 %) vs CNT-dry(균질·저저항·σ_s,eff 3.1×·
+    closed pore 2.4 %) = **#275와 똑같이 "연속 도전망이 discrete 이김 + discrete가 이온채널 막음" 실험 증명** →
+    우리 voxel CBD 발견(전자 σ=0 + 이온 blocking)을 REINFORCE. ★★ **Koo 2025 + Koo 2026(#275)은 같은 저자·컨셉
+    sister → CBD audit ✅#4의 하나의 증거 라인**(독립 2점 카운트 금지).
+  - **(b) ⚠⚠ ⚠#11 (σ_e composition-direction) datapoint — 진짜 NEW 기여이나 결판 아님:** SC-vs-PC를 직접 대비하지만
+    **"전자전도(σ_e)"가 아니라 입자강도(111.63 vs 48.96)·균열·SSA(0.88 vs 0.31)·kinetics(문헌충돌 Sun vs Ma vs Jung,
+    결론 안 냄)** 축. ⇒ **#266의 "다결정 σ_NCWA 13.7 ≫ 단결정 σ_NCM 2.45"를 뒤집는 직접 반례(단결정 σ_e↑ 수치) 없음.**
+    간접: SSA(SC 작은 입자 → 접촉수↑)는 우리 σ_e "접촉수 지배(작은 입자↑)" 가정과 부호 일치(약한 지지)지만 **재료
+    고유 σ가 아니라 기하 논거** → #266(재료 고유 σ)와 다른 축이라 직접 모순 아님. **⚠#11 유지**(σ_e 재검토는 #266 중심);
+    이 논문은 "SC-vs-PC가 재료·기하·kinetics 모두 단순치 않다"는 추가 증거 + kinetics literature-wide 미해결 재확인.
+  - **(c) ★ digital twin = GeoDict 2022 reconstruct(출력단):** FIB-SEM 토모 → effective σ/D/τ + PNM + BESTmicro 1D =
+    `positioning_vs_geodict.md` "GeoDict는 구조를 줘야 함"을 NCA dry 양극으로 재확인. 이식: voxel FV 확산모드(D_eff/τ
+    교차검증) + PNM pore-side(closed pore 2.4/17.72 % = dead-SE 기공판). (#275와 동일.)
+  - **(d) ★ SC 견고성·무균열 = MPM rigid-AM scaffold 정당화(#285 일관):** SC 111.63 MPa·무균열 4.0 g/cc = 우리 단결정
+    AM_S `--am-scaffold` 고정 옳음; PC 7.8 % 균열 = fracture severe(#266 ΔP·D1 max @CAM10:0) 방향 일치. ⚠ NCA 액체 →
+    역학 정성, σ/porosity 절대앵커 아님.
+  - **우리 우위:** post-mortem 측정 + digital-twin(출력단) vs 우리 압력→미세구조→σ triad 예측(입력단)+소성 morphology.
+    frame[5] 분업 재확인. ⚠ **#275와 같은 증거 라인(double-count 금지); ⚠#11 σ_e-방향 결판 datapoint 아님(직접 σ_e 부재).**
+
 ### #286 — Porosity-Gradient Dry-Processed Graphite + Deformable Primer Layer  ★★  ✅ 풀 디제스트 완료
 Energy Storage Materials (2026), DOI 10.1016/j.ensm.2026.105331 (ENSM 105331, IF 19.3).  Hyundong Yoo†,
 Jaejin Lim† … Yong Min Lee\*, Hansu Kim\* (Hanyang+Yonsei).  ★ **풀 디제스트:**
