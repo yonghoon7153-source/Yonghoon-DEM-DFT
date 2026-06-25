@@ -5,17 +5,24 @@ DEM Kirchhoff/Holm network solver, on **input_1mAh_8_AMS_S1** (P:S 0:10, AM:SE 8
 @2.5µm + 19971 SE @0.5µm, 300 MPa).  This is the controlling record for what the voxel σ tool
 does and does NOT capture — do not lose to compaction.
 
-## The headline result — the voxel reproduces σ_contact-free (ionic) AND σ_full (electronic)
+## The headline result — voxel electronic reproduces DEM σ_full; voxel ionic reproduces only σ_contact-free (the UPPER BOUND, NOT production σ_ionic)
 
-| channel | voxel σ (this tool) | DEM dashboard | matches |
+| channel | voxel σ (this tool) | DEM dashboard | reproduces |
 |---|---|---|---|
-| **electronic** | 2.67→4.03→5.19 (128/192/256), geometric extrap **11.76** | σ_full = **11.75** mS/cm | ✓✓ |
-| **ionic** | 0.299/0.250 (192/256, `--porosity 0.174`) → **0.250** | σ_contact-free = σ_full·5.8 = 0.0436·5.8 = **0.253** mS/cm | ✓✓ |
+| **electronic** | 2.67→4.03→5.19 (128/192/256), geometric extrap **11.76** | σ_full = **11.75** mS/cm | ✓ σ_full |
+| **ionic** | 0.299/0.250 (192/256, `--porosity 0.174`) → **0.250** | σ_contact-free = σ_full·5.8 = 0.0436·5.8 = **0.253** mS/cm | ⚠ only σ_contact-free (= upper bound), NOT σ_ionic |
 
-- The DEM dashboard itself reports **σ_contact-free / σ_full = 5.8×** and **constriction-resistance
-  fraction = 77.5 %** for the ionic channel (σ_ionic Hertz 0.0436, Physics 0.031 mS/cm).
-- voxel_ionic / DEM_σ_full = 0.250 / 0.0436 = **5.7×** → independently reproduces the dashboard's
-  5.8× constriction factor.  The voxel lands on σ_contact-free almost exactly.
+⚠ The ionic row is NOT "the voxel reproduces DEM ionic transport".  The voxel matches the **contact-free
+upper bound** (0.25), while the **production σ_ionic = DEM 0.0436** (constriction-limited) — see line "Production
+σ_ionic = DEM …" below; the voxel value is ~5.7× too high and is NOT a usable σ_ionic.
+- The DEM dashboard reports **σ_contact-free / σ_full = 5.8×** (this is `R_brug_over_full` = σ_cf/σ_full) for the
+  ionic channel (σ_ionic Hertz 0.0436, Physics 0.031 mS/cm).  (Separately, the per-edge mean **constriction-
+  resistance fraction = 77.5 %**; these are TWO DIFFERENT decompositions — a 5.8× σ_cf/σ_full ratio ⇒ ~83 % of
+  the SERIES resistance is constriction, while 77.5 % is the per-edge average.  Do not read 5.8× and 77.5 % as
+  the same measurement.)
+- voxel_ionic / DEM_σ_full = 0.250 / 0.0436 = **5.7×** → independently reproduces the dashboard's 5.8×
+  σ_contact-free/σ_full factor.  The voxel lands on σ_contact-free almost exactly — confirming it captures the
+  GEOMETRY but NOT the sub-voxel SE constriction.
 
 ## Why electronic matches σ_full but ionic matches σ_contact-free — CONTACT SIZE
 
@@ -84,3 +91,22 @@ porosity 21.1 % (ε_union 22.5), thickness 17.84µm, φ_SE 0.235, ⟨z_SE-SE⟩ 
 σ_e 11.75/8.28, κ 5.315/4.560.  Bruggeman EMT σ_ionic 0.124 (R_brug 5.8× vs network).
 MPM (n_grid 384, hold): porosity 17.86 %, thickness 16.89µm, SE 28.6 % of solid, cov_AM_S
 plastic/rigid Tabor 70/64 %.
+
+## ⚠ The `--se-id` contact-network mode (se_contact_network) — EXPERIMENTAL, currently OVER-COUNTS
+
+`scripts/voxel_conductivity.py --se-id` builds an SE-PARTICLE network from the MPM `--save-se-id` (Voronoi-
+tagged particle ids): voxelise SE per-particle, take the contact area between touching particles, Holm
+constriction, Kirchhoff.  Intent: an independent, plastic-deformed-contact σ_ionic.  **Status: it over-counts
+and is NOT a usable σ_ionic** — keep for diagnostics only.
+
+- The space-filling Voronoi partition makes neighbouring particles share their FULL mutual facet, so the
+  "contact area" = the Voronoi facet, NOT the small plastic contact disk.  Facet ≫ real neck → r_c too large
+  → constriction too small → σ_ionic ≈ **0.88** on real_10-class cases, which is ABOVE even the contact-free
+  fused-FV (0.25) and ~20× the DEM full (0.044).  The ordering 0.88 > 0.25 > 0.044 is the tell-tale: it
+  under-resists MORE than the no-constriction limit.
+- Even a corrected interpenetration/overlap-based contact area (DEM-style δ/R* plastic film) cannot rescue it:
+  the SE neck (⟨A_hop⟩≈0.065 µm², bottleneck 0.0025) is SUB-VOXEL at any practical n_vox (cell ≈0.19 µm at
+  256; recommended n_vox ≫ 1000), so the voxel contact area saturates at ~1 cell² ≫ the real neck.
+- **frame[5] holds**: σ_ionic constriction belongs to the DEM contact network (Holm), period.  The voxel-
+  contact variant is at best a coarse UPPER bound + a contact-area diagnostic — NOT an independent σ_ionic.
+  (The code docstring + CLI print now carry this caveat; production σ_ionic stays the DEM value.)

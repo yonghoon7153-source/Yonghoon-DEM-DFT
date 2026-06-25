@@ -66,7 +66,9 @@ def _cg_solve(A, b, tol=1e-6, label=''):
                 print(f'\r      [{label}] CG done: {cnt[0]} iters, {_time.time()-t0:.0f}s' + '\033[K', flush=True)
             return cp.asnumpy(x)
         except Exception as e:
-            print(f'    (GPU CG unavailable: {type(e).__name__}: {e} → CPU)', file=_sys.stderr)
+            print(f'    (GPU CG unavailable: {type(e).__name__}: {e} → CPU for the rest of this run)',
+                  file=_sys.stderr)
+            globals()['_USE_GPU'] = False            # latch off → don't retry the failed GPU path every solve
             cnt[0] = 0; t0 = _time.time(); last[0] = t0
     M = csr_matrix((minv, (np.arange(N), np.arange(N))), shape=(N, N))
     x = cg(A, b, rtol=tol, maxiter=20000, M=M, callback=_mk_cb(A, b, np))[0]
@@ -120,14 +122,16 @@ def effective_sigma(sigma, axis=2, dx=1.0, tol=1e-6, return_field=False, label='
         return (0.0, None) if return_field else 0.0
     z0 = int(np.argmax(zmask)); z1 = int(len(zmask) - np.argmax(zmask[::-1]))
     sigma = sigma[:, :, z0:z1]
+    if z1 - z0 < 2:                                 # 1-layer-thick conductor → NO top↔bottom z-path:
+        return (0.0, None) if return_field else 0.0   #   top & bottom Dirichlet hit the SAME cell → false σ≠0
     cond = sigma > 0
     N = int(cond.sum())
     if N == 0:
         return (0.0, None) if return_field else 0.0
     # Bound the conductivity contrast: electronic mixes carbon (SuperP 1e5 / VGCF 5e5 mS/cm) with
     # AM (50) — a 2000–10000× ratio that makes the FV Laplacian ill-conditioned, so unpreconditioned
-    # CG crawls toward maxiter.  A phase already ≥1000× its neighbour is a near-perfect bridge, so
-    # clamping the max to 1000×(smallest nonzero σ) leaves σ_eff unchanged (<1%) and the solve fast.
+    # CG crawls toward maxiter.  A phase already ≥200× its neighbour is a near-perfect bridge, so
+    # clamping the max to 200×(smallest nonzero σ) leaves σ_eff unchanged (<0.2%) and the solve fast.
     sigma = np.minimum(sigma, float(sigma[cond].min()) * 200.0)
     nx, ny, nz = sigma.shape
     if label:
@@ -210,7 +214,10 @@ def _densify_fibres(p, fid, h):
     """Fill the gaps between consecutive points of each fibre (same id, kept in centreline order) with
     interpolated points spaced ≤ h, so a thin sub-voxel fibre rasterises to a CONNECTED voxel thread
     instead of a dotted line (the VGCF/PTFE centrelines are seeded ~1.5 µm apart ≫ a 0.5 µm cell, so
-    the bare point cloud breaks into disconnected dots and the fibre stops conducting)."""
+    the bare point cloud breaks into disconnected dots and the fibre stops conducting).
+    PRECONDITION: each fibre's points are CONSECUTIVE in array order along the centreline (true for
+    mpm3d --save-fibre — seed_fibres emits one ordered line per id).  Do NOT pass a reshuffled cloud or
+    a Voronoi-style id (e.g. se_id); stable-sort only groups by id, it does NOT re-order within a fibre."""
     if len(p) < 2:
         return p
     o = np.argsort(fid, kind='stable'); p, fid = p[o], fid[o]
@@ -279,12 +286,19 @@ def se_contact_network(se_pts, se_id, n_vox, thickness_um, sigma_grain=3.0, top=
     Voxelise SE keeping the id (majority per cell), then between every pair of TOUCHING particles
     accumulate the real plastic CONTACT AREA a = (#adjacent cell-faces with different ids)·h_um².
     Build a Holm resistor network — constriction R = 1/(2·σ·r_c), r_c = √(a/π) (Holm 1967, the same
-    law as the DEM Kirchhoff solver) — and solve top↔bottom.  Because the contact areas come from
-    the MPM's actually-deformed SE (not a rigid-sphere Hertz/Tabor approximation), this is an
-    independent, more physical σ_ionic to cross-check the DEM network value.
+    law as the DEM Kirchhoff solver) — and solve top↔bottom.
 
-    Returns dict: σ_ionic (mS/cm, constriction-only), n_particles, n_contacts, A_SE-SE total &
-    mean contact area (µm²) — the latter directly comparable to the DEM dashboard A_SE-SE/⟨A_hop⟩."""
+    ⚠ EXPERIMENTAL — currently OVER-COUNTS the contact area.  The space-filling Voronoi partition makes
+    every pair of neighbouring particles share their FULL mutual facet, so `a` is the Voronoi facet area,
+    NOT the small plastic contact disk → r_c too large → constriction too small → σ_ionic comes out ABOVE
+    even σ_contact-free (≈0.88 vs the fused-FV 0.25 and the DEM full 0.044 on AMS_S1-class cases).  A fix
+    needs interpenetration/overlap-based contact area (DEM-style δ/R* plastic film), and even then the SE
+    neck (⟨A_hop⟩≈0.065 µm², bottleneck 0.0025) is SUB-VOXEL at any practical n_vox → not DEM-grade.
+    → Production σ_ionic stays the DEM network (frame[5]: the contact network owns the constriction); this
+    mode is at best a coarse UPPER bound + a contact-area diagnostic, not an independent σ_ionic.
+
+    Returns dict: σ_ionic (mS/cm, Voronoi-contact, OVER-COUNTED), n_particles, n_contacts, A_SE-SE total &
+    mean contact area (µm²; also over-counted = Voronoi facets, not plastic contacts)."""
     from scipy.sparse import csr_matrix as _csr
     vc = _vc()
     SW0, FLOOR, WIDTH = vc.SW[0], vc.FLOOR, vc.SW[1] - vc.SW[0]
@@ -349,8 +363,9 @@ def se_contact_network(se_pts, se_id, n_vox, thickness_um, sigma_grain=3.0, top=
     base = {'n_particles': int(npart), 'n_contacts': int(len(uk)),
             'A_SE_SE_total_um2': float(a_um2.sum()), 'A_hop_mean_um2': float(a_um2.mean()),
             'recommended_n_vox': rec_nvox}
-    if not bottom.any() or not top_m.any():
-        return {**base, 'sigma_ionic_mScm': 0.0, 'note': 'no top↔bottom percolation'}
+    if z_hi - z_lo < 1 or not bottom.any() or not top_m.any():       # 1-layer SE → rails short / no z-path
+        return {**base, 'sigma_ionic_mScm': 0.0,
+                'note': 'SE single z-layer' if z_hi - z_lo < 1 else 'no top↔bottom percolation'}
     # Holm constriction conductance g = 2·r_c (σ=1 normalised; µm), r_c = √(a/π).  Rail: top→V=1,
     # bottom→V=0 with a stiff g_big.  σ_eff[mS/cm] = σ_grain · G_norm[µm] · L[µm] / A[µm²].
     g = 2.0 * np.sqrt(a_um2 / np.pi)
@@ -446,8 +461,10 @@ def _main():
               f'   (compare to DEM dashboard A_SE-SE / ⟨A_hop⟩)')
         if o.get('note'):
             print(f'  ⚠ {o["note"]} → σ_ionic = 0')
-        print(f'  ★ σ_ionic (constriction-only, mS/cm) = {o["sigma_ionic_mScm"]:.4f}   '
-              f'(DEM σ_full ≈ this × {0.775:.2f}; cf. DEM dashboard σ_ionic)')
+        print(f'  σ_ionic (Voronoi-contact, mS/cm) = {o["sigma_ionic_mScm"]:.4f}   '
+              f'⚠ OVER-COUNTS (Voronoi facet ≠ plastic contact → > σ_contact-free, ≫ DEM σ_full).')
+        print(f'    ⇒ production σ_ionic = DEM network (Holm); this mode = upper-bound + contact-area '
+              f'diagnostic only.  A_SE-SE/⟨A_hop⟩ above are likewise Voronoi facets, not plastic contacts.')
         return
     if not a.scaffold:
         raise SystemExit('FV mode needs --scaffold am_scaffold.csv (or pass --se-id for contact-network mode)')

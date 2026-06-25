@@ -176,7 +176,7 @@ def main(argv):
         # fraction.  The plate then plastically compacts the SE around the fixed real skeleton, so
         # the porosity is a RESULT of the SE plastic fill (drops from the rigid-RSA value), not assumed.
         SW = (0.04, 0.96); WIDTH = SW[1] - SW[0]; FLOOR = 0.05
-        amraw = np.loadtxt(args.am_scaffold, delimiter=',')
+        amraw = np.atleast_2d(np.loadtxt(args.am_scaffold, delimiter=','))  # 2D even for a 1-row CSV
         scl = WIDTH / args.lateral_box                         # box units per LIGGGHTS unit (lateral→WIDTH)
         am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
                                 FLOOR + amraw[:, 3] * scl]).astype(np.float64)
@@ -289,7 +289,7 @@ def main(argv):
             #    (voxel union → no overlap double-count), keep only non-AM cells.  SE volume and
             #    spatial distribution are then REAL, so porosity·coverage EMERGE from the data
             #    (no se_frac, no --target-porosity). ──────────────────────────────────────────
-            seraw = np.loadtxt(args.se_dump, delimiter=',')
+            seraw = np.atleast_2d(np.loadtxt(args.se_dump, delimiter=','))  # 2D even for a 1-row CSV
             se_c = np.column_stack([SW[0] + seraw[:, 1] * scl, SW[0] + seraw[:, 2] * scl,
                                     FLOOR + seraw[:, 3] * scl])
             se_rr = (seraw[:, 4] * scl).astype(np.float64)
@@ -761,6 +761,9 @@ def main(argv):
         se_id_full = np.full(n, -1, np.int32)               # carbon / non-SE = -1; base SE pts = particle id
         if se_id_base is not None:
             se_id_full[:len(se_id_base)] = se_id_base       # base SE pts are points 0..len-1 (carbon appended)
+        else:
+            print("  ⚠ --save-se-id without --se-dump → all -1 (per-particle ids need real SE centres). "
+                  "The voxel contact-network (--se-id) will return None.")
         np.save(args.save_se_id, se_id_full)
         _nid = len(np.unique(se_id_full[se_id_full >= 0]))
         print(f"  saved SE particle ids → {args.save_se_id} ({n} pts, {_nid} SE particles)")

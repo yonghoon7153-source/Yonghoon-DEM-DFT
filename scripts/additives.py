@@ -242,6 +242,9 @@ def seed_carbon_black(n, box_um, dx_um, rng, in_am=None, am=None, mixing='ballmi
     fraction and agglomerate clustering (CB_MIX).  am=(centres[m,3], radii[m]) in box_um's frame for the
     coating bias (None → pore-only).  n = target point count → n_agg = n/k aggregates.  Returns the
     point cloud (+ per-aggregate ids if return_ids) so the viewer draws the chains as short lines."""
+    if n <= 0:                                          # 0-wt% carbon → emit nothing (else max(1,…) below
+        z = (np.zeros((0, 3), np.float32), np.zeros(0, np.int32))   # would inject a stray ~k-point chain)
+        return z if return_ids else z[0]
     (Lx, Ly, Lz) = box_um
     cfg = CB_MIX.get(mixing, CB_MIX['ballmill'])
     k, sfrac, step, clump = cfg['k'], cfg['surface_frac'], cfg['step'] * dx_um, cfg['clump']

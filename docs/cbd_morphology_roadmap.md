@@ -127,8 +127,16 @@ i.e. a GOOD AM network).  Two `--add-recipe`s, same 80:18:1:1 wt%, n_grid 266 MP
   voxelise to 1-cell threads (669 k < 721 k cells) that can break → its long-range bridging is
   under-resolved.  A fair SuperP-vs-VGCF verdict needs higher n_vox or fibre-aware voxelisation.
 - **Real-physics reading**: for a POOR AM network (many dead AM) VGCF's long fibres should WIN (long
-  bridges span gaps SuperP can't); real_10's AM is good, so SuperP's contact density edges it.  Next:
-  repeat on an AM-poor case to confirm the VGCF crossover + bump VGCF resolution.
+  bridges span gaps SuperP can't); real_10's AM is good, so SuperP's contact density edges it.
+- ⚠ **The SuperP > VGCF verdict is NOT yet safe — gated on the VGCF under-resolution above.**  Two reasons it
+  likely FLIPS once VGCF is properly resolved:
+  (1) **Code fix shipped**: `voxel_conductivity.py --fibre fibre_carbon.npy` now interpolates each VGCF/PTFE
+      centreline into a CONNECTED voxel thread (bare cloud ~1.5µm-spaced ≫ 0.5µm cell → dotted line → no
+      conduction).  Re-run BOTH SuperP and VGCF with `--fibre` for the fair comparison.  PENDING.
+  (2) **Literature** (docs/literature_dry_assb.md P11/P12): in the SAME sulfide class, 1D CNF/VGCF
+      (150 nm × 15 µm) BEATS 0D Super-P (40 nm) on electronic percolation — VGCF SHOULD win.  So the current
+      1.3× > 1.1× is most likely the under-resolved-fibre artifact, not a real morphology verdict.
+  Next: `--fibre` re-run (both) + an AM-poor case to confirm the VGCF crossover.
 - Pipeline (gabia GPU): `mpm3d_compaction.py --se-dump … --add-recipe "AM:SE:{SuperP|VGCF}:PTFE=80:18:1:1"
   --save-se se_carbon{,_vgcf}.npy --save-phase phase_carbon{,_vgcf}.npy --save-se-id se_id{,_vgcf}.npy`
   then `nohup voxel_conductivity.py --se … --phase … --scaffold am_carbon.csv --n-vox 256 --porosity 0.165
