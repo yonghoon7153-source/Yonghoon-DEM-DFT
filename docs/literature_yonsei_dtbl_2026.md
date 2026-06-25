@@ -45,20 +45,47 @@ Advanced Energy Materials 16(10) (2026) e70730 (Back Cover, IF 25.5).  Youyeong 
   - **ACTION:** 이들의 2D-param-추출 → stochastic-3D-생성 방법을 우리 synth와 비교; 우리 합성이 같은
     구조 파라미터(porosity, tortuosity, 입경분포)를 보존하는지 검증 프레임으로 채택.
 
-### #271 — Unveiling Degradation of Sulfide Composite Cathodes, Digital-Twin: Dry vs Wet Binder  ⭐우리 도메인
-Energy Storage Materials 86 (2026) 104930 (IF 19.3).  Seung-Bo Hong†, Hyobin Lee† … Yong Min Lee, Dong-Won Kim.
-- **핵심:** sulfide ASSLB 복합 cathode를 dry(PTFE) vs wet(NBR) 공정으로 제작.  digital-twin 모델링 +
-  전기화학 + 형태 분석.  **PTFE는 긴밀한 접촉 유지 + void 형성 최소화 → 계면 열화 억제**; NBR은
-  사이클 중 **계면 열화 + void 성장** 가속.
-- **우리 모델 매핑:**
-  - 우리 `additives.py`가 **PTFE 피브릴**을 모델링 → 이 논문이 "PTFE → void↓" 실험 확증 = 우리 MPM
-    void-fill + coverage 유지와 직결.
-  - **binder type(PTFE/NBR) → void → σ** 축은 우리 porosity/coverage 관계식에 **binder 항 추가** 후보.
-  - "사이클 중 void 성장" = 우리가 아직 안 다루는 **degradation(시간 진화) 축** → 향후 porosity/coverage
-    시간 변화 metric.
-  - 그들의 digital-twin(전기-화학-기계 결합) = 우리 **DEM(transport)+MPM(mechanics)** 분업.  그들의
-    binder-void 모델 vs 우리 coverage/Stage-E 비교 연구 가치.
-  - **ACTION:** litdb 풀 디제스트(PDF) — 우리 LPSCl sulfide ASSB + PTFE additive와 1:1 비교.
+### #271 — Unveiling Degradation of Sulfide Composite Cathodes, Digital-Twin: Dry vs Wet Binder  ⭐⭐ TIER-1 (우리 소재계 = σ 절대앵커)  ✅ 풀 디제스트 완료
+Energy Storage Materials **86** (2026) 104930 (IF 19.3), DOI 10.1016/j.ensm.2026.104930.  Seung-Bo Hong†,
+**Hyobin Lee†**(digital-twin 모델러) … Yong Min Lee\*, Un-Hyuck Kim\*, Dong-Won Kim\* (Hanyang + DGIST +
+Yonsei DTBL).  접수 2025-12-01 / 게재확정 2026-01-26.  ★ **풀 디제스트:**
+`docs/lit_hong2026_sulfide_cathode_binder_digitaltwin.md`.
+★★ **소재 = Li₆PS₅Cl(LPSCl) 황화물 SE + NCM CAM, ASSB = 우리 정확한 소재계**(Bazzoun과 동일).  ⇒
+**#284/#285/#286(액체 LIB)과 결정적으로 다르게 σ_ionic·porosity·retention 절대값이 (조건 매핑 후) 전이
+가능 → 검증 앵커.**  σ/porosity 앵커군 = **Bazzoun(LPSCl) + #271(LPSCl) + Varkey(halide) + Minnmann**.
+⚠ **#285(Rakhwi Hong, 단결정NCMA·액체)와 다른 논문**(같은 "Hong"이나 #271=Seung-Bo Hong/ASSB — 혼동 금지).
+- **핵심:** sulfide ASSLB 복합양극을 **4구성(Pwd 무바인더 / S-Pwd 용매만 / NBR wet / PTFE dry)**으로
+  제작해 용매↔바인더 decouple.  **PTFE = confined fibril망(최소 coverage) → 연속 Li⁺ 경로·void 최소 →
+  retention 최고**; **NBR = 깊이침투·광범위 coverage → Li⁺ 차단 + 계면 void 성장 + LPSCl 산화분해(sulfate→
+  rock-salt) 가속**.  **용매효과는 minor, 바인더 공간분포가 dominant.**  디지털트윈 = **GeoDict GrainGeo
+  재구성 + ConductoDict FV**(σ_ionic는 입력, coverage·current density 출력 = reconstruct-from-measurement).
+- **핵심 수치:** ★★ **σ_ionic Pwd 0.087 / S-Pwd 0.079 / PTFE 0.064 / NBR 0.042 mS/cm**(Table S2; σ_e
+  1.11/1.07/0.85/1.10); **retention@100cyc 0.33C: PTFE 94.6 > Pwd 92.0 > S-Pwd 87.1 > NBR 85.4%**(Table S1);
+  **pore volume PTFE 22.3 / Pwd 28.7 / NBR 29.4 vol%**(Fig 2f); **AM coverage(디지털트윈) LPSCl/CBD =
+  Pwd 35/5 · NBR 26/27 · PTFE 36/9 %**(Fig 2c); **Δ(ΔP)_Q(부피팽창) NBR 1.99 vs PTFE 1.74**(Pwd 1.88/S-Pwd
+  1.89); **bulk LPSCl σ 1.87 → 0.53 mS/cm(28% 잔존, butyl butyrate)**(Fig S7, XRD 변화無); **R₁@2.4V NBR
+  17.4 vs PTFE 12.8 Ω**, R₂(NBR 급발산 vs PTFE 포화); **XPS S 2p 100th SO₄²⁻ NBR 4.4%(PTFE 無)**;
+  **rock-salt 깊이 NBR 17–22 vs PTFE 8–10 nm**(SAED); SAICAS PTFE ≈ 2× NBR.  활물질 loading 30 mg/cm².
+  조성 NCM:LPSCl:Super C:바인더 = 75:22.5:1.5:1(PTFE/NBR).
+- **우리 모델 매핑 (★ TIER-1 — σ_ionic 절대 검증 + audit #1/#5 진전; 수치 전이됨):**
+  - **(a) ✅✅ σ_ionic 절대값 in-range:** 그들 LPSCl 양극 σ_ionic **0.042–0.087** ⊂ 우리 DEM 범위
+    (~0.04–0.18); Bazzoun(0.065–0.137)과 합쳐 **LPSCl+NCM 실측 envelope ≈ 0.04–0.14 mS/cm** → **우리 절대
+    σ_ionic이 "외삽 1점(Bazzoun)"에서 "2개 독립 EIS 실측에 둘러싸인" 상태로 격상**(audit #1 다점화).  추세
+    (coverage/φ_SE↓→σ↓) 일치.  ⚠ 압력 350/400/300 MPa + vol% 매핑은 정밀 1:1 전 보정 필요.
+  - **(b) ✅ bulk σ_grain 정합:** Hong 1.87 ∈ (Bazzoun pellet 1.02, Cronau 단결정 3.0) — GB-포함 다결정
+    범위 일관.  우리 σ_grain=3.0+Cronau(r_SE) 점검(이중계상 주의).
+  - **(c) ❗ PTFE 양의 역학효과(audit #5):** 우리는 PTFE를 **σ=0 obstacle(차단=음효과)**로만 모델 → 이
+    논문의 **PTFE void-억제(−6.4%p pore)·팽창↓(1.74)·접착 2×**(양효과, retention 지배)를 누락.  ⇒ MPM에서
+    **PTFE를 cohesion-부여 결합상(`--coh` PTFE항)**으로 → void-억제 재현; net σ_ionic = "차단 − densification
+    회복"(그들 0.064에 맞추려면 양효과 필요).  audit #5에 "PTFE 기계적 void-억제 미반영" 신규 항목 근거.
+  - **(d) 디지털트윈 = GeoDict reconstruct(출력단):** σ_ionic 입력·coverage/current density 출력 =
+    `positioning_vs_geodict.md`의 "GeoDict는 구조를 줘야 함"을 **ASSB 양극 사례로 재확인** → 우리 공정→구조
+    **predict(입력단) + Kirchhoff/Holm 접촉망** superset 강화.  그들 AM-coverage % = 우리 Stage-E coverage
+    검증 reference.
+  - **(e) ⚠ 비전이:** NBR(wet 공정) = 우리 모델 없음(process-specific).  시간(cycling) 화학-기계 열화
+    (void 성장·rock-salt·sulfate) = 우리도 그들 디지털트윈도 단일 스냅샷 → 공통 GAP(Phase 4 후보).
+  - **★ DB 후보:** §11(디제스트) — LPSCl porosity@350MPa(Pwd 28.7/NBR 29.4/PTFE 22.3) + σ_ionic 4점.
+    `densification_porosity_db.csv` + `bazzoun2026_sigma_ionic.csv` 추가 후보(유저 결정).
 
 ### #262 — Digital Twin Mechanical Degradation Diagnostics, Si Anode Microstructure  ★★★
 Small 22(3) (2026) e07883 (IF 11.8).  Jaejin Lim†, Junhyeok Choi† … Hyobin Lee, Yong Min Lee.  DOI 10.1002/smll.202507883.
@@ -398,7 +425,7 @@ EES Batteries 2 (2026) 464-474 (Front Inside Cover).  Dongyoon Kang†, Sun Hyu 
 | 1 | #266 | bimodal P:S 7:3 → tortuosity↓ → σ↑, 87.8%@200cyc | **P:S 7:3 production + Furnas dip 실험 앵커** | PDF로 수치 추출 → validation corpus |
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
 | 2.5 | #281 | 미세구조→GeoDict effective→1D 전기화학(COMSOL)→방전; 구조변수 decouple | **★ Phase 4 결합 blueprint(=우리 voxel FV→PyBaMM) + DiffuDict(유효 D_eff/τ) 이식 + predictor decouple** | ✅ 풀 디제스트 (`lit_kim2026_...md`); ⚠Li-O₂ 외래→METHODOLOGY만, 수치앵커 아님 |
-| 3 | #271 | PTFE void↓ vs NBR void↑ (digital-twin) | binder→void→σ 축; PTFE additive 검증 | litdb 풀 디제스트(PDF) |
+| 3 | #271 | ★ LPSCl+NCM ASSB σ_ionic(Pwd 0.087/PTFE 0.064/NBR 0.042) + PTFE void↓(22.3 vs 28.7 vol%) + GeoDict reconstruct | **★ σ_ionic 절대 검증 앵커(Bazzoun에 이은 2번째 같은-소재계, audit #1 다점화) + PTFE 양의 역학효과(audit #5) + positioning 재확인** | ✅ 풀 디제스트 (`lit_hong2026_sulfide_cathode_binder_digitaltwin.md`); ★ 우리 소재계 → 수치 전이됨 |
 | 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
 | 5.7 | #276 | **DPE 4단계 taxonomy + 미세구조 5특징 + 양방향 material↔process interplay (리뷰)** | **★ 우리 DEM+MPM 전체의 FRAMEWORK/POSITIONING — 5특징↔우리출력 1:1; calendering=압축; descriptive↔우리 predictive 엔진** | ✅ 풀 디제스트 (`lit_nam2026_...md`); ⚠일반 Li-ion DPE 리뷰→framework/positioning 앵커(수치 앵커 아님) |
