@@ -15,6 +15,54 @@ PDF 받으면 `docs/lit_<author>2026_<topic>.md`로 litdb-curator 풀 디제스�
 
 ## ★★★ TIER-1 — 우리 방법론 그 자체 (digital-twin / 2D→3D / bimodal)
 
+### #17(EES 2025) — Microstructural Electrochemo-Mechanical Digital-Twin, High-Ni Composite Electrodes (입자↔셀 bridge)  ⭐Phase-4 sibling + 바인더 점소성  ✅ 풀 디제스트 완료
+Energy & Environmental Science **18** (2025) 3129-3147 (Open Access **CC BY-NC 3.0**, IF ~32, ★cover).
+Jihun Song, Royal C. Ihuaenyi, **Jaejin Lim**, Zihan Wang, Wei Li, Ruqing Fang, Amin Kazem Ghamsari,
+Hongyi Xu, **Yong Min Lee\***, **Juner Zhu\***.  DOI **10.1039/d4ee04856c**.  **Northeastern Univ.
+(Juner Zhu) + Yonsei DTBL(Yong Min Lee) + UConn**.  ★ **풀 디제스트:**
+`docs/lit_song2025_electrochemo_mechanical_microelectrode_ees.md`.  ⚠ **ESI(SI) 미제공** — 본문 PDF 기준.
+⚠ **소재 = LiNi₀.₇Mn₀.₁₅Co₀.₁₅O₂(NMC711) + PVDF·Super P + 1 M LiPF₆ EC:EMC 3:7 액체전해질, coin half-cell
+= 일반 LIB** — **우리 LPSCl sulfide ASSB가 아님** → **셀 전기화학 절대값(전압·과전압·용량·σ_e·D) 전이 ✗**.
+★ **METHODOLOGY 3종이 핵심**(수치앵커 아님 — Bazzoun/Varkey/Minnmann/#266/#271 담당):
+- **핵심:** **FIB-SEM(540장, 43.78 nm) 3D 재구성** → 전성분 고유물성(NMC711 단일입자측정+nanoindentation,
+  PVDF 바인더 인장, Table 2/3/4/5) 직접부여 → **homogenization 없이 voxel mesh PDE(Fick+Ohm+BV+기계)로
+  미세전극 electrochemo-mechanical 모델** → **coin-cell 전압 >98% 재현**.  입자↔셀 괴리를 **3메커니즘**으로
+  분해 + **과량전해질 → 4C 94% 용량유지** + **폴리머 바인더 VISCOPLASTICITY(Perzyna+Ludwick)로 cycling
+  바인더-입자 연결 기계열화** 시뮬.
+- **★★ EXACT 수치(본문 Table 1–6, Fig 2/4/6):**
+  - **입자↔셀 과전압(x=0.24):** particle 0.0089/0.0142/0.0244/0.0405 V vs **coin cell 0.1383/0.2538/0.4505/
+    0.8234 V**(1/2/4/8C, **15–20배↑**); coin cell 용량감소 2/4/8C = 23.89/89.23/96.95%.
+  - **★ 3메커니즘:** ① 반응면적↓ — particle SSA **2,476,784 vs microelectrode 1,720,752 m²/m³**(30.52% 차);
+    유효 ASA = particle의 **61.76%**(38% dead, 입자접촉·CBM·집전체에 가림); ② 확산길이↑(입경최적화 rate↔기계);
+    ③ 전해질↓ — realistic vs excessive **용량유지 @4C 26.5% vs 94%**(1/2/4C realistic 90.5/81.58/26.5%).
+  - **★ CBM(도전재+바인더 통합상) 전류밀도 ≫ 활물질 1000%+**: 활물질 16.29/35.20/96.60 vs CBM 222.10/431.01/
+    1012.92 A/m²(1/2/4C) → 전류는 주로 CBM 통해 흐름; CBM 표면근처 boiling-void로 연결끊김.
+  - **★★ 바인더 점소성(Table 3, Fig 6):** PVDF film 인장(strain-rate 0.00003/0.0003/0.003 s⁻¹, 시뮬정확도
+    89.21/93.75/97.11%) → **E 1.05 GPa, σ_y 19.36 MPa, ν 0.326**; **Perzyna**(점소성 ε̇_vp=A⟨f/σ_y⟩ᵇ, b=1,
+    A 0–3×10⁻³ s⁻¹) + **Ludwick**(σ_y=σ_y0+k·ε̄_vpⁿ, n=2, k 1100–1200 MPa); **5cycle yield 24→42.10 MPa 포화**
+    (PVDF 파괴 45 MPa > 42.10 → 견딤).  활물질 부피변화 2.37/1.71/0.34%@1/2/4C, 집전체근처 최대응력 314 MPa.
+  - 활물질 NMC711: E 2.611 GPa·σ_y 0.1534 GPa·ν 0.25·i₀ 26 A/m²·D_s 3×10⁻¹⁴ m²/s·SOC-σ(0→1.7 S/m); CBM σ_e
+    375 S/m·ε_e침투 0.16; 전해질 t₊~0.1–0.3·c_e 1000(액체); Al CC σ_e 3.58×10⁷.  도메인 90 µm 두께(crop 30×70.8×30).
+- **★★★ 우리 Phase-4·MPM 매핑 (frame[5] — METHODOLOGY 전이, 셀 절대값 ✗):**
+  - **(a) ✅✅ Phase-4 sibling(#281 NEXT):** 미세구조→electrochemo-mechanical→셀전압 = 우리 stage4 §6 그 자체.
+    #281(effective 균질화 1D)보다 한 단계 미세 = **structure-resolved**(voxel PDE, homogenization 회피).
+    채택디테일 3종 = #281과 동일(핵심전극 실구조·보조 Bruggeman / 동역학 고정·구조변수만 변화 / 방전부터 검증).
+  - **(b) ✅✅ 3메커니즘 = 우리 transport triad 1:1:** **반응면적↓=coverage(Tabor/StageE)·active-fraction·
+    dead-AM map**, **확산길이↑=tortuosity(τ_Laplace,eff)·r_AM**, **전해질↓=porosity·SE 부피분율·f_perc**.
+    ⇒ **우리 미세구조 metric이 셀 괴리를 설명하는 published proof** + 유효 ASA 61.76%(38% dead)가 우리
+    coverage의 셀-수준 의미 정량.  ⚠ ASSB는 "과량전해질" 안 통함(SE 고정부피) → SE 부피분율↑로 번역.
+  - **(c) ★★★ 바인더 VISCOPLASTICITY = 우리 MPM 없는 물리:** Perzyna(시간/속도의존)+Ludwick(경화)+cycle누적
+    = 우리 **rate-independent J2의 한계(⚠#10 spring-back 재현불가)를 메우는 published 정식**.  ⇒ **E3 `--coh`
+    점성화(Ludwick 경화 + Perzyna rate) + MPM 점탄성 요소(#285 spring-back gap 해소)의 직접 구현 레시피**.
+    ★ **#285("무엇을"=DMA tan δ·두께회복 현상)에 이 논문이 "어떻게"=Perzyna+Ludwick 완전 정식을 더함**.
+    ⚠ 단 바인더 dried-film 측정(전해질 swelling 미반영) = 우리도 동일 GAP; PVDF 파라미터는 액체 LIB → 정식만 전이.
+  - **우리 우위:** 공정→미세구조 예측(그들 FIB-SEM 재구성) + granular constriction σ(Kirchhoff/Holm) + σ triad
+    (열 포함) + 소성 SHAPE morphology + fracture + scaling-law 예측.  **그들 우위:** structure-resolved 전기화학·
+    양방향 결합·바인더 점소성·셀전압 검증·단일입자 동역학.  ⇒ frame[5] 분업(그들=출력단 셀검증, 우리=입력단 예측).
+- ⚠ **전이 경계:** NMC+액체(t₊≈0.38·대류·농도분극·Li-metal half-cell)≠LPSCl SE(t₊≈1·접촉저항); E_AM 2.611/
+  E_CBM 1.05 GPa = oxide AM·PVDF(우리 22 GPa SE-modulus 앵커 무관); "과량전해질"=ASSB 직접 ✗.  **정식
+  (Perzyna/Ludwick/Fick/Ohm/BV)·3메커니즘 프레임·워크플로만 전이, 수치 σ/porosity ✗.**
+
 ### #266 — Bimodal Composite Cathodes, Chemo-Mechanical Integrity & Kinetics for ASSB  ⭐최우선  ✅✅ 풀 디제스트 완료 (HEADLINE 1:1 검증)
 ACS Energy Letters **11** (2026) 2103-2114 (Open Access **CC-BY 4.0**, IF 17.5).  Hyeonseong Oh†, Uigyeong Jeong† …
 **Yong Min Lee**, Jongsoon Kim, Junyoung Mun, … **Jong-Won Lee\*, Sang-Young Lee\*, Hun-Gi Jung\***.
@@ -619,6 +667,7 @@ positioning**(top-down/bottom-up · multi-scale · 미세구조 descriptor 어�
 |---|---|---|---|---|
 | 1 | #266 | bimodal P:S 7:3 → tortuosity↓ → σ↑, 87.8%@200cyc | **P:S 7:3 production + Furnas dip 실험 앵커** | PDF로 수치 추출 → validation corpus |
 | 1.2 | #(2025 Small 2410485) | **★ 가상 캘린더링 = 우리 압축 그 자체** (FIB-SEM 재구성→ElastoDict 압축→밀도 sweep 2.4–4.0 검증; porosity 49→10%, σ_e +130%, 접착 +199%, crack VMS>150MPa 3.4–3.6 지수급증, 최적 3.4–3.6; bimodal 14:3µm 8:2) | **★ 우리 DEM+MPM 압축의 직접 방법론 형제 — 출력 porosity/τ/접촉면적/crack/응력 1:1; reconstruct-then-compress(top-down 출발) vs 우리 predict-from-powder(bottom-up 출발) distinction; LIGGGHTS/GeoDict/MPSP-DEM = 우리 도구군; 과압축 caveat ↔ 우리 over-compression** | ✅ 풀 디제스트 (`lit_lim2025_virtual_calendering_framework.md`); ⚠Li-ion 액체 NCM622 → METHOD만 전이(수치앵커 아님), positioning_vs_geodict 정밀화 |
+| 1.5 | #17 (EES 2025, DTBL+Juner Zhu) | **★ Phase-4 sibling + 바인더 점소성** (FIB-SEM 재구성→structure-resolved electrochemo-mechanical→셀전압 >98%; 입자↔셀 괴리 3메커니즘 [반응면적↓ ASA 61.76%/확산길이↑/전해질↓ 94%@4C]; **PVDF 바인더 Perzyna+Ludwick 점소성** E 1.05 GPa·σ_y 19.36 MPa·5cyc yield 24→42.10 MPa; CBM 전류 ≫ 활물질 1000%+) | **★★★ Phase-4 결합 = 우리 미세구조 metric→PyBaMM 셀전압(3메커니즘=coverage/τ/porosity 1:1, #281 NEXT structure-resolved); ★ 바인더 점소성 정식 = 우리 MPM rate-indep J2 없는 물리 → E3 `--coh` 점성화 + #285 spring-back gap 직접 구현 레시피("무엇을"#285 + "어떻게"이 논문)** | ✅ 풀 디제스트 (`lit_song2025_electrochemo_mechanical_microelectrode_ees.md`); ⚠NMC+액체 LIB → METHODOLOGY·3메커니즘·점소성 정식만 전이(수치앵커 ✗), stage4+audit⚠#10/E3 cross-ref |
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
 | 2.5 | #281 | 미세구조→GeoDict effective→1D 전기화학(COMSOL)→방전; 구조변수 decouple | **★ Phase 4 결합 blueprint(=우리 voxel FV→PyBaMM) + DiffuDict(유효 D_eff/τ) 이식 + predictor decouple** | ✅ 풀 디제스트 (`lit_kim2026_...md`); ⚠Li-O₂ 외래→METHODOLOGY만, 수치앵커 아님 |
 | 3 | #271 | ★ LPSCl+NCM ASSB σ_ionic(Pwd 0.087/PTFE 0.064/NBR 0.042) + PTFE void↓(22.3 vs 28.7 vol%) + GeoDict reconstruct | **★ σ_ionic 절대 검증 앵커(Bazzoun에 이은 2번째 같은-소재계, audit #1 다점화) + PTFE 양의 역학효과(audit #5) + positioning 재확인** | ✅ 풀 디제스트 (`lit_hong2026_sulfide_cathode_binder_digitaltwin.md`); ★ 우리 소재계 → 수치 전이됨 |
