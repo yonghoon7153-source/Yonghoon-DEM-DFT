@@ -166,6 +166,46 @@ Advanced Energy Materials 16(10) (2026) e70730 (Back Cover, IF 25.5).  Youyeong 
   - **ACTION:** 이들의 2D-param-추출 → stochastic-3D-생성 방법을 우리 synth와 비교; 우리 합성이 같은
     구조 파라미터(porosity, tortuosity, 입경분포)를 보존하는지 검증 프레임으로 채택.
 
+### #(2023 Battery Energy 20220061) — Digital-Twin SIC-SPE vs LPSCl 복합양극 구조·전기화학 분석  ★ TIER-1 (★ DTBL 디지털트윈 계보의 가장 이른 논문 + LPSCl 전극 구조지표)  ✅ 풀 디제스트 완료
+*Battery Energy* **2** (2023) 20220061, DOI **10.1002/bte2.20220061** (Open Access **CC BY**, © 2023, Rapid
+Communication 7p).  Jongjun Lee, Seoungwoo Byun, **Hyobin Lee**, Youngjoon Roh, Dahee Jin, **Jaejin Lim**,
+Jihun Song, Cyril Bubu Dzakpasu, Joonam Park, **Yong Min Lee\*** (DGIST; 당시 yongmin@dgist.ac.kr, 이후 연세
+DTBL).  접수 2022-11-02 / 게재확정 2022-11-20.  ★ **풀 디제스트:** `docs/lit_lee2023_sicspe_digitaltwin_assb.md`.
+⚠ **#260–286 리스트엔 번호 없음**(2026 리스트 밖, **2023 논문**) → **이 그룹 디지털트윈의 "이른 시드"** 계보 항목.
+모델러 = **Hyobin Lee + Jaejin Lim**(= #266/#271/#262/#281의 디지털트윈 모델러 본인들).  **(보충) Kim 2024 ACS EL
+(#18 = `lit_kim2024_digital_twin_acsenergyletters.md`)이 명명한 top-down/reconstruction(GeoDict) 방법론의 가장 이른
+실제 적용** + #271/#266/#281/#263/#275 GeoDict 라인의 **2023 원형**.
+⚠ **소재 두 갈래:** ★ headline = **SIC-SPE**(단일이온 고분자전해질 = Li-Nafion, σ 0.2×10⁻³ S/cm, t₊ 0.94) —
+**우리 LPSCl 황화물 focus가 아님**(셀 절대값 비전이). ★ 비교군 = **Li₆PS₅Cl(LPSCl, σ 2.2×10⁻³) + LiNbO₃-coated
+NMC711**(우리 정확한 SE+AM) → **LPSCl 전극의 디지털트윈 구조지표 = 우리 출력과 같은 축, 이른 same-system reference.**
+- **핵심:** "SE 고유 σ가 낮아도 복합양극 구조(SE-vol↑·τ↓·AM-SE 접촉↑)가 좋으면 셀 성능 대등" — SIC-SPE(고분자,
+  σ가 LPSCl 1/10)가 **저압(수십 MPa) intimate contact**로 LPSCl(500 MPa 고압)과 **대등 용량·율속**. 3D 디지털트윈
+  (GeoDict GrainGeo 재구성 + MatDict/ConductoDict FV + BESTmicro)으로 SIC-SPE 전극이 LPSCl보다 **SE-vol↑·τ↓·
+  coverage↑** → 낮은 과전압임을 분해.  = **GeoDict top-down/reconstruct**(측정 조성·밀도·두께 입력, **intrinsic σ는
+  입력**, 구조지표·σ_eff·flux 출력).
+- **★★ 핵심 수치 — LPSCl 전극 디지털트윈(우리 reference) [SIC-SPE 비교]:** **SE 부피분율 26.1 vol%** [32.1];
+  **tortuosity factor 1.31**(geodesic) [1.08]; **AM coverage 38.8 %** [68.2]; **유효 σ_ionic 4.28×10⁻⁵ S/cm =
+  0.0428 mS/cm**(intrinsic 2.20×10⁻³ → **1.9% 유지**) [σ_eff 2.85×10⁻⁵, intrinsic 2.0×10⁻⁴ → 14.3% 유지].
+  전극밀도 2.81 g/cm³·58 µm·16.3 mg/cm²; LPSCl D50 2.3 / NMC711 D50 8.0 µm; 조성 NMC711:LPSCl:NBR:Super P =
+  76.8:19.2:2:2 wt%.  셀 율속(0.1–2C) SIC-SPE 163.0/146.5/125.5/95.4/55.8 mAh/g(LPSCl과 대등, ⚠이-셀-특이).
+  도메인 40×40×t µm³, voxel 0.2 µm.
+- **우리 모델 매핑 (★ TIER-1 — LPSCl 구조지표 = 우리 출력의 이른 reference; SIC-SPE·셀 비전이):**
+  - **(a) ✅ LPSCl 구조지표 4종 = 우리 출력 대역 자릿수 일치:** SE-vol 26.1 vol% ⊂ 우리 φ_SE(real_14 ~25–28%);
+    AM coverage 38.8% = 우리 Stage-E(Hertz 18 / Tabor 50%) 사이 + **#271 LPSCl coverage 35–36%와 거의 같음** →
+    **2개 독립 디지털트윈(2023 Lee + 2026 Hong)이 LPSCl AM coverage ~26–39% 수렴** = 우리 coverage 외부 reference;
+    σ_eff 0.0428 mS/cm ⊂ 우리 DEM 범위(0.04–0.18) 하단(⚠위상 주의 — 아래 (c)); τ 1.31(geodesic)은 정의差로 추세만.
+  - **(b) ✅ GeoDict reconstruct(출력단) = positioning 계보의 이른(2023) 원형:** 측정 조성·밀도·두께를 GrainGeo에
+    주입 재구성 → ConductoDict FV로 σ_eff·구조지표 출력(intrinsic σ는 입력) = `positioning_vs_geodict.md`의
+    "GeoDict는 구조를 줘야 함(reconstruct) ↔ 우리=공정→구조 예측(predict, 입력단)"을 **이 그룹 가장 이른 사례**로
+    재확인.  #18(ACS EL taxonomy)·#271/#266의 **직계 선조** → 우리 공정→구조 예측 + 접촉망 superset 계보적 근거.
+  - **(c) ⚠ σ_eff 위상 주의(가장 중요):** 그들 σ_eff(0.0428)는 **intrinsic σ(2.2×10⁻³)를 구조로 가중한 출력**
+    (from-scratch 예측 아님; intrinsic은 Table S2 입력) → 우리 Kirchhoff σ(σ_grain·접촉망 순추론)와 **정보론적
+    위상 다름** → **자릿수 reference지 점대점 검증 아님**.  **σ 절대 앵커는 Bazzoun/#271/Varkey/Minnmann/#266 유지.**
+  - **(d) ⚠ 비전이:** headline SIC-SPE(고분자 저압 intimate contact·t₊ 0.94·SE-vol 32.1·coverage 68.2) + 셀 율속 =
+    우리 dry-press 황화물 모델 밖.  시간(cycling) 열화 = 그들 디지털트윈도 단일 스냅샷(우리와 공통 GAP).
+  - **★ frame[5] 우리 우위:** 그들 = GeoDict 고정 구형 + σ 입력 + 단일 스냅샷(소성 morphology·void-fill·force
+    chain·파괴 전무).  우리 = 압력→구조 예측 + Kirchhoff/Holm 접촉망 + MPM 소성 + fracture.
+
 ### #271 — Unveiling Degradation of Sulfide Composite Cathodes, Digital-Twin: Dry vs Wet Binder  ⭐⭐ TIER-1 (우리 소재계 = σ 절대앵커)  ✅ 풀 디제스트 완료
 Energy Storage Materials **86** (2026) 104930 (IF 19.3), DOI 10.1016/j.ensm.2026.104930.  Seung-Bo Hong†,
 **Hyobin Lee†**(digital-twin 모델러) … Yong Min Lee\*, Un-Hyuck Kim\*, Dong-Won Kim\* (Hanyang + DGIST +
@@ -523,6 +563,53 @@ ASSB가 아님** → 절대 transport 값 전이불가. 가져올 것은 **설�
     예측 + 소성 morphology + 접촉 σ triad + fracture**. ⇒ 이상 워크플로 = 우리가 미세구조 생성/예측 →
     그들식 토모-정량 검증 → 그들식 전기화학시뮬로 농도분극 닫기. frame[5] 분업 재확인.
 
+### (2024 CEJ) Bak — Multilayer Model Electrode for BINDER z-Distribution + Digital-Twin  ★★  ✅ 풀 디제스트 완료 (★ #286 porosity-z의 BINDER 짝)
+Chemical Engineering Journal **483** (2024) 148913 (Open Access, IF 13.3), DOI 10.1016/j.cej.2024.148913.
+Cheol Bak†, Kyung-Geun Kim†, Hyuntae Lee† … **Jaejin Lim**, **Hyobin Lee**, **Hongkyung Lee\*\***,
+**Yong Min Lee\*** (DGIST; = DTBL의 2024 선행작, Lim/H.Lee = #266/#271/#286 모델러).  ★ **풀 디제스트:**
+`docs/lit_bak2024_binder_distribution_multilayer.md`.  ⚠ 2026 리스트(#260–286)에 없던 2024 논문 → 추가.
+⚠ **소재 = NCM622 양극 + 액체전해질(1.15 M LiPF₆ EC/EMC 3:7 + 2% VC) + PVDF 일반 LIB** — **우리 LPSCl
+sulfide ASSB가 아님** → 절대 transport/용량/저항 값 전이불가. 가져올 것은 **z-분포 설계개념(binder-z) +
+바인더→접착/전자전도 매핑(E3 `--coh`) + digital-twin positioning**(수치 앵커 아님 — LPSCl σ는 Bazzoun/#271).
+- **핵심:** 바인더(PVDF) 함량을 **z방향 3층(각 30 µm, 총 90 µm)으로 강제** → **증가(LMH=집전체쪽 과잉) /
+  감소(HML=표면 과잉) / 균일(MMM)**(층조성 NCM:carbon:PVDF wt% = H 93:1:6 / M 93:3:4 / L 93:5:2; Ref=단층
+  93:3:4). **SAICAS 접착강도 + 박리후 표면 EDX(F)**로 층별 바인더 정량, **전극저항계로 bulk+계면 전자저항**,
+  rate/cycle, **digital-twin(GeoDict)로 전자전도·전위·전류**. ★ **결론 = 균일(MMM)이 최적**; **집전체 근처
+  바인더과잉(LMH)이 최악**(전자공급 차단), 표면과잉(HML)은 전해질 침투 방해. = **"바인더 국소과잉→전자저항↑
+  +전해질차단 / 부재→박리"** 매핑. ★ **#286(Yoo, porosity-z 구배 최적)의 BINDER 버전** — z-분포 제어로
+  성능 최적화는 같으나 **축(binder vs porosity)·최적방향(균일 vs 구배)이 다름**(소재의존).
+- **검증:** GeoDict2023 GrainGeo(NCM 구) + stochastic CBD + **ConductoDict(유효 σ_e, 전자전도-only)** +
+  SAICAS + 표면 EDX + EIS + 전극저항계. (#286의 BESTmicro 3D 전기화학보다 가벼운 digital-twin = 전자전도만.)
+- **핵심 수치:** CBD 유효 σ_e **H 0 / M 115.36 / L 375 S/m**(바인더↑→도전망 끊김); 전극 유효 σ_e
+  **HML 6.94 / MMM 2.46 / LMH 3.02 S/m**; **계면 전자저항 LMH ~1600 ≫ Ref ~280 > MMM ~150 ≫ HML ~10
+  mΩ·cm²**(digitize TREND; bulk과 계면이 모델별 반대방향 — HML bottom carbon-rich라 계면 최저지만 표면
+  바인더가 전해질 차단); rate(0.2–6C) 고율 **MMM>Ref>HML≫LMH(붕괴)**; 250cyc **MMM~130 > Ref~120 >
+  HML~70 ≫ LMH~10 mAh/g**; SAICAS·EDX **F양↔접착강도 강한 상관**(HML 감소·LMH 증가·MMM 평탄);
+  porosity(SI Fig S6) 34–37 vol%(Ref 39, 표면↑, 깊이 std 3.1). 입경 10 µm, areal capacity 3.5 mAh/cm²,
+  밀도 3.0 g/cm³, 160 °C 건조(온도 고정해 분포만 변수). (CBD vol%: H 6.5/63.5/30, M 31.8/38.2/30,
+  L 51.5/18.5/30 = PVDF/carbon/pore; carbon 고유 σ 18 S/m.)
+- **우리 모델 매핑 (★ Phase 5 binder-z + E3 `--coh` 매핑 — 수치 앵커는 Bazzoun/#271):**
+  - **(a) ★ Phase 5 binder-z(=#286 porosity-z의 짝):** z방향 분포의 **두 번째 자유도(바인더)**. → 우리
+    z-band 합성(K=8)을 **band별 (i) porosity[#286] + (ii) carbon:binder 비율[이 논문]** 둘 다 받도록 확장;
+    출력에 **바인더(z) 프로파일 + 층별 σ_e/계면저항 + 전류 localization 맵** 추가. ⚠ **최적방향 소재의존**
+    (#286 흑연=구배 최적, 이 논문 NCM=균일 최적) → Phase 5는 **균일·구배 둘 다 합성·비교**(ASSB 최적
+    binder-z는 우리 DEM+MPM으로 별도; 흑연/NCM 흉내 금지).
+  - **(b) ★ 바인더분포→접착/전자전도 = E3 `--coh`(audit #5) 타깃, #271/#264와 3-입력원 수렴:** "국소과잉→
+    전자저항↑+전해질차단 / 부재→박리" + SAICAS "접착강도↔바인더양" → MPM `--coh`를 **(i) cohesion 값 +
+    (ii) 공간분포 패널티(과잉=차단·저항↑ / 부재=무결성↓)**로 확장 근거. #271(PTFE coverage→void↓)·#264
+    (cross-link modulus→무결성)와 합쳐 **"바인더 기계물성·분포가 무결성·수송 지배"** 수렴(이 논문=분포→전자/접착 정량 담당).
+  - **(c) positioning(GeoDict 전자-only, top-down):** GeoDict 논문 목록(#266/#271/#281/#284/#286)에 2024
+    선행작 1개 추가 → `positioning_vs_geodict.md` 서사 강화(구조 IN=설계/측정 vs 우리 DEM 구조예측, Kim
+    2024 ACS EL top-down/bottom-up taxonomy). 그들 전류 localization 맵(Fig 6d–f) = 우리 voxel/viz_mpm 이식 후보.
+  - **(d) porosity-binder coupling(SI Fig S6):** 바인더 분포가 porosity 분포에도 영향 → binder-z·porosity-z를
+    **coupled하게** 합성 고려(MPM 압축 시 binder cohesion이 local densification에 영향).
+  - **우리 우위:** 그들은 **GeoDict 구조-IN(설계) + 전자전도 시뮬(출력단) + 실험**; 우리 DEM+MPM은 **압력·
+    조성에서 binder-z 미세구조 *예측*(입력단) + σ triad(ionic/e/thermal) + 소성 morphology + fracture**.
+    frame[5] 분업 재확인(그들엔 입자스케일 압축예측·이온/열 σ·소성 morphology 없음 = 전자전도 digital-twin만).
+- ⚠ **전이 경계:** NCM622/액체/PVDF → 셀 절대값·계면저항(전해질-매개)·CBD 연속체 σ_e 전이불가; digital-twin
+  = 전자전도-only(이온/전기화학 풀모델 없음). **z-분포 설계개념 + 바인더→접착/전자전도 매핑 *방향/구조* +
+  positioning만 전이.** ⚠ **#286(흑연/porosity-z/구배최적)과 짝이되 다른 축·다른 최적방향 — 혼동 금지.**
+
 ### #284 — Optimized Carbon Coating on SiOx, Balanced Ion/Electron Transport + Uniform Dispersion  ★★  ✅ 풀 디제스트 완료
 Journal of Power Sources **689** (2026) 240698 (IF 8.4), DOI 10.1016/j.jpowsour.2026.240698.  Jihwan Oh†,
 Seungyeop Choi† … Yong Min Lee\* (Yonsei DTBL + ActRO Corp.).  접수 2026-04-04 / 게재확정 2026-06-10.
@@ -748,10 +835,12 @@ positioning**(top-down/bottom-up · multi-scale · 미세구조 descriptor 어�
 | 1.2 | #(2025 Small 2410485) | **★ 가상 캘린더링 = 우리 압축 그 자체** (FIB-SEM 재구성→ElastoDict 압축→밀도 sweep 2.4–4.0 검증; porosity 49→10%, σ_e +130%, 접착 +199%, crack VMS>150MPa 3.4–3.6 지수급증, 최적 3.4–3.6; bimodal 14:3µm 8:2) | **★ 우리 DEM+MPM 압축의 직접 방법론 형제 — 출력 porosity/τ/접촉면적/crack/응력 1:1; reconstruct-then-compress(top-down 출발) vs 우리 predict-from-powder(bottom-up 출발) distinction; LIGGGHTS/GeoDict/MPSP-DEM = 우리 도구군; 과압축 caveat ↔ 우리 over-compression** | ✅ 풀 디제스트 (`lit_lim2025_virtual_calendering_framework.md`); ⚠Li-ion 액체 NCM622 → METHOD만 전이(수치앵커 아님), positioning_vs_geodict 정밀화 |
 | 1.5 | #17 (EES 2025, DTBL+Juner Zhu) | **★ Phase-4 sibling + 바인더 점소성** (FIB-SEM 재구성→structure-resolved electrochemo-mechanical→셀전압 >98%; 입자↔셀 괴리 3메커니즘 [반응면적↓ ASA 61.76%/확산길이↑/전해질↓ 94%@4C]; **PVDF 바인더 Perzyna+Ludwick 점소성** E 1.05 GPa·σ_y 19.36 MPa·5cyc yield 24→42.10 MPa; CBM 전류 ≫ 활물질 1000%+) | **★★★ Phase-4 결합 = 우리 미세구조 metric→PyBaMM 셀전압(3메커니즘=coverage/τ/porosity 1:1, #281 NEXT structure-resolved); ★ 바인더 점소성 정식 = 우리 MPM rate-indep J2 없는 물리 → E3 `--coh` 점성화 + #285 spring-back gap 직접 구현 레시피("무엇을"#285 + "어떻게"이 논문)** | ✅ 풀 디제스트 (`lit_song2025_electrochemo_mechanical_microelectrode_ees.md`); ⚠NMC+액체 LIB → METHODOLOGY·3메커니즘·점소성 정식만 전이(수치앵커 ✗), stage4+audit⚠#10/E3 cross-ref |
 | 2 | #263 | 2D param → stochastic 3D → transport 예측 | **Phase 4-5 합성 published blueprint** | 방법 비교/이식 |
+| 2.3 | (2023 Battery Energy 20220061) | **★ DTBL 디지털트윈 계보의 가장 이른(2023) 논문** — SIC-SPE vs LPSCl 복합양극 GeoDict 분석; LPSCl 전극 **SE-vol 26.1 vol%·τ 1.31(geodesic)·AM coverage 38.8%·σ_eff 0.0428 mS/cm**(우리 출력과 같은 축, same-system) | **★ LPSCl 구조지표 4종 = 우리 출력의 이른 reference**(coverage 38.8% ≈ #271 35–36% → 2개 독립 DT 수렴; σ_eff 0.04 in-range·⚠intrinsic×구조 출력이라 위상 주의·절대 앵커 아님) + **GeoDict reconstruct positioning의 2023 원형**(#18/#271/#266 직계 선조) | ✅ 풀 디제스트 (`lit_lee2023_sicspe_digitaltwin_assb.md`); ⚠headline SIC-SPE 고분자=비-우리-소재계(셀 절대값 비전이) → LPSCl 구조지표+positioning만 전이 |
 | 2.5 | #281 | 미세구조→GeoDict effective→1D 전기화학(COMSOL)→방전; 구조변수 decouple | **★ Phase 4 결합 blueprint(=우리 voxel FV→PyBaMM) + DiffuDict(유효 D_eff/τ) 이식 + predictor decouple** | ✅ 풀 디제스트 (`lit_kim2026_...md`); ⚠Li-O₂ 외래→METHODOLOGY만, 수치앵커 아님 |
 | 3 | #271 | ★ LPSCl+NCM ASSB σ_ionic(Pwd 0.087/PTFE 0.064/NBR 0.042) + PTFE void↓(22.3 vs 28.7 vol%) + GeoDict reconstruct | **★ σ_ionic 절대 검증 앵커(Bazzoun에 이은 2번째 같은-소재계, audit #1 다점화) + PTFE 양의 역학효과(audit #5) + positioning 재확인** | ✅ 풀 디제스트 (`lit_hong2026_sulfide_cathode_binder_digitaltwin.md`); ★ 우리 소재계 → 수치 전이됨 |
 | 4 | #285 | 단결정=견고→압축이 CBD로; CBD 점탄성→시간의존 spring-back; HT 억제 | **(✅)rigid-AM 검증 + (❗)점탄성 spring-back 미구현 한계** | ✅ 풀 디제스트 (`lit_hong2026_...md`); ⚠단결정NCMA/액체→역학만 전이 |
 | 5 | #286 | porosity 구배(z) + 토모 정량(τ/PNM) + 전기화학시뮬 | **Phase 5 z-layer + 토모 방법 이식 + Phase 4 workflow** | ✅ 풀 디제스트 (`lit_yoo2026_...md`); ⚠흑연/액체→방법·개념만, 수치앵커 아님 |
+| 5.3 | (2024 CEJ) Bak | **★ binder-z 분포 3층(HML/MMM/LMH) + SAICAS/EDX + GeoDict 전자전도; 균일(MMM) 최적, 집전체 바인더과잉(LMH) 최악**(CBD σ_e H 0/M 115/L 375 S/m; 계면저항 LMH ~1600≫HML ~10; 250cyc MMM~130≫LMH~10) | **★ Phase 5 binder-z 축(=#286 porosity-z의 짝, 단 균일최적=구배최적과 반대); E3 `--coh` 분포→접착/전자전도 매핑(#271/#264 수렴); GeoDict positioning(전자-only, top-down)** | ✅ 풀 디제스트 (`lit_bak2024_binder_distribution_multilayer.md`); ⚠NCM622/액체→설계개념·매핑만, 수치앵커 아님 |
 | 5.7 | #276 | **DPE 4단계 taxonomy + 미세구조 5특징 + 양방향 material↔process interplay (리뷰)** | **★ 우리 DEM+MPM 전체의 FRAMEWORK/POSITIONING — 5특징↔우리출력 1:1; calendering=압축; descriptive↔우리 predictive 엔진** | ✅ 풀 디제스트 (`lit_nam2026_...md`); ⚠일반 Li-ion DPE 리뷰→framework/positioning 앵커(수치 앵커 아님) |
 | 5.75 | (보충) **Kim 2024 ACS Energy Lett. 9, 5225-5239 (= Ref 127, PEER-REVIEWED)** | **★ top-down/bottom-up 분류 + atom→pack multi-scale + Fig 1b descriptor + DTP/DTI — 동료심사 원본(영문 §명·정의 문구·118 ref)** | **★★★ positioning의 PEER-REVIEWED 인용원 — 논문엔 매거진 대신 이걸 인용(우리=bottom-up/formation process-physics, GeoDict 논문=top-down/reconstruction); E softening = "intrinsic properties cannot be fully realized at electrode scale" 영문 근거** | ✅ 풀 디제스트 (`lit_kim2024_digital_twin_acsenergyletters.md`); ⚠동료심사 framework REVIEW→번호 없음, positioning 앵커(수치 앵커 아님) |
 | 5.8 | (보충) E.Chem 2024 digital-twin review (=Ref 127 ACS EL 2024 한국어판) | **★ top-down(reconstruction) vs bottom-up(formation) 분류 + atom→pack multi-scale + Fig 1b descriptor + DTP/DTI** | **★★★ positioning NAMING — 우리=bottom-up/formation(process-physics), GeoDict 논문=top-down/reconstruction; Fig 1b descriptor↔우리출력 1:1; positioning_vs_geodict.md 정당화** | ✅ 풀 디제스트 (`lit_choi2024_digital_twin_review_echem.md`); ⚠peer-review 아닌 총설(=위 ACS EL의 한국어판)→번호 없음, framework/positioning 앵커(수치 앵커 아님) |
