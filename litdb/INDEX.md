@@ -7,11 +7,18 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 
 ## ★★★ 필독 / MUST-READ (랩 자체 논문 — 모델 trend 기준) ★★★
 
-> **우리 랩(Hanyang, Jong-Won Lee) 논문 — 모델이 따라가야 할 실험 trend의 기준점.** 우리 DEM+MPM은 이 논문들이
-> 정하는 실험 방향에 정렬해야 한다. **두 논문은 같은 NCA/NCM–LPSCl 계면의 두 렌즈 (Junhee Kang 공통저자):**
-> **Kang & Shin 2025 = *역학/균열*** (bimodal 패킹 대가, FEM cohesive-zone) · **Kim·Kang·Park·Lee 2025 = *임피던스/
-> 반응속도*** (modified TLM 으로 R_ion/R_ct/C_dl/확산 분해). 같은 황화물-계면 산화분해가 한쪽엔 *균열*(Kang),
-> 다른쪽엔 *R_ct↑*(Kim) 으로 나타남 → 우리 DEM+MPM 은 그 *구조→수송 σ* 를 채운다(structure-σ / mechanics / kinetics 분업).
+> **우리 랩(Hanyang, Jong-Won Lee) 논문 7편 — 모델이 따라가야 할 실험 trend의 기준점.** 우리 DEM+MPM은 이들이
+> 정하는 실험 방향에 정렬해야 한다.
+>
+> ★ **랩 DEGRADATION-MAP (Yun2023 capstone이 통합 — 2축 × 균열 3-driver):**
+> - **계면반응 축 (R_int↑, 황화물 산화분해):** Yun2023(LPSCl=계면반응) · Kim2025(R_ct ~20×, 정밀 TLM) · Cho2024(도전재 매개)
+> - **이온수송/기계 축 (R_ion↑·균열):** Yun2023(LIC 할라이드=압력하 SE균열) · Kang2025·Kang2023(NCA 입계균열)
+> - **균열 3-driver:** **크기**(Kang2025, 큰 10µm 입자) × **음극strain**(Kang2023, Li-In ΔP) × **결정도**(Jung2023, PC>SC)
+> - **입자 기반:** Jung2023 단결정 SC-NCM (CAM균열 배제 → SE 열화 분리)
+> 같은 황화물-계면 산화분해가 *균열*(Kang)·*R_ct↑*(Kim/Cho)·*SE균열*(Yun-LIC)로 발현.  공통저자 사슬(Junhee Kang·
+> Siwon Kim·Hong Rim Shin)이 hub.  ⇒ **우리 DEM+MPM = 그 *구조→수송 σ* 절반** (structure-σ=우리 / mechanics=Kang·Jung /
+> kinetics=Kim·Cho / 종합=Yun).  ★ **우리 미보유(frame[5] 공백): SE 취성균열·R_ct/C_dl/확산·사이클 chemo-mech**
+> (backlog D6 + A1; `papers/yun2023_*` 종합).
 
 | 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
 |---|---|---|---|---|---|---|
