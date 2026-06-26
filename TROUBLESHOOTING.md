@@ -67,6 +67,10 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
   - ⚠ 함의: Thinky rpm↑ = 원심력↑ = 볼이 *더* 눌림 → 충격이 오히려 안 늘 수도 (Thinky로는 한계인 물리적 이유).
   → **도우 완성도 = gradient = f(전단강도, 단결정%, −Poly%).** ball-mill이 Thinky보다 강도↑로 **Poly 허용치를 높이나, 70% Poly는 ball-mill 충격으로도 full-dough 문턱 미달.**
   → "강도 문턱" 모델이 ball-mill(부분)>Thinky(0)·시간무효·단결정OK·Poly↑록 악화 를 전부 설명.
+- ✅ **★★★ ball-mill 부분 도우 → 2nd Thinky 거치면 다시 파우더** (사용자 확인) = **Thinky가 도우를 *부순다*.**
+  Thinky = (a) flow shear 섬유화(build, 하드 입자만) + (b) 고-g 분산(tear, 덩어리 풀어헤침) **동시 작용.**
+  단결정: build>tear→도우 / **Poly: build≈0(쿠션)·tear 지배 → ball-mill 약한 도우 파괴 → 파우더.** (Poly 도우는 망 약해 resilience 0)
+  ⇒ **★ actionable: Poly-rich엔 2nd Thinky 생략** (도우 파괴 방지). = 회의노트 "2nd Thinky 없이 ball-mill 2h" fallback의 *이유*.
 - ✅ **온도가 섬유화 핵심 손잡이** — 85°C 롤링이 PTFE 모듈러스↓로 섬유화 완성
   (Lee2025: 30→120°C서 균일·바인더 모듈러스 −67%; Nam2026: 섬유화 = shear·온도·시간).
 - ✅ **★ 전 실험 85°C 핫롤링 공통** (사용자 확인) — 단/3:7·7:3 **모두 85°C 핫롤**. 그런데 **결과가 다름:**
@@ -134,9 +138,10 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
 - **단결정:** 2nd Thinky(flow shear) = 도우 단계.
 - **Poly-rich:** Thinky flow shear 부족 → **ball-mill IMPACT가 섬유화 엔진**(2h 부분 도우). 2nd Thinky는 Poly엔 거의 무력.
 **레버 (Poly-rich 도우, 우선순위):**
-- **★ ball-mill(impact) = Poly 섬유화의 맞는 도구** (Thinky 아님). 시간↑ 누적(문턱 위). 단 70%는 부분.
+- **★ 0순위(공짜): Poly-rich엔 2nd Thinky 생략** — Thinky가 ball-mill 도우를 *tear*하므로. ball-mill → 바로 롤링.
+- **★ ball-mill(impact) = Poly 섬유화의 맞는 도구** (Thinky 아님). 시간↑ 누적(문턱 위, 2h). 단 70%는 부분.
 - **★ 온도↑(문턱↓)** = ball-mill **+ 외부가열**로 7:3 full dough 시도 (가장 유망한 단일층).
-- Thinky rpm↑ = **Poly엔 약함**(flow shear + rpm↑이 미디어 더 pinned → impact 안 늚). 단결정엔 유효.
+- Thinky rpm↑ = **Poly엔 약함/해로움**(flow shear 부족 + tear + rpm↑이 미디어 더 pinned). 단결정엔만 유효.
 - 그래도 부분이면 → **다층/조성**(도우층 Poly% 낮춤).
 
 ### ★ Poly에서 2nd Thinky rpm↑의 효과 분해
@@ -237,3 +242,6 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
   정정들: **둘 다 지르코니아 有**(차이=거동, impact vs 원심pinned) · **단계역할 CAM경도 의존**(Poly엔 ball-mill이 섬유화 엔진) ·
   **peak전단≠rpm**(Thinky 2000>ball 200이어도 critical-speed 위라 미디어 pinned→impact 죽음) · **ball-mill도 70% Poly엔 부분 도우(gradient)**.
   레버 재정리(Poly-rich): ① ball-mill(impact) ② +외부가열(문턱↓) ③ 그래도 부분이면 다층/조성. Thinky rpm은 Poly엔 약함.
+- **2026-06-26 (갱신 11)** — ★★★ 사용자: **ball-mill 부분 도우가 2nd Thinky서 다시 파우더** → **Thinky가 도우를 부순다(tear).**
+  build(섬유화)vs tear(분산) 모델: 단결정 build>tear→도우 / Poly build≈0·tear지배→파괴. **actionable: Poly-rich엔 2nd Thinky 생략(0순위·공짜)** =
+  회의노트 "2nd Thinky 없이 ball-mill 2h" fallback의 이유 규명. 경로: ball-mill(±가열)→바로 롤링.
