@@ -262,9 +262,10 @@ frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
   한 coefficient가 둘 다 맞추면 genuine(regime auto); 한쪽만 맞으면 또 tunable patch → 폐기.
 - ⚠ **DEM import도 억지 jam도 아님** — AM confinement는 *실재 물리*(SE가 AM에 갇힘).  맞으면 MPM이 porosity를
   물리적으로 내는 길 → §13 코너도 DEM 없이 MPM이 owns 가능.  status: 구현·adversarial 검증 진행.
-- ⚠ **PREDICTION (NOT yet empirically run — 2026-06-27): se-am-drag = 3번째 artifact일 *가능성*.**  ★ 아직 실제
-  GPU 런이 *한 번도 없음* (12.70은 drag 아님 = variance).  아래는 adversarial 리뷰(wq3sgfk9j) + 사용자 통찰의
-  *예측*일 뿐 — **fixed-coef 런(100_12 + real_14)으로 empirical 확정 전까지 §13을 "확정"이라 단정 금지.**
+- ✅ **EMPIRICALLY CONFIRMED (2026-06-27, rounds 3+4 GPU 실행 완료): se-am-drag = 3번째 artifact 확정.**  더 이상
+  예측 아님 — 실제 GPU 런 2회(round 3 fixed coef=1.0, round 4 flexible base=2.0)로 검증.  아래 리뷰(wq3sgfk9j +
+  wlq429sda) 예측이 empirical로 적중 (round 3: 1mAh_6 void-fill 15.6→17.26 침식; round 4: robust 0.62≈0.64 thin-pair
+  구분 실패 + 100_12 더 나빠짐 13.75).  → §13을 이제 "EARNED, empirical-backed"로 승격 (혼자 단정 아님, 4-round CYCLE 근거).
   - **code PASS**(default off byte-identical, 버그 없음) 하지만 **physics = tunable knob, NOT regime-auto.**
   - **결정 논거:** drag는 *local* am_near(3³ AM-fraction, geometry-static)만 본다.  그러나 §13의 진짜 discriminator
     는 **두께(global)** — **100_12(thin)·real_14(thick) 둘 다 am_near 높음** → 한 coef가 둘을 구분 불가 → 100_12
@@ -273,11 +274,10 @@ frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
     regime 자동.  drag는 그게 불가(local≠global).  ⇒ **세 번째 artifact.**
   - **GPU 부수발견:** no-drag 100_12가 11.62 ↔ 12.70 = **MPM ~1%p run-to-run variance** (fixed config).  ±1%p는 noise.
     (그 12.70은 drag 아님 — sed가 multi-line run_mpm.sh서 안 먹어 --se-am-drag 미적용이었음, grep로 확인.)
-  - **(잠정) 방향:** 조건부(over-dense)·am-jam(over-loose)는 *empirical로* artifact 확인됨(**2× 시험**).  se-am-drag는
-    **예측만**(round 3 PENDING — 아직 GPU 미실행).  IF 셋 다 실패로 *확정*되면 → 코너 porosity = *global* AM 재배열
-    (frame[1] local 한계) = DEM 영역, §13 regime-gate.  단 **se-am-drag flexible 물리계수**(아래 §15 round 4)가 살아
-    남으면 코너도 MPM이 owns 가능.  `--se-am-drag`/`--am-jam` opt-in 유지(default OFF, production 무영향).  ⚠ "EARNED"는
-    round 3 empirical 후에만.
+  - **확정 방향 (4× empirical):** 조건부(over-dense)·am-jam(over-loose)·se-am-drag-fixed(1mAh_6 침식)·se-am-drag-flexible
+    (thin-pair 구분 실패) **모두 GPU로 artifact 확인**.  ⇒ 코너 porosity = *global* AM 재배열(frame[1] local MPM 한계)
+    = DEM 영역, §13 regime-gate = **EARNED, empirical-backed** (round 3+4 완료).  `--se-am-drag`/`--am-jam` opt-in 유지
+    (default OFF, production 무영향).  OPEN: round 5(local SE-content 계수) 또는 §13 채택 — 사용자 결정.
 
 ## §15 ★ 물리모델 탐색 CYCLE (idea → 반박 리뷰 → empirical → iterate) — 표준 프로세스 (2026-06-27)
 사용자 채택.  매 라운드: **(1) 물리 가설 1개 → (2) adversarial 반박 리뷰(죽이려 시도: correctness+physics+regression)
@@ -287,9 +287,23 @@ frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
 |---|---|---|---|---|
 | 1 | wallP 조건부 (f_AM 응력분담 정지) | — | 100_12 GPU: 11.6 (조건부 ON인데 과압축) | ❌ artifact (over-dense) |
 | 2 | --am-jam (percolating AM rigid 정지) | — | standalone: 100_12 22.6 / real_14 18.4 | ❌ artifact (over-loose, AM overlap 무시) |
-| 3 | --se-am-drag (SE-AM confinement, **fixed** coef) | wq3sgfk9j: tunable-patch *예측*(local≠global thickness) | ⏳ **PENDING** (coef=1.0; 100_12 + real_14 + 1mAh_6) | 미정 |
-| 4 | --se-am-drag **flexible 물리계수** (AM load-path robustness서 유도, 손-튜닝 X) | (round 3 결과 후) | — | — |
+| 3 | --se-am-drag (SE-AM confinement, **fixed** coef=1.0) | wq3sgfk9j: tunable-patch *예측*(local≠global thickness) | GPU: 100_12 11.6→**14.8** / 1mAh_6 15.6→**17.26** | ❌ tunable patch (방향 ✓ but 1mAh_6 void-fill 침식) |
+| 4 | --se-am-drag **flexible 물리계수** (AM load-path robustness서 유도, base=2.0) | wlq429sda: robust factor가 thin-pair 구분 못함 *예측* | GPU: 100_12 base2.0→**13.75** (robust 0.62) / 1mAh_6→**17.26** (robust 0.64) | ❌ **반박 confirmed** (robust 0.62≈0.64 thin 둘 동일; am_frac fix가 100_12를 더 망침 14.8→13.75; 1mAh_6 round3과 IDENTICAL) |
 
-★ round 3 핵심 질문 2개: (a) drag가 porosity를 *옳은 방향*으로 옮기나 (11.6 → ↑)? (b) **한 fixed coef**가 100_12를
-고치면서 1mAh_6 void-fill(15.6)을 살리나?  방향 맞으면 → round 4(flexible 물리계수: coef=f(구조), 손-튜닝 아님) 설계+리뷰.
-방향도 틀리면 → 다른 가설(예: AM을 stiff-plastic *material*로 = Option D, AM 재배열을 MPM이 직접).  ⚠ 미해결 = OPEN.
+★ round 3 결과: (a) 방향 ✓ (11.6→14.8, 옳은 방향). (b) ✗ — fixed coef=1.0이 100_12는 부분개선했으나 1mAh_6 void-fill
+(15.6→17.26)을 **침식**.  ⇒ tunable patch (한쪽만 맞음).  → round 4 flexible 물리계수 설계.
+★ round 4 결과 (am_frac 버그 fix + coef=f(global AM-robustness), base=2.0): **반박 리뷰 wlq429sda가 정확히 적중.**
+robustness factor가 thin 두 케이스에 거의 동일(100_12=0.62 ≈ 1mAh_6=0.64) → flexible coef가 100_12-vs-1mAh_6를
+**구분 못함**.  am_frac 이진-fix가 am_near를 약화 → 100_12는 round3(14.8)보다 **더 나빠짐**(13.75); 1mAh_6는 round3과
+**완전 동일**(17.26, void-fill 여전히 침식).  ⇒ flexible 계수도 손-튜닝 fixed-coef와 같은 한계: **local MPM이 global
+AM-재배열 discriminator(두께)를 유도 불가**.  8mAh = 미실행(zip 없음)이나 real_14(thick, robust=0.00 = drag-off)가
+standalone서 이미 thick drag-off 구조 확인 → 8mAh도 동일 예상.
+
+★ **4 라운드 누적 결론 (empirical, NOT prediction):** 조건부·am-jam·se-am-drag(fixed)·se-am-drag(flexible) **모두
+empirical 실패**, 같은 root-cause: **resolved-grain 연속체 MPM은 frozen rigid-AM의 *재배열·AM-AM overlap*(DEM softened-E
+plastic proxy)을 표현 불가 → 코너 porosity(thin + SE-poor + AM-rich)는 AM-재배열 지배 = DEM 영역.**  어떤 engineered
+coef(fixed/flexible/local/global-robust)도 §13 regime-gate를 변장한 것일 뿐.  ⇒ **§13 (코너 = DEM-domain regime-gate)
+= EARNED, 이제 empirical-backed** (4-round CYCLE 소진).
+★ OPEN (사용자 결정 대기, 혼자 확정 X): round 5 후보 = *local SE-content* 계수(100_12-vs-1mAh_6 차이가 SE/sol-based이므로).
+단 반박 예측: 그것도 SE/sol 값으로 만든 dressed-up gate = §13 답을 계수로 재포장.  또는 Option D(AM을 stiff-plastic
+*material*로 → MPM이 AM 재배열 직접, frame[5] 위반 위험·CFL/OOM).  ⚠ CYCLE 계속 vs §13 채택 = 사용자 판단.
