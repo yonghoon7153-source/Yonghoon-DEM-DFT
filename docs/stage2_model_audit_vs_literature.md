@@ -199,6 +199,15 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   계열이 수백MPa서 ~10–17% por)지 **동일소재·동일압력 byte-match 아님**.  σ 0.31(cold)/0.34(hot) mS/cm = LPSCl의 ~1/10
   → **knee 모양만 전이, 절대 X**.  SEM 입자 coalescence = MPM morphology(소성 shape change) 실험 endorsement(frame[5]).
   paper-build TODO: main.tex ~L823 "87%@300 matches Sakuda" → ">90%@>350 stated; ~87%@~300 digitized trend; glass≠LPSCl"로 softening.
+- **⚠ κ 보정 "Wang 2022" = PHANTOM 인용 (5번째 provenance 문제, 2026-06-26)**: 우리 refs.bib
+  `@Wang2022 "Thermal conductivity of single- and polycrystalline NCM cathodes", ESM 2022`는 **실제 논문으로
+  resolve 안 되는 stub**(저자 "...and others", vol/pages/DOI 없음; 코드엔 "Wang 2021"로도 적혀 연도 모호).
+  웹검색(2026-06-26)으로 NCM-특정 "Wang thermal conductivity" 논문 **확인 불가** — 검색에 나오는 C.Wang ESM 2022는
+  중성자회절/Li-이동(열전도 아님).  ⇒ **κ phonon-GB 보정의 물리는 textbook(다결정 GB 산란→κ↓, 확립)**이나
+  **NCM-특정 단일 문헌앵커는 phantom**.  처방: κ 보정을 **일반 GB-phonon-scattering 원리로 재귀속**(Nano Lett.
+  2018 GB 산란 등 real refs), "Wang 2022 NCM" 인용 삭제/교체.  κ는 최약 채널(LOOCV 0.90)이라 단일앵커보다 일반원리
+  + corpus-fit이 적절.  paper-build TODO: refs.bib @Wang2022 교체, main.tex κ 인용 정정.  (Wang 논문 digest 불요 —
+  인용대로의 논문 부재.)
 - **★ #22 Park 2020 (FOUNDATIONAL ROOT) ✅ frame[4] 4건** (`docs/lit_park2020_digitaltwin_assb_foundational.md`):
   계보 시조(2020) — 우리 정확한 소재계(LiNbO₃-NCM711+LPSCl+NBR) + 조성축(NCM 60–90wt%).  ① 최적창 NCM
   60–80wt%(dead LPSCl ≤0.5%→90wt%서 6–20%) ↔ 우리 dead-AM 회피대; ② **NCM 90wt% σ_eff,ion=계산불가
