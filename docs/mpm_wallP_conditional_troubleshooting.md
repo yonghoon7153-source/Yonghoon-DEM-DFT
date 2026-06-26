@@ -345,3 +345,39 @@ gate가 SE-content-aware(f_AM/margin) = round 6 geometric gate가 못 보는 그
 "완전 종결"은 아님.
 ★ OPEN (사용자 결정, 혼자 확정 X): §13 채택 + wallP-conditional(SE-content-aware) validation 마무리 vs round 6 GPU 재확인
 (예측 exact: real_14 ≥18.4, 100_12↔1mAh_6 분리 불가 — 기존 결과 재현일 뿐).
+
+## §16 ★ 코너 = 물리적으로 만들 수 없는 셀 (REFRAME, 2026-06-27) — 사용자 통찰, 데이터로 확정
+계기 (사용자): "round 7 patch 말고, 그 1mAh 코너가 *물리적으로 안 만들어지는 셀*인지 확인해보자."  → MPM을 고치는 lane이
+아니라 **코너 입력 자체가 manufacturable functional cell인지** 묻는 다른 lane.  ★ 핵심 연결: round 6의 2D discriminator
+(두께 × SE-content)가 **바로 물리적 realizability의 두 축** — 두께=near-monolayer 한계, SE-content=ionic percolation.
+- **방법:** reliability 117케이스 중 σ_ionic+thickness 매칭되는 24케이스(σ_ionic 있는 *real* 케이스; 합성 a-sweep는
+  porosity-only)에 대해 **n_layers = thickness / D_AM_max** + **σ_ionic**(SE ionic percolation 직접 측정값) 계산.
+  data: `docs/data/mpm_corner_realizability.csv`.
+- **결과 (깨끗한 분리, cross-tab):**
+
+  | group | n | SE-starved (σ_ion<0.05) | near-monolayer (n_layers<2.5) | **BOTH (marginal)** |
+  |---|---|---|---|---|
+  | **CORNER (MPM 과압축, unreliable)** | 8 | **8/8** | **8/8** | **8/8** |
+  | reliable (cross-validated) | 16 | 3/16 (단 thick) | 6/16 (단 SE충분) | **0/16** |
+
+  - CORNER σ_ionic 0.0009–0.036 mS/cm; reliable 0.030–0.231.  **thin AND SE-starved = 오직 unreliable 코너에만**
+    (reliable 16개 중 *둘 다*인 케이스 0개).  reliable의 low-σ는 전부 THICK(particulate_12 n_layers 16 = thickness escape);
+    reliable의 thin은 전부 SE-충분(100_9 σ 0.105, 1mAh_6 σ 0.09–0.12).  **교집합(thin∩starved)만 실패 = round 6 2D
+    discriminator와 정확히 일치.**
+  - 대표: **100_15** = mono-large(AM_P 12µm), thickness 19µm → **n_layers 1.6**, σ_ionic **0.0009**(거의 non-percolating)
+    = 이중 degenerate.  100_12/13/14 = n_layers 1.3, σ_ionic 0.025–0.033 (sub-functional).
+- **literature anchor (Bazzoun 2026, 같은 LPSCl+NMC):** functional cell은 SE/sol **38–53 vol%** (σ_ionic 0.065–0.137);
+  80wt% AM(가장 AM-rich functional)에서 SE/sol 38vol%, σ 0.065가 **하한**.  우리 코너 = am_wt 87–92, SE/sol **16–32 vol%**,
+  σ 0.0009–0.036 = Bazzoun functional 하한 **아래** = SE-starved.  실제 cathode는 또한 multilayer(50–150µm, 수십 층);
+  코너 15–20µm = 1–2 입자층 = near-monolayer.
+- **VERDICT (사용자 가설 확정):** MPM-unreliable 코너 = **SE-starved(σ_ion<functional 하한) ∩ near-monolayer(n_layers<2)**
+  = **manufacturable functional ASSB cathode가 아님** (SE가 ionic percolate 안 함 + 입자 1–2층).  → §13 REFRAME:
+  **MPM은 물리적으로 제조가능한/기능하는 design envelope 전체에서 신뢰됨; unreliable 코너는 그 envelope 밖**(SE-기아
+  near-monolayer = 학술적 degenerate 입력).  MPM의 "실패"는 real cell의 모델 한계가 아니라 **realizable space 밖에서 도는 것.**
+- **정직한 caveat:** (1) 24/117 매칭(σ_ionic 보유 real 케이스; 합성 a-sweep porosity-only는 σ-test 불가하나 AM-rich/SE-poor
+  signature 공유).  (2) strict "불가능"은 아님 — 100_12/13/14는 σ~0.03(기능 미달이나 nonzero)=marginal, 100_15(σ0.0009)만
+  사실상 non-functional.  단 8/8 전부 functional 하한 아래 + near-monolayer = **practical envelope 밖**.  (3) binding은
+  *교집합*(thin AND starved): thin이지만 SE충분(100_9)은 OK, thick이지만 starved(particulate_12)도 OK — 교집합만 실패.
+- ⇒ 이게 §13의 **6번째 backing**이자 가장 강력 — 코너를 "MPM이 못 푸는 real cell"이 아니라 "**안 만들어지는 degenerate
+  입력**"으로 재정의.  production design space(functional cells)는 100% MPM-신뢰.  ⚠ 여전히 사용자 결정: 이 REFRAME을
+  최종 closure로 채택할지, 합성 a-sweep 케이스까지 σ_ionic 돌려 24→전체로 확장할지.
