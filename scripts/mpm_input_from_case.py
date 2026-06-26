@@ -133,66 +133,17 @@ def main():
 
     poro = fm.get('porosity')
     tgt = round(float(poro) / 100.0, 4) if poro is not None else 0.16
-    # ★ ROBUST wallP conditional: f_AM (AM-AM axial load share, Love-Weber) + DEM porosity floor.
-    # The AM skeleton bears f_AM·target ONLY below the floor → dense/SE-rich beds (reach target above
-    # the floor) UNCHANGED; SE-poor/mono-large (over-compress past the floor) stopped near it.  scipy-
-    # optional → f_AM=0 (legacy = off).  See scripts/dem_am_load_fraction.py + mpm3d_compaction --floor-porosity.
-    # f_AM source PRIORITY: (1) REAL per-atom AM-phase σ_zz from the raw atom dump (hooke/hysteresis,
-    # header-name robust = the AM-phase load the frozen AM bears → exactly what the skeleton-spring needs);
-    # (2) FALLBACK Hertz scaffold geometry (over-estimates AM-AM) if no raw dump.  Compute BOTH for
-    # transparency — Hertz over-estimates (docs/mpm_wallP_conditional_troubleshooting.md §12: real_14
-    # Hertz 0.847 vs real per-atom 0.809).
-    f_am = 0.0; f_am_src = 'off (no source)'; _f_real = None; _f_hertz = None
-    _adump = _find_atom_dump(a.results)
-    if _adump:
-        try:
-            from dem_am_load_fraction import am_load_fraction_liggghts as _amll
-            _f_real = _amll(_adump, se_types=sorted(se_types)).get('f_AM_peratom_AMphase')
-        except Exception as _e:
-            print(f'  [f_AM] atom-dump parse failed ({_e}) → Hertz scaffold fallback')
-    try:
-        import numpy as _np
-        from dem_am_load_fraction import am_load_fraction as _amlf
-        _Xam = _np.array([[float(r[1]), float(r[2]), float(r[3])] for r in am_rows], dtype=float)
-        _Ram = _np.array([float(r[4]) for r in am_rows], dtype=float)
-        _Xse = _np.array([[float(r[1]), float(r[2]), float(r[3])] for r in se_rows], dtype=float)
-        _Rse = _np.array([float(r[4]) for r in se_rows], dtype=float)
-        if len(_Xam) and len(_Xse):
-            _X = _np.vstack([_Xam, _Xse]); _R = _np.concatenate([_Ram, _Rse])
-            _isSE = _np.concatenate([_np.zeros(len(_Xam), bool), _np.ones(len(_Xse), bool)])
-            _f_hertz = float(_amlf(_np.zeros(len(_R)), _X, _R, _isSE)['f_AM'])
-    except Exception as _e:
-        print(f'  [f_AM] Hertz scaffold skipped ({_e})')
-    if _f_real is not None:
-        f_am = float(_f_real); f_am_src = f'REAL atom-dump σ_zz AM-phase ({os.path.basename(_adump)})'
-    elif _f_hertz is not None:
-        f_am = _f_hertz; f_am_src = 'Hertz scaffold (no raw atom dump — over-estimates AM-AM)'
-    else:
-        print('  [f_AM] no source (scipy/dump missing) → --am-load-frac 0 (legacy, conditional OFF)')
-    # ★ ROBUST gate via a porosity MARGIN below DEM (geometry-AGNOSTIC — replaces an r_AM/r_SE gate that
-    # MISSED r_SE=1.5 mono-large like a9_p10, since the ratio drifts with r_SE).  The AM skeleton engages
-    # only when the bed compresses MORE THAN `WALLP_MARGIN` below the DEM rigid-packing porosity (= the
-    # catastrophic frozen-AM over-compression).  MARGIN = the max observed LEGITIMATE plastic densification
-    # (non-mono cases reach ≤3.9 %p below DEM) → legit plastic (MPM ≤MARGIN below DEM) is PRESERVED (floor
-    # not reached); only catastrophic (>MARGIN below, the ~7 cases with DEM−MPM gap >5) is caught — works
-    # for ANY r_SE.  Data: clean gap between legit max 3.9 and catastrophic min 6.3 → MARGIN=5 separates.
-    # MARGIN below DEM at which the rigid AM-AM network JAMS (HARD floor stop in mpm3d_compaction.py).
-    # ⚠ FLAT 5.0 — do NOT SE-scale this (review wf wqcdb7eyc, 2026-06-27): the empirical legit plastic
-    # void-fill gap maxes at ~3.9 %p INDEPENDENT of SE content (real_19 SE16% gap3.8, 1mAh_8_S1 SE28%
-    # gap3.9), so shrinking the margin with SE pushed the floor INTO the legit band and wrongly capped
-    # 13 cross-validated cases (real_19 +2.1 %p etc.).  5 > max-legit 3.9 = clean separation: legit
-    # cases (MPM ≤3.9 below DEM) stay ABOVE the floor (untouched); only catastrophic (>5 below DEM, the
-    # ~11 SE-poor thin corners) get hard-stopped at DEM−5.  ⚠ LIMIT: this caps at DEM−5 (≈13.3 for
-    # 100_12) — fixes the slip (was 11.6) but still BELOW the cross-cap true (~16) when the DEM is itself
-    # thin-loose-inflated.  Reaching the true value needs a CROSS-CAP-anchored floor (separate change).
-    WALLP_MARGIN = 5.0
-    floor_por = round(max(2.0, float(poro) - WALLP_MARGIN), 2) if poro is not None else 0.0
-    _rs = f'{_f_real:.3f}' if _f_real is not None else '—'
-    _hs = f'{_f_hertz:.3f}' if _f_hertz is not None else '—'
-    print(f'  f_AM = {f_am:.3f}  [{f_am_src}]   (real atom-dump={_rs}, Hertz scaffold={_hs})')
-    _pstr = f'{poro:.1f}' if poro is not None else 'n/a'
-    print(f'  floor_porosity = {floor_por:.1f}% (= DEM {_pstr} − {WALLP_MARGIN:.0f} margin)   '
-          f'(HARD AM-jam stop at floor; catastrophic-only, legit void-fill ≤3.9%p untouched)')
+    # PRODUCTION = pure scaffold + hold; NO injected conditional (FINAL LOGIC, 2026-06-27).
+    # The wallP conditional — --am-load-frac (Love-Weber f_AM skeleton-spring) + --floor-porosity
+    # (a DEM−5 HARD porosity clamp) — was a CORNER patch that stopped the SE-poor/mono-large
+    # over-compression by CLAMPING porosity at DEM−margin.  But a porosity clamp MASKS the true
+    # DEM↔MPM gap, and that gap IS the validity certificate (§13/§16: regime-gate, NOT a clamp).
+    # Final logic: run the MPM PURE (SE bears the load → plastic void-fill).  In-envelope cases
+    # reproduce experiment (real_14 15.93 ≈ DEM 15.6 ≈ FIB-SEM 9–19 %); the out-of-envelope corner
+    # (SE-sub-functional + thin = not a manufacturable cell, §16-lit) HONESTLY over-compresses, and
+    # the un-clamped |DEM − MPM| gap flags it (large gap → trust DEM, not the MPM number).  The
+    # conditional + --se-am-drag/--am-jam survive as OPT-IN flags in mpm3d_compaction.py for
+    # experiments; production never injects them.  (Dead-patch history: troubleshooting §15/§16 + git.)
     case = a.case or os.path.basename(a.results.rstrip('/'))
     # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
     # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are
@@ -285,7 +236,7 @@ echo "[run_mpm] $(hostname) start $(date)  n_grid={n_grid_mpm}  est_pts~{est_pts
 python3 scripts/mpm3d_compaction.py \\
   --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
-  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} --am-load-frac {f_am:.3f} --floor-porosity {floor_por:.2f} \\
+  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags}
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
