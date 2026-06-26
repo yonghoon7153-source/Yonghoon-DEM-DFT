@@ -216,6 +216,7 @@ mono-large/SE-poor 코너 13개를 wallP 조건부(skeleton-spring, §6)로 재�
 | 1mAh_100_10 | 10:0 | 82 | 32 | 0.5 | 28.3 | **21.78** | ~17 (2mAh_real_10 17.9, 8mAh_real_5 16.8) | 🟡 **mid-bracket OK** [bulk17, thinDEM28.3], 과압축 아님 |
 | 2mAh_real_20 | 10:0 | 92 | **16** | 0.5 | 29.3 | **22.2** | ~27 (8mAh_real_15 27.4=DEM27.3) | ⚠ **MPM 잔여 과압축** → DEM/8mAh(~27) 신뢰 |
 | 2mAh_a9_p10 | 10:0 | 90 | 19 | **1.5** | 26.4 | **15.44** | 없음 (am_wt90+rSE1.5 = 2mAh만) | ⛔ **DEGENERATE** (perc 0%, RVE 작음) → 둘 다 불신 |
+| 2mAh_a9_50_p10 | 10:0 | 90 | 19 | 0.5 | 18.4 | **11.95** | 없음 (a9 series 2mAh-only) | ⚠ **over-compress confound** (a9_50_ps §발견3) → MPM 하한, DEM/mid 신뢰; 단 구조 OK(perc 99.4%, ≠a9_p10 degenerate) |
 
 ### OUTLIER 3-regime (확정 규칙 — production/trend 사용 시 적용)
 1. **SE 충분 (SE/solid ≳ 25 %) → MPM 신뢰.**  조건부가 잘 작동, MPM이 같은-조성 고-면용량 형제(DEM=MPM)와

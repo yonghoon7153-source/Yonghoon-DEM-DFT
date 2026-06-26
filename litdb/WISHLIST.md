@@ -102,7 +102,7 @@
 | ⚠paywall | Chang, Etsion, Bogy (1987) | An elastic-plastic model for the contact of rough surfaces | J. Tribol. 109(2) 257 | 10.1115/1.3261348 — **유료 → SKIP**; 후속 FEM판 **Kogut–Etsion 2002 + Jackson–Green 2005**가 같은 EP-asperity 내용 (Etsion Technion 페이지/ResearchGate free 흔함) |
 | ② | Mesarovic & Fleck (2000) | Frictionless indentation of dissimilar elastic-plastic spheres | Int. J. Solids Struct. 37(46) 7071 | 10.1016/S0020-7683(99)00328-5 |
 | ③ | Thornton & Ning (1998) | A theoretical model for the stick/bounce behaviour of adhesive, elastic-plastic spheres | Powder Technol. 99(2) 154 | 10.1016/S0032-5910(98)00099-0 |
-| 🟡 | Thornton (1997) | Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres | J. Appl. Mech. 64(2) 383 | 10.1115/1.2787319 |
+| ⚠paywall | Thornton (1997) | Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres | J. Appl. Mech. 64(2) 383 | 10.1115/1.2787319 — **유료 → SKIP**; 내용은 후속 **Thornton–Ning 1998**(점착 EP 구, #14/③) + Mesarovic–Fleck 2000 에 포함 |
 | 🟡 | Storåkers, Biwa, Larsson (1997) | Similarity analysis of inelastic contact | Int. J. Solids Struct. 34(24) 3061 | 10.1016/S0020-7683(96)00176-X |
 | 🟡 | Thakur, Morrissey, Sun, Chen, Ooi (2014) | Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model | Granular Matter 16(3) 383 | 10.1007/s10035-014-0506-4 |
 | 🟡 | Sangrós Giménez, Schilde, Froböse, Ivanov, Kwade (2020) | Mechanical, electrical, and ionic behavior of lithium-ion battery electrodes via discrete element method simulations | Energy Technol. 8(2) 1900180 | 10.1002/ente.201900180 |

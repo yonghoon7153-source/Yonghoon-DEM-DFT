@@ -1,0 +1,115 @@
+# Kang, Shin et al., Energy Storage Materials 63 (2023) 103049 (DOI 10.1016/j.ensm.2023.103049)
+# Hanyang (Jong-Won Lee) + DGIST + Samsung SDI. CAM=NCA LiNi0.88Co0.09Al0.03O2, SE=LPSCl Li6PS5Cl, +Super P; cathode 72:27:1 wt%.
+# Anodes compared: HIGH-STRAIN Li-In (In 100um + Li 200um) vs ZERO-STRAIN LTO Li4Ti5O12 composite (LTO:LPSCl:SuperP=50:40:10).
+# fab 433 MPa / operating stack 250 MPa (bolt-tightened, pressure-sensor monitored); 2.5-4.3 V; 0.05C 1st (CC-CV, CV cutoff 20%) then 0.5C; 30 C.
+# THESIS: high-strain anode volume change -> "dynamic contact" -> NCA/LPSCl interfacial heterogeneity -> GPa diffusion-induced stress -> NCA grain-boundary cracking.
+# This is Kang 2025 (ACS AMI) ref [27]; SAME group/first author (Junhee Kang). NOTE user-supplied first-author "Kim" is WRONG: actual first author = Kang (Siwon/Beomsu Kim are coauthors).
+# source: stated=text/Table S3 (verbatim) ; digitized=read from figure or text-approx (TREND only).
+quantity,value,unit,cell_or_system,condition,source,figure_table,notes
+# --- in-situ pressure swing (the high-strain signature) ---
+in_situ_dP,3.8,MPa,Li-In_cell,250MPa stack 0.05C 1st (charge expand/discharge contract),stated,Fig1b,high-strain anode; text also "approx 4.0 MPa"
+in_situ_dP,0.2,MPa,LTO_cell,250MPa stack,stated,Fig1c,zero-strain anode; text "approx 0.2 MPa"
+# --- 1st discharge capacity (identical -> difference is cycling only) ---
+discharge_capacity_1st,152.7,mAh_g-1,Li-In_cell,0.5C 1st,stated,text,
+discharge_capacity_1st,152.4,mAh_g-1,LTO_cell,0.5C 1st,stated,text,nearly identical to Li-In
+# --- capacity retention (KEY RESULT) ---
+capacity_retention_100cyc,82.5,percent,Li-In_cell,0.5C,stated,Fig1e,
+capacity_at_200cyc,9,mAh_g-1,Li-In_cell,0.5C 200th,stated,Fig1e,KEY: severe collapse after ~120 cyc
+capacity_retention_200cyc,75.6,percent,LTO_cell,0.5C,stated,Fig1g,KEY: zero-strain anode stable
+coulombic_efficiency,99.97,percent,LTO_cell,0.5C,stated,Fig1g,
+# --- EIS Z-type TLM, cathode, vs cycle: Li-In cell (Table S3) ---
+R_Ohmic,34.0,Ohm_cm2,Li-In_cell,cycle1 cathode TLM,stated,Table_S3,
+R_ion,27.8,Ohm_cm2,Li-In_cell,cycle1,stated,Table_S3,
+R_int,28.8,Ohm_cm2,Li-In_cell,cycle1,stated,Table_S3,
+R_w,21.6,Ohm_cm2,Li-In_cell,cycle1,stated,Table_S3,
+CPE_int_C,152.7,uF_s_eta-1_cm-2,Li-In_cell,cycle1,stated,Table_S3,
+CPE_eta,0.50,-,Li-In_cell,cycle1,stated,Table_S3,
+R_Ohmic,40.8,Ohm_cm2,Li-In_cell,cycle50,stated,Table_S3,
+R_ion,33.4,Ohm_cm2,Li-In_cell,cycle50,stated,Table_S3,
+R_int,52.0,Ohm_cm2,Li-In_cell,cycle50,stated,Table_S3,
+R_w,21.8,Ohm_cm2,Li-In_cell,cycle50,stated,Table_S3,
+CPE_int_C,61.8,uF_s_eta-1_cm-2,Li-In_cell,cycle50,stated,Table_S3,
+CPE_eta,0.62,-,Li-In_cell,cycle50,stated,Table_S3,
+R_Ohmic,46.0,Ohm_cm2,Li-In_cell,cycle100,stated,Table_S3,
+R_ion,37.6,Ohm_cm2,Li-In_cell,cycle100,stated,Table_S3,
+R_int,65.2,Ohm_cm2,Li-In_cell,cycle100,stated,Table_S3,
+R_w,24.4,Ohm_cm2,Li-In_cell,cycle100,stated,Table_S3,
+CPE_int_C,50.9,uF_s_eta-1_cm-2,Li-In_cell,cycle100,stated,Table_S3,
+CPE_eta,0.64,-,Li-In_cell,cycle100,stated,Table_S3,
+R_Ohmic,43.3,Ohm_cm2,Li-In_cell,cycle150,stated,Table_S3,
+R_ion,35.4,Ohm_cm2,Li-In_cell,cycle150,stated,Table_S3,
+R_int,115.7,Ohm_cm2,Li-In_cell,cycle150,stated,Table_S3,KEY: R_int jump 65->116 at 100-150
+R_w,128.6,Ohm_cm2,Li-In_cell,cycle150,stated,Table_S3,KEY: R_w jump 24->129 at 100-150 (cracking)
+CPE_int_C,34.5,uF_s_eta-1_cm-2,Li-In_cell,cycle150,stated,Table_S3,
+CPE_eta,0.65,-,Li-In_cell,cycle150,stated,Table_S3,
+R_Ohmic,45.4,Ohm_cm2,Li-In_cell,cycle200,stated,Table_S3,
+R_ion,37.2,Ohm_cm2,Li-In_cell,cycle200,stated,Table_S3,KEY: R_ion stable 27.8->37.2 (ion network intact)
+R_int,170.4,Ohm_cm2,Li-In_cell,cycle200,stated,Table_S3,KEY: R_int 28.8->170.4 (5.9x)
+R_w,174.5,Ohm_cm2,Li-In_cell,cycle200,stated,Table_S3,KEY: R_w 21.6->174.5 (8.1x); cracking signature
+CPE_int_C,26.4,uF_s_eta-1_cm-2,Li-In_cell,cycle200,stated,Table_S3,interfacial active area shrinks
+CPE_eta,0.65,-,Li-In_cell,cycle200,stated,Table_S3,
+# --- EIS Z-type TLM, cathode, vs cycle: LTO cell (Table S3) ---
+R_Ohmic,3199.5,Ohm_cm2,LTO_cell,cycle1,stated,Table_S3,LTO R_Ohmic ~100x Li-In but trend mild
+R_ion,28.8,Ohm_cm2,LTO_cell,cycle1,stated,Table_S3,
+R_int,8.7,Ohm_cm2,LTO_cell,cycle1,stated,Table_S3,
+R_w,13.1,Ohm_cm2,LTO_cell,cycle1,stated,Table_S3,
+CPE_int_C,55.5,uF_s_eta-1_cm-2,LTO_cell,cycle1,stated,Table_S3,
+CPE_eta,0.70,-,LTO_cell,cycle1,stated,Table_S3,
+R_Ohmic,3681.9,Ohm_cm2,LTO_cell,cycle50,stated,Table_S3,
+R_ion,33.1,Ohm_cm2,LTO_cell,cycle50,stated,Table_S3,
+R_int,39.0,Ohm_cm2,LTO_cell,cycle50,stated,Table_S3,
+R_w,20.4,Ohm_cm2,LTO_cell,cycle50,stated,Table_S3,
+CPE_int_C,66.4,uF_s_eta-1_cm-2,LTO_cell,cycle50,stated,Table_S3,
+CPE_eta,0.68,-,LTO_cell,cycle50,stated,Table_S3,
+R_Ohmic,3694.7,Ohm_cm2,LTO_cell,cycle100,stated,Table_S3,
+R_ion,33.3,Ohm_cm2,LTO_cell,cycle100,stated,Table_S3,
+R_int,52.8,Ohm_cm2,LTO_cell,cycle100,stated,Table_S3,
+R_w,21.8,Ohm_cm2,LTO_cell,cycle100,stated,Table_S3,
+CPE_int_C,61.8,uF_s_eta-1_cm-2,LTO_cell,cycle100,stated,Table_S3,
+CPE_eta,0.68,-,LTO_cell,cycle100,stated,Table_S3,
+R_Ohmic,3958.2,Ohm_cm2,LTO_cell,cycle150,stated,Table_S3,
+R_ion,35.6,Ohm_cm2,LTO_cell,cycle150,stated,Table_S3,
+R_int,72.6,Ohm_cm2,LTO_cell,cycle150,stated,Table_S3,
+R_w,25.6,Ohm_cm2,LTO_cell,cycle150,stated,Table_S3,
+CPE_int_C,61.8,uF_s_eta-1_cm-2,LTO_cell,cycle150,stated,Table_S3,
+CPE_eta,0.69,-,LTO_cell,cycle150,stated,Table_S3,
+R_Ohmic,4232.1,Ohm_cm2,LTO_cell,cycle200,stated,Table_S3,
+R_ion,38.1,Ohm_cm2,LTO_cell,cycle200,stated,Table_S3,mild rise
+R_int,74.0,Ohm_cm2,LTO_cell,cycle200,stated,Table_S3,mild vs Li-In 170.4
+R_w,29.7,Ohm_cm2,LTO_cell,cycle200,stated,Table_S3,mild vs Li-In 174.5
+CPE_int_C,56.4,uF_s_eta-1_cm-2,LTO_cell,cycle200,stated,Table_S3,
+CPE_eta,0.70,-,LTO_cell,cycle200,stated,Table_S3,
+# --- re-applied pressure recovery (Fig S13/S14) ---
+discharge_capacity_before_repress,25.2,mAh_g-1,Li-In_cell,after 150 cyc before re-pressing,stated,Fig_S13,
+discharge_capacity_after_repress,38.3,mAh_g-1,Li-In_cell,after re-applying 250 MPa at 150 cyc,stated,Fig_S13,partial recovery; capacity decay slope not restored (irreversible cracking)
+# --- low operating pressure stabilizes (Fig S17) ---
+cycles_stable_low_pressure,300,cycles,Li-In_cell,100 MPa operating stack,stated,Fig_S17,KEY: lower operating pressure -> more stable (less anode-strain transfer); direction agrees Doux 5MPa
+# --- FEM mechanical moduli (text section 2.5) ---
+E_NCA,175,GPa,NCA,FEM elastic modulus,stated,text_sec2.5,ref39; ORIGIN of value reused in Kang2025; our NMC811=140
+E_LPSCl,22.1,GPa,LPSCl,FEM elastic modulus,stated,text_sec2.5,= Bazzoun2026 22.1 / our real-bulk ~24; SE-modulus anchor origin
+NCA_volume_change,5.9,percent,NCA,full charge (deintercalation contraction),stated,text_sec2.5,Omega(partial molar vol) from this; eps_d=Omega/3*dc_Li
+diffusion_induced_stress_scale,1,GPa_order,NCA,internal during charge,stated,Discussion,GPa >> stack pressure (few hundred MPa); cracking driver not pressure
+# --- FEM electrochemical parameters (Table S1) ---
+FEM_cell_dimension_L,815,um,FEM,cell scale,stated,Table_S1,
+FEM_cell_dimension_W,100,um,FEM,cell scale,stated,Table_S1,
+FEM_cathode_domain,12.5,um,FEM,x-y crack-analysis domain,stated,text_sec2.5,
+FEM_temperature,298.15,K,FEM,,stated,Table_S1,
+FEM_i0_ref,10,A_m-2,FEM,reference exchange current density,stated,Table_S1,Butler-Volmer
+FEM_c_ref,48000,mol_m-3,FEM,reference (max) Li concentration in NCA,stated,Table_S1,ref_S3_Nitta2015
+FEM_AM_radius,5,um,FEM,representative active material radius,stated,Table_S1,2ndary particle ~10um in text
+FEM_Vmax,4.3,V,FEM,,stated,Table_S1,
+FEM_Vmin,2.5,V,FEM,,stated,Table_S1,
+FEM_C_rate,0.33,-,FEM,charging,stated,Table_S1,
+FEM_sigma_e_AM,1,S_m-1,FEM,NCA electronic conductivity input,stated,Table_S1,ref_S4_Amin2015
+FEM_D_Li_AM,3e-14,m2_s-1,FEM,Li diffusion coeff in NCA,stated,Table_S1,ref_S4
+FEM_sigma_ion_electrolyte,0.02,S_m-1,FEM,LPSCl ionic conductivity input,stated,Table_S1,= 0.2 mS/cm; ref_S5_Park2022
+# --- XPS binding energies (decomposition byproducts; cathode after 200 cyc) ---
+XPS_Li2Sn_S2p,162.7,eV,LPSCl,S2p Li2Sn (n>1) oxidative decomp,stated,Fig3a,larger in Li-In cell
+XPS_P2Sx_S2p,163.4,eV,LPSCl,S2p P2Sx (x>5) S-bridging oxidation,stated,Fig3a,
+XPS_PO4_P2p,134.1,eV,LPSCl,P2p PO4^3- electrolyte oxidative decomp,stated,Fig3a,much larger in Li-In than LTO
+# --- pressures ---
+fabrication_pressure,433,MPa,cell,composite cathode + SE (same for both cells),stated,text_sec2.2,
+operating_stack_pressure,250,MPa,cell,cycling (bolt-tightened),stated,text_sec3,fab != operating
+N_P_ratio_LTO,1.66,-,LTO_cell,LTO loading 20.4 mg cm-2,stated,text_sec2.2,Li-In has free N/P (Li reservoir)
+cathode_loading,12.7,mg_cm-2,cell,NCA composite,stated,text_sec2.2,
+symmetric_LiIn_stable_hours,600,h,symmetric_LiIn_cell,0.9 mA cm-2 1.8 mAh cm-2 (150 cyc),stated,Fig_S9,Li-In/LPSCl interface itself stable
