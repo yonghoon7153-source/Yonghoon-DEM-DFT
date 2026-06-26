@@ -1,0 +1,19 @@
+# Nd-RELATED XPS peaks only (filtered from xps_reference_sei.csv).
+# Nd-bearing SEI/decomposition phases. C 1s 284.8 eV ref. 2p=2p3/2; Nd 3d3/2 = 3d5/2 + ~22.5 eV.
+# conf A/B well-established; C = Nd 3d multiplet/satellite-limited, per-ligand shift is an ESTIMATE.
+product,element,core_level,BE_eV,BE_pm,conf,diagnostic
+NdPO4,P,2p3/2,133.3,0.3,B,monazite phosphate ~ same as Li3PO4
+NdPO4,O,1s,531.5,0.5,B,phosphate O
+NdPO4,Nd,3d5/2,982.5,1.0,C,Nd3+ (~same as Nd2O3
+Nd2O3,Nd,3d5/2,982.5,1.0,C,Nd3+ REF (web-verified); 3d3/2 ~1005; main 3d9-4f3 + screened satellite ~977
+Nd2O3,O,1s,529.8,0.5,B,RE-oxide O (between Li2O and phosphate)
+NdCl3,Cl,2p3/2,199.2,0.4,B,metal chloride ~+0.6 eV vs LiCl
+NdCl3,Nd,3d5/2,982.5,1.0,C,Nd3+ chloride (ligand shift unresolved
+NdOCl,Cl,2p3/2,198.8,0.4,C,oxychloride Cl
+NdOCl,O,1s,530.0,0.6,C,oxychloride O
+NdOCl,Nd,3d5/2,982.5,1.0,C,Nd3+ oxychloride (estimate)
+LiNdO2,Nd,3d5/2,982.5,1.0,C,Nd3+ ternary oxide (estimate)
+LiNdO2,O,1s,529.5,0.6,C,ternary oxide O
+Nd2S3,S,2p3/2,161.5,0.5,C,Nd sulfide; conductive -> avoid
+Nd2S3,Nd,3d5/2,981.5,1.2,C,Nd3+ sulfide (may shift slightly lower; estimate)
+NdS,S,2p3/2,161.0,0.6,C,near-metallic NdS; avoid
