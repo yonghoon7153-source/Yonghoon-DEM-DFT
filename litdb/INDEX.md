@@ -15,6 +15,8 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) | 리뷰·oxide/sulfide·계면 landscape |
 | `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | **[우리 그룹]** Kim/Cho/Y.M.Lee, ICCF(이온성액체 cavity filler) → σ 회복 155 % + 음극 in-situ LiF-rich SEI (CEJ 2026) | 시트 미세구조·σ 회복·음극 in-situ SEI·계면(실험) |
 | `papers/kim2025_conductive_agent_se_coating_cathode.md` | **[우리 그룹]** Kim/Y.M.Lee, SE 코팅 중 도전재(CA) 차원 효과 — 0D Super P(나쁨) vs 1D VGCF(좋음, ≈CA無 dense) (Battery Energy 2025) | 양극복합체·코팅형상·전자전도경로·CA 차원(실험, 계산無) |
+| `papers/kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review.md` | **[우리 그룹]** Kang/Shin/Y.Lee/**Jong-Won Lee**, *Intertwined* electrochemo-mechanical degradation 리뷰 (ChemComm Feature Article 2026, 18 pp) — 전기화학 분해 ↔ 기계 불안정의 **양방향 되먹임 고리**가 thesis; 양극4종·음극3종 전기화학 분해 + 공동·접촉손실·균열·dendrite 기계 분해 + coupling(§4) + 3대 완화(SE도핑·CAM코팅·음극공학) + 통합 chemo-mechanical 로드맵 | **리뷰·우리그룹·electrochemo-mechanical coupling** (우리 DFT 상위 프레임) |
+| `papers/kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb.md` | **[우리 그룹]** Kang/Y.Lee/Bae/**Jong-Won Lee**, "이로운 기생반응" — NCM811에 LPSCl conformal **dry-coating** → 고전압 기생분해(식1 `2Li₆PS₅Cl→P₂S₅+5S+2LiCl+10e⁻+10Li⁺`)를 *균일*화 → NCM 균질 chemical lithiation(SOC↓) → layered→rock-salt 억제 → R_int 4.3 Ω cm²·200cyc 유지율 **+15.0 %** (ChemComm 2025, 61, 16850) | **양극·고전압 계면·기생반응·균일 chemical lithiation·SE 코팅** (실험·계산無) |
 
 
 ## 시트: 실험값  (21 entries)
@@ -87,7 +89,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 12.0 | When Electrolytes Are Semiconductors: A Feature, Not a Bug for Solid-S | 10.3390/batteries12020060 | sulfid | DFT (GGA-PBE / HSE06) + 실험(SKPM, PEIS, CV) 전자 세 황화물 SE 모두 wide-band-gap 반도체(direct: LPSCl 2.45/3.30 eV, LPSBr 2.32/3.34 eV; | 📄 |
 ---
 
-## 📂 보유 PDF (지금까지 "먹인" 논문 — 27개, ~24 unique)
+## 📂 보유 PDF (지금까지 "먹인" 논문 — 28개, ~25 unique)
 
 > status: ✅ digest 완료 · ⬜ PDF 보유·미digest. 디지스트는 `litdb-curator`로 하나씩.
 
@@ -119,5 +121,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 24 | 4229e857 / 98afe5b4 (SI) | Kim/Balaish/Rupp, oxide vs sulfide SE + 계면 리뷰 (AEM 2021, 63 pp) — `papers/kim2021_review_oxide_sulfide_se_interfaces.md` | ✅ |
 | 25 | 6bc71e96 / 0a75f53b (SI) | **[우리 그룹]** Kim/Cho/Y.M.Lee, ICCF molten-salt cavity filler → σ 회복 155 % + 음극 in-situ LiF SEI (CEJ 2026) — `papers/kim2026_iccf_molten_salt_sei_lpscl_sheet.md` | ✅ |
 | 26 | bed8fa69 / 00e03394 (SI) | **[우리 그룹]** Kim/Y.M.Lee, 도전재(CA) 차원 효과 in SE 코팅 — 0D Super P vs 1D VGCF, 양극복합체 (Battery Energy 2025) — `papers/kim2025_conductive_agent_se_coating_cathode.md` | ✅ |
+| 27 | c0c4fd29 (…Intertwined…) | **[우리 그룹]** Kang/Shin/Y.Lee/**Jong-Won Lee**, electrochemo-mechanical degradation 리뷰 (ChemComm Feature Article 2026, DOI 10.1039/d5cc06309d, 18 pp) — `papers/kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review.md` | ✅ |
+| 28 | 82ea256b (…parasitic_reaction…) | **[우리 그룹]** Kang/Y.Lee/Bae/**Jong-Won Lee**, 고전압 "이로운 기생반응" — NCM811에 LPSCl conformal dry-coating → 기생분해 균일화 → 균질 chemical lithiation (ChemComm 2025, 61, 16850, DOI 10.1039/d5cc04349b) — `papers/kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정)*
