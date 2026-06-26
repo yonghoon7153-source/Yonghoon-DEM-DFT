@@ -20,7 +20,7 @@ input_1mAh_8_S2,5:5,0.5,85,28,17.2,13.5,3.7,both,cross-validated
 input_1mAh_8_AMS_S5,0:10,0.0,85,28,21.4,17.8,3.6,both,cross-validated
 input_2mAh_a8_p00,0:10,0.0,80,35,19.4,23.0,-3.5,both,cross-validated
 input_2mAh_a9_p08,8:2,0.8,90,19,23.2,19.8,3.4,both,cross-validated
-input_1mAh_5_AMP_S3,10:0,1.0,80,35,21.1,17.7,3.4,both,cross-validated
+input_1mAh_5_AMP_S3,10:0,1.0,80,35,21.1,17.67,3.43,both,"cross-validated; SE-sufficient (se35) -> wallP conditional OFF (floor not engaged, reaches target above), MPM unchanged 17.7->17.67 = never over-compressed (healthy case)"
 input_2mAh_real_15,10:0,1.0,87,25,24.6,21.3,3.3,both,cross-validated
 input_particulate_12_S5,0:10,0.0,82,32,18.9,22.3,-3.3,both,cross-validated
 input_1mAh_8_S3,5:5,0.5,85,28,15.5,12.4,3.2,both,cross-validated
