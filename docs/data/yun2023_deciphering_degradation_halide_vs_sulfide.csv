@@ -1,0 +1,103 @@
+## Yun et al., Energy Storage Materials 59 (2023) 102787 — "Deciphering the critical degradation factors of solid composite electrodes with halide electrolytes: Interfacial reaction versus ionic transport"
+## Lab paper (Jong-Won Lee co-corresponding, Hanyang + Janghyuk Moon co-corresponding, Chung-Ang). System: single-particle (SC) NCM811 LiNi0.8Co0.1Mn0.102 + two SEs compared: sulfide LPSCl (Li6PS5Cl) vs halide LIC (Li3InCl6).
+## Composite NCM:SE:SuperP = 72:27:1 wt%. SE layer pressed 433 MPa, full cell 250 MPa. Voltage 2.5-4.3 V vs Li/Li+, 0.33C cycling, 30 C. EIS 7 MHz-1 mHz, 5 mV, modified TLM decoupling (R_ion / R_int).
+## CORE THESIS: NCM-LPSCl degrades by INTERFACIAL REACTION (R_int up, resistive interphase P2Sx/Li2S); NCM-LIC degrades by IONIC TRANSPORT (R_ion up, cracking-induced mechanical deformation of LIC under pressure).
+## src: stated = text/Table; digitized = read off figure (TREND only, approximate). All Ohm.cm2 unless noted.
+##
+## ===== A. DECOUPLED IMPEDANCE (modified TLM fit, Table S1) — the paper's central numbers =====
+category,quantity,system,condition,value,unit,src,note
+impedance_TLM,R_ion,NCM-LPSCl,before_cycling,126.1,Ohm.cm2,stated_TableS1,Li+ transport impedance (ion rail)
+impedance_TLM,R_ion,NCM-LPSCl,after_cycling,155.6,Ohm.cm2,stated_TableS1,modest rise (+23%) — LPSCl transport stays OK
+impedance_TLM,R_int,NCM-LPSCl,before_cycling,341.7,Ohm.cm2,stated_TableS1,interfacial (charge-transfer) impedance
+impedance_TLM,R_int,NCM-LPSCl,after_cycling,982.3,Ohm.cm2,stated_TableS1,★ +187% — LPSCl DEGRADES BY INTERFACIAL REACTION (resistive interphase)
+impedance_TLM,R_ion,NCM-LIC,before_cycling,302.5,Ohm.cm2,stated_TableS1,higher pristine R_ion (LIC lower bulk sigma 1.2 vs 1.6)
+impedance_TLM,R_ion,NCM-LIC,after_cycling,595.6,Ohm.cm2,stated_TableS1,★ +97% (~2-fold) — LIC DEGRADES BY IONIC TRANSPORT (SE cracking)
+impedance_TLM,R_int,NCM-LIC,before_cycling,65.2,Ohm.cm2,stated_TableS1,low pristine R_int (LIC interface stable)
+impedance_TLM,R_int,NCM-LIC,after_cycling,113.8,Ohm.cm2,stated_TableS1,modest rise — LIC interface stays relatively stable
+## --- r_ion / r_int reported also in volume units (Omega.cm3) in main text (Fig 2 discussion) ---
+impedance_vol,r_int,NCM-LPSCl,pristine,6305,Ohm.cm3,stated_text,first-charge fit; LPSCl higher pristine r_int than LIC
+impedance_vol,r_int,NCM-LIC,pristine,1.3,Ohm.cm3,stated_text,★ LIC much lower pristine interfacial (stable interface)
+impedance_vol,r_ion,NCM-LPSCl,pristine,6.8,Ohm.cm3,stated_text,LPSCl higher bulk ionic conductivity -> low r_ion
+impedance_vol,r_ion,NCM-LIC,pristine,15125,Ohm.cm3,stated_text,★ LIC much higher r_ion (lower Li+ conductivity)
+impedance_vol,r_int,NCM-LPSCl,after_cycling,19.6,Ohm.cm3,stated_text,r_int rose from 6.8 -> 19.6 (text; note unit/scale per main text)
+impedance_vol,r_ion,NCM-LIC,after_cycling,29780,Ohm.cm3,stated_text,★ ~2-fold rise 15125->29780 (LIC ionic transport degrades)
+## --- supporting circuit elements (Table S1 unit-cell TML fit) ---
+impedance_TLM,CPE_int_C,NCM-LPSCl,before_cycling,96.8,uF.s^(eta-1).cm-2,stated_TableS1,eta=0.8
+impedance_TLM,CPE_int_C,NCM-LIC,before_cycling,257.6,uF.s^(eta-1).cm-2,stated_TableS1,eta=0.9
+impedance_TLM,Zw_Rw,NCM-LPSCl,before_cycling,14.7,Ohm.cm2,stated_TableS1,Warburg (solid-state diffusion in NCM); T=5.1 s f=0.2
+impedance_TLM,Zw_Rw,NCM-LIC,before_cycling,30.7,Ohm.cm2,stated_TableS1,T=22.5 s f=0.4
+impedance_TLM,Zw_Rw,NCM-LPSCl,after_cycling,11.8,Ohm.cm2,stated_TableS1,T=3002.6 s f=0.2 (large diffusion time const after cycling)
+impedance_TLM,Zw_Rw,NCM-LIC,after_cycling,1017.9,Ohm.cm2,stated_TableS1,T=0.5 s f=0.6
+##
+## ===== B. SE IONIC CONDUCTIVITY (AC-impedance, 25 C) =====
+bulk_sigma,sigma_ion,LPSCl,bulk_SE_25C,1.6,mS/cm,stated_text,= Minnmann 1.6 / Kim2025 1.6 (consistent); our sulfide bulk anchor
+bulk_sigma,sigma_ion,LIC_Li3InCl6,bulk_SE_25C,1.2,mS/cm,stated_text,halide; ~0.75x of LPSCl (lower sigma, higher oxidative stability)
+bulk_sigma,sigma_ion,LIC_under_pressure,initial,1.2,mS/cm,stated_Fig4b,pellet under 250 MPa, t=0
+bulk_sigma,sigma_ion,LIC_under_pressure,after_240h,0.6,mS/cm,stated_Fig4b,★ DECREASES to 0.6 over 240 h UNDER PRESSURE (cracking-induced) -2x
+bulk_sigma,sigma_ion,LPSCl_under_pressure,after_240h,1.6,mS/cm,stated_Fig4b,★ STABLE 1.6 (no decay under pressure) — contrast with LIC
+bulk_sigma,sigma_ion,LIC_noPressure_Ar,similar_period,no_loss,mS/cm,stated_FigS9,no conductivity loss when stored WITHOUT pressure -> loss is PRESSURE-driven (mechanical)
+##
+## ===== C. MECHANICAL MODULI (FS force-spectroscopy local + FEM input) =====
+modulus,E_NCM,NCM811,FEM_input,175,GPa,stated_FEM,FEM mechanical modulus (cf Kang2025 E_NCA=175; our NMC811 140)
+modulus,E_LPSCl,LPSCl,FEM_input,32.8,GPa,stated_FEM,★ WITHIN-CORPUS DISCREPANCY: 32.8 here vs 22.1 (Bazzoun/Kang2025/Kim2025) vs our real ~24
+modulus,E_LIC,LIC_Li3InCl6,FEM_input,41.1,GPa,stated_FEM,halide modulus; STIFFER than LPSCl
+modulus,E_mean_LPSCl_pristine,LPSCl,FS_measured_pristine,32.8,GPa,stated_Fig4e,FS local modulus (force-distance, DMT fit); matches FEM input
+modulus,E_mean_LIC_pristine,LIC,FS_measured_pristine,41.1,GPa,stated_Fig4d,FS pristine; LIC stiffer than LPSCl pristine
+modulus,E_mean_LPSCl_pressurized,LPSCl,FS_after_pressure,29.3,GPa,stated_Fig4f,★ LPSCl nearly unchanged (32.8->29.3) under pressure
+modulus,E_mean_LIC_pressurized,LIC,FS_after_pressure,19.8,GPa,stated_Fig4d,★ LIC SEVERE drop (41.1->19.8, -52%) = cracking/mechanical degradation
+modulus,FS_scan_area,both,FS_measurement,5x5,um,stated_SI,256x256 px, 0.2 Hz scan rate, DMT model
+modulus,yield_strength_LPSCl,LPSCl,FEM_input_AS_PRINTED,200,GPa,stated_text_TYPO,⚠ PAPER SAYS 200 GPa but yield > modulus 32.8 GPa is impossible -> almost certainly 200 MPa typo (yield strengths are MPa)
+##
+## ===== D. FEM crack-propagation (cohesive-zone, Voronoi SE) =====
+fem,domain_size,both,FEM_2D,12.55,um,stated_text,square domain matched to NCM:SE volume fractions
+fem,NCM_effective_size,NCM811,Voronoi_pack,10,um,stated_text,effective NCM particle size in FEM (single-particle ~1-5 um real; 10 um for packing match)
+fem,NCM_volume_change,NCM811,full_lithiation,5.9,percent,stated_text,delitiation/lithiation volume change (ref 38 Marker)
+fem,partial_molar_volume,NCM811,Omega,1.338e-6,m3/mol,stated_text,Omega in eps = Omega/3 * delta_c (diffusion-induced strain via thermal-strain analogy)
+fem,crack_energy_release_Gc,sulfide_SE,parameterized,0.5-3,J/m2,stated_text,crack-tip opening G_c range; sulfide SE known value 2.93 J/m2 (ref 40 Smith)
+fem,GB_interfacial_strength,SE_grain_boundary,assumed,30,percent_weaker,stated_text,interfacial (GB) strength assumed 30% weaker than within-grain
+fem,sigma_Mises_LPSCl,NCM-LPSCl,full_lithiation,<0.2,GPa,stated_Fig5a,★ LPSCl PLASTIC -> stress REDISTRIBUTED over large region, low values (<0.2 GPa)
+fem,sigma_Mises_LIC,NCM-LIC,full_lithiation,>0.5,GPa,stated_Fig5b,★ LIC ELASTIC-ONLY -> stress ACCUMULATES at NCM/LIC interface (>0.5 GPa) -> cracks
+fem,crack_count_LPSCl,NCM-LPSCl,vs_LIC,fewer,relative,stated_text,LPSCl had FEWER cracks (plastic redistribution lowers crack driving force)
+fem,crack_count_LIC,NCM-LIC,vs_LPSCl,more,relative,stated_text,LIC MORE cracks (elastic stress concentration at interface)
+fem,deformation_LPSCl,LPSCl,FEM_assumption,elastic-plastic,mode,stated_text,LPSCl viscoelastic/plastic (ref 54 Papakyriakou) -> can yield and redistribute
+fem,deformation_LIC,LIC,FEM_assumption,elastic-only,mode,stated_text,LIC assumed deform ONLY elastically -> no redistribution -> interface stress accumulates
+##
+## ===== E. SSRM (scanning spreading resistance microscopy) local resistivity mapping =====
+ssrm,scan_area,both,cross_section,2x2,um,stated_text,3D resistivity-topology map; z up to ~200 nm topology
+ssrm,bias,both,DC,2.5,V,stated_SI,+2.5 V (sufficient to measure R_e while preventing LPSCl decomposition)
+ssrm,tip,both,CONTSCPt,Pt-coated,probe,stated_text,resistivity rho_e = 4*r*R_e (r = probe radius)
+ssrm,resistivity_NCM_phase,NCM,cross_section,<10,kOhm.cm,stated_text,low-resistivity NCM phase (green-blue in maps)
+ssrm,resistivity_SE_phase,SE,cross_section,very_high,kOhm.cm,stated_text,extremely high resistivity SE phase (red), up to ~10^3-10^5 kOhm.cm in line scan
+ssrm,interface_LPSCl,NCM-LPSCl,after_cycling_linescan,variation_~50nm,resistivity,stated_Fig3a,★ CONTINUOUS resistivity VARIATION across ~50 nm interfacial region = RESISTIVE INTERPHASE present
+ssrm,interface_LIC,NCM-LIC,after_cycling_linescan,DISCONTINUITY_no_finite,resistivity,stated_Fig3b,★ resistivity DISCONTINUITY (no continuous variation over finite distance) = NO interphase (clean interface)
+##
+## ===== F. XPS chemical state (interphase identification) =====
+xps,P2p_LPSCl_before,LPSCl,P2p,131.9_132.7,eV,stated_Fig3c,argyrodite P + phosphates (pristine)
+xps,P2p_LPSCl_after,LPSCl,P2p_after_cycle,P2Sx_132.8_phosphate_133.7,eV,stated_Fig3c,★ NEW P2Sx + phosphate peaks after cycling = LPSCl OXIDATIVE DECOMPOSITION (interphase)
+xps,S2p_LPSCl_after,LPSCl,S2p_after_cycle,Li2S_P2Sx,species,stated_Fig3c,★ sulfide species (Li2S, P2Sx) formed = resistive interphase
+xps,In3d_LIC_after,LIC,In3d_after_cycle,UNCHANGED,species,stated_Fig3d,★ In 3d UNCHANGED after cycling = LIC electrochemically stable (no decomposition)
+xps,Cl2p_LIC_after,LIC,Cl2p_after_cycle,UNCHANGED,species,stated_Fig3d,★ Cl 2p UNCHANGED = LIC interface stable (confirms SSRM no-interphase)
+##
+## ===== G. RATE CAPABILITY + CYCLING (Fig 1b-d) =====
+electrochem,discharge_capacity,NCM-LPSCl,0.1C_initial,186.4,mAh/g,stated_text,initial discharge capacity (0.1C, lower than LIC)
+electrochem,discharge_capacity,NCM-LIC,0.1C_initial,197.7,mAh/g,stated_text,★ LIC higher initial capacity (better NCM/LIC interface)
+electrochem,initial_coulombic_efficiency,NCM-LPSCl,1st_cycle,84.5,percent,stated_text,lower ICE (LPSCl interphase side reaction)
+electrochem,initial_coulombic_efficiency,NCM-LIC,1st_cycle,89.5,percent,stated_text,★ LIC higher ICE (stable interface, no sagging in voltage profile)
+electrochem,capacity_2C,NCM-LPSCl,rate_2C,higher_than_LIC,relative,stated_text,★ at 2C LPSCl BETTER (interfacial charge transfer enhanced by large overpotential driving force)
+electrochem,capacity_2C,NCM-LIC,rate_2C,inferior,relative,stated_text,LIC WORSE at 2C (low Li+ conductivity -> ionic transport bottleneck at high rate, larger polarization)
+electrochem,capacity_retention,NCM-LPSCl,after_100cyc_0.33C,84.7,percent,stated_text,cap 138.5 mAh/g (LPSCl retains BETTER over 100 cyc)
+electrochem,capacity_retention,NCM-LIC,after_100cyc_0.33C,75.7,percent,stated_text,★ cap 140.4 mAh/g; LIC FASTER decay (SE cracking -> ionic transport loss) despite higher start
+electrochem,capacity_after100,NCM-LPSCl,100cyc,138.5,mAh/g,stated_text,absolute end capacity
+electrochem,capacity_after100,NCM-LIC,100cyc,140.4,mAh/g,stated_text,absolute end capacity (still slightly higher than LPSCl but declining)
+##
+## ===== H. CELL / TEST PARAMETERS =====
+params,composite_ratio,NCM:SE:SuperP,wt,72:27:1,wt%,stated_text,single-particle NCM + SE + Super P, ball-mill 250 rpm 48 h ZrO2
+params,SE_layer_press,LPSCl_separator,fabrication,433,MPa,stated_text,100 mg LPSCl pressed at 433 MPa (then powder mix on one side)
+params,cell_press,full_cell,fabrication,250,MPa,stated_text,after SUS current collectors inserted both sides
+params,SE_layer_thickness,LPSCl_separator,cell,~200,um,stated_text,separator thickness
+params,anode,In_Li,counter,In_100um+Li_200um,um,stated_text,indium 100 um (4 mm) + Li foil 200 um (4 mm)
+params,voltage_window,full_cell,cycling,2.5-4.3,V_vs_Li,stated_text,formation 0.05C x2 (CC-CV to 4.3 V, CV cutoff 0.01C); cycling 0.33C
+params,temperature,full_cell,test,30,degC,stated_text,galvanostatic + EIS at 30 C
+params,EIS_range,full_cell,measurement,7MHz-1mHz,Hz,stated_text,AC amplitude 5 mV, Biologic SP-300, potentiostat
+params,cell_types,both,EIS_decoupling,ion-blocking[SUS|elec|SUS]+full[SUS|elec|LPSCl|LiIn|SUS],config,stated_text,two cell types for electronic/ionic/interfacial decoupling
+params,LIC_synthesis,Li3InCl6,prep,LiCl+InCl3_600rpm_3h+anneal_260C_12h_vacuum,method,stated_text,high-energy ball mill then anneal
