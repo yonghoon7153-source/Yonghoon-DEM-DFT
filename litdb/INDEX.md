@@ -27,6 +27,8 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 | 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
 |---|---|---|---|---|---|---|
 | **★ Minnmann 2021 JES** | J. Electrochem. Soc. 168, 040537 | **NCM-622 + LPSCl** (= 우리 소재계) | ★★ **우리 porosity/σ_ion/τ 앵커의 진짜 출처.** EIS-TLM 1차 측정: **복합 porosity 14 % (13–17 %, dry-mix 380 MPa)** · **σ_ion,eff 0.17 mS/cm @ 42 vol% NCM** · **τ_ion 2.07 (=√(τ²=4.3))** · σ_el,eff 0.56 (τ_el²=7.4) · LPSCl bulk 1.6 mS/cm · NCM 전자 10 mS/cm. CAM vol% 25–61 스윕(CAM↑→σ_ion↓/τ↑), 42 vol% 154 mAh/g 최적; carbon-free 고-CAM; fine SE→σ_ion,eff↑(packing/τ). | exp (EIS-TLM+cycling) | ✅(docs) | `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md` |
+| **★ Doux 2020** | Adv. Energy Mater. 10, 1903253 | **LPSCl + Li-metal** (+LNO-NCA full cell) (= 우리 SE) | ★ **작동압(operating) vs 제조압(fabrication) 앵커.** Li 대칭셀 단락시간: **75→0, 25→48, 20→190, 15→272, 10→474, 5 MPa→∞(>1000h)** → 최적 작동 **5 MPa**(≥25 단락, Li가 SE 공극으로 creep=기계적 단락). 임피던스 **500→32 Ω(@25 포화), release 비가역(110→50)**. ★ 펠릿 **porosity 18 %(rel.dens 82.1 %)@370 MPa** = 강체-구 floor 실험 확증. σ_pellet 2–2.5 mS/cm. full cell 229 cyc/80.9 %@5 MPa. ⚠ Li-metal 단락 논문 → SE 압력-역학만 전사 | exp (in-situ P-cell + XCT/XRD) | ✅(docs) | `docs/lit_doux2020_stack_pressure_assb.md` |
+| **★ Cronau 2021** | ACS Energy Lett. 6, 3072 | sulfide SE 6종 (µC-Li₆PS₅**Br** 등, **단결정·Cl 측정 無**) | ★ **stack pressure 가 σ *측정* 신뢰성을 좌우**(측정 protocol). σ_grain=3.0 출처판정: 본 논문 아님(µC-Br plateau ~2.4 + 타 LPSCl 종합); Cronau(r_SE)=결정도/GB 인자(breakpoint 미지지). 제조압 400–500 + 작동 5–50 MPa 권고 | viewpoint (exp) | ✅(docs) | `docs/lit_cronau2021_stack_pressure_ionic_conductivity.md` |
 
 ## 설계 Perspective (정성 — 수치 앵커 아님)
 
@@ -48,5 +50,9 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 
 ## 현황
 papers/ digest 7편 ✅ (**Lee2025**(실험 앵커, =우리 소재 전부) · Bazzoun · Varkey · So2021 · Martin-Bouvard2003 · Bouvard2000 · McGeary1961)
-+ docs/ digest: **Minnmann 2021 JES**(★ porosity/σ_ion/τ 앵커 진짜 출처, EIS-TLM) · Minnmann 2022(설계 Perspective).
++ docs/ digest: **Minnmann 2021 JES**(★ porosity/σ_ion/τ 앵커 진짜 출처, EIS-TLM) · Minnmann 2022(설계 Perspective)
+· **★ Doux 2020**(작동압 vs 제조압 LPSCl 앵커, porosity 18 %@370 MPa) · **Cronau 2021**(stack pressure σ-측정 protocol).
+**Stack-pressure 3종 압력 구분 완성:** 제조(fab ~300–490 MPa: Minnmann 380 / Doux·Cronau 370–490) ≠ 측정/작동(stack ~5–70 MPa:
+Doux 5 최적 / Minnmann 측정 40 / Cronau sputter 5–10·WC 30–50). 데이터 `docs/data/doux2020_stack_pressure.csv`,
+`cronau2021_stack_pressure_ionic.csv`, `minnmann2021_sigma_tau_porosity.csv`.
 새 PDF 업로드 후 "논문 에이전트 실행해줘"로 추가.

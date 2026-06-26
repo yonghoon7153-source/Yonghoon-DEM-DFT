@@ -11,3 +11,4 @@ varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,300,37.5,137.7,13
 varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,350,37,135.6,135.3,thickness_exact_porosity_digitized,floor 37pct (AM-rich stiff halide)
 ours_minnmann,separator,Li6PS5Cl,1.35,pure_SE,300,10,,,experiment_anchor,LPSCl cold-press Minnmann (E_eff soft -> denser)
 ours_real14,cathode,Li6PS5Cl,1.35,AM-rich_82_18,300,15.6,,30.28,dem_measured,real_14 DEM (soft E + MPM flow reach below rigid floor)
+doux2020,separator,Li6PS5Cl,24,pure_SE_pellet,370,18,,1000,experiment_anchor,LPSCl pellet rel.density 82.1pct (TableS2 80.3-84.9) @370MPa cold-press = our LPSCl; ~20pct rigid-sphere floor analog (our soft+plastic pure-SE 10pct is BELOW). Li-metal cell paper -> SE pellet porosity only

@@ -2,9 +2,14 @@
 
 > 기준값: `our_dem_baseline.md`. 각 축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
 > 현재 digest: Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
-> McGeary1961(패킹), **Lee2025·Minnmann2021 JES(실험 앵커 — 우리 NCM/LPSCl 소재계)**. elasto-plastic 종합 =
-> `elasto_plastic_feasibility.md`. ★ **Minnmann 2021 JES = 우리 porosity/σ_ion/τ 앵커의 진짜 출처**
-> (digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`; 2022 Perspective 아님).
+> McGeary1961(패킹), **Lee2025·Minnmann2021 JES·Doux2020·Cronau2021(실험 앵커 — 우리 NCM/LPSCl 소재계)**.
+> elasto-plastic 종합 = `elasto_plastic_feasibility.md`. ★ **Minnmann 2021 JES = 우리 porosity/σ_ion/τ 앵커의
+> 진짜 출처** (digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`; 2022 Perspective 아님).
+>
+> ★ **Stack-pressure 3종 압력 구분 (Doux2020 + Cronau2021 + Minnmann2021):** **제조압(fab ~300–490 MPa)**
+> = 압밀/porosity/Heckel(우리 300, Heckel P_y 138) ≠ **측정/작동압(stack ~5–70 MPa)** = 계면접촉/creep/σ-측정
+> (Doux 5 MPa 최적 / Minnmann 측정 40 / Cronau sputter 5–10). Doux digest `docs/lit_doux2020_stack_pressure_assb.md`,
+> Cronau `docs/lit_cronau2021_stack_pressure_ionic_conductivity.md`.
 >
 > ★ **Lee2025 (Nat. Commun. 2025, UCSD+LGES)** 는 유일하게 **우리와 완전히 같은 소재계**(LPSCl + NCM811/82 +
 > **VGCF + PTFE** 둘 다)의 **순수 실험** 막 논문 → 시뮬 경쟁 아니라 **frame[4] 외부 실험 앵커**.  세 곳에 매핑:
@@ -35,6 +40,20 @@
 - **Bouvard 2000**: 경상↑ → 고압 porosity↑ (Astroloy 0.995→0.86 @0→35 vol% alumina) = 우리 AM↑→porosity↑;
   '온도↑→σ_y↓→압밀↑'은 우리 E_eff 연화의 실험적 정당화. **Martin–Bouvard 2003**: 거시응력이 E₂/E₁=10→100서
   <3% 변화 → **rigid-AM 가정 외부 면허**.
+- **★ Doux 2020 (LPSCl + Li-metal, 실험, =우리 SE) — 18 % floor + 제조/작동압 분리**:
+  - **LPSCl 펠릿 porosity 18 %** (rel.density 82.1 %, Table S2 80.3–84.9 %) **@370 MPa cold-press** →
+    ★ **same-material 실측이 우리 "rigid-sphere ~20 % floor" 를 확증**(압력으로 못 닫는 잔류공극). 우리 pure-SE
+    **10 %**(연화+소성)는 *이 18 % 아래로* 도달 → **연화/소성이 floor 를 깬다**는 논증의 직접 대조점.
+    `docs/data/{doux2020_stack_pressure,densification_porosity_db}.csv`.
+  - **제조압 vs 작동압 분리 (§8 명문장):** "펠릿은 이미 **370 MPa** 로 cold-press 되어 **작동 stack
+    pressure(5–75 MPa)의 역학은 단락에 영향 없다**" → **제조압=압밀/porosity/Heckel**, **작동압=계면접촉/creep**
+    가 *다른 물리* 임을 실험 분리. ⇒ 우리 **"300 MPa=제조(Heckel P_y=138) vs 작동 수~수십 MPa"** 인식의
+    **권위 있는 LPSCl 근거**. Heckel P_y 도 *제조압* 무릎이지 작동압 아님 — 구분 흐려지지 않게 cite.
+  - **soft 상이 공극으로 흐른다(거시물리 일치, 단 주체 다름):** Doux = **Li metal** 이 LPSCl 의 *기존* 18 %
+    공극으로 creep(Li 항복 0.8 MPa, 작동압이 ~6–100×); 우리 MPM = **SE 입자 자신**의 소성 void-fill. 같은
+    *종류*의 물리지만 **상(Li≠SE)이 달라** Doux 가 우리 SE 소성을 *직접* 검증하는 건 아니고 **간접 보강**
+    (LPSCl 은 압력민감 soft/다공 시스템). ⚠ over-claim 금지.
+  - ⚠ **Li-metal 단락 논문** → 단락시간·용량·dendrite 수치 전사 금지, **SE 압력-역학·porosity 만**.
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 - **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**
@@ -52,6 +71,15 @@
   우리 Stage-E 소성 접촉면적이 이 과소를 일부 보정. 그들은 σ_e/σ_thermal 없음(우리 삼중항 우위).
 - 인사이트: **Bazzoun 실험 σ_eff,ion = 우리 σ_ionic의 외부 절대 검증점** (그들 vol% CAM:SE → 우리 φ_SE 매핑 후).
   "missing direct validation"(다중압력 LPSCl σ_ionic) 확보.
+- **★ Doux 2020 (LPSCl, 실험) — 접촉-vs-압력 포화 + 비가역 (σ-vs-P 와 같은 계열)**:
+  - Li 대칭셀 **임피던스 500→110→50→40→35→32 Ω** (1→5→10→15→20→25 MPa) → **~20–25 MPa 에서 포화**(plateau).
+    ★ **압력↑→접촉↑→포화** = 우리 Heckel knee(P_y 138) / Bazzoun σ-포화@400 MPa 와 **같은 계열**의 "압력으로
+    접촉 좋아지다 수확체감" 곡선. **단 Doux 는 Li/SE *계면* 접촉저항(Ω)**, 우리·Bazzoun 은 SE/SE *벌크망 σ* →
+    **추세만** 비교(절대 직접대조 금지). 다중압력 σ 의 직접 데이터는 Bazzoun(RNM)·Cronau(protocol) 소유.
+  - **비가역 이력:** 25→5 MPa release 시 임피던스 **초기 5 MPa 의 절반 이하(110→50 Ω)** 로 유지 → **압밀=비가역
+    소성**(우리 MPM 영구변형·overlap 잔류·Heckel 비가역)의 거시 증거. ⇒ "**고압-제작 + 저압-운용**" 실용전략 근거.
+  - **bulk LPSCl σ_pellet 2–2.5 mS/cm** (cold-press, GB+공극 포함) = Cronau µC-Br ~2.4 / Lee pristine 2.19 /
+    Bazzoun pellet 1.02 / 우리 채택 3.0(단결정-라벨) 사이의 **또 하나의 LPSCl bulk 앵커** (스프레드로만, 절대대조 금지).
 - **★ Lee 2025 (LPSCl + NCM811/82 + VGCF + PTFE, 실험)**:
   - **PTFE wt% σ 페널티 곡선** (Supp Fig 5, CAM:SSE:VGCF 80:17:3 고정, 75 MPa):
     PTFE 0.5 / 2 / 5 wt% → **σ_ionic 0.069 / 0.024 / 0.007 mS/cm** AND **σ_e 34 / 4.5 / 0.011 mS/cm** (≈3,000×↓).
