@@ -197,6 +197,13 @@
   σ_ion,eff 0.17 mS/cm @42 vol% NCM ⊂ 우리 DEM σ_ionic 0.04–0.18; 복합 porosity 13–17 % ≈ 우리 real_14 15.6 %;
   τ_ion²(Eq 4) = 우리 τ_Laplace,eff 정의; "fine SE→σ_eff↑ = packing/τ" 결론 일치; utilization(ion+e 둘 다
   연결) = 우리 dead-AM. (frame[4] 외부 실험 앵커 — 같은 NCM/LPSCl 매트릭스.)
+- ★ **Bielefeld 2019 = 우리 *구조 파이프라인*의 가장 가까운 peer + 우리 3대 novelty의 정확한 위치를 드러냄**:
+  Janek 그룹 자신의 GeoDict 구조-모델링이 (i) 구조를 *랜덤 배치*(우리는 *압축해 예측*), (ii) σ를 *안 풂*(우리는
+  Kirchhoff/Holm 삼중항), (iii) *단봉 입경*(우리는 bimodal+dip)이라, **"공정→구조 예측 + 접촉망 σ + 소성 morphology"**
+  세 portion이 *정확히 그들이 비운 칸*에 들어감.  ★ **같은 그룹의 후속 Bazzoun 2026이 *바로 그 σ 솔버*(RNM/Holm)를
+  추가** = Bielefeld(percolation, 2019) → Bazzoun(RNM σ, 2026) → 우리(σ 삼중항+MPM) 라는 *그룹-내부 진화*가 우리
+  방향이 옳다는 증거.  percolation 추세(작은 입자→percolation↑·utilization·active interface·β=0.41·good-perf
+  porosity ~21%)는 frame[4] 구조 descriptor 교차검증(σ 절대값은 그들이 없어 불가).
 - Bazzoun RNM(Holm+Kirchhoff) = 우리 네트워크 솔버 → 같은 물리, 추세 일치 (frame[4] 독립 교차검증).
 - Bazzoun 실험 σ_eff,ion + 다중압력 = 우리가 부족했던 **외부 실험 앵커** 제공.
 - Varkey E_SE=10.58·floor 21/37 % = 우리 "E 강성 → floor" 가설의 stiffer-SE 데이터점.
@@ -208,6 +215,14 @@
 
 ## F. 우리가 아직 못 하는 것 / 흡수할 것 (정직 목록 → 향후)
 - **FEM 연속체 transport 기준** 없음 (Bazzoun COMSOL 보유) — RNM↔FEM 대조틀 흡수 가치.
+- **★ Bielefeld 2019 이 *앞서는* 것 (정직):** **GeoDict 성숙도**(상용 voxel 재료-연구소)·**Hoshen-Kopelman cluster
+  분석**·**깨끗한 percolation power-law(β=0.41) + 입경-percolation 로그식(p_c=7.83·ln d+36.67)** + **porosity별 이상
+  조성의 체계적 스윕(5/10/20%)**.  ★ **분류:** 그들 = **top-down / stochastic placement**(porosity·조성·입경=입력,
+  랜덤 배치 + 사후 겹침조정; GeoDict ConductoDict/DiffuDict 계보, 단 σ PDE까지 안 가고 percolation cluster까지) —
+  우리 NOVELTY.md §1 "top-down/reconstruction(필드 주류)" 열·§4 portion map **역할 A(percolation 추세 anchor)+M
+  (methodology peer)**.  우리 = **bottom-up/process-physics formation**.  ⚠ 그들 *비운 칸*(σ·소성 SHAPE·dip·공정
+  예측)이 우리 novelty지만, *구조-기하 분석 도구*(Hoshen-Kopelman·power-law fit)는 우리도 갖춘 것 — 흡수보다 *정당화
+  근거*로 사용(우리 f_perc/percolation 지수가 그들 β=0.41과 같은 universality class).
 - **다중압력 Heckel(LPSCl powder) 실측** — 우리 직접앵커 부족; Bazzoun σ-vs-P / Varkey P-vs-porosity로 보강.
 - **명시적 바인더(SBR/CB/PTFE) 역학·이온저항 R_b** — Varkey/Bazzoun 보유, 우리 미모델.
 - **multi-contact 구속항 F_mc** (Varkey) vs 우리 18× 연화 — 같은 증상(ρ>0.7 과강성) 다른 처방, 비교연구 거리.
