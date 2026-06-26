@@ -23,6 +23,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 | **Sundar 2025** (oxide-coating 스크린, Argonne) | D·G | InterfaceReactions = 우리 interface_reactivity와 동일도구; 분해산물-σ 철학; Li₂S<LiCl gap 재확인. ⚠코팅≠도핑 | `sundar2025_oxide_coating_screening_lpscl` |
 | *(기존)* GilGonzalez 2022 | B② 기계구속 | Cl-rich K_eff=20서 창 확장 (Zuo B③와 다른 축) | `gilgonzalez2022_synergistic_cl_constricted_esw` |
 | *(기존)* Lu 2025 | 음극 | Cl-rich 음극 LiCl passivation (Liu와 같은 진영) | `lu2025_tailoring_cl_rich_anode_licl` |
+| **★ Banik 2022** (치환↔산화안정성, **Mo**+Zeier) | B① intrinsic | **우리 방법 본가(Mo=grand-potential 원저자)가 우리 결론 독립 발표**: 치환은 onset 못 옮김(S 3p가 pin)=comp1=modelc 2.14V; COHP가 우리 ICOHP/ELF 확증 | `banik2022_substitutions_oxidative_stability_argyrodite` |
 
 ## C. 외부 — 이론/방법 백본
 | 논문 | 유형 | 우리 작업 연결 (1줄) | slug |
@@ -47,6 +48,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 4. **inter-cage 서사 3단**: 이론(Ishikawa/Dyre) + 시각증거(Liu2022 Fig2e-g) + analogy(Liu2013 cage).
 5. **Cl-rich 산화 4축 정명**: B①intrinsic onset(무승부, S²⁻-limited 2.14V) · B②기계구속(GG) · B③양극cycling(Zuo) · 음극(Liu/Lu). 섞으면 틀림.
 6. **방법 엄밀성**: 우리=표준 battery-DFT(He19) + ESW는 grand-potential로 *상회*(band-edge 2–3×과대) + W_ad는 SMD개선(Choi) + UPS로 VBM실측.
+7. **★ S-pin 산화 명제 (Banik=외부 정답지)**: "치환은 S-limited 산화 onset 못 옮긴다"가 이제 **Zeier 실험 + Mo 계산**(우리 grand-potential 본가)의 검증을 가짐. 우리 차별화 = Banik이 닫은 문 *위*: (i) Cl-rich 4축, (ii) onset 옮기는 예외도판트(B₂O₃ 2.317·Sc/Cr/In/Ga₂O₃ 2.356, ≤0.2V), (iii) Nd passivation. + "치환 안 되니 코팅 필요"가 우리그룹 cathode-interface 라인을 외부 정당화.
 
 ## 진행 중 (완료 시 추가)
 - **#18** "Can substitutions affect oxidative stability?" — 우리 cascade 산화축과 정면 (most relevant)
