@@ -59,8 +59,14 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
 - ✅ **★ Poly% 문턱 존재** — **3:7(Poly 30%) 도우 OK / 7:3(Poly 70%) 실패** (사용자 확인). 문턱이 30~70% 사이
   → **"단결정 backbone percolation" 확정** (단결정=섬유화 agent가 일정 비율 이상이어야 도우 형성).
 - ✅ **★ 2nd Thinky 시간(time) 무효** — **5분 = 10분, 차이 없음** (사용자 확인). → **"양(time)"이 아니라 "강도(intensity) 문턱" 문제.**
-  섬유화는 per-event shear가 문턱을 넘어야 일어남 → 강도가 문턱 아래면 시간 늘려도 분산만 반복(누적 안 됨). **시간은 레버에서 제외.**
-  남는 레버 = **강도↑(rpm)** 또는 **문턱↓(온도)** 둘뿐.
+  섬유화는 per-event shear가 문턱을 넘어야 일어남 → 강도가 문턱 아래면 시간 늘려도 분산만 반복(누적 안 됨).
+- ✅ **★★ Ball mill = Poly-rich 도우 "부분적으로" 됨 (Thinky는 전혀 안 됨)** — 사용자 확인. **단, Poly 많으면 완전 도우는 X(gradient).**
+  **★ 둘 다 지르코니아 볼 들어감**(Thinky 5pi×6+3pi×9 / ball-mill 5pi×5+2pi×15) → 차이는 **미디어 유무 아니라 거동(dynamics):**
+  - **ball-mill = 볼이 tumbling/cascade → impact(충격)** → per-event 전단↑ → PTFE 직타 → Poly여도 부분 섬유화.
+  - **Thinky = 강한 원심력에 볼이 벽으로 pinned → flow/press shear**(저강도·분산) → 무른 Poly가 쿠션 흡수 → 문턱 미달(전혀 안 됨).
+  - ⚠ 함의: Thinky rpm↑ = 원심력↑ = 볼이 *더* 눌림 → 충격이 오히려 안 늘 수도 (Thinky로는 한계인 물리적 이유).
+  → **도우 완성도 = gradient = f(전단강도, 단결정%, −Poly%).** ball-mill이 Thinky보다 강도↑로 **Poly 허용치를 높이나, 70% Poly는 ball-mill 충격으로도 full-dough 문턱 미달.**
+  → "강도 문턱" 모델이 ball-mill(부분)>Thinky(0)·시간무효·단결정OK·Poly↑록 악화 를 전부 설명.
 - ✅ **온도가 섬유화 핵심 손잡이** — 85°C 롤링이 PTFE 모듈러스↓로 섬유화 완성
   (Lee2025: 30→120°C서 균일·바인더 모듈러스 −67%; Nam2026: 섬유화 = shear·온도·시간).
 - ✅ **★ 전 실험 85°C 핫롤링 공통** (사용자 확인) — 단/3:7·7:3 **모두 85°C 핫롤**. 그런데 **결과가 다름:**
@@ -113,19 +119,25 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
 | 5 | 핸드믹싱 → (떡) → **핫롤 85°C** (8방향×5단계×5회) | 성형·마무리 | 고 | 85°C | ❌ **도우 없는 분말 압연 → 갈라짐** |
 | 6 | 추가 롤링 → 타발 | 두께/로딩 | 고 | 85°C | ❌ |
 
-→ **실패 지점 = 4 (2nd Thinky = shear/도우 단계)** — Poly-rich가 shear를 흡수해 섬유화 문턱 미달 → 도우 X → 5에서 도우 없는 분말을 압연하니 **갈라짐.**
-핫롤도 *없는* 망을 새로 충분히 만들진 못함.
+→ **실패 지점:** 표준 루트는 **2nd Thinky(flow shear)에 최종 도우를 의존** — 단결정엔 OK, **Poly엔 무력**. Poly는 **ball-mill impact(2h)** 가 부분 도우. 도우 부족 상태로 5 압연 → **갈라짐**. 핫롤도 *없는* 망 새로 못 만듦.
 
-### (2) 왜 4(2nd Thinky)에서 섬유화가 안 되나 (메커니즘)
-2nd Thinky shear로 PTFE 섬유화 → 도우. **단결정(작고 단단)=shear 잘 전달→섬유화** / **Poly(크고 무른 다공성)=shear 흡수·접점↓→문턱 미달.** 7:3은 단결정 30%로 percolation 미달.
+### (2) 통합 메커니즘 — 왜 Poly는 안 되나 (★ 정정: CAM 경도 의존)
+섬유화 = **per-event shear > 문턱.** 전단 2종: **(i) Thinky flow/press shear**(하드 입자가 PTFE에 전달) · **(ii) ball-mill 미디어 impact.**
+- **단결정(하드):** Thinky flow shear를 PTFE에 잘 전달 → **Thinky서 도우** (+ball-mill 도움).
+- **Poly(소프트·다공성):** Thinky flow shear를 쿠션 흡수 → **Thinky 미달**; **ball-mill IMPACT에 의존 → 부분 도우**(2h 필요, 70%는 부분). 7:3은 단결정 30%로 percolation 미달.
+- 둘 다 지르코니아 有, 단 **Thinky 미디어=원심 pinned(저impact)·ball-mill=tumbling(고impact).**
+- ⚠ **peak 전단 ≠ rpm (Thinky 2000 vs ball-mill 200):** rpm 숫자가 아니라 *전달 모드*가 peak를 정함.
+  Thinky 2000rpm = 고 g → flow/press(연속·중간 peak) + 고g가 **미디어 pin**. Ball-mill 200rpm = cascade → **discrete IMPACT**(점타격·고 strain-rate = 고 peak).
+  **역설(critical speed):** 볼밀은 임계속도 이상이면 미디어가 원심으로 벽에 붙어 cascade 멈춤(밀링 X). Thinky 2000rpm은 그 영역 위 → **미디어 pinned → impact≈0, flow만.** ⇒ **더 빠른 rpm이 오히려 peak impact를 죽임.** (블렌더 vs 망치 비유) ※ 메커니즘 추론(실측 전단값 없음); 관찰=ball-mill 도우/Thinky X가 ground truth.
 
-### ★ 핵심 합성 (synthesis) — 공정 단계 역할 (정정)
-**단계 역할:** 1st Thinky·ball-mill(200rpm) = **분산** / **2nd Thinky = shear force로 섬유화→도우 (의도된 도우 단계)** / 핫롤 = 성형.
-→ 2nd Thinky shear가 **단결정은 섬유화(도우 O)**, **Poly-rich는 cushioning(전단 흡수)으로 문턱 미달(도우 X)**.
-**두 레버가 한 쌍:**
-- **(B) 2nd Thinky rpm↑ = shear 직접↑ (native 도우 knob)** — 도우 만드는 단계 그 자체 → **1순위 시도**. ⚠ Poly가 흡수하므로 Thinky shear *천장*이 Poly cushioning을 못 이기면 한계.
-- **(A) 온도↑ = 섬유화 문턱↓** — Thinky shear가 부족해도 *같은 shear로* 섬유화되게 함 + **균일도 유지**(masterbatch 회피). 천장 한계의 보완책.
-⇒ **rpm(shear) ↔ 온도(문턱) 두 레버 묶음.** 분산 단계(1st Thinky·ball-mill) 키우는 건 균일도일 뿐 도우 주레버 아님.
+### ★ 핵심 합성 (synthesis) — 단계 역할은 CAM 경도에 의존
+- **단결정:** 2nd Thinky(flow shear) = 도우 단계.
+- **Poly-rich:** Thinky flow shear 부족 → **ball-mill IMPACT가 섬유화 엔진**(2h 부분 도우). 2nd Thinky는 Poly엔 거의 무력.
+**레버 (Poly-rich 도우, 우선순위):**
+- **★ ball-mill(impact) = Poly 섬유화의 맞는 도구** (Thinky 아님). 시간↑ 누적(문턱 위). 단 70%는 부분.
+- **★ 온도↑(문턱↓)** = ball-mill **+ 외부가열**로 7:3 full dough 시도 (가장 유망한 단일층).
+- Thinky rpm↑ = **Poly엔 약함**(flow shear + rpm↑이 미디어 더 pinned → impact 안 늚). 단결정엔 유효.
+- 그래도 부분이면 → **다층/조성**(도우층 Poly% 낮춤).
 
 ### ★ Poly에서 2nd Thinky rpm↑의 효과 분해
 1. **★ shear force↑ → 섬유화 drive↑** — 2nd Thinky의 본 목적. **도우의 직접 동인**(단결정은 이걸로 충분).
@@ -220,3 +232,8 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
   ★ 교차검증: **핫롤 85°C도 7:3 실패** → "열만 주면 됨" 단순 X. 해석: fibrillation은 **kneading 3D 전단**서 일어나야, **롤링 2D는 없는 망 못 만듦**(85°C여도).
   → 온도 테스트 재정의: **2nd Thinky 외부가열(60–70°C) kneading** (자가발열 plateau 위, 롤링 아님). 실패 시 7:3 단일층 본질 불가 → 다층/조성.
   다음: ① Thinky plateau 온도 IR 측정 ② rpm sweep ③ 외부가열 kneading.
+- **2026-06-26 (갱신 10)** — ★★ **ball-mill은 Poly 도우 (부분) 됨 / Thinky는 X** (사용자) = 진단 핵심.
+  메커니즘 통합: 섬유화=shear>문턱, 전단 2종(Thinky flow / ball-mill impact). 단결정=Thinky flow로 도우, Poly=ball-mill impact 의존(부분, 70%는 gradient).
+  정정들: **둘 다 지르코니아 有**(차이=거동, impact vs 원심pinned) · **단계역할 CAM경도 의존**(Poly엔 ball-mill이 섬유화 엔진) ·
+  **peak전단≠rpm**(Thinky 2000>ball 200이어도 critical-speed 위라 미디어 pinned→impact 죽음) · **ball-mill도 70% Poly엔 부분 도우(gradient)**.
+  레버 재정리(Poly-rich): ① ball-mill(impact) ② +외부가열(문턱↓) ③ 그래도 부분이면 다층/조성. Thinky rpm은 Poly엔 약함.
