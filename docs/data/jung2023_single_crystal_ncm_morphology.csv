@@ -1,0 +1,45 @@
+metric,value,unit,cathode,cell,condition,stated_or_digitized,notes
+particle_hardness,972.7,MPa,SC-NCM,LIB,micro-indenter MCT-W500 stress-strain peak,stated,SC ~8.6x harder than PC; mechanical strength
+particle_hardness,113.3,MPa,PC-NCM,LIB,micro-indenter MCT-W500 stress-strain peak,stated,PC much softer; ~-113.3 in text
+particle_hardness_after_LE_immersion,maintained_high,MPa,SC-NCM,LIB,after soaking in liquid electrolyte (Fig S8),stated_qualitative,SC keeps hardness after soak
+particle_hardness_after_LE_immersion,decreased_considerably,MPa,PC-NCM,LIB,after soaking in liquid electrolyte (Fig S8),stated_qualitative,PC hardness drops after soak (GB attack)
+tap_density,2.10,g/cm3,SC-NCM,powder,porosity analyzer + tap density (Fig S5b),stated,SC denser than PC
+tap_density,2.02,g/cm3,PC-NCM,powder,porosity analyzer + tap density (Fig S5b),stated,PC lower tap density
+BET_surface_area,0.23,m2/g,SC-NCM,powder,N2 isotherm (Fig S5a),stated,SC lower SA (monolithic)
+BET_surface_area,0.28,m2/g,PC-NCM,powder,N2 isotherm (Fig S5a),stated,PC higher SA (aggregate of primaries + internal voids)
+D50_particle_size,5.0,um,SC-NCM,powder,PSA MICROTRAC + FESEM (675C optimum),stated,SC monolithic 5 um at 675C
+D50_particle_size,4.9,um,PC-NCM,powder,PSA (800C calcined),stated,PC spherical aggregate ~600 nm primaries
+D50_particle_size,13.0,um,as-prepared SC-NCM,powder,PSA (900C as-prepared, aggregated),stated,as-prepared SC too large/aggregated
+D50_particle_size,4.5,um,wet-milled SC-NCM,powder,PSA (after IPA wet-mill 150rpm x6),stated,wet-mill shrinks + damages surface
+D50_particle_size,7.0,um,SC-NCM_700C,powder,PSA (700C overheated -> agglomeration),stated,700C too high -> agglomeration
+primary_particle_size,600,nm,PC-NCM,powder,FESEM (Fig 2b),stated,PC primaries ~600 nm
+lattice_param_c,14.1811,angstrom,PC-NCM,powder,XRD Rietveld (Table S1),stated,PC larger c
+lattice_param_c,14.1929,angstrom,SC-NCM,powder,XRD Rietveld (Table S1, 675C),stated,SC smaller c (Li-deficiency Li/TM<1 from post-heat)
+lattice_param_c,14.1920,angstrom,as-prepared SC-NCM,powder,XRD (Table S1),stated,Li loss during post-heat not wet-mill
+lattice_param_c,14.1920,angstrom,wet-milled SC-NCM,powder,XRD (Table S1),stated,same as as-prepared (Li loss in post-heat)
+TM_ratio_Ni_Co_Mn,82_12_6,atomic,SC-NCM,powder,ICP-MS,stated,Ni:Co:Mn = 82:12:6
+reversible_capacity_1st,187.0,mAh/g,SC-NCM,ASSB,0.05C 1st cycle 437MPa In-Li,stated,SC > PC in ASSB (opposite to LIB)
+reversible_capacity_1st,185.0,mAh/g,PC-NCM,ASSB,0.05C 1st cycle 437MPa In-Li,stated,PC lower in ASSB
+initial_coulombic_efficiency,79.9,percent,SC-NCM,ASSB,0.05C 1st cycle,stated,SC higher ICE in ASSB
+initial_coulombic_efficiency,78.3,percent,PC-NCM,ASSB,0.05C 1st cycle,stated,PC lower ICE in ASSB
+rate_capacity_retention_5C,74.0,percent,SC-NCM,ASSB,5C vs 0.1C cut-off 3.9V In-Li,stated,SC retains 74% at 5C
+rate_capacity_retention_5C,41.6,percent,PC-NCM,ASSB,5C vs 0.1C cut-off 3.9V In-Li,stated,PC collapses to 41.6% at 5C (GB+void bottleneck)
+cycle_retention_100cyc,75.0,percent,SC-NCM,LIB,0.5C 100 cycles 3.0-4.3V,stated,SC slightly higher than PC in LIB (62.9)
+cycle_retention_100cyc,62.9,percent,PC-NCM,LIB,0.5C 100 cycles 3.0-4.3V,stated,PC fades in LIB (cracks penetrated by LE)
+cycle_retention_150cyc,84.9,percent,SC-NCM,ASSB,0.5C 150 cycles cut-off 3.9V In-Li,stated,SC retains 84.9% after 150 cyc ASSB
+cycle_retention_150cyc,65.6,percent,PC-NCM,ASSB,0.5C 150 cycles cut-off 3.9V In-Li,stated,PC 65.6% after 150 cyc ASSB (microcrack+contact loss)
+microcrack_after_cycling,suppressed,qualitative,SC-NCM,both,cross-section FESEM after 100/150 cyc (Fig 5a/b Fig 7),stated_qualitative,SC monolith no microcrack -> integrity
+microcrack_after_cycling,extensive,qualitative,PC-NCM,both,cross-section FESEM after 100/150 cyc (Fig 5a/b Fig 7),stated_qualitative,PC intergranular cracks along grain boundaries
+GITT_overpotential_dV,smaller,V,PC-NCM,LIB,GITT 10min pulse + 1h relax 0.1C (Fig 4c),stated_qualitative,PC smaller dV in LIB (LE penetrates -> short diffusion in primaries)
+GITT_overpotential_dV,larger,V,SC-NCM,LIB,GITT (Fig 4c),stated_qualitative,SC larger dV in LIB (longer solid diffusion length in monolith)
+GITT_overpotential_dV,smaller,V,SC-NCM,ASSB,GITT dV-vs-SOC (Fig 6d),stated_qualitative,SC smaller dV in ASSB (opposite to LIB) -> ambipolar advantage
+GITT_overpotential_dV,larger,V,PC-NCM,ASSB,GITT dV-vs-SOC (Fig 6d),stated_qualitative,PC larger dV in ASSB (GB+void bottleneck for ambipolar diffusion)
+Rct_charge_transfer,lower,Ohm,PC-NCM,LIB,EIS Nyquist 2nd semicircle (Fig S7),stated_qualitative,PC lower Rct in LIB (larger interface area from primaries)
+Rct_charge_transfer,higher,Ohm,SC-NCM,LIB,EIS Nyquist (Fig S7),stated_qualitative,SC higher Rct in LIB (smaller active interface)
+composite_composition,60_35_5,wt percent,both,ASSB,NCM:LPSCl:SuperP composite cathode,stated,60:35:5 wt%
+fab_pressure,437,MPa,both,ASSB,external pelletization pressure,stated,437 MPa composite/electrolyte stack
+SE_separator_mass,100,mg,both,ASSB,LPSCl pellet 10 mm dia,stated,solid electrolyte separator
+anode,In_Li,foil,both,ASSB,In foil + Li foil torque 11 N m,stated,In/Li anode
+LIB_loading,17.0,mg,both,LIB,electrode area 1.131 cm2 roll-pressed 200 kgf/cm2,stated,LIB control electrode
+post_heat_optimum,675,C,SC-NCM,powder,6h O2 atmosphere,stated,675C = D50 5um no structural damage
+post_heat_range,600-700,C,SC-NCM,powder,6h O2 structural recovery,stated,600 low rate / 700 agglomeration
