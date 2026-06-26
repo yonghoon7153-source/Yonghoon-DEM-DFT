@@ -11,10 +11,10 @@ cd "$WORK" || { echo "no $WORK"; exit 1; }
 cp "$SELF/P_gs.in" "$SELF/P_ch.in" .
 for p in P_gs P_ch; do
   echo "=========== ld1.x $p (in=$(wc -l < $p.in) lines) ==========="
-  timeout 120 $LD1 < ${p}.in > ${p}.ld1out 2>&1
+  timeout 300 $LD1 < ${p}.in > ${p}.ld1out 2>&1
   rc=$?
   if [ -f ${p}.UPF ]; then echo "  UPF OK ($(wc -c < ${p}.UPF) bytes)"
-  elif [ $rc -eq 124 ]; then echo "  *** TIMEOUT(120s) — likely rel=2 core-hole not converging"
+  elif [ $rc -eq 124 ]; then echo "  *** TIMEOUT(300s) — likely rel=2 core-hole not converging"
   else echo "  *** NO UPF (rc=$rc):"; grep -iE "error|waiting for input" ${p}.ld1out | head -3; tail -3 ${p}.ld1out; fi
 done
 echo "=== DONE ==="
