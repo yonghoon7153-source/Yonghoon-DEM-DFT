@@ -1,6 +1,7 @@
 # 📚 LITDB — DEM+MPM ASSB 압밀·전달 문헌 인덱스
 
-> 갱신: 2026-06-26. 각 논문 상세는 `papers/<slug>.md` (digest), 우리 대비는 `comparison_vs_ours.md`,
+> 갱신: 2026-06-27. ★ **종합 리뷰(60편) = `docs/literature_review_dem_mpm_assb.md`** (분류표 + 섹션별 review +
+> DEM/MPM 적용리스트 + MPM 수식계보 + Stage-2 닫음 + 결론).  각 논문 상세는 `papers/<slug>.md` (digest), 우리 대비는 `comparison_vs_ours.md`,
 > 기준값은 `our_dem_baseline.md`. 수치 CSV는 `docs/data/<slug>_*.csv`.
 
 Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
