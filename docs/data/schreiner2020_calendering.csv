@@ -1,0 +1,32 @@
+category,parameter,phase_pair,value,unit,source,note
+# Schreiner Klinger Reinhart 2020 Procedia CIRP 93 149-155 (TU Munich) — LIB NMC622 calendering DEM (EDEM + EEPA + Bonding). SHORT CONFERENCE PAPER — minimal hard numbers; mostly qualitative parameter screening. NO porosity-vs-line-load table exists in the paper.
+composition,mass_fraction,NMC622_AM,95.50,wt%,Table1_stated,cathode active material (NMC622)
+composition,mass_fraction,PVDF5130_binder,2.25,wt%,Table1_stated,binder
+composition,mass_fraction,C65_carbon_black,1.50,wt%,Table1_stated,conductive carbon black
+composition,mass_fraction,SFG6L_graphite,0.75,wt%,Table1_stated,conductive graphite (Timcal)
+material,crystal_density,NMC622,4.74,g/cm3,Table1_stated,
+material,crystal_density,PVDF5130,1.70,g/cm3,Table1_stated,
+material,crystal_density,C65,1.66,g/cm3,Table1_stated,
+material,crystal_density,SFG6L,2.33,g/cm3,Table1_stated,
+structure,coating_density_uncompressed,electrode,2.53,g/cm3,text_stated,uncompressed coating density
+structure,porosity_uncompressed,electrode,43,%,text_stated,ONLY hard porosity value; corresponds to rho 2.53 g/cm3
+structure,single_sided_coating_thickness,electrode,56,um,text_stated,d_sheet; control volume trimmed to this
+PSD,mean_d50,NMC622,7.19,um,text_stated,log-normal (static laser scattering SLS)
+PSD,smallest_particle_in_sim,NMC622,3.4,um,text_stated,sets timestep (Rayleigh); neglected fines <3.4um are <2vol%
+PSD,upper_limit,NMC622,20,um,text_stated,larger would not fit electrode
+domain,control_volume_edge,RVE,250,um,text_stated,square edge length (x-y)
+domain,generation_height,RVE,120,um,text_stated,height for particle generation before trimming
+domain,trimmed_thickness,RVE,56,um,text_stated,trimmed to electrode thickness (avoids edge effects)
+indenter,flat_punch_diameter,nanoindentation,100,um,text_stated,calibration of contact model
+indenter,velocity,nanoindentation,0.15,um/s,text_stated,constant loading and unloading velocity
+contact_EEPA,plasticity_ratio_lambda_P,PVDF-NMC,0.9,-,text_stated,initial value; lambda_P = unloading-stiffness ratio (0=elastic,1=fully plastic)
+contact_EEPA,plasticity_ratio_lambda_P,NMC-NMC,0.8,-,text_stated,initial; NMC-NMC has GREATEST influence (largest contact area)
+contact_EEPA,plasticity_ratio_lambda_P,PVDF-PVDF,0.975,-,text_stated,initial value
+contact_EEPA,plasticity_ratio_lambda_P,all_increased_to,0.985,-,text_stated,values gradually increased to 0.985 to fit experiment
+contact_EEPA,surface_energy_dY,NMC-NMC,5,J/m2,text_stated,Delta_Y for load-dependent adhesion f_min
+contact_EEPA,surface_energy_dY,PVDF-NMC,20,J/m2,text_stated,
+contact_EEPA,surface_energy_dY,PVDF-PVDF,60,J/m2,text_stated,higher dY -> required compression force rises rapidly
+bonding,broken_bonds_max,electrode,25000-28000,count,Fig5_digitized,broken bonds across compaction path (~30um); approximate TREND
+bonding,bond_reform,electrode,none,-,text_stated,once destroyed bonds CANNOT reform (permanent breakage)
+machine,roll_diameter,calender,~400,mm,text_stated,roll ~400mm vs particles ~10um (4e4x); roll SECTION modeled not full roll
+machine,particle_vs_roll_ratio,calender,~40000,-,text_derived,~10um particle / ~400mm roll

@@ -1,0 +1,71 @@
+# So et al. 2022 (J. Power Sources 530, 231279) — DEM cold-press of ASSB cathode, SE modelled TWO ways: particle MIXTURE (free SE) vs SE-COATING (core-shell SE-coated AM).
+# Material: LPS (Li2S-P2S5) SE + NCM/LiCoO2 AM (cathode). E_SE=24, E_AM=199, H_SE=1.9, H_AM=11.2 GPa, nu=0.3, mu=0.5, e=0.5. 3D, 20x20 um box, primary 1/0.5 um (AM/SE), aggregate 5/1.45 um. RESULTS paper for which So 2022 MethodsX (slug so2022_dem_contact_model_assb_compaction_sintering) is the contact-model methods companion.
+# This study has NO explicit transport solver: ionic/electron transport ESTIMATED VIA TAUFACTOR TORTUOSITY (tau_SE, tau_AM of the percolating phase), NOT via a Kirchhoff/Holm contact-resistance network. "ionic transport" <- tau_SE; "electron transport" <- tau_AM (percolation of AM). The sigma_e coating-SHIELDING claim is read off AM-AM contact disruption + AM percolation, not a sigma value.
+# Most curve values DIGITIZED from Figs 4-7 (TREND only, +/-); stated values flagged. Material = LPS+NCM cathode, NOT our LPSCl+NMC811 -> do NOT transfer absolute, methods/trends only.
+metric,method,mold_pressure_MPa,value,units,stated_or_digitized,note
+# ---- AM particle DAMAGE (Fig 6b) = relative decrease in AM-AM fusion bonds f^AM (eq 9) ----
+am_damage,particle_mixture,0,0,pct,stated,zero damage at start
+am_damage,particle_mixture,100,4.5,pct,digitized,
+am_damage,particle_mixture,300,8.5,pct,digitized,
+am_damage,particle_mixture,500,12,pct,stated,"~12% at 500 MPa (text: 'approximately 12% at 500 MPa')"
+am_damage,SE_coating,0,0,pct,stated,zero damage at start
+am_damage,SE_coating,100,2.0,pct,digitized,coating slightly lower at low P
+am_damage,SE_coating,300,8.5,pct,digitized,curves cross ~300 MPa
+am_damage,SE_coating,500,12,pct,stated,"~12%; difference vs mixture NOT statistically significant (text)"
+am_damage_spatial,both,360,"25_at_wall_~5_in_bulk",pct,digitized,"Fig 6d: damage concentrated near upper+lower walls (current-collector / SE-layer boundaries); ~25% at z->0 wall, ~5% mid; both methods similar"
+# ---- AM-SE FUSION BONDS (Fig 5a) — coating starts with bonds, mixture builds them ----
+am_se_fusion_bonds,particle_mixture,0,0,count,digitized,"mixture: SE free -> ZERO AM-SE bonds initially"
+am_se_fusion_bonds,particle_mixture,500,23000,count,digitized,"builds to ~2.3e4 with pressure"
+am_se_fusion_bonds,SE_coating,0,50000,count,digitized,"coating: SE pre-attached -> ~5.0e4 AM-SE bonds at start"
+am_se_fusion_bonds,SE_coating,500,55000,count,digitized,"~5.5e4; largest mixture-vs-coating gap at low P, significant at all P"
+am_se_fusion_accumulated,SE_coating,500,55000,count,digitized,"Fig 5b: accumulated = initial + attached - delaminated; net increases with P"
+am_se_fusion_delaminated,SE_coating,500,13000,count,digitized,"Fig 5b: delaminated SE significant (~1.3e4 at 500)"
+am_se_fusion_attached,SE_coating,500,18000,count,digitized,"Fig 5b: NEWLY attached > delaminated -> net accumulation rises"
+# ---- AM-AM FUSION BONDS (Fig 6a) — DECREASE with pressure (this drives AM damage) ----
+am_am_fusion_bonds,particle_mixture,0,42000,count,digitized,"~4.2e4 initial (intra-aggregate)"
+am_am_fusion_bonds,particle_mixture,500,37000,count,digitized,"decreases significantly with P (broken contacts = damage)"
+am_am_fusion_bonds,SE_coating,0,42000,count,digitized,
+am_am_fusion_bonds,SE_coating,500,37000,count,digitized,"similar to mixture"
+# ---- NUMBER OF AM AGGREGATES (Fig 4a) — fragmentation indicator ----
+n_am_aggregates,particle_mixture,0,81,count,digitized,"starts at 81; increases from 50 MPa"
+n_am_aggregates,particle_mixture,500,89,count,digitized,"more fragments at high P (mixture)"
+n_am_aggregates,SE_coating,0,81,count,digitized,"stays ~81 up to 200 MPa (SE coating protects), then small rise"
+n_am_aggregates,SE_coating,500,83,count,digitized,"fewer fragments than mixture"
+# ---- AM PERCOLATION CLUSTERS (Fig 4b) — fewer = more connected ----
+n_am_perc_clusters,particle_mixture,25,80,count,digitized,"high count at low P"
+n_am_perc_clusters,particle_mixture,100,5,count,digitized,"drops FAST with P (AM-AM contacts form via SE delamination)"
+n_am_perc_clusters,SE_coating,25,25,count,digitized,"coating: fewer clusters at 25 MPa but..."
+n_am_perc_clusters,SE_coating,100,8,count,digitized,"reduction SLOWER than mixture (SE shell delays AM-AM contact)"
+# ---- ★ RELATIVE AM PERCOLATION VOLUME (Fig 4c) = electron-transport backbone ----
+rel_am_perc_volume,particle_mixture,25,1.0,fraction,stated,"mixture AM ALMOST FULLY percolated at 25 MPa"
+rel_am_perc_volume,SE_coating,25,0.3,fraction,digitized,"coating LOW at 25 MPa -> ★ SE shell SHIELDS AM-AM electron contact"
+rel_am_perc_volume,SE_coating,100,1.0,fraction,stated,"100 MPa required for coating to fully percolate AM -> SHIELDING VANISHES at high P"
+# ---- ★ RELATIVE SE PERCOLATION VOLUME (Fig 4d) = ionic-transport backbone ----
+rel_se_perc_volume,SE_coating,25,0.9,fraction,stated,"coating SE EXCEEDS 90% at 25 MPa -> ★ superior ionic percolating network at LOW P"
+rel_se_perc_volume,particle_mixture,25,0.15,fraction,digitized,"mixture SE low at 25 MPa"
+rel_se_perc_volume,particle_mixture,100,0.65,fraction,digitized,"mixture rises slowly"
+rel_se_perc_volume,particle_mixture,360,0.9,fraction,stated,"mixture needs 360 MPa to reach the 90% the coating had at 25 MPa"
+# ---- SE TORTUOSITY FACTOR tau_SE (Fig 7a,b) — lower = better ionic transport ----
+tau_SE,particle_mixture,50,36,-,digitized,"mixture HIGH tortuosity at low P (no PBC sim line)"
+tau_SE,particle_mixture,200,15,-,digitized,
+tau_SE,particle_mixture,360,9,-,digitized,"~exp point (Particle mix exp triangle)"
+tau_SE,particle_mixture,500,6,-,digitized,
+tau_SE,SE_coating,50,10,-,digitized,"coating LOW tortuosity (less tortuous, better-connected SE)"
+tau_SE,SE_coating,360,5,-,digitized,"coating < mixture at ALL P (red < blue)"
+tau_SE,SE_coating,500,4,-,digitized,
+# ---- AM TORTUOSITY FACTOR tau_AM (Fig 7c,d) — coating WORSE at low P (reversed!) ----
+tau_AM,particle_mixture,50,7,-,digitized,"mixture lower tau_AM at low P"
+tau_AM,particle_mixture,360,2.5,-,digitized,"~exp point"
+tau_AM,SE_coating,50,26,-,digitized,"★ coating MUCH HIGHER tau_AM at low P (AM not connected -> electron path tortuous = shielding)"
+tau_AM,SE_coating,100,7,-,digitized,"drops fast as P rises"
+tau_AM,SE_coating,360,2.5,-,digitized,"difference vanishes at high P (curves merge)"
+# ---- VOLUME FRACTIONS (Fig 3a, at 360 MPa) — sim vs FIB-SEM exp (Nakamura) ----
+vol_frac_AM,particle_mixture_sim,360,0.61,fraction,digitized,
+vol_frac_SE,particle_mixture_sim,360,0.22,fraction,digitized,
+vol_frac_pore,particle_mixture_sim,360,0.17,fraction,digitized,"-> porosity ~17% (digitized from stacked bar; good agreement w/ FIB-SEM)"
+vol_frac_AM,SE_coating_sim,360,0.59,fraction,digitized,
+vol_frac_SE,SE_coating_sim,360,0.25,fraction,digitized,
+vol_frac_pore,SE_coating_sim,360,0.16,fraction,digitized,"-> porosity ~16%; volume fractions in good agreement w/ FIB-SEM"
+# ---- SPECIFIC SURFACE AREA (Fig 3b, 360 MPa) — AM-SE interface OVER-predicted (key caveat) ----
+spec_surface_AM_SE,particle_mixture_sim,360,1.5,um^-1,digitized,"AM-SE surface OVER-estimated vs exp (sim 1.5 vs exp ~0.8); reason: too many small internal pores in AM (sec 4.3)"
+spec_surface_AM_SE,SE_coating_sim,360,1.7,um^-1,digitized,"coating gives larger AM-SE area (dual-shell -> more AM-SE contact, consistent w/ Nakamura claim)"

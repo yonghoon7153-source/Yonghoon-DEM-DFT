@@ -1,0 +1,100 @@
+section,quantity,case,compression_ratio,external_pressure_MPa,value,unit,precision,note
+# Lee et al. 2024, J. Energy Storage 82, 110431. DOI 10.1016/j.est.2024.110431. Hanbat Nat. Univ. (Daejeon, Korea).
+# DEM (Ansys Rocky DEM 4.5, HYSTERETIC LINEAR SPRING contact model, NOT Hertz) -> outputs compression ratio + Young's modulus + volume fractions + surface area + tortuosity
+#   -> FEM (COMSOL Multiphysics 6.0, pseudo-3D / 2D electro-chemo-mechanical, Butler-Volmer + solid-phase potential + Maxwell porosity sigma + Bruggeman).
+# MATERIALS: SE = LGPS (Li10GeP2S12) and LLZO (Li6.4La3Zr2Al0.2O12) -- NOT LPSCl. CAM = NMC (LiNixMnyCozO2, generic). Anode = graphite. Conductive = carbon black.
+#   -> sulfide here is LGPS (E=37.2 GPa), NOT our LPSCl (E_SE 22.1-24). Use TRENDS not absolute sigma. DEM-FEM coupling is the transferable methodology.
+# study type: DEM+FEM multiphysics, EFFECT OF INITIAL/EXTERNAL PRESSURE + COMPRESSION RATE. 8 case studies (Table 3). All values stated-in-text unless flagged digitized.
+#
+# ============ DEM material properties (Table 1) ============
+dem_material,density,graphite,,,2180,kg/m3,exact_text,anode active
+dem_material,density,NMC,,,4750,kg/m3,exact_text,cathode active
+dem_material,density,LLZO,,,5500,kg/m3,exact_text,oxide SE
+dem_material,density,LGPS,,,2000,kg/m3,exact_text,sulfide SE (Li10GeP2S12)
+dem_material,density,carbon_black,,,1950,kg/m3,exact_text,conductive additive
+dem_material,youngs_modulus,graphite,,,1,GPa,exact_text,very soft (solid-lubricant-like, high compressibility)
+dem_material,youngs_modulus,NMC,,,144,GPa,exact_text,CAM (cf our NMC811 140)
+dem_material,youngs_modulus,LLZO,,,150.3,GPa,exact_text,stiff oxide SE
+dem_material,youngs_modulus,LGPS,,,37.2,GPa,exact_text,sulfide SE (cf our LPSCl 22.1-24)
+dem_material,youngs_modulus,carbon_black,,,80,GPa,exact_text,
+dem_material,poisson_ratio,graphite,,,0.3,-,exact_text,
+dem_material,poisson_ratio,NMC,,,0.25,-,exact_text,
+dem_material,poisson_ratio,LLZO,,,0.26,-,exact_text,
+dem_material,poisson_ratio,LGPS,,,0.3,-,exact_text,
+dem_material,poisson_ratio,carbon_black,,,0.3,-,exact_text,
+dem_material,particle_radius,graphite,,,14,um,exact_text,DEM diameter (Table1 lists 14 um size)
+dem_material,particle_radius,NMC,,,12,um,exact_text,
+dem_material,particle_radius,LLZO,,,30,um,exact_text,
+dem_material,particle_radius,LGPS,,,30,um,exact_text,
+dem_material,particle_radius,carbon_black,,,4,um,exact_text,
+dem_material,friction_coeff,graphite,,,0.1,-,exact_text,
+dem_material,friction_coeff,carbon_black,,,0.1,-,exact_text,
+dem_material,friction_coeff,NMC,,,0.2,-,exact_text,
+dem_material,friction_coeff,LLZO,,,0.3,-,exact_text,
+dem_material,friction_coeff,LGPS,,,0.3,-,exact_text,
+dem_setup,powder_fill_rate,,,,80,pct,exact_text,die filling fraction
+dem_setup,n_particles,,,,1000-30000,count,exact_text,generated for accuracy
+dem_setup,mixing_volratio_std_NMC,,,,0.695/0.118,ratio/std,exact_text,8-section uniformity check (cathode)
+dem_setup,mixing_volratio_std_graphite,,,,0.682/0.047,ratio/std,exact_text,8-section uniformity check (anode)
+#
+# ============ DEM compaction results (SE mixtures, Fig 2 / Fig 3) ============
+dem_result,SE_mix_best_compaction_LGPS_frac,,,,66,wt_pct,exact_text,LGPS 66wt% (LLZO 33wt%) -> high-compressibility material improves compaction
+dem_result,cathode_TP_BP_stress_transfer,,0.71_at_yield,,51,pct,exact_text,top->bottom punch stress transfer at NMC yield (~100 MPa); cathode mix
+dem_result,cathode_yield_stress_approx,,,,100,MPa,exact_text,NMC yield ~100 MPa (TP)
+dem_result,anode_TP_BP_stress_transfer,,0.7_CR,,61,pct,exact_text,graphite anode mix at CR 70%
+dem_result,anode_compression_rate_yield,,,,70,pct,exact_text,graphite reaches yield ~CR 70% (very high compressibility, solid-lubricant)
+#
+# ============ FEM electrochemical results vs compression ratio (Fig 4) ============
+fem_result,relative_capacity,case1,0.7,10,0.8,fraction,exact_text,CR 0.7 -> better echem (discharge)
+fem_result,relative_capacity,case2,0.5,10,0.6,fraction,exact_text,CR 0.5 -> lower capacity
+fem_result,voltage_cutoff,,,,3.5,V,exact_text,discharge cut-off
+fem_result,voltage_charge_top,,,,4.2,V,exact_text,charge top
+#
+# ============ FEM mechanical results: von Mises stress vs compression ratio (Fig 5/6) ============
+mech_result,max_vonMises_anode_discharge,case1,0.7,10,688,MPa,exact_text,max anode stress @ CR 0.7 discharge
+mech_result,max_vonMises_anode_discharge,case2,0.5,10,76,MPa,exact_text,max anode stress @ CR 0.5 discharge -> CR 0.5 MUCH lower stress
+mech_result,max_vonMises_anode_case3,case3,0.7_anode,10,629,MPa,exact_text,Case3 increased anode CR -> anode stress ~629
+mech_result,max_vonMises_cathode_case4,case4,0.7_cathode,10,697,MPa,exact_text,Case4 increased cathode CR -> cathode stress ~697 (best echem despite least favorable mech)
+mech_result,stress_order_by_phase,,,,cathode>anode>SE,rank,exact_text,von Mises + Young's modulus highest at cathode; SE lowest. SE exhibits NO volume expansion.
+mech_result,expansion_order_by_phase,,,,graphite>cathode>SE,rank,exact_text,volume expansion: graphite(anode) highest, then cathode; SE none
+#
+# ============ FEM results: effect of external pressure (Fig 7/8, Cases 1,6,7,8: CR all 0.7) ============
+press_result,anode_pressure_internal,case6,0.7,0,468,MPa,exact_text,internal anode pressure with ZERO external pressure
+press_result,anode_pressure_internal,case7,0.7,50,739,MPa,exact_text,internal anode pressure with 50 MPa external -> +external raises internal stress (more Li intercalation)
+press_result,echem_perf_vs_pressure,case6,0.7,0,worst,qual,exact_text,zero external P -> significant cell-performance drop (poor SE ionic conduction, Li cannot penetrate interface)
+press_result,echem_perf_vs_pressure,case1,0.7,10,good,qual,exact_text,0->10 MPa significantly enhances performance
+press_result,echem_perf_vs_pressure,case7,0.7,50,marginal_gain,qual,exact_text,marginal improvement beyond 50 MPa (saturation-like)
+press_result,echem_perf_vs_pressure,case8,0.7,100,marginal_gain,qual,exact_text,100 MPa little extra benefit over 50 MPa
+#
+# ============ Mechanism summary (qualitative chain) ============
+mechanism,elevated_stress_chain,,,,stress_up->volfrac_AM_up+surface_area_up+tortuosity_down->sigma_e_up+sigma_ion_up,chain,exact_text,higher pressure -> more AM vol fraction + more contact surface area + lower tortuosity -> higher electronic AND ionic conductivity (Fig6a geometric)
+mechanism,tradeoff,,,,higher_CR/P->better_echem_BUT_higher_stress->fracture_risk,chain,exact_text,balanced electrode design needed (core conclusion)
+#
+# ============ Key FEM transport equations (constitutive, for method reference) ============
+fem_equation,sigma_AM_Maxwell,,,,kappa_AM = kappa_AM0 * 2(1-theta)/(2+theta),eq35,exact_text,Maxwell porosity model for SE electronic cond (theta=compact porosity 0..1)
+fem_equation,kappa_s_eff_Bruggeman,,,,kappa_s_eff = kappa_s * eps_s^brug,eq10,exact_text,electronic cond vs AM vol fraction (Bruggeman)
+fem_equation,sigma_SE_eff,,,,sigma_SE_eff = sigma_SE*eps_SE / tau_L/S_all,eq37,exact_text,effective ionic cond = intrinsic * vol-frac / path-resistance
+fem_equation,tau_path_resistance,,,,tau_L/S_all = -11.7*eps_SE + 8.54,eq38,exact_text,empirical linear path-resistance vs SE vol fraction (Otani 2023 ref46)
+fem_equation,surface_area,,,,S_a = 3*eps_AM / R_p,eq34,exact_text,specific surface area of active material
+fem_equation,sigma_SE_vs_stack_pressure,,,,sigma_SE = sigma_SEmax - (sigma_SEmax - sigma_SE0)*exp(-k3*E_xsl),eq36,exact_text,semi-empirical sigma vs stack pressure (Doux 2020 ref45 extrapolation); sigma_SE0=0.002 sigma_max=0.0002 S/cm k3=70/GPa LGPS
+#
+# ============ FEM model transport/kinetic parameters (Table 2, selected) ============
+fem_param,electrical_conductivity_graphite,,,,100,S/m,exact_text,
+fem_param,electrical_conductivity_LGPS,,,,2.2e-7,S/m,exact_text,SE electronic (very low)
+fem_param,electrical_conductivity_NMC,,,,10,S/m,exact_text,CAM electronic
+fem_param,LLZO_electronic_cond_30C,,,,5.5e-8,S/cm,exact_text,oxide SE electronic (text)
+fem_param,ionic_cond_initial_sigma_SE0,,,,0.002,S/cm,exact_text,LGPS sigma at low stack pressure (eq36 fit)
+fem_param,ionic_cond_max_sigma_SEmax,,,,0.0002,S/cm,exact_text,LGPS asymptotic ionic cond (eq36 fit) [NOTE: paper lists sigma0=0.002 > sigmamax=0.0002, as printed]
+fem_param,k3_pressure_constant,,,,70,1/GPa,exact_text,eq36 LGPS
+fem_param,diffusion_coeff_SE,,,,2.61e-4,m2/s,exact_text,LGPS Li diffusion (Table2; units as printed)
+fem_param,Li_transference_number,,,,0.363,-,exact_text,all phases
+fem_param,layer_thickness_anode,,,,65,um,exact_text,graphite layer L
+fem_param,layer_thickness_SE,,,,75,um,exact_text,electrolyte separator L
+fem_param,layer_thickness_cathode,,,,70,um,exact_text,NMC layer L
+fem_param,init_volfrac_AM_anode,,,,0.32,fraction,exact_text,graphite eps_AM0
+fem_param,init_volfrac_AM_cathode,,,,0.18,fraction,exact_text,NMC eps_AM0
+fem_param,init_volfrac_SE_anode,,,,0.24,fraction,exact_text,
+fem_param,init_volfrac_SE_cathode,,,,0.38,fraction,exact_text,
+fem_param,init_volfrac_void,,,,0.44,fraction,exact_text,both electrodes (initial porosity)
+fem_param,particle_radius_anode_FEM,,,,10,um,exact_text,graphite Rp (FEM, differs from DEM 14)
+fem_param,particle_radius_cathode_FEM,,,,5,um,exact_text,NMC Rp (FEM)
