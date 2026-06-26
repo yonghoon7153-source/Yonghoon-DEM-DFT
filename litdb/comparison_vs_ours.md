@@ -15,6 +15,7 @@
 | **[Lu]** | Lu 2025 CEJ — 음극 4d-Cl 자기분해 → LiCl interphase (gap 1.88/LiCl 6.22) | ✅ `papers/lu2025_tailoring_cl_rich_anode_licl.md` | exp+DFT |
 | **[Liu23]** | Liu 2023 Angew — MgF₂ 공도핑 electron redistribution (redox-resistible, σ_e 8×↓) ⚠[Liu]≠이것(=Liu 2022 AdvFM) | ✅ `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | exp+DFT |
 | [Ma] | Ma 2026 J.E.S. — In doping, PBE gap 2.10→2.62 | ⬜ PDF | DFT |
+| **[Li25]** | Li/G.Wu/L-Z.Fan/C-W.Nan 2025 ESM (77, 104221) — **CuBr₂ 이원(Cu+Br) 도핑** argyrodite (USTB·Tsinghua·Heze, **외부**): LPSC-P(Li₅.₅PS₄.₅Cl₁.₅)→LPSC-CB(Li₅.₈P₀.₉Cu₀.₁S₄.₅Cl₁.₃Br₀.₂). σ 5.3→**10.3 mS/cm**·Ea 0.295→**0.239**·gap 1.82→2.41·**σ_e 1.02e-8→3.35e-9 S/cm(실측)**·CCD 0.6→**1.9 mA/cm²**. 분해산물 gap(DFT) **LiCl 6.13/LiBr 5.07/Li₂S 3.04**; 물흡착 ΔE 0.29→**2.42 eV**(Cu–S>P–S, HSAB) | ✅ `papers/li2025_cubr2_dualdoping_argyrodite.md` | exp+DFT보조 |
 | [Semi] | "When Electrolytes Are Semiconductors" 2026 — HSE06 gap | ⬜ PDF | DFT |
 | [Kaur] | Kaur 2016 JES — elastic SQS E22.1/B28.7/G8.1 | ⬜ PDF | DFT |
 | [JPCC] | First-Principles Mech&Aniso 2025 — D3 E27.4/B34.7/G10.0 | 📄 Excel | DFT |
@@ -47,6 +48,7 @@
 | 주장 | 출처 | 우리 (comp1→modelc) | 일치 |
 |---|---|---|---|
 | Cl↑ → σ 2.5→7–10 mS/cm, Ea 0.34→0.22 eV | [Zuo](2.9→7.0), [GG](AIMD peak 14.55 @Cl1.5), [Liu], Excel exp 다수 | D(600K) 3.09→7.90e-6, Ea 0.253→**0.224** | **✓✓** |
+| **σ↑·Ea↓ 레버 = Cl만이 아니라 *무질서+Li⁺-carrier 일반*** — **Cu²⁺/P⁵⁺ 헤테로치환(Li⁺ 추가·S²⁻ 전하밀도↓) + Br→4a/4d(음이온 무질서↑)** 도 σ 5.3→**10.3 mS/cm**·Ea 0.295→**0.239 eV**(LPSC-P→LPSC-CB). x>0.1 불순물(LiCl/CuCl₂/LiBr)서 σ↓(용해한계) | **[Li25]** (CuBr₂ dual-doping, exp+DFT) | D(600K) 3.09→7.90e-6, Ea 0.253→**0.224** (우리는 Cl만으로 같은 trend) | **✓ trend 일치, 기전 일반화**: "Cl↑"든 "Cu+Br"든 *무질서·extra-Li⁺*가 공통 레버 → 우리 comp1→modelc Ea drop와 같은 방향. 단 변수 다중(Cu·Br 분리 안 됨)·실험 EIS vs 우리 AIMD라 절대값 비교 금지. Excel exp#9(Cl/Br 24 mS/cm)와 같은 mixed-halide 줄 |
 | σ 기전 = inter-cage Li jump (Cl 4c 무질서) | [GG] (Li 확률밀도, Fig 1e,f) | 우리 percolation/inter-cage 분석과 동일 물리 | ✓ |
 | **Li₆PS₅Cl = S²⁻/Cl⁻ 완전 disordered → 가장 빠른 Li⁺** (Cl이 X=Cl,Br,I 중 disorder 최대) | **[Rupp]** p.9 | comp1→modelc D↑·Ea↓ (Cl-rich 빠름) | **✓ 구조적 근거** (Cl disorder = σ↑ 원인) |
 | AIMD setup (300 eV/Γ/NVT) | [GG] | 동급 | ✓ 방법 정합 |
@@ -94,11 +96,14 @@
 |---|---|---|---|
 | PBE gap **LPSCl 1.88 / LiCl 6.22 eV** | [Lu] | comp1 2.066 / modelc 2.098 (PBE) | 무질서·Γ-only k ±0.2–0.3 scatter. LiCl 6.22 = 전자절연 interphase 기준 |
 | PBE 2.10→2.62 (In 도핑) | [Ma] | — | In 0.52 eV↑인데 σ_e 1.2×만 변(=defect-controlled) |
+| gap **1.82→2.41 eV** (CuBr₂ 도핑) + **σ_e 실측 1.02×10⁻⁸→3.35×10⁻⁹ S/cm**(3×↓, CCD와 역상관) | **[Li25]** (PDOS + DC분극) | comp1 2.066 / modelc 2.098 (PBE); σ_e 미측정 | △ **"도핑이 gap 확대→σ_e↓" 방향 일치**(우리 comp1→modelc gap 거의 불변과 대비; Cu/Br이 더 강한 전자구조 변화). **σ_e 3×↓ = gap+0.59 + Cu/Br carrier 복합**(gap만 분리 불가, [Ma]와 같은 주의). gap 절대값(LPSC-P 1.82<우리 2.066)은 functional·k·무질서 미상 → 비교 금지 |
 | PBE 2.45 / **HSE06 3.30** | [Semi] | (우리 PBE 2.07) | PBE는 ~1 eV 과소 → "wide-gap insulator"만 |
 | VBM = S 3p (HAXPES) | [Banik] | 우리 PDOS VBM=S 3p | **✓ 재현** |
 | **산화 onset ≈ 음이온 p-band(VBM) 깊이**: S 3p(얕음)→LPSCl 2.256 V vs O 2p(깊음)→LLZO **2.88 V (+0.63)** | [Rupp] + **우리 LLZO grand-potential**(`papers/kim2021…md` §LLZO) | comp1 VBM=S 3p, onset 2.256 | **✓ VBM character가 onset 지배** (S²⁻→S⁰ vs O²⁻→peroxide) |
 | PS₄ "gap" ~2.0 → MgS₄ ~4.2 eV (도핑이 gap 확대) | [Liu23] | comp1 2.066 ≈ 그들 LPSC ~2.0 (우연) | MP smear 0.2 + PDOS 분리 추정, 엄밀 gap 아님; **MgS₄ 구조 자체 부실(§12b)** |
 | **bulk σ_e(실측) = 8.16×10⁻⁹ S/cm** (Mg/F 도핑 시 1.03×10⁻⁹, 8×↓) | [Liu23] (DC분극) | 우리 미측정 | **slide25 σ_e 논의 실측 기준값** |
+| **bulk σ_e(실측) = 1.02×10⁻⁸ S/cm**(LPSC-P) → **3.35×10⁻⁹**(CuBr₂ 도핑) | **[Li25]** (DC분극) | 우리 미측정 | **slide25 σ_e 두 번째 실측 anchor**([Liu23]와 같은 ~10⁻⁸–10⁻⁹ S/cm 줄). 도핑이 σ_e↓→CCD↑ 직접 보임(Fig 3b) |
+| **분해산물 밴드갭(DFT PDOS): LiCl 6.13 / LiBr 5.07 / Li₂S 3.04 eV** (wide-gap halide가 절연 계면) | **[Li25]** (산물 PDOS) | sei_products.json: **LiCl 6.65 / Li₂S 3.90** (MP); LiBr 없음 | **✓✓ 독립 검증** — 외부 그룹 DFT가 우리 "LiCl≫Li₂S, wide-gap halide=전자절연 SEI" 순서·논리 재현. **LiBr(5.07)은 우리 db에 없던 값**(Br계 도핑 시 추가 가치). [Lu] LiCl 6.22와도 정합 |
 | sulfide = "wide-band-gap" (구체 LPSCl gap 미제시; buffer LiI gap 6.4 eV) | **[Rupp]** | comp1 2.066 / modelc 2.098 (PBE) | 리뷰 gap 절대값 無 → "wide-gap insulator" 수준만 일치(비교대상 자체 없음) |
 | **interphase는 전자절연이어야 self-limiting** (LPO ALD로 LLZO σ_e 10⁻⁸→10⁻⁹ → dendrite 억제) | **[Rupp]** Fig 13·17 | (우리 σ_e 논의 frame) | [Ke]Li₂O·[Lu]LiCl·[Liu23]LiF 절연 interphase 논리의 **landscape 근거** |
 > 인사이트: ① **모델 간 gap scatter(1.88 vs 2.10)는 σ_e 차이를 설명 못 함** — [Ma]는 gap +0.52인데 σ_e 1.2×만(=defect/carrier 지배, slide25 틀). ② 단, **큰 전자구조 변화(도핑)는 σ_e를 바꿈** — [Liu23]는 Mg/F로 σ_e 8×↓(gap 확대 + LiF + carrier 변화 복합, gap만 분리 불가). → "작은 모델 scatter ≠ σ_e / 큰 도핑 변화 = σ_e 가능", 두 경우 구분.
@@ -112,6 +117,7 @@
 | **도핑 route**: PS₄³⁻의 Li-유발 redox 분해를 **Mg(s-p 혼성, S 전자풍부→전자이동 차단)+F(in-situ LiF 절연층)** 로 억제 (MgS₄는 무분해) | **[Liu23]**(MgF₂), [Ke](MgClO) | modelc 환원산물 = 그들이 억제하려는 분해산물 | 별도 축(조성 아닌 *도핑*); cascade 동기 |
 | interphase **LiCl = 전자절연(gap 6.22) + 저Li⁺장벽(0.05) + 연성(Poisson 0.23)** → 좋은 buffer | **[Lu]** Fig6 | modelc가 LiCl 생성 → Lu의 "good passivator"로 해석 | **✓ 우리 LiCl 산물에 의미 부여** |
 | **in-situ LiF-rich SEI(액체 처방 FEC→LiF)가 SE 분해(Li₂S) 억제 → 균일 Li flux·dendrite 억제** (XPS F1s 684 / S2p Li₂S↓; overpot 154→55 mV; CCD 0.8→1.5) | **[KimICCF]** Fig 5 | comp1/modelc native 환원산물 = Li₂S/Li₃P/LiCl (그중 Li₂S=전자전도 우려) | **🔑 = 우리 'electron-blocking interphase' 메커니즘의 실험 카운터파트**. 우리 DFT=어떤 산물이 절연(LiF/LiCl/Li₂O/Li₃PO₄/NdPO₄), 이들=그 절연 SEI를 액체 처방(FEC)으로 **in-situ 형성**. LiF·LiCl·Li₂O·Li₃PO₄ = wide-gap 절연 패밀리 일관. ⚠ σ_e 실측 아님(간접추론) |
+| **도핑 route(CuBr₂)가 음극에 wide-gap *LiCl@LiBr* native 절연층 형성 → Li₂S/Li₃P 전도성 분해 억제** (cycled XPS LiCl 56.3·LiBr 56.9; LPSC-P는 Li₂S 160.2·Li₃P 신규·심한 분해). **σ_e↓(1.02e-8→3.35e-9)→CCD↑(0.6→1.9 mA/cm²)·3000 h** | **[Li25]** Fig 4·5 | comp1/modelc native 환원산물 = Li₃P+Li₂S+LiCl (LiCl=절연·Li₂S=전도 우려) | **🔑 = 우리 'wide-gap 절연 interphase' 패밀리 또 하나**(LiF[KimICCF]/Li₂O[Ke]/LiCl[Lu]/LiF[Liu23]에 **LiBr 추가**). 우리 환원산물 LiCl(절연)이 정확히 이들 메커니즘. **단 이 절연층은 도핑이 만든 *native 분해산물*(LiCl/LiBr), Nd는 *능동 O-derived 산물* → 위치 다름**. σ_e↔CCD 역상관은 우리 "SEI 전자절연=dendrite 레버"의 실측 증거 |
 | **Nolan Type 1/2/3 Li/SE 계면 분류** (1=열역학안정 passivating / 2=MIEC 성장형 / 3=전자절연 kinetic SEI) | **[Kang]** Fig5c (Nolan ref47) | comp1/modelc 환원산물 Li₃P+Li₂S+LiCl → **Type 3 목표**; sei_products.json gap 분류(insulator≥4/marginal2–4/conductor<2 eV) | **🔑 = 우리 SEI 전자절연 논리의 표준 프레임**. 우리 gap 임계 = Type 분류의 *정량판*. Nd cascade = "conductive Li₃P(0.70)를 wide-gap Li₂O(5.24)/Li₃PO₄(5.73)로 → Type3 강화" |
 | **dendrite는 *환원 SEI*의 전자구조가 좌우(pristine bulk 아님)** | **[Kang]** Fig6c (Hao ref90 계산) | 우리 bulk σ_e(gap 2.07 wide insulator)만; SEI 산물 gap은 sei_products.json | **✓ bulk σ_e 한계 명시** — dendrite 진짜 레버는 SEI 전자절연성(우리 sei_products.json) |
 | 계면E Li/LPSCl −2.68 ≪ LiCl/LPSCl −0.19 J cm⁻² (LiCl buffer가 Li-S 자발반응 차단) | **[Lu]** Fig6a | 우리 계면 slab 미계산(gap H) | 차용 가능 |
@@ -124,6 +130,7 @@
 |---|---|---|
 | MgClO(Mg+Cl+O) 공도핑 → 계면 metallic→gapped (s-p/p-p 혼성) → 환원 분해 차단 | [Ke] | **우리 cascade(Mg/Cl/O/F 도판트 스크리닝)의 직접 문헌 동기 ①** |
 | **MgF₂(Mg+F) 공도핑** → 음극 redox 억제(실험: CCD 0.6→1.4, σ_e 8×↓). ⚠메커니즘("MgS₄ 사면체 s-p 혼성, Mg@P자리")은 **구조모델 under-determined**(lab XRD로 Mg@P vs Mg@Li 구분 불가, 자기 ELF는 이온결합, 반경상 Mg→Li) → `papers/liu2023…md` §12b | **[Liu23]** | cascade 동기 ②는 **실험적 방향**(Mg 도핑이 음극 도움)만; *기전*은 미확정으로 인용 |
+| **CuBr₂(Cu양이온+Br음이온) 이원 공도핑** → σ↑(10.3)·gap↑(2.41)·σ_e↓·CCD↑(1.9)·대기안정 *동시*. Cu²⁺/P⁵⁺(Li⁺추가·S²⁻전하밀도↓)·Br→4a/4d(무질서); **HSAB: soft Cu–S>P–S → 가수분해 저항**(물흡착 ΔE 0.29→2.42 eV) | **[Li25]** (exp+DFT) | cascade는 **양이온+음이온 동시** 도판트도 스크리닝 대상(Mg/Cl/O/F 외 Cu/Br 추가); 우리 **결합강도→안정**(oxophilicity·ICOHP P–O −8.43) 논리의 다른 화학 사례 | **cascade 동기 ③(양이온+음이온 동시)**: "어떤 *쌍*이 σ·전자절연·대기안정을 동시에 주나"의 외부 사례. **단 변수 다중(Cu·Br 분리 안 됨)·DFT 파라미터 미명시 → 정성 동기로만**. 대기안정(가수분해 ΔE)은 우리 0K hull 밖(기체상 X) |
 | SEI = 전자절연(Li₂O 8.37 eV)+친리튬(LiMg) | [Ke] | 우리 **Li₃N**(음극 interphase) 연구와 같은 패밀리 |
 | 도판트 음극 호환성 descriptor: 계면 binding energy(J/m²), E_F metallic 여부 | [Ke] | 우리 cascade 평가에 차용 가능 |
 | **음이온 자리(4d) Cl 점유 엔지니어링** → 자기분해 LiCl interphase (원소도핑 아닌 *자리* 레버) | **[Lu]** | modelc Cl-rich의 4a/4d 분포 명시하면 Lu와 직접 연결 |
@@ -142,7 +149,8 @@
 | 구속 ESW Cl-rich 확대 trend | = K_eff=20 거동 | [GG] |
 | AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][Liu] |
 | VBM = S 3p | = HAXPES | [Banik] |
-| 환원 산물 Li₃P+Li₂S+**LiCl** (LiCl = 전자절연 passivator) | = LPSCl(1.5) 환원; LiCl이 음극 passivation | [Ke][GG][**Lu**][**Liu23**] |
+| 환원 산물 Li₃P+Li₂S+**LiCl** (LiCl = 전자절연 passivator) | = LPSCl(1.5) 환원; LiCl이 음극 passivation | [Ke][GG][**Lu**][**Liu23**][**Li25**] |
+| **sei_products.json 절연산물 순서 LiCl(6.65)≫Li₂S(3.90)** = "wide-gap halide=전자절연 SEI" | = 외부 그룹 독립 DFT PDOS **LiCl 6.13/LiBr 5.07/Li₂S 3.04 eV** (같은 순서) | **[Li25]** (+[Lu] LiCl 6.22) |
 | **"electron-blocking interphase가 분해 차단" 메커니즘** (우리 중심 주장) | = **LiF-rich SEI가 SE 분해(Li₂S) 억제** (실험 XPS) → 같은 그룹이 실험 입증 | **[KimICCF]** ⭐ |
 | **"σ 병목 = interphase/microstructure, bulk 결정 아님"** | = 시트 σ 손실 원인 = 공동(34.2 %), 채우면 155 % 회복 | **[KimICCF]** ⭐ |
 | **O-doping interphase가 전자절연(wide-gap)으로 e⁻ leak 차단** (우리 Nd cascade) | = §5.1(b) 옥시설파이드 "reduced electron leakage"·O–P>S–P; §5.1(c) Li₃PO₄ buffer | **[Kang]** ⭐ (우리 그룹 리뷰가 직접 전략으로 추천) |
