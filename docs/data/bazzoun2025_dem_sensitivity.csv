@@ -1,0 +1,108 @@
+source,table,SE_type,parameter,output,f_CAM_wt,pressure_MPa,value,unit,precision,note
+# Bazzoun & Piruzjam 2025 (Electrochim. Acta 535, 146536). DEM parameter sensitivity + calibration, uniaxial cold-press LPSCl SE + NMC532 CAM (Ni0.5Mn0.3Co0.2) + CB/CNF/PTFE dry-film. LIGGGHTS DEM (Hertz spring + damping, NO plasticity / NO contact-cap). Outputs = theta_CAM (CAM utilization, percolation), theta_SE (SE utilization), epsilon (porosity, Monte-Carlo). Sister paper Bazzoun 2026 (JPS 661) adds FEM/RNM sigma_ionic. CAM=NMC532 (NOT NMC811) -> composition differs from us/Bazzoun2026; E_CAM=161.5 shared; absolute sigma/crack NON-transferable, trends/method OK. SE=LPSCl (same as us).
+#
+# === DEM CONTACT-MODEL & MATERIAL PARAMETERS (Table 3, stated; nominal + sweep boundaries) ===
+bazzoun2025,Table3,both,mu_SE-SE,parameter,,,0.4,dimensionless,stated_nominal,range 0.2-0.6; This work
+bazzoun2025,Table3,both,mu_CAM-CAM,parameter,,,0.4,dimensionless,stated_nominal,range 0.2-0.6; This work
+bazzoun2025,Table3,both,mu_CAM-SE,parameter,,,0.4,dimensionless,stated_nominal,range 0.2-0.6; This work; MOST SENSITIVE parameter
+bazzoun2025,Table3,both,E_SE,parameter,,,20.5,GPa,stated_nominal,range 15-200; refs 14/31/34/48/49; ~= our real 22-24 / Bazzoun2026 22.1
+bazzoun2025,Table3,both,E_CAM,parameter,,,161.5,GPa,stated_nominal,range 123-200; = Bazzoun2026
+bazzoun2025,Table3,both,nu_SE,parameter,,,0.33,dimensionless,stated_nominal,range 0.29-0.37
+bazzoun2025,Table3,both,nu_CAM,parameter,,,0.27,dimensionless,stated_nominal,range 0.24-0.3
+bazzoun2025,Table3,both,COR_RC,parameter,,,0.4,dimensionless,stated_nominal,range 0.2-0.6; This work; LOWEST sensitivity (negligible)
+bazzoun2025,Table3,both,pressure,parameter,,,300,MPa,stated_nominal,range 200-400; = our 300
+#
+# === DENSITIES (Table 2, stated) ===
+bazzoun2025,Table2,,rho_CAM,density,,,4.77,g/cm3,stated,NMC532
+bazzoun2025,Table2,,rho_SE,density,,,1.64,g/cm3,stated,LPSCl
+bazzoun2025,Table2,,rho_CB,density,,,2.00,g/cm3,stated,
+bazzoun2025,Table2,,rho_CNF,density,,,1.90,g/cm3,stated,
+bazzoun2025,Table2,,rho_PTFE,density,,,2.15,g/cm3,stated,
+#
+# === PSD (laser diffraction, stated section 4.1) ===
+bazzoun2025,sec4.1,CAM,D_mean,PSD,,,5.8,um,stated,CAM mean diameter D-bar
+bazzoun2025,sec4.1,SE45,D_mean,PSD,,,4.5,um,stated,pristine SE; lambda=D_CAM/D_SE=1.3
+bazzoun2025,sec4.1,SE19,D_mean,PSD,,,1.9,um,stated,wet-ball-milled SE; lambda~3
+#
+# === BULK SIGMA_IONIC (EIS pellet 350 MPa, stated Fig4b) ===
+bazzoun2025,Fig4b,SE45,sigma_ionic_bulk,sigma,,,2.9,mScm,stated,pellet; ball-mill SE19 lower
+bazzoun2025,Fig4b,SE19,sigma_ionic_bulk,sigma,,,1.0,mScm,stated,ball-milled -> more GB -> sigma down; cf Bazzoun2026 pellet 1.02
+#
+# === POROSITY: pressure effect (200->400 MPa decrease %, stated section 4.4) ===
+bazzoun2025,sec4.4,SE19,epsilon_decrease,porosity,60,200-400,19.0,percent_reduction,stated,P up 200->400 reduces eps
+bazzoun2025,sec4.4,SE19,epsilon_decrease,porosity,70,200-400,12.6,percent_reduction,stated,
+bazzoun2025,sec4.4,SE19,epsilon_decrease,porosity,80,200-400,11.8,percent_reduction,stated,
+bazzoun2025,sec4.4,SE19,epsilon_decrease,porosity,85,200-400,13.7,percent_reduction,stated,
+bazzoun2025,sec4.4,SE45,epsilon_decrease,porosity,60,200-400,22.0,percent_reduction,stated,
+bazzoun2025,sec4.4,SE45,epsilon_decrease,porosity,70,200-400,10.9,percent_reduction,stated,
+bazzoun2025,sec4.4,SE45,epsilon_decrease,porosity,80,200-400,7.5,percent_reduction,stated,
+bazzoun2025,sec4.4,SE45,epsilon_decrease,porosity,85,200-400,6.1,percent_reduction,stated,
+#
+# === POROSITY: SE19 vs SE45 difference (SE19 LOWER by %, stated section 4.4) = size=packing ===
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,60,200,23.6,percent_lower,stated,small SE -> denser packing
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,70,200,20.5,percent_lower,stated,
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,80,200,12.7,percent_lower,stated,
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,85,200,13.8,percent_lower,stated,
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,60,400,37.4,percent_lower,stated,
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,70,400,32.8,percent_lower,stated,
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,80,400,30.6,percent_lower,stated,
+bazzoun2025,sec4.4,SE19_vs_SE45,epsilon_lower,porosity,85,400,24.9,percent_lower,stated,
+#
+# === POROSITY: absolute simulated (digitized Fig5/6/17, TREND ONLY +-) ===
+bazzoun2025,Fig6/17,SE45,epsilon,porosity,60,300,0.22,fraction,digitized_approx, omega=0.7 box-conv; TREND
+bazzoun2025,Fig6/17,SE45,epsilon,porosity,85,300,0.25,fraction,digitized_approx,high CAM -> higher eps
+bazzoun2025,Fig6/17,SE19,epsilon,porosity,60,300,0.16,fraction,digitized_approx,small SE denser
+bazzoun2025,Fig6/17,SE19,epsilon,porosity,85,300,0.18,fraction,digitized_approx,
+#
+# === THETA_CAM (CAM utilization, percolation; digitized Fig12/18, TREND) ===
+bazzoun2025,Fig12/18,SE45,theta_CAM,utilization,60,400,1.0,fraction,digitized_approx,full utilization low f_CAM
+bazzoun2025,Fig12/18,SE45,theta_CAM,utilization,70,400,1.0,fraction,digitized_approx,
+bazzoun2025,Fig12/18,SE45,theta_CAM,utilization,80,400,0.75,fraction,digitized_approx,onset of drop
+bazzoun2025,Fig12/18,SE45,theta_CAM,utilization,85,400,0.35,fraction,digitized_approx,SHARP drop near percolation threshold
+bazzoun2025,Fig18,SE19,theta_CAM,utilization,85,400,0.50,fraction,digitized_approx,small SE retains higher theta_CAM at high f_CAM
+#
+# === THETA_SE (SE utilization; digitized Fig20, TREND; drops BEFORE theta_CAM = early warning) ===
+bazzoun2025,Fig20,SE45,theta_SE,utilization,60,400,1.0,fraction,digitized_approx,
+bazzoun2025,Fig20,SE45,theta_SE,utilization,80,400,0.75,fraction,digitized_approx,theta_SE falls earlier than theta_CAM
+bazzoun2025,Fig20,SE45,theta_SE,utilization,85,400,0.40,fraction,digitized_approx,early indicator of degradation
+#
+# === SPECIFIC DISCHARGE CAPACITY (experiment, stated section 4.4; theta_CAM proxy) ===
+bazzoun2025,sec4.4,SE45,spec_capacity,capacity,60,200,136.5,mAh/g,stated,
+bazzoun2025,sec4.4,SE45,spec_capacity,capacity,70,200,137.5,mAh/g,stated,
+bazzoun2025,sec4.4,SE45,spec_capacity,capacity,80,200,104,mAh/g,stated,
+bazzoun2025,sec4.4,SE45,spec_capacity,capacity,85,200,50.5,mAh/g,stated,SE45 collapses at 85 wt%
+bazzoun2025,sec4.4,SE45,spec_capacity,capacity,60,400,140.2,mAh/g,stated,
+bazzoun2025,sec4.4,SE45,spec_capacity,capacity,85,400,52.5,mAh/g,stated,
+bazzoun2025,sec4.4,SE19,spec_capacity,capacity,60,200,142.5,mAh/g,stated,
+bazzoun2025,sec4.4,SE19,spec_capacity,capacity,80,200,139.5,mAh/g,stated,
+bazzoun2025,sec4.4,SE19,spec_capacity,capacity,85,200,122.5,mAh/g,stated,SE19 holds at 85 wt% (142.6% > SE45)
+bazzoun2025,sec4.4,SE19,spec_capacity,capacity,60,400,148.5,mAh/g,stated,
+bazzoun2025,sec4.4,SE19,spec_capacity,capacity,85,400,130,mAh/g,stated,147.6% > SE45 at 400 MPa
+bazzoun2025,sec4.4,SE19,spec_capacity,capacity_ref,60,400,150,mAh/g,stated,C_max-disch reference (theta_CAM=1 anchor)
+#
+# === SENSITIVITY RANKING (normalized SI, Fig14; ORDINAL from bar heights, TREND) ===
+bazzoun2025,Fig14,both,mu_CAM-SE,SI_rank,,,1,rank,stated_ordinal,MOST sensitive for theta_CAM/theta_SE/eps; esp high f_CAM
+bazzoun2025,Fig14,both,mu_SE-SE,SI_rank,,,2,rank,stated_ordinal,high for SE45/SE19; SE-SE matters more in SE-dominated
+bazzoun2025,Fig14,both,mu_CAM-CAM,SI_rank,,,3,rank,stated_ordinal,dictates packing at high CAM
+bazzoun2025,Fig14,both,E_SE,SI_rank,,,4,rank,stated_ordinal,moderate; more sensitive at LOW f_CAM (SE45); higher eps when stiffer
+bazzoun2025,Fig14,both,E_CAM,SI_rank,,,5,rank,stated_ordinal,moderate
+bazzoun2025,Fig14,both,nu_SE,SI_rank,,,6,rank,stated_ordinal,lowest (random-noise level)
+bazzoun2025,Fig14,both,nu_CAM,SI_rank,,,7,rank,stated_ordinal,lowest
+bazzoun2025,Fig14,both,COR_RC,SI_rank,,,8,rank,stated_ordinal,lowest; no clear trend
+#
+# === RVE / NUMERICAL CONVERGENCE (stated) ===
+bazzoun2025,Fig8/9,both,side_length_ratio_omega,RVE,,,0.7,dimensionless,stated,virtual box; plateau 0.4-0.9; excludes 2-4 diam wall layer
+bazzoun2025,Fig5/9,both,box_size_factor,RVE,,,10,dimensionless,stated,converged >=8; chosen 10 (accuracy/cost balance)
+bazzoun2025,Fig10,both,monte_carlo_points,porosity_conv,,,30000,points,stated,porosity converges; 50000 recommended for precision
+bazzoun2025,sec3.6,both,n_cases_total,sweep,,,1920,cases,stated,8 param x 10 vals x 2 SE x 4 f_CAM x 3 P; >=3 seeds each
+bazzoun2025,sec3.2,both,n_realizations,seed,,,3,realizations,stated,mean + std error bars
+bazzoun2025,sec4.5,both,mu_eff_optimal,calibration,,,0.4,dimensionless,stated,effective friction min error vs exp (Fig19)
+#
+# === KEY QUALITATIVE FINDINGS (for model application) ===
+# 1. mu_CAM-SE = single most influential param on percolation/connectivity/porosity, esp high f_CAM.
+# 2. RIGID-SPHERE CEILING: high accuracy at LOW f_CAM, NOTABLE discrepancies + increased sensitivity at HIGH f_CAM (80-85 wt%).
+# 3. Model UNDER-predicts epsilon at high f_CAM (Fig18/19) -> missing plastic flow (= our Stage-E + MPM fill this).
+# 4. theta_SE drops BEFORE theta_CAM -> early degradation indicator.
+# 5. NO contact-cap / NO plasticity (pure elastic Hertz) -> less sophisticated than So2021 H-cap / Varkey multi-contact, but most systematic sensitivity study.
+# 6. Pressure (200-400 MPa) shows "no significant trend" -> friction dominates compaction (cf our Heckel P_y=138 with yield-cap model).
+# 7. theta_CAM/theta_SE = percolation EXISTENCE + utilization, NOT transport sigma (sister paper 2026 adds RNM sigma_ionic).
