@@ -87,8 +87,23 @@ a5(SE/sol 68%) gap −9.3~−10.8, a6(59%) −7.1~−9.6, a7(48%) −5.2~−6.7.
 - [x] wallP 조건부 `--am-load-frac` 구현 (Tabor식, opt-in, default off) — commit 70fd236.
 - [x] f_AM v0(von Mises) 결함 규명 (SE-rich Eshelby) → v1(Love-Weber) 설계 확정.
 - [x] DEM쪽 재실행 불필요 확인 (force vectors 이미 재구성).
-- [ ] **_10 corner 런 (0.86+sweep)** — 사용자 실행 대기.  porosity 16→~28 검증.
-- [ ] f_AM v1 Love-Weber extractor 구현 (von Mises 코드에 σzz pair 분해 추가).
-- [ ] SE-rich f_AM≈0 확인 (v1로).
-- [ ] 비교표 (old/new/DEM) + reliability CSV 업데이트.
-- [ ] 검증되면 production gate: corner 자동감지 → v1 f_AM 적용, 그 외 0.
+- [x] **_10 corner 런 (f_AM 0.86)** — ✅ **DONE 2026-06-26, 검증 성공** (n_grid 384, hold, kserver):
+  porosity **15.9% (조건부 없음) → 25.25% (f_AM 0.86)**, DEM 28.34 → gap **12.4 → 3.1 (75% 닫힘)**.
+  thickness 19.3µm, coverage AM_P 42/68% (rigid 38/65, 유지).  SE_target 0.042 GPa.  ⇒ frozen-AM 과압축 fix 검증.
+- [x] f_AM 출처 검증: 0.86 = DEM von Mises 독립유도(fit 아님) → MPM이 DEM 근처 재현 = cross-consistency.
+  잔차 +3.1%p = SE가 42MPa 몫만 받고 큰 void로 소성 flow한 증분(frame[5]; MPM = DEM_rigid − 소성증분, clamp가
+  못 하는 *계산*).
+- [ ] sweep 0.75(SE_target 75MPa)/0.60(120MPa) — f_AM↔porosity 단조곡선 매핑 (확인용).
+- [ ] f_AM v1 Love-Weber extractor 구현 (von Mises 코드에 σzz pair 분해 추가) → SE-rich 자동 f_AM≈0.
+- [ ] SE-rich f_AM≈0 확인 (v1로) = production gate 마지막 조각.
+- [ ] reliability CSV에 am_load_frac 버전 열 추가.
+
+## §8 RESULT (_10 corner, 2026-06-26)
+| f_AM | SE_target (MPa) | MPM porosity (%) | gap to DEM 28.34 |
+|---|---|---|---|
+| 0 (조건부 off) | 300 | 15.9 (과압축) | +12.4 |
+| **0.86 (von Mises)** | 42 | **25.25** | **+3.1** ✅ |
+| DEM rigid | — | 28.34 | 0 |
+판정: Tabor식 wallP 조건부가 SE-poor/mono-large frozen-AM 과압축(0%→15.9 over-compress)을 물리적으로 교정.
+f_AM은 DEM 응력에서 독립 유도 → cross-consistency(fit 아님).  잔차 3.1%p = 진짜 소성 void-fill(frame[5]).
+DEM-rock clamp와 달리 MPM이 porosity를 *계산*(신뢰성 有).  → SE-poor corner fix로 채택 후보.

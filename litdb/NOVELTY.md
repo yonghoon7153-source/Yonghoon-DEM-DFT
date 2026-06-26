@@ -98,3 +98,7 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
   (Lee paper는 2026-06-24 litdb/papers/에 CBD/binder 각도로 부분 digest 존재했음 — 이번 docs/ digest는
   process/저압/계면 각도로 보완, 중복 아님.)  TODO: Bielefeld/Wang digest 시 §4 추가; Phase-4 echem 커플링
   (#22/#281) + operating-pressure σ-degradation(Lee void-vs-P 시간축) 우리 gap으로 명시.
+- 2026-06-26 ★ **wallP 조건부 검증** (§2-6 novelty): _10 corner에서 DEM von-Mises f_AM=0.86 →
+  MPM porosity 과압축 15.9% → 25.25%(DEM 28.34 근처), gap 12.4→3.1.  DEM 접촉망 하중분담을 MPM servo
+  BC에 주입하는 multi-scale handoff = 우리 고유 novelty(clamp 아닌 *계산*; 잔차 3.1%p = 소성 void-fill).
+  full record: docs/mpm_wallP_conditional_troubleshooting.md §8.
