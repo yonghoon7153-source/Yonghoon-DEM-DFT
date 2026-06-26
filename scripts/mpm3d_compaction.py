@@ -113,6 +113,12 @@ def parse_args(argv):
                          'plastic void-fill unchanged (SE servo stops first).  Needs scipy.')
     ap.add_argument('--am-jam-tol', type=float, default=0.05,
                     help='AM-AM contact tolerance for --am-jam, as a fraction of median AM radius (near-contact).')
+    ap.add_argument('--se-am-drag', type=float, default=0.0,
+                    help='SE-AM CONFINEMENT (physical, scaffold only): damp SE grid velocity near the frozen AM, '
+                         'scaled by the LOCAL AM fraction (3x3x3) — so SE conforms locally (Sakuda fusion) but is '
+                         'resisted from long-range MIGRATION past the AM skeleton.  AM density modulates it → '
+                         'SE-poor (dense AM, confined) stays ~DEM, SE-rich (sparse AM) keeps plastic void-fill — '
+                         'regime auto, no DEM import / no forced jam.  v *= max(0, 1 − drag·AM_frac).  0 = off. Needs scipy.')
     ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
                     help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
     ap.add_argument('--protocol', default='servo', choices=['servo', 'hold'],
@@ -552,9 +558,20 @@ def main(argv):
     wall_z = ti.field(ti.f32, ()); wall_vel = ti.field(ti.f32, ()); szz = ti.field(ti.f32, ())
     wallf = ti.field(ti.f32, ())                                # platen reaction impulse Σ m·Δv (per substep)
     scaffold_on = bool(args.am_scaffold)                        # fixed-AM grid obstacle (real skeleton)
+    SE_AM_DRAG = float(args.se_am_drag) if scaffold_on else 0.0   # ★ SE-AM confinement drag coef (compile-time const)
     am_mask = ti.field(ti.i32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))
+    am_near = ti.field(ti.f32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))   # local AM fraction (confinement)
     if scaffold_on:
         am_mask.from_numpy(pin_np)                              # cells inside fixed AM (built in scaffold branch)
+        if SE_AM_DRAG > 0.0:
+            try:
+                from scipy.ndimage import uniform_filter
+                _amnear = uniform_filter(pin_np.astype(np.float32), size=3, mode='nearest')   # 3³ local AM fraction
+            except Exception as _e:
+                print(f'  [se-am-drag] scipy.ndimage missing ({_e}) → AM-cell-only proximity'); _amnear = pin_np.astype(np.float32)
+            am_near.from_numpy(_amnear.astype(np.float32))
+            print(f'  [se-am-drag] ON coef={SE_AM_DRAG:.2f}; SE velocity damped by coef·AM_frac near the frozen '
+                  f'skeleton (max AM_frac={float(_amnear.max()):.2f}) — local conform, long-range migration suppressed.')
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(),
@@ -597,6 +614,9 @@ def main(argv):
                 if ti.static(scaffold_on):                              # fixed AM = rigid obstacle (v=0)
                     if am_mask[I] > 0:
                         grid_v[I] = ti.Vector.zero(ti.f32, 3)
+                    else:
+                        if ti.static(SE_AM_DRAG > 0.0):                  # ★ SE-AM confinement: damp SE flow near AM
+                            grid_v[I] *= ti.max(0.0, 1.0 - SE_AM_DRAG * am_near[I])  # local conform, suppress migration
                 i, j, k = I[0], I[1], I[2]
                 if k * dx < FLOOR and grid_v[I][2] < 0: grid_v[I][2] = 0.0
                 if k * dx > wall_z[None]:                                    # servo platen (rigid)

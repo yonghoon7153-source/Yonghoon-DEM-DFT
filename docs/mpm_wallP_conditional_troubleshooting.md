@@ -202,3 +202,63 @@ BOUNDARY(4<gap≤5) **0** · caught-but-non-mono **0**.  무결성 완벽.
 - **원칙적 해결(구현됨):** dump가 있으면 실제 hooke f_AM 사용 — `scripts/dem_am_load_fraction.py:
   am_load_fraction_liggghts(atom_dump, contact_dump)`.  webapp(dump 없음)는 Hertz scaffold + floor 안전망 유지.
 ⇒ 위시리스트 Tier 0~1(Walton–Braun/Luding/Tabor/Johnson/CEB)이 이 LAW의 물리 근거 — `litdb/WISHLIST.md`.
+
+## §13 ★★ VALIDITY THRESHOLD — MPM porosity는 어디서 믿을 수 있고 어디서 DEM이 owns인가 (2026-06-27)
+
+★ **결정적 재정리** (조건부·am-jam을 *끝까지 구현·검증*한 뒤 earned).  조건부(f_AM 응력분담)도 am-jam(기하 rigid
+정지)도 **둘 다 artifact**다 — 100_12에서 조건부=11.6(과압축), am-jam=22.6(과소압축, real_14도 16.7→18.4 깨짐).
+*진짜 물리*: 이 코너의 porosity는 **AM 재배열(rearrangement)**이 주도 = DEM의 softened-E/Furnas 영역이지
+**SE void-fill(MPM 영역)이 아니다.**  근본 이유 = MPM scaffold가 AM을 frozen-rigid로 둬서 (i) AM-AM overlap
+(DEM의 소성 proxy, 300 MPa서 AM 상호침투)을 못 만들고 (ii) AM 재배열을 못 함 → SE만 over-flow.  **frame[1] 본질
+한계** (연속체엔 rigid 점접촉·재배열 없음).
+
+### 데이터로 찍은 threshold (reliability corpus 117 케이스)
+**90.6% (106/117) reliable** (|gap|≤4).  unreliable = catastrophic(gap>5) **11개뿐**, 전부 한 코너:
+```
+SE/sol bin   mean gap   catastrophic(gap>5)        reliable(|gap|≤4)
+ 0-20%          2.3         3/22                       19/22
+ 25-30%         3.1         7/27   ← 코너 집중          18/27
+ 30-35%        -0.4         1/24                       23/24
+ 35-45%        -0.7         0/26   ← 완벽              26/26
+ 45%+          -8.3         0/18   (SE-rich: DEM ε_sphere 과압축, MPM이 맞음)
+```
+catastrophic 11개 = **thin(1mAh) + SE-poor(SE/sol ≤32%) + AM-rich(85-92wt%)**: 100_1X(26%)·1mAh_8/9(28-29%)·
+1mAh_100_15(25%) + 2mAh **mono-large만**(a9_p10·real_20·a9_50_p10, p=10:0/0:10).
+
+### ★ threshold는 단일 SE/sol 선이 아니라 *두께 × SE/sol* (2D) — "thickness escape"
+**결정 증거:** 같은 SE/sol 16%라도 두께가 가른다 —
+```
+8mAh_real_14 (SE/sol 16%!) DEM 19.1 / MPM 19.0  gap +0.1  ✅
+8mAh_real_11/12/13/15 (16%) gap ~0              전부 ✅  ← 초-SE-poor인데 reliable
+2mAh_real_20 (16%, mono-large) DEM 29.3/MPM 22.2 gap +7.1 ✗
+```
+**물리(geometric):** thick(8mAh) → AM 다층이 평판을 *기하적으로 차단* → SE 못 샘 → reliable (AM 주도라도!).
+thin(1mAh) SE-poor → AM 층이 1-2개라 평판 차단 못 함 → SE 옆으로 over-flow → 과압축.  ⇒ "AM 주도=불가"가
+아니라 **"AM 주도 + thin이라 AM 다층 차단이 없는" 코너**만 불가.  두께가 구제.
+
+### ⇒ Operational regime-gate (validity domain — porosity 보고 규칙)
+| 조건 | porosity 진짜 모델 | 근거 |
+|---|---|---|
+| **SE/sol ≥ 30%** (어느 두께든) | **MPM** ✅ | SE-governed, void-fill = MPM 물리영역 |
+| **8mAh** (SE/sol 16%까지) | **MPM** ✅ | AM 다층 차단 → SE 못 over-flow |
+| **2mAh bimodal** | **MPM** ✅ (대체로) | mono-large만 ✗ |
+| **1mAh + SE/sol <~30% + AM-rich** | **DEM** ✗(MPM 과압축) | AM-재배열 주도, thin이라 차단 없음 |
+| **2mAh/1mAh mono-large (10:0/0:10)** | **DEM** ✗ | 같은 코너 (AM 단일층) |
+
+★ **clamp/조작 아님** — regime-gate(옳은 *물리 모델* 선택) + DEM↔MPM 일치(|gap|≤4)를 validity 증명서로 노출.
+publishable: "어느 (조성×두께)에서 MPM(SE-소성)이 owns porosity이고 어디서 DEM(AM-재배열)이 owns인가"의 정량 경계.
+frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
+
+## §14 ★ 다음 물리경로 — SE-AM confinement (장거리 migration 억제, 국소 conform 허용) — IN PROGRESS (2026-06-27)
+
+조건부·am-jam(둘 다 artifact)을 버리고 *빠진 물리를 채우는* 방향.  **관찰:** pure-SE σ_y=0.30은 confinement 0서
+10%로 calibrated인데, composite SE-poor선 dense-AM이 SE를 가둬야(거의 못 흐름) 함에도 MPM 연속체 SE가 AM 틈으로
+**무한정 squeeze** → 과-flow(11.6).  빠진 항 = **AM confinement on SE flow.**
+- **물리 가설:** SE는 접촉부서 *국소 소성변형(Sakuda fusion)*은 하되 **AM 골격을 가로질러 장거리 migration은 안 함.**
+  AM 밀도가 flow를 modulate → SE-poor(dense AM): 거의 막힘→~DEM / SE-rich(sparse AM): void-fill.  **regime 자동.**
+- **구현 후보:** AM-인접 grid node서 SE 속도 drag (local AM-proximity로 스케일) — `--se-am-drag` opt-in.  dense-AM
+  근방 SE quasi-static(conform), AM 먼 곳 자유(void-fill).
+- **검증 (GPU, 둘 다):** SE-poor 100_12 → ~16-18 (코너 고쳐지나) / SE-rich real_14·1mAh_6 → void-fill 유지(안 깨지나).
+  한 coefficient가 둘 다 맞추면 genuine(regime auto); 한쪽만 맞으면 또 tunable patch → 폐기.
+- ⚠ **DEM import도 억지 jam도 아님** — AM confinement는 *실재 물리*(SE가 AM에 갇힘).  맞으면 MPM이 porosity를
+  물리적으로 내는 길 → §13 코너도 DEM 없이 MPM이 owns 가능.  status: 구현·adversarial 검증 진행.
