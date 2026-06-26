@@ -26,6 +26,7 @@
 | **[Kang25]** ⭐우리그룹 | Kang/Y.Lee/Bae/**Jong-Won Lee** 2025 ChemComm (61, 16850) — NCM811에 **LPSCl(=comp1) conformal dry-coating** → 고전압 **기생반응을 *균일*화**(식1 `2Li₆PS₅Cl→P₂S₅+5S+2LiCl+10e⁻+10Li⁺`) → NCM 균질 chemical lithiation(SOC↓) → layered→rock-salt 억제 → R_int 4.3 Ω cm²·200cyc 유지율 **+15.0 %**. **이로움 = SOC-강하(코팅), passivation 아님** | ✅ `papers/kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb.md` | exp(계산無) |
 | **[Whitten]** 📐methods | Whitten 2023 Appl. Surf. Sci. Adv. (13, 100384) — **UPS 실전·best-practice 튜토리얼**(외부, 단독저자, *재료결과無·계산無*). **물성축 비교대상 아님 — methods 레퍼런스**: UPS = 우리 DFT VBM/Φ/IE를 *측정하는 기법* + 산화안정성 valence-side 관측량 | ✅ `papers/whitten2023_ups_practical_best_practices.md` | methods(외부) |
 | **[He19]** 📐methods | He/Yu/Li/**Yan Zhao** 2019 EEM (2, 264–279) — **"Density Functional Theory for Battery Materials"** DFT 방법론 백본 리뷰(외부, Wuhan; *argyrodite 아님·재료수치無·물성축 비교대상 아님*). **우리 정적 DFT 백본 *전부*의 표준 provenance**: PBE 주류·**PBE gap ~1 eV 과소→HSE 보정(Fig 8)**·Nernst V=−Δ_rG/nF + convex-hull(Ceder 평균전압)·**AIMD-MSD→D·σ**·NEB·CDD/DOS/PDOS/Bader·EOS·phonon·**§7 functional 벤치(SCAN 추천/HSE06=+U급/U는 TM-d/f localized 전용)**. **🔑 SE ESW=Goodenough HOMO/LUMO band-edge(Fig 7)만 — grand-potential(Mo2012)은 리뷰에 *없음* → 우리가 더 엄밀** | ✅ `papers/he2019_dft_for_battery_materials_review.md` | review(methods) |
+| **[Sundar]** 🧪screening | Sundar/T.Kim/Lagunas/Mane/**Zapol**/**Connell** 2025 Adv. Sci. (12, e13191) — **LPSCl(=comp1) 입자에 바이너리 산화물 ALD 코팅** DFT 고처리량 스크린(외부, Argonne·UChicago; *코팅≠격자도핑*). 2-단계: ① 계면 분해 ΔE(**pymatgen InterfaceReactions = 우리 interface_reactivity와 동일**, 전해질·Li·양극 3계면) + HSE06 gap → ② 분해산물 Li-CI-NEB barrier + gap. **design rule = 예측력 있는 지표는 코팅 자체 안정성이 아니라 *계면 분해산물의 σ_ion/σ_e*** (우리 sei_products/Nd-cascade 철학과 동일 결). MgO=champion(σ_ion+25%·σ_e÷9·Li안정·CCD≤0.9 mA/cm²)·Al₂O₃ 재확인·ZrO₂ 실패(Zr₃O 1.4 eV·σ_e×2)·ZnO 역설(slab gap 0.4 eV·ZnS→σ_e↓0.17). LPSCl HSE06 gap **3.92 eV**(mix 0.32). **❗우리 47-dopant cascade ranking/descriptor와는 비교 금지(도핑 아님)** — 연결=방법론 거울 + 분해산물-전도도 철학 + sei_products gap 재확인 | ✅ `papers/sundar2025_oxide_coating_screening_lpscl.md` | DFT-screen+exp(외부) |
 | **[Cha]** ⭐우리그룹 | Cha/Yun/Kim/**Kang**/Cho/**Jong-Won Lee** 2024 J.Power Sources (617, 235157) — high-Ni NCM에 **할라이드 SE(LIC=Li₃InCl₆/LYC=Li₃YCl₆/LZC=Li₂ZrCl₆) 8–10 nm 코팅**으로 NCM-LPSCl(=comp1) 계면 부반응 억제. **핵심 = *dual compatibility*(NCM·LPSCl *양쪽* 호환)가 결정, σ 아님**: LIC(In) 양쪽 분해(In₂S₃)·LYC(Y) LPSCl과 분해(Y₂S₃)·**LZC(Zr⁴⁺) 양쪽 무분해=최고**. 계면저항 bare 74.4→LZC **20.1 Ω·cm²**·100cyc LZC **91.2 %**(LIC 80.8 < bare 83.1 < LYC 87.3). **우리 그룹 cathode-interface 3부작 *기원(2024)*** (→Kang25→Kang) | ✅ `papers/cha2024_dualcompatible_halide_ncm_lpscl_interface.md` | exp(계산無) |
 
 ---
@@ -55,6 +56,8 @@
 > - **MLIP 교차검증**: 우리 UMA가 EOS선 DFT급(**Nd₂O₃ B0 UMA 18.9 ≈ cascade DFT 19.9**, ≈1 GPa)이나 **절대 σ는 3–5× 과대** → "에너지·EOS·Ea는 DFT 기준 통과, 절대 수송계수는 미달"이 우리 MLIP 운용규칙(리뷰의 DFT 정확도 기준에 비춤).
 > **→ deck/paper 용법**: Methods 섹션에서 gap(PBE)·DOS·OCV(hull)·AIMD Ea/D·elastic 각각에 He19를 표준 근거로 인용; "우리 방법은 표준 DFT-for-batteries 관행을 따르되, SE 산화창은 리뷰의 band-edge가 아니라 *더 엄밀한* grand-potential(Mo2012)을 쓴다"가 정확한 1-liner. ⚠ **2019 리뷰 = r²SCAN·foundation MLIP·grand-potential 계면도구 누락** → 우리 신·심화 도구(UMA·constrained-ESW·interface_reactivity)의 표준성은 *후속 문헌*으로 별도.
 
+> 🧪 **screening 레퍼런스 note — *코팅 ≠ 도핑, cascade ranking 비교 금지* (NOT comparable to our 47-dopant cascade)** [`papers/sundar2025_oxide_coating_screening_lpscl.md`]: **Sundar 2025 = LPSCl 입자에 *바이너리 산화물 ALD 코팅*을 DFT로 스크린**(외부 Argonne). 우리 cascade는 *격자 치환*(Nd/Mg/O/F), Sundar는 *표면 코팅 산화물 상* → **레버가 다르다. 도판트 랭킹·descriptor(stability↔mobility trade-off·BVSE bottleneck)와 1:1 대조 금지.** **연결은 정확히 두 곳뿐**: (a) **방법론 거울** — Sundar의 계면 분해 스크린 = **pymatgen `InterfaceReactions`** = 우리 `interface_reactivity`/`GrandPotentialInterfacialReactivity`와 *동일 알고리즘*(우리는 grand-potential 전압분해까지 확장 = 우리 우위). 외부 Argonne 그룹이 같은 도구를 쓴다 = 우리 계면 방법이 **분야 표준**. (b) **분해산물-전도도 철학** — Sundar 핵심 design rule "코팅 자체 안정성 < *계면 분해산물의 σ_ion/σ_e*" = 우리 "도판트 자체 < *분해산물/SEI*의 전자절연성(NdPO₄/Li₃PO₄/Li₂O wide-gap)"과 **같은 사고**. 그리고 Sundar HSE06 분해산물 gap(Li₂S<LiCl, LiAlS₂/MgS 큼)이 우리 sei_products.json(LiCl 6.65≫Li₂S 3.90)·[Li25](LiCl 6.13/Li₂S 3.04)·[Lu](LiCl 6.22) 순서를 **재확인**(축 D·G). **ZnO 역설**(bulk gap 3.4 eV → 1 nm slab 0.4 eV → 코팅 후 σ_e *오히려↓* ZnS 산물 때문) = 우리 "PBE gap은 과소·slab/disorder 민감 → 'wide-gap insulator'로만 쓴다" 규율의 외부 근거. ⚠ **MgO/Al₂O₃/ZrO₂/ZnO·LiAlS₂/MgS는 우리 6원소(Cl-Li-Nd-O-P-S) hull 밖** → 그 절대 ΔE/gap은 우리 hull로 재현 못 함, 정성 정렬만. **DFT+U 미명시·HSE mix 0.32(비표준)·무질서 처리 미명시** → §10 한계.
+
 ## A. 이온전도도 — *Cl-rich가 빠르다 (전원 일치)*
 | 주장 | 출처 | 우리 (comp1→modelc) | 일치 |
 |---|---|---|---|
@@ -81,7 +84,7 @@
 | **B① intrinsic 0-pressure onset** | **무승부** (S²⁻-limited, 둘 다 2.256 V) | [GG] K_eff=0 = **1.70–2.40 V**; **[Rupp]** LPSCl DFT **2.01 V**(→Li₃PS₄+S+LiCl) / **2.2 V** vs LCO(→LiCl+Li₄P₂S₆+Li₂S) | 우리 grand-potential OCV 1.717 / **onset 2.256**(LiS4 제외, GG set; 포함 시 2.14) → **✓✓ 재현**, GG 2.40과 격차 0.14 V, [Rupp] 2.0–2.2 V band와 정합 |
 | **B① 방법: indirect (de)lithiation** | (우리 못 봄) | **[Rupp]** §2.5.2: LPSCl→**Li₄PS₄Cl/Li₁₁PS₅Cl 중간상** 거쳐 분해 → 실험창 ~1.25–2.5 V로 넓어 보임 (Schwietert/Wagemaker) | 우리 onset이 실험보다 낮은 이유 = indirect/passivation/kinetics의 **방법 근거** |
 | **B② 기계 구속 window** | **Cl-rich 승** | [GG] K_eff=20 LPSCl1.5 **0.80–4.30 V** (Cl 산물 고몰부피→strain) | 우리 `constrained_esw.py`가 trend 재현(modelc 더 넓어짐) → **✓** |
-| **B③ cathode 계면 cycling** | **Cl-rich 승** | [Zuo] R_cat 8.9<13.2, CE 79>77% (산물 양호) | 우리 grand-potential이 [Zuo] Eq1/Eq2 분해 stoichiometry 재현 → **✓ 화학**. **+ Zuo ToF-SIMS 종(PO₃⁻/SO₃⁻/Sₓ⁻/Cl⁻) = 우리 interface_reactivity 산물(Li₃PO₄/Li₂SO₄/폴리설파이드/LiCl, vs LiCoO₂) = `xps_reference_sei.csv` anchor(133.3/168.0/160.2/198.6) 1:1** (`papers/zuo2022…md` §11b, 2026-06-26). 단 "phosphate/sulfate *양*↓·폴리설파이드↑"는 SIMS-fold라 우리 정적 hull로 비율 못 가름 |
+| **B③ cathode 계면 cycling** | **Cl-rich 승** | [Zuo] R_cat 8.9<13.2, CE 79>77% (산물 양호) | 우리 grand-potential이 [Zuo] Eq1/Eq2 분해 stoichiometry 재현 → **✓ 화학**. **+ Zuo ToF-SIMS 종(PO₃⁻/SO₃⁻/Sₓ⁻/Cl⁻) = 우리 interface_reactivity 산물(Li₃PO₄/Li₂SO₄/폴리설파이드/LiCl, vs LiCoO₂) = `xps_reference_sei.csv` anchor(133.3/168.0/160.2/198.6) 1:1** (`papers/zuo2022…md` §11b, 2026-06-26). 단 "phosphate/sulfate *양*↓·폴리설파이드↑"는 SIMS-fold라 우리 정적 hull로 비율 못 가름. **+ [Liu] 독립 확증**(NCM811 full): cycled NCM/LPSCl이 oxidized S(sulfate/sulfite)·oxidized P 더 많고 argyrodite 적음 → R_cat 142.8 < 276 Ω·CE↑(Fig 5d–f). 같은 방향(Cl-rich NCM 계면 산화 산물 적음)이나 Liu는 "less oxidized solid"만, Zuo의 gas/polysulfide diversion 메커니즘은 없음 |
 | **B③ cathode 계면 — *레버 = SE 코팅*** (Cl 함량 아님) | **SE-coated 승** | **[Kang25]** ⭐ R_int 4.3 Ω cm²·200cyc 유지율 **+15.0 %**·OCV 강하 +10.1 mV; 식1 `2Li₆PS₅Cl→P₂S₅+5S+2LiCl+10e⁻+10Li⁺` → NCM811 균질 chemical lithiation(SOC↓) | 우리 grand-potential이 식1 산화분해(P₂S₅계+S+LiCl)를 **voltage-resolved로 재현·검증** (2.14 V S²⁻→폴리설파이드 … 3.06 V 원소 S). **단 이로움 = SOC-강하(코팅 균일화)이지 passivation 아님** → Nd(절연 CEI)와 *다른 physics* (§B 주석·§D) |
 | **B③ cathode 계면 — *레버 = 할라이드 코팅의 dual compatibility*** (Cl 함량 아님) | **dual-compat 할라이드(LZC) 승** | **[Cha]** ⭐ 할라이드(LIC/LYC/LZC) 8–10 nm 코팅; **LZC=Li₂ZrCl₆만 NCM·LPSCl 양쪽 호환**(7일 무분해) → 계면저항 74.4→**20.1 Ω·cm²**·100cyc **91.2 %**; LIC(In₂S₃)·LYC(Y₂S₃) 비호환·**LIC는 bare보다 나쁨(80.8<83.1)** | 우리 grand-potential이 bare NCM-LPSCl 분해(phosphate·P₂Sₓ·Li₂S, Cha XPS Fig5e)를 **재현**(우리 산화 staircase P₂S₇·S·폴리설파이드·LiCl). **단 LZC dual compatibility(Zr⁴⁺ passivation)는 Zr가 우리 hull에 없어 *아직* 정량 못 함** → 향후 Zr hull + interface_reactivity. **이로움 = *새 저항층 안 만듦*(비반응성 코팅)이지 능동적 절연 CEI 형성(Nd) 아님** → §B 주석·§D, "Cha=Nd 실험증거"는 부정확 |
 | **B④ calendar/thermal/moisture** | **Cl-poor(LPSCl) 승** | [Wu] 90℃ retention L6 68%>L55 48% | 범위 밖(우리 못 봄) |
@@ -111,6 +114,7 @@
 | 주장 | 출처 | 우리 | 비고 |
 |---|---|---|---|
 | PBE gap **LPSCl 1.88 / LiCl 6.22 eV** | [Lu] | comp1 2.066 / modelc 2.098 (PBE) | 무질서·Γ-only k ±0.2–0.3 scatter. LiCl 6.22 = 전자절연 interphase 기준 |
+| **LPSCl HSE06 gap 3.92 eV** (mix 0.32) + **분해산물 gap: Li₂S < LiCl, LiAlS₂/MgS 큼**(σ_e 억제 산물) | **[Sundar]** | comp1 2.066 / modelc 2.098 (PBE); sei_products LiCl 6.65 / Li₂S 3.90 | **△ gap 절대값 비교 금지**(PBE vs HSE06+mix 0.32; [Semi] HSE 3.30보다도 높음=mixing 의존). **✓ 분해산물 gap *순서*(LiCl≫Li₂S, wide 산물=절연 interphase)는 재확인** ([Li25]/[Lu]/sei_products와 한 줄). **ZnO 역설**(slab gap 0.4 eV·ZnS 산물 σ_e↓) = 우리 "PBE 과소·slab/disorder 민감 → wide-gap insulator만" 규율의 외부 근거 |
 | PBE 2.10→2.62 (In 도핑) | [Ma] | — | In 0.52 eV↑인데 σ_e 1.2×만 변(=defect-controlled) |
 | gap **1.82→2.41 eV** (CuBr₂ 도핑) + **σ_e 실측 1.02×10⁻⁸→3.35×10⁻⁹ S/cm**(3×↓, CCD와 역상관) | **[Li25]** (PDOS + DC분극) | comp1 2.066 / modelc 2.098 (PBE); σ_e 미측정 | △ **"도핑이 gap 확대→σ_e↓" 방향 일치**(우리 comp1→modelc gap 거의 불변과 대비; Cu/Br이 더 강한 전자구조 변화). **σ_e 3×↓ = gap+0.59 + Cu/Br carrier 복합**(gap만 분리 불가, [Ma]와 같은 주의). gap 절대값(LPSC-P 1.82<우리 2.066)은 functional·k·무질서 미상 → 비교 금지 |
 | PBE 2.45 / **HSE06 3.30** | [Semi] | (우리 PBE 2.07) | PBE는 ~1 eV 과소 → "wide-gap insulator"만 |
@@ -138,6 +142,7 @@
 | **dendrite는 *환원 SEI*의 전자구조가 좌우(pristine bulk 아님)** | **[Kang]** Fig6c (Hao ref90 계산) | 우리 bulk σ_e(gap 2.07 wide insulator)만; SEI 산물 gap은 sei_products.json | **✓ bulk σ_e 한계 명시** — dendrite 진짜 레버는 SEI 전자절연성(우리 sei_products.json) |
 | 계면E Li/LPSCl −2.68 ≪ LiCl/LPSCl −0.19 J cm⁻² (LiCl buffer가 Li-S 자발반응 차단) | **[Lu]** Fig6a | 우리 계면 slab 미계산(gap H) | 차용 가능 |
 | **[Lu] 견해**: 4d-Cl 90 % 자기분해 → LiCl passivation → **Cl-rich가 음극 유리** (CCD 0.96, 800h) | **[Lu]** | modelc Cl-rich, 4d 점유↑ 추정 → 부합 | Cl-rich ✓(조건부) |
+| **[Liu] 견해(AIMD kinetic)**: Cl-rich 환원 분해가 *더 느림* — 계면 P–S RDF(300 K, 50 ps): PS₄³⁻(2.02 Å) **LPSCl 10 ps서 깨짐 / Cl-rich 35 ps 유지**; LiₓPᵧ(2.5 Å) LPSCl이 더 빨리·많이 형성. + **LiCl-rich SEI**(post-mortem XPS LiCl↑·Li₂S↓·PS₄ 131.9 eV↓) → CCD 0.95→**1.40 mA/cm²**·대칭셀 500 h(R 65→600 vs 34→50 Ω). **Cl-rich 음극 유리** | **[Liu]** (Fig 4·S10) | 우리 grand-potential = **0V 환원산물만**(Li₃P+Li₂S+**LiCl**, thermo) — 분해 *속도* 못 봄 | **△ 보완(kinetic)·[Lu]와 동맹**: 우리=어떤 산물(thermo, 동일 화학)·Liu=얼마나 빨리(kinetic). LiCl=절연(우리 sei_products 6.65 eV)이 Liu "LiCl SEI 이점"에 의미부여. **우리 H목록 '음극 분해 동역학'을 메우는 외부 AIMD 증거** |
 | **[GG] 견해**: 과안정 LPSCl1.5는 self-limiting ✗ → **moderate Cl(1.0)이 유리** (다층 전략) | [GG] | — | Cl-rich ✗ |
 > **🔑 화해 (정직)**: 같은 LPSCl1.5인데 [Lu]는 "Cl-rich 유리", [GG]는 "moderate 유리"로 정반대. 둘 다 **"전자절연 passivation(LiCl) 형성 = dendrite 억제 관건"** 엔 동의. 차이는 **Cl '양'이 아니라 Cl '자리(4d)'**: [Lu]의 high-4d-Cl은 metastable(E_hull +15.2)이라 자기분해→LiCl, [GG]의 조성-평균 관점은 이 자리 불안정성을 못 봄. → **deck 결론: "음극엔 Cl-rich 무조건 유리 ✗ / 전자절연 LiCl interphase 형성되면 ✓, 형성 여부는 4d-Cl 점유가 좌우"**. (상세 = `papers/lu2025_tailoring_cl_rich_anode_licl.md` §13)
 
@@ -163,10 +168,13 @@
 | modelc onset `→Li3PS4+1.6LiCl+0.4S+0.8Li` | = [Zuo] Eq2 거동 (전자 적게·LiCl 많이) | [Zuo] |
 | 0-pressure ESW (OCV 1.717, onset **2.256** LiS4 제외) | = K_eff=0 (1.70–2.40), 격차 0.14 V | [GG] |
 | 구속 ESW Cl-rich 확대 trend | = K_eff=20 거동 | [GG] |
-| AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][Liu] |
+| AIMD Ea/D Cl-rich 빠름 | = 실험 σ trend | [GG][Zuo][**Liu**] |
+| **inter-cage 활성화 = Cl-rich σ↑ 물리** (우리 percolation·D↑) | = AIMD Li 확률밀도 intra→inter-cage 전이·MSD 3× (Cl-rich가 cage 사이 통로 개방) | **[Liu]** Fig 2e–g (직접 시각 증거) |
 | VBM = S 3p | = HAXPES | [Banik] |
-| 환원 산물 Li₃P+Li₂S+**LiCl** (LiCl = 전자절연 passivator) | = LPSCl(1.5) 환원; LiCl이 음극 passivation | [Ke][GG][**Lu**][**Liu23**][**Li25**] |
+| 환원 산물 Li₃P+Li₂S+**LiCl** (LiCl = 전자절연 passivator) | = LPSCl(1.5) 환원; LiCl이 음극 passivation. **[Liu] = AIMD/XPS로 PS₄³⁻→LiₓPᵧ 환원 + LiCl-rich SEI 직접 관측 + Cl-rich가 *더 느린* 환원(kinetic)** | [Ke][GG][**Lu**][**Liu23**][**Li25**][**Liu**] |
 | **sei_products.json 절연산물 순서 LiCl(6.65)≫Li₂S(3.90)** = "wide-gap halide=전자절연 SEI" | = 외부 그룹 독립 DFT PDOS **LiCl 6.13/LiBr 5.07/Li₂S 3.04 eV** (같은 순서) | **[Li25]** (+[Lu] LiCl 6.22) |
+| **sei_products.json 절연산물 순서 LiCl(6.65)≫Li₂S(3.90)** = "wide-gap 산물=전자절연 interphase" | = 독립 HSE06 분해산물 gap **Li₂S < LiCl** (+ LiAlS₂/MgS 특히 큼) — 또 하나의 외부 DFT가 같은 순서 재확인 | **[Sundar]** |
+| **계면 분해 분석 방법 = pymatgen `InterfaceReactions`** (우리 `interface_reactivity`/`GrandPotentialInterfacialReactivity`) | = Sundar가 12 산화물×3계면을 *동일 도구*로 스크린 → 우리 계면 방법이 **분야 표준**임을 외부 Argonne 그룹이 입증 (우리는 grand-potential 전압분해까지 = 우위) | **[Sundar]** |
 | **"electron-blocking interphase가 분해 차단" 메커니즘** (우리 중심 주장) | = **LiF-rich SEI가 SE 분해(Li₂S) 억제** (실험 XPS) → 같은 그룹이 실험 입증 | **[KimICCF]** ⭐ |
 | **"σ 병목 = interphase/microstructure, bulk 결정 아님"** | = 시트 σ 손실 원인 = 공동(34.2 %), 채우면 155 % 회복 | **[KimICCF]** ⭐ |
 | **O-doping interphase가 전자절연(wide-gap)으로 e⁻ leak 차단** (우리 Nd cascade) | = §5.1(b) 옥시설파이드 "reduced electron leakage"·O–P>S–P; §5.1(c) Li₃PO₄ buffer | **[Kang]** ⭐ (우리 그룹 리뷰가 직접 전략으로 추천) |
@@ -180,7 +188,8 @@
 | gap | 누가 필요로 함 | 보강책 |
 |---|---|---|
 | 기체상(SO₂/O₂) 포함 계면 분해 | [Zuo] R_int 메커니즘 | 기체 chempot + NCM O-release |
-| 무질서 E_above_hull (metastability) | [Zuo] DSC/TGA, [Wu] | SQS/enumerate E_hull |
+| 무질서 E_above_hull (metastability) | [Zuo] DSC/TGA, [Wu], **[Liu]**(LiCl/thio-LISICON annealing window) | SQS/enumerate E_hull (Cl-rich 2차상 = modelc Cl1.6 위험) |
+| 음극 환원 분해 *동역학*(속도) — 우리는 grand-potential 산물(thermo)만 | **[Liu]** AIMD 계면 P–S RDF 시간추적(PS₄ 10 ps vs 35 ps) | **이미 [Liu]가 외부 AIMD로 제공** → 우리 thermo onset에 kinetic 짝. 향후 우리도 Li//argyrodite AIMD RDF 가능(셋업 동급: VASP/PBE/NVT/Γ) |
 | **시트/펠릿 microstructure σ(공동·percolation) — 우리는 bulk 단결정 AIMD만** | **[KimICCF]** (device σ ≠ bulk σ) | **GeoDict digital-twin**(GrainGeo+ConductoDict, contact 0.07 + biphasic 0.08 Ω·cm²) = bulk↔device σ 다리 |
 | 음극 in-situ SEI *실측* 산물·전자절연성 | **[KimICCF]** XPS LiF/Li₂S | 우리 grand-potential 환원산물 예측의 실험 카운터파트(이미 [KimICCF]가 제공) |
 | ~~LiS4 제외 ESW~~ ✅ **완료 (2026-06-23)** | [GG] phase set | onset 2.256 V, comp1 rxn=Zuo Eq1 정확 일치 (`our_dft_baseline.md` §ESW 상세) |
