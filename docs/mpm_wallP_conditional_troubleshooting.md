@@ -299,11 +299,28 @@ robustness factor가 thin 두 케이스에 거의 동일(100_12=0.62 ≈ 1mAh_6=
 AM-재배열 discriminator(두께)를 유도 불가**.  8mAh = 미실행(zip 없음)이나 real_14(thick, robust=0.00 = drag-off)가
 standalone서 이미 thick drag-off 구조 확인 → 8mAh도 동일 예상.
 
-★ **4 라운드 누적 결론 (empirical, NOT prediction):** 조건부·am-jam·se-am-drag(fixed)·se-am-drag(flexible) **모두
-empirical 실패**, 같은 root-cause: **resolved-grain 연속체 MPM은 frozen rigid-AM의 *재배열·AM-AM overlap*(DEM softened-E
-plastic proxy)을 표현 불가 → 코너 porosity(thin + SE-poor + AM-rich)는 AM-재배열 지배 = DEM 영역.**  어떤 engineered
-coef(fixed/flexible/local/global-robust)도 §13 regime-gate를 변장한 것일 뿐.  ⇒ **§13 (코너 = DEM-domain regime-gate)
-= EARNED, 이제 empirical-backed** (4-round CYCLE 소진).
-★ OPEN (사용자 결정 대기, 혼자 확정 X): round 5 후보 = *local SE-content* 계수(100_12-vs-1mAh_6 차이가 SE/sol-based이므로).
-단 반박 예측: 그것도 SE/sol 값으로 만든 dressed-up gate = §13 답을 계수로 재포장.  또는 Option D(AM을 stiff-plastic
-*material*로 → MPM이 AM 재배열 직접, frame[5] 위반 위험·CFL/OOM).  ⚠ CYCLE 계속 vs §13 채택 = 사용자 판단.
+| 5 | **mobile elastic real-E AM** (E=140, softening 無, freeze 아니라 하중-bearing; nu_se=0.49가 soft-bulk 잡았으니 안전하다는 가설) | 3-lens(physics/regression/feasibility) **전부 KILL** + ★ 기존 empirical 발굴 | **이미 실행됨**: dem3d_composite_overshielding.md 4-lever 스크린 (real E=140 AM, e_am 140→40→12→4) | ❌ **기존 데이터로 KILL** (아래) |
+
+★ round 5 가설의 출발점은 **옳았다**(사용자 통찰): AM-AM은 영률 안 줄인 *real physics* (SE만 18× softened) → 내가 코너를
+"AM softened-E proxy"라 한 건 *틀림*.  하지만 그 real AM에 하중을 주면(=mobile) 어떻게 되는지는 **이미 2026-06-15에
+empirical로 실행됨** (`docs/dem3d_composite_overshielding.md`, scripts/dem3d_plastic.py) — 4 라운드 내내 내가 못 본 데이터:
+  • resolved-grain 3D DEM, **real E=140 AM**, bulk axial virial → composite **34–41 %** (측정 9–19 %, over-shielded).
+  • **AM 영률 sweep 140→40→12→4 = 36→37→38→32 %** (변화 거의 없음) — 즉 round 5가 쓰려던 바로 그 lever(real AM E)를
+    이미 쓸어봤고 안 됨.  friction·cohesion·AM-yield 도 전부 실패.  ⇒ over-shielding은 **GEOMETRIC**(SE가 AM 틈에 안 들어가
+    있음, rigid-sphere가 FLOW 못 함), contact-force/modulus 문제 아님.  rigid(cap off) ≈ plastic(cap on) ~36 %.
+  • **★ 두 force-chain 구분 (내 premise 오류 정정):** (a) **52–56 %** = soft-bulk SE artifact → nu_se=0.49로 *dissolved*
+    (CORRECTION 1).  (b) **34–41 %** = geometric rigid-sphere void-fill limit → real E=140, rigid≈plastic, nu_se가 *안 건드림*.
+    round 5의 "nu_se가 mobile AM을 안전하게 만든다"는 (a)(b)를 혼동한 것 = 거짓.
+  • reliability 문서(§46-47)가 **이미 mobile-AM을 pre-reject**: "force-chain 일부는 SE-bulk 부작용(nu_se 0.49 완화)이나
+    AM-mobile 자체는 ③CFL/OOM(n_grid≥384 blow-up) ④drift(측정 skeleton 이탈) 때문에 기각."  feasibility lens 확인:
+    scaffold는 SE-only material(line 307), AM은 am_mask(v=0)와 **상호배타** → mobile-AM 코드 path 자체가 없음 + 코너가
+    요구하는 n_grid≥300서 OOM.  ⇒ 새 코드 + OOM 위험 무릅써 돌려도 결과는 36–41 % over-shielding 재현(기존 DEM 스크린이 보증).
+
+★ **누적 결론 (5 라운드, empirical-backed):** mobile AM(하중-bearing) → over-shielding 36–41 %(production real_14 15.6 깨짐);
+frozen AM → SE 하중-bearing densify 15.6 ✓(production) 但 코너 over-compress 11.6.  **코너=loose AM 필요, production=frozen AM
+필요 → 어느 쪽이냐 선택 = 바로 regime-gate = §13.**  코너 porosity는 BRACKET[frozen-MPM 11.6 하한 … DEM 32.8 상한 (단 32.8도
+thin loose-packing outlier 의심 — thick sibling+MPM cross-capacity ~20 %)]; truth는 그 사이, DEM(softened-E overlap)+packing이
+owns.  ⇒ §13 = **3중 backed**: (1) 4 GPU 라운드(조건부/jam/drag×2), (2) DEM 4-lever geometric 스크린(modulus 포함 전부 실패),
+(3) 프로젝트 자체 pre-rejection 문서.  ⚠ PROCESS 교훈: round 5 제안 전에 dem3d_composite_overshielding.md를 봤어야 함 —
+반박 CYCLE이 그 miss를 잡음(이게 반박 step의 가치).
+★ OPEN (사용자 결정, 혼자 확정 X): §13 채택(권장, 압도적 earned) vs 직접 GPU 재확인(새 코드+OOM, 기존 스크린 재현만).
