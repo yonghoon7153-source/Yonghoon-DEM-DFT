@@ -106,7 +106,7 @@
 | 🟡 | Storåkers, Biwa, Larsson (1997) | Similarity analysis of inelastic contact | Int. J. Solids Struct. 34(24) 3061 | 10.1016/S0020-7683(96)00176-X |
 | 🟡 | Thakur, Morrissey, Sun, Chen, Ooi (2014) | Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model | Granular Matter 16(3) 383 | 10.1007/s10035-014-0506-4 |
 | 🟡 | Sangrós Giménez, Schilde, Froböse, Ivanov, Kwade (2020) | Mechanical, electrical, and ionic behavior of lithium-ion battery electrodes via discrete element method simulations | Energy Technol. 8(2) 1900180 | 10.1002/ente.201900180 |
-| ⬜ | Jackson & Green (2005) | A finite element study of elasto-plastic hemispherical contact against a rigid flat | J. Tribol. 127(2) 343 | 10.1115/1.1866166 |
+| ⚠paywall | Jackson & Green (2005) | A finite element study of elasto-plastic hemispherical contact against a rigid flat | J. Tribol. 127(2) 343 | 10.1115/1.1866166 — **유료 → SKIP** (저자 Robert Jackson Auburn 페이지에 free 있을 수 있음) |
 | ⬜ | Kogut & Etsion (2002) | Elastic-plastic contact analysis of a sphere and a rigid flat | J. Appl. Mech. 69(5) 657 | 10.1115/1.1490373 |
 | ⬜ | Vu-Quoc & Zhang (1999) | An elastoplastic contact force-displacement model in the normal direction: displacement-driven version | Proc. R. Soc. A 455(1991) 4013 | 10.1098/rspa.1999.0488 |
 | ⬜ | Pasha, Hassanpour, Ahmadian, Ghadiri (2014) | A linear model of elasto-plastic and adhesive contact deformation | Granular Matter 16(1) 151 | 10.1007/s10035-013-0476-y |
@@ -120,6 +120,14 @@
 | ⬜ | Stomakhin, Schroeder, Chai, Teran, Selle (2013) | A material point method for snow simulation | ACM TOG 32(4) 102 | 10.1145/2461912.2461948 |
 | ⬜ | de Vaucorbeil, Nguyen, Sinaie, Wu (2020) | Material point method after 25 years: theory, implementation, and applications | Adv. Appl. Mech. 53 185 | 10.1016/bs.aams.2019.11.001 |
 | ⬜ | Ngandjong, Lombardo, Primo, Chouchane, Shodiev, Arcelus, Franco (2021) | Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model | J. Power Sources 485 229320 | 10.1016/j.jpowsour.2020.229320 |
+
+## ★ 접근성 현실 (2026-06-26) — 정전은 대부분 유료, 안 사도 됨
+사용자 확인 유료(⚠paywall): **Walton–Braun 1986 · CEB 1987 · Thornton 1997 · Jackson–Green 2005** (구 ASME/Elsevier
+저널은 대개 유료).  → **정전 PDF는 굳이 구하지 말 것.**  현실적 intake = **단 2~3편**:
+1. **Luding 2008** (우리 모델 자체 k₂/k_c/φ_f; 저자 Twente 페이지에 free) — ★ 이거 하나가 핵심.
+2. **리뷰 1편** — Di Renzo & Di Maio 2004 *또는* Thornton–Cummins–Cleary 2013: linear-hysteretic + EP 접촉모델 **정전 내용을 한 편에 요약** → 정전들(Walton/CEB/Thornton/Jackson)을 *이 리뷰로 인용*.
+3. 교과서(Tabor·Johnson)는 **도서관/발췌**로 근거만.
+⇒ 유료 정전을 못 구해도 **모델·논문 작성에 지장 없음**(리뷰+교과서+Luding 으로 커버).  유료 표시된 건 SKIP 확정.
 
 ## 비고
 - 📕 교과서(Tabor·Johnson·Simo–Hughes)는 PDF agent엔 부적합 → **인용·근거용**(해당 장만 발췌 가능).
