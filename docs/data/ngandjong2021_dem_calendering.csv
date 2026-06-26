@@ -1,0 +1,46 @@
+quantity,structure,value,units,pressure_MPa,porosity_pct,condition,precision,note
+porosity_vs_pressure,cathode,41.6,pct,0,41.6,Uncal_sim,stated,"sim un-calendered; exp 42+/-2; rho_dry exp 2.3 sim 2.4 g/cm3 (Table 1)"
+porosity_vs_pressure,cathode,42,pct,0,42,Uncal_exp,stated,"exp un-calendered 42+/-2 (Table 1)"
+porosity_vs_pressure,cathode,31.5,pct,7,31.5,calendered_sim,digitized_Fig2B,"approx 7 MPa after knee; representative structure-analysis point"
+porosity_vs_pressure,cathode,30.7,pct,35,30.7,calendered_sim,digitized_Fig2B,"approx 35 MPa"
+porosity_vs_pressure,cathode,27.8,pct,85,27.8,calendered_sim,digitized_Fig2B,"approx 85 MPa; near saturation floor"
+porosity_vs_pressure,cathode,27.2,pct,160,27.2,calendered_sim,digitized_Fig2B,"approx 160 MPa; floor ~27pct (LIB porosity GOOD; stiff NMC E=200 + low-P calendering)"
+porosity_knee,cathode,5,MPa,5,,elastic_to_plastic_knee,digitized_Fig2B,"42->~32pct rapid drop at ~5-10 MPa = LIB low-P knee (cf our Heckel P_y=138 MPa, ~20x higher)"
+tortuosity_z,cathode,1.55,dimensionless,0,41.6,Uncal_z_GeoDict,digitized_Fig5,"CBD inner-porosity 47pct assumed; x~y~z (small anisotropy)"
+tortuosity_z,cathode,1.95,dimensionless,160,27.2,calendered_z_GeoDict,digitized_Fig5,"calendering UP -> tau UP (pore path worsens; ionic conductor IS the pore = inverted vs ASSB)"
+tau_EIS_TLM,cathode,1.3676,dimensionless,0,41.6,Uncal_Landesfeind_TLM,stated_Table3,"R_ion=0.02595 Ohm m2"
+tau_EIS_TLM,cathode,1.3808,dimensionless,7,31.5,Landesfeind_TLM,stated_Table3,"R_ion=0.02913 Ohm m2"
+tau_EIS_TLM,cathode,1.7527,dimensionless,160,27.2,Landesfeind_TLM,stated_Table3,"R_ion=0.04014 Ohm m2; calendering UP -> R_ion UP"
+R_ion,cathode,0.02595,Ohm_m2,0,41.6,Uncal,stated_Table3,"electrolyte ionic resistance within porous electrode"
+R_ion,cathode,0.02913,Ohm_m2,7,31.5,calendered,stated_Table3,
+R_ion,cathode,0.04014,Ohm_m2,160,27.2,calendered,stated_Table3,
+discharge_capacity_1C,cathode,116.2,mAh_per_g,0,41.6,Uncal_sim_1C,stated,"sim 1C; NMC theoretical 280 mAh/g; un-cal potential collapses ~70 mAh/g (poor e-transport)"
+discharge_capacity_1C,cathode,121.5,mAh_per_g,7,31.5,calendered_sim_1C,stated,"calendering UP -> capacity UP (e-transport gain dominates)"
+discharge_capacity_1C,cathode,130.7,mAh_per_g,160,27.2,calendered_sim_1C,stated,
+discharge_exp_1C,cathode,,mAh_per_g,5.92,32,exp_1C_red,stated_FigS8,"porosity 32+/-1 @ 5.92 MPa; theoretical 177 mAh/g; un-cal ~zero capacity at 1C"
+discharge_exp_1C,cathode,,mAh_per_g,86,26.3,exp_1C_blue,stated_FigS8,"porosity 26.3+/-0.8 @ 86 MPa"
+E_AM_DEM,particle,200,GPa,,,NMC_single_particle,stated_Table2,"lit 100-200 GPa, upper limit chosen"
+E_CBD_DEM,particle,2,GPa,,,CBD_particle,stated_Table2,"1/100 of NMC -> soft deformable phase"
+poisson_DEM,particle,0.3,dimensionless,,,AM_CBD_Al_Steel,stated_Table2,"all phases nu=0.3"
+CED_AM,bond,600000,pg_per_um_us2,,,SJKR_adhesion_AM,stated_Table2,"cohesion energy density; mixed i-j = geometric mean"
+CED_CBD,bond,70000,pg_per_um_us2,,,SJKR_adhesion_CBD,stated_Table2,"CBD weakest (~1/9 of AM) but sticky"
+CED_Al,bond,550000,pg_per_um_us2,,,SJKR_adhesion_Al_collector,stated_Table2,
+CED_Steel,bond,600000,pg_per_um_us2,,,SJKR_adhesion_Steel_roll,stated_Table2,
+friction_Xu_AM,particle,0.001,dimensionless,,,AM,stated_Table2,"near-frictionless particles"
+friction_Xu_CBD,particle,0.001,dimensionless,,,CBD,stated_Table2,
+friction_Xu_Al,wall,1.2,dimensionless,,,Al_collector,stated_Table2,
+friction_Xu_Steel,wall,0.76,dimensionless,,,Steel_roll,stated_Table2,
+CBD_inner_porosity,particle,47,pct,,,CBD_nanoporosity_FIBSEM,stated,"rho_CBD,solid 1.81 -> compressed particle 0.95 g/cm3"
+CBD_diam_slurry,particle,3.1,um,,,slurry_with_solvent,stated_Fig1,"shrinks to 0.65 um on drying (solvent evaporation)"
+CBD_diam_dry,particle,0.65,um,,,dried_electrode,stated_Fig1,
+D_eff_CBD_FEM,FEM,2.46e-11,m2_per_s,,,CBD_partial_blocking,stated,"vs pore D=7.5e-11; CBD allows ion transport, no intercalation"
+sigma_e_NMC_FEM,FEM,5e-3,S_per_m,,,NMC_electronic,stated,"lowered below experiment for COMSOL convergence (authors note)"
+D_Li_solid_FEM,FEM,2e-15,m2_per_s,,,NMC_Li_diffusion,stated,
+NMC_PSD_bin1,particle,2.5,um,,,SEM_binned,stated_FigS1,"6 AM diameters used in CGMD"
+NMC_PSD_bin2,particle,3.5,um,,,SEM_binned,stated_FigS1,
+NMC_PSD_bin3,particle,4.5,um,,,SEM_binned,stated_FigS1,
+NMC_PSD_bin4,particle,5.86,um,,,SEM_binned,stated_FigS1,
+NMC_PSD_bin5,particle,8.28,um,,,SEM_binned,stated_FigS1,
+NMC_PSD_bin6,particle,10.35,um,,,SEM_binned,stated_FigS1,
+slurry_viscosity_hi,slurry,3.3,Pa_s,,,low_shear_sim_eq_exp,stated_FigS2,"eta-gamma 3.3->1.0 Pa.s; rho sim=exp=2.14 g/cm3 (Lombardo ref18 validation)"
+slurry_viscosity_lo,slurry,1.0,Pa_s,,,high_shear,stated_FigS2,

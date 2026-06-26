@@ -1,0 +1,1986 @@
+Drucker-Prager Elastoplasticity for Sand Animation
+
+Gergely Kla´r     Theodore Gast     Andre Pradhana     Chuyuan Fu     Craig Schroeder     Chenfanfu 
+Jiang     Joseph Teran
+University of California, Los Angeles
+
+
+Abstract
+
+Figure 1: Sand falls through the narrow neck of an hourglass, accumulating at the bottom.
+
+level  of  accuracy  when  animating  scenes  like  beaches  or  play-
+grounds. Sand and many other similar everyday materials like salt,
+
+
+We simulate sand dynamics using an elastoplastic, continuum as-
+sumption.   We  demonstrate  that  the  Drucker-Prager  plastic  flow
+model combined with a Hencky-strain-based hyperelasticity accu-
+rately recreates a wide range of visual sand phenomena with mod-
+erate computational expense.   We use the Material Point Method
+(MPM) to discretize the governing equations for its natural treat-
+ment  of  contact,  topological  change  and  history  dependent  con-
+stitutive relations.  The Drucker-Prager model naturally represents
+the frictional relation between shear and normal stresses through
+a yield stress criterion.  We develop a stress projection algorithm
+used for enforcing this condition with a non-associative flow rule
+that works naturally with both implicit and explicit time integra-
+tion.   We  demonstrate  the  efficacy  of  our  approach  on  examples
+undergoing large deformation, collisions and topological changes
+necessary for producing modern visual effects.
+
+Keywords:  MPM, APIC, elastoplasticity, sand, granular
+
+Concepts:    Computing methodologies       Physical simulation;
+
+Continuous simulation;
+
+1    Introduction
+
+Sand dynamics are ubiquitous in every day environments. Its char-
+acteristic flowing and piling motions must be recreated with a high
+
+Permission to make digital or hard copies of all or part of this work for per-
+sonal or classroom use is granted without fee provided that copies are not
+made or distributed for profit or commercial advantage and that copies bear
+this notice and the full citation on the first page. Copyrights for components
+of this work owned by others than the author(s) must be honored. Abstract-
+ing with credit is permitted.   To copy otherwise,  or republish,  to post on
+servers or to redistribute to lists, requires prior specific permission and/or a
+fee.  Request permissions from permissions@acm.org.   c  2016 Copyright
+held by the owner/author(s). Publication rights licensed to ACM.
+SIGGRAPH ’16 Technical Paper,, July 24 - 28, 2016, Anaheim, CA,
+ISBN: 978-1-4503-4279-7/16/07
+
+DOI: http://dx.doi.org/10.1145/2897824.2925906
+
+ACM Reference Format
+
+Klár, G., Gast, T., Pradhana, A., Fu, C., Schroeder, C., Jiang, C., Teran, J. 2016. Drucker-Prager 
+Elastoplas-
+ticity                                                                                              
+                                                                           for Sand Animation. ACM 
+Trans. Graph. 35, 4, Article 103 (July 2016), 12 pages.
+
+DOI = 10.1145/2897824.2925906 http://doi.acm.org/10.1145/2897824.2925906.
+
+powder, rubble, etc are granular materials composed of many dis-
+crete macroscopic grains colliding and sliding against one another.
+These materials exhibit complex behaviors with aspects compara-
+ble to both fluids (e.g.  they can assume the shape of a container)
+and solids (they can support weight and form stable piles) [Jaeger
+et al. 1996; Bardenhagen et al. 2000].
+
+Unfortunately, this complex material behavior makes it very diffi-
+cult to develop numerical methods capable of reproducing sand dy-
+namics. Given the incredibly high number of grains in practical sce-
+narios, a continuum description of the governing equations is useful
+for simulation. However, it is difficult to design a single constitutive
+law that reproduces all sand behaviors. Furthermore, these laws are
+relatively complex and require subtle aspects of elastic and plastic
+response.  On the other hand, a Lagrangian view where all grains
+are simulated only requires a description of the frictional contact
+between grains.  Unfortunately, numerical methods designed from
+this view would require the computationally prohibitive simulation
+of many millions or even of billions of individual grains.  Further-
+more, it is difficult to tune the grain frictional parameters to match
+observed piling and flowing behaviors in everyday experiments.
+
+We build on the work of Mast et al. [2013; 2014] and develop an im-
+plicit version of their Drucker-Prager-based elastoplasticity model
+for granular materials.  The Drucker-Prager conception of elasto-
+plasticity is often used in the mechanical engineering literature for
+granular materials [Drucker and Prager 1952],  and we show that
+it can be adopted to animation applications with relatively simple
+implementation and efficient runtimes.  This is useful because the
+models are well developed and the literature can be consulted to re-
+duce the difficulty of parameter tuning.  We use the Material Point
+Method (MPM) [Sulsky et al. 1994] to discretize the model since it
+provides a natural and efficient way of treating contact, topological
+change and history dependent behavior. Furthermore, we show that
+this can be done with little more effort than was used for simulating
+snow dynamics in the MPM approach of Stomakhin et al.  [2013].
+Lastly,  we  replace  the  particle/grid  transfers  used  by  Mast  et  al.
+with APIC transfers [Jiang 2015; Jiang et al. 2015] and show that
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:2    •    G. Klár et al.
+
+this allows for more stable behavior, particularly with simulations
+that have higher numbers of particle per cell.
+
+2    Related Work
+
+and  conservation  of  momentum,  which  can  be  simplified  to  the
+Euler-Lagrange equations,
+
+ρ Dv  =        σ + ρg.                          (2)
+
+Dt
+
+Here,  we have used  Dφ  =   ∂φ + v · ∇φ to denote the material
+
+
+Continuum  approaches  have  been  used  in  a  number  of  graphics
+methods for granular materials.  Zhu and Bridson [2005] animate
+sand as a continuum with a modified Particle-In-Cell fluid solver.
+Narain et al.  [2010] improve on the method of Zhu and Bridson
+
+derivative of an arbitrary function φ(x, y, z). The text of Gonzalez
+and Stuart [2008] provides useful background for these equations.
+
+Deformation gradient.  The deformation gradient represents how
+deformed a material is locally.  For example, let x⁰ and x⁰ be two
+
+by removing cohesion artifacts associated with incompressibility.                                   
+                                                        1                2
+
+
+Both  of  these  works  led  to  a  number  of  generalizations  and  im-
+provements.  Nkulikiyimfura et al.  [2012] develop a GPU version
+of the Zhu and Bridson approach.  Laenerts and Dutre [2009] use
+an  SPH  version  to  couple  water  with  porous  granular  materials.
+Aldua´n  and  Otaduy  [2011]  generalize  the  unilateral  incompress-
+ibility developed by Narain et al.   to SPH. Imhsen et al.   [2013]
+show  how  to  improve  the  convergence  of  the  method  of  Aldua´n
+and Otaduy [2011] and also detail refinement of base simulations
+to upscale to millions of grains. Chang et al. [2012] use a modified
+Hooke’s law to handle friction between grains.
+
+Many methods are developed by modeling interactions between in-
+dividual grains or particle idealizations of grains, rather than from
+a continuum.   Miller and Pearce [1989] simulate interactions be-
+tween particles to model sand, solid and viscous behaviors. Luciani
+et al. [1995] use a similar approach. Bell et al. [2005] got very im-
+pressive results by simulating many sand grains as spherical rigid
+bodies with friction.  Milenkovic [1996] also simulated individual
+grains  to  solve  for  piles  of  rigid  materials  via  energy  minimiza-
+tion/optimization.   Mazhar et al.   [2015] use Nestov’s method to
+simulate millions of individual grains.   Yasuda et al.   [2008] use
+the GPU to get real-time results with rigid grains.   Alduan et al.
+[2009] use an adaptive resolution version of the method by Bell et
+al.  [2005] to improve performance.  Macklin et al.  [2014] show
+that the extremely efficient position based dynamics methods can
+be applied by casting granular interactions as hard constraints in.
+
+As a method that combines aspects of particle-based and grid-based
+methods, MPM has proven to be a useful discretization choice for
+granular materials, such as snow [Stomakhin et al. 2013] and sand
+[Jiang et al. 2015].  It has also been used for more general elasto-
+plastic  flows  for  computer  graphics  [Yue  et  al.  2015;  Stomakhin
+et  al. 2014; Ram et al. 2015; Jiang 2015; Jiang et al. 2015] and engi-
+neering applications [Mast 2013; Mast et al. 2014]. Brackbill et al.
+[Bardenhagen et al. 2000; Cummins and Brackbill 2002] simulate
+individual grains but use MPM to resolve collisions and friction.
+
+When extreme computational efficiency is required, simplified ap-
+proaches like height fields [Sumner et al. 1999; Onoue and Nishita
+
+nearby points embedded in the material (see Figure 4) at the begin-
+ning of the simulation, and let x1  and x2  be the same two points
+in the current configuration. Then (x2      x1) = F(x⁰    x⁰). The
+deformation gradient F evolves according to
+
+DF  = (    v)F.                              (3)
+
+Dt
+
+Elastic and plastic deformation gradient.  We represent plastic-
+ity by factoring deformation gradient into elastic and plastic parts
+as F  =  FEFP .   The deformation gradient is a measure of how
+a material has locally rotated and deformed due to its motion.  By
+factoring the deformation gradient in this way, we divide this defor-
+mation history into two pieces. The plastic part, FP , represents the
+portion of the material’s history that has been forgotten.  If a metal
+rod is bent into a coiled spring,  the rod forgets that it used to be
+straight; the coiled spring behaves as though it was always coiled
+(see Figure 6).  The twisting and bending involved in this opera-
+tion is stored in FP . If the spring is compressed slightly, the spring
+will feel strain (deformation). This is elastic deformation, which is
+stored in FE. The spring remembers this deformation. In response,
+the material exerts stress to try to restore itself to its coiled shape.
+In this way, we see that only FE should be used to compute stress.
+The full history of the metal rod consists of being bent into a spring
+shape (FP ) and then being compressed (FE).
+
+Constitutive model.  A constitutive model relating the state to the
+stress is needed. The text of Bonet and Wood [2008] provides use-
+ful background for elastoplastic constitutive modeling.  Following
+Mast el al.  [2013;  2014],  we use Drucker-Prager elastoplasticity
+[Drucker and Prager 1952].  The elastic part of this relation is ex-
+pressed through the deformation gradient F.
+
+For perfectly hyperelastic materials the constitutive relation is de-
+fined through the potential energy, which increases with non-rigid
+deformation from the initial state.  However, in the case of large-
+strain elastoplasticity, there will be some permanent (or plastic) de-
+formation and the potential will only increase for deformation be-
+yond this state. In this case, the stress in the material is
+
+1       ∂ψ    ET
+
+
+2003; Li and Moshell 1993; Chen and Wong 2013; Chanclou et al.
+1996]  and  cellular  automata  [Pla-Castells  et  al.  2006]  have  been
+
+σ =  det(F) ∂FE F
+
+(4)
+
+
+used to provide real-time interaction.
+
+3    Background
+
+Conservation laws. We represent the sand as an elastoplastic con-
+tinuum, whose state can be described at each location by its density
+ρ(x, y, z)  and velocity v(x, y, z).   Our sand experiences internal
+stress σ and gravity g.  The motion of the sand satisfies conserva-
+tion of mass
+
+Dρ + ρ     v = 0                                   (1)
+
+Dt
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+where  ψ(FE)  is  the  elastic  energy  density  designed  to  penalize
+non-rigid FE (see Section 6.3 for more detailed discussion).
+
+With  the  Drucker-Prager  model,  frictional  interactions  between
+grains of sand can be expressed in the continuum via a relation be-
+tween shear and normal stresses. Using a Coulomb friction model,
+shear stresses resisting sliding motions between grains can only be
+as large as a constant times the normal stress holding them together.
+For example, if shear stresses larger than this value are required to
+maintain a static pile, plastic flow will commence when the limit is
+reached and the material will move.  This constraint defines a fea-
+sible region of stresses, the surface of the feasible region is often
+referred to as the yield surface. The decomposition of the deforma-
+tion gradient into elastic and plastic components F =  FEFP  can
+
+
+103:3    •    Drucker-Prager Elastoplasticity for Sand Animation
+
+Figure 2: A solid ball drops into a sandbox, spraying sand in all directions.
+
+
+be viewed as a means of projecting the deformation to satisfy the
+constraint.  Notably,  the projection must be designed carefully to
+ensure for increase of entropy as well as volume preserving plastic
+flow. We discuss the model in more detail in Section 7 as well as in
+the supplementary technical document [Kla´r et al. 2016].
+
+Discretization.  Traditional approaches for discretization are typ-
+ically  either  Eulerian  or  Lagrangian,  which  differ  by  their  frame
+of reference. An Eulerian description computes quantities of inter-
+est at fixed locations in space.  These methods feature fixed grids.
+Eulerian methods are ideal for handling collisions and changes in
+topology, making them a popular choice for fluids.
+
+A Lagrangian description uses quantities that move with the ma-
+terial being described.   These methods tend to use moving parti-
+cles often connected by a mesh.  This representation automatically
+conserves mass,  and the mesh provides a straightforward way to
+determine how deformed the material is.  Lagrangian methods are
+preferred for elastic solids.
+
+Some materials, such as sand, exhibit characteristics of both fluids
+and solids. Sand can support a load like a solid, but it can also flow
+like a liquid.  For materials like these, there is growing interest in
+
+Figure 3: A sand castle is hit with a deformable ball while falling.
+The sand and ball are fully coupled in the simulation.
+
+hybrid methods, such as the Material Point Method, which combine
+aspects of both types of discretization, seeking to obtain some of the
+benefits of each.
+
+The Material Point Method stores information on Lagrangian parti-
+cles, but it computes forces using a fixed Eulerian grid. The use of
+particles makes mass conservation trivial, and it provides a simple
+means of moving information around.  The use of a fixed grid pro-
+vides automatic handling of topology changes (merging and sep-
+arating) and collisions between regions of material.   Since MPM
+uses two distinct representations, information must be transferred
+between them.   These transfers play a very important role in the
+numerical behavior of a hybrid method.  Furthermore, to simplify
+topology changes, MPM does not store connectivity between parti-
+cles. This avoids the need for complex remeshing, but deformation
+must now be tracked in an Eulerian way.
+
+In the next section, we outline our discretization steps.
+
+4    Overview
+
+Before  presenting  the  algorithm  in  detail,  we  first  provide  an
+overview  of  the  steps  that  are  involved  in  the  algorithm  and  the
+role that they play, which is summarized in Figure 7.
+
+1.  Transfer to grid.  Transfer mass and momentum from parti-
+cles to the grid. Use mass and momentum to compute velocity
+on the grid. (§5.1)
+
+2.  Apply  forces.   Compute  elastic  forces  using  a  deformation
+gradient that has been projected into the plastic yield surface
+and apply the forces to the grid velocities. (§6)
+
+3.  Grid collisions.  Project grid velocities for collisions against
+scripted bodies and obstacles, ignoring friction (§8).  For im-
+plicit, this is merged with the force application step (§5.6).
+
+4.  Friction. Compute and apply friction based on the collisions
+that were resolved. The velocity before and after this step are
+retained for use during the transfers. (§8.1)
+
+5.  Transfer to particles.  Transfer velocities from grid to parti-
+cles, being careful to handle friction in a manner that does not
+lead to inconsistencies. (§5.3)
+
+6.  Update particles. Update remaining particle state, including
+positions and deformation gradient. (§5.4)
+
+
+0
+
+2
+
+0                                     b      x
+
+b      x2
+1
+
+7.  Plasticity and hardening.  Project the deformation gradient
+for plasticity, updating the elastic and plastic parts.  Perform
+hardening, which updates the plastic yield surface. (§5.5)
+
+5    Algorithm
+
+
+Ω⁰                  Ω
+
+Figure 4: Relationship between deformation and F.
+
+Notation. It is helpful to establish the conventions for notation (see
+Table 1 for a complete list).  Scalars are represented by non-bold
+Latin or Greek characters (mp, αⁿ, Gk).  Vectors are represented
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:4    •    G. Klár et al.
+
+Figure 5: A rake is dragged around a rock, producing a circular pattern in the sand.
+
+
+by bold lowercase Latin characters (vⁿ, xⁿ⁺¹). Matrices are repre-
+
+Particles                                           Grid
+
+p      i
+
+
+sented by bold uppercase Latin characters or bold Greek characters
+(I, FˆP,n+1, σ). Derivatives alter this in the usual way, so that ∇Gki
+is a vector and (∇v)p  is a matrix.
+
+Many quantities are indexed with subscripts, which indicate where
+quantities are stored.  Quantities that are stored at grid nodes are
+indexed with i and particle quantities have the index p.  Collision-
+related quantities have an index k relating them to a particular colli-
+sion interaction. A quantity may have more than one subscript (wⁿ ,
+
+Particle state
+
+Particle velocity (§5.3)
+Updated positions (§5.4)
+Plasticity, hardening (§5.5)
+
+Grid velocity, mass (§5.1)
+Forces (§6)
+
+Collisions (§8)
+Friction (§8.1)
+
+
+∇Gki).  The quantity Fp     represents the quantity corresponding
+to one index, and ⟨Fⁿ⁺¹⟩ represents a vector of all such quantities.
+
+Superscript n is used to indicate a quantity near the beginning of the
+time step, before forces are applied, (mⁿ, Bⁿ).  Superscript n + 1
+
+Figure 7: Overview of MPM stages.
+
+the end of the previous time step.
+
+i        p                                                       We also store the elastic and 
+plastic components of the deformation
+
+
+indicates a quantity near the end of the time step, after forces are
+
+gradient, FE,ⁿ and FP,ⁿ. Note that while we use FE,ⁿ to compute
+
+
+n+1      P,n+1
+
+p                  p                                                          p
+
+
+applied, (xi      , Fp       ).
+
+Stars, tildes, and bars are used to distinguish intermediate quantities
+(vˢ, v˜ⁿ⁺¹, vⁿ⁺¹), and some effort is made to group them, but the
+
+forces, FP,ⁿ is not required and need not be stored.  For plasticity,
+we must store one parameter αⁿ, which defines the size of the yield
+surface and may change per particle as a result of hardening.
+
+i       i               i
+
+
+adornments do not have any intrinsic meaning.
+
+Superscripts E and P are used to denote the elastic or plastic part
+
+E,n      P,n
+
+Weights.  We will frequently need to transfer information between
+particle and grid representations.  We do this by associating with
+each particle p and grid node i a weight wⁿ  which determines how
+
+
+of a deformation gradient (Fp   , Fp   ).
+
+Generally, quantities that are stored on particles have indicators of
+time, and those that lack other adornments are state variables (αⁿ,
+
+ip
+
+strongly the particle and node interact. If the particle and grid node
+are close together, the weight should be large.  If the particle and
+node are farther apart,  the weight should be small.   We compute
+
+
+FE,ⁿ, xⁿ; not vⁿ, FˆE,n+1). There are two exceptions to this. We
+
+our weights based on a kernel as wⁿ
+
+=  N (xⁿ − xⁿ), where xⁿ
+
+
+p           p              i        p
+
+n                                            and    ⁿ
+
+ip                  p           i                       p
+
+
+do not store the deformation gradient itself, so Fp  for us is not a
+
+xi  are  the  locations  of  the  particle  and  grid  node  locations.
+
+
+state variable.  The mass mp  is a state variable, but we omit a time
+
+We will also need the spatial derivatives of our weights, ∇wⁿ  =
+
+n          n
+
+
+indicator because it never changes.  State variables are those that
+
+persist from the end of one time step to the beginning of the next.
+
+N (xp     xi ), when we compute forces. We use time indices on
+
+the fixed grid node locations xⁿ to distinguish them from estimates
+(such as xⁿ⁺¹) of where those nodes would end up if evolved with
+
+Particle  state.    In  MPM,  the  primary  representation  of  state  is                           
+ⁱ                                                         n
+
+
+stored on particles.  We maintain mass m  , position xⁿ, velocity
+
+node velocities.  We also indicate time on weights wip since they
+
+p                        p                                 were computed using quantities at this 
+time.
+
+vⁿ, and affine momentum Bⁿ, which is related to the velocity spa-
+
+p                                                    p
+
+
+tial derivatives. The extra matrix Bⁿ stored per particle is used for
+APIC transfers [Jiang et al. 2015]. Up to a constant scale, this quan-
+tity approximates the spatial derivative of the grid velocity field at
+
+original  rest  shape
+
+Choosing a kernel N  leads to trade offs with respect to smooth-
+ness,  computational  efficiency,  and  the  width  of  the  stencil.   We
+prefer tensor product splines for their computational efficiency, as
+they are relatively inexpensive to compute, differentiate, and store.
+The  multilinear  kernel  typically  employed  for  FLIP  fluid  solvers
+is the simplest of these options, but it is not suitable here.  There
+are two reasons for this (see [Steffen et al. 2008]).  The first is that
+
+
+FP                           ∇wip
+
+would be discontinuous and produce discontinuous forces.
+
+The second is that ∇wⁿ  may be far from zero when wⁿ  ≈ 0, lead-
+
+
+F
+
+new  rest  shape
+
+FE
+
+ing to large forces being applied to grid nodes with tiny weights.
+Quadratic and cubic b-splines work well, and we choose cubic b-
+splines for convenience. Our kernel is
+
+ 1 |x|3 − |x|2 + ²    0 ≤ |x| < 1
+
+ 2                            3
+
+
+current  shape
+
+Nˆ(x) =
+
+1 (2 − |x|)³          1 ≤ |x| < 2
+
+0                              2 ≤ |x|
+
+(5)
+
+
+Figure 6: Relationship between F, FE, and FP .
+
+N (u) = Nˆ  ux  Nˆ  uy  Nˆ  uz  ,                      (6)
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:5    •    Drucker-Prager Elastoplasticity for Sand Animation
+
+Figure 8: A stick is dragged through a bed of sand, tracing out a butterfly shape in the sand.
+
+
+Variable                 Where                   Type                 Meaning
+
+I                           -                       matrix               identity matrix
+
+∆t                     -                        scalar                time step size
+
+h                       -                        scalar                grid resolution
+
+D                       -                            -                    material derivative
+
+                 Dt                                                                                 
+                                                                                                    
+        
+
+g                           -                       vector                gravity
+
+Grid nodes far enough from any particle that they do not receive
+mass are inactive and do not participate in any further computations.
+
+The next task is to transfer velocity.   We do this using the APIC
+transfers in [Jiang et al. 2015].  The velocity state on the particle
+is represented by vⁿ and Bⁿ. The affine momentum Bⁿ is related
+
+σ                        -                       matrix               Cauchy stress                 
+                                                                                                    
+                     p               p                                                      p
+
+
+ρ                       -                        scalar                density
+
+to the velocity spatial derivatives Cⁿ through Cⁿ =  Bⁿ(Dⁿ)−¹,
+
+p                       p             p       p
+
+
+v                           -                       vector                velocity
+
+mp               particles†            scalar                particle mass
+
+where Dⁿ is a matrix that behaves as an inertia tensor and is
+
+
+⁰              particles†            scalar                initial particle volume
+
+( h₂
+
+cubic
+
+
+αn , αn+1
+
+particles†            scalar                yield surface size
+
+n       Σ   n      n
+
+	 
+
+n       n          n  T              3  I
+
+			
+
+
+Fn , Fn+1
+
+particles                 matrix               deformation gradient
+
+
+p        p
+
+E,n        E,n+1                       †
+
+where h is the grid spacing.  Although the definition of the iner-
+
+
+Fp      , Fp                   particles
+
+matrix               elastic deformation gradient
+
+n
+
+
+FP,n , FP,n+1
+
+particles†            matrix               plastic deformation gradient
+
+tia tensor Dp  depends on the relative positions of the grid nodes
+
+p             p
+
+
+vn , vn+1
+
+particles†            vector                particle velocity
+
+and particles through a relatively high-degree polynomial (both ex-
+
+p        p
+
+
+xn , xn+1
+
+particles†            vector                particle position
+
+plicitly and through wⁿ ), it simplifies to a constant multiple of the
+
+           p        p                                                                               
+                                                                                                    
+                                                                                                    
+              ip
+
+
+ⁿ                particles                 matrix               particle velocity derivative (APIC)
+
+Dⁿ                particles                 matrix               affine inertia tensor (APIC)
+
+identity in the cases of the quadratic and cubic splines presented.
+
+With Cⁿ, we can define an affine velocity field v  (x) for particle p
+
+
+ˆn+1
+
+p
+
+particles                 matrix               deformation gradient, before plasticity              
+                                                p                                                   
+                             p
+
+
+FˆE,n+1
+
+particles                 matrix               elastic deformation gradient, before plasticity
+
+by vp(x) = vp + Cⁿ(x − xⁿ). The momentum contribution from
+
+
+ˆP,n+1
+
+p
+
+particles                 matrix               plastic deformation gradient, before plasticity
+
+
+(∇v)p            particles                 matrix               grid-based velocity gradient
+
+vp                particles                 vector                particle affine velocity field
+
+Zp                particles       matrix → matrix      project to yield surface
+
+Nˆ(x)
+
+mⁿ                   grid                     scalar                grid node mass
+
+                       i                                                                            
+                                                                                                    
+             
+
+vⁿ                   grid                     vector                rasterized velocity
+
+                     i                                                                              
+                                                                                                    
+            
+
+
+vn+1
+
+grid                     vector                final grid velocity, no friction
+
+                  i                                                                                 
+                                                                                                    
+            
+
+
+v˜n+1
+
+grid                     vector                final grid velocity
+
+                  i                                                                                 
+                                                                                                    
+            
+
+vʸ                    grid                     vector                velocity with explicit forces
+
+                      i                                                                             
+                                                                                                    
+             
+
+
+xⁿ                   grid                     vector                Cartesian grid node locations
+
+Figure 9:  Cubic (blue) and quadratic (red) splines used for com-
+
+
+n+1
+
+i
+
+grid                     vector                grid positions moved by vⁿ⁺¹
+
+puting interpolation weights.
+
+
+fi                    grid           matrix → vector      compute forces
+
+λk                      -                        scalar                Lagrange multiplier for 
+enforcing collision
+
+Gk                     -              vector → scalar       collision criterion
+
+∇Gki                grid           vector → vector      collision criterion gradient
+
+E = 1kPa
+
+Nˆ                     -               scalar → scalar       interpolation spline
+
+
+N                      -              vector → scalar       tensor product interpolation spline
+
+∇N                    -              vector → scalar       tensor product interpolation spline 
+gradient
+
+wip                 mixed                   scalar                interpolation weight
+
+∇wip               mixed                   vector                interpolation weight gradient
+
+Table 1: Table of notation used in this paper. †These quantities are
+state on particles.
+
+where h is the grid spacing. Sometimes the quadratic kernel is also
+useful. We plot the quadratic and cubic kernels in Figure 9. We use
+the cubic spline for all of our examples.
+
+5.1    Transfer to grid
+
+The first step of each time step is the transfer of state particles to
+the fixed Cartesian grid. We begin by distributing the mass of each
+particle to its neighboring grid nodes.
+
+mn  = Σ wn mp                                           (7)
+
+E = 10kPa
+
+E = 100kPa
+
+E = 1000kPa
+
+Figure 10: This simulation shows the effects of Young’s modulus on
+the behavior of a simulation. Sand with a very low Young’s modulus
+tends to be bouncy.  The behavior is more like sand as the Young’s
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:6    •    G. Klár et al.
+
+
+Figure 11: A shovel digs through sand and pushes it aside.
+
+particle p to node i is wⁿ mpvp(xⁿ). This leads to the full form of
+the velocity transfer,
+
+Figure 12:  Sand is poured from a spout into a pile in a lab (left)
+and with our method (right).
+
+vⁿ =    1   Σ wⁿ m  (vⁿ + Bⁿ(Dⁿ)−¹(xⁿ − xⁿ))      (9)
+
+		
+
+of Fⁿ rather than Fⁿ itself. These are related by Fⁿ = FE,ⁿFP,ⁿ
+
+p                            p                                                            p         
+  p         p
+
+
+5.2    Grid update
+
+(  7).  During this evolution step, we assume that the plastic part is
+
+not changing (Fˆn+1  = Fⁿ), which gives us the rule
+
+p                p
+
+
+We next update velocities on the grid. This involves applying forces
+
+approaches for doing this,  explicit and implicit.   For most of our
+examples, explicit is more efficient, since we are running with rela-
+tively low stiffness. For stiff examples, implicit becomes advisable.
+We defer the implicit formulation until (§5.6).
+
+Explicit The simplest approach for handling forces is explicit.  In
+this case, we compute and apply an explicit force (§6)
+
+FˆE,n+1  = FE,ⁿ + ∆t(∇v)  FE,ⁿ.               (16)
+
+The plastic update is covered in (§7).
+
+Note that the update of the particle position and deformation gra-
+dient use vⁿ⁺¹ while the velocity and related quantities use v˜ⁿ⁺¹.
+The use of the frictional velocity in the updates of positional up-
+dates resulted in less stable behavior with implicit time stepping.
+With explicit time stepping, v˜ⁿ⁺¹ could be used for both position
+
+
+s       n     ∆t
+
+E,n
+
+and velocity related updates.
+
+
+vi  = vi  + mn fi(⟨Fp   ⟩).                    (10)
+
+After forces are applied, we can process the velocities for collisions
+
+vˢ → vⁿ⁺¹ and then apply friction vⁿ⁺¹ → v˜ⁿ⁺¹. The collision
+
+5.5    Plasticity, hardening
+
+
+processing is described in (§8).
+
+5.3    Transfer to particles
+
+formed by projecting the elastic deformation gradient to its yield
+surface,  an action denoted by Z( ,  ) which we describe in detail
+later (  7). Plasticity does not change the full deformation gradient,
+
+so that Fⁿ⁺¹ =  FˆE,n+1FˆP,n+1  =  FE,ⁿ⁺¹FP,ⁿ⁺¹.  This allows
+
+p                  p              p                      p              p
+
+
+Next we transfer velocities from the grid back to particles. Since we
+are using APIC, we need to compute new velocities vⁿ⁺¹ and affine
+
+momentum Bⁿ⁺¹.  Velocities are interpolated back to particles in
+
+us to update the plastic part.
+
+FE,ⁿ⁺¹ = Z(FˆE,n+1, αⁿ)                                    (17)
+
+p                                                                                                   
+                                               p                          p                p
+
+
+the straightforward way
+
+vⁿ⁺¹ =        wⁿ v˜ⁿ⁺¹.                       (11)
+
+i
+
+The transfer for Bⁿ⁺¹ is
+
+Bⁿ⁺¹ = Σ wⁿ v˜ⁿ⁺¹(xⁿ − xⁿ)T .               (12)
+
+FP,n+1  = (FE,n+1)−1FˆE,n+1FˆP,n+1
+
+p            p
+
+5.6    Implicit velocity update
+
+The implicit velocity update is
+
+(18)
+
+
+p                         ip   i            i           p
+
+i
+
+vⁿ⁺¹ = vⁿ +  ∆t f (⟨FE,ⁿ⁺¹⟩) + Σ ∇G   λ
+
+(19)
+
+
+Next, we update the particle’s position and deformation gradient.
+Positions are updated by interpolating moving grid node positions
+
+subject to the additional conditions Gk ≥ 0, λk ≥ 0, and Gkλk =
+
+0.  Here, Gk(⟨xⁿ⁺¹⟩)  ≥  0, with xⁿ⁺¹  =  xⁿ + ∆tvⁿ⁺¹, is the
+
+
+xn+1  =
+
+Σ wⁿ xⁿ⁺¹.                        (13)
+
+collision-free  criterion  for  all  object-node  collision  pairs  k.   (  8)
+
+These forces are implicit, since FE,ⁿ⁺¹ depends on vⁿ⁺¹ through
+
+p                         ip   i                                                                    
+                                                                p                                   
+            i
+
+i                                                                                 (16), (15), and 
+(17).  As in the explicit case, we complete the grid
+update by applying friction vⁿ⁺¹ → v˜ⁿ⁺¹ and described in (§8).
+
+
+Equation 3 is just a normal time derivative and a simple difference
+yields the particle deformation gradient update
+
+Note that we are implicit in plasticity,  but we are not implicit in
+hardening  or  friction.   In  the  absence  of  plasticity,  these  are  just
+the Karush-Kuhn-Tucker (KKT) conditions [Nocedal and Wright
+
+
+Fn+1  = Fn + ∆t(∇v)pFn
+
+(14)
+
+2006] for minimization.  Unlike solving a minimization problem,
+
+
+where (∇v)p  is calculated by differentiating (11)
+
+(∇v)p  = Σ vn+1(∇wn )T .                   (15)
+
+however, our linear systems are not generally symmetric, and we
+do not have an objective with which to do line searches.
+
+Solving the system.   Since the collision constraints are indepen-
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:7    •    Drucker-Prager Elastoplasticity for Sand Animation
+
+6.2    Discrete setting
+
+We discretize the potential energy with a sum on particles,
+
+Ψ = Σ V ⁰ψ(FE)                                (20)
+
+
+Figure 13: Varying the friction angle changes the shape of a pile of
+sand. A larger angle produces a taller sand pile with steeper sides.
+
+solve the nonlinear system of equations using Newton’s method.
+Note that because of plasticity, the systems will in general be asym-
+metric, and we solve with GMRES. These systems usually converge
+sufficiently in three or fewer iterations of GMRES, rarely (< 1%)
+taking more than four iterations. We limit GMRES to 15 iterations
+and allow multiple Newton iterations.
+
+5.7    Initialization
+
+Particle locations are initialized with Poisson disk sampling. Initial
+
+Note that V ⁰ is the volume of material attributed to a particle in the
+initial configuration.   Only the elastic portion of the deformation
+gradient FE contributes to the energy [Bonet and Wood 2008].
+
+If the state of the system is described by a finite number of positions
+x1, . . . , xm (picture a bunch of point masses connected by springs),
+then the potential energy can be written Φ(x1, . . . , xm).  Moving
+one of these points causes the amount of energy to change (energy
+is required to stretch or compress the springs).   The springs will
+push back on these points so as to release this built-up energy.  In
+this way, the force felt by particle j will be fj  = − ∂Ψ .
+
+With  MPM,  grid  nodes  are  temporarily  Lagrangian,  and  can  be
+moved to define the force.  If the current grid node velocity is vi,
+then its position can be approximated as xi  = xⁿ + ∆tvi. Consid-
+ering a different ending position implies a different velocity to get
+there.  These node velocities are used in (15) to compute (    v)p,
+which is in turn used by (16) to compute a new deformation gradi-
+ent FE. This deformation gradient will be used to compute energy
+
+density using a model ψ(FE), which finally gives us total potential
+energy.  In this way, the potential energy of the material can be ex-
+pressed in terms of the locations of the grid nodes. We can use this
+relationship, summarized below, to compute forces on grid nodes.
+
+Ψ(⟨xi⟩) = Σ V 0ψ(FE (⟨xi⟩))                                     (21)
+
+
+		
+
+of  the  example,  with  v(x)  the  desired  initial  velocity  field.   Bⁿ
+
+is initialized so that Cⁿ  =  Bⁿ(Dⁿ)−¹  =  ∇v is the gradient of
+
+FE (⟨xi⟩) =
+
+I + Σ
+
+(xi − xn)(∇wn )T
+
+!FE,n
+
+(22)
+
+the initial velocity field and Dⁿ is computed from (8).  Our initial                                
+                      i
+
+setups have no deformation, so FE,ⁿ = FE,ⁿ⁺¹ = I. We initialize
+
+
+p                p
+
+our hardening parameter with qⁿ = 0, from which we can compute
+
+αⁿ using  (30) and  (31).   Initial  particle  volume  V ⁰ is  computed
+
+This relationship can be differentiated to deduce the desired equa-
+tion for computing grid node forces
+
+
+p                                                                                                  
+p
+
+from the seeding density.
+
+E           ∂Ψ         Σ   0∫∂ψ
+
+E  ,    E,n  T         n
+
+
+6    Forces
+
+fi(⟨Fp ⟩) = − ∂x   = −       Vp
+
+p
+
+∂F (Fp )  (Fp   )   ∇wip.  (23)
+
+Note that FE is the function parameter but FE,ⁿ is a known value
+
+p                                                                 p
+
+
+Here we derive the MPM forces on Eulerian grid nodes fi(  FE  ).
+These forces are obtained by differentiating a discretization of the
+potential energy with respect to the motion of grid nodes.
+
+6.1    Continuous setting
+
+Elastic materials are characterized by their ability to store potential
+energy and then release it by doing work to cause motion (kinetic
+energy). Let Ψ be the total potential energy stored by a material at
+a given time.  In a real material, potential energy is stored locally
+in response to deformation. This is called energy density, or energy
+per unit volume,  and represented by ψ.   Since this depends only
+on the local deformation, we can write ψ(F).  The function ψ(F)
+captures the essential information about the way an elastic material
+responds to deformation. This relationship depends on the material;
+we choose our model in (§6.3).
+
+In much the same way that total mass is computed by integrating
+the density of a material over its volume Ω, potential energy is com-
+
+ 
+
+which is not changing during the current time step.  Also note that
+all deformation is assumed to be elastic. When computing the force,
+the effect of further plastic flow is ignored [Bonet and Wood 2008].
+
+Gravity. We include gravity as an additional term in (23)
+
+grav                   n                       n
+
+i                           ip                          i
+
+p
+
+6.3    Constitutive model
+
+We adopt the energy density ψ(F) from Mast et al.  [2013].  This
+model uses the same energy density as St.  Venant-Kirchhoff, but
+it  replaces  the  left  Cauchy  Green  strain  with  the  Hencky  strain
+¹ ln(FFT ). This makes a number of aspects of the Drucker-Prager
+plastic projection very simple (see the supplementary technical doc-
+ument [Kla´r et al. 2016]).  The model is most conveniently written
+in terms of the singular value decomposition F = UΣVT as
+
+ψ(F) = µtr (ln Σ)²  + 1 λ(tr(ln Σ))²,           (25)
+
+
+103:8    •    G. Klár et al.
+
+τ2                                                                                                  
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                    τ2                                              
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+    τ2
+
+τ1                                                                                                  
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                    τ1                                              
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+    τ1
+
+Figure 14:  A column of sand collapses into a pile.  Sand particles are colored based on their 
+current plastic deformation behavior.  The
+plot shows the locations of these particles in principal stress space. Green particles lie within 
+the yield surface and experience no plasticity.
+Blue particles are projected to the yield surface along a direction that avoids volume change. Red 
+particles are experiencing tension and are
+projected to the tip of the conical yield surface; these particles are separating freely with no 
+stress.
+
+
+where Σ is diagonal so ln Σ is computed by taking the logarithm
+of the diagonal entries.   The force computation (23) requires the
+derivative of this, which is
+
+∂ψ (F) = U(2µΣ−¹ ln Σ + λtr(ln Σ)Σ−¹)VT .        (26)
+
+∂F
+
+7    Plasticity
+
+7.1    Projecting to the yield surface
+
+The only algorithmic aspect of our plasticity treatment that has not
+yet been defined is our function Z(FE, αp), which projects the de-
+formation gradient FE to the yield surface defined by the parameter
+αp. The Drucker-Prager plasticity model is based on Coulomb fric-
+tion interactions between sand particles.  In the continuum setting,
+this means that the shear stress cannot be larger than a coefficient of
+friction times the normal stress.  This results in a simple constraint
+on the principal stresses which we derive in the supplementary tech-
+nical document [Kla´r et al. 2016].
+
+In the space of principal stress, the yield surface looks like a cone
+(see Figure 15). There are three possible cases that must be consid-
+ered.  If the stress lies within the yield surface (Case I), then there
+is static friction between sand particles, and no plasticity occurs. If
+the sand is undergoing expansion (Case II), then there is no resis-
+tance to motion; this corresponds to the tip of the cone. Otherwise,
+there is dynamic friction (Case III), and we should project to the
+side of the cone.  Examples of these cases in an actual simulation
+can be seen in Figure 14.
+
+As with energy density, plasticity is most conveniently defined in
+terms of the singular value decomposition of the deformation gra-
+dient, FE = UpΣpVpT . Let sp  = ln Σp  and
+
+to the diagonal elements. Note also that the result of this projection
+Z has a straightforward singular value decomposition (Up  and Vp
+do not change), and this decomposition will be required when com-
+puting the force.  We avoid the extra decomposition by returning
+the diagonal part (Σp, I, or eHᵖ ) rather than the full result (FE,
+UpVpT , or UpeHᵖ VpT ).
+
+7.2    Note on preventing undesired volume change
+
+The method as described has the desirable feature that sand is pre-
+vented from compressing arbitrarily as a byproduct of losing vol-
+ume in the plasticity projection.  To see this, note that a change in
+det(FE) corresponds to a change in volume of the elastic deforma-
+
+tion. In Case I, FE is unchanged, so volume is not changed. In Case
+II, the sand expands,  and volume should be gained.   In Case III,
+the sand deforms plasticly and an associative flow rule [Bonet and
+
+τ₂
+
+τ₁
+
+
+ˆs  = s −  tr(sp) I     δγ
+
+= ǁˆs ǁ
+
++ dλ + 2µ tr(s )α
+
+(27)
+
+
+where d is the spatial dimension and δγp  is the amount of plastic
+deformation.  If δγp        0, then the candidate FE is already in the
+
+yield  surface  and  should  be  returned  without  modification  (Case
+I). If   ˆsp   F   =  0 or tr(sp)  >  0,  then we need to project to the
+
+cone’s tip (Case II), in which case we should return UpVpT . Oth-
+erwise, we should project to the cone surface (Case III) by returning
+UpeHᵖ VpT , where
+
+ˆsp
+
+Figure 15: The yield surface for Drucker-Prager is shown in prin-
+ciple stretch space.  The yield surface has the shape of a cone with
+its tip at the origin,  which corresponds to no stress.   Green par-
+ticles are inside the yield surface and exhibit an elastic response.
+Blue particles are under compression but experience more shear
+
+
+Hp  = sp − δγp ǁˆs ǁ
+
+(28)
+
+than friction allows. These configurations are projected to the yield
+surface along a direction that avoids volume change. Red particles
+
+
+Note that the operations ln Σp  and eHᵖ involve diagonal matrices,
+so that the logarithm and exponential functions are simply applied
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+are experiencing tension and are projected to the tip of the conical
+yield surface. These particles separate freely without stress.
+
+
+103:9    •    Drucker-Prager Elastoplasticity for Sand Animation
+
+φF                                                                                                  
+                                                                                                    
+                                                                                                    
+              τ2                                                                                    
+    φF                                                                                              
+                                                                                                    
+                                                                                                    
+                  τ2                                                                                
+        φF                                                                                          
+                                                                                                    
+                                                                                                    
+                      τ2
+
+τ1                                                                                                  
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                    τ1                                              
+                                                                                                    
+                                                                                                    
+                                                                                                    
+                                                                                                    
+    τ1
+
+q                                                                                                   
+                                                                                                    
+ q                                                                                                  
+                                                                                                    
+  q
+
+Figure 16:  Three particles in a collapsing pile of sand are colored for reference.  As these 
+particles deform plasticly, their yield surface
+changes as they undergo hardening, resulting in a wider cone for projection. Hardening causes each 
+particle to have its own yield surface.
+
+Wood 2008] would lead to excessive volume gain.  Instead, noting           Since  xⁿ⁺¹ will  be  
+computed  based  on  vⁿ⁺¹,  one  could  adjust
+
+p                                                                                   i
+
+that tr(ˆsp)  =  0, the Drucker-Prager model uses a non-associative           vn+1  to enforce 
+φ(xn+1)  ≥  0.   While this would likely lead to
+
+flow to preserve volume during the plastic projection                                    i          
+                             p
+
+
+det(UpeHp VpT ) = etr(Hp)  = etr(sp)  = det(Σp) = det(FE ).
+
+The key to retaining volume in this case is to ensure that tr(Hp) =
+tr(sp), which means the projection to the cone should locate the
+closest point on the cone that does not change the trace, rather than
+
+the closest point on the cone.  We discuss this in more detail in the
+supplementary technical document [Kla´r et al. 2016].
+
+7.3    Hardening
+
+We adopt the hardening model of Mast et al. [2014], where plastic
+deformation can increase the friction between sand particles.  The
+amount of hardening depends on the amount of correction that oc-
+curred due to plasticity. In Case I, no plasticity occurred, so δq   =
+
+good  results,  it  complicates  collision  processing  in  both  the  ex-
+plicit  and  implicit  cases.   Instead,  we  process  collisions  against
+the nodes themselves as in [Gast et al. 2015].  This is difficult be-
+cause φ(xⁿ⁺¹)       0 does not make sense.  There should be grid
+nodes inside obstacles.  A set of constraints Gk(  xⁿ⁺¹ )       0 or
+Gk(  xⁿ⁺¹ ) = 0 on grid nodes is needed that avoid collisions for
+particles, at least approximately, but which can be applied indepen-
+dently per grid node in an straightforward manner. This depends on
+the type of collision being applied.  We support three types of col-
+lisions: sticky, slipping, and separating. Note that a grid node must
+have received mass during the transfer in order to be considered for
+a collision constraint of any type.
+
+Sticky.   Sticky  collisions  enforce  that  a  point  remains  fixed  to  a
+particular reference point on the collision object.  We enforce this
+by  requiring  vⁿ⁺¹  =  vⁿ⁺¹,  where  vⁿ⁺¹ is  the  velocity  of  the
+
+
+0. In Case II, all of the stress was removed, so δqp  = ǁsE,ⁿ⁺¹ǁF .
+
+collision object at the candidate position. In terms of positions, this
+
+is G  (xⁿ⁺¹) = xⁿ⁺¹ − xⁿ − ∆tvⁿ⁺¹ = 0. The constraint can be
+
+
+In each case, δqp  ≥ 0. We define our hardening update using
+
+qⁿ⁺¹ = qⁿ + δq                                           (29)
+
+enforced by directly setting the velocity.
+
+Separating.   Separating constraints have two cases.   If a node is
+
+
+p               p            p
+
+already  inside  a  collision  body  (φ(xⁿ)  <  0),  then  it  should  not
+
+
+n+1
+
+−h2 q
+
+n+1                  n
+
+
+φF p  = h0 + (h1qp     − h3)e
+
+p                             (30)
+
+penetrate any deeper, φ(xi      )  ≥  φ(xi ).  If a node is originally
+
+outside the object (φ(xⁿ)  ≥  0) then it should remain φ(xⁿ⁺¹)  ≥
+
+r 2   2 sin φF                                                                                ⁱ     
+                                                                              ⁱ
+
+3 3 − sin φ                                                              n
+
+
+F p
+
+The quantity qⁿ is the hardening state, φF     is often referred to as
+
+min(φ(xi ), 0). Note that movement along and away from the col-
+lision object are fully permitted by this rule, even if the collision
+surface is curved. An unsatisfied constraint of the form φ(xi) ≥ a
+
+
+the friction angle, the internal coefficient of friction is tan φF p, and
+
+(30) models a curve with a maximum and an asymptote.  Plausible
+
+values  of  φF p  lie  in  [0, π ),  with  φF p   =  0  behaving  as  a  fluid.
+Feasible hardening parameters satisfy h0  > h3       0 and h1, h2
+
+0. The values we use are listed in Table 3. Figure 16 illustrates the
+change in yield surface as particles undergo hardening in 2D.
+
+8    Collisions
+
+We separate our collision response into two distinct steps: resolving
+the actual collision and applying friction. The motivation for this is
+that the collision response can be added into the implicit solve, but
+doing the same for friction would be more difficult.  In the explicit
+case, this separation does not matter.
+
+We use a signed distance function φ(x) to represent each obstacle,
+with the convention that negative is inside the object and positive
+is outside. If we could process particles for collisions directly, then
+the collision constraint would be φ(xⁿ⁺¹)       0.  In practice, pro-
+cessing collisions directly on particles produces poor results, since
+it  causes  xⁿ⁺¹ and  FE,ⁿ⁺¹ to  get  out  of  sync.   This  can  cause
+
+or φ(xi) = a can be enforced by xi  ← xi − (φ(xi) − a)∇φ(xi),
+noting that ∇φ is the normal direction.
+
+Figure 17:  Sand is poured into a pile with APIC (left) and FLIP
+(right) transfers.  FLIP tends to accumulate spurious velocities on
+
+ᵖ              ᵖ                                                                  particles.  In 
+some cases, FLIP leads to unstable behavior, as was
+
+
+objects to slowly seep into the ground.  Instead, it is necessary to
+process collisions using the grid velocities.
+
+the case in this simulation.
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:10    •    G. Klár et al.
+
+Figure 18: Comparison on notched sand block fall. Initial (left), ours (middle), and Narain et al. 
+[2010] (right).
+
+
+Slipping.  For a slipping constraint, we do not want to allow sep-
+aration for existing collisions, but sliding along the surface is per-
+mitted.  If a node is already inside a collision body (φ(xⁿ)  < 0),
+
+then it should stay at its current depth,  φ(xⁿ⁺¹)  =  φ(xⁿ).   If a
+
+each particle as a matte sphere.  The color of each particle is ran-
+domly chosen from yellow (RGB 225/169/95 with a probability
+of 0.85), brown (RGB 107/84/30 with a probability of 0.1) and
+white  (RGB  255/255/255  with  a  probability  of  0.05)  to  further
+
+i                               i
+
+
+node is originally outside the object (φ(xⁿ)      0) then no collision
+constraint  is  enforced.   By  not  enforcing  this  constraint  for  non-
+penetrating nodes,  penetration becomes possible and leads to en-
+forcement in the next time step.  Slipping constraints are enforced
+as        in the separating case.
+
+With a mathematical description for the constraints for all cases and
+a method for directly enforcing those constraints,  direct enforce-
+ment (vˢ → vⁿ⁺¹) is all that is required for the explicit case. The
+
+improve realism. All scenes were rendered using SideFX’s Mantra.
+For  scenes  with  rapidly  flowing  sand  (such  as  the  hourglass)  we
+turned on motion blur where appropriate.
+
+10    Results
+
+Flowing and Piling. We demonstrate the accuracy of our model by
+showing the characteristic behaviors of sand flowing and piling. In
+
+Figure 1, we simulate sand flowing inside an hourglass.  The sand
+
+
+implicit case uses the constraints Gk that have been defined in order
+to couple collision enforcement with force application (§5.6).
+
+8.1    Friction
+
+To apply friction,  we look not at the manner in which collisions
+were enforced but the effect that this enforcement had on the veloc-
+ities.  In the explicit case, velocities before (vˢ) and after (vⁿ⁺¹)
+
+forms a smooth granular flow and piles up at the bottom. Figure 12
+shows a stream of sand inflow hitting a high frictional surface. We
+compare this simulation with real world footage.  Our model suc-
+cessfully  captures  the  interesting  avalanche  instability  [Yoshioka
+2003] of this experiment.
+
+Easy  Tuning.    We  list  the  parameters  used  in  our  examples  in
+
+i                             i                     Table 3 and the runtime performance of those 
+simulations in Ta-
+
+
+are already available.  ∆vi   =  vⁿ⁺¹    vˢ is the velocity change
+attributable to collisions.
+
+In the implicit case, the collision contribution is from the last term
+of Equation 19.   We compute the velocity estimate before forces
+
+ble  2.   In  Figure  13,  we  simulate  columns  of  dry  sand  with  dif-
+ferent friction angles collapsing on the ground.  Different friction
+angles  directly  affect  the  interaction  between  sand  grains,  there-
+fore the final piling angle. While the real Young’s modulus of sand
+
+
+as    ˢ
+
+n         ∆t
+
+E,n+1
+
+.  Although
+
+ⁿ⁺¹ would be the
+
+is 3.537 × 10⁷, we found that sometimes choosing a moderately
+
+
+vi  =  vi  +  mn fi(⟨Fp       ⟩)                    vi
+
+after-collision velocity if the implicit solve had converged, this is
+not often done in practice.  Instead, we repeat collision processing
+on vˢ to compute the difference for ∆vi.
+
+For both cases, ∆vi  is the velocity change that collisions caused.
+Corresponding to this,  an impulse  j  =  mⁿ∆vi  must have been
+applied.  Since each node participates in at most one collision (the
+constraints do not mix), the normal direction n is known. (If it were
+not, it could be approximated as n  =    ʲ  .)  This divides velocity
+
+ǁjǁ
+
+into normal and tangential parts: vin  = n·vⁿ⁺¹ and vit  = vⁿ⁺¹ −
+
+smaller value does not change the visual appearance. In Figure 10,
+we show 2D inflow simulations with different Young’s modulus. A
+moderately smaller Young’s modulus improves the efficiency of the
+implicit solve. However, the material may exhibit jiggling behavior
+if it is too small. We assert physically accurate Young’s modulus is
+always the best choice unless an artistic elastic effect is desirable.
+
+Two-way Coupling. The benefits of using MPM include automatic
+self collision and coupling between different materials. In Figure 3,
+we show an elastic ball interacting with a dry sand castle.  MPM
+naturally handles the two-way coupling without requiring any ad-
+
+
+i
+
+nv   . The tangential direction is t =    ᵛⁱᵗ
+
+ditional treatment other than assigning different constitutive models
+
+
+in                                                                   ǁvitǁ . The Coulomb friction
+
+to different particles.
+
+law limits the amount of friction that can be applied to µbǁjǁ, where
+
+
+µb
+
+µb is the coefficient of friction.  If ǁvitǁ  ≤         ǁjǁ, then friction
+
+Drawing and Scooping.  We further demonstrate the versatility of
+
+
+suffices to eliminate tangential motion entirely, and v˜n+1  = nvin.
+
+n+1          n+1        µb
+
+i                 i                 n
+i
+
+9    Render
+
+Zhu and Bridson [2005] render sand with a reconstructed surface.
+Narain et al.  [2010] associate a number of render points sampled
+near each particle for high resolution rendering.  In our examples
+we have a sufficient number of simulated particles to simply render
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+our method by performing various tasks in a sand box.  Figure 8
+shows  drawing  a  butterfly  with  a  wooden  stick.   Figure  5  shows
+raking sand in a Zen garden. Figure 11 shows scooping sand.
+
+APIC Stability.  Our method benefits from the APIC particle/grid
+transfers [Jiang 2015; Jiang et al. 2015] due to its stability and low
+numerical dissipation.  In Figure 17, we run a 2D inflow simula-
+tion  and compare our result with Mast et al.  [2013; 2014] where
+a traditional FLIP transfer scheme is used.  With the same material
+parameters and time step sizes, our method does not suffer from the
+
+
+103:11    •    Drucker-Prager Elastoplasticity for Sand Animation
+
+Frame rate    Min/frame    Scheme          ∆t             Particle #       Threads     CPU          
+  ∆x        Grid resolution   Particles/cell
+Castle               72            6.80       Implicit    1 × 10−³       7.95 × 10⁵        4      
+†2.67GHz       0.01     300 × 140 × 200         8
+
+Friction angle        120           4.10       Explicit    1 × 10−⁴       1.20 × 10⁶        4      
+‡3.33GHz      0.001     432 × 144 × 432        32
+
+Hourglass            48            2.00       Explicit    1 × 10−⁴       4.60 × 10⁵       12    
+y3.00GHz    0.0025    160 × 360 × 160         8
+
+Butterfly             24           10.31      Explicit   2.5 × 10−⁴      3.84 × 10⁶       10    
+y3.00GHz    0.0045     220 × 55 × 220          8
+
+Butterfly close         48           21.23      Explicit    1 × 10−⁴        4.1 × 10⁶         8     
+y3.00GHz    0.0014    280 × 140 × 210         2
+
+Raking               24            9.78       Explicit   2.5 × 10−⁴      3.84 × 10⁶       10    
+y3.00GHz    0.0045     220 × 55 × 220          8
+
+Raking close          24           32.84      Explicit    1 × 10−⁴        4.3 × 10⁶         8     
+◦2.90GHz    0.0021     336 × 96 × 288          2
+
+Pile from spout       120           4.34       Implicit   1.5 × 10−⁴      9.94 × 10⁵        8      
+†2.67GHz   0.00083    240 × 96 × 240         32
+
+Splash              240           9.27       Explicit    5 × 10−⁵        6.6 × 10⁶         8      
+§3.47GHz     0.0078    256 × 256 × 256         9
+
+Shovel               24           24.84      Explicit    1 × 10−⁴       1.96 × 10⁶        4      
+§3.47GHz      0.005     160 × 100 × 100         8
+
+Young’s modulus      24        49 × 10−⁴  Implicit   7.5 × 10−⁴  742/739/746/745     1      
+†2.67GHz      0.016          256 × 64                4
+
+Table 2: Simulation performance. Note that ∆t denotes the maximum allowed time step size. The 
+actual ∆t is adaptive and may be restricted
+by CFL condition when the particle velocities are high.  In all of our simulations we use a CFL 
+number of 1, i.e., we don’t allow particles
+to move further than ∆x in a time step.  CPU types used are: †Intel Xeon X5650, ‡Intel Xeon W3680, 
+ˢIntel Xeon E5-2690 v2, ◦Intel Xeon
+E5-2690, §Intel Xeon X5690.
+
+
+unstable ringing instability like FLIP does. We further show the ro-
+bustness and stability of our method in a 3D energetic scenario. In
+Figure 2, a rigid ball is dropped into a 1m    1m    0.35m sand box
+with impact speed 6m/s.  The impact dynamics are stable and al-
+most noise-free, resulting in a smooth and symmetric crown splash
+visual appearance.
+
+Comparison with the state-of-the-art method.  We compare the
+result of our method with the algorithm proposed by Narain et al.
+[2010] for the collapse of a column of granular material. The results
+shown in Figure 18 are at 150     100     150 grid resolution. Perfor-
+mance data for this example at a variety of resolutions is shown in
+Table 4. Two particle counts (initial and final) are listed for Narain
+et al., since their particle counts tend to increase over time due to
+particle splitting and merging.  Although their algorithm runs 8.7
+times faster at the highest resolution, our algorithm avoids the stair-
+casing  artifact  and  is  able  to  produce  a  less  viscous  flow  of  dry
+cohesion-less granular materials.
+
+11    Discussion and Limitations
+
+Limitations.  There are methods that are much faster, for example
+the position based dynamics approach in Macklin et al.  [2014] or
+other existing continuum approaches such as Narain et al.  [2010].
+However,  when  realism  and  intuitively  designed  parameters  are
+more important than raw performance, our method provides an al-
+ternative with competitive computational expense.  Also, although
+the framework would generalize to a wide range of yield surfaces
+and  elastic  potentials,  we  only  investigated  the  Drucker-Prager
+model. However, the Drucker-Prager cone is only equivalent to the
+Coulomb friction shear/normal-stress relation in two dimensions.
+In  three  dimensions,  the  elastic  regime  is  described  by  the  more
+complicated region in the Mohr-Coulomb model, but the Drucker-
+Prager model is a decent approximation [Mast 2013].
+
+Future work.   In future work,  we will investigate a wider range
+of  plastic  flows  and  yield  surfaces  and  the  effect  of  cohesion  in
+modeling soil or wet-sands.  We would also like to investigate the
+importance of hardening to visual simulation of sand.
+
+Discussion.   We note that explicit time stepping was often faster
+than implicit time stepping.  Although implicit steps are generally
+larger than explicit, the cost required to solve the nonlinear equa-
+tions of the implicit step was often larger than just taking more inex-
+pensive explicit steps. Improvements in stability of explicit integra-
+tion may be partly due to a better position update and APIC trans-
+fers providing more stability than FLIP/PIC blends as in Stomakhin
+et al. [2013], whose implicit scheme also benefited from a symmet-
+ric treatment.  Tuning time step and solver tolerances proved diffi-
+cult to optimize, requiring different values for different examples.
+
+Acknowledgements
+
+The  authors  were  partially  supported  by  NSF  CCF-1422795,
+ONR (N000141110719,  N000141210834),  DOD (W81XWH-15-
+
+1-0147), Intel STC-Visual Computing Grant (20112360) as well as
+a gift from Disney Research. We would also like to thank R. Narain
+for providing invaluable assistance in comparing with their method.
+
+References
+
+ALDUA´ N,  I.,  AND  OTADUY,  M.   2011.   SPH granular flow with
+friction  and  cohesion.    In  Proc  ACM  SIGGRAPH/Eurograph
+Symp Comp Anim, 25–32.
+
+ALDUA´ N, I., TENA, A., AND  OTADUY, M.  2009.  Simulation of
+
+high-resolution granular media. In Proc Cong Espan˜ol Inf Graf.
+
+BARDENHAGEN,  S.,  BRACKBILL,  J.,  AND  SULSKY,  D.   2000.
+
+The material-point method for granular materials.  Comp Meth
+App Mech Eng 187, 3–4, 529–541.
+
+BELL, N., YU, Y., AND  MUCHA, P.  2005.  Particle-based simula-
+tion of granular materials. In Proc ACM SIGGRAPH/Eurograph
+Symp Comp Anim, 77–86.
+
+BONET, J., AND WOOD, R. 2008. Nonlinear continuum mechanics
+for finite element analysis. Cambridge University Press.
+
+CHANCLOU, B., LUCIANI, A., AND  HABIBI, A.  1996.  Physical
+
+models of loose soils dynamically marked by a moving object.
+In Comp Anim, 27–35.
+
+CHANG,  Y.,  BAO,  K.,  ZHU,  J.,  AND  WU,  E.  2012.  A particle-
+
+based method for granular flow simulation. Sci China Inf Sci 55,
+5, 1062–1072.
+
+                                   ρ            E           ν    Friction angle    h₀/h₁/h₂/h₃
+
+Castle             2200    3.537    10⁵   0.3             —               35/0/0.2/10
+
+Friction angle       2200    3.537    10⁵   0.3   20/25/30/35/40            —
+
+Hourglass          2200    3.537    10⁵   0.3             —               35/9/0.3/10
+
+Butterfly           2200    3.537    10⁵   0.3             —               35/9/0.2/10
+
+Butterfly close      2200    3.537    10⁵   0.3             —               35/9/0.2/10
+
+Raking            2200    3.537    10⁵   0.3             —               35/9/0.2/10
+
+Raking close        2200    3.537    10⁵   0.3             —               35/9/0.2/10
+
+Pile from spout      2200    3.537    10⁵   0.3             30                      —
+
+Splash             1582    3.537    10⁶   0.3             22                      —
+
+Shovel             2200    3.537    10⁵   0.3             —               35/9/0.2/10
+
+Young’s modulus    2200       10³,⁴,⁵,⁶      0.3             —               35/9/0.3/10
+
+Table 3: Material parameters are provided for all of our 3D simu-
+lations.  Friction angle φF  and hardening parameters h0, h1, and
+h3 are listed in degrees for convenience.
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+
+103:12    •    G. Klár et al.
+
+CHEN, P., AND  WONG, S.  2013.  Real-time auto stylized sand art
+drawing. In CAD Comp Graph, 439–440.
+
+CUMMINS,  S.,  AND  BRACKBILL,  J.  2002.  An implicit particle-
+in-cell method for granular materials. J Comp Phys 180, 2, 506–
+548.
+
+DRUCKER, D., AND  PRAGER, W.  1952. Soil mechanics and plas-
+ticity analysis or limit design. Quart App Math 10, 157–165.
+
+GAST,  T.,  SCHROEDER,  C.,  STOMAKHIN,  A.,  JIANG,  C.,  AND
+
+TERAN,  J.  2015.  Optimization integrator for large time steps.
+
+IEEE Trans Vis Comp Graph 21, 10, 1103–1115.
+
+GONZALEZ, O., AND  STUART, A.  2008.  A first course in contin-
+uum mechanics. Cambridge University Press.
+
+IHMSEN,  M.,  WAHL,  A.,  AND  TESCHNER,  M.    2013.    A  la-
+
+grangian framework for simulating granular material with high
+detail. Comp Graph 37, 7, 800–808.
+
+JAEGER,  H.,  NAGEL,  S.,  AND  BEHRINGER,  R.  1996.  Granular
+
+solids, liquids, and gases. Rev Mod Phys 68, 1259–1273.
+
+JIANG, C., SCHROEDER, C., SELLE, A., TERAN, J., AND STOM-
+
+AKHIN, A. 2015. The affine particle-in-cell method. ACM Trans
+Graph 34, 4, 51:1–51:10.
+
+JIANG, C.  2015.  The material point method for the physics-based
+simulation of solids and fluids.  PhD thesis, University of Cali-
+fornia, Los Angeles.
+
+KLA´ R, G., GAST, T., PRADHANA, A., FU, C., SCHROEDER, C.,
+
+JIANG,  C.,  AND  TERAN,  J.  2016.  Drucker-prager elastoplas-
+ticity  for  sand  animation:  Supplementary  technical  document.
+ACM Trans Graph.
+
+LENAERTS, T., AND  DUTRE´, P.  2009. Mixing fluids and granular
+materials. Comp Graph Forum 28, 2, 213–218.
+
+LI, X., AND MOSHELL, J. 1993. Modeling soil: realtime dynamic
+models for soil slippage and manipulation. In Proc SIGGRAPH,
+361–368.
+
+LUCIANI, A., HABIBI, A., AND  MANZOTTI, E.  1995.  A multi-
+
+scale physical model of granular materials.  In Proc Graph Int,
+136–146.
+
+MACKLIN,  M.,  MU¨ LLER,  M.,  CHENTANEZ,  N.,  AND  KIM,  T.
+
+2014.  Unified particle physics for real-time applications.  ACM
+Trans Graph 33, 4, 153:1–153:12.
+
+MAST,  C.,  ARDUINO,  P.,  MACKENZIE-HELNWEIN,  P.,  AND
+
+MILLER, R.  2014.  Simulating granular column collapse using
+the material point method. Acta Geotech 10, 1, 101–116.
+
+MAST, C. 2013. Modeling landslide-induced flow interactions with
+structures using the Material Point Method. PhD thesis.
+
+MAZHAR, H., HEYN, T., NEGRUT, D., AND  TASORA, A.  2015.
+
+Using Nesterov’s method to accelerate multibody dynamics with
+friction and contact. ACM Trans Graph 34, 3, 32:1–32:14.
+
+MILENKOVIC,  V.   1996.   Position-based physics:  simulating the
+motion  of  many  highly  interacting  spheres  and  polyhedra.   In
+Proc SIGGRAPH, 129–136.
+
+MILLER, G., AND  PEARCE, A.  1989.  Globular dynamics: a con-
+nected particle system for animating viscous fluids. Comp Graph
+13, 3, 305–309.
+
+NARAIN, R., GOLAS, A., AND LIN, M. 2010. Free-flowing gran-
+
+ular materials with two-way solid coupling.  ACM Trans Graph
+29, 6, 173:1–173:10.
+
+ACM Trans. Graph., Vol. 35, No. 4, Article 103, Publication Date: July 2016
+
+Grid resolution           Method       Sec/Frame            Particles
+
+10     15     10           Ours             0.085             1.5K     
+
+Narain           0.019         1.8 − 2.4K
+
+20     30     20           Ours               1.1                12K      
+
+Narain            0.16           13 − 20K
+
+50     75     50           Ours                33               188K     
+
+Narain             3.4          194 − 330K
+
+100     150     100        Ours              540               1.5M     
+
+Narain              62           1.5 − 2.7M
+
+Table 4: Performance comparison with Narain et al. [2010].
+
+NKULIKIYIMFURA, D., KIM, J., AND KIM, H. 2012. A real-time
+
+sand simulation using a GPU.   In Comp Tech Inf Man,  vol. 1,
+495–498.
+
+NOCEDAL, J., AND  WRIGHT, S.  2006.  Numerical Optimization.
+Springer series in operations research and financial engineering.
+Springer.
+
+ONOUE,  K.,  AND  NISHITA,  T.   2003.  Virtual sandbox.  In Proc
+Pac Conf Comp Graph App, 252–262.
+
+PLA-CASTELLS, M., GARCIA-FERNANDEZ, I., AND MARTINEZ,
+
+R.   2006.   Interactive terrain simulation and force distribution
+models in sand piles. In Cellular Automata, vol. 4173 of Lecture
+Notes Comp Sci. 392–401.
+
+RAM, D., GAST, T., JIANG, C., SCHROEDER, C., STOMAKHIN,
+A., TERAN, J., AND  KAVEHPOUR, P.  2015.  A material point
+
+method for viscoelastic fluids, foams and sponges. In Proc ACM
+SIGGRAPH/Eurograph Symp Comp Anim, 157–163.
+
+STEFFEN, M., KIRBY, R. M., AND  BERZINS, M.  2008.  Analysis
+
+and reduction of quadrature errors in the material point method
+(MPM). Int J Numer Meth Eng 76, 6, 922–948.
+
+STOMAKHIN,  A.,  SCHROEDER,  C.,  CHAI,  L.,  TERAN,  J.,  AND
+
+SELLE, A.  2013. A material point method for snow simulation.
+
+ACM Trans Graph 32, 4, 102:1–102:10.
+
+STOMAKHIN,   A.,   SCHROEDER,   C.,   JIANG,   C.,   CHAI,   L.,
+
+TERAN, J., AND SELLE, A. 2014. Augmented MPM for phase-
+change and varied materials.  ACM Trans Graph 33, 4, 138:1–
+138:11.
+
+SULSKY, D., CHEN, Z., AND  SCHREYER, H. L.  1994.  A parti-
+
+cle method for history-dependent materials.  Comp Meth in App
+Mech Eng 118, 1, 179–196.
+
+SUMNER, R., O’BRIEN, J., AND  HODGINS, J.  1999.  Animating
+
+sand, mud and snow. Comp Graph Forum 18, 1, 17–26.
+
+YASUDA,  R.,  HARADA,  T.,  AND  KAWAGUCHI,  Y.  2008.  Real-
+
+time simulation of granular materials using graphics hardware.
+In Comp Graph Imag Vis, 28–31.
+
+YOSHIOKA,  N.    2003.   A  sandpile  experiment  and  its  implica-
+tions for self-organized criticality and characteristic earthquake.
+Earth, planets and space 55, 6, 283–289.
+
+YUE,  Y.,  SMITH,  B.,  BATTY,  C.,  ZHENG,  C.,  AND  GRINSPUN,
+
+E.  2015.  Continuum foam:  a material point method for shear-
+dependent flows. ACM Trans Graph 34, 5, 160:1–160:20.
+
+ZHU,  Y.,  AND  BRIDSON,  R.   2005.   Animating sand as a fluid.
+
+ACM Trans Graph 24, 3, 965–972.
+
