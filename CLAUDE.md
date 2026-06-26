@@ -685,6 +685,13 @@ our MPM fills; Bazzoun=frame[4] CROSS-VALIDATION of our TRANSPORT side (DEM→Ki
     only the archive/readable copies (webapp unchanged).  Had to RE-RUN on the
     TIMESTAMP cids (the uploads/ dir names) to update the SERVED copies.
 
+### ★ Digest→model APPLICATION backlog (안 적용 추적, 2026-06-26) ★
+논문 digest는 다수 완료됐으나 **모델 적용은 별개** — `docs/digest_model_application_backlog.md`가 추적.
+A1 σ_e 방향(Trevisanello mis-attribution→σ_S/P material-input, Phase-3 전 필수) · A2 wallP 조건부
+(skeleton-spring, trust-test만 남음) · A3 E3 --coh binder · A4 E4 se_coating carbon · A5 dispersion CV
+· A6 pore-τ DiffuDict · A7 Phase-5 graded-z · B1-6 검증(σ anchor/RNM-vs-StageE/β=0.41/multi-contact)
+· C1-4 paper-build(refs.bib Minnmann/Wang/Sakuda/Cronau).  ⚠ digest 끝났다고 적용 끝 아님 — 이 표 소진까지.
+
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
 microstructure matching those numbers → eventually stack different
