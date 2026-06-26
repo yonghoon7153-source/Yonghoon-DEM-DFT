@@ -1,0 +1,23 @@
+dataset,electrode,axis_value,axis_var,porosity,coating_density_g_cm3,calendering_stress_MPa,sigma_el_S_m,sigma_ion_S_m,adhesion_MPa,broken_particles_pct,precision,note
+# Sangros Gimenez et al., Energy Technol. 8(2) 1900180 (2020). NMC(LiNi1/3Mn1/3Co1/3O2) cathode + carbon-black(4wt%)+PVDF(4wt%) CBD. DEM = Thornton-Ning elasto-plastic CONTACT + Sangros particle-particle BOND (binder). RVE 150x150x78.15 um, 2237 particles. LIQUID-electrolyte LIB -> ionic = Li+ through PORE phase (Bruggeman porosity/tortuosity), NOT solid SE network. Calendering stress = calender line-load uniaxial.
+# --- Table 1: calendering series (noncalendered + C1-C4). axis = calendering stress. stated. ---
+calendering_series,noncalendered,,calstress,0.522,2.13,,,,,,stated,position-A start; experiment-anchored noncalendered porosity
+calendering_series,C1,19.82,calstress,0.417,2.61,19.82,,,,0.00,stated,
+calendering_series,C2,42.71,calstress,0.368,2.80,42.71,,,,0.09,stated,reference calstress for the noncalendered-porosity study
+calendering_series,C3,79.13,calstress,0.305,3.15,79.13,,,,0.54,stated,
+calendering_series,C4,159.37,calstress,0.270,3.49,159.37,,,,1.52,stated,highest calendering; sigma_el form DIVERGES from exp here
+# --- Fig 2: properties vs FINAL porosity (after calendering). sigma values digitized from Fig2; broken% from Table2. C_el=0.665, C_ion=0.534, C_ad=0.755 (fitted proportionality factors). ---
+final_porosity_props,C1,0.417,porosity,0.417,,,0.45,0.0030,1.78,0.00,digitized_approx,sigma_el exp~0.45 ; sigma_ion from Bruggeman eps^1.5 ; adhesion exp~1.78 MPa
+final_porosity_props,C2,0.368,porosity,0.368,,,0.72,0.0019,1.95,0.09,digitized_approx,
+final_porosity_props,C3,0.305,porosity,0.305,,,1.25,0.0013,2.15,0.54,digitized_approx,below ~30pct porosity sigma_el drops; form diverges from exp
+final_porosity_props,C4,0.270,porosity,0.270,,,1.55,0.0012,2.78,1.52,digitized_approx,exp sigma_el~1.2 vs form~1.55 (form OVER at lowest porosity)
+# --- Fig 9: properties vs INITIAL (noncalendered) porosity. calendering stress held = 42.71 MPa. ALL modeled (constitutive). digitized. higher initial porosity -> lower FINAL porosity (Fig8). ---
+initial_porosity_sweep,eA0.48,0.48,init_porosity,,,42.71,0.82,0.00380,2.60,,digitized_approx,final porosity posB~0.200 posC~0.375 (Fig8); sigma_el LOWEST here
+initial_porosity_sweep,eA0.52,0.52,init_porosity,,,42.71,1.05,0.00375,2.62,,digitized_approx,
+initial_porosity_sweep,eA0.56,0.56,init_porosity,,,42.71,1.62,0.00345,2.82,,digitized_approx,
+initial_porosity_sweep,eA0.60,0.60,init_porosity,,,42.71,1.88,0.00340,3.25,,digitized_approx,sigma_el HIGHEST + adhesion HIGHEST at highest initial porosity
+# --- Fig 8: final porosity at posB(max stress) and posC(after springback) vs initial porosity. digitized. ---
+springback,eA0.48_posB,0.48,init_porosity,0.200,,42.71,,,,,digitized_approx,posB = at max mechanical stress
+springback,eA0.48_posC,0.48,init_porosity,0.375,,42.71,,,,,digitized_approx,posC = after elastic recovery (final)
+springback,eA0.60_posB,0.60,init_porosity,0.185,,42.71,,,,,digitized_approx,higher initial -> particles rearrange easier -> denser posB
+springback,eA0.60_posC,0.60,init_porosity,0.338,,42.71,,,,,digitized_approx,but more springback -> posC still > low-initial case (text)
