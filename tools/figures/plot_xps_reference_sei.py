@@ -58,7 +58,10 @@ for ax, (el, cl, xlim, title) in zip(axs, PANELS):
                     arrowprops=dict(arrowstyle="->", color="#e65100", lw=2))
         ax.text(132.5, 0.62, "+1.6 eV\nO-doping", fontsize=7.5, ha="center", color="#e65100", fontweight="bold")
     if el == "Nd":
-        ax.axvspan(982, 987, color="#e65100", alpha=.08); ax.text(984.5, len(sub)-1, "satellite\nregion", fontsize=7, ha="center", color="#e65100")
+        ax.axvline(982.5, ls=":", color="#e65100", lw=1.2)
+        ax.text(0.5, 0.03, "Nd³⁺ main ~982.5 (web-verified Nd₂O₃) — lineshape is multiplet/satellite-complex\n"
+                "(screened satellite ~977, off-panel left). Per-ligand shifts unresolved = orientation only.",
+                transform=ax.transAxes, fontsize=6.6, ha="center", va="bottom", color="#e65100")
 
 handles = [Line2D([0],[0], marker="o", ls="", mfc=COL[k], mec=COL[k], ms=9, label=k) for k in COL]
 handles += [Line2D([0],[0], marker="o", ls="", mfc="white", mec="0.3", mew=1.8, ms=9, label="open = low conf (C)")]
