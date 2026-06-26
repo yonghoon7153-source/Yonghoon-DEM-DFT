@@ -44,7 +44,7 @@
 
 | # | 정확한 제목 | 저자/년·출처 | 왜 | 상태 |
 |---|---|---|---|---|
-| 12 | **Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks** | Walton & Braun 1986, J. Rheol. 30(5) 949 | ★ **LIGGGHTS `hooke/hysteresis`의 원전.** 이력 선형 스프링(loading k₁/unloading k₂, 영구겹침) = 우리가 쓰는 *바로 그 힘법칙*. f_AM을 **실제 LAW로** 재구성하려면 필수. | 🔜 |
+| 12 | **Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks** | Walton & Braun 1986, J. Rheol. 30(5) 949 | LIGGGHTS `hooke/hysteresis`의 원전(이력 선형 스프링 k₁/k₂, 영구겹침). ⚠ **유료·구버전 → SKIP**; Luding 2008(#13)이 같은 모델을 더 완전·접근가능하게 대체. | ⚠paywall |
 | 13 | **Cohesive, frictional powders: contact models for tension** | Luding 2008, Granular Matter 10(4) 235 | ★ 점착 탄소성 이력 스프링(k₁·k₂·k_c·φ_f). 우리 `maxElasticStiffness`(k₂)·`adhesionStiffness`(k_c)·`plasticityDepth`(φ_f) 파라미터 **1:1 매핑** = input m6/m7/m8 의 정의서. | 🔜 |
 | 14 | **A theoretical model for the stick/bounce behaviour of adhesive, elastic-plastic spheres** | Thornton & Ning 1998, Powder Technol. 99(2) 154 | 점착 탄소성 구(Hertz→항복 p_y→소성분기+잔류겹침). Varkey 2026 사용. **경로 A** 후보 LAW. litdb엔 언급만. | 🔜 |
 
@@ -82,7 +82,7 @@
 ---
 
 ## 투입 순서 추천
-1. **#12 Walton–Braun + #13 Luding** — 우리 모델 *자체*. f_AM·load-share를 Hertz 아닌 **실제 LAW**로
+1. **#13 Luding 2008** (Walton–Braun #12 유료 → 대체 PRIMARY) — 우리 모델 *자체*(k₂/k_c/φ_f 1:1). f_AM·load-share를 Hertz 아닌 **실제 LAW**로
    해석/재구성 (오늘 발견 직접 해소) + `dem_am_load_fraction.py` 물리 검증 근거.
 2. **#1 Tabor(H) + #2 Johnson + #3 CEB + #4 Mesarovic–Fleck** — 탄소성 접촉의 *정전* (경로 A 항복캡 p_y/H 근거).
 3. **#14 Thornton–Ning** — 경로 A LAW 확정.
@@ -93,8 +93,10 @@
 
 | 우선 | 저자 (년) | 정확한 제목 | 출처 | DOI / ISBN |
 |:--:|---|---|---|---|
-| ① | Walton & Braun (1986) | Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks | J. Rheol. 30(5) 949 | 10.1122/1.549893 |
-| ① | Luding (2008) | Cohesive, frictional powders: contact models for tension | Granular Matter 10(4) 235 | 10.1007/s10035-008-0099-x |
+| ⚠paywall | Walton & Braun (1986) | Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks | J. Rheol. 30(5) 949 | 10.1122/1.549893 — **유료·구버전 → SKIP** (Luding 2008이 같은 모델 더 완전·접근가능; Walton의 free 버전은 LLNL 보고서 UCRL-91254/93254 검색) |
+| ① | Luding (2008) | Cohesive, frictional powders: contact models for tension | Granular Matter 10(4) 235 | 10.1007/s10035-008-0099-x — ★ **Walton 대체 PRIMARY** (우리 k₂/k_c/φ_f 1:1; 저자 Twente 페이지/ResearchGate에 free PDF 흔함) |
+| ①alt | Di Renzo & Di Maio (2004) | Comparison of contact-force models for the simulation of collisions in DEM-based granular flow codes | Chem. Eng. Sci. 59(3) 525 | 10.1016/j.ces.2003.09.037 — linear-hysteretic(Walton) 포함 접촉모델 REVIEW (접근성↑) |
+| ①alt | Thornton, Cummins, Cleary (2013) | An investigation of the comparative behaviour of alternative contact force models during inelastic collisions | Powder Technol. 233 30 | 10.1016/j.powtec.2012.08.012 — linear-hysteretic vs 타모델 정량 REVIEW |
 | ② | Tabor (1951) 📕 | The Hardness of Metals | Clarendon Press, Oxford | ISBN 9780198507765 |
 | ② | K.L. Johnson (1985) 📕 | Contact Mechanics | Cambridge Univ. Press | 10.1017/CBO9781139171731 |
 | ② | Chang, Etsion, Bogy (1987) | An elastic-plastic model for the contact of rough surfaces | J. Tribol. 109(2) 257 | 10.1115/1.3261348 |
