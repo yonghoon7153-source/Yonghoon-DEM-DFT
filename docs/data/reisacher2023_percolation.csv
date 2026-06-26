@@ -1,0 +1,77 @@
+# Reisacher, Kaya, Knoblauch — Batteries 2023, 9(12), 595 (DOI 10.3390/batteries9120595) — OPEN ACCESS
+# "Percolation Behavior of a Sulfide Electrolyte-Carbon Additive Matrix for Composite Cathodes in ASSBs"
+# Materials Research Institute Aalen (IMFAA), Aalen University. EXPERIMENTAL (EIS + DC-polarization). No DEM/MPM.
+# Conducting matrix = Li6PS5Cl (LPSCl = OUR EXACT SE) + C65 carbon (Super C65, Imerys; BET 62 m2/g; rho 1.60 g/cm3).
+#   NO active material — this is the SE-carbon conducting MATRIX only (do NOT equate to our composite cathode).
+# rho_LPSCl = 1.83 g/cm3. Separator densified @ 375 MPa; conducting matrix compressed IN-CELL @ 2.07 MPa (163.2 N).
+#   => matrix sigma_eff is UNDER-COMPACTED (2.07 MPa) -> absolute sigma NOT transferable to our 300-MPa cases; use
+#      percolation THRESHOLD (p_c) + STEP SHAPE + ion<->e crossover ONLY.
+# src: stated = text/Abstract/Conclusions value; digitized = read from Fig 4/5 curve (TREND only, approximate, no false precision).
+# CAVEAT: E_a(Li+) 0.41 eV is the IONIC activation energy; it is NUMERICALLY COINCIDENTAL with Bielefeld-2019 beta=0.41
+#         (3D site-percolation critical exponent) and PHYSICALLY UNRELATED — do not conflate.
+# ============================================================================================================
+# Block 1: ELECTRONIC PERCOLATION THRESHOLD (the key result)
+quantity,value,unit,condition,src,note
+p_c_electronic_C65,4,wt_pct,LPSCl+C65 matrix 25C,stated,approximate ~4 wt% C65 (Abstract/Fig5/Conclusions)
+p_c_electronic_C65_range_low,3,wt_pct,,stated,3 < p_c < 5 wt%
+p_c_electronic_C65_range_high,5,wt_pct,,stated,
+p_c_electronic_C65_volpct,4.62,vol_pct,,stated,wt 4% -> vol 4.62% (Table 1, rho 1.83/1.60)
+p_c_cathode_equiv_C65,1.2,wt_pct,70 wt% AM cathode design guideline,stated,4 wt% in matrix = 1.2 wt% in full cathode
+p_c_LiFePO4_C65_compare,7,wt_pct,LiFePO4+C65 (Guzman ref46),stated,other-material p_c comparison (higher than sulfide 4)
+# ============================================================================================================
+# Block 2: EFFECTIVE CONDUCTIVITY sigma_eff vs C65 wt% @ 25C (Fig 5 + text) — the percolation curve
+C65_wt_pct,C65_vol_pct,sigma_eff_S_per_cm,regime,src,note
+0,0.00,6.6e-5,below_pc,digitized,pure SE in-cell (~6.6e-5; ionic, under-compacted)
+1,1.16,9.5e-5,below_pc,digitized,CM-1 isolated C65 islands
+3,3.47,1.66e-4,below_pc,stated,CM-3 transition onset
+4,4.62,1.36e-3,at_pc,stated,CM-4 percolation knee (~1 order over CM-3)
+5,5.77,1.02e-1,above_pc,stated,CM-5 (~3 orders over CM-3) e-network formed
+10,11.44,1.1e-1,above_pc,digitized,CM-10 marginal increase (saturation)
+100,100.00,0.2,above_pc,stated,pure C65 (R ~0.25 Ohm)
+# ============================================================================================================
+# Block 3: LPSCl SOLID-ELECTROLYTE ionic conductivity vs temperature (Fig 2, separator @375 MPa)
+quantity,value,unit,temperature_C,src,note
+sigma_ion_LPSCl,0.12,mS_per_cm,5,stated,Fig2 separator
+sigma_ion_LPSCl,0.43,mS_per_cm,25,stated,RT — bulk anchor LOWER bound of spread; do NOT directly compare (cell/P/T)
+sigma_ion_LPSCl,2.02,mS_per_cm,65,stated,Fig2 separator
+E_a_Li_LPSCl,0.41,eV,5-65 sweep,stated,Arrhenius Fig2b (matches Yu/Zhang); != Bielefeld beta 0.41
+R_total_LPSCl_sep,354.40,Ohm,25,stated,separator total resistance
+R_total_LPSCl_sep,58.79,Ohm,65,stated,
+# ============================================================================================================
+# Block 4: total resistance R(T) of conducting matrix per C65 wt% — ion(T-down R-up) vs e(T-down R-down) signature
+sample,C65_wt_pct,R_Ohm,temperature_C,conduction_signature,src,note
+pure_SE_incell,0,1628.50,15,ionic,stated,T-down -> R-up
+pure_SE_incell,0,3098.60,5,ionic,stated,low-freq blocked at SE/In
+CM-1,1,247.67,65,ionic,stated,> pure SE 102.10 Ohm @65C
+CM-1,1,522,25,ionic,stated,RT
+CM-3,3,302.43,65,mixed_transition,stated,T-down -> R-DOWN (e- contribution appears)
+CM-3,3,288.03,15,mixed_transition,stated,
+CM-3,3,272.17,5,mixed_transition,stated,blocking disappears (partial e- path)
+CM-4,4,33.50,25,electronic_ohmic,stated,frequency-independent, T-uncorrelated
+CM-4,4,43.89,65,electronic_ohmic,stated,pure ohmic = percolation reached
+pure_C65,100,0.25,25,electronic_ohmic,stated,approx absolute resistance
+# ============================================================================================================
+# Block 5: composition table (Table 1) wt% <-> vol% C65 and material/cell parameters
+LPSCl_C65_wt_ratio,C65_wt_pct,C65_vol_pct,LPSCl_mg_per_pellet,C65_mg_per_pellet,src
+100:0,0.00,0.00,40.00,0.00,stated
+99:1,1.00,1.16,39.60,0.40,stated
+97:3,3.00,3.47,38.80,1.20,stated
+96:4,4.00,4.62,38.40,1.60,stated
+95:5,5.00,5.77,38.00,2.00,stated
+90:10,10.00,11.44,36.00,4.00,stated
+0:100,100.00,100.00,0.00,40.00,stated
+# ============================================================================================================
+# Block 6: material / cell parameters
+parameter,value,unit,src,note
+rho_LPSCl,1.83,g_per_cm3,stated,SE density
+rho_C65,1.60,g_per_cm3,stated,carbon density (near-equal to SE -> p_c set by surface area not density)
+BET_C65,62,m2_per_g,stated,high specific surface -> 3D network at low loading -> low p_c
+separator_press,375,MPa,stated,LPSCl uniaxial densification (manufacturing; ~ our 300 / Doux 370 / Minnmann 380)
+matrix_press_incell,2.07,MPa,stated,163.2 N in-cell compression (UNDER-COMPACTED -> low absolute sigma)
+sample_diameter,10.12,mm,stated,measured by caliper
+sample_thickness,400,um,stated,~400 um
+EIS_freq_high,7e6,Hz,stated,7 MHz upper
+EIS_freq_low,1,Hz,stated,1 Hz lower
+EIS_AC_amplitude,10,mV,stated,
+T_sweep_low,5,C,stated,
+T_sweep_high,65,C,stated,10 C steps, 120 min stabilization

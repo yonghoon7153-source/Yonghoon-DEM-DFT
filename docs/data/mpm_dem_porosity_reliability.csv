@@ -107,3 +107,4 @@ input_2mAh_a7_p08,8:2,0.8,70,48,7.6,13.6,-6.0,review,review MPM>DEM moderate SE-
 input_2mAh_a7_p06,6:4,0.6,70,48,9.4,14.9,-5.5,review,review MPM>DEM moderate SE-rich
 input_2mAh_a7_p10,10:0,1.0,70,48,8.8,13.9,-5.2,review,review MPM>DEM moderate SE-rich
 input_particulate_12_S1,0:10,0.0,82,32,19.8,22.8,-3.0,both,cross-validated
+input_1mAh_9_S4,7:3,0.7,85,29,20.1,15.8,4.3,MPM,"thin 1mAh(17.6um) DEM thin-loose-high + 1mAh_9 known per-seed-scatter family; MPM 15.8 == 7:3 cross-cap anchor family (2/6/8mAh_real 15-16) -> MPM reliable; sigma_ionic 0.0335 ~ family median 0.033 (transport representative); gap +4.3 just over band = mild thin divergence"
