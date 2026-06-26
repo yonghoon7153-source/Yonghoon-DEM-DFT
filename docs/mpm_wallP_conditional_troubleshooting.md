@@ -158,3 +158,18 @@ descend while (wallP_SE + am_skel) < target
 ⇒ "SE-rich/dense서도 안전" 요구 충족.  floor-gate = DEM-MPM 일치점에서 자동 ON/OFF.  f_AM(Hertz)은 floor 아래
 소성증분만 정하는 2차 knob(--atoms-sigzz로 실제-virial 교차검증 가능).  **wallP 조건부 production 채택**
 (mpm_input_from_case 자동주입 → 모든 케이스 robust, dense 자동 OFF).  backlog A2 = DONE.
+
+## §11 ★ 놓쳤던 결함 + 수정 — floor=DEM 전역적용이 정당 소성을 억제 (재실행 전 발견, 2026-06-26)
+대량 재실행 전 점검에서 발견: **floor=DEM을 *전 케이스* 자동주입하면 MPM이 DEM 아래로 가는 정당한 소성
+densification을 억제**.  MPM은 plastic void-fill로 porosity<DEM이 되어야 정상(MPM 고유값) — 그게 frame[5].
+데이터(reliability CSV, gap=DEM−MPM):
+- mono-large gap>4 (catastrophic corner) **7** → floor 올바르게 복원 ✅
+- mono-large gap 1-4 **6** → 복원(corner, defensible)
+- **★ NON-mono gap 1-4 (정당 소성, MPM 1-4%p<DEM) 23** → floor=DEM이면 **DEM으로 잘못 끌어올림 = 억제** ❌
+- gap≤0 (MPM≥DEM) **64** → floor OFF, 불변.  (real14가 통과한 건 MPM 15.91>DEM 15.6, 우연히 floor 위)
+⇒ 과압축은 **mono-large 기하**(sparse 큰 AM→SE 탈출)에서만 catastrophic; bimodal/mono-small은 SE가 trapped라
+안 터짐.  **FIX: 조건부를 mono-large-AM에만 GATE** (mpm_input_from_case.py: mono_large = 단봉 AM(AM_S 없음)
+AND r_AM/r_SE ≥ 6).  non-mono → f_AM=0(조건부 OFF) → 23개 정당 소성 보존.  thick mono-large(8mAh real_10,
+MPM≈DEM)는 게이트 ON이어도 floor가 MPM≈DEM서 거의 미engage → 불변(floor self-handles).
+⇒ **재실행 범위 축소: mono-large ~13개만 변함**(조건부 적용); 나머지 ~90개는 f_AM=0 → 현 MPM값 그대로 →
+재실행해도 동일(재실행 불요).  backlog A2 GATE 보강 = DONE.

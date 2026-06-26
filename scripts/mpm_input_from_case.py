@@ -136,7 +136,27 @@ def main():
     except Exception as _e:
         print(f'  [f_AM] skipped ({_e}) → --am-load-frac 0 (legacy, no conditional)')
     floor_por = round(float(poro), 2) if poro is not None else 0.0
-    print(f'  f_AM = {f_am:.3f}   floor_porosity = {floor_por:.1f}%   (robust wallP conditional, auto-off if dense)')
+    # ★ GATE — conditional ONLY for mono-LARGE-AM (the catastrophic over-compression geometry: sparse big
+    # AM → SE escapes → frozen-AM can't bear load).  Bimodal (has AM_S) or mono-SMALL → SE is TRAPPED →
+    # NO catastrophic over-compress → conditional OFF, so the MPM's LEGITIMATE plastic densification
+    # (porosity < DEM = the MPM's unique value) is PRESERVED, not suppressed by the floor.  Without this
+    # gate, floor=DEM would wrongly pull the ~23 non-mono cases (MPM 1-4 %p below DEM, legit plastic) up
+    # to DEM.  mono-large = single-modal AM (no AM_S) AND r_AM/r_SE ≳ 6 (the 12:1-ratio large-AM regime).
+    try:
+        _n_ams = sum(1 for r in am_rows if int(float(r[0])) == 2)
+        _r_am = sum(float(r[4]) for r in am_rows) / max(len(am_rows), 1)
+        _r_se = sum(float(r[4]) for r in se_rows) / max(len(se_rows), 1)
+        _mono_large = (_n_ams == 0 and len(am_rows) > 0 and _r_am / max(_r_se, 1e-9) >= 6.0)
+    except Exception:
+        _mono_large = False
+    if not _mono_large and f_am > 0:
+        print(f'  [gate] non-mono-large (bimodal/mono-small) → conditional OFF (f_AM {f_am:.3f}→0): '
+              f'preserve legit plastic densification (MPM<DEM, MPM 고유값)')
+        f_am = 0.0
+    elif _mono_large:
+        print(f'  [gate] mono-large-AM (r_AM/r_SE={_r_am/max(_r_se,1e-9):.1f}) → conditional ON '
+              f'(f_AM {f_am:.3f}, floor {floor_por:.1f}%) — over-compression corner')
+    print(f'  f_AM = {f_am:.3f}   floor_porosity = {floor_por:.1f}%   (robust wallP conditional, gated to mono-large)')
     case = a.case or os.path.basename(a.results.rstrip('/'))
     # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
     # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are
