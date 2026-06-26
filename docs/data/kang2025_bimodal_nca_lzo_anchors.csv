@@ -1,0 +1,103 @@
+# Kang & Shin et al., ACS Appl. Mater. Interfaces 2025, 17, 60558-60567 (DOI 10.1021/acsami.5c14519)
+# Hanyang (Jong-Won Lee) + Samsung SDI. CAM=NCA LiNi0.88Co0.09Al0.03O2, SE=LPSCl Li6PS5Cl, +Super P; 72:27:1 wt%.
+# fab 400 MPa / operating stack 200 MPa; 2.5-4.3 V; 0.1C 1st then 0.5C; 30 C; Li-In counter.
+# source: stated=text/Tables S1-S6 (verbatim) ; digitized=read from figure (TREND only, approximate).
+# CAM-types: U-NCA (unimodal 3um polycryst), B-NCA (bimodal 3+10um), LZO-B-NCA (LZO 6-8nm coated B-NCA).
+quantity,value,unit,cathode_or_system,condition,source,figure_table,notes
+E_NCA,175,GPa,NCA,FEM elastic modulus,stated,Table_S4_text,ref42_Koerver2018; our NMC811=140
+E_LPSCl,22.1,GPa,LPSCl,FEM elastic modulus,stated,text,matches Bazzoun2026 22.1 / our real-bulk ~24
+NCA_volume_change,5.9,percent,NCA,full charge-discharge,stated,text,Omega(partial molar vol) from this; eps_d=Omega/3*dc_Li
+pellet_thickness,0.74,mm,U-NCA,0.15g pellet 400MPa 10mm dia,stated,Fig1b,unimodal
+pellet_thickness,0.68,mm,B-NCA,0.15g pellet 400MPa 10mm dia,stated,Fig1b,bimodal denser
+pellet_thickness,0.67,mm,LZO-B-NCA,0.15g pellet 400MPa 10mm dia,stated,text,LZO negligible on energy density
+volumetric_loading_NCA,1.1,ratio_B_over_U,B-NCA_vs_U-NCA,mg cm-3,stated,Fig_S2,bimodal packing gain (~2.02 vs ~1.87 g cm-3)
+volumetric_loading_NCA,1.87,g_cm-3,U-NCA,approx,digitized,Fig_S2,read from bar
+volumetric_loading_NCA,2.02,g_cm-3,B-NCA,approx,digitized,Fig_S2,read from bar
+discharge_capacity_1st,183.1,mAh_g-1,U-NCA,0.5C 1st,stated,text,
+discharge_capacity_1st,177.1,mAh_g-1,B-NCA,0.5C 1st,stated,text,
+discharge_capacity_1st_large,210,mAh_g-1,large10um_NCA,0.1C 1st,digitized,Fig_S4,large particle works 1st cycle
+capacity_retention_100cyc,67.3,percent,U-NCA,0.5C 200MPa @100cyc,stated,Fig2c,
+capacity_retention_100cyc,47.7,percent,B-NCA,0.5C 200MPa @100cyc,stated,Fig2c,rapid decay after ~80cyc
+capacity_retention_120cyc_stable,1,bool,LZO-B-NCA,0.5C @120cyc,stated,Fig4d,no abrupt decay
+LZO_capacity_gain_100th,54.4,mAh_g-1,LZO-B-NCA_vs_bare,100th cycle,stated,text,LZO improvement
+# --- E moduli for FEM (Table S4) ---
+sigma_Mises_3um_min,2.6,GPa,NCA_3um,FEM SOC charging 0.5C,stated,Fig3e_colorbar,
+sigma_Mises_3um_max,2.9,GPa,NCA_3um,FEM SOC charging 0.5C,stated,Fig3e_colorbar,
+sigma_Mises_10um_min,1.5,GPa,NCA_10um,FEM SOC charging 0.5C,stated,Fig3e_colorbar,larger gradient surface-to-core
+sigma_Mises_10um_max,3.0,GPa,NCA_10um,FEM SOC charging 0.5C,stated,Fig3e_colorbar,
+cLi_3um_min,12.25,kmol_m-3,NCA_3um,FEM SOC charging,stated,Fig3d_colorbar,
+cLi_3um_max,12.75,kmol_m-3,NCA_3um,FEM SOC charging,stated,Fig3d_colorbar,small gradient
+cLi_10um_min,12.5,kmol_m-3,NCA_10um,FEM SOC charging,stated,Fig3d_colorbar,
+cLi_10um_max,17.5,kmol_m-3,NCA_10um,FEM SOC charging,stated,Fig3d_colorbar,
+cLi_gradient_ratio_10um_over_3um,10,ratio,NCA,FEM,stated,Fig3d_text,KEY: 10um gradient ~10x the 3um
+cohesive_damage_10um,1,scalar,NCA_10um,FEM multiple GBs,stated,Fig3f,complete detachment (D=1)
+LZO_thickness,7,nm,LZO_on_NCA,sol-gel amorphous (range 6-8),stated,Fig4b_TEM,uniform
+# --- EIS-TLM symmetric cell (Table S1) ---
+R_ion_bulk,10.5,Ohm_cm2,U-NCA,symmetric cell,stated,Table_S1,
+R_ion_gb,56.9,Ohm_cm2,U-NCA,symmetric cell,stated,Table_S1,
+R_ele,89.9,Ohm_cm2,U-NCA,symmetric cell,stated,Table_S1,
+R_ion_bulk,7.4,Ohm_cm2,B-NCA,symmetric cell,stated,Table_S1,
+R_ion_gb,52.4,Ohm_cm2,B-NCA,symmetric cell,stated,Table_S1,
+R_ele,20.0,Ohm_cm2,B-NCA,symmetric cell,stated,Table_S1,bimodal electronic R much lower
+R_ion_total,67.4,Ohm_cm2,U-NCA,symmetric cell (bulk+gb),stated,text_Fig1d,
+R_ion_total,59.8,Ohm_cm2,B-NCA,symmetric cell (bulk+gb),stated,text_Fig1d,similar to U-NCA
+R_ele_diff_B_lower,33.9,Ohm_cm2,B-NCA_vs_U-NCA,symmetric cell,stated,text_Fig1d,B-NCA electronic R lower
+# --- Full-cell EIS vs cycle: B-NCA (Table S2) ---
+R_ion,5.7,Ohm_cm2,B-NCA,cycle1 0.5C,stated,Table_S2,
+R_int,113.5,Ohm_cm2,B-NCA,cycle1 0.5C,stated,Table_S2,
+R_w,70.7,Ohm_cm2,B-NCA,cycle1 0.5C,stated,Table_S2,
+R_ion,6.0,Ohm_cm2,B-NCA,cycle25 0.5C,stated,Table_S2,
+R_int,275.6,Ohm_cm2,B-NCA,cycle25 0.5C,stated,Table_S2,
+R_w,106.0,Ohm_cm2,B-NCA,cycle25 0.5C,stated,Table_S2,
+R_ion,6.6,Ohm_cm2,B-NCA,cycle50 0.5C,stated,Table_S2,
+R_int,332.2,Ohm_cm2,B-NCA,cycle50 0.5C,stated,Table_S2,
+R_w,176.7,Ohm_cm2,B-NCA,cycle50 0.5C,stated,Table_S2,
+R_ion,6.7,Ohm_cm2,B-NCA,cycle75 0.5C,stated,Table_S2,
+R_int,335.7,Ohm_cm2,B-NCA,cycle75 0.5C,stated,Table_S2,
+R_w,212.0,Ohm_cm2,B-NCA,cycle75 0.5C,stated,Table_S2,
+R_ion,6.7,Ohm_cm2,B-NCA,cycle100 0.5C,stated,Table_S2,KEY: R_ion stable 5.7->6.7
+R_int,501.8,Ohm_cm2,B-NCA,cycle100 0.5C,stated,Table_S2,KEY: R_int 113.5->501.8 (4.4x)
+R_w,353.4,Ohm_cm2,B-NCA,cycle100 0.5C,stated,Table_S2,KEY: R_w 70.7->353.4 (5x); cracking signature
+# --- Full-cell EIS vs cycle: U-NCA (Table S3) ---
+R_ion,10.4,Ohm_cm2,U-NCA,cycle1 0.5C,stated,Table_S3,
+R_int,56.0,Ohm_cm2,U-NCA,cycle1 0.5C,stated,Table_S3,
+R_w,59.5,Ohm_cm2,U-NCA,cycle1 0.5C,stated,Table_S3,
+R_ion,11.2,Ohm_cm2,U-NCA,cycle100 0.5C,stated,Table_S3,
+R_int,84.5,Ohm_cm2,U-NCA,cycle100 0.5C,stated,Table_S3,mild rise 1.5x
+R_w,123.4,Ohm_cm2,U-NCA,cycle100 0.5C,stated,Table_S3,mild rise 2.1x (vs B-NCA 5x)
+# --- Full-cell EIS vs cycle: LZO-B-NCA (Table S6) ---
+R_ion,5.9,Ohm_cm2,LZO-B-NCA,cycle1 0.5C,stated,Table_S6,
+R_int,36.8,Ohm_cm2,LZO-B-NCA,cycle1 0.5C,stated,Table_S6,
+R_w,58.7,Ohm_cm2,LZO-B-NCA,cycle1 0.5C,stated,Table_S6,
+R_ion,9.3,Ohm_cm2,LZO-B-NCA,cycle50 0.5C,stated,Table_S6,
+R_int,73.0,Ohm_cm2,LZO-B-NCA,cycle50 0.5C,stated,Table_S6,
+R_w,76.5,Ohm_cm2,LZO-B-NCA,cycle50 0.5C,stated,Table_S6,
+R_ion,10.2,Ohm_cm2,LZO-B-NCA,cycle100 0.5C,stated,Table_S6,
+R_int,102.5,Ohm_cm2,LZO-B-NCA,cycle100 0.5C,stated,Table_S6,vs bare 501.8
+R_w,77.7,Ohm_cm2,LZO-B-NCA,cycle100 0.5C,stated,Table_S6,KEY: R_w 50->100 only +1.2 (crack suppressed)
+# --- FEM parameters (Table S4) ---
+FEM_cell_dimension_L,815,um,FEM,cell scale,stated,Table_S4,
+FEM_cell_dimension_W,100,um,FEM,cell scale,stated,Table_S4,
+FEM_cathode_domain,12.5,um,FEM,x-y crack-analysis domain,stated,text,
+FEM_temperature,298.15,K,FEM,,stated,Table_S4,
+FEM_i0_ref,10,A_m-2,FEM,reference exchange current density,stated,Table_S4,Butler-Volmer
+FEM_c_ref,48000,mol_m-3,FEM,reference (max) Li concentration in NCA,stated,Table_S4,ref_S1_Yu2023
+FEM_AM_radius,5,um,FEM,representative active material radius,stated,Table_S4,3/10um represented
+FEM_Vmax,4.3,V,FEM,,stated,Table_S4,
+FEM_Vmin,2.5,V,FEM,,stated,Table_S4,
+FEM_C_rate,0.33,-,FEM,charging,stated,Table_S4,
+FEM_sigma_e_AM,1,S_m-1,FEM,NCA electronic conductivity input,stated,Table_S4,
+FEM_D_Li_AM,3e-14,m2_s-1,FEM,Li diffusion coeff in NCA,stated,Table_S4,ref_S1
+FEM_sigma_ion_electrolyte,0.02,S_m-1,FEM,LPSCl ionic conductivity input,stated,Table_S4,= 0.2 mS/cm
+FEM_interfacial_strength,100,MPa,FEM,cohesive strength sigma_t_c/sigma_s_c,stated,Table_S4,ref_S3_SinghPal2022
+FEM_Gc,1,J_m-2,FEM,critical energy release rate (cohesive),stated,Table_S4,ref_S4_Boyce2022
+# --- XPS binding energies (decomposition byproducts) ---
+XPS_PS4_S2p_a,161.3,eV,LPSCl,S2p PS4^3-,stated,Fig5,characteristic LPSCl
+XPS_PS4_S2p_b,162.5,eV,LPSCl,S2p PS4^3-,stated,Fig5,
+XPS_Li2Sn,163.0,eV,LPSCl,S2p Li2Sn byproduct (oxidative decomp),stated,Fig5,suppressed by LZO
+XPS_P2Sx,133.5,eV,LPSCl,P2p P2Sx,stated,Fig5,
+XPS_PO4,134.4,eV,LPSCl,P2p PO4^3- byproduct,stated,Fig5,suppressed by LZO
+# --- pressures ---
+fabrication_pressure,400,MPa,cell,composite cathode + SE pellet,stated,text,
+operating_stack_pressure,200,MPa,cell,cycling,stated,text,fab != operating
+LPSCl_separator_press,400,MPa,separator,0.1g LPSCl pellet,stated,text,

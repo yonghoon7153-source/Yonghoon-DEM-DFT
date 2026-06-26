@@ -1,7 +1,15 @@
 # 🔬 문헌 ↔ 우리 DEM+MPM — 차이 + 적용 인사이트
 
 > 기준값: `our_dem_baseline.md`. 각 축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
-> 현재 digest: Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
+>
+> ## ⭐필독 / 우리-랩 — **Kang & Shin 2025 (Jong-Won Lee 그룹, Hanyang + Samsung SDI; ACS AMI 17, 60558)** 은
+> **랩 자체 논문 = 모델이 따라가야 할 실험 trend의 기준점.** 소재 = **NCA(Ni₀.₈₈)+LPSCl+Super P**; bimodal(3+10µm)
+> 패킹 이득 ↔ **큰 입자 사이클 균열**(유지 47.7%/67.3%@100cyc) trade-off; 균열 driver = **Li 농도·응력 구배(큰 입자
+> ~10×)**, 가압 아님; FEM = **Voronoi 다결정 + cohesive-zone damage**; **E_NCA=175·E_LPSCl=22.1**. 각 축에
+> 표시(A 패킹-균열 대가 / B EIS-TLM 열화 시그니처 / C FEM cohesive-zone ↔ 우리 MPM J2 / F 사이클 chemo-mechanics).
+> digest `papers/kang2025_toughened_bimodal_nca_lzo.md`, CSV `docs/data/kang2025_bimodal_nca_lzo_anchors.csv`.
+>
+> 현재 digest: **⭐Kang&Shin2025(랩 자체논문, NCA+LPSCl)**, Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
 > McGeary1961(패킹), **Lee2025·Minnmann2021 JES·Doux2020·Cronau2021(실험 앵커 — 우리 NCM/LPSCl 소재계)**,
 > **★ Bielefeld2019(우리와 가장 가까운 *구조-모델링 peer* — GeoDict stochastic-placement percolation, Janek 그룹)**,
 > **★ Bielefeld2020(=2019의 *σ-추가 후속편*, 같은 1저자·GeoDict — flux-PDE 연속체 σ_eff,ion+τ²+바인더 영향; ⚠위시리스트 "2022"=오기, 실제 2020)**.
@@ -94,6 +102,21 @@
     치밀화"라는 *거동(추세)*의 3중 정합** — *같은 소재·같은 압력의 byte-identical 일치 아님.* Sakuda 기여 = same-family
     거동·E·물리 앵커(절대 porosity 정밀값은 LPSCl 쪽 Minnmann/Doux/우리 DEM 소유). `docs/data/densification_porosity_db.csv`.
 
+- **★⭐(우리-랩) Kang & Shin 2025 (NCA+LPSCl, 실험+FEM) — bimodal 패킹 이득의 *역학적 대가* + NCA/LPSCl E 앵커**:
+  - **bimodal 패킹 이득 = 우리 Furnas-dip 이득과 같은 물리** (단 *역학 대가* 추가): 3+10 µm bimodal NCA → 펠릿
+    **0.74→0.68 mm**(패킹↑·두께↓)·**부피로딩 1.1×**·R_ele *크게 낮음*(큰 입자 전자 percolation) = 우리 "bimodal
+    porosity↓·전자망↑"과 정합.  ★ **그러나** 큰 10 µm 입자 사이클 균열로 **유지 47.7 %(bimodal) vs 67.3 %(단봉)
+    @100 cyc** → 우리 dip/packing 작업이 *순이득*으로만 보던 bimodal에 **"큰 입자 균열 리스크"** caveat 추가 근거
+    ("toughened" = 랩 목표가 *균열 억제*).  ⚠ 단 **압밀 porosity 미보고**(펠릿 *두께*만) → 우리 DEM 15.6 %·Minnmann
+    14 %·Doux 18 %와 **직접 비교 금지**.
+  - **E_LPSCl = 22.1 GPa**(FEM) = **Bazzoun 2026(22.1) ∩ 우리 real-bulk ~24** → SE-모듈러스 앵커 *3중 확인*(우리
+    E_eff 1.35/1.53는 그 연화 프록시).  **E_NCA = 175 GPa** ≠ 우리 NMC811 140 → CAM 모듈러스 옵션 재고(아래 §C/§F).
+  - **가압 응력 ≪ 확산 응력 (맥락 분리 필수):** 그들 FEM = 가압 응력(stack 200/fab 400 MPa, *수백 MPa*) ≪ Li
+    deintercalation 확산-유발 응력(*최대 GPa*) → **사이클 균열에 가압 기여 미미**.  ⚠ 이는 *사이클 균열* 맥락 한정 —
+    우리 *압밀 porosity/Heckel*에서는 압력이 주역(제조 300 MPa, P_y 138).  "압력 기여 미미"를 우리 압밀 결론으로
+    전이 금지.  같은 그룹이 **fab 400 / operating 200 MPa 명시 분리** = Doux/Lee2025 "제조≠작동"과 합류(단 operating
+    200은 Doux 최적 5보다 높은 고압 운용).
+
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 - **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**
   (= 우리 DEM σ_ionic 0.04–0.18 상단과 일치!), **τ_ion 2.07 (=√(τ²=4.3))**, σ_el,eff 0.56 (τ_el²=7.4).
@@ -179,6 +202,17 @@
   - ⚠ **placement(입력 porosity, 2019 계승) ≠ 우리 압밀(측정 porosity)** → σ·porosity 절대 동일시 금지, 추세만; σ-검증계
     **LCO+LGPS**(NCM811+LPSCl 아님) → σ 절대전이 금지; 바인더 morphology = *형상 없는 meniscus*(실제 PTFE fibril/SuperP
     응집 morphology 효과 없음).
+
+- **★⭐(우리-랩) Kang & Shin 2025 (실험 EIS-TLM) — 사이클 *열화 시그니처* (정적 우리 σ엔 없는 시간축)**:
+  - **Z-type TLM 분해**(회로 Fig S6: r_Ohmic—(r_anode‖cpe)—양극[r_ion + (cpe_int‖(r_int+Z_w))]) → **R_ion(이온망)
+    거의 불변**(B-NCA 5.7→6.7) **vs R_int(계면) 113.5→501.8(4.4×)·R_w(Warburg) 70.7→353.4(5×) 급등**(75→100 cyc).
+    ★ **"R_ion stable / R_int+R_w rising" = 균열의 명확한 시그니처** — **R_w ∝ δ_s**(eq 2, 확산거리) → 큰 입자 =
+    긴 δ_s = 큰 R_w; 균열이 tortuosity↑로 R_w 추가 증가.  U-NCA는 R_int 1.5×·R_w 2.1×로 완만(안정).
+  - 차이/주의: 그들 R_ion/R_int/R_w는 **실험 측정값 + TLM 피팅**이지 *예측 솔버* 산출이 아니다(FEM은 σ_ion=0.02
+    S/m·σ_e=1 S/m을 *입력*만, σ_eff를 *안 풂*) → 우리 Kirchhoff/Holm σ-솔버와 **방법이 다름**.  우리는 *정적* σ만
+    예측 → 이 "사이클 R_int/R_w↑" 열화 패턴은 **우리 미보유 시간축**(흡수 후보 = backlog B6에 *사이클-Warburg*).
+  - **LZO 코팅이 R_w를 고정**(50→100 cyc **+1.2 Ω·cm²만** vs bare +176.7) = 균열 억제 직접증거 → "코팅→계면
+    안정→δ_s 유지→R_w 평탄"의 transport 입증.
 
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
 - 문헌: Varkey "elasto-plastic"은 **CONTACT 힘법칙만**(Thornton–Ning), 입자는 완벽 구 — "구=타협,
