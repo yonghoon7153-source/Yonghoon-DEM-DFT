@@ -1,0 +1,37 @@
+category,symbol,value,units,condition_or_source,stated_or_digitized,note
+material,e,0.5,-,This study (arbitrary global),stated,restitution coefficient COR (all particle-particle + particle-wall)
+material,E_SE,24,GPa,Sakuda et al. [4],stated,SE Young modulus (LPS = Li2S-P2S5); SAME numeric as our real-bulk 24 (coincidence; material is LPS not LPSCl)
+material,E_AM,199,GPa,Cheng et al. [10] LiCoO2,stated,"AM Young modulus -- Table1 says 'SE Young modulus (LPS)' for E_AM row (likely typo); AM here = NCM/LiCoO2 cathode (199 GPa), NOT Si"
+material,mu,0.5,-,This study,stated,friction coefficient (Coulomb)
+material,nu,0.3,-,This study,stated,Poisson ratio (both phases)
+material,H_SE,1.9,GPa,McGrogan et al. [8],stated,Hardness of SE (LPS) -- sets F_th yield via approx sigma_yield = H
+material,H_AM,11.2,GPa,Cheng et al. [10],stated,Hardness of AM (NCM/LiCoO2)
+contact_law,exponent_Hertz_kn,0.5,-,Hertz eq15,stated,kn = 4/3 E_eff hov^0.5 Reff^0.5
+contact_law,exponent_spring_k_factor,1.5,-,eq9,stated,"k = k_Hertz(1 + c_spring h_eq/R_eff)^(3/2); 3/2 because spring const grows via area AND length contraction"
+contact_law,F_th_parabolic_factor,0.6667,-,eq5/eq6 (=2/3),stated,A_con^eff = 2/3 A_con^spherical (parabolic stress profile peak 3/2x mean)
+contact_law,A_con_spherical,n/a,m2,eq6,stated,A_con^spherical = 2/3 * pi * h_ov * R_eff (eq6 writes 2/3pi h_ov R_eff)
+fit_param,c_area,2,-,"Fig8a calibrated to Sakuda [4]",stated,"area factor: A = A_Hertz(1 + c_area h_eq/R_eff); c_area=2 best fit (0/2/5 tested)"
+fit_param,c_spring,5,-,"Fig7/Fig8 production",stated,"spring factor: tested 3/5/7; c_spring=7 makes E_electrode -> E_LPS at solid fraction->1 (Fig7b)"
+fit_param,h_ov_max_lim,0.6,R_eff,"eq=0.6 R_eff (Fig4b/Fig8b)",stated,"consolidation limit (max equilibrium overlap) = 0.6 R_eff; chosen to avoid over-compaction; corresponds to solid-fraction->1 at ~600 MPa"
+fit_param,h_ov_max_tested,"0.4 / 0.6 / 0.8",R_eff,Fig8b,stated,h_ov^max sweep; 0.4 too low / 0.8 over-dense / 0.6 best-fit Sakuda
+viscoelastic,t_rel_role,n/a,s,eq2-4,stated,relaxation time t_rel = eta/E; plastic mode requires t_rel << sim time (steady-state); viscoelastic mode t_rel matters
+viscoelastic,t_press_over_t_rel_tested,"0.1 / 1 / 10 / 100",-,Fig9a,stated,"pressing-time vs viscoelastic-response-time ratio; Fig9b rel density rises with t_press/t_rel (1/10/10000)"
+setup,N_AM_mono,0,-,Table2 monodisperse,stated,monodisperse pure-LPS calibration run
+setup,N_SE_mono,1846,-,Table2 monodisperse,stated,
+setup,N_AM_coated,10746,-,Table2 coated,stated,SE-coated-AM sim (reference So 2021/2022 JPS [6])
+setup,N_SE_coated,27263,-,Table2 coated,stated,
+setup,primary_AM_diameter,1,um,Table2 coated,stated,
+setup,primary_SE_diameter,0.5,um,Table2,stated,
+setup,domain_size,10,um,Table2,stated,monodisperse lateral box 10x10 um; coated 20x20 um
+setup,fraction_AM_coated,0.734,-,Table2,stated,volume/number fraction of AM in coated sim
+setup,AM_aggregate_size,5,um,Table2,stated,
+setup,SE_aggregate_size,1.45,um,Table2,stated,
+result,height_pure_SE,"14 -> ~12",um,Fig7a (mono, 200 MPa press profile),digitized,height vs time; elastic recovery (springback) decreases as c_spring increases
+result,rel_density_at_P,"~0.72@100 -> ~0.9@400 -> ~1.0@600+",-,Fig8 (mono, c_area=2),digitized,relative density vs mold pressure; good fit to Sakuda above ~200 MPa
+result,rel_density_underfit_lowP,"model > Sakuda below ~150 MPa",-,Fig8a,stated,"simple DEM (no aggregates) UNDER-porous at low P; aggregates not simulated -> would raise low-P porosity"
+result,box_pressure_profile,200,MPa,Fig7a inset,digitized,PI/servo press ramps to 200 MPa then release
+result,rel_Young_modulus_at_solidfrac1,"->1 at c_spring=7",-,Fig7b,stated,E_electrode/E_LPS -> 1 as solid fraction -> 1 (only with c_spring=7)
+domain_geom,mono_box_50MPa,14.8,um,Fig6a,stated,monodisperse box height after 50 MPa
+domain_geom,mono_box_100MPa,13.8,um,Fig6b,stated,after 100 MPa
+domain_geom,mono_box_400MPa,11.2,um,Fig6c,stated,after 400 MPa
+domain_geom,coated_box_360MPa,23.9,um,Fig6d,stated,SE-coated-AM box (20x20 um) after 360 MPa

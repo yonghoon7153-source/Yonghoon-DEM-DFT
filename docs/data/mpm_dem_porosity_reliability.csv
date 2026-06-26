@@ -106,3 +106,4 @@ input_2mAh_a7_p00,0:10,0.0,70,48,11.5,17.9,-6.4,review,review MPM>DEM moderate S
 input_2mAh_a7_p08,8:2,0.8,70,48,7.6,13.6,-6.0,review,review MPM>DEM moderate SE-rich
 input_2mAh_a7_p06,6:4,0.6,70,48,9.4,14.9,-5.5,review,review MPM>DEM moderate SE-rich
 input_2mAh_a7_p10,10:0,1.0,70,48,8.8,13.9,-5.2,review,review MPM>DEM moderate SE-rich
+input_particulate_12_S1,0:10,0.0,82,32,19.8,22.8,-3.0,both,cross-validated
