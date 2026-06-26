@@ -111,6 +111,13 @@ def parse_args(argv):
                          'only — no f_AM / floor / DEM-porosity import); SE-poor AM-rich corners stop near '
                          'the DEM-anchored true porosity, SE-rich (no tall floor-connected cluster) keep '
                          'plastic void-fill unchanged (SE servo stops first).  Needs scipy.')
+    ap.add_argument('--se-am-robust', type=float, default=6.0,
+                    help='ROUND 4 (flexible PHYSICAL coef for --se-am-drag): drag turns OFF above this many AM '
+                         'load-path layers (bed_depth / AM_diameter).  THICK beds (≥this) → AM multilayer bears '
+                         'the platen load (§13 thickness-escape: 8mAh reliable w/o drag) → robust=0 → no drag.  '
+                         'THIN beds → robust→1 → full drag.  Physically-derived (load-path depth), not target-tuned.')
+    ap.add_argument('--se-am-robust-width', type=float, default=3.0,
+                    help='ramp width (AM layers) over which the --se-am-robust factor goes 1→0.')
     ap.add_argument('--am-jam-tol', type=float, default=0.05,
                     help='AM-AM contact tolerance for --am-jam, as a fraction of median AM radius (near-contact).')
     ap.add_argument('--se-am-drag', type=float, default=0.0,
@@ -563,15 +570,26 @@ def main(argv):
     am_near = ti.field(ti.f32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))   # local AM fraction (confinement)
     if scaffold_on:
         am_mask.from_numpy(pin_np)                              # cells inside fixed AM (built in scaffold branch)
+        if SE_AM_DRAG > 0.0 and am_r is not None:
+            # ★ ROUND 4 — GLOBAL load-path robustness (physical, not target-tuned): the drag is only PHYSICAL
+            # where the AM skeleton does NOT robustly bear the platen load = THIN beds (few AM layers → marginal
+            # floor→platen force path → SE over-flows).  THICK beds = AM multilayer geometrically blocks the
+            # platen (§13 thickness-escape: 8mAh SE/sol 16% reliable WITHOUT drag) → robust→0 → drag OFF, so we
+            # DON'T over-correct cases §13 says are already MPM-owned.  n_layers = bed depth / AM diameter.
+            n_layers = (am_top - FLOOR) / (2.0 * float(np.median(am_r)))
+            robust = max(0.0, min(1.0, (float(args.se_am_robust) - n_layers) / max(float(args.se_am_robust_width), 1e-6)))
+            SE_AM_DRAG = SE_AM_DRAG * robust                    # effective coef: thin→full, thick→0
+            print(f'  [se-am-drag] load-path: bed {(am_top - FLOOR) * um_box:.1f}µm = {n_layers:.1f} AM-layers → '
+                  f'robustness {robust:.2f} (off ≥{float(args.se_am_robust):.0f}) → eff-coef {SE_AM_DRAG:.3f}')
         if SE_AM_DRAG > 0.0:
             try:
                 from scipy.ndimage import uniform_filter
-                _amnear = uniform_filter(pin_np.astype(np.float32), size=3, mode='nearest')   # 3³ local AM fraction
+                _amnear = uniform_filter((pin_np > 0).astype(np.float32), size=3, mode='nearest')   # 3³ AM fraction ∈[0,1] (binary → fixes overlap double-count, was max 2.0)
             except Exception as _e:
-                print(f'  [se-am-drag] scipy.ndimage missing ({_e}) → AM-cell-only proximity'); _amnear = pin_np.astype(np.float32)
+                print(f'  [se-am-drag] scipy.ndimage missing ({_e}) → AM-cell-only proximity'); _amnear = (pin_np > 0).astype(np.float32)
             am_near.from_numpy(_amnear.astype(np.float32))
-            print(f'  [se-am-drag] ON coef={SE_AM_DRAG:.2f}; SE velocity damped by coef·AM_frac near the frozen '
-                  f'skeleton (max AM_frac={float(_amnear.max()):.2f}) — local conform, long-range migration suppressed.')
+            print(f'  [se-am-drag] ON eff-coef={SE_AM_DRAG:.3f}; SE velocity damped by coef·AM_frac (∈[0,1], '
+                  f'max {float(_amnear.max()):.2f}) near the frozen skeleton — local conform, migration suppressed.')
 
     @ti.kernel
     def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(),
