@@ -102,13 +102,13 @@
 | ⚠paywall | Chang, Etsion, Bogy (1987) | An elastic-plastic model for the contact of rough surfaces | J. Tribol. 109(2) 257 | 10.1115/1.3261348 — **유료 → SKIP**; 후속 FEM판 **Kogut–Etsion 2002 + Jackson–Green 2005**가 같은 EP-asperity 내용 (Etsion Technion 페이지/ResearchGate free 흔함) |
 | ② | Mesarovic & Fleck (2000) | Frictionless indentation of dissimilar elastic-plastic spheres | Int. J. Solids Struct. 37(46) 7071 | 10.1016/S0020-7683(99)00328-5 |
 | ③ | Thornton & Ning (1998) | A theoretical model for the stick/bounce behaviour of adhesive, elastic-plastic spheres | Powder Technol. 99(2) 154 | 10.1016/S0032-5910(98)00099-0 |
-| ⚠paywall | Thornton (1997) | Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres | J. Appl. Mech. 64(2) 383 | 10.1115/1.2787319 — **유료 → SKIP**; 내용은 후속 **Thornton–Ning 1998**(점착 EP 구, #14/③) + Mesarovic–Fleck 2000 에 포함 |
+| 🟡 | Thornton (1997) | Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres | J. Appl. Mech. 64(2) 383 | 10.1115/1.2787319 |
 | 🟡 | Storåkers, Biwa, Larsson (1997) | Similarity analysis of inelastic contact | Int. J. Solids Struct. 34(24) 3061 | 10.1016/S0020-7683(96)00176-X |
 | 🟡 | Thakur, Morrissey, Sun, Chen, Ooi (2014) | Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model | Granular Matter 16(3) 383 | 10.1007/s10035-014-0506-4 |
 | 🟡 | Sangrós Giménez, Schilde, Froböse, Ivanov, Kwade (2020) | Mechanical, electrical, and ionic behavior of lithium-ion battery electrodes via discrete element method simulations | Energy Technol. 8(2) 1900180 | 10.1002/ente.201900180 |
-| ⚠paywall | Jackson & Green (2005) | A finite element study of elasto-plastic hemispherical contact against a rigid flat | J. Tribol. 127(2) 343 | 10.1115/1.1866166 — **유료 → SKIP** (저자 Robert Jackson Auburn 페이지에 free 있을 수 있음) |
+| ⬜ | Jackson & Green (2005) | A finite element study of elasto-plastic hemispherical contact against a rigid flat | J. Tribol. 127(2) 343 | 10.1115/1.1866166 |
 | ⬜ | Kogut & Etsion (2002) | Elastic-plastic contact analysis of a sphere and a rigid flat | J. Appl. Mech. 69(5) 657 | 10.1115/1.1490373 |
-| ⬜ | Vu-Quoc & Zhang (1999) | An elastoplastic contact force-displacement model in the normal direction: displacement-driven version | Proc. R. Soc. A 455(1991) 4013 | 10.1098/rspa.1999.0488 |
+| ⚠paywall | Vu-Quoc & Zhang (1999) | An elastoplastic contact force-displacement model in the normal direction: displacement-driven version | Proc. R. Soc. A 455(1991) 4013 | 10.1098/rspa.1999.0488 — **유료 → SKIP** |
 | ⬜ | Pasha, Hassanpour, Ahmadian, Ghadiri (2014) | A linear model of elasto-plastic and adhesive contact deformation | Granular Matter 16(1) 151 | 10.1007/s10035-013-0476-y |
 | ⬜ | Greenwood & Williamson (1966) | Contact of nominally flat surfaces | Proc. R. Soc. A 295(1442) 300 | 10.1098/rspa.1966.0242 |
 | ⬜ | Johnson, Kendall, Roberts (1971) (JKR) | Surface energy and the contact of elastic solids | Proc. R. Soc. A 324(1558) 301 | 10.1098/rspa.1971.0141 |
@@ -122,8 +122,8 @@
 | ⬜ | Ngandjong, Lombardo, Primo, Chouchane, Shodiev, Arcelus, Franco (2021) | Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model | J. Power Sources 485 229320 | 10.1016/j.jpowsour.2020.229320 |
 
 ## ★ 접근성 현실 (2026-06-26) — 정전은 대부분 유료, 안 사도 됨
-사용자 확인 유료(⚠paywall): **Walton–Braun 1986 · CEB 1987 · Thornton 1997 · Jackson–Green 2005** (구 ASME/Elsevier
-저널은 대개 유료).  → **정전 PDF는 굳이 구하지 말 것.**  현실적 intake = **단 2~3편**:
+사용자 확인 유료(⚠paywall): **Walton–Braun 1986 · CEB 1987 · Vu-Quoc & Zhang 1999** (Thornton 1997·Jackson–Green
+2005 는 접근 가능 — 정정).  → **유료 정전 PDF는 굳이 구하지 말 것.**  현실적 intake = **단 2~3편**:
 1. **Luding 2008** (우리 모델 자체 k₂/k_c/φ_f; 저자 Twente 페이지에 free) — ★ 이거 하나가 핵심.
 2. **리뷰 1편** — Di Renzo & Di Maio 2004 *또는* Thornton–Cummins–Cleary 2013: linear-hysteretic + EP 접촉모델 **정전 내용을 한 편에 요약** → 정전들(Walton/CEB/Thornton/Jackson)을 *이 리뷰로 인용*.
 3. 교과서(Tabor·Johnson)는 **도서관/발췌**로 근거만.
