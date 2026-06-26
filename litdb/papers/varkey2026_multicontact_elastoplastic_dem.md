@@ -85,5 +85,18 @@ CONTACT 소성만이라, 우리 MPM이 메우는 *간극(형상변화·<20 % por
 - σ_ionic·접촉면적(Fig14)·porosity(Fig10/13)는 **작은 삽입그림 digitized** → 추세만(±), stated 아님.
 - multi-contact F_mc는 **평균장**(연속체 MPM은 exact) — ρ>0.7 보정의 근사.
 
-## 🗨️ Q&A 로그
-<!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->
+## Supplementary (FEM 검증 — 2026-06-26 사용자 PDF 추가)
+원본 `docs/literature_coverage/pdfs/Varkey_2026_AdvPowderTech_SupportingInformation_FEM_validation.pdf`.
+**"Validation of Multi-contact elasto-plastic model using FEM"** — 그들 접촉모델을 **Ansys Mechanical FEM**으로
+검증 (우리가 없던 ground-truth 검증):
+- **셋업**: 3입자(직경 10 mm) 단축압축, 변형체 구 + 탄소성 구성식 + frictionless(Augmented Lagrange) 접촉,
+  2 plate 변위(5 mm)로 압축.  DEM은 동일조건 Ansys Rocky(multi-contact EP + Thornton–Ning).
+- **Table S1 (FEM 파라미터)**: E = **71 GPa** (7.1e10 Pa), ν = **0.33**, **σ_y = 280 MPa** (2.8e8 Pa),
+  mesh 0.66 mm.  ⚠ = *모델수치 검증용 generic EP 재료*(금속급), **실제 halide SE(E=10.58)가 아님** — 접촉
+  LAW의 수치정확도 검증이지 재료 검증 아님.
+- **★ Figure S1 (핵심 결과)**: force-displacement에서 **multi-contact EP 모델 = FEM과 전 압축영역 일치**,
+  반면 **Thornton–Ning 단독은 고변위서 FEM을 UNDER-predict** (5 mm서 TN ≈ 5.7 vs FEM/MC ≈ 9.7 ×10⁴ N).
+  ⇒ **multi-contact 구속항 F_mc 가 고압축(고밀도) 힘응답을 FEM 수준으로 끌어올리는 바로 그 보정**.
+- ★ **우리에게**: 이게 frame[2]에서 언급한 "**multi-contact = 18× 연화의 물리적 대안**"의 정량 근거 —
+  Thornton–Ning(wishlist #③) 단독은 고밀도서 under-stiff(우리 DEM이 E를 18× 낮춰 메우는 그 증상), F_mc가
+  그걸 *물리적으로* 보정.  단 여전히 강체 구(형상 안 변함) → 우리 MPM 형상소성과는 별개(frame[5] 유지).
