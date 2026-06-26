@@ -88,6 +88,37 @@
 3. **#14 Thornton–Ning** — 경로 A LAW 확정.
 4. 나머지(점착 JKR/DMT, EEPA, MPM, 배터리)는 필요 시.
 
+## 📋 전체 서지 + DOI (복사·검색용)
+> DOI는 best-effort — 404면 "제목"으로 검색.  📕=교과서(ISBN).
+
+| 우선 | 저자 (년) | 정확한 제목 | 출처 | DOI / ISBN |
+|:--:|---|---|---|---|
+| ① | Walton & Braun (1986) | Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks | J. Rheol. 30(5) 949 | 10.1122/1.549893 |
+| ① | Luding (2008) | Cohesive, frictional powders: contact models for tension | Granular Matter 10(4) 235 | 10.1007/s10035-008-0099-x |
+| ② | Tabor (1951) 📕 | The Hardness of Metals | Clarendon Press, Oxford | ISBN 9780198507765 |
+| ② | K.L. Johnson (1985) 📕 | Contact Mechanics | Cambridge Univ. Press | 10.1017/CBO9781139171731 |
+| ② | Chang, Etsion, Bogy (1987) | An elastic-plastic model for the contact of rough surfaces | J. Tribol. 109(2) 257 | 10.1115/1.3261348 |
+| ② | Mesarovic & Fleck (2000) | Frictionless indentation of dissimilar elastic-plastic spheres | Int. J. Solids Struct. 37(46) 7071 | 10.1016/S0020-7683(99)00328-5 |
+| ③ | Thornton & Ning (1998) | A theoretical model for the stick/bounce behaviour of adhesive, elastic-plastic spheres | Powder Technol. 99(2) 154 | 10.1016/S0032-5910(98)00099-0 |
+| 🟡 | Thornton (1997) | Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres | J. Appl. Mech. 64(2) 383 | 10.1115/1.2787319 |
+| 🟡 | Storåkers, Biwa, Larsson (1997) | Similarity analysis of inelastic contact | Int. J. Solids Struct. 34(24) 3061 | 10.1016/S0020-7683(96)00176-X |
+| 🟡 | Thakur, Morrissey, Sun, Chen, Ooi (2014) | Micromechanical analysis of cohesive granular materials using the discrete element method with an adhesive elasto-plastic contact model | Granular Matter 16(3) 383 | 10.1007/s10035-014-0506-4 |
+| 🟡 | Sangrós Giménez, Schilde, Froböse, Ivanov, Kwade (2020) | Mechanical, electrical, and ionic behavior of lithium-ion battery electrodes via discrete element method simulations | Energy Technol. 8(2) 1900180 | 10.1002/ente.201900180 |
+| ⬜ | Jackson & Green (2005) | A finite element study of elasto-plastic hemispherical contact against a rigid flat | J. Tribol. 127(2) 343 | 10.1115/1.1866166 |
+| ⬜ | Kogut & Etsion (2002) | Elastic-plastic contact analysis of a sphere and a rigid flat | J. Appl. Mech. 69(5) 657 | 10.1115/1.1490373 |
+| ⬜ | Vu-Quoc & Zhang (1999) | An elastoplastic contact force-displacement model in the normal direction: displacement-driven version | Proc. R. Soc. A 455(1991) 4013 | 10.1098/rspa.1999.0488 |
+| ⬜ | Pasha, Hassanpour, Ahmadian, Ghadiri (2014) | A linear model of elasto-plastic and adhesive contact deformation | Granular Matter 16(1) 151 | 10.1007/s10035-013-0476-y |
+| ⬜ | Greenwood & Williamson (1966) | Contact of nominally flat surfaces | Proc. R. Soc. A 295(1442) 300 | 10.1098/rspa.1966.0242 |
+| ⬜ | Johnson, Kendall, Roberts (1971) (JKR) | Surface energy and the contact of elastic solids | Proc. R. Soc. A 324(1558) 301 | 10.1098/rspa.1971.0141 |
+| ⬜ | Derjaguin, Muller, Toporov (1975) (DMT) | Effect of contact deformations on the adhesion of particles | J. Colloid Interface Sci. 53(2) 314 | 10.1016/0021-9797(75)90018-1 |
+| ⬜ | Tabor (1977) | Surface forces and surface interactions | J. Colloid Interface Sci. 58(1) 2 | 10.1016/0021-9797(77)90366-6 |
+| ⬜ | Cundall & Strack (1979) | A discrete numerical model for granular assemblies | Géotechnique 29(1) 47 | 10.1680/geot.1979.29.1.47 |
+| ⬜ | Simo & Hughes (1998) 📕 | Computational Inelasticity | Springer (IAM 7) | 10.1007/b98904 |
+| ⬜ | Klár, Gast, Pradhana, Fu, Schroeder, Jiang, Teran (2016) | Drucker-Prager elastoplasticity for sand animation | ACM TOG 35(4) 103 | 10.1145/2897824.2925906 |
+| ⬜ | Stomakhin, Schroeder, Chai, Teran, Selle (2013) | A material point method for snow simulation | ACM TOG 32(4) 102 | 10.1145/2461912.2461948 |
+| ⬜ | de Vaucorbeil, Nguyen, Sinaie, Wu (2020) | Material point method after 25 years: theory, implementation, and applications | Adv. Appl. Mech. 53 185 | 10.1016/bs.aams.2019.11.001 |
+| ⬜ | Ngandjong, Lombardo, Primo, Chouchane, Shodiev, Arcelus, Franco (2021) | Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model | J. Power Sources 485 229320 | 10.1016/j.jpowsour.2020.229320 |
+
 ## 비고
 - 📕 교과서(Tabor·Johnson·Simo–Hughes)는 PDF agent엔 부적합 → **인용·근거용**(해당 장만 발췌 가능).
 - Tier 0~1·3은 **DEM 접촉 LAW 층위**( `elasto_plastic_feasibility.md` 0절 층위(1) ) — 우리 18× 연화의
