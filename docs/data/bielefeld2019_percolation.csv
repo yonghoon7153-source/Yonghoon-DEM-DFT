@@ -1,0 +1,101 @@
+# Bielefeld, Weber, Janek — J. Phys. Chem. C 2019, 123, 1626-1634 (DOI 10.1021/acs.jpcc.8b11043)
+# Justus-Liebig-Univ. Giessen (Janek group) + Volkswagen AG Group Research.
+# 3D microstructural model: spherical AM (no overlap) + convex-POLYHEDRA SE (with overlap) in GeoDict;
+#   ionic & electronic conduction clusters by PERCOLATION THEORY (Hoshen-Kopelman cluster labelling).
+# ==> This paper does NOT compute an effective conductivity sigma. It outputs ONLY:
+#       (a) percolation existence (does a spanning cluster exist?),
+#       (b) utilization level theta_v = V_cluster/V_phase (Eq 6),
+#       (c) specific active interface area A_spec,a between the ionic & electronic clusters (Eq 7 = geometric limit).
+#     Constriction/contact resistance is EXPLICITLY deferred to future work (cites Greenwood 1966, ref 36).
+# Material is essentially GEOMETRY-ONLY (shape/size/overlap). NCM-622 + LPS named only to convert vol% <-> wt%.
+#   ==> Do NOT transfer absolute numbers to LPSCl/NMC811 as material values; these are percolation/geometry trends.
+# source_type:  stated_text = sentence in paper;  stated_eq# = the stated equation (value computed from it);
+#               stated_fig# = number printed on/in the figure;  digitized_fig# = read off a figure curve (TREND, +- , approximate).
+# =====================================================================================================================
+#
+# BLOCK 0 -- the two values our backlog-B3 cites (CONFIRMED verbatim against the paper):
+quantity,value,unit,eq_or_fig,source_type,note
+beta_critical_exponent,0.41,dimensionless,Eq1+Fig4,stated_fig4,"Theta ~ (p-p_c)^beta ; Grimmett order parameter; ""critical exponent of beta = 0.41"" (text+Fig4); good agreement with Sur et al. ref37 3D site-percolation simple-cubic lattice. CONFIRMS backlog beta=0.41."
+A_spec_powerlaw_prefactor,1.73e5,m2_per_m3,Fig4,stated_fig4,"A_spec(p-p_c) = 1.73e5 * ((p-p_c)/volpct)^0.41 ; surface area of electronic cluster just above p_c, d=10um, 8 packings/density."
+pc_size_law_slope,7.83,volpct_per_ln_um,Eq8+Fig6,stated_eq8,"p_c = [7.83*ln(d/um) + 36.67] vol% ; logarithmic p_c vs AM size. CONFIRMS backlog p_c = 7.83*ln(d)+36.67."
+pc_size_law_intercept,36.67,volpct,Eq8+Fig6,stated_eq8,"intercept of p_c(d) law."
+#
+# BLOCK 1 -- electronic-cluster percolation threshold p_c vs AM particle size (Fig 6, Eq 8).
+#   p_c DEFINITION (text): AM vol% at which the MAJORITY of the 10 random arrangements percolate
+#                          == the AM vol% where mean utilization level = 40 %.
+#   Values below are computed FROM Eq 8 (stated equation); figure data points scatter ~+-1-2 vol% around them.
+quantity,d_AM_um,p_c_electronic_volpct_AM,eq_or_fig,source_type,note
+electronic_percolation_threshold,3,45.27,Eq8,stated_eq8,7.83*ln(3)+36.67=45.27 ; Fig5 transition interval 41-46 vol%
+electronic_percolation_threshold,4,47.52,Eq8,stated_eq8,
+electronic_percolation_threshold,5,49.27,Eq8,stated_eq8,"5um is the workhorse size (realistic for NCM per Strauss); used in Fig3/7/8/9/10"
+electronic_percolation_threshold,6,50.70,Eq8,stated_eq8,
+electronic_percolation_threshold,7,51.91,Eq8,stated_eq8,
+electronic_percolation_threshold,8,52.96,Eq8,stated_eq8,
+electronic_percolation_threshold,9,53.87,Eq8,stated_eq8,
+electronic_percolation_threshold,10,54.70,Eq8,stated_eq8,"arbitrarily chosen for the Fig4 power-law fit"
+electronic_percolation_threshold,15,57.87,Eq8,stated_eq8,"Fig6 data point ~58 ; Fig5 transition interval 52-57 vol%"
+#
+# BLOCK 1b -- Fig 5 transition-region intervals (stated in text), vol% AM
+quantity,d_AM_um,interval_low_volpct,interval_high_volpct,eq_or_fig,source_type,note
+transition_region,3,41,46,Fig5,stated_text,"3um particles percolate at lower AM fraction"
+transition_region,15,52,57,Fig5,stated_text,"15um shifts the transition up; steepness similar for all sizes"
+#
+# BLOCK 2 -- ideal (optimal) composition vs porosity (Fig 7 + Fig 8, stated in text).
+#   Optimal = composition that MAXIMIZES the specific active interface area while BOTH clusters still percolate.
+#   wt% basis = NCM-622 + LPS densities (NOT NMC811+LPSCl -> convert carefully before comparing to ours).
+porosity_pct,ideal_AM_volpct,ideal_SE_volpct,ideal_AM_wtpct_NCM622LPS,ideal_SE_wtpct,eq_or_fig,source_type,note
+5,62,38,80,20,Fig8,stated_text,"smaller porosity -> higher packing/mass loading -> higher A_spec ; optimum shifts to LOWER AM"
+10,66,34,82,18,Fig8,stated_text,
+20,72,28,86,14,Fig7+Fig8,stated_text,"72/28 vol% = 86/14 wt% explicitly stated for NCM-622+LPS at 20% porosity"
+#
+# BLOCK 3 -- percolation-limitation windows (Fig 7; porosity 20%, d=5um), vol% AM in the SOLID (upper x-axis).
+limitation,boundary_AM_volpct,eq_or_fig,source_type,note
+electronic_limitation_below,69,Fig7,stated_text,"AM < 69 vol% (69/31) -> electronic cluster NOT well connected (electronic limitation)"
+ionic_limitation_above,79,Fig7,stated_text,"AM > 79 vol% (79/21) -> SE cannot build well-connected ionic cluster (ionic limitation)"
+well_performing_window_low,69,Fig7,stated_text,"interval of well-performing composites is FAIRLY SMALL: 69-79 vol% AM"
+well_performing_window_high,79,Fig7,stated_text,
+#
+# BLOCK 4 -- porosity dependence at FIXED composition 70/30 vol% (Fig 9, d=5um).
+#   These are PERCOLATION / conduction-recovery thresholds (does the cluster span?), NOT a geometric compaction floor.
+#   ==> DISTINCT meaning from our ~20% rigid-sphere POROSITY floor. Do not equate the two.
+porosity_criterion,porosity_pct,eq_or_fig,source_type,note
+both_clusters_isolated_above,34,Fig9,stated_text,"porosity > 34% -> ionically AND electronically isolated regions appear"
+electronic_limitation_persists_down_to,21,Fig9,stated_text,"electronic limitation still present down to 21% porosity"
+good_performance_below,21,Fig9,stated_text,"below ~21% porosity the cathode ought to perform well (at this 70/30 composition)"
+porosity_range_studied_low,3,Fig9,stated_text,"Fig9 sweeps porosity 43% down to 3%"
+porosity_range_studied_high,43,Fig9,stated_text,
+#
+# BLOCK 5 -- utilization-level statistics in the transition region (Fig 3 text, 5um).
+quantity,value,unit,eq_or_fig,source_type,note
+utilization_definition,theta_v=V_cluster/V_phase,ratio,Eq6,stated_eq6,"c=cluster (ionic or electronic), v=phase (AM or SE) ; normalized property"
+transition_band_low_volpct,48,volpct_AM,Fig3,stated_text,"48-52 vol% AM = transition band where 10 arrangements were averaged (high uncertainty)"
+transition_band_high_volpct,52,volpct_AM,Fig3,stated_text,
+utilization_spread_in_transition_low,30,pct,Fig3,stated_text,"at same AM fraction in transition, some packings percolate (theta~70%), others ~30% (random-packing dependent)"
+utilization_spread_in_transition_high,70,pct,Fig3,stated_text,
+A_spec_geometric_limit,A_spec_geo=g_AM^V*6/d,m2_per_m3,Eq7,stated_eq7,"saturation value = 6/d times AM volume fraction (= spheres' surface/volume) ; dashed line in Fig3/4"
+#
+# BLOCK 6 -- electrode-thickness effect (Fig 10; porosity 20%, 70/30 vol%, d=5um).
+quantity,value,unit,eq_or_fig,source_type,note
+thickness_studied_low,20,um,Fig10,stated_text,"140um base microstructure cut to 20-120um slabs"
+thickness_studied_high,140,um,Fig10,stated_text,
+thickness_effect_on_electronic,thin_only,qualitative,Fig10,stated_text,"thin electrodes percolate at SMALLER AM fraction (finite/reduced-model-size effect); A_spec higher even at low AM -> percolation SUPPRESSED in thin -> falsely-favorable look"
+thickness_effect_on_ionic,none,qualitative,Fig10,stated_text,"ionic conduction NOT affected by thickness; A_spec drop (cf Fig7) indistinguishable across thicknesses"
+#
+# BLOCK 7 -- highest-AM overlap note (text, p.1628).
+quantity,value,unit,eq_or_fig,source_type,note
+max_AM_overlap_at_highAM,1,volpct,text,stated_text,"at ~65 vol% AM the (removed) sphere overlap reaches ~1 vol% -> proximity to geometric dense-random limit"
+geometric_dense_packing_limit,74,volpct,text,stated_text,"equal-size spheres dense-pack limit ~74% ; nonuniform PSD would shift packing higher (deferred)"
+#
+# BLOCK 8 -- model setup (Table 1, stated).
+param,value,unit,note
+microstructure_dims,80x80x140,um3,
+resolution,0.2,um_per_voxel,"200 nm ; reasonable to model down to 3um particles"
+AM_shape,spherical,,no overlap (overlap removed iteratively, ~1e-5 vol% residual; harder at high packing)
+AM_size_set,3-4-5-6-7-8-9-10-15,um,uniform single-modal ONLY
+AM_PSD,uniform,,"bi/tri-modal (Gaussian width etc.) DEFERRED to future work -> no Furnas-dip study here"
+SE_shape,convex_polyhedra,,with overlap; SE size = enclosing-sphere diameter; overlap assigned to AM to keep AM spherical
+SE_size,3,um,enclosing sphere diameter
+E_SE_LPS_assumed,~25,GPa,"refs 32-34 ; rationale for allowing SE overlap (low Young's modulus + ductility). NOT used numerically in percolation."
+n_realizations_transition,10,,per AM fraction in transition region (statistics)
+n_packings_powerlaw,8,,for the Fig4 power-law fit
+SE_ionic_only_assumption,5_to_6_orders,magnitude,"SE electronic sigma negligible vs ionic (5-6 orders lower, ref35) -> SE assigned solely to ionic cluster; AM solely to electronic cluster"

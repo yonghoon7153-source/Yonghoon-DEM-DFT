@@ -1,0 +1,47 @@
+sample,ISE_material,CAM_material,milling_media_mm,d50_ISE_um,fab_pressure_MPa,sigma_measure_pressure_MPa,cycle_stack_pressure_MPa,metric,value,unit,measure_method,precision,note
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,sigma_ion_ISE_bulk,2.0,mS/cm,EIS_ion_blocking,stated,ISE single-phase bulk ionic conductivity; larger SE particles slightly higher sigma (less inter-particle contact resistance)
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,sigma_ion_ISE_bulk,1.7,mS/cm,EIS_ion_blocking,stated,smaller media -> smaller d50 -> slightly lower bulk sigma
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,sigma_ion_ISE_bulk,1.6,mS/cm,EIS_ion_blocking,stated,d50 rebounds (re-agglomeration) but narrower PSD; lowest bulk sigma
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,porosity_composite_segmented,10,pct,FIB-SEM_segmented,digitized_Fig4d,larger SE -> higher porosity; segmented << geometric (nanopores <50nm + redeposition missed)
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,porosity_composite_segmented,7.5,pct,FIB-SEM_segmented,digitized_Fig4d,smaller SE -> lower porosity (fills CAM voids)
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,porosity_composite_segmented,6,pct,FIB-SEM_segmented,digitized_Fig4d,smallest SE -> lowest segmented porosity
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,porosity_composite_geometric,20,pct,mass_density_expected,digitized_Fig4d,geometric (from masses+density); higher than segmented
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,porosity_composite_geometric,16,pct,mass_density_expected,digitized_Fig4d,geometric expected porosity
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,porosity_composite_geometric,11,pct,mass_density_expected,digitized_Fig4d,geometric; segmented-geometric gap = nanopore/interface segmentation loss
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,phi_CAM_segmented,55,vol_pct,FIB-SEM_segmented,stated,nominal 50:50 vol; BM10 +5 vol pct deviation (small ISE/pores misassigned as CAM)
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,phi_CAM_segmented,51,vol_pct,FIB-SEM_segmented,digitized_Fig4b,closer to nominal 50
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,phi_CAM_segmented,45,vol_pct,FIB-SEM_segmented,digitized_Fig4b,closer to nominal 50
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,phi_ISE_segmented,34,vol_pct,FIB-SEM_segmented,digitized_Fig4c,geometric ~40; BM10 underestimated (small-particle ISE segmentation hard)
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,phi_ISE_segmented,41,vol_pct,FIB-SEM_segmented,digitized_Fig4c,
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,phi_ISE_segmented,46,vol_pct,FIB-SEM_segmented,digitized_Fig4c,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,100,30,sigma_el_composite_eff,15,mS/cm,EIS_ion_blocking_TLM,digitized_Fig2c,70wt pct CAM composite; larger SE -> higher sigma_el (CAM clusters = electronic highways); uncertainty ~20pct
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,100,30,sigma_el_composite_eff,10,mS/cm,EIS_ion_blocking_TLM,digitized_Fig2c,smaller SE -> CAM cluster dispersion -> lower sigma_el
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,100,30,sigma_el_composite_eff,10,mS/cm,EIS_ion_blocking_TLM,digitized_Fig2c,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,100,30,sigma_ion_composite_eff,0.05,mS/cm,EIS_full_blocking_TLM,digitized_Fig2d,70wt pct CAM composite; larger SE -> lower sigma_ion
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,100,30,sigma_ion_composite_eff,0.11,mS/cm,EIS_full_blocking_TLM,digitized_Fig2d,smaller SE -> sigma_ion ~2x higher (more+shorter ion paths = packing)
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,100,30,sigma_ion_composite_eff,0.11,mS/cm,EIS_full_blocking_TLM,digitized_Fig2d,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,S_CAM_pore,0.34,m2/g,marching_cubes_Eq1,stated,CAM-pore interface area; larger SE -> more CAM surface facing pore
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,S_CAM_pore,0.16,m2/g,marching_cubes_Eq1,stated,smaller SE -> CAM surface contacts ISE instead -> decreases
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,S_CAM_ISE,0.11,m2/g,marching_cubes_Eq1,stated,ACTIVE Li-transfer interface; larger SE -> low
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,S_CAM_ISE,0.24,m2/g,marching_cubes_Eq1,stated,smaller SE -> active CAM-ISE interface 2.2x higher = key benefit
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,S_ISE_pore,0.05,m2/g,marching_cubes_Eq1,stated,smaller ISE -> more ISE-ISE point contacts
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,S_ISE_pore,0.09,m2/g,marching_cubes_Eq1,stated,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,CAM_coverage_by_ISE,20,pct,geometric_Scam0.5,stated,assumed S_CAM 0.5 m2/g; rest: pores 31pct + other CAM 19pct (BM03/01)
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,CAM_coverage_by_ISE,50,pct,geometric_Scam0.5,stated,smaller SE -> ~50pct coverage
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,CAM_coverage_by_ISE,50,pct,geometric_Scam0.5,stated,almost 50pct
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,CAM_utilization_1st,62,pct,OCP_Ruess_method,stated_Fig8,electrochemically active CAM fraction; larger SE -> CAM clusters disconnect from ion network
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,CAM_utilization_1st,77,pct,OCP_Ruess_method,stated_Fig8,smaller SE -> higher utilization
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,CAM_utilization_1st,77,pct,OCP_Ruess_method,stated_Fig8,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,kappa_ion_exp,15,dimensionless,EIS_tau2,stated_Fig6b,ionic tortuosity factor (experiment); >4x electronic; large SE clusters block ion x-axis
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,kappa_ion_sim_flux,12,dimensionless,flux_GeoDict,digitized_Fig6b,simulated < experiment (no contact-R/nanopore/constriction)
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,kappa_ion_exp,6,dimensionless,EIS_tau2,stated_Fig6b,smaller SE -> kappa_ion drops to ~6 (4 for sim)
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,kappa_el_exp,3,dimensionless,EIS_tau2,stated_Fig6b,electronic tortuosity ~3 (LIB-like); ISE size effect small for electronic
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,discharge_capacity_0.1C,92,mAh/g,galvanostatic_2.62-4.32V,stated_Fig7a,CAM loading 10.7 mg/cm2; large SE = poor rate
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,discharge_capacity_0.1C,156,mAh/g,galvanostatic_2.62-4.32V,stated_Fig7a,
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,discharge_capacity_0.1C,152,mAh/g,galvanostatic_2.62-4.32V,stated_Fig7a,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,rate_retention_1C,25,pct,galvanostatic,stated,1C vs 0.1C retention; tortuous paths -> overpotential
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,rate_retention_1C,32,pct,galvanostatic,stated,
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,rate_retention_1C,28,pct,galvanostatic,stated,
+BM10,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,10,7.41,380,380,30,coulombic_eff_1st_0.1C,58,pct,galvanostatic,stated_FigS8,interfacial degradation + chemo-mech loss 1st cycle; BM10 lowest
+BM03,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,3,4.93,380,380,30,coulombic_eff_1st_0.1C,73,pct,galvanostatic,stated_FigS8,
+BM01,Li3PS4-0.5LiI_glass,NCM_Ni0.83_singlecrystal,1,5.93,380,380,30,coulombic_eff_1st_0.1C,68,pct,galvanostatic,stated_FigS8,

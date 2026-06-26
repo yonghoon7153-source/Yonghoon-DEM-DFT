@@ -1,0 +1,68 @@
+# Huang et al. 2025, J. Energy Storage 114, 115692 — DEM-generated microstructure + 3D Lattice Boltzmann heat conduction.
+# AM = LCO (LiCoO2), SE = LLZO (Li7La3Zr2O12).  ETC = effective thermal conductivity k_eff [W m^-1 K^-1].
+# Material k (oxide!) NOT transferable to our LPSCl/NCM sulfide system; trends only. source: stated=Table value; digitized=read from Fig.
+# tortuosity from TauFactor (per-phase, per-direction). "inf" = phase not percolating along conduction dir (tortuosity unmeasurable).
+section,case,group,LCO_size_um,LLZO_size_um,vol_ratio_LCO_LLZO,CAM_volpct_LCO_over_solid,porosity_pct,tau_pore,tau_LCO,tau_LLZO,k_eff_LBM_Wm-1K-1,k_eff_EMT_Wm-1K-1,interconnected_solid_pct,interconnected_pore_pct,source,note
+# ---- material reference (Table 1) ----
+material,LCO,,5,,,,,,,5.40,,,,stated,k_LCO=5.40 rho=5.06 g/cm3 Cp=715.42 J/kgK alpha=1.49e-6 m2/s,
+material,LLZO,,,5,,,,,,0.46,,,,stated,k_LLZO=0.46(0.47+-0.01) rho=5.11 Cp=927.19 alpha=1.00e-7 m2/s; pore k~0 near-vacuum,
+# ---- Sec 4.1 vol-ratio x porosity sweep (Table 5 + Table 6 + Fig 10); LCO 5um LLZO 5um ----
+4.1,I-a1,I-a(1:1),5,5,1:1,50,4.4,inf,2.552,2.661,1.816,1.904,99.965,0.213,stated,pore not percolating at low porosity
+4.1,I-a2,I-a(1:1),5,5,1:1,50,8.1,inf,2.418,2.839,1.452,1.753,99.987,4.455,stated,
+4.1,I-a3,I-a(1:1),5,5,1:1,50,15.1,50.42,2.824,3.075,0.945,1.475,99.883,11.054,stated,
+4.1,I-a4,I-a(1:1),5,5,1:1,50,21.1,22.30,3.428,3.718,0.775,1.243,99.871,19.897,stated,
+4.1,I-a5,I-a(1:1),5,5,1:1,50,31.2,5.278,4.905,5.436,0.542,0.874,99.819,74.265,stated,EMT over-predicts here (high-poro LCO-dominated)
+4.1,I-b1,I-b(4:1),5,5,4:1,80,4.4,inf,1.354,inf,4.023,3.716,99.965,0.213,stated,LLZO not percolating (4:1 LCO-rich) -> highest ETC
+4.1,I-b2,I-b(4:1),5,5,4:1,80,8.1,inf,1.415,inf,3.279,3.472,99.987,4.455,stated,
+4.1,I-b3,I-b(4:1),5,5,4:1,80,15.1,50.42,1.596,inf,2.005,3.014,99.883,11.054,stated,
+4.1,I-b4,I-b(4:1),5,5,4:1,80,21.1,22.30,1.801,inf,1.477,2.620,99.871,19.897,stated,
+4.1,I-b5,I-b(4:1),5,5,4:1,80,31.2,5.278,2.319,inf,1.078,1.966,99.819,74.265,stated,
+4.1,I-c1,I-c(1:4),5,5,1:4,20,4.4,inf,inf,1.354,1.041,0.751,99.965,0.213,stated,LCO not percolating (1:4 LLZO-rich) -> lowest ETC; EMT under-predicts (-28%)
+4.1,I-c2,I-c(1:4),5,5,1:4,20,8.1,inf,inf,1.415,0.792,0.695,99.987,4.455,stated,
+4.1,I-c3,I-c(1:4),5,5,1:4,20,15.1,50.42,inf,1.596,0.722,0.593,99.883,11.054,stated,
+4.1,I-c4,I-c(1:4),5,5,1:4,20,21.1,22.30,inf,1.801,0.557,0.509,99.871,19.897,stated,
+4.1,I-c5,I-c(1:4),5,5,1:4,20,31.2,5.278,inf,2.319,0.413,0.377,99.819,74.265,stated,
+# ---- Sec 4.2 tortuosity effect (Case II, porosity fixed 21.1%, 1:1, LCO 5um LLZO 10um); per-direction X/Y/Z ----
+# Case II-a similar-tortuosity group (Table 7)
+4.2,II-a1_X,II-a,5,10,1:1,50,21.1,9.428,3.128,5.812,0.959,,,,stated,
+4.2,II-a1_Y,II-a,5,10,1:1,50,21.1,9.339,3.069,5.437,0.961,,,,stated,
+4.2,II-a1_Z,II-a,5,10,1:1,50,21.1,9.054,3.069,5.022,0.967,,,,stated,
+4.2,II-a2_X,II-a,5,10,1:1,50,21.1,9.215,3.096,6.194,0.895,,,,stated,
+4.2,II-a2_Y,II-a,5,10,1:1,50,21.1,9.349,3.081,6.677,0.916,,,,stated,
+4.2,II-a2_Z,II-a,5,10,1:1,50,21.1,9.399,2.912,5.170,0.925,,,,stated,similar-tau range k_eff 0.895-0.967 (narrow)
+# Case II-b different-tortuosity group (Table 8) -> wider k_eff 0.758-1.306
+4.2,II-b1_X,II-b,5,10,1:1,50,21.1,8.693,4.088,5.810,0.758,,,,stated,
+4.2,II-b1_Y,II-b,5,10,1:1,50,21.1,9.915,3.823,7.168,0.923,,,,stated,
+4.2,II-b1_Z,II-b,5,10,1:1,50,21.1,8.058,3.894,4.564,1.091,,,,stated,
+4.2,II-b2_X,II-b,5,10,1:1,50,21.1,9.733,3.726,5.490,0.843,,,,stated,
+4.2,II-b2_Y,II-b,5,10,1:1,50,21.1,14.70,3.539,6.289,0.986,,,,stated,
+4.2,II-b2_Z,II-b,5,10,1:1,50,21.1,15.23,3.653,5.192,1.306,,,,stated,highest tau_pore -> highest ETC (pore detour routes heat through solid)
+4.2,II-b3_X,II-b,5,10,1:1,50,21.1,10.59,3.126,6.048,0.795,,,,stated,
+4.2,II-b3_Y,II-b,5,10,1:1,50,21.1,14.94,3.141,3.126,0.908,,,,stated,
+4.2,II-b3_Z,II-b,5,10,1:1,50,21.1,11.30,3.085,5.391,1.036,,,,stated,
+# ---- Sec 4.3 particle-size effect (Case III, porosity fixed 7%, vary CAM vol% 30-70); Table 9 + Fig 14 ----
+4.3,III-a1,III-a(3:3um),3,3,3:7,30,7,,13.22,1.767,1.280,,,,stated,equal small 3um -> best ETC across all vol%
+4.3,III-a2,III-a(3:3um),3,3,4:6,40,7,,4.900,2.232,1.689,,,,stated,
+4.3,III-a3,III-a(3:3um),3,3,5:5,50,7,,3.046,3.103,2.113,,,,stated,
+4.3,III-a4,III-a(3:3um),3,3,6:4,60,7,,2.179,5.059,2.978,,,,stated,
+4.3,III-a5,III-a(3:3um),3,3,7:3,70,7,,1.740,14.80,4.005,,,,stated,highest CAM% -> highest ETC (LCO tau down LLZO tau up)
+4.3,III-b1,III-b(6:3um),6,3,3:7,30,7,,31.88,1.568,1.148,,,,stated,larger LCO 6um
+4.3,III-b2,III-b(6:3um),6,3,4:6,40,7,,5.691,1.847,1.419,,,,stated,
+4.3,III-b3,III-b(6:3um),6,3,5:5,50,7,,3.103,2.334,1.770,,,,stated,
+4.3,III-b4,III-b(6:3um),6,3,6:4,60,7,,2.167,3.240,2.312,,,,stated,
+4.3,III-b5,III-b(6:3um),6,3,7:3,70,7,,1.705,6.142,2.924,,,,stated,
+4.3,III-c1,III-c(3:6um),3,6,3:7,30,7,,6.177,1.714,1.203,,,,stated,larger LLZO 6um
+4.3,III-c2,III-c(3:6um),3,6,4:6,40,7,,3.270,2.179,1.421,,,,stated,
+4.3,III-c3,III-c(3:6um),3,6,5:5,50,7,,2.339,3.125,1.729,,,,stated,
+4.3,III-c4,III-c(3:6um),3,6,6:4,60,7,,1.850,5.737,2.139,,,,stated,
+4.3,III-c5,III-c(3:6um),3,6,7:3,70,7,,1.569,32.02,2.753,,,,stated,
+4.3,III-d1,III-d(6:6um),6,6,3:7,30,7,,15.24,1.623,1.068,,,,stated,equal large 6um -> lowest ETC
+4.3,III-d2,III-d(6:6um),6,6,4:6,40,7,,4.712,1.983,1.174,,,,stated,
+4.3,III-d3,III-d(6:6um),6,6,5:5,50,7,,2.707,2.572,1.491,,,,stated,
+4.3,III-d4,III-d(6:6um),6,6,6:4,60,7,,2.069,4.211,1.855,,,,stated,
+4.3,III-d5,III-d(6:6um),6,6,7:3,70,7,,1.614,11.82,2.505,,,,stated,
+4.3,III-e1,III-e(5:5um),5,5,3:7,30,7,,11.91,1.661,1.095,,,,stated,intermediate equal 5um
+4.3,III-e2,III-e(5:5um),5,5,4:6,40,7,,4.345,2.076,1.236,,,,stated,
+4.3,III-e3,III-e(5:5um),5,5,5:5,50,7,,2.761,2.893,1.561,,,,stated,
+4.3,III-e4,III-e(5:5um),5,5,6:4,60,7,,1.994,4.577,1.942,,,,stated,
+4.3,III-e5,III-e(5:5um),5,5,7:3,70,7,,1.619,12.99,2.608,,,,stated,

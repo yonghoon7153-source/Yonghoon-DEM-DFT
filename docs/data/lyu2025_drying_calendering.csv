@@ -1,0 +1,56 @@
+quantity,stage,value,units,dimless_time,porosity_pct,condition,precision,note
+# --- POROSITY: drying + calendering (one continuous DEM, NCM811 LIB, PFC3D 5.00) ---
+porosity_calendering,calendering,57,pct,0.0,57,end_of_drying_start_of_calendering,stated,"Fig 7b initial; = final state of drying (rough top, thickness ~80 um)"
+porosity_calendering,calendering,22,pct,1.0,22,end_of_calendering,stated,"Fig 7b final ~22pct; thickness 40 um; Hg-intrusion exp 57->~20pct [ref32] consistent"
+porosity_calendering,calendering,57,pct,0.2,57,plateau_rough_top,digitized_Fig7b,"plateau ~0-0.25: rough top means plate touches only high points, little RVE-density change"
+porosity_calendering,calendering,40,pct,0.5,40,interim_linear_drop,digitized_Fig7b,"~interim; smooth top reached -> porosity drops nearly linearly"
+porosity_validation_exp,calendering,20,pct,1.0,20,Hg_intrusion_exp,stated,"experimental mercury-intrusion porosity 57->~20pct [ref32]; matches sim"
+thickness_calendering,calendering,80,um,0.0,57,initial_h_A,stated_Fig7a,"h~80 um = noncalendered (=dried) thickness"
+thickness_calendering,calendering,60,um,0.5,40,interim_h,stated_Fig7a,"h=60 um interim"
+thickness_calendering,calendering,40,um,1.0,22,final_h,stated_Fig7a,"h=40 um final; ~40pct thickness reduction = ~75.4pct density increase [ref32]"
+# --- COORDINATION NUMBER ---
+coordination_drying,drying,0.0,dimensionless,0.0,,initial_dispersed,digitized_Fig6,"Z~0 at slurry start; 3-stage I(HDR slow)/II(LDR rapid)/III(HDR slow-stable)"
+coordination_drying,drying,3.5,dimensionless,1.0,57,end_of_drying,stated,"Z=3.6 quoted as calendering-start value (text); Fig6 plateau ~3.5"
+coordination_calendering_start,calendering,3.6,dimensionless,0.0,57,calendering_initial,stated,"Z at start of calendering = final value of drying"
+coordination_calendering_dip,calendering,2.3,dimensionless,0.25,,early_calendering_min,digitized_Fig7c,"Z dips ~3.6->~2.3 early (drying-structure stability destroyed, contacts separate)"
+coordination_calendering_max,calendering,8.3,dimensionless,1.0,22,end_of_calendering,stated,"Z rises to MAX 8.3 (tighter network -> shorter e-paths, more contacts)"
+# --- CONTACT NUMBER with CURRENT COLLECTOR (calendering) ---
+contacts_collector,calendering,897,count,0.0,57,before_calendering,stated_Fig8,"AM+CBD-collector contacts at end of drying"
+contacts_collector,calendering,1087,count,0.5,40,interim,stated_Fig8,
+contacts_collector,calendering,2038,count,1.0,22,after_calendering,stated_Fig8,"897->2038 = ~230pct increase; better interfacial adhesion + lower interfacial resistance [ref38]"
+# --- AVERAGE STRESS (calendering, compressive negative; peak in thickness z) ---
+stress_xx,calendering,-130,MPa,1.0,22,sigma_xx_final,digitized_Fig9a,"in-plane; sigma_xx~sigma_yy (periodic x-y BC); ~ -130 MPa at end"
+stress_yy,calendering,-130,MPa,1.0,22,sigma_yy_final,digitized_Fig9a,"in-plane equals sigma_xx"
+stress_zz,calendering,-165,MPa,1.0,22,sigma_zz_final_THICKNESS,digitized_Fig9a,"PEAK stress in thickness z (~-165 MPa) due to preferential z-thinning; contact force mainly along thickness"
+stress_particle_fracture_exp,calendering,200,MPa,,,fracture_onset_exp,stated,"experiment [ref57]: particle fracture when electrode stress reaches 200 MPa -> keep z-stress < particle fracture stress"
+force_pressure_plate,calendering,-4.9,N,1.0,22,force_on_plate_final,digitized_Fig9b,"escalates exponentially from 0; ~ -4.9 N at end"
+force_current_collector,calendering,-5.7,N,1.0,22,force_on_collector_final,digitized_Fig9b,"slightly larger than plate (weak local top stability); both ~exponential growth with calendering"
+# --- ELECTRONIC CONDUCTIVITY (QUALITATIVE in this paper - via contact-network completeness, NOT a Bruggeman/RNM solver) ---
+sigma_e_trend,calendering,,qualitative,,,calendering_improves_sigma_e,stated,"tighter network -> shorter e-paths + more contacts -> LOWER electronic resistance [ref38]; NO numeric sigma_e value given (network completeness argument only)"
+sigma_e_caveat,calendering,,qualitative,,,moderate_calendering_only,stated,"only MODERATE calendering reduces e-resistance; EXCESSIVE calendering -> ionic resistance UP [ref48] -> trade-off"
+# --- DEM MATERIAL / CONTACT PARAMETERS (Table 1) ---
+particle_density_AM,material,4.74,g_per_cm3,,,NCM811_AM,stated_Table1,"AM = LiNi0.8Co0.1Mn0.1O2 (NCM811)"
+particle_density_CBD,material,2.2,g_per_cm3,,,CBD,stated_Table1,"carbon-binder domain particle"
+E_AM,material,142,GPa,,,Young_AM,stated_Table1,"NCM811 single-particle modulus"
+E_CBD,material,0.65,GPa,,,Young_CBD,stated_Table1,"~1/220 of AM -> soft deformable binder phase"
+poisson_AM,material,0.25,dimensionless,,,nu_AM,stated_Table1,
+poisson_CBD,material,0.2,dimensionless,,,nu_CBD,stated_Table1,
+sliding_friction_AM,material,0.12,dimensionless,,,mu_slide_AM,stated_Table1,
+sliding_friction_CBD,material,0.1,dimensionless,,,mu_slide_CBD,stated_Table1,
+rolling_friction_AM,material,0.012,dimensionless,,,mu_roll_AM,stated_Table1,
+rolling_friction_CBD,material,0.01,dimensionless,,,mu_roll_CBD,stated_Table1,
+# --- RVE / PSD / BOND geometry ---
+RVE_size_xy,geometry,200,um,,,slurry_RVE_x_and_y,stated,"RVE 200x200x200 um initial (slurry); periodic x-y; bottom=current collector; top free (drying) / pressure plate (calendering)"
+RVE_thickness_dried,geometry,80,um,,,dried_electrode_z,stated,"z thickness after drying ~80 um (calendering initial)"
+AM_diam_mean,geometry,13,um,,,Gaussian_mean,stated,"AM diameter Gaussian, mean 13 um, std 0.61 [ref51]"
+AM_diam_std,geometry,0.61,dimensionless,,,Gaussian_std,stated,"std of Gaussian AM size distribution"
+CBD_diam,geometry,2.2,um,,,CBD_particle_diam,stated,"CBD particles 2.2 um [ref28]; both AM and CBD assumed spherical"
+slurry_solid_mass_ratio,composition,65,pct,,,AM_CBD_solid_fraction,stated,"AM:CBD weight ratio 94:6; solid (AM+CBD) = 65pct of slurry mass [ref26 case]"
+AM_CBD_weight_ratio,composition,94,to_6,,,AM_to_CBD,stated,"94:6 AM:CBD"
+bond_separation_lambda,bond,1.67,dimensionless,,,bond_gap_criterion,stated,"bond forms if ||Pi-Pj|| <= lambda*(Ri+Rj), lambda=1.67 [ref51]"
+# --- BONDS & FLUID-SUBSTITUTION (drying) physics ---
+bond_model_AM,bond,,linear_contact_bond,,,AM_AM_and_AM_collector,stated,"linear CONTACT bond among AM particles and AM-collector (no bending moment transfer)"
+bond_model_CBD,bond,,linear_parallel_bond,,,CBD_CBD_CBD_AM_CBD_collector,stated,"linear PARALLEL bond among CBD, CBD-AM, CBD-collector (transfers bending+twisting moment); breakdown stress sigma_c/tau_c"
+fluid_buoyancy,drying,,F_b=4/3 pi R^3 rho_liquid g,,,solvent_buoyant_force,stated_eq27,"fluid substitution model (NOT explicit CFD): buoyant + gravity + viscous damping replace solvent"
+fluid_viscous_damping,drying,,F_r = alpha * v,,,velocity_dependent,stated_eq29,"viscous damping not constant (depends on particle velocity v); alpha = damping coeff"
+calendering_plate_speed,calendering,0.01,m_per_s,,,constant_z_speed,stated,"pressure plate moves down along z at constant 0.01 m/s [ref51]"

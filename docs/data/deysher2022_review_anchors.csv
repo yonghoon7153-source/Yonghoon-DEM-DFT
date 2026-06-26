@@ -1,0 +1,43 @@
+quantity,value,unit,condition,material,stated_or_digitized,original_source_ref,note
+# Deysher, Ridley, ... Meng, "Transport and mechanical aspects of all-solid-state lithium batteries", Mater. Today Phys. 24 (2022) 100679, DOI 10.1016/j.mtphys.2022.100679. REVIEW (NMC | Li6PS5Cl | Si/Li). NO self-measurement/simulation -- ALL numbers are CITED from other papers. The 'original_source_ref' column gives the in-paper reference NUMBER that the review attributes the value to; cite THAT source, not this review, as the primary origin. digitized = read from a figure curve (TREND only).
+# === TRANSPORT / PERFORMANCE-LIMIT anchors (Fig 1 survey + text) ===
+areal_capacity_typical_limit,< 2,mAh/cm2,room temperature; literature survey,NMC/various + sulfide SE,stated,"refs[1,6,9-28] (Fig1)",most reported ASSB cells fall below this; our model TARGET coordinate
+areal_capacity_best_case,6.8,mAh/cm2,60 C; Ag-C pouch full cell; cycled at 3.2 mA/cm2,LiNi0.9Mn0.05Co0.05O2 (NMC) + LPSCl,stated,Lee et al. [24],best-case high-areal example; needs elevated T + micron SSE + isostatic press
+current_density_best_full_cell,5,mA/cm2,80% retention over 500 cyc; areal 2 mAh/cm2; util <50%,NCM811 + LPSCl + uSi full cell,stated,Tan et al. [25],OUR material system best-case; cathode utilization still <50%
+current_density_RT_Limetal_limit,< 2,mA/cm2,room temperature full cell,Li metal anode,stated,Fig1 / [28,30,32-62],sym-cell >> full-cell gap (volume change hypothesis)
+ARPA_E_IONICS_goal,3,mA/cm2,2016 program goal (reference line),-,stated,Fig1 (ARPA-E),benchmark dashed line in Fig1
+SE_bulk_sigma_ionic_high,12,mS/cm,room temperature (representative high),Li10GeP2S12 (LGPS),stated,Kamaya [1],bulk SE sigma already high -> focus shifts to composite; NOTE LGPS != LPSCl
+porosity_for_full_utilization,< 20,%,microstructure modeling; high CAM wt%,composite cathode,stated,Bielefeld [66],"<20% porosity needed for full CAM utilization -- our porosity ~10-15.6% MEETS this (frame[4])"
+porosity_utilization_drop,> 55,%,microstructure modeling,composite cathode,stated,Bielefeld [66],above ~55% porosity utilization decreases (2nd cited threshold)
+SE_coating_thickness,several hundred,nm,solution-precipitation onto CAM particles,SE coating,stated,[3],decreases inactive SE; improves contact + shortens t in Eq2
+SE_infiltration_SE_reduction_cathode,~ 10,vol%,SE dissolution+infiltration; cathode side,LPSCl,stated,[78],"SE amount greatly reduced; LiCoO2 141 mAh/g achieved"
+SE_infiltration_SE_reduction_anode,~ 20,vol%,SE dissolution+infiltration; anode side,LPSCl,stated,[78],"graphite 364 mAh/g achieved (near theoretical)"
+SE_separator_pellet_thickness_current,~ 0.5,mm,conventional pellet-cell architecture (to be reduced),SE separator,stated,"[25,67,68,82-85]",dead-weight target; thin cast SE < 50 um is the goal
+SE_cast_film_thin,< 50,um,cast SE separator on anode/cathode,LPSCl,stated,"[23,24,79,80]",thin SE film reduces dead weight
+LPSCl_oxidation_limit,2.1,V vs Li/Li+,charged to 4.25 V -> oxidation occurs,LPSCl,stated,[69],used to demonstrate carbon-surface-area effect on decomposition
+LGPS_stability_window_apparent_vs_real,1.71 (red) / 2.15 (ox),V vs Li/Li+,real window (vs apparent 0-5 V),LGPS,stated,[110],apparent wide window was a semi-blocking-electrode artifact (DFT-confirmed)
+CEI_bandgap_GeS2,2.3,eV,1st-cycle LGPS decomposition product,GeS2,stated,"[89,90] (Materials Project)",CEI products are poor e- conductors -> passivate after 1st cycle
+CEI_bandgap_P2S5,2.6,eV,1st-cycle LGPS decomposition product,P2S5,stated,"[89,90]",
+CEI_bandgap_S,2.7,eV,1st-cycle LGPS decomposition product,S,stated,"[89,90]",
+DC_polarization_bias,~ 50,mV,echem separation of e- contribution,SE / MIEC,stated,Fig6e / [120],low-to-moderate bias for DC polarization to isolate electrons
+# === MECHANICAL / VOLUME-CHANGE anchors (Sec 3) ===
+NMC_volume_change,1-3,%,de/lithiation,NMC layered oxide,stated,[86],interparticle void formation source; our MPM/DEM CYCLE volume-change (we only do compaction)
+void_fill_recovery_pressure,370,MPa,re-press after first tens of cycles -> recover lost capacity,Li3PS4 + NMC,stated,Koerver [121],"= macroscopic evidence of our MPM void-fill + Doux irreversible compaction; NOT a practical strategy (disassembly)"
+critical_stack_pressure_exists,yes (threshold),-,Li/LLZO/Li symmetric; below it -> polarization (void formation),Li / LLZO,stated,Wang et al. [105],first defined 'critical stack pressure'; Li transport via creep needs it
+critical_stripping_current_3MPa,0.2,mA/cm2,3 MPa stack,Li / Li6PS5Cl / Li,stated,Kasemchainan [106],stripping is the bottleneck of void formation
+critical_stripping_current_7MPa,1.0,mA/cm2,7 MPa stack,Li / Li6PS5Cl / Li,stated,Kasemchainan [106],
+critical_plating_current,2.0,mA/cm2,both low and high pressure,Li / Li6PS5Cl / Li,stated,Kasemchainan [106],plating less pressure-sensitive than stripping
+Li_creep_yield_strength,~ 0.8,MPa,1-7 MPa stack -> plastic deform + creep,Li metal,stated,[107] Masias,creep can cause internal shorting via surface cracks
+Li_operating_stack_pressure,1-7,MPa,Li metal anode cell operation,Li metal,stated,[107],"operating range; >> than this -> shorting risk [98]"
+Li_metal_volume_expansion_rate,~ 5,um per mAh/cm2,plated Li (anode-less),Li metal,stated,Fig4b / [25],"Li reservoir higher -> expansion larger; Li-PHASE physics, do NOT transfer to our SE model"
+Na_vs_Li_expansion,~ 60,% more,Na-ASSB vs Li (8 um vs 5 um per mAh/cm2),Na metal,stated,conclusion,context only
+multilayer_expansion_10layer,0.18,mm,NMC anode-less, 4 mAh/cm2,multilayer stack,digitized,Fig5,expansion linear with layer count (Fig5 curve)
+multilayer_expansion_20layer,0.35,mm,NMC anode-less, 4 mAh/cm2,multilayer stack,digitized,Fig5,
+multilayer_expansion_30layer,0.53,mm,NMC anode-less, 4 mAh/cm2,multilayer stack,digitized,Fig5,
+Li_alloy_volume_expansion,> 300,%,lithiation,(Li)Si / (Li)Sb,stated,[25],alloys withstand higher pressure (better mech props than Li metal)
+Li_In_alloy_stack_pressure,5-150,MPa,reported operating,Li-In alloy anode,stated,[104],alloy-type anode pressures
+Li_Si_alloy_stack_pressure,50,MPa,reported operating,Li-Si alloy anode,stated,[25],Si retains increased stack pressure after delithiation (helps retention)
+fuel_cell_car_pressure_context,70,MPa,passenger-car H2 tank (pressure-vessel context),-,stated,[109] DOE,pack-level pressurization energy-density tradeoff context
+Li_melting_point,180.6,C,-,Li metal,stated,-,creep faster near Tm
+LiSi_alloy_melting_point,> 592,C,-,(Li)Si,stated,[102],higher Tm -> creeps at far lower propensity than Li
+LiSb_alloy_melting_point,> 466,C,-,(Li)Sb,stated,[103],

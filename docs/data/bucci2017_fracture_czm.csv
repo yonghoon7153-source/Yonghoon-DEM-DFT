@@ -1,0 +1,81 @@
+# Bucci, Swamy, Chiang, Carter, J. Mater. Chem. A 2017, 5, 19422-19430 (DOI 10.1039/c7ta03199h)
+# MIT (Yet-Ming Chiang + W. Craig Carter). FIRST quantitative mechanical-reliability analysis of ASSBs.
+# Coupled electro-chemo-mechanical FEM (deal.II) + cohesive-zone model (CZM) for SE fracture during CYCLING (Li-intercalation).
+# Model = composite NEGATIVE electrode (AM intercalation particles in SE+carbon mixed conductor). 2D plane strain, 11x11 um, 36 square Voronoi particles, <d>=1 um, AM ~50%.
+# Loading = galvanostatic Li flux (i=1 mA/cm2), NOT mechanical compaction pressure. AM expands (Vegard), SE (beta_SE=0) is stressed by constraint -> SE micro-cracks.
+# source: stated=text/Table1/Table2 (verbatim, exact). digitized=read from figure (TREND only, approximate).
+# *** NOT our LPSCl-specific; SE material UNSPECIFIED (E_SE=15 GPa = compliant-sulfide representative). Table1 = literature SURVEY range. DO NOT transfer absolute sigma/porosity. ***
+# *** LAYER WARNING: E_SE=15 GPa here = REAL material modulus (cycling-fracture input). NOT our E_eff=1.35 GPa (compaction-bed effective proxy). Our REAL ~24 GPa is the comparable value. ***
+quantity,value,unit,system_or_material,condition,source,figure_table,notes
+# === KEY THRESHOLDS (the paper's heart) ===
+fracture_prevent_expansion_threshold,7.5,percent_volumetric,AM_intercalation_particle,fracture suppressed below this,stated,abstract_text_conclusions,typical Li-intercalation compounds < 7.5%; AND needs G_c>=4
+fracture_prevent_Gc_threshold,4.0,J_m-2,SE_bulk,fracture suppressed above this,stated,abstract_text_conclusions,both conditions simultaneous (expansion<7.5% AND G_c>=4)
+fracture_onset_expansion,3.0,percent_volumetric,AM_intercalation_particle,baseline crack initiation,stated,Results_sec3,baseline sim cracks initiate at dV=3% (many intercalation compounds)
+Gc_baseline,1.0,J_m-2,SE_sulfide_representative,baseline FEM,stated,Table2_Results,representative sulfide SE; sweep 0.25-4.0
+Gc_sweep_min,0.25,J_m-2,SE,parameter sweep,stated,Fig3_Fig5,lower G_c -> faster crack propagation
+Gc_sweep_max,4.0,J_m-2,SE,parameter sweep,stated,Fig3,G_c>=4 can suppress even 30% expansion
+Gc_sulfide_McGrogan,2.8,J_m-2,Li2S-P2S5_glassy,K_IC=0.23 MPa.m^0.5 / E=18.5 GPa converted,stated,text_ref16,G_c=K_IC^2/E; uncertainty +-1.8; only exp toughness data for sulfide SE
+Gc_sulfide_McGrogan_uncertainty,1.8,J_m-2,Li2S-P2S5_glassy,+- on 2.8,stated,text_ref16,
+# === DIMENSIONLESS DESIGN RULE ===
+design_rule_G_script,1000,dimensionless,SE_elastic_brittle,integrity preserved when below,stated,Fig5_Conclusions,G_script = 0.5*k_SE*(3*beta_AM*A_AM)^2/(H*G_c); k_SE=bulk modulus H=thickness A_AM=AM area
+# === TABLE 1: SE Young's modulus + fracture toughness SURVEY (literature anchors) ===
+E_SE_LiPON,77,GPa,Li3PO4Nx_amorphous_sputtered,nanoindentation,stated,Table1_ref12,sigma_ion 2e-6 S/cm
+E_SE_perovskite_solidstate,186,GPa,Li0.33La0.57TiO3_solid-state,nanoindentation +-4,stated,Table1_ref13,K_IC 0.890-1.34 MPa.m^0.5; bulk sigma ~1e-3
+E_SE_perovskite_solgel,200,GPa,Li0.33La0.57TiO3_sol-gel,nanoindentation +-3,stated,Table1_ref13,K_IC 0.890-1.31 MPa.m^0.5; total sigma ~1e-5
+E_SE_garnet_LLZO_hotpressed,150,GPa,Li6.24La3Zr2Al0.24O11.98_LLZO,resonant ultrasound porosity 0.03,stated,Table1_ref14,132.5 GPa at porosity 0.06; sigma ~0.2e-3
+E_SE_garnet_cubic_LLZO,150,GPa,cubic_Li7La3Zr2O12,resonant ultrasound rel.density ~99%,stated,Table1_ref14,sigma 3e-4
+E_SE_sulfide_hotpressed_min,18,GPa,Li2S-P2S5_hot-pressed,ultrasound velocity + compression sinter 360MPa 20-190C,stated,Table1_ref15,COMPLIANT; matches Sakuda 18-25 / our real-bulk 24
+E_SE_sulfide_hotpressed_max,25,GPa,Li2S-P2S5_hot-pressed,ultrasound velocity + compression,stated,Table1_ref15,COMPLIANT; sigma 3e-4 (dense)
+E_SE_sulfide_coldpressed_min,14,GPa,Li2S-P2S5_cold-pressed,sinter 180-360MPa RT,stated,Table1_ref15,LOWEST; baseline E_SE=15 sits here = compliant label
+E_SE_sulfide_coldpressed_max,17,GPa,Li2S-P2S5_cold-pressed,sinter 180-360MPa RT,stated,Table1_ref15,
+E_SE_argyrodite_Li6PS5,18.5,GPa,Li6PS5_argyrodite,nanoindentation +-0.9,stated,Table1_ref16,K_IC 0.23+-0.04 MPa.m^0.5; CLOSEST to our LPSCl Li6PS5Cl
+K_IC_argyrodite_Li6PS5,0.23,MPa_m0.5,Li6PS5_argyrodite,nanoindentation +-0.04,stated,Table1_ref16,McGrogan; -> G_c~2.8 J/m2
+E_SE_LGPS,37.19,GPa,Li10GeP2S12_LGPS,atomistic simulation,stated,Table1_ref17,sigma 1.2e-2 S/cm
+# === TABLE 2: FEM input parameters (Section 2) ===
+temperature,298,K,both,FEM,stated,Table2,
+mobility_Li_AM,1e-15,m2_s-1,AM_electrode,M_el,stated,Table2,SE 100x faster Li transport than AM
+mobility_Li_SE,1e-13,m2_s-1,SE,M_SE,stated,Table2,
+cmax_relative_AM,1,mol_per_mol,AM,max relative moles Li,stated,Table2,
+cmax_relative_SE,0.25,mol_per_mol,SE,max relative moles Li,stated,Table2,
+current_density,10,A_m-2,separator_interface,galvanostatic = 1 mA/cm2,stated,Table2,commercial Li-ion typical; loading is Li-flux NOT compaction pressure
+activity_coefficient,1,dimensionless,Li,gamma_Li,stated,Table2,
+poisson_ratio,0.3,dimensionless,both,nu for both materials,stated,Table2,
+beta_AM,0.1,dimensionless,AM_electrode,relative lattice constant Li (Vegard),stated,Table2,volumetric expansion = 3*beta_AM*dc
+beta_SE,0,dimensionless,SE,relative lattice constant Li,stated,Table2,SE Vegard strain ZERO -> SE stress purely from constraining AM
+E_AM,100,GPa,AM_electrode,Young modulus,stated,Table2,E_AM/E_SE = 100/15 ~ 6.7x; our NMC811 assume 140 / Kang NCA 175
+E_SE_baseline,15,GPa,SE,Young modulus baseline,stated,Table2,COMPLIANT sulfide representative; ** REAL modulus NOT our E_eff 1.35 **
+delta0_damage_onset,5,nm,SE_cohesive,opening displacement at damage onset,stated,Table2,CZM length scale
+delta_cr_separation,100,nm,SE_cohesive,critical opening complete separation,stated,Table2,= 20*delta0
+# === E_SE sweep (Fig 4) - crack vs SE stiffness (the counter-intuitive result) ===
+E_SE_sweep_ratio,100/15,ratio_EAM_ESE,SE,Fig4 most cracking,stated,Fig4,compliant SE (E_SE=15) -> MOST cracks (counter-intuitive)
+E_SE_sweep_ratio,100/25,ratio_EAM_ESE,SE,Fig4,stated,Fig4,
+E_SE_sweep_ratio,100/50,ratio_EAM_ESE,SE,Fig4,stated,Fig4,
+E_SE_sweep_ratio,100/150,ratio_EAM_ESE,SE,Fig4 least cracking,stated,Fig4,stiffer SE (E_SE=150 garnet-like) -> LEAST cracks
+# === Stress values (Fig 2) ===
+AM_particle_pressure,1.0,GPa,AM_electrode,>1 GPa at 50% capacity stored,stated,Fig2c_text,compressive; AM stress is GPa
+SE_compressive_stress_max,200,MPa,SE,0-200 MPa linear-elastic range,stated,Fig2c_text,similar to Sakuda; SE stress ~hundreds MPa (NOT GPa like AM)
+# === SOC snapshots (Fig 2, digitized state-of-charge labels) ===
+SOC_snapshot_a,0.115641,dimensionless,cell,t=150 s,stated,Fig2a,
+SOC_snapshot_b,0.168185,dimensionless,cell,t=400 s,stated,Fig2b,crack growth visible
+SOC_snapshot_c,0.273068,dimensionless,cell,t=900 s,stated,Fig2c,corner-to-corner cracks cutting Li diffusion paths
+# === Expansion sweep (Fig 5) ===
+expansion_sweep_low,7.5,percent_volumetric,AM,Fig5 with G_c combos,stated,Fig5,7.5% + G_c>=4 -> suppressed
+expansion_sweep_mid,15,percent_volumetric,AM,Fig5,stated,Fig5,
+expansion_sweep_high,30,percent_volumetric,AM,Fig5 baseline max,stated,Fig5,large swelling (Li + interface layer growth)
+# === DOMAIN / geometry ===
+domain_size,11,um,FEM,square plane-strain 2D side,stated,Fig1_text,11x11 um
+n_particles,36,count,FEM,randomly oriented square Voronoi,stated,text,
+mean_particle_size,1,um,FEM,average AM particle,stated,text,mono ~1 um; square (sharp corners) per Sakuda/Harris
+AM_area_ratio,50,percent,FEM,AM area fraction,stated,text,~50% area = 50-60% volume loading
+# === n/a (NOT reported - do not compare to our compaction/transport anchors) ===
+porosity,NA,percent,SE_composite,not measured,na,na,cycling-mechanics sim; not a compaction model
+relative_density,NA,percent,SE_composite,not measured,na,na,
+coordination_Z,NA,count,SE,not measured,na,na,
+coverage,NA,percent,AM_SE,not measured,na,na,
+Heckel_Py,NA,MPa,SE,not measured,na,na,loading is Li-flux not pressure
+sigma_y_yield,NA,MPa,SE,linear-elastic assumption,na,na,SE+AM both linear elastic (NO plasticity); ductile-vs-brittle differs from our MPM J2
+sigma_ionic_eff,NA,mScm,SE_composite,not solved,na,na,mobility M_SE input only; sigma_eff NOT computed (crack->flux=0 qualitative only)
+sigma_electronic_eff,NA,mScm,SE_composite,not solved,na,na,
+sigma_thermal,NA,mScm_or_WmK,SE_composite,not solved,na,na,
+PSD_D50,NA,um,SE_or_AM,not reported,na,na,mono ~1 um Voronoi
+compaction_pressure,NA,MPa,SE_composite,not applicable,na,na,loading is internal Li-intercalation stress NOT external compaction

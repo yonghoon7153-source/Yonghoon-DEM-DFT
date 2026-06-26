@@ -1,0 +1,55 @@
+# Bucci et al., Phys. Rev. Materials 2, 105407 (2018), DOI 10.1103/PhysRevMaterials.2.105407
+# "Mechanical instability of electrode-electrolyte interfaces in solid-state batteries"
+# MIT + Robert Bosch LLC. 1D radially-symmetric ANALYTICAL cohesive-zone delamination model + random-walk FPT for ASR.
+# MATERIAL-AGNOSTIC: SE = E_se 20-200 GPa parameter sweep (any inorganic SE), CAM = generic intercalation compound (volume change 0-25% sweep).
+#   -> NOT LPSCl/NMC811 specific; our LPSCl (E~22-24) maps to ONE point of the sweep, near the compliant threshold (25 GPa).
+# NO porosity / sigma_ionic-e-thermal / Heckel / PSD / coordination (not a compaction paper) -> n/a; DO NOT compare to our compaction/transport absolutes.
+# Quantitative anchors are CRITICAL CONDITIONS (design map), not single-material measurements.
+# source: stated = text/equation (exact) ; digitized = read from contour/figure (TREND only, approximate). cohesive inputs (F_c, gamma, |u|_R) are sweep ranges, not LPSCl values.
+#
+# === A. DELAMINATION-ONSET volume/radius-change thresholds (the headline numbers) ===
+category,quantity,value,unit,condition,source,note
+onset_threshold,radius_change_typical,2.5,percent,"most E_se x gamma combos, |u|_R=1nm",stated,representative onset (radius)
+onset_threshold,volume_change_typical,7.5,percent,"most combos (radius 2.5% -> volume ~3x)",stated,"abstract+SecII; encompasses many intercalation compounds"
+onset_threshold,volume_change_compliant_limit,25,percent,"E_se<25 GPa AND gamma_am-se>5 J/m2",stated,"compliant SE + large cohesive energy delays onset to 25% volume"
+onset_threshold,E_se_compliant_threshold,25,GPa,"below this = compliant (delays delamination)",stated,"Fig3a; LPSCl E~22 is just below -> compliant side"
+onset_threshold,gamma_am-se_for_25pct,5,J/m2,"interfacial cohesive energy needed for 25% accommodation",stated,Fig3a
+onset_threshold,Fig3a_contour_levels,"7.5;15;25;50",percent,"volume-contraction contours over E_se 20-200 x gamma 1-10",digitized,more compliant/larger gamma -> tolerates more
+#
+# === B. STABILITY (ductile/brittle) geometric regime: particle radius vs damage-zone ===
+category,quantity,value,unit,condition,source,note
+stability,A_critical_particle_radius_bound,50-500,nm,"|u|_R~1nm, nu up to 0.3 (Eq11/12)",stated,below ~this = stable-leaning; our AM(~6um) >> this = brittle-snap propagation
+stability,cohesive_length_uR,1,nm,"linear traction-separation, Fig3a/Fig5 fixed",stated,rough interface -> |u|_R up -> more stable
+stability,gamma_am-se_sweep,1-10,J/m2,"Fig3a horizontal axis",stated,"sulfide SE known value ~2.93 (yun2023 G_c)"
+stability,adhesive_strength_Fc,2-20,GPa,"back-out at |u|_R=1nm, gamma 1-10 (F_c=2gamma/|u|_R)",stated,Eq9
+stability,no_delamination_design_rule,0.5,ratio_sigmay_over_Fc,"sigma_yield < 0.5*F_c (Eq14, Fig7)",stated,"rule of thumb: ductile SE (yield < half adhesive strength) prevents delamination"
+stability,onset_particle_size_dependence,independent,none,"Eq10 contains no length scale",stated,delamination ONSET is particle-size independent (only propagation-stability depends on size)
+#
+# === C. DELAMINATION -> AREA-SPECIFIC IMPEDANCE (random-walk first-passage-time, Fig8) ===
+category,quantity,value,unit,condition,source,note
+ASR_FPT,mean_FPT_increase_contiguous,2.75,x_factor,"contiguous delamination patches, 50% area",stated,worst case (continuous); = our coverage->ASR cycling penalty (relative)
+ASR_FPT,std_FPT_increase_contiguous,5,x_factor,"contiguous, 50% area",stated,"large scatter -> nonuniform Li distribution"
+ASR_FPT,discontinuous_effect,much_smaller,qualitative,"same 50% area but scattered patches",stated,"connectivity matters, not only area (rough stable interface = lower avg resistance)"
+ASR_FPT,FPT_sweep_delaminated_area,"0;12.5;25;50",percent,"random-walk sweep (Fig8a,b)",stated,"1000 walkers; 2160-triangle particle surface; reflective at delaminated patches"
+ASR_FPT,cell_time_high_sigma_SE,"2tP->3tP",dimensionless,"d_particle=d_electrode/10, SE Li-mobility 10x -> tP=tS; delamination doubles tP",stated,"+150% of tP; high-conductivity SE (tP>>tS) -> delamination rate-limiting"
+ASR_FPT,cell_time_low_sigma_SE,small,qualitative,"tS >> tP (SE rate-limiting)",stated,low-conductivity SE -> delamination impact minor
+#
+# === D. SE shell stress field during volume contraction (Fig6; E_se=50 GPa, phi_AM=0.55) ===
+category,quantity,value,unit,condition,source,note
+stress_field,sigma_RR_inner_nu015,4,GPa,"radial, tensile at inner radius, nu=0.15, full charge",digitized,decays toward outer radius; ~GPa >> compaction ~hundreds-MPa
+stress_field,sigma_Mises_nu015,-4_to_-2,GPa,"von Mises (scalar negative-sign convention), nu=0.15",digitized,compressive; Fig6a
+stress_field,hoop_sign_change,compressive_at_interface,qualitative,"nu=0.15: hoop compressive at interface, changes sign across thickness",digitized,Fig6a; nu=0.35 -> hoop becomes tensile (Fig6b)
+#
+# === E. Geometry factor f = R_B/R_A vs AM volume fraction (Fig1 right) ===
+category,quantity,value,unit,condition,source,note
+geometry,f_RB_over_RA_phiAM30,1.70,ratio,"phi_AM=30 vol%",digitized,f=(1/phi_AM)^(1/3) family; space-filling truncated-octahedron unit cell
+geometry,f_RB_over_RA_phiAM50,1.45,ratio,"phi_AM=50 vol%",digitized,commercial cells typical phi_AM 50-60%
+geometry,f_RB_over_RA_phiAM70,1.28,ratio,"phi_AM=70 vol%",digitized,higher AM loading -> thinner SE shell
+#
+# === F. n/a (NOT measured here; do not cross-compare to our compaction/transport absolutes) ===
+category,quantity,value,unit,condition,source,note
+n_a,porosity,n/a,,not a compaction paper,n/a,DO NOT compare to Minnmann 14% / Doux 18% / our 15.6%
+n_a,sigma_ionic_electronic_thermal_absolute,n/a,mS/cm,"FPT ratio only (relative ASR)",n/a,no absolute conductivity solved
+n_a,coverage_contact_area_pct,n/a,,interface = continuous cohesive surface (no per-particle area),n/a,DO NOT compare to our Stage-E Tabor 49.6/48.2%
+n_a,Heckel_Py_coordination_PSD,n/a,,single representative particle + radius sweep,n/a,
+n_a,LPSCl_NMC811_specific_properties,n/a,,material-agnostic E_se 20-200 sweep,n/a,LPSCl E~22 maps to ONE point only

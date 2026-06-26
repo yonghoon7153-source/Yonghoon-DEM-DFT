@@ -1,0 +1,120 @@
+metric,value,unit,phase_or_particle,condition,stated_or_digitized,notes
+# === crack onset / driver (phase-field FEM + XRD-strain linkage) ===
+crack_onset_voltage,4.0,V_vs_Li,NMC811_secondary,phase-field FEM charge C/50 (Fig 5e-i),stated,majority of cracks INITIATE in central region at ~4 V
+crack_onset_c_lattice_strain,0.015,strain (-),NMC811_primary,c-lattice strain at crack initiation (Fig 5d/5e-i),stated,Griffith crack starts when c-strain reaches 0.015
+c_lattice_strain_max,0.55,state_of_lithiation (-),NMC811_primary,c-strain peak then collapse (Fig 5e-ii),stated,c-strain maximum at ~0.55 SOL; cracks propagate outward with severity here
+c_lattice_collapse_onset_voltage,4.1,V_vs_Li,NMC811_primary,c-lattice collapse drastic above 4.1 V (intro),stated,collapse -> bulk contraction -> steep damage rise (Fig 5e-iii)
+delithiation_threshold,4.5,V_vs_Li,cell,CCCV C/50 to 4.5 V then CV to C/100,stated,drives >85% delithiation (Maerker), guarantees significant cracking
+delithiation_extent,85,percent,NMC811,charged 4.5 V C/50 (per Maerker ref 2),stated,>85% delithiation state
+# === crack location / type ===
+crack_type,intergranular,categorical,NMC811_secondary,X-ray CT + phase-field,stated,cracks along primary-particle grain boundaries; little transgranular (cracks branching into grains rare)
+crack_location,central_then_radial,categorical,NMC811_secondary,Fig 3m / Fig 4 GREAT,stated,cracks concentrate in particle CENTRE and reduce in severity radially outward
+crack_driver,anisotropic_lattice_strain,categorical,NMC811_primary,phase-field FEM (Fig 5),stated,randomly oriented primary crystals expand/contract asymmetrically (transversely isotropic) -> tensile stress at GBs
+spatial_polarisation,separator_gt_currentcollector,categorical,electrode,Fig 4b through-thickness,stated,particles near separator delithiate more (higher SoC) -> larger central voids; near CC = smaller distributed cracks
+# === volume expansion of secondary particles (15 particles, X-ray CT) ===
+secondary_particle_volume_increase_mean,19,percent,NMC811_secondary,pristine->charged 4.5V, 15 particles,stated,AVERAGE +19% volume increase (contrasts -5% unit-cell from a-lattice)
+secondary_particle_volume_increase_max,28,percent,NMC811_secondary,pristine->charged 4.5V,stated,greatest single-particle increase ~28% (Particle #5)
+a_lattice_volume_change,-5,percent,NMC811_primary_unitcell,4.4 V (literature ref 2),stated,UNIT-CELL volume DECREASES 5% (a-lattice shrink) -> particle EXPANSION contrasts crystallography
+expansion_contributing_voltage,4.1,V_vs_Li,NMC811,a-lattice +210 mAh/g direction,stated,~2% a-direction expansion conceivable to 4.1 V
+# === crack quantification (segmented crack as separate phase) ===
+crack_volume_fraction_mean,9,percent,NMC811_secondary,greyscale-thresholded segmented crack (Fig 3l),stated,crack volume ~9% of total particle volume on average
+crack_volume_fraction_max,16,percent,NMC811_secondary,Fig 3l,stated,largest crack occupies 16% of total particle volume
+crack_volume_explains_volume_increase,70,percent,NMC811_secondary,best case (Fig 2 / Fig 3k),stated,in best cases ~70% of absolute volume increase = segmentable crack; rest = sub-124nm unresolvable
+# === per-particle table (Fig 2 + Fig 3) — 8 highlighted particles ===
+particle_diameter_pristine,17.8,um,Particle_1,X-ray CT pristine (Fig 2),stated,P1
+particle_diameter_charged,19.4,um,Particle_1,X-ray CT charged 4.5V (Fig 2),stated,P1
+particle_diameter_pristine,13.8,um,Particle_2,Fig 2,stated,P2
+particle_diameter_charged,15.2,um,Particle_2,Fig 2,stated,P2
+particle_diameter_pristine,16.0,um,Particle_3,Fig 2,stated,P3
+particle_diameter_charged,17.1,um,Particle_3,Fig 2,stated,P3
+particle_diameter_pristine,16.1,um,Particle_4,Fig 2,stated,P4
+particle_diameter_charged,17.0,um,Particle_4,Fig 2,stated,P4
+particle_diameter_pristine,12.6,um,Particle_5,Fig 2,stated,P5
+particle_diameter_charged,14.0,um,Particle_5,Fig 2,stated,P5 (max %vol change +28.3)
+particle_diameter_pristine,12.1,um,Particle_6,Fig 2,stated,P6
+particle_diameter_charged,13.0,um,Particle_6,Fig 2,stated,P6
+particle_diameter_pristine,12.3,um,Particle_7,Fig 2,stated,P7
+particle_diameter_charged,12.9,um,Particle_7,Fig 2,stated,P7
+particle_diameter_pristine,10.2,um,Particle_8,Fig 2,stated,P8
+particle_diameter_charged,10.9,um,Particle_8,Fig 2,stated,P8
+particle_volume_pristine,2935.2,um3,Particle_1,Fig 2,stated,P1
+particle_volume_charged,3822.0,um3,Particle_1,Fig 2,stated,P1 (+23.2%)
+particle_volume_pristine,1364.9,um3,Particle_2,Fig 2,stated,P2
+particle_volume_charged,1820.2,um3,Particle_2,Fig 2,stated,P2 (+25.0%)
+particle_volume_pristine,2134.8,um3,Particle_3,Fig 2,stated,P3
+particle_volume_charged,2600.2,um3,Particle_3,Fig 2,stated,P3 (+17.9%)
+particle_volume_pristine,2185.1,um3,Particle_4,Fig 2,stated,P4
+particle_volume_charged,2564.9,um3,Particle_4,Fig 2,stated,P4 (+14.8%)
+particle_volume_pristine,1040.3,um3,Particle_5,Fig 2,stated,P5
+particle_volume_charged,1449.9,um3,Particle_5,Fig 2,stated,P5 (+28.3% max)
+particle_volume_pristine,926.9,um3,Particle_6,Fig 2,stated,P6
+particle_volume_charged,1132.1,um3,Particle_6,Fig 2,stated,P6 (+18.1%)
+particle_volume_pristine,978.3,um3,Particle_7,Fig 2,stated,P7
+particle_volume_charged,1132.1,um3,Particle_7,Fig 2,stated,P7 (+13.3%)
+particle_volume_pristine,558.1,um3,Particle_8,Fig 2,stated,P8
+particle_volume_charged,668.9,um3,Particle_8,Fig 2,stated,P8 (+16.6%)
+percent_volume_change,23.2,percent,Particle_1,Fig 2 table,stated,P1
+percent_volume_change,25.0,percent,Particle_2,Fig 2 table,stated,P2
+percent_volume_change,17.9,percent,Particle_3,Fig 2 table,stated,P3
+percent_volume_change,14.8,percent,Particle_4,Fig 2 table,stated,P4
+percent_volume_change,28.3,percent,Particle_5,Fig 2 table,stated,P5 (max)
+percent_volume_change,18.1,percent,Particle_6,Fig 2 table,stated,P6
+percent_volume_change,13.3,percent,Particle_7,Fig 2 table,stated,P7
+percent_volume_change,16.6,percent,Particle_8,Fig 2 table,stated,P8
+distance_from_CC_pristine,64.4,um,Particle_1,Fig 2 table,stated,P1 distance from current collector
+distance_from_CC_pristine,63.5,um,Particle_2,Fig 2 table,stated,P2
+distance_from_CC_pristine,56.5,um,Particle_3,Fig 2 table,stated,P3
+distance_from_CC_pristine,55.6,um,Particle_4,Fig 2 table,stated,P4
+distance_from_CC_pristine,58.0,um,Particle_5,Fig 2 table,stated,P5
+distance_from_CC_pristine,48.0,um,Particle_6,Fig 2 table,stated,P6
+distance_from_CC_pristine,31.6,um,Particle_7,Fig 2 table,stated,P7
+distance_from_CC_pristine,38.8,um,Particle_8,Fig 2 table,stated,P8
+crack_volume,641,um3,Particle_1,Fig 3 table skeletonised,stated,P1 crack volume
+crack_volume,247,um3,Particle_2,Fig 3 table,stated,P2
+crack_volume,262,um3,Particle_3,Fig 3 table,stated,P3
+crack_volume,144,um3,Particle_4,Fig 3 table,stated,P4
+crack_volume,170,um3,Particle_5,Fig 3 table,stated,P5
+crack_volume,63,um3,Particle_6,Fig 3 table,stated,P6
+crack_volume,106,um3,Particle_7,Fig 3 table,stated,P7
+crack_volume,80,um3,Particle_8,Fig 3 table,stated,P8
+crack_surface_area,2723,um2,Particle_1,Fig 3 table,stated,P1 crack surface area
+crack_surface_area,1115,um2,Particle_2,Fig 3 table,stated,P2
+crack_surface_area,1313,um2,Particle_3,Fig 3 table,stated,P3
+crack_surface_area,697,um2,Particle_4,Fig 3 table,stated,P4
+crack_surface_area,864,um2,Particle_5,Fig 3 table,stated,P5
+crack_surface_area,363,um2,Particle_6,Fig 3 table,stated,P6
+crack_surface_area,615,um2,Particle_7,Fig 3 table,stated,P7
+crack_surface_area,473,um2,Particle_8,Fig 3 table,stated,P8
+percent_volume_change_due_to_crack,72,percent,Particle_1,Fig 3 table,stated,P1 % of vol change attributed to segmented crack
+percent_volume_change_due_to_crack,54,percent,Particle_2,Fig 3 table,stated,P2
+percent_volume_change_due_to_crack,56,percent,Particle_3,Fig 3 table,stated,P3
+percent_volume_change_due_to_crack,38,percent,Particle_4,Fig 3 table,stated,P4
+percent_volume_change_due_to_crack,41,percent,Particle_5,Fig 3 table,stated,P5
+percent_volume_change_due_to_crack,30,percent,Particle_6,Fig 3 table,stated,P6
+percent_volume_change_due_to_crack,71,percent,Particle_7,Fig 3 table,stated,P7
+percent_volume_change_due_to_crack,72,percent,Particle_8,Fig 3 table,stated,P8
+mean_percent_volume_change_due_to_crack,92.0,percent,NMC811_secondary,Fig 3k mean over 15 particles,stated,mean %vol-change-due-to-crack = 92.0% (Fig 3k header)
+# === fabrication-induced (pre-cycling) cracking baseline ===
+fabrication_induced_cracking_fraction,33,percent,NMC811,literature (intro ref 10),stated,~1/3 of all particles had fabrication-induced cracks (physical stress: calendering/winding/synthesis) -> motivates need to distinguish drivers
+pre_cycling_cracking,none,categorical,NMC811_assessed,pristine scan all assessed particles,stated,NO cracking present prior to charging -> cracks attributed SOLELY to electrochemical delithiation
+# === electrode / cell parameters ===
+composition_NMC_carbon_PVDF,90_5_5,wt percent,electrode,NEI Corp NMC811 + conductive carbon + PVDF,stated,90:5:5 wt% (LIB liquid-electrolyte electrode, NOT ASSB)
+areal_capacity,2.2,mAh/cm2,electrode,printed electrode,stated,areal capacity 2.2 mAh/cm2
+electrode_thickness,69,um,electrode,calendared,stated,~69 um thick
+electrode_porosity,30,percent,electrode,calendared to porosity (active density 11.36 mg/cm2),stated,~30% porosity (LIB electrode, liquid-filled)
+active_material_density,11.36,mg/cm2,electrode,calendared,stated,active loading
+specific_capacity_NMC811,190-220,mAh/g,NMC811,literature (intro),stated,NMC811 specific capacity range
+secondary_particle_diameter_FEM,14,um,NMC811_secondary,extracted from X-ray CT for phase-field model,stated,14 um agglomerate, 400 Voronoi primary grains
+# === phase-field FEM material parameters ===
+E_primary_particle,150,GPa,NMC811_primary,phase-field FEM (isotropic linear elastic),stated,E_p = 150 GPa
+poisson_primary_particle,0.3,(-),NMC811_primary,phase-field FEM,stated,nu_p = 0.3
+E_carbon_binder,0.3,GPa,CBD,phase-field FEM (linear elastic isotropic),stated,E_c = 0.3 GPa carbon-binder (nano-porous, soft)
+poisson_carbon_binder,0.3,(-),CBD,phase-field FEM,stated,nu_c = 0.3
+carbon_binder_shell_thickness,20,um,CBD,shell around 14um particle (numerical method),stated,20 um diameter shell captured CBD presence
+FEM_elements,4000000,count,model,COMSOL 3D tomography-based mesh,stated,~4 million elements, 13 million DOF
+charge_rate_FEM,C/50,rate,model,phase-field FEM charge,stated,C/50 slow charge -> homogeneous intraparticle delithiation
+# === imaging parameters ===
+pixel_size,124,nm,X-ray nano-CT,Zeiss Xradia 810 Ultra Cr source 5.4 keV,stated,~124 nm pixel; crack <124 nm unresolvable
+crack_unresolvable_floor,124,nm,X-ray nano-CT,resolution limit,stated,cracks below 124 nm technically unresolvable but documented for NMC811
+xray_energy,5.4,keV,X-ray nano-CT,quasi-monochromatic Cr source Fresnel zone plate,stated,parallel-beam geometry
+scan_projections,1601,count,X-ray nano-CT,per tomogram,stated,~24 h total scan incl movements
