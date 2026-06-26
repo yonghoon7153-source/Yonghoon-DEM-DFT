@@ -1,0 +1,57 @@
+category,symbol,name,value,unit,branch_or_condition,stated_or_digitized,notes
+metadata,,first_author,Subhash C. Thakur,,,stated,Univ Edinburgh / IPE
+metadata,,journal_year,Granular Matter 16(3) 383-400 (2014),,,stated,received 2013-06-29 published 2014-05-21
+metadata,,doi,10.1007/s10035-014-0506-4,,,stated,Springer
+metadata,,code,EDEM v2.4 (DEM Solutions Ltd) via API,,,stated,commercial; EEPA later ported to LIGGGHTS
+metadata,,model_name,EEPA Edinburgh Elasto-Plastic Adhesion,,,stated,5-parameter normal hysteretic + area-dependent adhesion
+EEPA_normal_param,k1,loading (virgin) stiffness,1,kN/m,initial-loading branch f=k1*delta^n,stated,Table1 fixed value
+EEPA_normal_param,k2,unloading/reloading stiffness,"1,1.25,2,5,10,100",kN/m,un/reloading branch f=k2(delta^n-deltap^n),stated,Table1 swept; k2/k1 = 1..100
+EEPA_normal_param,k_adh,adhesive stiffness,0.1-100,kN/m,adhesion branch f=-k_adh*delta^n,stated,Table1 swept; AREA-DEPENDENT adhesion (its distinctive feature)
+EEPA_normal_param,f0,constant adhesion at first contact,-0.002 to -0.05,N,pull-off / van der Waals,stated,Table1; constant (load-INDEPENDENT) adhesion
+EEPA_normal_param,n,nonlinear index parameter,1,dimensionless,all branches f~delta^n,stated,n=1 => piecewise-LINEAR (this study); n>1 nonlinear (companion [54])
+EEPA_normal_eq,fhys,hysteretic spring force loading,f0 + k1*delta^n,N,if k2(delta^n-deltap^n) >= k1*delta^n,stated,Eq5 branch 1 (virgin loading)
+EEPA_normal_eq,fhys,hysteretic spring force un/reload,f0 + k2(delta^n - deltap^n),N,if k1*delta^n > k2(...) > -k_adh*delta^n,stated,Eq5 branch 2
+EEPA_normal_eq,fhys,hysteretic spring force adhesion,f0 - k_adh*delta^n,N,if -k_adh*delta^n >= k2(delta^n-deltap^n),stated,Eq5 branch 3 (adhesive/tensile)
+EEPA_normal_eq,fn,total normal force,fhys + fnd,N,,stated,Eq4 (hysteretic + damping)
+EEPA_normal_eq,fnd,normal damping force,beta_n * vn,N,,stated,Eq6
+EEPA_normal_eq,beta_n,normal dashpot coefficient,sqrt(4*m_star*k1/(1+(pi/ln e)^2)),,,stated,Eq7 (uses k1 and COR e)
+EEPA_adhesion,fmin,max adhesive (tensile) force,f0 - k_adh*delta_min^n,N,bottom of adhesion branch,stated,grows with plastic contact area via deltap
+EEPA_tangential_eq,ft,tangential force,fts + ftd,N,,stated,Eq8
+EEPA_tangential_eq,fts,tangential spring force (incremental),fts(n-1) + Delta_fts,N,Delta_fts = -kt*delta_t,stated,Eq9-10
+EEPA_tangential_eq,kt,tangential stiffness,2/7 * k1,kN/m,,stated,fixed at 2/7 k1 (Walton-Braun)
+EEPA_tangential_eq,ftd,tangential damping,-beta_t * vt,N,,stated,Eq11
+EEPA_tangential_eq,fct,Coulomb limit (adhesion-modified),mu*|fhys + k_adh*delta^n - f0|,N,,stated,Eq13 ★ adhesion included in friction limit
+EEPA_tangential_eq,tau,rolling torque,-mu_r*|fhys|*Ri*omega_i,N.m,,stated,Eq14 (EDEM default rolling)
+sim_param,N,number of particles,2200,,uniaxial mould 15mm dia,stated,Table1 (also sample4 N=10000)
+sim_param,rho,particle density,10000,kg/m3,density-scaled,stated,Table1
+sim_param,e,coefficient of restitution,0.4,,,stated,Table1
+sim_param,mu_sf,particle static friction,0.5,,,stated,Table1
+sim_param,mu_rf,particle rolling friction,0.001,,,stated,Table1
+sim_param,mu_pf,platen friction,0.1,,,stated,Table1
+sim_param,wall_friction,wall friction,0,,,stated,Table1 (frictionless side walls)
+sim_param,wall_shear_mod,wall shear modulus,1e10,N/m2,,stated,Table1
+sim_param,nu_pp,Poisson particle-particle,0.3,,,stated,Table1
+sim_param,nu_pw,Poisson particle-wall,0.25,,,stated,Table1
+sim_param,timestep,simulation time step,8e-7 to 2e-6,s,<10% Rayleigh,stated,Table1
+sim_param,aspect_ratio,paired-particle aspect ratio,1.5,,two 1mm spheres,stated,Fig3 multi-sphere shape (NOT single sphere)
+material,d_mean,limestone (ESKAL 500) mean diameter,4.7,um,reference PARDEM solid,stated,Fig2 SEM
+material,consolidation_range,consolidation stress range,16-96,kPa,EPT uniaxial test,stated,5 levels 16/36/56/76/96 kPa
+result,sigma_u,unconfined yield strength,~2.3 to ~5.6,kPa,sigma1=16..96 kPa,digitized,Fig8 flow function vs consolidation stress
+result,sigma_u_COV,unconfined strength COV,3.4,%,3 random seeds @100kPa,stated,low scatter from random packing
+result,flow_function_agreement,sim vs exp flow function,within ~12,%,limestone EPT,stated,Fig8 proposed model good agreement
+result,JKR_discrepancy,modified-JKR (EDEM2.4) flow fn,too flat,kPa,elastic adhesion only,stated,Fig8 red squares; JKR can NOT capture stress-history
+result,fill_porosity_eta_f,fill porosity no-adhesion,41,%,f0=0 k_adh=0 aspect1.5,stated,vs 36% mono-disperse frictionless spheres (shape effect)
+result,fill_porosity_eta_f,fill porosity high-adhesion,up to ~72-75,%,f0 0.1 N or k_adh 1e5 N/m,digitized,Fig16 adhesion => chain structures => higher porosity
+result,consolidated_porosity_eta_c,consolidated porosity range,~35 to ~47,%,sigma1 20..100 kPa,digitized,Fig18 decreases with stress and increases with adhesion
+micromech,lambda_p,contact plasticity,1 - k1/k2,dimensionless,deltap/delta (linear n=1),stated,Eq16 ★ key micromech variable; 0=elastic 1=fully plastic
+micromech,lambda_b,bulk plasticity,eps_p/eps,dimensionless,,stated,Eq17 bulk plastic / total deformation
+micromech,Rumpf,tensile strength of agglomerate,sigma_t = Fat*(1-eta)*Z/(pi*d^2),Pa,Rumpf 1962,stated,Eq18 ★ links contact adhesion Fat + Z + porosity to bulk
+micromech,sigma_u_to_t,unconfined comp from tensile,sigma_u = (1+sin phi)/(1-sin phi)*sigma_t,Pa,Mohr circle,stated,Eq19 phi=internal friction angle
+micromech,master_relation,normalized unconfined strength,sigma_u*d^2/fatp ~ (1-eta_c)*Z,dimensionless,LINEAR,stated,Eq20 ★ Fig21 R2=0.94 universal collapse across ALL adhesion params
+micromech,Fig15_collapse,sigma_u*d^2/f0 vs Z critical curve,single curve,,all lambda_p & sigma1 (k_adh=0),stated,Fig15 critical-state-like collapse
+micromech,additive_adhesion,unconfined strength f0+k_adh,approx additive,kPa,both nonzero,stated,Fig19 sigma_u(f0,k_adh) ~ sigma_u(f0)+sigma_u(k_adh)
+liggghts_map,k1,EEPA k1,coefficientLoadingStiffness (or youngsModulus-derived),,,mapping,maps to our hooke/hysteresis k1 (Luding)
+liggghts_map,k2,EEPA k2,coefficientMaxElasticStiffness (m6),,,mapping,our LIGGGHTS m6 = EEPA k2/k_hat2
+liggghts_map,k_adh,EEPA k_adh,coefficientAdhesionStiffness (m7),,,mapping,our LIGGGHTS m7 = EEPA k_adh (AREA-dependent adhesion)
+liggghts_map,deltap,EEPA plastic overlap,coefficientPlasticityDepth (m8) governs,,,mapping,our m8 phi_f sets plastic-flow limit => deltap
+liggghts_map,f0,EEPA f0,constant pull-off (cohesionEnergyDensity-like),,,mapping,no direct single m-slot; constant adhesion term
