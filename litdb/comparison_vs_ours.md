@@ -192,7 +192,7 @@
     = 우리 f_AM^cc/dead-AM; (iv) **β=0.41**(3D site-perc, Fig4) = 우리 √(φ−φc)·φ^4 percolation-backbone 지수 이론 정당화.
   - **흡수할 정량식:** 전자 percolation 임계 **p_c=7.83·ln(d_AM/µm)+36.67 vol%**(Fig6) → 우리 σ_e 입경 의존·dead-AM
     임계와 대조.  **이상 조성 62/38(5%)·66/34(10%)·72/28 vol%(20%)**(=NCM622+LPS 80/82/86 wt%) → 우리 production core
-    (AM 70–85 wt%) 상단과 정합 + porosity↑→AM↑ 이동.  데이터 `docs/data/bielefeld2019_percolation_thresholds.csv`.
+    (AM 70–85 wt%) 상단과 정합 + porosity↑→AM↑ 이동.  데이터 `docs/data/bielefeld2019_percolation.csv`.
   - ⚠ **placement(입력 porosity) ≠ 우리 압밀(측정 porosity)** → σ·porosity 절대 동일시 금지, *구조 추세만*.  재료-무관
     (NCM+LPS는 wt% 환산용 예시) → 소재-특이 절대값 끌어오기 금지.
 

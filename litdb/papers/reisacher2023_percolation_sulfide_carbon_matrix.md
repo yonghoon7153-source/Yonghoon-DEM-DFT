@@ -373,7 +373,7 @@
 - ★ **MPM scaffold 에 carbon 상 추가**(additives.py 는 이미 MPM material phase 로 carbon seed): carbon vol% 가 SE 영역을 점유(Kim 2024 짝) + matrix 4 wt% 서 전자 percolate → 두 carbon 논문(Reisacher 임계 + Kim 부피점유)을 *한 scaffold* 에서 동시 표현 가능.
 
 ### 11.3 ★ Bielefeld p_c 식과의 직접 연결(우리 보유 데이터)
-- 우리 `docs/data/bielefeld2019_percolation_thresholds.csv`: **전자 p_c = 7.83·ln(d_AM/µm) + 36.67 vol% (AM 입자 기준)**, β=0.41.
+- 우리 `docs/data/bielefeld2019_percolation.csv`: **전자 p_c = 7.83·ln(d_AM/µm) + 36.67 vol% (AM 입자 기준)**, β=0.41.
 - ★ 이 논문 **p_c≈4 wt% C65 (≈4.62 vol%, *carbon* 기준)** = Bielefeld 의 *AM-percolation* 과 *상보*(그들 = AM 전자상의 임계, 이 논문 = *carbon 첨가상*의 임계).  → 우리 모델에 **두 전자 percolation 게이트**(AM backbone + carbon additive)를 *각각* 둘 근거; carbon 게이트 임계는 이 논문(4 wt%), AM 게이트는 Bielefeld(d_AM 의존).
 - ★ 그들 "smaller AM → earlier p_c (高표면적)" = 우리 σ_e *입경 의존* + Bielefeld 식의 *실험 확증*.
 

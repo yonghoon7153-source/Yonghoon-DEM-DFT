@@ -21,6 +21,8 @@
 | | **Pasha 2014** (open) | ✗ | **에너지일관 A_p·Γ** | Luding + JKR jump-in + 미세분말(=SE).  Luding "α=0 파단 무시" 비판 |
 | **B. 항복캡 (= 경로 A LAW)** | **Thornton–Ning 1998** | ✅ p_y | JKR | ★ **경로 A LAW.** Hertz→p_y→선형소성(cap)→잔류겹침.  Varkey 2026 사용 |
 | | **So 2021** (digest됨) | ✅ H | — | F_th=2/3·H·A_con.  **LPS로 0.98 입증 = 18×연화 대체 실증** |
+| | **So 2022** (MethodsX, ✅) | ✅ H | DMT-유사 | ★ So2021 **LAW 정의편**: rate-h_eq(Maxwell 점탄성) + **F_th=H·A_con 경도캡** + **소결 fusion-bond** + **area/spring factor**(porosity→0 특이점 fix).  소결·점탄성 creep = 우리 미보유 |
+| | **Bazzoun 2025** (Electrochim. Acta, ✅ 진행중) | (calib) | — | ASSB cold-press DEM **파라미터 민감도+보정**; friction이 percolation 지배; **high-f_CAM서 rigid-sphere 불일치** = 우리 Stage-E/MPM이 메우는 칸 |
 | **C. FEM EP 기준 (캡의 엄밀값)** | **Kogut–Etsion 2002** | (H=2.8Y) | — | 구-평면 FEM, **유료 CEB 대체**.  항복 ω_c 닫힌형, 완전소성 ω/ω_c=110 |
 | | **Jackson–Green 2005** | (H 가변!) | — | ★ **H≠상수 3σ_y**: H_G/σ_y=2.84[1−e^{−0.82(a/R)^{−0.7}}] → a/R>0.2서 Stage-E 면적 과소 |
 | | **Mesarovic–Fleck 2000** | (H≈2.8–3σ_y) | — | **異種**(=AM-SE) 엄밀해; soft상 변형집중·stiff≈rigid → **AM-freeze scaffold 정당화** |
@@ -37,6 +39,10 @@
   접촉서 H_G(a/R)로 교체**하면 dense regime 면적 과소 보정.
 - **선례** = So 2021(H-cap, LPS 0.98) + Varkey 2026(Thornton–Ning + multi-contact F_mc; TN 단독은 ρ>0.7서 under-stiff →
   F_mc 필요할 수 있음).
+- ★ **2026-06-27 보강 선례**: **So 2022**(MethodsX) = So2021 **완전 LAW 정의편**(rate-h_eq + F_th=H·A_con + area/spring factor)
+  → 경로A 구현 시 직접 참조 스펙; **Sangrós 2019**(Powder Tech) = **나노압입으로 항복비 YR 직접 측정**(8.59e-3·x, R²0.89)
+  = 경로A의 *YR 실측* LIB 선례(우리 LPSCl도 동일 압입측정 가능); **Bazzoun 2025**(Electrochim. Acta) = high-f_CAM rigid-sphere
+  불일치를 정량(경로A로 풀어야 할 dense-regime).
 - ⚠ EEPA/Pasha는 **캡 없음** → 단독으론 경로 A 아님 (Luding과 같은 층).  "EEPA + p_y캡"이라야 점착포함 경로 A.
 
 ## 3. ★ MPM 소성 계보 (snow → sand → 우리 J2)
@@ -60,3 +66,8 @@
 - ★ **이온 위상 역전**: LIB는 pore=이온전도체(Bruggeman, 압밀↑→σ↓), 우리 ASSB는 SE망=전도체(Holm, 압밀↑→σ↑) →
   **우리 SE-network 솔버가 LIB pore-Bruggeman을 대체** = 우리 work 정체성.
 - **Sangrós bond / Ngandjong SJKR** = CBD 명시화 청사진 (backlog A3; SJKR 끊김·재형성 = PTFE cold-weld `--coh` 직접 모델).
+- ★ **2026-06-27 추가 LIB-제조 DEM peer (4편)**: **Sangrós 2019**(2020 Part-I) = **Thornton–Ning 항복캡 + 나노압입 YR** =
+  경로A LIB 실측 선례 + 명시 binder bond + 점탄성 spring-back 17%; **Lyu 2025**(3D DEM 건조+캘린더링) = **CBD moment-전달
+  parallel-bond**(A3 최적합, PTFE 굽힘강성) + solvent fluid-substitution; **Shenouda 2020 / Bosch 2014** = LIGGGHTS 튜토리얼/MSc
+  (가역 Hertz, baseline-floor 대조).  모두 σ-삼중항·MPM 형상소성 부재 = frame[5] 재확인.  **Huang 2025**(DEM+LBM 열) = 우리
+  multi-pathway σ_thermal 독립 교차검증(산화물).

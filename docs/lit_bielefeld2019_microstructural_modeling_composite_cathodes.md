@@ -20,7 +20,7 @@ elastomeric Li-metal anode, Korea Univ.)의 SI다.  Bielefeld 2019 본 논문과
 이 디제스트의 모든 수치·그림·식은 **9쪽 본문 PDF에서만** 추출했다(Bielefeld 2019에는 별도 SI가 본문에
 deposit되지 않음 — 모든 데이터가 본문 Fig 1–10 + Table 1 + Eq 1–9에 있음).
 
-DB 동반 파일: `docs/data/bielefeld2019_percolation_thresholds.csv` (입경별 percolation threshold + utilization
+DB 동반 파일: `docs/data/bielefeld2019_percolation.csv` (입경별 percolation threshold + utilization
 + 비표면적, digitized 추세).
 
 ---
@@ -338,7 +338,7 @@ ref 36 = **Greenwood 1966 "Constriction resistance and the real area of contact"
 1. **★ percolation 임계 로그식 + porosity별 이상 조성 = 우리 σ_e/dip 관계식의 구조-검증 앵커.**
    - `p_c(전자) = 7.83·ln(d_AM/µm) + 36.67 vol%` (Fig 6) → 우리 σ_e 폼의 입경 의존·dead-AM 임계와 *추세* 대조.
    - 이상 조성 **62/38(5%)·66/34(10%)·72/28(20%) vol%** → 우리 Furnas dip 최적(AM 70–85 wt%)이 **porosity에 따라
-     이동**하는지 점검(그들은 porosity↑→AM↑로 이동).  → `docs/data/bielefeld2019_percolation_thresholds.csv`로 보관.
+     이동**하는지 점검(그들은 porosity↑→AM↑로 이동).  → `docs/data/bielefeld2019_percolation.csv`로 보관.
 
 2. **★ "porosity를 *반드시* 측정/보고하라"는 그들의 강한 권고 = 우리 porosity-중심 모델링의 권위 있는 근거.**
    - 그들 핵심 메시지: porosity가 이온·전자 percolation을 *결정적으로* 좌우하는데 실험들이 자주 *안 보고*함 → 비교

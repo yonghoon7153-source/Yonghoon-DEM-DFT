@@ -61,3 +61,23 @@
   MPM은 ductile J2 → SE 취성균열 불가.  de Vaucorbeil 리뷰의 continuous-damage/cohesive MPM이 구현 경로(우선순위 낮음).
 - ⚠ **DPC/cap은 적용 대상 아님** (resolved-grain에 cap=비물리, Klár로 확정).  cap은 homogenized-REV(`cap_compaction_heckel.py`)
   에서만 옳음.  우리 J2+ν0.49는 재료클래스 유도 필연 → 변경 불요.
+
+## E. #17-34 digest batch → backlog 매핑 (2026-06-27)
+
+19편(#17-29 완료 13 + #30-34 진행 5 + Bazzoun2025) digest의 **모델 적용 후보**.  digest는 끝나도 적용은 별개 — 여기서 추적.
+
+| 논문 | feeds | 적용 내용 | 상태 |
+|---|---|---|---|
+| **Bielefeld 2019** | **B3** | β=0.41(3D-site strength 지수)·p_c=7.83·ln d+36.67 **verbatim 확인** → 우리 √(φ−φc)·CN²·f_p³ universality-class 근거.  ⚠β=0.41≠우리 0.5(mean-field) 동일시 금지 | ✅ 확인(인용만) |
+| **Reisacher 2023** | **A4** | carbon 전자-percolation p_c≈4 wt% C65 (LPSCl=우리 SE, 보정無) → additives.py σ_e carbon-gate `g_C=f(wt_C65−p_c)` 캘리브레이션 + Bielefeld AM-p_c의 carbon 짝 | ⛔ TODO |
+| **Minnmann 2024** | **B1** | FIB-SEM σ_ion 0.05–0.11·porosity 6–10%·coverage 20–50%·CAM util 62–77% = frame[4] TREND 앵커(글래스 composite, 절대전이 금지) | ⛔ TODO |
+| **Schneider 2023** | **B5/B6** | σ vs 입경·압력 실측 → 우리 Cronau(r_SE) SE-size 인자 + σ-vs-porosity(압밀) 검증 (material-match 확인 대기) | 🔶 digest 진행 |
+| **Bucci 2017 (CZM) + Bucci 2018 (delamination) + NMC811 입계균열 2023** | **A10/B6/D6** | 사이클 chemo-mech 균열(Vegard strain driver, 우리 압밀-Auerbach의 사이클 짝); SE 취성균열 = de Vaucorbeil continuous-damage MPM(D6) 구현경로; 박리→ASR↑(B6 시간축).  ⚠우리 미보유 frame[5] | ⛔ TODO(future) |
+| **Lyu 2025** | **A3/D5** | CBD **moment-전달 parallel-bond** = PTFE 굽힘강성 최적합(Sangrós force-bond보다 우수); solvent fluid-substitution = 건식≠습식 | ⛔ TODO |
+| **Sangrós 2019** | **D1/A3** | Thornton–Ning 항복캡 + **나노압입 YR=8.59e-3·x(R²0.89)** = 경로A YR 실측 LIB 선례; 명시 binder bond | ⛔ TODO |
+| **So 2022** | **D1** | rate-h_eq + F_th=H·A_con + area/spring factor = 경로A **완전 LAW 스펙**; +소결 fusion-bond(우리 미보유) | ⛔ TODO |
+| **Bazzoun 2025** | **D1/B4** | DEM 파라미터 민감도(friction 지배)·high-f_CAM rigid-sphere 불일치 = 경로A/Stage-E로 풀 dense-regime; 우리 캘리브레이션 우선순위 가이드 | 🔶 digest 진행 |
+| **Huang 2025** | **B (신규)** | DEM+LBM ETC = 우리 σ_thermal Stage-T1 독립 교차검증(다른 방법, 산화물); LBM(또는 TauFactor)을 우리 DEM dump에 돌려 thermal cross-check 가능 | ⛔ TODO(검증) |
+| **Mun 2025 / Liu 2025 (dry-electrode 리뷰)** | **A3/공정** | 건식 PTFE fibrillation·co-rolling 공정 landscape → CBD 모델 + 압밀 프로토콜(co-rolling) 맥락 | 🔶 digest 진행 |
+| **Interfacial-impedance formulation (#31)** | **kinetics(신규)** | R_ct/double-layer/Warburg 해석식 → 우리 geometric ASR 위에 kinetics 칸(kim2025 미보유) 추가 경로 | 🔶 digest 진행 |
+| **Deysher 2022 (리뷰)** | positioning | transport+mech 커플 리뷰가 호명한 정량 모델 = 우리 DEM σ-삼중항↔MPM이 실현(미래방향 4/6 충족) | ✅ 포지셔닝 |

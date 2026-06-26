@@ -5,7 +5,7 @@
 > ★ **우리 backlog-B3 의 1차 출처** — 우리 percolation 지수(√(φ−φc)·CN²·f_p³)의 *universality-class* 문헌 앵커.
 > 두 핵심값 **β=0.41**(Eq 1/Fig 4)·**p_c=[7.83·ln(d/µm)+36.67] vol%**(Eq 8/Fig 6) 둘 다 **본문 verbatim 확인**.
 >
-> 데이터 CSV: `docs/data/bielefeld2019_percolation.csv` (이 digest 전용, 정밀 수치). 기존 `bielefeld2019_percolation_thresholds.csv`도 같은 내용(병존).
+> 데이터 CSV: `docs/data/bielefeld2019_percolation.csv` (이 digest 전용, 정밀 수치). 기존 `bielefeld2019_percolation.csv`도 같은 내용(병존).
 
 ---
 
