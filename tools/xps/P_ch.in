@@ -3,7 +3,7 @@
     iswitch=3, dft='PBE',
  /
  &inputp
-   lloc=2, pseudotype=2, file_pseudopw='P_ch.UPF', author='xps',
+   lloc=2, pseudotype=2, zval=5.5, file_pseudopw='P_ch.UPF', author='xps',
  /
 3
 3S  1  0  2.00  0.00  1.60  1.60
