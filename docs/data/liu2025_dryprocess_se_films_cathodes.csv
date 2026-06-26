@@ -1,0 +1,27 @@
+# Liu et al., Small 2025, 21, e10454, DOI 10.1002/smll.202510454 (REVIEW). All values are SECONDARY-CITED from the listed source refs (NOT this review's own measurements). value_type=stated unless noted. phase column: ASSB (our topology, SE solid network) vs LIB (opposite topology, electrolyte-in-pore). DO NOT map sigma/porosity absolutes across phases; trend/form only.
+table,phase,system_SE,system_CAM,binder,binder_wt_pct,thickness_um,sigma_ionic_mScm,areal_loading,cycle_perf,source_ref,value_type,note
+Table2,ASSB,LGPS,,PTFE,1.0,100,0.34,,,ref110,stated,thick film
+Table2,ASSB,Li5.4PS4.4Cl1.6,,PTFE,0.2,30,8.4,,,ref22,stated,low-PTFE -> high sigma
+Table2,ASSB,LPSCl,,PTFE,0.5,18,0.85,,,ref111,stated,
+Table2,ASSB,LPSCl,,PTFE,0.2,40,8.4,,,ref112_Li,stated,low-PTFE -> high sigma
+Table2,ASSB,LPSCl,,PTFE,0.5,15-20,1.7,,,ref102_Wang,stated,thin LPSCl film
+Table2,ASSB,Li3InCl5_halide,,PTFE,0.5,15-20,1.0,,,ref102_Wang,stated,halide ~0.6x LPSCl
+Table2,ASSB,Li6.5La3Zr1.5Ta0.5O12_LLZTO_oxide,,PTFE,0.5,15-20,0.52,,,ref102_Wang,stated,oxide garnet
+Table2,ASSB,Li5.7PS4.7Cl1.3,,PTFE_with_PEVA_scaffold,0.5,40,1.1,,,ref101_Fan,stated,scaffold mitigates PTFE reduction
+Table2,ASSB,LPSCl,,Polycaprolactone_PCL,7.0,80,0.85,,,ref113_Su,stated,polymer binder many -> sigma down
+Table2,ASSB,LPSCl,,Thermoplastic_polyamide_TPA,3.0,25,2.1,,,ref17_Hu,stated,non-PTFE alternative
+Table3,ASSB,LPNS,NCM622,acetylene_black_AB,3.8,,,61.22_mg_cm2,0.1C_50cyc_91.7pct,ref129,stated,comp 57.7:38.5:3.8
+Table3,ASSB,LPS,NCM622,CNF,5.0,,,31.25_mg_cm2,na,ref125_130,stated,comp 70:25:5
+Table3,ASSB,LPSCl,NCM811,VGCF,2.34,,,122.4_mg_cm2,0.2C_50cyc_gt90pct,ref126_Kim,stated,core-shell LPSC-coated NCM811; comp 85:12.66:2.34
+Table3,ASSB,LPSCl,LiCoO2,none_Li3InCl6_SE,,,,15_mAh_cm2,5mAcm2_100cyc_90pct,ref124,stated,comp 85:15
+Table3,ASSB,LPSCl,Li2NbSe2_Li2.25PS4.25ClBr0.75,,,,,45.20_mg_cm2,0.5C_200cyc_95.1pct,ref131,stated,comp 53.33:26.6:7:20
+Table3,ASSB,LPSCl,NCM,VGCF_PTFE,0.5,,,5_mAh_cm2,1C_500cyc_gt95pct,ref134_Lee2025,stated,co-rolling sister paper; comp 79.6:16.9:2.98:0.5
+Table3,ASSB,LPS,S_VS2,,,,,15.5_mg_cm2,0.12mAcm2_10cyc_67pct,ref132,stated,comp 20:40:40
+Table3,ASSB,LPSCl,LiCoO2,4-Aminobenzonitrile,1.0,,,3.06_mg_cm2,0.2C_100cyc_77.2pct,ref133,stated,comp 99:1
+Table3,ASSB,LPSCl,LTG0.25PSSe0.2_AEA,,,,,2_mAh_cm2,2.5C_1000cyc_82.3pct,ref135,stated,all-electrochem-active
+Table3,ASSB,LZO_LPSCl,Li1.3Fe1.2Cl4_AEA,,,,,3.8_mAh_cm2,5C_3000cyc_90pct,ref136,stated,all-electrochem-active
+Table1,LIB,liquid_electrolyte_in_pore,LFP,,,162_um_cathode,,1.27_mAh_cm2,,ref30_A123,stated,porosity_pct=26 ELECTROLYTE-PORE not ASSB
+Table1,LIB,liquid_electrolyte_in_pore,LFP,,,200_um_cathode,,2.74_mAh_cm2,,ref32_CATL,stated,porosity_pct=32 ELECTROLYTE-PORE not ASSB
+Table1,LIB,liquid_electrolyte_in_pore,NCA,,,104_um_cathode,,2.99_mAh_cm2,,ref30_Samsung30Q,stated,porosity_pct=9 ELECTROLYTE-PORE not ASSB
+Table1,LIB,liquid_electrolyte_in_pore,NCM811,,,167_um_cathode,,4.87_mAh_cm2,,ref35_LG_M50,stated,porosity_pct=25 ELECTROLYTE-PORE not ASSB
+Table1,LIB,liquid_electrolyte_in_pore,NCM811,,,174_um_cathode,,5.00_mAh_cm2,,ref31_36_Tesla4680,stated,dry-processed anode; porosity na

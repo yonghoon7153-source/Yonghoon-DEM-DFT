@@ -1,0 +1,26 @@
+source,table,fig,cell_type,chemistry,AM,AM_wt,CA,CA_wt,binder,binder_wt,additive,SE_or_LE,SE_wt,thickness_um,loading_mg_cm2,areal_cap_mAh_cm2,rev_cap_mAh_g,cycle_retention,energy_density_Whkg_WhL,primary_ref,precision,note
+# Mun et al. Adv. Mater. 2025 37 2506123 doi 10.1002/adma.202506123. REVIEW (no DEM/MPM/FEM no new experiment). All numbers are STATED values from CITED PRIMARY SOURCES (Table 1/2) NOT measured by this review -> cite primary_ref for absolute transfer. ASSB = ONLY Fig5e (NCM811+LPSCl ref69) + Fig6f (Si+HC ASSB ref78); ALL OTHERS are LIB (liquid electrolyte) -> topology INVERTED (porosity=good ion-conductor=pore) DO NOT transfer LIB rows to our ASSB. Use as PROCESS/loading context + dry-vs-wet trend ONLY.
+# --- Table 1 (cathodes + LIB context, Fig 5) ---
+mun2025,T1,5a,LIB_pouch,LIB,NCM712,80,MWNT,15,PVDF,5,none,LE_1M_LiPF6,na,573,100,17.6,176,67.0%@400,360/701,ref51_Ryu_DPCE,stated_table,dry press-coated electrode (DPCE) MWNT conductor
+mun2025,T1,5b,LIB_pouch,LIB,LFP,97,Super-P,1,PTFE,2,none,LE_1M_LiPF6,na,175,52,7.8,154.6,65.5%@300,185/470,ref43,stated_table,LFP dry PTFE fibrillation
+mun2025,T1,5c,LIB_2016R,LIB,NCM622,90,Super-P,7,pitch,3,none,LE_1.3M_LiPF6,na,305.1,75.1,10.9,170.5,85.5%@15,na,ref67_Park,stated_table,pitch binder dry; wet max ~150um dry ~300um
+mun2025,T1,5d,LIB_2016R,LIB,LFP,50,holey_graphene,50,none,0,none,LE_1M_LiPF6,na,340,11.6,0.9,>160,87.5%@200,na,ref68_Kirsch,stated_table,binderless holey graphene; thickness 160um@500MPa 175@200 340@20MPa
+mun2025,T1,5e,ASSB_pressure,ASSB,NCM811,85,Super-P,10,PTFE,1,LiPO2F2_1,LPSCl,13,156.8,57.5,10.0,208.86,96.5%@100,na,ref69_Kim,stated_table,ONLY ASSB cathode row; LiPO2F2 additive; bimodal densification suppress crack
+mun2025,T1,5f,LIB_Swagelok,LIB,LFP,50,none,0,none,0,NaCl_template_40,LE_1M_LiPF6,na,1000,114.3,20,178,84%@70,na,ref71_Elango,stated_table,NaCl-template SPS binderless 40pct porosity ~1mm thick
+# --- Table 2 (anodes + additional, Fig 6; all LIB except 6f ASSB) ---
+mun2025,T2,6a,LIB_2032,LIB,graphite,98,none,0,PTFE,2,none,LE_1.15M_LiPF6,na,120,41.25,6,160,88.2%@300,na,ref73_Suh,stated_table,graphite dry anode 3D-XRM uniform pore vs wet gradient
+mun2025,T2,6b,LIB_2032,LIB,Si,73.7,C,26.3,none,0,none,LE_1M_LiPF6,na,0.2,na,na,250,83%@150,na,ref43,stated_table,Si-C 0.2um (magnetron/thin) approx 250 cap
+mun2025,T2,6c,LIB_2032,LIB,graphite,96,Super-P,1,PTFE,3,PVP_0.5,LE_1.15M_LiPF6,na,93,30.2,9.9,341.5,86.3%@200,na,ref75_Lee,stated_table,PVP suppresses PTFE decomposition; densify 112->98um
+mun2025,T2,6d,LIB_2032,LIB,Si,na,na,na,none,0,none,LE_1M_LiPF6,na,70.21,na,na,175.7,88.2%@100,na,ref74,stated_table,LDSC magnetron sputter prelithiation
+mun2025,T2,6e,LIB_2032,LIB,graphite,80,PANI,20,none,0,none,LE_1M_LiPF6,na,na,na,na,221.4,78.2%@100,na,ref77_Yuan,stated_table,PANI dual binder+conductor
+mun2025,T2,6f,ASSB_pressure,ASSB,Si,95,hard_carbon,na,PTFE,5,none,sulfide_SE,na,na,na,6,2803.8,61.5%@5000,na,ref78_Yan,stated_table,Si+HC LiSH46 ASSB anode 5000cyc@1C
+# --- Fig 4f: dry vs wet SE separator porosity (cross-section segmentation; NOT composite-cathode compaction porosity) ---
+mun2025,Fig4f,4f,SE_membrane_wet,membrane,na,na,na,na,na,na,na,Li2S-P2S5_sulfide,na,na,na,na,na,na,na,ref59,stated_text,wet/slurry SE membrane porosity 22.0pct (Film-Type binder)
+mun2025,Fig4f,4f,SE_membrane_dry,membrane,na,na,na,na,na,na,na,Li2S-P2S5_sulfide,na,na,na,na,na,na,na,ref59,stated_text,dry/shearing SE membrane porosity 10.2pct (Fiber-Type binder); dry HALF of wet
+# --- Fig 3e: Young's modulus of materials (E_SE anchor; our real-bulk 22-24 in Li2S-P2S5 18-25 band) ---
+mun2025,Fig3e,3e,modulus,material,LLZO_sintered,na,na,na,na,na,na,oxide_garnet,na,na,na,na,na,na,na,ref40,stated_fig,E=92 GPa (needs high-T sintering)
+mun2025,Fig3e,3e,modulus,material,Li2O-SiO2_glass,na,na,na,na,na,na,oxide_glass,na,na,na,na,na,na,na,ref40,stated_fig,E=70-80 GPa
+mun2025,Fig3e,3e,modulus,material,SiO2_glass,na,na,na,na,na,na,oxide_glass,na,na,na,na,na,na,na,ref40,stated_fig,E=75 GPa
+mun2025,Fig3e,3e,modulus,material,Li2O-P2O5_glass,na,na,na,na,na,na,oxide_glass,na,na,na,na,na,na,na,ref40,stated_fig,E=50 GPa
+mun2025,Fig3e,3e,modulus,material,Li2S-P2S5_glass,na,na,na,na,na,na,sulfide_glass,na,na,na,na,na,na,na,ref40,stated_fig,E=18-25 GPa; our real-bulk E_SE 22-24 in this band (Sakuda 24 Bazzoun 22.1); room-T calenderable
+mun2025,Fig3e,3e,modulus,material,polymer,na,na,na,na,na,na,polymer,na,na,na,na,na,na,na,ref40,stated_fig,E=1-6 GPa

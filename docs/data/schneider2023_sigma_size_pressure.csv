@@ -1,0 +1,51 @@
+# Schneider et al., Adv. Energy Mater. 13, 2203873 (2023). DOI 10.1002/aenm.202203873
+# Material: t-Li7SiPS8 (t-LiSiPS), tetragonal LGPS-like thiophosphate glass-ceramic. SE-only blocking-electrode pellet (NO CAM/composite).
+# CAUTION: NOT argyrodite LPSCl. Same sulfide family -> physics/pressure-behaviour/method transferable; sigma/E/dV/density ABSOLUTE values NOT transferable to LPSCl (frame[4] material caveat).
+# sigma = IONIC conductivity (mS/cm). PSD via 50um sieve: psd_small=<50um (monomodal, gamma a=1.944 b=7.048), psd_large=>50um (bimodal, D50_vol=89um).
+# source: stated = caption/text exact; digitized = read from figure (TREND only, approximate). value_blank/na = not given in paper.
+# pressure_GPa: pelletizing (=fabrication) unless noted stack. Our LPSCl fabrication = 0.30 GPa; their range 0.01-1.7 GPa (high to expose activation-volume dV).
+quantity,psd,sweep,pressure_GPa,value,unit,stated_or_digitized,figure,note
+sigma_ionic,psd_small,compression_max,0.5,4.1,mS/cm,stated,Fig3,max of compression sweep
+sigma_ionic,psd_large,compression_max,0.5,5.7,mS/cm,stated,Fig3,max of compression sweep (larger PSD higher sigma despite lower density)
+sigma_ionic,psd_small,compression,0.01,0.3,mS/cm,stated,Fig3,uncompressed powder (poor inter-particle contact)
+sigma_ionic,psd_large,compression,0.01,0.7,mS/cm,stated,Fig3,uncompressed powder
+sigma_ionic,psd_small,release_max,0.15,5.3,mS/cm,stated,Fig3,max on pressure-release sweep (~0.1-0.2 GPa)
+sigma_ionic,psd_large,release_max,0.15,6.6,mS/cm,stated,Fig3,max on pressure-release sweep
+sigma_ionic,psd_small,release,0.01,4.4,mS/cm,stated,Fig3,at lowest pressure on release (irreversible plastic densified)
+sigma_ionic,psd_large,release,0.01,2.1,mS/cm,stated,Fig3,larger PSD MORE sensitive to release (sigma drops below small PSD)
+sigma_ionic,bulk,no_pressure,,2.0,mS/cm,stated,text_ref38,Harm et al total sigma at no pressure
+sigma_ionic,psd_small,stack_test,0.01,,mS/cm,digitized,Fig5,stack-pressure EIS at 0.01 GPa lower than 0.1 GPa (surface roughness/cracks)
+sigma_ionic,psd_small,stack_test,0.1,,mS/cm,digitized,Fig5,0.1 GPa stack recommended (closes surface cracks)
+activation_energy,bulk,no_pressure,,0.27,eV,stated,text_ref38,Harm et al; matches calc 0.22(c-axis 1D)/0.28(3D)
+migration_barrier_c_axis,bulk,,,0.22,eV,stated,Fig4,bond-valence + AIMD; 1D fast channel along c
+migration_barrier_3D,bulk,,,0.28,eV,stated,Fig4,3D migration barrier
+diffusion_anisotropy,bulk,,,4.0,ratio_Dc/Dab,stated,text/FigS17,D along c ~4x D along a/b
+activation_volume_exp,psd_small,release_fit,,1.39,cm3/mol,stated,Fig4c,from ln(sigma)-vs-p slope; particle-size INDEPENDENT
+activation_volume_exp,psd_large,release_fit,,1.41,cm3/mol,stated,Fig4c,intrinsic material property (size/morphology independent)
+activation_volume_aimd,bulk,f0.99,,1.7,cm3/mol,stated,Fig4b,AIMD lattice-scaling f=0.99
+activation_volume_aimd,bulk,f0.98,,2.0,cm3/mol,stated,Fig4b,AIMD lattice-scaling f=0.98
+heckel_Py_indie,psd_small,compression,,0.95,GPa,stated,Fig2f_text,mean yield pressure P_y from regime-II slope (in-die); +/-0.03
+heckel_Py_indie,psd_large,compression,,1.65,GPa,stated,Fig2f_text,larger PSD -> higher P_y (harder plastic flow); +/-0.03
+heckel_Py_outdie,psd_small,release,,,GPa,stated,FigS9,out-of-die P_y higher than in-die both PSDs (value in SI)
+heckel_Py_order,both,,,small<large,GPa,stated,text,KEY TREND: smaller PSD -> lower P_y -> easier plastic densification
+rel_density,both,regime_III,1.2,90,percent,stated,text,rho_rel ~90-95% at regime III (porosity 5-10%) high pressure
+rel_density,both,regime_III,1.7,95,percent,stated,text,upper bound of regime III density
+rel_density,both,release_drop,,-4,percent,stated,Fig2e_text,density decreases ~4% on pressure release (elastic recovery)
+rel_density_compare,psd_small,low_P,,higher,percent,stated,Fig2e,small PSD denser than large PSD at given pressure (BUT sigma lower)
+pellet_thickness,both,compression,0.01,1600,um,digitized,Fig2d,initial thickness ~1600 um
+pellet_thickness,both,compression,1.7,1000,um,digitized,Fig2d,saturates ~1000 um (rho_rel->100% asymptote)
+side_phase_amorphous,both,pristine,,8.6,wt%,stated,FigS12,31P MAS NMR pristine (range 8.2-9.0)
+side_phase_amorphous,both,pressed,1.7,10.0,wt%,stated,FigS12,after 1.7 GPa (range 9.7-10.2); pressure increases disorder/side-phase
+psd_D50_volume,psd_large,,,89,um,stated,Fig2c_TableS1,volume-based D50 of >50um fraction
+gamma_fit_a,psd_small,,,1.944,dimensionless,stated,Fig6a,DEM input gamma distribution shape (Feret diameter)
+gamma_fit_b,psd_small,,,7.048,um,stated,Fig6a,DEM input gamma distribution scale
+dem_domain_base,,,,210,um,stated,text,DEM domain base 210x210 um^2
+dem_domain_height,,,,1700,um,stated,text,DEM domain height 1700 um
+dem_n_particles,,,,9591,count,stated,text,number of particles in DEM compaction
+E_SE,,,,,GPa,na,,NOT given in paper (DEM calibrated via k_N/c_cor; Heckel P_y=0.95/1.65 GPa is the sigma_y proxy)
+sigma_y,,,,,GPa,na,,NOT given numerically; P_y(Heckel) is effective yield
+poisson_nu,,,,,dimensionless,na,,NOT given numerically (SI)
+sigma_electronic,,,,,mS/cm,na,,not measured (SE-only ionic study)
+sigma_thermal,,,,,W/mK,na,,not measured
+coverage,,,,,percent,na,,not measured (no CAM)
+coordination_Z,,,,,count,na,,not reported
