@@ -23,7 +23,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/cha2024_dualcompatible_halide_ncm_lpscl_interface.md` | **[우리 그룹]** Cha/Yun/Kim/**Kang**/Cho/**Jong-Won Lee**, "dual-compatible halides" — high-Ni NCM(LiNi₀.₈₃Co₀.₁₁Mn₀.₀₆O₂)에 할라이드 SE(**LIC=Li₃InCl₆ / LYC=Li₃YCl₆ / LZC=Li₂ZrCl₆**)를 RAM 8–10 nm conformal 코팅 → NCM-LPSCl 계면 부반응 억제. **핵심: σ가 아니라 *dual compatibility*(NCM·LPSCl *양쪽* 호환)가 결정** — LIC(In) 양쪽 분해(In₂S₃)·LYC(Y) LPSCl과 분해(Y₂S₃)·**LZC(Zr⁴⁺) 양쪽 무분해 = 최고**. 계면저항 bare 74.4→LZC **20.1 Ω·cm²**·100cyc 유지율 LZC **91.2 %**(LIC 80.8 < bare 83.1 < LYC 87.3) (J. Power Sources 2024, 617, 235157, DOI 10.1016/j.jpowsour.2024.235157) — **우리 그룹 cathode-interface 3부작 *기원(2024)*** | **양극·계면 수식제·할라이드 코팅·dual compatibility·σ≠계면저항** (실험·계산無) |
 
 ## ⚠ EXTERNAL (argyrodite 아님 · [우리 그룹] 아님 · 물성 4축에 *수치로* 비교 제외)
-> 아래는 **argyrodite/배터리 *물성* 논문이 아님** — off-topic 멘탈모델(Liu2013) 또는 *외부 theory framework*(Dyre2004). 전이 가능한 *개념/어휘* 때문에만 보관. **comparison_vs_ours 물성축에 *수치로* 넣지 않음**(theory framework는 축 A에 framework note 한 줄만 허용), [우리 그룹] 태그 금지, 수치 대조·"일치" 금지.
+> 아래는 **argyrodite/배터리 *물성* 논문이 아님** — off-topic 멘탈모델(Liu2013), *외부 theory framework*(Dyre2004), 또는 *다른 재료의 method 레퍼런스*(Choi2025=Cu/TaN MLIP-adhesion). 전이 가능한 *개념/어휘/방법* 때문에만 보관. **comparison_vs_ours 물성축에 *수치로* 넣지 않음**(theory framework는 축 A에 framework note 한 줄만 / method 레퍼런스는 §methods 한 줄만 허용), [우리 그룹] 태그 금지, 수치 대조·"일치" 금지.
 
 | slug | 논문 | 보관 이유 (analogy/vocabulary-only) |
 |---|---|---|
