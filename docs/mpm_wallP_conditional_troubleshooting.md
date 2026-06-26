@@ -101,9 +101,14 @@ a5(SE/sol 68%) gap −9.3~−10.8, a6(59%) −7.1~−9.6, a7(48%) −5.2~−6.7.
 ## §8 RESULT (_10 corner, 2026-06-26)
 | f_AM | SE_target (MPa) | MPM porosity (%) | gap to DEM 28.34 |
 |---|---|---|---|
-| 0 (조건부 off) | 300 | 15.9 (과압축) | +12.4 |
-| **0.86 (von Mises)** | 42 | **25.25** | **+3.1** ✅ |
+| 0 (조건부 off) | 300 | 15.90 (과압축) | +12.4 |
+| 0.60 | 120 | 21.78 | +6.6 |
+| 0.75 | 75 | 23.56 | +4.8 |
+| **0.86 (von Mises)** | 42 | **25.25** | **+3.1** |
+| (Love-Weber 0.924) | 23 | ~27–28 (외삽) | ~0 |
 | DEM rigid | — | 28.34 | 0 |
+★ flat sweep MONOTONE (f_AM↑→porosity↑), 과압축 15.9 → DEM 28.34 매끄럽게 tune; 외삽 f_AM≈0.95에서 DEM 도달.
+Love-Weber f_AM=0.924(`dem_am_load_fraction.py`) → ~27–28% ≈ DEM(소성증분 작음) = robust 버전(floor+0.924) production 값.
 판정: Tabor식 wallP 조건부가 SE-poor/mono-large frozen-AM 과압축(0%→15.9 over-compress)을 물리적으로 교정.
 f_AM은 DEM 응력에서 독립 유도 → cross-consistency(fit 아님).  잔차 3.1%p = 진짜 소성 void-fill(frame[5]).
 DEM-rock clamp와 달리 MPM이 porosity를 *계산*(신뢰성 有).  → SE-poor corner fix로 채택 후보.
