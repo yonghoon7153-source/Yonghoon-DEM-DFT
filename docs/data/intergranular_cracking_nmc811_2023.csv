@@ -4,7 +4,7 @@ crack_onset_voltage,4.0,V_vs_Li,NMC811_secondary,phase-field FEM charge C/50 (Fi
 crack_onset_c_lattice_strain,0.015,strain (-),NMC811_primary,c-lattice strain at crack initiation (Fig 5d/5e-i),stated,Griffith crack starts when c-strain reaches 0.015
 c_lattice_strain_max,0.55,state_of_lithiation (-),NMC811_primary,c-strain peak then collapse (Fig 5e-ii),stated,c-strain maximum at ~0.55 SOL; cracks propagate outward with severity here
 c_lattice_collapse_onset_voltage,4.1,V_vs_Li,NMC811_primary,c-lattice collapse drastic above 4.1 V (intro),stated,collapse -> bulk contraction -> steep damage rise (Fig 5e-iii)
-delithiation_threshold,4.5,V_vs_Li,cell,CCCV C/50 to 4.5 V then CV to C/100,stated,drives >85% delithiation (Maerker), guarantees significant cracking
+delithiation_threshold,4.5,V_vs_Li,cell,CCCV C/50 to 4.5 V then CV to C/100,stated,drives >85% delithiation (Maerker) -- guarantees significant cracking
 delithiation_extent,85,percent,NMC811,charged 4.5 V C/50 (per Maerker ref 2),stated,>85% delithiation state
 # === crack location / type ===
 crack_type,intergranular,categorical,NMC811_secondary,X-ray CT + phase-field,stated,cracks along primary-particle grain boundaries; little transgranular (cracks branching into grains rare)
@@ -12,7 +12,7 @@ crack_location,central_then_radial,categorical,NMC811_secondary,Fig 3m / Fig 4 G
 crack_driver,anisotropic_lattice_strain,categorical,NMC811_primary,phase-field FEM (Fig 5),stated,randomly oriented primary crystals expand/contract asymmetrically (transversely isotropic) -> tensile stress at GBs
 spatial_polarisation,separator_gt_currentcollector,categorical,electrode,Fig 4b through-thickness,stated,particles near separator delithiate more (higher SoC) -> larger central voids; near CC = smaller distributed cracks
 # === volume expansion of secondary particles (15 particles, X-ray CT) ===
-secondary_particle_volume_increase_mean,19,percent,NMC811_secondary,pristine->charged 4.5V, 15 particles,stated,AVERAGE +19% volume increase (contrasts -5% unit-cell from a-lattice)
+secondary_particle_volume_increase_mean,19,percent,NMC811_secondary,pristine->charged 4.5V over 15 particles,stated,AVERAGE +19% volume increase (contrasts -5% unit-cell from a-lattice)
 secondary_particle_volume_increase_max,28,percent,NMC811_secondary,pristine->charged 4.5V,stated,greatest single-particle increase ~28% (Particle #5)
 a_lattice_volume_change,-5,percent,NMC811_primary_unitcell,4.4 V (literature ref 2),stated,UNIT-CELL volume DECREASES 5% (a-lattice shrink) -> particle EXPANSION contrasts crystallography
 expansion_contributing_voltage,4.1,V_vs_Li,NMC811,a-lattice +210 mAh/g direction,stated,~2% a-direction expansion conceivable to 4.1 V
@@ -98,20 +98,20 @@ mean_percent_volume_change_due_to_crack,92.0,percent,NMC811_secondary,Fig 3k mea
 fabrication_induced_cracking_fraction,33,percent,NMC811,literature (intro ref 10),stated,~1/3 of all particles had fabrication-induced cracks (physical stress: calendering/winding/synthesis) -> motivates need to distinguish drivers
 pre_cycling_cracking,none,categorical,NMC811_assessed,pristine scan all assessed particles,stated,NO cracking present prior to charging -> cracks attributed SOLELY to electrochemical delithiation
 # === electrode / cell parameters ===
-composition_NMC_carbon_PVDF,90_5_5,wt percent,electrode,NEI Corp NMC811 + conductive carbon + PVDF,stated,90:5:5 wt% (LIB liquid-electrolyte electrode, NOT ASSB)
+composition_NMC_carbon_PVDF,90_5_5,wt percent,electrode,NEI Corp NMC811 + conductive carbon + PVDF,stated,90:5:5 wt% LIB liquid-electrolyte electrode -- NOT ASSB
 areal_capacity,2.2,mAh/cm2,electrode,printed electrode,stated,areal capacity 2.2 mAh/cm2
 electrode_thickness,69,um,electrode,calendared,stated,~69 um thick
-electrode_porosity,30,percent,electrode,calendared to porosity (active density 11.36 mg/cm2),stated,~30% porosity (LIB electrode, liquid-filled)
+electrode_porosity,30,percent,electrode,calendared to porosity (active density 11.36 mg/cm2),stated,~30% porosity LIB electrode -- liquid-filled not ASSB compaction
 active_material_density,11.36,mg/cm2,electrode,calendared,stated,active loading
 specific_capacity_NMC811,190-220,mAh/g,NMC811,literature (intro),stated,NMC811 specific capacity range
-secondary_particle_diameter_FEM,14,um,NMC811_secondary,extracted from X-ray CT for phase-field model,stated,14 um agglomerate, 400 Voronoi primary grains
+secondary_particle_diameter_FEM,14,um,NMC811_secondary,extracted from X-ray CT for phase-field model,stated,14 um agglomerate of 400 Voronoi primary grains
 # === phase-field FEM material parameters ===
 E_primary_particle,150,GPa,NMC811_primary,phase-field FEM (isotropic linear elastic),stated,E_p = 150 GPa
 poisson_primary_particle,0.3,(-),NMC811_primary,phase-field FEM,stated,nu_p = 0.3
-E_carbon_binder,0.3,GPa,CBD,phase-field FEM (linear elastic isotropic),stated,E_c = 0.3 GPa carbon-binder (nano-porous, soft)
+E_carbon_binder,0.3,GPa,CBD,phase-field FEM (linear elastic isotropic),stated,E_c = 0.3 GPa carbon-binder (nano-porous soft)
 poisson_carbon_binder,0.3,(-),CBD,phase-field FEM,stated,nu_c = 0.3
 carbon_binder_shell_thickness,20,um,CBD,shell around 14um particle (numerical method),stated,20 um diameter shell captured CBD presence
-FEM_elements,4000000,count,model,COMSOL 3D tomography-based mesh,stated,~4 million elements, 13 million DOF
+FEM_elements,4000000,count,model,COMSOL 3D tomography-based mesh,stated,~4 million elements with 13 million DOF
 charge_rate_FEM,C/50,rate,model,phase-field FEM charge,stated,C/50 slow charge -> homogeneous intraparticle delithiation
 # === imaging parameters ===
 pixel_size,124,nm,X-ray nano-CT,Zeiss Xradia 810 Ultra Cr source 5.4 keV,stated,~124 nm pixel; crack <124 nm unresolvable

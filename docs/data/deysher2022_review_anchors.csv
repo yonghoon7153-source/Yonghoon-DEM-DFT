@@ -2,9 +2,9 @@ quantity,value,unit,condition,material,stated_or_digitized,original_source_ref,n
 # Deysher, Ridley, ... Meng, "Transport and mechanical aspects of all-solid-state lithium batteries", Mater. Today Phys. 24 (2022) 100679, DOI 10.1016/j.mtphys.2022.100679. REVIEW (NMC | Li6PS5Cl | Si/Li). NO self-measurement/simulation -- ALL numbers are CITED from other papers. The 'original_source_ref' column gives the in-paper reference NUMBER that the review attributes the value to; cite THAT source, not this review, as the primary origin. digitized = read from a figure curve (TREND only).
 # === TRANSPORT / PERFORMANCE-LIMIT anchors (Fig 1 survey + text) ===
 areal_capacity_typical_limit,< 2,mAh/cm2,room temperature; literature survey,NMC/various + sulfide SE,stated,"refs[1,6,9-28] (Fig1)",most reported ASSB cells fall below this; our model TARGET coordinate
-areal_capacity_best_case,6.8,mAh/cm2,60 C; Ag-C pouch full cell; cycled at 3.2 mA/cm2,LiNi0.9Mn0.05Co0.05O2 (NMC) + LPSCl,stated,Lee et al. [24],best-case high-areal example; needs elevated T + micron SSE + isostatic press
-current_density_best_full_cell,5,mA/cm2,80% retention over 500 cyc; areal 2 mAh/cm2; util <50%,NCM811 + LPSCl + uSi full cell,stated,Tan et al. [25],OUR material system best-case; cathode utilization still <50%
-current_density_RT_Limetal_limit,< 2,mA/cm2,room temperature full cell,Li metal anode,stated,Fig1 / [28,30,32-62],sym-cell >> full-cell gap (volume change hypothesis)
+areal_capacity_best_case,6.8,mAh/cm2,"60 C; Ag-C pouch full cell; cycled at 3.2 mA/cm2","LiNi0.9Mn0.05Co0.05O2 (NMC) + LPSCl",stated,Lee et al. [24],best-case high-areal example; needs elevated T + micron SSE + isostatic press
+current_density_best_full_cell,5,mA/cm2,"80% retention over 500 cyc; areal 2 mAh/cm2; util <50%",NCM811 + LPSCl + uSi full cell,stated,Tan et al. [25],OUR material system best-case; cathode utilization still <50%
+current_density_RT_Limetal_limit,< 2,mA/cm2,room temperature full cell,Li metal anode,stated,"Fig1 / [28,30,32-62]",sym-cell >> full-cell gap (volume change hypothesis)
 ARPA_E_IONICS_goal,3,mA/cm2,2016 program goal (reference line),-,stated,Fig1 (ARPA-E),benchmark dashed line in Fig1
 SE_bulk_sigma_ionic_high,12,mS/cm,room temperature (representative high),Li10GeP2S12 (LGPS),stated,Kamaya [1],bulk SE sigma already high -> focus shifts to composite; NOTE LGPS != LPSCl
 porosity_for_full_utilization,< 20,%,microstructure modeling; high CAM wt%,composite cathode,stated,Bielefeld [66],"<20% porosity needed for full CAM utilization -- our porosity ~10-15.6% MEETS this (frame[4])"
@@ -31,9 +31,9 @@ Li_creep_yield_strength,~ 0.8,MPa,1-7 MPa stack -> plastic deform + creep,Li met
 Li_operating_stack_pressure,1-7,MPa,Li metal anode cell operation,Li metal,stated,[107],"operating range; >> than this -> shorting risk [98]"
 Li_metal_volume_expansion_rate,~ 5,um per mAh/cm2,plated Li (anode-less),Li metal,stated,Fig4b / [25],"Li reservoir higher -> expansion larger; Li-PHASE physics, do NOT transfer to our SE model"
 Na_vs_Li_expansion,~ 60,% more,Na-ASSB vs Li (8 um vs 5 um per mAh/cm2),Na metal,stated,conclusion,context only
-multilayer_expansion_10layer,0.18,mm,NMC anode-less, 4 mAh/cm2,multilayer stack,digitized,Fig5,expansion linear with layer count (Fig5 curve)
-multilayer_expansion_20layer,0.35,mm,NMC anode-less, 4 mAh/cm2,multilayer stack,digitized,Fig5,
-multilayer_expansion_30layer,0.53,mm,NMC anode-less, 4 mAh/cm2,multilayer stack,digitized,Fig5,
+multilayer_expansion_10layer,0.18,mm,"NMC anode-less; 4 mAh/cm2",multilayer stack,digitized,Fig5,expansion linear with layer count (Fig5 curve)
+multilayer_expansion_20layer,0.35,mm,"NMC anode-less; 4 mAh/cm2",multilayer stack,digitized,Fig5,
+multilayer_expansion_30layer,0.53,mm,"NMC anode-less; 4 mAh/cm2",multilayer stack,digitized,Fig5,
 Li_alloy_volume_expansion,> 300,%,lithiation,(Li)Si / (Li)Sb,stated,[25],alloys withstand higher pressure (better mech props than Li metal)
 Li_In_alloy_stack_pressure,5-150,MPa,reported operating,Li-In alloy anode,stated,[104],alloy-type anode pressures
 Li_Si_alloy_stack_pressure,50,MPa,reported operating,Li-Si alloy anode,stated,[25],Si retains increased stack pressure after delithiation (helps retention)
