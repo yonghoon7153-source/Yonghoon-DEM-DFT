@@ -37,7 +37,10 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
    줘야 함.  ★ 가장 큰 차별.
 2. **granular 점접촉 constriction σ triad** — Kirchhoff/Holm 접촉망으로 **ionic+electronic+thermal** 동시.
    연속체(GeoDict/FEM/voxel)는 σ_contact-free **상한**만; RNM(Bazzoun)은 ionic만.  우리는 둘 다 가져 constriction
-   overhead까지 정량.
+   overhead까지 정량.  ★ **그룹-내부 진화 논거**: Janek 그룹 자신이 **Bielefeld 2019(percolation만, σ 미계산,
+   constriction을 future work로 deferral) → Bazzoun 2026(RNM/Holm σ 추가) → 우리(σ triad + MPM)** 순으로
+   발전 — 즉 *그 그룹이 나중에 Bielefeld가 빠뜨린 σ 솔버를 정확히 추가*했다 = 우리 transport 방향이 옳다는
+   독립 증거.  우리는 거기서 한 발 더(전자·열 triad + 소성 MPM).
 3. **MPM 소성 morphology** — 입자 shape change(SEM 일치) + void-fill flow + accumulated plastic-strain field
    (열화 onset) + 공간 stress/strain/density map.  rigid-sphere DEM(Varkey 포함 *모든* DEM 논문)은 불가.
 4. **DEM↔MPM 독립 cross-validation + regime map** — 둘을 실험에 독립 보정(frame[4]); 수렴=교차검증, 발산=정량화된
@@ -74,6 +77,7 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
 | Lee 2025 (Nat Commun 16, 4200) | A+X | dry **co-rolling** 저압 2MPa robust 계면 (LPSCl+NCM811+VGCF+PTFE = 우리 정확한 계) | operating-pressure anchor(floor 2<Doux5<Minn40); ★ **const-P vs fixed-gap cell = 우리 MPM servo vs hold 실험쌍** → hold 채택 독립검증; fab 500 vs cycle 2-5 = process-level fab/operating |
 | Bazzoun 2026 | A+X+M | EIS σ_ionic + DEM+RNM(=우리 솔버) + FEM | σ_e/thermal triad + Stage-E + MPM(그들 ionic·sphere만) |
 | Varkey 2026 | G+M | multi-contact 탄소성 DEM(but rigid sphere, ~20% floor) | 소성 shape change + void-fill + <20% (그들이 future work로 인정) |
+| Bielefeld 2019 (JPCC 123,1626) | X+M | GeoDict **stochastic-placement** percolation/utilization/contact-area (NCM+LPS, Janek+VW); **σ 계산 안 함**(constriction을 future로 deferral, Greenwood 1966=Holm계보) | 공정 compaction(porosity 우리는 *출력*, 그들은 *입력*) + 접촉망 σ triad + MPM 소성 morphology + bimodal Furnas dip(그들 single-modal) |
 | Oh 2026 (#266) | A+X | bimodal CAM dip(실험) | rigid DEM이 dip 독립재현; 소성 MPM이 dip 부분소거 정량 |
 | Hong 2026 (#271) | A+G | CBD viscoelastic spring-back(GeoDict) | spring-back은 우리 MPM gap(미구현); CBD --coh lever |
 | GeoDict류 #281/#284/#286/#275 | G | 주어진 구조 특성화(top-down) | 공정→구조 예측 + 접촉망 σ |
