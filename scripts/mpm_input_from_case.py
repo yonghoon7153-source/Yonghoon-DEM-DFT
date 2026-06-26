@@ -176,13 +176,23 @@ def main():
     # (non-mono cases reach ≤3.9 %p below DEM) → legit plastic (MPM ≤MARGIN below DEM) is PRESERVED (floor
     # not reached); only catastrophic (>MARGIN below, the ~7 cases with DEM−MPM gap >5) is caught — works
     # for ANY r_SE.  Data: clean gap between legit max 3.9 and catastrophic min 6.3 → MARGIN=5 separates.
-    WALLP_MARGIN = 5.0
+    # ★ SE-CONTENT-SCALED margin (2026-06-27): a flat MARGIN=5 set the floor too LOW for SE-poor AM-rich
+    # corners whose DEM is thin-loose-inflated (100_12 DEM 18.3, true ~16) → floor DEM−5=13.3 sits below
+    # the true porosity, so even the hard AM-jam stop under-corrects.  The legit plastic void-fill
+    # increment SCALES WITH SE availability (SE-poor beds void-fill LESS): SE/sol~36% (SE-sufficient)
+    # reaches the full ~4%p envelope; SE/sol~26% (SE-poor) only ~3%p → floor closer to DEM.  Preserves
+    # the 25 legit void-fill cases (MPM 2–4%p<DEM, stop ABOVE floor) AND caps the 11 catastrophic SE-poor
+    # corners near their DEM-anchored true porosity.  (SE-rich runs have f_AM≈0 → conditional off anyway.)
+    _vse = sum(float(r[4]) ** 3 for r in se_rows); _vam = sum(float(r[4]) ** 3 for r in am_rows)
+    se_of_solid = _vse / (_vse + _vam) if (_vse + _vam) > 0 else 0.36
+    WALLP_MARGIN_MAX = 4.0; SE_REF = 0.36          # MAX ≈ legit-plastic envelope (3.9%p); SE_REF = SE-sufficient breakpoint
+    WALLP_MARGIN = WALLP_MARGIN_MAX * min(1.0, se_of_solid / SE_REF)
     floor_por = round(max(2.0, float(poro) - WALLP_MARGIN), 2) if poro is not None else 0.0
     _rs = f'{_f_real:.3f}' if _f_real is not None else '—'
     _hs = f'{_f_hertz:.3f}' if _f_hertz is not None else '—'
     print(f'  f_AM = {f_am:.3f}  [{f_am_src}]   (real atom-dump={_rs}, Hertz scaffold={_hs})')
-    print(f'  floor_porosity = {floor_por:.1f}% (= DEM {poro:.1f} − {WALLP_MARGIN:.0f} margin)   '
-          f'(AM skeleton engages only if MPM compresses >{WALLP_MARGIN:.0f}%p below DEM = catastrophic)')
+    print(f'  floor_porosity = {floor_por:.1f}% (= DEM {poro:.1f} − {WALLP_MARGIN:.1f} margin, SE/sol={se_of_solid*100:.0f}%)   '
+          f'(HARD AM-jam stop at floor; margin SE-content-scaled, MAX={WALLP_MARGIN_MAX:.0f})')
     case = a.case or os.path.basename(a.results.rstrip('/'))
     # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
     # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are

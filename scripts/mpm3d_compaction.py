@@ -657,7 +657,17 @@ def main(argv):
                     am_skel = args.am_load_frac * target * engage      # AM skeleton stress, engages below floor
                 else:
                     am_skel = args.am_load_frac * target               # legacy flat (no floor)
-                descend = (p + am_skel < target)             # stop when SE + engaged AM-skeleton reaches target
+                # ★ HARD AM-jamming stop (2026-06-27): the stress-share criterion alone lets a SOFT SE
+                # SLIP PAST the floor (SE-poor corners: SE meets its (1-f_AM)·target share only ~5-7%p
+                # below the floor → catastrophic over-compaction, e.g. 100_12 → 11.6 < floor 13.3).  The
+                # frozen AM is fixed at its DEM-compacted (jammed) positions, so once the bed reaches the
+                # floor the rigid AM-AM network has JAMMED and physically blocks further platen descent —
+                # a porosity-based stop, NOT a stress-based one.  Gated on am_load_frac>0 (conditional
+                # active = AM load-bearing); SE-rich (f_AM≈0) and legit void-fill (stop above floor) are
+                # untouched.  This is physics (AM jam at DEM packing), not a DEM clamp.
+                hard_floor = (args.am_load_frac > 0.0 and args.floor_porosity > 0.0
+                              and por <= args.floor_porosity)
+                descend = (p + am_skel < target) and not hard_floor   # stop when stress-share reached OR AM jams at floor
             else:
                 # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
                 # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
