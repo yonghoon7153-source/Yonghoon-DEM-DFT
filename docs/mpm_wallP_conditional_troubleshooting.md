@@ -262,7 +262,9 @@ frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
   한 coefficient가 둘 다 맞추면 genuine(regime auto); 한쪽만 맞으면 또 tunable patch → 폐기.
 - ⚠ **DEM import도 억지 jam도 아님** — AM confinement는 *실재 물리*(SE가 AM에 갇힘).  맞으면 MPM이 porosity를
   물리적으로 내는 길 → §13 코너도 DEM 없이 MPM이 owns 가능.  status: 구현·adversarial 검증 진행.
-- ★★ **VERDICT (2026-06-27): se-am-drag = 3번째 artifact.  §13 확정.**  adversarial 리뷰(wq3sgfk9j) + 사용자 통찰:
+- ⚠ **PREDICTION (NOT yet empirically run — 2026-06-27): se-am-drag = 3번째 artifact일 *가능성*.**  ★ 아직 실제
+  GPU 런이 *한 번도 없음* (12.70은 drag 아님 = variance).  아래는 adversarial 리뷰(wq3sgfk9j) + 사용자 통찰의
+  *예측*일 뿐 — **fixed-coef 런(100_12 + real_14)으로 empirical 확정 전까지 §13을 "확정"이라 단정 금지.**
   - **code PASS**(default off byte-identical, 버그 없음) 하지만 **physics = tunable knob, NOT regime-auto.**
   - **결정 논거:** drag는 *local* am_near(3³ AM-fraction, geometry-static)만 본다.  그러나 §13의 진짜 discriminator
     는 **두께(global)** — **100_12(thin)·real_14(thick) 둘 다 am_near 높음** → 한 coef가 둘을 구분 불가 → 100_12
