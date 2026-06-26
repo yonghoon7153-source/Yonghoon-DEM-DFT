@@ -135,28 +135,17 @@ def main():
             f_am = float(_amlf(_np.zeros(len(_R)), _X, _R, _isSE)['f_AM'])
     except Exception as _e:
         print(f'  [f_AM] skipped ({_e}) → --am-load-frac 0 (legacy, no conditional)')
-    floor_por = round(float(poro), 2) if poro is not None else 0.0
-    # ★ GATE — conditional ONLY for mono-LARGE-AM (the catastrophic over-compression geometry: sparse big
-    # AM → SE escapes → frozen-AM can't bear load).  Bimodal (has AM_S) or mono-SMALL → SE is TRAPPED →
-    # NO catastrophic over-compress → conditional OFF, so the MPM's LEGITIMATE plastic densification
-    # (porosity < DEM = the MPM's unique value) is PRESERVED, not suppressed by the floor.  Without this
-    # gate, floor=DEM would wrongly pull the ~23 non-mono cases (MPM 1-4 %p below DEM, legit plastic) up
-    # to DEM.  mono-large = single-modal AM (no AM_S) AND r_AM/r_SE ≳ 6 (the 12:1-ratio large-AM regime).
-    try:
-        _n_ams = sum(1 for r in am_rows if int(float(r[0])) == 2)
-        _r_am = sum(float(r[4]) for r in am_rows) / max(len(am_rows), 1)
-        _r_se = sum(float(r[4]) for r in se_rows) / max(len(se_rows), 1)
-        _mono_large = (_n_ams == 0 and len(am_rows) > 0 and _r_am / max(_r_se, 1e-9) >= 6.0)
-    except Exception:
-        _mono_large = False
-    if not _mono_large and f_am > 0:
-        print(f'  [gate] non-mono-large (bimodal/mono-small) → conditional OFF (f_AM {f_am:.3f}→0): '
-              f'preserve legit plastic densification (MPM<DEM, MPM 고유값)')
-        f_am = 0.0
-    elif _mono_large:
-        print(f'  [gate] mono-large-AM (r_AM/r_SE={_r_am/max(_r_se,1e-9):.1f}) → conditional ON '
-              f'(f_AM {f_am:.3f}, floor {floor_por:.1f}%) — over-compression corner')
-    print(f'  f_AM = {f_am:.3f}   floor_porosity = {floor_por:.1f}%   (robust wallP conditional, gated to mono-large)')
+    # ★ ROBUST gate via a porosity MARGIN below DEM (geometry-AGNOSTIC — replaces an r_AM/r_SE gate that
+    # MISSED r_SE=1.5 mono-large like a9_p10, since the ratio drifts with r_SE).  The AM skeleton engages
+    # only when the bed compresses MORE THAN `WALLP_MARGIN` below the DEM rigid-packing porosity (= the
+    # catastrophic frozen-AM over-compression).  MARGIN = the max observed LEGITIMATE plastic densification
+    # (non-mono cases reach ≤3.9 %p below DEM) → legit plastic (MPM ≤MARGIN below DEM) is PRESERVED (floor
+    # not reached); only catastrophic (>MARGIN below, the ~7 cases with DEM−MPM gap >5) is caught — works
+    # for ANY r_SE.  Data: clean gap between legit max 3.9 and catastrophic min 6.3 → MARGIN=5 separates.
+    WALLP_MARGIN = 5.0
+    floor_por = round(max(2.0, float(poro) - WALLP_MARGIN), 2) if poro is not None else 0.0
+    print(f'  f_AM = {f_am:.3f}   floor_porosity = {floor_por:.1f}% (= DEM {poro:.1f} − {WALLP_MARGIN:.0f} margin)   '
+          f'(robust: AM skeleton engages only if MPM compresses >{WALLP_MARGIN:.0f}%p below DEM = catastrophic)')
     case = a.case or os.path.basename(a.results.rstrip('/'))
     # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
     # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are

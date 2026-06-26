@@ -167,9 +167,14 @@ densification을 억제**.  MPM은 plastic void-fill로 porosity<DEM이 되어�
 - mono-large gap 1-4 **6** → 복원(corner, defensible)
 - **★ NON-mono gap 1-4 (정당 소성, MPM 1-4%p<DEM) 23** → floor=DEM이면 **DEM으로 잘못 끌어올림 = 억제** ❌
 - gap≤0 (MPM≥DEM) **64** → floor OFF, 불변.  (real14가 통과한 건 MPM 15.91>DEM 15.6, 우연히 floor 위)
-⇒ 과압축은 **mono-large 기하**(sparse 큰 AM→SE 탈출)에서만 catastrophic; bimodal/mono-small은 SE가 trapped라
-안 터짐.  **FIX: 조건부를 mono-large-AM에만 GATE** (mpm_input_from_case.py: mono_large = 단봉 AM(AM_S 없음)
-AND r_AM/r_SE ≥ 6).  non-mono → f_AM=0(조건부 OFF) → 23개 정당 소성 보존.  thick mono-large(8mAh real_10,
-MPM≈DEM)는 게이트 ON이어도 floor가 MPM≈DEM서 거의 미engage → 불변(floor self-handles).
-⇒ **재실행 범위 축소: mono-large ~13개만 변함**(조건부 적용); 나머지 ~90개는 f_AM=0 → 현 MPM값 그대로 →
-재실행해도 동일(재실행 불요).  backlog A2 GATE 보강 = DONE.
+⇒ 과압축은 **catastrophic 정도**(MPM이 DEM보다 한참 아래)에서만 문제; legit plastic은 DEM 살짝 아래.
+**FIX-v1(폐기): mono-large-AM geometry 게이트(r_AM/r_SE≥6)** — ⚠ **버그**: r_SE=1.5면 비율이 4로 떨어져
+**a9_p10(r_SE 1.5, gap+15.5 진짜 과압축)을 놓침**.  geometry/비율 게이트는 r_SE 의존이라 신뢰 불가.
+**FIX-v2(채택): porosity MARGIN 게이트 (geometry-AGNOSTIC)** — `floor = DEM − WALLP_MARGIN(5%p)`.  AM 골격은
+**DEM보다 5%p 넘게 압축될 때만** engage(=catastrophic).  legit plastic(MPM ≤4%p<DEM)은 floor 못 닿아 보존;
+catastrophic(gap>5)만 잡힘, **r_SE 무관**(a9_p10도 catch).  margin=5는 데이터 검증: legit max gap **3.9** <
+catastrophic min gap **6.3** = 깨끗한 갭 한가운데.  (mpm_input_from_case.py: floor=DEM−5 자동주입, f_AM 전부 계산.)
+**★ CROSS-CHECK 전체 107 케이스 (2026-06-26):** CAUGHT 7(전부 mono-large, gap>5: 1mAh_100_15/_10, real_20,
+a9_p10, a9_50_p10, 1mAh_8_AMP_S5/S2 → new≈floor) · PRESERVED legit 37 · PRESERVED SE-rich/dense 63 ·
+BOUNDARY(4<gap≤5) **0** · caught-but-non-mono **0**.  무결성 완벽.
+⇒ **재실행 = 정확히 7개**(catastrophic); 나머지 100개 조건부 OFF → 현 MPM 그대로 → 재실행 불요.  backlog A2 = DONE.
