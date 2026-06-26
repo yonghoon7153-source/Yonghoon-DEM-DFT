@@ -1,0 +1,89 @@
+# Bielefeld et al., ACS Appl. Mater. Interfaces 2020, 12, 12821-12833 (DOI 10.1021/acsami.9b22788)
+# Janek group + Volkswagen. GeoDict flux-based (EJ-HEAT, CONTINUUM PDE) effective ionic conductivity + binder influence.
+# *** sigma-METHOD: continuum flux-PDE (voxel harmonic averaging) -> NO point-contact constriction (Holm/Greenwood). ***
+#   sigma_eff,ion is the granular-network UPPER BOUND (constriction-free). Our Kirchhoff/Holm solver + Bazzoun RNM ADD the constriction.
+#   They DO include AM/SE INTERFACE area-resistance (40 Ohm*cm2, Braun 2018) but NOT SE-SE point-contact constriction.
+# This is the sigma-ADDING follow-up to Bielefeld 2019 (which deferred sigma to "future work"). Group evolution:
+#   Bielefeld2019 (percolation, NO sigma) -> Bielefeld2020 (THIS: continuum flux-PDE sigma + binder) -> Bazzoun2026 (RNM/Holm constriction sigma + EIS).
+# MATERIAL: AM=NCM811 (sigma_AM=1e-4 mS/cm, negligible), SE=LPSCl (sigma_bulk=2.7 mS/cm, Kato 2016). void phi=15% unless noted.
+#   sigma-validation case is LCO+LGPS+acetylene-black (Kato 2018), NOT NCM811+LPSCl -> do NOT transfer sigma absolute to our LPSCl system; TREND/method only.
+# source_type: stated = text/eq/table; digitized = read from figure curve (TREND only, approximate, do NOT cite at false precision).
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 1: model setup / sigma-flux parameters (SI Table S1, stated)
+param,value,unit,source_type,note
+void_space_phi,15,pct,stated,SI Table S1 (similar to Hlushkou)
+sigma_bulk_SE_LPSCl,2.7,mS_cm,stated,Kato 2016
+sigma_AM_NCM,1e-4,mS_cm,stated,Amin&Chiang NMC523; 4 orders below SE -> negligible
+contact_resistance_AM_SE,40,Ohm_cm2,stated,Braun 2018 (INTERFACE area-resistance, NOT SE-SE constriction)
+delta_U,1,V,stated,
+resolution,0.2,um_per_voxel,stated,200 nm -> 3 um particle is model lower limit
+domain_dims,80x80x140,um,stated,SI Table S1
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 2: literature validation (Kato 2018 reconstruction, SI Fig S4 + Table S2) -- the ONLY experimentally-validated sigma point
+quantity,model_value,experiment_value,unit,source_type,note
+sigma_eff_ion_Kato_reconstruction,0.68,0.73,mS_cm,stated,LCO+LGPS+acetylene-black (NOT NCM811+LPSCl); good agreement
+tortuosity_factor_tau2_Kato,2.29,2.47,dimensionless,stated,Kato did not account for void -> tau2 ambiguous
+solid_volpct_AM_Kato,38.1,,volpct,stated,SI Table S2
+solid_volpct_SE_Kato,57.1,,volpct,stated,
+solid_volpct_acetylene_black_Kato,4.8,,volpct,stated,
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 3: sigma_eff,ion + tau2 vs composition, uniform AM, porosity 15% (Fig 1) -- DIGITIZED trends
+#   sigma falls LINEARLY with AM fraction; larger AM -> higher sigma (smaller AM -> more obstacles -> lower sigma, higher tau2).
+quantity,AM_volpct,AM_um,sigma_eff_ion_mScm,tau2,source_type,note
+sigma_eff_vs_compo,40,15,0.62,2.0,digitized,Fig1 large AM upper (50:50 ~tau2 2)
+sigma_eff_vs_compo,40,3,0.55,2.2,digitized,Fig1 small AM lower
+sigma_eff_vs_compo,67,15,0.10,3.5,digitized,Fig1 large AM (70:30 region)
+sigma_eff_vs_compo,67,3,0.07,10,digitized,Fig1 small AM -> tau2 abrupt rise >65:35
+# tau2 vs ε_SE (SE total-volume fraction) power-law fits (Fig 2, stated)
+tau2_fit,,3,,,stated,tau2_3um = 0.325*eps_SE^(-2.018) data
+tau2_fit,,15,,,stated,tau2_15um = 0.668*eps_SE^(-1.213) data
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 4: Bruggeman comparison (Fig 2, Eq 18/19, stated) -- ASSB cathode does NOT obey Bruggeman
+quantity,value,source_type,note
+bruggeman_standard,tau2=eps^(-1/2),stated,Eq18; UNDERESTIMATES model tau2 by 4x at small AM / small SE-frac
+bruggeman_modified_alpha_range,2.02_to_1.21,stated,Eq19 tau2=gamma*eps^(-alpha); far from standard 0.5
+bruggeman_modified_gamma_range,0.32_to_0.67,stated,far from standard 1; "no further scientific insight"
+model_over_bruggeman_factor,4,stated,model tau2 = 4x Bruggeman at small particles/small SE-frac
+# -> maps to OUR R_brug_over_full_physics (sigma_thermal Ridge) + our distrust of Bruggeman for ASSB
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 5: multimodal PSD tortuosity (Fig 3 + SI Fig S5, stated) -- trimodal lowers ionic tortuosity vs monomodal
+#   NOTE: porosity held 15% -> NO Furnas dip measured (dip = porosity-vs-AM% minimum; they only show ionic-tau reduction)
+psd,vanishing_d_tau2_limit,fit,R2,source_type,note
+monomodal,6.40,tau2_mono=6.40*(d/um)^(-0.246),0.95,stated,SI Fig S5 d in [3,15] um
+trimodal_1to1to2,5.55,tau2_tri=5.55*(dL/um)^(-0.190),0.99,stated,dL[5.5,13.5] dM=5.5 dS=3 um; de Larrard ideal packing geometry
+target_tau2_3p5_needs_d,12,um,stated,both mono+multi need d=12 um for tau2=3.5
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 6: porosity is a strong sigma lever (Fig 4, d=5um, uniform) -- 5% void gives 2x sigma vs 20% void at high-AM
+porosity_pct,sigma_eff_relation,source_type,note
+5,sigma_eff ~2x the 20pct void value (high-AM),digitized_Fig4,dense/high-mass-loading -> 2x sigma; tau2 lowest
+10,intermediate,digitized_Fig4,
+20,lowest sigma / steepest tau2 rise,digitized_Fig4,more voids -> loss of ionic pathways
+# -> maps to OUR sigma_ionic sqrt(phi_eff) dependence + porosity-centric modeling (BUT their porosity = INPUT, not measured)
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 7: *** BINDER (CBD) INFLUENCE (Fig 5, d=5um, porosity 15%) *** -- maps to OUR CBD/binder-blocking work
+#   Binder = concave meniscus on AM surface (INTERFACIAL "binder bridge", high-wettability), volume tied to AM: V(B):V(AM).
+#   Binder = sigma=0 obstacle blocking SE ionic network + AM/SE active interface. Even <2 wt% has strong negative effect.
+binder_VB_to_VAM,binder_wt_NBR_range_pct,tau2_at_70_30,active_interface_loss_lowAM_pct,active_interface_loss_highAM_pct,source_type,note
+0.00,0,4.2,0,0,stated,binder-free reference (Fig 5f tau2=4.2 at 70:30)
+0.05,1.2_to_1.8,6.4,17,43,stated,Fig5a-f; 0.9 wt% NBR at 70:30 -> tau2 6.4; active interface -17%(lowAM) -43%(highAM)
+0.10,2.5_to_3.4,10,29,82,stated,Fig5a-f; 1.8 wt% NBR at 70:30 -> tau2 10; active interface -29%(lowAM) -82%(highAM)
+# AM utilization ~unchanged by binder (added to existing AM clusters); SE utilization DROPS >70:30 AM:SE (binder blocks SE paths).
+# Binder densities for wt% conversion: PVDF 1.78 g/cm3, NBR 1.0 g/cm3 (PVDF heavier -> larger wt% at same volume).
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 8: *** binder cross-check vs OUR/other LPSCl binder data (same sigma-blocking physics, different placement/material) ***
+source,binder,content,sigma_ionic_effect,extra_effect,placement,note
+bielefeld2020_model,NBR/PVDF,V(B):V(AM)=0.05,sigma_eff drop + tau2 4.2->6.4,active interface -17~43pct,interfacial_meniscus,MODEL (NCM811+LPSCl placement)
+bielefeld2020_model,NBR/PVDF,V(B):V(AM)=0.10 (~1.8wt% NBR),sigma_eff cliff + tau2 4.2->10,active interface -29~82pct,interfacial_meniscus,MODEL
+hong2026_exp,PTFE,1 wt% (75:22.5:1.5:1),0.087->0.064 (-26pct),void 28.7->22.3 volpct (densification),fibril (real),EXP LPSCl+NCM (our material system)
+lee2025_exp,PTFE,0.5->5 wt%,0.069->0.007 (-90pct),sigma_e -99.97pct,fibril (real),EXP LPSCl+NCM82
+ours_voxel,SuperP_0D (CA regime),conductive-agent,SuperP 0.0168 < VGCF 0.0298 mS/cm,SuperP blocks ~1.8x more ionic,voxel sigma=0,OUR model (#19 Kim regime)
+# CROSS-CHECK VERDICT: Bielefeld(sigma down + active-interface down, INTERFACIAL) / our voxel(sigma down, BULK) / Hong(sigma down + void-fill mechanical, +) = three faces of same sigma-blocking physics.
+# ABSORB: (i) high-AM nonlinearity of active-interface loss (-43~82%); (ii) interfacial(theirs) vs bulk(ours) placement RVE compare; (iii) void-fill mechanical effect (Hong) -- both Bielefeld+our-voxel MISS the (+) densification effect.
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 9: application current density / C-rate (Table 1, stated) -- "good case" (ionic ohmic only, dU=0.1V)
+case,electrode_thickness_um,AM_SE_volpct,tau2,j_ion_LGPS_mAcm2,j_ion_LSiPSCl_mAcm2,Crate_LGPS_perh,Crate_LSiPSCl_perh,source_type
+high_energy,300,80:20,10,0.18,1.42,0.010,0.074,stated
+intermediate,140,70:30,4,1.46,11.4,0.19,1.46,stated
+high_power,100,60:40,1.7,7.25,56.7,1.5,11.9,stated
+# Design target: sigma_bulk,SE 10 mS/cm for enhanced C-rate + reasonable energy density. Common SE (<5 mS/cm) NOT thick-electrode enabler.
+# NCM811: 196 mAh/g, 4.76 g/cm3 (for C-rate). SE conductivities: LGPS 3.2, LSiPSCl 25 mS/cm.

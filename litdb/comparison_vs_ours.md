@@ -3,7 +3,8 @@
 > 기준값: `our_dem_baseline.md`. 각 축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
 > 현재 digest: Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
 > McGeary1961(패킹), **Lee2025·Minnmann2021 JES·Doux2020·Cronau2021(실험 앵커 — 우리 NCM/LPSCl 소재계)**,
-> **★ Bielefeld2019(우리와 가장 가까운 *구조-모델링 peer* — GeoDict stochastic-placement percolation, Janek 그룹)**.
+> **★ Bielefeld2019(우리와 가장 가까운 *구조-모델링 peer* — GeoDict stochastic-placement percolation, Janek 그룹)**,
+> **★ Bielefeld2020(=2019의 *σ-추가 후속편*, 같은 1저자·GeoDict — flux-PDE 연속체 σ_eff,ion+τ²+바인더 영향; ⚠위시리스트 "2022"=오기, 실제 2020)**.
 > elasto-plastic 종합 = `elasto_plastic_feasibility.md`. ★ **Minnmann 2021 JES = 우리 porosity/σ_ion/τ 앵커의
 > 진짜 출처** (digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`; 2022 Perspective 아님).
 >
@@ -147,6 +148,38 @@
   - ⚠ **placement(입력 porosity) ≠ 우리 압밀(측정 porosity)** → σ·porosity 절대 동일시 금지, *구조 추세만*.  재료-무관
     (NCM+LPS는 wt% 환산용 예시) → 소재-특이 절대값 끌어오기 금지.
 
+- **★ Bielefeld 2020 (GeoDict flux-PDE σ_eff + 바인더, Janek 그룹) — 2019의 *σ-추가 후속편*; σ는 *연속체*로 풂(constriction
+  없음=상한), 바인더-블로킹은 우리 CBD 직접 cross-check** (digest `docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md`,
+  CSV `docs/data/bielefeld2020_sigma_binder.csv`; ⚠위시리스트 "2022"=오기, 실제 **2020**):
+  - **★ σ-method = 연속체 flux-PDE(EJ-HEAT, ∇·(−σ∇φ)=0, voxel harmonic avg) → point-contact constriction *없음***:
+    2019가 "σ=future work(Greenwood)"로 미룬 σ_eff,ion+τ²를 *이 논문이 풀었다* — 단 **SE 상을 연속 매질로** 다뤄
+    **SE-SE 점접촉 수렴저항(Holm/Greenwood)을 입자별로 안 푼다**(넣는 건 AM/SE *면*접촉저항 40 Ω·cm²뿐). ⇒ σ_eff,ion =
+    **강체-접촉 granular망의 상한(upper bound)** → ★ **우리 Kirchhoff/Holm σ_ionic·Bazzoun RNM σ는 그 아래로 좁힘만큼
+    깎인다**(절대 동일시 금지, 우리가 *더하는* 핵심 = constriction). σ-검증은 **Kato재구성 0.68 vs 실측 0.73 mS/cm 1점**
+    (LCO+LGPS, NCM811+LPSCl 아님 → 소재 절대전이 금지, 추세/방법만).
+  - **추세 일치(frame[4] 구조 descriptor):** (i) **CAM↑→σ_eff,ion↓**(Fig1, 선형) = 우리 σ_ionic + Minnmann2021 + Bazzoun;
+    (ii) **porosity↑→σ_eff↓(5% void가 20% void 대비 σ *2×*, Fig4)** = 우리 √φ_eff·porosity-중심 모델링; (iii) **고-AM서
+    σ_eff abrupt drop(65:35 초과)** = 우리 dead-SE; (iv) **τ²-vs-조성 2→10** = 우리 τ_Laplace/R_brug.
+  - **★ Bruggeman 4× 과소(Fig2, Eq18/19):** 표준 Bruggeman τ²=ε^(−1/2)가 모델 τ²를 *4배* 과소평가, 수정 γ·ε^(−α)는
+    α∈[2.02,1.21]·γ∈[0.32,0.67]로 비물리 → ★ **우리 R_brug_over_full_physics(σ_thermal Ridge) 사용·Bruggeman 불신의
+    권위 있는 외부 근거**.
+  - **입경 효과 = 부호 같되 *채널 반대*(주의):** 그들 **작은 AM→이온 σ_eff↓·τ²↑**(작은 AM=우회 장애물 多) vs 우리·Bazzoun
+    **작은 SE→σ↑**(작은 SE=전도체 접촉 多) — **모순 아님**: SE 잘게·AM 굵게 = 이온 최적(같은 그림); + 2019 "작은 AM→전자↑"
+    합치면 **작은 AM = 전자↑·이온↓ trade-off**.
+  - **★ 바인더(CBD) 영향 = 우리 CBD/voxel σ-블로킹 직접 cross-check** (Fig5, V(B):V(AM)=0.05/0.10, *interfacial meniscus*
+    배치): **σ_eff급감 + τ² 4.2→6.4→10(70:30) + active interface −17~43%(저-AM)·−29~82%(고-AM)**. "binder impedes/blocks
+    ionic pathways; not all SE particles contribute." = ★ **우리 voxel σ_ionic 블로킹(SuperP 0.0168<VGCF 0.0298 mS/cm,
+    SuperP ~1.8× 더 막음)·#271 Hong PTFE(0.087→0.064, −26%)·Lee2025 PTFE(0.069→0.007, −90%)와 同 σ-블로킹 물리.**
+    - ⚠ **배치 차이:** 그들 = **AM 표면 interfacial meniscus** → *AM/SE active interface*를 우선 막음(고-AM −82%); 우리
+      voxel = *SE 이온망 bulk* 차단. → **interfacial(그들) vs bulk(우리) 배치 비교가 cross-check 거리.**
+    - ⚠ **둘 다 *양의 역학효과 없음*:** Bielefeld·우리 voxel 둘 다 바인더를 σ=0 obstacle(전도 차단)로만 봄 → **#271 Hong이
+      지적한 PTFE void-억제(28.7→22.3 vol% densification 도움)가 *둘 다* 빠짐** → MPM/DEM 역학에서 보강.
+    - ★ **흡수 타깃:** (i) **active interface 손실의 고-AM 비선형성(−43~82%)** → 우리 coverage/A_AM-SE 폼에 바인더 항
+      추가 시 고-AM서 더 급감하게; (ii) interfacial vs bulk 배치 RVE 비교; (iii) void-fill 역학효과(Hong).
+  - ⚠ **placement(입력 porosity, 2019 계승) ≠ 우리 압밀(측정 porosity)** → σ·porosity 절대 동일시 금지, 추세만; σ-검증계
+    **LCO+LGPS**(NCM811+LPSCl 아님) → σ 절대전이 금지; 바인더 morphology = *형상 없는 meniscus*(실제 PTFE fibril/SuperP
+    응집 morphology 효과 없음).
+
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
 - 문헌: Varkey "elasto-plastic"은 **CONTACT 힘법칙만**(Thornton–Ning), 입자는 완벽 구 — "구=타협,
   현실 형상=향후 과제" 명시. Bazzoun도 구만.
@@ -185,6 +218,13 @@
   percolation)지 *분포* 효과(dip)가 아니다.  ⇒ ★ **dip은 그들이 비운 칸 → 우리 bimodal 12:4:1 + 정량 dip(AM 70–85
   wt%, de Larrard/McGeary)이 채움**.  단 그들 이상 조성(62/38~72/28 vol%)·전자 percolation 임계는 *강체-구 패킹* 산물
   이라 우리 dip의 *조성 위치*와 같은 기하 계보(비교는 추세만).
+- **★ Bielefeld 2020 (σ-추가 후속편) — multimodal은 시도하나 *dip 미측정*(porosity 15% 고정)**:
+  2020은 **trimodal 1:1:2(de Larrard ideal packing geometry, r_M=(√2−1)r_L·r_S=(√(3/2)−1)r_L) 한 케이스**를 시도하나,
+  그 목적은 **이온 tortuosity 저감**(τ²_tri 5.55 < τ²_mono 6.40, vanishing-입경 극한)뿐 — **porosity는 15% 고정**이라
+  ★ **porosity-vs-AM% dip(최소)을 *측정하지 않는다*.** ⇒ 우리 bimodal 12:4:1 + 정량 dip(AM 70–85 wt%, de Larrard/
+  McGeary)과 비교할 **dip 데이터 없음**(그들 trimodal은 de Larrard *geometry*를 빌리되 *이온 τ* 관점). dip은 여전히
+  그들이 비운 칸 → 우리(또는 de Larrard 기하)가 소유. 단 trimodal이 *τ²를 낮춘다*(packing 개선)는 결론은 우리 "bimodal
+  packing↑" 방향과 정합.
 - **★ Minnmann 2022(설계 Perspective, 정성)**: **tailored(bimodal/multimodal) PSD가 모든 축
   (확산·전자·이온 percolation·계면열화·GB) 최적**(Fig 6 4분면) + **작은 SE + 큰 CAM/SE 비 = 패킹밀도↑**
   (§3.1) → ★ **우리 bimodal 12:4:1 + Furnas dip의 권위 있는 정성 근거**. 단 *dip 위치/깊이는 이 논문에
@@ -204,6 +244,15 @@
   추가** = Bielefeld(percolation, 2019) → Bazzoun(RNM σ, 2026) → 우리(σ 삼중항+MPM) 라는 *그룹-내부 진화*가 우리
   방향이 옳다는 증거.  percolation 추세(작은 입자→percolation↑·utilization·active interface·β=0.41·good-perf
   porosity ~21%)는 frame[4] 구조 descriptor 교차검증(σ 절대값은 그들이 없어 불가).
+- ★ **Bielefeld 2020 = 그룹-진화 가운데토막 + σ-추가가 우리 방향임을 보이는 증거**: Janek 그룹의 σ-솔버는 **2019(σ
+  없음) → 2020(*이 논문*: 연속체 flux-PDE σ_eff+τ²+바인더, 같은 1저자) → Bazzoun2026(RNM/Holm constriction σ+실험)** 으로
+  *스스로* 정교화돼왔다. ★ **2020 = 우리(contact-network constriction) 방향으로 가는 *중간 단계***: 연속체 flux-PDE는
+  granular 점접촉 좁힘을 빼서 σ를 *상한*으로 평가하고, Bazzoun과 우리는 그 constriction을 *되돌려* 넣는다. ⇒ "공정→구조
+  예측 + **granular constriction σ 삼중항** + MPM 소성"이라는 우리 3대 portion은 이 그룹이 *걸어온 궤적의 자연스러운 끝*에
+  놓인다 (positioning 최강 근거). + 바인더도 같은 궤적: 2019(carbon-free 배제) → **2020(*처음으로* CBD를 ASSB 미세구조
+  모델에 추가)** → 우리(voxel σ-블로킹 + Hong/Lee 실험 cross-check + MPM/DEM void-fill 역학). σ_eff 추세(CAM↑→σ↓·
+  porosity↑→σ 2×·Bruggeman 4× 과소·고-AM abrupt drop)는 frame[4] 구조 descriptor 교차검증(σ 절대값은 *연속체 상한*이라
+  *추세*만; 절대 교차검증은 Bazzoun RNM·Minnmann 실험 소유).
 - Bazzoun RNM(Holm+Kirchhoff) = 우리 네트워크 솔버 → 같은 물리, 추세 일치 (frame[4] 독립 교차검증).
 - Bazzoun 실험 σ_eff,ion + 다중압력 = 우리가 부족했던 **외부 실험 앵커** 제공.
 - Varkey E_SE=10.58·floor 21/37 % = 우리 "E 강성 → floor" 가설의 stiffer-SE 데이터점.

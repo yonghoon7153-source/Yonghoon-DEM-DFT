@@ -21,6 +21,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 | 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
 |---|---|---|---|---|---|---|
 | **★ Bielefeld 2019** | J. Phys. Chem. C 123, 1626 | NCM-811/622 + LPS (사실상 재료-무관: shape/size/overlap만) | ★ **GeoDict 구조-모델링 (Janek 그룹) — 우리와 *가장 가까운* 구조-모델링 peer.** **stochastic placement**(AM 구 no-overlap + SE polyhedra overlap, 사후 겹침조정) → **Hoshen-Kopelman** percolation(이온/전자 cluster)·utilization·active interface.  ★ **σ는 *안 풂*(percolation 존재+cluster 부피까지; constriction=ref36 Greenwood future work)**·**단봉 PSD**(bi/tri-modal 보류)·porosity/조성/입경=*입력*.  p_c(전자)=**7.83·ln(d)+36.67 vol%**(Fig6)·β=**0.41**(3D site-perc, Fig4)·이상조성 **62/38·66/34·72/28 vol%@porosity 5/10/20%**·전자한계<69·이온한계>79 vol%(Fig7)·good-perf porosity **~21%**(Fig9, ≠압밀floor 의미). carbon-free(=Strauss ref13). ⇒ **top-down/placement** — 우리 bottom-up/압축+σ삼중항+MPM이 *비운 칸* 채움; Bazzoun2026(같은 그룹 RNM σ)이 후속으로 σ 추가 | continuum (GeoDict, voxel percolation) | ✅(docs) | `docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md` |
+| **★ Bielefeld 2020** ⚠(위시리스트 "2022"=오기, 실제 **2020**) | ACS Appl. Mater. Interfaces 12, 12821 | NCM811 + LPSCl(σ_bulk 2.7 mS/cm); σ-검증계는 LCO+LGPS | ★ **Bielefeld 2019의 *σ-추가 후속편*(같은 1저자·GeoDict).** 2019가 미룬 **σ_eff,ion + τ²**를 GeoDict **flux-PDE**(EJ-HEAT 연속체, ∇·(−σ∇φ)=0)로 *풀고*, ★ **바인더(CBD) 영향**(SE 이온망 차단)까지 추가.  ★ σ-method = **연속체 flux-PDE** → **point-contact constriction(Holm/Greenwood) *없음* = σ 상한**(AM/SE 면접촉저항 40 Ω·cm²만; SE-SE 좁힘 빠짐); Bazzoun/우리가 constriction 되돌림.  σ_eff 0.07–0.62 mS/cm·**Kato재구성 0.68 vs 실측 0.73**(검증 1점, LCO+LGPS)·τ² 2→10·**Bruggeman 4× 과소**(Fig2, =우리 R_brug 근거)·**5% void가 20% void 대비 σ 2×**(Fig4)·작은 AM→σ↓τ²↑(이온 장애물; 우리 작은 SE→σ↑와 *반대 채널·같은 그림*).  ★ **바인더 V(B):V(AM) 0.05/0.10 → σ_eff급감·τ² 4.2→6.4→10·active interface −17~43%/−29~82%(고-AM 비선형)**(Fig5, interfacial meniscus 배치) = 우리 CBD/voxel σ-블로킹(SuperP 0.0168<VGCF 0.0298)·#271 Hong PTFE·Lee2025 직접 cross-check.  단봉+trimodal 1케이스(1:1:2 de Larrard) → **dip 미측정**(porosity 15% 고정). C-rate Table1(SE<5 mS/cm thick 불가, 타깃 10). ⇒ **그룹-진화 가운데토막: 2019(σ없음)→2020(연속체σ+바인더)→Bazzoun2026(RNM/constriction σ)→우리(삼중항+MPM)** | continuum (GeoDict, voxel flux-PDE σ_ion) | ✅(docs) | `docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md` + `docs/data/bielefeld2020_sigma_binder.csv` |
 
 ## 패킹 기하 (geometric packing — Furnas dip 근거)
 
@@ -61,7 +62,11 @@ papers/ digest 7편 ✅ (**Lee2025**(실험 앵커, =우리 소재 전부) · Ba
 · **★ Doux 2020**(작동압 vs 제조압 LPSCl 앵커, porosity 18 %@370 MPa) · **Cronau 2021**(stack pressure σ-측정 protocol)
 · **★ Sakuda 2013**(황화물-기계물성 고전; E_SE 24 GPa 원전 + "상온 가압소결" 원전; 밀도 stated >90 %@>350 MPa)
 · **★ Bielefeld 2019**(★ 우리와 가장 가까운 *구조-모델링 peer*; GeoDict stochastic-placement percolation, Janek 그룹;
-  σ 안 풂·단봉 PSD·porosity=입력 → top-down/placement; p_c=7.83·ln(d)+36.67·β=0.41·이상조성 62/38~72/28 vol%; CSV `docs/data/bielefeld2019_percolation_thresholds.csv`).
+  σ 안 풂·단봉 PSD·porosity=입력 → top-down/placement; p_c=7.83·ln(d)+36.67·β=0.41·이상조성 62/38~72/28 vol%; CSV `docs/data/bielefeld2019_percolation_thresholds.csv`)
+· **★ Bielefeld 2020**(⚠위시리스트 "2022"=오기, 실제 **2020**; ★ Bielefeld 2019의 *σ-추가 후속편*, 같은 1저자·GeoDict;
+  2019가 미룬 **σ_eff,ion+τ²를 flux-PDE(EJ-HEAT 연속체)로 풀고 바인더(CBD) 영향 추가**; σ-method = **연속체 PDE → constriction 없음=σ상한**;
+  Bruggeman 4× 과소·5% void→σ 2×·**바인더 V(B):V(AM) 0.05/0.10→σ급감·τ² 4.2→10·active interface −17~82%**(우리 CBD/voxel σ-블로킹 cross-check);
+  **그룹-진화: 2019(σ없음)→2020(연속체σ+바인더)→Bazzoun2026(RNM/constriction)→우리**; CSV `docs/data/bielefeld2020_sigma_binder.csv`).
 **Stack-pressure 3종 압력 구분 완성:** 제조(fab ~300–490 MPa: Minnmann 380 / Doux·Cronau 370–490) ≠ 측정/작동(stack ~5–70 MPa:
 Doux 5 최적 / Minnmann 측정 40 / Cronau sputter 5–10·WC 30–50). 데이터 `docs/data/doux2020_stack_pressure.csv`,
 `cronau2021_stack_pressure_ionic.csv`, `minnmann2021_sigma_tau_porosity.csv`.
