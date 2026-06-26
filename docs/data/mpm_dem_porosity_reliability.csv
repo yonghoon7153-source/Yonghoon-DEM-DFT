@@ -21,7 +21,7 @@ input_1mAh_8_AMS_S5,0:10,0.0,85,28,21.4,17.8,3.6,both,cross-validated
 input_2mAh_a8_p00,0:10,0.0,80,35,19.4,23.0,-3.5,both,cross-validated
 input_2mAh_a9_p08,8:2,0.8,90,19,23.2,19.8,3.4,both,cross-validated
 input_1mAh_5_AMP_S3,10:0,1.0,80,35,21.1,17.67,3.43,both,"cross-validated; SE-sufficient (se35) -> wallP conditional OFF (floor not engaged, reaches target above), MPM unchanged 17.7->17.67 = never over-compressed (healthy case)"
-input_2mAh_real_15,10:0,1.0,87,25,24.6,21.3,3.3,both,cross-validated
+input_2mAh_real_15,10:0,1.0,87,25,24.6,21.30,3.26,both,"cross-validated; SE-sufficient (se26) -> conditional OFF, unchanged 21.3->21.30; = 2mAh anchor of am_wt87 trio (1mAh_100_15 20.2 / this 21.3 / 8mAh_real_10 19.0 = all ~20)"
 input_particulate_12_S5,0:10,0.0,82,32,18.9,22.3,-3.3,both,cross-validated
 input_1mAh_8_S3,5:5,0.5,85,28,15.5,12.4,3.2,both,cross-validated
 input_1mAh_8_AMS_S3,0:10,0.0,85,28,20.6,17.4,3.2,both,cross-validated
