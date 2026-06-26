@@ -92,6 +92,8 @@
 
 ---
 
-## 진행 중 (완료 시 섹션 반영)
-- **#26 Liang** (quasi-layered, §1) · **#24 review** (§0 field-map 보강) · **#25 operando band** (§7) · **#27 5V ASSB** (§3·§4).
-> 4편 들어오면 본 리뷰 해당 섹션에 1–2줄씩 추가 예정.
+## 후속 반영 (2026-06-26)
+- **#26 Liang 2025**[외] (quasi-layered, →§1): anion-site를 **Mayer 결합차수로 정량**(4c-Cl ≤0.5×S 약결합) + **inter-LAYER 율속**(NEB 0.12 ≈ AIMD 0.088 eV) = inter-cage 율속 **4번째 근거**([Rao11]/[Perc]/[Dyre]에 AIMD궤적+NEB 추가). ⚠ 준층상(4a/4c)≠우리 cubic(4a/4d), inter-layer≠inter-cage, 절대 Ea/σ 비교금지.
+- **#25 Hikima 2022**[외] (operando band, →§7): 박막 ASSB 충전 중 **E_F 1.1 eV↓ → n→p → Schottky/inversion → charge 차단**. **[Whitten]UPS기법 → [Banik]정적 VBM불변 → [Hikima]operando VBM운동** 3단 계보 완성 + "밴드엣지=정렬(상한), onset=grand-potential" 규율 operando 재확인. ★ **Li₃PO₄ Eg 5.77(실측 UPS) ≈ 우리 5.73**(sei_products, Δ0.04) = wide-gap 절연산물 외부 실측 앵커. 단 oxide SE(LASGTP)·DFT없음·밴드엣지≠분해onset.
+- **#27 Son 2025**[외] (Nature Energy, Yonsei/KAIST, 5V-class, →§3·§4): **★ 우리 산화 스토리의 외부 캡스톤.** 본문이 "LPSCl **<2.5 V**"로 출발 = **우리 grand-potential 2.256 V(S²⁻-limited)와 정량 일치** → Banik 진단("치환으론 못 감")의 *처방*(불소계 SE LiCl-4LTF, >6.7V 차폐). ★★ 절제: 우리 그룹 코팅 3부작([Cha]/[Kang])은 **"4V급 계면관리"**로 위치(할라이드조차 ~4V 분해), **5V급은 물질군 교체(불소계)** 영역 — 우리 코팅 결론을 5V로 *과확장 금지*. (Ti/F는 우리 6원소 hull 밖, 황화물 한 줄만 정량일치.)
+- **#24 argyrodite review** — 진행 중(완료 시 §0 field-map 보강).
