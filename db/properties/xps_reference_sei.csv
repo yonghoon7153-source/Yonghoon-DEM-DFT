@@ -1,0 +1,37 @@
+# XPS reference binding-energy positions for Nd2O3-doped LPSCl SEI / decomposition products.
+# Literature/handbook values (NIST XPS DB + solid-state-battery XPS literature), charge-referenced to C 1s = 284.8 eV.
+# Read with pandas.read_csv(comment='#'). 2p entries are the 2p3/2 component.
+# spin-orbit doublet splits (2p1/2 sits higher by): P 2p ~0.86, S 2p ~1.18, Cl 2p ~1.60 eV ; Nd 3d3/2 = 3d5/2 + ~22.5 eV.
+# conf = confidence: A well-established / B good / C uncertain (esp. Nd 3d: open-4f multiplet + shake-up satellite, single value insufficient).
+# BE_pm = +/- spread of reported literature values (NOT an experimental error bar).
+# diagnostic = what the peak tells us about OUR SEI story (O-doping conversion / Nd3+ survival / e- leak).
+# These are the validation anchors for the ORCA dSCF core-hole calc (gabia /data/apps/orca-6.1.1).
+product,element,core_level,BE_eV,BE_pm,role_side,conf,diagnostic
+host_PS4_thiophosphate,P,2p3/2,131.7,0.3,host-backbone,A,baseline P-S; conversion to 133.3 = O-doping worked
+host_PS4_thiophosphate,S,2p3/2,161.6,0.4,host-backbone,A,terminal P-S (bridging P-S-P ~163)
+Li3PO4,P,2p3/2,133.3,0.3,bulk-GB+cathode,A,phosphate P; +1.6 eV vs thiophosphate = KEY O-doping signature
+Li3PO4,O,1s,531.5,0.4,bulk-GB+cathode,A,phosphate O; e-blocking passivation
+NdPO4,P,2p3/2,133.3,0.3,cathode,B,monazite phosphate ~ same as Li3PO4
+NdPO4,O,1s,531.5,0.5,cathode,B,phosphate O
+NdPO4,Nd,3d5/2,982.0,1.0,cathode,C,Nd3+ + satellite ~+4-5 eV; survival = cathode anchor
+Li2O,O,1s,528.5,0.3,anode,A,oxide O (low BE); O-derived anode SEI
+Li2O,Li,1s,53.8,0.3,anode,B,oxide Li
+Nd2O3,Nd,3d5/2,982.0,1.0,cathode,C,Nd3+ reference; multiplet + satellite
+Nd2O3,O,1s,529.8,0.5,cathode,B,RE-oxide O (between Li2O and phosphate)
+LiCl,Cl,2p3/2,198.6,0.3,anode+cathode,A,lattice/SEI chloride; anode SEI with Li2O
+LiCl,Li,1s,56.0,0.4,anode+cathode,B,chloride Li
+NdCl3,Cl,2p3/2,199.2,0.4,cathode,B,metal chloride ~+0.6 eV vs LiCl
+NdCl3,Nd,3d5/2,982.2,1.0,cathode,C,Nd3+ chloride
+NdOCl,Cl,2p3/2,198.8,0.4,cathode,C,oxychloride Cl
+NdOCl,O,1s,530.0,0.6,cathode,C,oxychloride O
+NdOCl,Nd,3d5/2,982.0,1.0,cathode,C,Nd3+ oxychloride
+LiNdO2,Nd,3d5/2,982.0,1.0,cathode,C,Nd3+ ternary oxide
+LiNdO2,O,1s,529.5,0.6,cathode,C,ternary oxide O
+Li2S,S,2p3/2,160.2,0.3,anode+cathode,A,sulfide S (low BE); semi-insulating SEI
+Li2S,Li,1s,54.5,0.4,anode+cathode,B,sulfide Li
+Nd2S3,S,2p3/2,161.5,0.5,avoid,C,Nd sulfide; conductive -> avoid
+Nd2S3,Nd,3d5/2,981.5,1.2,avoid,C,Nd3+ sulfide (lower BE)
+Li3P,P,2p3/2,128.0,0.5,anode-LEAK,B,phosphide (reduced P, low BE); UNDOPED anode e-leak product
+NdS,S,2p3/2,161.0,0.6,avoid,C,near-metallic NdS; avoid
+Li2SO4_oxidizedS_marker,S,2p3/2,168.0,0.4,marker,A,sulfate; high-BE S-oxidation marker (overcharge)
+Li2SO4_oxidizedS_marker,O,1s,531.8,0.4,marker,B,sulfate O
