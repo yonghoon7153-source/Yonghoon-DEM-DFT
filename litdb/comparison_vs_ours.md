@@ -2,12 +2,22 @@
 
 > 기준값: `our_dem_baseline.md`. 각 축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
 >
-> ## ⭐필독 / 우리-랩 — **Kang & Shin 2025 (Jong-Won Lee 그룹, Hanyang + Samsung SDI; ACS AMI 17, 60558)** 은
-> **랩 자체 논문 = 모델이 따라가야 할 실험 trend의 기준점.** 소재 = **NCA(Ni₀.₈₈)+LPSCl+Super P**; bimodal(3+10µm)
-> 패킹 이득 ↔ **큰 입자 사이클 균열**(유지 47.7%/67.3%@100cyc) trade-off; 균열 driver = **Li 농도·응력 구배(큰 입자
-> ~10×)**, 가압 아님; FEM = **Voronoi 다결정 + cohesive-zone damage**; **E_NCA=175·E_LPSCl=22.1**. 각 축에
-> 표시(A 패킹-균열 대가 / B EIS-TLM 열화 시그니처 / C FEM cohesive-zone ↔ 우리 MPM J2 / F 사이클 chemo-mechanics).
-> digest `papers/kang2025_toughened_bimodal_nca_lzo.md`, CSV `docs/data/kang2025_bimodal_nca_lzo_anchors.csv`.
+> ## ⭐필독 / 우리-랩 — **Jong-Won Lee 그룹(Hanyang) 자매 논문 2편** = 모델이 따라가야 할 실험 trend의 기준점.
+> 두 논문은 **같은 NCA/NCM–LPSCl 계면의 두 렌즈** (Junhee Kang 공통저자):
+> - **Kang & Shin 2025 (ACS AMI 17, 60558) = *역학/균열*.** 소재 NCA(Ni₀.₈₈)+LPSCl; bimodal 패킹 이득 ↔ **큰 입자
+>   사이클 균열**(유지 47.7%/67.3%@100cyc); 균열 driver = **Li 농도·응력 구배(큰 입자 ~10×)**, 가압 아님; FEM =
+>   **Voronoi 다결정 + cohesive-zone damage**; **E_NCA=175·E_LPSCl=22.1**. 축: A 패킹-균열 대가 / B EIS-TLM 열화
+>   시그니처 / C FEM cohesive-zone ↔ 우리 MPM J2 / F 사이클 chemo-mechanics. digest `papers/kang2025_toughened_bimodal_nca_lzo.md`.
+> - **Kim, Kang, Park, Lee 2025 (Electrochim. Acta 542, 147413) = *임피던스/반응속도*.** 소재 **NCM811(=우리
+>   production)+LPSCl+SuperP** (62:37/72:27/82:17 wt%) + 할라이드 LZC; **modified TLM**(이온 z₁/전자 z₃ 두 레일 +
+>   계면 z₂ crossrail)으로 **R_ion·R_ct·C_dl·고상확산(Warburg) *동시 분해*** = 우리 Kirchhoff/Holm σ-솔버의 실험
+>   카운터파트 (단 우리는 z₁만 → R_ct·C_dl·확산·E_a 는 **우리 미보유**); **bulk σ LPSCl 1.6=Minnmann 1.6**·LZC
+>   할라이드 0.51; **GB≈bulk**(우리 Cronau GB 인자 정당화); **uncoated R_ct=coated 의 ~20×**(=Kang 분해→균열의
+>   *kinetics* 짝); T-스윕 **E_a 서열 R_ct≫GB>확산>bulk**. 축: B σ_ionic 3번째 TLM 앵커+GB / C 코팅 화학 패시베이션 /
+>   D 할라이드 cross-check / **F R_ct·C_dl·E_a 미보유 새 축**. digest `papers/kim2025_impedance_decoupling_tlm_assb.md`,
+>   CSV `docs/data/kim2025_tlm_kinetics_anchors.csv`.
+> ★ **두 자매 논문의 연결:** 같은 황화물-계면 산화분해가 *역학*(균열, Kang)과 *kinetics*(R_ct↑ ~20×, Kim) 양쪽으로
+> 나타나며, 우리 DEM+MPM 은 그 *구조→수송 σ* 를 채운다 → **structure-σ(우리) / mechanics(Kang) / kinetics(Kim) 3자 분업.**
 >
 > 현재 digest: **⭐Kang&Shin2025(랩 자체논문, NCA+LPSCl)**, Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
 > McGeary1961(패킹), **Lee2025·Minnmann2021 JES·Doux2020·Cronau2021(실험 앵커 — 우리 NCM/LPSCl 소재계)**,
@@ -126,6 +136,21 @@
   Eq 4 τ²=σ_0·φ/σ_eff = **우리 τ_Laplace,eff 정의 동일**(단 그들 = constriction 미포함 → 우리 Stage-E가 그
   constriction 포함 → 보정 lever). bulk LPSCl 1.6 mS/cm = 또 하나의 bulk 앵커. → **우리 σ_ionic·τ 의 최강
   same-material 실험 절대 검증점.** (그들 42 vol% NCM → 우리 φ_SE≈58 vol% 매핑 후.)
+- **★⭐(우리-랩) Kim·Kang·Park·Lee 2025 (NCM811+LPSCl, 실험 EIS-modified-TLM) — σ_ionic *3번째* TLM 앵커 + GB 분리 측정**:
+  - **bulk σ_ion LPSCl = 1.6 mS/cm = Minnmann 1.6 정확히 일치** → 같은 소재 두 독립 측정 일치 = 우리 bulk 앵커
+    스프레드 {Cronau 3.0, Lee 2.19, **이 논문 1.6 = Minnmann 1.6**, Bazzoun 1.02} 의 신뢰 보강 (절대 직접대조 금지).
+    할라이드 LZC = **0.51 mS/cm**(LPSCl 의 ~1/3).
+  - **R_ion 측정·분해 (대칭셀 LNO-coated, bulk+gb):** 62 wt% **34.9** / 72 **48.1** / 82 **19.0** Ω·cm² → **82 wt%
+    최저 이온저항**(같은 분말질량 → CAM↑ → 부피↓ → thin·compact → 이온 percolation↑). → 우리 σ_ionic 직접 외부
+    앵커 (⚠ wt% 62:37/72:27/82:17 → vol% → φ_SE 매핑 선행; 대략 62 wt% ≈ φ_SE 0.45–0.50, 82 wt% ≈ 0.25).
+    ★ **단 "R_ion 이 깨끗이 분리된 셀"(대칭셀/uncoated)만** 쓸 것 — coated full-cell 은 R_ct 와 lumped (§5.5 Morasch
+    R_int/R_i 교훈: 비 작으면 영역 겹침).
+  - ★ **GB(입계) 를 *분리 측정* → 우리 Cronau(r_SE) GB 인자 정당화:** **R_i,gb ≈ R_i,bulk 또는 더 큼**(62: bulk
+    9.3 vs gb 25.6; uncoated 82: bulk 59.7 vs gb 209.5) + **GB 가 온도에 더 민감**(62: gb 25.6→3.1 vs bulk 9.3→6.0
+    over 30→60°C). → 우리가 σ_grain prefactor 에 럼핑한 Cronau GB 인자가 옳은 방향(입계가 이온수송 주 병목)임을
+    *분리 측정*으로 확증. ★ 흡수 후보: GB 저항의 입경/온도 의존을 우리 σ_grain 에 명시.
+  - 차이/주의: 그들 R_ion 은 **측정+TLM 피팅** 값(예측 솔버 아님) → frame[4] 외부 검증. 우리 σ_ionic(계산)·삼중항·
+    Stage-E·MPM 우위 유지. CAM=NCM811(=우리 production, Kang 의 NCA 보다 정확) 단 입경 PSD 미보고 → 절대 매칭 주의.
 - 문헌(Bazzoun, **LPSCl 동일소재 + LIGGGHTS 동일코드**): RNM = 우리 Holm/Kirchhoff 그대로
   (R=1/(2σr_c), Σ(φi−φj)/R=0). 실험 σ_eff,ion **0.137/0.101/0.065 mS/cm @ f_CAM 70/75/80** (400 MPa, EIS).
 - 우리: 같은 솔버 물리. 추세 일치 — 작은 SE→σ↑, CAM↑→σ↓, 압력↑→σ↑(~400 포화 ≈ 우리 P_y 138).
@@ -237,7 +262,30 @@
   - 우리 우위(그들 없음): 정량 porosity·Heckel·coordination·coverage% · MPM 정량 변형장 Σdg·void-fill flow ·
     명시적 접촉망 σ 삼중항.  그들 void는 *사이클 후 계면 void 상대비*(ImageJ)지 압밀 porosity 아님 → 우리 15.6%와 직접 비교 금지.
 
+- **★⭐(우리-랩) Kang & Shin 2025 (FEM electrochemo-mechanical) — *사이클* chemo-mechanics ↔ 우리 *압밀* 소성 (frame[5] 시간축 분업)**:
+  - **모델링 패럴렐:** 그들 FEM = 2D **Voronoi 다결정 NCA + cohesive-zone 입계 박리(취성), damage scalar D(0→1)**,
+    전변형 ε = ε^e + ε_d (ε_d = Ω/3·Δc_Li, Ω = 5.9 % 부피변화).  우리 MPM = 3D/2D **J2 연속체 소성 *형상* 흐름(연성),
+    누적소성변형 Σdg**.  ★ **둘 다 연속체 + 손상/소성 변수**지만 **파괴 메커니즘 다름**: 그들 *취성 입계 cohesive 박리*
+    ↔ 우리 *연성 소성 void-fill*.  damage D ↔ Σdg는 *개념* 대응(동일시 금지).  ⇒ **시간축 분업**: 사이클 chemo-
+    mechanical = cohesive-zone(랩 FEM), 압밀 plastic = J2(우리) → frame[5] 확장(MPM 문서에 명문화 제안).
+  - **★ 크기-의존 파괴 (우리 Auerbach/fracture-aware σ의 *크기* 방향을 못 박음):** **큰 입자(10 µm)가 작은 입자
+    (3 µm)보다 압도적 균열** — c_Li 구배 **~10×**, σ_Mises 구배 큼, **damage→1 다중 입계(완전박리)**.  우리 DEM
+    fracture(AM_P 92:8 8mAh서 37–40 % cracked)·f_intact·frac_severe는 *크기-의존성 명시 안 함* → **AM_P(큰 다결정)
+    일수록 fracture↑** 하도록 Auerbach 임계를 입경-스케일링(σ_crit ∝ 1/√d 또는 접촉응력 ∝ 입경)으로 보강.
+    - ⚠ **driver 다름 명시:** 그들 = *사이클 Li-구배*(NCA/LPSCl 계면분해 → 농도·응력 불균일); 우리 DEM = *압밀 접촉
+      응력*(Auerbach).  "큰 입자 깨짐"은 공통이나 *원인이 다름* → 우리는 *압밀-시점* 균열만 표현(접촉응력 ∝ 입경 버전
+      흡수), *사이클* 균열은 frame[5] 미보유로 명시.  Lee2025 "PC-NCM 깨짐/SC-NCM 무손상"·우리 DEM AM_P 파괴와 같은
+      "다결정 2차입자가 깨진다" 계보.
+  - **계면 화학열화 → 균열 (우리 *전혀* 미모델 축):** "**NCA/LPSCl 계면분해(XPS: Li₂Sₙ 163.0·PO₄³⁻ 134.4 eV) →
+    Li-구배 → 응력 → 균열**" 인과 = 우리가 안 다루는 *계면 화학* 축.  **LZO 6–8 nm 비정질 코팅**이 이를 패시베이션
+    (XPS 부산물 억제 → 구배·damage 모두 완화, Fig 5f–h) → 우리 coverage(*기계* 접촉면적)와 **종류 다른** *화학*
+    코팅(backlog A4 carbon coating과도 다름).  future "계면" 축의 실험 근거로 기록.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
+> ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
+> stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl
+> 1.6, BUT R_ct 가 LPSCl 보다 *낮음* = 산화안정성↑). ⇒ **할라이드 = "안정하나 σ 낮음"** 의 두 측면(압밀 Varkey /
+> kinetics Kim). 우리가 할라이드로 확장 시 E·σ·R_ct 셋 다 재보정 필요.
 - 문헌: Varkey RCP/rigid → dip @ AM 70–80 wt% (de Larrard 기하). Bazzoun 작은 SE→packing↑→σ↑(size=packing).
 - 우리: DEM·de Larrard dip @ AM 70–85; **소성 연속체 MPM은 dip 재현 못 함**(material sweep로 증명, frame[4]).
 - 인사이트: dip은 초기 강체 구 패킹(기하)에 산다 → DEM(또는 de Larrard)이 소유. porosity-incl-dip은 DEM.
@@ -313,6 +361,33 @@
 - **비구형 입자**(Bouvard 각질 inclusion이 압밀 더 방해; Martin–Bouvard truncated sphere = SHAPE flow 없음) —
   우리 DEM·MPM 둘 다 구만 = 23년째 문헌 공통 한계(M&B2003→Varkey2026→Bazzoun2026), frame[5] 일관 확증.
 - **Storåkers 소성 접촉면적** A=2πc(m)²rh (Martin–Bouvard, c(m) 0.5→1.45) — 우리 Stage-E(Tabor+volume)와 A/B 비교 거리.
+- **★⭐(우리-랩) Kang & Shin 2025 이 갖고 우리가 미보유 (랩 trend → 흡수 우선):**
+  - **사이클 chemo-mechanics(volume change + cohesive-zone 입계 박리)** — 우리 MPM/DEM은 *압밀*만, *사이클* 부피변화
+    (NCA 5.9 %)·입계 균열 미모델.  그들 FEM(Voronoi + CZM damage)이 그 칸 → frame[5] *시간축* 분업으로 위치.
+  - **크기-의존 파괴의 정량 driver(Li-구배 10×)** — 우리 Auerbach는 크기-의존성·Li-구배 미반영 → AM_P 입경-스케일링
+    파괴로 보강(§C).  ★ 랩 핵심 = "큰 입자 깨짐" → 우리 모델이 *반드시* 반영해야 할 방향.
+  - **NCA(E=175) CAM 옵션** — 우리는 NMC811(140)만.  랩 소재가 NCA → `our_dem_baseline.md §0`에 NCA 행 추가 +
+    σ_e(NCA) 재보정 제안.
+  - **계면 화학열화(XPS 부산물) → 균열 체인** — 우리 *전혀* 미모델.  LZO 같은 *화학* 코팅 효과(coverage=기계와 다름).
+  - **EIS-TLM 사이클 시그니처(R_ion 불변 / R_int·R_w 급등)** — 우리 정적 σ엔 없는 *열화 시간축*(backlog B6 사이클-Warburg).
+- **★⭐(우리-랩) Kim·Kang·Park·Lee 2025 이 갖고 우리가 미보유 — *계면/확산 kinetics* (frame[5] 의 새 빈 칸, 자매 Kang 보완):**
+  - ★ **계면 전하전달 R_int(=R_ct) + 이중층 C_dl + 고상확산 Warburg(R_w/T_w/α) = 우리 σ-솔버가 *전혀* 안 잡는 칸.**
+    우리 Kirchhoff/Holm 솔버는 modified TLM 의 **z₁(이온수송) 레일만** 계산 → crossrail z₂(R_ct·C_dl·Warburg)는
+    통째로 우리 모델 밖. ⇒ "우리가 이걸 cross-validate" 가 *아니라* "우리가 *안 갖는* 것을 실험이 보여줌"으로 정직히.
+    → `our_dem_baseline.md §4` + 여기 F 에 "**계면 전하전달·이중층·고상확산 kinetics = EIS-TLM(Kim 2025) 영역**" 명시.
+  - ★ **uncoated NCM811/LPSCl R_ct = LNO-coated 의 ~20×**(62: 22.4→453.4 Ω·cm²) = 산화분해가 전하전달을 ~20× 느리게.
+    **= Kang 2025 "계면분해→Li-구배→균열"(역학)의 *kinetics* 짝**(같은 황화물-계면 분해, 한쪽은 균열·한쪽은 R_ct↑).
+    LNO(Kim)·LZO(Kang) 둘 다 *화학* 패시베이션 코팅(우리 coverage=*기계* 와 종류 다름). → "계면"을 랩 *공동 future 축*
+    (structure-σ 우리 / mechanics Kang / kinetics Kim) 으로 명문화.
+  - ★ **T-dependent σ (활성화에너지) = 우리 *미보유* 온도축 (model extension 후보).** 온도 스윕 → **E_a 서열
+    R_ct(~0.42 eV) ≫ R_i,gb(~0.6 eV) > R_w > R_i,bulk**(작음); R_ct·GB 가 가장 thermally-activated(율속). ⚠ E_a
+    절대값은 논문이 명시 표로 안 줌 → R(T) 3점 Arrhenius 추정(TREND-only). 우리 σ-솔버는 *상온 단일* → σ(T) =
+    σ(300K)·exp[−E_a/k(1/T−1/300)] 형태로 T-축 추가 가능. (우리 σ_thermal=*열전도*지 *전도도의 온도의존* 아님 — 다른 축.)
+  - ★ **modified TLM 2-BC 분해 = 우리 솔버 검증의 *방법론* 교훈:** R_int/R_i 비가 작으면(coated full-cell) 이온수송·
+    전하전달 영역이 *겹쳐* full-cell 단독 분석이 오해 → **대칭셀/uncoated 병용 필수**(Morasch). ⇒ 우리가 실험 R_ion 을
+    σ_ionic 앵커로 쓸 때 *깨끗이 분리된 셀의 R_ion* 만 쓸 것 (Bazzoun/Minnmann 이 대칭셀/full-blocking 쓴 이유).
+  - **도전제 형상(0D Super P vs 1D VGCF):** VGCF 가 전자저항·R_int 둘 다 낮춤(1D 전자망 + SE-카본 계면면적↓ → 산화분해↓)
+    = Lee 2025 VGCF σ_e 와 같은 결 → 우리 σ_e 도전제 형상 구분 약함 보강(우리 production = Super P 0D 가정).
 
 ---
 ## 🗨️ Q&A 로그

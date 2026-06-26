@@ -1,0 +1,78 @@
+# Kim et al., Adv. Funct. Mater. 2024, 34, 2409318 (DOI 10.1002/adfm.202409318).
+# "Accelerated Degradation of ASSBs Induced through Volumetric Occupation of the Carbon Additive in the SE Domain."
+# *** USER'S OWN LAB (Jong-Won Lee group, Hanyang + Yang-Kook Sun + KETI Woosuk Cho). EXPERIMENT (no DEM/MPM). ***
+# MATERIAL: Ni-rich NCM811 (LiNi0.8Co0.1Mn0.1O2) CAM + argyrodite LPSCl Li6PS5Cl0.5Br0.5 SE + conductive carbon
+#   SC = spherical carbon (Super C, Timcal; Super-P-like) / CF = carbon fiber (PotenCia, Teijin, 1D).
+# CORE THESIS: low-density conductive carbon VOLUMETRICALLY OCCUPIES the SE domain (rho_carbon 0.67 << rho_SE 1.86 g/cm3),
+#   reducing the SE volume fraction retained after formation -> collapses sigma_ionic; AND the carbon SURFACE catalyzes
+#   oxidative decomposition of the sulfide SE on the NCM surface -> resistive byproducts -> accelerated degradation.
+#   Worst at HIGH active-material content (>90 wt%, the SE-poor regime). MITIGATION: replace spherical SC with 1D carbon FIBER
+#   (interconnects NCMs while occupying LESS SE domain -> preserves SE network + integrity after prolonged cycling).
+# source_type: stated = text/figure-annotation numeric label / table; digitized = read from figure curve (TREND only, approximate).
+# Fabrication: cathode composite 15 mg, pelletized 517 MPa (PAEK mold), LiIn anode, 11 N*m torque seal. 1.0C = 180 mA/g.
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 1: densities (Archimedes, isopropanol) -- the QUANTITATIVE basis of "carbon occupies SE volume" (stated, text p4)
+phase,property,value,unit,source_type,note
+sulfide_SE_LPSCl,density,1.86,g_cm3,stated,Archimedes in isopropanol; SE is dense
+spherical_carbon_SC,density,0.67,g_cm3,stated,Archimedes; low-density carbon occupies large volume per unit mass
+# density ratio rho_SE/rho_SC = 1.86/0.67 = 2.78x -> per gram, SC displaces ~2.78x the SE volume; substituting SE by SC GREATLY raises carbon's volume share in SE domain
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 2: SE volume fraction vs active-material wt% (carbon held 3 wt%) -- Fig 1e ternary occupation diagram (stated, text p2)
+AM_wt_pct,SE_vol_pct,carbon_wt_pct,source_type,note
+80,30.0,3,stated,80 wt% AM -> SE 30.0 vol%
+90,13.9,3,stated,90 wt% AM -> SE 13.9 vol% (less than half of 80 wt%); SE network starved
+# (85 wt% SE vol% not given explicitly in text; lies between 30.0 and 13.9)
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 3: ionic + electronic conductivity of POWDER PELLET ELECTRODE vs AM wt% (carbon 3 wt% fixed) -- Fig 1c,1d (stated figure labels)
+AM_wt_pct,sigma_ionic_mScm,sigma_e_mScm,carbon_wt_pct,source_type,note
+80,0.125,38.6,3,stated,Fig 1c/1d bar labels
+85,0.0458,54.8,3,stated,Fig 1c/1d bar labels
+90,0.0138,65.2,3,stated,Fig 1c/1d bar labels; sigma_ionic ~1/10 of 80 wt% (0.0138 vs 0.125 = 11%); sigma_e RISES (AM sigma_e > SE) -> trade-off
+# KEY: as AM up 80->90, sigma_ionic DROPS ~9x (SE volumetrically displaced + occupied by carbon) while sigma_e RISES (AM more conductive than SE)
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 4: ionic + electronic conductivity vs CARBON wt% (90 wt% AM fixed) -- Fig S3 (a) ionic / (b) electrical (SI)
+carbon_wt_pct,sigma_ionic_mScm,sigma_e_mScm,AM_wt_pct,source_type,note
+0,,,90,digitized,Fig S3; sigma_ionic ~similar across 0-3 wt% (SC barely changes ionic per text "ionic conductivity ... similar to that of SC 1 to SC 3 wt%")
+1,,,90,digitized,Fig S3; sigma_ionic SIMILAR to other carbon%, sigma_e increases with carbon
+2,,,90,digitized,Fig S3
+3,,,90,digitized,Fig S3; sigma_e significantly increased with SC; ionic stays ~flat
+# NOTE: text states "measured ionic conductivity of the pellet electrode was similar to that of SC 1 to SC 3 wt%, while electric conductivity significantly increased"
+#   -> at FIXED 90 wt% AM, varying carbon 0-3 wt% changes sigma_e strongly but sigma_ionic only weakly (the SE-displacement effect dominates over AM-wt%, carbon-wt% is secondary on ionic). Numeric S3 values not table-stated; digitized TREND only.
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 5: initial-cycle IRREVERSIBLE CAPACITY vs carbon (SC) wt% (90 wt% AM) -- Fig 2b (stated, text p2)
+carbon_wt_pct,irreversible_capacity_mAh_g,AM_wt_pct,source_type,note
+0,26.3,90,stated,SC 0 wt%
+1,,90,stated,gradual increase (Fig 2b bar; numeric not text-stated, between 26.3 and 42.9)
+2,,90,stated,gradual increase (Fig 2b bar)
+3,42.9,90,stated,SC 3 wt%; +63% vs 0 wt% -> more carbon = more SE-oxidation side reactions
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 6: Coulombic efficiency / formation -- AM wt% effect (carbon 3 wt%) (stated, text p2)
+AM_wt_pct,coulombic_efficiency_drop_pct,carbon_wt_pct,source_type,note
+90,2.0,3,stated,90 wt% AM -> ~2.0% CE decrease vs 80 & 85 wt% (noticeable polarization at 90 wt%)
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 7: SC vs CF (carbon FIBER) mitigation -- Fig 4c (dry electrode, 1 wt% carbon) + Fig 3 oxidative current (stated figure labels)
+additive,sigma_ionic_mScm,sigma_e_mScm,carbon_wt_pct,electrode,source_type,note
+SC_spherical,0.087,5.08,1,dry_electrode,stated,Fig 4c bars; SC disperses widely in SE domain -> blocks Li+ transport
+CF_fiber,0.105,5.18,1,dry_electrode,stated,Fig 4c bars; CF 1D interconnects NCM, occupies LESS SE domain -> +22% ionic (0.105 vs 0.087), sigma_e ~same (5.18 vs 5.08)
+# CF improves sigma_ionic +22% at ~equal sigma_e by morphological change (sphere->fiber): less SE-domain occupation + less carbon-SE contact area
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 8: oxidative decomposition (CV / BET) -- Fig 3 / Fig S5,S6 (stated, text p5)
+additive,max_oxidative_current_mA,basis,source_type,note
+SC_spherical,0.088,SE_to_carbon_14to1_CV,stated,Fig S5; max oxidative current of SE on SC surface
+CF_fiber,0.015,SE_to_carbon_14to1_CV,stated,Fig S5; ~6x lower (0.015 vs 0.088) -> CF catalyzes less SE oxidation at equal mass
+# NOTE: BET-normalized current density (Fig S6) shows SIMILAR oxidative decomposition RATE per surface area for SC and CF
+#   -> CF's advantage is the VOLUMETRIC OCCUPATION + total contact area, NOT an intrinsic surface-chemistry difference (same rate per m2).
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 9: cycle retention -- Fig 5d (dry electrode, 0.2C, 150 cyc) qualitative (stated, text p6)
+additive,retention_qualitative,cycles,C_rate,source_type,note
+SC_spherical,gradual_diffusion_polarization_growth_capacity_decay,150,0.2,stated,Fig 5d/S7; interfacial deterioration of NCM significant with SC
+CF_fiber,stable_voltage_profile_well_retained,150,0.2,stated,Fig 5d/S7; 6.0 mAh/cm2 dry electrode well retained; NCM interface failure mitigated
+# -----------------------------------------------------------------------------------------------------------------------
+# Block 10: dry-electrode recipe + areal loading (Methods, SI) (stated)
+param,value,unit,source_type,note
+dry_electrode_recipe,NCM:SE:carbon:PTFE=90:9:1:1,wt_ratio,stated,dry electrode (calendered sheet)
+dry_electrode_mass_loading,36,mg_cm2,stated,high areal loading
+dry_electrode_areal_capacity,6.0,mAh_cm2,stated,high-areal-capacity electrode
+pellet_press_pressure,517,MPa,stated,cathode composite pellet
+SE_pellet_for_ionic,150,mg,stated,SE pellet pressed first
+cell_seal_torque,11,N_m,stated,

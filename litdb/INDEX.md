@@ -7,12 +7,16 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 
 ## ★★★ 필독 / MUST-READ (랩 자체 논문 — 모델 trend 기준) ★★★
 
-> **우리 랩(Hanyang, Jong-Won Lee) 논문 — 모델이 따라가야 할 실험 trend의 기준점.** 우리 DEM+MPM은 이 논문이
-> 정하는 실험 방향(소재·bimodal 역학·크기-의존 균열·LZO 코팅·EIS-TLM·FEM)에 정렬해야 한다.
+> **우리 랩(Hanyang, Jong-Won Lee) 논문 — 모델이 따라가야 할 실험 trend의 기준점.** 우리 DEM+MPM은 이 논문들이
+> 정하는 실험 방향에 정렬해야 한다. **두 논문은 같은 NCA/NCM–LPSCl 계면의 두 렌즈 (Junhee Kang 공통저자):**
+> **Kang & Shin 2025 = *역학/균열*** (bimodal 패킹 대가, FEM cohesive-zone) · **Kim·Kang·Park·Lee 2025 = *임피던스/
+> 반응속도*** (modified TLM 으로 R_ion/R_ct/C_dl/확산 분해). 같은 황화물-계면 산화분해가 한쪽엔 *균열*(Kang),
+> 다른쪽엔 *R_ct↑*(Kim) 으로 나타남 → 우리 DEM+MPM 은 그 *구조→수송 σ* 를 채운다(structure-σ / mechanics / kinetics 분업).
 
 | 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
 |---|---|---|---|---|---|---|
 | **⭐필독 Kang & Shin 2025** (Jong-Won Lee 그룹, Hanyang + Samsung SDI) | ACS Appl. Mater. Interfaces 17, 60558 | **NCA LiNi₀.₈₈Co₀.₀₉Al₀.₀₃O₂ + LPSCl + Super P** (72:27:1 wt%) | ★★ **랩 trend 기준.** bimodal(3+10µm) NCA = 패킹↑(펠릿 0.74→0.68mm·부피로딩 1.1×·R_ele 33.9 Ω·cm² 낮음) **BUT 큰 10µm 입자 사이클 균열** → 유지 **47.7%(B)/67.3%(U)@100cyc**; 균열 driver = **NCA/LPSCl 계면분해→Li 농도·응력 *구배*(c_Li 구배 10µm이 3µm 대비 ~10×), 큰 입자일수록 심함**; ★**가압(stack 200/fab 400MPa)응력(수백 MPa)≪확산응력(GPa)→압력 균열기여 미미**; FEM = **Voronoi 다결정 + cohesive-zone damage(0→1)**, ε_d=Ω/3·Δc_Li(Ω=5.9% 부피변화); **E_NCA=175·E_LPSCl=22.1**(=Bazzoun/우리24); EIS-TLM **R_ion 불변·R_int(113→502)·R_w(70→353) 급등**=균열 시그니처; **LZO 6–8nm 비정질 코팅**→XPS 부산물(Li₂Sₙ163.0·PO₄³⁻134.4eV) 억제·120cyc 안정·R_w +1.2만(50→100) | exp + FEM (electrochemo-mechanical) | ✅✅ (가장 자세) | `kang2025_toughened_bimodal_nca_lzo` (papers) + `docs/data/kang2025_bimodal_nca_lzo_anchors.csv` |
+| **⭐필독 Kim, Kang, Park, Lee 2025** (Jong-Won Lee 그룹, Hanyang; **Junhee Kang = Kang2025 공통저자 = 자매논문**) | Electrochim. Acta 542, 147413 | **NCM811 LiNi₀.₈Co₀.₁Mn₀.₁O₂ + LPSCl + Super P** (62:37:1/72:27:1/82:17:1 wt%) + 할라이드 **LZC Li₂ZrCl₆** | ★★ **랩 trend 기준 — *EIS-TLM 임피던스 분해*의 방법론 기준점 (Bazzoun·Minnmann 에 이은 3번째 TLM 앵커 + SAME LAB).** **modified TLM**(두 레일 z₁이온/z₃전자 + crossrail z₂계면 사다리망)으로 **Li⁺/전자 수송·계면 전하전달 R_int(=R_ct)·이중층 C_dl·고상확산(Warburg) 을 *동시 분해*** (= 우리 Kirchhoff/Holm σ-솔버의 실험 카운터파트, 단 우리는 z₁만 계산 → R_ct·C_dl·확산은 **우리 미보유 칸**); **2 BC**(ion-block=전하전달 X·이중층만 / e-block=전하전달 O·R_ct 분리); **bulk σ_ion LPSCl 1.6 = Minnmann 1.6**(신뢰보강)·**LZC 할라이드 0.51**(낮은 σ·안정 계면); ★**GB 가 bulk 와 동급/더 큼**(R_i,bulk 9.3 vs R_i,gb 25.6 @62wt%)+온도 더 민감 = 우리 Cronau(r_SE) GB 인자 정당화; ★**uncoated R_ct = LNO-coated 의 ~20×**(62: 22→453 Ω·cm²)=NCM811/LPSCl 산화분해 = **Kang2025 분해→균열의 *kinetics* 짝**(같은 계면, 역학 vs 반응속도); **82wt% 최저 R_ion·R_ct·R_w**(densify+electroactive area↑); ★**T-스윕 E_a 서열 R_ct≫GB>확산>bulk**=우리 *미보유* 온도축; 할라이드 LZC=낮은 σ·낮은 R_ct(안정)=**Varkey halide cross-check** | exp + equivalent-circuit (modified TLM) | ✅✅ (가장 자세) | `kim2025_impedance_decoupling_tlm_assb` (papers) + `docs/data/kim2025_tlm_kinetics_anchors.csv` |
 
 ## DEM/MPM 압밀 · 전달 (composite ASSB)
 
@@ -69,7 +73,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
   실제 hooke/hysteresis 접촉력 재현 못 함; `docs/mpm_wallP_conditional_troubleshooting.md` §12)이 동기.
 
 ## 현황
-papers/ digest 8편 ✅ (**⭐필독 Kang&Shin 2025**(랩 자체논문, NCA+LPSCl, 가장 자세) · **Lee2025**(실험 앵커, =우리 소재 전부) · Bazzoun · Varkey · So2021 · Martin-Bouvard2003 · Bouvard2000 · McGeary1961)
+papers/ digest 9편 ✅ (**⭐필독 Kang&Shin 2025**(랩 자체논문, NCA+LPSCl, 역학/균열) · **⭐필독 Kim·Kang·Park·Lee 2025**(랩 자체논문, NCM811+LPSCl, EIS-TLM 임피던스 분해 — Kang2025 자매·Junhee Kang 공통; 3번째 TLM 앵커) · **Lee2025**(실험 앵커, =우리 소재 전부) · Bazzoun · Varkey · So2021 · Martin-Bouvard2003 · Bouvard2000 · McGeary1961)
 + docs/ digest: **Minnmann 2021 JES**(★ porosity/σ_ion/τ 앵커 진짜 출처, EIS-TLM) · Minnmann 2022(설계 Perspective)
 · **★ Doux 2020**(작동압 vs 제조압 LPSCl 앵커, porosity 18 %@370 MPa) · **Cronau 2021**(stack pressure σ-측정 protocol)
 · **★ Sakuda 2013**(황화물-기계물성 고전; E_SE 24 GPa 원전 + "상온 가압소결" 원전; 밀도 stated >90 %@>350 MPa)

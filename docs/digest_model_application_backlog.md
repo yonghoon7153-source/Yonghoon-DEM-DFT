@@ -16,6 +16,9 @@
 | A5 | **E2 dispersion CV** — 첨가제/입자 분산 불균일도 | #284 SiOx | additives.py / 합성 | ⛔ | |
 | A6 | **pore-τ DiffuDict (유효-D voxel)** — pore network 유효확산 | #281 A3D | voxel_conductivity (D 채널) | ⛔ | |
 | A7 | **Phase-5 graded-z** — z-band별 porosity(#286)+carbon:binder(#20) 2축 | #286 Yoo, #20 Bak | extract_2d_microstructure K=8 z-band | ⛔ | optimum 재료의존(#286 gradient vs #20 uniform) → 둘 다 비교 |
+| A8 | **★⭐(랩) NCA(E=175) CAM 옵션 추가** — 랩 trend가 NCA(Ni0.88)인데 우리는 NMC811(140)만 | **Kang&Shin 2025**(랩 자체논문, E_NCA=175·E_LPSCl=22.1) | our_dem_baseline §0, 재료 파라미터, σ_e σ_AM 재보정 | ⛔ | ★ 랩 소재 정렬.  E_LPSCl 22.1는 Bazzoun/우리24 확인; σ_e(NCA)·D_Li는 NMC811과 다름(FEM σ_e=1 S/m,D=3e-14) → σ_e 폼 σ_AM 재보정 필요 |
+| A9 | **★⭐(랩) 크기-의존 파괴** — AM_P(큰 다결정)일수록 fracture↑ (Auerbach 입경-스케일링 σ_crit∝1/√d) | **Kang&Shin 2025**(10µm c_Li 구배 3µm 대비 ~10×·damage→1; 큰입자 균열), Lee2025(PC깨짐) | network_conductivity fracture, Auerbach 임계 | ⛔ | ★ 랩 핵심 결과.  ⚠ driver 다름: 그들=사이클 Li-구배, 우리=압밀 접촉응력 → 압밀-버전(접촉응력∝입경)만 흡수, 사이클-버전은 frame[5] 미보유 명시 |
+| A10 | **★⭐(랩) 사이클 chemo-mechanics(future)** — volume change(NCA 5.9%)+cohesive-zone 입계 박리 = 우리 *압밀* MPM의 *사이클* 짝 | **Kang&Shin 2025**(FEM Voronoi+CZM damage 0→1, ε_d=Ω/3·Δc_Li) | (신규 cycling FEM/MPM, frame[5] 시간축) | ⛔ | future.  MPM 문서에 "압밀=J2(우리) / 사이클=cohesive-zone(랩 FEM)" 시간축 분업 명문화부터 |
 
 ## B. 검증/교차대조 (모델 값 확인·정당화 — 적용은 선택)
 
@@ -26,7 +29,7 @@
 | B3 | **percolation 지수 정당화** — 우리 √(φ−φc)·CN² 등 vs β=0.41(3D site), p_c=7.83·ln d+36.67 | Bielefeld 2019 | ⛔ | 우리 exponents의 universality-class 근거 |
 | B4 | **multi-contact coupling** = 18× softening 대안(밀집 과강성) 비교연구 | Varkey 2026 | ⛔ | 우리 경험적 softening의 물리적 대안 |
 | B5 | **σ_grain 이중계상 재점검** — pellet(1.02-1.6) vs Cronau single(3.0) + Cronau(r_SE) GB factor | Bazzoun, Cronau, Minnmann(bulk 1.6) | ⛔ | bulk spread {3.0/2.19/1.6/1.02} |
-| B6 | **operating-pressure σ-degradation** (void-vs-P 시간축) — 정적 모델에 없는 축 | Lee 2025 co-rolling, Doux 2020 | ⛔ | future: P sweep→void→σ↓ |
+| B6 | **operating-pressure σ-degradation** (void-vs-P 시간축) + **사이클-Warburg 열화 시그니처** — 정적 모델에 없는 시간축 | Lee 2025 co-rolling, Doux 2020, **★⭐Kang&Shin 2025**(EIS-TLM R_ion 불변/R_int·R_w 급등, R_w∝δ_s) | ⛔ | future: P sweep→void→σ↓; + 균열→tortuosity↑→R_w↑(eq2) 사이클 시그니처 |
 
 ## C. paper-build (refs.bib / main.tex 정정 — 출판 전)
 

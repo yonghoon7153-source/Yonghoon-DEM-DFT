@@ -1,0 +1,69 @@
+# Kim, Kang, Park, Lee — Electrochim. Acta 542 (2025) 147413 — modified TLM impedance decoupling
+# NCM811 (LiNi0.8Co0.1Mn0.1O2) + LPSCl (Li6PS5Cl) + Super P; halide = Li2ZrCl6 (LZC)
+# All R in Ohm.cm2 (areal), C in indicated units, sigma in mS/cm, L in um, T_w in s, E_a in eV (estimated)
+# source: SI Tables S3-S6 (fitted, verbatim) + main text (stated) + Fig bars (digitized) + Arrhenius (estimated)
+# NCM811 wt% (NCM811:LPSCl:SuperP = 62:37:1 / 72:27:1 / 82:17:1); coating = LNO (LiNbO3) or uncoated
+# cell = symmetric (ion-blocking, SUS|cathode|SUS) or fullcell (3-electrode, e-blocking, Ag-Li RE)
+quantity,cell,coating,SE,NCM_wt_pct,temperature_C,value,unit,provenance,table,note
+bulk_sigma_ion,material,n/a,LPSCl,n/a,25,1.6,mS/cm,stated,text,equals Minnmann 2021 = our bulk anchor spread
+bulk_sigma_ion,material,n/a,LZC_halide,n/a,25,0.51,mS/cm,stated,text,halide lower sigma higher oxidative stability
+R_i_bulk,symmetric,LNO,LPSCl,62,30,9.3,Ohm.cm2,stated,S3,
+R_i_bulk,symmetric,LNO,LPSCl,72,30,18.7,Ohm.cm2,stated,S3,
+R_i_bulk,symmetric,LNO,LPSCl,82,30,12.8,Ohm.cm2,stated,S3,
+R_i_gb,symmetric,LNO,LPSCl,62,30,25.6,Ohm.cm2,stated,S3,GB comparable to or larger than bulk
+R_i_gb,symmetric,LNO,LPSCl,72,30,29.4,Ohm.cm2,stated,S3,
+R_i_gb,symmetric,LNO,LPSCl,82,30,6.2,Ohm.cm2,stated,S3,
+R_ion_total,symmetric,LNO,LPSCl,62,30,34.9,Ohm.cm2,derived,S3,R_i_bulk+R_i_gb
+R_ion_total,symmetric,LNO,LPSCl,72,30,48.1,Ohm.cm2,derived,S3,
+R_ion_total,symmetric,LNO,LPSCl,82,30,19.0,Ohm.cm2,derived,S3,82wt% lowest ionic R (densification)
+R_e,symmetric,LNO,LPSCl,62,30,4.8,Ohm.cm2,stated,S3,
+R_e,symmetric,LNO,LPSCl,72,30,53.1,Ohm.cm2,stated,S3,
+R_e,symmetric,LNO,LPSCl,82,30,262.7,Ohm.cm2,stated,S3,
+R_i_gb,symmetric,LNO,LPSCl,62,45,12.4,Ohm.cm2,stated,S3,GB strongly thermally activated
+R_i_gb,symmetric,LNO,LPSCl,62,60,3.1,Ohm.cm2,stated,S3,
+R_i_bulk,symmetric,LNO,LPSCl,62,45,8.0,Ohm.cm2,stated,S3,bulk weakly thermally activated
+R_i_bulk,symmetric,LNO,LPSCl,62,60,6.0,Ohm.cm2,stated,S3,
+thickness_L,symmetric,LNO,LPSCl,62,30,190,um,stated,S3,CAM up thickness down (densify)
+thickness_L,symmetric,LNO,LPSCl,72,30,180,um,stated,S3,
+thickness_L,symmetric,LNO,LPSCl,82,30,160,um,stated,S3,
+R_ion,fullcell,LNO,LPSCl,62,30,8.7,Ohm.cm2,stated,S4,
+R_ion,fullcell,LNO,LPSCl,72,30,12.0,Ohm.cm2,stated,S4,
+R_ion,fullcell,LNO,LPSCl,82,30,4.7,Ohm.cm2,stated,S4,82wt% lowest
+R_int_ct,fullcell,LNO,LPSCl,62,30,22.4,Ohm.cm2,stated,S4,charge-transfer; 82wt% lowest (electroactive area up)
+R_int_ct,fullcell,LNO,LPSCl,72,30,18.2,Ohm.cm2,stated,S4,
+R_int_ct,fullcell,LNO,LPSCl,82,30,17.2,Ohm.cm2,stated,S4,
+R_int_ct,fullcell,LNO,LPSCl,62,45,8.7,Ohm.cm2,stated,S4,temperature sweep (45C row, not same wt% base)
+R_int_ct,fullcell,LNO,LPSCl,62,60,7.6,Ohm.cm2,stated,S4,
+R_w,fullcell,LNO,LPSCl,62,30,215.5,Ohm.cm2,stated,S4,Warburg solid diffusion; low-CAM diffusion bottleneck
+R_w,fullcell,LNO,LPSCl,72,30,40.6,Ohm.cm2,stated,S4,
+R_w,fullcell,LNO,LPSCl,82,30,37.2,Ohm.cm2,stated,S4,
+T_w,fullcell,LNO,LPSCl,62,30,2929.3,s,stated,S4,diffusion time constant
+T_w,fullcell,LNO,LPSCl,72,30,614.6,s,stated,S4,
+T_w,fullcell,LNO,LPSCl,82,30,676.0,s,stated,S4,
+alpha_warburg,fullcell,LNO,LPSCl,62,30,0.31,dimensionless,stated,S4,<0.5 strong frequency dispersion
+alpha_warburg,fullcell,LNO,LPSCl,72,30,0.24,dimensionless,stated,S4,
+alpha_warburg,fullcell,LNO,LPSCl,82,30,0.30,dimensionless,stated,S4,
+CPE_int_C,fullcell,LNO,LPSCl,62,30,84.2,uF.s^(eta-1),stated,S4,double-layer; eta 0.97
+CPE_int_C,fullcell,LNO,LPSCl,72,30,1.9,uF.s^(eta-1),stated,S4,eta 0.89
+CPE_int_C,fullcell,LNO,LPSCl,82,30,0.9,uF.s^(eta-1),stated,S4,eta 0.80
+thickness_L,fullcell,LNO,LPSCl,62,30,47.5,um,stated,S4,
+thickness_L,fullcell,LNO,LPSCl,72,30,45,um,stated,S4,
+thickness_L,fullcell,LNO,LPSCl,82,30,40,um,stated,S4,
+R_i_gb,symmetric,uncoated,LPSCl,62,30,50.5,Ohm.cm2,stated,S5,uncoated GB much larger than coated
+R_i_gb,symmetric,uncoated,LPSCl,72,30,80.3,Ohm.cm2,stated,S5,
+R_i_gb,symmetric,uncoated,LPSCl,82,30,209.5,Ohm.cm2,stated,S5,uncoated high-CAM GB explosion
+R_i_bulk,symmetric,uncoated,LPSCl,62,30,12.2,Ohm.cm2,stated,S5,
+R_i_bulk,symmetric,uncoated,LPSCl,82,30,59.7,Ohm.cm2,stated,S5,
+R_int_ct,fullcell,uncoated,LPSCl,62,30,453.4,Ohm.cm2,stated,S6,uncoated R_ct ~20x coated (oxidative decomposition)
+R_int_ct,fullcell,uncoated,LPSCl,72,30,289.9,Ohm.cm2,stated,S6,~16x coated
+R_int_ct,fullcell,uncoated,LPSCl,82,30,382.4,Ohm.cm2,stated,S6,
+R_int_ct,fullcell,uncoated,LPSCl,72,45,139.6,Ohm.cm2,stated,S6,temperature sweep 72wt%
+R_int_ct,fullcell,uncoated,LPSCl,72,60,67.8,Ohm.cm2,stated,S6,289.9->139.6->67.8 large E_a
+R_ion,fullcell,uncoated,LPSCl,62,30,15.7,Ohm.cm2,stated,S6,
+R_ion,fullcell,uncoated,LPSCl,72,30,23.3,Ohm.cm2,stated,S6,
+R_ion,fullcell,uncoated,LPSCl,82,30,67.3,Ohm.cm2,stated,S6,
+R_e,fullcell,uncoated,LPSCl,62,30,31.8,Ohm.cm2,stated,S6,
+thickness_L,symmetric,uncoated,LZC_halide,72,30,170,um,stated,text,halide cell thickness
+E_a_R_ct,fullcell,uncoated,LPSCl,72,n/a,0.42,eV,estimated,S6,Arrhenius 3-pt 289.9->67.8 over 303-333K TREND-only
+E_a_R_i_gb,symmetric,LNO,LPSCl,62,n/a,0.6,eV,estimated,S3,Arrhenius 3-pt 25.6->3.1 TREND-only
+E_a_hierarchy,n/a,n/a,LPSCl,n/a,n/a,R_ct>R_i_gb>R_w>R_i_bulk,ordering,stated_qualitative,text,interfacial charge transfer most thermally activated (rate-limiting)
