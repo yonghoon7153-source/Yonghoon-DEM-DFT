@@ -8,6 +8,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | slug | 논문 | 축 |
 |---|---|---|
 | `papers/zuo2022_chlorination_cathode_interface.md` | Zuo, Chlorination/cathode interface (Angew 2022) | 양극·산화 |
+| `papers/li2025_cubr2_dualdoping_argyrodite.md` | **[외부]** Li/G.Wu/**Li-Zhen Fan**/**Ce-Wen Nan** (USTB·Tsinghua·Heze), **CuBr₂ 이원(Cu+Br) 도핑** argyrodite — Li₅.₅PS₄.₅Cl₁.₅(LPSC-P)→Li₅.₈P₀.₉Cu₀.₁S₄.₅Cl₁.₃Br₀.₂(LPSC-CB): σ 5.3→**10.3 mS/cm**·Ea 0.295→**0.239 eV**·gap 1.82→2.41 eV·σ_e 1.02e-8→**3.35e-9 S/cm**·CCD 0.6→**1.9 mA/cm²**(3000 h). Cu²⁺/P⁵⁺ 치환→Li⁺추가·S²⁻전하밀도↓·Br 4a/4d 무질서→σ↑; **wide-gap LiCl/LiBr 절연계면**(DFT gap LiCl 6.13/LiBr 5.07/Li₂S 3.04)→dendrite↓; **Cu–S>P–S**(물흡착 ΔE 0.29→2.42 eV·HSAB)→대기안정. LCO 112.6 mAh/g·400cyc 86.7 %, **FeS₂ 788.9 mAh/g·>4.02 mAh/cm²·200cyc 80.1 %** (ESM 2025, 77, 104221, DOI 10.1016/j.ensm.2025.104221) | **이온전도(σ)·도핑·음극 절연계면·대기안정·전자구조(gap/σ_e)** (exp + DFT보조: PDOS·ELF·H₂O흡착·Br자리) |
 | `papers/ke2025_orbital_hybridization_mgclo.md` | Ke, MgClO 공도핑 s-p/p-p 혼성 (ESM 2025) | 음극·환원·도핑 |
 | `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | Gil-González, constrained ESW 시너지 (ESM 2022) | 산화·기계구속(②)·전도도 |
 | `papers/lu2025_tailoring_cl_rich_anode_licl.md` | Lu, 4d-Cl 자기분해 → LiCl interphase (CEJ 2025) | 음극·환원·자리도핑 |
@@ -18,6 +19,13 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review.md` | **[우리 그룹]** Kang/Shin/Y.Lee/**Jong-Won Lee**, *Intertwined* electrochemo-mechanical degradation 리뷰 (ChemComm Feature Article 2026, 18 pp) — 전기화학 분해 ↔ 기계 불안정의 **양방향 되먹임 고리**가 thesis; 양극4종·음극3종 전기화학 분해 + 공동·접촉손실·균열·dendrite 기계 분해 + coupling(§4) + 3대 완화(SE도핑·CAM코팅·음극공학) + 통합 chemo-mechanical 로드맵 | **리뷰·우리그룹·electrochemo-mechanical coupling** (우리 DFT 상위 프레임) |
 | `papers/kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb.md` | **[우리 그룹]** Kang/Y.Lee/Bae/**Jong-Won Lee**, "이로운 기생반응" — NCM811에 LPSCl conformal **dry-coating** → 고전압 기생분해(식1 `2Li₆PS₅Cl→P₂S₅+5S+2LiCl+10e⁻+10Li⁺`)를 *균일*화 → NCM 균질 chemical lithiation(SOC↓) → layered→rock-salt 억제 → R_int 4.3 Ω cm²·200cyc 유지율 **+15.0 %** (ChemComm 2025, 61, 16850) | **양극·고전압 계면·기생반응·균일 chemical lithiation·SE 코팅** (실험·계산無) |
 | `papers/cha2024_dualcompatible_halide_ncm_lpscl_interface.md` | **[우리 그룹]** Cha/Yun/Kim/**Kang**/Cho/**Jong-Won Lee**, "dual-compatible halides" — high-Ni NCM(LiNi₀.₈₃Co₀.₁₁Mn₀.₀₆O₂)에 할라이드 SE(**LIC=Li₃InCl₆ / LYC=Li₃YCl₆ / LZC=Li₂ZrCl₆**)를 RAM 8–10 nm conformal 코팅 → NCM-LPSCl 계면 부반응 억제. **핵심: σ가 아니라 *dual compatibility*(NCM·LPSCl *양쪽* 호환)가 결정** — LIC(In) 양쪽 분해(In₂S₃)·LYC(Y) LPSCl과 분해(Y₂S₃)·**LZC(Zr⁴⁺) 양쪽 무분해 = 최고**. 계면저항 bare 74.4→LZC **20.1 Ω·cm²**·100cyc 유지율 LZC **91.2 %**(LIC 80.8 < bare 83.1 < LYC 87.3) (J. Power Sources 2024, 617, 235157, DOI 10.1016/j.jpowsour.2024.235157) — **우리 그룹 cathode-interface 3부작 *기원(2024)*** | **양극·계면 수식제·할라이드 코팅·dual compatibility·σ≠계면저항** (실험·계산無) |
+
+## ⚠ EXTERNAL / OFF-TOPIC (argyrodite 아님 · [우리 그룹] 아님 · 물성 4축 비교 제외)
+> 아래는 **argyrodite/배터리 논문이 아님**. 단 하나의 *전이 가능한 개념(멘탈모델)* 때문에만 보관. **comparison_vs_ours 물성축에 절대 넣지 않음**, [우리 그룹] 태그 금지, 수치 대조 금지.
+
+| slug | 논문 | 보관 이유 (analogy-only) |
+|---|---|---|
+| `papers/liu2013_cage_methane_adsorption_hydrate_nucleation.md` | **[EXTERNAL · 비-argyrodite]** Liu/Z.Zhang/Z.Zhang/Y.Zhang/**Guo** (CAS Beijing), "Effects of cage type and adsorption face on the cage–methane adsorption interaction: Implications for hydrate nucleation studies" — **가스 클라트레이트 수화물(물 cage + 메탄 CH₄), classical MD(GROMACS, TIP4P/2005 물 + OPLS-UA 메탄)로 cage–메탄 PMF 계산**. cage 면(window) 크기가 흡착세기 지배(E_a 4→6각 **11.7→21.3 kJ/mol**), **7각 면부터 메탄이 흡착 대신 *통과*(inter-cage 확산 통로)** (Chem. Phys. Lett. 575 (2013) 54–58, DOI 10.1016/j.cplett.2013.05.012) | **개념 멘탈모델만**: "face/window 크기 → guest의 trap-vs-cross 전이를 PMF 장벽으로 정량" = argyrodite Li⁺ **inter-cage hopping** 장벽을 *생각하는* 방식(우리 BVSE `migration_volume_fraction`=창 크기, tier2 `dopant_blocking_fraction`=창 좁힘)으로만 차용. **다른 시스템(물cage/CH₄ vs PS₄/Li⁺)·다른 결합(vdW·H-bond vs 이온)·다른 방법(MD PMF vs BVSE/AIMD/NEB) → 우리 재료 검증 0, 수치 전이 0.** §7 analogy-only. |
 
 
 ## 시트: 실험값  (21 entries)
@@ -124,6 +132,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 26 | bed8fa69 / 00e03394 (SI) | **[우리 그룹]** Kim/Y.M.Lee, 도전재(CA) 차원 효과 in SE 코팅 — 0D Super P vs 1D VGCF, 양극복합체 (Battery Energy 2025) — `papers/kim2025_conductive_agent_se_coating_cathode.md` | ✅ |
 | 27 | c0c4fd29 (…Intertwined…) | **[우리 그룹]** Kang/Shin/Y.Lee/**Jong-Won Lee**, electrochemo-mechanical degradation 리뷰 (ChemComm Feature Article 2026, DOI 10.1039/d5cc06309d, 18 pp) — `papers/kang2026_intertwined_electrochemo_mechanical_sulfide_assb_review.md` | ✅ |
 | 28 | 82ea256b (…parasitic_reaction…) | **[우리 그룹]** Kang/Y.Lee/Bae/**Jong-Won Lee**, 고전압 "이로운 기생반응" — NCM811에 LPSCl conformal dry-coating → 기생분해 균일화 → 균질 chemical lithiation (ChemComm 2025, 61, 16850, DOI 10.1039/d5cc04349b) — `papers/kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb.md` | ✅ |
+| 30 | fef2173b (…8._Effectstudies…) | **⚠ EXTERNAL · 비-argyrodite** Liu/Zhang/Zhang/Zhang/**Guo** (CAS), gas-hydrate cage–메탄 PMF (Chem. Phys. Lett. 575 (2013) 54–58, DOI 10.1016/j.cplett.2013.05.012). *argyrodite 아님 — `82ea256b` 업로드 폴더에 섞여 들어온 off-topic 파일.* 개념 멘탈모델(face/window→inter-cage 전이 장벽)만 보관 — `papers/liu2013_cage_methane_adsorption_hydrate_nucleation.md` | ✅ (EXTERNAL) |
 | 29 | a0db35d2 (05._Stabilalides) | **[우리 그룹]** Cha/Yun/Kim/**Kang**/Cho/**Jong-Won Lee**, "Stabilizing NCM/Li₆PS₅Cl interface via dual-compatible halides" — high-Ni NCM에 LIC/LYC/LZC 할라이드 8–10 nm 코팅, **Li₂ZrCl₆(LZC)=dual compatible**(NCM·LPSCl 양쪽 호환)이 계면저항 74.4→20.1 Ω·cm²·100cyc 91.2 % (J. Power Sources 2024, 617, 235157, DOI 10.1016/j.jpowsour.2024.235157) — `papers/cha2024_dualcompatible_halide_ncm_lpscl_interface.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정)*
