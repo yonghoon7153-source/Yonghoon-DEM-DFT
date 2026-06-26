@@ -1,5 +1,5 @@
 case,ps_label,p_frac,am_wt,se_of_solid_pct,dem_porosity_pct,mpm_porosity_pct,gap_dem_minus_mpm,trust,verdict
-input_1mAh_100_15,10:0,1.0,87,25,32.8,0.0,32.8,DEM,MPM-COLLAPSE invalid (mono-large crushed)
+input_1mAh_100_15,10:0,1.0,87,25,32.8,20.2,12.6,bracket,"BRACKET mono-large: MPM 20.2 (wallP cond., f_AM-insensitive) ~ same-comp 8mAh_real_10 19.0 / 2mAh_real_15 21.3 cross-validated; DEM 32.8 thin-loose outlier"
 input_2mAh_a5_p00,0:10,0.0,50,68,2.4,13.2,-10.8,MPM,DEM eps-overcompress (SE-rich artifact)
 input_2mAh_a5_p02,2:8,0.2,50,68,1.9,12.4,-10.5,MPM,DEM eps-overcompress (SE-rich artifact)
 input_2mAh_a5_p04,4:6,0.4,50,68,2.2,12.6,-10.4,MPM,DEM eps-overcompress (SE-rich artifact)
