@@ -90,5 +90,21 @@
 - σ 정규화 σ=1 S/cm(상대) → 절대는 bulk 스케일링 가정 (우리 Cronau σ_grain과 다름, 직접 절대비교 주의).
 - LPSCl 동일소재라 **추세·물리 직접 비교 가능** (Varkey halide와 달리) — 단 그들 φ 정의(vol% CAM:SE) 매핑 선행.
 
+## Supplementary Information (Table S1 — 2026-06-26 사용자 .docx 추가)
+원본 `docs/literature_coverage/pdfs/Bazzoun_2026_JPowerSources_SupportingInformation.docx`,
+데이터 `docs/data/bazzoun2026_S1_replicates.csv`.  Figure S1 = SE/CAM XRD 패턴.
+**Table S1 = full-blocking 대칭셀 Z-type TLM 피팅 + σ_eff,ion 의 조성별 3-replicate** (본문 0.137/0.101/0.065은
+이 3개 평균임을 확인 ✓):
+| f_CAM | replicate σ_eff,ion (mS/cm) | 평균 | 산포 | R_ion (Ω) | 두께 (µm) |
+|---|---|---|---|---|---|
+| 70 wt% | 0.123 / 0.135 / 0.153 | **0.137** | 0.123–0.153 (±11 %) | 203–282 | 120–129 |
+| 75 wt% | 0.105 / 0.101 / 0.098 | **0.101** | 0.098–0.105 (**±3 %**, 최소) | 296–317 | 119–126 |
+| 80 wt% | 0.079 / 0.063 / 0.054 | **0.065** | 0.054–0.079 (**±19 %**, 최대) | 392–574 | 119–131 |
+- TLM 파라미터: CPE Q≈15–20 (S·sᵅ/m), α 0.67–0.74 (비이상 계면), fit error <2 %, 전극면적 78.5 mm²(10 mm dia),
+  양극층 두께 ~119–131 µm (대칭셀 2층).
+- ★ **활용 = 우리 σ_ionic 절대앵커의 실험 불확실성 밴드**: 고-CAM(80 wt%, sparse-SE)일수록 replicate 산포가
+  급증(±19 %) = SE망 희박→패킹 민감 (우리 SE-poor 코너의 산포·신뢰성 논의와 같은 물리).  앵커를 점이 아닌
+  ±밴드로 쓸 근거.  75 wt%가 가장 robust(±3 %).
+
 ## 🗨️ Q&A 로그
 <!-- "Q&A 작성해줘" 트리거 시 직전 질문/답 누적 -->

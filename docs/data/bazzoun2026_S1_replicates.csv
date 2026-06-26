@@ -1,0 +1,16 @@
+f_CAM_wt,replicate,R_ion_TLM_Ohm_per_m,fit_error_pct,Q_CPE_S_s_alpha_per_m,alpha,R_ion_Ohm,cathode1_thick_um,cathode2_thick_um,sigma_eff_ion_mScm,electrode_area_m2
+# Bazzoun 2026 (JPS 661, 238682) SUPPLEMENTARY Table S1 — per-replicate Z-type TLM fit + sigma_eff_ion.
+# Full-blocking symmetric composite-cathode cell, 400 MPa assembly, EIS 1 Hz-7 MHz. 3 replicates per composition.
+# Replicate MEANS == digest stated values: 70wt 0.137 / 75wt 0.101 / 80wt 0.065 mS/cm (confirmed).
+# Spread: 70wt 0.123-0.153 (+-11%), 75wt 0.098-0.105 (+-3%, tightest), 80wt 0.054-0.079 (+-19%, widest =
+#   sparse-SE high-CAM most packing-sensitive). = experimental uncertainty band on our absolute sigma_ionic anchor.
+# electrode_area 7.85e-5 m2 = pi*(5mm)^2 (10 mm dia); given once in S1, same cell geometry all rows.
+70,1,833365,1.5,19.7,0.70,282,127,128,0.123,7.85e-5
+70,2,1035415,0.26,18.7,0.67,240,126,129,0.135,7.85e-5
+70,3,942202,0.97,17.0,0.68,203,120,124,0.153,7.85e-5
+75,1,1216000,1.7,17.8,0.74,296,119,126,0.105,7.85e-5
+75,2,1254964,0.33,19.5,0.73,303,119,122,0.101,7.85e-5
+75,3,1270412,0.37,19.6,0.73,317,120,124,0.098,7.85e-5
+80,1,1612622,0.54,17.0,0.70,392,119,124,0.079,7.85e-5
+80,2,2009708,0.29,15.1,0.71,519,128,131,0.063,7.85e-5
+80,3,2345392,0.99,16.9,0.72,574,122,123,0.054,7.85e-5
