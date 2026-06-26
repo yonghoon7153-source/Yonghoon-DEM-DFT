@@ -1,0 +1,50 @@
+# Mesarovic & Fleck (2000) Int. J. Solids Struct. 37(46-47) 7071-7091
+# Frictionless indentation of dissimilar elastic-plastic spheres (FEM, ABAQUS J2)
+# DOI 10.1016/S0020-7683(99)00328-5
+# All values STATED unless marked digitized(approx, TREND-only). Mean pressure normalized by sigma_0 (lower of two yield strengths) or sigma_r (reduced ref stress for hardening).
+# quantity,value,units,regime/condition,source,notes
+# --- regime structure: mean contact pressure F/(pi a^2 sigma_0) vs (a E*/R0 sigma_0) ---
+p_mean_first_yield,1.1,x_sigma_y,elastic->elastic-plastic onset,Johnson-stated(I=MesarovicFleck1999),"first yield p_mean ~ 1.1 sigma_y; quoted ~10% above sigma_y in text"
+aE_over_R0sigma0_at_first_yield,2.5,dimensionless,elastic Hertz upper bound,stated_Fig4a,"Hertzian (purely elastic) for aE*/R0sigma0 < 2.5"
+aE_over_R0sigma0_elastic_plastic_range,2.5-50,dimensionless,elastic-plastic regime (ideally-plastic m=inf),stated_Fig4a,"p_mean rises with aE*/R0sigma0 in this range (Johnson elastic-plastic)"
+aE_over_R0sigma0_plateau_onset,~50,dimensionless,fully-plastic similarity plateau onset (m=inf),stated_Fig4a,"plateau (H) reached for aE*/R0sigma0 >~ 50 IF yield strain high enough"
+aE_over_R0sigma0_plateau_onset_m3,~100,dimensionless,similarity plateau onset (m=3 hardening),stated_Fig5a,"F/(pi a^2 sigma_r) rises until aE*/R0sigma0 ~ 100 then plateau"
+p_mean_fully_plastic_cap_idealplastic,2.8-3.0,x_sigma_y,fully-plastic similarity plateau (m=inf),digitized_Fig4ab(approx),"Tabor hardness H ~ 2.8-3 sigma_y; plateau of F/(pi a^2 sigma_0) at ~2.8-3.0"
+p_mean_similarity_constant_k_m_inf,3.0,F/(pi a^2 sigma_0),rigid-ideally-plastic similarity (1.4),stated_Fig4,"k(m=inf) similarity value ~3.0 (the horizontal 'similarity solution' line)"
+contact_area_similarity_constant,1.4,a^2/(2 h R0),fully-plastic similarity plateau (m=inf),stated_Fig4cd,"a^2/2hR0 -> ~1.4 in similarity regime; >1 means contact LARGER than geometric overlap (sink-in/pile-up)"
+contact_area_similarity_constant_m3,~0.95,a^2/(2 h R0),similarity plateau (m=3 hardening),digitized_Fig5cd(approx),"a^2/2hR0 ~ 0.92-0.95 for m=3 (less than ideally-plastic 1.4)"
+# --- finite-deformation regime onset (a/R0 critical) ---
+a_over_R0_finite_def_onset_case_i,~0.16,a/R0,deformable sphere vs rigid platen (R_d/R_t=0),stated,"average pressure drops for a/R0 > ~0.16 (Brinell case iii drops here)"
+a_over_R0_finite_def_onset_case_i_m3,~0.06,a/R0,deformable sphere/rigid half-space m=3,stated_Fig5b,"finite-def regime entered when a/R0 exceeds ~0.06 for case (i)"
+a_over_R0_finite_def_onset_case_ii_m3,~0.1,a/R0,deformable sphere vs rigid sphere equal size m=3,stated_Fig5b,"~0.1 for case (ii)"
+a_over_R0_max_indentation_depth,0.2,h/R,max indent depth used (= stage I end),stated_eq2.3,"h=0.2R for D0=0.64 -> D=0.88; stage I ends D~0.8"
+# --- dimensionless groups (the map axes) ---
+group_elastic_plastic_governing,aE*/(R0 sigma0),dimensionless,governs elastic-plastic regime,stated_sec2.3,"E* combined plane-strain modulus eq2.4; R0 combined radius eq1.3; sigma0 = min(sigma01,sigma02)"
+group_finite_def_governing,a/R0,dimensionless,governs finite-deformation regime onset,stated_sec2.3,"no general a/R0 transition criterion exists across geometries (only similarity scaling used)"
+map_axis_x,a/R0,dimensionless,indentation map abscissa,stated_Fig8,"normalized contact radius"
+map_axis_y,sigma0/E*,dimensionless,indentation map ordinate,stated_Fig8,"= yield strain measure (lower yield / combined modulus)"
+# --- combined (reduced) parameters ---
+combined_radius_R0,1/R0=1/R1+1/R2,formula,equivalent radius,eq1.3,"harmonic-style sum (reduced radius)"
+combined_modulus_Estar,1/E*=(1-nu1^2)/E1+(1-nu2^2)/E2,formula,combined plane-strain modulus,eq2.4,"rigorously valid only in Hertz limit"
+combined_strength_sigma_e,sigma_e^-m = sigma_1^-m + sigma_2^-m,formula,equivalent strength (power-law solids),eq1.3,"m = strain-hardening exponent; reduces to series-like combination"
+yield_strength_governing_sigma0,sigma0 = min(sigma01,sigma02),formula,governing yield (lower of two),eq5.1,"the SOFTER body's yield governs the elastic-plastic regime"
+# --- strain-hardening exponents studied ---
+hardening_exponent_m_values,3;5;inf,dimensionless,m studied,stated,"m=3 strongly hardening (annealed Cu); m=5; m=inf elastic-ideally-plastic"
+# --- similarity (Storakers 1997) contact law constants ---
+similarity_F_law,F/(pi a^2 sigma_e)=k(m)(a/R0)^(1/m),eq1.4,mean pressure vs contact radius,eq1.4,"k(m),c(m) tabulated Biwa-Storakers 1995; indep of depth/size/strength"
+similarity_h_law,h/R0=(1/2c^2(m))(a/R0)^2,eq1.5,contact area prop to depth,eq1.5,"a^2 prop to h R0"
+similarity_F_vs_h,F/(pi R0^2 sigma_e)=K(m)(h/R0)^(1+1/2m),eq1.6a,force vs indent depth,eq1.6a,"K=2^(1+1/2m) c^(2+1/m) k (eq1.6b); for m=inf exponent=1, m=3 exponent=7/6"
+# --- the SEMI-EMPIRICAL contact law correction (paper's key deliverable for compaction) ---
+KFEM_over_Ktheory_range,0.55-0.87,dimensionless,stiffness reduction factor (all geometries m=3..inf),stated_sec7+Fig10,"K_FEM/K_theory at h/R0=0.1; multiply similarity K by this in finite-def regime"
+KFEM_over_Ktheory_m3,~0.6-0.7,dimensionless,strong hardening m=3,digitized_Fig10(approx),"increases as m decreases (less hardening -> closer to theory)"
+KFEM_over_Ktheory_m_inf,~0.85,dimensionless,elastic-ideally-plastic m=inf,digitized_Fig10(approx),"least reduction for ideally-plastic"
+# --- independent-contact assumption validity (3D B2 unit cell) ---
+B2_initial_relative_density_D0,0.68,relative density,B2 unit cell start,stated_sec6,"two overlapping simple-cubic lattices; close to RCP 0.64"
+B2_independent_contact_valid_to_D,0.82,relative density,independent-contact assumption holds below,stated_sec7,"contacts deform independently for D < ~0.82 (h/R0)^7/6 = 0.2"
+B2_contact_count_evolution,8->14,contacts,coordination during compaction,stated_sec6,"central soft sphere: 8 initial (rigid NN) -> +6 (deformable NN) at h/R0~0.2"
+stage_I_compaction_end_D,~0.8,relative density,stage I powder compaction end,stated_sec2.1+Fleck1992,"discrete-contact (stage I) regime ends ~0.8"
+# --- mesh / numerics ---
+fem_code,ABAQUS_v5.5,software,FE solver,stated,"updated Lagrangian finite deformation, Jaumann stress rate"
+mesh_axisym_elements,~2500,2nd-order elements,axisym mesh,stated_Fig3,"8-node rect + 6-node tri; ~23500 DOF; node spacing 1.5e-3 R at initial contact"
+mesh_3D_B2_elements,~4300,2nd-order elements,3D B2 mesh,stated_Fig3,"~100000 DOF; 20-node brick+15-node prism; node spacing 5e-3 R"
+scatter_h_at_a_over_R_0.01,7.5,percent,numerical scatter (small contact),stated,"drops to <2.5% for a/R>0.08"
