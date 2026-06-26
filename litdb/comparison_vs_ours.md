@@ -54,6 +54,27 @@
     *종류*의 물리지만 **상(Li≠SE)이 달라** Doux 가 우리 SE 소성을 *직접* 검증하는 건 아니고 **간접 보강**
     (LPSCl 은 압력민감 soft/다공 시스템). ⚠ over-claim 금지.
   - ⚠ **Li-metal 단락 논문** → 단락시간·용량·dendrite 수치 전사 금지, **SE 압력-역학·porosity 만**.
+- **★ Sakuda 2013 (75/80Li₂S·25/20P₂S₅ glass, 실험, 황화물-기계물성 고전) — 우리 두 토대 앵커의 원전**:
+  - ★ **E_SE 24 GPa 의 1차 출처**: 초음파 측정 **18–25 GPa** (75Li₂S·25P₂S₅ = **24**, 50Li₂S·50P₂S₅ = 18; 산화물
+    50Li₂O·50P₂O₅ = 50 ≈ 2×). → 우리 **real-bulk 22–24** = Sakuda 24 ∩ Bazzoun 22.1(LPSCl). **E_eff 1.35(DEM)/1.53(MPM)
+    = 이 24 의 18× 연화 프록시** — Sakuda 가 "real E 가 뻣뻣함"을 *측정*으로 확정 → "1.35 는 임의 아니라 *측정된 24 의
+    연화*"라는 frame[2] 논거의 measurement 근거. ⚠ Sakuda 24 = *재료 고유 E*(hot-press 고밀도 펠릿 초음파) → 우리
+    **real-bulk 칸에만** 매핑, *압밀-bed* E_eff 와 층위 다름(직접 동일시 금지).
+  - ★ **"황화물은 상온 가압만으로 치밀화(room-temperature pressure sintering)" 의 1차 출처**: 산화물 LLZO 는 1000 ℃+
+    소결 필요(Fig 1) vs 황화물은 냉간가압만으로 입계 소멸(Fig 2b→d, Fig 3 입자 유합). → 우리 **DEM cold-press @300 +
+    MPM 소성 void-fill** 전제의 물리적 정당화. Sakuda SEM(입자 *유합·성장* = 진짜 SHAPE 변화)= 우리 **MPM morphology
+    (코어보존+경계평탄화)가 모사하려는 바로 그 현상** → 강체-구 DEM 한계를 *실험이 직접 지적* → MPM 이 메우는 게 옳음(frame[5]).
+  - ⚠ **밀도 앵커 PROVENANCE 정정**: 우리 "**87 %@300 MPa (porosity 13 %)**"는 **본문에 stated 되어 있지 않다.** 본문 stated =
+    **">90 % @ over 350 MPa"** (porosity <10 %) 뿐. "87 %@300"은 **Fig 2a 곡선 digitized 추세값**(±, 본문에 300 MPa 정밀값
+    없음). → cite 시 **"Sakuda Fig2a digitized ~87 %@~300 (TREND); stated >90 %@>350 MPa"**. 소재 = 75Li₂S·25P₂S₅ **glass**
+    (≠ LPSCl). 우리 DEM pure-SE 90 % 는 **>350 MPa stated 와 정합**(300 digitized 와도 추세 일치하나 *압력 다름* 주의).
+  - **σ-vs-P 무릎(Fig 4)**: 냉간 **0.31** / bulk **0.34 mS/cm** (75Li₂S·25P₂S₅), 70 MPa 서 ~10⁻⁴ 급상승→포화 = Bazzoun
+    σ@400 포화 / 우리 Heckel P_y 138 / Doux 접촉@~25 MPa 와 **같은 계열**. ⚠ **σ 절대값(0.31) 전이 금지** — Li₃PS₄ glass σ ≪
+    LPSCl(~1–3, ~10×↑), *형태/추세*만.
+  - **"three-way agreement" 정직 재서술**: DEM(LPSCl, 300 MPa, ~10/15.6 %) ↔ Minnmann2021(NCM622+LPSCl 복합, 380 MPa,
+    13–17 %) ↔ Sakuda(75Li₂S·25P₂S₅ glass, stated >90 %@>350) = **"황화물-유리계가 수백 MPa 냉간가압서 porosity ~10–17 %로
+    치밀화"라는 *거동(추세)*의 3중 정합** — *같은 소재·같은 압력의 byte-identical 일치 아님.* Sakuda 기여 = same-family
+    거동·E·물리 앵커(절대 porosity 정밀값은 LPSCl 쪽 Minnmann/Doux/우리 DEM 소유). `docs/data/densification_porosity_db.csv`.
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 - **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**

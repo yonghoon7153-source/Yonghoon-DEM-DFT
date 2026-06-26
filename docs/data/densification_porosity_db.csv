@@ -12,3 +12,5 @@ varkey2026,cathode,Li3YBrCl6,10.58,NMC77.6_SE17.43_SBR3_CB0.97,350,37,135.6,135.
 ours_minnmann,separator,Li6PS5Cl,1.35,pure_SE,300,10,,,experiment_anchor,LPSCl cold-press Minnmann (E_eff soft -> denser)
 ours_real14,cathode,Li6PS5Cl,1.35,AM-rich_82_18,300,15.6,,30.28,dem_measured,real_14 DEM (soft E + MPM flow reach below rigid floor)
 doux2020,separator,Li6PS5Cl,24,pure_SE_pellet,370,18,,1000,experiment_anchor,LPSCl pellet rel.density 82.1pct (TableS2 80.3-84.9) @370MPa cold-press = our LPSCl; ~20pct rigid-sphere floor analog (our soft+plastic pure-SE 10pct is BELOW). Li-metal cell paper -> SE pellet porosity only
+sakuda2013,bulk_SE,75Li2S25P2S5_glass,24,pure_SE_glass,350,10,,,experiment_anchor_stated,STATED ">90pct at over 350 MPa" (porosity <10pct); 75Li2S25P2S5 GLASS not LPSCl; E_SE=24GPa(ultrasonic) origin of our real-bulk 24; same-sulfide-family densification physics TREND only
+sakuda2013,bulk_SE,75Li2S25P2S5_glass,24,pure_SE_glass,300,13,,,trend_digitized,DIGITIZED from Fig2a ~87pct@~300MPa (porosity ~12-15pct) TREND ONLY not stated; 300MPa not a stated pressure in paper; glass not LPSCl -> same-family trend not absolute
