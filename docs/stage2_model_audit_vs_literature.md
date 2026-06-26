@@ -182,6 +182,23 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   grain-contact 효율 인자"로 재명명** 권고(값·LOOCV +0.0043 유지).  ★ 보너스: **fabrication(300MPa) vs
   stack(40–70MPa) 압력 분리** + inter-lab **10× 분산**(Ohno/Zeier round-robin) = 우리 envelope 허용폭 + E_eff
   softening + Heckel P_y=138 + σ-vs-P ~400MPa saturation을 **"압력이 grain contact를 닫아 σ 포화"** 서사로 통합.
+- **★ Tier-1 Minnmann (porosity/σ/τ 앵커) — 출처 = 2021 JES 040537, NOT 2022 review** (`docs/lit_minnmann2022_*` +
+  `lit_minnmann2021_jes_charge_transport_bottlenecks.md`): 우리가 "Minnmann"이라 인용한 **porosity 14%(13–17%) +
+  σ_ion_eff 0.17 mS/cm + τ_ion 2.07** 은 **Minnmann 2021 JES 040537**(NCM622+LPSCl, 380 MPa dry uniaxial, EIS-TLM,
+  @42 vol% NCM)에 있음.  2022 AEM review(2201425)는 **정량 porosity/σ 0개**(qualitative Perspective) → **숫자는 2021
+  JES 040537 인용, review는 design-guideline용만**.  ⚠ τ는 **τ²=4.3 → τ=2.07**(Fig 2b 축이 τ²; "τ=2.07(=√4.3)"로
+  인용).  3압력 분리(fab 380 / 측정 ~40 / 운전 few-tens).  CAM vol% sweep = 우리 AM:SE sweep과 같은 방향(CAM↑→σ_ion↓
+  τ_ion↑; τ_el²=120@25vol% = 전자 퍼콜실패 = Park 90wt% analog).  ★ **refs.bib 버그 fix**: `@Minnmann2021`은 040502
+  (charge RATE, 다른 논문)을 가리킴 → **`@Minnmann2021bottleneck`(040537) 추가**.  paper-build TODO: 앵커 인용을
+  bottleneck(040537)으로 배선, framework 인용(040502)은 검토.  bulk LPSCl 1.6 = spread{Cronau 3.0/Lee 2.19/Bazzoun 1.02}.
+- **★ Tier-2 Sakuda 2013 — E_SE=24 origin 확정 / density 앵커는 trend-only 정정** (`docs/lit_sakuda2013_sulfide_mechanical_property.md`):
+  ✅ **E_SE≈24 GPa = 이 논문이 origin**(75Li2S·25P2S5 = 24 GPa stated, ultrasonic 18–25 over Li2S 50–80mol%) →
+  우리 real-bulk 24(∩ Bazzoun 22.1), E_eff 1.35/1.53 = **측정값의 18× softening**(자유파라미터 아님, frame[2]).
+  ⚠ **density 앵커 부분정정**: 우리 "87%@300MPa(13% por)"는 **Fig 2a digitized TREND**, stated는 **">90%@>350 MPa"** +
+  소재가 **75Li2S·25P2S5 GLASS(≠LPSCl argyrodite)** → 3-way 합의(DEM/Minnmann/Sakuda)는 **거동/trend 합의**(sulfide-glass
+  계열이 수백MPa서 ~10–17% por)지 **동일소재·동일압력 byte-match 아님**.  σ 0.31(cold)/0.34(hot) mS/cm = LPSCl의 ~1/10
+  → **knee 모양만 전이, 절대 X**.  SEM 입자 coalescence = MPM morphology(소성 shape change) 실험 endorsement(frame[5]).
+  paper-build TODO: main.tex ~L823 "87%@300 matches Sakuda" → ">90%@>350 stated; ~87%@~300 digitized trend; glass≠LPSCl"로 softening.
 - **★ #22 Park 2020 (FOUNDATIONAL ROOT) ✅ frame[4] 4건** (`docs/lit_park2020_digitaltwin_assb_foundational.md`):
   계보 시조(2020) — 우리 정확한 소재계(LiNbO₃-NCM711+LPSCl+NBR) + 조성축(NCM 60–90wt%).  ① 최적창 NCM
   60–80wt%(dead LPSCl ≤0.5%→90wt%서 6–20%) ↔ 우리 dead-AM 회피대; ② **NCM 90wt% σ_eff,ion=계산불가

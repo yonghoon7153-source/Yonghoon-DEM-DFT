@@ -572,6 +572,12 @@ DEM 32.8%) → "다른 MPM porosity 믿을 수 있나 / porosity lock은 신뢰�
   전구간 사용 금지(mono-large rebound를 과압축이 지움).  ★정정: a9_50 p10 MPM 9.31%는 over-compression
   CONFOUND → frame[3] "plastic erases dip"의 깨끗한 증거는 standalone 2D champion이지 scaffold p10 아님
   (docs/a9_50_ps_sweep_vs_bimodal266.md §발견3 caveat).
+- **FIX (진행중): Tabor식 wallP 조건부** (`docs/mpm_wallP_conditional_troubleshooting.md`, mpm3d_compaction.py
+  `--am-load-frac`, commit 70fd236).  frozen AM이 wallP에 기여 0인 걸 DEM AM 하중분담 f_AM으로 보정: SE servo가
+  `wallP_SE ≥ target·(1−f_AM)`에서 정지(SE는 자기 몫만).  DEM-rock clamp 아님(MPM이 보정된 BC서 porosity 계산 =
+  Tabor가 area를 cap하듯).  f_AM v0(von Mises)은 **SE-rich서 결함**(Eshelby, percolation gating 없음) → v1 production
+  = **Love-Weber σzz^AM-AM/σzz^total**(분산 SE-rich 자동 ~0).  ★ DEM 재실행 불필요: 파이프라인이 이미 contact force
+  재구성(von Mises 계산) → f_AM extractor만 추가.  corner에만 적용(production bimodal은 f_AM=0).  _10 corner 런 검증 대기.
 
 ### ★ MPM coverage PLASTIC vs RIGID — why the value is USABLE (2026-06-21) ★
 Closes the "값도 바뀌고" coverage saga.  Full record: docs/mpm_coverage_plastic_vs_rigid.md
