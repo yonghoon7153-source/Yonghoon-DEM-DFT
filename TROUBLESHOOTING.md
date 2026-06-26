@@ -130,6 +130,9 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
      ball-mill·롤링이 주력. → **Thinky rpm 단독 효과는 제한적(주로 발열 경유), 온도(A)와 묶어야 큼.**
      진단: 합제가 *균일한데 안 뭉침*=섬유화 문제(Thinky rpm 효과 제한) / *불균일*=분산 문제(Thinky rpm·시간 직접 도움) /
      *고rpm서 공처럼 뭉침/벽 타고 오름*=섬유화 onset 신호.
+   - ⚠ **섬유화 window (과전단 주의):** PTFE 섬유화는 부족→망없음 / **과다(over-fibrillation·over-kneading)→fibril 끊김·balling·MW저하**
+     로 망 저하. **단, 지금 Poly-rich는 under 상태**(도우 X)라 당장은 부족이 문제 → rpm↑ 시도 OK. 가드: **점진적↑ + 도우 뭉치면 즉시 정지**
+     (max·장시간 금지; 시간이 rpm보다 over의 주범). 과전단 신호 = balling / 뭉쳤다 다시 부슬 / 과열 / Poly 균열. (Nam2026 kneading-time = 최적 존재)
 **C. ⬇강등 PTFE 선(先)섬유화 masterbatch:** 단결정+PTFE+VGCF로 그물 먼저 → Poly 나중. agent percolation은 확보되나
    **★ 굳은 그물에 다수 Poly(70%)를 나중에 섞어 균일도 불량 위험**(사용자 지적). 쓰려면 **Poly 분할투입 + EDS 맵/단면으로 균일도 검증** 필수.
 **D. PTFE 양/첨가법:** Poly-rich엔 PTFE↑(1→1.5%) 또는 분할/투입시점 조정.
