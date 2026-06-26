@@ -203,3 +203,31 @@ mono-large 끝은 DEM, SE-rich 끝은 MPM.  또는 **|gap|≤4 케이스만으�
   gap, trust, verdict).  생성 로직 = 이 문서 §3 규칙.
 - anchor 검증: real_14 (MPM 16.7 ↔ DEM 15.6 ↔ exp, 512 수렴) = `docs/mpm3d_calibration.md`.
 - 트랜드 정정: `docs/a9_50_ps_sweep_vs_bimodal266.md` §발견3 (a9_50 p10 over-compression confound).
+
+## §8 ★ wallP-조건부 재실행 cross-capacity 결과 + OUTLIER 분류 (2026-06-26, 진행중)
+mono-large/SE-poor 코너 13개를 wallP 조건부(skeleton-spring, §6)로 재실행하며, **같은 조성의 다른 면용량
+(areal capacity) 형제**와 비교해 어느 값을 믿을지 판정.  ★ **방법 = 같은 조성에서 DEM=MPM 으로 *일치하는*
+고-면용량 형제(두껍고 입자 많아 통계 좋음)를 trusted anchor 로 잡고, 얇은 케이스를 그에 비춰 본다.**
+(면용량↑ = 전극 두꺼움 = 입자 多.  DEM은 *얇을수록 느슨*(edge/통계) → thin-DEM은 보통 상단 outlier.)
+
+| case | P:S | am_wt | SE/sol% | r_SE | DEM | MPM(재실행) | 같은-조성 bulk anchor (trusted) | 판정 |
+|---|---|---|---|---|---|---|---|---|
+| 1mAh_100_15 | 10:0 | 87 | 25 | 0.5 | 32.8 | **20.2** | ~20 (8mAh_real_10 19.0, 2mAh_real_15 21.3) | ✅ **MPM 신뢰** (thin-DEM 32.8이 outlier) |
+| 1mAh_100_10 | 10:0 | 82 | 32 | 0.5 | 28.3 | **21.78** | ~17 (2mAh_real_10 17.9, 8mAh_real_5 16.8) | 🟡 **mid-bracket OK** [bulk17, thinDEM28.3], 과압축 아님 |
+| 2mAh_real_20 | 10:0 | 92 | **16** | 0.5 | 29.3 | **22.2** | ~27 (8mAh_real_15 27.4=DEM27.3) | ⚠ **MPM 잔여 과압축** → DEM/8mAh(~27) 신뢰 |
+| 2mAh_a9_p10 | 10:0 | 90 | 19 | **1.5** | 26.4 | **15.44** | 없음 (am_wt90+rSE1.5 = 2mAh만) | ⛔ **DEGENERATE** (perc 0%, RVE 작음) → 둘 다 불신 |
+
+### OUTLIER 3-regime (확정 규칙 — production/trend 사용 시 적용)
+1. **SE 충분 (SE/solid ≳ 25 %) → MPM 신뢰.**  조건부가 잘 작동, MPM이 같은-조성 고-면용량 형제(DEM=MPM)와
+   수렴.  이때 **thin 1mAh 의 DEM 이 outlier**(thin-loose, +10 %p 이상) — DEM 아닌 MPM/bulk 사용.
+   예: 1mAh_100_15(20.2), 1mAh_100_10(21.78).
+2. **SE 극빈 (SE/solid ≈ 16 %) → MPM 잔여 과압축.**  SE가 너무 희박해 frozen-AM scaffold에서 SE가 더 흘러
+   조건부가 *완전히* 못 잡음.  같은-조성 고-면용량 형제(8mAh, DEM=MPM)가 진실을 가리킴 → **DEM/8mAh 쪽
+   (상단) 신뢰, MPM은 하한.**  예: 2mAh_real_20 (MPM 22.2 ≪ bulk 27).
+3. **DEGENERATE (r_SE=1.5 mono-large 또는 SE percolation 0 % 또는 RVE 과소) → 둘 다 불신, trend 제외.**
+   SE망이 끊겨 이온적으로 죽은 구조 + 통계 부족 → DEM·MPM 모두 low-confidence.  cross-capacity 형제도 없음.
+   예: 2mAh_a9_p10 (perc 0 %, SE 629개, RVE 40×40µm).  **degenerate-flag, scaling/trend 코퍼스에서 제외.**
+
+⇒ **단일 케이스의 porosity 신뢰도는 SE/solid 와 degeneracy 로 결정**:  SE≥25 % MPM·SE≈16 % DEM/anchor·
+degenerate 제외.  thin-DEM 의 "insufficient compaction(>25 %)" 경고는 *얇은 전극의 loose-packing artifact*
+일 수 있으니 같은-조성 고-면용량 형제로 교차확인할 것.  (나머지 9개 재실행 진행중 — 같은 표/규칙으로 누적.)
