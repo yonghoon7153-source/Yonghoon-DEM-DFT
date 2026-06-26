@@ -300,6 +300,7 @@ AM-재배열 discriminator(두께)를 유도 불가**.  8mAh = 미실행(zip 없
 standalone서 이미 thick drag-off 구조 확인 → 8mAh도 동일 예상.
 
 | 5 | **mobile elastic real-E AM** (E=140, softening 無, freeze 아니라 하중-bearing; nu_se=0.49가 soft-bulk 잡았으니 안전하다는 가설) | 3-lens(physics/regression/feasibility) **전부 KILL** + ★ 기존 empirical 발굴 | **이미 실행됨**: dem3d_composite_overshielding.md 4-lever 스크린 (real E=140 AM, e_am 140→40→12→4) | ❌ **기존 데이터로 KILL** (아래) |
+| 6 | **frozen AM + platen이 AM-protrusion top(am_top)에 stop, thin-protrude gate** (사용자: "AM이 SE 뚫고 나옴, 면용량 1일때") | 2-lens(physics/honesty + regression/gate) **전부 KILL** + ★ 기존 empirical 2건 발굴 | **이미 실행됨**: round 2(am_jam_z stop) + round 4(n_layers gate) — 양쪽 절반이 각각 로그됨 | ❌ **기존 데이터로 KILL** (아래) |
 
 ★ round 5 가설의 출발점은 **옳았다**(사용자 통찰): AM-AM은 영률 안 줄인 *real physics* (SE만 18× softened) → 내가 코너를
 "AM softened-E proxy"라 한 건 *틀림*.  하지만 그 real AM에 하중을 주면(=mobile) 어떻게 되는지는 **이미 2026-06-15에
@@ -316,11 +317,31 @@ empirical로 실행됨** (`docs/dem3d_composite_overshielding.md`, scripts/dem3d
     scaffold는 SE-only material(line 307), AM은 am_mask(v=0)와 **상호배타** → mobile-AM 코드 path 자체가 없음 + 코너가
     요구하는 n_grid≥300서 OOM.  ⇒ 새 코드 + OOM 위험 무릅써 돌려도 결과는 36–41 % over-shielding 재현(기존 DEM 스크린이 보증).
 
-★ **누적 결론 (5 라운드, empirical-backed):** mobile AM(하중-bearing) → over-shielding 36–41 %(production real_14 15.6 깨짐);
+★ round 6 가설의 출발점도 **부분적으로 옳았다**(사용자 통찰): default servo가 platen을 튀어나온 rigid AM **통과**시켜 SE
+과압축(11.6) = 진짜 비물리 지점.  그리고 AM은 frozen 유지(round 5 kill 회피).  하지만 **양쪽 절반이 이미 GPU로 실행·기각됨**:
+  • **stop-height (am_top):** code 주석(line 238) — 코너 regime에선 `am_top ≈ am_jam_z` → round 6 = **round 2(am-jam, 22.6,
+    real_14 16.7→18.4 깨짐)와 기하학적으로 동일**.  게다가 am_top은 *단일 최고 구* = lone-sphere(무한 국부응력) → percolating
+    `am_jam_z`보다 **덜 물리적**(셋 중 최악); am_top ≥ am_jam_z라 production over-loosen은 **≥18.4로 더 악화**.
+  • **gate (n_layers thin-protrude):** round 4 `--se-am-drag`의 n_layers gate(line 579-581)와 **동일 스칼라** → 이미 GPU 실행:
+    **robust(100_12)=0.62 ≈ robust(1mAh_6)=0.64** = thin-pair **straddle**, 어떤 threshold도 코너 ON / production OFF 분리 불가.
+  • **★ 핵심 발견 (이 라운드의 payoff): 코너 discriminator는 2-DIMENSIONAL (두께 × SE-content).**  두 직교 straddle pair가 증명:
+    (a) **8mAh_real_14(SE/sol 16%, thick) gap +0.1 ✓** vs **2mAh_real_20(SE/sol 16%, thin) gap +7.1 ✗** → 같은 SE-content, **두께**가 가름.
+    (b) **100_12(SE/sol 26%, 코너) vs 1mAh_6(SE/sol 36%, reliable)** → 둘 다 thin 1mAh, **SE-content**가 가름.
+    단일 스칼라(am_top·n_layers·drag = 전부 geometry-static)는 한 축을 붕괴 → 반드시 한 pair 오분류.  **이게 모든 patch가 실패한
+    이유 = 운이 아니라 차원.**  → §13이 이미 내린 결론(2-변수 validity domain, gateable mechanism 아님)을 정량 재확인.
+  • **틀린 target:** 코너 truth ~20 %(cross-capacity bracket), 32.8은 thin loose-packing **DEM outlier** → am_top은 그 outlier를 재현 = 틀린 끝.
+
+★ **누적 결론 (6 라운드, empirical-backed):** mobile AM(하중-bearing) → over-shielding 36–41 %(production real_14 15.6 깨짐);
 frozen AM → SE 하중-bearing densify 15.6 ✓(production) 但 코너 over-compress 11.6.  **코너=loose AM 필요, production=frozen AM
 필요 → 어느 쪽이냐 선택 = 바로 regime-gate = §13.**  코너 porosity는 BRACKET[frozen-MPM 11.6 하한 … DEM 32.8 상한 (단 32.8도
-thin loose-packing outlier 의심 — thick sibling+MPM cross-capacity ~20 %)]; truth는 그 사이, DEM(softened-E overlap)+packing이
-owns.  ⇒ §13 = **3중 backed**: (1) 4 GPU 라운드(조건부/jam/drag×2), (2) DEM 4-lever geometric 스크린(modulus 포함 전부 실패),
-(3) 프로젝트 자체 pre-rejection 문서.  ⚠ PROCESS 교훈: round 5 제안 전에 dem3d_composite_overshielding.md를 봤어야 함 —
-반박 CYCLE이 그 miss를 잡음(이게 반박 step의 가치).
-★ OPEN (사용자 결정, 혼자 확정 X): §13 채택(권장, 압도적 earned) vs 직접 GPU 재확인(새 코드+OOM, 기존 스크린 재현만).
+thin loose-packing outlier 의심 — thick sibling+MPM cross-capacity ~20 %)]; truth는 그 사이 ~20 %, DEM(softened-E overlap)+packing이
+owns.  ⇒ §13 = **5중 backed**: (1) 6 GPU 라운드(조건부/jam/drag×2/mobile/am_top), (2) DEM 4-lever geometric 스크린(modulus 포함
+전부 실패), (3) 프로젝트 자체 pre-rejection 문서, (4) **코너 discriminator 2-dimensionality 증명**(두 직교 straddle pair),
+(5) round 6의 두 절반이 각각 round 2·4서 GPU-기각.  ⚠ PROCESS 교훈: round 5·6 둘 다 **이미 repo에 있던 empirical 데이터**로
+죽음 — 새 가설 전에 기존 GPU 로그(§15, dem3d_composite_overshielding, se-am-drag robust)를 먼저 확인할 것.  반박 CYCLE이 두 번 다 그 miss를 잡음.
+★ **건설적 대안 (둘 다 lens가 지목):** ~20 %에 *복사 아니라 계산*으로 착지하는 건 이미 있는 **skeleton-spring wallP-conditional**
+(§9-11): SE가 `(1−f_AM)·target`을 받아 작은 plastic 증분 *계산* → MPM = DEM_rigid − increment (height-clamp이 못 하는 것),
+gate가 SE-content-aware(f_AM/margin) = round 6 geometric gate가 못 보는 그 축.  단 이건 자체 OPEN validation(코너 런) 남음 = "옳은 레인",
+"완전 종결"은 아님.
+★ OPEN (사용자 결정, 혼자 확정 X): §13 채택 + wallP-conditional(SE-content-aware) validation 마무리 vs round 6 GPU 재확인
+(예측 exact: real_14 ≥18.4, 100_12↔1mAh_6 분리 불가 — 기존 결과 재현일 뿐).
