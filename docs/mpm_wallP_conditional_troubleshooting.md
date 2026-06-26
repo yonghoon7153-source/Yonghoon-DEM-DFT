@@ -273,8 +273,23 @@ frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
     regime 자동.  drag는 그게 불가(local≠global).  ⇒ **세 번째 artifact.**
   - **GPU 부수발견:** no-drag 100_12가 11.62 ↔ 12.70 = **MPM ~1%p run-to-run variance** (fixed config).  ±1%p는 noise.
     (그 12.70은 drag 아님 — sed가 multi-line run_mpm.sh서 안 먹어 --se-am-drag 미적용이었음, grep로 확인.)
-  - **닫음:** 세 genuine 시도(조건부 over-dense / am-jam over-loose / se-am-drag local-blind) 모두 **동일 근본 이유**
-    로 실패 — 코너 porosity는 *global* AM 재배열·두께가 정하고 *어떤 local MPM 기제도* 못 잡음(frame[1]).  ⇒ 코너 =
-    **DEM 영역**, §13 regime-gate가 production 정답.  `--se-am-drag`/`--am-jam` 코드는 opt-in으로 남겨 이 탐색을 기록
-    (production default OFF, 무영향).  더 이상 patch 추구 안 함(= artifact 쫓기).  **MPM = 90% owns + morphology;
-    DEM = thin·SE-poor·AM-rich 코너 porosity.**  EARNED (3× 시험).
+  - **(잠정) 방향:** 조건부(over-dense)·am-jam(over-loose)는 *empirical로* artifact 확인됨(**2× 시험**).  se-am-drag는
+    **예측만**(round 3 PENDING — 아직 GPU 미실행).  IF 셋 다 실패로 *확정*되면 → 코너 porosity = *global* AM 재배열
+    (frame[1] local 한계) = DEM 영역, §13 regime-gate.  단 **se-am-drag flexible 물리계수**(아래 §15 round 4)가 살아
+    남으면 코너도 MPM이 owns 가능.  `--se-am-drag`/`--am-jam` opt-in 유지(default OFF, production 무영향).  ⚠ "EARNED"는
+    round 3 empirical 후에만.
+
+## §15 ★ 물리모델 탐색 CYCLE (idea → 반박 리뷰 → empirical → iterate) — 표준 프로세스 (2026-06-27)
+사용자 채택.  매 라운드: **(1) 물리 가설 1개 → (2) adversarial 반박 리뷰(죽이려 시도: correctness+physics+regression)
+→ (3) 살아남으면 GPU empirical test → (4) outcome 로그 → 다음 가설.**  ⚠ RULE: **empirical test 없이 "확정" 금지**(혼자 결론 X).
+
+| # | 물리 가설 | 반박 리뷰 | empirical test | outcome |
+|---|---|---|---|---|
+| 1 | wallP 조건부 (f_AM 응력분담 정지) | — | 100_12 GPU: 11.6 (조건부 ON인데 과압축) | ❌ artifact (over-dense) |
+| 2 | --am-jam (percolating AM rigid 정지) | — | standalone: 100_12 22.6 / real_14 18.4 | ❌ artifact (over-loose, AM overlap 무시) |
+| 3 | --se-am-drag (SE-AM confinement, **fixed** coef) | wq3sgfk9j: tunable-patch *예측*(local≠global thickness) | ⏳ **PENDING** (coef=1.0; 100_12 + real_14 + 1mAh_6) | 미정 |
+| 4 | --se-am-drag **flexible 물리계수** (AM load-path robustness서 유도, 손-튜닝 X) | (round 3 결과 후) | — | — |
+
+★ round 3 핵심 질문 2개: (a) drag가 porosity를 *옳은 방향*으로 옮기나 (11.6 → ↑)? (b) **한 fixed coef**가 100_12를
+고치면서 1mAh_6 void-fill(15.6)을 살리나?  방향 맞으면 → round 4(flexible 물리계수: coef=f(구조), 손-튜닝 아님) 설계+리뷰.
+방향도 틀리면 → 다른 가설(예: AM을 stiff-plastic *material*로 = Option D, AM 재배열을 MPM이 직접).  ⚠ 미해결 = OPEN.
