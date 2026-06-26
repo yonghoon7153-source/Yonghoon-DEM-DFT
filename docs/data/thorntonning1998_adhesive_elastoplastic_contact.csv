@@ -1,0 +1,68 @@
+# Thornton & Ning (1998) Powder Technology 99(2) 154-162, DOI 10.1016/S0032-5910(98)00099-0
+# "A theoretical model for the stick/bounce behaviour of adhesive, elastic-plastic spheres" (Aston Univ.)
+# The 4-phase NORMAL adhesive elasto-plastic contact LAW + JKR adhesion + restitution.
+# This is the ANALYTICAL contact LAW (per-contact constitutive), the base model Varkey 2026 uses,
+# and the "path A" yield-cap LAW that Luding 2008 (our hooke/hysteresis) LACKS.
+# All values are STATED equations / parameters in the paper (no digitized-from-figure numbers unless flagged).
+# E* = reduced modulus 1/E*=(1-v1^2)/E1+(1-v2^2)/E2 (eq5); R* reduced radius 1/R*=1/R1+1/R2 (eq6);
+# m* reduced mass 1/m*=1/m1+1/m2 (eq8); alpha = relative approach (overlap); a = contact radius; Gamma = surface/interface energy.
+category,phase_or_quantity,symbol,equation_or_value,paper_eq,notes
+# ===== PHASE 1 : ELASTIC HERTZ LOADING (alpha < alpha_y) =====
+phase1_elastic,Hertz pressure dist,p(r),p(r)=(3P)/(2*pi*a^2)*[1-(r/a)^2]^(1/2),eq1,semi-ellipsoidal Hertz traction
+phase1_elastic,normal force,P,P=(4/3)*E*·R*^(1/2)·alpha^(3/2),eq2,Hertz F ~ delta^1.5
+phase1_elastic,contact radius,a,a=(3*P*R*/(4*E*))^(1/3); a^2=R*·alpha,eq3+eq4,
+# ===== PHASE 2 : YIELD ONSET (alpha = alpha_y, a = a_y) =====
+phase2_yield,limiting contact pressure,p_y,p_y = 2*E*·a_y/(pi*R*),eq9,DEFINITION: mean(peak) pressure cap = "limiting contact pressure"; p_y~1.6-3*sigma_y (Tabor)
+phase2_yield,yield force (from py),P_y,p_y = 3*P_y/(2*pi*a_y^2),eq14,P_y = yield normal force at onset
+phase2_yield,contact radius at yield,a_y,a_y^3 = 3*R*·P_y/(4*E*),eq16,
+phase2_yield,yield velocity (sphere-sphere),V_y,V_y=(pi/(2E*))^2·(8*pi*R*^3/(15*m*))^(1/2)·p_y^(5/2)=3.194·(p_y^5·R*^3/(E*^4·m*))^(1/2),eq10,relative impact velocity below which interaction is elastic
+phase2_yield,yield velocity (sphere-plane),V_y_plane,V_y=(pi/(2E*))^2·(2/(5*rho))^(1/2)·p_y^(5/2)=1.56·(p_y^5/(E*^4·rho))^(1/2),eq11,Davies 1949 result
+phase2_yield,energy balance at yield,KE_y,(1/2)*m*·V_y^2 = integral_0^alpha_y P dalpha = 8*E*·a_y^5/(15*R*^2),eq7,
+# ===== PHASE 3 : PLASTIC LOADING BRANCH (alpha > alpha_y) — LINEAR, pressure capped at p_y =====
+phase3_plastic,plastic force-overlap (LINEAR),P,P = P_y + pi·p_y·R*·(alpha - alpha_y),eq19,★ LINEAR plastic branch (contact pressure capped at p_y); tangent to Hertz at yield
+phase3_plastic,plastic force (area form),P,P = pi·a_p^2·p_y + P_e·[1-(a_p/a)^2]^(3/2),eq13,a_p = radius of uniform-p_y plateau; P_e = equiv elastic force (eq21)
+phase3_plastic,plastic contact stiffness,k_N,k_N = pi·R*·p_y = 2*E*·a_y,eq22,CONSTANT slope of plastic branch (vs Hertz tangent-decreasing)
+phase3_plastic,plateau/cap relation,a_p,a^2 = a_p^2 + a_y^2,eq17,Hertz cut off at p_y over inner plateau a_p
+phase3_plastic,virtual intercept,P_0,P_0 = P_y - 2*E*·a_y·alpha_y = -P_y/2,eq24+eq25,linear plastic line extended hits P-axis at P_0=-P_y/2 (<0)
+# ===== PHASE 4 : ELASTIC UNLOADING (Hertzian, LARGER radius R_p* = residual plastic deformation) =====
+phase4_unload,plastic unloading radius,R_p*,R_p*·P* = R*·P_e*; R_p* = (4*E*/(3*P*))·((2*P*+P_y)/(2*pi*p_y))^(3/2),eq20+eq28,1/R_p* < 1/R* permanent flattening; bigger eff radius on unload
+phase4_unload,equivalent elastic force,P_e*,P_e* = (4/3)*E*·R*^(1/2)·alpha^(*3/2),eq21,
+phase4_unload,unloading force law (Hertz),P,P = (4/3)*E*·R_p*^(1/2)·(alpha - alpha_p)^(3/2),eq29,elastic rebound along Hertz with R_p*; alpha_p = residual overlap
+phase4_unload,max overlap relation,alpha*,alpha* = (2*P*+P_y)/(2*pi*R*·p_y); alpha*^2 not used,eq26,P* = actual max normal force
+# ===== COEFFICIENT OF RESTITUTION (non-adhesive elastic-plastic) =====
+restitution,general COR (e=Vr/Vi),e,e=(6*sqrt(3)/5)^(1/2)·[1-(1/6)(V_y/V_i)^2]^(1/2)·[(V_y/V_i)/((V_y/V_i)+2*sqrt(6/5-(1/5)(V_y/V_i)^2))]^(1/4),eq44,satisfies e=1 at Vi=Vy
+restitution,high-velocity limit,e,e=1.185·(V_y/V_i)^(1/4),eq46,valid for V_i>10*V_y; e ~ V^(-1/4)
+restitution,sphere-plane high-V,e,e=1.324·(p_y^5/(E*^4·rho))^(1/8)·V_i^(-1/4),eq47,Johnson textbook prefactor 1.72 (assumed 2x plastic stiffness)
+# ===== JKR ADHESION (elastic adhesive spheres) =====
+jkr,pull-off force,P_c,P_c = (3/2)*pi*Gamma*R*,eq50,pull-off (separation) force; Gamma=interface energy
+jkr,equilibrium contact at zero load,alpha_f,alpha_f=(3/4)*(pi^2·Gamma^2·R*/E*^2)^(1/3)=(3*P_c^2/(16*R*·E*^2))^(1/3),eq49,JKR overlap at P=0
+jkr,jump-in force on contact,P_jump,P = -8*P_c/9,fig5 text,VdW force drops contact to -8Pc/9 on first touch (point A)
+jkr,work to break contact,W_s,W_s=0.9355·P_c·alpha_f=7.09·(Gamma^5·R*^4/E*^2)^(1/3),eq52,energy to separate surfaces (integral of adhesive curve)
+jkr,sticking velocity (sphere-sphere),V_s,V_s=(14.18/m*)^(1/2)·(Gamma^5·R*^4/E*^2)^(1/6),eq54,critical velocity below which sticking occurs
+jkr,sticking velocity (sphere-plane),V_s_plane,V_s=1.84·((Gamma/R)^5/(rho^3·E*^2))^(1/6),eq55,
+jkr,COR adhesive elastic,e,e=[1-(V_s/V_i)^2]^(1/2),eq57,e=0.995 at Vi=10*Vs
+# ===== ADHESIVE ELASTIC-PLASTIC (JKR + plastic, combined) =====
+adh_ep,JKR traction with py cap,p(r),p(r)=(2*E*·a/(pi*R*))[1-(r/a)^2]^(1/2)-(2*Gamma*E*/(pi*a))^(1/2)[1-(r/a)^2]^(-1/2),eq58,JKR distribution capped at p_y (Fig 7)
+adh_ep,effective Hertz force,P_1,P_1 = P + 2*P_c +/- (4*P*P_c+4*P_c^2)^(1/2),eq60,gives same contact area as applied force P + pull-off P_c
+adh_ep,adhesive plastic force,P,P=(4*E*·a^3)/(3*R*)-(8*pi*Gamma*E*·a^5)^(1/2)/... ,eq62,JKR loading force (relative approach eq61)
+adh_ep,limiting pressure (adhesive),p_y,p_y = 2*E*·a_y/(pi*R*) - (2*Gamma*E*/(pi*a_y))^(1/2),eq65,p_y reduced by adhesion term vs eq9
+adh_ep,plastic stiffness (adhesive),dPp/dalpha,dPp/dalpha = (3*pi*R*·p_y·sqrt(P_1)-2*E*·a_y·sqrt(P_c))/(3*sqrt(P_1)-sqrt(P_c)),eq69,
+adh_ep,unload stiffness (adhesive),dP/dalpha,dP/dalpha = 2*E*·a·(3*sqrt(P_1r)-3*sqrt(P_cr))/(3*sqrt(P_1r)-sqrt(P_cr)),eq73,Ning 1995 thesis; R_p*=R*·P_1*/(P*+sqrt(4Pc·P1*)) eq76
+adh_ep,enhanced pull-off (plastic),P_cr,P_cr = (3/2)*pi*Gamma*R_p*,eq77,pull-off force RISES with impact velocity (larger R_p*)
+# ===== COMBINED adhesive elastic-plastic COR (additive dissipation) =====
+combined,additive dissipation rule,e,(1-e^2)=(1-e_p^2)+(1-e_a^2),eq78,plastic work (e_p eq44) + adhesive rupture (e_a eq57) ADDITIVE
+combined,COR Vi<=Vs,e,e=0,eq79,stick (no rebound)
+combined,COR Vs<Vi<=Vy,e,e=[1-(V_s/V_i)^2]^(1/2),eq80,adhesive-only regime (elastic)
+combined,COR Vi>Vy,e,e^2=(6*sqrt(3)/6)·[1-(1/6)(V_s/V_i)^2]·[(V_y/V_i)/((V_y/V_i)+2*sqrt(6/5-(1/5)(V_y/V_i)^2))]^(1/2)-(V_s/V_i)^2,eq81,full adhesive elastic-plastic
+# ===== WORKED PARAMETER EXAMPLE (Fig 9/10 numerical sims, Ning 1995 thesis) =====
+example,interface energy,Gamma,0.2 (also 0.4) J/m^2,fig9/fig10,STATED example values
+example,limiting pressure case A,p_y,3.04 GPa,fig10,V_y=0.62 m/s, V_s=0.016 m/s, e_max=1.0
+example,limiting pressure case B,p_y,1.0 GPa,fig10,V_y=0.045 m/s, V_s unchanged, e_max=0.9
+example,limiting pressure case C,p_y,0.5 GPa,fig10,plastic at zero load (V_y=0) -> e_max=0.5, V_s rises to 0.032 m/s
+example,yield velocity (illustrated),V_y,0.62 m/s,fig9,for the Gamma=0.2 / p_y=3.04 GPa case
+# ===== LINK to our model: LPSCl numbers for path-A feasibility check =====
+link_LPSCl,LPSCl yield stress range,sigma_y,0.05 - 0.30 GPa,our_baseline,LPSCl single-crystal->granular literature
+link_LPSCl,LPSCl limiting pressure (est),p_y,~0.08 - 0.48 GPa (=1.6*sigma_y),derived,p_y~1.6*sigma_y (Tabor lower bound); our compaction contacts ~300 MPa = 0.30 GPa
+link_LPSCl,our DEM contact pressure target,P_macro,300 MPa = 0.30 GPa,our_baseline,macroscopic press; local contact pressure capped at p_y in TN law
+link_LPSCl,So2021 H-cap analog,F_th,F_th = (2/3)*H*A_con,so2021_eq14,same idea: contact pressure -> H (Tabor H~3*sigma_y); TN p_y is the Hertz-based version
+link_LPSCl,Luding gap (no cap),hooke/hyst,piecewise-LINEAR k1->k2 + delta0; NO p_y/H cap,luding2008_eq6,what TN ADDS = the missing yield-pressure cap -> removes our 18x E-softening
