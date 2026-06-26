@@ -34,6 +34,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 | **He 2019** (DFT for battery) | methods-review | 우리 방법=표준 battery-DFT 인용처; ⚠grand-potential은 He19 아님(Mo2012) | `he2019_dft_for_battery_materials_review` |
 | **Whitten 2023** (UPS best-practice) | methods | UPS=VBM/IE=산화안정성 valence-side probe (상한, 진짜 onset은 grand-potential) | `whitten2023_ups_practical_best_practices` |
 | **Choi 2025** (MLIP 계면접착) | methods | W_ad **SMD+PMF** = 우리 rigid-분리 100–1000× 과대 처방; MLIP B0 DFT 5%내 앵커 | `choi2025_mlip_cu_taxn_interfacial_adhesion` |
+| **★ Torii 2025** (LPSCl 기계물성·이방성, Osaka) | C 기계 | **외부 full-DFT가 vacancy paradox 판정**: relaxed-ion(E27.4/G10.0)=우리 relaxed(22/8), clamped(52/20)의 2× 아래 → **relaxed가 옳다 외부확증**. 전단취성 Cl→Li₄Cl 원자기구 | `torii2025_lpscl_mechanical_anisotropy_dft` |
 
 ## D. external / off-topic (analogy only)
 | 논문 | 우리 작업 연결 | slug |
@@ -50,6 +51,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 5. **Cl-rich 산화 4축 정명**: B①intrinsic onset(무승부, S²⁻-limited 2.14V) · B②기계구속(GG) · B③양극cycling(Zuo) · 음극(Liu/Lu). 섞으면 틀림.
 6. **방법 엄밀성**: 우리=표준 battery-DFT(He19) + ESW는 grand-potential로 *상회*(band-edge 2–3×과대) + W_ad는 SMD개선(Choi) + UPS로 VBM실측.
 7. **★ S-pin 산화 명제 (Banik=외부 정답지)**: "치환은 S-limited 산화 onset 못 옮긴다"가 이제 **Zeier 실험 + Mo 계산**(우리 grand-potential 본가)의 검증을 가짐. 우리 차별화 = Banik이 닫은 문 *위*: (i) Cl-rich 4축, (ii) onset 옮기는 예외도판트(B₂O₃ 2.317·Sc/Cr/In/Ga₂O₃ 2.356, ≤0.2V), (iii) Nd passivation. + "치환 안 되니 코팅 필요"가 우리그룹 cathode-interface 라인을 외부 정당화.
+8. **★ vacancy paradox 외부 판정 (Torii)**: 독립 full-DFT(PBE-D3 relaxed-ion)가 E=27.4/G=10.0 → 우리 **relaxed-ion(22/8)에 산다, clamped(52/20)의 2× 아래** = "clamped는 frozen-framework baseline, relaxed가 물리적"이 외부확증. B0는 동물질(격자 10.04≈10.055)·절대값은 D3+정의차(우리 PBE B_VRH 25.51≈EOS 26.23). 전단취성(ε0.7%, Cl→Li₄Cl)이 우리 낮은 C₄₄/G의 *원자기구*(Kang 리뷰 chemo-mechanical과 연결). deck "paradox" 슬라이드 외부 인용처.
 
 ## ✅ 배치 완료 (2026-06-26)
 이번 세션 총 **18편** digest (우리그룹 5 · 외부 Cl/계면·산화 8 · 이론/방법 5 — 일부 중복 카운트 / analogy 1). #18 Banik·#19 Rao 포함 전부 커밋·푸시됨. 동반 figure: `docs/figures/cascade/cascade_oxidation_vs_banik.png` (Banik S-pin vs 우리 예외 6 M³⁺ 산화물).
