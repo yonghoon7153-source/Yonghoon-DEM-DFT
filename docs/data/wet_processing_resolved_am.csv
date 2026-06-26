@@ -1,0 +1,67 @@
+quantity,stage,value,units,calendering_degree_pct,distance_from_cc_um,interface_pair,precision,note
+# === Weitze, Zanotto, Zapata Dominguez, Franco (Energy Storage Materials 73, 2024, 103747) ===
+# === ASSB cathode WET-processing (slurry->dry->calender), RESOLVED multisphere AM (nano-CT), LAMMPS DEM + GeoDict continuum sigma ===
+# === Material: NMC622 75wt% + LPSCl 17.5wt% + carbon C65 5wt% + PIB binder 2.5wt%; solid content 50wt% ===
+# === WARNINGS: sigma is DIMENSIONLESS (phase bulk sigma=1; no absolute mS/cm); calendering DEGREE != pressure(MPa); resolved-shape but RIGID (no shape plasticity); nano-CT material != slurry material. NMC622 != our NMC811. TREND only for ASSB-production transfer. ===
+#
+# --- CALIBRATION ANCHORS (stated, exp vs sim) ---
+slurry_density,slurry,1.353,g_per_cm3,,,,"stated_exp_eq3.1","experimental, Anton Paar DMA 4100 M; uncertainty +-0.001"
+slurry_density,slurry,1.34,g_per_cm3,,,,"stated_sim_eq3.1","simulated after Bayesian force-field calibration; +-0.02 (in exp error range)"
+porosity,dry_electrode,0.53,fraction,0.0,,,"stated_exp_eq3.2","experimental dry electrode porosity before calendering; +-0.03"
+porosity,dry_electrode,0.57,fraction,0.0,,,"stated_sim_eq3.2","simulated dry porosity; +-0.01 (within exp range). = start point of calendering"
+#
+# --- POROSITY vs CALENDERING DEGREE (Fig 6; stated endpoints + digitized curve) ---
+porosity,calendering,0.57,fraction,0.0,,,"stated","Fig 6 start = dry electrode porosity"
+porosity,calendering,0.30,fraction,45.0,,,"stated","Fig 6 end; P_sim=0.30+-0.02 @45pct calendering degree. NONLINEAR (springback varies with calendering pressure)"
+porosity,calendering,0.55,fraction,5.0,,,"digitized_Fig6","gentle decline at low calendering degree"
+porosity,calendering,0.50,fraction,15.0,,,"digitized_Fig6","mid"
+porosity,calendering,0.45,fraction,25.0,,,"digitized_Fig6","mid; steeper decline begins ~25pct"
+porosity,calendering,0.39,fraction,35.0,,,"digitized_Fig6","steep region"
+#
+# --- IONIC CONDUCTIVITY vs CALENDERING DEGREE (Fig 8 right; DIMENSIONLESS, SE bulk sigma_ion=1; digitized) ---
+# NOTE: DIMENSIONLESS (normalized to SE bulk). Monotone increase: calendering->SE contacts up, tau down -> sigma_ion up. ASSB densification HELPS ionic (OPPOSITE of LIB pore-conductor).
+sigma_ionic_normalized,calendering,0.05e-2,dimensionless,5.0,,,"digitized_Fig8","x10^-2 units; SE bulk=1; low calendering"
+sigma_ionic_normalized,calendering,0.30e-2,dimensionless,20.0,,,"digitized_Fig8","x10^-2"
+sigma_ionic_normalized,calendering,0.75e-2,dimensionless,35.0,,,"digitized_Fig8","x10^-2"
+sigma_ionic_normalized,calendering,1.35e-2,dimensionless,45.0,,,"digitized_Fig8","x10^-2; peak at max calendering. ~27x rise over the sweep"
+#
+# --- ELECTRONIC CONDUCTIVITY vs CALENDERING DEGREE (Fig 8 left; DIMENSIONLESS, CBD bulk sigma_e=1; digitized) ---
+# NOTE: DIMENSIONLESS (normalized to CBD bulk). Monotone increase with step ~0.3 calendering: contacts up, porosity down -> sigma_e up.
+sigma_electronic_normalized,calendering,0.15e-3,dimensionless,5.0,,,"digitized_Fig8","x10^-3 units; CBD bulk=1; low calendering"
+sigma_electronic_normalized,calendering,0.30e-3,dimensionless,20.0,,,"digitized_Fig8","x10^-3; plateau ~0.1-0.25"
+sigma_electronic_normalized,calendering,0.60e-3,dimensionless,35.0,,,"digitized_Fig8","x10^-3; step-up near 0.3 calendering"
+sigma_electronic_normalized,calendering,1.15e-3,dimensionless,45.0,,,"digitized_Fig8","x10^-3; peak at max calendering. ~8x rise"
+#
+# --- NORMALIZED INTERFACIAL AREA A_interface/A_base vs CALENDERING DEGREE (Fig 7; digitized) ---
+# *** KEY COUNTER-INTUITIVE RESULT ***: phase-Pore interfaces DECREASE (pores shrink), but phase-phase (AM-SE etc.) interfaces do NOT grow.
+# Authors EXPLICITLY attribute to model limitation: spherical+RIGID particles cannot increase contact area after touching (no plastic deformation). = the gap our MPM/Stage-E fills.
+interface_area_normalized,calendering,11.5,ratio,5.0,,SE-Pore,"digitized_Fig7","highest; SE has most pore interface. decreases 11.5->8.5"
+interface_area_normalized,calendering,8.5,ratio,45.0,,SE-Pore,"digitized_Fig7","decreased (pores shrink)"
+interface_area_normalized,calendering,5.8,ratio,5.0,,CBD-Pore,"digitized_Fig7","2nd; 5.8->4.8"
+interface_area_normalized,calendering,4.8,ratio,45.0,,CBD-Pore,"digitized_Fig7",""
+interface_area_normalized,calendering,5.7,ratio,5.0,,AM-Pore,"digitized_Fig7","5.7->4.0"
+interface_area_normalized,calendering,4.0,ratio,45.0,,AM-Pore,"digitized_Fig7",""
+interface_area_normalized,calendering,1.8,ratio,5.0,,CBD-SE,"digitized_Fig7","phase-phase; roughly flat ~1.8"
+interface_area_normalized,calendering,1.0,ratio,5.0,,AM-SE,"digitized_Fig7","*** phase-phase: ~1, NEARLY CONSTANT across calendering -> the counter-intuitive non-growth (active interface for (de)intercalation should grow but does not = rigid-sphere limit) ***"
+interface_area_normalized,calendering,1.0,ratio,45.0,,AM-SE,"digitized_Fig7","still ~1; does NOT grow with calendering (model limitation, authors stated)"
+interface_area_normalized,calendering,0.9,ratio,5.0,,CBD-AM,"digitized_Fig7","lowest; roughly flat ~0.9"
+#
+# --- THICKNESS / GEOMETRY (Fig 4; stated) ---
+thickness_or_box,slurry,22,um,,,,"stated_Fig4","slurry box WIDTH (x,y,z periodic initial)"
+thickness,dry_electrode,110,um,,,,"stated_Fig4","dry electrode height after drying+re-equilibration"
+thickness,calendered,40,um,,,,"stated_Fig4","calendered electrode height"
+#
+# --- COMPOSITION (stated, wt%) ---
+composition,formulation,75,wt_pct,,,AM_NMC622,"stated","LiNi0.6Mn0.2Co0.2O2"
+composition,formulation,17.5,wt_pct,,,SE_LPSCl,"stated","Li6PS5Cl"
+composition,formulation,5,wt_pct,,,carbon_C65,"stated","Timcal C65 conductive carbon"
+composition,formulation,2.5,wt_pct,,,binder_PIB,"stated","polyisobutene; 9wt% in p-xylene; CBD = carbon+binder homogenized"
+composition,slurry,50,wt_pct,,,solid_content,"stated","slurry solid content"
+#
+# --- DESCRIPTORS NOT REPORTED (for completeness) ---
+# coordination_Z: n/a (not reported)
+# Heckel_Py: n/a (no absolute pressure; calendering degree only)
+# sigma_thermal: n/a (not solved; ionic+electronic only)
+# absolute_sigma_mScm: n/a (dimensionless, phase bulk=1)
+# E_AM / E_SE / sigma_y / nu: n/a (Bayesian force-field calibration, not stated; chemistry-neutral)
+# fracture: n/a (not modeled; group ref [38] did LIB fracture, excluded here)

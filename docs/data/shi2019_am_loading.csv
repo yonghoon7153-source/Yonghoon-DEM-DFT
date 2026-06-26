@@ -1,0 +1,107 @@
+# Shi, Tu, Tian, Xiao, Miara, Kononova, Ceder -- Adv. Energy Mater. 2020, 10, 1902881 (DOI 10.1002/aenm.201902881)
+# "High Active Material Loading in All-Solid-State Battery Electrode via Particle Size Optimization"
+# UC Berkeley + Lawrence Berkeley National Lab + Samsung Research America (Ceder group). Open access (CC-BY).
+# Material: SE = amorphous 75Li2S.25P2S5 (LPS GLASS, sigma_ion 0.39 mS/cm) ; CAM = LiNi0.5Mn0.3Co0.2O2 (NMC532), LZO-coated (6-8 nm).
+#   ==> NOT our LPSCl (sigma ~1-3 mS/cm, ~3-8x higher) and NOT our NMC811. DO NOT transfer sigma/capacity ABSOLUTE values.
+#       Only the size-ratio / utilization / packing / capacity TRENDS are frame[4] anchors for our LPSCl+NMC811 model.
+# Method: LIGGGHTS DEM (SAME code as ours) + Hertz contact (RIGID SPHERE, no plastic SHAPE) ; cold-press 200 MPa.
+#   Transport = ionic PERCOLATION CONNECTIVITY only (shortest path CAM->bulk-SE/separator -> cathode utilization theta_CAM).
+#   ==> Paper does NOT compute an effective conductivity sigma. No constriction/contact resistance; no electronic/thermal.
+#       Paper EXPLICITLY states (Sec 4) that an accurate inter-particle CONTACT AREA "requires modelling the plastic
+#       deformation of LPS particles" (ref 29 Choi 2018) -- i.e. it NAMES the gap our MPM/Stage-E/Holm fill.
+# Key dimensionless number: lambda = D_CAM_mean / D_SE_mean. Golden rule: keep SE SMALLER than CAM (lambda>1) -> high utilization.
+# Our cross-reference: Bielefeld 2019 = their ref [16] (bielefeld2019_microstructural_modeling_composite_cathode.md, also percolation-only).
+#                      Bazzoun 2026 = same LIGGGHTS + LPSCl + RNM/Holm sigma (the sigma-solve Shi defers).
+# source_type: stated_text = sentence in paper ; stated = number printed in text/figure-label/equation ;
+#              digitized_figN = read off a figure curve (TREND only, approximate, +-). 'n/a' = not reported in paper.
+# ====================================================================================================================
+#
+# BLOCK 0 -- metadata / global conditions
+block,key,value,unit,source_type,note
+meta,DOI,10.1002/aenm.201902881,,stated,Adv. Energy Mater. 2020 10 1902881 (online 2019-12-03)
+meta,DEM_code,LIGGGHTS,,stated_text,"refs 18-20 Kloss/Goniva LIGGGHTS, Di Renzo, Schopfer -- SAME code as ours"
+meta,contact_law,Hertz,,stated_text,"Hertzian granular normal+tangential + damping + frictional yield; RIGID sphere, no plastic SHAPE"
+meta,SE_material,LPS_75Li2S_25P2S5_glass,,stated_text,"amorphous, SPEX/ball-milled"
+meta,CAM_material,NMC532_LZO_coated,,stated_text,"LiNi0.5Mn0.3Co0.2O2 + 6-8 nm Li2O-ZrO2 coating (Ito ref 6)"
+meta,conductive_additive,CNF_5wt_pct,,stated_text,"carbon nanofiber 5 wt%; NOT in model (prefactor 0.95 only)"
+meta,compaction_pressure,200,MPa,stated,"cathode composite; separator pressed ~100 MPa first; operating (cycling) 5 MPa"
+meta,operating_pressure,5,MPa,stated,"spring-loaded during cycling"
+meta,RVE_box_rule,Lbox=1.5*Lmin~15*Dmax,,stated,"box-size convergence (Sec 2.1, SI S2); cf our ~35 factor (different value)"
+meta,seeds_per_condition,>=3,configs,stated,"random initial configurations averaged, esp. transition region"
+meta,voltage_window,2.0-3.7,V_vs_In,stated,"Bio-Logic VMP300, 0.05 mA/cm2, CCCV (5h hold @top)"
+#
+# BLOCK 1 -- particle sizes & size ratio lambda (the design axis ; cf our 12:4:1 = lambda 4 & 12)
+block,key,value,unit,source_type,note
+size,D_SE_mean_set,"1.5;3;5;8",um,stated,"four ball-milled LPS sizes, log-normal PSD (Fig 1b, Fig 2a-d SEM)"
+size,D_CAM_mean_set,"5;12",um,stated,"NMC532-LZO: 5 um (Samsung Japan) + 12 um (MSE Supplies); SEM Fig 2e,f"
+size,lambda_definition,D_CAM_mean/D_SE_mean,dimensionless,stated,"the governing dimensionless number"
+size,lambda_range_explored,0.6-8,dimensionless,stated,"e.g. CAM5/SE8=0.6 ... CAM12/SE1.5=8"
+size,PSD_type,log-normal,,stated_text,"mean diameter + std from SEM (~200 particles each, Zeiss Gemini Ultra-55)"
+size,SE_sigma_ion_vs_size,decreases_with_smaller_SE,,stated_text,"Table S3: bulk(SPEX) 0.39 mS/cm; smaller ball-milled LPS -> LOWER sigma_ion (GB + residual solvent)"
+size,SE_sigma_ion_bulk,0.39,mS_cm,stated,"SPEX-mixed bulk LPS (consistent ref 27)"
+#
+# BLOCK 2 -- loadings: wt% <-> vol% (Fig 7a, porosity-shaded). 80 wt% ~ 50 vol% (liquid-cell level)
+block,f_CAM_wt_pct,f_CAM_vol_pct_approx,porosity_Phi_assumed,source_type,note
+loading,60,n/a,0.1-0.2,stated_text,"low loading, full utilization regime"
+loading,70,~45,0.1-0.2,stated_text,"production-core lower end; lambda_min=1.67 for full util."
+loading,75,n/a,0.1-0.2,stated_text,"lambda_min=2.1 for 98% util."
+loading,80,~50,0.1-0.2,stated_text,"~50 vol% CAM ~ liquid-cell level; achieved with D_CAM 12um + D_SE 1.5um (lambda=8)"
+loading,85,n/a,0.1-0.2,stated_text,"high loading; lambda 1->8 raises theta only slightly (~16->20%)"
+loading,porosity_band,Phi=0.1-0.2,,stated_fig7a,"Fig 7a shaded = experimentally-reported SSB-cathode porosity range (ref 29); cf OUR real_14 15.6% = mid-band (band-match ONLY, LPS-glass != LPSCl, do NOT equate single value)"
+#
+# BLOCK 3 -- cathode utilization theta_CAM vs lambda (at fixed loading) -- the headline 'size=packing' result
+block,condition,theta_CAM,unit,source_type,note
+util_lambda,f_CAM70_D_CAM5_lambda_lt1,drastic_drop,fraction,stated_fig3b,"lambda<1 (SE bigger than CAM) -> percolation clearly decreases"
+util_lambda,f_CAM70_D_CAM5_lambda~1.67,~1.0,fraction,stated_fig3b,"theta_CAM~1 (full util.) ; merely shrinking SE lifts theta 0.2->1.0"
+util_lambda,f_CAM70_full_util_lambda_min,1.67,dimensionless,stated,"Fig 3a,b,d: lambda_min for full utilization at 70 wt%"
+util_lambda,f_CAM75_98pct_util_lambda_min,2.1,dimensionless,stated,"Fig 3d: lambda_min for 98% util at 75 wt% -> D_CAM5->D_SE2.4 ; D_CAM20->D_SE9.5"
+util_lambda,f_CAM80_lambda1to3,0.30->0.60,fraction,stated_text,"theta doubles 30->60% as lambda 1->3 (p.7)"
+util_lambda,f_CAM80_lambda1to8_D_CAM5,0.16->0.20,fraction,stated_text,"with 5um CAM, lambda up to 8 only 16->20% -> need LARGER CAM (p.5)"
+util_lambda,f_CAM85_lambda1to8,slight_increase,fraction,stated_text,"high-loading limit"
+util_lambda,f_CAM80_D_SE3um_visual,0.52,fraction,stated_fig4,"Fig 4b model (lambda=1.67) ; vs SE5um model c"
+util_lambda,f_CAM80_D_SE5um_visual,0.25,fraction,stated_fig4,"Fig 4c model (lambda=1.0) -> larger SE halves active CAM"
+#
+# BLOCK 4 -- cathode utilization vs loading (at fixed lambda=1.67) (Fig 3a)
+block,f_CAM_wt_pct,theta_CAM,unit,source_type,note
+util_load,<70,~1.0,fraction,stated_fig3a,"lambda=1.67, D_CAM5um: full utilization below 70 wt%"
+util_load,>75,drastic_decrease,fraction,stated_fig3a,"theta_CAM drops drastically above 75 wt% (less SE -> weaker Li percolation)"
+#
+# BLOCK 5 -- experimental discharge capacity (frame[4] model->experiment validation, good agreement)
+#   NOTE capacities are LPS-glass + NMC532-LZO ; max observed 155 mAh/g used to convert model theta_CAM -> capacity.
+block,condition,capacity_mAh_g,source_type,note
+cap,f_CAM60_NMC5_SE8um_lambda0.6,~75,digitized_fig5a,"large SE (small lambda) -> low capacity (Fig 5a)"
+cap,f_CAM60_NMC5_SE5um_lambda1.0,~125,digitized_fig5a,"Fig 5a"
+cap,f_CAM60_NMC5_SE3um_lambda1.67,>150,digitized_fig5a,"small SE (large lambda) -> full capacity (Fig 5a)"
+cap,f_CAM60_NMC5_SE1.5um_lambda3.33,>150,digitized_fig5a,"full capacity (Fig 5a)"
+cap,f_CAM60_NMC5_SE2um_lambda2.5,~155,digitized_fig5b,"Fig 5b exp vs model (lambda=2.5)"
+cap,f_CAM60_NMC5_SE8um_lambda0.6_fig5b,~80,digitized_fig5b,"Fig 5b (lambda=0.6)"
+cap,max_observed_for_normalization,155,stated,"largest experimental specific capacity observed; model capacity = 155 * theta_CAM(model)"
+cap,f_CAM80_SE3um_NMC4um,~80,digitized_fig5e,"Fig 5e: small CAM -> low capacity at 80 wt%"
+cap,f_CAM80_SE3um_NMC12um,~140,digitized_fig5e,"Fig 5e: LARGER CAM -> HIGHER capacity (counter-intuitive; surface-area -> SE-contact probability)"
+cap,f_CAM80_SE1.5um_NMC4um,~95,digitized_fig5e,"Fig 5e (1.5um SE)"
+cap,f_CAM80_SE1.5um_NMC12um,~130,digitized_fig5e,"Fig 5e (1.5um SE)"
+cap,f_CAM60_SE3um_NMC5,>150,digitized_fig6,"Fig 6: 60 & 70 wt% both high-util (green) -> ~same capacity >150"
+cap,f_CAM70_SE1.5um_NMC5,>150,digitized_fig6,"Fig 6: 60->70 wt% increasable WITHOUT capacity loss (1.5um SE, lambda=3.33)"
+cap,f_CAM80_SE3or1.5um_NMC5,drastic_drop,digitized_fig6,"Fig 6: 80 wt% (low-theta red/purple) -> capacity drops sharply"
+#
+# BLOCK 6 -- design rules (stated, paper-grade takeaways)
+block,key,value,source_type,note
+rule,golden_rule,SE_smaller_than_CAM_lambda_gt_1,stated_text,"under ALL circumstances SE particle size should be kept smaller than CAM (lambda>1)"
+rule,high_loading_needs_large_lambda,f_CAM_up->lambda_min_up,stated_text,"70->1.67, 75->2.1, 80->~3-8 ; loading up requires larger lambda"
+rule,liquid_cell_level_demo,f_CAM80wt~50volpct_via_CAM12_SE1.5,stated_text,"50 vol% CAM (liquid-cell level) by simple mixing + pressing"
+rule,large_CAM_helps_utilization,larger_CAM->higher_theta_CAM,stated_text,"counter-intuitive; larger CAM has higher surface area -> higher prob. of contacting percolating SE (Sec 4)"
+rule,utilization_is_percolation_controlled,theta_CAM=percolation_limited,stated_text,"cathode utilization is percolation-controlled in cold-pressed SSB"
+rule,size_packing_not_sigma,small_SE_raises_util_despite_lower_sigma_ion,stated_text,"Table S3 small SE -> sigma_ion DOWN, yet utilization UP -> packing/connectivity beats material-sigma == OUR 'size=packing not overlap'"
+rule,contact_area_needs_plasticity,accurate_contact_area_requires_LPS_plastic_deformation_model,stated_text,"Sec 4: NAMES the gap our MPM(SHAPE plasticity)+Stage-E(plastic contact area)+Holm fill (ref 29)"
+rule,tradeoff_power_vs_energy,very_large_lambda->power_down;very_small_SE->SE_network_impedance_up,stated_text,"large CAM lithiates slowly (ref 24); tiny SE -> narrow channel + more GB (ref 30) -> optimize lambda"
+#
+# BLOCK 7 -- our-baseline cross-check (for quick comparison; see digest Sec 8/A/B/C)
+block,axis,shi2019,ours,note
+xcheck,DEM_code,LIGGGHTS,LIGGGHTS,SAME code (method sibling)
+xcheck,contact,Hertz_rigid_sphere,hooke_hysteresis_rigid_sphere,both elastic-contact rigid sphere; both delta-overlap proxy (no real flow)
+xcheck,transport_depth,ionic_percolation_connectivity(utilization),Kirchhoff+Holm_sigma_triad(real values),we solve sigma ; they count connectivity
+xcheck,size_conclusion,small_SE+large_CAM->util_up(packing),size=packing_not_overlap,SAME conclusion (model+experiment evidence)
+xcheck,porosity,Phi=0.1-0.2(conversion band),15.6%(DEM)/16.7%(MPM),our 15.6% mid-band; band-match only (LPS-glass != LPSCl)
+xcheck,plasticity,none(rigid Hertz; "needs LPS plastic model" Sec4),MPM_true_SHAPE_plasticity+StageE_area,we fill the gap they name
+xcheck,our_12_4_1_as_lambda,n/a,lambda=4(AM_S/SE)_and_12(AM_P/SE),our 12:4:1 sits inside their high-util lambda>1 region
+xcheck,material,LPS_glass(0.39)+NMC532-LZO,LPSCl(~1-3)+NMC811,DO NOT transfer sigma/capacity absolute; trends only

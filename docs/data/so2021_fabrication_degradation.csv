@@ -29,7 +29,7 @@ params,cluster_diameter,SE_aggregates,5-10,um,stated,Methods,particle grouped in
 params,Si_capacity,literature_context,~4200,mAh/g,stated,Intro,high-capacity Si; may expand up to ~300% (volume) on full lithiation
 params,n_particles_intercalation,2D_domain,1600,-,stated,Shortcomings,limited to 1600 particles in AM-SE intercalation sims (particle-number independence caveat)
 params,gamma_cohesive_Li2S,cohesive_energy,2.8,J/m2,stated,eq10_text,cohesive energy gamma for Li2S electrolyte (sigma_coh=2*gamma/delta)
-params,delta_cohesive_zone,crack_length_scale,~1,nm,stated,eq10_text,length of cohesive zone delta ~1nm (ref 2,24,31)
+params,delta_cohesive_zone,crack_length_scale,~1,nm,stated,eq10_text,length of cohesive zone delta ~1nm (refs 2/24/31)
 params,sigma_coh_fracture_strength,Li2S_estimate,5.6,GPa,stated,eq10_text,fracture strength sigma_c=2*gamma/delta=5.6 GPa (eq10)
 params,hardness_to_fracture_ratio,Li2S,0.34,-,stated,eq10_text,sigma_H/sigma_c=1.9/5.6=0.34 -> hardness<<fracture -> initial failure DOMINATED BY PLASTIC (not brittle)
 # ============ INTERCALATION / DEGRADATION (cyclic, Si AM expansion) ============
