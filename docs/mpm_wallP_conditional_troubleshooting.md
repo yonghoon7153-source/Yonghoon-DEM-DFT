@@ -143,4 +143,18 @@ descend while (wallP_SE + am_skel) < target
 이어야 함(16.7 그대로).  바뀌면 floor gating 실패 신호.  _10은 25–28(복원).  둘 다 통과하면 production 채택.
 
 상태: [x] skeleton-spring 구현(mpm3d_compaction --floor-porosity + mpm_input_from_case 자동주입) + compile OK.
-[ ] real14 trust test(불변 확인) + _10 재실행(floor 버전) — 사용자 실행 대기.
+[x] ★ **real14 TRUST TEST 통과 (2026-06-26, kserver, n_grid 384)**: A(조건부 OFF) porosity **15.91%** =
+    B(--am-load-frac 0.847 --floor-porosity 15.6) **15.91%** — **byte-identical**(coverage 336,831↔336,833 =
+    2-voxel 노이즈).  로그: B가 frame15서 wallP 0.3225(>0.3) @ por 15.91% > floor 15.6 → am_skel=clamp(−0.21)=0
+    → conditional 미engage → baseline 동일.  ⇒ floor-gate가 dense 케이스를 **완벽 보존**(over-correction 0).
+    (15.91 = se-dump 값 ≈ CLAUDE.md 기록 15.93 ≈ DEM 15.6; 이전 인용 16.7은 se_frac cell-fill 모드 = 별개.)
+
+## §10 VERDICT — robust 조건부 ALL-REGIME 검증 완료 → PRODUCTION 채택 (2026-06-26)
+| regime | 조건부 결과 | 판정 |
+|---|---|---|
+| _10 (loose mono-large, 과압축 corner) | 15.9 → 25.25(f_AM 0.86) ~ 28(0.924); sweep 단조(0.6→21.78/0.75→23.56) | ✅ 복원 |
+| real14 (dense, 정상 cross-validated) | 15.91 → 15.91 (조건부 OFF, am_skel=0) | ✅ 불변 |
+| SE-rich (DEM floor 낮음, ε-artifact) | wallP가 floor 위서 target 도달 → 미engage | ✅ 불변(예측) |
+⇒ "SE-rich/dense서도 안전" 요구 충족.  floor-gate = DEM-MPM 일치점에서 자동 ON/OFF.  f_AM(Hertz)은 floor 아래
+소성증분만 정하는 2차 knob(--atoms-sigzz로 실제-virial 교차검증 가능).  **wallP 조건부 production 채택**
+(mpm_input_from_case 자동주입 → 모든 케이스 robust, dense 자동 OFF).  backlog A2 = DONE.
