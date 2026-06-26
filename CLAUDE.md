@@ -553,6 +553,26 @@ instead of uniform cell-fill → SE volume·distribution REAL → porosity·thic
   (fidelity, not fabrication).  `--target-coverage` binary-searches the interfacial SE film at
   FIXED SE total (volume fractions unchanged — coverage = where SE sits, not how much).
 
+### ★ MPM scaffold porosity 신뢰성 regime map + AM-freeze 근거 (2026-06-26) ★
+Full record: docs/mpm_scaffold_reliability_and_am_freeze.md + docs/data/mpm_dem_porosity_reliability.csv
+(105 cases).  계기: input_1mAh_100_15 (10:0, SE-poor, thin) scaffold MPM이 porosity 0% (비물리,
+DEM 32.8%) → "다른 MPM porosity 믿을 수 있나 / porosity lock은 신뢰성 있나" 의문.
+- **AM을 freeze하는 4 근거** (=AM에 물리 주면 안 되는 이유): ① frame[5] AM load-bearing은 rigid 접촉망
+  현상 = DEM 영역, 연속체 MPM은 rigid 점접촉 표현 불가; ② mobile-rigid AM 넣으면 force-chain over-shielding
+  36–41% (반대 비물리); ③ AM-as-material CFL/OOM blow-up (n_grid≥384); ④ DEM AM이 이미 검증된 300MPa 골격
+  → 움직이면 drift.
+- **신뢰성: 105 중 80개(76%) DEM↔MPM cross-validated (|gap|≤4%p)** = 신뢰 (real_14 16.7↔15.6↔exp anchor).
+  실패는 **양 끝 두 corner에 국한, 반대 방향**: (a) **mono-large(10:0)+thin(1–2mAh)** → MPM 과압축
+  [COLLAPSE(MPM<3,→DEM) 또는 BRACKET(target 도달했지만 MPM 하한/DEM 상한, anchor 없음, 진실 사이)];
+  (b) **SE-rich(SE/sol≳50%)** → DEM ε_sphere 과압축(overlap artifact) → MPM 신뢰.  ★대조: 같은 SE/sol라도
+  8mAh mono-large는 gap~0(일치), thin만 분기 → 두께(AM-obstruction)+DEM-loose가 판별.
+- **porosity lock/clamp = 신뢰성 0 (조작).**  정답은 clamp가 아니라 **regime-gate**(옳은 모델 선택)+
+  **DEM↔MPM 일치(|gap|≤4)를 validity 증명서로 노출**.  gap 부호로 어느 모델이 무너졌는지 진단.
+- **트랜드**: 중간 robust; SE-poor/mono-large 끝은 DEM 트랜드(Furnas rebound), SE-rich 끝은 MPM.  raw-MPM
+  전구간 사용 금지(mono-large rebound를 과압축이 지움).  ★정정: a9_50 p10 MPM 9.31%는 over-compression
+  CONFOUND → frame[3] "plastic erases dip"의 깨끗한 증거는 standalone 2D champion이지 scaffold p10 아님
+  (docs/a9_50_ps_sweep_vs_bimodal266.md §발견3 caveat).
+
 ### ★ MPM coverage PLASTIC vs RIGID — why the value is USABLE (2026-06-21) ★
 Closes the "값도 바뀌고" coverage saga.  Full record: docs/mpm_coverage_plastic_vs_rigid.md
 + docs/data/mpm_coverage_plastic_vs_rigid.csv.  Report TWO settings-independent measures at

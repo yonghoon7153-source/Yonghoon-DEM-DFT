@@ -47,6 +47,14 @@ void로 **흘러들어가 채움** → mono-modal에서도 치밀.  끝점 차�
 dip(특히 mono-modal rebound)을 지움**.  CLAUDE.md frame[3]("dip은 geometric, plastic이 부분적으로 erase")의
 **가장 깨끗한 단일-sweep 증거**.  ⇒ 생산 porosity·dip은 **DEM**, 소성 morphology·void-fill은 **MPM** (frame[5] 분업).
 
+> ⚠⚠ **정정 (2026-06-26) — p10의 MPM 9.31%는 over-compression CONFOUND:** p10(10:0)은 **SE-poor +
+> mono-large-AM = scaffold MPM 과압축 regime**(`docs/mpm_scaffold_reliability_and_am_freeze.md`, gap +9.1).
+> 따라서 9.31%는 **소성 void-fill(실물리) + frozen-AM 과소부담 과압축(artifact)의 혼합**이라 깨끗이 분리 불가
+> → "MPM이 rebound를 지운다"를 이 숫자로 과대해석 금지.  **Furnas rebound의 진실은 DEM 18.45%**, p10 porosity는
+> bracket [MPM 하한 9.3 / DEM 상한 18.5]로 봐야 함.  frame[3] "plastic이 dip을 부분 erase"의 *깨끗한* 증거는
+> **standalone 2D champion**(mpm2d_jamming `--e-se/--yield-se`, scaffold 아님 → 과압축 없음, 768 수렴)이지
+> 이 scaffold p10 숫자가 아니다.  p00–p08(SE 충분, 과압축 아님)의 DEM↔MPM dip 일치는 유효.
+
 ## 발견 4 — bimodal 최적은 **3축 trade-off** (단일 최적 아님)
 
 P 증가 방향으로:
