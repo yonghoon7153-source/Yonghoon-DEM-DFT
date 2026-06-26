@@ -408,3 +408,37 @@ litdb 60편 + 우리 랩 케이스(Kim/Cho/Kang 2024-25) recipe table 추출 (ag
 - **production gate (사용자 "거부?" 질문 답, 이제 threshold가 lit-grounded):** hard-refuse 아님 → **flag+defer+reason**:
   입력 SE/sol < ~26vol%(Choi 경계) AND thickness < ~40µm(최薄 fabricated) → "⚠ out-of-envelope: SE-poor+thin, σ sub-functional,
   porosity는 DEM 사용, |gap|=certificate" output.  §13 regime-gate의 코드판(clamp 아님).
+
+## §17 ★ FINAL LOGIC — production서 막 계수 제거 + outlier disposition + nu_se status (2026-06-27)
+사용자 audit("막 계수 넣고 그렇지 않았나?") → production 코드 정리.  commit: mpm_input_from_case.py.
+
+### A. 적용 코드 = pure scaffold + hold (wallP conditional 제거)
+production 경로 = webapp [MPM input 변환] → `mpm_input_from_case.py` → `run_mpm.sh` → `mpm3d_compaction.py`.
+변경 전 주입하던 **`--am-load-frac`(Love-Weber f_AM 스프링) + `--floor-porosity`(DEM−5 HARD porosity 클램프) 제거.**
+이 둘은 descent 단계(mpm3d_compaction.py:716-748)서 *live*였음(hold는 descent 후 platen 고정뿐) → inert 아니었음.
+- floor = porosity 클램프 = §13 "조작" — 진짜 |DEM−MPM| gap을 가림(그 gap이 validity 증명서인데).
+- **제거 효과:** in-envelope ~80 = **BYTE-IDENTICAL**(floor 위서 멈춰 `engage=(floor−por)/floor_engage→0` → `am_skel=0` →
+  이미 pure stress); real_14 15.93 그대로.  out-of-envelope 코너 ~11 = 이제 pure로 **정직하게 over-compress**(100_12 ~11.6,
+  클램프 DEM−5 아님) → un-clamped gap이 flag.
+- **최종 적용 한 줄:** `--am-scaffold --se-dump --periodic --protocol hold --e-se/--nu-se(K-fixed μ-scale) --target-gpa`.
+  전부 원칙적(scaffold=DEM골격, hold=LIGGGHTS BC, K-fixed=CORRECTION1).  conditional·--se-am-drag·--am-jam = mpm3d opt-in
+  (default 0/off), production 미주입.  mpm3d defaults 확인: am-load-frac/floor-porosity = 0.0.
+
+### B. outlier disposition (porosity)
+- **in-envelope: outlier 없음** — 80/cross-validated 전부 |gap|≤4 (real_14 16.7↔15.6).  conditional 제거로 불변.
+- **out-of-envelope 코너 ~11(gap>4, positive)**: 1mAh_100_10/12/13/14/15, 2mAh_real_20, 2mAh_a9_p10, 2mAh_a9_50_p10,
+  1mAh_8_AMP_S2/S5, 1mAh_9_S2/S3/S4.  전부 **SE-sub-functional(σ_ion<0.065) + thin = §16-lit out-of-envelope**(제조 안 되는
+  설계) → **regime-gate: porosity는 DEM 사용, MPM 신뢰 X, |gap|=certificate.**  data: `docs/data/mpm_corner_realizability.csv`.
+  ⚠ CSV `mpm_porosity` 칼럼은 conditional 시절 값(stale) — pure 재실행시 더 낮아질 수 있으나 flagged라 production 무관(코너는
+  DEM 사용).  negative-gap(SE-rich, MPM>DEM) = 별개 regime(DEM ε_sphere overlap artifact, MPM 신뢰) — 이 변경 무관.
+
+### C. nu_se=0.49 morphology — reasoned likely-intact + MORE physical, GPU 직접비교 pending
+사용자 ①의 미검증 건.  **결론: 물리적으로 intact일 가능성 높고 nu0.49가 *더* 물리적 — 단 3D 직접 SEM 비교는 GPU(user box) 남음.**
+- **물리 논거:** morphology(SEM core-preserved + boundary-flattening) = PLASTIC SHEAR 현상(σ_y + μ 지배).  nu가 바꾸는 건
+  주로 K(bulk): E=1.53서 **nu0.30 → K=1.28/μ=0.588**, **nu0.49 → K=25.5/μ=0.513**.  **σ_y=0.30 불변**, μ는 −13%만 변함.
+  → 소성 형상은 ~intact 예상.  K 20×↑(volume-preserving)은 deviatoric/shear 형상을 *안* 바꾸고 비물리적 부피 crush만 차단
+  (LPSCl 비압축 ≈ 실제) → nu0.49가 **MORE physical**.  (2D champion E=1.53/σ_y=0.15가 SEM(vis_zoom④) 매치 — 거긴 nu 主레버 아님.)
+- **잔여 미검증:** 3D nu0.49의 직접 SEM-morphology 대조(3D는 porosity/coverage/thickness만 검증됨).
+- **GPU verify (user box):** `mpm2d_morphology.py --nu-se 0.30` vs `--nu-se 0.49` 형상 출력 → SEM 대조; 또는
+  `viz_mpm_morphology.py`로 3D x-z slice.  μ −13%면 boundary-flattening이 *아주 약간* 더 강할 수 있음(확인 포인트).
+- status: **reasoned likely-intact + more-physical; GPU 직접비교 1건 남음(blocker 아님, production nu0.49 유지 OK).**
