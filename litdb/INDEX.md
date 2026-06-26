@@ -55,6 +55,9 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 ## 주제별 종합 문서
 - `elasto_plastic_feasibility.md` — elasto-plastic 접촉모델 실행가능성·적용·우리 모델 대비 장단점
   (Varkey/So/M&B 종합; ★ So 2021 H-cap = 18× 연화 대체 경로).
+- **`WISHLIST.md`** — ★ elasto-plastic 접촉/소성 논문 **agent 투입 대기열**(분야 무관 *정전* 우선:
+  Tabor·Johnson·CEB·Mesarovic–Fleck·Walton–Braun·Luding·Thornton–Ning…).  2026-06-26 발견(Hertz가
+  실제 hooke/hysteresis 접촉력 재현 못 함; `docs/mpm_wallP_conditional_troubleshooting.md` §12)이 동기.
 
 ## 현황
 papers/ digest 7편 ✅ (**Lee2025**(실험 앵커, =우리 소재 전부) · Bazzoun · Varkey · So2021 · Martin-Bouvard2003 · Bouvard2000 · McGeary1961)

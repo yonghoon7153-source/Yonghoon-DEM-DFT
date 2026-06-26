@@ -178,3 +178,27 @@ catastrophic min gap **6.3** = 깨끗한 갭 한가운데.  (mpm_input_from_case
 a9_p10, a9_50_p10, 1mAh_8_AMP_S5/S2 → new≈floor) · PRESERVED legit 37 · PRESERVED SE-rich/dense 63 ·
 BOUNDARY(4<gap≤5) **0** · caught-but-non-mono **0**.  무결성 완벽.
 ⇒ **재실행 = 정확히 7개**(catastrophic); 나머지 100개 조건부 OFF → 현 MPM 그대로 → 재실행 불요.  backlog A2 = DONE.
+
+## §12 ★ f_AM 출처 검증 — Hertz 재구성 vs 실제 hooke/hysteresis (real_14 dump, 2026-06-26)
+사용자 우려: "우리는 Hertz가 아니라 hooke/hysteresis인데 scaffold extractor의 Hertz f_AM을 믿어도 되나?"
+→ real_14 **실제 LIGGGHTS dump**(atom_2060000 + contact_2060000)로 직접 검증.
+- **dump 파싱 (검증됨):** contact dump는 `id`와 `force` 사이에 **빈 0열**(c_cpl[9]=0)이 하나 끼어 있어
+  실제 total force = 0-idx 열 `[9,10,11]` → **fz=C[:,11]**.  Σfz·lz = **−16.1115 = atom virial(c_strs[3]) −16.1098
+  정확 일치**(비율 1.0001) → 파싱·물리 검증 완료.  force_normal=`[12,13,14]`(branch와 cos 0.986).
+- **실제 정답 (hooke 접촉력 Love-Weber σzz 분해):** AM-AM **0.670** · AM-SE 0.276 · SE-SE 0.053.
+  per-atom virial **AM-phase 0.809**(= AM-AM 0.670 + AM-SE 중 AM 몫 ~0.14).
+- **Hertz 재구성 (같은 압축 geometry, 모듈러스 민감도):** E_SE=1.35 → AM-AM **0.843**(과대 +0.17);
+  E_SE=24(real) → AM-AM **0.258**(과소, 반대로 튐).
+- **판정 (2가지):** (1) 모듈러스는 Hertz에서 거대 지렛대 — E만 1.35↔24로 f_AM 0.843↔0.258.  "연화 유효
+  모듈러스가 Hertz의 AM-AM 분담을 부풀린다"는 사용자 직관 **맞음**.  (2) 그러나 **어떤 단일 Hertz
+  모듈러스도 실제 0.670을 못 맞춤** — 연화는 위로·real은 아래로, 실제는 그 사이.  간극 = **접촉 LAW 형태**:
+  Hertz(δ^1.5·순수탄성) ≠ hooke/hysteresis(선형) + plasticityDepth(AM-AM 0.05 늦게·SE쌍 0.005 일찍 항복)
+  + maxElasticStiffness(SE-SE cap 5.0 > AM-AM 1.5) + SE-SE adhesion(1e6).  이 SE-우대 항들이 AM-AM에서
+  하중을 떼어 SE로 보냄 → Hertz엔 없음.  ⇒ **믿을 f_AM = hooke 접촉력 직접측정(0.670/0.809), Hertz 아님.**
+- **production 영향 (= 없음, 안전):** skeleton-spring이 필요로 하는 건 **AM-phase 총하중**(per-atom **0.809**,
+  frozen AM이 AM-SE 하중을 흡수→SE wallP에 안 잡힘).  Hertz scaffold 0.847 ≈ 0.809(차 0.04)로 *오히려*
+  필요량에 근접(AM-AM 0.670보다 훨씬 가까움) — 우연한 정렬.  게다가 f_AM이 틀려도 **floor(DEM−5%p)가 상한**
+  이라 bounded-safe(과대 f_AM → engage 일찍 → 덜 압축 → 보수적).  → 현 조건부 그대로 OK.
+- **원칙적 해결(구현됨):** dump가 있으면 실제 hooke f_AM 사용 — `scripts/dem_am_load_fraction.py:
+  am_load_fraction_liggghts(atom_dump, contact_dump)`.  webapp(dump 없음)는 Hertz scaffold + floor 안전망 유지.
+⇒ 위시리스트 Tier 0~1(Walton–Braun/Luding/Tabor/Johnson/CEB)이 이 LAW의 물리 근거 — `litdb/WISHLIST.md`.
