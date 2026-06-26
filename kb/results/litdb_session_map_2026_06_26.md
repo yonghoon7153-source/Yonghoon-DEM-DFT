@@ -25,6 +25,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 | *(기존)* Lu 2025 | 음극 | Cl-rich 음극 LiCl passivation (Liu와 같은 진영) | `lu2025_tailoring_cl_rich_anode_licl` |
 | **★ Banik 2022** (치환↔산화안정성, **Mo**+Zeier) | B① intrinsic | **우리 방법 본가(Mo=grand-potential 원저자)가 우리 결론 독립 발표**: 치환은 onset 못 옮김(S 3p가 pin)=comp1=modelc 2.14V; COHP가 우리 ICOHP/ELF 확증 | `banik2022_substitutions_oxidative_stability_argyrodite` |
 | **Li 2025**(CuBr₂→Br) / **Rao 2025**(I) | A·D 할라이드 trend | Cl/Br/I: σ는 종류보다 **총량·비율·채널부피** 지배(=comp1→modelc trend). I→**4a**(site ΔE 0.35>Br); I가 E_hull↓·계면 ΔE_D↓(Br엔 없는 분석). **산화 onset엔 영향X**(Banik S-pin) | `rao2025_iodide_argyrodite` |
+| **Taklu 2021**(CuCl dual-doping, NTUST) | A·D·E·F | **li2025(CuBr₂)의 4년 앞선 원조** + 모체=**우리 comp1**. Cu+Cl dual; σ_e **3번째 실측 anchor**(comp1 기준 최직접); 음극레버=**"모체 robust화"**(vs li2025 "산물 절연화"). ⚠"8V ESW"=kinetic(In/InLi+C) | `taklu2021_cucl_dualdoping_air_stability_argyrodite` |
 
 ## C. 외부 — 이론/방법 백본
 | 논문 | 유형 | 우리 작업 연결 (1줄) | slug |
