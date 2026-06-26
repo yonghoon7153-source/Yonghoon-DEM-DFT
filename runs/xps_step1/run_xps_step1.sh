@@ -20,7 +20,6 @@ for sys in li3po4 li3ps4; do
   # neutral SP (identical settings to dSCF, minus DELTASCF) at optimized geometry -> E_N
   cat > ${sys}_neutral.inp <<EOF
 ! PBE0 def2-TZVP RIJCOSX def2/J TightSCF
-%pal nprocs 8 end
 %maxcore 3000
 *xyzfile 0 1 ${sys}_opt.xyz
 EOF
@@ -28,7 +27,6 @@ EOF
   # dSCF P 1s core hole (ORCA auto-makes the +1/doublet core-ionized state)
   cat > ${sys}_P1s.inp <<EOF
 ! PBE0 def2-TZVP RIJCOSX def2/J DELTASCF NODIIS UKS TightSCF
-%pal nprocs 8 end
 %maxcore 3000
 %scf
   IonizeAlpha $idx

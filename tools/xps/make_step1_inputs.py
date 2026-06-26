@@ -37,7 +37,7 @@ def xyzblock(geom):
     return "\n".join(f"{el:2s} {p[0]:12.6f} {p[1]:12.6f} {p[2]:12.6f}" for el, p in geom)
 
 OPT_HEAD = ("! PBE0 def2-TZVP D4 RIJCOSX def2/J OPT TightSCF\n"
-            "%pal nprocs 8 end\n%maxcore 3000\n")
+            "%maxcore 3000\n")
 for name, s in SYS.items():
     with open(f"{OUT}/{name}_opt.inp", "w") as f:
         f.write(f"# {s['note']} — geometry opt (neutral closed shell)\n")
@@ -71,7 +71,6 @@ for sys in li3po4 li3ps4; do
   # neutral SP (identical settings to dSCF, minus DELTASCF) at optimized geometry -> E_N
   cat > ${sys}_neutral.inp <<EOF
 ! PBE0 def2-TZVP RIJCOSX def2/J TightSCF
-%pal nprocs 8 end
 %maxcore 3000
 *xyzfile 0 1 ${sys}_opt.xyz
 EOF
@@ -79,7 +78,6 @@ EOF
   # dSCF P 1s core hole (ORCA auto-makes the +1/doublet core-ionized state)
   cat > ${sys}_P1s.inp <<EOF
 ! PBE0 def2-TZVP RIJCOSX def2/J DELTASCF NODIIS UKS TightSCF
-%pal nprocs 8 end
 %maxcore 3000
 %scf
   IonizeAlpha $idx
