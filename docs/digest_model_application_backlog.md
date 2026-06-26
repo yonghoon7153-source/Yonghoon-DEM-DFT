@@ -43,4 +43,21 @@
 ## 진행 메모
 - 2026-06-26 작성.  논문 digest batch(Trevisanello/Cronau/Minnmann/Doux/Sakuda/co-rolling/Bielefeld19+20 등)
   완료 → **적용은 이 backlog가 추적**.  사용자 plan대로 논문작업 종료 후 A1(σ_e 방향)부터 진행.
-- A2(wallP 조건부)는 자체 작업으로 거의 완료(trust test만).  나머지 A3-A7/B/C는 미착수.
+- A2(wallP 조건부)는 자체 작업으로 **완료**(13 corner 재실행 + §8 3-regime 분류 끝, porosity CLOSED).  나머지 A3-A7/B/C는 미착수.
+
+## D. 접촉모델·소성 digest 14편 적용 backlog (2026-06-26 일괄, `litdb/contact_models_layer_map.md`)
+- **D1 ⛔ 경로 A 구현 (★최우선 후보)** — real E_SE=24 GPa + **Thornton–Ning p_y캡**(eq2→9→19→29, p_y≈1.6σ_y, LPSCl
+  σ_y 0.05–0.30) LIGGGHTS에 → 300 MPa porosity가 **18× 연화 없이** 나오나 시험.  선례 So 2021(LPS 0.98).  접촉별 항복
+  gate = Kogut–Etsion ω_c/R=6.43(Y/E)².  ⚠ TN 단독은 ρ>0.7 under-stiff → Varkey multi-contact F_mc 필요할 수도.
+- **D2 ⛔ Stage-E H 가변 보정** — Jackson–Green **H_G/σ_y=2.84[1−e^{−0.82(a/R)^{−0.7}}]**: a/R>0.2 dense 접촉서 H<3σ_y →
+  현 상수 H=3 가정이 면적 과소.  우리 real-contact a/R 분포 뽑아 Stage-E의 A_tabor=F/H를 H_G(a/R)로 교체.
+- **D3 ⛔ SE-SE 점착 정량** — DMT **F₀=2πRγ**(SE=DMT 체제, 작고 단단)로 `adhesionStiffness` k_c(=1e6)·MPM `--coh` magnitude
+  고정.  γ(LPSCl 표면/계면 점착일) 문헌값만 잡으면 됨.  Pasha 에너지일관 A_p·Γ가 Luding k_c·δ보다 물리적 시작점.
+- **D4 ⛔ Stage-E A/B 검증** — Storåkers **A=2πc²(m)rh**(c²≈1.4 이상소성 pile-up) vs 우리 Stage-E 경험면적 A/B 비교
+  (Mesarovic–Fleck a²/2hR₀→1.4 가 독립 확인).  Martin–Bouvard가 Storåkers 사용.
+- **D5 ⛔ CBD 명시 bond (= A3 구체화)** — Sangrós 영구파단 bond / Ngandjong **SJKR(CED×면적, 끊김·재형성)** 두 옵션;
+  SJKR이 PTFE cold-weld(`--coh`)·fibrillation 1차 근사에 더 가까움.  Stage-2 부피점유 → 명시 bond 승격 시 템플릿.
+- **D6 ⛔ SE 취성균열 (frame[5] 공백)** — yun2023: halide(+LPSCl 고압) SE *자체* 균열.  우리 Auerbach는 AM-only,
+  MPM은 ductile J2 → SE 취성균열 불가.  de Vaucorbeil 리뷰의 continuous-damage/cohesive MPM이 구현 경로(우선순위 낮음).
+- ⚠ **DPC/cap은 적용 대상 아님** (resolved-grain에 cap=비물리, Klár로 확정).  cap은 homogenized-REV(`cap_compaction_heckel.py`)
+  에서만 옳음.  우리 J2+ν0.49는 재료클래스 유도 필연 → 변경 불요.
