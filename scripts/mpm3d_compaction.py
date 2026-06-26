@@ -88,7 +88,19 @@ def parse_args(argv):
                          '0 = off (SE bears all = original validated behaviour).  Like Tabor caps contact '
                          'AREA by F/H, this caps SE densification by the AM load-balance -- a physics '
                          'condition, NOT a DEM-porosity clamp (the MPM still COMPUTES porosity under the '
-                         'corrected BC).  Use ONLY in the failure corner; leave 0 for production bimodal.')
+                         'corrected BC).  ROBUST gating via --floor-porosity (recommended): then the AM '
+                         'share engages ONLY below the DEM floor → dense/SE-rich beds unchanged.')
+    ap.add_argument('--floor-porosity', type=float, default=0.0,
+                    help='ROBUST wallP-conditional gate (%, set = the case DEM porosity).  The AM skeleton '
+                         '(--am-load-frac) bears its share ONLY once the bed compresses to this DEM rigid-'
+                         'packing floor (where the AM jams).  ABOVE it the SE bears the full load → dense / '
+                         'SE-rich beds that reach target above the floor are UNCHANGED (no over-correction); '
+                         'BELOW it the AM share ramps in → SE-poor/mono-large over-compression stops near the '
+                         'floor.  This is the all-regime-safe gate (flat --am-load-frac alone over-corrects '
+                         'dense beds).  0 = off.')
+    ap.add_argument('--floor-engage', type=float, default=1.5,
+                    help='ramp width (%) over which the AM-skeleton load engages below --floor-porosity '
+                         '(numerical smoothness; smaller = stiffer jam).')
     ap.add_argument('--compact-to', type=float, default=0.0,
                     help='displacement-driven: descend the platen until bed porosity ≤ this %% then HOLD, '
                          'regardless of stress — for a target-density demo (e.g. 15).  0 = stress servo (default)')
@@ -601,7 +613,7 @@ def main(argv):
         print(f"3D MPM  grid={gshape}  pts={n}  arch={args.arch}  {comp}  "
               f"E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} K_SE={K_SE:.2f}GPa  "
               f"target={target} GPa  readout={args.readout}  "
-              + (f"am_load_frac={args.am_load_frac:.3f} → SE_target={target*(1.0-args.am_load_frac):.4f} GPa  " if args.am_load_frac > 0 else "")
+              + (f"am_load_frac={args.am_load_frac:.3f}" + (f" floor_porosity={args.floor_porosity:.1f}% (engage {args.floor_engage:.1f}%)" if args.floor_porosity > 0 else f" → SE_target={target*(1.0-args.am_load_frac):.4f} GPa") + "  " if args.am_load_frac > 0 else "")
               + f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
     reach_cnt = 0; STOP_HOLD = 3            # loose→dense mix: need target SUSTAINED this many frames to stop
@@ -631,12 +643,21 @@ def main(argv):
                 if por < args.compact_to + 5.0:              # slow near the target → less overshoot
                     step = vmax * 0.25
             elif args.am_scaffold:
-                # Tabor-style wallP CONDITIONAL: the frozen AM skeleton bears f_AM of the load (from DEM
-                # stress) but contributes 0 to wallP (kinematic mask, no material points) -> without this,
-                # the SE alone must reach `target` and over-compresses in SE-poor/AM-load-bearing corners.
-                # Stop when wallP_SE + f_AM*target >= target  <=>  wallP_SE >= target*(1-f_AM).  f_AM=0 -> original.
-                se_target = target * (1.0 - args.am_load_frac)
-                descend = (p < se_target)                    # scaffold: stop at the SE's load SHARE
+                # ROBUST wallP CONDITIONAL (skeleton-spring) — works across ALL regimes incl. SE-rich:
+                # the rigid AM skeleton bears up to f_AM*target, but ONLY once the bed compresses to its
+                # DEM rigid-packing floor (--floor-porosity), where the AM jams.  ABOVE the floor the SE
+                # bears the FULL load → dense / SE-rich beds that reach `target` above the floor are
+                # UNCHANGED (no over-correction — fixes the flaw where a flat f_AM broke real14/SE-rich).
+                # BELOW the floor the AM share ramps in (over --floor-engage) → stops the SE-poor/mono-
+                # large over-compression near the DEM floor, keeping a small plastic increment.
+                # f_AM (=--am-load-frac) = AM-AM axial load share (scripts/dem_am_load_fraction.py).
+                # floor<=0 OR f_AM=0 → legacy (SE bears all = original validated behaviour).
+                if args.floor_porosity > 0.0 and args.am_load_frac > 0.0:
+                    engage = min(1.0, max(0.0, (args.floor_porosity - por) / max(args.floor_engage, 1e-6)))
+                    am_skel = args.am_load_frac * target * engage      # AM skeleton stress, engages below floor
+                else:
+                    am_skel = args.am_load_frac * target               # legacy flat (no floor)
+                descend = (p + am_skel < target)             # stop when SE + engaged AM-skeleton reaches target
             else:
                 # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
                 # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
@@ -734,7 +755,8 @@ def main(argv):
             'um_box_um': round(float(um_box), 4) if um_box > 0 else None,   # µm per box unit (payload scale)
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
             'am_load_frac': float(args.am_load_frac),
-            'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if args.am_load_frac > 0 else None,
+            'floor_porosity_pct': float(args.floor_porosity) if args.floor_porosity > 0 else None,
+            'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if (args.am_load_frac > 0 and args.floor_porosity <= 0) else None,
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
             'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),
             'E_SE_GPa': float(args.e_se), 'nu_SE': float(args.nu_se),

@@ -117,6 +117,26 @@ def main():
 
     poro = fm.get('porosity')
     tgt = round(float(poro) / 100.0, 4) if poro is not None else 0.16
+    # ★ ROBUST wallP conditional: f_AM (AM-AM axial load share, Love-Weber) + DEM porosity floor.
+    # The AM skeleton bears f_AM·target ONLY below the floor → dense/SE-rich beds (reach target above
+    # the floor) UNCHANGED; SE-poor/mono-large (over-compress past the floor) stopped near it.  scipy-
+    # optional → f_AM=0 (legacy = off).  See scripts/dem_am_load_fraction.py + mpm3d_compaction --floor-porosity.
+    f_am = 0.0
+    try:
+        import numpy as _np
+        from dem_am_load_fraction import am_load_fraction as _amlf
+        _Xam = _np.array([[float(r[1]), float(r[2]), float(r[3])] for r in am_rows], dtype=float)
+        _Ram = _np.array([float(r[4]) for r in am_rows], dtype=float)
+        _Xse = _np.array([[float(r[1]), float(r[2]), float(r[3])] for r in se_rows], dtype=float)
+        _Rse = _np.array([float(r[4]) for r in se_rows], dtype=float)
+        if len(_Xam) and len(_Xse):
+            _X = _np.vstack([_Xam, _Xse]); _R = _np.concatenate([_Ram, _Rse])
+            _isSE = _np.concatenate([_np.zeros(len(_Xam), bool), _np.ones(len(_Xse), bool)])
+            f_am = float(_amlf(_np.zeros(len(_R)), _X, _R, _isSE)['f_AM'])
+    except Exception as _e:
+        print(f'  [f_AM] skipped ({_e}) → --am-load-frac 0 (legacy, no conditional)')
+    floor_por = round(float(poro), 2) if poro is not None else 0.0
+    print(f'  f_AM = {f_am:.3f}   floor_porosity = {floor_por:.1f}%   (robust wallP conditional, auto-off if dense)')
     case = a.case or os.path.basename(a.results.rstrip('/'))
     # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
     # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are
@@ -209,7 +229,7 @@ echo "[run_mpm] $(hostname) start $(date)  n_grid={n_grid_mpm}  est_pts~{est_pts
 python3 scripts/mpm3d_compaction.py \\
   --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
-  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
+  --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} --am-load-frac {f_am:.3f} --floor-porosity {floor_por:.2f} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags}
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
