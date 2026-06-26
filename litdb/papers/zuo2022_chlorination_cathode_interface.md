@@ -131,6 +131,21 @@ S⁻ 증가: LPSCl **6.7×** vs Cl1.5 **10.4×**; Cl⁻: **5.1×** vs **6.7×**.
 | 셀 우수(R_cat↓) | gas diversion→얇은 CEI | **못 봄**(closed solid-hull, 기체상 X) | ✗ 한계 → 실험 인용 |
 | metastability(DSC/TGA) | Cl-rich 덜 안정 | composition-기반 ESW ranking 불가 | ✗ 범위밖 → E_above_hull 보강 |
 
+## 11b. Zuo ToF-SIMS 분해종 ↔ 우리 interface_reactivity + XPS anchor (2026-06-26 추가)
+> Zuo는 **ToF-SIMS 음이온 fragment**(PO₃⁻/PO₂⁻=phosphate, SO₃⁻/SO₂⁻=sulfate/sulfite, Sₓ⁻=폴리설파이드, Cl⁻=LiCl)로만 종을 본다. 우리는 같은 화학을 **grand-potential interface_reactivity**(`db/properties/oxidation_stability.json`)로 *어떤 상*인지 짚고, **XPS BE anchor**(`db/properties/xps_reference_sei.csv`)로 그 상을 *코어레벨로* 동정한다 → Zuo의 SIMS 종이 우리 두 도구와 같은 산물을 가리키는지 교차검증.
+
+| Zuo ToF-SIMS fragment | = 우리 interface_reactivity 산물 (vs LiCoO2) | = 우리 XPS anchor (BE_eV) | 정합 |
+|---|---|---|---|
+| **PO₃⁻ / PO₂⁻** (phosphate, 내부층) | **Li₃PO₄** (O는 CATHODE서 옴 → 도핑 무관 형성) | Li₃PO₄ **P 2p₃/₂ 133.3** · O 1s 531.5 (thiophosphate 131.7 대비 **+1.6 eV**) | **✓✓** 같은 phosphate CEI |
+| **SO₃⁻ / SO₂⁻** (sulfate/sulfite, 내부층) | **Li₂SO₄** (interface_reactivity 산물 목록) | Li₂SO₄ **S 2p₃/₂ 168.0** (산화 S 마커, thiophosphate 161.6 대비 **+6.4 eV**) | **✓✓** 같은 sulfate, 고-BE S-산화 마커 |
+| **Sₓ⁻ (S4+S5+S6, 폴리설파이드, 외부층)** | grand-potential staircase **0.25 LiS4(2.14 V)→원소 S(3.06 V)** (modelc 동일) | (폴리설파이드 단일 BE anchor 없음; Li₂S **S 2p 160.2** = 완전환원 끝점, 폴리설파이드는 그 위 161–164) | **✓ 같은 폴리설파이드 경로** (XPS는 Li₂S 끝점만 anchor) |
+| **Cl⁻ (LiCl)** | **LiCl** (comp1/modelc 분해 전구간 inert 산물) | LiCl **Cl 2p₃/₂ 198.6** (NdCl₃ 199.2 대비 −0.6) | **✓✓** 같은 LiCl, 우리 SEI Cl anchor와 정확 일치 |
+
+🔑 **세 결론**:
+1. **Zuo의 SIMS 4종이 우리 interface_reactivity 산물 4종과 1:1** — Co9S8 + **Li₃PO₄ + Li₂S + LiCl + Li₂SO₄** (oxidation_stability.json `nd2o3_interface_reactivity`, vs LiCoO₂). Zuo가 본 phosphate/sulfate/polysulfide/LiCl을 우리 grand-potential이 *독립적으로* 같은 상으로 내놓음 = 화학 교차검증.
+2. **XPS anchor도 동일 상을 지목** — phosphate(133.3)·sulfate(168.0)·LiCl(198.6)·Li₂S(160.2)가 모두 우리 `xps_reference_sei.csv`의 *기존* anchor와 일치(Zuo는 XPS 안 했지만, 우리 ORCA ΔSCF 검증용 BE가 Zuo SIMS 종과 같은 산물 가리킴). → **우리 XPS 테이블이 Zuo 계면 화학을 BE-수준으로 커버**.
+3. **단, '양 vs 질'은 SIMS만 분리** — Zuo의 *핵심*(Cl-rich가 phosphate/sulfate **적게**, 폴리설파이드/SO₂ **많게**)은 *상대 강도(fold)*라 정적 hull(우리)·정적 BE(XPS)로는 못 본다. 우리 interface_reactivity는 dE가 comp1 −0.3227 ≈ modelc −0.3308 eV/atom(**0.008 차이=noise**) → "어떤 산물"은 같고 "얼마나·어느 비율"은 못 가름 → §11 ✗행과 동일 한계.
+
 ## 12. 적용 인사이트 (깊게)
 1. **deck 프레이밍 확정**: "Cl-rich = intrinsic 분해는 많지만(낮은 onset·2×) 산물이 좋아(LiCl↑·기체↑·고체산화물↓) CEI 얇고 계면저항 덜 올라 → 셀 우수." Zuo가 실험 근거.
 2. **우리 ESW 강점**: grand-potential이 Eq1/Eq2 분해 화학 독립 재현 → "검증됨".

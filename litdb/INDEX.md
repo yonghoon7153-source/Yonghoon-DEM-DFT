@@ -108,7 +108,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 
 | # | PDF (upload-id) | 추정 논문 | status |
 |---|---|---|---|
-| 1 | d0102fe3 …Zuo… | Zuo, Chlorination/cathode interface (Angew 2022) | ✅ |
+| 1 | d0102fe3 …Zuo… (＝ 재업로드 `82ea256b/7dd4f5c1 …16._Impact_of_the_Chlorination…`, 2026-06-26 — **동일 논문**, DOI 10.1002/anie.202213228) | Zuo, Chlorination/cathode interface (Angew 2022) — 재업로드 시 신규파일 X, 기존 digest에 §11b(XPS anchor 교차검증)만 추가 | ✅ |
 | 2 | dd2a1b3f …Liu… | Liu, Cl substitution crystallization/interface (AdvFunctMater 2022) | ⬜ |
 | 3 | 0be7bdb0 …Liang… | Liang, quasi-layered argyrodite Li migration (Small 2025) | ⬜ |
 | 4 | 338654f5 / 7440fd1f (S2405829721005894) | Gil-González, synergistic Cl / constrained ESW (ESM 2022) [dup] | ⬜ |
@@ -140,5 +140,6 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 29 | a0db35d2 (05._Stabilalides) | **[우리 그룹]** Cha/Yun/Kim/**Kang**/Cho/**Jong-Won Lee**, "Stabilizing NCM/Li₆PS₅Cl interface via dual-compatible halides" — high-Ni NCM에 LIC/LYC/LZC 할라이드 8–10 nm 코팅, **Li₂ZrCl₆(LZC)=dual compatible**(NCM·LPSCl 양쪽 호환)이 계면저항 74.4→20.1 Ω·cm²·100cyc 91.2 % (J. Power Sources 2024, 617, 235157, DOI 10.1016/j.jpowsour.2024.235157) — `papers/cha2024_dualcompatible_halide_ncm_lpscl_interface.md` | ✅ |
 | 32 | 82ea256b/97a4ea93 (…01._Ultraviolet_photoelectron…) | **[외부·methods]** Whitten (단독, UMass Lowell), **UPS 실전·best-practice 튜토리얼** (Appl. Surf. Sci. Adv. 13 (2023) 100384, DOI 10.1016/j.apsadv.2023.100384). *argyrodite 아님·재료결과無·계산無 — 그러나 on-topic(광전자분광): UPS=우리 DFT VBM/Φ/IE의 실험 측정법·산화안정성 valence-side 관측량.* — `papers/whitten2023_ups_practical_best_practices.md` | ✅ ([외부·methods]) |
 | 31 | 398d7029 (09._Engineteries) | **[외부]** Li/G.Wu/**Li-Zhen Fan**/**Ce-Wen Nan** (USTB·Tsinghua·Heze), "Engineering high-performance argyrodite SE via metal halide doping" — **CuBr₂ 이원(Cu+Br) 도핑** Li₅.₅PS₄.₅Cl₁.₅(LPSC-P)→Li₅.₈P₀.₉Cu₀.₁S₄.₅Cl₁.₃Br₀.₂(LPSC-CB): σ **10.3 mS/cm**·gap 1.82→2.41·σ_e 3.35e-9·CCD **1.9 mA/cm²**·Cu–S>P–S 대기안정 (ESM 2025, 77, 104221, DOI 10.1016/j.ensm.2025.104221) — `papers/li2025_cubr2_dualdoping_argyrodite.md`. *⚠ PDF #19 `7b32ac6f (High_perfo…eries)`와 동일 논문 가능성(미확인)* | ✅ |
+| 33 | 82ea256b/fbf22a65 (…13._Energy_Environ_Materials_2019_He…) | **[외부·methods]** He/Yu/Li/**Yan Zhao** (Wuhan Univ of Tech), **"Density Functional Theory for Battery Materials"** — **DFT-for-batteries 방법론 백본 리뷰**(16 pp). 5축(구조안정성·전압/용량·전자구조·이온수송·흡착) + §7 functional 벤치(SCAN 추천·PBE gap ~1 eV 과소·GGA 전압 과소·U는 TM-d/f 전용). *argyrodite/재료결과無 — 우리 정적 DFT 백본 전부의 표준 정당화.* **SE ESW=band-edge(Fig 7)만, grand-potential은 리뷰에 없음→우리가 더 엄밀.** (EEM 2019, 2, 264–279, DOI 10.1002/eem.12056) — `papers/he2019_dft_for_battery_materials_review.md` | ✅ ([외부·methods]) |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정. #19 `High_perfo…eries`는 본 논문(#31)과 동일 논문일 가능성 — upload-id 다름, 미확인.)*
