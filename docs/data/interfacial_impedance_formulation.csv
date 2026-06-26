@@ -1,0 +1,78 @@
+# Choi, Ku, Kim, Gwon, Yoon, Yu, Kim — ACS Appl. Mater. Interfaces 16 (2024) 26066-26078
+# DOI 10.1021/acsami.4c01322. "Formulating Interfacial Impedances for Designing High-Energy and High-Power All-Solid-State Battery Cathodes"
+# Samsung Advanced Institute of Technology (SAIT). ANALYTICAL/EQUIVALENT-CIRCUIT formulation (TLM = de Levie / transmission-line) + EIS fits + cell tests.
+# Materials: SE = LPSC argyrodite Li5.75PS4.75Cl1.25 (Mitsui M&S); CAM = NCM LiNi0.90Co0.05Mn0.05O2 (JX) and NCA LiNi0.94Co0.04Al0.02O2 (Samsung SDI); conductor = carbon fiber CF (Teijin). Composite cathode SSE:NCM = 50:50 v/v for symmetric cells.
+# KEY: this is an IMPEDANCE FORMULATION paper (no DEM/MPM/FEM microstructure). r_i = bulk(intragrain) + GB(SE/SE) ionic resistivity; r_i,gb = grain-boundary; r_i/e = charge-transfer (SE/CAM); r_e = electronic.
+# All r in Ohm.cm (resistivity) or Ohm.cm2 (areal R) as marked; z_i/e in Ohm.cm3 (charge-transfer impedance per unit volume); eps_pore dimensionless; alpha Bruggeman exponent.
+# provenance: stated_text | digitized_figure(TREND only, approximate) | derived
+quantity,cell_or_sample,CAM,SE_vol_frac_eps_i,pressure_MPa,temperature_C,value,unit,provenance,figure_table,note
+# ============ PRISTINE SE (Li5.75PS4.75Cl1.25 pellet, 300 MPa) — Fig 2c,d ============
+R_i_bulk_pristineSE,pristine_SSE_pellet,n/a,1.0,300,25,178,Ohm.cm,stated_text,Fig2c,resistivity r_i,bulk of pristine SE pellet
+R_i_gb_pristineSE,pristine_SSE_pellet,n/a,1.0,300,25,631,Ohm.cm,stated_text,Fig2d,grain-boundary resistivity (small HF semicircle >100 kHz)
+R_i_total_pristineSE,pristine_SSE_pellet,n/a,1.0,300,25,809,Ohm.cm,stated_text,Fig2c-d,r_i = R_i,bulk+R_i,gb = 178+631; pristine SE ionic resistivity
+E_a_ionic_pristineSE,pristine_SSE_pellet,n/a,1.0,300,25,0.33,eV,stated_text,Fig2c_inset,Arrhenius activation energy of pristine SE ionic conduction (8-fold blocking)
+# ============ COMPOSITE CATHODE total ionic resistivity (NCM 50:50 v/v) — text ============
+R_i_composite,composite_cathode,NCM,0.5,300,25,12800,Ohm.cm,stated_text,Fig3a_text,r_i(=r_i,bulk) of composite ~16x higher than pristine SE r_i; LOW SE fraction extreme
+R_i_composite_low_SE,composite_cathode,NCM,0.54,300,25,18400,Ohm.cm,stated_text,Fig3c,total r_i at eps_i=0.54 (LOW SE) - dominated by r_i,gb
+R_i_bulk_composite_low_SE,composite_cathode,NCM,0.54,300,25,610,Ohm.cm,stated_text,Fig3c,0.61 kOhm.cm; bulk part at low SE (similar to high SE)
+R_i_gb_composite_low_SE,composite_cathode,NCM,0.54,300,25,17700,Ohm.cm,stated_text,Fig3c,17.7 kOhm.cm; GB part 29x bulk at low SE -> r_i,gb DOMINATES composite resistivity
+R_i_bulk_composite_high_SE,composite_cathode,NCM,1.0,300,25,170,Ohm.cm,stated_text,Fig3c,0.17 kOhm.cm at eps_i=1.0
+R_i_gb_composite_high_SE,composite_cathode,NCM,1.0,300,25,630,Ohm.cm,stated_text,Fig3c,0.63 kOhm.cm at eps_i=1.0
+# ============ Tortuosity factor (Bruggeman tau_eff^2 = eps_i^-alpha, eq 5) — Fig 3d ============
+alpha_Bruggeman_bulk,composite_cathode,NCM,n/a,300,25,0.52,dimensionless,stated_text,Fig3d,alpha for r_i,bulk ~ ideal Bruggeman 0.5 (spherical insulating particles)
+alpha_Bruggeman_gb,composite_cathode,NCM,n/a,300,25,4.3,dimensionless,stated_text,Fig3d,alpha for r_i,gb MUCH higher than ideal -> GB GROWTH not path elongation drives resistivity rise
+tau_eff2_bulk_low_SE,composite_cathode,NCM,0.54,300,25,1.9,dimensionless,stated_text,Fig3d,tortuosity factor of r_i,bulk at eps_i=0.54
+tau_eff2_gb_low_SE,composite_cathode,NCM,0.54,300,25,22,dimensionless,stated_text,Fig3d,tortuosity factor of r_i,gb at eps_i=0.54 (very high)
+# ============ Pore volume fraction eps_pore — Fig 3b ============
+eps_pore_eps_i_1p0,composite_cathode,NCM,1.0,300,25,0.16,dimensionless,stated_text,Fig3b,pore vol frac at eps_i=1.0 (pure SE in composite cell)
+eps_pore_eps_i_0p26,composite_cathode,NCM,0.26,300,25,0.23,dimensionless,stated_text,Fig3b,pore vol frac at eps_i=0.26; LESS SE -> MORE pore (rigid NCM prevents SE sintering)
+eps_pore_range,composite_cathode,NCM,0.49-1.0,300,25,0.16-0.23,dimensionless,stated_text,Fig3b,pore vol frac increases slightly with decreasing SE fraction
+# ============ Electronic percolation threshold (teardrop->double-peak transition) ============
+electronic_percolation_eps_i,composite_cathode,NCM,0.77,300,25,0.77,dimensionless,stated_text,Fig3a,below eps_i=0.77 sudden LF change = NCM reached electronic percolation threshold (r_e < r_i)
+TLM_R_only_eps_i,composite_cathode,NCM,0.49,300,25,0.49,dimensionless,stated_text,Fig3a,at eps_i<=0.49 no distinguishable semicircles (r_e<<r_i) -> pure-R circuit; electronic path established
+# ============ Capacitance of z_i (grain-boundary capacitance) ============
+C_i_gb_composite,composite_cathode,NCM,0.54-1.0,300,25,1e-11_to_1e-8,F,stated_text,TableS1,c_i,gb of composite (grain-boundary ion-conduction capacitance; NOT electronic q_e,gb ~1e-9 which is unphysical for NCM)
+# ============ FABRICATION PRESSURE sweep (eps_i=0.58) — Fig 4 ============
+R_i_gb_UPC_300,composite_cathode,NCM,0.58,300,25,8700,Ohm.cm,digitized_figure,Fig4c,r_i,gb uniaxial press 300 MPa (~8.7 kOhm.cm)
+R_i_gb_IPP_500,composite_cathode,NCM,0.58,500,25,2650,Ohm.cm,stated_text,Fig4c,r_i,gb isostatic-press-pellet (IP-P) at 500 MPa (decreased remarkably with pressure)
+R_i_gb_IPC_500,composite_cathode,NCM,0.58,500,25,4680,Ohm.cm,stated_text,Fig4c,r_i,gb isostatic-press-cylindrical (IP-C) at 500 MPa
+eps_pore_IPP_500,composite_cathode,NCM,0.58,500,25,0.046,dimensionless,stated_text,Fig4d,pore vol frac of IP-P at 500 MPa (smooth SSE sintering via fluidic-media compression)
+R_e_500MPa_all,composite_cathode,NCM,0.58,500,25,15000,Ohm.cm,stated_text,Fig4f,r_e of all cells decreased to below 15 kOhm.cm at 500 MPa
+tau_eff2_IPP_500_85C,composite_cathode,NCM,0.58,500,85,1.46,dimensionless,stated_text,Fig4_text,r_i,bulk tortuosity of IP-P at 500 MPa 85C ~ ideal Bruggeman 1.41 (alpha=0.5) -> near-full SE densification
+R_i_total_IPP_500_85C,composite_cathode,NCM,0.58,500,85,2260,Ohm.cm,stated_text,Fig4_text,r_i of IP-P cell at 500 MPa 85C
+# Fabrication-pressure tortuosity of composite (eps_i=0.54, reference from Fig3d)
+tau_eff2_bulk_ref,composite_cathode,NCM,0.54,300,25,1.9,dimensionless,stated_text,Fig3d,r_i,bulk tortuosity (= Fig3d)
+tau_eff2_gb_ref,composite_cathode,NCM,0.54,300,25,22,dimensionless,stated_text,Fig3d,r_i,gb tortuosity (= Fig3d); for context vs IP-P 85C value 1.46
+# ============ CAM PARTICLE SIZE effect (NCA-4 / NCA-15 / NCM-7 / bimodal NCA-b-12) — Fig 6 ============
+# r_i/e (charge-transfer) PROPORTIONAL to 1/A_CAM (CAM surface area); slope = 0.082 Ohm.cm5 for NCA
+r_ie_slope_vs_invA_NCA,fullcell_ASSB,NCA,n/a,500,25,0.082,Ohm.cm5,stated_text,Fig6c,r_i/e proportional to 1/A_CAM; slope = SE/CAM charge-transfer material property
+R_low_diffusion,fullcell_ASSB,NCA,n/a,500,25,13.9,Ohm.cm2,stated_text,Fig6a_text,Z_low diffusion element 13.9+-2.6 Ohm.cm2 (anode+cathode Li diffusion)
+R_SE_separator,fullcell_ASSB,NCA,n/a,500,25,32.6,Ohm.cm2,stated_text,Fig6a_text,Z_SE bulk+GB of SE separator 32.6+-1.4 Ohm.cm2
+R_cathode_NCA15,fullcell_ASSB,NCA,n/a,500,25,20,Ohm.cm2,stated_text,Fig6_text,cathodic resistance R_cathode NCA-15 (largest particle, lowest)
+R_cathode_NCA4,fullcell_ASSB,NCA,n/a,500,25,24,Ohm.cm2,stated_text,Fig6_text,R_cathode NCA-4 (smallest particle)
+R_cathode_NCM7,fullcell_ASSB,NCM,n/a,500,25,25,Ohm.cm2,stated_text,Fig6_text,R_cathode NCM-7
+R_cathode_NCAb12_bimodal,fullcell_ASSB,NCA,n/a,500,25,14,Ohm.cm2,stated_text,Fig6_text,R_cathode bimodal NCA-b-12 = LOWEST (3240 Ohm.cm r_i,gb) -> bimodal overcomes trade-off
+r_igb_NCAb12_resistivity,fullcell_ASSB,NCA,n/a,500,25,3240,Ohm.cm,stated_text,Fig6_text,r_i,gb of bimodal NCA-b-12 = lowest among samples
+eps_pore_NCAb12_bimodal,fullcell_ASSB,NCA,n/a,500,25,0.11,dimensionless,stated_text,Fig6e,pore vol of bimodal NCA-b-12 (lower than unimodal; small NCA-4 infiltrate large NCA-15 -> densify)
+# CAM particle diameters
+d_NCA4,material,NCA,n/a,n/a,n/a,4,um,stated_text,methods,NCA-4 small Ni-Co-Al oxide
+d_NCA15,material,NCA,n/a,n/a,n/a,15,um,stated_text,methods,NCA-15 large
+d_NCM7,material,NCM,n/a,n/a,n/a,7,um,stated_text,methods,NCM-7 medium
+d_NCAb12_bimodal,material,NCA,n/a,n/a,n/a,12,um,stated_text,methods,bimodal NCA-4/NCA-15 mix avg diameter 12 um
+# ============ CELL PERFORMANCE (NCA-b-12 vs NCM-7) — Fig 7 ============
+discharge_cap_NCAb12_low_rate,fullcell_ASSB,NCA,n/a,500,25,4.1,mAh.cm2,stated_text,Fig7a,discharge capacity bimodal NCA-b-12 at 0.1C (0.5 mA/cm2); projected 5 mAh/cm2
+discharge_cap_NCM7_low_rate,fullcell_ASSB,NCM,n/a,500,25,3.5,mAh.cm2,stated_text,Fig7a,discharge capacity NCM-7 at 0.1C
+discharge_cap_NCAb12_high_rate,fullcell_ASSB,NCA,n/a,500,25,2.1,mAh.cm2,stated_text,Fig7b_text,NCA-b-12 at 2C (10 mA/cm2) = 7x higher than NCM-7
+discharge_cap_NCM7_high_rate,fullcell_ASSB,NCM,n/a,500,25,0.3,mAh.cm2,stated_text,Fig7b_text,NCM-7 at 2C (10 mA/cm2)
+V_init_NCAb12,fullcell_ASSB,NCA,n/a,500,25,3.00,V,stated_text,Fig7_text,initial discharge voltage NCA-b-12 (lower IR drop)
+V_init_NCM7,fullcell_ASSB,NCM,n/a,500,25,2.63,V,stated_text,Fig7_text,initial discharge voltage NCM-7 (higher IR drop)
+internal_R_NCAb12,fullcell_ASSB,NCA,n/a,500,25,58,Ohm.cm2,stated_text,Fig7_text,IR-drop internal R = R_SE+R_cathode+R_anode = 57 (EIS) ~ 58 (IV slope) Ohm.cm2
+# ============ POUCH high-energy cell (NCA-b-12, 105 um cathode) — Fig 7d-g ============
+areal_cap_pouch_low_rate,pouch_ASSB,NCA,n/a,500,25,5.3,mAh.cm2,stated_text,Fig7f,171 mAh/g at 0.1C
+areal_cap_pouch_high_rate,pouch_ASSB,NCA,n/a,500,25,5.0,mAh.cm2,stated_text,Fig7g,159 mAh/g maintained at 2.1 mA/cm2 (0.33C)
+energy_density_pouch_volumetric,pouch_ASSB,NCA,n/a,500,25,1100,Wh.L,stated_text,Fig7_text,volumetric energy density >1100 Wh/L (stacked config target)
+energy_density_pouch_gravimetric,pouch_ASSB,NCA,n/a,500,25,800,Wh.kg,stated_text,Fig7_text,gravimetric energy density >800 Wh/kg (>5 mAh/cm2 stacked)
+cycle_retention_pouch,pouch_ASSB,NCA,n/a,500,25,85,percent,stated_text,Fig7g,135 mAh/g over 300 cycles; 85%; Coulombic efficiency 99.9% (0.33C charge / 1C? per Fig7g 0.1C/0.33C)
+# ============ STACK PRESSURE during battery test ============
+stack_pressure_operation,fullcell_ASSB,n/a,n/a,n/a,25,4,MPa,stated_text,methods,4 MPa applied to pouch cell DURING battery tests (operating pressure << 300-500 MPa fabrication)
+fabrication_pressure_range,composite_cathode,n/a,n/a,300-500,n/a,300-500,MPa,stated_text,methods,fabrication pressure range yielding ~800 um pellets
