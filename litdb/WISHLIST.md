@@ -93,7 +93,7 @@
 
 | 우선 | 저자 (년) | 정확한 제목 | 출처 | DOI / ISBN |
 |:--:|---|---|---|---|
-| ⚠paywall | Walton & Braun (1986) | Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks | J. Rheol. 30(5) 949 | 10.1122/1.549893 — **유료·구버전 → SKIP** (Luding 2008이 같은 모델 더 완전·접근가능; Walton의 free 버전은 LLNL 보고서 UCRL-91254/93254 검색) |
+| ⚠paywall | Walton & Braun (1986) | Viscosity, granular-temperature, and stress calculations for shearing assemblies of inelastic, frictional disks | J. Rheol. 30(5) 949 | 10.1122/1.549893 — **유료·구버전 → SKIP** (Luding 2008이 같은 모델 더 완전·접근가능; Walton은 LLNL 소속이라 free UCRL preprint가 있을 수 있음 → "Walton UCRL preprint" 검색, 번호 미확인) |
 | ① | Luding (2008) | Cohesive, frictional powders: contact models for tension | Granular Matter 10(4) 235 | 10.1007/s10035-008-0099-x — ★ **Walton 대체 PRIMARY** (우리 k₂/k_c/φ_f 1:1; 저자 Twente 페이지/ResearchGate에 free PDF 흔함) |
 | ①alt | Di Renzo & Di Maio (2004) | Comparison of contact-force models for the simulation of collisions in DEM-based granular flow codes | Chem. Eng. Sci. 59(3) 525 | 10.1016/j.ces.2003.09.037 — linear-hysteretic(Walton) 포함 접촉모델 REVIEW (접근성↑) |
 | ①alt | Thornton, Cummins, Cleary (2013) | An investigation of the comparative behaviour of alternative contact force models during inelastic collisions | Powder Technol. 233 30 | 10.1016/j.powtec.2012.08.012 — linear-hysteretic vs 타모델 정량 REVIEW |
