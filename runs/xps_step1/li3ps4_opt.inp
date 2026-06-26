@@ -1,0 +1,14 @@
+# thiophosphate PS4^3- + 3Li (P-S 2.05 A) — geometry opt (neutral closed shell)
+! PBE0 def2-TZVP D4 RIJCOSX def2/J OPT TightSCF
+%pal nprocs 8 end
+%maxcore 3000
+* xyz 0 1
+P      0.000000     0.000000     0.000000
+S      1.183568     1.183568     1.183568
+S      1.183568    -1.183568    -1.183568
+S     -1.183568     1.183568    -1.183568
+S     -1.183568    -1.183568     1.183568
+Li     2.450000     0.000000     0.000000
+Li    -2.450000     0.000000     0.000000
+Li     0.000000     2.450000     0.000000
+*
