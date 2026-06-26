@@ -77,6 +77,18 @@ def parse_args(argv):
                     help='SE Poisson ratio (default 0.49 = 3D calib: K~25.5 GPa, the real LPSC bulk; '
                          'soft shear -> incompressible granular flow; nu<=0.45 over-crushes to 0 porosity)')
     ap.add_argument('--target-gpa', type=float, default=0.30, help='servo platen target σzz (GPa)')
+    ap.add_argument('--am-load-frac', type=float, default=0.0,
+                    help='Tabor-style wallP CONDITIONAL (DEM-stress coupling, scaffold only).  Fraction '
+                         '[0,1) of the target axial load borne by the FROZEN AM skeleton (from DEM, e.g. '
+                         'von-Mises partition f_AM = phi_AM*sVM_AM / (phi_AM*sVM_AM + phi_SE*sVM_SE), '
+                         'volume fractions of SOLID).  The SE servo then stops when '
+                         'wallP_SE + f_AM*target >= target, i.e. SE bears only its share target*(1-f_AM) -- '
+                         'the frozen AM cannot register on wallP, so without this the SE bears ALL the load '
+                         'and over-compresses in SE-poor / AM-load-bearing corners (mono-large 10:0).  '
+                         '0 = off (SE bears all = original validated behaviour).  Like Tabor caps contact '
+                         'AREA by F/H, this caps SE densification by the AM load-balance -- a physics '
+                         'condition, NOT a DEM-porosity clamp (the MPM still COMPUTES porosity under the '
+                         'corrected BC).  Use ONLY in the failure corner; leave 0 for production bimodal.')
     ap.add_argument('--compact-to', type=float, default=0.0,
                     help='displacement-driven: descend the platen until bed porosity ≤ this %% then HOLD, '
                          'regardless of stress — for a target-density demo (e.g. 15).  0 = stress servo (default)')
@@ -589,7 +601,8 @@ def main(argv):
         print(f"3D MPM  grid={gshape}  pts={n}  arch={args.arch}  {comp}  "
               f"E_SE={args.e_se} σy={args.sigma_y} ν_SE={args.nu_se} K_SE={K_SE:.2f}GPa  "
               f"target={target} GPa  readout={args.readout}  "
-              f"xy={'periodic' if PERIODIC else 'walls'}")
+              + (f"am_load_frac={args.am_load_frac:.3f} → SE_target={target*(1.0-args.am_load_frac):.4f} GPa  " if args.am_load_frac > 0 else "")
+              + f"xy={'periodic' if PERIODIC else 'walls'}")
     reached = False; conv = 0; por_end = 0.0; p_end = 0.0; por_at_target = -1.0; por0 = 100.0; relax = 0
     reach_cnt = 0; STOP_HOLD = 3            # loose→dense mix: need target SUSTAINED this many frames to stop
     for frame in range(args.frames):
@@ -618,7 +631,12 @@ def main(argv):
                 if por < args.compact_to + 5.0:              # slow near the target → less overshoot
                     step = vmax * 0.25
             elif args.am_scaffold:
-                descend = (p < target)                       # scaffold: instant stop at target (validated)
+                # Tabor-style wallP CONDITIONAL: the frozen AM skeleton bears f_AM of the load (from DEM
+                # stress) but contributes 0 to wallP (kinematic mask, no material points) -> without this,
+                # the SE alone must reach `target` and over-compresses in SE-poor/AM-load-bearing corners.
+                # Stop when wallP_SE + f_AM*target >= target  <=>  wallP_SE >= target*(1-f_AM).  f_AM=0 -> original.
+                se_target = target * (1.0 - args.am_load_frac)
+                descend = (p < se_target)                    # scaffold: stop at the SE's load SHARE
             else:
                 # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
                 # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
@@ -715,6 +733,8 @@ def main(argv):
             'wall_z': round(float(wall_z[None]), 4),
             'um_box_um': round(float(um_box), 4) if um_box > 0 else None,   # µm per box unit (payload scale)
             'final_stress_GPa': round(float(p_end), 4), 'target_GPa': float(target),
+            'am_load_frac': float(args.am_load_frac),
+            'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if args.am_load_frac > 0 else None,
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
             'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),
             'E_SE_GPa': float(args.e_se), 'nu_SE': float(args.nu_se),
