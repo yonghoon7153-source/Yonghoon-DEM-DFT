@@ -1,0 +1,97 @@
+# Sangros Gimenez et al., Chem. Eng. Technol. 43 (2020) No.5, 819-829, DOI 10.1002/ceat.201900501
+# "Modeling the Electrical Conductive Paths within All-Solid-State Battery Electrodes"
+# Material: LFP active material + carbon black (CB) additive + PEO-LiTFSI POLYMER electrolyte (insulator -> treated as pore).
+# Method: DEM (LIGGGHTS, Hertz-Mindlin elastic + vdW) -> A* shortest-path -> equivalent-circuit (cylinder R=rho*l/A, no constriction) -> sigma_e.
+#   sigma_ionic NOT solved directly -> estimated via skeleton-model tortuosity tau + Bruggeman D_eff = eps_el/tau * D_el.
+# WARNING: LFP+CB+POLYMER, NOT our LPSCl+NMC811 -> do NOT transfer absolute values. TREND/method only.
+# source: stated = Table/text exact; digitized = read off Fig (TREND only, +/- approximate).
+quantity,value,unit,condition_CB_wt_pct,composition_or_note,stated_or_digitized,figure_or_table
+# --- electrolyte content V_el = simulation "porosity" (manufactured electrode porosity ~0 due to calendering; pore=electrolyte) ---
+V_electrolyte,60.00,pct,0,LFP+PEO-LiTFSI; CB 0wt%,stated,Table4
+V_electrolyte,48.80,pct,0.5,,stated,Table4
+V_electrolyte,48.80,pct,2,,stated,Table4
+V_electrolyte,47.20,pct,3.7,,stated,Table4
+V_electrolyte,46.6,pct,5.2,,stated,Table4
+V_electrolyte,45.00,pct,8,extended sim cathode,stated,Table5
+V_electrolyte,43.00,pct,10,extended sim cathode,stated,Table5
+V_electrolyte,45.00,pct,15,extended sim cathode,stated,Table5
+V_electrolyte,46.00,pct,20,extended sim cathode,stated,Table5
+# --- sigma_electronic EXPERIMENTAL (4-point / two-point, 40 N composite, 10 mA, 3 s) ---
+sigma_e_exp,1.61e-3,S/cm,0,4-point measured,stated,Table4
+sigma_e_exp,1.95e-3,S/cm,0.5,4-point measured,stated,Table4
+sigma_e_exp,6.20e-3,S/cm,2,4-point measured,stated,Table4
+sigma_e_exp,1.59e-2,S/cm,3.7,4-point measured,stated,Table4
+sigma_e_exp,2.54e-2,S/cm,5.2,4-point measured,stated,Table4
+# --- sigma_electronic MODEL (A* + equivalent circuit, this work) ---
+sigma_e_model,1.6e-3,S/cm,0,A* model (blue dots); TREND,digitized,Fig4
+sigma_e_model,2.5e-3,S/cm,0.5,A* model; TREND,digitized,Fig4
+sigma_e_model,6.0e-3,S/cm,2,A* model; TREND,digitized,Fig4
+sigma_e_model,1.3e-2,S/cm,3.7,A* model; UNDER-predicts exp; TREND,digitized,Fig4
+sigma_e_model,2.2e-2,S/cm,5.2,A* model; UNDER-predicts exp; TREND,digitized,Fig4
+sigma_e_model,8e-3,S/cm,8,extended; TREND,digitized,Fig5
+sigma_e_model,3.0e-2,S/cm,10,extended; TREND,digitized,Fig5
+sigma_e_model,3.4e-2,S/cm,15,extended saturating; TREND,digitized,Fig5
+sigma_e_model,3.4e-2,S/cm,20,extended saturating; TREND,digitized,Fig5
+# --- sigma_electronic PERCOLATION THEORY (Costamagna eq15, Bruggeman eq14, mu=1.5) -- benchmark only ---
+sigma_e_perc,1.0e-3,S/cm,0,percolation theory (green tri); TREND,digitized,Fig4
+sigma_e_perc,2.4e-3,S/cm,0.5,percolation theory; TREND,digitized,Fig4
+sigma_e_perc,7.0e-3,S/cm,2,percolation theory; TREND,digitized,Fig4
+sigma_e_perc,2.2e-2,S/cm,3.7,percolation OVER-predicts exp; TREND,digitized,Fig4
+sigma_e_perc,3.4e-2,S/cm,5.2,percolation OVER-predicts exp; TREND,digitized,Fig4
+# --- sigma_ionic MODEL (tau-skeleton + Bruggeman D_eff = eps_el/tau * D_el; ESTIMATE, not direct solver) ---
+sigma_ion_model,7.3e-5,S/cm,0,Fig7 right axis; DECREASES with CB; TREND,digitized,Fig7
+sigma_ion_model,6.0e-5,S/cm,5,interp; TREND,digitized,Fig7
+sigma_ion_model,5.0e-5,S/cm,10,TREND,digitized,Fig7
+sigma_ion_model,4.6e-5,S/cm,20,CB up -> tau up -> sigma_ion down; TREND,digitized,Fig7
+# --- specific number of conductive paths n'_paths (eq16 normalized) ---
+n_paths_specific,10,per_um,0,A* path count normalized; TREND,digitized,Fig5
+n_paths_specific,38,per_um,20,saturating with CB; TREND,digitized,Fig5
+# --- percolation knee / increase rate (stated) ---
+sigma_e_increase_rate,85.89,pct,2-to-3.7,just-after-percolation steep rise,stated,text
+sigma_e_increase_rate,18.65,pct,8-to-10,after-percolation gradual (network count only),stated,text
+percolation_threshold_note,2,wt_pct,~2,CB<=0.5wt% below threshold(sigma~0); ~2wt% network forms,stated,text
+optimal_CB_compromise,5,wt_pct,~5,electronic/ionic trade-off optimum (do not exceed ~6-8),stated,Conclusion
+# --- intrinsic resistivities (powder-calibrated single-particle, sigma_e inputs) ---
+sigma_powder_LFP,0.023,S/cm,NA,LFP powder eps=0.60,stated,Table3
+sigma_powder_CB,4.390,S/cm,NA,CB powder eps=0.74,stated,Table3
+porosity_powder_LFP,0.60,frac,NA,LFP powder,stated,Table3
+porosity_powder_CB,0.74,frac,NA,CB powder,stated,Table3
+rho_particle_LFP,6177.91,Ohm.mm,NA,single-particle fit (LFP ~1e5x CB),stated,text4.1
+rho_particle_CB,0.07,Ohm.mm,NA,single-particle fit (CB most conductive),stated,text4.1
+# --- DEM material parameters (Table 2) ---
+E_LFP,123.90,GPa,NA,Young modulus LFP,stated,Table2
+E_CB,5.00,GPa,NA,Young modulus CB (soft),stated,Table2
+nu_LFP,0.28,-,NA,Poisson LFP,stated,Table2
+nu_CB,0.23,-,NA,Poisson CB,stated,Table2
+COR_LFP,0.40,-,NA,coeff restitution LFP,stated,Table2
+COR_CB,0.40,-,NA,coeff restitution CB,stated,Table2
+rho_density_LFP,4.28,g/cm3,NA,density LFP (supplier),stated,Table2
+rho_density_CB,1.96,g/cm3,NA,density CB (supplier),stated,Table2
+Hamaker_LFP,1.21e-19,J,NA,van der Waals Hamaker LFP,stated,Table2
+Hamaker_CB,1.09e-19,J,NA,van der Waals Hamaker CB,stated,Table2
+distance_limit_vdW_LFP,7.30e-6,mm,NA,vdW cutoff distance LFP,stated,Table2
+distance_limit_vdW_CB,7.80e-6,mm,NA,vdW cutoff distance CB,stated,Table2
+# --- PSD (Table 1, LFP; CB single size) ---
+LFP_size,0.28,um,NA,dQ3=15pct,stated,Table1
+LFP_size,0.30,um,NA,dQ3=15pct,stated,Table1
+LFP_size,0.32,um,NA,dQ3=15pct,stated,Table1
+LFP_size,0.34,um,NA,dQ3=10pct,stated,Table1
+LFP_size,0.36,um,NA,dQ3=10pct,stated,Table1
+LFP_size,0.40,um,NA,dQ3=15pct,stated,Table1
+LFP_size,0.60,um,NA,dQ3=20pct,stated,Table1
+CB_size,0.065,um,NA,CB aggregate (shear-fragmented 65nm); primary 40-50nm,stated,text3.1
+# --- domain / setup ---
+n_particles,6000,count,NA,all cases (domain resized to keep N const),stated,Table4-5
+domain_L,6.8,um,0,cubic l=w=h,stated,Table4
+domain_L,4.57,um,0.5,cubic,stated,Table4
+domain_L,3.25,um,2,cubic,stated,Table4
+domain_L,2.69,um,3.7,cubic,stated,Table4
+domain_L,2.43,um,5.2,cubic,stated,Table4
+domain_L,2.19,um,8,cubic extended,stated,Table5
+domain_L,2.05,um,10,cubic extended,stated,Table5
+domain_L,1.83,um,15,cubic extended,stated,Table5
+domain_L,1.69,um,20,cubic extended,stated,Table5
+plate_speed,0.75,mm/s,NA,calendering-mimic compression (stop at target V_par),stated,text3.1
+load_measurement_LFP,380,N,NA,4-point on LFP powder,stated,text2
+load_measurement_composite,40,N,NA,4-point on composite electrode,stated,text2
+D_el_electrolyte,2e-4,S/cm-1,NA,Pesko et al [39]; for sigma_ion Bruggeman estimate,stated,text3.3

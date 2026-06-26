@@ -1,0 +1,72 @@
+# Zhou et al. (ACS Energy Lett. 2025, 10, 966-974) DOI 10.1021/acsenergylett.4c03256 — "Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for ASSBs".
+# UCSD (H. Alicia Kim / Ping Liu) + LG Energy Solution. SYSTEM: Li6PS5Cl (LPSC) SE coarse ~20um vs fine ~1um + NCM811 (~1-5um) CAM + Li-metal anode. = OUR exact material system (LPSCl+NCM811).
+# type = mixed: experiment (EIS/GITT/cycling/FIB-SEM/XRD/XPS) + LAMMPS granular DEM (CAM utilization vs minimum overlap; Hertzian contact; velocity-Verlet calendaring) + FIB-SEM 3D tortuosity.
+# SCOPE: CAM utilization (=our coverage/contact analog, SAME LAMMPS-granular code family) + tortuosity + porosity + operating-pressure(2/10/30 MPa) cyclability = frame[4] EXTERNAL ANCHOR. DEM does NOT solve sigma (sigma measured by EIS). DEM material params (E_SE,nu,sigma_y) NOT reported.
+# CAVEATS: (1) CAM utilization % (AM particle-count contact ratio) != our coverage % (AM surface-area covered) -> concept/trend match, NOT absolute. (2) rigid sphere + Hertzian CONTACT (delta-overlap), NO true SHAPE plasticity. (3) FIB-SEM porosity/tortuosity convention differs from our ε_sphere / network-tau. (4) fabrication pressure NOT reported (2/10/30 MPa are CYCLING/operating pressure). (5) SE~CAM size (fine SE ~1um ~ NCM811 1-5um) != our 12:4:1 (SE<<CAM) -> coverage-mechanism vs interstice-fill differ.
+# precision: text_stated = printed in body text (RELIABLE); fig_digitized = read off figure (TREND only); table_stated = Table 1 / SI table (RELIABLE).
+#
+# === (A) MICROSTRUCTURE / STRUCTURAL PROPERTIES (fine vs coarse LPSC) ===
+metric,microstructure,value,unit,pressure_MPa,method,precision,note
+porosity,coarse_LPSC,11.3,pct,n/a,FIB-SEM_pore_seg,text_stated,Figure S7; pellet; fab P not reported
+porosity,fine_LPSC,4.4,pct,n/a,FIB-SEM_pore_seg,text_stated,Figure S7; ~2.6x denser than coarse
+relative_density,fine_LPSC,90,pct,n/a,FIB-SEM_S8,text_stated,Figure S8; consistent with 4.4pct porosity
+tortuosity_LPSC_median,coarse_LPSC,1.84,dimensionless,n/a,FIB-SEM_3D_recon,text_stated,Figure S15; LPSC ionic path tortuosity
+tortuosity_LPSC_median,fine_LPSC,1.21,dimensionless,n/a,FIB-SEM_3D_recon,text_stated,Figure S15; near-ideal; finer SE -> lower tortuosity
+BET_surface_area,coarse_LPSC,6.02,m2_per_g,n/a,BET,text_stated,Figure S9
+BET_surface_area,fine_LPSC,9.24,m2_per_g,n/a,BET,text_stated,Figure S9; roll-mixing increases surface area
+TGA_decomp_temp,both,365,degC,n/a,TGA,text_stated,Figure S6; no new peak -> no residual toluene in fine-LPSC
+PSD_fine_LPSC,fine_LPSC,1-3,um,n/a,SEM,text_stated,most 1-3um some <1um; roll@To preserves >3um few <0.25um
+PSD_CAM_NCM811,both,1-5,um,n/a,SEM,text_stated,NCM811; note SE(fine)~CAM size (not our 12:4:1)
+#
+# === (B) DEM CAM UTILIZATION vs MINIMUM OVERLAP (Table 1) — = our coverage/contact analog (SAME LAMMPS-granular code) ===
+# minimum_overlap = overlap relative to sum of two particle radii (contact criterion). utilization = fraction of NCM811 particles in contact (overlap>=criterion) with LPSC.
+metric,microstructure,min_overlap_pct,utilization_pct,method,precision,note
+CAM_utilization,coarse_LPSC,0,94,LAMMPS_granular_DEM,table_stated,Table 1
+CAM_utilization,coarse_LPSC,2,83,LAMMPS_granular_DEM,table_stated,Table 1; vs fine 100 at same criterion
+CAM_utilization,coarse_LPSC,5,56,LAMMPS_granular_DEM,table_stated,Table 1
+CAM_utilization,coarse_LPSC,10,20,LAMMPS_granular_DEM,table_stated,Table 1; strict criterion -> sharp drop
+CAM_utilization,fine_LPSC,0,100,LAMMPS_granular_DEM,table_stated,Table 1
+CAM_utilization,fine_LPSC,2,100,LAMMPS_granular_DEM,table_stated,Table 1; STAR fine~100 vs coarse 83 at 2pct overlap
+CAM_utilization,fine_LPSC,5,94,LAMMPS_granular_DEM,table_stated,Table 1
+CAM_utilization,fine_LPSC,10,28,LAMMPS_granular_DEM,table_stated,Table 1
+#
+# === (C) TRANSPORT / INTERFACE RESISTANCE (EIS, as-fabricated) ===
+metric,microstructure,value,unit,pressure_MPa,method,precision,note
+R_ct_charge_transfer,coarse_LPSC,17.3,Ohm,n/a,EIS_fit,text_stated,Fig 1e; full cell as-fab
+R_ct_charge_transfer,fine_LPSC,9.9,Ohm,n/a,EIS_fit,text_stated,Fig 1e; ~43pct lower -> fine improves kinetics
+DRT_P1_GB_timeconstant,coarse_LPSC,0.5,us,n/a,DRT,text_stated,Fig 1f/S16; P1=grain boundary
+DRT_P1_GB_timeconstant,fine_LPSC,1.4,us,n/a,DRT,text_stated,tau up = capacitance up = interface area up (BET 9.24 consistent)
+sigma_ionic_LPSC_To_rolling,fine_LPSC,highest_among_fine,qualitative,n/a,EIS,text_stated,Figure S5; roll@To preserves LPSC; absolute mS/cm NOT given in body
+#
+# === (D) ELECTROCHEMICAL PERFORMANCE vs OPERATING PRESSURE (cycling 2/10/30 MPa, 0.1C, 30C, Li-metal anode) — backlog B6 anchor ===
+metric,microstructure,pressure_MPa,value,unit,precision,note
+capacity_retention_100cyc,coarse_LPSC,30,84.0,pct,text_stated,Fig 2c
+capacity_retention_100cyc,fine_LPSC,30,90.3,pct,text_stated,Fig 2c; gap +7.5 pp (high P -> small gap)
+capacity_retention_100cyc,coarse_LPSC,10,74.3,pct,text_stated,Fig 2c
+capacity_retention_100cyc,fine_LPSC,10,88.9,pct,text_stated,Fig 2c; gap +19.7 pp
+capacity_retention_100cyc,coarse_LPSC,2,63.3,pct,text_stated,Fig 2c
+capacity_retention_100cyc,fine_LPSC,2,85.6,pct,text_stated,Fig 2c; STAR gap +35.2 pp (low P -> microstructure decisive)
+first_cycle_capacity_advantage_fine_minus_coarse,fine_vs_coarse,30,18,mAh_per_g,text_stated,fine delivers +18 mAh/g over coarse
+first_cycle_capacity_advantage_fine_minus_coarse,fine_vs_coarse,10,20,mAh_per_g,text_stated,+20 mAh/g; lower P -> larger advantage
+first_cycle_capacity_advantage_fine_minus_coarse,fine_vs_coarse,2,22,mAh_per_g,text_stated,+22 mAh/g; correlates with utilization sim (100 vs 83 pct)
+R_SSE_NCM_increase_100cyc,coarse_LPSC,2,545,Ohm,text_stated,Fig 3 EIS fit; coarse interface severe decay at low P
+R_SSE_NCM_increase_100cyc,fine_LPSC,2,34,Ohm,text_stated,Fig 3; fine +34 vs coarse +545 (16x) -> low-P interface stability
+DRT_Rct_area_increase_100cyc_coarse_vs_fine,coarse_vs_fine,30,8,pct,text_stated,Fig 3g-i; coarse Rct area +8pct vs fine
+DRT_Rct_area_increase_100cyc_coarse_vs_fine,coarse_vs_fine,10,26,pct,text_stated,+26pct
+DRT_Rct_area_increase_100cyc_coarse_vs_fine,coarse_vs_fine,2,115,pct,text_stated,+115pct -> coarse charge-transfer kinetics collapse at low P
+rate_capacity_advantage_fine,fine_vs_coarse,n/a,40,pct,text_stated,Figure S18; fine +40pct at 0.3C
+rate_capacity_advantage_fine,fine_vs_coarse,n/a,50,pct,text_stated,Figure S18; fine +50pct at 0.5C
+#
+# === (E) STRUCTURAL DEGRADATION (post-cycling, vs pressure) ===
+metric,microstructure,pressure_MPa,value,unit,precision,note
+I003_over_I104_LiNi_mixing,coarse_LPSC,10,1.121,ratio,text_stated,Fig 4h; lower ratio = more Li/Ni mixing
+I003_over_I104_LiNi_mixing,fine_LPSC,10,1.388,ratio,text_stated,Fig 4h; fine = less Li/Ni mixing
+I003_over_I104_LiNi_mixing,coarse_LPSC,2,1.011,ratio,text_stated,Fig 4i; coarse @2MPa shows Li2Sx polysulfide impurity peak too
+I003_over_I104_LiNi_mixing,fine_LPSC,2,1.204,ratio,text_stated,Fig 4i; fine more stable crystal structure
+#
+# === (F) FABRICATION vs OPERATING PRESSURE CONTEXT (pressure-cluster: Doux 5 / Lee 2 / Minnmann meas 40 / this 2-30 operating) ===
+context,value,note
+fabrication_pressure_MPa,n/a,pellet fab pressure NOT reported in body (SI Methods); DEM calendaring is displacement-based
+operating_pressure_MPa,2_to_30,cycling pressures; 2/10/30 MPa; LOW-P emphasis (industry targets <=5 MPa)
+key_mechanism,microstructure_matters_only_at_low_P,"high P: SE fills cavities (microstructure-independent); low P: initial packing/coverage (DEM-owned) decides cyclability"
+pressure_cluster_position,operating_2_to_30_MPa,"Lee 2 < this 2-30; Doux optimal 5; Minnmann measure 40; Cronau 5-50 (all operating); fab 300-500 separate"
