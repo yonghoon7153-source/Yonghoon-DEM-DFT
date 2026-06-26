@@ -152,16 +152,22 @@ def am_load_fraction_peratom(atoms_path, type_map):
     return {'f_AM_peratom': round(num / den, 4), 'n_AM': n_am, 'n_SE': n_se}
 
 
-def am_load_fraction_liggghts(atom_dump, contact_dump=None):
+def am_load_fraction_liggghts(atom_dump, contact_dump=None, se_types=(3,)):
     """★ ACTUAL-force f_AM from LIGGGHTS dumps (hooke/hysteresis, NOT Hertz reconstruction).
     atom_dump: 'ITEM: ATOMS id type ... c_strs[1] c_strs[2] c_strs[3] ...' (compute stress/atom; the
-      dashboard von-Mises basis).  Robust by COLUMN NAME.  → per-atom AM-PHASE σ_zz virial share.
-    contact_dump (optional): 'ITEM: ENTRIES c_cpl[...]' from `compute pair/gran/local pos id force ...`.
-      → per-contact AM-AM-only Love-Weber f_AM with the REAL contact force.  ⚠ column layout is
-      INPUT-SPECIFIC (positional); the indices below match input_real_14.liggghts
+      dashboard von-Mises basis).  Robust by COLUMN NAME.  → per-atom AM-PHASE σ_zz virial share
+      = EXACTLY what the skeleton-spring needs (the frozen AM absorbs AM-SE load that never reaches the
+      SE wallP, so am_skel must cover AM-AM + AM-SE = the AM phase).  Needs ONLY the atom dump.
+    se_types: which atom types are SE (NOT always {3} — a no-AM_S case dumps SE as type 2).  Pass the
+      same se_types the scaffold split used so AM/SE classification is consistent.
+    contact_dump (optional, diagnostic): 'ITEM: ENTRIES c_cpl[...]' from `compute pair/gran/local pos id
+      force ...`.  → per-contact AM-AM-ONLY Love-Weber f_AM with the REAL contact force.  ⚠ column layout
+      is INPUT-SPECIFIC (positional); the indices below match input_real_14.liggghts
       (pos[1-6] id[7-8] force[9-11]→fz=c_cpl[11]; verified: Σ f_z·l_z == atom-virial total).  Other
       inputs may differ → cross-check Σ(f·l) vs atom virial; if mismatched, the force column moved.
+      NOT used for production f_AM (the atom-dump AM-phase share is; this is only the AM-AM cross-check).
     real_14 result: Hertz(AM-AM) 0.847 OVER-estimates the actual AM-AM 0.670 (per-atom AM-phase 0.809)."""
+    se = set(int(t) for t in se_types)
     al = open(atom_dump).readlines()
     hi = next(k for k, l in enumerate(al) if l.startswith('ITEM: ATOMS'))
     cols = al[hi].split()[2:]
@@ -174,10 +180,11 @@ def am_load_fraction_liggghts(atom_dump, contact_dump=None):
         if len(p) < len(cols): continue
         aid = int(float(p[idk])); t = int(float(p[tk])); id2type[aid] = t
         if zzk is not None:
-            szz = float(p[zzk]); (globals(), sSE)  # noqa
-            if t == 3: sSE += szz
+            szz = float(p[zzk])
+            if t in se: sSE += szz
             else: sAM += szz
-    out = {'f_AM_peratom_AMphase': round(sAM / (sAM + sSE), 4) if (sAM + sSE) else None}
+    out = {'f_AM_peratom_AMphase': round(sAM / (sAM + sSE), 4) if (sAM + sSE) else None,
+           'atom_virial_total': round(sAM + sSE, 3) if (sAM + sSE) else None}
     if contact_dump:
         cl = open(contact_dump).readlines()
         ej = next(k for k, l in enumerate(cl) if l.startswith('ITEM: ENTRIES'))
@@ -192,12 +199,12 @@ def am_load_fraction_liggghts(atom_dump, contact_dump=None):
                 continue
             c = fz * (z2 - z1); t1 = id2type.get(i1); t2 = id2type.get(i2)
             if t1 is None or t2 is None: continue
-            if t1 != 3 and t2 != 3: saa += c; naa += 1
-            elif t1 == 3 and t2 == 3: sss += c; nss += 1
+            if t1 not in se and t2 not in se: saa += c; naa += 1
+            elif t1 in se and t2 in se: sss += c; nss += 1
             else: sas += c; nas += 1
         tc = saa + sas + sss
         out.update({'f_AM_contact_AMAM': round(saa / tc, 4) if tc else None,
-                    'contact_sigzz_total': round(tc, 3), 'atom_virial_total': round(sAM + sSE, 3),
+                    'contact_sigzz_total': round(tc, 3),
                     'n_AM_AM': naa, 'n_AM_SE': nas, 'n_SE_SE': nss})
     return out
 
@@ -212,7 +219,28 @@ def main():
                     '(LIGGGHTS virial, the dashboard von-Mises basis) → f_AM from real hooke/hysteresis '
                     'forces, no Hertz reconstruction.  Reports the AM-phase axial-stress share (brackets '
                     'the Hertz AM-AM-only from above).  use with --type-map')
+    ap.add_argument('--atom-dump', help='★ REAL production f_AM: raw LIGGGHTS atom_*.liggghts (has '
+                    'c_strs[3] σzz). → per-atom AM-PHASE axial-load share (hooke/hysteresis, NOT Hertz). '
+                    'this is what --am-load-frac should use.  SE types from --type-map.')
+    ap.add_argument('--contact-dump', help='optional diagnostic with --atom-dump: contact_*.liggghts → '
+                    'AM-AM-only Love-Weber f_AM (real contact force).  ⚠ column layout input-specific.')
     a = ap.parse_args()
+    if a.atom_dump:
+        se_types = [int(tok.split(':', 1)[0]) for tok in (a.type_map or '').split(',')
+                    if ':' in tok and 'SE' in tok.split(':', 1)[1].upper()] or [3]
+        r = am_load_fraction_liggghts(a.atom_dump, a.contact_dump, se_types=se_types)
+        v = r.get('f_AM_peratom_AMphase')
+        if v is None:
+            print("  [atom-dump] no c_strs[3] (σzz) column — LIGGGHTS `compute stress/atom` not dumped here.")
+        else:
+            print(f"f_AM = {v}   ← REAL per-atom AM-phase σ_zz share (hooke/hysteresis).  use --am-load-frac {v}")
+            print(f"  (se_types={se_types}; this is the AM-phase TOTAL the frozen AM bears = what the "
+                  f"skeleton-spring needs, NOT the Hertz AM-AM reconstruction)")
+        if r.get('f_AM_contact_AMAM') is not None:
+            print(f"  cross-check (AM-AM-only, real contact force) = {r['f_AM_contact_AMAM']}   "
+                  f"[Σf·l {r['contact_sigzz_total']} vs atom-virial {r['atom_virial_total']}: "
+                  f"match ⇒ column parse OK]")
+        return r
     if a.atoms_sigzz:
         pa = am_load_fraction_peratom(a.atoms_sigzz, a.type_map)
         if pa is None:

@@ -18,6 +18,22 @@ import csv
 import json
 import math
 import os
+import re
+
+
+def _find_atom_dump(results_dir):
+    """The FINAL-state raw LIGGGHTS atom dump (highest timestep) in the case dir, if present.
+    The webapp keeps atom_<step>.liggghts (app.detect_mode reads it for type count); it carries the
+    per-atom σ_zz virial (c_strs[3]) the analyzed atoms.csv strips → lets us get the REAL f_AM."""
+    cands = []
+    try:
+        for f in os.listdir(results_dir):
+            if f.startswith('atom') and f.endswith('.liggghts'):
+                m = re.search(r'(\d+)', f)
+                cands.append((int(m.group(1)) if m else -1, os.path.join(results_dir, f)))
+    except OSError:
+        return None
+    return max(cands)[1] if cands else None      # highest timestep = the compacted 300-MPa state
 
 
 def main():
@@ -121,7 +137,19 @@ def main():
     # The AM skeleton bears f_AM·target ONLY below the floor → dense/SE-rich beds (reach target above
     # the floor) UNCHANGED; SE-poor/mono-large (over-compress past the floor) stopped near it.  scipy-
     # optional → f_AM=0 (legacy = off).  See scripts/dem_am_load_fraction.py + mpm3d_compaction --floor-porosity.
-    f_am = 0.0
+    # f_AM source PRIORITY: (1) REAL per-atom AM-phase σ_zz from the raw atom dump (hooke/hysteresis,
+    # header-name robust = the AM-phase load the frozen AM bears → exactly what the skeleton-spring needs);
+    # (2) FALLBACK Hertz scaffold geometry (over-estimates AM-AM) if no raw dump.  Compute BOTH for
+    # transparency — Hertz over-estimates (docs/mpm_wallP_conditional_troubleshooting.md §12: real_14
+    # Hertz 0.847 vs real per-atom 0.809).
+    f_am = 0.0; f_am_src = 'off (no source)'; _f_real = None; _f_hertz = None
+    _adump = _find_atom_dump(a.results)
+    if _adump:
+        try:
+            from dem_am_load_fraction import am_load_fraction_liggghts as _amll
+            _f_real = _amll(_adump, se_types=sorted(se_types)).get('f_AM_peratom_AMphase')
+        except Exception as _e:
+            print(f'  [f_AM] atom-dump parse failed ({_e}) → Hertz scaffold fallback')
     try:
         import numpy as _np
         from dem_am_load_fraction import am_load_fraction as _amlf
@@ -132,9 +160,15 @@ def main():
         if len(_Xam) and len(_Xse):
             _X = _np.vstack([_Xam, _Xse]); _R = _np.concatenate([_Ram, _Rse])
             _isSE = _np.concatenate([_np.zeros(len(_Xam), bool), _np.ones(len(_Xse), bool)])
-            f_am = float(_amlf(_np.zeros(len(_R)), _X, _R, _isSE)['f_AM'])
+            _f_hertz = float(_amlf(_np.zeros(len(_R)), _X, _R, _isSE)['f_AM'])
     except Exception as _e:
-        print(f'  [f_AM] skipped ({_e}) → --am-load-frac 0 (legacy, no conditional)')
+        print(f'  [f_AM] Hertz scaffold skipped ({_e})')
+    if _f_real is not None:
+        f_am = float(_f_real); f_am_src = f'REAL atom-dump σ_zz AM-phase ({os.path.basename(_adump)})'
+    elif _f_hertz is not None:
+        f_am = _f_hertz; f_am_src = 'Hertz scaffold (no raw atom dump — over-estimates AM-AM)'
+    else:
+        print('  [f_AM] no source (scipy/dump missing) → --am-load-frac 0 (legacy, conditional OFF)')
     # ★ ROBUST gate via a porosity MARGIN below DEM (geometry-AGNOSTIC — replaces an r_AM/r_SE gate that
     # MISSED r_SE=1.5 mono-large like a9_p10, since the ratio drifts with r_SE).  The AM skeleton engages
     # only when the bed compresses MORE THAN `WALLP_MARGIN` below the DEM rigid-packing porosity (= the
@@ -144,8 +178,11 @@ def main():
     # for ANY r_SE.  Data: clean gap between legit max 3.9 and catastrophic min 6.3 → MARGIN=5 separates.
     WALLP_MARGIN = 5.0
     floor_por = round(max(2.0, float(poro) - WALLP_MARGIN), 2) if poro is not None else 0.0
-    print(f'  f_AM = {f_am:.3f}   floor_porosity = {floor_por:.1f}% (= DEM {poro:.1f} − {WALLP_MARGIN:.0f} margin)   '
-          f'(robust: AM skeleton engages only if MPM compresses >{WALLP_MARGIN:.0f}%p below DEM = catastrophic)')
+    _rs = f'{_f_real:.3f}' if _f_real is not None else '—'
+    _hs = f'{_f_hertz:.3f}' if _f_hertz is not None else '—'
+    print(f'  f_AM = {f_am:.3f}  [{f_am_src}]   (real atom-dump={_rs}, Hertz scaffold={_hs})')
+    print(f'  floor_porosity = {floor_por:.1f}% (= DEM {poro:.1f} − {WALLP_MARGIN:.0f} margin)   '
+          f'(AM skeleton engages only if MPM compresses >{WALLP_MARGIN:.0f}%p below DEM = catastrophic)')
     case = a.case or os.path.basename(a.results.rstrip('/'))
     # lateral RVE box (LIGGGHTS units) → MPM scl = WIDTH/lateral_box and adaptive n_grid.  Prefer
     # input_params box_x; else the atom lateral extent (periodic box ≈ max x,y).  Thick films are
