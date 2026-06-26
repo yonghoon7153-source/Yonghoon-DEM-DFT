@@ -1,0 +1,95 @@
+block,quantity,condition,value,unit,precision,source_fig,note
+# ===================================================================================================
+# Alabdali, Zanotto, Chouchane, Ngandjong, Viallet, Seznec, Meng, Franco — Energy Storage Materials 70 (2024) 103527
+# DOI 10.1016/j.ensm.2024.103527.  Franco group (LRCS Amiens, ARTISTIC) + UCSD Meng + U.Chicago.
+# DEM (LIGGGHTS, Hertz Granular-Force-Field, RIGID spheres) — SAME SE as us (Li6PS5Cl LPSCl) + NMC532 CAM.
+# Workflow: initial gen (11,002 particles, 150^3 um, NVE 300 K) -> uniaxial 375 MPa -> relaxation
+#   -> isostatic 1/3/5 MPa -> CYCLING (all AM radii +/-6 % volume, 5 cycles, lithiation expand/delithiation contract).
+# Stress-only DEM: NO fracture, NO plasticity, NO shape change (cycle = sphere radius swing).
+# sigma_el = sigma_el/sigma_AM NORMALIZED (relative, GeoDict ConductoDict); tau = geometric (DiffuDict, tau=sqrt(eta/D_eff)).
+# NO Holm/Kirchhoff absolute sigma; porosity/coverage/coordination/Heckel/sigma_y = n/a (not reported).
+# Most numbers DIGITIZED from Fig 2-6 (TREND only, +/-); 'stated' marked where text-explicit.
+# ===================================================================================================
+#
+# ---- material / model params (mass loadings stated; E/nu/mu/COR in SI only -> 'SI_unstated') ----
+params,SE_material,Li6PS5Cl_LPSCl,n/a,-,stated,text,SAME SE as ours (argyrodite) — 73.30 wt%
+params,CAM_material,NMC532_LiNi0.5Mn0.3Co0.2O2,n/a,-,stated,text,26.7 wt% — NOTE NMC532 not our NMC811
+params,SE_wt_pct,composition,73.30,wt%,stated,text,SE-rich composite
+params,CAM_wt_pct,composition,26.70,wt%,stated,text,
+params,AM_mass_loading,areal,14.96,mg/cm2,stated,text,
+params,n_particles,total_AM_plus_SE,11002,count,stated,text,M1 (M2 = different seed)
+params,box_initial,cubic,150,um,stated,text,150x150x150 um3 initial generation box
+params,PSD_AM,range,3-10,um,stated,Fig_S1,NMC532 continuous PSD
+params,PSD_SE,range,6-13,um,stated,Fig_S1,LPSCl — NOTE SE LARGER than AM (opposite of our 12:4:1)
+params,AM_volume_change,Vegard_cycle,6,pct,stated,text,+/-6 % volume per cycle (lithiation expand/delithiation contract)
+params,n_cycles,cycling,5,count,stated,text,5 consecutive expand/contract cycles
+params,uniaxial_pressure,fabrication,375,MPa,stated,text,= experimental cold-press range 300-500 MPa
+params,isostatic_pressure,operation,1;3;5,MPa,stated,text,5 MPa = ref[28] device operational upper range
+params,E_SE,GFF,SI_unstated,GPa,SI,SI,"from refs[30,31]; not in main text (sulfide ~22-24 expected)"
+params,E_CAM,GFF,SI_unstated,GPa,SI,SI,"from refs[30,31]; NMC ~140-160 expected"
+params,nu;mu;COR,GFF,SI_unstated,-,SI,SI,"Poisson, friction, restitution in SI only"
+params,code,DEM,LIGGGHTS,n/a,stated,text,= OUR code; ref[29]
+params,transport_solver,post,GeoDict_ConductoDict_DiffuDict,n/a,stated,text,sigma_el(relative)+tau(geometric); NO Holm/Kirchhoff abs sigma
+params,voxel_size,post,0.5,um,stated,text,particle->voxel for sigma_el/tau
+#
+# ---- COMPACTION: box thickness evolution (M1, digitized Fig 2-3) ----
+compaction,z_thickness,uniaxial_375MPa,84,um,digitized,Fig2,z-compressed (xy periodic 150x150)
+compaction,z_thickness,relaxation_1atm,95,um,digitized,Fig2_3,springback 84->95 (permanent + elastic recovery)
+compaction,z_thickness,isostatic_5MPa,125,um,digitized,Fig3,z 95->125 BUT xy 150->130 (isostatic compresses all faces -> box isotropization; NOT a density drop)
+compaction,xy_dimension,isostatic_5MPa,130,um,digitized,Fig3,xy 150->130 under isostatic (all-face compression)
+compaction,sim_time_uniaxial,convergence,400,us,stated,text,~400 us (800 us no significant difference)
+#
+# ---- UNIAXIAL 375 MPa stress (M1, Fig 4, digitized; AM~2xSE STATED) ----
+uniaxial_stress,stress_x_AM,plateau_vs_z,340-400,MPa,digitized,Fig4,lateral x-stress AM (below 375 boundary; bulk higher than top/bottom)
+uniaxial_stress,stress_x_SE,plateau_vs_z,150-200,MPa,digitized,Fig4,SE ~ half of AM
+uniaxial_stress,stress_y_AM,plateau_vs_z,340-400,MPa,digitized,Fig4,similar to x
+uniaxial_stress,stress_y_SE,plateau_vs_z,150,MPa,digitized,Fig4,
+uniaxial_stress,stress_z_AM,peak_pressing_dir,500-700,MPa,digitized,Fig4,EXCEEDS 375 boundary (bulk pressed by both plates); peak ~700 plateau ~600
+uniaxial_stress,stress_z_SE,pressing_dir,250-450,MPa,digitized,Fig4,~2/3 of AM
+uniaxial_stress,stress_vs_radius_AM_xy,radius_2um,390,MPa,digitized,Fig4_mid,small AM higher stress (monotonic decrease)
+uniaxial_stress,stress_vs_radius_AM_xy,radius_6um,250,MPa,digitized,Fig4_mid,large AM lower stress
+uniaxial_stress,stress_vs_radius_AM_z,radius_2um,650,MPa,digitized,Fig4_mid,z-axis small AM
+uniaxial_stress,stress_vs_radius_AM_z,radius_6um,400,MPa,digitized,Fig4_mid,z-axis large AM
+uniaxial_stress,AM_over_SE_ratio,average_all_axes,2.0,-,stated,text,"stress on SE reduced by factor of two vs AM (SE deformable/soft)"
+uniaxial_stress,small_AM_all_dims,z_axis,>500,MPa,stated,text,"smaller AM particles endure stress exceeding 500 MPa in all dimensions"
+#
+# ---- ISOSTATIC 1/3/5 MPa stress (M1, Fig 5a, digitized; range STATED) ----
+isostatic_stress,stress_x_range,isostatic_5MPa,6-16,MPa,stated,text,"stress varies between 6-16 MPa along x and y axes"
+isostatic_stress,stress_y_range,isostatic_5MPa,6-16,MPa,stated,text,
+isostatic_stress,stress_z_range,isostatic_5MPa,6-16,MPa,stated,text,"6-16 MPa along the z axis"
+isostatic_stress,orders_lower_vs_uniaxial,magnitude,~100x,-,stated,text,"nearly two orders of magnitude lower than uniaxial"
+isostatic_stress,heatmap_z_avg_range,Fig5b_xy_section,6-35,MPa,digitized,Fig5b,most 20-25 MPa; M2 more heterogeneous than M1 (esp lower-y)
+isostatic_stress,colorbar,Fig5a,0-10,MPa,stated,Fig5a,
+#
+# ---- CYCLING stress redistribution (Fig 5a, qualitative-stated; the cycling core) ----
+cycling_stress,AM_vs_SE_before_discharge,pre_expansion,AM>SE,-,stated,text,"AM experiences higher stress vs SE due to deformable/soft SE"
+cycling_stress,gap_during_discharge,AM_expansion,widens,-,stated,text,"gap in stress widens with AM particle expansion under load"
+cycling_stress,gap_full_discharge,end_expansion,narrows_to_similar,-,stated,text,"stress gap decreases until both AM and SE reach similar levels"
+cycling_stress,charge_transfer,AM_contraction,stress_AM->SE,-,stated,text,"transfer of stress to SE particles as AM occupy less volume -> more homogeneous distribution after charge"
+cycling_stress,lateral_after_charge,x_y,edges_high_core_low,-,stated,text,"lateral stress towards edges, decreases towards core -> impacts ionic/electronic pathways"
+cycling_stress,percolation_after_charge,homogeneity,enhanced,-,stated,text,"concentrated stress -> more prominent ionic percolation pathways"
+#
+# ---- sigma_el / tau evolution (Fig 6, sigma_el NORMALIZED, tau GEOMETRIC; digitized) ----
+sigma_el_tau,sigma_el_over_sigmaAM,uniaxial,0.072,-,digitized,Fig6a,"highest sigma_el (thickness down, contacts up)"
+sigma_el_tau,sigma_el_over_sigmaAM,relaxed,0.032,-,digitized,Fig6a,significant decrease upon relaxation (contacts lost)
+sigma_el_tau,sigma_el_over_sigmaAM,isostatic_range,0.033-0.043,-,digitized,Fig6a,"partial recovery; MONOTONIC increase with isostatic pressure (5>3>1 MPa)"
+sigma_el_tau,tau,uniaxial,2.3,-,digitized,Fig6b,lowest tau (most direct SE path)
+sigma_el_tau,tau,isostatic_range,2.2-3.8,-,digitized,Fig6b,NON-MONOTONIC with isostatic pressure; 1 MPa LOWEST tau / highest D_eff (not 3 or 5)
+sigma_el_tau,tau_dependence,isostatic_pressure,non_monotonic,-,stated,text,"tau and D_eff do not exhibit monotonic dependence on isostatic pressure; lowest at 1 MPa"
+sigma_el_tau,sigma_el_caveat,lithiated_states,not_accounted,-,stated,text,"NOT accounting for change of electronic conductivity of AM in lithiated/delithiated states -> geometry only"
+sigma_el_tau,sigma_el_below_1MPa,Fig_S10,decreases,-,stated,text,"sigma_el decrease when pressures fall below 1 MPa; optimal isostatic pressure must be refined"
+#
+# ---- context anchor (literature cited in-text) ----
+context,interlab_sigma_ion_spread,reproducibility_ref39,1.3-5.8,mS/cm,stated,text,"most conductive sample 4.5 mS/cm; RSD 35-50 % across labs (ref[39]) — same spread as our bulk anchors"
+context,uniaxial_press_range_lit,fabrication,300-500,MPa,stated,text,"electrode usually pressed uniaxially at 300-500 MPa before cycling"
+#
+# ---- n/a (NOT reported by this paper — do NOT cross-compare to our anchors) ----
+not_reported,porosity_absolute,n/a,n/a,-,n/a,n/a,only box thickness evolution; porosity % not reported
+not_reported,sigma_ionic_absolute_mScm,n/a,n/a,-,n/a,n/a,only normalized sigma_el + geometric tau; no Holm/Kirchhoff abs sigma
+not_reported,sigma_electronic_absolute_mScm,n/a,n/a,-,n/a,n/a,sigma_el normalized by sigma_AM (sigma_AM abs not given)
+not_reported,sigma_thermal,n/a,n/a,-,n/a,n/a,not computed
+not_reported,coverage_pct,n/a,n/a,-,n/a,n/a,contact stress only; coverage not computed
+not_reported,coordination_Z,n/a,n/a,-,n/a,n/a,not reported
+not_reported,Heckel_Py,n/a,n/a,-,n/a,n/a,no Heckel analysis
+not_reported,sigma_y_yield,n/a,n/a,-,n/a,n/a,rigid spheres + Hertz elastic — no plasticity/yield/fracture modeled
+not_reported,fracture,n/a,n/a,-,n/a,n/a,stress suggests cracking risk but NO fracture criterion/model

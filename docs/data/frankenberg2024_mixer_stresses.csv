@@ -1,0 +1,82 @@
+quantity,region_or_axis,value,units,axis_value,axis_var,precision,note
+# Frankenberg et al., Powder Technology 435 (2024) 119403, DOI 10.1016/j.powtec.2024.119403. OPEN ACCESS (CC BY). TU-Braunschweig IPAT (Kwade) + Janek (Giessen). DEM (Rocky 2023 R1) of the STRESSING CONDITIONS in a high-intensity MIXER producing ASSB composite-cathode HETEROAGGREGATES = submicron LiFePO4 (LFP, AM) + carbon black (CB, IMERYS SUPER C65) + Li3InCl6 (LIC, HALIDE SE), mass ratio LFP:CB:LIC = 58:4:38. Anode In/InLi. Cell SE separator = Li6PS5Cl (LPSCl, NEI). DRY high-intensity MIXING = PRE-compaction process (precedes cold-press). Contact = Hertz-Mindlin + JKR adhesion. METHOD CORE = coarse-graining (26.65x) + FORCE-SCALING (force x f^2, overlap x f, collision time x f, E*/G* constant -> stress sigma_CG=sigma_0 and specific collision energy E_m,CG=E_m,0 SCALE-INDEPENDENT, eqs 7-8) + 3-step calibration (DAOR/SAOR/compaction).
+# ★ NO transport solver (no sigma_ionic/e/thermal), NO compaction porosity (process-mechanics + full-cell capacity only). RIGID spheres (each heteroaggregate coarse-grained to ONE particle). HALIDE SE + LFP (NOT our LPSCl + NMC811) -> absolute values NOT transferable; trends/method/force-scaling-derivation only.
+# ★ force-scaling vs OUR 18x E-softening: BOTH adjust DEM contact stiffness, OPPOSITE purpose. force-scaling = PRESERVE (invariance, analytic eq7 sigma_CG=sigma_0; offsets coarse-graining overforce). 18x softening = COMPENSATE (lump granular rearrangement a rigid sphere cannot do; match macro porosity). Orthogonal; force-scaling does NOT replace softening (we use real sizes, no coarse-graining).
+#
+# --- A. FULL-CELL DISCHARGE CAPACITY (Fig 9, vs rotational speed n; t_mix=60 min; 0.1C, 1.9-3.4 V vs In/InLi). LFP theoretical 140 mAh/g. ---
+discharge_capacity_vs_n,n_10000min,109,mAh_per_g,10000,rotational_speed_min-1,stated,"+/-5; ~78% of LFP theoretical 140; C_discharge proportional to n (Fig 9a)"
+discharge_capacity_vs_n,n_7500min,78,mAh_per_g,7500,rotational_speed_min-1,digitized_Fig9a,"approx; linear trend"
+discharge_capacity_vs_n,n_5000min,46,mAh_per_g,5000,rotational_speed_min-1,digitized_Fig9a,"approx"
+discharge_capacity_vs_n,n_2000min,21,mAh_per_g,2000,rotational_speed_min-1,digitized_Fig9a,"approx"
+discharge_capacity_vs_n,n_1000min,0,mAh_per_g,1000,rotational_speed_min-1,digitized_Fig9a,"~0; poor aggregation (LIC clusters, contact loss, Fig 8a/b)"
+#
+# --- B. STRESS INTENSITY LIMIT (Fig 9b/d/f; same SN, two SI levels). SI bigger -> capacity bigger. ---
+SI_level_high,n_10000min,3.35,J_per_kg,10000,rotational_speed_min-1,stated,"mean SI at 10000 min-1; higher SI -> higher capacity at equal SN (Fig 9d)"
+SI_level_low,n_5000min,0.78,J_per_kg,5000,rotational_speed_min-1,stated,"mean SI at 5000 min-1"
+optimum_mixing_time,t_mix,30,min,,mixing_time,stated,"capacity saturates after ~30 min; >60 min re-agglomeration/granulation can REDUCE (Fig 9b/f)"
+#
+# --- C. POWER-LAW EXPONENTS on rotational speed n (whole simulated domain, 1 s; allometric fit, eqs 17-22). STATED. ---
+exponent_SI_normal,n,2.17,exponent,,rotational_speed,stated,"SI^normal ~ n^2.17 (eq17); SI ~ n^2 (collision KE ~ v^2 ~ n^2)"
+exponent_SI_shear,n,2.09,exponent,,rotational_speed,stated,"SI^shear ~ n^2.09 (eq18)"
+exponent_SI_dissipation,n,2.11,exponent,,rotational_speed,stated,"SI^dissipation ~ n^2.11 (eq19)"
+exponent_SN,n,0.62,exponent,,rotational_speed,stated,"SN ~ n^0.62 (stress number weakly depends on n; SI depends on n much more strongly than SN)"
+exponent_Em_normal,n,2.79,exponent,,rotational_speed,stated,"E_m^normal ~ n^2.79 (eq20); E_m ~ n^2.7-2.8 overall"
+exponent_Em_shear,n,2.71,exponent,,rotational_speed,stated,"E_m^shear ~ n^2.71 (eq21)"
+exponent_Em_dissipation,n,2.73,exponent,,rotational_speed,stated,"E_m^dissipation ~ n^2.73 (eq22)"
+exponent_Pm_specific_power,n,2.82,exponent,,rotational_speed,stated,"P_m ~ n^2.82 (sim); matches experimentally determined specific power dependence (validation)"
+#
+# --- D. MEAN STRESS INTENSITY + VELOCITY by REGION (Table 4; n=10000 min-1, steady state 0.7-1.0 s, dt_out=5 us). Region 1=gap, 2=rotor blade, 3=outside gap. STATED. ---
+mean_SI_normal,Region1_gap,7.410,J_per_kg,10000,rotational_speed_min-1,stated,"gap: compression in normal direction"
+mean_SI_normal,Region2_rotor,49.430,J_per_kg,10000,rotational_speed_min-1,stated,"rotor blade: MAX normal SI (impact); 3.558x higher than shear here"
+mean_SI_normal,Region3_outside,0.236,J_per_kg,10000,rotational_speed_min-1,stated,"outside gap: lowest (energy cascade after collisions)"
+mean_SI_shear,Region1_gap,6.005,J_per_kg,10000,rotational_speed_min-1,stated,"gap shear ~ as high as normal here"
+mean_SI_shear,Region2_rotor,13.893,J_per_kg,10000,rotational_speed_min-1,stated,"rotor: MAX shear SI"
+mean_SI_shear,Region3_outside,0.327,J_per_kg,10000,rotational_speed_min-1,stated,"outside: lowest shear"
+mean_SI_dissipation,Region1_gap,14.626,J_per_kg,10000,rotational_speed_min-1,stated,"gap dissipation < rotor"
+mean_SI_dissipation,Region2_rotor,51.795,J_per_kg,10000,rotational_speed_min-1,stated,"rotor: MAX dissipation (-> aggregation/sinter-granulation/melting risk)"
+mean_SI_dissipation,Region3_outside,0.764,J_per_kg,10000,rotational_speed_min-1,stated,"outside lowest"
+mean_velocity_particle,Region1_gap,12.134,m_per_s,10000,rotational_speed_min-1,stated,"gap v_part < rotor avg (friction+compression)"
+mean_velocity_particle,Region2_rotor,35.007,m_per_s,10000,rotational_speed_min-1,stated,"rotor v_part 35.007 < tip speed 39.9 (avg over all particles in front of rotor)"
+mean_velocity_particle,Region3_outside,9.980,m_per_s,10000,rotational_speed_min-1,stated,"outside lowest (energy cascade)"
+shear_rate_gap_min,gap,2604,per_s,1000,rotational_speed_min-1,stated,"gamma_dot = R_t*2pi*n/h (eq15); h_min=1.532 mm; range 2604 (1000 min-1)"
+shear_rate_gap_max,gap,26042,per_s,10000,rotational_speed_min-1,stated,"to 26042 s-1 (10000 min-1); high shear = good dispersion"
+rotor_tip_speed,rotor,39.9,m_per_s,10000,rotational_speed_min-1,stated,"v=2pi*n*R_t (calculated tip speed at 10000 min-1)"
+#
+# --- E. COARSE-GRAINING + FORCE-SCALING parameters (STATED, sec 3). ---
+coarse_grain_factor_f,coarse_graining,26.65,dimensionless,,scaling,stated,"f = d_CG/d_0 = 0.5mm / 18.77um (eq2); particle scaled 26.65x"
+coarse_grain_particle_size,coarse_graining,0.5,mm,,scaling,stated,"DEM particle 0.5 mm = ~1/3 of gap; <0.5um -> timestep explosion, >larger -> gap jam"
+heteroaggregate_x50,measured,18.77,um,10000,rotational_speed_min-1,stated,"+/-0.26; laser diffraction Horiba LA-960; = original particle d_0 for coarse-graining"
+n_particles_DEM,coarse_graining,36670,count,,domain,stated,"36670 particles (3 g; domain cut to 1/5, y-periodic; experiment used 15 g)"
+force_scaling_force_exponent,force_scaling,2,exponent_of_f,,scaling,stated,"contact force (Hertz/Mindlin/JKR) scales with f^2 (eq6); validated force-time curve (SI)"
+force_scaling_overlap_exponent,force_scaling,1,exponent_of_f,,scaling,stated,"overlap delta_CG = delta_0 * f (eq3)"
+force_scaling_collision_time_exponent,force_scaling,1,exponent_of_f,,scaling,stated,"collision time tau_CG = tau_0 * f (eq4, energy conservation)"
+force_scaling_stress_exponent,force_scaling,0,exponent_of_f,,scaling,stated,"sigma_CG = F0*f^2/(A*f^2) = sigma_0 SCALE-INDEPENDENT (eq7); A ~ f^2"
+force_scaling_impulse_exponent,force_scaling,3,exponent_of_f,,scaling,stated,"impulse ~ f^3; specific collision energy E_m,CG = E_m,0 (eq8; collision energy ~ f^3, mass m_p ~ f^3)"
+timestep_scaling,DEM,1,proportional_to_R,,scaling,stated,"dt_sim = 0.2*pi*R*sqrt(rho/G*)/(0.8766+0.1631*nu) ~ R* (eq1); smaller particle -> dt explodes -> reason for coarse-graining"
+#
+# --- F. CALIBRATED COARSE-GRAIN PARAMETERS (Table 3, STATED). E = HETEROAGGREGATE BULK (porous) compaction modulus, NOT material E. ---
+E_coarse_grain,calibration,25,MPa,,compaction,stated,"E=25 MPa = heteroaggregate POROUS-BULK compaction modulus (NOT material E; author-stated). Mixer wall E=120000 MPa"
+poisson_coarse_grain,calibration,0.3,dimensionless,,compaction,stated,"nu=0.3 (coarse-grain); wall nu=0.3"
+COR_pp,calibration,0.3,dimensionless,,compaction,stated,"restitution coefficient e_pp=0.3 (particle-particle); e_pw=0.3 (particle-wall)"
+rolling_friction_pp,calibration,0.2,dimensionless,,DAOR,stated,"mu_r=0.2 (linear spring rolling; PROXY for non-spherical shape)"
+static_friction_pp,calibration,0.44,dimensionless,,DAOR,stated,"mu_s,pp=0.44; wall mu_s,pw=0.5"
+dynamic_friction_pp,calibration,0.44,dimensionless,,DAOR,stated,"mu_d,pp=0.44; wall mu_d,pw=0.3 (condition: static >= dynamic)"
+surface_energy_pp_JKR,calibration,0.0045,J_per_m2,,DAOR,stated,"Gamma_pp=0.0045 J/m2 (JKR adhesion); wall Gamma_pw=0.001. JKR ESSENTIAL for the highly cohesive powder"
+bulk_density_sim,calibration,750,kg_per_m3,,DAOR,stated,"rho_b sim=750 (adjusted from exp 701.83+/-16.95 which is drum-compacted); gives eps_bulk=0.4, eps_inner=0.59"
+particle_density_coarse_grain,calibration,1250,kg_per_m3,,material,stated,"rho_p=1250 (aggregate w/ inner-porosity 0.59); pure density rho_0=3047; mixer wall 4510"
+#
+# --- G. DAOR (Dynamic Angle of Repose) calibration & validation (Table 1 exp / Table 2 sim). 10 min-1 = calibration point, rest = validation. ---
+DAOR_phi1_sim,n_5min,30.82,degrees,5,rotational_speed_min-1,stated,"Table 2 sim; exp 31.20 (Table1 seq1)"
+DAOR_phi1_sim,n_10min,30.35,degrees,10,rotational_speed_min-1,stated,"CALIBRATION point; exp 30.30 (Table1)"
+DAOR_phi1_sim,n_15min,29.26,degrees,15,rotational_speed_min-1,stated,"exp ~29.05/29.14 (Table1)"
+DAOR_phi1_sim,n_60min,15.50,degrees,60,rotational_speed_min-1,stated,"exp 14.78/14.60 (Table1); low angle at high drum speed"
+DAOR_phi2_sim,n_5min,53.77,degrees,5,rotational_speed_min-1,stated,"Table 2 sim; exp 54.46/51.87"
+DAOR_phi2_sim,n_10min,57.22,degrees,10,rotational_speed_min-1,stated,"exp 57.38/56.03"
+DAOR_phi2_sim,n_15min,61.50,degrees,15,rotational_speed_min-1,stated,"exp 61.32/62.03"
+DAOR_phi2_sim,n_60min,65.61,degrees,60,rotational_speed_min-1,stated,"exp 65.75/65.14; high angle = strong cohesion at high speed"
+SAOR_sim,validation,54.21,degrees,,static_angle,stated,"+/-1.14; sim SAOR (cylinder pull-up) validates DAOR-calibrated params"
+SAOR_exp,validation,55.58,degrees,,static_angle,stated,"+/-1.44; exp SAOR; sim 54.21 ~ exp 55.58 (params correct)"
+#
+# --- H. CELL FABRICATION vs OPERATION pressure (sec 2.2, STATED) -> joins our "fab != operating" framing (Doux 370 / Minnmann 380 / Lee 500 family). ---
+cell_fabrication_pressure,cell_assembly,380,MPa,,pressure,stated,"uniaxial cold-press (LPSCl separator + cathode); = our 300 / Doux 370 / Minnmann 380 family"
+cell_operation_stack_pressure,cycling,25,MPa,,pressure,stated,"~25 MPa stack during cycling (0.1C, 1.9-3.4 V); fab 380 >> operating 25 = fab!=operating split"

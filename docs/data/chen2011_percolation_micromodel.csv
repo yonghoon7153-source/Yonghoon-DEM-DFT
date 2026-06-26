@@ -1,0 +1,120 @@
+# Chen, Lu, Li, Yu, Kong, Zhu -- J. Power Sources 196 (2011) 3178-3185 (DOI 10.1016/j.jpowsour.2010.11.107)
+# Jiangsu Univ. of Science & Technology + USTC + Colorado School of Mines (linked to R. J. Kee group).
+# ANALYTIC percolation MICRO-MODEL (closed-form; NOT a particle/mesh simulation) for SOFC composite electrodes
+#   with POLY-DISPERSED particle sizes. Outputs CLOSED-FORM expressions for:
+#     coordination number Z_{k,l} (Eq 2), multi-size percolation probability P (Eq 7),
+#     percolated TPB length lambda_TPB (Eq 5/8), intra-particle sigma (Eq 9, Bruggeman xi^mu),
+#     inter-particle sigma (Eq 10, contact-area a / interface-thickness delta), hydraulic pore radius r_g (Eq 11).
+#   Validated against NUMERICAL random-packing reconstruction (Kenney et al. ref[20]).
+# ==> Chen DOES solve sigma (unlike Bielefeld 2019) -- BUT as a MEAN-FIELD (intrinsic-sigma x percolation/geometry
+#     factors), NOT an exact contact-resistance network. It is the ANALYTIC COUSIN of our DEM-measured CN/percolation
+#     and the mean-field cousin of our Kirchhoff/Holm conductivity solve.
+# ==> Bielefeld 2019 ANALOG: Bielefeld = NUMERICAL GeoDict percolation (no sigma, mono PSD);
+#     Chen = ANALYTIC closed-form percolation (solves sigma, poly-dispersed PSD). Same percolation physics, two routes.
+# CONTEXT: SOFC (LSM/Ni-YSZ). TPB (triple-phase boundary) is NOT a direct battery quantity.
+#   sigma absolute values are SOFC/YSZ (945 C). ==> Do NOT transfer absolutes to LPSCl/NMC811.
+#   TRANSFERABLE = coordination-number / percolation-probability / percolation-threshold-vs-PSD ANALYTIC physics only.
+# source_type: stated_text = sentence in paper; stated_eq# = the stated equation (or value computed from it);
+#              stated_table1 = Table 1; stated_fig# = number stated for that figure;
+#              digitized_fig# = read off a figure curve (TREND, +-, approximate).
+# =====================================================================================================================
+#
+# BLOCK 0 -- the headline poly-dispersed-PSD results our work cites (vs mono-sized), all STATED in text.
+quantity,value,unit,condition,eq_or_fig,source_type,note
+poly_TPB_reduction_sigprime_0p4,32,pct_lower,"sig'_ed=sig'_el=0.4, r_ed=r_el, psi_ed=0.5, max lambda_tilde",Fig4,stated_text,"poly-dispersed (normal, sig'=0.4) max percolated TPB is ~32% LOWER than mono-sized. KEY poly-PSD result."
+poly_TPB_reduction_sigprime_0p6,48,pct_lower,"sig'_ed=sig'_el=0.6, same",Fig4,stated_text,"sig'=0.6 -> 48% lower. Broader PSD -> weaker percolated TPB."
+poly_TPB_reduction_asymmetric,21,pct_lower,"sig'_ed=0.4, sig'_el=0, same",Fig4,stated_text,"asymmetric (only ed-phase poly) -> 21% lower."
+poly_TPB_reduction_ratio_0p5,25,pct_lower,"sig'=0.4, r_el/r_ed=0.5, psi_ed=0.5",Fig5,stated_text,"max lambda_tilde vs mono, at radii ratio 0.5"
+poly_TPB_reduction_ratio_1,32,pct_lower,"sig'=0.4, r_el/r_ed=1",Fig5,stated_text,
+poly_TPB_reduction_ratio_2,25,pct_lower,"sig'=0.4, r_el/r_ed=2",Fig5,stated_text,
+poly_TPB_reduction_ratio_4,25,pct_lower,"sig'=0.4, r_el/r_ed=4",Fig5,stated_text,
+inter_sigma_broadPSD_effect,10,pct_higher,"sig'=0.6 vs sig'=0, r_el/r_ed=1",Fig8,stated_text,"broad PSD raises inter-particle ionic conductivity ~10%; narrow PSD (sig'<=0.4) effect weak."
+#
+# BLOCK 1 -- coordination number (Eq 1-2). The ANALYTIC ANALOG of our DEM-measured <z>.
+quantity,value,unit,condition,eq_or_fig,source_type,note
+mean_coordination_number_all,6,contacts,random dense packing,Eq2,stated_text,"Z_bar = average coordination number of ALL particles, widely assumed = 6 (refs 21,22,33,34)."
+coordination_eq2_form,"Z_{k,l}=0.5*(1+r_k^2/r_l^2)*Z_bar*(psi_l/r_l)/sum(psi_k/r_k)",formula,binary/n-size,Eq2,stated_eq2,"species-pair coordination. Larger particle (r_k up) contacts more small neighbors. ANALYTIC PRIOR for our CN."
+coordination_eq1_form,"Z_k = sum_{l=1..M} Z_{k,l}",formula,M total sizes,Eq1,stated_eq1,"total coordination of a k-particle with ALL neighbors (ed+el)."
+#
+# BLOCK 2 -- percolation probability & threshold constant (Eq 7). ANALYTIC ANALOG of our f_perc/phi_c.
+quantity,value,unit,condition,eq_or_fig,source_type,note
+percolation_prob_eq7_form,"P_{el_k}=[1-((3.764-sum_l Z_{el_k,el_l})/2)^2.5]^0.4",formula,multi-size,Eq7,stated_eq7,"multi-size percolation probability; GENERALIZES the mono-binary P_{el1}=[1-((3.764-Z_{el1,el1})/2)^2.5]^0.4 (Costamagna ref22). Validated vs Kenney ref20."
+percolation_threshold_constant,3.764,dimensionless,Eq7 numerator,Eq7,stated_eq7,"= 2 x ~1.882; same-type contact threshold ~1.882 to percolate. P->0 below, P->1 above."
+percolation_threshold_constant_half,1.882,contacts_same_type,mono,Eq7,stated_text,"a particle needs ~1.882 same-type contacts (=3.764/2) to belong to the percolated cluster."
+#
+# BLOCK 3 -- percolation VOLUME-FRACTION threshold range psi^t_ed vs PSD width sig' (Fig 4). Both phases percolate in
+#   psi^t_ed < psi_ed < 1-psi^t_el. Broader PSD WIDENS this range (analytic basis for PSD-dependent phi_c).
+quantity,sigprime,psi_t_ed_low,psi_t_ed_high,condition,eq_or_fig,source_type,note
+percolation_volfrac_range,0,0.30,0.70,"mono-sized, r_el/r_ed=1",Fig4,stated_text,"sig'=0 (mono) -> both phases percolate for psi_ed in [0.30, 0.70]."
+percolation_volfrac_range,0.4,0.20,0.80,"poly, r_el/r_ed=1",Fig4,stated_text,"sig'=0.4 -> range WIDENS to [0.20, 0.80]. Broad PSD percolates over more compositions."
+#
+# BLOCK 3b -- percolation volume-fraction range vs radii ratio r_el/r_ed (Fig 5), sig'=0 (mono) and 0.4 (poly).
+quantity,sigprime,r_el_over_r_ed,psi_t_ed_low,psi_t_ed_high,eq_or_fig,source_type,note
+percolation_volfrac_range_ratio,0,0.5,0.46,0.82,Fig5,stated_text,"mono, ratio 0.5"
+percolation_volfrac_range_ratio,0,1,0.30,0.70,Fig5,stated_text,"mono, ratio 1"
+percolation_volfrac_range_ratio,0,2,0.18,0.54,Fig5,stated_text,"mono, ratio 2"
+percolation_volfrac_range_ratio,0,4,0.10,0.37,Fig5,stated_text,"mono, ratio 4 -> large ratio LOWERS the threshold"
+percolation_volfrac_range_ratio,0.4,0.5,0.32,0.89,Fig5,stated_text,"poly, ratio 0.5"
+percolation_volfrac_range_ratio,0.4,1,0.20,0.80,Fig5,stated_text,"poly, ratio 1"
+percolation_volfrac_range_ratio,0.4,2,0.11,0.68,Fig5,stated_text,"poly, ratio 2"
+percolation_volfrac_range_ratio,0.4,4,0.06,0.51,Fig5,stated_text,"poly, ratio 4 -> broad PSD + large ratio = widest range"
+#
+# BLOCK 4 -- percolation threshold psi^t_ed DROPS as PSD widens (Fig 6), with intra-sigma recovery.
+quantity,sigprime,psi_t_ed,sigma_tilde_tra_eff_ed,condition,eq_or_fig,source_type,note
+threshold_shift_with_PSD,0,0.30,0.59,"r_el/r_ed=1, intra-sigma at adopted psi_ed",Fig6,stated_text,"mono: psi^t_ed=0.30, sigma_tilde^tra,eff_ed=0.59 (at psi_ed=0.30)"
+threshold_shift_with_PSD,0.6,0.18,0.72,"broad PSD",Fig6,stated_text,"sig'=0.6: psi^t_ed DROPS to 0.18, sigma_tilde^tra,eff_ed RECOVERS to 0.72 (at psi_ed=0.18). Broad PSD -> lower threshold -> higher intra-sigma."
+#
+# BLOCK 4b -- intra-particle conductivity vs radii ratio (Fig 7), threshold shift.
+quantity,r_el_over_r_ed,psi_t_ed,eq_or_fig,source_type,note
+intra_threshold_vs_ratio,1,0.22,Fig7,stated_text,"sig'=0.4, ratio 1 -> psi^t_ed ~0.22"
+intra_threshold_vs_ratio,4,0.10,Fig7,stated_text,"ratio 4 -> psi^t_ed ~0.10; larger ratio lowers threshold, raises intra-sigma_ed"
+#
+# BLOCK 5 -- effective-conductivity FORMS (closed-form; the analytic cousins of our sigma).
+quantity,form,unit,eq_or_fig,source_type,note
+intra_particle_sigma,"sigma^tra,eff_el/sigma^tra,0_el = (1-phi_g)^mu * xi_el^mu",formula,Eq9+Eq18,stated_eq9,"Bruggeman/EMT: xi = effective relative density of percolated electrolyte particles; mu = Bruggeman factor."
+inter_particle_sigma,"sigma^ter,eff_el = (sigma^ter,0_el * sin^2(theta) * (1-phi_g)/delta) * sum_k sum_l 2*a_{el_k,el_l}*n^V_{el_k}*Z_{el_k,el_l}*P_{el_k}",formula,Eq10+Eq19,stated_eq10,"a = pi*(min(r_el_k,r_el_l)*sin theta)^2 contact AREA; delta = grain-boundary interface thickness. AREA/THICKNESS form (NOT Holm constriction). ANALYTIC cousin of our sigma_ionic ~ CN^2*cov^0.5*f_p^3."
+percolated_TPB_volume,"lambda^V_TPB,per = sum_k sum_l l_{ed_k,el_l}*n^V_{ed_k}*Z_{ed_k,el_l}*P_{ed_k}*P_{el_l}",formula,Eq5,stated_eq5,"l = 2*pi*min(r_ed,r_el)*sin theta contact PERIMETER; only where BOTH phases percolate (P_ed*P_el)."
+percolated_TPB_surface,"lambda^S_TPB,per = sum_k (2*pi*r_ed_k*sin theta)*n^S_{ed_k}*P_{ed_k}",formula,Eq8,stated_eq8,"TPB at the electrode/dense-electrolyte interface."
+particles_per_volume,"n^V_{ed_k} = (1-phi_g)*psi_{ed_k}/(4*pi*r_ed_k^3/3)",formula,Eq6,stated_eq6,"phi_g = porosity."
+hydraulic_pore_radius,"r_g = (2/3)*[phi_g/(x*(1-phi_g))]*(sum_k psi_{ed_k}/r_ed_k + sum_l psi_{el_l}/r_el_l)^-1",formula,Eq11,stated_eq11,"Dusty-Gas porous gas transport (SOFC); x = solid-surface/pore-boundary area fraction (adjustable)."
+nondimensional_TPB,"lambda_tilde^V_TPB,per = lambda^V_TPB,per / [(1-phi_g)*sin theta / r_ed_bar^2]",formula,Eq17,stated_eq17,"non-dim: independent of r_bar, theta, phi_g; depends only on sig'_ed, sig'_el, psi_ed, r_el/r_ed."
+#
+# BLOCK 6 -- PSD discretization (normal distribution -> 9 sizes), Eq 12-15, Table 1.
+quantity,form_or_value,unit,eq_or_fig,source_type,note
+PSD_distribution,normal_gaussian,,Eq12,stated_text,"f = (1/(sigma*sqrt(2pi)))*exp(-(r-r_bar)^2/(2 sigma^2)); mean r_bar, std sigma."
+nondim_std_definition,"sig' = sigma / r_bar",dimensionless,Sec3.1,stated_text,"non-dimensional standard deviation = PSD width parameter."
+PSD_n_sizes,9,sizes,Eq13-15,stated_text,"normal dist discretized into 9 particle sizes over range -sqrt(2)*sig'+1 to sqrt(2)*sig'+1, step 2*sqrt(2)*sig'/9."
+PSD_volfrac_eq15,"psi_k = p_k*r_k^2 / sum_{l=1..9} p_l*r_l^2",formula,Eq15,stated_eq15,"size-k volume fraction (probability x r^2, normalized; cumulative<1 corrected by p_k/sum p_l)."
+#
+# BLOCK 6b -- Table 1: 9-size non-dimensional radii (r/r_bar) and normalized probabilities (example sig'=0.2 shape).
+size_index,r_over_rbar_form,probability_pct,eq_or_fig,source_type,note
+1,"1-8*sqrt(2)*sig'/9",6.77,Table1,stated_table1,"tail"
+2,"1-6*sqrt(2)*sig'/9",9.53,Table1,stated_table1,
+3,"1-4*sqrt(2)*sig'/9",12.2,Table1,stated_table1,
+4,"1-2*sqrt(2)*sig'/9",14.1,Table1,stated_table1,
+5,"1",14.8,Table1,stated_table1,"central (max prob) = mean radius"
+6,"1+2*sqrt(2)*sig'/9",14.1,Table1,stated_table1,
+7,"1+4*sqrt(2)*sig'/9",12.2,Table1,stated_table1,
+8,"1+6*sqrt(2)*sig'/9",9.53,Table1,stated_table1,
+9,"1+8*sqrt(2)*sig'/9",6.77,Table1,stated_table1,"tail (symmetric)"
+#
+# BLOCK 7 -- model validation conditions + example absolute sigma (SOFC 945 C; DO NOT transfer to battery).
+quantity,value,unit,condition,eq_or_fig,source_type,note
+validation_conditions,"theta=29.5deg, phi_g=30%, r_ed_bar=r_el_bar=0.25um",,Fig3 vs Kenney ref20,Fig3,stated_text,"analytic model (lines) vs numerical random-packing reconstruction (points) -> good agreement."
+contact_angle_theta,29.5,deg,example,Eq8,stated_text,"contact angle between particles (free parameter in the model)."
+porosity_phi_g,30,pct,example,Fig3,stated_text,"INPUT porosity (assumed), NOT a compaction prediction."
+interface_thickness_delta,5,nm,YSZ grain boundary,Sec3.4,stated_text,"inter-particle interface thickness for YSZ (Eq 10)."
+example_lambda_TPB_abs,11.6e12,m_per_m3,"theta=29.5,phi_g=0.3,psi_ed=0.5,r=0.25um,sig'=0.4",Fig5b,stated_text,"example absolute percolated TPB length per unit volume."
+intrinsic_sigma_LSM_945C,1e4,S_per_m,945C,Sec3.4,stated_text,"Chan ref21: LSM intra intrinsic sigma (resistivity 1e-4 Ohm*m). SOFC -- not battery."
+intrinsic_sigma_YSZ_intra_945C,6.7,S_per_m,945C,Sec3.4,stated_text,"Chan ref21: YSZ intra intrinsic (resistivity 0.15 Ohm*m)."
+intrinsic_sigma_YSZ_inter_945C,0.05,S_per_m,945C,Sec3.4,stated_text,"Chan ref21: YSZ specific INTER-particle ionic sigma (resistivity 20 Ohm*m)."
+example_sigma_tra_eff_ed,1953,S_per_m,"phi_g=0.3,psi_ed=0.5,r=0.25um,sig'=0.4,945C",Fig7,stated_text,"effective intra-particle ELECTRON conductivity (ed=LSM)."
+example_sigma_tra_eff_el,1.3,S_per_m,same,Fig7,stated_text,"effective intra-particle ION conductivity (el=YSZ)."
+example_sigma_ter_eff_el,0.87,S_per_m,same,Fig9,stated_text,"effective INTER-particle ION conductivity (el=YSZ). ~same order as intra (1.3) -> inter is DECISIVE for total ionic sigma."
+#
+# BLOCK 8 -- key design conclusions (Summary, stated).
+conclusion,direction,quantity,eq_or_fig,source_type,note
+small_mean_size_narrow_PSD,higher,lambda_TPB_per,Sec5,stated_text,"small mean particle radius + narrow PSD -> higher percolated TPB (more electrochemically active)."
+broad_PSD,lower,max_lambda_TPB_per,Fig4,stated_text,"poly-dispersed lowers max percolated TPB by ~32% (sig'=0.4) vs mono."
+large_ratio_broad_PSD,higher,inter_particle_ionic_sigma,Fig5+Fig9,stated_text,"large r_el/r_ed + broad PSD -> higher inter-particle ionic sigma + LOWER percolation volume-fraction threshold -> suppress Ni agglomeration, improve durability (Itoh ref40, Kim ref41)."
+tradeoff,opposing,lambda_TPB_vs_inter_sigma,Sec5,stated_text,"TRADE-OFF: small size/narrow PSD favors lambda_TPB; large ratio/broad PSD favors inter-sigma + lower threshold."
