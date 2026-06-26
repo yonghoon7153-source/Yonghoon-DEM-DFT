@@ -110,20 +110,21 @@
 | ⬜ | Kogut & Etsion (2002) | Elastic-plastic contact analysis of a sphere and a rigid flat | J. Appl. Mech. 69(5) 657 | 10.1115/1.1490373 |
 | ⚠paywall | Vu-Quoc & Zhang (1999) | An elastoplastic contact force-displacement model in the normal direction: displacement-driven version | Proc. R. Soc. A 455(1991) 4013 | 10.1098/rspa.1999.0488 — **유료 → SKIP** |
 | ⬜ | Pasha, Hassanpour, Ahmadian, Ghadiri (2014) | A linear model of elasto-plastic and adhesive contact deformation | Granular Matter 16(1) 151 | 10.1007/s10035-013-0476-y |
-| ⬜ | Greenwood & Williamson (1966) | Contact of nominally flat surfaces | Proc. R. Soc. A 295(1442) 300 | 10.1098/rspa.1966.0242 |
-| ⬜ | Johnson, Kendall, Roberts (1971) (JKR) | Surface energy and the contact of elastic solids | Proc. R. Soc. A 324(1558) 301 | 10.1098/rspa.1971.0141 |
+| ⚠paywall | Greenwood & Williamson (1966) | Contact of nominally flat surfaces | Proc. R. Soc. A 295(1442) 300 | 10.1098/rspa.1966.0242 — **유료 → SKIP** |
+| ⚠paywall | Johnson, Kendall, Roberts (1971) (JKR) | Surface energy and the contact of elastic solids | Proc. R. Soc. A 324(1558) 301 | 10.1098/rspa.1971.0141 — **유료 → SKIP** (Royal Society 구논문 유료) |
 | ⬜ | Derjaguin, Muller, Toporov (1975) (DMT) | Effect of contact deformations on the adhesion of particles | J. Colloid Interface Sci. 53(2) 314 | 10.1016/0021-9797(75)90018-1 |
-| ⬜ | Tabor (1977) | Surface forces and surface interactions | J. Colloid Interface Sci. 58(1) 2 | 10.1016/0021-9797(77)90366-6 |
-| ⬜ | Cundall & Strack (1979) | A discrete numerical model for granular assemblies | Géotechnique 29(1) 47 | 10.1680/geot.1979.29.1.47 |
-| ⬜ | Simo & Hughes (1998) 📕 | Computational Inelasticity | Springer (IAM 7) | 10.1007/b98904 |
+| ⚠paywall | Tabor (1977) | Surface forces and surface interactions | J. Colloid Interface Sci. 58(1) 2 | 10.1016/0021-9797(77)90366-6 — **유료 → SKIP** |
+| ⚠paywall | Cundall & Strack (1979) | A discrete numerical model for granular assemblies | Géotechnique 29(1) 47 | 10.1680/geot.1979.29.1.47 — **유료 → SKIP** |
+| ⚠paywall | Simo & Hughes (1998) 📕 | Computational Inelasticity | Springer (IAM 7) | 10.1007/b98904 — **유료(교과서) → SKIP** |
 | ⬜ | Klár, Gast, Pradhana, Fu, Schroeder, Jiang, Teran (2016) | Drucker-Prager elastoplasticity for sand animation | ACM TOG 35(4) 103 | 10.1145/2897824.2925906 |
 | ⬜ | Stomakhin, Schroeder, Chai, Teran, Selle (2013) | A material point method for snow simulation | ACM TOG 32(4) 102 | 10.1145/2461912.2461948 |
 | ⬜ | de Vaucorbeil, Nguyen, Sinaie, Wu (2020) | Material point method after 25 years: theory, implementation, and applications | Adv. Appl. Mech. 53 185 | 10.1016/bs.aams.2019.11.001 |
 | ⬜ | Ngandjong, Lombardo, Primo, Chouchane, Shodiev, Arcelus, Franco (2021) | Investigating electrode calendering and its impact on electrochemical performance by means of a new discrete element method model | J. Power Sources 485 229320 | 10.1016/j.jpowsour.2020.229320 |
 
 ## ★ 접근성 현실 (2026-06-26) — 정전은 대부분 유료, 안 사도 됨
-사용자 확인 유료(⚠paywall): **Walton–Braun 1986 · CEB 1987 · Vu-Quoc & Zhang 1999** (Thornton 1997·Jackson–Green
-2005 는 접근 가능 — 정정).  → **유료 정전 PDF는 굳이 구하지 말 것.**  현실적 intake = **단 2~3편**:
+**대부분의 정전이 유료**(사용자 확인).  ★ **확인된 접근 가능 = Thornton 1997 · Jackson–Green 2005** (+ Luding 2008·
+리뷰는 미확인이나 저자페이지 free 가능).  유료 확정 = Walton–Braun · CEB · Vu-Quoc–Zhang · Greenwood–Williamson ·
+JKR · Tabor 1977 · Cundall–Strack · Simo–Hughes.  → **유료 정전 PDF는 굳이 구하지 말 것.**  현실적 intake = **단 2~3편**:
 1. **Luding 2008** (우리 모델 자체 k₂/k_c/φ_f; 저자 Twente 페이지에 free) — ★ 이거 하나가 핵심.
 2. **리뷰 1편** — Di Renzo & Di Maio 2004 *또는* Thornton–Cummins–Cleary 2013: linear-hysteretic + EP 접촉모델 **정전 내용을 한 편에 요약** → 정전들(Walton/CEB/Thornton/Jackson)을 *이 리뷰로 인용*.
 3. 교과서(Tabor·Johnson)는 **도서관/발췌**로 근거만.
