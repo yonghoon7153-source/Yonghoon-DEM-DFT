@@ -1,0 +1,3 @@
+cathode_AM,exp_name,ptfe_wt_pct,rate,capacity_mAhg,temp_C,source,note
+NCM_2,No.1,0.5,1C,150,30,annual report fig13,smooth surface; better rate
+NCM_3,No.2,0.5,1C,135,30,annual report fig13,satellite residue; worse rate

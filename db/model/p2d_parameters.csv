@@ -1,0 +1,15 @@
+parameter,value,unit,source,note
+i0_NCM,5,A/m2,kickoff p9,exchange current density
+DLi_NCM,1e-14,m2/s,kickoff p9,Li diffusivity in NCM (kickoff also shows 1e-16 - ambiguous; see ISSUES #3)
+sigma_Liion_cathode,0.25,mS/cm,kickoff p9,assumed effective ionic cond (NOTE: measured composite 0.057-0.062; see ISSUES #2)
+sigma_Liion_bulk,1,mS/cm,kickoff p9,bulk SE in kickoff (vs measured LPSCl 2.0)
+sigma_e_cathode,10,mS/cm,kickoff p9,electronic cond of cathode (NOTE: measured 0.04-0.05; see ISSUES #2)
+E_NCM,221,GPa,kickoff p9,NCM Young modulus
+E_LPSCl,22.3,GPa,kickoff p9,LPSCl Young modulus
+P_operating,150,MPa,kickoff p9,operating/driving pressure
+P_fabrication,450,MPa,kickoff p6,composite cathode fabrication pressure (pellet d=10mm)
+sigma_ion_sweep_ref,5,mS/cm,annual report p39,"report text ref for ion sweep 5->10 mS/cm (INCONSISTENT with kickoff 0.25; see ISSUES #2)"
+areal_capacity_levels,4/6/8,mAh/cm2,kickoff,design variable (6 = Ref)
+fam_levels,0.7/0.8/0.9,-,kickoff,active material fraction (0.8 = Ref)
+PS_ratio_levels,3:7/5:5/7:3,-,kickoff,Poly:Single ratio (5:5 = Ref)
+model_fidelity_target,95,%,annual report,RMSE of 0.2C+ profile at 60C

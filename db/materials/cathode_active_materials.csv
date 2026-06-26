@@ -1,0 +1,5 @@
+exp_name,report_name,source,type,morphology,Ni_molpct_ICP,Co_molpct_ICP,Mn_molpct_ICP,Li_ratio,Ni_molpct_EDS,Co_molpct_EDS,Mn_molpct_EDS,D10_um,D50_um,D90_um,Dmin_um,Dmax_um,BET_m2g,tap_density_gcc,pH,excess_Li2CO3_pct,excess_LiOH_pct,moisture_ppm,spec_capacity_mAhg,true_density_gcm3,surface_note
+No.1,NCM_2,L&F,single-crystal,smooth,82.5,12.7,4.8,0.99,81,14,4,2.84,3.94,5.56,2.12,9.25,0.56,2.14,11.31,0.42,0.07,127,205.9,4.8,smooth clean surface
+No.2,NCM_3,L&F,single-crystal,satellite-particles,86.9,5.7,7.4,1.02,86,7,6,2.55,3.84,5.98,1.50,11.00,0.57,2.06,11.38,0.19,0.07,188,213.0,4.8,surface residue/satellite particles
+Poly,대립,unspecified,polycrystalline-NCM811,cauliflower-secondary,,,,,,,,,~10,,,,,,,,,,200.0,4.8,polycrystalline secondary (~10um) of many primary grains
+NCM_1,NCM_1,self-purchased,single-crystal,agglomerated,,,,,78,17,4,,5.0,,,,,,,,,,,4.8,agglomerated + surface impurities (excess Li salt); NOT in No.1/No.2/Poly set

@@ -1,0 +1,15 @@
+source,measurement,structure,material_SE,material_CAM,additive,binder,PTFE_wt,CAM_SSE_VGCF_wt,config,pressure_MPa,sigma_ionic_mScm,sigma_e_mScm,precision,note
+# Lee 2025 (Nat. Commun. 16, 4200) doi 10.1038/s41467-025-59363-4. EXPERIMENT (no DEM/MPM). LPSCl <1um SE + NCM811(PC-NCM)/NCM82(SC-NCM) CAM + VGCF + PTFE<300nm. sigma from EIS(Li+) / DCP(e-) on cells, eq sigma=l/(R*A). ALL stated/exact (not digitized). Use as frame[4] EXTERNAL EXPERIMENTAL ANCHOR for our sigma_ionic/sigma_e forms + Stage-2 carbon/binder work. NOTE recipe differs from ours (theirs VGCF 3 / PTFE 0.5 wt% vs our 1/1) -> absorb as TREND/penalty shape, map absolute only after additive-content correction.
+# --- SI Fig 5: PTFE binder wt% sweep (CAM:SSE:VGCF FIXED 80:17:3, 75 MPa). STAR Stage-2 calibration: binder KILLS both conductivities ---
+lee2025,SI_Fig5_PTFE_sweep,cathode,Li6PS5Cl,NCM82_SC,VGCF,PTFE,0.5,80:17:3,LiIn|LPSCl|NCM,75,0.069,34,exact_text,sweet spot; raising binder collapses both sigma
+lee2025,SI_Fig5_PTFE_sweep,cathode,Li6PS5Cl,NCM82_SC,VGCF,PTFE,2,80:17:3,LiIn|LPSCl|NCM,75,0.024,4.5,exact_text,2wt% -> sigma_i -65pct sigma_e -87pct
+lee2025,SI_Fig5_PTFE_sweep,cathode,Li6PS5Cl,NCM82_SC,VGCF,PTFE,5,80:17:3,LiIn|LPSCl|NCM,75,0.007,0.011,exact_text,5wt% -> sigma_i -90pct sigma_e -99.97pct (3000x); binder insulates+blocks contact
+# --- Fig 4e,f: production 0.5 wt% PTFE electrode, co-rolled vs freestanding (same composition) ---
+lee2025,Fig4ef_electrode_co,cathode,Li6PS5Cl,NCM82_SC,VGCF,PTFE,0.5,80:17:3,co-rolled,75,0.076,33,exact_text,co-rolled production electrode
+lee2025,Fig4ef_electrode_free,cathode,Li6PS5Cl,NCM82_SC,VGCF,PTFE,0.5,80:17:3,freestanding,75,0.069,34,exact_text,freestanding; ~same as co (composition-set)
+# --- Fig 4c,d: SSE layer (LPSCl + PTFE 0.1 wt%). sigma_ionic = INTRINSIC (not conductance); sigma_e shows SSE is e-insulating ---
+lee2025,Fig4cd_SSE_co,separator,Li6PS5Cl,none,none,PTFE,0.1,100:0:0,co-rolled,75,1.04,1.4e-7,exact_text,co-rolled SSE 50um; conductance 164 mS (thin)
+lee2025,Fig4cd_SSE_free,separator,Li6PS5Cl,none,none,PTFE,0.1,100:0:0,freestanding,75,1.29,2.6e-7,exact_text,freestanding SSE 500um; conductance 20 mS; intrinsic sigma higher but conductance lower (thickness) -- do NOT read co<free as worse compaction
+# --- SI Fig 4e,f: bulk LPSCl pellet (pristine vs ball-milled <1um). 3rd LPSCl bulk anchor (cf Bazzoun pellet 1.02, Cronau single-crystal 3.0) ---
+lee2025,SI_Fig4_bulk_pristine,bulk,Li6PS5Cl,none,none,none,0,100:0:0,pellet,,2.19,5.0e-4,exact_text,pristine LPSCl pellet
+lee2025,SI_Fig4_bulk_ballmill,bulk,Li6PS5Cl,none,none,none,0,100:0:0,pellet,,1.64,3.3e-4,exact_text,ball-milled <1um; sigma maintained (small drop) after particle-size reduction

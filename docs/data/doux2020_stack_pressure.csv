@@ -1,0 +1,39 @@
+# Doux 2020 (Adv. Energy Mater. 10, 1903253, DOI 10.1002/aenm.201903253) — LPSCl Li-metal stack-pressure data.
+# UCSD (Meng). System: Li6PS5Cl SE + Li-metal anode (+ LNO-NCA full cell). SAME SE as ours (LPSCl).
+# SCOPE: take SE pressure-mechanics / porosity / contact-vs-pressure ONLY. Li-metal shorting/capacity = NOT transferable to our composite cathode.
+# source field: text_stated = number printed in body text (RELIABLE); fig_digitized = read off figure (TREND only); table_stated = SI table (RELIABLE).
+# --- (A) stack pressure -> Li-metal short-circuit time (Fig 2b / SI Fig S4); symmetric cell 75 uA/cm2, 1h/1h ---
+quantity,stack_pressure_MPa,value,unit,figure,source,notes
+short_time,75,0,h,Fig2b/4f,text_stated,mechanical short on pressing BEFORE cycling (SI Fig S6 cracks)
+short_time,25,48,h,Fig2b/4e,text_stated,Li creeps between SE grains during plate/strip -> dendrite
+short_time,20,190,h,Fig2b/S4,text_stated,
+short_time,15,272,h,Fig2b/S4,text_stated,
+short_time,10,474,h,Fig2b/S4,text_stated,
+short_time,5,1000,h,Fig2b/S4/S5,text_stated,NO short >1000h (>= sign; experiment stopped). optimal operating pressure
+short_time,2,165,h,FigS3,fig_digitized,also stable (~165h shown) -> 5 MPa near lower bound
+# --- (B) stack pressure -> Li symmetric cell impedance (Fig 4c); interfacial contact, NOT bulk sigma ---
+impedance,1,500,ohm,Fig4c,text_stated,>500 ohm; poor contact (many voids)
+impedance,5,110,ohm,Fig4c,text_stated,
+impedance,10,50,ohm,Fig4c,text_stated,
+impedance,15,40,ohm,Fig4c,text_stated,
+impedance,20,35,ohm,Fig4c,text_stated,
+impedance,25,32,ohm,Fig4c,text_stated,~plateau; contact saturates ~20-25 MPa
+impedance_release,5,50,ohm,Fig4c,text_stated,after 25->5 MPa release: <half initial 5 MPa (110). IRREVERSIBLE plastic contact gain
+# --- (C) LPSCl pellet relative density / porosity (Table S2); theoretical density 1.860 g/cm3, fab 370 MPa ---
+rel_density,370,80.3,pct,TableS2,table_stated,pellet1 mass200.0 d13 t1.01 -> exp 1.492 g/cm3
+rel_density,370,84.9,pct,TableS2,table_stated,pellet2 mass201.2 d13 t0.96 -> exp 1.579 g/cm3
+rel_density,370,80.3,pct,TableS2,table_stated,pellet3 mass200.3 d13 t1.01 -> exp 1.494 g/cm3
+rel_density,370,83.0,pct,TableS2,table_stated,pellet4 mass200.3 d13 t0.99 -> exp 1.524 g/cm3
+rel_density,370,82.1,pct,TableS2,table_stated,AVERAGE rel density -> porosity ~18 pct (text "porosity of 18%")
+porosity,370,18,pct,Fig4/TableS2,text_stated,~20 pct rigid-sphere floor analog (our pure-SE 10 pct via softening+plasticity is BELOW this)
+# --- (D) bulk / material anchors (text/SI Methods) ---
+sigma_ion_pellet,370,2.25,mS_cm,SI_Methods,text_stated,LPSCl 200mg/13mm/~1mm cold-press; range 2-2.5 mS/cm (GB+pore incl). one more LPSCl bulk anchor
+Li_yield_strength,NA,0.8,MPa,Intro,text_stated,Li metal creep-dominated (Masias/Tariq); all operating P (5-75) are 6-100x this
+Li_yield_ratio_75MPa,75,100,x,page5,text_stated,75 MPa ~100x Li yield strength (0.8 MPa)
+# --- (E) full cell performance (Li | LPSCl | LNO-NCA, 5 MPa, C/10) — context, NOT cathode-microstructure transferable ---
+fullcell_cycles,5,229,cycle,Fig3b,text_stated,>200 cycle no short; loading 3.55 mg/cm2
+fullcell_retention,5,80.9,pct_at_100cyc,Fig3b,text_stated,capacity retention over 100 cycles
+fullcell_CE_avg,5,98.86,pct,Fig3b,text_stated,average Coulombic efficiency over 229 cycles
+fullcell_1st_cap,5,150,mAh_g,Fig2c/3a,text_stated,first cycle specific capacity; 1st CE 69 pct
+fullcell_LiIn_1st_cap,25,140,mAh_g,Fig1,text_stated,Li-In anode @25 MPa: 1st discharge; 1st CE 66.5 pct then CE>99 (alloy creeps differently)
+# PROVENANCE: Li-metal shorting + capacity numbers are for the Li-METAL ANODE, not our composite cathode. Use SE pressure-mechanics (B,C,D) only. See lit_doux2020_stack_pressure_assb.md SS10/SS13.

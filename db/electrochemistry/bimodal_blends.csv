@@ -1,0 +1,6 @@
+config_PS,poly_wt_pct,single_wt_pct,single_base,blend_spec_capacity_mAhg,note
+P only,100,0,No.1,200.0,Poly only
+7:3,70,30,No.1,201.77,weighted avg of Poly 200 + No.1 205.9
+5:5,50,50,No.1,202.95,weighted avg
+3:7,30,70,No.1,204.13,weighted avg
+S only,0,100,No.1,205.9,No.1 single only

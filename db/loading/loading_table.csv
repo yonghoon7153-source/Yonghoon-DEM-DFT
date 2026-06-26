@@ -1,0 +1,11 @@
+sample,disc_pi,disc_area_cm2,areal_capacity_mAhcm2,spec_capacity_mAhg,electrode_mass_g,CAM_loading_mgcm2,source,note
+No.1,13,1.327,3.2,205.9,0.0258,,handwritten note,total electrode mass (AM 80%)
+No.2,13,1.327,3.2,213.0,0.0249,,handwritten note,total electrode mass
+Poly,13,1.327,3.2,200.0,0.0265,,handwritten note,total electrode mass
+Poly,13,1.327,6.0,200.0,0.0498,,handwritten note,thick film 6 mAh/cm2
+No.1,10,0.785,3.2,205.9,0.0153,,handwritten note,total electrode mass
+No.2,10,0.785,3.2,213.0,0.0149,,handwritten note,total electrode mass
+Poly,10,0.785,3.2,200.0,0.0157,,handwritten note,total electrode mass
+No.1,,,3.0,205.9,,14.57,260625 perf PDF,CAM-only loading at 3 mAh/cm2
+No.2,,,3.0,213.0,,14.08,260625 perf PDF,CAM-only loading
+Poly,,,3.0,200.0,,15.00,260625 perf PDF,CAM-only loading

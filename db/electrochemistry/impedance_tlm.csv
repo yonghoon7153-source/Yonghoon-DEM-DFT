@@ -1,0 +1,3 @@
+sample,cell_type,Rion_ohm_cm2,Rint_ohm_cm2,temp_C,equiv_circuit,source,note
+No.1,powder full cell,0.61,4.42,60,ri-rint-Zw-cpeint-re (TLM),2026-05-12 meeting,smooth surface; low interfacial R
+No.2,powder full cell,0.87,23.37,60,ri-rint-Zw-cpeint-re (TLM),2026-05-12 meeting,satellite residue; ~5x higher interfacial R

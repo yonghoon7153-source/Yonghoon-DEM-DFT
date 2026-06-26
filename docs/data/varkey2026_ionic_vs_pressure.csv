@@ -1,0 +1,8 @@
+source,structure,pressure_MPa,sigma_ionic_mScm_sim,sigma_ionic_mScm_exp,surface_area_contact_pct,precision,note
+# Varkey 2026 Fig 14 — separator (halide Li3YBrCl6 SE 97wt% + SBR 3wt%, E_SE=10.58 GPa). bulk halide sigma=1.8 mS/cm; confined-separator effective ~0.0025-0.005. ALL values digitized from a small embedded figure -> TREND only, not precise absolute. halide -> do NOT transfer absolute to LPSCl; use as stiffer-SE sigma-vs-P cross-check.
+varkey2026,separator,100,0.0026,0.0026,8.0,digitized_approx,low-P baseline
+varkey2026,separator,150,0.0027,0.0030,8.3,digitized_approx,
+varkey2026,separator,200,0.0029,0.0030,8.8,digitized_approx,paper: "increases noticeably at 200 MPa"
+varkey2026,separator,250,0.0030,0.0029,8.5,digitized_approx,markers cross ~here
+varkey2026,separator,300,0.0035,0.0032,10.0,digitized_approx,
+varkey2026,separator,350,0.0048,0.0045,13.0,digitized_approx,top-P; sim~exp, surface-area-in-contact peak 13pct

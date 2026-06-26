@@ -1,0 +1,5 @@
+component,material,wt_pct,true_density_gcm3,role,note
+AM,NCM811 single/poly,80,4.8,active material,No.1/No.2/Poly or bimodal blend
+SE,Li6PS5Cl ~1um,18,2.0,catholyte (ion path),"18.5 when PTFE 0.5; 17 when PTFE 2"
+VGCF,VGCF (or Super C),1,2.1,conductive (electron path),Super C used in some report cells
+PTFE,PTFE MW 500k,1,2.2,binder (fibrillation),"0.5/1/2 wt% studied; >=0.5 needed for freestanding film"

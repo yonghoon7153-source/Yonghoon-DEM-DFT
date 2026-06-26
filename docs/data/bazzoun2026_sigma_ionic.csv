@@ -1,0 +1,21 @@
+source,method,structure,material_SE,material_CAM,f_CAM_wt,pressure_MPa,D50_SE_um,sigma_eff_ion_mScm,precision,note
+# Bazzoun 2026 (JPS 661, 238682) sigma_ionic. LPSCl SE + NMC811 CAM + CNF + PTFE (dry-film). LIGGGHTS DEM -> FEM + RNM. SE E=22.1 GPa, nu=0.37; CAM E=161.5; SE D50=1.49 CAM D50=5.50 um. RNM contact R=1/(2*sigma*r_c)=Holm; Kirchhoff. RNM normalized intrinsic sigma=1 S/cm -> relative; abs scaled to bulk. RNM slightly UNDER-predicts vs FEM/exp (constriction-only, no field spreading), worse at high f_CAM.
+# --- experimental EIS anchors (full-blocking symmetric cell, 400 MPa assembly): stated values, exact ---
+bazzoun2026,experiment_EIS,cathode,Li6PS5Cl,NMC811,70,400,1.49,0.137,exact_text,exp anchor; CAM:SE:CNF:PTFE 70:27.7:2:0.3 wt% (45.3:52.7 vol)
+bazzoun2026,experiment_EIS,cathode,Li6PS5Cl,NMC811,75,400,1.49,0.101,exact_text,exp anchor; 75:22.7:2:0.3 wt% (52.2:45.5 vol)
+bazzoun2026,experiment_EIS,cathode,Li6PS5Cl,NMC811,80,400,1.49,0.065,exact_text,exp anchor; 80:17.7:2:0.3 wt% (59.5:38.3 vol)
+# --- bulk SE intrinsic (LPSCl pellet, 400 MPa, EIS): single-pellet incl grain boundary ---
+bazzoun2026,experiment_EIS_bulk,pellet,Li6PS5Cl,,0,400,1.49,1.02,exact_text,bulk LPSCl pellet (GB-incl) < Cronau single-crystal 3.0; our sigma_grain anchor cross-check
+# --- RNM pressure sweep (Fig 8a); 100 & 400 MPa endpoints derived from stated deltas, intermediate digitized ---
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,70,100,1.49,0.068,text_derived,sweep start; +0.067 mScm (+98%) to 400 MPa (stated)
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,70,200,1.49,0.100,digitized_approx,
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,70,300,1.49,0.122,digitized_approx,
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,70,400,1.49,0.135,text_derived,~=exp 0.137 (RNM matches at low f_CAM)
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,75,100,1.49,0.035,text_derived,+0.044 mScm (+126%) to 400 MPa (stated)
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,75,200,1.49,0.058,digitized_approx,
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,75,300,1.49,0.072,digitized_approx,
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,75,400,1.49,0.079,text_derived,RNM 0.079 < exp 0.101 (under-predict)
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,80,100,1.49,0.008,text_derived,+0.023 mScm (+291%) to 400 MPa (stated); highest relative gain
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,80,200,1.49,0.018,digitized_approx,
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,80,300,1.49,0.026,digitized_approx,
+bazzoun2026,RNM,cathode,Li6PS5Cl,NMC811,80,400,1.49,0.031,text_derived,RNM 0.031 << exp 0.065 (under-predict worst at high f_CAM)

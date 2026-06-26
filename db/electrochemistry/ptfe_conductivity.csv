@@ -1,0 +1,4 @@
+ptfe_wt_pct,recipe_AM_SE_VGCF_PTFE,sigma_electronic_mScm,sigma_ionic_mScm,method,note
+0.5,80:18.5:1:0.5,0.04-0.05,0.062,"e: Al/cathode/Al 50mV; i: SUS/Li/SE/cathode/SE/Li/SUS 200uA, SE ref 2mS/cm",highest ionic
+1.0,80:18:1:1,0.04-0.05,0.057,same,standard recipe
+2.0,80:17:1:2,0.04-0.05,0.019,same,ionic drops (PTFE blocks SE-SE contact)

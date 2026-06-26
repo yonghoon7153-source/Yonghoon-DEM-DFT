@@ -1,0 +1,3 @@
+sample,cell_type,voltage_range_V,temp_C,rate,CC_charge_mAhg,DC_discharge_mAhg,efficiency_pct,DCIR_ohm,source
+No.1,half-cell coin,2.5-4.3,25,0.1C,225.0,205.9,91.5,23.5,spec table image
+No.2,half-cell coin,2.5-4.3,25,0.1C,237.3,213.0,89.8,27.5,spec table image

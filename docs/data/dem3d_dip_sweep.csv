@@ -1,0 +1,16 @@
+am,mode,por_sphere,p_end,note
+0,plastic,9.0,0.293,pure-SE anchor (material=SE)
+20,plastic,39.01,0.293,
+20,rigid,36.48,0.293,
+35,plastic,38.89,0.293,
+35,rigid,36.80,0.293,
+50,plastic,38.33,0.293,
+50,rigid,37.02,0.292,
+65,plastic,37.11,0.292,not-equilibrated(framecap)
+65,rigid,36.19,0.293,
+75,plastic,36.99,0.293,
+75,rigid,37.58,0.293,
+85,plastic,35.79,0.293,not-equilibrated(framecap)
+85,rigid,36.14,0.294,
+95,plastic,34.10,0.293,
+95,rigid,41.32,0.293,
