@@ -1,0 +1,37 @@
+category,sample,porosity,kappa_eff_Sm,pressure_MPa,sinter_temp_C,heating_rate_Kpermin,holding_min,precision,note
+# Nisar et al., Comp. Part. Mech. 11 (2024) 2191-2201, DOI 10.1007/s40571-024-00773-4. OPEN ACCESS.
+# Material = porous NiAl intermetallic (NOT a battery; SPS-sintered metal). Single-PHASE solid+pore (no AM/SE/CAM).
+# DEM resistor network: R_ij = R_i + R_j + R_c (eq17), nodes=particle centres, Kirchhoff (eq1) first law, Ohm I_ij=K_ij(V_j-V_i) (eq3).
+# Per-particle hemisphere conductance K_i normalized by enclosing-cylinder K_cyl=lambda*pi*r_i (eq19,20): K_i/K_cyl = 1.08*a/r_i.
+# Neck radius a from VOLUME-PRESERVATION (overlap volume redistributed to a cylindrical neck) -- Rojek et al. [36] two-particle geometry,
+#   NOT Coble a=sqrt(2 r* h) (eq21, Coble OVER-estimates neck at high densification per [36]).
+# GB-overlap correction: f_gbf = sum(S_ij^neck)/S_i <= 1 (eq22-23); if violated, ALL necks of particle i scaled by alpha_i (eq24),
+#   alpha_i <= 2 r_i / sqrt(sum a_ij^2) (eq25). Compensates NON-PHYSICAL multi-contact overlaps at high density.
+# GB-within-neck resistance (porosity inside necks, SEM Fig2/Fig5): layer thickness delta_gb, kappa_gb = epsilon*kappa, K_c = epsilon*kappa*pi*a^2/delta_gb (eq26).
+#   Calibrated fitting params: delta_gb = 0.23 um, epsilon (conductivity reduction factor) = 0.16. (calibrated on Sample 3, validated on 1/2/4.)
+# Intrinsic material: rho0 = 5910 kg/m^3 (theoretical bulk density), kappa_e (fully dense) = 9.8e5 S/m (=0.98 MS/m). specific capacity c=2e6 F/kg (numerical only).
+# Boundary: top V=3.5e-5 V, bottom 0 V, insulated cylinder wall. kappa_eff = -I*L/(dV*A) (eq28). Convergence tol beta=2e-4 (eq15), ~40 iter, dt=5 us.
+# DEM sample: >17,000 particles, real PSD diameter 1.5-20 um (max:min ratio 15), cylinder D=123.6 um x H=202 um, initial/tap density 65%.
+# --- EXPERIMENT: four-point-probe sigma on SPS-sintered NiAl, Table 1 (stated, exact) ---
+experiment,Sample_1,0.216,4.33e5,5,1200,100,10,stated,Table1 SPS NiAl; porosity=1-(rho/rho0)
+experiment,Sample_2,0.164,6.14e5,5,1300,100,10,stated,Table1 SPS NiAl
+experiment,Sample_3,0.106,7.44e5,30,1100,100,10,stated,Table1 SPS NiAl; CALIBRATION sample for GB params
+experiment,Sample_4,0.050,8.77e5,30,1200,100,10,stated,Table1 SPS NiAl; lowest porosity / highest conductivity
+# --- DEM model WITHOUT grain-boundary resistance (particle resistance only), Fig 8 (digitized; TREND -- consistently OVER-predicts vs exp) ---
+dem_no_gb,Sample_4,0.050,1.21e6,30,1200,100,10,digitized_approx,Fig8 ~12.1e5; over-predicts (no GB resistance)
+dem_no_gb,Sample_3,0.106,1.10e6,30,1100,100,10,digitized_approx,Fig8 ~11.0e5; over-predicts
+dem_no_gb,Sample_2,0.164,0.91e6,5,1300,100,10,digitized_approx,Fig8 ~9.1e5; over-predicts
+dem_no_gb,Sample_1,0.216,0.68e6,5,1200,100,10,digitized_approx,Fig8 ~6.8e5; over-predicts (smallest gap)
+# --- DEM model WITH calibrated GB resistance (eps=0.16, delta_gb=0.23 um), Fig 10 (digitized; close agreement with exp -- VALIDATION) ---
+dem_with_gb,Sample_4,0.050,8.8e5,30,1200,100,10,digitized_approx,Fig10 ~8.8e5; matches exp 8.77e5
+dem_with_gb,Sample_3,0.106,7.7e5,30,1100,100,10,digitized_approx,Fig10 ~7.7e5; matches exp 7.44e5 (calibration pt)
+dem_with_gb,Sample_2,0.164,7.6e5,5,1300,100,10,digitized_approx,Fig10 ~7.6e5; near exp 6.14e5 (slight over)
+dem_with_gb,Sample_1,0.216,4.5e5,5,1200,100,10,digitized_approx,Fig10 ~4.5e5; matches exp 4.33e5
+# --- Calibration parametric study (Fig 9), grain-boundary thickness x reduction-factor map, ranges scanned ---
+calib_param,delta_gb_range_um,,,,,,,stated,Fig9 axis: 0.1-0.3 um (overlaps SEM-measured 0.15-0.4 um); SEM single GB measured 0.36 um (Fig5b)
+calib_param,epsilon_range,,,,,,,stated,Fig9 axis: 0.1-0.5 conductivity reduction factor
+calib_param,delta_gb_chosen_um,,,,,,,stated,0.23 um ADOPTED
+calib_param,epsilon_chosen,,,,,,,stated,0.16 ADOPTED
+# --- Neck-conductance constants (formulation) ---
+constant,K_over_Kcyl_slope,,,,,,,stated,K_i/K_cyl = 1.08 * (a/r_i)  (eq19, hemisphere normalized by cylinder K_cyl=lambda*pi*r_i)
+constant,Coble_neck,,,,,,,stated,a = sqrt(2 r* h), r*=2 r_i r_j/(r_i+r_j)  (eq21; REJECTED -- over-estimates at high density per [36])

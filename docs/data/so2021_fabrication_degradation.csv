@@ -1,0 +1,79 @@
+block,quantity,condition,value,unit,precision,source_fig,note
+# ============ FABRICATION (cold-press, SE-only calibration vs Sakuda) ============
+fabrication,relative_density,Pfab=0_initial_loose,0.30,-,digitized,Fig4a,initial packing of SE clusters (alpha=0.65 run)
+fabrication,relative_density,Pfab=50MPa,0.62,-,digitized,Fig4a,Sim alpha=0.65 (red alpha=1.0 lower ~0.62; blue alpha=0.5 higher ~0.67)
+fabrication,relative_density,Pfab=74MPa,0.70,-,digitized,Fig4a,matches Sakuda experiment open circles at 74 MPa
+fabrication,relative_density,Pfab=100MPa,0.74,-,digitized,Fig4a,alpha=0.65 black curve
+fabrication,relative_density,Pfab=200MPa,0.83,-,digitized,Fig4a,
+fabrication,relative_density,Pfab=360MPa,0.90,-,digitized,Fig4a,Sakuda SEM comparison point (Fig4g)
+fabrication,relative_density,Pfab=500MPa,0.95,-,digitized,Fig4a,alpha=0.65; alpha=0.50 reaches ~0.96
+fabrication,contact_area_ratio_alpha,calibration_best_fit,0.65,-,stated,Fig3-4,sub-particle non-dimensional contact area ratio alpha (eq9 A_con=pi*h_ov*R_eff*alpha); best Sakuda match
+fabrication,contact_area_ratio_alpha,tested_set,0.50/0.65/0.80/1.00,-,stated,Fig4a,alpha=1.0 (no area correction) UNDER-densifies vs Sakuda; 0.65 best
+fabrication,electrode_height_SEonly,Pfab=50MPa_initial,~13.5e4,um(plot_scale),digitized,Fig3b,height y-axis x1e4 um (cluster-scale model); loading then unloading springback
+fabrication,electrode_height_SEonly,Pfab=500MPa_final,~6.5e4,um(plot_scale),digitized,Fig3b,higher Pfab -> lower final height; springback on unload (height rises but not to initial)
+fabrication,springback,unload_all_Pfab,partial_recovery,-,stated,Fig3b,height increases on unloading but does NOT return to initial (permanent plastic h_eq)
+# ============ MATERIAL / MODEL PARAMETERS (Table I) ============
+params,e_COR,both,0.5,-,stated,TableI,coefficient of restitution (This study)
+params,E_SE_LPS,sulfide_75Li2S25P2S5,24,GPa,stated,TableI,Young modulus sulfide SE (Sakuda et al ref9)
+params,E_AM_Si,silicon_anode,70,GPa,stated,TableI,Young modulus Si AM (Sethuraman et al ref34)
+params,L_cat,cathode_layer,60,um,stated,TableI,thickness of cathode layer (This study) - used for areal spring constant in intercalation
+params,L_SE,SE_layer,60,um,stated,TableI,thickness of SE layer (This study)
+params,Pfab_range,fabrication_sweep,50-500,MPa,stated,TableI,fabrication pressure sweep
+params,SOCmax_range,intercalation_sweep,8-24,%,stated,TableI,maximum State of Charge (partial intercalation of Si)
+params,mu_friction,both,0.5,-,stated,TableI,friction coefficient (This study)
+params,nu_Poisson,both,0.3,-,stated,TableI,Poisson ratio (This study)
+params,beta_Si_expansion,Si_intercalation,2.8,-,stated,TableI,Si expansion factor beta_Si (relative volume expansion of fully charged AM; Obrovac et al ref35)
+params,sigma_H_SE_hardness,LPS,1.9,GPa,stated,TableI,Hardness of SE (McGrogan et al ref31) -> yield threshold F_th=2/3*sigma_H*A_con
+params,phi_AM_rel,anode_AM_volfrac,0.4,-,stated,TableI,AM volume fraction relative to all solids in anode
+params,cluster_diameter,SE_aggregates,5-10,um,stated,Methods,particle grouped in clusters dia 5-10um (matches Sakuda SEM observation)
+params,Si_capacity,literature_context,~4200,mAh/g,stated,Intro,high-capacity Si; may expand up to ~300% (volume) on full lithiation
+params,n_particles_intercalation,2D_domain,1600,-,stated,Shortcomings,limited to 1600 particles in AM-SE intercalation sims (particle-number independence caveat)
+params,gamma_cohesive_Li2S,cohesive_energy,2.8,J/m2,stated,eq10_text,cohesive energy gamma for Li2S electrolyte (sigma_coh=2*gamma/delta)
+params,delta_cohesive_zone,crack_length_scale,~1,nm,stated,eq10_text,length of cohesive zone delta ~1nm (ref 2,24,31)
+params,sigma_coh_fracture_strength,Li2S_estimate,5.6,GPa,stated,eq10_text,fracture strength sigma_c=2*gamma/delta=5.6 GPa (eq10)
+params,hardness_to_fracture_ratio,Li2S,0.34,-,stated,eq10_text,sigma_H/sigma_c=1.9/5.6=0.34 -> hardness<<fracture -> initial failure DOMINATED BY PLASTIC (not brittle)
+# ============ INTERCALATION / DEGRADATION (cyclic, Si AM expansion) ============
+degradation,volume_change_dVV,SOCmax=8pct,22,%,stated,Fig6/7,electrode-level Delta V/V at SOCmax 8%
+degradation,volume_change_dVV,SOCmax=24pct,67,%,stated,Fig6/7,electrode-level Delta V/V at SOCmax 24% (large expansion -> cracking)
+degradation,SE_normal_stress,SOCmax=8pct_lithiated,~0to2,GPa,digitized,Fig6c,histogram peak ~0.5-1 GPa; mostly compressive (positive); SOC8 narrower
+degradation,SE_normal_stress,SOCmax=24pct_lithiated,up_to_~6to8,GPa,digitized,Fig6c,SOC24 tail extends to 6-8 GPa; some tensile (negative ~ -2); EXCEEDS H_SE 1.9 -> plastic+crack
+degradation,SE_contact_stress_vs_hardness,major_portion_SOC24,>1.9,GPa,stated,Fig6_text,major portion of shear stress higher than hardness 1.9 GPa -> plastic failure / cohesive bond loss
+# --- porosity vs cycle (Fig8c, Pfab=100MPa) ---
+degradation,porosity,Pfab100_SOC8_baseline,0.12,-,digitized,Fig8c,porosity at delithiated (cycle integer) SOCmax 8%
+degradation,porosity,Pfab100_SOC8_lithiated_peak,0.145,-,digitized,Fig8c,porosity rises during intercalation expansion (peak at half-cycle); +0.025 swing
+degradation,porosity,Pfab100_SOC16_baseline,0.155,-,digitized,Fig8c,
+degradation,porosity,Pfab100_SOC16_lithiated_peak,0.185,-,digitized,Fig8c,
+degradation,porosity,Pfab100_SOC24_baseline,0.18,-,digitized,Fig8c,higher SOC -> higher porosity (more void on expansion-contraction)
+degradation,porosity,Pfab100_SOC24_lithiated_peak,0.21,-,digitized,Fig8c,porosity INCREASES with SOCmax (void created on delithiation contraction)
+# --- porosity vs cycle (Fig8d, Si SOCmax=24%, vary Pfab) ---
+degradation,porosity,Pfab100_SOC24,0.22,-,digitized,Fig8d,higher fabrication pressure -> LOWER porosity (denser start)
+degradation,porosity,Pfab200_SOC24,0.155,-,digitized,Fig8d,
+degradation,porosity,Pfab500_SOC24,0.06,-,digitized,Fig8d,densest; least void formation on cycling
+# --- wall pressure during intercalation (Fig8a, Pfab=100MPa) ---
+degradation,wall_pressure_peak,Pfab100_SOC8,~200,MPa,digitized,Fig8a,periodic wall pressure spike on lithiation (AM pushes against SE layer)
+degradation,wall_pressure_peak,Pfab100_SOC16,~450to500,MPa,digitized,Fig8a,
+degradation,wall_pressure_peak,Pfab100_SOC24,~850to900,MPa,digitized,Fig8a,large SOC -> large expansion -> high periodic wall pressure (>fabrication pressure)
+# --- electrode height swing (Fig8b, Pfab=100MPa) ---
+degradation,height_swing,Pfab100_SOC8,~59to61,um,digitized,Fig8b,height oscillates with cycle (lithiation expands)
+degradation,height_swing,Pfab100_SOC24,~59to66,um,digitized,Fig8b,larger SOC -> larger height oscillation amplitude
+# --- SE tortuosity vs cycle (Fig9a Pfab=100MPa; Fig9b SOC24) ---
+degradation,tortuosity_SE,Pfab100_SOC8,~1.5to3,-,digitized,Fig9a,low SOC -> small tortuosity oscillation
+degradation,tortuosity_SE,Pfab100_SOC16_peak,~12to15,-,digitized,Fig9a,higher at delithiation (closer packed) but cracks raise tau on lithiation
+degradation,tortuosity_SE,Pfab100_SOC24_peak,~25,-,digitized,Fig9a,LARGE tortuosity spikes from CRACK development (Fig7); dominates kappa_rel change
+degradation,tortuosity_SE,Pfab500_SOC24_peak,~10to15,-,digitized,Fig9b,higher fabrication pressure -> less cracking -> smaller tau spikes (less degradation)
+# --- relative SE ionic conductivity kappa_rel = phi_SE/tau_SE (Fig9c Pfab=100; Fig9d SOC24) ---
+degradation,kappa_rel_SE,Pfab100_SOC8,0.22to0.28,-,digitized,Fig9c,kappa_rel HIGHER during delithiation (SE more closely packed); SOC8 least degraded
+degradation,kappa_rel_SE,Pfab100_SOC16,0.03to0.15,-,digitized,Fig9c,deeper swing; permanent decrease over cycles
+degradation,kappa_rel_SE,Pfab100_SOC24,0.02to0.12,-,digitized,Fig9c,LARGEST permanent drop (crack-dominated); kappa_rel min ~0.02-0.05
+degradation,kappa_rel_SE_permanent_decrease,Pfab_dependence,less_at_high_Pfab,-,stated,Fig9d_text,permanent decrease in kappa_rel SIGNIFICANTLY LESS when fabrication pressure higher (key result)
+degradation,kappa_rel_recovery,small_expansion,recovers_near_original,-,stated,Abstract,when expansion small contact-area+conductivity may RECOVER to original after contraction
+degradation,kappa_rel_permanent_loss,large_expansion,permanent_reduction,-,stated,Abstract,large expansion -> plastic deformation+cracking -> PERMANENT reduction of both contact area and SE conductivity
+# --- AM-SE contact area vs cycle (Fig10a Pfab=100 vary SOC; Fig10b SOC24 vary Pfab) ---
+degradation,AM_SE_contact_area,Pfab100_SOC8_lithiated,~2.8e4,m2/m3,digitized,Fig10a,contact area HIGHER during lithiation (AM expands into SE); peak ~2.8e4
+degradation,AM_SE_contact_area,Pfab100_SOC8_delithiated,~0.5e4,m2/m3,digitized,Fig10a,DROPS on delithiation (contraction -> contact loss); swing 0.5-2.8 e4
+degradation,AM_SE_contact_area,Pfab100_SOC24_lithiated,~3.3e4,m2/m3,digitized,Fig10a,higher SOC -> higher peak contact area
+degradation,AM_SE_contact_area,Pfab500_SOC24_lithiated,~4.2e4,m2/m3,digitized,Fig10b,higher fabrication pressure -> higher overall contact area AND reduces contact-area LOSS over time
+degradation,AM_SE_contact_area_loss,delithiation_first_cycle,largest,-,stated,Fig10_text,contact area decreases between cycles especially at first cycle; higher Pfab mitigates loss
+degradation,crack_damage,Pfab100_SOC24,significant_cracks,-,stated,Fig7,electrode fabricated at 100MPa shows significant cracking after intercalation expansion (white crack lines)
+degradation,crack_damage,Pfab200_SOC24,much_less_cracking,-,stated,Fig7,denser electrode from high Pfab much less crack damage after intercalation (key durability result)
+degradation,crack_damage,Pfab100_SOC8,relatively_unaffected,-,stated,Fig7_text,SOC8 relatively unaffected; cracks appear at SOC24 (expansion threshold)

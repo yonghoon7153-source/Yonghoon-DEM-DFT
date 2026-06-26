@@ -1,0 +1,93 @@
+category,quantity,value,unit,condition,source_type,notes
+formulation,contact_radius_r_c,(3*f_n*r_eff/(4*E_eff))^(1/3),m,Hertz contact at normal force f_n,stated_eq13,classical Hertz; r_eff=equiv radius Eq8 E_eff=equiv Young Eq7
+formulation,contact_resistance_R_c_ij,(rho_i+rho_j)/(4*r_c),Ohm,two-particle contact zone,stated_eq12,Holm constriction model R=(rho_i+rho_j)/(4 r_c) = sum of two spreading resistances
+formulation,contact_resistance_substituted_R_c_ij,0.5*(rho_i+rho_j)*(E_eff/(6*f_n*r_eff^?))^(1/3),Ohm,Holm+Hertz combined,stated_eq14,R_c_ij=1/2 (rho_i+rho_j) (E_eff/(6 f_n r_eff))^(1/3) -> R_c proportional f_n^(-1/3)
+formulation,total_particle_particle_R_ij,R_i+R_c_ij+R_j,Ohm,full path centre-to-centre,stated_eq11,bulk_i + contact + bulk_j (three resistors in series)
+formulation,bulk_resistance_R_i_pp,(rho_i/(2*pi*r_i))*ln((r_i^2-r_j^2-L_ij^2+4*r_i*L_ij)/(r_i^2-r_j^2+L_ij^2)),Ohm,half-sphere under elastic deformation,stated_eq17a,integral of resistivity over deformed half-sphere geometry
+formulation,bulk_resistance_R_iw_pw,(rho_i/(2*pi*r_i))*ln(2*r_i/delta - 1),Ohm,particle-wall bulk resistance,stated_eq20,delta = wall-induced elastic deformation (overlap)
+formulation,contact_resistance_particle_wall_R_c_iw,0.5*(rho_i+rho_w)*(E_eff/(6*f_n*r_eff))^(1/3),Ohm,particle-wall contact,stated_eq21,same Holm+Hertz form as particle-particle
+formulation,total_particle_wall_R_iw,R_i+R_c_iw,Ohm,particle-to-wall path,stated_eq19,
+formulation,network_equation,G*V=I,-,nodal conductivity matrix,stated_eq23,G conductivity matrix V potentials I currents; nodal analysis = Kirchhoff current law
+formulation,kirchhoff_current_law,sum_j C_ij*(V_i-V_j)+C_iw*(V_w-V_i)=0,A,current balance at node i,stated_eq26,C_ij=1/R_ij conductances; sum of branch currents = 0
+formulation,current_load_relation,I_in=(F_n/F_ext)*I_0,A,mechanical-electrical coupling,stated_eq25,branch current scales with contact normal force F_n / external force F_ext
+formulation,electroactivity_index,N_electroactive_fragments/N_total_fragments,-,per sieve cut size,stated_eq29,fraction of fragments at each size that carry current
+hertz_mindlin,equiv_Young_modulus_E_eff,1/E*=(1-nu_i^2)/E_i+(1-nu_j^2)/E_j,Pa,contact mechanics,stated_eq7,
+hertz_mindlin,equiv_radius_r_eff,1/r*=1/r_i+1/r_j,m,contact mechanics,stated_eq8,
+hertz_mindlin,normal_spring_stiffness_k_n,2*E_eff*sqrt(r_eff*delta_n),N/m,Hertz normal,stated_eq9,
+hertz_mindlin,tangential_spring_stiffness_k_t,8*G_eff*sqrt(r_eff*delta_n),N/m,Hertz-Mindlin tangential,stated_eq10,G_eff equiv shear modulus
+sim_param_case1,material,Nickel ball,,single-particle compression validation,stated_table1,Case1 vs Yim&Paik 1998 analytical
+sim_param_case1,nickel_poisson_ratio,0.312,-,Ni ball,stated_table1,
+sim_param_case1,nickel_density,8908,kg/m3,Ni ball,stated_table1,
+sim_param_case1,nickel_young_modulus,199.5,GPa,Ni ball,stated_table1,
+sim_param_case1,nickel_diameter,1.0,mm,Ni ball,stated_table1,
+sim_param_case1,nickel_resistivity,8.0e-8,Ohm*m,Ni ball,stated_table1,
+sim_param_case1,copper_poisson_ratio,0.343,-,Cu pad,stated_table1,
+sim_param_case1,copper_density,8960,kg/m3,Cu pad,stated_table1,
+sim_param_case1,copper_young_modulus,129.8,GPa,Cu pad,stated_table1,
+sim_param_case1,copper_resistivity,1.8e-8,Ohm*m,Cu pad,stated_table1,
+validation_case1,R_vs_force_trend,decreases sharply then plateau,Ohm,0-100 N Ni ball / Cu pad,stated_fig5,almost perfect match to Yim&Paik 1998 analytical; R~0.032 Ohm at low F -> ~0.001 at high F (digitized)
+validation_case1,R_low_force,~0.032,Ohm,F approx 1 N,digitized_fig5,TREND only; very small contact area limits electron flow
+validation_case1,R_high_force,~0.001,Ohm,F approx 100 N,digitized_fig5,TREND only; plateau reached
+validation_case2,R_vs_force_trend,decreases sharply then near-constant,Ohm,particle-particle vs Birkholz2019 Ott2013,stated_fig6,excellent agreement; R~0.05 at low F -> ~0.002 at high F (digitized)
+sim_param_chain,N_particles_chain,41,-,1D stainless-steel chain (Falcon et al.),stated_table2,N_max=50 in experiment; 41 modelled
+sim_param_chain,chain_diameter,8,mm,stainless-steel bead,stated_table2,
+sim_param_chain,chain_poisson_ratio,0.27,-,stainless steel,stated_table2,
+sim_param_chain,chain_density,7750,kg/m3,stainless steel,stated_table2,
+sim_param_chain,chain_young_modulus,1.95e11,Pa,stainless steel,stated_table2,
+sim_param_chain,chain_resistivity,72,uOhm*cm,stainless steel,stated_table2,
+sim_param_chain,imposed_current,0.01;0.001;0.0001,A,three DC intensities,stated_table2,
+validation_chain,R_eq_vs_force,decreasing with F,Ohm,1-500 N chain vs Falcon et al. 2004,stated_fig9,DEM under-predicts at low F (oxide layer not modelled); good match above ~100 N
+sim_param_bed,particle_diameter_bed,2,mm,3D steel particle bed (Bourbatache),stated_table3,5 cm cylinder
+sim_param_bed,bed_poisson_ratio,0.3,-,steel bed,stated_table3,
+sim_param_bed,bed_density,7850,kg/m3,steel bed,stated_table3,
+sim_param_bed,bed_young_modulus,2e11,Pa,steel bed,stated_table3,
+sim_param_bed,bed_resistivity,1.71e-8,Ohm*m,steel bed,stated_table3,
+sim_param_bed,bed_imposed_current,0.01,A,top-bottom plate,stated_table3,
+validation_bed,R_vs_force_3layer,3D matches exp better than 2D,Ohm,3/5/10-layer beds vs Bourbatache 2012,stated_fig12,2D-3D divergence grows with layers; 3D R~50-2000 Ohm over 20-100 N (digitized)
+validation_bed,potential_steady_time,0.5,s,100 N + 0.01 A,stated_fig11,potential gradient propagates and stabilises; current follows force chains
+hpt_productB,particle_diameter,0.5,mm,Product B conductive material,stated_table4,bonded particle model (BPM) clumps
+hpt_productB,N_particles,1051,-,Product B,stated_table4,
+hpt_productB,fragment_diameter,0.06-0.2,mm,Product B fragments,stated_table4,
+hpt_productB,N_fragments,154497,-,Product B,stated_table4,
+hpt_productB,poisson_ratio,0.3,-,Product B,stated_table4,
+hpt_productB,density,3.81e4,kg/m3,Product B,stated_table4,note high value as-listed
+hpt_productB,young_modulus,7e8,Pa,Product B,stated_table4,
+hpt_productB,resistivity,4.31e-5,Ohm*m,Product B,stated_table4,low resistivity = good conductor
+hpt_productB,steady_resistance,~6,Ohm,HPT across discs,stated_fig16,low R maintained <10 Ohm
+hpt_productD,particle_diameter,0.9,mm,Product D conductive material,stated_table4,
+hpt_productD,N_particles,180,-,Product D,stated_table4,
+hpt_productD,fragment_diameter,0.06-0.3,mm,Product D fragments,stated_table4,
+hpt_productD,N_fragments,82440,-,Product D,stated_table4,
+hpt_productD,density,3.75e4,kg/m3,Product D,stated_table4,
+hpt_productD,young_modulus,7e8,Pa,Product D,stated_table4,
+hpt_productD,resistivity,4.31e-5,Ohm*m,Product D,stated_table4,
+hpt_productD,steady_resistance,~3.4,Ohm,HPT across discs,stated_fig16,low R maintained
+hpt_silica,particle_diameter,1.45,mm,silica sand (insulator),stated_table4,
+hpt_silica,N_particles,43,-,silica sand,stated_table4,
+hpt_silica,fragment_diameter,0.06-0.38,mm,silica fragments,stated_table4,
+hpt_silica,N_fragments,55384,-,silica sand,stated_table4,
+hpt_silica,density,2.65e4,kg/m3,silica sand,stated_table4,
+hpt_silica,young_modulus,7e8,Pa,silica sand,stated_table4,
+hpt_silica,resistivity,5.56e6,Ohm*m,silica sand,stated_table4,~11 orders higher than conductors
+hpt_silica,steady_resistance,~6e4,Ohm,HPT across discs,stated_fig16,insulator -> very high R + extremely low current
+hpt_bond,normal_stiffness_k_n,1e10,N/m3,BPM bond (fragment-fragment),stated_table4,bonded particle model for crushable particles
+hpt_bond,shear_stiffness_k_s,1e10,N/m3,BPM bond,stated_table4,
+hpt_bond,critical_normal_stress,1e8,Pa,bond breakage,stated_table4,fracture when exceeded
+hpt_bond,critical_shear_stress,1e8,Pa,bond breakage,stated_table4,
+hpt_interaction,restitution_coefficient,0.8,-,HPT contacts,stated_table4,
+hpt_interaction,friction_coefficient,0.5,-,HPT contacts,stated_table4,
+hpt_wheel,young_modulus,2.3e11,Pa,wheel specimen,stated_table4,
+hpt_wheel,resistivity,1.43e-7,Ohm*m,wheel specimen,stated_table4,
+hpt_wheel,poisson_ratio,0.28,-,wheel specimen,stated_table4,
+hpt_rail,young_modulus,2.1e11,Pa,rail specimen,stated_table4,
+hpt_rail,resistivity,1.43e-7,Ohm*m,rail specimen,stated_table4,
+hpt_rail,poisson_ratio,0.3,-,rail specimen,stated_table4,
+hpt_setup,normal_pressure,6,MPa,wheel-rail normal load,stated_table4,
+hpt_setup,angular_velocity,1,deg/s,rail rotation,stated_table4,
+hpt_setup,DC_voltage,0.5,V,track-circuit worst case,stated_text,0.5 V_DC = 79% wrong-side track-circuit failures (UK rail 2012-2022)
+hpt_setup,geometry_inner_diameter,10.5,mm,cylindrical contact ring,stated_fig13,
+hpt_setup,geometry_outer_diameter,18,mm,cylindrical contact ring,stated_fig13,
+hpt_setup,geometry_height,2,mm,wheel-rail contact region,stated_text,
+hpt_result,electroactivity_increases_with_size,larger fragments more electroactive,-,Product B and D,stated_fig18,current follows force-chain network; small fragments lose contact -> zero potential
+numerical_setting,rayleigh_timestep_fraction,0.20,-,all cases,stated_text,20% of Rayleigh timestep for stability vs cost
+software,DEM_package,EDEM,-,commercial DEM + C++ API,stated_text,electrical part implemented via Application Programming Interface
