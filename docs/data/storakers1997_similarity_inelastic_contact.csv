@@ -1,0 +1,62 @@
+# Storakers, Biwa & Larsson (1997) Int. J. Solids Struct. 34(24) 3061-3083
+# "Similarity analysis of inelastic contact" (KTH Stockholm)
+# DOI 10.1016/S0020-7683(96)00176-X
+# Self-similar analysis of viscoplastic / strain-hardening-plastic indentation of a half-space and
+# mutual indentation of two power-law bodies.  Constitutive law sigma_e = sigma_0 * eps_e^(1/m) (eq 6),
+# m = strain-hardening exponent (m=inf ideally-plastic, m=1 linear hardening), n = creep/rate exponent.
+# ---------------------------------------------------------------------------------------------------
+# c^2(m,n) = the SIMILARITY CONSTANT relating TRUE contact area to apparent (geometric) overlap area.
+#   Profile under a spherical indenter (p=2): u3 = h*[1 - c^2*(r/a)^2]  (eq 74).
+#   c^2 > 1  => surface PILES UP at the contact rim (true contact area > geometric overlap)  [ideal plastic]
+#   c^2 < 1  => surface SINKS IN (true contact area < geometric overlap)                     [strong hardening]
+#   c^2 = 1  => transition (rim displacement exactly at original surface)                    [near m=3, cold work]
+#   Contact-area law:  A = 2*pi * c^2(m) * r * h   (= Martin-Bouvard 2003 eq 8; r=reduced radius, h=overlap)
+#   Plotted in Fig 5 as (c^2 - 1) vs (1/m + 1/n).  Below: digitized-from-Fig5 TREND values (approx) +
+#   the two STATED endpoints/transition (ideal-plastic 1.43-1.45 ; transition c^2=1 at 1/m+1/n~1/3).
+# All c^2 rows marked digitized are READ-FROM-Fig5 (approximate, TREND only). Endpoints/constants marked stated.
+# quantity,value,units,condition,source,notes
+# ===== c^2(m,n) PILE-UP / SINK-IN SIMILARITY CONSTANT vs HARDENING (Fig 5, p=2 sphere) =====
+c2,1.43,dimensionless,ideal plasticity (1/m+1/n -> 0; m,n -> inf),stated_text+Fig5,"c^2-1 ~ +0.43 at axis origin; rigid-ideally-plastic; max pile-up"
+c2,1.45,dimensionless,ideal plasticity (Martin-Bouvard quote of Storakers table),stated_MartinBouvard2003,"c(m=inf)~1.45 cited downstream; consistent with 1.43 here (read tolerance)"
+c2,1.30,dimensionless,1/m+1/n ~ 0.15 (weak hardening),digitized_Fig5(approx),"c^2-1 ~ +0.30; strong pile-up still"
+c2,1.10,dimensionless,1/m+1/n ~ 0.27 (moderate hardening),digitized_Fig5(approx),"c^2-1 ~ +0.10"
+c2,1.00,dimensionless,1/m+1/n ~ 0.33 (= 1/3 ; sink-in<->pile-up transition),stated_text+Fig5,"TRANSITION: at 1/m+1/n ~= 1/3 surface neither piles up nor sinks in; ~ m=3 annealed metal (Norbury-Samuel 1928)"
+c2,0.90,dimensionless,1/m+1/n ~ 0.42,digitized_Fig5(approx),"c^2-1 ~ -0.10; sink-in begins"
+c2,0.70,dimensionless,1/m+1/n ~ 0.6,digitized_Fig5(approx),"c^2-1 ~ -0.30; moderate sink-in"
+c2,0.55,dimensionless,1/m+1/n ~ 0.85,digitized_Fig5(approx),"c^2-1 ~ -0.45"
+c2,0.50,dimensionless,linear hardening (1/m+1/n -> 1 ; m=n=1),stated_endpoint+Fig5,"c^2 ~ 0.5 at far end; ~ the value used as 'linear hardening' floor in Martin-Bouvard c(m): 0.5(linear)->1.45(ideal)"
+# ===== the c^2(m)=c^2(n) coincidence (key simplification) =====
+c2_m_equals_c2_n,true,n/a,Biwa-Storakers 1995 finding,stated_text,"c^2(m)=c^2(n) to very close agreement; combined cases collapse on single function of 1/m+1/n (Fig5)"
+sink_in_to_pileup_transition,1/3,1/m+1/n,sphere p=2,stated_Fig5,"transition from sinking-in to piling-up at 1/m+1/n ~ 1/3"
+annealed_metal_residual_impression,below_surface,n/a,m~3 annealed metals/alloys,stated_text(Norbury-Samuel1928),"residual plastic impression stays BELOW surface (sink-in) at ~m=3; pile-up at cold-work"
+# ===== CONTACT-AREA LAW (the equation Martin-Bouvard 2003 uses) =====
+contact_area_law,A = 2*pi*c^2(m)*r*h,formula,sphere/sphere plastic contact,eq derived(=MartinBouvard eq8),"r = reduced radius r_p r_q/(r_p+r_q); h = overlap (interpenetration); c^2 from Fig5"
+similarity_kinematic_h,h(a)=F(theta)/c^p(theta) * a^p / D^(p-1),eq31,indentation-depth<->contact-radius (separable),eq31,"depth h and reference radius a are SEPARABLE; eigenfunction c^p(theta) eq32"
+contour_relation,r=a*Ctilde(theta) ; Ctilde(0)=1,eq24,self-similar contact contour,eq24,"contour expands self-similarly; at axisymmetry Ctilde=1 so a alone fixes contact region"
+profile_under_die,u3 = h*(1 - c^p(theta)*(r/a)^p),eq34,displacement under die (pile-up criterion),eq34,"pile-up if c^p(theta)*Ctilde(theta)^p > 1; sink-in otherwise; sphere p=2 -> eq74 u3=h(1-c^2(r/a)^2)"
+# ===== MEAN PRESSURE / HARDNESS (sphere, p=2) =====
+mean_pressure_general,L/(pi a^2) = sigma_0*alpha(m,n)*[beta_m(a/D)^(p-1)]^(1/m)*[beta_n (a_dot/D)(a/D)^(p-2)]^(1/n),eq46,general hardness formula,eq46,"alpha,beta_m,beta_n depend ONLY on m,n,p (not on indentation magnitude); separable in a"
+mean_pressure_sphere,L/(pi a^2)=sigma_0*alpha(m,n)*[beta_m(a/D)]^(1/m)*[beta_n(a_dot/D)]^(1/n),eq75,spherical p=2 mean pressure,eq75,"reduced from eq46 with p=2"
+Tabor_alpha,2.8,dimensionless,Tabor 1951 strain-hardening hardness constant,stated_eq78_text,"Storakers ADOPT Tabor 1951: alpha=2.8 (the H ~ 2.8 sigma_0 hardness coefficient)"
+Tabor_beta_m,0.4,dimensionless,Tabor 1951 representative-strain constant,stated_eq78_text,"beta_m=0.4 (representative strain ~0.4 a/D = the 'Tabor strain'); used in hardness formula eq78"
+hardness_formula_eq78,L/(pi a^2)=3(n+2)/n * sigma_0 * (a/3D)^(1/m) * (a_dot/3D)^(1/n),eq78,practical universal hardness formula,eq78,"with alpha=2.8,beta_m=0.4 plugged into eq45; believed practically useful in general"
+reduced_load_fit_alpha,3,dimensionless,reduced-load fit (eqs 76-77),eq77,"alpha=3, beta_m=(n/(n+2))^n, beta_n=1/3 give good fit for 1/m+1/n<0.5 (Fig7)"
+reduced_load_factor,(n+2)/n,dimensionless,scaling factor for reduced mean pressure,eq76,"introduced so reduced load L-tilde is virtually governed by combined exponent 1/m+1/n (Fig7)"
+# ===== ELLIPSOIDAL NEWTONIAN FLUID (analytic illustration, m->inf, n=1, sigma_0=3mu) =====
+ellipsoid_contour,ellipse,n/a,viscous ellipsoidal indentation,stated_sec4.1,"sought contour IS an ellipse; eccentricity e from B/A = [E(e)/(1-e^2)-K(e)]/[K(e)-E(e)] (eq60)"
+ellipsoid_central_pressure,p0_tilde=(2/3)/(K(e)sqrt(1-e^2)),eq63,central contact pressure (scaled),eq63,"K,E complete elliptic integrals 1st/2nd kind"
+sphere_viscous_h_a,h(a)=2a^2/D,eq69,spherical viscous limit depth-radius (e->0),eq69,"a^2/2hR0 = 1 type relation in the e->0 spherical viscous limit"
+sphere_viscous_growth,a^3(t)/D = (K-E)/e^2 * 3L/(8 pi mu) * t,eq72,contact radius growth under constant load,eq72,"a ~ t^(1/3) under constant load (viscous)"
+# ===== CONSTITUTIVE FRAMEWORK =====
+constitutive_law,sigma_e = sigma_0 * eps_dot_e^(1/n) * eps_e^(1/m),eq6,viscoplastic potential (general),eq6,"m=strain-hardening exponent, n=rate/creep exponent; m->inf strain-hardening plastic, n->inf nonlinear viscous"
+plastic_limit,m -> inf,n/a,strain-hardening plastic flow,stated_sec2,"m->inf recovers strain-hardening plasticity; n->inf recovers nonlinear viscous/creep"
+homogeneity_degree,(n+1)/n,dimensionless,stress potential Phi degree (n+1) -> strain-rate potential Psi degree (n+1)/n,eq4-5,"Legendre-dual potentials; homogeneous functions => self-similarity reduces moving boundary to stationary"
+von_Mises_special,sigma_e=(3/2 s_ij s_ij)^(1/2),eq14,incompressible isotropic special case,eq14,"reduces to familiar von Mises; used in spherical-indentation application (sec 4.2)"
+# ===== TWO-BODY (DISSIMILAR) EXTENSION (sec 5) =====
+two_body_strength_scaling,u_i^(k) = (sigma_0/sigma_k)^q * u_i^(0),eq80,displacement scaling per body k,eq80,"q where 1/q=1/m+1/n; both bodies share m,n,p (save flat p->inf)"
+two_body_combined_strength,1/sigma_0^q = 1/sigma_1^q + 1/sigma_2^q,eq82,equivalent strength of two-body contact,eq82,"series-like combination of the two body strengths (q=combined exponent)"
+two_body_combined_curvature,F(theta)/D^(p-1) = F1(theta)/D1^(p-1) + F2(theta)/D2^(p-1),eq84,combined profile/curvature,eq84,"local contact of two deformable bodies reduces to fundamental half-space problem; no convexity restriction once local+smooth"
+two_body_application,Storakers 1996 IUTAM,reference,composite compaction of spheres of different rigidities/sizes,stated_sec5,"explicit composite-compaction application = Storakers (1996) Mech. Granular Porous Materials IUTAM; basis for Martin-Bouvard 2003 DEM"
+# ===== finite-element solution detail =====
+fem_dof,13882,degrees of freedom,reduced flat-die FEM (Biwa-Storakers mesh),stated_sec4.2,"singularity at contact boundary like HRR crack tip (Hutchinson 1968) resolved by refined rim mesh"
+fem_remote_boundary,rho/a=50 (or 10),mesh extent,for 1/m+1/n>=0.25 use rho=50; for <=0.25 use rho=10,stated_sec4.2,"convergence sensitive to m; parameter-tracking from m=1 used for high-m iteration"
