@@ -24,6 +24,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 | *(기존)* GilGonzalez 2022 | B② 기계구속 | Cl-rich K_eff=20서 창 확장 (Zuo B③와 다른 축) | `gilgonzalez2022_synergistic_cl_constricted_esw` |
 | *(기존)* Lu 2025 | 음극 | Cl-rich 음극 LiCl passivation (Liu와 같은 진영) | `lu2025_tailoring_cl_rich_anode_licl` |
 | **★ Banik 2022** (치환↔산화안정성, **Mo**+Zeier) | B① intrinsic | **우리 방법 본가(Mo=grand-potential 원저자)가 우리 결론 독립 발표**: 치환은 onset 못 옮김(S 3p가 pin)=comp1=modelc 2.14V; COHP가 우리 ICOHP/ELF 확증 | `banik2022_substitutions_oxidative_stability_argyrodite` |
+| **Li 2025**(CuBr₂→Br) / **Rao 2025**(I) | A·D 할라이드 trend | Cl/Br/I: σ는 종류보다 **총량·비율·채널부피** 지배(=comp1→modelc trend). I→**4a**(site ΔE 0.35>Br); I가 E_hull↓·계면 ΔE_D↓(Br엔 없는 분석). **산화 onset엔 영향X**(Banik S-pin) | `rao2025_iodide_argyrodite` |
 
 ## C. 외부 — 이론/방법 백본
 | 논문 | 유형 | 우리 작업 연결 (1줄) | slug |
@@ -50,6 +51,7 @@ base: `https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT/blob/claude/frien
 6. **방법 엄밀성**: 우리=표준 battery-DFT(He19) + ESW는 grand-potential로 *상회*(band-edge 2–3×과대) + W_ad는 SMD개선(Choi) + UPS로 VBM실측.
 7. **★ S-pin 산화 명제 (Banik=외부 정답지)**: "치환은 S-limited 산화 onset 못 옮긴다"가 이제 **Zeier 실험 + Mo 계산**(우리 grand-potential 본가)의 검증을 가짐. 우리 차별화 = Banik이 닫은 문 *위*: (i) Cl-rich 4축, (ii) onset 옮기는 예외도판트(B₂O₃ 2.317·Sc/Cr/In/Ga₂O₃ 2.356, ≤0.2V), (iii) Nd passivation. + "치환 안 되니 코팅 필요"가 우리그룹 cathode-interface 라인을 외부 정당화.
 
-## 진행 중 (완료 시 추가)
-- **#18** "Can substitutions affect oxidative stability?" — 우리 cascade 산화축과 정면 (most relevant)
-- **#19** iodide argyrodite — Cl/Br/I 할라이드 trend에 I 배치
+## ✅ 배치 완료 (2026-06-26)
+이번 세션 총 **18편** digest (우리그룹 5 · 외부 Cl/계면·산화 8 · 이론/방법 5 — 일부 중복 카운트 / analogy 1). #18 Banik·#19 Rao 포함 전부 커밋·푸시됨. 동반 figure: `docs/figures/cascade/cascade_oxidation_vs_banik.png` (Banik S-pin vs 우리 예외 6 M³⁺ 산화물).
+
+> **할라이드 한 줄(Cl/Br/I)**: σ는 *할라이드 종류*보다 **총량·비율·무질서·채널부피**가 지배(Rao·우리 trend 일치). 산화 onset은 셋 다 **S²⁻가 pin**(Banik) — 할라이드는 전도·계면·상안정 레버이지 산화창 레버 아님.
