@@ -262,3 +262,17 @@ frame[5] EARNED (단정 아니라 두 patch를 시험으로 소진해서).
   한 coefficient가 둘 다 맞추면 genuine(regime auto); 한쪽만 맞으면 또 tunable patch → 폐기.
 - ⚠ **DEM import도 억지 jam도 아님** — AM confinement는 *실재 물리*(SE가 AM에 갇힘).  맞으면 MPM이 porosity를
   물리적으로 내는 길 → §13 코너도 DEM 없이 MPM이 owns 가능.  status: 구현·adversarial 검증 진행.
+- ★★ **VERDICT (2026-06-27): se-am-drag = 3번째 artifact.  §13 확정.**  adversarial 리뷰(wq3sgfk9j) + 사용자 통찰:
+  - **code PASS**(default off byte-identical, 버그 없음) 하지만 **physics = tunable knob, NOT regime-auto.**
+  - **결정 논거:** drag는 *local* am_near(3³ AM-fraction, geometry-static)만 본다.  그러나 §13의 진짜 discriminator
+    는 **두께(global)** — **100_12(thin)·real_14(thick) 둘 다 am_near 높음** → 한 coef가 둘을 구분 불가 → 100_12
+    고치는 coef가 real_14 void-fill도 망침.  isotropic이라 수직 압축(legit densification)도 막음.
+  - "coef를 ~4로 올려 16 맞추자"는 **target-dial = artifact 사고**(사용자가 지적).  물리면 *고정* coef 하나가 전
+    regime 자동.  drag는 그게 불가(local≠global).  ⇒ **세 번째 artifact.**
+  - **GPU 부수발견:** no-drag 100_12가 11.62 ↔ 12.70 = **MPM ~1%p run-to-run variance** (fixed config).  ±1%p는 noise.
+    (그 12.70은 drag 아님 — sed가 multi-line run_mpm.sh서 안 먹어 --se-am-drag 미적용이었음, grep로 확인.)
+  - **닫음:** 세 genuine 시도(조건부 over-dense / am-jam over-loose / se-am-drag local-blind) 모두 **동일 근본 이유**
+    로 실패 — 코너 porosity는 *global* AM 재배열·두께가 정하고 *어떤 local MPM 기제도* 못 잡음(frame[1]).  ⇒ 코너 =
+    **DEM 영역**, §13 regime-gate가 production 정답.  `--se-am-drag`/`--am-jam` 코드는 opt-in으로 남겨 이 탐색을 기록
+    (production default OFF, 무영향).  더 이상 patch 추구 안 함(= artifact 쫓기).  **MPM = 90% owns + morphology;
+    DEM = thin·SE-poor·AM-rich 코너 porosity.**  EARNED (3× 시험).
