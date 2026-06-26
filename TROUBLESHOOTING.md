@@ -9,6 +9,12 @@
 전기화학·전달(T1) 분석은 **잠시 보류**. 지금 막힌 건 **공정** — Poly-rich(7:3) 합제가 cold 도우가 안 되고,
 핫롤해도 떡전극이 안 되고 **갈라져 나옴**. 전극 자체가 제대로 안 만들어지므로 **여기를 먼저 깊게 판다.**
 
+### ▶ 실험 계획 (확정 2026-06-26) — 순서: **① rpm → ② 온도 → ③ ball-mill only**
+프로토콜·결과표 = **`db/process/T2_dough_experiments.md`** (도우 grade 0–3, 합제온도 IR 필수).
+- ① 2nd Thinky rpm sweep(1000/2000/3000) — 강도 레버? (flat 예상)
+- ② 외부가열 kneading(RT/40/60/70℃) — 문턱↓ 레버? (핫롤 아닌 혼합단계)
+- ③ ball-mill only(2nd Thinky 생략, 1h/2h, ±가열) — Poly 정공법. 부분이면 → 다층/조성.
+
 ## 이슈 현황
 | # | 이슈 | 상태 | 핵심 진단 |
 |---|---|---|---|
@@ -245,3 +251,5 @@ CV 구간 비대(CC 분율↓) + CC 조기종료 · 고율에서 급격한 용�
 - **2026-06-26 (갱신 11)** — ★★★ 사용자: **ball-mill 부분 도우가 2nd Thinky서 다시 파우더** → **Thinky가 도우를 부순다(tear).**
   build(섬유화)vs tear(분산) 모델: 단결정 build>tear→도우 / Poly build≈0·tear지배→파괴. **actionable: Poly-rich엔 2nd Thinky 생략(0순위·공짜)** =
   회의노트 "2nd Thinky 없이 ball-mill 2h" fallback의 이유 규명. 경로: ball-mill(±가열)→바로 롤링.
+- **2026-06-26 (갱신 12)** — 실험 계획 확정(사용자): 순서 **① rpm → ② 온도 → ③ ball-mill only**.
+  프로토콜·결과표 작성 → **`db/process/T2_dough_experiments.md`** (도우 grade 0–3, 합제온도 IR 필수). 결과 나오면 T2에 누적.
