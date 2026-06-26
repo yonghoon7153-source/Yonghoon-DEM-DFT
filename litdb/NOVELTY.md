@@ -71,7 +71,7 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
 | Cronau 2021 | A | σ_grain(GB-pellet) + stack-pressure dilemma | σ_grain 소비; E_eff softening 서사 |
 | Sakuda 2013 | A | **E_SE=24 origin** + sulfide RT 압축densify | E_eff=1.35/1.53 = 24의 softening; MPM shape-change가 그들 SEM 재현 |
 | Doux 2020 | A | LPSCl stack-pressure(5MPa opt), 18% floor | fab/operating 분리; rigid-floor 비교 |
-| co-rolling (Nat Commun 2025, 59363) | A | dry-process 저압(2MPa) robust 계면 | (digest 중) operating-pressure anchor + 공정 |
+| Lee 2025 (Nat Commun 16, 4200) | A+X | dry **co-rolling** 저압 2MPa robust 계면 (LPSCl+NCM811+VGCF+PTFE = 우리 정확한 계) | operating-pressure anchor(floor 2<Doux5<Minn40); ★ **const-P vs fixed-gap cell = 우리 MPM servo vs hold 실험쌍** → hold 채택 독립검증; fab 500 vs cycle 2-5 = process-level fab/operating |
 | Bazzoun 2026 | A+X+M | EIS σ_ionic + DEM+RNM(=우리 솔버) + FEM | σ_e/thermal triad + Stage-E + MPM(그들 ionic·sphere만) |
 | Varkey 2026 | G+M | multi-contact 탄소성 DEM(but rigid sphere, ~20% floor) | 소성 shape change + void-fill + <20% (그들이 future work로 인정) |
 | Oh 2026 (#266) | A+X | bimodal CAM dip(실험) | rigid DEM이 dip 독립재현; 소성 MPM이 dip 부분소거 정량 |
@@ -92,6 +92,9 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
 ---
 
 ## §6 update log
-- 2026-06-26 최초 작성.  digest 12편(Trevisanello/Cronau/Minnmann22+21/Doux/Sakuda/Park20/Bazzoun/Varkey/
-  Oh266/Hong271 + co-rolling 진행) 기준 §4 채움.  TODO: co-rolling 완료 시 한 줄 확정; Bielefeld/Wang digest 시 추가;
-  Phase-4 echem 커플링(#22/#281) 우리 gap으로 명시.
+- 2026-06-26 최초 작성.  digest 12편 기준 §4 채움.
+- 2026-06-26 co-rolling(Lee 2025 Nat Commun 16,4200) 완료 → §4 확정.  ★ 신규 frame[4] 검증: 그들의
+  const-pressure vs fixed-gap 셀 = 우리 MPM servo vs hold 실험쌍 → scaffold에 hold 채택이 독립적으로 옳음.
+  (Lee paper는 2026-06-24 litdb/papers/에 CBD/binder 각도로 부분 digest 존재했음 — 이번 docs/ digest는
+  process/저압/계면 각도로 보완, 중복 아님.)  TODO: Bielefeld/Wang digest 시 §4 추가; Phase-4 echem 커플링
+  (#22/#281) + operating-pressure σ-degradation(Lee void-vs-P 시간축) 우리 gap으로 명시.

@@ -54,6 +54,22 @@
     *종류*의 물리지만 **상(Li≠SE)이 달라** Doux 가 우리 SE 소성을 *직접* 검증하는 건 아니고 **간접 보강**
     (LPSCl 은 압력민감 soft/다공 시스템). ⚠ over-claim 금지.
   - ⚠ **Li-metal 단락 논문** → 단락시간·용량·dendrite 수치 전사 금지, **SE 압력-역학·porosity 만**.
+- **★ Lee 2025 (LPSCl + NCM811 + VGCF + PTFE, 실험, 건식 co-rolling) — 작동압의 *공정-인과* 추가**
+  (docs digest `docs/lit_lee2025_corolling_dryprocess_assb.md`; papers digest는 σ·CBD·파괴 owns):
+  - **제조압 vs 작동압 *명시 분리*(공정 레벨):** 셀을 **500 MPa 로 press**(pouch CIP 500)하되 **2–5 MPa
+    로 cycle** → 우리 **"300 MPa 제조(Heckel P_y 138) ≠ 수~수십 MPa 작동"** 인식의 *공정* 버전. 그들 제조
+    500 MPa = 우리 300 MPa cold-press·Doux 370·Minnmann 380·Sakuda >350 과 같은 "수백 MPa 냉간가압" 계열.
+  - ★ **작동압의 *인과*: 계면 품질이 작동압 하한을 정한다.** Doux 가 "**5 MPa 최적**"(현상)이라면 Lee 는
+    **"co-rolling 으로 robust 융합 계면을 만들면 *2 MPa* 까지 낮춰도 >80 % 500 cyc"**(공정→작동압). 증거 =
+    사이클 후 **계면 void-ratio**(SSE 대비, 75→2 MPa): **co-rolled 1.9→3.5**(거의 안 늘음) vs **freestanding
+    4.0→15.5**(급증). → "**고압-제작 + 저압-운용**" 실용전략의 LPSCl 직접 실증 (Doux 비가역 이력과 결합).
+  - **셀 압력 protocol = 우리 MPM servo/hold:** Supp Fig 25 **fixed gap**(ΔP≈−1.5/cyc) vs **constant
+    pressure**(스프링, ΔP≈−0.1) ↔ 우리 **hold**(변위정지) vs **servo**(const-σ). 우리가 scaffold 에서
+    servo→over-compact→**hold 채택**한 것과 같은 물리 (저압 장기 cycling 은 const-P 필요) → 우리 protocol
+    선택의 실험 정당화. **압력 4종 위치:** 작동 하단 = Lee **2 MPa**(< Doux 5 < Minnmann 측정 40 < Cronau 5–50).
+  - ⚠ **정량 압밀 porosity 없음** (void = *사이클 후 계면 void 상대비* ImageJ, 제조 porosity 아님) → 우리
+    DEM 15.6 %/MPM 16.7 % 와 **직접 비교 금지**. densification CSV 의 Lee 행은 *압력-구분 컨텍스트*(작동압
+    2/75 MPa retention)로만, **porosity 칸 비움**. 제조압도 500 MPa(우리 300 과 다름) → 밀도 절대 동일시 금지.
 - **★ Sakuda 2013 (75/80Li₂S·25/20P₂S₅ glass, 실험, 황화물-기계물성 고전) — 우리 두 토대 앵커의 원전**:
   - ★ **E_SE 24 GPa 의 1차 출처**: 초음파 측정 **18–25 GPa** (75Li₂S·25P₂S₅ = **24**, 50Li₂S·50P₂S₅ = 18; 산화물
     50Li₂O·50P₂O₅ = 50 ≈ 2×). → 우리 **real-bulk 22–24** = Sakuda 24 ∩ Bazzoun 22.1(LPSCl). **E_eff 1.35(DEM)/1.53(MPM)
