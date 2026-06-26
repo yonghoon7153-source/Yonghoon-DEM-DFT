@@ -1,0 +1,26 @@
+# Cho et al., Electrochimica Acta 481 (2024) 143990 — Conflicting roles of conductive additives (VGCF) in ASSB cathodes
+# Lab: Jong-Won Lee group, Hanyang (Cho, Yun, Kang, Kim, Lee). NCM811 + LPSCl + VGCF (2 wt%); halide LZC variant.
+# r_ele = electronic resistance per length (Ohm.cm, from DC-polarization Fig 2a/b, stated).
+# R_ion/R_int/R_w/CPE_int = modified-TLM fitted (Table S1; Ohm.cm^2; CPE_int C in mF.s^(eta-1).cm^-2). R1 in Ohm.cm.
+# porosity/tortuosity = Table S2 (tortuosity method unspecified, likely EIS-derived; TREND only).
+# norm_cap_pct = Cap_1C/Cap_0.1C (Fig 1e, digitized ~). dV_1C_V = deltaV @ SOC50% at 1C (Fig 1f, stated/digitized).
+# state = pristine | cycled(100). src = stated | digitized.
+f_AM_wtpct,regime,SE,CA,state,r_ele_Ohm_cm,R1_Ohm_cm,R_ion_Ohm_cm2,R_int_Ohm_cm2,R_w_Ohm_cm2,CPE_int_C_mF,eta,porosity,tortuosity,norm_cap_1C_0p1C_pct,dV_1C_V,Cap_1C_mAh_g,init_CE_pct,sigma_ion_SE_mScm,src
+72,low,LPSCl,without,pristine,245.0,891.1,64.8,145.0,22.1,0.7,0.7,0.14,6.47,49,0.88,84.2,,4.8,stated
+72,low,LPSCl,with,pristine,102.3,926.0,80.9,175.2,18.3,1.1,0.5,0.15,7.56,59,0.73,119.5,,4.8,stated
+88,high,LPSCl,without,pristine,166.2,1742.3,318.8,241.1,86.7,1.4,0.4,0.18,17.41,40,1.09,,,4.8,stated
+88,high,LPSCl,with,pristine,51.0,1747.6,402.5,278.0,64.5,4.8,0.7,0.19,18.34,24,1.29,,72.4,4.8,stated
+72,low,LPSCl,without,cycled,,1244.8,108.2,285.1,28.7,0.7,0.7,,,,,,,4.8,stated
+72,low,LPSCl,with,cycled,,1370.2,140.1,381.0,27.6,1.2,0.4,,,,,,,4.8,stated
+88,high,LPSCl,without,cycled,,2227.0,416.9,490.3,105.3,1.2,0.9,,,,,,,4.8,stated
+88,high,LPSCl,with,cycled,,2013.5,780.9,591.4,41.9,3.6,0.7,,,,,,,4.8,stated
+# Halide LZC variant (Fig 5; quantitative impedance table not in extraction). LZC sigma_ion = 0.6 mS/cm.
+88,high,LZC,without,pristine,,,,,,,,,,,,,,0.6,stated
+88,high,LZC,with,pristine,,,,,,,,,,,,,,0.6,stated
+# Material/SE ionic conductivities (Fig S1/S2):
+# LPSCl 4.8 mS/cm ; LZC 0.6 mS/cm. VGCF BET 12.3 m^2/g (Fig S4). AM loading: f_AM72=9.17 mg/cm^2, f_AM88=11.21 mg/cm^2.
+# Compaction pressure 433 MPa (stack), operating stack pressure 250 MPa. CV vol ratio LPSCl:CA 94:6 (~low-fAM), 79:21 (~high-fAM).
+# XPS decomposition (CV after, Fig 4b): PS4^3- 161.7/163.0 eV -> +P2Sx 163.7/164.2, +Li2Sn, +PO4^3- 134.1 eV (79:21 >> 94:6).
+# KEY TRENDS: CA lowers r_ele in BOTH (2.4x low, 3.3x high) = electronic benefit f_AM-independent.
+#   High-fAM CA: R_ion 318.8->402.5 (pristine) -> 780.9 (cycled); tortuosity 17.41->18.34; porosity ~unchanged -> SE network disconnect.
+#   Norm cap CA effect REVERSES with f_AM: low 49->59% (beneficial), high 40->24% (detrimental).

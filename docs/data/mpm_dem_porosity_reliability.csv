@@ -96,7 +96,7 @@ input_8mAh_real_14,7:3,0.7,92,16,19.1,19.0,0.1,both,cross-validated
 input_8mAh_real_10,10:0,1.0,87,25,19.0,19.0,-0.0,both,cross-validated
 input_2mAh_real_20,10:0,1.0,92,16,29.3,22.2,7.1,bracket,"BRACKET mono-large se16 extreme-SE-poor: wallP cond 9.7->22.2 but still ~5pp below trusted same-comp 8mAh_real_15 27.4(=DEM 27.3) -> residual over-compress; truth ~27-29 lean DEM/8mAh anchor"
 input_2mAh_a9_p10,10:0,1.0,90,19,26.4,15.44,10.96,bracket,"BRACKET mono-large r_SE=1.5 DEGENERATE (629 SE, percolation 0%, tau 17.5 RVE-artifact): wallP cond 10.9->15.44; NO cross-capacity sibling (am_wt90+rSE1.5 only @2mAh); both bounds low-confidence"
-input_1mAh_100_10,10:0,1.0,82,32,28.3,15.9,12.4,bracket,"BRACKET mono-large: DEM upper/MPM lower, no anchor"
+input_1mAh_100_10,10:0,1.0,82,32,28.3,21.78,6.52,bracket,"BRACKET mono-large: wallP cond 15.9->21.78; same-comp bulk 2mAh_real_10 17.9 / 8mAh_real_5 16.8 trusted ~17; 1mAh MPM 21.78 = mid-bracket [bulk 17, thin-DEM 28.3] plausible thin-loose (se32 enough SE -> NOT over-compressed, unlike se16 2mAh_real_20)"
 input_2mAh_a9_50_p10,10:0,1.0,90,19,18.4,9.3,9.1,bracket,"BRACKET mono-large: DEM upper/MPM lower, no anchor"
 input_1mAh_8_AMP_S5,10:0,1.0,85,28,21.9,15.0,6.8,bracket,"BRACKET mono-large: DEM upper/MPM lower, no anchor"
 input_1mAh_8_AMP_S2,10:0,1.0,85,28,23.6,17.3,6.3,bracket,"BRACKET mono-large: DEM upper/MPM lower, no anchor"

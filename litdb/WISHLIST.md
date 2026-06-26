@@ -99,7 +99,7 @@
 | ①alt | Thornton, Cummins, Cleary (2013) | An investigation of the comparative behaviour of alternative contact force models during inelastic collisions | Powder Technol. 233 30 | 10.1016/j.powtec.2012.08.012 — linear-hysteretic vs 타모델 정량 REVIEW |
 | ② | Tabor (1951) 📕 | The Hardness of Metals | Clarendon Press, Oxford | ISBN 9780198507765 |
 | ② | K.L. Johnson (1985) 📕 | Contact Mechanics | Cambridge Univ. Press | 10.1017/CBO9781139171731 |
-| ② | Chang, Etsion, Bogy (1987) | An elastic-plastic model for the contact of rough surfaces | J. Tribol. 109(2) 257 | 10.1115/1.3261348 |
+| ⚠paywall | Chang, Etsion, Bogy (1987) | An elastic-plastic model for the contact of rough surfaces | J. Tribol. 109(2) 257 | 10.1115/1.3261348 — **유료 → SKIP**; 후속 FEM판 **Kogut–Etsion 2002 + Jackson–Green 2005**가 같은 EP-asperity 내용 (Etsion Technion 페이지/ResearchGate free 흔함) |
 | ② | Mesarovic & Fleck (2000) | Frictionless indentation of dissimilar elastic-plastic spheres | Int. J. Solids Struct. 37(46) 7071 | 10.1016/S0020-7683(99)00328-5 |
 | ③ | Thornton & Ning (1998) | A theoretical model for the stick/bounce behaviour of adhesive, elastic-plastic spheres | Powder Technol. 99(2) 154 | 10.1016/S0032-5910(98)00099-0 |
 | 🟡 | Thornton (1997) | Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres | J. Appl. Mech. 64(2) 383 | 10.1115/1.2787319 |
