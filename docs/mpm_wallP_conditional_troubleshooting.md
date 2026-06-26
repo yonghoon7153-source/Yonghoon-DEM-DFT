@@ -382,5 +382,29 @@ data: `docs/data/mpm_corner_realizability.csv` (hertz σ, 84케이스: 6 코너 
   caveat = **사실 오류** (case_3d_collection에 σ 31/36 존재) → 전체 join으로 정정.  (4) σ=0.0009(100_15)는 솔버 marginal-
   percolation 최약 regime 값 → 단독 근거로 못 씀.
 - ⇒ §13의 backing은 유지되나 "강한 physical-realizability law"는 **철회**.  사용자 원래 질문("1mAh 코너 물리적으로 못 만드나?")
-  답 = **strict 不可는 아님; SE-sub-functional·문헌 envelope 밖** = 안 좋은 설계지 불가능한 설계 아님.  ⚠ 사용자 결정 OPEN:
-  이 scoped 결론 채택 vs 더 파기(예: 코너의 실제 실험 제조 가능성 문헌 추가 조사).
+  답 = **strict 不可는 아님; SE-sub-functional·문헌 envelope 밖** = 안 좋은 설계지 불가능한 설계 아님.
+
+### §16-lit ★ 제조 envelope 문헌 확인 (b 완료, 2026-06-27) — scoped 결론 GROUNDED
+litdb 60편 + 우리 랩 케이스(Kim/Cho/Kang 2024-25) recipe table 추출 (agent af383e5).  코너(87–92wt% AM, SE/sol
+16–26vol%, ~15–20µm = 1–2 입자층, mono-large 12µm)를 **실제 제조된 envelope**과 3축 대조:
+- **조성 (87–92wt%): EDGE/borderline.**  最-AM-rich *functional* = **Choi 2024(SAIT) 85wt%**(SE 14.25wt%, full pouch
+  >800 Wh/kg, 300cyc) + Mun2025 ref[69] 85wt%(10mAh/cm², 96.5%@100cyc).  **88–90wt%는 만들어 cycle은 되나 SE-기아
+  열화 regime**: **Kim2024(우리 랩) 90wt% σ_ionic 0.014 mS/cm(80wt%의 ~1/10)**; **Park2020 90wt% = ionic-percolation
+  FAILURE(dead-SE 6–20%)**.  코너 SE/sol 16–26vol%는 Choi 85wt% 경계 *at/just below* = 문헌이 SE-기아로 기록한 그 자리.
+- **두께 (~15–20µm, ~1mAh/cm²): OUTSIDE.**  실제 fabricated cathode = **40–157µm @ 5–10mAh/cm²** (Mun 156.8 / Lee 120 /
+  Choi 105 / Kim2025 full-cell 40–47.5µm).  최薄 = Park2020 ~39µm(그조차 SIM, NCM~8µm).  **15–20µm·1mAh/cm² 황화물
+  cathode를 만든 논문 0편** — energy density는 오히려 *더 두껍게*(dry up to 300µm) 민다.
+- **modality (mono-large 12µm): OUTSIDE/anti-design.**  high-AM 실제 cathode는 의도적으로 **bimodal**(Choi 4+15µm,
+  Kang 3+10µm = packing/loading).  mono-large는 Shi2019(λ=8 small-SE 필요, mono/large-SE FAIL) + Kang(大입자 cracking)이
+  보인 under-fill 구성.
+- **VERDICT: 코너는 두께+modality축 OUTSIDE, 조성축 EDGE(marginal/degrading).**  ⚠ 정직: 두께는 "**시도된 적 없음/타깃
+  아님**"이지 "tried & failed"가 아님(아무도 15–20µm 황화물 cathode를 *시도*안 함); 조성 edge는 same-material(LPSCl+NMC811)
+  Choi 85wt% robust ↔ Park/Kim 90wt% fail로 정량 bracket.  ⇒ scoped §16 = literature-grounded: 코너 = 제조 envelope 밖
+  (thickness/modality) + 조성 degrading edge = **MPM이 못 푸는 게 아니라 *현실에서 안 만드는/작동 나쁜* 설계.**
+- **★ DIGITAL-TWIN 선례 (사용자 "twin 아니면" 고민에 직접 답):** **Park2020이 바로 digital-twin 논문**인데, 거기서도
+  90wt% AM에서 ionic-percolation FAILURE(dead-SE)를 모델로 매핑함 → 우리 코너 finding과 **일치**.  즉 "twin이 코너서
+  못 푼다"가 아니라 "**twin이 코너 = SE-percolation 실패를 *진단*한다**"가 정상.  우리 랩 Kim2024 90wt% σ 0.014(실측)이
+  그 SE-기아를 실험으로 확증.  → twin = functional envelope 전체 예측 + 실패 regime 진단, 둘 다.  코너를 못 푸는 게 흠이 아님.
+- **production gate (사용자 "거부?" 질문 답, 이제 threshold가 lit-grounded):** hard-refuse 아님 → **flag+defer+reason**:
+  입력 SE/sol < ~26vol%(Choi 경계) AND thickness < ~40µm(최薄 fabricated) → "⚠ out-of-envelope: SE-poor+thin, σ sub-functional,
+  porosity는 DEM 사용, |gap|=certificate" output.  §13 regime-gate의 코드판(clamp 아님).
