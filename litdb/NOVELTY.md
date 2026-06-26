@@ -37,10 +37,14 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
    줘야 함.  ★ 가장 큰 차별.
 2. **granular 점접촉 constriction σ triad** — Kirchhoff/Holm 접촉망으로 **ionic+electronic+thermal** 동시.
    연속체(GeoDict/FEM/voxel)는 σ_contact-free **상한**만; RNM(Bazzoun)은 ionic만.  우리는 둘 다 가져 constriction
-   overhead까지 정량.  ★ **그룹-내부 진화 논거**: Janek 그룹 자신이 **Bielefeld 2019(percolation만, σ 미계산,
-   constriction을 future work로 deferral) → Bazzoun 2026(RNM/Holm σ 추가) → 우리(σ triad + MPM)** 순으로
-   발전 — 즉 *그 그룹이 나중에 Bielefeld가 빠뜨린 σ 솔버를 정확히 추가*했다 = 우리 transport 방향이 옳다는
-   독립 증거.  우리는 거기서 한 발 더(전자·열 triad + 소성 MPM).
+   overhead까지 정량.  ★★ **그룹-내부 진화 논거(4단계, 우리에서 끝남)**: Janek 그룹 자신이
+   **Bielefeld 2019(percolation만, σ 미계산) → Bielefeld 2020(continuum flux-PDE σ_eff+τ², 단 SE-SE 점접촉
+   constriction 없는 *상한*) → Bazzoun 2026(RNM/Holm *constriction* σ + EIS) → 우리(Kirchhoff/Holm
+   constriction triad + Stage-E 소성접촉 + MPM)** 순으로 σ 솔버를 단계적 정밀화.  2020은 우리 contact-network
+   constriction으로 가는 **continuum 중간단계**(constriction-free 상한 → Bazzoun/우리가 되돌려 더함).  즉
+   *그 그룹의 자기 trajectory가 정확히 우리 접근으로 수렴* = transport 방향이 옳다는 독립 증거; 우리 3 portion이
+   그 궤적의 끝.  binder도 같은 arc: 2019 carbon-free 제외 → 2020 CBD 첫 도입(interfacial, σ=0 obstacle) → 우리
+   voxel blocking + 실험 cross-check(#271/#19/Lee) + void-fill mechanics.
 3. **MPM 소성 morphology** — 입자 shape change(SEM 일치) + void-fill flow + accumulated plastic-strain field
    (열화 onset) + 공간 stress/strain/density map.  rigid-sphere DEM(Varkey 포함 *모든* DEM 논문)은 불가.
 4. **DEM↔MPM 독립 cross-validation + regime map** — 둘을 실험에 독립 보정(frame[4]); 수렴=교차검증, 발산=정량화된
@@ -78,6 +82,7 @@ GeoDict은 **연속체 특성화 엔진의 표준**(성숙·robust·모듈폭) �
 | Bazzoun 2026 | A+X+M | EIS σ_ionic + DEM+RNM(=우리 솔버) + FEM | σ_e/thermal triad + Stage-E + MPM(그들 ionic·sphere만) |
 | Varkey 2026 | G+M | multi-contact 탄소성 DEM(but rigid sphere, ~20% floor) | 소성 shape change + void-fill + <20% (그들이 future work로 인정) |
 | Bielefeld 2019 (JPCC 123,1626) | X+M | GeoDict **stochastic-placement** percolation/utilization/contact-area (NCM+LPS, Janek+VW); **σ 계산 안 함**(constriction을 future로 deferral, Greenwood 1966=Holm계보) | 공정 compaction(porosity 우리는 *출력*, 그들은 *입력*) + 접촉망 σ triad + MPM 소성 morphology + bimodal Furnas dip(그들 single-modal) |
+| Bielefeld 2020 (ACS AMI 12,12821) | X+M | 2019에 **σ_eff 추가**(GeoDict flux-PDE continuum, **constriction-free 상한**) + binder(interfacial, σ=0 obstacle); Bruggeman 4× 과소; porosity 2× σ lever; dip 미측정(porosity 고정) | constriction(Holm/Stage-E)로 상한→실측 보정 + MPM void-fill mechanics(그들 binder=σ0 obstacle) + dip; ★ group-evolution 중간단계 |
 | Oh 2026 (#266) | A+X | bimodal CAM dip(실험) | rigid DEM이 dip 독립재현; 소성 MPM이 dip 부분소거 정량 |
 | Hong 2026 (#271) | A+G | CBD viscoelastic spring-back(GeoDict) | spring-back은 우리 MPM gap(미구현); CBD --coh lever |
 | GeoDict류 #281/#284/#286/#275 | G | 주어진 구조 특성화(top-down) | 공정→구조 예측 + 접촉망 σ |
