@@ -2,7 +2,8 @@
 
 > 기준값: `our_dem_baseline.md`. 각 축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
 > 현재 digest: Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
-> McGeary1961(패킹), **Lee2025·Minnmann2021 JES·Doux2020·Cronau2021(실험 앵커 — 우리 NCM/LPSCl 소재계)**.
+> McGeary1961(패킹), **Lee2025·Minnmann2021 JES·Doux2020·Cronau2021(실험 앵커 — 우리 NCM/LPSCl 소재계)**,
+> **★ Bielefeld2019(우리와 가장 가까운 *구조-모델링 peer* — GeoDict stochastic-placement percolation, Janek 그룹)**.
 > elasto-plastic 종합 = `elasto_plastic_feasibility.md`. ★ **Minnmann 2021 JES = 우리 porosity/σ_ion/τ 앵커의
 > 진짜 출처** (digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`; 2022 Perspective 아님).
 >
@@ -129,6 +130,23 @@
   - 차이/주의: 실험이라 **솔버 없음**(우리 Kirchhoff/Holm·삼중항 σ_i/σ_e/σ_thermal 우위 유지); σ_ionic(SSE) 1.04(co)<1.29(free)는
     압밀 차 아니라 **측정 형상차**(free 500 µm vs co 50 µm) — intrinsic σ 비교 주의.
 
+- **★ Bielefeld 2019 (GeoDict 구조-모델링, Janek 그룹, 우리와 가장 가까운 *구조-모델링 peer*) — percolation 추세는
+  교차검증, 단 σ는 *안 풂***  (digest `docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md`):
+  - **σ 절대값 *미산출*:** 이 논문은 유효 전도도를 *안 푼다* — **percolation 존재 + cluster 부피(utilization) + 기하
+    active interface**까지만.  constriction/contact 저항은 **명시적으로 "future work"**(ref 36 = **Greenwood 1966**,
+    우리 Holm 1967과 같은 계보).  ⇒ 우리 σ_ionic 0.04–0.18·Bazzoun 0.137 과 **σ 직접 수치 비교 불가** — 비교 가능한 건
+    *percolation 임계·utilization·active interface 추세*뿐.  ★ **바로 이 칸(constriction σ)을 우리(+같은 그룹 후속
+    Bazzoun RNM)이 채움** = 우리 transport novelty의 정확한 위치.
+  - **추세 일치(frame[4] 구조 descriptor):** (i) **고-AM → 이온 한계(AM>79 vol%), 저-AM → 전자 한계(AM<69 vol%),
+    중간 좁은 창(69–79 vol%)**(Fig7) = 우리 dead-SE/dead-AM 양끝 + Minnmann 2021 "CAM↑→σ_ion↓·σ_e↑·42 vol% 교차"와
+    같은 trade-off; (ii) **작은 입자 → 저-분율 percolation**(Fig5–6) = 우리 size=packing; (iii) **utilization θ_ν=V_c/V_ν**
+    = 우리 f_AM^cc/dead-AM; (iv) **β=0.41**(3D site-perc, Fig4) = 우리 √(φ−φc)·φ^4 percolation-backbone 지수 이론 정당화.
+  - **흡수할 정량식:** 전자 percolation 임계 **p_c=7.83·ln(d_AM/µm)+36.67 vol%**(Fig6) → 우리 σ_e 입경 의존·dead-AM
+    임계와 대조.  **이상 조성 62/38(5%)·66/34(10%)·72/28 vol%(20%)**(=NCM622+LPS 80/82/86 wt%) → 우리 production core
+    (AM 70–85 wt%) 상단과 정합 + porosity↑→AM↑ 이동.  데이터 `docs/data/bielefeld2019_percolation_thresholds.csv`.
+  - ⚠ **placement(입력 porosity) ≠ 우리 압밀(측정 porosity)** → σ·porosity 절대 동일시 금지, *구조 추세만*.  재료-무관
+    (NCM+LPS는 wt% 환산용 예시) → 소재-특이 절대값 끌어오기 금지.
+
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
 - 문헌: Varkey "elasto-plastic"은 **CONTACT 힘법칙만**(Thornton–Ning), 입자는 완벽 구 — "구=타협,
   현실 형상=향후 과제" 명시. Bazzoun도 구만.
@@ -162,6 +180,11 @@
 - **So 2021** φ_SE^crit=**0.13**(ball-milled aggregate) vs 우리 σ_ionic φc 0.195–0.20(mono) → 응집이 저-φ 침투
   허용 = SE-dispersion 축 후보. **Bouvard 2000** percolation 임계 = f(크기비): 0.32(r=1)→0.18(r=2) = dip의
   rigid-skeleton 기하 기원(alumina inclusion 균열이 하중분담 증거).
+- **★ Bielefeld 2019 (구조-모델링) — Furnas dip을 *다루지 않음*(단봉 PSD)**: AM PSD = **uniform 단봉**만;
+  **bi/tri-modal은 *향후 과제*로 명시 보류** → 그들 "입경 효과"(Fig5–6)는 단봉 입경 *크기* 효과(작은 입자→저-분율
+  percolation)지 *분포* 효과(dip)가 아니다.  ⇒ ★ **dip은 그들이 비운 칸 → 우리 bimodal 12:4:1 + 정량 dip(AM 70–85
+  wt%, de Larrard/McGeary)이 채움**.  단 그들 이상 조성(62/38~72/28 vol%)·전자 percolation 임계는 *강체-구 패킹* 산물
+  이라 우리 dip의 *조성 위치*와 같은 기하 계보(비교는 추세만).
 - **★ Minnmann 2022(설계 Perspective, 정성)**: **tailored(bimodal/multimodal) PSD가 모든 축
   (확산·전자·이온 percolation·계면열화·GB) 최적**(Fig 6 4분면) + **작은 SE + 큰 CAM/SE 비 = 패킹밀도↑**
   (§3.1) → ★ **우리 bimodal 12:4:1 + Furnas dip의 권위 있는 정성 근거**. 단 *dip 위치/깊이는 이 논문에
