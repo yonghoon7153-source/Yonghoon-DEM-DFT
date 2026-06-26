@@ -104,6 +104,15 @@ def parse_args(argv):
     ap.add_argument('--compact-to', type=float, default=0.0,
                     help='displacement-driven: descend the platen until bed porosity ≤ this %% then HOLD, '
                          'regardless of stress — for a target-density demo (e.g. 15).  0 = stress servo (default)')
+    ap.add_argument('--am-jam', action='store_true',
+                    help='OPTION C (geometric AM-jamming, scaffold only): the platen CANNOT penetrate the '
+                         'PERCOLATING (floor-connected) frozen-AM skeleton — descent hard-stops at that '
+                         'cluster top.  Makes the MPM jam at the AM-packing porosity GENUINELY (geometry '
+                         'only — no f_AM / floor / DEM-porosity import); SE-poor AM-rich corners stop near '
+                         'the DEM-anchored true porosity, SE-rich (no tall floor-connected cluster) keep '
+                         'plastic void-fill unchanged (SE servo stops first).  Needs scipy.')
+    ap.add_argument('--am-jam-tol', type=float, default=0.05,
+                    help='AM-AM contact tolerance for --am-jam, as a fraction of median AM radius (near-contact).')
     ap.add_argument('--readout', default='wallP', choices=['wallP', 'sigzz'],
                     help='servo signal: wallP (platen reaction, resolution-invariant) or sigzz (volume-mean)')
     ap.add_argument('--protocol', default='servo', choices=['servo', 'hold'],
@@ -193,7 +202,7 @@ def main(argv):
     # ── build material points: place spheres (two-tier RSA: big AM brute + small SE
     #    fine-grid, like the DEM — a uniform brute is O(N²) and stalls) ───────────
     rng = np.random.default_rng(args.seed)
-    am_c = None; am_r = None; AM_vol = 0.0; am_top = 0.0; um_box = 0.0   # fixed-AM scaffold bookkeeping
+    am_c = None; am_r = None; AM_vol = 0.0; am_top = 0.0; um_box = 0.0; am_jam_z = 0.0   # fixed-AM scaffold bookkeeping
     if args.am_scaffold:
         # DEM→MPM scaffold: real AM are FIXED (loaded from the LIGGGHTS dump) and become a grid
         # obstacle; only SE is the MPM material, RSA-packed into the interstices to a target volume
@@ -210,6 +219,36 @@ def main(argv):
         WALL0 = am_top + 0.05; WALL_MIN = FLOOR + 0.01
         r_se3 = 0.0005 * scl                                  # SE 0.5µm → box units
         um_box = 1000.0 / scl                                 # µm per box unit (lateral_box LIGGGHTS u = WIDTH)
+        if args.am_jam:                                       # ★ OPTION C: percolating-AM rigid jam height
+            # The platen cannot penetrate the floor-connected (percolating) frozen-AM skeleton.  Compute
+            # AM-AM near-contacts → connected components → keep components touching the FLOOR → jam height
+            # = max(z+r) over those AM.  SE-poor AM-rich → AM percolate → jam_z ≈ am_top (platen stops near
+            # the DEM bed top = true porosity, geometry-derived, no anchor import).  SE-rich → no tall
+            # floor-connected cluster → jam_z stays low → SE servo stops the platen first → void-fill intact.
+            try:
+                from scipy.spatial import cKDTree
+                from scipy.sparse import coo_matrix
+                from scipy.sparse.csgraph import connected_components
+                _rmed = float(np.median(am_r)); _tol = max(args.am_jam_tol, 0.0) * _rmed
+                _pp = cKDTree(am_c).query_pairs(r=float(2.0 * am_r.max() + _tol), output_type='ndarray')
+                if len(_pp):
+                    _d = np.linalg.norm(am_c[_pp[:, 0]] - am_c[_pp[:, 1]], axis=1)
+                    _pp = _pp[_d <= (am_r[_pp[:, 0]] + am_r[_pp[:, 1]] + _tol)]      # actual (near-)contacts
+                _N = len(am_c)
+                if len(_pp):
+                    _g = coo_matrix((np.ones(len(_pp)), (_pp[:, 0], _pp[:, 1])), shape=(_N, _N))
+                    _, _lab = connected_components(_g, directed=False)
+                else:
+                    _lab = np.arange(_N)
+                _floor_am = (am_c[:, 2] - am_r) <= (FLOOR + 1.5 * _rmed)             # AM resting on/near the floor
+                _perc = np.isin(_lab, np.unique(_lab[_floor_am])) if _floor_am.any() else np.zeros(_N, bool)
+                if _perc.any():
+                    am_jam_z = float((am_c[_perc, 2] + am_r[_perc]).max())
+                print(f'  [am-jam] percolating AM skeleton: {int(_perc.sum())}/{_N} floor-connected, '
+                      f'jam_z={am_jam_z:.3f} box = bed {(am_jam_z - FLOOR) * um_box:.1f}µm '
+                      f'(am_top {am_top:.3f}) → platen hard-stops at the rigid AM top.')
+            except Exception as _e:
+                print(f'  [am-jam] DISABLED ({_e}) → no geometric jam'); am_jam_z = 0.0
         # THICK-FILM vertical grid: a tall electrode (z_extent > lateral) would overflow the cubic
         # unit box (158µm/30µm → z maps to ~5).  Size nz so the grid spans [0, WALL0] at the SAME
         # dx as the lateral cells → SE keeps its calibrated resolution.  nz = n_grid when it fits
@@ -667,7 +706,8 @@ def main(argv):
                 # untouched.  This is physics (AM jam at DEM packing), not a DEM clamp.
                 hard_floor = (args.am_load_frac > 0.0 and args.floor_porosity > 0.0
                               and por <= args.floor_porosity)
-                descend = (p + am_skel < target) and not hard_floor   # stop when stress-share reached OR AM jams at floor
+                am_jam = (am_jam_z > 0.0 and wall_z[None] <= am_jam_z)   # ★ OPTION C: platen reached percolating AM top → rigid jam
+                descend = (p + am_skel < target) and not hard_floor and not am_jam
             else:
                 # loose→dense mix: a big rigid AM hitting the platen spikes wallP for ~1 frame, which
                 # froze the platen in the loose state (premature stop → slow crawl).  Keep descending
