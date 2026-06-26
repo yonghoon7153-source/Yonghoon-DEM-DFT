@@ -69,7 +69,7 @@
 | # | 정확한 제목 | 저자/년·출처 | 왜 | 상태 |
 |---|---|---|---|---|
 | 21 | **Drucker-Prager elastoplasticity for sand animation** | Klár 외 2016, ACM TOG 35(4) | DP-cap MPM — 우리 **DPC cap dead-end**과 직결. | ⬜ |
-| 22 | **A material point method for snow simulation** | Stomakhin 외 2013, ACM TOG 32(4) | 탄소성 MPM 대중화 원전(return-mapping). | ⬜ |
+| 22 | **A material point method for snow simulation** | Stomakhin 외 2013, ACM TOG 32(4) | 탄소성 MPM 대중화 원전(return-mapping). | ✅ `papers/stomakhin2013_mpm_snow_elastoplastic.md` |
 | 23 | **Material point method after 25 years: theory, implementation, and applications** | de Vaucorbeil 외 2020, Adv. Appl. Mech. 53 | MPM 리뷰 + J2 구현(champion 토대). | ⬜ |
 
 ## Tier 5 — 배터리 전극 탄소성 DEM 응용 (맥락, 선택)

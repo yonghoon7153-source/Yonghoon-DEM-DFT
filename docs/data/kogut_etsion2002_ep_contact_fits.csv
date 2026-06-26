@@ -1,0 +1,34 @@
+quantity,regime,omega_over_omegac_range,prefactor,exponent,equation_in_paper,source,notes
+# Kogut & Etsion 2002 J. Appl. Mech. 69(5) 657-662  DOI 10.1115/1.1490373
+# Deformable elastic-plastic SPHERE pressed by a RIGID FLAT (axisymmetric ANSYS 5.7 FEM)
+# Dimensionless KE empirical power-law fits (curve-fitted to FEM), normalized at yield inception (omega_c, P_c, A_c, p_c)
+# Validity tested over 100 < E/Y < 1000 and nu=0.3 ; normalization makes results material/radius independent. Curve-fit accuracy: P,A >97% throughout; p/Y stated.
+# --- yield inception (critical values), Eqs 1,3,4 ---
+omega_c,critical_interference,n/a,n/a,n/a,Eq1,stated,omega_c = (pi*K*H/(2*E))^2 * R ; K=0.454+0.41*nu (hardness coeff, Chang-Etsion-Bogy 1988) ; H=2.8*Y (hardness, Bhushan ref18) ; E=Hertz modulus 1/E=(1-nu1^2)/E1+(1-nu2^2)/E2
+P_c,critical_contact_load,n/a,n/a,n/a,from_Eq2_at_omegac,stated,P_c = (4/3)*E*R^(1/2)*omega_c^(3/2) (Hertz at omega=omega_c)
+A_c,critical_contact_area,n/a,n/a,n/a,Eq3_at_omegac,stated,A_c = pi*R*omega_c (Hertz at omega=omega_c)
+p_c,critical_mean_pressure,n/a,n/a,n/a,from_Eq4_at_omegac,stated,p_c = (2/3)*K*H = (2/3)*K*2.8*Y ; at yield inception p_m = p_c
+# --- elastic (Hertz) regime, omega <= omega_c, Eqs 2-4 ---
+P_over_Pc,elastic_Hertz,<=1,1.0,1.5,Eq2,stated,P/P_c = (omega/omega_c)^(3/2)
+A_over_Ac,elastic_Hertz,<=1,1.0,1.0,Eq3,stated,A/A_c = (omega/omega_c)^1
+p_over_pc,elastic_Hertz,<=1,1.0,0.5,Eq4,stated,p/p_c = (omega/omega_c)^(1/2)
+# --- elastic-plastic regime stage-1, 1 <= omega/omega_c <= 6, Eqs 5,7 ---
+P_over_Pc,elastoplastic_stage1,1-6,1.03,1.425,Eq7,stated,(P/P_c)_1 = 1.03*(omega/omega_c)^1.425
+A_over_Ac,elastoplastic_stage1,1-6,0.93,1.136,Eq7,stated,(A/A_c)_1 = 0.93*(omega/omega_c)^1.136
+p_over_Y,elastoplastic_stage1,1-6,1.19,0.289,Eq5,stated,(p/Y)_1 = 1.19*(omega/omega_c)^0.289  (mean pressure normalized by yield strength Y)
+# --- elastic-plastic regime stage-2, 6 <= omega/omega_c <= 110, Eqs 6,8 ---
+P_over_Pc,elastoplastic_stage2,6-110,1.40,1.263,Eq8,stated,(P/P_c)_2 = 1.40*(omega/omega_c)^1.263
+A_over_Ac,elastoplastic_stage2,6-110,0.94,1.146,Eq8,stated,(A/A_c)_2 = 0.94*(omega/omega_c)^1.146
+p_over_Y,elastoplastic_stage2,6-110,1.61,0.117,Eq6,stated,(p/Y)_2 = 1.61*(omega/omega_c)^0.117  (mean pressure normalized by yield strength Y)
+# --- transition markers (stated in text) ---
+plastic_onset_below_surface,marker,1,n/a,n/a,text,stated,plastic region first appears below sphere tip at omega/omega_c=1 (yield inception)
+stage_transition_1to2,marker,6,n/a,n/a,text,stated,plastic region first reaches sphere SURFACE at omega/omega_c=6 (r/a~2.7) -> slope change in p_m (Fig7 discontinuity)
+elastic_core_gone,marker,68,n/a,n/a,text,stated,inner elastic core disappears at omega/omega_c=68 (whole contact zone plastic)
+fully_plastic_onset,marker,110,n/a,n/a,text,stated,fully-plastic inception at omega/omega_c=110 ; p_m -> hardness H ; p/Y -> 2.8 (Tabor); A/A_c~205, P/P_c~534
+# --- fully-plastic endpoint values at omega/omega_c=110 (FEM) ---
+p_over_Y_fullyplastic,fully_plastic,110,2.8,n/a,Fig7,stated,p/Y -> 2.8 at omega/omega_c=110 (= H/Y, Tabor; eq6 at 110 gives 1.61*110^0.117 ~ 2.81)
+A_over_Ac_fullyplastic,fully_plastic,110,205,n/a,text,stated,A/A_c ~ 205 at omega/omega_c=110 (deformable-sphere endpoint; cf indented half-space Francis 113.2)
+P_over_Pc_fullyplastic,fully_plastic,110,534,n/a,text,stated,P/P_c ~ 534 at omega/omega_c=110 (deformable-sphere endpoint; cf indented half-space Johnson 360)
+# --- comparison to indentation of half-space by rigid sphere (Mesarovic-Fleck 17, this paper text) ---
+A_over_Ac_halfspace,fully_plastic_indent,n/a,113.2,n/a,text,stated,Francis ref25: fully-plastic indentation of half-space starts A/A_c=113.2 (rigid sphere indenting half-space; yields easier than pressed sphere)
+P_over_Pc_halfspace,fully_plastic_indent,n/a,360,n/a,text,stated,Johnson ref24: fully-plastic indentation of half-space starts P/P_c=360

@@ -1,0 +1,61 @@
+# Jackson & Green (2005) J. Tribology 127(2) 343-354
+# A Finite Element Study of Elasto-Plastic Hemispherical Contact Against a Rigid Flat
+# DOI 10.1115/1.1866166  (Auburn / Georgia Tech). FEM (ANSYS, confirmed by ABAQUS), axisymmetric 2D, elastic-perfectly-plastic, von Mises.
+# Single-contact deformable hemisphere (R) vs RIGID FLAT (reverse of Mesarovic-Fleck dissimilar two-sphere). REFINES Kogut-Etsion 2002.
+# KEY RESULT: mean contact pressure / hardness H is NOT a constant ~3*S_y; it EVOLVES with deformed geometry (a/R) and material (e_y=S_y/E').
+# All values STATED unless marked digitized(approx, TREND-only). Normalized by Hertz critical values (omega_c, P_c, A_c). omega*=omega/omega_c etc.
+# quantity,value,units,regime/condition,source,notes
+# --- FEM model setup ---
+fem_code,ANSYS,software,FE solver,stated,"axisymmetric 2D; confirmed identical by ABAQUS; mesh orders of magnitude finer than Kogut-Etsion[4]"
+material_model,elastic-perfectly-plastic,constitutive,von Mises yield,stated,"NO strain hardening (cf Mesarovic-Fleck m=3/5/inf); tangential/sliding not modeled"
+mesh_total_elements,11101,4-and-8-node elements,converged mesh,stated,"mesh refined x2 until force & area differ <1% between iterations"
+mesh_contact_elements,100,contact elements,contact region,stated,">=30 contact elements in contact for each interference (max contact-radius error 3.3%)"
+loading_method,displacement-controlled,BC,base nodes displaced by omega,stated,"displacement (not force) control; converges faster; radial displ of base restricted"
+E_modulus,200,GPa,held constant,stated,"elastic modulus fixed for all 5 materials"
+poisson_ratio,0.32,dimensionless,held constant,stated,"nu=0.32 (steel-like); C=1.295*exp(0.736*nu)=1.639"
+sphere_radius_R,1,micron,tabulated results,stated_Table1,"R=1um, E=200GPa, nu=0.32 baseline"
+material_yield_strengths_Sy,0.210;0.5608;0.9115;1.2653;1.619,GPa,5 materials (Mat.1-5),stated,"cover typical engineering steel yield range; Mat.1 weakest, Mat.5 strongest"
+yield_strain_ey_range,0.00105-0.0081,dimensionless,e_y=S_y/E' for 5 mats,stated,"e_y=S_y/E'; Mat.1 ~0.00105, up to Mat.5; Table3 lists 0.00456/0.00633/0.00810"
+contact_area_radius_error_max,8.1,percent,vs Hertz below critical,stated,"contact RADIUS differs from Hertz by max 8.1%, average 4.4%; FEM->Hertz below critical"
+contact_force_error_max,2,percent,vs Hertz below critical,stated,"contact force differs from Hertz by no more than 2%"
+# --- critical (onset of yield) values, derived analytically (Appendix B, von Mises) ---
+critical_interference_omega_c,(pi*C*S_y/(2E'))^2*R,formula,onset of yielding,eq1,"omega_c critical interference; C from VM yield criterion solved numerically"
+C_yield_coefficient,1.295*exp(0.736*nu),formula,critical yield stress coefficient,eq2,"C=p_oc/S_y at first yield; eq B6; for nu=0.32 C=1.639; differs from numerical avg 1.2% max 3.1%"
+critical_force_Pc,(4/3)*(R/E')^2*(C*pi*S_y/2)^3,formula,critical contact force,eq3,"P_c at initial yielding"
+critical_area_Ac,pi^3*(C*S_y*R/(2E'))^2,formula,critical contact area,eq4,"A_c at initial yielding"
+# --- EVOLVING HARDNESS: the central result (Fig 5,6,7) ---
+hardness_geometric_limit_formula,H_G/S_y=2.84*[1-exp(-0.82*(a/R)^(-0.7))],eq17,evolving hardness vs deformed geometry,eq17,"H_G/S_y EVOLVES with a/R (contact radius / sphere radius); Weibull-form fit to FEM limiting values"
+hardness_limiting_value_a_over_R_to_0,2.84,H_G/S_y,a/R -> 0 (small contact),eq17_limit,"limiting H_G/S_y=2.84 as a/R->0; matches Williams[29] theoretical 2.83 ALMOST PRECISELY"
+hardness_theoretical_Williams,2.83,H_G/S_y,a/R->0 blunt-rigid-rod limit,stated_Williams29,"theoretical value 2.83 (Williams p109); FEM fit 2.84 agrees"
+hardness_at_a_over_R_unity,1.0,H_G/S_y,a/R = 1 (contact radius = sphere radius),stated_Fig7,"H_G/S_y -> 1 when a=R: deformable blunt rod vs rigid flat (theoretically H/S_y=1)"
+hardness_Tabor_constant_REJECTED,3.0,H_G/S_y,classical Tabor assumption,stated_Tabor11,"Tabor[11] H~3*S_y assumed CONSTANT; this work shows it is NOT constant - varies 2.84(small)->1(a=R)"
+hardness_fit_valid_range_a_over_R,0-0.412,a/R,eq17 fit data range,stated,"eq17 fitted for 0<a/R<=0.412; CAUTION outside this range"
+peak_average_pressure_ratio,~2.8,P/(A*S_y),max observed in Fig5/6 (weakest mat),digitized_Fig5_6(approx),"Mat.1 (weakest) reaches P/AS_y ~2.8 at large omega*; Mat.5 lower; material-dependent peak"
+# --- empirical contact AREA fit (Eqs 12-14) ---
+area_fit_elastic_branch,A_F*=omega*,eq12,for 0<=omega*<=omega_t*,eq12,"Hertz-like below transition; A normalized by A_c"
+area_fit_plastic_branch,A_F*=omega**(omega*/omega_t*)^B,eq13,for omega_t*<=omega*,eq13,"power function; continues PAST Abbott-Firestone fully-plastic (AF) area"
+area_fit_exponent_B,B=0.14*exp(23*e_y),eq14,material-dependent exponent,eq14,"e_y=S_y/E' (eq15); area fit IS material-dependent (key vs AF/KE)"
+area_transition_omega_t,1.9,omega*,transition elastic->elasto-plastic,eq16,"omega_t*=1.9 transition point; fit avg error 1.3% max 4.3% over all 5 materials"
+area_fit_avg_error,1.3,percent,Eqs12-13 vs FEM,stated,"average 1.3%, maximum 4.3% (eq13 across all 5 materials)"
+# --- empirical contact FORCE fit (Eqs 18-22) ---
+force_fit_elastic_branch,P_F*=(omega*)^(3/2),eq20,for 0<=omega*<=omega_t*,eq20,"Hertz P*=(omega*)^3/2 below transition"
+force_fit_plastic_branch,P_F*=[exp(-0.25*(omega*)^(5/12))]*(omega*)^(3/2)+(4HG/CSy)[1-exp(-(1/25)(omega*)^(5/9))]*omega*,eq21,for omega_t*<=omega*,eq21,"corrected-AF force using evolving H_G; approaches Hertz at small omega, AF-corrected at large"
+force_fit_avg_error,0.94,percent,Eq21 vs FEM,stated,"statistically differs from FEM avg 0.94%, max 3.5% (when eq19 used for H_G)"
+avg_pressure_to_yield_combined,P/(A*S_y)=(2/3)*P_F*/A_F*,eq22,average pressure to yield ratio,eq22,"combining eqs12-16,20-21; the evolving hardness ratio"
+# --- transition / regime markers (vs Kogut-Etsion KE model [4]) ---
+KE_discontinuity_omega1,6,omega*,KE model slope discontinuity,stated,"KE model has discontinuous slope at omega*=6 (this work continuous; transition at 1.9)"
+KE_termination_omega2,110,omega*,KE model termination (fully plastic),stated,"KE assumes fully plastic at omega*=110; this work continuous past it (no truncation)"
+initial_surface_yield_omega,7.89-9.64,omega*,interference at initial SURFACE yield,stated_Table3,"omega* at which plastic deformation first reaches the contacting SURFACE: 7.89/9.36/9.64 (material-dep)"
+fully_plastic_onset_omega,74.23-81.87,omega*,interference at fully plastic,stated_Table3,"omega* at which contact first FULLY plastic: 81.13/81.87/74.23; KE predicts 68 (close)"
+bulk_yield_onset_omega_c,1.0,omega*,first yield BELOW surface,stated,"by definition first yield (subsurface, max von Mises) at omega*=1=omega_c"
+volume_conservation_onset_omega,22,omega*,Poisson eff/volume-conserving plastic flow,stated_Fig9,"radial displacement of last contact point: negative (compress) below omega*~22, positive (geometry-following) above; nu_eff->0.5"
+# --- experimental validation (Johnson 1968 copper, Table 2) ---
+exp_Johnson_copper_Sy,265.5,kPa,Johnson[25] copper yield,stated_Table2,"copper sphere vs rigid steel flat; E=115GPa nu=0.34"
+exp_validation_max_diff_current,10.9,percent,Jackson-Green vs Johnson exp,stated_Table2,"current model max 10.9% diff (vs KE max 10.2%); at HIGHEST load only 1.7%"
+exp_validation_largest_load_diff,1.7,percent,at highest (fully-plastic) load,stated_Table2,"at largest load current model differs from experiment only 1.7% (a/R=0.204, P~2.59 S_y)"
+exp_a_over_R_highest_load,0.204,a/R,Johnson highest load,stated_Table2,"a/R=0.204; predicted P/AS_y=2.61 (vs KE's AF-assumed 2.8)"
+# --- prior models compared (Appendix A) ---
+AF_fully_plastic_pressure,3.0,P/(A*S_y),Abbott-Firestone fully plastic,stated,"AF model: horizontal line P/AS_y=3 (constant hardness); A_AF=2*pi*R*omega (truncation)"
+CEB_hardness_factor,H=2.8*S_y;K=0.454+0.41*nu,model,Chang-Etsion-Bogy CEB,stated_eqA7,"CEB assumes H=2.8 S_y; omega_c=(pi*K*H/2E')^2*R; discontinuity at omega_c"
+KE_area_branch1,A_KE*=0.93*(omega*)^1.136,eqA8,KE for 1<=omega*<=6,eqA8,"Kogut-Etsion fully-plastic area fit (their FEM, coarser mesh)"
+KE_area_branch2,A_KE*=0.94*(omega*)^1.146,eqA9,KE for 6<=omega*<=110,eqA9,"KE second branch; discontinuous slope at omega*=6; terminates omega*=110"
