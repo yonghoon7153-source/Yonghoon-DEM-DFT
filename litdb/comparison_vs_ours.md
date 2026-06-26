@@ -11,7 +11,14 @@
 
 ## A. 압밀 / porosity (E_SE 강성이 floor를 정한다)
 - 문헌: Varkey(halide E=10.58) separator floor **21 %** / cathode **37 %** @350 MPa (강체 구, <20 % "추구 안 함").
-- 우리: LPSCl pure-SE **~10 %** @300 (Minnmann), real_14 **15.6 %** — 같은 압력 **약 2× 더 치밀**.
+- 우리: LPSCl pure-SE **~10 %** @300, real_14 **15.6 %** — 같은 압력 **약 2× 더 치밀**.
+- ★ **porosity 앵커 출처 정정(Minnmann 2022 digest §0):** "Minnmann porosity 14 %/13–17 %"는
+  **Minnmann *2022* AEM Perspective가 아니라 Minnmann *2021* JES 040537**(NCM622+LPSCl, **380 MPa**,
+  EIS-TLM; avg 14 %, range 13–17 %, σ_ion_eff 0.17 mS/cm, τ_ion 2.07)에서 옴. **밀도 87 %@300 MPa =
+  Sakuda 2013**(75Li₂S-25P₂S₅). **pure-SE 10 % = 우리 MPM 3D(σ_y 0.30) 보정 수렴값**(2021 JES/Sakuda
+  cold-press 거동 위). 2022 Perspective는 **porosity 수치 0개(전부 정성)** — 수치 cite 시 *반드시*
+  2021 JES/Sakuda를. (+ refs.bib @Minnmann2021이 엉뚱한 040502/abf3a3 가리킴 → 040537/abf8d7 정정.)
+  ⇒ 압력 구분 필수: 우리 **300 MPa = 제조(cold-press)**, 작동은 **수~수십 MPa**(2022 Perspective 명시).
 - 왜 다른가: (a) halide E가 우리 E_eff 1.35보다 ~8× 뻣뻣 → 더 높은 잔류 porosity (우리 MPM E-sweep과 정합);
   (b) 우리 DEM 연화 + MPM 소성 흐름이 강체 구 floor(~20 %) 아래로 도달.
 - 인사이트: **우리 porosity 관계식에 E_SE(강성) 항 + 조성 항 필수.** ~20 %는 강체 구 하드 floor.
@@ -76,12 +83,22 @@
 - **So 2021** φ_SE^crit=**0.13**(ball-milled aggregate) vs 우리 σ_ionic φc 0.195–0.20(mono) → 응집이 저-φ 침투
   허용 = SE-dispersion 축 후보. **Bouvard 2000** percolation 임계 = f(크기비): 0.32(r=1)→0.18(r=2) = dip의
   rigid-skeleton 기하 기원(alumina inclusion 균열이 하중분담 증거).
+- **★ Minnmann 2022(설계 Perspective, 정성)**: **tailored(bimodal/multimodal) PSD가 모든 축
+  (확산·전자·이온 percolation·계면열화·GB) 최적**(Fig 6 4분면) + **작은 SE + 큰 CAM/SE 비 = 패킹밀도↑**
+  (§3.1) → ★ **우리 bimodal 12:4:1 + Furnas dip의 권위 있는 정성 근거**. 단 *dip 위치/깊이는 이 논문에
+  없음*(정성 "bimodal이 좋다"까지) → McGeary/de Larrard 기하(우리)가 *정량*을 소유. 우리 차별점 =
+  정량 dip(AM 70–85 wt%)을 추가. **CAM 60–70 vol% 최적**(§2.1)이 우리 production core(AM 70–85 wt% ≈
+  SE 30–50 % of solid)와 정합.
 
 ## E. 우리 계산이 문헌을 "검증/교차검증"하는 지점 (강점으로 쓸 것)
 - Bazzoun RNM(Holm+Kirchhoff) = 우리 네트워크 솔버 → 같은 물리, 추세 일치 (frame[4] 독립 교차검증).
 - Bazzoun 실험 σ_eff,ion + 다중압력 = 우리가 부족했던 **외부 실험 앵커** 제공.
 - Varkey E_SE=10.58·floor 21/37 % = 우리 "E 강성 → floor" 가설의 stiffer-SE 데이터점.
 - Varkey 탄성→소성 무릎 ~100 MPa = 우리 Heckel P_y 138 재현(소재 일반성).
+- ★ Minnmann 2022 §5.4 = Janek 그룹 리뷰가 **"미세구조 mechanical model을 echem·thermal과 결합 + CAM을
+  다른 형상·크기·탄성으로 재고"를 명시 요구** → **우리 DEM(transport σ 삼중항)+MPM(소성 SHAPE morphology)
+  분업이 그 권고의 직접 구현**. "구형 CAM 권고 + 비구형 재고"는 우리 MPM SHAPE 소성 간극 + Varkey/Bazzoun
+  "구=타협" 한계와 같은 계보 → **frame[5] 분업이 문헌 권위로 정당화.**
 
 ## F. 우리가 아직 못 하는 것 / 흡수할 것 (정직 목록 → 향후)
 - **FEM 연속체 transport 기준** 없음 (Bazzoun COMSOL 보유) — RNM↔FEM 대조틀 흡수 가치.
