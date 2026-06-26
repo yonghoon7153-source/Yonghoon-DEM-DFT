@@ -25,6 +25,7 @@ DEM/MPM (stoic-knuth)  ──전달/역학 시뮬레이션──┐
 | `.claude/agents/litdb-curator.md` | 논문 에이전트 정의 |
 
 ## 빠른 시작
+- **🔧 막히는 문제(트러블슈팅)** → `TROUBLESHOOTING.md` (후막 transport·건식 도우/섬유화 등 — 살아있는 문서)
 - **무슨 데이터 있나** → `db/README.md` (데이터 사전)
 - **어디까지 되어있나(진행현황)** → `docs/project/06_STATUS.md`
 - **2차년도 뭐하나** → `docs/project/01_YEAR2_PLAN.md`
