@@ -346,38 +346,41 @@ gate가 SE-content-aware(f_AM/margin) = round 6 geometric gate가 못 보는 그
 ★ OPEN (사용자 결정, 혼자 확정 X): §13 채택 + wallP-conditional(SE-content-aware) validation 마무리 vs round 6 GPU 재확인
 (예측 exact: real_14 ≥18.4, 100_12↔1mAh_6 분리 불가 — 기존 결과 재현일 뿐).
 
-## §16 ★ 코너 = 물리적으로 만들 수 없는 셀 (REFRAME, 2026-06-27) — 사용자 통찰, 데이터로 확정
-계기 (사용자): "round 7 patch 말고, 그 1mAh 코너가 *물리적으로 안 만들어지는 셀*인지 확인해보자."  → MPM을 고치는 lane이
-아니라 **코너 입력 자체가 manufacturable functional cell인지** 묻는 다른 lane.  ★ 핵심 연결: round 6의 2D discriminator
-(두께 × SE-content)가 **바로 물리적 realizability의 두 축** — 두께=near-monolayer 한계, SE-content=ionic percolation.
-- **방법:** reliability 117케이스 중 σ_ionic+thickness 매칭되는 24케이스(σ_ionic 있는 *real* 케이스; 합성 a-sweep는
-  porosity-only)에 대해 **n_layers = thickness / D_AM_max** + **σ_ionic**(SE ionic percolation 직접 측정값) 계산.
-  data: `docs/data/mpm_corner_realizability.csv`.
-- **결과 (깨끗한 분리, cross-tab):**
+## §16 ★ 코너 = SE-sub-functional + thin subset (사용자 통찰 → 강버전 반박 KILL → scoped 생존, 2026-06-27)
+계기 (사용자): "round 7 patch 말고, 그 1mAh 코너가 *물리적으로 안 만들어지는 셀*인지 확인해보자."  → MPM을 고치는 게 아니라
+**코너 입력 자체가 functional cell인지** 묻는 다른 lane.  ⚠ **첫 강버전(아래)은 사용자 요청 반박 2-lens로 KILL됨 — scoped 버전만 생존.**
 
-  | group | n | SE-starved (σ_ion<0.05) | near-monolayer (n_layers<2.5) | **BOTH (marginal)** |
-  |---|---|---|---|---|
-  | **CORNER (MPM 과압축, unreliable)** | 8 | **8/8** | **8/8** | **8/8** |
-  | reliable (cross-validated) | 16 | 3/16 (단 thick) | 6/16 (단 SE충분) | **0/16** |
+### 강버전 (KILLED): "코너 = near-monolayer ∩ SE-starved = 물리적으로 못 만드는 셀"
+첫 컷(full_ranking.csv σ, 24케이스 매칭)은 깨끗해 보였음: CORNER 8/8 vs reliable 0/16이 thin∩starved.  **그러나 반박이
+정량으로 깸** (lens ac20b5471 circularity/overclaim + a3a4242643 generalization):
+1. **CIRCULARITY:** ρ(SE/sol, σ_ionic) = **0.972** → σ_ionic은 SE/sol의 monotone 변환.  "코너는 SE-starved"는 코너의 정의
+   (AM-rich/SE-poor)를 *재진술*한 것 = 독립 발견 아님.
+2. **near-monolayer는 second axis 아님 (BROKEN):** ★ 첫 컷은 거의 다 1mAh.  반박이 빠진 2mAh 코너 케이스로 확장
+   (case_3d_collection.csv — 내 "a-sweep는 σ 없음" caveat가 **사실과 다름**, 31/36이 σ 보유):
+   2mAh_a9_p10 **n_layers 3.00**, 2mAh_real_20 **2.68**, 2mAh_a9_50_p10 **2.71** = **near-monolayer 아닌데 코너**.
+   full 코너서 SE-starved 13/13 (universal) but near-mono 10/13 (깨짐).  + reliable의 10/16(첫컷)~23/78(전체)도 near-mono
+   → 변별 안 됨.  ★ **clincher (같은 두께 control):** 2mAh_real_10 (n_layers 2.99, SE/sol 32, σ **0.126**) → MPM 17.95 ≈
+   DEM 17.75 **reliable** vs 2mAh_a9_50_p10 (n_layers 2.71, SE/sol 19, σ **0.0066**) → MPM 9.31 ≪ DEM 18.45 **corner**.
+   같은 두께, 반대 결과 → **SE-content가 가르고 두께는 안 가름.**
+3. **OVERCLAIM "un-manufacturable":** Bazzoun 80wt% 셀(σ 0.065)은 *실제로 만들어 EIS 측정됨*.  코너 σ 0.025–0.036은 겨우
+   ~2× 아래 + 1mAh는 real lab loading.  조립 못 한다는 증거 0 → 맞는 말은 "**sub-functional / 문헌 검증 envelope 밖**".
 
-  - CORNER σ_ionic 0.0009–0.036 mS/cm; reliable 0.030–0.231.  **thin AND SE-starved = 오직 unreliable 코너에만**
-    (reliable 16개 중 *둘 다*인 케이스 0개).  reliable의 low-σ는 전부 THICK(particulate_12 n_layers 16 = thickness escape);
-    reliable의 thin은 전부 SE-충분(100_9 σ 0.105, 1mAh_6 σ 0.09–0.12).  **교집합(thin∩starved)만 실패 = round 6 2D
-    discriminator와 정확히 일치.**
-  - 대표: **100_15** = mono-large(AM_P 12µm), thickness 19µm → **n_layers 1.6**, σ_ionic **0.0009**(거의 non-percolating)
-    = 이중 degenerate.  100_12/13/14 = n_layers 1.3, σ_ionic 0.025–0.033 (sub-functional).
-- **literature anchor (Bazzoun 2026, 같은 LPSCl+NMC):** functional cell은 SE/sol **38–53 vol%** (σ_ionic 0.065–0.137);
-  80wt% AM(가장 AM-rich functional)에서 SE/sol 38vol%, σ 0.065가 **하한**.  우리 코너 = am_wt 87–92, SE/sol **16–32 vol%**,
-  σ 0.0009–0.036 = Bazzoun functional 하한 **아래** = SE-starved.  실제 cathode는 또한 multilayer(50–150µm, 수십 층);
-  코너 15–20µm = 1–2 입자층 = near-monolayer.
-- **VERDICT (사용자 가설 확정):** MPM-unreliable 코너 = **SE-starved(σ_ion<functional 하한) ∩ near-monolayer(n_layers<2)**
-  = **manufacturable functional ASSB cathode가 아님** (SE가 ionic percolate 안 함 + 입자 1–2층).  → §13 REFRAME:
-  **MPM은 물리적으로 제조가능한/기능하는 design envelope 전체에서 신뢰됨; unreliable 코너는 그 envelope 밖**(SE-기아
-  near-monolayer = 학술적 degenerate 입력).  MPM의 "실패"는 real cell의 모델 한계가 아니라 **realizable space 밖에서 도는 것.**
-- **정직한 caveat:** (1) 24/117 매칭(σ_ionic 보유 real 케이스; 합성 a-sweep porosity-only는 σ-test 불가하나 AM-rich/SE-poor
-  signature 공유).  (2) strict "불가능"은 아님 — 100_12/13/14는 σ~0.03(기능 미달이나 nonzero)=marginal, 100_15(σ0.0009)만
-  사실상 non-functional.  단 8/8 전부 functional 하한 아래 + near-monolayer = **practical envelope 밖**.  (3) binding은
-  *교집합*(thin AND starved): thin이지만 SE충분(100_9)은 OK, thick이지만 starved(particulate_12)도 OK — 교집합만 실패.
-- ⇒ 이게 §13의 **6번째 backing**이자 가장 강력 — 코너를 "MPM이 못 푸는 real cell"이 아니라 "**안 만들어지는 degenerate
-  입력**"으로 재정의.  production design space(functional cells)는 100% MPM-신뢰.  ⚠ 여전히 사용자 결정: 이 REFRAME을
-  최종 closure로 채택할지, 합성 a-sweep 케이스까지 σ_ionic 돌려 24→전체로 확장할지.
+### scoped 생존 버전 (둘 다 lens가 인정) — 이게 §16의 최종
+data: `docs/data/mpm_corner_realizability.csv` (hertz σ, 84케이스: 6 코너 / 78 reliable).
+- **SE-sub-functionality(σ_ionic_hertz < ~0.065 = Bazzoun functional 하한)는 MPM-unreliable 코너의 NECESSARY 조건
+  (6/6, lens B full 코너 13/13).**  그러나 **NOT sufficient** — reliable 78 중 **22개(σ<0.05)/33개(σ<0.065)도 sub-functional**.
+- sub-functional이 reliable로 남는 경로 = **THICKNESS escape (§13 확인):** 8mAh_real_11–15 (SE/sol 16, σ~0.005, **n_layers
+  10–12**) gap≈0 = reliable.  2mAh (n_layers ~2.4–2.9)는 borderline(gap 2–4); 1mAh (n_layers 1.3–1.9)는 코너.
+  ⇒ **두께는 연속 modulator (8mAh escape → 2mAh borderline → 1mAh corner)**, binary near-monolayer 경계가 아님.
+- **VERDICT (scoped):** MPM-unreliable 코너 = **SE-sub-functional ∩ thin (thickness-escape 못 받는)** subset.  코너 셀은
+  **sub-functional**(ionic 전송 나쁨, 실제 셀 SE/sol≥38vol%·σ≥0.065보다 아래) — **"못 만든다"가 아니라 "잘 작동 안 하는,
+  문헌 envelope 밖 설계".**  → §13 보강: **MPM은 functional 셀(σ 충분) 전체 + thick 셀(thickness-escape) 전체에서 신뢰;
+  과압축은 thin × sub-functional corner에만.**  단 이는 코너의 SE-poor 정의를 크게 재진술한 것(ρ0.97) — non-circular 가치는
+  *literature functional 하한*(Bazzoun)을 코너가 넘어선다는 **외부 anchor** + thickness-escape의 연속성뿐.
+- **정직한 정정 기록:** (1) 강버전 "un-manufacturable" overclaim → "sub-functional/envelope 밖"로 격하.  (2) "near-monolayer
+  = 2nd realizability axis" = **틀림** (2mAh 코너 n_layers 3.0; reliable도 near-mono 다수).  (3) 내 "a-sweep porosity-only"
+  caveat = **사실 오류** (case_3d_collection에 σ 31/36 존재) → 전체 join으로 정정.  (4) σ=0.0009(100_15)는 솔버 marginal-
+  percolation 최약 regime 값 → 단독 근거로 못 씀.
+- ⇒ §13의 backing은 유지되나 "강한 physical-realizability law"는 **철회**.  사용자 원래 질문("1mAh 코너 물리적으로 못 만드나?")
+  답 = **strict 不可는 아님; SE-sub-functional·문헌 envelope 밖** = 안 좋은 설계지 불가능한 설계 아님.  ⚠ 사용자 결정 OPEN:
+  이 scoped 결론 채택 vs 더 파기(예: 코너의 실제 실험 제조 가능성 문헌 추가 조사).
