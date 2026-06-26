@@ -1,8 +1,10 @@
 # 🔬 문헌 ↔ 우리 DEM+MPM — 차이 + 적용 인사이트
 
 > 기준값: `our_dem_baseline.md`. 각 축마다 "문헌이 뭐라 하나 / 우리가 뭐라 하나 / 왜 다른가 / 어떻게 쓰나".
-> 현재 digest(7): Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
-> McGeary1961(패킹), **Lee2025(실험 앵커 — 우리 소재·도전제 전부 동일)**. elasto-plastic 종합 = `elasto_plastic_feasibility.md`.
+> 현재 digest: Varkey2026·So2021·Martin-Bouvard2003·Bouvard2000(압밀), Bazzoun2026(전달),
+> McGeary1961(패킹), **Lee2025·Minnmann2021 JES(실험 앵커 — 우리 NCM/LPSCl 소재계)**. elasto-plastic 종합 =
+> `elasto_plastic_feasibility.md`. ★ **Minnmann 2021 JES = 우리 porosity/σ_ion/τ 앵커의 진짜 출처**
+> (digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`; 2022 Perspective 아님).
 >
 > ★ **Lee2025 (Nat. Commun. 2025, UCSD+LGES)** 는 유일하게 **우리와 완전히 같은 소재계**(LPSCl + NCM811/82 +
 > **VGCF + PTFE** 둘 다)의 **순수 실험** 막 논문 → 시뮬 경쟁 아니라 **frame[4] 외부 실험 앵커**.  세 곳에 매핑:
@@ -12,13 +14,17 @@
 ## A. 압밀 / porosity (E_SE 강성이 floor를 정한다)
 - 문헌: Varkey(halide E=10.58) separator floor **21 %** / cathode **37 %** @350 MPa (강체 구, <20 % "추구 안 함").
 - 우리: LPSCl pure-SE **~10 %** @300, real_14 **15.6 %** — 같은 압력 **약 2× 더 치밀**.
-- ★ **porosity 앵커 출처 정정(Minnmann 2022 digest §0):** "Minnmann porosity 14 %/13–17 %"는
-  **Minnmann *2022* AEM Perspective가 아니라 Minnmann *2021* JES 040537**(NCM622+LPSCl, **380 MPa**,
-  EIS-TLM; avg 14 %, range 13–17 %, σ_ion_eff 0.17 mS/cm, τ_ion 2.07)에서 옴. **밀도 87 %@300 MPa =
-  Sakuda 2013**(75Li₂S-25P₂S₅). **pure-SE 10 % = 우리 MPM 3D(σ_y 0.30) 보정 수렴값**(2021 JES/Sakuda
-  cold-press 거동 위). 2022 Perspective는 **porosity 수치 0개(전부 정성)** — 수치 cite 시 *반드시*
-  2021 JES/Sakuda를. (+ refs.bib @Minnmann2021이 엉뚱한 040502/abf3a3 가리킴 → 040537/abf8d7 정정.)
-  ⇒ 압력 구분 필수: 우리 **300 MPa = 제조(cold-press)**, 작동은 **수~수십 MPa**(2022 Perspective 명시).
+- ★ **porosity 앵커 출처 확정(Minnmann 2021 JES PDF 직접 확인, digest `docs/lit_minnmann2021_jes_charge_transport_bottlenecks.md`):**
+  "Minnmann porosity 14 %/13–17 %"는 **Minnmann *2022* AEM Perspective가 아니라 Minnmann *2021* JES 040537**
+  (NCM622+LPSCl, **압밀 380 MPa**, EIS-TLM **측정 40 MPa**; **복합 양극** avg 14 %, range 13–17 % @Table SIII,
+  σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**, **τ_ion 2.07 = √(tortuosity factor τ²=4.3)**)에서 옴 — **세 앵커
+  전부 PDF 본문 stated 확인**. ⚠ **τ vs τ² 구분**: 논문 Fig 2b 세로축 = τ²(=σ_0·φ/σ_eff, Eq 4 = 우리
+  τ_Laplace,eff 정의); 우리 2.07 = √(τ²=4.3). 인용 시 "τ_ion 2.07 (=√(τ²=4.3))" 병기. ⚠ 이 14 %는 **복합
+  양극** porosity지 **pure-SE 아님**(이 논문은 pure-SE를 측정 안 함). **밀도 87 %@300 MPa = Sakuda 2013**
+  (75Li₂S-25P₂S₅). **pure-SE 10 % = 우리 MPM 3D(σ_y 0.30) 보정 수렴값**(2021 JES/Sakuda cold-press 거동 위).
+  2022 Perspective는 **porosity 수치 0개(전부 정성)** — 수치 cite 시 *반드시* 2021 JES/Sakuda를.
+  (+ refs.bib @Minnmann2021이 엉뚱한 040502/abf3a3 가리킴 → **040537/abf8d7** 정정.) ⇒ 압력 **3종 구분 필수**:
+  우리 **300 MPa = 제조(cold-press)** ≈ 그들 압밀 380 MPa; 그들 σ/cycling 측정 = **40 MPa**; 작동은 수~수십 MPa.
 - 왜 다른가: (a) halide E가 우리 E_eff 1.35보다 ~8× 뻣뻣 → 더 높은 잔류 porosity (우리 MPM E-sweep과 정합);
   (b) 우리 DEM 연화 + MPM 소성 흐름이 강체 구 floor(~20 %) 아래로 도달.
 - 인사이트: **우리 porosity 관계식에 E_SE(강성) 항 + 조성 항 필수.** ~20 %는 강체 구 하드 floor.
@@ -31,6 +37,14 @@
   <3% 변화 → **rigid-AM 가정 외부 면허**.
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
+- **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**
+  (= 우리 DEM σ_ionic 0.04–0.18 상단과 일치!), **τ_ion 2.07 (=√(τ²=4.3))**, σ_el,eff 0.56 (τ_el²=7.4).
+  CAM vol% 25–61 스윕: **CAM↑→σ_ion↓ / τ_ion²↑(2.4→15.3)**, **σ_el↑ / τ_el²↓(120→4.3)**, 42 vol% 교차·최적.
+  τ_el²=120 @25 vol% = **전자 percolation 실패**(= Park 2020 90 wt% / 우리 σ_e f_p 항). **size: fine SE →
+  σ_ion,eff↑ (bulk 1.6→1.2 mS/cm로 오히려↓에도) = packing/τ 효과** — 우리 "size=PACKING not overlap" 정확 일치.
+  Eq 4 τ²=σ_0·φ/σ_eff = **우리 τ_Laplace,eff 정의 동일**(단 그들 = constriction 미포함 → 우리 Stage-E가 그
+  constriction 포함 → 보정 lever). bulk LPSCl 1.6 mS/cm = 또 하나의 bulk 앵커. → **우리 σ_ionic·τ 의 최강
+  same-material 실험 절대 검증점.** (그들 42 vol% NCM → 우리 φ_SE≈58 vol% 매핑 후.)
 - 문헌(Bazzoun, **LPSCl 동일소재 + LIGGGHTS 동일코드**): RNM = 우리 Holm/Kirchhoff 그대로
   (R=1/(2σr_c), Σ(φi−φj)/R=0). 실험 σ_eff,ion **0.137/0.101/0.065 mS/cm @ f_CAM 70/75/80** (400 MPa, EIS).
 - 우리: 같은 솔버 물리. 추세 일치 — 작은 SE→σ↑, CAM↑→σ↓, 압력↑→σ↑(~400 포화 ≈ 우리 P_y 138).
@@ -91,6 +105,10 @@
   SE 30–50 % of solid)와 정합.
 
 ## E. 우리 계산이 문헌을 "검증/교차검증"하는 지점 (강점으로 쓸 것)
+- **★ Minnmann 2021 JES = 우리 porosity·σ_ion·τ 앵커의 1차 출처 + 최강 same-material 실험 검증**:
+  σ_ion,eff 0.17 mS/cm @42 vol% NCM ⊂ 우리 DEM σ_ionic 0.04–0.18; 복합 porosity 13–17 % ≈ 우리 real_14 15.6 %;
+  τ_ion²(Eq 4) = 우리 τ_Laplace,eff 정의; "fine SE→σ_eff↑ = packing/τ" 결론 일치; utilization(ion+e 둘 다
+  연결) = 우리 dead-AM. (frame[4] 외부 실험 앵커 — 같은 NCM/LPSCl 매트릭스.)
 - Bazzoun RNM(Holm+Kirchhoff) = 우리 네트워크 솔버 → 같은 물리, 추세 일치 (frame[4] 독립 교차검증).
 - Bazzoun 실험 σ_eff,ion + 다중압력 = 우리가 부족했던 **외부 실험 앵커** 제공.
 - Varkey E_SE=10.58·floor 21/37 % = 우리 "E 강성 → floor" 가설의 stiffer-SE 데이터점.
