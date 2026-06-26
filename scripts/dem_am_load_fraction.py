@@ -123,13 +123,56 @@ def am_load_fraction(T, X, R, isSE):
     }
 
 
+def am_load_fraction_peratom(atoms_path, type_map):
+    """ACTUAL-FORCE cross-check: f_AM from the LIGGGHTS per-atom virial σ_zz (the SAME hooke/hysteresis
+    stress the dashboard von Mises uses — NOT a Hertz reconstruction).  f_AM_peratom = Σ_AM V_p·σzz_p /
+    Σ_all V_p·σzz_p (V_p = atom volume).  This is the AM-PHASE axial-stress share (incl. the AM-SE part on
+    AM atoms), so it BRACKETS the Hertz AM-AM-only value from above (AM-AM-only ≤ true ≤ AM-phase-share):
+    the frozen-AM MPM misses the AM-AM skeleton load for sure, and partly the AM-SE load it absorbs.
+    Needs atoms.csv with sigma_xx/yy/zz (LIGGGHTS compute stress/atom; present where the dashboard shows
+    von-Mises ratios)."""
+    import csv as _csv
+    se_types = {int(t.split(':')[0]) for t in type_map.split(',') if ':' in t and 'SE' in t.split(':', 1)[1].upper()} or {3}
+    num = 0.0; den = 0.0; n_am = 0; n_se = 0; have = False
+    with open(atoms_path) as f:
+        rd = _csv.DictReader(f); cols = {c.lower(): c for c in rd.fieldnames}
+        tk = cols['type']; rk = cols.get('radius') or cols.get('r'); zzk = cols.get('sigma_zz')
+        if zzk is None:
+            return None
+        have = True
+        for row in rd:
+            t = int(float(row[tk])); r = float(row[rk]); szz = float(row[zzk])
+            v = r * r * r                                   # ∝ atom volume (4/3π cancels in ratio)
+            contrib = v * szz
+            den += contrib
+            if t in se_types: n_se += 1
+            else: n_am += 1; num += contrib
+    if not have or den == 0:
+        return None
+    return {'f_AM_peratom': round(num / den, 4), 'n_AM': n_am, 'n_SE': n_se}
+
+
 def main():
     ap = argparse.ArgumentParser(description="DEM AM-AM axial load fraction f_AM (Love-Weber) for --am-load-frac")
     ap.add_argument('--am', help='am_scaffold.csv (type,x,y,z,r)')
     ap.add_argument('--se', help='se_scaffold.csv (type,x,y,z,r)')
     ap.add_argument('--atoms', help='webapp atoms.csv (id,type,x,y,z,radius) — use with --type-map')
     ap.add_argument('--type-map', default='1:AM_P,2:AM_S,3:SE', help='for --atoms: e.g. "1:AM_P,2:SE"')
+    ap.add_argument('--atoms-sigzz', help='ACTUAL-FORCE cross-check: atoms.csv WITH per-atom sigma_zz '
+                    '(LIGGGHTS virial, the dashboard von-Mises basis) → f_AM from real hooke/hysteresis '
+                    'forces, no Hertz reconstruction.  Reports the AM-phase axial-stress share (brackets '
+                    'the Hertz AM-AM-only from above).  use with --type-map')
     a = ap.parse_args()
+    if a.atoms_sigzz:
+        pa = am_load_fraction_peratom(a.atoms_sigzz, a.type_map)
+        if pa is None:
+            print("  [atoms-sigzz] no sigma_zz column in atoms.csv (LIGGGHTS compute stress/atom not dumped)")
+        else:
+            print(f"f_AM_peratom = {pa['f_AM_peratom']:.3f}   (ACTUAL hooke virial σ_zz, AM-phase share; "
+                  f"n_AM {pa['n_AM']}, n_SE {pa['n_SE']})")
+            print("  vs Hertz AM-AM-only (--am/--se) → the two BRACKET the true f_AM (AM-AM-only ≤ true ≤ AM-phase-share)")
+        if not (a.am or a.atoms):
+            return pa
     if a.atoms:
         T, X, R, isSE = _read_atoms(a.atoms, a.type_map)
     elif a.am and a.se:
