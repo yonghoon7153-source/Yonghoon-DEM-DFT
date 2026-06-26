@@ -11,7 +11,7 @@
 | **[GG]** | Gil-González 2022 ESM — constrained ESW (구속) | ✅ `papers/gilgonzalez2022_synergistic_cl_constricted_esw.md` | DFT+exp |
 | [Wu] | Wu 2026 Nano Energy — calendar aging | 📄 db/properties/oxidation_stability.json | exp |
 | [Banik] | Banik 2022 ACS AEM — HAXPES VBM=S | ⬜ PDF | exp |
-| [Liu] | Liu 2022 AdvFM — Cl 결정화/계면 | ⬜ PDF | exp |
+| **[Liu]** | Liu/Zhong/Wang/**Tu** 2022 AdvFM (32, 2207978) — Cl 치환 **결정화(annealing) + Li-metal 계면** (Zhejiang Univ., **외부**). σ 2.62→**8.0 mS/cm**(@450)·Ea **0.28**·Rietveld 4d 무질서 13.3→**61.7 %**·격자 9.85→9.81 Å. **음극 초점**: AIMD Li 확률밀도 **intra→inter-cage 활성화**(MSD 3×)·계면 P–S RDF PS₄ LPSCl 10 ps / Cl-rich **35 ps** 유지·**LiCl-rich SEI**(XPS). CCD 0.95→**1.40**·대칭셀 500 h·NCM811 full(Li) 30.6→**80.4 %**. ⚠ **≠ Zuo** | ✅ `papers/liu2022_cl_crystallization_interface_argyrodite.md` | exp+DFT/AIMD보조 |
 | **[Lu]** | Lu 2025 CEJ — 음극 4d-Cl 자기분해 → LiCl interphase (gap 1.88/LiCl 6.22) | ✅ `papers/lu2025_tailoring_cl_rich_anode_licl.md` | exp+DFT |
 | **[Liu23]** | Liu 2023 Angew — MgF₂ 공도핑 electron redistribution (redox-resistible, σ_e 8×↓) ⚠[Liu]≠이것(=Liu 2022 AdvFM) | ✅ `papers/liu2023_electron_redistribution_redox_resistible_mgf2.md` | exp+DFT |
 | [Ma] | Ma 2026 J.E.S. — In doping, PBE gap 2.10→2.62 | ⬜ PDF | DFT |
@@ -61,6 +61,7 @@
 | Cl↑ → σ 2.5→7–10 mS/cm, Ea 0.34→0.22 eV | [Zuo](2.9→7.0), [GG](AIMD peak 14.55 @Cl1.5), [Liu], Excel exp 다수 | D(600K) 3.09→7.90e-6, Ea 0.253→**0.224** | **✓✓** |
 | **σ↑·Ea↓ 레버 = Cl만이 아니라 *무질서+Li⁺-carrier 일반*** — **Cu²⁺/P⁵⁺ 헤테로치환(Li⁺ 추가·S²⁻ 전하밀도↓) + Br→4a/4d(음이온 무질서↑)** 도 σ 5.3→**10.3 mS/cm**·Ea 0.295→**0.239 eV**(LPSC-P→LPSC-CB). x>0.1 불순물(LiCl/CuCl₂/LiBr)서 σ↓(용해한계) | **[Li25]** (CuBr₂ dual-doping, exp+DFT) | D(600K) 3.09→7.90e-6, Ea 0.253→**0.224** (우리는 Cl만으로 같은 trend) | **✓ trend 일치, 기전 일반화**: "Cl↑"든 "Cu+Br"든 *무질서·extra-Li⁺*가 공통 레버 → 우리 comp1→modelc Ea drop와 같은 방향. 단 변수 다중(Cu·Br 분리 안 됨)·실험 EIS vs 우리 AIMD라 절대값 비교 금지. Excel exp#9(Cl/Br 24 mS/cm)와 같은 mixed-halide 줄 |
 | σ 기전 = inter-cage Li jump (Cl 4c 무질서) | [GG] (Li 확률밀도, Fig 1e,f) | 우리 percolation/inter-cage 분석과 동일 물리 | ✓ |
+| **intra-cage→inter-cage 전이 = Cl-rich σ↑ 물리 (직접 시각)**: AIMD Li 확률밀도 — **LPSCl=Li₆S cage 안 갇힘 / Li₅.₅PS₄.₅Cl₁.₅=inter-cage 경로 활성화·전 방향 비편재화** (MSD ≈3× 등방). 무질서 정량 = Rietveld 4d S²⁻/Cl⁻ **13.3→61.7 %**(Klerk 예측 확인). σ as-milled도 2× (1.10→2.13), 최적 **8.0 mS/cm@450**(LPSCl 2.62@550). **단 LPSCl σ=결정화도만 / Cl-rich σ=결정화도+무질서** | **[Liu]** (Fig 2e–g·S5, exp+AIMD) | comp1→modelc D(600K) 3.09→**7.90e-6**(2.6×)·Ea 0.253→**0.224**; 우리 inter-cage 멘탈모델 | **✓✓ 우리 inter-cage 서사의 *문헌 그림 증거***. [GG] 확률밀도와 같은 물리. modelc도 SQS 아닌 단일배열(Liu=enumerate→lowest-Ewald, 우리와 같은 철학). 절대 σ는 EIS RT vs 우리 AIMD 외삽 → Arrhenius로만 |
 | **Li₆PS₅Cl = S²⁻/Cl⁻ 완전 disordered → 가장 빠른 Li⁺** (Cl이 X=Cl,Br,I 중 disorder 최대) | **[Rupp]** p.9 | comp1→modelc D↑·Ea↓ (Cl-rich 빠름) | **✓ 구조적 근거** (Cl disorder = σ↑ 원인) |
 | AIMD setup (300 eV/Γ/NVT) | [GG] | 동급 | ✓ 방법 정합 |
 | **device σ ≠ bulk σ: 손실 원인 = 미세구조(공동), bulk 결정 아님** (시트 1.44 ↔ 펠릿 3.2 mS/cm; 공동 채우면 2.23=155 %) | **[KimICCF]** (Li₆PS₅Cl=comp1, GeoDict digital-twin) | 우리 bulk AIMD RT-외삽 σ ≫ 실현 σ | **🔑 개념 평행**: 우리 "σ는 interphase·percolation 변수"와 일치. **둘 다 "bulk 잠재력 ≫ device σ"** → 미세구조가 병목. 절대값 직접 비교는 금지(bulk 단결정 vs 시트 실측) |
