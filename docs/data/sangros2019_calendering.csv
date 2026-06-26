@@ -1,0 +1,29 @@
+dataset,electrode,axis_value,axis_var,porosity,thickness_um,coating_density_g_cm3,calendering_stress_MPa,roll_gap_um,elastic_recovery_ER,coordination_number_CN,broken_bonds_per_particle,fabric_Fdev_zz,internal_stress_total_MPa,precision,note
+# Sangros Gimenez et al., Powder Technology 349 (2019) 1-11, DOI 10.1016/j.powtec.2019.03.020. NMC111 Li[Ni1/3Mn1/3Co1/3]O2 90wt% + graphite 2wt% + carbon-black 4wt% + PVDF 4wt% binder. PREDECESSOR (Part I, MECHANICS-ONLY) of Sangros 2020. DEM(in-house/LIGGGHTS) = Thornton-Ning elasto-plastic CONTACT (eqs1-6, yield ratio YR=8.59e-3*x measured by nanoindentation of 40 particles, R2=0.89) + particle-particle BOND (eqs10-13, S_n=S_t=6e12 N/m^3, ultimate strength 2e13 N/m^2, PERMANENT break). RVE 150x150xh_A um, 2237 particles, x.y periodic. LIQUID-electrolyte LIB. ★ NO conductivity solved here (that is the 2020 Part II). Calendering = roll line-load, B=max-stress, C=after springback. timestep 1e-10 s.
+# Material inputs (Table 2, stated): E_NMC=142 GPa, nu=0.25, COR=0.25, rho=4.75 g/cm3. PSD x10/x50/x90 = 4.96/9.35/16.59 um. sim 5 diameters 5/7.5/10.5/15/18 um. YR=8.59e-3 (yield ratio = d(delta_y)/dx).
+# --- Table 1: calendering series (noncalendered + C1-C4). axis = calendering stress P_Cal. ALL stated. ---
+calendering_series,noncalendered,,calstress,0.522,180,2.13,,,,,,,,stated,position-A start; experiment-anchored noncalendered porosity; mass loading 16.88 mg/cm2
+calendering_series,C1,19.82,calstress,0.416,151.2,2.61,19.82,130,,,,,,stated,thickness includes both coating sides + Al collector ~23.5 um
+calendering_series,C2,42.71,calstress,0.372,142.2,2.80,42.71,108,,,,,,stated,reference calstress for the initial-porosity sweep study
+calendering_series,C3,79.13,calstress,0.295,129.2,3.15,79.13,80,,,,,,stated,
+calendering_series,C4,159.37,calstress,0.217,118.6,3.49,159.37,20,,,,,,stated,highest calendering; sim posC porosity 0.247 vs exp 0.217 (high-stress contact-model limit)
+# --- Per-case mechanical descriptors at position C (final) unless noted. ER from Conclusion(stated 10.25->17pct) + Fig8(digitized). CN posB stated for C1/C4; Fig10 digitized. broken bonds Fig10 digitized. fabric Fdev_zz Fig12 digitized. internal stress Fig13 digitized (posB). ---
+mech_descriptors,C1,19.82,calstress,0.416,151.2,,19.82,,0.136,1.55,0.18,0.047,40,mixed_stated_digitized,CN_C1=1.55 STATED(posB); ER~0.136 Fig8; Fdev_zz +0.047 (z-contacts dominant); sigma~40 MPa; sigma_zz ~2x sigma_xx
+mech_descriptors,C2,42.71,calstress,0.372,142.2,,42.71,,0.171,1.85,0.55,0.005,90,mixed_stated_digitized,ER MAX ~0.171 Fig8; near-isotropic Fdev~0; sigma_zz/sigma_xx ~1.4; CN/broken digitized
+mech_descriptors,C3,79.13,calstress,0.295,129.2,,79.13,,0.116,2.05,0.78,-0.022,140,digitized_approx,Fdev_zz NEGATIVE (in-plane contacts dominate; anisotropy develops); sigma_zz/sigma_xx ~1.17
+mech_descriptors,C4,159.37,calstress,0.217,118.6,,159.37,,0.103,2.19,1.00,-0.030,220,mixed_stated_digitized,CN_C4=2.19 STATED(posB); ER~0.103 (plastic dominates; less recovery); Fdev_zz neg; sigma_zz/sigma_xx ~1.08 (isotropises at high stress)
+# --- NMC-current-collector contact area ratio A_CC,p (eq19), A_CC=22500 um^2. posC values; posB larger. STATED in text. ---
+collector_contact,C1,19.82,calstress,,,,19.82,,,,,,,stated,A_CC_p ~56pct (posC); fraction of Al collector covered by NMC
+collector_contact,C2,42.71,calstress,,,,42.71,,,,,,,stated,A_CC_p ~61pct (posC)
+collector_contact,C3,79.13,calstress,,,,79.13,,,,,,,stated,A_CC_p ~62pct (posC)
+collector_contact,C4,159.37,calstress,,,,159.37,,,,,,,stated,A_CC_p ~65pct (posC); higher calendering -> NMC pushed deeper into Al
+# --- Contact-model comparison (Fig6/7): elasto-plastic+bond vs Hertz+bond FINAL porosity. Hertz OVER-estimates densification (porosity too low = physically impossible eps_B < eps_C_exp). digitized. ---
+contact_model_compare,C1_EP,19.82,calstress,0.416,,,19.82,,,,,,,digitized_approx,elasto-plastic+bond final porosity ~= exp (0.416)
+contact_model_compare,C1_Hertz,19.82,calstress,0.49,,,19.82,,,,,,,digitized_approx,Hertz+bond OVER (too porous early then collapses; see Fig7 curve)
+contact_model_compare,C4_EP,159.37,calstress,0.247,,,159.37,,,,,,,digitized_approx,elasto-plastic+bond final porosity 0.247 (exp 0.217)
+contact_model_compare,C4_Hertz,159.37,calstress,0.38,,,159.37,,,,,,,digitized_approx,Hertz+bond final porosity ~0.38 (OVER-estimate at C4)
+# --- Bond/contact model parameters (stated, calibrated C1&C4, validated C2&C3). ---
+model_params,bond_stiffness,,param,,,,,,,,,,,stated,S_n=S_t=6e12 N/m^3 (area-related bond stiffness; normal=tangential)
+model_params,bond_ultimate_strength,,param,,,,,,,,,,,stated,2e13 N/m^2 (permanent breakage threshold; forces+torques removed)
+model_params,initial_bonds_per_particle,,param,,,,,,,,3.44,,,stated,3.44 bonds/particle at position A (max; before breakage)
+model_params,yield_ratio_YR,,param,,,,,,,,,,,stated,delta_y = 8.59e-3 * x (x in um); R2=0.89; from nanoindentation of 40 particles
