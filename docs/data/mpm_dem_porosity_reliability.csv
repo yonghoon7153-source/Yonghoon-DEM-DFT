@@ -46,7 +46,7 @@ input_2mAh_real_18,5:5,0.5,92,16,21.0,18.6,2.3,both,cross-validated
 input_2mAh_a9_50_p06,6:4,0.6,90,19,12.7,10.4,2.3,both,cross-validated
 input_1mAh_100_4,7:3,0.7,77,39,4.1,6.3,-2.2,both,cross-validated
 input_2mAh_a9_p06,6:4,0.6,90,19,22.8,20.8,2.1,both,cross-validated
-input_1mAh_5_AMP_S5,10:0,1.0,80,35,20.2,18.1,2.1,both,cross-validated
+input_1mAh_5_AMP_S5,10:0,1.0,80,35,20.2,18.12,2.07,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 18.1->18.12 (healthy)"
 input_2mAh_real_7,3:7,0.3,82,32,12.9,14.9,-2.0,both,cross-validated
 input_1mAh_100_8,5:5,0.5,82,32,12.4,10.3,2.0,both,cross-validated
 input_2mAh_real_17,3:7,0.3,92,16,22.7,20.8,1.9,both,cross-validated
