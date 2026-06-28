@@ -1,0 +1,42 @@
+{
+  "system": "B2O3-doped LPSCl",
+  "method": "QE PBE EOS, Birch-Murnaghan 3rd order",
+  "n_points": 5,
+  "note": "v1.06 (x=1.06) excluded — no total energy produced",
+  "V0_bohr3": 16441.2,
+  "V0_A3": 2436.33,
+  "E0_Ry": -2621.755437,
+  "B0_GPa": 24.48,
+  "B0_prime": 4.24,
+  "fit_rms_meV": 0.039,
+  "modelC_MLIP_B0_GPa": 21.7,
+  "diff_GPa": 2.78,
+  "diff_pct": 12.8,
+  "points": [
+    {
+      "x": 0.96,
+      "V_bohr3": 15574.073,
+      "E_Ry": -2621.7136072
+    },
+    {
+      "x": 0.98,
+      "V_bohr3": 15898.533,
+      "E_Ry": -2621.73963052
+    },
+    {
+      "x": 1.0,
+      "V_bohr3": 16222.992,
+      "E_Ry": -2621.75297508
+    },
+    {
+      "x": 1.02,
+      "V_bohr3": 16547.452,
+      "E_Ry": -2621.75486781
+    },
+    {
+      "x": 1.04,
+      "V_bohr3": 16871.912,
+      "E_Ry": -2621.74646071
+    }
+  ]
+}
