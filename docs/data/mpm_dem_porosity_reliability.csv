@@ -1,118 +1,118 @@
-case,ps_label,p_frac,am_wt,se_of_solid_pct,dem_porosity_pct,mpm_porosity_pct,gap_dem_minus_mpm,trust,verdict,floor_por_pct,f_AM_used,cond_status
-input_1mAh_100_15,10:0,1.0,87,25,32.8,20.2,12.6,bracket,"BRACKET mono-large: MPM 20.2 (wallP cond., f_AM-insensitive) ~ same-comp 8mAh_real_10 19.0 / 2mAh_real_15 21.3 cross-validated; DEM 32.8 thin-loose outlier",27.8,~0(inf),OFF/overcompact (MPM 20.2<floor 27.8; true~anchor)
-input_2mAh_a5_p00,0:10,0.0,50,68,2.4,13.2,-10.8,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a5_p02,2:8,0.2,50,68,1.9,12.4,-10.5,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a5_p04,4:6,0.4,50,68,2.2,12.6,-10.4,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a5_p06,6:4,0.6,50,68,2.3,12.1,-9.9,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a5_p08,8:2,0.8,50,68,1.0,11.0,-9.9,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a6_p00,0:10,0.0,60,59,5.8,15.4,-9.6,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a6_p04,4:6,0.4,60,59,4.3,13.7,-9.4,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a5_p10,10:0,1.0,50,68,1.7,11.0,-9.3,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a6_p02,2:8,0.2,60,59,5.1,14.5,-9.3,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a6_p06,6:4,0.6,60,59,3.0,12.2,-9.3,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a6_p08,8:2,0.8,60,59,4.2,12.2,-8.0,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a6_p10,10:0,1.0,60,59,5.0,12.1,-7.1,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_8_S1,5:5,0.5,85,28,16.8,12.9,3.9,both,cross-validated,11.8,,ok (MPM>=floor; cond moot)
-input_2mAh_real_4,7:3,0.7,77,39,3.3,7.1,-3.8,both,cross-validated,2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a8_p02,2:8,0.2,80,35,17.0,20.8,-3.8,both,cross-validated,12.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_19,7:3,0.7,92,16,20.4,16.5,3.8,both,cross-validated,15.4,,ok (MPM>=floor; cond moot)
-input_1mAh_8_S2,5:5,0.5,85,28,17.2,13.5,3.7,both,cross-validated,12.2,,ok (MPM>=floor; cond moot)
-input_1mAh_8_AMS_S5,0:10,0.0,85,28,21.4,17.8,3.6,both,cross-validated,16.4,,ok (MPM>=floor; cond moot)
-input_2mAh_a8_p00,0:10,0.0,80,35,19.4,23.0,-3.5,both,cross-validated,14.4,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_p08,8:2,0.8,90,19,23.2,19.8,3.4,both,cross-validated,18.2,,ok (MPM>=floor; cond moot)
-input_1mAh_5_AMP_S3,10:0,1.0,80,35,21.1,17.67,3.43,both,"cross-validated; SE-sufficient (se35) -> wallP conditional OFF (floor not engaged, reaches target above), MPM unchanged 17.7->17.67 = never over-compressed (healthy case)",16.1,,ok (MPM>=floor; cond moot)
-input_2mAh_real_15,10:0,1.0,87,25,24.6,21.30,3.26,both,"cross-validated; SE-sufficient (se26) -> conditional OFF, unchanged 21.3->21.30; = 2mAh anchor of am_wt87 trio (1mAh_100_15 20.2 / this 21.3 / 8mAh_real_10 19.0 = all ~20)",19.6,,ok (MPM>=floor; cond moot)
-input_particulate_12_S5,0:10,0.0,82,32,18.9,22.3,-3.3,both,cross-validated,13.9,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_8_S3,5:5,0.5,85,28,15.5,12.4,3.2,both,cross-validated,10.5,,ok (MPM>=floor; cond moot)
-input_1mAh_8_AMS_S3,0:10,0.0,85,28,20.6,17.4,3.2,both,cross-validated,15.6,,ok (MPM>=floor; cond moot)
-input_1mAh_8_AMS_S1,0:10,0.0,85,28,21.1,17.9,3.2,both,cross-validated,16.1,,ok (MPM>=floor; cond moot)
-input_2mAh_a9_50_p08,8:2,0.8,90,19,14.7,11.5,3.2,both,cross-validated,9.7,,ok (MPM>=floor; cond moot)
-input_1mAh_100_9,7:3,0.7,82,32,12.9,9.7,3.2,both,cross-validated,7.9,,ok (MPM>=floor; cond moot)
-input_2mAh_real_2,3:7,0.3,77,39,11.2,14.3,-3.1,both,cross-validated,6.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_5_AMP_S1,10:0,1.0,80,35,20.2,17.12,3.13,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 17.1->17.12 (healthy case)",15.2,,ok (MPM>=floor; cond moot)
-input_1mAh_8_S4,5:5,0.5,85,28,16.6,13.6,3.1,both,cross-validated,11.6,,ok (MPM>=floor; cond moot)
-input_particulate_12_S4,0:10,0.0,82,32,19.8,22.8,-3.0,both,cross-validated,14.8,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a8_p06,6:4,0.6,80,35,13.5,16.4,-2.9,both,cross-validated,8.5,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_5_AMP_S2,10:0,1.0,80,35,20.4,17.56,2.87,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 17.6->17.56 (healthy)",15.4,,ok (MPM>=floor; cond moot)
-input_2mAh_a8_p04,4:6,0.4,80,35,14.9,17.7,-2.8,both,cross-validated,9.9,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_16,0:10,0.0,92,16,28.1,25.4,2.7,both,cross-validated,23.1,,ok (MPM>=floor; cond moot)
-input_1mAh_8_AMS_S2,0:10,0.0,85,28,20.4,17.7,2.7,both,cross-validated,15.4,,ok (MPM>=floor; cond moot)
-input_2mAh_real_3,5:5,0.5,77,39,10.5,13.1,-2.6,both,cross-validated,5.5,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_1,0:10,0.0,77,39,13.5,16.1,-2.6,both,cross-validated,8.5,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a8_p08,8:2,0.8,80,35,14.9,17.4,-2.6,both,cross-validated,9.9,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_5_AMP_S4,10:0,1.0,80,35,19.1,16.59,2.56,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 16.6->16.59 (healthy)",14.1,,ok (MPM>=floor; cond moot)
-input_1mAh_100_6,0:10,0.0,82,32,18.4,16.0,2.5,both,cross-validated,13.4,,ok (MPM>=floor; cond moot)
-input_2mAh_real_18,5:5,0.5,92,16,21.0,18.6,2.3,both,cross-validated,16.0,,ok (MPM>=floor; cond moot)
-input_2mAh_a9_50_p06,6:4,0.6,90,19,12.7,10.4,2.3,both,cross-validated,7.7,,ok (MPM>=floor; cond moot)
-input_1mAh_100_4,7:3,0.7,77,39,4.1,6.3,-2.2,both,cross-validated,2.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_p06,6:4,0.6,90,19,22.8,20.8,2.1,both,cross-validated,17.8,,ok (MPM>=floor; cond moot)
-input_1mAh_5_AMP_S5,10:0,1.0,80,35,20.2,18.12,2.07,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 18.1->18.12 (healthy)",15.2,,ok (MPM>=floor; cond moot)
-input_2mAh_real_7,3:7,0.3,82,32,12.9,14.9,-2.0,both,cross-validated,7.9,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_100_8,5:5,0.5,82,32,12.4,10.3,2.0,both,cross-validated,7.4,,ok (MPM>=floor; cond moot)
-input_2mAh_real_17,3:7,0.3,92,16,22.7,20.8,1.9,both,cross-validated,17.7,,ok (MPM>=floor; cond moot)
-input_1mAh_100_7,3:7,0.3,82,32,13.1,11.4,1.7,both,cross-validated,8.1,,ok (MPM>=floor; cond moot)
-input_2mAh_real_9_E1.5_S3,7:3,0.7,82,32,12.5,14.1,-1.6,both,cross-validated,7.5,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_p04,4:6,0.4,90,19,23.9,22.4,1.5,both,cross-validated,18.9,,ok (MPM>=floor; cond moot)
-input_2mAh_real_6,0:10,0.0,82,32,16.7,18.2,-1.5,both,cross-validated,11.7,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_8,5:5,0.5,82,32,13.0,14.4,-1.4,both,cross-validated,8.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_6mAh_real40_2,3:7,0.3,82,32,15.9,17.2,-1.4,both,cross-validated,10.9,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_5,10:0,1.0,77,39,10.2,11.6,-1.3,both,cross-validated,5.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_6mAh_real40_4,7:3,0.7,82,32,13.8,15.2,-1.3,both,cross-validated,8.8,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_9_E1.5_S2,7:3,0.7,82,32,13.2,14.3,-1.1,both,cross-validated,8.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_9_E2,7:3,0.7,82,32,15.0,16.1,-1.1,both,cross-validated,10.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_8,5:5,0.5,87,25,16.2,17.3,-1.1,both,cross-validated,11.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_9,7:3,0.7,82,32,13.5,14.6,-1.1,both,cross-validated,8.5,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_50_p00,0:10,0.0,90,19,17.9,16.8,1.1,both,cross-validated,12.9,,ok (MPM>=floor; cond moot)
-input_2mAh_a9_50_p04,4:6,0.4,90,19,13.9,12.8,1.1,both,cross-validated,8.9,,ok (MPM>=floor; cond moot)
-input_8mAh_real_19,7:3,0.7,77,39,12.2,13.2,-1.0,both,cross-validated,7.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_16,0:10,0.0,77,39,16.0,17.0,-1.0,both,cross-validated,11.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a8_p10,10:0,1.0,80,35,15.7,16.6,-0.9,both,cross-validated,10.7,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_9_E1.5,7:3,0.7,82,32,12.6,13.6,-0.9,both,cross-validated,7.6,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_100_1,0:10,0.0,77,39,14.1,14.9,-0.8,both,cross-validated,9.1,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_1,0:10,0.0,82,32,18.6,19.3,-0.8,both,cross-validated,13.6,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_p00,0:10,0.0,90,19,28.1,27.4,0.7,both,cross-validated,23.1,,ok (MPM>=floor; cond moot)
-input_8mAh_real_20,10:0,1.0,77,39,11.9,12.6,-0.7,both,cross-validated,6.9,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_50_p02,2:8,0.2,90,19,15.5,14.8,0.7,both,cross-validated,10.5,,ok (MPM>=floor; cond moot)
-input_8mAh_real_3,5:5,0.5,82,32,16.1,16.8,-0.7,both,cross-validated,11.1,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_5,10:0,1.0,82,32,16.3,16.8,-0.6,both,cross-validated,11.3,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a9_p02,2:8,0.2,90,19,25.9,25.3,0.6,both,cross-validated,20.9,,ok (MPM>=floor; cond moot)
-input_8mAh_real_6,0:10,0.0,87,25,22.2,22.8,-0.6,both,cross-validated,17.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_100_2,3:7,0.3,77,39,11.1,11.7,-0.6,both,cross-validated,6.1,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_4,7:3,0.7,82,32,15.0,15.6,-0.6,both,cross-validated,10.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_9,7:3,0.7,87,25,15.0,15.5,-0.5,both,cross-validated,10.0,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_7,3:7,0.3,87,25,18.2,18.6,-0.5,both,cross-validated,13.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_11,0:10,0.0,87,25,21.8,21.3,0.5,both,cross-validated,16.8,,ok (MPM>=floor; cond moot)
-input_8mAh_real_2,3:7,0.3,82,32,17.6,18.1,-0.5,both,cross-validated,12.6,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_13,5:5,0.5,92,16,20.2,20.7,-0.4,both,cross-validated,15.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_8mAh_real_11,0:10,0.0,92,16,27.4,27.8,-0.4,both,cross-validated,22.4,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_real_14,7:3,0.7,87,25,15.6,15.9,-0.3,both,cross-validated,10.6,,ok (MPM>=floor; cond moot)
-input_8mAh_real_12,3:7,0.3,92,16,22.8,22.5,0.3,both,cross-validated,17.8,,ok (MPM>=floor; cond moot)
-input_2mAh_real_10,10:0,1.0,82,32,17.8,17.9,-0.2,both,cross-validated,12.8,,ok (MPM>=floor; cond moot)
-input_2mAh_real_13,5:5,0.5,87,25,15.2,15.3,-0.2,both,cross-validated,10.2,,ok (MPM>=floor; cond moot)
-input_2mAh_real_12,3:7,0.3,87,25,16.5,16.2,0.2,both,cross-validated,11.5,,ok (MPM>=floor; cond moot)
-input_1mAh_100_3,5:5,0.5,77,39,10.1,10.3,-0.2,both,cross-validated,5.1,,ok (MPM>=floor; cond moot)
-input_8mAh_real_15,10:0,1.0,92,16,27.3,27.4,-0.1,both,cross-validated,22.3,,ok (MPM>=floor; cond moot)
-input_8mAh_real_14,7:3,0.7,92,16,19.1,19.0,0.1,both,cross-validated,14.1,,ok (MPM>=floor; cond moot)
-input_8mAh_real_10,10:0,1.0,87,25,19.0,19.0,-0.0,both,cross-validated,14.0,,ok (MPM>=floor; cond moot)
-input_2mAh_real_20,10:0,1.0,92,16,29.3,22.2,7.1,bracket,BRACKET mono-large se16 extreme-SE-poor: wallP cond 9.7->22.2 but still ~5pp below trusted same-comp 8mAh_real_15 27.4(=DEM 27.3) -> residual over-compress; truth ~27-29 lean DEM/8mAh anchor,24.3,~0(inf),OFF/overcompact (MPM 22.2<floor 24.3; true~anchor)
-input_2mAh_a9_p10,10:0,1.0,90,19,26.4,15.44,10.96,bracket,"BRACKET mono-large r_SE=1.5 DEGENERATE (629 SE, percolation 0%, tau 17.5 RVE-artifact): wallP cond 10.9->15.44; NO cross-capacity sibling (am_wt90+rSE1.5 only @2mAh); both bounds low-confidence",21.4,~0(inf),OFF/overcompact (MPM 15.4<floor 21.4; true~anchor)
-input_1mAh_100_10,10:0,1.0,82,32,28.3,21.78,6.52,bracket,"BRACKET mono-large: wallP cond 15.9->21.78; same-comp bulk 2mAh_real_10 17.9 / 8mAh_real_5 16.8 trusted ~17; 1mAh MPM 21.78 = mid-bracket [bulk 17, thin-DEM 28.3] plausible thin-loose (se32 enough SE -> NOT over-compressed, unlike se16 2mAh_real_20)",23.3,~0(inf),OFF/overcompact (MPM 21.8<floor 23.3; true~anchor)
-input_2mAh_a9_50_p10,10:0,1.0,90,19,18.4,11.95,6.5,bracket,"BRACKET mono-large se19 borderline, NO cross-capacity sibling (a9 series 2mAh-only): wallP cond 9.3->11.95; DOCUMENTED over-compress confound (a9_50_ps_sweep_vs_bimodal266 §발견3) -> MPM 11.95 lower bound, lean DEM 18.45/mid; structure OK (perc 99.4%, NOT degenerate unlike a9_p10 rSE1.5)",13.4,~0(inf),OFF/overcompact (MPM 11.9<floor 13.4; true~anchor)
-input_1mAh_8_AMP_S5,10:0,1.0,85,28,21.9,15.93,5.95,MPM,"SE-sufficient (se28>=25) -> regime-1 MPM reliable; wallP cond 15.0->15.93; no cross-cap sibling (am_wt85 mono=1mAh only) BUT seed-pair S2 17.3/S5 15.93 ~16 + real_14(am_wt85) MPM 16.7 consistent; r_AM_P=5um -> DEM 21.9 lower (better pack, mild thin-loose)",16.9,~0(inf),OFF/overcompact (MPM 15.9<floor 16.9; true~anchor)
-input_1mAh_8_AMP_S2,10:0,1.0,85,28,23.6,18.16,5.45,MPM,SE-sufficient (se29>=25) -> regime-1 MPM reliable; wallP cond 17.3->18.16; seed-pair S5 15.93/S2 18.16 ~17 + real_14(am_wt85) MPM 16.7 consistent; r_AM_P=5um -> DEM 23.6 (mild thin-loose),18.6,~0(inf),OFF/overcompact (MPM 18.2<floor 18.6; true~anchor)
-input_2mAh_a7_p04,4:6,0.4,70,48,9.1,15.8,-6.7,review,review MPM>DEM moderate SE-rich,4.1,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a7_p02,2:8,0.2,70,48,10.2,16.8,-6.6,review,review MPM>DEM moderate SE-rich,5.2,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a7_p00,0:10,0.0,70,48,11.5,17.9,-6.4,review,review MPM>DEM moderate SE-rich,6.5,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a7_p08,8:2,0.8,70,48,7.6,13.6,-6.0,review,review MPM>DEM moderate SE-rich,2.6,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a7_p06,6:4,0.6,70,48,9.4,14.9,-5.5,review,review MPM>DEM moderate SE-rich,4.4,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_2mAh_a7_p10,10:0,1.0,70,48,8.8,13.9,-5.2,review,review MPM>DEM moderate SE-rich,3.8,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_particulate_12_S1,0:10,0.0,82,32,19.8,22.8,-3.0,both,cross-validated,14.8,,"SE-rich n/a (MPM>DEM, DEM-side)"
-input_1mAh_9_S4,7:3,0.7,85,29,20.1,15.8,4.3,MPM,thin 1mAh(17.6um) DEM thin-loose-high + 1mAh_9 known per-seed-scatter family; MPM 15.8 == 7:3 cross-cap anchor family (2/6/8mAh_real 15-16) -> MPM reliable; sigma_ionic 0.0335 ~ family median 0.033 (transport representative); gap +4.3 just over band = mild thin divergence,15.1,,ok (MPM>=floor; cond moot)
-input_1mAh_9_S3,7:3,0.7,85,29,21.6,16.7,4.9,MPM,sibling of S4 same pattern: thin 1mAh DEM thin-loose-high (per-seed S3 21.6/S4 20.1) + 1mAh_9 known scatter family; MPM 16.7 == 7:3 cross-cap anchor (2/6/8mAh_real 15-16) -> MPM reliable; sigma_ionic 0.0348 ~ family median; gap +4.9 mild thin divergence,16.6,,ok (MPM>=floor; cond moot)
-input_1mAh_9_S2,7:3,0.7,85,29,23.8,18.7,5.2,MPM,"loosest seed of 1mAh_9 trio (DEM 20.1/21.6/23.8 = MPM 15.8/16.7/18.65 across S4/S3/S2 = per-seed packing scatter ~3.7pp); both high vs 7:3 anchor 15-16, MPM closer -> MPM more reliable; DEM thin-loose-high; most AM_P fracture (F/Pc 14.3, loosest seed concentrates load); gap +5.2",18.8,,ok (MPM>=floor; cond moot)
-input_1mAh_6_S5,7:3,0.7,80,36,15.5,14.8,0.7,both,"cross-validated; 80:20 (more SE: SE/sol 36, phi_SE 0.317, 28403 SE) fills thin-RVE voids -> DEM packs tight = MPM; CONTRAST 1mAh_9 85:15 thin-loose gap+4-5 (SE-poorer) -> thin-loose is SE-POOR effect not thickness; sigma_ionic 0.108 (3x of 1mAh_9, dense SE net); AM_P fracture persists (contact-stress, compo-indep)",10.5,,ok (MPM>=floor; cond moot)
-input_1mAh_100_14,7:3,0.7,87,26,18.2,11.4,6.8,anchor,"BRACKET (largest 7:3 gap): thin 1mAh + SE-poor(SE/sol 26, phi_SE 0.22) + AM-rich 87wt corner; DEM 18.2 thin-loose-high (tau 4.0 tortuous SE-poor net), MPM 11.4 over-compacted (SE-poor+thin frozen-AM cant bear platen, SE over-flows = §2.1 even bimodal); cross-cap anchor real_14/real_9 (AM87/SE25) 15.6/15.9,15.0/15.5 -> truth ~15.5; f_AM/wallP-conditional would lift MPM toward anchor; AM_P fracture max F/Pc 14.9",13.2,~0(inf),OFF/overcompact (MPM 11.4<floor 13.2; true~anchor)
-input_1mAh_100_13,5:5,0.5,87,26,16.7,11.1,5.6,anchor,"BRACKET (sibling of 100_14 but P:S 5:5): thin + SE-poor(SE/sol 26) + AM-rich 87wt corner; DEM 16.7 thin-loose-high (tau 4.0), MPM 11.1 over-compacted (SE-poor+thin §2.1); 5:5 more AM_S(1395) -> slightly less loose than 100_14 7:3 (DEM 16.7<18.2, gap +5.6<6.8); truth ~15 cross-cap anchor; f_AM/wallP corner",11.7,~0(inf),OFF/overcompact (MPM 11.1<floor 11.7; true~anchor)
-input_1mAh_100_12,3:7,0.3,87,26,18.3,11.6,6.7,anchor,"3rd of 100_1X trio (AM87/SE-poor): all BRACKET MPM ~11, DEM ~17-18 thin-loose; truth ~15 cross-cap anchor; conditional OFF (MPM<floor). [CORRECTION: the 15.15 shown 2026-06-27 was a mis-paste of 1mAh_6_S3 MPM, NOT a 100_12 re-run]",13.3,0.883(CONFIRMED),"ON f_AM=0.883 CONFIRMED (run_mpm.sh+log) — FINAL still 11.62 = continuum UNDER-correction (soft SE meets its (1-f_AM)*target=35MPa share only ~11%, doesn't jam at DEM porosity like rigid spheres; need f_AM~0.97 to stop at anchor). floor=DEM-5=13.3 also < anchor 15. -> regime-gate: report cross-cap anchor ~15, NOT raw MPM"
-input_1mAh_6_S4,7:3,0.7,80,36,18.2,15.6,2.5,both,"cross-validated (within band); sibling of S5 (15.5/14.8 gap+0.7); 80:20 SE-sufficient (SE/sol 36) both ~15-16; S4 DEM 18.2 looser seed than S5 15.5 (per-seed) but MPM stable 15.6 ~anchor; SE-content ladder: gap grows monotone as SE 20->15->13wt (1mAh_6 +0.7/2.5 < 1mAh_9 +4-5 < 1mAh_100 +6-7) = SE-content is the thin-case reliability axis, breakpoint SE/sol ~30pct",13.2,,ok (MPM>=floor; cond moot)
-input_1mAh_6_S3,7:3,0.7,80,36,16.3,15.2,1.1,both,"cross-validated; 1mAh_6 80:20 SE-sufficient (SE/sol 36): S5 15.5/14.8(+0.7) S4 18.2/15.6(+2.5) S3 16.3/15.2(+1.1) all cross-val, MPM stable ~15 = SE-content ladder (80:20 no BRACKET). NOTE this MPM block (15.15/AM147/SEsol36.41) was mis-pasted under 100_12 earlier",11.3,,ok (MPM>=floor; cond moot)
+case,ps_label,p_frac,am_wt,se_of_solid_pct,dem_porosity_pct,mpm_porosity_pct,gap_dem_minus_mpm,trust,verdict,floor_por_pct,f_AM_used,cond_status,regime,use_source,use_porosity_pct
+input_1mAh_100_15,10:0,1.0,87,25,32.8,20.2,12.6,bracket,"BRACKET mono-large: MPM 20.2 (wallP cond., f_AM-insensitive) ~ same-comp 8mAh_real_10 19.0 / 2mAh_real_15 21.3 cross-validated; DEM 32.8 thin-loose outlier",27.8,~0(inf),OFF/overcompact (MPM 20.2<floor 27.8; true~anchor),SE-poor-corner(out-of-envelope),DEM,32.8
+input_2mAh_a5_p00,0:10,0.0,50,68,2.4,13.2,-10.8,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,13.2
+input_2mAh_a5_p02,2:8,0.2,50,68,1.9,12.4,-10.5,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,12.4
+input_2mAh_a5_p04,4:6,0.4,50,68,2.2,12.6,-10.4,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,12.6
+input_2mAh_a5_p06,6:4,0.6,50,68,2.3,12.1,-9.9,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,12.1
+input_2mAh_a5_p08,8:2,0.8,50,68,1.0,11.0,-9.9,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,11.0
+input_2mAh_a6_p00,0:10,0.0,60,59,5.8,15.4,-9.6,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,15.4
+input_2mAh_a6_p04,4:6,0.4,60,59,4.3,13.7,-9.4,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,13.7
+input_2mAh_a5_p10,10:0,1.0,50,68,1.7,11.0,-9.3,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,11.0
+input_2mAh_a6_p02,2:8,0.2,60,59,5.1,14.5,-9.3,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,14.5
+input_2mAh_a6_p06,6:4,0.6,60,59,3.0,12.2,-9.3,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,12.2
+input_2mAh_a6_p08,8:2,0.8,60,59,4.2,12.2,-8.0,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,12.2
+input_2mAh_a6_p10,10:0,1.0,60,59,5.0,12.1,-7.1,MPM,DEM eps-overcompress (SE-rich artifact),2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,12.1
+input_1mAh_8_S1,5:5,0.5,85,28,16.8,12.9,3.9,both,cross-validated,11.8,,ok (MPM>=floor; cond moot),cross-validated,MPM,12.9
+input_2mAh_real_4,7:3,0.7,77,39,3.3,7.1,-3.8,both,cross-validated,2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,7.1
+input_2mAh_a8_p02,2:8,0.2,80,35,17.0,20.8,-3.8,both,cross-validated,12.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,20.8
+input_2mAh_real_19,7:3,0.7,92,16,20.4,16.5,3.8,both,cross-validated,15.4,,ok (MPM>=floor; cond moot),cross-validated,MPM,16.5
+input_1mAh_8_S2,5:5,0.5,85,28,17.2,13.5,3.7,both,cross-validated,12.2,,ok (MPM>=floor; cond moot),cross-validated,MPM,13.5
+input_1mAh_8_AMS_S5,0:10,0.0,85,28,21.4,17.8,3.6,both,cross-validated,16.4,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.8
+input_2mAh_a8_p00,0:10,0.0,80,35,19.4,23.0,-3.5,both,cross-validated,14.4,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,23.0
+input_2mAh_a9_p08,8:2,0.8,90,19,23.2,19.8,3.4,both,cross-validated,18.2,,ok (MPM>=floor; cond moot),cross-validated,MPM,19.8
+input_1mAh_5_AMP_S3,10:0,1.0,80,35,21.1,17.67,3.43,both,"cross-validated; SE-sufficient (se35) -> wallP conditional OFF (floor not engaged, reaches target above), MPM unchanged 17.7->17.67 = never over-compressed (healthy case)",16.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.7
+input_2mAh_real_15,10:0,1.0,87,25,24.6,21.30,3.26,both,"cross-validated; SE-sufficient (se26) -> conditional OFF, unchanged 21.3->21.30; = 2mAh anchor of am_wt87 trio (1mAh_100_15 20.2 / this 21.3 / 8mAh_real_10 19.0 = all ~20)",19.6,,ok (MPM>=floor; cond moot),cross-validated,MPM,21.3
+input_particulate_12_S5,0:10,0.0,82,32,18.9,22.3,-3.3,both,cross-validated,13.9,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,22.3
+input_1mAh_8_S3,5:5,0.5,85,28,15.5,12.4,3.2,both,cross-validated,10.5,,ok (MPM>=floor; cond moot),cross-validated,MPM,12.4
+input_1mAh_8_AMS_S3,0:10,0.0,85,28,20.6,17.4,3.2,both,cross-validated,15.6,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.4
+input_1mAh_8_AMS_S1,0:10,0.0,85,28,21.1,17.9,3.2,both,cross-validated,16.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.9
+input_2mAh_a9_50_p08,8:2,0.8,90,19,14.7,11.5,3.2,both,cross-validated,9.7,,ok (MPM>=floor; cond moot),cross-validated,MPM,11.5
+input_1mAh_100_9,7:3,0.7,82,32,12.9,9.7,3.2,both,cross-validated,7.9,,ok (MPM>=floor; cond moot),cross-validated,MPM,9.7
+input_2mAh_real_2,3:7,0.3,77,39,11.2,14.3,-3.1,both,cross-validated,6.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.3
+input_1mAh_5_AMP_S1,10:0,1.0,80,35,20.2,17.12,3.13,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 17.1->17.12 (healthy case)",15.2,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.1
+input_1mAh_8_S4,5:5,0.5,85,28,16.6,13.6,3.1,both,cross-validated,11.6,,ok (MPM>=floor; cond moot),cross-validated,MPM,13.6
+input_particulate_12_S4,0:10,0.0,82,32,19.8,22.8,-3.0,both,cross-validated,14.8,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,22.8
+input_2mAh_a8_p06,6:4,0.6,80,35,13.5,16.4,-2.9,both,cross-validated,8.5,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,16.4
+input_1mAh_5_AMP_S2,10:0,1.0,80,35,20.4,17.56,2.87,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 17.6->17.56 (healthy)",15.4,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.6
+input_2mAh_a8_p04,4:6,0.4,80,35,14.9,17.7,-2.8,both,cross-validated,9.9,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,17.7
+input_2mAh_real_16,0:10,0.0,92,16,28.1,25.4,2.7,both,cross-validated,23.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,25.4
+input_1mAh_8_AMS_S2,0:10,0.0,85,28,20.4,17.7,2.7,both,cross-validated,15.4,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.7
+input_2mAh_real_3,5:5,0.5,77,39,10.5,13.1,-2.6,both,cross-validated,5.5,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,13.1
+input_2mAh_real_1,0:10,0.0,77,39,13.5,16.1,-2.6,both,cross-validated,8.5,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,16.1
+input_2mAh_a8_p08,8:2,0.8,80,35,14.9,17.4,-2.6,both,cross-validated,9.9,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,17.4
+input_1mAh_5_AMP_S4,10:0,1.0,80,35,19.1,16.59,2.56,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 16.6->16.59 (healthy)",14.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,16.6
+input_1mAh_100_6,0:10,0.0,82,32,18.4,16.0,2.5,both,cross-validated,13.4,,ok (MPM>=floor; cond moot),cross-validated,MPM,16.0
+input_2mAh_real_18,5:5,0.5,92,16,21.0,18.6,2.3,both,cross-validated,16.0,,ok (MPM>=floor; cond moot),cross-validated,MPM,18.6
+input_2mAh_a9_50_p06,6:4,0.6,90,19,12.7,10.4,2.3,both,cross-validated,7.7,,ok (MPM>=floor; cond moot),cross-validated,MPM,10.4
+input_1mAh_100_4,7:3,0.7,77,39,4.1,6.3,-2.2,both,cross-validated,2.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,6.3
+input_2mAh_a9_p06,6:4,0.6,90,19,22.8,20.8,2.1,both,cross-validated,17.8,,ok (MPM>=floor; cond moot),cross-validated,MPM,20.8
+input_1mAh_5_AMP_S5,10:0,1.0,80,35,20.2,18.12,2.07,both,"cross-validated; SE-sufficient (se36) -> wallP conditional OFF, unchanged 18.1->18.12 (healthy)",15.2,,ok (MPM>=floor; cond moot),cross-validated,MPM,18.1
+input_2mAh_real_7,3:7,0.3,82,32,12.9,14.9,-2.0,both,cross-validated,7.9,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.9
+input_1mAh_100_8,5:5,0.5,82,32,12.4,10.3,2.0,both,cross-validated,7.4,,ok (MPM>=floor; cond moot),cross-validated,MPM,10.3
+input_2mAh_real_17,3:7,0.3,92,16,22.7,20.8,1.9,both,cross-validated,17.7,,ok (MPM>=floor; cond moot),cross-validated,MPM,20.8
+input_1mAh_100_7,3:7,0.3,82,32,13.1,11.4,1.7,both,cross-validated,8.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,11.4
+input_2mAh_real_9_E1.5_S3,7:3,0.7,82,32,12.5,14.1,-1.6,both,cross-validated,7.5,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.1
+input_2mAh_a9_p04,4:6,0.4,90,19,23.9,22.4,1.5,both,cross-validated,18.9,,ok (MPM>=floor; cond moot),cross-validated,MPM,22.4
+input_2mAh_real_6,0:10,0.0,82,32,16.7,18.2,-1.5,both,cross-validated,11.7,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,18.2
+input_2mAh_real_8,5:5,0.5,82,32,13.0,14.4,-1.4,both,cross-validated,8.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.4
+input_6mAh_real40_2,3:7,0.3,82,32,15.9,17.2,-1.4,both,cross-validated,10.9,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,17.2
+input_2mAh_real_5,10:0,1.0,77,39,10.2,11.6,-1.3,both,cross-validated,5.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,11.6
+input_6mAh_real40_4,7:3,0.7,82,32,13.8,15.2,-1.3,both,cross-validated,8.8,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,15.2
+input_2mAh_real_9_E1.5_S2,7:3,0.7,82,32,13.2,14.3,-1.1,both,cross-validated,8.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.3
+input_2mAh_real_9_E2,7:3,0.7,82,32,15.0,16.1,-1.1,both,cross-validated,10.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,16.1
+input_8mAh_real_8,5:5,0.5,87,25,16.2,17.3,-1.1,both,cross-validated,11.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,17.3
+input_2mAh_real_9,7:3,0.7,82,32,13.5,14.6,-1.1,both,cross-validated,8.5,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.6
+input_2mAh_a9_50_p00,0:10,0.0,90,19,17.9,16.8,1.1,both,cross-validated,12.9,,ok (MPM>=floor; cond moot),cross-validated,MPM,16.8
+input_2mAh_a9_50_p04,4:6,0.4,90,19,13.9,12.8,1.1,both,cross-validated,8.9,,ok (MPM>=floor; cond moot),cross-validated,MPM,12.8
+input_8mAh_real_19,7:3,0.7,77,39,12.2,13.2,-1.0,both,cross-validated,7.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,13.2
+input_8mAh_real_16,0:10,0.0,77,39,16.0,17.0,-1.0,both,cross-validated,11.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,17.0
+input_2mAh_a8_p10,10:0,1.0,80,35,15.7,16.6,-0.9,both,cross-validated,10.7,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,16.6
+input_2mAh_real_9_E1.5,7:3,0.7,82,32,12.6,13.6,-0.9,both,cross-validated,7.6,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,13.6
+input_1mAh_100_1,0:10,0.0,77,39,14.1,14.9,-0.8,both,cross-validated,9.1,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,14.9
+input_8mAh_real_1,0:10,0.0,82,32,18.6,19.3,-0.8,both,cross-validated,13.6,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,19.3
+input_2mAh_a9_p00,0:10,0.0,90,19,28.1,27.4,0.7,both,cross-validated,23.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,27.4
+input_8mAh_real_20,10:0,1.0,77,39,11.9,12.6,-0.7,both,cross-validated,6.9,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,12.6
+input_2mAh_a9_50_p02,2:8,0.2,90,19,15.5,14.8,0.7,both,cross-validated,10.5,,ok (MPM>=floor; cond moot),cross-validated,MPM,14.8
+input_8mAh_real_3,5:5,0.5,82,32,16.1,16.8,-0.7,both,cross-validated,11.1,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,16.8
+input_8mAh_real_5,10:0,1.0,82,32,16.3,16.8,-0.6,both,cross-validated,11.3,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,16.8
+input_2mAh_a9_p02,2:8,0.2,90,19,25.9,25.3,0.6,both,cross-validated,20.9,,ok (MPM>=floor; cond moot),cross-validated,MPM,25.3
+input_8mAh_real_6,0:10,0.0,87,25,22.2,22.8,-0.6,both,cross-validated,17.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,22.8
+input_1mAh_100_2,3:7,0.3,77,39,11.1,11.7,-0.6,both,cross-validated,6.1,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,11.7
+input_8mAh_real_4,7:3,0.7,82,32,15.0,15.6,-0.6,both,cross-validated,10.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,15.6
+input_8mAh_real_9,7:3,0.7,87,25,15.0,15.5,-0.5,both,cross-validated,10.0,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,15.5
+input_8mAh_real_7,3:7,0.3,87,25,18.2,18.6,-0.5,both,cross-validated,13.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,18.6
+input_2mAh_real_11,0:10,0.0,87,25,21.8,21.3,0.5,both,cross-validated,16.8,,ok (MPM>=floor; cond moot),cross-validated,MPM,21.3
+input_8mAh_real_2,3:7,0.3,82,32,17.6,18.1,-0.5,both,cross-validated,12.6,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,18.1
+input_8mAh_real_13,5:5,0.5,92,16,20.2,20.7,-0.4,both,cross-validated,15.2,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,20.7
+input_8mAh_real_11,0:10,0.0,92,16,27.4,27.8,-0.4,both,cross-validated,22.4,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,27.8
+input_2mAh_real_14,7:3,0.7,87,25,15.6,15.9,-0.3,both,cross-validated,10.6,,ok (MPM>=floor; cond moot),cross-validated,MPM,15.9
+input_8mAh_real_12,3:7,0.3,92,16,22.8,22.5,0.3,both,cross-validated,17.8,,ok (MPM>=floor; cond moot),cross-validated,MPM,22.5
+input_2mAh_real_10,10:0,1.0,82,32,17.8,17.9,-0.2,both,cross-validated,12.8,,ok (MPM>=floor; cond moot),cross-validated,MPM,17.9
+input_2mAh_real_13,5:5,0.5,87,25,15.2,15.3,-0.2,both,cross-validated,10.2,,ok (MPM>=floor; cond moot),cross-validated,MPM,15.3
+input_2mAh_real_12,3:7,0.3,87,25,16.5,16.2,0.2,both,cross-validated,11.5,,ok (MPM>=floor; cond moot),cross-validated,MPM,16.2
+input_1mAh_100_3,5:5,0.5,77,39,10.1,10.3,-0.2,both,cross-validated,5.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,10.3
+input_8mAh_real_15,10:0,1.0,92,16,27.3,27.4,-0.1,both,cross-validated,22.3,,ok (MPM>=floor; cond moot),cross-validated,MPM,27.4
+input_8mAh_real_14,7:3,0.7,92,16,19.1,19.0,0.1,both,cross-validated,14.1,,ok (MPM>=floor; cond moot),cross-validated,MPM,19.0
+input_8mAh_real_10,10:0,1.0,87,25,19.0,19.0,-0.0,both,cross-validated,14.0,,ok (MPM>=floor; cond moot),cross-validated,MPM,19.0
+input_2mAh_real_20,10:0,1.0,92,16,29.3,22.2,7.1,bracket,BRACKET mono-large se16 extreme-SE-poor: wallP cond 9.7->22.2 but still ~5pp below trusted same-comp 8mAh_real_15 27.4(=DEM 27.3) -> residual over-compress; truth ~27-29 lean DEM/8mAh anchor,24.3,~0(inf),OFF/overcompact (MPM 22.2<floor 24.3; true~anchor),SE-poor-corner(out-of-envelope),DEM,29.3
+input_2mAh_a9_p10,10:0,1.0,90,19,26.4,15.44,10.96,bracket,"BRACKET mono-large r_SE=1.5 DEGENERATE (629 SE, percolation 0%, tau 17.5 RVE-artifact): wallP cond 10.9->15.44; NO cross-capacity sibling (am_wt90+rSE1.5 only @2mAh); both bounds low-confidence",21.4,~0(inf),OFF/overcompact (MPM 15.4<floor 21.4; true~anchor),SE-poor-corner(out-of-envelope),DEM,26.4
+input_1mAh_100_10,10:0,1.0,82,32,28.3,21.78,6.52,bracket,"BRACKET mono-large: wallP cond 15.9->21.78; same-comp bulk 2mAh_real_10 17.9 / 8mAh_real_5 16.8 trusted ~17; 1mAh MPM 21.78 = mid-bracket [bulk 17, thin-DEM 28.3] plausible thin-loose (se32 enough SE -> NOT over-compressed, unlike se16 2mAh_real_20)",23.3,~0(inf),OFF/overcompact (MPM 21.8<floor 23.3; true~anchor),SE-poor-corner(out-of-envelope),DEM,28.3
+input_2mAh_a9_50_p10,10:0,1.0,90,19,18.4,11.95,6.5,bracket,"BRACKET mono-large se19 borderline, NO cross-capacity sibling (a9 series 2mAh-only): wallP cond 9.3->11.95; DOCUMENTED over-compress confound (a9_50_ps_sweep_vs_bimodal266 §발견3) -> MPM 11.95 lower bound, lean DEM 18.45/mid; structure OK (perc 99.4%, NOT degenerate unlike a9_p10 rSE1.5)",13.4,~0(inf),OFF/overcompact (MPM 11.9<floor 13.4; true~anchor),SE-poor-corner(out-of-envelope),DEM,18.4
+input_1mAh_8_AMP_S5,10:0,1.0,85,28,21.9,15.93,5.95,MPM,"SE-sufficient (se28>=25) -> regime-1 MPM reliable; wallP cond 15.0->15.93; no cross-cap sibling (am_wt85 mono=1mAh only) BUT seed-pair S2 17.3/S5 15.93 ~16 + real_14(am_wt85) MPM 16.7 consistent; r_AM_P=5um -> DEM 21.9 lower (better pack, mild thin-loose)",16.9,~0(inf),OFF/overcompact (MPM 15.9<floor 16.9; true~anchor),SE-poor-corner(out-of-envelope),DEM,21.9
+input_1mAh_8_AMP_S2,10:0,1.0,85,28,23.6,18.16,5.45,MPM,SE-sufficient (se29>=25) -> regime-1 MPM reliable; wallP cond 17.3->18.16; seed-pair S5 15.93/S2 18.16 ~17 + real_14(am_wt85) MPM 16.7 consistent; r_AM_P=5um -> DEM 23.6 (mild thin-loose),18.6,~0(inf),OFF/overcompact (MPM 18.2<floor 18.6; true~anchor),SE-poor-corner(out-of-envelope),DEM,23.6
+input_2mAh_a7_p04,4:6,0.4,70,48,9.1,15.8,-6.7,review,review MPM>DEM moderate SE-rich,4.1,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,15.8
+input_2mAh_a7_p02,2:8,0.2,70,48,10.2,16.8,-6.6,review,review MPM>DEM moderate SE-rich,5.2,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,16.8
+input_2mAh_a7_p00,0:10,0.0,70,48,11.5,17.9,-6.4,review,review MPM>DEM moderate SE-rich,6.5,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,17.9
+input_2mAh_a7_p08,8:2,0.8,70,48,7.6,13.6,-6.0,review,review MPM>DEM moderate SE-rich,2.6,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,13.6
+input_2mAh_a7_p06,6:4,0.6,70,48,9.4,14.9,-5.5,review,review MPM>DEM moderate SE-rich,4.4,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,14.9
+input_2mAh_a7_p10,10:0,1.0,70,48,8.8,13.9,-5.2,review,review MPM>DEM moderate SE-rich,3.8,,"SE-rich n/a (MPM>DEM, DEM-side)",SE-rich(DEM-eps-artifact),MPM,13.9
+input_particulate_12_S1,0:10,0.0,82,32,19.8,22.8,-3.0,both,cross-validated,14.8,,"SE-rich n/a (MPM>DEM, DEM-side)",cross-validated,MPM,22.8
+input_1mAh_9_S4,7:3,0.7,85,29,20.1,15.8,4.3,MPM,thin 1mAh(17.6um) DEM thin-loose-high + 1mAh_9 known per-seed-scatter family; MPM 15.8 == 7:3 cross-cap anchor family (2/6/8mAh_real 15-16) -> MPM reliable; sigma_ionic 0.0335 ~ family median 0.033 (transport representative); gap +4.3 just over band = mild thin divergence,15.1,,ok (MPM>=floor; cond moot),SE-poor-corner(out-of-envelope),DEM,20.1
+input_1mAh_9_S3,7:3,0.7,85,29,21.6,16.7,4.9,MPM,sibling of S4 same pattern: thin 1mAh DEM thin-loose-high (per-seed S3 21.6/S4 20.1) + 1mAh_9 known scatter family; MPM 16.7 == 7:3 cross-cap anchor (2/6/8mAh_real 15-16) -> MPM reliable; sigma_ionic 0.0348 ~ family median; gap +4.9 mild thin divergence,16.6,,ok (MPM>=floor; cond moot),SE-poor-corner(out-of-envelope),DEM,21.6
+input_1mAh_9_S2,7:3,0.7,85,29,23.8,18.7,5.2,MPM,"loosest seed of 1mAh_9 trio (DEM 20.1/21.6/23.8 = MPM 15.8/16.7/18.65 across S4/S3/S2 = per-seed packing scatter ~3.7pp); both high vs 7:3 anchor 15-16, MPM closer -> MPM more reliable; DEM thin-loose-high; most AM_P fracture (F/Pc 14.3, loosest seed concentrates load); gap +5.2",18.8,,ok (MPM>=floor; cond moot),SE-poor-corner(out-of-envelope),DEM,23.8
+input_1mAh_6_S5,7:3,0.7,80,36,15.5,14.8,0.7,both,"cross-validated; 80:20 (more SE: SE/sol 36, phi_SE 0.317, 28403 SE) fills thin-RVE voids -> DEM packs tight = MPM; CONTRAST 1mAh_9 85:15 thin-loose gap+4-5 (SE-poorer) -> thin-loose is SE-POOR effect not thickness; sigma_ionic 0.108 (3x of 1mAh_9, dense SE net); AM_P fracture persists (contact-stress, compo-indep)",10.5,,ok (MPM>=floor; cond moot),cross-validated,MPM,14.8
+input_1mAh_100_14,7:3,0.7,87,26,18.2,11.4,6.8,anchor,"BRACKET (largest 7:3 gap): thin 1mAh + SE-poor(SE/sol 26, phi_SE 0.22) + AM-rich 87wt corner; DEM 18.2 thin-loose-high (tau 4.0 tortuous SE-poor net), MPM 11.4 over-compacted (SE-poor+thin frozen-AM cant bear platen, SE over-flows = §2.1 even bimodal); cross-cap anchor real_14/real_9 (AM87/SE25) 15.6/15.9,15.0/15.5 -> truth ~15.5; f_AM/wallP-conditional would lift MPM toward anchor; AM_P fracture max F/Pc 14.9",13.2,~0(inf),OFF/overcompact (MPM 11.4<floor 13.2; true~anchor),SE-poor-corner(out-of-envelope),DEM,18.2
+input_1mAh_100_13,5:5,0.5,87,26,16.7,11.1,5.6,anchor,"BRACKET (sibling of 100_14 but P:S 5:5): thin + SE-poor(SE/sol 26) + AM-rich 87wt corner; DEM 16.7 thin-loose-high (tau 4.0), MPM 11.1 over-compacted (SE-poor+thin §2.1); 5:5 more AM_S(1395) -> slightly less loose than 100_14 7:3 (DEM 16.7<18.2, gap +5.6<6.8); truth ~15 cross-cap anchor; f_AM/wallP corner",11.7,~0(inf),OFF/overcompact (MPM 11.1<floor 11.7; true~anchor),SE-poor-corner(out-of-envelope),DEM,16.7
+input_1mAh_100_12,3:7,0.3,87,26,18.3,11.6,6.7,anchor,"3rd of 100_1X trio (AM87/SE-poor): all BRACKET MPM ~11, DEM ~17-18 thin-loose; truth ~15 cross-cap anchor; conditional OFF (MPM<floor). [CORRECTION: the 15.15 shown 2026-06-27 was a mis-paste of 1mAh_6_S3 MPM, NOT a 100_12 re-run]",13.3,0.883(CONFIRMED),"ON f_AM=0.883 CONFIRMED (run_mpm.sh+log) — FINAL still 11.62 = continuum UNDER-correction (soft SE meets its (1-f_AM)*target=35MPa share only ~11%, doesn't jam at DEM porosity like rigid spheres; need f_AM~0.97 to stop at anchor). floor=DEM-5=13.3 also < anchor 15. -> regime-gate: report cross-cap anchor ~15, NOT raw MPM",SE-poor-corner(out-of-envelope),DEM,18.3
+input_1mAh_6_S4,7:3,0.7,80,36,18.2,15.6,2.5,both,"cross-validated (within band); sibling of S5 (15.5/14.8 gap+0.7); 80:20 SE-sufficient (SE/sol 36) both ~15-16; S4 DEM 18.2 looser seed than S5 15.5 (per-seed) but MPM stable 15.6 ~anchor; SE-content ladder: gap grows monotone as SE 20->15->13wt (1mAh_6 +0.7/2.5 < 1mAh_9 +4-5 < 1mAh_100 +6-7) = SE-content is the thin-case reliability axis, breakpoint SE/sol ~30pct",13.2,,ok (MPM>=floor; cond moot),cross-validated,MPM,15.6
+input_1mAh_6_S3,7:3,0.7,80,36,16.3,15.2,1.1,both,"cross-validated; 1mAh_6 80:20 SE-sufficient (SE/sol 36): S5 15.5/14.8(+0.7) S4 18.2/15.6(+2.5) S3 16.3/15.2(+1.1) all cross-val, MPM stable ~15 = SE-content ladder (80:20 no BRACKET). NOTE this MPM block (15.15/AM147/SEsol36.41) was mis-pasted under 100_12 earlier",11.3,,ok (MPM>=floor; cond moot),cross-validated,MPM,15.2
