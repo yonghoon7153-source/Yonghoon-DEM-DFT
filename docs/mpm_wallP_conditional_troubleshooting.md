@@ -432,13 +432,20 @@ production 경로 = webapp [MPM input 변환] → `mpm_input_from_case.py` → `
   ⚠ CSV `mpm_porosity` 칼럼은 conditional 시절 값(stale) — pure 재실행시 더 낮아질 수 있으나 flagged라 production 무관(코너는
   DEM 사용).  negative-gap(SE-rich, MPM>DEM) = 별개 regime(DEM ε_sphere overlap artifact, MPM 신뢰) — 이 변경 무관.
 
-### C. nu_se=0.49 morphology — reasoned likely-intact + MORE physical, GPU 직접비교 pending
-사용자 ①의 미검증 건.  **결론: 물리적으로 intact일 가능성 높고 nu0.49가 *더* 물리적 — 단 3D 직접 SEM 비교는 GPU(user box) 남음.**
-- **물리 논거:** morphology(SEM core-preserved + boundary-flattening) = PLASTIC SHEAR 현상(σ_y + μ 지배).  nu가 바꾸는 건
-  주로 K(bulk): E=1.53서 **nu0.30 → K=1.28/μ=0.588**, **nu0.49 → K=25.5/μ=0.513**.  **σ_y=0.30 불변**, μ는 −13%만 변함.
-  → 소성 형상은 ~intact 예상.  K 20×↑(volume-preserving)은 deviatoric/shear 형상을 *안* 바꾸고 비물리적 부피 crush만 차단
-  (LPSCl 비압축 ≈ 실제) → nu0.49가 **MORE physical**.  (2D champion E=1.53/σ_y=0.15가 SEM(vis_zoom④) 매치 — 거긴 nu 主레버 아님.)
-- **잔여 미검증:** 3D nu0.49의 직접 SEM-morphology 대조(3D는 porosity/coverage/thickness만 검증됨).
-- **GPU verify (user box):** `mpm2d_morphology.py --nu-se 0.30` vs `--nu-se 0.49` 형상 출력 → SEM 대조; 또는
-  `viz_mpm_morphology.py`로 3D x-z slice.  μ −13%면 boundary-flattening이 *아주 약간* 더 강할 수 있음(확인 포인트).
-- status: **reasoned likely-intact + more-physical; GPU 직접비교 1건 남음(blocker 아님, production nu0.49 유지 OK).**
+### C. nu_se=0.49 morphology — ✅ GPU-CONFIRMED (2026-06-28, kserver/Gabia A6000)
+사용자 ①의 미검증 건 → 직접 GPU 실험으로 **확정.**  **결론: nu=0.49는 irreducibly 필요 + 물리적; nu=0.30은 부피 crush로 붕괴.**
+- **GPU 실험 (pure-SE, n_grid 256, E=1.53/σ_y=0.30, nu만 변경, mpm3d_compaction.py --material SE):**
+
+  | nu | K_SE | FINAL porosity | 거동 |
+  |---|---|---|---|
+  | 0.30 | 1.27 GPa | **0.00%** (settled & @target) | frame 100에 완전 붕괴, wall이 floor에 박힘 = **부피 crush(비물리)** |
+  | 0.49 | 25.5 GPa | **7.31%** settled (@target 3.09%) | ~6% 도달 후 servo 안정 ~7% = **부피 보존 + shape-change 치밀화(물리)** |
+
+  strain: nu0.49 max ε **53.7** > nu0.30 **33.9** = 경계 국부변형(shape-change) vs 균일 crush.  PNG: nu0.30 smear vs nu0.49
+  distinct-grain+boundary-flatten (morph_nu030/049.png; nu049 파일 3.6× 큼 = 구조 더 많음).
+- **물리 논거 (실험으로 적중):** morphology = PLASTIC SHEAR(σ_y+μ 지배), nu는 주로 K(bulk).  nu0.30(K≈press)은 SE를 부피로
+  으깨 구조 파괴; nu0.49(K=25.5≈real LPSC 24)는 부피 보존 → σ_y/μ-driven shape-change가 살아 SEM-like.  ⇒ §17 추론
+  ("nu0.49 = volume-preserving = MORE physical, σ_y 불변이라 shape 메커니즘 유지") **GPU로 확정.**
+- ⚠ 정직: 7.31%는 nu-대조 run(servo+walls+n256)이라 Minnmann 정밀보정(10%)과 약간 다름 — **대조(0 vs 7)가 요점**이지 재보정 아님.
+  (porosity@target 3.09 = servo가 첫 도달 시 과압축 후 relax up = 알려진 pure-SE servo 거동; production scaffold는 hold protocol.)
+- status: **✅ GPU-CONFIRMED — production nu_se=0.49 LOCKED, 물리적으로 정당.**  data: kserver morph_nu030/049.png + 위 FINAL.
