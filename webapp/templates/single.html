@@ -300,6 +300,8 @@ scp root@121.78.116.27:/root/work/Yonghoon-DEM-DFT/mpm_payload.json \
             <th>SE tris</th><td data-mk="se_surface_tris" data-fmt="int">—</td></tr>
       </tbody>
     </table>
+    <div id="mpm-regime-note" style="display:none; margin-top:9px; padding:7px 10px;
+         border-radius:6px; font-size:0.84em; line-height:1.5"></div>
   </div>
 </div>
 {% endif %}
@@ -356,6 +358,8 @@ scp root@121.78.116.27:/root/work/Yonghoon-DEM-DFT/mpm_payload.json \
 <script>
 // MPM result params → the table in the MPM-pipeline card.  Filled on page load from the
 // server (_INIT_MPM, present if a payload was already uploaded) and again on each upload.
+{% set _demp = (metrics.porosity_spheresum if (metrics and metrics.porosity_spheresum is defined and metrics.porosity_spheresum is not none) else (metrics.porosity if metrics else none)) %}
+const _DEM_POR = {{ _demp | tojson }};   // DEM porosity (production sphere-sum) for the MPM↔DEM regime flag
 const _INIT_MPM = {{ (mpm_metrics or {}) | tojson }};
 function fillMpmTable(m) {
   const box = document.getElementById('mpm-result-box');
@@ -394,6 +398,22 @@ function fillMpmTable(m) {
     box.querySelectorAll('.cov-band-note').forEach(e =>
       e.textContent = `소성 vs 강체 · Hertz ${m.cov_hertz_um}/Tabor ${m.cov_tabor_um}µm`);
   box.style.display = 'block';
+  // regime flag — DEM↔MPM porosity gap → which value to trust (mirrors the dashboard badge + §16/§17)
+  const _note = document.getElementById('mpm-regime-note');
+  if (_note) {
+    const _mp = +m.porosity_mpm_pct, _dp = +_DEM_POR;
+    if (Number.isFinite(_mp) && Number.isFinite(_dp)) {
+      const _gap = _dp - _mp; let _bg, _fg, _txt;
+      if (_gap > 4) { _bg = '#3a1d00'; _fg = '#ffb37a';
+        _txt = `🟠 <b>SE-poor · out-of-envelope</b> — MPM ${_mp.toFixed(1)}% 과압축. 참값은 <b>MPM ${_mp.toFixed(1)} ~ DEM ${_dp.toFixed(1)}% 사이</b> (DEM = 상한). SE-기아 + thin = 제조 envelope 밖 설계 → porosity는 DEM 참고.`;
+      } else if (_gap < -4) { _bg = '#0d2540'; _fg = '#9ec5fe';
+        _txt = `🔵 <b>SE-rich</b> — DEM ${_dp.toFixed(1)}% ε_sphere 과압축 → <b>MPM ${_mp.toFixed(1)}% 사용</b>.`;
+      } else { _bg = '#0a3320'; _fg = '#8cffb2';
+        _txt = `🟢 <b>cross-validated</b> — DEM ${_dp.toFixed(1)}%와 일치 (|gap| ${Math.abs(_gap).toFixed(1)} ≤ 4) → <b>MPM ${_mp.toFixed(1)}% 사용</b>.`;
+      }
+      _note.style.background = _bg; _note.style.color = _fg; _note.innerHTML = _txt; _note.style.display = 'block';
+    } else { _note.style.display = 'none'; }
+  }
   // a carbon payload (built with --phase) carries additive_counts → reveal the 도전재 3D button
   const addBtn = document.getElementById('btn-additives-3d');
   if (addBtn) {
