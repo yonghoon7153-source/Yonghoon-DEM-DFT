@@ -9,7 +9,6 @@
   "B0_GPa": 24.48,
   "B0_prime": 4.24,
   "fit_rms_meV": 0.039,
-  "modelC_MLIP_B0_GPa": 21.7,
   "diff_GPa": 2.78,
   "diff_pct": 12.8,
   "points": [
@@ -38,5 +37,8 @@
       "V_bohr3": 16871.912,
       "E_Ry": -2621.74646071
     }
-  ]
+  ],
+  "reference": "undoped modelC (DFT BM-EOS, Li5.4PS4.4Cl1.6) B0=21.7 GPa — NOT MLIP",
+  "modelC_DFT_B0_GPa": 21.7,
+  "interpretation": "B2O3 doping stiffens B0 by +2.8 GPa (+13%), DFT-confirmed (same BM3 method)"
 }
