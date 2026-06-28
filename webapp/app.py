@@ -373,6 +373,7 @@ def list_cases():
         report_file = os.path.join(results_dir, 'report.md')
         meta['has_report'] = os.path.exists(report_file)
         meta['has_mpm'] = os.path.exists(os.path.join(results_dir, 'mpm_payload.json'))  # MPM result uploaded?
+        meta['mpm_regime'] = ''   # filled below (cross-validated / SE-rich / SE-poor) when DEM+MPM porosity both exist
         # Check for warnings
         metrics_file = os.path.join(results_dir, 'full_metrics.json')
         if os.path.exists(metrics_file):
@@ -423,6 +424,36 @@ def list_cases():
                 if not _has_i_p: meta['stage_e_physics_missing'].append('σ_ionic')
                 if not _has_e_p: meta['stage_e_physics_missing'].append('σ_e')
                 if not _has_k_p: meta['stage_e_physics_missing'].append('κ')
+
+            # MPM regime — DEM↔MPM porosity cross-check (gap = DEM − MPM).  Splits the binary
+            # "MPM ✓" badge into 3 intuitive states + tells which porosity value to trust:
+            #   gap > +4  → SE-poor (out-of-envelope): MPM over-compresses → use DEM   (orange ⚠)
+            #   gap < −4  → SE-rich: DEM ε_sphere over-compresses          → use MPM   (blue)
+            #   |gap| ≤ 4 → cross-validated (in-envelope)                  → use MPM   (green ✓)
+            # docs/data/mpm_dem_porosity_reliability.csv + troubleshooting §16/§17.
+            if meta.get('has_mpm'):
+                _dem_por = m.get('porosity_spheresum')
+                if _dem_por is None:
+                    _dem_por = m.get('porosity')
+                _mpm_por = None
+                _mmf = os.path.join(results_dir, 'mpm_metrics.json')
+                if os.path.exists(_mmf):
+                    try:
+                        with open(_mmf) as _mf:
+                            _mpm_por = (json.load(_mf) or {}).get('porosity_mpm_pct')
+                    except Exception:
+                        _mpm_por = None
+                if _dem_por is not None and _mpm_por is not None:
+                    _gap = float(_dem_por) - float(_mpm_por)
+                    meta['mpm_dem_porosity'] = round(float(_dem_por), 1)
+                    meta['mpm_porosity'] = round(float(_mpm_por), 1)
+                    meta['mpm_gap'] = round(_gap, 1)
+                    if _gap > 4.0:
+                        meta['mpm_regime'] = 'SE-poor';        meta['mpm_use_source'] = 'DEM'
+                    elif _gap < -4.0:
+                        meta['mpm_regime'] = 'SE-rich';        meta['mpm_use_source'] = 'MPM'
+                    else:
+                        meta['mpm_regime'] = 'cross-validated'; meta['mpm_use_source'] = 'MPM'
 
             # Composite score (overall grade) — used for the 랭킹 filter.
             # Cheap to compute (no SE-aux dependency at the list level;
