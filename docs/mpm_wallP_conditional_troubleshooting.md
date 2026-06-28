@@ -448,4 +448,7 @@ production 경로 = webapp [MPM input 변환] → `mpm_input_from_case.py` → `
   ("nu0.49 = volume-preserving = MORE physical, σ_y 불변이라 shape 메커니즘 유지") **GPU로 확정.**
 - ⚠ 정직: 7.31%는 nu-대조 run(servo+walls+n256)이라 Minnmann 정밀보정(10%)과 약간 다름 — **대조(0 vs 7)가 요점**이지 재보정 아님.
   (porosity@target 3.09 = servo가 첫 도달 시 과압축 후 relax up = 알려진 pure-SE servo 거동; production scaffold는 hold protocol.)
-- status: **✅ GPU-CONFIRMED — production nu_se=0.49 LOCKED, 물리적으로 정당.**  data: kserver morph_nu030/049.png + 위 FINAL.
+- **✓ VISUAL 확인 (사용자, 2026-06-28):** morph PNG가 예측 그대로 — **nu0.30 = 얇은 pancake로 으깨짐, SE 연속 mass 병합(grain
+  식별 불가) = 부피 crush**; **nu0.49 = 두꺼운 bed(부피 보존) + distinct deformed grain + 내부 flow + 경계 flattening = SEM-like.**
+  ⚠ full-panel "void %"(nu030 68 / nu049 53)는 *framing artifact*(얇은 slab이 큰 box에 떠 있음)지 porosity 아님 — 실제는 0 vs 7.31.
+- status: **✅ GPU + VISUAL CONFIRMED — production nu_se=0.49 LOCKED, porosity·morphology 둘 다 물리적으로 정당.**  data: kserver morph_nu030/049.png + 위 FINAL.
