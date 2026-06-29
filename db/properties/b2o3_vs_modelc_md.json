@@ -1,17 +1,45 @@
 {
-  "method": "disorder_ensemble UMA MD, fit window 5-40ps (consistent b2o3 vs modelc)",
-  "modelc_natural": {
-    "D_600": 7.52e-06,
-    "D_800": 1.711e-05,
-    "D_1000": 4.534e-05,
-    "Ea_eV": 0.2259,
-    "source": "msd_compare_comp1_modelc.csv"
+  "FINAL_method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t on window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven ratio = 1. This window/pipeline reproduces the validated deck slide for modelc EXACTLY (D 7.90/2.05/4.55e-6, Ea 0.2235, sigma300 13.94 vs slide 14).",
+  "window_ps": [2, 50],
+  "n_pts_arrhenius": 3,
+  "modelc_LPSCl1.6": {
+    "n_Li_cm3": 2.2197e+22,
+    "D_600": 7.901e-06,
+    "D_800": 2.054e-05,
+    "D_1000": 4.554e-05,
+    "Ea_eV": 0.2235,
+    "D0_cm2_s": 5.753e-04,
+    "D_300K": 1.0135e-07,
+    "sigma_300K_mS_cm": 13.94,
+    "sigma_273K_mS_cm": 6.52,
+    "validated": "EXACT match to deck slide (msd_origin), Ea 0.2235, sigma300 13.94"
   },
-  "b2o3": {
-    "D_600": 9.973e-06,
-    "D_800": 3.095e-05,
-    "D_1000": 4.831e-05,
-    "Ea_eV": 0.207
+  "b2o3_doped": {
+    "n_Li_cm3": 2.3806e+22,
+    "D_600": 9.174e-06,
+    "D_800": 3.009e-05,
+    "D_1000": 5.067e-05,
+    "Ea_eV": 0.2234,
+    "D0_cm2_s": 7.112e-04,
+    "D_300K": 1.2547e-07,
+    "sigma_300K_mS_cm": 18.51,
+    "sigma_273K_mS_cm": 8.65
   },
-  "verdict": "B2O3 doping lowers Ea (0.226->0.207) and raises D at all T (600-1000K) -> improves Li transport, consistent with BVSE 2x channel. Low-T (400/500) pending for curvature + 300K sigma."
+  "comparison": {
+    "delta_Ea_meV": 0.0,
+    "Ea_verdict": "b2o3 and modelc have IDENTICAL Ea (0.223 eV) at the consistent 2-50 ps window. The transport gain is NOT a lower barrier.",
+    "D0_ratio_b2o3_over_modelc": 1.24,
+    "sigma300_ratio_b2o3_over_modelc": 1.33,
+    "verdict": "B2O3 doping raises Li conductivity by ~1.33x vs LPSCl1.6 at RT, driven entirely by the prefactor D0 (more carriers / higher attempt rate), at the SAME activation energy. sigma300 18.5 vs 13.9 mS/cm; sigma273 8.7 vs 6.5 mS/cm."
+  },
+  "honesty": {
+    "absolute_sigma": "UMA classical Nernst-Einstein (Haven=1) overestimates absolute sigma ~3-5x for the LPSCl family (deck note) -> quote Ea + ratio, not absolute sigma.",
+    "fitting_sensitivity": "D from MSD swings ~10-20% with the fit window; this amplifies in the RT extrapolation. The window MUST be held fixed across systems (here 2-50 ps). The earlier (5-40 ps) extraction made modelc 800 K anomalously low -> inflated modelc Ea to 0.226 and faked a b2o3 Ea advantage (0.207). Corrected here.",
+    "comp1_LPSCl_baseline": "comp1 columns in msd_comp1_modelc.csv are a DIFFERENT (slower) trajectory than the deck comp1 and do NOT reproduce the slide (D ~60% of slide). Use the deck-validated comp1 reference (D 3.09/1.03e-5/2.20e-5, Ea 0.2532, sigma300 3.35) for the LPSCl baseline."
+  },
+  "SUPERSEDED_5_40_window": {
+    "note": "earlier (5-40 ps) extraction, retained for traceability; NOT for paper",
+    "modelc": {"D_600": 7.52e-06, "D_800": 1.711e-05, "D_1000": 4.534e-05, "Ea_eV": 0.2259, "sigma_300K": 12.17},
+    "b2o3": {"D_600": 9.973e-06, "D_800": 3.095e-05, "D_1000": 4.831e-05, "Ea_eV": 0.207, "sigma_300K": 27.82}
+  }
 }

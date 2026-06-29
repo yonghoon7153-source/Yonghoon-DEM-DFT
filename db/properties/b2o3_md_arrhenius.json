@@ -1,34 +1,28 @@
 {
-  "method": "UMA-s-1p1 Langevin MD, fit window 5-40 ps; Nernst-Einstein sigma = n q^2 D / (kB T), Haven ratio = 1",
-  "n_Li_per_cm3": 2.3806298818304583e+22,
-  "D_per_T_cm2_s": {
-    "400": 1.124e-06,
-    "500": 5.517e-06,
-    "600": 9.973e-06,
-    "800": 3.095e-05,
-    "1000": 4.831e-05
+  "FINAL_for_paper": {
+    "method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t, fit window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven = 1. SAME pipeline reproduces the validated deck slide for modelc exactly.",
+    "window_ps": [2, 50],
+    "n_Li_cm3": 2.3806298818304583e+22,
+    "D_per_T_cm2_s": {"600": 9.174e-06, "800": 3.009e-05, "1000": 5.067e-05},
+    "Ea_eV": 0.2234,
+    "D0_cm2_s": 7.112e-04,
+    "D_300K_cm2_s": 1.2547e-07,
+    "D_273K_cm2_s": 5.337e-08,
+    "sigma_300K_mS_cm": 18.51,
+    "sigma_273K_mS_cm": 8.65,
+    "vs_modelc": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json."
   },
-  "fit_full_5pt_400_1000": {
-    "Ea_eV": 0.214,
-    "D0_cm2_s": 6.493e-04,
-    "D_300K_cm2_s": 1.622e-07,
-    "D_273K_cm2_s": 7.140e-08,
-    "sigma_300K_mS_cm": 23.93,
-    "sigma_273K_mS_cm": 11.58,
-    "note": "preferred for low-T extrapolation: anchored by the 400/500 K points"
+  "supplementary_lowT_400_500": {
+    "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",
+    "window_ps": [5, 40],
+    "D_400K_cm2_s": 1.124e-06,
+    "D_500K_cm2_s": 5.517e-06,
+    "curvature_verdict": "segment Ea zig-zags (no clean super-Arrhenius). To fold into a consistent 5-pt fit, re-extract the 400/500 K MSD arrays (gabia) at 2-50 ps."
   },
-  "fit_highT_600_1000": {
-    "Ea_eV": 0.207,
-    "D0_cm2_s": 5.667e-04,
-    "D_300K_cm2_s": 1.885e-07,
-    "D_273K_cm2_s": 8.540e-08,
-    "sigma_300K_mS_cm": 27.82,
-    "sigma_273K_mS_cm": 13.85,
-    "note": "original high-T-only fit (matches prior db value 27.82)"
-  },
-  "curvature": {
-    "segment_Ea_eV": {"400-500": 0.274, "500-600": 0.153, "600-800": 0.234, "800-1000": 0.153},
-    "verdict": "no clean super-Arrhenius curvature; segments zig-zag (low-T 400 K D has the largest statistical uncertainty). Full-5pt Ea 0.214 ~ high-T 0.207 => approximately Arrhenius 400-1000 K, so 300/273 K extrapolation is reasonably trustworthy."
-  },
-  "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma; Ea and the relative b2o3-vs-modelc comparison (same method/window) are the robust quantities. Absolute sigma is an upper-ish bound."
+  "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma ~3-5x for the LPSCl family. Robust quantities = Ea and the relative b2o3-vs-modelc ratio (same method/window). Absolute sigma is an upper bound.",
+  "SUPERSEDED": {
+    "note": "earlier (5-40 ps) fits, retained for traceability only; the (5-40) window faked a b2o3 Ea advantage via modelc's window-sensitive 800 K point.",
+    "highT_5_40": {"Ea_eV": 0.207, "sigma_300K_mS_cm": 27.82},
+    "full5pt_5_40": {"Ea_eV": 0.214, "sigma_300K_mS_cm": 23.93}
+  }
 }
