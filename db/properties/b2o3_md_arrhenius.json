@@ -1,14 +1,34 @@
 {
-  "method": "UMA-s-1p1 Langevin MD, Nernst-Einstein (Haven=1)",
-  "Ea_eV": 0.207,
-  "D0_cm2_s": 0.0005667272246702259,
-  "D_per_T": {
+  "method": "UMA-s-1p1 Langevin MD, fit window 5-40 ps; Nernst-Einstein sigma = n q^2 D / (kB T), Haven ratio = 1",
+  "n_Li_per_cm3": 2.3806298818304583e+22,
+  "D_per_T_cm2_s": {
+    "400": 1.124e-06,
+    "500": 5.517e-06,
     "600": 9.973e-06,
     "800": 3.095e-05,
     "1000": 4.831e-05
   },
-  "D_300K_cm2_s": 1.8854617232673419e-07,
-  "sigma_300K_mS_cm": 27.82,
-  "n_Li_per_cm3": 2.3806298818304583e+22,
-  "caveat": "MLIP-MD classical Nernst-Einstein overestimates absolute sigma; Ea + relative comparison vs modelc (same method) are the robust quantities."
+  "fit_full_5pt_400_1000": {
+    "Ea_eV": 0.214,
+    "D0_cm2_s": 6.493e-04,
+    "D_300K_cm2_s": 1.622e-07,
+    "D_273K_cm2_s": 7.140e-08,
+    "sigma_300K_mS_cm": 23.93,
+    "sigma_273K_mS_cm": 11.58,
+    "note": "preferred for low-T extrapolation: anchored by the 400/500 K points"
+  },
+  "fit_highT_600_1000": {
+    "Ea_eV": 0.207,
+    "D0_cm2_s": 5.667e-04,
+    "D_300K_cm2_s": 1.885e-07,
+    "D_273K_cm2_s": 8.540e-08,
+    "sigma_300K_mS_cm": 27.82,
+    "sigma_273K_mS_cm": 13.85,
+    "note": "original high-T-only fit (matches prior db value 27.82)"
+  },
+  "curvature": {
+    "segment_Ea_eV": {"400-500": 0.274, "500-600": 0.153, "600-800": 0.234, "800-1000": 0.153},
+    "verdict": "no clean super-Arrhenius curvature; segments zig-zag (low-T 400 K D has the largest statistical uncertainty). Full-5pt Ea 0.214 ~ high-T 0.207 => approximately Arrhenius 400-1000 K, so 300/273 K extrapolation is reasonably trustworthy."
+  },
+  "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma; Ea and the relative b2o3-vs-modelc comparison (same method/window) are the robust quantities. Absolute sigma is an upper-ish bound."
 }
