@@ -129,9 +129,15 @@ def main():
 
     wd = Path(args.workdir); wd.mkdir(parents=True, exist_ok=True)
     atoms = read(args.cif)
-    grid_shape = (args.grid, args.grid, args.grid)
+    # anisotropic grid: --grid = points along the SHORTEST cell axis; longer
+    # axes get proportionally more points (~uniform Å spacing). For cubic cells
+    # this reduces to the old (grid,grid,grid); for elongated (e.g. c=70 Å) it
+    # avoids coarse voxels along the long axis.
+    _L = np.asarray(atoms.cell.lengths())
+    grid_shape = tuple(int(max(8, round(args.grid * float(Lk) / float(_L.min())))) for Lk in _L)
+    anions = "+".join(sorted({s for s in atoms.get_chemical_symbols() if s in BV_PARAMS}))
     print(f"System: {atoms.get_chemical_formula()}, V={atoms.get_volume():.3f} Å³")
-    print(f"Grid: {grid_shape}, anions=S+Cl")
+    print(f"Grid: {grid_shape} (~{float(_L.min())/args.grid:.3f} Å/voxel), anions={anions}")
 
     bvs, bvse = compute_bvs_map(atoms, grid_shape, args.cutoff)
     print(f"BVS range:  [{bvs.min():.4f}, {bvs.max():.4f}], median={np.median(bvs):.4f}")
