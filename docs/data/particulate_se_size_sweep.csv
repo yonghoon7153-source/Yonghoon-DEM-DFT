@@ -11,4 +11,5 @@ input_particulate_11,72,3.0,1.5,2.0,17.74,191,9.6,ok,1.35
 input_particulate_12,82,3.0,1.5,2.0,23.04,230,11.5,ok,1.35
 input_particulate_6,82,3.0,0.5,6.0,17.54,230,3.8,ok,1.35
 input_particulate_9,82,3.0,1.0,3.0,19.78,230,7.7,ok,1.35
+input_particulate_9_E05,82,3.0,1.0,3.0,17.91,230,7.7,ok,0.68
 input_particulate_9_E15,82,3.0,1.0,3.0,21.61,230,7.7,ok,2.02
