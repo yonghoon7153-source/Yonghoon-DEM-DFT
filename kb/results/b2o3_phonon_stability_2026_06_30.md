@@ -51,6 +51,24 @@
 - **MD**(Ea 0.207, D↑) + **최저 soft 모드 ~14 cm⁻¹** → 무른 Li 부격자 = 빠른 전도.
 - **배위 BS₃**(5중 확증) 구조가 동역학적으로도 안정 = 그 motif가 인위적 artifact가 아님을 재확인.
 
+## 7. Phonon DOS + 진동분광 testable 지문
+**그림** `docs/figures/cascade/b2o3_phonon_dos.png` · **데이터** `db/properties/b2o3_phonon_dos.csv`, `b2o3_phonon_freqs.csv` (384 모드, max 1013 cm⁻¹)
+
+384 Γ-모드를 Gaussian(σ≈9 cm⁻¹) broaden → 3개 밴드:
+| 밴드 | 범위 (cm⁻¹) | 귀속 | 의미 |
+|---|---|---|---|
+| 저진동 soft | ~14–200 (peak ~130) | Li libration / 무른 부격자 | **빠른 전도**(Ea 0.207와 정합); 허수영역 깨끗 |
+| framework | ~200–580 | P–S / B–S bend·stretch | 골격 |
+| **★ 고립 고진동** | **788–1013** (7 모드) | **P–O phosphate stretch (+ B–S)** | **testable Raman/IR 지문** |
+
+→ **새 testable prediction**: B₂O₃-doped를 **Raman/IR 측정 시 ~900–1013 cm⁻¹에 P–O stretch 피크**(무도핑엔 없음). NMR(¹¹B 삼각 BS₃ / ³¹P PS₄₋ₓOₓ)에 더해 **진동분광 검증 경로** 확보.
+
+### 7.1 Raman/IR 스펙트럼 계산 가능성 (정직)
+- **피크 위치(주파수)**: ✅ 이미 있음(UMA phonon). P–O ~900–1013은 위에서 예측됨. P1 disordered 셀이라 모든 모드가 형식상 IR+Raman 둘 다 활성 → 위치는 그대로 비교 가능.
+- **세기(intensity)**: ❌ UMA로는 못 구함. IR 세기 = (∂μ/∂Q)² → **Born effective charge**(DFPT), Raman 세기 = (∂α/∂Q)² → **편극률 미분**(DFPT/유한장) 필요. UMA는 에너지/힘 모델이라 dipole·polarizability 없음.
+- **정량 스펙트럼 원하면**: QE **`ph.x`(DFPT)** 로 Born charge(→IR) + (Raman은 ph.x 2차/유한장). 단 **128원자 DFPT는 매우 비쌈**(수일). 대안: ① 위치만 보고 화학지식으로 강/약 추정(phosphate P–O는 IR·Raman 둘 다 강함, 잘 알려짐) ② 더 작은 대표 셀 DFPT.
+- **권장**: 현 단계는 **주파수(위치) 예측으로 충분**(fingerprint 목적). 정량 세기는 reviewer가 요구할 때 DFPT.
+
 ## 참고
 - `db/properties/b2o3_phonon_stability.json`, `tools/electronic/uma_phonon.py`, `/data/work/runs/b2o3_phonon_freqs.txt`(gabia, 384 모드 전체)
 - 관련: `kb/results/b2o3_convex_hull_2026_06_29.md`, `b2o3_champion_coordination_2026_06_29.md`, `db/properties/b2o3_md_arrhenius.json`
