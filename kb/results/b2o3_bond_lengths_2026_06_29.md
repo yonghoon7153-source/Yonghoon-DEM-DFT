@@ -76,13 +76,56 @@
 ## 3. 다른 결과와의 연결
 - **배위/Voronoi**(BS₃ 5중 확증): B–S 1.827·P–O 1.556 결합길이가 그 motif의 정량 backbone.
 - **MD**(b2o3 D↑, Ea 0.207): 4d Cl anti-site 분율 25%(>LPSCl1.6 10%) = site-disorder↑ → 전도↑와 정합.
-- **EOS**(B₀ 24.5 GPa, +13%): S–S cage 수축(3.436)·골격 보존과 일관 — 더 단단하되 골격 유지.
+- **EOS·탄성**: §4에서 상세 (결합길이 → 모듈러스 직결).
 
-## 4. 정직한 한계
-- **단일 Li-config**: 챔피언 1개 배열의 기하. 4a/4d 분율·Li–Cl 평균은 배열마다 다름(Li-ordering 1162 meV 스프레드).
+---
+
+## 4. 결합길이 ↔ 탄성(elastic) 연결 — **핵심**
+
+> **왜 연결되나.** 탄성 모듈러스는 에너지의 변형률 2차 곡률(∂²E/∂ε²)이고, 그건 결국 **개별 결합의 힘상수 k = d²E/dr²** 와 결합각 굽힘의 합산이다. **짧고 공유결합성 큰 결합일수록 k가 크다** → 그 결합이 많거나 짧아지면 모듈러스↑. 그래서 **결합길이 표는 탄성텐서의 미시적 "재료명세서"** 다.
+
+### 4.1 두 층 역학 모델 (rigid backbone + soft glue)
+결합길이가 명확히 **두 부류**로 갈린다 — 이게 argyrodite 역학의 핵심:
+
+| 층 | 결합 (길이 Å) | 성격 | 역학 역할 |
+|---|---|---|---|
+| **단단한 공유 골격** | P–O 1.556, B–S 1.827, P–S 2.065 | 짧음·강공유·std 극소 | **압축(bulk) 저항** = 높은 진동수(788–1013 cm⁻¹ P–O), 골격 강성 |
+| **무른 이온 접착** | Li–O 1.911, Li–S 2.501, Li–Cl 2.525 | 김·이온성·std 큼 | **전단(shear)에서 재배열** = 낮은 G, soft 모드(~14 cm⁻¹), ductile |
+
+→ **단단한 PS₄/BS₃/phosphate 단위가 "벽돌", 무른 Li–S/Li–Cl이 "모르타르".** 압축엔 벽돌이 버텨 B(부피탄성)가 어느 정도 유지되고, 전단엔 모르타르(Li 부격자)가 흘러 G(전단탄성)가 낮음 → **B/G 큼 = ductile** = ASSB에 이상적(냉간가압·접촉유지).
+
+### 4.2 도핑이 결합 차원에서 한 일 → 탄성 예측
+무도핑 대비 b2o3가 바꾼 것:
+1. **단단한 공유결합 추가**: B–S 1.827·P–O 1.556·Li–O 1.911 — 무도핑엔 **아예 없던** 짧고 센 결합. 국소적으로 골격 강성↑.
+2. **S–S cage 수축**: 3.434 (vs LPSCl1.6 3.519 −2.4%, vs LPSCl 3.595 −4.5%). cage가 조밀 = 단위부피당 결합밀도↑ = 강성↑.
+3. **Li 부격자는 무른 채 유지**: Li–Cl 2.525 ≈ LPSCl1.6 2.532, soft 모드 ~14 cm⁻¹ 그대로.
+
+→ **예측**: (a) **B(부피탄성) 상승** — 실제로 **EOS B₀ = 24.48 GPa, 무도핑 modelC 21.7 → +2.8 GPa(+13%) DFT 확정**(`b2o3_eos_dft_result.json`). cage 수축 + 단단한 B–O/P–O가 미시적 원인. (b) **G는 덜 오름**(Li 부격자 무름 유지) → **ductility(높은 B/G·ν) 보존**. = "더 단단해지되 안 부서짐" = 이상적 SE 거동.
+
+### 4.3 정량 탄성텐서와의 cross-check (relaxed-ion Cij, KISTI 진행중)
+이미 무도핑 두 계의 **DFT 0K relaxed-ion 풀 Cij**가 있음(`db/properties/elastic.json`):
+
+| 계 | B_VRH | G_VRH | **E_VRH** | ν | Zener A |
+|---|---|---|---|---|---|
+| LPSCl (comp1_v3) | 25.51 | 8.13 | **22.06** | 0.356 | 1.144 |
+| LPSCl1.6 (modelc_v3) | 23.40 | 10.61 | **27.66** | 0.303 | 1.441 |
+| **b2o3 (진행중, KISTI)** | — | — | **예측 ≥ 27.66** | — | 예측 ↑(anti-site↑) |
+
+- **"vacancy paradox"**: clamped-ion(원자고정)에선 LPSCl≈LPSCl1.6 E가 거의 같았으나(둘다 ~52), **relaxed-ion(원자 이완 허용 = Born 이온차폐 포함)에서 비로소 LPSCl1.6이 E 27.66 > LPSCl 22.06으로 갈라짐** — 실험적 LPSCl1.6 강성화가 relaxed-ion에서 재현됨. → **b2o3 탄성은 반드시 relaxed-ion으로 비교**(clamped-ion 직관은 함정).
+- **b2o3 예측**: ① cage 수축·단단한 phosphate/thioborate → **B ≥ modelc**, EOS +13%와 정합. ② **rigid phosphate 단위가 이온차폐(전단시 재배열)에 저항** → relaxed-ion에서도 E를 덜 떨어뜨림 → **E ≥ 27.66 예상**. ③ **4d Cl 분율 25%(>modelc 10%)·B/O 무질서 → Zener A(이방성) 더 커질 것**(modelc도 vacancy+anti-site로 1.441로 이방). 
+- **검증**: KISTI 4-job 체인(relaxed-ion, conv_thr 1e-8, ±0.005 12 strain) 완료 → `fit_elastic_cij_stress.py` → B/G/E/ν/Zener 나오면 위 ①②③를 **정량 확인/반증**. E≥27.66·B≥23.4면 결합길이 서사 확정.
+
+### 4.4 한 줄 요약 (elastic용)
+**짧고 센 새 결합(B–S·P–O·Li–O) + cage 수축 = 골격 강성↑(B +13% 확정), 무른 Li 부격자 유지 = G 억제·ductile 보존.** relaxed-ion Cij가 E≥27.66을 주면 "도핑이 더 단단하되 더 잘 휘는 SE를 만든다"가 정량 확정됨.
+
+## 5. 정직한 한계
+- **결합길이→모듈러스는 정성·상관**(force-constant 직관)이지 Cij 대체가 아님 — 정량값은 relaxed-ion 탄성계산이 답.
+- **vacancy paradox 주의**: DFT 0K **clamped-ion**은 LPSCl1.6 강성화를 놓침. 반드시 **relaxed-ion**(이온차폐 포함)으로 비교.
+- **단일 Li-config**: 챔피언 1개 배열의 기하. 4a/4d 분율·Li–Cl 평균·이방성은 배열마다 다름(Li-ordering 1162 meV 스프레드).
 - **4a/4d 분류는 기하 기준**(Li 배위 Z 컷오프 3.4 Å). 결정학적 Wyckoff와 100% 일치는 아니나, 슬라이드와 같은 정의(8면체 vs 반자리 사면체)로 일관 비교.
-- Voronoi 부피(슬라이드 22.06/20.31)는 이번에 미계산 — 필요시 pymatgen `VoronoiNN`으로 추가 가능.
+- Voronoi 부피(슬라이드 22.06/20.31)는 미계산 — 필요시 pymatgen `VoronoiNN`으로 추가 가능.
 
 ## 참고
-- `db/properties/b2o3_bond_lengths.json`, `docs/figures/cascade/b2o3_licl_distribution.png`
-- 관련: `kb/results/b2o3_champion_coordination_2026_06_29.md`(BS₃ 5중 확증), `b2o3_convex_hull_2026_06_29.md`, `db/properties/b2o3_md_arrhenius.json`
+- 데이터: `db/properties/b2o3_bond_lengths.json`(핵심), `b2o3_bond_lengths_full.json`(전체), `b2o3_eos_dft_result.json`(B₀), `elastic.json`(무도핑 Cij)
+- 그림: `docs/figures/cascade/b2o3_licl_distribution.png` · 도구: `tools/comp1_v3/b2o3_all_bond_lengths.py`
+- 관련: `kb/results/b2o3_champion_coordination_2026_06_29.md`(BS₃ 5중 확증), `b2o3_convex_hull_2026_06_29.md`, `b2o3_phonon_stability_2026_06_30.md`(soft 모드 ~14 cm⁻¹), `db/properties/b2o3_md_arrhenius.json`
