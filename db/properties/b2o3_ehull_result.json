@@ -1,0 +1,36 @@
+{
+  "method": "UMA(omat)-consistent convex hull; our structure + all MP competing phases single-pointed with UMA",
+  "modelC_undoped": {
+    "E_above_hull_meV_atom": 16.7,
+    "chemsys": "Li-P-S-Cl",
+    "n_mp_entries": 110,
+    "decomposition": {
+      "Li3PS4": 0.645,
+      "LiCl": 0.258,
+      "Li2S": 0.097
+    }
+  },
+  "b2o3_doped": {
+    "E_above_hull_meV_atom": 37.5,
+    "chemsys": "Li-P-S-Cl-B-O",
+    "n_mp_entries": 349,
+    "decomposition": {
+      "Li3PS4": 0.5,
+      "LiCl": 0.246,
+      "Li2S": 0.193,
+      "Li4B7ClO12": 0.047,
+      "Li3BS3": 0.014
+    }
+  },
+  "delta_doping_meV_atom": 20.8,
+  "mp_mode_b2o3_products": {
+    "LiB": 0.031,
+    "Li2O": 0.07,
+    "Li3P": 0.25,
+    "LiCl": 0.25,
+    "Li": 0.078,
+    "S": 0.32
+  },
+  "caveat": "UMA(MLIP) energies, not DFT-absolute. Relative delta + decomposition identity robust; absolute meV has MLIP error (~tens meV/atom).",
+  "key_finding": "b2o3 hull decomposition INCLUDES Li3BS3 (trigonal-BS3 thioborate) + Li4B7ClO12 (borate) -> thermodynamics independently predicts B->BS3 thioborate + O->borate, matching the champion coordination (BS3 + free-S + O-on-P)."
+}
