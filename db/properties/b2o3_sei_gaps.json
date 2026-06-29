@@ -1,0 +1,18 @@
+{
+  "sei_gaps_MP_eV": {
+    "B2O3": 8.38,
+    "BPO4": 7.0,
+    "LiCl": 6.65,
+    "Li3PO4": 5.73,
+    "Li3B7O12": 5.6,
+    "Li2O": 5.24,
+    "Li3BO3": 5.15,
+    "Li2S": 3.9,
+    "Li3BS3": 3.05,
+    "Li2B2S5": 2.44,
+    "BP": 1.08,
+    "Li3P": 0.7,
+    "BS2": 0.0
+  },
+  "verdict": "B/O doping introduces wide-gap (5-8 eV) passivating SEI (Li3BO3, Li3B7O12, B2O3, BPO4, Li2O, Li3PO4) absent in undoped LPSCl; thioborates Li3BS3/Li2B2S5 moderate (2.4-3). Only BP(1.08) mildly leaky (minor); Li3P(0.70) pre-existing; BS2(0) won't form. Narrow ESW compensated by passivating interphase."
+}
