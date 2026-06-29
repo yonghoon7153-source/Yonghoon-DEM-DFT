@@ -1,29 +1,28 @@
 #!/usr/bin/env bash
-# b2o3 UMA-MD 살아있는지 점검. SSH 끊겨도 setsid라 살아야 정상.
-# 사용: bash tools/modelc_v3/watch_b2o3_md.sh   (gabia에서)
+# b2o3 UMA-MD 라이브 점검. 1회 출력 (반복하려면: watch -n 30 bash <이 파일>).
+# 각 온도(600/800/1000K)는 equilib 5 + prod 50 = 55 ps에서 끝, msd.json 기록.
 set +H
-echo "════════ $(date '+%m-%d %H:%M')  b2o3 UMA-MD 상태 ════════"
-echo "── MD 프로세스 (이게 핵심) ──"
-if pgrep -af disorder_ensemble_diffusion.py; then
-  echo "  ✅ MD 실행 중"
+R="${1:-/data/work/runs/b2o3_md}"
+echo "════ $(date '+%m-%d %H:%M:%S')  b2o3 UMA-MD  ($R) ════"
+if P=$(pgrep -f disorder_ensemble_diffusion.py); then
+  echo "✅ MD 실행중 PID=$P  경과 $(ps -o etime= -p $P 2>/dev/null | tr -d ' ')"
 else
-  echo "  ⛔ 실행 중인 MD 없음 (꺼짐 또는 미실행)"
+  echo "⛔ 실행 중 MD 없음 (끝났거나 죽음)"
 fi
-echo "── 출력/로그 위치 탐색 ──"
-found=$(find /data/work /tmp -maxdepth 5 -path "*b2o3_md*" \
-        \( -name "*.log" -o -name "ensemble_results.json" -o -name "msd.json" \) 2>/dev/null)
-if [ -n "$found" ]; then
-  echo "$found"
-  L=$(echo "$found" | grep -m1 '\.log$')
-  [ -n "$L" ] && { echo "── 로그 끝 12줄 ($L) ──"; tail -n 12 "$L"; }
-  R=$(echo "$found" | grep -m1 ensemble_results.json)
-  [ -n "$R" ] && { echo "── 완료 결과 헤드라인 ──"; grep -A20 '"headline"' "$R" 2>/dev/null | head -25; }
-else
-  echo "  (b2o3_md 출력 없음 — 아직 한 번도 안 떴을 수 있음)"
+echo "── T별 상태 (600→800→1000) ──"
+for t in 600 800 1000; do
+  j="$R/d0.00_cfg0/T$t/msd.json"; m="$R/d0.00_cfg0/T$t/md.log"
+  if [ -f "$j" ]; then
+    python3 -c "import json;v=json.load(open('$j')).get('D_Li_cm2_s');print('  T$t  ✓ 완료   D_Li = %s'%(('%.3e cm2/s'%v) if v else 'n/a'))"
+  elif [ -f "$m" ]; then
+    l=$(tail -1 "$m"); echo "  T$t  ▶ 진행중  ~$(echo "$l"|awk '{print $1}')/55 ps  ($(echo "$l"|awk '{print $NF}') K)"
+  else
+    echo "  T$t  · 대기"
+  fi
+done
+if [ -f "$R/ensemble_results.json" ]; then
+  echo "── 완료 헤드라인 (Ea/D0) ──"
+  grep -A8 '"headline"' "$R/ensemble_results.json" 2>/dev/null | head -10 | sed 's/^/  /'
 fi
-echo "── GPU ──"
-nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader 2>/dev/null | sed 's/^/  proc: /'
-nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader 2>/dev/null | sed 's/^/  GPU: /'
-echo "※ ⛔이면 영구 위치에서 재실행:"
-echo "   cd /data/work && git clone --depth 1 -b claude/friendly-meitner-lldvar https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT b2o3md 2>/dev/null; cd b2o3md"
-echo "   bash tools/modelc_v3/run_b2o3_md.sh /data/work/runs/b2o3_md cuda"
+echo "── 메인 로그 끝 3줄 ──"; tail -n 3 "$R/b2o3_md.log" 2>/dev/null | sed 's/^/  /'
+echo "── GPU ──"; nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total --format=csv,noheader 2>/dev/null | sed 's/^/  /'
