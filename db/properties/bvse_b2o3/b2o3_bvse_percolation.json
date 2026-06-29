@@ -1,0 +1,13 @@
+{
+  "source": "db/properties/bvse_b2o3/b2o3_bvse_map.npy (gabia, grid 28x28x282)",
+  "system": "B2O3-doped LPSCl champion (b2o3_relaxV0, 128 atoms)",
+  "bvse_min_val2": 0.0,
+  "in_plane_ab_percolation_barrier_val2": 0.4976,
+  "in_plane_ab_resolution_limited": true,
+  "in_plane_channel_volume_fraction": 0.0672,
+  "c_axis_percolation_barrier_val2": 1.9906,
+  "c_axis_channel_volume_fraction": 0.2119,
+  "ratio_c_over_ab": 4.0,
+  "units": "BVSE valence^2 (empirical softBV) \u2014 NOT eV; relative/geometric pre-screen, calibrate vs DFT-NEB or same-method comp1/modelc for absolute scale",
+  "interpretation": "In-plane (a,b) Li network is open at the lowest resolvable threshold (<=0.50 val^2, 6.7% channel volume). Through the long c stacking axis, which contains the B2O3 dopant layers (B z~0.36/0.46, O z~0.24/0.81), percolation needs ~1.99 val^2 (~4x higher) = the dopant layers are the c-axis bottleneck."
+}
