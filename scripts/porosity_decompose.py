@@ -44,7 +44,7 @@ ps_grid = [("0:10",0.0),("1:9",0.1),("2:8",0.2),("3:7",0.3),("4:6",0.4),
 # full CSV: every (P:S, AM_wt) with per-term contribution
 out = []
 for ps, P in ps_grid:
-    for amwt in (75, 78, 80, 82, 85, 88, 90):
+    for amwt in (70, 72.5, 75, 77.5, 80, 82.5, 85, 87.5, 90):
         rAMP, rAMS = 6.0, 2.0
         if P == 0.0: rAMP = 0.0
         if P == 1.0: rAMS = 0.0
