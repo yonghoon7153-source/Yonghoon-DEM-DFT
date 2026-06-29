@@ -48,7 +48,7 @@ def load_pairs(exclude_particulate=True):
             # out the Furnas-dip term and degrade the PRODUCTION form.  Tracked
             # separately in docs/data/particulate_se_size_sweep.csv.  Exclude from
             # the production-form fit (set exclude_particulate=False to include).
-            if exclude_particulate and "particulate" in d["case"]:
+            if exclude_particulate and ("particulate" in d["case"] or d["case"].startswith("input_S_")):
                 continue
             r = reconstruct(d)
             r["dem"] = dem; r["mpm"] = mpm; r["case"] = d["case"]
