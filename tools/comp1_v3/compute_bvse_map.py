@@ -25,6 +25,7 @@ from ase.io import read
 BV_PARAMS = {
     "S":  {"R0": 2.105, "b": 0.37},   # Li-S (Brown)
     "Cl": {"R0": 2.249, "b": 0.37},   # Li-Cl (Brown)
+    "O":  {"R0": 1.466, "b": 0.37},   # Li-O (Brown-Altermatt) — for O-doped (B2O3) cells
 }
 V_IDEAL_LI = 1.0
 
