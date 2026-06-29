@@ -1,0 +1,22 @@
+{
+  "system": "modelC LPSCl1.6 (undoped, 62 atom V0)",
+  "grid": [
+    28,
+    28,
+    140
+  ],
+  "bvse_min": 0.0,
+  "perc_onset_val2": {
+    "a": 0.55,
+    "b": 0.55,
+    "c": 1.65
+  },
+  "iso_volume_frac": {
+    "0.25": 1.23,
+    "0.5": 3.32,
+    "1.0": 8.36,
+    "2.0": 17.85
+  },
+  "Li_site_BVS_mean": 1.722,
+  "Li_site_BVS_std": 0.169
+}
