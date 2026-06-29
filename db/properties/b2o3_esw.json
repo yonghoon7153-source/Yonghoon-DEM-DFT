@@ -1,0 +1,22 @@
+{
+  "LPSCl1.6": {
+    "reduction_V": 1.24,
+    "oxidation_V": 2.14,
+    "ocv_V": 1.72,
+    "window_V": 0.9
+  },
+  "b2o3": {
+    "reduction_V": 1.72,
+    "oxidation_V": 2.03,
+    "ocv_V": 1.77,
+    "window_V": 0.31,
+    "ocv_decomp": "0.25 Li3BS3 + 8.25 Li2S + 8 Li3PS4 + 0.25 Li3B7O12 + 16 LiCl",
+    "new_B_reactions": {
+      "2.03": "Li2B2S5 thioborate",
+      "2.75": "B2O3",
+      "3.24": "BCl3/BPO4",
+      "1.72_red": "BP"
+    }
+  },
+  "note": "grand-potential ESW (Mo/Ong), MP GGA_GGA+U hull, 346 entries. B2O3 narrows ESW both sides."
+}

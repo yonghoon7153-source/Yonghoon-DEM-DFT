@@ -121,14 +121,27 @@ def main():
     pos_unit, pos_block = parse_final_positions(out_text)
     if pos_block is None:
         raise SystemExit("Could not parse final ATOMIC_POSITIONS from src_out")
-    if not pos_unit.lower().startswith("crystal"):
+    if pos_unit.lower().startswith("angstrom"):
+        # Convert cartesian (Å) → fractional via the UNSTRAINED cell so the
+        # coords are invariant under cell strain (what this build needs).
+        inv = np.linalg.inv(cell)
+        conv = []
+        for ln in pos_block.strip().splitlines():
+            t = ln.split()
+            if len(t) < 4:
+                continue
+            fr = np.array([float(t[1]), float(t[2]), float(t[3])]) @ inv
+            conv.append(f"{t[0]}  {fr[0]:.10f}  {fr[1]:.10f}  {fr[2]:.10f}")
+        pos_block = "\n".join(conv) + "\n"
+        pos_unit = "crystal"
+        print("Position unit = angstrom → converted to crystal (fractional)")
+    elif not pos_unit.lower().startswith("crystal"):
         raise SystemExit(
-            f"Need ATOMIC_POSITIONS in crystal coords; got {pos_unit}. "
-            f"(Crystal coords stay fixed under cell strain.)")
+            f"Need crystal or angstrom ATOMIC_POSITIONS; got {pos_unit}.")
 
     print(f"Source cell V = {abs(np.linalg.det(cell)):.4f} Å³")
     print(f"Strain magnitude h = {args.strain}")
-    print(f"Position unit = {pos_unit}  (crystal — invariant)")
+    print(f"Position unit = {pos_unit}  (crystal — invariant under strain)")
     print(f"Writing 12 SCFs to {wd}")
 
     h = args.strain
