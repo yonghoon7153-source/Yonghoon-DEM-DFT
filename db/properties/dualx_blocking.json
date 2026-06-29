@@ -1,0 +1,84 @@
+{
+  "descriptor": "blocking_fraction = fraction of Li-migration network blocked by the dopant + charge-compensating defects (mobility-only, dual-x STAGE_02). Higher = worse Li transport.",
+  "concentrations": {
+    "low": 0.0625,
+    "high": 0.25
+  },
+  "data": {
+    "Sc2O3": {
+      "low": 0.2667,
+      "high": 0.6944,
+      "delta": 0.4277,
+      "ratio": 2.6
+    },
+    "Gd2O3": {
+      "low": 0.2667,
+      "high": 0.6944,
+      "delta": 0.4277,
+      "ratio": 2.6
+    },
+    "Cr2O3": {
+      "low": 0.2667,
+      "high": 0.75,
+      "delta": 0.4833,
+      "ratio": 2.81
+    },
+    "Y2O3": {
+      "low": 0.2874,
+      "high": 0.7101,
+      "delta": 0.4227,
+      "ratio": 2.47
+    },
+    "La2O3": {
+      "low": 0.2444,
+      "high": 0.6522,
+      "delta": 0.4078,
+      "ratio": 2.67
+    },
+    "HfO2": {
+      "low": 0.1087,
+      "high": 0.5625,
+      "delta": 0.4538,
+      "ratio": 5.17
+    },
+    "Ta2O5": {
+      "low": 0.3333,
+      "high": 0.8958,
+      "delta": 0.5625,
+      "ratio": 2.69
+    },
+    "Nb2O5": {
+      "low": 0.3542,
+      "high": 0.8958,
+      "delta": 0.5416,
+      "ratio": 2.53
+    },
+    "V2O5": {
+      "low": 0.375,
+      "high": 0.9271,
+      "delta": 0.5521,
+      "ratio": 2.47
+    },
+    "TiF4": {
+      "low": 0.2474,
+      "high": 0.86,
+      "delta": 0.6126,
+      "ratio": 3.48
+    }
+  },
+  "ranking_low_to_high_blocking": [
+    "HfO2",
+    "La2O3",
+    "TiF4",
+    "Sc2O3",
+    "Gd2O3",
+    "Cr2O3",
+    "Y2O3",
+    "Ta2O5",
+    "Nb2O5",
+    "V2O5"
+  ],
+  "best": "HfO2 (0.109 low / 0.563 high)",
+  "worst": "V2O5 (0.375 / 0.927)",
+  "trend": "All dopants block MORE at higher x (2.5-5x). +5 oxides (V2O5/Nb2O5/Ta2O5) block most; HfO2(+4) least. TiF4 jumps the most (x3.5)."
+}
