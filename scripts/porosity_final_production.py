@@ -90,7 +90,9 @@ print(f"\n=== PRODUCTION GRID (final rigid+plastic form, @300 MPa) ===")
 print(f"  AM_P D12(r6) / AM_S D4(r2) / SE D1(r0.5)\n")
 print(f"  {'P:S':>5} {'AM_wt%':>6} | {'porosity%':>9}  {'±band':>6}  src")
 out = []
-for ps_label, P in [("0:10",0.0),("3:7",0.3),("5:5",0.5),("7:3",0.7),("10:0",1.0)]:
+ps_grid = [("0:10",0.0),("1:9",0.1),("2:8",0.2),("3:7",0.3),("4:6",0.4),
+           ("5:5",0.5),("6:4",0.6),("7:3",0.7),("8:2",0.8),("9:1",0.9),("10:0",1.0)]
+for ps_label, P in ps_grid:
     for amwt in (75, 78, 80, 82, 85, 88, 90):
         rAMP, rAMS = (6.0, 2.0)
         if P == 0.0: rAMP = 0.0
