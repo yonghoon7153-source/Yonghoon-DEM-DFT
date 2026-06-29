@@ -129,11 +129,19 @@ def features(r):
         rAM_eff    = rAM_eff,             # absolute AM size (wall/skeleton scale)
         lamSE_x_amwt = lamSE_x_amwt,      # SE-size x composition coupling
         sefill_x_bim = sefill_x_bim,      # SE-fill x bimodal-dip coupling
+        rSE        = rSE,                 # raw SE radius -- direct size effect
+                                          # beyond the SATURATED lam_SE coupling
+                                          # (bigger SE = fewer/larger SE grains =
+                                          #  looser pack; adversarial-verified
+                                          #  +0.084 LOOCV on r_SE-varied corpus)
     )
 
 
-FEAT_KEYS = ["const", "bimodal", "bimodal_sym", "se_fill", "lam_SE_sat",
-             "se_solid", "rAM_eff", "lamSE_x_amwt", "sefill_x_bim"]
+# FINAL term set (adversarial backward-elimination, gated target, n=109):
+# standalone se_fill DROPPED -- redundant once rSE is explicit (its interaction
+# sefill_x_bim is kept).  9 live terms, LOOCV 0.644.
+FEAT_KEYS = ["const", "bimodal", "bimodal_sym", "lam_SE_sat",
+             "se_solid", "rAM_eff", "lamSE_x_amwt", "sefill_x_bim", "rSE"]
 
 
 def design_matrix(rows, keys=FEAT_KEYS):

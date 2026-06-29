@@ -24,8 +24,8 @@ B = dict(zip(FEAT_KEYS, beta))
 GROUPS = [
     ("const",         ["const"]),
     ("McGeary dip",   ["bimodal", "bimodal_sym"]),
-    ("Bazzoun SE",    ["se_fill", "lam_SE_sat", "se_solid"]),
-    ("size",          ["rAM_eff"]),
+    ("Bazzoun SE",    ["lam_SE_sat", "se_solid"]),
+    ("size",          ["rAM_eff", "rSE"]),
     ("couplings",     ["lamSE_x_amwt", "sefill_x_bim"]),
 ]
 
