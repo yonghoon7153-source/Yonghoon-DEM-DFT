@@ -11,7 +11,8 @@
 | 4 | **CDD** | pp.x + 원자밀도 | 부분 | 도핑 전하 재분배 | KISTI(보조) |
 | 5 | **ICOHP** | LOBSTER (nscf+lobster) | 새 nscf | B–S/P–S/P–O 결합세기 순위 | KISTI+LOBSTER |
 | 6 | **NMR** | QE-GIPAW | 새 scf(gipaw pseudo) | ¹¹B(BS₃)/³¹P(PS₄₋ₓOₓ) shift = testable | KISTI+gipaw |
-| 7 | **UMA phonon** | phonopy+UMA | ✗ | 동역학 안정성(허수모드 X)+Raman/IR | gabia |
+| 7 | **UMA phonon** | phonopy+UMA | ✗ | 동역학 안정성(허수모드 X)+Raman/IR | gabia ✅ |
+| **8** | **dielectric/polarizability (ε∞)** | **ph.x epsil-only** | ✓(scf) | **전자 분극률 ε∞ → Li⁺ 차폐·전도 연결, anion 무름↔elastic** | **KISTI** |
 
 **실행 batch**: ① ELF+Bader+Voronoi/bond(빠름,지금) → ② ICOHP(LOBSTER) → ③ NMR+phonon(testable) → ④ CDD(보조).
 
@@ -105,5 +106,37 @@ phonopy --qe -d --dim="1 1 1" -c POSCAR_b2o3   # 변위 생성 (또는 ASE+phono
 전하밀도차 ρ(doped)−ρ(ref): fragment/promolecule 밀도 필요(추가 SCF). ELF가 lone pair를 직접 보여주므로 우선순위 낮음 — Batch1·2 후 필요시.
 
 ---
+## Batch 5 — 유전율/분극률 (ε∞) — **elastic과 짝**
+
+> **왜.** 고체전해질에서 "polarizability"는 사실상 **유전텐서 ε**(전자분극 ε∞ + 이온분극 → 정적 ε₀). ε는 **Li⁺를 차폐**해 이동장벽·전도에 직결되고, **무른·분극성 큰 음이온(S²⁻)** 이 곧 **낮은 전단탄성 G** 의 원인과 같은 물리(음이온 전자구름의 변형성) → **elastic과 한 짝으로 보는 게 맞음**. Born charge Z*는 역학(phonon)↔전기(유전)를 잇는 다리.
+
+**정직한 비용 등급 (USPP SSSP scf 재활용 기준):**
+| 등급 | 양 | 방법 | 비용 | 비고 |
+|---|---|---|---|---|
+| **무료(지금)** | ε∞ 대략값 | Clausius–Mossotti(조성+V+이온 α) | 0 | **ε∞~3.9–5.7**(S²⁻ α의존). 분극의 **78% S²⁻+19% Cl⁻**, 양이온~0.7%. O²⁻ 작음(hard) → **O 도핑이 ε∞ 소폭↓**. 절대값 아닌 경향용 |
+| **★ 권장(중저비용)** | **ε∞ 텐서(전자)** | **ph.x `epsil=.true., trans=.false.`** @Γ | E-field 3섭동(~3×SCF) | **Raman/Born보다 훨씬 쌈**(3N 아님). USPP scf 재활용 |
+| 고비용(보류) | Born Z* + 정적 ε₀ | ph.x `epsil+trans`(또는 zeu) | 3N 섭동 = 전체 Γ DFPT = Raman급 | 우리가 이미 보류한 Raman 비용군. reviewer 요구시 |
+
+### ⑧ ε∞ (전자 유전텐서) — ph.x epsil-only (KISTI, scf 재활용)
+```bash
+cd /scratch/x3430a02/kgy/b2o3_eos
+ls apps_bin=/scratch/x3430a02/kgy/apps/qe-gpu/bin/ph.x   # 0) ph.x 빌드 존재 확인(GPU 빌드에 없을 수 있음)
+# scf save 필요(DOS용 scf). nscf로 덮였으면 quick scf 재실행 후 진행.
+cat > eps.in <<'EOF'
+&inputph
+  prefix='b2o3', outdir='./tmp'
+  fildyn='b2o3_eps.dyn'
+  epsil=.true.      ! 전자 유전텐서 ε∞ (clamped-ion)
+  trans=.false.     ! phonon/Born 안함 → 싸게(E-field 3섭동만)
+  tr2_ph=1.0d-14
+/
+EOF
+# sbatch 래퍼에서: mpirun ph.x < eps.in > eps.out  → eps.out 의 "Dielectric constant in cartesian axis" 3x3
+```
+- **결과**: ε∞ 3×3 텐서(이방성 포함). trace/3 = 등방 평균. → CM 추정과 대조 + DFPT 정량값.
+- **pseudo 주의**: 현 QE(≥6.x)는 USPP로 epsil 지원. 만약 빌드가 거부하면 **NC-pseudo 1회 재SCF**(ONCV) 후 epsil.
+- **GPU 주의**: QE-GPU에 `ph.x`가 없을 수 있음 → 있으면 그걸로, 없으면 **CPU QE ph.x** 또는 **pw.x `lelfield`(유한장 Berry-phase)** 대안(작동하는 pw.x GPU 사용, 단 field방향 k조밀 필요).
+- **elastic 연결**: ε∞(음이온 분극) ↔ relaxed-ion G(음이온 무름) 같은 기원 → "도핑이 S²⁻ 일부를 hard O로 → ε∞ 소폭↓ & 골격 강성↑" 한 서사로 묶임.
+
 ## 결과 종합 목표
 Bader(전하)+ICOHP(결합세기)+ELF(국재) → **BS₃/free-S/phosphate 3중 확증 그림·표** 1세트 → NMR/phonon으로 **testable**까지. 각 결과 붙여주시면 figure+표+kb 정리.
