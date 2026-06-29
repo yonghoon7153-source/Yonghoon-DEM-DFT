@@ -1,6 +1,22 @@
 # Nd-RELATED XPS peaks only (filtered from xps_reference_sei.csv).
 # Nd-bearing SEI/decomposition phases. C 1s 284.8 eV ref. 2p=2p3/2; Nd 3d3/2 = 3d5/2 + ~22.5 eV.
 # conf A/B well-established; C = Nd 3d multiplet/satellite-limited, per-ligand shift is an ESTIMATE.
+#
+# WHY Nd 3d IS LITERATURE-ONLY (not DFT): open 4f3 shell -> 3d hole final state 3d9-4f3 is a
+#   many-body MULTIPLET + charge-transfer + shake satellites (intensity spread ~972-1005 eV).
+#   Single-particle DFT cannot place it (core-hole PP fails; PBE+U metalizes Nd). Quantitative
+#   needs charge-transfer multiplet (CTM), not DFT. Full: kb/results/nd_xps_literature_basis_2026_06_30.md
+# REFINED RANGE (web-verified 2026-06-30): Nd3+ 3d5/2 = 980.7 (Intl XPS DB ref) - 982.5 (oxide studies),
+#   up to ~983.8; 3d3/2 ~1003-1005; satellite (shake-down, low-BE) ~972-977. We tabulate 982.5 (spread top).
+# SOURCES (Nd 3d):
+#   [1] NIST XPS Database SRD 20  https://srdata.nist.gov/xps/
+#   [2] International XPS Database, Nd Z=60 (3d5/2=980.7+-0.2)  https://xpsdatabase.com/neodymium-nd-z60/
+#   [3] Rare earth oxides Eu2O3 and Nd2O3 analyzed by XPS, Surface Science Spectra 26, 014001 (2019)  https://pubs.aip.org/avs/sss/article/26/1/014001
+#   [4] Uwamino et al., XPS of rare-earth compounds, J. Electron Spectrosc. Relat. Phenom. 34 (1984)  https://www.sciencedirect.com/science/article/abs/pii/0368204884800602
+#   [5] de Groot & Kotani, Core Level Spectroscopy of Solids, CRC (2008)  -- CTM theory
+#   [6] Electronic structure of rare-earth oxides in core-hole creation, J.ESRP (1999)  https://www.sciencedirect.com/science/article/abs/pii/S0301010499003808
+#   [7] arXiv:2505.14284 (2025) -- lanthanide dioxide core-level photoemission
+# B/O/S/P/Cl peaks here ARE computable (dSCF core-hole / Bader), unlike Nd 3d -- see kb note section 4.
 product,element,core_level,BE_eV,BE_pm,conf,diagnostic
 NdPO4,P,2p3/2,133.3,0.3,B,monazite phosphate ~ same as Li3PO4
 NdPO4,O,1s,531.5,0.5,B,phosphate O

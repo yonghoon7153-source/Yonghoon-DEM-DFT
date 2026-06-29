@@ -10,6 +10,17 @@
 #   Nd 3d5/2 Nd2O3 ~982.5 + 3d3/2 ~1005 + COMPLEX multiplet (unscreened 3d9-4f3 main; screened ~977 lower-BE satellite) [Intl XPS DB].
 # TRUST: conf A = standard & spot-checked. conf C (Nd phases) = Nd3+ center ~982.5 OK, but per-ligand shifts are ESTIMATES and the
 #   3d lineshape is multiplet/satellite-dominated -> use for orientation, NOT for citation (that is exactly why we cross-check with ORCA).
+#
+# Nd 3d SOURCES (web-verified 2026-06-30; full discussion kb/results/nd_xps_literature_basis_2026_06_30.md):
+#   Range Nd3+ 3d5/2 = 980.7 (Intl XPS DB ref) - 982.5 (oxide studies); 3d3/2 ~1003-1005; satellite ~972-977.
+#   [1] NIST XPS Database SRD 20  https://srdata.nist.gov/xps/
+#   [2] International XPS Database Nd Z=60 (3d5/2 980.7+-0.2)  https://xpsdatabase.com/neodymium-nd-z60/
+#   [3] Surface Science Spectra 26, 014001 (2019) Eu2O3/Nd2O3 by XPS  https://pubs.aip.org/avs/sss/article/26/1/014001
+#   [4] Uwamino et al., J. Electron Spectrosc. Relat. Phenom. 34 (1984)  https://www.sciencedirect.com/science/article/abs/pii/0368204884800602
+#   [5] de Groot & Kotani, Core Level Spectroscopy of Solids, CRC (2008) -- CTM (quantitative)
+#   [6] J.ESRP (1999) rare-earth oxide core-hole  https://www.sciencedirect.com/science/article/abs/pii/S0301010499003808
+#   [7] arXiv:2505.14284 (2025) lanthanide dioxide core-level photoemission
+# NOTE: Nd 3d = literature only (multiplet, not DFT). B/O/S/P/Cl peaks ARE computable (dSCF core-hole / Bader).
 product,element,core_level,BE_eV,BE_pm,role_side,conf,diagnostic
 host_PS4_thiophosphate,P,2p3/2,131.7,0.3,host-backbone,A,baseline P-S; conversion to 133.3 = O-doping worked
 host_PS4_thiophosphate,S,2p3/2,161.6,0.4,host-backbone,A,terminal P-S (bridging P-S-P ~163)
