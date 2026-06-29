@@ -4,6 +4,7 @@ case,am_wt,r_AM_S,r_SE,lambda,mpm_porosity,n_grid,r_per_cell,resolved
 input_particulate_1,62,3.0,0.25,12.0,15.97,195,1.6,under
 input_particulate_7,62,3.0,1.0,3.0,13.50,164,5.5,ok
 input_particulate_10,62,3.0,1.5,2.0,14.10,164,8.2,ok
+input_particulate_4,62,3.0,0.5,6.0,21.85,164,3.2,ok
 input_particulate_5,72,3.0,0.5,6.0,18.78,191,3.2,ok
 input_particulate_8,72,3.0,1.0,3.0,15.14,191,6.4,ok
 input_particulate_11,72,3.0,1.5,2.0,17.74,191,9.6,ok
