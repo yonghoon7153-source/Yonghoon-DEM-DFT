@@ -33,7 +33,7 @@ def reconstruct(d):
     return dict(P=P, amwt=float(d["am_wt"]), rAMP=rAMP, rAMS=rAMS, rSE=rSE,
                 por=np.nan, ps=ps)
 
-def load_pairs():
+def load_pairs(exclude_particulate=True):
     rows = []
     with open(SRC) as f:
         for d in csv.DictReader(f):
@@ -42,6 +42,13 @@ def load_pairs():
             except (ValueError, KeyError):
                 continue
             if dem <= 0 or mpm <= 0:
+                continue
+            # particulate cases = a SEPARATE REGIME (mono-AM_S r3, separator-like,
+            # SE-rich, SE-size U-shape).  They have NO bimodal AM (P=0) so they wash
+            # out the Furnas-dip term and degrade the PRODUCTION form.  Tracked
+            # separately in docs/data/particulate_se_size_sweep.csv.  Exclude from
+            # the production-form fit (set exclude_particulate=False to include).
+            if exclude_particulate and "particulate" in d["case"]:
                 continue
             r = reconstruct(d)
             r["dem"] = dem; r["mpm"] = mpm; r["case"] = d["case"]
