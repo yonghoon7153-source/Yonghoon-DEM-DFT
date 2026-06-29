@@ -1,0 +1,17 @@
+{
+  "method": "disorder_ensemble UMA MD, fit window 5-40ps (consistent b2o3 vs modelc)",
+  "modelc_natural": {
+    "D_600": 7.52e-06,
+    "D_800": 1.711e-05,
+    "D_1000": 4.534e-05,
+    "Ea_eV": 0.2259,
+    "source": "msd_compare_comp1_modelc.csv"
+  },
+  "b2o3": {
+    "D_600": 9.973e-06,
+    "D_800": 3.095e-05,
+    "D_1000": 4.831e-05,
+    "Ea_eV": 0.207
+  },
+  "verdict": "B2O3 doping lowers Ea (0.226->0.207) and raises D at all T (600-1000K) -> improves Li transport, consistent with BVSE 2x channel. Low-T (400/500) pending for curvature + 300K sigma."
+}
