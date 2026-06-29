@@ -1,0 +1,23 @@
+{
+  "method": "UMA(omat) Gamma-point finite-displacement phonons (ASE Vibrations, delta 0.02)",
+  "n_modes": 384,
+  "imaginary_below_-30_cm": 0,
+  "small_imag_-30_to_-5": 0,
+  "acoustic_modes_cm": [
+    -0.13,
+    -0.08,
+    0.11
+  ],
+  "lowest_real_modes_cm": [
+    13.7,
+    14.8,
+    15.3,
+    16.4,
+    25.4,
+    26.9,
+    28.9,
+    29.6,
+    31.0
+  ],
+  "verdict": "DYNAMICALLY STABLE - champion is a true local minimum (no imaginary modes). Reinforces convex-hull metastability: 37.5 meV/atom above hull but a real, dynamically-stable, synthesizable phase (not a saddle)."
+}
