@@ -4,11 +4,16 @@
 The base regression targets DEM eps_sphere = RIGID sphere + elastic overlap.
 MPM adds TRUE plastic void-fill.  Fit the SAME physics form on:
   (R) rigid target  = dem_porosity_pct
-  (P) plastic target= mpm_porosity_pct
+  (P) plastic target= mpm_porosity_pct  (production SCAFFOLD MPM)
   (D) densification = dem - mpm  (how much extra the plastic flow densifies)
-on the paired corpus (case_3d_collection.csv has both).  Compare R2, the
-Furnas-dip coefficient (frame[3]: does plastic erase the dip?), the overall
-level, and the regime error.
+on the paired corpus (case_3d_collection.csv has both).
+
+NOTE on the Furnas dip: the single `bimodal` coefficient is COLLINEAR with
+bimodal_sym / sefill_x_bim, so reading it alone is misleading.  At the DATA
+level the production MPM is the SCAFFOLD MPM (frozen real DEM AM positions),
+so it INHERITS the DEM packing dip (6/8mAh AM82 MPM dips to a 7:3 bottom) --
+plastic does NOT erase the dip here.  Only the standalone-2D free-AM MPM
+erases it (frame[3]).  The ROBUST comparison is the regime-gap, not the coef.
 """
 import csv, math
 import numpy as np
