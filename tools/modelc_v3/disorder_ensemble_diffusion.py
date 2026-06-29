@@ -120,7 +120,7 @@ def li_diffusion_from_frames(frames, save_fs, fit_window_ps):
 
 
 def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
-           out_dir, fit_window_ps, seed):
+           out_dir, fit_window_ps, seed, save_traj=False):
     out_dir.mkdir(parents=True, exist_ok=True)
     atoms = atoms.copy()
     atoms.calc = calc
@@ -137,6 +137,13 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
     D, t_ps, msd = li_diffusion_from_frames(frames, save_fs, fit_window_ps)
     (out_dir / "msd.json").write_text(json.dumps(
         {"T_K": T, "D_Li_cm2_s": D, "times_ps": t_ps, "msd_Li_A2": msd}, indent=2))
+    if save_traj:
+        # full production trajectory (extended-xyz) for jump stats / Li-density
+        # cube / van Hove. + sidecar meta so downstream tools auto-read save_fs.
+        write(str(out_dir / "traj.xyz"), frames)
+        (out_dir / "aimd_results.json").write_text(json.dumps(
+            {"T_K": T, "save_fs": save_fs, "n_frames": len(frames),
+             "prod_ps": prod_ps, "dt_fs": dt_fs}, indent=2))
     return D
 
 
@@ -173,6 +180,9 @@ def main():
     ap.add_argument("--friction", type=float, default=0.02)
     ap.add_argument("--save_fs", type=float, default=100.0)
     ap.add_argument("--fit_window_ps", type=float, nargs=2, default=[5.0, 40.0])
+    ap.add_argument("--save_traj", action="store_true",
+                    help="dump production frames to traj.xyz + aimd_results.json "
+                         "(enables jump stats / Li-density cube / van Hove)")
     ap.add_argument("--p_s_cut", type=float, default=2.6)
     ap.add_argument("--seed", type=int, default=1234)
     ap.add_argument("--uma_model", default="uma-s-1p1")
@@ -217,7 +227,8 @@ def main():
                 D = run_md(atoms_d, calc, T, args.equilib_ps, args.prod_ps,
                            args.timestep_fs, args.friction, args.save_fs,
                            cdir / f"T{int(T)}", tuple(args.fit_window_ps),
-                           seed=args.seed + 1000 * ci + int(T))
+                           seed=args.seed + 1000 * ci + int(T),
+                           save_traj=args.save_traj)
                 Ds.append(D)
                 print(f"    d={d_actual:.2f} cfg{ci} T={int(T)}: "
                       f"D_Li={D:.3e} cm²/s  ({(time.time()-t0)/60:.1f} min)")
