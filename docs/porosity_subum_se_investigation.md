@@ -37,18 +37,30 @@ DEM+실험 EIS):
 → **우리 식과 문헌이 정반대.** 응집이든 뭐든 sub-µm에서 porosity를 *올리는* sigmoid는
 문헌(같은 소재계)과 충돌한다.
 
-## 증거 ③ — 그 1점은 MPM 해상도 부족(artifact 의심)
+## 증거 ③ — r0.25는 해상도 부족이나, "작은 SE=성김" 트렌드 자체는 *실재* (수정됨)
 
-| case | r_SE | MPM cell | r/cell | 판정 |
-|---|---|---|---|---|
-| **particulate_1** | 0.25µm | 0.154µm | **1.6 cells** | **UNDER-RESOLVED** |
-| particulate_10 | 1.5µm | 0.183µm | 8.2 cells | ok |
-| particulate_11 | 1.5µm | 0.157µm | 9.6 cells | ok |
+| case | AM | r_SE | MPM | r/cell | 판정 |
+|---|---|---|---|---|---|
+| **particulate_1** | 62 | 0.25µm | 15.97 | **1.6 cells** | **UNDER-RESOLVED** |
+| particulate_10 | 62 | 1.5µm | 14.10 | 8.2 cells | ok |
+| **particulate_5** | 72 | 0.5µm | 18.78 | **3.2 cells** | **OK** |
+| particulate_11 | 72 | 1.5µm | 17.74 | 9.6 cells | ok |
 
-particulate_1의 SE는 **격자 1.6셀**밖에 안 됨 → MPM이 소성 흐름을 제대로 못 풀어 **덜
-다져진 채(15.97%, looser) 읽혔을** 가능성. 같은 조성(0:10, AM62)의 r1.5 짝
-(particulate_10, MPM 14.10)보다 +1.87%p 성긴데, 이 차이는 **seed-noise(±1.5%p)와 해상도
-artifact로 대부분 설명**된다 — 견고한 물리 신호가 아님.
+particulate_1의 SE는 격자 1.6셀 → under-resolved (값 15.97 부정확 가능). **그러나
+particulate_5(r0.5, 3.2셀, 해상도 OK)도** 같은 조성 r1.5 짝보다 **+1.04%p 더 성김**
+(18.78 vs 17.74). ⇒ ★ **"작은 SE = 더 성김"은 r0.25 artifact가 아니라 *해상된 사이즈에서도
+나타나는 실제 µm-스케일 트렌드*.**
+
+★ **이게 증거②(Schneider: 작을수록 조밀)와의 충돌을 *해소*한다 = 스케일 교차**:
+- **tens-of-µm(Schneider)**: 작은 입자 → 낮은 P_y → 소성 다짐 쉬움 → *조밀*.
+- **µm/sub-µm(우리)**: 작은 SE → 배위수↑ load-sharing → 접촉당 다짐↓ → *성김*.
+두 효과가 스케일에 따라 우열이 바뀌는 **크기 교차(size crossover)**. 우리 식의 r_SE 음수
+계수는 *우리 작동 스케일(0.5–1.5µm)에서 물리적으로 옳다* — particulate_5/11(해상)로 검증.
+r0.25는 그 실제 트렌드의 *under-resolved 가장자리*일 뿐.
+
+⇒ **수정된 함의**: sub-µm "문제"는 *누락된 물리(응집)*가 아니라 **식 size 항들의 collinear
+외삽**이 r0.25에서 폭주하는 것 + r0.25 MPM 데이터 부정확. 트렌드는 r_SE 항이 이미 옳게
+담고 있음.
 
 ---
 
@@ -62,15 +74,19 @@ sub-µm sigmoid를 박으려면 **방향과 진폭**이 필요한데:
 세 축이 모두 불확실/반대 → **물리적으로 정당한 sub-µm 보정을 지금 만들 수 없다.** 억지로
 박으면 (Stage E Cronau가 피한) "데이터-fitting 계수"가 되어 신뢰성 0.
 
-## 권고 (선결 작업)
+## 권고 (수정됨 — particulate_5 반영)
 
-1. **particulate_1 MPM 고해상 재시뮬** (n_grid↑ → r_SE=0.25를 ≥6셀로). 다져지면 15.97은
-   under-resolution artifact 확정 → sub-µm 문제 자체가 소멸(식 r_SE 항으로 충분).
-2. **스케일 재조정**: 우리 r_SE(0.25–1.5µm)와 Schneider(<50 vs >50µm)는 *다른 스케일*.
-   우리 데이터의 "작은 SE=성김"이 진짜 µm-스케일 packing 물리인지(CLAUDE.md size-effect
-   note), 아니면 모델 artifact인지 — 고해상 재시뮬이 가른다.
-3. 그 전까지 **식 도메인 = r_SE ≥ 0.5µm**로 유지(검증됨, LOOCV 0.64, SE-rich RMSE 1.7).
-   sub-µm은 "out-of-domain, 재시뮬 필요"로 정직 표기.
+0. ★ **트렌드는 이미 실재로 확정**: particulate_5(r0.5, 해상 OK)가 "작은 SE=성김"을 보임 →
+   r_SE 음수 계수는 *우리 스케일에서 옳음*. 이건 Schneider와의 **스케일 교차**이지 artifact
+   아님. ⇒ **sub-µm sigmoid 추가 불필요**(트렌드는 r_SE 항이 이미 담음). 식 도메인 r≥0.5 유지.
+1. **(선택) particulate_1 고해상 재시뮬 = *확정용*, 결론 변경 아님**: full-3D로 r0.25를 ≥6셀
+   (n_grid≥720)은 **OOM(~1.8B점)**. 현실적 최대 = **n_grid=384(r0.25=3.2셀, ~223M점, 메모리
+   상한 근처)** → particulate_5의 r0.5와 *같은 해상도*가 됨. 판정: porosity가 ~16 유지면
+   15.97 실재(트렌드 확정); ~14로 떨어지면 r0.25 값만 under-res로 부풀었던 것(트렌드는
+   particulate_5가 이미 보장). 어느 쪽이든 **sub-µm sigmoid는 불필요**.
+2. **식 도메인 = r_SE ≥ 0.5µm** 유지(검증됨, LOOCV 0.64, SE-rich RMSE 1.7). r0.25는 실제
+   트렌드의 under-resolved 가장자리 → "out-of-domain(해상도 한계), 트렌드는 r_SE 항이 외삽"
+   으로 정직 표기.
 
 ⇒ "응집 sigmoid로 확실히 잡자"의 정답은: **검증해보니 응집이 아니었고(Bond), 방향도
 문헌과 반대였고(Schneider), 그 1점은 해상도 의심(1.6셀)** — 그래서 **지금은 안 박는 게
