@@ -36,8 +36,8 @@ LAMBDA_C  = 7.0      # McGeary critical size ratio (1/7 rule, 0.154*d_c)
 
 # --- material densities (g/cm3) for weight->volume of the SOLID (design input,
 #     POROSITY-INDEPENDENT -- never use the DEM phi_am/phi_se which leak porosity)
-RHO_AM = 4.75        # single-crystal NCM811
-RHO_SE = 1.64        # Li6PS5Cl (LPSCl)
+RHO_AM = 4.8         # single-crystal NCM811 (project convention)
+RHO_SE = 2.0         # Li6PS5Cl (LPSCl) (project convention)
 
 
 def se_of_solid(am_wt):
