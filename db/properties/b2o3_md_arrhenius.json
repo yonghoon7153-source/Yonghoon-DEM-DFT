@@ -1,0 +1,14 @@
+{
+  "method": "UMA-s-1p1 Langevin MD, Nernst-Einstein (Haven=1)",
+  "Ea_eV": 0.207,
+  "D0_cm2_s": 0.0005667272246702259,
+  "D_per_T": {
+    "600": 9.973e-06,
+    "800": 3.095e-05,
+    "1000": 4.831e-05
+  },
+  "D_300K_cm2_s": 1.8854617232673419e-07,
+  "sigma_300K_mS_cm": 27.82,
+  "n_Li_per_cm3": 2.3806298818304583e+22,
+  "caveat": "MLIP-MD classical Nernst-Einstein overestimates absolute sigma; Ea + relative comparison vs modelc (same method) are the robust quantities."
+}
