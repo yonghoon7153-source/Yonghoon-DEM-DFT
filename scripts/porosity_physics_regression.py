@@ -110,7 +110,15 @@ def features(r):
     lam_SE   = rAM_eff / rSE if rSE > 0 else 0.0
     se_fill  = se_solid * sat(lam_SE)                      # Bazzoun void-filling
 
-    # (3) skeleton baseline proxies
+    # (3) multi-dimensional couplings (literature: the packing mechanisms are
+    #     NOT independent -- LOOCV-validated cross terms):
+    #   lamSE_x_amwt  : SE-fill efficiency scales with the AM skeleton it fills
+    #                   around (Bazzoun lambda x composition)
+    #   sefill_x_bim  : SE seats into the voids the McGeary/Furnas bimodal AM
+    #                   packing creates (de Larrard two-class coupling)
+    lamSE_x_amwt = sat(lam_SE) * (amwt / 100.0)
+    sefill_x_bim = se_fill * bimodal_fill
+
     return dict(
         const      = 1.0,
         bimodal    = bimodal_fill,        # -> lowers porosity (McGeary/Furnas)
@@ -119,11 +127,13 @@ def features(r):
         lam_SE_sat = sat(lam_SE),         # size-ratio eff -> crossover partner
         se_solid   = se_solid,            # raw SE-of-solid (composition)
         rAM_eff    = rAM_eff,             # absolute AM size (wall/skeleton scale)
+        lamSE_x_amwt = lamSE_x_amwt,      # SE-size x composition coupling
+        sefill_x_bim = sefill_x_bim,      # SE-fill x bimodal-dip coupling
     )
 
 
 FEAT_KEYS = ["const", "bimodal", "bimodal_sym", "se_fill", "lam_SE_sat",
-             "se_solid", "rAM_eff"]
+             "se_solid", "rAM_eff", "lamSE_x_amwt", "sefill_x_bim"]
 
 
 def design_matrix(rows, keys=FEAT_KEYS):
@@ -201,30 +211,32 @@ def main():
     print("    mono uses r=6 (P) or r=2 (S); error band = regime RMSE above.\n")
     band = {n: math.sqrt(np.mean(np.array(e)**2)) for n, e in buckets.items()}
     norm_band = band.get("normal cross-validated", 3.0)
-    print(f"  {'P:S':>5} {'AM_wt%':>6} {'r_SE':>5} | {'porosity%':>9}  {'±band':>6}  regime")
+    # production sizes (user spec): AM_P D=12um (r=6), AM_S D=4um (r=2),
+    # SE D=1um (r=0.5).  Single size set -> sweep P:S x AM_wt only.
+    rSE = 0.5
+    print(f"  sizes: AM_P D12 (r6) / AM_S D4 (r2) / SE D1 (r{2*rSE:.0f}... r_SE={rSE})")
+    print(f"  {'P:S':>5} {'AM_wt%':>6} | {'porosity%':>9}  {'±band':>6}  regime")
     grid_ps = [("0:10",0.0),("3:7",0.3),("5:5",0.5),("7:3",0.7),("10:0",1.0)]
     out_rows = []
     for ps_label, P in grid_ps:
-        for amwt in (75, 80, 82, 85, 90):
-            for rSE in (0.5, 1.5):
-                rAMP, rAMS = (6.0, 2.0)
-                if P == 0.0: rAMP = 0.0          # mono small
-                if P == 1.0: rAMS = 0.0          # mono large
-                rr = dict(P=P, amwt=amwt, rAMP=rAMP, rAMS=rAMS, rSE=rSE,
-                          por=np.nan, ps=ps_label)
-                fv = features(rr)
-                pred = sum(beta[i]*fv[k] for i,k in enumerate(FEAT_KEYS))
-                reg = regime_of(dict(por=pred, P=P, amwt=amwt))
-                short = ("over-comp" if "over" in reg else
-                         "corner" if "corner" in reg else "normal")
-                b = band.get(reg, norm_band)
-                print(f"  {ps_label:>5} {amwt:>6} {rSE:>5} | {pred:>8.1f}  "
-                      f"±{b:>4.1f}  {short}")
-                out_rows.append(dict(ps=ps_label, P=P, am_wt=amwt, r_AM_P=rAMP,
-                                     r_AM_S=rAMS, r_SE=rSE,
-                                     se_of_solid_pct=round(se_of_solid(amwt)*100,1),
-                                     porosity_pred_pct=round(pred,1),
-                                     err_band_pct=round(b,1), regime=short))
+        for amwt in (75, 78, 80, 82, 85, 88, 90):
+            rAMP, rAMS = (6.0, 2.0)
+            if P == 0.0: rAMP = 0.0          # mono small
+            if P == 1.0: rAMS = 0.0          # mono large
+            rr = dict(P=P, amwt=amwt, rAMP=rAMP, rAMS=rAMS, rSE=rSE,
+                      por=np.nan, ps=ps_label)
+            fv = features(rr)
+            pred = sum(beta[i]*fv[k] for i,k in enumerate(FEAT_KEYS))
+            reg = regime_of(dict(por=pred, P=P, amwt=amwt))
+            short = ("over-comp" if "over" in reg else
+                     "corner" if "corner" in reg else "normal")
+            b = band.get(reg, norm_band)
+            print(f"  {ps_label:>5} {amwt:>6} | {pred:>8.1f}  ±{b:>4.1f}  {short}")
+            out_rows.append(dict(ps=ps_label, P=P, am_wt=amwt, r_AM_P=rAMP,
+                                 r_AM_S=rAMS, r_SE=rSE,
+                                 se_of_solid_pct=round(se_of_solid(amwt)*100,1),
+                                 porosity_pred_pct=round(pred,1),
+                                 err_band_pct=round(b,1), regime=short))
     # save the deliverable CSV
     outp = "docs/data/porosity_regression_predictions.csv"
     with open(outp, "w", newline="") as f:
