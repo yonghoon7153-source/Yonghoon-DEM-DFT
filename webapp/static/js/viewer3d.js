@@ -1732,7 +1732,7 @@ function applyViewMode(state, mode) {
     }
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     const pm = new THREE.Points(g, new THREE.PointsMaterial({
-      color: 0x38bdf8, size: 0.25, sizeAttenuation: true, transparent: true, opacity: 0.4 }));
+      color: 0x38bdf8, size: 0.32, sizeAttenuation: true, transparent: true, opacity: 0.9 }));
     pm.renderOrder = 5;
     state.additivePointGroup = pm;                          // reuse the cleanup hook (torn down next mode change)
     if (state.scene) state.scene.add(pm);
