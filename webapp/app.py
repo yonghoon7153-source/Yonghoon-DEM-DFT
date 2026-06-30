@@ -3460,6 +3460,56 @@ def case_whatif_carbon(case_id):
     return jsonify(out)
 
 
+def _add_recipe_str(vgcf, superp, ptfe):
+    """Serialize chosen additive wt% into an --add-recipe string for
+    additives.parse_recipe (only the additive wt% are load-bearing downstream;
+    AM:SE are ignored by additive_wt).  Returns '' if no additive selected."""
+    parts = [(k, v) for k, v in (('VGCF', vgcf), ('SuperP', superp), ('PTFE', ptfe)) if v and v > 0]
+    if not parts:
+        return ''
+    keys = ':'.join(k for k, _ in parts)
+    vals = ':'.join(f'{v:g}' for _, v in parts)
+    return f'{keys}={vals}'
+
+
+@app.route('/case/<path:case_id>/whatif-additives')
+def case_whatif_additives(case_id):
+    """Literature-anchored with/without estimate of σ_e / σ_ion / porosity for
+    VGCF / Super P / PTFE at a mixing protocol.  Backs the 첨가제 적용 section.
+    Query: ?vgcf=&superp=&ptfe= (wt%, 0–10) &mixing=ballmill|thinky|handmix."""
+    def _f(name):
+        try:
+            return max(0.0, min(10.0, float(request.args.get(name, 0.0))))
+        except ValueError:
+            return 0.0
+    vgcf, superp, ptfe = _f('vgcf'), _f('superp'), _f('ptfe')
+    mixing = request.args.get('mixing', 'ballmill')
+    if mixing not in ('ballmill', 'thinky', 'handmix'):
+        mixing = 'ballmill'
+
+    if case_id.startswith('archive:'):
+        target = _safe_path(case_id[len('archive:'):])
+        metrics_path = os.path.join(target, 'full_metrics.json') if target else None
+    else:
+        metrics_path = os.path.join(get_results_dir(case_id), 'full_metrics.json')
+    if not metrics_path or not os.path.exists(metrics_path):
+        return jsonify({'available': False, 'reason': 'full_metrics.json not found'}), 200
+    with open(metrics_path) as f:
+        metrics = json.load(f)
+    try:
+        import sys as _sys
+        scripts_dir = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+        if scripts_dir not in _sys.path:
+            _sys.path.insert(0, scripts_dir)
+        from grade_engine import whatif_additives
+        out = whatif_additives(metrics, vgcf_wt=vgcf, superp_wt=superp,
+                               ptfe_wt=ptfe, mixing=mixing)
+    except Exception as e:
+        return jsonify({'available': False, 'reason': f'{type(e).__name__}: {e}'}), 200
+    out['recipe'] = _add_recipe_str(vgcf, superp, ptfe)
+    return jsonify(out)
+
+
 @app.route('/')
 def index():
     cases = list_cases()
@@ -5184,6 +5234,18 @@ def mpm_input_package(case_id):
     cmd = ['python3', gen, '--results', results_dir, '--case', case_id, '--out', tmp]
     if tmap:
         cmd += ['--type-map', tmap]
+    # optional conductive-additive recipe baked into run_mpm.sh (첨가제 적용 section)
+    def _addf(name):
+        try:
+            return max(0.0, min(10.0, float(request.args.get(name, 0.0))))
+        except ValueError:
+            return 0.0
+    recipe = _add_recipe_str(_addf('vgcf'), _addf('superp'), _addf('ptfe'))
+    mixing = request.args.get('mixing', 'thinky')
+    if mixing not in ('ballmill', 'thinky', 'handmix'):
+        mixing = 'thinky'
+    if recipe:
+        cmd += ['--add-recipe', recipe, '--mixing', mixing]
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
@@ -5195,8 +5257,9 @@ def mpm_input_package(case_id):
             z.write(os.path.join(tmp, fn), fn)
     shutil.rmtree(tmp, ignore_errors=True)
     buf.seek(0)
+    tag = ('_' + recipe.replace(':', '-').replace('=', '_')) if recipe else ''
     return send_file(buf, mimetype='application/zip', as_attachment=True,
-                     download_name=f'mpm_input_{case_id}.zip')
+                     download_name=f'mpm_input_{case_id}{tag}.zip')
 
 
 @app.route('/results/<case_id>/mpm-upload', methods=['POST'])
