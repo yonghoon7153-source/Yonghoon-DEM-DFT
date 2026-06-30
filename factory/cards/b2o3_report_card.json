@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T06:47:08.737962+00:00",
+  "generated_utc": "2026-06-30T06:56:05.224519+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "b2o3",
@@ -242,7 +242,7 @@
     "confidence": "B",
     "method": "open-Li reduction profile (get_element_profile) at anode reservoir V (Li metal 0V, Li-In 0.62V) + MP product gaps",
     "source": "db/properties/anode_interface_b2o3.json",
-    "verdict": "Li-metal UNSTABLE",
+    "verdict": "Li-metal UNSTABLE (metallic LiB); Li-In (0.7 eV, no metallic LiB) MANAGEABLE",
     "li_metal_reduction": "Li58B2P8S41Cl16O3 -> 2 LiB + 3 Li2O + 8 Li3P + 16 LiCl + 41 S + 10 Li",
     "li_metal_leaky": [
       "Li3P(0.7)",
@@ -250,9 +250,11 @@
     ],
     "min_product_gap_eV": 0.0,
     "vs_undoped_min_gap_eV": 0.7,
-    "li_in_min_gap_eV": null,
-    "li_in_leaky": null,
-    "caveats": "Both SEs are Li-metal-UNSTABLE (reduce to Li3P 0.7 eV leaky, sulfide-generic). BUT b2o3's B dopant ADDS a METALLIC LiB phase (gap 0.0) to the anode interphase -> min gap 0.0 vs undoped 0.7 -> doping WORSENS Li-metal electronic stability. b2o3 also adds Li2O (4.9, passivating). Net: b2o3 needs an anode interlayer more than undoped. Thermodynamic products only; morphology/kinetics not modeled."
+    "li_in_min_gap_eV": 0.7,
+    "li_in_leaky": [
+      "Li3P(0.7)"
+    ],
+    "caveats": "vs BARE Li METAL (0 V): b2o3 is WORSE than undoped -- the B dopant forms METALLIC LiB (gap 0) -> min gap 0.0 vs undoped 0.7 (Li3P). BUT vs Li-In (~0.62 V, the standard sulfide-ASSB lab anode): the metallic LiB does NOT form (B -> B6P + Li3BO3) -> b2o3 min gap 0.7 (Li3P only), same leaky tier as undoped-at-Li-metal; undoped at Li-In is even milder (1.89, P2S7, no Li3P). => b2o3's worst anode liability (metallic LiB) is specific to bare Li metal and is AVOIDED with a Li-In anode -> practically manageable (which is why sulfide ASSBs use Li-In). Thermodynamic products only; morphology/kinetics not modeled."
   },
   "critical_current_density": {
     "status": "n.a.",
@@ -283,10 +285,10 @@
     "caveats": "sigma_electronic (self-discharge driver), beyond just band gap."
   },
   "overall": {
-    "summary": "B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; #6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars pending). KEY TRADE-OFF: the bulk-transport gain comes WITH a WORSE Li-metal anode -- the B dopant adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7), so b2o3 is Li-metal-UNSTABLE and worse than undoped at the anode (needs an interlayer). Plus NARROW ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor, but a doping-WORSENED Li-metal interface is the headline liability.",
+    "summary": "B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; #6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars pending). KEY TRADE-OFF: vs BARE Li metal the bulk-transport gain comes WITH a WORSE anode -- the B dopant adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7). BUT that liability is bare-Li-metal-SPECIFIC: vs a Li-In anode (0.62 V, the standard sulfide-ASSB anode) the metallic LiB does NOT form (B -> B6P + Li3BO3) -> min gap 0.7 (Li3P only), same tier as undoped-at-Li-metal -> practically MANAGEABLE with the alloy anode the field already uses. Plus NARROW ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor; the metallic-LiB anode liability is real at Li metal but avoided with Li-In.",
     "flags": [
       "transport:+(D0-driven,no-error-bars)",
-      "anode:Li-metal-UNSTABLE(metallic-LiB,doping-WORSENED)",
+      "anode:Li-metal-UNSTABLE(metallic-LiB)-but-Li-In-MANAGEABLE(0.7,noLiB)",
       "ESW:narrow(0.31V)+leaky",
       "stability:metastable(+37.5)+Gamma-only",
       "mechanical:pending"
@@ -294,7 +296,7 @@
     "honesty_notes": [
       "transport is the robust result BUT single-trajectory/single-config -> Ea+-0.01 + 1.3x ratio need multi-seed error bars (within ~15-20% MD noise)",
       "absolute sigma is MLIP upper bound (cite Ea + ratio, never the absolute number)",
-      "ANODE: doping WORSENS Li-metal stability -- b2o3 reduction interphase has METALLIC LiB (gap 0) from the B dopant (min gap 0 vs undoped Li3P 0.7). NOT a doping-neutral story. Thermodynamic products only (morphology/kinetics not modeled)",
+      "ANODE: vs BARE Li metal doping WORSENS stability -- b2o3 interphase has METALLIC LiB (gap 0) from the B dopant (min gap 0 vs undoped Li3P 0.7). BUT vs Li-In (0.62V, the standard sulfide-ASSB anode) the metallic LiB does NOT form (B->B6P+Li3BO3) -> min gap 0.7 (Li3P only) -> practically MANAGEABLE. The liability is bare-Li-metal-specific. Thermodynamic products only (morphology/kinetics not modeled)",
       "ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped",
       "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too",
       "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B",

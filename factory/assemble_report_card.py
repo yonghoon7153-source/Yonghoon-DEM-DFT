@@ -325,10 +325,12 @@ def build(sysid, stamp=None):
         lm = anode_norm(me, "0.00")                                   # Li metal
         liin = anode_norm(me, "0.62") if me.get("by_anode") else None  # Li-In (new schema only)
         ref_lm = anode_norm(ref, "0.00") if ref else {}
+        liin_verdict = (f"; Li-In ({liin['min_gap']} eV, no metallic LiB) MANAGEABLE"
+                        if liin and liin.get("min_gap") is not None else "")
         card["anode_interface_stability"] = sec("done", confidence="B",
             method="open-Li reduction profile (get_element_profile) at anode reservoir V (Li metal 0V, Li-In 0.62V) + MP product gaps",
             source=f"db/properties/{F['anode']}",
-            verdict="Li-metal UNSTABLE",
+            verdict=f"Li-metal UNSTABLE (metallic LiB){liin_verdict}",
             li_metal_reduction=lm["reaction"], li_metal_leaky=lm["leaky"],
             min_product_gap_eV=lm["min_gap"], vs_undoped_min_gap_eV=ref_lm.get("min_gap"),
             li_in_min_gap_eV=(liin["min_gap"] if liin else None),
@@ -350,16 +352,18 @@ def build(sysid, stamp=None):
         summary = ("B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; "
                    "#6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises "
                    "BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars "
-                   "pending). KEY TRADE-OFF: the bulk-transport gain comes WITH a WORSE Li-metal anode -- the B dopant "
-                   "adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7), so "
-                   "b2o3 is Li-metal-UNSTABLE and worse than undoped at the anode (needs an interlayer). Plus NARROW "
-                   "ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor, "
-                   "but a doping-WORSENED Li-metal interface is the headline liability.")
-        flags = ["transport:+(D0-driven,no-error-bars)", "anode:Li-metal-UNSTABLE(metallic-LiB,doping-WORSENED)",
+                   "pending). KEY TRADE-OFF: vs BARE Li metal the bulk-transport gain comes WITH a WORSE anode -- the B "
+                   "dopant adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P "
+                   "0.7). BUT that liability is bare-Li-metal-SPECIFIC: vs a Li-In anode (0.62 V, the standard sulfide-"
+                   "ASSB anode) the metallic LiB does NOT form (B -> B6P + Li3BO3) -> min gap 0.7 (Li3P only), same tier "
+                   "as undoped-at-Li-metal -> practically MANAGEABLE with the alloy anode the field already uses. Plus "
+                   "NARROW ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk "
+                   "conductor; the metallic-LiB anode liability is real at Li metal but avoided with Li-In.")
+        flags = ["transport:+(D0-driven,no-error-bars)", "anode:Li-metal-UNSTABLE(metallic-LiB)-but-Li-In-MANAGEABLE(0.7,noLiB)",
                  "ESW:narrow(0.31V)+leaky", "stability:metastable(+37.5)+Gamma-only", "mechanical:pending"]
         notes = ["transport is the robust result BUT single-trajectory/single-config -> Ea+-0.01 + 1.3x ratio need multi-seed error bars (within ~15-20% MD noise)",
                  "absolute sigma is MLIP upper bound (cite Ea + ratio, never the absolute number)",
-                 "ANODE: doping WORSENS Li-metal stability -- b2o3 reduction interphase has METALLIC LiB (gap 0) from the B dopant (min gap 0 vs undoped Li3P 0.7). NOT a doping-neutral story. Thermodynamic products only (morphology/kinetics not modeled)",
+                 "ANODE: vs BARE Li metal doping WORSENS stability -- b2o3 interphase has METALLIC LiB (gap 0) from the B dopant (min gap 0 vs undoped Li3P 0.7). BUT vs Li-In (0.62V, the standard sulfide-ASSB anode) the metallic LiB does NOT form (B->B6P+Li3BO3) -> min gap 0.7 (Li3P only) -> practically MANAGEABLE. The liability is bare-Li-metal-specific. Thermodynamic products only (morphology/kinetics not modeled)",
                  "ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped",
                  "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too",
                  "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B",

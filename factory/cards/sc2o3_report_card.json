@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T06:09:30.973761+00:00",
+  "generated_utc": "2026-06-30T06:56:05.263114+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "sc2o3",
