@@ -1,0 +1,24 @@
+{
+  "system": "b2o3",
+  "stamp": "2026-06-30T_session",
+  "completeness": "8/9 sections done",
+  "done": [
+    "screening",
+    "transport",
+    "thermodynamic_stability",
+    "electrochemical_window",
+    "electronic",
+    "structure_chemistry",
+    "dynamical_stability",
+    "testable_predictions"
+  ],
+  "pending": [
+    "mechanical"
+  ],
+  "next_gates": [
+    "cost_gate"
+  ],
+  "planned_commands": {
+    "mechanical": "python3 tools/comp1_v3/build_elastic_strain_inputs.py --relaxed_ion ... (12 strain SCF on KISTI) && fit_elastic_cij_stress.py"
+  }
+}
