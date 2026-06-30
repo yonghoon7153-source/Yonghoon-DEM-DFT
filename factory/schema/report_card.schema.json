@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Solid-electrolyte electrochemical report card",
+  "description": "Standardized in-silico electrochemical characterization of a (doped) solid electrolyte. Every section carries status + confidence + method + caveats to prevent over-claiming.",
+  "type": "object",
+  "required": ["schema_version", "system", "overall"],
+  "properties": {
+    "schema_version": {"type": "string"},
+    "generated_utc": {"type": "string", "description": "stamped by the caller (scripts cannot read the clock)"},
+    "system": {
+      "type": "object",
+      "required": ["id", "composition", "structure_ref"],
+      "properties": {
+        "id": {"type": "string"},
+        "composition": {"type": "string"},
+        "structure_ref": {"type": "string"},
+        "n_atoms": {"type": "integer"},
+        "provenance": {"type": "string"}
+      }
+    },
+    "screening": {"$ref": "#/$defs/section_with",
+      "description": "Upstream cascade screening that nominated this candidate. Versioned (loose coupling) so the factory survives cascade evolving. Fast descriptors here vs deep-validation sections below seed future ML calibration.",
+      "properties": {
+        "source_pipeline": {"type": ["string", "null"], "description": "e.g. cascade_v23"},
+        "candidate_id": {"type": ["string", "null"]},
+        "rank": {"type": ["integer", "null"]},
+        "score": {"type": ["number", "null"]},
+        "descriptors": {"type": ["object", "null"]},
+        "cascade_fast_estimates": {"type": ["object", "null"]}
+      }},
+    "transport": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "sigma_300K_mS_cm": {"type": ["number", "null"]},
+        "sigma_273K_mS_cm": {"type": ["number", "null"]},
+        "Ea_eV": {"type": ["number", "null"]},
+        "D0_cm2_s": {"type": ["number", "null"]},
+        "bvse_barrier_eV": {"type": ["number", "null"]}
+      }},
+    "thermodynamic_stability": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "e_above_hull_meV_atom": {"type": ["number", "null"]},
+        "decomposition": {"type": ["object", "null"]}
+      }},
+    "electrochemical_window": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "esw_reduction_V": {"type": ["number", "null"]},
+        "esw_oxidation_V": {"type": ["number", "null"]},
+        "window_V": {"type": ["number", "null"]},
+        "sei_products": {"type": ["array", "null"], "items": {"type": "object"}}
+      }},
+    "mechanical": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "B_GPa": {"type": ["number", "null"]},
+        "G_GPa": {"type": ["number", "null"]},
+        "E_GPa": {"type": ["number", "null"]},
+        "nu": {"type": ["number", "null"]},
+        "B0_eos_GPa": {"type": ["number", "null"]}
+      }},
+    "electronic": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "band_gap_eV": {"type": ["number", "null"]},
+        "N_EF": {"type": ["number", "null"]},
+        "vbm_character": {"type": ["string", "null"]}
+      }},
+    "structure_chemistry": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "coordination_motifs": {"type": ["array", "null"], "items": {"type": "string"}},
+        "bond_lengths": {"type": ["object", "null"]},
+        "oxidation_states": {"type": ["object", "null"]}
+      }},
+    "dynamical_stability": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "imaginary_modes": {"type": ["integer", "null"]},
+        "verdict": {"type": ["string", "null"]}
+      }},
+    "testable_predictions": {"$ref": "#/$defs/section_with",
+      "properties": {
+        "xps": {"type": ["array", "null"]},
+        "raman_ir": {"type": ["array", "null"]},
+        "nmr": {"type": ["array", "null"]}
+      }},
+    "overall": {
+      "type": "object",
+      "required": ["summary"],
+      "properties": {
+        "summary": {"type": "string"},
+        "flags": {"type": "array", "items": {"type": "string"}},
+        "honesty_notes": {"type": "array", "items": {"type": "string"}},
+        "completeness": {"type": "string", "description": "fraction of sections done"}
+      }
+    }
+  },
+  "$defs": {
+    "section_with": {
+      "type": "object",
+      "required": ["status"],
+      "properties": {
+        "status": {"enum": ["done", "pending", "partial", "n.a."]},
+        "confidence": {"enum": ["A", "B", "C", null]},
+        "method": {"type": ["string", "null"]},
+        "source": {"type": ["string", "null"], "description": "db/ or kb/ provenance path"},
+        "caveats": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

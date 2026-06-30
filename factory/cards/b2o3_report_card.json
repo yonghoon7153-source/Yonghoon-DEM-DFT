@@ -1,0 +1,212 @@
+{
+  "schema_version": "0.1",
+  "generated_utc": "STAMP_AT_CALLER",
+  "system": {
+    "id": "b2o3",
+    "composition": "Li58P8S41Cl16B2O3",
+    "structure_ref": "db/structures/b2o3_relaxV0.cif",
+    "n_atoms": 128,
+    "provenance": "DFT V0 fixed-cell relax (B2O3-doped LPSCl1.6 champion)"
+  },
+  "screening": {
+    "status": "done",
+    "source_pipeline": "cascade_v23",
+    "candidate_id": "B2O3_x010",
+    "rank": 6,
+    "score": 0.85,
+    "descriptors": {
+      "bvs_li_proxy_score": 0.8859,
+      "migration_volume_fraction": 0.1115,
+      "blocking_fraction": 0.8824,
+      "li_li_disorder_std": 0.2056,
+      "cation_site": "Li_24g",
+      "anion_site": "S_16e"
+    },
+    "cascade_fast_estimates": {
+      "eos_B0_GPa": 16.2003,
+      "elastic_E_GPa": 43.0577,
+      "elastic_nu": 0.2197,
+      "pugh_GoverB": 0.6895,
+      "ox_V": 2.317,
+      "red_V": 2.043,
+      "window_V": 0.274
+    },
+    "confidence": "C",
+    "method": "cascade tier descriptors (fast proxy)",
+    "caveats": "fast screening estimate; deep-validation sections below are high-fidelity. cascade evolves -> re-link by (version, candidate_id)."
+  },
+  "transport": {
+    "status": "done",
+    "confidence": "B",
+    "method": "UMA-s-1p1 MLIP-MD, MSD window 2-50 ps, 3pt Arrhenius, Nernst-Einstein (Haven=1)",
+    "source": "db/properties/b2o3_vs_modelc_md.json + kb/methodology/md_conductivity_protocol.md",
+    "sigma_300K_mS_cm": 18.51,
+    "sigma_273K_mS_cm": 8.65,
+    "Ea_eV": 0.2234,
+    "D0_cm2_s": 0.0007,
+    "caveats": "MLIP NE overestimates absolute sigma ~3-5x; Ea + relative-vs-modelc robust. vs modelc (LPSCl1.6): same Ea, ~1.33x higher sigma (D0-driven)."
+  },
+  "thermodynamic_stability": {
+    "status": "done",
+    "confidence": "B",
+    "method": "UMA-consistent convex hull (e_above_hull), MP chemsys Li-P-S-Cl-B-O",
+    "source": "db/properties/b2o3_ehull_result.json",
+    "e_above_hull_meV_atom": 37.5,
+    "decomposition": {
+      "Li3PS4": 0.5,
+      "LiCl": 0.246,
+      "Li2S": 0.193,
+      "Li4B7ClO12": 0.047,
+      "Li3BS3": 0.014
+    },
+    "caveats": "metastable (+37.5 meV/atom) but phonon-stable real phase; decomp includes Li3BS3 (BS3 thioborate)."
+  },
+  "electrochemical_window": {
+    "status": "done",
+    "confidence": "B",
+    "method": "grand-potential ESW (MP GGA/GGA+U hull) + MP band gaps of SEI products",
+    "source": "db/properties/b2o3_esw.json + b2o3_sei_gaps.json",
+    "esw_reduction_V": 1.72,
+    "esw_oxidation_V": 2.03,
+    "window_V": 0.31,
+    "sei_products": [
+      {
+        "phase": "B2O3",
+        "gap_eV": 8.38,
+        "passivating": true
+      },
+      {
+        "phase": "BPO4",
+        "gap_eV": 7.0,
+        "passivating": true
+      },
+      {
+        "phase": "LiCl",
+        "gap_eV": 6.65,
+        "passivating": true
+      },
+      {
+        "phase": "Li3PO4",
+        "gap_eV": 5.73,
+        "passivating": true
+      },
+      {
+        "phase": "Li3B7O12",
+        "gap_eV": 5.6,
+        "passivating": true
+      },
+      {
+        "phase": "Li2O",
+        "gap_eV": 5.24,
+        "passivating": true
+      },
+      {
+        "phase": "Li3BO3",
+        "gap_eV": 5.15,
+        "passivating": true
+      },
+      {
+        "phase": "Li2S",
+        "gap_eV": 3.9,
+        "passivating": false
+      }
+    ],
+    "caveats": "window narrows (1.72-2.03 V) but SEI is wide-gap passivating (B2O3 8.4, BPO4 7.0, Li3PO4 5.7) -> e- blocking."
+  },
+  "mechanical": {
+    "status": "pending",
+    "confidence": null,
+    "method": "DFT relaxed-ion finite-strain Cij (running on KISTI); EOS B0 as proxy",
+    "source": "db/properties/b2o3_eos_dft_result.json (B0); elastic Cij pending",
+    "B_GPa": null,
+    "G_GPa": null,
+    "E_GPa": null,
+    "nu": null,
+    "B0_eos_GPa": 24.48,
+    "caveats": "elastic relaxed-ion 12-strain chain running; cascade fast-estimate E~41-43 GPa (screening). EOS B0 24.5 GPa (+13% vs undoped, DFT)."
+  },
+  "electronic": {
+    "status": "done",
+    "confidence": "A",
+    "method": "DFT DOS/PDOS (scf->nscf->projwfc)",
+    "source": "db/properties/b2o3_dos_smooth.csv + b2o3_pdos_*_smooth.csv; kb/results b2o3 DOS",
+    "band_gap_eV": 1.97,
+    "N_EF": 0.0,
+    "vbm_character": "S 3p ~89.5% (free-S shallowest)",
+    "caveats": "gap 1.97 eV (VBM 2.47 / CBM 4.44); insulating bulk."
+  },
+  "structure_chemistry": {
+    "status": "done",
+    "confidence": "A",
+    "method": "coordination/bond-length + Bader (oxidation) + Lowdin (S-site order)",
+    "source": "db/properties/b2o3_bond_lengths.json + b2o3_charge_xps.csv + b2o3_coordination_bonds.json",
+    "coordination_motifs": [
+      "trigonal BS3 (B-S 1.83)",
+      "free-S2- (6)",
+      "phosphate P-O (1.56, PS4-xOx)"
+    ],
+    "bond_lengths": {
+      "P-S": 2.065,
+      "Li-S": 2.486,
+      "Li-Cl": 2.525,
+      "B-S": 1.827,
+      "P-O": 1.556,
+      "S-S(cage)": 3.436
+    },
+    "oxidation_states": {
+      "B": "+3.00",
+      "P": "+4.69",
+      "O": "-1.92",
+      "Cl": "-0.91",
+      "Li": "+0.88",
+      "S": "~-1.8"
+    },
+    "caveats": "BS3 confirmed 5 ways (coord/hull/DOS/ESW/charge). USPP charges = relative."
+  },
+  "dynamical_stability": {
+    "status": "done",
+    "confidence": "B",
+    "method": "UMA Gamma-point finite-displacement phonons",
+    "source": "db/properties/b2o3_phonon_stability.json",
+    "imaginary_modes": 0,
+    "verdict": "DYNAMICALLY STABLE (0 imaginary; soft Li band ~14 cm-1)",
+    "caveats": "Gamma-only (UMA); qualitative stability robust; quantitative Raman/IR needs DFPT."
+  },
+  "testable_predictions": {
+    "status": "done",
+    "confidence": "B",
+    "method": "aggregated fingerprints for experimental validation",
+    "source": "derived from structure_chemistry + dynamical_stability",
+    "xps": [
+      "S 2p: free-S2-(low BE) < PS4-S < B-S/BS3(high BE shoulder)",
+      "B 1s B3+",
+      "P 2p P5+ (PS4-xOx)"
+    ],
+    "raman_ir": [
+      "P-O phosphate stretch ~900-1013 cm-1 (absent in undoped)"
+    ],
+    "nmr": [
+      "11B trigonal BS3",
+      "31P PS4 / PS4-xOx",
+      "7Li"
+    ],
+    "caveats": "positions/order computable; Nd 3d is literature-only (multiplet). Quantitative XPS eV needs dSCF core-hole."
+  },
+  "overall": {
+    "summary": "B2O3-doped LPSCl1.6 champion (cascade rank-1): higher RT conductivity than undoped (sigma300 ~18.5 mS/cm, same Ea, D0-driven), metastable but phonon-stable, narrow ESW compensated by wide-gap passivating B/O SEI, stiffer framework (EOS B0 +13%). Promising dopant.",
+    "flags": [
+      "transport:+",
+      "stability:metastable(+37.5)",
+      "ESW:narrow-but-SEI-compensated",
+      "dynamical:stable",
+      "mechanical:pending"
+    ],
+    "honesty_notes": [
+      "absolute sigma is MLIP upper bound (cite Ea+ratio)",
+      "elastic Cij pending (KISTI); EOS B0 proxy",
+      "single Li-config",
+      "cascade fast-estimates vs deep-validation differ (seeds ML calibration)"
+    ],
+    "completeness": "8/9 sections done"
+  }
+}

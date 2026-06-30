@@ -1,0 +1,91 @@
+# Stage registry — the factory's tool catalog.
+# Each stage: which report-card section it fills, the tool, compute location, cost,
+# confidence, the human gate before it, and inputs/outputs. The orchestrator (v1.1)
+# reads this to run propose -> validate -> report. cascade is the UPSTREAM source
+# (versioned, loose-coupling) that nominates candidates; it keeps evolving.
+
+upstream:
+  cascade:
+    role: candidate source + fast screening descriptors
+    versioned: true            # reference by version (cascade_v23, v24, ...)
+    coupling: loose            # factory ingests id + descriptors, not cascade internals
+    fills_section: screening
+    db: [cascade_v23_champions.csv, cascade_v23_litransport.csv,
+         cascade_v23_ranked.csv, oxidation_stability_cascade.csv]
+    note: cascade evolves independently; re-link a candidate by (version, candidate_id).
+
+gates:
+  - id: prep_gate   ; before: [transport, mechanical, electronic]; ask: "structure relaxed OK?"
+  - id: cost_gate   ; before: [mechanical, dynamical_stability]  ; ask: "approve expensive DFT/DFPT?"
+  - id: rank_gate   ; before: report_emit                        ; ask: "approve final report card?"
+
+stages:
+  transport:
+    fills_section: transport
+    tool: tools/modelc_v3/disorder_ensemble_diffusion.py + tools/ionic/msd_origin.py
+    method: UMA-s-1p1 MLIP-MD, MSD window 2-50 ps, 3pt Arrhenius, Nernst-Einstein
+    protocol: kb/methodology/md_conductivity_protocol.md
+    compute: gabia (GPU, MLIP)
+    cost: medium    # ~10 runs x 100-200 ps
+    confidence: B   # Ea + relative robust; absolute sigma upper bound
+    bvse: tools/ (BVSE percolation) -> bvse_barrier_eV
+
+  thermodynamic_stability:
+    fills_section: thermodynamic_stability
+    tool: tools/doping/convex_hull_ehull.py
+    method: UMA-consistent convex hull (e_above_hull), MP chemsys
+    compute: gabia/local (MP API)
+    cost: low
+    confidence: B
+
+  electrochemical_window:
+    fills_section: electrochemical_window
+    tool: tools/oxidation/esw_grand_potential.py + sei_product_gaps.py
+    method: grand-potential ESW (MP GGA/GGA+U hull) + MP band gaps of SEI products
+    compute: gabia/local (MP API)
+    cost: low
+    confidence: B
+
+  mechanical:
+    fills_section: mechanical
+    tool: tools/comp1_v3/build_elastic_strain_inputs.py + fit_elastic_cij_stress.py
+    method: DFT relaxed-ion finite strain (12 SCF), Cij -> B/G/E/nu ; EOS B0 as proxy
+    compute: KISTI (QE, SLURM)
+    cost: high      # 12 strained relaxations
+    confidence: B
+    gate: cost_gate
+
+  electronic:
+    fills_section: electronic
+    tool: tools/electronic/ (standard_dos recipe: scf->nscf->projwfc)
+    method: DFT DOS/PDOS -> gap, N(E_F), VBM character
+    compute: KISTI (QE)
+    cost: medium
+    confidence: A
+
+  structure_chemistry:
+    fills_section: structure_chemistry
+    tool: tools/comp1_v3/per_site_bond_analysis.py + b2o3_all_bond_lengths.py + Bader/Lowdin
+    method: coordination/bond lengths + oxidation states (Bader) + site order (Lowdin)
+    compute: local + KISTI (charge cube)
+    cost: low
+    confidence: A
+
+  dynamical_stability:
+    fills_section: dynamical_stability
+    tool: tools/electronic/uma_phonon.py
+    method: UMA Gamma-point finite-displacement phonons -> imaginary-mode count
+    compute: gabia (MLIP)
+    cost: medium
+    confidence: B
+    gate: cost_gate
+
+  testable_predictions:
+    fills_section: testable_predictions
+    derived_from: [structure_chemistry (XPS S2p/B1s/P2p order), dynamical_stability (Raman/IR P-O), bond (NMR 11B/31P)]
+    method: aggregated fingerprints for experimental validation
+    compute: derived (no new run)
+    confidence: B
+
+# future (v2): surrogate AI layer trained on cascade descriptors -> report-card labels
+# (active learning). NOT in v1. The screening<->deep comparison per card is the seed data.
