@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
-"""anode_interface_stability.py — is the SE stable against a Li-METAL anode?
+"""anode_interface_stability.py — what does the SE reduce to against a Li-METAL anode?
 
-The decisive calc flagged by external review (b2o3 report card #1). Uses the
-CLOSED pymatgen InterfacialReactivity (Richards/Ong 2016, Wenzel/Janek anode
-picture): the most-exothermic mutual reaction between the SE and Li metal along
-the SE-Li tie-line. Li metal = 0 V (the anode); a closed binary, so NO open Li
-reservoir (that breaks for a pure-Li partner -- use esw_grand_potential.py for
-voltage-resolved windows). Reports the reaction ENERGY (more negative = more
-reactive = LESS stable vs Li) and its PRODUCTS, and flags electronically-leaky
-products by MP band gap -> confirms/refutes the predicted BP/Li3P leaky reduction
-front and compares b2o3 vs undoped LPSCl1.6.
+The decisive calc flagged by external review (b2o3 report card #1). Uses the SAME
+grand-potential (open-Li) machinery as esw_grand_potential.py -- pymatgen
+`PhaseDiagram.get_element_profile(Li, SE)` -- to get the Li-chempot decomposition
+profile, and extracts the reaction at V ~ 0 (mu_Li = mu_Li(metal) = direct
+Li-metal contact = the anode). That reaction's PRODUCTS are the reduction
+interphase; their MP band gaps flag electronically-leaky (non-passivating) phases.
+Compares b2o3 vs undoped LPSCl1.6 -> does doping worsen Li-metal stability?
+
+(NOTE: a closed InterfacialReactivity(SE, Li) is wrong here -- the SE is not an MP
+phase, so use_hull_energy projects it onto the hull and the SE/Li reaction reads
+~0. The open-Li profile is the correct electrochemical-reduction picture.)
 
 Run on gabia/kserver116 (MP_API_KEY set, pymatgen + mp_api):
   python3 tools/oxidation/anode_interface_stability.py \
@@ -33,7 +35,6 @@ def main():
 
     from pymatgen.core import Composition, Element
     from pymatgen.analysis.phase_diagram import PhaseDiagram
-    from pymatgen.analysis.interface_reactions import InterfacialReactivity
     from mp_api.client import MPRester
 
     elems = set()
@@ -52,9 +53,9 @@ def main():
                 gaps[f] = (round(float(d.band_gap), 2), float(d.energy_above_hull or 0))
 
     pd = PhaseDiagram(entries)
-    Li = Composition("Li")
-    mu0 = min(e.energy_per_atom for e in entries if e.composition.reduced_formula == "Li")
-    print(f"mu_Li(metal) = {mu0:.4f} eV/atom\n")
+    Li = Element("Li")
+    mu_ref = pd.el_refs[Li].energy_per_atom   # mu_Li(metal); V = mu_ref - mu
+    print(f"mu_Li(metal) = {mu_ref:.4f} eV/atom  (V = mu_ref - mu_Li; 0 V = Li metal)\n")
 
     def product_gaps(rxn):
         out = {}
@@ -70,33 +71,36 @@ def main():
     results = {}
     for spec in a.electrolytes:
         estr, _, elab = spec.partition(":"); elab = elab or estr
-        ir = InterfacialReactivity(Composition(estr), Li, pd, use_hull_energy=True)
-        me, rxn, kinks = 1e9, None, []
-        for k in ir.get_kinks():
-            idx, x, e, rk = k[0], k[1], k[2], k[3]
-            kinks.append({"x_Li": round(float(x), 3),
-                          "energy_eV_atom": round(float(e), 4), "reaction": str(rk)})
-            if float(e) < me:
-                me, rxn = float(e), str(rk)
-        pg = product_gaps(rxn)
+        profile = pd.get_element_profile(Li, Composition(estr))
+        steps = []
+        for p in profile:
+            steps.append({"V_vs_Li": round(mu_ref - float(p["chempot"]), 3),
+                          "evolution_Li": round(float(p["evolution"]), 4),
+                          "reaction": str(p["reaction"])})
+        steps.sort(key=lambda s: s["V_vs_Li"])
+        anode = steps[0]            # lowest V = nearest Li metal (most reduced)
+        red_lim = max((s["V_vs_Li"] for s in steps if s["evolution_Li"] > 1e-6), default=None)
+        pg = product_gaps(anode["reaction"])
         leaky = sorted(f"{p}({g})" for p, g in pg.items() if g < LEAKY_EV)
         results[elab] = {
             "composition": estr,
-            "max_rxn_energy_eV_atom": round(me, 4),   # most-exothermic = anode driving force
-            "reaction": rxn, "product_gaps_eV": pg, "leaky_products": leaky,
+            "anode_V_vs_Li": anode["V_vs_Li"],
+            "anode_reduction_reaction": anode["reaction"],
+            "reduction_limit_V": red_lim,        # cross-check vs esw (b2o3 ~1.72)
+            "product_gaps_eV": pg, "leaky_products": leaky,
             "min_product_gap_eV": (min(pg.values()) if pg else None),
-            "all_kinks": kinks}
+            "full_profile": steps}
         print(f"######## {elab} ({estr}) vs Li metal ########")
-        print(f"  max reaction energy = {me:.4f} eV/atom  (more negative = less stable vs Li)")
-        print(f"  reaction = {rxn}")
+        print(f"  reduction limit ≈ {red_lim} V (esw cross-check)")
+        print(f"  anode (V≈{anode['V_vs_Li']}) reduction: {anode['reaction']}")
         print(f"  product gaps = {pg}")
-        print(f"  LEAKY products (<{LEAKY_EV} eV) = {leaky or 'none'}\n")
+        print(f"  LEAKY products (<{LEAKY_EV} eV) = {leaky or 'none'}  | min gap = {results[elab]['min_product_gap_eV']}\n")
 
     Path(a.out).write_text(json.dumps({
-        "method": "closed pymatgen InterfacialReactivity (Richards/Ong 2016) SE vs Li metal (anode, 0 V); "
-                  "max (most-negative) mutual reaction energy = anode driving force. leaky_products = interphase "
-                  f"phases with MP gap < {LEAKY_EV} eV (electron-conducting -> non-passivating). MP GGA/GGA+U.",
-        "mu_Li_metal_eV": round(mu0, 4), "leaky_threshold_eV": LEAKY_EV,
+        "method": "pymatgen get_element_profile(Li, SE) (open-Li, same as esw_grand_potential); reaction at "
+                  "V~0 (mu_Li=metal) = Li-metal reduction interphase. leaky_products = phases with MP gap < "
+                  f"{LEAKY_EV} eV (electron-conducting -> non-passivating). MP GGA/GGA+U. Compare b2o3 vs LPSCl1.6.",
+        "mu_Li_metal_eV": round(mu_ref, 4), "leaky_threshold_eV": LEAKY_EV,
         "results": results}, indent=2))
     print(f"-> {a.out}")
 
