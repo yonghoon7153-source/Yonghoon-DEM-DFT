@@ -33,6 +33,19 @@ porosity **MPM 15.45 % / DEM 14.28 %** · thickness 113.4 µm · SE/solid 33.2 %
 - **morphology**: VGCF 섬유 / SuperP 응집 / PTFE 섬유망이 자연스럽게 깔렸나 (도전재 3D).
 - **σ_e / σ_ion** (STEP 3, network 확장 후): carbon 전자경로↑ / SE점유 σ_ion↓ → 실측 대조.
 
+### 형상 메모 — VGCF waviness (2026-06-30)
+이전 VGCF는 완벽한 직선(curl=0)이라 뷰어에서 artifact처럼 보였음.  실제 VGCF(기상성장
+탄소섬유)는 SEM상 곧은 막대가 아니라 **본질적으로 물결치는(wavy)** 필라멘트 → `mpm3d_compaction.py`
+ADD dict의 VGCF `curl 0.0 → 0.06`(gentle as-grown waviness; PTFE 0.4=tangled과 구분).
+- **porosity 검증에 영향 없음**: curl은 경로 모양만 바꾸고 per-point 부피(`add_pvs·w`)는 보존 →
+  volume-fill porosity·예측(13.79%) 불변.  STEP 1 이후 GPU 코드 pull 후 재-run하면 형상만 개선됨.
+- **지름 균일 유지**: `vol_conserve`를 `vcv>0`에만 묶어(drawing=PTFE 전용) VGCF는 curl을 줘도
+  제조상 일정 Ø(150nm) 유지.  `curl`은 grid step 단위라 waviness ∝ curl·√(L/step) — n_grid에
+  따라 약간 민감, 너무 곧/과하게 꼬이면 curl만 튜닝.
+- 가압 중 휨: VGCF는 최강성 상(E=10≫SE 1.53, σ_y=2.0≫0.3 가압)이라 거의 탄성·평행이동;
+  MPM에 굽힘(beam) 항이 없어 능동적 좌굴은 미표현 → 압축 후 추가 휨은 SE 흐름에 의한 수동
+  왜곡뿐.  좌굴까지 보려면 fibre beam/bond 모델이 필요(차후 검토).
+
 ## 실행 로그
 | # | 조건 | mixing | por_pred | por_meas | thick_meas | 판정 | 비고 |
 |---|---|---|---|---|---|---|---|

@@ -106,9 +106,13 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
     L_cv>0 → per-fibre length is lognormal (mean L, CV L_cv), mean-preserving: the recipe
     count/volume is unchanged, only the lengths spread (real VGCF: 5-20µm from milling).
 
-    curl>0 → SOFT fibril: the path is a persistent random walk (worm-like chain) with a per-step
-    direction kick ~curl rad, instead of a straight rod.  curl=0 → straight (stiff VGCF — a real
-    graphite fibre is rigid).  PTFE fibrils are roll-shear-DRAWN into a tangled, curved web → curl≈0.4.
+    curl>0 → the path is a persistent random walk (worm-like chain) with a per-step direction kick
+    ~curl rad, instead of a straight rod.  curl=0 → perfectly straight.  VGCF uses a SMALL curl
+    (~0.06) for as-grown graphite-fibre waviness — real VGCF is wavy, not laser-straight (axially
+    stiff, so it doesn't bend much MORE under load, but it isn't a ruler either; perfectly straight
+    rods read as an artifact).  PTFE fibrils are roll-shear-DRAWN into a tangled, curved web → curl≈0.4.
+    NOTE: the per-step kick is in grid steps, so total waviness ∝ curl·√(L/step) — mildly resolution-
+    sensitive; tune curl per n_grid if a run looks too straight/too coiled.
 
     vol_conserve → CONSTANT-VOLUME DRAWING (PTFE fibrillation): each fibril starts as a PTFE node of
     volume V_i (varied by vol_cv — real PTFE has a particle/agglomerate SIZE distribution) and is drawn
@@ -251,7 +255,7 @@ ADDITIVE_PROCESS = {
         'handmix':  dict(regime='bulk',       k=8, surface_frac=0.30, step=0.9, clump=4),
     },
     'VGCF': {    # 1D fibre — morph = intended fibre treatment (TBD A4/lit; not yet seeded per-mixing)
-        'ballmill': dict(regime='bulk',       morph='straight fibre, well dispersed'),
+        'ballmill': dict(regime='bulk',       morph='gently wavy fibre, well dispersed'),
         'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
         'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
     },

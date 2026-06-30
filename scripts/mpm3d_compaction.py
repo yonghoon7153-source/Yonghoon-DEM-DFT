@@ -512,10 +512,10 @@ def main(argv):
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
             ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac, branch_frac, bridge_frac).
-                #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl>0 → tangled worm-like fibril (PTFE);
+                #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl = path waviness (VGCF small ~0.06 = gentle as-grown wave; PTFE 0.4 = tangled web);
                 #   vol_cv>0 → initial node-volume spread (drawn d∝√(V/L)); nuc_frac → fraction nucleating on carbon
                 #   (CBD); branch_frac → ② spawn thinner secondary fibrils; bridge_frac → ④ steer toward a 2nd carbon.
-                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, 0.0,  0.0, 0.0, 0.0, 0.0),   # stiff straight
+                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, 0.06, 0.0, 0.0, 0.0, 0.0),   # stiff fibre, gentle as-grown waviness (real VGCF is wavy, not laser-straight)
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, 0.40, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD
             }
@@ -538,7 +538,7 @@ def main(argv):
                 if kind == 'fibre':
                     nuc = np.concatenate(carbon_seed) if ((nucf > 0.0 or brgf > 0.0) and carbon_seed) else None
                     pts, _fid, _w = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
-                                                    curl=curl, vol_conserve=(curl > 0.0 or vcv > 0.0),
+                                                    curl=curl, vol_conserve=(vcv > 0.0),   # Ø-spread = drawing (PTFE vcv>0) ONLY; VGCF gets waviness (curl>0) but keeps a uniform manufactured Ø
                                                     vol_cv=vcv, nucleate=nuc, nucleate_frac=nucf,
                                                     branch_frac=brf, bridge_frac=brgf,
                                                     in_am=lambda q: _in_am_abs(q + off),
