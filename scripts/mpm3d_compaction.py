@@ -527,6 +527,11 @@ def main(argv):
             for nm, (E, nu, sy, code, kind, L_um, curl, vcv, nucf, brf, brgf) in ADD.items():
                 if nm not in cnt:
                     continue
+                # ★ A4 HOOK — placement regime for this (additive, mixing) from the process matrix.
+                # 'coat_block'/'coat_embed' (Super P/VGCF dry-coat) SHOULD seed in the SE-coating layer
+                # on the AM surface, not the bulk interstices.  Not yet implemented → every regime seeds
+                # as bulk today; the regime is recorded here so the A4 se_coating result plugs in.
+                _proc_regime = _ad.additive_regime(nm, args.mixing)
                 nobj = cnt[nm]['n']                          # target PRIMARY-fibre count (VGCF/PTFE centreline
                 #   skeleton; SuperP = aggregate count) — recipe wt%/vol% tracked in metrics + per-point pvs
                 #   (branching adds children but the mean-1 weight normalisation preserves the recipe volume).
@@ -574,6 +579,7 @@ def main(argv):
                     _coh, _cap, _reg = 0.0, 0.0, '—'
                 coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
                 _bind = (f" binder_cap={_cap:.2f} [{_reg}] (opt {args.binder_opt_wt}wt%)" if code == 4 else "")
+                _bind += f" regime={_proc_regime}" + ("  (A4: coat seeding TBD → bulk)" if _proc_regime != 'bulk' else "")
                 print(f"  [additives] {nm}: {nobj} objects ({cnt[nm]['wt_pct']}wt% = "
                       f"{cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
                       f"(E={E} σ_y={sy} coh={_coh}, phase {code}){_bind}")

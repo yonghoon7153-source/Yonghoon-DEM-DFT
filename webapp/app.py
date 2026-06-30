@@ -5240,7 +5240,13 @@ def mpm_input_package(case_id):
             return max(0.0, min(10.0, float(request.args.get(name, 0.0))))
         except ValueError:
             return 0.0
-    recipe = _add_recipe_str(_addf('vgcf'), _addf('superp'), _addf('ptfe'))
+    _vg, _sp, _pt = _addf('vgcf'), _addf('superp'), _addf('ptfe')
+    # VGCF + Super P are both conductive carbon → mutually exclusive.
+    if _vg > 0 and _sp > 0:
+        shutil.rmtree(tmp, ignore_errors=True)
+        return jsonify({'error': 'VGCF와 Super P는 함께 사용 불가 — 도전재는 하나만 '
+                                 '(VGCF/Super P/PTFE/VGCF+PTFE/Super P+PTFE)'}), 400
+    recipe = _add_recipe_str(_vg, _sp, _pt)
     mixing = request.args.get('mixing', 'thinky')
     if mixing not in ('ballmill', 'thinky', 'handmix'):
         mixing = 'thinky'

@@ -1673,6 +1673,12 @@ def whatif_additives(metrics: dict, vgcf_wt: float = 0.0, superp_wt: float = 0.0
                 blocks CAM–CAM.  VGCF stays high (embedded, σ_e ≈ no-CA, Kim2025 1.4e-2).
                 ⇒ the carbon-density sign FLIPS with position (bulk boost ↔ coating block).
     """
+    # VGCF and Super P are both conductive carbon → mutually exclusive (use one OR the
+    # other). Valid combos: VGCF / Super P / PTFE / VGCF+PTFE / Super P+PTFE.
+    if vgcf_wt > 0 and superp_wt > 0:
+        return {'available': False,
+                'reason': 'VGCF와 Super P는 함께 사용 불가 — 도전재는 하나만 (유효 조합: '
+                          'VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE)'}
     sig_e = (metrics.get('electronic_sigma_full_mScm_stage_e_physics')
              or metrics.get('electronic_sigma_full_mScm_physics')
              or metrics.get('electronic_sigma_full_mScm_stage_e')
@@ -1689,7 +1695,20 @@ def whatif_additives(metrics: dict, vgcf_wt: float = 0.0, superp_wt: float = 0.0
     por = float(por) * (100.0 if (por is not None and por <= 1.0) else 1.0) if por is not None else None
 
     carbon_wt = max(0.0, vgcf_wt) + max(0.0, superp_wt)
-    coating = (mixing == 'thinky')                       # dry-coat → carbon in SE-coating-on-CAM
+    # per-additive PROCESS regime from the (additive × mixing) matrix (additives.py) —
+    # single source of truth shared with the MPM seeding. 'coat_block' (Super P dry-coat)
+    # → σ_e collapse; 'coat_embed' (VGCF dry-coat) → σ_e ~recovers (A4 magnitude TBD,
+    # today = bulk); 'bulk' → boost.
+    try:
+        import sys as _sys, os as _os
+        _sd = _os.path.dirname(__file__)
+        if _sd not in _sys.path:
+            _sys.path.insert(0, _sd)
+        from additives import additive_regime
+    except Exception:
+        additive_regime = lambda name, m: ('coat_block' if (name == 'SuperP' and m == 'thinky') else 'bulk')
+    reg_sp = additive_regime('SuperP', mixing)
+    reg_vgcf = additive_regime('VGCF', mixing)
     flags, notes = {}, []
 
     # ── σ_e (electronic) ────────────────────────────────────────────────────
@@ -1701,12 +1720,17 @@ def whatif_additives(metrics: dict, vgcf_wt: float = 0.0, superp_wt: float = 0.0
     eff = 1.0 + 0.6 * (vgcf_wt - superp_wt) / max(carbon_wt, 1e-9) if carbon_wt > 0 else 1.0
     d_sig_e = (phi_C ** 2) * _SIGMA_C_MSCM * g_perc * max(eff, 0.2)
     sig_e_new = sig_e + d_sig_e
-    if coating and superp_wt > 0:                        # ★ Super P-rich SE-coating → σ_e collapse
+    if reg_sp == 'coat_block' and superp_wt > 0:         # ★ Super P-rich SE-coating → σ_e collapse
         block = 10.0 ** (-3.0 * _sat(superp_wt / 2.9))   # 2.9 wt% → 3 decades (Kim2025); scales w/ wt
         sig_e_new *= block
         flags['superp_coating_collapse'] = round(block, 4)
-        notes.append(f'thinky(dry-coat)+Super P → σ_e ×{block:.3g} 붕괴 (Kim2025 SE–SP@CAM, '
+        notes.append(f'{mixing}(dry-coat)+Super P [coat_block] → σ_e ×{block:.3g} 붕괴 (Kim2025 SE–SP@CAM, '
                      'Super P-rich coating이 CAM–CAM 전기연결 차단). VGCF면 회복.')
+    if reg_vgcf == 'coat_embed' and vgcf_wt > 0:         # VGCF dry-coat embeds in porous SE coat
+        # ★ A4 HOOK: Kim2025 SE–VGCF@CAM → σ_e RECOVERS to ≈ no-CA (not a full bulk boost).
+        # Structural slot present; the embed σ magnitude is TBD until the A4 GPU result —
+        # today it leaves σ_e as the bulk estimate (no change), only flags the regime.
+        flags['vgcf_coat_embed'] = True                  # A4: set σ_e ≈ baseline-recover here
     if ptfe_wt > 0:                                      # PTFE insulator: mild σ_e drag
         sig_e_new *= (1.0 - 0.03 * ptfe_wt)
     sig_e_new = max(sig_e_new, 0.0)
@@ -1729,8 +1753,9 @@ def whatif_additives(metrics: dict, vgcf_wt: float = 0.0, superp_wt: float = 0.0
                          f'void-fill); σ_ion은 binder 점유로 ×{_PTFE_SION_PER_WT ** ptfe_wt:.2f} '
                          '감소(densification 이득 상회).')
     if carbon_wt > 0:
-        notes.append(('VGCF/Super P bulk' if not coating else 'thinky coating')
-                     + f' carbon {carbon_wt:g} wt% (p_c≈4): σ_e {("↑" if d_sig_e>0 else "·")}'
+        _rg = ((f'Super P={reg_sp}' if superp_wt > 0 else '') + (' ' if superp_wt > 0 and vgcf_wt > 0 else '')
+               + (f'VGCF={reg_vgcf}' if vgcf_wt > 0 else ''))
+        notes.append(f'carbon {carbon_wt:g} wt% (p_c≈4, mixing={mixing} → {_rg}): σ_e {("↑" if d_sig_e>0 else "·")}'
                      + (f', Super P가 σ_ion {1-_SION_BLOCK_SUPERP:.2f}/wt로 VGCF({1-_SION_BLOCK_VGCF:.2f}/wt)보다 더 막음'
                         if superp_wt > 0 else ''))
 

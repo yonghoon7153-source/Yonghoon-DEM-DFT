@@ -222,15 +222,57 @@ def seed_blobs(n, box_um, rng, in_am=None):
 
 SP_AGG = 0.18         # Super P aggregate size µm (40nm primaries → 150-200nm branched aggregate; lit)
 
-# mixing presets — carbon black morphology depends strongly on the dispersion energy (lit):
-#   ball-mill / Thinky (planetary): high shear breaks agglomerates → SHORT aggregates, UNIFORM,
-#     intimately COATING the active material (high surface fraction, porous network).
-#   hand-mixing: gentle → large AGGLOMERATES survive, LONGER clustered chains, NON-uniform, less coating.
-CB_MIX = {
-    'ballmill': dict(k=3, surface_frac=0.70, step=0.7, clump=1),   # short, uniform, AM-coating
-    'thinky':   dict(k=3, surface_frac=0.70, step=0.7, clump=1),   # planetary ≈ ball-mill dispersion
-    'handmix':  dict(k=8, surface_frac=0.30, step=0.9, clump=4),   # long, clustered agglomerates
+# ── ADDITIVE × MIXING process matrix (the A4 plug-board) ─────────────────────────
+# Every (additive, mixing) combination is an INDEPENDENT, explicit slot so each can
+# carry its own process physics.  `regime` says WHERE the additive ends up:
+#   'bulk'       — in the particle interstices (current default; W2 σ_e BOOST).
+#   'coat_block' — carbon inside the SE-coating-on-CAM layer, blocking CAM–CAM
+#                  contact → W2 σ_e COLLAPSE (Super P dry-coat; Kim2025 SE–SP@CAM 1.0e-5).
+#   'coat_embed' — carbon embedded in a porous SE coating, still conductive → W2 σ_e
+#                  ~RECOVERS (VGCF dry-coat; Kim2025 SE–VGCF@CAM 1.4e-2 ≈ no-CA).
+# ★ A4 HOOK: the *structural seeding* for the 'coat_*' regimes (placing carbon in the
+#   SE-coating layer rather than bulk interstices) is NOT yet implemented in the MPM
+#   (mpm3d_compaction seeds every regime as bulk today).  These cells are pre-wired so
+#   that when the A4 se_coating GPU results land you only fill (i) the coating seeding
+#   in mpm3d_compaction and (ii) the embed/block σ magnitudes in grade_engine — no
+#   plumbing.  Morphology fields beyond Super P's CB params are descriptive intent
+#   (TBD A4/lit) and are NOT yet read by the fibre seeder, so behaviour is unchanged.
+#   mixing energy (lit): ball-mill/Thinky = high shear → short, uniform, AM-coating;
+#   hand-mix = gentle → long, clustered agglomerates (less dispersion).
+ADDITIVE_PROCESS = {
+    'SuperP': {  # 0D carbon black — k/surface_frac/step/clump consumed by seed_carbon_black
+        'ballmill': dict(regime='bulk',       k=3, surface_frac=0.70, step=0.7, clump=1),
+        'thinky':   dict(regime='coat_block', k=3, surface_frac=0.70, step=0.7, clump=1),  # dry-coat → blocks CAM–CAM
+        'handmix':  dict(regime='bulk',       k=8, surface_frac=0.30, step=0.9, clump=4),
+    },
+    'VGCF': {    # 1D fibre — morph = intended fibre treatment (TBD A4/lit; not yet seeded per-mixing)
+        'ballmill': dict(regime='bulk',       morph='straight fibre, well dispersed'),
+        'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
+        'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
+    },
+    'PTFE': {    # binder fibril — morph = intended fibrillation degree (TBD A4/lit)
+        'ballmill': dict(regime='bulk',       morph='fibrillated binder web'),
+        'thinky':   dict(regime='bulk',       morph='dry-process fibrillation (TBD A4)'),
+        'handmix':  dict(regime='bulk',       morph='less fibrillated, clumpy (TBD A4)'),
+    },
 }
+
+# backward-compat: Super P carbon-black mixing presets consumed by seed_carbon_black.
+# Derived from the matrix above (drop the non-CB keys) so there is ONE source of truth.
+CB_MIX = {m: {k: v for k, v in cfg.items() if k in ('k', 'surface_frac', 'step', 'clump')}
+          for m, cfg in ADDITIVE_PROCESS['SuperP'].items()}
+
+
+def additive_process(name, mixing):
+    """Process cell for an (additive, mixing) pair; falls back to ball-mill / bulk."""
+    a = ADDITIVE_PROCESS.get(name, {})
+    return a.get(mixing) or a.get('ballmill') or {'regime': 'bulk'}
+
+
+def additive_regime(name, mixing):
+    """Placement regime for (additive, mixing): 'bulk' | 'coat_block' | 'coat_embed'.
+    The single source of truth shared by the W2 σ estimate and (future A4) MPM seeding."""
+    return additive_process(name, mixing).get('regime', 'bulk')
 
 
 def seed_carbon_black(n, box_um, dx_um, rng, in_am=None, am=None, mixing='ballmill', return_ids=False):

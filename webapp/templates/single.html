@@ -261,7 +261,12 @@
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
       <div id="add-result" style="margin-top:12px; font-size:0.86em; color:#cbd5e1"></div>
-      <div style="margin-top:8px; font-size:0.76em; color:#64748b; line-height:1.5">
+      <div style="margin-top:8px; font-size:0.78em; color:#fbbf24; line-height:1.5">
+        ⚠ <b>조합 규칙</b>: VGCF·Super P는 함께 쓸 수 없음(둘 다 도전재 → 하나만).
+        유효 = <b>VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE</b>.  mixing은 <b>Super P에만</b> 적용
+        (thinky=dry-coat → σ_e 붕괴 / ball·hand-mix=bulk → σ_e↑); VGCF·PTFE는 mixing 무관(슬롯은 A4용 예약).
+      </div>
+      <div style="margin-top:6px; font-size:0.76em; color:#64748b; line-height:1.5">
         문헌 앵커: <b>PTFE</b> void −6.4 %p · σ_ion ×0.74 /wt (Hong 2026) · <b>carbon</b> e-percolation p_c≈4 wt% (Reisacher 2023) ·
         <b>Super P</b> thinky(dry-coat) 시 σ_e 붕괴(~3 decade, Kim 2025) ↔ bulk 시 σ_e↑ (위치-의존 반전) ·
         Super P가 σ_ion을 VGCF보다 ~1.8× 더 막음(voxel). <i>해석 추정 — 풀 MPM-additive run(② zip→GPU)이 교차검증.</i>
@@ -485,10 +490,21 @@ function _addVals() {
     mix: document.getElementById('add-mixing').value,
   };
 }
+// VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
+// Valid combos: VGCF / Super P / PTFE / VGCF+PTFE / Super P+PTFE.
+function _addExclusiveOK() {
+  const { vg, sp } = _addVals();
+  if (vg > 0 && sp > 0) {
+    alert('⚠ VGCF와 Super P는 함께 사용할 수 없습니다.\n\n둘 다 도전재(carbon)라 하나만 선택하세요 (VGCF 또는 Super P).\nPTFE(바인더)는 둘 중 하나와 같이 쓸 수 있습니다.\n\n유효 조합: VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE');
+    return false;
+  }
+  return true;
+}
 async function recalcAdditives() {
   const { vg, sp, pt, mix } = _addVals();
   const box = document.getElementById('add-result');
   if (vg <= 0 && sp <= 0 && pt <= 0) { box.innerHTML = '<span style="color:#94a3b8">첨가제 wt%를 하나 이상 입력하세요.</span>'; return; }
+  if (!_addExclusiveOK()) { box.innerHTML = '<span style="color:#ef4444">⚠ VGCF + Super P 동시 사용 불가 — 도전재는 하나만 선택하세요.</span>'; return; }
   box.innerHTML = '… 계산 중';
   try {
     const r = await fetch(`/case/${encodeURIComponent('{{ case.id }}')}/whatif-additives?vgcf=${vg}&superp=${sp}&ptfe=${pt}&mixing=${mix}`);
@@ -513,6 +529,7 @@ async function recalcAdditives() {
 function dlAdditiveZip() {
   const { vg, sp, pt, mix } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
+  if (!_addExclusiveOK()) return false;
   window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&mixing=${mix}`;
   return false;
 }
