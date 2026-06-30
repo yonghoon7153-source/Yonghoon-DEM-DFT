@@ -12,7 +12,7 @@ HOMOGENISED phase (a fibre = a chain of points along its axis; carbon black = a
 small blob), evenly distributed through the box (optionally avoiding the fixed AM).
 
 Recipe → count chain (densities g/cm³, literature):
-  AM(NMC811) 4.80 · SE(Li6PS5Cl) 1.64 · VGCF 2.00 · SuperP 1.90 · PTFE 2.20
+  AM(NMC811) 4.80 · SE(Li6PS5Cl) 2.00 · VGCF 2.00 · SuperP 1.90 · PTFE 2.20
   wt%  --(/ρ)-->  vol%  --(× solid_vol)-->  phase volume  --(/ vol-per-object)-->  N
 VGCF Ø≈0.15 µm, L≈10 µm (aspect ≈67);  SuperP aggregate ≈0.2 µm.
 
@@ -22,7 +22,12 @@ from __future__ import annotations
 import argparse
 import numpy as np
 
-DENS = {'AM': 4.80, 'SE': 1.64, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20}  # g/cm³
+DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20}  # g/cm³
+#   SE=2.00 = PROJECT CONVENTION (matches porosity_physics_regression RHO_SE + grade_engine);
+#   real Li6PS5Cl crystallographic ≈ 1.85–1.88 (2.0 is the project's slightly-high standard).
+#   Aligned 2026-06-30 (was 1.64, an out-of-band low value) so the zip additive counts use the
+#   SAME SE density as the closed porosity model. ⚠ grade_engine.py:1217 still uses 1.85 (separate
+#   composite-density calc) — flagged for the user; not changed here.
 PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4}                 # save-phase codes
 # default geometry (µm)
 VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
