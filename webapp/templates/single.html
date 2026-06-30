@@ -261,6 +261,16 @@
       </div>
       <!-- GPU 실행 명령어 (첨가제 zip 파일명은 선택에 따라 동적 — JS가 채움) -->
       <div id="add-gpu-cmds" style="margin-top:8px"></div>
+      <!-- ③ 첨가제 결과 업로드 → 변종 이름으로 MPM 뷰어 -->
+      <div style="margin-top:10px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:0.85em; color:#cbd5e1">
+        <span>③ 결과 업로드 →</span>
+        <input type="file" id="add-payload-file" accept=".json">
+        <button class="btn btn-secondary" onclick="uploadAdditiveResult()">MPM 뷰어로 보기</button>
+        <span id="add-upload-status" style="color:#888; font-size:0.92em"></span>
+      </div>
+      <div style="margin-top:3px; font-size:0.74em; color:#64748b">
+        run_mpm.sh가 만든 <code>mpm_payload.json</code>을 올리면 <b id="add-variant-name">…</b> 이름으로 MPM 뷰어에 저장돼 (베이스 케이스 안 덮어씀).
+      </div>
       <div style="margin-top:10px; font-size:0.78em; color:#fbbf24; line-height:1.5">
         ⚠ <b>조합 규칙</b>: VGCF·Super P는 함께 쓸 수 없음(둘 다 도전재 → 하나만).
         유효 = <b>VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE</b>.  mixing은 <b>Super P seeding에만</b> 영향
@@ -515,13 +525,22 @@ function _addRecipeStr(vg, sp, pt) {
   const parts = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt]].filter(p => p[1] > 0);
   return parts.length ? parts.map(p => p[0]).join(':') + '=' + parts.map(p => '' + p[1]).join(':') : '';
 }
+// variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
+function _addTag() {
+  const { vg, sp, pt, mix } = _addVals();
+  const recipe = _addRecipeStr(vg, sp, pt);
+  return recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') + '_' + mix : '';
+}
+function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
   const { vg, sp, pt, mix } = _addVals();
+  const vn = document.getElementById('add-variant-name');
+  if (vn) vn.textContent = _addVariantName() || '…';
   if ((vg <= 0 && sp <= 0 && pt <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
   const recipe = _addRecipeStr(vg, sp, pt);
-  const tag = recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') + '_' + mix : '';
+  const tag = _addTag();
   const zip = `mpm_input_${'{{ case.id }}'}${tag}.zip`;
   const DL = '/mnt/c/Users/안용훈/Downloads', SRV = 'root@121.78.116.27', WK = '/root/work/Yonghoon-DEM-DFT';
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
@@ -531,6 +550,25 @@ function updateAdditiveGpuCmds() {
     + blk('# 1) WSL → GPU 업로드 (② 버튼으로 zip 받은 뒤)', `scp "${DL}/${zip}" ${SRV}:${WK}/`)
     + blk(`# 2) GPU에서 실행 (먼저: ssh ${SRV})`, `cd ${WK}\ngit pull\nunzip -o ${zip}\nbash run_mpm.sh`)
     + blk('# 3) 결과 → WSL (그다음 ③ 결과 업로드)', `scp ${SRV}:${WK}/mpm_payload.json ${SRV}:${WK}/mpm_metrics.json ${DL}/`);
+}
+// ③ upload the additive run's mpm_payload.json as a NAMED variant in the MPM lab, then jump to the viewer.
+async function uploadAdditiveResult() {
+  const { vg, sp, pt } = _addVals();
+  if (vg <= 0 && sp <= 0 && pt <= 0) { alert('첨가제 조건(wt%)을 먼저 그대로 두세요 — 변종 이름에 들어갑니다.'); return; }
+  if (!_addExclusiveOK()) return;
+  const file = document.getElementById('add-payload-file').files[0];
+  if (!file) { alert('업로드할 mpm_payload.json을 선택하세요.'); return; }
+  const name = _addVariantName();
+  const status = document.getElementById('add-upload-status');
+  status.textContent = '업로드 중…';
+  const fd = new FormData(); fd.append('payload', file); fd.append('name', name);
+  try {
+    const r = await fetch('/mpm-lab/upload', { method: 'POST', body: fd });
+    const j = await r.json();
+    if (!j.ok) { status.innerHTML = `<span style="color:#ef4444">✗ ${j.error || '실패'}</span>`; return; }
+    status.innerHTML = `<span style="color:#10b981">✓ "${j.item.name}" 저장 — MPM 뷰어로 이동…</span>`;
+    setTimeout(() => { window.location = '/mpm-lab#' + j.item.id; }, 700);
+  } catch (e) { status.innerHTML = `<span style="color:#ef4444">✗ ${e.message}</span>`; }
 }
 
 let cur3dMode = null;

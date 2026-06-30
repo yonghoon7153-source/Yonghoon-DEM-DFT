@@ -221,5 +221,12 @@ function labRenameStart(span) {
     else if (e.key === 'Escape') finish(false);
   });
 }
+// auto-open a payload when arriving with /mpm-lab#<id> (e.g. from the case-page 첨가제 업로드).
+window.addEventListener('DOMContentLoaded', () => {
+  const id = decodeURIComponent((location.hash || '').slice(1));
+  if (!id) return;
+  const row = document.querySelector(`tr[data-id="${CSS.escape(id)}"]`);
+  if (row) labOpen(id, row.dataset.add === '1' ? 1 : 0, null);
+});
 </script>
 {% endblock %}
