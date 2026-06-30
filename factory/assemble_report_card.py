@@ -30,10 +30,6 @@ CORE_SECTIONS = ["screening", "transport", "thermodynamic_stability", "electroch
 # descriptors a credible SE pipeline still owes (audit finding 9) — declared n.a. so
 # reviewers see they are acknowledged, not forgotten.
 ROADMAP_SECTIONS = {
-    "anode_interface_stability": "*** TOP PRIORITY (external review): the DECISIVE risk. Li-metal reduction at the "
-        "1.72 V limit produces LEAKY BP(1.08)/Li3P(0.7 eV) -> b2o3 is likely Li-metal-UNSTABLE. Run "
-        "interface_reactivity_v2.py open to a Li reservoir for the anode reaction energy + interphase products. "
-        "Until computed, NO positive recommendation for any candidate.",
     "critical_current_density": "dendrite resistance / CCD — most-requested SE metric; not computed.",
     "grain_boundary_transport": "bulk sigma != total sigma; GB often dominates.",
     "air_moisture_stability": "H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).",
@@ -109,6 +105,7 @@ SYSTEMS = {
             "coord": "b2o3_coordination_bonds.json",
             "charge_csv": "b2o3_charge_xps.csv",
             "bvse": "bvse_b2o3/b2o3_bvse_percolation.json",
+            "anode": "anode_interface_b2o3.json",
         },
         # electronic has no machine-readable summary -> curated (provenance honest).
         "electronic_manual": {"band_gap_eV": 1.97, "N_EF": 0.0,
@@ -307,6 +304,26 @@ def build(sysid, stamp=None):
                        "method": card[s].get("method"), "source": card[s].get("source"),
                        "caveats": "not yet computed — orchestrator plans this stage"}
 
+    # anode-interface stability (external review #1, NOW COMPUTED if the json exists)
+    an = jload(F.get("anode"))
+    if an and an.get("results"):
+        r = an["results"]
+        me = r.get(sysid) or next(iter(r.values()))
+        ref = r.get("LPSCl1.6")
+        card["anode_interface_stability"] = sec("done", confidence="B",
+            method="open-Li reduction profile (get_element_profile) at V~0 = Li-metal contact + MP product gaps",
+            source=f"db/properties/{F['anode']}",
+            verdict="Li-metal UNSTABLE",
+            reduction_reaction=me.get("anode_reduction_reaction"),
+            leaky_products=me.get("leaky_products"),
+            min_product_gap_eV=me.get("min_product_gap_eV"),
+            vs_undoped_min_gap_eV=(ref.get("min_product_gap_eV") if ref else None),
+            caveats=an.get("interpretation"))
+    else:
+        card["anode_interface_stability"] = sec("n.a.", confidence=None,
+            method="not computed", source="—",
+            caveats="run tools/oxidation/anode_interface_stability.py (Li-open) — decisive risk (external review #1)")
+
     # roadmap (acknowledged-but-not-computed) sections
     for k, why in ROADMAP_SECTIONS.items():
         card[k] = sec("n.a.", confidence=None, method="not in v1 pipeline", source="—", caveats=why)
@@ -314,21 +331,22 @@ def build(sysid, stamp=None):
     done = sum(1 for s in CORE_SECTIONS if card[s]["status"] == "done")
     if sysid == "b2o3":
         summary = ("B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; "
-                   "#6 of 47 by the global coating composite -- objective-dependent). SCREENED, NOT validated. "
-                   "Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), "
-                   "single-trajectory (error bars pending). Liabilities: NARROW ESW (0.31 V) with a LEAKY reduction "
-                   "interphase (BP 1.08 / Li3P 0.7 eV at a Li anode), metastable (+37.5 meV/atom), only Gamma-point "
-                   "phonons (full stability unproven). ANODE-INTERFACE stability -- the decisive risk -- is UNCOMPUTED. "
-                   "Verdict: favorable bulk transport, interface stability UNASSESSED.")
-        flags = ["transport:+(D0-driven,no-error-bars)", "ESW:narrow(0.31V)+leaky-interphase(BP/Li3P)",
-                 "stability:metastable(+37.5)+Gamma-only", "anode-interface:UNCOMPUTED(decisive)", "mechanical:pending"]
+                   "#6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises "
+                   "BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars "
+                   "pending). KEY TRADE-OFF: the bulk-transport gain comes WITH a WORSE Li-metal anode -- the B dopant "
+                   "adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7), so "
+                   "b2o3 is Li-metal-UNSTABLE and worse than undoped at the anode (needs an interlayer). Plus NARROW "
+                   "ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor, "
+                   "but a doping-WORSENED Li-metal interface is the headline liability.")
+        flags = ["transport:+(D0-driven,no-error-bars)", "anode:Li-metal-UNSTABLE(metallic-LiB,doping-WORSENED)",
+                 "ESW:narrow(0.31V)+leaky", "stability:metastable(+37.5)+Gamma-only", "mechanical:pending"]
         notes = ["transport is the robust result BUT single-trajectory/single-config -> Ea+-0.01 + 1.3x ratio need multi-seed error bars (within ~15-20% MD noise)",
                  "absolute sigma is MLIP upper bound (cite Ea + ratio, never the absolute number)",
-                 "ESW reduction interphase is LEAKY (BP 1.08 / Li3P 0.7 eV); passivation NOT demonstrated; 'compensated' framing dropped",
-                 "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too (not a doping-specific story)",
-                 "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways'; alternative motifs not energy-tested -> grade B",
-                 "ANODE-INTERFACE (Li-metal reduction), CCD/dendrite, GB, air/moisture, e-conductivity NOT computed -> NO positive recommendation until the anode interface is run",
-                 "elastic Cij pending (KISTI); electronic scalars curated (GGA single-config)"]
+                 "ANODE: doping WORSENS Li-metal stability -- b2o3 reduction interphase has METALLIC LiB (gap 0) from the B dopant (min gap 0 vs undoped Li3P 0.7). NOT a doping-neutral story. Thermodynamic products only (morphology/kinetics not modeled)",
+                 "ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped",
+                 "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too",
+                 "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B",
+                 "CCD/dendrite, GB, air/moisture, e-conductivity still NOT computed; elastic Cij pending; electronic curated (GGA)"]
     else:
         rk = card["screening"].get("rank")
         summary = (f"cascade rank-{rk} candidate {m['composition']}: deep validation PENDING "
@@ -374,6 +392,7 @@ def to_md(card):
             ("electronic", ["band_gap_eV", "N_EF", "vbm_character"]),
             ("structure_chemistry", ["coordination_motifs", "oxidation_states_bader_net"]),
             ("dynamical_stability", ["imaginary_modes", "verdict"]),
+            ("anode_interface_stability", ["verdict", "min_product_gap_eV", "vs_undoped_min_gap_eV", "leaky_products"]),
             ("testable_predictions", ["xps", "raman_ir", "nmr"])]
     for name, keys in rows:
         d = card[name]

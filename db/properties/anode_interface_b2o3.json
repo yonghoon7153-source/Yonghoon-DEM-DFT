@@ -1,0 +1,24 @@
+{
+  "method": "pymatgen get_element_profile(Li, SE) (open-Li, same as esw_grand_potential); reaction at V~0 (mu_Li=metal) = Li-metal reduction interphase. leaky_products = phases with MP gap < 2.0 eV (electron-conducting -> non-passivating). MP GGA/GGA+U. Compare b2o3 vs LPSCl1.6.",
+  "mu_Li_metal_eV": -2.3867,
+  "leaky_threshold_eV": 2.0,
+  "results": {
+    "b2o3": {
+      "composition": "Li58P8S41Cl16B2O3",
+      "anode_V_vs_Li": 0.0,
+      "anode_reduction_reaction": "Li58B2P8S41Cl16O3 -> 2 LiB + 3 Li2O + 8 Li3P + 16 LiCl + 41 S + 10 Li",
+      "product_gaps_eV": {"LiB": 0.0, "Li2O": 4.9, "LiCl": 6.65, "Li3P": 0.7, "S": 2.61},
+      "leaky_products": ["Li3P(0.7)", "LiB(0.0)"],
+      "min_product_gap_eV": 0.0
+    },
+    "LPSCl1.6": {
+      "composition": "Li5.4PS4.4Cl1.6",
+      "anode_V_vs_Li": 0.0,
+      "anode_reduction_reaction": "Li5.4P1S4.4Cl1.6 -> Li3P + 1.6 LiCl + 4.4 S + 0.8 Li",
+      "product_gaps_eV": {"LiCl": 6.65, "S": 2.61, "Li3P": 0.7},
+      "leaky_products": ["Li3P(0.7)"],
+      "min_product_gap_eV": 0.7
+    }
+  },
+  "interpretation": "Both SEs are Li-metal-UNSTABLE (reduce to Li3P 0.7 eV leaky, sulfide-generic). BUT b2o3's B dopant ADDS a METALLIC LiB phase (gap 0.0) to the anode interphase -> min gap 0.0 vs undoped 0.7 -> doping WORSENS Li-metal electronic stability. b2o3 also adds Li2O (4.9, passivating). Net: b2o3 needs an anode interlayer more than undoped. Thermodynamic products only; morphology/kinetics not modeled."
+}

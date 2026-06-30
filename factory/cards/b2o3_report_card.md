@@ -1,10 +1,10 @@
 # Report card — b2o3 (Li58P8S41Cl16B2O3)
 
 **구조** `db/structures/b2o3_relaxV0.cif` (128 atom) · DFT V0 fixed-cell relax (B2O3-doped LPSCl1.6 champion)
-**완성도** 8/9 core sections done; 5 descriptors on roadmap · schema 0.2 · generated 2026-06-30T04:07:46.708349+00:00
+**완성도** 8/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T06:09:30.906368+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
-> B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; #6 of 47 by the global coating composite -- objective-dependent). SCREENED, NOT validated. Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars pending). Liabilities: NARROW ESW (0.31 V) with a LEAKY reduction interphase (BP 1.08 / Li3P 0.7 eV at a Li anode), metastable (+37.5 meV/atom), only Gamma-point phonons (full stability unproven). ANODE-INTERFACE stability -- the decisive risk -- is UNCOMPUTED. Verdict: favorable bulk transport, interface stability UNASSESSED.
+> B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; #6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars pending). KEY TRADE-OFF: the bulk-transport gain comes WITH a WORSE Li-metal anode -- the B dopant adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7), so b2o3 is Li-metal-UNSTABLE and worse than undoped at the anode (needs an interlayer). Plus NARROW ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor, but a doping-WORSENED Li-metal interface is the headline liability.
 
 ## Screening (upstream cascade)
 - **cascade_v23 / B2O3_x010** rank=1 score=0.85 (cascade_v23 champions (rank_combined / combined_score))
@@ -22,10 +22,10 @@
 | electronic | done | B | band_gap_eV=1.97, N_EF=0.0, vbm_character=S 3p ~89.5% (free-S shallowest) |
 | structure_chemistry | done | B | coordination_motifs=trigonal BS3; PS4 thiophosphate + P-O phosphate (PS4-xOx); free-S2- (isolate |
 | dynamical_stability | done | B | imaginary_modes=0, verdict=no Gamma-point imaginary modes (NECESSARY, not sufficient) |
+| anode_interface_stability | done | B | verdict=Li-metal UNSTABLE, min_product_gap_eV=0.0, vs_undoped_min_gap_eV=0.7, leaky_products=Li3 |
 | testable_predictions | done | B | xps=S 2p: free-S2-(low BE) < PS4-S < B-S/BS3(high BE shoulder); B 1s B3+; P 2p P5+ (PS4-xOx), ra |
 
 ## Roadmap descriptors (acknowledged, not yet computed)
-- **anode_interface_stability** (n.a.): *** TOP PRIORITY (external review): the DECISIVE risk. Li-metal reduction at the 1.72 V limit produces LEAKY BP(1.08)/Li3P(0.7 eV) -> b2o3 is likely Li-metal-UNSTABLE. Run interface_reactivity_v2.py open to a Li reservoir for the anode reaction energy + interphase products. Until computed, NO positive recommendation for any candidate.
 - **critical_current_density** (n.a.): dendrite resistance / CCD — most-requested SE metric; not computed.
 - **grain_boundary_transport** (n.a.): bulk sigma != total sigma; GB often dominates.
 - **air_moisture_stability** (n.a.): H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).
@@ -34,11 +34,11 @@
 ## 정직한 한계
 - transport is the robust result BUT single-trajectory/single-config -> Ea+-0.01 + 1.3x ratio need multi-seed error bars (within ~15-20% MD noise)
 - absolute sigma is MLIP upper bound (cite Ea + ratio, never the absolute number)
-- ESW reduction interphase is LEAKY (BP 1.08 / Li3P 0.7 eV); passivation NOT demonstrated; 'compensated' framing dropped
-- phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too (not a doping-specific story)
-- structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways'; alternative motifs not energy-tested -> grade B
-- ANODE-INTERFACE (Li-metal reduction), CCD/dendrite, GB, air/moisture, e-conductivity NOT computed -> NO positive recommendation until the anode interface is run
-- elastic Cij pending (KISTI); electronic scalars curated (GGA single-config)
+- ANODE: doping WORSENS Li-metal stability -- b2o3 reduction interphase has METALLIC LiB (gap 0) from the B dopant (min gap 0 vs undoped Li3P 0.7). NOT a doping-neutral story. Thermodynamic products only (morphology/kinetics not modeled)
+- ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped
+- phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too
+- structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B
+- CCD/dendrite, GB, air/moisture, e-conductivity still NOT computed; elastic Cij pending; electronic curated (GGA)
 - cascade fast-estimates vs deep-validation differ (seeds future ML calibration)
 
 *Generated by `factory/assemble_report_card.py` (v1.1, audit-hardened). Sections marked pending are validated by the running orchestrator stages.*

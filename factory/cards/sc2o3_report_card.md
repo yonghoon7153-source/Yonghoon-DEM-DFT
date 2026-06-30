@@ -1,7 +1,7 @@
 # Report card — sc2o3 ((LPSCl1.6 + Sc2O3, x=0.25))
 
 **구조** `db/structures/sc2o3_TODO.cif (not yet built/relaxed)` (None atom) · cascade_v23 rank-1 dopant (Sc2O3); NOT yet deep-validated
-**완성도** 1/9 core sections done; 5 descriptors on roadmap · schema 0.2 · generated 2026-06-30T04:07:46.753949+00:00
+**완성도** 1/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T06:09:30.973761+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
 > cascade rank-1 candidate (LPSCl1.6 + Sc2O3, x=0.25): deep validation PENDING (1/9 core done). Only cascade screening available so far; the orchestrator plans the remaining DFT/MLIP stages (with gates).
@@ -22,10 +22,10 @@
 | electronic | pending | - |  |
 | structure_chemistry | pending | - |  |
 | dynamical_stability | pending | - |  |
+| anode_interface_stability | n.a. | - |  |
 | testable_predictions | pending | - |  |
 
 ## Roadmap descriptors (acknowledged, not yet computed)
-- **anode_interface_stability** (n.a.): *** TOP PRIORITY (external review): the DECISIVE risk. Li-metal reduction at the 1.72 V limit produces LEAKY BP(1.08)/Li3P(0.7 eV) -> b2o3 is likely Li-metal-UNSTABLE. Run interface_reactivity_v2.py open to a Li reservoir for the anode reaction energy + interphase products. Until computed, NO positive recommendation for any candidate.
 - **critical_current_density** (n.a.): dendrite resistance / CCD — most-requested SE metric; not computed.
 - **grain_boundary_transport** (n.a.): bulk sigma != total sigma; GB often dominates.
 - **air_moisture_stability** (n.a.): H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).

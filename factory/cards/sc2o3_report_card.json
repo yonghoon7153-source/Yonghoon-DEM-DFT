@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T04:07:46.753949+00:00",
+  "generated_utc": "2026-06-30T06:09:30.973761+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "sc2o3",
@@ -93,9 +93,9 @@
   "anode_interface_stability": {
     "status": "n.a.",
     "confidence": null,
-    "method": "not in v1 pipeline",
+    "method": "not computed",
     "source": "—",
-    "caveats": "*** TOP PRIORITY (external review): the DECISIVE risk. Li-metal reduction at the 1.72 V limit produces LEAKY BP(1.08)/Li3P(0.7 eV) -> b2o3 is likely Li-metal-UNSTABLE. Run interface_reactivity_v2.py open to a Li reservoir for the anode reaction energy + interphase products. Until computed, NO positive recommendation for any candidate."
+    "caveats": "run tools/oxidation/anode_interface_stability.py (Li-open) — decisive risk (external review #1)"
   },
   "critical_current_density": {
     "status": "n.a.",
@@ -143,6 +143,6 @@
       "deep DFT/MLIP stages not yet run (see orchestrator run plan)",
       "cascade fast-estimates vs deep-validation differ (seeds future ML calibration)"
     ],
-    "completeness": "1/9 core sections done; 5 descriptors on roadmap"
+    "completeness": "1/9 core sections done; 4 descriptors on roadmap"
   }
 }
