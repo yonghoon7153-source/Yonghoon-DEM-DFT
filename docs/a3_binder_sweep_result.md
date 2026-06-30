@@ -78,4 +78,40 @@ A3 complete; the only adjacent open item is the SEPARATE, literature-gated **CBD
 nano-porosity** (deferred) — it redistributes binder solid but does not change total
 porosity in a solid-counting model at 300 MPa.
 
-Data: `a3_sweep_out/m_ptfe_{0,0.5,1,2,4,8}.json` (on kserver).
+## ★ Low-pressure empirical test (5 MPa) — propping CONFIRMED, regime-gated (no fudge)
+The user asked to *run it*, not just argue. Re-ran the same real14 sweep at
+**--target-gpa 0.005 (5 MPa < σ_y 50 MPa)**, where the binder should NOT yield and
+*can* prop. Two-pressure comparison (real14, 384, CUDA):
+
+| PTFE wt% | porosity 300 MPa | **porosity 5 MPa** | thick 300 MPa | **thick 5 MPa** |
+|---|---|---|---|---|
+| 0   | 15.91 | 16.67 | 29.95 | 30.22 |
+| 0.5 | 15.15 | **17.40** ↑ | 29.95 | 30.76 |
+| 1   | 14.37 | 17.38 | 29.95 | 31.04 |
+| 2   | 13.59 | 15.86 | 30.22 | 31.04 |
+| 4   | 10.38 | 13.49 | 30.22 | 31.31 |
+| 8   | 4.40  | 6.89  | 30.49 | **31.31** ↑ |
+
+**The yield-gated propping prediction is CONFIRMED by the model itself — no spacer term added:**
+- **Thickness** = the clean mechanistic signal. At **5 MPa it rises monotonically with
+  binder** (30.22 → 31.31 µm, +1.1 µm): the un-yielded binder *holds the bed open*
+  (props). At **300 MPa it is ~flat** (29.95 → 30.49): the binder yields and is squeezed,
+  no propping. ⇒ propping turns ON below σ_y, OFF above — exactly the yield physics.
+- **Porosity** at 5 MPa is **non-monotone**: it **rises +0.7 %p at 0.5 wt%** (16.67 →
+  17.40 — propping opens the loose bed faster than the small binder volume fills it),
+  then declines as volume-fill takes over (→ 6.89 at 8 wt%). At 300 MPa it is cleanly
+  monotone (15.91 → 4.40).
+- The effect is **modest and at LOW loading** (a ~+0.7 %p bump near 0.5–1 wt%), NOT a
+  catastrophic over-binder rebound — the literature "over-binder bad" is σ/integrity,
+  while this is the small low-loading low-pressure propping bump.
+
+⇒ **A3 final, empirically:** the binder's porosity effect is **pressure-regime-gated**,
+and the model produces it *for free* from the PTFE yield (E=0.3, σ_y=0.05):
+- **300 MPa (production)** → binder yields → porosity monotone (correct).
+- **≲ σ_y (~5 MPa, low-pressure cells)** → binder props → porosity non-monotone
+  (small low-loading bump + thickness rise).
+No spacer/agglomeration-void fudge was needed or added; the regime split is real physics.
+(Verdict label still prints "MONOTONE" because it scans for a ∪/min-at-interior; the
+actual low-P shape is a small ∩ bump at low loading — read the table, not the label.)
+
+Data: `a3_sweep_out/` (300 MPa) + `a3_sweep_5MPa/` (5 MPa) `m_ptfe_{0,0.5,1,2,4,8}.json` (kserver).

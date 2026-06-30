@@ -1,0 +1,11 @@
+# A3 PTFE binder sweep — real14 scaffold, n_grid 384, CUDA, champion SE (E=1.53/nu=0.49/sy=0.3)
+# coh_ptfe=0.10, binder_opt_wt=1.5. porosity@target & thickness from mpm_metrics.json.
+# 300 MPa (>sigma_y 50): binder yields -> monotone porosity, flat thickness.
+# 5 MPa (<sigma_y 50): binder props -> non-monotone porosity (+0.7%p bump @0.5wt%), thickness rises.
+ptfe_wt,binder_cap,porosity_300MPa_pct,porosity_5MPa_pct,thickness_300MPa_um,thickness_5MPa_um
+0,0.000,15.91,16.67,29.95,30.22
+0.5,0.649,15.15,17.40,29.95,30.76
+1,0.930,14.37,17.38,29.95,31.04
+2,0.955,13.59,15.86,30.22,31.04
+4,0.504,10.38,13.49,30.22,31.31
+8,0.070,4.40,6.89,30.49,31.31

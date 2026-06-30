@@ -87,21 +87,35 @@ def main():
         print(f"{r['wt']:>9g} {r['cap']:>11.3f} {r['porosity']:>10.2f} "
               f"{(r['thickness'] or 0):>9.2f}  {r['readout']}")
 
-    # ∪-shape check: is the minimum porosity at an INTERIOR (non-endpoint) wt%?
+    # Shape diagnosis. Two real signals: (1) a ∪ (porosity min at an interior wt%,
+    # rising both sides — the cohesion-driven shape), and (2) a low-loading propping
+    # BUMP (porosity rises ABOVE the no-binder baseline at small wt% — the yield-gated
+    # propping that appears below σ_y pressure, A3 5 MPa result). Report whichever is real.
     pos = [r for r in rows if r["wt"] > 0]
+    base = next((r["porosity"] for r in rows if r["wt"] == 0), None)
     if len(pos) >= 3:
         pmin = min(pos, key=lambda r: r["porosity"])
         interior = pos[0]["wt"] < pmin["wt"] < pos[-1]["wt"]
         rises_right = pos[-1]["porosity"] > pmin["porosity"] + 0.3
         rises_left = pos[0]["porosity"] > pmin["porosity"] + 0.3
+        # propping bump: any binder point sits ≥0.3 %p above the no-binder baseline
+        bump = max(pos, key=lambda r: r["porosity"])
+        propping = base is not None and bump["porosity"] > base + 0.3
         print(f"\n  min porosity {pmin['porosity']:.2f}% at PTFE {pmin['wt']:g} wt% "
               f"(binder_cap {pmin['cap']:.2f})")
+        if propping:
+            print(f"  propping bump: porosity {bump['porosity']:.2f}% at {bump['wt']:g} wt% "
+                  f"> baseline {base:.2f}% (+{bump['porosity']-base:.2f} %p)")
         verdict = ("∪-SHAPE ✓ (min at optimal, rises both sides) — A3 ↔ Hong/Cho"
                    if interior and rises_right and rises_left else
+                   "NON-MONOTONE: low-loading PROPPING bump (binder opens the bed above "
+                   "baseline at small wt%, then volume-fill wins) — expected below σ_y "
+                   "pressure (A3 5 MPa); means the binder is NOT yielding here"
+                   if propping else
                    "half-∪ (rises on over-application side only) — partial A3 support"
                    if rises_right else
-                   "MONOTONE — binder volume-fill dominates cohesion at this scale; "
-                   "tune --coh-ptfe up / --opt-wt, or record model limit")
+                   "MONOTONE — binder volume-fill dominates; binder yields (≥σ_y pressure) "
+                   "so no propping. Correct at 300 MPa production")
         print(f"  VERDICT: {verdict}")
     print("=" * 64)
 
