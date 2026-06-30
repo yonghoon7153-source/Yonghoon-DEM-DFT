@@ -93,10 +93,13 @@ a5(SE/sol 68%) gap −9.3~−10.8, a6(59%) −7.1~−9.6, a7(48%) −5.2~−6.7.
 - [x] f_AM 출처 검증: 0.86 = DEM von Mises 독립유도(fit 아님) → MPM이 DEM 근처 재현 = cross-consistency.
   잔차 +3.1%p = SE가 42MPa 몫만 받고 큰 void로 소성 flow한 증분(frame[5]; MPM = DEM_rigid − 소성증분, clamp가
   못 하는 *계산*).
-- [ ] sweep 0.75(SE_target 75MPa)/0.60(120MPa) — f_AM↔porosity 단조곡선 매핑 (확인용).
-- [ ] f_AM v1 Love-Weber extractor 구현 (von Mises 코드에 σzz pair 분해 추가) → SE-rich 자동 f_AM≈0.
-- [ ] SE-rich f_AM≈0 확인 (v1로) = production gate 마지막 조각.
-- [ ] reliability CSV에 am_load_frac 버전 열 추가.
+- [x] sweep 0.75/0.60 — DONE (§8 table: 0.60→21.78, 0.75→23.56, MONOTONE).
+- [~] f_AM v1 Love-Weber extractor / [~] SE-rich f_AM≈0 (v1) / [~] reliability CSV am_load_frac 열
+  — ⚠ **SUPERSEDED by §13 (2026-06-27)**: the conditional (and am-jam) were BOTH judged artifacts; production
+  does NOT gate on f_AM at all — it runs PURE MPM + the **regime-gate** (report DEM where |gap|>4).  So there is
+  no "production gate" to finish; the v1 Love-Weber precision + the CSV version column are moot for production.
+  The conditional remains an OPT-IN experimental flag only.  ⇒ A2 = DONE as "investigation concluded + production
+  logic settled (pure + regime-gate)", NOT as "conditional auto-injected".  (Resolves the "A2 다시 확인" stale-doc.)
 
 ## §8 RESULT (_10 corner, 2026-06-26)
 | f_AM | SE_target (MPa) | MPM porosity (%) | gap to DEM 28.34 |
