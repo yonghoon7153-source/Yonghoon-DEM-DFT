@@ -1,5 +1,37 @@
 # 전극 공극률(Porosity) 회귀식 — 문헌 기반 다차원 모델
 
+> ## ✅ CLOSED (stage2 종료, 2026-06-30) — n_collection=153
+> 데이터 수집 종료, 식 확정.  **production form = regime-gated(plastic 포함) target**:
+> | target | LOOCV | R² | RMSE | n |
+> |---|---|---|---|---|
+> | **gated best (plastic 포함, 생산형)** | **0.583** | 0.637 | 2.32 %p | 129 |
+> | rigid ε_sphere (DEM native) | 0.769 | 0.830 | 2.45 %p | 129 |
+>
+ rigid가 더 높은 건 ε_sphere가 *매끄러운* 양이라 그렇고(단 SE-rich 과압축 artifact를
+> fit), **물리적으로 옳은 건 gated(plastic) 0.583**.  잔차 ±2.3%p의 **절반(~1.5)은 환원
+> 불가 seed 노이즈** → 식은 정보 한계.  **R²를 더 못 올리는 이유 = 데이터 다양성(thin↔thick,
+> SE-poor↔rich, 전 P:S)이지 form 결함 아님.**
+>
+> **★ 코너는 *포함*** (mono-large·thin-SE-poor, gap>4 → gate가 DEM 사용).  out-of-envelope
+> 지만 porosity 범위를 넓혀 R²에 *기여*한다 — 빼면 R²가 *오히려* 떨어짐(in-envelope-only
+> 0.52 < 코너포함 0.58).  사용자 지시(2026-06-30): "코너도 추가".
+>
+> **Outlier 제외 = 물성(영률 등)-다른 것만 (`scripts/porosity_close.py`):**
+> - **영률(E_SE)-다른**: E-변종 particulate_9_E05(0.68)/E15(2.02 GPa) — 표준 1.35와 다른
+>   재료강성 → 제외(E-축은 별도, +2.3%p/E배).
+> - **그 외 물성/레짐-다른**: sub-µm SE(particulate_1 r0.25, Cronau 비정질) · particulate
+>   (mono-AM_S r3 separator) · S-series(r_AM_S=4) — `load_pairs(exclude_particulate)` +
+>   tracking CSV로 분리(frame[5] 별 레짐).
+> - **broken-sim**(물성 아닌 *무효 데이터*): `1mAh_100_*` (CLAUDE.md plate_z 메타버그 →
+>   음수/이상 porosity) — 필터 영구.
+>
+> 별도 발견(닫음): regime-gate · thin SE-poor 코너 경계(SE≲15% **且** thin, 두께-탈출) ·
+> SE-size U(조성-의존, particulate) · E_SE 단조(+2.3%p/E배) · λ-scaling(r_AM_S=4 미완,
+> r_SE=1.33 1점 필요) — `docs/porosity_subum_se_investigation.md`.
+> 후속(통합/E축)은 `scripts/porosity_unified.py` + post-porosity 로드맵.
+
+
+
 전고체 양극(LPSCl 고체전해질 + 단결정 NCM)의 **공극률을 설계 변수에서 예측**하는
 관계식. **SE 소성 변형을 포함한** DEM(강체 패킹)·MPM(소성 void-fill) 결합 모델.
 
@@ -18,7 +50,7 @@ gap > +4 %p  →  ε_DEM    (mono-large 코너: 연속체 MPM이 과압축 → �
                           동시에 DEM ε_sphere의 overlap 과압축을 보정)
 ```
 
-n=110 중 **104 = MPM(plastic), 6 = DEM(코너)**. 즉 기본은 소성값, MPM이 무너지는
+n=129 중 **123 = MPM(plastic), 6 = DEM(코너)**. 즉 기본은 소성값, MPM이 무너지는
 큰-AM 단일 코너만 강체값.
 
 **근거(frame[5] 분업)**: DEM = 강체 접촉망·패킹·Furnas dip 담당, MPM = 소성 형상
@@ -38,18 +70,19 @@ n=110 중 **104 = MPM(plastic), 6 = DEM(코너)**. 즉 기본은 소성값, MPM�
      + β7·(S_λ·a) + β8·(F_se·B)   (다차원 결합)
 ```
 
-현 corpus(n=110) fit 계수:
+현 corpus(n=129, **CLOSED**) fit 계수:
 
 | 항 | 계수 | 항 | 계수 |
 |---|---|---|---|
-| β0 (const) | +31.92 | β4 (φ_se) | −18.39 |
-| β1 (B) | −51.06 | β5 (r_AM) | +3.06 |
-| β2 (B_sym) | +13.51 | β6 (r_SE) | −3.71 |
-| β3 (S_λ) | −47.88 | β7 (S_λ·a) | +33.79 |
-| | | β8 (F_se·B) | +38.12 |
+| β0 (const) | +34.90 | β4 (φ_se) | −25.15 |
+| β1 (B) | −58.88 | β5 (r_AM) | +2.81 |
+| β2 (B_sym) | +14.72 | β6 (r_SE) | −3.41 |
+| β3 (S_λ) | −36.66 | β7 (S_λ·a) | +19.94 |
+| | | β8 (F_se·B) | +70.50 |
 
-**성능**: R² = 0.696, **LOOCV R² = 0.646**, RMSE = 2.52 %p, n=110, k=9 (n/k=12).
-full−LOOCV gap = 0.05 → 과적합 아님.
+**성능**: R² = 0.637, **LOOCV R² = 0.583**, RMSE = 2.32 %p, n=129, k=9 (n/k=14.3).
+full−LOOCV gap = 0.054 → 과적합 아님.  (rigid ε_sphere native target은 LOOCV 0.769
+— 더 매끄럽지만 SE-rich overlap 과압축 artifact를 fit; 물리적으로 옳은 생산형은 gated 0.583.)
 
 ---
 
@@ -168,16 +201,18 @@ seed-noise floor ≈ ±1.5 %p (동일 설계의 seed 간 흩어짐) → 잔차�
   제거(r_SE 추가 후 중복; 상호작용 F_se·B는 유지).
 - **Addition 스크리닝**: r_SE 추가 +0.084(채택). 그 외 후보(se_solid², B×φ_se, P, P²,
   φ_se×a, 1/λ_SE, B²)는 ΔLOOCV ≤ 0 또는 노이즈 → 기각.
-- **타깃 비교**: gated 0.646 vs pure-MPM 0.443 vs pure-DEM 0.798. pure-DEM이 수치상
-  높으나 **소성 미포함 + ε_sphere 과압축 artifact 잔존** → 물리적으로 부적합. gated가
-  옳은 타깃(소성 포함 요구 충족).
-- **과적합/정칙화**: full−LOOCV gap 0.05(작음). Ridge는 LOOCV 악화(강한 collinearity)
+- **타깃 비교**: gated 0.583 vs pure-MPM 0.399 vs pure-DEM(rigid ε_sphere) 0.769.
+  pure-DEM이 수치상 높으나 **소성 미포함 + ε_sphere 과압축 artifact 잔존** → 물리적으로
+  부적합. gated가 옳은 타깃(소성 포함 요구 충족).
+- **과적합/정칙화**: full−LOOCV gap 0.054(작음). Ridge는 LOOCV 악화(강한 collinearity)
   → OLS 유지, 단 계수는 합으로만 해석.
+- **코너 포함이 R²를 올린다**: in-envelope-only(n≈95) LOOCV 0.52 < 코너 포함(n=129) 0.58.
+  코너(mono-large·thin-SE-poor)는 porosity 범위를 넓혀 *기여* → 제외 안 함.
 
-**결론**: r_SE 추가 + se_fill 제거로 LOOCV 0.550 → 0.646. 추가/삭제할 항 없음 → 현
-corpus의 최종식.
+**결론**: r_SE 추가 + se_fill 제거 + broken-sim(1mAh_100) 제거로 corpus 정리, gated
+LOOCV 0.583. 추가/삭제할 항 없음 → 현 corpus의 **최종식(CLOSED)**.
 
 ---
 
 *기준 조건: 압력 300 MPa, AM 12µm·4µm(반지름 6·2) / SE 1µm(반지름 0.5), ρ_AM=4.8 /
-ρ_SE=2.0 g/cm³, n=110.*
+ρ_SE=2.0 g/cm³, n=129 (CLOSED, 2026-06-30).*

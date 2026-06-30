@@ -50,6 +50,10 @@ def load_pairs(exclude_particulate=True):
             # the production-form fit (set exclude_particulate=False to include).
             if exclude_particulate and ("particulate" in d["case"] or d["case"].startswith("input_S_")):
                 continue
+            # broken-sim series (CLAUDE.md: input_1mAh_100_* plate_z metadata bug ->
+            # bad/negative porosity).  Excluded from the closed production form.
+            if exclude_particulate and "1mAh_100" in d["case"]:
+                continue
             r = reconstruct(d)
             r["dem"] = dem; r["mpm"] = mpm; r["case"] = d["case"]
             r["se_solid"] = se_of_solid(r["amwt"])
