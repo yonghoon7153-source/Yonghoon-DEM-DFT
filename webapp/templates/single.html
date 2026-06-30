@@ -521,7 +521,7 @@ function updateAdditiveGpuCmds() {
   const { vg, sp, pt, mix } = _addVals();
   if ((vg <= 0 && sp <= 0 && pt <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
   const recipe = _addRecipeStr(vg, sp, pt);
-  const tag = recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') : '';
+  const tag = recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') + '_' + mix : '';
   const zip = `mpm_input_${'{{ case.id }}'}${tag}.zip`;
   const DL = '/mnt/c/Users/안용훈/Downloads', SRV = 'root@121.78.116.27', WK = '/root/work/Yonghoon-DEM-DFT';
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');

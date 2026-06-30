@@ -5263,7 +5263,9 @@ def mpm_input_package(case_id):
             z.write(os.path.join(tmp, fn), fn)
     shutil.rmtree(tmp, ignore_errors=True)
     buf.seek(0)
-    tag = ('_' + recipe.replace(':', '-').replace('=', '_')) if recipe else ''
+    # filename carries BOTH the recipe and the mixing, so a thinky vs ball-mill zip
+    # of the same recipe are distinct files (mixing changes the baked run_mpm.sh).
+    tag = ('_' + recipe.replace(':', '-').replace('=', '_') + '_' + mixing) if recipe else ''
     return send_file(buf, mimetype='application/zip', as_attachment=True,
                      download_name=f'mpm_input_{case_id}{tag}.zip')
 
