@@ -39,6 +39,8 @@ ROADMAP_SECTIONS = {
 
 
 def jload(name):
+    if not name:
+        return None
     p = DBP / name
     return json.loads(p.read_text()) if p.exists() else None
 
@@ -110,6 +112,26 @@ SYSTEMS = {
                               "vbm_character": "S 3p ~89.5% (free-S shallowest)",
                               "source": "kb/results b2o3 DOS analysis (curated; DOS data db/properties/b2o3_dos_smooth.csv)"},
     },
+    # ---- v1.2 generalization demo: a FRESH cascade candidate (rank-1 dopant),
+    # NOT yet deep-validated. Only cascade screening exists; the file map points
+    # at convention-named outputs that do not exist yet -> deep sections auto-
+    # report 'pending' and the orchestrator plans the full validation. ----
+    "sc2o3": {
+        "id": "sc2o3",
+        "composition": "(LPSCl1.6 + Sc2O3, x=0.25)",
+        "structure_ref": "db/structures/sc2o3_TODO.cif (not yet built/relaxed)",
+        "n_atoms": None,
+        "provenance": "cascade_v23 rank-1 dopant (Sc2O3); NOT yet deep-validated",
+        "cascade": {"version": "cascade_v23", "champ_id": "Sc2O3_x010", "ranked_dopant": "Sc2O3"},
+        "files": {  # expected (convention-named) outputs; do not exist yet -> pending
+            "md": "sc2o3_vs_modelc_md.json", "hull": "sc2o3_ehull_result.json",
+            "esw": "sc2o3_esw.json", "sei": "sc2o3_sei_gaps.json",
+            "phonon": "sc2o3_phonon_stability.json", "eos": "sc2o3_eos_dft_result.json",
+            "bonds": "sc2o3_bond_lengths.json", "coord": "sc2o3_coordination_bonds.json",
+            "charge_csv": "sc2o3_charge_xps.csv", "bvse": "bvse_sc2o3/sc2o3_bvse_percolation.json",
+        },
+        # no electronic_manual -> electronic section pending
+    },
 }
 
 
@@ -148,15 +170,16 @@ def build_screening(m):
 def build(sysid, stamp=None):
     m = SYSTEMS[sysid]
     F = m["files"]
-    md = (jload(F["md"]) or {}).get("b2o3_doped", {})
-    hb = (jload(F["hull"]) or {}).get("b2o3_doped", {})
-    esw = (jload(F["esw"]) or {}).get("b2o3", {})
-    seigaps = (jload(F["sei"]) or {}).get("sei_gaps_MP_eV", {})
-    phon = jload(F["phonon"]) or {}
-    eos = jload(F["eos"]) or {}
-    bonds = jload(F["bonds"]) or {}
-    coord = jload(F["coord"]) or {}
-    bvse = jload(F["bvse"]) or {}
+    em = m.get("electronic_manual", {})   # absent for not-yet-validated candidates
+    md = (jload(F.get("md")) or {}).get(f"{sysid}_doped", {})
+    hb = (jload(F.get("hull")) or {}).get(f"{sysid}_doped", {})
+    esw = (jload(F.get("esw")) or {}).get(sysid, {})
+    seigaps = (jload(F.get("sei")) or {}).get("sei_gaps_MP_eV", {})
+    phon = jload(F.get("phonon")) or {}
+    eos = jload(F.get("eos")) or {}
+    bonds = jload(F.get("bonds")) or {}
+    coord = jload(F.get("coord")) or {}
+    bvse = jload(F.get("bvse")) or {}
 
     # --- parsed oxidation states (truthful source; audit finding 2) ---
     ox = {}
@@ -219,9 +242,8 @@ def build(sysid, stamp=None):
                     "EOS B0 24.5 GPa (+13% vs undoped, DFT)."),
         "electronic": sec("done", confidence="B", curation="manual",
             method="DFT DOS/PDOS (scf->nscf->projwfc); scalars curated (no machine-readable summary)",
-            source=m["electronic_manual"]["source"],
-            band_gap_eV=m["electronic_manual"]["band_gap_eV"], N_EF=m["electronic_manual"]["N_EF"],
-            vbm_character=m["electronic_manual"]["vbm_character"],
+            source=em.get("source"),
+            band_gap_eV=em.get("band_gap_eV"), N_EF=em.get("N_EF"), vbm_character=em.get("vbm_character"),
             caveats="GGA underestimates gaps; single config/functional -> grade B not A. gap 1.97 eV (VBM 2.47/CBM 4.44)."),
         "structure_chemistry": sec("done", confidence="A",
             method="coordination (Voronoi) + bond lengths + Bader oxidation states (parsed) + Lowdin S-site order",
@@ -245,25 +267,50 @@ def build(sysid, stamp=None):
             nmr=["11B trigonal BS3", "31P PS4 / PS4-xOx", "7Li"],
             caveats="positions/order computable; absolute XPS eV needs dSCF core-hole; Nd 3d is literature-only (multiplet)."),
     }
+    # data-aware status (generalizes to not-yet-validated candidates): tie each
+    # section to whether its PRIMARY source data actually loaded (not to templated
+    # constants like the verdict string or threshold dict). A fresh cascade
+    # candidate (only screening) then auto-reports deep sections as pending ->
+    # the orchestrator plans exactly those stages.
+    present = {
+        "transport": bool(md), "thermodynamic_stability": bool(hb),
+        "electrochemical_window": bool(esw or seigaps), "mechanical": False,  # pending until Cij
+        "electronic": bool(em), "structure_chemistry": bool(bonds or coord or ox),
+        "dynamical_stability": bool(phon), "testable_predictions": bool(bonds or coord),
+    }
+    for s, ok in present.items():
+        if not ok and card[s]["status"] == "done":
+            card[s]["status"], card[s]["confidence"] = "pending", None
+
     # roadmap (acknowledged-but-not-computed) sections
     for k, why in ROADMAP_SECTIONS.items():
         card[k] = sec("n.a.", confidence=None, method="not in v1 pipeline", source="—", caveats=why)
 
     done = sum(1 for s in CORE_SECTIONS if card[s]["status"] == "done")
-    card["overall"] = {
-        "summary": "B2O3-doped LPSCl1.6 (cascade champion, rank_combined=1 by combined_score): higher RT "
+    if sysid == "b2o3":
+        summary = ("B2O3-doped LPSCl1.6 (cascade champion, rank_combined=1 by combined_score): higher RT "
                    "conductivity than undoped LPSCl1.6 (sigma300 ~18.5 mS/cm, SAME Ea, D0-driven), metastable "
                    "(+37.5 meV/atom) but phonon-stable, NARROW ESW (0.31 V, a real risk) with mixed SEI "
                    "(wide-gap B/O passivators + leaky thioborates), stiffer framework (EOS B0 +13%). "
-                   "Promising but with an interface-stability caveat.",
-        "flags": ["transport:+", "stability:metastable(+37.5)", "ESW:narrow(0.31V,risk)",
-                  "dynamical:stable", "mechanical:pending", "anode-interface:UNASSESSED"],
-        "honesty_notes": ["absolute sigma is MLIP upper bound (cite Ea+-0.01 + ratio)",
-                          "elastic Cij pending (KISTI); EOS B0 proxy",
-                          "ESW narrow + leaky SEI members present; passivation NOT demonstrated (interphase not modeled)",
-                          "electronic scalars curated (GGA single-config), graded B",
-                          "single Li-config; anode-interface/CCD/GB/air-stability/e-conductivity NOT yet computed (roadmap)",
-                          "cascade fast-estimates vs deep-validation differ (seeds future ML calibration)"],
+                   "Promising but with an interface-stability caveat.")
+        flags = ["transport:+", "stability:metastable(+37.5)", "ESW:narrow(0.31V,risk)",
+                 "dynamical:stable", "mechanical:pending", "anode-interface:UNASSESSED"]
+        notes = ["absolute sigma is MLIP upper bound (cite Ea+-0.01 + ratio)",
+                 "elastic Cij pending (KISTI); EOS B0 proxy",
+                 "ESW narrow + leaky SEI members present; passivation NOT demonstrated (interphase not modeled)",
+                 "electronic scalars curated (GGA single-config), graded B",
+                 "single Li-config; anode-interface/CCD/GB/air-stability/e-conductivity NOT yet computed (roadmap)"]
+    else:
+        rk = card["screening"].get("rank")
+        summary = (f"cascade rank-{rk} candidate {m['composition']}: deep validation PENDING "
+                   f"({done}/{len(CORE_SECTIONS)} core done). Only cascade screening available so far; "
+                   f"the orchestrator plans the remaining DFT/MLIP stages (with gates).")
+        flags = [f"{s}:{card[s]['status']}" for s in CORE_SECTIONS]
+        notes = ["FRESH candidate — values shown are cascade fast-estimates only, not deep validation",
+                 "deep DFT/MLIP stages not yet run (see orchestrator run plan)"]
+    card["overall"] = {
+        "summary": summary, "flags": flags,
+        "honesty_notes": notes + ["cascade fast-estimates vs deep-validation differ (seeds future ML calibration)"],
         "completeness": f"{done}/{len(CORE_SECTIONS)} core sections done; {len(ROADMAP_SECTIONS)} descriptors on roadmap",
     }
     return card

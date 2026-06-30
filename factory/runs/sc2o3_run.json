@@ -1,0 +1,32 @@
+{
+  "system": "sc2o3",
+  "stamp": "2026-06-30T_s",
+  "completeness": "1/9 core sections done; 5 descriptors on roadmap",
+  "done": [
+    "screening"
+  ],
+  "pending": [
+    "transport",
+    "thermodynamic_stability",
+    "electrochemical_window",
+    "mechanical",
+    "electronic",
+    "structure_chemistry",
+    "dynamical_stability",
+    "testable_predictions"
+  ],
+  "next_gates": [
+    "cost_gate",
+    "prep_gate"
+  ],
+  "planned_commands": {
+    "transport": "python3 tools/modelc_v3/disorder_ensemble_diffusion.py --v0_xyz db/structures/sc2o3_TODO.xyz (not yet built/relaxed) --label sc2o3 --temperatures 600 800 1000 --equilib_ps 10 --prod_ps 100 --save_fs 100 --fit_window_ps 2 50 --save_traj   # protocol: kb/methodology/md_conductivity_protocol.md",
+    "thermodynamic_stability": "python3 tools/doping/convex_hull_ehull.py --structure db/structures/sc2o3_TODO.cif (not yet built/relaxed) --mode uma",
+    "electrochemical_window": "python3 tools/oxidation/esw_grand_potential.py ... && python3 tools/oxidation/sei_product_gaps.py ...",
+    "mechanical": "python3 tools/comp1_v3/build_elastic_strain_inputs.py --relaxed_ion ... (12 strain SCF on KISTI) && fit_elastic_cij_stress.py",
+    "electronic": "standard_dos recipe: scf -> nscf -> projwfc (KISTI)",
+    "structure_chemistry": "bond/coordination (local) + pp.x charge cube -> Bader/Lowdin (KISTI)",
+    "dynamical_stability": "python3 tools/electronic/uma_phonon.py --xyz db/structures/sc2o3_TODO.xyz (not yet built/relaxed)",
+    "testable_predictions": "(derived from structure_chemistry + dynamical_stability; no new run)"
+  }
+}
