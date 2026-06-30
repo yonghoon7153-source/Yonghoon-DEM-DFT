@@ -45,53 +45,61 @@ def main():
     print("chemsys =", chemsys)
     with MPRester(key) as mpr:
         entries = mpr.get_entries_in_chemsys(chemsys)
-        gaps = {}
-        for d in mpr.materials.summary.search(chemsys=chemsys,
-                fields=["formula_pretty", "band_gap", "energy_above_hull"]):
-            f = d.formula_pretty
-            if f not in gaps or (d.energy_above_hull or 9) < gaps[f][1]:
-                gaps[f] = (round(float(d.band_gap), 2), float(d.energy_above_hull or 0))
 
     pd = PhaseDiagram(entries)
     Li = Element("Li")
     mu_ref = pd.el_refs[Li].energy_per_atom   # mu_Li(metal); V = mu_ref - mu
     print(f"mu_Li(metal) = {mu_ref:.4f} eV/atom  (V = mu_ref - mu_Li; 0 V = Li metal)\n")
 
-    def product_gaps(rxn):
-        out = {}
-        for tok in re.findall(r"[A-Z][A-Za-z0-9.()]*", rxn or ""):
+    def rhs_formulas(rxn):
+        # RHS (products) of "A -> B + C + ..."; reduced formulas, drop Li metal
+        rhs = (rxn or "").split("->")[-1]
+        out = set()
+        for tok in re.findall(r"[A-Z][A-Za-z0-9.()]*", rhs):
             try:
                 rf = Composition(tok).reduced_formula
             except Exception:
                 continue
-            if rf in gaps and rf != "Li":
-                out[rf] = gaps[rf][0]
+            if rf != "Li":
+                out.add(rf)
         return out
 
-    results = {}
+    # pass 1: reactions per SE
+    raw = {}
+    allprod = set()
     for spec in a.electrolytes:
         estr, _, elab = spec.partition(":"); elab = elab or estr
         profile = pd.get_element_profile(Li, Composition(estr))
-        steps = []
-        for p in profile:
-            steps.append({"V_vs_Li": round(mu_ref - float(p["chempot"]), 3),
-                          "evolution_Li": round(float(p["evolution"]), 4),
-                          "reaction": str(p["reaction"])})
-        steps.sort(key=lambda s: s["V_vs_Li"])
+        steps = sorted(({"V_vs_Li": round(mu_ref - float(p["chempot"]), 3),
+                         "evolution_Li": round(float(p["evolution"]), 4),
+                         "reaction": str(p["reaction"])} for p in profile),
+                       key=lambda s: s["V_vs_Li"])
         anode = steps[0]            # lowest V = nearest Li metal (most reduced)
-        red_lim = max((s["V_vs_Li"] for s in steps if s["evolution_Li"] > 1e-6), default=None)
-        pg = product_gaps(anode["reaction"])
+        prods = rhs_formulas(anode["reaction"])
+        allprod |= prods
+        raw[elab] = (estr, anode, steps, prods)
+
+    # pass 2: MP band gaps for the ACTUAL product formulas (targeted -> no 100-cap bug)
+    gaps = {}
+    with MPRester(key) as mpr:
+        for d in mpr.materials.summary.search(formula=sorted(allprod),
+                fields=["formula_pretty", "band_gap", "energy_above_hull"]):
+            f = d.formula_pretty
+            if f not in gaps or (d.energy_above_hull or 9) < gaps[f][1]:
+                gaps[f] = (round(float(d.band_gap), 2), float(d.energy_above_hull or 0))
+
+    results = {}
+    for elab, (estr, anode, steps, prods) in raw.items():
+        pg = {p: gaps[p][0] for p in prods if p in gaps}
         leaky = sorted(f"{p}({g})" for p, g in pg.items() if g < LEAKY_EV)
         results[elab] = {
             "composition": estr,
             "anode_V_vs_Li": anode["V_vs_Li"],
             "anode_reduction_reaction": anode["reaction"],
-            "reduction_limit_V": red_lim,        # cross-check vs esw (b2o3 ~1.72)
             "product_gaps_eV": pg, "leaky_products": leaky,
             "min_product_gap_eV": (min(pg.values()) if pg else None),
             "full_profile": steps}
         print(f"######## {elab} ({estr}) vs Li metal ########")
-        print(f"  reduction limit ≈ {red_lim} V (esw cross-check)")
         print(f"  anode (V≈{anode['V_vs_Li']}) reduction: {anode['reaction']}")
         print(f"  product gaps = {pg}")
         print(f"  LEAKY products (<{LEAKY_EV} eV) = {leaky or 'none'}  | min gap = {results[elab]['min_product_gap_eV']}\n")
