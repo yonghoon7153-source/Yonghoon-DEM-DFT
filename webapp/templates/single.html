@@ -506,6 +506,7 @@ function dlAdditiveZip() {
   const { vg, sp, pt, mix } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
+  updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
   window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&mixing=${mix}`;
   return false;
 }
