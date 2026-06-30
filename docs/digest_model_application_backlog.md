@@ -35,10 +35,10 @@
 
 | # | 항목 | 상태 |
 |---|---|---|
-| C1 | refs.bib `@Minnmann2021bottleneck`(040537) **추가됨** ✅ — anchor 인용을 그쪽으로 배선(main.tex) | 🔶 |
-| C2 | main.tex Sakuda "87%@300" → ">90%@>350 stated; ~87%@~300 digitized trend; glass≠LPSCl" softening | ⛔ |
-| C3 | refs.bib `@Wang2022`(κ) = phantom → 일반 GB-phonon refs로 교체 + main.tex κ 인용 정정 | ⛔ |
-| C4 | Cronau 라벨 정정(연도 2021, Br not Cl, GB-pellet not single-crystal) | ⛔ |
+| C1 | refs.bib `@Minnmann2021bottleneck`(040537) **추가됨** ✅ — anchor 인용을 그쪽으로 배선(main.tex) | ✅ (2026-06-30) porosity anchor 문장이 `\citep{Minnmann2021bottleneck}` 인용하도록 배선 |
+| C2 | main.tex Sakuda "87%@300" → ">90%@>350 stated; ~87%@~300 digitized trend; glass≠LPSCl" softening | ✅ (2026-06-30) softened: trend match, glass≠argyrodite, digitized 명시 |
+| C3 | refs.bib `@Wang2022`(κ) = phantom → 일반 GB-phonon refs로 교체 + main.tex κ 인용 정정 | 🔶 (2026-06-30) bib에 PHANTOM 경고+placeholder 표시 (날조 금지); **남음=실제 GB-phonon ref로 교체**(네가 문헌 확보 후) |
+| C4 | Cronau 라벨 정정(연도 2021, Br not Cl, GB-pellet not single-crystal) | ✅ (2026-06-30) bib `@Cronau2022`→`@Cronau2021` (vol6/3072-3077/1c01299) + GB-pellet·Br note; main.tex 인용 전부 재배선 |
 
 ## 진행 메모
 - 2026-06-26 작성.  논문 digest batch(Trevisanello/Cronau/Minnmann/Doux/Sakuda/co-rolling/Bielefeld19+20 등)

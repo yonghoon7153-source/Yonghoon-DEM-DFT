@@ -70,7 +70,7 @@ extract a Kirchhoff resistor network in which each contact carries a
 bulk-plus-constriction resistance \citep{Holm1967}, decompose the
 graph into three parallel circuits ($\sigmaionic$, $\sigmae$, $\kappa$),
 and apply per-edge \emph{Stage E} corrections combining the SE-size
-amorphisation factor of \citet{Cronau2022}, the AM-crystallinity factor
+amorphisation factor of \citet{Cronau2021}, the AM-crystallinity factor
 of \citet{Trevisanello2021}, and the AM-grain phonon-scattering factor
 of \citet{Wang2022}, weighted by the per-contact Lawn-stage fracture
 distribution \citep{Lawn1998}. To handle the high-contrast Laplacian
@@ -119,7 +119,7 @@ The present work closes that gap with a literature-grounded
 \emph{Stage E} correction layer, applied per contact according to
 its Lawn-stage classification \citep{Lawn1998} and per phase pair
 according to grain-level $\sigma$ corrections from
-\citet{Cronau2022, Trevisanello2021, Wang2022}.
+\citet{Cronau2021, Trevisanello2021, Wang2022}.
 We further show that the resulting high-contrast Laplacian is
 numerically unstable for $\sim$20\,\% of cases, and develop a
 seven-layer defence with a Bruggeman effective-medium fallback
@@ -198,7 +198,7 @@ The contributions of this work are:
     filtering and R-grouping rules.
     \textbf{(f)} Stage E correction pipeline: per-contact Lawn 1998
     fracture factor $f_r$ distribution, combined with
-    \citet{Cronau2022} / \citet{Trevisanello2021} /
+    \citet{Cronau2021} / \citet{Trevisanello2021} /
     \citet{Wang2022} grain-level $\sigma$ corrections
     ($f_r = f_{\mathrm{Cronau}} \times f_{\mathrm{Trevisanello}}
             \times f_{\mathrm{Wang}}$);
@@ -317,7 +317,7 @@ shows the $f_r$ distribution for $\sigmae$ in a representative case.
 The full Stage~E factor is the product:
 \begin{align}
 f_r^{(\sigmaionic)} &= f_{\mathrm{Cronau}}(r_{\mathrm{SE}})
-   & \text{\citep{Cronau2022}} \\
+   & \text{\citep{Cronau2021}} \\
 f_r^{(\sigmae)}     &= f_{\mathrm{Lawn}} \times f_{\mathrm{Trev.}}(\AMP, \AMS)
    & \text{\citep{Trevisanello2021, Sun2017, Ryu2018}} \\
 f_r^{(\kappa)}      &= f_{\mathrm{Lawn}} \times f_{\mathrm{Wang}}(\AMP, \AMS)
@@ -820,13 +820,17 @@ fits to their DEM ionic conductivity that depend only on $\varphi_{
 only formulation we adopt here.
 
 The 300~MPa compaction target used throughout this work reaches
-87\,\% relative density (13\,\% porosity), which matches the Sakuda
-2013 cold-press density data at 300~MPa and the Minnmann 2021
+87\,\% relative density (13\,\% porosity), consistent with the Sakuda
+2013 cold-press density \emph{trend} \citep{Sakuda2013} (they state
+$>$90\,\% at $>$350~MPa; $\approx$87\,\% at $\approx$300~MPa is a digitized
+read of their Fig.~2a, and their material is the 75Li$_2$S$\cdot$25P$_2$S$_5$
+glass rather than Li$_6$PS$_5$Cl argyrodite, so this is a behavioural
+trend match, not a same-material point match) and with the Minnmann 2021
 NCM-622/Li$_6$PS$_5$Cl composite measurement at 380~MPa (13--17\,\%
-porosity).  Direct SEM evidence of complete SE--SE grain-boundary
-disappearance is reported by \citet{Sakuda2013} at 360~MPa (their
-Fig.~3a); our 300~MPa is 60~MPa below this threshold, so a small
-residual GB density is expected.  The Cronau 2022 particle-size
+porosity) \citep{Minnmann2021bottleneck}.  Direct SEM evidence of complete
+SE--SE grain-boundary disappearance is reported by \citet{Sakuda2013} at
+360~MPa (their Fig.~3a, for the glass); our 300~MPa is 60~MPa below this
+threshold, so a small residual GB density is expected.  The Cronau 2021 particle-size
 factor $f_{\mathrm{Cronau}}(r_{\mathrm{SE}})$ applied per contact
 during Stage~E (\S\ref{sec:stagee}) captures this
 residual GB density via a particle-size proxy: cases with

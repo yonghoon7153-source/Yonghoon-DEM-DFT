@@ -41,16 +41,21 @@
   doi     = {10.1002/andp.19354160705}
 }
 
-@article{Cronau2022,
-  author  = {Cronau, M. and Szabo, M. and K{\"o}nig, C. and others},
+% C4 (audit stage2_model_audit_vs_literature.md): corrected from the prior
+% @Cronau2022 misentry (year 2022 / vol 7 / 1843--1851 / 2c00688 were ALL wrong).
+% Real paper = 2021, ACS Energy Lett 6, 3072--3077, DOI 1c01299.  ⚠ When citing
+% sigma_grain: it is a GB-included PELLET conductivity (NOT single-crystal), and
+% the paper's max-sigma class is microcrystalline Li6PS5BR (Br), not Cl.
+@article{Cronau2021,
+  author  = {Cronau, M. and Szabo, M. and K{\"o}nig, C. and Wassermann, T. B. and Roling, B.},
   title   = {How to measure a reliable ionic conductivity? The stack
              pressure dilemma of microcrystalline sulfide-based solid
              electrolytes},
   journal = {ACS Energy Letters},
-  year    = {2022},
-  volume  = {7},
-  pages   = {1843--1851},
-  doi     = {10.1021/acsenergylett.2c00688}
+  year    = {2021},
+  volume  = {6},
+  pages   = {3072--3077},
+  doi     = {10.1021/acsenergylett.1c01299}
 }
 
 @article{Trevisanello2021,
@@ -66,10 +71,18 @@
   doi     = {10.1002/aenm.202003400}
 }
 
+% ⚠ C3 (audit): PHANTOM CITATION — this NCM-specific "Wang 2022 thermal
+% conductivity" entry does NOT resolve to a real paper (no DOI; author "others";
+% web search 2026-06-26 found no such NCM κ paper).  The kappa GB-correction
+% PHYSICS is textbook (polycrystalline grain-boundary phonon scattering reduces κ)
+% and does not need this specific reference.  TODO before submission: replace
+% with a real general GB-phonon-scattering reference (e.g. a polycrystalline-oxide
+% κ paper) and re-point the \citet{Wang2022} uses, OR re-attribute κ to the general
+% GB-scattering principle.  Kept here only so the current \cite keys resolve.
 @article{Wang2022,
   author  = {Wang, J. and Lin, R. and Liu, Y. and others},
   title   = {Thermal conductivity of single- and polycrystalline NCM
-             cathodes},
+             cathodes (UNVERIFIED --- placeholder, see note above)},
   journal = {Energy Storage Materials},
   year    = {2022},
   volume  = {49},
