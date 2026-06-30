@@ -1633,6 +1633,126 @@ def whatif_carbon_additive(metrics: dict, wt_pct: float = 1.0,
     }
 
 
+# ── Literature-anchored multi-additive what-if (VGCF / Super P / PTFE) ────────
+# Densities (g/cm³) match scripts/additives.py DENS.
+_ADD_RHO   = {'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20}
+_RHO_SOLID = 3.5            # composite (NMC+LPSCl) average, g/cc
+
+# ── ALL magnitudes are literature anchors (LPSCl + NCM same-material-system
+#    where possible).  Sources cited per term; see docs/post_porosity_roadmap.md §2
+#    and the lit_*.md digests.  This is a CPU analytic estimate (no sim); a full
+#    MPM-additive run is the GPU cross-check.
+_PTFE_DPOR_PER_WT   = -6.4     # %p porosity per 1 wt% PTFE  (Hong 2026: 28.7→22.3 vol% @1wt%)
+_PTFE_SION_PER_WT   = 0.74     # σ_ion × per 1 wt% PTFE       (Hong 2026: 0.087→0.064 mS/cm @1wt%)
+_POR_FLOOR          = 3.0      # %  pore cannot fibrillate below ~ this
+_CARB_PC_WT         = 4.0      # wt% carbon e-percolation threshold (Reisacher 2023, C65/LPSCl)
+_SION_BLOCK_VGCF    = 0.05     # σ_ion reduction slope /wt, VGCF (mild — concentrated fibre)
+_SION_BLOCK_SUPERP  = 0.09     # σ_ion reduction slope /wt, Super P (~1.8× VGCF; our voxel + Kim2025 SP lowest)
+_SIGMA_C_MSCM       = 1000.0   # effective carbon σ after percolation losses (mS/cm)
+
+
+def _sat(x):
+    return max(0.0, min(1.0, x))
+
+
+def whatif_additives(metrics: dict, vgcf_wt: float = 0.0, superp_wt: float = 0.0,
+                     ptfe_wt: float = 0.0, mixing: str = 'ballmill') -> dict:
+    """Literature-anchored with/without estimate of σ_e, σ_ion and porosity when
+    VGCF / Super P / PTFE are added, at a given mixing protocol.  PURE ANALYTIC
+    (no sim) — a full MPM-additive run on the GPU is the cross-check.
+
+    Anchored DIRECTIONS (each validated against LPSCl-ASSB literature):
+      • PTFE  → porosity ↓ (−6.4 %p/wt, Hong 2026 fibrillar void-fill) AND
+                σ_ion ↓ (×0.74/wt, binder occupation; confined ≫ NBR wet ×0.48).
+      • carbon (VGCF/Super P), BULK (mixing=ballmill/handmix) → σ_e ↑ with a
+                percolation gate at p_c≈4 wt% (Reisacher 2023); Super P ≥ VGCF per-wt
+                at low loading (our voxel "density beats reach"); σ_ion ↓, Super P
+                blocking ~1.8× VGCF (our voxel; Kim2025 σ_ion Super P lowest).
+      • Super P, COATING (mixing=thinky dry-coat) → σ_e COLLAPSE up to ~3 decades
+                (Kim2025: SE–SP@CAM 1.0e-5 vs SE@CAM 3.3e-2) — Super P-rich SE coating
+                blocks CAM–CAM.  VGCF stays high (embedded, σ_e ≈ no-CA, Kim2025 1.4e-2).
+                ⇒ the carbon-density sign FLIPS with position (bulk boost ↔ coating block).
+    """
+    sig_e = (metrics.get('electronic_sigma_full_mScm_stage_e_physics')
+             or metrics.get('electronic_sigma_full_mScm_physics')
+             or metrics.get('electronic_sigma_full_mScm_stage_e')
+             or metrics.get('electronic_sigma_full_mScm'))
+    sig_i = (metrics.get('ionic_sigma_full_mScm_stage_e_physics')
+             or metrics.get('ionic_sigma_full_mScm_physics')
+             or metrics.get('ionic_sigma_full_mScm_stage_e')
+             or metrics.get('ionic_sigma_full_mScm'))
+    por = metrics.get('porosity_pct', metrics.get('porosity'))
+    if sig_e is None:
+        return {'available': False, 'reason': 'electronic σ not in metrics — Stage E first'}
+    sig_e = float(sig_e)
+    sig_i = float(sig_i) if sig_i is not None else None
+    por = float(por) * (100.0 if (por is not None and por <= 1.0) else 1.0) if por is not None else None
+
+    carbon_wt = max(0.0, vgcf_wt) + max(0.0, superp_wt)
+    coating = (mixing == 'thinky')                       # dry-coat → carbon in SE-coating-on-CAM
+    flags, notes = {}, []
+
+    # ── σ_e (electronic) ────────────────────────────────────────────────────
+    # carbon vol fraction (of composite solid)
+    phi_C = sum(max(0.0, w) / 100.0 * (_RHO_SOLID / _ADD_RHO[k])
+                for k, w in (('VGCF', vgcf_wt), ('SuperP', superp_wt)))
+    g_perc = _sat(carbon_wt / _CARB_PC_WT)               # soft percolation gate (Reisacher p_c≈4wt%)
+    # VGCF is the more efficient backbone per-wt once load-bearing; Super P wins at low bulk loading.
+    eff = 1.0 + 0.6 * (vgcf_wt - superp_wt) / max(carbon_wt, 1e-9) if carbon_wt > 0 else 1.0
+    d_sig_e = (phi_C ** 2) * _SIGMA_C_MSCM * g_perc * max(eff, 0.2)
+    sig_e_new = sig_e + d_sig_e
+    if coating and superp_wt > 0:                        # ★ Super P-rich SE-coating → σ_e collapse
+        block = 10.0 ** (-3.0 * _sat(superp_wt / 2.9))   # 2.9 wt% → 3 decades (Kim2025); scales w/ wt
+        sig_e_new *= block
+        flags['superp_coating_collapse'] = round(block, 4)
+        notes.append(f'thinky(dry-coat)+Super P → σ_e ×{block:.3g} 붕괴 (Kim2025 SE–SP@CAM, '
+                     'Super P-rich coating이 CAM–CAM 전기연결 차단). VGCF면 회복.')
+    if ptfe_wt > 0:                                      # PTFE insulator: mild σ_e drag
+        sig_e_new *= (1.0 - 0.03 * ptfe_wt)
+    sig_e_new = max(sig_e_new, 0.0)
+
+    # ── σ_ion (ionic) ───────────────────────────────────────────────────────
+    sig_i_new = sig_i
+    if sig_i is not None:
+        f = (1.0 - _SION_BLOCK_VGCF * max(0.0, vgcf_wt)) \
+            * (1.0 - _SION_BLOCK_SUPERP * max(0.0, superp_wt)) \
+            * (_PTFE_SION_PER_WT ** max(0.0, ptfe_wt))   # Hong: ×0.74 per wt PTFE
+        sig_i_new = max(sig_i * f, 0.0)
+
+    # ── porosity ────────────────────────────────────────────────────────────
+    por_new = por
+    if por is not None:
+        d_por = _PTFE_DPOR_PER_WT * max(0.0, ptfe_wt)    # Hong 2026 fibrillar void-fill
+        por_new = max(por + d_por, _POR_FLOOR)
+        if ptfe_wt > 0:
+            notes.append(f'PTFE {ptfe_wt:g} wt% → porosity {d_por:+.1f}%p (Hong 2026 fibrillation '
+                         f'void-fill); σ_ion은 binder 점유로 ×{_PTFE_SION_PER_WT ** ptfe_wt:.2f} '
+                         '감소(densification 이득 상회).')
+    if carbon_wt > 0:
+        notes.append(('VGCF/Super P bulk' if not coating else 'thinky coating')
+                     + f' carbon {carbon_wt:g} wt% (p_c≈4): σ_e {("↑" if d_sig_e>0 else "·")}'
+                     + (f', Super P가 σ_ion {1-_SION_BLOCK_SUPERP:.2f}/wt로 VGCF({1-_SION_BLOCK_VGCF:.2f}/wt)보다 더 막음'
+                        if superp_wt > 0 else ''))
+
+    def _r(a, b):
+        return round(b / a, 3) if (a and a > 1e-12) else None
+    return {
+        'available': True,
+        'inputs': {'vgcf_wt': vgcf_wt, 'superp_wt': superp_wt, 'ptfe_wt': ptfe_wt, 'mixing': mixing},
+        'phi_carbon': round(phi_C, 4),
+        'sigma_e_old':  round(sig_e, 5),   'sigma_e_new':  round(sig_e_new, 5),  'sigma_e_ratio':  _r(sig_e, sig_e_new),
+        'sigma_ion_old': (round(sig_i, 5) if sig_i is not None else None),
+        'sigma_ion_new': (round(sig_i_new, 5) if sig_i_new is not None else None),
+        'sigma_ion_ratio': (_r(sig_i, sig_i_new) if sig_i is not None else None),
+        'porosity_old': (round(por, 2) if por is not None else None),
+        'porosity_new': (round(por_new, 2) if por_new is not None else None),
+        'porosity_delta_pp': (round(por_new - por, 2) if por is not None else None),
+        'flags': flags,
+        'notes': notes,
+        'anchors': 'Hong2026(PTFE void/σion) · Reisacher2023(p_c≈4wt%) · Kim2025(SuperP coating σ_e collapse, σion) · voxel(SuperP 1.8× block)',
+    }
+
+
 # ── CLI smoke test ──────────────────────────────────────────────────────
 if __name__ == '__main__':
     import argparse, json
