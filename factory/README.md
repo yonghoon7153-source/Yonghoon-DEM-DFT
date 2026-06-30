@@ -27,7 +27,11 @@
 ## 3. report card 섹션 (표준 전기화학 산출물)
 `transport`(σ300/273·Ea·BVSE) · `thermodynamic_stability`(e_hull·분해) · `electrochemical_window`(ESW·SEI gap) · `mechanical`(B/G/E/ν) · `electronic`(gap·N(E_F)) · `structure_chemistry`(배위·결합·산화상태) · `dynamical_stability`(허수모드) · `testable_predictions`(XPS/Raman/NMR) · `overall`(요약·flag·정직한계).
 
-각 섹션은 **`status`(done/pending/n.a.) + `confidence`(A/B/C) + `method` + `caveats`** 를 항상 포함 → 과대주장 방지.
+각 섹션은 **`status`(done/pending/n.a.) + `confidence`(A/B/C) + `method` + `source` + `caveats`** 를 항상 포함 → 과대주장 방지. **`source`는 스크립트가 실제로 읽는 파일만** 표기(자동화 허위귀속 금지; 수기 curation은 `curation:manual` 명시).
+
+**confidence rubric** — A = DFT, 수렴, multi-witness 또는 실험검증 · B = single-config DFT/MLIP 또는 상대값 · C = fast proxy(스크리닝).
+
+**roadmap descriptors (인정하되 미계산, status:n.a.)** — 신뢰 가능한 SE 카드가 아직 빚진 것: **anode-interface 안정성**(ESW 하한 1.72 V = Li 근처 환원, 헤드라인 리스크) · **임계전류밀도/dendrite(CCD)** · **grain-boundary 수송**(bulk σ ≠ total σ) · **공기/수분(H₂S) 안정성**(thioborate 민감) · **전자전도도**(self-discharge). 카드에 n.a.로 노출 → reviewer가 누락 아닌 "인지됨"으로 봄.
 
 ## 4. Human-in-loop 게이트 (자율성)
 오케스트레이터(v1.1)는 스테이지 사이에 게이트:

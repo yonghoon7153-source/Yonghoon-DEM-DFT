@@ -62,8 +62,8 @@ GATE_Q = {
 }
 
 
-def plan(sysid):
-    card = A.build(sysid)
+def plan(sysid, stamp=None):
+    card = A.build(sysid, stamp=stamp)
     s = A.SYSTEMS[sysid]
     secs = [k for k in STAGE_META]
     done, pending = [], []
@@ -103,14 +103,13 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("system", choices=list(A.SYSTEMS))
     ap.add_argument("--assemble", action="store_true", help="re-build card JSON+MD from db/")
-    ap.add_argument("--stamp", default="UNSTAMPED", help="provenance UTC timestamp (caller-provided)")
+    ap.add_argument("--stamp", default=None, help="provenance UTC (default: now)")
     args = ap.parse_args()
 
-    card, s, done, pending = plan(args.system)
+    card, s, done, pending = plan(args.system, stamp=args.stamp)
     print(render(card, s, done, pending))
 
     if args.assemble:
-        card["generated_utc"] = args.stamp
         A.CARDS.mkdir(parents=True, exist_ok=True)
         (A.CARDS / f"{args.system}_report_card.json").write_text(json.dumps(card, indent=2, ensure_ascii=False))
         (A.CARDS / f"{args.system}_report_card.md").write_text(A.to_md(card))

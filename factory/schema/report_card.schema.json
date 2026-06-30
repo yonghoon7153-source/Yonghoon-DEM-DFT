@@ -6,7 +6,8 @@
   "required": ["schema_version", "system", "overall"],
   "properties": {
     "schema_version": {"type": "string"},
-    "generated_utc": {"type": "string", "description": "stamped by the caller (scripts cannot read the clock)"},
+    "generated_utc": {"type": "string", "description": "ISO UTC, stamped at assembly time"},
+    "confidence_rubric": {"type": "string", "description": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy"},
     "system": {
       "type": "object",
       "required": ["id", "composition", "structure_ref"],
@@ -34,7 +35,8 @@
         "sigma_273K_mS_cm": {"type": ["number", "null"]},
         "Ea_eV": {"type": ["number", "null"]},
         "D0_cm2_s": {"type": ["number", "null"]},
-        "bvse_barrier_eV": {"type": ["number", "null"]}
+        "bvse_barrier_val2": {"type": ["number", "null"], "description": "softBV percolation barrier in val^2 units (relative, NOT eV; needs NEB calibration)"},
+        "bvse_channel_volume_fraction": {"type": ["number", "null"]}
       }},
     "thermodynamic_stability": {"$ref": "#/$defs/section_with",
       "properties": {
@@ -46,7 +48,9 @@
         "esw_reduction_V": {"type": ["number", "null"]},
         "esw_oxidation_V": {"type": ["number", "null"]},
         "window_V": {"type": ["number", "null"]},
-        "sei_products": {"type": ["array", "null"], "items": {"type": "object"}}
+        "sei_products": {"type": ["array", "null"], "items": {"type": "object"}},
+        "sei_min_gap_eV": {"type": ["number", "null"], "description": "min band gap among PREDICTED decomposition products (not won't-form phases)"},
+        "passivation_thresholds_eV": {"type": ["object", "null"], "description": "documented heuristic tiers"}
       }},
     "mechanical": {"$ref": "#/$defs/section_with",
       "properties": {
@@ -79,6 +83,11 @@
         "raman_ir": {"type": ["array", "null"]},
         "nmr": {"type": ["array", "null"]}
       }},
+    "anode_interface_stability": {"$ref": "#/$defs/section_with", "description": "ROADMAP: Li-metal reduction at ESW lower limit (headline risk)."},
+    "critical_current_density": {"$ref": "#/$defs/section_with", "description": "ROADMAP: dendrite resistance / CCD."},
+    "grain_boundary_transport": {"$ref": "#/$defs/section_with", "description": "ROADMAP: bulk sigma != total sigma."},
+    "air_moisture_stability": {"$ref": "#/$defs/section_with", "description": "ROADMAP: H2S evolution / hydrolysis."},
+    "electronic_conductivity": {"$ref": "#/$defs/section_with", "description": "ROADMAP: sigma_electronic / self-discharge."},
     "overall": {
       "type": "object",
       "required": ["summary"],
