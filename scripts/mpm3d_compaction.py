@@ -28,6 +28,19 @@ import sys
 import numpy as np
 
 
+def binder_cap(w_wt, w_opt):
+    """A3 non-monotonic binder efficiency vs PTFE wt% (dimensionless, peak = 1 at
+    w=w_opt).  cap(w) = (w/w*)·exp(1 - w/w*): 0 at w=0, rises to 1 at w=w_opt, then
+    decays for over-application (over-crosslink / agglomeration — #264 X14, Cho 2024).
+    Physical: too little binder → weak binding (delamination-prone); optimal →
+    max fibril densification (Hong 2026 void -6.4%p); too much → inert agglomerate,
+    declining mechanical benefit.  w_opt → ∞ recovers a flat ~constant near w≪w_opt."""
+    if w_opt <= 0 or w_wt <= 0:
+        return 0.0
+    r = w_wt / w_opt
+    return max(0.0, r * np.exp(1.0 - r))
+
+
 def parse_args(argv):
     ap = argparse.ArgumentParser(description="3D MPM compaction (servo to target σzz).")
     ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'])
@@ -69,6 +82,16 @@ def parse_args(argv):
                     help='SE cohesion / adhesion (GPa, Cauchy): cold-weld + vdW of the soft sulfide — '
                          'an attractive stress that reduces the net contact repulsion → densifies. '
                          'Real physics (not a target fudge); LPSC ~0.01-0.05 GPa.  Acts in compression.')
+    ap.add_argument('--coh-ptfe', type=float, default=0.10,
+                    help='A3: PEAK PTFE binder cohesion (GPa) at the optimal loading.  The PTFE fibril web '
+                         'binds + densifies (Hong 2026 void -6.4%%p).  The EFFECTIVE binder cohesion is '
+                         'NON-MONOTONIC in PTFE wt%% (see --binder-opt-wt): too little → weak binding / '
+                         'delamination-prone; too much → over-crosslink / agglomeration (#264 X14, Cho 2024 '
+                         'over-binder harmful) → declining mechanical benefit.')
+    ap.add_argument('--binder-opt-wt', type=float, default=1.5,
+                    help='A3: PTFE wt%% at which the binder benefit peaks (Hong ~1 wt%% optimal + a small '
+                         'over-margin).  coh_PTFE(w) = coh_ptfe · (w/w*)·exp(1-w/w*) — rises to coh_ptfe at '
+                         'w=w*, then decays for over-application.  Set w* large to recover the old constant.')
     ap.add_argument('--e-se', type=float, default=1.53, help='SE modulus (GPa); champion 1.53 (softened)')
     ap.add_argument('--e-am', type=float, default=140.0, help='AM modulus (GPa)')
     ap.add_argument('--sigma-y', type=float, default=0.30,
@@ -539,11 +562,21 @@ def main(argv):
                 add_pvs = float(cnt[nm]['vol_um3'] / max(len(pts), 1)) / (um_box ** 3)   # box units
                 pvs = np.concatenate([pvs, (add_pvs * _w).astype(np.float32)])
                 phase_np = np.concatenate([phase_np, np.full(len(pts), code, np.int8)])
-                _coh = {2: 0.0, 3: 0.0, 4: 0.10}[code]            # VGCF/SuperP not sticky; PTFE binder ≫ SE
+                # A3: VGCF/SuperP not sticky; PTFE binder cohesion is NON-MONOTONIC in PTFE wt%
+                # (peak at --binder-opt-wt, decays for over-application — over-crosslink/agglomeration).
+                if code == 4:                                      # PTFE binder
+                    _cap = binder_cap(float(cnt[nm]['wt_pct']), args.binder_opt_wt)
+                    _coh = round(args.coh_ptfe * _cap, 4)
+                    _reg = ('under (delamination-prone)' if cnt[nm]['wt_pct'] < 0.6 * args.binder_opt_wt
+                            else 'over (agglomeration↓)' if cnt[nm]['wt_pct'] > 1.6 * args.binder_opt_wt
+                            else 'near-optimal')
+                else:
+                    _coh, _cap, _reg = 0.0, 0.0, '—'
                 coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
+                _bind = (f" binder_cap={_cap:.2f} [{_reg}] (opt {args.binder_opt_wt}wt%)" if code == 4 else "")
                 print(f"  [additives] {nm}: {nobj} objects ({cnt[nm]['wt_pct']}wt% = "
                       f"{cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
-                      f"(E={E} σ_y={sy} coh={_coh}, phase {code})")
+                      f"(E={E} σ_y={sy} coh={_coh}, phase {code}){_bind}")
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
