@@ -47,28 +47,32 @@ SIGMA_BULK_DEFAULT = 3.0e-3  # S/cm (grain interior, ionic)
 SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
 
 # ───────────────────────────────────────────────────────────────────────
-# Trevisanello 2021 size + crystallinity correction for NCM σ_AM
+# Grain-boundary (crystallinity) correction for NCM σ_AM — "Trevisanello-spirit"
+# DIRECTION + corpus-fit (β, r0).  See A1 note in generate_comparison_plots.py.
 # ───────────────────────────────────────────────────────────────────────
-# Per-particle effective σ_AM depends on:
-#   - AM_S (small primary single-crystal, ≈2.5 µm): minimal grain-boundary effect
-#     → σ_eff ≈ σ_grain (1.0× literature bulk)
-#   - AM_P (large polycrystalline secondary aggregate, ≈5 µm): strong GB reduction
-#     → σ_eff = σ_grain / (1 + (r/r0)^β)  Trevisanello formula
-#
-# Adding this to the solver means R_bulk reflects intrinsic crystallinity +
-# size effects directly (rather than form post-correcting).  The form's
-# σ_S/σ_P endpoint mix term should naturally simplify after this refactor.
-NCM_AM_REF_R = 2.0       # µm reference radius (Trevisanello)
-NCM_AM_GB_EXPONENT = 1.5  # Trevisanello β
+# ⚠ ATTRIBUTION (2026-06-30, audit ⚠#11): Trevisanello 2021 measured Li⁺ chemical
+# diffusion / BET / R_ct — NOT σ_e and NOT a σ-vs-radius curve.  What transfers is
+# only the DIRECTION (single-crystal lacks internal GBs → less reduction; large
+# polycrystalline secondaries have internal GBs → reduced effective transport).
+# The FORM σ_eff = σ_grain/(1+(r/r0)^β) with r0=2 µm, β=1.5 is OUR corpus fit, not a
+# Trevisanello formula — really a crystallinity/grain-contact-efficiency factor.
+# Per-particle effective σ_AM:
+#   - AM_S (small primary single-crystal, ≈2.5 µm): minimal GB effect → ≈ σ_grain (1.0×)
+#   - AM_P (large polycrystalline secondary, ≈5 µm): GB reduction → σ_grain/(1+(r/r0)^β)
+# ⚠ MATERIAL-SPECIFIC: the single>poly direction holds for UNDOPED NCM811; W-doped
+# NCWA (#266 Oh) shows poly ≫ single → for those materials σ_AM is a material INPUT.
+NCM_AM_REF_R = 2.0       # µm reference radius (corpus-fit; r0)
+NCM_AM_GB_EXPONENT = 1.5  # GB-reduction exponent β (corpus-fit; Trevisanello-spirit direction)
 
 def sigma_AM_relative(r_um, particle_type):
-    """Relative σ_AM vs grain interior (Trevisanello 2021).
+    """Relative σ_AM vs grain interior (crystallinity/GB factor; corpus-fit,
+    Trevisanello-spirit direction — see A1 note above, NOT a Trevisanello σ_e formula).
     Returns 1.0 if no GB scaling (single-crystal or non-AM particle).
     Returns < 1.0 for polycrystalline secondary aggregates with internal GBs.
 
     Convention (consistent with input_params type_map):
       AM_S = small primary single-crystal NCM    → no GB scaling, ratio = 1.0
-      AM_P = large polycrystalline secondary NCM → GB reduction by Trevisanello
+      AM_P = large polycrystalline secondary NCM → GB reduction (corpus-fit factor)
       SE, others                                 → ratio = 1.0 (not used in AM-AM)
     """
     if particle_type == 'AM_P':
@@ -296,12 +300,12 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         # Normalized resistances (ρ=1, scaled by k_weight for thermal):
         # R_bulk = d / (k_weight × σ_rel × π × r²)
         #
-        # For ELECTRONIC mode, σ_rel applies Trevisanello 2021 size +
-        # crystallinity correction (AM_P polycrystalline gets r-dependent
-        # GB reduction, AM_S single-crystal stays at 1.0).  This bakes the
-        # NCM literature physics into the solver — the form's σ_S/σ_P
+        # For ELECTRONIC mode, σ_rel applies the GB/crystallinity correction
+        # (AM_P polycrystalline gets r-dependent GB reduction, AM_S single-crystal
+        # stays at 1.0; GB-direction is Trevisanello-spirit, β/r0 corpus-fit — A1).
+        # This bakes the crystallinity physics into the solver — the form's σ_S/σ_P
         # endpoint mix and NCM correction become redundant after refactor.
-        # Per-particle σ for electronic mode (Trevisanello).
+        # Per-particle σ for electronic mode (GB/crystallinity factor).
         # Detect electronic mode from target_types + type_map (mode parameter
         # is unreliable — caller may not set it correctly).  Electronic =
         # AM-only network (no SE in targets).  Ionic = SE-only.  Thermal = all.

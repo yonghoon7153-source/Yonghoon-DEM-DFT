@@ -2781,7 +2781,7 @@ def plot_electronic_sigma(data_list, names, outdir):
 
     # Stage E target (kept as the headline series — red squares solid)
     ax.plot(x, y_line, 's-', color='#e74c3c', markersize=ms, linewidth=lw,
-            label="σ_e Stage E target (Trevisanello, mS/cm)")
+            label="σ_e Stage E target (mS/cm)")
     # AUDIT EXCLUDED overlay on per-config plot (mirror parity plot's
     # treatment) — gray ✗ on top of EXCL data points so user immediately
     # sees which red square is documented anomaly (not form fail).
@@ -2830,21 +2830,21 @@ def plot_electronic_sigma(data_list, names, outdir):
     #   1. --y-max-sigma-e  (user σ_AM(e) UI input — preferred, σ_e-specific)
     #   2. --y-max-sigma    (unified σ y-max — shared with σ_ionic)
     #   3. auto-scale       (matplotlib default)
-    # σ_AM(e) NEVER touches form anchors — form keeps Trevisanello defaults.
+    # σ_AM(e) NEVER touches form anchors — form keeps the corpus-fit σ_S/σ_P defaults.
     if _Y_MAX_SIGMA_E is not None and _Y_MAX_SIGMA_E > 0:
         ax.set_ylim(0, _Y_MAX_SIGMA_E)
     elif _Y_MAX_SIGMA is not None and _Y_MAX_SIGMA > 0:
         ax.set_ylim(0, _Y_MAX_SIGMA)
     ax.legend(fontsize=8, loc='upper left')
-    stage_n = ((f"Stage 22.5 (Trevisanello, 8 LIVE)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (Trevisanello-locked)") if _LOCK_ENDPOINTS else "Stage 21 (live-fit)")
+    stage_n = ((f"Stage 22.5 (8 LIVE)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (endpoints anchored)") if _LOCK_ENDPOINTS else "Stage 21 (live-fit)")
     # Physically-organized form display (Stage 22 reorganization):
-    #   Block 1: AM material (Trevisanello literature)
+    #   Block 1: AM material (corpus-fit σ_S/σ_P endpoints + GB-direction NCM(r))
     #   Block 2: Geometric (Bruggeman + Holm)
     #   Block 3: Network corrections
     #   Block 4: Thin-film gates
     #   Block 5: Fracture + Tortuosity
     title = (f"σ_electronic — Stage E target vs {stage_n}" + fit_summary + "\n"
-             "σ_e = (σ_S·NCM_S)^(1-p)·(σ_P·NCM_P)^p  ←AM material (Trevisanello)   "
+             "σ_e = (σ_S·NCM_S)^(1-p)·(σ_P·NCM_P)^p  ←AM material (corpus-fit endpoints + GB NCM(r))   "
              "× φ_AM⁴·√A_AM-AM  ←Bruggeman×Holm   "
              "× (T/d)^β_T·r_SE^β_rSE  ←geometry\n"
              "       × exp[β_AC·φ·logCN + β_v·v_AM]  ←network   "
@@ -2853,7 +2853,7 @@ def plot_electronic_sigma(data_list, names, outdir):
              "       × exp[g_thin·(β_φth·logφ + β_covth·log cov_AM,P + β_fpth·log f_p)]  ←thin film   "
              "× C(τ) = exp[p_τ + q_τ·lnτ + r_τ·ln²τ]  ←tortuosity")
     if not form_ok:
-        title = ("Electronic Conductivity — Stage E (Trevisanello-corrected, AM-AM Network)\n"
+        title = ("Electronic Conductivity — Stage E (GB-corrected, AM-AM Network)\n"
                  "σ_AM_ref = 50 mS/cm  [form overlay unavailable — corpus too small or fit failed]")
     ax.set_title(title, fontsize=8, fontweight='bold')
 
@@ -4032,7 +4032,7 @@ def plot_electronic_active_am(data_list, names, outdir):
 
     _apply_style(ax1, '', names)
     ax1.set_title('Electronic Active AM & Dead AM Analysis  '
-                  '[σ_e shown = Stage E target (Trevisanello-corrected)]\n'
+                  '[σ_e shown = Stage E target (GB-corrected)]\n'
                   'Green≥95%, Yellow≥80%, Red<80%',
                   fontsize=10, fontweight='bold')
     lines1, labels1 = ax1.get_legend_handles_labels()
@@ -5596,7 +5596,7 @@ PLOT_REGISTRY["fracture_pairtype"] = {
 # Form:  σ_e = σ_S^(1-p)·σ_P^p · φ_AM^4 · NCM(r̄) · √A_AM-AM
 #              · (T/d_AM)^β_T · exp(β_v·am_vuln) · C(τ)
 # 7 live-fit OLS: log σ_S, log σ_P, β_T, β_v, p_τ, q_τ, r_τ
-# Locked: a=4 (φ_AM), d=0 (f_p_e), Trevisanello NCM, Holm √A
+# Locked: a=4 (φ_AM), d=0 (f_p_e), GB-direction NCM(r) (β=1.5 corpus-fit), Holm √A
 # Audit-trail exclusions (5 cases — see scripts/electronic_nested_cv.py
 # _EXCLUDED_NAMES_EL).  In dashboard plots these are X-marked, NOT dropped
 # from the corpus for the fit (so the form sees them as outliers honestly).
@@ -5693,25 +5693,35 @@ _EXCLUDED_NAMES_EL = frozenset([
     'input_8mAh_real_15',     # +143% over-pred; same corner family
 ])
 
-_SIGMA_AM_E = 50.0    # NCM811 single-crystal reference (Trevisanello 2021)
+_SIGMA_AM_E = 50.0    # NCM811 reference σ_AM (literature-range bulk; UI default / cap basis).
+                      # NOT a Trevisanello value — Trevisanello 2021 measured Li⁺ diffusion/BET/R_ct,
+                      # not σ_e.  σ_S/σ_P endpoints (below) are the corpus-fit AM electronic anchors.
 _PHI_AM_MIN = 0.30
 _SIGMA_E_MAX = 100.0  # composite cannot exceed σ_AM × volume frac;
                       # cap = 2× σ_AM_single (NCM811) margin.
                       # Anything > 100 mS/cm is physics-pathway bug (10⁴–10⁶
                       # nonsense values from electronic_sigma_*_physics).
 
-# Stage 22 (2026-06-02): LOCK σ_S, σ_P at Trevisanello 2021 literature
-# effective values (was Stage 21 live-fit).  Diagnostic confirmed:
-#   live-fit σ_S=9.13, σ_P=4.14 (ratio 2.21×) vs Trevisanello 10/5 (2.00×)
-#   → ΔLOOCV = -0.0004 (essentially identical, n=94 corpus)
-#   → 2 fewer effective DOF (n/k 84/12 = 7.0, was 84/14 = 6.0)
-#   → Literature-anchored = defensible to critics, matches σ_ionic playbook
-#     (σ_grain=3 Cronau fixed; here σ_S=10, σ_P=5 Trevisanello fixed)
-# The 2.2× S-vs-P asymmetry IS real physics (locking ratio=1 destroys LOOCV
-# by -0.10).  Locking the ABSOLUTE VALUES at literature is the right move.
-_SIGMA_S_LOCKED = 10.0   # S-heavy polycrystalline NCM, Trevisanello 2021
-_SIGMA_P_LOCKED = 5.0    # P-heavy single-crystal NCM, Trevisanello 2021
-_LOCK_ENDPOINTS = True   # toggle: True = Stage 22 locked, False = Stage 21 live-fit
+# σ_S / σ_P — AM electronic endpoints.  σ_S = AM_S endpoint (p=0, small SINGLE-
+# crystal NCM, no internal grain boundaries); σ_P = AM_P endpoint (p=1, large
+# POLYcrystalline NCM, GB-reduced).  VALUES are CORPUS-FIT-ANCHORED:
+#   live-fit σ_S=9.13, σ_P=4.14 (ratio 2.21×); rounded to 10 / 5 (ratio 2.00×)
+#   → ΔLOOCV = -0.0004 (essentially identical, n=94 corpus), 2 fewer DOF (n/k 7.0).
+# ⚠ A1 CORRECTION (2026-06-30, audit ⚠#11 docs/stage2_model_audit_vs_literature.md):
+#   the OLD "Trevisanello 2021" attribution of these σ_e values was WRONG —
+#   Trevisanello 2021 measured Li⁺ chemical diffusion / BET surface area / R_ct,
+#   NOT electronic σ_e.  Trevisanello supports only the GB-DIRECTION (single-crystal
+#   has no internal GBs → higher σ_e than large poly), applied via the NCM(r) factor;
+#   the σ_S/σ_P VALUES are OURS (corpus fit).  The single>poly SIGN is MATERIAL-
+#   SPECIFIC: undoped NCM811 = single>poly (GB scattering); W-doped NCWA (#266 Oh)
+#   = poly 13.7 ≫ single 2.45 (opposite) → σ_S/σ_P are a material INPUT
+#   (--sigma-S/--sigma-P, already wired at the CLI).  Locking ratio=1 costs LOOCV
+#   -0.10, so the 2.2× asymmetry is real for undoped NCM.  Changing the DEFAULT
+#   values/sign is a NUMERICAL change (needs LOOCV re-fit) — left for validation;
+#   this edit fixes ONLY the attribution + the prior single/poly label swap.
+_SIGMA_S_LOCKED = 10.0   # σ_S = AM_S endpoint: small SINGLE-crystal NCM (no internal GB); corpus-fit ~9.1, rounded
+_SIGMA_P_LOCKED = 5.0    # σ_P = AM_P endpoint: large POLYcrystalline NCM (GB-reduced); corpus-fit ~4.1, rounded
+_LOCK_ENDPOINTS = True   # True = use the rounded defaults; False = live-fit. Values are material INPUTS (--sigma-S/-P)
 
 # Stage 22.5 (2026-06-03): drop WEAK BLOCK identified by full ablation
 # (scripts/electronic_ablation_full.py).  Removing 4 weak terms improves
@@ -5724,7 +5734,8 @@ _LOCK_ENDPOINTS = True   # toggle: True = Stage 22 locked, False = Stage 21 live
 #   13: β_logrSE  (r_SE size on AM-AM)      Δ = +0.0014 (Stage 21 marginal)
 #
 # Keep (8 LIVE OLS): β_T, [p_τ, q_τ, r_τ], β_φth, β_covth, β_bi, β_Fe
-# Plus 2 LOCKED: σ_S, σ_P (Trevisanello literature)
+# Plus 2 anchored endpoints: σ_S, σ_P (corpus-fit, material INPUT — see A1 note above;
+#   NOT Trevisanello-measured σ_e — Trevisanello gives only the GB-direction via NCM(r))
 _STAGE_FORM_VERSION = 22.5      # 22.0 = full 12 OLS, 22.5 = drop 4 weak → 8 LIVE
 _STAGE_22_5_DROP_COLS = frozenset([3, 7, 12, 13])
 
@@ -5817,10 +5828,11 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
 
     Stage 22 PRODUCTION form — physically organized in 4 blocks:
 
-    BLOCK 1 — AM material (Trevisanello 2021 literature LOCKED):
+    BLOCK 1 — AM material (corpus-fit σ_S/σ_P endpoints + GB-direction NCM(r)):
       σ_e ∝ (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p
-        σ_S=10, σ_P=5 mS/cm    (S-end vs P-end effective AM, ratio 2.0 ✓ data)
-        NCM(r) = 1 / (1 + (r/2)^1.5)   (Trevisanello grain-boundary correction)
+        σ_S=10 (AM_S single-crystal), σ_P=5 mS/cm (AM_P poly), ratio 2.0 ✓ data
+          — corpus-fit (live ~9.1/4.1, rounded); MATERIAL INPUT, NOT Trevisanello σ_e (A1)
+        NCM(r) = 1 / (1 + (r/2)^1.5)   (GB-direction; β/r0 corpus-fit, Trevisanello-spirit)
 
     BLOCK 2 — Geometric scaling (locked exponents):
       · φ_AM^4              Bruggeman/percolation, exponent=4 Stage 14 lock
@@ -5839,7 +5851,7 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
         g_thin = σ(-5·(T/d_AM − 8))   thin-film 3D→2D crossover gate (Stage 17/21)
       · C(τ) = exp(p_τ + q_τ·lnτ + r_τ·ln²τ)   logpoly2 tortuosity (σ_ionic T1 mirror)
 
-    Live params (12 OLS, σ_S/σ_P LOCKED at Trevisanello literature):
+    Live params (12 OLS, σ_S/σ_P anchored at corpus-fit endpoints):
       β_T, β_v, [p_τ, q_τ, r_τ for C(τ)], β_AC, β_φth, β_covth,
       β_bi, β_Fe, β_fpth, β_logrSE
 
@@ -5850,7 +5862,7 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
       Stage 19  bimodal coupling β_bi    +0.008
       Stage 20  fracture Holm β_Fe       +0.020
       Stage 21  + β_fpth + β_logrSE      +0.003 + EXCL refinement
-      Stage 22  LOCK σ_S=10, σ_P=5 (Trevisanello)
+      Stage 22  anchor σ_S=10, σ_P=5 (corpus-fit, rounded — NOT Trevisanello σ_e)
                   ΔLOOCV ≈ 0 (data-confirmed ratio 2× sweet spot)
                   → 12 OLS, more defensible, n/k 84/12 = 7.0 (was 6.0)
     """
@@ -5971,7 +5983,7 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
     log_Td = np.log(np.maximum(T_a / d_AM, 0.1))
     lt = np.log(tau_a)
     # Stage 16 + 19: NCM RESTORED to log_offset (Stage 18 attempt to make
-    # it live-fit caused collinearity with σ_S/σ_P).  Trevisanello β=1.5
+    # it live-fit caused collinearity with σ_S/σ_P).  GB-direction β=1.5 (corpus-fit)
     # fixed exponent is used.
     ncm_S = 1.0 / (1.0 + np.power(np.maximum(ras_a, 0.05) / 2.0, 1.5))
     ncm_P = 1.0 / (1.0 + np.power(np.maximum(rap_a, 0.05) / 2.0, 1.5))
@@ -6000,7 +6012,7 @@ def _electronic_form_arrays(data_list, names, allow_no_sigma=False):
     # Stage 18 (reverted 2026-06-01): live-fit r_AM exponents created
     # collinearity with σ_S/σ_P (both scaled by (1-p) and p).  OLS
     # equalized σ_S=σ_P=12.55 — physically wrong.  Reverted to fixed
-    # Trevisanello NCM β=1.5 (in log_offset).  See git history for
+    # GB-direction NCM β=1.5 (corpus-fit, in log_offset).  See git history for
     # Stage 18 attempt.
 
     # Stage 19 (2026-06-01): bimodal-packing coupling — captures the
@@ -6181,9 +6193,9 @@ def plot_electronic_fit_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    stage_str = ((f"Stage 22.5 (Trevisanello LOCKED σ_S/σ_P, 8 LIVE OLS)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (Trevisanello LOCKED σ_S/σ_P, 12 OLS params)")
+    stage_str = ((f"Stage 22.5 (anchored σ_S/σ_P, 8 LIVE OLS)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (anchored σ_S/σ_P, 12 OLS params)")
                  if _LOCK_ENDPOINTS else "Stage 21 (14 OLS params, live-fit σ_S/σ_P)")
-    sig_str = (f"σ_S={sigma_S:.1f} LOCKED, σ_P={sigma_P:.1f} LOCKED (Trevisanello 2021)"
+    sig_str = (f"σ_S={sigma_S:.1f}, σ_P={sigma_P:.1f} (corpus-fit endpoints, material INPUT)"
                if _LOCK_ENDPOINTS else f"σ_S={sigma_S:.2f} σ_P={sigma_P:.2f}")
     ax.set_ylabel('σ_e predicted (Stage 22 form, mS/cm)' if _LOCK_ENDPOINTS
                   else 'σ_e predicted (Stage 21 form, mS/cm)')
@@ -6336,7 +6348,7 @@ def plot_electronic_outliers_final(data_list, names, outdir):
     ax.set_xscale('log'); ax.set_yscale('log')
     ax.set_xlim(lim); ax.set_ylim(lim)
     ax.set_xlabel('σ_e actual (Stage E target, mS/cm)')
-    stage_lbl = ((f"Stage 22.5 (Trevisanello-locked, 8 LIVE OLS)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (Trevisanello-locked, 12 OLS)") if _LOCK_ENDPOINTS else "Stage 21 (live-fit, 14 OLS)")
+    stage_lbl = ((f"Stage 22.5 (anchored σ_S/σ_P, 8 LIVE OLS)" if _STAGE_FORM_VERSION >= 22.5 else "Stage 22 (anchored σ_S/σ_P, 12 OLS)") if _LOCK_ENDPOINTS else "Stage 21 (live-fit, 14 OLS)")
     ax.set_ylabel(f'σ_e predicted ({stage_lbl} form)')
     # Show 5 top features to match modal (was 3 — inconsistency with modal display)
     top_corr = '  '.join(f'{k}:{r:+.2f}' for k, r, _ in feat_corr[:5])
@@ -6426,12 +6438,13 @@ def plot_electronic_outliers_final(data_list, names, outdir):
 PLOT_REGISTRY["electronic_fit_final"] = {
     "func": plot_electronic_fit_final,
     "file": "electronic_fit_final.png",
-    "title": "σ_electronic → Stage 22 (Trevisanello-locked, 12 OLS) — 물리 4-block 정돈",
+    "title": "σ_electronic → Stage 22 (anchored σ_S/σ_P, 12 OLS) — 물리 4-block 정돈",
     "description": "Stage 22 PRODUCTION form, 4 physical block 으로 정돈:\n\n"
-                   "BLOCK 1 — AM material (literature locked):\n"
+                   "BLOCK 1 — AM material (corpus-fit endpoints + GB NCM(r)):\n"
                    "  σ_e ∝ (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p\n"
-                   "  σ_S=10, σ_P=5 (Trevisanello 2021 NCM polycrystalline vs single-crystal)\n"
-                   "  NCM(r) = 1 / (1 + (r/2)^1.5)  (Trevisanello grain-boundary 보정)\n\n"
+                   "  σ_S=10 (AM_S single-crystal), σ_P=5 (AM_P polycrystalline) — corpus-fit,\n"
+                   "  material INPUT (A1; NOT Trevisanello-measured σ_e)\n"
+                   "  NCM(r) = 1 / (1 + (r/2)^1.5)  (GB-direction 보정, β/r0 corpus-fit)\n\n"
                    "BLOCK 2 — Geometric (literature locked exponents):\n"
                    "  · φ_AM⁴  (Bruggeman 3D percolation, Stage 14 데이터 lock)\n"
                    "  · √A_AM-AM  (Holm 1967 constriction resistance)\n"
@@ -6446,7 +6459,7 @@ PLOT_REGISTRY["electronic_fit_final"] = {
                    "  · exp(g_thin · (β_φth·logφ + β_covth·logcov_AM,P + β_fpth·logf_p))\n"
                    "  g_thin = σ(-5(T/d − 8))  (thin-film 3D→2D crossover gate, Stage 17/21)\n"
                    "  · C(τ) = exp(p_τ + q_τ·lnτ + r_τ·ln²τ)  (logpoly2, σ_ionic T1 mirror)\n\n"
-                   "Trevisanello 2× ratio 검증: 데이터 sensitivity test 결과 ratio 2.0 이 sweet spot\n"
+                   "σ_S/σ_P 2× ratio 검증 (corpus-fit, NOT Trevisanello): 데이터 sensitivity test 결과 ratio 2.0 이 sweet spot\n"
                    "(LOOCV 0.945), ratio 1.43 (10/7) → 0.914, 3.33 (10/3) → 0.921, 1.0 → 0.841.",
     "origin_tip": "Scatter parity (log-log) + 1:1 + ±20% band. ✗ 표시 = audit 제외.",
 }
@@ -6472,7 +6485,7 @@ def plot_electronic_decomp_final(data_list, names, outdir):
 
     Stage 22.5 factors (10 total; dropped weak terms NOT shown):
       LOCKED (literature anchors):
-        1. mix σ_S/σ_P    : (1-p)·log σ_S + p·log σ_P     Trevisanello endpoints
+        1. mix σ_S/σ_P    : (1-p)·log σ_S + p·log σ_P     corpus-fit endpoints (material INPUT)
         2. φ_AM⁴          : 4·log φ_AM                     Stauffer-Bruggeman backbone
         3. NCM(r̄)         : (1-p)·log NCM_S + p·log NCM_P  Trevisanello GB correction
         4. √A_AM-AM       : 0.5·log A_AM-AM                 Holm 1967 constriction
@@ -7014,11 +7027,11 @@ def main():
                         help="Fixed y-axis max (mS/cm) for σ_ionic / multiscale σ plots")
     parser.add_argument("--y-max-sigma-e", type=float, default=None,
                         help="Fixed y-axis max (mS/cm) for σ_electronic plots (user σ_AM(e) input). "
-                             "Does NOT lock form anchors — form keeps Trevisanello defaults.")
+                             "Does NOT lock form anchors — form keeps the corpus-fit defaults.")
     parser.add_argument("--sigma-S", type=float, default=None,
-                        help="σ_e form: S-end AM conductivity (mS/cm). Default=10 (Trevisanello locked). Set to override.")
+                        help="σ_e form: S-end AM conductivity (mS/cm, AM_S single-crystal). Default=10 (corpus-fit; material INPUT). Set to override.")
     parser.add_argument("--sigma-P", type=float, default=None,
-                        help="σ_e form: P-end AM conductivity (mS/cm). Default=5 (Trevisanello locked). Set to override.")
+                        help="σ_e form: P-end AM conductivity (mS/cm, AM_P polycrystalline). Default=5 (corpus-fit; material INPUT). Set to override.")
     # Generic parameter-comparison selections
     parser.add_argument("--param-x", default="")   # scatter X metric key
     parser.add_argument("--param-y", default="")   # scatter Y metric key
@@ -7030,7 +7043,7 @@ def main():
     args = parser.parse_args()
 
     # σ_e endpoint override (user-set σ_S/σ_P from UI) — applies to Stage 22
-    # locked form.  If both blank → use Trevisanello defaults (10, 5).
+    # locked form.  If both blank → use the corpus-fit defaults (10, 5).
     # If user sets either, override the module constant before any plot runs.
     global _SIGMA_S_LOCKED, _SIGMA_P_LOCKED
     if args.sigma_S is not None and args.sigma_S > 0:
