@@ -83,7 +83,8 @@
         "raman_ir": {"type": ["array", "null"]},
         "nmr": {"type": ["array", "null"]}
       }},
-    "anode_interface_stability": {"$ref": "#/$defs/section_with", "description": "ROADMAP: Li-metal reduction at ESW lower limit (headline risk)."},
+    "anode_interface_stability": {"$ref": "#/$defs/section_with", "description": "COMPUTED: open-Li reduction interphase at anode reservoirs (Li metal 0V, Li-In 0.62V)."},
+    "cathode_interface_stability": {"$ref": "#/$defs/section_with", "description": "COMPUTED (when json present): voltage-resolved SE/cathode oxidation reactivity (Richards/Ong 2016)."},
     "critical_current_density": {"$ref": "#/$defs/section_with", "description": "ROADMAP: dendrite resistance / CCD."},
     "grain_boundary_transport": {"$ref": "#/$defs/section_with", "description": "ROADMAP: bulk sigma != total sigma."},
     "air_moisture_stability": {"$ref": "#/$defs/section_with", "description": "ROADMAP: H2S evolution / hydrolysis."},

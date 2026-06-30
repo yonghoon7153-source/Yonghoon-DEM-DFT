@@ -1,7 +1,7 @@
 # Report card — sc2o3 ((LPSCl1.6 + Sc2O3, x=0.25))
 
 **구조** `db/structures/sc2o3_TODO.cif (not yet built/relaxed)` (None atom) · cascade_v23 rank-1 dopant (Sc2O3); NOT yet deep-validated
-**완성도** 1/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T06:56:05.263114+00:00
+**완성도** 1/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T07:04:56.594837+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
 > cascade rank-1 candidate (LPSCl1.6 + Sc2O3, x=0.25): deep validation PENDING (1/9 core done). Only cascade screening available so far; the orchestrator plans the remaining DFT/MLIP stages (with gates).
@@ -23,6 +23,7 @@
 | structure_chemistry | pending | - |  |
 | dynamical_stability | pending | - |  |
 | anode_interface_stability | n.a. | - |  |
+| cathode_interface_stability | n.a. | - |  |
 | testable_predictions | pending | - |  |
 
 ## Roadmap descriptors (acknowledged, not yet computed)

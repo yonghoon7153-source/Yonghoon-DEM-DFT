@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T06:56:05.224519+00:00",
+  "generated_utc": "2026-06-30T07:04:56.558155+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "b2o3",
@@ -256,6 +256,13 @@
     ],
     "caveats": "vs BARE Li METAL (0 V): b2o3 is WORSE than undoped -- the B dopant forms METALLIC LiB (gap 0) -> min gap 0.0 vs undoped 0.7 (Li3P). BUT vs Li-In (~0.62 V, the standard sulfide-ASSB lab anode): the metallic LiB does NOT form (B -> B6P + Li3BO3) -> b2o3 min gap 0.7 (Li3P only), same leaky tier as undoped-at-Li-metal; undoped at Li-In is even milder (1.89, P2S7, no Li3P). => b2o3's worst anode liability (metallic LiB) is specific to bare Li metal and is AVOIDED with a Li-In anode -> practically manageable (which is why sulfide ASSBs use Li-In). Thermodynamic products only; morphology/kinetics not modeled."
   },
+  "cathode_interface_stability": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not computed",
+    "source": "—",
+    "caveats": "run tools/oxidation/interface_reactivity_v2.py (SE x cathode, voltage-resolved) for the oxidation-side interface"
+  },
   "critical_current_density": {
     "status": "n.a.",
     "confidence": null,
@@ -300,6 +307,7 @@
       "ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped",
       "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too",
       "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B",
+      "CATHODE oxidation interface NOT yet computed (interface_reactivity_v2.py ready; SE x LiCoO2/NMC811, voltage-resolved) -> the both-sided interface module is anode-done, cathode-pending",
       "CCD/dendrite, GB, air/moisture, e-conductivity still NOT computed; elastic Cij pending; electronic curated (GGA)",
       "cascade fast-estimates vs deep-validation differ (seeds future ML calibration)"
     ],

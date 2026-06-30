@@ -77,6 +77,18 @@ stages:
     cost: low
     confidence: B
 
+  interface_stability:                 # external-review #1 (decisive): both-sided SE/electrode interface
+    fills_section: [anode_interface_stability, cathode_interface_stability]
+    anode_tool: tools/oxidation/anode_interface_stability.py   # open-Li reduction profile, multi anode (Li metal 0V, Li-In 0.62V)
+    cathode_tool: tools/oxidation/interface_reactivity_v2.py   # GrandPotential SE/cathode reactivity, voltage-resolved (Richards/Ong 2016)
+    method: "anode: open-Li get_element_profile -> interphase products + MP gaps (leaky<2eV); cathode: most-exothermic SE/cathode rxn energy vs charge V"
+    figures: tools/oxidation/plot_anode_interface.py + plot_cathode_interface.py
+    out: [db/properties/anode_interface_<id>.json, db/properties/cathode_interface_<id>.json]
+    compute: gabia/local (MP API)
+    cost: low
+    confidence: B
+    status: "anode DONE (b2o3: Li-metal-unstable/metallic-LiB, Li-In-manageable); cathode tool READY, run pending"
+
   mechanical:
     fills_section: mechanical
     tool: tools/comp1_v3/build_elastic_strain_inputs.py + fit_elastic_cij_stress.py

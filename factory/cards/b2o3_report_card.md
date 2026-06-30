@@ -1,7 +1,7 @@
 # Report card — b2o3 (Li58P8S41Cl16B2O3)
 
 **구조** `db/structures/b2o3_relaxV0.cif` (128 atom) · DFT V0 fixed-cell relax (B2O3-doped LPSCl1.6 champion)
-**완성도** 8/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T06:56:05.224519+00:00
+**완성도** 8/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T07:04:56.558155+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
 > B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; #6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars pending). KEY TRADE-OFF: vs BARE Li metal the bulk-transport gain comes WITH a WORSE anode -- the B dopant adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7). BUT that liability is bare-Li-metal-SPECIFIC: vs a Li-In anode (0.62 V, the standard sulfide-ASSB anode) the metallic LiB does NOT form (B -> B6P + Li3BO3) -> min gap 0.7 (Li3P only), same tier as undoped-at-Li-metal -> practically MANAGEABLE with the alloy anode the field already uses. Plus NARROW ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor; the metallic-LiB anode liability is real at Li metal but avoided with Li-In.
@@ -23,6 +23,7 @@
 | structure_chemistry | done | B | coordination_motifs=trigonal BS3; PS4 thiophosphate + P-O phosphate (PS4-xOx); free-S2- (isolate |
 | dynamical_stability | done | B | imaginary_modes=0, verdict=no Gamma-point imaginary modes (NECESSARY, not sufficient) |
 | anode_interface_stability | done | B | verdict=Li-metal UNSTABLE (metallic LiB); Li-In (0.7 eV, no metallic LiB) MANAGEABLE, min_produc |
+| cathode_interface_stability | n.a. | - |  |
 | testable_predictions | done | B | xps=S 2p: free-S2-(low BE) < PS4-S < B-S/BS3(high BE shoulder); B 1s B3+; P 2p P5+ (PS4-xOx), ra |
 
 ## Roadmap descriptors (acknowledged, not yet computed)
@@ -38,6 +39,7 @@
 - ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped
 - phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too
 - structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B
+- CATHODE oxidation interface NOT yet computed (interface_reactivity_v2.py ready; SE x LiCoO2/NMC811, voltage-resolved) -> the both-sided interface module is anode-done, cathode-pending
 - CCD/dendrite, GB, air/moisture, e-conductivity still NOT computed; elastic Cij pending; electronic curated (GGA)
 - cascade fast-estimates vs deep-validation differ (seeds future ML calibration)
 

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T06:56:05.263114+00:00",
+  "generated_utc": "2026-06-30T07:04:56.594837+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "sc2o3",
@@ -96,6 +96,13 @@
     "method": "not computed",
     "source": "—",
     "caveats": "run tools/oxidation/anode_interface_stability.py (Li-open) — decisive risk (external review #1)"
+  },
+  "cathode_interface_stability": {
+    "status": "n.a.",
+    "confidence": null,
+    "method": "not computed",
+    "source": "—",
+    "caveats": "run tools/oxidation/interface_reactivity_v2.py (SE x cathode, voltage-resolved) for the oxidation-side interface"
   },
   "critical_current_density": {
     "status": "n.a.",

@@ -106,6 +106,7 @@ SYSTEMS = {
             "charge_csv": "b2o3_charge_xps.csv",
             "bvse": "bvse_b2o3/b2o3_bvse_percolation.json",
             "anode": "anode_interface_b2o3.json",
+            "cathode": "cathode_interface_b2o3.json",
         },
         # electronic has no machine-readable summary -> curated (provenance honest).
         "electronic_manual": {"band_gap_eV": 1.97, "N_EF": 0.0,
@@ -129,6 +130,7 @@ SYSTEMS = {
             "phonon": "sc2o3_phonon_stability.json", "eos": "sc2o3_eos_dft_result.json",
             "bonds": "sc2o3_bond_lengths.json", "coord": "sc2o3_coordination_bonds.json",
             "charge_csv": "sc2o3_charge_xps.csv", "bvse": "bvse_sc2o3/sc2o3_bvse_percolation.json",
+            "anode": "anode_interface_sc2o3.json", "cathode": "cathode_interface_sc2o3.json",
         },
         # no electronic_manual -> electronic section pending
     },
@@ -343,6 +345,45 @@ def build(sysid, stamp=None):
             method="not computed", source="—",
             caveats="run tools/oxidation/anode_interface_stability.py (Li-open) — decisive risk (external review #1)")
 
+    # cathode-interface stability (oxidation side; COMPUTED if the json exists).
+    # cathode json is keyed by CATHODE -> by_voltage -> {electrolyte_label: rxn_energy}.
+    cb = jload(F.get("cathode"))
+    if cb and cb.get("results"):
+        cr = cb["results"]
+        vkeys = sorted({v for c in cr.values() for v in c.get("by_voltage", {})}, key=float)
+        topV = vkeys[-1] if vkeys else None                     # top charge V = most oxidizing
+        per_cat, worst_cat, worst_e, vs_undoped = {}, None, None, None
+        for cat, cd in cr.items():
+            bv = cd.get("by_voltage", {}).get(topV, {}) if topV else {}
+            e_me = bv.get(sysid)
+            if e_me is None:
+                continue
+            per_cat[cat] = f(e_me)
+            if worst_e is None or e_me < worst_e:               # most negative = most reactive
+                worst_e, worst_cat, vs_undoped = e_me, cat, bv.get("LPSCl1.6")
+        verdict = None
+        if worst_e is not None:
+            verdict = f"reactive at {topV} V (worst {worst_cat} {f(worst_e)} eV/atom)"
+            if vs_undoped is not None:
+                dd = worst_e - vs_undoped
+                verdict += ("; doping ~neutral vs undoped" if abs(dd) < 0.01 else
+                            ("; doping MORE reactive" if dd < 0 else "; doping LESS reactive"))
+        card["cathode_interface_stability"] = sec("done", confidence="B",
+            method="GrandPotential SE/cathode interfacial reactivity (Richards/Ong 2016), open-Li mu=mu_metal-V; more negative = more reactive",
+            source=f"db/properties/{F['cathode']}",
+            charge_voltage_V=f(topV) if topV else None,
+            worst_cathode=worst_cat, worst_rxn_energy_eV_atom=f(worst_e),
+            vs_undoped_rxn_energy_eV_atom=f(vs_undoped), per_cathode_rxn_eV_atom=per_cat,
+            verdict=verdict,
+            caveats=cb.get("interpretation") or
+                "Most-exothermic SE/cathode reaction at the charge voltage (thermodynamic driving force; "
+                "products/morphology/kinetics not modeled). Sulfide SE + oxide cathode is a known-reactive "
+                "couple -> a cathode coating (e.g. LiNbO3) is standard practice.")
+    else:
+        card["cathode_interface_stability"] = sec("n.a.", confidence=None,
+            method="not computed", source="—",
+            caveats="run tools/oxidation/interface_reactivity_v2.py (SE x cathode, voltage-resolved) for the oxidation-side interface")
+
     # roadmap (acknowledged-but-not-computed) sections
     for k, why in ROADMAP_SECTIONS.items():
         card[k] = sec("n.a.", confidence=None, method="not in v1 pipeline", source="—", caveats=why)
@@ -367,6 +408,7 @@ def build(sysid, stamp=None):
                  "ESW reduction interphase is LEAKY (Li3P 0.7); passivation NOT demonstrated; 'compensated' framing dropped",
                  "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too",
                  "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways' -> grade B",
+                 "CATHODE oxidation interface NOT yet computed (interface_reactivity_v2.py ready; SE x LiCoO2/NMC811, voltage-resolved) -> the both-sided interface module is anode-done, cathode-pending",
                  "CCD/dendrite, GB, air/moisture, e-conductivity still NOT computed; elastic Cij pending; electronic curated (GGA)"]
     else:
         rk = card["screening"].get("rank")
@@ -414,6 +456,7 @@ def to_md(card):
             ("structure_chemistry", ["coordination_motifs", "oxidation_states_bader_net"]),
             ("dynamical_stability", ["imaginary_modes", "verdict"]),
             ("anode_interface_stability", ["verdict", "min_product_gap_eV", "vs_undoped_min_gap_eV", "li_in_min_gap_eV"]),
+            ("cathode_interface_stability", ["verdict", "worst_cathode", "worst_rxn_energy_eV_atom", "vs_undoped_rxn_energy_eV_atom"]),
             ("testable_predictions", ["xps", "raman_ir", "nmr"])]
     for name, keys in rows:
         d = card[name]
