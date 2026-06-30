@@ -36,11 +36,22 @@ mechanical integrity + transport — NOT in raw porosity:
       as coh rises 0→0.093 over 0→1 wt%, i.e. the cohesion IS doing work), and
   (ii) **transport σ-block**: over-binder = resistive film → handled by
       `whatif_additives` (W2, PTFE σ_ion ×0.74; Bielefeld 2020).
-- A porosity **rebound** would require the over-applied binder to act as a
-  *spacer* (agglomerates propping particles apart). **No clean literature evidence**
-  supports a raw-porosity rebound (Hong only measured 1 wt%; the harm reported is
-  σ/retention, not porosity) → inventing an "agglomeration-void" term to force the ∪
-  would be unphysical curve-fitting. **Not done.**
+- A porosity **rebound** would require the over-applied binder to act as a rigid
+  *spacer* (propping AM/SE apart so void cannot close). **★ This is unphysical at the
+  300 MPa production pressure — and the reason is quantitative, not just "no data":**
+  PTFE is soft (E = 0.30 GPa, **σ_y = 0.05 GPa = 50 MPa**). The press is **300 MPa ≫
+  50 MPa**, so the binder *yields and plastically flows into the void* — it cannot
+  hold rigid particles apart. To act as a spacer the binder would have to **resist
+  300 MPa with a 50 MPa yield stress (6× too soft)** → impossible. So porosity is
+  monotone *because the soft binder fills void at production pressure*, which is the
+  real mechanism. (Literature agrees in direction: Hong's only point, 1 wt%, *lowers*
+  porosity; the reported over-binder harm is σ / retention, not a porosity rebound.)
+  Forcing a ∪ with an "agglomeration-void / spacer" term would be **wrong physics**,
+  not just unvalidated curve-fitting → **not done**.
+  ⚠ Regime note: at **low operating pressure** (≲ a few MPa, e.g. tailored-low-P cells)
+  the binder may *not* fully yield and a spacer/propping effect could appear — a
+  DIFFERENT regime from our 300 MPa press. If that regime is ever targeted, model it
+  there with a yield-gated propping term (active only when P < σ_y-scale), not here.
 
 ## Verdict on A3
 - ✅ **`binder_cap` non-monotonic COHESION is correct and ACTIVE** — it models the
@@ -53,8 +64,18 @@ mechanical integrity + transport — NOT in raw porosity:
   **porosity** channel correctly shows volume-fill; the **transport** channel (W2)
   carries the over-binder σ harm. Frame[5]: MPM = mechanics (cohesion/integrity),
   network/W2 = transport (σ-block).
-- OPEN (optional, literature-gated): IF a multi-loading porosity dataset ever shows a
-  raw-porosity rebound at high PTFE, revisit with a spacer/agglomeration-void term.
-  Until then, do not force it.
+## ✅ A3 CLOSED (2026-06-30) — real physics, no fudge
+The binder dual-role is modelled by its REAL mechanisms, split across the right
+channels — **not** by bending the porosity number:
+1. **mechanical binding strength** → `binder_cap` non-monotonic cohesion
+   (mpm3d_compaction `--coh-ptfe`/`--binder-opt-wt`), GPU-confirmed active.
+2. **transport σ-block** → `whatif_additives` (W2, PTFE σ_ion ×0.74).
+3. **porosity** → monotone volume-fill = correct physics at 300 MPa (soft binder
+   yields at 50 MPa ≪ 300 MPa → fills void, cannot prop).
+No spacer/agglomeration-void term (wrong physics at production pressure). The
+porosity-∪ was a mis-framing; the real over-binder penalty is σ + integrity.
+A3 complete; the only adjacent open item is the SEPARATE, literature-gated **CBD
+nano-porosity** (deferred) — it redistributes binder solid but does not change total
+porosity in a solid-counting model at 300 MPa.
 
 Data: `a3_sweep_out/m_ptfe_{0,0.5,1,2,4,8}.json` (on kserver).
