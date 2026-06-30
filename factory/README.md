@@ -47,10 +47,12 @@
 - **v2** Surrogate AI(능동학습) — 사전선별로 비싼 계산 절감
 - **품질** 외부리뷰 번들 + 백그라운드 code-review/science-audit 에이전트(CI식)
 
-## 6. 정직한 경계
+## 6. 정직한 경계 (외부 peer-review 반영)
+- **현재 정체는 "provenance-discipline가 강제된 assembly + plan-only 스케줄러"** — 표준 도구(BVSE·MLIP-MD·ESW·hull·phonon·Bader)를 **오케스트레이션·표준화**하는 층이지, **새 물리·calibration·UQ·surrogate를 도입한 방법론적 기여는 아님**(그건 v2). README의 "autonomous/physical-AI" 표현은 **포부**이고 현 구현은 **사람이 명령을 실행하는 plan-only**임. 과대표현 금지.
 - **계산 결과 + testable 예측**까지. 실제 CV/EIS/cycling = 물리 랩 루프(별도) 또는 실험데이터 surrogate.
-- 절대 σ 등은 MLIP 한계 명시(card의 caveats). **Ea·상대비·정성결론이 robust 축.**
-- 단일 Li-config 등 각 물성의 한계는 card에 그대로 표기.
+- 절대 σ 등은 MLIP 한계 명시(card의 caveats). **Ea·상대비·정성결론이 robust 축.** 단 **현재 단일-trajectory라 error bar 없음** → multi-seed 필요(v2).
+- **b2o3는 "SCREENED candidate"지 "validated champion" 아님.** 가장 결정적 위험인 **anode-interface 안정성(Li-metal 환원)이 미계산** — 그게 나오기 전엔 positive 추천 불가. (외부리뷰 #1)
+- **UQ 부재**: A/B/C는 사람 판단이지 calibrated confidence 아님. provenance manifest도 입력 해시·MLIP/MP 버전 pin 없음(재현성 한계).
 
 ## 참고
 - 첫 카드: `cards/b2o3_report_card.md` · 스키마: `schema/report_card.schema.json`

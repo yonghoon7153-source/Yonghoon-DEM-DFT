@@ -16,7 +16,7 @@ status/confidence/method/caveats. Confidence rubric (see README/schema):
   B = single-config DFT/MLIP, or relative-only
   C = fast proxy / screening descriptor
 """
-import argparse, json, csv, math
+import argparse, json, csv, math, re
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -30,7 +30,10 @@ CORE_SECTIONS = ["screening", "transport", "thermodynamic_stability", "electroch
 # descriptors a credible SE pipeline still owes (audit finding 9) — declared n.a. so
 # reviewers see they are acknowledged, not forgotten.
 ROADMAP_SECTIONS = {
-    "anode_interface_stability": "Li-metal reduction at the ESW lower limit; headline risk (red 1.72 V near Li).",
+    "anode_interface_stability": "*** TOP PRIORITY (external review): the DECISIVE risk. Li-metal reduction at the "
+        "1.72 V limit produces LEAKY BP(1.08)/Li3P(0.7 eV) -> b2o3 is likely Li-metal-UNSTABLE. Run "
+        "interface_reactivity_v2.py open to a Li reservoir for the anode reaction energy + interphase products. "
+        "Until computed, NO positive recommendation for any candidate.",
     "critical_current_density": "dendrite resistance / CCD — most-requested SE metric; not computed.",
     "grain_boundary_transport": "bulk sigma != total sigma; GB often dominates.",
     "air_moisture_stability": "H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).",
@@ -196,11 +199,18 @@ def build(sysid, stamp=None):
     PASS, MARG = 4.0, 2.0  # documented heuristic thresholds (eV)
     def tier(g):
         return "passivating" if g >= PASS else ("marginal" if g >= MARG else "leaky")
-    predicted = set((hb.get("decomposition") or {}).keys())   # phases actually predicted to form
+    # External review (concern #2): sei_min_gap must include the VOLTAGE-RESOLVED
+    # interface products the ESW itself predicts (reduction-limit + OCV decomp),
+    # not only the equilibrium hull -- the interphase lives at the reduction front.
+    # e.g. b2o3 reduces to BP (1.08 eV, leaky) at 1.72 V; excluding it faked a
+    # rosy 3.05 eV. Word-boundary match so "Li3P" inside "Li3PS4" does NOT spuriously match.
+    rxn_text = " ".join(str(x) for x in (esw.get("new_B_reactions") or {}).values()) + " " + str(esw.get("ocv_decomp") or "")
+    vr = {k for k in seigaps if re.search(r"(?<![A-Za-z0-9])" + re.escape(k) + r"(?![A-Za-z0-9])", rxn_text)}
+    predicted = set((hb.get("decomposition") or {}).keys()) | vr   # hull + voltage-resolved
     sei_products = [{"phase": k, "gap_eV": v, "tier": tier(v), "in_predicted_decomp": k in predicted}
                     for k, v in sorted(seigaps.items(), key=lambda x: x[1])]  # leaky first, none hidden
     pred_gaps = [v for k, v in seigaps.items() if k in predicted]
-    min_gap = min(pred_gaps) if pred_gaps else None   # min among PREDICTED products (not won't-form phases like BS2)
+    min_gap = min(pred_gaps) if pred_gaps else None   # over hull+voltage-resolved (excludes won't-form phases like BS2)
 
     card = {
         "schema_version": "0.2",
@@ -230,10 +240,12 @@ def build(sysid, stamp=None):
             esw_reduction_V=f(esw.get("reduction_V")), esw_oxidation_V=f(esw.get("oxidation_V")),
             window_V=f(esw.get("window_V")), sei_products=sei_products, sei_min_gap_eV=min_gap,
             passivation_thresholds_eV={"passivating>=": PASS, "marginal>=": MARG, "note": "heuristic rule-of-thumb, not a hard physical boundary"},
-            caveats="window is NARROW (0.31 V) = a real risk, NOT solved. SEI has wide-gap members (B2O3 8.4, BPO4 7.0, "
-                    "Li3PO4 5.7) AND leaky members in the SAME predicted decomposition (Li3BS3 3.05, Li2B2S5 2.44, "
-                    "Li3P 0.7). Passivation is plausible ONLY IF the interphase is dense/continuous and the leaky "
-                    "thioborates are minor -- interphase morphology/electron-tunneling NOT modeled here."),
+            caveats="window is NARROW (0.31 V) = a real liability, NOT compensated. The REDUCTION-LIMIT (1.72 V) "
+                    "product is BP (1.08 eV, LEAKY); at a Li-metal anode (0 V) full reduction -> Li3P (0.7 eV) -> the "
+                    "reduction interphase is electronically LEAKY, not passivating. Wide-gap members (B2O3 8.4, BPO4 7.0) "
+                    "coexist but a mixed interphase with 0.7-1.1 eV members can leak regardless of how many wide-gap "
+                    "phases are present. Passivation NOT demonstrated (interphase continuity/tunneling NOT modeled). "
+                    "ANODE-INTERFACE stability = TOP uncomputed risk (see roadmap)."),
         "mechanical": sec("pending", confidence=None,
             method="DFT relaxed-ion finite-strain Cij (running on KISTI); EOS B0 as proxy",
             source=f"db/properties/{F['eos']} (B0); elastic Cij pending (db/properties/elastic.json)",
@@ -245,20 +257,27 @@ def build(sysid, stamp=None):
             source=em.get("source"),
             band_gap_eV=em.get("band_gap_eV"), N_EF=em.get("N_EF"), vbm_character=em.get("vbm_character"),
             caveats="GGA underestimates gaps; single config/functional -> grade B not A. gap 1.97 eV (VBM 2.47/CBM 4.44)."),
-        "structure_chemistry": sec("done", confidence="A",
+        "structure_chemistry": sec("done", confidence="B",
             method="coordination (Voronoi) + bond lengths + Bader oxidation states (parsed) + Lowdin S-site order",
             source=f"db/properties/{F['bonds']} + {F['coord']} + {F['charge_csv']}",
             coordination_motifs=motifs,
             bond_lengths={k: f(v.get("mean")) for k, v in (bonds.get("bonds", {}) or {}).items()},
             oxidation_states_bader_net=ox,
-            caveats="BS3 confirmed 5 independent ways (coord/hull/DOS/ESW/charge) = multi-witness -> grade A. "
-                    "USPP Bader net charges are relative (B basin collapses; S-site order from Lowdin)."),
+            caveats="trigonal BS3 is chemically well-motivated + literature-consistent (11B NMR thioborate anti-anomaly; "
+                    "crystalline Li3BS3). BUT the computational witnesses are CORRELATED: coordination + Bader/Lowdin "
+                    "are two readouts of ONE relaxed config; hull + ESW are the SAME thermodynamic statement (thioborate "
+                    "decomp). So ~2 independent computational witnesses + literature precedent, NOT '5 independent ways'. "
+                    "Alternative BS4/BS3O motifs were NOT energy-compared (UMA B-chemistry is weak) -> grade B, not A. "
+                    "USPP Bader is relative (B basin collapses; S-site order from Lowdin)."),
         "dynamical_stability": sec("done", confidence="B",
             method="UMA Gamma-point finite-displacement phonons",
             source=f"db/properties/{F['phonon']}",
             imaginary_modes=iget(phon, "imaginary_below_-30_cm"),
-            verdict="DYNAMICALLY STABLE (0 imaginary; soft Li band ~14 cm-1)",
-            caveats="Gamma-only (UMA) -> qualitative stability only; quantitative Raman/IR needs DFPT."),
+            verdict="no Gamma-point imaginary modes (NECESSARY, not sufficient)",
+            caveats="Gamma-only MLIP Hessian CANNOT establish full dynamical stability (blind to q!=Gamma / "
+                    "zone-boundary / supercell instabilities). Claim limited to 'no Gamma instabilities'; full proof "
+                    "needs a phonon supercell / DFPT. Soft ~14 cm-1 Li band is present in BOTH doped and undoped "
+                    "(Ea is unchanged) -> it is NOT evidence of a doping-specific lower barrier."),
         "testable_predictions": sec("done", confidence="B",
             method="aggregated fingerprints for experimental validation (derived)",
             source="derived from structure_chemistry + dynamical_stability",
@@ -294,18 +313,22 @@ def build(sysid, stamp=None):
 
     done = sum(1 for s in CORE_SECTIONS if card[s]["status"] == "done")
     if sysid == "b2o3":
-        summary = ("B2O3-doped LPSCl1.6 (cascade champion, rank_combined=1 by combined_score): higher RT "
-                   "conductivity than undoped LPSCl1.6 (sigma300 ~18.5 mS/cm, SAME Ea, D0-driven), metastable "
-                   "(+37.5 meV/atom) but phonon-stable, NARROW ESW (0.31 V, a real risk) with mixed SEI "
-                   "(wide-gap B/O passivators + leaky thioborates), stiffer framework (EOS B0 +13%). "
-                   "Promising but with an interface-stability caveat.")
-        flags = ["transport:+", "stability:metastable(+37.5)", "ESW:narrow(0.31V,risk)",
-                 "dynamical:stable", "mechanical:pending", "anode-interface:UNASSESSED"]
-        notes = ["absolute sigma is MLIP upper bound (cite Ea+-0.01 + ratio)",
-                 "elastic Cij pending (KISTI); EOS B0 proxy",
-                 "ESW narrow + leaky SEI members present; passivation NOT demonstrated (interphase not modeled)",
-                 "electronic scalars curated (GGA single-config), graded B",
-                 "single Li-config; anode-interface/CCD/GB/air-stability/e-conductivity NOT yet computed (roadmap)"]
+        summary = ("B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; "
+                   "#6 of 47 by the global coating composite -- objective-dependent). SCREENED, NOT validated. "
+                   "Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), "
+                   "single-trajectory (error bars pending). Liabilities: NARROW ESW (0.31 V) with a LEAKY reduction "
+                   "interphase (BP 1.08 / Li3P 0.7 eV at a Li anode), metastable (+37.5 meV/atom), only Gamma-point "
+                   "phonons (full stability unproven). ANODE-INTERFACE stability -- the decisive risk -- is UNCOMPUTED. "
+                   "Verdict: favorable bulk transport, interface stability UNASSESSED.")
+        flags = ["transport:+(D0-driven,no-error-bars)", "ESW:narrow(0.31V)+leaky-interphase(BP/Li3P)",
+                 "stability:metastable(+37.5)+Gamma-only", "anode-interface:UNCOMPUTED(decisive)", "mechanical:pending"]
+        notes = ["transport is the robust result BUT single-trajectory/single-config -> Ea+-0.01 + 1.3x ratio need multi-seed error bars (within ~15-20% MD noise)",
+                 "absolute sigma is MLIP upper bound (cite Ea + ratio, never the absolute number)",
+                 "ESW reduction interphase is LEAKY (BP 1.08 / Li3P 0.7 eV); passivation NOT demonstrated; 'compensated' framing dropped",
+                 "phonon Gamma-only -> 'no Gamma instabilities' only, NOT full dynamical stability; soft mode exists in undoped too (not a doping-specific story)",
+                 "structure BS3 = ~2 correlated computational witnesses + literature, NOT '5 independent ways'; alternative motifs not energy-tested -> grade B",
+                 "ANODE-INTERFACE (Li-metal reduction), CCD/dendrite, GB, air/moisture, e-conductivity NOT computed -> NO positive recommendation until the anode interface is run",
+                 "elastic Cij pending (KISTI); electronic scalars curated (GGA single-config)"]
     else:
         rk = card["screening"].get("rank")
         summary = (f"cascade rank-{rk} candidate {m['composition']}: deep validation PENDING "

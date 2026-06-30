@@ -3,7 +3,9 @@
 **날짜** 2026-06-30 · **방법** UMA(omat) Γ-point 유한변위 phonon (ASE Vibrations, δ=0.02 Å)
 **구조** `db/structures/b2o3_relaxV0.cif` (DFT V₀ 고정셀 relax, 128 atom) · **결과** `db/properties/b2o3_phonon_stability.json`, `tools/electronic/uma_phonon.py`
 
-> **한 줄 결론.** B₂O₃-doped 챔피언은 **Γ에서 허수모드 0개 = 동역학적으로 안정한 진짜 국소최소**다. convex hull상 0K hull 위 **+37.5 meV/atom(준안정)** 이지만, 안장점이 아니라 **실재하는·합성가능한 상**임이 phonon으로 독립 확정된다. 게다가 최저 실수모드(~14 cm⁻¹)가 **soft-but-stable** → 무른 Li 부격자 = 높은 Li 전도(Ea 0.207)와 정합.
+> **⚠ 정정 (외부 peer-review 2026-06-30).** ① "동역학적으로 안정"은 과대 — **Γ-only MLIP Hessian은 q≠Γ 불안정(zone-boundary/supercell)을 못 봄** → "Γ에서 허수모드 0개(**필요조건, 충분조건 아님**)"로 한정. 완전증명엔 phonon supercell/DFPT 필요. ② **아래의 Ea 0.207은 철회된 값**(5-40ps window artifact). 일관 window(2-50ps)에서 **b2o3 Ea = 0.223 = 무도핑과 동일** → soft 격자는 **양쪽 다** 있어 **도핑특이적 낮은 장벽의 근거가 아님**; b2o3 전도 이득은 **D₀(prefactor)**. 본문의 "soft→낮은 Ea" 추론은 무효.
+
+> **한 줄 결론(수정).** B₂O₃-doped 챔피언은 **Γ에서 허수모드 0개**(필요조건). convex hull상 **+37.5 meV/atom(준안정)**. 최저 실수모드(~14 cm⁻¹) soft — superionic 격자 특유이나 **무도핑에도 동일**(Ea 0.223=무도핑) → 도핑특이적 우위의 근거 아님.
 
 ---
 
@@ -31,7 +33,7 @@
 허수모드가 없다는 건 모든 방향으로 곡률이 양(+)이라는 뜻 = 에너지 지형의 **진짜 우물 바닥**. 챔피언이 UMA relax + DFT relax로 얻은 구조가 **동역학적으로 안정한 최소**임을 확인.
 
 ### 3.2 soft-but-stable Li 부격자 → 전도와 정합
-최저 실수모드가 **~14 cm⁻¹**로 매우 낮음(허수는 아님). 이 저진동 모드는 무른 Li 부격자/anion libration에서 옴 — **"무르지만 안정"** = Li가 쉽게 움직이되 구조는 안 무너짐. **낮은 Ea(0.207 eV)·높은 D**(MD 결과)와 일관된 그림: superionic conductor 특유의 soft 격자.
+최저 실수모드가 **~14 cm⁻¹**로 매우 낮음(허수는 아님). 이 저진동 모드는 무른 Li 부격자/anion libration에서 옴. **단 이 soft 격자는 무도핑에도 동일**하고 **Ea = 0.223 eV로 b2o3=무도핑** → soft는 superionic 일반 특성이지 **도핑특이적 낮은 장벽의 근거가 아님**(b2o3 이득은 D₀). ~~낮은 Ea(0.207)~~ ← 철회.
 
 ## 4. 의의 — metastability의 동역학적 보강
 | 안정성 축 | 결과 | 의미 |
@@ -48,7 +50,7 @@
 
 ## 6. 다른 결과와의 연결
 - **convex hull**(37.5 meV/atom) + **phonon**(허수 0) → "준안정이지만 진짜·합성가능".
-- **MD**(Ea 0.207, D↑) + **최저 soft 모드 ~14 cm⁻¹** → 무른 Li 부격자 = 빠른 전도.
+- **MD**(Ea 0.223 = 무도핑, D₀↑) + **최저 soft 모드 ~14 cm⁻¹**(무도핑에도 있음) → soft 부격자는 전도에 우호적이나 **도핑특이적 우위는 D₀**.
 - **배위 BS₃**(5중 확증) 구조가 동역학적으로도 안정 = 그 motif가 인위적 artifact가 아님을 재확인.
 
 ## 7. Phonon DOS + 진동분광 testable 지문
@@ -57,7 +59,7 @@
 384 Γ-모드를 Gaussian(σ≈9 cm⁻¹) broaden → 3개 밴드:
 | 밴드 | 범위 (cm⁻¹) | 귀속 | 의미 |
 |---|---|---|---|
-| 저진동 soft | ~14–200 (peak ~130) | Li libration / 무른 부격자 | **빠른 전도**(Ea 0.207와 정합); 허수영역 깨끗 |
+| 저진동 soft | ~14–200 (peak ~130) | Li libration / 무른 부격자 | 전도 우호(Ea 0.223; 무도핑도 soft → 도핑특이 아님); 허수영역 깨끗 |
 | framework | ~200–580 | P–S / B–S bend·stretch | 골격 |
 | **★ 고립 고진동** | **788–1013** (7 모드) | **P–O phosphate stretch (+ B–S)** | **testable Raman/IR 지문** |
 

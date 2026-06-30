@@ -63,4 +63,15 @@ Not computed (shown as `n.a.`): **anode-interface stability** (Li-metal reductio
 - [ ] Declare `jsonschema` as a dev dependency; wire `test_factory.py` into CI.
 - [ ] Consider `additionalProperties:false` on `section_with` once field names are frozen.
 
-*Two independent background audits (round 1 + round 2) drove the hardening above; 5/6 prior HIGH fixes verified RESOLVED, the 6th (generalization) fixed + regression-guarded here.*
+## External peer-review outcome (acted on)
+A skeptical SE-domain peer review (verdict: **Major revision** for both the pipeline-as-method and the b2o3 finding) drove a second honesty pass. **Fixed in-card/in-repo:**
+- [x] **`sei_min_gap` data defect** — now computed over hull **∪ voltage-resolved** reduction/oxidation products → **1.08 eV (BP, leaky)**, not the rosy 3.05; the reduction interphase is reported LEAKY (BP 1.08 / Li3P 0.7), "compensated" dropped.
+- [x] **Phonon over-claim** — verdict downgraded to "no Γ instabilities (necessary, not sufficient)"; the kb note's retracted Ea=0.207 corrected to 0.223 (=undoped) and the soft-lattice→lower-barrier inference removed.
+- [x] **Confidence recalibration** — structure_chemistry A→B ("BS3 5 ways" → ~2 correlated witnesses + literature); framing reworded to "SCREENED candidate, NOT validated"; README scoped to "provenance-disciplined assembly + plan-only layer" (no autonomous/UQ over-claim).
+
+**MUST-DO before any positive recommendation (needs compute):**
+- [ ] **ANODE-INTERFACE stability (decisive)** — run `interface_reactivity_v2.py` open to a Li-metal reservoir; the reduction front likely makes b2o3 Li-metal-unstable (BP/Li3P leaky). Until then: "interface UNASSESSED".
+- [ ] **Transport error bars** — multi-seed MD; b2o3 high-T 100 ps parity; jump-stats to substantiate "D0-driven".
+- [ ] **Finite-q phonon** (supercell/DFPT) before any "dynamically stable" claim.
+
+*Three independent reviews drove this: two background CODE audits (rounds 1-2; 5/6 prior HIGH fixes RESOLVED + generalization fixed/regression-guarded) and one external SCIENCE peer review (the in-card honesty above). The framework's value is exactly this: it surfaced its own over-claims for correction.*

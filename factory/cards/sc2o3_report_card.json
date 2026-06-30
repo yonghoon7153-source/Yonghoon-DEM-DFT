@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T02:53:29.142177+00:00",
+  "generated_utc": "2026-06-30T04:07:46.753949+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "sc2o3",
@@ -95,7 +95,7 @@
     "confidence": null,
     "method": "not in v1 pipeline",
     "source": "—",
-    "caveats": "Li-metal reduction at the ESW lower limit; headline risk (red 1.72 V near Li)."
+    "caveats": "*** TOP PRIORITY (external review): the DECISIVE risk. Li-metal reduction at the 1.72 V limit produces LEAKY BP(1.08)/Li3P(0.7 eV) -> b2o3 is likely Li-metal-UNSTABLE. Run interface_reactivity_v2.py open to a Li reservoir for the anode reaction energy + interphase products. Until computed, NO positive recommendation for any candidate."
   },
   "critical_current_density": {
     "status": "n.a.",
