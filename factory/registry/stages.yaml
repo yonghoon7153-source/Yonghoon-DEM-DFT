@@ -40,9 +40,15 @@ structure_discovery:
   generalize_TODO: [enumerate_anion.py (s1), run_li_anneal.py (s3), basin-RMSD auto (s5)]
 
 gates:
-  - id: prep_gate   ; before: [transport, mechanical, electronic]; ask: "structure relaxed OK?"
-  - id: cost_gate   ; before: [mechanical, dynamical_stability]  ; ask: "approve expensive DFT/DFPT?"
-  - id: rank_gate   ; before: report_emit                        ; ask: "approve final report card?"
+  - id: prep_gate
+    before: [transport, mechanical, electronic, structure_chemistry, dynamical_stability]
+    ask: "structure relaxed OK? (structure_discovery V0 produced)"
+  - id: cost_gate
+    before: [mechanical, dynamical_stability]
+    ask: "approve expensive DFT/DFPT stage?"
+  - id: rank_gate
+    before: report_emit
+    ask: "approve final report card?"
 
 stages:
   transport:
@@ -82,7 +88,7 @@ stages:
 
   electronic:
     fills_section: electronic
-    tool: tools/electronic/ (standard_dos recipe: scf->nscf->projwfc)
+    tool: "tools/electronic/ (standard_dos recipe: scf->nscf->projwfc)"
     method: DFT DOS/PDOS -> gap, N(E_F), VBM character
     compute: KISTI (QE)
     cost: medium
