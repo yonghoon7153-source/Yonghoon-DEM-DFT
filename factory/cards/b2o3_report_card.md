@@ -1,7 +1,7 @@
 # Report card — b2o3 (Li58P8S41Cl16B2O3)
 
 **구조** `db/structures/b2o3_relaxV0.cif` (128 atom) · DFT V0 fixed-cell relax (B2O3-doped LPSCl1.6 champion)
-**완성도** 8/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T06:09:30.906368+00:00
+**완성도** 8/9 core sections done; 4 descriptors on roadmap · schema 0.2 · generated 2026-06-30T06:47:08.737962+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
 > B2O3-doped LPSCl1.6 -- cascade-SCREENED candidate (rank_combined=1 within its dopant family; #6 of 47 by the global coating composite). SCREENED, NOT validated. Robust finding: doping raises BULK Li+ conductivity at EQUAL Ea (prefactor/D0-driven, ~1.3x), single-trajectory (error bars pending). KEY TRADE-OFF: the bulk-transport gain comes WITH a WORSE Li-metal anode -- the B dopant adds a METALLIC LiB phase (gap 0) to the reduction interphase (min gap 0 vs undoped Li3P 0.7), so b2o3 is Li-metal-UNSTABLE and worse than undoped at the anode (needs an interlayer). Plus NARROW ESW (0.31 V), metastable (+37.5 meV/atom), Gamma-only phonons. Verdict: promising bulk conductor, but a doping-WORSENED Li-metal interface is the headline liability.
@@ -22,7 +22,7 @@
 | electronic | done | B | band_gap_eV=1.97, N_EF=0.0, vbm_character=S 3p ~89.5% (free-S shallowest) |
 | structure_chemistry | done | B | coordination_motifs=trigonal BS3; PS4 thiophosphate + P-O phosphate (PS4-xOx); free-S2- (isolate |
 | dynamical_stability | done | B | imaginary_modes=0, verdict=no Gamma-point imaginary modes (NECESSARY, not sufficient) |
-| anode_interface_stability | done | B | verdict=Li-metal UNSTABLE, min_product_gap_eV=0.0, vs_undoped_min_gap_eV=0.7, leaky_products=Li3 |
+| anode_interface_stability | done | B | verdict=Li-metal UNSTABLE, min_product_gap_eV=0.0, vs_undoped_min_gap_eV=0.7 |
 | testable_predictions | done | B | xps=S 2p: free-S2-(low BE) < PS4-S < B-S/BS3(high BE shoulder); B 1s B3+; P 2p P5+ (PS4-xOx), ra |
 
 ## Roadmap descriptors (acknowledged, not yet computed)

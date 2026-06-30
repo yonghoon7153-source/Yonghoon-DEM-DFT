@@ -310,15 +310,32 @@ def build(sysid, stamp=None):
         r = an["results"]
         me = r.get(sysid) or next(iter(r.values()))
         ref = r.get("LPSCl1.6")
+
+        def anode_norm(d, v="0.00"):
+            # robust to BOTH the old flat schema and the new by_anode schema
+            if not d:
+                return {}
+            if "by_anode" in d:
+                x = d["by_anode"].get(v) or next(iter(d["by_anode"].values()), {})
+                return {"reaction": x.get("reaction"), "leaky": x.get("leaky_products"),
+                        "min_gap": x.get("min_product_gap_eV")}
+            return {"reaction": d.get("anode_reduction_reaction"), "leaky": d.get("leaky_products"),
+                    "min_gap": d.get("min_product_gap_eV")}
+
+        lm = anode_norm(me, "0.00")                                   # Li metal
+        liin = anode_norm(me, "0.62") if me.get("by_anode") else None  # Li-In (new schema only)
+        ref_lm = anode_norm(ref, "0.00") if ref else {}
         card["anode_interface_stability"] = sec("done", confidence="B",
-            method="open-Li reduction profile (get_element_profile) at V~0 = Li-metal contact + MP product gaps",
+            method="open-Li reduction profile (get_element_profile) at anode reservoir V (Li metal 0V, Li-In 0.62V) + MP product gaps",
             source=f"db/properties/{F['anode']}",
             verdict="Li-metal UNSTABLE",
-            reduction_reaction=me.get("anode_reduction_reaction"),
-            leaky_products=me.get("leaky_products"),
-            min_product_gap_eV=me.get("min_product_gap_eV"),
-            vs_undoped_min_gap_eV=(ref.get("min_product_gap_eV") if ref else None),
-            caveats=an.get("interpretation"))
+            li_metal_reduction=lm["reaction"], li_metal_leaky=lm["leaky"],
+            min_product_gap_eV=lm["min_gap"], vs_undoped_min_gap_eV=ref_lm.get("min_gap"),
+            li_in_min_gap_eV=(liin["min_gap"] if liin else None),
+            li_in_leaky=(liin["leaky"] if liin else None),
+            caveats=an.get("interpretation") or
+                "Li-metal interphase has metallic LiB (B-dopant-added, gap 0) + Li3P (0.7) leaky -> worse than undoped "
+                "(0.7); Li-In (0.62V) milder anode if it avoids the metallic phase. Thermodynamic products only.")
     else:
         card["anode_interface_stability"] = sec("n.a.", confidence=None,
             method="not computed", source="—",
@@ -392,7 +409,7 @@ def to_md(card):
             ("electronic", ["band_gap_eV", "N_EF", "vbm_character"]),
             ("structure_chemistry", ["coordination_motifs", "oxidation_states_bader_net"]),
             ("dynamical_stability", ["imaginary_modes", "verdict"]),
-            ("anode_interface_stability", ["verdict", "min_product_gap_eV", "vs_undoped_min_gap_eV", "leaky_products"]),
+            ("anode_interface_stability", ["verdict", "min_product_gap_eV", "vs_undoped_min_gap_eV", "li_in_min_gap_eV"]),
             ("testable_predictions", ["xps", "raman_ir", "nmr"])]
     for name, keys in rows:
         d = card[name]
