@@ -5358,6 +5358,7 @@ def mpm_lab_upload():
         'has_additives': bool(ac),
         'uploaded_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
         'size_mb': round(os.path.getsize(os.path.join(d, 'payload.json')) / 1e6, 1),
+        'mpm_metrics': mm,                          # full metrics dict → 요약 button (small, fast to read)
     }
     with open(os.path.join(d, 'meta.json'), 'w') as mf:
         json.dump(meta, mf)
@@ -5377,6 +5378,27 @@ def mpm_lab_data(pid):
         payload['mesh_triangles'] = payload['seed_mesh_triangles']
     payload.pop('seed_mesh_triangles', None)
     return jsonify(payload)
+
+
+@app.route('/mpm-lab/summary/<pid>')
+def mpm_lab_summary(pid):
+    """Metrics-only fetch for the 요약 button — returns just mpm_metrics (a few KB) so the
+    summary doesn't ship the whole multi-MB payload.  Reads the dict cached in meta.json
+    (new uploads); falls back to parsing payload.json once for older uploads."""
+    d = os.path.join(app.config['MPM_LAB_FOLDER'], _mpm_lab_slug(pid))
+    mp = os.path.join(d, 'meta.json')
+    if not os.path.isfile(mp):
+        return jsonify({'ok': False, 'error': 'not found'}), 404
+    meta = json.load(open(mp))
+    mm = meta.get('mpm_metrics')
+    if mm is None:                                       # pre-cache upload → read it out of the payload once
+        pp = os.path.join(d, 'payload.json')
+        try:
+            mm = (json.load(open(pp)).get('mpm_metrics') or {}) if os.path.isfile(pp) else {}
+        except Exception:
+            mm = {}
+    return jsonify({'ok': True, 'name': meta.get('name', pid),
+                    'case': meta.get('source_case', ''), 'mpm_metrics': mm})
 
 
 @app.route('/mpm-lab/rename/<pid>', methods=['POST'])

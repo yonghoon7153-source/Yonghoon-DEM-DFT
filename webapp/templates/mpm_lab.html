@@ -72,6 +72,7 @@
         <td style="padding:6px 10px; color:#94a3b8">{{ it.size_mb }}MB</td>
         <td style="padding:6px 10px; white-space:nowrap">
           <button class="btn btn-secondary btn-sm" onclick="labOpen('{{ it.id }}', {{ 1 if it.has_additives else 0 }}, this)">보기</button>
+          <button class="btn btn-secondary btn-sm" onclick="labSummary('{{ it.id }}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button>
           <button class="btn btn-secondary btn-sm" onclick="labDelete('{{ it.id }}', this)">삭제</button>
         </td>
       </tr>
@@ -171,10 +172,78 @@ function labAddRow(it) {
     `<td style="padding:6px 10px;color:#94a3b8">${it.size_mb}MB</td>` +
     `<td style="padding:6px 10px;white-space:nowrap">` +
       `<button class="btn btn-secondary btn-sm" onclick="labOpen('${it.id}', ${it.has_additives ? 1 : 0}, this)">보기</button> ` +
+      `<button class="btn btn-secondary btn-sm" onclick="labSummary('${it.id}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labDelete('${it.id}', this)">삭제</button></td>`;
   tb.insertBefore(tr, tb.firstChild);
   const c = document.getElementById('lab-count');
   c.textContent = `(${tb.querySelectorAll('tr').length})`;
+}
+
+// ── 요약: copy a labeled text summary of a payload's metrics to the clipboard (feed to Claude) ──
+function labFmt(v, digits, unit) {
+  if (v === null || v === undefined || v === '') return '—';
+  if (typeof v === 'number')
+    return ((digits ?? 2) === 0 ? Math.round(v).toLocaleString() : v.toFixed(digits ?? 2)) + (unit || '');
+  return String(v) + (unit || '');
+}
+
+function labBuildSummary(name, info, m) {
+  const L = [];
+  const ac = m.additive_counts || {};
+  const recipe = Object.keys(ac).length
+    ? Object.entries(ac).map(([k, v]) => `${k} ${(+v).toLocaleString()}`).join(' · ') : '없음';
+  L.push(`[MPM payload 요약] ${name}`);
+  L.push(`case: ${info.case || '—'}   ·   도전재(recipe): ${recipe}`);
+  L.push('');
+  L.push('— 핵심 물성 —');
+  L.push(`porosity (MPM)   : ${labFmt(m.porosity_mpm_pct, 2, ' %')}`);
+  if (m.seed_porosity_pct != null)
+    L.push(`  seed → 압축     : ${labFmt(m.seed_porosity_pct, 2, ' %')} → ${labFmt(m.compacted_porosity_pct, 2, ' %')}`);
+  L.push(`두께             : ${labFmt(m.thickness_mpm_um, 2, ' µm')}`);
+  L.push(`SE / solid       : ${labFmt(m.se_fraction_pct, 2, ' %')}`);
+  L.push(`AM 입자수        : ${labFmt(m.n_am, 0)}`);
+  const cov = (t) => {
+    let s = `Hertz ${labFmt(m['coverage_AM_' + t + '_hertz_pct'], 0)} / Tabor ${labFmt(m['coverage_AM_' + t + '_tabor_pct'], 0)} %`;
+    if (m['coverage_AM_' + t + '_rigid_hertz_pct'] != null)
+      s += ` (rigid ${labFmt(m['coverage_AM_' + t + '_rigid_hertz_pct'], 0)}/${labFmt(m['coverage_AM_' + t + '_rigid_tabor_pct'], 0)})`;
+    return s;
+  };
+  if (m.coverage_AM_P_hertz_pct != null) L.push(`coverage AM_P    : ${cov('P')}`);
+  if (m.coverage_AM_S_hertz_pct != null) L.push(`coverage AM_S    : ${cov('S')}`);
+  if (m.dg_mean != null)
+    L.push(`소성변형 Σdg     : mean ${labFmt(m.dg_mean, 4)} / max ${labFmt(m.dg_max, 3)}${m.strain_kind ? ' (' + m.strain_kind + ')' : ''}`);
+  L.push(`E_SE / ν / σ_y   : ${labFmt(m.E_SE_GPa, 2)} GPa / ${labFmt(m.nu_SE, 2)} / ${labFmt(m.sigma_y_GPa, 2)} GPa`);
+  L.push(`target / final   : ${labFmt(m.target_GPa, 2)} / ${labFmt(m.final_stress_GPa, 3)} GPa  (${m.protocol || '—'}, n_grid ${m.n_grid || '—'})`);
+  L.push('');
+  L.push('— 전체 mpm_metrics (raw JSON · 새 물성이 추가되면 자동 포함) —');
+  L.push(JSON.stringify(m, null, 2));
+  return L.join('\n');
+}
+
+async function labCopyText(txt) {
+  try {
+    if (navigator.clipboard && window.isSecureContext) { await navigator.clipboard.writeText(txt); return true; }
+  } catch (e) { /* fall through to legacy path */ }
+  try {                                                  // non-secure context (plain http) fallback
+    const ta = document.createElement('textarea');
+    ta.value = txt; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta); ta.focus(); ta.select();
+    const ok = document.execCommand('copy'); ta.remove(); return ok;
+  } catch (e) { return false; }
+}
+
+async function labSummary(id, btn) {
+  const old = btn.textContent; btn.disabled = true; btn.textContent = '…';
+  try {
+    const r = await fetch('/mpm-lab/summary/' + encodeURIComponent(id));
+    const j = await r.json();
+    if (!j.ok) throw new Error(j.error || '실패');
+    const txt = labBuildSummary(j.name || id, { case: j.case }, j.mpm_metrics || {});
+    const ok = await labCopyText(txt);
+    btn.textContent = ok ? '✓ 복사' : '✗';
+    if (!ok) window.prompt('복사 실패 — 아래 내용을 수동 복사하세요:', txt);
+  } catch (e) { btn.textContent = '✗'; }
+  setTimeout(() => { btn.textContent = old; btn.disabled = false; }, 1600);
 }
 
 async function labDelete(id, btn) {
