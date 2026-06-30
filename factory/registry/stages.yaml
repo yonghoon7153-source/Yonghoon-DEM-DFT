@@ -14,6 +14,31 @@ upstream:
          cascade_v23_ranked.csv, oxidation_stability_cascade.csv]
     note: cascade evolves independently; re-link a candidate by (version, candidate_id).
 
+# STAGE 0 — structure discovery (the DFT/MLIP pipeline that finds the actual V0
+# shape). cascade nominates a COMPOSITION; this turns it into a relaxed CHAMPION
+# STRUCTURE (db/structures/<id>_relaxV0.cif) + EOS B0, which every report-card
+# section then consumes. b2o3 went through it -> b2o3_relaxV0.cif. The b2o3_*.py
+# scripts are candidate-specific; generalizing them is the main factory build-out.
+# Full protocol + references: kb/methodology/argyrodite_mechanical_pipeline.md
+structure_discovery:
+  produces: "db/structures/<id>_relaxV0.cif (V0 champion) + EOS B0; the input to ALL report-card sections"
+  reference: "kb/methodology/argyrodite_mechanical_pipeline.md (D'Amore 2022 polymorph + Pustorino 2025 Li-ordering)"
+  gate_before: prep_gate          # must clear before the report-card stages run
+  steps:
+    s0_baseline:  {desc: "polymorph + Li-ordering baseline (pseudo-cubic P1 / 48HR ground state)", status: doc}
+    s1_enumerate: {desc: "anion S/Cl site enumeration C(8,4)=70 (Li sublattice fixed)", tool: tools/doping/b2o3_enumerate.py, status: b2o3-done, generalize: scripts/disorder/enumerate_anion.py}
+    s2_screen:    {desc: "2-stage UMA screen: halogen (70 cfg) then Li-ordering (20 seeds); Li energy spread 1162 meV => anneal critical", tool: tools/doping/ (UMA relax), status: b2o3-done}
+    s3_anneal:    {desc: "UMA-MD Li anneal 500K 50ps (basin escape; screen rank can flip 4th->1st). 800K breaks halogen order, 1500K breaks PS4", tool: tools/doping/b2o3_anneal.py, status: b2o3-done, generalize: run_li_anneal.py}
+    s4_mlip_eos:  {desc: "UMA volume sweep (96-108%) + BM3 fit -> V0/B0 first guess", tool: tools/doping/b2o3_eos.py + b2o3_eos_fit.py, status: b2o3-done}
+    s5_dft_relax: {desc: "DFT relax per volume + BASIN cross-check (RMSD>0.5A => new basin)", tool: tools/doping/b2o3_dft_eos.py, compute: KISTI, status: b2o3-done, gap: basin-RMSD-auto}
+    s6_dft_eos:   {desc: "DFT BM3 fit, basin-consistent +-6% only -> B0 (R2>0.9999)", tool: tools/doping/b2o3_eos_fit.py, status: b2o3-done}
+    s7_v0_coords: {desc: "V0 coords + tight SCF (conv_thr 1e-10) -> <id>_relaxV0.cif (the report-card input)", status: b2o3-done}
+  honest:
+    - "report B0 as mean+-std over >=5 Li configs (single-baseline B0 unreliable, +-15 GPa; ties to report-card transport multi-seed need)"
+    - "strain window +-6% (basin-consistent); beyond enters new basins -> exclude from fit"
+    - "static elastic overestimates C44 ~47% vs MD-snapshot (Li-ordering) -> use MD-snapshot for shear (report-card mechanical)"
+  generalize_TODO: [enumerate_anion.py (s1), run_li_anneal.py (s3), basin-RMSD auto (s5)]
+
 gates:
   - id: prep_gate   ; before: [transport, mechanical, electronic]; ask: "structure relaxed OK?"
   - id: cost_gate   ; before: [mechanical, dynamical_stability]  ; ask: "approve expensive DFT/DFPT?"

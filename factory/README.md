@@ -16,6 +16,17 @@
 | **오케스트레이션 (v1)** | **조성→스테이지 자동실행→report card** (이 디렉터리) | ▶ 구축중 |
 | Surrogate AI | DB로 물성 예측(능동학습) | ☐ v2 |
 
+### 1.1 전체 흐름 (조성 → 구조 → 특성)
+```
+cascade           structure_discovery (Stage 0, DFT/MLIP)          report card
+(조성 지명)  ──▶   enumerate → screen → anneal → MLIP-EOS      ──▶   transport·hull·ESW·
+                  → DFT relax(basin check) → DFT-EOS → V0구조        mechanical·electronic·
+                                                                     structure·phonon·anode
+```
+- **cascade**는 *조성*만 지명. **structure_discovery**(`registry/stages.yaml` + `kb/methodology/argyrodite_mechanical_pipeline.md`)가 그 조성을 **실제 V₀ 챔피언 구조**(`db/structures/<id>_relaxV0.cif`)로 만든다 — D'Amore 2022(polymorph)·Pustorino 2025(Li-ordering) 기반, basin cross-check 포함. **b2o3는 이 파이프라인을 거쳐 나옴**(`tools/doping/b2o3_enumerate→anneal→dft_eos`).
+- 그 V₀ 구조가 **report card의 모든 섹션의 입력.** 즉 factory = **구조발견(upstream) → 특성화(report card)** 한 줄로 연결.
+- **일반화 TODO**: b2o3 전용 스크립트(`b2o3_*.py`)를 임의 조성용(`enumerate_anion.py`·`run_li_anneal.py`·basin-RMSD 자동)으로 — 이게 factory가 신규 후보의 구조까지 자율 발견하는 핵심 build-out.
+
 ## 2. v1 구성요소
 | 파일 | 역할 |
 |---|---|
