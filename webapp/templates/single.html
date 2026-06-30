@@ -250,15 +250,17 @@
     <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P) — recipe zip 생성</summary>
     <div style="margin-top:10px; padding:12px 14px; background:#0f172a; border:1px solid #334155; border-radius:8px">
       <div style="display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; font-size:0.85em; color:#cbd5e1">
-        <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px"></label>
-        <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px"></label>
-        <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px"></label>
-        <label>mixing<br><select id="add-mixing" style="padding:3px">
+        <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
+        <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
+        <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
+        <label>mixing<br><select id="add-mixing" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="ballmill">ball-mill (bulk)</option>
           <option value="thinky" selected>thinky (dry-coat)</option>
           <option value="handmix">hand-mix (bulk)</option></select></label>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
+      <!-- GPU 실행 명령어 (첨가제 zip 파일명은 선택에 따라 동적 — JS가 채움) -->
+      <div id="add-gpu-cmds" style="margin-top:8px"></div>
       <div style="margin-top:10px; font-size:0.78em; color:#fbbf24; line-height:1.5">
         ⚠ <b>조합 규칙</b>: VGCF·Super P는 함께 쓸 수 없음(둘 다 도전재 → 하나만).
         유효 = <b>VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE</b>.  mixing은 <b>Super P seeding에만</b> 영향
@@ -506,6 +508,28 @@ function dlAdditiveZip() {
   if (!_addExclusiveOK()) return false;
   window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&mixing=${mix}`;
   return false;
+}
+// recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
+function _addRecipeStr(vg, sp, pt) {
+  const parts = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt]].filter(p => p[1] > 0);
+  return parts.length ? parts.map(p => p[0]).join(':') + '=' + parts.map(p => '' + p[1]).join(':') : '';
+}
+// Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
+function updateAdditiveGpuCmds() {
+  const el = document.getElementById('add-gpu-cmds'); if (!el) return;
+  const { vg, sp, pt, mix } = _addVals();
+  if ((vg <= 0 && sp <= 0 && pt <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
+  const recipe = _addRecipeStr(vg, sp, pt);
+  const tag = recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') : '';
+  const zip = `mpm_input_${'{{ case.id }}'}${tag}.zip`;
+  const DL = '/mnt/c/Users/안용훈/Downloads', SRV = 'root@121.78.116.27', WK = '/root/work/Yonghoon-DEM-DFT';
+  const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+  const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
+  el.innerHTML =
+    `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}</div>`
+    + blk('# 1) WSL → GPU 업로드 (② 버튼으로 zip 받은 뒤)', `scp "${DL}/${zip}" ${SRV}:${WK}/`)
+    + blk(`# 2) GPU에서 실행 (먼저: ssh ${SRV})`, `cd ${WK}\ngit pull\nunzip -o ${zip}\nbash run_mpm.sh`)
+    + blk('# 3) 결과 → WSL (그다음 ③ 결과 업로드)', `scp ${SRV}:${WK}/mpm_payload.json ${SRV}:${WK}/mpm_metrics.json ${DL}/`);
 }
 
 let cur3dMode = null;
