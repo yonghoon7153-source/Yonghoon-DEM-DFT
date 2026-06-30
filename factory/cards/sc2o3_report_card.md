@@ -1,7 +1,7 @@
 # Report card — sc2o3 ((LPSCl1.6 + Sc2O3, x=0.25))
 
 **구조** `db/structures/sc2o3_TODO.cif (not yet built/relaxed)` (None atom) · cascade_v23 rank-1 dopant (Sc2O3); NOT yet deep-validated
-**완성도** 1/9 core sections done; 5 descriptors on roadmap · schema 0.2 · generated 2026-06-30T_s
+**완성도** 1/9 core sections done; 5 descriptors on roadmap · schema 0.2 · generated 2026-06-30T02:53:29.142177+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
 > cascade rank-1 candidate (LPSCl1.6 + Sc2O3, x=0.25): deep validation PENDING (1/9 core done). Only cascade screening available so far; the orchestrator plans the remaining DFT/MLIP stages (with gates).
@@ -20,15 +20,15 @@
 | electrochemical_window | pending | - |  |
 | mechanical | pending | - |  |
 | electronic | pending | - |  |
-| structure_chemistry | pending | - | coordination_motifs=free-S2- (isolated sulfide), oxidation_states_bader_net= |
-| dynamical_stability | pending | - | verdict=DYNAMICALLY STABLE (0 imaginary; soft Li band ~14 cm-1) |
-| testable_predictions | pending | - | xps=S 2p: free-S2-(low BE) < PS4-S < B-S/BS3(high BE shoulder); B 1s B3+; P 2p P5+ (PS4-xOx), ra |
+| structure_chemistry | pending | - |  |
+| dynamical_stability | pending | - |  |
+| testable_predictions | pending | - |  |
 
 ## Roadmap descriptors (acknowledged, not yet computed)
 - **anode_interface_stability** (n.a.): Li-metal reduction at the ESW lower limit; headline risk (red 1.72 V near Li).
 - **critical_current_density** (n.a.): dendrite resistance / CCD — most-requested SE metric; not computed.
 - **grain_boundary_transport** (n.a.): bulk sigma != total sigma; GB often dominates.
-- **air_moisture_stability** (n.a.): H2S evolution / hydrolysis (BS3/thioborates are sensitive).
+- **air_moisture_stability** (n.a.): H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).
 - **electronic_conductivity** (n.a.): sigma_electronic (self-discharge driver), beyond just band gap.
 
 ## 정직한 한계

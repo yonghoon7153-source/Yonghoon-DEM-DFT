@@ -33,7 +33,7 @@ ROADMAP_SECTIONS = {
     "anode_interface_stability": "Li-metal reduction at the ESW lower limit; headline risk (red 1.72 V near Li).",
     "critical_current_density": "dendrite resistance / CCD — most-requested SE metric; not computed.",
     "grain_boundary_transport": "bulk sigma != total sigma; GB often dominates.",
-    "air_moisture_stability": "H2S evolution / hydrolysis (BS3/thioborates are sensitive).",
+    "air_moisture_stability": "H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).",
     "electronic_conductivity": "sigma_electronic (self-discharge driver), beyond just band gap.",
 }
 
@@ -274,13 +274,19 @@ def build(sysid, stamp=None):
     # the orchestrator plans exactly those stages.
     present = {
         "transport": bool(md), "thermodynamic_stability": bool(hb),
-        "electrochemical_window": bool(esw or seigaps), "mechanical": False,  # pending until Cij
+        "electrochemical_window": bool(esw or seigaps), "mechanical": bool(eos),
         "electronic": bool(em), "structure_chemistry": bool(bonds or coord or ox),
         "dynamical_stability": bool(phon), "testable_predictions": bool(bonds or coord),
     }
     for s, ok in present.items():
-        if not ok and card[s]["status"] == "done":
-            card[s]["status"], card[s]["confidence"] = "pending", None
+        if not ok:
+            # no source data -> CLEAN pending stub. Keep only the stage-generic
+            # method/source; DROP every value field + caveats so no system-specific
+            # physics (verdict strings, XPS/Raman fingerprints, motifs, thresholds)
+            # leaks onto another candidate. (audit round-2 BUG 4a/4b.)
+            card[s] = {"status": "pending", "confidence": None,
+                       "method": card[s].get("method"), "source": card[s].get("source"),
+                       "caveats": "not yet computed — orchestrator plans this stage"}
 
     # roadmap (acknowledged-but-not-computed) sections
     for k, why in ROADMAP_SECTIONS.items():

@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T_s",
+  "generated_utc": "2026-06-30T02:53:29.142177+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "sc2o3",
@@ -39,103 +39,56 @@
     "confidence": null,
     "method": "UMA-s-1p1 MLIP-MD, MSD window 2-50 ps, 3pt Arrhenius, Nernst-Einstein (Haven=1)",
     "source": "db/properties/sc2o3_vs_modelc_md.json + bvse_sc2o3/sc2o3_bvse_percolation.json + kb/methodology/md_conductivity_protocol.md",
-    "sigma_300K_mS_cm": null,
-    "sigma_273K_mS_cm": null,
-    "Ea_eV": null,
-    "D0_cm2_s": null,
-    "bvse_barrier_val2": null,
-    "bvse_channel_volume_fraction": null,
-    "caveats": "MLIP NE overestimates absolute sigma ~3-5x; Ea+relative-vs-modelc robust (same Ea as modelc, ~1.33x higher sigma, D0-driven). Ea uncertainty ~+-0.01 eV (MSD-window sensitivity). BVSE barrier is in softBV val^2 units (relative, resolution-limited), NOT eV -> needs NEB calibration."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "thermodynamic_stability": {
     "status": "pending",
     "confidence": null,
     "method": "UMA-consistent convex hull (e_above_hull), MP chemsys ",
     "source": "db/properties/sc2o3_ehull_result.json",
-    "e_above_hull_meV_atom": null,
-    "decomposition": null,
-    "caveats": "metastable (+37.5 meV/atom) but phonon-stable real phase; decomp includes Li3BS3 (BS3 thioborate) + Li4B7ClO12 -> independently corroborates the BS3/borate motif."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "electrochemical_window": {
     "status": "pending",
     "confidence": null,
     "method": "grand-potential ESW (MP GGA/GGA+U hull) + MP band gaps of SEI products",
     "source": "db/properties/sc2o3_esw.json + sc2o3_sei_gaps.json",
-    "esw_reduction_V": null,
-    "esw_oxidation_V": null,
-    "window_V": null,
-    "sei_products": [],
-    "sei_min_gap_eV": null,
-    "passivation_thresholds_eV": {
-      "passivating>=": 4.0,
-      "marginal>=": 2.0,
-      "note": "heuristic rule-of-thumb, not a hard physical boundary"
-    },
-    "caveats": "window is NARROW (0.31 V) = a real risk, NOT solved. SEI has wide-gap members (B2O3 8.4, BPO4 7.0, Li3PO4 5.7) AND leaky members in the SAME predicted decomposition (Li3BS3 3.05, Li2B2S5 2.44, Li3P 0.7). Passivation is plausible ONLY IF the interphase is dense/continuous and the leaky thioborates are minor -- interphase morphology/electron-tunneling NOT modeled here."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "mechanical": {
     "status": "pending",
     "confidence": null,
     "method": "DFT relaxed-ion finite-strain Cij (running on KISTI); EOS B0 as proxy",
     "source": "db/properties/sc2o3_eos_dft_result.json (B0); elastic Cij pending (db/properties/elastic.json)",
-    "B_GPa": null,
-    "G_GPa": null,
-    "E_GPa": null,
-    "nu": null,
-    "B0_eos_GPa": null,
-    "caveats": "elastic relaxed-ion 12-strain chain running; cascade fast-estimate E~41-43 GPa (screening). EOS B0 24.5 GPa (+13% vs undoped, DFT)."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "electronic": {
     "status": "pending",
     "confidence": null,
-    "curation": "manual",
     "method": "DFT DOS/PDOS (scf->nscf->projwfc); scalars curated (no machine-readable summary)",
     "source": null,
-    "band_gap_eV": null,
-    "N_EF": null,
-    "vbm_character": null,
-    "caveats": "GGA underestimates gaps; single config/functional -> grade B not A. gap 1.97 eV (VBM 2.47/CBM 4.44)."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "structure_chemistry": {
     "status": "pending",
     "confidence": null,
     "method": "coordination (Voronoi) + bond lengths + Bader oxidation states (parsed) + Lowdin S-site order",
     "source": "db/properties/sc2o3_bond_lengths.json + sc2o3_coordination_bonds.json + sc2o3_charge_xps.csv",
-    "coordination_motifs": [
-      "free-S2- (isolated sulfide)"
-    ],
-    "bond_lengths": {},
-    "oxidation_states_bader_net": {},
-    "caveats": "BS3 confirmed 5 independent ways (coord/hull/DOS/ESW/charge) = multi-witness -> grade A. USPP Bader net charges are relative (B basin collapses; S-site order from Lowdin)."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "dynamical_stability": {
     "status": "pending",
     "confidence": null,
     "method": "UMA Gamma-point finite-displacement phonons",
     "source": "db/properties/sc2o3_phonon_stability.json",
-    "imaginary_modes": null,
-    "verdict": "DYNAMICALLY STABLE (0 imaginary; soft Li band ~14 cm-1)",
-    "caveats": "Gamma-only (UMA) -> qualitative stability only; quantitative Raman/IR needs DFPT."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "testable_predictions": {
     "status": "pending",
     "confidence": null,
     "method": "aggregated fingerprints for experimental validation (derived)",
     "source": "derived from structure_chemistry + dynamical_stability",
-    "xps": [
-      "S 2p: free-S2-(low BE) < PS4-S < B-S/BS3(high BE shoulder)",
-      "B 1s B3+",
-      "P 2p P5+ (PS4-xOx)"
-    ],
-    "raman_ir": [
-      "P-O phosphate stretch ~900-1013 cm-1 (absent in undoped)"
-    ],
-    "nmr": [
-      "11B trigonal BS3",
-      "31P PS4 / PS4-xOx",
-      "7Li"
-    ],
-    "caveats": "positions/order computable; absolute XPS eV needs dSCF core-hole; Nd 3d is literature-only (multiplet)."
+    "caveats": "not yet computed — orchestrator plans this stage"
   },
   "anode_interface_stability": {
     "status": "n.a.",
@@ -163,7 +116,7 @@
     "confidence": null,
     "method": "not in v1 pipeline",
     "source": "—",
-    "caveats": "H2S evolution / hydrolysis (BS3/thioborates are sensitive)."
+    "caveats": "H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive)."
   },
   "electronic_conductivity": {
     "status": "n.a.",

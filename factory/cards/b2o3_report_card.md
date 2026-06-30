@@ -1,7 +1,7 @@
 # Report card — b2o3 (Li58P8S41Cl16B2O3)
 
 **구조** `db/structures/b2o3_relaxV0.cif` (128 atom) · DFT V0 fixed-cell relax (B2O3-doped LPSCl1.6 champion)
-**완성도** 8/9 core sections done; 5 descriptors on roadmap · schema 0.2 · generated 2026-06-30T_s
+**완성도** 8/9 core sections done; 5 descriptors on roadmap · schema 0.2 · generated 2026-06-30T02:53:29.101396+00:00
 **confidence rubric** A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy
 
 > B2O3-doped LPSCl1.6 (cascade champion, rank_combined=1 by combined_score): higher RT conductivity than undoped LPSCl1.6 (sigma300 ~18.5 mS/cm, SAME Ea, D0-driven), metastable (+37.5 meV/atom) but phonon-stable, NARROW ESW (0.31 V, a real risk) with mixed SEI (wide-gap B/O passivators + leaky thioborates), stiffer framework (EOS B0 +13%). Promising but with an interface-stability caveat.
@@ -28,7 +28,7 @@
 - **anode_interface_stability** (n.a.): Li-metal reduction at the ESW lower limit; headline risk (red 1.72 V near Li).
 - **critical_current_density** (n.a.): dendrite resistance / CCD — most-requested SE metric; not computed.
 - **grain_boundary_transport** (n.a.): bulk sigma != total sigma; GB often dominates.
-- **air_moisture_stability** (n.a.): H2S evolution / hydrolysis (BS3/thioborates are sensitive).
+- **air_moisture_stability** (n.a.): H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive).
 - **electronic_conductivity** (n.a.): sigma_electronic (self-discharge driver), beyond just band gap.
 
 ## 정직한 한계

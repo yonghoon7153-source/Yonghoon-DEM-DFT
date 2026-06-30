@@ -1,6 +1,6 @@
 {
   "schema_version": "0.2",
-  "generated_utc": "2026-06-30T_s",
+  "generated_utc": "2026-06-30T02:53:29.101396+00:00",
   "confidence_rubric": "A=DFT converged multi-witness/validated; B=single-config DFT/MLIP or relative; C=fast proxy",
   "system": {
     "id": "b2o3",
@@ -263,7 +263,7 @@
     "confidence": null,
     "method": "not in v1 pipeline",
     "source": "—",
-    "caveats": "H2S evolution / hydrolysis (BS3/thioborates are sensitive)."
+    "caveats": "H2S evolution / hydrolysis (sulfide SEs are moisture-sensitive)."
   },
   "electronic_conductivity": {
     "status": "n.a.",
