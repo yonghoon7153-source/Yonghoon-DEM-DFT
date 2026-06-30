@@ -59,7 +59,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 
 | 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
 |---|---|---|---|---|---|---|
-| **★ Bielefeld 2019** | J. Phys. Chem. C 123, 1626 | NCM-811/622 + LPS (사실상 재료-무관: shape/size/overlap만) | ★ **GeoDict 구조-모델링 (Janek 그룹) — 우리와 *가장 가까운* 구조-모델링 peer.** **stochastic placement**(AM 구 no-overlap + SE polyhedra overlap, 사후 겹침조정) → **Hoshen-Kopelman** percolation(이온/전자 cluster)·utilization·active interface.  ★ **σ는 *안 풂*(percolation 존재+cluster 부피까지; constriction=ref36 Greenwood future work)**·**단봉 PSD**(bi/tri-modal 보류)·porosity/조성/입경=*입력*.  p_c(전자)=**7.83·ln(d)+36.67 vol%**(Fig6)·β=**0.41**(3D site-perc, Fig4)·이상조성 **62/38·66/34·72/28 vol%@porosity 5/10/20%**·전자한계<69·이온한계>79 vol%(Fig7)·good-perf porosity **~21%**(Fig9, ≠압밀floor 의미). carbon-free(=Strauss ref13). ⇒ **top-down/placement** — 우리 bottom-up/압축+σ삼중항+MPM이 *비운 칸* 채움; Bazzoun2026(같은 그룹 RNM σ)이 후속으로 σ 추가.  ★ **backlog-B3 verbatim 확인**(β=0.41 Fig4·p_c=7.83·ln d+36.67 Eq8). ⚠β=0.41은 *3D-perc strength* 지수 = universality-class만; 우리 √(φ−φc)의 0.5(mean-field)와 동일시 금지 | continuum (GeoDict, voxel percolation) | ✅(papers, docs 노트 대체) | `bielefeld2019_microstructural_modeling_composite_cathode` (papers) + `docs/data/bielefeld2019_percolation.csv` |
+| **★ Bielefeld 2019** | J. Phys. Chem. C 123, 1626 | NCM-811/622 + LPS (사실상 재료-무관: shape/size/overlap만) | ★ **GeoDict 구조-모델링 (Janek 그룹) — 우리와 *가장 가까운* 구조-모델링 peer.** **stochastic placement**(AM 구 no-overlap + SE polyhedra overlap, 사후 겹침조정) → **Hoshen-Kopelman** percolation(이온/전자 cluster)·utilization·active interface.  ★ **σ는 *안 풂*(percolation 존재+cluster 부피까지; constriction=ref36 Greenwood future work)**·**단봉 PSD**(bi/tri-modal 보류)·porosity/조성/입경=*입력*.  p_c(전자)=**7.83·ln(d)+36.67 vol%**(Fig6)·β=**0.41**(3D site-perc, Fig4)·이상조성 **62/38·66/34·72/28 vol%@porosity 5/10/20%**·전자한계<69·이온한계>79 vol%(Fig7)·good-perf porosity **~21%**(Fig9, ≠압밀floor 의미). carbon-free(=Strauss ref13). ⇒ **top-down/placement** — 우리 bottom-up/압축+σ삼중항+MPM이 *비운 칸* 채움; Bazzoun2026(같은 그룹 RNM σ)이 후속으로 σ 추가.  ★ **backlog-B3 verbatim 확인**(β=0.41 Fig4·p_c=7.83·ln d+36.67 Eq8). ⚠β=0.41은 *3D-perc strength* 지수 = universality-class만; 우리 √(φ−φc)의 0.5(mean-field)와 동일시 금지 | continuum (GeoDict, voxel percolation) | ✅(papers, docs 노트 대체) | `bielefeld2019_microstructural_modeling_composite_cathode` (papers; 레거시 dup `docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md` 대체) + `docs/data/bielefeld2019_percolation.csv` |
 | **★ Bielefeld 2020** ⚠(위시리스트 "2022"=오기, 실제 **2020**) | ACS Appl. Mater. Interfaces 12, 12821 | NCM811 + LPSCl(σ_bulk 2.7 mS/cm); σ-검증계는 LCO+LGPS | ★ **Bielefeld 2019의 *σ-추가 후속편*(같은 1저자·GeoDict).** 2019가 미룬 **σ_eff,ion + τ²**를 GeoDict **flux-PDE**(EJ-HEAT 연속체, ∇·(−σ∇φ)=0)로 *풀고*, ★ **바인더(CBD) 영향**(SE 이온망 차단)까지 추가.  ★ σ-method = **연속체 flux-PDE** → **point-contact constriction(Holm/Greenwood) *없음* = σ 상한**(AM/SE 면접촉저항 40 Ω·cm²만; SE-SE 좁힘 빠짐); Bazzoun/우리가 constriction 되돌림.  σ_eff 0.07–0.62 mS/cm·**Kato재구성 0.68 vs 실측 0.73**(검증 1점, LCO+LGPS)·τ² 2→10·**Bruggeman 4× 과소**(Fig2, =우리 R_brug 근거)·**5% void가 20% void 대비 σ 2×**(Fig4)·작은 AM→σ↓τ²↑(이온 장애물; 우리 작은 SE→σ↑와 *반대 채널·같은 그림*).  ★ **바인더 V(B):V(AM) 0.05/0.10 → σ_eff급감·τ² 4.2→6.4→10·active interface −17~43%/−29~82%(고-AM 비선형)**(Fig5, interfacial meniscus 배치) = 우리 CBD/voxel σ-블로킹(SuperP 0.0168<VGCF 0.0298)·#271 Hong PTFE·Lee2025 직접 cross-check.  단봉+trimodal 1케이스(1:1:2 de Larrard) → **dip 미측정**(porosity 15% 고정). C-rate Table1(SE<5 mS/cm thick 불가, 타깃 10). ⇒ **그룹-진화 가운데토막: 2019(σ없음)→2020(연속체σ+바인더)→Bazzoun2026(RNM/constriction σ)→우리(삼중항+MPM)** | continuum (GeoDict, voxel flux-PDE σ_ion) | ✅(docs) | `docs/lit_bielefeld2020_effective_ionic_conductivity_binder.md` + `docs/data/bielefeld2020_sigma_binder.csv` |
 
 ## 패킹 기하 (geometric packing — Furnas dip 근거)
@@ -126,8 +126,90 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 - **★ `contact_models_layer_map.md`** — 접촉모델 14편을 우리 모델 기준 **층위 지도**(no-cap=우리/캡=경로A/FEM기준/
   자기상사/점착/MPM 계보)로 종합 + **경로 A 구현 스펙**(real E + p_y캡 → 18×연화 제거 시험).
 
+## 추가 digest — INDEX 미반영분 일괄 정리 (2026-06-30, "INDEX 마무리")
+> papers/ 60편 + docs/lit_*.md 33편 중 **위 섹션에 아직 안 올라온 17편**을 주제별로 일괄 등록.
+> 각 행 = 방법·핵심 + **우리 모델 어디에 먹이나(feeds)**.  (정밀 재배치는 추후; 여기 등록 = 누락 0.)
+
+**구조·percolation·전달 peer (우리 DEM 접촉망/σ 교차검증)**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **Chen 2011** | 다분산 복합전극 *해석적* percolation 미시모델(CN·percolation·TPB·σ_inter/intra·hydraulic pore 닫힌식) → 우리 CN·percolation→σ 논리의 해석 peer(B3 인접) | analytic | `chen2011_percolation_micromodel_composite_electrode` |
+| **Zhang 2024** (Powder Tech.) | DEM **전기-기계 접촉 결합** 모델(접촉변형↔전기전도) → 우리 Kirchhoff/Holm 접촉-σ의 DEM-side 결합 peer | DEM (contact+electrical) | `electromechanical_contact_model_particulate_systems` |
+| **Nisar 2024** (Comp. Part. Mech.) | 부분소결 다공체 유효 σ_e DEM **저항망(sinter-neck conductance)** → 우리 Holm/Kirchhoff σ_e 저항망의 소결-neck peer | DEM (resistor network) | `nisar2024_dem_effective_electrical_conductivity_sps` |
+| **TauFactor** (Cooper) | voxel 미세구조에서 Laplace 정상확산 풀어 **tortuosity factor τ 직접 계산** MATLAB 툴 → 우리 τ_Laplace/voxel τ의 독립 교차검증 도구(우리 dump에 직접 실행 가능) | tool (MATLAB) | `taufactor_tortuosity_factor_tomography_tool` |
+
+**DEM 제조·압밀 (ASSB/LIB 공정 peer)**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **Schneider 2023** (Adv. Energy Mater.) | t-Li₇SiPS₈ **입자크기·압력→수송물성**, DEM 압밀+Heckel+FVA σ → 우리 Cronau(r_SE) SE-size 인자 + σ-vs-porosity(압밀) 검증(**B5/B6**) | DEM+exp | `schneider2023_particle_size_pressure_transport` |
+| **Frankenberg 2024** | ASSB 복합양극 **고강도 믹서** 공정 DEM(coarse-graining + force-scaling) → 분산/혼합 공정(A5 dispersion 인접) | DEM (mixing) | `frankenberg2024_dem_high_intensity_mixer_assb` |
+| **Schreiner 2020** | LIB calendering DEM(EDEM+EEPA 탄소성+Bonding Potyondy–Cundall, 3-모듈) → 캘린더링 제조 DEM peer | DEM (calendering) | `schreiner2020_dem_calendering_lib` |
+| **wet-processing resolved-AM** | ASSB 양극 *습식*(슬러리→건조→압연), **실제형상(resolved multisphere) AM**을 nano-CT서 추출해 DEM 제조 → resolved-grain 제조 peer | DEM (wet, resolved) | `wet_processing_resolved_am_ssb_cathode_manufacturing` |
+| **Lim 2025** (Small) | **Virtual Calendering Framework**: 3D-재구성 양극 가상 캘린더링 + 전극설계 최적화 → 우리 압밀·구조 파이프라인의 가상-캘린더링 peer | framework | `docs/lit_lim2025_virtual_calendering_framework.md` |
+
+**CBD · binder · carbon morphology (Stage-2 A3/A4/A7)**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **Bak 2024** (Chem. Eng. J.) | **바인더 z-분포 제어** 다층 모델전극 + digital-twin → **A7 graded-z**(carbon:binder z축) | exp+model | `docs/lit_bak2024_binder_distribution_multilayer.md` |
+| **Koo 2025** (Energy Storage Mater.) | anti-solvent **MWCNT 감싼 단결정 SC-NCA dry** 양극(99.6 wt%, 4.0 g/cc) → CBD carbon morphology(#275 선행) | exp | `docs/lit_koo2025_cnt_wrapped_sc_nca_dry_cathode.md` |
+| **Koo 2026** (Joule, #275) | **연속 SWCNT sheath** 두꺼운 dry 전극 = 우리 CBD **SuperP-vs-VGCF "discrete=gap-filler, 연속=backbone"의 실험 증명** + 제3 morphology(sheath) | exp+digital-twin | `docs/lit_koo2026_swcnt_sheath_thick_electrode.md` |
+
+**kinetics / impedance + 공정 review + 저압 설계**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **Choi 2024** (ACS AMI) | 복합양극 **계면 임피던스 정식화(TLM 등가회로)** → 고에너지·고출력 설계규칙; 우리 geometric ASR 위에 **kinetics 칸**(R_ct/이중층/Warburg, 미보유) 추가 경로 | exp+TLM | `interfacial_impedance_formulation_assb_cathode` |
+| **Liu 2025** (review) | **건식공정(DPT)** 총설(DPC/분무/압출/**PTFE 섬유화**) LIB → A3 CBD + 압밀 프로토콜(co-rolling) 공정 맥락 | review | `liu2025_dry_processing_high_energy_li_batteries_review` |
+| **Zhou 2025** (ACS Energy Lett.) | **저압 장수명** 복합양극 microstructure 설계(tailored) → 작동압-구조-수명 설계 peer | exp | `tailored_cathode_microstructure_low_pressure_assb` |
+| **Yoo 2026** (Energy Storage Mater.) | **porosity-구배** 건식 흑연 전극 + 변형성 Primer Layer → **A7 Phase-5 graded-z** | exp | `docs/lit_yoo2026_porosity_gradient_dry_electrode.md` |
+
+**사이클 파괴 frame[5] (우리 압밀-Auerbach의 사이클 짝, 미보유칸)**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **Alabdali·Ngandjong** | ⭐ **사이클 응력 DEM**(SSB 전극 cycling 기계응력) → frame[5] *사이클* driver(우리 *압밀* DEM의 시간축 짝, A10) | DEM (cycle stress) | `dem_mechanical_stresses_ssb_electrode_cycling` |
+
+**docs/lit_*.md 실험·디지털트윈 앵커 (우리 소재계/축 — 행 누락분)**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **★ Hong 2026 #271** (sulfide binder DT) | LPSCl+NCM **PTFE void −6.4%p**(28.7→22.3 vol%)·σ_ion 0.064(=Pwd 74%, 차단−치밀화 상쇄)·retention 94.6% → **σ_ionic 절대 앵커 + A3 binder + whatif_additives(W2) PTFE** | exp+DT | `docs/lit_hong2026_sulfide_cathode_binder_digitaltwin.md` |
+| **★ Hong 2026 #285** (CBD viscoelasticity) | PTFE/CBD **점탄성 spring-back**(RT+4/HT+1µm/3주)·단결정 rigid-AM 정당화 → 우리 rate-indep J2의 *시간축 한계*(#7/#10) | exp+DMA | `docs/lit_hong2026_cbd_viscoelasticity_springback.md` |
+| **★★ Oh 2026 #266** (bimodal) | ASSB **bimodal Furnas dip 정량 1:1**(He pycnometry 8.83%@CAM7:3, σ_ion peak)·σ_e **poly(13.7)≫single(2.45)** → 우리 a9_50 dip 검증 + **σ_e 방향(A1/#11)** | exp | `docs/lit_oh2026_bimodal_composite_cathode.md` |
+| **Oh 2026 #284** (carbon-coat SiOx) | CBD **이온/전자 balance**(중간-C 최적)+분산 정량(SSRM/work-of-adhesion) → **A5 dispersion CoV / E1·E2** | exp | `docs/lit_oh2026_carbon_coating_siox_ion_electron_balance.md` |
+| **★ Park 2020 #22** (foundational DT) | 계보 시조 LiNbO₃-NCM711+LPSCl+NBR; **NCM 90wt% σ_eff,ion 계산불가(LPSCl 퍼콜 단절)** = 우리 SE-no-perc degenerate 1:1·dead-AM 회피대 | exp+DT | `docs/lit_park2020_digitaltwin_assb_foundational.md` |
+| **★ Trevisanello 2021** (SC/PC NCM) | 단·다결정 NCM **균열·Li확산·BET·R_ct**(★ **σ_e 측정 無** — A1 mis-attribution 출처); SC 0.84>PC 0.17 m²/g | exp | `docs/lit_trevisanello2021_sc_pc_ncm_cracking_diffusion.md` |
+
+**papers/ DEM 공정·민감도 + 주변 (행 누락분)**
+| 논문 (제1저자 년) | 핵심 + feeds | type | slug |
+|---|---|---|---|
+| **Bazzoun 2025** | DEM **파라미터 민감도**(friction 지배)·high-f_CAM rigid-sphere 불일치 → 경로A/Stage-E dense-regime 가이드(**D1/B4**) | DEM | `bazzoun2025_dem_parameter_sensitivity_assb_cathode` |
+| **Lee 2024** | **multiphysics DEM+FEM 초기압력** ASSB → 압력→구조→역학 커플 peer | DEM+FEM | `lee2024_multiphysics_dem_fem_initial_pressure_assb` |
+| **Mun 2025** (review) | **건식전극 기술** 총설(co-rolling/PTFE) → A3 CBD + 압밀 프로토콜 공정 맥락 | review | `mun2025_dry_electrode_technology_assb_review` |
+| **Shi 2019** | **고-AM 로딩 × 입자크기** ASSB → 조성·크기-packing peer | exp/DEM | `shi2019_high_am_loading_particle_size_assb` |
+
+**docs/lit_*.md 디지털트윈·바인더·주변 (행 누락분, 정성/주변축)**
+| 논문 (제1저자 년) | 핵심 + feeds | slug |
+|---|---|---|
+| **Choi 2024** | digital-twin echem 리뷰 → positioning | `docs/lit_choi2024_digital_twin_review_echem.md` |
+| **Song 2025** | electrochemo-mech 미세전극(**Perzyna-Ludwick 점소성**) → A3/#17 | `docs/lit_song2025_electrochemo_mechanical_microelectrode_ees.md` |
+| **Lee 2023** | SiC-SPE digital-twin ASSB | `docs/lit_lee2023_sicspe_digitaltwin_assb.md` |
+| **Nam 2026** | DPE(dry-process electrode) microstructure 리뷰 | `docs/lit_nam2026_dpe_microstructure_review.md` |
+| **Kim 2026a** | A3D 공기전극 microstructure-transport | `docs/lit_kim2026_a3d_air_electrode_microstructure_transport.md` |
+| **Kim 2026b** | charge-engineered CNF 바인더 | `docs/lit_kim2026_charge_engineered_cnf_binder.md` |
+| **Park 2026a** | ceramic-PP 분리막 | `docs/lit_park2026_ceramic_pp_separator.md` |
+| **Park 2026b** | thiol-ene SBR 바인더 ASSB | `docs/lit_park2026_thiolene_sbr_binder_assb.md` |
+| **Choi 2026** | elastomeric Li-metal 음극 | `docs/lit_choi2026_elastomeric_li_metal_anode.md` |
+| **Cho 2026** | EIPC Zn 음극 AZIB (수계, 주변) | `docs/lit_cho2026_eipc_zn_anode_azib.md` |
+
+**동일-저자 *별개* 논문 (위 행과 다른 paper — 행 누락분)**
+| 논문 (제1저자 년) | 핵심 + feeds | slug |
+|---|---|---|
+| **So 2021b** (≠ cold-press) | ⭐ **사이클 열화 DEM** — Fabrication & Degradation of ASSB → frame[5] 사이클 driver(A10) | `so2021_dem_fabrication_degradation_ductile_particles` |
+| **So 2022b** (≠ 접촉모델) | **SE-코팅(core-shell) vs 입자-혼합** DEM 냉간압밀 — tortuosity·AM damage·percolation → **A4 se_coating_interface** 직접 peer | `so2022_dem_compaction_coated_particles_assb` |
+| **Sangrós 2020b** (≠ LIB) | **ASSB(폴리머 SSB) 전자 전도경로** DEM — A* 경로탐색 + 실린더 → 우리 σ_e 경로/percolation peer | `sangros2020_dem_electrical_conductive_paths_assb` |
+| **Kim 2024b** (ACS Energy Lett., ≠ carbon-점유) | **Digital Twin Battery Modeling & Simulations** 동료심사 → 우리 DEM+MPM 스케일 positioning | `docs/lit_kim2024_digital_twin_acsenergyletters.md` |
+| **★ Kim 2025b** (Battery Energy, ≠ TLM) | **SE-coating CA(Super P 0D vs VGCF 1D)**: SE-SP σ_e **1.0e-5(3-decade 붕괴)** vs VGCF 1.4e-2; σ_ion SP 최저 → ★ **whatif_additives(W2) thinky-SuperP 붕괴 앵커 + A4** | `docs/lit_kim2025_conductive_agent_se_coating_assb.md` |
+
 ## 현황
-papers/ digest **41편** ✅ (2026-06-26~27 대량추가; **+5 #30-34 진행중**).  **랩 자체논문 7편**(필독): Kang&Shin2025(역학/균열)·Kim·Kang·Park·Lee2025(EIS-TLM)·Kim2024(carbon점유)·Cho2024(VGCF양면성)·Kang2023(음극strain균열)·Jung2023(단결정NCM)·**Yun2023(degradation 종합 capstone)**.  **접촉모델·소성 14편**(`contact_models_layer_map.md`): Luding·EEPA·Pasha·Thornton–Ning·Kogut–Etsion·Jackson–Green·Mesarovic–Fleck·Storåkers·DMT·Stomakhin·Klár·de Vaucorbeil·Sangrós·Ngandjong.  **기존 7편**: Lee2025·Bazzoun·Varkey·So2021·Martin-Bouvard2003·Bouvard2000·McGeary1961.
+papers/ digest **60편** + docs/lit_*.md **33편** ✅ — **2026-06-30 INDEX 마무리 완료**: 4개 일괄 섹션으로 **모든 digest 파일이 slug로 findable** (검증 통과, 누락 0).  이전 "41편"/슬러그 stale 정정.  ⚠ 같은 (저자,년)에 *별개 논문*이 여럿(So2021/2022·Sangrós2020·Kim2024/2025) → slug로 구분.  **랩 자체논문 7편**(필독): Kang&Shin2025(역학/균열)·Kim·Kang·Park·Lee2025(EIS-TLM)·Kim2024(carbon점유)·Cho2024(VGCF양면성)·Kang2023(음극strain균열)·Jung2023(단결정NCM)·**Yun2023(degradation 종합 capstone)**.  **접촉모델·소성 14편**(`contact_models_layer_map.md`): Luding·EEPA·Pasha·Thornton–Ning·Kogut–Etsion·Jackson–Green·Mesarovic–Fleck·Storåkers·DMT·Stomakhin·Klár·de Vaucorbeil·Sangrós·Ngandjong.  **기존 7편**: Lee2025·Bazzoun·Varkey·So2021·Martin-Bouvard2003·Bouvard2000·McGeary1961.
 **★ #17-29 batch 13편 (2026-06-27):** DEM/ASSB — So2022(접촉+소결)·Huang2025(DEM+LBM 열); LIB제조 DEM+LIGGGHTS — Sangrós2019(Thornton-Ning+bond)·Lyu2025(건조+CBD parallel-bond)·Shenouda2020(LIGGGHTS튜토리얼)·Bosch2014(LIGGGHTS MSc); 구조모델링 — Bielefeld2019(percolation, B3 verbatim 확인, docs노트 대체); 실험앵커 — Minnmann2024(FIB-SEM)·Reisacher2023(LPSCl+C65 p_c≈4wt%); 사이클파괴 frame[5] — Bucci2017(CZM)·Bucci2018(delamination)·NMC811입계균열2023(nano-CT); 리뷰 — Deysher2022.
 + docs/ digest: **Minnmann 2021 JES**(★ porosity/σ_ion/τ 앵커 진짜 출처, EIS-TLM) · Minnmann 2022(설계 Perspective)
 · **★ Doux 2020**(작동압 vs 제조압 LPSCl 앵커, porosity 18 %@370 MPa) · **Cronau 2021**(stack pressure σ-측정 protocol)
