@@ -12,7 +12,7 @@
 | A1 | **σ_e 조성방향 수정** — σ_S/σ_P를 LOCKED "single>poly"에서 **재료별 INPUT**으로; Trevisanello 인용 제거/교체 | Trevisanello 2021 (#11 mis-attribution), Oh #266 (poly>single 반대) | generate_comparison_plots.py `_SIGMA_S/P_LOCKED`, network_conductivity NCM(r) | ⛔ | ★ Phase-3 전 필수.  finalized form 변경이라 신중(사용자 합의 후).  Trevisanello엔 전자σ 없음(확산/표면적만) — 값·출처 둘 다 오배선 |
 | A2 | **wallP 조건부 (skeleton-spring) production 채택** | (자체 MPM 작업) | mpm3d_compaction `--floor-porosity`, mpm_input_from_case 자동주입 | ✅ | **채택 완료(2026-06-26)**: real14 trust test 통과(A=B=15.91 byte-identical, floor-gate OFF) + _10 복원(15.9→25-28) + sweep 단조.  ALL-regime 검증.  +CBD 적용됨(Q1).  세부 docs/mpm_wallP_conditional_troubleshooting.md §10 |
 | A3 | **E3 MPM `--coh` distribution-aware (binder 양역할)** — 과잉=σ차단/전해질차단, 부재=delamination; SAICAS adhesion↔binder | #271 Hong(PTFE void↓6.4%p), #264(cross-link modulus), #17 Song(Perzyna-Ludwick 점소성), #20 Bak(binder-z adhesion), #08 Bielefeld2020(binder σ-block), #285(spring-back) | mpm3d_compaction `--coh`(현 상수) | ⛔ | binder modulus(MPa)는 SE E_eff(1.53GPa)와 별개 항; 비단조 cap(과가교↓) |
-| A4 | **E4 `se_coating_interface` carbon 옵션** — additives.py가 carbon을 bulk 간극에만 seed → CAM-표면-film carbon(SuperP coating 차단) 표현 못 함 | #19 Kim(SE-coating SuperP σ_e 3자리 붕괴) | additives.py (seed 위치) | ⛔ | 현 SuperP>VGCF는 bulk-corner 한정; coating regime은 VGCF승 |
+| A4 | **E4 `se_coating_interface` carbon 옵션** — additives.py가 carbon을 bulk 간극에만 seed → CAM-표면-film carbon(SuperP coating 차단) 표현 못 함 | #19 Kim2025(SE-coating SuperP σ_e 3자리 붕괴) | additives.py (seed 위치) | 🔶 | **부분**(2026-06-30): webapp **해석모델** `whatif_additives`가 thinky(dry-coat)+SuperP → σ_e 붕괴(위치-의존 반전)를 이미 잡음 → with/without webapp ✓.  남은 ⛔ = **MPM seeding** 자체(additives.py가 SE-coating 셀에 carbon seed → 풀 GPU run서 구조적으로 재현).  현 SuperP>VGCF는 bulk-corner 한정; coating regime은 VGCF승 |
 | A5 | **E2 dispersion CV** — 첨가제/입자 분산 불균일도 | #284 SiOx | additives.py / 합성 | ⛔ | |
 | A6 | **pore-τ DiffuDict (유효-D voxel)** — pore network 유효확산 | #281 A3D | voxel_conductivity (D 채널) | ⛔ | |
 | A7 | **Phase-5 graded-z** — z-band별 porosity(#286)+carbon:binder(#20) 2축 | #286 Yoo, #20 Bak | extract_2d_microstructure K=8 z-band | ⛔ | optimum 재료의존(#286 gradient vs #20 uniform) → 둘 다 비교 |
@@ -69,7 +69,7 @@
 | 논문 | feeds | 적용 내용 | 상태 |
 |---|---|---|---|
 | **Bielefeld 2019** | **B3** | β=0.41(3D-site strength 지수)·p_c=7.83·ln d+36.67 **verbatim 확인** → 우리 √(φ−φc)·CN²·f_p³ universality-class 근거.  ⚠β=0.41≠우리 0.5(mean-field) 동일시 금지 | ✅ 확인(인용만) |
-| **Reisacher 2023** | **A4** | carbon 전자-percolation p_c≈4 wt% C65 (LPSCl=우리 SE, 보정無) → additives.py σ_e carbon-gate `g_C=f(wt_C65−p_c)` 캘리브레이션 + Bielefeld AM-p_c의 carbon 짝 | ⛔ TODO |
+| **Reisacher 2023** | **A4** | carbon 전자-percolation p_c≈4 wt% C65 (LPSCl=우리 SE, 보정無) → additives.py σ_e carbon-gate `g_C=f(wt_C65−p_c)` 캘리브레이션 + Bielefeld AM-p_c의 carbon 짝 | 🔶 부분(2026-06-30): p_c≈4wt% soft-gate가 webapp **해석모델** `whatif_additives` σ_e boost에 적용됨(`_CARB_PC_WT=4.0`).  남음 = MPM seeding측 g_C 캘리브레이션 |
 | **Minnmann 2024** | **B1** | FIB-SEM σ_ion 0.05–0.11·porosity 6–10%·coverage 20–50%·CAM util 62–77% = frame[4] TREND 앵커(글래스 composite, 절대전이 금지) | ⛔ TODO |
 | **Schneider 2023** | **B5/B6** | σ vs 입경·압력 실측 → 우리 Cronau(r_SE) SE-size 인자 + σ-vs-porosity(압밀) 검증 (material-match 확인 대기) | 🔶 digest 진행 |
 | **Bucci 2017 (CZM) + Bucci 2018 (delamination) + NMC811 입계균열 2023** | **A10/B6/D6** | 사이클 chemo-mech 균열(Vegard strain driver, 우리 압밀-Auerbach의 사이클 짝); SE 취성균열 = de Vaucorbeil continuous-damage MPM(D6) 구현경로; 박리→ASR↑(B6 시간축).  ⚠우리 미보유 frame[5] | ⛔ TODO(future) |

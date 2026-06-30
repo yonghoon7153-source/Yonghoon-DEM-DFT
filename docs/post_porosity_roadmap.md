@@ -7,6 +7,18 @@
 
 ★ **핵심: 인프라 ~70% 이미 존재 → 대부분 *배선*이지 신규개발 아님.**
 
+> ## ✅ 진행상황 (2026-06-30) — porosity stage2 CLOSED 후 v3 착수
+> - **W1 (webapp 첨가제 section)** ✅ — single.html MPM 파이프라인 카드에 "⚡ 첨가제 적용" section
+>   (VGCF/SuperP/PTFE wt% + mixing) → recipe-baked zip(`/results/<id>/mpm-input?vgcf=&…&mixing=`).
+> - **W2 (전도도 with/without)** ✅ *해석모델* — `grade_engine.whatif_additives` (문헌-앵커, CPU 즉시계산)
+>   + `/case/<id>/whatif-additives` route + 라이브 표. 풀 MPM-additive run(②zip→GPU)이 교차검증.
+>   (구 carbon-only `whatif_carbon_additive`는 back-compat로 유지.)
+> - **문헌검증(§2)** ✅ 5방향 smoke-test 통과(`scripts/test_whatif_additives.py`): PTFE por↓/σ_ion↓ ·
+>   carbon σ_e↑/σ_ion↓ · SuperP가 VGCF보다 σ_ion 더 막음 · thinky-SuperP σ_e붕괴↔bulk σ_e↑ 위치반전 ·
+>   thinky VGCF>SuperP.  앵커값 = Hong2026(−6.4%p, ×0.74) · Reisacher(p_c≈4wt%) · Kim2025(3-decade).
+> - **남음**: W3 모델 seeding(A3 --coh / A4 se_coating_interface / A5 dispersion = GPU측 MPM, 코드만 내가) ·
+>   W4 dem-analyze v3 통합.  ⚠ 현재 webapp σ-변화는 *해석추정*이고, 실제 MPM-additive 구조 σ는 ②zip→GPU에서.
+
 ## 0. 이미 있는 것 (재사용)
 | 조각 | 위치 | 상태 |
 |---|---|---|
