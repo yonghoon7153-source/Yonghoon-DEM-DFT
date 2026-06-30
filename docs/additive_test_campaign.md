@@ -33,18 +33,27 @@ porosity **MPM 15.45 % / DEM 14.28 %** · thickness 113.4 µm · SE/solid 33.2 %
 - **morphology**: VGCF 섬유 / SuperP 응집 / PTFE 섬유망이 자연스럽게 깔렸나 (도전재 3D).
 - **σ_e / σ_ion** (STEP 3, network 확장 후): carbon 전자경로↑ / SE점유 σ_ion↓ → 실측 대조.
 
-### 형상 메모 — VGCF waviness (2026-06-30)
+### 형상 메모 — VGCF waviness = 압력-의존 buckling proxy (2026-06-30)
 이전 VGCF는 완벽한 직선(curl=0)이라 뷰어에서 artifact처럼 보였음.  실제 VGCF(기상성장
-탄소섬유)는 SEM상 곧은 막대가 아니라 **본질적으로 물결치는(wavy)** 필라멘트 → `mpm3d_compaction.py`
-ADD dict의 VGCF `curl 0.0 → 0.06`(gentle as-grown waviness; PTFE 0.4=tangled과 구분).
+탄소섬유)는 SEM상 곧은 막대가 아니라 **본질적으로 물결치는(wavy)** 필라멘트 + 슬렌더 컬럼이라
+가압 시 **좌굴(buckling)**함(L/r~267, Euler σ_cr≈수십 MPa ≪ 가압 → 좌굴; SE에 박혀 단파장 wrinkle).
+→ `mpm3d_compaction.py`에서 VGCF `curl`을 **press의 함수**로:
+`_press_curl(P)=0.095·(1−exp(−P/0.30))` (`--vgcf-curl <0` = auto, ≥0 = 고정).  P 0.1→0.027 / 0.3→0.060 /
+0.6→0.082 / 1.0→0.092 (단조·포화; 후좌굴 성장 후 densifying SE가 pin).  **압력 환경에 따라 형상 생성이 바뀜**(사용자 요청).
 - **porosity 검증에 영향 없음**: curl은 경로 모양만 바꾸고 per-point 부피(`add_pvs·w`)는 보존 →
   volume-fill porosity·예측(13.79%) 불변.  STEP 1 이후 GPU 코드 pull 후 재-run하면 형상만 개선됨.
 - **지름 균일 유지**: `vol_conserve`를 `vcv>0`에만 묶어(drawing=PTFE 전용) VGCF는 curl을 줘도
   제조상 일정 Ø(150nm) 유지.  `curl`은 grid step 단위라 waviness ∝ curl·√(L/step) — n_grid에
-  따라 약간 민감, 너무 곧/과하게 꼬이면 curl만 튜닝.
-- 가압 중 휨: VGCF는 최강성 상(E=10≫SE 1.53, σ_y=2.0≫0.3 가압)이라 거의 탄성·평행이동;
-  MPM에 굽힘(beam) 항이 없어 능동적 좌굴은 미표현 → 압축 후 추가 휨은 SE 흐름에 의한 수동
-  왜곡뿐.  좌굴까지 보려면 fibre beam/bond 모델이 필요(차후 검토).
+  따라 약간 민감, 너무 곧/과하게 꼬이면 `--vgcf-curl`로 튜닝.
+- ★ **PRESCRIBED vs EMERGENT (정직)**: 위는 buckling의 *prescribed* proxy(seeding이 press에 반응).
+  연속체 MPM은 sub-grid 섬유의 굽힘강성(∝두께³)을 격자로 못 풀어서(150nm fibre를 100µm box서 resolve =
+  ~10⁹ cell, 불가) **emergent 좌굴은 안 나옴**.  진짜 emergent는 fibre 점에 **명시적 sub-grid Cosserat/
+  bonded-rod**(축+굽힘 director DOF)를 얹어 기존 MPM 가압에 반응시키는 빌드 — MPM에서 가능(DEM은 가압
+  불가→LAMMPS).  per-additive·coupling·CFL·sequencing은 backlog `digest_model_application_backlog.md`
+  "F. Additive mechanics fidelity" 참조.
+- σ_y 비대칭: SuperP(σ_y=0.1=100MPa<가압)·PTFE(0.05=50MPa<가압)는 이미 MPM서 소성 압밀=press 반응 *부분
+  emergent*; VGCF(2.0=2000MPa≫가압)만 탄성유지라 prescribed curl이 필요한 유일 상.  → buckling 모델 가장
+  필요한 건 VGCF.
 
 ## 실행 로그
 | # | 조건 | mixing | por_pred | por_meas | thick_meas | 판정 | 비고 |

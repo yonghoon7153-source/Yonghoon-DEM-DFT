@@ -81,3 +81,13 @@
 | **Mun 2025 / Liu 2025 (dry-electrode 리뷰)** | **A3/공정** | 건식 PTFE fibrillation·co-rolling 공정 landscape → CBD 모델 + 압밀 프로토콜(co-rolling) 맥락 | 🔶 digest 진행 |
 | **Interfacial-impedance formulation (#31)** | **kinetics(신규)** | R_ct/double-layer/Warburg 해석식 → 우리 geometric ASR 위에 kinetics 칸(kim2025 미보유) 추가 경로 | 🔶 digest 진행 |
 | **Deysher 2022 (리뷰)** | positioning | transport+mech 커플 리뷰가 호명한 정량 모델 = 우리 DEM σ-삼중항↔MPM이 실현(미래방향 4/6 충족) | ✅ 포지셔닝 |
+
+## F. Additive mechanics fidelity — 압력-의존 형상 (2026-06-30)
+
+첨가제(VGCF/SuperP/PTFE) 형상을 **가압 압력에 반응**하게 만드는 작업.  계기: 완벽 직선 VGCF가
+artifact 같다 → 실제 VGCF는 wavy + 가압 시 좌굴.  2-tier.
+
+| # | 항목 | 대상 | 상태 | 노트 |
+|---|---|---|---|---|
+| **F1** | **압력-의존 PRESCRIBED seeding** — seed 형상 파라미터를 press(`args.target`)의 함수로 | `mpm3d_compaction.py` `_press_curl`, `--vgcf-curl` | 🔶 VGCF ✅ / SuperP·PTFE TODO | **VGCF DONE**: `curl=f(P)=0.095·(1−exp(−P/0.30))`, 0.06@0.30GPa 보존, buckling+post-buckling 포화 근거.  porosity 불변(부피 보존).  **SuperP**(aggregate 구조붕괴/compaction vs P)·**PTFE**(fibrillation degree vs P)는 *방향*만 lit-지지(CB structure collapse·dry fibrillation), *크기* 미앵커 → 날조 금지, conservative tunable hook으로만(요청 시).  σ_y 비대칭: SuperP/PTFE는 soft(σ_y<press)라 MPM서 이미 소성압밀=부분 emergent, VGCF만 prescribed 필수 |
+| **F2** | **EMERGENT sub-grid bonded-rod / Cosserat MPM** — 섬유가 기존 MPM 가압에 *실제로* 좌굴 | `mpm3d_compaction.py` (신규 rod DOF) | ⛔ TODO (★ "가장 현실적", STEP 3 표적) | **MPM에서 가능 — 단 격자 refine 아님**(150nm fibre를 100µm box서 resolve=~10⁹ cell, 불가).  경로 = fibre 점에 **명시적 director(축+굽힘 강성) + bond**를 얹어 sub-grid rod로 coupling → emergent 좌굴.  ★ **MPM이 올바른 집**: MPM은 이미 가압함(servo/hold) → rod만 추가; **DEM(LIGGGHTS)은 가압 불가→LAMMPS bonded-particle 별도 sim 필요**(사용자 확인).  rod엔 **실제 VGCF E≈200 GPa**(굽힘은 rod가 explicit하게 carry → 연화 E=10과 분리, 더 물리적).  per-additive: VGCF=좌굴(최우선, 탄성유지라 prescribed 외 방법 없음), PTFE=fibril draw/align(+A3 coh), SuperP=bonded-aggregate 압밀/fragmentation.  COST: per-point 방향 DOF+굽힘에너지+bond+grid coupling+**stiff bond→dt 빡빡(CFL)→느려짐**; Taichi 구현 가능, bounded.  payoff = σ_e network 형상(percolation/τ) → **STEP 3에서 측정 σ_e로 검증**.  frame[5]상 이산결합역학이지만 가압제약 때문에 MPM-rod가 실용적 home |

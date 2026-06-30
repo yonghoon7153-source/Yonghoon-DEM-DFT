@@ -41,6 +41,19 @@ def binder_cap(w_wt, w_opt):
     return max(0.0, r * np.exp(1.0 - r))
 
 
+def _press_curl(p_gpa, curl_sat=0.095, p_char=0.30):
+    """VGCF waviness as a FUNCTION OF THE PRESS p_gpa (GPa) — pressure-dependent shape generation.
+    Real VGCF is a slender column (L/r~267): Euler sigma_cr ~ tens of MPa << the 0.1-0.6 GPa press, so
+    it BUCKLES under compaction — but embedded in the SE (elastic foundation) it wrinkles at SHORT
+    wavelength, not one big arc.  Returns the per-step worm-like curl that PRESCRIBES that press-
+    dependent wrinkle in the seeder.  (The continuum MPM can't resolve a sub-grid fibre's bending
+    stiffness from the grid, so the buckling is prescribed here, not emergent — the emergent version
+    needs an explicit sub-grid Cosserat/bonded-rod on the fibre points; see the additive-mechanics
+    backlog.)  Saturating (post-buckling grows, then the densifying SE pins it): curl(P) = curl_sat·
+    (1-exp(-P/p_char)); calibrated curl(0.30 GPa)=0.060.  P=0.1→0.027, 0.3→0.060, 0.6→0.082, 1.0→0.092."""
+    return float(curl_sat * (1.0 - np.exp(-max(float(p_gpa), 0.0) / p_char)))
+
+
 def parse_args(argv):
     ap = argparse.ArgumentParser(description="3D MPM compaction (servo to target σzz).")
     ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'])
@@ -190,6 +203,11 @@ def parse_args(argv):
     ap.add_argument('--add-l-cv', type=float, default=0.4,
                     help='fibre length variation (coefficient of variation) for VGCF/PTFE — real fibres '
                          'have a length spread; lognormal mean-preserving so counts/volume unchanged. 0=fixed.')
+    ap.add_argument('--vgcf-curl', type=float, default=-1.0,
+                    help='VGCF path waviness (per-step worm-like kick, rad).  <0 (default) = AUTO from the '
+                         'press: curl(P)=0.095·(1-exp(-P/0.30)) (buckling proxy — more press → more wrinkle, '
+                         'calibrated 0.06 @ 0.30 GPa; real VGCF sigma_cr~tens of MPa < press, embedded → short-'
+                         'wavelength waviness).  >=0 = fixed value (0 = perfectly straight).  See _press_curl.')
     ap.add_argument('--mixing', default='ballmill', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
                          'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
@@ -511,11 +529,16 @@ def main(argv):
                 ii = int(p[0] * n_grid); jj = int(p[1] * n_grid); kk = int(p[2] * n_grid)
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
+            # VGCF waviness from the press (buckling proxy): --vgcf-curl <0 → AUTO curl=f(target P).
+            _vgcf_curl = args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target))
+            print(f"  [additives] VGCF curl = {_vgcf_curl:.3f} "
+                  f"({'fixed --vgcf-curl' if args.vgcf_curl >= 0.0 else f'auto from press {args.target:.2f} GPa'})")
             ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac, branch_frac, bridge_frac).
-                #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl = path waviness (VGCF small ~0.06 = gentle as-grown wave; PTFE 0.4 = tangled web);
+                #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl = path waviness (VGCF = press-dependent
+                #   buckling proxy _vgcf_curl; PTFE 0.4 = tangled drawn web);
                 #   vol_cv>0 → initial node-volume spread (drawn d∝√(V/L)); nuc_frac → fraction nucleating on carbon
                 #   (CBD); branch_frac → ② spawn thinner secondary fibrils; bridge_frac → ④ steer toward a 2nd carbon.
-                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, 0.06, 0.0, 0.0, 0.0, 0.0),   # stiff fibre, gentle as-grown waviness (real VGCF is wavy, not laser-straight)
+                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, 0.40, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD
             }
