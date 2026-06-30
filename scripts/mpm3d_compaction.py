@@ -41,6 +41,36 @@ def binder_cap(w_wt, w_opt):
     return max(0.0, r * np.exp(1.0 - r))
 
 
+def build_rod_topology(fibre_np, phase_np, xs, rod_phases=(2, 4)):
+    """Tier-2 --fibre-rod connectivity (host-side, testable).  Fibre points of a given id are appended
+    CONTIGUOUSLY in walk order (ids are globally unique, branches get their own id), so chain neighbours
+    are just adjacent array indices that share the same fibre id AND a rod phase (2=VGCF, 4=PTFE).
+    Returns per-point int32 prev/next (−1 = none), float32 rest length to NEXT (rl), float32 rest bending
+    vector b0 = x_prev−2x+x_next (the seeded curvature the bending constraint restores; ≈0 for a straight
+    VGCF seed), and an int32 is_rod flag.  SuperP (3) = breakable aggregate, handled separately (TODO)."""
+    import numpy as _np
+    n = len(xs)
+    prev = _np.full(n, -1, _np.int32); nxt = _np.full(n, -1, _np.int32)
+    rl = _np.zeros(n, _np.float32); b0 = _np.zeros((n, 3), _np.float32)
+    is_rod = _np.zeros(n, _np.int32)
+    rp = set(rod_phases)
+    same = lambda a, b: (0 <= a < n and 0 <= b < n and fibre_np[a] >= 0
+                         and fibre_np[a] == fibre_np[b] and phase_np[a] == phase_np[b])
+    for p in range(n):
+        if int(phase_np[p]) not in rp or fibre_np[p] < 0:
+            continue
+        is_rod[p] = 1
+        if same(p, p - 1):
+            prev[p] = p - 1
+        if same(p, p + 1):
+            nxt[p] = p + 1
+            rl[p] = float(_np.linalg.norm(xs[p + 1] - xs[p]))
+    for p in range(n):                                  # rest curvature once neighbours are known
+        if is_rod[p] and prev[p] >= 0 and nxt[p] >= 0:
+            b0[p] = (xs[prev[p]] - 2.0 * xs[p] + xs[nxt[p]]).astype(_np.float32)
+    return prev, nxt, rl, b0, is_rod
+
+
 def _press_curl(p_gpa, curl_sat=0.095, p_char=0.30):
     """VGCF waviness as a FUNCTION OF THE PRESS p_gpa (GPa) — pressure-dependent shape generation.
     Real VGCF is a slender column (L/r~267): Euler sigma_cr ~ tens of MPa << the 0.1-0.6 GPa press, so
@@ -208,6 +238,17 @@ def parse_args(argv):
                          'press: curl(P)=0.095·(1-exp(-P/0.30)) (buckling proxy — more press → more wrinkle, '
                          'calibrated 0.06 @ 0.30 GPa; real VGCF sigma_cr~tens of MPa < press, embedded → short-'
                          'wavelength waviness).  >=0 = fixed value (0 = perfectly straight).  See _press_curl.')
+    ap.add_argument('--fibre-rod', action='store_true',
+                    help='Tier-2: give VGCF/PTFE fibres an explicit sub-grid rod (XPBD distance+bending) so '
+                         'they BUCKLE *emergently* under the press instead of the prescribed --vgcf-curl.  Real '
+                         'fibre stiffness drives it (decoupled from the softened SE continuum E); VGCF is auto-'
+                         'seeded straight when on.  Physics+solver verified in scripts/fibre_rod_reference.py '
+                         '(P_cr==Euler).  OFF (default) = Tier-1 curl=f(P).  SuperP aggregate = TODO.')
+    ap.add_argument('--rod-stiff', type=float, default=0.6,
+                    help='--fibre-rod bending stiffness (PBD 0..1; VGCF uses this, PTFE 0.2× softer).  Higher = '
+                         'longer buckling wavelength.  Calibrate on the single-fibre unit test to Euler σ_cr.')
+    ap.add_argument('--rod-iters', type=int, default=15,
+                    help='--fibre-rod constraint-projection iterations per substep (Jacobi, under-relaxed).')
     ap.add_argument('--mixing', default='ballmill', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
                          'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
@@ -530,9 +571,13 @@ def main(argv):
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
             # VGCF waviness from the press (buckling proxy): --vgcf-curl <0 → AUTO curl=f(target P).
-            _vgcf_curl = args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target))
-            print(f"  [additives] VGCF curl = {_vgcf_curl:.3f} "
-                  f"({'fixed --vgcf-curl' if args.vgcf_curl >= 0.0 else f'auto from press {args.target:.2f} GPa'})")
+            # --fibre-rod ON → seed STRAIGHT (curl 0) and let the explicit rod buckle it emergently.
+            _vgcf_curl = (0.0 if args.fibre_rod else
+                          args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target)))
+            print(f"  [additives] VGCF curl = {_vgcf_curl:.3f}  "
+                  + ('(straight seed → --fibre-rod buckles it emergently)' if args.fibre_rod
+                     else 'fixed --vgcf-curl' if args.vgcf_curl >= 0.0
+                     else f'auto from press {args.target:.2f} GPa'))
             ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac, branch_frac, bridge_frac).
                 #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl = path waviness (VGCF = press-dependent
                 #   buckling proxy _vgcf_curl; PTFE 0.4 = tangled drawn web);
@@ -653,6 +698,27 @@ def main(argv):
             print(f'  [se-am-drag] ON eff-coef={SE_AM_DRAG:.3f}; SE velocity damped by coef·AM_frac (∈[0,1], '
                   f'max {float(_amnear.max()):.2f}) near the frozen skeleton — local conform, migration suppressed.')
 
+    # ── Tier-2 --fibre-rod: explicit sub-grid rod on VGCF/PTFE points (XPBD distance+bending) so they
+    #    BUCKLE emergently under the press.  Verified physics+solver in scripts/fibre_rod_reference.py
+    #    (P_cr==Euler; compressed rod bends, keeps contour length).  OFF → fields are size-1 dummies and
+    #    none of the rod code runs (compile-time ti.static guard) → production path byte-identical.
+    FIBRE_ROD = bool(args.fibre_rod) and ('fibre_np' in locals()) and ('phase_np' in locals())
+    if bool(args.fibre_rod) and not FIBRE_ROD:
+        print('  [fibre-rod] requested but no fibre additives present (need --add-recipe with VGCF/PTFE) → disabled')
+    ROD_STIFF = float(args.rod_stiff); ROD_OMEGA = 0.25            # bending stiffness (PBD) + under-relax
+    _rn = n if FIBRE_ROD else 1
+    rod_prev = ti.field(ti.i32, _rn); rod_next = ti.field(ti.i32, _rn)
+    rod_rl = ti.field(ti.f32, _rn); rod_kfac = ti.field(ti.f32, _rn); rod_is = ti.field(ti.i32, _rn)
+    rod_b0 = ti.Vector.field(3, ti.f32, _rn); rod_dx = ti.Vector.field(3, ti.f32, _rn)
+    x_pre = ti.Vector.field(3, ti.f32, _rn)                       # fibre position at substep start (for v)
+    if FIBRE_ROD:
+        _pv, _nx, _rl, _b0, _isr = build_rod_topology(fibre_np, phase_np, xs)
+        _kf = np.where(phase_np == 2, 1.0, np.where(phase_np == 4, 0.2, 0.0)).astype(np.float32)  # VGCF stiff, PTFE 0.2×
+        rod_prev.from_numpy(_pv); rod_next.from_numpy(_nx); rod_rl.from_numpy(_rl)
+        rod_b0.from_numpy(_b0); rod_is.from_numpy(_isr); rod_kfac.from_numpy(_kf)
+        print(f'  [fibre-rod] ON: {int(_isr.sum())} rod points (VGCF+PTFE) buckle emergently '
+              f'(stiff={ROD_STIFF}, iters={args.rod_iters}); SuperP aggregate = TODO')
+
     @ti.kernel
     def load(xy: ti.types.ndarray(), ms: ti.types.ndarray(), ls: ti.types.ndarray(),
              ys: ti.types.ndarray(), pv: ti.types.ndarray(), cz: ti.types.ndarray()):
@@ -667,6 +733,8 @@ def main(argv):
             grid_v[I] = ti.Vector.zero(ti.f32, 3); grid_m[I] = 0.0
         szz[None] = 0.0; wallf[None] = 0.0
         for p in range(n):
+            if ti.static(FIBRE_ROD):
+                x_pre[p] = x[p]                                  # fibre position before advection (→ rod velocity)
             base = (x[p] * inv_dx - 0.5).cast(int); fx = x[p] * inv_dx - base.cast(ti.f32)
             w = [0.5 * (1.5 - fx) ** 2, 0.75 - (fx - 1.0) ** 2, 0.5 * (fx - 0.5) ** 2]
             U, sig, V = ti.svd(F[p])
@@ -738,6 +806,33 @@ def main(argv):
                 x[p][0] -= _LATW * ti.floor((x[p][0] - _SW0) / _LATW)
                 x[p][1] -= _LATW * ti.floor((x[p][1] - _SW0) / _LATW)
 
+    @ti.kernel
+    def rod_pass():                          # one PBD/XPBD Jacobi pass over the fibre rods (VGCF/PTFE)
+        for p in range(n):
+            rod_dx[p] = ti.Vector.zero(ti.f32, 3)
+        for p in range(n):
+            if rod_is[p] == 1:
+                q = rod_next[p]
+                if q >= 0:                   # distance (hard, inextensible): edge p→q back to rest length
+                    d = x[q] - x[p]; Ln = d.norm() + 1e-9; nrm = d / Ln
+                    dl = -0.5 * (Ln - rod_rl[p])
+                    rod_dx[p] += -dl * nrm; rod_dx[q] += dl * nrm
+                pr = rod_prev[p]
+                if pr >= 0 and q >= 0:       # bending (soft): restore the seeded rest curvature b0
+                    bvec = x[pr] - 2.0 * x[p] + x[q] - rod_b0[p]
+                    Cb = bvec.norm() + 1e-9; nb = bvec / Cb
+                    db = -(ROD_STIFF * rod_kfac[p]) * Cb / 6.0
+                    rod_dx[pr] += db * nb; rod_dx[p] += -2.0 * db * nb; rod_dx[q] += db * nb
+        for p in range(n):
+            if rod_is[p] == 1:
+                x[p] += ROD_OMEGA * rod_dx[p]            # under-relaxed Jacobi (a node sits in ≤5 constraints)
+
+    @ti.kernel
+    def rod_setv():                          # corrected positions → velocity (two-way rod↔SE coupling)
+        for p in range(n):
+            if rod_is[p] == 1:
+                v[p] = (x[p] - x_pre[p]) / dt
+
     load(xs, mus, las, ylds, pvs, coh_np)
     area = (_LATW * _LATW if PERIODIC else WIDTH * WIDTH)   # periodic → grid-aligned cell area (self-consistent)
     target = args.target_gpa
@@ -760,6 +855,10 @@ def main(argv):
         sacc = 0.0; wacc = 0.0
         for _ in range(args.sub):
             substep()
+            if FIBRE_ROD:                                    # Tier-2: rods buckle emergently under the press
+                for _r in range(args.rod_iters):
+                    rod_pass()
+                rod_setv()
             sacc += szz[None] / n                            # volume-mean Cauchy σzz (GPa)
             wacc += wallf[None] / (dt * area)                # platen reaction stress (GPa), resolution-invariant
         sig_mean = sacc / args.sub
