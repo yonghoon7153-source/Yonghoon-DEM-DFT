@@ -245,9 +245,9 @@
     <span id="mpm-upload-status" style="color:#888; font-size:0.9em"></span>
   </div>
 
-  <!-- ⚡ 첨가제 적용 (W1/W2): PTFE/VGCF/Super P 선택 → 전도도 with/without + recipe-baked zip -->
+  <!-- ⚡ 첨가제 적용: PTFE/VGCF/Super P 선택 → recipe-baked zip 생성. σ/porosity 상세 분석은 GPU run 후 MPM 뷰어. -->
   <details style="margin-top:14px">
-    <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P) — 전도도 with/without + recipe zip</summary>
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P) — recipe zip 생성</summary>
     <div style="margin-top:10px; padding:12px 14px; background:#0f172a; border:1px solid #334155; border-radius:8px">
       <div style="display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; font-size:0.85em; color:#cbd5e1">
         <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px"></label>
@@ -257,19 +257,17 @@
           <option value="ballmill">ball-mill (bulk)</option>
           <option value="thinky" selected>thinky (dry-coat)</option>
           <option value="handmix">hand-mix (bulk)</option></select></label>
-        <button class="btn btn-secondary" onclick="recalcAdditives()">전도도 비교</button>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
-      <div id="add-result" style="margin-top:12px; font-size:0.86em; color:#cbd5e1"></div>
-      <div style="margin-top:8px; font-size:0.78em; color:#fbbf24; line-height:1.5">
+      <div style="margin-top:10px; font-size:0.78em; color:#fbbf24; line-height:1.5">
         ⚠ <b>조합 규칙</b>: VGCF·Super P는 함께 쓸 수 없음(둘 다 도전재 → 하나만).
-        유효 = <b>VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE</b>.  mixing은 <b>Super P에만</b> 적용
-        (thinky=dry-coat → σ_e 붕괴 / ball·hand-mix=bulk → σ_e↑); VGCF·PTFE는 mixing 무관(슬롯은 A4용 예약).
+        유효 = <b>VGCF · Super P · PTFE · VGCF+PTFE · Super P+PTFE</b>.  mixing은 <b>Super P seeding에만</b> 영향
+        (thinky=dry-coat 코팅 / ball·hand-mix=bulk 분산); VGCF·PTFE는 mixing 무관(A4 슬롯 예약).
       </div>
       <div style="margin-top:6px; font-size:0.76em; color:#64748b; line-height:1.5">
-        문헌 앵커: <b>PTFE</b> void −6.4 %p · σ_ion ×0.74 /wt (Hong 2026) · <b>carbon</b> e-percolation p_c≈4 wt% (Reisacher 2023) ·
-        <b>Super P</b> thinky(dry-coat) 시 σ_e 붕괴(~3 decade, Kim 2025) ↔ bulk 시 σ_e↑ (위치-의존 반전) ·
-        Super P가 σ_ion을 VGCF보다 ~1.8× 더 막음(voxel). <i>해석 추정 — 풀 MPM-additive run(② zip→GPU)이 교차검증.</i>
+        이 패널은 <b>recipe-baked zip 생성 전용</b>이야: 입력 wt% → (밀도→개수→형상) 물리식으로 첨가제를
+        MPM 입력에 seed. ② zip → GPU에서 <code>run_mpm.sh</code> → ③ 결과 업로드하면 <b>MPM 뷰어/비교표</b>에서
+        첨가제 구조·porosity·σ를 <b>실제 구조 기반</b>으로 분석(첨가제 부피만큼 porosity가 실제로 변동).
       </div>
     </div>
   </details>
@@ -500,32 +498,8 @@ function _addExclusiveOK() {
   }
   return true;
 }
-async function recalcAdditives() {
-  const { vg, sp, pt, mix } = _addVals();
-  const box = document.getElementById('add-result');
-  if (vg <= 0 && sp <= 0 && pt <= 0) { box.innerHTML = '<span style="color:#94a3b8">첨가제 wt%를 하나 이상 입력하세요.</span>'; return; }
-  if (!_addExclusiveOK()) { box.innerHTML = '<span style="color:#ef4444">⚠ VGCF + Super P 동시 사용 불가 — 도전재는 하나만 선택하세요.</span>'; return; }
-  box.innerHTML = '… 계산 중';
-  try {
-    const r = await fetch(`/case/${encodeURIComponent('{{ case.id }}')}/whatif-additives?vgcf=${vg}&superp=${sp}&ptfe=${pt}&mixing=${mix}`);
-    const d = await r.json();
-    if (!d.available) { box.innerHTML = `<span style="color:#ef4444">데이터 없음: ${d.reason || ''}</span>`; return; }
-    const row = (label, o, n, ratio) => {
-      if (o == null) return '';
-      const col = ratio == null ? '' : ratio > 1.02 ? 'color:#10b981' : ratio < 0.98 ? 'color:#ef4444' : '';
-      return `<tr><td>${label}</td><td>${o}</td><td><b>${n}</b></td><td style="${col}">${ratio != null ? '×' + ratio : ''}</td></tr>`;
-    };
-    box.innerHTML = `<table class="whatif-table" style="font-size:0.95em">
-        <tr><th></th><th>없음</th><th>+첨가제</th><th>비</th></tr>
-        ${row('σ_e (mS/cm)', d.sigma_e_old, d.sigma_e_new, d.sigma_e_ratio)}
-        ${row('σ_ion (mS/cm)', d.sigma_ion_old, d.sigma_ion_new, d.sigma_ion_ratio)}
-        ${row('porosity (%)', d.porosity_old, d.porosity_new, null)}
-      </table>
-      ${d.porosity_delta_pp != null ? `<div style="margin-top:4px">porosity Δ <b>${d.porosity_delta_pp > 0 ? '+' : ''}${d.porosity_delta_pp} %p</b></div>` : ''}
-      ${(d.notes || []).map(n => `<div style="color:#94a3b8;margin-top:3px">• ${n}</div>`).join('')}
-      ${d.recipe ? `<div style="margin-top:4px;color:#64748b">recipe: <code>${d.recipe}</code> · anchors: ${d.anchors || ''}</div>` : ''}`;
-  } catch (e) { box.innerHTML = `<span style="color:#ef4444">오류: ${e.message}</span>`; }
-}
+// (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
+//  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
   const { vg, sp, pt, mix } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }

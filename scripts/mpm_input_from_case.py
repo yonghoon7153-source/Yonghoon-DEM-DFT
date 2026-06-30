@@ -200,7 +200,12 @@ def main():
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
     # and carry the per-point phase into the payload (so the 도전재 3D viewer can colour the carbon)
+    # A3 binder physics baked EXPLICITLY (non-monotonic PTFE cohesion: peak at --binder-opt-wt,
+    # decays for over-application). These equal the mpm3d_compaction defaults, but writing them
+    # makes the run self-documenting that A3 is applied. Pressure-regime propping (yield at
+    # σ_y=0.05 GPa) is automatic from the PTFE material vs --target-gpa.
     add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
+                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 '
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''
