@@ -3,7 +3,7 @@
 case,additive,vgcf_wt,superp_wt,ptfe_wt,mixing,pred_n_objects,pred_vol_pct_solid,pred_porosity_dpor_pp,pred_porosity_mpm,meas_porosity_mpm,meas_thickness_um,meas_se_solid_pct,meas_cov_amp,meas_cov_ams,match,notes
 6mAh_real_4,VGCF,0.5,0,0,ballmill,13281,0.97,-0.83,14.62,,,,,,,
 6mAh_real_4,VGCF,1,0,0,ballmill,26696,1.94,-1.66,13.79,13.80,112.87,33.23,60.7,62.2,PASS,meas from _thinky variant (volume-fill is mixing-independent; VGCF coat-regime seeding not impl so thinky≡ballmill); Hertz cov shown / Tabor 83.1/84.8; seed 15.89→13.80; err 0.01pp
-6mAh_real_4,VGCF,2,0,0,ballmill,53936,3.92,-3.36,12.09,12.11,112.87,33.23,45.2,45.8,PASS,volume-fill exact (13.80@1wt%→12.11@2wt%; err 0.02pp); cov=raw voxel plastic (Hertz higher); this run used curl 0.06 not --fibre-buckle (buckle doesn't affect porosity)
+6mAh_real_4,VGCF,2,0,0,ballmill,53936,3.92,-3.36,12.09,12.11,112.87,33.23,45.7,46.4,PASS,volume-fill exact (13.80@1wt%→12.11@2wt%; err 0.02pp); --fibre-buckle AM-position-dependent applied (porosity identical 12.112 with/without buckle = buckle volume-neutral); cov=raw voxel plastic
 6mAh_real_4,VGCF,4,0,0,ballmill,110120,8.01,-6.86,8.59,,,,,,,
 6mAh_real_4,SuperP,0,0.5,0,ballmill,589774,1.02,-0.87,14.58,,,,,,,
 6mAh_real_4,SuperP,0,1,0,ballmill,1185506,2.04,-1.75,13.7,,,,,,,
