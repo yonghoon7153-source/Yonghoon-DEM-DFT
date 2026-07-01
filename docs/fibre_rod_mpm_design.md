@@ -146,8 +146,11 @@ transport result** — see the "honest framing" caveats below (4-agent verificat
     straightness ~0.96–0.97, the SEM-consistent band — resolving the "0.42 is the macro not the fibre-axial
     strain" over-estimate *through the pinching mechanism* rather than an arbitrary lower number.
 
-Validated (`seed_fibres`, standalone, AM-scaled): mean straightness **0.968** at buckle_strain 0.42 (p10
-0.926) — visible waviness in the SEM a/λ band (~0.1–0.2).
+Validated — standalone (`seed_fibres`, AM-scaled) mean straightness 0.968 @ buckle_strain 0.42; **GPU
+(input_6mAh_real_4, VGCF 1 wt%, AM-position-dependent): mean 0.9775, p10 0.94, 2 % bent** → a/λ ≈ 0.10,
+the SEM band (0.10–0.20) lower edge.  AM-scaling raised the mean from the uniform 0.956 (open-pore fibres
+straighten, buckling concentrates in dense-AM regions).  Raise `--buckle-strain` (→ ~0.55) to sit more
+centrally in the band if a wavier mean is wanted.
 
 ### Honest framing (from the 4-agent verification — do NOT overclaim)
 - **Formulas (λ, A) are real physics**: independently re-derived, self-consistent (straightness 0.930
