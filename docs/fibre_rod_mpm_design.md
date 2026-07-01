@@ -127,21 +127,39 @@ empirically by the stiffness-invariance test, a clean frame[5] boundary.  Practi
 - `--fibre-rod` stays in the code (opt-in, verified to run) for a future framework that DOES supply fibre
   compression (mobile-AM MPM, or higher-strain protocols); it is not wrong, just un-driven here.
 
-## SOLUTION (2026-07-01) — physics-PRESCRIBED buckle (`--fibre-buckle`)
+## SOLUTION (2026-07-01) — prescribed SEM-consistent buckle (`--fibre-buckle`)
 
-Since the scaffold MPM can't compress the fibre to buckle it emergently, **compute the buckle it WOULD
-take at the press and prescribe it** (Tier-1.5: Tier-1's practicality + Tier-2's physics).  The buckling
-physics is known (eigenanalysis), so this is a calculation, not a guess:
-- **wavelength** λ = 2π(EI/E_SE)^¼ (Winkler, deterministic): EI = 200 GPa·πr⁴/4 (real graphite), E_SE
-  foundation → **λ ≈ 1.5 µm** (~6–7 half-waves over a 10 µm fibre).
-- **amplitude** A = (λ/π)√ε_axial, with ε_axial = `--buckle-strain`·cos²θ — the loose→compacted uniaxial
-  strain (φ0~0.5 → 13.8 % ⇒ z-strain 42 %, `--buckle-strain 0.42`), per-fibre weighted by orientation so
-  z-aligned fibres buckle most and in-plane fibres stay ~straight (real orientation dependence).
-- **why the scaffold gave 0.997**: se_dump seeds fibres into the ALREADY-compacted SE → they only see the
-  residual ~2 % strain (straightness 0.99), not the full press.  `--fibre-buckle` restores the missing
-  press strain analytically.
+Since the scaffold MPM can't compress the fibre to buckle it emergently, **prescribe the buckled shape a
+real fibre would take** (Tier-1.5).  ⚠ **This is a SEM-consistent MORPHOLOGY KNOB, NOT a derived/validated
+transport result** — see the "honest framing" caveats below (4-agent verification, 2026-07-01).
+- **wavelength** λ = 2π(EI/E_SE)^¼ (Euler beam on a Winkler foundation): EI = 200 GPa·πr⁴/4 (real graphite),
+  E_SE as the foundation modulus k_f → **λ ≈ 1.5 µm** (~6–7 *wavelengths* = **~13 half-waves** over a 10 µm
+  fibre).  The ¼-power strongly suppresses the k_f uncertainty (k_f=E_SE omits a geometry factor ~1–3×, but
+  λ moves only within ~1.0–1.6 µm).
+- **amplitude** A = (λ/π)√ε_ax, with **ε_ax = `--buckle-strain`·cos²θ·(local AM fraction)**:
+  - `cos²θ` (θ = fibre angle from press-z) → z-aligned fibres buckle most, in-plane ~straight.
+  - **local AM fraction** (uniform_filter of the AM mask at ~fibre-length scale) → fibres in dense/pinched
+    AM regions buckle more than those in open SE pores = the actual **particle-pinching driver** (verdict
+    #3; the waviness is AM-POSITION-dependent, not spatially uniform).
+  - `--buckle-strain 0.42` = the **fully-AM-confined** strain (a fibre pinched on all sides sees the macro
+    bed strain).  The AM-fraction factor (~0.5 in interstices) reduces the EFFECTIVE mean to ~0.2 → mean
+    straightness ~0.96–0.97, the SEM-consistent band — resolving the "0.42 is the macro not the fibre-axial
+    strain" over-estimate *through the pinching mechanism* rather than an arbitrary lower number.
 
-Validated (`seed_fibres`, standalone): straightness **1.000 / 0.980 / 0.942** at buckle_strain 0 / 0.14 /
-0.42 (25 % of fibres clearly bent at 0.42 — visible SEM-like waviness).  `mpm3d_compaction --fibre-buckle
---buckle-strain 0.42`; VGCF only (PTFE stays a drawn web); records buckle_lam_um/buckle_strain in metrics.
-This is the recommended VGCF morphology in the MPM (supersedes the arbitrary Tier-1 curl=0.06).
+Validated (`seed_fibres`, standalone, AM-scaled): mean straightness **0.968** at buckle_strain 0.42 (p10
+0.926) — visible waviness in the SEM a/λ band (~0.1–0.2).
+
+### Honest framing (from the 4-agent verification — do NOT overclaim)
+- **Formulas (λ, A) are real physics**: independently re-derived, self-consistent (straightness 0.930
+  analytic / 0.943 MC / 0.945 code), quantitatively in the published CNT/CNF SEM a/λ band.
+- **The absolute waviness is a KNOB, not "the physics"**: there is NO direct straightness/λ measurement of
+  VGCF-H in a 300 MPa sulfide composite; the a/λ band is from *polymer* CNT/CNF (an upper bound for stiffer
+  VGCF).  Real VGCF-H is stiff/straight; its in-electrode waviness is partly **as-grown manufacturing** +
+  partly **discrete particle-pinching (DEM)**, not pure press-buckle.  So call it a *prescribed SEM-
+  consistent morphology*, not a "physics-computed and validated buckle".
+- **The shape is visualization/morphology, not transport, at production resolution**: amplitude A≈0.3 µm is
+  **sub-voxel** (< 0.5 µm) and λ≈1.5 µm is ~3 cells → the buckled polyline rasterises to the same voxel
+  thread as a straight fibre → **σ_e / tortuosity unchanged**.  Porosity/coverage unchanged (volume-
+  conserving).  Do NOT cite a σ_e payoff unless a resolving grid (h≪0.3 µm) run shows one.
+- VGCF only (PTFE stays a drawn web).  Recommended VGCF morphology in the MPM (supersedes the arbitrary
+  Tier-1 curl=0.06) — as an honest SEM-consistent stand-in.

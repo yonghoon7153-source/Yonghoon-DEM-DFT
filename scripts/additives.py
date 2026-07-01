@@ -97,7 +97,7 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
                 curl=0.0, vol_conserve=False, vol_cv=0.0, nucleate=None, nucleate_frac=0.0,
                 branch_frac=0.0, branch_n=2, branch_vol=0.3, branch_len=0.5,
-                bridge_frac=0.0, bridge_drift=0.15, buckle_lam=0.0, buckle_strain=0.0,
+                bridge_frac=0.0, bridge_drift=0.15, buckle_lam=0.0, buckle_strain=0.0, am_frac_fn=None,
                 return_lengths=False, return_ids=False, return_vol=False):
     """n random fibres (SEM-like: thin rods/fibrils threading the interstices), each a chain of
     points spaced ~dx along its path.  Even distribution = uniform random centres.  Points falling
@@ -152,12 +152,16 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
             t = np.linspace(-Li / 2, Li / 2, kk)
             ln = c[None, :] + t[:, None] * d0[None, :]
             if buckle_lam > 0.0 and buckle_strain > 0.0 and kk >= 3:
-                # ★ PHYSICS-PRESCRIBED BUCKLE: the shape a real VGCF would take at the press, computed
-                # (not emergent — the scaffold MPM can't compress it; see fibre_rod_mpm_design §RESULT).
-                # Winkler wavelength buckle_lam = 2π(EI/E_SE)^¼; amplitude A = (λ/π)√ε_axial, with the
-                # axial strain ε_axial = buckle_strain·cos²θ (θ=fibre angle from the press-z) so z-aligned
-                # fibres buckle most, in-plane fibres stay ~straight (real orientation dependence).
-                eps_ax = buckle_strain * float(d0[2]) ** 2
+                # ★ PRESCRIBED SEM-CONSISTENT BUCKLE (morphology knob, NOT a derived transport result — the
+                # scaffold MPM can't compress the fibre to buckle it emergently, fibre_rod_mpm_design §RESULT;
+                # real VGCF waviness is part as-grown + part discrete AM-pinching = DEM).  Winkler wavelength
+                # buckle_lam = 2π(EI/E_SE)^¼ (~1.5µm, ~13 half-waves / 10µm fibre).  Amplitude A = (λ/π)√ε_ax.
+                # ε_ax = buckle_strain · cos²θ · amf, where cos²θ (θ=fibre angle from press-z) makes z-aligned
+                # fibres buckle most, and amf = LOCAL AM volume fraction around the fibre (am_frac_fn) makes
+                # fibres in dense/pinched AM regions buckle more than those in open SE pores — the actual
+                # particle-pinching driver, so the waviness is AM-POSITION-dependent (not spatially uniform).
+                amf = float(am_frac_fn(c)) if am_frac_fn is not None else 1.0
+                eps_ax = buckle_strain * float(d0[2]) ** 2 * max(0.0, min(amf, 1.0))
                 A = (buckle_lam / np.pi) * np.sqrt(max(eps_ax, 0.0))
                 if A > 0.0:
                     rp = rng.normal(size=3); rp -= rp.dot(d0) * d0    # a perpendicular buckling direction

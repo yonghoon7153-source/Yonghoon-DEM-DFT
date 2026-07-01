@@ -256,9 +256,11 @@ def parse_args(argv):
                          'cannot compress the fibre to buckle it emergently (fibre_rod_mpm_design §RESULT). '
                          'Replaces --vgcf-curl for VGCF.')
     ap.add_argument('--buckle-strain', type=float, default=0.42,
-                    help='--fibre-buckle axial compaction strain (loose→compacted, z-aligned).  0.42 = loose '
-                         'φ0~0.5 → 300 MPa (thickness strain); per-fibre ×cos²θ.  Higher = wavier (straightness '
-                         '≈ 0.94 @ 0.42 / 0.98 @ 0.14).')
+                    help='--fibre-buckle FULLY-AM-CONFINED axial strain (a fibre pinched on all sides sees the '
+                         'macro bed strain ~0.42 for loose φ0~0.5→300 MPa).  Per-fibre effective strain = this '
+                         '×cos²θ×(local AM fraction), so open-pore fibres buckle far less → mean straightness '
+                         '≈0.96-0.97 (SEM-consistent band).  A SEM-match MORPHOLOGY KNOB, not a derived transport '
+                         'result (the shape is sub-voxel → does not change σ_e at production resolution).')
     ap.add_argument('--mixing', default='ballmill', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
                          'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
@@ -587,8 +589,27 @@ def main(argv):
             # physics buckle wavelength (Winkler): λ=2π(EI/E_SE)^¼, EI=E_fib·πr⁴/4 (real graphite 200 GPa, r=75nm)
             _buckle_lam = ((2 * np.pi * (200.0 * np.pi * 0.075 ** 4 / 4 / max(args.e_se, 1e-6)) ** 0.25) / um_box
                            if args.fibre_buckle else 0.0)
+            # AM-POSITION-dependent buckle: local AM volume fraction at ~fibre-length scale → fibres in dense/
+            # pinched AM regions buckle more (the real particle-pinching driver), fibres in open SE pores less.
+            _amfrac_arr = None
+            if args.fibre_buckle:
+                try:
+                    from scipy.ndimage import uniform_filter
+                    _wn = max(3, int(round((_ad.VGCF_L / um_box) * n_grid)))   # window ≈ one fibre length (cells)
+                    _amfrac_arr = uniform_filter((pin_np > 0).astype(np.float32), size=_wn, mode='nearest')
+                except Exception as _e:
+                    print(f'  [fibre-buckle] scipy.ndimage missing ({_e}) → uniform AM factor'); _amfrac_arr = None
+
+            def _am_frac_abs(p):                                          # p ABSOLUTE box coords → local AM fraction
+                if _amfrac_arr is None:
+                    return 1.0
+                ii = min(max(int(p[0] * n_grid), 0), n_grid - 1)
+                jj = min(max(int(p[1] * n_grid), 0), n_grid - 1)
+                kk2 = min(max(int(p[2] * n_grid), 0), nz - 1)
+                return float(_amfrac_arr[ii, jj, kk2])
             print(f"  [additives] VGCF curl = {_vgcf_curl:.3f}  "
-                  + (f'(--fibre-buckle: physics buckle λ={_buckle_lam * um_box:.2f}µm, strain {args.buckle_strain})'
+                  + (f'(--fibre-buckle: λ={_buckle_lam * um_box:.2f}µm, confined-strain {args.buckle_strain}, '
+                     f'AM-position-dependent{"" if _amfrac_arr is not None else " OFF"})'
                      if args.fibre_buckle
                      else '(straight seed → --fibre-rod buckles it emergently)' if args.fibre_rod
                      else 'fixed --vgcf-curl' if args.vgcf_curl >= 0.0
@@ -622,11 +643,13 @@ def main(argv):
                 if kind == 'fibre':
                     nuc = np.concatenate(carbon_seed) if ((nucf > 0.0 or brgf > 0.0) and carbon_seed) else None
                     _bk_lam = _buckle_lam if code == 2 else 0.0     # physics buckle = VGCF only (PTFE = drawn web)
+                    _amfn = (lambda q: _am_frac_abs(q + off)) if (code == 2 and _bk_lam > 0.0) else None
                     pts, _fid, _w = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
                                                     curl=curl, vol_conserve=(vcv > 0.0),   # Ø-spread = drawing (PTFE vcv>0) ONLY; VGCF gets waviness (curl>0) but keeps a uniform manufactured Ø
                                                     vol_cv=vcv, nucleate=nuc, nucleate_frac=nucf,
                                                     branch_frac=brf, bridge_frac=brgf,
                                                     buckle_lam=_bk_lam, buckle_strain=args.buckle_strain,
+                                                    am_frac_fn=_amfn,
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
                 else:                                        # carbon black: branched chains coating the AM
@@ -678,7 +701,8 @@ def main(argv):
                     _add_meta[nm]['curl'] = round(float(_vgcf_curl), 3)
                     if args.fibre_buckle:
                         _add_meta[nm]['buckle_lam_um'] = round(float(_buckle_lam * um_box), 3)
-                        _add_meta[nm]['buckle_strain'] = float(args.buckle_strain)
+                        _add_meta[nm]['buckle_strain_confined'] = float(args.buckle_strain)
+                        _add_meta[nm]['buckle_am_position_dependent'] = bool(_amfrac_arr is not None)
                 if code == 4:                                # PTFE: A3 binder cohesion
                     _add_meta[nm]['coh_ptfe'] = float(_coh); _add_meta[nm]['binder_cap'] = round(float(_cap), 3)
     n = len(xs)                                               # final count (incl additives)
