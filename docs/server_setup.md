@@ -62,8 +62,18 @@ export LIGGGHTS_BIN="$PWD/LIGGGHTS-PUBLIC/src/lmp_auto"     # so scripts can fin
 - `mpicxx not found` → install openmpi (above) and re-run.
 - Newer g++ (≥11) can trip on old LIGGGHTS sources → `make serial` (no MPI) as a
   fallback, or pin `gxx_linux-64=10` in conda.
-- VTK dumps are optional; if the build complains about VTK, it's not required for
-  atoms.csv/contacts.csv — disable the VTK package (`make no-vtk` in `src/`).
+- **`fatal error: vtkSmartPointer.h: No such file or directory`** (very common): LIGGGHTS
+  is trying to build the optional ParaView **VTK** output but VTK isn't installed. We don't
+  need VTK (the pipeline reads atoms.csv/contacts.csv). Disable it:
+  ```bash
+  cd LIGGGHTS-PUBLIC/src && make clean-all
+  mkdir -p ../_vtk_off && mv dump_*vtk*.cpp dump_*vtk*.h dump_vtk.* ../_vtk_off/ 2>/dev/null
+  for f in MAKE/Makefile.mpi Makefile.package Makefile.package.settings; do
+    [ -f "$f" ] && sed -i -E 's/-DLAMMPS_VTK//g; s#-I[[:space:]]*[^[:space:]]*vtk[^[:space:]]*##g; s/-lvtk[^[:space:]]*//g' "$f"
+  done
+  make -j$(nproc) mpi
+  ```
+  If another `*vtk*` source errors, move it into `../_vtk_off/` too and rebuild.
 
 ## 3) webapp (optional, for the viewer/zip generator)
 ```bash
