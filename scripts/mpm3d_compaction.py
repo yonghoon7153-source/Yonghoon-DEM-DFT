@@ -1034,6 +1034,8 @@ def main(argv):
         if _add_meta:
             m['additives'] = _add_meta                       # {VGCF:{wt_pct,vol%,n_obj,n_pts,E,σ_y,curl}, …} → 요약
             m['fibre_rod'] = bool(FIBRE_ROD)                 # Tier-2 emergent buckling on?
+            if FIBRE_ROD:                                    # record the rod knobs so runs are distinguishable
+                m['rod_stiff'] = float(args.rod_stiff); m['rod_iters'] = int(args.rod_iters)
         _json.dump(m, open(args.save_metrics, 'w'), indent=2)
         print(f"  saved metrics → {args.save_metrics}  ({len(m)} fields)")
     if args.save_se:
