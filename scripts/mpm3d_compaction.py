@@ -592,6 +592,7 @@ def main(argv):
             dia_np = np.zeros(len(xs), np.float32)      # per-point relative fibre Ø (0 = SE/non-fibre; ∝√weight)
             carbon_seed = []                            # carbon (VGCF/SuperP) pts in seed-box frame → PTFE
             _gfib = 0                                   # nucleation attractors (binder nets carbon = CBD)
+            _add_meta = {}                              # per-additive recipe+physics → mpm_metrics['additives']
             for nm, (E, nu, sy, code, kind, L_um, curl, vcv, nucf, brf, brgf) in ADD.items():
                 if nm not in cnt:
                     continue
@@ -651,6 +652,15 @@ def main(argv):
                 print(f"  [additives] {nm}: {nobj} objects ({cnt[nm]['wt_pct']}wt% = "
                       f"{cnt[nm]['vol_pct_of_solid']}vol% of solid) → {len(pts):,} pts "
                       f"(E={E} σ_y={sy} coh={_coh}, phase {code}){_bind}")
+                _add_meta[nm] = {                            # → mpm_metrics['additives'][nm] → 요약
+                    'wt_pct': float(cnt[nm]['wt_pct']), 'vol_pct_of_solid': float(cnt[nm]['vol_pct_of_solid']),
+                    'vol_um3': round(float(cnt[nm]['vol_um3']), 2), 'n_objects': int(nobj), 'n_points': int(len(pts)),
+                    'E_GPa': float(E), 'sigma_y_GPa': float(sy), 'phase_code': int(code), 'mixing_regime': _proc_regime,
+                }
+                if code == 2:                                # VGCF: seeding waviness (Tier-1) or straight+rod (Tier-2)
+                    _add_meta[nm]['curl'] = round(float(_vgcf_curl), 3)
+                if code == 4:                                # PTFE: A3 binder cohesion
+                    _add_meta[nm]['coh_ptfe'] = float(_coh); _add_meta[nm]['binder_cap'] = round(float(_cap), 3)
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
@@ -1020,6 +1030,10 @@ def main(argv):
                 'SE_of_solid_pct': round(100.0 * se_solid / max(am_solid + se_solid, 1e-12), 2),
                 'bulk_density_g_cm3': round(float(bulk_rho), 3), 'n_AM': int(len(am_r)),
             })
+        _add_meta = locals().get('_add_meta') or {}          # per-additive recipe+physics (if additives seeded)
+        if _add_meta:
+            m['additives'] = _add_meta                       # {VGCF:{wt_pct,vol%,n_obj,n_pts,E,σ_y,curl}, …} → 요약
+            m['fibre_rod'] = bool(FIBRE_ROD)                 # Tier-2 emergent buckling on?
         _json.dump(m, open(args.save_metrics, 'w'), indent=2)
         print(f"  saved metrics → {args.save_metrics}  ({len(m)} fields)")
     if args.save_se:

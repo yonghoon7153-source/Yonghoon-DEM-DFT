@@ -458,12 +458,16 @@ def main():
         mpm_metrics['seed_porosity_pct'] = round(sim_seed if sim_seed is not None else seed_por, 2)
         mpm_metrics['compacted_porosity_pct'] = mpm_metrics['porosity_mpm_pct']
     for k in ('E_SE_GPa', 'nu_SE', 'sigma_y_GPa', 'K_SE_GPa', 'final_stress_GPa', 'target_GPa',
-              'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol'):
+              'bulk_density_g_cm3', 'seed_AM_frac_pct', 'seed_SE_frac_pct', 'n_grid', 'protocol',
+              'additives', 'fibre_rod'):                    # per-additive recipe+physics + Tier-2 rod flag → 요약
         if k in sim_m:
             mpm_metrics[k] = sim_m[k]                       # carry through raw sim fields
     mpm_metrics.update(strain_stats)                       # Σdg mean/max/vmax98/n_strain_pts (if --dg)
     if additive_counts:
         mpm_metrics['additive_counts'] = additive_counts   # {VGCF:n, SuperP:n, PTFE:n} total seeded
+    # fibre polyline count (VGCF/PTFE) — a morphology descriptor the summary can show without the sim JSON
+    if additive_fibres:
+        mpm_metrics['n_fibres'] = len(additive_fibres)
 
     payload = {
         'kind': 'mpm', 'case': a.case,

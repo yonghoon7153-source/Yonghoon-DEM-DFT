@@ -214,6 +214,28 @@ function labBuildSummary(name, info, m) {
     L.push(`소성변형 Σdg     : mean ${labFmt(m.dg_mean, 4)} / max ${labFmt(m.dg_max, 3)}${m.strain_kind ? ' (' + m.strain_kind + ')' : ''}`);
   L.push(`E_SE / ν / σ_y   : ${labFmt(m.E_SE_GPa, 2)} GPa / ${labFmt(m.nu_SE, 2)} / ${labFmt(m.sigma_y_GPa, 2)} GPa`);
   L.push(`target / final   : ${labFmt(m.target_GPa, 2)} / ${labFmt(m.final_stress_GPa, 3)} GPa  (${m.protocol || '—'}, n_grid ${m.n_grid || '—'})`);
+  // — 첨가제 —  rich per-additive block (fresh runs carry m.additives); old payloads fall back to counts
+  const adds = m.additives || {};
+  if (Object.keys(adds).length || Object.keys(ac).length) {
+    L.push('');
+    L.push('— 첨가제 —');
+    if (m.fibre_rod !== undefined) L.push(`fibre-rod (Tier-2 emergent 좌굴): ${m.fibre_rod ? 'ON' : 'OFF'}`);
+    if (m.n_fibres != null) L.push(`fibre 개수(polyline): ${(+m.n_fibres).toLocaleString()}`);
+    if (Object.keys(adds).length) {
+      for (const [nm, a] of Object.entries(adds)) {
+        let s = `${nm}: ${labFmt(a.wt_pct, 2)} wt% / ${labFmt(a.vol_pct_of_solid, 2)} vol%(solid)`
+              + ` · ${labFmt(a.n_points, 0)} pts (${labFmt(a.n_objects, 0)} obj)`
+              + ` · E ${labFmt(a.E_GPa, 2)} / σ_y ${labFmt(a.sigma_y_GPa, 2)} GPa`;
+        if (a.curl != null) s += ` · curl ${labFmt(a.curl, 3)}`;
+        if (a.coh_ptfe != null) s += ` · coh ${labFmt(a.coh_ptfe, 3)} (cap ${labFmt(a.binder_cap, 2)})`;
+        if (a.mixing_regime) s += ` · ${a.mixing_regime}`;
+        L.push(`  ${s}`);
+      }
+    } else {                                    // old payload: only point counts are available
+      for (const [nm, v] of Object.entries(ac)) L.push(`  ${nm}: ${(+v).toLocaleString()} pts`);
+      L.push('  (구 payload — wt%/vol%/E/σ_y/curl 등 상세 물성은 새 run부터 자동 표시)');
+    }
+  }
   L.push('');
   L.push('— 전체 mpm_metrics (raw JSON · 새 물성이 추가되면 자동 포함) —');
   L.push(JSON.stringify(m, null, 2));
