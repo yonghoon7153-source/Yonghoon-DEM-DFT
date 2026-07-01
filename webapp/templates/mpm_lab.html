@@ -221,6 +221,10 @@ function labBuildSummary(name, info, m) {
     L.push('— 첨가제 —');
     if (m.fibre_rod !== undefined) L.push(`fibre-rod (Tier-2 emergent 좌굴): ${m.fibre_rod ? 'ON' : 'OFF'}`);
     if (m.n_fibres != null) L.push(`fibre 개수(polyline): ${(+m.n_fibres).toLocaleString()}`);
+    if (m.fibre_straightness_mean != null)
+      L.push(`fibre 곧기(end-to-end/contour): mean ${labFmt(m.fibre_straightness_mean, 3)} `
+        + `· 최다굽음10% ${labFmt(m.fibre_straightness_p10, 3)} · 굽은비율 ${labFmt(m.fibre_buckled_frac_pct, 1)}% `
+        + `(1=곧음, <1=좌굴)`);
     if (Object.keys(adds).length) {
       for (const [nm, a] of Object.entries(adds)) {
         let s = `${nm}: ${labFmt(a.wt_pct, 2)} wt% / ${labFmt(a.vol_pct_of_solid, 2)} vol%(solid)`

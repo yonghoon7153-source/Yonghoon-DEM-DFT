@@ -468,6 +468,22 @@ def main():
     # fibre polyline count (VGCF/PTFE) — a morphology descriptor the summary can show without the sim JSON
     if additive_fibres:
         mpm_metrics['n_fibres'] = len(additive_fibres)
+        # ★ buckling metric (the Tier-2 --fibre-rod check): per-fibre end-to-end / contour length.
+        #   1.00 = perfectly straight; <1 = bent/wavy/buckled.  A straight seed → ~1.0; if the rod truly
+        #   buckles the fibres, mean drops and a fraction go clearly bent.  Quantitative = settles the
+        #   "did it buckle?" question the cluttered 3D view can't.  Computed straight from the polylines.
+        _st = []
+        for _f in additive_fibres:
+            _p = np.asarray(_f.get('pts') or [], float)
+            if len(_p) >= 2:
+                _contour = float(np.sum(np.linalg.norm(np.diff(_p, axis=0), axis=1)))
+                if _contour > 1e-9:
+                    _st.append(float(np.linalg.norm(_p[-1] - _p[0])) / _contour)
+        if _st:
+            _st = np.asarray(_st)
+            mpm_metrics['fibre_straightness_mean'] = round(float(_st.mean()), 4)        # 1=straight
+            mpm_metrics['fibre_straightness_p10'] = round(float(np.percentile(_st, 10)), 4)  # most-buckled decile
+            mpm_metrics['fibre_buckled_frac_pct'] = round(float((_st < 0.9).mean()) * 100.0, 1)  # % clearly bent
 
     payload = {
         'kind': 'mpm', 'case': a.case,
