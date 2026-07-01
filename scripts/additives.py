@@ -97,7 +97,7 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
                 curl=0.0, vol_conserve=False, vol_cv=0.0, nucleate=None, nucleate_frac=0.0,
                 branch_frac=0.0, branch_n=2, branch_vol=0.3, branch_len=0.5,
-                bridge_frac=0.0, bridge_drift=0.15,
+                bridge_frac=0.0, bridge_drift=0.15, buckle_lam=0.0, buckle_strain=0.0,
                 return_lengths=False, return_ids=False, return_vol=False):
     """n random fibres (SEM-like: thin rods/fibrils threading the interstices), each a chain of
     points spaced ~dx along its path.  Even distribution = uniform random centres.  Points falling
@@ -151,6 +151,21 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
         if curl <= 0.0 and drift_to is None:                        # straight rod (VGCF)
             t = np.linspace(-Li / 2, Li / 2, kk)
             ln = c[None, :] + t[:, None] * d0[None, :]
+            if buckle_lam > 0.0 and buckle_strain > 0.0 and kk >= 3:
+                # ★ PHYSICS-PRESCRIBED BUCKLE: the shape a real VGCF would take at the press, computed
+                # (not emergent — the scaffold MPM can't compress it; see fibre_rod_mpm_design §RESULT).
+                # Winkler wavelength buckle_lam = 2π(EI/E_SE)^¼; amplitude A = (λ/π)√ε_axial, with the
+                # axial strain ε_axial = buckle_strain·cos²θ (θ=fibre angle from the press-z) so z-aligned
+                # fibres buckle most, in-plane fibres stay ~straight (real orientation dependence).
+                eps_ax = buckle_strain * float(d0[2]) ** 2
+                A = (buckle_lam / np.pi) * np.sqrt(max(eps_ax, 0.0))
+                if A > 0.0:
+                    rp = rng.normal(size=3); rp -= rp.dot(d0) * d0    # a perpendicular buckling direction
+                    rp /= np.linalg.norm(rp) + 1e-12
+                    s = t + Li / 2.0                                  # arc position 0..Li
+                    win = np.sin(np.pi * s / Li)                      # end-taper → deflection vanishes at the pins
+                    disp = A * win * np.sin(2.0 * np.pi * s / buckle_lam + rng.uniform(0, 2 * np.pi))
+                    ln = ln + disp[:, None] * rp[None, :]
         else:                                                       # persistent random walk (PTFE fibril)
             d = d0.copy(); pos = c.copy(); seq = [pos.copy()]
             for _s in range(kk - 1):

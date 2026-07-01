@@ -126,3 +126,22 @@ empirically by the stiffness-invariance test, a clean frame[5] boundary.  Practi
   DEM = LAMMPS; DEM/LIGGGHTS can't press) → parked as future work.
 - `--fibre-rod` stays in the code (opt-in, verified to run) for a future framework that DOES supply fibre
   compression (mobile-AM MPM, or higher-strain protocols); it is not wrong, just un-driven here.
+
+## SOLUTION (2026-07-01) — physics-PRESCRIBED buckle (`--fibre-buckle`)
+
+Since the scaffold MPM can't compress the fibre to buckle it emergently, **compute the buckle it WOULD
+take at the press and prescribe it** (Tier-1.5: Tier-1's practicality + Tier-2's physics).  The buckling
+physics is known (eigenanalysis), so this is a calculation, not a guess:
+- **wavelength** λ = 2π(EI/E_SE)^¼ (Winkler, deterministic): EI = 200 GPa·πr⁴/4 (real graphite), E_SE
+  foundation → **λ ≈ 1.5 µm** (~6–7 half-waves over a 10 µm fibre).
+- **amplitude** A = (λ/π)√ε_axial, with ε_axial = `--buckle-strain`·cos²θ — the loose→compacted uniaxial
+  strain (φ0~0.5 → 13.8 % ⇒ z-strain 42 %, `--buckle-strain 0.42`), per-fibre weighted by orientation so
+  z-aligned fibres buckle most and in-plane fibres stay ~straight (real orientation dependence).
+- **why the scaffold gave 0.997**: se_dump seeds fibres into the ALREADY-compacted SE → they only see the
+  residual ~2 % strain (straightness 0.99), not the full press.  `--fibre-buckle` restores the missing
+  press strain analytically.
+
+Validated (`seed_fibres`, standalone): straightness **1.000 / 0.980 / 0.942** at buckle_strain 0 / 0.14 /
+0.42 (25 % of fibres clearly bent at 0.42 — visible SEM-like waviness).  `mpm3d_compaction --fibre-buckle
+--buckle-strain 0.42`; VGCF only (PTFE stays a drawn web); records buckle_lam_um/buckle_strain in metrics.
+This is the recommended VGCF morphology in the MPM (supersedes the arbitrary Tier-1 curl=0.06).

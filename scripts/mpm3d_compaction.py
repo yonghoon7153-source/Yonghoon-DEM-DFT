@@ -249,6 +249,16 @@ def parse_args(argv):
                          'longer buckling wavelength.  Calibrate on the single-fibre unit test to Euler σ_cr.')
     ap.add_argument('--rod-iters', type=int, default=15,
                     help='--fibre-rod constraint-projection iterations per substep (Jacobi, under-relaxed).')
+    ap.add_argument('--fibre-buckle', action='store_true',
+                    help='VGCF: seed the PHYSICS-PRESCRIBED buckle a real fibre would take at the press '
+                         '(Winkler wavelength λ=2π(EI/E_SE)^¼≈1.5µm, amplitude from --buckle-strain, per-fibre '
+                         'orientation-weighted cos²θ).  The honest MPM answer since the frozen-AM scaffold '
+                         'cannot compress the fibre to buckle it emergently (fibre_rod_mpm_design §RESULT). '
+                         'Replaces --vgcf-curl for VGCF.')
+    ap.add_argument('--buckle-strain', type=float, default=0.42,
+                    help='--fibre-buckle axial compaction strain (loose→compacted, z-aligned).  0.42 = loose '
+                         'φ0~0.5 → 300 MPa (thickness strain); per-fibre ×cos²θ.  Higher = wavier (straightness '
+                         '≈ 0.94 @ 0.42 / 0.98 @ 0.14).')
     ap.add_argument('--mixing', default='ballmill', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
                          'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
@@ -571,11 +581,16 @@ def main(argv):
                 return (0 <= ii < n_grid and 0 <= jj < n_grid and 0 <= kk < nz
                         and pin_np[ii, jj, kk] > 0)
             # VGCF waviness from the press (buckling proxy): --vgcf-curl <0 → AUTO curl=f(target P).
-            # --fibre-rod ON → seed STRAIGHT (curl 0) and let the explicit rod buckle it emergently.
-            _vgcf_curl = (0.0 if args.fibre_rod else
+            # --fibre-rod → straight seed (rod buckles emergently); --fibre-buckle → straight seed + physics buckle.
+            _vgcf_curl = (0.0 if (args.fibre_rod or args.fibre_buckle) else
                           args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target_gpa)))
+            # physics buckle wavelength (Winkler): λ=2π(EI/E_SE)^¼, EI=E_fib·πr⁴/4 (real graphite 200 GPa, r=75nm)
+            _buckle_lam = ((2 * np.pi * (200.0 * np.pi * 0.075 ** 4 / 4 / max(args.e_se, 1e-6)) ** 0.25) / um_box
+                           if args.fibre_buckle else 0.0)
             print(f"  [additives] VGCF curl = {_vgcf_curl:.3f}  "
-                  + ('(straight seed → --fibre-rod buckles it emergently)' if args.fibre_rod
+                  + (f'(--fibre-buckle: physics buckle λ={_buckle_lam * um_box:.2f}µm, strain {args.buckle_strain})'
+                     if args.fibre_buckle
+                     else '(straight seed → --fibre-rod buckles it emergently)' if args.fibre_rod
                      else 'fixed --vgcf-curl' if args.vgcf_curl >= 0.0
                      else f'auto from press {args.target_gpa:.2f} GPa'))
             ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac, branch_frac, bridge_frac).
@@ -606,10 +621,12 @@ def main(argv):
                 #   (branching adds children but the mean-1 weight normalisation preserves the recipe volume).
                 if kind == 'fibre':
                     nuc = np.concatenate(carbon_seed) if ((nucf > 0.0 or brgf > 0.0) and carbon_seed) else None
+                    _bk_lam = _buckle_lam if code == 2 else 0.0     # physics buckle = VGCF only (PTFE = drawn web)
                     pts, _fid, _w = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
                                                     curl=curl, vol_conserve=(vcv > 0.0),   # Ø-spread = drawing (PTFE vcv>0) ONLY; VGCF gets waviness (curl>0) but keeps a uniform manufactured Ø
                                                     vol_cv=vcv, nucleate=nuc, nucleate_frac=nucf,
                                                     branch_frac=brf, bridge_frac=brgf,
+                                                    buckle_lam=_bk_lam, buckle_strain=args.buckle_strain,
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
                 else:                                        # carbon black: branched chains coating the AM
@@ -657,8 +674,11 @@ def main(argv):
                     'vol_um3': round(float(cnt[nm]['vol_um3']), 2), 'n_objects': int(nobj), 'n_points': int(len(pts)),
                     'E_GPa': float(E), 'sigma_y_GPa': float(sy), 'phase_code': int(code), 'mixing_regime': _proc_regime,
                 }
-                if code == 2:                                # VGCF: seeding waviness (Tier-1) or straight+rod (Tier-2)
+                if code == 2:                                # VGCF: waviness (Tier-1 curl / physics buckle / rod)
                     _add_meta[nm]['curl'] = round(float(_vgcf_curl), 3)
+                    if args.fibre_buckle:
+                        _add_meta[nm]['buckle_lam_um'] = round(float(_buckle_lam * um_box), 3)
+                        _add_meta[nm]['buckle_strain'] = float(args.buckle_strain)
                 if code == 4:                                # PTFE: A3 binder cohesion
                     _add_meta[nm]['coh_ptfe'] = float(_coh); _add_meta[nm]['binder_cap'] = round(float(_cap), 3)
     n = len(xs)                                               # final count (incl additives)
