@@ -17,9 +17,15 @@ fi
 # ── 1) Python deps: MPM + post-processing + webapp ───────────────────────────
 python -m pip install --upgrade pip
 python -m pip install numpy scipy pandas matplotlib flask python-pptx
-# MPM engine — pin to the production Taichi (bundles its own CUDA runtime; only the
-# NVIDIA *driver* is needed on the host, not the full CUDA toolkit).
+# MPM engine — Taichi (bundles its own CUDA runtime; only the NVIDIA *driver* is needed
+# on the host, not the full CUDA toolkit).  Try the production 1.7.4; if its wheel needs
+# a newer glibc than this host has (ImportError: GLIBC_2.32 not found), fall back to
+# 1.6.0 (manylinux_2_27 → glibc 2.27, works on older servers; same MPM API + results).
 python -m pip install "taichi==1.7.4"
+if ! python -c "import taichi" >/dev/null 2>&1; then
+  echo "[setup] taichi 1.7.4 import failed (likely host glibc < 2.32) → falling back to 1.6.0"
+  python -m pip install "taichi==1.6.0"
+fi
 # optional: ML predictor training (Phase 3).  Safe to skip if it fails.
 python -m pip install scikit-learn || echo "[setup] scikit-learn optional → skipped"
 

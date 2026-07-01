@@ -35,6 +35,11 @@ This installs `numpy scipy pandas matplotlib flask python-pptx taichi==1.7.4`
   (`nvidia-smi` must work), not the full CUDA toolkit.
 - If Taichi CUDA init fails: the driver is missing/mismatched; MPM still runs on
   `--arch cpu` (slow) meanwhile.
+- **`ImportError: ... GLIBC_2.32 not found ... taichi_python...so`** (older-glibc hosts,
+  e.g. Ubuntu 20.04 glibc 2.31): the taichi 1.7.4 wheel needs glibc ≥ 2.32 which the host
+  lacks. Use **taichi 1.6.0** (`manylinux_2_27` → glibc 2.27; same MPM API/results):
+  `pip install taichi==1.6.0`. `setup_server.sh` does this fallback automatically. (System
+  glibc: `ldd --version | head -1`; don't try to upgrade the system glibc.)
 
 Smoke-test MPM:
 ```bash
