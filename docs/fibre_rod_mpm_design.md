@@ -92,3 +92,37 @@ The fibre's SE interaction + press already arrive as `v[p]` from G2P (line 722).
 
 Tier-1 (`curl=f(P)`, DONE) keeps STEP-1 porosity moving now.  Build `--fibre-rod` (XPBD) → unit-test on
 GPU → enable for STEP-3 σ_e.  Tracked in `digest_model_application_backlog.md` §F2.
+
+---
+
+## RESULT (GPU, 2026-07-01) — buckling is DEM-territory, NOT MPM-scaffold
+
+Ran `--fibre-rod` on input_6mAh_real_4 (VGCF 1 wt%, n_grid 256, scaffold, hold).  The rod compiled and
+ran to completion on the GPU (no crash — the blind Taichi first cut works).  **But the fibres stayed
+nearly straight, stiffness-independently:**
+
+| --rod-stiff | fibre_straightness_mean | p10 (most-buckled decile) | buckled_frac (<0.9) |
+|---|---|---|---|
+| 0.6  | 0.997 | 0.999 | 0.7 % |
+| 0.15 | 0.996 | 0.999 | 1.0 % |
+
+Softening the bending stiffness **4×** changed nothing (0.997 → 0.996).  If the rod were too stiff to
+buckle, 4× softer would have buckled markedly — it didn't.  ⇒ the limiter is **not** the rod
+(stiffness/coupling hypothesis REFUTED); it is that **the fibres experience almost no axial compression**
+in this framework.
+
+**Why (frame[5]):** the scaffold bed compacts only ~2 %p (15.9 → 13.8 %) with the AM **frozen**, and that
+densification is SE flowing into voids + the platen descending — the fibres are **advected (translated)**
+by the smooth SE flow, not axially compressed along their length.  Real dramatic VGCF buckling comes from
+**discrete particles pinching the fibre** as they rearrange — a **contact/DEM** phenomenon the continuum
+SE (and the frozen AM) structurally cannot supply.  The rod is correct (numpy: compress → buckles at
+Euler); the continuum MPM just never applies the compression.
+
+**Verdict:** emergent fibre buckling is a **DEM/discrete** phenomenon, not a continuum-MPM one — confirmed
+empirically by the stiffness-invariance test, a clean frame[5] boundary.  Practical consequence:
+- **MPM** represents VGCF with the **Tier-1 prescribed curl** (as-grown waviness — avoids the ruler-
+  straight artifact without forcing an unphysical buckle the framework can't drive).
+- **Emergent buckling** belongs to a **DEM bonded-fibre + particle-pinching** model (needs pressurised
+  DEM = LAMMPS; DEM/LIGGGHTS can't press) → parked as future work.
+- `--fibre-rod` stays in the code (opt-in, verified to run) for a future framework that DOES supply fibre
+  compression (mobile-AM MPM, or higher-strain protocols); it is not wrong, just un-driven here.
