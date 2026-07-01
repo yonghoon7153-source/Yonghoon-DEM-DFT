@@ -573,11 +573,11 @@ def main(argv):
             # VGCF waviness from the press (buckling proxy): --vgcf-curl <0 → AUTO curl=f(target P).
             # --fibre-rod ON → seed STRAIGHT (curl 0) and let the explicit rod buckle it emergently.
             _vgcf_curl = (0.0 if args.fibre_rod else
-                          args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target)))
+                          args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target_gpa)))
             print(f"  [additives] VGCF curl = {_vgcf_curl:.3f}  "
                   + ('(straight seed → --fibre-rod buckles it emergently)' if args.fibre_rod
                      else 'fixed --vgcf-curl' if args.vgcf_curl >= 0.0
-                     else f'auto from press {args.target:.2f} GPa'))
+                     else f'auto from press {args.target_gpa:.2f} GPa'))
             ADD = {  # phase: (E GPa, ν, σ_y GPa, code, kind, L_µm, curl, vol_cv, nuc_frac, branch_frac, bridge_frac).
                 #   'fibre' = rod, 'cblack' = branched chain + AM-coating.  curl = path waviness (VGCF = press-dependent
                 #   buckling proxy _vgcf_curl; PTFE 0.4 = tangled drawn web);
