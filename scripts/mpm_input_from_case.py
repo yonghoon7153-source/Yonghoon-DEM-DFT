@@ -204,8 +204,12 @@ def main():
     # decays for over-application). These equal the mpm3d_compaction defaults, but writing them
     # makes the run self-documenting that A3 is applied. Pressure-regime propping (yield at
     # σ_y=0.05 GPa) is automatic from the PTFE material vs --target-gpa.
+    # VGCF present → bake the SEM-consistent AM-position-dependent buckle morphology by default (the
+    # electrode-faithful VGCF shape; fibre_rod_mpm_design §SOLUTION).  Volume/porosity-neutral, so it never
+    # changes the porosity result; it just makes the seeded fibres wavy like real VGCF instead of straight.
+    _buckle = '--fibre-buckle ' if 'VGCF' in a.add_recipe.upper() else ''
     add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
-                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 '
+                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}'
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''
