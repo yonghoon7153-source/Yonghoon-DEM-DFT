@@ -25,6 +25,15 @@ if [ ! -d "$DIR" ]; then
 fi
 
 cd "$DIR/src"
+# Optional ParaView VTK output is the #1 build failure ("vtkSmartPointer.h: No such file")
+# and the pipeline never uses it (reads atoms.csv/contacts.csv) → disable it up front.
+if ls dump_*vtk*.cpp >/dev/null 2>&1 || grep -rql 'LAMMPS_VTK' MAKE/Makefile.* Makefile.package* 2>/dev/null; then
+  echo "[liggghts] disabling optional VTK output (not needed)"
+  mkdir -p ../_vtk_off && mv dump_*vtk*.cpp dump_*vtk*.h dump_vtk.* ../_vtk_off/ 2>/dev/null
+  for f in MAKE/Makefile.mpi Makefile.package Makefile.package.settings; do
+    [ -f "$f" ] && sed -i -E 's/-DLAMMPS_VTK//g; s#-I[[:space:]]*[^[:space:]]*vtk[^[:space:]]*##g; s/-lvtk[^[:space:]]*//g' "$f"
+  done
+fi
 echo "[liggghts] building (make auto, -j$JOBS) …"
 # 'make auto' autodetects MPI/serial and produces lmp_auto.  If it fails, try:
 #   make -j$JOBS mpi     (→ lmp_mpi)   or   make -j$JOBS serial   (→ lmp_serial)
