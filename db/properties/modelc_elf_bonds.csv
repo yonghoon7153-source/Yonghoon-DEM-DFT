@@ -1,0 +1,6 @@
+bond,n_bonds,mean_dist_A,ELF_midpoint,ELF_mid_std,system
+P-S,20,2.06,0.944,0.001,LPSCl1.6
+Li-S,68,2.47,0.940,0.011,LPSCl1.6
+Li-Cl,39,2.52,0.887,0.020,LPSCl1.6
+# LPSCl1.6 (modelc) ELF midpoint from its DFT ELF cube (mean 0.460), same tool as b2o3.
+# vs b2o3: P-S 0.944~0.945, Li-Cl 0.887~0.884 IDENTICAL; Li-S 0.940 vs 0.929. b2o3 adds B-S 0.959, P-O 0.930.

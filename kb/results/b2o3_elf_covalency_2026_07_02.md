@@ -21,6 +21,17 @@
 - **Li–음이온(Li–S/Cl/O)은 std 0.02–0.03로 넓음** → 중점 ELF가 **음이온 lone-pair 껍질 근접**에 영향받아 다소 부풀려짐(순수 공유성 아님). robust 공유결합 집합 = **B–S/P–S/P–O**.
 - 툴 캘리브레이션(P–S 0.94 > Li–S 0.93 > Li–Cl 0.85)과 정확히 일치 → 값 신뢰.
 
+## LPSCl1.6 비교 (정밀 — 둘 다 실제 ELF cube, 같은 툴)
+modelc(LPSCl1.6) ELF cube(mean 0.460)에서 직접 샘플 → **골격 결합 거의 완전 동일**:
+| 결합 | LPSCl1.6 | b2o3 | Δ |
+|---|---|---|---|
+| P–S | 0.944 | 0.945 | +0.001 (동일) |
+| Li–Cl | 0.887 | 0.884 | −0.003 (동일) |
+| Li–S | 0.940 | 0.929 | −0.011 |
+| **B–S(BS₃)** | — | **0.959** | NEW |
+| **P–O** | — | **0.930** | NEW |
+- **결론: B₂O₃ 도핑이 PS₄/Li–Cl 골격 공유결합성을 그대로 보존**하고 **B–S(최강)·P–O 신규 공유 motif만 추가**. 평면 slice(`b2o3_vs_lpscl16_elf_planes.png`)에서 PS₄ 평면이 육안으로도 동일. (`db/properties/modelc_elf_bonds.csv`)
+
 ## 연결
 - 슬라이드 19(LPSCl/LPSCl1.6 ELF: PS₄ 공유·Li 이온·free-S lone pair)의 **b2o3 확장** — 새 B–S/P–O 공유 지문 추가.
 - `b2o3_bond_lengths_2026_06_29.md`(B–S 1.827), `b2o3_charge_bader_lowdin_2026_06_30.md`(B +3), Voronoi/배위(BS₃), `b2o3_cdd_2026_07_02.md`(같은 공유결합 축적).
