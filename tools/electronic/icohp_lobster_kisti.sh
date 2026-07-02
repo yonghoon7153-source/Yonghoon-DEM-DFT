@@ -39,14 +39,24 @@ for tag in ("nosym", "noinv"):
 # bump nbnd 388 -> 460 (occupied ~298 + margin so LOBSTER basis fits)
 s = re.sub(r"nbnd\s*=\s*[0-9]+", "nbnd=460", s) if re.search(r"nbnd\s*=", s) \
     else re.sub(r"(&SYSTEM[^\n]*\n)", r"\1  nbnd=460\n", s, count=1, flags=re.I)
-open("nscf_lobster.in", "w").write(s); print("-> nscf_lobster.in (nosym, noinv, nbnd=460)")
+# LOBSTER 5.x requires the wf_collect keyword literally in the QE input it reads
+if not re.search(r"wf_collect", s, re.I):
+    s = re.sub(r"(&(?:control|CONTROL)[^\n]*\n)", r"\1  wf_collect=.true.\n", s, count=1)
+open("nscf_lobster.in", "w").write(s); print("-> nscf_lobster.in (nosym, noinv, nbnd=460, wf_collect)")
 PY
 echo ">> nscf $(date +%H:%M:%S)"
-mpirun -np 1 "$GPU/pw.x" -npool 1 -in nscf_lobster.in > nscf_lobster.out 2>&1
-grep -q "JOB DONE" nscf_lobster.out || { echo "nscf FAIL:"; tail -20 nscf_lobster.out; exit 1; }
+if grep -q "JOB DONE" nscf_lobster.out 2>/dev/null; then
+  echo "   nscf 재활용 (이미 JOB DONE — 재계산 안 함)"
+else
+  mpirun -np 1 "$GPU/pw.x" -npool 1 -in nscf_lobster.in > nscf_lobster.out 2>&1
+  grep -q "JOB DONE" nscf_lobster.out || { echo "nscf FAIL:"; tail -20 nscf_lobster.out; exit 1; }
+fi
 
 # 2) let LOBSTER's QE detector find the save (it looks for ./<prefix>.save)
 ln -sfn tmp/b2o3.save ./b2o3.save
+# LOBSTER reads b2o3_scf.in as THE QE input -> make it match the nscf (+wf_collect)
+[ -f b2o3_scf.in.orig ] || cp b2o3_scf.in b2o3_scf.in.orig
+cp nscf_lobster.in b2o3_scf.in
 
 # 3) lobsterin — champion bonds (matches slide 15/16 + new B-S, P-O)
 cat > lobsterin <<'EOF'
