@@ -261,6 +261,10 @@ def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF
     phi_bed = (vgcf_vol_pct_solid / 100.0) * (1.0 - p0)
     x = (phi_bed / phi_jam) if phi_jam > 0 else 0.0
     p = 1.0 - math.exp(-x)
+    # PHYSICAL sanity: rod-network mesh size ξ = D·√(π/4φ) (semidilute rod correlation length).
+    # If ξ < AM diameter, the rods geometrically BLOCK the AM from packing dense → prop is REAL
+    # (not just parameterised).  SE (~ξ) can still thread the mesh.
+    xi = D_um * math.sqrt(math.pi / (4.0 * phi_bed)) if phi_bed > 0 else float('inf')
 
     def _por(A):
         return _porosity_added_solid(p0, phi_bed, p * phi_bed * A)
@@ -275,6 +279,7 @@ def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF
         'jamming_ratio_x': round(x, 3),
         'jammed': bool(x >= 1.0),
         'prop_gate_p': round(p, 3),
+        'rod_mesh_xi_um': round(xi, 3),                          # < AM dia → rods block AM (prop real)
         'porosity_no_additive_pct': round(100 * p0, 3),
         'porosity_volume_fill_pct': round(100 * por_vf, 3),
         'porosity_dilate_nominal_pct': round(100 * por_lower, 3),      # A=1
