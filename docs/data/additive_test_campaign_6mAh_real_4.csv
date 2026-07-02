@@ -7,8 +7,8 @@ case,additive,vgcf_wt,superp_wt,ptfe_wt,mixing,pred_n_objects,pred_vol_pct_solid
 6mAh_real_4,VGCF,4,0,0,ballmill,110120,8.01,-6.86,8.59,8.63,112.87,33.23,51.7,52.5,PASS,volume-fill exact (Δ0.04pp); --fibre-buckle AM-pos applied; n_obj 109289 n_pts 2.93M (2x per wt% doubling); cov rises w/ carbon (45.7@2wt%→51.7@4wt%)
 6mAh_real_4,SuperP,0,0.5,0,thinky,589774,1.02,-0.87,14.58,14.59,112.87,33.23,40.9,47.2,PASS,THINKY run (coat_block); = ballmill since coat-seeding not impl (A4 TODO) so doubles as 0.5 ballmill; volume-fill exact Δ0.005pp; 0D CB n_obj 585k
 6mAh_real_4,SuperP,0,1,0,thinky,1185506,2.04,-1.75,13.7,13.71,112.87,33.23,42.4,53.7,PASS,THINKY run (coat_block); = ballmill since coat-seeding not impl (A4 TODO) so doubles as 1wt% ballmill; volume-fill exact Δ0.01pp; 0D CB n_obj 1.18M/n_pts 828k; soft E0.5/σy0.1
-6mAh_real_4,SuperP,0,2,0,ballmill,2395205,4.13,-3.54,11.91,,,,,,,
-6mAh_real_4,SuperP,0,4,0,ballmill,4890211,8.43,-7.22,8.23,,,,,,,
+6mAh_real_4,SuperP,0,2,0,thinky,2395205,4.13,-3.54,11.91,11.94,112.87,33.23,45.2,64.3,PASS,THINKY run (coat_block) = ballmill (coat-seeding A4 TODO); volume-fill exact Δ0.026pp; 0D CB n_obj 2.38M/n_pts 1.67M
+6mAh_real_4,SuperP,0,4,0,thinky,4890211,8.43,-7.22,8.23,8.28,112.87,33.23,50.4,78.2,PASS,THINKY run (coat_block) = ballmill (coat-seeding A4 TODO); volume-fill exact Δ0.045pp; 0D CB n_obj 4.85M/n_pts 3.42M; AM_S cov 78% (carbon coats AM strongly)
 6mAh_real_4,PTFE,0,0,0.5,ballmill,1087,0.88,-0.75,14.7,,,,,,,
 6mAh_real_4,PTFE,0,0,1,ballmill,2184,1.76,-1.51,13.94,,,,,,,
 6mAh_real_4,PTFE,0,0,2,ballmill,4413,3.56,-3.06,12.39,,,,,,,
