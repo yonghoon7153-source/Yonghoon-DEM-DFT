@@ -15,7 +15,7 @@
 # not build), fall back to NC(ONCV) pseudos + epsilon.x. But try this first: it
 # reuses the exact USPP champion and is a one-shot.
 
-set -u
+# NOTE: no `set -u` — it breaks `conda activate` (conda scripts read unset vars).
 REPO="$HOME/work/Yonghoon-DEM-DFT"
 CIF="$REPO/db/structures/b2o3_relaxV0.cif"
 PSEUDO="${PSEUDO_DIR:-$HOME/work/pseudo}"
