@@ -1,7 +1,7 @@
 # B₂O₃ 챔피언 — ELF 결합 공유결합성 (슬라이드 19의 b2o3 판)
 
 **날짜** 2026-07-02 · **방법** DFT ELF (QE `pp.x plot_num=8`, KISTI, 기존 `tmp/b2o3.save` SCF 재활용 → 128원자 ELF cube grid [96,96,960], mean 0.446 = 진짜 ELF) → 각 결합 중점 ELF 샘플(`tools/figures/sample_elf_bonds.py`, B 포함).
-**데이터** `db/properties/b2o3_elf_bonds.csv` · **그림** `docs/figures/cascade/b2o3_elf_bond_covalency.png` · **cube** KISTI `b2o3_elf.cube`(VESTA용, 커밋X)
+**데이터** `db/properties/b2o3_elf_bonds.csv` · **그림** `docs/figures/cascade/b2o3_elf_bond_covalency.png`(결합별 막대), `b2o3_elf_planes.png`(BS₃·PS₄ 2D 평면 slice) · **cube** KISTI `b2o3_elf.cube`(VESTA용, 커밋X)
 
 > **한 줄.** 중점 ELF 공유결합성 순위 **B–S(BS₃) 0.959 > P–S(PS₄) 0.945 > P–O 0.930 > Li–S 0.929 > Li–Cl 0.884 > Li–O 0.780**. **B–S가 챔피언에서 가장 공유결합적** — **삼각 BS₃ thioborate가 P–S보다도 강한 공유결합 motif**임을 전자국재로 확증.
 
