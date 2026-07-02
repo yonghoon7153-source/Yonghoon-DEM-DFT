@@ -32,6 +32,12 @@ modelc(LPSCl1.6) ELF cube(mean 0.460)에서 직접 샘플 → **골격 결합 �
 | **P–O** | — | **0.930** | NEW |
 - **결론: B₂O₃ 도핑이 PS₄/Li–Cl 골격 공유결합성을 그대로 보존**하고 **B–S(최강)·P–O 신규 공유 motif만 추가**. 평면 slice(`b2o3_vs_lpscl16_elf_planes.png`)에서 PS₄ 평면이 육안으로도 동일. (`db/properties/modelc_elf_bonds.csv`)
 
+### O@PS₄ 분포 (P 8개, O 3개)
+O 3개가 P에 분산: **PS₄ ×6 · PS₃O ×1(P#92) · PS₂O₂ ×1(P#29, P–O 1.55·1.56Å)**. 평면 그림:
+- `docs/figures/paper/elf_plane_b2o3_PS2O2.png`(clean), `b2o3_elf_plane_PS2O2.png`(라벨) — PS₂O₂ 단위, **2×P–O + 2×P–S** 한 평면에.
+- `elf_plane_b2o3_PO.png` — P–O 결합면.
+- P–O(0.930)는 P–S(0.945)보다 약간 낮음 = **강하지만 polar한 공유**(O 전기음성도가 전하 당김; nd O@PS₄ 결과와 정합).
+
 ## 연결
 - 슬라이드 19(LPSCl/LPSCl1.6 ELF: PS₄ 공유·Li 이온·free-S lone pair)의 **b2o3 확장** — 새 B–S/P–O 공유 지문 추가.
 - `b2o3_bond_lengths_2026_06_29.md`(B–S 1.827), `b2o3_charge_bader_lowdin_2026_06_30.md`(B +3), Voronoi/배위(BS₃), `b2o3_cdd_2026_07_02.md`(같은 공유결합 축적).
