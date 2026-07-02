@@ -26,7 +26,10 @@ ln -sf "$PSEUDO" pseudo
 test -f "$CIF" || { echo "cif 없음: $CIF (git pull 했나?)"; exit 1; }
 
 # 1) SCF input from the champion cif (ASE): fixed occ + SSSP auto-pseudo + 2x2x2 k
+#    ASE lives in the 'uma' conda env; activate it just for this step.
 echo ">> gen scf_eps.in $(date +%H:%M)"
+source "$HOME/apps/miniforge3/etc/profile.d/conda.sh" 2>/dev/null || true
+conda activate uma 2>/dev/null || true
 python3 - "$CIF" "$PSEUDO" <<'PY'
 import sys, os, glob
 from ase.io import read, write
@@ -45,7 +48,8 @@ inp = dict(
 write('scf_eps.in', at, format='espresso-in', input_data=inp, pseudopotentials=pp, kpts=(2, 2, 2))
 print('  -> scf_eps.in')
 PY
-[ -f scf_eps.in ] || { echo "입력 생성 실패 (conda activate uma 했나?)"; exit 1; }
+[ -f scf_eps.in ] || { echo "입력 생성 실패 (ase/uma 확인)"; exit 1; }
+conda deactivate 2>/dev/null || true    # QE는 시스템 라이브러리로 (conda libgomp 간섭 방지)
 
 # 2) SCF (CPU, 8 ranks). b2o3 is an insulator -> fixed occ must give a gap.
 echo ">> SCF $(date +%H:%M)"
