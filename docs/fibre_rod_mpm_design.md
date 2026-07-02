@@ -200,3 +200,38 @@ raises wall_z — physically the Cho/Reisacher percolation-onset behaviour.
 **A/B test:** same VGCF wt% WITHOUT (volume-fill baseline) vs WITH `--fibre-stiff`, compare
 `porosity_settled_pct` to the no-additive baseline (15.45 % MPM) and to Cho's direction.  Baked as an
 opt-in in mpm_input_from_case.py (`--fibre-stiff`; default OFF → production volume-fill unchanged).
+
+### RESULT (GPU, input_6mAh_real_4 VGCF 4 wt%, n_grid 256, 2026-07-02) — direction ✓, mechanism ✓, magnitude modest → frame[5] confirmed
+
+`--fibre-stiff` engaged cleanly: **2.39 M rigid load-bearing VGCF cells** = 8 vol% of solid, exactly
+∝ the VGCF recipe volume (NOT over-connected by the binary_closing — 2.39 M / 8.3 M SE cells = 29 % =
+VGCF/SE volume ratio 8/27.9 %).
+
+| VGCF 4 wt% | porosity | thickness | SE plastic strain Σdg (mean) | total strain (mean) | cov AM_S |
+|---|---|---|---|---|---|
+| volume-fill (soft) | 8.63 % | 112.87 µm | (normal compaction) | — | 52.5 % |
+| **+ --fibre-stiff** | **9.38 %** ↑ | 113.80 µm | **0.026 → 0.001** | 0.195 → 0.006 | 50.5 % |
+| no-additive baseline | 15.45 % | — | — | — | — |
+
+- **Direction ✓ (Cho):** porosity **8.63 → 9.38 % = +0.75 %p UP** — the conflicting-roles sign, opposite
+  to the volume-fill drop.
+- **Mechanism ✓ (the real value):** the SE plastic strain is **crushed** (Σdg 0.026 → 0.001; total strain
+  0.195 → 0.006) — the rigid VGCF network **props the bed so the SE cannot plastically densify** → bed
+  thickens (+0.9 µm) and SE conforms to the AM less (cov AM_S 52.5 → 50.5).  These are exactly the
+  "conflicting roles" density-penalty signatures, emergent from the load-bearing physics.
+- **Magnitude modest:** +0.75 %p recovers only **~11 %** of the 6.8 %p volume-fill error (would need ~+7 %p
+  to reach the no-additive 15.45 % that Cho's flat-to-up implies).  Cause: the frozen AM already fixes
+  `wall_z`; the VGCF sits in the interstitial void and only props the near-wall gap — it **cannot push the
+  AM skeleton itself apart** (frozen).  That AM-rearrangement is the dominant half.
+
+**Verdict (frame[5], mirrors the buckling stiffness-invariance test):** even the STRONGEST MPM lever
+(fully-rigid VGCF = the σ_y→∞ upper bound) recovers only ~11 % of the porosity penalty → the penalty is a
+**packing / AM-rearrangement phenomenon = DEM's domain**, empirically proven, not asserted.  The MPM
+scaffold correctly owns the **direction + mechanism** (strut resistance → SE can't densify); the
+**absolute magnitude** belongs to DEM co-compaction (VGCF present when the AM jams → looser skeleton).
+Caveats: fully-rigid = stiffness upper bound; a mild first-contact wallP transient may inflate the stop
+slightly (the scaffold disables the arm-guard) — both would only make the strut half SMALLER, reinforcing
+the verdict.  Optional lower bracket: a softened-E elastic VGCF (vs fully-rigid) would sit below +0.75 %p.
+⇒ `--fibre-stiff` is the physically-correct VGCF STIFFNESS model for the MPM (direction + mechanism +
+morphology); report porosity as the frame[5] bracket [volume-fill 8.63 % … strut-corrected 9.38 %], with
+the DEM packing half named as the remainder.  Production porosity-incl-additive stays with DEM (frame[5]).

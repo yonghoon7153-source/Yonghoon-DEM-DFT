@@ -110,3 +110,17 @@ isolated island(void에 들어갈 수도 있으나 여전히 밀도-주도 아�
 ⚠ 캐비엇: Cho는 433 MPa·AM 72/88 wt%(우리 300 MPa·다른 조성)라 1:1 오버레이는 아니다.  하지만
 **SE가 동일(LPSCl)하고 VGCF 방향이 견고**하므로 "방향 반대"는 신뢰.  깨끗한 porosity-vs-wt% 실측
 스윕은 아직 없음(Cho는 0/2 wt% 두 점, Reisacher는 전도도 스윕) → 직접 곡선 오버레이는 미보유.
+
+### 해결 — 물리 strut 모델 `--fibre-stiff` 빌드·GPU 검증 (2026-07-02)
+"실제 방향을 맞추려면 첨가제를 하중-저항하게" = `--fibre-stiff`로 구현(VGCF 격자셀 rigid pin =
+E→∞·σ_y→∞ strut 극한; `mpm3d_compaction.py`, docs/fibre_rod_mpm_design.md §COMPACTION-RESISTANCE).
+VGCF 4 wt% @ input_6mAh_real_4 (n_grid 256, 2.39 M rigid VGCF 셀 = 8 vol% ∝ 부피):
+- **방향 ✓**: porosity **volume-fill 8.63 % → 9.38 % (+0.75 %p UP)** = Cho conflicting-roles 부호.
+- **메커니즘 ✓**: SE 소성변형 **뭉개짐**(Σdg 0.026→0.001; total strain 0.195→0.006) — rigid VGCF가
+  bed를 떠받쳐 SE가 압밀 못 함 → 두께 +0.9 µm, cov AM_S 52.5→50.5.  밀도-페널티 서명 그대로.
+- **크기 modest**: +0.75 %p = volume-fill 오차(6.8 %p)의 **~11 %만** 회복.  얼린 AM이 wall_z를 이미
+  정하고 VGCF는 사이 공극에 있어 near-wall만 떠받침 — **AM 골격 자체를 벌리는 재배열(나머지 89 %)은
+  못 함**(frozen).  = buckling과 같은 frame[5] 경계: 가장 센 MPM 레버도 11 % → 밀도 페널티는 packing/
+  재배열 현상(**DEM 몫**) 실증.  절대 porosity는 frame[5] bracket [volume-fill 8.63 … strut 9.38 %]로
+  보고, 나머지는 DEM 공동압밀(VGCF를 LIGGGHTS에 유효입자로)에 귀속.  → MPM은 direction+mechanism+
+  morphology 소유, 절대 porosity(dip 포함)는 DEM 소유(frame[5] division).
