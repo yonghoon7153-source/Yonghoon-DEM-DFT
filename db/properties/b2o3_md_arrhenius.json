@@ -5,6 +5,7 @@
     "n_Li_cm3": 2.3806298818304583e+22,
     "D_per_T_cm2_s": {"600": 9.174e-06, "800": 3.009e-05, "1000": 5.067e-05},
     "Ea_eV": 0.2234,
+    "Ea_eV_PAPER": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
     "D0_cm2_s": 7.112e-04,
     "D_300K_cm2_s": 1.2547e-07,
     "D_273K_cm2_s": 5.337e-08,
@@ -18,6 +19,19 @@
     "D_400K_cm2_s": 1.124e-06,
     "D_500K_cm2_s": 5.517e-06,
     "curvature_verdict": "segment Ea zig-zags (no clean super-Arrhenius). To fold into a consistent 5-pt fit, re-extract the 400/500 K MSD arrays (gabia) at 2-50 ps."
+  },
+  "multiseed_600K_errorbar": {
+    "note": "600K is the dominant Ea-noise driver (leave-one-out); reseeded 3x (each 200 ps, 2-50 ps window, uma-s-1p1) to quantify. This is the honest paper value; the single-seed Ea 0.2234 above is one draw within this bar.",
+    "seeds_D_600_cm2_s": {"s2": 7.981e-06, "s3": 1.3043e-05, "s4": 1.0211e-05},
+    "D_600_mean_cm2_s": 1.041e-05,
+    "D_600_std_cm2_s": 2.537e-06,
+    "D_600_spread_pct": 24,
+    "high_T_anchor_cm2_s": {"800": 3.009e-05, "1000": 5.067e-05, "note": "deck-validated but still single-seed -> a 2nd-order uncertainty on top of the 600K bar"},
+    "Ea_eV": "0.206 (+0.038/-0.030)",
+    "Ea_per_seed_eV": {"s2": 0.2425, "s3": 0.1752, "s4": 0.2087},
+    "sigma_300K_mS_cm_per_seed": {"s2": 11.27, "s3": 64.81, "s4": 27.11, "mean": 29.05, "caution": "sigma300 swings 11-65 with the 600K seed -> single-seed absolute sigma is NOT reportable; quote Ea+-err and the b2o3/modelc ratio only"},
+    "resolves": "the earlier 0.223-vs-0.172 (51 meV) swing was entirely 600K seed variation, not a real difference. Confirms the leave-one-out diagnosis.",
+    "data": "db/properties/b2o3_600K_reseed_errorbar.csv ; fig docs/figures/cascade/b2o3_600K_reseed_errorbar.png"
   },
   "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma ~3-5x for the LPSCl family. Robust quantities = Ea and the relative b2o3-vs-modelc ratio (same method/window). Absolute sigma is an upper bound.",
   "SUPERSEDED": {
