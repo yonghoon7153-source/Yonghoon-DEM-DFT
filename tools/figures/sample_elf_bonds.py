@@ -16,11 +16,13 @@ import argparse
 import numpy as np
 
 BOHR = 0.5291772108
-PT = {3: "Li", 6: "C", 7: "N", 8: "O", 9: "F", 11: "Na",
+PT = {3: "Li", 5: "B", 6: "C", 7: "N", 8: "O", 9: "F", 11: "Na",
       15: "P", 16: "S", 17: "Cl", 20: "Ca", 35: "Br", 60: "Nd"}
 # element-pair cutoffs (Å) for "a bond" -- KEYS MUST BE alphabetically sorted
+# B-S ~1.9 (thioborate BS3 motif), B-O ~1.4 (borate BO3) -- the B2O3-dopant bonds.
 CUT = {("P", "S"): 2.3, ("Li", "S"): 2.9, ("Cl", "Li"): 2.95,
-       ("S", "S"): 3.0, ("O", "P"): 1.9, ("Nd", "O"): 2.8, ("Li", "O"): 2.5}
+       ("S", "S"): 3.0, ("O", "P"): 1.9, ("Nd", "O"): 2.8, ("Li", "O"): 2.5,
+       ("B", "S"): 2.15, ("B", "O"): 1.7, ("B", "B"): 2.0}
 
 
 def read_cube(path):
