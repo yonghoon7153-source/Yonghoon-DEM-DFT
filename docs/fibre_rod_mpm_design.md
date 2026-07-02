@@ -198,8 +198,11 @@ raises wall_z — physically the Cho/Reisacher percolation-onset behaviour.
   pressurise — it is how the AM scaffold was made — so VGCF-as-stiff-clumps re-compaction is feasible).
 
 **A/B test:** same VGCF wt% WITHOUT (volume-fill baseline) vs WITH `--fibre-stiff`, compare
-`porosity_settled_pct` to the no-additive baseline (15.45 % MPM) and to Cho's direction.  Baked as an
-opt-in in mpm_input_from_case.py (`--fibre-stiff`; default OFF → production volume-fill unchanged).
+`porosity_settled_pct` to the no-additive baseline (15.45 % MPM) and to Cho's direction.  ★ **Now
+AUTO-baked for every VGCF recipe** in mpm_input_from_case.py (like `--fibre-buckle`) — VGCF as a
+load-bearing strut IS the physical model, so the webapp/CLI zips always include it, no flag or sed
+needed.  (`--fibre-stiff` CLI still force-enables it for a non-VGCF recipe.)  The pre-auto volume-fill
+VGCF campaign numbers stay recorded for contrast.
 
 ### RESULT (GPU, input_6mAh_real_4 VGCF 4 wt%, n_grid 256, 2026-07-02) — direction ✓, mechanism ✓, magnitude modest → frame[5] confirmed
 
