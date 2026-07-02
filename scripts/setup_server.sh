@@ -16,7 +16,7 @@ fi
 
 # ── 1) Python deps: MPM + post-processing + webapp ───────────────────────────
 python -m pip install --upgrade pip
-python -m pip install numpy scipy pandas matplotlib flask python-pptx
+python -m pip install numpy scipy pandas matplotlib flask python-pptx scikit-image
 # MPM engine — Taichi (bundles its own CUDA runtime; only the NVIDIA *driver* is needed
 # on the host, not the full CUDA toolkit).  Try the production 1.7.4; if its wheel needs
 # a newer glibc than this host has (ImportError: GLIBC_2.32 not found), fall back to
