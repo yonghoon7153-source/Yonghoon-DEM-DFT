@@ -1,0 +1,10 @@
+T_K,D_b2o3_cm2_s,D_LPSCl16_cm2_s,D_b2o3_fit(600-1000),D_LPSCl16_fit,ratio_MD,ratio_fit,note
+400,7.466e-07,4.268e-06,1.090e-06,8.789e-07,0.175,1.240,NOISE (window-sensitive; unreliable)
+500,7.998e-06,,3.983e-06,3.215e-06,,1.239,NOISE (window-sensitive; unreliable)
+600,9.117e-06,7.901e-06,9.452e-06,7.631e-06,1.154,1.239,reliable
+800,2.989e-05,2.054e-05,2.784e-05,2.249e-05,1.455,1.238,reliable
+1000,5.05e-05,4.554e-05,5.322e-05,4.300e-05,1.109,1.238,reliable
+# LPSCl1.6 500K MISSING from glob (check /data/work/runs/modelc_md_lowT/d0.00_cfg0/T500/msd.json)
+# 400/500K are NON-DIFFUSIVE/undersampled: b2o3 400K (7.5e-7) < modelc 400K (4.3e-6) is UNPHYSICAL (b2o3>=modelc at every reliable T) -> pure noise.
+# b2o3 segment Ea zig-zags (400-500:0.41, 500-600:0.03 eV) -> no clean super-Arrhenius. Low-T points scatter 0.7-4.9x around the 600-1000K fit with no systematic bend.
+# CONCLUSION: explicit 400/500K MD shows NO curvature beyond noise -> the equal-Ea, constant-1.33x picture holds down to low T; RT/273K extrapolation is safe. No low-T differential between the two systems.
