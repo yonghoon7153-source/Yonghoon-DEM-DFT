@@ -1,0 +1,7 @@
+system,Ea_eV,D0_cm2_s,n_Li_cm3,D_600,D_800,D_1000,sigma_300K_mS_cm,sigma_273K_mS_cm
+LPSCl1.6,0.2235,5.753e-04,2.220e+22,7.901e-06,2.054e-05,4.554e-05,13.94,6.52
+b2o3,0.2234,7.112e-04,2.381e+22,9.174e-06,3.009e-05,5.067e-05,18.51,8.65
+ratio_b2o3/LPSCl1.6,-0.0001(dEa),1.24,1.07,,,,1.33,1.33
+# b2o3 Ea multiseed = 0.21 +/- 0.03 eV (3-seed 600K); LPSCl1.6 0.2235 -> EQUAL Ea within error
+"# sigma ratio ~1.33x CONSTANT at all T (parallel Arrhenius) = uniform D0/carrier-driven gain, NOT a lower barrier / special low-T advantage"
+"# sigma300 = MLIP Nernst-Einstein UPPER BOUND (~3-5x over exp for LPSCl family); quote Ea + the 1.33x RATIO, not absolute sigma"
