@@ -218,8 +218,15 @@ def main():
     # docs/fibre_rod_mpm_design.md §COMPACTION-RESISTANCE).  So every VGCF run is strut by default (no
     # manual flag / sed needed); the --fibre-stiff CLI flag still force-enables it for a non-VGCF recipe.
     _stiff = '--fibre-stiff ' if ('VGCF' in a.add_recipe.upper() or a.fibre_stiff) else ''
+    # --fibre-align AUTO for VGCF: press-induced IN-PLANE alignment.  λ_z = axial stretch of the bed under
+    # the uniaxial compaction the fibres underwent WITH it = (1−ε_loose)/(1−ε_DEM), ε_loose≈0.44 (random
+    # loose packing pre-press), ε_DEM = this case's compacted porosity → non-circular (from the compaction
+    # ratio), morphology-faithful (real 300-MPa VGCF tilts in-plane).  <1 tilts toward the press plane.
+    _eps_dem = (float(poro) / 100.0) if poro else 0.15
+    _lam_z = round(min(1.0, (1.0 - 0.44) / max(1.0 - _eps_dem, 1e-6)), 3)
+    _align = f'--fibre-align {_lam_z} ' if 'VGCF' in a.add_recipe.upper() else ''
     add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
-                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}{_stiff}'
+                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}{_stiff}{_align}'
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''

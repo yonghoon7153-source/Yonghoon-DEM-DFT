@@ -274,6 +274,12 @@ def parse_args(argv):
                     help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
                          'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
                          'clustered agglomerates, non-uniform.  (VGCF/PTFE fibres unaffected.)')
+    ap.add_argument('--fibre-align', type=float, default=1.0,
+                    help='PRESS-INDUCED IN-PLANE fibre alignment (affine): λ_z = axial stretch of the bed under '
+                         'uniaxial compaction (loose→pressed).  1.0 = isotropic (default); <1 tilts fibres toward '
+                         'the plane perpendicular to the press (tanθ = tanθ0/λ_z), as real 300-MPa-pressed VGCF '
+                         'does.  Physically λ_z = (1−ε_loose)/(1−ε_pressed) ≈ 0.71 for 40%%→15%% porosity; the zip '
+                         'generator bakes the case-specific value.  In-plane fibres also buckle less (smaller d0_z).')
     return ap.parse_args(argv)
 
 
@@ -678,7 +684,7 @@ def main(argv):
                                                     vol_cv=vcv, nucleate=nuc, nucleate_frac=nucf,
                                                     branch_frac=brf, bridge_frac=brgf,
                                                     buckle_lam=_bk_lam, buckle_strain=args.buckle_strain,
-                                                    am_frac_fn=_amfn,
+                                                    am_frac_fn=_amfn, align_lambda=float(args.fibre_align),
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
                 else:                                        # carbon black: branched chains coating the AM
@@ -732,6 +738,8 @@ def main(argv):
                         _add_meta[nm]['buckle_lam_um'] = round(float(_buckle_lam * um_box), 3)
                         _add_meta[nm]['buckle_strain_confined'] = float(args.buckle_strain)
                         _add_meta[nm]['buckle_am_position_dependent'] = bool(_amfrac_arr is not None)
+                if kind == 'fibre' and float(args.fibre_align) != 1.0:   # press-induced in-plane alignment
+                    _add_meta[nm]['align_lambda_z'] = round(float(args.fibre_align), 3)
                 if code == 4:                                # PTFE: A3 binder cohesion
                     _add_meta[nm]['coh_ptfe'] = float(_coh); _add_meta[nm]['binder_cap'] = round(float(_cap), 3)
     n = len(xs)                                               # final count (incl additives)

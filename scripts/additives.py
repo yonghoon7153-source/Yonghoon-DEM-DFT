@@ -98,6 +98,7 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
                 curl=0.0, vol_conserve=False, vol_cv=0.0, nucleate=None, nucleate_frac=0.0,
                 branch_frac=0.0, branch_n=2, branch_vol=0.3, branch_len=0.5,
                 bridge_frac=0.0, bridge_drift=0.15, buckle_lam=0.0, buckle_strain=0.0, am_frac_fn=None,
+                align_lambda=1.0,
                 return_lengths=False, return_ids=False, return_vol=False):
     """n random fibres (SEM-like: thin rods/fibrils threading the interstices), each a chain of
     points spaced ~dx along its path.  Even distribution = uniform random centres.  Points falling
@@ -204,8 +205,10 @@ def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
         else:
             c = np.array([rng.uniform(0, Lx), rng.uniform(0, Ly), rng.uniform(0, Lz)])
         d0 = (drift_to - c) if drift_to is not None else rng.normal(size=3)   # head toward the bridge target
-        d0 = d0 / (np.linalg.norm(d0) + 1e-12)
-        line = _grow(c, d0, Li, k, drift_to)
+        if align_lambda != 1.0:                                # PRESS-INDUCED IN-PLANE ALIGNMENT (affine):
+            d0 = d0 * np.array([1.0, 1.0, align_lambda])       # uniaxial-z compaction (λ_z<1) tilts fibres in-
+        d0 = d0 / (np.linalg.norm(d0) + 1e-12)                 # plane (tanθ_new = tanθ0/λ_z).  buckle then sees
+        line = _grow(c, d0, Li, k, drift_to)                   # a smaller d0[2] → in-plane fibres buckle less (physical)
         if not len(line):
             continue
         pts.append(line); lens.append(Li); ids.append(np.full(len(line), fid, np.int32))

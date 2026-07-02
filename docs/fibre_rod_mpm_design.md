@@ -238,3 +238,25 @@ the verdict.  Optional lower bracket: a softened-E elastic VGCF (vs fully-rigid)
 ⇒ `--fibre-stiff` is the physically-correct VGCF STIFFNESS model for the MPM (direction + mechanism +
 morphology); report porosity as the frame[5] bracket [volume-fill 8.63 % … strut-corrected 9.38 %], with
 the DEM packing half named as the remainder.  Production porosity-incl-additive stays with DEM (frame[5]).
+
+## PRESS-INDUCED IN-PLANE ALIGNMENT (`--fibre-align`, 2026-07-03) — the orientation axis
+
+The third VGCF-morphology axis (after shape=curl/buckle and stiffness=--fibre-stiff): real 300-MPa-pressed
+VGCF is NOT isotropic — uniaxial compaction rotates the fibres toward the plane perpendicular to the press.
+Modelled as the **affine rotation** of the fibre axis under the bed's uniaxial stretch: seed direction
+`d0[2] *= λ_z` before normalising (so `tanθ = tanθ0/λ_z`), where **λ_z = (1−ε_loose)/(1−ε_pressed)** is the
+axial stretch the fibres underwent WITH the bed (ε_loose≈0.44 random-loose-packing pre-press, ε_pressed =
+the case's compacted porosity).  Non-circular (from the compaction ratio, not a fit).  For real_4
+(ε=14.28 %) → **λ_z≈0.65** → 66 % of fibres tilt >45° from the press-z (vs 49 % isotropic) — a moderate,
+SEM-faithful in-plane bias.  Auto-baked for every VGCF recipe in mpm_input_from_case.py (`--fibre-align`),
+case-specific λ_z; `--fibre-align 1.0` = isotropic.
+
+Physics couplings (why it's more than cosmetic):
+- **buckle consistency**: the buckle strain uses `d0[2]²`, so in-plane fibres (smaller d0[2]) now buckle
+  LESS — physically right (an in-plane fibre sees little axial press to buckle it).
+- **strut coupling**: for `--fibre-stiff`, in-plane fibres bear the z-platen load LESS than z-aligned ones,
+  so real in-plane alignment should REDUCE the strut prop vs isotropic — a physical (not cosmetic) effect
+  worth measuring against the isotropic strut sweep.
+Honest scope: still a resolved-grain morphology model at production res (fibres sub-voxel → porosity/σ
+largely unchanged); the value is SEM fidelity + the physically-correct orientation for the strut/buckle
+couplings.  ε_loose=0.44 is the one assumption (random loose packing); override λ_z via `--fibre-align`.
