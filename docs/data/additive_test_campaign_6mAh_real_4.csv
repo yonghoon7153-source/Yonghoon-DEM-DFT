@@ -1,17 +1,17 @@
-# input_6mAh_real_4 additive test campaign (ball-mill + thinky; thinky≡ballmill until A4 coat-seeding). baseline: porosity MPM 15.45% / DEM 14.28%, thickness 113.4um, SE/solid 33.2%
+# input_6mAh_real_4 additive test campaign (mixing bm=thinky = ball-mill & thinky MERGED: code-identical — CB_MIX same for both + coat-regime not seeded [A4 TODO]; only handmix [SuperP CB_MIX k8/clump4] or A4 gives a different result). baseline: porosity MPM 15.45% / DEM 14.28%, thickness 113.4um, SE/solid 33.2%
 # pred_porosity = volume-fill (additive vol / box); ±~0.5%p from MPM re-compaction. meas_* = GPU MPM run.
 case,additive,vgcf_wt,superp_wt,ptfe_wt,mixing,pred_n_objects,pred_vol_pct_solid,pred_porosity_dpor_pp,pred_porosity_mpm,meas_porosity_mpm,meas_thickness_um,meas_se_solid_pct,meas_cov_amp,meas_cov_ams,match,notes
-6mAh_real_4,VGCF,0.5,0,0,thinky,13281,0.97,-0.83,14.62,14.63,112.87,33.23,40.9,41.7,PASS,THINKY run (mixing_regime coat_embed); = ballmill since coat-seeding not impl (A4 TODO) so this doubles as the 0.5 ballmill point; volume-fill exact Δ0.009pp; n_obj 13181
-6mAh_real_4,VGCF,1,0,0,ballmill,26696,1.94,-1.66,13.79,13.80,112.87,33.23,60.7,62.2,PASS,meas from _thinky variant (volume-fill is mixing-independent; VGCF coat-regime seeding not impl so thinky≡ballmill); Hertz cov shown / Tabor 83.1/84.8; seed 15.89→13.80; err 0.01pp
-6mAh_real_4,VGCF,2,0,0,ballmill,53936,3.92,-3.36,12.09,12.11,112.87,33.23,45.7,46.4,PASS,volume-fill exact (13.80@1wt%→12.11@2wt%; err 0.02pp); --fibre-buckle AM-position-dependent applied (porosity identical 12.112 with/without buckle = buckle volume-neutral); cov=raw voxel plastic
-6mAh_real_4,VGCF,4,0,0,ballmill,110120,8.01,-6.86,8.59,8.63,112.87,33.23,51.7,52.5,PASS,volume-fill exact (Δ0.04pp); --fibre-buckle AM-pos applied; n_obj 109289 n_pts 2.93M (2x per wt% doubling); cov rises w/ carbon (45.7@2wt%→51.7@4wt%)
-6mAh_real_4,SuperP,0,0.5,0,thinky,589774,1.02,-0.87,14.58,14.59,112.87,33.23,40.9,47.2,PASS,THINKY run (coat_block); = ballmill since coat-seeding not impl (A4 TODO) so doubles as 0.5 ballmill; volume-fill exact Δ0.005pp; 0D CB n_obj 585k
-6mAh_real_4,SuperP,0,1,0,thinky,1185506,2.04,-1.75,13.7,13.71,112.87,33.23,42.4,53.7,PASS,THINKY run (coat_block); = ballmill since coat-seeding not impl (A4 TODO) so doubles as 1wt% ballmill; volume-fill exact Δ0.01pp; 0D CB n_obj 1.18M/n_pts 828k; soft E0.5/σy0.1
-6mAh_real_4,SuperP,0,2,0,thinky,2395205,4.13,-3.54,11.91,11.94,112.87,33.23,45.2,64.3,PASS,THINKY run (coat_block) = ballmill (coat-seeding A4 TODO); volume-fill exact Δ0.026pp; 0D CB n_obj 2.38M/n_pts 1.67M
-6mAh_real_4,SuperP,0,4,0,thinky,4890211,8.43,-7.22,8.23,8.28,112.87,33.23,50.4,78.2,PASS,THINKY run (coat_block) = ballmill (coat-seeding A4 TODO); volume-fill exact Δ0.045pp; 0D CB n_obj 4.85M/n_pts 3.42M; AM_S cov 78% (carbon coats AM strongly)
-6mAh_real_4,PTFE,0,0,0.5,ballmill,1087,0.88,-0.75,14.7,,,,,,,
-6mAh_real_4,PTFE,0,0,1,ballmill,2184,1.76,-1.51,13.94,,,,,,,
-6mAh_real_4,PTFE,0,0,2,ballmill,4413,3.56,-3.06,12.39,,,,,,,
-6mAh_real_4,PTFE,0,0,4,ballmill,9010,7.28,-6.24,9.21,,,,,,,
-6mAh_real_4,VGCF+PTFE,1,0,1,ballmill,29174,3.74,-3.21,12.24,,,,,,,
-6mAh_real_4,SuperP+PTFE,0,1,1,ballmill,1199809,3.85,-3.3,12.15,,,,,,,
+6mAh_real_4,VGCF,0.5,0,0,bm=thinky,13281,0.97,-0.83,14.62,14.63,112.87,33.23,40.9,41.7,PASS,THINKY run (mixing_regime coat_embed); = ballmill since coat-seeding not impl (A4 TODO) so this doubles as the 0.5 ballmill point; volume-fill exact Δ0.009pp; n_obj 13181
+6mAh_real_4,VGCF,1,0,0,bm=thinky,26696,1.94,-1.66,13.79,13.80,112.87,33.23,60.7,62.2,PASS,meas from _thinky variant (volume-fill is mixing-independent; VGCF coat-regime seeding not impl so thinky≡ballmill); Hertz cov shown / Tabor 83.1/84.8; seed 15.89→13.80; err 0.01pp
+6mAh_real_4,VGCF,2,0,0,bm=thinky,53936,3.92,-3.36,12.09,12.11,112.87,33.23,45.7,46.4,PASS,volume-fill exact (13.80@1wt%→12.11@2wt%; err 0.02pp); --fibre-buckle AM-position-dependent applied (porosity identical 12.112 with/without buckle = buckle volume-neutral); cov=raw voxel plastic
+6mAh_real_4,VGCF,4,0,0,bm=thinky,110120,8.01,-6.86,8.59,8.63,112.87,33.23,51.7,52.5,PASS,volume-fill exact (Δ0.04pp); --fibre-buckle AM-pos applied; n_obj 109289 n_pts 2.93M (2x per wt% doubling); cov rises w/ carbon (45.7@2wt%→51.7@4wt%)
+6mAh_real_4,SuperP,0,0.5,0,bm=thinky,589774,1.02,-0.87,14.58,14.59,112.87,33.23,40.9,47.2,PASS,ballmill=thinky byte-identical but TAUTOLOGICAL (CB_MIX identical for ballmill/thinky + regime not seeded → same code path; NOT a physics result); real mixing test = handmix (CB_MIX k8/clump4 differs) or A4 coat-seeding; volume-fill exact Δ0.005pp
+6mAh_real_4,SuperP,0,1,0,bm=thinky,1185506,2.04,-1.75,13.7,13.71,112.87,33.23,42.4,53.7,PASS,volume-fill exact Δ0.01pp; 0D CB n_obj 1.18M/n_pts 828k soft E0.5/σy0.1 (ballmill=thinky merged, same code)
+6mAh_real_4,SuperP,0,2,0,bm=thinky,2395205,4.13,-3.54,11.91,11.94,112.87,33.23,45.2,64.3,PASS,THINKY run (coat_block) = ballmill (coat-seeding A4 TODO); volume-fill exact Δ0.026pp; 0D CB n_obj 2.38M/n_pts 1.67M
+6mAh_real_4,SuperP,0,4,0,bm=thinky,4890211,8.43,-7.22,8.23,8.28,112.87,33.23,50.4,78.2,PASS,THINKY run (coat_block) = ballmill (coat-seeding A4 TODO); volume-fill exact Δ0.045pp; 0D CB n_obj 4.85M/n_pts 3.42M; AM_S cov 78% (carbon coats AM strongly)
+6mAh_real_4,PTFE,0,0,0.5,bm=thinky,1087,0.88,-0.75,14.7,,,,,,,
+6mAh_real_4,PTFE,0,0,1,bm=thinky,2184,1.76,-1.51,13.94,,,,,,,
+6mAh_real_4,PTFE,0,0,2,bm=thinky,4413,3.56,-3.06,12.39,,,,,,,
+6mAh_real_4,PTFE,0,0,4,bm=thinky,9010,7.28,-6.24,9.21,,,,,,,
+6mAh_real_4,VGCF+PTFE,1,0,1,bm=thinky,29174,3.74,-3.21,12.24,,,,,,,
+6mAh_real_4,SuperP+PTFE,0,1,1,bm=thinky,1199809,3.85,-3.3,12.15,,,,,,,
