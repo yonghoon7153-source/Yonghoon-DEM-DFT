@@ -33,8 +33,26 @@ echo ">> start $(date +%H:%M:%S)  base=$BASE"
 declare -A PAW=( [Li]="Li.pbe-sl-kjpaw_psl.1.0.0.UPF" [P]="P.pbe-n-kjpaw_psl.1.0.0.UPF"
                  [S]="S.pbe-nl-kjpaw_psl.1.0.0.UPF" [Cl]="Cl.pbe-nl-kjpaw_psl.1.0.0.UPF"
                  [O]="O.pbe-n-kjpaw_psl.0.1.UPF" [B]="B.pbe-n-kjpaw_psl.1.0.0.UPF" )
+mkdir -p pseudo
+# Li/P/S/Cl/O kjpaw already on KISTI — pull them in from the known pseudo dirs.
+for d in "$SLURM_SUBMIT_DIR/pseudo" ../pseudo ../manuscript_support/pseudo \
+         /scratch/x3430a02/kgy/pseudo "$HOME/pseudo"; do
+  [ -d "$d" ] || continue
+  for e in Li P S Cl O B; do
+    [ -f "pseudo/${PAW[$e]}" ] || { [ -f "$d/${PAW[$e]}" ] && cp "$d/${PAW[$e]}" pseudo/; }
+  done
+done
+# B kjpaw is NOT in the KISTI set — auto-fetch from QE pslibrary if still missing.
+Bp="${PAW[B]}"
+if [ ! -f "pseudo/$Bp" ]; then
+  echo ">> fetching $Bp from pseudopotentials.quantum-espresso.org ..."
+  ( cd pseudo && { wget -q "https://pseudopotentials.quantum-espresso.org/upf_files/$Bp" \
+       || curl -fsSLO "https://pseudopotentials.quantum-espresso.org/upf_files/$Bp"; } ) \
+    || echo "  auto-fetch failed (compute node has no internet?). On the LOGIN node run:
+    cd '$PWD/pseudo' && wget https://pseudopotentials.quantum-espresso.org/upf_files/$Bp"
+fi
 for e in Li P S Cl O B; do
-  test -f "pseudo/${PAW[$e]}" || { echo "ERROR: pseudo/${PAW[$e]} 없음 (B 받았나?)"; exit 1; }
+  test -f "pseudo/${PAW[$e]}" || { echo "ERROR: pseudo/${PAW[$e]} 없음 (B는 로그인노드에서 wget)"; exit 1; }
 done
 
 # 1) PAW SCF input: swap ATOMIC_SPECIES pseudo names, own outdir/prefix
