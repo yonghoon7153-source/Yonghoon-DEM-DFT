@@ -47,9 +47,11 @@ electrode springback magnitude.
 ## Driver B — breathing (chemo-mechanical cycling) — STUB wired to the engine
 `r → r·(1+ΔV/3)` from the NCM SOC-volume curve (independent physics: charge=shrink
 ≈ −2..−6 %; AM_P single-crystal vs AM_S poly differ).  Overlaps shift, contacts with
-δ_new<0 are **LOST** → σ_ionic/σ_e drop → cycle/SOC degradation.  The engine already
-handles the resulting strain + contact loss (self-test [5]); Phase-B = supply the
-SOC-volume curve as `--dvol` and re-solve σ on the perturbed contacts.
+δ_new<0 are **LOST** → σ_ionic/σ_e drop → cycle/SOC degradation.  Radius-driven ⇒ the
+centres are FIXED, so porosity is **solid-loss at fixed thickness** (NOT the centre-
+separation ε_zz engine — that would be a fake expansion; audit-fixed); the contact-loss
+topology is the transport output.  Phase-B = supply the SOC-volume curve as `--dvol`
+and re-solve σ on the perturbed contacts.
 
 ## Driver C — dilate (VGCF rod-network prop-open, Philipse rod jamming) — LIVE
 The packing half of the additive porosity effect (frame[5] DEM domain) that
@@ -61,8 +63,8 @@ The packing half of the additive porosity effect (frame[5] DEM domain) that
 - jamming ratio `x = φ_vgcf,bed/φ_jam`; prop gate `p = 1−exp(−x)`; bed expansion
   `ε_zz = p·φ_vgcf,bed·A`.  A = excluded-volume amplification, **BRACKETED**
   [1 (rods add own volume as height, conservative) … 1/φ_jam (full exclusion, capped
-  at loose 0.40)].  The exact A = AM/SE fillability of the open rod mesh → pinned only
-  by DEM co-compaction; reported as a bracket, A=1 as the nominal.
+  at loose 0.40)].  The exact A = AM/SE fillability of the open rod mesh; DEM would pin it
+  but VGCF-in-DEM is impossible → the bracket is final, A=1 the conservative nominal.
 
 **Result — VGCF wt% sweep on the input_6mAh_real_4 baseline (ε₀=14.28 %):**
 
@@ -79,11 +81,32 @@ The packing half of the additive porosity effect (frame[5] DEM domain) that
 - **vs Cho (2 wt% → +1 %p, i.e. 14.3→15.3 %)**: the 2 wt% bracket [11.8, 22.7]
   CONTAINS 15.3 (Cho sits at A≈1.5–2).  So the model brackets Cho and matches its
   direction, non-circularly — but the nominal A=1 is conservative (below no-additive).
-- **Honest**: the jamming ONSET + DIRECTION are non-circular (Philipse geometry); the
-  exact porosity WITHIN the bracket = fillability = DEM co-compaction (VGCF rods in
-  LIGGGHTS) pins it.  Combined with `--fibre-stiff` (+0.75 %p, direction+mechanism,
-  MPM) this is the complete honest VGCF picture: MPM owns direction+mechanism, dilate
-  gives the packing onset+bracket, DEM pins the single magnitude.
+- **Honest**: the ONSET + DIRECTION are non-circular (Philipse geometry); the exact
+  porosity WITHIN the bracket = AM/SE fillability of the rod mesh.  A DEM force balance
+  (VGCF rods in LIGGGHTS) would pin it — **but that is NOT possible** (can't put VGCF in
+  the DEM), so **the bracket is the FINAL analytic answer**; a single number requires
+  calibrating A to the Cho experiment (frame[4], legitimate — Cho is an independent
+  anchor, not our own model).  Combined with `--fibre-stiff` (+0.75 %p, direction+
+  mechanism, MPM) this is the complete honest VGCF picture: MPM owns direction+mechanism,
+  dilate gives the packing onset + bracket (Cho-calibratable), no residual DEM.
+- **L/D routing (verified)**: SuperP (L/D≈1) → φ_jam≫1 → p≈0 → **volume-fill (porosity
+  DOWN)**; VGCF (L/D≈67) → **prop (UP)**.  Same driver reproduces both the SuperP
+  campaign (down) and the VGCF direction (up).  volume-fill is NOT absent — it is the
+  p=0 baseline; net = volume-fill(−) vs prop(+), balance set by L/D.
+
+**Audit caveats (independent review, all fixes applied):**
+- **φ_jam = C·D/L is the Philipse random-CONTACT / network-formation onset, NOT mechanical
+  rigidity** (rigidity needs more contacts).  For prop-open the contact onset is the right
+  trigger; the field is renamed `contact_onset_reached` (was `jammed`) and C=5.4 carries a
+  literature range (3.5–10) → the onset *scale* is right, the exact wt% has a ±.
+- **x uses the BED-average rod fraction** (conservative — pore-local rods would reach onset
+  sooner) → the onset *position* is a modeling assumption; direction/mechanism stay geometric.
+- **A=1 nominal is non-monotonic at very high wt% (>~10 wt%)** — a benign artifact of the
+  exp-gate inflection (dilation slope briefly >1), never exceeds no-additive; report the
+  bracket / Cho-calibrated A at high loading, not bare A=1.
+- Fixed: bracket no longer inverts for L/D<5.4 (`A_upper=max(1,1/φ_jam)`); volume-fill
+  porosity clamped ≥0 with a `volume_fill_valid` flag for φ_bed>void; breathing porosity
+  is now solid-loss at fixed thickness (centres fixed) NOT a fake ε_zz; xi JSON-safe.
 
 Usage: `python3 scripts/dem_perturbation.py --case <cid> --driver dilate --vgcf-vol-pct 8.06`
 

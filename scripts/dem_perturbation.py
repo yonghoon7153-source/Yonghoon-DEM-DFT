@@ -235,8 +235,10 @@ LOOSE_POROSITY = 0.40   # random-loose-packing cap (the bed cannot prop looser t
 
 def _porosity_added_solid(p0, phi_add_bed, eps_zz):
     """Porosity after adding a solid fraction phi_add_bed (of the ORIGINAL bed volume)
-    and expanding the bed uniaxially by eps_zz.  Original bed volume normalised to 1."""
-    return 1.0 - ((1.0 - p0) + phi_add_bed) / (1.0 + eps_zz)
+    and expanding the bed uniaxially by eps_zz.  Original bed volume normalised to 1.
+    Clamped to ≥0 — the ε_zz=0 'volume-fill' baseline goes unphysical once phi_add_bed
+    exceeds the void p0 (the bed MUST dilate just to fit the fibre); the caller flags it."""
+    return max(0.0, 1.0 - ((1.0 - p0) + phi_add_bed) / (1.0 + eps_zz))
 
 
 def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF_D_UM):
@@ -264,29 +266,35 @@ def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF
     # PHYSICAL sanity: rod-network mesh size ξ = D·√(π/4φ) (semidilute rod correlation length).
     # If ξ < AM diameter, the rods geometrically BLOCK the AM from packing dense → prop is REAL
     # (not just parameterised).  SE (~ξ) can still thread the mesh.
-    xi = D_um * math.sqrt(math.pi / (4.0 * phi_bed)) if phi_bed > 0 else float('inf')
+    xi = D_um * math.sqrt(math.pi / (4.0 * phi_bed)) if phi_bed > 0 else None
 
     def _por(A):
         return _porosity_added_solid(p0, phi_bed, p * phi_bed * A)
     por_vf = _porosity_added_solid(p0, phi_bed, 0.0)          # volume-fill (no prop)
     por_lower = _por(1.0)                                     # A=1 conservative nominal
-    por_upper = min(LOOSE_POROSITY, _por(1.0 / phi_jam) if phi_jam > 0 else LOOSE_POROSITY)
+    # excluded-volume amplification can't be < the rod's own volume → A_upper ≥ 1 (guards L/D<5.4,
+    # i.e. φ_jam>1, where 1/φ_jam<1 would invert the bracket).  Capped at loose packing.
+    A_upper = max(1.0, 1.0 / phi_jam) if phi_jam > 0 else 1.0
+    por_upper = min(LOOSE_POROSITY, _por(A_upper))
     return {
-        'driver': f'dilate (VGCF rod-jamming, Philipse; L/D={L_um/D_um:.0f})',
+        'driver': f'dilate (VGCF rod prop-open, Philipse contact-onset; L/D={L_um/D_um:.0f})',
         'vgcf_vol_pct_of_solid': round(vgcf_vol_pct_solid, 3),
         'phi_jam_vol_pct': round(100 * phi_jam, 2),
         'phi_vgcf_bed_vol_pct': round(100 * phi_bed, 2),
         'jamming_ratio_x': round(x, 3),
-        'jammed': bool(x >= 1.0),
+        'contact_onset_reached': bool(x >= 1.0),             # x≥1 = Philipse random-CONTACT onset (network forms)
         'prop_gate_p': round(p, 3),
-        'rod_mesh_xi_um': round(xi, 3),                          # < AM dia → rods block AM (prop real)
+        'rod_mesh_xi_um': (round(xi, 3) if xi is not None else None),   # < AM dia → rods block AM (prop real)
+        'volume_fill_valid': bool(phi_bed <= p0),            # False → fibre vol > void → vol-fill baseline unphysical
         'porosity_no_additive_pct': round(100 * p0, 3),
         'porosity_volume_fill_pct': round(100 * por_vf, 3),
         'porosity_dilate_nominal_pct': round(100 * por_lower, 3),      # A=1
-        'porosity_dilate_bracket_pct': [round(100 * por_lower, 3), round(100 * por_upper, 3)],
+        'porosity_dilate_bracket_pct': sorted([round(100 * por_lower, 3), round(100 * por_upper, 3)]),
         'eps_zz_nominal': round(p * phi_bed * 1.0, 5),
-        'note': ('onset(Philipse)+direction are non-circular; the value WITHIN the bracket '
-                 '= AM/SE fillability of the rod mesh → pinned only by DEM co-compaction. '
+        'note': ('φ_jam = Philipse random-CONTACT (network-formation) onset, NOT mechanical rigidity; '
+                 'x uses the BED-average rod fraction (conservative — pore-local would jam sooner). '
+                 'onset+direction non-circular; the value WITHIN the bracket = AM/SE fillability of the '
+                 'rod mesh (DEM would pin it, but DEM-with-VGCF is not possible → bracket is final). '
                  'porosity UP vs volume-fill; vs no-additive depends on A.'),
     }
 
@@ -342,7 +350,7 @@ def contact_area_change(state: DEMState, sep_change, new_radius):
     ratios = []
     for i, c in enumerate(state.contacts):
         d_old = c['delta']
-        # δ_new = δ_old − Δsep   (springback: δ·(1−COR²));  breathing folds Δr into sep
+        # δ_new = δ_old − Δsep   (springback: residual δ·(1−k₁/k₂));  breathing folds Δr into sep
         d_new = d_old - sep_change[i]
         if d_old > 0:
             if d_new <= 0:
@@ -364,34 +372,55 @@ def apply_driver(state: DEMState, driver_name, dvol_by_type=None,
             raise ValueError('dilate needs --vgcf-vol-pct (VGCF vol% of solid)')
         return driver_dilate(state, vgcf_vol_pct, vgcf_L, vgcf_D), None, None
     if driver_name == 'springback':
+        # centre-SEPARATION driver: contacts recover overlap → best-fit ε_zz → solid-conserving expansion.
         sep, new_r = driver_springback(state)
         k = REAL14['k2_over_k1']
         drv = (f'springback (hooke/hysteresis unload; recovery δ/(k₂/k₁), m6: '
                f'AM-AM {1/k[(1,1)]:.2f}·δ / AM-SE {1/k[(1,3)]:.2f}·δ / SE-SE {1/k[(3,3)]:.2f}·δ; '
                f'adhesion m7 → upper bound)')
-    elif driver_name == 'breathing':
+        ezz = bestfit_uniaxial_ezz(state, sep)
+        p0, p1 = porosity_after(state, ezz)
+        ca = contact_area_change(state, sep, new_r)
+        dm = [c['delta'] for c in state.contacts if c['delta'] > 0]
+        out = {
+            'driver': drv,
+            'n_atoms': len(state.atoms), 'n_contacts': len(state.contacts),
+            'eps_zz': round(float(ezz), 6),
+            'porosity_loaded_pct': round(100.0 * p0, 3),
+            'porosity_perturbed_pct': round(100.0 * p1, 3),
+            'delta_porosity_pp': round(100.0 * (p1 - p0), 3),
+            'mean_overlap_sim': round(float(np.mean(dm)), 8) if dm else 0.0,
+            'contacts': ca,
+        }
+        if state.thickness_um_loaded:
+            out['thickness_loaded_um'] = round(state.thickness_um_loaded, 3)
+            out['thickness_perturbed_um'] = round(state.thickness_um_loaded * (1 + ezz), 3)
+        return out, sep, new_r
+    if driver_name == 'breathing':
+        # RADIUS-driven: particle centres are FIXED, only radii change → the centre-separation ε_zz
+        # engine does NOT apply.  Porosity = solid-loss at FIXED thickness (displacement BC); the
+        # contact-loss topology is the transport-relevant output.  [Phase-B stub — wire NCM SOC-volume.]
         sep, new_r = driver_breathing(state, dvol_by_type or {})
-        drv = f'breathing (ΔV/V={dvol_by_type})'
-    else:
-        raise ValueError(f'unknown driver: {driver_name}')
-    ezz = bestfit_uniaxial_ezz(state, sep)
-    p0, p1 = porosity_after(state, ezz)
-    ca = contact_area_change(state, sep, new_r)
-    dm = [c['delta'] for c in state.contacts if c['delta'] > 0]
-    out = {
-        'driver': drv,
-        'n_atoms': len(state.atoms), 'n_contacts': len(state.contacts),
-        'eps_zz': round(float(ezz), 6),
-        'porosity_loaded_pct': round(100.0 * p0, 3),
-        'porosity_perturbed_pct': round(100.0 * p1, 3),
-        'delta_porosity_pp': round(100.0 * (p1 - p0), 3),
-        'mean_overlap_sim': round(float(np.mean(dm)), 8) if dm else 0.0,
-        'contacts': ca,
-    }
-    if state.thickness_um_loaded:
-        out['thickness_loaded_um'] = round(state.thickness_um_loaded, 3)
-        out['thickness_perturbed_um'] = round(state.thickness_um_loaded * (1 + ezz), 3)
-    return out, sep, new_r
+        vol_old = sum(a['radius'] ** 3 for a in state.atoms.values())
+        vol_new = sum(new_r[aid] ** 3 for aid in state.atoms)
+        vr = (vol_new / vol_old) if vol_old > 0 else 1.0
+        p0 = state.porosity_loaded if state.porosity_loaded is not None else _geometric_porosity(state)
+        p1 = max(0.0, 1.0 - (1.0 - p0) * vr)               # solid ×vr at fixed thickness
+        ca = contact_area_change(state, sep, new_r)
+        out = {
+            'driver': f'breathing (ΔV/V={dvol_by_type}; solid-loss at fixed thickness)',
+            'n_atoms': len(state.atoms), 'n_contacts': len(state.contacts),
+            'mean_volume_ratio': round(float(vr), 5),
+            'porosity_loaded_pct': round(100.0 * p0, 3),
+            'porosity_perturbed_pct': round(100.0 * p1, 3),
+            'delta_porosity_pp': round(100.0 * (p1 - p0), 3),
+            'contacts': ca,
+            'note': ('Phase-B STUB: centres fixed, radii change → porosity = solid-loss at fixed '
+                     'thickness (NOT the ε_zz path); contact-loss topology feeds the σ re-solve. '
+                     'Wire the NCM SOC-volume curve as --dvol.'),
+        }
+        return out, sep, new_r
+    raise ValueError(f'unknown driver: {driver_name}')
 
 
 def write_perturbed_csvs(state: DEMState, sep_change, new_radius, ezz, out_dir):
@@ -474,24 +503,31 @@ def selftest():
     assert abs(bestfit_uniaxial_ezz(st_h, driver_springback(st_h)[0])) < 1e-12
     print("  [4] horizontal contact: ε_zz=0 (only z-contacts spring the platen) ✓")
 
-    # (5) breathing: delithiation shrink (ΔV/V=−6%) parts contacts → porosity ↑.
+    # (5) breathing: delithiation shrink (ΔV/V=−6%) → solid-loss at FIXED thickness → porosity ↑ +
+    #     contacts lost (topology).  NOT the ε_zz path (centres fixed).
     st5 = chain(1)
-    sepb, nrb = driver_breathing(st5, {1: -0.06})
-    ezzb = bestfit_uniaxial_ezz(st5, sepb)
-    _, p1b = porosity_after(st5, ezzb)
-    assert ezzb > 0 and p1b > st5.porosity_loaded, (ezzb, p1b)
-    print(f"  [5] breathing ΔV/V=−6%: ε_zz={ezzb:.5f}>0, porosity {100*st5.porosity_loaded:.1f}→"
-          f"{100*p1b:.2f}% ✓")
+    out5, sepb, nrb = apply_driver(st5, 'breathing', dvol_by_type={1: -0.06})
+    vr = sum(nrb[a] ** 3 for a in st5.atoms) / sum(x['radius'] ** 3 for x in st5.atoms.values())
+    assert vr < 1.0 and out5['porosity_perturbed_pct'] > out5['porosity_loaded_pct'], (vr, out5)
+    assert abs((1 - (1 - st5.porosity_loaded) * vr) * 100 - out5['porosity_perturbed_pct']) < 0.01, out5
+    print(f"  [5] breathing ΔV/V=−6% (solid-loss, fixed thickness): vol_ratio={vr:.4f} → "
+          f"porosity {out5['porosity_loaded_pct']}→{out5['porosity_perturbed_pct']}% "
+          f"(NOT fake ε_zz), contacts lost={out5['contacts']['n_lost']} ✓")
 
     # (6) dilate: VGCF rod-jamming prop (Philipse).  φ_jam=5.4·0.15/10=0.081; real_4-like ε₀=0.1428,
     #     4 wt% = 8.06 vol% of solid → x≈0.85 (just below jamming); prop lifts porosity ABOVE volume-fill.
     st6 = _mk_state({1: {'type': 1, 'x': 0, 'y': 0, 'z': 1.0, 'radius': 1.0}}, [], poros=0.1428)
     dd = driver_dilate(st6, vgcf_vol_pct_solid=8.06, L_um=10.0, D_um=0.15)
     assert abs(dd['phi_jam_vol_pct'] - 8.1) < 0.2, dd
-    assert 0.80 < dd['jamming_ratio_x'] < 0.90 and not dd['jammed'], dd
+    assert 0.80 < dd['jamming_ratio_x'] < 0.90 and not dd['contact_onset_reached'], dd
     assert dd['porosity_dilate_nominal_pct'] > dd['porosity_volume_fill_pct'], dd
     lo, hi = dd['porosity_dilate_bracket_pct']
     assert lo <= dd['porosity_dilate_nominal_pct'] <= hi + 1e-9 and hi <= 100 * LOOSE_POROSITY + 1e-9, dd
+    # BUG-1 regression: SuperP (L/D=1 → φ_jam>1) must NOT invert the bracket (lo≤hi) and stay volume-fill.
+    sp = driver_dilate(st6, vgcf_vol_pct_solid=8.06, L_um=0.2, D_um=0.2)
+    slo, shi = sp['porosity_dilate_bracket_pct']
+    assert slo <= shi and slo <= sp['porosity_dilate_nominal_pct'] <= shi + 1e-9, sp
+    assert sp['prop_gate_p'] < 0.05 and abs(sp['porosity_dilate_nominal_pct'] - sp['porosity_volume_fill_pct']) < 0.2, sp
     print(f"  [6] dilate VGCF 4wt% (Philipse L/D=67): φ_jam={dd['phi_jam_vol_pct']}vol% x={dd['jamming_ratio_x']} "
           f"→ vol-fill {dd['porosity_volume_fill_pct']}% → dilate {dd['porosity_dilate_nominal_pct']}% "
           f"bracket{dd['porosity_dilate_bracket_pct']} ✓")
@@ -534,7 +570,7 @@ def main(argv=None):
                                        vgcf_vol_pct=a.vgcf_vol_pct, vgcf_L=a.vgcf_l, vgcf_D=a.vgcf_d)
     print(json.dumps(summary, indent=2, ensure_ascii=False))
     if a.write_csv and sep is not None:
-        p = write_perturbed_csvs(st, sep, new_r, summary['eps_zz'], a.write_csv)
+        p = write_perturbed_csvs(st, sep, new_r, summary.get('eps_zz', 0.0), a.write_csv)
         print(f"  wrote perturbed atoms.csv + contacts.csv → {p}  "
               f"(rerun scripts/network_conductivity.py there for the perturbed σ)")
     if a.out:
