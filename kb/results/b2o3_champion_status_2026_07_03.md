@@ -14,8 +14,8 @@
 | 이온 | BVSE 채널 | ✅ | 채널부피 **+45%**; percolation onset 면내 0.50 / c축 1.99 val² (**4× 이방성 — B₂O₃층이 c축 막음**) | — |
 | 이온 | MD σ₃₀₀ | ✅ | **18.5 mS/cm** (Ea 0.223) | 13.9 (0.224) → **1.33×, D0-driven** |
 | 기계 | EOS B0 | ✅ | **24.48 GPa** | 21.7 (**+13%**) |
-| 기계 | **DFT Cij** | ▶ **824692 (8/12)** | 지금까지 UMA만(E~41) → DFT Cij 채우는 중 | comp1 22.06 / modelc 27.66 (E_VRH) |
-| 전자 | **ICOHP** | ▶ **824939 (PAW SCF)** | 지금까지 ELF만, LOBSTER 없음 → 채우는 중 | P–S −6.00, Li–Cl −2.10, Li–S −1.72 |
+| 기계 | **DFT Cij** | ⚠ 일부 | **Bulk 27 GPa 신뢰**(relaxed-ion normal + EOS 24.5 교차검증, +13% 강화). **G/E는 relaxed-ion shear ±basin 오염으로 미보고** (C66 붕괴·고유값 음수). clamped-ion 러너 준비됨(`tools/elastic/run_b2o3_elastic_clamped_kisti.sh`)이나 보류 | comp1 22.06 / modelc 27.66 (E_VRH); clamped ≈52 |
+| 전자 | **ICOHP** | ▶ LOBSTER **825717** | wf_collect 픽스 후 재실행 중(로그인노드가 포그라운드를 Killed해서 sbatch로). minimal basis라 spilling 주의 | P–S −6.00, Li–Cl −2.10, Li–S −1.72 |
 | 전자 | gap/Bader/ELF/CDD | ✅ | gap ~2.0 eV, B+3/P+5/O−1.9, **B–S ELF 0.959(최공유)**, P–O 0.930 | — |
 | 안정성 | phonon/hull | ✅ | 0 허수모드, lowest 13.7 cm⁻¹, +37.5 meV/at | — |
 | 안정성 | 산화창 ESW | ✅ | **0.31 V** (ox 2.03 / red 1.72) | 0.90 V |
