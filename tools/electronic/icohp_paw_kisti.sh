@@ -85,6 +85,9 @@ s = re.sub(r"(?m)^\s*([A-Za-z]{1,2}[0-9]?)\s+([\d.]+\s+\S+\.UPF)", swap, s)
 s = re.sub(r"calculation\s*=\s*'[^']*'", "calculation='scf'", s)
 s = re.sub(r"prefix\s*=\s*'[^']*'", "prefix='b2o3'", s)
 s = re.sub(r"outdir\s*=\s*'[^']*'", "outdir='./tmp_paw'", s)
+# LOBSTER auto-reads THIS scf input and hard-fails without wf_collect present
+if not re.search(r"wf_collect", s, re.I):
+    s = re.sub(r"(&(?:control|CONTROL)[^\n]*\n)", r"\1  wf_collect=.true.\n", s, count=1)
 # robust SCF for a 128-atom insulator: local-TF + modest beta
 for k,v in [("mixing_mode","'local-TF'"),("mixing_beta","0.2"),("electron_maxstep","300")]:
     s = re.sub(rf"{k}\s*=\s*[^\n,]+", f"{k}={v}", s) if re.search(rf"{k}\s*=", s) \
