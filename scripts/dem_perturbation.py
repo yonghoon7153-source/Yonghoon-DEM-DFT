@@ -222,6 +222,71 @@ def driver_breathing(state: DEMState, dvol_by_type):
 
 
 # ─────────────────────────────────────────────────────────────────────────────
+# DRIVER C — dilate: VGCF rod-network PROP-OPEN (Philipse rod jamming)
+#   The packing half of the additive porosity effect (frame[5] DEM domain) that
+#   --fibre-stiff (frozen AM) could not reach: the VGCF fibre network jams and
+#   holds the bed open → porosity UP (Cho-2024 conflicting-roles direction).
+# ─────────────────────────────────────────────────────────────────────────────
+VGCF_L_UM = 10.0        # as-grown vapour-grown carbon fibre length (µm)
+VGCF_D_UM = 0.15        # fibre diameter (150 nm)
+PHILIPSE_C = 5.4        # Philipse 1996 random-contact rod jamming: φ_jam·(L/D) = 5.4
+LOOSE_POROSITY = 0.40   # random-loose-packing cap (the bed cannot prop looser than this)
+
+
+def _porosity_added_solid(p0, phi_add_bed, eps_zz):
+    """Porosity after adding a solid fraction phi_add_bed (of the ORIGINAL bed volume)
+    and expanding the bed uniaxially by eps_zz.  Original bed volume normalised to 1."""
+    return 1.0 - ((1.0 - p0) + phi_add_bed) / (1.0 + eps_zz)
+
+
+def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF_D_UM):
+    """VGCF rod-network prop-open via Philipse rod jamming.  NON-CIRCULAR: the
+    jamming onset comes from the fibre geometry (L/D), never from a target porosity.
+
+      φ_jam = C_rod·D/L          (Philipse 1996; VGCF L/D≈67 → φ_jam≈8 vol% ≈ 4 wt%
+                                  → low-wt% carbon has an OUTSIZED structural effect)
+      φ_vgcf,bed = vol%_of_solid · (1−ε₀)
+      x = φ_vgcf,bed / φ_jam      (jamming ratio; x≥1 = rods jam)
+      p = 1 − exp(−x)            (prop gate: weak below jamming, →1 above)
+      eps_zz = p · φ_vgcf,bed · A (bed expansion; A = excluded-volume amplification)
+
+    A is BRACKETED and reported, NOT fudged to a target:
+      • A=1  (lower)  — rods add their own volume as height (conservative prop).
+      • A=1/φ_jam (upper) — full rod-network exclusion, capped at LOOSE_POROSITY.
+    The exact A within the bracket = the AM/SE fillability of the open rod mesh, which
+    only the DEM force balance (VGCF rods in LIGGGHTS) pins.  So this returns the
+    jamming ONSET + DIRECTION + porosity BRACKET, with A=1 as the reported nominal."""
+    p0 = state.porosity_loaded if state.porosity_loaded is not None else _geometric_porosity(state)
+    phi_jam = PHILIPSE_C * D_um / L_um
+    phi_bed = (vgcf_vol_pct_solid / 100.0) * (1.0 - p0)
+    x = (phi_bed / phi_jam) if phi_jam > 0 else 0.0
+    p = 1.0 - math.exp(-x)
+
+    def _por(A):
+        return _porosity_added_solid(p0, phi_bed, p * phi_bed * A)
+    por_vf = _porosity_added_solid(p0, phi_bed, 0.0)          # volume-fill (no prop)
+    por_lower = _por(1.0)                                     # A=1 conservative nominal
+    por_upper = min(LOOSE_POROSITY, _por(1.0 / phi_jam) if phi_jam > 0 else LOOSE_POROSITY)
+    return {
+        'driver': f'dilate (VGCF rod-jamming, Philipse; L/D={L_um/D_um:.0f})',
+        'vgcf_vol_pct_of_solid': round(vgcf_vol_pct_solid, 3),
+        'phi_jam_vol_pct': round(100 * phi_jam, 2),
+        'phi_vgcf_bed_vol_pct': round(100 * phi_bed, 2),
+        'jamming_ratio_x': round(x, 3),
+        'jammed': bool(x >= 1.0),
+        'prop_gate_p': round(p, 3),
+        'porosity_no_additive_pct': round(100 * p0, 3),
+        'porosity_volume_fill_pct': round(100 * por_vf, 3),
+        'porosity_dilate_nominal_pct': round(100 * por_lower, 3),      # A=1
+        'porosity_dilate_bracket_pct': [round(100 * por_lower, 3), round(100 * por_upper, 3)],
+        'eps_zz_nominal': round(p * phi_bed * 1.0, 5),
+        'note': ('onset(Philipse)+direction are non-circular; the value WITHIN the bracket '
+                 '= AM/SE fillability of the rod mesh → pinned only by DEM co-compaction. '
+                 'porosity UP vs volume-fill; vs no-additive depends on A.'),
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
 # ENGINE — confined-uniaxial macroscopic strain from contact-overlap changes
 # ─────────────────────────────────────────────────────────────────────────────
 def bestfit_uniaxial_ezz(state: DEMState, sep_change):
@@ -287,7 +352,12 @@ def contact_area_change(state: DEMState, sep_change, new_radius):
     }
 
 
-def apply_driver(state: DEMState, driver_name, dvol_by_type=None):
+def apply_driver(state: DEMState, driver_name, dvol_by_type=None,
+                 vgcf_vol_pct=None, vgcf_L=VGCF_L_UM, vgcf_D=VGCF_D_UM):
+    if driver_name == 'dilate':                          # analytic (Philipse), not contact-based
+        if vgcf_vol_pct is None:
+            raise ValueError('dilate needs --vgcf-vol-pct (VGCF vol% of solid)')
+        return driver_dilate(state, vgcf_vol_pct, vgcf_L, vgcf_D), None, None
     if driver_name == 'springback':
         sep, new_r = driver_springback(state)
         k = REAL14['k2_over_k1']
@@ -408,6 +478,19 @@ def selftest():
     print(f"  [5] breathing ΔV/V=−6%: ε_zz={ezzb:.5f}>0, porosity {100*st5.porosity_loaded:.1f}→"
           f"{100*p1b:.2f}% ✓")
 
+    # (6) dilate: VGCF rod-jamming prop (Philipse).  φ_jam=5.4·0.15/10=0.081; real_4-like ε₀=0.1428,
+    #     4 wt% = 8.06 vol% of solid → x≈0.85 (just below jamming); prop lifts porosity ABOVE volume-fill.
+    st6 = _mk_state({1: {'type': 1, 'x': 0, 'y': 0, 'z': 1.0, 'radius': 1.0}}, [], poros=0.1428)
+    dd = driver_dilate(st6, vgcf_vol_pct_solid=8.06, L_um=10.0, D_um=0.15)
+    assert abs(dd['phi_jam_vol_pct'] - 8.1) < 0.2, dd
+    assert 0.80 < dd['jamming_ratio_x'] < 0.90 and not dd['jammed'], dd
+    assert dd['porosity_dilate_nominal_pct'] > dd['porosity_volume_fill_pct'], dd
+    lo, hi = dd['porosity_dilate_bracket_pct']
+    assert lo <= dd['porosity_dilate_nominal_pct'] <= hi + 1e-9 and hi <= 100 * LOOSE_POROSITY + 1e-9, dd
+    print(f"  [6] dilate VGCF 4wt% (Philipse L/D=67): φ_jam={dd['phi_jam_vol_pct']}vol% x={dd['jamming_ratio_x']} "
+          f"→ vol-fill {dd['porosity_volume_fill_pct']}% → dilate {dd['porosity_dilate_nominal_pct']}% "
+          f"bracket{dd['porosity_dilate_bracket_pct']} ✓")
+
     print("SELF-TEST PASSED ✓")
     return True
 
@@ -417,7 +500,11 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--case', help='case dir with atoms.csv + contacts.csv (+ full_metrics.json)')
-    ap.add_argument('--driver', default='springback', choices=['springback', 'breathing'])
+    ap.add_argument('--driver', default='springback', choices=['springback', 'breathing', 'dilate'])
+    ap.add_argument('--vgcf-vol-pct', type=float, default=None,
+                    help='dilate: VGCF vol%% of solid (from the campaign; e.g. 4wt%% → 8.06).')
+    ap.add_argument('--vgcf-l', type=float, default=VGCF_L_UM, help='dilate: VGCF fibre length µm (10).')
+    ap.add_argument('--vgcf-d', type=float, default=VGCF_D_UM, help='dilate: VGCF fibre diameter µm (0.15).')
     ap.add_argument('--cor', type=float, default=DEFAULT_COR,
                     help=f'coefficientRestitution (m3, production {DEFAULT_COR}) — the VISCOUS damping; '
                          f'informational only.  Springback uses coefficientMaxElasticStiffness (m6 = k₂/k₁), '
@@ -438,9 +525,10 @@ def main(argv=None):
     dvol = None
     if a.dvol:
         dvol = {int(k): float(v) for k, v in (kv.split(':') for kv in a.dvol.split(','))}
-    summary, sep, new_r = apply_driver(st, a.driver, dvol_by_type=dvol)
+    summary, sep, new_r = apply_driver(st, a.driver, dvol_by_type=dvol,
+                                       vgcf_vol_pct=a.vgcf_vol_pct, vgcf_L=a.vgcf_l, vgcf_D=a.vgcf_d)
     print(json.dumps(summary, indent=2, ensure_ascii=False))
-    if a.write_csv:
+    if a.write_csv and sep is not None:
         p = write_perturbed_csvs(st, sep, new_r, summary['eps_zz'], a.write_csv)
         print(f"  wrote perturbed atoms.csv + contacts.csv → {p}  "
               f"(rerun scripts/network_conductivity.py there for the perturbed σ)")

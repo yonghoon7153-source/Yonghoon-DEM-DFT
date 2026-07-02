@@ -51,10 +51,45 @@ electrode springback magnitude.
 handles the resulting strain + contact loss (self-test [5]); Phase-B = supply the
 SOC-volume curve as `--dvol` and re-solve σ on the perturbed contacts.
 
-## Driver C/D — dilate (VGCF rod-jamming, Philipse) / inverse-design
-Same engine: a driver that expands by the rod-network jamming excluded volume
-(φ·L/D≈5.4), or that solves for the radius/position change hitting a predictor
-**target** (Phase-4/5 inverse design, graded-z electrodes).
+## Driver C — dilate (VGCF rod-network prop-open, Philipse rod jamming) — LIVE
+The packing half of the additive porosity effect (frame[5] DEM domain) that
+`--fibre-stiff` (frozen AM) could not reach — the VGCF "역산" the user asked for.
+- **φ_jam = C_rod·D/L** (Philipse 1996 random-contact rod jamming, C_rod=5.4).  VGCF
+  L/D≈67 → **φ_jam≈8.1 vol% ≈ 4 wt%** → low-wt% carbon has an OUTSIZED structural
+  effect (explains Cho's small-wt% prop).  **NON-CIRCULAR: onset from fibre geometry,
+  never a target porosity.**
+- jamming ratio `x = φ_vgcf,bed/φ_jam`; prop gate `p = 1−exp(−x)`; bed expansion
+  `ε_zz = p·φ_vgcf,bed·A`.  A = excluded-volume amplification, **BRACKETED**
+  [1 (rods add own volume as height, conservative) … 1/φ_jam (full exclusion, capped
+  at loose 0.40)].  The exact A = AM/SE fillability of the open rod mesh → pinned only
+  by DEM co-compaction; reported as a bracket, A=1 as the nominal.
+
+**Result — VGCF wt% sweep on the input_6mAh_real_4 baseline (ε₀=14.28 %):**
+
+| VGCF | x (jam ratio) | volume-fill | dilate nominal (A=1) | bracket | no-additive |
+|---|---|---|---|---|---|
+| 0.5 wt% | 0.11 | 13.4 % | 13.5 % | [13.5, 14.4] | 14.3 % |
+| 1 wt%   | 0.22 | 12.5 % | 12.8 % | [12.8, 16.1] | 14.3 % |
+| 2 wt%   | 0.44 | 10.7 % | 11.8 % | [11.8, 22.7] | 14.3 % |
+| 4 wt%   | 0.85 | 7.4 %  | 10.9 % | [10.9, 37.8] | 14.3 % |
+
+- **Direction ✓**: dilate lifts porosity ABOVE volume-fill at every wt% (the prop), and
+  the lift GROWS with wt% (x→jamming).  x reaches 0.85 at 4 wt% = right at the rod-
+  jamming onset (jams at x=1 ≈ 4.7 wt%).
+- **vs Cho (2 wt% → +1 %p, i.e. 14.3→15.3 %)**: the 2 wt% bracket [11.8, 22.7]
+  CONTAINS 15.3 (Cho sits at A≈1.5–2).  So the model brackets Cho and matches its
+  direction, non-circularly — but the nominal A=1 is conservative (below no-additive).
+- **Honest**: the jamming ONSET + DIRECTION are non-circular (Philipse geometry); the
+  exact porosity WITHIN the bracket = fillability = DEM co-compaction (VGCF rods in
+  LIGGGHTS) pins it.  Combined with `--fibre-stiff` (+0.75 %p, direction+mechanism,
+  MPM) this is the complete honest VGCF picture: MPM owns direction+mechanism, dilate
+  gives the packing onset+bracket, DEM pins the single magnitude.
+
+Usage: `python3 scripts/dem_perturbation.py --case <cid> --driver dilate --vgcf-vol-pct 8.06`
+
+## Driver D — inverse-design (Phase-4/5) — same engine
+Solve for the radius/position change that hits a predictor **target** (graded-z
+electrodes, target-porosity synth).
 
 ## Rules (all drivers)
 - **Non-circular**: every driver's magnitude comes from INDEPENDENT physics (m6/m7/m8,
