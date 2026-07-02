@@ -283,18 +283,26 @@ def main(argv):
     arch = {'gpu': ti.gpu, 'cuda': ti.cuda, 'vulkan': ti.vulkan, 'cpu': ti.cpu}[args.arch]
     kw = dict(arch=arch, default_fp=ti.f32, random_seed=args.seed)
     if args.arch in ('gpu', 'cuda'):
-        # cap --gpu-mem to the real GPU VRAM so a zip baked for a big GPU (e.g. --gpu-mem 28) doesn't
-        # crash Taichi ('Assertion failure: prealloc_size <= total_mem') on a smaller card (RTX 3090=24GB).
+        # cap --gpu-mem to the real USABLE VRAM so a zip baked for a big GPU (e.g. --gpu-mem 28) doesn't
+        # OOM at ti.init on a smaller card (RTX 3090 = 24GB).  Taichi PRE-ALLOCATES device_memory_GB up
+        # front, so it must fit in FREE VRAM (not just total) — a desktop card driving a display, or a
+        # leftover run, has free < total → cuMemAlloc CUDA_ERROR_OUT_OF_MEMORY.  Cap to min(85% total,
+        # 90% free); if nvidia-smi is unavailable/unparseable, fall back to a safe 20GB (never leave 28).
+        _cap = 20.0
+        _msg = 'nvidia-smi unavailable → safe default'
         try:
             import subprocess as _sp
-            _tot_mb = int(_sp.run(['nvidia-smi', '--query-gpu=memory.total', '--format=csv,noheader,nounits'],
-                                  capture_output=True, text=True, timeout=10).stdout.strip().split('\n')[0])
-            _cap = max(2.0, round(_tot_mb / 1024.0 * 0.85, 1))     # 85% of total VRAM (GB), leave headroom
-            if args.gpu_mem > _cap:
-                print(f"  [mpm] --gpu-mem {args.gpu_mem} > GPU VRAM {_tot_mb/1024:.0f}GB → capping to {_cap}GB")
-                args.gpu_mem = _cap
-        except Exception:
-            pass
+            _q = _sp.run(['nvidia-smi', '--query-gpu=memory.total,memory.free',
+                          '--format=csv,noheader,nounits'],
+                         capture_output=True, text=True, timeout=10).stdout.strip().split('\n')[0]
+            _tot_mb, _free_mb = (int(_x) for _x in _q.split(','))
+            _cap = max(2.0, round(min(_tot_mb * 0.85, _free_mb * 0.90) / 1024.0, 1))
+            _msg = f"total {_tot_mb/1024:.0f}GB, free {_free_mb/1024:.0f}GB"
+        except Exception as _e:
+            _msg = f"nvidia-smi query failed ({_e}) → safe default"
+        if args.gpu_mem > _cap:
+            print(f"  [mpm] --gpu-mem {args.gpu_mem} > usable VRAM ({_msg}) → capping to {_cap}GB")
+            args.gpu_mem = _cap
         kw['device_memory_GB'] = args.gpu_mem
     ti.init(**kw)
 

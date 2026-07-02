@@ -254,7 +254,10 @@ python3 scripts/mpm3d_compaction.py \\
   --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
-  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags}
+  --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} \\
+  || {{ echo "[run_mpm] STEP 1 (compaction) FAILED — see the trace above.  NOT running the payload: it would"; \\
+        echo "          rebuild mpm_payload.json from the STALE se_dump.npy of a PREVIOUS run and report a"; \\
+        echo "          leftover porosity as if it were this run.  Fix the error and re-run."; exit 1; }}
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
