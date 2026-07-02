@@ -12,7 +12,7 @@
 #SBATCH -J llm_finetuning_icohp
 #SBATCH -p amd_a100nv_8
 #SBATCH -N 1
-#SBATCH --ntasks-per-node=8
+#SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
 #SBATCH --gres=gpu:1
 #SBATCH --time=03:00:00
