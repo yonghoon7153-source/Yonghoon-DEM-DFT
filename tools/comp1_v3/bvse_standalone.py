@@ -35,9 +35,26 @@ def parse_cif(fn):
     A = np.array([[a, 0, 0],
                   [b*cs(ga), b*math.sin(ga), 0],
                   [c*cs(be), c*(cs(al)-cs(be)*cs(ga))/math.sin(ga), c*v/math.sin(ga)]])
+    # header-aware atom parse: works for both `label symbol x y z` and
+    # `symbol label mult x y z occ` column orders (uses the _atom_site_ header).
     sym, frac = [], []
-    for m in re.finditer(r"^\s*\w+\s+([A-Za-z]{1,2})\s+(-?[\d.]+)\s+(-?[\d.]+)\s+(-?[\d.]+)", t, re.M):
-        sym.append(m.group(1)); frac.append([float(m.group(2)), float(m.group(3)), float(m.group(4))])
+    lines = t.splitlines(); cols = []; inloop = False
+    for ln in lines:
+        s = ln.strip()
+        if s.startswith("_atom_site_"):
+            cols.append(s); inloop = True; continue
+        if inloop and cols and s and not s.startswith("_") and s != "loop_":
+            tok = ln.split()
+            if len(tok) < len(cols):
+                if frac: break
+                continue
+            isym = cols.index("_atom_site_type_symbol") if "_atom_site_type_symbol" in cols \
+                else cols.index("_atom_site_label")
+            ix = cols.index("_atom_site_fract_x"); iy = cols.index("_atom_site_fract_y"); iz = cols.index("_atom_site_fract_z")
+            el = "".join(ch for ch in tok[isym] if ch.isalpha())
+            sym.append(el); frac.append([float(tok[ix]), float(tok[iy]), float(tok[iz])])
+        elif inloop and frac and (s == "" or s.startswith("loop_")):
+            break
     return A, np.array(frac), sym
 
 
