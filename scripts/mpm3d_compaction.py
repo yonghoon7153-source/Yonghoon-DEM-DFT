@@ -92,7 +92,7 @@ def parse_args(argv):
     ap.add_argument('--am-frac', type=float, default=0.0, help='AM volume fraction of SOLID (mix)')
     ap.add_argument('--preset', default='none', choices=['none', 'real14'],
                     help='real14 = production input_real_14 (3-comp AM_P6/AM_S2/SE0.5um = 12:4:1, '
-                         'actual vol AM:SE 73:27, 50um RVE → cross-validate porosity vs LIGGGHTS 15.6%)')
+                         'actual vol AM:SE 73:27, 50um RVE → cross-validate porosity vs LIGGGHTS 15.6%%)')
     ap.add_argument('--am-scaffold', default='',
                     help='CSV of fixed AM (type,x,y,z,r in LIGGGHTS 0..0.05 units): AM become a fixed '
                          'grid obstacle and only SE is the MPM filler (real skeleton, no RSA AM, light)')
@@ -157,7 +157,7 @@ def parse_args(argv):
                          'corrected BC).  ROBUST gating via --floor-porosity (recommended): then the AM '
                          'share engages ONLY below the DEM floor → dense/SE-rich beds unchanged.')
     ap.add_argument('--floor-porosity', type=float, default=0.0,
-                    help='ROBUST wallP-conditional gate (%, set = the case DEM porosity).  The AM skeleton '
+                    help='ROBUST wallP-conditional gate (%%, set = the case DEM porosity).  The AM skeleton '
                          '(--am-load-frac) bears its share ONLY once the bed compresses to this DEM rigid-'
                          'packing floor (where the AM jams).  ABOVE it the SE bears the full load → dense / '
                          'SE-rich beds that reach target above the floor are UNCHANGED (no over-correction); '
@@ -165,7 +165,7 @@ def parse_args(argv):
                          'floor.  This is the all-regime-safe gate (flat --am-load-frac alone over-corrects '
                          'dense beds).  0 = off.')
     ap.add_argument('--floor-engage', type=float, default=1.5,
-                    help='ramp width (%) over which the AM-skeleton load engages below --floor-porosity '
+                    help='ramp width (%%) over which the AM-skeleton load engages below --floor-porosity '
                          '(numerical smoothness; smaller = stiffer jam).')
     ap.add_argument('--compact-to', type=float, default=0.0,
                     help='displacement-driven: descend the platen until bed porosity ≤ this %% then HOLD, '
@@ -223,11 +223,11 @@ def parse_args(argv):
                          'coverage (default = rigid lateral walls, the validated production box)')
     ap.add_argument('--quiet', action='store_true')
     ap.add_argument('--add-recipe', default='',
-                    help='seed conductive additives as extra MPM phases.  The ADDITIVE wt% is its share of '
+                    help='seed conductive additives as extra MPM phases.  The ADDITIVE wt%% is its share of '
                          'the 100%% total electrode (AM+SE+additives); the AM:SE in the recipe is IGNORED — '
                          'AM:SE comes from the REAL scaffold (not hardcoded).  So "AM:SE:VGCF=80:18:1" → VGCF '
-                         '1 wt% (AM:SE fill the other 99%% at the scaffold ratio); "AM:SE:VGCF:PTFE=80:18:1:1" '
-                         '→ VGCF 1 + PTFE 1 wt% (AM:SE = 98%%).  "VGCF=1" works too.  VGCF & SuperP are separate. '
+                         '1 wt%% (AM:SE fill the other 99%% at the scaffold ratio); "AM:SE:VGCF:PTFE=80:18:1:1" '
+                         '→ VGCF 1 + PTFE 1 wt%% (AM:SE = 98%%).  "VGCF=1" works too.  VGCF & SuperP are separate. '
                          'fibres=point-chains, SuperP=blobs, avoid fixed AM.  Auto-enables SE cohesion '
                          '(--coh 0.02) unless --coh given.  Needs --am-scaffold.')
     ap.add_argument('--add-l-cv', type=float, default=0.4,
