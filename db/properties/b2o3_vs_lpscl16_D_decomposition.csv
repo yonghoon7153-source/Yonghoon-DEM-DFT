@@ -1,0 +1,9 @@
+quantity,b2o3,LPSCl1.6,ratio_b2o3/LPSCl1.6,log_share_pct_of_sigma_gain
+D0_prefactor_cm2_s,7.112e-04,5.753e-04,1.236,74.2
+n_Li_carriers_cm3,2.381e+22,2.220e+22,1.072,24.5
+Ea_barrier_eV,0.2234,0.2235,1.0039(=exp(-dEa/kT@300)),1.4
+=> D_ratio,,,1.241,(D0 x barrier)
+=> sigma_ratio,,,1.331,(D0 x barrier x carriers)
+# sigma gain 1.33x is D0-prefactor-driven (~74% of log-gain): more open Li pathways / higher attempt frequency.
+# carriers n_Li ~25%; barrier (Ea) ~0 (dEa=-0.1 meV, within the 0.03 eV multiseed error) -> NOT a lower-barrier effect.
+# barrier factor is the ONLY T-dependent term; dEa~0 makes it ~1 at all T -> the 1.33x ratio is temperature-independent.
