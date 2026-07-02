@@ -66,3 +66,47 @@ porosity **MPM 15.45 % / DEM 14.28 %** · thickness 113.4 µm · SE/solid 33.2 %
 1. **porosity/구조 검증** (이 캠페인, ball-mill) ← 지금
 2. **A4** (SE-coating seeding — thinky-SuperP 구조)
 3. **network** (carbon phase → σ 계산 → σ_e/σ_ion 실측 대조)
+
+## ★ 실제 실험과 비교 — volume-fill 방향이 carbon에선 반대 (frame[4], 2026-07-02) ★
+"사실 실제 현상도 엇비슷하게 나오나?"에 대한 정직한 답.  결론: **carbon 첨가제(VGCF/SuperP)에
+대해 우리 volume-fill 예측과 실제 실험의 porosity 방향이 반대다.**
+
+**직접 앵커 — Cho 2024** (`docs/data/cho2024_conflicting_roles_conductive_additive.csv`,
+NCM811 + **우리와 동일한 LPSCl SE** + VGCF 2 wt%, 433 MPa 가압):
+| 조건 (2 wt% VGCF) | 우리 volume-fill | Cho 2024 실측 |
+|---|---|---|
+| porosity Δ | **−3.3 %p** (15.45→12.11) | **+1 %p** (72wt%AM 0.14→0.15; 88wt%AM 0.18→0.19) |
+| tortuosity | (변화 없음, 경로만) | **↑** (6.47→7.56, 17.41→18.34) |
+| r_ele (전자저항) | (미계산) | **↓ 2.4–3.3×** (전자망 형성) |
+
+⇒ 실제 VGCF는 porosity를 **거의 불변~살짝 증가**시킨다(우리 −3.3 %p 감소와 방향 반대).
+이게 논문 제목 "conflicting roles" — **전자전도는 좋아지지만(r_ele↓) 밀도·tortuosity는
+나빠진다(porosity↑)**.
+
+**왜 반대인가 (물리):**
+- 우리 volume-fill = 첨가제를 **수동적 void-filler(조밀 덩어리가 기존 공극으로 떨어짐)**로 가정
+  → 부피만큼 porosity 감소.
+- 실제 VGCF = **뻣뻣한 슬렌더 섬유(E≈200 GPa ≫ 300 MPa)** → 압밀을 *방해*하는 scaffold로
+  구조를 벌려놓음(prop-open) + 자기 percolation 망을 형성 → 오히려 공극 유지/증가.
+- SuperP도 고비표면(C65 BET 62 m²/g) fluffy 응집체 → 조밀 고체처럼 안 뭉침, 자체 내부 공극 추가.
+- carbon은 저밀도(VGCF≈2.0/C65 1.60 vs AM 4.8) → 같은 wt%가 큰 vol% → 우리 모델선 큰 감소,
+  실제론 그 큰 부피가 densify 안 되니 오히려 두께·공극으로 감.
+
+**즉 이 캠페인이 검증한 것 vs 아닌 것:**
+- ✓ 검증됨: **zip→MPM이 volume-fill을 정확히 구현**하는가 (내부 일관성; Δ≤0.045 %p PASS).
+- ✗ 검증 아님: **volume-fill 가정 자체가 실제 carbon 거동과 맞는가** — 실제론 안 맞음
+  (carbon은 void-filler가 아니라 compaction-resisting scaffold).
+
+**frame[4] 관점:** 이 불일치는 실패가 아니라 **정량화된 모델 한계**(publishable).  volume-fill은
+"조밀·연성 filler" 극한이고, 실제 carbon은 "압밀-저항 scaffold" 극한 → 실제는 후자.  실제 방향을
+맞추려면 첨가제를 MPM에서 **하중을 견디며 압밀에 저항**하게 만들어야 함 = F1/F2 backlog
+(emergent fibre mechanics, Cosserat/bonded-rod) — buckling이 "DEM-territory"인 것과 같은 이유
+(수동 연속체가 못 잡는 discrete mechanics).
+
+**보조 앵커 — Reisacher 2023** (`docs/data/reisacher2023_percolation.csv`, LPSCl+C65 매트릭스,
+AM 없음): carbon 전자 percolation 임계 **~4 wt%**(matrix; cathode 환산 ~1.2 wt%).  그 아래선
+isolated island(void에 들어갈 수도 있으나 여전히 밀도-주도 아님) → 우리 σ_e STEP 3 검증용.
+
+⚠ 캐비엇: Cho는 433 MPa·AM 72/88 wt%(우리 300 MPa·다른 조성)라 1:1 오버레이는 아니다.  하지만
+**SE가 동일(LPSCl)하고 VGCF 방향이 견고**하므로 "방향 반대"는 신뢰.  깨끗한 porosity-vs-wt% 실측
+스윕은 아직 없음(Cho는 0/2 wt% 두 점, Reisacher는 전도도 스윕) → 직접 곡선 오버레이는 미보유.
