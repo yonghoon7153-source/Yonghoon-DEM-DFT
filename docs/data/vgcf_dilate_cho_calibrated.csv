@@ -1,0 +1,8 @@
+"# VGCF dilate — A calibrated to Cho 2024 EchimActa 481 143990 (2wt%→+1%p vs no-additive, frame[4]); A_cho=1.568, p0=14.28%, L/D=66.7"
+wt_pct,vol_pct_of_solid,porosity_pct,dpor_vs_no_add_pp,porosity_volume_fill_pct,x_perc_ratio,rod_mesh_xi_um
+0.5,1.02,14.071,-0.209,13.406,0.833,1.422
+1.0,2.04,14.433,0.153,12.531,1.665,1.005
+2.0,4.13,15.28,1.0,10.74,3.372,0.707
+4.0,8.06,16.411,2.131,7.371,6.58,0.506
+6.0,12.09,17.344,3.064,3.916,9.87,0.413
+8.0,16.12,18.184,3.904,0.462,13.16,0.358

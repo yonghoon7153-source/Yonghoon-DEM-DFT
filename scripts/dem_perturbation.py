@@ -229,7 +229,15 @@ def driver_breathing(state: DEMState, dvol_by_type):
 # ─────────────────────────────────────────────────────────────────────────────
 VGCF_L_UM = 10.0        # as-grown vapour-grown carbon fibre length (µm)
 VGCF_D_UM = 0.15        # fibre diameter (150 nm)
-PHILIPSE_C = 5.4        # Philipse 1996 random-contact rod jamming: φ_jam·(L/D) = 5.4
+# The PROP (a load-bearing rod network holding the bed open) turns on at rod PERCOLATION, not dense
+# jamming: for slender rods φ_perc·(L/D) ≈ 0.7 (Balberg 1984, excluded-volume percolation).  Stiff
+# fibres (VGCF E~200 GPa) are ~rigid right at percolation, so this is the prop onset — and it is
+# data-consistent (Cho shows a clear +1 %p already at 2 wt%, i.e. prop well developed).  Philipse's
+# DENSE random-contact packing φ·L/D≈5.4 is the UPPER limit (used only for the amplification bound).
+# ⚠ the onset constant carries a [0.7 percolation … 5.4 dense] modeling range; it barely moves the
+# curve near the Cho anchor (≤2 wt%) but DOMINATES the high-wt% extrapolation (why 8 wt% is bracketed).
+ROD_PERC_C = 0.7        # Balberg rod-percolation prop onset (φ_perc·L/D)
+PHILIPSE_JAM_C = 5.4    # Philipse dense random-contact packing (amplification upper bound)
 LOOSE_POROSITY = 0.40   # random-loose-packing cap (the bed cannot prop looser than this)
 
 
@@ -241,7 +249,30 @@ def _porosity_added_solid(p0, phi_add_bed, eps_zz):
     return max(0.0, 1.0 - ((1.0 - p0) + phi_add_bed) / (1.0 + eps_zz))
 
 
-def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF_D_UM):
+# Cho 2024 (LPSCl + NCM811 + VGCF, our exact SE) — the INDEPENDENT experimental anchor for A.
+# 2 wt% VGCF → porosity +1 %p vs no-additive (0.14→0.15 @72wt%AM, 0.18→0.19 @88wt%AM).  frame[4]:
+# calibrating A to THIS (external experiment) is legitimate, not circular self-fitting.
+CHO_ANCHOR = {'source': 'Cho 2024 EchimActa 481 143990', 'wt': 2.0, 'vol_pct_of_solid': 4.13, 'dpor_pp': 1.0}
+# VGCF wt% → vol% of solid (campaign densities; ~2.04 vol%/wt%, linear).  Measured 0.5/1/2/4; 6/8 linear.
+VGCF_WT_TO_VOL = {0.5: 1.02, 1.0: 2.04, 2.0: 4.13, 4.0: 8.06, 6.0: 12.09, 8.0: 16.12}
+
+
+def calibrate_A_to_cho(p0, anchor_vol_pct=None, anchor_dpor_pp=None, L_um=VGCF_L_UM, D_um=VGCF_D_UM):
+    """Solve the excluded-volume amplification A so dilate reproduces the Cho Δporosity at the
+    anchor wt%.  A becomes the single fillability parameter fixed by ONE external experiment
+    (frame[4]); the model then PREDICTS the rest of the wt% curve."""
+    av = anchor_vol_pct if anchor_vol_pct is not None else CHO_ANCHOR['vol_pct_of_solid']
+    ad = anchor_dpor_pp if anchor_dpor_pp is not None else CHO_ANCHOR['dpor_pp']
+    phi_perc = ROD_PERC_C * D_um / L_um
+    phi_bed = (av / 100.0) * (1.0 - p0)
+    p = 1.0 - math.exp(-(phi_bed / phi_perc)) if phi_perc > 0 else 0.0
+    target = p0 + ad / 100.0
+    solid = (1.0 - p0) + phi_bed
+    eps_zz = solid / (1.0 - target) - 1.0                 # bed expansion needed to hit the Cho porosity
+    return eps_zz / (p * phi_bed) if (p * phi_bed) > 0 else float('nan')
+
+
+def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF_D_UM, A_fixed=None):
     """VGCF rod-network prop-open via Philipse rod jamming.  NON-CIRCULAR: the
     jamming onset comes from the fibre geometry (L/D), never from a target porosity.
 
@@ -259,9 +290,10 @@ def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF
     only the DEM force balance (VGCF rods in LIGGGHTS) pins.  So this returns the
     jamming ONSET + DIRECTION + porosity BRACKET, with A=1 as the reported nominal."""
     p0 = state.porosity_loaded if state.porosity_loaded is not None else _geometric_porosity(state)
-    phi_jam = PHILIPSE_C * D_um / L_um
+    phi_perc = ROD_PERC_C * D_um / L_um                       # rod-percolation prop ONSET (Balberg)
+    phi_dense = PHILIPSE_JAM_C * D_um / L_um                  # dense random-contact packing (upper)
     phi_bed = (vgcf_vol_pct_solid / 100.0) * (1.0 - p0)
-    x = (phi_bed / phi_jam) if phi_jam > 0 else 0.0
+    x = (phi_bed / phi_perc) if phi_perc > 0 else 0.0         # percolation ratio (x≥1 = network spans)
     p = 1.0 - math.exp(-x)
     # PHYSICAL sanity: rod-network mesh size ξ = D·√(π/4φ) (semidilute rod correlation length).
     # If ξ < AM diameter, the rods geometrically BLOCK the AM from packing dense → prop is REAL
@@ -271,32 +303,54 @@ def driver_dilate(state: DEMState, vgcf_vol_pct_solid, L_um=VGCF_L_UM, D_um=VGCF
     def _por(A):
         return _porosity_added_solid(p0, phi_bed, p * phi_bed * A)
     por_vf = _porosity_added_solid(p0, phi_bed, 0.0)          # volume-fill (no prop)
-    por_lower = _por(1.0)                                     # A=1 conservative nominal
-    # excluded-volume amplification can't be < the rod's own volume → A_upper ≥ 1 (guards L/D<5.4,
-    # i.e. φ_jam>1, where 1/φ_jam<1 would invert the bracket).  Capped at loose packing.
-    A_upper = max(1.0, 1.0 / phi_jam) if phi_jam > 0 else 1.0
-    por_upper = min(LOOSE_POROSITY, _por(A_upper))
+    A_nom = float(A_fixed) if A_fixed is not None else 1.0    # Cho-calibrated A, else A=1 conservative
+    por_nom = _por(A_nom)
+    # excluded-volume amplification bounded [1 (own volume) … 1/φ_dense (full exclusion at dense
+    # packing)]; capped at loose packing.  (Uses the DENSE φ for the ceiling, the PERCOLATION φ for x.)
+    A_upper = max(1.0, 1.0 / phi_dense) if phi_dense > 0 else 1.0
+    por_lo, por_hi = _por(1.0), min(LOOSE_POROSITY, _por(A_upper))
     return {
-        'driver': f'dilate (VGCF rod prop-open, Philipse contact-onset; L/D={L_um/D_um:.0f})',
+        'driver': f'dilate (VGCF rod prop-open, Balberg percolation onset; L/D={L_um/D_um:.0f})',
         'vgcf_vol_pct_of_solid': round(vgcf_vol_pct_solid, 3),
-        'phi_jam_vol_pct': round(100 * phi_jam, 2),
+        'phi_perc_onset_vol_pct': round(100 * phi_perc, 3),  # rod-percolation prop onset
         'phi_vgcf_bed_vol_pct': round(100 * phi_bed, 2),
-        'jamming_ratio_x': round(x, 3),
-        'contact_onset_reached': bool(x >= 1.0),             # x≥1 = Philipse random-CONTACT onset (network forms)
+        'perc_ratio_x': round(x, 3),                         # φ_bed/φ_perc
+        'percolated': bool(x >= 1.0),                        # x≥1 = rod network spans (prop load-bearing)
         'prop_gate_p': round(p, 3),
         'rod_mesh_xi_um': (round(xi, 3) if xi is not None else None),   # < AM dia → rods block AM (prop real)
         'volume_fill_valid': bool(phi_bed <= p0),            # False → fibre vol > void → vol-fill baseline unphysical
+        'A_used': round(A_nom, 3),                           # 1 = conservative; else Cho-calibrated
         'porosity_no_additive_pct': round(100 * p0, 3),
         'porosity_volume_fill_pct': round(100 * por_vf, 3),
-        'porosity_dilate_nominal_pct': round(100 * por_lower, 3),      # A=1
-        'porosity_dilate_bracket_pct': sorted([round(100 * por_lower, 3), round(100 * por_upper, 3)]),
-        'eps_zz_nominal': round(p * phi_bed * 1.0, 5),
-        'note': ('φ_jam = Philipse random-CONTACT (network-formation) onset, NOT mechanical rigidity; '
-                 'x uses the BED-average rod fraction (conservative — pore-local would jam sooner). '
-                 'onset+direction non-circular; the value WITHIN the bracket = AM/SE fillability of the '
-                 'rod mesh (DEM would pin it, but DEM-with-VGCF is not possible → bracket is final). '
-                 'porosity UP vs volume-fill; vs no-additive depends on A.'),
+        'porosity_dilate_nominal_pct': round(100 * por_nom, 3),        # A=A_used
+        'porosity_dilate_bracket_pct': sorted([round(100 * por_lo, 3), round(100 * por_hi, 3)]),
+        'eps_zz_nominal': round(p * phi_bed * A_nom, 5),
+        'note': ('φ_perc = Balberg rod-percolation prop onset (load-bearing network spans); x uses the '
+                 'BED-average rod fraction.  onset+direction non-circular; A (fillability) = 1 conservative '
+                 'OR Cho-calibrated (frame[4]).  ⚠ onset constant [0.7 perc … 5.4 dense] barely moves ≤2 wt% '
+                 'but dominates high-wt% → trust the curve in the practical 0.5–2(3) wt% range.'),
     }
+
+
+def cho_calibrated_curve(p0, wt_list=None, L_um=VGCF_L_UM, D_um=VGCF_D_UM,
+                         anchor_vol_pct=None, anchor_dpor_pp=None):
+    """Production porosity-vs-VGCF-wt% curve: A calibrated to the Cho anchor ONCE (frame[4],
+    external experiment), then dilate PREDICTS every other wt%.  Returns {A_cho, anchor, rows}."""
+    A = calibrate_A_to_cho(p0, anchor_vol_pct, anchor_dpor_pp, L_um, D_um)
+    st = DEMState({}, [], 1.0, 1.0, 1.0, porosity_loaded=p0)
+    rows = []
+    for wt in (wt_list or sorted(VGCF_WT_TO_VOL)):
+        vol = VGCF_WT_TO_VOL.get(wt, wt * 2.04)              # campaign vol%; linear off-grid
+        d = driver_dilate(st, vol, L_um, D_um, A_fixed=A)
+        rows.append({
+            'wt_pct': wt, 'vol_pct_of_solid': vol,
+            'porosity_pct': d['porosity_dilate_nominal_pct'],
+            'dpor_vs_no_add_pp': round(d['porosity_dilate_nominal_pct'] - d['porosity_no_additive_pct'], 3),
+            'porosity_volume_fill_pct': d['porosity_volume_fill_pct'],
+            'x': d['perc_ratio_x'], 'xi_um': d['rod_mesh_xi_um'],
+        })
+    return {'A_cho': round(A, 3), 'anchor': CHO_ANCHOR, 'p0_pct': round(100 * p0, 3),
+            'L_over_D': round(L_um / D_um, 1), 'rows': rows}
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -514,23 +568,27 @@ def selftest():
           f"porosity {out5['porosity_loaded_pct']}→{out5['porosity_perturbed_pct']}% "
           f"(NOT fake ε_zz), contacts lost={out5['contacts']['n_lost']} ✓")
 
-    # (6) dilate: VGCF rod-jamming prop (Philipse).  φ_jam=5.4·0.15/10=0.081; real_4-like ε₀=0.1428,
-    #     4 wt% = 8.06 vol% of solid → x≈0.85 (just below jamming); prop lifts porosity ABOVE volume-fill.
+    # (6) dilate: VGCF rod prop-open (Balberg percolation).  φ_perc=0.7·0.15/10=0.0105 (1.05 vol%);
+    #     real_4-like ε₀=0.1428, 4 wt%=8.06 vol% → x≈6.6 (above percolation); prop lifts above volume-fill.
     st6 = _mk_state({1: {'type': 1, 'x': 0, 'y': 0, 'z': 1.0, 'radius': 1.0}}, [], poros=0.1428)
     dd = driver_dilate(st6, vgcf_vol_pct_solid=8.06, L_um=10.0, D_um=0.15)
-    assert abs(dd['phi_jam_vol_pct'] - 8.1) < 0.2, dd
-    assert 0.80 < dd['jamming_ratio_x'] < 0.90 and not dd['contact_onset_reached'], dd
+    assert abs(dd['phi_perc_onset_vol_pct'] - 1.05) < 0.1, dd
+    assert dd['perc_ratio_x'] > 1.0 and dd['percolated'], dd          # 4wt% above rod percolation
     assert dd['porosity_dilate_nominal_pct'] > dd['porosity_volume_fill_pct'], dd
     lo, hi = dd['porosity_dilate_bracket_pct']
     assert lo <= dd['porosity_dilate_nominal_pct'] <= hi + 1e-9 and hi <= 100 * LOOSE_POROSITY + 1e-9, dd
-    # BUG-1 regression: SuperP (L/D=1 → φ_jam>1) must NOT invert the bracket (lo≤hi) and stay volume-fill.
+    # Cho-calibration regression: A_cho reproduces the +1 %p anchor at 2 wt% (vol 4.13).
+    A = calibrate_A_to_cho(0.1428)
+    d2 = driver_dilate(st6, vgcf_vol_pct_solid=4.13, A_fixed=A)
+    assert abs(d2['porosity_dilate_nominal_pct'] - (14.28 + 1.0)) < 0.05, (A, d2)
+    # SuperP (spheres, L/D=1) must net-DENSIFY (volume-fill wins) with only a small prop.
     sp = driver_dilate(st6, vgcf_vol_pct_solid=8.06, L_um=0.2, D_um=0.2)
     slo, shi = sp['porosity_dilate_bracket_pct']
-    assert slo <= shi and slo <= sp['porosity_dilate_nominal_pct'] <= shi + 1e-9, sp
-    assert sp['prop_gate_p'] < 0.05 and abs(sp['porosity_dilate_nominal_pct'] - sp['porosity_volume_fill_pct']) < 0.2, sp
-    print(f"  [6] dilate VGCF 4wt% (Philipse L/D=67): φ_jam={dd['phi_jam_vol_pct']}vol% x={dd['jamming_ratio_x']} "
-          f"→ vol-fill {dd['porosity_volume_fill_pct']}% → dilate {dd['porosity_dilate_nominal_pct']}% "
-          f"bracket{dd['porosity_dilate_bracket_pct']} ✓")
+    assert slo <= shi and sp['porosity_dilate_nominal_pct'] < sp['porosity_no_additive_pct'], sp
+    assert (sp['porosity_dilate_nominal_pct'] - sp['porosity_volume_fill_pct']) < 1.5, sp
+    print(f"  [6] dilate VGCF 4wt% (Balberg perc, L/D=67): φ_perc={dd['phi_perc_onset_vol_pct']}vol% "
+          f"x={dd['perc_ratio_x']} → vol-fill {dd['porosity_volume_fill_pct']}% → dilate "
+          f"{dd['porosity_dilate_nominal_pct']}%; Cho A={A:.2f} reproduces 2wt%→15.28% ✓")
 
     print("SELF-TEST PASSED ✓")
     return True
@@ -553,14 +611,42 @@ def main(argv=None):
     ap.add_argument('--dvol', default='',
                     help='breathing ΔV/V per atom type, e.g. "1:-0.04,2:-0.02" (charge=shrink)')
     ap.add_argument('--write-csv', default='', help='write perturbed atoms.csv+contacts.csv here')
-    ap.add_argument('--out', default='', help='write the summary JSON here')
+    ap.add_argument('--out', default='', help='write the summary JSON (or --cho-curve CSV) here')
     ap.add_argument('--selftest', action='store_true')
+    ap.add_argument('--cho-curve', action='store_true',
+                    help='dilate: calibrate A to the Cho-2024 experiment (frame[4]) and print/save the '
+                         'production porosity-vs-VGCF-wt%% curve (needs --case or --p0).')
+    ap.add_argument('--p0', type=float, default=None,
+                    help='baseline porosity FRACTION for --cho-curve when no --case (e.g. 0.1428).')
+    ap.add_argument('--wt', default='', help='comma wt%% list for --cho-curve (default 0.5,1,2,4,6,8).')
     a = ap.parse_args(argv)
 
     if a.selftest:
         return 0 if selftest() else 1
+
+    if a.cho_curve:
+        p0 = a.p0 if a.p0 is not None else (load_state(a.case).porosity_loaded if a.case else None)
+        if p0 is None:
+            ap.error('--cho-curve needs --p0 <fraction> or --case (with a full_metrics porosity)')
+        wl = [float(w) for w in a.wt.split(',')] if a.wt else None
+        cur = cho_calibrated_curve(p0, wt_list=wl, L_um=a.vgcf_l, D_um=a.vgcf_d)
+        print(json.dumps(cur, indent=2, ensure_ascii=False))
+        if a.out:
+            import csv as _csv
+            with open(a.out, 'w', newline='') as f:
+                w = _csv.writer(f)
+                w.writerow([f'# VGCF dilate — A calibrated to {CHO_ANCHOR["source"]} '
+                            f'(2wt%→+1%p vs no-additive, frame[4]); A_cho={cur["A_cho"]}, '
+                            f'p0={cur["p0_pct"]}%, L/D={cur["L_over_D"]}'])
+                w.writerow(['wt_pct', 'vol_pct_of_solid', 'porosity_pct', 'dpor_vs_no_add_pp',
+                            'porosity_volume_fill_pct', 'x_perc_ratio', 'rod_mesh_xi_um'])
+                for r in cur['rows']:
+                    w.writerow([r['wt_pct'], r['vol_pct_of_solid'], r['porosity_pct'],
+                                r['dpor_vs_no_add_pp'], r['porosity_volume_fill_pct'], r['x'], r['xi_um']])
+            print(f"  saved curve → {a.out}")
+        return 0
     if not a.case:
-        ap.error('need --case (or --selftest)')
+        ap.error('need --case (or --selftest / --cho-curve)')
 
     st = load_state(a.case)
     dvol = None

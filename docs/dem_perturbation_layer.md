@@ -110,6 +110,36 @@ The packing half of the additive porosity effect (frame[5] DEM domain) that
 
 Usage: `python3 scripts/dem_perturbation.py --case <cid> --driver dilate --vgcf-vol-pct 8.06`
 
+### Production porosity-vs-VGCF-wt% curve — A calibrated to Cho (frame[4])
+`--cho-curve` fixes the single fillability parameter **A to ONE external experiment** (Cho 2024:
+2 wt% → +1 %p vs no-additive; frame[4], not circular self-fitting), then the model PREDICTS every
+other wt%.  `docs/data/vgcf_dilate_cho_calibrated.csv` (real_4 baseline ε₀=14.28 %):
+
+| VGCF wt% | vol% of solid | porosity | Δ vs no-additive | x (perc ratio) |
+|---|---|---|---|---|
+| 0.5 | 1.02 | 14.07 % | **−0.21** | 0.83 |
+| 1.0 | 2.04 | 14.43 % | +0.15 | 1.67 |
+| 2.0 | 4.13 | **15.28 %** | **+1.00** (Cho anchor) | 3.37 |
+| 4.0 | 8.06 | 16.41 % | +2.13 | 6.58 |
+| 6.0 | 12.09 | 17.34 % | +3.06 | 9.87 |
+| 8.0 | 16.12 | 18.18 % | +3.90 | 13.16 |
+
+**A_cho = 1.57.**  Physical, monotonic, gentle.  **Fill→prop crossover ≈ 0.9 wt%**: below it VGCF
+slightly densifies (volume-fill wins, net −); above it loosens (prop wins, net +) — a testable prediction.
+
+★ **The onset constant matters (why C=0.7 not 5.4).**  The PROP (a load-bearing rod network holding
+the bed open) turns on at rod **PERCOLATION** — φ_perc·(L/D) ≈ **0.7** (Balberg 1984), the point where
+the network spans; stiff VGCF (E~200 GPa) is ~rigid there.  Philipse's φ·L/D ≈ 5.4 is the DENSE random-
+contact packing (the amplification ceiling, not the onset).  Calibrating A to Cho with the WRONG onset
+(C=5.4, dense) forces A=4.28 and the curve **EXPLODES** (8 wt% → 33 %, unphysical); with the correct
+percolation onset (C=0.7) A=1.57 and the curve is gentle (8 wt% → 18 %).  Both reproduce Cho at 2 wt%
+(they only diverge in extrapolation) — and the DATA favours the early (percolation) onset since Cho
+already shows a clear +1 %p at 2 wt%.  ⚠ the onset carries a [0.7 … 5.4] range that barely moves the
+curve ≤2 wt% but dominates >4 wt% → **trust the curve in the practical 0.5–2(3) wt% range** (where VGCF
+is actually used); >4 wt% is extrapolation.
+
+Reproduce: `python3 scripts/dem_perturbation.py --cho-curve --p0 0.1428 --wt "0.5,1,2,4,6,8" --out <csv>`
+
 ## Driver D — inverse-design (Phase-4/5) — same engine
 Solve for the radius/position change that hits a predictor **target** (graded-z
 electrodes, target-porosity synth).
