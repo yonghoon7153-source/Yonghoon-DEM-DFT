@@ -54,6 +54,11 @@ def main():
     ap.add_argument('--add-l-cv', type=float, default=0.4, help='fibre length variation baked into run_mpm.sh.')
     ap.add_argument('--mixing', default='thinky', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P dispersion baked into run_mpm.sh (thinky = lit dry-process coating).')
+    ap.add_argument('--fibre-stiff', action='store_true',
+                    help='bake --fibre-stiff into run_mpm.sh: VGCF as a LOAD-BEARING rigid strut (σ_y≫press → '
+                         'does not compress at 300 MPa) instead of the passive volume-fill.  Physics-test opt-in '
+                         '(compaction-resistance → Cho-2024 porosity-flat/up direction); default OFF = production '
+                         'volume-fill.  See mpm3d_compaction.py --fibre-stiff.')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -208,8 +213,11 @@ def main():
     # electrode-faithful VGCF shape; fibre_rod_mpm_design §SOLUTION).  Volume/porosity-neutral, so it never
     # changes the porosity result; it just makes the seeded fibres wavy like real VGCF instead of straight.
     _buckle = '--fibre-buckle ' if 'VGCF' in a.add_recipe.upper() else ''
+    # --fibre-stiff (opt-in): VGCF load-bearing rigid strut (compaction-resistance test).  Only meaningful
+    # with VGCF present; orthogonal to --fibre-buckle (shape).  Default OFF → production volume-fill unchanged.
+    _stiff = '--fibre-stiff ' if (a.fibre_stiff and 'VGCF' in a.add_recipe.upper()) else ''
     add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
-                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}'
+                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}{_stiff}'
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''

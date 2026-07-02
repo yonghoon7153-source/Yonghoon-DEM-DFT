@@ -166,3 +166,37 @@ centrally in the band if a wavier mean is wanted.
   conserving).  Do NOT cite a σ_e payoff unless a resolving grid (h≪0.3 µm) run shows one.
 - VGCF only (PTFE stays a drawn web).  Recommended VGCF morphology in the MPM (supersedes the arbitrary
   Tier-1 curl=0.06) — as an honest SEM-consistent stand-in.
+
+## COMPACTION-RESISTANCE (`--fibre-stiff`, 2026-07-02) — the DENSITY axis, not the SHAPE axis
+
+Motivation (frame[4]): the verified volume-fill campaign makes porosity DROP ~linearly with additive
+vol% (VGCF 2 wt% → −3.3 %p).  But the direct experimental anchor **Cho 2024** (same LPSCl SE + NCM811 +
+VGCF 2 wt%, 433 MPa) shows porosity **FLAT-to-UP** (0.14→0.15, 0.18→0.19) with tortuosity rising — the
+"conflicting roles" density penalty.  Real VGCF is a **compaction-RESISTING scaffold** (stiff graphite
+E≈200 GPa, σ_y ≫ 0.3 GPa press → does not compress), NOT the passive void-filler the volume-fill assumes.
+`--fibre-buckle`/`--vgcf-curl` are the SHAPE axis (volume-neutral, don't touch porosity); this is the
+missing **stiffness/load** axis.
+
+**Model (`--fibre-stiff`, mpm3d_compaction.py):** pin the VGCF-occupied grid cells rigid (v=0), unioned
+into `am_mask` exactly like the frozen AM — the σ_y→∞, E→∞ limit of a stiff strut at 300 MPa (a 200 GPa
+strut strains 0.15 % under 0.3 GPa ≈ rigid).  pin_np (AM coverage / AM_vol) is left untouched (VGCF gets a
+separate tag 3); only the rigid-obstacle field changes.  The servo then reaches wallP=target at a HIGHER
+wall_z where the load-bearing VGCF resists → larger height → porosity rises.  Percolation-gated by
+construction: buried isolated VGCF doesn't reach the platen (no prop); only a floor→platen-bridging network
+raises wall_z — physically the Cho/Reisacher percolation-onset behaviour.
+
+**What it is / isn't (honest, mirrors the buckle framing):**
+- It is the **UPPER bound** on the density penalty: fully rigid = no buckling relief.
+- Crucially it still **cannot rearrange the frozen AM**.  The real prop-open has TWO halves: (a) the VGCF
+  strut resists local compression (this lever captures it), and (b) the VGCF holds the whole AM skeleton
+  apart so the AM settles LOOSER — that half lives in the DEM co-compaction (VGCF present when the AM
+  jams) and the frozen-AM scaffold structurally cannot produce it (same frame[5] boundary as buckling).
+- So `--fibre-stiff` tests **how much of the Cho density penalty the frozen-AM MPM scaffold can recover**
+  from the strut-stiffness half alone.  If it flips porosity toward flat/up → the MPM captures the
+  strut half; the residual vs Cho = the AM-rearrangement (DEM) half, quantified.  If it barely moves →
+  the penalty is almost entirely AM-rearrangement → DEM co-compaction is the physical home (LIGGGHTS CAN
+  pressurise — it is how the AM scaffold was made — so VGCF-as-stiff-clumps re-compaction is feasible).
+
+**A/B test:** same VGCF wt% WITHOUT (volume-fill baseline) vs WITH `--fibre-stiff`, compare
+`porosity_settled_pct` to the no-additive baseline (15.45 % MPM) and to Cho's direction.  Baked as an
+opt-in in mpm_input_from_case.py (`--fibre-stiff`; default OFF → production volume-fill unchanged).

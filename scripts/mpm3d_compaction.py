@@ -261,6 +261,15 @@ def parse_args(argv):
                          '×cos²θ×(local AM fraction), so open-pore fibres buckle far less → mean straightness '
                          '≈0.96-0.97 (SEM-consistent band).  A SEM-match MORPHOLOGY KNOB, not a derived transport '
                          'result (the shape is sub-voxel → does not change σ_e at production resolution).')
+    ap.add_argument('--fibre-stiff', action='store_true',
+                    help='VGCF as a LOAD-BEARING rigid strut: pin the VGCF-occupied grid cells (v=0, like the '
+                         'frozen AM), because real graphite VGCF (E~200 GPa, σ_y≫0.3 GPa press) does NOT compress '
+                         'at 300 MPa — it RESISTS compaction.  Tests whether a compaction-resisting fibre network '
+                         'moves porosity toward the Cho-2024 "conflicting roles" direction (porosity flat/up '
+                         'instead of the passive volume-fill drop).  This is the STIFFNESS/load lever, orthogonal '
+                         'to --vgcf-curl/--fibre-buckle (shape).  Scaffold-only.  It is the UPPER bound: fully '
+                         'rigid = no buckling relief and (crucially) the frozen AM cannot rearrange, so the '
+                         'AM-rearrangement half of the real prop-open is DEM co-compaction territory.')
     ap.add_argument('--mixing', default='ballmill', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P (carbon black) dispersion (lit morphology): ball-mill/Thinky = short '
                          'branched aggregates, uniform, intimately coating the AM; hand-mix = larger '
@@ -742,7 +751,29 @@ def main(argv):
     am_mask = ti.field(ti.i32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))
     am_near = ti.field(ti.f32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))   # local AM fraction (confinement)
     if scaffold_on:
-        am_mask.from_numpy(pin_np)                              # cells inside fixed AM (built in scaffold branch)
+        rigid_np = pin_np                                       # rigid (v=0) obstacle mask = fixed AM …
+        if args.fibre_stiff and 'phase_np' in locals():         # … ∪ load-bearing VGCF (stiff strut lever)
+            _vg = (phase_np == 2)                               # VGCF points (phase code 2; σ_y=2 GPa ≫ press)
+            if _vg.any():
+                rigid_np = pin_np.copy()
+                _vc = xs[_vg]
+                _vi = np.clip((_vc[:, 0] * n_grid).astype(np.int64), 0, n_grid - 1)
+                _vj = np.clip((_vc[:, 1] * n_grid).astype(np.int64), 0, n_grid - 1)
+                _vk = np.clip((_vc[:, 2] * n_grid).astype(np.int64), 0, nz - 1)
+                if PERIODIC:                                    # wrap x,y into the periodic cell (matches P2G node wrap)
+                    _vi = _LO + ((_vi - _LO) % _WC + _WC) % _WC
+                    _vj = _LO + ((_vj - _LO) % _WC + _WC) % _WC
+                _free = rigid_np[_vi, _vj, _vk] == 0            # keep AM tags 1/2 intact (coverage/AM_vol untouched)
+                rigid_np[_vi[_free], _vj[_free], _vk[_free]] = 3   # VGCF rigid tag (≠ AM 1/2; am_mask fires on >0)
+                try:                                            # close the sub-voxel threads into connected struts
+                    from scipy import ndimage as _ndi
+                    _vm = _ndi.binary_closing(rigid_np == 3, iterations=1) & (rigid_np == 0)
+                    rigid_np[_vm] = 3
+                except Exception:
+                    pass
+                print(f"  [fibre-stiff] VGCF LOAD-BEARING: {int((rigid_np == 3).sum()):,} rigid cells "
+                      f"(σ_y≫press → unbucklable strut) — tests compaction-resistance vs volume-fill")
+        am_mask.from_numpy(rigid_np)                            # cells inside fixed AM (∪ stiff VGCF if --fibre-stiff)
         if SE_AM_DRAG > 0.0 and am_r is not None:
             # ★ ROUND 4 — GLOBAL load-path robustness (physical, not target-tuned): the drag is only PHYSICAL
             # where the AM skeleton does NOT robustly bear the platen load = THIN beds (few AM layers → marginal
@@ -1090,6 +1121,7 @@ def main(argv):
         if _add_meta:
             m['additives'] = _add_meta                       # {VGCF:{wt_pct,vol%,n_obj,n_pts,E,σ_y,curl}, …} → 요약
             m['fibre_rod'] = bool(FIBRE_ROD)                 # Tier-2 emergent buckling on?
+            m['fibre_stiff'] = bool(args.fibre_stiff)        # VGCF load-bearing rigid strut (compaction-resistance)?
             if FIBRE_ROD:                                    # record the rod knobs so runs are distinguishable
                 m['rod_stiff'] = float(args.rod_stiff); m['rod_iters'] = int(args.rod_iters)
         _json.dump(m, open(args.save_metrics, 'w'), indent=2)
