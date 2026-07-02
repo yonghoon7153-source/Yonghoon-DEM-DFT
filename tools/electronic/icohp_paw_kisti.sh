@@ -43,13 +43,25 @@ for d in "$SLURM_SUBMIT_DIR/pseudo" ../pseudo ../manuscript_support/pseudo \
   done
 done
 # B kjpaw is NOT in the KISTI set — auto-fetch from QE pslibrary if still missing.
+# Validate the payload is a real UPF (a 403/hotlink page must NOT masquerade as one).
 Bp="${PAW[B]}"
 if [ ! -f "pseudo/$Bp" ]; then
-  echo ">> fetching $Bp from pseudopotentials.quantum-espresso.org ..."
-  ( cd pseudo && { wget -q "https://pseudopotentials.quantum-espresso.org/upf_files/$Bp" \
-       || curl -fsSLO "https://pseudopotentials.quantum-espresso.org/upf_files/$Bp"; } ) \
-    || echo "  auto-fetch failed (compute node has no internet?). On the LOGIN node run:
-    cd '$PWD/pseudo' && wget https://pseudopotentials.quantum-espresso.org/upf_files/$Bp"
+  echo ">> fetching $Bp ..."
+  for url in "https://pseudopotentials.quantum-espresso.org/upf_files/$Bp" \
+             "https://www.quantum-espresso.org/upf_files/$Bp"; do
+    echo "   try $url"
+    curl -fsSL -o "pseudo/$Bp.part" "$url" 2>/dev/null || wget -qO "pseudo/$Bp.part" "$url" 2>/dev/null || true
+    if grep -qiE "PP_HEADER|UPF version" "pseudo/$Bp.part" 2>/dev/null; then
+      mv "pseudo/$Bp.part" "pseudo/$Bp"; echo "   ok -> pseudo/$Bp ($(wc -c <"pseudo/$Bp") bytes)"; break
+    fi
+    rm -f "pseudo/$Bp.part"
+  done
+fi
+if [ ! -f "pseudo/$Bp" ]; then
+  echo "  !! B auto-fetch failed (compute node likely has no internet). Do ONE of these:"
+  echo "     # (a) on the KISTI LOGIN node, which has internet:"
+  echo "     cd '$PWD/pseudo' && wget https://pseudopotentials.quantum-espresso.org/upf_files/$Bp"
+  echo "     # (b) or drop the copy you already have into: $PWD/pseudo/$Bp"
 fi
 for e in Li P S Cl O B; do
   test -f "pseudo/${PAW[$e]}" || { echo "ERROR: pseudo/${PAW[$e]} 없음 (B는 로그인노드에서 wget)"; exit 1; }
