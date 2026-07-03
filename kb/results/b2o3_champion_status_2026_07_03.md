@@ -15,13 +15,13 @@
 | 이온 | MD σ₃₀₀ | ✅ | **18.5 mS/cm** (Ea 0.223) | 13.9 (0.224) → **1.33×, D0-driven** |
 | 기계 | EOS B0 | ✅ | **24.48 GPa** | 21.7 (**+13%**) |
 | 기계 | **DFT Cij** | ⚠ 일부 | **Bulk 27 GPa 신뢰**(relaxed-ion normal + EOS 24.5 교차검증, +13% 강화). **G/E는 relaxed-ion shear ±basin 오염으로 미보고** (C66 붕괴·고유값 음수). clamped-ion 러너 준비됨(`tools/elastic/run_b2o3_elastic_clamped_kisti.sh`)이나 보류 | comp1 22.06 / modelc 27.66 (E_VRH); clamped ≈52 |
-| 전자 | **ICOHP** | ▶ LOBSTER **825717** | wf_collect 픽스 후 재실행 중(로그인노드가 포그라운드를 Killed해서 sbatch로). minimal basis라 spilling 주의 | P–S −6.00, Li–Cl −2.10, Li–S −1.72 |
+| 전자 | **ICOHP** | ✅ 완료 | **spilling 1.57%**. **P–O −8.56·B–S −7.57 = 새 강한 공유결합**(B–S가 host P–S보다 셈), **P–S −6.11≈modelc −6.00 = host 불변**. Li–X(−0.83/−0.80)는 minimal basis라 modelc와 미비교(확장basis 재실행 시 가능). 그림/CSV/json 커밋됨 | P–S −6.00, Li–Cl −2.10, Li–S −1.72 |
 | 전자 | gap/Bader/ELF/CDD | ✅ | gap ~2.0 eV, B+3/P+5/O−1.9, **B–S ELF 0.959(최공유)**, P–O 0.930 | — |
 | 안정성 | phonon/hull | ✅ | 0 허수모드, lowest 13.7 cm⁻¹, +37.5 meV/at | — |
 | 안정성 | 산화창 ESW | ✅ | **0.31 V** (ox 2.03 / red 1.72) | 0.90 V |
 | 구조 | 결합길이/배위 | ✅ | **B–S 1.83Å(삼각 BS3)**, P–O 1.56Å(phosphate PS2O2/PS3O), **B–O 없음**; Voronoi disorder ×1.3–4 | — |
 | 광학 | ε∞ (ph.x epsil) | ▶ 대기 | SCF 수렴, ph.x epsil 대기 (ph.x hang 이력 → epsilon.x 우회 가능) | — |
-| 이온 | Li density (MD 궤적) | ☐ 대기 | | |
+| 이온 | Li density (MD 궤적) | ✅ 완료 | gabia 600K MD 궤적(400프레임)→ `b2o3_T600_Li.cube` (셀 검증 2436 Å³ = V0). BVSE(정적)와 짝 = 실제 Li 점유 | — |
 
 ## 지금 돌아가는 잡 (KISTI, /scratch/x3430a02/kgy/b2o3_eos)
 
