@@ -288,6 +288,12 @@ def parse_args(argv):
                          'MORPHOLOGY + PTFE-on-AM coverage (pending a resolving-grid σ_e run); porosity is '
                          'UNAFFECTED (soft PTFE flows + volume-pinned, like SuperP).  DIRECTION lit-supported '
                          '(dry-fibrillation); MAGNITUDE a tunable estimate, NOT anchored (backlog §F1).')
+    ap.add_argument('--ptfe-press-curl', action='store_true',
+                    help='PTFE web tangle (curl) scales with the target press toward 0.40, for parity with '
+                         "VGCF's press-curl.  OFF by default: PTFE is SOFT (σ_y=0.05<press) so its press-"
+                         'compaction is already EMERGENT in the MPM, and a prescribed press-curl risks DOUBLE-'
+                         'COUNTING (VGCF is stiff, does not deform → genuinely needs the prescribed waviness; '
+                         'PTFE does not).  Opt-in only, for A/B comparison against the emergent baseline.')
     return ap.parse_args(argv)
 
 
@@ -629,6 +635,13 @@ def main(argv):
             # --fibre-rod → straight seed (rod buckles emergently); --fibre-buckle → straight seed + physics buckle.
             _vgcf_curl = (0.0 if (args.fibre_rod or args.fibre_buckle) else
                           args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target_gpa)))
+            # PTFE web tangle (curl).  Baseline 0.40 = the as-drawn/fibrillated tangle (a DRAWING/shear
+            # property, NOT press).  --ptfe-press-curl (OPT-IN) scales it with the target press toward 0.40
+            # for parity with VGCF's press-curl — BUT PTFE is SOFT (σ_y=0.05<press) so its press-compaction
+            # is already EMERGENT in the MPM; a prescribed press-curl risks DOUBLE-COUNTING (unlike stiff
+            # VGCF, which does not deform and genuinely needs the prescribed waviness).  Off by default.
+            _ptfe_curl = (_press_curl(float(args.target_gpa), curl_sat=0.40, p_char=0.30)
+                          if args.ptfe_press_curl else 0.40)
             # physics buckle wavelength (Winkler): λ=2π(EI/E_SE)^¼, EI=E_fib·πr⁴/4 (real graphite 200 GPa, r=75nm)
             _buckle_lam = ((2 * np.pi * (200.0 * np.pi * 0.075 ** 4 / 4 / max(args.e_se, 1e-6)) ** 0.25) / um_box
                            if args.fibre_buckle else 0.0)
@@ -664,7 +677,7 @@ def main(argv):
                 #   (CBD); branch_frac → ② spawn thinner secondary fibrils; bridge_frac → ④ steer toward a 2nd carbon.
                 'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
-                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, 0.40, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD
+                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
@@ -694,7 +707,19 @@ def main(argv):
                     _fibril = float(args.ptfe_fibril) if args.ptfe_fibril >= 0.0 else _ad.PTFE_FIBRIL.get(args.mixing, 1.0)
                     brf = round(brf * _fibril, 3)            # fewer secondary fibrils = less-networked web at low shear
                 if kind == 'fibre':
-                    nuc = np.concatenate(carbon_seed) if ((nucf > 0.0 or brgf > 0.0) and carbon_seed) else None
+                    # nucleation attractors for the binder web: the already-seeded carbon (CBD co-location)
+                    # PLUS, for PTFE (code 4), points sampled on the AM SURFACES — PTFE is a binder that
+                    # DRAPES/wraps AM particles (Lee 2025 bridging), not only the CBD carbon.  Carbon (if any)
+                    # stays primary; AM-surface adds the direct AM-binding the pore-random seed otherwise misses.
+                    _nuc_parts = [np.concatenate(carbon_seed)] if carbon_seed else []
+                    if code == 4 and am_c is not None and (nucf > 0.0 or brgf > 0.0):
+                        _per = 2                                          # attractors per AM sphere
+                        _dd = rng.normal(size=(len(am_c) * _per, 3)).astype(np.float32)
+                        _dd /= (np.linalg.norm(_dd, axis=1, keepdims=True) + 1e-12)   # unit dirs → sphere surface
+                        _amsurf = (np.repeat((am_c - off).astype(np.float32), _per, axis=0)
+                                   + _dd * np.repeat(am_r.astype(np.float32), _per)[:, None])   # box-frame AM-surface pts
+                        _nuc_parts.append(_amsurf)
+                    nuc = np.concatenate(_nuc_parts) if (_nuc_parts and (nucf > 0.0 or brgf > 0.0)) else None
                     _bk_lam = _buckle_lam if code == 2 else 0.0     # physics buckle = VGCF only (PTFE = drawn web)
                     _amfn = (lambda q: _am_frac_abs(q + off)) if (code == 2 and _bk_lam > 0.0) else None
                     pts, _fid, _w = _ad.seed_fibres(nobj, bx, dx, rng, L=L_um / um_box, L_cv=args.add_l_cv,
@@ -767,6 +792,9 @@ def main(argv):
                     _add_meta[nm]['coh_ptfe'] = float(_coh); _add_meta[nm]['binder_cap'] = round(float(_cap), 3)
                     _add_meta[nm]['fibrillation'] = round(float(_fibril), 3)   # dry-shear web degree (mixing-driven)
                     _add_meta[nm]['branch_frac_effective'] = round(float(brf), 3)   # post-fibrillation secondary-fibril fraction (raw base = eff / fibrillation)
+                    _add_meta[nm]['curl'] = round(float(_ptfe_curl), 3)        # web tangle (press-scaled iff --ptfe-press-curl)
+                    _add_meta[nm]['press_curl'] = bool(args.ptfe_press_curl)   # prescribed press-curl on? (OFF = emergent soft compaction only)
+                    _add_meta[nm]['am_bind'] = bool(am_c is not None)          # AM-surface draping attractors added (binder wraps AM)
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
