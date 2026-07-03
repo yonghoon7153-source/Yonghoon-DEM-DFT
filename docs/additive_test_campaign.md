@@ -124,3 +124,31 @@ VGCF 4 wt% @ input_6mAh_real_4 (n_grid 256, 2.39 M rigid VGCF 셀 = 8 vol% ∝ �
   재배열 현상(**DEM 몫**) 실증.  절대 porosity는 frame[5] bracket [volume-fill 8.63 … strut 9.38 %]로
   보고, 나머지는 DEM 공동압밀(VGCF를 LIGGGHTS에 유효입자로)에 귀속.  → MPM은 direction+mechanism+
   morphology 소유, 절대 porosity(dip 포함)는 DEM 소유(frame[5] division).
+
+## ★ SuperP 종결 — volume-fill DOWN (no-strut) + handmix 응집이 coverage만 낮춤 (2026-07-03) ★
+kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경로 = strut/align/buckle
+**하나도 안 받음**(0D 구, L/D≈1 → rod-jamming/배향/좌굴 기하 전제 없음; soft E=0.5/σ_y=0.1<press →
+소성 압밀이 이미 emergent).  이게 VGCF(1D stiff-elastic, prescribed 3-knob)와의 코드/물리 대비.
+- **bulk(ballmill=thinky) 스윕 = 순수 volume-fill DOWN, threshold 없음** (VGCF strut-up과 정반대):
+  0.5→14.585 / 1→13.711 / 2→11.936 / 4→8.275 %; cov AM_S 47→78 %(카본이 AM 표면 점점 감쌈).
+  ballmill≡thinky (CB_MIX 동일 + coat_block 미seed) → 4점 전부 기록값 재현 = VGCF 코드변경이 SuperP
+  안 건드림 확인.
+- **handmix(분산 나쁨: k3→8 / surface_frac 0.70→0.30 off-AM / clump1→4) SIGNATURE**:
+  | wt% | porosity(bm=hm) | cov AM_S bm→hm | Δcov | n_pts Δ |
+  |---|---|---|---|---|
+  | 0.5 | 14.585 (동일) | 47.3→43.2 | −4.1 | −26 % |
+  | 1 | 13.711 (동일) | 53.7→46.0 | −7.7 | −27 % |
+  | 2 | 11.936 (동일) | 64.4→51.4 | −13.0 | −27 % |
+  = **porosity는 volume-fill 그대로(mixing-invariant; add_pvs가 recipe 부피 pin + wall_z jamming) +
+  AM coverage만 체계적으로 ↓**(뭉친 off-AM 카본이 AM 덜 덮음).  Δcov가 wt%에 따라 단조 증가
+  (−4.1/−7.7/−13.0) → σ_e 축(coverage↓ = e-contact↓, Reisacher p_c 4wt%/Kim2025 방향).
+- **adversarial 검증 (workflow wf_17325d01)**: "handmix가 실제 적용됐나 vs mislabel/seed-noise?" 판정
+  **handmix_applied (conf 0.85)**.  근거: n_pts −26 %는 seed-only 변동(측정 std 0.16–1.67 %)의
+  **15–160σ 밖** → seed로 불가능; porosity-동일이 스캐폴드 불변 증명 → CB_MIX가 유일 lever;
+  ballmill≡thinky니 다른 실현은 handmix뿐; cov AM_S만↓/AM_P flat = surface_frac 지문.  (judge의 toy
+  random-sphere가 부호 재현 못 한 건 실제 압축 bed 아닌 toy 한계로 귀속 — 3점 스케일링이 독립 확증.)
+- **TRACEABILITY fix (commit)**: metrics의 `mixing_regime`이 ballmill/handmix 둘 다 'bulk' → JSON만으론
+  구분 불가였음.  `mpm3d_compaction.py` `_add_meta`에 **mixing NAME + cb_mix params(k/surface_frac/
+  step/clump)** 추가 → 이제 bulk-regime 런도 자기-문서화(py_compile ✓, CB_MIX 구조 검증 ✓).
+- **thinky의 진짜 차이(coat_block → σ_e 붕괴, Kim2025)는 여전히 A4 대기** — bulk에선 ballmill과 동일.
+  handmix는 **분산/응집 축**(bulk, 지금 가능)이고 thinky는 **coating 축**(A4/STEP3)으로 분리됨.

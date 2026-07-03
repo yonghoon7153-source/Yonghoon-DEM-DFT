@@ -730,8 +730,13 @@ def main(argv):
                 _add_meta[nm] = {                            # → mpm_metrics['additives'][nm] → 요약
                     'wt_pct': float(cnt[nm]['wt_pct']), 'vol_pct_of_solid': float(cnt[nm]['vol_pct_of_solid']),
                     'vol_um3': round(float(cnt[nm]['vol_um3']), 2), 'n_objects': int(nobj), 'n_points': int(len(pts)),
-                    'E_GPa': float(E), 'sigma_y_GPa': float(sy), 'phase_code': int(code), 'mixing_regime': _proc_regime,
+                    'E_GPa': float(E), 'sigma_y_GPa': float(sy), 'phase_code': int(code),
+                    'mixing': args.mixing, 'mixing_regime': _proc_regime,   # NAME + regime: ballmill & handmix BOTH regime='bulk' → the NAME is what tells them apart (regime alone can't)
                 }
+                if kind == 'cblack':                         # carbon black: record the CB_MIX params that actually
+                    _cbm = _ad.CB_MIX.get(args.mixing, {})   # differ (k/surface_frac/step/clump) so a bulk-regime
+                    if _cbm:                                 # ballmill vs handmix run is self-documenting/traceable
+                        _add_meta[nm]['cb_mix'] = {_k: _cbm[_k] for _k in ('k', 'surface_frac', 'step', 'clump') if _k in _cbm}
                 if code == 2:                                # VGCF: waviness (Tier-1 curl / physics buckle / rod)
                     _add_meta[nm]['curl'] = round(float(_vgcf_curl), 3)
                     if args.fibre_buckle:
