@@ -293,6 +293,16 @@ ADDITIVE_PROCESS = {
 CB_MIX = {m: {k: v for k, v in cfg.items() if k in ('k', 'surface_frac', 'step', 'clump')}
           for m, cfg in ADDITIVE_PROCESS['SuperP'].items()}
 
+# PTFE fibrillation degree vs mixing SHEAR (dry-process).  PTFE binder fibrillates — mechanically
+# unravels into fibrils — in proportion to the applied shear: high-shear ball-mill / Thinky give a
+# long, thin, highly-BRANCHED fibril WEB (good binder network); low-shear hand-mix leaves short,
+# thick, clumpy, poorly-networked fibrils.  ∈(0,1], 1 = full web.  DIRECTION is lit-supported
+# (dry-electrode fibrillation); the MAGNITUDE (how much less at low shear) is NOT anchored → a
+# conservative tunable hook (see docs/fibre_rod_mpm_design.md F1); mpm3d_compaction --ptfe-fibril
+# overrides.  Consumed ONLY for PTFE (fibre code 4); scales branch_frac + fibril length → σ_e network
+# + PTFE-on-AM coverage, NOT porosity (soft PTFE flows + recipe-volume-pinned, mirror of SuperP).
+PTFE_FIBRIL = {'ballmill': 1.0, 'thinky': 1.0, 'handmix': 0.45}
+
 
 def additive_process(name, mixing):
     """Process cell for an (additive, mixing) pair; falls back to ball-mill / bulk."""
