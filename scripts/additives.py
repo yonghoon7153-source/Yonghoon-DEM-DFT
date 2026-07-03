@@ -281,10 +281,10 @@ ADDITIVE_PROCESS = {
         'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
         'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
     },
-    'PTFE': {    # binder fibril — morph = intended fibrillation degree (TBD A4/lit)
-        'ballmill': dict(regime='bulk',       morph='fibrillated binder web'),
-        'thinky':   dict(regime='bulk',       morph='dry-process fibrillation (TBD A4)'),
-        'handmix':  dict(regime='bulk',       morph='less fibrillated, clumpy (TBD A4)'),
+    'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
+        'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),
+        'thinky':   dict(regime='bulk', fibril=1.0,  morph='dry-process fibrillation (high shear)'),
+        'handmix':  dict(regime='bulk', fibril=0.45, morph='less fibrillated, clumpy (low shear)'),
     },
 }
 
@@ -294,14 +294,15 @@ CB_MIX = {m: {k: v for k, v in cfg.items() if k in ('k', 'surface_frac', 'step',
           for m, cfg in ADDITIVE_PROCESS['SuperP'].items()}
 
 # PTFE fibrillation degree vs mixing SHEAR (dry-process).  PTFE binder fibrillates — mechanically
-# unravels into fibrils — in proportion to the applied shear: high-shear ball-mill / Thinky give a
-# long, thin, highly-BRANCHED fibril WEB (good binder network); low-shear hand-mix leaves short,
-# thick, clumpy, poorly-networked fibrils.  ∈(0,1], 1 = full web.  DIRECTION is lit-supported
-# (dry-electrode fibrillation); the MAGNITUDE (how much less at low shear) is NOT anchored → a
-# conservative tunable hook (see docs/fibre_rod_mpm_design.md F1); mpm3d_compaction --ptfe-fibril
-# overrides.  Consumed ONLY for PTFE (fibre code 4); scales branch_frac + fibril length → σ_e network
-# + PTFE-on-AM coverage, NOT porosity (soft PTFE flows + recipe-volume-pinned, mirror of SuperP).
-PTFE_FIBRIL = {'ballmill': 1.0, 'thinky': 1.0, 'handmix': 0.45}
+# unravels into a BRANCHED fibril WEB — in proportion to the applied shear: high-shear ball-mill /
+# Thinky give a good binder network; low-shear hand-mix leaves poorly-networked, clumpy fibrils.
+# fibril ∈(0,1], 1 = full web.  DIRECTION is lit-supported (dry-electrode fibrillation); the MAGNITUDE
+# (the 0.45 low-shear value) is NOT anchored — a demonstrative, tunable estimate (mpm3d_compaction
+# --ptfe-fibril overrides).  Rule: docs/digest_model_application_backlog.md §F1 ("conservative tunable
+# hook, 날조 금지").  Consumed ONLY for PTFE (fibre code 4); scales branch_frac (the web) → σ_e-network
+# MORPHOLOGY + PTFE-on-AM coverage (pending a resolving-grid σ_e run), NOT porosity (soft PTFE flows +
+# recipe-volume-pinned, mirror of SuperP).  DERIVED from ADDITIVE_PROCESS → ONE source of truth (cf CB_MIX).
+PTFE_FIBRIL = {m: cfg.get('fibril', 1.0) for m, cfg in ADDITIVE_PROCESS['PTFE'].items()}
 
 
 def additive_process(name, mixing):

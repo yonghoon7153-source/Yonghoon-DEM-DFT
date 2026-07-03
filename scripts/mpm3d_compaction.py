@@ -282,12 +282,12 @@ def parse_args(argv):
                          'generator bakes the case-specific value.  In-plane fibres also buckle less (smaller d0_z).')
     ap.add_argument('--ptfe-fibril', type=float, default=-1.0,
                     help='PTFE fibrillation degree ∈(0,1] set by the mixing SHEAR (dry-process): high-shear '
-                         'ball-mill/Thinky unravel PTFE into a long, thin, BRANCHED fibril web (1.0); low-shear '
-                         'hand-mix leaves short, thick, clumpy, poorly-networked fibrils (<1).  <0 = AUTO from '
-                         '--mixing (ball-mill/Thinky 1.0, hand-mix 0.45).  Scales branch_frac (the web) + fibril '
-                         'length only → shapes the σ_e network + PTFE-on-AM coverage; porosity is UNAFFECTED '
-                         '(soft PTFE flows + volume-pinned, like SuperP).  DIRECTION lit-supported (dry-'
-                         'fibrillation); MAGNITUDE a conservative tunable hook, NOT anchored (see F1).')
+                         'ball-mill/Thinky unravel PTFE into a BRANCHED fibril web (1.0); low-shear hand-mix '
+                         'leaves poorly-networked, clumpy fibrils (<1).  <0 = AUTO from --mixing (ball-mill/'
+                         'Thinky 1.0, hand-mix 0.45).  Scales branch_frac (the web) only → shapes the σ_e-network '
+                         'MORPHOLOGY + PTFE-on-AM coverage (pending a resolving-grid σ_e run); porosity is '
+                         'UNAFFECTED (soft PTFE flows + volume-pinned, like SuperP).  DIRECTION lit-supported '
+                         '(dry-fibrillation); MAGNITUDE a tunable estimate, NOT anchored (backlog §F1).')
     return ap.parse_args(argv)
 
 
@@ -684,15 +684,15 @@ def main(argv):
                 #   skeleton; SuperP = aggregate count) — recipe wt%/vol% tracked in metrics + per-point pvs
                 #   (branching adds children but the mean-1 weight normalisation preserves the recipe volume).
                 # ★ PTFE fibrillation vs mixing SHEAR (dry-process): high-shear ball-mill/Thinky unravel PTFE
-                # into a long, thin, BRANCHED fibril web; low-shear hand-mix → short, thick, poorly-networked
-                # fibrils.  Scales branch_frac (the web) + fibril length ONLY → σ_e network + PTFE-on-AM
-                # coverage; porosity UNAFFECTED (soft PTFE flows + add_pvs volume-pin, mirror of SuperP).
-                # DIRECTION lit-supported; MAGNITUDE a conservative tunable hook (--ptfe-fibril / F1).
+                # into a BRANCHED fibril web; low-shear hand-mix → poorly-networked, clumpy fibrils.  Scales
+                # branch_frac (the web = the lit-supported fibrillation signature) ONLY, by a single knob → σ_e-
+                # network morphology + PTFE-on-AM coverage; porosity UNAFFECTED (soft PTFE flows + add_pvs
+                # volume-pin, mirror of SuperP).  DIRECTION lit-supported; MAGNITUDE a tunable hook, NOT anchored
+                # (--ptfe-fibril; docs/digest_model_application_backlog.md §F1).
                 _fibril = 1.0
                 if code == 4:
                     _fibril = float(args.ptfe_fibril) if args.ptfe_fibril >= 0.0 else _ad.PTFE_FIBRIL.get(args.mixing, 1.0)
                     brf = round(brf * _fibril, 3)            # fewer secondary fibrils = less-networked web at low shear
-                    L_um = L_um * (0.4 + 0.6 * _fibril)      # + modestly shorter fibrils (drawn less) at low shear
                 if kind == 'fibre':
                     nuc = np.concatenate(carbon_seed) if ((nucf > 0.0 or brgf > 0.0) and carbon_seed) else None
                     _bk_lam = _buckle_lam if code == 2 else 0.0     # physics buckle = VGCF only (PTFE = drawn web)
@@ -766,7 +766,7 @@ def main(argv):
                 if code == 4:                                # PTFE: A3 binder cohesion + fibrillation-vs-shear
                     _add_meta[nm]['coh_ptfe'] = float(_coh); _add_meta[nm]['binder_cap'] = round(float(_cap), 3)
                     _add_meta[nm]['fibrillation'] = round(float(_fibril), 3)   # dry-shear web degree (mixing-driven)
-                    _add_meta[nm]['branch_frac'] = round(float(brf), 3)        # secondary-fibril fraction after fibrillation scaling
+                    _add_meta[nm]['branch_frac_effective'] = round(float(brf), 3)   # post-fibrillation secondary-fibril fraction (raw base = eff / fibrillation)
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
