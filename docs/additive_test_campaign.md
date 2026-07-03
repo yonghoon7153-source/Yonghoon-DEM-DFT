@@ -206,3 +206,15 @@ coh_ptfe 0.0649 (A3 binder_cap 0.649) / press_curl false(opt-in, VGCF-차용 크
 - **결론 (정직)**: PTFE-AM 바인딩의 본질 = **anchor+bridge 연결성**(+A3 cohesion 역학) — surface
   coverage %가 아님.  값은 STEP3(σ_e network / mechanical connectivity)에서 나타남.  PTFE porosity/
   형상 축 CLOSED; 남은 PTFE 물리 = handmix fibril 0.45 대비런(선택) + STEP3 연결성.
+
+### PTFE wt% 스윕 완결 (0.5/1/2/4, ballmill full-physics, 2026-07-03)
+| wt% | por (pred) | drape<0.2µm | add-cov AM_S | binder_cap |
+|---|---|---|---|---|
+| 0.5 | 14.703 (14.70) | 20.7% | 1.1% | 0.649 |
+| 1 | 13.948 (13.94) | 20.8% | 2.2% | 0.930 |
+| 2 | 12.415 (12.39) | 21.1% | 4.4% | 0.955 |
+| 4 | 9.254 (9.21) | 21.0% | 8.8% | **0.504** |
+3중 일관성: ① porosity = volume-fill EXACT 전 구간; ② **drape ~21% wt%-불변**(intensive 형상통계,
+packing-지배 — am-bind 대조군과 정합) vs **add-cov 완벽 선형**(extensive 재료통계, 1.1→2.2→4.4→8.8);
+③ **binder_cap이 A3 비단조 arc를 데이터로 완주** — 0.649→0.930→[peak 1.0 @1.5wt%]→0.955→**0.504**
+(4wt% over-crosslink 반토막, 공식값 사전등록 후 적중).  PTFE porosity/형상 축 스윕까지 CLOSED.
