@@ -1,7 +1,7 @@
-bond,b2o3_ICOHP_eV,N,b2o3_min,b2o3_max,modelc_ICOHP,comp1_ICOHP,nd_ICOHP,comparable_to_modelc,note
-P-O,-8.555,3,-8.708,-8.342,,,-8.43,yes,phosphate P-O; new bond from O doping (strongest)
-B-S,-7.568,6,-7.856,-7.263,,,,yes,thioborate BS3; new bond from B doping (stronger than host P-S)
-P-S,-6.106,29,-6.676,-5.784,-6.00,-5.944,-5.976,yes,host PS4 backbone; ~unchanged by doping (+1.8% vs modelc)
-S-S,-0.057,84,-0.110,-0.007,-0.11,-0.107,-0.101,yes,weak/non-bonding
-Li-S,-0.829,151,-1.081,-0.274,-1.717,-1.592,-1.647,NO,Li-X basis-limited: b2o3 minimal (Li 1s2s) vs modelc extended (1s2s2p)
-Li-Cl,-0.796,79,-1.104,-0.389,-2.103,-1.855,-2.132,NO,Li-X basis-limited (same reason)
+bond,b2o3_ICOHP_eV,N,modelc_ICOHP,comparable_to_modelc,note
+P-O,-8.551,3,,yes,phosphate P-O; new bond from O doping
+B-S,-7.792,6,,yes,thioborate BS3; new bond from B doping (stronger than host P-S)
+P-S,-6.023,29,-6.00,yes,host PS4 backbone; unchanged (+0.4% vs modelc)
+Li-Cl,-2.076,86,-2.103,yes,host; unchanged (extended basis Li 2p) — was basis-limited before
+Li-S,-1.680,234,-1.717,yes,host; unchanged (extended basis Li 2p) — was basis-limited before
+S-S,-0.116,95,-0.11,yes,host; unchanged
