@@ -1085,32 +1085,55 @@ def main(argv):
         xf = x.to_numpy()
         ci = (xf * n_grid).astype(int)
         ci[:, :2] = np.clip(ci[:, :2], 0, n_grid - 1); ci[:, 2] = np.clip(ci[:, 2], 0, nz - 1)
-        se_occ = np.zeros((n_grid, n_grid, nz), bool)
-        se_occ[ci[:, 0], ci[:, 1], ci[:, 2]] = True
-        # close the discrete SE occupancy to fill point-sampling holes at the interface —
-        # the raw 'point in the adjacent cell' measure UNDER-counts coverage otherwise
-        # (geometric ground-truth is ~16 % touching / ~49 % within 0.14 µm; raw read ~26 %).
         try:
             from scipy import ndimage as _ndi
-            se_occ = _ndi.binary_closing(se_occ, iterations=1)
         except Exception:
-            pass
+            _ndi = None
+        # close the discrete occupancy to fill point-sampling holes at the interface —
+        # the raw 'point in the adjacent cell' measure UNDER-counts coverage otherwise
+        # (geometric ground-truth is ~16 % touching / ~49 % within 0.14 µm; raw read ~26 %).
+        def _occ_of(sel):                                     # boolean cell occupancy of a point-subset (+ hole-close)
+            occ = np.zeros((n_grid, n_grid, nz), bool)
+            if sel.any():
+                cc = ci[sel]
+                occ[cc[:, 0], cc[:, 1], cc[:, 2]] = True
+                if _ndi is not None:
+                    occ = _ndi.binary_closing(occ, iterations=1)
+            return occ
+        # ★ SE-only coverage (phase==1) = the TRUE SE coverage validating DEM Hertz/Tabor.  The additive
+        # points (VGCF/SuperP/PTFE, phase>1) are ALSO material points in x, so lumping them here would
+        # inflate "coverage by SE" (SuperP handmix's cov drop was 100 % the carbon component, mislabeled).
+        # → count them SEPARATELY as additive-on-AM coverage (the σ_e-relevant contact).  Carbon-free runs
+        # (real_14 validation) have no additive points → SE coverage byte-unchanged.
+        _is_se = (phase_np == 1) if 'phase_np' in locals() else np.ones(len(ci), bool)
+        se_occ = _occ_of(_is_se)
+        add_occ = _occ_of(~_is_se) if (~_is_se).any() else None
         if PERIODIC:                                          # roll must wrap WITHIN the box, not the dead
             sl = slice(_LO, _LO + _WC)                        # margin → slice the periodic cell for x,y
-            pin_c, se_c2 = pin_np[sl, sl, :], se_occ[sl, sl, :]
+            pin_c = pin_np[sl, sl, :]; se_c2 = se_occ[sl, sl, :]
+            add_c = add_occ[sl, sl, :] if add_occ is not None else None
         else:
             pin_c, se_c2 = pin_np, se_occ
-        for t, nm in ((1, 'AM_P'), (2, 'AM_S')):
-            amt = (pin_c == t); tot = 0; cov = 0
+            add_c = add_occ
+        def _cov_frac(occ_c, amt):                            # fraction of AM_t surface voxels facing occ_c
+            tot = 0; cov = 0
             for ax in range(3):
                 for s in (1, -1):
                     iface = amt & (np.roll(pin_c, s, ax) == 0)   # AM_t voxel with a non-AM neighbour
                     tot += int(iface.sum())
-                    cov += int((iface & np.roll(se_c2, s, ax)).sum())
-            pct = 100.0 * cov / tot if tot else 0.0
+                    cov += int((iface & np.roll(occ_c, s, ax)).sum())
+            return (100.0 * cov / tot if tot else 0.0), cov, tot
+        for t, nm in ((1, 'AM_P'), (2, 'AM_S')):
+            amt = (pin_c == t)
+            pct, cov, tot = _cov_frac(se_c2, amt)
             cov_out[nm] = round(pct, 1)
             if tot:
                 print(f"  coverage {nm} by SE = {pct:5.1f}%   ({cov:,}/{tot:,} surface voxels)")
+            if add_c is not None:                             # additive (carbon/soft-fibre) coverage of AM = σ_e contact
+                apct, acov, _ = _cov_frac(add_c, amt)
+                cov_out[nm + '_add'] = round(apct, 1)
+                if tot:
+                    print(f"  coverage {nm} by additive = {apct:5.1f}%   ({acov:,}/{tot:,})")
     if args.save_metrics:
         # ── ALL raw MPM outputs → one structured JSON (the webapp's MPM source) ──────────────
         import json as _json
@@ -1125,6 +1148,9 @@ def main(argv):
             'floor_porosity_pct': float(args.floor_porosity) if args.floor_porosity > 0 else None,
             'se_target_GPa': round(float(target * (1.0 - args.am_load_frac)), 4) if (args.am_load_frac > 0 and args.floor_porosity <= 0) else None,
             'coverage_AM_P_pct': cov_out.get('AM_P'), 'coverage_AM_S_pct': cov_out.get('AM_S'),
+            # additive(carbon/soft-fibre)-on-AM coverage (σ_e contact), SEPARATE from SE coverage above;
+            # None for carbon-free runs.  SE keys are now SE-ONLY (were SE+additive conflated pre-2026-07-03).
+            'coverage_AM_P_add_pct': cov_out.get('AM_P_add'), 'coverage_AM_S_add_pct': cov_out.get('AM_S_add'),
             'n_grid': int(n_grid), 'nz': int(nz), 'n_pts': int(n),
             'E_SE_GPa': float(args.e_se), 'nu_SE': float(args.nu_se),
             'sigma_y_GPa': float(args.sigma_y), 'K_SE_GPa': round(float(K_SE), 3),

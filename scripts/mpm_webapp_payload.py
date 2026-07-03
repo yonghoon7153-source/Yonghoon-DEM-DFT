@@ -436,6 +436,10 @@ def main():
         'thickness_mpm_um': round(pick(a.thickness, 'thickness_um', thick), 2),
         'coverage_AM_P_mpm_pct': round(pick(a.cov_p, 'coverage_AM_P_pct', cov['AM_P']), 1),
         'coverage_AM_S_mpm_pct': round(pick(a.cov_s, 'coverage_AM_S_pct', cov['AM_S']), 1),
+        # additive(carbon/soft-fibre)-on-AM coverage (σ_e contact), SEPARATE from the SE coverage above
+        # (which is now SE-ONLY as of the 2026-07-03 metric fix); None for carbon-free runs.
+        'coverage_AM_P_add_mpm_pct': sim_m.get('coverage_AM_P_add_pct'),
+        'coverage_AM_S_add_mpm_pct': sim_m.get('coverage_AM_S_add_pct'),
         'se_fraction_pct': round(sim_m.get('SE_of_solid_pct', f_se), 2),
         'n_am': len(particles), 'se_surface_tris': len(tris), 'n_vox': a.n_vox,
         # coverage within Hertz/Tabor µm of the SE surface.  PLASTIC = deformed SE (MPM, all points);

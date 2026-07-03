@@ -154,7 +154,11 @@ kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경�
      전자접촉↓)는 진짜**지만 "SE coverage 하락"으로 라벨된 건 오류.
   → **살아남는 것**: handmix가 AM 표면 carbon을 실제로 줄임(분산 나쁨) = σ_e 축 신호, 방향 맞음
   (Reisacher/Kim2025).  **정정**: porosity 불변=구조적 강제(물리 아님), cov=SE 아닌 carbon.
-  metric 권고: SE-only cov와 carbon cov 분리 기록(현재 conflate → additive 케이스서 오해 소지).
+  metric FIX ✅ (2026-07-03): `coverage_AM_P/S_pct`를 **SE-only**로, `coverage_AM_P/S_add_pct`를
+  **additive-on-AM(σ_e 접촉)**으로 분리 (mpm3d_compaction `_cov_frac`를 `phase_np==1`로 게이트 +
+  payload 키 전달; unit-test PASS, carbon-free real14 자동 불변).  ⚠ 기존 additive 런은 **새 코드로
+  재실행**해야 분리값이 채워짐(coverage는 run-time 계산이라 recompute 불가) — SE/porosity 데이터는
+  유효하니 coverage만 갱신되는 것, "처음부터"가 아님.
 
 ## PTFE mixing = tautological (VGCF와 동일, SuperP와 다름) (2026-07-03)
 `CB_MIX`는 `ADDITIVE_PROCESS['SuperP']`에서만 파생(additives.py:293) → **PTFE는 CB_MIX 없음**.  PTFE kind=
