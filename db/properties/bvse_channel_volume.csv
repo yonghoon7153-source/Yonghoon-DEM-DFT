@@ -1,0 +1,8 @@
+# BVSE Li-channel volume fraction vs iso level (above-min). Same softBV params + ~0.25 A voxel.
+"# b2o3 = interp of b2o3_bvse_percolation.csv; modelc = recomputed from modelc_bvse_map.npy. valence^2 units (empirical, NOT eV)."
+bvse_iso_val2,b2o3_channel_vol_pct,modelc_channel_vol_pct,ratio_b2o3_over_modelc
+0.25,3.37,1.23,2.75
+0.50,6.74,3.32,2.03
+1.00,12.22,8.36,1.46
+1.50,17.09,13.44,1.27
+2.00,21.25,17.85,1.19
