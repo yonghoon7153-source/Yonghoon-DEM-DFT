@@ -159,6 +159,12 @@ kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경�
   payload 키 전달; unit-test PASS, carbon-free real14 자동 불변).  ⚠ 기존 additive 런은 **새 코드로
   재실행**해야 분리값이 채워짐(coverage는 run-time 계산이라 recompute 불가) — SE/porosity 데이터는
   유효하니 coverage만 갱신되는 것, "처음부터"가 아님.
+  ★ **검증 완료 (2wt% ballmill/handmix 재실행)**: SE-only cov AM_P/S ballmill **39.3/40.0** → handmix
+  **39.3/40.2** = **MIXING-INVARIANT ✓**(SE 스캐폴드 구동); carbon-on-AM cov(`_add`) ballmill 7.9/35.8 →
+  handmix 6.2/15.4 = **AM_S −20.4pp** → handmix "하락"이 **전부 carbon coverage에** 있음(옛 conflated
+  −13.0보다 큼 — 불변 SE 40에 희석됐던 것).  mixing/cb_mix도 기록됨(handmix k8/sf0.3/clump4).
+  ⇒ **"handmix는 SE coverage 안 바꾸고 carbon 접촉(σ_e)만 −20pp 떨어뜨린다"** 실데이터 확정.
+  **★ SuperP CLOSED (metric-validated).**
 
 ## PTFE mixing = tautological (VGCF와 동일, SuperP와 다름) (2026-07-03)
 `CB_MIX`는 `ADDITIVE_PROCESS['SuperP']`에서만 파생(additives.py:293) → **PTFE는 CB_MIX 없음**.  PTFE kind=
