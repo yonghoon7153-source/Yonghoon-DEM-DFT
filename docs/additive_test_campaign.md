@@ -218,3 +218,18 @@ coh_ptfe 0.0649 (A3 binder_cap 0.649) / press_curl false(opt-in, VGCF-차용 크
 packing-지배 — am-bind 대조군과 정합) vs **add-cov 완벽 선형**(extensive 재료통계, 1.1→2.2→4.4→8.8);
 ③ **binder_cap이 A3 비단조 arc를 데이터로 완주** — 0.649→0.930→[peak 1.0 @1.5wt%]→0.955→**0.504**
 (4wt% over-crosslink 반토막, 공식값 사전등록 후 적중).  PTFE porosity/형상 축 스윕까지 CLOSED.
+
+### ⚠ 두께 컬럼 정직 노트 — 전 런 112.9µm 고정 = frozen-scaffold 강제 (2026-07-03, 사용자 관찰)
+저장된 payload 23종의 두께가 전부 112.9µm(wall_z 2.1267 byte-동일; 유일 예외 VGCF-4 strut 113.8)인
+것은 물리 결과가 아니라 **모델 구조 3중 pin**: ① AM 스캐폴드 frozen(무첨가 DEM 골격) ② hold 프로토콜
+정지높이 = AM+SE jamming ③ soft additive(σ_y<press)는 흘러서 wallP 기여 0 → 플레이트 못 밀어올림.
+⇒ 첨가 부피가 100% porosity↓로 강제 흡수(=volume-fill의 두께-측 얼굴).  **strut(113.8, +0.9µm)이
+유일하게 두께 반응 = 메커니즘 증명**.
+물리 판정: soft 저 wt%(pore의 ~6-12% 채움)는 void-fill ≈ 그럴듯(실제 두께변화 ~1%↓).  4wt%(=solid
+7.3vol% ≈ pore 공간의 ~40%)를 골격 교란 없이 전부 pore로 = **과장** — 실제는 상당분이 두께↑
+(porosity 유지 가정 시 ~+8µm: 112.9→~121µm).  stiff VGCF는 Cho 방향(두께가 첨가부피 이상 ↑)인데
+frozen AM 탓에 strut가 ~11%만 회복(+0.75%p 결론과 동일 수치).
+frame[5]: 두께 절대값 = porosity와 동일한 bracket [volume-fill 하한 … strut 부분회복] + 실제값은
+Cho-dilate 곡선에서 유도(VGCF 2wt% dilate ε 15.28% → +4µm 스케일).  **트렌드/형상/coverage 비교는
+모든 런이 같은 pin을 공유하므로 유효**.  두께 자유도는 모델에 있으나(wall_z는 300MPa까지 하강)
+frozen 골격이 사실상 pin — AM-재배열 몫 = DEM(frame[5] division)의 두께-축 표현.
