@@ -25,7 +25,14 @@ set -euo pipefail
 REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}
 V0XYZ=${V0XYZ:-$REPO/db/structures/modelc_2x_V0.xyz}   # <-- CONFIRM this matches the deck run
 OUTROOT=${OUTROOT:-$HOME/work/runs/modelc_600_reseed}
+DEVICE=${DEVICE:-cuda}   # cuda (gabia GPU) | cpu (kgy CPU-only: valid but SLOW, hrs-days/seed)
 # -----------------------------------------------------------------------------
+# PREFLIGHT (run once on a new machine before the loop):
+#   python3 -c "from fairchem.core import pretrained_mlip; \
+#     from fairchem.core.calculate.ase_calculator import FAIRChemCalculator; \
+#     import ase; print('fairchem+ase OK')"
+#   nvidia-smi -L && echo 'GPU -> DEVICE=cuda' || echo 'CPU only -> DEVICE=cpu (slow)'
+# If the import fails (kgy is a QE server, fairchem likely absent) -> use gabia.
 
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 
