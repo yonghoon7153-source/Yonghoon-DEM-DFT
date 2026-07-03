@@ -53,8 +53,8 @@ axes[0].legend(fontsize=8.5, loc="upper left", framealpha=0.9)
 
 # annotate the D ratio (from the official conductivity CSV) on the 600 K panel
 axes[0].text(0.97, 0.05,
-             "b2o3 / LPSCl1.6:\nE$_a$ equal (~0.22 eV)\n$\\sigma$ = 1.33× (D$_0$-driven)",
-             transform=axes[0].transAxes, ha="right", va="bottom", fontsize=7.6,
+             "b2o3 / LPSCl1.6:\nE$_a$ equal (0.22 $\\pm$ 0.03 eV)\n$\\sigma$ $\\approx$ 1.3× (not a barrier effect)",
+             transform=axes[0].transAxes, ha="right", va="bottom", fontsize=7.2,
              bbox=dict(boxstyle="round,pad=0.35", fc="#fff5f2", ec="#d1352b", lw=0.8))
 
 fig.suptitle("Li mean-squared displacement  —  LPSCl  vs  LPSCl1.6  vs  B$_2$O$_3$-doped   (MLIP-MD)",
