@@ -255,8 +255,13 @@ Physics couplings (why it's more than cosmetic):
 - **buckle consistency**: the buckle strain uses `d0[2]²`, so in-plane fibres (smaller d0[2]) now buckle
   LESS — physically right (an in-plane fibre sees little axial press to buckle it).
 - **strut coupling**: for `--fibre-stiff`, in-plane fibres bear the z-platen load LESS than z-aligned ones,
-  so real in-plane alignment should REDUCE the strut prop vs isotropic — a physical (not cosmetic) effect
-  worth measuring against the isotropic strut sweep.
+  so a-priori in-plane alignment *should* REDUCE the strut prop vs isotropic.  ★ MEASURED (real_4 4wt%, kgy
+  RTX3090, 3-flag stiff+align+buckle): align is **POROSITY-NEUTRAL** — stiff-only 9.38 % → stiff+align
+  9.383 % (Δ+0.003 %p).  Reason the prediction did NOT materialise: the strut is a BINARY rigid mask (cells
+  pinned v=0), which props the bed by OCCUPYING VOLUME irrespective of fibre orientation — the model does
+  not resolve per-fibre z-load-bearing, so strut(z-resistance) and align(in-plane) are ORTHOGONAL here and
+  DECOUPLE cleanly.  The orientation's real payoff is therefore σ_e in-plane anisotropy (STEP 3, not done),
+  NOT the porosity prop; the +0.75 %p Cho-direction prop is set by the strut alone and align leaves it intact.
 Honest scope: still a resolved-grain morphology model at production res (fibres sub-voxel → porosity/σ
 largely unchanged); the value is SEM fidelity + the physically-correct orientation for the strut/buckle
 couplings.  ε_loose=0.44 is the one assumption (random loose packing); override λ_z via `--fibre-align`.
