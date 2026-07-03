@@ -23,7 +23,12 @@ set -euo pipefail
 # original gabia modelc conductivity run dir. The 3-seed mean should bracket
 # ~0.79e-5; if it is wildly off you have the wrong structure/cell.
 REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}
-V0XYZ=${V0XYZ:-$REPO/db/structures/modelc_2x_V0.xyz}   # <-- CONFIRM this matches the deck run
+# 62-atom AUTHORITATIVE modelc V0 = the slide-14 / deck conductivity cell
+# (D_600 ~ 0.79e-5, Ea 0.2235). The deck b2o3-vs-modelc comparison reuses these
+# 62-atom values verbatim -> reseed THIS so the 600K bar is anchor-consistent.
+# (NOT modelc_2x_V0.xyz -- that 124-atom "b2o3 undoped frame" was built to grow
+#  b2o3, and would NOT reproduce the 0.79e-5 anchor.)
+V0XYZ=${V0XYZ:-$REPO/db/structures/modelc_V0_k663.xyz}
 OUTROOT=${OUTROOT:-$HOME/work/runs/modelc_600_reseed}
 DEVICE=${DEVICE:-cuda}   # cuda (gabia GPU) | cpu (kgy CPU-only: valid but SLOW, hrs-days/seed)
 # -----------------------------------------------------------------------------
