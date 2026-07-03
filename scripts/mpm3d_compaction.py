@@ -84,6 +84,32 @@ def _press_curl(p_gpa, curl_sat=0.095, p_char=0.30):
     return float(curl_sat * (1.0 - np.exp(-max(float(p_gpa), 0.0) / p_char)))
 
 
+def _am_surface_pts(centres, radii, n, rng, box_hi, per=6):
+    """`n` box-frame points on the AM sphere surfaces — for PTFE binder nucleation-draping (the fibril
+    web wraps AM).  EVEN per-sphere spread (golden-angle Fibonacci directions + a per-sphere random
+    roll), NOT random pin-pricks.  `per` seed points per sphere are generated, then sampled to exactly
+    `n` (with replacement if n exceeds per·N_AM, so the caller can hit a target nucleation FRACTION
+    regardless of the AM count).  Clipped inside the box.  Buried points (a nucleus inside another AM)
+    are left to seed_fibres' `in_am` drop — a buried nucleus grows no fibril, so it self-corrects."""
+    N = len(centres)
+    if N == 0 or n <= 0:
+        return np.zeros((0, 3), np.float32)
+    k = np.arange(per) + 0.5
+    z = 1.0 - 2.0 * k / per
+    rr = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+    th = (np.pi * (1.0 + 5.0 ** 0.5)) * k                                  # golden-angle azimuth
+    base = np.stack([rr * np.cos(th), rr * np.sin(th), z], axis=1)         # (per,3) even unit dirs
+    roll = rng.uniform(0.0, 2.0 * np.pi, size=N)                           # per-sphere azimuth variety
+    cs, sn = np.cos(roll)[:, None], np.sin(roll)[:, None]
+    dx = base[None, :, 0] * cs - base[None, :, 1] * sn
+    dy = base[None, :, 0] * sn + base[None, :, 1] * cs
+    dz = np.broadcast_to(base[None, :, 2], (N, per))
+    pts = (centres[:, None, :] + np.stack([dx, dy, dz], 2) * radii[:, None, None]).reshape(-1, 3)
+    pts = np.clip(pts, 1e-4, np.asarray(box_hi, np.float64) - 1e-4)        # keep inside the box
+    idx = rng.choice(len(pts), n, replace=(n > len(pts)))
+    return pts[idx].astype(np.float32)
+
+
 def parse_args(argv):
     ap = argparse.ArgumentParser(description="3D MPM compaction (servo to target σzz).")
     ap.add_argument('--arch', default='cpu', choices=['cpu', 'gpu', 'cuda', 'vulkan'])
@@ -290,10 +316,18 @@ def parse_args(argv):
                          '(dry-fibrillation); MAGNITUDE a tunable estimate, NOT anchored (backlog §F1).')
     ap.add_argument('--ptfe-press-curl', action='store_true',
                     help='PTFE web tangle (curl) scales with the target press toward 0.40, for parity with '
-                         "VGCF's press-curl.  OFF by default: PTFE is SOFT (σ_y=0.05<press) so its press-"
-                         'compaction is already EMERGENT in the MPM, and a prescribed press-curl risks DOUBLE-'
-                         'COUNTING (VGCF is stiff, does not deform → genuinely needs the prescribed waviness; '
-                         'PTFE does not).  Opt-in only, for A/B comparison against the emergent baseline.')
+                         "VGCF's press-curl.  OFF by default (opt-in) because the press MAGNITUDE for a SOFT "
+                         'fibril is UNANCHORED — curl_sat=0.40/p_char=0.30 are BORROWED from VGCF\'s stiff-'
+                         'column Euler-buckling calibration and have no PTFE basis (backlog §F1: unanchored → '
+                         'keep out of the production number).  Provided for A/B comparison only.  (align, by '
+                         "contrast, is auto-baked: its λ_z is DERIVED from the measured compaction ratio.)")
+    ap.add_argument('--ptfe-am-bind', type=float, default=0.5,
+                    help='PTFE binder AM-wrap strength = the target FRACTION of PTFE nucleations that DRAPE AM '
+                         'surfaces (vs the CBD carbon).  PTFE is a binder that wraps/bridges AM (Lee 2025), not '
+                         'only carbon; 0 = pure-CBD (no AM wrap), 1 = all on AM.  Held FIXED independent of the '
+                         'carbon point count (else the wrap strength would swing with recipe).  In a PTFE-only '
+                         'recipe (no carbon) AM is the whole pool.  MAGNITUDE (default 0.5) a conservative '
+                         'tunable hook, NOT anchored (backlog §F1).')
     return ap.parse_args(argv)
 
 
@@ -636,10 +670,12 @@ def main(argv):
             _vgcf_curl = (0.0 if (args.fibre_rod or args.fibre_buckle) else
                           args.vgcf_curl if args.vgcf_curl >= 0.0 else _press_curl(float(args.target_gpa)))
             # PTFE web tangle (curl).  Baseline 0.40 = the as-drawn/fibrillated tangle (a DRAWING/shear
-            # property, NOT press).  --ptfe-press-curl (OPT-IN) scales it with the target press toward 0.40
-            # for parity with VGCF's press-curl — BUT PTFE is SOFT (σ_y=0.05<press) so its press-compaction
-            # is already EMERGENT in the MPM; a prescribed press-curl risks DOUBLE-COUNTING (unlike stiff
-            # VGCF, which does not deform and genuinely needs the prescribed waviness).  Off by default.
+            # property set by mixing, NOT press).  --ptfe-press-curl (OPT-IN) re-attributes it to a press
+            # scaling for parity with VGCF — kept OPT-IN because the press MAGNITUDE for a soft fibril is
+            # UNANCHORED (curl_sat/p_char are borrowed from VGCF's stiff-column Euler buckling, no PTFE
+            # basis) → keep it out of the production number (backlog §F1).  (align is auto-baked instead
+            # because its λ_z is DERIVED from the measured compaction ratio — an anchored quantity, not an
+            # invented magnitude; that honest split — derived=auto, unanchored=opt-in — is the real reason.)
             _ptfe_curl = (_press_curl(float(args.target_gpa), curl_sat=0.40, p_char=0.30)
                           if args.ptfe_press_curl else 0.40)
             # physics buckle wavelength (Winkler): λ=2π(EI/E_SE)^¼, EI=E_fib·πr⁴/4 (real graphite 200 GPa, r=75nm)
@@ -708,17 +744,22 @@ def main(argv):
                     brf = round(brf * _fibril, 3)            # fewer secondary fibrils = less-networked web at low shear
                 if kind == 'fibre':
                     # nucleation attractors for the binder web: the already-seeded carbon (CBD co-location)
-                    # PLUS, for PTFE (code 4), points sampled on the AM SURFACES — PTFE is a binder that
-                    # DRAPES/wraps AM particles (Lee 2025 bridging), not only the CBD carbon.  Carbon (if any)
-                    # stays primary; AM-surface adds the direct AM-binding the pore-random seed otherwise misses.
+                    # PLUS, for PTFE (code 4), points on the AM SURFACES — PTFE is a binder that DRAPES/wraps
+                    # AM particles (Lee 2025 bridging), not only the CBD carbon.  The AM share is a CONTROLLED
+                    # FRACTION (--ptfe-am-bind) of the nucleations, held FIXED independent of the carbon point
+                    # count (a raw concat would let the wrap strength swing wildly with recipe).  MAGNITUDE
+                    # (default 0.5) is a conservative tunable hook, NOT anchored (backlog §F1).
+                    _am_fired = False
                     _nuc_parts = [np.concatenate(carbon_seed)] if carbon_seed else []
                     if code == 4 and am_c is not None and (nucf > 0.0 or brgf > 0.0):
-                        _per = 2                                          # attractors per AM sphere
-                        _dd = rng.normal(size=(len(am_c) * _per, 3)).astype(np.float32)
-                        _dd /= (np.linalg.norm(_dd, axis=1, keepdims=True) + 1e-12)   # unit dirs → sphere surface
-                        _amsurf = (np.repeat((am_c - off).astype(np.float32), _per, axis=0)
-                                   + _dd * np.repeat(am_r.astype(np.float32), _per)[:, None])   # box-frame AM-surface pts
-                        _nuc_parts.append(_amsurf)
+                        _f = float(np.clip(args.ptfe_am_bind, 0.0, 1.0))         # target AM share of nucleations
+                        _ncarb = int(sum(len(c) for c in carbon_seed)) if carbon_seed else 0
+                        if _f > 0.0:
+                            _nam = (int(round(_f / (1.0 - _f) * _ncarb)) if (_ncarb > 0 and _f < 1.0)
+                                    else 4 * len(am_c))                          # PTFE-only / f→1: AM = whole pool
+                            _amsurf = _am_surface_pts(am_c - off, am_r, min(max(_nam, 0), 500000), rng, bx)
+                            if len(_amsurf):
+                                _nuc_parts.append(_amsurf); _am_fired = True
                     nuc = np.concatenate(_nuc_parts) if (_nuc_parts and (nucf > 0.0 or brgf > 0.0)) else None
                     _bk_lam = _buckle_lam if code == 2 else 0.0     # physics buckle = VGCF only (PTFE = drawn web)
                     _amfn = (lambda q: _am_frac_abs(q + off)) if (code == 2 and _bk_lam > 0.0) else None
@@ -793,8 +834,9 @@ def main(argv):
                     _add_meta[nm]['fibrillation'] = round(float(_fibril), 3)   # dry-shear web degree (mixing-driven)
                     _add_meta[nm]['branch_frac_effective'] = round(float(brf), 3)   # post-fibrillation secondary-fibril fraction (raw base = eff / fibrillation)
                     _add_meta[nm]['curl'] = round(float(_ptfe_curl), 3)        # web tangle (press-scaled iff --ptfe-press-curl)
-                    _add_meta[nm]['press_curl'] = bool(args.ptfe_press_curl)   # prescribed press-curl on? (OFF = emergent soft compaction only)
-                    _add_meta[nm]['am_bind'] = bool(am_c is not None)          # AM-surface draping attractors added (binder wraps AM)
+                    _add_meta[nm]['press_curl'] = bool(args.ptfe_press_curl)   # prescribed press-curl on? (OFF = as-drawn 0.40)
+                    _add_meta[nm]['am_bind'] = bool(_am_fired)                 # AM-surface draping attractors ACTUALLY added?
+                    _add_meta[nm]['am_bind_frac'] = round(float(np.clip(args.ptfe_am_bind, 0.0, 1.0)), 3)   # target AM nucleation share
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
