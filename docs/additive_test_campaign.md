@@ -139,9 +139,13 @@ kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경�
   | 0.5 | 14.585 (동일) | 47.3→43.2 | −4.1 | −26 % |
   | 1 | 13.711 (동일) | 53.7→46.0 | −7.7 | −27 % |
   | 2 | 11.936 (동일) | 64.4→51.4 | −13.0 | −27 % |
+  | 4 | 8.275 (동일) | 78.2→60.8 | −17.4 | −27 % |
   = **porosity는 volume-fill 그대로(mixing-invariant; add_pvs가 recipe 부피 pin + wall_z jamming) +
   AM coverage만 체계적으로 ↓**(뭉친 off-AM 카본이 AM 덜 덮음).  Δcov가 wt%에 따라 단조 증가
-  (−4.1/−7.7/−13.0) → σ_e 축(coverage↓ = e-contact↓, Reisacher p_c 4wt%/Kim2025 방향).
+  (−4.1/−7.7/−13.0/−17.4) → σ_e 축(coverage↓ = e-contact↓, Reisacher p_c 4wt%/Kim2025 방향).
+  ★ **code-agent "고 wt%선 handmix porosity 약하게↑" 예측 반증**: 4wt%(8.5vol%)서도 porosity byte-동일
+  (8.275) → soft carbon(σ_y0.1<press)이 분산 무관하게 소성으로 void에 흘러들고 wall_z 스캐폴드-pin
+  → 전 구간 mixing-invariant.  handmix = **순수 coverage 효과, porosity 0 변화**(예측보다 깨끗).
 - **adversarial 검증 (workflow wf_17325d01)**: "handmix가 실제 적용됐나 vs mislabel/seed-noise?" 판정
   **handmix_applied (conf 0.85)**.  근거: n_pts −26 %는 seed-only 변동(측정 std 0.16–1.67 %)의
   **15–160σ 밖** → seed로 불가능; porosity-동일이 스캐폴드 불변 증명 → CB_MIX가 유일 lever;
