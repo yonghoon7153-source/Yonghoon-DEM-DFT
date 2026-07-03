@@ -172,6 +172,10 @@ kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경�
 자체가 없음(97) → mixing 무시.  PTFE process 3행 전부 regime='bulk', morph만 텍스트("TBD A4").
 ∴ **PTFE ballmill=thinky=handmix 전부 동일**(VGCF처럼 tautological) → mixing 3개 돌릴 필요 없음, 하나면 끝.
 의도된 fibrillation-degree 차이는 미구현(A4).  (SuperP만 handmix가 CB_MIX로 실제 다름.)
+⚠ **SUPERSEDED (같은 날, bb49666→bd1ff20)**: `--ptfe-fibril` 구현으로 PTFE도 이제 handmix가 다름 —
+`ADDITIVE_PROCESS['PTFE']`에 `fibril=` 필드(bm/thinky 1.0, handmix 0.45, matrix-파생 = CB_MIX 패턴),
+handmix → branch_frac 0.5→0.225 (덜-networked web).  §F1 tunable hook(`--ptfe-fibril`), 크기 미앵커 명시.
+ballmill≡thinky는 여전히 동일(둘 다 fibril 1.0).
 - **adversarial 검증 (workflow wf_17325d01)**: "handmix가 실제 적용됐나 vs mislabel/seed-noise?" 판정
   **handmix_applied (conf 0.85)**.  근거: n_pts −26 %는 seed-only 변동(측정 std 0.16–1.67 %)의
   **15–160σ 밖** → seed로 불가능; porosity-동일이 스캐폴드 불변 증명 → CB_MIX가 유일 lever;
@@ -182,3 +186,23 @@ kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경�
   step/clump)** 추가 → 이제 bulk-regime 런도 자기-문서화(py_compile ✓, CB_MIX 구조 검증 ✓).
 - **thinky의 진짜 차이(coat_block → σ_e 붕괴, Kim2025)는 여전히 A4 대기** — bulk에선 ballmill과 동일.
   handmix는 **분산/응집 축**(bulk, 지금 가능)이고 thinky는 **coating 축**(A4/STEP3)으로 분리됨.
+
+## ★ PTFE 압축 물리 종결 — anchor+bridge binder, drape는 packing-지배 (2026-07-03) ★
+kgy 09eac31, real_4 PTFE 0.5wt% ballmill.  풀 물리 스택(모두 metrics에 기록): fibrillation 1.0 /
+branch_frac_effective 0.5 / **align_lambda_z 0.653**(PTFE로 auto-bake 확장) / **am_bind f=0.5**
+(`--ptfe-am-bind`, PTFE nucleation의 AM-표면 drape 몫; carbon-count 독립 fraction, §F1 tunable) /
+coh_ptfe 0.0649 (A3 binder_cap 0.649) / press_curl false(opt-in, VGCF-차용 크기라 §F1로 OFF).
+- **porosity 14.703 = volume-fill 예측 14.7 EXACT** (soft PTFE, SuperP와 동일 구조).
+- **PTFE-on-AM add-cov 0.8/1.1% — 낮은 게 맞는 물리**: 1D bridging binder ≠ 0D coating carbon
+  (SuperP add-cov 35.8 @2wt%).  coverage는 PTFE 바인딩의 잘못된 렌즈.
+- **기하 ground-truth (payload KDTree, 120k pts)**: PTFE의 **20.7%가 AM 표면 0.2µm 이내(drape)**,
+  median gap 0.51µm, 79%가 1µm 이내, 18.5%가 pore-bridge(>1µm) = **anchor+bridge binder 형상**
+  (Lee 2025 SEM "fibrils stretched & fibrillated ACROSS the interface, bridging particles" 정합).
+- **★ AM-BIND 대조군 (`--ptfe-am-bind 0` 재실행)**: drape 20.7→**19.5%** (Δ+1.2pp), pore-bridge
+  18.5→20.6%, porosity byte-동일.  ⇒ **drape는 PACKING-지배** — 56% AM 압축 bed에선 랜덤 fibril도
+  이미 ~19.5%가 AM 근접; nucleation-bias는 방향 맞는(+drape/−deep-pore) 작은 증분만.  이유: fibril은
+  시작점 1개만 AM에 앵커, 나머지 ~140점 worm-walk(L40µm, curl0.4)은 pore로 뻗음 — 그리고 그게
+  dry-PTFE SEM(bridging, 필름-wrap 아님)과 일치.  `am_bind:false` traceability도 검증 ✓.
+- **결론 (정직)**: PTFE-AM 바인딩의 본질 = **anchor+bridge 연결성**(+A3 cohesion 역학) — surface
+  coverage %가 아님.  값은 STEP3(σ_e network / mechanical connectivity)에서 나타남.  PTFE porosity/
+  형상 축 CLOSED; 남은 PTFE 물리 = handmix fibril 0.45 대비런(선택) + STEP3 연결성.
