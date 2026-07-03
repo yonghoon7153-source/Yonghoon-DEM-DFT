@@ -140,12 +140,28 @@ kgy RTX3090, input_6mAh_real_4, n_grid 256.  SuperP는 `seed_carbon_black` 경�
   | 1 | 13.711 (동일) | 53.7→46.0 | −7.7 | −27 % |
   | 2 | 11.936 (동일) | 64.4→51.4 | −13.0 | −27 % |
   | 4 | 8.275 (동일) | 78.2→60.8 | −17.4 | −27 % |
-  = **porosity는 volume-fill 그대로(mixing-invariant; add_pvs가 recipe 부피 pin + wall_z jamming) +
-  AM coverage만 체계적으로 ↓**(뭉친 off-AM 카본이 AM 덜 덮음).  Δcov가 wt%에 따라 단조 증가
-  (−4.1/−7.7/−13.0/−17.4) → σ_e 축(coverage↓ = e-contact↓, Reisacher p_c 4wt%/Kim2025 방향).
-  ★ **code-agent "고 wt%선 handmix porosity 약하게↑" 예측 반증**: 4wt%(8.5vol%)서도 porosity byte-동일
-  (8.275) → soft carbon(σ_y0.1<press)이 분산 무관하게 소성으로 void에 흘러들고 wall_z 스캐폴드-pin
-  → 전 구간 mixing-invariant.  handmix = **순수 coverage 효과, porosity 0 변화**(예측보다 깨끗).
+  Δcov가 wt%에 따라 단조 증가 (−4.1/−7.7/−13.0/−17.4).
+  ★ **적대적 재검증 정정 (2026-07-03) — 이전 프레이밍 두 곳 과장이었음**:
+  1) **porosity 불변 = 구조적 artifact(물리 발견 아님)**: `por=1−solid_vol/(area·height)`(mpm3d:986);
+     solid_vol의 carbon 몫 = `add_pvs·len(pts)=vol_um3` EXACT(711-712,753)로 pin, height=wall_z는
+     AM+SE 스캐폴드 jamming으로 pin(soft carbon σ_y0.1<press → 흘러서 wall 안 붙듦).  ∴ porosity는 carbon
+     형상에 **구조적으로 독립** → byte-동일은 **강제**.  "예측 반증/더 깨끗"은 **틀림**(모델이 carbon-형상
+     porosity 효과를 애초에 못 냄); 실제 high-structure-CB porosity(응집체 내부공극/국소 압밀저항)는
+     **모델 범위 밖 = deferred CBD nano-porosity**.
+  2) **cov 하락 = "SE coverage" 아니라 "carbon coverage"(라벨 artifact)**: `se_occ`(1088)가 x=xs(=SE+carbon,
+     704)로 만들어져 "coverage by SE"(1113 라벨)가 실은 SE+carbon.  SE는 스캐폴드 동일(se_dump) →
+     Δcov는 **100% carbon 성분**(SE cov 불변).  handmix가 carbon을 AM 밖으로 뺀 것 = **σ_e 신호(carbon
+     전자접촉↓)는 진짜**지만 "SE coverage 하락"으로 라벨된 건 오류.
+  → **살아남는 것**: handmix가 AM 표면 carbon을 실제로 줄임(분산 나쁨) = σ_e 축 신호, 방향 맞음
+  (Reisacher/Kim2025).  **정정**: porosity 불변=구조적 강제(물리 아님), cov=SE 아닌 carbon.
+  metric 권고: SE-only cov와 carbon cov 분리 기록(현재 conflate → additive 케이스서 오해 소지).
+
+## PTFE mixing = tautological (VGCF와 동일, SuperP와 다름) (2026-07-03)
+`CB_MIX`는 `ADDITIVE_PROCESS['SuperP']`에서만 파생(additives.py:293) → **PTFE는 CB_MIX 없음**.  PTFE kind=
+'fibre'(mpm3d:659) → `seed_fibres`(682) 사용(`seed_carbon_black` 아님), `seed_fibres`는 `mixing` 인자
+자체가 없음(97) → mixing 무시.  PTFE process 3행 전부 regime='bulk', morph만 텍스트("TBD A4").
+∴ **PTFE ballmill=thinky=handmix 전부 동일**(VGCF처럼 tautological) → mixing 3개 돌릴 필요 없음, 하나면 끝.
+의도된 fibrillation-degree 차이는 미구현(A4).  (SuperP만 handmix가 CB_MIX로 실제 다름.)
 - **adversarial 검증 (workflow wf_17325d01)**: "handmix가 실제 적용됐나 vs mislabel/seed-noise?" 판정
   **handmix_applied (conf 0.85)**.  근거: n_pts −26 %는 seed-only 변동(측정 std 0.16–1.67 %)의
   **15–160σ 밖** → seed로 불가능; porosity-동일이 스캐폴드 불변 증명 → CB_MIX가 유일 lever;
