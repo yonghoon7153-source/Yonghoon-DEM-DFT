@@ -1,0 +1,77 @@
+{
+ "property": "b2o3 ICOHP (LOBSTER)",
+ "system": "b2o3 = B2O3-doped LPSCl1.6 (Li58P8S41Cl16B2O3, 128 atoms)",
+ "date": "2026-07-03",
+ "method": "LOBSTER 5.1.1 on QE all-PAW(kjpaw) SCF+NSCF (nosym, nbnd460, wf_collect). MINIMAL LOBSTER basis (Li 1s2s; B/O 2s2p; P/S/Cl 3s3p) -> Li-X underestimated vs extended-basis modelc.",
+ "charge_spilling_pct": 1.57,
+ "raw": "KISTI:/scratch/x3430a02/kgy/b2o3_eos/ICOHPLIST.lobster",
+ "bonds": {
+  "P-O": {
+   "N": 3,
+   "ICOHP_eV": -8.555,
+   "min": -8.708,
+   "max": -8.342
+  },
+  "B-S": {
+   "N": 6,
+   "ICOHP_eV": -7.568,
+   "min": -7.856,
+   "max": -7.263
+  },
+  "P-S": {
+   "N": 29,
+   "ICOHP_eV": -6.106,
+   "min": -6.676,
+   "max": -5.784
+  },
+  "S-S": {
+   "N": 84,
+   "ICOHP_eV": -0.057,
+   "min": -0.11,
+   "max": -0.007
+  },
+  "Li-S": {
+   "N": 151,
+   "ICOHP_eV": -0.829,
+   "min": -1.081,
+   "max": -0.274,
+   "caveat": "minimal basis"
+  },
+  "Li-Cl": {
+   "N": 79,
+   "ICOHP_eV": -0.796,
+   "min": -1.104,
+   "max": -0.389,
+   "caveat": "minimal basis"
+  }
+ },
+ "comparison_vs_modelc": {
+  "P-S": {
+   "b2o3": -6.106,
+   "modelc": -6.0,
+   "comp1": -5.944,
+   "nd": -5.976,
+   "note": "~unchanged, host intact"
+  },
+  "S-S": {
+   "b2o3": -0.057,
+   "modelc": -0.11
+  },
+  "Li-S": {
+   "b2o3": -0.829,
+   "modelc": -1.717,
+   "note": "NOT comparable - basis differs"
+  },
+  "Li-Cl": {
+   "b2o3": -0.796,
+   "modelc": -2.103,
+   "note": "NOT comparable - basis differs"
+  }
+ },
+ "headline": {
+  "new_strong_bonds": "B-S -7.57 (thioborate BS3) + P-O -8.56 (phosphate) = new covalent bonds from B2O3; B-S stronger than host P-S",
+  "host_unchanged": "P-S -6.11 ~ modelc -6.00 -> B2O3 leaves the PS4 backbone intact",
+  "consistent_with": "mechanical stiffening (B0 +13%) + BS3/phosphate speciation (ELF/Bader/bond-lengths)"
+ },
+ "caveat": "Li-S/Li-Cl underestimated (minimal Li basis 1s2s). For apples-to-apples Li-X vs modelc, rerun LOBSTER only (no DFT redo) with extended basis: basisfunctions Li 1s 2s 2p / P S Cl 3s 3p 3d."
+}
