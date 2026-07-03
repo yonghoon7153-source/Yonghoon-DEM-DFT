@@ -233,3 +233,12 @@ frame[5]: 두께 절대값 = porosity와 동일한 bracket [volume-fill 하한 �
 Cho-dilate 곡선에서 유도(VGCF 2wt% dilate ε 15.28% → +4µm 스케일).  **트렌드/형상/coverage 비교는
 모든 런이 같은 pin을 공유하므로 유효**.  두께 자유도는 모델에 있으나(wall_z는 300MPa까지 하강)
 frozen 골격이 사실상 pin — AM-재배열 몫 = DEM(frame[5] division)의 두께-축 표현.
+
+### PTFE handmix 스윕 완결 (0.5/1/2/4, 2026-07-03) — 4/4 사전등록 적중
+porosity/두께: **전 점 ballmill과 byte-동일**(14.703/13.948/12.415/9.254, 112.87µm) — 구조적 pin의
+mixing-측 표현: soft additive의 *형상*(분산/분기)은 wallP에 기여 0 → **mixing은 porosity·두께 축에서
+원리적으로 무정보**(SuperP porosity-invariance 정정과 동일 클래스; 실제 저전단 분산불량은 packing 악화로
+약간 두꺼워질 수 있으나 frozen-scaffold가 표현 불가 — af712a0 두께 노트 그대로).  mixing의 진짜 정보 =
+**web 연결성**: fibrillation 0.45 → children 45%로 반토막(0.5wt% 337/784, 1wt% 683/~1577; ≥2wt%는
+payload --fibre-max 4000 캡이라 full-res n_pts −15~18%로 확인) + PTFE-on-AM 소폭↓ → STEP3 축.
+binder_cap은 wt%-구동·mixing-무관 확인(0.649/0.930/0.955/0.504 양쪽 동일).
