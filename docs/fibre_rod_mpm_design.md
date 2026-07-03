@@ -226,6 +226,12 @@ VGCF/SE volume ratio 8/27.9 %).
   to reach the no-additive 15.45 % that Cho's flat-to-up implies).  Cause: the frozen AM already fixes
   `wall_z`; the VGCF sits in the interstitial void and only props the near-wall gap — it **cannot push the
   AM skeleton itself apart** (frozen).  That AM-rearrangement is the dominant half.
+- **Jamming ONSET ✓ (wt% sweep control, kgy RTX3090):** the +0.75 %p is a THRESHOLD effect, not monotonic
+  drift.  3-flag (stiff+align+buckle) porosity vs wt%: 0.5 → 14.629, 2 → **12.112**, 4 → **9.383 %**.  At
+  0.5 & 2 wt% porosity = volume-fill EXACTLY (strut Δ0) — VGCF stays BELOW the rod-jamming onset (≈4 wt%,
+  C=5.4·D/L) so the rigid fibres are isolated with no load path; only at 4 wt% do they jam into a load-bearing
+  strut network and the prop appears.  "Flat below onset → jump at onset" is the percolation signature; the
+  2 wt% Δ0 is the CONTROL that rules out a monotonic artifact and proves the 4 wt% bump is genuine jamming.
 
 **Verdict (frame[5], mirrors the buckling stiffness-invariance test):** even the STRONGEST MPM lever
 (fully-rigid VGCF = the σ_y→∞ upper bound) recovers only ~11 % of the porosity penalty → the penalty is a
