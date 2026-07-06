@@ -33,6 +33,7 @@ def main():
     ap.add_argument("--fix_bottom", type=float, default=6.0, help="freeze SE atoms within this many A of the slab bottom")
     ap.add_argument("--relax_fmax", type=float, default=0.08)
     ap.add_argument("--relax_steps", type=int, default=300)
+    ap.add_argument("--seed", type=int, default=1234, help="RNG seed for initial velocities (reproduction)")
     ap.add_argument("--uma_model", default="uma-s-1p1")
     ap.add_argument("--uma_task", default="omat")
     ap.add_argument("--device", default="cuda")
