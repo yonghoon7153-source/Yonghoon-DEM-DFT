@@ -1,3 +1,5 @@
+> ⚠️ **SUPERSEDED (2026-07-07)** — 3-seed × 100 ps **통제 campaign**(`b2o3_anode_interface_campaign_2026_07_07.md`)이 이 문서의 "6× 억제"를 **철회**함: 같은 2× 프레임 통제비교에서 b2o3 ≈ 무도핑(PS 손실 22±9 vs 26±0%). 6×는 **얇은 1× 슬랩(modelc62) artifact**였음. 유지되는 결론: **BS₃ 온전·금속 LiB 없음 = 도핑이 계면을 악화시키지 않음**. 아래는 예비(단일시드 50 ps) 기록.
+
 # B₂O₃ champion — anode 계면 **동역학** MLIP-MD: 도핑이 Li-metal 분해를 **억제** (열역학 worst-case 반전)
 
 **날짜** 2026-07-06 · **방법** UMA-s-1p1 MLIP-MD, SE|Li-metal 슬랩, 600 K NVT 50 ps (bottom SE 고정) · **동기** 열역학(평형) 계산은 "b2o3가 Li-metal에서 악화(금속 LiB)"라 했으나 그건 **형태·동역학 미모델**(그 문서가 자인). 실제 반응을 동역학으로 확인.

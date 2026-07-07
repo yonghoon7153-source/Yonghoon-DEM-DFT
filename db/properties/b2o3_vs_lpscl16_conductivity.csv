@@ -1,7 +1,20 @@
-system,Ea_eV,D0_cm2_s,n_Li_cm3,D_600,D_800,D_1000,sigma_300K_mS_cm,sigma_273K_mS_cm
-LPSCl1.6,0.2235,5.753e-04,2.220e+22,7.901e-06,2.054e-05,4.554e-05,13.94,6.52
-b2o3,0.2234,7.112e-04,2.381e+22,9.174e-06,3.009e-05,5.067e-05,18.51,8.65
-ratio_b2o3/LPSCl1.6,-0.0001(dEa),1.24,1.07,,,,1.33,1.33
-# b2o3 Ea multiseed = 0.21 +/- 0.03 eV (3-seed 600K); LPSCl1.6 0.2235 -> EQUAL Ea within error
-"# sigma ratio ~1.33x CONSTANT at all T (parallel Arrhenius) = uniform D0/carrier-driven gain, NOT a lower barrier / special low-T advantage"
-"# sigma300 = MLIP Nernst-Einstein UPPER BOUND (~3-5x over exp for LPSCl family); quote Ea + the 1.33x RATIO, not absolute sigma"
+system,Ea_eV,Ea_err,D0_cm2_s,n_Li_cm3,D600_mean,D600_std,D800_mean,D800_std,D1000_mean,D1000_std,sig600_mScm,sig800,sig1000
+b2o3,0.199,0.034,4.625e-04,2.381e+22,1.041e-05,2.07e-06,2.163e-05,4.08e-06,5.081e-05,9.21e-06,768,1197,2249
+LPSCl1.6,0.197,0.032,4.791e-04,2.220e+22,1.037e-05,2.14e-06,2.845e-05,7.51e-06,4.728e-05,2.17e-06,713,1468,1951
+ratio_b2o3/LPSCl1.6,dEa=+0.002+/-0.047,,,,,,,,,,1.08+/-0.18,0.82+/-0.15,1.15+/-0.12
+
+"# PER-SEED D (cm2/s): FULLY symmetric 3-seed x 3-T reseed (600K + 800/1000K, kgy 2026-07-06/07)"
+system,T_K,s2,s3,s4
+b2o3,600,7.9800e-06,1.3040e-05,1.0210e-05
+b2o3,800,1.9410e-05,2.7350e-05,1.8140e-05
+b2o3,1000,4.6140e-05,6.3670e-05,4.2610e-05
+LPSCl1.6,600,1.1718e-05,1.2037e-05,7.3508e-06
+LPSCl1.6,800,2.8320e-05,3.7720e-05,1.9320e-05
+LPSCl1.6,1000,5.0300e-05,4.6210e-05,4.5330e-05
+"# ===== FINAL (2026-07-07). SUPERSEDES all single-seed tables (0.2234 Ea, 1.33x sigma, D0-decomposition). ====="
+# Ea EQUAL: 0.199+/-0.034 vs 0.197+/-0.032 (dEa +0.002+/-0.047).
+# sigma ratio per T: 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12 -> scatter AROUND 1.0 = statistically EQUIVALENT transport.
+# The old 1.33x rested on the single-seed 800K pair (b2o3 3.009 high-outlier vs modelc 2.054 low-outlier); reseeded means: 2.163 vs 2.845.
+# FRAME for the paper: O-substitution normally LOWERS sigma in oxysulfides; here BVSE channel opening (+45% in-plane) offsets the O-penalty
+#   -> conductivity PRESERVED (not boosted). Robust b2o3 gains live in mechanics (+13% bulk) and the covalent B-S network.
+# absolute sigma = MLIP Nernst-Einstein upper bound; RT extrapolation NOT reportable (Ea error x ~5 amplification at 300K).
