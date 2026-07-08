@@ -22,7 +22,7 @@ from __future__ import annotations
 import argparse
 import numpy as np
 
-DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20, 'SDCP': 1.30}  # g/cm³ (SDCP = self-doped S-PEDOT film ~0.95-1.45 lit → 1.3)
+DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20, 'SDCP': 1.30}  # g/cm³ (SDCP 1.3 = ⚠PROXY from generic PEDOT web-lit — REPLACE with the user's manuscript value)
 #   SE=2.00 = PROJECT CONVENTION (matches porosity_physics_regression RHO_SE + grade_engine);
 #   real Li6PS5Cl crystallographic ≈ 1.85–1.88 (2.0 is the project's slightly-high standard).
 #   Aligned 2026-06-30 (was 1.64, an out-of-band low value) so the zip additive counts use the

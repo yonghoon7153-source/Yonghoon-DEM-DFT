@@ -752,7 +752,7 @@ def main(argv):
                 'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
-                'SDCP':   (2.00, 0.35, 0.05, 5, 'coat',   0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # anchored conformal film (E PEDOT 0.9-2.9 lit → 2.0; σ_y=0.05 UN-anchored soft-polymer hook §F1, =PTFE)
+                'SDCP':   (2.00, 0.35, 0.05, 5, 'coat',   0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # anchored conformal film — E 2.0/σ_y 0.05/ρ = ⚠ALL PROXY (generic PEDOT web-lit, NOT the lab SDCP; manuscript pending — replace on digest)
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
