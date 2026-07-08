@@ -32,7 +32,8 @@ PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4, 'SDCP': 5}      # 
 # default geometry (µm)
 VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
 SP_D           = 0.20            # Super P / Super C carbon-black aggregate (sphere, particulate)
-PTFE_D, PTFE_L = 0.25, 40.0      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes long
+PTFE_D, PTFE_L = 0.25, 40.0
+SDCP_SHELL = 0.20                 # SDCP coat shell thickness (µm) — 1-voxel film (real 26-40nm, volume-pinned)      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes long
                                  # thin threads (branch to 10s nm) spanning tens of NMC; LONGER + HIGHER
                                  # aspect (AR≈160) than VGCF (AR≈67) → reads as the spanning binder web,
                                  # not a short rod.  Soft binder FIBRE (RSC D5EE03240G; Front. Energy 2023.1336344)
@@ -97,16 +98,19 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
 
 
 def seed_coat(n, box_um, dx_um, rng, am=None, shell_um=0.20, surface_frac=1.0,
-              return_ids=False):
+              in_am=None, return_ids=False):
     """CONFORMAL COAT seeding (A4 coat regime): n points in a thin shell ON the AM sphere
     surfaces — the anchored film morphology (SDCP self-doped binder: sulfonate chemisorbs
-    into the Li-O layer, E_bind −4.8 eV MLIP → the film STARTS anchored; also SuperP
-    thinky dry-coat coat_block).  Area-weighted across AM (big spheres get ∝R² points);
-    golden-angle dirs + per-sphere random roll = even drape (not pin-pricks).
+    into the Li-O layer, E_bind −4.8 eV — INTERIM MLIP, DFT pending; also SuperP thinky
+    dry-coat coat_block).  Area-weighted across AM (big spheres get ∝R² points);
+    UNIFORM-on-sphere dirs + per-sphere random cap axis (contiguous patch when
+    surface_frac<1).
     surface_frac < 1 → each sphere coated only on a random spherical CAP of that fractional
     area (patchy/partial coating).  Radial offset uniform in [0, shell_um] OUTSIDE the
     surface (film thickness ≈ shell; sub-voxel reality documented — 1-voxel overstatement,
-    volume-pinned by add_pvs downstream so porosity stays honest).
+    volume-pinned by add_pvs downstream so porosity stays honest).  Points buried inside a
+    NEIGHBOURING AM (scaffold contact overlaps, ~6%%) or outside the box are DROPPED — the
+    fibre-seeding convention; add_pvs renormalises the recipe volume over the survivors.
     am = (centres, radii) in the SEED-BOX frame (same convention as seed_carbon_black)."""
     if am is None or len(am[0]) == 0:                        # no AM → uniform fallback (degenerate)
         (Lx, Ly, Lz) = box_um
@@ -139,7 +143,13 @@ def seed_coat(n, box_um, dx_um, rng, am=None, shell_um=0.20, surface_frac=1.0,
     off = rng.uniform(0.0, shell_um, n)
     P = C[sph] + d * (R[sph] + off)[:, None]
     (Lx, Ly, Lz) = box_um
-    P = np.clip(P, 1e-4, np.array([Lx, Ly, Lz]) - 1e-4).astype(np.float32)
+    keep = ((P[:, 0] >= 0) & (P[:, 0] < Lx) & (P[:, 1] >= 0) & (P[:, 1] < Ly)
+            & (P[:, 2] >= 0) & (P[:, 2] < Lz))                # DROP out-of-box (fibre convention,
+    P = P[keep]; sph = sph[keep]                              #  no wall 'curtains'; periodic images
+    if in_am is not None and len(P):                          #  re-enter via the volume renorm)
+        P_keep = ~np.array([in_am(q) for q in P])             # drop points buried in a NEIGHBOUR AM
+        P = P[P_keep]; sph = sph[P_keep]                      #  (own sphere: offset ≥ R → never inside)
+    P = P.astype(np.float32)
     return (P, sph.astype(np.int32)) if return_ids else P
 
 
@@ -330,10 +340,10 @@ ADDITIVE_PROCESS = {
         'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
         'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
     },
-    'SDCP': {    # self-doped conductive binder (S-PEDOT): sulfonate ANCHORS to NCM (E_bind −4.8 eV MLIP)
-        'ballmill': dict(regime='coat', morph='anchored conformal film on AM'),
-        'thinky':   dict(regime='coat', morph='anchored conformal film on AM'),
-        'handmix':  dict(regime='coat', morph='anchored film, poorer spread (surface_frac<1)'),
+    'SDCP': {    # self-doped conductive binder (S-PEDOT): sulfonate ANCHORS to NCM (E_bind −4.8 eV, INTERIM MLIP)
+        'ballmill': dict(regime='coat', surface_frac=1.0, morph='anchored conformal film on AM'),
+        'thinky':   dict(regime='coat', surface_frac=1.0, morph='anchored conformal film on AM'),
+        'handmix':  dict(regime='coat', surface_frac=0.6, morph='anchored film, poorer spread (§F1 hook)'),
     },
     'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
         'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),

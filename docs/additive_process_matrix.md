@@ -29,6 +29,7 @@ the old `CB_MIX`, now derived from this matrix — ball=thinky uniform, hand=agg
 - ✅ **MPM seeding (`mpm3d_compaction`)** looks up the regime per additive and prints
   it; the seeding still places every regime in the **bulk** (the `coat_*` SE-coating
   placement is the A4 hook — `# A4 HOOK` in the loop).
+- 🔶 **A4 UPDATE (2026-07-09, 97767ae)**: SuperP `coat_block`(thinky) + SDCP `coat` now SEED as an AM-surface film (`seed_coat`, shell 0.2µm, process-row surface_frac) — thinky ≢ ballmill for SuperP from this date.  VGCF `coat_embed` still NOT coat-seeded (fibre branch wins) ⛔; σ_e-direction validation + divergence re-run pending.
 - ⛔ **TBD A4**: (i) seed `coat_*` carbon in the SE-coating layer on the AM surface
   (not bulk) in mpm3d_compaction; (ii) the `coat_embed` σ_e-recover magnitude in
   whatif; (iii) VGCF/PTFE per-mixing morphology (fibre length / fibrillation) — the

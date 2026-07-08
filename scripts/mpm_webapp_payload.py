@@ -417,12 +417,16 @@ def main():
     if len(r):
         try:
             _sdcp = (sim_m.get('additives') or {}).get('SDCP') or {}
-            _cph = (2, 3) if _sdcp.get('variant') == 'neutral' else (2, 3, 5)   # neutral SDCP = semiconducting → dropped
-            econn, _ncl = electronic_connectivity(t, c, r, se, phase, FLOOR, UM, cond_phases=_cph)
+            # neutral SDCP (~1e-3..1e-1 S/cm) ≈ AM-grade conductor → KEPT in the binary graph (AM itself
+            # is a node at similar σ; an insulator-drop would misclassify by ~13 orders vs ≤1).  The
+            # doped/neutral quantitative split = STEP3 Kirchhoff σ-weights, not a percolation boolean.
+            econn, _ncl = electronic_connectivity(t, c, r, se, phase, FLOOR, UM)
             econn_summary = {'connected_pct': round(100.0 * float(econn.mean()), 1),
                              'n_isolated': int((~econn).sum()), 'n_carbon_clusters': _ncl,
                              'tol_am_um': 0.10, 'band_um': 0.15, 'vox_um': 0.30,
-                             'conductive_phases': ('AM + VGCF/SuperP (SE·PTFE·neutral-SDCP excluded)' if _cph == (2, 3)
+                             'conductive_phases': ('AM + VGCF/SuperP + neutral-SDCP as AM-grade weak conductor '
+                                                   '(SE·PTFE excluded; doped/neutral split = STEP3 σ-weights)'
+                                                   if _sdcp.get('variant') == 'neutral'
                                                    else 'AM + VGCF/SuperP/SDCP (SE·PTFE excluded = e-insulators)')}
             for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
                 m = (t == ty)
@@ -447,7 +451,7 @@ def main():
     if phase is not None:
         rng_a = np.random.default_rng(1)
         add_tot = int((phase >= 2).sum())
-        for code, nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE')):
+        for code, nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE'), (5, 'SDCP')):
             m = phase == code
             cnt = int(m.sum())
             if cnt == 0:
@@ -479,7 +483,7 @@ def main():
         if len(fid) != len(se):
             print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
         else:
-            fib_mask = (phase >= 2) & (fid >= 0)
+            fib_mask = np.isin(phase, (2, 4)) & (fid >= 0)   # rod phases only — coat ids (SuperP-thinky/SDCP shells) are NOT polylines
             n_fib_total = len(np.unique(fid[fib_mask]))
             # subsample fibres PER PHASE so a high-count phase (SuperP — ~40k carbon-black chains) doesn't
             # crowd out the low-count binder web (PTFE — ~300 fibres).  Fewest-fibre phase first gets its
