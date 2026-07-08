@@ -68,15 +68,31 @@ def main():
     ap.add_argument("--vac_top", type=float, default=12.0)
     ap.add_argument("--fix_bottom", type=float, default=6.0, help="freeze SE atoms within this many A of the bottom")
     ap.add_argument("--supercell", type=int, nargs=2, default=[1, 1], help="lateral repeat of SE (a b) before building")
+    ap.add_argument("--roll_c", type=float, default=0.0,
+                    help="roll SE along c (fractional, periodic) BEFORE cleaving -> selects which layer sits at the exposed top (e.g. 0.51 exposes B in b2o3_relaxV0)")
+    ap.add_argument("--shift_ab", type=float, nargs=2, default=[0.0, 0.0],
+                    help="lateral fractional shift (registry scan vs the Li slab)")
     ap.add_argument("--out", default=None)
     a = ap.parse_args()
 
     se = read(a.electrolyte)
     if a.supercell != [1, 1]:
         se = se.repeat((a.supercell[0], a.supercell[1], 1))
+    if a.roll_c or any(a.shift_ab):
+        f = se.get_scaled_positions()
+        f[:, 2] = (f[:, 2] + a.roll_c) % 1.0
+        f[:, 0] = (f[:, 0] + a.shift_ab[0]) % 1.0
+        f[:, 1] = (f[:, 1] + a.shift_ab[1]) % 1.0
+        se.set_scaled_positions(f)
     se = reorient_ab_inplane(se)
     se.positions[:, 2] += a.vac_bottom - se.positions[:, 2].min()     # sit SE at z=vac_bottom
     zmax = se.positions[:, 2].max()
+    ssym = np.array(se.get_chemical_symbols())
+    for el in ("B", "O", "P"):                       # who is actually at the Li contact?
+        if (ssym == el).any():
+            dep = np.sort(zmax - se.positions[ssym == el, 2])
+            print(f"  {el} depth below exposed top (A): {np.round(dep, 1)}"
+                  + ("   <-- SURFACE-EXPOSED" if dep[0] < 3.0 else ""))
     a_vec, b_vec = se.cell[0], se.cell[1]
 
     z0, z1 = zmax + a.gap, zmax + a.gap + a.li_thickness
