@@ -281,3 +281,14 @@ binder_cap은 wt%-구동·mixing-무관 확인(0.649/0.930/0.955/0.504 양쪽 �
 - 검증런 사전등록 (VGCF 4wt% ballmill **dilated, auto-strut 드랍**): thickness ≈**125.5µm**,
   porosity(in-sim) ≈**17.5%** (= ε_real 16.41 + MPM-baseline offset ~1.2pp; offset의 λ-증폭 ±0.3pp 여유),
   **cov AM_S < 40.3 하락 = emergent 신규 정보**, metrics `dilate_z:1.1119` + `fibre_stiff:false`.
+
+### ★ dilation 검증런 PASS — 두께·porosity·형상 최초 동시응답 (2026-07-08, V1: VGCF 4wt% dilated) ★
+사전등록 전 항목 적중: **thickness 125.128µm = 112.87×1.1076 EXACT**(pin 최초 탈출) / porosity **16.838**
+(설계 ε_real 16.41 + 0.43 — SE 구 z-분리로 voxel-union 부피 +3%가 원인, 리뷰가 예고한 2차 효과;
+seed_SE 26.08% > 순수 스케일링 25.2%가 증거) / metrics `dilate_z:1.1076`+`fibre_stiff:false`(strut 드랍
+규칙 작동) / payload 프레임 dilated 검증(AM top 125.5µm).
+★ **emergent 형상 응답 (신규 정보)**: cov AM_S **SE-only 40.3→21.3** + **VGCF-on-AM 15.6**(AM_P 12.5+16.2)
+— 분해하면 ① 벌어진 bed에서 SE가 덜 눌려 AM 접촉↓ ② 4wt% VGCF가 AM 표면 ~16% 점유(σ_e 좋고 σ_ion
+손해 = Cho conflicting-roles의 구조적 기반).  ⚠ 옛 strut런 cov 50.5는 pre-split conflated(SE+VGCF)라
+직접 비교 불가.  ⇒ dilation 축 CLOSED — 남은 조합런(VGCF1+PTFE4 zip 보유 / 1+1 handmix / SuperP2+PTFE1)
+후 A4 진입.
