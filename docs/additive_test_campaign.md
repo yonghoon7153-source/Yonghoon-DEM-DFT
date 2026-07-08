@@ -242,3 +242,22 @@ mixing-측 표현: soft additive의 *형상*(분산/분기)은 wallP에 기여 0
 **web 연결성**: fibrillation 0.45 → children 45%로 반토막(0.5wt% 337/784, 1wt% 683/~1577; ≥2wt%는
 payload --fibre-max 4000 캡이라 full-res n_pts −15~18%로 확인) + PTFE-on-AM 소폭↓ → STEP3 축.
 binder_cap은 wt%-구동·mixing-무관 확인(0.649/0.930/0.955/0.504 양쪽 동일).
+
+## ★ 두께-형상 동시응답 — 이론-유도 dilation `--dilate-z` (2026-07-08) ★
+"질량보존 후처리는 숫자만 고치고 형상은 못 고친다"(사용자 지적, 맞음)에 대한 DEM-불요 해법.
+**물리 판정 1순위**: 완전-emergent 골격 재배열 = granular force-chain = **DEM-클래스** (mobile-AM MPM은
+틀린 응답=artifact, 기각 유지).  DEM 없이 가능한 최선 = **prescribed-but-theory-anchored dilation**:
+- λ_dz = **(1+φ_VGCF)·(1−ε_DEM)/(1−ε_real)**, ε_real = ε_DEM + **0.5pp/wt%(VGCF)** — 실증 숫자 단 1개
+  (Cho 2024, 동일 LPSCl+VGCF, +1pp/2wt% @고정압).  구조는 이론: **Philipse random-contact rod-jamming
+  φ_c ≈ 5.4/(L/D) = 5.4/67 ≈ 8 vol%** — **우리 strut-MPM onset(2wt% 무반응/4wt% 발화 = 8vol%)이 이
+  이론값을 독립 재현** (이론-데이터 교차검증; φ_c 너머는 부피보존 기울기로 전환, ≤4wt%에선 불요).
+- **soft additive(PTFE/SuperP)는 제외** — σ_y<press로 pore에 흘러들어 prop 못 함 → 그쪽 두께 pin이
+  물리적으로 맞음.  z-only affine = die-press 전역 모드(lateral은 die 고정); 국소 비-affine 재배열은
+  DEM 몫으로 명시 잔류.
+- 구현: `mpm3d --dilate-z`(스캐폴드 AM+SE z-offset 스트레치, 반지름 불변=prop-open) +
+  `mpm_input_from_case` VGCF recipe 자동 bake.  두께/porosity는 by-construction, **coverage·망·SE-strain은
+  벌어진 골격 위에서 emergent** (= 새 정보).
+- λ_dz(real_4): VGCF 1→1.0264(T 115.8µm) / 2→1.0536(118.9) / 4→**1.1102(125.3)** / 1+PTFE1→1.0266.
+- ⚠ 기존 VGCF 행들은 pre-dilation(un-dilated bracket 하한)으로 유효 유지; 이후 VGCF zip은 dilated 기본.
+- 검증런 사전등록 (VGCF 4wt% ballmill dilated): thickness ≈**125.3µm**, porosity(in-sim) ≈**17.4%**
+  (= DEM-frame 16.28 + MPM-baseline offset ~1.2pp), **cov AM_S < 40.3으로 하락 = emergent 신규 정보**.

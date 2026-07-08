@@ -227,8 +227,32 @@ def main():
     _lam_z = round(min(1.0, (1.0 - 0.44) / max(1.0 - _eps_dem, 1e-6)), 3)
     _rc = a.add_recipe.upper()
     _align = f'--fibre-align {_lam_z} ' if ('VGCF' in _rc or 'PTFE' in _rc) else ''
+    # --dilate-z AUTO for STIFF-fibre (VGCF) recipes: bed prop-open the frozen-AM MPM cannot produce
+    # emergently (skeleton rearrangement = granular/DEM-class).  λ_dz = (1+φ_VGCF)·(1−ε_DEM)/(1−ε_real),
+    # ε_real = ε_DEM + 0.5pp/wt%(VGCF) — the ONE empirical number (Cho 2024, same LPSCl SE + VGCF: +1pp
+    # per 2wt% at fixed press).  Philipse rod-jamming φ_c ≈ 5.4/(L/D) ≈ 8 vol% bounds this pre-jamming
+    # linear regime (our own strut-MPM onset at 4wt%=8vol% reproduces it; beyond φ_c the slope steepens
+    # to volume-conservation — not needed ≤4wt%).  Soft additives (PTFE/SuperP, σ_y<press) flow into the
+    # pores instead of propping (their thickness pin IS the physics) → EXCLUDED from λ_dz.  Thickness/
+    # porosity then respond BY CONSTRUCTION; coverage/network/SE-strain respond EMERGENTLY on the
+    # dilated bed (z-affine = die-press global mode; local non-affine rearrangement stays DEM territory).
+    _dilate = ''
+    _wv = 0.0
+    _mv = re.search(r'VGCF\s*=\s*([0-9.]+)', _rc)
+    if _mv and poro:
+        _wv = float(_mv.group(1))
+    if _wv > 0.0:
+        _wt_tot = sum(float(x) for x in re.findall(r'=\s*([0-9.]+)', a.add_recipe))
+        _r3 = lambda rows: sum(float(r[4]) ** 3 for r in rows)          # Σr³ ∝ volume (4π/3 cancels)
+        _v_am, _v_se = _r3(am_rows), _r3(se_rows)
+        _m_base = _v_am * 4.8 + _v_se * 2.0                             # ρ_AM/ρ_SE g/cm³ (additives.DENS)
+        _v_vgcf = (_m_base * (_wv / 100.0) / max(1.0 - _wt_tot / 100.0, 1e-6)) / 2.0   # ρ_VGCF = 2.0
+        _phi = _v_vgcf / max(_v_am + _v_se, 1e-12)                      # VGCF vol / base-solid vol
+        _eps_real = min(_eps_dem + 0.005 * _wv, 0.95)                   # Cho slope: +0.5pp per wt% VGCF
+        _dz = round((1.0 + _phi) * (1.0 - _eps_dem) / max(1.0 - _eps_real, 1e-6), 4)
+        _dilate = f'--dilate-z {_dz} '
     add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
-                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}{_stiff}{_align}'
+                 f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}{_stiff}{_align}{_dilate}'
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''

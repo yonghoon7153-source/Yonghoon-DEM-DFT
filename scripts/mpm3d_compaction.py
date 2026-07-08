@@ -328,6 +328,17 @@ def parse_args(argv):
                          'carbon point count (else the wrap strength would swing with recipe).  In a PTFE-only '
                          'recipe (no carbon) AM is the whole pool.  MAGNITUDE (default 0.5) a conservative '
                          'tunable hook, NOT anchored (backlog §F1).')
+    ap.add_argument('--dilate-z', type=float, default=1.0,
+                    help='STIFF-FIBRE BED DILATION: stretch the frozen scaffold (AM + SE seed) z-offsets by this '
+                         'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
+                         'produce emergently (skeleton rearrangement = granular force-chain physics = DEM-class). '
+                         'The VALUE is derived upstream (mpm_input_from_case) from λ_z = (1+φ_VGCF)·(1−ε_DEM)/'
+                         '(1−ε_real), ε_real = ε_DEM + 0.5pp/wt%(VGCF) — ONE empirical number (Cho 2024 LPSCl+VGCF '
+                         'slope); Philipse rod-jamming φ_c≈5.4/(L/D)≈8vol% bounds the regime (our strut onset '
+                         'reproduces it).  Thickness/porosity respond BY CONSTRUCTION; coverage/network/strain '
+                         'respond EMERGENTLY on the dilated bed.  z-only affine = die-press global mode (lateral '
+                         'fixed); local non-affine rearrangement stays DEM territory.  1.0 = off (soft additives: '
+                         'PTFE/SuperP flow into pores, no dilation — their thickness pin is the physics).')
     return ap.parse_args(argv)
 
 
@@ -401,8 +412,12 @@ def main(argv):
         SW = (0.04, 0.96); WIDTH = SW[1] - SW[0]; FLOOR = 0.05
         amraw = np.atleast_2d(np.loadtxt(args.am_scaffold, delimiter=','))  # 2D even for a 1-row CSV
         scl = WIDTH / args.lateral_box                         # box units per LIGGGHTS unit (lateral→WIDTH)
+        DZ = max(float(args.dilate_z), 1.0)                    # stiff-fibre bed dilation (z-offsets only;
+        if DZ > 1.0:                                           #  radii unchanged → particles move APART = prop-open)
+            print(f'  [dilate-z] scaffold z-offsets ×{DZ:.4f} (stiff-fibre prop-open; thickness/porosity by '
+                  f'construction, coverage/network EMERGENT on the dilated bed)')
         am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
-                                FLOOR + amraw[:, 3] * scl]).astype(np.float64)
+                                FLOOR + amraw[:, 3] * scl * DZ]).astype(np.float64)
         am_r = (amraw[:, 4] * scl).astype(np.float64)
         AM_vol = float(np.sum((4.0 / 3.0) * np.pi * am_r ** 3))
         am_top = float((am_c[:, 2] + am_r).max())
@@ -544,7 +559,7 @@ def main(argv):
             #    (no se_frac, no --target-porosity). ──────────────────────────────────────────
             seraw = np.atleast_2d(np.loadtxt(args.se_dump, delimiter=','))  # 2D even for a 1-row CSV
             se_c = np.column_stack([SW[0] + seraw[:, 1] * scl, SW[0] + seraw[:, 2] * scl,
-                                    FLOOR + seraw[:, 3] * scl])
+                                    FLOOR + seraw[:, 3] * scl * DZ])   # SE rides the dilated skeleton (z-affine)
             se_rr = (seraw[:, 4] * scl).astype(np.float64)
             se_pin = np.zeros((n_grid, n_grid, nz), bool)
             for _i in range(len(se_rr)):
@@ -1247,6 +1262,7 @@ def main(argv):
             'protocol': args.protocol, 'readout': args.readout,
             'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
             'periodic': bool(PERIODIC),
+            'dilate_z': round(float(args.dilate_z), 4) if float(args.dilate_z) > 1.0 else None,   # stiff-fibre prop-open stretch (None = off)
         }
         if args.am_scaffold:
             m.update({
