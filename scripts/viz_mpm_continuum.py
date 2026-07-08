@@ -70,12 +70,14 @@ def coverage(am_p, am_s, se_mask):
     return res
 
 
-def load_am(path):
+def load_am(path, dz=1.0):
+    # dz = the MPM's --dilate-z scaffold z-stretch — pass it so downstream consumers (payload/coverage)
+    # rebuild the AM on the SAME dilated frame as the compacted SE cloud (default 1.0 = legacy exact).
     am = np.loadtxt(path, delimiter=',')
     t = am[:, 0].astype(int)
     c = np.column_stack([SW[0] + am[:, 1] * SCL,
                          SW[0] + am[:, 2] * SCL,
-                         FLOOR + am[:, 3] * SCL])
+                         FLOOR + am[:, 3] * SCL * dz])
     r = am[:, 4] * SCL
     return t, c, r
 

@@ -332,7 +332,7 @@ def parse_args(argv):
                     help='STIFF-FIBRE BED DILATION: stretch the frozen scaffold (AM + SE seed) z-offsets by this '
                          'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
                          'produce emergently (skeleton rearrangement = granular force-chain physics = DEM-class). '
-                         'The VALUE is derived upstream (mpm_input_from_case) from λ_z = (1+φ_VGCF)·(1−ε_DEM)/'
+                         'The VALUE is derived upstream (mpm_input_from_case) from λ_dz = (1+φ_VGCF)·(1−ε_DEM)/'
                          '(1−ε_real), ε_real = ε_DEM + 0.5pp/wt%(VGCF) — ONE empirical number (Cho 2024 LPSCl+VGCF '
                          'slope); Philipse rod-jamming φ_c≈5.4/(L/D)≈8vol% bounds the regime (our strut onset '
                          'reproduces it).  Thickness/porosity respond BY CONSTRUCTION; coverage/network/strain '
@@ -416,6 +416,10 @@ def main(argv):
         if DZ > 1.0:                                           #  radii unchanged → particles move APART = prop-open)
             print(f'  [dilate-z] scaffold z-offsets ×{DZ:.4f} (stiff-fibre prop-open; thickness/porosity by '
                   f'construction, coverage/network EMERGENT on the dilated bed)')
+            if args.am_jam or args.floor_porosity > 0 or args.se_am_drag > 0:
+                print('  [dilate-z] ⚠ --am-jam / --floor-porosity / --se-am-drag are anchored to the UNDILATED '
+                      'packing (contact tol, DEM-porosity clamp, layer count) — their gates are NOT dilation-'
+                      'aware; verify or disable them on a dilated bed.')
         am_c = np.column_stack([SW[0] + amraw[:, 1] * scl, SW[0] + amraw[:, 2] * scl,
                                 FLOOR + amraw[:, 3] * scl * DZ]).astype(np.float64)
         am_r = (amraw[:, 4] * scl).astype(np.float64)
@@ -1262,7 +1266,7 @@ def main(argv):
             'protocol': args.protocol, 'readout': args.readout,
             'se_dump': bool(args.se_dump), 'se_frac': float(args.se_frac),
             'periodic': bool(PERIODIC),
-            'dilate_z': round(float(args.dilate_z), 4) if float(args.dilate_z) > 1.0 else None,   # stiff-fibre prop-open stretch (None = off)
+            'dilate_z': round(float(args.dilate_z), 4) if (args.am_scaffold and float(args.dilate_z) > 1.0) else None,   # stiff-fibre prop-open stretch (None = off / no-op without a scaffold)
         }
         if args.am_scaffold:
             m.update({

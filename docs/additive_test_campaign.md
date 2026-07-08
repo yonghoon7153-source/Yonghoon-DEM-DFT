@@ -243,21 +243,41 @@ mixing-측 표현: soft additive의 *형상*(분산/분기)은 wallP에 기여 0
 payload --fibre-max 4000 캡이라 full-res n_pts −15~18%로 확인) + PTFE-on-AM 소폭↓ → STEP3 축.
 binder_cap은 wt%-구동·mixing-무관 확인(0.649/0.930/0.955/0.504 양쪽 동일).
 
-## ★ 두께-형상 동시응답 — 이론-유도 dilation `--dilate-z` (2026-07-08) ★
+## ★ 두께-형상 동시응답 — anchored dilation `--dilate-z` (2026-07-08, 2-agent 리뷰 반영 개정) ★
 "질량보존 후처리는 숫자만 고치고 형상은 못 고친다"(사용자 지적, 맞음)에 대한 DEM-불요 해법.
 **물리 판정 1순위**: 완전-emergent 골격 재배열 = granular force-chain = **DEM-클래스** (mobile-AM MPM은
-틀린 응답=artifact, 기각 유지).  DEM 없이 가능한 최선 = **prescribed-but-theory-anchored dilation**:
-- λ_dz = **(1+φ_VGCF)·(1−ε_DEM)/(1−ε_real)**, ε_real = ε_DEM + **0.5pp/wt%(VGCF)** — 실증 숫자 단 1개
-  (Cho 2024, 동일 LPSCl+VGCF, +1pp/2wt% @고정압).  구조는 이론: **Philipse random-contact rod-jamming
-  φ_c ≈ 5.4/(L/D) = 5.4/67 ≈ 8 vol%** — **우리 strut-MPM onset(2wt% 무반응/4wt% 발화 = 8vol%)이 이
-  이론값을 독립 재현** (이론-데이터 교차검증; φ_c 너머는 부피보존 기울기로 전환, ≤4wt%에선 불요).
+틀린 응답=artifact, 기각 유지).  DEM 없이 가능한 최선 = **prescribed-but-anchored dilation**:
+- λ_dz = **(1+φ_VGCF)·(1−ε_DEM)/(1−ε_real)**; **ε_real = ε_DEM + Δε_cho(w)** —
+  `docs/data/vgcf_dilate_cho_calibrated.csv` 보간 (dem_perturbation driver C, **Balberg-percolation-
+  gated, A_cho=1.568** = 레포의 유일 Cho-anchored 곡선).  ⚠ 첫-커밋(2db2e53)의 선형 0.5pp/wt%는 이
+  곡선과 저 wt%서 모순(0.5wt% **부호 반대**: 곡선 −0.209pp = percolation 이하 fill-지배) → **폐기·
+  단일화** (리뷰 발견 — 두 Cho-곡선 공존 금지).
+- **Cho 앵커 캐비엇 상속**(§실제 실험과 비교 그대로): 433 MPa(우리 300 아님)·다른 조성·**2점(0/2wt%)
+  앵커** → 기울기 ±~50%, 4wt%는 앵커 밖 외삽.  onset 상수는 [0.7 Balberg-percolation … 5.4
+  Philipse-dense]·D/L **모델링 범위**(dem_perturbation.py:237-239).
+- **Philipse 관계 (정직 표현으로 정정)**: strut onset은 solid-frame 4~8vol% **bracket**(2점)이고
+  bed-frame으론 ~3.4–7.3vol% — Philipse dense-jamming 상한 8.1vol%와 **order-of-magnitude 정합**
+  (±수십%; waviness·L_cv=0.4로 유효 α 불확실).  "독립 재현" 아님 — Cho의 2wt% soft onset은 Balberg
+  percolation(0.7 하한)이 설명.
+- **strut ⊃ dilation 규칙 (이중계상 방지)**: λ_dz가 Cho prop-open **전체**를 인코딩 → 같은 메커니즘의
+  부분모델 rigid strut(+0.75pp@4wt%)을 겹치면 이중계상 → dilated zip은 auto-`--fibre-stiff` **드랍**
+  (CLI --fibre-stiff 강제는 존중; buckle은 형상 전용 유지; **align은 ε_real 기준 재계산** = 두 auto-flag가
+  하나의 porosity 서사).
 - **soft additive(PTFE/SuperP)는 제외** — σ_y<press로 pore에 흘러들어 prop 못 함 → 그쪽 두께 pin이
   물리적으로 맞음.  z-only affine = die-press 전역 모드(lateral은 die 고정); 국소 비-affine 재배열은
   DEM 몫으로 명시 잔류.
-- 구현: `mpm3d --dilate-z`(스캐폴드 AM+SE z-offset 스트레치, 반지름 불변=prop-open) +
-  `mpm_input_from_case` VGCF recipe 자동 bake.  두께/porosity는 by-construction, **coverage·망·SE-strain은
-  벌어진 골격 위에서 emergent** (= 새 정보).
-- λ_dz(real_4): VGCF 1→1.0264(T 115.8µm) / 2→1.0536(118.9) / 4→**1.1102(125.3)** / 1+PTFE1→1.0266.
+- 구현: `mpm3d --dilate-z`(스캐폴드 AM+SE z-offset 스트레치, 반지름 불변=prop-open; 스캐폴드 없으면
+  no-op + metrics 미기록) + `mpm_input_from_case` VGCF recipe 자동 bake — **canonical `parse_recipe`**
+  ('VGCF:PTFE=1:1' / 'AM:SE:VGCF=…' / 'VGCF=4' 전 포맷; 첫-커밋 regex는 combo 소실·legacy 포맷 λ≈10.9
+  재앙 → 수정) + λ∈[1,1.35] sanity gate + `--no-dilate`(bracket-floor 재생성, sed 불요) +
+  **payload 동일-프레임 배선**(step2에 `--dilate-z`·ε_real 타깃 전달 — 없으면 뷰어/coverage가 dilated
+  SE를 un-dilated AM과 비교 + voxelize가 porosity를 ε_DEM으로 되-pin).  두께/porosity는
+  by-construction, **coverage·망·SE-strain은 emergent** (= 새 정보).
+- λ_dz(real_4, 곡선 기준): VGCF 0.5→1.0077(T 113.7µm) / 1→1.0222(115.4) / 2→1.0536(118.9) /
+  4→**1.1119(125.5)** / VGCF1+PTFE1→1.0225.  ⚠ opt-in 게이트(--am-jam/--floor-porosity/--se-am-drag)는
+  un-dilated 앵커 → dilated bed 미보정(mpm3d 런타임 경고; 생성기는 애초에 안 bake).
 - ⚠ 기존 VGCF 행들은 pre-dilation(un-dilated bracket 하한)으로 유효 유지; 이후 VGCF zip은 dilated 기본.
-- 검증런 사전등록 (VGCF 4wt% ballmill dilated): thickness ≈**125.3µm**, porosity(in-sim) ≈**17.4%**
-  (= DEM-frame 16.28 + MPM-baseline offset ~1.2pp), **cov AM_S < 40.3으로 하락 = emergent 신규 정보**.
+  CSV의 volume-fill pred 컬럼은 dilated 런에 부적용 — dilated pred = ε_real(노트에 기재).
+- 검증런 사전등록 (VGCF 4wt% ballmill **dilated, auto-strut 드랍**): thickness ≈**125.5µm**,
+  porosity(in-sim) ≈**17.5%** (= ε_real 16.41 + MPM-baseline offset ~1.2pp; offset의 λ-증폭 ±0.3pp 여유),
+  **cov AM_S < 40.3 하락 = emergent 신규 정보**, metrics `dilate_z:1.1119` + `fibre_stiff:false`.

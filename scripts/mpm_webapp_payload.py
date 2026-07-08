@@ -36,14 +36,15 @@ def _vc():
     return _VC
 
 
-def seed_se_mask(se_csv, am_shape, h, am_mask):
+def seed_se_mask(se_csv, am_shape, h, am_mask, dz=1.0):
     """Voxel union of D1 SE spheres at the SEED (real DEM CSV) positions, on the SAME
     grid as the compacted voxelisation, minus AM cells → the loose pre-compaction SE
-    (for the before/after view).  Mapping matches viz_mpm_continuum.voxelize exactly."""
+    (for the before/after view).  Mapping matches viz_mpm_continuum.voxelize exactly.
+    dz = the MPM's --dilate-z scaffold stretch (payload must live on the same frame)."""
     vc = _vc(); SW = vc.SW; FLOOR = vc.FLOOR
     scl = vc.SCL                                            # case µm/box scale (overridden for thick-film)
     raw = np.loadtxt(se_csv, delimiter=',')
-    c = np.column_stack([SW[0] + raw[:, 1] * scl, SW[0] + raw[:, 2] * scl, FLOOR + raw[:, 3] * scl])
+    c = np.column_stack([SW[0] + raw[:, 1] * scl, SW[0] + raw[:, 2] * scl, FLOOR + raw[:, 3] * scl * dz])
     rr = raw[:, 4] * scl
     nx, ny, nz = am_shape
     mask = np.zeros(am_shape, bool)
@@ -153,6 +154,10 @@ def main():
     ap.add_argument('--tri-step', type=int, default=3,
                     help='marching-cubes step for the SERVED mesh (3 ≈ browser-friendly tri count)')
     ap.add_argument('--target-porosity', type=float, default=None)
+    ap.add_argument('--dilate-z', type=float, default=1.0,
+                    help='scaffold z-stretch the MPM ran with (--dilate-z there): rebuild AM + seed-SE on the '
+                         'SAME dilated frame — else coverage/viewer compare the dilated se_dump.npy against '
+                         'un-dilated spheres (up-to-µm z mismatch at the bed top).')
     ap.add_argument('--target-coverage', type=float, default=None)
     ap.add_argument('--se-min-count', type=int, default=1)
     ap.add_argument('--denoise', type=int, default=1)
@@ -212,7 +217,7 @@ def main():
     UM = vc.UM_BOX; SW = vc.SW; FLOOR = vc.FLOOR
 
     if a.scaffold:
-        t, c, r = vc.load_am(a.scaffold)
+        t, c, r = vc.load_am(a.scaffold, dz=a.dilate_z)
     else:                                                  # SE-only payload (loose→dense demo, no AM)
         t, c, r = np.zeros(0, int), np.zeros((0, 3)), np.zeros(0)
     if a.se_proxy or not a.se:
@@ -313,7 +318,7 @@ def main():
     seed_tris = []
     seed_por = None
     if a.se_dump:
-        seed_mask = seed_se_mask(a.se_dump, am_p.shape, h, am)
+        seed_mask = seed_se_mask(a.se_dump, am_p.shape, h, am, dz=a.dilate_z)
         seed_por = 100.0 * (~(am | seed_mask)).mean()
         smm = vc.mesh_of(seed_mask, a.tri_step, a.smooth)
         if smm is not None:

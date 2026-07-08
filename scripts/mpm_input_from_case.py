@@ -54,6 +54,9 @@ def main():
     ap.add_argument('--add-l-cv', type=float, default=0.4, help='fibre length variation baked into run_mpm.sh.')
     ap.add_argument('--mixing', default='thinky', choices=['ballmill', 'thinky', 'handmix'],
                     help='Super P dispersion baked into run_mpm.sh (thinky = lit dry-process coating).')
+    ap.add_argument('--no-dilate', action='store_true',
+                    help='skip the VGCF-recipe --dilate-z auto-bake → regenerate the UN-dilated '
+                         'bracket-floor zip (volume-fill/strut lower bound) without hand-editing run_mpm.sh.')
     ap.add_argument('--fibre-stiff', action='store_true',
                     help='force --fibre-stiff even for a NON-VGCF recipe.  For any VGCF recipe it is now '
                          'AUTO-baked into run_mpm.sh (VGCF as a LOAD-BEARING rigid strut = the physical model, '
@@ -224,33 +227,90 @@ def main():
     # (from the compaction ratio), morphology-faithful (real 300-MPa fibres tilt in-plane).  PTFE fibrils
     # tilt in-plane under the same uniaxial press as VGCF; SuperP (0D, no long axis) is correctly excluded.
     _eps_dem = (float(poro) / 100.0) if poro else 0.15
-    _lam_z = round(min(1.0, (1.0 - 0.44) / max(1.0 - _eps_dem, 1e-6)), 3)
     _rc = a.add_recipe.upper()
-    _align = f'--fibre-align {_lam_z} ' if ('VGCF' in _rc or 'PTFE' in _rc) else ''
     # --dilate-z AUTO for STIFF-fibre (VGCF) recipes: bed prop-open the frozen-AM MPM cannot produce
-    # emergently (skeleton rearrangement = granular/DEM-class).  λ_dz = (1+φ_VGCF)·(1−ε_DEM)/(1−ε_real),
-    # ε_real = ε_DEM + 0.5pp/wt%(VGCF) — the ONE empirical number (Cho 2024, same LPSCl SE + VGCF: +1pp
-    # per 2wt% at fixed press).  Philipse rod-jamming φ_c ≈ 5.4/(L/D) ≈ 8 vol% bounds this pre-jamming
-    # linear regime (our own strut-MPM onset at 4wt%=8vol% reproduces it; beyond φ_c the slope steepens
-    # to volume-conservation — not needed ≤4wt%).  Soft additives (PTFE/SuperP, σ_y<press) flow into the
-    # pores instead of propping (their thickness pin IS the physics) → EXCLUDED from λ_dz.  Thickness/
-    # porosity then respond BY CONSTRUCTION; coverage/network/SE-strain respond EMERGENTLY on the
-    # dilated bed (z-affine = die-press global mode; local non-affine rearrangement stays DEM territory).
-    _dilate = ''
-    _wv = 0.0
-    _mv = re.search(r'VGCF\s*=\s*([0-9.]+)', _rc)
-    if _mv and poro:
-        _wv = float(_mv.group(1))
-    if _wv > 0.0:
-        _wt_tot = sum(float(x) for x in re.findall(r'=\s*([0-9.]+)', a.add_recipe))
+    # emergently (skeleton rearrangement = granular/DEM-class).  λ_dz = (1+φ_VGCF)·(1−ε_DEM)/(1−ε_real);
+    # ε_real = ε_DEM + Δε_cho(w) interpolated from docs/data/vgcf_dilate_cho_calibrated.csv — the ONE
+    # in-repo Cho-2024-anchored curve (dem_perturbation.py driver C: Balberg-percolation-gated,
+    # A_cho=1.568; SUPERSEDES the first-cut linear 0.5pp/wt% which disagreed with it below 2wt% —
+    # the curve is NET vs no-additive, negative below rod percolation where volume-fill dominates).
+    # ⚠ anchor caveats carry over (campaign doc): Cho = 433 MPa·other composition, TWO points (0/2wt%)
+    # → slope ±~50%; onset constant spans [0.7 Balberg … 5.4 Philipse]·D/L.  Soft additives (PTFE/
+    # SuperP, σ_y<press) flow into pores instead of propping → EXCLUDED.  Thickness/porosity respond
+    # BY CONSTRUCTION; coverage/network/SE-strain respond EMERGENTLY on the dilated bed (z-affine =
+    # die-press global mode; local non-affine rearrangement stays DEM territory).  --no-dilate
+    # regenerates the un-dilated bracket-floor zip (no sed needed).
+    _dilate = ''; _dz = 1.0; _eps_real = _eps_dem
+    _wts = {}
+    if a.add_recipe:
+        import sys as _sys                                              # robust regardless of caller cwd
+        _sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        try:
+            import additives as _adds                                   # canonical recipe parser + DENS
+            _parse, _awt, _DENS = _adds.parse_recipe, _adds.additive_wt, _adds.DENS
+        except ImportError as _e:                                       # numpy-less env → verbatim inline
+            print(f'⚠ additives import failed ({_e}) → inline parse/DENS copies (keep in sync w/ additives.py)')
+            def _parse(s):                                              # = additives.parse_recipe verbatim
+                keys, vals = s.split('=')
+                keys = keys.split(':'); vals = [float(v) for v in vals.split(':')]
+                return dict(zip(keys, vals))
+            def _awt(wt):                                               # = additives.additive_wt verbatim
+                return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE') if wt.get(k, 0) > 0}
+            _DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00}              # = additives.DENS subset
+        try:
+            _wts = _awt(_parse(a.add_recipe))                           # {'VGCF':1.0,...} — AM/SE ignored
+        except Exception as _e:
+            raise SystemExit(f'--add-recipe {a.add_recipe!r} unparseable ({_e}) — '
+                             f"expected 'VGCF:PTFE=1:1' / 'PTFE=0.5' / 'AM:SE:VGCF=72:27:1'")
+    _wv = float(_wts.get('VGCF', 0.0))
+    if _wv > 0.0 and poro and not a.no_dilate:
+        _wt_tot = sum(_wts.values())                                    # additive wt% only (AM/SE excluded)
         _r3 = lambda rows: sum(float(r[4]) ** 3 for r in rows)          # Σr³ ∝ volume (4π/3 cancels)
         _v_am, _v_se = _r3(am_rows), _r3(se_rows)
-        _m_base = _v_am * 4.8 + _v_se * 2.0                             # ρ_AM/ρ_SE g/cm³ (additives.DENS)
-        _v_vgcf = (_m_base * (_wv / 100.0) / max(1.0 - _wt_tot / 100.0, 1e-6)) / 2.0   # ρ_VGCF = 2.0
+        _m_base = _v_am * _DENS['AM'] + _v_se * _DENS['SE']             # single-source densities (additives.DENS)
+        _v_vgcf = (_m_base * (_wv / 100.0) / max(1.0 - _wt_tot / 100.0, 1e-6)) / _DENS['VGCF']
         _phi = _v_vgcf / max(_v_am + _v_se, 1e-12)                      # VGCF vol / base-solid vol
-        _eps_real = min(_eps_dem + 0.005 * _wv, 0.95)                   # Cho slope: +0.5pp per wt% VGCF
-        _dz = round((1.0 + _phi) * (1.0 - _eps_dem) / max(1.0 - _eps_real, 1e-6), 4)
-        _dilate = f'--dilate-z {_dz} '
+        _curve = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              'docs', 'data', 'vgcf_dilate_cho_calibrated.csv')
+        _pts = []                                                       # (wt%, Δε_pp) net-vs-no-additive
+        with open(_curve) as _f:
+            for _row in csv.reader(_f):
+                try:
+                    _pts.append((float(_row[0]), float(_row[3])))
+                except (ValueError, IndexError):
+                    continue                                            # header/comment lines
+        _pts.sort()
+        _w = min(max(_wv, _pts[0][0]), _pts[-1][0])                     # clamp to the calibrated range
+        _dpp = _pts[-1][1]
+        for (_w0, _d0), (_w1, _d1) in zip(_pts, _pts[1:]):
+            if _w0 <= _w <= _w1:
+                _dpp = _d0 + (_d1 - _d0) * (_w - _w0) / max(_w1 - _w0, 1e-9)
+                break
+        _eps_real = min(max(_eps_dem + _dpp / 100.0, 0.01), 0.60)
+        _dz = (1.0 + _phi) * (1.0 - _eps_dem) / max(1.0 - _eps_real, 1e-6)
+        if not (1.0 <= _dz <= 1.35):                                    # sanity gate: a λ outside this is a
+            print(f'⚠ dilate-z λ={_dz:.4f} outside [1.0,1.35] — clamped; check recipe/porosity inputs')
+            _dz = min(max(_dz, 1.0), 1.35)                              # parse/input bug, not physics
+        _dz = round(_dz, 4)
+        _dilate = f'--dilate-z {_dz} ' if _dz > 1.0 else ''
+    # --fibre-align AUTO for any FIBRE (VGCF or PTFE): press-induced IN-PLANE alignment.  λ_z = axial
+    # stretch of the bed under the uniaxial compaction the fibres underwent WITH it = (1−ε_loose)/(1−ε),
+    # ε_loose≈0.44.  ε = ε_real when dilation is baked (the dilated bed's own compaction endpoint —
+    # keeps the two auto-flags on ONE porosity narrative), else the case ε_DEM.  PTFE fibrils tilt
+    # in-plane under the same uniaxial press as VGCF; SuperP (0D, no long axis) is correctly excluded.
+    _eps_align = _eps_real if _dilate else _eps_dem
+    _lam_z = round(min(1.0, (1.0 - 0.44) / max(1.0 - _eps_align, 1e-6)), 3)
+    _align = f'--fibre-align {_lam_z} ' if ('VGCF' in _rc or 'PTFE' in _rc) else ''
+    # strut vs dilation: λ_dz already encodes the FULL Cho prop-open; the rigid strut is a partial
+    # mechanistic model of the SAME mechanism (+0.75pp @4wt% on the frozen bed) → stacking them
+    # double-counts.  Dilation SUPERSEDES the auto-strut; --fibre-stiff CLI still force-enables.
+    if _dilate and not a.fibre_stiff:
+        _stiff = ''
+    # step-2 payload must live on the SAME frame as the dilated run: pass λ_dz through (AM + seed-SE
+    # rebuilt dilated in the viz) and target the dilated ε_real — else voxelize pins the void back to
+    # ε_DEM exactly and the viewer/coverage compare a dilated SE cloud against un-dilated AM spheres.
+    tgt_pay = round(_eps_real, 4) if _dilate else tgt
+    pay_dilate = f' --dilate-z {_dz}' if _dilate else ''
     add_flags = (f' \\\n  --add-recipe "{a.add_recipe}" --add-l-cv {a.add_l_cv} --mixing {a.mixing} '
                  f'--coh-ptfe 0.10 --binder-opt-wt 1.5 {_buckle}{_stiff}{_align}{_dilate}'
                  f'--save-phase phase.npy --save-fibre fibre.npy --save-fibre-dia fibre_dia.npy'
@@ -296,7 +356,7 @@ python3 scripts/mpm3d_compaction.py \\
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
-  --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt} --eps se_dump_eps.npy \\
+  --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt_pay} --eps se_dump_eps.npy{pay_dilate} \\
   --void-max 180000 --metrics-json mpm_metrics.json --case {case}{pay_phase} --out mpm_payload.json
 echo "[run_mpm] DONE $(date) → upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
 """
