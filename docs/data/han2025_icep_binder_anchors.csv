@@ -1,0 +1,43 @@
+source,level,property,material,value,unit,condition,precision,note
+# Han 2025 (Adv. Mater. 37 2506266) doi 10.1002/adma.202506266. EXPERIMENT (no DEM/MPM; DFT adsorption only). LIQUID-electrolyte LIB (NCM811 + carbonate LiPF6 + Li-metal 100um) WET slurry process -- NOT ASSB/LPSCl/dry. Use ONLY as BINDER PROPERTY ANCHORS (SDCP conductive-binder modeling / A3 --coh / W2 binder-sigma class / coat-vs-fibril seeding). ICEP = [P(AN-co-AMPS)]2-b-PEO46 triblock (RAFT Mw~100kDa); champion = ICEP-8 ([AN]/[AMPS]~8). Composition/calendering/porosity are SI-only (n/a here).
+# --- binder FILM properties (Fig 1) ---
+han2025,film,sigma_ionic,ICEP-8,1.35e-4,S/cm,RT EIS SS|film|SS,exact_text,swelling state NOT stated in main text; PVDF value implies electrolyte-swollen films -> DO NOT transfer to dry ASSB binder
+han2025,film,sigma_ionic,PVDF,0.65e-4,S/cm,RT EIS SS|film|SS,exact_text,impossibly high for dry PVDF (~1e-9) -> swollen inferred
+han2025,film,E_nanoindent,ICEP-8,6.03,GPa,0.1 mN depth 96.5 nm,exact_text,surface/glassy hard-block dominated; bulk tensile is MPa-scale -> do NOT use 6 GPa as MPM binder E
+han2025,film,E_nanoindent,PVDF,3.73,GPa,0.1 mN depth 120.0 nm,exact_text,
+han2025,film,hardness,ICEP-8,0.42,GPa,nanoindent,exact_text,
+han2025,film,hardness,PVDF,0.34,GPa,nanoindent,exact_text,
+han2025,film,elongation_at_break,ICEP-8,283,%,tensile free-standing film,exact_text,ICEP-5 212 / ICEP-19 167
+han2025,film,elongation_at_break,PVDF,31.8,%,tensile,exact_text,brittle
+han2025,film,toughness,ICEP-8,601.2,J/m3(stated),tensile area,exact_text_unit_suspect,unit inconsistent with curve area ~7 MJ/m3 -> likely MJ/m3 typo; use RATIO vs PVDF (4.0x) only
+han2025,film,toughness,PVDF,151.8,J/m3(stated),tensile area,exact_text_unit_suspect,
+han2025,film,tensile_flow_stress,ICEP-8,~2.7,MPa,plateau Fig1a,digitized_trend,STAR MPM --coh / binder-bridge stress-scale anchor candidate
+han2025,film,tensile_peak_stress,PVDF,~9,MPa,peak then early fracture Fig1a,digitized_trend,
+han2025,film,E_tensile_initial,ICEP-8,~10-25,MPa,Fig1a initial slope,digitized_trend,elastomer-scale bulk network modulus (3 decades below indentation)
+han2025,film,Tg_PEO_block,ICEP-8,-56,degC,DSC,exact_text,PEO crystallinity fully suppressed; ICEP-5/-19 PEO Tg -18/-25 + partial crystallinity
+han2025,film,Tg_hard_block,ICEP-8,85.2,degC,DSC P(AN-co-AMPS),exact_text,2-Tg = physical crosslink microphase separation
+han2025,film,Mn_chelation,ICEP-8,126,ppm,0.01M Mn(ClO4)2 6h ICP-MS,exact_text,vs PVDF 27 ppm; polar amide+sulfonic TM capture
+han2025,film,Mn_chelation,PVDF,27,ppm,same,exact_text,
+# --- DFT adsorption on NCM811 (001) (Fig 2g; molecular eV -- NOT continuum adhesion) ---
+han2025,dft,E_bind,ICEP_AMPS(-H),-2.243,eV,NCM811(001),exact_text,sulfonate-surface-O H-bond
+han2025,dft,E_bind,ICEP_AMPS,-1.819,eV,NCM811(001),exact_text,
+han2025,dft,E_bind,PVDF,-0.703,eV,NCM811(001),exact_text,vdW only
+han2025,dft,E_bind,ICEP_AN,-0.162,eV,NCM811(001),exact_text,adhesion carried by AMPS not AN
+# --- ELECTRODE-level mechanics/adhesion (Fig 2h-j) ---
+han2025,electrode,SAICAS_cohesion_cutting,ICEP-8_cathode,0.29,N,blade 1mm shear45 rake20 clear10,exact_text,~290 N/m per blade width (OUR conversion); apparent (plastic dissipation incl) not intrinsic Gc
+han2025,electrode,SAICAS_adhesion_peeling,ICEP-8_cathode,0.27,N,same at current collector,exact_text,~270 N/m (OUR conversion); 6.8x PVDF
+han2025,electrode,SAICAS_cohesion_cutting,PVDF_cathode,0.07,N,same,exact_text,~70 N/m
+han2025,electrode,SAICAS_adhesion_peeling,PVDF_cathode,0.04,N,same,exact_text,~40 N/m
+han2025,electrode,E_nanoindent,ICEP-8_cathode,1.57,GPa,2.0 mN depth 936.1 nm,exact_text,STAR numerically adjacent to our MPM champion E_eff 1.53 GPa (different physics -- coincidence anchor: electrode-scale effective moduli are O(1 GPa))
+han2025,electrode,E_nanoindent,PVDF_cathode,0.11,GPa,2.0 mN depth 3345.2 nm,exact_text,>10x softer
+han2025,electrode,hardness,ICEP-8_cathode,0.15,GPa,nanoindent,exact_text,PVDF 0.014
+han2025,electrode,elastic_recovery,ICEP-8_cathode,48.0,%,nanoindent,exact_text,PVDF 35.8
+han2025,electrode,binder_coating_thickness,ICEP-8_on_NCM811,~7,nm,TEM pristine,exact_text,STAR coat-type morphology (vs PVDF sporadic aggregates); sub-voxel for our RVE -> model as interface property not resolved phase
+han2025,electrode,film_ASR_derived,ICEP-8_7nm_coat,~5e-3,Ohm.cm2,t/sigma OUR calculation,derived_ours,negligible vs AM/SE interface 40 (Bielefeld2020) or R_ct 22-453 (Kim2025); same 7nm insulating binder -> >=1e3-1e4 Ohm.cm2 blocking
+han2025,electrode,thickness,ICEP-8_cathode,~230,um,ion-milled cross-section SEM,exact_text,loading pairing NOT stated -> porosity NOT derivable; PVDF ~190 um
+# --- loading / cell level (liquid LIB context; trend only) ---
+han2025,cell,mass_loading_max_crackfree,ICEP-8,62.4,mg/cm2,12.5 mAh/cm2 wet cast,exact_text,PVDF fails: energy-density decline >31.7 and crack/delamination at 40.7 mg/cm2
+han2025,cell,retention_60cyc,ICEP-8_62.4mg,94.6,%,0.1C/0.1C Li 100um N/P 1.6-5.9,exact_text,52.3 mg/cm2 -> 96.3%; PVDF 37.3 -> 54.7%
+han2025,cell,D_Li_GITT,ICEP-8_cathode,0.42e-7,cm2/s,avg over SOC/DOD after 30cyc,exact_text,PVDF 0.18e-7; R_internal 31.0 vs 57.2 Ohm
+han2025,cell,rocksalt_layer_after_cycling,ICEP-8,3.1,nm,STEM/EELS,exact_text,PVDF 11.3 nm; binder suppresses phase transition + intergranular cracks (nano-CT)
+han2025,cell,pouch_energy_density,ICEP-8_2stack,377.6,Wh/kg_cell,62.5 mg/cm2 N/P 1.57 E/C 2.5 g/Ah incl packaging,exact_text,1016.8 Wh/L; 96.7% @40cyc; >40cyc drop = Li anode (reassembly test)

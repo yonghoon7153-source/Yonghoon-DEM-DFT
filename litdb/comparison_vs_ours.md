@@ -178,6 +178,29 @@
     **3.0** 사이 = **세 번째 LPSCl bulk 앵커** (측정·입자·GB 차이 스프레드로만 사용, 절대 직접대조 금지).
   - 차이/주의: 실험이라 **솔버 없음**(우리 Kirchhoff/Holm·삼중항 σ_i/σ_e/σ_thermal 우위 유지); σ_ionic(SSE) 1.04(co)<1.29(free)는
     압밀 차 아니라 **측정 형상차**(free 500 µm vs co 50 µm) — intrinsic σ 비교 주의.
+- **★ Kang(Jihyeon) 2025 (bollard binder, LIB 건식) — 바인더 σ 페널티의 *바인더별* 세분 근거** (상세 §C):
+  바인더 필름 σ_ion **PTFE 4.88e-6 → PC_PTFE 1.31e-4 S/cm (27×)** — 앵커형 극성 바인더는 "완전 차단"이 아니라
+  "약한 이온 전도상".  우리 W2 whatif 는 PTFE **σ_ion×0.74 고정** 페널티(바인더 종류 무관) → **바인더별 σ_ion
+  입력으로 세분**할 문헌 근거(SDCP·PC류 극성/도전 바인더는 PTFE보다 덜 막음).  ⚠ 액체전해질 팽윤 필름 값 —
+  ASSB SE-neck 차단과 물리 다름, **비율·방향만**.  양극 σ_e 1.30 S/cm(최고)는 분산효과(§C) — σ_e 폼의 바인더
+  항이 아니라 A5 dispersion 축 증거.
+- **★ Han 2025 (ICEP 이온전도 탄성 binder, Adv. Mater. 2506266, ⚠액체 LIB *습식* — Kang(J) bollard의 습식 자매편) —
+  "binder=σ0 차단자"를 깨는 클래스의 *두 번째 독립점* + 7 nm coat ASR 스케일**
+  (digest `papers/han2025_icep_conductive_elastic_binder.md`, CSV `docs/data/han2025_icep_binder_anchors.csv`):
+  - **binder 필름 σ_ion 0.135 mS/cm**(ICEP-8, RT EIS SS|film|SS; PVDF 0.065 — 건식 PVDF로 불가능한 값 →
+    둘 다 전해질-swollen 추정, SI 확인 필요) = σ_LPSCl bulk 1.6(Minnmann/Kim2025)의 **~1/12**.
+    ★ **Kang(J) PC_PTFE 0.131 mS/cm와 사실상 동값 → "전도-binder 클래스 ~0.1 mS/cm" 가 독립 2편에서 수렴** —
+    W2 binder-voxel σ_b 파라미터의 대표값으로 채택 가능(0 = PTFE ↔ 1.3e-4 S/cm급 = ICEP/PC/SDCP류).
+  - **★ 7 nm coat의 film-ASR 스케일 논증(우리 유도, 논문 stated 아님)**: R = t/σ_b → ICEP ~7 nm 균일 coat ≈
+    **5×10⁻³ Ω·cm²**(무시) vs 같은 7 nm 절연-binder(σ≲1e-10 S/cm) ≥ **10³–10⁴ Ω·cm²**(지배) — Bielefeld2020
+    AM/SE 면접촉 40·Kim2025 R_ct 22–453 Ω·cm² 예산 대비 **"AM-coat 허용여부는 binder 화학이 정한다"**.
+    → A4/W2에서 coat형 binder는 σ_b에 따라 계면 conductance 수정항으로(차단↔투명 스위치).
+  - **셀-레벨 발현 사슬(실측)**: binder-σ 2.1× → GITT **D_Li 0.42 vs 0.18 ×10⁻⁷ cm²/s·R_internal 31.0 vs
+    57.2 Ω** → z-Raman redox 균일(PVDF 바닥 E_g/A₁g 0.84 = 미반응) → **로딩 상한 62.4 vs ~40.7 mg/cm²** —
+    "binder 수송성이 두께 상한을 정한다"의 정량 사슬(우리 Phase-5 graded-z 출력이 예측해야 할 관측량).
+  - ⚠ 액체-swollen 전도 메커니즘 개연 → **건식 ASSB(SDCP dry)로 σ 절대값 이식 금지**(SDCP 자체 측정 필요);
+    복합 σ_eff·porosity·조성·캘린더링 전무(습식 LIB, Experimental=SI-only) → 압밀·수송 절대축 비교 불가,
+    **binder 물성 앵커 전용**.
 
 - **★ Bielefeld 2019 (GeoDict 구조-모델링, Janek 그룹, 우리와 가장 가까운 *구조-모델링 peer*) — percolation 추세는
   교차검증, 단 σ는 *안 풂***  (digest `docs/lit_bielefeld2019_microstructural_modeling_composite_cathodes.md`):
@@ -262,7 +285,56 @@
   - 우리 우위(그들 없음): 정량 porosity·Heckel·coordination·coverage% · MPM 정량 변형장 Σdg·void-fill flow ·
     명시적 접촉망 σ 삼중항.  그들 void는 *사이클 후 계면 void 상대비*(ImageJ)지 압밀 porosity 아님 → 우리 15.6%와 직접 비교 금지.
 
-- **★⭐(우리-랩) Kang & Shin 2025 (FEM electrochemo-mechanical) — *사이클* chemo-mechanics ↔ 우리 *압밀* 소성 (frame[5] 시간축 분업)**:
+- **★ Kang(Jihyeon) 2025 (Adv. Mater. 2416872, 중앙대+현대차, LIB 건식전극 — ⚠랩 Junhee Kang 아님) — "bollard hitch"
+  앵커 바인더 = 우리 SDCP 화학앵커의 개념-클래스 독립 선례** (digest `papers/kang2025_bollard_anchored_binder_dry_electrode.md`,
+  CSV `docs/data/kang2025_bollard_binder_anchors.csv`):
+  - **앵커링 물리 (그들)**: PC(PAA-grafted CMC)가 NMC 산화물 표면에 **Na⁺-매개 화학흡착** — MLP-DFT E_ads
+    **PC_2Na −2.24 ≫ PC_1Na −1.12 ≫ 극성쌍극자 −0.37 ≫ PTFE vdW −0.09 eV**; PTFE fibril은 bollard의 자유 Na에
+    **Na–F −0.35 eV**(PTFE-NMC의 2–4.5×) + PAA 가지 물리얽힘으로 계류.  400 K NVT-MD 10 ps: PTFE-only 탈착
+    (표면거리 4.2→6.6 Å) vs PC 동반 계류(4.5–4.9 Å).  XPS F1s Na–F>C–F로 실험 확인.
+  - ★ **우리 SDCP와 판정 — 같은 개념-클래스, 4가지 차이**: 둘 다 "CAM 산화물 표면 *이온성* 화학흡착이 PTFE
+    vdW-only 접착을 대체"; 이온성≫극성≫vdW 사다리 = 우리 **doped(−4.797) ≫ neutral(−3.02 eV)** 방향의 분자스케일
+    외부 확인(frame[4]-형).  차이: (i) 그들 **양이온 Na⁺ 표면 브리지** vs 우리 **음이온 −SO₃⁻ Li-O층 삽입**(O–Li
+    1.83 Å×2); (ii) 그들 **이중-바인더**(절연 bollard + PTFE rope 0.6 wt% 유지) vs 우리 **단일 도전바인더**(SDCP가
+    앵커+전자전도 겸업, PTFE-free 지향); (iii) 그들 σ_e 1.30 S/cm 최고는 **분산/3D망 효과**(PC 절연) — 우리 SDCP
+    전도축과 다른 채널(=A5 dispersion 증거); (iv) 역학 매핑은 우리가 앞섬(footprint→γ 0.93 J/m²→coh) vs 그들
+    fragment E_ads에서 종료.  ⚠ 절대 E 비교 금지(fragment·facet·코드 다름) — 서열만.
+  - **bollard 형상 = 우리 SDCP 시딩과 동형**: bollard = NMC 표면 **불연속 앵커 입자/패치 + 입자간 fibril 스팬**
+    (EDS Na 균일분포) — conformal 필름이 아니라 우리 additives.py SDCP `particle` regime + `surface_frac`(AM-앵커
+    분율 bias) 그림과 일치; `seed_coat` conformal 필름은 SuperP coat_block 쪽.  SDCP+PTFE 콤보 시 fibril이
+    앵커입자에서 nucleate하는 bias가 그들 모델의 시딩 번역.
+  - **A3 binder-cohesion 실험앵커 (계층 구분 필수)**: 계면(그들 E_ads비 25×·우리 γ비 ~10×) ≫ 시스템 peel
+    **1.68×**(0.9615/0.5733 N/cm, 전극↔Al — N/cm≈J/m² 규모 96/57 = 소성산일 포함 → 우리 DFT γ 0.93 J/m²와 100×
+    층위차, **비율만 전이**).  사이클 R_ct 성장(39→48 vs 68.65→91.52 Ω)·**PTFE계 NMC 2차입자 파쇄 vs PC계 무균열**
+    (100 cyc) = binder cohesion↔AM 파괴 결합의 실험짝(우리 Auerbach는 압밀-접촉응력만 — driver 다름, 정성).
+  - **PTFE fibrillation 하한 + 혼합 앵커**: dough 성립 PTFE **0.6 wt%**(bollard 지원; 0.2 wt% 실패) vs **2 wt%**
+    (단독) = 우리 `--ptfe-fibril`/PTFE-wt 축의 첫 문헌 하한.  혼합법→2C 용량 STD **16.52→5.59(planetary)→4.28
+    (ballmill×3)** = **A5 dispersion-CV 정량 실험앵커** + ADDITIVE_PROCESS(ballmill 우위) 방향 정합.
+  - ⚠ **LIB 액체전해질 — 이온위상 역전**: 그들 "porosity↑(25.9% 또는 ~22.3% — 본문 문장 중의적; PVdF 17.7%)·
+    τ 1.30 = 장점"은 pore=전도체 논리 → 우리 ASSB(SE망=전도체, porosity=죽은 공간)로 부호까지 반대 — 절대 전이
+    금지.  바인더 필름 E도 MPa-스케일(PTFE 3.50/PC_PTFE 0.15 MPa, 다공 시트) — 우리 ADD dict PTFE 0.30 GPa와
+    1000× 층위차, 서열만.
+- **★ Han 2025 (ICEP, 실험+DFT흡착, 액체 LIB 습식) — binder 역학·접착 앵커 + coat-morphology + 전극-스케일 유효 E 실측**
+  (digest `papers/han2025_icep_conductive_elastic_binder.md`; Kang(J) bollard와 자매 — 그들 *건식 앵커-입자+fibril*,
+  이들 *습식 conformal-coat*):
+  - **binder 3-morphology 분류 완성(화학×공정이 형상을 정한다)**: **ICEP = NCM811 위 ~7 nm 균일 coat**(습식,
+    수소결합 구동 — DFT NCM811(001) AMPS −1.8~−2.2 eV ≫ PVDF vdW −0.70) / **PVDF = aggregate**(습식, 약흡착
+    → 산발 응집) / **PTFE = fibril**(건식 전단, Lee2025·우리 CBD) (+Kang(J) bollard = 앵커입자+fibril 하이브리드).
+    ★ **시딩 규칙 흡수: coat(7 nm)는 sub-voxel(우리 복셀 ~0.14 µm의 1/20) → resolved 상 금지, 계면 성질
+    (접촉 conductance/coverage modifier)로**; fibril/앵커입자만 resolved 시딩(additives.py).
+  - **A3 `--coh` 역학 앵커**: 필름 인장 연신 **283 %**(PVDF 31.8)·flow **~2.7 MPa**(digitized) = binder-bridge
+    인력 σ 스케일; SAICAS 박리 **0.27 N@1 mm ≈ 270 N/m**(우리 환산; cohesion 0.29 N ≈ 290; PVDF 40/70) —
+    apparent peel(소성 소산 포함) → Bucci 고유 G_c 4 J/m²와 층위 다름, bond-파괴에너지 **상한측**으로만.
+    ⚠ **필름 E는 프로브 3-decade 스프레드**: 나노압입 6.03 GPa(표면 유리질 hard-block) vs 인장 초기 ~10–25 MPa
+    (digitized, 벌크 엘라스토머 망) → MPM binder상 E는 MPa-급(bulk)으로, 6 GPa 입력 금지.
+  - **전극 나노압입 E 1.57 GPa ≈ 우리 MPM champion E_eff 1.53** — 물리 기원 다름(다공 폴리머-복합 압입 vs
+    granular 연화 프록시; 우연 일치 flag)이나 **"전극-스케일 유효강성 O(1 GPa)" 밴드의 실측 동반자**(구성상
+    벌크 E 수십~수백 GPa가 전극 스케일에서 1–2 GPa로 내려온다는 우리 서사의 외부 실측점). PVDF 전극 0.11 GPa
+    = binder가 전극 유효 E를 10× 흔든다는 실측 → binder 역학이 전극-스케일 modulus의 1차 변수.
+  - **binder→AM 파괴 커플링(직접 구조 증거)**: 사이클 후 nano-CT/TXM — PVDF 분쇄(pulverization)+입계균열 vs
+    **ICEP 무손상**; rock-salt 상전이층 3.1 vs 11.3 nm → binder 접착·탄성이 균열 전파/박리 억제. ⚠ driver =
+    *사이클 Li-구배*(습식 건조응력 + 탈리튬) ≠ 우리 압밀-Auerbach 접촉응력 — A3 bond 도입 시 fracture 축
+    기대효과의 *방향* 근거로만(정량 전이 금지). 건조 모세관응력-균열 축 자체는 습식 전용(우리 건식 무관).
   - **모델링 패럴렐:** 그들 FEM = 2D **Voronoi 다결정 NCA + cohesive-zone 입계 박리(취성), damage scalar D(0→1)**,
     전변형 ε = ε^e + ε_d (ε_d = Ω/3·Δc_Li, Ω = 5.9 % 부피변화).  우리 MPM = 3D/2D **J2 연속체 소성 *형상* 흐름(연성),
     누적소성변형 Σdg**.  ★ **둘 다 연속체 + 손상/소성 변수**지만 **파괴 메커니즘 다름**: 그들 *취성 입계 cohesive 박리*
@@ -361,7 +433,24 @@
 - **비구형 입자**(Bouvard 각질 inclusion이 압밀 더 방해; Martin–Bouvard truncated sphere = SHAPE flow 없음) —
   우리 DEM·MPM 둘 다 구만 = 23년째 문헌 공통 한계(M&B2003→Varkey2026→Bazzoun2026), frame[5] 일관 확증.
 - **Storåkers 소성 접촉면적** A=2πc(m)²rh (Martin–Bouvard, c(m) 0.5→1.45) — 우리 Stage-E(Tabor+volume)와 A/B 비교 거리.
-- **★⭐(우리-랩) Kang & Shin 2025 이 갖고 우리가 미보유 (랩 trend → 흡수 우선):**
+- **★ Kang(Jihyeon) 2025 (bollard binder) 가 갖고 우리가 미보유 (SDCP/A3 흡수 후보):**
+  - **MD hold-test(동역학 검증)** — 우리 SDCP E_bind는 single-point; 그들은 400 K NVT-MD로 "앵커가 시간축에서도
+    잡아둠"(PTFE 4.2→6.6 Å 탈착 vs 계류 4.5–4.9 Å)을 시연 → SDCP-NCM MLIP MD 탈착시험 이식(A4′ 검증 ④의 계산 짝).
+  - **바인더-바인더 결합 정량(Na–F −0.35 eV)** — anchored-binder↔PTFE 커플링 에너지.  우리 비교셋(VGCF+PTFE /
+    SDCP-only)에 **SDCP+PTFE 콤보** 추가 시 대응 결합(술폰산/티오펜–F?)이 미계산 칸 — "앵커가 rope 필요량을
+    줄인다"(그들 7:3 최적, PTFE 2→0.6 wt%) 가설의 우리 프레임 시험 거리.
+  - **혼합→성능 산포 정량(STD 16.52→4.28)** = A5 dispersion-CV 실험앵커; **fibrillation 하한(0.6 wt%)** =
+    `--ptfe-fibril` magnitude 앵커 — 둘 다 우리 morphology knob의 미앵커 magnitude를 잡아줄 데이터.
+- **★ Han 2025 (ICEP) 가 갖고 우리가 미보유 (SDCP/A3/W2/Phase-5 흡수 후보):**
+  - **z-분해 반응 균일성 실측(confocal Raman E_g/A₁g top/bottom)** — PVDF 바닥 0.84(미반응) vs ICEP 0.99(균일)
+    = **Phase-5 graded-z 가 내보내야 할 관측량의 실험 원형**; 우리 layered-composite 출력에 "z별 활용/반응도
+    프록시" readout 추가 시 이런 실험과 직접 접점.
+  - **습식 건조 공정축(모세관응력→binder segregation→균열·박리)** — 우리 solvent 미모델(건식이라 불요하나
+    습식 문헌 비교 시 이 driver 를 우리 압밀-접촉응력과 혼동 금지); Lyu2025 drying-DEM 이 시뮬 짝.
+  - **binder 관능기 화학 → 접착·킬레이션·CEI 사슬**(DFT 흡착 + Mn²⁺ 킬레이션 126 vs 27 ppm + TOF-SIMS CEI
+    108 vs 283 s) — 우리 coverage(기계 접촉면적)와 종류 다른 *화학* 계면축(Kang/Kim 랩 축·LZO/LNO 코팅과 동류).
+  - **binder-σ → 셀 kinetics 정량 사슬(GITT D_Li·R_internal·DRT P1–P4)** — 우리 σ-솔버 밖(z₂ crossrail 계열,
+    Kim2025 R_ct 축과 동류).  SDCP 논증서 "전도 binder 의 셀-레벨 이득" 인용점.
   - **사이클 chemo-mechanics(volume change + cohesive-zone 입계 박리)** — 우리 MPM/DEM은 *압밀*만, *사이클* 부피변화
     (NCA 5.9 %)·입계 균열 미모델.  그들 FEM(Voronoi + CZM damage)이 그 칸 → frame[5] *시간축* 분업으로 위치.
   - **크기-의존 파괴의 정량 driver(Li-구배 10×)** — 우리 Auerbach는 크기-의존성·Li-구배 미반영 → AM_P 입경-스케일링

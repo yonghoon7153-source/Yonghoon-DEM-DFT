@@ -1,0 +1,68 @@
+# Kang (Jihyeon) 2025 Adv. Mater. 2416872 — bollard-anchored binder (PC=PAA-g-CMC + PTFE), NMC622 LIB dry electrode
+# provenance: stated = text/figure-label value; ambiguous = wording unclear (see digest §10). LIQUID-electrolyte LIB — ionic-phase INVERTED vs our ASSB (trend/ratio transfer only).
+metric,system,value,unit,condition,provenance,note
+ionic_conductivity_binder_film,PVdF_PTFE,2.55e-4,S/cm,"film additive:PTFE=1:1, EIS bulk R",stated,Fig 3a
+ionic_conductivity_binder_film,CMC_PTFE,1.78e-4,S/cm,,stated,Fig 3a
+ionic_conductivity_binder_film,PC_PTFE,1.31e-4,S/cm,,stated,Fig 3a; 27x over pure PTFE (polar -OH/-COOH Li+ hop)
+ionic_conductivity_binder_film,PAA_PTFE,1.27e-4,S/cm,,stated,Fig 3a
+ionic_conductivity_binder_film,PTFE,4.88e-6,S/cm,,stated,Fig 3a; vdW-only fluoropolymer
+sheet_resistance_cathode,PVdF_PTFE,540.1,Ohm cm-2,dry-process cathode,stated,Fig 3b (unit as printed)
+sheet_resistance_cathode,CMC_PTFE,374.6,Ohm cm-2,,stated,
+sheet_resistance_cathode,PC_PTFE,77.2,Ohm cm-2,,stated,lowest
+sheet_resistance_cathode,PAA_PTFE,494.0,Ohm cm-2,,stated,
+sheet_resistance_cathode,PTFE,173.8,Ohm cm-2,,stated,
+sheet_resistance_cathode,PVdF_wet,2259.3,Ohm cm-2,wet slurry cathode,stated,Fig S4a
+electronic_conductivity_cathode,PVdF_PTFE,0.19,S/cm,4-probe,stated,Fig 3c
+electronic_conductivity_cathode,CMC_PTFE,0.27,S/cm,,stated,
+electronic_conductivity_cathode,PC_PTFE,1.30,S/cm,,stated,highest — dispersion/3D-network effect (PC itself insulating ionomer)
+electronic_conductivity_cathode,PAA_PTFE,0.20,S/cm,,stated,
+electronic_conductivity_cathode,PTFE,0.58,S/cm,,stated,
+electronic_conductivity_cathode,PVdF_wet,0.04,S/cm,,stated,Fig S4b
+swelling_ratio_120h,PVdF_PTFE,1.45,fold,electrolyte 120 h,stated,Fig 3d
+swelling_ratio_120h,CMC_PTFE,1.23,fold,,stated,
+swelling_ratio_120h,PC_PTFE,1.13,fold,,stated,moderate = optimal claim
+swelling_ratio_120h,PAA_PTFE,0.99,fold,,stated,
+swelling_ratio_120h,PTFE,1.01,fold,,stated,
+youngs_modulus_film,PVdF_PTFE,0.83,MPa,UTM tensile binder film,stated,Fig 3e; FILM-scale MPa != bulk binder GPa (our ADD PTFE E=0.30 GPa)
+youngs_modulus_film,CMC_PTFE,0.80,MPa,,stated,
+youngs_modulus_film,PC_PTFE,0.15,MPa,,stated,23x softer than PTFE film
+youngs_modulus_film,PAA_PTFE,0.66,MPa,,stated,
+youngs_modulus_film,PTFE,3.50,MPa,,stated,
+strain_at_break_film,PVdF_PTFE,10.8,%,,stated,Fig 3f
+strain_at_break_film,CMC_PTFE,7.4,%,,stated,
+strain_at_break_film,PC_PTFE,21.9,%,,stated,4x PTFE (soft-PC synergy)
+strain_at_break_film,PAA_PTFE,1.2,%,,stated,
+strain_at_break_film,PTFE,5.2,%,,stated,text also cites 6.0%
+peel_adhesion_180deg,PC_PTFE,0.9615,N/cm,electrode-to-Al 3M tape 12mm 6mm/min,stated,Fig S6b; = ~96 J/m2 SYSTEM level (incl. dissipation) — NOT interface gamma
+peel_adhesion_180deg,PTFE,0.5733,N/cm,,stated,ratio PC_PTFE/PTFE = 1.68x
+E_ads_MLP_DFT,PC_2Na_on_NMC,-2.24,eV,2 Na of PC on NMC surface O; 15 orientations,stated,Fig 4c; bollard state; fragment-scale (PAA-dimer-grafted CMC monomer)
+E_ads_MLP_DFT,PC_1Na_on_NMC,-1.12,eV,,stated,half of 2Na
+E_ads_MLP_DFT,PC_0Na_on_NMC,-0.37,eV,-OH/-COOH long-range dipole only,stated,polar-only channel
+E_ads_MLP_DFT,PTFE_dimer_on_NMC,-0.09,eV,,stated,O(NMC)-F(PTFE) electrostatic repulsion
+E_interaction,Na_F_PC_PTFE,-0.35,eV,free Na site of PC vs F of PTFE,stated,2-4.5x stronger than PTFE-NMC; XPS F1s Na-F area > C-F
+MD_detach_distance,PTFE_only,4.2->6.6,Angstrom,NVT Langevin 400K 10ps; mean F-to-surface,stated,Fig 4f — detaches
+MD_detach_distance,PTFE_with_PC,4.5-4.9,Angstrom,,stated,held by bollard (snapshots 9 A vs 3 A in Fig 4d/e)
+porosity_electrode,PC_PTFE73,25.9_or_~22.3,%,"same electrode density 3.0 g/cm3, density-calc",ambiguous,"text: '25.9% higher porosity than PVdF wet (17.7%)' — absolute-vs-relative reading unresolved (Table S3 = SI, not held); LIQUID-LIB: high porosity = GOOD (inverted vs ASSB)"
+porosity_electrode,PVdF_wet,17.7,%,,stated,
+tortuosity,PC_PTFE_cathode,1.30,tau,cross-section SEM based,stated,tau not tau^2
+tortuosity,PTFE_cathode,1.40,tau,,stated,
+ptfe_fibrillation_floor,PC_PTFE73,0.6,wt% PTFE in electrode,dough forms (bollard-assisted),stated,PC_PTFE91 (0.2 wt%) dough FAILS; PTFE-only needs 2 wt% — fibril-web lower bound anchor
+capacity_STD_mixing,base_mix,103.65+-16.52,mAh/g,30 mg/cm2 2C PTFE electrode,stated,Fig S2 — dispersion CV anchor (A5)
+capacity_STD_mixing,planetary_x1,118.22+-5.59,mAh/g,,stated,Fig 2h
+capacity_STD_mixing,ballmill_x3,127.67+-4.28,mAh/g,,stated,Fig 2i — selected
+capacity_2C_30mg,PC_PTFE73,133.2,mAh/g,30 mg/cm2 (=4.0 mAh/cm2),stated,PTFE 108.1 / PVdF 76.5
+retention_100cyc_25mg,PC_PTFE73,83,%,1/3C 25 mg/cm2,stated,139.2 mAh/g
+retention_100cyc_25mg,PTFE,51,%,,stated,84.0 mAh/g; decay after ~70 cyc
+retention_100cyc_25mg,PVdF_wet,47,%,,stated,77.6 mAh/g
+Rct_EIS,PC_PTFE73_10cyc,39.01,Ohm,,stated,1.76x lower than PTFE
+Rct_EIS,PTFE_10cyc,68.65,Ohm,,stated,
+Rct_EIS,PC_PTFE73_100cyc,48.08,Ohm,,stated,+23% growth
+Rct_EIS,PTFE_100cyc,91.52,Ohm,,stated,+33% growth
+D_Li,PC_PTFE73,5.09e-14,m2/s,after 10 cyc,stated,20x PTFE
+D_Li,PTFE,2.53e-15,m2/s,,stated,
+ultra_high_loading,PC_PTFE73,90,mg/cm2,=15.6 mAh/cm2 @0.1C 50cyc stable,stated,
+CEI_LiF_fraction,PC_PTFE73,29.8,%,F1s after 100cyc 1C,stated,PTFE self-decomposition adds LiF (37.4%) non-uniform with depth
+CEI_LiF_fraction,PTFE,37.4,%,,stated,
+full_cell_retention,dry_dry_50cyc_0p5C,84,%,NMC622@PC_PTFE73 // Graphite@PTFE,stated,120.0 mAh/g
+full_cell_retention,dry_wetanode_100cyc_0p2C,86,%,NMC622@PC_PTFE73 // wet graphite,stated,134.4 mAh/g
+pouch_areal_capacity,PC_PTFE73,8,mAh/cm2,0.5C commercial graphite anode,stated,
