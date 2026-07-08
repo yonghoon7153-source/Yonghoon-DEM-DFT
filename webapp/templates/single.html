@@ -247,12 +247,13 @@
 
   <!-- ⚡ 첨가제 적용: PTFE/VGCF/Super P 선택 → recipe-baked zip 생성. σ/porosity 상세 분석은 GPU run 후 MPM 뷰어. -->
   <details style="margin-top:14px">
-    <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P) — recipe zip 생성</summary>
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.92em;font-weight:600">⚡ 첨가제 적용 (PTFE / VGCF / Super P / SDCP) — recipe zip 생성</summary>
     <div style="margin-top:10px; padding:12px 14px; background:#0f172a; border:1px solid #334155; border-radius:8px">
       <div style="display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap; font-size:0.85em; color:#cbd5e1">
         <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
+        <label title="자가도핑 전도성 바인더 (S-PEDOT계): NCM 표면 화학앵커 conformal 코팅 (A4 coat regime)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>mixing<br><select id="add-mixing" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="ballmill">ball-mill (bulk)</option>
           <option value="thinky" selected>thinky (dry-coat)</option>
@@ -513,6 +514,7 @@ function _addVals() {
     vg: +document.getElementById('add-vgcf').value || 0,
     sp: +document.getElementById('add-superp').value || 0,
     pt: +document.getElementById('add-ptfe').value || 0,
+    sd: +document.getElementById('add-sdcp').value || 0,
     mix: document.getElementById('add-mixing').value,
   };
 }
@@ -529,33 +531,33 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, mix } = _addVals();
-  if (vg <= 0 && sp <= 0 && pt <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
+  const { vg, sp, pt, sd, mix } = _addVals();
+  if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&mixing=${mix}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
-function _addRecipeStr(vg, sp, pt) {
-  const parts = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt]].filter(p => p[1] > 0);
+function _addRecipeStr(vg, sp, pt, sd = 0) {
+  const parts = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]].filter(p => p[1] > 0);
   return parts.length ? parts.map(p => p[0]).join(':') + '=' + parts.map(p => '' + p[1]).join(':') : '';
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, mix } = _addVals();
-  const recipe = _addRecipeStr(vg, sp, pt);
+  const { vg, sp, pt, sd, mix } = _addVals();
+  const recipe = _addRecipeStr(vg, sp, pt, sd);
   return recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') + '_' + mix : '';
 }
 function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, mix } = _addVals();
+  const { vg, sp, pt, sd, mix } = _addVals();
   const vn = document.getElementById('add-variant-name');
   if (vn) vn.textContent = _addVariantName() || '…';
   if ((vg <= 0 && sp <= 0 && pt <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
-  const recipe = _addRecipeStr(vg, sp, pt);
+  const recipe = _addRecipeStr(vg, sp, pt, sd);
   const tag = _addTag();
   const zip = `mpm_input_${'{{ case.id }}'}${tag}.zip`;
   const DL = '/mnt/c/Users/안용훈/Downloads';

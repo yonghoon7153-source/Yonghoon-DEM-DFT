@@ -63,7 +63,7 @@ def seed_se_mask(se_csv, am_shape, h, am_mask, dz=1.0):
 
 
 def electronic_connectivity(t, c, r, se, phase, floor_z, um,
-                            tol_am_um=0.10, band_um=0.15, vox_um=0.30):
+                            tol_am_um=0.10, band_um=0.15, vox_um=0.30, cond_phases=(2, 3, 5)):
     """Per-AM ELECTRONIC connectivity to the current collector (floor) — the slide-19 quantity
     (연결/고립 입자).  Zeroth-order electron-transport physics = PERCOLATION on the conductive
     phases only:
@@ -106,7 +106,7 @@ def electronic_connectivity(t, c, r, se, phase, floor_z, um,
             union(int(i), n)                                 # AM on the collector
     n_cl = 0
     if phase is not None and n:
-        cond = se[np.isin(phase, (2, 3, 5))]                 # conductive carbon only (NOT PTFE 4)
+        cond = se[np.isin(phase, cond_phases)]               # conductive phases only (NOT PTFE 4; SDCP 5 dropped when neutral)
         if len(cond):
             vox = vox_um / um                                # ≥2× the 0.7·dx point spacing → one
             lo = cond.min(0) - vox                           #   continuous fibre labels as one cluster
@@ -416,11 +416,14 @@ def main():
     econn = None; econn_summary = None
     if len(r):
         try:
-            econn, _ncl = electronic_connectivity(t, c, r, se, phase, FLOOR, UM)
+            _sdcp = (sim_m.get('additives') or {}).get('SDCP') or {}
+            _cph = (2, 3) if _sdcp.get('variant') == 'neutral' else (2, 3, 5)   # neutral SDCP = semiconducting → dropped
+            econn, _ncl = electronic_connectivity(t, c, r, se, phase, FLOOR, UM, cond_phases=_cph)
             econn_summary = {'connected_pct': round(100.0 * float(econn.mean()), 1),
                              'n_isolated': int((~econn).sum()), 'n_carbon_clusters': _ncl,
                              'tol_am_um': 0.10, 'band_um': 0.15, 'vox_um': 0.30,
-                             'conductive_phases': 'AM + VGCF/SuperP/SDCP (SE·PTFE excluded = e-insulators)'}
+                             'conductive_phases': ('AM + VGCF/SuperP (SE·PTFE·neutral-SDCP excluded)' if _cph == (2, 3)
+                                                   else 'AM + VGCF/SuperP/SDCP (SE·PTFE excluded = e-insulators)')}
             for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
                 m = (t == ty)
                 if m.any():

@@ -22,13 +22,13 @@ from __future__ import annotations
 import argparse
 import numpy as np
 
-DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20}  # g/cm³
+DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00, 'SuperP': 1.90, 'PTFE': 2.20, 'SDCP': 1.30}  # g/cm³ (SDCP = self-doped S-PEDOT film ~0.95-1.45 lit → 1.3)
 #   SE=2.00 = PROJECT CONVENTION (matches porosity_physics_regression RHO_SE + grade_engine);
 #   real Li6PS5Cl crystallographic ≈ 1.85–1.88 (2.0 is the project's slightly-high standard).
 #   Aligned 2026-06-30 (was 1.64, an out-of-band low value) so the zip additive counts use the
 #   SAME SE density as the closed porosity model. ⚠ grade_engine.py:1217 still uses 1.85 (separate
 #   composite-density calc) — flagged for the user; not changed here.
-PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4}                 # save-phase codes
+PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4, 'SDCP': 5}      # save-phase codes
 # default geometry (µm)
 VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
 SP_D           = 0.20            # Super P / Super C carbon-black aggregate (sphere, particulate)
@@ -65,7 +65,7 @@ def additive_wt(wt: dict) -> dict:
     """Pull just the conductive-additive wt% from a recipe dict, ignoring AM/SE.  So
     'AM:SE:VGCF=72:27:1' and 'VGCF=1' both give {'VGCF': 1.0} — the AM:SE in the recipe is
     NOT used (the real scaffold sets it; see recipe_counts_real)."""
-    return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE') if wt.get(k, 0) > 0}
+    return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE', 'SDCP') if wt.get(k, 0) > 0}
 
 
 def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_d=VGCF_D,
@@ -86,12 +86,61 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
     out = {'mode': 'real_scaffold_wt',
            'am_wt_pct': round(100.0 * M_AM / M_tot, 2), 'se_wt_pct': round(100.0 * M_SE / M_tot, 2)}
     v_obj = {'VGCF': np.pi * (vgcf_d / 2) ** 2 * vgcf_l, 'SuperP': np.pi / 6 * sp_d ** 3,
-             'PTFE': np.pi * (ptfe_d / 2) ** 2 * ptfe_l}
+             'PTFE': np.pi * (ptfe_d / 2) ** 2 * ptfe_l,
+             'SDCP': 0.19 ** 3}   # conformal-film 'object' = nominal grid-scale patch (0.19µm)³ — n is just
+                                  # the coat point-count target; the RECIPE VOLUME is pinned by add_pvs
     for a, w in add_wt.items():
         V_a = (w / 100.0) * M_tot / DENS[a]                            # µm³ of additive a
         out[a] = {'wt_pct': w, 'vol_um3': V_a, 'n': int(round(V_a / v_obj[a])),
                   'vol_per_obj_um3': v_obj[a], 'vol_pct_of_solid': round(100.0 * V_a / solid_vol, 3)}
     return out
+
+
+def seed_coat(n, box_um, dx_um, rng, am=None, shell_um=0.20, surface_frac=1.0,
+              return_ids=False):
+    """CONFORMAL COAT seeding (A4 coat regime): n points in a thin shell ON the AM sphere
+    surfaces — the anchored film morphology (SDCP self-doped binder: sulfonate chemisorbs
+    into the Li-O layer, E_bind −4.8 eV MLIP → the film STARTS anchored; also SuperP
+    thinky dry-coat coat_block).  Area-weighted across AM (big spheres get ∝R² points);
+    golden-angle dirs + per-sphere random roll = even drape (not pin-pricks).
+    surface_frac < 1 → each sphere coated only on a random spherical CAP of that fractional
+    area (patchy/partial coating).  Radial offset uniform in [0, shell_um] OUTSIDE the
+    surface (film thickness ≈ shell; sub-voxel reality documented — 1-voxel overstatement,
+    volume-pinned by add_pvs downstream so porosity stays honest).
+    am = (centres, radii) in the SEED-BOX frame (same convention as seed_carbon_black)."""
+    if am is None or len(am[0]) == 0:                        # no AM → uniform fallback (degenerate)
+        (Lx, Ly, Lz) = box_um
+        P = np.column_stack([rng.uniform(0, Lx, n), rng.uniform(0, Ly, n), rng.uniform(0, Lz, n)])
+        return (P.astype(np.float32), np.zeros(n, np.int32)) if return_ids else P.astype(np.float32)
+    C, R = np.asarray(am[0], np.float64), np.asarray(am[1], np.float64)
+    w = R ** 2; w /= w.sum()                                 # per-sphere share ∝ surface area
+    sph = rng.choice(len(C), n, p=w)                         # sphere index per point
+    # even unit dirs: golden-angle sequence per point + per-sphere random axis for the cap
+    k = rng.uniform(0, 1, n)
+    z = 1.0 - 2.0 * k                                        # uniform in cos → uniform on sphere
+    if surface_frac < 1.0:                                   # spherical cap of fractional area f:
+        z = 1.0 - 2.0 * surface_frac * k                     #   cos(θ) ∈ [1−2f, 1] about the cap axis
+    phi = rng.uniform(0, 2 * np.pi, n)
+    rr = np.sqrt(np.maximum(0.0, 1.0 - z * z))
+    d_loc = np.column_stack([rr * np.cos(phi), rr * np.sin(phi), z])
+    # rotate each sphere's cap axis to a random direction (per-sphere fixed → contiguous patch)
+    ax = rng.normal(size=(len(C), 3)); ax /= np.linalg.norm(ax, axis=1, keepdims=True) + 1e-12
+    a = ax[sph]
+    # rotate local +z to a: use Rodrigues via orthonormal frame
+    t = np.cross(np.broadcast_to([0.0, 0.0, 1.0], a.shape), a)
+    tn = np.linalg.norm(t, axis=1, keepdims=True)
+    ok = tn[:, 0] > 1e-9
+    t = np.where(ok[:, None], t / np.where(tn > 1e-9, tn, 1.0), [1.0, 0.0, 0.0])
+    cosang = a[:, 2:3]
+    d = d_loc * cosang + np.cross(t, d_loc) * np.sqrt(np.maximum(1 - cosang ** 2, 0)) \
+        + t * (t * d_loc).sum(1, keepdims=True) * (1 - cosang)
+    d[~ok] = d_loc[~ok] * np.sign(a[~ok, 2:3] + 1e-12)       # a ≈ ±z: no rotation needed
+    d /= np.linalg.norm(d, axis=1, keepdims=True) + 1e-12
+    off = rng.uniform(0.0, shell_um, n)
+    P = C[sph] + d * (R[sph] + off)[:, None]
+    (Lx, Ly, Lz) = box_um
+    P = np.clip(P, 1e-4, np.array([Lx, Ly, Lz]) - 1e-4).astype(np.float32)
+    return (P, sph.astype(np.int32)) if return_ids else P
 
 
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
@@ -280,6 +329,11 @@ ADDITIVE_PROCESS = {
         'ballmill': dict(regime='bulk',       morph='gently wavy fibre, well dispersed'),
         'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
         'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
+    },
+    'SDCP': {    # self-doped conductive binder (S-PEDOT): sulfonate ANCHORS to NCM (E_bind −4.8 eV MLIP)
+        'ballmill': dict(regime='coat', morph='anchored conformal film on AM'),
+        'thinky':   dict(regime='coat', morph='anchored conformal film on AM'),
+        'handmix':  dict(regime='coat', morph='anchored film, poorer spread (surface_frac<1)'),
     },
     'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
         'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),

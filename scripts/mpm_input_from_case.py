@@ -255,7 +255,7 @@ def main():
                 keys = keys.split(':'); vals = [float(v) for v in vals.split(':')]
                 return dict(zip(keys, vals))
             def _awt(wt):                                               # = additives.additive_wt verbatim
-                return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE') if wt.get(k, 0) > 0}
+                return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE', 'SDCP') if wt.get(k, 0) > 0}
             _DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00}              # = additives.DENS subset
         try:
             _wts = _awt(_parse(a.add_recipe))                           # {'VGCF':1.0,...} — AM/SE ignored

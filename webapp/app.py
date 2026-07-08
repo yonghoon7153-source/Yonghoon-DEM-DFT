@@ -3460,11 +3460,12 @@ def case_whatif_carbon(case_id):
     return jsonify(out)
 
 
-def _add_recipe_str(vgcf, superp, ptfe):
+def _add_recipe_str(vgcf, superp, ptfe, sdcp=0.0):
     """Serialize chosen additive wt% into an --add-recipe string for
     additives.parse_recipe (only the additive wt% are load-bearing downstream;
     AM:SE are ignored by additive_wt).  Returns '' if no additive selected."""
-    parts = [(k, v) for k, v in (('VGCF', vgcf), ('SuperP', superp), ('PTFE', ptfe)) if v and v > 0]
+    parts = [(k, v) for k, v in (('VGCF', vgcf), ('SuperP', superp), ('PTFE', ptfe),
+                                 ('SDCP', sdcp)) if v and v > 0]
     if not parts:
         return ''
     keys = ':'.join(k for k, _ in parts)
@@ -5240,13 +5241,13 @@ def mpm_input_package(case_id):
             return max(0.0, min(10.0, float(request.args.get(name, 0.0))))
         except ValueError:
             return 0.0
-    _vg, _sp, _pt = _addf('vgcf'), _addf('superp'), _addf('ptfe')
+    _vg, _sp, _pt, _sd = _addf('vgcf'), _addf('superp'), _addf('ptfe'), _addf('sdcp')
     # VGCF + Super P are both conductive carbon → mutually exclusive.
     if _vg > 0 and _sp > 0:
         shutil.rmtree(tmp, ignore_errors=True)
         return jsonify({'error': 'VGCF와 Super P는 함께 사용 불가 — 도전재는 하나만 '
                                  '(VGCF/Super P/PTFE/VGCF+PTFE/Super P+PTFE)'}), 400
-    recipe = _add_recipe_str(_vg, _sp, _pt)
+    recipe = _add_recipe_str(_vg, _sp, _pt, _sd)
     mixing = request.args.get('mixing', 'thinky')
     if mixing not in ('ballmill', 'thinky', 'handmix'):
         mixing = 'thinky'

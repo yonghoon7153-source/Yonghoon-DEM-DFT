@@ -328,6 +328,21 @@ def parse_args(argv):
                          'carbon point count (else the wrap strength would swing with recipe).  In a PTFE-only '
                          'recipe (no carbon) AM is the whole pool.  MAGNITUDE (default 0.5) a conservative '
                          'tunable hook, NOT anchored (backlog §F1).')
+    ap.add_argument('--coh-sdcp', type=float, default=0.10,
+                    help='SDCP binder cohesion (GPa, Cauchy) among SDCP/SE points — film integrity.  The '
+                         'AM-interface anchoring itself (γ≈0.93 J/m², E_bind −4.8 eV MLIP; ~10× PTFE γ) is '
+                         'represented STRUCTURALLY (film seeded ON the AM surface, seed_coat) — a boundary-'
+                         'adhesion energy term is future work; do NOT inflate this bulk coh to 10× (that '
+                         'would be the wrong term).  Neutral variant scales this by 0.45 (γ 0.42/0.93).')
+    ap.add_argument('--sdcp-neutral', action='store_true',
+                    help='SDCP NEUTRAL (−SO₃H) variant: weaker anchoring (γ 0.42 vs 0.93 J/m² → coh ×0.45) '
+                         'AND semiconducting (undoped PEDOT ~1e-3..1e-1 S/cm ≈ AM-scale, NOT the doped '
+                         '315-1089 S/cm) → the payload drops phase 5 from the econn conductive set.  '
+                         'Default = doped (−SO₃⁻, the self-doped production state).')
+    ap.add_argument('--sdcp-surface-frac', type=float, default=-1.0,
+                    help='SDCP coat coverage fraction per AM sphere (spherical-cap area).  <0 = AUTO from '
+                         '--mixing (ballmill/thinky 1.0 conformal; handmix 0.6 patchy).  MAGNITUDE a '
+                         'conservative tunable hook, NOT anchored (backlog §F1) — SEM will anchor it.')
     ap.add_argument('--dilate-z', type=float, default=1.0,
                     help='STIFF-FIBRE BED DILATION: stretch the frozen scaffold (AM + SE seed) z-offsets by this '
                          'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
@@ -733,6 +748,7 @@ def main(argv):
                 'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
+                'SDCP':   (2.00, 0.35, 0.05, 5, 'coat',   0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # anchored conformal film (E PEDOT 0.9-2.9 lit → 2.0; soft σ_y)
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
@@ -790,6 +806,18 @@ def main(argv):
                                                     am_frac_fn=_amfn, align_lambda=float(args.fibre_align),
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
+                elif kind == 'coat' or _proc_regime in ('coat_block', 'coat_embed'):
+                    # A4 COAT REGIME: points seeded in a thin shell ON the AM surfaces — SDCP anchored film
+                    # (default) or SuperP thinky dry-coat (coat_block: carbon film at the AM|SE interface;
+                    # its σ_i-blocking emerges as an SE-coverage drop, Kim 2025 direction).  Film thickness
+                    # is 1 voxel-ish (shell 0.2µm) vs real ~26-40nm — OVERSTATED sub-voxel reality, but the
+                    # recipe VOLUME is add_pvs-pinned so porosity stays honest (same approximation class as
+                    # Stage-E).  surface_frac: mixing-driven spread (handmix = patchy).
+                    _sfrac = (float(args.sdcp_surface_frac) if (code == 5 and args.sdcp_surface_frac >= 0.0)
+                              else (0.6 if args.mixing == 'handmix' else 1.0))
+                    pts, _fid = _ad.seed_coat(nobj, bx, dx, rng, am=am_box, shell_um=0.20 / um_box,
+                                              surface_frac=_sfrac, return_ids=True)   # 0.20µm shell → seed-frame (box) units
+                    _w = np.ones(len(pts), np.float32)
                 else:                                        # carbon black: branched chains coating the AM
                     pts, _fid = _ad.seed_carbon_black(nobj, bx, dx, rng, in_am=lambda q: _in_am_abs(q + off),
                                                       am=am_box, mixing=args.mixing, return_ids=True)
@@ -822,6 +850,10 @@ def main(argv):
                     _reg = ('under (delamination-prone)' if cnt[nm]['wt_pct'] < 0.6 * args.binder_opt_wt
                             else 'over (agglomeration↓)' if cnt[nm]['wt_pct'] > 1.6 * args.binder_opt_wt
                             else 'near-optimal')
+                elif code == 5:                                    # SDCP conductive binder — film-integrity coh;
+                    _cap = 0.45 if args.sdcp_neutral else 1.0      #   neutral γ 0.42/0.93 ratio.  AM-interface
+                    _coh = round(args.coh_sdcp * _cap, 4)          #   anchoring (γ~0.93 J/m², INTERIM MLIP −4.8 eV,
+                    _reg = 'neutral(−SO₃H)' if args.sdcp_neutral else 'doped(−SO₃⁻)'   # DFT pending) = STRUCTURAL (seed_coat)
                 else:
                     _coh, _cap, _reg = 0.0, 0.0, '—'
                 coh_np = np.concatenate([coh_np, np.full(len(pts), _coh, np.float32)])
@@ -856,6 +888,12 @@ def main(argv):
                     _add_meta[nm]['press_curl'] = bool(args.ptfe_press_curl)   # prescribed press-curl on? (OFF = as-drawn 0.40)
                     _add_meta[nm]['am_bind'] = bool(_am_fired)                 # AM-surface draping attractors ACTUALLY added?
                     _add_meta[nm]['am_bind_frac'] = round(float(np.clip(args.ptfe_am_bind, 0.0, 1.0)), 3)   # target AM nucleation share
+                if code == 5:                                # SDCP: anchored conformal film (A4 coat regime)
+                    _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
+                    _add_meta[nm]['coh_sdcp'] = float(_coh)
+                    _add_meta[nm]['surface_frac'] = round(float(_sfrac), 3)    # coat cap-coverage per AM (mixing-driven)
+                    _add_meta[nm]['anchor_E_bind_eV'] = -3.02 if args.sdcp_neutral else -4.80   # INTERIM (uma-s-1p1 MLIP,
+                    _add_meta[nm]['anchor_status'] = 'INTERIM_MLIP_DFT_pending'                 #  consistent-ref; NOT final — DFT U-ramp pending)
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
