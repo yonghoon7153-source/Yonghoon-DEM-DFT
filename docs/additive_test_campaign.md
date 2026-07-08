@@ -292,3 +292,19 @@ seed_SE 26.08% > 순수 스케일링 25.2%가 증거) / metrics `dilate_z:1.1076
 손해 = Cho conflicting-roles의 구조적 기반).  ⚠ 옛 strut런 cov 50.5는 pre-split conflated(SE+VGCF)라
 직접 비교 불가.  ⇒ dilation 축 CLOSED — 남은 조합런(VGCF1+PTFE4 zip 보유 / 1+1 handmix / SuperP2+PTFE1)
 후 A4 진입.
+
+### ★ 조합 캠페인 완결 (2026-07-09) + mixing→porosity 정직 노트 ★
+5조합 전부 사전등록-적중: Run A(1+1 bm, pre-dilation) / B′(VGCF1+PTFE4 dilated λ1.022) / C(1+1 handmix
+dilated, fibrillation in-combo) / S-bm(SuperP2+PTFE1, econn 첫 데이터: AM골격 82%=DEM dead-AM 밴드 +
+carbon 국소다리 32,620개→100%) / S-hm(byte-동일 porosity + n_carbon_clusters 반토막 13,016 = 뭉침의
+망-입도 지문).  econn은 binary라 mixing에 포화(100%=100%); mixing 차이는 **망 입도**(클러스터 수)와
+**carbon 접촉량**(add-cov −20.8pp)에 있음 → STEP3 σ_e 축.
+**mixing→porosity (사용자 질문, 문헌 확인)**: 우리 모델은 구조적 0(add_pvs가 skeletal-밀도 recipe 부피
+pin → 응집체 내부공극 부재 = DEFERRED ① CBD nano-porosity 한계 그 자체).  실제는 **있다**: Kwade 그룹
+— 혼합 강도/시간↑ → 탈응집↑ → **tap density 단조↑**(= 같은 압밀에서 porosity↓); Mayer 2022 "inner CB
+porosity"가 분산상태를 전극 미세구조 특성 파라미터로 정량화(저분산=큰 응집체가 calendering서 부분
+파쇄/압밀).  방향: handmix(분산불량) → 응집체 내부 nano-void 반입 → porosity ↑.  크기: CB 응집체 내부
+공극률 ~50-80%(tap 0.1-0.2 vs skeletal 1.9 g/cm³)지만 300MPa가 대부분 파쇄 → 잔여 ~+0.3-1pp급(소·실재).
+구현 경로(원하면): mixing-의존 **envelope density** ρ_env(mixing) — handmix carbon을 내부공극 포함
+유효부피로 seed(+press-crush 인자) = deferred ① 의 1차 구현; 크기는 tap-density/inner-CB-porosity
+문헌으로 앵커(F1).  현재 byte-동일은 모델 한계로 명시하고 트렌드 비교엔 무해(모든 런 공유 pin).
