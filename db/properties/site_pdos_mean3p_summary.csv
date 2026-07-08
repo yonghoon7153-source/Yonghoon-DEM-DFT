@@ -1,0 +1,12 @@
+site,b2o3_mean3p_eV,LPSCl16_mean3p_eV,role
+free_S,-1.14,-0.90,shallowest = most oxidation-prone (BOTH systems; sets oxidation onset site)
+B_S_BS3,-2.15,,new bond from doping; deeper than free-S = oxidation-stable
+PS4_S,-2.23,-2.25,HOST PRESERVED (matches ICOHP P-S -6.11 vs -6.00 invariance)
+Cl,-2.99,-2.83,deep; does not participate in oxidation
+O,-3.64,,new from doping; DEEPEST = hardest to oxidize
+# mean3p = intensity-weighted centroid of per-atom p-PDOS over occupied states (E<0, E-VBM aligned)
+# b2o3 from db/properties/b2o3_pdos_site_smooth.csv ; LPSCl1.6 from slide-23 site study (KISTI lpscl16_site_pref)
+# CORRECTION 2026-07-07: b2o3 slide's "PS4-S -5.37" was an error (likely O deep-peak -5.44 mislabel).
+#   True PS4-S -2.23 ~= modelc -2.25 -> consistent with ICOHP host preservation.
+# order (shallow->deep): free-S > B-S ~= PS4-S > Cl > O
+# story: doping adds NO new shallow (oxidation-prone) states; new B-S/O sit deeper than free-S.
