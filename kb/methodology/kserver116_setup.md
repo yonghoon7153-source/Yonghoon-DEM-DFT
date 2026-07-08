@@ -89,6 +89,10 @@ mpirun -np 20 lmp_mpi -in input.liggghts  # LIGGGHTS (DEM)
 conda activate uma        # or mace / sevennet
 python script.py
 
+# ★ 일상 python/ase/변환 작업도 'uma' env 사용 (사용자 표준, 2026-07-08)
+#   ase는 uma env에 포함(fairchem 의존) — 'dft' env 말고 uma로 통일할 것
+conda activate uma
+
 # Analysis
 conda activate dft
 jupyter notebook          # with nglview viz
