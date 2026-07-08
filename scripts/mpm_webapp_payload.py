@@ -62,6 +62,75 @@ def seed_se_mask(se_csv, am_shape, h, am_mask, dz=1.0):
     return mask & ~am_mask
 
 
+def electronic_connectivity(t, c, r, se, phase, floor_z, um,
+                            tol_am_um=0.10, band_um=0.15, vox_um=0.30):
+    """Per-AM ELECTRONIC connectivity to the current collector (floor) — the slide-19 quantity
+    (연결/고립 입자).  Zeroth-order electron-transport physics = PERCOLATION on the conductive
+    phases only:
+      nodes  = AM spheres ∪ conductive-carbon clusters (phase 2 VGCF / 3 SuperP / 5 SDCP)
+      edges  = AM–AM mechanical contact (surface gap ≤ tol_am — Holm: contact spot = conduction
+               spot, mirrors the DEM σ_e network criterion)
+             ∪ AM–carbon contact (carbon point within band of the AM surface = the add-cov
+               contact we measure; carbon σ_e ≫ σ_AM so the bridge is never the bottleneck
+               at connectivity level)
+      carbon clusters: full-res material points voxel-labeled at vox_um (26-conn) — one
+               continuous fibre/web/aggregate = one conductor; touching carbon conducts.
+      connected := component reaches the collector (AM bottom or carbon within tol of z=floor).
+    EXCLUDED (physics): SE = electronic insulator (~1e-9 S/cm, by design); PTFE (phase 4) =
+    insulating binder (~1e-16 S/cm).  BINARY percolation only — NO σ numbers (that is STEP3
+    Kirchhoff with contact resistances); an AM with no electron path is electrochemically DEAD
+    regardless of its ionic wiring (= the DEM dead-AM concept, extended to carbon-mediated paths).
+    MUST run on FULL-RES arrays (se+phase before subsampling): the served 120k-point subsample
+    stretches fibre point spacing ~0.14→~4µm and would falsely fragment conductors."""
+    from scipy import ndimage
+    from scipy.spatial import cKDTree
+    n = len(r)
+    parent = np.arange(n + 1, dtype=np.int64)               # node n = the current collector
+
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]; i = int(parent[i])
+        return i
+
+    def union(a, b):
+        ra, rb = find(a), find(b)
+        if ra != rb:
+            parent[ra] = rb
+    tol = tol_am_um / um; band = band_um / um
+    if n:
+        tree = cKDTree(c)
+        for i, j in tree.query_pairs(2.0 * float(r.max()) + tol):
+            if np.linalg.norm(c[i] - c[j]) <= r[i] + r[j] + tol:
+                union(int(i), int(j))                        # (a) AM–AM contact
+        for i in np.where(c[:, 2] - r <= floor_z + tol)[0]:
+            union(int(i), n)                                 # AM on the collector
+    n_cl = 0
+    if phase is not None and n:
+        cond = se[np.isin(phase, (2, 3, 5))]                 # conductive carbon only (NOT PTFE 4)
+        if len(cond):
+            vox = vox_um / um                                # ≥2× the 0.7·dx point spacing → one
+            lo = cond.min(0) - vox                           #   continuous fibre labels as one cluster
+            ijk = np.floor((cond - lo) / vox).astype(np.int64)
+            grid = np.zeros(ijk.max(0) + 2, bool)
+            grid[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = True
+            lab, n_cl = ndimage.label(grid, structure=np.ones((3, 3, 3), bool))
+            plab = lab[ijk[:, 0], ijk[:, 1], ijk[:, 2]]      # per-point cluster id 1..n_cl
+            parent = np.concatenate([parent, n + 1 + np.arange(n_cl, dtype=np.int64)])
+            ct = cKDTree(cond)
+            for i in range(n):                               # (b) AM–carbon attach
+                idx = ct.query_ball_point(c[i], float(r[i]) + band)
+                if idx:
+                    for lb in np.unique(plab[idx]):
+                        union(int(i), n + int(lb))
+            fl = np.where(cond[:, 2] <= floor_z + band)[0]   # carbon on the collector
+            if len(fl):
+                for lb in np.unique(plab[fl]):
+                    union(n, n + int(lb))
+    root_cc = find(n)
+    econn = np.array([find(i) == root_cc for i in range(n)], bool)
+    return econn, int(n_cl)
+
+
 def deformed_coverage(se_pts, t, c, r, bands_um, n_samp=400, sub=2_000_000, seed=0):
     """Continuous SE coverage of AM from the DEFORMED MPM SE points (KDTree to the real
     plastic SE — NOT a rigid-sphere / Tabor post-correction).  Coverage is a DISTANCE
@@ -343,12 +412,30 @@ def main():
             return geom_rigid[nm]['hertz'] if which == 'h' else geom_rigid[nm]['tabor']
         return None
     name = {1: 'AM_P', 2: 'AM_S'}
+    # electronic connectivity (연결/고립, slide-19 quantity) — FULL-RES se+phase, before subsampling
+    econn = None; econn_summary = None
+    if len(r):
+        try:
+            econn, _ncl = electronic_connectivity(t, c, r, se, phase, FLOOR, UM)
+            econn_summary = {'connected_pct': round(100.0 * float(econn.mean()), 1),
+                             'n_isolated': int((~econn).sum()), 'n_carbon_clusters': _ncl,
+                             'tol_am_um': 0.10, 'band_um': 0.15, 'vox_um': 0.30,
+                             'conductive_phases': 'AM + VGCF/SuperP/SDCP (SE·PTFE excluded = e-insulators)'}
+            for ty, nm in ((1, 'AM_P'), (2, 'AM_S')):
+                m = (t == ty)
+                if m.any():
+                    econn_summary[f'connected_pct_{nm}'] = round(100.0 * float(econn[m].mean()), 1)
+            print(f"  econn: {econn_summary['connected_pct']}% AM connected to the collector "
+                  f"({econn_summary['n_isolated']} isolated; {_ncl} carbon clusters)")
+        except Exception as _e:
+            print(f'  ⚠ econn skipped ({_e})')
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
                   'y': round(float((c[i, 1] - SW[0]) * UM), 3),
                   'z': round(float((c[i, 2] - FLOOR) * UM), 3),
                   'r': round(float(r[i] * UM), 3),
-                  'coverage': float(cov_per[i])} for i in range(len(r))]
+                  'coverage': float(cov_per[i]),
+                  **({'econn': int(econn[i])} if econn is not None else {})} for i in range(len(r))]
 
     # conductive additives (VGCF/SuperP/PTFE) → colored points for the 도전재 3D viewer.  Subsampled
     # proportionally to the budget; carried as [x,y,z,phase] µm (phase 2 VGCF · 3 SuperP · 4 PTFE).
@@ -497,6 +584,7 @@ def main():
     payload = {
         'kind': 'mpm', 'case': a.case,
         'particles': particles,                            # AM_P / AM_S spheres (same both states)
+        'econn_summary': econn_summary,                    # 전기적 연결성 (slide-19): % connected + graph params
         'am_coverage_patches': cov_patches,                # covered AM-surface points (spatial map)
         'se_strain_points': se_strain_points,              # [x,y,z,Σdg] µm — viewer "SE 소성변형" mode
         'mesh_triangles': tris,                            # COMPACTED SE plastic continuum (default)
