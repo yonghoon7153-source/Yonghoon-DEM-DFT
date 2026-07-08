@@ -32,11 +32,13 @@ PHASE = {'SE': 1, 'AM': 0, 'VGCF': 2, 'SuperP': 3, 'PTFE': 4, 'SDCP': 5}      # 
 # default geometry (µm)
 VGCF_D, VGCF_L = 0.15, 10.0      # VGCF fibre Ø, length (Showa Denko VGCF-H; aspect ~67)
 SP_D           = 0.20            # Super P / Super C carbon-black aggregate (sphere, particulate)
-PTFE_D, PTFE_L = 0.25, 40.0
-SDCP_SHELL = 0.20                 # SDCP coat shell thickness (µm) — 1-voxel film (real 26-40nm, volume-pinned)      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes long
+PTFE_D, PTFE_L = 0.25, 40.0      # PTFE FIBRIL Ø, length — dry-process hot-roll fibrillation makes long
                                  # thin threads (branch to 10s nm) spanning tens of NMC; LONGER + HIGHER
                                  # aspect (AR≈160) than VGCF (AR≈67) → reads as the spanning binder web,
                                  # not a short rod.  Soft binder FIBRE (RSC D5EE03240G; Front. Energy 2023.1336344)
+SDCP_D = 0.30                    # SDCP in-electrode particle Ø (µm) — manuscript Fig S3 (0.2-0.5µm dispersed;
+                                 # as-made ~3µm S2, milled down by the dry process)
+SDCP_SHELL = 0.20                # legacy coat-shell (µm) — coat-variant option only; manuscript default = PARTICLE
 
 
 def vol_fracs(wt: dict) -> dict:
@@ -88,8 +90,7 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
            'am_wt_pct': round(100.0 * M_AM / M_tot, 2), 'se_wt_pct': round(100.0 * M_SE / M_tot, 2)}
     v_obj = {'VGCF': np.pi * (vgcf_d / 2) ** 2 * vgcf_l, 'SuperP': np.pi / 6 * sp_d ** 3,
              'PTFE': np.pi * (ptfe_d / 2) ** 2 * ptfe_l,
-             'SDCP': 0.19 ** 3}   # conformal-film 'object' = nominal grid-scale patch (0.19µm)³ — n is just
-                                  # the coat point-count target; the RECIPE VOLUME is pinned by add_pvs
+             'SDCP': np.pi / 6 * SDCP_D ** 3}  # SDCP particle (manuscript S3) — n = particle count; volume add_pvs-pinned
     for a, w in add_wt.items():
         V_a = (w / 100.0) * M_tot / DENS[a]                            # µm³ of additive a
         out[a] = {'wt_pct': w, 'vol_um3': V_a, 'n': int(round(V_a / v_obj[a])),
@@ -340,10 +341,14 @@ ADDITIVE_PROCESS = {
         'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
         'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
     },
-    'SDCP': {    # self-doped conductive binder (S-PEDOT): sulfonate ANCHORS to NCM (E_bind −4.8 eV, INTERIM MLIP)
-        'ballmill': dict(regime='coat', surface_frac=1.0, morph='anchored conformal film on AM'),
-        'thinky':   dict(regime='coat', surface_frac=1.0, morph='anchored conformal film on AM'),
-        'handmix':  dict(regime='coat', surface_frac=0.6, morph='anchored film, poorer spread (§F1 hook)'),
+    'SDCP': {    # self-doped conductive binder — MANUSCRIPT morphology: 0.2-0.5µm PARTICLES dispersed in the
+        # composite (Fig S3), sulfonate-ANCHORED to NCM where they touch (E_bind −4.8 eV INTERIM MLIP);
+        # NOT a conformal film (the coat picture was the pre-manuscript proxy).  surface_frac here = the
+        # AM-anchored fraction of particles (anchoring-affinity bias; MAGNITUDE un-anchored §F1 hook —
+        # S3 shows particles both at NCM surfaces and in SE regions).
+        'ballmill': dict(regime='particle', surface_frac=0.5, morph='dispersed 0.3µm particles, NCM-anchor bias'),
+        'thinky':   dict(regime='particle', surface_frac=0.5, morph='dispersed 0.3µm particles, NCM-anchor bias'),
+        'handmix':  dict(regime='particle', surface_frac=0.3, morph='poorer dispersion (§F1 hook)'),
     },
     'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
         'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),

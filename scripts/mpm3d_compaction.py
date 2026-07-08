@@ -412,6 +412,12 @@ def main(argv):
     _M = LA_SE + 2.0 * MU_SE
     if _has_am_mat:
         _M = max(_M, LA_AM + 2.0 * MU_AM)
+    if args.add_recipe:                                     # additive stiffness can EXCEED the SE stack
+        _rc_up = args.add_recipe.upper()                    # (VGCF E=10 rode the old margin; SDCP E=23.6
+        for _anm, _aE, _anu in (('VGCF', 10.0, 0.30), ('SDCP', 23.6, 0.35)):   # would blow the CFL) → cap dt
+            if _anm in _rc_up:
+                _mu_a, _la_a = lame(_aE, _anu)
+                _M = max(_M, _la_a + 2.0 * _mu_a)
     dt = min(args.dt, 0.4 * dx / (_M ** 0.5))
 
     FLOOR = 0.10; SW = (0.18, 0.82)                         # confined box in x,y
@@ -752,7 +758,7 @@ def main(argv):
                 'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
-                'SDCP':   (2.00, 0.35, 0.05, 5, 'coat',   0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # anchored conformal film — E 2.0/σ_y 0.05/ρ = ⚠ALL PROXY (generic PEDOT web-lit, NOT the lab SDCP; manuscript pending — replace on digest)
+                'SDCP':   (23.6, 0.35, 1.00, 5, 'particle', 0.0,      0.0,  0.0, 0.0, 0.0, 0.0),   # ★E=23.6 GPa MANUSCRIPT-ANCHORED (AFM S6; LPSCl급 강성) — 0.3µm particles (S3), σ_y=1.0 UN-anchored rigid-proxy §F1 (stiff conjugated polymer, no PTFE-like flow; ≫press → behaves rigid); ρ 1.3 still proxy (methods 대기)
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
@@ -811,6 +817,28 @@ def main(argv):
                                                     am_frac_fn=_amfn, align_lambda=float(args.fibre_align),
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
+                elif kind == 'particle':
+                    # ★ SDCP manuscript morphology (Fig S3): 0.2-0.5µm PARTICLES dispersed in the composite,
+                    # a fraction ANCHORED at NCM surfaces (sulfonate chemisorption, E_bind −4.8 eV INTERIM
+                    # MLIP) and the rest in the SE/pore bulk.  surface_frac = AM-anchored share (process
+                    # row; §F1 hook — S3 shows both populations).  Anchored part reuses seed_coat with
+                    # shell ≈ particle radius; bulk part = uniform in-pore (in_am-dropped).
+                    _row = _ad.additive_process(nm, args.mixing)
+                    _sfrac = (float(args.sdcp_surface_frac) if (code == 5 and args.sdcp_surface_frac >= 0.0)
+                              else float(_row.get('surface_frac', 0.5)))
+                    _n_am = int(round(nobj * _sfrac)); _n_bulk = max(nobj - _n_am, 0)
+                    _pa, _fa = _ad.seed_coat(_n_am, bx, dx, rng, am=am_box, shell_um=(_ad.SDCP_D / 2) / um_box,
+                                             surface_frac=1.0, in_am=lambda q: _in_am_abs(q + off),
+                                             return_ids=True) if _n_am > 0 else (np.zeros((0, 3), np.float32), np.zeros(0, np.int32))
+                    _pb = np.column_stack([rng.uniform(0, bx[0], _n_bulk), rng.uniform(0, bx[1], _n_bulk),
+                                           rng.uniform(0, bx[2], _n_bulk)]).astype(np.float32)
+                    if len(_pb):
+                        _keep = ~np.array([_in_am_abs(q + off) for q in _pb])
+                        _pb = _pb[_keep]
+                    pts = np.concatenate([_pa, _pb]) if len(_pb) else _pa
+                    _fid = np.concatenate([_fa, np.arange(len(_pb), dtype=np.int32) + (int(_fa.max()) + 1 if len(_fa) else 0)])
+                    _w = np.ones(len(pts), np.float32)
+                    _coated = True                            # metadata: coat dict records the anchored share
                 elif kind == 'coat' or _proc_regime in ('coat_block', 'coat_embed'):
                     # A4 COAT REGIME: points seeded in a thin shell ON the AM surfaces — SDCP anchored film
                     # (default) or SuperP thinky dry-coat (coat_block: carbon film at the AM|SE interface;
@@ -901,7 +929,9 @@ def main(argv):
                     _add_meta[nm]['press_curl'] = bool(args.ptfe_press_curl)   # prescribed press-curl on? (OFF = as-drawn 0.40)
                     _add_meta[nm]['am_bind'] = bool(_am_fired)                 # AM-surface draping attractors ACTUALLY added?
                     _add_meta[nm]['am_bind_frac'] = round(float(np.clip(args.ptfe_am_bind, 0.0, 1.0)), 3)   # target AM nucleation share
-                if code == 5:                                # SDCP: anchored conformal film (A4 coat regime)
+                if code == 5:                                # SDCP: dispersed anchored particles (manuscript)
+                    _add_meta[nm]['morphology'] = 'particle_0.3um_S3'
+                    _add_meta[nm]['E_anchor'] = 'AFM_S6_23.6GPa'
                     _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
                     _add_meta[nm]['coh_sdcp'] = float(_coh)
                     _add_meta[nm]['anchor_E_bind_eV'] = -3.02 if args.sdcp_neutral else -4.80   # INTERIM (uma-s-1p1 MLIP,
