@@ -126,6 +126,14 @@ Caveats:
 ```
 로컬 시각화: `D:\QE\6. orca_sdcp\{figs/, best_doped_oc20.xyz, best_neutral_oc20.xyz}`
 
+
+## ⚠️ 2026-07-08 구조 개정 (Figures v7) — ORCA 재최적화 필요
+Fig. 2a 확정 구조: **EDOT 골격 + 측쇄 `ring–CH₂–O–CH₂CH₂–CH(CH₃)–SO₃H`** — 기존 모델 대비 **측쇄 중간에 ether O 1개 추가** (tether 유연성↑ + 잠재적 Li/표면 배위점 추가).
+- 새 조성: neutral **C11H16O6S2** (35원자) / doped **C11H15O6S2⁻** (34원자) — 기존(C11H16O5S2/C11H15O5S2)에서 정확히 +O
+- SMILES: neutral `CC(S(=O)(=O)O)CCOCC1COc2ccsc2O1` / doped `CC(S(=O)(=O)[O-])CCOCC1COc2ccsc2O1` (charge −1, mult 1)
+- 재실행 범위: ORCA opt+freq(동일 프로토콜) → E_SDCP_iso → Phase A/C/B 재스캔. **E_slab(UMA·DFT)은 불변 = 재사용.**
+- 기존 결과(−4.75/−2.98 rigid, −18.2/−6.3 relax)는 구모델 기록으로 보존 — 신구 비교 자체가 "ether O의 역할" 데이터가 됨.
+
 ## 다른 트랙과의 충돌
 
 - **gabia master batch (273 cascade, PID 309933)** 가 GPU 점유 → scan 시 `kill -STOP 309933` 필요.
