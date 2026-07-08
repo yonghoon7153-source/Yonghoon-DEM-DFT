@@ -1,0 +1,46 @@
+# 왜 P–S만 끊기고 B–S/P–O는 사는가 — σ\* 궤도 제어 (환원분해의 미시 메커니즘)
+
+**날짜** 2026-07-08 · **데이터** `docs/figures/icohp/b2o3_COHP_ext.csv`(비점유측 분석), `db/properties/{b2o3,lpscl16}_pdos_element_smooth.csv`, 계면 MD campaign · **동기** 계면 MD에서 PS₄만 분해되고 BS₃·P–O가 온전한 이유를 전자구조로 규명
+
+> **한 줄.** 환원 = CBM 채우기 = **CBM을 구성하는 결합의 σ\*를 채우는 것 = 그 결합의 절단.** COHP 비점유측 분석: **P–S σ\*는 CBM+0.10 eV(사실상 CBM 그 자체)**에서 시작, B–S는 +0.75 eV, P–O는 +1.61 eV — 접근가능 σ\* 무게도 결합당 P–S가 B–S의 3.7×, P–O의 5.8×. CBM 조성도 S 46%+P 27%(O 0%, B 10%). **Li가 주입한 전자는 P–S σ\*로만 들어갈 수 있어 P–S만 끊긴다** — MD 관찰(host만 분해, 도판트 단위 온전)의 궤도 수준 원인.
+
+## 1. 원리 (MO)
+- 결합 형성 → σ(핵 사이 전자 = 접착) + σ\*(핵 사이 마디 = 반접착)로 분리. **결합차수 = (n_σ − n_σ\*)/2.**
+- **환원 = 전자 주입 = 가장 낮은 빈 상태(CBM) 채우기.** CBM이 어떤 결합의 σ\*면, 환원 = 그 결합의 절단 ("환원분해"의 정체).
+- Li 금속 μ_e는 CBM 위 → 전자는 반드시 흐름; 문제는 **어느 σ\*가 받느냐**뿐.
+
+## 2. 측정 결과
+
+| 결합 | σ\* onset (CBM 기준) | σ\* 무게/결합 (CBM+2.5 eV) | ICOHP |
+|---|---|---|---|
+| P–S | **+0.10 eV** | −2.9 | −6.0 |
+| B–S | +0.75 eV | −0.8 (3.7× 적음) | −7.8 |
+| P–O | +1.61 eV | −0.5 (5.8× 적음) | −8.55 |
+
+- CBM 바닥 1.2 eV 조성: b2o3 **S 46% P 27%** Li 15% B 10% **O 0%** / LPSCl1.6 S 51% P 34% Li 15%.
+- (곡선은 결합종별 합산 → 결합수 P–S 29·B–S 6·P–O 3으로 나눠 결합당 환산.)
+
+## 3. "강한 결합은 두 번 보호한다" — 전 측정의 통합
+σ\* onset 순서 = ICOHP 순서 (강한 겹침 → 분리폭↑ → σ 깊고 **σ\* 높음**):
+1. **점유측 보호**: 전자가 결합에 국재(ELF B–S 0.959/P–O 0.930; mean-3p 깊음) → 산화 저항
+2. **비점유측 보호**: σ\*가 CBM 위로 밀려남 → 환원 전자를 못 받음 → 환원 저항
+→ 짧은 결합(1.83/1.56 Å) → ICOHP → ELF(공간) + σ\*(에너지) → **MD 생존(결과)**. 한 인과사슬.
+
+## 4. 열역학 역설과 해소 (kinetic/orbital control)
+- ESW(평형): **B→BP 환원 onset 1.72 V > host 1.24 V** — 열역학은 B를 1번 타자로 지목.
+- MD(실제): B 생존, P만 분해.
+- 해소: **열역학은 산물의 순위, 궤도는 경로의 문.** B-쪽엔 CBM 근처 acceptor 상태가 없고(조성 10%, σ\* +0.75 eV) BP 생성은 B를 S₃ 우리에서 뽑는 재조직 장벽 필요. P–S σ\*는 CBM에 상시 개방 → 전자 주입 즉시 결합 절단(저장벽) → **P 채널이 모든 전자를 흡수**. (MD의 P–Li 0.8→4.2 연속 상승 = 단계적 환원의 직접 증거.)
+- Liu(2023)의 MgS₄ 생존도 같은 언어: Mg–S는 이온성(약함)이지만 **Mg²⁺에 접근가능한 환원 상태가 없음** — 단위 불활성의 다른 경로(redox-inert cation) vs 우리 B(강공유 → σ\* 상승).
+
+## 5. 설계 규칙 (일반화 — cascade Layer-2 후보 descriptor)
+도판트 단위가 Li 계면에서 살아남을 조건:
+1. 그 결합의 **σ\* onset이 CBM보다 충분히 위** (COHP 비점유측에서 계산 가능)
+2. 중심 양이온에 **낮은 환원 상태 없음** (CBM projection에 기여 적음)
+→ 둘 다 bulk 계산에서 뽑히는 **계산가능 스크리닝 지표** — 차기 도펀트 스크리닝에 사용 가능.
+
+## 6. 한계
+- PBE 준위(절대 onset은 hybrid에서 이동 가능; **순서는 결합강도에 묶여 견고**), bulk COHP로 계면 사건 설명(관행적 근사), 결합수 환산은 평균치.
+- B-노출 종단 MD(진행중)가 "직접 접촉에서도 σ\* 보호가 작동하는가"의 최종 실증.
+
+## 논문 문장 후보
+"Energy-resolved COHP shows the P–S antibonding manifold begins essentially at the CBM (+0.1 eV), while B–S and P–O σ\* states are pushed 0.75 and 1.6 eV higher by their stronger bonding — electrons injected from Li therefore populate (and cleave) only host P–S bonds, rationalizing the selective decomposition observed in interface MD and the survival of the dopant units."
