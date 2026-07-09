@@ -37,11 +37,14 @@ from scipy import ndimage, sparse
 from scipy.sparse.linalg import cg
 
 # σ defaults (S/cm) — see module docstring for anchor status
-SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 0.010}
+# SDCP 150 = USER-provided INTERIM material conductivity (2026-07-10, 진성호계 S-PEDOT 자릿수);
+# replaces the earlier 'AM-grade 0.010' placeholder.  Still overridable per run.
+SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 150.0}
 PHASE_NAME = {2: 'VGCF', 3: 'SuperP', 5: 'SDCP'}          # additive phase codes (4 PTFE = insulator)
+SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE'}   # voxel σ-id → name
 
 
-def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10):
+def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -57,6 +60,15 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
     n = np.maximum(1, np.ceil((np.asarray(box_hi) - lo) / vox).astype(int))
     sid = np.zeros(tuple(n), np.int8)
     pid = np.full(tuple(n), -1, np.int32)
+    # SE (sid 6, optional): stamped FIRST = lowest priority — AM / contact bridges / additives
+    # overwrite.  Enables the IONIC solve (SE+SDCP conduct; AM/carbon/PTFE ion-block) on the SAME
+    # grid: the electronic table just sets σ(SE)=0.  Chunked (tens of millions of points).
+    if se_pts is not None and len(se_pts):
+        for c0 in range(0, len(se_pts), 8_000_000):
+            ijk = np.floor((np.asarray(se_pts[c0:c0 + 8_000_000], np.float64) - lo) / vox).astype(int)
+            ok = ((ijk >= 0) & (ijk < n)).all(1)
+            ijk = ijk[ok]
+            sid[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = 6
 
     def _ball(centre_um, rad_um, s, particle):
         c = (centre_um - lo) / vox; rr = rad_um / vox

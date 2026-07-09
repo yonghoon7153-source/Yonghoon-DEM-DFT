@@ -40,7 +40,7 @@ side chain:  ring–CH₂–O–CH₂CH₂–CH(CH₃)–SO₃H
 | σ_ion (LPSCl+SDCP pellet) | 3.57→**2.86 mS/cm (×0.80)**; PTFE는 ×0.27 | Fig2f | ✅ 앵커 (이온 저차단) |
 | σ_e (LPSCl+SDCP pellet) | 0.30→**1.53 ×10⁻⁷ S/cm (×5.1)**; PTFE ×0.4 | Fig2g/S10 | ✅ 앵커 (e-부스팅) |
 | ρ (밀도) | 1.3 g/cm³ | generic PEDOT | ⚠ proxy — methods 확인 대기 |
-| σ_e (SDCP 필름 단독) | ~~315–1089 S/cm~~ | 웹서치 S-PEDOT | ❌ 폐기 (오귀속 위험 — 실측 필요) |
+| σ_e (SDCP 소재) | **150 S/cm** | 사용자 지정 (2026-07-10) | 🔶 INTERIM — STEP3 상-σ로 사용; (구 웹서치 315–1089는 ❌폐기 유지) |
 | σ_y (항복) | 1.0 GPa | rigid-proxy | ⚠ §F1 hook (미앵커; 강성 공액고분자, PTFE식 유동 없음 가정) |
 | 열/구조 | XRD 무변화(S8), Raman/FTIR PEDOT+SO₃H(2b/S7) | | ✅ |
 

@@ -18,8 +18,8 @@
   | AM_P | 0.005 | ✅ A1-locked (5 mS/cm) |
   | VGCF | 100 | ⚠ §F1 자릿수 hook (graphitic fibre 문헌 10²-10³) |
   | SuperP | 10 | ⚠ §F1 자릿수 hook (CB compact 1-50) |
-  | SDCP | 0.010 | ⚠ §F1 — "AM급 도체" 기본값 (econn 분류와 일치). **pellet ×5.1은 composite-수준
-      앵커라 상-σ에 직접 이식 금지**; doped/neutral 분리는 후속 |
+  | SDCP | **150** | 🔶 **사용자 지정 INTERIM 앵커 (2026-07-10)** — S-PEDOT급 소재 전도도 자릿수.
+      (pellet ×5.1은 composite-수준이라 별개; doped/neutral 분리는 후속) |
 
 ## 신뢰 모델 (정직)
 - **v1 신뢰 단위 = 상대 비교** (σ표+vox 동일 세팅의 런끼리). 절대 σ_e는 sub-voxel constriction
@@ -48,6 +48,14 @@
 - `payload particles[].je`: 입자별 평균 |J_z| → viewer "전류밀도 — STEP3 σ_e (slide-20)" 모드
   (p5-p95 정규화, 빨강=hot path)
 - 로그 한 줄: σ_e_eff + 상별 분담
+
+## 이온망 (v2-lite, 2026-07-10 — 같은 그리드, σ표만 교체)
+같은 voxel 그리드에 SE(sid 6, 최저 우선순위 스탬프)를 추가하고 **이온 σ표로 한 번 더 풀기**:
+SE = 3.0 mS/cm (Cronau σ_grain ✅) + **SDCP = 1.0 mS/cm (⚠F1 hook — 사용자 원칙 '이온 절연 아님',
+pellet ×0.80 방향; Li⁺ DFT 패키지가 앵커 예정)**; AM/VGCF/SuperP/PTFE = 이온 차단.
+→ `metrics.step3.sigma_ion_eff_S_cm` + `ion_dissipation_share` (SE vs SDCP 경로 분담).
+GeoDict-계 논문의 Fig-2(d)/(f) 축과 방법론 동급 (voxel FV) — 단 우리는 **상 분해** 유지.
+스모크: 전자 2.19e-4 / 이온 3.69e-4 S/cm, 이온 분담 SE 97.6% + SDCP 2.4% (기계 검증).
 
 ## 한계 (v1, 문서화)
 - sub-voxel constriction 미모델 (목 면적 voxel-양자화) / 측면 Neumann (주기 아님) /

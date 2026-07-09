@@ -281,9 +281,14 @@ def main():
     ap.add_argument('--sigma-am-p', type=float, default=0.005, help='σ_e AM_P (S/cm) — A1-locked 5 mS/cm')
     ap.add_argument('--sigma-vgcf', type=float, default=100.0, help='σ_e VGCF (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
-    ap.add_argument('--sigma-sdcp', type=float, default=0.010,
-                    help='σ_e SDCP (S/cm) — AM-grade default (econn classification); pellet ×5.1 is '
-                         'COMPOSITE-level, not a phase σ.  ⚠hook; doped/neutral split = future refinement.')
+    ap.add_argument('--sigma-sdcp', type=float, default=150.0,
+                    help='σ_e SDCP material (S/cm) — 150 = USER-provided INTERIM anchor (2026-07-10, '
+                         'S-PEDOT-class); pellet ×5.1 stays COMPOSITE-level.  Doped/neutral split = future.')
+    ap.add_argument('--sigma-ion-se', type=float, default=0.003,
+                    help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor)')
+    ap.add_argument('--sigma-ion-sdcp', type=float, default=0.001,
+                    help='σ_ion SDCP (S/cm) — NOT an ion-insulator (user principle: Li-hopping keeps it '
+                         'conducting; pellet ×0.80 vs PTFE ×0.27).  1 mS/cm ⚠F1 hook; Li⁺ DFT 패키지가 앵커 예정.')
     a = ap.parse_args()
     vc = _vc()
     sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
@@ -471,15 +476,18 @@ def main():
             _apts = (se[_m] - _off) * UM if _m.any() else None
             _aph = phase[_m] if _m.any() else None
             _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
-            sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox)
-            _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp])
+            _septs = (se[phase == 1] - _off) * UM if phase is not None else (se - _off) * UM
+            sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
+                                       se_pts=_septs)      # SE stamped (sid 6) → ionic solve on the same grid
+            _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
+                              0.0])                        # ELECTRONIC table: SE = e-insulator
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
                                        z_top_um=(top - FLOOR) * UM)   # bed-thickness top plate
             if _res3['n_dof']:
                 je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
                                       nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
-                _sname = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP'}
+                _sname = _s3.SID_NAME
                 step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
                          'vox_um': a.step3_vox, 'n_dof': _res3['n_dof'],
                          'k_plates': list(_res3.get('k_plates', ())),
@@ -495,6 +503,23 @@ def main():
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
+                # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
+                # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
+                _t1 = _time.time()
+                _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se])
+                _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
+                                           z_top_um=(top - FLOOR) * UM)
+                if _res3i['n_dof']:
+                    _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
+                    step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
+                    step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
+                                                      for k, v in _sharei.items()}
+                    step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
+                    step3['ion_resid'] = float(f"{_res3i['resid']:.2g}")
+                    print(f"  STEP3 σ_ion_eff = {step3['sigma_ion_eff_S_cm']:.4g} S/cm  "
+                          f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
+                          f"share: " + " ".join(f"{k} {100*v:.0f}%"
+                                                for k, v in step3['ion_dissipation_share'].items()))
         except Exception as _e:
             import traceback as _tb
             print(f'  ⚠ STEP3 skipped ({type(_e).__name__}: {_e})')
