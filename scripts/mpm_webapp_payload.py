@@ -270,6 +270,20 @@ def main():
                     '--save-fibre-dia): attach per-fibre median Ø to additive_fibres so the viewer renders '
                     'thickness (PTFE draw d∝√(V/L) — thin-long vs thick-short).')
     ap.add_argument('--out', default='mpm_payload.json')
+    # ★ STEP3 v1 — electronic voxel resistor network (σ_e_eff + per-AM current density).  RELATIVE
+    # trust unit; σ table: AM = A1-locked (Trevisanello 10/5 mS/cm), carbon/SDCP = §F1 order-of-
+    # magnitude hooks (record travels in metrics.step3.sigma_table so runs are comparable).
+    ap.add_argument('--no-step3', action='store_true', help='skip the STEP3 σ_e network solve')
+    ap.add_argument('--step3-vox', type=float, default=0.4,
+                    help='STEP3 voxel size (µm).  0.4 default: AM-carbon bridges (band 0.15µm) land in '
+                         'same/adjacent voxels; smaller = finer necks but ∝1/vox³ dof.')
+    ap.add_argument('--sigma-am-s', type=float, default=0.010, help='σ_e AM_S (S/cm) — A1-locked 10 mS/cm')
+    ap.add_argument('--sigma-am-p', type=float, default=0.005, help='σ_e AM_P (S/cm) — A1-locked 5 mS/cm')
+    ap.add_argument('--sigma-vgcf', type=float, default=100.0, help='σ_e VGCF (S/cm) — lit order ⚠hook')
+    ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
+    ap.add_argument('--sigma-sdcp', type=float, default=0.010,
+                    help='σ_e SDCP (S/cm) — AM-grade default (econn classification); pellet ×5.1 is '
+                         'COMPOSITE-level, not a phase σ.  ⚠hook; doped/neutral split = future refinement.')
     a = ap.parse_args()
     vc = _vc()
     sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
@@ -437,13 +451,58 @@ def main():
                   f"({econn_summary['n_isolated']} isolated; {_ncl} carbon clusters)")
         except Exception as _e:
             print(f'  ⚠ econn skipped ({_e})')
+    # ★ STEP3 v1 — electronic voxel resistor network (FULL-RES, like econn): σ_e_eff + per-AM
+    # current density (slide-20 axis) + per-phase current share.  ∇·(σ∇φ)=0, harmonic-mean faces,
+    # collector plate below / φ=0 above, lateral Neumann.  TRUST = RELATIVE comparison at identical
+    # settings (σ hooks + vox recorded in metrics); absolute σ_e needs the DEM Stage-E contact-area
+    # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
+    # analytic laminate/percolation self-tests that pin the assembly.
+    step3 = None; je_am = None
+    if len(r) and phase is not None and not a.no_step3:
+        try:
+            import time as _time
+            import step3_sigma as _s3
+            _t0 = _time.time()
+            _off = np.array([SW[0], SW[0], FLOOR])
+            _am_c = (c - _off) * UM
+            _am_r = r * UM
+            _m = np.isin(phase, (2, 3, 5))                 # conductive additives (PTFE 4 = insulator)
+            _apts = (se[_m] - _off) * UM if _m.any() else None
+            _aph = phase[_m] if _m.any() else None
+            _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
+            sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox)
+            _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp])
+            _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
+                                       z_top_um=(top - FLOOR) * UM)   # bed-thickness top plate
+            if _res3['n_dof']:
+                je_am = _s3.per_particle_current(_res3, sid3, pid3, _sig3, a.step3_vox, len(r))
+                _share = _s3.phase_current_share(_res3, sid3, _sig3)
+                _sname = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP'}
+                step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
+                         'vox_um': a.step3_vox, 'n_dof': _res3['n_dof'],
+                         'k_plates': list(_res3.get('k_plates', ())),
+                         'n_floating_dropped': _res3.get('n_floating_dropped', 0),
+                         'cg_resid': float(f"{_res3['resid']:.2g}"),
+                         'dissipation_share': {_sname[k]: round(v, 4) for k, v in _share.items()},
+                         'sigma_table_S_cm': {'AM_S': a.sigma_am_s, 'AM_P': a.sigma_am_p,
+                                              'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,
+                                              'SDCP': a.sigma_sdcp},
+                         'trust': 'RELATIVE_v1 (same settings between runs; carbon/SDCP σ = F1 hooks; '
+                                  'AM_S/P = A1-locked 10/5 mS/cm; lateral Neumann; sub-voxel '
+                                  'constriction not modelled)'}
+                print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
+                      f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
+                      f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
+        except Exception as _e:
+            print(f'  ⚠ STEP3 skipped ({_e})')
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
                   'y': round(float((c[i, 1] - SW[0]) * UM), 3),
                   'z': round(float((c[i, 2] - FLOOR) * UM), 3),
                   'r': round(float(r[i] * UM), 3),
                   'coverage': float(cov_per[i]),
-                  **({'econn': int(econn[i])} if econn is not None else {})} for i in range(len(r))]
+                  **({'econn': int(econn[i])} if econn is not None else {}),
+                  **({'je': float(f'{je_am[i]:.4g}')} if je_am is not None else {})} for i in range(len(r))]
 
     # conductive additives (VGCF/SuperP/PTFE) → colored points for the 도전재 3D viewer.  Subsampled
     # proportionally to the budget; carried as [x,y,z,phase] µm (phase 2 VGCF · 3 SuperP · 4 PTFE).
@@ -552,6 +611,8 @@ def main():
         'cov_hertz_um': a.coverage_um, 'cov_tabor_um': a.cov_tabor_um,   # distance bands (0.13/0.26µm)
         'cov_method': 'plastic_deformed_vs_rigid_geometric' if geom_rigid else 'deformed_points',
     }
+    if step3 is not None:
+        mpm_metrics['step3'] = step3                       # σ_e_eff + σ-table + shares (RELATIVE trust)
     # coverage_AM_*_mpm_pct = the sim's RAW value (the MPM DIRECTLY measures the plastic SE-AM
     # contact from the deformed SE — no Tabor/B3 post-correction, which would re-impose the DEM's
     # rigid-sphere fix on a model that already deformed plastically).  Compared in /group against

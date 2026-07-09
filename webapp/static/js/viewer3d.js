@@ -137,6 +137,7 @@ function buildControls(container, isMPM) {
       <option value="se_strain">SE 변형 (vs seed)</option>
       <optgroup label="전기 (electrical)">
         <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
+        <option value="je">전류밀도 — STEP3 σ_e (slide-20)</option>
       </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
@@ -1893,6 +1894,50 @@ function applyViewMode(state, mode) {
          &nbsp;— 연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
        + (nClFull != null ? ` · carbon cluster ${nClFull.toLocaleString()}개` : '') + `</div>
        <div style="margin-top:2px;color:#9ca3af;font-size:10px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
+    return;
+  }
+  if (mode === 'je') {
+    /* STEP3 per-AM current density (slide-20 문법): AM coloured by mean |J_z| from the voxel
+     * Kirchhoff solve (payload particles[].je; mpm_metrics.step3 carries σ_e_eff + σ table).
+     * Percentile-normalised like the coverage heat; HIGH current = RED (hot path). */
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const s3 = mm.step3 || null;
+    const vals = [];
+    ['AM_P', 'AM_S'].forEach(ty => {
+      const m = state.meshes[ty]; if (!m) return;
+      m.userData.particles.forEach(p => { if (p.je !== undefined) vals.push(p.je); });
+    });
+    if (!vals.length) {
+      setLegend(state, '<i>이 payload엔 STEP3 전류밀도(<b>je</b>)가 없어요 — 최신 '
+        + '<b>mpm_webapp_payload.py</b>(--step3 기본 ON)로 payload를 재생성해서 업로드하세요.</i>');
+      return;
+    }
+    if (state.meshes.MESH) {
+      state.meshes.MESH.visible = true;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.08;
+    }
+    const sorted = [...vals].sort((x, y) => x - y);
+    const pctl = (p) => sorted[Math.max(0, Math.min(sorted.length - 1, Math.floor(p * (sorted.length - 1))))];
+    const lo = pctl(0.05), hi = Math.max(pctl(0.95), lo * (1 + 1e-9) + 1e-30);
+    const norm = (v) => Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
+    ['AM_P', 'AM_S'].forEach(ty => {
+      const m = state.meshes[ty]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        if (p.je === undefined) { m.setColorAt(i, colDim); return; }
+        m.setColorAt(i, new THREE.Color(rdylgnColor(1 - norm(p.je))));   // high current = red
+      });
+      m.material.opacity = 0.97; m.material.transparent = true;
+    });
+    flushColors();
+    const stops = [1, 0.75, 0.5, 0.25, 0].map(v => '#' + rdylgnColor(v).toString(16).padStart(6, '0'));
+    setLegend(state,
+      `<b>전류밀도 (STEP3 Kirchhoff)</b>`
+      + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm
+          <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span></div>` : '')
+      + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>low</span><span>|J| (p5–p95)</span><span>high</span></div>`
+      + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">전류 경로 분담: `
+          + Object.entries(s3.dissipation_share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     return;
   }
   if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe'
