@@ -865,6 +865,97 @@ function resetSEColors(state) {
   mesh.material.opacity = OPA.SE;  // back to 0.85
 }
 
+/* round point sprite (soft disc) — raw THREE.Points draw hard SQUARES; cached radial-alpha texture */
+function roundDotTex() {
+  if (!roundDotTex._t) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+    const c2 = cv.getContext('2d');
+    const rg = c2.createRadialGradient(32, 32, 0, 32, 32, 30);
+    rg.addColorStop(0.0, 'rgba(255,255,255,1)');
+    rg.addColorStop(0.75, 'rgba(255,255,255,1)');
+    rg.addColorStop(1.0, 'rgba(255,255,255,0)');
+    c2.fillStyle = rg; c2.beginPath(); c2.arc(32, 32, 30, 0, 2 * Math.PI); c2.fill();
+    roundDotTex._t = new THREE.CanvasTexture(cv);
+  }
+  return roundDotTex._t;
+}
+
+/* econn-mode carbon overlay — CBD-style CLUSTER DOMAINS (user request 2026-07-10):
+ * the CONDUCTIVE additive geometry (phases 2 VGCF · 3 SuperP · 5 SDCP; PTFE 4 = e-insulator,
+ * NOT drawn — it is not in the econn graph) is grouped into clusters by voxel-adjacency
+ * union-find (0.3µm, ≈ the payload's econn labelling) and each cluster is rendered as a FUSED
+ * translucent blob of soft discs — reads like the carbon-binder-domain (CBD) phase, one colour
+ * per cluster (golden-angle categorical HSL).  So: clusters read APART by colour, and the
+ * cluster COUNT reads at a glance (85 film mega-sheets = few big patches; 32k bulk chains =
+ * confetti).  Clustering runs on the DISPLAYED (subsampled) geometry → the displayed count can
+ * differ from the full-res econn_summary number; the legend shows both (summary = quantitative).
+ * Returns {shown, nClusters, biggestPct} or null. */
+function buildEconnClusters(state) {
+  const COND = new Set([2, 3, 5]);
+  const fibres = ((state.data && state.data.additive_fibres) || []).filter(f => COND.has(f.phase));
+  const fibrePh = new Set(fibres.map(f => f.phase));
+  const loose = ((state.data && state.data.additive_points) || [])
+    .filter(p => COND.has(p[3]) && !fibrePh.has(p[3]));
+  const ents = [];                                   // entity = one fibre (vertices move together) or one loose pt
+  for (const f of fibres) ents.push(f.pts);
+  for (const p of loose) ents.push([[p[0], p[1], p[2]]]);
+  if (!ents.length) return null;
+  const parent = Array.from({ length: ents.length }, (_, i) => i);
+  const find = (a) => { while (parent[a] !== a) { parent[a] = parent[parent[a]]; a = parent[a]; } return a; };
+  const union = (a, b) => { const ra = find(a), rb = find(b); if (ra !== rb) parent[ra] = rb; };
+  const VOX = 0.3;                                   // µm — matches econn vox_um
+  const occ = new Map();                             // voxel key → first entity seen there
+  for (let e = 0; e < ents.length; e++) {
+    for (const q of ents[e]) {
+      const i = Math.floor(q[0] / VOX), j = Math.floor(q[1] / VOX), k = Math.floor(q[2] / VOX);
+      for (let di = -1; di <= 1; di++) for (let dj = -1; dj <= 1; dj++) for (let dk = -1; dk <= 1; dk++) {
+        const key = (i + di) + '_' + (j + dj) + '_' + (k + dk);
+        const o = occ.get(key);
+        if (o === undefined) { if (!di && !dj && !dk) occ.set(key, e); }
+        else if (o !== e) union(e, o);
+      }
+    }
+  }
+  const rootIdx = new Map(); const sizes = [];
+  const clOf = new Array(ents.length);
+  for (let e = 0; e < ents.length; e++) {
+    const r = find(e);
+    if (!rootIdx.has(r)) { rootIdx.set(r, rootIdx.size); sizes.push(0); }
+    clOf[e] = rootIdx.get(r);
+    sizes[clOf[e]] += ents[e].length;
+  }
+  const nCl = rootIdx.size;
+  const nPts = ents.reduce((a, b) => a + b.length, 0);
+  // categorical colour per cluster: golden-angle hue → adjacent ids maximally apart; mid lightness
+  // so the translucent blobs stay readable on the white canvas
+  const cc = new THREE.Color();
+  const grp = new THREE.Group();
+  const pos = new Float32Array(nPts * 3), col = new Float32Array(nPts * 3);
+  let w = 0;
+  for (let e = 0; e < ents.length; e++) {
+    cc.setHSL(((clOf[e] * 137.508) % 360) / 360, 0.72, 0.46);
+    for (const q of ents[e]) {
+      pos[3 * w] = q[0]; pos[3 * w + 1] = q[2]; pos[3 * w + 2] = q[1];   // Z-up swap
+      col[3 * w] = cc.r; col[3 * w + 1] = cc.g; col[3 * w + 2] = cc.b; w++;
+    }
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  // CBD look = two fused layers: a wide faint halo (domain body) + a smaller firmer core.
+  // Both x-ray (depthTest off) so the domains show threading between the opaque AM.
+  for (const [sz, op] of [[1.5, 0.16], [0.65, 0.55]]) {
+    const pm = new THREE.Points(g, new THREE.PointsMaterial({
+      size: sz, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false,
+      map: roundDotTex(), transparent: true, opacity: op, alphaTest: 0.05 }));
+    pm.renderOrder = 999; grp.add(pm);
+  }
+  state.additivePointGroup = grp;                    // reuse the mode-switch cleanup hook
+  if (state.scene) state.scene.add(grp);
+  const biggest = sizes.length ? Math.max(...sizes) : 0;
+  return { shown: nPts, nClusters: nCl, biggestPct: nPts ? 100 * biggest / nPts : 0 };
+}
+
 /* Build the conductive-additive point cloud (payload additive_points: [x,y,z,phase]) and add it to
  * the scene as state.additivePointGroup.  Used both as a subtle overlay on the Default view (so the
  * carbon is visible inside the normal AM/SE structure) and as the prominent 도전재 mode.  Points draw
@@ -940,22 +1031,10 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
     }
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
-    // round-dot sprite: raw THREE.Points draw as hard SQUARES — at close zoom the particle cloud
-    // reads as blocky pixels (user-reported).  A radial-alpha canvas texture makes each point a
-    // soft disc (built once, cached on the function).
-    if (!buildCarbonOverlay._dotTex) {
-      const cv = document.createElement('canvas'); cv.width = cv.height = 64;
-      const c2 = cv.getContext('2d');
-      const rg = c2.createRadialGradient(32, 32, 0, 32, 32, 30);
-      rg.addColorStop(0.0, 'rgba(255,255,255,1)');
-      rg.addColorStop(0.75, 'rgba(255,255,255,1)');
-      rg.addColorStop(1.0, 'rgba(255,255,255,0)');
-      c2.fillStyle = rg; c2.beginPath(); c2.arc(32, 32, 30, 0, 2 * Math.PI); c2.fill();
-      buildCarbonOverlay._dotTex = new THREE.CanvasTexture(cv);
-    }
+    // round-dot sprite (raw THREE.Points draw hard squares — user-reported blocky pixels)
     const pm = new THREE.Points(g, new THREE.PointsMaterial({
       size, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false,
-      map: buildCarbonOverlay._dotTex, transparent: true, alphaTest: 0.3 }));
+      map: roundDotTex(), transparent: true, alphaTest: 0.3 }));
     pm.renderOrder = 999; grp.add(pm); n += pts.length;
   }
   if (n === 0) return 0;
@@ -1799,9 +1878,11 @@ function applyViewMode(state, mode) {
       m.material.opacity = 0.97; m.material.transparent = true;
     });
     flushColors();
-    // carbon bridges faint in the background — they are WHY isolated AM turn connected
-    buildCarbonOverlay(state, 0, 0.5, 0x6b7280);
+    // carbon bridges as CBD-style translucent CLUSTER DOMAINS (one colour per cluster) — clusters
+    // read apart AND their count reads at a glance; PTFE (insulator) not drawn.
+    const cl = buildEconnClusters(state);
     const pct = (nOn + nOff) ? (100 * nOn / (nOn + nOff)) : 0;
+    const nClFull = ec && ec.n_carbon_clusters != null ? Number(ec.n_carbon_clusters) : null;
     setLegend(state,
       `<b>전기 연결성 (집전체 percolation)</b>
        <div style="margin-top:4px">
@@ -1809,11 +1890,15 @@ function applyViewMode(state, mode) {
          <span style="color:#dc2626;font-size:13px">●</span> 고립 입자 ${nOff.toLocaleString()}개
          ${nNA ? `&nbsp;<span style="color:#6b7280">● no-data ${nNA}</span>` : ''}
        </div>
-       <div style="margin-top:3px">연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
-       + (ec ? ` · carbon cluster ${Number(ec.n_carbon_clusters || 0).toLocaleString()}개
-         · AM-carbon 다리 밴드 ${ec.band_um}µm / AM-AM 접촉 ${ec.tol_am_um}µm` : '') + `</div>
-       <div style="margin-top:3px;color:#9ca3af;font-size:10px">
-         AM-AM 접촉 ∪ AM-[VGCF·SuperP·SDCP]-AM 다리 → 집전체(바닥) 연결 판정. SE·PTFE는 전자 절연으로 제외.<br>
+       <div style="margin-top:3px">연결률 <b style="font-size:13px">${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
+       + (nClFull != null ? ` &nbsp;·&nbsp; carbon cluster <b style="font-size:15px">${nClFull.toLocaleString()}</b>개` : '') + `</div>`
+       + (cl ? `<div style="margin-top:3px;color:#cbd5e1;font-size:10px">
+           도전재 도메인(CBD식): <b>색 = 클러스터</b> — 색 조각이 많을수록 네트워크가 잘게 나뉜 것
+           (표시 서브샘플 기준 ${cl.nClusters.toLocaleString()}개${nClFull != null ? ` / 정량은 풀해상도 ${nClFull.toLocaleString()}개` : ''};
+           최대 도메인이 표시 지오메트리의 ${cl.biggestPct.toFixed(0)}%)</div>` : '')
+       + `<div style="margin-top:3px;color:#9ca3af;font-size:10px">
+         AM-AM 접촉 ∪ AM-[VGCF·SuperP·SDCP]-AM 다리 → 집전체(바닥) 연결 판정.<br>
+         · SE = 반투명 컨텍스트 · <b>PTFE = 전자 절연이라 그래프/그림 모두 제외</b><br>
          · 계면(반응면적 proxy): SE-coverage AM_P ${mm.coverage_AM_P_pct != null ? mm.coverage_AM_P_pct : '—'}%
          / AM_S ${mm.coverage_AM_S_pct != null ? mm.coverage_AM_S_pct : '—'}%<br>
          · 전류밀도·Li농도 색칠은 STEP3(Kirchhoff σ 배정) 후 제공 예정</div>`);
