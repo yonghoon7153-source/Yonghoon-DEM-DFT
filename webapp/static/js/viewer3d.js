@@ -880,7 +880,8 @@ function roundDotTex() {
   return roundDotTex._t;
 }
 
-/* econn-mode carbon overlay — CBD-style CLUSTER DOMAINS (user request 2026-07-10):
+/* CBD-style carbon CLUSTER DOMAINS — currently UNWIRED (user pref 2026-07-10: the econn mode
+ * shows AM connectivity only; keep this for a future carbon-network / STEP3 mode):
  * the CONDUCTIVE additive geometry (phases 2 VGCF · 3 SuperP · 5 SDCP; PTFE 4 = e-insulator,
  * NOT drawn — it is not in the econn graph) is grouped into clusters by voxel-adjacency
  * union-find (0.3µm, ≈ the payload's econn labelling) and each cluster is rendered as a FUSED
@@ -1878,30 +1879,20 @@ function applyViewMode(state, mode) {
       m.material.opacity = 0.97; m.material.transparent = true;
     });
     flushColors();
-    // carbon bridges as CBD-style translucent CLUSTER DOMAINS (one colour per cluster) — clusters
-    // read apart AND their count reads at a glance; PTFE (insulator) not drawn.
-    const cl = buildEconnClusters(state);
+    // AM connectivity ONLY (user pref 2026-07-10): no carbon overlay — the blue/red spheres ARE
+    // the story (slide-19 문법).  buildEconnClusters (CBD-style cluster domains) is kept unwired
+    // for a future carbon-network mode.  Legend kept SHORT (was too long — user).
     const pct = (nOn + nOff) ? (100 * nOn / (nOn + nOff)) : 0;
     const nClFull = ec && ec.n_carbon_clusters != null ? Number(ec.n_carbon_clusters) : null;
     setLegend(state,
-      `<b>전기 연결성 (집전체 percolation)</b>
+      `<b>전기 연결성</b>
        <div style="margin-top:4px">
-         <span style="color:#5b7cf0;font-size:13px">●</span> 연결 입자 ${nOn.toLocaleString()}개 &nbsp;
-         <span style="color:#dc2626;font-size:13px">●</span> 고립 입자 ${nOff.toLocaleString()}개
-         ${nNA ? `&nbsp;<span style="color:#6b7280">● no-data ${nNA}</span>` : ''}
-       </div>
-       <div style="margin-top:3px">연결률 <b style="font-size:13px">${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
-       + (nClFull != null ? ` &nbsp;·&nbsp; carbon cluster <b style="font-size:15px">${nClFull.toLocaleString()}</b>개` : '') + `</div>`
-       + (cl ? `<div style="margin-top:3px;color:#cbd5e1;font-size:10px">
-           도전재 도메인(CBD식): <b>색 = 클러스터</b> — 색 조각이 많을수록 네트워크가 잘게 나뉜 것
-           (표시 서브샘플 기준 ${cl.nClusters.toLocaleString()}개${nClFull != null ? ` / 정량은 풀해상도 ${nClFull.toLocaleString()}개` : ''};
-           최대 도메인이 표시 지오메트리의 ${cl.biggestPct.toFixed(0)}%)</div>` : '')
-       + `<div style="margin-top:3px;color:#9ca3af;font-size:10px">
-         AM-AM 접촉 ∪ AM-[VGCF·SuperP·SDCP]-AM 다리 → 집전체(바닥) 연결 판정.<br>
-         · SE = 반투명 컨텍스트 · <b>PTFE = 전자 절연이라 그래프/그림 모두 제외</b><br>
-         · 계면(반응면적 proxy): SE-coverage AM_P ${mm.coverage_AM_P_pct != null ? mm.coverage_AM_P_pct : '—'}%
-         / AM_S ${mm.coverage_AM_S_pct != null ? mm.coverage_AM_S_pct : '—'}%<br>
-         · 전류밀도·Li농도 색칠은 STEP3(Kirchhoff σ 배정) 후 제공 예정</div>`);
+         <span style="color:#5b7cf0;font-size:13px">●</span> 연결 ${nOn.toLocaleString()} &nbsp;
+         <span style="color:#dc2626;font-size:13px">●</span> 고립 ${nOff.toLocaleString()}
+         ${nNA ? `&nbsp;<span style="color:#6b7280">● n/a ${nNA}</span>` : ''}
+         &nbsp;— 연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
+       + (nClFull != null ? ` · carbon cluster ${nClFull.toLocaleString()}개` : '') + `</div>
+       <div style="margin-top:2px;color:#9ca3af;font-size:10px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
     return;
   }
   if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe'
