@@ -336,19 +336,25 @@ ADDITIVE_PROCESS = {
         'thinky':   dict(regime='coat_block', k=3, surface_frac=0.70, step=0.7, clump=1),  # dry-coat → blocks CAM–CAM
         'handmix':  dict(regime='bulk',       k=8, surface_frac=0.30, step=0.9, clump=4),
     },
-    'VGCF': {    # 1D fibre — morph = intended fibre treatment (TBD A4/lit; not yet seeded per-mixing)
-        'ballmill': dict(regime='bulk',       morph='gently wavy fibre, well dispersed'),
-        'thinky':   dict(regime='coat_embed', morph='embedded in porous SE coat (Kim2025: σ_e recovers)'),
-        'handmix':  dict(regime='bulk',       morph='long, clustered (gentle mix)'),
+    'VGCF': {    # 1D fibre — ★ 'coat_embed' label RETIRED (2026-07-10, A4 closure): a 10µm stiff fibre
+        # cannot 'coat' a 5µm NCM — the label never matched fibre physics (placement = bulk interstices
+        # + buckle/align), and the Kim2025 coating concern is CARBON-BLACK's (coat_block), not fibres'.
+        # → VGCF thinky ≡ ballmill by physics, not by TODO.
+        'ballmill': dict(regime='bulk', morph='gently wavy fibre, well dispersed'),
+        'thinky':   dict(regime='bulk', morph='gently wavy fibre (coat_embed retired — fibres do not coat)'),
+        'handmix':  dict(regime='bulk', morph='long, clustered (gentle mix)'),
     },
     'SDCP': {    # self-doped conductive binder — MANUSCRIPT morphology: 0.2-0.5µm PARTICLES dispersed in the
         # composite (Fig S3), sulfonate-ANCHORED to NCM where they touch (E_bind −4.8 eV INTERIM MLIP);
         # NOT a conformal film (the coat picture was the pre-manuscript proxy).  surface_frac here = the
         # AM-anchored fraction of particles (anchoring-affinity bias; MAGNITUDE un-anchored §F1 hook —
         # S3 shows particles both at NCM surfaces and in SE regions).
-        'ballmill': dict(regime='particle', surface_frac=0.5, morph='dispersed 0.3µm particles, NCM-anchor bias'),
-        'thinky':   dict(regime='particle', surface_frac=0.5, morph='dispersed 0.3µm particles, NCM-anchor bias'),
-        'handmix':  dict(regime='particle', surface_frac=0.3, morph='poorer dispersion (§F1 hook)'),
+        # clump = anchored-CLUSTER size at NCM surfaces (ordered-mixing: fine guest particles decorate the
+        # coarse host; sulfonate anchoring enhances + selects NCM).  Default 1 = S3-faithful singles;
+        # >1 tests the user's NCM-cluster hypothesis (§F1 hook; SBE/DBE payload proximity will discriminate).
+        'ballmill': dict(regime='particle', surface_frac=0.5, clump=1, morph='dispersed 0.3µm particles, NCM-anchor bias'),
+        'thinky':   dict(regime='particle', surface_frac=0.5, clump=1, morph='dispersed 0.3µm particles, NCM-anchor bias'),
+        'handmix':  dict(regime='particle', surface_frac=0.3, clump=3, morph='poorer dispersion → NCM-surface clusters (§F1 hook)'),
     },
     'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
         'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),

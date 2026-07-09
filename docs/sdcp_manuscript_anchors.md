@@ -31,3 +31,36 @@
   σ_y=1.0 rigid-proxy(§F1), **CFL dt 가드**(additive E가 SE 스택 초과 시 dt 캡 — VGCF 10도 소급 커버),
   metadata morphology/E_anchor/variant/INTERIM
 - 유지: doped/neutral variant(coh·econn 처리), E_bind INTERIM(−4.8/−3.0 MLIP, DFT U-ramp 대기), ρ1.3 proxy(methods 대기)
+
+## ★ 구조 정정 + E_bind 무효화 + cluster 가설 (2026-07-10) ★
+**분자 구조가 달랐다** (사용자 발견, Fig 2a/S5 대조):
+- 이전 DFT monomer: **C₁₁H₁₅O₅S₂** — 곧은 pentyl 사슬 말단 1차 술폰산 (EDOT–(CH₂)₅–SO₃H형)
+- 실제 SDCP monomer: **C₁₁H₁₆O₆S₂** — `ring–CH₂–O–CH₂CH₂–CH(CH₃)–SO₃H` (EDOT-MeOH + methyl-sultone
+  개환, S5).  차이: ① **ether –O– 링커** (O5→O6 — ether O 고립전자쌍의 표면 Li⁺ 배위 채널을 이전 모델이
+  원천 누락; sulfonate+ether **chelation** 가능성) ② 말단 1차 → **methyl-분지 2차 술폰산** (입체/전자환경)
+  ③ footprint/배좌 상이.
+- ⇒ **E_bind −4.797/−3.020 eV 및 γ 0.93/0.42 J/m² 전면 무효** (`INVALID_WRONG_MONOMER`) — 재계산 스펙:
+  올바른 monomer(위 구조; doped = 중성 radical charge0 doublet), 동일-세팅 refs(slab 공유), 다중 시작
+  배향에 **ether-O-down/chelation 계열 포함**, PBC-aware H 확인, 수렴 후 DFT U-ramp 교차검증 + footprint
+  재측정 → γ 재산출.  방향(doped≫neutral)은 bollard 사다리·술폰산 화학으로 개연 유지되나 **수치는 백지**.
+
+**NCM 주위 cluster 가설 (사용자) — 물리 판정: 그럴 수 있음 (강함)**:
+- **ordered/interactive mixing**: 건식 혼합에서 미세 guest 입자(0.2-0.5µm SDCP)는 부착력이 자중을 압도해
+  조대 host(5µm NCM) 표면에 부착·장식됨 — 분체공학 표준 메커니즘 (제약 dry-coating/ordered mixture 문헌).
+- **화학 선택성**: 술폰산-산화물(NCM) 이온성 앵커 ≫ 황화물(LPSCl) 상호작용 → NCM-선택적 장식 개연
+  (pellet 호환성은 매뉴스크립트 σ 유지로 확인).  bollard 논문의 NMC 표면 앵커-patch EDS가 유사 선례.
+- 반증 관찰: S3 (전극 표면)는 주로 SE 영역의 단독 입자 — NCM-인접 clustering은 S3 시야로 판정 불가.
+- **모델 반영**: `--sdcp-clump` (process-row 기본 bm/thinky **1** = S3-충실 단독; handmix 3; >1 = cluster
+  가설 시험) — anchored 몫을 AM 표면 cluster 중심 + 주변 산포로 시딩.  판별 도구 = SBE/DBE payload의
+  SDCP→AM 근접 분석 (drape-식) + 실험 SEM/EDS.
+
+## A4 마감 계획 (2026-07-10, "SDCP와 같이 닫기")
+① VGCF `coat_embed` — **은퇴로 해결**: 10µm 강성 섬유는 5µm NCM을 '코팅' 못 함 (라벨이 처음부터 섬유
+   물리와 불일치; Kim2025 코팅 우려는 carbon-black 것).  VGCF thinky ≡ ballmill이 물리로 확정 (기록
+   데이터와 정합).  dead-cond 제거.
+② SuperP thinky **divergence 검증런 1개** (마지막 관문): SuperP 2wt% thinky vs 기록된 ballmill 2wt%.
+   사전등록: porosity **11.94 동일**(volume-pin) / **SE-cov 하락**(film이 AM|SE 계면 점유 — Kim2025 σ_i
+   차단의 구조적 기반, emergent) / **add-cov AM_S ≫ 35.8**(film이 AM 표면 sf 0.70로 도포) / metadata
+   `coat:{shell 0.2, surface_frac 0.70}` + cb_mix 부재.
+③ σ_e 방향(coat_block → σ_e 붕괴) = 저항 수준 = webapp whatif ✓ / 구조-수준은 STEP3 Kirchhoff 몫 (econn
+   binary는 표현 불가 — 명시 완료).  ①②완료 시 **A4 CLOSED**.

@@ -347,6 +347,11 @@ def parse_args(argv):
                     help='SDCP coat coverage fraction per AM sphere (spherical-cap area).  <0 = AUTO from '
                          '--mixing (ballmill/thinky 1.0 conformal; handmix 0.6 patchy).  MAGNITUDE a '
                          'conservative tunable hook, NOT anchored (backlog §F1) — SEM will anchor it.')
+    ap.add_argument('--sdcp-clump', type=int, default=-1,
+                    help='SDCP anchored-cluster size at NCM surfaces (ordered-mixing decoration).  <=0 = AUTO '
+                         'from the process row (ballmill/thinky 1 = S3-faithful singles; handmix 3).  >1 seeds '
+                         'clusters of that size at AM surfaces — tests the NCM-cluster hypothesis; MAGNITUDE '
+                         'un-anchored §F1 hook (payload SDCP→AM proximity + SEM/EDS discriminate).')
     ap.add_argument('--dilate-z', type=float, default=1.0,
                     help='STIFF-FIBRE BED DILATION: stretch the frozen scaffold (AM + SE seed) z-offsets by this '
                          'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
@@ -827,9 +832,26 @@ def main(argv):
                     _sfrac = (float(args.sdcp_surface_frac) if (code == 5 and args.sdcp_surface_frac >= 0.0)
                               else float(_row.get('surface_frac', 0.5)))
                     _n_am = int(round(nobj * _sfrac)); _n_bulk = max(nobj - _n_am, 0)
-                    _pa, _fa = _ad.seed_coat(_n_am, bx, dx, rng, am=am_box, shell_um=(_ad.SDCP_D / 2) / um_box,
-                                             surface_frac=1.0, in_am=lambda q: _in_am_abs(q + off),
-                                             return_ids=True) if _n_am > 0 else (np.zeros((0, 3), np.float32), np.zeros(0, np.int32))
+                    _clump = max(1, int(args.sdcp_clump) if args.sdcp_clump > 0 else int(_row.get('clump', 1)))
+                    if _n_am > 0 and _clump > 1:
+                        # NCM-surface CLUSTERS (user hypothesis, ordered-mixing physics): seed cluster
+                        # CENTRES on the AM surfaces, scatter `clump` members ~1 particle-Ø around each.
+                        _nc = max(1, _n_am // _clump)
+                        _ctr, _fc = _ad.seed_coat(_nc, bx, dx, rng, am=am_box, shell_um=(_ad.SDCP_D / 2) / um_box,
+                                                  surface_frac=1.0, in_am=lambda q: _in_am_abs(q + off), return_ids=True)
+                        if len(_ctr):
+                            _rep = np.repeat(np.arange(len(_ctr)), _clump)[:_n_am]
+                            _pa = (_ctr[_rep] + rng.normal(scale=_ad.SDCP_D / um_box, size=(len(_rep), 3))).astype(np.float32)
+                            _ok = ((_pa >= 0) & (_pa < np.array(bx, np.float32))).all(1)
+                            _pa = _pa[_ok]
+                            _ok2 = ~np.array([_in_am_abs(q + off) for q in _pa]) if len(_pa) else np.zeros(0, bool)
+                            _pa = _pa[_ok2]; _fa = _fc[_rep][_ok][_ok2]
+                        else:
+                            _pa, _fa = np.zeros((0, 3), np.float32), np.zeros(0, np.int32)
+                    else:
+                        _pa, _fa = _ad.seed_coat(_n_am, bx, dx, rng, am=am_box, shell_um=(_ad.SDCP_D / 2) / um_box,
+                                                 surface_frac=1.0, in_am=lambda q: _in_am_abs(q + off),
+                                                 return_ids=True) if _n_am > 0 else (np.zeros((0, 3), np.float32), np.zeros(0, np.int32))
                     _pb = np.column_stack([rng.uniform(0, bx[0], _n_bulk), rng.uniform(0, bx[1], _n_bulk),
                                            rng.uniform(0, bx[2], _n_bulk)]).astype(np.float32)
                     if len(_pb):
@@ -839,7 +861,7 @@ def main(argv):
                     _fid = np.concatenate([_fa, np.arange(len(_pb), dtype=np.int32) + (int(_fa.max()) + 1 if len(_fa) else 0)])
                     _w = np.ones(len(pts), np.float32)
                     _coated = True                            # metadata: coat dict records the anchored share
-                elif kind == 'coat' or _proc_regime in ('coat_block', 'coat_embed'):
+                elif kind == 'coat' or _proc_regime == 'coat_block':   # coat_embed RETIRED (fibres don't coat)
                     # A4 COAT REGIME: points seeded in a thin shell ON the AM surfaces — SDCP anchored film
                     # (default) or SuperP thinky dry-coat (coat_block: carbon film at the AM|SE interface;
                     # its σ_i-blocking emerges as an SE-coverage drop, Kim 2025 direction).  Film thickness
@@ -934,8 +956,10 @@ def main(argv):
                     _add_meta[nm]['E_anchor'] = 'AFM_S6_23.6GPa'
                     _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
                     _add_meta[nm]['coh_sdcp'] = float(_coh)
-                    _add_meta[nm]['anchor_E_bind_eV'] = -3.02 if args.sdcp_neutral else -4.80   # INTERIM (uma-s-1p1 MLIP,
-                    _add_meta[nm]['anchor_status'] = 'INTERIM_MLIP_DFT_pending'                 #  consistent-ref; NOT final — DFT U-ramp pending)
+                    _add_meta[nm]['clump'] = max(1, int(args.sdcp_clump) if args.sdcp_clump > 0 else int(_ad.additive_process(nm, args.mixing).get('clump', 1)))
+                    _add_meta[nm]['anchor_status'] = 'INVALID_WRONG_MONOMER_recompute_pending'   # 2026-07-10: 이전 E_bind(−4.8/−3.0)는
+                    #   곧은-pentyl C11H15O5S2로 계산됨 — 실제 SDCP는 ether-O 링커 + methyl-분지 2차 술폰산
+                    #   (C11H16O6S2, Fig2a/S5).  ether-O의 Li 배위 채널 누락 → 값·기하 전면 재계산 필요.
     n = len(xs)                                               # final count (incl additives)
     xs[:, :2] = np.clip(xs[:, :2], 2.0 * dx, 1.0 - 2.0 * dx)   # lateral stencil inside [0,n_grid)
     xs[:, 2] = np.clip(xs[:, 2], 2.0 * dx, (nz - 2) * dx)      # z stencil inside [0,nz) (= 1-2dx when cubic)
