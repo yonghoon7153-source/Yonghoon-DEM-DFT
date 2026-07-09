@@ -64,10 +64,11 @@ Li metal = 가장 **환원적인** 환경(0 V). B–S/P–O가 버틴 건 환원
 3. "B₂O₃ doping neither improves nor degrades electrochemical stability: oxidation onset and the vulnerable free-S site are unchanged, and interfacial decomposition kinetics match the undoped electrolyte."
 4. "A thin-slab control revealed a ~2× cell-size artifact in interfacial decomposition metrics, underscoring the need for same-frame controlled comparisons."
 5. "A termination scan shows the protection mode is geometry-dependent: buried dopants remain inert spectators (decomposition kinetics equal to undoped), whereas a B-exposed termination undergoes sacrificial lithiation (B–S 3.00→1.50, B–Li→5.0–5.5) that protects the host — PS₄ loss drops to 8±2% versus 22±0% for the P-exposed undoped control at the same cleave, and Li penetration is arrested. In no tested geometry does doping degrade the interface."
+6. "A clean-build front-line test (cleave-integrity audited) shows that even the strongest dopant-derived bond is not immune at direct metallic contact: an exposed PS₂O₂ tetrahedron loses both intact P–O bonds within 100 ps (exposed O ending in a Li₂O-like environment) and degrades faster than the intact-PS₄ control at the same depth (34±2% vs 22±3% P–S loss). The front-line hierarchy — B-fronted 8% ≪ PS₄ ~22% ≲ PS₂O₂ ~34% — establishes that protection at a Li-metal contact arises only from burial or from a sacrificial product that stays anchored at the interface (realized only by B)."
 
 ## 5. 정직한 한계
 - **100 ps = 초기 단계**: 양쪽 다 분해 진행 중(미수렴) — 절대 분해량이 아니라 **비교(동등/보호)**만 인용. B-노출 방패층의 장기 자기제한 여부도 100 ps 밖.
-- ~~표면 종단 1종/프레임~~ → **c-roll 종단 스캔(2026-07-09)**: 매몰 원기하 + B-노출(0.51, **build 무결 감사 통과 → 방패 판정 유효**) + O-노출(0.16 — **build artifact 판명**: cleave가 최전선 P의 S 3개를 잘라놓은 파편이라 최전선 판정 철회, 매몰-보호 확인만 유효; `audit_cleave_bonds.py` 신설) (`interface_termination_scan.csv`). **재시험 roll 0.71**(온전 PS₂O₂ O-up vs 같은 깊이 온전 PS₄ 통제) MD 대기. 남은 것: 종단당 n=2 seed·cleave 높이 1종, 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색.
+- ~~표면 종단 1종/프레임~~ → **c-roll 종단 스캔 완결(2026-07-09)**: 매몰 원기하 + B-노출(0.51, 감사 통과 → **방패**) + 0.16(artifact 철회, `audit_cleave_bonds.py` 신설) + **0.71 clean 재시험 완결** (PS₂O₂ 34±2% vs PS₄ 통제 22±3% — O 코너 비보호·가속 방향; P–O도 접촉면 절단 = **세 게이트 전멸**, s3 per-atom 도장만 대기). 최전선 위계: **B 8 ≪ PS₄ ~22 (두 cleave 재현) ≲ PS₂O₂ ~34**. 남은 것: 종단당 n=2 seed, 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색.
 - MLIP 반응상(Li₃P/Li₂S) 정확도는 DFT 단발 검증 미실시(선택 과제) — "동등" 결론은 리스크 낮음; **B-노출의 Li–B–S 산물층은 MLIP 의존이 커서 "MLIP 수준" 명시하고 인용**.
 - CIF 스냅샷은 seed-s2 대표 1개 (통계는 곡선/CSV가 담당).
 

@@ -29,8 +29,22 @@ mc2x_r016,0.16,none-exposed CONTROL,P min depth 4.9 (buried),3,3.90,2.90,25.6,1.
 "# BUILD-INTEGRITY CROSS-CHECK (same audit): roll 0.51 pair was CLEAN -- b2o3 BS3 3/3 intact (both B), mc2x PS4 4/4 intact (P@1.7/8.7 A)"
 "#   -> the B-exposed sacrificial-shield verdict is unaffected (intact units on both sides of that comparison)."
 "# GATES MEASURED AT DIRECT CONTACT so far: P-S +0.10 (r051, intact) and B-S +0.75 (Bexp, intact) both fall; P-O +1.61 = STILL UNTESTED."
-"# CLEAN RETEST FOUND: roll_c 0.71 exposes an INTACT PS2O2 tetrahedron with BOTH O pointing up (O@1.6/1.8, parent P@2.1, cage 4/4,"
-"#   nothing severed in top 8A) and the control exposes an INTACT PS4 at the SAME depth 2.1A -> perfect front-line pair; MD queued."
+"# CLEAN RETEST roll 0.71 (build audited 4/4 both sides) -- COMPLETED 2026-07-09 evening, per-seed rows:"
+b2o3_O71,0.71,PS2O2-exposed (2 O up),O@1.6+1.8 P@2.1 intact,2,3.50,2.25,35.7,1.22,2.63,10,3.00,3.00,1.00,1.00
+b2o3_O71,0.71,PS2O2-exposed (2 O up),O@1.6+1.8 P@2.1 intact,3,3.50,2.38,32.0,1.12,2.00,10,3.00,3.00,1.00,2.00
+mc2x_r071,0.71,PS4-exposed CONTROL,P@2.1 intact cage 4/4,2,3.60,2.70,25.0,0.75,1.40,9,,,,
+mc2x_r071,0.71,PS4-exposed CONTROL,P@2.1 intact cage 4/4,3,3.60,2.90,19.4,0.68,1.00,6,,,,
+"# ROLL-0.71 VERDICT (clean front-line tetrahedron pair, seeds non-overlapping: doped min 32.0 > control max 25.0):"
+"#   PS2O2 loses 33.9+/-1.9 % vs PS4 22.2+/-2.8 % at the same depth -> the O corners do NOT protect the front-line"
+"#   tetrahedron at direct Li contact; if anything they accelerate its collapse (hypothesis: P-O cleavage leaves a"
+"#   2-S-remnant with a lower collapse threshold -- mechanistic reading, labeled as such)."
+"#   Per-atom (s2, audited-clean build): the intact P-O bonds DID break during the 100 ps production (P-O 2->0,"
+"#   exposed O -> Li2O-like O-Li 5-6) -> the highest sigma* gate (+1.61 eV) falls at direct contact on a CLEAN build."
+"#   (s3 per-atom stamp pending; s3 aggregates fully consistent.) Buried B 3.00->3.00 and buried O 1->1 continue perfect."
+"# FRONT-LINE HIERARCHY at direct Li contact (100 ps, PS4-bond loss): B-fronted 8.4+/-1.8 %  <<  PS4-fronted ~22 %"
+"#   (r051 22.2/22.2 and r071 25.0/19.4 -- consistent across two different cleaves)  <~  PS2O2-fronted 33.9+/-1.9 %."
+"#   => ALL THREE sigma* gates (P-S +0.10 / B-S +0.75 / P-O +1.61) fail at the contact plane on clean builds;"
+"#      protection comes only from burial, or from a sacrificial product that stays anchored (B only)."
 "# LESSON: run tools/oxidation/audit_cleave_bonds.py before EVERY roll_c MD launch (roll+cleave severs c-boundary-crossing bonds)."
 "# Combined with the buried-geometry campaign (interface_campaign_summary.csv: 22+/-9 vs 26+/-0 % = equal):"
 "#   TERMINATION DECIDES THE MODE -- buried dopants = inert survivors (kinetics equal); B-exposed termination = sacrificial shield (host protected)."
