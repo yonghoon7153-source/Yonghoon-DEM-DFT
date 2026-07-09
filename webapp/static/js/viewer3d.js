@@ -157,6 +157,7 @@ function buildControls(container, isMPM) {
     <label style="font-size:11px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
     <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
     <hr>
+    <button data-action="analysisSummary">📊 분석 요약</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>` : `
@@ -3316,6 +3317,175 @@ function setLegend(state, html) {
   if (el) el.innerHTML = html;
 }
 
+/* ── MPM 분석 요약 (Analysis Summary) ──────────────────────────
+ * Client-side, payload-only (no server round-trip).  One paper-style
+ * small-multiples canvas: 전체 분포 (histograms over ALL AM), z별 분포
+ * (depth profiles), 손실분담 bars + transport scalars.  Works on any
+ * payload that already carries per-AM je/coverage/r/z + step3/econn. */
+function showMPMAnalysisSummary(state) {
+  const AMs = [];
+  ['AM_P', 'AM_S'].forEach(ty => {
+    const m = state.meshes && state.meshes[ty];
+    if (m && m.userData && m.userData.particles) m.userData.particles.forEach(p => AMs.push(p));
+  });
+  const mm = (state.data && state.data.mpm_metrics) || {};
+  const s3 = mm.step3 || (state.data && state.data.step3) || {};
+  const ec = mm.econn_summary || (state.data && state.data.econn_summary) || {};
+  const num = (arr) => arr.filter(v => v !== undefined && v !== null && isFinite(v));
+  const jeV = num(AMs.map(p => p.je));
+  const covPctAll = num(AMs.map(p => p.coverage)).map(v => v <= 1.0 ? v * 100 : v);
+  const rV = num(AMs.map(p => p.r));
+  const zPairs = (getter) => AMs.filter(p => isFinite(p.z) && isFinite(getter(p))).map(p => ({ z: p.z, v: getter(p) }));
+
+  const W = 1060, pad = 18, cols = 3;
+  const colW = (W - pad * (cols + 1)) / cols;
+  const chH = 196, titleH = 22, rowH = titleH + chH + 20;
+  const top0 = 44, headH = 118, rows = 3;
+  const H = top0 + headH + rows * rowH + 16;
+  const cvs = document.createElement('canvas');
+  const DPR = 2; cvs.width = W * DPR; cvs.height = H * DPR;
+  const ctx = cvs.getContext('2d'); ctx.scale(DPR, DPR);
+  ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
+
+  function fmtNum(v) {
+    if (v === 0) return '0';
+    const a = Math.abs(v);
+    if (a >= 1e4 || a < 1e-2) return v.toExponential(1);
+    if (a >= 100) return v.toFixed(0);
+    if (a >= 1) return v.toFixed(1);
+    return v.toFixed(2);
+  }
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
+  }
+  const cellXY = (idx) => {
+    const c = idx % cols, r = Math.floor(idx / cols);
+    return [pad + c * (colW + pad), top0 + headH + r * rowH];
+  };
+  function axes(x, y, w, h, title) {
+    ctx.fillStyle = '#374151'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(title, x, y + 14);
+    const px = x + 8, py = y + titleH, pw = w - 14, ph = h - 26;
+    ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + ph); ctx.lineTo(px + pw, py + ph); ctx.stroke();
+    return [px, py, pw, ph];
+  }
+  function note(x, y, w, h, title, msg) {
+    ctx.fillStyle = '#374151'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
+    ctx.fillText(title, x, y + 14);
+    ctx.fillStyle = '#9ca3af'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(msg, x + w / 2, y + titleH + (h - titleH) / 2); ctx.textAlign = 'left';
+  }
+  function hist(idx, vals, title, unit, color) {
+    const [x, y] = cellXY(idx);
+    if (!vals.length) { note(x, y, colW, chH, title, 'STEP3/데이터 없음'); return; }
+    const [px, py, pw, ph] = axes(x, y, colW, chH, title);
+    const lo = Math.min(...vals), hi = Math.max(...vals), span = (hi - lo) || 1, nb = 22;
+    const bins = new Array(nb).fill(0);
+    vals.forEach(v => { bins[Math.min(nb - 1, Math.floor((v - lo) / span * nb))]++; });
+    const mx = Math.max(...bins) || 1, bw = pw / nb;
+    ctx.fillStyle = color;
+    bins.forEach((b, i) => { const bh = b / mx * ph; ctx.fillRect(px + i * bw + 0.5, py + ph - bh, Math.max(0.5, bw - 1), bh); });
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
+    ctx.fillStyle = '#6b7280'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText(fmtNum(lo), px, py + ph + 11); ctx.fillText(fmtNum(hi), px + pw, py + ph + 11);
+    ctx.textAlign = 'left'; ctx.fillText(unit, px, py - 2);
+    ctx.fillStyle = '#111827'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText('μ=' + fmtNum(mean) + '  n=' + vals.length, px + pw, py + 10); ctx.textAlign = 'left';
+  }
+  function zprofile(idx, pairs, title, unit, color, agg) {
+    const [x, y] = cellXY(idx);
+    if (!pairs.length) { note(x, y, colW, chH, title, 'STEP3/데이터 없음'); return; }
+    const [px, py, pw, ph] = axes(x, y, colW, chH, title);
+    const zhi = Math.max(...pairs.map(p => p.z), mm.thickness_um || 1), nb = 12, span = zhi || 1;
+    const sum = new Array(nb).fill(0), cnt = new Array(nb).fill(0);
+    pairs.forEach(p => { const b = Math.min(nb - 1, Math.floor(p.z / span * nb)); sum[b] += p.v; cnt[b]++; });
+    const yv = sum.map((s, i) => agg === 'count' ? cnt[i] : (cnt[i] ? s / cnt[i] : 0));
+    const ymx = Math.max(...yv, 1e-30), bw = pw / nb;
+    ctx.fillStyle = color;
+    yv.forEach((v, i) => { const bh = v / ymx * ph; ctx.fillRect(px + i * bw + 0.5, py + ph - bh, Math.max(0.5, bw - 1), bh); });
+    ctx.fillStyle = '#6b7280'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText('0(하단)', px + 12, py + ph + 11); ctx.fillText(fmtNum(zhi) + 'µm(plate)', px + pw - 12, py + ph + 11);
+    ctx.textAlign = 'left'; ctx.fillText(unit, px, py - 2);
+    ctx.fillStyle = '#111827'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
+    ctx.fillText('max=' + fmtNum(ymx), px + pw, py + 10); ctx.textAlign = 'left';
+  }
+  function bars(idx, entries, title) {
+    const [x, y] = cellXY(idx);
+    const es = Object.entries(entries || {}).filter(([k, v]) => isFinite(v) && v > 0).sort((a, b) => b[1] - a[1]);
+    if (!es.length) { note(x, y, colW, chH, title, '데이터 없음'); return; }
+    const [px, py, pw, ph] = axes(x, y, colW, chH, title);
+    const bh = Math.min(30, ph / es.length - 6);
+    const palb = ['#2563eb', '#dc2626', '#16a34a', '#d97706', '#7c3aed', '#0891b2'];
+    es.forEach(([k, v], i) => {
+      const yy = py + i * (bh + 6) + 4;
+      ctx.fillStyle = palb[i % palb.length]; ctx.fillRect(px, yy, Math.max(1, v * pw), bh);
+      ctx.fillStyle = '#111827'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
+      ctx.fillText(k + '  ' + (100 * v).toFixed(1) + '%', px + 4, yy + bh - 7);
+    });
+  }
+
+  // title + scalar chips
+  ctx.fillStyle = '#111827'; ctx.font = 'bold 17px sans-serif'; ctx.textAlign = 'left';
+  ctx.fillText('분석 요약 — ' + ((state.data && state.data.case) || 'MPM 전극'), pad, 26);
+  const chips = [
+    ['σ_e_eff', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['σ_ion_eff', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['R_geom', s3.collector_geometric ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
+    ['porosity', mm.porosity_settled_pct != null ? Number(mm.porosity_settled_pct).toFixed(2) + ' %' : '—'],
+    ['thickness', mm.thickness_um != null ? Number(mm.thickness_um).toFixed(1) + ' µm' : '—'],
+    ['N(AM)', String(mm.n_AM || AMs.length)],
+    ['econn 연결', ec.connected_pct != null ? Number(ec.connected_pct).toFixed(1) + ' %' : '—'],
+    ['carbon clusters', ec.n_carbon_clusters != null ? String(ec.n_carbon_clusters) : '—'],
+  ];
+  const chipGap = 10, chipW = (W - pad * 2 - chipGap * 3) / 4, chipH = 46;
+  chips.forEach((c, i) => {
+    const x = pad + (i % 4) * (chipW + chipGap), y = top0 + Math.floor(i / 4) * (chipH + 10);
+    ctx.fillStyle = '#f3f4f6'; roundRect(x, y, chipW, chipH, 6); ctx.fill();
+    ctx.fillStyle = '#6b7280'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left'; ctx.fillText(c[0], x + 10, y + 17);
+    ctx.fillStyle = '#111827'; ctx.font = 'bold 14px sans-serif'; ctx.fillText(c[1], x + 10, y + 37);
+  });
+
+  // ① 전체 분포 (histograms)
+  hist(0, jeV, '① |J_z| 전자전류밀도 분포 (전체 AM)', '상대 |J_z|', '#dc2626');
+  hist(1, covPctAll, '② Coverage 분포 (AM 표면 SE 덮임)', '%', '#2563eb');
+  hist(2, rV, '③ 입자 반경 r 분포', 'µm', '#16a34a');
+  // ② z별 분포 (depth profiles)
+  zprofile(3, zPairs(p => p.je), '④ 평균 |J_z| vs z (깊이 프로파일)', '⟨|J_z|⟩', '#dc2626', 'mean');
+  zprofile(4, zPairs(p => (p.coverage <= 1 ? p.coverage * 100 : p.coverage)), '⑤ 평균 coverage vs z', '⟨cov⟩ %', '#2563eb', 'mean');
+  zprofile(5, zPairs(() => 1), '⑥ AM 입자 수 vs z', 'count', '#6b7280', 'count');
+  // ③ 손실분담 + econn
+  bars(6, s3.dissipation_share, '⑦ 전자 손실(발열) 분담');
+  bars(7, s3.ion_dissipation_share, '⑧ 이온 손실 분담 (Li⁺ 경로)');
+  zprofile(8, zPairs(p => (p.econn === undefined ? NaN : p.econn)), '⑨ 집전체 연결 비율 vs z', '연결 fraction', '#7c3aed', 'mean');
+
+  // modal
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:1120px;max-width:97vw">
+      <button class="path-modal-close">&times;</button>
+      <div style="font-size:14px;font-weight:bold;text-align:center;margin-bottom:8px">📊 분석 요약</div>
+      <div id="mpm-sum-wrap" style="max-height:80vh;overflow:auto;text-align:center"></div>
+      <div class="path-modal-actions">
+        <button id="mpm-sum-png">PNG 다운로드</button>
+        <button id="mpm-sum-close">닫기</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  cvs.style.width = W + 'px'; cvs.style.height = H + 'px'; cvs.style.maxWidth = '100%';
+  overlay.querySelector('#mpm-sum-wrap').appendChild(cvs);
+  const close = () => overlay.remove();
+  overlay.querySelector('.path-modal-close').addEventListener('click', close);
+  overlay.querySelector('#mpm-sum-close').addEventListener('click', close);
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+  overlay.querySelector('#mpm-sum-png').addEventListener('click', () => {
+    const a = document.createElement('a'); a.href = cvs.toDataURL('image/png');
+    a.download = 'mpm_analysis_summary.png'; document.body.appendChild(a); a.click(); a.remove();
+  });
+}
+
 /* ── wire up control panel ─────────────────────────────────── */
 function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
   /* View Mode dropdown */
@@ -3452,6 +3622,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         showPathOnlyView(renderer, scene, camera, state);
       } else if (action === 'amCloseup') {
         showAMCloseupView(state);
+      } else if (action === 'analysisSummary') {
+        showMPMAnalysisSummary(state);
       }
     });
   });
