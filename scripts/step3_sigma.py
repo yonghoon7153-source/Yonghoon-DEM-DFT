@@ -130,7 +130,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     cond = sig > 0
     if not cond.any():
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
-                'unconverged': False}
+                'unconverged': False, 'reason': 'no_conductive_voxels'}
     occ = np.where(cond.any((0, 1)))[0]
     k_bot = int(occ[0])
     am_occ = np.where((((sid == 1) | (sid == 2)) & cond).any((0, 1)))[0]
@@ -143,7 +143,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     z_plate = min(z_plate, nz * vox)
     if z_plate - z_b <= 1.5 * vox:                         # degenerate (≈1-layer bed) → no through-path
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False}
+                'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed'}
     band = plate_band_um if plate_band_um is not None else (vox + 0.10)
     zc = (np.arange(nz) + 0.5) * vox                       # voxel-centre heights
     # PER-COLUMN SINGLE CONTACT (review F1, final form): each lateral column couples to a plate
@@ -158,7 +158,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     top_m = any_c & (z_plate - zc[k_last] <= band)
     if not bot_m.any() or not top_m.any():
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False}
+                'resid': 0.0, 'unconverged': False,
+                'reason': f'no_plate_contact(bot={int(bot_m.sum())},top={int(top_m.sum())},'
+                          f'z_b={z_b:.2f},z_plate={z_plate:.2f},band={band:.2f})'}
     # FLOATING ISLANDS (components touching NEITHER plate contact) = singular blocks, zero current
     # by physics → dropped (their je reads 0).
     lab, _nl = ndimage.label(cond)                         # 6-connectivity = the face-coupling graph
@@ -172,7 +174,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     n_dof = int(cond.sum())
     if n_dof == 0:
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
-                'resid': 0.0, 'unconverged': False}
+                'resid': 0.0, 'unconverged': False, 'reason': 'all_floating_dropped'}
     sig = np.where(cond, sig, 0.0)
     idx = -np.ones(sid.shape, np.int64)
     idx[cond] = np.arange(n_dof)
@@ -242,6 +244,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
 def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     """Mean |J_z| PROXY per AM particle (z-face current g·Δφ ∝ J_z·vox² — run-relative, the
     viewer percentile-normalizes; NOT vox-invariant across runs) — the slide-20 axis."""
+    if 'phi' not in res:                                   # early-returned solve (see res['reason'])
+        return np.zeros(n_am, np.float64)
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
     jz = np.zeros(sid.shape, np.float64)
@@ -260,6 +264,8 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
 
 def phase_current_share(res, sid, sigma_of_sid):
     """Fraction of total dissipation per σ-id (where the current actually flows)."""
+    if 'phi' not in res:
+        return {}
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
     diss = np.zeros(sid.shape, np.float64)

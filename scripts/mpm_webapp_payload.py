@@ -481,9 +481,15 @@ def main():
                                        se_pts=_septs)      # SE stamped (sid 6) → ionic solve on the same grid
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
                               0.0])                        # ELECTRONIC table: SE = e-insulator
+            _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
+            #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
+            #   crowns (kgy first run: no_plate_contact); the sim thickness is the physical plate.
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                       z_top_um=(top - FLOOR) * UM, z_bot_um=0.0)   # plates = collector plane + bed thickness (continuous µm)
-            if _res3['n_dof']:
+                                      z_top_um=_ztop, z_bot_um=0.0)
+            if _res3.get('reason'):
+                print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
+                step3 = {'sigma_e_eff_S_cm': 0.0, 'reason': _res3['reason'], 'vox_um': a.step3_vox}
+            elif _res3['n_dof']:
                 je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
                                       nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
@@ -509,7 +515,7 @@ def main():
                 _t1 = _time.time()
                 _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se])
                 _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
-                                           z_top_um=(top - FLOOR) * UM, z_bot_um=0.0)
+                                           z_top_um=_ztop, z_bot_um=0.0)
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
