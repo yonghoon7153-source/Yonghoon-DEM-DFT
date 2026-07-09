@@ -96,6 +96,16 @@ const _RDYLGN = [
   [0.75, 0xa6, 0xd9, 0x6a],
   [1.00, 0x1a, 0x96, 0x41],
 ];
+function jetColor(t) {
+  // paper-style jet (0 = deep blue → cyan → green → yellow → red = hot): current-density maps
+  // read as a blue field with sparse hot paths, like tomography-FEM figures.
+  t = Math.max(0, Math.min(1, t));
+  const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
+  const g = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 2)));
+  const b = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 1)));
+  return (Math.round(255 * r) << 16) | (Math.round(255 * g) << 8) | Math.round(255 * b);
+}
+
 function rdylgnColor(t) {
   t = Math.max(0, Math.min(1, t));
   for (let i = 0; i < _RDYLGN.length - 1; i++) {
@@ -154,6 +164,9 @@ function buildControls(container, isMPM) {
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
+    <label style="font-size:11px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
+    <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
+    <hr>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>` : `
@@ -182,6 +195,9 @@ function buildControls(container, isMPM) {
       </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
+    <hr>
+    <label style="font-size:11px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
+    <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
     <hr>
     <label><input type="checkbox" id="path-toggle"> <span style="font-size:11px">Percolating Path</span></label>
     <div id="path-controls" style="display:none">
@@ -1969,15 +1985,15 @@ function applyViewMode(state, mode) {
     }
     const sorted = [...vals].sort((x, y) => x - y);
     const pctl = (p) => sorted[Math.max(0, Math.min(sorted.length - 1, Math.floor(p * (sorted.length - 1))))];
-    const lo = pctl(0.05), hi = Math.max(pctl(0.95), lo * (1 + 1e-9) + 1e-30);
+    const lo = 0, hi = Math.max(pctl(0.98), 1e-30);        // paper convention: 0 = deep blue anchor
     const norm = (v) => Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
     ['AM_P', 'AM_S'].forEach(ty => {
       const m = state.meshes[ty]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
         if (p[fld] === undefined) { m.setColorAt(i, colDim); return; }
-        m.setColorAt(i, new THREE.Color(rdylgnColor(1 - norm(p[fld]))));   // high current = red
+        m.setColorAt(i, new THREE.Color(jetColor(norm(p[fld]))));   // jet: blue field, hot = red
       });
-      m.material.opacity = 0.97; m.material.transparent = true;
+      m.material.opacity = 1.0; m.material.transparent = false;
     });
     flushColors();
     // collector slab (모식 — 두께 과장): thin plate under the bed; dark = primer/wetted, light = bare
@@ -1992,7 +2008,7 @@ function applyViewMode(state, mode) {
       state.additivePointGroup = grp;                     // reuse mode-switch cleanup
       if (state.scene) state.scene.add(grp);
     }
-    const stops = [1, 0.75, 0.5, 0.25, 0].map(v => '#' + rdylgnColor(v).toString(16).padStart(6, '0'));
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     const cg = s3 && s3.collector_geometric;
     const sel = s3 && s3.collector && s3.collector.selected;
     setLegend(state,
@@ -2003,7 +2019,7 @@ function applyViewMode(state, mode) {
       + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm
           <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>low</span><span>|J_z| (p5–p95)</span><span>high</span></div>`
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J_z| (0–p98)</span><span>high</span></div>`
       + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
           + Object.entries(s3.dissipation_share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     return;
@@ -3298,7 +3314,26 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
   if (modeSel) {
     modeSel.addEventListener('change', () => {
       applyViewMode(state, modeSel.value);
+      if (state.applyClip) state.applyClip();              // mode switches create fresh materials
     });
+  }
+
+  /* 단면 뷰 — clipping plane along µm-Y (scene Z): 논문 (b)/(e)식 단면/줌 구도를 어느 모드에서든 */
+  const clipOn = ctrlDiv.querySelector('#clip-on'), clipPos = ctrlDiv.querySelector('#clip-pos');
+  if (clipOn && clipPos) {
+    renderer.localClippingEnabled = true;
+    const applyClip = () => {
+      const box = (state.data && state.data.box) || {};
+      const y0 = box.y_min || 0, y1 = box.y_max || 50;
+      const cut = y0 + (y1 - y0) * (parseFloat(clipPos.value) / 100);
+      state.clipPlanes = clipOn.checked ? [new THREE.Plane(new THREE.Vector3(0, 0, -1), cut)] : null;
+      scene.traverse(o => {
+        if (o.material) { o.material.clippingPlanes = state.clipPlanes; o.material.needsUpdate = true; }
+      });
+    };
+    clipOn.addEventListener('change', applyClip);
+    clipPos.addEventListener('input', applyClip);
+    state.applyClip = applyClip;
   }
 
   ctrlDiv.querySelectorAll('input[type=checkbox]').forEach(cb => {
