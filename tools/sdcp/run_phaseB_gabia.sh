@@ -33,13 +33,14 @@ wait_gpu () {          # $1 = required free MiB on device 0
 }
 
 run_one () {           # $1 = job dir, $2 = required free MiB
-    local j=$1 need=$2 d=$BASE/$j
+    local j=$1 need=$2          # NOTE: keep on its own line -- under `set -u`, a single
+    local d=$BASE/$j            # `local j=$1 d=$BASE/$j` expands $j (unset) before assigning
     if grep -q "JOB DONE" "$d/scf.out" 2>/dev/null; then echo "[$j] already done — skip"; return; fi
     wait_gpu "$need"
     echo "[$j] START $(date)"
     ( cd "$d" && $MPIRUN -np 1 $QE -in scf.in > scf.out 2>&1 )
     if grep -q "JOB DONE" "$d/scf.out"; then
-        e=$(grep '^!' "$d/scf.out" | tail -1 | awk '{print $5}')
+        local e=$(grep '^!' "$d/scf.out" | tail -1 | awk '{print $5}')
         echo "[$j] DONE  E=${e} Ry  $(date)"
     else
         echo "[$j] NOT finished (OOM/error) — rerun script to retry  $(date)"
