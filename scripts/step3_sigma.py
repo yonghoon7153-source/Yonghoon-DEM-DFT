@@ -110,7 +110,7 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
 
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
-                  z_bot_um=None, plate_band_bot_um=None):
+                  z_bot_um=None, plate_band_bot_um=None, bot_allowed=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -161,6 +161,12 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     k_first = np.argmax(cond, axis=2)                      # column's lowest conductive voxel
     k_last = nz - 1 - np.argmax(cond[:, :, ::-1], axis=2)  # column's highest conductive voxel
     bot_m = any_c & (zc[k_first] - z_b <= band_bot)
+    # ANALYTIC contact mask (v3, optional): [nx,ny] bool from EXACT sphere/point z (payload computes
+    # it — gap ≤ 0.1µm bare / ≤ 0.3µm film-wetted).  Voxel-centre bands cannot resolve below
+    # ~half-voxel; the analytic mask removes that blur — the SELECTION is exact, only the coupling
+    # conductance stays voxel-scale.
+    if bot_allowed is not None:
+        bot_m &= np.asarray(bot_allowed, bool)
     top_m = any_c & (z_plate - zc[k_last] <= band)
     if not bot_m.any() or not top_m.any():
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,

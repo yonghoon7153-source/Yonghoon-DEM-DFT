@@ -547,36 +547,69 @@ def main():
                 print(f"  STEP3 collector scenarios: bulk {_ca['ideal_R0']:.3g} → SBE(110Ωcm²) "
                       f"{_ca['SBE_bare_110']:.3g} / DBE(46) {_ca['DBE_bare_46']:.3g} / SBE+C-SUS(30 proxy) "
                       f"{_ca['SBE_CSUS_30_proxy_DBE_anchored']:.3g} S/cm  (R_bulk {_Rbulk:.2g} Ωcm² ≪ 계면)")
-                # ★ BARE-collector GEOMETRIC solve (v2, user request): tighter bottom contact band
-                # (0.5·vox+0.1 = true-contact crowns only vs wetted/primer vox+0.1 film reach) →
-                # the exit current funnels through the crown contacts and the per-AM je map
-                # REDISTRIBUTES near the collector (primer-paper Fig-4d red-box, in 3D via 'jb').
-                # ±half-voxel quantization blur on the contact set — documented, direction robust.
+                # ★ ANALYTIC-GAP GEOMETRIC pair (v3, user: "지금 하자"): the contact SELECTION now
+                # comes from EXACT sphere/point z (no voxel blur — the DEM positions are known
+                # exactly): bare = surface within 0.10µm of the collector (econn contact tol),
+                # wetted = within 0.30µm (0.10 + 200nm primer film reach).  Per-sphere contact
+                # patch on the plane: ρ² = r² − (z_c − tol)² (surface-within-tol footprint);
+                # conductive additive points (2/3/5) with z ≤ tol mark their columns too.
+                # The voxel solve then couples ONLY those columns (selection analytic; coupling
+                # conductance stays voxel-scale).  je = canonical plate, jb = analytic-bare.
+                def _bot_mask(_tol):
+                    _nx2, _ny2 = sid3.shape[0], sid3.shape[1]
+                    _mm2 = np.zeros((_nx2, _ny2), bool)
+                    _gz = _am_c[:, 2] - _am_r
+                    for _i2 in np.where(_gz <= _tol)[0]:
+                        _rho2 = _am_r[_i2] ** 2 - max(_am_c[_i2, 2] - _tol, 0.0) ** 2
+                        if _rho2 <= 0:
+                            continue
+                        _rho = float(np.sqrt(_rho2))
+                        _x0 = max(0, int((_am_c[_i2, 0] - _rho) / a.step3_vox))
+                        _x1 = min(_nx2 - 1, int((_am_c[_i2, 0] + _rho) / a.step3_vox))
+                        _y0 = max(0, int((_am_c[_i2, 1] - _rho) / a.step3_vox))
+                        _y1 = min(_ny2 - 1, int((_am_c[_i2, 1] + _rho) / a.step3_vox))
+                        if _x1 < _x0 or _y1 < _y0:
+                            continue
+                        _gxx, _gyy = np.ogrid[_x0:_x1 + 1, _y0:_y1 + 1]
+                        _mm2[_x0:_x1 + 1, _y0:_y1 + 1] |= (
+                            ((_gxx + 0.5) * a.step3_vox - _am_c[_i2, 0]) ** 2
+                            + ((_gyy + 0.5) * a.step3_vox - _am_c[_i2, 1]) ** 2) <= _rho2
+                    if _apts is not None and len(_apts):
+                        _lw = _apts[:, 2] <= _tol
+                        if _lw.any():
+                            _ij = np.floor(_apts[_lw, :2] / a.step3_vox).astype(int)
+                            _ok3 = (_ij[:, 0] >= 0) & (_ij[:, 0] < _nx2) & (_ij[:, 1] >= 0) & (_ij[:, 1] < _ny2)
+                            _mm2[_ij[_ok3, 0], _ij[_ok3, 1]] = True
+                    return _mm2
+                _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
+                _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
+                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mw)
                 _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                           z_top_um=_ztop, z_bot_um=0.0,
-                                           plate_band_bot_um=0.5 * a.step3_vox + 0.10)
+                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mb)
                 jb_am = None
                 if 'phi' in _res3b:
                     jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
                                           nan=0.0, posinf=0.0, neginf=0.0)
-                # R_geom = the interface resistance the GEOMETRY itself creates (contact starving
-                # bare vs wetted) — this is the MODEL'S OWN emergent interface number (an OUTPUT,
-                # user principle: 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom
-                # = the chemistry/degradation share the structure model does NOT contain
-                # (quantified model limit, frame[1]).
+                # R_geom = the interface resistance the GEOMETRY itself creates (bare contact
+                # starving vs film-wetted) — the MODEL'S OWN emergent interface number (an OUTPUT;
+                # 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom = the chemistry/
+                # degradation share the structure model does NOT contain (quantified limit).
+                _sw = max(float(_res3w['sigma_eff']), 1e-30)
                 _sb = max(float(_res3b['sigma_eff']), 1e-30)
-                _rgeom = _Lcm / _sb - _Lcm / max(step3['sigma_e_eff_S_cm'], 1e-30)
+                _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
                 step3['collector_geometric'] = {
-                    'wetted_sigma_S_cm': step3['sigma_e_eff_S_cm'],
-                    'bare_sigma_S_cm': float(f"{_res3b['sigma_eff']:.4g}"),
+                    'mode': 'analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)',
+                    'wetted_sigma_S_cm': float(f'{_sw:.4g}'),
+                    'bare_sigma_S_cm': float(f'{_sb:.4g}'),
                     'R_geom_ohm_cm2': float(f'{_rgeom:.3g}'),
-                    'n_bottom_contacts': {'wetted': (_res3.get('n_plate_vox') or (None,))[0],
-                                          'bare': (_res3b.get('n_plate_vox') or (None,))[0]},
+                    'n_bottom_contacts': {'wetted': (_res3w.get('n_plate_vox') or (None,))[0],
+                                          'bare': (_res3b.get('n_plate_vox') or (None,))[0],
+                                          'canonical_plate': (_res3.get('n_plate_vox') or (None,))[0]},
                     **({'bare_reason': _res3b['reason']} if _res3b.get('reason') else {}),
-                    'note': 'MODEL OUTPUT (emergent): wetted=film-reach band vox+0.1µm / bare=crown '
-                            'band 0.5vox+0.1µm; R_geom = L(1/σ_bare − 1/σ_wetted) — measured R_int '
-                            '− R_geom = chemistry/degradation share (not in the structure model). '
-                            'Contact set has ±half-voxel quantization blur'}
+                    **({'wetted_reason': _res3w['reason']} if _res3w.get('reason') else {}),
+                    'note': 'MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); '
+                            'coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); '
+                            'measured R_int − R_geom = chemistry/degradation share'}
                 _cgm = step3['collector_geometric']
                 print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "
                       f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
