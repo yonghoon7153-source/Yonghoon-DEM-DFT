@@ -2049,8 +2049,12 @@ function applyViewMode(state, mode) {
       state.meshes.MESH.visible = true;
       state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.18;
     }
-    [state.meshes.AM_P, state.meshes.AM_S].forEach(m => {
-      if (m) { m.material.transparent = true; m.material.opacity = 0.13; }
+    ['AM_P', 'AM_S'].forEach(ty => {                     // reset AM to BASE colors first — without this
+      const m = state.meshes[ty]; if (!m) return;        // the previous mode's instance colors bleed in
+      const base = new THREE.Color(COL[ty]);             // (je-mode jet blues at 0.13 opacity = invisible
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));   //  ghosts on white — user report)
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      m.material.transparent = true; m.material.opacity = 0.22;
     });
     buildCarbonOverlay(state, only, only ? 1.0 : 0.7);   // fibres → lines, SuperP → points (x-ray)
     const nFib = ((state.data && state.data.additive_fibres) || [])
