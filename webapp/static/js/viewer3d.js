@@ -1102,6 +1102,10 @@ function applyViewMode(state, mode) {
     if (state.strainPointGroup.material) state.strainPointGroup.material.dispose();
     state.strainPointGroup = null;
   }
+  if (state.meshes && state.meshes.MESH && state.meshes.MESH.userData._baseColor) {
+    state.meshes.MESH.material.color.setHex(state.meshes.MESH.userData._baseColor);   // je-mode navy → base
+    delete state.meshes.MESH.userData._baseColor;
+  }
   if (state.additivePointGroup && state.scene) {          // conductive-additive Group (lines + points)
     state.scene.remove(state.additivePointGroup);
     state.additivePointGroup.traverse(o => {
@@ -1970,18 +1974,25 @@ function applyViewMode(state, mode) {
       return;
     }
     if (state.meshes.MESH) {
-      state.meshes.MESH.visible = true;
-      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.08;
+      // paper Fig-4d solid-block read: SE painted as the ZERO-current phase (jet(0) = deep navy —
+      // physically exact: SE carries no electronic current) and OPAQUE.  Interior inspection =
+      // the 단면 슬라이더 (that is why the paper shows cross-sections).
+      const mm2 = state.meshes.MESH;
+      mm2.visible = true;
+      if (!mm2.userData._baseColor) mm2.userData._baseColor = mm2.material.color.getHex();
+      mm2.material.color.setHex(0x000080);
+      mm2.material.transparent = false; mm2.material.opacity = 1.0;
     }
     const sorted = [...vals].sort((x, y) => x - y);
     const pctl = (p) => sorted[Math.max(0, Math.min(sorted.length - 1, Math.floor(p * (sorted.length - 1))))];
-    const lo = 0, hi = Math.max(pctl(0.98), 1e-30);        // paper convention: 0 = deep blue anchor
+    const lo = 0, hi = Math.max(pctl(0.998), 1e-30);       // scale to ~max: the FIELD stays deep blue
     const norm = (v) => Math.max(0, Math.min(1, (v - lo) / (hi - lo)));
-    ['AM_P', 'AM_S'].forEach(ty => {
+    const gam = (t) => Math.pow(t, 1.6);                   // gamma-compress mids toward blue (paper look:
+    ['AM_P', 'AM_S'].forEach(ty => {                       //   only true hot paths leave the blue field)
       const m = state.meshes[ty]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
         if (p[fld] === undefined) { m.setColorAt(i, colDim); return; }
-        m.setColorAt(i, new THREE.Color(jetColor(norm(p[fld]))));   // jet: blue field, hot = red
+        m.setColorAt(i, new THREE.Color(jetColor(gam(norm(p[fld])))));
       });
       m.material.opacity = 1.0; m.material.transparent = false;
     });
@@ -3318,7 +3329,17 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
       const cut = y0 + (y1 - y0) * (parseFloat(clipPos.value) / 100);
       state.clipPlanes = clipOn.checked ? [new THREE.Plane(new THREE.Vector3(0, 0, -1), cut)] : null;
       scene.traverse(o => {
-        if (o.material) { o.material.clippingPlanes = state.clipPlanes; o.material.needsUpdate = true; }
+        if (o.material) {
+          o.material.clippingPlanes = state.clipPlanes;
+          if (state.clipPlanes) {                          // cut spheres read hollow with FrontSide —
+            if (o.material.userData._baseSide === undefined) o.material.userData._baseSide = o.material.side;
+            o.material.side = THREE.DoubleSide;            //   show interior surfaces at the cut
+          } else if (o.material.userData._baseSide !== undefined) {
+            o.material.side = o.material.userData._baseSide;
+            delete o.material.userData._baseSide;
+          }
+          o.material.needsUpdate = true;
+        }
       });
     };
     clipOn.addEventListener('change', applyClip);
