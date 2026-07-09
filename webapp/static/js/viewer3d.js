@@ -872,7 +872,9 @@ function resetSEColors(state) {
 function buildCarbonOverlay(state, only, size, colorOverride) {
   // colorOverride: a single colour for all carbon (e.g. soft black in the Default overlay so it reads
   // SEM-like and doesn't drown the structure).  null → per-phase colours (cyan VGCF) for the 도전재 mode.
-  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xa3e635 };   // VGCF cyan · Super P magenta · PTFE amber · SDCP lime
+  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xff3b30 };   // VGCF cyan · Super P magenta · PTFE amber ·
+  //   SDCP RED (was lime — lime sank into the olive-brown blend thousands of x-ray fibre lines make; red is the
+  //   complement of that mush so the 0.3µm particles pop.  vs SuperP magenta: red 5° vs pink 330°, still distinct)
   const colOf = (ph) => (colorOverride != null ? colorOverride : (PHCOL[ph] || 0x22d3ee));
   const fibres = (state.data && state.data.additive_fibres) || [];   // [{phase, pts:[[x,y,z]…]}]
   const pts0 = (state.data && state.data.additive_points) || [];
@@ -938,8 +940,22 @@ function buildCarbonOverlay(state, only, size, colorOverride) {
     }
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    // round-dot sprite: raw THREE.Points draw as hard SQUARES — at close zoom the particle cloud
+    // reads as blocky pixels (user-reported).  A radial-alpha canvas texture makes each point a
+    // soft disc (built once, cached on the function).
+    if (!buildCarbonOverlay._dotTex) {
+      const cv = document.createElement('canvas'); cv.width = cv.height = 64;
+      const c2 = cv.getContext('2d');
+      const rg = c2.createRadialGradient(32, 32, 0, 32, 32, 30);
+      rg.addColorStop(0.0, 'rgba(255,255,255,1)');
+      rg.addColorStop(0.75, 'rgba(255,255,255,1)');
+      rg.addColorStop(1.0, 'rgba(255,255,255,0)');
+      c2.fillStyle = rg; c2.beginPath(); c2.arc(32, 32, 30, 0, 2 * Math.PI); c2.fill();
+      buildCarbonOverlay._dotTex = new THREE.CanvasTexture(cv);
+    }
     const pm = new THREE.Points(g, new THREE.PointsMaterial({
-      size, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false }));
+      size, vertexColors: true, sizeAttenuation: true, depthTest: false, depthWrite: false,
+      map: buildCarbonOverlay._dotTex, transparent: true, alphaTest: 0.3 }));
     pm.renderOrder = 999; grp.add(pm); n += pts.length;
   }
   if (n === 0) return 0;
@@ -1834,7 +1850,7 @@ function applyViewMode(state, mode) {
     const nFib = ((state.data && state.data.additive_fibres) || [])
       .filter(f => !only || f.phase === only).length;
     const ac = mm.additive_counts || {};
-    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b', SDCP: '#a3e635' };
+    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b', SDCP: '#ff3b30' };
     const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
     const legend = keys.map(k =>
       `<span style="color:${swatch[k]};font-size:13px">●</span> ${k} ${Number(ac[k] || 0).toLocaleString()}개`).join(' &nbsp; ');
