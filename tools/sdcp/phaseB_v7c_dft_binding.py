@@ -238,26 +238,32 @@ def afm_layer_assign(atoms, ref_band_lab, tag, tol=0.8):
 
 
 def afm_inplane_assign(atoms, tag, ztol=0.8):
-    """In-plane AFM generated from the slab's OWN geometry: within each z-layer,
-    alternate Ni1/Ni2 by a deterministic in-plane order (2up/2down per 4-Ni
-    layer = scf_u62's AFM TYPE). Needs no reference correspondence, so it is
-    immune to the slabs being different structures. Applied identically to slab
-    and both complexes (same slab atoms, same order) it cancels in the
-    doped-neutral E_bind DIFFERENCE -- which is the Phase-B deliverable; the
-    absolute E_bind then carries only a common (cancelling) magnetic-state offset.
+    """In-plane AFM generated from the slab's OWN geometry, GUARANTEED net-zero
+    (equal Ni1/Ni2). Ni are sorted by (z-band, x, y) and alternated GLOBALLY, so
+    an even Ni count gives exactly 12/12 regardless of how the layers cluster
+    (per-layer alternation would give a ferrimagnetic 13/11 seed on odd bands).
+    It reproduces scf_u62's AFM TYPE (in-plane, net-zero) without needing any ref
+    correspondence, so it is immune to the slabs being different structures.
+    Applied identically to slab and both complexes (same atoms/order via index
+    transfer) it cancels in the doped-neutral E_bind DIFFERENCE -- the Phase-B
+    deliverable; the absolute E_bind then carries a common (cancelling) offset.
     """
     labels = list(atoms.get_chemical_symbols())
     ni_idx = [i for i, s in enumerate(labels) if s == 'Ni']
     pos = atoms.positions[ni_idx]
     band = cluster_z(pos[:, 2], ztol)
-    for b in range(int(band.max()) + 1):
-        mem = [k for k in range(len(ni_idx)) if band[k] == b]
-        mem.sort(key=lambda k: (round(float(pos[k, 0]), 2), round(float(pos[k, 1]), 2)))
-        for rank, k in enumerate(mem):
-            labels[ni_idx[k]] = 'Ni1' if rank % 2 == 0 else 'Ni2'
+    nb = int(band.max()) + 1
+    order = sorted(range(len(ni_idx)), key=lambda k: (
+        int(band[k]), round(float(pos[k, 0]), 2), round(float(pos[k, 1]), 2)))
+    for rank, k in enumerate(order):
+        labels[ni_idx[k]] = 'Ni1' if rank % 2 == 0 else 'Ni2'
     n1 = sum(1 for i in ni_idx if labels[i] == 'Ni1')
-    print(f"    [{tag}] in-plane AFM: {int(band.max()) + 1} layers -> "
-          f"Ni1 {n1}/Ni2 {len(ni_idx) - n1}")
+    zc = [round(float(pos[band == b, 2].mean()), 2) for b in range(nb)]
+    sizes = [int((band == b).sum()) for b in range(nb)]
+    print(f"    [{tag}] in-plane AFM (global-alt): {nb} z-bands z={zc} sizes={sizes} "
+          f"-> Ni1 {n1}/Ni2 {len(ni_idx) - n1}")
+    if n1 != len(ni_idx) - n1:
+        print(f"    !! net moment != 0 (odd Ni count?) — check the slab")
     return labels
 
 
