@@ -46,6 +46,7 @@ import os
 import re
 import numpy as np
 from ase.io import read
+from scipy.optimize import linear_sum_assignment
 
 # ---- cloned from scf_u62.in (reference_dft_v2) ------------------------------
 ECUTWFC = 60.0
@@ -73,7 +74,7 @@ SPECIES_ORDER = ['Li', 'Ni1', 'Ni2', 'O', 'C', 'H', 'S']
 
 
 def parse_ref_ni(ref_scf):
-    """Extract Ni1/Ni2 cartesian positions from a QE input (the AFM partition)."""
+    """Extract Ni1/Ni2 cartesian positions + labels from a QE input (AFM partition)."""
     with open(ref_scf) as f:
         lines = f.readlines()
     # cell
@@ -89,7 +90,7 @@ def parse_ref_ni(ref_scf):
         if u.startswith('ATOMIC_POSITIONS'):
             crystal = 'CRYSTAL' in u
             j = i + 1
-            ni1, ni2 = [], []
+            pos, lab = [], []
             while j < len(lines):
                 s = lines[j].split()
                 if len(s) < 4 or not re.match(r'^[A-Za-z]', s[0]):
@@ -100,40 +101,51 @@ def parse_ref_ni(ref_scf):
                     if cell is None:
                         raise SystemExit("CRYSTAL positions but no CELL_PARAMETERS")
                     p = p @ cell
-                if sp == 'Ni1':
-                    ni1.append(p)
-                elif sp == 'Ni2':
-                    ni2.append(p)
+                if sp in ('Ni1', 'Ni2'):
+                    pos.append(p)
+                    lab.append(sp)
                 j += 1
-            if not ni1 or not ni2:
+            if 'Ni1' not in lab or 'Ni2' not in lab:
                 raise SystemExit("ref_scf has no Ni1/Ni2 labels — cannot inherit AFM split")
-            return np.array(ni1), np.array(ni2), cell
+            return np.array(pos), lab, cell
     raise SystemExit("no ATOMIC_POSITIONS in ref_scf")
 
 
-def split_ni(atoms, ni1_ref, ni2_ref, cell):
-    """Return per-atom species labels; each Ni -> Ni1/Ni2 by nearest ref (MIC)."""
-    labels = list(atoms.get_chemical_symbols())
-    inv = np.linalg.inv(cell) if cell is not None else None
-    worst = 0.0
-    for idx, sym in enumerate(labels):
-        if sym != 'Ni':
-            continue
-        p = atoms.positions[idx]
+def split_ni(atoms, ni_ref, ref_lab, cell):
+    """Per-atom labels; Ni -> Ni1/Ni2 by BIJECTIVE (Hungarian) match to ref (MIC).
 
-        def mind(refs):
-            d = refs - p
-            if inv is not None:                       # min-image
-                f = d @ inv
-                f -= np.round(f)
-                d = f @ cell
-            return np.sqrt((d ** 2).sum(axis=1)).min()
-        d1, d2 = mind(ni1_ref), mind(ni2_ref)
-        labels[idx] = 'Ni1' if d1 <= d2 else 'Ni2'
-        worst = max(worst, min(d1, d2))
-    if worst > 1.0:
-        print(f"  !! WARNING: a Ni matched its nearest ref at {worst:.2f} A "
-              f"(>1.0) — check slab correspondence")
+    Greedy nearest-match is not one-to-one: with 24 ref = 24 target Ni it can
+    orphan one Ni to a far ref while another is double-booked, scrambling the
+    AFM label. linear_sum_assignment guarantees a 1:1 map so the max distance
+    reflects true relaxation drift, not an assignment artifact.
+    """
+    labels = list(atoms.get_chemical_symbols())
+    ni_idx = [i for i, s in enumerate(labels) if s == 'Ni']
+    inv = np.linalg.inv(cell)
+    P = atoms.positions[ni_idx]
+    if len(ni_idx) != len(ni_ref):
+        print(f"  !! Ni count target {len(ni_idx)} != ref {len(ni_ref)} — greedy fallback")
+        for a, idx in enumerate(ni_idx):
+            d = ni_ref - P[a]
+            f = d @ inv; f -= np.round(f); d = f @ cell
+            labels[idx] = ref_lab[int(np.argmin((d ** 2).sum(axis=1)))]
+        return labels
+    # min-image distance matrix target(n) x ref(n)
+    D = np.empty((len(ni_idx), len(ni_ref)))
+    for a in range(len(ni_idx)):
+        d = ni_ref - P[a]
+        f = d @ inv; f -= np.round(f); d = f @ cell
+        D[a] = np.sqrt((d ** 2).sum(axis=1))
+    row, col = linear_sum_assignment(D)
+    dists = D[row, col]
+    for a, c in zip(row, col):
+        labels[ni_idx[a]] = ref_lab[c]
+    n1 = sum(1 for i in ni_idx if labels[i] == 'Ni1')
+    print(f"  Ni assign (Hungarian): max {dists.max():.2f} A, mean {dists.mean():.2f} A, "
+          f">1A {(dists > 1.0).sum()}/{len(dists)}  -> Ni1 {n1}/Ni2 {len(ni_idx) - n1}")
+    if dists.max() > 1.5:
+        print("  !! large assignment distance (>1.5 A) — slabs may be offset/rotated; "
+              "AFM labels suspect, check reference/slab_relaxed.xyz vs scf_u62.in")
     return labels
 
 
@@ -243,8 +255,8 @@ def main():
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
-    ni1_ref, ni2_ref, cell = parse_ref_ni(a.ref_scf)
-    print(f"ref AFM split: Ni1 x{len(ni1_ref)}  Ni2 x{len(ni2_ref)}", flush=True)
+    ni_ref, ref_lab, cell = parse_ref_ni(a.ref_scf)
+    print(f"ref AFM split: Ni1 x{ref_lab.count('Ni1')}  Ni2 x{ref_lab.count('Ni2')}", flush=True)
 
     jobs = [
         ("slab",            a.slab,             "slab",             a.kpts,   "pb_slab"),
@@ -259,7 +271,7 @@ def main():
             atoms = box_molecule(atoms)
             labels = list(atoms.get_chemical_symbols())
         else:
-            labels = split_ni(atoms, ni1_ref, ni2_ref, atoms.cell.array)
+            labels = split_ni(atoms, ni_ref, ref_lab, atoms.cell.array)
         d = os.path.join(a.out, name)
         os.makedirs(d, exist_ok=True)
         write_scf(os.path.join(d, "scf.in"), atoms, labels, kind, kpts,
