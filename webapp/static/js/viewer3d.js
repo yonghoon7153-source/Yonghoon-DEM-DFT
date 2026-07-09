@@ -2049,12 +2049,12 @@ function applyViewMode(state, mode) {
       state.meshes.MESH.visible = true;
       state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.18;
     }
-    ['AM_P', 'AM_S'].forEach(ty => {                     // reset AM to BASE colors first — without this
-      const m = state.meshes[ty]; if (!m) return;        // the previous mode's instance colors bleed in
-      const base = new THREE.Color(COL[ty]);             // (je-mode jet blues at 0.13 opacity = invisible
-      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));   //  ghosts on white — user report)
-      if (m.instanceColor) m.instanceColor.needsUpdate = true;
-      m.material.transparent = true; m.material.opacity = 0.22;
+    ['AM_P', 'AM_S'].forEach(ty => {                     // AM = solid grey presence (user: ghosts too
+      const m = state.meshes[ty]; if (!m) return;        // faint).  Carbon draws x-ray (depthTest off)
+      const base = new THREE.Color(0x8f8f8f);            // so a stronger AM cannot hide it.  Reset the
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));   // instance colors too — previous
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;         // mode's palette bled in before.
+      m.material.transparent = true; m.material.opacity = 0.5;
     });
     buildCarbonOverlay(state, only, only ? 1.0 : 0.7);   // fibres → lines, SuperP → points (x-ray)
     const nFib = ((state.data && state.data.additive_fibres) || [])
