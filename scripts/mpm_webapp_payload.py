@@ -106,7 +106,8 @@ def electronic_connectivity(t, c, r, se, phase, floor_z, um,
             union(int(i), n)                                 # AM on the collector
     n_cl = 0
     if phase is not None and n:
-        cond = se[np.isin(phase, cond_phases)]               # conductive phases only (NOT PTFE 4; SDCP 5 dropped when neutral)
+        cond = se[np.isin(phase, cond_phases)]               # conductive phases only (NOT PTFE 4; SDCP 5 KEPT even
+        #   when neutral — AM-grade weak conductor; insulator-drop would misclassify ~13 orders (see caller 419+)
         if len(cond):
             vox = vox_um / um                                # ≥2× the 0.7·dx point spacing → one
             lo = cond.min(0) - vox                           #   continuous fibre labels as one cluster

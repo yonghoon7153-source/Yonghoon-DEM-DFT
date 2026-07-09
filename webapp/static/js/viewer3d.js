@@ -135,11 +135,15 @@ function buildControls(container, isMPM) {
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
       <option value="se_strain">SE 변형 (vs seed)</option>
+      <optgroup label="전기 (electrical)">
+        <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
+      </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
         <option value="add_vgcf">　└ VGCF만</option>
         <option value="add_superp">　└ Super P만</option>
         <option value="add_ptfe">　└ PTFE만</option>
+        <option value="add_sdcp">　└ SDCP만</option>
       </optgroup>
       <optgroup label="기공 (pore / XCT)">
         <option value="pore">기공만 (pore — XCT처럼)</option>
@@ -868,7 +872,7 @@ function resetSEColors(state) {
 function buildCarbonOverlay(state, only, size, colorOverride) {
   // colorOverride: a single colour for all carbon (e.g. soft black in the Default overlay so it reads
   // SEM-like and doesn't drown the structure).  null → per-phase colours (cyan VGCF) for the 도전재 mode.
-  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b };   // VGCF cyan · Super P magenta · PTFE amber
+  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xa3e635 };   // VGCF cyan · Super P magenta · PTFE amber · SDCP lime
   const colOf = (ph) => (colorOverride != null ? colorOverride : (PHCOL[ph] || 0x22d3ee));
   const fibres = (state.data && state.data.additive_fibres) || [];   // [{phase, pts:[[x,y,z]…]}]
   const pts0 = (state.data && state.data.additive_points) || [];
@@ -1745,12 +1749,68 @@ function applyViewMode(state, mode) {
        XCT/FIB-SEM 분할처럼).  도전재(~4vol%, 기공 내부)는 미차감.</div>`);
     return;
   }
-  if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe') {
+  if (mode === 'econn') {
+    /* 전기 연결성 (한양대 slide-19 문법): AM 입자를 집전체-연결(파랑)/고립(빨강)으로 색칠.
+     * payload per-particle `econn` = electronic_connectivity(mpm_webapp_payload): AM-AM 접촉 ∪
+     * AM-[VGCF/SuperP/SDCP]-cluster 다리 → 집전체 percolation (SE·PTFE = e-절연 제외).
+     * GEOMETRY+graph 판정 — σ 배정(STEP3 Kirchhoff) 없이 그릴 수 있는 연결성 지도.
+     * 전류밀도/Li-농도 색칠(slide 20-22)은 STEP3+ 필요. */
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const ec = (state.data && state.data.econn_summary) || null;
+    let have = false;
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      if (m.userData.particles.some(p => p.econn !== undefined)) have = true;
+    });
+    if (!have) {
+      setLegend(state, '<i>이 payload엔 per-particle <b>econn</b>이 없어요 — 최신 '
+        + '<b>mpm_webapp_payload.py</b>로 payload를 재생성해서 업로드하면 색칠됩니다.</i>');
+      return;
+    }
+    if (state.meshes.MESH) {                                 // SE = faint context shell
+      state.meshes.MESH.visible = true;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.10;
+    }
+    const colOn = new THREE.Color(0x3b5fd9), colOff = new THREE.Color(0xb91c1c);
+    let nOn = 0, nOff = 0, nNA = 0;
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        if (p.econn === undefined) { m.setColorAt(i, colDim); nNA++; }
+        else if (p.econn) { m.setColorAt(i, colOn); nOn++; }
+        else { m.setColorAt(i, colOff); nOff++; }
+      });
+      m.material.opacity = 0.97; m.material.transparent = true;
+    });
+    flushColors();
+    // carbon bridges faint in the background — they are WHY isolated AM turn connected
+    buildCarbonOverlay(state, 0, 0.5, 0x6b7280);
+    const pct = (nOn + nOff) ? (100 * nOn / (nOn + nOff)) : 0;
+    setLegend(state,
+      `<b>전기 연결성 (집전체 percolation)</b>
+       <div style="margin-top:4px">
+         <span style="color:#5b7cf0;font-size:13px">●</span> 연결 입자 ${nOn.toLocaleString()}개 &nbsp;
+         <span style="color:#dc2626;font-size:13px">●</span> 고립 입자 ${nOff.toLocaleString()}개
+         ${nNA ? `&nbsp;<span style="color:#6b7280">● no-data ${nNA}</span>` : ''}
+       </div>
+       <div style="margin-top:3px">연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
+       + (ec ? ` · carbon cluster ${Number(ec.n_carbon_clusters || 0).toLocaleString()}개
+         · AM-carbon 다리 밴드 ${ec.band_um}µm / AM-AM 접촉 ${ec.tol_am_um}µm` : '') + `</div>
+       <div style="margin-top:3px;color:#9ca3af;font-size:10px">
+         AM-AM 접촉 ∪ AM-[VGCF·SuperP·SDCP]-AM 다리 → 집전체(바닥) 연결 판정. SE·PTFE는 전자 절연으로 제외.<br>
+         · 계면(반응면적 proxy): SE-coverage AM_P ${mm.coverage_AM_P_pct != null ? mm.coverage_AM_P_pct : '—'}%
+         / AM_S ${mm.coverage_AM_S_pct != null ? mm.coverage_AM_S_pct : '—'}%<br>
+         · 전류밀도·Li농도 색칠은 STEP3(Kirchhoff σ 배정) 후 제공 예정</div>`);
+    return;
+  }
+  if (mode === 'additives' || mode === 'add_vgcf' || mode === 'add_superp' || mode === 'add_ptfe'
+      || mode === 'add_sdcp') {
     /* conductive additives (payload additive_points: [x,y,z,phase]) as a coloured point cloud over a
      * dimmed SE+AM — so the carbon threading the SE/voids + bridging the AM reads clearly.  Colours are
      * BRIGHT (not SEM-black) for contrast on the dark canvas.  Sub-modes filter to one phase. */
-    const PH = { 2: 'VGCF', 3: 'SuperP', 4: 'PTFE' };
-    const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4 : 0;
+    const PH = { 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP' };
+    const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4
+               : mode === 'add_sdcp' ? 5 : 0;
     const mm = (state.data && state.data.mpm_metrics) || {};
     const all = (state.data && state.data.additive_points) || [];
     if (!all.length) {
@@ -1774,7 +1834,7 @@ function applyViewMode(state, mode) {
     const nFib = ((state.data && state.data.additive_fibres) || [])
       .filter(f => !only || f.phase === only).length;
     const ac = mm.additive_counts || {};
-    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b' };
+    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b', SDCP: '#a3e635' };
     const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
     const legend = keys.map(k =>
       `<span style="color:${swatch[k]};font-size:13px">●</span> ${k} ${Number(ac[k] || 0).toLocaleString()}개`).join(' &nbsp; ');
