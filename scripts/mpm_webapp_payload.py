@@ -523,7 +523,10 @@ def main():
                 # fixes — the model states that quantitatively.
                 _Lcm = _ztop * 1e-4
                 _Rbulk = _Lcm / max(step3['sigma_e_eff_S_cm'], 1e-30)
-                step3['collector'] = {'R_bulk_ohm_cm2': float(f'{_Rbulk:.3g}'),
+                step3['collector'] = {'kind': 'SCENARIO series load — measured R_int applied '
+                                              'externally (NOT a model prediction; the model\'s own '
+                                              'interface OUTPUT is collector_geometric.R_geom)',
+                                      'R_bulk_ohm_cm2': float(f'{_Rbulk:.3g}'),
                                       'anchors': 'Fig6e post-cycling R_int; S14 primer 1.3e4 S/cm 200nm',
                                       'sigma_apparent_S_cm': {
                                           nm2: float(f'{_Lcm / (_Rbulk + _R):.3g}')
@@ -553,18 +556,29 @@ def main():
                 if 'phi' in _res3b:
                     jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
                                           nan=0.0, posinf=0.0, neginf=0.0)
+                # R_geom = the interface resistance the GEOMETRY itself creates (contact starving
+                # bare vs wetted) — this is the MODEL'S OWN emergent interface number (an OUTPUT,
+                # user principle: 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom
+                # = the chemistry/degradation share the structure model does NOT contain
+                # (quantified model limit, frame[1]).
+                _sb = max(float(_res3b['sigma_eff']), 1e-30)
+                _rgeom = _Lcm / _sb - _Lcm / max(step3['sigma_e_eff_S_cm'], 1e-30)
                 step3['collector_geometric'] = {
                     'wetted_sigma_S_cm': step3['sigma_e_eff_S_cm'],
                     'bare_sigma_S_cm': float(f"{_res3b['sigma_eff']:.4g}"),
+                    'R_geom_ohm_cm2': float(f'{_rgeom:.3g}'),
                     'n_bottom_contacts': {'wetted': (_res3.get('n_plate_vox') or (None,))[0],
                                           'bare': (_res3b.get('n_plate_vox') or (None,))[0]},
                     **({'bare_reason': _res3b['reason']} if _res3b.get('reason') else {}),
-                    'note': 'wetted=film-reach band vox+0.1µm / bare=crown band 0.5vox+0.1µm; '
-                            'contact set has ±half-voxel quantization blur'}
+                    'note': 'MODEL OUTPUT (emergent): wetted=film-reach band vox+0.1µm / bare=crown '
+                            'band 0.5vox+0.1µm; R_geom = L(1/σ_bare − 1/σ_wetted) — measured R_int '
+                            '− R_geom = chemistry/degradation share (not in the structure model). '
+                            'Contact set has ±half-voxel quantization blur'}
                 _cgm = step3['collector_geometric']
-                print(f"  STEP3 collector geometry: wetted {_cgm['wetted_sigma_S_cm']:.3g} S/cm "
+                print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "
                       f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
-                      f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']} contacts)")
+                      f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']}) → "
+                      f"R_geom {_cgm['R_geom_ohm_cm2']:.3g} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()

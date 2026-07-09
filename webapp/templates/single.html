@@ -254,7 +254,7 @@
         <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 (크기=Fig S2 앵커, 저전단 생존=추론). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
-        <label title="STEP3 집전체 축. R_int는 (전극, 집전체) 페어의 계면 속성이라 전극 쪽은 레시피가 결정 — bare-Al 선택 시 SDCP 포함 레시피면 46(DBE 앵커), 없으면 110(SBE 앵커)이 자동 적용됨 (manuscript Fig6e 사이클후). C-SUS는 DBE 측정치 30 (SBE+C-SUS는 미측정 — proxy 라벨). 모든 프리셋 σ_apparent는 항상 함께 계산·기록">집전체<br><select id="add-collector" style="padding:3px" onchange="updateAdditiveGpuCmds()">
+        <label title="STEP3 집전체 축 — 두 층 구분: ① 모델 예측(출력) = bare-vs-wetted 기하 접촉 이중솔브의 R_geom (항상 계산됨) ② 이 선택 = 문헌 실측 R_int를 직렬로 거는 「시나리오 부하」 (결과값을 재생하는 what-if — 모델 예측 아님). R_int는 (전극,집전체) 페어 속성: bare-Al은 레시피에 SDCP 있으면 46/없으면 110, C-SUS 30 (Fig6e 사이클후; SBE+C-SUS 미측정=proxy). 이상 접촉 = 부하 없음 = 기존 STEP3 그대로">집전체<br><select id="add-collector" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="csus" selected>C-SUS primer 코팅</option>
           <option value="bare">bare-Al</option>
           <option value="ideal">이상 접촉 (R_int 0)</option></select></label>
