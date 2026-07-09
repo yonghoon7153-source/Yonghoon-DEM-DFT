@@ -220,3 +220,20 @@ minimax MEP **barrier 0.156 eV**, saddle = **on-top-Li**(frac 0.750,0.250; env L
 
 **DFT 중재자 (진행 중)**: `dft_p0/` p0_min(자유 이완)·p0_saddle(xy-pin 이완) — 위 §의 "UMA site topology 불신" 결론과 정합:
 UMA-min이 DFT에서 다른 site로 흘러가면 그것대로 기록 (DFT가 최종 심판, UMA는 지형 정찰). 장벽 = (E_saddle−E_min)×13.6057 vs 문헌 0.133 eV.
+
+### 2026-07-09 追記 — LiC₆에선 반대: PES-격자 실패, NEB가 정답 (방법-재료 궁합)
+
+SI 비교군용으로 LiC₆(0001)에 같은 12×12 구속 PES를 시도 → **부적합 판정**:
+- 반셀 이동점 E[6,0]=0.59 eV (Li 초격자 대칭이면 ~0이어야) — slab의 삽입-Li 배열이 4.26 Å 부분주기를 안 가짐
+- 최소점들이 전부 +0.36 eV 이상 (등가 hollow 부재), E[6,6]=5.4 eV 병리점
+- 원인: 매 grid점을 A0 슬랩 상태에서 시작하는 구속이완이 **무른 삽입-Li 부격자의 이완 이력(hysteresis)**을
+  80 스텝 안에 못 털어냄 (Li₃N의 뻣뻣한 표면에선 문제없던 것)
+
+**교훈 (일반화)**: 표면 확산 계산의 방법 선택은 재료-의존 —
+| | Li₃N (001) | LiC₆ (0001) |
+|---|---|---|
+| NEB | ❌ 4연속 실패 (재구성/기억 편향) | ✅ 0.241 eV, 대칭 끝점, dip 없음 (검증됨) |
+| 구속 PES-격자 | ✅ 0.156/0.171 eV (측정 MEP) | ❌ 이력 오염 (본 절) |
+→ SI 패널: Li₃N = PES/dense-scan 산출물, LiC₆ = 기존 NEB 산출물 (각자 잘 듣는 방법; 둘 다 DFT 도장 예정 —
+Li₃N은 P0 pair, LiC₆는 기존 "DFT SCF on UMA" 0.287 + 추후 P0-pair 업그레이드 옵션).
+LiC₆ PES 산출물(/data/work/runs/lic6_pes_uma)은 인용 금지, 이 진단의 증거로만 보존.
