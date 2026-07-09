@@ -1,0 +1,35 @@
+tag,orientation,azimuth,slab,E_bind_eV,rank,note
+doped,chelation,90,clean,-5.196,1,CHAMPION (doped global min)
+doped,sulfonate_down,90,clean,-4.693,2,
+doped,sulfonate_down,0,clean,-4.247,3,
+neutral,chelation,0,clean,-2.733,4,neutral global min
+neutral,sulfonate_down,90,clean,-2.596,5,
+neutral,sulfonate_down,0,clean,-2.260,6,
+doped,chelation,0,clean,-2.246,,azimuth-sensitive vs r90 (-5.196)
+neutral,chelation,90,clean,-2.221,,
+neutral,etherO_down,90,clean,-1.626,,
+neutral,etherO_down,0,clean,-1.615,,
+doped,etherO_down,90,clean,-1.608,,doped~=neutral at ether O
+doped,etherO_down,0,clean,-1.544,,
+"# SDCP v7c on LiNiO2(104): UMA (uma-s-1p1 oc20) binding scan, 3 orient x 2 azimuth x doped/neutral."
+"# E_bind = E(complex) - E_slab - E_mol.  Refs: E_slab=-173.6884 eV, E_mol neutral=-199.2648, doped=-194.1078 eV."
+"# SLAB = clean DFT-relaxed (104) extracted from reference_dft_v2/scf_u62.in (linio2_104_optB), 6x4 Ni layers,"
+"#   FROZEN whole (--freeze_frac 1.0) so only the molecule relaxes. tools/sdcp/{extract_scf_slab,phaseA_v7c_orient_scan}.py"
+"#   phaseA_v7c_clean/phaseA_v7c_results.csv (kserver116-27, 2026-07-10). Provenance: LiNiO2 = MP mp-25411 (R-3m)."
+"# ==== KEY FINDING: the clean slab REVERSES the earlier marginal result ===="
+"#   doped binds MUCH stronger than neutral on the clean surface: champion Delta = -5.196(doped chel_r90) vs"
+"#   -2.733(neutral chel_r0) = 2.46 eV; same-orientation sulfonate_down_r90 -4.693 vs -2.596 = 2.10 eV; r0 1.99 eV."
+"#   Effect is NOT uniform: strong for sulfonate_down (both azimuths, ~2 eV) and chelation_r90 (+2.98);"
+"#   ~0 for etherO_down (doped~=neutral); slightly REVERSED for chelation_r0 (neutral -2.733 > doped -2.246 by 0.49)."
+"#   Reading: doped = [M-H] RADICAL chemisorbs covalently (unpaired e- bonds to surface) -> -4..-5 eV;"
+"#   neutral (closed-shell) coordinates via sulfonate/ether O -> -2..-2.7 eV. Doping (deprotonation) strongly"
+"#   anchors the polymer to the cathode -- supports the binding hypothesis. (UMA level; Phase-B DFT+U to confirm.)"
+"# ==== SUPERSEDED (do NOT quote): reconstructed-slab run phaseA_v7c/ gave champion doped_sulfonate_down_r0 -0.935"
+"#   vs neutral -0.893 (Delta 0.04, 'marginal'). That slab (reference/slab_relaxed.xyz) had a UMA-reconstructed top:"
+"#   upper Ni layers collapsed to z<5 + one Ni ejected to z=8.11 (vs clean 6x4 at z 0.07..10.27). The collapsed,"
+"#   saturated surface masked the doping effect. E_slab there was -400.1 eV (different/broken geometry) vs clean -173.7."
+"#   -> the Delta 0.04 was a slab artifact; the clean-slab Delta ~2.5 eV is the corrected result."
+"# Phase-B (DFT+U, single-point on these UMA geometries): doped_chelation_r90 vs neutral_chelation_r0,"
+"#   AFM inherited exactly by index from scf_u62 (slab_afm.json). Verdict = E_bind(doped)-E_bind(neutral) at DFT+U."
+"# CAVEATS: UMA has no charge/spin knob (sees radical geometry only) -> the -5 eV magnitude needs DFT+U; n=1 per"
+"#   orientation; frozen slab (rigid-surface binding estimate); champion -5.196 pending a dissociation sanity check."

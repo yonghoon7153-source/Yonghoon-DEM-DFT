@@ -6,15 +6,31 @@
 # with this, then  watch -n 30 /root/watch_li3n.sh
 echo "════════ $(date '+%m-%d %H:%M:%S')  gabia — SDCP clean rebuild + p0 ════════"
 
-echo "■ P0 DFT barrier (tmux:p0)  min→saddle→barrier"
-if tmux has-session -t p0 2>/dev/null; then
-    tmux capture-pane -t p0 -p 2>/dev/null \
-        | grep -E "bfgs steps|Total force|scf accuracy|JOB DONE|BARRIER|NOT finished|START" \
-        | tail -3 | sed 's/^/   /'
-    echo "   [tmux:p0 실행중]"
-else
-    echo "   [tmux:p0 없음 — 종료/미시작]"
+echo "■ P0 DFT barrier (Li3N, tmux:p0)  dft_p0/{min,saddle}"
+D=/data/work/runs/li3n_pes_uma/dft_p0
+Emin=""; Esad=""
+for J in p0_min p0_saddle; do
+    O=$D/$J.out
+    if [ ! -f "$O" ]; then echo "   $J: 대기 (.out 없음)"; continue; fi
+    E=$(grep '^!' "$O" 2>/dev/null | tail -1 | awk '{print $5}')
+    if grep -q "JOB DONE" "$O" 2>/dev/null; then
+        conv="?"; grep -q "bfgs converged" "$O" && conv="수렴"
+        grep -q "maximum number" "$O" && conv="MAXSTEP"
+        echo "   $J: ✅ JOB DONE ($conv)  E=${E:-–} Ry"
+    else
+        st=$(grep "number of bfgs steps" "$O" 2>/dev/null | tail -1 | awk '{print $NF}')
+        fo=$(grep "Total force" "$O" 2>/dev/null | tail -1 | awk '{print $4}')
+        sc=$(grep "estimated scf accuracy" "$O" 2>/dev/null | tail -1 | awk '{print $(NF-1)}')
+        age=$(( $(date +%s) - $(stat -c %Y "$O" 2>/dev/null || date +%s) ))
+        echo "   $J: 진행  ionic≈${st:-0} | force ${fo:-–} | scf ${sc:-–} Ry | E ${E:-–} Ry (${age}s前)"
+    fi
+    [ "$J" = "p0_min" ] && Emin=$E || Esad=$E
+done
+if [ -n "$Emin" ] && [ -n "$Esad" ] && grep -q "JOB DONE" "$D/p0_min.out" 2>/dev/null \
+   && grep -q "JOB DONE" "$D/p0_saddle.out" 2>/dev/null; then
+    awk -v a="$Emin" -v b="$Esad" 'BEGIN{printf "   ★ DFT BARRIER = (E_saddle-E_min) = %.3f eV\n",(b-a)*13.605693}'
 fi
+tmux has-session -t p0 2>/dev/null && echo "   [tmux:p0 실행중]" || echo "   [tmux:p0 없음]"
 
 echo "■ SDCP Phase-A CLEAN 재랭킹 (tmux:phaseAc)  슬랩 전체 고정, v7c"
 PA=/data/work/runs/sdcp_linio2_binding/phaseA_v7c_clean.log
