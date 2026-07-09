@@ -194,3 +194,29 @@ on-top 전하이동·0.13 eV 미세신호 → out-of-distribution. (`why-uma-fai
 
 - ASE 3.23+ docs: `ase.mep.NEB`, `EspressoProfile`.
 - UMA-s-1p1: FAIRChem (Meta) foundation MLIP.
+
+---
+
+## 2026-07-09 UPDATE — revision 캠페인: NEB 완전 폐기, PES-직접 프로파일로 대체
+
+**배경**: 리뷰어가 reaction coordinate 상세를 요구 → 측정 기반으로 재구축 (mirrored-spline 0.054/0.102 폐기).
+
+**확보한 것 (UMA, kserver116)**: 12×12 구속 PES(`li3n_pes_uma.py`, 점별 adatom z-이완 + 상판 이완) → 등가 최소 6개,
+minimax MEP **barrier 0.156 eV**, saddle = **on-top-Li**(frac 0.750,0.250; env Li:0.54Å) — on-N이 아님.
+
+**NEB 4연속 실패 계보 (전부 다른 병리 — 이 계에서 NEB 자체가 부적합하다는 증거)**:
+| 시도 | 설정 | 실패 모드 |
+|---|---|---|
+| v1 (×3) | IDPP 보간 | on-top-N 위로 보간 → 폭주 |
+| v2a | PES-seed | seed가 PBC를 감아 6 Å 이미지 갭 → 가짜 8.95 eV |
+| v2b | +unwrap | ① linspace 중복 이미지 ② minimax 시드가 중간 최소점 관통(2-hop) ③ **자유 상판이 on-top-Li 안장 근처에서 재구성** → 8.95 eV 재폭주 + 내부 이미지가 끝점보다 0.46 eV 낮아짐 |
+| v3 | 1-hop 절단 + **전 슬랩 동결**(3-DOF) | 수치 수렴(fmax 0.046)했으나 **물리 무효**: 동결 슬랩이 초기 site의 이완 기억을 보존 → **등가 끝점이 +0.73 eV 비대칭**(장벽 0.156의 4.7배), 경로 3.41→11.6 Å 미끄러짐, BARRIER 1.544 = 인용 금지 |
+
+**교훈 (일반화)**: 무른 이온성 표면(Li₃N)에서 MLIP-NEB는 양쪽 함정 — **자유 슬랩 = 재구성 폭주, 동결 슬랩 = 초기-site 기억 편향**.
+견고한 객체는 **구속 PES 스캔 그 자체** (점별 국소 이완 = 단열 프로파일, 대역폭 넓은 재구성 봉쇄).
+
+**대체 산출물**: `li3n_mep_profile.py` — pes_grid.csv에서 minimax MEP를 따라 E(s)를 직접 추출(1-hop 절단, s = 실공간 경로길이)
+→ `mep_profile.csv/png` (계산점 마커, 스플라인 없음). **리뷰어 패키지 = pes_map.png(2D) + mep_profile.png(1D) + P0 DFT 장벽.**
+
+**DFT 중재자 (진행 중)**: `dft_p0/` p0_min(자유 이완)·p0_saddle(xy-pin 이완) — 위 §의 "UMA site topology 불신" 결론과 정합:
+UMA-min이 DFT에서 다른 site로 흘러가면 그것대로 기록 (DFT가 최종 심판, UMA는 지형 정찰). 장벽 = (E_saddle−E_min)×13.6057 vs 문헌 0.133 eV.
