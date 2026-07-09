@@ -3410,145 +3410,231 @@ function showMPMAnalysisSummary(state) {
   const mm = (state.data && state.data.mpm_metrics) || {};
   const s3 = mm.step3 || (state.data && state.data.step3) || {};
   const ec = mm.econn_summary || (state.data && state.data.econn_summary) || {};
+  const caseName = (state.data && state.data.case) || 'MPM 전극';
   const num = (arr) => arr.filter(v => v !== undefined && v !== null && isFinite(v));
+  const covOf = (p) => (p.coverage == null ? NaN : (p.coverage <= 1 ? p.coverage * 100 : p.coverage));
   const jeV = num(AMs.map(p => p.je));
-  const covPctAll = num(AMs.map(p => p.coverage)).map(v => v <= 1.0 ? v * 100 : v);
+  const covPctAll = num(AMs.map(covOf));
   const rV = num(AMs.map(p => p.r));
-  const zPairs = (getter) => AMs.filter(p => isFinite(p.z) && isFinite(getter(p))).map(p => ({ z: p.z, v: getter(p) }));
+  const porosity = (mm.porosity_mpm_pct != null ? mm.porosity_mpm_pct
+    : mm.porosity_settled_pct != null ? mm.porosity_settled_pct : mm.porosity_at_target_pct);
+  const thickness = (mm.thickness_um != null ? mm.thickness_um : mm.thickness_mpm_um);
+  const zMax = Math.max(thickness || 0, ...AMs.map(p => p.z).filter(isFinite), 1);
+  // shared 12-bin z-profile used by BOTH the depth charts AND the summary CSV (one source of truth)
+  const NB = 12;
+  const zbins = Array.from({ length: NB }, (_, i) =>
+    ({ z_lo: zMax * i / NB, z_hi: zMax * (i + 1) / NB, jeS: 0, covS: 0, ecS: 0, n: 0, ecN: 0 }));
+  AMs.forEach(p => {
+    if (!isFinite(p.z)) return;
+    const b = zbins[Math.min(NB - 1, Math.floor(p.z / zMax * NB))]; b.n++;
+    if (isFinite(p.je)) b.jeS += p.je;
+    const cv = covOf(p); if (isFinite(cv)) b.covS += cv;
+    if (p.econn !== undefined) { b.ecS += p.econn; b.ecN++; }
+  });
+  const zJe = zbins.map(b => b.n ? b.jeS / b.n : 0);
+  const zCov = zbins.map(b => b.n ? b.covS / b.n : 0);
+  const zCnt = zbins.map(b => b.n);
+  const zEc = zbins.map(b => b.ecN ? b.ecS / b.ecN : 0);
 
-  const W = 1060, pad = 18, cols = 3;
+  const W = 1080, pad = 18, cols = 3;
   const colW = (W - pad * (cols + 1)) / cols;
-  const chH = 196, titleH = 22, rowH = titleH + chH + 20;
-  const top0 = 44, headH = 118, rows = 3;
-  const H = top0 + headH + rows * rowH + 16;
+  const cellH = 198, vgap = 26, top0 = 46, headH = 120;
+  const gridTop = top0 + headH, gridH = 3 * cellH + 2 * vgap;
+  const glossY = gridTop + gridH + 22, glossH = 150;
+  const H = glossY + glossH + 14;
   const cvs = document.createElement('canvas');
   const DPR = 2; cvs.width = W * DPR; cvs.height = H * DPR;
   const ctx = cvs.getContext('2d'); ctx.scale(DPR, DPR);
   ctx.fillStyle = '#ffffff'; ctx.fillRect(0, 0, W, H);
 
-  function fmtNum(v) {
+  const fmtNum = (v) => {
     if (v === 0) return '0';
     const a = Math.abs(v);
     if (a >= 1e4 || a < 1e-2) return v.toExponential(1);
     if (a >= 100) return v.toFixed(0);
     if (a >= 1) return v.toFixed(1);
     return v.toFixed(2);
-  }
+  };
+  const median = (a) => {
+    if (!a.length) return NaN;
+    const s = [...a].sort((x, y) => x - y), m = Math.floor(s.length / 2);
+    return s.length % 2 ? s[m] : 0.5 * (s[m - 1] + s[m]);
+  };
   function roundRect(x, y, w, h, r) {
     ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r);
     ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath();
   }
-  const cellXY = (idx) => {
-    const c = idx % cols, r = Math.floor(idx / cols);
-    return [pad + c * (colW + pad), top0 + headH + r * rowH];
-  };
-  function axes(x, y, w, h, title) {
-    ctx.fillStyle = '#374151'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText(title, x, y + 14);
-    const px = x + 8, py = y + titleH, pw = w - 14, ph = h - 26;
-    ctx.strokeStyle = '#e5e7eb'; ctx.lineWidth = 1;
+  const cellXY = (idx) => [pad + (idx % cols) * (colW + pad), gridTop + Math.floor(idx / cols) * (cellH + vgap)];
+  // frame = title + subtitle(unit·stats, no more overlap) + faint gridlines + axes → plot rect
+  function frame(x, y, title, subtitle) {
+    ctx.textAlign = 'left';
+    ctx.fillStyle = '#111827'; ctx.font = 'bold 12.5px sans-serif'; ctx.fillText(title, x, y + 14);
+    if (subtitle) { ctx.fillStyle = '#9ca3af'; ctx.font = '10px sans-serif'; ctx.fillText(subtitle, x, y + 29); }
+    const px = x + 8, py = y + 40, pw = colW - 16, ph = cellH - 60;
+    ctx.strokeStyle = '#f1f3f5'; ctx.lineWidth = 1;
+    for (let g = 1; g <= 3; g++) { const gy = py + ph * g / 4; ctx.beginPath(); ctx.moveTo(px, gy); ctx.lineTo(px + pw, gy); ctx.stroke(); }
+    ctx.strokeStyle = '#d1d5db';
     ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + ph); ctx.lineTo(px + pw, py + ph); ctx.stroke();
     return [px, py, pw, ph];
   }
-  function note(x, y, w, h, title, msg) {
-    ctx.fillStyle = '#374151'; ctx.font = 'bold 12px sans-serif'; ctx.textAlign = 'left';
-    ctx.fillText(title, x, y + 14);
+  function note(x, y, title, sub, msg) {
+    ctx.textAlign = 'left'; ctx.fillStyle = '#111827'; ctx.font = 'bold 12.5px sans-serif'; ctx.fillText(title, x, y + 14);
+    if (sub) { ctx.fillStyle = '#9ca3af'; ctx.font = '10px sans-serif'; ctx.fillText(sub, x, y + 29); }
     ctx.fillStyle = '#9ca3af'; ctx.font = '11px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(msg, x + w / 2, y + titleH + (h - titleH) / 2); ctx.textAlign = 'left';
+    ctx.fillText(msg, x + colW / 2, y + cellH / 2 + 6); ctx.textAlign = 'left';
+  }
+  function xticks(px, py, pw, ph, lo, hi, mid) {
+    ctx.fillStyle = '#6b7280'; ctx.font = '9px sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText(lo, px, py + ph + 12);
+    if (mid !== undefined) { ctx.textAlign = 'center'; ctx.fillText(mid, px + pw / 2, py + ph + 12); }
+    ctx.textAlign = 'right'; ctx.fillText(hi, px + pw, py + ph + 12); ctx.textAlign = 'left';
   }
   function hist(idx, vals, title, unit, color) {
     const [x, y] = cellXY(idx);
-    if (!vals.length) { note(x, y, colW, chH, title, 'STEP3/데이터 없음'); return; }
-    const [px, py, pw, ph] = axes(x, y, colW, chH, title);
-    const lo = Math.min(...vals), hi = Math.max(...vals), span = (hi - lo) || 1, nb = 22;
-    const bins = new Array(nb).fill(0);
+    if (!vals.length) { note(x, y, title, unit, 'STEP3/데이터 없음'); return; }
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    const mean = vals.reduce((a, b) => a + b, 0) / vals.length, med = median(vals);
+    if (hi - lo <= Math.abs(hi) * 1e-6) {                    // degenerate single value (mono-size AM)
+      note(x, y, title, `${unit} · n ${vals.length}`, `단일값 ${fmtNum(lo)} (모든 입자 동일)`); return;
+    }
+    const [px, py, pw, ph] = frame(x, y, title, `${unit} · μ ${fmtNum(mean)} · med ${fmtNum(med)} · n ${vals.length}`);
+    const nb = 24, span = hi - lo, bins = new Array(nb).fill(0);
     vals.forEach(v => { bins[Math.min(nb - 1, Math.floor((v - lo) / span * nb))]++; });
     const mx = Math.max(...bins) || 1, bw = pw / nb;
     ctx.fillStyle = color;
     bins.forEach((b, i) => { const bh = b / mx * ph; ctx.fillRect(px + i * bw + 0.5, py + ph - bh, Math.max(0.5, bw - 1), bh); });
-    const mean = vals.reduce((a, b) => a + b, 0) / vals.length;
-    ctx.fillStyle = '#6b7280'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText(fmtNum(lo), px, py + ph + 11); ctx.fillText(fmtNum(hi), px + pw, py + ph + 11);
-    ctx.textAlign = 'left'; ctx.fillText(unit, px, py - 2);
-    ctx.fillStyle = '#111827'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText('μ=' + fmtNum(mean) + '  n=' + vals.length, px + pw, py + 10); ctx.textAlign = 'left';
+    const mxp = px + (med - lo) / span * pw;                 // median dashed marker
+    ctx.strokeStyle = '#111827'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(mxp, py); ctx.lineTo(mxp, py + ph); ctx.stroke(); ctx.setLineDash([]);
+    xticks(px, py, pw, ph, fmtNum(lo), fmtNum(hi), fmtNum((lo + hi) / 2));
   }
-  function zprofile(idx, pairs, title, unit, color, agg) {
+  function zprof(idx, yv, title, unit, color) {
     const [x, y] = cellXY(idx);
-    if (!pairs.length) { note(x, y, colW, chH, title, 'STEP3/데이터 없음'); return; }
-    const [px, py, pw, ph] = axes(x, y, colW, chH, title);
-    const zhi = Math.max(...pairs.map(p => p.z), mm.thickness_um || 1), nb = 12, span = zhi || 1;
-    const sum = new Array(nb).fill(0), cnt = new Array(nb).fill(0);
-    pairs.forEach(p => { const b = Math.min(nb - 1, Math.floor(p.z / span * nb)); sum[b] += p.v; cnt[b]++; });
-    const yv = sum.map((s, i) => agg === 'count' ? cnt[i] : (cnt[i] ? s / cnt[i] : 0));
-    const ymx = Math.max(...yv, 1e-30), bw = pw / nb;
+    if (!yv.some(v => v > 0)) { note(x, y, title, unit, 'STEP3/데이터 없음'); return; }
+    const ymx = Math.max(...yv, 1e-30);
+    const [px, py, pw, ph] = frame(x, y, title, `${unit} · max ${fmtNum(ymx)}`);
+    const bw = pw / yv.length;
     ctx.fillStyle = color;
     yv.forEach((v, i) => { const bh = v / ymx * ph; ctx.fillRect(px + i * bw + 0.5, py + ph - bh, Math.max(0.5, bw - 1), bh); });
-    ctx.fillStyle = '#6b7280'; ctx.font = '9px sans-serif'; ctx.textAlign = 'center';
-    ctx.fillText('0(하단)', px + 12, py + ph + 11); ctx.fillText(fmtNum(zhi) + 'µm(plate)', px + pw - 12, py + ph + 11);
-    ctx.textAlign = 'left'; ctx.fillText(unit, px, py - 2);
-    ctx.fillStyle = '#111827'; ctx.font = '10px sans-serif'; ctx.textAlign = 'right';
-    ctx.fillText('max=' + fmtNum(ymx), px + pw, py + 10); ctx.textAlign = 'left';
+    xticks(px, py, pw, ph, '0 하단', fmtNum(zMax) + 'µm 압축면');
   }
-  function bars(idx, entries, title) {
+  function bars(idx, entries, title, unit) {
     const [x, y] = cellXY(idx);
     const es = Object.entries(entries || {}).filter(([k, v]) => isFinite(v) && v > 0).sort((a, b) => b[1] - a[1]);
-    if (!es.length) { note(x, y, colW, chH, title, '데이터 없음'); return; }
-    const [px, py, pw, ph] = axes(x, y, colW, chH, title);
-    const bh = Math.min(30, ph / es.length - 6);
+    if (!es.length) { note(x, y, title, unit, '데이터 없음'); return; }
+    const [px, py, pw, ph] = frame(x, y, title, unit);
+    const rh = Math.min(30, (ph - 4) / es.length), gp = Math.min(9, rh * 0.3);
     const palb = ['#2563eb', '#dc2626', '#16a34a', '#d97706', '#7c3aed', '#0891b2'];
     es.forEach(([k, v], i) => {
-      const yy = py + i * (bh + 6) + 4;
-      ctx.fillStyle = palb[i % palb.length]; ctx.fillRect(px, yy, Math.max(1, v * pw), bh);
+      const yy = py + i * rh + 2, bh = rh - gp;
+      ctx.fillStyle = palb[i % palb.length]; roundRect(px, yy, Math.max(2, v * pw), bh, 2); ctx.fill();
       ctx.fillStyle = '#111827'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left';
-      ctx.fillText(k + '  ' + (100 * v).toFixed(1) + '%', px + 4, yy + bh - 7);
+      ctx.fillText(`${k}  ${(100 * v).toFixed(1)}%`, px + 5, yy + bh - 4);
     });
   }
 
-  // title + scalar chips
+  // ---- header + scalar chips ----
   ctx.fillStyle = '#111827'; ctx.font = 'bold 17px sans-serif'; ctx.textAlign = 'left';
-  ctx.fillText('분석 요약 — ' + ((state.data && state.data.case) || 'MPM 전극'), pad, 26);
+  ctx.fillText('분석 요약 — ' + caseName + (s3.vox_um != null ? '   (STEP3 vox ' + s3.vox_um + 'µm)' : ''), pad, 27);
   const chips = [
-    ['σ_e_eff', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
-    ['σ_ion_eff', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
-    ['R_geom', s3.collector_geometric ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
-    ['porosity', mm.porosity_settled_pct != null ? Number(mm.porosity_settled_pct).toFixed(2) + ' %' : '—'],
-    ['thickness', mm.thickness_um != null ? Number(mm.thickness_um).toFixed(1) + ' µm' : '—'],
-    ['N(AM)', String(mm.n_AM || AMs.length)],
+    ['σ_e_eff (전자전도도)', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['σ_ion_eff (이온전도도)', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['R_geom (기하 계면저항)', (s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2 != null) ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
+    ['porosity (공극률)', porosity != null ? Number(porosity).toFixed(2) + ' %' : '—'],
+    ['thickness (두께)', thickness != null ? Number(thickness).toFixed(1) + ' µm' : '—'],
+    ['N (AM 입자수)', String(mm.n_AM || AMs.length)],
     ['econn 연결', ec.connected_pct != null ? Number(ec.connected_pct).toFixed(1) + ' %' : '—'],
     ['carbon clusters', ec.n_carbon_clusters != null ? String(ec.n_carbon_clusters) : '—'],
   ];
-  const chipGap = 10, chipW = (W - pad * 2 - chipGap * 3) / 4, chipH = 46;
+  const chipGap = 10, chipW = (W - pad * 2 - chipGap * 3) / 4, chipH = 48;
   chips.forEach((c, i) => {
-    const x = pad + (i % 4) * (chipW + chipGap), y = top0 + Math.floor(i / 4) * (chipH + 10);
-    ctx.fillStyle = '#f3f4f6'; roundRect(x, y, chipW, chipH, 6); ctx.fill();
-    ctx.fillStyle = '#6b7280'; ctx.font = '11px sans-serif'; ctx.textAlign = 'left'; ctx.fillText(c[0], x + 10, y + 17);
-    ctx.fillStyle = '#111827'; ctx.font = 'bold 14px sans-serif'; ctx.fillText(c[1], x + 10, y + 37);
+    const x = pad + (i % 4) * (chipW + chipGap), y = top0 + Math.floor(i / 4) * (chipH + 8);
+    ctx.fillStyle = '#f6f7f9'; roundRect(x, y, chipW, chipH, 7); ctx.fill();
+    ctx.strokeStyle = '#eceef1'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#6b7280'; ctx.font = '10.5px sans-serif'; ctx.textAlign = 'left'; ctx.fillText(c[0], x + 11, y + 18);
+    ctx.fillStyle = '#111827'; ctx.font = 'bold 15px sans-serif'; ctx.fillText(c[1], x + 11, y + 38);
   });
 
-  // ① 전체 분포 (histograms)
+  // ---- 9 charts: 전체 분포 / z별 분포 / 손실분담 ----
   hist(0, jeV, '① |J_z| 전자전류밀도 분포 (전체 AM)', '상대 |J_z|', '#dc2626');
-  hist(1, covPctAll, '② Coverage 분포 (AM 표면 SE 덮임)', '%', '#2563eb');
-  hist(2, rV, '③ 입자 반경 r 분포', 'µm', '#16a34a');
-  // ② z별 분포 (depth profiles)
-  zprofile(3, zPairs(p => p.je), '④ 평균 |J_z| vs z (깊이 프로파일)', '⟨|J_z|⟩', '#dc2626', 'mean');
-  zprofile(4, zPairs(p => (p.coverage <= 1 ? p.coverage * 100 : p.coverage)), '⑤ 평균 coverage vs z', '⟨cov⟩ %', '#2563eb', 'mean');
-  zprofile(5, zPairs(() => 1), '⑥ AM 입자 수 vs z', 'count', '#6b7280', 'count');
-  // ③ 손실분담 + econn
-  bars(6, s3.dissipation_share, '⑦ 전자 손실(발열) 분담');
-  bars(7, s3.ion_dissipation_share, '⑧ 이온 손실 분담 (Li⁺ 경로)');
-  zprofile(8, zPairs(p => (p.econn === undefined ? NaN : p.econn)), '⑨ 집전체 연결 비율 vs z', '연결 fraction', '#7c3aed', 'mean');
+  hist(1, covPctAll, '② Coverage 분포 (AM 표면 SE 덮임)', 'coverage %', '#2563eb');
+  hist(2, rV, '③ 입자 반경 r 분포', 'r µm', '#16a34a');
+  zprof(3, zJe, '④ 평균 |J_z| vs z (깊이 프로파일)', '⟨|J_z|⟩ 상대', '#dc2626');
+  zprof(4, zCov, '⑤ 평균 coverage vs z', '⟨coverage⟩ %', '#2563eb');
+  zprof(5, zCnt, '⑥ AM 입자 수 vs z', 'count', '#6b7280');
+  bars(6, s3.dissipation_share, '⑦ 전자 손실(발열) 분담', '각 상의 전력손실 %');
+  bars(7, s3.ion_dissipation_share, '⑧ 이온 손실 분담 (Li⁺ 경로)', '각 상의 전력손실 %');
+  zprof(8, zEc, '⑨ 집전체 연결 비율 vs z', '연결 fraction 0–1', '#7c3aed');
 
-  // modal
+  // ---- 약어 (abbreviations) ----
+  ctx.fillStyle = '#f6f7f9'; roundRect(pad, glossY, W - 2 * pad, glossH, 8); ctx.fill();
+  ctx.strokeStyle = '#eceef1'; ctx.lineWidth = 1; ctx.stroke();
+  ctx.textAlign = 'left'; ctx.fillStyle = '#374151'; ctx.font = 'bold 12px sans-serif';
+  ctx.fillText('약어 (abbreviations) — STEP3 = 전도상 복셀 Kirchhoff σ 저항망 솔브', pad + 12, glossY + 20);
+  const gloss = [
+    ['|J_z| , je', '전자 전류밀도(z방향) · STEP3 AM 입자별 상대값(자기 p99.8 정규화, 같은 payload 내 비교) · je=wetted/primer 집전체 기준'],
+    ['jb', 'bare 집전체(crown 접점만) 기준 |J_z| · je와의 차 = 바닥 접점 상실 시 전류 재분배'],
+    ['σ_e_eff / σ_ion_eff', '유효 전자 / 이온 전도도 (S/cm) · 전극 through-plane'],
+    ['R_geom', '모델 기하 계면저항 (Ω·cm²) = L·(1/σ_bare − 1/σ_wetted) · 측정 R_int − R_geom = 화학/열화 몫'],
+    ['coverage', 'AM 입자 표면이 SE로 덮인 비율 (%)'],
+    ['econn', '집전체에 전기 연결(1) / 고립(0) · 100% = 모든 AM이 외부회로 도달'],
+    ['z / 손실분담', 'z = 두께방향(0 하단 집전체 ~ 상단 압축면) · 손실(발열)분담 = 각 상의 전력손실 % (∝ J²·R)'],
+  ];
+  gloss.forEach((g, i) => {
+    const gy = glossY + 40 + i * 15.5;
+    ctx.fillStyle = '#111827'; ctx.font = 'bold 11px sans-serif'; ctx.textAlign = 'left'; ctx.fillText(g[0], pad + 12, gy);
+    ctx.fillStyle = '#4b5563'; ctx.font = '11px sans-serif'; ctx.fillText(g[1], pad + 130, gy);
+  });
+
+  // ---- CSV builders (client-side, no server round-trip) ----
+  const csv = (v) => {
+    if (v == null || (typeof v === 'number' && !isFinite(v))) return '';
+    const s = String(v); return /[",\n]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+  };
+  function perAMCsv() {
+    const out = ['id,type,x_um,y_um,z_um,r_um,coverage_pct,je_rel,jb_rel,econn'];
+    AMs.forEach(p => out.push([p.id, p.type, p.x, p.y, p.z, p.r,
+      (isFinite(covOf(p)) ? +covOf(p).toFixed(3) : ''), p.je, p.jb, p.econn].map(csv).join(',')));
+    return out.join('\n');
+  }
+  function summaryCsv() {
+    const out = ['section,key,v1,v2,v3,v4,v5,v6'];
+    const row = (...vs) => out.push(vs.map(csv).join(','));
+    row('case', 'name', caseName);
+    row('scalar', 'sigma_e_eff_S_cm', s3.sigma_e_eff_S_cm);
+    row('scalar', 'sigma_ion_eff_S_cm', s3.sigma_ion_eff_S_cm);
+    row('scalar', 'R_geom_ohm_cm2', s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2);
+    row('scalar', 'porosity_pct', porosity);
+    row('scalar', 'thickness_um', thickness);
+    row('scalar', 'n_AM', mm.n_AM || AMs.length);
+    row('scalar', 'econn_connected_pct', ec.connected_pct);
+    row('scalar', 'carbon_clusters', ec.n_carbon_clusters);
+    row('scalar', 'step3_vox_um', s3.vox_um);
+    Object.entries(s3.dissipation_share || {}).forEach(([k, v]) => row('e_dissipation_share', k, v));
+    Object.entries(s3.ion_dissipation_share || {}).forEach(([k, v]) => row('ion_dissipation_share', k, v));
+    row('zprofile_header', 'cols', 'z_lo_um', 'z_hi_um', 'mean_je_rel', 'mean_coverage_pct', 'count', 'econn_frac');
+    zbins.forEach((b, i) => row('zprofile', 'bin_' + i, +b.z_lo.toFixed(2), +b.z_hi.toFixed(2),
+      +zJe[i].toFixed(6), +zCov[i].toFixed(3), zCnt[i], +zEc[i].toFixed(3)));
+    return out.join('\n');
+  }
+  function dlText(name, text) {
+    const blob = new Blob(['﻿' + text], { type: 'text/csv;charset=utf-8' });   // BOM → Excel UTF-8
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }
+  const slug = String(caseName).replace(/[^\w.-]+/g, '_').slice(0, 60);
+
+  // ---- modal ----
   const overlay = document.createElement('div');
   overlay.className = 'path-modal-overlay';
   overlay.innerHTML = `
-    <div class="path-modal" style="width:1120px;max-width:97vw">
+    <div class="path-modal" style="width:1140px;max-width:97vw">
       <button class="path-modal-close">&times;</button>
       <div style="font-size:14px;font-weight:bold;text-align:center;margin-bottom:8px">📊 분석 요약</div>
-      <div id="mpm-sum-wrap" style="max-height:80vh;overflow:auto;text-align:center"></div>
+      <div id="mpm-sum-wrap" style="max-height:78vh;overflow:auto;text-align:center"></div>
       <div class="path-modal-actions">
-        <button id="mpm-sum-png">PNG 다운로드</button>
+        <button id="mpm-sum-csv-am">CSV — 입자별</button>
+        <button id="mpm-sum-csv-sum">CSV — 요약·z프로파일</button>
+        <button id="mpm-sum-png">PNG</button>
         <button id="mpm-sum-close">닫기</button>
       </div>
     </div>`;
@@ -3561,8 +3647,10 @@ function showMPMAnalysisSummary(state) {
   overlay.onclick = (e) => { if (e.target === overlay) close(); };
   overlay.querySelector('#mpm-sum-png').addEventListener('click', () => {
     const a = document.createElement('a'); a.href = cvs.toDataURL('image/png');
-    a.download = 'mpm_analysis_summary.png'; document.body.appendChild(a); a.click(); a.remove();
+    a.download = 'mpm_summary_' + slug + '.png'; document.body.appendChild(a); a.click(); a.remove();
   });
+  overlay.querySelector('#mpm-sum-csv-am').addEventListener('click', () => dlText('mpm_perAM_' + slug + '.csv', perAMCsv()));
+  overlay.querySelector('#mpm-sum-csv-sum').addEventListener('click', () => dlText('mpm_summary_' + slug + '.csv', summaryCsv()));
 }
 
 /* ── wire up control panel ─────────────────────────────────── */
