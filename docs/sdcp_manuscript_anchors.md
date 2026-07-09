@@ -66,6 +66,17 @@
 ③ σ_e 방향(coat_block → σ_e 붕괴) = 저항 수준 = webapp whatif ✓ / 구조-수준은 STEP3 Kirchhoff 몫 (econn
    binary는 표현 불가 — 명시 완료).  ①②완료 시 **A4 CLOSED**.
 
+**★ A4 CLOSED (2026-07-10, 런 완료 — campaign CSV `thinky_coat` 행이 원본 기록)**:
+- ① porosity 11.936 = bm 11.94 **EXACT** ✓ / ④ metadata coat{0.2,0.70} + cb_mix 부재 ✓
+- ③ add-cov AM_P/AM_S **45.1/45.7** vs bm 45.2/**64.3** → AM_S −18.6pp **발산 실증** (film 지문: P≈S 동등
+  cap — bm chain의 AM_S 특혜 소멸).  ⚠ 사전등록의 "≫35.8" 기준값은 STALE (실제 bm 64.3) — 같은 부피가
+  cap에 응축되면 표면-voxel 접촉은 chain 산개보다 적다 (방향 반대 실현, 사후 해석으로 정직 기록).
+- ② SE-cov 40.1 **invariant** (하락 MISS): 0.2µm film < coverage voxel(~0.59µm) = sub-해상이라 SE-인접
+  boolean이 film 개재를 못 봄 — Kim2025 차단은 저항 수준 = STEP3 계면 가중 소관 (한계 명시).
+- ★ **econn film 지문 (최강 증거)**: carbon cluster **85개** (film이 소수 mega-sheet로 융합) vs S-run
+  bulk chain **32,620개** — 384× 네트워크 거칠기 차이; 연결률 99.4% (9 고립).
+- payload empty-fibre 크래시 26b9136 수정 (SuperP-only 런에서 rod-phase 폴리라인 0개 → min() 크래시).
+
 ### 메커니즘 스토리 생존 판정 — 구조 정정 후 (2026-07-10)
 사용자 DFT-측 논의(산-염기 surface-OH / 자가도핑 실재 / 앵커링 3시나리오 / 혼합폴리머 계면 귀결 /
 Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 대해 판정:
