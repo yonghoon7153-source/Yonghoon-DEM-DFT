@@ -42,6 +42,38 @@ from scipy.sparse.linalg import cg
 SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 150.0}
 SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE'}   # voxel σ-id → name
 
+# Set True (mpm_webapp_payload --step3-gpu) to run the Kirchhoff CG on GPU (CuPy cuSPARSE) — a
+# multi-M-dof fine-vox solve drops from ~1 h (CPU) to minutes.  Auto-falls back to scipy CPU if
+# CuPy/CUDA is unavailable, so it is always safe to leave on.
+GPU_SOLVE = False
+
+
+def _solve_cg(L, b):
+    """Jacobi-preconditioned CG for the SPD Kirchhoff system L·φ = b.  GPU (CuPy) when GPU_SOLVE and
+    the import succeeds, else scipy CPU — SAME matrix + tol (1e-8) → SAME φ (backend swap only).
+    Returns (phi: np.ndarray, info: int)."""
+    diag = L.diagonal()
+    if GPU_SOLVE:
+        try:
+            import cupy as cp
+            import cupyx.scipy.sparse as cxs
+            from cupyx.scipy.sparse.linalg import cg as cg_gpu
+            Lg = cxs.csr_matrix(L.astype(np.float64))
+            bg = cp.asarray(b, dtype=np.float64)
+            Mg = cxs.diags(1.0 / cp.asarray(diag))
+            try:
+                xg, info = cg_gpu(Lg, bg, tol=1e-8, maxiter=30000, M=Mg)
+            except TypeError:                              # newer CuPy renamed tol → rtol/atol
+                xg, info = cg_gpu(Lg, bg, rtol=1e-8, atol=0.0, maxiter=30000, M=Mg)
+            return cp.asnumpy(xg), int(info)
+        except Exception as _e:
+            print(f'    STEP3 GPU solve unavailable ({type(_e).__name__}: {_e}) → CPU fallback', flush=True)
+    Minv = sparse.diags(1.0 / diag)
+    try:
+        return cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)
+    except TypeError:                                      # scipy < 1.12 has no rtol kwarg
+        return cg(L, b, tol=1e-8, maxiter=30000, M=Minv)
+
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
@@ -230,13 +262,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                            (np.concatenate(rows + [np.arange(n_dof)]),
                             np.concatenate(cols + [np.arange(n_dof)]))),
                           shape=(n_dof, n_dof)).tocsr()
-    Minv = sparse.diags(1.0 / L.diagonal())
-    print(f'    STEP3 solve: {n_dof:,} dof, plate contacts {n_pb:,}/{n_pt:,} — CG running (수 분 소요 가능)…',
-          flush=True)
-    try:
-        phi, info = cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)
-    except TypeError:                                      # scipy < 1.12 has no rtol kwarg
-        phi, info = cg(L, b, tol=1e-8, maxiter=30000, M=Minv)
+    print(f'    STEP3 solve: {n_dof:,} dof, plate contacts {n_pb:,}/{n_pt:,} — CG running '
+          f'({"GPU" if GPU_SOLVE else "CPU"}, 수 분 소요 가능)…', flush=True)
+    phi, info = _solve_cg(L, b)
     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
     unconv = bool(info) or resid > 1e-6                    # review F2: NEVER ship a silent bad σ
     if unconv:

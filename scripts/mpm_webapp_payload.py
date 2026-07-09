@@ -299,6 +299,9 @@ def main():
                          'High for paper figures; ~90k/field ≈ a few MB JSON.  Hottest 35%% always kept.')
     ap.add_argument('--no-field', action='store_true',
                     help='skip the STEP3 current-density FIELD export (electronic_field / ionic_field)')
+    ap.add_argument('--step3-gpu', action='store_true',
+                    help='run the STEP3 Kirchhoff CG on GPU (CuPy cuSPARSE) — ~10-50× faster, esp. fine '
+                         'vox; auto-falls back to scipy CPU if CuPy/CUDA missing (same σ either way).')
     a = ap.parse_args()
     vc = _vc()
     sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
@@ -477,6 +480,7 @@ def main():
         try:
             import time as _time
             import step3_sigma as _s3
+            _s3.GPU_SOLVE = a.step3_gpu                     # CuPy CG backend (auto CPU fallback)
             _t0 = _time.time()
             _off = np.array([SW[0], SW[0], FLOOR])
             _am_c = (c - _off) * UM
