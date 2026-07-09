@@ -2014,11 +2014,15 @@ function applyViewMode(state, mode) {
     const sel = s3 && s3.collector && s3.collector.selected;
     setLegend(state,
       `<b>전류밀도 (STEP3 · ${mode === 'je' ? 'wetted/primer' : 'bare'} 집전체${sel && mode === 'je' ? ' — ' + sel.name : ''})</b>`
-      + (cg ? `<div style="margin-top:2px;font-size:10px;color:#cbd5e1">σ wetted ${Number(cg.wetted_sigma_S_cm).toExponential(2)}
-          (접점 ${cg.n_bottom_contacts.wetted}) vs bare ${Number(cg.bare_sigma_S_cm).toExponential(2)}
-          (${cg.n_bottom_contacts.bare}) S/cm — 집전체 슬래브는 모식(두께 과장)</div>` : '')
-      + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm
-          <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span></div>` : '')
+      + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm`
+          + (cg ? ` · R_geom <b>${Number(cg.R_geom_ohm_cm2).toExponential(2)}</b> Ω·cm²`
+                : ` <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span>`)
+          + `</div>` : '')
+      + (cg ? `<details style="margin-top:2px;font-size:10px;color:#cbd5e1"><summary style="cursor:pointer;color:#9ca3af">wetted/bare 상세</summary>
+          σ wetted ${Number(cg.wetted_sigma_S_cm).toExponential(2)} (접점 ${cg.n_bottom_contacts.wetted})
+          vs bare ${Number(cg.bare_sigma_S_cm).toExponential(2)} (${cg.n_bottom_contacts.bare}) S/cm<br>
+          R_geom = L(1/σ_bare − 1/σ_wetted) — 바닥 기하 접촉만의 계면저항 (모델 출력; 측정 R_int와의 갭 = 화학/열화 몫)<br>
+          집전체 슬래브는 모식(두께 과장) · σ_e_eff는 상대비교용(σ표/vox 동일 세팅끼리)</details>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J_z| (0–p99.8)</span><span>high</span></div>`
       + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
