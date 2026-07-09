@@ -255,9 +255,9 @@
         <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 (크기=Fig S2 앵커, 저전단 생존=추론). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label title="STEP3 집전체 축 — 두 층 구분: ① 모델 예측(출력) = bare-vs-wetted 기하 접촉 이중솔브의 R_geom (항상 계산됨) ② 이 선택 = 문헌 실측 R_int를 직렬로 거는 「시나리오 부하」 (결과값을 재생하는 what-if — 모델 예측 아님). R_int는 (전극,집전체) 페어 속성: bare-Al은 레시피에 SDCP 있으면 46/없으면 110, C-SUS 30 (Fig6e 사이클후; SBE+C-SUS 미측정=proxy). 이상 접촉 = 부하 없음 = 기존 STEP3 그대로">집전체<br><select id="add-collector" style="padding:3px" onchange="updateAdditiveGpuCmds()">
-          <option value="csus" selected>C-SUS primer 코팅</option>
+          <option value="ideal" selected>이상 접촉 (기본 — 시나리오 부하 없음)</option>
           <option value="bare">bare-Al</option>
-          <option value="ideal">이상 접촉 (R_int 0)</option></select></label>
+          <option value="csus">C-SUS primer 코팅</option></select></label>
         <label>mixing<br><select id="add-mixing" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="ballmill">ball-mill (고전단)</option>
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
@@ -523,7 +523,7 @@ function _addVals() {
     pt: +document.getElementById('add-ptfe').value || 0,
     sd: +document.getElementById('add-sdcp').value || 0,
     mix: document.getElementById('add-mixing').value,
-    coll: (document.getElementById('add-collector') || {value: 'csus'}).value,
+    coll: (document.getElementById('add-collector') || {value: 'ideal'}).value,
   };
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
