@@ -64,3 +64,16 @@
    `coat:{shell 0.2, surface_frac 0.70}` + cb_mix 부재.
 ③ σ_e 방향(coat_block → σ_e 붕괴) = 저항 수준 = webapp whatif ✓ / 구조-수준은 STEP3 Kirchhoff 몫 (econn
    binary는 표현 불가 — 명시 완료).  ①②완료 시 **A4 CLOSED**.
+
+### 메커니즘 스토리 생존 판정 — 구조 정정 후 (2026-07-10)
+사용자 DFT-측 논의(산-염기 surface-OH / 자가도핑 실재 / 앵커링 3시나리오 / 혼합폴리머 계면 귀결 /
+Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 대해 판정:
+- **유지**: ①산-염기 H⁺→surface OH (head 국소; α-Me +I ↔ β-ether −I 상쇄, 여전히 강산) ③앵커링
+  3시나리오 ④양 상태 local-min+trigger ⑤"도핑 레벨 무관 모든 SO₃ unit이 계면 기여" — 논문 문장 유효.
+- **유지+보강**: ②자가도핑 실재 — 근거가 실험(실물=에터 포함)이라 원래 옳은 구조의 증거; 틀린 건 시뮬
+  모델뿐 (⚠시뮬 Raman은 재계산 + side-chain ether C-O-C 모드 ~1100 추가 → 배정 재확인).
+  ⑥Li⁺ tridentate → **ether O = PEO형 Li⁺ 사이트 추가** = SO₃⁻+ether 단일이온전도체 모티프 완성 —
+  Fig2f σ_ion 유지(×0.80)·ICEP(AMPS+PEO) 선례와 정합, 이온전도 서사 강화.
+- **추가 필요**: 앵커링 시나리오 ④ ether-보조 chelation (재계산 시작배향 포함됨).
+- **무효 유지**: 절대 수치 전부 + 삽입형 기하 재검증 (ether 유연성/메틸 입체).
+- **재사용**: LiNiO₂ slab relaxation/U-ramp E_slab은 분자-무관 → 전부 유효; 재계산 = 분자+complex만.
