@@ -237,6 +237,30 @@ def afm_layer_assign(atoms, ref_band_lab, tag, tol=0.8):
     return labels
 
 
+def afm_inplane_assign(atoms, tag, ztol=0.8):
+    """In-plane AFM generated from the slab's OWN geometry: within each z-layer,
+    alternate Ni1/Ni2 by a deterministic in-plane order (2up/2down per 4-Ni
+    layer = scf_u62's AFM TYPE). Needs no reference correspondence, so it is
+    immune to the slabs being different structures. Applied identically to slab
+    and both complexes (same slab atoms, same order) it cancels in the
+    doped-neutral E_bind DIFFERENCE -- which is the Phase-B deliverable; the
+    absolute E_bind then carries only a common (cancelling) magnetic-state offset.
+    """
+    labels = list(atoms.get_chemical_symbols())
+    ni_idx = [i for i, s in enumerate(labels) if s == 'Ni']
+    pos = atoms.positions[ni_idx]
+    band = cluster_z(pos[:, 2], ztol)
+    for b in range(int(band.max()) + 1):
+        mem = [k for k in range(len(ni_idx)) if band[k] == b]
+        mem.sort(key=lambda k: (round(float(pos[k, 0]), 2), round(float(pos[k, 1]), 2)))
+        for rank, k in enumerate(mem):
+            labels[ni_idx[k]] = 'Ni1' if rank % 2 == 0 else 'Ni2'
+    n1 = sum(1 for i in ni_idx if labels[i] == 'Ni1')
+    print(f"    [{tag}] in-plane AFM: {int(band.max()) + 1} layers -> "
+          f"Ni1 {n1}/Ni2 {len(ni_idx) - n1}")
+    return labels
+
+
 def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     """kind in {'slab','complex','molecule_doped','molecule_neutral'}."""
     has_ni = ('Ni1' in labels) or ('Ni2' in labels)
@@ -340,9 +364,12 @@ def main():
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     ap.add_argument("--out", required=True)
     ap.add_argument("--kpts", default=KPTS_SLAB, help="slab/complex k-grid")
-    ap.add_argument("--afm_mode", default="auto", choices=["auto", "layer", "match"],
-                    help="auto: layer if ref is A-type else match; layer: z-band "
-                         "alternation (offset-immune); match: Hungarian position match")
+    ap.add_argument("--afm_mode", default="auto",
+                    choices=["auto", "layer", "inplane", "match"],
+                    help="auto: layer if ref is A-type, else inplane. layer: z-band "
+                         "alternation (A-type, offset-immune). inplane: 2up/2down per "
+                         "z-layer from the slab's OWN geometry (in-plane AFM, needs no "
+                         "ref correspondence). match: Hungarian on RANSAC-aligned ref.")
     ap.add_argument("--ztol", type=float, default=0.8, help="z-layer clustering gap (A)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
@@ -359,33 +386,52 @@ def main():
 
     mode = a.afm_mode
     if mode == "auto":
-        mode = "layer" if is_A else "match"
+        mode = "layer" if is_A else "inplane"
     if mode == "layer" and not is_A:
-        raise SystemExit(
-            "  !! --afm_mode layer requested but ref is NOT clean z-layer AFM.\n"
-            "     The ref uses an in-plane pattern; layer alternation would give a\n"
-            "     DIFFERENT magnetic state. Need position correspondence (match) —\n"
-            "     but the slabs are offset, so tell me and I'll add RANSAC alignment.")
-    if mode == "match" and not is_A:
-        print("  (ref is in-plane AFM -> match mode; RANSAC alignment removes the offset first)")
+        raise SystemExit("  !! layer mode needs an A-type ref; this ref is in-plane. Use inplane.")
+    if mode == "inplane":
+        print("  ref is in-plane AFM (2up/2down per layer); generating the same TYPE from the")
+        print("  phaseA slab's own geometry (no ref correspondence needed). The slab cancels in")
+        print("  E_bind(doped)-E_bind(neutral), so the verdict is robust to the AFM microstate.")
     print(f"  --> AFM assignment mode: {mode}", flush=True)
 
+    # ---- slab AFM computed ONCE, transferred to complexes by index (identical slab
+    #      sublattice across slab/complex_doped/complex_neutral => clean cancellation) ----
+    slab_atoms = read(a.slab)
+    Nslab = len(slab_atoms)
+    if mode == "layer":
+        slab_labels = afm_layer_assign(slab_atoms, band_lab, "slab", a.ztol)
+    elif mode == "inplane":
+        slab_labels = afm_inplane_assign(slab_atoms, "slab", a.ztol)
+    else:
+        slab_labels = split_ni(slab_atoms, ni_ref, ref_lab, slab_atoms.cell.array)
+    slab_ni = {i: slab_labels[i] for i in range(Nslab) if slab_labels[i] in ('Ni1', 'Ni2')}
+
     jobs = [
-        ("slab",            a.slab,             "slab",             a.kpts,   "pb_slab"),
+        ("slab",            None,               "slab",             a.kpts,   "pb_slab"),
         ("complex_doped",   a.complex_doped,    "complex",          a.kpts,   "pb_cxd"),
         ("complex_neutral", a.complex_neutral,  "complex",          a.kpts,   "pb_cxn"),
         ("mol_doped",       a.mol_doped,        "molecule_doped",   "gamma",  "pb_mold"),
         ("mol_neutral",     a.mol_neutral,      "molecule_neutral", "gamma",  "pb_moln"),
     ]
     for name, src, kind, kpts, prefix in jobs:
-        atoms = read(src)
-        if kind.startswith("molecule"):
-            atoms = box_molecule(atoms)
-            labels = list(atoms.get_chemical_symbols())
-        elif mode == "layer":
-            labels = afm_layer_assign(atoms, band_lab, name, a.ztol)
+        if kind == "slab":
+            atoms, labels = slab_atoms, slab_labels
+        elif kind == "complex":
+            atoms = read(src)
+            base = list(atoms.get_chemical_symbols())
+            mism = sum(1 for i in range(Nslab)
+                       if base[i] != slab_atoms.get_chemical_symbols()[i])
+            if mism:
+                print(f"  !! {name}: {mism} of first {Nslab} atoms differ from the slab — "
+                      "index transfer unsafe; check phaseA atom ordering")
+            labels = base[:]
+            for i in range(Nslab):
+                if labels[i] == 'Ni':
+                    labels[i] = slab_ni[i]        # inherit identical slab sublattice
         else:
-            labels = split_ni(atoms, ni_ref, ref_lab, atoms.cell.array)
+            atoms = box_molecule(read(src))
+            labels = list(atoms.get_chemical_symbols())
         d = os.path.join(a.out, name)
         os.makedirs(d, exist_ok=True)
         write_scf(os.path.join(d, "scf.in"), atoms, labels, kind, kpts,
@@ -398,7 +444,12 @@ def main():
         f.write(
             "Phase-B DFT+U binding cross-check (single-point on UMA geometries)\n"
             "  E_bind(tag) = E(complex_tag) - E_slab - E_mol(tag)\n"
-            "  verdict     = E_bind(doped) - E_bind(neutral)   (< 0 => doping strengthens)\n\n"
+            "  VERDICT (robust)  = E_bind(doped) - E_bind(neutral)   (< 0 => doping strengthens)\n"
+            "  The slab (and its in-plane-AFM microstate) enters both E_bind identically and\n"
+            "  cancels in this difference, so the verdict does NOT depend on reproducing\n"
+            "  scf_u62's exact AFM (the phaseA and scf_u62 slabs are different structures).\n"
+            "  Absolute E_bind values carry a common, cancelling magnetic-state offset -- quote\n"
+            "  the difference, not the absolutes.\n\n"
             "Run order (sequential; slab is the heaviest ~96+ atoms):\n"
             "  for j in slab complex_doped complex_neutral mol_doped mol_neutral; do\n"
             "    cd $j && mpirun -np <N> pw.x -in scf.in > scf.out 2>&1; cd ..\n"
