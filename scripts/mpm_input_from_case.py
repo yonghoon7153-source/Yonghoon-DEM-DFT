@@ -354,11 +354,14 @@ python3 scripts/mpm3d_compaction.py \\
         echo "          rebuild mpm_payload.json from the STALE se_dump.npy of a PREVIOUS run and report a"; \\
         echo "          leftover porosity as if it were this run.  Fix the error and re-run."; exit 1; }}
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
+#    + STEP3 σ_e 저항망 (전도상 voxel Kirchhoff, 풀해상도 — metrics.step3.sigma_e_eff + 입자별 je;
+#      상대비교용 σ표는 metrics에 기록됨.  끄기: --no-step3)
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
   --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt_pay} --eps se_dump_eps.npy{pay_dilate} \\
-  --void-max 180000 --metrics-json mpm_metrics.json --case {case}{pay_phase} --out mpm_payload.json
+  --void-max 180000 --step3-vox 0.4 --metrics-json mpm_metrics.json --case {case}{pay_phase} --out mpm_payload.json
 echo "[run_mpm] DONE $(date) → upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
+echo "          (additive run이면 mpm_metrics.json의 step3.sigma_e_eff_S_cm = STEP3 σ_e — viewer 전류밀도 모드로 색칠)"
 """
     rp = os.path.join(a.out, 'run_mpm.sh')
     open(rp, 'w').write(run); os.chmod(rp, 0o755)
