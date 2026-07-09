@@ -595,6 +595,15 @@ function updateAdditiveGpuCmds() {
   }
   el.innerHTML = html;
 }
+// Populate the GPU command card on load / back-forward restore.  Browsers restore the wt% inputs on
+// reload or bfcache WITHOUT firing oninput, so the card (and variant name) would otherwise stay blank
+// until the user touches a field — that is why the scp/run boxes "disappeared" after a reload.
+(function initAddCard() {
+  const run = () => { try { updateAdditiveGpuCmds(); } catch (e) {} };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+  else run();
+  window.addEventListener('pageshow', run);   // fires on bfcache restore (back/forward)
+})();
 // ③ upload the additive run's mpm_payload.json as a NAMED variant in the MPM lab, then jump to the viewer.
 async function uploadAdditiveResult() {
   const { vg, sp, pt, sd } = _addVals();
