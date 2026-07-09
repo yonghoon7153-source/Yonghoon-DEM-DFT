@@ -258,6 +258,10 @@
           <option value="ideal" selected>이상 접촉 (기본 — 시나리오 부하 없음)</option>
           <option value="bare">bare-Al</option>
           <option value="csus">C-SUS primer 코팅</option></select></label>
+        <label title="STEP3 복셀 해상도 (µm) — 작을수록 입자-입자 접점(neck)·SDCP 채널이 더 선명. dof∝1/vox³: 0.4→~0.8M(σ 검증값), 0.25→~3M(논문 figure), 0.2→~6M(최고 해상, CG 오래). 전류밀도 필드/논문 그림용. σ 절대값은 vox에 약간 의존하니 비교표는 0.4로.">voxel(STEP3)<br><select id="add-vox" style="padding:3px" onchange="updateAdditiveGpuCmds()">
+          <option value="0.4" selected>0.4 µm (기본 · σ 검증값)</option>
+          <option value="0.25">0.25 µm (고해상 · 논문)</option>
+          <option value="0.2">0.2 µm (초고해상 · 느림)</option></select></label>
         <label>mixing<br><select id="add-mixing" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="ballmill">ball-mill (고전단)</option>
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
@@ -524,6 +528,7 @@ function _addVals() {
     sd: +document.getElementById('add-sdcp').value || 0,
     mix: document.getElementById('add-mixing').value,
     coll: (document.getElementById('add-collector') || {value: 'ideal'}).value,
+    vox: (document.getElementById('add-vox') || {value: '0.4'}).value,
   };
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
@@ -539,11 +544,11 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -553,15 +558,16 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, sd, mix } = _addVals();
+  const { vg, sp, pt, sd, mix, vox } = _addVals();
   const recipe = _addRecipeStr(vg, sp, pt, sd);
-  return recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') + '_' + mix : '';
+  const vt = (vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
+  return recipe ? '_' + recipe.replace(/:/g, '-').replace(/=/g, '_') + '_' + mix + vt : '';
 }
 function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, sd, mix } = _addVals();
+  const { vg, sp, pt, sd, mix, vox } = _addVals();
   const vn = document.getElementById('add-variant-name');
   if (vn) vn.textContent = _addVariantName() || '…';
   if ((vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
@@ -579,7 +585,7 @@ function updateAdditiveGpuCmds() {
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
-  let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}</div>`;
+  let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}</div>`;
   for (const s of SERVERS) {
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`
       + (s.setup ? blk(`# ⓪ ${s.name} 최초 1회 — MPM worktree (DFT 브랜치 클론 안 건드림; 이미 있으면 skip)`, s.setup) : '')

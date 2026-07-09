@@ -5270,6 +5270,14 @@ def mpm_input_package(case_id):
         _rint, _cname = -1.0, ''
     if _rint >= 0.0:
         cmd += ['--collector-rint', str(_rint), '--collector-name', _cname]
+    # STEP3 voxel resolution (µm).  ONLY the σ solve grid — NOT the MPM compaction (n_grid) nor the
+    # porosity/thickness/coverage/econn (those are unchanged by vox).  Finer = neck/SDCP-channel detail
+    # for the current-density FIELD figure; σ_e/σ_ion/R_geom can shift slightly (finite-volume grid
+    # dependence).  Whitelisted so the UI can't request a runaway dof (∝1/vox³).
+    _vox = request.args.get('vox', '0.4')
+    if _vox not in ('0.4', '0.25', '0.2'):
+        _vox = '0.4'
+    cmd += ['--step3-vox', _vox]
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
@@ -5284,6 +5292,8 @@ def mpm_input_package(case_id):
     # filename carries BOTH the recipe and the mixing, so a thinky vs ball-mill zip
     # of the same recipe are distinct files (mixing changes the baked run_mpm.sh).
     tag = ('_' + recipe.replace(':', '-').replace('=', '_') + '_' + mixing) if recipe else ''
+    if recipe and _vox != '0.4':                        # finer STEP3 vox → carried into the zip/name
+        tag += '_vox' + _vox
     return send_file(buf, mimetype='application/zip', as_attachment=True,
                      download_name=f'mpm_input_{case_id}{tag}.zip')
 
@@ -5361,6 +5371,7 @@ def mpm_lab_upload():
     _sel = ((mm.get('step3') or {}).get('collector') or {}).get('selected') or {}
     collector = (f"{_sel.get('name')} (R_int {_sel.get('R_int_ohm_cm2'):g}Ωcm²)"
                  if _sel.get('name') else '')
+    _vox_um = (mm.get('step3') or {}).get('vox_um')     # STEP3 voxel size — show when finer than default
     name = (request.form.get('name') or data.get('case') or 'payload').strip()
     pid = f"{_mpm_lab_slug(name)}_{uuid.uuid4().hex[:6]}"
     d = os.path.join(app.config['MPM_LAB_FOLDER'], pid)
@@ -5377,6 +5388,7 @@ def mpm_lab_upload():
         'additive_counts': ac,
         'recipe': ' · '.join(f'{k} {int(v):,}' for k, v in ac.items()) if ac else '',
         'collector': collector,                     # STEP3 선택 집전체 (시나리오 태그) — 목록/요약 표기
+        'vox_um': _vox_um,                          # STEP3 복셀 해상도 — 목록 뱃지 (0.4 기본이면 숨김)
         'has_additives': bool(ac),
         'uploaded_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
         'size_mb': round(os.path.getsize(os.path.join(d, 'payload.json')) / 1e6, 1),

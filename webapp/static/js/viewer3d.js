@@ -3681,13 +3681,17 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
             hiddenDecorations.push(obj);
           }
         });
-        // Use transparent background so PNG overlays cleanly on any PPT slide color
+        // Current-density FIELD / je modes read as "hot paths on a DARK field" — a transparent PNG
+        // drops the deep-blue cold field on white paper, breaking the figure.  Keep the dark canvas
+        // background for those; keep transparent for structural modes (clean slide overlay).
+        const _mode = (ctrlDiv.querySelector('#view-mode') || {}).value || '';
+        const darkField = ['je_field', 'ji_field', 'je', 'je_bare'].includes(_mode);
         const prevBg = scene.background;
         const prevClear = new THREE.Color();
         renderer.getClearColor(prevClear);
         const prevAlpha = renderer.getClearAlpha();
-        scene.background = null;
-        renderer.setClearColor(0x000000, 0);
+        if (darkField) { scene.background = new THREE.Color(COL.BG); renderer.setClearColor(COL.BG, 1); }
+        else { scene.background = null; renderer.setClearColor(0x000000, 0); }
         // 6× supersampled capture (paper-grade PNG — ~6000px on a 1000px canvas)
         const dataUrl = captureHighRes(renderer, scene, camera, 6);
         // Restore background + decorations
