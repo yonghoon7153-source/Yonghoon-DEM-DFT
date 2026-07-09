@@ -53,11 +53,15 @@ echo "===== Phase-B SCF chain (gabia)  $(date) ====="
 # in a vacuum box at ecutrho 480) fits alongside p0 -- the first attempt OOM'd
 # the molecules at 4 GB free. All thresholds now gate on "p0 has freed the card"
 # (free jumps to ~47 GB when p0's min->saddle->barrier chain finishes).
-run_one mol_doped       20000    # 34 atoms, gamma, big vacuum box -> mem-heavy
-run_one mol_neutral     20000    # 35 atoms
-run_one slab            34000    # 96 atoms, 2x2x1, nspin2+U
-run_one complex_doped   40000    # 130 atoms (drop to gamma if this OOMs on 48 GB)
-run_one complex_neutral 40000    # 131 atoms
+# Thresholds gate on "p0 has freed the card" (~47 GB free after its chain).
+# slab verified to run at 11.7 GB with 30 GB free, co-existing with p0_saddle,
+# so heavies use the proven 30/32; molecules (big vacuum box, OOM'd at 6 GB free)
+# wait for the same 30 GB before launching.
+run_one mol_doped       30000    # 34 atoms, gamma, big vacuum box -> mem-heavy
+run_one mol_neutral     30000    # 35 atoms
+run_one slab            30000    # 96 atoms, 2x2x1, nspin2+U (ran at 11.7 GB)
+run_one complex_doped   32000    # 130 atoms
+run_one complex_neutral 32000    # 131 atoms
 echo "===== chain end  $(date) ====="
 n=$(grep -l "JOB DONE" $BASE/*/scf.out 2>/dev/null | wc -l)
 echo "completed SCFs: $n / 5"
