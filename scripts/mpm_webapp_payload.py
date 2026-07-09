@@ -294,6 +294,11 @@ def main():
     ap.add_argument('--sigma-ion-sdcp', type=float, default=0.001,
                     help='σ_ion SDCP (S/cm) — NOT an ion-insulator (user principle: Li-hopping keeps it '
                          'conducting; pellet ×0.80 vs PTFE ×0.27).  1 mS/cm ⚠F1 hook; Li⁺ DFT 패키지가 앵커 예정.')
+    ap.add_argument('--field-max-points', type=int, default=90000,
+                    help='max points per current-density FIELD cloud (electronic=AM+carbon, ionic=SE+SDCP). '
+                         'High for paper figures; ~90k/field ≈ a few MB JSON.  Hottest 35%% always kept.')
+    ap.add_argument('--no-field', action='store_true',
+                    help='skip the STEP3 current-density FIELD export (electronic_field / ionic_field)')
     a = ap.parse_args()
     vc = _vc()
     sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
@@ -467,7 +472,7 @@ def main():
     # settings (σ hooks + vox recorded in metrics); absolute σ_e needs the DEM Stage-E contact-area
     # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
     # analytic laminate/percolation self-tests that pin the assembly.
-    step3 = None; je_am = None; jb_am = None
+    step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None
     if len(r) and not a.no_step3:                       # phase=None → AM-skeleton-only σ (SBE baseline)
         try:
             import time as _time
@@ -498,6 +503,15 @@ def main():
             elif _res3['n_dof']:
                 je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
                                       nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
+                if not a.no_field:                          # ELECTRONIC field (AM+carbon {1,2,3,4,5}) — the
+                    _ep, _ej = _s3.field_point_cloud(       # paper Fig-4 grammar: |J_e| cloud, hot backbone
+                        _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5), max_points=a.field_max_points)
+                    if _ep is not None:
+                        _ejn = _ej / max(float(_ej.max()), 1e-30)   # normalise 0–1 (compact JSON; viewer
+                        elec_field = [[round(float(_ep[i, 0]), 2), round(float(_ep[i, 1]), 2),   # p99.8-norms)
+                                       round(float(_ep[i, 2]), 2), round(float(_ejn[i]), 4)]
+                                      for i in range(len(_ep))]
+                        print(f"  STEP3 electronic FIELD: {len(elec_field):,} pts (AM+carbon |J| cloud)")
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
                 _sname = _s3.SID_NAME
                 step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
@@ -623,6 +637,15 @@ def main():
                                            z_top_um=_ztop, z_bot_um=0.0)
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
+                    if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
+                        _ip, _ij = _s3.field_point_cloud(   # the partner panel to the electronic field
+                            _res3i, sid3, _sig3i, a.step3_vox, (5, 6), max_points=a.field_max_points)
+                        if _ip is not None:
+                            _ijn = _ij / max(float(_ij.max()), 1e-30)
+                            ion_field = [[round(float(_ip[i, 0]), 2), round(float(_ip[i, 1]), 2),
+                                          round(float(_ip[i, 2]), 2), round(float(_ijn[i]), 4)]
+                                         for i in range(len(_ip))]
+                            print(f"  STEP3 ionic FIELD: {len(ion_field):,} pts (SE+SDCP |J| cloud)")
                     step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
@@ -803,6 +826,8 @@ def main():
         'seed_mesh_triangles': seed_tris,                  # loose SE before compaction (before/after)
         'additive_points': additive_points,                # [x,y,z,phase] µm — VGCF(2)/SuperP(3)/PTFE(4)
         'additive_fibres': additive_fibres,                # [{phase, pts:[[x,y,z],…]}] — VGCF/PTFE as polylines
+        'electronic_field': elec_field,                    # [x,y,z,|J|₀₋₁] µm — STEP3 e⁻ current-density cloud (AM+carbon)
+        'ionic_field': ion_field,                          # [x,y,z,|J|₀₋₁] µm — STEP3 Li⁺ current-density cloud (SE+SDCP)
         'void_points': void_points,                        # [x,y,z] µm — pore voxel centres (XCT "기공만" mode)
         'box': {'x_min': 0.0, 'x_max': round(lat, 2), 'y_min': 0.0, 'y_max': round(lat, 2),
                 'z_min': 0.0, 'z_max': round(thick, 2)},

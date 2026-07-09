@@ -299,6 +299,63 @@ def phase_current_share(res, sid, sigma_of_sid):
     return out
 
 
+def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
+                      max_points=40000, hot_budget_frac=0.35, seed=1):
+    """Per-voxel current-density MAGNITUDE sampled at the selected conducting phase(s), as a
+    subsampled point cloud for a paper-style field figure (Fig-2/Fig-4 grammar).
+
+    Reuses the SAME validated (phi, cond) the solve returned (return_field=True) — this is a pure
+    READOUT, it does not re-solve or change σ.  The cell-centred |J| proxy mirrors
+    per_particle_current EXACTLY: for each of the 3 axes the two bounding face currents |g·Δφ| are
+    half-split onto the cell (g = 2σaσb/(σa+σb) = the SAME harmonic-mean conductance the matrix
+    used — so a high-σ phase such as SDCP actually lights up), then |J| = √(Jx²+Jy²+Jz²).
+    Run-relative (∝ σ·Δφ; the viewer percentile-normalises); NOT vox-invariant across runs.
+
+    sel_sids : iterable of σ-ids to KEEP (electronic field → AM+carbon {1,2,3,4,5};
+               ionic field → SE+SDCP {5,6}).  Only voxels that are BOTH sel AND conductive (in the
+               plate-connected component `cond`) are emitted — floating islands already dropped.
+    Returns (pts_um [N,3] float32, jmag [N] float32) in the payload µm frame (voxel centres +
+    box_lo), or (None, None) if the solve early-returned / nothing selected.
+
+    Subsample keeps ALL of the hottest `hot_budget_frac` of the budget (so the conduction
+    backbone survives at low point counts) + a uniform-random background for honest density."""
+    if 'phi' not in res:
+        return None, None
+    P, cond = res['phi'], res['cond']
+    sig = sigma_of_sid[sid]
+    jmag = np.zeros(sid.shape, np.float64)
+    for axis in (0, 1, 2):
+        sa_sl = [slice(None)] * 3; sb_sl = [slice(None)] * 3
+        sa_sl[axis] = slice(0, -1); sb_sl[axis] = slice(1, None)
+        sa_sl, sb_sl = tuple(sa_sl), tuple(sb_sl)
+        both = cond[sa_sl] & cond[sb_sl]
+        sa, sb = sig[sa_sl], sig[sb_sl]
+        g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
+        f = np.abs(g * (P[sa_sl] - P[sb_sl]))               # face current ∝ σ·Δφ (per face area)
+        comp = np.zeros(sid.shape, np.float64)
+        comp[sa_sl] += f * 0.5
+        comp[sb_sl] += f * 0.5
+        jmag += comp * comp
+    jmag = np.sqrt(jmag)
+    sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
+    ii, jj, kk = np.where(sel)
+    if not len(ii):
+        return None, None
+    vals = jmag[ii, jj, kk]
+    if len(ii) > max_points:
+        rng = np.random.default_rng(seed)
+        order = np.argsort(vals)[::-1]
+        n_hot = int(max_points * hot_budget_frac)
+        hot = order[:n_hot]
+        rest = rng.choice(order[n_hot:], size=max_points - n_hot, replace=False)
+        pick = np.concatenate([hot, rest])
+        ii, jj, kk, vals = ii[pick], jj[pick], kk[pick], vals[pick]
+    pts = np.stack([(ii + 0.5) * vox + box_lo[0],
+                    (jj + 0.5) * vox + box_lo[1],
+                    (kk + 0.5) * vox + box_lo[2]], axis=1)
+    return pts.astype(np.float32), vals.astype(np.float32)
+
+
 def _selftest():
     """Analytic checks that pin assembly + BC signs."""
     ok = True

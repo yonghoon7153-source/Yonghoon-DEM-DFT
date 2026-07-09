@@ -137,8 +137,10 @@ function buildControls(container, isMPM) {
       <option value="se_strain">SE 변형 (vs seed)</option>
       <optgroup label="전기 (electrical)">
         <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
-        <option value="je">전류밀도 — STEP3 (wetted/primer 집전체)</option>
-        <option value="je_bare">전류밀도 — bare 집전체 (crown 접점만)</option>
+        <option value="je_field">⚡ 전자 전류밀도 — 필드 (AM+카본, 논문)</option>
+        <option value="ji_field">⚡ 이온 전류밀도 — 필드 (SE+SDCP, 논문)</option>
+        <option value="je">└ 전자 — AM 입자별 (wetted 집전체)</option>
+        <option value="je_bare">└ 전자 — AM 입자별 (bare 집전체)</option>
       </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
@@ -1956,6 +1958,78 @@ function applyViewMode(state, mode) {
        <div style="margin-top:2px;color:#9ca3af;font-size:10px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
     return;
   }
+  if (mode === 'je_field' || mode === 'ji_field') {
+    /* STEP3 current-density FIELD (paper Fig-2/Fig-4 grammar): a per-voxel |J| point cloud of the
+     * CONDUCTING phase — electronic (AM+carbon) or ionic (SE+SDCP) — coloured jet + gamma-compressed
+     * so only the true conduction backbone leaves the deep-blue field.  The OPPOSITE (blocking) phase
+     * is a faint dark ghost for context.  Same p99.8/gamma normalisation as the je AM-sphere map. */
+    const ionic = mode === 'ji_field';
+    const fld = (state.data && state.data[ionic ? 'ionic_field' : 'electronic_field']) || [];
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const s3 = mm.step3 || (state.data && state.data.step3) || null;
+    if (!fld.length) {
+      setLegend(state, '<i>이 payload엔 ' + (ionic ? '이온' : '전자') + ' 전류밀도 FIELD가 없어요 — 최신 '
+        + '<b>mpm_webapp_payload.py</b>(--field 기본 ON)로 payload를 재생성해 업로드하세요 '
+        + '(MPM 재실행 불필요).</i>');
+      return;
+    }
+    // conducting phase IS the cloud → hide its sphere/mesh; blocking phase = faint dark ghost
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      if (ionic) {                                          // ionic: AM = dark obstacle ghost
+        const base = new THREE.Color(0x0a0e1a);
+        m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
+        if (m.instanceColor) m.instanceColor.needsUpdate = true;
+        m.visible = true; m.material.transparent = true; m.material.opacity = 0.13;
+      } else { m.visible = false; }                         // electronic: AM is IN the cloud → hide
+    });
+    if (state.meshes.MESH) {
+      if (ionic) { state.meshes.MESH.visible = false; }     // ionic: SE is IN the cloud → hide mesh
+      else {                                                // electronic: SE = insulator ghost
+        state.meshes.MESH.visible = true;
+        state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.09;
+      }
+    }
+    const jv = fld.map(p => p[3]);
+    const sorted = [...jv].sort((a, b) => a - b);
+    const hi = Math.max(sorted[Math.floor(0.998 * (sorted.length - 1))], 1e-9);
+    const gam = (t) => Math.pow(Math.max(0, Math.min(1, t / hi)), 1.6);
+    const g = new THREE.BufferGeometry();
+    const pos = new Float32Array(fld.length * 3), col = new Float32Array(fld.length * 3);
+    const c = new THREE.Color();
+    for (let i = 0; i < fld.length; i++) {
+      const p = fld[i];
+      pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];   // Z-up swap (x,z,y)
+      c.setHex(jetColor(gam(p[3])));
+      col[3 * i] = c.r; col[3 * i + 1] = c.g; col[3 * i + 2] = c.b;
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const grp = new THREE.Group();
+    for (const [sz, op] of [[0.9, 0.22], [0.42, 0.96]]) {    // soft halo + crisp core = paper glow
+      const pm = new THREE.Points(g, new THREE.PointsMaterial({
+        size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+        transparent: true, opacity: op, alphaTest: 0.02, depthWrite: false }));
+      pm.renderOrder = 900; grp.add(pm);
+    }
+    state.additivePointGroup = grp;                          // reuse the mode-switch cleanup hook
+    if (state.scene) state.scene.add(grp);
+    if (state.applyClip) state.applyClip();                  // 단면 뷰를 새 point 재질에도 적용
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+    const sigTxt = ionic
+      ? (s3 && s3.sigma_ion_eff_S_cm != null ? 'σ_ion_eff ' + Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '')
+      : (s3 && s3.sigma_e_eff_S_cm != null ? 'σ_e_eff ' + Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '');
+    const share = ionic ? (s3 && s3.ion_dissipation_share) : (s3 && s3.dissipation_share);
+    setLegend(state,
+      `<b>${ionic ? '이온 (Li⁺)' : '전자 (e⁻)'} 전류밀도 FIELD (STEP3 · ${ionic ? 'SE+SDCP' : 'AM+carbon'})</b>`
+      + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
+      + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
+      + `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`
+      + `<div style="margin-top:3px;color:#9ca3af;font-size:10px">${fld.length.toLocaleString()}점 · ${ionic ? 'AM=어두운 장애물' : 'SE=어두운 절연체'} 고스트 · 단면 뷰로 내부, Screenshot=4× 고화질</div>`
+      + (share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
+          + Object.entries(share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
+    return;
+  }
   if (mode === 'je' || mode === 'je_bare') {
     /* STEP3 per-AM current density (slide-20 문법): AM coloured by mean |J_z| from the voxel
      * Kirchhoff solve.  'je' = wetted/primer collector (film-reach contacts), 'je_bare' = bare
@@ -3609,8 +3683,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         const prevAlpha = renderer.getClearAlpha();
         scene.background = null;
         renderer.setClearColor(0x000000, 0);
-        // 4× supersampled capture (publication-quality PNG)
-        const dataUrl = captureHighRes(renderer, scene, camera, 4);
+        // 6× supersampled capture (paper-grade PNG — ~6000px on a 1000px canvas)
+        const dataUrl = captureHighRes(renderer, scene, camera, 6);
         // Restore background + decorations
         scene.background = prevBg;
         renderer.setClearColor(prevClear, prevAlpha);
