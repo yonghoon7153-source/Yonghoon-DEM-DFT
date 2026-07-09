@@ -96,16 +96,6 @@ const _RDYLGN = [
   [0.75, 0xa6, 0xd9, 0x6a],
   [1.00, 0x1a, 0x96, 0x41],
 ];
-function jetColor(t) {
-  // paper-style jet (0 = deep blue → cyan → green → yellow → red = hot): current-density maps
-  // read as a blue field with sparse hot paths, like tomography-FEM figures.
-  t = Math.max(0, Math.min(1, t));
-  const r = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 3)));
-  const g = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 2)));
-  const b = Math.max(0, Math.min(1, 1.5 - Math.abs(4 * t - 1)));
-  return (Math.round(255 * r) << 16) | (Math.round(255 * g) << 8) | Math.round(255 * b);
-}
-
 function rdylgnColor(t) {
   t = Math.max(0, Math.min(1, t));
   for (let i = 0; i < _RDYLGN.length - 1; i++) {

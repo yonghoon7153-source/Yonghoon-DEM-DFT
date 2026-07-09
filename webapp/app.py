@@ -5358,6 +5358,9 @@ def mpm_lab_upload():
                         'mpm_payload.json을 올리세요 (metrics 파일 아님).'}), 400
     mm = data.get('mpm_metrics', {}) or {}
     ac = mm.get('additive_counts') or {}
+    _sel = ((mm.get('step3') or {}).get('collector') or {}).get('selected') or {}
+    collector = (f"{_sel.get('name')} (R_int {_sel.get('R_int_ohm_cm2'):g}Ωcm²)"
+                 if _sel.get('name') else '')
     name = (request.form.get('name') or data.get('case') or 'payload').strip()
     pid = f"{_mpm_lab_slug(name)}_{uuid.uuid4().hex[:6]}"
     d = os.path.join(app.config['MPM_LAB_FOLDER'], pid)
@@ -5373,6 +5376,7 @@ def mpm_lab_upload():
         'n_am': mm.get('n_am') or len(data.get('particles', [])),
         'additive_counts': ac,
         'recipe': ' · '.join(f'{k} {int(v):,}' for k, v in ac.items()) if ac else '',
+        'collector': collector,                     # STEP3 선택 집전체 (시나리오 태그) — 목록/요약 표기
         'has_additives': bool(ac),
         'uploaded_at': datetime.now().strftime('%Y-%m-%d %H:%M'),
         'size_mb': round(os.path.getsize(os.path.join(d, 'payload.json')) / 1e6, 1),
