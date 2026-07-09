@@ -530,8 +530,11 @@ def main():
                                       'anchors': 'Fig6e post-cycling R_int; S14 primer 1.3e4 S/cm 200nm',
                                       'sigma_apparent_S_cm': {
                                           nm2: float(f'{_Lcm / (_Rbulk + _R):.3g}')
-                                          for nm2, _R in (('ideal_R0', 0.0), ('bare_Al_SBE_110', 110.0),
-                                                          ('DBE_46', 46.0), ('C-SUS_primer_30', 30.0))}}
+                                          # ★ 사용자 확정 시나리오 트리플 (2026-07-10): SBE / DBE / SBE+C-SUS.
+                                          #   SBE+C-SUS는 manuscript 미측정 → DBE-앵커(30) proxy 라벨.
+                                          for nm2, _R in (('ideal_R0', 0.0), ('SBE_bare_110', 110.0),
+                                                          ('DBE_bare_46', 46.0),
+                                                          ('SBE_CSUS_30_proxy_DBE_anchored', 30.0))}}
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
@@ -541,9 +544,9 @@ def main():
                         'R_int_ohm_cm2': a.collector_rint,
                         'sigma_apparent_S_cm': float(f'{_Lcm / (_Rbulk + a.collector_rint):.3g}')}
                 _ca = step3['collector']['sigma_apparent_S_cm']
-                print(f"  STEP3 collector axis (R_int series): bulk {_ca['ideal_R0']:.3g} → "
-                      f"bare-Al(110Ωcm²) {_ca['bare_Al_SBE_110']:.3g} / DBE(46) {_ca['DBE_46']:.3g} / "
-                      f"C-SUS primer(30) {_ca['C-SUS_primer_30']:.3g} S/cm  — 계면이 병목 (R_bulk {_Rbulk:.2g} Ωcm²)")
+                print(f"  STEP3 collector scenarios: bulk {_ca['ideal_R0']:.3g} → SBE(110Ωcm²) "
+                      f"{_ca['SBE_bare_110']:.3g} / DBE(46) {_ca['DBE_bare_46']:.3g} / SBE+C-SUS(30 proxy) "
+                      f"{_ca['SBE_CSUS_30_proxy_DBE_anchored']:.3g} S/cm  (R_bulk {_Rbulk:.2g} Ωcm² ≪ 계면)")
                 # ★ BARE-collector GEOMETRIC solve (v2, user request): tighter bottom contact band
                 # (0.5·vox+0.1 = true-contact crowns only vs wetted/primer vox+0.1 film reach) →
                 # the exit current funnels through the crown contacts and the per-AM je map
