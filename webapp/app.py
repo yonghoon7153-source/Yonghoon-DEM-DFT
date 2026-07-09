@@ -5253,6 +5253,13 @@ def mpm_input_package(case_id):
         mixing = 'thinky'
     if recipe:
         cmd += ['--add-recipe', recipe, '--mixing', mixing]
+    # STEP3 collector preset (manuscript Fig6e cycled R_int anchors) — post-processing selection;
+    # every preset is always computed, this just tags metrics.step3.collector.selected.
+    _coll = request.args.get('collector', '')
+    _cmap = {'csus': (30.0, 'C-SUS_primer'), 'dbe': (46.0, 'bare_Al_DBE'),
+             'bare': (110.0, 'bare_Al_SBE'), 'ideal': (0.0, 'ideal')}
+    if _coll in _cmap:
+        cmd += ['--collector-rint', str(_cmap[_coll][0]), '--collector-name', _cmap[_coll][1]]
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:

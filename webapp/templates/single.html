@@ -254,6 +254,11 @@
         <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 (크기=Fig S2 앵커, 저전단 생존=추론). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
+        <label title="STEP3 집전체 축 (manuscript Fig6e 사이클후 R_int 앵커): 선택은 metrics.step3.collector.selected 강조용 — 모든 프리셋(σ_apparent)은 항상 함께 계산·기록됨. bare-vs-wetted 기하 접촉 비교(je 재분배)도 자동 포함">집전체<br><select id="add-collector" style="padding:3px" onchange="updateAdditiveGpuCmds()">
+          <option value="csus" selected>C-SUS primer (R_int 30)</option>
+          <option value="dbe">bare-Al · DBE (46)</option>
+          <option value="bare">bare-Al · SBE (110)</option>
+          <option value="ideal">이상 접촉 (0)</option></select></label>
         <label>mixing<br><select id="add-mixing" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="ballmill">ball-mill (고전단)</option>
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
@@ -519,6 +524,7 @@ function _addVals() {
     pt: +document.getElementById('add-ptfe').value || 0,
     sd: +document.getElementById('add-sdcp').value || 0,
     mix: document.getElementById('add-mixing').value,
+    coll: (document.getElementById('add-collector') || {value: 'csus'}).value,
   };
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
@@ -534,11 +540,11 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix } = _addVals();
+  const { vg, sp, pt, sd, mix, coll } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)

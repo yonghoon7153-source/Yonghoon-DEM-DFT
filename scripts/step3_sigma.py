@@ -110,7 +110,7 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
 
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
-                  z_bot_um=None):
+                  z_bot_um=None, plate_band_bot_um=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -145,6 +145,12 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False, 'reason': 'degenerate_thin_bed'}
     band = plate_band_um if plate_band_um is not None else (vox + 0.10)
+    # BOTTOM band override (collector GEOMETRY axis): 'wetted/primer' = default band (vox+0.1 —
+    # a conformal conductive film reaches ~0.2µm gaps, + quantization half-voxel); 'bare' passes a
+    # TIGHTER band (0.5·vox+0.1 = true-contact crowns only) → fewer collector contacts → the exit
+    # current funnels through crown contacts and the per-AM je map redistributes near the collector
+    # (the primer-paper Fig-4d red-box story).  ±half-voxel quantization blur documented.
+    band_bot = plate_band_bot_um if plate_band_bot_um is not None else band
     zc = (np.arange(nz) + 0.5) * vox                       # voxel-centre heights
     # PER-COLUMN SINGLE CONTACT (review F1, final form): each lateral column couples to a plate
     # through ONE voxel — its surface voxel — iff that surface is within `band` of the plane,
@@ -154,7 +160,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     any_c = cond.any(2)
     k_first = np.argmax(cond, axis=2)                      # column's lowest conductive voxel
     k_last = nz - 1 - np.argmax(cond[:, :, ::-1], axis=2)  # column's highest conductive voxel
-    bot_m = any_c & (zc[k_first] - z_b <= band)
+    bot_m = any_c & (zc[k_first] - z_b <= band_bot)
     top_m = any_c & (z_plate - zc[k_last] <= band)
     if not bot_m.any() or not top_m.any():
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,

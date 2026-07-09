@@ -286,6 +286,11 @@ def main():
                          'S-PEDOT-class); pellet ×5.1 stays COMPOSITE-level.  Doped/neutral split = future.')
     ap.add_argument('--sigma-ion-se', type=float, default=0.003,
                     help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor)')
+    ap.add_argument('--collector-rint', type=float, default=-1.0,
+                    help='SELECTED collector R_int (Ω·cm², manuscript Fig6e cycled anchors: bare-Al SBE '
+                         '110 / DBE 46 / C-SUS primer 30; 0 = ideal).  <0 = no selection (presets still '
+                         'reported).  Applied as a uniform areal series term (post-processing).')
+    ap.add_argument('--collector-name', default='', help='label for the selected collector preset')
     ap.add_argument('--sigma-ion-sdcp', type=float, default=0.001,
                     help='σ_ion SDCP (S/cm) — NOT an ion-insulator (user principle: Li-hopping keeps it '
                          'conducting; pellet ×0.80 vs PTFE ×0.27).  1 mS/cm ⚠F1 hook; Li⁺ DFT 패키지가 앵커 예정.')
@@ -462,7 +467,7 @@ def main():
     # settings (σ hooks + vox recorded in metrics); absolute σ_e needs the DEM Stage-E contact-area
     # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
     # analytic laminate/percolation self-tests that pin the assembly.
-    step3 = None; je_am = None
+    step3 = None; je_am = None; jb_am = None
     if len(r) and not a.no_step3:                       # phase=None → AM-skeleton-only σ (SBE baseline)
         try:
             import time as _time
@@ -527,10 +532,39 @@ def main():
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
+                if a.collector_rint >= 0.0:                # UI-selected preset → highlighted entry
+                    step3['collector']['selected'] = {
+                        'name': a.collector_name or f'R{a.collector_rint:g}',
+                        'R_int_ohm_cm2': a.collector_rint,
+                        'sigma_apparent_S_cm': float(f'{_Lcm / (_Rbulk + a.collector_rint):.3g}')}
                 _ca = step3['collector']['sigma_apparent_S_cm']
                 print(f"  STEP3 collector axis (R_int series): bulk {_ca['ideal_R0']:.3g} → "
                       f"bare-Al(110Ωcm²) {_ca['bare_Al_SBE_110']:.3g} / DBE(46) {_ca['DBE_46']:.3g} / "
                       f"C-SUS primer(30) {_ca['C-SUS_primer_30']:.3g} S/cm  — 계면이 병목 (R_bulk {_Rbulk:.2g} Ωcm²)")
+                # ★ BARE-collector GEOMETRIC solve (v2, user request): tighter bottom contact band
+                # (0.5·vox+0.1 = true-contact crowns only vs wetted/primer vox+0.1 film reach) →
+                # the exit current funnels through the crown contacts and the per-AM je map
+                # REDISTRIBUTES near the collector (primer-paper Fig-4d red-box, in 3D via 'jb').
+                # ±half-voxel quantization blur on the contact set — documented, direction robust.
+                _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
+                                           z_top_um=_ztop, z_bot_um=0.0,
+                                           plate_band_bot_um=0.5 * a.step3_vox + 0.10)
+                jb_am = None
+                if 'phi' in _res3b:
+                    jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
+                                          nan=0.0, posinf=0.0, neginf=0.0)
+                step3['collector_geometric'] = {
+                    'wetted_sigma_S_cm': step3['sigma_e_eff_S_cm'],
+                    'bare_sigma_S_cm': float(f"{_res3b['sigma_eff']:.4g}"),
+                    'n_bottom_contacts': {'wetted': (_res3.get('n_plate_vox') or (None,))[0],
+                                          'bare': (_res3b.get('n_plate_vox') or (None,))[0]},
+                    **({'bare_reason': _res3b['reason']} if _res3b.get('reason') else {}),
+                    'note': 'wetted=film-reach band vox+0.1µm / bare=crown band 0.5vox+0.1µm; '
+                            'contact set has ±half-voxel quantization blur'}
+                _cgm = step3['collector_geometric']
+                print(f"  STEP3 collector geometry: wetted {_cgm['wetted_sigma_S_cm']:.3g} S/cm "
+                      f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
+                      f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']} contacts)")
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()
@@ -559,7 +593,8 @@ def main():
                   'r': round(float(r[i] * UM), 3),
                   'coverage': float(cov_per[i]),
                   **({'econn': int(econn[i])} if econn is not None else {}),
-                  **({'je': float(f'{je_am[i]:.4g}')} if je_am is not None else {})} for i in range(len(r))]
+                  **({'je': float(f'{je_am[i]:.4g}')} if je_am is not None else {}),
+                  **({'jb': float(f'{jb_am[i]:.4g}')} if jb_am is not None else {})} for i in range(len(r))]
 
     # conductive additives (VGCF/SuperP/PTFE) → colored points for the 도전재 3D viewer.  Subsampled
     # proportionally to the budget; carried as [x,y,z,phase] µm (phase 2 VGCF · 3 SuperP · 4 PTFE).

@@ -73,6 +73,24 @@ pellet ×0.80 방향; Li⁺ DFT 패키지가 앵커 예정)**; AM/VGCF/SuperP/PT
 GeoDict-계 논문의 Fig-2(d)/(f) 축과 방법론 동급 (voxel FV) — 단 우리는 **상 분해** 유지.
 스모크: 전자 2.19e-4 / 이온 3.69e-4 S/cm, 이온 분담 SE 97.6% + SDCP 2.4% (기계 검증).
 
+## 집전체 축 (C-SUS/primer, 2026-07-10)
+- **R_int 직렬 (후처리, 재-솔브 불필요)**: σ_apparent = L/(L/σ_bulk + R_int).  앵커 = manuscript
+  Fig6e **사이클 후** R_int: bare-Al SBE 110 / DBE 46 / C-SUS primer 30 Ω·cm² (S14: primer 1.3e4
+  S/cm, 200nm).  벌크 R ~0.002 Ω·cm² ≪ R_int → **계면이 병목, primer가 그걸 ×3.7 연다**.
+- **문헌 검증 (2026-07-10 WebSearch)**: ① 액체 LIB의 carbon-coated Al 계면 ASR은 0.014–0.03
+  Ω·cm² (코팅 후) — 우리 값보다 3-4자릿수 작음 = **액체계 잣대는 부적용**.  ② 고체계 계면은
+  수십~수백 Ω·cm²가 정상 스케일 (garnet/Li 950→75 표면처리; Bazzoun 우리-동일계 R_ele 59.7→48.5
+  Ω·cm²) → **manuscript 30-110은 sulfide-ASSB EIS 계면저항 자릿수에 정합** ✓.  ③ dry-공정 ASSB
+  carbon-coated Al: R_int **5-10× 감소** 보고 — manuscript의 110→30 (×3.7)과 방향·자릿수 일치 ✓.
+  ⚠ 명시: Fig6e는 **사이클 후**(열화 포함) 값 — pristine 계면은 더 낮음; "primer = 열화 억제"
+  성분이 큼 (조건 라벨 유지).
+- **기하 접촉 모드 (v2)**: bottom 접촉 밴드 wetted(vox+0.1 — 200nm film reach) vs **bare(0.5vox+0.1
+  — crown 접점만)** 두 번 풀어 σ_wetted/σ_bare + 접점 수 + **입자별 je(wetted)·jb(bare)** 를 payload에
+  기록 — bare의 "몇 개 crown으로 전류가 몰리는" 국소 그림이 viewer 'je_bare' 모드에서 3D로 보임
+  (primer-논문 Fig4d red-box 문법).  접촉 집합에 ±half-voxel 양자화 blur (방향 강건, 문서화).
+- webapp: 첨가제 패널 **집전체 드롭다운** (C-SUS 30 기본/DBE 46/bare 110/이상 0) → zip에
+  --collector-rint 베이킹 → metrics.step3.collector.selected 강조 (모든 프리셋은 항상 병기).
+
 ## 한계 (v1, 문서화)
 - sub-voxel constriction 미모델 (목 면적 voxel-양자화) / 측면 Neumann (주기 아님) /
   σ_ion 망 미구현 (v2: SE+SDCP, SDCP σ_ion>0 — 사용자 원칙) / 절대값 캘리브레이션 미완.

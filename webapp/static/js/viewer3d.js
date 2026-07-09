@@ -137,7 +137,8 @@ function buildControls(container, isMPM) {
       <option value="se_strain">SE 변형 (vs seed)</option>
       <optgroup label="전기 (electrical)">
         <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
-        <option value="je">전류밀도 — STEP3 σ_e (slide-20)</option>
+        <option value="je">전류밀도 — STEP3 (wetted/primer 집전체)</option>
+        <option value="je_bare">전류밀도 — bare 집전체 (crown 접점만)</option>
       </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
@@ -1944,19 +1945,21 @@ function applyViewMode(state, mode) {
        <div style="margin-top:2px;color:#9ca3af;font-size:10px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
     return;
   }
-  if (mode === 'je') {
+  if (mode === 'je' || mode === 'je_bare') {
     /* STEP3 per-AM current density (slide-20 문법): AM coloured by mean |J_z| from the voxel
-     * Kirchhoff solve (payload particles[].je; mpm_metrics.step3 carries σ_e_eff + σ table).
-     * Percentile-normalised like the coverage heat; HIGH current = RED (hot path). */
+     * Kirchhoff solve.  'je' = wetted/primer collector (film-reach contacts), 'je_bare' = bare
+     * collector (crown contacts only) — 두 모드의 차이가 바닥 근처 전류 재분배(primer-paper
+     * Fig-4d red box)를 3D로 보여줌.  Percentile-normalised; HIGH current = RED. */
+    const fld = mode === 'je' ? 'je' : 'jb';
     const mm = (state.data && state.data.mpm_metrics) || {};
     const s3 = mm.step3 || null;
     const vals = [];
     ['AM_P', 'AM_S'].forEach(ty => {
       const m = state.meshes[ty]; if (!m) return;
-      m.userData.particles.forEach(p => { if (p.je !== undefined) vals.push(p.je); });
+      m.userData.particles.forEach(p => { if (p[fld] !== undefined) vals.push(p[fld]); });
     });
     if (!vals.length) {
-      setLegend(state, '<i>이 payload엔 STEP3 전류밀도(<b>je</b>)가 없어요 — 최신 '
+      setLegend(state, '<i>이 payload엔 STEP3 전류밀도(<b>' + fld + '</b>)가 없어요 — 최신 '
         + '<b>mpm_webapp_payload.py</b>(--step3 기본 ON)로 payload를 재생성해서 업로드하세요.</i>');
       return;
     }
@@ -1971,15 +1974,32 @@ function applyViewMode(state, mode) {
     ['AM_P', 'AM_S'].forEach(ty => {
       const m = state.meshes[ty]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
-        if (p.je === undefined) { m.setColorAt(i, colDim); return; }
-        m.setColorAt(i, new THREE.Color(rdylgnColor(1 - norm(p.je))));   // high current = red
+        if (p[fld] === undefined) { m.setColorAt(i, colDim); return; }
+        m.setColorAt(i, new THREE.Color(rdylgnColor(1 - norm(p[fld]))));   // high current = red
       });
       m.material.opacity = 0.97; m.material.transparent = true;
     });
     flushColors();
+    // collector slab (모식 — 두께 과장): thin plate under the bed; dark = primer/wetted, light = bare
+    {
+      const box = (state.data && state.data.box) || {};
+      const w = (box.x_max || 50) - (box.x_min || 0), d = (box.y_max || 50) - (box.y_min || 0);
+      const slabG = new THREE.BoxGeometry(w, 0.8, d);
+      const slab = new THREE.Mesh(slabG, new THREE.MeshBasicMaterial({
+        color: mode === 'je' ? 0x2f2f38 : 0x9aa2ad, transparent: true, opacity: 0.85 }));
+      slab.position.set(w / 2, -0.5, d / 2);
+      const grp = new THREE.Group(); grp.add(slab);
+      state.additivePointGroup = grp;                     // reuse mode-switch cleanup
+      if (state.scene) state.scene.add(grp);
+    }
     const stops = [1, 0.75, 0.5, 0.25, 0].map(v => '#' + rdylgnColor(v).toString(16).padStart(6, '0'));
+    const cg = s3 && s3.collector_geometric;
+    const sel = s3 && s3.collector && s3.collector.selected;
     setLegend(state,
-      `<b>전류밀도 (STEP3 Kirchhoff)</b>`
+      `<b>전류밀도 (STEP3 · ${mode === 'je' ? 'wetted/primer' : 'bare'} 집전체${sel && mode === 'je' ? ' — ' + sel.name : ''})</b>`
+      + (cg ? `<div style="margin-top:2px;font-size:10px;color:#cbd5e1">σ wetted ${Number(cg.wetted_sigma_S_cm).toExponential(2)}
+          (접점 ${cg.n_bottom_contacts.wetted}) vs bare ${Number(cg.bare_sigma_S_cm).toExponential(2)}
+          (${cg.n_bottom_contacts.bare}) S/cm — 집전체 슬래브는 모식(두께 과장)</div>` : '')
       + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm
           <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
