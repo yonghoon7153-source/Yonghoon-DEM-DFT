@@ -6,8 +6,8 @@
 #SBATCH --cpus-per-task=16
 #SBATCH --gres=gpu:2
 #SBATCH --time=04:00:00
-#SBATCH -o logs/lpsocl_eos_%j.out
-#SBATCH -e logs/lpsocl_eos_%j.err
+#SBATCH -o /scratch/x3430a02/kgy/lpsocl_eos/logs/lpsocl_eos_%j.out
+#SBATCH -e /scratch/x3430a02/kgy/lpsocl_eos/logs/lpsocl_eos_%j.err
 #SBATCH --comment qe
 
 # ============================================================
