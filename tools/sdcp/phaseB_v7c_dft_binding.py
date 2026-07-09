@@ -111,13 +111,36 @@ def parse_ref_ni(ref_scf):
     raise SystemExit("no ATOMIC_POSITIONS in ref_scf")
 
 
-def split_ni(atoms, ni_ref, ref_lab, cell):
-    """Per-atom labels; Ni -> Ni1/Ni2 by BIJECTIVE (Hungarian) match to ref (MIC).
+def _mic_min(P_ref, q, inv, cell):
+    d = P_ref - q
+    f = d @ inv; f -= np.round(f); d = f @ cell
+    return np.sqrt((d ** 2).sum(axis=1)).min()
 
-    Greedy nearest-match is not one-to-one: with 24 ref = 24 target Ni it can
-    orphan one Ni to a far ref while another is double-booked, scrambling the
-    AFM label. linear_sum_assignment guarantees a 1:1 map so the max distance
-    reflects true relaxation drift, not an assignment artifact.
+
+def best_translation(P_tgt, P_ref, cell, cutoff=0.6):
+    """RANSAC rigid translation T (min-image) maximizing inliers of P_tgt+T vs
+    P_ref. Two relaxations of the same (104) cell differ only by a cell-origin
+    offset (no rotation: cell vectors identical), so a single T aligns them."""
+    inv = np.linalg.inv(cell)
+    best_T, best_in = np.zeros(3), -1
+    for i in range(len(P_ref)):            # every ref anchor ...
+        for j in range(len(P_tgt)):        # ... hypothesised == every target
+            T = P_ref[i] - P_tgt[j]
+            Q = P_tgt + T
+            inl = sum(1 for q in Q if _mic_min(P_ref, q, inv, cell) < cutoff)
+            if inl > best_in:
+                best_in, best_T = inl, T
+    return best_T, best_in
+
+
+def split_ni(atoms, ni_ref, ref_lab, cell, align=True):
+    """Per-atom labels; Ni -> Ni1/Ni2 by BIJECTIVE (Hungarian) match to ref (MIC),
+    after a RANSAC translation alignment so a cell-origin offset between the two
+    slabs does not scramble the (in-plane) AFM labels.
+
+    Greedy nearest-match is not one-to-one and would orphan a Ni to a far ref;
+    linear_sum_assignment guarantees a 1:1 map. Alignment removes the ~2.9 A
+    offset first so the residual reflects true relaxation drift.
     """
     labels = list(atoms.get_chemical_symbols())
     ni_idx = [i for i, s in enumerate(labels) if s == 'Ni']
@@ -126,11 +149,19 @@ def split_ni(atoms, ni_ref, ref_lab, cell):
     if len(ni_idx) != len(ni_ref):
         print(f"  !! Ni count target {len(ni_idx)} != ref {len(ni_ref)} — greedy fallback")
         for a, idx in enumerate(ni_idx):
-            d = ni_ref - P[a]
-            f = d @ inv; f -= np.round(f); d = f @ cell
-            labels[idx] = ref_lab[int(np.argmin((d ** 2).sum(axis=1)))]
+            labels[idx] = ref_lab[int(np.argmin([
+                _mic_min(ni_ref[c:c + 1], P[a], inv, cell) for c in range(len(ni_ref))]))]
         return labels
-    # min-image distance matrix target(n) x ref(n)
+    if align:
+        T, inl = best_translation(P, ni_ref, cell)
+        n = len(ni_ref)
+        print(f"  RANSAC align: {inl}/{n} inliers @0.6A, T=[{T[0]:.2f} {T[1]:.2f} {T[2]:.2f}]")
+        if inl >= 0.8 * n:
+            P = P + T
+        else:
+            print(f"  !! weak alignment ({inl}/{n}) — a pure translation does not map the "
+                  "slabs (rotation/reconstruction?); AFM labels UNRELIABLE, do not launch")
+    # bijective Hungarian on (aligned) coordinates
     D = np.empty((len(ni_idx), len(ni_ref)))
     for a in range(len(ni_idx)):
         d = ni_ref - P[a]
@@ -141,11 +172,10 @@ def split_ni(atoms, ni_ref, ref_lab, cell):
     for a, c in zip(row, col):
         labels[ni_idx[a]] = ref_lab[c]
     n1 = sum(1 for i in ni_idx if labels[i] == 'Ni1')
-    print(f"  Ni assign (Hungarian): max {dists.max():.2f} A, mean {dists.mean():.2f} A, "
+    print(f"  Ni assign (Hungarian post-align): max {dists.max():.2f} A, mean {dists.mean():.2f} A, "
           f">1A {(dists > 1.0).sum()}/{len(dists)}  -> Ni1 {n1}/Ni2 {len(ni_idx) - n1}")
-    if dists.max() > 1.5:
-        print("  !! large assignment distance (>1.5 A) — slabs may be offset/rotated; "
-              "AFM labels suspect, check reference/slab_relaxed.xyz vs scf_u62.in")
+    if dists.max() > 1.0:
+        print("  !! residual >1.0 A after alignment — labels suspect, check the two slabs")
     return labels
 
 
@@ -337,7 +367,7 @@ def main():
             "     DIFFERENT magnetic state. Need position correspondence (match) —\n"
             "     but the slabs are offset, so tell me and I'll add RANSAC alignment.")
     if mode == "match" and not is_A:
-        print("  (match mode on offset slabs will be unreliable — see earlier 9.94 A)")
+        print("  (ref is in-plane AFM -> match mode; RANSAC alignment removes the offset first)")
     print(f"  --> AFM assignment mode: {mode}", flush=True)
 
     jobs = [
