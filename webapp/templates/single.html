@@ -253,7 +253,7 @@
         <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
-        <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 생존 (Fig S2). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
+        <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 (크기=Fig S2 앵커, 저전단 생존=추론). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>mixing<br><select id="add-mixing" style="padding:3px" onchange="updateAdditiveGpuCmds()">
           <option value="ballmill">ball-mill (고전단)</option>
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
@@ -278,7 +278,7 @@
         SDCP 단독 zip은 형상 탐색용 — 실전(제조) 비교셋은 manuscript S12(단독 dough 불가)에 따라 <b>PTFE+SDCP(DBE)</b>.
         mixing 영향: <b>Super P</b>(thinky=dry-coat 코팅 / ball·hand=bulk 분산) · <b>PTFE</b>(fibrillation
         bm/thinky 1.0 / handmix 0.45) · <b>SDCP</b>(bm/thinky=밀링 0.2-0.5µm singles S3 / handmix=as-made
-        ~3µm 응집 생존 S2); <b>VGCF만 mixing 무관</b>(섬유는 코팅 불가 — A4 확정).
+        ~3µm 응집 — 크기=S2 앵커, 저전단 생존=추론); <b>VGCF만 mixing 무관</b>(섬유는 코팅 불가 — A4 확정).
       </div>
       <div style="margin-top:6px; font-size:0.76em; color:#64748b; line-height:1.5">
         이 패널은 <b>recipe-baked zip 생성 전용</b>이야: 입력 wt% → (밀도→개수→형상) 물리식으로 첨가제를

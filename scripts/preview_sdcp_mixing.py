@@ -74,37 +74,40 @@ def main():
     print(f"SDCP {args.wt} wt% → {cnt['SDCP']['vol_um3']:,.0f} µm³ = {cnt['SDCP']['vol_pct_of_solid']} vol% "
           f"of solid → n = {n:,} primaries (Ø {ad.SDCP_D} µm)")
 
-    tree = cKDTree(am_c)
-    rmax = float(am_r.max())
-    kq = min(8, len(am_c))
+    # EXACT in_am / surface distance: one KDTree per radius CLASS (real14: r=6 AM_P, r=2 AM_S).
+    # A point inside any class-r sphere is < r from its NEAREST same-class centre (k=1 exact) —
+    # avoids the k-nearest-by-centre false negatives a mixed-radius single tree has.
+    classes = [(float(r), cKDTree(am_c[am_r == r])) for r in np.unique(am_r)]
 
     def in_am(q):
-        dd, ii = tree.query(np.asarray(q, np.float64), k=kq,
-                            distance_upper_bound=rmax + 1e-9)
-        dd, ii = np.atleast_1d(dd), np.atleast_1d(ii)
-        ok = ii < len(am_c)
-        return bool(np.any(dd[ok] < am_r[ii[ok]]))
+        q = np.asarray(q, np.float64)
+        return any(t.query(q)[0] < r for r, t in classes)
+
+    def dist_surf(P):
+        """min over classes of (dist to nearest same-class centre − r); negative = inside."""
+        return np.min(np.column_stack([t.query(np.asarray(P, np.float64))[0] - r
+                                       for r, t in classes]), axis=1)
 
     results = {}
     for mix in MIXINGS:
         row = ad.additive_process('SDCP', mix)
         rng = np.random.default_rng(args.seed)                 # same seed → comparable panels
-        pts, ids = ad.seed_sdcp(n, box, 0.13, rng, am=(am_c, am_r), in_am=in_am,
-                                surface_frac=float(row.get('surface_frac', 0.5)),
-                                clump=int(row.get('clump', 1)),
-                                agg_d=float(row.get('agg_d', 0.0)), d=ad.SDCP_D,
-                                return_ids=True)
-        # SDCP → nearest AM SURFACE distance (µm): anchoring fingerprint
-        dd, ii = tree.query(pts.astype(np.float64), k=kq)
-        dsurf = (dd - am_r[ii]).min(axis=1)
-        anch = float(np.mean(dsurf < ad.SDCP_D))               # within ~1 particle Ø of an AM surface
-        q25, q50, q75 = np.percentile(dsurf, (25, 50, 75))
-        results[mix] = dict(pts=pts, ids=ids, dsurf=dsurf, row=row, anch=anch)
+        pts, ids, info = ad.seed_sdcp(n, box, 0.13, rng, am=(am_c, am_r), in_am=in_am,
+                                      surface_frac=float(row.get('surface_frac', 0.5)),
+                                      clump=int(row.get('clump', 1)),
+                                      agg_d=float(row.get('agg_d', 0.0)), d=ad.SDCP_D,
+                                      return_ids=True, return_info=True)
+        dsurf = dist_surf(pts)                                 # SDCP → nearest AM SURFACE (µm), exact
+        near = float(np.mean(dsurf < ad.SDCP_D))               # near-AM(<1 particle Ø) — includes INCIDENTAL
+        q25, q50, q75 = np.percentile(dsurf, (25, 50, 75))     #   proximity of bulk pts, ≠ the seeded split
+        results[mix] = dict(pts=pts, ids=ids, dsurf=dsurf, row=row, near=near, info=info)
         print(f"[{mix:8s}] {row.get('morph', '')}\n"
-              f"           → {len(pts):,} pts / {len(np.unique(ids)):,} objects | "
-              f"anchored(<{ad.SDCP_D}µm of AM) {100*anch:.1f}% | d_surf q25/50/75 = "
-              f"{q25:.2f}/{q50:.2f}/{q75:.2f} µm"
-              + (f" | agg Ø{row['agg_d']}µm × {max(1, int(round(0.64*(row['agg_d']/ad.SDCP_D)**3)))} primaries"
+              f"           → {len(pts):,} pts / {len(np.unique(ids)):,} objects | seeded anchored share "
+              f"{100*info['realized_anchor_frac']:.1f}% (nominal sf={info['surface_frac_nominal']}) | "
+              f"near-AM(<{ad.SDCP_D}µm incl. incidental) {100*near:.1f}% | d_surf q25/50/75 = "
+              f"{q25:.2f}/{q50:.2f}/{q75:.2f} µm | survival {100*info['survival']:.1f}%"
+              + (f" | agg Ø{row['agg_d']}µm × {info.get('n_agg_design', 0)} primaries "
+                 f"(pack {info.get('agg_pack_assumed', 0)} ASSUMED §F1)"
                  if row.get('agg_d', 0) > 0 else ""))
 
     # ── figure: row 1 = full x-z slice, row 2 = zoom on the biggest AM_P in the slab ──
@@ -129,7 +132,8 @@ def main():
                 dy = abs(c[1] - y0)
                 if dy < r:
                     rs = np.sqrt(r * r - dy * dy)
-                    ax.add_patch(Circle((c[0], c[2]), rs, facecolor='#d8d8d8',
+                    ax.add_patch(Circle((c[0], c[2]), rs,                     # AM_P darker, AM_S lighter
+                                        facecolor=('#c9c9c9' if t == 1 else '#e2e2e2'),
                                         edgecolor='#8a8a8a', lw=0.6, zorder=1))
             ax.scatter(se_c[se_sl, 0], se_c[se_sl, 2], s=2.5, c='#9ecae1', alpha=0.35,
                        lw=0, zorder=2, label='SE (Ø1µm)')
@@ -140,7 +144,8 @@ def main():
                 ax.set_title(ttl[mix], fontsize=11)
                 st = results[mix]
                 ax.text(0.02, 0.98, f"{len(pts):,} pts / {len(np.unique(st['ids'])):,} obj\n"
-                                    f"anchored {100*st['anch']:.0f}%  (sf={st['row']['surface_frac']})",
+                                    f"seeded anchored {100*st['info']['realized_anchor_frac']:.0f}% "
+                                    f"(sf={st['row']['surface_frac']})",
                         transform=ax.transAxes, va='top', fontsize=8.5,
                         bbox=dict(fc='white', alpha=0.8, ec='none'))
             else:

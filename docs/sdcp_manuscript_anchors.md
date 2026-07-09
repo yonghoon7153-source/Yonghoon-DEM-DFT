@@ -50,9 +50,10 @@
 - **화학 선택성**: 술폰산-산화물(NCM) 이온성 앵커 ≫ 황화물(LPSCl) 상호작용 → NCM-선택적 장식 개연
   (pellet 호환성은 매뉴스크립트 σ 유지로 확인).  bollard 논문의 NMC 표면 앵커-patch EDS가 유사 선례.
 - 반증 관찰: S3 (전극 표면)는 주로 SE 영역의 단독 입자 — NCM-인접 clustering은 S3 시야로 판정 불가.
-- **모델 반영**: `--sdcp-clump` (process-row 기본 bm/thinky **1** = S3-충실 단독; handmix 3; >1 = cluster
+- **모델 반영**: `--sdcp-clump` (process-row 기본 전부 **1** = S3-충실 단독; >1 = cluster
   가설 시험) — anchored 몫을 AM 표면 cluster 중심 + 주변 산포로 시딩.  판별 도구 = SBE/DBE payload의
-  SDCP→AM 근접 분석 (drape-식) + 실험 SEM/EDS.
+  SDCP→AM 근접 분석 (drape-식) + 실험 SEM/EDS.  (구 "handmix clump=3"은 2026-07-10 mixing→형상
+  매핑에서 S2-유도 agg_d=3.0µm 응집으로 대체됨 — 아래 mixing 섹션이 현행.)
 
 ## A4 마감 계획 (2026-07-10, "SDCP와 같이 닫기")
 ① VGCF `coat_embed` — **은퇴로 해결**: 10µm 강성 섬유는 5µm NCM을 '코팅' 못 함 (라벨이 처음부터 섬유
@@ -100,13 +101,21 @@ Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 �
 - **ballmill / thinky (고전단)**: 밀링 → **S3-충실 singles** (Ø0.3µm). surface_frac=0.5 (§F1 hook)
   AM-앵커(seed_coat shell=반지름, 술폰산+ordered-mixing 장식) + 나머지 bulk 균일.  thinky≡ballmill
   (둘 다 고전단; VGCF A4 마감과 같은 논리 — 차별화할 manuscript 근거 없음).
-- **handmix (저전단)**: **밀링 에너지 없음 → S2 as-made ~3µm 응집 생존** (기존 clump=3 임의 hook을
-  S2-유도 값으로 대체): 전량 agg_d=3.0µm 클러스터, n_agg=0.64·(3/0.3)³≈**640 primaries**/응집
-  (0.64=RCP → 반지름 1.5µm 균일구 산포가 구성상 로컬 패킹 0.64 재현), anchored 몫 0.3 (3µm guest는
+- **handmix (저전단)**: **밀링 에너지 없음 → S2 as-made ~3µm 응집** (기존 clump=3 임의 hook을
+  S2-유도 값으로 대체; **크기=S2 앵커, 저전단 생존=추론** — 전량생존 상한 시나리오, 부분 파쇄 미모델):
+  전량 agg_d=3.0µm 클러스터, n_agg=pack·(3/0.3)³≈**640 primaries**/응집, anchored 몫 0.3 (3µm guest는
   부착력/자중 ~100× 약화 → ordered mixing 퇴색; §F1 hook)은 AM 표면 **드레이프 cap**(host 안 멤버
   drop, add_pvs 부피 재정규화), bulk 몫도 응집 (분산상태 = 분말의 성질, 위치의 성질 아님).
-- 방향 = 물리 확정(전단↔밀링), **크기 = S2/S3 앵커**, surface_frac 크기들만 §F1 hook.
+- **§F1 hook 목록 (2-agent 리뷰 반영 2026-07-10)**: surface_frac 크기들 + **agg 내부 패킹
+  SDCP_AGG_PACK=0.64**(RCP 가정 — S2는 크기만 앵커; 치밀/솔리드 입자 배제 못 함) + 저전단 전량생존.
+  방향(전단↔밀링)과 크기(S2/S3)만 앵커.  ⚠ 시딩-카운트 구성으로 패킹 0.64를 만들지만 in-AM 드롭 후
+  add_pvs 글로벌 재정규화로 **실현 응집 내부밀도 ≈ 0.64/생존율** (real14 1wt% 생존 64.9% → ≈0.99);
+  surface_frac은 시딩-시점 분할이고 **실현 anchored 몫은 metadata `seeding.realized_anchor_frac`**로
+  읽을 것 (드롭 비대칭: 드레이프 cap ~절반 소실, bulk는 rejection-sampling 무손실).
   override: `--sdcp-agg-d`(µm; 0=강제 singles) / `--sdcp-surface-frac` / `--sdcp-clump`(§3.7 가설).
-- 미리보기 (real14, 1wt%, seed0): bm/thinky **10.2만 pts 분산+표면장식**, d_surf 중앙값 0.10µm ↔
-  handmix **214개 응집**(각 640), d_surf 중앙값 0.57µm — `docs/figures/sdcp_mixing_preview.png`.
-- metadata: `morphology: particle_0.3um_S3 | agglomerate_3.0um_S2`, `agg_d_um`, `n_per_agglomerate`.
+- 미리보기 (real14, 1wt%, seed0, 리뷰-후): bm/thinky **13.3만 pts 분산+표면장식** (실현 anchored
+  46.5% ≈ 명목 0.5 ✓, 생존 93.4%), d_surf 중앙값 0.14µm ↔ handmix **214개 응집**(각 ~640, 실현
+  anchored 23.9%, 생존 64.9%), 중앙값 0.56µm — `docs/figures/sdcp_mixing_preview.png`.
+- metadata: `morphology: particle_0.3um_S3 | agglomerate_3.0um_S2`, `agg_d_um`, `n_per_agglomerate`,
+  `agg_pack_assumed`, `agg_mechanics`(E 앵커는 PRIMARY 것 — 응집-스케일 결합은 coh_sdcp hook 무보정),
+  `seeding{n_seeded, realized_anchor_frac, survival, n_clusters_*}`, `clump`(singles 모드에서만).

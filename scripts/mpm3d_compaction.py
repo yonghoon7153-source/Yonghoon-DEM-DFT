@@ -844,11 +844,11 @@ def main(argv):
                     _clump = max(1, int(args.sdcp_clump) if args.sdcp_clump > 0 else int(_row.get('clump', 1)))
                     _aggd = (float(args.sdcp_agg_d) if args.sdcp_agg_d >= 0.0
                              else float(_row.get('agg_d', 0.0)))               # µm; 0 = milled singles (S3)
-                    pts, _fid = _ad.seed_sdcp(nobj, bx, dx, rng, am=am_box,
-                                              in_am=lambda q: _in_am_abs(q + off),
-                                              surface_frac=_sfrac, clump=_clump,
-                                              agg_d=_aggd / um_box, d=_ad.SDCP_D / um_box,
-                                              return_ids=True)
+                    pts, _fid, _seedinfo = _ad.seed_sdcp(nobj, bx, dx, rng, am=am_box,
+                                                         in_am=lambda q: _in_am_abs(q + off),
+                                                         surface_frac=_sfrac, clump=_clump,
+                                                         agg_d=_aggd / um_box, d=_ad.SDCP_D / um_box,
+                                                         return_ids=True, return_info=True)
                     _w = np.ones(len(pts), np.float32)
                     _coated = True                            # metadata: coat dict records the anchored share
                 elif kind == 'coat' or _proc_regime == 'coat_block':   # coat_embed RETIRED (fibres don't coat)
@@ -860,7 +860,7 @@ def main(argv):
                     # Stage-E).  surface_frac: mixing-driven spread (handmix = patchy).
                     _row = _ad.additive_process(nm, args.mixing)          # single source: process matrix
                     _sfrac = (float(args.sdcp_surface_frac) if (code == 5 and args.sdcp_surface_frac >= 0.0)
-                              else float(_row.get('surface_frac', 1.0)))    # SDCP rows 1.0/1.0/0.6; SuperP thinky 0.70
+                              else float(_row.get('surface_frac', 1.0)))    # SuperP thinky 0.70 (SDCP never routes here — kind='particle')
                     pts, _fid = _ad.seed_coat(nobj, bx, dx, rng, am=am_box, shell_um=_ad.SDCP_SHELL / um_box,
                                               surface_frac=_sfrac, in_am=lambda q: _in_am_abs(q + off),
                                               return_ids=True)              # µm shell → seed-frame units; buried/out-of-box DROPPED
@@ -948,10 +948,18 @@ def main(argv):
                     _add_meta[nm]['E_anchor'] = 'AFM_S6_23.6GPa'
                     _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
                     _add_meta[nm]['coh_sdcp'] = float(_coh)
-                    _add_meta[nm]['clump'] = int(_clump)
                     _add_meta[nm]['agg_d_um'] = round(float(_aggd), 2)           # 0 = milled S3 singles
-                    if _aggd > 0.0:                                              # S2 as-made agglomerate: primaries per cluster
-                        _add_meta[nm]['n_per_agglomerate'] = max(1, int(round(0.64 * (_aggd / _ad.SDCP_D) ** 3)))
+                    _add_meta[nm]['seeding'] = _seedinfo                         # REALIZED counts/shares — read
+                    #   realized_anchor_frac (NOT surface_frac: drops are population-asymmetric) + survival
+                    #   (add_pvs re-pins volume over survivors → realized agg density = pack/survival).
+                    if _aggd > 0.0:                                              # S2 as-made agglomerate mode
+                        _add_meta[nm]['n_per_agglomerate'] = int(_seedinfo.get('n_agg_design', 0))
+                        _add_meta[nm]['agg_pack_assumed'] = float(_ad.SDCP_AGG_PACK)   # §F1 hook — S2 anchors SIZE only
+                        _add_meta[nm]['agg_mechanics'] = 'primary_E_anchor_assembly_uncalibrated'
+                        #   E=23.6 GPa is the PRIMARY's AFM anchor; agglomerate-scale inter-primary bonding
+                        #   is represented only by the un-calibrated bulk coh_sdcp hook (§F1)
+                    else:                                                        # clump active only in singles mode
+                        _add_meta[nm]['clump'] = int(_clump)                     # (agg_d wins over clump by design)
                     _add_meta[nm]['anchor_status'] = 'INVALID_WRONG_MONOMER_recompute_pending'   # 2026-07-10: 이전 E_bind(−4.8/−3.0)는
                     #   곧은-pentyl C11H15O5S2로 계산됨 — 실제 SDCP는 ether-O 링커 + methyl-분지 2차 술폰산
                     #   (C11H16O6S2, Fig2a/S5).  ether-O의 Li 배위 채널 누락 → 값·기하 전면 재계산 필요.
