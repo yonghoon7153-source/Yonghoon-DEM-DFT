@@ -32,6 +32,11 @@
 - 해소: **열역학은 산물의 순위, 궤도는 경로의 문.** B-쪽엔 CBM 근처 acceptor 상태가 없고(조성 10%, σ\* +0.75 eV) BP 생성은 B를 S₃ 우리에서 뽑는 재조직 장벽 필요. P–S σ\*는 CBM에 상시 개방 → 전자 주입 즉시 결합 절단(저장벽) → **P 채널이 모든 전자를 흡수**. (MD의 P–Li 0.8→4.2 연속 상승 = 단계적 환원의 직접 증거.)
 - Liu(2023)의 MgS₄ 생존도 같은 언어: Mg–S는 이온성(약함)이지만 **Mg²⁺에 접근가능한 환원 상태가 없음** — 단위 불활성의 다른 경로(redox-inert cation) vs 우리 B(강공유 → σ\* 상승).
 
+### 4.1 적용 한계가 실측됨 — σ\* 게이트는 "제한 구동력" regime의 법칙 (2026-07-09 종단 스캔)
+- **B-노출 종단 MD 결과**: B를 표면 1.5 Å에 두고 Li metal과 **직접 접촉**시키면 **B–S가 끊긴다**(3.00→1.50, B–Li→5.0–5.5; `interface_termination_scan.csv`). 즉 σ\* 선택성은 **전자가 격자를 거쳐 도달해야 하는 매몰/벌크 regime**(제한 플럭스·CBM 근처 전자만 공급)의 법칙이고, **금속 접촉면의 무제한 전자 플럭스** 앞에서는 +0.75 eV 게이트도 국소적으로 넘친다 — 이때는 열역학 순위(ESW: B 환원 onset 1.72 V = 1번 타자)가 그대로 실현됨.
+- **그러나 결과는 보호적**: 같은 cleave의 무도핑 통제(표면 P) 대비 host PS₄ 손실 8±2 vs 22±0%, Li 침투 정지 — B의 환원 산물(Li–B–S 층)이 **희생 방패**로 작동. 궤도 위계의 역할 분담: **매몰에서는 σ\*가 B를 지키고(생존자), 노출에서는 B가 host를 지킨다(방패)** — "강한 결합은 두 번 보호한다"에 더해, **무너지는 자리에서도 산물이 계면을 막는다**(MLIP 수준, n=2).
+- 설계 규칙(§5)에 미치는 영향: σ\* onset 지표는 "도판트 단위의 벌크/매몰 생존성" 예측용으로 유지. 직접 접촉 종단의 거동은 별도 지표(환원 산물의 전자차단성, e.g. Li–B–S/Li₃BO₃ 밴드갭)가 필요.
+
 ## 5. 설계 규칙 (일반화 — cascade Layer-2 후보 descriptor)
 도판트 단위가 Li 계면에서 살아남을 조건:
 1. 그 결합의 **σ\* onset이 CBM보다 충분히 위** (COHP 비점유측에서 계산 가능)
@@ -40,7 +45,7 @@
 
 ## 6. 한계
 - PBE 준위(절대 onset은 hybrid에서 이동 가능; **순서는 결합강도에 묶여 견고**), bulk COHP로 계면 사건 설명(관행적 근사), 결합수 환산은 평균치.
-- B-노출 종단 MD(진행중)가 "직접 접촉에서도 σ\* 보호가 작동하는가"의 최종 실증.
+- ~~B-노출 종단 MD(진행중)~~ → **완결(§4.1)**: 직접 접촉에서는 σ\* 게이트가 국소적으로 넘치고 B가 희생 방패로 작동 — σ\* 보호의 유효 범위가 "매몰/제한 구동력"으로 실측 확정됨.
 
 ## 논문 문장 후보
 "Energy-resolved COHP shows the P–S antibonding manifold begins essentially at the CBM (+0.1 eV), while B–S and P–O σ\* states are pushed 0.75 and 1.6 eV higher by their stronger bonding — electrons injected from Li therefore populate (and cleave) only host P–S bonds, rationalizing the selective decomposition observed in interface MD and the survival of the dopant units."

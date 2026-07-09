@@ -13,11 +13,11 @@ Li metal이 닿으면 **PS₄ 사면체가 풀리며 P는 Li₃P로(P–Li coord
 ### ② 통제비교의 핵심 결론: **도핑이 계면을 악화시키지 않는다**
 같은 프레임·같은 표면에서 100 ps 후 PS₄ 잔존 **78±9%(b2o3) vs 74±0%(무도핑)** — 모든 분해 채널(Li₃P·Li₂S 생성, Li 침투)이 **오차 내 동등**. 개선 주장도, 악화 우려도 아닌 "**전해질 골격 분해 속도 불변**"이 정직한 결론.
 
-### ③ **도핑 유래 결합 둘 다 강건: BS₃ + P–O 온전, 금속성 LiB·Li₂O 미실현** (이 study의 고유 발견)
+### ③ **도핑 유래 결합 둘 다 강건: BS₃ + P–O 온전, 금속성 LiB·Li₂O 미실현 — 매몰 기하 한정** (이 study의 고유 발견; 노출 종단은 아래 ✅ 참조)
 - **B–S coord 3.00 → 3.00** (9/9 run) — 주변 PS₄가 풀리는 동안에도 붕소는 황 우리를 유지 → **금속성 LiB 안 생김**. (B–Li 1–2는 B–S 온전 상태의 Li 배위 = 합금 아님.)
 - **O–P coord 1.00 → 1.00** (3/3 seed) — **phosphate P–O도 하나도 안 끊김 → Li₂O 안 생김.** (O–Li 2.0→2.0–2.7은 단순 Li 배위.)
 - → **열역학 worst-case(B³⁺→BP/LiB, Li₂O)가 100 ps 동역학에서 전부 미실현** = ESW 축소(0.90→0.31 V)의 주범인 환원측 flag를 kinetics가 완화함을 자체 데이터로 입증. 분해는 오직 host P–S 채널로만 진행 (속도는 무도핑과 동일). ICOHP(B–S −7.8/P–O −8.6 = 최강 결합)·site-PDOS(깊은 상태)와 정합.
-- ⚠️ **조건부 (2026-07-08 확인)**: 원 슬랩 기하에서 **B는 표면 아래 37.8/45.3 Å, O는 13.4/53 Å에 매몰** — Li 침투가 표면 수 Å에 그쳤으므로 **Li가 B/O를 직접 공격한 적이 없음**. 즉 위 결론은 "매몰-도판트 기하"에서의 결과. **B-노출 종단 재시험(c-roll 0.51로 B를 표면 ~2 Å에 배치, 같은 roll의 무도핑 통제 병행) 진행** — 직접 접촉에서도 B–S가 버티는지가 LiB worst-case의 최종 판정.
+- ✅ **조건 해소 (2026-07-09, 종단 roll-scan 완결 → `interface_termination_scan.csv` + campaign 문서 §5)**: 위 결론은 **매몰-도판트 기하(B 37.8/45.3 Å)**의 결과가 맞음. B를 표면 1.5 Å에 노출한 재시험에서 **B는 직접 접촉 시 실제로 리튬화**(B–S 3.00→1.50, B–Li→5.0–5.5; 2/2 seed) — 그러나 같은 cleave 무도핑 통제(표면 P) 대비 **host가 2.6× 보호되고(PS₄ 손실 8±2 vs 22±0%) Li 침투가 정지**(−0.5 vs +4) → worst-case의 "실현"이 곧 **희생 방패**로 작동. 매몰 B는 O-노출 기하에서도 3.00→3.00(3번째 확인). **정리: 매몰 = 생존자, 노출 = 방패 — 어느 쪽도 악화가 아님.**
 
 ### ④ Li 침투는 표면 국한
 양쪽 모두 100 ps에 **+7원자 수준**, 깊은 침투 없음 — 초기 SEI가 표면에서 형성되는 그림과 정합.
@@ -47,27 +47,28 @@ Li metal = 가장 **환원적인** 환경(0 V). B–S/P–O가 버틴 건 환원
 
 → 정확한 주장: **"전기화학 안정성을 개선하지도 훼손하지도 않는다 + 도판트 유래 추가 패널티가 실제로 없다."** ("향상"으로 쓰면 ESW 창 축소 0.90→0.31 V로 반격당함.)
 
-### 3.2 방패(보호막)가 아니라 **생존자**다
-막아주는 것이었다면 통제비교에서 host PS₄ 분해가 느려졌어야 하는데 **동일**(22±9 vs 26±0%). 문헌의 "도핑=방패" 3메커니즘과 대조하면 이유가 명확:
+### 3.2 종단이 보호 모드를 결정: **매몰이면 생존자, B-노출이면 방패** (2026-07-09 종단 스캔으로 업데이트)
+원 기하(매몰)에서는 방패가 아니었다 — host PS₄ 분해가 무도핑과 **동일**(22±9 vs 26±0%). 문헌의 "도핑=방패" 3메커니즘과 대조:
 
-| 방패 메커니즘 (문헌) | 원리 | 우리 계에서 왜 미작동 |
-|---|---|---|
-| ① 희생 분해 → 절연 필름 (LiF, Li₃BO₃) | 도판트가 **먼저 분해**되며 전자차단막을 깔아 self-limiting | **역설적으로 너무 안정** — BS₃·P–O가 안 분해되니 필름 재료를 안 내놓음 |
-| ② host 결합 강화 | 도판트가 host 골격 결합의 장벽을 올림 | 강화는 **자기 결합만**(B–S −7.8/P–O −8.6); host P–S ICOHP −6.1 **불변** → host는 자기 속도로 분해 |
-| ③ 취약 사이트 치환/표면 농축 | 공격 지점(free S²⁻)을 대체·커버 | **~4% 희박**(B2+O3/128원자) + O는 free-S가 아닌 **phosphate 코너**로 감 → free-S 수 불변 |
+| 방패 메커니즘 (문헌) | 원리 | 매몰 기하 (원 캠페인) | B-노출 종단 (roll-scan) |
+|---|---|---|---|
+| ① 희생 분해 → 절연 필름 (LiF, Li₃BO₃) | 도판트가 **먼저 분해**되며 전자차단막을 깔아 self-limiting | 미작동 — BS₃·P–O가 안 분해되니 필름 재료를 안 내놓음 | **작동 실증** — B 리튬화(B–Li→5.0–5.5) 후 host 보존 2.6×·Li 침투 정지 |
+| ② host 결합 강화 | 도판트가 host 골격 결합의 장벽을 올림 | 미작동 — 강화는 자기 결합만(B–S −7.8/P–O −8.6), host P–S ICOHP −6.1 불변 | 동일 (host 보호는 ①의 산물층 효과) |
+| ③ 취약 사이트 치환/표면 농축 | 공격 지점(free S²⁻)을 대체·커버 | 미작동 — ~4% 희박 + O는 phosphate 코너로 감 | **부분 작동** — 최전선 자리에 P 대신 B가 서는 국소 버전 |
 
-→ outlook 문장: *"묽은 bulk 도핑은 계면 방패가 아니다(bulk doping ≠ coating). B 기반 계면 보호를 원하면 표면 B₂O₃/Li₃BO₃ **코팅**(메커니즘 ①·③)이 별도 전략으로 필요하다"* — 우리 데이터가 이 구분을 실증.
+→ outlook 문장(업데이트): *"묽은 bulk 도핑은 도판트가 매몰된 종단에서는 방패가 아니라 불활성 생존자다(bulk doping ≠ coating). 그러나 **B가 표면에 노출된 종단은 B₂O₃/Li₃BO₃ 코팅의 희생-보호 메커니즘 ①을 국소적으로 자발 재현**한다(host PS₄ 보존 8±2 vs 22±0%, Li 침투 정지) — 코팅 전략의 타당성을 bulk-도핑 데이터가 역으로 지지."*
 
 ## 4. 논문 문장 제안
 1. "Interface MD (3 seeds × 100 ps) shows the B₂O₃-doped electrolyte decomposes at the same rate as the undoped frame at a Li-metal contact (PS₄ retention 78±9 vs 74±0%), i.e., doping does not compromise interfacial stability."
 2. "Both doping-derived bonds survive Li-metal contact intact (B–S 3.00→3.00, O–P 1.00→1.00 in all seeds); neither metallic LiB nor Li₂O forms — the thermodynamic worst-case reduction is kinetically suppressed, and decomposition proceeds only through the host P–S channel."
 3. "B₂O₃ doping neither improves nor degrades electrochemical stability: oxidation onset and the vulnerable free-S site are unchanged, and interfacial decomposition kinetics match the undoped electrolyte."
 4. "A thin-slab control revealed a ~2× cell-size artifact in interfacial decomposition metrics, underscoring the need for same-frame controlled comparisons."
+5. "A termination scan shows the protection mode is geometry-dependent: buried dopants remain inert spectators (decomposition kinetics equal to undoped), whereas a B-exposed termination undergoes sacrificial lithiation (B–S 3.00→1.50, B–Li→5.0–5.5) that protects the host — PS₄ loss drops to 8±2% versus 22±0% for the P-exposed undoped control at the same cleave, and Li penetration is arrested. In no tested geometry does doping degrade the interface."
 
 ## 5. 정직한 한계
-- **100 ps = 초기 단계**: 양쪽 다 분해 진행 중(미수렴) — 절대 분해량이 아니라 **비교(동등)**만 인용.
-- 표면 종단 1종/프레임 (c-면 cleave, **도판트 매몰 기하**) → **보완 진행중**: ① c-roll 종단 스캔(B-노출 0.51 / O-노출 0.161, `--roll_c`) ② 측면 registry 스캔(`--shift_ab`) ③ (선택) a-면 슬랩(~700원자, 전방향 완성).
-- MLIP 반응상(Li₃P/Li₂S) 정확도는 DFT 단발 검증 미실시(선택 과제) — 결론이 "동등"이라 리스크 낮음.
+- **100 ps = 초기 단계**: 양쪽 다 분해 진행 중(미수렴) — 절대 분해량이 아니라 **비교(동등/보호)**만 인용. B-노출 방패층의 장기 자기제한 여부도 100 ps 밖.
+- ~~표면 종단 1종/프레임~~ → **c-roll 종단 스캔 완결(2026-07-09)**: 매몰 원기하 + B-노출(0.51) + O-노출(0.16), 각각 같은-roll 무도핑 통제 동반 (`interface_termination_scan.csv`). 남은 것: 종단당 n=2 seed·cleave 높이 1종, O-노출 쌍은 confound(도핑 프레임만 P 동시 노출 → delta 인용 금지, per-O 분석으로 대체), 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색.
+- MLIP 반응상(Li₃P/Li₂S) 정확도는 DFT 단발 검증 미실시(선택 과제) — "동등" 결론은 리스크 낮음; **B-노출의 Li–B–S 산물층은 MLIP 의존이 커서 "MLIP 수준" 명시하고 인용**.
 - CIF 스냅샷은 seed-s2 대표 1개 (통계는 곡선/CSV가 담당).
 
 ## 6. 파일 인덱스
@@ -77,6 +78,7 @@ Li metal = 가장 **환원적인** 환경(0 V). B–S/P–O가 버틴 건 환원
 | `iface_timeseries.png` / `interface_timeseries_mean.csv` | P–S 잔존율·B–S 평탄·Li 침투 시간곡선 (3-seed mean±std) |
 | `iface_MD_2p5d.gif` | 2.5D 애니메이션 (보조 자료 — 발표용 옵션, 그림은 CIF 렌더 사용) |
 | `db/properties/interface_decomp_*_s*.csv` | per-frame 원자료 9개 (kgy) |
-| `db/properties/interface_campaign_summary.csv` | 계별 mean±std 집계 |
+| `db/properties/interface_campaign_summary.csv` | 계별 mean±std 집계 (매몰 기하 캠페인) |
+| `db/properties/interface_termination_scan.csv` | 종단 roll-scan 8 run (B-노출/O-노출 + 통제, per-seed) + 판정 주석 |
 | `docs/figures/oxidation/interface_campaign_controlled.png` | 통제비교 요약 그림 |
 | 관련 kb | `b2o3_anode_interface_campaign_2026_07_07.md`(확정), `..._MD_dynamics_2026_07_06.md`(예비, superseded), `b2o3_anode_interface_2026_06_30.md`(열역학) |

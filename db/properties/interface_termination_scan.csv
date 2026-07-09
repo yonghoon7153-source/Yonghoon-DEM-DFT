@@ -1,0 +1,23 @@
+label,roll_c,termination,exposed_species_depth_A,seed,PS_init,PS_final,PS_loss_pct,dS_Li,dP_Li,dLi_pen,BS_init,BS_final,BLi_init,BLi_final
+b2o3_Bexp,0.51,B-exposed,B@1.5/7.6,2,3.62,3.38,6.6,0.39,0.24,-2,3.00,1.50,2.00,5.50
+b2o3_Bexp,0.51,B-exposed,B@1.5/7.6,3,3.62,3.25,10.2,0.66,0.00,1,3.00,1.50,2.50,5.00
+mc2x_r051,0.51,P-exposed CONTROL,P@~0 (SURFACE-EXPOSED),2,3.60,2.80,22.2,0.77,1.50,5,,,,
+mc2x_r051,0.51,P-exposed CONTROL,P@~0 (SURFACE-EXPOSED),3,3.60,2.80,22.2,0.75,1.20,3,,,,
+b2o3_Oexp,0.16,O+P co-exposed,O@1.5 + P@0.0 (both SURFACE-EXPOSED),2,3.25,2.12,34.8,1.30,1.87,12,3.00,3.00,0.50,1.50
+b2o3_Oexp,0.16,O+P co-exposed,O@1.5 + P@0.0 (both SURFACE-EXPOSED),3,3.12,2.25,27.9,1.25,2.00,12,3.00,3.00,1.00,1.50
+mc2x_r016,0.16,none-exposed CONTROL,P min depth 4.9 (buried),2,3.60,3.00,16.7,0.82,1.10,7,,,,
+mc2x_r016,0.16,none-exposed CONTROL,P min depth 4.9 (buried),3,3.90,2.90,25.6,1.13,1.50,11,,,,
+"# Termination roll-scan, SE|Li-metal 600K NVT 100ps x 2 seeds (kgy, 2026-07-09). build_li_interface.py --roll_c; logs ~/work/iface_roll.log + iface_roll_O.log; per-frame decomp_*.csv on kgy ~/work/runs/iface_roll/"
+"# PAIR MEANS (mean +/- half-range, n=2):"
+"#   roll 0.51: b2o3_Bexp PS_loss 8.4+/-1.8 %, dP_Li +0.12+/-0.12, dLi_pen -0.5+/-1.5  |  mc2x_r051 PS_loss 22.2+/-0.0 %, dP_Li +1.35+/-0.15, dLi_pen +4+/-1"
+"#   roll 0.16: b2o3_Oexp PS_loss 31.4+/-3.5 %, dP_Li +1.94+/-0.07, dLi_pen +12+/-0    |  mc2x_r016 PS_loss 21.2+/-4.5 %, dP_Li +1.30+/-0.20, dLi_pen +9+/-2"
+"# VERDICT roll 0.51 (CLEAN front-line pair: doped puts B where the control has surface P):"
+"#   B lithiates (B-S 3.00->1.50, B-Li ->5.0-5.5 = the thermodynamic worst-case DOES fire at direct metallic contact),"
+"#   BUT the host is PROTECTED: PS4 loss 8.4 vs 22.2 % (2.6x, seeds non-overlapping 10.2max vs 22.2min), Li3P growth ~0 (+0.12 vs +1.35), Li penetration HALTED (-0.5 vs +4)."
+"#   => SACRIFICIAL SHIELD (literature mechanism-1, LiF/Li3BO3-type): B reacts first, its Li-B-S product layer passivates. NOT a degradation."
+"# VERDICT roll 0.16 (CONFOUNDED pair -- do NOT quote doped-vs-control delta):"
+"#   the 0.16 cleave exposes P@0.0 AND O@1.5 in the doped frame (PS_init already 3.25/3.12 = cleave-cut PS4), while the control exposes nothing (P>=4.9)."
+"#   clean info: buried B (21.6/27.6 A) stays 3.00->3.00, B-Li<=1.5 (3rd independent burial-protection confirmation); per-O fate of the exposed O = separate one-liner analysis."
+"# Combined with the buried-geometry campaign (interface_campaign_summary.csv: 22+/-9 vs 26+/-0 % = equal):"
+"#   TERMINATION DECIDES THE MODE -- buried dopants = inert survivors (kinetics equal); B-exposed termination = sacrificial shield (host protected)."
+"#   In NO tested geometry does doping worsen the interface. Caveats: n=2 seeds/termination, one cleave height per termination, 100 ps, UMA MLIP, coordination-count metrics."

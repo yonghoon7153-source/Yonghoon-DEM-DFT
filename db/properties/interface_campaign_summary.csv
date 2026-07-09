@@ -10,3 +10,5 @@ modelc62,3,48.1,7.8,3.27,0.25,1.97,0.12,10.3,0.9,,
 "# ROBUST b2o3 result: B-S 3.00->3.00 ALL seeds (BS3 thioborate intact); B-Li ~1-2 with B-S intact = Li-coordinated thioborate, NOT metallic LiB."
 #   => equilibrium 'metallic LiB' worst-case still NOT realized dynamically; doping does NOT worsen the interface.
 # Time: b2o3 PS_loss -8%@50ps(single seed) -> 15-35%@100ps: decomposition NOT yet self-limited at 100 ps (both systems still reacting).
+"# GEOMETRY QUALIFIER (2026-07-09): in THIS slab B sits 37.8/45.3 A below the surface -> the 'LiB not realized' line above is a BURIED-dopant result."
+"# Termination roll-scan (B/O placed at the surface + same-roll controls) -> interface_termination_scan.csv: B-exposed DOES lithiate but acts as a SACRIFICIAL SHIELD (host PS4 2.6x better preserved, Li penetration halted). No tested termination worsens the interface."
