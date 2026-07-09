@@ -312,3 +312,22 @@ doped/neutral 비교는 **|E_bind| 차이**가 아니라 **anchoring site 위치
 4. 작은 grid로 sanity check (4×4×3 = 48 points)
 5. 본 grid scan 실행
 6. 분석 + heatmap + report
+
+---
+
+## ★ 2026-07-09 구조 재정정 (v7 → v7c): 방향족 융합 이성질체 오류
+
+**사용자가 VESTA 렌더 비교로 적발.** v7 SMILES의 방향족부 `c2ccsc2`는 **thieno[2,3-b][1,4]dioxine**
+(S가 융합탄소 옆)을 만든다 — 진짜 EDOT 코어는 **thieno[3,4-b]** (S가 오각형 중앙, CH 둘 사이;
+PubChem canonical `C1COC2=CSC=C2O1`와 일치 확인). 분자식이 동일한 이성질체라 기존 감사
+(식·작용기 카운트·S–O 거리)로는 잡히지 않았음 — **탐지법 = S의 두 이웃 방향족 탄소가 모두
+H-탄소(산소 무접촉)인지 확인** (v7c 생성기에 감사 항목으로 추가됨).
+
+- **v7c SMILES**: neutral `CC(S(=O)(=O)O)CCOCC1COc2cscc2O1` / doped `[O-]` 버전 (기하 임베드용; ORCA는 0/2 radical)
+- **무효화**: v7 ORCA 산출물 전부 (opt/freq/IR/E, 돌던 Raman 포함 — 오이성질체 기하)
+- **영향 없음**: LiNiO₂ slab/E_slab/U-ramp (분자 무관), side chain 화학 서사(§ether/methyl-분지 — 그대로),
+  DEM-MPM 문서 §1.1의 side chain 기술 (링 융합은 명시돼 있지 않았음 — v7c로 보완)
+- **재실행 체인**: 로컬 ORCA v7c opt+freq (r2SCAN-3c, 직렬 — v7 실측 페어 ~90분) → HURRAY×2·허수0
+  → Raman(B3LYP NumFreq+Polar) v7c 기하로 → gabia `inputs/sdcp_v7c/` 업로드 → Phase A 배향 3종
+- **교훈**: 이성질체는 조성 감사를 전부 통과한다. 링 함유 분자는 **연결 토폴로지(치환 위치·융합 방향)**를
+  템플릿 substructure 매치로 검증할 것. (구조 오류 3회째: 곧은-pentyl → ether 누락 → 융합 이성질체)
