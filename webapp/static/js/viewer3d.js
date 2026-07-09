@@ -1126,6 +1126,11 @@ function applyViewMode(state, mode) {
     const m = state.meshes && state.meshes[t];
     if (m && m.material) { m.material.opacity = 1.0; m.material.transparent = false; }
     if (m) { const cb = document.querySelector(`.viewer-controls input[data-layer="${t}"]`); m.visible = cb ? cb.checked : true; }
+    if (m && m.instanceColor) {                            // repaint AM base colour so a prior mode's
+      const base = new THREE.Color(COL[t]);                //   per-instance tint (je dark navy, ji_field
+      m.userData.particles.forEach((_, i) => m.setColorAt(i, base));   //   0x0a0e1a, additives SEM-black)
+      m.instanceColor.needsUpdate = true;                  //   never bleeds into a mode that skips AM
+    }
   });
   // analysis modes are POST-compaction results — in the "압축 전" (loose seed) view they
   // don't exist yet, so show the loose SE + a note instead of the (compacted) field.

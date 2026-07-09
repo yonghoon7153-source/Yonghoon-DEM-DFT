@@ -507,10 +507,11 @@ def main():
                     _ep, _ej = _s3.field_point_cloud(       # paper Fig-4 grammar: |J_e| cloud, hot backbone
                         _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5), max_points=a.field_max_points)
                     if _ep is not None:
-                        _ejn = _ej / max(float(_ej.max()), 1e-30)   # normalise 0–1 (compact JSON; viewer
-                        elec_field = [[round(float(_ep[i, 0]), 2), round(float(_ep[i, 1]), 2),   # p99.8-norms)
-                                       round(float(_ep[i, 2]), 2), round(float(_ejn[i]), 4)]
-                                      for i in range(len(_ep))]
+                        _ej = np.nan_to_num(_ej, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
+                        _ejn = _ej / max(float(np.percentile(_ej, 99.8)), 1e-30)   # p99.8-norm (top 0.2%>1,
+                        elec_field = [[round(float(_ep[i, 0]), 2), round(float(_ep[i, 1]), 2),   # viewer clamps;
+                                       round(float(_ep[i, 2]), 2), round(float(_ejn[i]), 4)]     # keeps dim-end
+                                      for i in range(len(_ep))]                                  # range vs max-norm)
                         print(f"  STEP3 electronic FIELD: {len(elec_field):,} pts (AM+carbon |J| cloud)")
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
                 _sname = _s3.SID_NAME
@@ -641,8 +642,9 @@ def main():
                         _ip, _ij = _s3.field_point_cloud(   # the partner panel to the electronic field
                             _res3i, sid3, _sig3i, a.step3_vox, (5, 6), max_points=a.field_max_points)
                         if _ip is not None:
-                            _ijn = _ij / max(float(_ij.max()), 1e-30)
-                            ion_field = [[round(float(_ip[i, 0]), 2), round(float(_ip[i, 1]), 2),
+                            _ij = np.nan_to_num(_ij, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
+                            _ijn = _ij / max(float(np.percentile(_ij, 99.8)), 1e-30)   # p99.8-norm (top 0.2%>1,
+                            ion_field = [[round(float(_ip[i, 0]), 2), round(float(_ip[i, 1]), 2),   # viewer clamps)
                                           round(float(_ip[i, 2]), 2), round(float(_ijn[i]), 4)]
                                          for i in range(len(_ip))]
                             print(f"  STEP3 ionic FIELD: {len(ion_field):,} pts (SE+SDCP |J| cloud)")
