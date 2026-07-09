@@ -508,9 +508,29 @@ def main():
                                    'plate contacts abundant; carbon/SDCP σ = F1 hooks; AM_S/P = A1-locked '
                                    '10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)'
                                    + (' ⚠UNCONVERGED' if _res3.get('unconverged') else ''))}
+                # COLLECTOR-INTERFACE post-processing (C-SUS/primer axis, manuscript-anchored):
+                # the solve's bottom plate is a PERFECT contact (R_int=0) → σ_e_eff is the BULK
+                # network value.  A real collector adds an AREAL series term: σ_apparent =
+                # L/(L/σ_bulk + R_int) — exact series composition for uniform areal R_int, no
+                # re-solve.  Anchors = manuscript Fig6e post-cycling R_int (Ω·cm²): bare-Al SBE
+                # 110 / DBE 46 / SDCP-graphene-primer C-SUS 30 (S14: primer σ 1.3e4 S/cm, 200nm).
+                # Bulk R (~0.002 Ω·cm²) ≪ R_int → the INTERFACE is the bottleneck the primer
+                # fixes — the model states that quantitatively.
+                _Lcm = _ztop * 1e-4
+                _Rbulk = _Lcm / max(step3['sigma_e_eff_S_cm'], 1e-30)
+                step3['collector'] = {'R_bulk_ohm_cm2': float(f'{_Rbulk:.3g}'),
+                                      'anchors': 'Fig6e post-cycling R_int; S14 primer 1.3e4 S/cm 200nm',
+                                      'sigma_apparent_S_cm': {
+                                          nm2: float(f'{_Lcm / (_Rbulk + _R):.3g}')
+                                          for nm2, _R in (('ideal_R0', 0.0), ('bare_Al_SBE_110', 110.0),
+                                                          ('DBE_46', 46.0), ('C-SUS_primer_30', 30.0))}}
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
+                _ca = step3['collector']['sigma_apparent_S_cm']
+                print(f"  STEP3 collector axis (R_int series): bulk {_ca['ideal_R0']:.3g} → "
+                      f"bare-Al(110Ωcm²) {_ca['bare_Al_SBE_110']:.3g} / DBE(46) {_ca['DBE_46']:.3g} / "
+                      f"C-SUS primer(30) {_ca['C-SUS_primer_30']:.3g} S/cm  — 계면이 병목 (R_bulk {_Rbulk:.2g} Ωcm²)")
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()
