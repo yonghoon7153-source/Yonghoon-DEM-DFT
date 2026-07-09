@@ -42,6 +42,7 @@ Writes <out>/{slab,complex_doped,complex_neutral,mol_doped,mol_neutral}/scf.in
 plus <out>/README_harvest.txt (E_bind formula + a grep-the-energies snippet).
 """
 import argparse
+import json
 import os
 import re
 import numpy as np
@@ -359,9 +360,31 @@ def box_molecule(atoms):
     return m
 
 
+def afm_from_json(slab_atoms, afm_json):
+    """Exact Ni1/Ni2 labels by index from extract_scf_slab.py's map. Use when the
+    slab IS the scf_u62 geometry (slab_clean.xyz) -> no clustering/matching."""
+    m = json.load(open(afm_json))
+    labels = list(slab_atoms.get_chemical_symbols())
+    if m["nat"] != len(labels):
+        raise SystemExit(f"  !! afm_json nat {m['nat']} != slab nat {len(labels)} "
+                         "-- slab is not the json's source geometry")
+    for i in m["Ni1"]:
+        labels[i] = 'Ni1'
+    for i in m["Ni2"]:
+        labels[i] = 'Ni2'
+    bad = [i for i, s in enumerate(labels) if s == 'Ni']
+    if bad:
+        raise SystemExit(f"  !! {len(bad)} Ni not covered by afm_json indices")
+    print(f"  AFM from json (exact, index-based): Ni1 {len(m['Ni1'])}/Ni2 {len(m['Ni2'])}")
+    return labels
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--ref_scf", required=True)
+    ap.add_argument("--ref_scf", help="scf_u62.in (for --afm_mode match/layer/inplane diagnosis)")
+    ap.add_argument("--afm_json", default=None,
+                    help="exact Ni1/Ni2 index map from extract_scf_slab.py; when the slab is "
+                         "scf_u62's own geometry this is the clean path (overrides afm_mode)")
     ap.add_argument("--slab", required=True)
     ap.add_argument("--complex_doped", required=True)
     ap.add_argument("--complex_neutral", required=True)
@@ -380,37 +403,37 @@ def main():
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
-    ni_ref, ref_lab, cell = parse_ref_ni(a.ref_scf)
-    print(f"ref AFM split: Ni1 x{ref_lab.count('Ni1')}  Ni2 x{ref_lab.count('Ni2')}", flush=True)
-
-    # ---- diagnose the ref AFM pattern (decides layer vs match) ----
-    rows, band_lab, is_A = analyze_ref_layers(ni_ref, ref_lab, a.ztol)
-    print("  ref z-band diagnosis (band: <z> n label):")
-    for b, zc, n, lb in rows:
-        print(f"    band {b}: z={zc:5.2f}  n={n:2d}  {lb}")
-    print(f"  ref pattern = {'A-type (z-layer AFM)' if is_A else 'NOT A-type (in-plane/G)'}")
-
-    mode = a.afm_mode
-    if mode == "auto":
-        mode = "layer" if is_A else "inplane"
-    if mode == "layer" and not is_A:
-        raise SystemExit("  !! layer mode needs an A-type ref; this ref is in-plane. Use inplane.")
-    if mode == "inplane":
-        print("  ref is in-plane AFM (2up/2down per layer); generating the same TYPE from the")
-        print("  phaseA slab's own geometry (no ref correspondence needed). The slab cancels in")
-        print("  E_bind(doped)-E_bind(neutral), so the verdict is robust to the AFM microstate.")
-    print(f"  --> AFM assignment mode: {mode}", flush=True)
+    slab_atoms = read(a.slab)
+    Nslab = len(slab_atoms)
 
     # ---- slab AFM computed ONCE, transferred to complexes by index (identical slab
     #      sublattice across slab/complex_doped/complex_neutral => clean cancellation) ----
-    slab_atoms = read(a.slab)
-    Nslab = len(slab_atoms)
-    if mode == "layer":
-        slab_labels = afm_layer_assign(slab_atoms, band_lab, "slab", a.ztol)
-    elif mode == "inplane":
-        slab_labels = afm_inplane_assign(slab_atoms, "slab", a.ztol)
+    if a.afm_json:
+        # exact index map (slab IS scf_u62's geometry): no ref parse / matching
+        print("AFM source: exact index map (slab_afm.json) — clean DFT slab path")
+        slab_labels = afm_from_json(slab_atoms, a.afm_json)
     else:
-        slab_labels = split_ni(slab_atoms, ni_ref, ref_lab, slab_atoms.cell.array)
+        if not a.ref_scf:
+            raise SystemExit("provide --afm_json (clean DFT slab) or --ref_scf (diagnosis path)")
+        ni_ref, ref_lab, cell = parse_ref_ni(a.ref_scf)
+        print(f"ref AFM split: Ni1 x{ref_lab.count('Ni1')}  Ni2 x{ref_lab.count('Ni2')}", flush=True)
+        rows, band_lab, is_A = analyze_ref_layers(ni_ref, ref_lab, a.ztol)
+        print("  ref z-band diagnosis (band: <z> n label):")
+        for b, zc, n, lb in rows:
+            print(f"    band {b}: z={zc:5.2f}  n={n:2d}  {lb}")
+        print(f"  ref pattern = {'A-type (z-layer AFM)' if is_A else 'NOT A-type (in-plane/G)'}")
+        mode = a.afm_mode
+        if mode == "auto":
+            mode = "layer" if is_A else "inplane"
+        if mode == "layer" and not is_A:
+            raise SystemExit("  !! layer mode needs an A-type ref; this ref is in-plane.")
+        print(f"  --> AFM assignment mode: {mode}", flush=True)
+        if mode == "layer":
+            slab_labels = afm_layer_assign(slab_atoms, band_lab, "slab", a.ztol)
+        elif mode == "inplane":
+            slab_labels = afm_inplane_assign(slab_atoms, "slab", a.ztol)
+        else:
+            slab_labels = split_ni(slab_atoms, ni_ref, ref_lab, slab_atoms.cell.array)
     slab_ni = {i: slab_labels[i] for i in range(Nslab) if slab_labels[i] in ('Ni1', 'Ni2')}
 
     jobs = [

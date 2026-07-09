@@ -74,6 +74,10 @@ def main():
     ap.add_argument("--gap", type=float, default=2.4, help="lowest mol atom above slab top (A)")
     ap.add_argument("--fmax", type=float, default=0.05)
     ap.add_argument("--steps", type=int, default=300)
+    ap.add_argument("--freeze_frac", type=float, default=0.5,
+                    help="fix slab atoms with z below this fraction of the slab thickness; "
+                         "1.0 = freeze the ENTIRE slab (use for a clean DFT-relaxed substrate "
+                         "so UMA cannot reconstruct it -- only the molecule relaxes)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -83,8 +87,11 @@ def main():
     # ---- shared slab reference ----
     slab0 = read(a.slab)
     zs = slab0.positions[:, 2]
-    zcut = zs.min() + 0.5 * (zs.max() - zs.min())
-    fix = FixAtoms(indices=[i for i in range(len(slab0)) if slab0.positions[i, 2] < zcut])
+    if a.freeze_frac >= 1.0:
+        fix = FixAtoms(indices=list(range(len(slab0))))     # freeze whole slab
+    else:
+        zcut = zs.min() + a.freeze_frac * (zs.max() - zs.min())
+        fix = FixAtoms(indices=[i for i in range(len(slab0)) if slab0.positions[i, 2] < zcut])
     slab = slab0.copy()
     slab.set_constraint(fix)
     slab.calc = calc
