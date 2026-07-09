@@ -331,3 +331,29 @@ H-탄소(산소 무접촉)인지 확인** (v7c 생성기에 감사 항목으로 
   → Raman(B3LYP NumFreq+Polar) v7c 기하로 → gabia `inputs/sdcp_v7c/` 업로드 → Phase A 배향 3종
 - **교훈**: 이성질체는 조성 감사를 전부 통과한다. 링 함유 분자는 **연결 토폴로지(치환 위치·융합 방향)**를
   템플릿 substructure 매치로 검증할 것. (구조 오류 3회째: 곧은-pentyl → ether 누락 → 융합 이성질체)
+
+## 2026-07-09 Phase-A v7c 배향 스캔 결과 (UMA-oc20, 정합-ref: E_slab 공유·동일세팅 분자 ref)
+
+E_slab −400.1256 eV · E_mol neutral −199.2649 / doped[M−H]• −194.1078 (UMA 절대값, 부기용)
+
+**랭킹 (12배치 중 상위, `phaseA_v7c/phaseA_v7c_results.csv`)**
+| E_bind (eV) | 배치 |
+|---|---|
+| **−0.935** | **doped_sulfonate_down_r0 (챔피언)** |
+| −0.893 | neutral_sulfonate_down_r0 |
+| −0.890 | doped_etherO_down_r90 |
+| −0.745 | neutral_chelation_r0 |
+| −0.643 | doped_sulfonate_down_r90 |
+| +0.488 / +0.272 | doped_chelation r0/r90 — **양수 = 기각** (집게 기하가 반발로 풀림) |
+
+**판정 3건**
+1. **챔피언 배향 = sulfonate-down** — r0↔r90 방위 이방성 ~0.3 eV = 술폰산이 표면 격자에 자리를
+   가려 앉음 (bidentate 모티프 후보, footprint 측정으로 확인)
+2. **doped ≳ neutral (Δ 0.04 eV)** — 방향은 생존했으나 옛 무효 수치(Δ1.78)와 달리 MLIP에선 근소.
+   UMA는 전하상태·폴라론 보상을 명시적으로 인지하지 못하므로(radical 기하만), doped≫neutral의
+   성패는 **Phase-B DFT(+U·dipole corr) 교차검증이 심판** — 이 간극 자체가 B를 돌려야 할 이유
+3. **가설④ ether-chelation: MLIP 레벨 기각.** 단 doped_etherO_down −0.890이 sulfonate-down에
+   근접 = **ether O의 Li⁺ 배위가 실재** → 앵커로는 아니어도 §3.6 Li⁺-hopping site 역할은 지지
+
+다음: 챔피언 복합체 footprint 측정 → γ 잠정 재산출 → Phase-B DFT → coh 앵커 확정. (DEM-MPM 방
+sdcp_master §2.1 히스토리에 이 행 추가할 것.)
