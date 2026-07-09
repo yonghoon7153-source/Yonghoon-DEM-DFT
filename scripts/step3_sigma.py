@@ -219,6 +219,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
                             np.concatenate(cols + [np.arange(n_dof)]))),
                           shape=(n_dof, n_dof)).tocsr()
     Minv = sparse.diags(1.0 / L.diagonal())
+    print(f'    STEP3 solve: {n_dof:,} dof, plate contacts {n_pb:,}/{n_pt:,} — CG running (수 분 소요 가능)…',
+          flush=True)
     try:
         phi, info = cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)
     except TypeError:                                      # scipy < 1.12 has no rtol kwarg

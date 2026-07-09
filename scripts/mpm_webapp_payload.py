@@ -476,6 +476,7 @@ def main():
             _apts = (se[_m] - _off) * UM if _m.any() else None
             _aph = phase[_m] if _m.any() else None
             _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
+            print('  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…', flush=True)
             _septs = (se[phase == 1] - _off) * UM if phase is not None else (se - _off) * UM
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
                                        se_pts=_septs)      # SE stamped (sid 6) → ionic solve on the same grid
