@@ -67,7 +67,7 @@ Li metal = 가장 **환원적인** 환경(0 V). B–S/P–O가 버틴 건 환원
 
 ## 5. 정직한 한계
 - **100 ps = 초기 단계**: 양쪽 다 분해 진행 중(미수렴) — 절대 분해량이 아니라 **비교(동등/보호)**만 인용. B-노출 방패층의 장기 자기제한 여부도 100 ps 밖.
-- ~~표면 종단 1종/프레임~~ → **c-roll 종단 스캔 완결(2026-07-09)**: 매몰 원기하 + B-노출(0.51) + O-노출(0.16), 각각 같은-roll 무도핑 통제 동반 (`interface_termination_scan.csv`). 남은 것: 종단당 n=2 seed·cleave 높이 1종, O-노출 쌍은 confound(도핑 프레임만 P 동시 노출 → delta 인용 금지, per-O 분석으로 대체), 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색.
+- ~~표면 종단 1종/프레임~~ → **c-roll 종단 스캔(2026-07-09)**: 매몰 원기하 + B-노출(0.51, **build 무결 감사 통과 → 방패 판정 유효**) + O-노출(0.16 — **build artifact 판명**: cleave가 최전선 P의 S 3개를 잘라놓은 파편이라 최전선 판정 철회, 매몰-보호 확인만 유효; `audit_cleave_bonds.py` 신설) (`interface_termination_scan.csv`). **재시험 roll 0.71**(온전 PS₂O₂ O-up vs 같은 깊이 온전 PS₄ 통제) MD 대기. 남은 것: 종단당 n=2 seed·cleave 높이 1종, 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색.
 - MLIP 반응상(Li₃P/Li₂S) 정확도는 DFT 단발 검증 미실시(선택 과제) — "동등" 결론은 리스크 낮음; **B-노출의 Li–B–S 산물층은 MLIP 의존이 커서 "MLIP 수준" 명시하고 인용**.
 - CIF 스냅샷은 seed-s2 대표 1개 (통계는 곡선/CSV가 담당).
 
