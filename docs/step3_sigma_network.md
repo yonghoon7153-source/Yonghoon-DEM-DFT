@@ -28,6 +28,22 @@
 - AM-AM 접촉 목은 **econn과 같은 규칙(gap ≤ 0.1µm)의 1-voxel 다리**로 보존 — DEM 접촉망 충실.
   목 면적 ~vox²로 과대 (비교런 공통 → 상대차 보존).
 
+## 물리 리뷰 반영 (2026-07-10, 2-agent 적대 리뷰 — 코드/물리 각 1명)
+- **F1 판-운(MAJOR) 해결**: 윗판이 "최상 AM 한 층"에만 결합 → sub-voxel 베드 이동에 σ가 **×7.7**
+  요동 (리뷰어 프로브) = 스캐폴드 다른 런끼리 비교가 판-운에 노출.  ⇒ 판을 **연속 평면(바닥=collector
+  z=0, 상단=두께) + 컬럼당 표면 voxel 1개 접촉 + 거리-가중 g = σ·vox²/max(dist, vox/2), 밴드
+  vox+0.1µm**로 재정식화.  베드-고정 phase 프로브에서 σ 완전 안정; 잔여 ±~2×는 **crown-희소 프레임
+  (부유 베드)**에만 남는 quantization 항 — production은 프레스가 상단을 눌러 접촉이 풍부(수백 컬럼)
+  → 안정.  trust 문구를 "pressed-to-plate 베드"로 좁힘.
+- **F2 수렴 침묵**: info≠0 또는 resid>1e-6 → ⚠ 출력 + metrics trust에 `⚠UNCONVERGED` 플래그;
+  maxiter 30k.  **F3 다리 σ-id 역전**: 수정(혼합 접촉 = AM_P 하위-σ).  **F4 share 오분배**: 혼합 면의
+  발열을 반반이 아니라 **반대편 σ 가중**(1e4 대비 면에서 탄소 몫 50%→~0%)으로; 라벨 "전류 경로"→
+  **"손실(발열) 분담"** (전류 아님 — 탄소는 전류는 많이 나르고 발열은 거의 없음).
+- 기타: je = |J_z| proxy 라벨 정정 / vox 민감도 실측 **0.4→0.3µm에서 σ ×0.46** (vox는 절대 튜닝 노브
+  아님 — 비교런 간 고정 필수) / 1.6M dof 실측 ~8분 (문서의 "수 분" 정정) / PTFE가 접촉 틈에 있어도
+  AM-AM 다리는 스탬프됨(econn과 같은 한계 — binder-rich계 과대 카운트 1줄 명시) /
+  `--integration` 모드 커밋 (real14+합성 VGCF 재현: AM-only 1.474e-4 → +VGCF 2.849e-4, ×1.93 단조).
+
 ## 검증 (2026-07-10, 전부 통과)
 1. **해석해 5종**: 균질블록=σ 정확 / 직렬 라미네이트=조화평균 / 병렬=산술평균 / 절단층=0 /
    단면 1/36 기둥=σ/36 — 조립·BC·단위 고정.
@@ -43,7 +59,7 @@
 4. DEM 불필요 — 전부 MPM 구조(se_dump/phase/scaffold) 위 계산.
 
 ## 산출물
-- `mpm_metrics.step3`: sigma_e_eff_S_cm, sigma_table, dissipation_share(상별 전류경로 분담),
+- `mpm_metrics.step3`: sigma_e_eff_S_cm, sigma_table, dissipation_share(상별 손실(발열) 분담 — 전류 아님),
   vox_um, n_dof, k_plates, n_floating_dropped, cg_resid, trust 문자열
 - `payload particles[].je`: 입자별 평균 |J_z| → viewer "전류밀도 — STEP3 σ_e (slide-20)" 모드
   (p5-p95 정규화, 빨강=hot path)

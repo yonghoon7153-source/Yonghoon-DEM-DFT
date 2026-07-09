@@ -40,7 +40,6 @@ from scipy.sparse.linalg import cg
 # SDCP 150 = USER-provided INTERIM material conductivity (2026-07-10, 진성호계 S-PEDOT 자릿수);
 # replaces the earlier 'AM-grade 0.010' placeholder.  Still overridable per run.
 SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 150.0}
-PHASE_NAME = {2: 'VGCF', 3: 'SuperP', 5: 'SDCP'}          # additive phase codes (4 PTFE = insulator)
 SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE'}   # voxel σ-id → name
 
 
@@ -110,52 +109,73 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
     return sid, pid
 
 
-def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None):
+def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
+                  z_bot_um=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
-    plate φ=1 at the bottom bed surface, φ=0 plate at the top, lateral Neumann.
-    z_top_um: put the TOP plate at this height (the bed THICKNESS — production passes it).  Without
-    it the top plate sits at the highest occupied layer, which is FRAGILE: one protruding fibre tip
-    moves the plate up and the whole current funnels through those few voxels (integration test:
-    adding VGCF *lowered* σ_eff ×24 — a plate artifact, since adding conductors is monotone).
-    Returns dict(sigma_eff, n_dof, k_plates, cg_iters, resid [, phi, cond])."""
+    plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
+
+    PLATES = BAND-COUPLED CONTACT SETS (physics review F1): every conductive voxel whose centre
+    lies within `band` of its plate PLANE couples with the distance-aware conductance
+    g = σ·vox²/max(dist, vox/2).  A single-quantization-layer plate made σ swing ×7.7 under a
+    ±0.2µm sub-voxel bed shift (2-4 AM crowns = the whole exit) — the band (default vox+0.1µm,
+    capped 1.4·vox: the 0.1µm is the econn contact tol) makes the plate contact set the PHYSICAL
+    crown-contact set, restoring cross-scaffold relative trust.  Top plane = z_top_um (bed
+    thickness, production) else the top face of the highest AM layer; bottom plane = floor of the
+    lowest occupied layer.  σ_eff uses the true plate gap L = z_plate − z_b.
+    Returns dict(sigma_eff, n_dof, plate_z_um, n_plate_vox, cg_info, resid, unconverged
+    [, phi, cond])."""
+    nx, ny, nz = sid.shape
     sig = sigma_of_sid[sid]                                # per-voxel σ (S/cm)
     cond = sig > 0
     if not cond.any():
-        return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_iters': 0, 'resid': 0.0}
-    # PLATE LAYERS: bottom = lowest OCCUPIED conductive layer (a sphere tangent to a plane never
-    # reaches that layer's voxel CENTRES, so raw grid ends read empty → σ=0 for every run — caught
-    # by the integration test).  Top = highest layer WITH AM (sid 1/2): the AM spheres ARE the bed
-    # frame, so that layer is the bed surface a top plate can touch — a single protruding carbon
-    # strand must NOT carry the plate (funnel artifact: adding VGCF *lowered* σ ×24 in the test).
-    # z_top_um (bed thickness, production) additionally clips.  Falls back to occupancy top when
-    # the grid has no AM (pure-carbon lab cases / selftests).
+        return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
+                'unconverged': False}
     occ = np.where(cond.any((0, 1)))[0]
     k_bot = int(occ[0])
     am_occ = np.where((((sid == 1) | (sid == 2)) & cond).any((0, 1)))[0]
-    k_top = int(am_occ[-1]) if len(am_occ) else int(occ[-1])
-    if z_top_um is not None:
-        k_top = min(k_top, max(k_bot + 1, int(round(z_top_um / vox)) - 1))
-    k_top = min(k_top, sid.shape[2] - 1)                   # review M5: clamp can not exceed the grid
-    if k_top <= k_bot:
-        return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_iters': 0,
-                'resid': 0.0}
-    # FLOATING ISLANDS (components touching NEITHER plate layer) make the Laplacian singular
-    # (zero-diag isolated voxels / zero-sum blocks → CG NaN — caught by the integration test).
-    # They carry no current by physics → drop them (their je reads 0).
+    k_top_ref = int(am_occ[-1]) if len(am_occ) else int(occ[-1])
+    # plate PLANES in CONTINUOUS µm (not voxel-snapped): production passes z_bot=0 (collector)
+    # and z_top=thickness — snapping to occupied layers re-introduced sub-voxel plate luck
+    # (probe: ×2.8 residual swing) because the plane then hops with the rasterization phase.
+    z_b = float(z_bot_um) if z_bot_um is not None else k_bot * vox
+    z_plate = float(z_top_um) if z_top_um is not None else (k_top_ref + 1) * vox
+    z_plate = min(z_plate, nz * vox)
+    if z_plate - z_b <= 1.5 * vox:                         # degenerate (≈1-layer bed) → no through-path
+        return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
+                'resid': 0.0, 'unconverged': False}
+    band = plate_band_um if plate_band_um is not None else (vox + 0.10)
+    zc = (np.arange(nz) + 0.5) * vox                       # voxel-centre heights
+    # PER-COLUMN SINGLE CONTACT (review F1, final form): each lateral column couples to a plate
+    # through ONE voxel — its surface voxel — iff that surface is within `band` of the plane,
+    # with distance-aware g.  A layer-band coupled a column through TWO layers whenever the band
+    # edge crossed a voxel centre (probe: plate-voxel count 54→278 on a +0.1µm shift, σ ×2) —
+    # per-column contact makes the plate set the physical crown patch and σ vary smoothly.
+    any_c = cond.any(2)
+    k_first = np.argmax(cond, axis=2)                      # column's lowest conductive voxel
+    k_last = nz - 1 - np.argmax(cond[:, :, ::-1], axis=2)  # column's highest conductive voxel
+    bot_m = any_c & (zc[k_first] - z_b <= band)
+    top_m = any_c & (z_plate - zc[k_last] <= band)
+    if not bot_m.any() or not top_m.any():
+        return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
+                'resid': 0.0, 'unconverged': False}
+    # FLOATING ISLANDS (components touching NEITHER plate contact) = singular blocks, zero current
+    # by physics → dropped (their je reads 0).
     lab, _nl = ndimage.label(cond)                         # 6-connectivity = the face-coupling graph
-    plate = np.unique(np.concatenate([lab[:, :, k_bot].ravel(), lab[:, :, k_top].ravel()]))
+    _ii, _jj = np.where(bot_m); _lb = lab[_ii, _jj, k_first[bot_m]]
+    _ii, _jj = np.where(top_m); _lt = lab[_ii, _jj, k_last[top_m]]
+    plate = np.unique(np.concatenate([_lb, _lt]))
     plate = plate[plate > 0]
     n_float = int(cond.sum())
     cond &= np.isin(lab, plate)
     n_float -= int(cond.sum())
     n_dof = int(cond.sum())
     if n_dof == 0:
-        return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_iters': 0, 'resid': 0.0}
+        return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': n_float, 'cg_info': 0,
+                'resid': 0.0, 'unconverged': False}
     sig = np.where(cond, sig, 0.0)
     idx = -np.ones(sid.shape, np.int64)
     idx[cond] = np.arange(n_dof)
-    nx, ny, nz = sid.shape
 
     rows, cols, vals = [], [], []
     diag = np.zeros(n_dof, np.float64)
@@ -167,45 +187,52 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None):
         m = (A >= 0) & (B >= 0)
         if not m.any():
             return
-        g = (2.0 * sa[m] * sb[m] / (sa[m] + sb[m])) * vox   # S·cm... units: σ[S/cm]·vox[µm] — consistent
-        a, bb = A[m], B[m]                                  #   throughout (cancels in σ_eff; see below)
-        rows.append(a); cols.append(bb); vals.append(-g)
-        rows.append(bb); cols.append(a); vals.append(-g)
-        np.add.at(diag, a, g); np.add.at(diag, bb, g)
+        g = (2.0 * sa[m] * sb[m] / (sa[m] + sb[m])) * vox   # σ[S/cm]·vox[µm] — unit cancels in σ_eff
+        a2, b2 = A[m], B[m]
+        rows.append(a2); cols.append(b2); vals.append(-g)
+        rows.append(b2); cols.append(a2); vals.append(-g)
+        np.add.at(diag, a2, g); np.add.at(diag, b2, g)
 
     couple(np.s_[:-1, :, :], np.s_[1:, :, :])
     couple(np.s_[:, :-1, :], np.s_[:, 1:, :])
     couple(np.s_[:, :, :-1], np.s_[:, :, 1:])
-    # Dirichlet plates AT THE BED SURFACES: k_bot layer ↔ φ=1 collector, k_top layer ↔ φ=0
-    # (half-cell distance → g = 2σ·vox)
-    for k, phi_p in ((k_bot, 1.0), (k_top, 0.0)):
-        A = idx[:, :, k]; sa = sig[:, :, k]
+    # per-column plate couplings, distance-aware: g = σ·vox²/max(dist, vox/2) (= 2σ·vox at half-cell)
+    def _plate_couple(mask, ksurf, plane, phi_p):
+        ii, jj = np.where(mask)
+        kk2 = ksurf[mask]
+        A = idx[ii, jj, kk2]; sa = sig[ii, jj, kk2]
         m = A >= 0
-        g = 2.0 * sa[m] * vox
+        if not m.any():
+            return 0, None, None
+        dist = np.maximum(np.abs(zc[kk2[m]] - plane), 0.5 * vox)
+        g = sa[m] * vox * vox / dist
         np.add.at(diag, A[m], g)
         if phi_p != 0.0:
             np.add.at(b, A[m], g * phi_p)
+        return int(m.sum()), A[m], g
+    n_pb, _Ab, _gb = _plate_couple(bot_m, k_first, z_b, 1.0)
+    n_pt, _At, _gt = _plate_couple(top_m, k_last, z_plate, 0.0)
     L = sparse.coo_matrix((np.concatenate(vals + [diag]),
                            (np.concatenate(rows + [np.arange(n_dof)]),
                             np.concatenate(cols + [np.arange(n_dof)]))),
                           shape=(n_dof, n_dof)).tocsr()
     Minv = sparse.diags(1.0 / L.diagonal())
     try:
-        phi, info = cg(L, b, rtol=1e-8, maxiter=12000, M=Minv)
-    except TypeError:                                      # scipy < 1.12 has no rtol kwarg (repo convention:
-        phi, info = cg(L, b, tol=1e-8, maxiter=12000, M=Minv)   # network_conductivity.py dual-kwarg)
+        phi, info = cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)
+    except TypeError:                                      # scipy < 1.12 has no rtol kwarg
+        phi, info = cg(L, b, tol=1e-8, maxiter=30000, M=Minv)
     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
-    # total current through the bottom plate: I = Σ g_plate·(1 − φ_bottom)
-    A0 = idx[:, :, k_bot]; s0 = sig[:, :, k_bot]; m0 = A0 >= 0
-    I = float(np.sum(2.0 * s0[m0] * vox * (1.0 - phi[A0[m0]])))
-    # σ_eff: I[σ·vox·V] over plate area (nx·ny·vox²) and plate gap L = (k_top−k_bot+1)·vox, ΔV=1
-    #   σ_eff = I·L/(A·ΔV) = I·(k_top−k_bot+1)/(nx·ny·vox)   [same units as σ input]
-    L_lay = k_top - k_bot + 1
-    sigma_eff = max(0.0, I * L_lay / (nx * ny * vox))      # CG rounding can leave a ~1e-19 negative
-    if info:
-        print(f'  ⚠ STEP3 CG not fully converged (info={info}, resid={resid:.1e}) — treat σ with care')
+    unconv = bool(info) or resid > 1e-6                    # review F2: NEVER ship a silent bad σ
+    if unconv:
+        print(f'  ⚠ STEP3 CG not converged (info={info}, resid={resid:.1e}) — σ UNRELIABLE')
+    # total current through the bottom plate: I = Σ g_b·(1 − φ)
+    I = float(np.sum(_gb * (1.0 - phi[_Ab]))) if _Ab is not None else 0.0
+    # σ_eff = I·L/(A·ΔV): L = plate gap (µm), A = nx·ny·vox² → σ_eff in the σ-table unit (S/cm)
+    sigma_eff = max(0.0, I * (z_plate - z_b) / (nx * ny * vox * vox))
     out = {'sigma_eff': float(sigma_eff), 'n_dof': n_dof, 'n_floating_dropped': n_float,
-           'k_plates': (k_bot, k_top), 'cg_info': int(info) if info else 0, 'resid': resid}
+           'plate_z_um': (round(z_b, 3), round(z_plate, 3)), 'n_plate_vox': (n_pb, n_pt),
+           'k_plates': (k_bot, k_top_ref), 'cg_info': int(info) if info else 0, 'resid': resid,
+           'unconverged': unconv}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
         out['phi'] = P; out['cond'] = cond
@@ -213,8 +240,8 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None):
 
 
 def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
-    """Mean |J_z| (A per unit area, ∝ σ·∇φ) over each AM particle's voxels — the slide-20 axis.
-    Uses the z-face currents so the number reads as through-plane current density."""
+    """Mean |J_z| PROXY per AM particle (z-face current g·Δφ ∝ J_z·vox² — run-relative, the
+    viewer percentile-normalizes; NOT vox-invariant across runs) — the slide-20 axis."""
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
     jz = np.zeros(sid.shape, np.float64)
@@ -241,8 +268,10 @@ def phase_current_share(res, sid, sigma_of_sid):
         both = cond[sl_a] & cond[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
         g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
-        d = g * (P[sl_a] - P[sl_b]) ** 2                   # per-face dissipation, split half-half
-        diss[sl_a] += 0.5 * d; diss[sl_b] += 0.5 * d
+        d = g * (P[sl_a] - P[sl_b]) ** 2                   # per-face dissipation; split ∝ each side's
+        wa = np.where(both, sb / np.maximum(sa + sb, 1e-30), 0.0)   # RESISTANCE (review F4 — the old
+        diss[sl_a] += wa * d; diss[sl_b] += (1.0 - wa) * d          # half-half gave carbon 50% at a
+        #   1e4-contrast face where it truly dissipates ~0.01%)
     tot = diss.sum()
     out = {}
     for s in np.unique(sid[sid > 0]):
@@ -286,7 +315,35 @@ def _selftest():
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--selftest', action='store_true', help='run the analytic laminate/percolation checks')
+    ap.add_argument('--integration', action='store_true',
+                    help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
+                         'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
     a = ap.parse_args()
     if a.selftest:
         sys.exit(_selftest())
+    if a.integration:
+        import os
+        _csv = os.path.join(os.path.dirname(__file__), '..', 'docs/data/real14_am_scaffold.csv')
+        am = np.loadtxt(_csv, delimiter=',', comments='#')
+        t, c, r = am[:, 0].astype(int), am[:, 1:4] * 1000.0, am[:, 4] * 1000.0
+        c[:, 2] -= (c[:, 2] - r).min()
+        hi = (50.0, 50.0, float((c[:, 2] + r).max()))
+        rng = np.random.default_rng(0)
+        pts = []
+        for _ in range(300):
+            p0 = rng.uniform([0, 0, 0], hi); d = rng.normal(size=3); d /= np.linalg.norm(d)
+            pts.append(p0 + np.outer(np.arange(0, 10, 0.2), d))
+        pts = np.concatenate(pts); ph = np.full(len(pts), 2)
+        inb = ((pts >= 0) & (pts < hi)).all(1); pts, ph = pts[inb], ph[inb]
+        sig = np.array([0.0, 0.010, 0.005, 100.0, 10.0, 150.0, 0.0])
+        out = {}
+        for label, ap_, aph in (('AM-only', None, None), ('AM+VGCF', pts, ph)):
+            sid, pid = rasterize(c, r, t, ap_, aph, (0, 0, 0), hi, 0.4)
+            res = solve_sigma_z(sid, sig, 0.4, z_top_um=hi[2], z_bot_um=0.0)
+            out[label] = res['sigma_eff']
+            print(f"[{label:8s}] σ_eff={res['sigma_eff']:.4g} S/cm  dof={res['n_dof']:,} "
+                  f"plate_vox={res['n_plate_vox']} resid={res['resid']:.1e}")
+        boost = out['AM+VGCF'] / max(out['AM-only'], 1e-30)
+        print(f"carbon boost ×{boost:.2f}  → {'PASS (monotone)' if boost > 1.0 else 'FAIL'}")
+        sys.exit(0 if boost > 1.0 else 1)
     ap.print_help()

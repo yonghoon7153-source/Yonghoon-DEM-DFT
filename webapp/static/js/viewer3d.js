@@ -1983,8 +1983,8 @@ function applyViewMode(state, mode) {
       + (s3 ? `<div style="margin-top:3px">σ_e_eff <b style="font-size:13px">${Number(s3.sigma_e_eff_S_cm).toExponential(2)}</b> S/cm
           <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>low</span><span>|J| (p5–p95)</span><span>high</span></div>`
-      + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">전류 경로 분담: `
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>low</span><span>|J_z| (p5–p95)</span><span>high</span></div>`
+      + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
           + Object.entries(s3.dissipation_share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     return;
   }
