@@ -2049,12 +2049,12 @@ function applyViewMode(state, mode) {
       state.meshes.MESH.visible = true;
       state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.18;
     }
-    ['AM_P', 'AM_S'].forEach(ty => {                     // AM = solid grey presence (user: ghosts too
-      const m = state.meshes[ty]; if (!m) return;        // faint).  Carbon draws x-ray (depthTest off)
-      const base = new THREE.Color(0x8f8f8f);            // so a stronger AM cannot hide it.  Reset the
-      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));   // instance colors too — previous
-      if (m.instanceColor) m.instanceColor.needsUpdate = true;         // mode's palette bled in before.
-      m.material.transparent = true; m.material.opacity = 0.5;
+    ['AM_P', 'AM_S'].forEach(ty => {                     // AM = SOLID near-black (the original SEM-like
+      const m = state.meshes[ty]; if (!m) return;        // 도전재 look the user asked back for): carbon
+      const base = new THREE.Color(0x141414);            // draws x-ray on top, so amber/cyan webs pop
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));   // on the dark spheres.  Instance
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;         // colors reset (no palette bleed).
+      m.material.transparent = false; m.material.opacity = 1.0;
     });
     buildCarbonOverlay(state, only, only ? 1.0 : 0.7);   // fibres → lines, SuperP → points (x-ray)
     const nFib = ((state.data && state.data.additive_fibres) || [])
