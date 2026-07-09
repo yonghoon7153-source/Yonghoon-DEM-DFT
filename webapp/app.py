@@ -5253,13 +5253,23 @@ def mpm_input_package(case_id):
         mixing = 'thinky'
     if recipe:
         cmd += ['--add-recipe', recipe, '--mixing', mixing]
-    # STEP3 collector preset (manuscript Fig6e cycled R_int anchors) — post-processing selection;
-    # every preset is always computed, this just tags metrics.step3.collector.selected.
+    # STEP3 collector selection.  R_int is an (ELECTRODE, collector) PAIR property — the Fig6e
+    # anchors are (SBE,bare)=110 / (DBE,bare)=46 / (DBE,C-SUS)=30 Ω·cm² (post-cycling).  The UI
+    # picks only the COLLECTOR; the electrode side is what the recipe already is (SDCP in the
+    # recipe = DBE-class bottom interface).  (SBE,C-SUS) was not measured → DBE-anchored proxy,
+    # labelled.  Every preset is still computed; this tags metrics.step3.collector.selected.
     _coll = request.args.get('collector', '')
-    _cmap = {'csus': (30.0, 'C-SUS_primer'), 'dbe': (46.0, 'bare_Al_DBE'),
-             'bare': (110.0, 'bare_Al_SBE'), 'ideal': (0.0, 'ideal')}
-    if _coll in _cmap:
-        cmd += ['--collector-rint', str(_cmap[_coll][0]), '--collector-name', _cmap[_coll][1]]
+    _dbe = _sd > 0                                       # recipe contains SDCP → DBE-class electrode
+    if _coll == 'bare':
+        _rint, _cname = (46.0, 'bare_Al+DBE_electrode') if _dbe else (110.0, 'bare_Al+SBE_electrode')
+    elif _coll == 'csus':
+        _rint, _cname = 30.0, ('C-SUS_primer+DBE' if _dbe else 'C-SUS_primer+SBE(proxy_DBE-anchored)')
+    elif _coll == 'ideal':
+        _rint, _cname = 0.0, 'ideal'
+    else:
+        _rint, _cname = -1.0, ''
+    if _rint >= 0.0:
+        cmd += ['--collector-rint', str(_rint), '--collector-name', _cname]
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
