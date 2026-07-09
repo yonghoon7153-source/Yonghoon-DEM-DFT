@@ -24,6 +24,19 @@ calc = FAIRChemCalculator(pretrained_mlip.get_predict_unit("uma-s-1p1", device="
                           task_name="oc20")
 imgs = read(f"{D}/mep_path.xyz", index=":")
 ad = len(imgs[0]) - 1
+
+# --- unwrap adatom across the periodic boundary (minimax path may wrap the cell) ---
+cell = imgs[0].cell.array
+icell = np.linalg.inv(cell)
+for k in range(1, len(imgs)):
+    dr = imgs[k].positions[ad] - imgs[k - 1].positions[ad]
+    f = dr @ icell
+    f -= np.round(f)
+    imgs[k].positions[ad] = imgs[k - 1].positions[ad] + f @ cell
+_j = [float(np.linalg.norm(imgs[k + 1].positions[ad] - imgs[k].positions[ad]))
+      for k in range(len(imgs) - 1)]
+print("adatom jumps (A):", np.round(_j, 2), flush=True)
+assert max(_j) < 4.0, "path still has a >4A jump after unwrap -- inspect mep_path.xyz"
 zs = imgs[0].positions[:, 2]
 zsl = np.delete(zs, ad)
 zcut = zsl.min() + 0.5 * (zsl.max() - zsl.min())
