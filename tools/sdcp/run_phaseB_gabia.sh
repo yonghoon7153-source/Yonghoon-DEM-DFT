@@ -2,11 +2,12 @@
 # run_phaseB_gabia.sh — run the 5 Phase-B SCFs on kserver116-27 (gabia GPU).
 #   tmux new -s phaseB -d 'bash ~/work/Yonghoon-DEM-DFT/tools/sdcp/run_phaseB_gabia.sh \
 #                          > /data/work/runs/sdcp_linio2_binding/phaseB_v7c/run.log 2>&1'
-# Smallest-first + resume-safe (skip JOB DONE) + OOM-safe: instead of a hard
-# p0 gate, each heavy job waits until GPU 0 has enough FREE memory, so the tiny
-# molecule SCFs start immediately alongside p0 and the big slab/complex jobs
-# start the instant p0 frees the card. Failure-tolerant: an OOM/error job is
-# logged and skipped; rerun the script to pick up whatever didn't finish.
+# Smallest-first + resume-safe (skip JOB DONE) + OOM-safe: each job waits until
+# GPU 0 has enough FREE memory. On this ~48 GB card p0 holds ~41 GB, so EVERY
+# job (molecules included -- a vacuum box at ecutrho 480 is not cheap) must wait
+# for p0's min->saddle->barrier chain to free the card; the thresholds encode
+# that. Failure-tolerant: an OOM/error job is logged and skipped; rerun to pick
+# up whatever didn't finish (the OOM'd molecules re-run cleanly, no JOB DONE).
 set -u
 BASE=/data/work/runs/sdcp_linio2_binding/phaseB_v7c
 
@@ -48,11 +49,15 @@ run_one () {           # $1 = job dir, $2 = required free MiB
 }
 
 echo "===== Phase-B SCF chain (gabia)  $(date) ====="
-run_one mol_doped        4000    # 34 atoms, gamma — co-runs with p0
-run_one mol_neutral      4000    # 35 atoms, gamma
-run_one slab            30000    # 96 atoms, 2x2x1, nspin2+U — mem-gated
-run_one complex_doped   32000    # 130 atoms
-run_one complex_neutral 32000    # 131 atoms
+# NOTE: this GPU is ~48 GB and p0 holds ~41 GB, so NOTHING (not even a molecule
+# in a vacuum box at ecutrho 480) fits alongside p0 -- the first attempt OOM'd
+# the molecules at 4 GB free. All thresholds now gate on "p0 has freed the card"
+# (free jumps to ~47 GB when p0's min->saddle->barrier chain finishes).
+run_one mol_doped       20000    # 34 atoms, gamma, big vacuum box -> mem-heavy
+run_one mol_neutral     20000    # 35 atoms
+run_one slab            34000    # 96 atoms, 2x2x1, nspin2+U
+run_one complex_doped   40000    # 130 atoms (drop to gamma if this OOMs on 48 GB)
+run_one complex_neutral 40000    # 131 atoms
 echo "===== chain end  $(date) ====="
 n=$(grep -l "JOB DONE" $BASE/*/scf.out 2>/dev/null | wc -l)
 echo "completed SCFs: $n / 5"
