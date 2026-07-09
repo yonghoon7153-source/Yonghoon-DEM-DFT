@@ -515,8 +515,9 @@ def main():
                     rec['d'] = round(float(np.median(dia[grp])), 3)
                 additive_fibres.append(rec)
             print(f'  additive_fibres: {len(additive_fibres)} fibres as polylines (of {n_fib_total} total)'
-                  + ('' if dia is None else f'  Ø rel {min(f["d"] for f in additive_fibres):.2f}'
-                     f'..{max(f["d"] for f in additive_fibres):.2f}'))
+                  + ('' if (dia is None or not additive_fibres)   # rod phases (2,4) can be ABSENT (e.g.
+                     else f'  Ø rel {min(f["d"] for f in additive_fibres):.2f}'   # SuperP-only run: fibre.npy
+                     f'..{max(f["d"] for f in additive_fibres):.2f}'))            # exists but 0 polylines) — min() on empty crashed A4 run
 
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
