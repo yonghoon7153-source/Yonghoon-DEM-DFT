@@ -49,3 +49,7 @@ mc2x_r071,0.71,PS4-exposed CONTROL,P@2.1 intact cage 4/4,3,3.60,2.90,19.4,0.68,1
 "# Combined with the buried-geometry campaign (interface_campaign_summary.csv: 22+/-9 vs 26+/-0 % = equal):"
 "#   TERMINATION DECIDES THE MODE -- buried dopants = inert survivors (kinetics equal); B-exposed termination = sacrificial shield (host protected)."
 "#   In NO tested geometry does doping worsen the interface. Caveats: n=2 seeds/termination, one cleave height per termination, 100 ps, UMA MLIP, coordination-count metrics."
+"# O SURFACE-SEGREGATION (2026-07-09 night, UMA, kgy): swap the 2 surface O of the roll-0.71 slab with 2 deep PS4 sulfurs,"
+"#   relax both -> dE_seg = E(O@surface) - E(O@bulk) = +0.671 eV (+336 meV per O). O strongly AVOIDS surface corners"
+"#   (>> synthesis kT ~60-70 meV) -> the accelerated PS2O2-exposed termination is thermodynamically self-avoiding at"
+"#   equilibrium = NATURAL DEFENSE. Caveats: UMA level, single swap pair, ball-milled synthesis may freeze non-equilibrium terminations."
