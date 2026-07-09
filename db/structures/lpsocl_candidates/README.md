@@ -21,6 +21,14 @@ is represented by the cell-minimum substitution):
 **Prior**: in the b2o3 champion, O sat on phosphate corners (P-O bonds), not free-S
 -> corner expected to win, but free-S must be tested (site-preference step of the pipeline).
 
-**Next (KISTI)**: QE vc-relax the 4 candidates -> lowest E = site preference ->
-Layer-1 property cascade (EOS / elastic / ESW / BVSE / MD 3-seed) same track as b2o3.
+**Next — pipeline-v2 track (`argyrodite_mechanical_pipeline.md`; NO vc-relax, DFT = fixed-cell only)**:
+1. Stage 2a (kgy/gabia GPU, minutes): UMA full relax of the 4 candidates -> energy ranking
+   -> champion O site.
+2. Step 4 (kgy, ~5 min): `scripts/adhesion/uma_eos_pre_dft.py` on the champion -> V0 +
+   96-108% volume grid + UMA-BM first guess.
+3. Step 5-6 (KISTI): fixed-cell atom-relax at each volume point via the Nd machinery
+   (`prepare_dft_eos_nd.py` + `sbatch_dft_eos_nd.sh`, QE-GPU) -- 4 h chained jobs with
+   sbatch dependencies (project convention) -> basin cross-check (RMSD > 0.5 A) ->
+   BM fit v94-v106 -> V0 coordinates.
+4. Step 7-8 + b2o3-track extensions: tight SCF -> DOS/PDOS/Bader/ELF/ESW/BVSE/MD 3-seed.
 Alternative model (recorded, not default): Li2O interstitial addition (+2 Li + 1 O).
