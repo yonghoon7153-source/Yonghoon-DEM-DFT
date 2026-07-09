@@ -149,6 +149,64 @@ def split_ni(atoms, ni_ref, ref_lab, cell):
     return labels
 
 
+def cluster_z(z, tol=0.8):
+    """1D gap clustering along z -> band index per point (band 0 = lowest z)."""
+    order = np.argsort(z)
+    band = np.zeros(len(z), dtype=int)
+    b = 0
+    for k in range(1, len(order)):
+        if z[order[k]] - z[order[k - 1]] > tol:
+            b += 1
+        band[order[k]] = b
+    return band
+
+
+def analyze_ref_layers(ni_ref, ref_lab, tol=0.8):
+    """Report the ref AFM pattern along z. Returns (rows, band_lab, is_A_type).
+
+    A-type (layer AFM): each z-band is a single spin and adjacent bands alternate
+    -> reproducible from the target slab's OWN z-layering, immune to in-plane
+    offset. Anything else (mixed labels within a z-band) = in-plane/G-type, which
+    needs true position correspondence (not available when the slabs are offset).
+    """
+    z = ni_ref[:, 2]
+    band = cluster_z(z, tol)
+    lab = np.array(ref_lab)
+    nb = int(band.max()) + 1
+    rows, band_lab, pure = [], [], True
+    for b in range(nb):
+        m = band == b
+        s = sorted(set(lab[m]))
+        rows.append((b, float(z[m].mean()), int(m.sum()), "/".join(s)))
+        band_lab.append(s[0] if len(s) == 1 else "?")
+        if len(s) != 1:
+            pure = False
+    alt = pure and all(band_lab[b] != band_lab[b + 1] for b in range(nb - 1))
+    return rows, band_lab, alt
+
+
+def afm_layer_assign(atoms, ref_band_lab, tag, tol=0.8):
+    """Assign Ni1/Ni2 by z-band alternation, phased to the ref's lowest band.
+    Immune to in-plane shift AND rigid z-shift (band order preserved); the AFM
+    energy is anyway invariant under global spin flip, so only the alternation
+    matters. Prints the target's own band structure for a sanity cross-check."""
+    labels = list(atoms.get_chemical_symbols())
+    ni_idx = [i for i, s in enumerate(labels) if s == 'Ni']
+    z = atoms.positions[ni_idx, 2]
+    band = cluster_z(z, tol)
+    lab0 = ref_band_lab[0]
+    other = 'Ni2' if lab0 == 'Ni1' else 'Ni1'
+    sizes = {}
+    for a, idx in enumerate(ni_idx):
+        labels[idx] = lab0 if band[a] % 2 == 0 else other
+        sizes[int(band[a])] = sizes.get(int(band[a]), 0) + 1
+    n1 = sum(1 for i in ni_idx if labels[i] == 'Ni1')
+    nb = int(band.max()) + 1
+    print(f"    [{tag}] z-layers: {nb} bands, sizes {[sizes[b] for b in range(nb)]} "
+          f"-> Ni1 {n1}/Ni2 {len(ni_idx) - n1}")
+    return labels
+
+
 def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
     """kind in {'slab','complex','molecule_doped','molecule_neutral'}."""
     has_ni = ('Ni1' in labels) or ('Ni2' in labels)
@@ -252,11 +310,35 @@ def main():
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     ap.add_argument("--out", required=True)
     ap.add_argument("--kpts", default=KPTS_SLAB, help="slab/complex k-grid")
+    ap.add_argument("--afm_mode", default="auto", choices=["auto", "layer", "match"],
+                    help="auto: layer if ref is A-type else match; layer: z-band "
+                         "alternation (offset-immune); match: Hungarian position match")
+    ap.add_argument("--ztol", type=float, default=0.8, help="z-layer clustering gap (A)")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
     ni_ref, ref_lab, cell = parse_ref_ni(a.ref_scf)
     print(f"ref AFM split: Ni1 x{ref_lab.count('Ni1')}  Ni2 x{ref_lab.count('Ni2')}", flush=True)
+
+    # ---- diagnose the ref AFM pattern (decides layer vs match) ----
+    rows, band_lab, is_A = analyze_ref_layers(ni_ref, ref_lab, a.ztol)
+    print("  ref z-band diagnosis (band: <z> n label):")
+    for b, zc, n, lb in rows:
+        print(f"    band {b}: z={zc:5.2f}  n={n:2d}  {lb}")
+    print(f"  ref pattern = {'A-type (z-layer AFM)' if is_A else 'NOT A-type (in-plane/G)'}")
+
+    mode = a.afm_mode
+    if mode == "auto":
+        mode = "layer" if is_A else "match"
+    if mode == "layer" and not is_A:
+        raise SystemExit(
+            "  !! --afm_mode layer requested but ref is NOT clean z-layer AFM.\n"
+            "     The ref uses an in-plane pattern; layer alternation would give a\n"
+            "     DIFFERENT magnetic state. Need position correspondence (match) —\n"
+            "     but the slabs are offset, so tell me and I'll add RANSAC alignment.")
+    if mode == "match" and not is_A:
+        print("  (match mode on offset slabs will be unreliable — see earlier 9.94 A)")
+    print(f"  --> AFM assignment mode: {mode}", flush=True)
 
     jobs = [
         ("slab",            a.slab,             "slab",             a.kpts,   "pb_slab"),
@@ -270,6 +352,8 @@ def main():
         if kind.startswith("molecule"):
             atoms = box_molecule(atoms)
             labels = list(atoms.get_chemical_symbols())
+        elif mode == "layer":
+            labels = afm_layer_assign(atoms, band_lab, name, a.ztol)
         else:
             labels = split_ni(atoms, ni_ref, ref_lab, atoms.cell.array)
         d = os.path.join(a.out, name)
