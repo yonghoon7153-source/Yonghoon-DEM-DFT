@@ -98,10 +98,13 @@
 - **열역학 역설 해소**: ESW는 B 환원(1.72 V)을 host(1.24 V)보다 먼저 지목하지만 열역학은
   산물의 순위, 궤도는 경로의 문 — B쪽 acceptor 문이 없어 전자는 P 채널로 (kinetic/orbital control).
 - **유효 범위 (2026-07-09 종단 스캔으로 실측 확정)**: σ\* 게이트는 **매몰/제한-플럭스 regime의
-  법칙**. 직접 금속 접촉(무제한 플럭스)에서는 **세 게이트 전부 무너짐이 clean build에서 실측**:
-  P–S(+0.10, r051/r071 통제) · B–S(+0.75, Bexp) · **P–O(+1.61, roll-0.71 재시험 — 온전 P–O 2개가
-  100 ps production 중 절단, 노출 O→Li₂O-like; per-atom s2 확정·s3 도장 대기)**. 이때는 열역학
-  순위가 실현되며, 보호 여부는 게이트 높이가 아니라 **산물의 계면 잔류(앵커링)**가 결정. ✅
+  법칙**. 직접 금속 접촉(무제한 플럭스)에서는 **두 낮은 게이트(P–S +0.10 · B–S +0.75)가 clean
+  build에서 견고하게 무너짐**(멀티시드·두 cleave). **가장 높은 게이트 P–O(+1.61)는 접촉면에서
+  시드-분할** — roll-0.71 재시험 per-atom: **s2는 온전 P–O 2개 절단(2→0, 노출 O→Li₂O-like), s3는
+  P–O 2개 유지(2→2)하고 P–S만 절단(O–P 1→1, O–Li 3→4)**. 즉 P–O 게이트는 2 시드 중 1에서만 무너짐
+  (가장 높은 게이트답게 절반은 버팀 = σ\* 순서와 정합). 단 두 시드 모두 PS₂O₂는 PS₄보다 빨리 붕괴
+  (집계 P–S 손실 35.7/32.0). 접촉면에서는 열역학 순위가 실현되며, 보호 여부는 게이트 높이가 아니라
+  **산물의 계면 잔류(앵커링)**가 결정. ✅
 - **설계 규칙 (cascade Layer-2 descriptor)**: ① σ\* onset ≫ CBM ② CBM projection 미미
   ③ mean-3p ≪ free-S ④ Li–X ELF ≥0.8 또는 상쇄 경로 ⑤ (노출 대비) 환원 산물의 전자차단성
   + 계면 잔류성 — ①–④ 파이프라인 자동화 가능, ⑤는 산물상 계산 필요.
@@ -121,14 +124,15 @@
 |---|---|---|---|
 | **B-노출** (BS₃, roll 0.51) | **8.4±1.8%** | **−0.5±1.5 (정지)** | B 리튬화(B–S 1.50, B–Li 5.0–5.5) — **앵커 유지** |
 | **PS₄-노출** (통제, r051+r071 두 cleave) | **~22%** (22.2/22.2 · 25.0/19.4) | +4~+9 | 표면 P → Li₃P 전환·전파 |
-| **PS₂O₂-노출** (O 코너 2개, roll 0.71) | **33.9±1.9%** | +10±0 | **온전 P–O 절단**(2→0), O→Li₂O-like |
+| **PS₂O₂-노출** (O 코너 2개, roll 0.71) | **33.9±1.9%** | +10±0 | P–S 붕괴(양 시드); P–O는 **시드-분할** — s2 절단(2→0)·s3 유지(2→2) |
 | 매몰 (전 기하 누적) | 무도핑과 동등 | 표면 국한 | B 3.00→3.00 · O 1→1 무결 |
 
 - **B-노출 = 희생 방패** (문헌 메커니즘 ①, LiF/Li₃BO₃형): B가 1번 타자로 환원되지만(ESW 예고
   그대로) 산물 Li–B–S 층이 **S-우리 절반을 문 채 계면에 앵커** → host 2.6× 보호 + 침투 정지.
 - **PS₂O₂-노출 = 비보호·가속 방향** (시드 비겹침: 도핑 최소 32.0 > 통제 최대 25.0): O 코너는
-  최전선 사면체를 지키지 못하며, 가설(표기된 해석)로는 P–O 절단 후 2-S 잔여 사면체의 붕괴
-  문턱이 낮음. **단, 이는 소수 패치 문제** — O 3/128이라 다결정 표면에서 확률 수 % 미만이고
+  최전선 사면체를 지키지 못함. 붕괴 경로는 **시드-분할**(per-atom): s2는 P–O 자체 절단, s3는 P–O
+  유지·P–S만 절단 — 어느 쪽이든 2-O 사면체가 plain PS₄보다 빨리 붕괴(가설: O 코너가 P–S 우리를
+  약화 / P–O 절단 후 2-S 잔여의 붕괴 문턱이 낮음). **단, 이는 소수 패치 문제** — O 3/128이라 다결정 표면에서 확률 수 % 미만이고
   체적-평균은 6.1의 "동등"이 실측. **자연 방어 실측 확정 (2026-07-09 밤): O 표면-편석 에너지 ΔE_seg = +0.67 eV (+336 meV/O, UMA)** — O는 표면 코너를 강하게 기피(≫ 합성 kT ~60–70 meV) → 가속-종단은 평형에서 자기-회피. (캐비앗: UMA·스왑쌍 n=1·볼밀 비평형 동결 가능성 명기.) ✅
 - **통합 결론**: **보호는 ①매몰 ②앵커형 희생 산물(B 전용)에서만 나온다.** 시험한 어떤
   기하에서도 체적-평균 계면 성능은 무도핑 대비 악화되지 않음.
@@ -158,8 +162,8 @@
 3. "B₂O₃ doping neither improves nor degrades electrochemical stability: oxidation onset and the vulnerable free-S site are unchanged, and interfacial decomposition kinetics match the undoped electrolyte."
 4. "A thin-slab control revealed a ~2× cell-size artifact in interfacial decomposition metrics, underscoring the need for same-frame controlled comparisons."
 5. "A termination scan shows the protection mode is geometry-dependent: buried dopants remain inert spectators, whereas a B-exposed termination undergoes sacrificial lithiation (B–S 3.00→1.50, B–Li→5.0–5.5) that protects the host — PS₄ loss drops to 8±2% versus 22±0% for the P-exposed undoped control at the same cleave, and Li penetration is arrested. In no tested geometry does doping degrade the interface."
-6. "A clean-build front-line test (cleave-integrity audited) shows that even the strongest dopant-derived bond is not immune at direct metallic contact: an exposed PS₂O₂ tetrahedron loses both intact P–O bonds within 100 ps (exposed O ending in a Li₂O-like environment) and degrades faster than the intact-PS₄ control at the same depth (34±2% vs 22±3% P–S loss). The front-line hierarchy — B-fronted 8% ≪ PS₄ ~22% ≲ PS₂O₂ ~34% — establishes that protection at a Li-metal contact arises only from burial or from a sacrificial product that stays anchored at the interface (realized only by B)."
-7. "Energy-resolved COHP shows the P–S antibonding manifold begins essentially at the CBM (+0.1 eV), while B–S and P–O σ\* states are pushed 0.75 and 1.6 eV higher by their stronger bonding — electrons injected from Li in the buried regime therefore populate (and cleave) only host P–S bonds; at a direct metallic contact all three gates are overwhelmed, and protection is instead governed by whether the sacrificial product remains anchored at the interface."
+6. "A clean-build front-line test (cleave-integrity audited) shows that an exposed PS₂O₂ tetrahedron degrades faster than the intact-PS₄ control at the same depth (34±2% vs 22±3% P–S loss, both seeds). The front-line hierarchy — B-fronted 8% ≪ PS₄ ~22% ≲ PS₂O₂ ~34% — establishes that protection at a Li-metal contact arises only from burial or from a sacrificial product that stays anchored at the interface (realized only by B). The oxygen corners themselves are seed-dependent: in one of two 100 ps trajectories both P–O bonds cleave (the exposed O ending in a Li₂O-like environment), while in the other they survive and only the P–S bonds are lost — consistent with P–O being the most reduction-resistant of the three bonds even at a metallic contact."
+7. "Energy-resolved COHP shows the P–S antibonding manifold begins essentially at the CBM (+0.1 eV), while B–S and P–O σ\* states are pushed 0.75 and 1.6 eV higher by their stronger bonding — electrons injected from Li in the buried regime therefore populate (and cleave) only host P–S bonds. At a direct metallic contact the two lower gates (P–S, B–S) are robustly overwhelmed, whereas the highest gate (P–O) is only marginally so (cleaving in one of two seeds), and protection is instead governed by whether the sacrificial product remains anchored at the interface."
 
 ## 9. 정직한 한계 · 남은 작업
 
