@@ -38,6 +38,9 @@ PTFE_D, PTFE_L = 0.25, 40.0      # PTFE FIBRIL Ø, length — dry-process hot-ro
                                  # not a short rod.  Soft binder FIBRE (RSC D5EE03240G; Front. Energy 2023.1336344)
 SDCP_D = 0.30                    # SDCP in-electrode particle Ø (µm) — manuscript Fig S3 (0.2-0.5µm dispersed;
                                  # as-made ~3µm S2, milled down by the dry process)
+SDCP_AGG_D = 3.0                 # SDCP AS-MADE agglomerate Ø (µm) — manuscript Fig S2 (~3µm particles before
+                                 # milling).  Low-shear mixing (hand-mix) has no milling energy → these survive
+                                 # (seeded via seed_sdcp agg_d); high-shear (ball-mill/Thinky) mills → S3 singles.
 SDCP_SHELL = 0.20                # legacy coat-shell (µm) — coat-variant option only; manuscript default = PARTICLE
 
 
@@ -152,6 +155,108 @@ def seed_coat(n, box_um, dx_um, rng, am=None, shell_um=0.20, surface_frac=1.0,
         P = P[P_keep]; sph = sph[P_keep]                      #  (own sphere: offset ≥ R → never inside)
     P = P.astype(np.float32)
     return (P, sph.astype(np.int32)) if return_ids else P
+
+
+def seed_sdcp(n, box, dx, rng, am=None, in_am=None, surface_frac=0.5, clump=1,
+              agg_d=0.0, d=SDCP_D, return_ids=False):
+    """SDCP particle seeding — the MIXING-dependent dispersion states (manuscript S2/S3).
+    Single source of truth shared by mpm3d_compaction (seed-box units) and
+    scripts/preview_sdcp_mixing.py (µm units): box/dx/d/agg_d must be in ONE frame.
+
+    Two dispersion modes (agg_d wins):
+      agg_d == 0 — HIGH SHEAR (ball-mill / Thinky; manuscript electrode): the dry process
+        mills the powder to 0.2-0.5µm SINGLES (Fig S3).  `surface_frac` of them are
+        anchored ON the AM surfaces (seed_coat shell = d/2 — sulfonate chemisorption +
+        ordered-mixing decoration of the coarse host); the rest disperse uniform in-pore.
+        clump > 1 = the NCM-decoration CLUSTER hypothesis (§3.7): the anchored share seeds
+        as `clump`-member clusters scattered ~1 particle Ø (gaussian σ = d) around
+        AM-surface centres; the bulk share STAYS singles (the powder itself is dispersed).
+      agg_d > 0 — LOW SHEAR (hand-mix): no milling energy → the AS-MADE ~agg_d
+        agglomerates (Fig S2) survive.  ALL SDCP seeds as agglomerates — n_agg =
+        0.64·(agg_d/d)³ primaries (0.64 = RCP packing of the as-made agglomerate)
+        uniform-in-sphere of radius agg_d/2.  Centres split surface_frac : rest between
+        AM surfaces (members poking into the host DROP → a cap DRAPED on the NCM, the
+        soft-agglomerate adhesion contact) and the bulk pore space.
+    Points inside AM / outside the box are DROPPED (fibre convention — no wall curtains,
+    no buried mass); add_pvs volume-pinning downstream renormalises the recipe volume
+    over the survivors, so porosity stays honest regardless of drops.
+    Returns pts float32 (m,3) [+ ids int32: cluster/agglomerate group index — singles get
+    their AM-sphere index (anchored) or a unique id (bulk), mirroring the fibre-id ledger]."""
+    box_arr = np.asarray(box, np.float64)
+    parts, idparts, base = [], [], 0
+
+    def _filt(P, ids):
+        if len(P) == 0:
+            return np.zeros((0, 3), np.float64), np.zeros(0, np.int64)
+        keep = ((P >= 0) & (P < box_arr)).all(1)
+        P, ids = P[keep], ids[keep]
+        if in_am is not None and len(P):
+            k2 = ~np.array([in_am(q) for q in P])
+            P, ids = P[k2], ids[k2]
+        return P, ids
+
+    def _push(P, ids, n_groups):
+        nonlocal base
+        P, ids = _filt(np.asarray(P, np.float64), np.asarray(ids, np.int64))
+        if len(P):
+            parts.append(P.astype(np.float32))
+            idparts.append((ids + base).astype(np.int32))
+        base += int(n_groups)
+
+    def _ball(centres, members, radius):
+        """`members` pts uniform-in-sphere(radius) around each centre → (P, group ids)."""
+        rep = np.repeat(np.arange(len(centres)), members)
+        v = rng.normal(size=(len(rep), 3))
+        v /= np.linalg.norm(v, axis=1, keepdims=True) + 1e-12
+        rad = radius * rng.uniform(0.0, 1.0, len(rep)) ** (1.0 / 3.0)
+        return np.asarray(centres, np.float64)[rep] + v * rad[:, None], rep
+
+    have_am = am is not None and len(am[0]) > 0
+    if agg_d and agg_d > 0.0:
+        n_agg = max(1, int(round(0.64 * (agg_d / d) ** 3)))     # primaries per as-made agglomerate
+        n_cl = max(1, int(round(n / n_agg)))                    # agglomerate count from the recipe
+        n_cl_am = int(round(n_cl * surface_frac)) if have_am else 0
+        n_cl_bulk = max(n_cl - n_cl_am, 0)
+        if n_cl_am > 0:
+            ctr = seed_coat(n_cl_am, box, dx, rng, am=am, shell_um=d / 2, surface_frac=1.0,
+                            in_am=in_am)
+            if len(ctr):
+                P, gid = _ball(ctr, n_agg, agg_d / 2.0)
+                _push(P, gid, len(ctr))
+        if n_cl_bulk > 0:
+            ctr = seed_blobs(n_cl_bulk, box, rng, in_am=in_am)
+            if len(ctr):
+                P, gid = _ball(ctr, n_agg, agg_d / 2.0)
+                _push(P, gid, len(ctr))
+    else:
+        n_am = int(round(n * surface_frac)) if have_am else 0
+        n_bulk = max(n - n_am, 0)
+        clump = max(1, int(clump))
+        if n_am > 0 and clump > 1:
+            n_ctr = max(1, n_am // clump)
+            ctr = seed_coat(n_ctr, box, dx, rng, am=am, shell_um=d / 2, surface_frac=1.0,
+                            in_am=in_am)
+            if len(ctr):
+                rep = np.repeat(np.arange(len(ctr)), clump)[:n_am]
+                P = np.asarray(ctr, np.float64)[rep] + rng.normal(scale=d, size=(len(rep), 3))
+                _push(P, rep, len(ctr))
+        elif n_am > 0:
+            P, sph = seed_coat(n_am, box, dx, rng, am=am, shell_um=d / 2, surface_frac=1.0,
+                               in_am=in_am, return_ids=True)
+            if len(P):
+                parts.append(P.astype(np.float32))
+                idparts.append((sph.astype(np.int64) + base).astype(np.int32))
+            base += int(len(am[0]))
+        if n_bulk > 0:
+            P = np.column_stack([rng.uniform(0, box_arr[0], n_bulk),
+                                 rng.uniform(0, box_arr[1], n_bulk),
+                                 rng.uniform(0, box_arr[2], n_bulk)])
+            _push(P, np.arange(n_bulk), n_bulk)
+    if parts:
+        pts, ids = np.concatenate(parts, 0).astype(np.float32), np.concatenate(idparts, 0)
+    else:
+        pts, ids = np.zeros((0, 3), np.float32), np.zeros(0, np.int32)
+    return (pts, ids) if return_ids else pts
 
 
 def seed_fibres(n, box_um, dx_um, rng, in_am=None, L=VGCF_L, L_cv=0.0,
@@ -344,17 +449,25 @@ ADDITIVE_PROCESS = {
         'thinky':   dict(regime='bulk', morph='gently wavy fibre (coat_embed retired — fibres do not coat)'),
         'handmix':  dict(regime='bulk', morph='long, clustered (gentle mix)'),
     },
-    'SDCP': {    # self-doped conductive binder — MANUSCRIPT morphology: 0.2-0.5µm PARTICLES dispersed in the
-        # composite (Fig S3), sulfonate-ANCHORED to NCM where they touch (E_bind −4.8 eV INTERIM MLIP);
-        # NOT a conformal film (the coat picture was the pre-manuscript proxy).  surface_frac here = the
-        # AM-anchored fraction of particles (anchoring-affinity bias; MAGNITUDE un-anchored §F1 hook —
-        # S3 shows particles both at NCM surfaces and in SE regions).
-        # clump = anchored-CLUSTER size at NCM surfaces (ordered-mixing: fine guest particles decorate the
-        # coarse host; sulfonate anchoring enhances + selects NCM).  Default 1 = S3-faithful singles;
-        # >1 tests the user's NCM-cluster hypothesis (§F1 hook; SBE/DBE payload proximity will discriminate).
-        'ballmill': dict(regime='particle', surface_frac=0.5, clump=1, morph='dispersed 0.3µm particles, NCM-anchor bias'),
-        'thinky':   dict(regime='particle', surface_frac=0.5, clump=1, morph='dispersed 0.3µm particles, NCM-anchor bias'),
-        'handmix':  dict(regime='particle', surface_frac=0.3, clump=3, morph='poorer dispersion → NCM-surface clusters (§F1 hook)'),
+    'SDCP': {    # self-doped conductive binder — MANUSCRIPT morphology, MIXING-dependent dispersion state.
+        # The manuscript anchors BOTH endpoints of the shear axis:
+        #   S3 = IN-ELECTRODE 0.2-0.5µm dispersed singles (their high-shear dry process mills the powder),
+        #   S2 = AS-MADE ~3µm particles (what a mixer that CANNOT mill inherits — hand-mix has no milling
+        #        energy, so the as-made agglomerates survive; dispersion is a property of the POWDER after
+        #        mixing, so it applies to the anchored AND the bulk share alike).
+        # surface_frac = AM-anchored share (sulfonate anchoring + ordered-mixing decoration of the coarse
+        # NCM host by the fine guest; MAGNITUDE un-anchored §F1 hook — S3 shows both populations.  hand-mix
+        # lower: a ~3µm guest on a 5µm host has adhesion/weight ~100× weaker than a 0.3µm guest → ordered
+        # mixing fades toward random).  clump = NCM-decoration cluster size (user §3.7 hypothesis; default
+        # 1 = S3-faithful singles; SBE/DBE payload proximity + SEM/EDS discriminate).  agg_d = surviving
+        # as-made agglomerate Ø (µm; 0 = milled to singles).  Consumed by seed_sdcp (single source shared
+        # by mpm3d_compaction and preview_sdcp_mixing).
+        'ballmill': dict(regime='particle', surface_frac=0.5, clump=1, agg_d=0.0,
+                         morph='milled 0.2-0.5µm singles, NCM-anchor bias (S3)'),
+        'thinky':   dict(regime='particle', surface_frac=0.5, clump=1, agg_d=0.0,
+                         morph='milled 0.2-0.5µm singles, NCM-anchor bias (S3; ≡ballmill — both high-shear)'),
+        'handmix':  dict(regime='particle', surface_frac=0.3, clump=1, agg_d=SDCP_AGG_D,
+                         morph='as-made ~3µm agglomerates survive (S2 — no milling energy); weaker NCM decoration'),
     },
     'PTFE': {    # binder fibril — fibril = fibrillation degree vs mixing SHEAR (dry-process; ∈(0,1], 1=full web)
         'ballmill': dict(regime='bulk', fibril=1.0,  morph='fibrillated binder web (high shear)'),

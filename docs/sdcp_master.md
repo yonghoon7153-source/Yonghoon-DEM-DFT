@@ -204,11 +204,11 @@ bollard/ICEP은 방향·실효성의 인용처.
 
 | 축 | 구현 | 상태 |
 |---|---|---|
-| **시딩** | `kind='particle'`: AM-앵커 몫(`surface_frac`, bm/thinky 0.5·handmix 0.3 — §F1 hook) seed_coat(shell=입자반지름) + 나머지 bulk 균일(in_am drop). **`--sdcp-clump`**(기본 1=S3-충실; handmix 3; >1 = §3.7 cluster 가설 시험) | ✅ (리뷰 2회 통과) |
+| **시딩 (mixing→형상)** | `additives.seed_sdcp` 단일 소스 (mpm3d + preview 공유). **bm/thinky(고전단)** = 밀링된 0.2-0.5µm singles(S3 앵커): AM-앵커 몫(`surface_frac` 0.5 — §F1 hook) seed_coat(shell=입자반지름) + 나머지 bulk 균일(in_am drop). **handmix(저전단)** = 밀링 에너지 없음 → **as-made ~3µm 응집(S2 앵커) 생존**: 전량 agg_d 클러스터(n_agg=0.64·(3/0.3)³≈640 primaries, 반지름 1.5µm 균일구), anchored 몫(0.3)은 AM 표면 드레이프 cap + bulk 몫도 응집(분산상태는 분말의 성질). `--sdcp-agg-d`/`--sdcp-clump`(§3.7 cluster 가설용, 기본 1) override. 미리보기: `scripts/preview_sdcp_mixing.py` → `docs/figures/sdcp_mixing_preview.png` (1wt%: bm/thinky 10.2만 singles·d_surf 중앙값 0.10µm ↔ handmix 214개 응집·0.57µm) | ✅ (리뷰 통과) |
 | **역학** | E=23.6 GPa ✅앵커 + **CFL dt 가드**(additive E > SE 스택 시 dt 캡; VGCF 10 소급) / σ_y=1.0 rigid-proxy ⚠ / coh_sdcp=bulk 필름 무결성(variant-무관 — γ-비율은 미래 boundary 항) | ✅ |
 | **variant** | `--sdcp-neutral`: STEP3 σ-가중용 provenance (econn에선 AM급 도체 유지 — 절연 취급은 13자릿수 오분류) | ✅ |
 | **전기 연결성 (econn)** | AM-AM 접촉 ∪ AM-[VGCF/SuperP/SDCP]-AM 다리 → 집전체 percolation → 연결/고립 (SE·PTFE 제외). 풀해상도 계산(payload step2), per-particle `econn` + summary | ✅ (S런 검증: AM골격 82% + carbon 다리→100%) |
-| **STEP3 예고** | SDCP = 스택 최초 **이중-전도 상** (e ×5.1 + Li⁺ ×0.80 pellet 앵커) — network solver에 σ_e·σ_ion 동시 배정 | 설계노트 |
+| **STEP3 예고** | SDCP = 스택 최초 **이중-전도 상** (e ×5.1 + Li⁺ ×0.80 pellet 앵커) — network solver에 σ_e·σ_ion 동시 배정. ★사용자 확정 원칙(2026-07-10): ① Li-hopping 덕에 σ_ion **증가까지는 아니어도 절연이 아님** → SDCP 접촉에 σ_ion>0 배정(PTFE=0과 구분) ② 자체 전자전도 보유 → **SDCP 경유 전자 percolation이 끊기면 안 됨** (econn 도체 phase(2,3,5) 유지 ✓, Kirchhoff에서도 σ_e>0) | 설계노트 |
 | metadata | morphology/E_anchor/variant/clump/coat/`anchor_status: INVALID_WRONG_MONOMer_recompute_pending` | ✅ 자기문서화 |
 | 파이프라인 | 웹앱 UI(SDCP wt%)·route·zip·payload 채널·viewer 배선 | ✅ |
 
@@ -232,4 +232,5 @@ divergence 런** (사전등록: porosity 11.94 동일 / SE-cov↓ / add-cov≫35
 - 상세 앵커/판정 로그: `docs/sdcp_manuscript_anchors.md`
 - 문헌: `litdb/papers/kang2025_bollard_anchored_binder_dry_electrode.md`, `litdb/papers/han2025_icep_conductive_elastic_binder.md` (+ 각 CSV: `docs/data/*_anchors.csv`)
 - 작업 추적: `docs/digest_model_application_backlog.md` A4/A4′ 행
-- 코드: `scripts/additives.py` (SDCP_D/process rows/seed_coat), `scripts/mpm3d_compaction.py` (particle 분기·flags·metadata), `scripts/mpm_webapp_payload.py` (econn), `webapp/` (UI/route)
+- 코드: `scripts/additives.py` (SDCP_D/SDCP_AGG_D/process rows/**seed_sdcp**), `scripts/mpm3d_compaction.py` (particle 분기·flags·metadata), `scripts/mpm_webapp_payload.py` (econn), `webapp/` (UI/route)
+- 형상 미리보기: `scripts/preview_sdcp_mixing.py` → `docs/figures/sdcp_mixing_preview.png` (mixing 3종 비교, 실제 시딩 코드패스 공유)

@@ -88,3 +88,25 @@ Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 �
   '덜 차단' 증거; **재계산 패키지에 Li⁺ 결합(SO₃⁻ vs ether-O) + 사이트간 NEB 장벽 추가** 권고.
 - STEP3 설계 노트: SDCP = 스택 최초의 **이중-전도 상** (PTFE 0/0 · VGCF e · SuperP e · **SDCP e+Li⁺**)
   → network solver에서 σ_e·σ_ion 동시 배정 (pellet 앵커 ×5.1/×0.80).
+  ★ 사용자 확정 원칙 (2026-07-10): ① SDCP는 Li-hopping을 도와 σ_ion **증가는 아니어도 절연이 아님**
+  → SDCP 접촉 σ_ion > 0 (PTFE=0과 명확히 구분) ② 자체 전자전도 → **SDCP 경유 전자 percolation이
+  끊기면 안 됨** (econn 도체 유지 ✓; Kirchhoff STEP3에서도 σ_e > 0 배정).
+
+## ★ mixing → 형상 매핑 (2026-07-10) — manuscript가 양 끝점을 앵커
+매뉴스크립트는 분산 상태의 **양 끝점을 둘 다** 제공: **S3** = 전극 내 0.2-0.5µm 분산 입자
+(고전단 건식 공정이 분말을 밀링) / **S2** = as-made ~3µm 입자 (밀링 전).  → mixing이 두 끝점
+사이를 선택한다 (`additives.ADDITIVE_PROCESS['SDCP']` + `seed_sdcp` 단일 소스, mpm3d와
+`scripts/preview_sdcp_mixing.py` 공유):
+- **ballmill / thinky (고전단)**: 밀링 → **S3-충실 singles** (Ø0.3µm). surface_frac=0.5 (§F1 hook)
+  AM-앵커(seed_coat shell=반지름, 술폰산+ordered-mixing 장식) + 나머지 bulk 균일.  thinky≡ballmill
+  (둘 다 고전단; VGCF A4 마감과 같은 논리 — 차별화할 manuscript 근거 없음).
+- **handmix (저전단)**: **밀링 에너지 없음 → S2 as-made ~3µm 응집 생존** (기존 clump=3 임의 hook을
+  S2-유도 값으로 대체): 전량 agg_d=3.0µm 클러스터, n_agg=0.64·(3/0.3)³≈**640 primaries**/응집
+  (0.64=RCP → 반지름 1.5µm 균일구 산포가 구성상 로컬 패킹 0.64 재현), anchored 몫 0.3 (3µm guest는
+  부착력/자중 ~100× 약화 → ordered mixing 퇴색; §F1 hook)은 AM 표면 **드레이프 cap**(host 안 멤버
+  drop, add_pvs 부피 재정규화), bulk 몫도 응집 (분산상태 = 분말의 성질, 위치의 성질 아님).
+- 방향 = 물리 확정(전단↔밀링), **크기 = S2/S3 앵커**, surface_frac 크기들만 §F1 hook.
+  override: `--sdcp-agg-d`(µm; 0=강제 singles) / `--sdcp-surface-frac` / `--sdcp-clump`(§3.7 가설).
+- 미리보기 (real14, 1wt%, seed0): bm/thinky **10.2만 pts 분산+표면장식**, d_surf 중앙값 0.10µm ↔
+  handmix **214개 응집**(각 640), d_surf 중앙값 0.57µm — `docs/figures/sdcp_mixing_preview.png`.
+- metadata: `morphology: particle_0.3um_S3 | agglomerate_3.0um_S2`, `agg_d_um`, `n_per_agglomerate`.

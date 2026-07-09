@@ -344,14 +344,21 @@ def parse_args(argv):
                          '(NOT dropped — an insulator-drop would misclassify by ~13 orders vs ≤1).  '
                          'Default = doped (−SO₃⁻, the self-doped production state).')
     ap.add_argument('--sdcp-surface-frac', type=float, default=-1.0,
-                    help='SDCP coat coverage fraction per AM sphere (spherical-cap area).  <0 = AUTO from '
-                         '--mixing (ballmill/thinky 1.0 conformal; handmix 0.6 patchy).  MAGNITUDE a '
-                         'conservative tunable hook, NOT anchored (backlog §F1) — SEM will anchor it.')
+                    help='SDCP AM-ANCHORED share of the particles (sulfonate anchoring + ordered-mixing '
+                         'decoration).  <0 = AUTO from the process row (ballmill/thinky 0.5; handmix 0.3 — '
+                         'a ~3µm agglomerate decorates a 5µm host far more weakly than a 0.3µm single).  '
+                         'MAGNITUDE a conservative tunable hook, NOT anchored (backlog §F1) — SEM/EDS anchor.')
     ap.add_argument('--sdcp-clump', type=int, default=-1,
                     help='SDCP anchored-cluster size at NCM surfaces (ordered-mixing decoration).  <=0 = AUTO '
-                         'from the process row (ballmill/thinky 1 = S3-faithful singles; handmix 3).  >1 seeds '
-                         'clusters of that size at AM surfaces — tests the NCM-cluster hypothesis; MAGNITUDE '
+                         'from the process row (all mixings 1 = S3-faithful singles).  >1 seeds clusters of '
+                         'that size at AM surfaces — tests the NCM-cluster hypothesis (§3.7); MAGNITUDE '
                          'un-anchored §F1 hook (payload SDCP→AM proximity + SEM/EDS discriminate).')
+    ap.add_argument('--sdcp-agg-d', type=float, default=-1.0,
+                    help='SDCP surviving AS-MADE agglomerate Ø (µm) — hand-mix has no milling energy, so the '
+                         'as-made ~3µm particles (manuscript Fig S2) survive un-milled and ALL SDCP seeds as '
+                         '~agg_d clusters (anchored share draped on AM + bulk share in-pore).  <0 = AUTO from '
+                         'the process row (handmix 3.0 = S2 anchor; ballmill/thinky 0 = milled S3 singles); '
+                         '0 forces singles.  SIZE anchored (S2); survival-at-low-shear = physics direction.')
     ap.add_argument('--dilate-z', type=float, default=1.0,
                     help='STIFF-FIBRE BED DILATION: stretch the frozen scaffold (AM + SE seed) z-offsets by this '
                          'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
@@ -823,42 +830,25 @@ def main(argv):
                                                     in_am=lambda q: _in_am_abs(q + off),
                                                     return_ids=True, return_vol=True)
                 elif kind == 'particle':
-                    # ★ SDCP manuscript morphology (Fig S3): 0.2-0.5µm PARTICLES dispersed in the composite,
-                    # a fraction ANCHORED at NCM surfaces (sulfonate chemisorption, E_bind −4.8 eV INTERIM
-                    # MLIP) and the rest in the SE/pore bulk.  surface_frac = AM-anchored share (process
-                    # row; §F1 hook — S3 shows both populations).  Anchored part reuses seed_coat with
-                    # shell ≈ particle radius; bulk part = uniform in-pore (in_am-dropped).
+                    # ★ SDCP manuscript morphology — MIXING-dependent dispersion state; single source of
+                    # truth = additives.seed_sdcp (shared with scripts/preview_sdcp_mixing.py):
+                    #   ball-mill/Thinky (high shear): milled 0.2-0.5µm SINGLES (Fig S3), surface_frac
+                    #     AM-anchored (sulfonate + ordered-mixing decoration; §F1 hook) + rest in-pore;
+                    #     --sdcp-clump>1 = NCM-decoration cluster hypothesis (anchored share only, §3.7).
+                    #   hand-mix (low shear): NO milling energy → the as-made ~3µm agglomerates (Fig S2)
+                    #     survive — ALL SDCP seeds as agg_d clusters (anchored draped on AM + bulk alike;
+                    #     dispersion is a property of the POWDER, not of where a particle sits).
                     _row = _ad.additive_process(nm, args.mixing)
                     _sfrac = (float(args.sdcp_surface_frac) if (code == 5 and args.sdcp_surface_frac >= 0.0)
                               else float(_row.get('surface_frac', 0.5)))
-                    _n_am = int(round(nobj * _sfrac)); _n_bulk = max(nobj - _n_am, 0)
                     _clump = max(1, int(args.sdcp_clump) if args.sdcp_clump > 0 else int(_row.get('clump', 1)))
-                    if _n_am > 0 and _clump > 1:
-                        # NCM-surface CLUSTERS (user hypothesis, ordered-mixing physics): seed cluster
-                        # CENTRES on the AM surfaces, scatter `clump` members ~1 particle-Ø around each.
-                        _nc = max(1, _n_am // _clump)
-                        _ctr, _fc = _ad.seed_coat(_nc, bx, dx, rng, am=am_box, shell_um=(_ad.SDCP_D / 2) / um_box,
-                                                  surface_frac=1.0, in_am=lambda q: _in_am_abs(q + off), return_ids=True)
-                        if len(_ctr):
-                            _rep = np.repeat(np.arange(len(_ctr)), _clump)[:_n_am]
-                            _pa = (_ctr[_rep] + rng.normal(scale=_ad.SDCP_D / um_box, size=(len(_rep), 3))).astype(np.float32)
-                            _ok = ((_pa >= 0) & (_pa < np.array(bx, np.float32))).all(1)
-                            _pa = _pa[_ok]
-                            _ok2 = ~np.array([_in_am_abs(q + off) for q in _pa]) if len(_pa) else np.zeros(0, bool)
-                            _pa = _pa[_ok2]; _fa = _fc[_rep][_ok][_ok2]
-                        else:
-                            _pa, _fa = np.zeros((0, 3), np.float32), np.zeros(0, np.int32)
-                    else:
-                        _pa, _fa = _ad.seed_coat(_n_am, bx, dx, rng, am=am_box, shell_um=(_ad.SDCP_D / 2) / um_box,
-                                                 surface_frac=1.0, in_am=lambda q: _in_am_abs(q + off),
-                                                 return_ids=True) if _n_am > 0 else (np.zeros((0, 3), np.float32), np.zeros(0, np.int32))
-                    _pb = np.column_stack([rng.uniform(0, bx[0], _n_bulk), rng.uniform(0, bx[1], _n_bulk),
-                                           rng.uniform(0, bx[2], _n_bulk)]).astype(np.float32)
-                    if len(_pb):
-                        _keep = ~np.array([_in_am_abs(q + off) for q in _pb])
-                        _pb = _pb[_keep]
-                    pts = np.concatenate([_pa, _pb]) if len(_pb) else _pa
-                    _fid = np.concatenate([_fa, np.arange(len(_pb), dtype=np.int32) + (int(_fa.max()) + 1 if len(_fa) else 0)])
+                    _aggd = (float(args.sdcp_agg_d) if args.sdcp_agg_d >= 0.0
+                             else float(_row.get('agg_d', 0.0)))               # µm; 0 = milled singles (S3)
+                    pts, _fid = _ad.seed_sdcp(nobj, bx, dx, rng, am=am_box,
+                                              in_am=lambda q: _in_am_abs(q + off),
+                                              surface_frac=_sfrac, clump=_clump,
+                                              agg_d=_aggd / um_box, d=_ad.SDCP_D / um_box,
+                                              return_ids=True)
                     _w = np.ones(len(pts), np.float32)
                     _coated = True                            # metadata: coat dict records the anchored share
                 elif kind == 'coat' or _proc_regime == 'coat_block':   # coat_embed RETIRED (fibres don't coat)
@@ -934,7 +924,8 @@ def main(argv):
                     if _cbm:                                 # CB-chain morphology it didn't seed)
                         _add_meta[nm]['cb_mix'] = {_k: _cbm[_k] for _k in ('k', 'surface_frac', 'step', 'clump') if _k in _cbm}
                 if _coated:                                  # A4 coat: record what ACTUALLY seeded
-                    _add_meta[nm]['coat'] = {'shell_um': _ad.SDCP_SHELL, 'surface_frac': round(float(_sfrac), 3)}
+                    _add_meta[nm]['coat'] = {'shell_um': (_ad.SDCP_D / 2 if kind == 'particle' else _ad.SDCP_SHELL),
+                                             'surface_frac': round(float(_sfrac), 3)}   # particle: anchored shell = particle radius
                 if code == 2:                                # VGCF: waviness (Tier-1 curl / physics buckle / rod)
                     _add_meta[nm]['curl'] = round(float(_vgcf_curl), 3)
                     if args.fibre_buckle:
@@ -952,11 +943,15 @@ def main(argv):
                     _add_meta[nm]['am_bind'] = bool(_am_fired)                 # AM-surface draping attractors ACTUALLY added?
                     _add_meta[nm]['am_bind_frac'] = round(float(np.clip(args.ptfe_am_bind, 0.0, 1.0)), 3)   # target AM nucleation share
                 if code == 5:                                # SDCP: dispersed anchored particles (manuscript)
-                    _add_meta[nm]['morphology'] = 'particle_0.3um_S3'
+                    _add_meta[nm]['morphology'] = (f'agglomerate_{_aggd:.1f}um_S2' if _aggd > 0.0
+                                                   else 'particle_0.3um_S3')     # mixing-dependent dispersion state
                     _add_meta[nm]['E_anchor'] = 'AFM_S6_23.6GPa'
                     _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
                     _add_meta[nm]['coh_sdcp'] = float(_coh)
-                    _add_meta[nm]['clump'] = max(1, int(args.sdcp_clump) if args.sdcp_clump > 0 else int(_ad.additive_process(nm, args.mixing).get('clump', 1)))
+                    _add_meta[nm]['clump'] = int(_clump)
+                    _add_meta[nm]['agg_d_um'] = round(float(_aggd), 2)           # 0 = milled S3 singles
+                    if _aggd > 0.0:                                              # S2 as-made agglomerate: primaries per cluster
+                        _add_meta[nm]['n_per_agglomerate'] = max(1, int(round(0.64 * (_aggd / _ad.SDCP_D) ** 3)))
                     _add_meta[nm]['anchor_status'] = 'INVALID_WRONG_MONOMER_recompute_pending'   # 2026-07-10: 이전 E_bind(−4.8/−3.0)는
                     #   곧은-pentyl C11H15O5S2로 계산됨 — 실제 SDCP는 ether-O 링커 + methyl-분지 2차 술폰산
                     #   (C11H16O6S2, Fig2a/S5).  ether-O의 Li 배위 채널 누락 → 값·기하 전면 재계산 필요.
