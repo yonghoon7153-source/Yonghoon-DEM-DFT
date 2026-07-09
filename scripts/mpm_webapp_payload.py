@@ -458,7 +458,7 @@ def main():
     # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
     # analytic laminate/percolation self-tests that pin the assembly.
     step3 = None; je_am = None
-    if len(r) and phase is not None and not a.no_step3:
+    if len(r) and not a.no_step3:                       # phase=None → AM-skeleton-only σ (SBE baseline)
         try:
             import time as _time
             import step3_sigma as _s3
@@ -466,7 +466,8 @@ def main():
             _off = np.array([SW[0], SW[0], FLOOR])
             _am_c = (c - _off) * UM
             _am_r = r * UM
-            _m = np.isin(phase, (2, 3, 5))                 # conductive additives (PTFE 4 = insulator)
+            _m = (np.isin(phase, (2, 3, 5)) if phase is not None
+                  else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator)
             _apts = (se[_m] - _off) * UM if _m.any() else None
             _aph = phase[_m] if _m.any() else None
             _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
@@ -475,7 +476,8 @@ def main():
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
                                        z_top_um=(top - FLOOR) * UM)   # bed-thickness top plate
             if _res3['n_dof']:
-                je_am = _s3.per_particle_current(_res3, sid3, pid3, _sig3, a.step3_vox, len(r))
+                je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
+                                      nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
                 _sname = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP'}
                 step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
@@ -494,7 +496,9 @@ def main():
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
         except Exception as _e:
-            print(f'  ⚠ STEP3 skipped ({_e})')
+            import traceback as _tb
+            print(f'  ⚠ STEP3 skipped ({type(_e).__name__}: {_e})')
+            print('    ' + _tb.format_exc(limit=2).strip().replace(chr(10), chr(10) + '    '))
     particles = [{'id': int(i), 'type': name.get(int(t[i]), 'AM'),
                   'x': round(float((c[i, 0] - SW[0]) * UM), 3),
                   'y': round(float((c[i, 1] - SW[0]) * UM), 3),

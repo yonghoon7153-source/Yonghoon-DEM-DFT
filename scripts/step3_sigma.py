@@ -73,19 +73,18 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
 
     for i in range(len(am_c)):                             # AM spheres (few hundred): ball masks
         _ball(am_c[i], am_r[i], 2 if am_t[i] == 1 else 1, i)   # type 1 = AM_P → sid 2; 2 = AM_S → sid 1
-    # AM-AM contact bridges (econn contact rule: gap ≤ tol)
-    try:
+    # AM-AM contact bridges (econn contact rule: gap ≤ tol) — NO blanket except here: silently
+    # losing every bridge = the fragmented-skeleton σ-collapse the integration test exists to catch
+    if len(am_c) >= 2:
         from scipy.spatial import cKDTree
         tree = cKDTree(am_c)
         for i, j in tree.query_pairs(2.0 * float(am_r.max()) + tol_am_um):
             d = float(np.linalg.norm(am_c[i] - am_c[j]))
             if d <= am_r[i] + am_r[j] + tol_am_um:
                 mid = am_c[i] + (am_c[j] - am_c[i]) * (am_r[i] + 0.5 * (d - am_r[i] - am_r[j])) / max(d, 1e-12)
-                soft = i if am_t[i] != 1 else j            # prefer the AM_S σ-id (lower σ, conservative);
-                s = 2 if am_t[soft] == 1 else 1            #   AM_P-AM_P pairs stay AM_P
-                _ball(mid, 1.2 * vox, s, soft)
-    except Exception:
-        pass
+                soft = i if am_t[i] == 1 else j            # the LOWER-σ particle = AM_P (0.005 < AM_S 0.010)
+                s = 2 if (am_t[i] == 1 or am_t[j] == 1) else 1   # mixed / P-P → AM_P id (series-conservative);
+                _ball(mid, 1.2 * vox, s, soft)             #   S-S stays AM_S.  (Review M2: was inverted.)
     # additive points: cell-stamp (carbon overwrites AM at shared cells — the higher-σ phase wins,
     # which is the physical series-shortcut at an anchored contact)
     if add_pts is not None and len(add_pts):
@@ -125,7 +124,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None):
     k_top = int(am_occ[-1]) if len(am_occ) else int(occ[-1])
     if z_top_um is not None:
         k_top = min(k_top, max(k_bot + 1, int(round(z_top_um / vox)) - 1))
-    k_top = max(k_top, k_bot + 1)
+    k_top = min(k_top, sid.shape[2] - 1)                   # review M5: clamp can not exceed the grid
     if k_top <= k_bot:
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_iters': 0,
                 'resid': 0.0}
@@ -179,7 +178,10 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None):
                             np.concatenate(cols + [np.arange(n_dof)]))),
                           shape=(n_dof, n_dof)).tocsr()
     Minv = sparse.diags(1.0 / L.diagonal())
-    phi, info = cg(L, b, rtol=1e-8, maxiter=12000, M=Minv)
+    try:
+        phi, info = cg(L, b, rtol=1e-8, maxiter=12000, M=Minv)
+    except TypeError:                                      # scipy < 1.12 has no rtol kwarg (repo convention:
+        phi, info = cg(L, b, tol=1e-8, maxiter=12000, M=Minv)   # network_conductivity.py dual-kwarg)
     resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
     # total current through the bottom plate: I = Σ g_plate·(1 − φ_bottom)
     A0 = idx[:, :, k_bot]; s0 = sig[:, :, k_bot]; m0 = A0 >= 0
@@ -187,16 +189,18 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None):
     # σ_eff: I[σ·vox·V] over plate area (nx·ny·vox²) and plate gap L = (k_top−k_bot+1)·vox, ΔV=1
     #   σ_eff = I·L/(A·ΔV) = I·(k_top−k_bot+1)/(nx·ny·vox)   [same units as σ input]
     L_lay = k_top - k_bot + 1
-    sigma_eff = I * L_lay / (nx * ny * vox)
+    sigma_eff = max(0.0, I * L_lay / (nx * ny * vox))      # CG rounding can leave a ~1e-19 negative
+    if info:
+        print(f'  ⚠ STEP3 CG not fully converged (info={info}, resid={resid:.1e}) — treat σ with care')
     out = {'sigma_eff': float(sigma_eff), 'n_dof': n_dof, 'n_floating_dropped': n_float,
-           'k_plates': (k_bot, k_top), 'cg_iters': int(info) if info else 0, 'resid': resid}
+           'k_plates': (k_bot, k_top), 'cg_info': int(info) if info else 0, 'resid': resid}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
         out['phi'] = P; out['cond'] = cond
     return out
 
 
-def per_particle_current(res, sid, pid, sigma_of_sid, vox, n_am):
+def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     """Mean |J_z| (A per unit area, ∝ σ·∇φ) over each AM particle's voxels — the slide-20 axis.
     Uses the z-face currents so the number reads as through-plane current density."""
     P, cond = res['phi'], res['cond']
