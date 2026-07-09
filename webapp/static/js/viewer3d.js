@@ -145,6 +145,7 @@ function buildControls(container, isMPM) {
         <option value="add_superp">　└ Super P만</option>
         <option value="add_ptfe">　└ PTFE만</option>
         <option value="add_sdcp">　└ SDCP만</option>
+        <option value="cbd">CBD 도메인 (carbon+binder 통합상)</option>
       </optgroup>
       <optgroup label="기공 (pore / XCT)">
         <option value="pore">기공만 (pore — XCT처럼)</option>
@@ -1894,6 +1895,53 @@ function applyViewMode(state, mode) {
          &nbsp;— 연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
        + (nClFull != null ? ` · carbon cluster ${nClFull.toLocaleString()}개` : '') + `</div>
        <div style="margin-top:2px;color:#9ca3af;font-size:10px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
+    return;
+  }
+  if (mode === 'cbd') {
+    /* CBD 도메인 (tomography-FEM 논문 문법): carbon + binder를 하나의 융합 반투명 상으로 —
+     * VGCF/SuperP/SDCP/PTFE 전부 한 색(노랑)의 soft-disc 2겹 blob.  시각화 전용 lumping:
+     * STEP3 물리는 상별 σ 유지 (PTFE=절연) — legend에 명시. */
+    const fibres = ((state.data && state.data.additive_fibres) || []);
+    const fibrePh = new Set(fibres.map(f => f.phase));
+    const loose = ((state.data && state.data.additive_points) || []).filter(p => !fibrePh.has(p[3]));
+    let nPts = loose.length; fibres.forEach(f => { nPts += f.pts.length; });
+    if (!nPts) {
+      setLegend(state, '<i>이 payload엔 첨가제가 없어요 (--add-recipe 런 + --phase payload 필요).</i>');
+      return;
+    }
+    if (state.meshes.MESH) {
+      state.meshes.MESH.visible = true;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.12;
+    }
+    ['AM_P', 'AM_S'].forEach(ty => {                       // AM stays the grey solid subject
+      const m = state.meshes[ty]; if (!m) return;
+      const base = new THREE.Color(0x9a9a9a);
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
+      m.material.opacity = 1.0; m.material.transparent = false;
+    });
+    flushColors();
+    const pos = new Float32Array(nPts * 3);
+    let w = 0;
+    const put = (q) => { pos[3 * w] = q[0]; pos[3 * w + 1] = q[2]; pos[3 * w + 2] = q[1]; w++; };
+    fibres.forEach(f => f.pts.forEach(put));
+    loose.forEach(p => put(p));
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    const grp = new THREE.Group();
+    const cbdCol = new THREE.Color(0xd9c400);              // CBD yellow (논문 문법)
+    for (const [sz, op] of [[1.6, 0.20], [0.7, 0.6]]) {
+      const pm = new THREE.Points(g, new THREE.PointsMaterial({
+        size: sz, color: cbdCol, sizeAttenuation: true, depthTest: false, depthWrite: false,
+        map: roundDotTex(), transparent: true, opacity: op, alphaTest: 0.05 }));
+      pm.renderOrder = 999; grp.add(pm);
+    }
+    state.additivePointGroup = grp;
+    if (state.scene) state.scene.add(grp);
+    const ac = ((state.data && state.data.mpm_metrics) || {}).additive_counts || {};
+    setLegend(state,
+      `<b>CBD 도메인</b> <span style="color:#d9c400;font-size:13px">●</span>
+       carbon+binder 통합상 (${Object.entries(ac).map(([k, v]) => `${k} ${Number(v).toLocaleString()}`).join(' · ') || '—'})
+       <div style="margin-top:2px;color:#9ca3af;font-size:10px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
     return;
   }
   if (mode === 'je') {
