@@ -77,3 +77,14 @@ Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 �
 - **추가 필요**: 앵커링 시나리오 ④ ether-보조 chelation (재계산 시작배향 포함됨).
 - **무효 유지**: 절대 수치 전부 + 삽입형 기하 재검증 (ether 유연성/메틸 입체).
 - **재사용**: LiNiO₂ slab relaxation/U-ramp E_slab은 분자-무관 → 전부 유효; 재계산 = 분자+complex만.
+
+### "1분자 3역할" (anchoring + Li-hopping + polaron) 판정 — 정정 구조 (2026-07-10)
+- ①앵커링: 유지(head). ②**Li⁺ hopping: 크게 보강** — 정정 구조는 반복단위당 사이트 2개(SO₃⁻ 음이온
+  사이트 + ether-O PEO형 사이트) → `SO₃⁻→ether→SO₃⁻` 사다리로 hop 거리↓장벽↓ (ICEP AMPS+PEO 선례).
+  ③polaron: backbone 불변, packing 영향은 실물 σ_e ×5.1이 커버.  PVdF(접착만)·bollard PC(절연 2기능)
+  대비 **SDCP만 3기능** = novelty 포지셔닝의 분자 버전.
+- 정밀화: (a) 미세구조 한정 — 연속 interlayer가 아니라 **앵커된 0.3µm 입자의 NCM|SE 접촉 둘레**에서
+  작동 (= 우리 particle+anchoring 시딩의 배치와 자기일관). (b) 역할② 정량 한 칸 — pellet ×0.80은
+  '덜 차단' 증거; **재계산 패키지에 Li⁺ 결합(SO₃⁻ vs ether-O) + 사이트간 NEB 장벽 추가** 권고.
+- STEP3 설계 노트: SDCP = 스택 최초의 **이중-전도 상** (PTFE 0/0 · VGCF e · SuperP e · **SDCP e+Li⁺**)
+  → network solver에서 σ_e·σ_ion 동시 배정 (pellet 앵커 ×5.1/×0.80).
