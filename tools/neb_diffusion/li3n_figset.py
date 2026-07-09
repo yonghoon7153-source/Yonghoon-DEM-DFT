@@ -118,7 +118,7 @@ vals = [r[3] for r in rows]
 colors = ["#d46a6a", "#4a90c4", "#4a90c4", "#9ec9e8"]
 bars = axa.bar(range(len(rows)), vals, color=colors, width=0.62)
 for i, v in enumerate(vals):
-    axa.text(i, v - 0.04, f"{v:.3f}", ha="center", va="top", fontsize=9, color="white", fontweight="bold")
+    axa.text(i, v + 0.05, f"{v:.3f}", ha="center", va="bottom", fontsize=9, color="white", fontweight="bold")
 axa.set_xticks(range(len(rows)))
 axa.set_xticklabels(names, fontsize=9)
 axa.set_ylabel("Adsorption energy (eV)")
