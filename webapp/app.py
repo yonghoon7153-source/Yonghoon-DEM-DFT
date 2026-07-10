@@ -5328,7 +5328,11 @@ def mpm_upload(case_id):
 #    Upload an mpm_payload.json, view it in 3D, and keep an accumulating saved list — so an MPM
 #    result that isn't tied to a known DEM case can still be viewed and compared on its own.
 def _mpm_lab_slug(s):
-    return re.sub(r'[^A-Za-z0-9_.-]+', '_', str(s or ''))[:60].strip('_') or 'payload'
+    # Sanitize to a filesystem-safe token.  NO length cap here: this ALSO runs on LOOKUP, where the
+    # pid passed in is already "<name-slug>_<uuid6>".  The old [:60] truncation chopped the uuid off
+    # for long names (the _vox0.2 name suffix pushed the pid past 60 chars → wrong folder → 404).
+    # The length cap now lives at CREATION (upload), on the NAME part only, so the uuid always survives.
+    return re.sub(r'[^A-Za-z0-9_.-]+', '_', str(s or '')).strip('_') or 'payload'
 
 
 def _mpm_lab_list():
@@ -5373,7 +5377,7 @@ def mpm_lab_upload():
                  if _sel.get('name') else '')
     _vox_um = (mm.get('step3') or {}).get('vox_um')     # STEP3 voxel size — show when finer than default
     name = (request.form.get('name') or data.get('case') or 'payload').strip()
-    pid = f"{_mpm_lab_slug(name)}_{uuid.uuid4().hex[:6]}"
+    pid = f"{_mpm_lab_slug(name)[:52]}_{uuid.uuid4().hex[:6]}"   # cap NAME part → folder ≤ 59 chars, uuid intact
     d = os.path.join(app.config['MPM_LAB_FOLDER'], pid)
     os.makedirs(d, exist_ok=True)
     with open(os.path.join(d, 'payload.json'), 'w') as out:
