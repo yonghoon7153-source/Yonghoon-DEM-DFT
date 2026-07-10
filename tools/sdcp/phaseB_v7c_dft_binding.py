@@ -289,10 +289,14 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         "    nosym           = .true.",
     ]
     # spin setup
-    if has_ni:                                   # slab / complex: AFM Ni guess, spin free
+    if has_ni:                                   # slab / complex: AFM Ni guess + FSM
         sys_lines.append(f"    starting_magnetization(2) = +{AFM_MAG}   ! Ni1 up")
         sys_lines.append(f"    starting_magnetization(3) = -{AFM_MAG}   ! Ni2 down (AFM)")
-        # NOTE: FSM tot_magnetization DROPPED on purpose (u62c) so radical spin is free
+        # FSM restored (2026-07-11): free-spin AFM+U sloshed (slab scf-iter 148 @ acc
+        # 1.6 Ry); scf_u62's converged lineage used tot_magnetization. Slab/neutral
+        # complex = 0.0 (AFM net-zero), doped complex = 1.0 (the radical electron).
+        tm = 1.0 if kind == "complex_doped" else 0.0
+        sys_lines.append(f"    tot_magnetization = {tm}")
     else:                                        # isolated molecule
         if doped_mol:
             sys_lines.append("    tot_magnetization = 1.0   ! [M-H] radical = doublet")
@@ -438,15 +442,15 @@ def main():
 
     jobs = [
         ("slab",            None,               "slab",             a.kpts,   "pb_slab"),
-        ("complex_doped",   a.complex_doped,    "complex",          a.kpts,   "pb_cxd"),
-        ("complex_neutral", a.complex_neutral,  "complex",          a.kpts,   "pb_cxn"),
+        ("complex_doped",   a.complex_doped,    "complex_doped",    a.kpts,   "pb_cxd"),
+        ("complex_neutral", a.complex_neutral,  "complex_neutral",  a.kpts,   "pb_cxn"),
         ("mol_doped",       a.mol_doped,        "molecule_doped",   "gamma",  "pb_mold"),
         ("mol_neutral",     a.mol_neutral,      "molecule_neutral", "gamma",  "pb_moln"),
     ]
     for name, src, kind, kpts, prefix in jobs:
         if kind == "slab":
             atoms, labels = slab_atoms, slab_labels
-        elif kind == "complex":
+        elif kind.startswith("complex"):
             atoms = read(src)
             base = list(atoms.get_chemical_symbols())
             mism = sum(1 for i in range(Nslab)

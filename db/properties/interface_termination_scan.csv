@@ -56,6 +56,17 @@ mc2x_r071,0.71,PS4-exposed CONTROL,P@2.1 intact cage 4/4,3,3.60,2.90,19.4,0.68,1
 "# Combined with the buried-geometry campaign (interface_campaign_summary.csv: 22+/-9 vs 26+/-0 % = equal):"
 "#   TERMINATION DECIDES THE MODE -- buried dopants = inert survivors (kinetics equal); B-exposed termination = sacrificial shield (host protected)."
 "#   In NO tested geometry does doping worsen the interface. Caveats: n=2 seeds/termination, one cleave height per termination, 100 ps, UMA MLIP, coordination-count metrics."
+"# ROLL-0.13 PS3O FRONT-LINE RETEST (P-up, lone O BURIED 2.5 A beneath; build audited 4/4 both sides) -- 2026-07-11 per-seed rows:"
+b2o3_P013,0.13,PS3O-exposed (P up; O buried),P@0.9 cage 4/4 + O@2.5 beneath,2,3.25,2.00,38.5,1.17,2.24,9,,,,
+b2o3_P013,0.13,PS3O-exposed (P up; O buried),P@0.9 cage 4/4 + O@2.5 beneath,3,3.25,2.50,23.1,0.64,1.25,5,,,,
+mc2x_r013,0.13,PS4-exposed CONTROL,P intact cage 4/4,2,3.60,2.80,22.2,0.89,1.90,4,,,,
+mc2x_r013,0.13,PS4-exposed CONTROL,P intact cage 4/4,3,3.60,2.70,25.0,0.84,1.80,9,,,,
+"# ROLL-0.13 VERDICT: PS3O-fronted 30.8+/-7.7 % (38.5/23.1 -- WIDE seed split) vs PS4 control 23.6+/-1.4 % (22.2/25.0)."
+"#   Ranges OVERLAP (doped s3 23.1 sits inside the control band) -> MILD/UNCERTAIN acceleration; NOT the clean"
+"#   non-overlapping separation PS2O2 showed. (PS_init 3.25 = expected for intact PS3O: 3 S + 1 O corner.)"
+"# O-CORNER DOSE TREND at direct Li contact (mean front-line PS4-bond loss, n=2 each):"
+"#   0 O (PS4, two cleaves) 22-24 %  <  1 O (PS3O, buried O) ~31 % (noisy)  <  2 O (PS2O2, exposed O) ~34 % (clean)."
+"#   Monotonic in O count -> supports the O-corner cage-weakening hypothesis; PS3O per-atom stamp (front P-S/P-O, buried-O fate) pending."
 "# O SURFACE-SEGREGATION (2026-07-09 night, UMA, kgy): swap the 2 surface O of the roll-0.71 slab with 2 deep PS4 sulfurs,"
 "#   relax both -> dE_seg = E(O@surface) - E(O@bulk) = +0.671 eV (+336 meV per O). O strongly AVOIDS surface corners"
 "#   (>> synthesis kT ~60-70 meV) -> the accelerated PS2O2-exposed termination is thermodynamically self-avoiding at"
