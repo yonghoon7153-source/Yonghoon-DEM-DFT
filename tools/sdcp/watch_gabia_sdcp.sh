@@ -8,30 +8,34 @@ RY=13.605693
 echo "════════ $(date '+%m-%d %H:%M:%S')  gabia — Phase-B DFT+U + p0 ════════"
 
 # ── p0 DFT barrier ──
-echo "■ P0 DFT barrier (Li3N, tmux:p0)  dft_p0/{min,saddle}"
+echo "■ P0 DFT barrier (Li3N)  min:gabia 완료 / min2→saddle:kgy(3090) 이관"
 D=/data/work/runs/li3n_pes_uma/dft_p0
-Emin=""; Esad=""
-for J in p0_min p0_saddle; do
-    O=$D/$J.out
-    if [ ! -f "$O" ]; then echo "   $J: 대기 (.out 없음)"; continue; fi
-    E=$(grep '^!' "$O" 2>/dev/null | tail -1 | awk '{print $5}')
-    if grep -q "JOB DONE" "$O" 2>/dev/null; then
-        conv="?"; grep -q "bfgs converged" "$O" && conv="수렴"; grep -q "maximum number" "$O" && conv="MAXSTEP"
-        echo "   $J: ✅ JOB DONE ($conv)  E=${E:-–} Ry"
+Emin=""; Emin2=""; Esad=""
+Emin=$(grep '^!' $D/p0_min.out 2>/dev/null | tail -1 | awk '{print $5}')
+[ -n "$Emin" ] && echo "   p0_min  : ✅ MAXSTEP 종료  E=$Emin Ry (미수렴 — min2로 연장 중, 참조용)"
+if [ -f $D/p0_min2.out ]; then
+    Emin2=$(grep '^!' $D/p0_min2.out | tail -1 | awk '{print $5}')
+    if grep -q "JOB DONE" $D/p0_min2.out; then
+        conv="?"; grep -q "bfgs converged" $D/p0_min2.out && conv="수렴"
+        grep -q "maximum number" $D/p0_min2.out && conv="MAXSTEP"
+        echo "   p0_min2 : ✅ JOB DONE ($conv)  E=$Emin2 Ry"
     else
-        st=$(grep "number of bfgs steps" "$O" 2>/dev/null | tail -1 | awk '{print $NF}')
-        fo=$(grep "Total force" "$O" 2>/dev/null | tail -1 | awk '{print $4}')
-        sc=$(grep "estimated scf accuracy" "$O" 2>/dev/null | tail -1 | awk '{print $(NF-1)}')
-        age=$(( $(date +%s) - $(stat -c %Y "$O" 2>/dev/null || date +%s) ))
-        echo "   $J: 진행  ionic≈${st:-0} | force ${fo:-–} | scf ${sc:-–} Ry (${age}s前)"
+        echo "   p0_min2 : (kgy 복사본 도착, 파싱)  E=${Emin2:-–}"
     fi
-    [ "$J" = "p0_min" ] && Emin=$E || Esad=$E
-done
-if [ -n "$Emin" ] && [ -n "$Esad" ] && grep -q "JOB DONE" "$D/p0_min.out" 2>/dev/null \
-   && grep -q "JOB DONE" "$D/p0_saddle.out" 2>/dev/null; then
-    awk -v a="$Emin" -v b="$Esad" -v r=$RY 'BEGIN{printf "   ★ DFT BARRIER = %.3f eV\n",(b-a)*r}'
+else
+    echo "   p0_min2 : ⏳ kgy에서 진행 — 완료 out을 이 폴더로 복사하면 barrier 자동"
 fi
-tmux has-session -t p0 2>/dev/null && echo "   [tmux:p0 실행중]" || echo "   [tmux:p0 없음]"
+if grep -q "JOB DONE" $D/p0_saddle.out 2>/dev/null; then
+    Esad=$(grep '^!' $D/p0_saddle.out | tail -1 | awk '{print $5}')
+    echo "   p0_saddle: ✅ JOB DONE  E=$Esad Ry"
+else
+    echo "   p0_saddle: ⏳ kgy에서 min2 뒤 자동 체인 (로컬 구 out 무시)"
+fi
+REF=${Emin2:-$Emin}
+if [ -n "$REF" ] && [ -n "$Esad" ]; then
+    awk -v a="$REF" -v b="$Esad" -v r=$RY -v m2="$Emin2" \
+      'BEGIN{printf "   ★ DFT BARRIER = %.3f eV%s\n",(b-a)*r,(m2==""?" (min 미수렴 참조 — min2 대기)":"")}'
+fi
 
 # ── SDCP Phase-B DFT+U (per-SCF) ──
 echo "■ SDCP Phase-B DFT+U (tmux:phaseB)  doped_chelation_r90 vs neutral_chelation_r0"
