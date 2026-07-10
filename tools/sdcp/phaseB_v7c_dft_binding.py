@@ -354,10 +354,10 @@ def write_scf(path, atoms, labels, kind, kpts, pseudo_dir, prefix):
         f.write("\n".join(body))
 
 
-def box_molecule(atoms):
+def box_molecule(atoms, vac=MOL_VACUUM):
     m = atoms.copy()
     ext = m.positions.max(axis=0) - m.positions.min(axis=0)
-    L = ext + 2 * MOL_VACUUM
+    L = ext + 2 * vac
     m.set_cell(L)
     m.center()
     m.pbc = True
@@ -404,6 +404,11 @@ def main():
                          "z-layer from the slab's OWN geometry (in-plane AFM, needs no "
                          "ref correspondence). match: Hungarian on RANSAC-aligned ref.")
     ap.add_argument("--ztol", type=float, default=0.8, help="z-layer clustering gap (A)")
+    ap.add_argument("--mol_vacuum", type=float, default=MOL_VACUUM,
+                    help="vacuum (A) around gas molecules. 12 A boxes at ecutrho 480 "
+                         "need >48 GB GPU (OOM'd alone on gabia); 8 A cuts the FFT ~3x "
+                         "(~15-20 GB). Molecules are charge-neutral so image effects are "
+                         "~meV and cancel in the doped-neutral difference.")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -463,7 +468,7 @@ def main():
                 if labels[i] == 'Ni':
                     labels[i] = slab_ni[i]        # inherit identical slab sublattice
         else:
-            atoms = box_molecule(read(src))
+            atoms = box_molecule(read(src), a.mol_vacuum)
             labels = list(atoms.get_chemical_symbols())
         d = os.path.join(a.out, name)
         os.makedirs(d, exist_ok=True)
