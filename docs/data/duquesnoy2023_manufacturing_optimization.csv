@@ -1,0 +1,31 @@
+# Duquesnoy et al., Energy Storage Materials 56 (2023) 50-61, DOI 10.1016/j.ensm.2022.12.040
+# ARTISTIC LIB NMC111 wet cathode: physics-sim (CGMD+DEM) -> SISSO ML -> Bayesian multi-objective optimization -> exp validation
+# provenance: stated=table/text ; digitized=read from figure axis (TREND only)
+# CAUTION: LIB WET electrode (ionic topology INVERTED vs our ASSB: pore=electrolyte=ionic conductor). Do NOT transfer transport absolutes.
+case,AM_pct,SC_pct,CD_pct,tortuosity,sigma_e_S_per_m,active_surface_pct,density_g_cm3,porosity_pct,mass_loading_mg_cm2,thickness_um,provenance,note
+optimal_BO_Table2,90.4,58.1,28.4,,,,,,,,stated,BO-predicted optimal manufacturing params
+optimal_SISSO_pred_Table3,90.4,58.1,28.4,1.4700,0.1724,54.0522,2.4459,,,,stated,deterministic-learning(SISSO) prediction at optimal
+optimal_physicsmodel_Table3,90.4,58.1,28.4,1.5286,0.1750,55.7230,2.4456,,,,stated,physics-model regenerated at optimal (validates surrogate)
+extreme_high_conductivity_TableS2,86.3,57.0,33.1,,,,,26.55,,,stated,Fig6 blue; CBD up AM down -> sigma_e max
+extreme_low_tortuosity_TableS2,88.8,56.8,2.24,,,,,42.35,,,stated,Fig6 green; near-uncalendered -> tau min
+extreme_high_active_surface_TableS2,96.5,60.3,9.11,,,,,35.97,,,stated,Fig6 yellow; AM up CBD down -> active surface max
+extreme_high_density_TableS2,94.5,71.0,36.36,,,,,24.11,,,stated,Fig6 magenta; big compression -> density max, AM fracture risk
+exp_pristine_Table4,90,58,0,3.5,,,1.6,60,6.7,68,stated,fabricated ML-optimal electrode, uncalendered (tau/porosity/density +/- in paper)
+exp_calendered30_Table4,90,58,30,1.8,,,2.6,29,6.7,48,stated,fabricated ML-optimal electrode, calendered 30pct = experimental validation
+# --- SI Table S3: comparison with Liu et al. 2023 ESM 54:156-163 (physics-model calibration set); last row = this-work optimal ---
+liu2023_AM85_CD0_TableS3,85,46,0,1.94,0.029,,1.55,59.53,15.79,121.6,stated,Liu2023 calibration
+liu2023_AM85_CD10_TableS3,85,46,10,2.365,0.0928,,1.73,55.82,15.44,108.83,stated,Liu2023 calibration
+liu2023_AM85_CD20_TableS3,85,46,20,2.66,0.478,,2.03,50.91,15.52,98.5,stated,Liu2023 calibration; sigma_e up 16x with CD (0.029->0.478)
+liu2023_AM90_CD0_TableS3,90,55,0,1.78,0.00242,,1.89,53.03,15.58,91.67,stated,Liu2023 calibration
+liu2023_AM90_CD10_TableS3,90,55,10,1.78,0.0432,,2.02,49.835,14.94,82.32,stated,Liu2023 calibration
+liu2023_AM90_CD20_TableS3,90,55,20,2.77,0.14,,2.33,42.145,15.09,72.1,stated,Liu2023 calibration
+liu2023_AM95_CD0_TableS3,95,67,0,1.57,0.000743,,1.09,51.544,15.46,77.8,stated,Liu2023 calibration
+liu2023_AM95_CD10_TableS3,95,67,10,1.75,0.00145,,2.37,45.0,15.37,68.2,stated,Liu2023 calibration
+liu2023_AM95_CD20_TableS3,95,67,20,2.47,0.00164,,2.58,40.26,15.11,61.7,stated,Liu2023 calibration
+thiswork_optimal_TableS3,90,58,30,1.8,,,2.6,29,6.7,48,stated,this-work ML-optimal electrode (=Table4 calendered)
+# --- SISSO validation metrics (Table 1 testing / Table S1 training) ---
+# property,test_RMSE_pct,test_R2_CI95,train_RMSE_pct,train_R2
+# tortuosity,1.48,[0.941;0.950],6.88,0.978   (Table1 printed R2=0.933 is a table error: outside its own CI95)
+# sigma_e,7.80,[0.978;0.981],1.91,0.966       (Table1 printed R2=0.933 is a table error)
+# active_surface,1.41,[0.885;0.914]->0.911,1.41,0.909
+# density,1.87,[0.962;0.971]->0.968,1.87,0.985

@@ -264,7 +264,9 @@
 
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
 - 문헌: Varkey "elasto-plastic"은 **CONTACT 힘법칙만**(Thornton–Ning), 입자는 완벽 구 — "구=타협,
-  현실 형상=향후 과제" 명시. Bazzoun도 구만.
+  현실 형상=향후 과제" 명시. Bazzoun도 구만.  **★ Duquesnoy 2023(ARTISTIC 캘린더링 DEM)도 rigid-구형**(CBD-shrink 건조=
+  부피연산, 형상소성 없음) → **제조시뮬 최전선 3편(Varkey·Bazzoun·Duquesnoy)이 모두 형상소성 없음 = frame[5] *3중* 독립확증**
+  (우리 MPM 이 메우는 형상-morphology 절반이 세 논문 다 빠짐).
 - 우리: MPM 진짜 소성 형상변화(SEM 일치), void-fill flow, Σdg 변형장.
 - 왜: 강체 구 DEM·단상 연속체는 granular 재배열을 못 잡아 둘 다 연화 럼핑 필요 (frame [1]/[2]).
 - 인사이트: **morphology·소성 floor(<20 %)·변형장 = 우리 MPM이 메우는 간극** (Varkey가 스스로 인정 = frame[5] 확증).
@@ -417,6 +419,45 @@
   "구=타협" 한계와 같은 계보 → **frame[5] 분업이 문헌 권위로 정당화.**
 
 ## F. 우리가 아직 못 하는 것 / 흡수할 것 (정직 목록 → 향후)
+
+- **★★ Duquesnoy 2023 (Franco/ARTISTIC, LIB NMC111 습식) = 우리 5-Phase 로드맵의 *published archetype* — 최적화 loop 전체가
+  흡수 대상** (digest `papers/duquesnoy2023_ml_multiobjective_manufacturing_optimization.md`, CSV
+  `docs/data/duquesnoy2023_manufacturing_optimization.csv`).  **they-lead / we-lead / adopt** 로 정리:
+  - **THEY LEAD (그들이 앞섬 — 우리 Phase 3–5 미완):**
+    - ★ **닫힌 역설계 loop 완성·published·실험검증:** 물리시뮬(CGMD 슬러리→CBD-shrink 건조→DEM 캘린더링, LAMMPS 174건)
+      → **Sobol(+Saltelli) DOE** space-filling → **SISSO** symbolic regression(물성=Σc_i·d_i, 3-descriptor, l₀; R² 0.91–0.985)
+      → **베이지안 다목적최적화**(GP + **GP-Hedge**(LCB+EI+PI) + 스칼라화 **C_f=¼[Σy²_min+Σ(1−y)²_max]** 등가중, 300-iter)
+      → 역설계 최적 **AM/SC/CD=90.4/58.1/28.4 %** → **실물 전극 제작·EIS 검증**(τ 1.8·density 2.6·porosity 29 %).
+      우리는 Phase 1(σ 삼중항 스케일링)만 완료, Phase 3–5(predictor→2D synth→layering)는 계획만 → **그들 loop 기계장치가
+      우리 로드맵의 de-risking + 직접 청사진.**
+    - **SISSO auto symbolic-regression:** 우리 σ 폼은 *손유도 physics-prior + OLS/Ridge*.  SISSO 는 feature-space(연산자
+      {+,−,×,²,³,⁻¹,√,³√,log,exp} 재귀 rung) + l₀ screening 으로 *자동* 발견.  우리에겐 없는 도구.
+    - **Sobol space-filling DOE:** 우리 corpus 는 ad-hoc + `active_learning_suggest.py`(exploit corner 수렴) → **exploration 약함**.
+    - **자체 실험 fabrication:** ML 최적전극을 실제로 만들어 검증(우리는 문헌 앵커 차용).
+  - **WE LEAD (우리가 앞섬 — 그들 비운 칸 = 우리 novelty 위치):**
+    - ★ **구조→σ 기계론 (그들 black-box):** SISSO 는 제조→물성 *직결*, 구조 우회 → "왜" 못 답함.  우리는 DEM+MPM 구조 →
+      Kirchhoff/Holm σ → 스케일링 → 구조 descriptor(φ·CN·cov·τ·percolation)가 인과 설명.
+    - ★ **전달 삼중항 + Holm constriction + Stage-E 소성면적:** 그들 = **tortuosity(pore 이온 proxy 1채널) + GeoDict σ_e(연속체=
+      constriction 없는 *상한*, Bielefeld2020 계열)**.  σ_ionic·σ_thermal·명시 접촉망 **전무**.  ⚠**이온위상 반전**(그들 pore=이온
+      전도체 / 우리 SE망=이온전도체) → transport 절대·부호 전이 금지, loop 방법론만.
+    - ★ **MPM 진짜 소성 morphology (frame[5]):** rigid-구형 캘린더링(형상소성 없음)+CBD-shrink(부피연산) = **Varkey/Bazzoun
+      과 같은 frame[1] 한계** → *제조시뮬 최전선 3편(Varkey·Bazzoun·Duquesnoy)이 다 형상소성 없음* = frame[5] 3중 독립확증.
+    - ★ **Furnas dip + bimodal 12:4:1 정량** (그들 단일 CAM 상, dip 없음).
+    - **DEM↔MPM 상보 프레임 [1]–[5]** (그들 단일 파이프라인, 우리 교차검증 엄밀성).
+  - **ADOPT (구체 흡수 action, 우선순위):**
+    1. **★★ Sobol(+Saltelli) DOE = 다음 sim batch 즉시 적용** — 우리 (AM·P:S·r_SE·P) hyper-rectangle 에 low-discrepancy 깔아
+       σ_ionic close-out 이 지목한 구조 gap(CN≥7·중간두께) 균일 충전.  `active_learning_suggest.py` 에 Sobol seed 모드(explore+exploit).
+    2. **★★ SISSO 를 우리 corpus 에 돌려 σ 폼 *교차검증*** — √φ_eff·CN²·√cov 류를 재발견하면 손유도 폼의 독립 확증(frame[4]).
+       ⚠ SISSO `Σc_i·d_i`=단일-backbone 선형결합 = 우리가 σ_thermal 에서 *실패 판정*한 pure-power-law → **σ_thermal 은 SISSO 도
+       한계 예상**(우리 "Ridge irreducible/multi-pathway" 논지 강화); σ_ionic·σ_e(단일 backbone)는 궁합 좋을 것.  Phase-3 per-metric
+       엔진 후보(hand-form 과 병렬 fit, CV R² 비교).
+    3. **★★ GP + GP-Hedge + 스칼라화 = Phase 3–5 역설계 loop** — 그들 Eq 3 스칼라화 채택하되 **가중치는 application 별**
+       (fast-charge=τ·σ_e↑ / high-energy=density↑; 그들도 명시).  우리 metric set(σ_ionic/σ_e/σ_thermal·porosity·coverage·dip)로 확장.
+       Phase-3(predict)→4(`extract_2d_microstructure.py synthesize_microstructure`)→5(layered)를 하나의 BO loop 로.
+    4. **PDP + KDE + radar 해석 패널** — 그들 Fig 4(2D PDP 민감도)·5A(KDE 위치)·6(극단 radar)을 우리 webapp group-compare 에.
+  - ⚠ **caveat (§10 digest):** LIB 습식·NMC111·이온위상 반전·rigid-구형·black-box·단일 CAM 상·등가중 proof-of-concept·
+    Table 1 R²=0.933 표오류(CI95 신뢰)·mass loading 본문15–40 vs 실험6.7 불일치.  → **loop 방법론만 흡수, transport/역학 물리결론 전이 금지.**
+
 - **FEM 연속체 transport 기준** 없음 (Bazzoun COMSOL 보유) — RNM↔FEM 대조틀 흡수 가치.
 - **★ Bielefeld 2019 이 *앞서는* 것 (정직):** **GeoDict 성숙도**(상용 voxel 재료-연구소)·**Hoshen-Kopelman cluster
   분석**·**깨끗한 percolation power-law(β=0.41) + 입경-percolation 로그식(p_c=7.83·ln d+36.67)** + **porosity별 이상
