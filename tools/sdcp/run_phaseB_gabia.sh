@@ -48,20 +48,45 @@ run_one () {           # $1 = job dir, $2 = required free MiB
     fi
 }
 
+run_heavy () {         # $1 = job dir, $2 = required free MiB — U-RAMP two-stage
+    # From-scratch U=6.2 on the AFM slab sloshes forever (iter 158 @ acc 1.2 Ry even
+    # with FSM). The reference_dft_v2 lineage converged via U-RAMP: scf_u0 first,
+    # then U=6.2 restarted from that density (startingpot='file'). Automate both.
+    local j=$1 need=$2
+    local d=$BASE/$j
+    grep -q "JOB DONE" "$d/scf.out" 2>/dev/null && { echo "[$j] already done — skip"; return; }
+    # stage A: U=0 warm-up density (same prefix/outdir so stage B can read it)
+    if ! grep -q "JOB DONE" "$d/scf_u0.out" 2>/dev/null; then
+        [ -f "$d/scf_u0.in" ] || sed '/^HUBBARD/,/^U Ni2/d' "$d/scf.in" > "$d/scf_u0.in"
+        rm -rf "$d/tmp" "$d/scf_u0.out"
+        wait_gpu "$need"
+        echo "[$j:u0] START (U=0 warm-up)  $(date)"
+        ( cd "$d" && $MPIRUN -np 1 $QE -in scf_u0.in > scf_u0.out 2>&1 )
+        grep -q "JOB DONE" "$d/scf_u0.out" || { echo "[$j:u0] FAILED — chain moves on"; return; }
+        echo "[$j:u0] DONE  $(date)"
+    fi
+    # stage B: U=6.2 from the U0 density
+    grep -q "startingpot" "$d/scf.in" || \
+        sed -i "/&ELECTRONS/a\    startingpot      = 'file'" "$d/scf.in"
+    rm -f "$d/scf.out"
+    wait_gpu "$need"
+    echo "[$j] START (U=6.2 from u0 rho)  $(date)"
+    ( cd "$d" && $MPIRUN -np 1 $QE -in scf.in > scf.out 2>&1 )
+    if grep -q "JOB DONE" "$d/scf.out"; then
+        local e=$(grep '^!' "$d/scf.out" | tail -1 | awk '{print $5}')
+        echo "[$j] DONE  E=${e} Ry  $(date)"
+    else
+        echo "[$j] NOT finished — rerun script to retry  $(date)"
+    fi
+}
+
 echo "===== Phase-B SCF chain (gabia)  $(date) ====="
-# NOTE: this GPU is ~48 GB and p0 holds ~41 GB, so NOTHING (not even a molecule
-# in a vacuum box at ecutrho 480) fits alongside p0 -- the first attempt OOM'd
-# the molecules at 4 GB free. All thresholds now gate on "p0 has freed the card"
-# (free jumps to ~47 GB when p0's min->saddle->barrier chain finishes).
-# Thresholds gate on "p0 has freed the card" (~47 GB free after its chain).
-# slab verified to run at 11.7 GB with 30 GB free, co-existing with p0_saddle,
-# so heavies use the proven 30/32; molecules (big vacuum box, OOM'd at 6 GB free)
-# wait for the same 30 GB before launching.
-run_one mol_doped       30000    # 34 atoms, gamma, big vacuum box -> mem-heavy
-run_one mol_neutral     30000    # 35 atoms
-run_one slab            30000    # 96 atoms, 2x2x1, nspin2+U (ran at 11.7 GB)
-run_one complex_doped   32000    # 130 atoms
-run_one complex_neutral 32000    # 131 atoms
+# 48 GB card: molecules need ~47 GB free (8 A boxes), heavies ~30-32 GB.
+run_one   mol_doped       30000    # 34 atoms, gamma — DONE-skip if converged
+run_one   mol_neutral     30000    # 35 atoms
+run_heavy slab            30000    # 96 atoms, U-ramp (u0 -> u62)
+run_heavy complex_doped   32000    # 130 atoms, U-ramp
+run_heavy complex_neutral 32000    # 131 atoms, U-ramp
 echo "===== chain end  $(date) ====="
 n=$(grep -l "JOB DONE" $BASE/*/scf.out 2>/dev/null | wc -l)
 echo "completed SCFs: $n / 5"

@@ -45,7 +45,19 @@ done=0
 now=$(date +%s)
 for j in slab complex_doped complex_neutral mol_doped mol_neutral; do
     f=$PB/$j/scf.out
-    if [ ! -f "$f" ]; then printf "   %-16s ⬚ 대기\n" "$j"; continue; fi
+    u0=$PB/$j/scf_u0.out
+    if [ ! -f "$f" ] && [ -f "$u0" ] && ! grep -q "JOB DONE" "$u0" 2>/dev/null; then
+        it0=$(grep -c "iteration #" "$u0" 2>/dev/null)
+        ac0=$(grep "estimated scf accuracy" "$u0" 2>/dev/null | tail -1 | awk '{print $(NF-1)}')
+        printf "   %-16s ⏳ U0 워밍업 scf-iter %s | acc %s Ry\n" "$j" "${it0:-0}" "${ac0:-–}"
+        continue
+    fi
+    if [ ! -f "$f" ]; then
+        [ -f "$u0" ] && grep -q "JOB DONE" "$u0" 2>/dev/null \
+            && printf "   %-16s ⬚ U0 완료 — U6.2 대기\n" "$j" \
+            || printf "   %-16s ⬚ 대기\n" "$j"
+        continue
+    fi
     if grep -q "JOB DONE" "$f" 2>/dev/null; then
         e=$(grep '^!' "$f" 2>/dev/null | tail -1 | awk '{print $5}')
         cv=""; grep -q "convergence has been achieved" "$f" && cv="✓수렴"
