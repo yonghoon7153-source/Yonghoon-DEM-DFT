@@ -1,0 +1,19 @@
+site,E_bind_neutral_eV,E_bind_doped_eV,delta_doped_minus_neutral_eV
+SO3 O-O bidentate,-2.508,-3.278,-0.770
+side-chain ether O,-2.878,-2.930,-0.052
+EDOT O-O chelate,-1.606,-3.363,-1.758
+"# SDCP v7c + Li+ site binding (local ORCA r2SCAN-3c Opt TightSCF, gas monomer; charge +1, neutral mult 1 / doped mult 2)."
+"# E_bind = E(mol+Li+) - E(mol) - E(Li+); refs: E(Li+) = -7.281558 Eh, E(neutral) = -1676.256250, E(doped) = -1675.600576 Eh."
+"# Jobs: ~/orca_li on DESKTOP-K1BLBIJ (li_ref + 6 site opts), completed 2026-07-11; placements max-min clearance searched."
+"# ==== VERDICT (v7c re-test of report p.6 Li-hopping claims) ===="
+"#   1. doped binds Li+ STRONGER at every site (Delta -0.05..-1.76 eV); champion = EDOT O,O-chelate -3.363 ~ SO3"
+"#      bidentate -3.278 -> the O,O-chelate (bidentate) motif carries the binding, as in the old-structure O2S story."
+"#   2. LANDSCAPE FLATNESS (hopping metric): site-to-site spread doped 0.43 eV vs neutral 1.27 eV (3x flatter)."
+"#      Doped offers three comparable O-sites (-2.9..-3.4) = connected hopping pathway; neutral funnels Li into the"
+"#      single ether site (-2.88) with SO3H weak (-2.51) and EDOT far (-1.61) = rugged/insulating-like landscape."
+"#   3. Reading: doping turns the side chain into a sequence of near-degenerate Li+ O-sites -> supports 'Li hopping"
+"#      activated, ionic conduction not blocked' (report p.6) at the v7c level; neutral = poor-connectivity carrier."
+"# CAVEATS: gas-phase monomer + bare Li+ (no SE counter-charge/environment); single conformer per site; site labels"
+"#   = STARTING placements (Opt may relocate Li -- final coordination check pending); absolute ~3 eV values are"
+"#   gas-phase ion-molecule scale, only DIFFERENCES/spread are meaningful. Stage-2 (relaxed site-to-site scan for"
+"#   actual hopping barriers) designed, launch on demand."
