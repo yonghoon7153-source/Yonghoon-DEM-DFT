@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""llm_fitting_lpsocl_bm.py — LPSOCl DFT-EOS harvest: Birch-Murnaghan fit + basin check.
+"""llm_fitting_bm.py — generic DFT-EOS harvest (any v??? volume-grid dir): Birch-Murnaghan fit + basin check.
 
-Pipeline v2, Step 7: after the KISTI chain writes ALL_DONE (7/7 volumes with
-JOB DONE), fit E(V) to 3rd-order Birch-Murnaghan -> V0, B0, B0'; and verify all
+Pipeline v2, Step 7. Works on ANY EOS dir laid out as <base>/v094..v106/relax.out
+(lpsocl, nd_doped, comp*, ...): after the chain finishes (JOB DONE per volume), fit E(V) to 3rd-order Birch-Murnaghan -> V0, B0, B0'; and verify all
 volumes stayed in the SAME ionic basin (a volume that basin-hopped during its
 fixed-cell relax poisons the fit -> flagged, refit without it).
 
   conda activate uma
-  python3 llm_fitting_lpsocl_bm.py --base /scratch/x3430a02/kgy/lpsocl_eos
+  python3 llm_fitting_bm.py --base <eos_dir>   # e.g. /scratch/.../lpsocl_eos
   # 부분 수확(미완 볼륨 건너뜀): --allow_partial
 
 Outputs under --base: eos_fit_results.json, eos_EV.csv, prints the verdict.
@@ -19,7 +19,7 @@ import numpy as np
 
 RY2EV = 13.605693122994
 EVA3_2_GPA = 160.21766208
-VOLS = ["v094", "v096", "v098", "v100", "v102", "v104", "v106"]
+DEFAULT_VOLS = ["v094", "v096", "v098", "v100", "v102", "v104", "v106"]
 
 
 def parse_relax(path):
@@ -71,10 +71,14 @@ def main():
     ap.add_argument("--rmsd_flag", type=float, default=0.30,
                     help="mean |disp| (A, MIC) above this vs ref = basin hop flag")
     ap.add_argument("--allow_partial", action="store_true")
+    ap.add_argument("--vols", default="", help="쉼표목록으로 볼륨 지정 (기본: base의 v??? 자동탐지)")
     a = ap.parse_args()
 
     data = {}
-    for v in VOLS:
+    import glob, os
+    vols = a.vols.split(",") if a.vols else \
+        sorted(os.path.basename(d) for d in glob.glob(f"{a.base}/v[0-9][0-9][0-9]")) or DEFAULT_VOLS
+    for v in vols:
         try:
             E, cell, frac, conv, done = parse_relax(f"{a.base}/{v}/relax.out")
         except FileNotFoundError:
@@ -138,8 +142,8 @@ def main():
     with open(f"{a.base}/eos_fit_results.json", "w") as f:
         json.dump(out, f, indent=1)
     print(f"\nsaved: {a.base}/eos_fit_results.json + eos_EV.csv")
-    print("다음 단계(pipeline v2): V0 셀로 Step 8 (성질 계산) — B0는 무도핑 21.7 /"
-          " B2O3 24.5 GPa와 비교해 O-도핑 강성 효과 판정.")
+    print("다음 단계(pipeline v2): V0 셀로 Step 8 (성질 계산). 참조 B0: 무도핑 LPSCl1.6"
+          " 21.7 / B2O3-doped 24.5 GPa (비교 표는 db/properties 참조).")
 
 
 if __name__ == "__main__":
