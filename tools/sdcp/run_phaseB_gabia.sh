@@ -48,33 +48,34 @@ run_one () {           # $1 = job dir, $2 = required free MiB
     fi
 }
 
-run_heavy () {         # $1 = job dir, $2 = required free MiB — U-RAMP two-stage
-    # From-scratch U=6.2 on the AFM slab sloshes forever (iter 158 @ acc 1.2 Ry even
-    # with FSM). The reference_dft_v2 lineage converged via U-RAMP: scf_u0 first,
-    # then U=6.2 restarted from that density (startingpot='file'). Automate both.
+run_heavy () {         # $1 = job dir, $2 = required free MiB
+    # U DIRECT + robust smearing/mixing. Archaeology of reference_dft_v2 (07-11):
+    # NO run of this slab ever truly converged -- U=0 sloshes at 1000s of Ry (AFM
+    # collapse; our u0 retraced their failed trajectory digit-for-digit), while
+    # U-on from scratch plateaus at ~2e-3 Ry after 300 iters (gpu2: beta 0.10,
+    # degauss 0.02). +U stabilizes the AFM/gapped Ni-d state => run U directly,
+    # and soften the classic sloshing knobs: degauss 0.03->0.05 (mv), beta 0.10,
+    # ndim 8. Molecules (gapped, integer occupations) are smearing-insensitive,
+    # so their 0.03-degauss energies remain consistent with the heavy set.
     local j=$1 need=$2
     local d=$BASE/$j
     grep -q "JOB DONE" "$d/scf.out" 2>/dev/null && { echo "[$j] already done — skip"; return; }
-    # stage A: U=0 warm-up density (same prefix/outdir so stage B can read it)
-    if ! grep -q "JOB DONE" "$d/scf_u0.out" 2>/dev/null; then
-        [ -f "$d/scf_u0.in" ] || sed '/^HUBBARD/,/^U Ni2/d' "$d/scf.in" > "$d/scf_u0.in"
-        rm -rf "$d/tmp" "$d/scf_u0.out"
-        wait_gpu "$need"
-        echo "[$j:u0] START (U=0 warm-up)  $(date)"
-        ( cd "$d" && $MPIRUN -np 1 $QE -in scf_u0.in > scf_u0.out 2>&1 )
-        grep -q "JOB DONE" "$d/scf_u0.out" || { echo "[$j:u0] FAILED — chain moves on"; return; }
-        echo "[$j:u0] DONE  $(date)"
-    fi
-    # stage B: U=6.2 from the U0 density
-    grep -q "startingpot" "$d/scf.in" || \
-        sed -i "/&ELECTRONS/a\    startingpot      = 'file'" "$d/scf.in"
-    rm -f "$d/scf.out"
+    rm -f "$d/scf_u0.in" "$d/scf_u0.out"              # retire the u0-ramp stage
+    sed -i "/startingpot/d" "$d/scf.in"               # no u0 rho to read anymore
+    sed -i "s/degauss.*/degauss         = 0.05/"      "$d/scf.in"
+    sed -i "s/mixing_beta.*/mixing_beta     = 0.10/"  "$d/scf.in"
+    sed -i "s/mixing_ndim.*/mixing_ndim     = 8/"     "$d/scf.in"
+    rm -rf "$d/tmp" "$d/scf.out"
     wait_gpu "$need"
-    echo "[$j] START (U=6.2 from u0 rho)  $(date)"
+    echo "[$j] START (U direct; degauss 0.05 / beta 0.10 / ndim 8)  $(date)"
     ( cd "$d" && $MPIRUN -np 1 $QE -in scf.in > scf.out 2>&1 )
     if grep -q "JOB DONE" "$d/scf.out"; then
         local e=$(grep '^!' "$d/scf.out" | tail -1 | awk '{print $5}')
-        echo "[$j] DONE  E=${e} Ry  $(date)"
+        if grep -q "convergence has been achieved" "$d/scf.out"; then
+            echo "[$j] DONE (converged)  E=${e} Ry  $(date)"
+        else
+            echo "[$j] DONE (MAXSTEP PLATEAU — E는 오차막대와 함께만 사용)  E=${e} Ry  $(date)"
+        fi
     else
         echo "[$j] NOT finished — rerun script to retry  $(date)"
     fi
