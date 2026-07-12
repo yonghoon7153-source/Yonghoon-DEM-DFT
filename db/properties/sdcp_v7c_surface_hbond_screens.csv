@@ -1,6 +1,12 @@
 screen,surface_model,poses,acid_H_donor_hbond,surface_OH_donor_hbond_reverse,best_E_bind_eV,notes
 clean_6orient_2026_07_11,stoichiometric LiNiO2(104) frozen clean-DFT slab,6,0/6 (no surface O within 3.5 A; O-H 0.98-0.99 A keeps and rotates away),n/a (no surface H),-2.733 neutral best (chelation_r0),UMA static relax; no H-bond precursor on clean lattice O
 hydroxyl_6pose_2026_07_12,same slab + 3 dissociated H2O as OH@cation + H@lattice-O patch (UMA E_ads +0.403 eV/H2O -> patch metastable on frozen slab),6,0/6 (min H..O 3.42 A; acid O-H 0.982-0.986 A),0/6 (min surfOH->molO 2.43 A at OHdown_r270; crit 2.2; champion sulfdown_r90 3.51 A),-2.989 (sulfdown_r90),reverse direction explicitly checked; E_bind gain vs clean (-2.99 vs -2.73) is NOT H-bond mediated -- attributed to sulfonate-O/surface-cation coordination + adsorbate co-relaxation in the complex reference; slab frozen; uma-s-1p1/oc20 static
+md_300K_5ps_2026_07_13,same hydroxylated model; champion pose sulfdown_r90; UMA Langevin 1 fs 300 K,1,★ PROTON TRANSFER at t=0.66 ps: acid H -> LATTICE O (slab atom 47) = new surface hydroxyl; SO3- left on molecule; exothermic (T spike to 556 K) and irreversible within 5 ps,transient surface-OH..molO contact 2.0-2.3 A during the event only,n/a,"post-transfer 'occupancy 87.6%' is the new covalent O-H not an H-bond; UMA charge-separation caveat -> DFT before/after dE recheck queued (KISTI 2-SCF after LPSOCl EOS); clean-surface 300 K control MD pending"
+"# UPDATE (2026-07-13, MD): the static 'no precursor' verdict was a KINETIC/approach statement, not a thermodynamic refusal —"
+"#   at 300 K the acidic proton transfers to a LATTICE oxygen within ~1 ps (forming a new surface OH; SO3- remains), at least"
+"#   with the hydroxyl patch present. Bottleneck was the ENCOUNTER (0 K relaxation rotates O-H away), not the acceptor's basicity."
+"#   Open questions: (1) clean-surface control MD — is the patch a matchmaker (holds pose) or a promoter (raises lattice-O basicity)?"
+"#   (2) DFT dE(before/after) — UMA cannot treat the charge separation of SO3-/surface-OH formation quantitatively."
 "# VERDICT (2026-07-12): at the static-UMA level the SDCP SO3H forms NO hydrogen bond with LiNiO2(104) in EITHER direction"
 "#   (acid-H donor AND surface-OH donor), on clean AND on hydroxylated surfaces. Anchoring remains coordination-driven (sulfonate O -> surface cations)."
 "# Literature reconciliation status: 'sulfonic acid H-bonds to NCM' claims remain compatible only outside this model's scope:"
