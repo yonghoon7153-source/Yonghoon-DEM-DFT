@@ -25,15 +25,28 @@ from fairchem.core import pretrained_mlip
 from fairchem.core.calculate.ase_calculator import FAIRChemCalculator
 
 
-def find_acid(mol_sym, mol_d):
-    Ss = [i for i, s in enumerate(mol_sym) if s == "S"
-          and sum(1 for j, t in enumerate(mol_sym) if t == "O" and mol_d[i, j] < 1.8) >= 3]
-    assert len(Ss) == 1, "sulfonate S not unique"
-    sO = [j for j, t in enumerate(mol_sym) if t == "O" and mol_d[Ss[0], j] < 1.8]
-    for j in sO:
-        for k, t in enumerate(mol_sym):
-            if t == "H" and mol_d[j, k] < 1.15:
-                return j, k, sO
+def find_acid_global(atoms):
+    """복합체 전체에서 설포네이트 S/O/산성H를 mic 거리로 탐지 (슬랩엔 S가 없어 유일함이 보장).
+    스크린의 수산기 패치가 6~9원자로 가변이라 고정 슬라이스는 어긋난다 — 전역 탐지가 정답."""
+    sym = atoms.get_chemical_symbols()
+    allO = [i for i, s in enumerate(sym) if s == "O"]
+    allH = [i for i, s in enumerate(sym) if s == "H"]
+    sS = None
+    for i, s in enumerate(sym):
+        if s != "S":
+            continue
+        d = atoms.get_distances(i, allO, mic=True)
+        if sum(1 for x in d if x < 1.8) >= 3:
+            sS = i
+            break
+    assert sS is not None, "sulfonate S not found"
+    dSO = atoms.get_distances(sS, allO, mic=True)
+    sO = [allO[k] for k, x in enumerate(dSO) if x < 1.8]
+    for o in sO:
+        d = atoms.get_distances(o, allH, mic=True)
+        for k, x in enumerate(d):
+            if x < 1.15:
+                return o, allH[k], sO
     raise SystemExit("acidic H not found — doped xyz를 넣었나? 중성 복합체를 사용할 것")
 
 
@@ -42,7 +55,7 @@ def main():
     ap.add_argument("--xyz", required=True, help="정적 스크린이 저장한 complex_*.xyz")
     ap.add_argument("--out", required=True)
     ap.add_argument("--n_slab", type=int, default=96, help="동결할 슬랩 원자 수 (앞쪽 인덱스)")
-    ap.add_argument("--n_ads", type=int, default=9, help="수산기 패치 원자 수 (슬랩 뒤)")
+    ap.add_argument("--n_mol", type=int, default=35, help="분자 원자 수 (중성 v7c = 35; 뒤쪽 인덱스)")
     ap.add_argument("--T", type=float, default=300.0)
     ap.add_argument("--dt", type=float, default=1.0, help="fs (H 있으므로 1 fs 권장)")
     ap.add_argument("--ps", type=float, default=5.0)
@@ -54,19 +67,20 @@ def main():
                               task_name="oc20")
     atoms = read(a.xyz)
     sym = atoms.get_chemical_symbols()
-    n_sub = a.n_slab + a.n_ads
+    mol_start = len(atoms) - a.n_mol                       # 분자 = 마지막 n_mol 원자
+    n_ads = mol_start - a.n_slab                           # 수산기 패치 크기는 자동 산출 (6~9 가변)
+    assert n_ads >= 0, f"n_slab({a.n_slab})+n_mol({a.n_mol}) > 전체 원자수 {len(atoms)}"
     atoms.set_constraint(FixAtoms(indices=list(range(a.n_slab))))
     atoms.calc = calc
+    print(f"atoms {len(atoms)} = slab {a.n_slab} + ads {n_ads} + mol {a.n_mol}", flush=True)
 
-    mol = atoms[n_sub:]
-    aO_l, aH_l, sO_l = find_acid(mol.get_chemical_symbols(), mol.get_all_distances())
-    iO, iH = n_sub + aO_l, n_sub + aH_l
-    molO = [n_sub + k for k, s in enumerate(mol.get_chemical_symbols()) if s == "O"]
+    iO, iH, sO = find_acid_global(atoms)
+    molO = [i for i in range(mol_start, len(atoms)) if sym[i] == "O"]
     ztop = atoms.positions[:a.n_slab, 2].max()
     surfO = [i for i in range(a.n_slab) if sym[i] == "O"
              and atoms.positions[i, 2] > ztop - 1.4]
-    adsO = [i for i in range(a.n_slab, n_sub) if sym[i] == "O"]
-    adsH = [i for i in range(a.n_slab, n_sub) if sym[i] == "H"]
+    adsO = [i for i in range(a.n_slab, mol_start) if sym[i] == "O"]
+    adsH = [i for i in range(a.n_slab, mol_start) if sym[i] == "H"]
     accO = surfO + adsO                                    # 산성 H의 억셉터 후보
 
     MaxwellBoltzmannDistribution(atoms, temperature_K=a.T)
@@ -79,11 +93,11 @@ def main():
     transfers = []
 
     def snap():
-        p = atoms.positions
         t = dyn.get_number_of_steps() * a.dt
-        doh = np.linalg.norm(p[iH] - p[iO])
-        d1 = min(np.linalg.norm(p[iH] - p[j]) for j in accO)
-        d2 = min((np.linalg.norm(p[h] - p[o]) for h in adsH for o in molO), default=9.9)
+        doh = float(atoms.get_distance(iH, iO, mic=True))
+        d1 = float(min(atoms.get_distances(iH, accO, mic=True)))
+        d2 = min((float(min(atoms.get_distances(h, molO, mic=True))) for h in adsH),
+                 default=9.9)
         Tk = atoms.get_temperature()
         trackf.write(f"{t:.0f},{Tk:.0f},{doh:.3f},{d1:.2f},{d2:.2f}\n")
         stats["n"] += 1
