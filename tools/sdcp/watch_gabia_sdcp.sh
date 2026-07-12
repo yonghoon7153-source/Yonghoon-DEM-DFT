@@ -8,33 +8,33 @@ RY=13.605693
 echo "════════ $(date '+%m-%d %H:%M:%S')  gabia — Phase-B DFT+U + p0 ════════"
 
 # ── p0 DFT barrier ──
-echo "■ P0 DFT barrier (Li3N)  min:gabia 완료 / min2→saddle:kgy(3090) 이관"
+# 계보: round1 gabia(p0_min MAXSTEP) → round2 kgy(saddle, min2 — 둘 다 MAXSTEP)
+#       → round3 kgy(saddle2→min3, nstep300, 수렴 목표) 진행 중.
+# kgy 완료 후 p0_*.out 전부를 이 폴더로 scp하면 아래 barrier가 최신 계보로 자동 갱신.
+echo "■ P0 DFT barrier (Li3N)  round3:kgy(saddle2→min3, nstep300) 러닝"
 D=/data/work/runs/li3n_pes_uma/dft_p0
-Emin=""; Emin2=""; Esad=""
-Emin=$(grep '^!' $D/p0_min.out 2>/dev/null | tail -1 | awk '{print $5}')
-[ -n "$Emin" ] && echo "   p0_min  : ✅ MAXSTEP 종료  E=$Emin Ry (미수렴 — min2로 연장 중, 참조용)"
-if [ -f $D/p0_min2.out ]; then
-    Emin2=$(grep '^!' $D/p0_min2.out | tail -1 | awk '{print $5}')
-    if grep -q "JOB DONE" $D/p0_min2.out; then
-        conv="?"; grep -q "bfgs converged" $D/p0_min2.out && conv="수렴"
-        grep -q "maximum number" $D/p0_min2.out && conv="MAXSTEP"
-        echo "   p0_min2 : ✅ JOB DONE ($conv)  E=$Emin2 Ry"
+ok() { [ -s "$1" ] && grep -q "JOB DONE" "$1" 2>/dev/null; }
+for j in p0_min p0_min2 p0_min3 p0_saddle p0_saddle2; do
+    f=$D/$j.out; [ -f "$f" ] || continue
+    e=$(grep '^!' "$f" 2>/dev/null | tail -1 | awk '{print $5}')
+    if ok "$f"; then
+        st="MAXSTEP"; grep -q "bfgs converged" "$f" && st="수렴"
+        echo "   $j: ✅ $st  E=${e:-–} Ry"
     else
-        echo "   p0_min2 : (kgy 복사본 도착, 파싱)  E=${Emin2:-–}"
+        echo "   $j: (미완/구본 — barrier 계산에서 제외)  E=${e:-–}"
     fi
-else
-    echo "   p0_min2 : ⏳ kgy에서 진행 — 완료 out을 이 폴더로 복사하면 barrier 자동"
-fi
-if grep -q "JOB DONE" $D/p0_saddle.out 2>/dev/null; then
-    Esad=$(grep '^!' $D/p0_saddle.out | tail -1 | awk '{print $5}')
-    echo "   p0_saddle: ✅ JOB DONE  E=$Esad Ry"
-else
-    echo "   p0_saddle: ⏳ kgy에서 min2 뒤 자동 체인 (로컬 구 out 무시)"
-fi
-REF=${Emin2:-$Emin}
-if [ -n "$REF" ] && [ -n "$Esad" ]; then
-    awk -v a="$REF" -v b="$Esad" -v r=$RY -v m2="$Emin2" \
-      'BEGIN{printf "   ★ DFT BARRIER = %.3f eV%s\n",(b-a)*r,(m2==""?" (min 미수렴 참조 — min2 대기)":"")}'
+done
+[ -f $D/p0_saddle2.out ] || echo "   (saddle2/min3 out 미도착 — kgy watch로 추적, 잠정 barrier ≤ +71 meV 상한)"
+SB=""; for c in p0_saddle2 p0_saddle; do ok $D/$c.out && { SB=$D/$c.out; break; }; done
+MB=""; for c in p0_min3 p0_min2 p0_min; do ok $D/$c.out && { MB=$D/$c.out; break; }; done
+if [ -n "$SB" ] && [ -n "$MB" ]; then
+    es=$(grep '^!' "$SB" | tail -1 | awk '{print $5}')
+    em=$(grep '^!' "$MB" | tail -1 | awk '{print $5}')
+    tag="잠정(MAXSTEP 포함)"
+    grep -q "bfgs converged" "$SB" && grep -q "bfgs converged" "$MB" && tag="확정(양쪽 수렴)"
+    [ -n "$es" ] && [ -n "$em" ] && awk -v s="$es" -v m="$em" -v t="$tag" \
+        -v sb="$(basename "$SB" .out)" -v mb="$(basename "$MB" .out)" \
+        'BEGIN{printf "   ★ barrier(%s−%s) = %+.1f meV  [%s]\n",sb,mb,(s-m)*13605.7,t}'
 fi
 
 # ── SDCP Phase-B DFT+U (per-SCF) ──
@@ -70,6 +70,11 @@ for j in slab complex_doped complex_neutral mol_doped mol_neutral; do
         ac=$(grep "estimated scf accuracy" "$f" 2>/dev/null | tail -1 | awk '{print $(NF-1)}')
         age=$(( now - $(stat -c %Y "$f" 2>/dev/null || echo "$now") ))
         printf "   %-16s ⏳ scf-iter %s | acc %s Ry (%ds前)\n" "$j" "${it:-0}" "${ac:-–}" "$age"
+        # 하강 vs 슬로싱 판별: 최근 4개 acc + 지금까지의 best.
+        # best ≈ 현재값 → 아직 하강 중 / best ≪ 현재값 → 플래토 슬로싱 (gpu2: 2.7e-3에서 300iter 종료)
+        tr4=$(grep "estimated scf accuracy" "$f" 2>/dev/null | tail -4 | awk '{printf " %s",$(NF-1)}')
+        bst=$(grep "estimated scf accuracy" "$f" 2>/dev/null | awk '{print $(NF-1)}' | sort -g | head -1)
+        [ -n "$tr4" ] && printf "        acc 최근4:%s | best %s\n" "$tr4" "${bst:-–}"
     fi
 done
 echo "   ───  완료 $done/5  ───"
