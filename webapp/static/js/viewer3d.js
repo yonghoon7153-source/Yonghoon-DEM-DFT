@@ -237,7 +237,8 @@ function injectCSS() {
 .viewer-container canvas{display:block}
 .viewer-controls{position:absolute;top:10px;right:10px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:8px 12px;display:inline-flex;flex-direction:column;gap:3px;
-  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:140px}
+  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:140px;
+  max-height:calc(100% - 20px);overflow-y:auto;overflow-x:hidden}
 .viewer-controls label{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px}
 .viewer-controls hr{border:none;border-top:1px solid #2a2d3e;margin:3px 0}
 .viewer-controls button{background:#555;color:#fff;border:none;border-radius:4px;padding:3px 8px;
@@ -2024,11 +2025,13 @@ function applyViewMode(state, mode) {
     // CBD-grammar FUSED bulk (big soft sprites merge contiguous voxels into strands) + explicit
     // lattice-adjacency LINES (6-neighbour on the vox grid) = the connected conduction network.
     const vox3 = (s3 && s3.vox_um) || 0.4;
+    const bbPct = state._fieldBackbonePct || 80;             // target: 백본이 나를 전류 분율 (slider)
     const orderIdx = Array.from({ length: fld.length }, (_, i) => i).sort((a, b) => jv[b] - jv[a]);
     const jTot = jv.reduce((a, b) => a + b, 0) || 1;
     let acc = 0, nHot = 0;
-    while (nHot < orderIdx.length && nHot < 30000 && acc < 0.8 * jTot) { acc += jv[orderIdx[nHot]]; nHot++; }
-    const hotIdx = orderIdx.slice(0, nHot);
+    while (nHot < orderIdx.length && nHot < 30000 && acc < (bbPct / 100) * jTot) { acc += jv[orderIdx[nHot]]; nHot++; }
+    const bbShare = Math.round(100 * acc / jTot);            // ACTUAL share carried (cap-honest: ionic
+    const hotIdx = orderIdx.slice(0, nHot);                  //   diffuse fields hit the 30k cap below target)
     const hPos = new Float32Array(nHot * 3), hCol = new Float32Array(nHot * 3);
     const cellOf = (p) => Math.round(p[0] / vox3 - 0.5) + ',' + Math.round(p[1] / vox3 - 0.5) + ','
                         + Math.round(p[2] / vox3 - 0.5);
@@ -2044,7 +2047,10 @@ function applyViewMode(state, mode) {
     hg.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
     hg.setAttribute('color', new THREE.BufferAttribute(hCol, 3));
     const backboneGrp = new THREE.Group();
-    for (const [sz, op] of [[1.7, 0.30], [0.85, 0.95]]) {    // fused-bulk look (CBD 문법)
+    // fused-bulk look (CBD 문법) — ADAPTIVE size: sparse backbone (electronic web) gets fat strands;
+    // a diffuse field (ionic through bulk SE) gets slimmer sprites so it doesn't mush into cauliflower.
+    const bbSizes = nHot <= 12000 ? [[1.7, 0.30], [0.85, 0.95]] : [[1.05, 0.20], [0.55, 0.92]];
+    for (const [sz, op] of bbSizes) {
       const pm = new THREE.Points(hg, new THREE.PointsMaterial({
         size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
         transparent: true, opacity: op, alphaTest: 0.03, depthWrite: false }));
@@ -2089,14 +2095,22 @@ function applyViewMode(state, mode) {
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`
-      + `<label style="display:block;margin-top:5px;font-size:11px;color:#e5e7eb;cursor:pointer">
+      + `<label style="display:block;margin-top:5px;font-size:10.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
-           🔥 백본 강조 — <b>${nHot.toLocaleString()}</b>복셀이 전체 전류의 80% 운반 (융합체+연결선)</label>`
-      + `<div style="margin-top:3px;color:#9ca3af;font-size:10px">${fld.length.toLocaleString()}점 (배경 반투명) · ${ionic ? 'AM=어두운 장애물' : 'SE=어두운 절연체'} 고스트 · 단면 뷰로 내부, Screenshot=6× 고화질</div>`
-      + (share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
-          + Object.entries(share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
+           🔥 백본 <b>${nHot.toLocaleString()}</b>복셀 = 전류 <b>${bbShare}%</b></label>`
+      + `<div style="display:flex;align-items:center;gap:4px;margin-top:2px">
+           <input type="range" id="fld-bb-pct" min="30" max="95" step="5" value="${bbPct}" style="flex:1;accent-color:#f97316;height:12px">
+           <span id="fld-bb-pct-lab" style="font-size:9.5px;color:#9ca3af;min-width:52px">목표 ${bbPct}%</span></div>`
+      + `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'SE'} 고스트 · 단면뷰·6×촬영</div>`
+      + (share ? `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">손실분담 `
+          + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     const bbCb = document.getElementById('fld-backbone');
     if (bbCb) bbCb.onchange = () => { state._fieldBackboneOn = bbCb.checked; backboneGrp.visible = bbCb.checked; };
+    const bbSl = document.getElementById('fld-bb-pct'), bbLab = document.getElementById('fld-bb-pct-lab');
+    if (bbSl) {
+      bbSl.oninput = () => { if (bbLab) bbLab.textContent = '목표 ' + bbSl.value + '%'; };
+      bbSl.onchange = () => { state._fieldBackbonePct = +bbSl.value; applyViewMode(state, mode); };  // rebuild
+    }
     return;
   }
   if (mode === 'je' || mode === 'je_bare') {
