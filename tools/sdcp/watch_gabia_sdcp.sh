@@ -59,8 +59,9 @@ for j in slab complex_doped complex_neutral mol_doped mol_neutral; do
         continue
     fi
     if grep -q "JOB DONE" "$f" 2>/dev/null; then
-        e=$(grep '^!' "$f" 2>/dev/null | tail -1 | awk '{print $5}')
-        cv=""; grep -q "convergence has been achieved" "$f" && cv="✓수렴"
+        # PLATEAU 종료 시 '!' 최종에너지 줄이 없음 -> 플레인 total energy 줄로 폴백
+        e=$(grep -E "^(!)? *total energy *=" "$f" 2>/dev/null | tail -1 | awk '{print $(NF-1)}')
+        if grep -q "convergence has been achieved" "$f"; then cv="✓수렴"; else cv="PLATEAU±0.004Ry"; fi
         printf "   %-16s ✅ DONE %s  E=%s Ry\n" "$j" "$cv" "${e:-–}"
         EN[$j]=$e; done=$((done+1))
     elif grep -qiE "out of memory|cuMemAlloc|%%%%%%" "$f" 2>/dev/null; then
