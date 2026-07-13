@@ -2011,12 +2011,71 @@ function applyViewMode(state, mode) {
     g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
     g.setAttribute('color', new THREE.BufferAttribute(col, 3));
     const grp = new THREE.Group();
-    for (const [sz, op] of [[0.9, 0.22], [0.42, 0.96]]) {    // soft halo + crisp core = paper glow
+    // background cloud — deliberately MORE transparent (user: "voxelization 약간 투명화") so the
+    // backbone reads on top; still shows the full conducting phase as context.
+    for (const [sz, op] of [[0.9, 0.10], [0.42, 0.55]]) {    // soft halo + light core
       const pm = new THREE.Points(g, new THREE.PointsMaterial({
         size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
         transparent: true, opacity: op, alphaTest: 0.02, depthWrite: false }));
       pm.renderOrder = 900; grp.add(pm);
     }
+    // ── 백본 (전류 고속도로) — percolation-style skeleton ──────────────────────
+    // hot set = the voxels carrying the top 80% of Σ|J| (heavy-tailed → few); rendered as a
+    // CBD-grammar FUSED bulk (big soft sprites merge contiguous voxels into strands) + explicit
+    // lattice-adjacency LINES (6-neighbour on the vox grid) = the connected conduction network.
+    const vox3 = (s3 && s3.vox_um) || 0.4;
+    const orderIdx = Array.from({ length: fld.length }, (_, i) => i).sort((a, b) => jv[b] - jv[a]);
+    const jTot = jv.reduce((a, b) => a + b, 0) || 1;
+    let acc = 0, nHot = 0;
+    while (nHot < orderIdx.length && nHot < 30000 && acc < 0.8 * jTot) { acc += jv[orderIdx[nHot]]; nHot++; }
+    const hotIdx = orderIdx.slice(0, nHot);
+    const hPos = new Float32Array(nHot * 3), hCol = new Float32Array(nHot * 3);
+    const cellOf = (p) => Math.round(p[0] / vox3 - 0.5) + ',' + Math.round(p[1] / vox3 - 0.5) + ','
+                        + Math.round(p[2] / vox3 - 0.5);
+    const hotMap = new Map();
+    hotIdx.forEach((fi, k) => {
+      const p = fld[fi];
+      hPos[3 * k] = p[0]; hPos[3 * k + 1] = p[2]; hPos[3 * k + 2] = p[1];
+      c.setHex(jetColor(gam(p[3])));
+      hCol[3 * k] = c.r; hCol[3 * k + 1] = c.g; hCol[3 * k + 2] = c.b;
+      hotMap.set(cellOf(p), k);
+    });
+    const hg = new THREE.BufferGeometry();
+    hg.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
+    hg.setAttribute('color', new THREE.BufferAttribute(hCol, 3));
+    const backboneGrp = new THREE.Group();
+    for (const [sz, op] of [[1.7, 0.30], [0.85, 0.95]]) {    // fused-bulk look (CBD 문법)
+      const pm = new THREE.Points(hg, new THREE.PointsMaterial({
+        size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+        transparent: true, opacity: op, alphaTest: 0.03, depthWrite: false }));
+      pm.renderOrder = 950; backboneGrp.add(pm);
+    }
+    {                                                        // lattice-adjacency edges (percolation skeleton)
+      const ePos = [], eCol = [];
+      hotIdx.forEach((fi, k) => {
+        const p = fld[fi];
+        const ci = Math.round(p[0] / vox3 - 0.5), cj = Math.round(p[1] / vox3 - 0.5),
+              ck = Math.round(p[2] / vox3 - 0.5);
+        for (const [di, dj, dk] of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) {   // +dir only → no duplicates
+          const nb = hotMap.get((ci + di) + ',' + (cj + dj) + ',' + (ck + dk));
+          if (nb === undefined) continue;
+          ePos.push(hPos[3 * k], hPos[3 * k + 1], hPos[3 * k + 2],
+                    hPos[3 * nb], hPos[3 * nb + 1], hPos[3 * nb + 2]);
+          eCol.push(hCol[3 * k], hCol[3 * k + 1], hCol[3 * k + 2],
+                    hCol[3 * nb], hCol[3 * nb + 1], hCol[3 * nb + 2]);
+        }
+      });
+      if (ePos.length) {
+        const eg = new THREE.BufferGeometry();
+        eg.setAttribute('position', new THREE.Float32BufferAttribute(ePos, 3));
+        eg.setAttribute('color', new THREE.Float32BufferAttribute(eCol, 3));
+        const lm = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({
+          vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
+        lm.renderOrder = 940; backboneGrp.add(lm);
+      }
+    }
+    backboneGrp.visible = state._fieldBackboneOn !== false;  // default ON, remembered across modes
+    grp.add(backboneGrp);
     state.additivePointGroup = grp;                          // reuse the mode-switch cleanup hook
     if (state.scene) state.scene.add(grp);
     if (state.applyClip) state.applyClip();                  // 단면 뷰를 새 point 재질에도 적용
@@ -2030,9 +2089,14 @@ function applyViewMode(state, mode) {
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`
-      + `<div style="margin-top:3px;color:#9ca3af;font-size:10px">${fld.length.toLocaleString()}점 · ${ionic ? 'AM=어두운 장애물' : 'SE=어두운 절연체'} 고스트 · 단면 뷰로 내부, Screenshot=4× 고화질</div>`
+      + `<label style="display:block;margin-top:5px;font-size:11px;color:#e5e7eb;cursor:pointer">
+           <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
+           🔥 백본 강조 — <b>${nHot.toLocaleString()}</b>복셀이 전체 전류의 80% 운반 (융합체+연결선)</label>`
+      + `<div style="margin-top:3px;color:#9ca3af;font-size:10px">${fld.length.toLocaleString()}점 (배경 반투명) · ${ionic ? 'AM=어두운 장애물' : 'SE=어두운 절연체'} 고스트 · 단면 뷰로 내부, Screenshot=6× 고화질</div>`
       + (share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
           + Object.entries(share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
+    const bbCb = document.getElementById('fld-backbone');
+    if (bbCb) bbCb.onchange = () => { state._fieldBackboneOn = bbCb.checked; backboneGrp.visible = bbCb.checked; };
     return;
   }
   if (mode === 'je' || mode === 'je_bare') {
