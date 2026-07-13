@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -J li3n_drag
+#SBATCH -J llm2
 #SBATCH -p amd_a100nv_8
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1

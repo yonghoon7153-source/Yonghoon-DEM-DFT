@@ -19,10 +19,10 @@ echo "══════ KISTI LPSOCl EOS  $(date '+%m-%d %H:%M:%S') ═══�
 
 # ---- chain (squeue) ----
 echo "── 체인 (squeue, QOS 상한 4) ──"
-q=$(squeue -u x3430a02 -h -n lpsocl_eos -o "  %.9i %.9T %.8M %.9L %R" 2>/dev/null | sort -k1)
+q=$(squeue -u x3430a02 -h -n llm1 -o "  %.9i %.9T %.8M %.9L %R" 2>/dev/null | sort -k1)
 if [ -n "$q" ]; then echo "$q"; else echo "  (큐에 lpsocl_eos 없음)"; fi
-nq=$(squeue -u x3430a02 -h -n lpsocl_eos 2>/dev/null | wc -l)
-nr=$(squeue -u x3430a02 -h -n lpsocl_eos -t RUNNING 2>/dev/null | wc -l)
+nq=$(squeue -u x3430a02 -h -n llm1 2>/dev/null | wc -l)
+nr=$(squeue -u x3430a02 -h -n llm1 -t RUNNING 2>/dev/null | wc -l)
 echo "  세그먼트: 큐 $nq개 (실행 $nr / 대기 $((nq-nr)))"
 if [ -f "$WB/ALL_DONE" ]; then
   echo "  ★★ ALL_DONE — 7/7 완료, 체인 no-op ★★"
