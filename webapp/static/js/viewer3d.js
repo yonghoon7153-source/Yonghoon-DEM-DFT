@@ -4254,9 +4254,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         const r1 = base + 1, r2 = base + 1 + SEG;
         for (let s = 0; s < SEG; s++) {
           const sn = (s + 1) % SEG;
-          idx.push(base, r1 + s, r1 + sn);                    // 정점 fan
-          idx.push(r1 + s, r2 + s, r2 + sn);                  // ring1–ring2 strip
-          idx.push(r1 + s, r2 + sn, r1 + sn);
+          // winding 주의: scene swap (x,z,y)은 반사(det −1)라 CCW가 뒤집힘 → 역순으로 감아
+          // 바깥면이 front가 되게 (FrontSide 컬링에 통째로 사라지던 버그).
+          idx.push(base, r1 + sn, r1 + s);                    // 정점 fan
+          idx.push(r1 + s, r2 + sn, r2 + s);                  // ring1–ring2 strip
+          idx.push(r1 + s, r1 + sn, r2 + sn);
         }
       }
     });
@@ -4268,6 +4270,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       g2.computeVertexNormals();
       const dom = new THREE.Mesh(g2, new THREE.MeshLambertMaterial({
         vertexColors: true, side: THREE.DoubleSide }));
+      dom.userData.keepDouble = true;                        // applyCmpClip의 FrontSide 강제에서 제외
       dom.renderOrder = 20; grp.add(dom);
     }
     S.scene.add(grp); S.grp = grp;
@@ -4462,7 +4465,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       if (S.grp) S.grp.traverse(o => {
         if (o.material) {
           o.material.clippingPlanes = planes;
-          if (o.isMesh) o.material.side = planes ? THREE.DoubleSide : THREE.FrontSide;
+          if (o.isMesh) o.material.side = (planes || (o.userData && o.userData.keepDouble))
+            ? THREE.DoubleSide : THREE.FrontSide;            // 도메인 캡은 항상 DoubleSide
           o.material.needsUpdate = true;
         }
       });
