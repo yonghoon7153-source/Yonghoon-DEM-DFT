@@ -3973,6 +3973,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-clip"> 단면
           <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
+        <span style="display:flex;align-items:center;gap:4px;font-size:10.5px;color:#e5e7eb">
+          <button id="cmp-zo" style="background:#334155;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer">−</button>
+          <input type="range" id="cmp-zoom" min="30" max="350" value="200" step="5" style="width:88px;accent-color:#6c8cff">
+          <button id="cmp-zi" style="background:#334155;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer">+</button></span>
         <span id="cmp-status" style="font-size:11px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
         <span style="flex:1"></span>
         <button id="cmp-png" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px">PNG</button>
@@ -4090,6 +4094,26 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   };
   SA.ctrl.addEventListener('change', link(SA, SB));
   SB.ctrl.addEventListener('change', link(SB, SA));
+  // ± 줌 게이지 (양쪽 동기 — 메인 뷰어와 같은 dist=380−v 모델)
+  const setCmpZoom = (v) => {
+    v = Math.max(30, Math.min(350, v));
+    [SA, SB].forEach(S => {
+      const dir = S.cam.position.clone().sub(S.ctrl.target).normalize();
+      S.cam.position.copy(S.ctrl.target).addScaledVector(dir, 380 - v);
+      S.ctrl.update();
+    });
+    if ($('cmp-zoom')) $('cmp-zoom').value = v;
+  };
+  {
+    const d0 = SA.cam.position.distanceTo(SA.ctrl.target);
+    if ($('cmp-zoom')) $('cmp-zoom').value = Math.max(30, Math.min(350, Math.round(380 - d0)));
+  }
+  if ($('cmp-zoom')) $('cmp-zoom').oninput = () => setCmpZoom(+$('cmp-zoom').value);
+  if ($('cmp-zi')) $('cmp-zi').onclick = () => setCmpZoom(+($('cmp-zoom') || { value: 200 }).value + 20);
+  if ($('cmp-zo')) $('cmp-zo').onclick = () => setCmpZoom(+($('cmp-zoom') || { value: 200 }).value - 20);
+  SA.ctrl.addEventListener('change', () => {                 // 휠 줌도 게이지에 반영
+    if ($('cmp-zoom')) $('cmp-zoom').value = Math.max(30, Math.min(350, Math.round(380 - SA.cam.position.distanceTo(SA.ctrl.target))));
+  });
 
   const clearSide = (S) => {
     if (!S.grp) return;
@@ -4397,20 +4421,33 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   if ($('cmp-clip')) $('cmp-clip').onchange = () => { clipSt.on = $('cmp-clip').checked; applyCmpClip(); };
   if ($('cmp-clip-pos')) $('cmp-clip-pos').oninput = () => { clipSt.frac = (+$('cmp-clip-pos').value) / 100; applyCmpClip(); };
   rebuild();
-  $('cmp-png').onclick = () => {
-    const a = SA.renderer.domElement, b = SB.renderer.domElement;
-    const cv = document.createElement('canvas');
-    cv.width = a.width + b.width + 12; cv.height = Math.max(a.height, b.height) + 30;
-    const x = cv.getContext('2d');
-    x.fillStyle = '#ffffff'; x.fillRect(0, 0, cv.width, cv.height);
-    x.drawImage(a, 0, 30); x.drawImage(b, a.width + 12, 30);
-    x.fillStyle = '#111827'; x.font = 'bold 15px sans-serif';
-    x.fillText('A · ' + (nameA || pidA), 4, 20);
-    x.fillText('B · ' + (nameB || pidB), a.width + 16, 20);
-    const dl2 = document.createElement('a');
-    dl2.href = cv.toDataURL('image/png');
-    dl2.download = 'compare_' + $('cmp-mode').value + '.png';
-    document.body.appendChild(dl2); dl2.click(); dl2.remove();
+  $('cmp-png').onclick = async () => {
+    // 논문급 스크린샷: 각 쪽을 4× 슈퍼샘플로 재렌더(captureHighRes) 후 이름표와 함께 합성.
+    const btn = $('cmp-png');
+    btn.disabled = true; btn.textContent = '촬영 중…';
+    try {
+      const load = (u) => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.src = u; });
+      const [ia, ib] = await Promise.all([
+        load(captureHighRes(SA.renderer, SA.scene, SA.cam, 4)),
+        load(captureHighRes(SB.renderer, SB.scene, SB.cam, 4))]);
+      const GAP = 24, HEAD = 76;
+      const cv = document.createElement('canvas');
+      cv.width = ia.width + ib.width + GAP;
+      cv.height = Math.max(ia.height, ib.height) + HEAD;
+      const x = cv.getContext('2d');
+      x.fillStyle = '#ffffff'; x.fillRect(0, 0, cv.width, cv.height);
+      x.drawImage(ia, 0, HEAD); x.drawImage(ib, ia.width + GAP, HEAD);
+      x.fillStyle = '#111827'; x.font = 'bold 36px sans-serif';
+      x.fillText('A · ' + (nameA || pidA), 10, 48);
+      x.fillText('B · ' + (nameB || pidB), ia.width + GAP + 10, 48);
+      const dl2 = document.createElement('a');
+      dl2.href = cv.toDataURL('image/png');
+      dl2.download = 'compare_' + $('cmp-mode').value + '.png';
+      document.body.appendChild(dl2); dl2.click(); dl2.remove();
+    } finally {
+      btn.disabled = false; btn.textContent = 'PNG';
+      SA.renderer.render(SA.scene, SA.cam); SB.renderer.render(SB.scene, SB.cam);
+    }
   };
   (function anim() {
     if (stopped || !overlay.isConnected) return;
