@@ -4541,7 +4541,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const grp = new THREE.Group();
     const parts = payload.particles || [];
     if (!glowOn) {                                           // ✨glow(=Fig4f x-ray 볼륨)에선 고스트 없이 순수 필드
-      const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.12, true);
+      const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.08, true);   // 0.12→0.08: 고스트가 큐브를 덮어 칙칙해지던 것 감광
       if (ghost) {
         const dk = new THREE.Color(0x0a0e1a);
         parts.forEach((_, i) => ghost.setColorAt(i, dk));
@@ -4593,19 +4593,24 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         if (cubeOn) {
           // 복셀 큐브 렌더 — 인접 백본 복셀이 면을 공유해 "이어진 통로"로 읽힘 (COMSOL 볼륨 문법,
           // 복셀-정직: 큐브 크기 = 실제 vox).  Lambert 음영이라 studio 라이트에서 입체감.
-          const im = new THREE.InstancedMesh(
-            new THREE.BoxGeometry(vox3 * 0.98, vox3 * 0.98, vox3 * 0.98),
-            new THREE.MeshLambertMaterial({ color: 0xffffff }), nH);
+          const cubeGeo = new THREE.BoxGeometry(vox3 * 0.98, vox3 * 0.98, vox3 * 0.98);
+          const im = new THREE.InstancedMesh(cubeGeo, new THREE.MeshLambertMaterial({ color: 0xffffff }), nH);
+          // glow OFF에서도 칙칙하지 않게: Lambert(입체감) 위에 unlit 보강 패스 — 면 방향과 무관하게
+          // 제 색을 유지 (COMSOL 볼륨 톤).  glow와 달리 depthTest 유지 = 기하-정직한 밝기.
+          const im2 = new THREE.InstancedMesh(cubeGeo, new THREE.MeshBasicMaterial({
+            color: 0xffffff, transparent: true, opacity: 0.40, depthWrite: false }), nH);
           const m4 = new THREE.Matrix4();
           for (let k = 0; k < nH; k++) {
             m4.setPosition(hPos[3 * k], hPos[3 * k + 1], hPos[3 * k + 2]);
-            im.setMatrixAt(k, m4);
+            im.setMatrixAt(k, m4); im2.setMatrixAt(k, m4);
             c.setRGB(hCol[3 * k], hCol[3 * k + 1], hCol[3 * k + 2]);
-            im.setColorAt(k, c);
+            im.setColorAt(k, c); im2.setColorAt(k, c);
           }
-          im.instanceMatrix.needsUpdate = true;
+          im.instanceMatrix.needsUpdate = true; im2.instanceMatrix.needsUpdate = true;
           if (im.instanceColor) im.instanceColor.needsUpdate = true;
+          if (im2.instanceColor) im2.instanceColor.needsUpdate = true;
           im.renderOrder = 950; grp.add(im);
+          im2.renderOrder = 951; grp.add(im2);
         } else {
           const hg = new THREE.BufferGeometry();
           hg.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
