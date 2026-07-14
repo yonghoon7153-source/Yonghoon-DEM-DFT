@@ -375,7 +375,10 @@ python3 scripts/mpm3d_compaction.py \\
 python3 scripts/mpm_webapp_payload.py \\
   --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
   --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt_pay} --eps se_dump_eps.npy{pay_dilate} \\
-  --void-max 180000 --step3-vox {a.step3_vox:g} --field-max-points {_fmax}{_gpu} --metrics-json mpm_metrics.json --case {case}{pay_phase}{pay_coll} --out mpm_payload.json
+  --void-max 180000 --step3-vox {a.step3_vox:g} --field-max-points {_fmax}{_gpu} --metrics-json mpm_metrics.json --case {case}{pay_phase}{pay_coll} --out mpm_payload.json \\
+  || {{ echo "[run_mpm] STEP 2 (payload) FAILED — 압밀(se_dump.npy)은 무사하니 원인 수정 후 payload만 재실행:"; \\
+        echo "          sed -n '/^python3 scripts\\/mpm_webapp_payload/,/--out mpm_payload.json/p' run_mpm.sh > payload_only.sh && bash payload_only.sh"; \\
+        echo "          (흔한 원인: pip 모듈 누락 — python3 -m pip install scikit-image scipy)"; exit 1; }}
 echo "[run_mpm] DONE $(date) → upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
 echo "          (additive run이면 mpm_metrics.json의 step3.sigma_e_eff_S_cm = STEP3 σ_e — viewer 전류밀도 모드로 색칠)"
 """

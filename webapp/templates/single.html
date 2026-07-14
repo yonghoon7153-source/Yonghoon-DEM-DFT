@@ -341,7 +341,7 @@ scp kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/mpm_payload.json \
     <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ⓪ 대여마다 1회 — WSL에서 새 pem 등록(v100key) 후, V100 안에서 (ssh v100):
 git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT
 cd ~/Yonghoon-DEM-DFT && git checkout claude/stoic-knuth-NObVQ
-sudo apt update && sudo apt install -y python3-pip && python3 -m pip install taichi numpy scipy cupy-cuda12x</pre></div>
+sudo apt update && sudo apt install -y python3-pip && python3 -m pip install taichi numpy scipy scikit-image cupy-cuda12x</pre></div>
     <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 1) WSL → V100 업로드
 scp "/mnt/c/Users/안용훈/Downloads/{{ zip }}" v100:~/Yonghoon-DEM-DFT/</pre></div>
     <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 2) V100에서 실행 (먼저: ssh v100)
@@ -605,7 +605,7 @@ function updateAdditiveGpuCmds() {
     // 대여마다 실기계·호스트키·pem이 바뀜 → WSL에서 v100key(최신 pem 등록) 먼저, 컨테이너엔 pip 없음).
     { name: 'runyourai(V100)', ssh: 'v100', wk: '~/Yonghoon-DEM-DFT',
       lbl0: '# ⓪ 대여마다 1회 — WSL서 v100key(새 pem 등록) 후, ssh v100 안에서:',
-      setup: `git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT; cd ~/Yonghoon-DEM-DFT && git checkout ${BR}\nsudo apt update && sudo apt install -y python3-pip && python3 -m pip install taichi numpy scipy cupy-cuda12x` },
+      setup: `git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT; cd ~/Yonghoon-DEM-DFT && git checkout ${BR}\nsudo apt update && sudo apt install -y python3-pip && python3 -m pip install taichi numpy scipy scikit-image cupy-cuda12x` },
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
