@@ -139,8 +139,8 @@ function buildControls(container, isMPM) {
         <option value="econn">전기 연결성 — 연결/고립 (econn)</option>
         <option value="je_field">⚡ 전자 전류밀도 — 필드 (AM+카본, 논문)</option>
         <option value="ji_field">⚡ 이온 전류밀도 — 필드 (SE+SDCP, 논문)</option>
-        <option value="je">└ 전자 — AM 입자별 (wetted 집전체)</option>
-        <option value="je_bare">└ 전자 — AM 입자별 (bare 집전체)</option>
+        <option value="je">└ 전자 — AM 입자별 (je)</option>
+        <option value="je_delta">└ Δ 재분배 — bare/wetted 비율 (접점 상실)</option>
       </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
@@ -2222,7 +2222,65 @@ function applyViewMode(state, mode) {
     }
     return;
   }
-  if (mode === 'je' || mode === 'je_bare') {
+  if (mode === 'je_delta') {
+    /* Δ 재분배 — 같은 전극을 wetted(je)/bare(jb) 집전체로 푼 두 해의 입자별 비율 log₂(jb/je).
+     * 두 솔브의 유일한 차이 = 바닥 접점 집합(4,680→3,741)이므로 색이 갈리는 곳은 집전체 근처뿐이어야
+     * 정상 — R_geom의 국소 시각화(primer-paper Fig4d red-box).  파랑 = bare에서 냉각(접점 상실),
+     * 빨강 = 가열(남은 접점으로 전류 집중), 흰색 = 변화 없음.  (je/je_bare 두 모드를 한 화면으로 통합.) */
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const s3 = mm.step3 || null;
+    let have = false;
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      if (m.userData.particles.some(p => p.je !== undefined && p.jb !== undefined)) have = true;
+    });
+    if (!have) {
+      setLegend(state, '<i>이 payload엔 je/jb 쌍이 없어요 — 최신 <b>mpm_webapp_payload.py</b>로 재생성해 업로드하세요.</i>');
+      return;
+    }
+    const allJe = [];
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (m) m.userData.particles.forEach(p => { if (isFinite(p.je)) allJe.push(p.je); });
+    });
+    allJe.sort((a, b) => a - b);
+    const eps = Math.max(1e-30, (allJe[Math.floor(allJe.length / 2)] || 1e-6) * 1e-3);   // 0-값 보호
+    const absR = [];
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach(p => {
+        if (p.je === undefined || p.jb === undefined) { p._dlt = undefined; return; }
+        p._dlt = Math.log2((p.jb + eps) / (p.je + eps));
+        absR.push(Math.abs(p._dlt));
+      });
+    });
+    absR.sort((a, b) => a - b);
+    const R = Math.min(3, Math.max(0.5, absR[Math.floor(0.99 * (absR.length - 1))] || 1));   // 대칭 범위 (p99)
+    let nCool = 0, nHot = 0;
+    ['AM_P', 'AM_S'].forEach(t => {
+      const m = state.meshes[t]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        if (p._dlt === undefined) { m.setColorAt(i, colDim); return; }
+        if (p._dlt <= -0.322) nCool++; else if (p._dlt >= 0.263) nHot++;   // ×0.8 미만 / ×1.2 초과
+        m.setColorAt(i, new THREE.Color(coolwarmColor(0.5 + 0.5 * Math.max(-1, Math.min(1, p._dlt / R)))));
+      });
+      m.material.opacity = 1.0; m.material.transparent = false;
+    });
+    flushColors();
+    if (state.meshes.MESH) {                                 // SE = 얇은 맥락 (바닥 신호를 가리지 않게)
+      state.meshes.MESH.visible = true;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.08;
+    }
+    const cg = s3 && s3.collector_geometric;
+    setLegend(state,
+      `<b>Δ 재분배 — bare/wetted (log₂ jb/je)</b>
+       <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,#3b4cc0,#dddddd,#b40426)"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>×${Math.pow(2, -R).toFixed(2)} 냉각</span><span>변화 없음</span><span>×${Math.pow(2, R).toFixed(1)} 가열</span></div>
+       <div style="margin-top:3px;font-size:10.5px">냉각(&lt;×0.8) <b>${nCool}</b>개 · 가열(&gt;×1.2) <b>${nHot}</b>개</div>`
+      + (cg ? `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">바닥 접점 wetted ${cg.n_bottom_contacts.wetted} → bare ${cg.n_bottom_contacts.bare} · R_geom ${Number(cg.R_geom_ohm_cm2).toExponential(2)} Ω·cm²</div>` : '')
+      + `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">색 갈림은 집전체 근처에만 — 접점 상실의 국소 재분배 (그 외는 흰색이 정상)</div>`);
+    return;
+  }
+  if (mode === 'je') {
     /* STEP3 per-AM current density (slide-20 문법): AM coloured by mean |J_z| from the voxel
      * Kirchhoff solve.  'je' = wetted/primer collector (film-reach contacts), 'je_bare' = bare
      * collector (crown contacts only) — 두 모드의 차이가 바닥 근처 전류 재분배(primer-paper
@@ -4245,7 +4303,7 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         // drops the deep-blue cold field on white paper, breaking the figure.  Keep the dark canvas
         // background for those; keep transparent for structural modes (clean slide overlay).
         const _mode = (ctrlDiv.querySelector('#view-mode') || {}).value || '';
-        const darkField = ['je_field', 'ji_field', 'je', 'je_bare'].includes(_mode);
+        const darkField = ['je_field', 'ji_field', 'je'].includes(_mode);   // je_delta = coolwarm/흰중앙 → 투명배경 유지
         const prevBg = scene.background;
         const prevClear = new THREE.Color();
         renderer.getClearColor(prevClear);
