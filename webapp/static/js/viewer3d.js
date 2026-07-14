@@ -1974,30 +1974,37 @@ function applyViewMode(state, mode) {
     // 접촉부 PATCH overlay — 닿은 카본 점을 그 AM 표면 위(반경+0.04µm)로 투영해 점 패치로.
     // 패치 색 = 그 입자의 배선 강도 (감마 jet) → "어디에·얼마나 물렸나"가 본색 구 위에 뜬다.
     if (touch && contactsOf) {
-      const pts = [], cols = [];
+      // 색 + 크기 이중 인코딩: 배선 강도 3버킷(약/중/강)별로 점 크기를 달리 → 차이가 한눈에.
+      const B3 = [{ pts: [], cols: [] }, { pts: [], cols: [] }, { pts: [], cols: [] }];
+      const CORE = [0.9, 1.55, 2.5];
       const c2 = new THREE.Color();
       contactsOf.forEach((hits, p) => {
         if (!p.econn) return;
-        c2.setHex(jetColor(gamW(((touch.get(p) || 0) - lo5) / Math.max(hi95 - lo5, 1e-9))));
+        const tRaw = Math.max(0, Math.min(1, ((touch.get(p) || 0) - lo5) / Math.max(hi95 - lo5, 1e-9)));
+        c2.setHex(jetColor(gamW(tRaw)));
+        const bk = B3[tRaw < 0.33 ? 0 : tRaw < 0.66 ? 1 : 2];
         for (const q of hits) {
           const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
           const L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
-          const rr = (p.r + 0.04) / L;
-          pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
-          cols.push(c2.r, c2.g, c2.b);
+          const rr = (p.r + 0.05) / L;
+          bk.pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
+          bk.cols.push(c2.r, c2.g, c2.b);
         }
       });
-      if (pts.length) {
+      const grpP = new THREE.Group();
+      B3.forEach((bk, k) => {
+        if (!bk.pts.length) return;
         const g2 = new THREE.BufferGeometry();
-        g2.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-        g2.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
-        const grpP = new THREE.Group();
-        for (const [sz, op] of [[0.85, 0.35], [0.45, 0.95]]) {   // soft halo + core (뒷면은 구가 가림)
+        g2.setAttribute('position', new THREE.Float32BufferAttribute(bk.pts, 3));
+        g2.setAttribute('color', new THREE.Float32BufferAttribute(bk.cols, 3));
+        for (const [sz, op] of [[CORE[k] * 1.9, 0.30], [CORE[k], 0.96]]) {   // halo + core
           const pm = new THREE.Points(g2, new THREE.PointsMaterial({
             size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
             transparent: true, opacity: op, alphaTest: 0.05, depthWrite: false }));
           pm.renderOrder = 30; grpP.add(pm);
         }
+      });
+      if (grpP.children.length) {
         state.additivePointGroup = grpP;                     // mode-switch cleanup 재사용
         if (state.scene) state.scene.add(grpP);
       }
@@ -3970,6 +3977,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <input type="checkbox" id="cmp-bb-on" checked> 🔥백본
           <input type="range" id="cmp-bb-pct" min="30" max="95" step="5" value="80" style="width:88px;accent-color:#f97316">
           <span id="cmp-bb-lab" style="color:#9ca3af">80%</span></label>
+        <label id="cmp-patch-wrap" style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
+          패치 <input type="range" id="cmp-patch" min="0.5" max="3" step="0.25" value="1.5" style="width:70px;accent-color:#34d399">
+          <span id="cmp-patch-lab" style="color:#9ca3af">1.5×</span></label>
         <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-clip"> 단면
           <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
@@ -4124,7 +4134,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   const barHtml = (lab) => `<div style="margin:2px 0;height:8px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
     <div style="display:flex;justify-content:space-between;font-size:9px"><span>${lab[0]}</span><span>${lab[1]}</span><span>${lab[2]}</span></div>`;
-  function buildWiring(S, payload, wire, lo, hi) {
+  function buildWiring(S, payload, wire, lo, hi, patchF) {
     // 최신 econn 문법: AM은 본색 유지, 카본 접촉부만 표면 패치로 (감마-jet, 공동 스케일).
     const parts = payload.particles || [];
     const grp = new THREE.Group();
@@ -4135,31 +4145,36 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       grp.add(mesh);
     }
-    const pts = [], cols = [];
+    // 패치 = 색(감마 jet) + 크기(3버킷: 약/중/강) 이중 인코딩 — 케이스 간 차이가 한눈에.
+    const f = (typeof patchF === 'number' ? patchF : 1.5);
+    const B3 = [{ pts: [], cols: [] }, { pts: [], cols: [] }, { pts: [], cols: [] }];
+    const CORE = [0.7, 1.2, 1.9];
     const c2 = new THREE.Color();
     parts.forEach((p, i) => {
       const hh = wire.hits && wire.hits[i]; if (!hh) return;
       const t = Math.max(0, Math.min(1, (wire.counts[i] - lo) / Math.max(hi - lo, 1e-9)));
       c2.setHex(jetColor(Math.pow(t, 1.6)));
+      const bk = B3[t < 0.33 ? 0 : t < 0.66 ? 1 : 2];
       for (const q of hh) {
         const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
         const L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
-        const rr = (p.r + 0.04) / L;
-        pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
-        cols.push(c2.r, c2.g, c2.b);
+        const rr = (p.r + 0.05) / L;
+        bk.pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
+        bk.cols.push(c2.r, c2.g, c2.b);
       }
     });
-    if (pts.length) {
+    B3.forEach((bk, k) => {
+      if (!bk.pts.length) return;
       const g2 = new THREE.BufferGeometry();
-      g2.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
-      g2.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
-      for (const [sz, op] of [[0.85, 0.35], [0.45, 0.95]]) {
+      g2.setAttribute('position', new THREE.Float32BufferAttribute(bk.pts, 3));
+      g2.setAttribute('color', new THREE.Float32BufferAttribute(bk.cols, 3));
+      for (const [sz, op] of [[CORE[k] * f * 1.9, 0.30], [CORE[k] * f, 0.96]]) {
         const pm = new THREE.Points(g2, new THREE.PointsMaterial({
           size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
           transparent: true, opacity: op, alphaTest: 0.05, depthWrite: false }));
         pm.renderOrder = 30; grp.add(pm);
       }
-    }
+    });
     S.scene.add(grp); S.grp = grp;
   }
   function buildPore(S, payload) {
@@ -4358,15 +4373,18 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const mode = $('cmp-mode').value;
     const bbWrap = $('cmp-bb-wrap');
     if (bbWrap) bbWrap.style.display = (mode === 'je_field' || mode === 'ji_field') ? 'inline-flex' : 'none';
+    const pWrap = $('cmp-patch-wrap');
+    if (pWrap) pWrap.style.display = (mode === 'wiring') ? 'flex' : 'none';
     const bbOn = $('cmp-bb-on') ? $('cmp-bb-on').checked : true;
     const bbPct = $('cmp-bb-pct') ? +$('cmp-bb-pct').value : 80;
+    const patchF = $('cmp-patch') ? +$('cmp-patch').value : 1.5;
     clearSide(SA); clearSide(SB);
     if (mode === 'wiring') {
       const joint = [...wireA.counts, ...wireB.counts].sort((a, b) => a - b);
       const lo = joint.length ? joint[Math.floor(0.05 * (joint.length - 1))] : 0;
       const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
-      buildWiring(SA, A, wireA, lo, hi);
-      buildWiring(SB, B, wireB, lo, hi);
+      buildWiring(SA, A, wireA, lo, hi, patchF);
+      buildWiring(SB, B, wireB, lo, hi, patchF);
       const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, AM 본색+접촉 패치)`
         + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
@@ -4420,6 +4438,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   }
   if ($('cmp-clip')) $('cmp-clip').onchange = () => { clipSt.on = $('cmp-clip').checked; applyCmpClip(); };
   if ($('cmp-clip-pos')) $('cmp-clip-pos').oninput = () => { clipSt.frac = (+$('cmp-clip-pos').value) / 100; applyCmpClip(); };
+  if ($('cmp-patch')) {
+    $('cmp-patch').oninput = () => { if ($('cmp-patch-lab')) $('cmp-patch-lab').textContent = $('cmp-patch').value + '×'; };
+    $('cmp-patch').onchange = rebuild;
+  }
   rebuild();
   $('cmp-png').onclick = async () => {
     // 논문급 스크린샷: 각 쪽을 4× 슈퍼샘플로 재렌더(captureHighRes) 후 이름표와 함께 합성.
