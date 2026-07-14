@@ -18,13 +18,13 @@ Bazzoun/Varkey)을 벤치마크로 1:1 대조한다.  living 문서: 각 논문 
 | 2 | **τ for Phase 4** (σ_ionic-anchored) | #286 XCT τ, #266 bimodal τ↓ | τ_Laplace,eff ~4.0 | ✅ 이중계산 회피 (아래) |
 | 3 | **Bimodal P:S 7:3 / Furnas dip** | **#266** ASSB bimodal (정확값) | a9_50 dip min p06 (6:4) | ✅✅ **정량 1:1** (dip모양·opt·σpeak·endpoint) |
 | 4 | **CBD carbon 퍼콜** (방금 완료) | #275 연속 CNT sheath | 1-4wt% discrete 퍼콜 불가 | ✅ 정합 (아래) |
-| 5 | **PTFE = 비전도 σ=0 장애물** | **#271** PTFE void−6.4%p·팽창1.74 (정량) | additives.py PTFE phase | ⚠ 양(+)기계역할 누락 → MPM --coh (E3) |
+| 5 | **PTFE = 비전도 σ=0 장애물** | **#271** PTFE void−6.4%p·팽창1.74 (정량) | additives.py PTFE phase | ⚠ 단순화 명시 — **E3 lever는 CLOSED** (2026-06-30 binder_cap, backlog A3; 아래) |
 | 6 | **porosity 물리값** (MPM 소성) | **#266** He pycnometry 8.83% @CAM7:3 | MPM 10.44% @p06 | ✅ like-for-like (~1.5%p; DEM rigid는 floor offset) |
 | 7 | **poly/single = 크기·σ만 다른 강체구** | #266/#285 poly↔single 역학 차이 | AM_P/AM_S | ⚠ 단순화 (아래) |
 | 8 | **E_eff 18× softening** | Varkey multi-contact DEM (대안) | 1.35(DEM)/1.53(MPM) GPa | ✅ 3중 검증(기존) |
 | 9 | **σ_thermal multi-pathway Ridge 14항** | (직접 벤치 없음) | LOOCV 0.90 | ⚠ 최소 물리근거 |
 | 10 | **time-dependent spring-back** (장기보관 두께회복) | #285 점탄성 CBD (RT+4/HT+1µm/3주) | rate-indep J2 = 재현불가 | ❗ 범위 밖 (Stage-2 아님, Phase4+; #7 참조) |
-| 11 | **σ_e 조성방향** (single vs poly 누가 전도↑) | **#266** σ_NCWA(poly)13.7≫σ_NCM(single)2.45 | 우리 σ_e: single-rich↑ (반대) | ⚠ 재료(σ_AM endpoint)-의존 → 재검토 (아래) |
+| 11 | **σ_e 조성방향** (single vs poly 누가 전도↑) | **#266** σ_NCWA(poly)13.7≫σ_NCM(single)2.45 | 우리 σ_e: single-rich↑ (반대) | ✅ **A1로 CLOSED** (오배선 정정 29375b2 + 숫자 10/5 유지 확정 2026-07-03; 아래) |
 
 ---
 
@@ -102,6 +102,15 @@ self-percolate 불가(carbon-only σ=0; carbon ≈6-7% ≪ 31% 3D 퍼콜 thresho
 - 판정: transport-only Stage 2에선 σ=0 단순화가 **σ_ionic 엔벨로프엔 여전히 정합**(#271 PTFE 0.064도 우리 범위
   안) → **Stage-2 하자 아님**.  단 PTFE-case **porosity·치밀화 정밀도**를 위해 MPM --coh PTFE 항이 개선 lever
   (E3).  Phase 4 degradation에선 PTFE void-억제가 retention을 가르므로 필수.
+- ★ **E3 lever CLOSED (2026-06-30, backlog A3 — 이 행이 stale이었음, 2026-07-14 정합화)**:
+  mpm3d_compaction `binder_cap(w,w*)=(w/w*)·exp(1−w/w*)` (`--coh-ptfe`/`--binder-opt-wt`; Hong 1wt%→0.093
+  backward-compat) 구현 + real14 384 GPU sweep (`docs/a3_binder_sweep_result.md`): porosity 0→8wt%
+  **단조** 15.91→4.40% = Hong "PTFE가 pore-vol↓" **방향(−6.4%p) 재현** (binder volume-fill이 cohesion 지배).
+  정직 결론: binder 비단조(∪)는 porosity 축이 아니라 (a) **기계 binding-strength**(binder_cap active —
+  early-servo wallP 0.32→0.56 GPa as coh 0→0.093) + (b) **σ-block**(webapp whatif W2, PTFE σ_ion×0.74)에 있음.
+  잔여(정직): ① **팽창 1.74 anchor 미검증** — 사이클/시간 축(#10 spring-back과 동류, Stage-2 밖);
+  ② delamination 명시 failure-mode는 coh=0 proxy만; ③ #271 pore-vol **절대 점대점**(28.7→22.3)은 Hong 조성
+  재현 GPU run 필요(방향은 재현 완료).  → headline ⚠는 "σ=0 단순화 명시"로 남고, 개선 lever 자체는 닫힘.
 
 ## ✅/❗ #7 — poly/single 역학 — #285 디제스트로 정량 (rigid-AM ✅ 검증 + 점탄성 spring-back ❗ 한계)
 
@@ -239,7 +248,13 @@ SE 접촉망(Kirchhoff/Holm)** → **절대값 전이 금지**.  ⇒ #286은 **�
   sign 제거); (2) 전자 endpoint의 Trevisanello 인용 수정/제거 + S/P 라벨 혼동 정리; (3) NCM(r)=1/(1+(r/2)^1.5)는
   **방향만 Trevisanello 지지**(큰 poly 동역학 불리, PSD median ~2µm로 r0=2 검증), 형태·β=1.5는 **우리
   corpus-fit** → "Trevisanello β=1.5" 표기를 "Trevisanello spirit + corpus-fit"으로 재표기, 전자-GB가 아니라
-  확산/dead-AM 채널로 옮길지 검토.  ⚠ liquid-vs-ASSB: 그 논문 "crack=이득(액체 침투→표면적↑·R_ct↓)"은 ASSB서
+  확산/dead-AM 채널로 옮길지 검토.
+  ★★ **권고 (1)(2)(3) 전부 이행 — #11 CLOSED (backlog A1, 2026-06-30 → 숫자확정 2026-07-03; 이 행이
+  stale이었음, 2026-07-14 정합화)** — `docs/a1_sigma_e_direction_closeout.md`: 인용/라벨 오배선 정정
+  커밋 29375b2(**숫자 0 변경 → LOOCV 0.9531 불변 증명**), σ_S/σ_P는 `--sigma-S/-P` **재료 INPUT**으로 노출,
+  NCM(r) "Trevisanello-spirit + corpus-fit" 재표기, 숫자 결정: NCM811 default **10/5 유지**(live-fit
+  9.13/4.14 대비 ΔLOOCV −0.0004 동일·DOF−2; ratio=1 강제시 −0.10 → 2× ratio는 data-필수).  #266 재료
+  (W-doped NCWA poly≫single)는 override 입력으로 표현 = **A8(NCA/재료 정렬) 소관**, form 하자 아님.  ⚠ liquid-vs-ASSB: 그 논문 "crack=이득(액체 침투→표면적↑·R_ct↓)"은 ASSB서
   **부호 반대**(고체 SE는 crack 못 메움 → 접촉손실=손해) → 우리 fracture/Auerbach 채널이 이미 **고체 부호
   (crack=손해)**로 옳음(대조 교차검증).  SC=무결정립=우리 작은 AM_S(F/P_c<1, #285) phenotype 일치.
 
@@ -251,6 +266,15 @@ softening(#266 E_SE 22 = 3중 확인) 모두 독립 문헌과 정합/검증.  �
 regime限** = DEM 영역, 별도 기록), (c) enhancement
 (Phase5 graded-z #286, pore-τ #286/#281 DiffuDict, MPM --coh PTFE/SBR E3, dispersion CoV E2).  ⇒ **Stage-2
 무결성 OK + 정량 검증 닫힘**; σ_e 방향만 Phase 3 전 점검.
+
+★ **후속 이행 현황 (2026-07-14 정합화)** — 위 "남은 것"의 소진 상태:
+(a) ✅ **A1 CLOSED** (29375b2 + 10/5 확정 2026-07-03 — #11 섹션 참조);
+(b) ✅ 명시 완료 (#7/#10 섹션이 그 기록; 구현이 아니라 문서화가 요구사항);
+(c) **E3 ✅**(A3 binder_cap 2026-06-30) · **E2 dispersion ✅**(A5 `additives.dispersion_metrics`,
+    2026-07-14) · **pore-τ ✅**(A6 `step3_sigma.pore_tau`, 2026-07-14 — STRUCTURAL 축, audit #2
+    이중계산 함정 회피 명시) · Phase5 graded-z = **Phase 5 본선 소관**(A7, enhancement 대기).
+잔여 열린 축(문서 기준): #9 σ_thermal 경험성(명시로 종결), B-검증군(B2-B6 대조연구), A7/A8(랩 재료·
+pristine R_int — 사용자 데이터 대기).
 
 ---
 

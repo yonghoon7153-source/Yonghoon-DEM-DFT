@@ -384,6 +384,78 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     return pts.astype(np.float32), vals.astype(np.float32)
 
 
+def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0)):
+    """A6 — PORE-phase effective-diffusion tortuosity (DiffuDict/TauFactor convention).
+
+    Runs the SAME validated finite-volume machinery (solve_sigma_z, physics unchanged) on the
+    VOID phase: σ(void)=1, σ(solid)=0, plates at z=0 / z_top → the returned sigma_eff IS the
+    dimensionless D_eff/D0.  τ = ε_total / (D_eff/D0)   [tortuosity FACTOR: D_eff = D0·ε/τ].
+
+    Conventions (honest):
+      • PTFE is NOT rasterized into the e/ionic sid grid (insulator on both networks), so sid==0
+        alone would read PTFE volume as open pore (ε over-count → τ under-count).  Its material
+        points must be passed via extra_solid_pts (µm, grid frame) — stamped solid here, same
+        single-voxel stamp convention rasterize() uses for additive points.
+      • the grid is CROPPED to z ≤ z_top_um first (REQUIRED arg: without it the top plate would
+        sit on the rasterization box's void padding cap and ε/D_rel measure the cap, not the
+        bed).  Uncropped, every column's topmost pore voxel floats in that cap and the top
+        plate loses/keeps contact by sub-voxel luck.
+      • plate band = vox EXACTLY (review M1) — NOT the e-solve default vox+0.1: after the crop a
+        true surface pore's centre is provably < vox from its plate plane while a pore ROOFED by
+        one solid voxel is ≥ vox away, so band=vox separates open from sealed at both plates.
+        The e-solve's +0.1 µm is crown-contact physics (a plate PRESSES onto crowns); for the
+        pore there is no press — solid above a pore genuinely seals it.  With the default band,
+        D_rel leaked through 1-voxel roofs whenever frac(z_top/vox) ∈ [0.5, 0.75) (τ<1 possible).
+      • ε_total counts ALL void voxels of the cropped domain (isolated pores included —
+        TauFactor convention: closed porosity RAISES τ); ε_connected (plate-reaching component)
+        is reported alongside — None when the solve early-returns before the floating-island
+        filter (its n_dof then counts ALL pore voxels, review m2).  D_rel below 1e-12
+        (non-percolating pore) → tau=None.
+      • known small biases (review m1/m4, documented not fixed): ε is measured over the cropped
+        height nzc·vox while D_rel is normalised by L=z_top → one-sided τ over-read ≤ 0.5·vox/
+        z_top (+0.67 % worst at 30 µm/vox 0.4, exact when frac(z_top/vox)<0.5); the AM-AM
+        contact-bridge balls rasterize() stamps (1.2·vox Hertz-neck proxy) count as solid here
+        (~2 % of the pore phase at ε≈15 % — a real neck does occupy that space).
+      • STRUCTURAL descriptor (frame[4] cross-check / gas·liquid-infiltration axis).  ASSB Li⁺
+        transport lives on the SE contact network (σ_ionic solves) — do NOT substitute this τ
+        into the transport forms (CLAUDE.md audit #2 double-count trap).
+
+    Returns dict(eps_total_pct, eps_connected_pct, D_rel, tau, n_dof, resid, unconverged
+                 [, reason])."""
+    if z_top_um is None or float(z_top_um) <= 0.0:
+        raise ValueError('pore_tau requires z_top_um > 0 (bed thickness): without the crop the '
+                         'void padding cap above the bed is measured instead of the pore network')
+    s = np.asarray(sid)
+    nzc = int(np.floor(float(z_top_um) / vox + 0.5))        # top-layer centre stays ≤ plate plane
+    nzc = max(2, min(s.shape[2], nzc))
+    s = s[:, :, :nzc].copy()
+    if extra_solid_pts is not None and len(extra_solid_pts):
+        ijk = np.floor((np.asarray(extra_solid_pts, np.float64) - np.asarray(box_lo, np.float64))
+                       / vox).astype(int)
+        ok = ((ijk >= 0) & (ijk < np.array(s.shape))).all(1)
+        ijk = ijk[ok]
+        s[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = 7               # any non-zero id = solid to the pore solve
+    pore = (s == 0)
+    eps = float(pore.mean())
+    if eps <= 0.0:
+        return {'eps_total_pct': 0.0, 'eps_connected_pct': 0.0, 'D_rel': 0.0, 'tau': None,
+                'n_dof': 0, 'resid': 0.0, 'unconverged': False, 'reason': 'no_void'}
+    res = solve_sigma_z(pore.astype(np.int8), np.array([0.0, 1.0]), vox,
+                        z_top_um=z_top_um, z_bot_um=0.0, plate_band_um=vox)
+    d_rel = float(res['sigma_eff'])
+    out = {'eps_total_pct': round(100.0 * eps, 2),
+           # on early-return paths n_dof counts ALL pore voxels (floating filter never ran) —
+           # connected fraction is then UNKNOWN, not "everything" (review m2)
+           'eps_connected_pct': (None if res.get('reason')
+                                 else round(100.0 * res['n_dof'] / s.size, 2)),
+           'D_rel': float(f'{d_rel:.4g}'),
+           'tau': (float(f'{eps / d_rel:.4g}') if d_rel > 1e-12 else None),
+           'n_dof': res['n_dof'], 'resid': res['resid'], 'unconverged': res['unconverged']}
+    if res.get('reason'):
+        out['reason'] = res['reason']
+    return out
+
+
 def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_code,
                            z_top_um=None, z_bot_um=None):
     """STEP4-v1 — 저율·균일-SOC 갈바노스타틱 **반응전류 분포** (랩 slide-20 물리, 선형화 BV).
@@ -603,11 +675,60 @@ def _selftest():
     return 0 if ok else 1
 
 
+def _selftest_pore():
+    """A6 pore-τ analytic checks — crop, PTFE stamping, TauFactor convention."""
+    ok = True
+    # 1) all-void box → ε=100%, D_rel=1, τ=1 exactly
+    sid = np.zeros((6, 6, 10), np.int8)
+    r = pore_tau(sid, 0.5, z_top_um=5.0)
+    e = abs(r['tau'] - 1.0) < 1e-6 and abs(r['eps_total_pct'] - 100.0) < 1e-9
+    ok &= e; print(f"all-void: τ={r['tau']}  ε={r['eps_total_pct']}%  (expect 1, 100)  {'OK' if e else 'FAIL'}")
+    # 2) straight 2×2 channel through solid → D_rel = area share EXACT (plate half-cell convention),
+    #    τ = 1 exactly (straight pore has no tortuosity)
+    sid = np.ones((6, 6, 10), np.int8); sid[2:4, 2:4, :] = 0
+    r = pore_tau(sid, 0.5, z_top_um=5.0)
+    e = abs(r['tau'] - 1.0) < 1e-6 and abs(r['D_rel'] - 4.0 / 36.0) < 5e-4   # D_rel ships %.4g-rounded
+    ok &= e; print(f"channel:  τ={r['tau']}  D_rel={r['D_rel']:.4f}  (expect 1, {4/36:.4f})  {'OK' if e else 'FAIL'}")
+    # 3) void padding cap ABOVE the bed (raster box taller than the pressed thickness) — uncropped,
+    #    every column's topmost pore voxel floats in the cap and the top plate decouples; the crop
+    #    must restore the exact channel answer
+    sid = np.ones((6, 6, 14), np.int8); sid[2:4, 2:4, :] = 0; sid[:, :, 10:] = 0
+    r = pore_tau(sid, 0.5, z_top_um=5.0)
+    e = abs(r['tau'] - 1.0) < 1e-6
+    ok &= e; print(f"crop:     τ={r['tau']}  (expect 1 — padding cap cropped)  {'OK' if e else 'FAIL'}")
+    # 4) extra_solid_pts stamping (the PTFE path): plug the channel with 4 stamped points → the pore
+    #    no longer percolates → D_rel ~ 0, τ = None
+    sid = np.ones((6, 6, 10), np.int8); sid[2:4, 2:4, :] = 0
+    plug = np.array([[1.25, 1.25, 2.25], [1.75, 1.25, 2.25], [1.25, 1.75, 2.25], [1.75, 1.75, 2.25]])
+    r = pore_tau(sid, 0.5, z_top_um=5.0, extra_solid_pts=plug)
+    e = (r['tau'] is None) and r['D_rel'] < 1e-9
+    ok &= e; print(f"stamp:    τ={r['tau']}  D_rel={r['D_rel']:.1e}  (expect None, ~0 — plugged)  {'OK' if e else 'FAIL'}")
+    # 5) isolated-pore honesty: a sealed 2-voxel pocket raises ε_total but not ε_connected;
+    #    τ uses ε_total (TauFactor) → closed porosity reads as τ > 1
+    sid = np.ones((6, 6, 10), np.int8); sid[2:4, 2:4, :] = 0; sid[0, 0, 4:6] = 0
+    r = pore_tau(sid, 0.5, z_top_um=5.0)
+    e = r['eps_total_pct'] > r['eps_connected_pct'] and r['tau'] is not None and r['tau'] > 1.0
+    ok &= e; print(f"isolated: ε_tot={r['eps_total_pct']}% > ε_conn={r['eps_connected_pct']}%  τ={r['tau']}"
+                   f"  (expect τ>1: closed porosity penalised)  {'OK' if e else 'FAIL'}")
+    # 6) review M1 — 1-voxel solid ROOF must SEAL the channel even when frac(z_top/vox) puts the
+    #    roofed pore centre inside the e-solve's default band (vox+0.1): vox=0.4, z_top=2.68
+    #    (frac 0.7) → roofed pore dist 0.48 < 0.5 leaked with the old band; band=vox seals it
+    sid = np.ones((6, 6, 8), np.int8); sid[2:4, 2:4, 0:6] = 0    # channel k=0..5, solid roof k=6
+    r = pore_tau(sid, 0.4, z_top_um=2.68)
+    e = r['tau'] is None and r['D_rel'] < 1e-9 and bool(r.get('reason'))
+    ok &= e; print(f"roof:     τ={r['tau']}  D_rel={r['D_rel']:.1e}  reason={r.get('reason')}"
+                   f"  (expect sealed — old band read τ<1 through the roof)  {'OK' if e else 'FAIL'}")
+    print('PORE SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--selftest', action='store_true', help='run the analytic laminate/percolation checks')
     ap.add_argument('--selftest-rxn', action='store_true',
                     help='STEP4 sandwich analytic (series-R total current + uniform per-particle i + KCL)')
+    ap.add_argument('--selftest-pore', action='store_true',
+                    help='A6 pore-τ analytic checks (crop / PTFE stamp / TauFactor convention)')
     ap.add_argument('--integration', action='store_true',
                     help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
@@ -616,6 +737,8 @@ if __name__ == '__main__':
         sys.exit(_selftest())
     if a.selftest_rxn:
         sys.exit(_selftest_rxn())
+    if a.selftest_pore:
+        sys.exit(_selftest_pore())
     if a.integration:
         import os
         _csv = os.path.join(os.path.dirname(__file__), '..', 'docs/data/real14_am_scaffold.csv')

@@ -601,13 +601,161 @@ def parse_recipe(s: str) -> dict:
     return dict(zip(keys, vals))
 
 
+def dispersion_metrics(pts_um, box_xy_um, z_top_um, cell_um=2.0, matrix_pts_um=None,
+                       nn_sample=20000, seed=0, am_c_um=None, am_r_um=None):
+    """A5/E2 (#284 SSRM-analog) — additive DISPERSION uniformity.  Pure geometry, run-relative.
+
+    Two axes, deliberately separate (they answer different questions):
+      • index_of_dispersion — variance-to-mean of per-cell point counts on a cell_um lattice
+        over the electrode volume (z ≤ z_top_um; only FULL cells binned, a partial top layer is
+        dropped).  CSR/Poisson-random = 1.0; >1 clustered/agglomerated; <1 hyper-uniform.
+        Density-corrected (raw CoV is NOT: a sparser phase has CoV_Poisson = 1/√mean even when
+        perfectly random — both are reported).  ⚠ CAVEAT 1 (chain/blob phases): VGCF/PTFE
+        fibres = ~dozens of collinear points per object, SuperP = small blobs — within-object
+        correlation inflates D by construction, so D is a SAME-PHASE run-to-run comparator;
+        cross-phase "who is better dispersed" must use the nn_* axis below.  ⚠ CAVEAT 2
+        (review M2 — AM exclusion): additives are seeded in the MATRIX (never inside AM), so
+        full-box cells inside AM are zero BY CONSTRUCTION → zero-inflation makes full-box D
+        scale with point count (measured: CSR-in-matrix reads D 2.3→22 for 25k→400k pts at 33 %
+        AM), swamping real agglomeration.  Pass am_c_um/am_r_um (AM sphere centres+radii, µm)
+        to EXCLUDE cells whose centre lies inside an AM sphere: CSR-in-matrix then reads near 1
+        again, with a RESIDUAL partial-cell inflation (boundary cells have less matrix volume) —
+        so even masked-D comparisons should hold recipe + AM scaffold statistics fixed.
+      • nn_med_um / nn_p90_um — nearest-additive distance from MATRIX sample points (SE), i.e.
+        "how far is a matrix location from the network" (the SSRM mechanism analog).  This is
+        the cross-phase axis and it INCLUDES morphology by design — a fibre network at the same
+        point budget genuinely leaves farther matrix voids than dispersed dots, which is the
+        transport-relevant fact.  nn_clustering = nn_med / nn_med_random, where the random
+        reference is a Poisson field of the same count in the MATRIX volume (review M3):
+        r_med = (3·ln2 / 4πn)^⅓ with n = N/(V_box·matrix_vol_frac), matrix_vol_frac = 1 − ΣV_AM/
+        V_box from am_c_um/am_r_um (falls back to the full box without them — then CSR-in-matrix
+        reads (V_matrix/V_box)^⅓ ≈ 0.73–0.95 < 1, documented offset).  >1 = matrix sees farther
+        voids than same-count random-in-matrix, ≈1 = random, <1 = hyper-uniform coverage.
+
+    No literature ABSOLUTE anchor is claimed (#284 SSRM is a different modality — §F1: relative
+    comparisons between our runs only).
+    Returns dict; {'reason': 'too_few_points'} below 50 pts."""
+    pts = np.asarray(pts_um, np.float64)
+    out = {'n_pts': int(len(pts)), 'cell_um': float(cell_um)}
+    if len(pts) < 50:
+        out['reason'] = 'too_few_points'
+        return out
+    lx, ly, lz = float(box_xy_um[0]), float(box_xy_um[1]), float(z_top_um)
+    ncx, ncy, ncz = max(1, int(lx / cell_um)), max(1, int(ly / cell_um)), max(1, int(lz / cell_um))
+    m = ((pts[:, 0] >= 0) & (pts[:, 0] < ncx * cell_um)
+         & (pts[:, 1] >= 0) & (pts[:, 1] < ncy * cell_um)
+         & (pts[:, 2] >= 0) & (pts[:, 2] < ncz * cell_um))
+    ijk = np.floor(pts[m] / cell_um).astype(int)
+    counts = np.bincount((ijk[:, 0] * ncy + ijk[:, 1]) * ncz + ijk[:, 2],
+                         minlength=ncx * ncy * ncz).astype(np.float64)
+    mat_frac = 1.0                                           # matrix volume fraction (M3 reference)
+    if am_c_um is not None and am_r_um is not None and len(am_r_um):
+        amc = np.asarray(am_c_um, np.float64); amr = np.asarray(am_r_um, np.float64)
+        mat_frac = float(np.clip(1.0 - (4.0 / 3.0) * np.pi * float((amr ** 3).sum())
+                                 / max(lx * ly * lz, 1e-12), 0.05, 1.0))   # overlaps ignored (slight
+        out['matrix_vol_frac'] = round(mat_frac, 3)          #   under-count of matrix — conservative)
+        # M2 mask: drop cells whose CENTRE is inside an AM sphere (structural zeros, not physics)
+        cx = (np.arange(ncx) + 0.5) * cell_um
+        cy = (np.arange(ncy) + 0.5) * cell_um
+        cz = (np.arange(ncz) + 0.5) * cell_um
+        inside = np.zeros((ncx, ncy, ncz), bool)
+        for k in range(len(amr)):                            # few hundred AM spheres — cheap
+            dx2 = (cx - amc[k, 0]) ** 2; dy2 = (cy - amc[k, 1]) ** 2; dz2 = (cz - amc[k, 2]) ** 2
+            inside |= (dx2[:, None, None] + dy2[None, :, None] + dz2[None, None, :]) <= amr[k] ** 2
+        keep = ~inside.reshape(-1)
+        out['n_cells_masked_am'] = int((~keep).sum())
+        counts = counts[keep]
+    if counts.size >= 2:                                     # review m5: 1 cell → var(ddof=1)=NaN
+        mu = float(counts.mean())
+        out.update({'n_cells': int(counts.size), 'mean_per_cell': round(mu, 2),
+                    'cov': round(float(counts.std(ddof=1)) / max(mu, 1e-12), 3),
+                    'cov_poisson_floor': round(float(1.0 / np.sqrt(max(mu, 1e-12))), 3),   # plain float — np.float64 kills json.dump
+                    'index_of_dispersion': round(float(counts.var(ddof=1)) / max(mu, 1e-12), 2)})
+    else:
+        out['reason'] = 'degenerate_lattice'
+    if matrix_pts_um is not None and len(matrix_pts_um):
+        from scipy.spatial import cKDTree
+        mp = np.asarray(matrix_pts_um, np.float64)
+        if len(mp) > nn_sample:
+            mp = mp[np.random.default_rng(seed).choice(len(mp), nn_sample, replace=False)]
+        d, _ = cKDTree(pts).query(mp, k=1)
+        n_dens = len(pts) / max(lx * ly * lz * mat_frac, 1e-12)   # density in the MATRIX volume (M3)
+        r_rand = (3.0 * np.log(2.0) / (4.0 * np.pi * n_dens)) ** (1.0 / 3.0)
+        out.update({'nn_med_um': round(float(np.median(d)), 3),
+                    'nn_p90_um': round(float(np.percentile(d, 90)), 3),
+                    'nn_med_random_um': round(float(r_rand), 3),
+                    'nn_clustering': round(float(np.median(d)) / max(float(r_rand), 1e-12), 2)})
+    return out
+
+
+def _selftest_dispersion():
+    """A5 dispersion-metric checks: CSR calibration (D≈1, nn_clustering≈1), clustered detection,
+    chain-phase caveat direction."""
+    rng = np.random.default_rng(0)
+    box, zt = (50.0, 50.0), 20.0
+    mx = rng.uniform([0, 0, 0], [box[0], box[1], zt], size=(30000, 3))     # matrix sample
+    ok = True
+    # 1) CSR uniform points → D ≈ 1, nn_clustering ≈ 1  (calibrates both "random = 1" scales)
+    pts = rng.uniform([0, 0, 0], [box[0], box[1], zt], size=(20000, 3))
+    r = dispersion_metrics(pts, box, zt, matrix_pts_um=mx)
+    e = 0.9 < r['index_of_dispersion'] < 1.1 and 0.9 < r['nn_clustering'] < 1.1
+    ok &= e; print(f"CSR:       D={r['index_of_dispersion']}  nn×={r['nn_clustering']}  (expect ≈1, ≈1)  {'OK' if e else 'FAIL'}")
+    # 2) clustered blobs (200 × 100 pts, σ=0.5µm) → D ≫ 1, nn_clustering > 1
+    cent = rng.uniform([2, 2, 2], [box[0] - 2, box[1] - 2, zt - 2], size=(200, 3))
+    pts = (cent[:, None, :] + rng.normal(0.0, 0.5, size=(200, 100, 3))).reshape(-1, 3)
+    r = dispersion_metrics(pts, box, zt, matrix_pts_um=mx)
+    e = r['index_of_dispersion'] > 5.0 and r['nn_clustering'] > 1.2
+    ok &= e; print(f"clustered: D={r['index_of_dispersion']}  nn×={r['nn_clustering']}  (expect ≫1, >1.2)  {'OK' if e else 'FAIL'}")
+    # 3) chain phase (randomly PLACED straight fibres): D inflated by within-object correlation
+    #    even though placement is random — the documented cross-phase caveat (direction check only)
+    p0 = rng.uniform([0, 0, 0], [box[0], box[1], zt], size=(500, 3))
+    dirs = rng.normal(size=(500, 3)); dirs /= np.linalg.norm(dirs, axis=1, keepdims=True)
+    pts = (p0[:, None, :] + dirs[:, None, :] * np.linspace(0, 10, 40)[None, :, None]).reshape(-1, 3)
+    r = dispersion_metrics(pts, box, zt, matrix_pts_um=mx)
+    e = r['index_of_dispersion'] > 1.5
+    ok &= e; print(f"chains:    D={r['index_of_dispersion']}  nn×={r['nn_clustering']}  (expect D>1.5 — "
+                   f"morphology confound, hence nn_* for cross-phase)  {'OK' if e else 'FAIL'}")
+    # 4) review M2/M3 — AM-exclusion calibration: CSR-in-MATRIX points around 18 AM spheres
+    #    (r=5µm, ~19 vol%).  Full-box D reads ≫1 by structural zero-inflation; the AM-masked D
+    #    must fall back near 1.  nn_clustering with the matrix-volume reference reads ≈1 where
+    #    the full-box reference reads <1 (matrix is denser than the box average).
+    amc = np.array([[x, y, z] for x in (12.5, 25.0, 37.5) for y in (12.5, 25.0, 37.5)
+                    for z in (6.0, 14.0)])
+    amr = np.full(len(amc), 5.0)
+    def _in_matrix(n):
+        got, tot = [], 0
+        while tot < n:
+            cand = rng.uniform([0, 0, 0], [box[0], box[1], zt], size=(2 * n, 3))
+            d2 = ((cand[:, None, :] - amc[None, :, :]) ** 2).sum(-1)
+            keep = cand[(d2 > amr[None, :] ** 2).all(1)]
+            got.append(keep); tot += len(keep)
+        return np.concatenate(got)[:n]
+    pmat, mmat = _in_matrix(20000), _in_matrix(30000)
+    rf = dispersion_metrics(pmat, box, zt, matrix_pts_um=mmat)
+    rm = dispersion_metrics(pmat, box, zt, matrix_pts_um=mmat, am_c_um=amc, am_r_um=amr)
+    e = (rf['index_of_dispersion'] > 1.5 and rm['index_of_dispersion'] < rf['index_of_dispersion']
+         and rm['index_of_dispersion'] < 1.5
+         and 0.9 < rm['nn_clustering'] < 1.12 and rf['nn_clustering'] < rm['nn_clustering'])
+    ok &= e; print(f"AM-excl:   D full-box={rf['index_of_dispersion']} → masked={rm['index_of_dispersion']}"
+                   f" (cells−{rm.get('n_cells_masked_am')})  nn× full-box={rf['nn_clustering']} → "
+                   f"matrix-ref={rm['nn_clustering']} (mat_frac={rm.get('matrix_vol_frac')})"
+                   f"  (expect masked≈1, matrix-ref≈1)  {'OK' if e else 'FAIL'}")
+    print('DISPERSION SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--recipe', default='', help="e.g. AM:SE:VGCF:PTFE=80:18:1:1")
     ap.add_argument('--rve-um', default='50,50,33', help='box Lx,Ly,Lz µm')
     ap.add_argument('--porosity', type=float, default=0.13)
     ap.add_argument('--dx-um', type=float, default=0.13)
+    ap.add_argument('--selftest-dispersion', action='store_true',
+                    help='A5/E2 dispersion-metric checks (CSR calibration / clustered / chain caveat)')
     a = ap.parse_args()
+    if a.selftest_dispersion:
+        import sys
+        sys.exit(_selftest_dispersion())
     Lx, Ly, Lz = (float(v) for v in a.rve_um.split(','))
     solid = Lx * Ly * Lz * (1 - a.porosity)
     recipes = [a.recipe] if a.recipe else ['AM:SE:VGCF=72:27:1', 'AM:SE:VGCF:PTFE=80:18:1:1']

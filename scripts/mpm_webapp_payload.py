@@ -666,6 +666,33 @@ def main():
                           f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
                           f"share: " + " ".join(f"{k} {100*v:.0f}%"
                                                 for k, v in step3['ion_dissipation_share'].items()))
+                # ★ A6 — PORE-phase effective-diffusion τ (DiffuDict/TauFactor 규약, #281/#286 축):
+                # 같은 격자에서 void상 σ=1 Laplace → D_eff/D0, τ = ε_total/D_rel.  STRUCTURAL
+                # descriptor (frame[4] cross-check) — ASSB Li⁺ 수송은 SE 접촉망(σ_ion 위)이 담당,
+                # 이 τ를 수송 폼/PyBaMM τ에 대입 금지 (audit #2 이중계산 함정).  PTFE는 e/ion
+                # 격자에 미스탬프(양쪽 절연) → 여기서 solid로 스탬프해 기공 과대계상 방지.
+                try:
+                    _t6 = _time.time()
+                    _ppts = ((se[phase == 4] - _off) * UM
+                             if (phase is not None and (phase == 4).any()) else None)
+                    _rp = _s3.pore_tau(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts)
+                    step3['pore'] = {k: _rp[k] for k in ('eps_total_pct', 'eps_connected_pct',
+                                                         'D_rel', 'tau', 'n_dof') if k in _rp}
+                    if _rp.get('reason'):
+                        step3['pore']['reason'] = _rp['reason']
+                    step3['pore']['resid'] = float(f"{_rp['resid']:.2g}")
+                    step3['pore']['trust'] = ('STRUCTURAL pore-diffusion τ (D_eff/D0 = ε/τ, TauFactor '
+                                              '규약, ε_total 기준; 닫힌 기공은 τ를 올림) — SE-망 '
+                                              'σ_ionic과 별개 축, 수송 폼 대입 금지; PTFE solid-stamped; '
+                                              'grid cropped to z ≤ thickness'
+                                              + (' ⚠UNCONVERGED' if _rp.get('unconverged') else ''))
+                    print(f"  STEP3 pore-τ: ε_tot {step3['pore'].get('eps_total_pct')}% (conn "
+                          f"{step3['pore'].get('eps_connected_pct')}%) · D_rel {step3['pore'].get('D_rel')}"
+                          f" · τ {step3['pore'].get('tau')}"
+                          + (f"  ⚠{_rp['reason']}" if _rp.get('reason') else '')
+                          + f"  ({_time.time()-_t6:.0f}s)")
+                except Exception as _e6:                     # pore-τ 실패가 STEP3 결과를 못 물귀신하게 격리
+                    print(f'  ⚠ pore-τ skipped ({type(_e6).__name__}: {_e6}) — STEP3 결과는 유지')
                 # ★ STEP4-v1 — 저율 충전 **반응전류 분포** (랩 slide-20 물리): 전자망(집전체 급전)과
                 # 이온망(분리막 급전)을 AM|SE·AM|SDCP 접촉면의 선형화 Butler-Volmer 컨덕턴스로 결합한
                 # 단일 Kirchhoff 시스템 → 입자별 i_n.  분포는 RELATIVE(i/ī, linear라 C-rate 스케일 무관);
@@ -793,6 +820,39 @@ def main():
     lat = (SW[1] - SW[0]) * UM
     thick = (top - FLOOR) * UM
 
+    # ★ A5/E2 — additive DISPERSION uniformity (#284 SSRM-analog, additives.dispersion_metrics):
+    # per-phase index-of-dispersion (2µm cell lattice, CSR=1; SAME-PHASE run-to-run comparator —
+    # chain phases carry within-object correlation) + SE-matrix→nearest-additive distances (µm,
+    # cross-phase axis: "매트릭스가 네트워크에서 얼마나 먼가").  Pure geometry on the FULL-res
+    # point cloud; §F1 — relative comparisons between our runs only, no SSRM absolute claimed.
+    additive_dispersion = None
+    if phase is not None and np.isin(phase, (2, 3, 4, 5)).any():
+        try:
+            from additives import dispersion_metrics as _dm
+            _offd = np.array([SW[0], SW[0], FLOOR])
+            _ztd = float(sim_m.get('thickness_um') or thick)
+            _mse = np.where(phase == 1)[0]                   # SE matrix: subsample BEFORE the µm
+            if len(_mse) > 20000:                            # copy (full SE = tens of millions pts)
+                _mse = np.random.default_rng(0).choice(_mse, 20000, replace=False)
+            _mx = (se[_mse] - _offd) * UM
+            _amck = {'am_c_um': (c - _offd) * UM, 'am_r_um': r * UM}   # review M2/M3: AM-masked D
+            additive_dispersion = {}                                   # cells + matrix-volume nn ref
+            for _ph, _nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE'), (5, 'SDCP')):
+                if (phase == _ph).any():
+                    additive_dispersion[_nm] = _dm((se[phase == _ph] - _offd) * UM, (lat, lat),
+                                                   _ztd, matrix_pts_um=_mx, **_amck)
+            _mc = np.isin(phase, (2, 3, 5))                  # conductive network union (PTFE 제외)
+            if _mc.any():
+                additive_dispersion['conductive_all'] = _dm((se[_mc] - _offd) * UM, (lat, lat),
+                                                            _ztd, matrix_pts_um=_mx, **_amck)
+            print('  additive dispersion (A5/E2): ' + '  '.join(
+                f"{_nm} D={_v.get('index_of_dispersion')} nn_med={_v.get('nn_med_um')}µm"
+                f"(×{_v.get('nn_clustering')})"
+                for _nm, _v in additive_dispersion.items() if 'reason' not in _v))
+        except Exception as _e5:
+            additive_dispersion = None
+            print(f'  ⚠ dispersion metrics skipped ({type(_e5).__name__}: {_e5})')
+
     # authoritative metrics: prefer the sim's --metrics-json (raw, computed at sim grid res),
     # then explicit overrides, then the (coarse-mesh-biased) recompute as a last resort.
     # (sim_m was already loaded above, where it set the µm/box scale for thick-film cases.)
@@ -843,6 +903,8 @@ def main():
     mpm_metrics.update(strain_stats)                       # Σdg mean/max/vmax98/n_strain_pts (if --dg)
     if additive_counts:
         mpm_metrics['additive_counts'] = additive_counts   # {VGCF:n, SuperP:n, PTFE:n} total seeded
+    if additive_dispersion:
+        mpm_metrics['additive_dispersion'] = additive_dispersion   # A5/E2: D(CSR=1)+nn_*(µm) per phase
     # fibre polyline count (VGCF/PTFE) — a morphology descriptor the summary can show without the sim JSON
     if additive_fibres:
         mpm_metrics['n_fibres'] = len(additive_fibres)
