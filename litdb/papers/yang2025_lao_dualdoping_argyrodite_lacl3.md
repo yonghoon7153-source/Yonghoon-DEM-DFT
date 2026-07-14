@@ -215,16 +215,18 @@ La₂O₃ 도핑(단일 전구체, x=0.04 상순수) → [비용] σ 9.58→6.23
 - "Across the full SI there is no anode-side XPS, no La 3d, no Cl 2p: the LaCl₃-at-the-anode layer is a hypothesis imported from LaCl₃-electrolyte literature, while the paper's only measured La-containing interphase species is a La–S component at the cathode (Fig S15b) — directionally matching the RE-sulfide oxidation branch of our hull (Nd-S phases at 1.92–2.45 V) rather than an anode chloride."
 
 ## 14. 주의/한계 (over-claim 방지)
-- **계산 0 + 음극 interphase 실측 0(본문)**: LaCl₃/La⁰/[LaCl₉] 채널 서사는 **도식+refs 38–40 차용**. "Yang이 LaCl₃ SEI를 증명"이라고 인용 금지 — "주장/도식"으로만.
-- **PS₃O 유닛 직접증거 없음(본문)**: P–O 결합은 Rietveld 격자+화학량론+선행문헌 추론. XPS O 1s/P 2p·Raman·³¹P NMR 부재(SI 미확인). "PO₄ 단위"는 아예 등장 안 함 — **oxysulfide PS₃O(x=0.04, O 0.06/f.u. = S 자리의 1.3%)** 수준.
-- **CV 창 "불변"**: 수치·전극구성·스캔속도 n/a(Fig S8, SI 미보유). band-edge 논리로 무계산 단언 — 관측만 취하고 논리는 버릴 것.
+- **계산 0 + 음극 interphase 실측 0(본문+SI 확정)**: LaCl₃/La⁰/[LaCl₉] 채널 서사는 **도식+refs 38–40 차용** — SI 전체에 음극 XPS·La 3d·Cl 2p 부재. "Yang이 LaCl₃ SEI를 증명"이라고 인용 금지 — "가설/도식"으로만.
+- **PS₃O 유닛 직접증거 없음(본문+SI 확정)**: P–O 결합은 Rietveld 격자+화학량론+선행문헌 추론. **O 1s XPS·Raman/FTIR P–O 밴드·³¹P NMR 전부 부재**. "PO₄ 단위"는 아예 등장 안 함 — **oxysulfide PS₃O(x=0.04, O 0.06/f.u. = S 자리의 1.3%)** 수준. 게다가 Table S1의 O는 S2와 좌표·U_iso 동일·frac 명목 고정(활자 그대로는 16e×0.06=0.24/f.u.로 명목 0.06의 4× — 점유 규약이 다르지 않는 한 내부 불일치).
+- **Rietveld는 명목-고정 템플릿**: La=P1과 완전 동일 파라미터, Li 48h 0.5(=Li 6.0/f.u.≠명목 5.58), cage Cl 합 1.0/f.u.(≠명목 1.5) — **La@4b "결정" 아님**; 본문(Rwp 4.14/Rp 2.98/a 9.823359)과 Table S1(4.12/5.76/9.823930) 수치 불일치.
+- **CV 창 "불변"**: Li/SE/SS **planar** 비대칭 셀(0–5 V; 스캔속도 미기재) = 분해 과소평가 지형 — 상대비교("도핑해도 같다")만 취하고, "0–5 V 안정" 식 절대 해석 금지. band-edge 논리도 무계산 단언 — 관측만 취하고 논리는 버릴 것.
+- **"lithium metal compatibility" 헤드라인의 실체**: 500cyc 83.6% 셀은 **Li-In 합금** 음극. **진짜 Li-금속 full cell은 NCM712 1건 = 100cyc 69.8%**(Table S4 자기보고) — Li-금속 장기 호환은 미입증. 대칭셀도 200 h에서 부반응 종료.
 - **σ_e 8.5× 증가를 "여전히 낮다"로 처리** — La³⁺ 4f⁰라 gap-state 우려는 적으나 측정상 분명한 악화. 이를 CCD·σ 논의에 연결하지 않음.
 - **abstract "passivation층의 기계적 성질이 dendrite 억제"** — 기계 물성 측정 전무(nanoindentation·모듈러스 0).
-- **편집 완성도**: Keywords "**Choline**-rich argyrodite"(Chlorine 오타)·Fig 3g 캡션 "LPSC-**Sn₀.₀₈**"(자기 그룹 Sn 논문[ref 15] 잔재)·p.8 LaCl₃ 채널 문단 사실상 동일 문장 3회 반복 — 검증 부담이 낮은 저널 프로세스였음을 시사, 수치는 교차확인된 것만 신뢰.
+- **편집 완성도**: Keywords "**Choline**-rich argyrodite"(Chlorine 오타)·Fig 3g 캡션 "LPSC-**Sn₀.₀₈**"(자기 그룹 Sn 논문[ref 15] 잔재)·p.8 LaCl₃ 채널 문단 사실상 동일 문장 3회 반복·양극 명명 혼선(방법·Fig 4 = **ZrO₂**@NCM955 vs p.8 한 문장·Table S4 = **LiNbO₃**@NCM955)·Table S2/S3 표제 "…/Li batteries"(실제 Li-In) — 검증 부담이 낮은 저널 프로세스였음을 시사, 수치는 교차확인된 것만 신뢰.
 - **H₂S 절대값 프로토콜 의존**: RH 50–55%·30 min·cm³/g — [Taklu](1.07→0.49)와 습도·시간·셀부피 달라 절대 비교 금지.
 - **저율(0.1C) 성능은 undoped가 우위** — "전면 우위" 아님; 이득은 계면·장기·고율에 국한.
 - **σ 하락의 조성 의존이 가파름**: x=0.05부터 2차상+σ 급락 — 실험 용해한계(x~0.04–0.05)는 우리 DFT x=0.2보다 4–5× 낮음. 우리 결과를 실험 스케일로 말할 때 항상 환기.
-- SI 미보유: S-피규어 수치는 본문 인용문 한정. Table S4(문헌비교) 내용 n/a.
+- **"LaSₓ"(S15b) 해석 이중성**: 신생 분해상일 수도, doped SE 자체 LaS₄ 결합의 표면신호일 수도 — 논문 미구분. "양극에서 La-S 분해상 관측"으로 단정 인용 금지(방향 정합 수준까지만, §11b).
 
 ## 15. 기법 용어 미니사전
 - **CCD (critical current density)**: 전류 계단상승 대칭셀에서 전압 급락(단락) 직전 전류밀도 — dendrite 내성 지표.
