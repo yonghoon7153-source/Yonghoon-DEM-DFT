@@ -5366,12 +5366,29 @@ def _mpm_lab_list():
             except Exception:
                 pass
     out.sort(key=lambda x: x.get('uploaded_at', ''), reverse=True)
+    out.sort(key=lambda x: 0 if x.get('fav') else 1)       # ★ 즐겨찾기 상단 고정 (그룹 내 날짜순 유지)
     return out
 
 
 @app.route('/mpm-lab')
 def mpm_lab():
     return render_template('mpm_lab.html', items=_mpm_lab_list())
+
+
+@app.route('/mpm-lab/fav/<pid>', methods=['POST'])
+def mpm_lab_fav(pid):
+    """★ 즐겨찾기 토글 — meta.json의 fav 불리언; 목록에서 fav 그룹이 상단 고정."""
+    mp = os.path.join(app.config['MPM_LAB_FOLDER'], _mpm_lab_slug(pid), 'meta.json')
+    if not os.path.isfile(mp):
+        return jsonify({'ok': False, 'error': 'payload not found'}), 404
+    try:
+        m = json.load(open(mp))
+        m['fav'] = not m.get('fav')
+        with open(mp, 'w') as f:
+            json.dump(m, f)
+        return jsonify({'ok': True, 'fav': m['fav']})
+    except Exception as e:
+        return jsonify({'ok': False, 'error': str(e)}), 500
 
 
 @app.route('/mpm-lab/upload', methods=['POST'])
