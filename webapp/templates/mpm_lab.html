@@ -41,10 +41,15 @@
 
 <!-- accumulating saved-payload list -->
 <div class="card" style="margin-top:16px">
+  <style>
+    #lab-cmp-btn{margin-left:10px;background:#f59e0b;color:#111827;font-weight:700;border:none;
+      border-radius:6px;padding:6px 16px;font-size:0.95em;cursor:pointer;box-shadow:0 0 0 1px #b45309}
+    #lab-cmp-btn:not(:disabled):hover{background:#fbbf24}
+    #lab-cmp-btn:disabled{background:#334155;color:#94a3b8;cursor:not-allowed;box-shadow:none}
+  </style>
   <h3 style="margin:0 0 8px">저장된 payload <span id="lab-count" style="color:#64748b;font-weight:400">({{ items|length }})</span>
-    <button class="btn btn-secondary btn-sm" id="lab-cmp-btn" onclick="labCompareOpen()" disabled
-      title="목록에서 ⚖ 체크박스로 payload 2개를 고른 뒤 누르면 비교 팝업 — 정량 표(Δ%) + 3D 뷰 2개(카메라 동기·배선은 공동 스케일)"
-      style="margin-left:10px">⚖ 비교 (0/2 선택)</button></h3>
+    <button id="lab-cmp-btn" onclick="labCompareOpen()" disabled
+      title="목록에서 ⚖ 체크박스로 payload 2개를 고른 뒤 누르면 비교 팝업 — 정량 표(Δ%) + 3D 뷰 2개(카메라 동기·배선은 공동 스케일)">⚖ 비교 (0/2 선택)</button></h3>
   <table class="lab-table" style="width:100%; border-collapse:collapse; font-size:0.88em">
     <thead>
       <tr style="text-align:left; color:#94a3b8; border-bottom:1px solid #334155">
