@@ -3912,11 +3912,26 @@ function showMPMAnalysisSummary(state) {
  * 3D 뷰 2개 (카메라 동기화).  배선 강도는 두 케이스의 counts를 합쳐 만든 "공동 스케일"로
  * 색칠 → 색 차이 = 실제 배선 차이 (사이드패널의 per-payload 자동 스케일은 비교 무효).
  * 전류밀도 필드는 export 시 payload별 자기 p99.8 정규화라 패턴 비교용 (legend에 명시). */
-function _wiringCounts(particles, addPts, addCounts) {
-  const carbon = (addPts || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
+function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
+  let carbon = (addPts || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
   const counts = new Float64Array((particles || []).length);
   const hits = new Array((particles || []).length);         // per-AM touching carbon pts (패치 렌더용)
   if (!carbon.length || !counts.length) return { counts, median: 0, hits };
+  // PERIODIC (x,y) — RVE 경계 너머로 닿는 접점을 ghost 복제로 포함 (경계 입자의 배선이
+  // 잘려 보이던 문제).  margin = max(r)+band 안에 드는 이미지 점만 복제 (z는 비주기).
+  if (boxLx > 0 && boxLy > 0) {
+    const marg = Math.max(...particles.map(p => p.r || 0)) + 0.5;
+    const ghosts = [];
+    for (const q of carbon) {
+      for (let sx = -1; sx <= 1; sx++) for (let sy = -1; sy <= 1; sy++) {
+        if (!sx && !sy) continue;
+        const gx = q[0] + sx * boxLx, gy = q[1] + sy * boxLy;
+        if (gx >= -marg && gx <= boxLx + marg && gy >= -marg && gy <= boxLy + marg)
+          ghosts.push([gx, gy, q[2], q[3]]);
+      }
+    }
+    carbon = carbon.concat(ghosts);
+  }
   const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
   const shown = { 2: 0, 3: 0, 5: 0 };
   carbon.forEach(p => { shown[p[3]]++; });
@@ -4041,8 +4056,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const mmA = A.mpm_metrics || {}, mmB = B.mpm_metrics || {};
   const sA = mmA.step3 || {}, sB = mmB.step3 || {};
   const ecA = A.econn_summary || mmA.econn_summary || {}, ecB = B.econn_summary || mmB.econn_summary || {};
-  const wireA = _wiringCounts(A.particles, A.additive_points, mmA.additive_counts);
-  const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts);
+  const wireA = _wiringCounts(A.particles, A.additive_points, mmA.additive_counts,
+                              (A.box || {}).x_max || 0, (A.box || {}).y_max || 0);
+  const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts,
+                              (B.box || {}).x_max || 0, (B.box || {}).y_max || 0);
   const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
   const rowsQ = [
     ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm],
@@ -4166,40 +4183,71 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       grp.add(mesh);
     }
-    // 패치 = 색(감마 jet) + 크기(3버킷: 약/중/강) 이중 인코딩 — 케이스 간 차이가 한눈에.
+    // ── 접촉 DOMAIN 렌더 (점 뿌리기 → 융합 캡, user: "근접한 것들은 하나의 도메인으로") ──
+    // 입자별 접점 방향들을 각도 클러스터링(임계 28°)해 클러스터당 구면 캡 하나를 만든다.
+    // 캡 = 코팅 패치처럼 읽히는 매끈한 디스크 (Lambert 음영, 논문 질감).  캡 색 = 입자 배선
+    // 등급(감마 jet, 공동 스케일).  patchF 슬라이더 = 캡 각반경 배율.
     const f = (typeof patchF === 'number' ? patchF : 1.5);
-    const B3 = [{ pts: [], cols: [] }, { pts: [], cols: [] }, { pts: [], cols: [] }];
-    const CORE = [0.7, 1.2, 1.9];
+    const SEG = 20, MERGE = Math.cos(28 * Math.PI / 180);
+    const PADR = (3 + 3 * f) * Math.PI / 180, MINR = (5 + 3 * f) * Math.PI / 180, MAXR = 0.95;
+    const vtx = [], vcol = [], idx = [];
     const c2 = new THREE.Color();
     parts.forEach((p, i) => {
       const hh = wire.hits && wire.hits[i]; if (!hh) return;
       const t = Math.max(0, Math.min(1, (wire.counts[i] - lo) / Math.max(hi - lo, 1e-9)));
       c2.setHex(jetColor(Math.pow(t, 1.6)));
-      const bk = B3[t < 0.33 ? 0 : t < 0.66 ? 1 : 2];
+      // 1) 단위 방향 클러스터링 (greedy, 평균 방향과 28° 이내면 병합)
+      const cls = [];
       for (const q of hh) {
-        const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
+        let dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
         const L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
-        const rr = (p.r + 0.05) / L;
-        bk.pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
-        bk.cols.push(c2.r, c2.g, c2.b);
+        dx /= L; dy /= L; dz /= L;
+        let best = null, bestDot = MERGE;
+        for (const cl of cls) {
+          const nl = Math.sqrt(cl.sx * cl.sx + cl.sy * cl.sy + cl.sz * cl.sz) || 1;
+          const d = (dx * cl.sx + dy * cl.sy + dz * cl.sz) / nl;
+          if (d > bestDot) { bestDot = d; best = cl; }
+        }
+        if (best) { best.sx += dx; best.sy += dy; best.sz += dz; best.m.push([dx, dy, dz]); }
+        else cls.push({ sx: dx, sy: dy, sz: dz, m: [[dx, dy, dz]] });
+      }
+      // 2) 클러스터 → 구면 캡 디스크 (fan geometry, 병합 buffer 1드로우)
+      for (const cl of cls) {
+        const nl = Math.sqrt(cl.sx * cl.sx + cl.sy * cl.sy + cl.sz * cl.sz) || 1;
+        const nx = cl.sx / nl, ny = cl.sy / nl, nz = cl.sz / nl;
+        let thMax = 0;
+        for (const v of cl.m) thMax = Math.max(thMax, Math.acos(Math.max(-1, Math.min(1, v[0] * nx + v[1] * ny + v[2] * nz))));
+        const th = Math.min(MAXR, Math.max(MINR, thMax + PADR));
+        const R = p.r, rl = R * Math.sin(th), hCap = R * Math.cos(th) + 0.06;
+        // 로컬 기저 (데이터 좌표) → 정점은 scene 좌표(x,z,y)로 push
+        const ax = Math.abs(ny) < 0.9 ? [0, 1, 0] : [1, 0, 0];
+        let t1x = ny * ax[2] - nz * ax[1], t1y = nz * ax[0] - nx * ax[2], t1z = nx * ax[1] - ny * ax[0];
+        const t1l = Math.sqrt(t1x * t1x + t1y * t1y + t1z * t1z) || 1;
+        t1x /= t1l; t1y /= t1l; t1z /= t1l;
+        const t2x = ny * t1z - nz * t1y, t2y = nz * t1x - nx * t1z, t2z = nx * t1y - ny * t1x;
+        const cxd = p.x + nx * hCap, cyd = p.y + ny * hCap, czd = p.z + nz * hCap;
+        const base = vtx.length / 3;
+        vtx.push(cxd, czd, cyd); vcol.push(c2.r, c2.g, c2.b);
+        for (let s = 0; s < SEG; s++) {
+          const ph = 2 * Math.PI * s / SEG, cph = Math.cos(ph), sph = Math.sin(ph);
+          vtx.push(cxd + (t1x * cph + t2x * sph) * rl,
+                   czd + (t1z * cph + t2z * sph) * rl,
+                   cyd + (t1y * cph + t2y * sph) * rl);
+          vcol.push(c2.r, c2.g, c2.b);
+        }
+        for (let s = 0; s < SEG; s++) idx.push(base, base + 1 + s, base + 1 + ((s + 1) % SEG));
       }
     });
-    B3.forEach((bk, k) => {
-      if (!bk.pts.length) return;
+    if (vtx.length) {
       const g2 = new THREE.BufferGeometry();
-      g2.setAttribute('position', new THREE.Float32BufferAttribute(bk.pts, 3));
-      g2.setAttribute('color', new THREE.Float32BufferAttribute(bk.cols, 3));
-      // core = 불투명 crisp 디스크 (depthWrite ON → 겹침 누적 없음); halo = 배율↑일수록 자동 감쇠
-      // (반투명 halo가 쌓여 bloom처럼 번지던 문제 — 확대 시 glow 제거).
-      const halo = new THREE.Points(g2, new THREE.PointsMaterial({
-        size: CORE[k] * f * 1.5, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-        transparent: true, opacity: Math.min(0.20, 0.28 / f), alphaTest: 0.05, depthWrite: false }));
-      halo.renderOrder = 29; grp.add(halo);
-      const core = new THREE.Points(g2, new THREE.PointsMaterial({
-        size: CORE[k] * f, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-        transparent: false, opacity: 1.0, alphaTest: 0.5, depthWrite: true }));
-      core.renderOrder = 30; grp.add(core);
-    });
+      g2.setAttribute('position', new THREE.Float32BufferAttribute(vtx, 3));
+      g2.setAttribute('color', new THREE.Float32BufferAttribute(vcol, 3));
+      g2.setIndex(idx);
+      g2.computeVertexNormals();
+      const dom = new THREE.Mesh(g2, new THREE.MeshLambertMaterial({
+        vertexColors: true, side: THREE.DoubleSide }));
+      dom.renderOrder = 20; grp.add(dom);
+    }
     S.scene.add(grp); S.grp = grp;
   }
   function buildPore(S, payload) {
@@ -4414,7 +4462,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
       buildWiring(SA, A, wireA, lo, hi, patchF);
       buildWiring(SB, B, wireB, lo, hi, patchF);
-      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, AM 본색+접촉 패치)`
+      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, 접촉 도메인=클러스터 융합 캡, periodic 이미지 접점 포함)`
         + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
       $('cmp-leg-b').innerHTML = leg(wireB);
