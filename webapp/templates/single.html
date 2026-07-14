@@ -336,6 +336,24 @@ scp kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/mpm_payload.json \
     kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/mpm_metrics.json \
     /mnt/c/Users/안용훈/Downloads/</pre></div>
   </details>
+  <details style="margin-top:8px">
+    <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(runyourai V100 대여) 실행 명령어 — ① zip 받고 복사해서 사용</summary>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ⓪ 대여마다 1회 — WSL에서 새 pem 등록(v100key) 후, V100 안에서 (ssh v100):
+git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT
+cd ~/Yonghoon-DEM-DFT && git checkout claude/stoic-knuth-NObVQ
+sudo apt update && sudo apt install -y python3-pip && python3 -m pip install taichi numpy scipy cupy-cuda12x</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 1) WSL → V100 업로드
+scp "/mnt/c/Users/안용훈/Downloads/{{ zip }}" v100:~/Yonghoon-DEM-DFT/</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 2) V100에서 실행 (먼저: ssh v100)
+cd ~/Yonghoon-DEM-DFT
+git pull origin claude/stoic-knuth-NObVQ       # 최신 코드
+unzip -o {{ zip }}                             # 루트에 풀림
+bash run_mpm.sh</pre></div>
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># 3) 결과 V100 → WSL 다운로드 (업로드 확인 후 대여 반납 잊지 말기!)
+scp v100:~/Yonghoon-DEM-DFT/mpm_payload.json \
+    v100:~/Yonghoon-DEM-DFT/mpm_metrics.json \
+    /mnt/c/Users/안용훈/Downloads/</pre></div>
+  </details>
   <!-- MPM 결과 파라미터 — 업로드(또는 기존 결과)가 있으면 채워지고 보임 -->
   <style>
     .mpm-result-table{border-collapse:collapse;font-size:0.84em;width:100%}
@@ -576,19 +594,25 @@ function updateAdditiveGpuCmds() {
   const zip = `mpm_input_${'{{ case.id }}'}${tag}.zip`;
   const DL = '/mnt/c/Users/안용훈/Downloads';
   const BR = 'claude/stoic-knuth-NObVQ';                    // the DEM/MPM branch (run_mpm.sh calls scripts/ from it)
-  const SERVERS = [                                          // gabia → kgy order; add more here if needed
+  const SERVERS = [                                          // gabia → kgy → 대여 order; add more here if needed
     // gabia's ~/work/Yonghoon-DEM-DFT is checked out to the DFT (b2o3run) branch → no MPM scripts there.
     // Use a one-time worktree on the MPM branch so it runs WITHOUT disturbing the DFT clone.
     { name: 'gabia', ssh: 'root@121.78.116.27', wk: '/root/work/mpm_run',
+      lbl0: '# ⓪ gabia 최초 1회 — MPM worktree (DFT 브랜치 클론 안 건드림; 이미 있으면 skip)',
       setup: `cd /root/work/Yonghoon-DEM-DFT && git fetch origin ${BR} && git worktree add -B mpmwork /root/work/mpm_run origin/${BR}` },
     { name: 'kgy',   ssh: 'kgy@59.12.161.91',   wk: '~/work/_verify/Yonghoon-DEM-DFT', setup: '' },
+    // runyourai 대여 V100(32GB): WSL ~/.ssh/config의 v100 별칭 사용 (HostName machine.runyour.ai —
+    // 대여마다 실기계·호스트키·pem이 바뀜 → WSL에서 v100key(최신 pem 등록) 먼저, 컨테이너엔 pip 없음).
+    { name: 'runyourai(V100)', ssh: 'v100', wk: '~/Yonghoon-DEM-DFT',
+      lbl0: '# ⓪ 대여마다 1회 — WSL서 v100key(새 pem 등록) 후, ssh v100 안에서:',
+      setup: `git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT; cd ~/Yonghoon-DEM-DFT && git checkout ${BR}\nsudo apt update && sudo apt install -y python3-pip && python3 -m pip install taichi numpy scipy cupy-cuda12x` },
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
   let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}</div>`;
   for (const s of SERVERS) {
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`
-      + (s.setup ? blk(`# ⓪ ${s.name} 최초 1회 — MPM worktree (DFT 브랜치 클론 안 건드림; 이미 있으면 skip)`, s.setup) : '')
+      + (s.setup ? blk(s.lbl0 || `# ⓪ ${s.name} 최초 1회`, s.setup) : '')
       + blk(`# 1) WSL → ${s.name} 업로드 (② 버튼으로 zip 받은 뒤)`, `scp "${DL}/${zip}" ${s.ssh}:${s.wk}/`)
       + blk(`# 2) ${s.name}에서 실행 (먼저: ssh ${s.ssh})`, `cd ${s.wk}\ngit pull origin ${BR}\nunzip -o ${zip}\nbash run_mpm.sh`)
       + blk('# 3) 결과 → WSL (그다음 ③ 결과 업로드)', `scp ${s.ssh}:${s.wk}/mpm_payload.json ${s.ssh}:${s.wk}/mpm_metrics.json ${DL}/`);
