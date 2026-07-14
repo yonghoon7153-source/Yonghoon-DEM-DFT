@@ -1908,7 +1908,7 @@ function applyViewMode(state, mode) {
       const tot = Number(((_acnt[_PHN[ph]] || {}).n_points != null ? _acnt[_PHN[ph]].n_points : _acnt[_PHN[ph]]) || 0);
       wPh[ph] = (tot > 0 && _shown[ph] > 0) ? tot / _shown[ph] : 1;
     });
-    let touch = null;
+    let touch = null, contactsOf = null;
     if (carbonPts.length) {
       const CELL = 3.0;
       const hash = new Map();
@@ -1917,12 +1917,14 @@ function applyViewMode(state, mode) {
         const k = keyOf(p[0], p[1], p[2]);
         let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(p);
       });
-      touch = new Map();                                     // particle-object → contact count
+      touch = new Map();                                     // particle-object → 환산 접점수
+      contactsOf = new Map();                                // particle-object → 닿은 카본 점들 (패치 overlay)
       ['AM_P', 'AM_S'].forEach(t => {
         const m = state.meshes[t]; if (!m) return;
         m.userData.particles.forEach(p => {
           const rr = p.r + BAND, rr2 = rr * rr;
           let n2 = 0;
+          const hits = [];
           const ci = Math.floor(p.x / CELL), cj = Math.floor(p.y / CELL), ck = Math.floor(p.z / CELL);
           const reach = Math.ceil(rr / CELL);
           for (let di = -reach; di <= reach; di++) for (let dj = -reach; dj <= reach; dj++)
@@ -1931,10 +1933,11 @@ function applyViewMode(state, mode) {
               if (!cell) continue;
               for (const q of cell) {
                 const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
-                if (dx * dx + dy * dy + dz * dz <= rr2) n2 += (wPh[q[3]] || 1);   // 환산(가중) 접점
+                if (dx * dx + dy * dy + dz * dz <= rr2) { n2 += (wPh[q[3]] || 1); hits.push(q); }   // 환산(가중)
               }
             }
           touch.set(p, n2);
+          if (hits.length) contactsOf.set(p, hits);
         });
       });
     }
@@ -1944,48 +1947,67 @@ function applyViewMode(state, mode) {
       autoLo = counts[Math.floor(0.05 * (counts.length - 1))];
       autoHi = Math.max(counts[Math.floor(0.95 * (counts.length - 1))], autoLo + 1);
     }
-    // 🔒 스케일 잠금 — SBE에서 잠그면 그 스케일이 localStorage에 저장되고 DBE도 같은 스케일로
-    // 색칠됨 → 케이스 간 "색 차이 = 실제 배선 차이" (per-payload 자동 스케일은 비교에 무효).
-    let lockOn = false, lockSc = null;
-    try {
-      lockOn = localStorage.getItem('econnWireLock') === '1';
-      const _s = localStorage.getItem('econnWireScale');
-      if (_s) lockSc = JSON.parse(_s);
-    } catch (e) { /* localStorage unavailable → auto scale */ }
-    const lo5 = (lockOn && lockSc) ? lockSc.lo : autoLo;
-    const hi95 = (lockOn && lockSc) ? Math.max(lockSc.hi, lo5 + 1) : autoHi;
-    const wiringColor = (t) => new THREE.Color(jetColor(Math.max(0, Math.min(1, t))));   // COMSOL rainbow
+    // per-payload 자동 스케일 (단일 케이스 읽기용).  케이스 간 색 비교는 여기서 하지 않음 —
+    // mpm-lab의 ⚖ 비교 팝업이 두 payload의 counts를 합친 "공동 스케일"로 그려줌 (그쪽이 비교의 정답).
+    const lo5 = autoLo, hi95 = autoHi;
+    // 톤 = 전류밀도 FIELD와 동일 (jet + 감마 1.6: 대부분 차분한 남색, 진짜 강한 배선만 따뜻하게).
+    const gamW = (t) => Math.pow(Math.max(0, Math.min(1, t)), 1.6);
     const colOn = new THREE.Color(0x3b5fd9), colOff = new THREE.Color(0xb91c1c);
     let nOn = 0, nOff = 0, nNA = 0, medTouch = 0;
     if (touch) {
       const cs = [...touch.values()].sort((a, b) => a - b);
       medTouch = cs[Math.floor(cs.length / 2)] || 0;
     }
+    // AM은 본색(Default 색) 유지 — 구 전체를 덮지 않는다 (user).  고립만 통짜 빨강.
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
+      const base = new THREE.Color(COL[t]);
       m.userData.particles.forEach((p, i) => {
         if (p.econn === undefined) { m.setColorAt(i, colDim); nNA++; }
         else if (!p.econn) { m.setColorAt(i, colOff); nOff++; }
-        else {
-          nOn++;
-          if (touch) {
-            const tt = Math.max(0, Math.min(1, ((touch.get(p) || 0) - lo5) / (hi95 - lo5)));
-            m.setColorAt(i, wiringColor(tt));
-          } else m.setColorAt(i, colOn);                     // no carbon in payload → binary 폴백
-        }
+        else { nOn++; m.setColorAt(i, touch ? base : colOn); }   // carbon 없으면 binary 폴백
       });
-      m.material.opacity = 0.97; m.material.transparent = true;
+      m.material.opacity = 1.0; m.material.transparent = false;
     });
     flushColors();
+    // 접촉부 PATCH overlay — 닿은 카본 점을 그 AM 표면 위(반경+0.04µm)로 투영해 점 패치로.
+    // 패치 색 = 그 입자의 배선 강도 (감마 jet) → "어디에·얼마나 물렸나"가 본색 구 위에 뜬다.
+    if (touch && contactsOf) {
+      const pts = [], cols = [];
+      const c2 = new THREE.Color();
+      contactsOf.forEach((hits, p) => {
+        if (!p.econn) return;
+        c2.setHex(jetColor(gamW(((touch.get(p) || 0) - lo5) / Math.max(hi95 - lo5, 1e-9))));
+        for (const q of hits) {
+          const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
+          const L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+          const rr = (p.r + 0.04) / L;
+          pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
+          cols.push(c2.r, c2.g, c2.b);
+        }
+      });
+      if (pts.length) {
+        const g2 = new THREE.BufferGeometry();
+        g2.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+        g2.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+        const grpP = new THREE.Group();
+        for (const [sz, op] of [[0.85, 0.35], [0.45, 0.95]]) {   // soft halo + core (뒷면은 구가 가림)
+          const pm = new THREE.Points(g2, new THREE.PointsMaterial({
+            size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+            transparent: true, opacity: op, alphaTest: 0.05, depthWrite: false }));
+          pm.renderOrder = 30; grpP.add(pm);
+        }
+        state.additivePointGroup = grpP;                     // mode-switch cleanup 재사용
+        if (state.scene) state.scene.add(grpP);
+      }
+    }
     const pct = (nOn + nOff) ? (100 * nOn / (nOn + nOff)) : 0;
     const nClFull = ec && ec.n_carbon_clusters != null ? Number(ec.n_carbon_clusters) : null;
     const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     const wireBar = touch
       ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
          <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
-         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM (서브샘플 가중보정 — 케이스 간 수치 비교 유효) · VGCF·SuperP·SDCP, PTFE 제외</div>
-         <label style="display:block;margin-top:3px;font-size:10px;color:#e5e7eb;cursor:pointer">
-           <input type="checkbox" id="wire-lock" ${lockOn ? 'checked' : ''}> 🔒 스케일 잠금 — 케이스 간 색 비교${(lockOn && lockSc) ? ' (고정)' : ''}</label>`
+         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 접촉부만 패치 색(AM 본색 유지) · 감마톤=전류밀도와 동일 · 케이스 색비교는 ⚖ 팝업</div>`
       : '';
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
@@ -1996,18 +2018,6 @@ function applyViewMode(state, mode) {
        + (nClFull != null ? ` · cluster ${nClFull.toLocaleString()}` : '') + `</div>`
        + wireBar
        + `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
-    const wl = document.getElementById('wire-lock');
-    if (wl) wl.onchange = () => {
-      // 잠금 ON: 지금 payload의 AUTO 스케일을 앵커로 저장 (기준 케이스에서 체크 — 보통 SBE) →
-      // 이후 다른 payload도 같은 스케일로 색칠 = 색 차이가 실제 배선 차이.  OFF: 자동 복귀.
-      try {
-        if (wl.checked) {
-          localStorage.setItem('econnWireLock', '1');
-          localStorage.setItem('econnWireScale', JSON.stringify({ lo: autoLo, hi: autoHi }));
-        } else { localStorage.removeItem('econnWireLock'); localStorage.removeItem('econnWireScale'); }
-      } catch (e) { /* ignore */ }
-      applyViewMode(state, 'econn');
-    };
     return;
   }
   if (mode === 'cbd') {
@@ -3823,6 +3833,286 @@ function showMPMAnalysisSummary(state) {
   });
   overlay.querySelector('#mpm-sum-csv-am').addEventListener('click', () => dlText('mpm_perAM_' + slug + '.csv', perAMCsv()));
   overlay.querySelector('#mpm-sum-csv-sum').addEventListener('click', () => dlText('mpm_summary_' + slug + '.csv', summaryCsv()));
+}
+
+/* ── 케이스 비교 팝업 (⚖) ─────────────────────────────────────
+ * mpm-lab에서 payload 2개를 골라 나란히: 정량 표 (σ_e/σ_ion/분담/R_geom/구조, Δ%) +
+ * 3D 뷰 2개 (카메라 동기화).  배선 강도는 두 케이스의 counts를 합쳐 만든 "공동 스케일"로
+ * 색칠 → 색 차이 = 실제 배선 차이 (사이드패널의 per-payload 자동 스케일은 비교 무효).
+ * 전류밀도 필드는 export 시 payload별 자기 p99.8 정규화라 패턴 비교용 (legend에 명시). */
+function _wiringCounts(particles, addPts, addCounts) {
+  const carbon = (addPts || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
+  const counts = new Float64Array((particles || []).length);
+  if (!carbon.length || !counts.length) return { counts, median: 0 };
+  const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
+  const shown = { 2: 0, 3: 0, 5: 0 };
+  carbon.forEach(p => { shown[p[3]]++; });
+  const w = {};
+  [2, 3, 5].forEach(ph => {
+    const tot = Number((addCounts || {})[PHN[ph]] || 0);
+    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 → 환산 접점
+  });
+  const CELL = 3.0, BAND = 0.3;
+  const hash = new Map();
+  carbon.forEach(p => {
+    const k = Math.floor(p[0] / CELL) + ',' + Math.floor(p[1] / CELL) + ',' + Math.floor(p[2] / CELL);
+    let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(p);
+  });
+  particles.forEach((p, ix) => {
+    const rr = p.r + BAND, rr2 = rr * rr;
+    let n = 0;
+    const ci = Math.floor(p.x / CELL), cj = Math.floor(p.y / CELL), ck = Math.floor(p.z / CELL);
+    const reach = Math.ceil(rr / CELL);
+    for (let di = -reach; di <= reach; di++) for (let dj = -reach; dj <= reach; dj++)
+      for (let dk = -reach; dk <= reach; dk++) {
+        const cell = hash.get((ci + di) + ',' + (cj + dj) + ',' + (ck + dk));
+        if (!cell) continue;
+        for (const q of cell) {
+          const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
+          if (dx * dx + dy * dy + dz * dz <= rr2) n += (w[q[3]] || 1);
+        }
+      }
+    counts[ix] = n;
+  });
+  const s = [...counts].sort((a, b) => a - b);
+  return { counts, median: s[Math.floor(s.length / 2)] || 0 };
+}
+
+export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
+  injectCSS();
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:97vw;max-width:97vw;background:#0d1117;color:#e5e7eb">
+      <button class="path-modal-close" style="color:#9ca3af">&times;</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
+        <b style="font-size:14px">⚖ 케이스 비교</b>
+        <select id="cmp-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 6px;font-size:11px">
+          <option value="wiring">전기 배선 강도 — 탄소 접점 (공동 스케일 ★)</option>
+          <option value="je_field">전자 전류밀도 필드</option>
+          <option value="ji_field">이온 전류밀도 필드</option>
+        </select>
+        <span id="cmp-status" style="font-size:11px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
+        <span style="flex:1"></span>
+        <button id="cmp-png" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px">PNG</button>
+      </div>
+      <div id="cmp-table" style="font-size:11px;margin-bottom:6px;overflow-x:auto"></div>
+      <div style="display:flex;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div id="cmp-name-a" style="font-size:12px;font-weight:600;color:#7dd3fc;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          <div id="cmp-view-a" style="height:56vh;background:#f4f5f8;border-radius:8px;overflow:hidden"></div>
+          <div id="cmp-leg-a" style="font-size:10px;color:#9ca3af;margin-top:3px;min-height:26px"></div>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div id="cmp-name-b" style="font-size:12px;font-weight:600;color:#fbbf24;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          <div id="cmp-view-b" style="height:56vh;background:#f4f5f8;border-radius:8px;overflow:hidden"></div>
+          <div id="cmp-leg-b" style="font-size:10px;color:#9ca3af;margin-top:3px;min-height:26px"></div>
+        </div>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const $ = (id) => overlay.querySelector('#' + id);
+  $('cmp-name-a').textContent = 'A · ' + (nameA || pidA);
+  $('cmp-name-b').textContent = 'B · ' + (nameB || pidB);
+  let stopped = false;
+  const sides = [];
+  const close = () => {
+    stopped = true;
+    sides.forEach(S => { try { S.ctrl.dispose(); S.renderer.dispose(); } catch (e) { /* ignore */ } });
+    overlay.remove();
+  };
+  overlay.querySelector('.path-modal-close').addEventListener('click', close);
+  overlay.onclick = (e) => { if (e.target === overlay) close(); };
+
+  let A, B;
+  try {
+    [A, B] = await Promise.all([pidA, pidB].map(pid =>
+      fetch('/mpm-lab/data/' + encodeURIComponent(pid))
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })));
+  } catch (e) {
+    $('cmp-status').textContent = '로딩 실패: ' + e.message;
+    return;
+  }
+  if (!overlay.isConnected) return;                        // closed while loading
+  $('cmp-status').textContent = '';
+
+  // ── 정량 표 ──
+  const mmA = A.mpm_metrics || {}, mmB = B.mpm_metrics || {};
+  const sA = mmA.step3 || {}, sB = mmB.step3 || {};
+  const ecA = A.econn_summary || mmA.econn_summary || {}, ecB = B.econn_summary || mmB.econn_summary || {};
+  const wireA = _wiringCounts(A.particles, A.additive_points, mmA.additive_counts);
+  const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts);
+  const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
+  const rowsQ = [
+    ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm],
+    ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm],
+    ['e-분담 SDCP (%)', gsh(sA, 'dissipation_share', 'SDCP'), gsh(sB, 'dissipation_share', 'SDCP')],
+    ['ion-분담 SDCP (%)', gsh(sA, 'ion_dissipation_share', 'SDCP'), gsh(sB, 'ion_dissipation_share', 'SDCP')],
+    ['R_geom (Ω·cm²)', (sA.collector_geometric || {}).R_geom_ohm_cm2, (sB.collector_geometric || {}).R_geom_ohm_cm2],
+    ['porosity (%)', mmA.porosity_mpm_pct != null ? mmA.porosity_mpm_pct : mmA.porosity_settled_pct,
+                     mmB.porosity_mpm_pct != null ? mmB.porosity_mpm_pct : mmB.porosity_settled_pct],
+    ['econn 연결률 (%)', ecA.connected_pct, ecB.connected_pct],
+    ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters],
+    ['환산접점 중앙값 /AM', wireA.median, wireB.median],
+  ];
+  const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
+    : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
+    : (+v).toFixed(Math.abs(+v) >= 100 ? 0 : Math.abs(+v) >= 1 ? 2 : 4);
+  $('cmp-table').innerHTML = '<table style="border-collapse:collapse;white-space:nowrap">'
+    + '<tr style="color:#9ca3af">' + ['축', 'A', 'B', 'Δ (B−A)/A'].map((h, i) =>
+        `<th style="text-align:${i ? 'right' : 'left'};padding:2px 12px 2px 0;border-bottom:1px solid #2a2d3e">${h}</th>`).join('') + '</tr>'
+    + rowsQ.map(([lab, a, b]) => {
+        const d = (a != null && b != null && isFinite(+a) && isFinite(+b) && +a !== 0) ? (100 * (b - a) / Math.abs(+a)) : null;
+        const dTxt = d == null ? '—' : (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
+        const dCol = d == null ? '#6b7280' : d > 0.5 ? '#34d399' : d < -0.5 ? '#f87171' : '#9ca3af';
+        return `<tr><td style="padding:2px 12px 2px 0;color:#cbd5e1">${lab}</td>`
+          + `<td style="text-align:right;padding:2px 12px 2px 0;color:#7dd3fc">${fmtQ(a)}</td>`
+          + `<td style="text-align:right;padding:2px 12px 2px 0;color:#fbbf24">${fmtQ(b)}</td>`
+          + `<td style="text-align:right;padding:2px 0;color:${dCol}">${dTxt}</td></tr>`;
+      }).join('') + '</table>';
+
+  // ── 3D 두 쪽 ──
+  const mkSide = (viewId, payload) => {
+    const el = $(viewId);
+    const W = el.clientWidth || 600, H = el.clientHeight || 480;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(W, H);
+    renderer.setClearColor(COL.BG, 1);
+    el.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
+    const dl = new THREE.DirectionalLight(0xffffff, 0.7); dl.position.set(1, 2, 1.5); scene.add(dl);
+    const box = payload.box || {};
+    const cx = (box.x_max || 50) / 2, cy = (box.y_max || 50) / 2, cz = (box.z_max || 50) / 2;
+    const cam = new THREE.PerspectiveCamera(45, W / H, 0.1, 3000);
+    const diag = Math.max(box.x_max || 50, box.z_max || 50);
+    cam.position.set(cx + diag * 1.5, cz + diag * 1.1, cy + diag * 1.5);
+    const ctrl = new OrbitControls(cam, renderer.domElement);
+    ctrl.target.set(cx, cz * 0.9, cy); ctrl.update();
+    const S = { renderer, scene, cam, ctrl, grp: null };
+    sides.push(S);
+    return S;
+  };
+  const SA = mkSide('cmp-view-a', A), SB = mkSide('cmp-view-b', B);
+  let syncing = false;
+  const link = (src, dst) => () => {
+    if (syncing) return; syncing = true;
+    dst.cam.position.copy(src.cam.position);
+    dst.ctrl.target.copy(src.ctrl.target);
+    dst.ctrl.update();
+    syncing = false;
+  };
+  SA.ctrl.addEventListener('change', link(SA, SB));
+  SB.ctrl.addEventListener('change', link(SB, SA));
+
+  const clearSide = (S) => {
+    if (!S.grp) return;
+    S.scene.remove(S.grp);
+    S.grp.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material && o.material.dispose) o.material.dispose(); });
+    S.grp = null;
+  };
+  const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+  const barHtml = (lab) => `<div style="margin:2px 0;height:8px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
+    <div style="display:flex;justify-content:space-between;font-size:9px"><span>${lab[0]}</span><span>${lab[1]}</span><span>${lab[2]}</span></div>`;
+  function buildWiring(S, payload, wire, lo, hi) {
+    const parts = payload.particles || [];
+    const grp = new THREE.Group();
+    const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
+    if (mesh) {
+      const c = new THREE.Color();
+      parts.forEach((_, i) => {
+        const t = Math.max(0, Math.min(1, (wire.counts[i] - lo) / Math.max(hi - lo, 1e-9)));
+        mesh.setColorAt(i, c.setHex(jetColor(Math.pow(t, 1.6))));   // 감마톤 = 전류밀도/패치와 동일
+      });
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+      grp.add(mesh);
+    }
+    S.scene.add(grp); S.grp = grp;
+  }
+  function buildField(S, payload, ionic) {
+    const grp = new THREE.Group();
+    const parts = payload.particles || [];
+    const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.12, true);
+    if (ghost) {
+      const dk = new THREE.Color(0x0a0e1a);
+      parts.forEach((_, i) => ghost.setColorAt(i, dk));
+      if (ghost.instanceColor) ghost.instanceColor.needsUpdate = true;
+      grp.add(ghost);
+    }
+    const fldp = payload[ionic ? 'ionic_field' : 'electronic_field'] || [];
+    if (fldp.length) {
+      const jv2 = fldp.map(p => p[3]);
+      const s2 = [...jv2].sort((a, b) => a - b);
+      const hi2 = Math.max(s2[Math.floor(0.998 * (s2.length - 1))], 1e-9);
+      const gam2 = (t) => Math.pow(Math.max(0, Math.min(1, t / hi2)), 1.6);
+      const pos = new Float32Array(fldp.length * 3), colr = new Float32Array(fldp.length * 3);
+      const c = new THREE.Color();
+      for (let i = 0; i < fldp.length; i++) {
+        const p = fldp[i];
+        pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
+        c.setHex(jetColor(gam2(p[3])));
+        colr[3 * i] = c.r; colr[3 * i + 1] = c.g; colr[3 * i + 2] = c.b;
+      }
+      const gg = new THREE.BufferGeometry();
+      gg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      gg.setAttribute('color', new THREE.BufferAttribute(colr, 3));
+      for (const [sz, op] of [[0.9, 0.18], [0.45, 0.9]]) {
+        const pm = new THREE.Points(gg, new THREE.PointsMaterial({
+          size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+          transparent: true, opacity: op, alphaTest: 0.02, depthWrite: false }));
+        pm.renderOrder = 900; grp.add(pm);
+      }
+    }
+    S.scene.add(grp); S.grp = grp;
+    return fldp.length;
+  }
+  function rebuild() {
+    const mode = $('cmp-mode').value;
+    clearSide(SA); clearSide(SB);
+    if (mode === 'wiring') {
+      const joint = [...wireA.counts, ...wireB.counts].sort((a, b) => a - b);
+      const lo = joint.length ? joint[Math.floor(0.05 * (joint.length - 1))] : 0;
+      const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
+      buildWiring(SA, A, wireA, lo, hi);
+      buildWiring(SB, B, wireB, lo, hi);
+      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★)`
+        + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
+      $('cmp-leg-a').innerHTML = leg(wireA);
+      $('cmp-leg-b').innerHTML = leg(wireB);
+    } else {
+      const ionic = mode === 'ji_field';
+      const nA2 = buildField(SA, A, ionic), nB2 = buildField(SB, B, ionic);
+      const cap = (n, s3x) => (n ? `${n.toLocaleString()}점 · ` : 'FIELD 없음 (payload 재생성 필요) · ')
+        + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
+        + ' · 색은 payload별 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)';
+      $('cmp-leg-a').innerHTML = cap(nA2, sA);
+      $('cmp-leg-b').innerHTML = cap(nB2, sB);
+    }
+  }
+  $('cmp-mode').onchange = rebuild;
+  rebuild();
+  $('cmp-png').onclick = () => {
+    const a = SA.renderer.domElement, b = SB.renderer.domElement;
+    const cv = document.createElement('canvas');
+    cv.width = a.width + b.width + 12; cv.height = Math.max(a.height, b.height) + 30;
+    const x = cv.getContext('2d');
+    x.fillStyle = '#ffffff'; x.fillRect(0, 0, cv.width, cv.height);
+    x.drawImage(a, 0, 30); x.drawImage(b, a.width + 12, 30);
+    x.fillStyle = '#111827'; x.font = 'bold 15px sans-serif';
+    x.fillText('A · ' + (nameA || pidA), 4, 20);
+    x.fillText('B · ' + (nameB || pidB), a.width + 16, 20);
+    const dl2 = document.createElement('a');
+    dl2.href = cv.toDataURL('image/png');
+    dl2.download = 'compare_' + $('cmp-mode').value + '.png';
+    document.body.appendChild(dl2); dl2.click(); dl2.remove();
+  };
+  (function anim() {
+    if (stopped || !overlay.isConnected) return;
+    SA.renderer.render(SA.scene, SA.cam);
+    SB.renderer.render(SB.scene, SB.cam);
+    requestAnimationFrame(anim);
+  })();
 }
 
 /* ── wire up control panel ─────────────────────────────────── */
