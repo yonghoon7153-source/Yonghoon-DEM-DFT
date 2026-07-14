@@ -501,7 +501,12 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
         return A[m] + off, g
     eb_nodes, eb_g = _plate(idx_e, sig_e, 0, bot_e, k_first_e, z_b, 1.0)
     _plate(idx_i, sig_i, n_e, top_i, k_last_i, z_plate, 0.0)
-    diag[diag == 0.0] = 1.0                                  # ε-guard: 완전 고립 노드 → φ=0, 전류 0
+    # degree-0 노드(엣지 전무)만 ε-고정.  union-라벨이 false-adjacency로 남길 수 있는 "고립
+    # 서브그래프"(예: SE에 싸인 carbon 섬)는 특이 블록이지만 b=0 + CG(x0=0)에서 φ≡0으로 정확히
+    # 유지된다(구조적 블록대각 + Krylov가 0-블록을 못 건드림) — 리뷰 프로브로 ΔI ~1e-15 확인.
+    # ⚠ 이 안전성은 CG+x0=0 전제: 직접분해(spsolve)나 블록혼합 preconditioner로 바꾸면
+    # 컴포넌트-그래프 anchoring(BV 엣지 기반 union-find)으로 교체할 것.
+    diag[diag == 0.0] = 1.0
     L = sparse.coo_matrix((np.concatenate(vals + [diag]),
                            (np.concatenate(rows + [np.arange(N)]),
                             np.concatenate(cols + [np.arange(N)]))), shape=(N, N)).tocsr()
@@ -537,9 +542,8 @@ def _selftest_rxn():
     gct = 0.05                                               # 면당 (code units)
     r = solve_reaction_current(sid, sig_e, sig_i, pid, 1, vox, gct,
                                z_top_um=nz * vox, z_bot_um=0.0)
-    # 직렬 해석해 (µm-code 단위 일관): per-column R = R_e + R_ct + R_i
-    #   R_e = (5.5·vox)/(σe·vox²)  [plate 반셀 0.25 + 내부 5칸 2.5 + 계면 반셀 0.25 → 3.0µm 경로/컬럼?]
-    #   코드 규약대로 직접 합산: plate g=σ·vox²/max(d,vox/2), 내부 g=σ·vox, BV g=gct
+    # 직렬 해석해 (µm-code 단위 일관, 코드 규약대로 직접 합산):
+    #   per-column R = 1/g_plate,e + 5/(σe·vox) + 1/g_ct + 5/(σi·vox) + 1/g_plate,i
     ge_plate = 1.0 * vox * vox / (0.5 * vox)
     gi_plate = 2.0 * vox * vox / (0.5 * vox)
     R_col = 1.0 / ge_plate + 5 * (1.0 / (1.0 * vox)) + 1.0 / gct + 5 * (1.0 / (2.0 * vox)) + 1.0 / gi_plate
@@ -550,8 +554,20 @@ def _selftest_rxn():
     print(f"rxn sandwich: I={r['I_tot']:.6f} (expect {I_exp:.6f})  {'OK' if okI else 'FAIL'}")
     print(f"rxn KCL: plate vs ΣBV err={r['kcl_err']:.2e}  {'OK' if okK else 'FAIL'}")
     print(f"rxn per-particle sum == I_tot  {'OK' if okU else 'FAIL'}")
-    print('RXN SELFTEST', 'PASS' if (okI and okK and okU) else 'FAIL')
-    return 0 if (okI and okK and okU) else 1
+    # 방향 대칭 — 좌/우 미러 배치가 같은 I·face 수 (am_first 양쪽 분기 고정; 물리 리뷰 프로브 영구화)
+    sidL = np.zeros((6, 6, 12), np.int8); sidL[:3] = 1; sidL[3:] = 6
+    sidR = np.zeros((6, 6, 12), np.int8); sidR[3:] = 1; sidR[:3] = 6
+    pidL = np.where(sidL == 1, 0, -1).astype(np.int32)
+    pidR = np.where(sidR == 1, 0, -1).astype(np.int32)
+    rL = solve_reaction_current(sidL, sig_e, sig_i, pidL, 1, vox, gct, z_top_um=nz * vox, z_bot_um=0.0)
+    rR = solve_reaction_current(sidR, sig_e, sig_i, pidR, 1, vox, gct, z_top_um=nz * vox, z_bot_um=0.0)
+    okM = (rL['n_bv_faces'] == rR['n_bv_faces']
+           and abs(rL['I_tot'] - rR['I_tot']) / max(abs(rL['I_tot']), 1e-30) < 1e-6)
+    print(f"rxn mirror(lateral BV): I_L={rL['I_tot']:.6f} I_R={rR['I_tot']:.6f} "
+          f"faces {rL['n_bv_faces']}/{rR['n_bv_faces']}  {'OK' if okM else 'FAIL'}")
+    ok = okI and okK and okU and okM
+    print('RXN SELFTEST', 'PASS' if ok else 'FAIL')
+    return 0 if ok else 1
 
 
 def _selftest():
