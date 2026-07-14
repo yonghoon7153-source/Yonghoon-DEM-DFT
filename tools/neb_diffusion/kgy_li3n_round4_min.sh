@@ -16,6 +16,11 @@
 set -e
 cd "$HOME/work/li3n_dft"
 
+# 중복실행 가드 (17:08 사고 교훈: 2호기가 1호기 밑에서 OOM 즉사 + .out 오염)
+if pgrep -f "pw\.x.*p0_min4\.in" >/dev/null; then
+    echo "이미 p0_min4 pw.x 실행 중 — 중복 발사 차단"; exit 0
+fi
+
 echo "== [0] min3 마지막 6스텝 dE(mRy) — 기록용 =="
 grep '^!' p0_min3.out | tail -6 | awk '{e[NR]=$5} END{for(i=2;i<=NR;i++) printf " %+.2f",(e[i]-e[i-1])*1000; print ""}'
 
@@ -56,20 +61,23 @@ cat > run_round4.sh <<'EOF'
 M=$1; Q=$2
 cd "$HOME/work/li3n_dft"
 j=p0_min4
-if grep -q "JOB DONE" "$j.out" 2>/dev/null; then
+if pgrep -f "pw\.x.*p0_min4\.in" >/dev/null; then
+    echo "[$j] 이미 실행 중 — 중복 발사 차단"; exit 0
+fi
+if grep -aq "JOB DONE" "$j.out" 2>/dev/null; then
     echo "[$j] already done — skip"
 else
     echo "[$j] START $(date)"
     $M -np 1 "$Q/pw.x" -npool 1 -in "$j.in" > "$j.out" 2>&1
-    if grep -q "JOB DONE" "$j.out"; then
-        conv="MAXSTEP"; grep -q "bfgs converged" "$j.out" && conv="수렴"
-        echo "[$j] DONE ($conv)  E=$(grep '^!' "$j.out" | tail -1 | awk '{print $5}') Ry  $(date)"
+    if grep -aq "JOB DONE" "$j.out"; then
+        conv="MAXSTEP"; grep -aq "bfgs converged" "$j.out" && conv="수렴"
+        echo "[$j] DONE ($conv)  E=$(grep -a '^!' "$j.out" | tail -1 | awk '{print $5}') Ry  $(date)"
     else
         echo "[$j] FAILED/interrupted  $(date)"
     fi
 fi
-S=$(grep '^!' p0_saddle3.out | tail -1 | awk '{print $5}')
-M4=$(grep '^!' p0_min4.out 2>/dev/null | tail -1 | awk '{print $5}')
+S=$(grep -a '^!' p0_saddle3.out | tail -1 | awk '{print $5}')
+M4=$(grep -a '^!' p0_min4.out 2>/dev/null | tail -1 | awk '{print $5}')
 [ -n "$S" ] && [ -n "$M4" ] && awk -v s="$S" -v m="$M4" \
     'BEGIN{d=(s-m)*13605.7; printf "[round4] barrier(saddle3-min4) = %+.1f meV %s\n", d, (d<0?"<- UMA 위상 역전 확정":"")}'
 echo "[round4] chain end $(date)"
