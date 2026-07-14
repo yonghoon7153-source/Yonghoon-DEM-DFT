@@ -4430,22 +4430,38 @@ def _load_case_tables(results_dir, meta):
 def _load_mpm_metrics(results_dir):
     """MPM result params for the case page — the compact mpm_metrics.json written on
     upload (falls back to extracting from the heavier mpm_payload.json).  {} when no
-    MPM result has been uploaded yet (→ the result table stays hidden)."""
+    MPM result has been uploaded yet (→ the result table stays hidden).
+
+    MERGE (2026-07-14): the sim이 뽑는 mpm_metrics.json에는 payload 파생 지표(step3 σ/
+    pore-τ/additive_dispersion 등)가 없어서, 그 파일이 small을 덮으면 카드의 STEP3 행들이
+    사라진다 → small에 payload 지표가 빠져 있으면 payload에서 1회 추출해 병합하고 small을
+    다시 써서 캐시 (다음 뷰부터는 무거운 payload를 안 읽음).  sim 키가 우선(authoritative)."""
     small = os.path.join(results_dir, 'mpm_metrics.json')
+    out = {}
     if os.path.exists(small):
         try:
             with open(small) as f:
-                return json.load(f) or {}
+                out = json.load(f) or {}
         except Exception:
-            pass
-    payload = os.path.join(results_dir, 'mpm_payload.json')
-    if os.path.exists(payload):
-        try:
-            with open(payload) as f:
-                return (json.load(f) or {}).get('mpm_metrics', {}) or {}
-        except Exception:
-            pass
-    return {}
+            out = {}
+    # payload-파생 지표 마커 = se_surface_tris (payload mpm_metrics에는 항상 있고 sim 파일엔 없음)
+    if 'se_surface_tris' not in out:
+        payload = os.path.join(results_dir, 'mpm_payload.json')
+        if os.path.exists(payload):
+            try:
+                with open(payload) as f:
+                    pm = (json.load(f) or {}).get('mpm_metrics', {}) or {}
+                if pm:
+                    pm.update(out)                          # sim(small) 키가 payload 키를 덮음
+                    out = pm
+                    try:
+                        with open(small, 'w') as f:
+                            json.dump(out, f)               # 병합 캐시 — 재스캔 방지
+                    except Exception:
+                        pass
+            except Exception:
+                pass
+    return out
 
 
 @app.route('/single/<case_id>')

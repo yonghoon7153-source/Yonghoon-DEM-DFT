@@ -483,6 +483,43 @@ function fillMpmTable(m) {
   if (m.cov_hertz_um != null && m.cov_tabor_um != null)
     box.querySelectorAll('.cov-band-note').forEach(e =>
       e.textContent = `소성 vs 강체 · Hertz ${m.cov_hertz_um}/Tabor ${m.cov_tabor_um}µm`);
+  // ── STEP3 · 신규 지표 (σ / R_geom / pore-τ / 분산 / STEP4) — metrics의 "중첩" 키라 data-mk
+  //    평면 조회로는 못 잡음 → 있는 것만 동적 행으로 append (단독 케이스 카드에서도 한눈에).
+  {
+    const s3m = m.step3 || {};
+    const sci = v => (v == null || !isFinite(+v)) ? null : (+v).toExponential(2);
+    const pairs = [];
+    if (s3m.sigma_e_eff_S_cm != null) pairs.push(['σ_e_eff (STEP3 벌크)', sci(s3m.sigma_e_eff_S_cm) + ' S/cm']);
+    if (s3m.sigma_ion_eff_S_cm != null) pairs.push(['σ_ion_eff (STEP3)', sci(s3m.sigma_ion_eff_S_cm) + ' S/cm']);
+    const cg = s3m.collector_geometric || {};
+    if (cg.R_geom_ohm_cm2 != null) pairs.push(['R_geom (기하 계면)', sci(cg.R_geom_ohm_cm2) + ' Ω·cm²']);
+    const selC = (s3m.collector || {}).selected;
+    if (selC && selC.sigma_apparent_S_cm != null)
+      pairs.push(['σ_apparent (' + selC.name + ')', sci(selC.sigma_apparent_S_cm) + ' S/cm']);
+    const pore = s3m.pore || {};
+    if (pore.eps_total_pct != null)
+      pairs.push(['pore-τ (구조·확산)', pore.tau != null
+        ? (+pore.tau).toFixed(2) + '  (ε ' + pore.eps_total_pct + '% · conn ' + (pore.eps_connected_pct != null ? pore.eps_connected_pct : '—') + '%)'
+        : '비퍼콜 — 기공 폐색  (ε ' + pore.eps_total_pct + '%)']);
+    const disp = m.additive_dispersion || {};
+    const dAll = disp.conductive_all || {};
+    if (dAll.nn_med_um != null)
+      pairs.push(['첨가제→SE 거리 (분산)', dAll.nn_med_um + ' µm (×' + dAll.nn_clustering + ' vs random)']);
+    if (disp.SDCP && disp.SDCP.index_of_dispersion != null)
+      pairs.push(['SDCP 분산 D (랜덤=1)', disp.SDCP.index_of_dispersion + ' · nn ' + disp.SDCP.nn_med_um + ' µm']);
+    const rxn = s3m.rxn || {};
+    if (rxn.active_am_pct != null)
+      pairs.push(['STEP4 반응-활성 AM', (+rxn.active_am_pct).toFixed(1) + ' %  (BV faces ' + (+rxn.n_bv_faces).toLocaleString() + ')']);
+    const tbdy = box.querySelector('.mpm-result-table tbody') || box.querySelector('.mpm-result-table');
+    tbdy.querySelectorAll('tr.mpm-step3-row').forEach(r => r.remove());   // 재호출(업로드 후) 중복 방지
+    for (let i = 0; i < pairs.length; i += 2) {
+      const tr = document.createElement('tr'); tr.className = 'mpm-step3-row';
+      const p2 = pairs[i + 1];
+      tr.innerHTML = `<th>${pairs[i][0]}</th><td>${pairs[i][1]}</td>`
+        + (p2 ? `<th>${p2[0]}</th><td>${p2[1]}</td>` : '<th></th><td></td>');
+      tbdy.appendChild(tr);
+    }
+  }
   box.style.display = 'block';
   // regime flag — DEM↔MPM porosity gap → which value to trust (mirrors the dashboard badge + §16/§17)
   const _note = document.getElementById('mpm-regime-note');
