@@ -4462,7 +4462,35 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       grp.add(ghost);
     }
     const swat = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xff3b30 };
-    const all = (payload.additive_points || []).filter(p => !only || p[3] === only);
+    // 파이버 상(VGCF/PTFE)은 폴리라인으로 — 점 구름으론 "연결성"이 안 보임 (메인 뷰어와 동일 문법).
+    const fibresAll = payload.additive_fibres || [];
+    const fibres = fibresAll.filter(f => !only || f.phase === only);
+    const fibrePh = new Set(fibresAll.map(f => f.phase));
+    let nFib = 0;
+    if (fibres.length) {
+      const pos = [], col = [];
+      const c = new THREE.Color();
+      for (const f of fibres) {
+        c.setHex(swat[f.phase] || 0x9ca3af);
+        const pts = f.pts || [];
+        if (pts.length >= 2) nFib++;
+        for (let k = 0; k + 1 < pts.length; k++) {
+          const a = pts[k], b2 = pts[k + 1];
+          pos.push(a[0], a[2], a[1], b2[0], b2[2], b2[1]);   // Z-up swap
+          col.push(c.r, c.g, c.b, c.r, c.g, c.b);
+        }
+      }
+      if (pos.length) {
+        const gf = new THREE.BufferGeometry();
+        gf.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+        gf.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+        const lm = new THREE.LineSegments(gf, new THREE.LineBasicMaterial({
+          vertexColors: true, transparent: true, opacity: 0.9, depthTest: false, depthWrite: false }));
+        lm.renderOrder = 999; grp.add(lm);
+      }
+    }
+    // 점 상 = fibre가 없는 상만 (SuperP·SDCP) — fibre 상의 점 중복 제거 (메인 모드와 동일)
+    const all = (payload.additive_points || []).filter(p => (!only || p[3] === only) && !fibrePh.has(p[3]));
     if (all.length) {
       const pos = new Float32Array(all.length * 3), colr = new Float32Array(all.length * 3);
       const c = new THREE.Color();
@@ -4483,7 +4511,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       }
     }
     S.scene.add(grp); S.grp = grp;
-    return all.length;
+    return { nPts: all.length, nFib };
   }
   function buildJe(S, payload, fldKey) {
     const parts = payload.particles || [];
@@ -4658,12 +4686,12 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     } else {                                                 // additives family
       const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4
                  : mode === 'add_sdcp' ? 5 : 0;
-      const nA3 = buildAdditives(SA, A, only), nB3 = buildAdditives(SB, B, only);
+      const rA3 = buildAdditives(SA, A, only), rB3 = buildAdditives(SB, B, only);
       const swatch = { 0: '전체', 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP' };
-      const cap = (n, mm2) => `${swatch[only]} ${n.toLocaleString()}점 (x-ray) · `
+      const cap = (r3, mm2) => `${swatch[only]} — fibre ${r3.nFib.toLocaleString()}가닥(라인) + ${r3.nPts.toLocaleString()}점 (x-ray) · `
         + Object.entries(mm2.additive_counts || {}).map(([k, v]) => `${k} ${Number(v).toLocaleString()}`).join(' · ');
-      $('cmp-leg-a').innerHTML = cap(nA3, mmA);
-      $('cmp-leg-b').innerHTML = cap(nB3, mmB);
+      $('cmp-leg-a').innerHTML = cap(rA3, mmA);
+      $('cmp-leg-b').innerHTML = cap(rB3, mmB);
     }
     applyCmpClip();                                          // 새 재질에 단면 재적용
   }
