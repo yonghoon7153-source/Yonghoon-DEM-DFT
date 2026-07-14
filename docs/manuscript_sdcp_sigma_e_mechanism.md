@@ -49,6 +49,32 @@ readout이 교차로 가리키는 구조적 결과** — (i) 병렬-기여 산�
 > voxel grid with identical numerics and material tables; only the recipe differs, so
 > discretisation and solver biases cancel in the comparison.
 
+### 1-K. 국문 대역 (검토용 — 본문은 위 영문 기준)
+
+> 총 첨가제 로딩을 고정한 채 PTFE의 절반을 SDCP로 치환하면(SBE: VGCF/PTFE = 3/1 wt% →
+> DBE: 3/0.5/0.5) 복셀-해상 전극의 두께방향 전자전도도가 33% 증가하고(2.12→2.83 S/cm)
+> 이온전도도는 사실상 불변이다(+3.6%).  같은 수치해의 서로 다른 세 가지 readout이 지배
+> 메커니즘을 **벌크 병렬전도가 아니라 계면 브리징**으로 지목한다.
+>
+> 첫째, SDCP 상 내부에서 발생하는 전자 줄(Joule) 손실은 전체의 8%뿐이다.  전도도 이득이
+> 추가된 상의 수송 몫을 따라가는 병렬-도체 그림으로는 8% 몫에서 33% 이득이 나올 수 없다.
+> 직렬 병목(constriction) 해소로는 가능하다: 좁은 접합부 하나를 뚫으면 그 퍼콜레이션 경로
+> 전체의 저항이 내려가는 반면, 브리지 자신은 고전도라 손실이 거의 없다(손실분담은 J²R
+> 가중이라 저저항 브리지의 역할을 구조적으로 과소표시한다).
+>
+> 둘째, 미세구조가 정확히 브리징이 요구하는 방향으로 변한다.  AM 입자당 카본 접점 중앙값이
+> 13% 증가하고(316→357) 전도 클러스터 수가 3.2배(1,447→4,698) — 이는 개별 분산된 0.3 µm
+> SDCP 입자 ~6×10⁴개(Fig. S3)를 반영하며, 그 공간 통계는 랜덤 필드와 구별 불가다
+> (AM-점유 부피 제외 후 index of dispersion 1.14 vs 완전 랜덤 1.0; 최근접거리 = 동밀도
+> 랜덤 기준의 1.16배).  균일-랜덤 배치는 "임의의 섬유-섬유·섬유-AM 틈"에 입자가 앉을
+> 확률을 최대화하는 기하다.
+>
+> 셋째, 대안 설명들은 쌍에서 고정된 관측치로 배제된다: porosity(16.2→16.0%)·두께(51.0 µm)
+> 불변 → 치밀화 배제; 두 전극 모두 이미 집전체 100% 연결 → 퍼콜레이션 개시 배제; 절연체
+> PTFE의 반감이 지배 원인이라면 이온·전자 수송이 함께 좋아져야 하나, SDCP가 이온 손실의
+> 10%를 새로 담당하는데도 이온망 개선은 +3.6%에 그침.  두 케이스는 동일 복셀 격자·동일
+> 수치·동일 물성표로 풀렸고 레시피만 다르므로, 이산화·솔버 편향은 비교에서 소거된다.
+
 ## 2. Methods 초안 (영문)
 
 > **Voxel resistor-network conductivity.**  The compacted MPM microstructure (AM spheres,
@@ -72,6 +98,21 @@ readout이 교차로 가리키는 구조적 결과** — (i) 병렬-기여 산�
 > reference (3·ln2/4πn)^⅓; both estimators are calibrated on synthetic random, clustered
 > and fibre fields.
 
+### 2-K. 국문 대역
+
+> **복셀 저항망 전도도.**  압밀된 MPM 미세구조(AM 구, 소성변형 SE 연속체, 명시적으로 seed된
+> 첨가제 재료점)를 0.4 µm 복셀 격자에 래스터화한다.  전도 복셀 쌍은 조화평균 면 컨덕턴스
+> g = 2σᵃσᵇ/(σᵃ+σᵇ)·Δx로 잇고, 집전체·상부 플레이트는 컬럼별 거리-인지 Dirichlet 결합,
+> 측면은 절연 경계로 두고 ∇·(σ∇φ)=0을 CG로 푼다(잔차 <10⁻⁸; 어셈블리는 적층/단일컬럼/퍼콜
+> 차단 해석해로 검증).  전자망·이온망은 **같은 격자** 위에서 상별 전도도로 푼다(전자: AM·
+> VGCF·SDCP 전도, SE·PTFE 절연 — 이온: SE·SDCP 전도, AM·VGCF·PTFE 절연).  보고되는 비교는
+> 동일 격자·물성표·경계조건 런들 사이의 **상대** 진술이며, 절대값은 복셀-스케일 접촉 해상도
+> 한계를 물려받는다(0.4 µm는 실험 σ_ionic envelope에 맞춰 고정; sub-voxel constriction은
+> 미해상).  상별 손실분담은 Σ g·(Δφ)²를 상별로 누적한 값.  첨가제 분산은 as-seeded 점군에서
+> (i) 2 µm 격자 셀별 점수의 index of dispersion(AM-점유 셀 제외 → 접근가능 매트릭스의 완전
+> 랜덤 = 1.0), (ii) SE 재료점에서 최근접 첨가제까지의 중앙값 거리를 동수 포아송 기준
+> (3·ln2/4πn)^⅓로 정규화한 비 — 두 추정자 모두 합성 랜덤/응집/섬유 필드로 보정.
+
 ## 3. Figure caption 초안 (⚖ 표/패널)
 
 > **SDCP acts as an interfacial bridge, not a parallel conductor.**  Paired voxel solves of
@@ -81,6 +122,14 @@ readout이 교차로 가리키는 구조적 결과** — (i) 병렬-기여 산�
 > 3.2-fold, while porosity, thickness and collector connectivity are unchanged and the
 > ionic network improves by only 3.6% — together isolating series-constriction relief at
 > fibre–fibre and fibre–AM junctions as the operative mechanism.
+
+### 3-K. 국문 대역
+
+> **SDCP는 병렬 도체가 아니라 계면 브리지로 작동한다.**  동일 격자에서 SBE(VGCF/PTFE
+> 3/1 wt%)와 DBE(3/0.5/0.5, SDCP 포함) 전극을 짝지어 푼 복셀 해.  DBE는 전자전도도 +33%를
+> 얻지만 SDCP가 담당하는 전자 손실은 8%뿐; 카본-AM 접점은 13%, 전도 클러스터 수는 3.2배
+> 증가하는 반면 porosity·두께·집전체 연결률은 불변이고 이온망 개선은 +3.6%에 그침 —
+> 종합하면 섬유-섬유·섬유-AM 접합부의 직렬 constriction 해소가 작동 메커니즘으로 격리된다.
 
 ## 4. "작위적 값이 아니다" — 리뷰어 방어 포인트 (국문, 순서대로 쓰기)
 
