@@ -3816,7 +3816,9 @@ function showMPMAnalysisSummary(state) {
     ['첨가제→SE 거리 (분산)', dAll.nn_med_um != null
       ? dAll.nn_med_um + ' µm (×' + dAll.nn_clustering + ' vs random)' : '—'],
   ];
-  const W = 1080, pad = 18, cols = 3;
+  // 창이 캔버스(고정 1080)보다 좁으면 브라우저가 비정수 축소를 해 글자가 뭉개짐 → 표시 폭에
+  // 맞춰 그리기 (DPR=2 비트맵이 CSS 폭과 1:1 → 항상 crisp).  레이아웃은 전부 W에서 파생됨.
+  const W = Math.max(780, Math.min(1080, (window.innerWidth || 1240) - 170)), pad = 18, cols = 3;
   const colW = (W - pad * (cols + 1)) / cols;
   const cellH = 198, vgap = 26, top0 = 46;
   const headH = Math.ceil(chips.length / 4) * 56 + 8;
@@ -3922,7 +3924,11 @@ function showMPMAnalysisSummary(state) {
     ctx.fillStyle = '#f6f7f9'; roundRect(x, y, chipW, chipH, 7); ctx.fill();
     ctx.strokeStyle = '#eceef1'; ctx.lineWidth = 1; ctx.stroke();
     ctx.fillStyle = '#6b7280'; ctx.font = '10.5px sans-serif'; ctx.textAlign = 'left'; ctx.fillText(c[0], x + 11, y + 18);
-    ctx.fillStyle = '#111827'; ctx.font = 'bold 15px sans-serif'; ctx.fillText(c[1], x + 11, y + 38);
+    ctx.fillStyle = '#111827';
+    let fs = 15;                                             // 긴 값(집전체 이름 등)은 칩 폭에 맞게 자동 축소
+    ctx.font = `bold ${fs}px sans-serif`;
+    while (fs > 10 && ctx.measureText(c[1]).width > chipW - 22) { fs -= 0.5; ctx.font = `bold ${fs}px sans-serif`; }
+    ctx.fillText(c[1], x + 11, y + 38);
   });
 
   // ---- 9 charts: 전체 분포 / z별 분포 / 손실분담 ----
@@ -4010,7 +4016,7 @@ function showMPMAnalysisSummary(state) {
   const overlay = document.createElement('div');
   overlay.className = 'path-modal-overlay';
   overlay.innerHTML = `
-    <div class="path-modal" style="width:1140px;max-width:97vw">
+    <div class="path-modal" style="width:${W + 60}px;max-width:97vw">
       <button class="path-modal-close">&times;</button>
       <div style="font-size:14px;font-weight:bold;text-align:center;margin-bottom:8px">📊 분석 요약</div>
       <div id="mpm-sum-wrap" style="max-height:78vh;overflow:auto;text-align:center"></div>
