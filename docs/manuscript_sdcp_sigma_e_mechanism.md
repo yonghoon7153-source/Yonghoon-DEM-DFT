@@ -1,251 +1,170 @@
-# SDCP σ_e +33% — 논문용 서술 (mechanism + "작위적 값 아님" 방어) — 2026-07-14
+# SDCP σ_e 메커니즘 — 최종판 (2026-07-15, CLOSED)
 
-대상 데이터: ⚖ 비교 (a7_p00 스캐폴드, 2mAh, 동일 세팅) — **A = SBE** (VGCF:PTFE = 3:1 wt%) vs
-**B = DBE** (VGCF:PTFE:SDCP = 3:0.5:0.5).  σ_e 2.12→2.83 S/cm (+33.2%) · σ_ion 1.39e-4→1.44e-4
-(+3.6%) · SDCP 손실분담 e 8.01% / ion 10.14% · 환산접점/AM 316→357 (+13.1%) · carbon cluster
-1,447→4,698 (×3.2) · porosity 16.15→15.97% · thickness 51.01µm 동일 · econn 100/100 ·
-R_geom 1.25e-5→1.21e-5 Ω·cm².
+**본문 숫자 = 3.18mAh 실조성 쌍 (σ_e +45.4%)**.  a7_p00 쌍(+33.2%)은 독립 스캐폴드 재현성
+보조.  전 지표 원장: `docs/sdcp_318_base_sbe_dbe_comparison.md`.  (구판의 a7-헤드라인 서술은
+본 최종판으로 대체 — 2026-07-15.)
 
-핵심 논지(리뷰어 프레임): **+33%는 모델에 "심어진" 값이 아니라, 같은 솔루션의 서로 다른 세
-readout이 교차로 가리키는 구조적 결과** — (i) 병렬-기여 산수로는 불가능한 손실분담 8% vs +33%
-(직렬 병목 해소 시그니처), (ii) 접점 +13%·클러스터 ×3.2·랜덤급 분산(D=1.14) — 브리지가 요구하는
-기하 변화, (iii) 대안 가설(치밀화·퍼콜 개시·PTFE 해방)이 고정된 관측치들로 각각 배제.
+## 1. 결론 (논문 결론 문장 그대로)
 
----
+같은 첨가제 총량(4 wt%)에서 절연 바인더 PTFE의 절반을 혼성전도 SDCP로 치환하면(SBE
+70:27:3:1 → DBE 70:27:3:0.5:0.5) **전자 +45.4% · 이온 +5.6% · 반응계면 +18% · R_geom −32%
+— 측정한 모든 수송·반응 축에서 이득이고 상쇄 축이 없다.**  메커니즘은 병렬 전도가 아니라
+**계면 브리지(직렬 constriction 해소)**: 도로(VGCF 3 wt%, 연결률 100%)는 두 전극이 같고,
+전도도를 깎는 것은 교차로(섬유-섬유·섬유-AM 접합부의 좁은 목)다.  랜덤-균일 분산(D = 1.13)된
+0.3 µm SDCP 입자가 확률적으로 그 목에 앉아 고전도 브리지가 되면, 브리지 자신의 발열 몫은
+10%뿐이어도 그 목을 지나는 경로 전체의 전류가 풀리며 σ_e가 뛴다.  유일한 잠재 비용은 기계
+축(바인더 반감)이며, 이는 transport 모델 밖 — manuscript의 SDCP 계면-앵커링(SAICAS/DFT)이
+담당하는 주장.
 
-## 1. Main-text 초안 (영문)
+## 2. 수치 원장
 
-> Replacing half of the PTFE binder with SDCP at fixed total additive loading (SBE:
-> VGCF/PTFE = 3/1 wt% → DBE: VGCF/PTFE/SDCP = 3/0.5/0.5 wt%) increases the through-plane
-> electronic conductivity of the voxel-resolved electrode by 33% (2.12 → 2.83 S/cm) while
-> leaving the ionic conductivity essentially unchanged (+3.6%).  Three independent readouts
-> of the same numerical solution identify **interfacial bridging, not bulk parallel
-> conduction,** as the dominant mechanism.
->
-> First, the share of electronic Joule dissipation occurring inside the SDCP phase is only
-> 8%.  A parallel-conductor picture — in which the conductivity gain tracks the added
-> phase's own transport share — cannot yield a 33% gain from an 8% share.  Relief of
-> series constrictions can: unblocking a narrow junction lowers the resistance of an entire
-> percolation pathway, while the bridge itself, being highly conductive, dissipates little
-> (dissipation is J²R-weighted and therefore systematically understates the role of
-> low-resistance bridges).
->
-> Second, the microstructure changes in exactly the way bridging requires.  The median
-> number of carbon contact points per AM particle rises by 13% (316 → 357) and the number
-> of distinct conductive clusters rises 3.2-fold (1,447 → 4,698), reflecting ~6×10⁴
-> individually dispersed 0.3 µm SDCP particles (Fig. S3) whose spatial statistics are
-> indistinguishable from a random field (index of dispersion 1.14 against 1.0 for complete
-> spatial randomness after excluding AM-occupied volume; nearest-neighbour distance 1.16×
-> the same-density random reference).  Uniformly random placement is the geometry that
-> maximises the probability of a particle sitting in *any* given inter-fibre or fibre–AM
-> gap.
->
-> Third, the alternative explanations are excluded by observables held fixed across the
-> pair: porosity (16.2 → 16.0%) and thickness (51.0 µm) are unchanged, ruling out
-> densification; both electrodes are already fully collector-connected (100%), ruling out a
-> percolation onset; and halving the insulating PTFE would relieve ionic and electronic
-> transport alike, whereas the ionic network — which SDCP additionally serves, carrying 10%
-> of the ionic dissipation — improves by only 3.6%.  The two cases are solved on the same
-> voxel grid with identical numerics and material tables; only the recipe differs, so
-> discretisation and solver biases cancel in the comparison.
-
-### 1-K. 국문 대역 (검토용 — 본문은 위 영문 기준)
-
-> 총 첨가제 로딩을 고정한 채 PTFE의 절반을 SDCP로 치환하면(SBE: VGCF/PTFE = 3/1 wt% →
-> DBE: 3/0.5/0.5) 복셀-해상 전극의 두께방향 전자전도도가 33% 증가하고(2.12→2.83 S/cm)
-> 이온전도도는 사실상 불변이다(+3.6%).  같은 수치해의 서로 다른 세 가지 readout이 지배
-> 메커니즘을 **벌크 병렬전도가 아니라 계면 브리징**으로 지목한다.
->
-> 첫째, SDCP 상 내부에서 발생하는 전자 줄(Joule) 손실은 전체의 8%뿐이다.  전도도 이득이
-> 추가된 상의 수송 몫을 따라가는 병렬-도체 그림으로는 8% 몫에서 33% 이득이 나올 수 없다.
-> 직렬 병목(constriction) 해소로는 가능하다: 좁은 접합부 하나를 뚫으면 그 퍼콜레이션 경로
-> 전체의 저항이 내려가는 반면, 브리지 자신은 고전도라 손실이 거의 없다(손실분담은 J²R
-> 가중이라 저저항 브리지의 역할을 구조적으로 과소표시한다).
->
-> 둘째, 미세구조가 정확히 브리징이 요구하는 방향으로 변한다.  AM 입자당 카본 접점 중앙값이
-> 13% 증가하고(316→357) 전도 클러스터 수가 3.2배(1,447→4,698) — 이는 개별 분산된 0.3 µm
-> SDCP 입자 ~6×10⁴개(Fig. S3)를 반영하며, 그 공간 통계는 랜덤 필드와 구별 불가다
-> (AM-점유 부피 제외 후 index of dispersion 1.14 vs 완전 랜덤 1.0; 최근접거리 = 동밀도
-> 랜덤 기준의 1.16배).  균일-랜덤 배치는 "임의의 섬유-섬유·섬유-AM 틈"에 입자가 앉을
-> 확률을 최대화하는 기하다.
->
-> 셋째, 대안 설명들은 쌍에서 고정된 관측치로 배제된다: porosity(16.2→16.0%)·두께(51.0 µm)
-> 불변 → 치밀화 배제; 두 전극 모두 이미 집전체 100% 연결 → 퍼콜레이션 개시 배제; 절연체
-> PTFE의 반감이 지배 원인이라면 이온·전자 수송이 함께 좋아져야 하나, SDCP가 이온 손실의
-> 10%를 새로 담당하는데도 이온망 개선은 +3.6%에 그침.  두 케이스는 동일 복셀 격자·동일
-> 수치·동일 물성표로 풀렸고 레시피만 다르므로, 이산화·솔버 편향은 비교에서 소거된다.
-
-## 2. Methods 초안 (영문)
-
-> **Voxel resistor-network conductivity.**  The compacted MPM microstructure (AM spheres,
-> plastically deformed SE continuum, and explicitly seeded additive material points) is
-> rasterised onto a 0.4 µm voxel grid.  Each conducting voxel pair is joined by a
-> harmonic-mean face conductance g = 2σᵃσᵇ/(σᵃ+σᵇ)·Δx, current collector and top plate are
-> applied as per-column, distance-aware Dirichlet couplings, lateral boundaries are
-> insulating, and ∇·(σ∇φ)=0 is solved by conjugate gradients (residual < 10⁻⁸; the assembly
-> is verified against analytic laminate, single-column and percolation-cutoff solutions).
-> The electronic and ionic networks are solved on the *same* grid with phase-wise
-> conductivities (electronic: AM, VGCF, SDCP conduct; SE, PTFE insulate — ionic: SE, SDCP
-> conduct; AM, VGCF, PTFE insulate).  Reported comparisons are between runs at identical
-> grid, tables and boundary conditions, so they are **relative** statements about
-> microstructure; absolute values inherit the voxel-scale contact resolution (0.4 µm was
-> fixed against the experimental σ_ionic envelope, and sub-voxel constriction is not
-> resolved).  Phase-wise dissipation shares are Σ g·(Δφ)² accumulated per phase.
-> Additive dispersion is quantified on the as-seeded point clouds by (i) the index of
-> dispersion of per-cell counts on a 2 µm lattice, with AM-occupied cells excluded so that
-> complete spatial randomness in the accessible matrix reads 1.0, and (ii) the median
-> nearest-additive distance from SE material points, normalised by the same-count Poisson
-> reference (3·ln2/4πn)^⅓; both estimators are calibrated on synthetic random, clustered
-> and fibre fields.
-
-### 2-K. 국문 대역
-
-> **복셀 저항망 전도도.**  압밀된 MPM 미세구조(AM 구, 소성변형 SE 연속체, 명시적으로 seed된
-> 첨가제 재료점)를 0.4 µm 복셀 격자에 래스터화한다.  전도 복셀 쌍은 조화평균 면 컨덕턴스
-> g = 2σᵃσᵇ/(σᵃ+σᵇ)·Δx로 잇고, 집전체·상부 플레이트는 컬럼별 거리-인지 Dirichlet 결합,
-> 측면은 절연 경계로 두고 ∇·(σ∇φ)=0을 CG로 푼다(잔차 <10⁻⁸; 어셈블리는 적층/단일컬럼/퍼콜
-> 차단 해석해로 검증).  전자망·이온망은 **같은 격자** 위에서 상별 전도도로 푼다(전자: AM·
-> VGCF·SDCP 전도, SE·PTFE 절연 — 이온: SE·SDCP 전도, AM·VGCF·PTFE 절연).  보고되는 비교는
-> 동일 격자·물성표·경계조건 런들 사이의 **상대** 진술이며, 절대값은 복셀-스케일 접촉 해상도
-> 한계를 물려받는다(0.4 µm는 실험 σ_ionic envelope에 맞춰 고정; sub-voxel constriction은
-> 미해상).  상별 손실분담은 Σ g·(Δφ)²를 상별로 누적한 값.  첨가제 분산은 as-seeded 점군에서
-> (i) 2 µm 격자 셀별 점수의 index of dispersion(AM-점유 셀 제외 → 접근가능 매트릭스의 완전
-> 랜덤 = 1.0), (ii) SE 재료점에서 최근접 첨가제까지의 중앙값 거리를 동수 포아송 기준
-> (3·ln2/4πn)^⅓로 정규화한 비 — 두 추정자 모두 합성 랜덤/응집/섬유 필드로 보정.
-
-## 3. Figure caption 초안 (⚖ 표/패널)
-
-> **SDCP acts as an interfacial bridge, not a parallel conductor.**  Paired voxel solves of
-> the SBE (VGCF/PTFE 3/1 wt%) and DBE (3/0.5/0.5 wt% with SDCP) electrodes on identical
-> grids.  DBE gains +33% electronic conductivity while SDCP carries only 8% of the
-> electronic dissipation; carbon–AM contact points rise 13% and conductive-cluster count
-> 3.2-fold, while porosity, thickness and collector connectivity are unchanged and the
-> ionic network improves by only 3.6% — together isolating series-constriction relief at
-> fibre–fibre and fibre–AM junctions as the operative mechanism.
-
-### 3-K. 국문 대역
-
-> **SDCP는 병렬 도체가 아니라 계면 브리지로 작동한다.**  동일 격자에서 SBE(VGCF/PTFE
-> 3/1 wt%)와 DBE(3/0.5/0.5, SDCP 포함) 전극을 짝지어 푼 복셀 해.  DBE는 전자전도도 +33%를
-> 얻지만 SDCP가 담당하는 전자 손실은 8%뿐; 카본-AM 접점은 13%, 전도 클러스터 수는 3.2배
-> 증가하는 반면 porosity·두께·집전체 연결률은 불변이고 이온망 개선은 +3.6%에 그침 —
-> 종합하면 섬유-섬유·섬유-AM 접합부의 직렬 constriction 해소가 작동 메커니즘으로 격리된다.
-
-## 4. "작위적 값이 아니다" — 리뷰어 방어 포인트 (국문, 순서대로 쓰기)
-
-1. **결과가 입력 파라미터에 비례하지 않는다.**  같은 SDCP(같은 위치·같은 부피)가 전자망에는
-   +33%, 이온망에는 +3.6%를 준다.  σ 테이블 값을 심어서 나오는 효과라면 두 망 모두 자기
-   테이블 값에 비례해야 한다 — 실제로는 **네트워크 기하(어느 틈에 앉았나)가 결과를 결정**했다.
-   같은 이유로 손실분담(8%)과 σ 이득(+33%)의 불일치도 병렬-기여 가설을 자체 기각한다.
-2. **동일-세팅 상대비교.**  두 케이스는 같은 복셀 크기·같은 σ표·같은 솔버·같은 경계조건으로
-   풀렸고 레시피만 다르다.  이산화 편향과 sub-voxel 한계는 공통이라 비교에서 소거된다
-   (절대값 주장 아님 — trust 문구에 명시).
-3. **세 독립 readout의 정합.**  σ(전역 스칼라), 손실분담(에너지 분해), 접점/클러스터/분산
-   (기하 통계)은 서로 다른 후처리인데 하나의 메커니즘(브리지)으로만 동시에 설명된다.
-4. **대안 가설의 명시적 배제.**  치밀화(porosity·두께 불변), 퍼콜 개시(양쪽 100% 연결),
-   PTFE-해방(이온 개선 부재)이 각각 관측치로 반증됨.
-5. **방향의 외부 정합.**  도전재가 σ_e를 올리며 SE-도메인을 잠식해 σ_ion을 해치는 상반 효과는
-   랩 실험(Kim 2024 carbon SE-domain occupation; Cho 2024 VGCF의 양면성)과 GeoDict 계열
-   (Bielefeld 2020, binder 부피↑ → σ_ion 급감)에서 확립된 방향이고, 본 모델은 같은 방향을
-   레시피 반전 없이 재현한다.  전도성-바인더 클래스의 계면-앵커링 개념(자가도핑 SDCP; 유사
-   클래스 Kang 2025 bollard-anchored binder, Han 2025 ICEP)과도 일관.
-6. **검증된 조작점.**  0.4 µm 복셀은 σ_ionic 실험 envelope에 맞춰 고정한 검증값이고, 솔버는
-   해석해(적층/단일컬럼/퍼콜 차단) 셀프테스트를 통과하며, 분산 지표는 합성 랜덤/응집/섬유
-   필드로 보정(CSR=1.0)되어 있다.
-7. **남은 가정을 숨기지 않는다(정직 캐비엇).**  σ_SDCP(전자)=150 S/cm는 잠정 입력이며
-   manuscript pellet 앵커(σ_e ×5.1)로 교체 예정.  단, +33%의 성립 조건은 "브리지가 그것이
-   대체한 틈(진공/SE)보다 충분히 전도적"이라는 것뿐이므로 결론은 σ_SDCP 크기에 약하게만
-   의존할 것으로 예상 — **robustness로 σ_SDCP ∈ {15, 50, 150} payload-only 스윕을 SI에 수록
-   권고** (동일 raster 재솔브, GPU 수 분).  ⚠ 이 스윕은 아직 미실행 — 실행 전에는 본문에
-   "weakly dependent"를 주장하지 말 것 (§F1).
-
-## 5. 수치 원장 (그대로 인용)
-
-| 축 | SBE (A) | DBE (B) | Δ |
-|---|---|---|---|
-| σ_e_eff (S/cm) | 2.12 | 2.83 | **+33.2%** |
-| σ_ion_eff (S/cm) | 1.39e-4 | 1.44e-4 | +3.6% |
-| e-손실분담 SDCP (%) | 0 | 8.01 | — |
-| ion-손실분담 SDCP (%) | 0 | 10.14 | — |
-| 환산접점 중앙값 /AM | 316 | 357 | +13.1% |
-| carbon clusters | 1,447 | 4,698 | ×3.2 |
-| porosity (%) | 16.15 | 15.97 | −1.1% |
-| thickness (µm) | 51.01 | 51.01 | 0 |
-| econn (%) | 100 | 100 | 0 |
-| R_geom (Ω·cm²) | 1.25e-5 | 1.21e-5 | −3.2% |
-| SDCP 분산 D / nn× (DBE) | — | 1.14 / 1.16 | 랜덤급 균일 |
-
-조성 환산 규약: 카드 wt% = 최종 전극 전체 기준.  실험 70:27:3:1(합 101) ↔ 입력 2.97/0.99;
-70:27:3:0.5:0.5 ↔ 2.97/0.495/0.495.  (a7_p00 계열은 3/1·3/0.5/0.5 명목 — 실제-조성판은
-3.18mAh 스캐폴드 런으로 교체 예정.)
-
-## 6. ★ 실조성 재현 — 3.18mAh 스캐폴드 (2026-07-15, V100 런) = 본문 헤드라인 숫자
-
-manuscript 조성 그대로(70:27:3:1 ↔ 70:27:3:0.5:0.5; 실현 AM 70.37/SE 25.67 wt%)를 실제
-3.18mAh DEM 스캐폴드(AM 1271, 두께 72.5µm) 위에서 재실행 — **§1의 메커니즘 시그니처가 전부
-재현되고 크기는 더 큼**.  a7_p00 쌍(+33%)은 재현성/보조, **본문 숫자는 이 쌍(+45%)**.
+**3.18mAh 실조성 (본문)** — 동일 스캐폴드(AM 1271, 72.5 µm), 동일 세팅, V100 2026-07-14/15:
 
 | 축 | base(무첨가) | SBE (3:1) | DBE (3:0.5:0.5) | SBE→DBE |
 |---|---|---|---|---|
 | σ_e_eff (S/cm) | 5.85e-4 | 1.975 | **2.871** | **+45.4%** |
 | σ_ion_eff (S/cm) | 9.66e-4 | 2.034e-4 | 2.147e-4 | +5.6% |
-| e-손실분담 SDCP (%) | — | 0 | **10.0** | (병렬 산수로 +45% 불가) |
+| e-손실분담 SDCP (%) | — | 0 | **10.0** | 병렬 산수 불가 |
 | ion-손실분담 SDCP (%) | — | 0 | 13.8 | |
+| BV 반응면 (AM\|이온상) | 792,503 | 425,349 | **503,922** | **+18%** |
 | R_geom (Ω·cm²) | 5.44e-2 | 1.37e-5 | 9.36e-6 | −32% |
 | carbon clusters | 0 | 3,172 | 8,644 | ×2.7 |
-| STEP4 BV faces (AM\|이온상 반응면) | 792,503 | 425,349 | **503,922** | +18% (SDCP 반응-접근 계면) |
-| STEP4 i/ī p95 | 1.65 (바닥-hot) | 2.32 (상단-hot) | 2.48 (상단-hot) | 지배축 반전은 base↔SBE |
-| porosity (%) | 9.80 | 7.87 | 7.39 | (DBE 첨가제 부피 +0.57vol%) |
-| SDCP 분산 D / nn× | — | — | **1.13 / 1.13** | a7의 1.14/1.16과 재현 일치 |
+| 환산접점 중앙값 /AM | — | 433 | 517 | +19.3% |
+| SDCP 분산 D / nn× | — | — | **1.13 / ×1.13** | 랜덤급 균일 |
 | conductive_all nn_med (µm) | — | 0.304 (×1.41) | 0.282 (×1.34) | 배달거리 단축 |
+| porosity / thickness | 9.80% / 68.0µm* | 7.87% / 72.48µm | 7.39% / 72.48µm | (*base는 dilate-z 없음 — 방향 참고) |
+| STEP4 i/ī p95 · hot side | 1.65 · 바닥 | 2.32 · 상단 | 2.48 · 상단 | base↔SBE = 지배축 반전 |
 
-- **EMT 크기 논증 (a7보다 더 강함)**: SDCP 1.385 vol%(고체) ≈ 1.28 vol%(전극) → Maxwell-Garnett
-  고립 개재물 상한 3φ ≈ **+3.9% ≪ 실측 +45.4% (11.6×)** — 부피 산수 기각, 위치(브리지) 지배.
-- **재현성 축**: SDCP 분산 D(1.14→1.13)·nn×(1.16→1.13)이 다른 스캐폴드·조성에서 거의 동일 =
-  "랜덤-균일 나노분산" 서사가 seeding 파라미터가 아니라 형상(0.3µm 단독입자)의 귀결임을 지지.
-- **증분 크기의 스캐폴드 의존(+33→+45%)**: 같은 부호·같은 시그니처, 더 조밀한 실조성 침대
-  (porosity ~7.5% vs 16%)에서 브리지 이득이 커짐 — 접점 밀도가 높을수록 병목 해소 기회가 많다는
-  방향으로 일관 (정량 분해는 후속).
-- ★ **부수 발견 — 첨가제의 반응계면 상쇄와 SDCP의 부분 복원**: base→SBE에서 BV 반응면이
-  792,503→425,349(−46%) — VGCF/PTFE가 AM 표면을 점유하며 AM|SE 반응계면을 잘라먹는 대가
-  (전자 +3,400×의 숨은 비용).  DBE는 SDCP의 AM|SDCP 면이 반응면으로 복귀해 +18%(425k→504k)
-  회복 — "SDCP = 혼성전도 배달부"가 반응-접근성 축에서도 정량 확인됨 (base는 dilate-z 유무가
-  달라 SBE↔DBE 비교가 엄밀; base 값은 방향 참고).  base↔SBE의 **반응 hot-side 반전**(바닥→상단,
-  전자지배→이온지배)은 §STEP4 대비쌍으로 별도 그림.
+**a7_p00 재현 (보조)** — 다른 스캐폴드(2mAh, AM 995, 51.0 µm, porosity ~16%), 명목 3:1 vs
+3:0.5:0.5: σ_e 2.12→2.83 (+33.2%) · SDCP e-분담 8.0% · σ_ion +3.6% · 접점 +13.1% ·
+클러스터 ×3.2 · SDCP 분산 D 1.14/×1.16.  **같은 시그니처, 다른 침대** — 조밀한 실조성
+침대(porosity ~7.5%)에서 증분이 커짐(브리지 기회 증가 방향).
 
-## 7. ★ σ-공동스케일 전류밀도 필드 — "+45%가 어디서 오는가"의 공간 증거 (4번째 축, 2026-07-15)
+## 3. 메커니즘 — 4축 논증 (작위성 방어의 골격)
 
-§1의 3축(손실분담 산수 / 접점 기하 / 대안 배제)은 전부 **집계 통계**였다.  4번째 축은 그
-메커니즘을 **공간에서 직접 보여주는** 그림 — ⚖ 비교팝업 ⚡전자 전류밀도 필드에 **σ-공동스케일**
-(두 해의 색을 σ_eff 비율로 정렬: A=SBE ×0.69, B=DBE ×1.00)과 **복셀큐브** 렌더를 적용한
-같은-색자 비교:
+**① 손실분담 산수 (병렬-기여 기각)**: SDCP의 전자 줄손실 몫은 10.0%인데 σ_e는 +45.4% —
+전도도 이득이 추가 상의 수송 몫을 따라가는 병렬-도체 그림으로는 불가능.  직렬 병목 해소는
+가능: 목 하나를 뚫으면 경로 전체 저항이 내려가고, 브리지 자신은 σ=150 S/cm 저저항이라
+J²R-가중 손실분담에는 작게 잡힌다(손실분담은 브리지 역할을 구조적으로 과소표시).
 
-- **SBE**: 전 영역이 남색 연속 채널 — VGCF 골격은 온전하지만 같은 색자에서 **절대 전류 레벨이
-  한 단 낮다** (병목 저항이 경로 전체 전류를 누르고 있는 상태).
-- **DBE**: 청록~초록 바탕 + **빨강/주황 핫스팟 점등** — 고전도(σ=150) SDCP가 낀 접합부로
-  전류가 몰리는 자리.  국소 핫스팟 소수가 새로 생기며 **네트워크 전체의 레벨이 올라가는** 그림
-  = "브리지가 직렬 병목을 풀어 경로 전체를 살린다"의 시각적 정의.  (병렬-도체 가설이었다면
-  기존 VGCF 패턴은 그대로이고 SDCP 위치만 밝아져야 하며, 전체 레벨 상승은 없어야 한다.)
+**② 접점 기하·분산**: AM당 환산접점 +19.3%(433→517), 전도 클러스터 ×2.7(3,172→8,644) =
+~13.7만 개 개별 분산 0.3 µm SDCP(Fig. S3).  공간 통계는 AM-배제 보정 후 완전 랜덤과 구별
+불가(index of dispersion 1.13, 최근접거리 = 동밀도 포아송의 1.13×) — **균일-랜덤 배치는
+"임의의 틈"에 입자가 앉을 확률을 최대화하는 기하**이고, 이 통계가 스캐폴드·조성이 다른
+a7_p00(1.14/×1.16)에서 재현된다 = 파라미터가 아니라 형상(단독입자)의 귀결.
 
-**왜 전자전도가 증가하는가 — 한 문단 종합**: 두 전극의 VGCF 고속도로망(3 wt%)은 동일하고
-연결률도 둘 다 100%다.  전도도를 깎는 것은 도로가 아니라 **교차로** — 섬유-섬유·섬유-AM
-접합부의 좁은 목(constriction)이 직렬로 끼어 경로 저항을 지배한다.  균일-랜덤으로 분산된
-(D=1.13) 0.3 µm SDCP 입자가 확률적으로 그 목들에 앉아 σ=150 S/cm 브리지가 되면, 브리지
-자신은 저저항이라 발열 몫이 8~10%에 불과한데도 **그 목을 지나는 경로 전체의 전류가 풀리며**
-σ_e가 +33%(a7)~+45%(실조성) 뛴다.  부피 산수(EMT 3φ ≈ +4%)로는 불가능한 크기이며, 이온망이
-+5.6%에 그친 것(같은 입자, 다른 네트워크)이 "입력값이 아니라 위치가 만든 결과"임을 잠근다.
+**③ 대안 배제 (고정 관측치)**: porosity(7.87→7.39%)·두께(72.48µm 동일) → 치밀화 아님;
+둘 다 집전체 연결 100% → 퍼콜레이션 개시 아님; 절연 PTFE 반감이 주범이면 이온도 함께 커야
+하나 이온망은 +5.6%(SDCP가 이온 손실 13.8%를 새로 담당하는데도) → PTFE-해방 기여는 부차.
+**크기 논증**: 고립 개재물 유효매질(Maxwell-Garnett) 상한 3φ ≈ +3.9%(SDCP 1.39 vol%) ≪
+실측 +45.4%(11.6×) — 부피 산수 기각, 위치가 만든 결과.  같은 입자가 전자망 +45%/이온망
++5.6%를 주는 비대칭 자체가 "σ 입력값이 아니라 네트워크 토폴로지가 결과를 결정"의 증명.
 
-Fig caption 초안 (영):
-> Electronic current-density fields of SBE and DBE rendered on a σ-joint colour scale
-> (colours referenced to the DBE p99.8 level; the SBE side scaled by the conductivity ratio
-> ×0.69★).  At matched scale the SBE network carries visibly lower current throughout,
-> whereas DBE lights up with localized high-current hotspots at SDCP-bridged fibre–fibre and
-> fibre–AM junctions while the whole network brightens — the spatial counterpart of the
-> +45.4% conductivity gain and the direct signature of series-constriction relief rather
-> than parallel conduction.  (★Approximate joint scale: assumes similar upper-tail shape
-> between the paired solves; per-payload self-normalized versions in SI.)
+**④ 공간 증거 (σ-공동스케일 필드)**: 두 해의 색을 σ_eff 비율로 정렬(SBE ×0.69, DBE ×1.00★)
+한 같은-색자 비교에서 — SBE는 전 영역 남색 연속 채널(병목이 경로 전체 전류를 누름), DBE는
+SDCP 접합부 핫스팟이 점등되며 **네트워크 전체 레벨이 상승**.  병렬-도체였다면 기존 VGCF
+패턴은 그대로이고 SDCP 위치만 밝아야 한다 — 관측은 반대.  (★비례 근사: |J| 자릿수 ∝ σ_eff,
+동일 ΔV·유사 상위꼬리 가정 — 캡션 명시, SI에 자기-정규화판 병기.)
 
-재현 세팅(뷰어): ⚖ 비교 → ⚡전자 전류밀도 필드 → **σ공동 ✓ · 이어짐 ✓ · 백본 95% · glow ✓**
-→ 투명샷 ×2 (+ 컬러바 버튼의 |J| jet 바에 "σ-joint, SBE ×0.69" 라벨 추가).
-정직 캐비엇: σ-공동스케일은 |J| 자릿수 ∝ σ_eff 라는 **비례 근사**(동일 ΔV·유사 상위꼬리) —
-캡션에 ★로 명시하고 SI에 자기-정규화판 병기.  절대 |J| 값은 주장하지 않음(RELATIVE trust).
+## 4. Main-text 최종 초안 (영문)
+
+> Replacing half of the insulating PTFE binder with the mixed-conducting SDCP at fixed total
+> additive loading (SBE: VGCF/PTFE = 3/1 wt% → DBE: 3/0.5/0.5) increases the through-plane
+> electronic conductivity of the voxel-resolved electrode by 45.4% (1.975 → 2.871 S/cm),
+> improves rather than sacrifices the ionic network (+5.6%), and enlarges the
+> reaction-accessible interface by 18% (425,349 → 503,922 Butler-Volmer faces) — the usual
+> conductive-additive trade-off (electrons gained at the cost of ions) does not appear,
+> because an insulator is being replaced by a conductor of both carriers.  The same
+> substitution on an independent scaffold and composition reproduces the effect (+33.2%),
+> and four independent readouts of the same solutions identify **interfacial bridging, not
+> bulk parallel conduction,** as the mechanism.
+>
+> First, the SDCP phase dissipates only 10% of the electronic Joule heat: a parallel-conductor
+> picture cannot yield a 45% conductivity gain from a 10% transport share, whereas relief of
+> series constrictions can — unblocking a junction lowers the resistance of an entire
+> percolation pathway while the highly conductive bridge itself dissipates little.  Second,
+> the microstructure moves exactly as bridging requires: carbon contact points per AM particle
+> rise by 19% and the conductive-cluster count 2.7-fold, contributed by ~1.4×10⁵ individually
+> dispersed 0.3 µm SDCP particles whose spatial statistics are indistinguishable from a random
+> field (index of dispersion 1.13 after excluding AM-occupied volume; nearest-neighbour
+> distance 1.13× the same-density Poisson reference) — random-uniform placement maximises the
+> probability of occupying any given inter-fibre or fibre–AM gap.  Third, the alternatives are
+> excluded by held-fixed observables (porosity and thickness unchanged; both electrodes fully
+> collector-connected; the ionic response bounds the PTFE-removal contribution), and by
+> magnitude: the dilute-inclusion effective-medium ceiling for 1.4 vol% of conductor is ≈+4%,
+> an order below the observation.  Fourth, current-density fields rendered on a σ-joint colour
+> scale show the spatial counterpart: at matched scale the SBE network runs uniformly dim,
+> while DBE lights up at SDCP-bridged junctions and brightens as a whole — the direct
+> signature of series-constriction relief.
+
+### 4-K. 국문 대역
+
+> 총 첨가제 로딩을 고정한 채 절연 PTFE의 절반을 혼성전도 SDCP로 치환하면(SBE 3/1 → DBE
+> 3/0.5/0.5 wt%) 복셀-해상 전극의 두께방향 전자전도도가 45.4% 증가하고(1.975→2.871 S/cm),
+> 이온망은 희생이 아니라 개선되며(+5.6%), 반응-접근 계면이 18% 커진다(BV 면 425,349→503,922)
+> — 절연체를 양쪽 운반자의 전도체로 바꾼 것이라 통상의 도전재 트레이드오프(전자↑이온↓)가
+> 나타나지 않는다.  독립 스캐폴드·조성에서 같은 치환이 효과를 재현하고(+33.2%), 같은 해의
+> 네 가지 독립 readout이 메커니즘을 **벌크 병렬전도가 아닌 계면 브리징**으로 지목한다.
+> (이하 ①손실분담 10% vs +45% ②접점 +19%·클러스터 ×2.7·랜덤 분산 D=1.13 ③대안 배제 +
+> EMT 상한 +4% ≪ +45% ④σ-공동스케일 필드의 전체-레벨 상승 — §3과 동일.)
+
+## 5. Methods 최종 초안 (영문, 국문 대역은 §2-K 구판과 동일 논리)
+
+> **Voxel resistor-network conductivity.**  The compacted MPM microstructure (AM spheres,
+> plastically deformed SE continuum, explicitly seeded additives) is rasterised onto a 0.4 µm
+> grid; conducting voxel pairs are joined by harmonic-mean face conductances, collector and
+> top plate enter as per-column distance-aware couplings, lateral boundaries are insulating,
+> and ∇·(σ∇φ)=0 is solved by conjugate gradients (residual <10⁻⁸; assembly verified against
+> analytic laminate, single-column and percolation-cutoff solutions).  Electronic (AM, VGCF,
+> SDCP conduct) and ionic (SE, SDCP conduct) networks are solved on the same grid; PTFE is
+> insulating on both — its volume resistivity exceeds 10¹⁸ Ω·cm (ASTM D257), i.e. σ_PTFE = 0
+> is the discretisation of the literature value.  Reported pair-wise comparisons share grid,
+> material tables and boundary conditions, so discretisation biases cancel; absolute values
+> inherit the voxel-scale contact resolution (0.4 µm fixed against the experimental σ_ionic
+> envelope; sub-voxel constrictions unresolved).  Phase-wise dissipation shares are Σg(Δφ)²
+> per phase.  Additive dispersion is quantified by (i) the index of dispersion of per-cell
+> counts on a 2 µm lattice with AM-occupied cells excluded (complete spatial randomness in
+> the accessible matrix = 1.0), and (ii) the median nearest-additive distance from SE material
+> points normalised by the same-count Poisson reference; both estimators are calibrated on
+> synthetic random, clustered and fibre fields.
+
+## 6. Figure 패키지 (조립만 남음)
+
+| 패널 | 내용 | 캡션 | 에셋 |
+|---|---|---|---|
+| 메인-1 | σ-공동스케일 |J_e| 필드 SBE vs DBE (투명샷 2장) | §3-④ 영문 캡션 (★근사 명시) | 뷰어: ⚡필드+σ공동✓+이어짐✓+백본95%+glow✓ → 투명샷×2 |
+| 메인-2 | 전기 배선 도메인캡 SBE vs DBE (공동 스케일 298–673) | "SDCP acts as an interfacial bridge…" (구판 §3 caption 유지) | ⚖ wiring + 투명샷; 컬러바 버튼 |
+| 보조 | Δ표 (σ/분담/접점/클러스터) + jrxn 지배축 반전(base↔SBE) | §2 표 | PNG 버튼(합성) |
+| 공용 | 컬러바(જet γ1.6, 뷰어 1:1)·컴포넌트 범례·µm 스케일바 킷 | — | `sdcp_figure_assets.pptx` + `sdcp_scalebar_sigma_joint.pptx` (편집 가능 도형) |
+
+## 7. 리뷰어 방어 (작위적 값 아님 — 8항)
+
+1. **결과가 입력에 비례하지 않음**: 같은 SDCP(같은 위치·부피)가 전자 +45.4%/이온 +5.6% —
+   σ 테이블을 심어 나오는 효과라면 두 망이 각자 테이블 값을 따라야 한다.  손실분담(10%) vs
+   이득(+45%) 불일치가 병렬 가설을 자체 기각.
+2. **크기 논증**: EMT(Maxwell-Garnett) 상한 3φ ≈ +3.9% ≪ +45.4% (11.6×) — 부피가 아니라
+   위치(토폴로지)의 효과.
+3. **동일-세팅 상대비교**: 같은 복셀·σ표·BC, 레시피만 다름 → 이산화 편향 소거.
+4. **세 독립 readout + 공간 필드의 정합**: 스칼라(σ)·에너지 분해(분담)·기하 통계(접점/
+   클러스터/분산)·공간 필드가 하나의 메커니즘으로만 동시 설명.
+5. **재현성**: 독립 스캐폴드(a7_p00)에서 +33.2%·D 1.14 — 시그니처 동일.
+6. **문헌 방향 정합**: 도전재의 σ_e↑/σ_ion 잠식(Kim 2024; Cho 2024; Bielefeld 2020)을 레시피
+   반전 없이 재현; 전도성-바인더 계면-앵커링 클래스(Kang 2025 bollard; Han 2025 ICEP)와 일관.
+7. **검증된 조작점 + 입력 provenance**: 0.4 µm = σ_ionic envelope 고정 검증값; 솔버 해석해
+   셀프테스트; 분산 지표 CSR 보정.  σ표는 측정/문헌/가정 3분류로 공개 — PTFE=0은 데이터시트
+   (>10¹⁸ Ω·cm)의 이산화 (⚠ Kang 2025 Fig 3c의 "PTFE 0.58 S/cm"은 **전극-수준 4-probe** 값 —
+   재료 σ로 넣으면 카본망 이중계상, 오독 주의).
+8. **정직 캐비엇 공개** (§8) — 숨긴 가정 없음.
+
+## 8. 정직 캐비엇 / 잔여 (열린 것)
+
+- **σ_SDCP(e)=150 S/cm 잠정** — 랩 펠릿/필름 측정으로 교체 예정 (`--sigma-sdcp`).
+  robustness 스윕 {15/50/150} **미실행** — 실행 전 "weakly dependent" 주장 금지 (§F1).
+- **σ-공동스케일 = 비례 근사★** — 캡션 명시 + SI 자기-정규화판.  glow = 렌더 장치(물리 아님).
+- **기계 축은 범위 밖**: PTFE 반감의 접착 비용(binder_cap 0.645 "under")은 SDCP 계면-앵커링
+  (E_bind 재계산 대기)이 담당하는 별도 주장.
+- **i/ī p95 2.32→2.48**: "SDCP가 반응 불균일을 낮춘다"는 지지되지 않음 — 균일도 개선 주장 금지.
+- 실험 앵커 훅: 대칭셀 SBE/DBE σ 비율(배영진 "얼추 비슷" — 수치 확보 시 §2에 추가),
+  3.18mAh 실측 전극 두께(≈72.5µm 검증 → porosity 논란 종결).
+- 조성 환산 규약: 카드 wt% = 최종 전극 전체 기준; 70:27:3:1(합101) ↔ 2.97/0.99,
+  70:27:3:0.5:0.5 ↔ 2.97/0.495/0.495 (실현 조성 70.37/25.67 wt% 확인).
