@@ -1889,32 +1889,91 @@ function applyViewMode(state, mode) {
       state.meshes.MESH.visible = true;
       state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.10;
     }
+    // ── 연결 AM = 탄소-배선 강도 GRADIENT (binary→graded, user: "칙칙 → CBD 닿는 정도 그라데이션") ──
+    // score = # of carbon points (VGCF 2 / SuperP 3 / SDCP 5 — PTFE 4 절연 제외) whose centre lies
+    // within (r_AM + 0.3µm) of the AM surface, from the payload's subsampled additive_points via a
+    // spatial hash (995 AM × ~120k pts → fast).  SUBSAMPLED counts → RELATIVE wiring only: percentile-
+    // normalised p5–p95 → indigo(약) → cyan → cream(강).  Isolated stays red.  Carbon 없으면 binary 폴백.
+    const carbonPts = ((state.data && state.data.additive_points) || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
+    const BAND = 0.3;
+    let touch = null;
+    if (carbonPts.length) {
+      const CELL = 3.0;
+      const hash = new Map();
+      const keyOf = (x, y, z) => Math.floor(x / CELL) + ',' + Math.floor(y / CELL) + ',' + Math.floor(z / CELL);
+      carbonPts.forEach(p => {
+        const k = keyOf(p[0], p[1], p[2]);
+        let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(p);
+      });
+      touch = new Map();                                     // particle-object → contact count
+      ['AM_P', 'AM_S'].forEach(t => {
+        const m = state.meshes[t]; if (!m) return;
+        m.userData.particles.forEach(p => {
+          const rr = p.r + BAND, rr2 = rr * rr;
+          let n2 = 0;
+          const ci = Math.floor(p.x / CELL), cj = Math.floor(p.y / CELL), ck = Math.floor(p.z / CELL);
+          const reach = Math.ceil(rr / CELL);
+          for (let di = -reach; di <= reach; di++) for (let dj = -reach; dj <= reach; dj++)
+            for (let dk = -reach; dk <= reach; dk++) {
+              const cell = hash.get((ci + di) + ',' + (cj + dj) + ',' + (ck + dk));
+              if (!cell) continue;
+              for (const q of cell) {
+                const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
+                if (dx * dx + dy * dy + dz * dz <= rr2) n2++;
+              }
+            }
+          touch.set(p, n2);
+        });
+      });
+    }
+    let lo5 = 0, hi95 = 1;
+    if (touch) {
+      const counts = [...touch.values()].sort((a, b) => a - b);
+      lo5 = counts[Math.floor(0.05 * (counts.length - 1))];
+      hi95 = Math.max(counts[Math.floor(0.95 * (counts.length - 1))], lo5 + 1);
+    }
+    const wiringColor = (t) => {                             // indigo → cyan → cream (기존 ramp 재사용)
+      if (t < 0.5) return new THREE.Color(0x1e3a8a).lerp(new THREE.Color(0x06b6d4), t * 2);
+      return new THREE.Color(0x06b6d4).lerp(new THREE.Color(0xfef3c7), (t - 0.5) * 2);
+    };
     const colOn = new THREE.Color(0x3b5fd9), colOff = new THREE.Color(0xb91c1c);
-    let nOn = 0, nOff = 0, nNA = 0;
+    let nOn = 0, nOff = 0, nNA = 0, medTouch = 0;
+    if (touch) {
+      const cs = [...touch.values()].sort((a, b) => a - b);
+      medTouch = cs[Math.floor(cs.length / 2)] || 0;
+    }
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
       m.userData.particles.forEach((p, i) => {
         if (p.econn === undefined) { m.setColorAt(i, colDim); nNA++; }
-        else if (p.econn) { m.setColorAt(i, colOn); nOn++; }
-        else { m.setColorAt(i, colOff); nOff++; }
+        else if (!p.econn) { m.setColorAt(i, colOff); nOff++; }
+        else {
+          nOn++;
+          if (touch) {
+            const tt = Math.max(0, Math.min(1, ((touch.get(p) || 0) - lo5) / (hi95 - lo5)));
+            m.setColorAt(i, wiringColor(tt));
+          } else m.setColorAt(i, colOn);                     // no carbon in payload → binary 폴백
+        }
       });
       m.material.opacity = 0.97; m.material.transparent = true;
     });
     flushColors();
-    // AM connectivity ONLY (user pref 2026-07-10): no carbon overlay — the blue/red spheres ARE
-    // the story (slide-19 문법).  buildEconnClusters (CBD-style cluster domains) is kept unwired
-    // for a future carbon-network mode.  Legend kept SHORT (was too long — user).
     const pct = (nOn + nOff) ? (100 * nOn / (nOn + nOff)) : 0;
     const nClFull = ec && ec.n_carbon_clusters != null ? Number(ec.n_carbon_clusters) : null;
+    const wireBar = touch
+      ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#fef3c7)"></div>
+         <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>배선 약함</span><span>탄소 접점 밀도 (p5–p95)</span><span>강함</span></div>
+         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 ${medTouch.toLocaleString()}접점/AM · 상대값(서브샘플 기반) — SDCP·VGCF·SuperP 접점, PTFE 제외</div>`
+      : '';
     setLegend(state,
-      `<b>전기 연결성</b>
-       <div style="margin-top:4px">
-         <span style="color:#5b7cf0;font-size:13px">●</span> 연결 ${nOn.toLocaleString()} &nbsp;
-         <span style="color:#dc2626;font-size:13px">●</span> 고립 ${nOff.toLocaleString()}
+      `<b>전기 연결성 — 탄소 배선 강도</b>
+       <div style="margin-top:4px">연결 <b>${nOn.toLocaleString()}</b>
+         &nbsp;<span style="color:#dc2626;font-size:13px">●</span> 고립 ${nOff.toLocaleString()}
          ${nNA ? `&nbsp;<span style="color:#6b7280">● n/a ${nNA}</span>` : ''}
          &nbsp;— 연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
-       + (nClFull != null ? ` · carbon cluster ${nClFull.toLocaleString()}개` : '') + `</div>
-       <div style="margin-top:2px;color:#9ca3af;font-size:10px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
+       + (nClFull != null ? ` · cluster ${nClFull.toLocaleString()}` : '') + `</div>`
+       + wireBar
+       + `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
     return;
   }
   if (mode === 'cbd') {
