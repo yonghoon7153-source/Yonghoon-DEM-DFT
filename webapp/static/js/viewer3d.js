@@ -163,7 +163,8 @@ function buildControls(container, isMPM) {
     <button data-action="analysisSummary">📊 분석 요약</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
-    <button data-action="screenshot">Screenshot</button>` : `
+    <button data-action="screenshot">Screenshot</button>
+    <button data-action="colorbar" title="현재 모드의 컬러바를 논문용 6× PNG로 다운로드 (⚖ 팝업과 동일 문법)">컬러바 ⬇</button>` : `
     <label><input type="checkbox" data-layer="AM_P" checked> AM_P</label>
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
     <label><input type="checkbox" data-layer="SE" checked> SE</label>
@@ -2078,6 +2079,9 @@ function applyViewMode(state, mode) {
          <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
          <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 도메인 캡=접점 28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
       : '';
+    state.cbarSpec = touch ? { map: 'jet', gamma: 1.6,
+      title: 'Carbon wiring \u2014 weighted contacts per AM (p5\u2013p95)',
+      left: '\uc57d\ud568 ' + Math.round(lo5), right: '\uac15\ud568 ' + Math.round(hi95) } : null;
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
        <div style="margin-top:4px">연결 <b>${nOn.toLocaleString()}</b>
@@ -4105,6 +4109,31 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
   return { counts, median: s[Math.floor(s.length / 2)] || 0, hits };
 }
 
+/* 논문용 컬러바 PNG — 뷰어와 동일 감마·컬러맵 (⚖ 팝업 + 단독 뷰어 공용, 6× 인쇄 해상). */
+function exportColorbarPNG(spec, fname) {
+  const sp = spec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
+  const S2 = 6, W2 = 470 * S2, H2 = 80 * S2;
+  const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
+  const cx = cv.getContext('2d');
+  cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
+  cx.fillStyle = '#111111'; cx.font = `600 ${13 * S2}px Arial`; cx.textAlign = 'left';
+  cx.fillText(sp.title, 10 * S2, 17 * S2);
+  const bx = 10 * S2, by = 25 * S2, bw = W2 - 20 * S2, bh = 25 * S2;
+  for (let i = 0; i < bw; i++) {
+    const t = i / (bw - 1);
+    const hx = sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t);
+    cx.fillStyle = '#' + hx.toString(16).padStart(6, '0');
+    cx.fillRect(bx + i, by, 1.5, bh);
+  }
+  cx.strokeStyle = '#111111'; cx.lineWidth = S2 * 0.7; cx.strokeRect(bx, by, bw, bh);
+  cx.fillStyle = '#111111'; cx.font = `${11.5 * S2}px Arial`;
+  cx.textAlign = 'left'; cx.fillText(sp.left != null ? String(sp.left) : '', bx, by + bh + 15 * S2);
+  if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
+  cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
+  const a2 = document.createElement('a'); a2.href = cv.toDataURL('image/png');
+  a2.download = fname || 'colorbar.png'; document.body.appendChild(a2); a2.click(); a2.remove();
+}
+
 export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   injectCSS();
   const overlay = document.createElement('div');
@@ -4186,28 +4215,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const a2 = document.createElement('a'); a2.href = cv.toDataURL('image/png'); a2.download = name;
     document.body.appendChild(a2); a2.click(); a2.remove();
   };
-  $('cmp-cbar').onclick = () => {
-    const sp = cbarSpec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
-    const S2 = 6,   // 논문 인쇄용 6× W2 = 470 * S2, H2 = 80 * S2;               // 3× 인쇄 해상
-    const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
-    const cx = cv.getContext('2d');
-    cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
-    cx.fillStyle = '#111111'; cx.font = `600 ${13 * S2}px Arial`; cx.textAlign = 'left';
-    cx.fillText(sp.title, 10 * S2, 17 * S2);
-    const bx = 10 * S2, by = 25 * S2, bw = W2 - 20 * S2, bh = 25 * S2;
-    for (let i = 0; i < bw; i++) {                           // 뷰어와 동일 감마 → 색-값 1:1
-      const t = i / (bw - 1);
-      const hx = sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t);
-      cx.fillStyle = '#' + hx.toString(16).padStart(6, '0');
-      cx.fillRect(bx + i, by, 1.5, bh);
-    }
-    cx.strokeStyle = '#111111'; cx.lineWidth = S2 * 0.7; cx.strokeRect(bx, by, bw, bh);
-    cx.fillStyle = '#111111'; cx.font = `${11.5 * S2}px Arial`;
-    cx.textAlign = 'left'; cx.fillText(sp.left != null ? String(sp.left) : '', bx, by + bh + 15 * S2);
-    if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
-    cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
-    dlCanvas(cv, 'colorbar_' + (($('cmp-mode') || {}).value || 'view') + '.png');
-  };
+  $('cmp-cbar').onclick = () => exportColorbarPNG(
+    cbarSpec, 'colorbar_' + (($('cmp-mode') || {}).value || 'view') + '.png');
   $('cmp-legend').onclick = () => {
     // 컴포넌트 범례 시트 — manuscript 범례 문법(아이콘+라벨 한 줄), 색은 뷰어 실제 팔레트
     const items = [
@@ -5053,6 +5062,20 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         camera.position.copy(state.defaultCamPos);
         controls.target.copy(state.defaultTarget);
         controls.update();
+      } else if (action === 'colorbar') {
+        // 논문용 컬러바 PNG — 모드별 스펙 (econn은 applyViewMode가 실측 p5–p95를 state.cbarSpec에 저장)
+        const _vm = (document.getElementById('view-mode') || {}).value || '';
+        const _SPEC = {
+          jrxn: { map: 'jet', gamma: 1.6, title: 'Reaction current i/\u012b (low-rate charging, p99.8)', left: '0', right: 'hot' },
+          je_field: { map: 'jet', gamma: 1.6, title: '|J_e| relative current density (p99.8-normalized)', left: '0', right: 'high' },
+          ji_field: { map: 'jet', gamma: 1.6, title: '|J_ion| relative current density (p99.8-normalized)', left: '0', right: 'high' },
+          je: { map: 'jet', gamma: 1.6, title: '|J_z| per-AM relative (wetted collector, p99.8)', left: '0', right: 'high' },
+          jb: { map: 'jet', gamma: 1.6, title: '|J_z| per-AM relative (bare collector, p99.8)', left: '0', right: 'high' },
+          je_delta: { map: 'coolwarm', title: '\u0394 redistribution log\u2082(j_bare/j_wetted)', left: '\u00d70.71', mid: '1', right: '\u00d71.4' },
+        };
+        const _sp = (_vm === 'econn' && state.cbarSpec) ? state.cbarSpec : _SPEC[_vm];
+        if (_sp) exportColorbarPNG(_sp, 'colorbar_' + (_vm || 'view') + '.png');
+        else alert('이 모드는 컬러바 스케일이 없어요 — 전류밀도/반응/econn/Δ 모드에서 사용하세요.');
       } else if (action === 'screenshot') {
         // Hide decoration objects (bbox, grid, axis labels) for clean screenshot
         const hiddenDecorations = [];
