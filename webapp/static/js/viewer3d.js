@@ -3906,7 +3906,8 @@ function showMPMAnalysisSummary(state) {
 function _wiringCounts(particles, addPts, addCounts) {
   const carbon = (addPts || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
   const counts = new Float64Array((particles || []).length);
-  if (!carbon.length || !counts.length) return { counts, median: 0 };
+  const hits = new Array((particles || []).length);         // per-AM touching carbon pts (패치 렌더용)
+  if (!carbon.length || !counts.length) return { counts, median: 0, hits };
   const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
   const shown = { 2: 0, 3: 0, 5: 0 };
   carbon.forEach(p => { shown[p[3]]++; });
@@ -3924,6 +3925,7 @@ function _wiringCounts(particles, addPts, addCounts) {
   particles.forEach((p, ix) => {
     const rr = p.r + BAND, rr2 = rr * rr;
     let n = 0;
+    const hh = [];
     const ci = Math.floor(p.x / CELL), cj = Math.floor(p.y / CELL), ck = Math.floor(p.z / CELL);
     const reach = Math.ceil(rr / CELL);
     for (let di = -reach; di <= reach; di++) for (let dj = -reach; dj <= reach; dj++)
@@ -3932,13 +3934,14 @@ function _wiringCounts(particles, addPts, addCounts) {
         if (!cell) continue;
         for (const q of cell) {
           const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
-          if (dx * dx + dy * dy + dz * dz <= rr2) n += (w[q[3]] || 1);
+          if (dx * dx + dy * dy + dz * dz <= rr2) { n += (w[q[3]] || 1); hh.push(q); }
         }
       }
     counts[ix] = n;
+    if (hh.length) hits[ix] = hh;
   });
   const s = [...counts].sort((a, b) => a - b);
-  return { counts, median: s[Math.floor(s.length / 2)] || 0 };
+  return { counts, median: s[Math.floor(s.length / 2)] || 0, hits };
 }
 
 export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
@@ -3951,10 +3954,25 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
         <b style="font-size:14px">⚖ 케이스 비교</b>
         <select id="cmp-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 6px;font-size:11px">
-          <option value="wiring">전기 배선 강도 — 탄소 접점 (공동 스케일 ★)</option>
-          <option value="je_field">전자 전류밀도 필드</option>
-          <option value="ji_field">이온 전류밀도 필드</option>
+          <option value="wiring">전기 배선 — 탄소 접점 패치 (공동 스케일 ★)</option>
+          <option value="je_field">⚡ 전자 전류밀도 필드</option>
+          <option value="ji_field">⚡ 이온 전류밀도 필드</option>
+          <option value="je">전자 — AM 입자별 (je)</option>
+          <option value="je_delta">Δ 재분배 — bare/wetted 비율</option>
+          <option value="additives">도전재 — 전체</option>
+          <option value="add_vgcf">　└ VGCF만</option>
+          <option value="add_superp">　└ Super P만</option>
+          <option value="add_ptfe">　└ PTFE만</option>
+          <option value="add_sdcp">　└ SDCP만</option>
+          <option value="pore">기공 (pore)</option>
         </select>
+        <label id="cmp-bb-wrap" style="display:none;font-size:10.5px;color:#e5e7eb;align-items:center;gap:4px">
+          <input type="checkbox" id="cmp-bb-on" checked> 🔥백본
+          <input type="range" id="cmp-bb-pct" min="30" max="95" step="5" value="80" style="width:88px;accent-color:#f97316">
+          <span id="cmp-bb-lab" style="color:#9ca3af">80%</span></label>
+        <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
+          <input type="checkbox" id="cmp-clip"> 단면
+          <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
         <span id="cmp-status" style="font-size:11px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
         <span style="flex:1"></span>
         <button id="cmp-png" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px">PNG</button>
@@ -4015,6 +4033,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['R_geom (Ω·cm²)', (sA.collector_geometric || {}).R_geom_ohm_cm2, (sB.collector_geometric || {}).R_geom_ohm_cm2],
     ['porosity (%)', mmA.porosity_mpm_pct != null ? mmA.porosity_mpm_pct : mmA.porosity_settled_pct,
                      mmB.porosity_mpm_pct != null ? mmB.porosity_mpm_pct : mmB.porosity_settled_pct],
+    ['thickness (µm)', mmA.thickness_um != null ? mmA.thickness_um : mmA.thickness_mpm_um,
+                       mmB.thickness_um != null ? mmB.thickness_um : mmB.thickness_mpm_um],
     ['econn 연결률 (%)', ecA.connected_pct, ecB.connected_pct],
     ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters],
     ['환산접점 중앙값 /AM', wireA.median, wireB.median],
@@ -4043,6 +4063,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(W, H);
     renderer.setClearColor(COL.BG, 1);
+    renderer.localClippingEnabled = true;                    // 단면 슬라이스 지원
     el.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
     scene.add(new THREE.AmbientLight(0xffffff, 0.85));
@@ -4080,21 +4101,61 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const barHtml = (lab) => `<div style="margin:2px 0;height:8px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
     <div style="display:flex;justify-content:space-between;font-size:9px"><span>${lab[0]}</span><span>${lab[1]}</span><span>${lab[2]}</span></div>`;
   function buildWiring(S, payload, wire, lo, hi) {
+    // 최신 econn 문법: AM은 본색 유지, 카본 접촉부만 표면 패치로 (감마-jet, 공동 스케일).
     const parts = payload.particles || [];
     const grp = new THREE.Group();
     const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
     if (mesh) {
       const c = new THREE.Color();
-      parts.forEach((_, i) => {
-        const t = Math.max(0, Math.min(1, (wire.counts[i] - lo) / Math.max(hi - lo, 1e-9)));
-        mesh.setColorAt(i, c.setHex(jetColor(Math.pow(t, 1.6))));   // 감마톤 = 전류밀도/패치와 동일
-      });
+      parts.forEach((p, i) => mesh.setColorAt(i, c.setHex(COL[p.type] != null ? COL[p.type] : 0x888888)));
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       grp.add(mesh);
     }
+    const pts = [], cols = [];
+    const c2 = new THREE.Color();
+    parts.forEach((p, i) => {
+      const hh = wire.hits && wire.hits[i]; if (!hh) return;
+      const t = Math.max(0, Math.min(1, (wire.counts[i] - lo) / Math.max(hi - lo, 1e-9)));
+      c2.setHex(jetColor(Math.pow(t, 1.6)));
+      for (const q of hh) {
+        const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
+        const L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
+        const rr = (p.r + 0.04) / L;
+        pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
+        cols.push(c2.r, c2.g, c2.b);
+      }
+    });
+    if (pts.length) {
+      const g2 = new THREE.BufferGeometry();
+      g2.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+      g2.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3));
+      for (const [sz, op] of [[0.85, 0.35], [0.45, 0.95]]) {
+        const pm = new THREE.Points(g2, new THREE.PointsMaterial({
+          size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+          transparent: true, opacity: op, alphaTest: 0.05, depthWrite: false }));
+        pm.renderOrder = 30; grp.add(pm);
+      }
+    }
     S.scene.add(grp); S.grp = grp;
   }
-  function buildField(S, payload, ionic) {
+  function buildPore(S, payload) {
+    const vp = payload.void_points || [];
+    const grp = new THREE.Group();
+    if (vp.length) {
+      const pos = new Float32Array(vp.length * 3);
+      for (let i = 0; i < vp.length; i++) {
+        const p = vp[i];
+        pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
+      }
+      const gg = new THREE.BufferGeometry();
+      gg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      grp.add(new THREE.Points(gg, new THREE.PointsMaterial({
+        color: 0x38bdf8, size: 0.32, sizeAttenuation: true, transparent: true, opacity: 0.9 })));
+    }
+    S.scene.add(grp); S.grp = grp;
+    return vp.length;
+  }
+  function buildField(S, payload, ionic, bbOn, bbPct) {
     const grp = new THREE.Group();
     const parts = payload.particles || [];
     const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.12, true);
@@ -4105,6 +4166,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       grp.add(ghost);
     }
     const fldp = payload[ionic ? 'ionic_field' : 'electronic_field'] || [];
+    let bbTxt = '';
     if (fldp.length) {
       const jv2 = fldp.map(p => p[3]);
       const s2 = [...jv2].sort((a, b) => a - b);
@@ -4121,18 +4183,159 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const gg = new THREE.BufferGeometry();
       gg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
       gg.setAttribute('color', new THREE.BufferAttribute(colr, 3));
-      for (const [sz, op] of [[0.9, 0.18], [0.45, 0.9]]) {
+      for (const [sz, op] of [[0.9, 0.10], [0.45, 0.55]]) {   // 배경 반투명 (백본이 주인공)
         const pm = new THREE.Points(gg, new THREE.PointsMaterial({
           size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
           transparent: true, opacity: op, alphaTest: 0.02, depthWrite: false }));
         pm.renderOrder = 900; grp.add(pm);
       }
+      if (bbOn) {                                            // 🔥 백본 — 메인 뷰어와 동일 문법
+        const vox3 = (((payload.mpm_metrics || {}).step3) || {}).vox_um || 0.4;
+        const order = Array.from({ length: fldp.length }, (_, i) => i).sort((a, b) => jv2[b] - jv2[a]);
+        const tot = jv2.reduce((a, b) => a + b, 0) || 1;
+        let acc = 0, nH = 0;
+        while (nH < order.length && nH < 30000 && acc < (bbPct / 100) * tot) { acc += jv2[order[nH]]; nH++; }
+        const hIdx = order.slice(0, nH);
+        const hPos = new Float32Array(nH * 3), hCol = new Float32Array(nH * 3);
+        const hotMap = new Map();
+        hIdx.forEach((fi, k) => {
+          const p = fldp[fi];
+          hPos[3 * k] = p[0]; hPos[3 * k + 1] = p[2]; hPos[3 * k + 2] = p[1];
+          c.setHex(jetColor(gam2(p[3])));
+          hCol[3 * k] = c.r; hCol[3 * k + 1] = c.g; hCol[3 * k + 2] = c.b;
+          hotMap.set(Math.round(p[0] / vox3 - 0.5) + ',' + Math.round(p[1] / vox3 - 0.5) + ','
+                   + Math.round(p[2] / vox3 - 0.5), k);
+        });
+        const hg = new THREE.BufferGeometry();
+        hg.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
+        hg.setAttribute('color', new THREE.BufferAttribute(hCol, 3));
+        const bbSz = nH <= 12000 ? [[1.7, 0.30], [0.85, 0.95]] : [[1.05, 0.20], [0.55, 0.92]];
+        for (const [sz, op] of bbSz) {
+          const pm = new THREE.Points(hg, new THREE.PointsMaterial({
+            size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+            transparent: true, opacity: op, alphaTest: 0.03, depthWrite: false }));
+          pm.renderOrder = 950; grp.add(pm);
+        }
+        const ePos = [], eCol = [];
+        hIdx.forEach((fi, k) => {
+          const p = fldp[fi];
+          const ci = Math.round(p[0] / vox3 - 0.5), cj = Math.round(p[1] / vox3 - 0.5),
+                ck = Math.round(p[2] / vox3 - 0.5);
+          for (const [di, dj, dk2] of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) {
+            const nb = hotMap.get((ci + di) + ',' + (cj + dj) + ',' + (ck + dk2));
+            if (nb === undefined) continue;
+            ePos.push(hPos[3 * k], hPos[3 * k + 1], hPos[3 * k + 2], hPos[3 * nb], hPos[3 * nb + 1], hPos[3 * nb + 2]);
+            eCol.push(hCol[3 * k], hCol[3 * k + 1], hCol[3 * k + 2], hCol[3 * nb], hCol[3 * nb + 1], hCol[3 * nb + 2]);
+          }
+        });
+        if (ePos.length) {
+          const eg = new THREE.BufferGeometry();
+          eg.setAttribute('position', new THREE.Float32BufferAttribute(ePos, 3));
+          eg.setAttribute('color', new THREE.Float32BufferAttribute(eCol, 3));
+          const lm = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({
+            vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
+          lm.renderOrder = 940; grp.add(lm);
+        }
+        bbTxt = ` · 🔥백본 ${nH.toLocaleString()}복셀=전류 ${Math.round(100 * acc / tot)}%`;
+      }
     }
     S.scene.add(grp); S.grp = grp;
-    return fldp.length;
+    return { n: fldp.length, bbTxt };
+  }
+  function buildAdditives(S, payload, only) {
+    const grp = new THREE.Group();
+    const parts = payload.particles || [];
+    const ghost = createInstancedSpheres(parts, 10, 0xffffff, 1.0, false);
+    if (ghost) {                                             // SEM-black AM (개별 도전재 모드와 동일)
+      const dk = new THREE.Color(0x141414);
+      parts.forEach((_, i) => ghost.setColorAt(i, dk));
+      if (ghost.instanceColor) ghost.instanceColor.needsUpdate = true;
+      grp.add(ghost);
+    }
+    const swat = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xff3b30 };
+    const all = (payload.additive_points || []).filter(p => !only || p[3] === only);
+    if (all.length) {
+      const pos = new Float32Array(all.length * 3), colr = new Float32Array(all.length * 3);
+      const c = new THREE.Color();
+      for (let i = 0; i < all.length; i++) {
+        const p = all[i];
+        pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
+        c.setHex(swat[p[3]] || 0x9ca3af);
+        colr[3 * i] = c.r; colr[3 * i + 1] = c.g; colr[3 * i + 2] = c.b;
+      }
+      const gg = new THREE.BufferGeometry();
+      gg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+      gg.setAttribute('color', new THREE.BufferAttribute(colr, 3));
+      for (const [sz, op] of [[1.1, 0.22], [0.55, 0.85]]) {  // x-ray 문법
+        const pm = new THREE.Points(gg, new THREE.PointsMaterial({
+          size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+          transparent: true, opacity: op, alphaTest: 0.05, depthTest: false, depthWrite: false }));
+        pm.renderOrder = 999; grp.add(pm);
+      }
+    }
+    S.scene.add(grp); S.grp = grp;
+    return all.length;
+  }
+  function buildJe(S, payload) {
+    const parts = payload.particles || [];
+    const grp = new THREE.Group();
+    const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
+    if (mesh) {
+      const vals = parts.map(p => p.je).filter(v => isFinite(v)).sort((a, b) => a - b);
+      const hi2 = Math.max(vals[Math.floor(0.998 * (vals.length - 1))] || 1e-9, 1e-30);
+      const c = new THREE.Color();
+      parts.forEach((p, i) => {
+        if (!isFinite(p.je)) { mesh.setColorAt(i, c.setHex(0x333333)); return; }
+        mesh.setColorAt(i, c.setHex(jetColor(Math.pow(Math.max(0, Math.min(1, p.je / hi2)), 1.6))));
+      });
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+      grp.add(mesh);
+    }
+    S.scene.add(grp); S.grp = grp;
+  }
+  function buildDelta(S, payload) {
+    const parts = payload.particles || [];
+    const grp = new THREE.Group();
+    const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
+    if (mesh) {
+      const je = parts.map(p => p.je).filter(v => isFinite(v)).sort((a, b) => a - b);
+      const eps = Math.max(1e-30, (je[Math.floor(je.length / 2)] || 1e-6) * 1e-3);
+      const dts = parts.map(p => (isFinite(p.je) && isFinite(p.jb)) ? Math.log2((p.jb + eps) / (p.je + eps)) : NaN);
+      const absR = dts.filter(isFinite).map(Math.abs).sort((a, b) => a - b);
+      const R = Math.min(3, Math.max(0.5, absR[Math.floor(0.99 * (absR.length - 1))] || 1));
+      const c = new THREE.Color();
+      parts.forEach((_, i) => {
+        const d = dts[i];
+        mesh.setColorAt(i, c.setHex(isFinite(d)
+          ? coolwarmColor(0.5 + 0.5 * Math.max(-1, Math.min(1, d / R))) : 0x333333));
+      });
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+      grp.add(mesh);
+    }
+    S.scene.add(grp); S.grp = grp;
+  }
+  // 단면 슬라이스 (양쪽 동기, 각자 자기 박스 기준 분율)
+  const clipSt = { on: false, frac: 0.5 };
+  function applyCmpClip() {
+    [[SA, A], [SB, B]].forEach(([S, P]) => {
+      const box = P.box || {};
+      const y0 = box.y_min || 0, y1 = box.y_max || 50;
+      const planes = clipSt.on ? [new THREE.Plane(new THREE.Vector3(0, 0, -1), y0 + (y1 - y0) * clipSt.frac)] : null;
+      if (S.grp) S.grp.traverse(o => {
+        if (o.material) {
+          o.material.clippingPlanes = planes;
+          if (o.isMesh) o.material.side = planes ? THREE.DoubleSide : THREE.FrontSide;
+          o.material.needsUpdate = true;
+        }
+      });
+    });
   }
   function rebuild() {
     const mode = $('cmp-mode').value;
+    const bbWrap = $('cmp-bb-wrap');
+    if (bbWrap) bbWrap.style.display = (mode === 'je_field' || mode === 'ji_field') ? 'inline-flex' : 'none';
+    const bbOn = $('cmp-bb-on') ? $('cmp-bb-on').checked : true;
+    const bbPct = $('cmp-bb-pct') ? +$('cmp-bb-pct').value : 80;
     clearSide(SA); clearSide(SB);
     if (mode === 'wiring') {
       const joint = [...wireA.counts, ...wireB.counts].sort((a, b) => a - b);
@@ -4140,21 +4343,59 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
       buildWiring(SA, A, wireA, lo, hi);
       buildWiring(SB, B, wireB, lo, hi);
-      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★)`
+      const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, AM 본색+접촉 패치)`
         + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
       $('cmp-leg-b').innerHTML = leg(wireB);
-    } else {
+    } else if (mode === 'je_field' || mode === 'ji_field') {
       const ionic = mode === 'ji_field';
-      const nA2 = buildField(SA, A, ionic), nB2 = buildField(SB, B, ionic);
-      const cap = (n, s3x) => (n ? `${n.toLocaleString()}점 · ` : 'FIELD 없음 (payload 재생성 필요) · ')
-        + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
-        + ' · 색은 payload별 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)';
-      $('cmp-leg-a').innerHTML = cap(nA2, sA);
-      $('cmp-leg-b').innerHTML = cap(nB2, sB);
+      const rA2 = buildField(SA, A, ionic, bbOn, bbPct), rB2 = buildField(SB, B, ionic, bbOn, bbPct);
+      const cap = (r, s3x) => (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
+        + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
+        + ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)';
+      $('cmp-leg-a').innerHTML = cap(rA2, sA);
+      $('cmp-leg-b').innerHTML = cap(rB2, sB);
+    } else if (mode === 'je') {
+      buildJe(SA, A); buildJe(SB, B);
+      const cap = (s3x) => 'AM 입자별 |J_z| (wetted) · σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)
+        + ' S/cm · 자기 p99.8+감마 — 패턴 비교용';
+      $('cmp-leg-a').innerHTML = cap(sA);
+      $('cmp-leg-b').innerHTML = cap(sB);
+    } else if (mode === 'je_delta') {
+      buildDelta(SA, A); buildDelta(SB, B);
+      const cap = (s3x) => {
+        const cg2 = s3x.collector_geometric || {};
+        return 'Δ 재분배 log₂(jb/je) — 파랑=냉각·빨강=가열·흰=불변'
+          + (cg2.n_bottom_contacts ? ` · 접점 ${cg2.n_bottom_contacts.wetted}→${cg2.n_bottom_contacts.bare}` : '');
+      };
+      $('cmp-leg-a').innerHTML = cap(sA);
+      $('cmp-leg-b').innerHTML = cap(sB);
+    } else if (mode === 'pore') {
+      const nA3 = buildPore(SA, A), nB3 = buildPore(SB, B);
+      const cap = (n, mm2) => `${n.toLocaleString()} void voxels · porosity `
+        + fmtQ(mm2.porosity_mpm_pct != null ? mm2.porosity_mpm_pct : mm2.porosity_settled_pct) + '%';
+      $('cmp-leg-a').innerHTML = cap(nA3, mmA);
+      $('cmp-leg-b').innerHTML = cap(nB3, mmB);
+    } else {                                                 // additives family
+      const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4
+                 : mode === 'add_sdcp' ? 5 : 0;
+      const nA3 = buildAdditives(SA, A, only), nB3 = buildAdditives(SB, B, only);
+      const swatch = { 0: '전체', 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP' };
+      const cap = (n, mm2) => `${swatch[only]} ${n.toLocaleString()}점 (x-ray) · `
+        + Object.entries(mm2.additive_counts || {}).map(([k, v]) => `${k} ${Number(v).toLocaleString()}`).join(' · ');
+      $('cmp-leg-a').innerHTML = cap(nA3, mmA);
+      $('cmp-leg-b').innerHTML = cap(nB3, mmB);
     }
+    applyCmpClip();                                          // 새 재질에 단면 재적용
   }
   $('cmp-mode').onchange = rebuild;
+  if ($('cmp-bb-on')) $('cmp-bb-on').onchange = rebuild;
+  if ($('cmp-bb-pct')) {
+    $('cmp-bb-pct').oninput = () => { if ($('cmp-bb-lab')) $('cmp-bb-lab').textContent = $('cmp-bb-pct').value + '%'; };
+    $('cmp-bb-pct').onchange = rebuild;
+  }
+  if ($('cmp-clip')) $('cmp-clip').onchange = () => { clipSt.on = $('cmp-clip').checked; applyCmpClip(); };
+  if ($('cmp-clip-pos')) $('cmp-clip-pos').oninput = () => { clipSt.frac = (+$('cmp-clip-pos').value) / 100; applyCmpClip(); };
   rebuild();
   $('cmp-png').onclick = () => {
     const a = SA.renderer.domElement, b = SB.renderer.domElement;
