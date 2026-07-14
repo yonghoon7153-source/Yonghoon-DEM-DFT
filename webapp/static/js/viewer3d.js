@@ -2092,12 +2092,17 @@ function applyViewMode(state, mode) {
       const base = new THREE.Color(0x0a0e1a);
       m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
       if (m.instanceColor) m.instanceColor.needsUpdate = true;
-      m.visible = true; m.material.transparent = true; m.material.opacity = ionic ? 0.13 : 0.12;
+      // ghost RESPECTS the layer checkbox — the backbone slider rebuilds this mode, and forcing
+      // visible=true resurrected AM the user had unchecked (bug report).
+      const cb = document.querySelector(`.viewer-controls input[data-layer="${t}"]`);
+      m.visible = cb ? cb.checked : true;
+      m.material.transparent = true; m.material.opacity = ionic ? 0.13 : 0.12;
     });
     if (state.meshes.MESH) {
       if (ionic) { state.meshes.MESH.visible = false; }     // ionic: SE is IN the cloud → hide mesh
-      else {                                                // electronic: SE = insulator ghost
-        state.meshes.MESH.visible = true;
+      else {                                                // electronic: SE = insulator ghost (checkbox 존중)
+        const mcb = document.querySelector('.viewer-controls input[data-layer="MESH"]');
+        state.meshes.MESH.visible = mcb ? mcb.checked : true;
         state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.09;
       }
     }
