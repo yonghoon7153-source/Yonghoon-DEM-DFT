@@ -4452,75 +4452,27 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     return { n: fldp.length, bbTxt };
   }
   function buildAdditives(S, payload, only) {
-    const grp = new THREE.Group();
+    // 개별(메인) 뷰어의 buildCarbonOverlay를 "그대로" 재사용 — fibre 폴리라인, periodic-wrap
+    // chord 스킵, 두께→밝기, binder 톤 등 검증된 렌더 전부 (중복 구현 금지, user 지시).
+    // shim state({data, scene})로 위임하고, 만들어진 그룹을 컨테이너로 옮겨 clearSide가 정리.
+    const cont = new THREE.Group();
     const parts = payload.particles || [];
     const ghost = createInstancedSpheres(parts, 10, 0xffffff, 1.0, false);
     if (ghost) {                                             // SEM-black AM (개별 도전재 모드와 동일)
       const dk = new THREE.Color(0x141414);
       parts.forEach((_, i) => ghost.setColorAt(i, dk));
       if (ghost.instanceColor) ghost.instanceColor.needsUpdate = true;
-      grp.add(ghost);
+      cont.add(ghost);
     }
-    const swat = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xff3b30 };
-    // 파이버 상(VGCF/PTFE)은 폴리라인으로 — 점 구름으론 "연결성"이 안 보임 (메인 뷰어와 동일 문법).
-    const fibresAll = payload.additive_fibres || [];
-    const fibres = fibresAll.filter(f => !only || f.phase === only);
-    const fibrePh = new Set(fibresAll.map(f => f.phase));
-    let nFib = 0;
-    if (fibres.length) {
-      // ① periodic-wrap 아티팩트 제거: 경계를 감아 넘는 세그먼트(길이 > 0.45·박스변)는 직선
-      //   chord로 그려져 상자 밖 "가시"가 됨 → 스킵.  ② 상별 분리 렌더: PTFE 피브릴은 가닥당
-      //   점이 수백 개라 세그먼트 수가 폭발(1wt%인데 화면 지배) → PTFE 옅게·먼저, VGCF 위에.
-      const box2 = payload.box || {};
-      const wrapMax = 0.45 * Math.min((box2.x_max || 50), (box2.y_max || 50));
-      const byPh = {};
-      for (const f of fibres) {
-        const pts = f.pts || [];
-        if (pts.length >= 2) nFib++;
-        const arr = byPh[f.phase] || (byPh[f.phase] = []);
-        for (let k = 0; k + 1 < pts.length; k++) {
-          const a = pts[k], b2 = pts[k + 1];
-          if (Math.abs(a[0] - b2[0]) > wrapMax || Math.abs(a[1] - b2[1]) > wrapMax) continue;
-          arr.push(a[0], a[2], a[1], b2[0], b2[2], b2[1]);   // Z-up swap
-        }
-      }
-      const PH_STYLE = { 4: { op: 0.30, ro: 997 }, 2: { op: 0.88, ro: 999 },   // PTFE 옅게 아래,
-                         3: { op: 0.8, ro: 998 }, 5: { op: 0.9, ro: 999 } };   // VGCF 진하게 위
-      const c = new THREE.Color();
-      Object.entries(byPh).forEach(([ph, arr]) => {
-        if (!arr.length) return;
-        const st = PH_STYLE[ph] || { op: 0.8, ro: 998 };
-        const gf = new THREE.BufferGeometry();
-        gf.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3));
-        const lm = new THREE.LineSegments(gf, new THREE.LineBasicMaterial({
-          color: c.setHex(swat[ph] || 0x9ca3af).getHex(), transparent: true,
-          opacity: st.op, depthTest: false, depthWrite: false }));
-        lm.renderOrder = st.ro; grp.add(lm);
-      });
+    const shim = { data: payload, scene: S.scene };
+    const nSeg = buildCarbonOverlay(shim, only, only ? 1.0 : 0.7, null);
+    if (shim.additivePointGroup) {
+      S.scene.remove(shim.additivePointGroup);
+      cont.add(shim.additivePointGroup);
     }
-    // 점 상 = fibre가 없는 상만 (SuperP·SDCP) — fibre 상의 점 중복 제거 (메인 모드와 동일)
-    const all = (payload.additive_points || []).filter(p => (!only || p[3] === only) && !fibrePh.has(p[3]));
-    if (all.length) {
-      const pos = new Float32Array(all.length * 3), colr = new Float32Array(all.length * 3);
-      const c = new THREE.Color();
-      for (let i = 0; i < all.length; i++) {
-        const p = all[i];
-        pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
-        c.setHex(swat[p[3]] || 0x9ca3af);
-        colr[3 * i] = c.r; colr[3 * i + 1] = c.g; colr[3 * i + 2] = c.b;
-      }
-      const gg = new THREE.BufferGeometry();
-      gg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-      gg.setAttribute('color', new THREE.BufferAttribute(colr, 3));
-      for (const [sz, op] of [[1.1, 0.22], [0.55, 0.85]]) {  // x-ray 문법
-        const pm = new THREE.Points(gg, new THREE.PointsMaterial({
-          size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-          transparent: true, opacity: op, alphaTest: 0.05, depthTest: false, depthWrite: false }));
-        pm.renderOrder = 999; grp.add(pm);
-      }
-    }
-    S.scene.add(grp); S.grp = grp;
-    return { nPts: all.length, nFib };
+    S.scene.add(cont); S.grp = cont;
+    const nFib = (payload.additive_fibres || []).filter(f => !only || f.phase === only).length;
+    return { nPts: nSeg, nFib };
   }
   function buildJe(S, payload, fldKey) {
     const parts = payload.particles || [];
@@ -4697,7 +4649,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
                  : mode === 'add_sdcp' ? 5 : 0;
       const rA3 = buildAdditives(SA, A, only), rB3 = buildAdditives(SB, B, only);
       const swatch = { 0: '전체', 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP' };
-      const cap = (r3, mm2) => `${swatch[only]} — fibre ${r3.nFib.toLocaleString()}가닥(라인) + ${r3.nPts.toLocaleString()}점 (x-ray) · `
+      const cap = (r3, mm2) => `${swatch[only]} — fibre ${r3.nFib.toLocaleString()}가닥 · ${r3.nPts.toLocaleString()} seg/점 (개별 뷰어 렌더러 재사용) · `
         + Object.entries(mm2.additive_counts || {}).map(([k, v]) => `${k} ${Number(v).toLocaleString()}`).join(' · ');
       $('cmp-leg-a').innerHTML = cap(rA3, mmA);
       $('cmp-leg-b').innerHTML = cap(rB3, mmB);
