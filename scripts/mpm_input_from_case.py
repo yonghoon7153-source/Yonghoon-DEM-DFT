@@ -125,6 +125,9 @@ def main():
     # AM_P (large) vs AM_S (small) by RADIUS — the physical distinction (AM_P polycrystalline
     # ~6µm / AM_S single-crystal ~2µm), robust to the type-number convention.  Bimodal → split
     # at the size-range geometric midpoint; single size → all AM_P (type 1).
+    # ★ mono-size → AM_P는 사용자 확정 (2026-07-14, 3.18mAh_SDCP): DEM 케이스가 mono-AM을
+    #   "AM_S"로 표기해도 manuscript NCM은 다결정 → MPM/STEP3 재료 배정은 AM_P(σ_P=5 mS/cm)가
+    #   의도된 값.  DEM 쪽 AM_S 표기는 크기-라벨 관례라 여기서 따라가지 않는다.
     am_rows = []
     if am_raw:
         radii = [float(r[4]) for r in am_raw]
