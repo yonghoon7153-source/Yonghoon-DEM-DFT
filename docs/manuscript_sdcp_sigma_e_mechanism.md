@@ -212,3 +212,40 @@ manuscript 조성 그대로(70:27:3:1 ↔ 70:27:3:0.5:0.5; 실현 AM 70.37/SE 25
   회복 — "SDCP = 혼성전도 배달부"가 반응-접근성 축에서도 정량 확인됨 (base는 dilate-z 유무가
   달라 SBE↔DBE 비교가 엄밀; base 값은 방향 참고).  base↔SBE의 **반응 hot-side 반전**(바닥→상단,
   전자지배→이온지배)은 §STEP4 대비쌍으로 별도 그림.
+
+## 7. ★ σ-공동스케일 전류밀도 필드 — "+45%가 어디서 오는가"의 공간 증거 (4번째 축, 2026-07-15)
+
+§1의 3축(손실분담 산수 / 접점 기하 / 대안 배제)은 전부 **집계 통계**였다.  4번째 축은 그
+메커니즘을 **공간에서 직접 보여주는** 그림 — ⚖ 비교팝업 ⚡전자 전류밀도 필드에 **σ-공동스케일**
+(두 해의 색을 σ_eff 비율로 정렬: A=SBE ×0.69, B=DBE ×1.00)과 **복셀큐브** 렌더를 적용한
+같은-색자 비교:
+
+- **SBE**: 전 영역이 남색 연속 채널 — VGCF 골격은 온전하지만 같은 색자에서 **절대 전류 레벨이
+  한 단 낮다** (병목 저항이 경로 전체 전류를 누르고 있는 상태).
+- **DBE**: 청록~초록 바탕 + **빨강/주황 핫스팟 점등** — 고전도(σ=150) SDCP가 낀 접합부로
+  전류가 몰리는 자리.  국소 핫스팟 소수가 새로 생기며 **네트워크 전체의 레벨이 올라가는** 그림
+  = "브리지가 직렬 병목을 풀어 경로 전체를 살린다"의 시각적 정의.  (병렬-도체 가설이었다면
+  기존 VGCF 패턴은 그대로이고 SDCP 위치만 밝아져야 하며, 전체 레벨 상승은 없어야 한다.)
+
+**왜 전자전도가 증가하는가 — 한 문단 종합**: 두 전극의 VGCF 고속도로망(3 wt%)은 동일하고
+연결률도 둘 다 100%다.  전도도를 깎는 것은 도로가 아니라 **교차로** — 섬유-섬유·섬유-AM
+접합부의 좁은 목(constriction)이 직렬로 끼어 경로 저항을 지배한다.  균일-랜덤으로 분산된
+(D=1.13) 0.3 µm SDCP 입자가 확률적으로 그 목들에 앉아 σ=150 S/cm 브리지가 되면, 브리지
+자신은 저저항이라 발열 몫이 8~10%에 불과한데도 **그 목을 지나는 경로 전체의 전류가 풀리며**
+σ_e가 +33%(a7)~+45%(실조성) 뛴다.  부피 산수(EMT 3φ ≈ +4%)로는 불가능한 크기이며, 이온망이
++5.6%에 그친 것(같은 입자, 다른 네트워크)이 "입력값이 아니라 위치가 만든 결과"임을 잠근다.
+
+Fig caption 초안 (영):
+> Electronic current-density fields of SBE and DBE rendered on a σ-joint colour scale
+> (colours referenced to the DBE p99.8 level; the SBE side scaled by the conductivity ratio
+> ×0.69★).  At matched scale the SBE network carries visibly lower current throughout,
+> whereas DBE lights up with localized high-current hotspots at SDCP-bridged fibre–fibre and
+> fibre–AM junctions while the whole network brightens — the spatial counterpart of the
+> +45.4% conductivity gain and the direct signature of series-constriction relief rather
+> than parallel conduction.  (★Approximate joint scale: assumes similar upper-tail shape
+> between the paired solves; per-payload self-normalized versions in SI.)
+
+재현 세팅(뷰어): ⚖ 비교 → ⚡전자 전류밀도 필드 → **σ공동 ✓ · 이어짐 ✓ · 백본 95% · glow ✓**
+→ 투명샷 ×2 (+ 컬러바 버튼의 |J| jet 바에 "σ-joint, SBE ×0.69" 라벨 추가).
+정직 캐비엇: σ-공동스케일은 |J| 자릿수 ∝ σ_eff 라는 **비례 근사**(동일 ΔV·유사 상위꼬리) —
+캡션에 ★로 명시하고 SI에 자기-정규화판 병기.  절대 |J| 값은 주장하지 않음(RELATIVE trust).
