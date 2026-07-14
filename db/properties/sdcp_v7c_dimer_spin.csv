@@ -1,0 +1,13 @@
+group,spin,percent
+A_SO3,0.623,62.3
+A_ring,0.174,17.4
+B_SO3,0.000,0.0
+B_ring,0.152,15.2
+rest,0.050,5.0
+total,1.000,100.0
+"# SDCP v7c alpha-alpha dimer (n=2) doped-state Loewdin group spin, ORCA r2SCAN-3c Opt (serial, desktop WSL ext4 ~/orca_poly/dimer), analyze_dimer_spin.py; inter-ring torsion 60 deg (steric maximin), 2026-07-14."
+"# Systems: dimer_neutral 68 atoms (both SO3H) E=-3351.335543932808 Eh, 3 cycles (warm-start from earlier runs' overwritten xyz); dimer_doped 67 atoms (A side SO3- + hole, B side SO3H intact; net-neutral doublet) E=-3350.681182242003 Eh, 17 cycles; total spin 1.000."
+"# Verdict: SO3:backbone partition 62.3 : 32.6 (+5.0 rest) ~= monomer 65:35 -> per-site radical character preserved on dimerization."
+"# KEY RESULT: backbone share spreads nearly EVENLY over both rings (A_ring 17.4 vs B_ring 15.2, ratio 0.87) even though the SO3- defect sits on ring A -> pi-polaron delocalization across the conjugated backbone demonstrated at n=2; expect wider spread as n grows."
+"# B_SO3 = 0.0 is BY CONSTRUCTION (B sulfonate still protonated SO3H, closed shell) -- not symmetry breaking; delocalization follows the pi network (rings), not the isolated side groups."
+"# Sanity: E(neutral)-E(doped) = 0.654 Eh ~= E(H atom, 0.500 Eh) + O-H BDE (~4.2 eV) -- homolytic H-removal bookkeeping consistent."
