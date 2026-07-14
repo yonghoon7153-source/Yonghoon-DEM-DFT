@@ -3940,6 +3940,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   }
   if (!overlay.isConnected) return;                        // closed while loading
   $('cmp-status').textContent = '';
+  try {                                                    // build errors → 모달 안에 표시 (silent-fail 금지)
 
   // ── 정량 표 ──
   const mmA = A.mpm_metrics || {}, mmB = B.mpm_metrics || {};
@@ -4118,6 +4119,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     SB.renderer.render(SB.scene, SB.cam);
     requestAnimationFrame(anim);
   })();
+  } catch (e) {
+    console.error('compare modal build failed:', e);
+    $('cmp-status').textContent = '오류: ' + ((e && e.message) || e);
+  }
 }
 
 /* ── wire up control panel ─────────────────────────────────── */

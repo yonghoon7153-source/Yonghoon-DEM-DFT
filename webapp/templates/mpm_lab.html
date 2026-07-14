@@ -166,8 +166,17 @@ function labCmpCount() {
 async function labCompareOpen() {
   const cbs = [...document.querySelectorAll('.lab-cmp-cb:checked')];
   if (cbs.length !== 2) { alert('비교할 payload를 정확히 2개 선택하세요 (⚖ 체크박스).'); return; }
-  const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
-  mod.showLabCompareModal(cbs[0].dataset.pid, cbs[1].dataset.pid, cbs[0].dataset.name, cbs[1].dataset.name);
+  try {
+    const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
+    if (!mod.showLabCompareModal) {
+      alert('viewer3d.js가 구버전으로 캐시돼 있어요 — Ctrl-Shift-R(강력 새로고침) 후 다시 시도하세요.');
+      return;
+    }
+    await mod.showLabCompareModal(cbs[0].dataset.pid, cbs[1].dataset.pid, cbs[0].dataset.name, cbs[1].dataset.name);
+  } catch (e) {
+    console.error('compare popup failed:', e);
+    alert('비교 팝업 오류: ' + ((e && e.message) || e));
+  }
 }
 function labAddRow(it) {
   document.getElementById('lab-empty').style.display = 'none';
