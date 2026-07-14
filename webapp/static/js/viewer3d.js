@@ -244,6 +244,7 @@ function injectCSS() {
 .viewer-controls button{background:#555;color:#fff;border:none;border-radius:4px;padding:3px 8px;
   cursor:pointer;font-size:10px;margin-top:1px}
 .viewer-controls button:hover{background:#777}
+.viewer-controls input[type=range]{width:100%;min-width:0;box-sizing:border-box;margin:2px 0;accent-color:#6c8cff}
 .viewer-info{position:absolute;bottom:50px;left:12px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:8px 12px;
   font:11px/1.5 'JetBrains Mono',monospace;color:#e4e6f0;z-index:10;max-width:240px;display:none}
@@ -2201,10 +2202,9 @@ function applyViewMode(state, mode) {
       + `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`
       + `<label style="display:block;margin-top:5px;font-size:10.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
-           🔥 백본 <b>${nHot.toLocaleString()}</b>복셀 = 전류 <b>${bbShare}%</b></label>`
-      + `<div style="display:flex;align-items:center;gap:4px;margin-top:2px">
-           <input type="range" id="fld-bb-pct" min="30" max="95" step="5" value="${bbPct}" style="flex:1;accent-color:#f97316;height:12px">
-           <span id="fld-bb-pct-lab" style="font-size:9.5px;color:#9ca3af;min-width:52px">목표 ${bbPct}%</span></div>`
+           🔥 백본 <b>${nHot.toLocaleString()}</b>복셀 = 전류 <b>${bbShare}%</b>
+           <span id="fld-bb-pct-lab" style="color:#9ca3af;font-size:9.5px">(목표 ${bbPct}%)</span></label>`
+      + `<input type="range" id="fld-bb-pct" min="30" max="95" step="5" value="${bbPct}" style="accent-color:#f97316;height:12px">`
       + `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'AM·SE'} 고스트(체크박스로 on/off) · 단면뷰·6×촬영</div>`
       + (share ? `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">손실분담 `
           + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
@@ -2212,7 +2212,7 @@ function applyViewMode(state, mode) {
     if (bbCb) bbCb.onchange = () => { state._fieldBackboneOn = bbCb.checked; backboneGrp.visible = bbCb.checked; };
     const bbSl = document.getElementById('fld-bb-pct'), bbLab = document.getElementById('fld-bb-pct-lab');
     if (bbSl) {
-      bbSl.oninput = () => { if (bbLab) bbLab.textContent = '목표 ' + bbSl.value + '%'; };
+      bbSl.oninput = () => { if (bbLab) bbLab.textContent = '(목표 ' + bbSl.value + '%)'; };
       bbSl.onchange = () => { state._fieldBackbonePct = +bbSl.value; applyViewMode(state, mode); };  // rebuild
     }
     return;
