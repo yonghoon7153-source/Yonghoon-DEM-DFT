@@ -671,6 +671,7 @@ def main():
                 # 단일 Kirchhoff 시스템 → 입자별 i_n.  분포는 RELATIVE(i/ī, linear라 C-rate 스케일 무관);
                 # 절대화(A/m²·SOC 의존)는 STEP4-v2.  analytic sandwich selftest: --selftest-rxn.
                 if not a.no_step4:
+                  try:                                       # STEP4 실패가 STEP3 결과를 못 물귀신하게 격리
                     _t4 = _time.time()
                     _gpp = a.i0_a_m2 * 1e-4 * 38.92          # i0[A/m²→A/cm²] × F/RT[V⁻¹] = g″ [S/cm²]
                     _gct = _gpp * (a.step3_vox ** 2) * 1e-4  # face-conductance (σ·vox_µm 코드 규약 정합)
@@ -697,6 +698,9 @@ def main():
                               f"{step3['rxn']['active_am_pct']}% · i/ī p95 "
                               f"{float(np.percentile(jrxn_am, 95)):.2f} · KCL {_r4['kcl_err']:.1e} · "
                               f"resid {_r4['resid']:.1e} ({_time.time()-_t4:.0f}s)")
+                  except Exception as _e4:
+                    jrxn_am = None
+                    print(f'  ⚠ STEP4 rxn failed ({type(_e4).__name__}: {_e4}) — STEP3 결과는 유지')
         except Exception as _e:
             import traceback as _tb
             print(f'  ⚠ STEP3 skipped ({type(_e).__name__}: {_e})')
