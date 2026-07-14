@@ -4139,6 +4139,13 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         <label id="cmp-glow-wrap" style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:3px"
           title="x-ray 깊이누적 발광 (primer 논문 Fig4f 문법) — 겹칠수록 색이 짙어져 케이스 차이가 증폭됨. 필드 모드에선 고스트 없이 순수 볼륨 렌더">
           ✨<input type="checkbox" id="cmp-glow" checked>glow</label>
+        <span id="cmp-fldops-wrap" style="display:none;font-size:10.5px;color:#e5e7eb;align-items:center;gap:8px">
+          <label style="display:flex;align-items:center;gap:3px"
+            title="σ-공동스케일: 두 쪽 색을 σ_eff 비율로 정렬해 절대 세기 차이가 색으로 보이게 (근사 — 상위꼬리 모양 유사 가정; 끄면 자기 정규화=패턴 비교)">
+            <input type="checkbox" id="cmp-joint">σ공동</label>
+          <label style="display:flex;align-items:center;gap:3px"
+            title="백본을 점 대신 복셀 큐브로 — 인접 복셀이 붙어 연속 통로로 보임 (COMSOL 볼륨 문법)">
+            <input type="checkbox" id="cmp-cube" checked>이어짐</label></span>
         <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-clip"> 단면
           <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
@@ -4148,6 +4155,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <button id="cmp-zi" style="background:#334155;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer">+</button></span>
         <span id="cmp-status" style="font-size:11px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
         <span style="flex:1"></span>
+        <button id="cmp-cbar" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
+          title="현재 모드의 컬러바를 논문용 PNG로 (흰 배경·3× 인쇄 해상·뷰어와 동일 감마)">컬러바</button>
+        <button id="cmp-legend" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
+          title="컴포넌트 범례 시트 PNG (NCM/SE/VGCF/SuperP/PTFE/SDCP — 뷰어 색상, manuscript 범례 문법)">범례</button>
         <button id="cmp-png" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
           title="A|B 합성 한 장 (4× 고해상, 흰 배경+이름표)">PNG</button>
         <button id="cmp-shot" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
@@ -4169,6 +4180,74 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     </div>`;
   document.body.appendChild(overlay);
   const $ = (id) => overlay.querySelector('#' + id);
+  // ── 논문용 컬러바/범례 내보내기 (user 2026-07-15: "manuscript 느낌의 컬러바 + 컴포넌트 이미지") ──
+  let cbarSpec = null;                                       // rebuild()가 모드별로 채움
+  const dlCanvas = (cv, name) => {
+    const a2 = document.createElement('a'); a2.href = cv.toDataURL('image/png'); a2.download = name;
+    document.body.appendChild(a2); a2.click(); a2.remove();
+  };
+  $('cmp-cbar').onclick = () => {
+    const sp = cbarSpec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
+    const S2 = 6,   // 논문 인쇄용 6× W2 = 470 * S2, H2 = 80 * S2;               // 3× 인쇄 해상
+    const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
+    const cx = cv.getContext('2d');
+    cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
+    cx.fillStyle = '#111111'; cx.font = `600 ${13 * S2}px Arial`; cx.textAlign = 'left';
+    cx.fillText(sp.title, 10 * S2, 17 * S2);
+    const bx = 10 * S2, by = 25 * S2, bw = W2 - 20 * S2, bh = 25 * S2;
+    for (let i = 0; i < bw; i++) {                           // 뷰어와 동일 감마 → 색-값 1:1
+      const t = i / (bw - 1);
+      const hx = sp.map === 'coolwarm' ? coolwarmColor(t) : jetColor(sp.gamma ? Math.pow(t, sp.gamma) : t);
+      cx.fillStyle = '#' + hx.toString(16).padStart(6, '0');
+      cx.fillRect(bx + i, by, 1.5, bh);
+    }
+    cx.strokeStyle = '#111111'; cx.lineWidth = S2 * 0.7; cx.strokeRect(bx, by, bw, bh);
+    cx.fillStyle = '#111111'; cx.font = `${11.5 * S2}px Arial`;
+    cx.textAlign = 'left'; cx.fillText(sp.left != null ? String(sp.left) : '', bx, by + bh + 15 * S2);
+    if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
+    cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
+    dlCanvas(cv, 'colorbar_' + (($('cmp-mode') || {}).value || 'view') + '.png');
+  };
+  $('cmp-legend').onclick = () => {
+    // 컴포넌트 범례 시트 — manuscript 범례 문법(아이콘+라벨 한 줄), 색은 뷰어 실제 팔레트
+    const items = [
+      ['NCM (AM_P)', '#3a3a3a', 'sphere'], ['NCM (AM_S)', '#888888', 'sphere'],
+      ['SE (Li₆PS₅Cl)', '#e8d68a', 'blob'], ['VGCF', '#22d3ee', 'fibre'],
+      ['Super P', '#ec4899', 'dots'], ['PTFE', '#f59e0b', 'wave'], ['SDCP', '#ff3b30', 'dot'],
+    ];
+    const S2 = 6, W2 = 830 * S2, H2 = 52 * S2;   // 논문 인쇄용 6× (~5000px)
+    const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
+    const cx = cv.getContext('2d');
+    cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
+    let x = 14 * S2; const cy = 26 * S2;
+    for (const [lab, col, kind] of items) {
+      cx.strokeStyle = col; cx.fillStyle = col; cx.lineWidth = 2.6 * S2; cx.lineCap = 'round';
+      if (kind === 'sphere') {
+        const g2 = cx.createRadialGradient(x + 6 * S2, cy - 3 * S2, S2, x + 8 * S2, cy, 9 * S2);
+        g2.addColorStop(0, '#ffffff'); g2.addColorStop(0.3, col); g2.addColorStop(1, col);
+        cx.fillStyle = g2; cx.beginPath(); cx.arc(x + 8 * S2, cy, 8 * S2, 0, 7); cx.fill();
+      } else if (kind === 'blob') {
+        cx.globalAlpha = 0.85; cx.beginPath(); cx.arc(x + 8 * S2, cy, 8.5 * S2, 0, 7); cx.fill();
+        cx.globalAlpha = 1;
+      } else if (kind === 'fibre') {
+        cx.beginPath(); cx.moveTo(x, cy + 5 * S2);
+        cx.quadraticCurveTo(x + 8 * S2, cy - 8 * S2, x + 16 * S2, cy + 3 * S2); cx.stroke();
+      } else if (kind === 'wave') {
+        cx.beginPath(); cx.moveTo(x, cy + 3 * S2);
+        cx.bezierCurveTo(x + 5 * S2, cy - 7 * S2, x + 11 * S2, cy + 9 * S2, x + 16 * S2, cy - 3 * S2); cx.stroke();
+      } else if (kind === 'dots') {
+        for (const [ox, oy] of [[3, -2], [8, 2], [12, -3]]) {
+          cx.beginPath(); cx.arc(x + ox * S2, cy + oy * S2, 2.6 * S2, 0, 7); cx.fill();
+        }
+      } else {
+        cx.beginPath(); cx.arc(x + 8 * S2, cy, 4 * S2, 0, 7); cx.fill();
+      }
+      cx.fillStyle = '#111111'; cx.font = `${11.5 * S2}px Arial`; cx.textAlign = 'left';
+      cx.fillText(lab, x + 20 * S2, cy + 4 * S2);
+      x += 20 * S2 + cx.measureText(lab).width + 18 * S2;
+    }
+    dlCanvas(cv, 'component_legend.png');
+  };
   $('cmp-name-a').textContent = 'A · ' + (nameA || pidA);
   $('cmp-name-b').textContent = 'B · ' + (nameB || pidB);
   let stopped = false;
@@ -4445,7 +4524,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     S.scene.add(grp); S.grp = grp;
     return vp.length;
   }
-  function buildField(S, payload, ionic, bbOn, bbPct, glowOn) {
+  function buildField(S, payload, ionic, bbOn, bbPct, glowOn, scaleK, cubeOn) {
+    // scaleK: σ-공동스케일 배율 (자기-p99.8 정규화 위에 σ_eff 비율을 곱해 절대 세기 차이를 색으로 —
+    //         근사: 상위꼬리 모양 유사 가정, legend에 명시).  cubeOn: 백본을 점 대신 복셀 큐브로
+    //         (인접 복셀이 면을 공유해 연속 통로로 읽힘 — user "점말고 이어지게").
+    const kS = (typeof scaleK === 'number' && isFinite(scaleK) && scaleK > 0) ? scaleK : 1;
     const grp = new THREE.Group();
     const parts = payload.particles || [];
     if (!glowOn) {                                           // ✨glow(=Fig4f x-ray 볼륨)에선 고스트 없이 순수 필드
@@ -4469,7 +4552,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       for (let i = 0; i < fldp.length; i++) {
         const p = fldp[i];
         pos[3 * i] = p[0]; pos[3 * i + 1] = p[2]; pos[3 * i + 2] = p[1];
-        c.setHex(jetColor(gam2(p[3])));
+        c.setHex(jetColor(gam2(p[3] * kS)));
         colr[3 * i] = c.r; colr[3 * i + 1] = c.g; colr[3 * i + 2] = c.b;
       }
       const gg = new THREE.BufferGeometry();
@@ -4493,42 +4576,61 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         hIdx.forEach((fi, k) => {
           const p = fldp[fi];
           hPos[3 * k] = p[0]; hPos[3 * k + 1] = p[2]; hPos[3 * k + 2] = p[1];
-          c.setHex(jetColor(gam2(p[3])));
+          c.setHex(jetColor(gam2(p[3] * kS)));
           hCol[3 * k] = c.r; hCol[3 * k + 1] = c.g; hCol[3 * k + 2] = c.b;
           hotMap.set(Math.round(p[0] / vox3 - 0.5) + ',' + Math.round(p[1] / vox3 - 0.5) + ','
                    + Math.round(p[2] / vox3 - 0.5), k);
         });
-        const hg = new THREE.BufferGeometry();
-        hg.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
-        hg.setAttribute('color', new THREE.BufferAttribute(hCol, 3));
-        const bbSz = nH <= 12000 ? [[1.7, 0.30], [0.85, 0.95]] : [[1.05, 0.20], [0.55, 0.92]];
-        for (const [sz, op] of bbSz) {
-          const pm = new THREE.Points(hg, new THREE.PointsMaterial({
-            size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-            transparent: true, opacity: op, alphaTest: 0.03, depthWrite: false }));
-          pm.renderOrder = 950; grp.add(pm);
-        }
-        const ePos = [], eCol = [];
-        hIdx.forEach((fi, k) => {
-          const p = fldp[fi];
-          const ci = Math.round(p[0] / vox3 - 0.5), cj = Math.round(p[1] / vox3 - 0.5),
-                ck = Math.round(p[2] / vox3 - 0.5);
-          for (const [di, dj, dk2] of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) {
-            const nb = hotMap.get((ci + di) + ',' + (cj + dj) + ',' + (ck + dk2));
-            if (nb === undefined) continue;
-            ePos.push(hPos[3 * k], hPos[3 * k + 1], hPos[3 * k + 2], hPos[3 * nb], hPos[3 * nb + 1], hPos[3 * nb + 2]);
-            eCol.push(hCol[3 * k], hCol[3 * k + 1], hCol[3 * k + 2], hCol[3 * nb], hCol[3 * nb + 1], hCol[3 * nb + 2]);
+        if (cubeOn) {
+          // 복셀 큐브 렌더 — 인접 백본 복셀이 면을 공유해 "이어진 통로"로 읽힘 (COMSOL 볼륨 문법,
+          // 복셀-정직: 큐브 크기 = 실제 vox).  Lambert 음영이라 studio 라이트에서 입체감.
+          const im = new THREE.InstancedMesh(
+            new THREE.BoxGeometry(vox3 * 0.98, vox3 * 0.98, vox3 * 0.98),
+            new THREE.MeshLambertMaterial({ color: 0xffffff }), nH);
+          const m4 = new THREE.Matrix4();
+          for (let k = 0; k < nH; k++) {
+            m4.setPosition(hPos[3 * k], hPos[3 * k + 1], hPos[3 * k + 2]);
+            im.setMatrixAt(k, m4);
+            c.setRGB(hCol[3 * k], hCol[3 * k + 1], hCol[3 * k + 2]);
+            im.setColorAt(k, c);
           }
-        });
-        if (ePos.length) {
-          const eg = new THREE.BufferGeometry();
-          eg.setAttribute('position', new THREE.Float32BufferAttribute(ePos, 3));
-          eg.setAttribute('color', new THREE.Float32BufferAttribute(eCol, 3));
-          const lm = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({
-            vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
-          lm.renderOrder = 940; grp.add(lm);
+          im.instanceMatrix.needsUpdate = true;
+          if (im.instanceColor) im.instanceColor.needsUpdate = true;
+          im.renderOrder = 950; grp.add(im);
+        } else {
+          const hg = new THREE.BufferGeometry();
+          hg.setAttribute('position', new THREE.BufferAttribute(hPos, 3));
+          hg.setAttribute('color', new THREE.BufferAttribute(hCol, 3));
+          const bbSz = nH <= 12000 ? [[1.7, 0.30], [0.85, 0.95]] : [[1.05, 0.20], [0.55, 0.92]];
+          for (const [sz, op] of bbSz) {
+            const pm = new THREE.Points(hg, new THREE.PointsMaterial({
+              size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+              transparent: true, opacity: op, alphaTest: 0.03, depthWrite: false }));
+            pm.renderOrder = 950; grp.add(pm);
+          }
+          const ePos = [], eCol = [];
+          hIdx.forEach((fi, k) => {
+            const p = fldp[fi];
+            const ci = Math.round(p[0] / vox3 - 0.5), cj = Math.round(p[1] / vox3 - 0.5),
+                  ck = Math.round(p[2] / vox3 - 0.5);
+            for (const [di, dj, dk2] of [[1, 0, 0], [0, 1, 0], [0, 0, 1]]) {
+              const nb = hotMap.get((ci + di) + ',' + (cj + dj) + ',' + (ck + dk2));
+              if (nb === undefined) continue;
+              ePos.push(hPos[3 * k], hPos[3 * k + 1], hPos[3 * k + 2], hPos[3 * nb], hPos[3 * nb + 1], hPos[3 * nb + 2]);
+              eCol.push(hCol[3 * k], hCol[3 * k + 1], hCol[3 * k + 2], hCol[3 * nb], hCol[3 * nb + 1], hCol[3 * nb + 2]);
+            }
+          });
+          if (ePos.length) {
+            const eg = new THREE.BufferGeometry();
+            eg.setAttribute('position', new THREE.Float32BufferAttribute(ePos, 3));
+            eg.setAttribute('color', new THREE.Float32BufferAttribute(eCol, 3));
+            const lm = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({
+              vertexColors: true, transparent: true, opacity: 0.9, depthWrite: false }));
+            lm.renderOrder = 940; grp.add(lm);
+          }
         }
-        bbTxt = ` · 🔥백본 ${nH.toLocaleString()}복셀=전류 ${Math.round(100 * acc / tot)}%`;
+        bbTxt = ` · 🔥백본 ${nH.toLocaleString()}복셀=전류 ${Math.round(100 * acc / tot)}%`
+              + (cubeOn ? ' · 복셀큐브' : '');
       }
     }
     S.scene.add(grp); S.grp = grp;
@@ -4643,6 +4745,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     if (pWrap) pWrap.style.display = (mode === 'wiring') ? 'flex' : 'none';
     const gWrap = $('cmp-glow-wrap');
     if (gWrap) gWrap.style.display = (mode === 'wiring' || mode === 'je_field' || mode === 'ji_field') ? 'flex' : 'none';
+    const fWrap = $('cmp-fldops-wrap');
+    if (fWrap) fWrap.style.display = (mode === 'je_field' || mode === 'ji_field') ? 'inline-flex' : 'none';
     const bbOn = $('cmp-bb-on') ? $('cmp-bb-on').checked : true;
     const bbPct = $('cmp-bb-pct') ? +$('cmp-bb-pct').value : 80;
     const patchF = $('cmp-patch') ? +$('cmp-patch').value : 1.5;
@@ -4658,6 +4762,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
       $('cmp-leg-b').innerHTML = leg(wireB);
+      cbarSpec = { map: 'jet', gamma: 1.6, title: 'Carbon wiring — weighted contacts per AM (joint scale)',
+                   left: '약함 ' + Math.round(lo), right: '강함 ' + Math.round(hi) };
     } else if (mode === 'wiring_delta') {
       // Δ 배선 — 같은 AM 골격(같은 케이스 파생) 두 payload의 입자별 접점 차이 (user: "차이 자체를 색칠")
       const partsA = A.particles || [], partsB = B.particles || [];
@@ -4690,18 +4796,34 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       }
     } else if (mode === 'je_field' || mode === 'ji_field') {
       const ionic = mode === 'ji_field';
-      const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn), rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn);
-      const cap = (r, s3x) => (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
+      const jointOn = $('cmp-joint') ? $('cmp-joint').checked : false;
+      const cubeOn = $('cmp-cube') ? $('cmp-cube').checked : true;
+      // σ-공동스케일: |J|의 자릿수는 σ_eff에 비례(같은 ΔV·유사 분포모양 가정) → 약한 쪽 색을
+      // σ비율만큼 눌러 절대 세기 차이가 색으로 보이게.  근사임을 legend에 명시 (★).
+      const sgA = ionic ? sA.sigma_ion_eff_S_cm : sA.sigma_e_eff_S_cm;
+      const sgB = ionic ? sB.sigma_ion_eff_S_cm : sB.sigma_e_eff_S_cm;
+      const smx = Math.max(sgA || 0, sgB || 0) || 1;
+      const kA2 = jointOn && sgA ? sgA / smx : 1, kB2 = jointOn && sgB ? sgB / smx : 1;
+      const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn, kA2, cubeOn),
+            rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn, kB2, cubeOn);
+      const cap = (r, s3x, k2) => (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
         + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
-        + ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)';
-      $('cmp-leg-a').innerHTML = cap(rA2, sA);
-      $('cmp-leg-b').innerHTML = cap(rB2, sB);
+        + (jointOn ? ` · σ-공동스케일 ×${k2.toFixed(2)} (비례 근사 ★색 비교 유효)`
+                   : ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)');
+      $('cmp-leg-a').innerHTML = cap(rA2, sA, kA2);
+      $('cmp-leg-b').innerHTML = cap(rB2, sB, kB2);
+      cbarSpec = { map: 'jet', gamma: 1.6,
+                   title: (ionic ? '|J_ion|' : '|J_e|') + ' relative current density (p99.8-normalized'
+                          + (jointOn ? ', σ-joint scale' : '') + ')',
+                   left: '0', right: 'high' };
     } else if (mode === 'je') {
       buildJe(SA, A, 'je'); buildJe(SB, B, 'je');
       const cap = (s3x) => 'AM 입자별 |J_z| (wetted) · σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)
         + ' S/cm · 자기 p99.8+감마 — 패턴 비교용';
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);
+      cbarSpec = { map: 'jet', gamma: 1.6, title: '|J_z| per-AM relative (wetted collector, p99.8)',
+                   left: '0', right: 'high' };
     } else if (mode === 'jrxn') {
       buildJe(SA, A, 'jrxn'); buildJe(SB, B, 'jrxn');
       const cap = (s3x) => {
@@ -4712,6 +4834,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       };
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);
+      cbarSpec = { map: 'jet', gamma: 1.6, title: 'Reaction current i/\u012b (low-rate charging, p99.8)',
+                   left: '0 (\ubc18\uc751 \uc18c\uc678)', right: 'hot' };
     } else if (mode === 'je_delta') {
       buildDelta(SA, A); buildDelta(SB, B);
       const cap = (s3x) => {
@@ -4721,6 +4845,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       };
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);
+      cbarSpec = { map: 'coolwarm', title: '\u0394 redistribution log\u2082(j_bare/j_wetted)',
+                   left: '\u00d70.71 \ub0c9\uac01', mid: '\ubcc0\ud654 \uc5c6\uc74c', right: '\u00d71.4 \uac00\uc5f4' };
     } else if (mode === 'pore') {
       const nA3 = buildPore(SA, A), nB3 = buildPore(SB, B);
       const cap = (n, mm2) => `${n.toLocaleString()} void voxels · porosity `
@@ -4752,6 +4878,8 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     $('cmp-patch').onchange = rebuild;
   }
   if ($('cmp-glow')) $('cmp-glow').onchange = rebuild;
+  if ($('cmp-joint')) $('cmp-joint').onchange = rebuild;
+  if ($('cmp-cube')) $('cmp-cube').onchange = rebuild;
   rebuild();
   $('cmp-png').onclick = async () => {
     // 논문급 스크린샷: 각 쪽을 4× 슈퍼샘플로 재렌더(captureHighRes) 후 이름표와 함께 합성.
