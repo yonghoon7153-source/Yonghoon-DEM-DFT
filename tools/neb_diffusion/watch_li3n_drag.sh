@@ -14,7 +14,7 @@ nr=$(squeue -u x3430a02 -h -n llm2 -t RUNNING 2>/dev/null | wc -l)
 
 last=$(ls -t $WB/logs/li3n_drag_*.out 2>/dev/null | head -1)
 if [ -n "$last" ]; then
-    c=$(grep -E "carried last geometry|no carry info" "$last" 2>/dev/null | sed 's/^/  /')
+    c=$(grep -E "CARRY:" "$last" 2>/dev/null | sed 's/^/  /')
     [ -n "$c" ] && { echo "── carry 이벤트 ($(basename "$last")) ──"; echo "$c"; }
 fi
 
@@ -24,7 +24,7 @@ for k in 0 1 2 3 4 5 6 7 8; do
     f=$WB/drag_p${k}.out
     g=$((k % 2))
     cm=""
-    [ -n "$last" ] && grep -q "\[p$k\] incomplete — carried" "$last" 2>/dev/null && cm="↻"
+    [ -n "$last" ] && grep -q "\[p$k\] CARRY: spliced" "$last" 2>/dev/null && cm="↻"
     if [ ! -f "$f" ]; then
         printf "  p%-2s [G%s] ⬚ 대기\n" "$k" "$g"; continue
     fi

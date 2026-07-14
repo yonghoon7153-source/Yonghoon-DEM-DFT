@@ -43,22 +43,36 @@ run_stream () {          # $1 = GPU id, $2.. = point tags (p0 p2 ...)
             echo "[$v] already done — skip"; continue
         fi
         if [ -f "$fout" ]; then
-            nat=$(awk '/number of atoms\/cell/{print $5; exit}' "$fout")
-            ln=$(grep -n "ATOMIC_POSITIONS" "$fout" | tail -1 | cut -d: -f1)
-            got=""
-            if [ -n "$nat" ] && [ -n "$ln" ]; then
-                sed -n "${ln},$((ln+nat))p" "$fout" > "$WORK_BASE/.carry_${v}"
-                nl=$(( $(wc -l < "$WORK_BASE/.carry_${v}") - 1 ))
-                if [ "$nl" -eq "$nat" ]; then
-                    lin=$(grep -n "ATOMIC_POSITIONS" "$fin" | head -1 | cut -d: -f1)
-                    { head -n $((lin-1)) "$fin"; cat "$WORK_BASE/.carry_${v}"; \
-                      tail -n +$((lin+nat+1)) "$fin"; } > "${fin}.new" \
-                        && mv "${fin}.new" "$fin" && got=1
-                fi
-            fi
-            [ -n "$got" ] && echo "[$v] incomplete — carried last geometry (nat=$nat)" \
-                          || echo "[$v] incomplete — no carry info, fresh start"
-            rm -rf "$WORK_BASE/tmp_${v}" "$fout" "$WORK_BASE/.carry_${v}"
+            # python carry with built-in verification (848199 lesson: the shell
+            # splice reported success but the run restarted from the ORIGINAL
+            # geometry -- first '!' proved it. Now we splice in python and PRINT
+            # the adatom row before/after so the log itself proves the hand-off.)
+            python3 - "$fin" "$fout" "$v" <<'PYEOF'
+import re, sys
+fin, fout, tag = sys.argv[1], sys.argv[2], sys.argv[3]
+out = open(fout, errors="ignore").read().splitlines()
+nat = None
+for l in out:
+    m = re.search(r"number of atoms/cell\s*=\s*(\d+)", l)
+    if m:
+        nat = int(m.group(1)); break
+idx = [i for i, l in enumerate(out) if l.strip().startswith("ATOMIC_POSITIONS")]
+if not (nat and idx):
+    print(f"[{tag}] CARRY: no position blocks in out -> fresh start"); sys.exit(0)
+blk = out[idx[-1]: idx[-1] + nat + 1]
+if len(blk) != nat + 1 or any(len(x.split()) < 4 for x in blk[1:]):
+    print(f"[{tag}] CARRY: truncated last block -> fresh start"); sys.exit(0)
+inp = open(fin).read().splitlines()
+j = next(i for i, l in enumerate(inp) if l.strip().upper().startswith("ATOMIC_POSITIONS"))
+old_ad = " ".join(inp[j + nat].split()[1:4])
+open(fin, "w").write("\n".join(inp[:j] + blk + inp[j + nat + 1:]) + "\n")
+chk = open(fin).read().splitlines()
+new_ad = " ".join(chk[j + nat].split()[1:4])
+want = " ".join(blk[nat].split()[1:4])
+ok = "OK" if new_ad == want else "FAIL"
+print(f"[{tag}] CARRY: spliced nat={nat} | adatom {old_ad} -> {new_ad} | verify={ok}")
+PYEOF
+            rm -rf "$WORK_BASE/tmp_${v}" "$fout"
         fi
         echo "[$v] START on GPU $gpu  $(date)"
         ( cd "$WORK_BASE" && CUDA_VISIBLE_DEVICES=$gpu $PW -in "drag_${v}.in" > "$fout" 2>&1 )
