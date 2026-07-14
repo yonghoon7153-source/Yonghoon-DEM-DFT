@@ -49,7 +49,7 @@
   </style>
   <h3 style="margin:0 0 8px">저장된 payload <span id="lab-count" style="color:#64748b;font-weight:400">({{ items|length }})</span>
     <button id="lab-cmp-btn" onclick="labCompareOpen()" disabled
-      title="목록에서 ⚖ 체크박스로 payload 2개를 고른 뒤 누르면 비교 팝업 — 정량 표(Δ%) + 3D 뷰 2개(카메라 동기·배선은 공동 스케일)">⚖ 비교 (0/2 선택)</button></h3>
+      title="⚖ 체크 2개 → 비교 팝업. 먼저 체크한 payload가 왼쪽(A), 두 번째가 오른쪽(B) — 정량 Δ표 + 3D 뷰 2개(카메라 동기)">⚖ 비교 (0/2 선택)</button></h3>
   <table class="lab-table" style="width:100%; border-collapse:collapse; font-size:0.88em">
     <thead>
       <tr style="text-align:left; color:#94a3b8; border-bottom:1px solid #334155">
@@ -79,7 +79,7 @@
         <td style="padding:6px 10px; color:#94a3b8">{{ it.uploaded_at }}</td>
         <td style="padding:6px 10px; color:#94a3b8">{{ it.size_mb }}MB</td>
         <td style="padding:6px 10px; white-space:nowrap">
-          <label title="비교 선택 (2개)" style="cursor:pointer;margin-right:4px">⚖<input type="checkbox" class="lab-cmp-cb" data-pid="{{ it.id }}" data-name="{{ it.name }}" onchange="labCmpCount()" style="vertical-align:middle;margin-left:2px"></label>
+          <label title="비교 선택 (2개)" style="cursor:pointer;margin-right:4px">⚖<input type="checkbox" class="lab-cmp-cb" data-pid="{{ it.id }}" data-name="{{ it.name }}" onchange="labCmpCount(this)" style="vertical-align:middle;margin-left:2px"></label>
           <button class="btn btn-secondary btn-sm" onclick="labOpen('{{ it.id }}', {{ 1 if it.has_additives else 0 }}, this)">보기</button>
           <button class="btn btn-secondary btn-sm" onclick="labSummary('{{ it.id }}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button>
           <button class="btn btn-secondary btn-sm" onclick="labDelete('{{ it.id }}', this)">삭제</button>
@@ -163,21 +163,29 @@ async function labUpload(e) {
 }
 
 // ⚖ 케이스 비교 — 목록에서 2개 체크 → 비교 팝업 (정량 Δ표 + 3D 두 쪽 나란히, 카메라 동기)
-function labCmpCount() {
+// 선택 "순서"를 기억: 먼저 체크한 payload = 왼쪽(A), 두 번째 = 오른쪽(B).
+const labCmpSel = [];
+function labCmpCount(cb) {
+  if (cb && cb.dataset) {
+    const i = labCmpSel.findIndex(e => e.pid === cb.dataset.pid);
+    if (cb.checked && i === -1) labCmpSel.push({ pid: cb.dataset.pid, name: cb.dataset.name });
+    else if (!cb.checked && i !== -1) labCmpSel.splice(i, 1);
+  }
   const n = document.querySelectorAll('.lab-cmp-cb:checked').length;
   const b = document.getElementById('lab-cmp-btn');
   if (b) { b.disabled = (n !== 2); b.textContent = `⚖ 비교 (${n}/2 선택)`; }
 }
 async function labCompareOpen() {
-  const cbs = [...document.querySelectorAll('.lab-cmp-cb:checked')];
-  if (cbs.length !== 2) { alert('비교할 payload를 정확히 2개 선택하세요 (⚖ 체크박스).'); return; }
+  const checked = new Set([...document.querySelectorAll('.lab-cmp-cb:checked')].map(c => c.dataset.pid));
+  const sel = labCmpSel.filter(e => checked.has(e.pid));    // 화면 상태와 교차검증된 클릭-순서
+  if (sel.length !== 2) { alert('비교할 payload를 정확히 2개 선택하세요 (⚖ 체크박스).\n먼저 체크한 것이 왼쪽(A)에 갑니다.'); return; }
   try {
     const mod = await import('/static/js/viewer3d.js?v={{ asset_version }}');
     if (!mod.showLabCompareModal) {
       alert('viewer3d.js가 구버전으로 캐시돼 있어요 — Ctrl-Shift-R(강력 새로고침) 후 다시 시도하세요.');
       return;
     }
-    await mod.showLabCompareModal(cbs[0].dataset.pid, cbs[1].dataset.pid, cbs[0].dataset.name, cbs[1].dataset.name);
+    await mod.showLabCompareModal(sel[0].pid, sel[1].pid, sel[0].name, sel[1].name);
   } catch (e) {
     console.error('compare popup failed:', e);
     alert('비교 팝업 오류: ' + ((e && e.message) || e));
@@ -201,7 +209,7 @@ function labAddRow(it) {
     `<td style="padding:6px 10px;color:#94a3b8">${it.uploaded_at}</td>` +
     `<td style="padding:6px 10px;color:#94a3b8">${it.size_mb}MB</td>` +
     `<td style="padding:6px 10px;white-space:nowrap">` +
-      `<label title="비교 선택 (2개)" style="cursor:pointer;margin-right:4px">⚖<input type="checkbox" class="lab-cmp-cb" data-pid="${it.id}" data-name="${it.name}" onchange="labCmpCount()" style="vertical-align:middle;margin-left:2px"></label>` +
+      `<label title="비교 선택 (2개)" style="cursor:pointer;margin-right:4px">⚖<input type="checkbox" class="lab-cmp-cb" data-pid="${it.id}" data-name="${it.name}" onchange="labCmpCount(this)" style="vertical-align:middle;margin-left:2px"></label>` +
       `<button class="btn btn-secondary btn-sm" onclick="labOpen('${it.id}', ${it.has_additives ? 1 : 0}, this)">보기</button> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labSummary('${it.id}', this)" title="물성 요약을 클립보드에 복사 (AI에 먹이기용)">요약</button> ` +
       `<button class="btn btn-secondary btn-sm" onclick="labDelete('${it.id}', this)">삭제</button></td>`;
