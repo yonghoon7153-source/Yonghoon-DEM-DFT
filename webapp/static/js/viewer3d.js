@@ -4174,7 +4174,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
             <input type="checkbox" id="cmp-joint">σ공동</label>
           <label style="display:flex;align-items:center;gap:3px"
             title="백본을 점 대신 복셀 큐브로 — 인접 복셀이 붙어 연속 통로로 보임 (COMSOL 볼륨 문법)">
-            <input type="checkbox" id="cmp-cube" checked>이어짐</label></span>
+            <input type="checkbox" id="cmp-cube" checked>이어짐</label>
+          <label style="display:flex;align-items:center;gap:3px"
+            title="AM 입자 고스트(밝은 종이-회색) — 전류가 어느 입자 사이를 지나는지 컨텍스트">
+            <input type="checkbox" id="cmp-ghost" checked>AM</label></span>
         <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-clip"> 단면
           <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
@@ -4533,17 +4536,17 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     S.scene.add(grp); S.grp = grp;
     return vp.length;
   }
-  function buildField(S, payload, ionic, bbOn, bbPct, glowOn, scaleK, cubeOn) {
+  function buildField(S, payload, ionic, bbOn, bbPct, glowOn, scaleK, cubeOn, ghostOn) {
     // scaleK: σ-공동스케일 배율 (자기-p99.8 정규화 위에 σ_eff 비율을 곱해 절대 세기 차이를 색으로 —
     //         근사: 상위꼬리 모양 유사 가정, legend에 명시).  cubeOn: 백본을 점 대신 복셀 큐브로
     //         (인접 복셀이 면을 공유해 연속 통로로 읽힘 — user "점말고 이어지게").
     const kS = (typeof scaleK === 'number' && isFinite(scaleK) && scaleK > 0) ? scaleK : 1;
     const grp = new THREE.Group();
     const parts = payload.particles || [];
-    if (!glowOn) {                                           // ✨glow(=Fig4f x-ray 볼륨)에선 고스트 없이 순수 필드
-      const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.08, true);   // 0.12→0.08: 고스트가 큐브를 덮어 칙칙해지던 것 감광
+    if (ghostOn !== false) {                                 // AM 고스트 — glow와 독립 (user: "AM은 있되 칙칙하지 않게")
+      const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.14, true);
       if (ghost) {
-        const dk = new THREE.Color(0x0a0e1a);
+        const dk = new THREE.Color(0xd2d7dd);                // 어두운 베일 대신 밝은 종이-회색 → 캔버스가 안 칙칙해짐
         parts.forEach((_, i) => ghost.setColorAt(i, dk));
         if (ghost.instanceColor) ghost.instanceColor.needsUpdate = true;
         grp.add(ghost);
@@ -4758,7 +4761,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const pWrap = $('cmp-patch-wrap');
     if (pWrap) pWrap.style.display = (mode === 'wiring') ? 'flex' : 'none';
     const gWrap = $('cmp-glow-wrap');
-    if (gWrap) gWrap.style.display = (mode === 'wiring' || mode === 'je_field' || mode === 'ji_field') ? 'flex' : 'none';
+    if (gWrap) gWrap.style.display = (mode === 'wiring') ? 'flex' : 'none';   // 필드에선 AM 체크가 대체
     const fWrap = $('cmp-fldops-wrap');
     if (fWrap) fWrap.style.display = (mode === 'je_field' || mode === 'ji_field') ? 'inline-flex' : 'none';
     const bbOn = $('cmp-bb-on') ? $('cmp-bb-on').checked : true;
@@ -4818,8 +4821,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const sgB = ionic ? sB.sigma_ion_eff_S_cm : sB.sigma_e_eff_S_cm;
       const smx = Math.max(sgA || 0, sgB || 0) || 1;
       const kA2 = jointOn && sgA ? sgA / smx : 1, kB2 = jointOn && sgB ? sgB / smx : 1;
-      const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn, kA2, cubeOn),
-            rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn, kB2, cubeOn);
+      const ghostOn = $('cmp-ghost') ? $('cmp-ghost').checked : true;
+      const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn, kA2, cubeOn, ghostOn),
+            rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn, kB2, cubeOn, ghostOn);
       const cap = (r, s3x, k2) => (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
         + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
         + (jointOn ? ` · σ-공동스케일 ×${k2.toFixed(2)} (비례 근사 ★색 비교 유효)`
@@ -4894,6 +4898,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   if ($('cmp-glow')) $('cmp-glow').onchange = rebuild;
   if ($('cmp-joint')) $('cmp-joint').onchange = rebuild;
   if ($('cmp-cube')) $('cmp-cube').onchange = rebuild;
+  if ($('cmp-ghost')) $('cmp-ghost').onchange = rebuild;
   rebuild();
   $('cmp-png').onclick = async () => {
     // 논문급 스크린샷: 각 쪽을 4× 슈퍼샘플로 재렌더(captureHighRes) 후 이름표와 함께 합성.
