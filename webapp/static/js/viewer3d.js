@@ -247,7 +247,7 @@ function injectCSS() {
 .viewer-info{position:absolute;bottom:50px;left:12px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:8px 12px;
   font:11px/1.5 'JetBrains Mono',monospace;color:#e4e6f0;z-index:10;max-width:240px;display:none}
-.viewer-zoom{position:absolute;bottom:12px;right:12px;background:rgba(22,25,46,.9);
+.viewer-zoom{position:absolute;bottom:12px;left:12px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:6px 10px;z-index:10;
   display:flex;align-items:center;gap:6px}
 .viewer-zoom button{background:#555;color:#fff;border:none;border-radius:4px;width:24px;height:24px;
