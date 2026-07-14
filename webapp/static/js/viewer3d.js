@@ -4468,26 +4468,35 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const fibrePh = new Set(fibresAll.map(f => f.phase));
     let nFib = 0;
     if (fibres.length) {
-      const pos = [], col = [];
-      const c = new THREE.Color();
+      // ① periodic-wrap 아티팩트 제거: 경계를 감아 넘는 세그먼트(길이 > 0.45·박스변)는 직선
+      //   chord로 그려져 상자 밖 "가시"가 됨 → 스킵.  ② 상별 분리 렌더: PTFE 피브릴은 가닥당
+      //   점이 수백 개라 세그먼트 수가 폭발(1wt%인데 화면 지배) → PTFE 옅게·먼저, VGCF 위에.
+      const box2 = payload.box || {};
+      const wrapMax = 0.45 * Math.min((box2.x_max || 50), (box2.y_max || 50));
+      const byPh = {};
       for (const f of fibres) {
-        c.setHex(swat[f.phase] || 0x9ca3af);
         const pts = f.pts || [];
         if (pts.length >= 2) nFib++;
+        const arr = byPh[f.phase] || (byPh[f.phase] = []);
         for (let k = 0; k + 1 < pts.length; k++) {
           const a = pts[k], b2 = pts[k + 1];
-          pos.push(a[0], a[2], a[1], b2[0], b2[2], b2[1]);   // Z-up swap
-          col.push(c.r, c.g, c.b, c.r, c.g, c.b);
+          if (Math.abs(a[0] - b2[0]) > wrapMax || Math.abs(a[1] - b2[1]) > wrapMax) continue;
+          arr.push(a[0], a[2], a[1], b2[0], b2[2], b2[1]);   // Z-up swap
         }
       }
-      if (pos.length) {
+      const PH_STYLE = { 4: { op: 0.30, ro: 997 }, 2: { op: 0.88, ro: 999 },   // PTFE 옅게 아래,
+                         3: { op: 0.8, ro: 998 }, 5: { op: 0.9, ro: 999 } };   // VGCF 진하게 위
+      const c = new THREE.Color();
+      Object.entries(byPh).forEach(([ph, arr]) => {
+        if (!arr.length) return;
+        const st = PH_STYLE[ph] || { op: 0.8, ro: 998 };
         const gf = new THREE.BufferGeometry();
-        gf.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
-        gf.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+        gf.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3));
         const lm = new THREE.LineSegments(gf, new THREE.LineBasicMaterial({
-          vertexColors: true, transparent: true, opacity: 0.9, depthTest: false, depthWrite: false }));
-        lm.renderOrder = 999; grp.add(lm);
-      }
+          color: c.setHex(swat[ph] || 0x9ca3af).getHex(), transparent: true,
+          opacity: st.op, depthTest: false, depthWrite: false }));
+        lm.renderOrder = st.ro; grp.add(lm);
+      });
     }
     // 점 상 = fibre가 없는 상만 (SuperP·SDCP) — fibre 상의 점 중복 제거 (메인 모드와 동일)
     const all = (payload.additive_points || []).filter(p => (!only || p[3] === only) && !fibrePh.has(p[3]));
