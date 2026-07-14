@@ -40,7 +40,10 @@ from scipy.sparse.linalg import cg
 # SDCP 150 = USER-provided INTERIM material conductivity (2026-07-10, 진성호계 S-PEDOT 자릿수);
 # replaces the earlier 'AM-grade 0.010' placeholder.  Still overridable per run.
 SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 150.0}
-SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE'}   # voxel σ-id → name
+SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE'}   # voxel σ-id → name
+#   sid 7 (PTFE) = SENSITIVITY-ONLY: production은 PTFE를 전도 격자에 아예 안 넣음(절연 = void와
+#   동일 취급, bulk PTFE σ~1e-16 S/cm).  --sigma-ptfe > 0 민감도 런에서만 payload가 phase-4 점을
+#   _apts에 포함시켜 여기로 스탬프됨.
 
 # Set True (mpm_webapp_payload --step3-gpu) to run the Kirchhoff CG on GPU (CuPy cuSPARSE) — a
 # multi-M-dof fine-vox solve drops from ~1 h (CPU) to minutes.  Auto-falls back to scipy CPU if
@@ -134,8 +137,8 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         ijk = np.floor((add_pts - lo) / vox).astype(int)
         ok = ((ijk >= 0) & (ijk < n)).all(1)
         ijk, ph = ijk[ok], add_phase[ok]
-        for code, s in ((2, 3), (3, 4), (5, 5)):           # phase → sid
-            m = ph == code
+        for code, s in ((2, 3), (3, 4), (5, 5), (4, 7)):   # phase → sid (4=PTFE: sensitivity-only,
+            m = ph == code                                  #   payload가 --sigma-ptfe>0일 때만 전달)
             if m.any():
                 sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
     return sid, pid

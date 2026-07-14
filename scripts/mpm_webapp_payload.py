@@ -284,6 +284,11 @@ def main():
     ap.add_argument('--sigma-sdcp', type=float, default=150.0,
                     help='σ_e SDCP material (S/cm) — 150 = USER-provided INTERIM anchor (2026-07-10, '
                          'S-PEDOT-class); pellet ×5.1 stays COMPOSITE-level.  Doped/neutral split = future.')
+    ap.add_argument('--sigma-ptfe', type=float, default=0.0,
+                    help='σ_e PTFE (S/cm) — SENSITIVITY hook (default 0 = production: PTFE는 전도 격자에 '
+                         '아예 미스탬프, bulk PTFE ~1e-16 S/cm 절연체).  >0이면 PTFE phase-4 점을 sid7로 '
+                         '스탬프해 전자망에 참여시킴 — "절연 가정이 결과를 만들었나" 반론 검증용 '
+                         '(랩 논의 2026-07-14, 0.58 S/cm 제안값의 출처는 미확인 ⚠).  이온은 항상 절연.')
     ap.add_argument('--sigma-ion-se', type=float, default=0.003,
                     help='σ_ion SE (S/cm) = 3.0 mS/cm LPSCl grain (Cronau — production σ_grain anchor)')
     ap.add_argument('--collector-rint', type=float, default=-1.0,
@@ -490,8 +495,9 @@ def main():
             _off = np.array([SW[0], SW[0], FLOOR])
             _am_c = (c - _off) * UM
             _am_r = r * UM
-            _m = (np.isin(phase, (2, 3, 5)) if phase is not None
-                  else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator)
+            _cond_ph = (2, 3, 5, 4) if a.sigma_ptfe > 0 else (2, 3, 5)   # PTFE(4)는 민감도 런에서만 스탬프
+            _m = (np.isin(phase, _cond_ph) if phase is not None
+                  else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator, default)
             _apts = (se[_m] - _off) * UM if _m.any() else None
             _aph = phase[_m] if _m.any() else None
             _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
@@ -500,7 +506,8 @@ def main():
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
                                        se_pts=_septs)      # SE stamped (sid 6) → ionic solve on the same grid
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
-                              0.0])                        # ELECTRONIC table: SE = e-insulator
+                              0.0, a.sigma_ptfe])          # ELECTRONIC table: SE = e-insulator; idx7 =
+            #                                                PTFE sensitivity hook (default 0 → sid7 미존재)
             _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
             #   crowns (kgy first run: no_plate_contact); the sim thickness is the physical plate.
@@ -514,7 +521,7 @@ def main():
                                       nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
                 if not a.no_field:                          # ELECTRONIC field (AM+carbon {1,2,3,4,5}) — the
                     _ep, _ej = _s3.field_point_cloud(       # paper Fig-4 grammar: |J_e| cloud, hot backbone
-                        _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5), max_points=a.field_max_points)
+                        _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5, 7), max_points=a.field_max_points)
                     if _ep is not None:
                         _ej = np.nan_to_num(_ej, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
                         _ejn = _ej / max(float(np.percentile(_ej, 99.8)), 1e-30)   # p99.8-norm (top 0.2%>1,
@@ -532,7 +539,8 @@ def main():
                          'dissipation_share': {_sname[k]: round(v, 4) for k, v in _share.items()},
                          'sigma_table_S_cm': {'AM_S': a.sigma_am_s, 'AM_P': a.sigma_am_p,
                                               'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,
-                                              'SDCP': a.sigma_sdcp},
+                                              'SDCP': a.sigma_sdcp,
+                                              **({'PTFE': a.sigma_ptfe} if a.sigma_ptfe > 0 else {})},
                          'trust': ('RELATIVE_v1 (same settings between runs; pressed-to-plate beds — '
                                    'plate contacts abundant; carbon/SDCP σ = F1 hooks; AM_S/P = A1-locked '
                                    '10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)'
@@ -646,7 +654,7 @@ def main():
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()
-                _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se])
+                _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0])
                 _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
                                            z_top_um=_ztop, z_bot_um=0.0)
                 if _res3i['n_dof']:
