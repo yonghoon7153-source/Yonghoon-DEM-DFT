@@ -384,6 +384,176 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     return pts.astype(np.float32), vals.astype(np.float32)
 
 
+def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_code,
+                           z_top_um=None, z_bot_um=None):
+    """STEP4-v1 — 저율·균일-SOC 갈바노스타틱 **반응전류 분포** (랩 slide-20 물리, 선형화 BV).
+
+    같은 복셀 격자 위 TWO networks를 반응 계면에서만 결합한 단일 SPD Kirchhoff 시스템:
+      · electronic net (σ_e table: AM+carbon+SDCP) ← 집전체 plate (bottom, φ_e=1 소스)
+      · ionic net      (σ_i table: SE+SDCP)        ← 분리막 plate (top,   φ_i=0 싱크)
+      · BV faces: AM(sid 1,2) ↔ ion-conductor(sid 5,6) 인접 면마다 선형화 Butler-Volmer
+        컨덕턴스 g_ct = (i0·F/RT)·A_face.  Li는 이 면으로만 두 망을 건넌다 — 반응 면적이
+        rasterized 접촉(=coverage)에서 자연히 나온다.
+    가정(정직): 저율 선형화(과전압≪RT/F), 균일 SOC(OCV 상수 소거 — linear라 총전류로 스케일),
+    충·방전은 부호만 반전.  SDCP는 혼성전도라 두 망 모두에 노드를 갖지만 자기-BV는 없음
+    (인터칼레이션 전극이 아님) — 기여는 이온/전자 '배달'로만 (STEP3 서사와 연속).
+    Returns dict(i_am[n_am] — 입자별 반응전류(code units, RELATIVE: caller가 정규화),
+    I_tot, kcl_err, resid, unconverged, n_dof_e/i, n_bv_faces [, reason])."""
+    nx, ny, nz = sid.shape
+    sig_e = sig_e_of_sid[sid]
+    sig_i = sig_i_of_sid[sid]
+    cond_e = sig_e > 0
+    cond_i = sig_i > 0
+    out0 = {'i_am': np.zeros(n_am), 'I_tot': 0.0, 'kcl_err': 0.0, 'resid': 0.0,
+            'unconverged': False, 'n_dof_e': int(cond_e.sum()), 'n_dof_i': int(cond_i.sum()),
+            'n_bv_faces': 0}
+    if not cond_e.any() or not cond_i.any():
+        return {**out0, 'reason': 'missing_network'}
+    z_b = float(z_bot_um) if z_bot_um is not None else 0.0
+    z_plate = min(float(z_top_um) if z_top_um is not None else nz * vox, nz * vox)
+    band = vox + 0.10
+    zc = (np.arange(nz) + 0.5) * vox
+    any_e = cond_e.any(2)
+    k_first_e = np.argmax(cond_e, axis=2)
+    bot_e = any_e & (zc[k_first_e] - z_b <= band)            # 집전체 접점 (전자망만)
+    any_i = cond_i.any(2)
+    k_last_i = nz - 1 - np.argmax(cond_i[:, :, ::-1], axis=2)
+    top_i = any_i & (z_plate - zc[k_last_i] <= band)         # 분리막 접점 (이온망만)
+    if not bot_e.any() or not top_i.any():
+        return {**out0, 'reason': f'no_plate_contact(bot_e={int(bot_e.sum())},top_i={int(top_i.sum())})'}
+    # anchored-component filter: 결합 그래프(전자·이온·BV 인접 = 모두 6-이웃 face)를 union 마스크
+    # 라벨로 근사 — 어느 plate에도 안 닿는 섬은 전류 0이므로 제거 (특이 블록 방지).  union 인접이
+    # 실제 엣지가 아닌 희귀 케이스(SE|carbon 면)는 아래 ε-diag 가드가 받친다.
+    uni = cond_e | cond_i
+    lab, _nl = ndimage.label(uni)
+    _ii, _jj = np.where(bot_e)
+    anch = set(lab[_ii, _jj, k_first_e[bot_e]].tolist())
+    _ii, _jj = np.where(top_i)
+    anch |= set(lab[_ii, _jj, k_last_i[top_i]].tolist())
+    anch.discard(0)
+    keep = np.isin(lab, list(anch))
+    cond_e &= keep
+    cond_i &= keep
+    n_e = int(cond_e.sum())
+    n_i = int(cond_i.sum())
+    if n_e == 0 or n_i == 0:
+        return {**out0, 'reason': 'all_floating_dropped'}
+    idx_e = -np.ones(sid.shape, np.int64); idx_e[cond_e] = np.arange(n_e)
+    idx_i = -np.ones(sid.shape, np.int64); idx_i[cond_i] = np.arange(n_i)
+    sig_e = np.where(cond_e, sig_e, 0.0)
+    sig_i = np.where(cond_i, sig_i, 0.0)
+    N = n_e + n_i
+    rows, cols, vals = [], [], []
+    diag = np.zeros(N, np.float64)
+    b = np.zeros(N, np.float64)
+
+    def _net_couple(idxN, sigN, off, sl_a, sl_b):
+        A, B = idxN[sl_a], idxN[sl_b]
+        sa, sb = sigN[sl_a], sigN[sl_b]
+        m = (A >= 0) & (B >= 0)
+        if not m.any():
+            return
+        g = (2.0 * sa[m] * sb[m] / (sa[m] + sb[m])) * vox
+        a2, b2 = A[m] + off, B[m] + off
+        rows.append(a2); cols.append(b2); vals.append(-g)
+        rows.append(b2); cols.append(a2); vals.append(-g)
+        np.add.at(diag, a2, g); np.add.at(diag, b2, g)
+
+    for sl_a, sl_b in ((np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
+                       (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+        _net_couple(idx_e, sig_e, 0, sl_a, sl_b)
+        _net_couple(idx_i, sig_i, n_e, sl_a, sl_b)
+    # BV 계면 결합 + per-face 기록 (입자별 합산용)
+    am_m = (sid == 1) | (sid == 2)
+    ion_m = (sid == 5) | (sid == 6)
+    bv_e, bv_i, bv_pid = [], [], []
+    gct = float(gct_code)
+    for sl_a, sl_b in ((np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
+                       (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+        for am_first in (True, False):
+            slA, slB = (sl_a, sl_b) if am_first else (sl_b, sl_a)
+            m = am_m[slA] & ion_m[slB]
+            Ae = idx_e[slA]; Bi = idx_i[slB]
+            m &= (Ae >= 0) & (Bi >= 0)
+            if not m.any():
+                continue
+            a2 = Ae[m]; b2 = Bi[m] + n_e
+            g = np.full(len(a2), gct)
+            rows.append(a2); cols.append(b2); vals.append(-g)
+            rows.append(b2); cols.append(a2); vals.append(-g)
+            np.add.at(diag, a2, g); np.add.at(diag, b2, g)
+            bv_e.append(a2); bv_i.append(b2); bv_pid.append(pid[slA][m])
+    n_bv = int(sum(len(x) for x in bv_e))
+    if n_bv == 0:
+        return {**out0, 'n_dof_e': n_e, 'n_dof_i': n_i, 'reason': 'no_reaction_interface'}
+    # plates: 전자망 bottom(φ=1 소스), 이온망 top(φ=0)
+    def _plate(idxN, sigN, off, mask, ksurf, plane, phi_p):
+        ii, jj = np.where(mask)
+        kk2 = ksurf[mask]
+        A = idxN[ii, jj, kk2]
+        sa = sigN[ii, jj, kk2]
+        m = A >= 0
+        dist = np.maximum(np.abs(zc[kk2[m]] - plane), 0.5 * vox)
+        g = sa[m] * vox * vox / dist
+        np.add.at(diag, A[m] + off, g)
+        if phi_p != 0.0:
+            np.add.at(b, A[m] + off, g * phi_p)
+        return A[m] + off, g
+    eb_nodes, eb_g = _plate(idx_e, sig_e, 0, bot_e, k_first_e, z_b, 1.0)
+    _plate(idx_i, sig_i, n_e, top_i, k_last_i, z_plate, 0.0)
+    diag[diag == 0.0] = 1.0                                  # ε-guard: 완전 고립 노드 → φ=0, 전류 0
+    L = sparse.coo_matrix((np.concatenate(vals + [diag]),
+                           (np.concatenate(rows + [np.arange(N)]),
+                            np.concatenate(cols + [np.arange(N)]))), shape=(N, N)).tocsr()
+    print(f'    STEP4 rxn solve: e {n_e:,} + i {n_i:,} dof, BV faces {n_bv:,} — CG '
+          f'({"GPU" if GPU_SOLVE else "CPU"})…', flush=True)
+    phi, info = _solve_cg(L, b)
+    resid = float(np.linalg.norm(L @ phi - b) / max(np.linalg.norm(b), 1e-30))
+    unconv = bool(info) or resid > 1e-6
+    I_tot = float(np.sum(eb_g * (1.0 - phi[eb_nodes])))
+    i_am = np.zeros(n_am, np.float64)
+    I_bv = 0.0
+    for a2, b2, pd in zip(bv_e, bv_i, bv_pid):
+        f = gct * (phi[a2] - phi[b2])                        # +: e-net → i-net (한 방향, linear)
+        I_bv += float(f.sum())
+        mm2 = pd >= 0
+        np.add.at(i_am, pd[mm2], f[mm2])
+    kcl = abs(I_tot - I_bv) / max(abs(I_tot), 1e-30)         # KCL: plate 유입 = BV 총 통과
+    return {'i_am': i_am, 'I_tot': I_tot, 'kcl_err': float(kcl), 'resid': resid,
+            'unconverged': unconv, 'n_dof_e': n_e, 'n_dof_i': n_i, 'n_bv_faces': n_bv}
+
+
+def _selftest_rxn():
+    """STEP4 sandwich analytic: 하반 AM slab / 상반 SE slab, 계면 BV — 직렬저항 I와 균일 i_n."""
+    vox = 0.5
+    nxy, nz = 6, 12
+    sid = np.zeros((nxy, nxy, nz), np.int8)
+    sid[:, :, :6] = 1                                        # AM (전자망)
+    sid[:, :, 6:] = 6                                        # SE (이온망)
+    pid = np.full(sid.shape, -1, np.int32)
+    pid[:, :, :6] = 0                                        # 입자 1개로 합산
+    sig_e = np.array([0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0])
+    sig_i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 2.0])
+    gct = 0.05                                               # 면당 (code units)
+    r = solve_reaction_current(sid, sig_e, sig_i, pid, 1, vox, gct,
+                               z_top_um=nz * vox, z_bot_um=0.0)
+    # 직렬 해석해 (µm-code 단위 일관): per-column R = R_e + R_ct + R_i
+    #   R_e = (5.5·vox)/(σe·vox²)  [plate 반셀 0.25 + 내부 5칸 2.5 + 계면 반셀 0.25 → 3.0µm 경로/컬럼?]
+    #   코드 규약대로 직접 합산: plate g=σ·vox²/max(d,vox/2), 내부 g=σ·vox, BV g=gct
+    ge_plate = 1.0 * vox * vox / (0.5 * vox)
+    gi_plate = 2.0 * vox * vox / (0.5 * vox)
+    R_col = 1.0 / ge_plate + 5 * (1.0 / (1.0 * vox)) + 1.0 / gct + 5 * (1.0 / (2.0 * vox)) + 1.0 / gi_plate
+    I_exp = nxy * nxy / R_col
+    okI = abs(r['I_tot'] - I_exp) / I_exp < 1e-3
+    okK = r['kcl_err'] < 1e-6
+    okU = abs(r['i_am'][0] - r['I_tot']) / r['I_tot'] < 1e-6   # 입자 1개 = 총전류 (CG rtol 1e-8 여유)
+    print(f"rxn sandwich: I={r['I_tot']:.6f} (expect {I_exp:.6f})  {'OK' if okI else 'FAIL'}")
+    print(f"rxn KCL: plate vs ΣBV err={r['kcl_err']:.2e}  {'OK' if okK else 'FAIL'}")
+    print(f"rxn per-particle sum == I_tot  {'OK' if okU else 'FAIL'}")
+    print('RXN SELFTEST', 'PASS' if (okI and okK and okU) else 'FAIL')
+    return 0 if (okI and okK and okU) else 1
+
+
 def _selftest():
     """Analytic checks that pin assembly + BC signs."""
     ok = True
@@ -420,12 +590,16 @@ def _selftest():
 if __name__ == '__main__':
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--selftest', action='store_true', help='run the analytic laminate/percolation checks')
+    ap.add_argument('--selftest-rxn', action='store_true',
+                    help='STEP4 sandwich analytic (series-R total current + uniform per-particle i + KCL)')
     ap.add_argument('--integration', action='store_true',
                     help='run the committed real14 integration probe (AM-only vs +300 synthetic VGCF, '
                          'seed 0, vox 0.4) — reproduces the review-anchored numbers + monotonicity')
     a = ap.parse_args()
     if a.selftest:
         sys.exit(_selftest())
+    if a.selftest_rxn:
+        sys.exit(_selftest_rxn())
     if a.integration:
         import os
         _csv = os.path.join(os.path.dirname(__file__), '..', 'docs/data/real14_am_scaffold.csv')

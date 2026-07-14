@@ -141,6 +141,7 @@ function buildControls(container, isMPM) {
         <option value="ji_field">⚡ 이온 전류밀도 — 필드 (SE+SDCP, 논문)</option>
         <option value="je">└ 전자 — AM 입자별 (je)</option>
         <option value="je_delta">└ Δ 재분배 — bare/wetted 비율 (접점 상실)</option>
+        <option value="jrxn">🔋 반응 전류밀도 — 충전 저율 (STEP4)</option>
       </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
@@ -2231,6 +2232,49 @@ function applyViewMode(state, mode) {
     }
     return;
   }
+  if (mode === 'jrxn') {
+    /* STEP4-v1 반응 전류밀도 (랩 slide-20 물리판): 전자망(집전체)×이온망(분리막)을 AM|SE·AM|SDCP
+     * 접촉면의 선형화 BV로 결합해 푼 입자별 반응전류 i/ī.  색 = 그 입자가 충전 반응을 얼마나
+     * 담당하나 (상대값 — linear라 C-rate 무관).  navy ≈ 반응 소외(접근성 나쁨) / red = 핫스팟. */
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const s3 = mm.step3 || null;
+    const rxn = s3 && s3.rxn;
+    const vals = [];
+    ['AM_P', 'AM_S'].forEach(ty => {
+      const m = state.meshes[ty]; if (!m) return;
+      m.userData.particles.forEach(p => { if (p.jrxn !== undefined) vals.push(p.jrxn); });
+    });
+    if (!vals.length) {
+      setLegend(state, '<i>이 payload엔 STEP4 반응전류(<b>jrxn</b>)가 없어요 — 최신 '
+        + '<b>mpm_webapp_payload.py</b>(--step4 기본 ON)로 payload를 재생성해 업로드하세요 '
+        + '(MPM 재실행 불필요).</i>');
+      return;
+    }
+    if (state.meshes.MESH) {                                 // SE = 얇은 이온-공급 맥락
+      state.meshes.MESH.visible = true;
+      state.meshes.MESH.material.transparent = true; state.meshes.MESH.material.opacity = 0.10;
+    }
+    const sorted = [...vals].sort((x, y) => x - y);
+    const hi = Math.max(sorted[Math.floor(0.998 * (sorted.length - 1))], 1e-9);
+    const gam = (t) => Math.pow(Math.max(0, Math.min(1, t / hi)), 1.6);
+    ['AM_P', 'AM_S'].forEach(ty => {
+      const m = state.meshes[ty]; if (!m) return;
+      m.userData.particles.forEach((p, i) => {
+        if (p.jrxn === undefined) { m.setColorAt(i, colDim); return; }
+        m.setColorAt(i, new THREE.Color(jetColor(gam(p.jrxn))));
+      });
+      m.material.opacity = 1.0; m.material.transparent = false;
+    });
+    flushColors();
+    const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+    setLegend(state,
+      `<b>🔋 반응 전류밀도 (STEP4 · 저율 충전)</b>
+       <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">전자망×이온망을 AM|SE·SDCP 접촉면 BV로 결합 — 입자별 충전 반응 분담 (i/ī 상대)</div>
+       <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
+       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0 (반응 소외)</span><span>i/ī (0–p99.8)</span><span>핫스팟</span></div>`
+      + (rxn ? `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">BV faces ${Number(rxn.n_bv_faces).toLocaleString()} · active AM ${rxn.active_am_pct}% · i0 ${rxn.i0_A_m2} A/m² (⚠F1 hook) · 선형화 BV·균일 SOC</div>` : ''));
+    return;
+  }
   if (mode === 'je_delta') {
     /* Δ 재분배 — 같은 전극을 wetted(je)/bare(jb) 집전체로 푼 두 해의 입자별 비율 log₂(jb/je).
      * 두 솔브의 유일한 차이 = 바닥 접점 집합(4,680→3,741)이므로 색이 갈리는 곳은 집전체 근처뿐이어야
@@ -3997,6 +4041,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <option value="ji_field">⚡ 이온 전류밀도 필드</option>
           <option value="je">전자 — AM 입자별 (je)</option>
           <option value="je_delta">Δ 재분배 — bare/wetted 비율</option>
+          <option value="jrxn">🔋 반응 전류밀도 (STEP4)</option>
           <option value="additives">도전재 — 전체</option>
           <option value="add_vgcf">　└ VGCF만</option>
           <option value="add_superp">　└ Super P만</option>
@@ -4440,19 +4485,19 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     S.scene.add(grp); S.grp = grp;
     return all.length;
   }
-  function buildJe(S, payload) {
+  function buildJe(S, payload, fldKey) {
     const parts = payload.particles || [];
     const grp = new THREE.Group();
     const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) {
       mesh.material.shininess = 8;
       if (mesh.material.specular) mesh.material.specular.setHex(0x161616);
-      const vals = parts.map(p => p.je).filter(v => isFinite(v)).sort((a, b) => a - b);
+      const vals = parts.map(p => p[fldKey]).filter(v => isFinite(v)).sort((a, b) => a - b);
       const hi2 = Math.max(vals[Math.floor(0.998 * (vals.length - 1))] || 1e-9, 1e-30);
       const c = new THREE.Color();
       parts.forEach((p, i) => {
-        if (!isFinite(p.je)) { mesh.setColorAt(i, c.setHex(0x333333)); return; }
-        mesh.setColorAt(i, c.setHex(jetColor(Math.pow(Math.max(0, Math.min(1, p.je / hi2)), 1.6))));
+        if (!isFinite(p[fldKey])) { mesh.setColorAt(i, c.setHex(0x333333)); return; }
+        mesh.setColorAt(i, c.setHex(jetColor(Math.pow(Math.max(0, Math.min(1, p[fldKey] / hi2)), 1.6))));
       });
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       grp.add(mesh);
@@ -4580,9 +4625,19 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       $('cmp-leg-a').innerHTML = cap(rA2, sA);
       $('cmp-leg-b').innerHTML = cap(rB2, sB);
     } else if (mode === 'je') {
-      buildJe(SA, A); buildJe(SB, B);
+      buildJe(SA, A, 'je'); buildJe(SB, B, 'je');
       const cap = (s3x) => 'AM 입자별 |J_z| (wetted) · σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)
         + ' S/cm · 자기 p99.8+감마 — 패턴 비교용';
+      $('cmp-leg-a').innerHTML = cap(sA);
+      $('cmp-leg-b').innerHTML = cap(sB);
+    } else if (mode === 'jrxn') {
+      buildJe(SA, A, 'jrxn'); buildJe(SB, B, 'jrxn');
+      const cap = (s3x) => {
+        const rx = (s3x || {}).rxn || {};
+        return '반응 전류 i/ī (STEP4 저율·선형화 BV) · active AM ' + (rx.active_am_pct != null ? rx.active_am_pct + '%' : '—')
+          + (rx.n_bv_faces ? ' · BV faces ' + Number(rx.n_bv_faces).toLocaleString() : '')
+          + ' · 자기 p99.8+감마 — 패턴 비교용 (payload에 jrxn 필요)';
+      };
       $('cmp-leg-a').innerHTML = cap(sA);
       $('cmp-leg-b').innerHTML = cap(sB);
     } else if (mode === 'je_delta') {

@@ -302,6 +302,11 @@ def main():
     ap.add_argument('--step3-gpu', action='store_true',
                     help='run the STEP3 Kirchhoff CG on GPU (CuPy cuSPARSE) — ~10-50× faster, esp. fine '
                          'vox; auto-falls back to scipy CPU if CuPy/CUDA missing (same σ either way).')
+    ap.add_argument('--i0-a-m2', type=float, default=2.0,
+                    help='STEP4 exchange current density i0 (A/m², NCM|LPSCl 계면) — ⚠F1 literature hook '
+                         '(Newman-typical 1-5 A/m²).  Sets the linearised BV conductance g=i0·F/RT.')
+    ap.add_argument('--no-step4', action='store_true',
+                    help='skip the STEP4 reaction-current solve (저율 충전 반응전류 분포, slide-20 물리)')
     a = ap.parse_args()
     vc = _vc()
     sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
@@ -475,7 +480,7 @@ def main():
     # settings (σ hooks + vox recorded in metrics); absolute σ_e needs the DEM Stage-E contact-area
     # cross-calibration (sub-voxel constriction not modelled).  scripts/step3_sigma.py has the
     # analytic laminate/percolation self-tests that pin the assembly.
-    step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None
+    step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     if len(r) and not a.no_step3:                       # phase=None → AM-skeleton-only σ (SBE baseline)
         try:
             import time as _time
@@ -661,6 +666,37 @@ def main():
                           f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
                           f"share: " + " ".join(f"{k} {100*v:.0f}%"
                                                 for k, v in step3['ion_dissipation_share'].items()))
+                # ★ STEP4-v1 — 저율 충전 **반응전류 분포** (랩 slide-20 물리): 전자망(집전체 급전)과
+                # 이온망(분리막 급전)을 AM|SE·AM|SDCP 접촉면의 선형화 Butler-Volmer 컨덕턴스로 결합한
+                # 단일 Kirchhoff 시스템 → 입자별 i_n.  분포는 RELATIVE(i/ī, linear라 C-rate 스케일 무관);
+                # 절대화(A/m²·SOC 의존)는 STEP4-v2.  analytic sandwich selftest: --selftest-rxn.
+                if not a.no_step4:
+                    _t4 = _time.time()
+                    _gpp = a.i0_a_m2 * 1e-4 * 38.92          # i0[A/m²→A/cm²] × F/RT[V⁻¹] = g″ [S/cm²]
+                    _gct = _gpp * (a.step3_vox ** 2) * 1e-4  # face-conductance (σ·vox_µm 코드 규약 정합)
+                    _r4 = _s3.solve_reaction_current(sid3, _sig3, _sig3i, pid3, len(r), a.step3_vox,
+                                                     _gct, z_top_um=_ztop, z_bot_um=0.0)
+                    if _r4.get('reason'):
+                        print(f"  ⚠ STEP4 rxn skipped: {_r4['reason']}")
+                    else:
+                        _ia = np.nan_to_num(_r4['i_am'], nan=0.0, posinf=0.0, neginf=0.0)
+                        _pos = _ia[_ia > 0]
+                        jrxn_am = _ia / max(float(_pos.mean()) if len(_pos) else 0.0, 1e-30)   # i/ī
+                        step3['rxn'] = {
+                            'i0_A_m2': a.i0_a_m2,
+                            'gct_S_cm2': float(f'{_gpp:.4g}'),
+                            'n_bv_faces': _r4['n_bv_faces'],
+                            'active_am_pct': round(100.0 * float((_ia > 0).mean()), 1),
+                            'kcl_err': float(f"{_r4['kcl_err']:.2g}"),
+                            'resid': float(f"{_r4['resid']:.2g}"),
+                            'trust': ('RELATIVE i/mean map — linearised BV, uniform SOC, low-rate '
+                                      '(charge↔discharge = sign only); i0 ⚠F1 hook; reaction area = '
+                                      'rasterized AM|SE·AM|SDCP faces (coverage-native)'
+                                      + (' ⚠UNCONVERGED' if _r4['unconverged'] else ''))}
+                        print(f"  STEP4 rxn: BV faces {_r4['n_bv_faces']:,} · active AM "
+                              f"{step3['rxn']['active_am_pct']}% · i/ī p95 "
+                              f"{float(np.percentile(jrxn_am, 95)):.2f} · KCL {_r4['kcl_err']:.1e} · "
+                              f"resid {_r4['resid']:.1e} ({_time.time()-_t4:.0f}s)")
         except Exception as _e:
             import traceback as _tb
             print(f'  ⚠ STEP3 skipped ({type(_e).__name__}: {_e})')
@@ -673,7 +709,8 @@ def main():
                   'coverage': float(cov_per[i]),
                   **({'econn': int(econn[i])} if econn is not None else {}),
                   **({'je': float(f'{je_am[i]:.4g}')} if je_am is not None else {}),
-                  **({'jb': float(f'{jb_am[i]:.4g}')} if jb_am is not None else {})} for i in range(len(r))]
+                  **({'jb': float(f'{jb_am[i]:.4g}')} if jb_am is not None else {}),
+                  **({'jrxn': float(f'{jrxn_am[i]:.4g}')} if jrxn_am is not None else {})} for i in range(len(r))]
 
     # conductive additives (VGCF/SuperP/PTFE) → colored points for the 도전재 3D viewer.  Subsampled
     # proportionally to the budget; carried as [x,y,z,phase] µm (phase 2 VGCF · 3 SuperP · 4 PTFE).
