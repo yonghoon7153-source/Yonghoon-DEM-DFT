@@ -568,9 +568,13 @@ def main():
                         'R_int_ohm_cm2': a.collector_rint,
                         'sigma_apparent_S_cm': float(f'{_Lcm / (_Rbulk + a.collector_rint):.3g}')}
                 _ca = step3['collector']['sigma_apparent_S_cm']
+                # carbon-free/희박 배선 케이스는 R_bulk가 계면(30-110)과 동급까지 올라옴 — "≪" 고정
+                # 문구가 그 regime에서 거짓이 되던 것을 조건화 (260714 carbon-free: R_bulk 12 Ωcm²)
+                _rel = ('≪ 계면' if _Rbulk < 3.0 else
+                        '≈ 계면과 동급 — carbon-free/희박 배선 regime' if _Rbulk < 100.0 else '≫ 계면(!)')
                 print(f"  STEP3 collector scenarios: bulk {_ca['ideal_R0']:.3g} → SBE(110Ωcm²) "
                       f"{_ca['SBE_bare_110']:.3g} / DBE(46) {_ca['DBE_bare_46']:.3g} / SBE+C-SUS(30 proxy) "
-                      f"{_ca['SBE_CSUS_30_proxy_DBE_anchored']:.3g} S/cm  (R_bulk {_Rbulk:.2g} Ωcm² ≪ 계면)")
+                      f"{_ca['SBE_CSUS_30_proxy_DBE_anchored']:.3g} S/cm  (R_bulk {_Rbulk:.2g} Ωcm² {_rel})")
                 # ★ ANALYTIC-GAP GEOMETRIC pair (v3, user: "지금 하자"): the contact SELECTION now
                 # comes from EXACT sphere/point z (no voxel blur — the DEM positions are known
                 # exactly): bare = surface within 0.10µm of the collector (econn contact tol),
