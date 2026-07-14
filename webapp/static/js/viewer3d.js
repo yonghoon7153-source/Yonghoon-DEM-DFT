@@ -3690,9 +3690,27 @@ function showMPMAnalysisSummary(state) {
   const zCnt = zbins.map(b => b.n);
   const zEc = zbins.map(b => b.ecN ? b.ecS / b.ecN : 0);
 
+  // 칩(스칼라) — 집전체 시나리오는 SAME 구조 payload들이 갈리는 유일한 축이라 반드시 노출
+  // (bare↔C-SUS 요약이 "차이 없음"으로 보이던 문제: 벌크는 동일한 게 물리 정답, 다른 건 이 두 칩).
+  const selC = (s3.collector || {}).selected;
+  const chips = [
+    ['σ_e_eff (전자전도도·벌크)', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['σ_ion_eff (이온전도도)', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
+    ['R_geom (기하 계면저항)', (s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2 != null) ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
+    ['porosity (공극률)', porosity != null ? Number(porosity).toFixed(2) + ' %' : '—'],
+    ['thickness (두께)', thickness != null ? Number(thickness).toFixed(1) + ' µm' : '—'],
+    ['N (AM 입자수)', String(mm.n_AM || AMs.length)],
+    ['econn 연결', ec.connected_pct != null ? Number(ec.connected_pct).toFixed(1) + ' %' : '—'],
+    ['carbon clusters', ec.n_carbon_clusters != null ? String(ec.n_carbon_clusters) : '—'],
+    ['집전체 (시나리오 부하)', selC ? selC.name + ' · R_int ' + selC.R_int_ohm_cm2 + ' Ω·cm²' : '이상 접촉 (R_int 0)'],
+    ['σ_apparent (전자·계면 포함)', selC && selC.sigma_apparent_S_cm != null
+      ? Number(selC.sigma_apparent_S_cm).toExponential(2) + ' S/cm'
+      : (s3.sigma_e_eff_S_cm != null ? '= σ_e_eff (이상 접촉)' : '—')],
+  ];
   const W = 1080, pad = 18, cols = 3;
   const colW = (W - pad * (cols + 1)) / cols;
-  const cellH = 198, vgap = 26, top0 = 46, headH = 120;
+  const cellH = 198, vgap = 26, top0 = 46;
+  const headH = Math.ceil(chips.length / 4) * 56 + 8;
   const gridTop = top0 + headH, gridH = 3 * cellH + 2 * vgap;
   const glossY = gridTop + gridH + 22, glossH = 150;
   const H = glossY + glossH + 14;
@@ -3789,16 +3807,6 @@ function showMPMAnalysisSummary(state) {
   // ---- header + scalar chips ----
   ctx.fillStyle = '#111827'; ctx.font = 'bold 17px sans-serif'; ctx.textAlign = 'left';
   ctx.fillText('분석 요약 — ' + caseName + (s3.vox_um != null ? '   (STEP3 vox ' + s3.vox_um + 'µm)' : ''), pad, 27);
-  const chips = [
-    ['σ_e_eff (전자전도도)', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
-    ['σ_ion_eff (이온전도도)', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
-    ['R_geom (기하 계면저항)', (s3.collector_geometric && s3.collector_geometric.R_geom_ohm_cm2 != null) ? Number(s3.collector_geometric.R_geom_ohm_cm2).toExponential(2) + ' Ω·cm²' : '—'],
-    ['porosity (공극률)', porosity != null ? Number(porosity).toFixed(2) + ' %' : '—'],
-    ['thickness (두께)', thickness != null ? Number(thickness).toFixed(1) + ' µm' : '—'],
-    ['N (AM 입자수)', String(mm.n_AM || AMs.length)],
-    ['econn 연결', ec.connected_pct != null ? Number(ec.connected_pct).toFixed(1) + ' %' : '—'],
-    ['carbon clusters', ec.n_carbon_clusters != null ? String(ec.n_carbon_clusters) : '—'],
-  ];
   const chipGap = 10, chipW = (W - pad * 2 - chipGap * 3) / 4, chipH = 48;
   chips.forEach((c, i) => {
     const x = pad + (i % 4) * (chipW + chipGap), y = top0 + Math.floor(i / 4) * (chipH + 8);
@@ -3863,6 +3871,9 @@ function showMPMAnalysisSummary(state) {
     row('scalar', 'econn_connected_pct', ec.connected_pct);
     row('scalar', 'carbon_clusters', ec.n_carbon_clusters);
     row('scalar', 'step3_vox_um', s3.vox_um);
+    row('scalar', 'collector_selected', selC ? selC.name : 'ideal_R0');
+    row('scalar', 'collector_R_int_ohm_cm2', selC ? selC.R_int_ohm_cm2 : 0);
+    row('scalar', 'sigma_apparent_S_cm', selC ? selC.sigma_apparent_S_cm : s3.sigma_e_eff_S_cm);
     Object.entries(s3.dissipation_share || {}).forEach(([k, v]) => row('e_dissipation_share', k, v));
     Object.entries(s3.ion_dissipation_share || {}).forEach(([k, v]) => row('ion_dissipation_share', k, v));
     row('zprofile_header', 'cols', 'z_lo_um', 'z_hi_um', 'mean_je_rel', 'mean_coverage_pct', 'count', 'econn_frac');
@@ -3917,6 +3928,16 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
   const counts = new Float64Array((particles || []).length);
   const hits = new Array((particles || []).length);         // per-AM touching carbon pts (패치 렌더용)
   if (!carbon.length || !counts.length) return { counts, median: 0, hits };
+  // 가중치는 반드시 ghost 복제 BEFORE 계산 — shown에 ghost가 들어가면 w=total/shown이 희석돼
+  // 환산 접점이 축소됨 (버그였음: 중앙값 348→290 하락의 원인).
+  const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
+  const shown = { 2: 0, 3: 0, 5: 0 };
+  carbon.forEach(p => { shown[p[3]]++; });
+  const w = {};
+  [2, 3, 5].forEach(ph => {
+    const tot = Number((addCounts || {})[PHN[ph]] || 0);
+    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 → 환산 접점
+  });
   // PERIODIC (x,y) — RVE 경계 너머로 닿는 접점을 ghost 복제로 포함 (경계 입자의 배선이
   // 잘려 보이던 문제).  margin = max(r)+band 안에 드는 이미지 점만 복제 (z는 비주기).
   if (boxLx > 0 && boxLy > 0) {
@@ -3932,14 +3953,6 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
     }
     carbon = carbon.concat(ghosts);
   }
-  const PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
-  const shown = { 2: 0, 3: 0, 5: 0 };
-  carbon.forEach(p => { shown[p[3]]++; });
-  const w = {};
-  [2, 3, 5].forEach(ph => {
-    const tot = Number((addCounts || {})[PHN[ph]] || 0);
-    w[ph] = (tot > 0 && shown[ph] > 0) ? tot / shown[ph] : 1;   // 서브샘플 가중 → 환산 접점
-  });
   const CELL = 3.0, BAND = 0.3;
   const hash = new Map();
   carbon.forEach(p => {
@@ -4218,24 +4231,33 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         let thMax = 0;
         for (const v of cl.m) thMax = Math.max(thMax, Math.acos(Math.max(-1, Math.min(1, v[0] * nx + v[1] * ny + v[2] * nz))));
         const th = Math.min(MAXR, Math.max(MINR, thMax + PADR));
-        const R = p.r, rl = R * Math.sin(th), hCap = R * Math.cos(th) + 0.06;
-        // 로컬 기저 (데이터 좌표) → 정점은 scene 좌표(x,z,y)로 push
+        // 곡면 캡 — 정점을 구 반경 R+0.06 위 각도 링(0 / 0.55θ / θ)에 놓아 표면을 감싼다.
+        // (이전 버전은 cap 밑면 평면 디스크 = 구 내부에 파묻혀 안 보이던 버그.)
+        const Rp = p.r + 0.06;
         const ax = Math.abs(ny) < 0.9 ? [0, 1, 0] : [1, 0, 0];
         let t1x = ny * ax[2] - nz * ax[1], t1y = nz * ax[0] - nx * ax[2], t1z = nx * ax[1] - ny * ax[0];
         const t1l = Math.sqrt(t1x * t1x + t1y * t1y + t1z * t1z) || 1;
         t1x /= t1l; t1y /= t1l; t1z /= t1l;
         const t2x = ny * t1z - nz * t1y, t2y = nz * t1x - nx * t1z, t2z = nx * t1y - ny * t1x;
-        const cxd = p.x + nx * hCap, cyd = p.y + ny * hCap, czd = p.z + nz * hCap;
         const base = vtx.length / 3;
-        vtx.push(cxd, czd, cyd); vcol.push(c2.r, c2.g, c2.b);
-        for (let s = 0; s < SEG; s++) {
-          const ph = 2 * Math.PI * s / SEG, cph = Math.cos(ph), sph = Math.sin(ph);
-          vtx.push(cxd + (t1x * cph + t2x * sph) * rl,
-                   czd + (t1z * cph + t2z * sph) * rl,
-                   cyd + (t1y * cph + t2y * sph) * rl);
+        const pushV = (thk, ph) => {                          // 구면 점: c + n̂·Rp cosθ + (t̂₁cosφ+t̂₂sinφ)·Rp sinθ
+          const rs = Rp * Math.sin(thk), hc = Rp * Math.cos(thk);
+          const cph = Math.cos(ph), sph = Math.sin(ph);
+          vtx.push(p.x + nx * hc + (t1x * cph + t2x * sph) * rs,
+                   p.z + nz * hc + (t1z * cph + t2z * sph) * rs,
+                   p.y + ny * hc + (t1y * cph + t2y * sph) * rs);   // scene swap (x,z,y)
           vcol.push(c2.r, c2.g, c2.b);
+        };
+        pushV(0, 0);                                          // v0: 캡 정점
+        for (let s = 0; s < SEG; s++) pushV(0.55 * th, 2 * Math.PI * s / SEG);   // ring1
+        for (let s = 0; s < SEG; s++) pushV(th, 2 * Math.PI * s / SEG);          // ring2 (가장자리)
+        const r1 = base + 1, r2 = base + 1 + SEG;
+        for (let s = 0; s < SEG; s++) {
+          const sn = (s + 1) % SEG;
+          idx.push(base, r1 + s, r1 + sn);                    // 정점 fan
+          idx.push(r1 + s, r2 + s, r2 + sn);                  // ring1–ring2 strip
+          idx.push(r1 + s, r2 + sn, r1 + sn);
         }
-        for (let s = 0; s < SEG; s++) idx.push(base, base + 1 + s, base + 1 + ((s + 1) % SEG));
       }
     });
     if (vtx.length) {
