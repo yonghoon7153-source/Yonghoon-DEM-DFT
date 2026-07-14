@@ -1896,6 +1896,18 @@ function applyViewMode(state, mode) {
     // normalised p5–p95 → indigo(약) → cyan → cream(강).  Isolated stays red.  Carbon 없으면 binary 폴백.
     const carbonPts = ((state.data && state.data.additive_points) || []).filter(p => p[3] === 2 || p[3] === 3 || p[3] === 5);
     const BAND = 0.3;
+    // 서브샘플 가중 보정 — additive_points는 phase별 서브샘플이라 raw count는 payload마다 밀도가
+    // 다름.  metrics.additive_counts(전체 seeded)로 w=total/shown을 곱해 "환산 접점수"를 만들면
+    // SBE↔DBE 케이스 간 수치·색 비교가 유효해짐 (uniform random subsample → unbiased estimate).
+    const _PHN = { 2: 'VGCF', 3: 'SuperP', 5: 'SDCP' };
+    const _shown = { 2: 0, 3: 0, 5: 0 };
+    carbonPts.forEach(p => { _shown[p[3]]++; });
+    const _acnt = mm.additive_counts || {};
+    const wPh = {};
+    [2, 3, 5].forEach(ph => {
+      const tot = Number(((_acnt[_PHN[ph]] || {}).n_points != null ? _acnt[_PHN[ph]].n_points : _acnt[_PHN[ph]]) || 0);
+      wPh[ph] = (tot > 0 && _shown[ph] > 0) ? tot / _shown[ph] : 1;
+    });
     let touch = null;
     if (carbonPts.length) {
       const CELL = 3.0;
@@ -1919,23 +1931,30 @@ function applyViewMode(state, mode) {
               if (!cell) continue;
               for (const q of cell) {
                 const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
-                if (dx * dx + dy * dy + dz * dz <= rr2) n2++;
+                if (dx * dx + dy * dy + dz * dz <= rr2) n2 += (wPh[q[3]] || 1);   // 환산(가중) 접점
               }
             }
           touch.set(p, n2);
         });
       });
     }
-    let lo5 = 0, hi95 = 1;
+    let autoLo = 0, autoHi = 1;
     if (touch) {
       const counts = [...touch.values()].sort((a, b) => a - b);
-      lo5 = counts[Math.floor(0.05 * (counts.length - 1))];
-      hi95 = Math.max(counts[Math.floor(0.95 * (counts.length - 1))], lo5 + 1);
+      autoLo = counts[Math.floor(0.05 * (counts.length - 1))];
+      autoHi = Math.max(counts[Math.floor(0.95 * (counts.length - 1))], autoLo + 1);
     }
-    const wiringColor = (t) => {                             // indigo → cyan → cream (기존 ramp 재사용)
-      if (t < 0.5) return new THREE.Color(0x1e3a8a).lerp(new THREE.Color(0x06b6d4), t * 2);
-      return new THREE.Color(0x06b6d4).lerp(new THREE.Color(0xfef3c7), (t - 0.5) * 2);
-    };
+    // 🔒 스케일 잠금 — SBE에서 잠그면 그 스케일이 localStorage에 저장되고 DBE도 같은 스케일로
+    // 색칠됨 → 케이스 간 "색 차이 = 실제 배선 차이" (per-payload 자동 스케일은 비교에 무효).
+    let lockOn = false, lockSc = null;
+    try {
+      lockOn = localStorage.getItem('econnWireLock') === '1';
+      const _s = localStorage.getItem('econnWireScale');
+      if (_s) lockSc = JSON.parse(_s);
+    } catch (e) { /* localStorage unavailable → auto scale */ }
+    const lo5 = (lockOn && lockSc) ? lockSc.lo : autoLo;
+    const hi95 = (lockOn && lockSc) ? Math.max(lockSc.hi, lo5 + 1) : autoHi;
+    const wiringColor = (t) => new THREE.Color(jetColor(Math.max(0, Math.min(1, t))));   // COMSOL rainbow
     const colOn = new THREE.Color(0x3b5fd9), colOff = new THREE.Color(0xb91c1c);
     let nOn = 0, nOff = 0, nNA = 0, medTouch = 0;
     if (touch) {
@@ -1960,10 +1979,13 @@ function applyViewMode(state, mode) {
     flushColors();
     const pct = (nOn + nOff) ? (100 * nOn / (nOn + nOff)) : 0;
     const nClFull = ec && ec.n_carbon_clusters != null ? Number(ec.n_carbon_clusters) : null;
+    const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     const wireBar = touch
-      ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,#1e3a8a,#06b6d4,#fef3c7)"></div>
-         <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>배선 약함</span><span>탄소 접점 밀도 (p5–p95)</span><span>강함</span></div>
-         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 ${medTouch.toLocaleString()}접점/AM · 상대값(서브샘플 기반) — SDCP·VGCF·SuperP 접점, PTFE 제외</div>`
+      ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
+         <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
+         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM (서브샘플 가중보정 — 케이스 간 수치 비교 유효) · VGCF·SuperP·SDCP, PTFE 제외</div>
+         <label style="display:block;margin-top:3px;font-size:10px;color:#e5e7eb;cursor:pointer">
+           <input type="checkbox" id="wire-lock" ${lockOn ? 'checked' : ''}> 🔒 스케일 잠금 — 케이스 간 색 비교${(lockOn && lockSc) ? ' (고정)' : ''}</label>`
       : '';
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
@@ -1974,6 +1996,18 @@ function applyViewMode(state, mode) {
        + (nClFull != null ? ` · cluster ${nClFull.toLocaleString()}` : '') + `</div>`
        + wireBar
        + `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
+    const wl = document.getElementById('wire-lock');
+    if (wl) wl.onchange = () => {
+      // 잠금 ON: 지금 payload의 AUTO 스케일을 앵커로 저장 (기준 케이스에서 체크 — 보통 SBE) →
+      // 이후 다른 payload도 같은 스케일로 색칠 = 색 차이가 실제 배선 차이.  OFF: 자동 복귀.
+      try {
+        if (wl.checked) {
+          localStorage.setItem('econnWireLock', '1');
+          localStorage.setItem('econnWireScale', JSON.stringify({ lo: autoLo, hi: autoHi }));
+        } else { localStorage.removeItem('econnWireLock'); localStorage.removeItem('econnWireScale'); }
+      } catch (e) { /* ignore */ }
+      applyViewMode(state, 'econn');
+    };
     return;
   }
   if (mode === 'cbd') {
