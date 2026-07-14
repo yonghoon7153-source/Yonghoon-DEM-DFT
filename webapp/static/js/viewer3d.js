@@ -1979,15 +1979,16 @@ function applyViewMode(state, mode) {
         + '(MPM 재실행 불필요).</i>');
       return;
     }
-    // conducting phase IS the cloud → hide its sphere/mesh; blocking phase = faint dark ghost
+    // AM spheres = dark translucent GHOST in BOTH field modes (user: "전자에도 AM 넣어줘") —
+    // gives the particle-scale spatial context while the cloud carries the |J| colours.  In the
+    // electronic mode the AM interior is also in the cloud, but it sits ~0% of the current (deep
+    // navy dots), so the ghost outline reads better than the dots did.  Layer checkboxes still work.
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
-      if (ionic) {                                          // ionic: AM = dark obstacle ghost
-        const base = new THREE.Color(0x0a0e1a);
-        m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
-        if (m.instanceColor) m.instanceColor.needsUpdate = true;
-        m.visible = true; m.material.transparent = true; m.material.opacity = 0.13;
-      } else { m.visible = false; }                         // electronic: AM is IN the cloud → hide
+      const base = new THREE.Color(0x0a0e1a);
+      m.userData.particles.forEach((p, i) => m.setColorAt(i, base));
+      if (m.instanceColor) m.instanceColor.needsUpdate = true;
+      m.visible = true; m.material.transparent = true; m.material.opacity = ionic ? 0.13 : 0.12;
     });
     if (state.meshes.MESH) {
       if (ionic) { state.meshes.MESH.visible = false; }     // ionic: SE is IN the cloud → hide mesh
@@ -2101,7 +2102,7 @@ function applyViewMode(state, mode) {
       + `<div style="display:flex;align-items:center;gap:4px;margin-top:2px">
            <input type="range" id="fld-bb-pct" min="30" max="95" step="5" value="${bbPct}" style="flex:1;accent-color:#f97316;height:12px">
            <span id="fld-bb-pct-lab" style="font-size:9.5px;color:#9ca3af;min-width:52px">목표 ${bbPct}%</span></div>`
-      + `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'SE'} 고스트 · 단면뷰·6×촬영</div>`
+      + `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'AM·SE'} 고스트(체크박스로 on/off) · 단면뷰·6×촬영</div>`
       + (share ? `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">손실분담 `
           + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     const bbCb = document.getElementById('fld-backbone');
