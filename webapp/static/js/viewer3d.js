@@ -3992,6 +3992,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         <b style="font-size:14px">⚖ 케이스 비교</b>
         <select id="cmp-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 6px;font-size:11px">
           <option value="wiring">전기 배선 — 탄소 접점 패치 (공동 스케일 ★)</option>
+          <option value="wiring_delta">Δ 배선 — 접점 차이 A−B (같은 골격 전용 ★)</option>
           <option value="je_field">⚡ 전자 전류밀도 필드</option>
           <option value="ji_field">⚡ 이온 전류밀도 필드</option>
           <option value="je">전자 — AM 입자별 (je)</option>
@@ -4010,6 +4011,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         <label id="cmp-patch-wrap" style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           패치 <input type="range" id="cmp-patch" min="0.5" max="3" step="0.25" value="1.5" style="width:70px;accent-color:#34d399">
           <span id="cmp-patch-lab" style="color:#9ca3af">1.5×</span></label>
+        <label id="cmp-glow-wrap" style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:3px"
+          title="x-ray 깊이누적 발광 (primer 논문 Fig4f 문법) — 겹칠수록 색이 짙어져 케이스 차이가 증폭됨. 필드 모드에선 고스트 없이 순수 볼륨 렌더">
+          ✨<input type="checkbox" id="cmp-glow" checked>glow</label>
         <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-clip"> 단면
           <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
@@ -4180,7 +4184,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   const barHtml = (lab) => `<div style="margin:2px 0;height:8px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
     <div style="display:flex;justify-content:space-between;font-size:9px"><span>${lab[0]}</span><span>${lab[1]}</span><span>${lab[2]}</span></div>`;
-  function buildWiring(S, payload, wire, lo, hi, patchF) {
+  function buildWiring(S, payload, wire, lo, hi, patchF, glowOn) {
     // 최신 econn 문법: AM은 본색 유지, 카본 접촉부만 표면 패치로 (감마-jet, 공동 스케일).
     const parts = payload.particles || [];
     const grp = new THREE.Group();
@@ -4203,7 +4207,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const f = (typeof patchF === 'number' ? patchF : 1.5);
     const SEG = 20, MERGE = Math.cos(28 * Math.PI / 180);
     const PADR = (3 + 3 * f) * Math.PI / 180, MINR = (5 + 3 * f) * Math.PI / 180, MAXR = 0.95;
-    const vtx = [], vcol = [], idx = [];
+    const capList = [];
     const c2 = new THREE.Color();
     parts.forEach((p, i) => {
       const hh = wire.hits && wire.hits[i]; if (!hh) return;
@@ -4224,54 +4228,75 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         if (best) { best.sx += dx; best.sy += dy; best.sz += dz; best.m.push([dx, dy, dz]); }
         else cls.push({ sx: dx, sy: dy, sz: dz, m: [[dx, dy, dz]] });
       }
-      // 2) 클러스터 → 구면 캡 디스크 (fan geometry, 병합 buffer 1드로우)
+      // 2) 클러스터 파라미터 수집 (본체/glow 2-pass가 같은 캡을 공유)
       for (const cl of cls) {
         const nl = Math.sqrt(cl.sx * cl.sx + cl.sy * cl.sy + cl.sz * cl.sz) || 1;
         const nx = cl.sx / nl, ny = cl.sy / nl, nz = cl.sz / nl;
         let thMax = 0;
         for (const v of cl.m) thMax = Math.max(thMax, Math.acos(Math.max(-1, Math.min(1, v[0] * nx + v[1] * ny + v[2] * nz))));
         const th = Math.min(MAXR, Math.max(MINR, thMax + PADR));
-        // 곡면 캡 — 정점을 구 반경 R+0.06 위 각도 링(0 / 0.55θ / θ)에 놓아 표면을 감싼다.
-        // (이전 버전은 cap 밑면 평면 디스크 = 구 내부에 파묻혀 안 보이던 버그.)
-        const Rp = p.r + 0.06;
         const ax = Math.abs(ny) < 0.9 ? [0, 1, 0] : [1, 0, 0];
         let t1x = ny * ax[2] - nz * ax[1], t1y = nz * ax[0] - nx * ax[2], t1z = nx * ax[1] - ny * ax[0];
         const t1l = Math.sqrt(t1x * t1x + t1y * t1y + t1z * t1z) || 1;
         t1x /= t1l; t1y /= t1l; t1z /= t1l;
-        const t2x = ny * t1z - nz * t1y, t2y = nz * t1x - nx * t1z, t2z = nx * t1y - ny * t1x;
+        capList.push({ px: p.x, py: p.y, pz: p.z, r: p.r, nx, ny, nz, t1x, t1y, t1z,
+                       t2x: ny * t1z - nz * t1y, t2y: nz * t1x - nx * t1z, t2z: nx * t1y - ny * t1x,
+                       th, cr: c2.r, cg: c2.g, cb: c2.b });
+      }
+    });
+    // 곡면 캡 emit — 정점을 구 반경 r+lift 위 각도 링(0 / 0.55θ / θ)에 놓아 표면을 감싼다.
+    // winding: scene swap (x,z,y)=반사(det −1)라 역순으로 감아 바깥면이 front (컬링 버그 방지).
+    const emitCaps = (lift, padE) => {
+      const vtx = [], vcol = [], idx = [];
+      for (const cp of capList) {
+        const th = Math.min(MAXR, cp.th + padE), Rp = cp.r + lift;
         const base = vtx.length / 3;
-        const pushV = (thk, ph) => {                          // 구면 점: c + n̂·Rp cosθ + (t̂₁cosφ+t̂₂sinφ)·Rp sinθ
+        const pushV = (thk, ph) => {
           const rs = Rp * Math.sin(thk), hc = Rp * Math.cos(thk);
           const cph = Math.cos(ph), sph = Math.sin(ph);
-          vtx.push(p.x + nx * hc + (t1x * cph + t2x * sph) * rs,
-                   p.z + nz * hc + (t1z * cph + t2z * sph) * rs,
-                   p.y + ny * hc + (t1y * cph + t2y * sph) * rs);   // scene swap (x,z,y)
-          vcol.push(c2.r, c2.g, c2.b);
+          vtx.push(cp.px + cp.nx * hc + (cp.t1x * cph + cp.t2x * sph) * rs,
+                   cp.pz + cp.nz * hc + (cp.t1z * cph + cp.t2z * sph) * rs,
+                   cp.py + cp.ny * hc + (cp.t1y * cph + cp.t2y * sph) * rs);   // scene swap (x,z,y)
+          vcol.push(cp.cr, cp.cg, cp.cb);
         };
-        pushV(0, 0);                                          // v0: 캡 정점
-        for (let s = 0; s < SEG; s++) pushV(0.55 * th, 2 * Math.PI * s / SEG);   // ring1
-        for (let s = 0; s < SEG; s++) pushV(th, 2 * Math.PI * s / SEG);          // ring2 (가장자리)
+        pushV(0, 0);
+        for (let s = 0; s < SEG; s++) pushV(0.55 * th, 2 * Math.PI * s / SEG);
+        for (let s = 0; s < SEG; s++) pushV(th, 2 * Math.PI * s / SEG);
         const r1 = base + 1, r2 = base + 1 + SEG;
         for (let s = 0; s < SEG; s++) {
           const sn = (s + 1) % SEG;
-          // winding 주의: scene swap (x,z,y)은 반사(det −1)라 CCW가 뒤집힘 → 역순으로 감아
-          // 바깥면이 front가 되게 (FrontSide 컬링에 통째로 사라지던 버그).
-          idx.push(base, r1 + sn, r1 + s);                    // 정점 fan
-          idx.push(r1 + s, r2 + sn, r2 + s);                  // ring1–ring2 strip
+          idx.push(base, r1 + sn, r1 + s);
+          idx.push(r1 + s, r2 + sn, r2 + s);
           idx.push(r1 + s, r1 + sn, r2 + sn);
         }
       }
-    });
-    if (vtx.length) {
+      if (!vtx.length) return null;
       const g2 = new THREE.BufferGeometry();
       g2.setAttribute('position', new THREE.Float32BufferAttribute(vtx, 3));
       g2.setAttribute('color', new THREE.Float32BufferAttribute(vcol, 3));
       g2.setIndex(idx);
       g2.computeVertexNormals();
-      const dom = new THREE.Mesh(g2, new THREE.MeshLambertMaterial({
+      return g2;
+    };
+    const gMain = emitCaps(0.06, 0);
+    if (gMain) {
+      const dom = new THREE.Mesh(gMain, new THREE.MeshLambertMaterial({
         vertexColors: true, side: THREE.DoubleSide }));
       dom.userData.keepDouble = true;                        // applyCmpClip의 FrontSide 강제에서 제외
       dom.renderOrder = 20; grp.add(dom);
+    }
+    if (gMain && glowOn !== false) {
+      // ✨ glow = 깊이-누적 x-ray halo.  예전 점 버전에서 차이가 보였던 이유가 바로 이 누적
+      // (따뜻한 도메인이 많은 쪽이 깊이 방향으로 겹치며 워시로 증폭) — 그 물리를 캡 기하로 재현:
+      // depthTest OFF + 저불투명 → 겹칠수록 색이 짙어져 케이스 간 밀도 차이가 한눈에.
+      const gGlow = emitCaps(0.20, 3 * Math.PI / 180);
+      if (gGlow) {
+        const gm = new THREE.Mesh(gGlow, new THREE.MeshBasicMaterial({
+          vertexColors: true, transparent: true, opacity: 0.10,
+          depthTest: false, depthWrite: false, side: THREE.DoubleSide }));
+        gm.userData.keepDouble = true;
+        gm.renderOrder = 40; grp.add(gm);
+      }
     }
     S.scene.add(grp); S.grp = grp;
   }
@@ -4292,15 +4317,17 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     S.scene.add(grp); S.grp = grp;
     return vp.length;
   }
-  function buildField(S, payload, ionic, bbOn, bbPct) {
+  function buildField(S, payload, ionic, bbOn, bbPct, glowOn) {
     const grp = new THREE.Group();
     const parts = payload.particles || [];
-    const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.12, true);
-    if (ghost) {
-      const dk = new THREE.Color(0x0a0e1a);
-      parts.forEach((_, i) => ghost.setColorAt(i, dk));
-      if (ghost.instanceColor) ghost.instanceColor.needsUpdate = true;
-      grp.add(ghost);
+    if (!glowOn) {                                           // ✨glow(=Fig4f x-ray 볼륨)에선 고스트 없이 순수 필드
+      const ghost = createInstancedSpheres(parts, 10, 0xffffff, 0.12, true);
+      if (ghost) {
+        const dk = new THREE.Color(0x0a0e1a);
+        parts.forEach((_, i) => ghost.setColorAt(i, dk));
+        if (ghost.instanceColor) ghost.instanceColor.needsUpdate = true;
+        grp.add(ghost);
+      }
     }
     const fldp = payload[ionic ? 'ionic_field' : 'electronic_field'] || [];
     let bbTxt = '';
@@ -4455,6 +4482,25 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     }
     S.scene.add(grp); S.grp = grp;
   }
+  function buildWiringDelta(S, payload, d, R, thr) {
+    // 입자별 Δ(A−B 환산접점) coolwarm 맵 — thr>0이면 |Δ|<thr 입자는 고스트(핫스팟 뷰).
+    const parts = payload.particles || [];
+    const grp = new THREE.Group();
+    const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
+    if (mesh) {
+      mesh.material.shininess = 8;
+      if (mesh.material.specular) mesh.material.specular.setHex(0x161616);
+      const c = new THREE.Color(), ghost = new THREE.Color(0xdcdfe4);
+      parts.forEach((_, i2) => {
+        const dv = d[i2];
+        if (!isFinite(dv) || (thr > 0 && Math.abs(dv) < thr)) { mesh.setColorAt(i2, ghost); return; }
+        mesh.setColorAt(i2, c.setHex(coolwarmColor(0.5 + 0.5 * Math.max(-1, Math.min(1, dv / R)))));
+      });
+      if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+      grp.add(mesh);
+    }
+    S.scene.add(grp); S.grp = grp;
+  }
   // 단면 슬라이스 (양쪽 동기, 각자 자기 박스 기준 분율)
   const clipSt = { on: false, frac: 0.5 };
   function applyCmpClip() {
@@ -4478,23 +4524,56 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     if (bbWrap) bbWrap.style.display = (mode === 'je_field' || mode === 'ji_field') ? 'inline-flex' : 'none';
     const pWrap = $('cmp-patch-wrap');
     if (pWrap) pWrap.style.display = (mode === 'wiring') ? 'flex' : 'none';
+    const gWrap = $('cmp-glow-wrap');
+    if (gWrap) gWrap.style.display = (mode === 'wiring' || mode === 'je_field' || mode === 'ji_field') ? 'flex' : 'none';
     const bbOn = $('cmp-bb-on') ? $('cmp-bb-on').checked : true;
     const bbPct = $('cmp-bb-pct') ? +$('cmp-bb-pct').value : 80;
     const patchF = $('cmp-patch') ? +$('cmp-patch').value : 1.5;
+    const glowOn = $('cmp-glow') ? $('cmp-glow').checked : true;
     clearSide(SA); clearSide(SB);
     if (mode === 'wiring') {
       const joint = [...wireA.counts, ...wireB.counts].sort((a, b) => a - b);
       const lo = joint.length ? joint[Math.floor(0.05 * (joint.length - 1))] : 0;
       const hi = joint.length ? Math.max(joint[Math.floor(0.95 * (joint.length - 1))], lo + 1) : 1;
-      buildWiring(SA, A, wireA, lo, hi, patchF);
-      buildWiring(SB, B, wireB, lo, hi, patchF);
+      buildWiring(SA, A, wireA, lo, hi, patchF, glowOn);
+      buildWiring(SB, B, wireB, lo, hi, patchF, glowOn);
       const leg = (w) => `중앙값 <b>${Math.round(w.median)}</b> 환산접점/AM · 공동 스케일 ${Math.round(lo)}–${Math.round(hi)} (색 비교 유효 ★, 접촉 도메인=클러스터 융합 캡, periodic 이미지 접점 포함)`
         + barHtml([`약함 ${Math.round(lo)}`, '환산 접점/AM', `강함 ${Math.round(hi)}`]);
       $('cmp-leg-a').innerHTML = leg(wireA);
       $('cmp-leg-b').innerHTML = leg(wireB);
+    } else if (mode === 'wiring_delta') {
+      // Δ 배선 — 같은 AM 골격(같은 케이스 파생) 두 payload의 입자별 접점 차이 (user: "차이 자체를 색칠")
+      const partsA = A.particles || [], partsB = B.particles || [];
+      const bById = new Map();
+      partsB.forEach((p, i2) => bById.set(p.id != null ? p.id : i2, wireB.counts[i2]));
+      const d = new Float64Array(partsA.length);
+      let matched = 0;
+      partsA.forEach((p, i2) => {
+        const k = p.id != null ? p.id : i2;
+        if (bById.has(k)) { d[i2] = wireA.counts[i2] - bById.get(k); matched++; } else d[i2] = NaN;
+      });
+      const frac = partsA.length ? matched / partsA.length : 0;
+      if (frac < 0.8) {
+        const warn = '⚠ 두 payload의 AM 골격이 달라 Δ 비교 불가 (id 매칭 ' + Math.round(100 * frac)
+          + '%) — 같은 케이스에서 파생된 payload끼리 선택하세요';
+        $('cmp-leg-a').innerHTML = warn; $('cmp-leg-b').innerHTML = warn;
+      } else {
+        const fin = [...d].filter(isFinite);
+        const abs = fin.map(Math.abs).sort((x, y) => x - y);
+        const R = Math.max(abs[Math.floor(0.99 * (abs.length - 1))] || 1, 5);
+        const thr = abs[Math.floor(0.80 * (abs.length - 1))] || 0;
+        const mean = fin.reduce((x, y) => x + y, 0) / Math.max(fin.length, 1);
+        const nUp = fin.filter(v => v > 0).length;
+        buildWiringDelta(SA, A, d, R, 0);
+        buildWiringDelta(SB, A, d, R, thr);                  // 같은 골격 → A 좌표로 렌더
+        $('cmp-leg-a').innerHTML = 'Δ = A−B 환산접점 전체맵 · 평균 ' + (mean >= 0 ? '+' : '') + mean.toFixed(1)
+          + ' · Δ>0 입자 ' + Math.round(100 * nUp / Math.max(fin.length, 1)) + '% · 범위 ±' + Math.round(R)
+          + ' (빨강 = A쪽 배선 보강)';
+        $('cmp-leg-b').innerHTML = '|Δ| 상위 20% 핫스팟만 (임계 ' + Math.round(thr) + ') — 보강/약화가 어디 몰렸나';
+      }
     } else if (mode === 'je_field' || mode === 'ji_field') {
       const ionic = mode === 'ji_field';
-      const rA2 = buildField(SA, A, ionic, bbOn, bbPct), rB2 = buildField(SB, B, ionic, bbOn, bbPct);
+      const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn), rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn);
       const cap = (r, s3x) => (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
         + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
         + ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)';
@@ -4545,6 +4624,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     $('cmp-patch').oninput = () => { if ($('cmp-patch-lab')) $('cmp-patch-lab').textContent = $('cmp-patch').value + '×'; };
     $('cmp-patch').onchange = rebuild;
   }
+  if ($('cmp-glow')) $('cmp-glow').onchange = rebuild;
   rebuild();
   $('cmp-png').onclick = async () => {
     // 논문급 스크린샷: 각 쪽을 4× 슈퍼샘플로 재렌더(captureHighRes) 후 이름표와 함께 합성.
