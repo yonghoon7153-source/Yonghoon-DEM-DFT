@@ -1960,53 +1960,111 @@ function applyViewMode(state, mode) {
       const cs = [...touch.values()].sort((a, b) => a - b);
       medTouch = cs[Math.floor(cs.length / 2)] || 0;
     }
-    // AM은 본색(Default 색) 유지 — 구 전체를 덮지 않는다 (user).  고립만 통짜 빨강.
+    // AM = 비교팝업과 동일한 무광 세라믹 회색 (논문 질감 — 캡 색이 정보 전달자).  고립만 통짜 빨강.
+    const PAPER_AM = { AM_P: 0xaeb4bc, AM_S: 0xc7ccd2 };
     ['AM_P', 'AM_S'].forEach(t => {
       const m = state.meshes[t]; if (!m) return;
-      const base = new THREE.Color(COL[t]);
+      const base = new THREE.Color(touch ? PAPER_AM[t] : COL[t]);   // carbon 없으면 binary 폴백(본색)
       m.userData.particles.forEach((p, i) => {
         if (p.econn === undefined) { m.setColorAt(i, colDim); nNA++; }
         else if (!p.econn) { m.setColorAt(i, colOff); nOff++; }
-        else { nOn++; m.setColorAt(i, touch ? base : colOn); }   // carbon 없으면 binary 폴백
+        else { nOn++; m.setColorAt(i, touch ? base : colOn); }
       });
       m.material.opacity = 1.0; m.material.transparent = false;
     });
     flushColors();
-    // 접촉부 PATCH overlay — 닿은 카본 점을 그 AM 표면 위(반경+0.04µm)로 투영해 점 패치로.
-    // 패치 색 = 그 입자의 배선 강도 (감마 jet) → "어디에·얼마나 물렸나"가 본색 구 위에 뜬다.
+    // 접촉 DOMAIN 캡 + glow — ⚖ 비교팝업 buildWiring과 동일 문법 (user 2026-07-14: "단독도 같은
+    // 버전으로, 패치×1 고정 + glow 기본, 게이지 없음").  입자별 접점 방향을 28° greedy 클러스터링
+    // → 클러스터당 곡면 캡(3-링, r+0.06µm) 하나 = 코팅 패치처럼 읽히는 매끈한 디스크.  캡 색 =
+    // 그 입자의 배선 강도(감마 jet, per-payload p5-p95).  glow = depthTest-off 저불투명 2차 캡
+    // (r+0.20µm) 깊이-누적 x-ray — 배선 밀도가 워시로 증폭돼 차이가 한눈에.
     if (touch && contactsOf) {
-      // 색 + 크기 이중 인코딩: 배선 강도 3버킷(약/중/강)별로 점 크기를 달리 → 차이가 한눈에.
-      const B3 = [{ pts: [], cols: [] }, { pts: [], cols: [] }, { pts: [], cols: [] }];
-      const CORE = [0.9, 1.55, 2.5];
+      const f = 1.0;                                         // 패치 각반경 배율 ×1 고정 (슬라이더 없음)
+      const SEG = 20, MERGE = Math.cos(28 * Math.PI / 180);
+      const PADR = (3 + 3 * f) * Math.PI / 180, MINR = (5 + 3 * f) * Math.PI / 180, MAXR = 0.95;
+      const capList = [];
       const c2 = new THREE.Color();
       contactsOf.forEach((hits, p) => {
         if (!p.econn) return;
         const tRaw = Math.max(0, Math.min(1, ((touch.get(p) || 0) - lo5) / Math.max(hi95 - lo5, 1e-9)));
         c2.setHex(jetColor(gamW(tRaw)));
-        const bk = B3[tRaw < 0.33 ? 0 : tRaw < 0.66 ? 1 : 2];
+        const cls = [];                                      // 1) 단위 방향 greedy 클러스터 (28°)
         for (const q of hits) {
-          const dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
+          let dx = q[0] - p.x, dy = q[1] - p.y, dz = q[2] - p.z;
           const L = Math.sqrt(dx * dx + dy * dy + dz * dz) || 1;
-          const rr = (p.r + 0.05) / L;
-          bk.pts.push(p.x + dx * rr, p.z + dz * rr, p.y + dy * rr);   // Z-up swap (x,z,y)
-          bk.cols.push(c2.r, c2.g, c2.b);
+          dx /= L; dy /= L; dz /= L;
+          let best = null, bestDot = MERGE;
+          for (const cl of cls) {
+            const nl = Math.sqrt(cl.sx * cl.sx + cl.sy * cl.sy + cl.sz * cl.sz) || 1;
+            const d = (dx * cl.sx + dy * cl.sy + dz * cl.sz) / nl;
+            if (d > bestDot) { bestDot = d; best = cl; }
+          }
+          if (best) { best.sx += dx; best.sy += dy; best.sz += dz; best.m.push([dx, dy, dz]); }
+          else cls.push({ sx: dx, sy: dy, sz: dz, m: [[dx, dy, dz]] });
+        }
+        for (const cl of cls) {                              // 2) 클러스터 → 캡 파라미터
+          const nl = Math.sqrt(cl.sx * cl.sx + cl.sy * cl.sy + cl.sz * cl.sz) || 1;
+          const nx = cl.sx / nl, ny = cl.sy / nl, nz = cl.sz / nl;
+          let thMax = 0;
+          for (const v of cl.m) thMax = Math.max(thMax, Math.acos(Math.max(-1, Math.min(1, v[0] * nx + v[1] * ny + v[2] * nz))));
+          const th = Math.min(MAXR, Math.max(MINR, thMax + PADR));
+          const ax = Math.abs(ny) < 0.9 ? [0, 1, 0] : [1, 0, 0];
+          let t1x = ny * ax[2] - nz * ax[1], t1y = nz * ax[0] - nx * ax[2], t1z = nx * ax[1] - ny * ax[0];
+          const t1l = Math.sqrt(t1x * t1x + t1y * t1y + t1z * t1z) || 1;
+          t1x /= t1l; t1y /= t1l; t1z /= t1l;
+          capList.push({ px: p.x, py: p.y, pz: p.z, r: p.r, nx, ny, nz, t1x, t1y, t1z,
+                         t2x: ny * t1z - nz * t1y, t2y: nz * t1x - nx * t1z, t2z: nx * t1y - ny * t1x,
+                         th, cr: c2.r, cg: c2.g, cb: c2.b });
         }
       });
-      const grpP = new THREE.Group();
-      B3.forEach((bk, k) => {
-        if (!bk.pts.length) return;
+      // 곡면 캡 emit — 정점을 구 반경 r+lift 위 각도 링(0/0.55θ/θ)에 놓아 표면을 감싼다.
+      // winding: scene swap (x,z,y)=반사(det −1)라 역순으로 감아 바깥면이 front (컬링 버그 방지).
+      const emitCaps = (lift, padE) => {
+        const vtx = [], vcol = [], idx = [];
+        for (const cp of capList) {
+          const th = Math.min(MAXR, cp.th + padE), Rp = cp.r + lift;
+          const base = vtx.length / 3;
+          const pushV = (thk, ph) => {
+            const rs = Rp * Math.sin(thk), hc = Rp * Math.cos(thk);
+            const cph = Math.cos(ph), sph = Math.sin(ph);
+            vtx.push(cp.px + cp.nx * hc + (cp.t1x * cph + cp.t2x * sph) * rs,
+                     cp.pz + cp.nz * hc + (cp.t1z * cph + cp.t2z * sph) * rs,
+                     cp.py + cp.ny * hc + (cp.t1y * cph + cp.t2y * sph) * rs);   // Z-up swap (x,z,y)
+            vcol.push(cp.cr, cp.cg, cp.cb);
+          };
+          pushV(0, 0);
+          for (let s = 0; s < SEG; s++) pushV(0.55 * th, 2 * Math.PI * s / SEG);
+          for (let s = 0; s < SEG; s++) pushV(th, 2 * Math.PI * s / SEG);
+          const r1 = base + 1, r2 = base + 1 + SEG;
+          for (let s = 0; s < SEG; s++) {
+            const sn = (s + 1) % SEG;
+            idx.push(base, r1 + sn, r1 + s);
+            idx.push(r1 + s, r2 + sn, r2 + s);
+            idx.push(r1 + s, r1 + sn, r2 + sn);
+          }
+        }
+        if (!vtx.length) return null;
         const g2 = new THREE.BufferGeometry();
-        g2.setAttribute('position', new THREE.Float32BufferAttribute(bk.pts, 3));
-        g2.setAttribute('color', new THREE.Float32BufferAttribute(bk.cols, 3));
-        const halo = new THREE.Points(g2, new THREE.PointsMaterial({   // 얇은 halo (glow 누적 방지)
-          size: CORE[k] * 1.5, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-          transparent: true, opacity: 0.18, alphaTest: 0.05, depthWrite: false }));
-        halo.renderOrder = 29; grpP.add(halo);
-        const core = new THREE.Points(g2, new THREE.PointsMaterial({   // 불투명 crisp core
-          size: CORE[k], vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-          transparent: false, opacity: 1.0, alphaTest: 0.5, depthWrite: true }));
-        core.renderOrder = 30; grpP.add(core);
-      });
+        g2.setAttribute('position', new THREE.Float32BufferAttribute(vtx, 3));
+        g2.setAttribute('color', new THREE.Float32BufferAttribute(vcol, 3));
+        g2.setIndex(idx);
+        g2.computeVertexNormals();
+        return g2;
+      };
+      const grpP = new THREE.Group();
+      const gMain = emitCaps(0.06, 0);
+      if (gMain) {
+        const dom = new THREE.Mesh(gMain, new THREE.MeshLambertMaterial({
+          vertexColors: true, side: THREE.DoubleSide }));
+        dom.renderOrder = 20; grpP.add(dom);
+        const gGlow = emitCaps(0.20, 3 * Math.PI / 180);     // ✨ glow 기본 ON
+        if (gGlow) {
+          const gm = new THREE.Mesh(gGlow, new THREE.MeshBasicMaterial({
+            vertexColors: true, transparent: true, opacity: 0.10,
+            depthTest: false, depthWrite: false, side: THREE.DoubleSide }));
+          gm.renderOrder = 40; grpP.add(gm);
+        }
+      }
       if (grpP.children.length) {
         state.additivePointGroup = grpP;                     // mode-switch cleanup 재사용
         if (state.scene) state.scene.add(grpP);
@@ -2018,7 +2076,7 @@ function applyViewMode(state, mode) {
     const wireBar = touch
       ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
          <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
-         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 접촉부만 패치 색(AM 본색 유지) · 감마톤=전류밀도와 동일 · 케이스 색비교는 ⚖ 팝업</div>`
+         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 도메인 캡=접점 28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
       : '';
     setLegend(state,
       `<b>전기 연결성 — 탄소 배선 강도</b>
