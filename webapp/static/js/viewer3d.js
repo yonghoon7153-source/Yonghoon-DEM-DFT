@@ -1997,12 +1997,14 @@ function applyViewMode(state, mode) {
         const g2 = new THREE.BufferGeometry();
         g2.setAttribute('position', new THREE.Float32BufferAttribute(bk.pts, 3));
         g2.setAttribute('color', new THREE.Float32BufferAttribute(bk.cols, 3));
-        for (const [sz, op] of [[CORE[k] * 1.9, 0.30], [CORE[k], 0.96]]) {   // halo + core
-          const pm = new THREE.Points(g2, new THREE.PointsMaterial({
-            size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-            transparent: true, opacity: op, alphaTest: 0.05, depthWrite: false }));
-          pm.renderOrder = 30; grpP.add(pm);
-        }
+        const halo = new THREE.Points(g2, new THREE.PointsMaterial({   // 얇은 halo (glow 누적 방지)
+          size: CORE[k] * 1.5, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+          transparent: true, opacity: 0.18, alphaTest: 0.05, depthWrite: false }));
+        halo.renderOrder = 29; grpP.add(halo);
+        const core = new THREE.Points(g2, new THREE.PointsMaterial({   // 불투명 crisp core
+          size: CORE[k], vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+          transparent: false, opacity: 1.0, alphaTest: 0.5, depthWrite: true }));
+        core.renderOrder = 30; grpP.add(core);
       });
       if (grpP.children.length) {
         state.additivePointGroup = grpP;                     // mode-switch cleanup 재사용
@@ -3989,7 +3991,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <button id="cmp-zi" style="background:#334155;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer">+</button></span>
         <span id="cmp-status" style="font-size:11px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
         <span style="flex:1"></span>
-        <button id="cmp-png" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px">PNG</button>
+        <button id="cmp-png" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
+          title="A|B 합성 한 장 (4× 고해상, 흰 배경+이름표)">PNG</button>
+        <button id="cmp-shot" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
+          title="A·B 각각 별도 파일 — 투명 배경 4× 고해상 (PPT/논문 오버레이용, 메인 뷰어 Screenshot과 동일 문법)">투명샷 ×2</button>
       </div>
       <div id="cmp-table" style="font-size:11px;margin-bottom:6px;overflow-x:auto"></div>
       <div style="display:flex;gap:8px">
@@ -4073,7 +4078,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const mkSide = (viewId, payload) => {
     const el = $(viewId);
     const W = el.clientWidth || 600, H = el.clientHeight || 480;
-    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+    const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(W, H);
     renderer.setClearColor(COL.BG, 1);
@@ -4168,12 +4173,16 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const g2 = new THREE.BufferGeometry();
       g2.setAttribute('position', new THREE.Float32BufferAttribute(bk.pts, 3));
       g2.setAttribute('color', new THREE.Float32BufferAttribute(bk.cols, 3));
-      for (const [sz, op] of [[CORE[k] * f * 1.9, 0.30], [CORE[k] * f, 0.96]]) {
-        const pm = new THREE.Points(g2, new THREE.PointsMaterial({
-          size: sz, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
-          transparent: true, opacity: op, alphaTest: 0.05, depthWrite: false }));
-        pm.renderOrder = 30; grp.add(pm);
-      }
+      // core = 불투명 crisp 디스크 (depthWrite ON → 겹침 누적 없음); halo = 배율↑일수록 자동 감쇠
+      // (반투명 halo가 쌓여 bloom처럼 번지던 문제 — 확대 시 glow 제거).
+      const halo = new THREE.Points(g2, new THREE.PointsMaterial({
+        size: CORE[k] * f * 1.5, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+        transparent: true, opacity: Math.min(0.20, 0.28 / f), alphaTest: 0.05, depthWrite: false }));
+      halo.renderOrder = 29; grp.add(halo);
+      const core = new THREE.Points(g2, new THREE.PointsMaterial({
+        size: CORE[k] * f, vertexColors: true, sizeAttenuation: true, map: roundDotTex(),
+        transparent: false, opacity: 1.0, alphaTest: 0.5, depthWrite: true }));
+      core.renderOrder = 30; grp.add(core);
     });
     S.scene.add(grp); S.grp = grp;
   }
@@ -4469,6 +4478,31 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     } finally {
       btn.disabled = false; btn.textContent = 'PNG';
       SA.renderer.render(SA.scene, SA.cam); SB.renderer.render(SB.scene, SB.cam);
+    }
+  };
+  $('cmp-shot').onclick = async () => {
+    // 각 쪽을 별도 파일로 — 투명 배경 + 4× 슈퍼샘플 (메인 뷰어 Screenshot 문법: PPT/논문 오버레이용)
+    const btn = $('cmp-shot');
+    btn.disabled = true; btn.textContent = '촬영 중…';
+    try {
+      const shot = (S, tag, nm) => {
+        const prevC = new THREE.Color(); S.renderer.getClearColor(prevC);
+        const prevA = S.renderer.getClearAlpha();
+        S.renderer.setClearColor(0x000000, 0);               // 투명 배경
+        const url = captureHighRes(S.renderer, S.scene, S.cam, 4);
+        S.renderer.setClearColor(prevC, prevA);
+        S.renderer.render(S.scene, S.cam);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'shot_' + $('cmp-mode').value + '_' + tag + '_'
+          + String(nm || '').replace(/[^\w.-]+/g, '_').slice(0, 40) + '.png';
+        document.body.appendChild(a); a.click(); a.remove();
+      };
+      shot(SA, 'A', nameA);
+      await new Promise(r => setTimeout(r, 500));            // 브라우저 연속 다운로드 여유
+      shot(SB, 'B', nameB);
+    } finally {
+      btn.disabled = false; btn.textContent = '투명샷 ×2';
     }
   };
   (function anim() {
