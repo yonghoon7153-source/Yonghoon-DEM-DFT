@@ -4081,13 +4081,24 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true, alpha: true });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
     renderer.setSize(W, H);
-    renderer.setClearColor(COL.BG, 1);
+    renderer.setClearColor(0xffffff, 1);                     // 논문 질감: 순백 배경 (ARTISTIC Fig-5B 문법)
     renderer.localClippingEnabled = true;                    // 단면 슬라이스 지원
     el.appendChild(renderer.domElement);
     const scene = new THREE.Scene();
-    scene.add(new THREE.AmbientLight(0xffffff, 0.85));
-    const dl = new THREE.DirectionalLight(0xffffff, 0.7); dl.position.set(1, 2, 1.5); scene.add(dl);
+    // 스튜디오 조명 리그 — 밝은 무광 세라믹 구가 나오는 모델링-논문 렌더 문법
+    scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x8e97a3, 0.55));
+    const key = new THREE.DirectionalLight(0xffffff, 0.85); key.position.set(1.6, 2.4, 1.2); scene.add(key);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.30); fill.position.set(-1.4, 0.8, -1.6); scene.add(fill);
     const box = payload.box || {};
+    {                                                        // 얇은 박스 와이어프레임 (논문 figure 필수 요소)
+      const bw = box.x_max || 50, bd = box.y_max || 50, bh = box.z_max || 50;
+      const eg = new THREE.EdgesGeometry(new THREE.BoxGeometry(bw, bh, bd));
+      const ln = new THREE.LineSegments(eg, new THREE.LineBasicMaterial({
+        color: 0x2b3138, transparent: true, opacity: 0.55 }));
+      ln.position.set(bw / 2, bh / 2, bd / 2);
+      scene.add(ln);
+    }
     const cx = (box.x_max || 50) / 2, cy = (box.y_max || 50) / 2, cz = (box.z_max || 50) / 2;
     const cam = new THREE.PerspectiveCamera(45, W / H, 0.1, 3000);
     const diag = Math.max(box.x_max || 50, box.z_max || 50);
@@ -4143,10 +4154,15 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     // 최신 econn 문법: AM은 본색 유지, 카본 접촉부만 표면 패치로 (감마-jet, 공동 스케일).
     const parts = payload.particles || [];
     const grp = new THREE.Group();
-    const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
+    const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) {
+      // 논문 질감: 밝은 무광 세라믹 회색 (검정은 음영이 죽어 입체감 상실 — ARTISTIC Fig-5B 문법).
+      // 패치 색이 정보 전달자라 AM은 중립 밝은 회색이 정답 (음영 보이고 패치가 튐).
+      mesh.material.shininess = 8;
+      if (mesh.material.specular) mesh.material.specular.setHex(0x161616);
       const c = new THREE.Color();
-      parts.forEach((p, i) => mesh.setColorAt(i, c.setHex(COL[p.type] != null ? COL[p.type] : 0x888888)));
+      const PAPER_AM = { AM_P: 0xaeb4bc, AM_S: 0xc7ccd2 };
+      parts.forEach((p, i) => mesh.setColorAt(i, c.setHex(PAPER_AM[p.type] || 0xb4bac1)));
       if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
       grp.add(mesh);
     }
@@ -4327,8 +4343,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   function buildJe(S, payload) {
     const parts = payload.particles || [];
     const grp = new THREE.Group();
-    const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
+    const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) {
+      mesh.material.shininess = 8;
+      if (mesh.material.specular) mesh.material.specular.setHex(0x161616);
       const vals = parts.map(p => p.je).filter(v => isFinite(v)).sort((a, b) => a - b);
       const hi2 = Math.max(vals[Math.floor(0.998 * (vals.length - 1))] || 1e-9, 1e-30);
       const c = new THREE.Color();
@@ -4344,8 +4362,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   function buildDelta(S, payload) {
     const parts = payload.particles || [];
     const grp = new THREE.Group();
-    const mesh = createInstancedSpheres(parts, 12, 0xffffff, 1.0, false);
+    const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) {
+      mesh.material.shininess = 8;
+      if (mesh.material.specular) mesh.material.specular.setHex(0x161616);
       const je = parts.map(p => p.je).filter(v => isFinite(v)).sort((a, b) => a - b);
       const eps = Math.max(1e-30, (je[Math.floor(je.length / 2)] || 1e-6) * 1e-3);
       const dts = parts.map(p => (isFinite(p.je) && isFinite(p.jb)) ? Math.log2((p.jb + eps) / (p.je + eps)) : NaN);
