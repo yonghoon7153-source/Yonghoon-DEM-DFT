@@ -3737,6 +3737,8 @@ function showMPMAnalysisSummary(state) {
   // 칩(스칼라) — 집전체 시나리오는 SAME 구조 payload들이 갈리는 유일한 축이라 반드시 노출
   // (bare↔C-SUS 요약이 "차이 없음"으로 보이던 문제: 벌크는 동일한 게 물리 정답, 다른 건 이 두 칩).
   const selC = (s3.collector || {}).selected;
+  const pore = s3.pore || {};                                // A6 pore-τ (payload step3.pore)
+  const dAll = (mm.additive_dispersion || {}).conductive_all || {};   // A5 분산 (VGCF+SuperP+SDCP 합)
   const chips = [
     ['σ_e_eff (전자전도도·벌크)', s3.sigma_e_eff_S_cm != null ? Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
     ['σ_ion_eff (이온전도도)', s3.sigma_ion_eff_S_cm != null ? Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '—'],
@@ -3750,13 +3752,18 @@ function showMPMAnalysisSummary(state) {
     ['σ_apparent (전자·계면 포함)', selC && selC.sigma_apparent_S_cm != null
       ? Number(selC.sigma_apparent_S_cm).toExponential(2) + ' S/cm'
       : (s3.sigma_e_eff_S_cm != null ? '= σ_e_eff (이상 접촉)' : '—')],
+    ['pore-τ (기공 확산굴곡·구조)', pore.tau != null
+      ? Number(pore.tau).toFixed(2) + ' (ε ' + pore.eps_total_pct + '%)'
+      : (pore.eps_total_pct != null ? '비퍼콜 · ε ' + pore.eps_total_pct + '% (기공 폐색)' : '—')],
+    ['첨가제→SE 거리 (분산)', dAll.nn_med_um != null
+      ? dAll.nn_med_um + ' µm (×' + dAll.nn_clustering + ' vs random)' : '—'],
   ];
   const W = 1080, pad = 18, cols = 3;
   const colW = (W - pad * (cols + 1)) / cols;
   const cellH = 198, vgap = 26, top0 = 46;
   const headH = Math.ceil(chips.length / 4) * 56 + 8;
   const gridTop = top0 + headH, gridH = 3 * cellH + 2 * vgap;
-  const glossY = gridTop + gridH + 22, glossH = 150;
+  const glossY = gridTop + gridH + 22, glossH = 185;         // 9 entries × 15.5px + header
   const H = glossY + glossH + 14;
   const cvs = document.createElement('canvas');
   const DPR = 2; cvs.width = W * DPR; cvs.height = H * DPR;
@@ -3884,6 +3891,8 @@ function showMPMAnalysisSummary(state) {
     ['coverage', 'AM 입자 표면이 SE로 덮인 비율 (%)'],
     ['econn', '집전체에 전기 연결(1) / 고립(0) · 100% = 모든 AM이 외부회로 도달'],
     ['z / 손실분담', 'z = 두께방향(0 하단 집전체 ~ 상단 압축면) · 손실(발열)분담 = 각 상의 전력손실 % (∝ J²·R)'],
+    ['pore-τ', '기공(void)상 유효확산 tortuosity (D_eff/D0 = ε/τ) · 구조 지표 — Li⁺ 수송 τ 아님(수송은 SE 접촉망 σ_ion) · 비퍼콜 = 기공 폐색(기체 불투과)'],
+    ['분산 D / nn', 'D = 셀별 첨가제 점수 분산/평균(AM-마스킹, 랜덤=1·응집↑, 같은 phase run간 비교) · nn = SE→최근접 첨가제 거리(µm), ×N = 동밀도 랜덤 대비'],
   ];
   gloss.forEach((g, i) => {
     const gy = glossY + 40 + i * 15.5;
@@ -3918,6 +3927,13 @@ function showMPMAnalysisSummary(state) {
     row('scalar', 'collector_selected', selC ? selC.name : 'ideal_R0');
     row('scalar', 'collector_R_int_ohm_cm2', selC ? selC.R_int_ohm_cm2 : 0);
     row('scalar', 'sigma_apparent_S_cm', selC ? selC.sigma_apparent_S_cm : s3.sigma_e_eff_S_cm);
+    row('scalar', 'pore_tau', pore.tau);                     // A6 (null = 비퍼콜 기공)
+    row('scalar', 'pore_eps_total_pct', pore.eps_total_pct);
+    row('scalar', 'pore_eps_connected_pct', pore.eps_connected_pct);
+    row('scalar', 'pore_D_rel', pore.D_rel);
+    row('dispersion_header', 'cols', 'n_pts', 'index_of_dispersion', 'nn_med_um', 'nn_p90_um', 'nn_clustering', 'matrix_vol_frac');
+    Object.entries(mm.additive_dispersion || {}).forEach(([ph, d]) => row('additive_dispersion', ph,
+      d.n_pts, d.index_of_dispersion, d.nn_med_um, d.nn_p90_um, d.nn_clustering, d.matrix_vol_frac));
     Object.entries(s3.dissipation_share || {}).forEach(([k, v]) => row('e_dissipation_share', k, v));
     Object.entries(s3.ion_dissipation_share || {}).forEach(([k, v]) => row('ion_dissipation_share', k, v));
     row('zprofile_header', 'cols', 'z_lo_um', 'z_hi_um', 'mean_je_rel', 'mean_coverage_pct', 'count', 'econn_frac');
@@ -4136,6 +4152,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['econn 연결률 (%)', ecA.connected_pct, ecB.connected_pct],
     ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters],
     ['환산접점 중앙값 /AM', wireA.median, wireB.median],
+    ['pore-τ (구조·확산)', (sA.pore || {}).tau, (sB.pore || {}).tau],
+    ['첨가제→SE nn_med (µm)', ((mmA.additive_dispersion || {}).conductive_all || {}).nn_med_um,
+                              ((mmB.additive_dispersion || {}).conductive_all || {}).nn_med_um],
   ];
   const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
     : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
