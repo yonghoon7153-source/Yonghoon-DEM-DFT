@@ -1,0 +1,3 @@
+material,structure,particle_size_um,sigma_ion_mScm,press_MPa,hold_MPa,true_density_gcm3,note
+Li6PS5Cl,argyrodite (sulfide),~1,2.0,500,60,2.0,catholyte for composite; XRD = Li6PS5Cl phase no impurity
+Li6PS5Cl,argyrodite (interlayer),5,2.0,500,,2.0,SE separator/interlayer in cell; ref sigma fixed 2 mS/cm for relative ionic measurement

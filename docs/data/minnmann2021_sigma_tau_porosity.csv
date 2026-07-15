@@ -1,0 +1,14 @@
+source,method,structure,material_SE,material_CAM,vol_pct_CAM,wt_pct_CAM,fab_pressure_MPa,meas_pressure_MPa,sigma_ion_eff_mScm,sigma_el_eff_mScm,tau_ion_sq,tau_el_sq,porosity_pct,precision,note
+# Minnmann et al., J. Electrochem. Soc. 168 (2021) 040537, DOI 10.1149/1945-7111/abf8d7. NCM-622 + Li6PS5Cl (= our NCM/LPSCl system). EIS + T-type TLM (Siroma) on ion-blocking (steel|cathode|steel) and electron-blocking (In/InLi|LPSCl|cathode|LPSCl|In/InLi) symmetric cells. sigma_eff=L/(R*A) [Eq2]; tau^2=(sigma_eff/sigma_0)*phi [Eq4] = our tau_Laplace,eff definition (NOTE: paper reports tortuosity FACTOR tau^2; linear tau = sqrt(tau^2)). Fabrication = dry mix (agate mortar 15 min) + uniaxial 380 MPa, 3 min, RT. EIS/cycling measured at ~40 MPa. Composite porosity 13-17% (avg 14% assumed for vol% calc), Table SIII. == THIS IS THE PROVENANCE SOURCE for our "Minnmann ~14% / sigma_ion 0.17 / tau_ion 2.07" anchors (NOT the 2022 AEM Perspective). ==
+# --- intrinsic bulk material conductivities (stated) ---
+minnmann2021,EIS_bulk,pure_SE_pellet,Li6PS5Cl,,0,,380,40,1.6,,1.0,,,exact_text,LPSCl bulk ionic 1.6 mS/cm @25C (NEI); electronic 1e-6 S/cm (DC pol). bulk anchor (spread vs Cronau 3.0 / Lee 2.19 / Bazzoun 1.02)
+minnmann2021,EIS_bulk,pure_SE_milled,Li6PS5Cl,,0,,380,40,1.2,,,,,exact_text,fine (ball-milled <10um) LPSCl bulk ionic 1.2 mS/cm (slight GB/amorphization drop)
+minnmann2021,EIS_bulk,pure_CAM,,NCM-622,100,100,380,40,,10.0,,1.0,,exact_text,NCM-622 electronic partial 10 mS/cm (SI Table S2); ionic negligible
+# --- composite cathode EIS-TLM sweep: tau^2 values STATED; sigma at 42 vol% STATED; other vol% from text/Fig 2 (TREND) ---
+minnmann2021,EIS_TLM,cathode,Li6PS5Cl,NCM-622,25,,380,40,~1.4,~0.021,2.4,120,14,text_plus_fig_trend,"electronic percolation nearly fails (tau_el^2=120); sigma_ion still high"
+minnmann2021,EIS_TLM,cathode,Li6PS5Cl,NCM-622,33,,380,40,,~0.24,,,14,text_plus_fig_trend,"25->33 vol% sigma_el +1 order (2.1e-5->2.4e-4 S/cm); CAM-specific 137 mAh/g @0.1C"
+minnmann2021,EIS_TLM,cathode,Li6PS5Cl,NCM-622,42,73,380,40,0.17,0.56,4.3,7.4,14,exact_text,"ANCHOR. L=470um, A=0.785cm2, R_el=107 Ohm, R_ion=360 Ohm. tau_ion=sqrt(4.3)=2.07. 154 mAh/g @0.1C (optimum). ion~el crossover"
+minnmann2021,EIS_TLM,cathode,Li6PS5Cl,NCM-622,53,,380,40,,,15.3,,14,text_plus_fig_trend,"ionic tortuosity factor peak region (tau_ion^2~15.3 at 53 vol%)"
+minnmann2021,EIS_TLM,cathode,Li6PS5Cl,NCM-622,61,,380,40,~0.001,~1.0,34,4.3,14,text_plus_fig_trend,"electronic sufficient (tau_el^2=4.3); severe ionic bottleneck; fine-SE tau_ion^2=34. 132->16 mAh/g 0.1C->1C (-88%)"
+# --- porosity anchor (Table SIII, dry-mix 380 MPa) ---
+minnmann2021,density,cathode,Li6PS5Cl,NCM-622,,,380,,,,,,13-17,exact_text,"composite cathode porosity range 13-17% (avg 14% assumed); dry mixing + uniaxial 380 MPa consolidation. == our porosity anchor =="

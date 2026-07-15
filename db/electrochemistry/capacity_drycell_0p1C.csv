@@ -1,0 +1,4 @@
+cathode_AM,ptfe_wt_pct,rate,charge_mAhg,discharge_mAhg,loading_mgcm2,temp_C,cell,source,note
+NCM_1,0.5,0.1C,230.5,198.7,28.3,30,Li-In dry ASSB,annual report fig11,CV fraction lowest
+NCM_1,1.0,0.1C,225.9,194.2,28.3,30,Li-In dry ASSB,annual report fig11,standard
+NCM_1,2.0,0.1C,227.9,196.8,28.3,30,Li-In dry ASSB,annual report fig11,higher CV (resistance up)

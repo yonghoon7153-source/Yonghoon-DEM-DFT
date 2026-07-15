@@ -1,0 +1,28 @@
+# Cronau 2021 (ACS Energy Lett. 6, 3072-3077, DOI 10.1021/acsenergylett.1c01299)
+# Sulfide SE sigma_ionic vs pressure — TREND ONLY (digitized from figures unless source=caption_stated).
+# Marburg (Roling). 6 materials x 3 crystallinity classes (AM/GC/uC). NOT our Cl-argyrodite (Br!) and NO single-crystal.
+# WARNING: Fig2 y-axis prefactor differs per panel (x1e-4 vs x1e-3). All sigma in mS/cm. Approximate — no false precision.
+# source field: caption_stated = exact number printed in Fig4 caption (RELIABLE); fig2_digitized / fig3_digitized = read off axis (TREND).
+material,class,fab_pressure_MPa,stack_pressure_MPa,anneal,sigma_mS_cm,figure,source,notes
+Li6PS5Br,GC,98,low(~10),no,0.15,Fig4a,caption_stated,FIB-SEM cross-section; porous/grainy
+Li6PS5Br,GC,392,low(~10),no,0.65,Fig4b,caption_stated,densified; amorphous particles fused (sintered)
+Li6PS5Br,uC,392,low(~10),before_pellet_anneal,0.59,Fig4c,caption_stated,micron grains individually visible NOT sintered
+Li6PS5Br,uC,392,low(~10),after_550C_pellet_anneal,2.40,Fig4d,caption_stated,grains sintered -> sigma ~4x up; BEST argyrodite value in paper
+Li7P3S11,AM,486.73,high_plateau,no,0.22,Fig2a,fig2_digitized,~0.20-0.25; y-axis x1e-4
+80Li2S.20P2S5,AM,486.73,high_plateau,no,0.60,Fig2b,fig2_digitized,~0.6; y-axis x1e-4
+Li7P3S11,GC,486.73,high_plateau,no,2.2,Fig2c,fig2_digitized,~2.0-2.5; y-axis labelled mS/cm (x1e-3)
+Li6PS5Br,GC,486.73,high_plateau,no,0.85,Fig2d,fig2_digitized,~0.8-0.9; y-axis x1e-4
+Li6PS5Br,uC,486.73,high_plateau,no,2.2,Fig2e,fig2_digitized,~2.0-2.4; yellow regime then green; y-axis x1e-3
+Li10GeP2S12,uC,486.73,high_plateau,no,5.5,Fig2f,fig2_digitized,~5-6; y-axis x1e-3
+# Fig3 GC-Li6PS5Br vs fabrication pressure at 4 stack pressures (5/50/100/300 MPa) — TREND
+Li6PS5Br,GC,98,50,no,0.30,Fig3a,fig3_digitized,sigma rises with fab pressure once stack>=50
+Li6PS5Br,GC,392,50,no,0.85,Fig3a,fig3_digitized,leveling at 400-500 MPa fab
+Li6PS5Br,GC,98,5,no,0.52,Fig3a,fig3_digitized,low stack: apparent decrease = electrode-contact artifact (NOT real)
+# Key regime / protocol thresholds (stated in text)
+threshold,electrode_contact_transition,NA,30-50,NA,NA,Fig2_text,caption_stated,red->green: pellet/electrode contact sufficient
+threshold,uC_yellow_regime_end,NA,200-250,NA,NA,Fig2ef_text,caption_stated,uC grain-gap closes; plateau only ABOVE this (no anneal)
+threshold,AMGC_recommended_fab,400-500,NA,NA,NA,Fig5_text,caption_stated,irreversible densification
+threshold,AMGC_recommended_stack_sputter,NA,5-10,NA,NA,Fig5_text,caption_stated,sputtered electrodes, after high fab
+threshold,AMGC_recommended_stack_WC,NA,30-50,NA,NA,Fig5_text,caption_stated,WC direct contact
+context,interlab_round_robin_spread,NA,NA,NA,NA,intro_ref23,caption_stated,~1 order of magnitude over 8 labs (Ohno/Zeier 2020)
+# PROVENANCE: 3.0 mS/cm single-crystal LPSCl is NOT in this paper (no single-crystal, no Cl measured, no r-law). See lit_cronau2021_*.md §0.

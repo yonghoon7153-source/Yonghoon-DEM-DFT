@@ -1,0 +1,3 @@
+case,composition,am_type,porosity_mpm_pct,porosity_dem_pct,cov_plastic_hertz_pct,cov_plastic_tabor_pct,cov_rigid_hertz_pct,cov_rigid_tabor_pct,plastic_delta_hertz_pp,plastic_delta_tabor_pp,sigma_ionic,sigma_e,am_perc_pct,note
+input_S_1,SE-rich,reported,20.17,19.7,70,91,60,87,10,4,0.48,0,0,SE load-bearing -> larger plastic conforming increment
+real_14,AM-rich,AM_P,15.91,15.64,52,74,46,70,6,3,0.063,14.25,87,periodic RVE; SE load-shielded by rigid AM skeleton -> smaller plastic increment

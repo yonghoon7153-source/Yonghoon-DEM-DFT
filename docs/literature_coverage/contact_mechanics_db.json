@@ -1,0 +1,407 @@
+{
+  "schema_version": "1.2",
+  "description": "Contact-mechanics theory database anchoring Tabor regime classification, plastic contact area, and volume-conservation constraints used in scripts/plastic_coverage.py (Physics mode) and scripts/network_conductivity.py.",
+  "our_dem_method": {
+    "approach": "effective-modulus (E_eff) calibration — standard DEM convention to absorb plastic + rate-dependent + cohesive contact effects into a single reduced stiffness (Cundall-Strack 1979; Thornton 1997).",
+    "E_eff_GPa": 1.35,
+    "E_real_LPSCl_GPa": 24.0,
+    "E_eff_over_E_real": 0.056,
+    "calibration_target": "porosity matched to experimental pellet at target compaction pressure",
+    "calibration_method": "linear regression sweeping E_eff and picking the value that minimises porosity residual",
+    "rationale": [
+      "Real LPSCl undergoes plastic flow above yield (σ_y ≈ 0.30 GPa, Sakuda 2013) — DEM with E_real would hit elastic overlap only, missing real densification.",
+      "Softening E_eff allows DEM to reach the same equilibrium porosity at the same applied pressure P, with larger overlap δ_sim that effectively represents the post-plastic-flow contact state."
+    ],
+    "implications_for_analysis": {
+      "delta_sim_inflation_factor": "delta_sim / delta_real ≈ (E_real / E_eff)^(2/3) ≈ 6.9x",
+      "A_liggghts_inflation": "A = π·R·δ inflated by the same factor as δ (linear in δ for small-overlap Hertz) — already behaves as a plastic contact area proxy",
+      "hertzian_mode_interpretation": "Use LIGGGHTS contact_area directly. δ_sim is E_eff-calibrated → A_liggghts is the internally-consistent plastic proxy.",
+      "physics_mode_interpretation": "Recomputes F_real from δ_sim with E_real (not E_eff) and applies Tabor A = F/H. When δ_sim is already inflated by E_eff calibration, this adds a second plastic correction — treat as UPPER BOUND, not independent prediction. Lower-bounded by A_liggghts so never goes below Hertzian.",
+      "recommended_defense_framing": "Primary: Hertzian (E_eff-calibrated DEM-native). Sensitivity: Physics (E_real + Tabor) as the upper bound of the σ band."
+    },
+    "why_delta_over_R_is_the_only_indicator": {
+      "central_claim": "δ/R* is the ONLY plastic-deformation indicator that survives E_eff calibration unchanged — every other DEM observable (force, contact pressure, energy) is scaled by E_eff and cannot be used at face value.",
+      "observable_audit": {
+        "delta_overlap": {"e_independent": true,   "reason": "pure kinematic quantity from particle centers and radii"},
+        "R_radius":     {"e_independent": true,   "reason": "fixed input geometry"},
+        "delta_over_R": {"e_independent": true,   "reason": "dimensionless ratio of two geometric observables — primary plastic proxy"},
+        "F_contact":    {"e_independent": false,  "reason": "F_sim = (4/3) E_eff √R δ^1.5  — scaled by E_eff → ~18× smaller than real F"},
+        "contact_pressure": {"e_independent": false, "reason": "F/A → inherits F pollution"},
+        "contact_energy":   {"e_independent": false, "reason": "integral of F·dδ → inherits F pollution"},
+        "contact_area_LIGGGHTS": {"e_independent": "partial", "reason": "A = π·R·δ_sim → inflated via δ only, not via any E-dependent force; interpretable as post-plastic-flow contact proxy under E_eff framework"}
+      },
+      "causal_chain_from_delta_to_sigma": [
+        {"step": 1, "name": "regime_classification",   "input": "δ/R*",       "output": "elastic | transition | plastic",              "logic": "Jackson-Green 2005 FEM thresholds (1.5% onset, 4% full plasticity)"},
+        {"step": 2, "name": "contact_area",            "input": "δ, R*, material constants", "output": "A",                             "logic": "Hertzian: A = π R δ from LIGGGHTS (E_eff-calibrated) | Physics: A = min(F_real/H, V/h_film, 2πR_min²) with F_real=(4/3)E_real√R·δ^1.5 lower-bounded by A_liggghts"},
+        {"step": 3, "name": "contact_radius",          "input": "A",          "output": "a = √(A/π)",                                   "logic": "Circular contact assumption"},
+        {"step": 4, "name": "constriction_resistance", "input": "a, σ_bulk",  "output": "R_constr = 1/(2σa)",                          "logic": "Holm 1967 / Maxwell 1873 spreading resistance"},
+        {"step": 5, "name": "bulk_resistance",         "input": "L_hop, A",   "output": "R_bulk = ρL/A",                               "logic": "Ohmic bulk through each sphere segment"},
+        {"step": 6, "name": "network_solve",           "input": "{R_i}",      "output": "σ_eff (ionic, electronic, thermal)",          "logic": "Kirchhoff Laplacian L·V=b solved via CG→ILU→spsolve (3-stage)"}
+      ],
+      "why_F_is_never_read_from_DEM": "LIGGGHTS outputs F_sim computed with E_eff (= 1.35 GPa here). Using F_sim directly for any plasticity metric would propagate the ~18× E-scaling artifact. Physics mode avoids this by RECOMPUTING F_real = (4/3)·E_real·√R·δ^1.5 from the measured δ_sim using the literature E_real — bypassing the DEM force entirely. The only δ-derived input is geometric, so the Tabor step is force-model-agnostic.",
+      "double_correction_caveat": "Even with F_real recomputation, Physics mode uses δ_sim (inflated 6.9× by E_eff calibration) in the F_real formula → F_real ∝ δ^1.5 → F_real ~ 18× the actual real-material value. A_tabor is correspondingly inflated. This is why Physics is labelled an UPPER BOUND and kept above A_liggghts by the lower-bound rule rather than replacing it.",
+      "why_hertzian_is_the_primary_mode": "A_liggghts carries the E_eff-calibrated plastic state internally consistent with the simulation that produced it. The porosity-regression calibration (E_eff=1.35 GPa ↔ experimental porosity at target P) is a single-parameter plastic absorption: whatever compaction experiments show, the simulation reproduces → contact areas reflect that state. No external Tabor reconstruction needed for self-consistency."
+    },
+    "method_section_one_liner": "DEM simulations use an effective Young's modulus E_eff=1.35 GPa, porosity-calibrated by linear regression against the experimental pellet at target compaction pressure, following the standard DEM convention of absorbing plastic and rate-dependent contact effects into a reduced stiffness (Cundall & Strack 1979; Thornton et al. 2013). Because DEM-reported forces are scaled by E_eff/E_real≈0.056, the only plastic-deformation indicator that remains E-independent is the normalized overlap δ/R*. All regime classification (elastic/transition/plastic via Jackson-Green 2005 thresholds) and contact-area computation therefore rely exclusively on δ/R*. The Hertzian analysis mode uses the LIGGGHTS-reported contact_area=π·R*·δ_sim (self-consistent within the E_eff frame) and serves as the primary estimator. The Physics analysis mode provides a sensitivity upper bound by recomputing F_real=(4/3)·E_real·√R*·δ^1.5 with E_real from literature (Sakuda 2013) and applying Tabor's plastic relation A=F_real/H with volume-conservation and hemisphere caps (lower-bounded by A_liggghts so it never falls below the DEM-native value). Contact radii a=√(A/π) feed Holm-Maxwell spreading resistance R_constr=1/(2σa) at every edge of a Kirchhoff resistor network, solved via a three-stage CG → ILU-preconditioned CG → direct LU fallback for robustness on ill-conditioned bottleneck cases."
+  },
+  "regime_insights_dataset_60": {
+    "description": "Empirical findings from per-contact cap-attribution analysis across the 60-case dataset (scripts/physics_regime_histogram.py --all, Apr 2026). Every finding is backed by dataset_summary.csv and visualised in dataset_regime_summary.png.",
+    "cap_binding_statistics": {
+      "tabor_dominance": "63–94% of contacts across all 60 cases → Physics mode's primary mechanism is active everywhere",
+      "elastic_lb": "0.0–0.3% → essentially zero; confirms all cases are post-yield (plastic regime) as intended by E_eff calibration",
+      "liggghts_lb": "3–34% → DEM-reported contact_area wins when DEM overlap already yielded a larger plastic footprint than Tabor F_real/H",
+      "geom_cap": "0.07–17.0% → hemisphere 2π R_min² binds only in extreme-δ contacts; AMS/bottleneck cases reach 10–17%, sieve cases <1%",
+      "volume_cap": "0.0% across 60/60 cases → h_film_min=5 nm is too permissive to bind in practice; retained as formal completeness safeguard only"
+    },
+    "physics_mode_value_by_regime": {
+      "sieve_regime_(liggghts_lb_≥_20%)": {
+        "examples": ["input_1mAh_8_AMP", "input_1mAh_8_AMS", "input_1mAh_9", "input_8mAh_8_AMP", "input_thin_9_S1"],
+        "p50_delta_over_R_range": "0.07–0.13",
+        "physics_vs_hertzian_interpretation": "DEM-native area already reflects physical plastic contact; Physics mode re-computation adds negligible correction (Δσ ≲ 5% typical). Recommendation: Hertzian sufficient, Physics redundant.",
+        "ionic_path": "sieve regime — wide, uniform contacts, σ_ionic relatively high"
+      },
+      "plastic_regime_(tabor_dominant,_geom_<5%)": {
+        "examples": ["input_particulate_1", "input_8mAh_1", "input_8mAh_2", "input_6mAh_real_3"],
+        "p50_delta_over_R_range": "0.13–0.20",
+        "physics_vs_hertzian_interpretation": "Core use case — Tabor A = F_real/H is the natural upgrade over pure-elastic Hertz while hemisphere cap rarely binds. Δσ typically 10–25%; Physics mode upgrades to upper bound.",
+        "ionic_path": "normal plastic regime — Tabor provides meaningful plastic correction"
+      },
+      "bottleneck_regime_(geom_≥_10%)": {
+        "examples": ["input_particulate_10", "input_particulate_11", "input_particulate_9_E05", "input_6mAh_real40_7", "input_6mAh_real_8"],
+        "p50_delta_over_R_range": "0.23–0.36",
+        "physics_vs_hertzian_interpretation": "Most demanding regime. Tabor A diverges unphysically at large δ, but hemisphere cap 2π R_min² activates for 10–17% of contacts and bounds A_plastic to the lateral surface of the smaller particle. Physics mode provides maximum information here — Δσ can reach +30–40%.",
+        "ionic_path": "severe bottleneck — narrow contacts dominate R_constr; τ_Lap_eff >> τ_Dij; σ_ionic collapses"
+      }
+    },
+    "key_decoupling_finding": {
+      "claim": "Porosity and bottleneck regime are decoupled for small-SE cases (D0.5, SE r=0.5μm)",
+      "example": "input_particulate_1: porosity=16.8%, σ_ionic=0.53 mS/cm (HIGH), geom_cap=0.07% (minimal bottleneck)",
+      "physical_explanation": "Small SE particles (r_SE/r_AM = 1:6 for D0.5) fit efficiently into tetrahedral/octahedral gaps between AM particles — even when porosity is high, SE forms continuous thin-layer ionic pathways between AM surfaces. Classical bimodal packing theory (Furnas 1928, McGeary 1961, Yu & Standish 1991) predicts this: with extreme size-ratio, the optimal SE volume fraction shifts to AM-rich composition.",
+      "implication": "SE-particle size controls whether porosity is a σ-limiting or σ-irrelevant variable. For D0.5, high porosity can coexist with excellent conductivity. For D1/D2 (r_SE/r_AM ≥ 1:3), porosity and σ are strongly coupled."
+    },
+    "se_self_packing_inversion": {
+      "observation": "D0.5 and S series show inverted porosity trend vs AM:SE — porosity DECREASES as AM:SE moves from 62:38 → 82:18, opposite to D1/D2 which increase.",
+      "data_points": {
+        "D0.5_at_62:38": "porosity ≈ 21% (abnormally high for SE-rich)",
+        "D0.5_at_82:18": "porosity ≈ 16% (normal)",
+        "D1_at_62:38":   "porosity ≈ 6–7% (lowest)",
+        "D1_at_82:18":   "porosity ≈ 17% (normal)"
+      },
+      "mechanism": "At SE-rich composition (62:38), D0.5 supplies far more SE than can be accommodated in AM interstices. The excess SE particles form their own loose-packed cluster — SE-SE interfaces with inherent voids — which inflates overall porosity. At AM-rich composition (82:18), SE amount matches interstitial demand exactly, giving optimal packing.",
+      "literature_refs": ["furnas_1928_eichkurve", "mcgeary_1961_mixed_sphere", "yu_standish_1991_multicomponent"],
+      "figure_spec_for_SI": "Plot porosity vs σ_ionic, coloured by SE variant (D0.5, D1, D2, S). Expected: D0.5/S cluster horizontally (wide porosity range at fixed σ), D1/D2 cluster diagonally (strong porosity-σ coupling)."
+    },
+    "defense_narrative_one_liner": "Hertzian-mode (E_eff-calibrated DEM-native) is adequate for sieve-regime cases (liggghts_lb ≥ 20%) where DEM already encodes plastic contact; Physics-mode (Tabor + hemisphere cap) delivers its main value in bottleneck-regime cases (geom_cap ≥ 10%) where the hemisphere constraint activates on extreme-overlap contacts and prevents the Hertzian force formula's unphysical extrapolation at large δ from propagating into A_plastic."
+  },
+  "model_summary": {
+    "tabor_number": "mu_T = (sigma_y^3 * R / (E_star^2 * F))^(1/6)  — indentation plasticity index. mu_T > 1 → elastic (Hertz), mu_T << 1 → fully plastic (Tabor A = F/H).",
+    "elastic_limit": "dr_yield_onset ≈ 1.5% (delta/R*) — below this Hertz is valid",
+    "full_plasticity": "dr_fully_plastic ≈ 4% (delta/R*) — above this Tabor A = F/H applies with H ≈ 2.8 sigma_y",
+    "volume_conservation": "A_plastic <= V_overlap / h_film_min — material cannot vanish on plastic deformation",
+    "hemisphere_cap": "A_plastic <= 2 pi R_min^2 — lateral spread bounded by smallest particle surface",
+    "lower_bound_rule": "A_plastic >= max(A_elastic_hertz, A_liggghts) — physical contact must exceed pure-elastic prediction and the DEM-reported area (which already accounts for in-sim hooke/hysteresis plasticity)"
+  },
+  "entries": [
+    {
+      "id": "cundall_strack_1979_geotechnique",
+      "citation": "Cundall, P. A. & Strack, O. D. L. A discrete numerical model for granular assemblies. Géotechnique 29, 47-65 (1979).",
+      "doi_or_url": "https://doi.org/10.1680/geot.1979.29.1.47",
+      "tier": 1,
+      "type": "foundational_dem",
+      "key_concepts": [
+        "original DEM formulation",
+        "soft-particle contact with overlap-proportional force",
+        "precedent for using reduced effective stiffness to enable tractable timesteps"
+      ],
+      "relevance_to_our_model": {
+        "E_eff_justification": "Founding DEM paper establishes the overlap-based soft-contact formulation; the choice of spring stiffness is a modelling parameter, not a material property — legitimises E_eff calibration approach.",
+        "our_E_eff_value": "E_eff = 1.35 GPa (porosity-calibrated against experimental pellet)"
+      }
+    },
+    {
+      "id": "thornton_2013_powder_tech",
+      "citation": "Thornton, C., Cummins, S. J. & Cleary, P. W. An investigation of the comparative behaviour of alternative contact force models during elastic collisions. Powder Technology 233, 30-46 (2013).",
+      "doi_or_url": "https://doi.org/10.1016/j.powtec.2012.08.012",
+      "tier": 2,
+      "type": "dem_methodology",
+      "key_concepts": [
+        "comparison of hooke, hertz, hertz-hysteresis contact models",
+        "timestep-cost vs physical-fidelity trade-off",
+        "effective modulus calibration against experimental observables"
+      ],
+      "relevance_to_our_model": {
+        "E_eff_calibration_standard": "Explicitly treats the effective modulus as a free parameter calibrated against experimental benchmarks (here: porosity at applied pressure). Matches our porosity-regression approach for E_eff = 1.35 GPa."
+      }
+    },
+    {
+      "id": "potyondy_cundall_2004_ijrmms",
+      "citation": "Potyondy, D. O. & Cundall, P. A. A bonded-particle model for rock. Int. J. Rock Mech. Min. Sci. 41, 1329-1364 (2004).",
+      "doi_or_url": "https://doi.org/10.1016/j.ijrmms.2004.09.011",
+      "tier": 2,
+      "type": "dem_methodology",
+      "key_concepts": [
+        "macro-scale calibration of micro-scale DEM parameters",
+        "effective stiffness as target-property fitting parameter"
+      ],
+      "relevance_to_our_model": {
+        "calibration_philosophy": "Supports the linear-regression porosity-target methodology we used to set E_eff = 1.35 GPa — DEM micro-parameters are routinely calibrated from experimental macro-observables."
+      }
+    },
+    {
+      "id": "tabor_1951_hardness_of_metals",
+      "citation": "Tabor, D. The Hardness of Metals. Oxford University Press, 1951.",
+      "doi_or_url": "ISBN 9780198507765 (reprinted 2000 Oxford Classic Texts series)",
+      "tier": 1,
+      "type": "foundational_monograph",
+      "key_concepts": [
+        "hardness-yield relation H ≈ 2.8 sigma_y",
+        "plastic indentation area A_plastic = F / H",
+        "strain geometric representation"
+      ],
+      "relevance_to_our_model": {
+        "plastic_coverage.py:H_REAL_SE": "H = 2.8 sigma_y anchor; LPSCl sigma_y ≈ 0.30 GPa → H ≈ 0.85 GPa",
+        "physics_mode_A_tabor": "A = F_real / H used as primary plastic-area estimate"
+      },
+      "equations_provided": [
+        "H = 2.8 * sigma_y  (Tabor's relation, spherical indenter, work-hardened metals)",
+        "A_plastic = F / H  (pure plastic regime, Tabor's plastic indentation)"
+      ]
+    },
+    {
+      "id": "johnson_1985_contact_mechanics",
+      "citation": "Johnson, K. L. Contact Mechanics. Cambridge University Press, 1985.",
+      "doi_or_url": "https://doi.org/10.1017/CBO9781139171731",
+      "tier": 1,
+      "type": "foundational_monograph",
+      "key_concepts": [
+        "Hertz theory for elastic spherical contact",
+        "elastoplastic transition",
+        "reduced modulus E_star definition",
+        "reduced radius R_star definition"
+      ],
+      "relevance_to_our_model": {
+        "plastic_coverage.py:F_real": "F = (4/3) E_star sqrt(R_star) delta^(3/2)  (Hertz point-contact force) — used to reconstruct 'real' force from sim overlap when E_eff differs from E_real",
+        "A_elastic": "A_hertz = pi R_star delta  (small-overlap geometric area)"
+      },
+      "equations_provided": [
+        "F_hertz = (4/3) E_star sqrt(R_star) delta^(3/2)",
+        "a_hertz = (3 F R_star / 4 E_star)^(1/3)",
+        "A_hertz = pi a_hertz^2 ≈ pi R_star delta  (small delta)",
+        "1/E_star = (1-nu1^2)/E1 + (1-nu2^2)/E2",
+        "1/R_star = 1/R1 + 1/R2"
+      ]
+    },
+    {
+      "id": "johnson_1970_jmps_indentation",
+      "citation": "Johnson, K. L. The correlation of indentation experiments. J. Mech. Phys. Solids 18, 115-126 (1970).",
+      "doi_or_url": "https://doi.org/10.1016/0022-5096(70)90029-3",
+      "tier": 1,
+      "type": "theoretical_primary",
+      "key_concepts": [
+        "Johnson's indentation strain parameter",
+        "derivation of the plasticity index controlling regime transitions",
+        "unified elastic/elastoplastic/plastic regime map for spherical indentation"
+      ],
+      "relevance_to_our_model": {
+        "tabor_number_definition": "Original derivation of mu_T = (E_star a / sigma_y R)^{-1}  ↔  equivalent form mu_T = (sigma_y^3 R / E_star^2 F)^(1/6) via Hertz substitution"
+      },
+      "equations_provided": [
+        "Plasticity index: (E_star/sigma_y) * (a/R)  (critical value ≈ 2.8 for onset of full plasticity)",
+        "Regime map: elastic when (E_star a / sigma_y R) < 1.1, plastic when > 2.8"
+      ]
+    },
+    {
+      "id": "mesarovic_fleck_2000_prsa",
+      "citation": "Mesarovic, S. D. & Fleck, N. A. Frictionless indentation of dissimilar elastic-plastic spheres. Int. J. Solids Struct. 37, 7071-7091 (2000).",
+      "doi_or_url": "https://doi.org/10.1016/S0020-7683(99)00328-5",
+      "tier": 1,
+      "type": "theoretical_primary",
+      "key_concepts": [
+        "similarity solutions for elastic-plastic contact",
+        "strain-hardening effects on contact pressure distribution",
+        "quantitative map F–delta–a for arbitrary material pairs"
+      ],
+      "relevance_to_our_model": {
+        "regime_thresholds": "Provides quantitative dr_yield_onset ≈ 0.015 and dr_fully_plastic ≈ 0.04 thresholds used in DR_YIELD_ONSET / DR_FULLY_PLASTIC constants",
+        "dissimilar_materials": "Justifies using E_star (not pure E) for NCM-LPSCl dissimilar contact"
+      }
+    },
+    {
+      "id": "jackson_green_2005_wear",
+      "citation": "Jackson, R. L. & Green, I. A finite element study of elasto-plastic hemispherical contact against a rigid flat. J. Tribology 127, 343-354 (2005).",
+      "doi_or_url": "https://doi.org/10.1115/1.1866166",
+      "tier": 1,
+      "type": "fem_computational",
+      "key_concepts": [
+        "FEM validation of Tabor's A = F/H in fully plastic regime",
+        "numerically derived elastic-plastic regime boundaries",
+        "mean contact pressure evolution with delta/delta_yield"
+      ],
+      "relevance_to_our_model": {
+        "dr_thresholds_validated": "Confirms the 1.5%–4% delta/R transition window used in plastic_coverage.py",
+        "A_plastic_saturation": "FEM shows A_plastic saturates near F/H for delta/R > 0.04"
+      },
+      "equations_provided": [
+        "delta_yield / R ≈ (pi C sigma_y / 2 E_star)^2  with C ≈ 1.295"
+      ]
+    },
+    {
+      "id": "kogut_etsion_2002_jam",
+      "citation": "Kogut, L. & Etsion, I. Elastic-plastic contact analysis of a sphere and a rigid flat. J. Appl. Mech. 69, 657-662 (2002).",
+      "doi_or_url": "https://doi.org/10.1115/1.1490373",
+      "tier": 2,
+      "type": "fem_computational",
+      "key_concepts": [
+        "normalized contact area vs interference (delta/delta_c) curves",
+        "elastic-plastic transition via delta/delta_c = 1, 6, 110"
+      ],
+      "relevance_to_our_model": {
+        "piecewise_formula_cross_check": "Kogut-Etsion curves cross-validate our piecewise elastic/transition/plastic classification"
+      }
+    },
+    {
+      "id": "thornton_1997_jam_plastic_collision",
+      "citation": "Thornton, C. Coefficient of restitution for collinear collisions of elastic-perfectly plastic spheres. J. Appl. Mech. 64, 383-386 (1997).",
+      "doi_or_url": "https://doi.org/10.1115/1.2787319",
+      "tier": 2,
+      "type": "theoretical_secondary",
+      "key_concepts": [
+        "energy dissipation in elastic-perfectly plastic contact",
+        "force-displacement law beyond yield",
+        "volume conservation under repeated contact loading"
+      ],
+      "relevance_to_our_model": {
+        "volume_conservation_basis": "Supports the V_overlap / h_film_min cap used to prevent unphysical thin films"
+      }
+    },
+    {
+      "id": "storakers_biwa_larsson_1997_ijss",
+      "citation": "Storåkers, B., Biwa, S. & Larsson, P.-L. Similarity analysis of inelastic contact. Int. J. Solids Struct. 34, 3061-3083 (1997).",
+      "doi_or_url": "https://doi.org/10.1016/S0020-7683(96)00176-X",
+      "tier": 2,
+      "type": "theoretical_secondary",
+      "key_concepts": [
+        "power-law creep and rate-dependent plastic contact",
+        "dimensional analysis of plastic indentation F-delta-A relations"
+      ],
+      "relevance_to_our_model": {
+        "rate_dependent_warning": "LPSCl may exhibit rate-dependence at high loading; our rate-independent Tabor treatment is a first-order approximation"
+      }
+    },
+    {
+      "id": "maugis_1992_jcis_jkr_dmt",
+      "citation": "Maugis, D. Adhesion of spheres: The JKR-DMT transition using a Dugdale model. J. Colloid Interface Sci. 150, 243-269 (1992).",
+      "doi_or_url": "https://doi.org/10.1016/0021-9797(92)90285-T",
+      "tier": 3,
+      "type": "theoretical_adhesion",
+      "key_concepts": [
+        "Tabor parameter as adhesion-regime indicator (not plasticity index — be careful)",
+        "JKR/DMT transition parameter mu_Maugis different from indentation Tabor number"
+      ],
+      "relevance_to_our_model": {
+        "nomenclature_clarification": "Note: Maugis-Tabor parameter differs from indentation Tabor; our use is the indentation plasticity index per Johnson 1970 & Tabor 1951"
+      }
+    },
+    {
+      "id": "greenwood_williamson_1966_prsa",
+      "citation": "Greenwood, J. A. & Williamson, J. B. P. Contact of nominally flat surfaces. Proc. R. Soc. Lond. A 295, 300-319 (1966).",
+      "doi_or_url": "https://doi.org/10.1098/rspa.1966.0242",
+      "tier": 3,
+      "type": "theoretical_secondary",
+      "key_concepts": [
+        "rough surface contact statistics",
+        "asperity-scale Hertz application"
+      ],
+      "relevance_to_our_model": {
+        "surface_roughness_neglected": "Our model treats particles as smooth spheres (sphere-sphere, not asperity-flat); GW results justify this abstraction at DEM length scale"
+      }
+    },
+    {
+      "id": "brake_2012_ijss",
+      "citation": "Brake, M. R. An analytical elastic-plastic contact model with strain hardening and frictional effects for normal and oblique impacts. Int. J. Solids Struct. 49, 3129-3141 (2012).",
+      "doi_or_url": "https://doi.org/10.1016/j.ijsolstr.2012.06.013",
+      "tier": 3,
+      "type": "theoretical_application",
+      "key_concepts": [
+        "closed-form F-delta for elastic-plastic contact with hardening",
+        "applicable to DEM force-displacement laws"
+      ],
+      "relevance_to_our_model": {
+        "analytical_alternative": "Provides analytical F-delta relation alternative to piecewise Tabor used in our physics mode; offered as a future enhancement route"
+      }
+    },
+    {
+      "id": "hertz_1882_crelle",
+      "citation": "Hertz, H. Über die Berührung fester elastischer Körper. J. für die reine und angewandte Mathematik 92, 156-171 (1882).",
+      "doi_or_url": "https://doi.org/10.1515/crll.1882.92.156",
+      "tier": 1,
+      "type": "foundational_historical",
+      "key_concepts": [
+        "original Hertz contact theory for two elastic spheres",
+        "derivation of F = (4/3) E_star sqrt(R) delta^(3/2)"
+      ],
+      "relevance_to_our_model": {
+        "fundamental_reference": "Cited for completeness as the origin of the elastic contact formula used in our Hertzian mode and Physics mode's F_real reconstruction"
+      }
+    },
+    {
+      "id": "holm_1967_electric_contacts",
+      "citation": "Holm, R. Electric Contacts: Theory and Application. 4th ed., Springer-Verlag, 1967.",
+      "doi_or_url": "ISBN 9783540038757",
+      "tier": 1,
+      "type": "foundational_monograph",
+      "key_concepts": [
+        "constriction (spreading) resistance through small circular contacts",
+        "Holm-Maxwell resistance R_s = rho / (2 a) for a single circular contact of radius a"
+      ],
+      "relevance_to_our_model": {
+        "network_conductivity.py:R_constriction": "R_constriction = 1 / (2 sigma a) used for every contact in the resistor network — directly from Holm",
+        "bottleneck_regime_physics": "Explains why σ collapses when contact radius a becomes very small (narrow neck geometry)"
+      },
+      "equations_provided": [
+        "R_constr = rho / (2 a) = 1 / (2 sigma a)  (per contact, Holm 1967 eq. 1.13)"
+      ]
+    },
+    {
+      "id": "maxwell_1873_treatise",
+      "citation": "Maxwell, J. C. A Treatise on Electricity and Magnetism, Vol. 1, §311 (spreading resistance derivation). Oxford, 1873.",
+      "doi_or_url": "N/A (public domain, Oxford University Press)",
+      "tier": 2,
+      "type": "foundational_historical",
+      "key_concepts": [
+        "original derivation of spreading resistance for circular aperture",
+        "underpins Holm 1967 constriction formula"
+      ],
+      "relevance_to_our_model": {
+        "attribution": "The spreading-resistance formula R = 1/(2 sigma a) originates from Maxwell's 1873 Treatise; Holm 1967 adapted it to electric contact theory"
+      }
+    }
+  ],
+  "material_constants_used": {
+    "E_STAR_AM_SE_REAL_GPa": {
+      "value": 20.0,
+      "derivation": "1/E* = (1-nu_AM^2)/E_AM + (1-nu_SE^2)/E_SE with E_AM=140 GPa (NCM), E_SE=24 GPa (LPSCl); ≈ 20 GPa",
+      "refs": ["lee_2024_natcomm SI Table S1", "sakuda_2013_sci_rep (LPSCl mechanics)"]
+    },
+    "H_REAL_SE_GPa": {
+      "value": 0.85,
+      "derivation": "Tabor H = 2.8 sigma_y with sigma_y_LPSCl ≈ 0.30 GPa (Sakuda 2013 indentation)",
+      "refs": ["sakuda_2013_sci_rep", "tabor_1951_hardness_of_metals"]
+    },
+    "H_FILM_MIN_nm": {
+      "value": 5.0,
+      "derivation": "Minimum plastic film thickness characteristic of sulfide glass flow (Sakuda empirical observation of ~5 nm residual interface)",
+      "refs": ["sakuda_2013_sci_rep"]
+    },
+    "DR_YIELD_ONSET": {
+      "value": 0.015,
+      "derivation": "delta/R* at onset of plastic yielding — Jackson-Green FEM boundary",
+      "refs": ["jackson_green_2005_wear", "mesarovic_fleck_2000_prsa"]
+    },
+    "DR_FULLY_PLASTIC": {
+      "value": 0.04,
+      "derivation": "delta/R* above which Tabor A = F/H saturates",
+      "refs": ["jackson_green_2005_wear", "kogut_etsion_2002_jam"]
+    }
+  }
+}
