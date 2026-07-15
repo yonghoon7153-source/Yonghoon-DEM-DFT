@@ -46,9 +46,19 @@ def _amg_M(L):
     """pyamg AMG preconditioner (그래프-라플라시안 특화) — 설치 시에만.  실패하면 None."""
     try:
         import pyamg
+    except ImportError:
+        print('    ⚠ pyamg 미설치 → CPU Jacobi-CG 폴백(고대비 격자에선 미수렴 가능) — '
+              '`python3 -m pip install pyamg` 후 재실행 권장', flush=True)
+        return None
+    try:
+        import time as _t
+        t0 = _t.time()
+        print(f'    AMG 전처리 구축 중 (dof {L.shape[0]:,} — 수십초~수분)…', flush=True)
         ml = pyamg.smoothed_aggregation_solver(sparse.csr_matrix(L), max_coarse=500)
+        print(f'    AMG 구축 완료 (levels {len(ml.levels)}, {_t.time() - t0:.0f}s) → CG', flush=True)
         return ml.aspreconditioner(cycle='V')
-    except Exception:
+    except Exception as e:
+        print(f'    ⚠ AMG 구축 실패 ({type(e).__name__}: {e}) → Jacobi', flush=True)
         return None
 
 
