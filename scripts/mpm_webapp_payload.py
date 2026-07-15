@@ -747,7 +747,7 @@ def main():
                     np.savez_compressed(a.save_step4_grid, sid=sid3.astype(np.int8),
                                         pid=pid3.astype(np.int32), vox_um=a.step3_vox,
                                         z_top_um=_ztop, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
-                                        am_r_um=np.asarray(r, np.float64))
+                                        am_r_um=np.asarray(r, np.float64) * UM)
                     print(f'  STEP4-v2 grid → {a.save_step4_grid}  (sid {sid3.shape}, '
                           f'n_am {len(r)}, vox {a.step3_vox}µm)')
         except Exception as _e:
@@ -984,6 +984,8 @@ def main():
           f'thickness {_mp["thickness_mpm_um"]:.1f}µm · coverage(@{a.coverage_um}/{a.cov_tabor_um}µm) {cov_str} · '
           f'{len(particles)} AM · {len(tris):,} SE tris (n_vox={a.n_vox})'
           f'  [voxel-preview por/SE/cov {por:.0f}/{f_se:.0f}/{cov["AM_P"]:.0f}% vary with n_vox — not reported]')
+    if a.save_step4_grid and not os.path.exists(a.save_step4_grid):
+        print(f'⚠ --save-step4-grid 요청됐지만 미저장 — STEP3 미도달/실패 경로 (step4-v2 입력 없음)')
 
 
 if __name__ == '__main__':

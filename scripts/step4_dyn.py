@@ -1,31 +1,32 @@
 #!/usr/bin/env python3
-"""STEP4-v2 — 갈바노스타틱 시간 전개: 비선형 Butler-Volmer + 입자별 구형확산 (voxel-DFN, SSB).
+"""STEP4-v2 — 갈바노스타틱/CV 시간 전개: 비선형 Butler-Volmer + 입자별 구형확산 (voxel-DFN, SSB).
 
-설계: docs/step4_v2_design.md.  v1(step3_sigma.solve_reaction_current, 저율 선형·균일 SOC
-스냅샷)의 동역학판.  같은 rasterized 복셀 격자 위 두 망(전자: AM+carbon+SDCP / 이온: SE+SDCP)을
-AM|ion BV 면에서 결합하고, 시간을 굴린다.
+설계: docs/step4_v2_design.md.  v1(step3_sigma.solve_reaction_current)의 동역학판 — 같은
+rasterized 복셀 격자의 두 망(전자/이온)을 실제 AM|SE·AM|SDCP 접촉면(BV)에서 결합해 시간을 굴린다.
 
-물리 (황화물 SSB 특화 — 근사가 아니라 물리인 것 2개):
-  · SE = 단일이온 전도체(t⁺≈1) → 전해질 농도분극 없음 → 이온망은 시종 옴익.
-  · 전위 준정적(전기장 이완 ≪ 확산) → 각 시점 (φ_e, φ_i) 정상상태를 Newton으로 푼다.
-  · 입자 내부: x(ρ,t) 구형 1D Fick — FV Crank–Nicolson, 입자별 tridiagonal(벡터화 Thomas).
-  · 대칭 BV(α=0.5): I_face = 2·i0(x_s)·A_face·sinh(β·η),  η = φ_e − φ_i − U_ocp(x_s),
-    β = F/(2RT).  I_face 부호: e-망 → i-망(= 탈리튬/충전) 양수.
-  · 갈바노스타틱: 집전체(bottom) = 전자망 supernode B (외부로 I_app 인출: b[B] = −I_app),
-    분리막(top) = 이온망 접지(φ=0, Li counter 기준) → V_cell = φ_B 가 미지수로 자연히 나옴.
-    평형(I=0)에서 φ_B = U(x̄) = OCV 재현이 부호 규약의 셀프체크.
+물리 범위 = COMSOL Battery(전극 스케일) 표준 세팅 패리티 (2026-07-15 전수 감사):
+  ✓ 비선형 BV, 비대칭 전달계수 α_a/α_c (기본 0.5/0.5 = 대칭 sinh)
+  ✓ i0(x) = i0_ref·(x/½)^αc·((1−x)/½)^αa  (c_e 항 없음 — 단일이온 SE, 활동도 고정: SSB 물리)
+  ✓ 계면 필름저항 ASR_film [Ω·m²] (SEI/CEI 자리, η_s = Δφ − U − I·ASR/A, 면별 내재 Newton)
+  ✓ 입자별 구형확산 (실측 입자 반경 분포 그대로 — COMSOL의 size-bin보다 정밀)
+  ✓ 갈바노스타틱(CC) + 전압 홀드(CV; CC→CV = CCCV, 방전/충전 양방향) — CV는 I에 대한 시컨트
+  ✓ 집전체 실측 R_int 직렬 부하 [Ω·cm²] (STEP3 시나리오 축과 동일 규약; 터미널 V·컷오프에 반영)
+  ✓ 발열 분해 출력 [W]: Q_ohm(e/i 분리)·Q_ct(BV)·Q_film + Q_rev(엔트로피 — dU/dT CSV 있을 때만)
+  ✓ 온도 파라미터 T (등온; f=F/RT 전체 일관)
+  ✓ 에너지 수지 감사 (매 스텝): P_ohm + Σ I·η_s + Σ I²·ASR/A + Σ I·U + I_app·V = 0 (기계정밀도)
+  ✓ 전하(KCL)·리튬(질량) 보존 감사
+  범위 밖(정직, 근거): 전해질 농도분극(단일이온 t⁺≈1 → 물리적으로 부재), 이중층 C_dl(시간상수
+  ~ms ≪ 방전 dt — COMSOL도 방전 sim에선 통상 off), D_s(c) 농도의존(Chen2020 양극도 상수),
+  열-전기 커플(등온; Q는 출력만), anode/SE열화/체적변화(A10).
 
-단위: 내부 SI (m, s, A, V, mol).  σ 테이블 입력은 S/cm(STEP3 규약) → ×100 [S/m].
+단위: 내부 SI.  σ 테이블 입력은 S/cm(STEP3 규약) → ×100 [S/m].
 
-§F1 앵커 입력(날조 금지 — 기본값 없이 파일로만):
-  · U_ocp(x)·c_max·stoich 창(x0, x100): --ocp-csv + --params-json
-    (scripts/step4_pybamm_anchor.py --export-params 가 pybamm Chen2020에서 생성, provenance 포함)
-  · D_s: --d-s (기본 3e-14 m²/s = Kang&Shin 2025 FEM 값 인용, 문헌범위 1e-14–1e-13)
-  · i0: --i0 (기본 2 A/m² = v1 훅 유지, ⚠F1 스윕 대상)
-  셀프테스트는 합성 선형 OCP(TEST-ONLY 라벨)만 사용 — 실측/문헌 수치 아님.
-
-한계(정직, 설계 §6): half-cell(anode 과전압 없음) · 열/열화/부피변화 없음 · 입자 표면 SOC는
-입자당 1D(면별 국소 SOC 없음 — 입자간 불균일이 해상 대상) · 코팅 부분피복은 전면적 flux로 균질화.
+§F1 앵커 입력(날조 금지):
+  · U_ocp(x)·c_max·stoich 창: --ocp-csv + --params-json (step4_pybamm_anchor --export-params
+    가 pybamm Chen2020에서 기계 추출, provenance 포함)
+  · D_s: --d-s (기본 3e-14 = Kang&Shin 2025 FEM; 문헌 1e-14–1e-13)
+  · i0: --i0 (기본 2 A/m² = v1 훅), dU/dT: --dudt-csv (있을 때만 Q_rev 계산)
+  셀프테스트는 합성 선형 OCP(TEST-ONLY 라벨)만 사용.
 """
 import argparse
 import json
@@ -37,8 +38,6 @@ from scipy.sparse.linalg import cg
 
 F_CONST = 96485.33212        # C/mol
 R_GAS = 8.314462618          # J/mol/K
-T_K = 298.15
-BETA = F_CONST / (2.0 * R_GAS * T_K)   # 1/V — 대칭 BV sinh 인자
 GPU = False                  # --gpu 로 켬; CuPy 실패 시 CPU 폴백 (step3_sigma 패턴)
 
 
@@ -73,54 +72,49 @@ def _cg(L, b, x0=None, rtol=1e-9):
 class RadialDiffusion:
     """입자별 구형 1D Fick, 정규화 반경 ρ=r/R ∈ [0,1], FV 셸 Nr개, Crank–Nicolson.
 
-    FV 유도 (셸 k, 경계 ρ_k = k/Nr, 중심값 x_k):
-      Ṽ_k · dx_k/dt = (D/R²)·[ρ²_{k+1}(x_{k+1}−x_k) − ρ²_k(x_k−x_{k−1})]/Δρ + δ_{k,Nr−1}·J/(c_max·R)
-      (Ṽ_k = (ρ_{k+1}³−ρ_k³)/3 — 단위구 셸부피/4π; 표면 면적항 ρ²=1)
-    질량보존: Σ Ṽ_k Δx_k = Δt·J/(c_max·R) 가 CN에서 기계정밀도로 성립(FV 보존형) — selftest 1.
-    x_surf = x_{Nr−1} + (∂x/∂ρ)|₁·Δρ/2,  (∂x/∂ρ)|₁ = J·R/(D·c_max)  (flux BC ghost 외삽)."""
+    FV: Ṽ_k·dx_k/dt = (D/R²)[A_hi(x_{k+1}−x_k) − A_lo(x_k−x_{k−1})]/Δρ + δ_{k,Nr−1}·J/(c_max·R)
+      (Ṽ_k = (ρ_{k+1}³−ρ_k³)/3 = 단위구 셸부피/4π; 표면 면적항 ρ²=1; 결합계수에 Δρ는 1회 —
+       스케일은 √t selftest가 고정)
+    질량보존: Σ Ṽ_k Δx_k = Δt·J/(c_max·R) — CN+FV에서 기계정밀도 (selftest 1).
+    x_surf = x_{Nr−1} + (∂x/∂ρ)|₁·Δρ/2,  (∂x/∂ρ)|₁ = J·R/(D·c_max)  (flux-BC ghost 외삽)."""
 
     def __init__(self, n_p, nr, r_p_m, d_s, c_max, x_init):
         self.n_p, self.nr = int(n_p), int(nr)
         self.R = np.asarray(r_p_m, np.float64)              # [n_p] m
         self.D = float(d_s)
         self.c_max = float(c_max)
-        rho = np.arange(nr + 1) / nr                        # 셸 경계
+        rho = np.arange(nr + 1) / nr
         self.d_rho = 1.0 / nr
         self.Vk = (rho[1:] ** 3 - rho[:-1] ** 3) / 3.0      # [nr]
-        self.A_lo = rho[:-1] ** 2                           # 셸 하부 경계면 ρ² [nr] (k=0 → 0)
-        self.A_hi = rho[1:] ** 2                            # 셸 상부 경계면 ρ²
+        self.A_lo = rho[:-1] ** 2
+        self.A_hi = rho[1:] ** 2
         self.x = np.full((self.n_p, nr), float(x_init))
         self.J = np.zeros(self.n_p)                         # 표면 몰유속 [mol/m²/s], 리튬화 +
 
     def surf_x(self):
-        grad = self.J * self.R / (self.D * self.c_max)      # (∂x/∂ρ)|₁
+        grad = self.J * self.R / (self.D * self.c_max)
         return np.clip(self.x[:, -1] + 0.5 * self.d_rho * grad, 1e-6, 1.0 - 1e-6)
 
     def mean_x(self):
         return (self.x * self.Vk).sum(1) / self.Vk.sum()
 
     def step(self, dt):
-        """CN 한 스텝 (J 고정).  벡터화 Thomas (n_p 동시).
-        이산화: Ṽ_k dx_k/dt = (D/R²)[A_hi(x_{k+1}−x_k) − A_lo(x_k−x_{k−1})]/Δρ + src
-        → x_{k±1} 결합계수 = (D·dt/R²)·A/(Ṽ_k·Δρ)  [Δρ 1회 — 검증: √t selftest]"""
+        """CN 한 스텝 (J 고정).  벡터화 Thomas (n_p 동시)."""
         lam = self.D * dt / (self.R ** 2)                   # [n_p]
         aL = self.A_lo / (self.Vk * self.d_rho)             # [nr]
         aH = self.A_hi / (self.Vk * self.d_rho)
-        # M·x 연산자 (행 k: +aL·x_{k-1} −(aL+aH)·x_k +aH·x_{k+1}; 표면 aH항 제외=무유속,
-        # 유속은 소스 s로).  CN: (I − λ/2·M)x⁺ = (I + λ/2·M)x + dt·s
         lo = np.outer(lam, aL)                              # [n_p, nr] (k=0 열은 0)
         hi = np.outer(lam, aH)
-        hi[:, -1] = 0.0                                     # 표면 경계: 확산항 없음(소스로)
+        hi[:, -1] = 0.0                                     # 표면: 확산항 없음(유속은 소스로)
         dg = lo + hi
         s = np.zeros_like(self.x)
         s[:, -1] = self.J / (self.c_max * self.R) / self.Vk[-1]
         rhs = self.x + 0.5 * (lo * np.roll(self.x, 1, 1) - dg * self.x + hi * np.roll(self.x, -1, 1))
-        rhs[:, 0] -= 0.5 * lo[:, 0] * self.x[:, -1]         # roll 오염 제거 (k=0: lo=0이라 0이지만 명시)
+        rhs[:, 0] -= 0.5 * lo[:, 0] * self.x[:, -1]         # roll 오염 가드 (lo[:,0]=0이라 실제 0)
         rhs[:, -1] -= 0.5 * hi[:, -1] * self.x[:, 0]
         rhs += dt * s
-        # Thomas: A = I + (λ/2)(대각 dg, 부대각 −lo/−hi)
-        a = -0.5 * lo                                       # sub (k-1 결합)
-        c = -0.5 * hi                                       # super
+        a = -0.5 * lo
+        c = -0.5 * hi
         d = 1.0 + 0.5 * dg
         cp_ = np.zeros_like(c); dp = np.zeros_like(rhs)
         cp_[:, 0] = c[:, 0] / d[:, 0]
@@ -136,10 +130,16 @@ class RadialDiffusion:
         self.x = xn
 
 
-# ---------------------------------------------------------------- OCP / i0
+# ---------------------------------------------------------------- OCP / kinetics
+def _load_xy_csv(path):
+    tab = np.loadtxt(path, delimiter=',', skiprows=1)
+    o = np.argsort(tab[:, 0])
+    return tab[o, 0], tab[o, 1]
+
+
 class OCP:
     def __init__(self, x_tab, u_tab, c_max, x0, x100, provenance='', test_only=False):
-        o = np.argsort(x_tab)
+        o = np.argsort(np.asarray(x_tab, np.float64))
         self.x_tab = np.asarray(x_tab, np.float64)[o]
         self.u_tab = np.asarray(u_tab, np.float64)[o]
         self.c_max, self.x0, self.x100 = float(c_max), float(x0), float(x100)
@@ -150,10 +150,10 @@ class OCP:
 
     @staticmethod
     def load(ocp_csv, params_json):
-        tab = np.loadtxt(ocp_csv, delimiter=',', skiprows=1)
+        x, u = _load_xy_csv(ocp_csv)
         p = json.load(open(params_json))
-        return OCP(tab[:, 0], tab[:, 1], p['c_max_mol_m3'], p['x_at_charged'],
-                   p['x_at_discharged'], p.get('provenance', ''))
+        return OCP(x, u, p['c_max_mol_m3'], p['x_at_charged'], p['x_at_discharged'],
+                   p.get('provenance', ''))
 
     @staticmethod
     def synthetic_test():
@@ -163,15 +163,60 @@ class OCP:
                    provenance='SYNTHETIC-TEST-ONLY', test_only=True)
 
 
-def i0_of_x(i0_ref, x_s):
-    """i0(x) = i0_ref·√(4x(1−x)) — x=0.5에서 i0_ref로 정규화한 표준 (c_e 고정, 단일이온 SE)."""
-    return i0_ref * np.sqrt(np.clip(4.0 * x_s * (1.0 - x_s), 1e-4, None))
+class Kinetics:
+    """면별 Butler-Volmer (+옵션 필름저항).  I_f [A] = e→i(탈리튬) 양수.
+
+      i_ct(η_s) = i0(x)·A·[exp(α_a f η_s) − exp(−α_c f η_s)],  f = F/RT
+      η_s = Δφ − U − I_f·ASR/A   (ASR>0이면 면별 스칼라 Newton — 유일근: 좌변↑/우변↓)
+      i0(x) = i0_ref·(x/½)^{α_c}·((1−x)/½)^{α_a}   (x=½에서 i0_ref; α=½/½ → √(4x(1−x)) 구형)
+      c_e 항 없음 — 단일이온 SE(활동도 고정) = SSB 물리."""
+
+    CLIP = 40.0
+
+    def __init__(self, i0_ref, alpha_a=0.5, alpha_c=0.5, asr_film=0.0, temp_k=298.15):
+        self.i0_ref, self.aa, self.ac = float(i0_ref), float(alpha_a), float(alpha_c)
+        self.asr = float(asr_film)                          # [Ω·m²]
+        self.T = float(temp_k)
+        self.f = F_CONST / (R_GAS * self.T)                 # [1/V]
+
+    def i0(self, x):
+        x = np.clip(x, 1e-4, 1.0 - 1e-4)
+        return self.i0_ref * (x / 0.5) ** self.ac * ((1.0 - x) / 0.5) ** self.aa
+
+    def _ct(self, eta, i0A):
+        ea = np.exp(np.clip(self.aa * self.f * eta, -self.CLIP, self.CLIP))
+        ec = np.exp(np.clip(-self.ac * self.f * eta, -self.CLIP, self.CLIP))
+        I = i0A * (ea - ec)
+        g = i0A * self.f * (self.aa * ea + self.ac * ec)    # dI/dη > 0
+        return I, g
+
+    def face_current(self, X, i0_f, A_face, I_init=None):
+        """X = Δφ − U.  반환 (I_f, g_eff=dI/dX, η_s)."""
+        i0A = i0_f * A_face
+        if self.asr <= 0.0:
+            I, g = self._ct(X, i0A)
+            return I, g, X
+        rA = self.asr / A_face                              # [Ω] per face
+        I = np.zeros_like(X) if I_init is None else I_init.copy()
+        for _ in range(12):                                 # h(I)=I−i_ct(X−I·rA)=0, 단조 → Newton
+            eta = X - I * rA
+            Ict, g = self._ct(eta, i0A)
+            h = I - Ict
+            dh = 1.0 + g * rA
+            dI = -h / dh
+            I = I + dI
+            if float(np.max(np.abs(dI))) < 1e-14 + 1e-10 * float(np.max(np.abs(I)) + 1e-30):
+                break
+        eta = X - I * rA
+        _, g = self._ct(eta, i0A)
+        return I, g / (1.0 + g * rA), eta
 
 
-# ---------------------------------------------------------------- 결합망 조립 (정적 1회)
+# ---------------------------------------------------------------- 결합망 (정적 CSR 1회 + 데이터 갱신)
 class CellSystem:
-    """v1(solve_reaction_current)과 같은 격자 규약: 6-이웃 face, plate band, anchored filter.
-    정적(불변) 부분을 1회 조립해두고, Newton 반복에서는 BV 면 값만 갱신해 CSR 재조립."""
+    """v1(solve_reaction_current)과 같은 격자 규약(6-이웃 face, plate band, anchored filter).
+    CSR 구조를 1회 조립(BV 자리 = 0 placeholder)하고, Newton 반복에서는 data 배열만 갱신
+    (15M+ 엔트리 재조립/재전송 없음 — 프로덕션 성능의 핵심)."""
 
     def __init__(self, sid, sig_e_tab_S_cm, sig_i_tab_S_cm, pid, n_am, vox_um,
                  z_top_um=None, z_bot_um=0.0):
@@ -181,6 +226,7 @@ class CellSystem:
         sig_i = np.asarray(sig_i_tab_S_cm, np.float64)[sid] * 100.0
         cond_e, cond_i = sig_e > 0, sig_i > 0
         nx, ny, nz = sid.shape
+        self.area_m2 = nx * ny * vox_m * vox_m              # 측면(RVE) 단면적 — R_int 환산용
         zc = (np.arange(nz) + 0.5) * vox_um
         band = vox_um + 0.10
         z_b = float(z_bot_um)
@@ -213,7 +259,7 @@ class CellSystem:
             m = (A >= 0) & (B >= 0)
             if not m.any():
                 return
-            g = (2.0 * sa[m] * sb[m] / (sa[m] + sb[m])) * vox_m       # 조화평균 face-컨덕턴스 [S]
+            g = (2.0 * sa[m] * sb[m] / (sa[m] + sb[m])) * vox_m       # 조화평균 face g [S]
             a2, b2 = A[m] + off, B[m] + off
             rows.append(a2); cols.append(b2); vals.append(-g)
             rows.append(b2); cols.append(a2); vals.append(-g)
@@ -238,7 +284,7 @@ class CellSystem:
         dist = np.maximum(np.abs(z_p - zc[kk[m]]), 0.5 * vox_um) * 1e-6
         gT = sig_i[ii[m], jj[m], kk[m]] * vox_m * vox_m / dist
         np.add.at(diag0, Ai[m] + self.n_e, gT)              # 접지(φ=0): diag-only
-        # BV 면 목록 (값은 매 Newton 갱신)
+        # BV 면 목록
         am_m = (sid == 1) | (sid == 2)
         ion_m = (sid == 5) | (sid == 6)
         fe, fi, fp = [], [], []
@@ -258,37 +304,57 @@ class CellSystem:
         self.n_bv = len(self.f_e)
         self.A_face = vox_m * vox_m
         self.n_am = int(n_am)
-        diag0[diag0 == 0.0] = 1.0                           # degree-0 가드 (v1 규약; CG x0 주의)
-        self.rows0 = np.concatenate(rows + [np.arange(self.N)])
-        self.cols0 = np.concatenate(cols + [np.arange(self.N)])
-        self.vals0 = np.concatenate(vals + [diag0])
-        self._static_nnz = len(self.vals0)
+        # degree-0 가드 — 단 BV 면을 가진 노드는 제외 (물리리뷰 #4: v1은 g_ct가 정적 대각에
+        # 있었지만 v2는 Newton 대각으로만 들어옴 → 여기서 1.0을 박으면 "가짜 1 S 접지"가 생겨
+        # BV 면을 타고 유령 전류 루프가 돎.  제외하면 해당 노드는 부유 전위(ΣI_f=0)로 수렴 = 물리)
+        iso = diag0 == 0.0
+        iso[self.f_e] = False
+        iso[self.f_i] = False
+        diag0[iso] = 1.0
         self._diag0 = diag0
+        # ---- CSR 1회 조립: 정적 + BV placeholder(0) + 대각.  이후 data만 갱신 ----
+        rows_all = np.concatenate(rows + [self.f_e, self.f_i, np.arange(self.N)])
+        cols_all = np.concatenate(cols + [self.f_i, self.f_e, np.arange(self.N)])
+        nnz_static = sum(len(v) for v in vals)
+        vals_all = np.concatenate(vals + [np.zeros(2 * self.n_bv), diag0])
+        # 좌표별 유일성: 네트워크 엣지·plate 엣지·BV pair·diag 는 모두 서로 다른 (r,c) —
+        # 단 BV pair가 같은 (e,i) 복셀쌍에 축 2회 나올 수는 없음(격자 인접은 유일축).  같은
+        # (r,c) 중복이 없으므로 COO→CSR 매핑이 1:1 (아래 위치맵 전제; selftest로 재검증).
+        M = sparse.coo_matrix((np.arange(len(vals_all), dtype=np.float64) + 1.0,
+                               (rows_all, cols_all)), shape=(self.N, self.N)).tocsr()
+        if len(M.data) != len(vals_all):
+            raise RuntimeError('duplicate COO coordinates — 위치맵 전제 붕괴 (assembly bug)')
+        # M.data[j] = (COO 인덱스 k)+1 → perm[k] = k번 COO 엔트리의 CSR data 위치 j.
+        # (방향 주의 — 산란은 data0[perm]=vals, 수집이 아님; selftest #0이 brute-force와 대조)
+        perm = np.argsort(M.data)
+        self.J = sparse.csr_matrix((np.empty(len(vals_all)), M.indices, M.indptr),
+                                   shape=(self.N, self.N))
+        self.data0 = np.empty(len(vals_all))
+        self.data0[perm] = vals_all                         # 정적값 (BV 자리 0)
+        self.pos_ei = perm[nnz_static:nnz_static + self.n_bv]           # (f_e,f_i) off-diag
+        self.pos_ie = perm[nnz_static + self.n_bv:nnz_static + 2 * self.n_bv]
+        self.pos_diag = perm[nnz_static + 2 * self.n_bv:]               # 노드별 대각 위치
+        self.J.data[:] = self.data0
 
-    # -- 비선형 잔차/야코비 (φ 전체 벡터; U_f, i0_f = 면별) --
-    def _face_eta_I(self, phi, U_f, i0_f):
-        eta = phi[self.f_e] - phi[self.f_i] - U_f
-        arg = np.clip(BETA * eta, -40.0, 40.0)
-        I_f = 2.0 * i0_f * self.A_face * np.sinh(arg)       # [A], e→i 양수(탈리튬)
-        g_f = 2.0 * i0_f * self.A_face * BETA * np.cosh(arg)  # dI/dη [S] > 0
-        return eta, I_f, g_f
+    # ---- 연산 ----
+    def _L0_apply(self, phi):
+        self.J.data[:] = self.data0
+        return self.J @ phi
 
-    def residual(self, phi, U_f, i0_f, I_app):
-        """F(φ) = L0·φ + BV(φ) − b;  b[B] = −I_app (방전: 외부로 인출)."""
-        L0 = sparse.coo_matrix((self.vals0, (self.rows0, self.cols0)),
-                               shape=(self.N, self.N)).tocsr()
-        Fv = L0 @ phi
-        _, I_f, _ = self._face_eta_I(phi, U_f, i0_f)
+    def residual(self, phi, U_f, i0_f, kin, I_app, I_faces_init=None):
+        """F(φ) = L0·φ + BV(φ) − b;  b[B] = −I_app (방전: 외부로 인출).  반환 (F, I_f, η_s)."""
+        Fv = self._L0_apply(phi)
+        X = phi[self.f_e] - phi[self.f_i] - U_f
+        I_f, _, eta_s = kin.face_current(X, i0_f, self.A_face, I_init=I_faces_init)
         np.add.at(Fv, self.f_e, I_f)
         np.add.at(Fv, self.f_i, -I_f)
-        Fv[self.iB] += I_app                                # b[B]=−I_app 이항
-        return Fv, I_f
+        Fv[self.iB] += I_app
+        return Fv, I_f, eta_s
 
-    def newton(self, phi, U_f, i0_f, I_app, tol_rel=1e-8, max_it=25):
-        """감쇠 Newton.  J = L0 + Σ_f g_f (e_a−e_b)(e_a−e_b)ᵀ — SPD → CG(warm).
-        수렴 판정 = max(노드별 KCL 잔차 ∞-norm, e-망 집계잔차 |I_app−Σi_am|) / |I_app|
-        — 집계 항이 없으면 노드별 1e-8이 큰 격자(n_e~1e6)에서 총전류 오차로 누적될 수 있음."""
-        Fv, I_f = self.residual(phi, U_f, i0_f, I_app)
+    def newton(self, phi, U_f, i0_f, kin, I_app, tol_rel=1e-8, max_it=25):
+        """감쇠 Newton.  J = L0 + Σ_f g_eff(e_a−e_b)(e_a−e_b)ᵀ — SPD → CG.
+        수렴 = max(노드별 잔차 ∞-norm, e-망 집계잔차 |I_app−Σi_am|) / |I_app|."""
+        Fv, I_f, eta_s = self.residual(phi, U_f, i0_f, kin, I_app)
         scale = max(abs(I_app), 1e-12)
 
         def _err(F):
@@ -301,35 +367,56 @@ class CellSystem:
             r = _err(Fv)
             if r < tol_rel:
                 break
-            # float64 노이즈-바닥 정체 감지: 이미 잘 수렴한 상태(best<1e-3)에서 2연속 무개선일
-            # 때만 종료 — 초기 비선형 감쇠 구간(r~1, 느린 하강)을 오판해 끊지 않도록 제한.
-            if r >= 0.5 * best:
+            if r >= 0.5 * best:                             # 노이즈-바닥 정체 감지 (수렴 근처 한정)
                 stall += 1
                 if stall >= 2 and best < 1e-3:
                     break
             else:
                 stall = 0
             best = min(best, r)
-            _, I_f, g_f = self._face_eta_I(phi, U_f, i0_f)
+            X = phi[self.f_e] - phi[self.f_i] - U_f
+            I_f, g_f, eta_s = kin.face_current(X, i0_f, self.A_face, I_init=I_f)
+            data = self.data0.copy()
+            data[self.pos_ei] = -g_f
+            data[self.pos_ie] = -g_f
             diag_add = np.zeros(self.N)
             np.add.at(diag_add, self.f_e, g_f)
             np.add.at(diag_add, self.f_i, g_f)
-            rows = np.concatenate([self.rows0, self.f_e, self.f_i, np.arange(self.N)])
-            cols = np.concatenate([self.cols0, self.f_i, self.f_e, np.arange(self.N)])
-            vals = np.concatenate([self.vals0, -g_f, -g_f, diag_add])
-            J = sparse.coo_matrix((vals, (rows, cols)), shape=(self.N, self.N)).tocsr()
-            dphi, info = _cg(J, -Fv, x0=None)
+            data[self.pos_diag] = self._diag0 + diag_add
+            self.J.data[:] = data
+            dphi, info = _cg(self.J, -Fv, x0=None)
+            self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             step = 1.0
             for k in range(10):                             # 감쇠: ||F|| 감소 보장
-                Fn, I_fn = self.residual(phi + step * dphi, U_f, i0_f, I_app)
+                Fn, I_fn, eta_n = self.residual(phi + step * dphi, U_f, i0_f, kin, I_app,
+                                                I_faces_init=I_f)
                 if (np.linalg.norm(Fn, np.inf)
                         <= np.linalg.norm(Fv, np.inf) * (1 - 0.25 * step)) or k == 9:
                     break                                    # k==9: 마지막 평가 스텝 그대로 적용
                 step *= 0.5
             phi = phi + step * dphi
-            Fv, I_f = Fn, I_fn
+            Fv, I_f, eta_s = Fn, I_fn, eta_n
             it += 1
-        return phi, I_f, _err(Fv), it
+        return phi, I_f, eta_s, _err(Fv), it
+
+    def solve_cv(self, phi, U_f, i0_f, kin, V_target, I_guess, r_int_abs=0.0,
+                 tol_v=2e-4, max_it=10):
+        """전압 홀드(CV): V_terminal(I) = φ_B(I) − I·R_int = V_target 이 되는 I를 시컨트로
+        — 각 평가는 갈바노 Newton(warm).  단조 dV/dI<0 → 시컨트 안정."""
+        I0 = I_guess
+        phi, I_f, eta_s, r, _ = self.newton(phi, U_f, i0_f, kin, I0)
+        V0 = float(phi[self.iB]) - I0 * r_int_abs
+        I1 = I0 * 1.05 + (1e-3 * abs(I0) + 1e-12) * np.sign((V0 - V_target) or 1.0)
+        for _ in range(max_it):
+            if abs(V0 - V_target) < tol_v:
+                break
+            phi, I_f, eta_s, r, _ = self.newton(phi, U_f, i0_f, kin, I1)
+            V1 = float(phi[self.iB]) - I1 * r_int_abs
+            if abs(V1 - V0) < 1e-15:
+                break
+            I2 = I1 + (V_target - V1) * (I1 - I0) / (V1 - V0)
+            I0, V0, I1 = I1, V1, I2
+        return phi, I_f, eta_s, r, I0
 
     def particle_current(self, I_f):
         """입자별 리튬화 전류 [A] (방전 +).  I_f 는 e→i(탈리튬) 양수 → 부호 반전 합산."""
@@ -338,88 +425,172 @@ class CellSystem:
         np.add.at(i_am, self.f_pid[m], -I_f[m])
         return i_am
 
+    def energy_audit(self, phi, I_f, eta_s, U_f, kin, I_app):
+        """P_ohm(e/i) + Σ I·η_s + Σ I²·ASR/A + Σ I·U + I_app·V = 0 (기계정밀도 감사).
+        반환 dict [W] — Q_* 발열 분해로도 그대로 사용."""
+        Pn = phi * self._L0_apply(phi)
+        P_ohm_e = float(Pn[:self.n_e].sum() + Pn[self.iB])
+        P_ohm_i = float(Pn[self.n_e:self.n_e + self.n_i].sum())
+        P_ct = float((I_f * eta_s).sum())
+        P_film = float((I_f ** 2).sum() * kin.asr / self.A_face) if kin.asr > 0 else 0.0
+        P_chem = float((I_f * U_f).sum())
+        V = float(phi[self.iB])
+        res = P_ohm_e + P_ohm_i + P_ct + P_film + P_chem + I_app * V
+        den = max(abs(I_app) * max(abs(V), 1.0), 1e-30)
+        return {'P_ohm_e': P_ohm_e, 'P_ohm_i': P_ohm_i, 'P_ct': P_ct, 'P_film': P_film,
+                'P_chem': P_chem, 'V': V, 'balance_rel': res / den}
+
 
 # ---------------------------------------------------------------- 시간 루프
-def simulate(sys_, ocp, r_p_m, d_s, i0_ref, c_rate, nr=20, v_min=3.0, v_max=4.5,
+def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
              dx_max=0.02, dt_init=1.0, dt_max=120.0, t_max=None, charge=False,
-             verbose=True):
-    """갈바노스타틱 방전(기본)/충전.  반환: dict of arrays (t, V, x_mean, …)."""
+             cv_hold=False, i_cut_frac=0.05, r_int_ohm_cm2=0.0, x_init=None,
+             dudt=None, verbose=True):
+    """CC 방전(기본)/충전 (+cv_hold=True → V-리밋 도달 후 CV 홀드 = CCCV).
+    r_int_ohm_cm2: 집전체 실측 R_int 직렬(시나리오 부하, STEP3 규약) — 터미널 V·컷오프에 반영.
+    dudt: (x_tab, dUdT_tab) 있으면 Q_rev = Σ I_f·T·dU/dT(x_f) 출력 (관례: I_f = 탈리튬 +)."""
     n_am = sys_.n_am
-    x_init = ocp.x0 if not charge else ocp.x100
+    x_ini = float(x_init) if x_init is not None else (ocp.x0 if not charge else ocp.x100)
     x_end = ocp.x100 if not charge else ocp.x0
-    rad = RadialDiffusion(n_am, nr, r_p_m, d_s, ocp.c_max, x_init)
-    V_p = 4.0 / 3.0 * np.pi * r_p_m ** 3                    # [m³] 물리 구부피 (용량 기준)
+    rad = RadialDiffusion(n_am, nr, r_p_m, d_s, ocp.c_max, x_ini)
+    V_p = 4.0 / 3.0 * np.pi * np.asarray(r_p_m) ** 3        # [m³] 물리 구부피 (용량 기준)
     cap_As = F_CONST * ocp.c_max * abs(ocp.x100 - ocp.x0) * V_p.sum()
     I_1C = cap_As / 3600.0
-    I_app = c_rate * I_1C * (1.0 if not charge else -1.0)   # 방전 +(인출)
-    # BV 면이 하나도 없는 입자 = dead (전류 0으로 자연 처리 — 미세구조 효과 그 자체)
+    I_cc = c_rate * I_1C * (1.0 if not charge else -1.0)    # 방전 +(인출)
+    R_int_abs = (r_int_ohm_cm2 * 1e-4 / sys_.area_m2) if r_int_ohm_cm2 > 0 else 0.0   # [Ω]
     has_face = np.zeros(n_am, bool)
     has_face[np.unique(sys_.f_pid[sys_.f_pid >= 0])] = True
     if verbose:
         print(f'  step4-v2: n_am={n_am} (dead {int((~has_face).sum())}), BV faces {sys_.n_bv:,}, '
-              f'dof {sys_.N:,}, I_1C={I_1C:.3e} A, I_app={I_app:.3e} A ({c_rate:g}C)', flush=True)
+              f'dof {sys_.N:,}, I_1C={I_1C:.3e} A, I_cc={I_cc:.3e} A ({c_rate:g}C'
+              f'{", CCCV" if cv_hold else ""}), R_int={r_int_ohm_cm2:g} Ω·cm², '
+              f'α={kin.aa}/{kin.ac}, ASR_film={kin.asr:g} Ω·m², T={kin.T:g} K', flush=True)
     phi = np.zeros(sys_.N)
-    U0 = float(ocp.U(x_init))
-    phi[:sys_.n_e] = U0; phi[sys_.iB] = U0                  # 초기추정 = 평형
-    out = {k: [] for k in ('t', 'V', 'x_mean', 'x_surf_p05', 'x_surf_p50', 'x_surf_p95',
-                           'eta_kin_mean', 'eta_diff_mean', 'newton_it', 'kcl_rel')}
+    U0 = float(ocp.U(x_ini))
+    phi[:sys_.n_e] = U0; phi[sys_.iB] = U0
+    keys = ('t', 'V', 'V_terminal', 'I', 'x_mean', 'x_surf_p05', 'x_surf_p50', 'x_surf_p95',
+            'eta_kin_mean', 'eta_diff_mean', 'newton_it', 'newton_resid', 'kcl_rel',
+            'energy_balance_rel',
+            'Q_ohm_e_W', 'Q_ohm_i_W', 'Q_ct_W', 'Q_film_W', 'Q_rint_W', 'Q_rev_W')
+    out = {k: [] for k in keys}
     t, dt = 0.0, dt_init
-    x_pid_prev = None
+    phase = 'cc'
+    I_app = I_cc
+    v_lim = v_min if not charge else v_max
+    dxs_meas = 0.0
+    x_s_prev = None
+    reason = 't_max'
     while True:
         x_s = rad.surf_x()
-        U_f = ocp.U(x_s)[np.clip(sys_.f_pid, 0, n_am - 1)]  # 면별 (입자 표면 SOC)
-        i0_f = i0_of_x(i0_ref, x_s)[np.clip(sys_.f_pid, 0, n_am - 1)]
-        phi, I_f, resid, n_it = sys_.newton(phi, U_f, i0_f, I_app)
-        i_am = sys_.particle_current(I_f)                   # 리튬화 + [A]
-        kcl = abs(i_am.sum() * (1.0) - I_app) / max(abs(I_app), 1e-30)
-        V_cell = float(phi[sys_.iB])
+        fp = np.clip(sys_.f_pid, 0, n_am - 1)
+        U_f = ocp.U(x_s)[fp]
+        i0_f = kin.i0(x_s)[fp]
+        if phase == 'cc':
+            phi, I_f, eta_s, resid, n_it = sys_.newton(phi, U_f, i0_f, kin, I_app)
+        else:                                               # CV 홀드: 터미널 V = v_lim 유지
+            phi, I_f, eta_s, resid, I_app = sys_.solve_cv(
+                phi, U_f, i0_f, kin, v_lim, I_app, r_int_abs=R_int_abs)
+            n_it = -1
+        i_am = sys_.particle_current(I_f)
+        if resid > 1e-6:                                    # F2 규약: 침묵 실패 금지 (수치리뷰 #5)
+            print(f'    ⚠ step4 Newton 잔차 {resid:.1e} > 1e-6 @t={t:.1f}s — 이 스텝 신뢰 주의', flush=True)
+        kcl = abs(i_am.sum() - I_app) / max(abs(I_app), 1e-30)
+        aud = sys_.energy_audit(phi, I_f, eta_s, U_f, kin, I_app)
+        V_cell = aud['V']
+        V_term = V_cell - I_app * R_int_abs
         x_mean_p = rad.mean_x()
-        eta_f = phi[sys_.f_e] - phi[sys_.f_i] - U_f
-        w = np.abs(I_f) + 1e-30
         x_bar = float((x_mean_p * V_p).sum() / V_p.sum())
-        out['t'].append(t); out['V'].append(V_cell)
+        w = np.abs(I_f) + 1e-30
+        out['t'].append(t); out['V'].append(V_cell); out['V_terminal'].append(V_term)
+        out['I'].append(I_app)
         out['x_mean'].append(x_bar)
         out['x_surf_p05'].append(float(np.percentile(x_s[has_face], 5)))
         out['x_surf_p50'].append(float(np.percentile(x_s[has_face], 50)))
         out['x_surf_p95'].append(float(np.percentile(x_s[has_face], 95)))
-        out['eta_kin_mean'].append(float((np.abs(eta_f) * w).sum() / w.sum()))
+        out['eta_kin_mean'].append(float((np.abs(eta_s) * w).sum() / w.sum()))
         out['eta_diff_mean'].append(float(np.mean(np.abs(ocp.U(x_s[has_face])
                                                          - ocp.U(x_mean_p[has_face])))))
-        out['newton_it'].append(n_it); out['kcl_rel'].append(kcl)
+        out['newton_it'].append(n_it); out['newton_resid'].append(resid)
+        out['kcl_rel'].append(kcl)
+        out['energy_balance_rel'].append(abs(aud['balance_rel']))
+        out['Q_ohm_e_W'].append(aud['P_ohm_e']); out['Q_ohm_i_W'].append(aud['P_ohm_i'])
+        out['Q_ct_W'].append(aud['P_ct']); out['Q_film_W'].append(aud['P_film'])
+        out['Q_rint_W'].append(I_app * I_app * R_int_abs)
+        out['Q_rev_W'].append(float((I_f * kin.T * np.interp(x_s, dudt[0], dudt[1])[fp]).sum())
+                              if dudt is not None else np.nan)
         if verbose and (len(out['t']) % 10 == 1):
-            print(f'    t={t:9.1f}s  V={V_cell:.4f}  x̄={x_bar:.4f}  '
-                  f'ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV  Newton {n_it}  KCL {kcl:.1e}', flush=True)
-        # 종료: 전압창 / SOC 창 / 시간
+            print(f'    t={t:9.1f}s [{phase}] V={V_term:.4f} I={I_app:.3e} x̄={x_bar:.4f} '
+                  f'ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV E-bal {aud["balance_rel"]:.1e} '
+                  f'KCL {kcl:.1e}', flush=True)
+        # ---- 종료/전환 ----
         done_soc = (x_bar >= x_end - 1e-4) if not charge else (x_bar <= x_end + 1e-4)
-        if V_cell < v_min or V_cell > v_max or done_soc or (t_max and t >= t_max):
-            reason = ('V_cutoff' if (V_cell < v_min or V_cell > v_max) else
-                      ('soc_end' if done_soc else 't_max'))
+        v_out = (V_term < v_min) if not charge else (V_term > v_max)
+        if phase == 'cc' and v_out and cv_hold:
+            phase = 'cv'
             if verbose:
-                print(f'  step4-v2 END: {reason}  t={t:.0f}s  delivered '
-                      f'{abs(x_bar - x_init) / abs(ocp.x100 - ocp.x0) * 100:.1f}% of 1C-capacity window', flush=True)
-            break
-        # 확산 전진 (면전류 → 표면 몰유속; J + = 리튬화)
+                print(f'    → CV hold @ {v_lim:.3f} V (terminal)', flush=True)
+        elif phase == 'cv' and abs(I_app) < i_cut_frac * I_1C:
+            reason = 'cv_i_cut'; break
+        elif phase == 'cc' and v_out:
+            reason = 'V_cutoff'; break
+        if done_soc:
+            reason = 'soc_end'; break
+        if t_max and t >= t_max:
+            reason = 't_max'; break
+        # ---- 확산 전진 ----
         rad.J = i_am / (F_CONST * 4.0 * np.pi * rad.R ** 2)
-        rad.step(dt)
+        # SOC-창 끝 오버슛 클램프: 남은 창을 다 채우는 시간보다 dt를 길게 두지 않음 (+5%)
+        if abs(I_app) > 0:
+            dt_end = abs(x_end - x_bar) * F_CONST * ocp.c_max * V_p.sum() / abs(I_app) * 1.05
+            dt = min(dt, max(dt_end, 1e-3))
+        # 표면-스텝 거부-재시도 (물리리뷰 #3: 사후 축소만으론 과대 스텝이 기록에 남음).
+        # 같은 새 J 기준으로 전/후 표면 SOC를 재서 2·dx_max 초과 시 되돌리고 dt 반감.
+        x_s_pre = rad.surf_x()
+        x_keep = rad.x.copy()
+        for _try in range(6):
+            rad.step(dt)
+            dxs_meas = float(np.max(np.abs(rad.surf_x() - x_s_pre)))
+            if dxs_meas <= 2.0 * dx_max or dt <= 0.05:
+                break
+            rad.x = x_keep.copy()
+            dt *= 0.5
         t += dt
-        # adaptive Δt: 표면 SOC 스텝 제한
-        dxs = np.max(np.abs(rad.J) * dt / (ocp.c_max * rad.R / 3.0) + 1e-30)
-        dt = float(np.clip(dt * np.clip(dx_max / max(dxs, 1e-9), 0.5, 1.3), 0.2, dt_max))
+        if float(rad.x.max()) > 1.01 or float(rad.x.min()) < -0.01:
+            reason = 'soc_overrun'                          # 셸 SOC 물리범위 이탈 (flat-OCP 크롤 가드)
+            break
+        # 측정-피드백 적응 dt: 실제 표면 SOC 스텝을 dx_max로 제한 (모델 추정이 아니라 실측)
+        dt = float(np.clip(dt * np.clip(dx_max / max(dxs_meas, 1e-9), 0.5, 1.3), 0.05, dt_max))
+    if verbose:
+        q_pct = abs(x_bar - x_ini) / abs(ocp.x100 - ocp.x0) * 100
+        print(f'  step4-v2 END: {reason}  t={t:.0f}s  delivered {q_pct:.1f}% of window '
+              f'(E-bal max {max(out["energy_balance_rel"]):.1e})', flush=True)
+        if getattr(sys_, 'last_cg_info', 0):
+            print(f'  ⚠ CG maxiter 도달 이력 (info={sys_.last_cg_info}) — 해 품질 확인 요망', flush=True)
     out = {k: np.asarray(v) for k, v in out.items()}
+    # V-컷오프 정밀값: 마지막 두 점 보간 (오버슛 오독 방지)
+    Vt = out['V_terminal']
+    if reason == 'V_cutoff' and len(Vt) >= 2:
+        vv = v_min if not charge else v_max
+        f = (Vt[-2] - vv) / max(abs(Vt[-2] - Vt[-1]), 1e-30)
+        q_arr = np.abs(out['x_mean'] - x_ini) / abs(ocp.x100 - ocp.x0)
+        out['q_frac_at_cutoff'] = float(q_arr[-2] + f * (q_arr[-1] - q_arr[-2]))
+    else:
+        out['q_frac_at_cutoff'] = float(abs(out['x_mean'][-1] - x_ini) / abs(ocp.x100 - ocp.x0))
     out['x_final_per_particle'] = rad.mean_x()
     out['dead_particle'] = ~has_face
-    out['I_app_A'] = I_app; out['I_1C_A'] = I_1C
-    out['params'] = dict(c_rate=c_rate, d_s=d_s, i0=i0_ref, nr=nr, v_min=v_min,
-                         c_max=ocp.c_max, x0=ocp.x0, x100=ocp.x100,
+    out['I_1C_A'] = I_1C
+    out['end_reason'] = reason
+    out['params'] = dict(c_rate=c_rate, d_s=d_s, i0=kin.i0_ref, alpha_a=kin.aa, alpha_c=kin.ac,
+                         asr_film=kin.asr, temp_k=kin.T, nr=nr, v_min=v_min, v_max=v_max,
+                         cv_hold=bool(cv_hold), r_int_ohm_cm2=r_int_ohm_cm2,
+                         c_max=ocp.c_max, x0=ocp.x0, x100=ocp.x100, x_init=x_ini,
                          ocp_provenance=ocp.provenance, test_only=ocp.test_only)
     return out
 
 
 # ---------------------------------------------------------------- selftests
 def _selftest_radial():
-    """구형확산 해석 체크 3종."""
     ok = True
-    # 1) 질량보존 (기계정밀도): 일정 J 리튬화, Σ V_k Δx = Δt·J/(c_max·R)
     rad = RadialDiffusion(3, 25, np.array([2e-6, 5e-6, 1e-5]), 3e-14, 50000.0, 0.3)
     rad.J = np.array([1e-6, 2e-6, 0.5e-6])
     tot0 = (rad.x * rad.Vk).sum(1).copy()
@@ -430,18 +601,16 @@ def _selftest_radial():
     e1 = np.max(np.abs(got - exp) / exp)
     ok &= e1 < 1e-10
     print(f'radial mass conservation: max rel err {e1:.2e}  {"OK" if e1 < 1e-10 else "FAIL"}')
-    # 2) 정상상태 무유속: J=0 → x 균일 유지 (초기 균일)
     rad = RadialDiffusion(1, 20, np.array([5e-6]), 3e-14, 50000.0, 0.5)
     for _ in range(100):
         rad.step(10.0)
     e2 = float(np.max(np.abs(rad.x - 0.5)))
     ok &= e2 < 1e-12
     print(f'radial equilibrium hold: max drift {e2:.2e}  {"OK" if e2 < 1e-12 else "FAIL"}')
-    # 3) 단시간 √t 침투 (평면 극한): Δx_surf = 2J√(t/πD)/c_max, t ≪ R²/D
     R, D, cm = 10e-6, 1e-14, 50000.0
     rad = RadialDiffusion(1, 400, np.array([R]), D, cm, 0.3)
     rad.J = np.array([2e-6])
-    dt, nstep = 0.05, 200                                   # t=10 s, √(Dt)=0.32µm ≪ R
+    dt, nstep = 0.05, 200
     for _ in range(nstep):
         rad.step(dt)
     t = dt * nstep
@@ -455,7 +624,6 @@ def _selftest_radial():
 
 
 def _build_sandwich(nxy=6, nz=12, vox_um=0.5):
-    """v1 selftest와 같은 AM/SE 샌드위치 (입자 1개)."""
     sid = np.zeros((nxy, nxy, nz), np.int8)
     sid[:, :, :nz // 2] = 1
     sid[:, :, nz // 2:] = 6
@@ -464,133 +632,214 @@ def _build_sandwich(nxy=6, nz=12, vox_um=0.5):
 
 
 def _selftest_cell():
-    """결합해 체크: 평형 OCV 재현 / 저율 직렬-R / KCL / v1 분포 일치."""
+    """평형 OCV / 저율 직렬-R / KCL / 에너지 수지 / CSR 위치맵 / ASR·CV / v1 회귀."""
     ok = True
     ocp = OCP.synthetic_test()
-    # σ를 낮춰(1e-4 S/cm) 네트워크 저항과 BV 저항이 같은 자릿수가 되게 — 직렬-R 해석해가
-    # 두 항 모두를 실제로 검증하도록 (고σ면 BV가 전부 지배해 네트워크 항 검증력이 없음)
     sid, pid, vox = _build_sandwich(nxy=6, nz=12, vox_um=5.0)
-    se_cm, si_cm = 1e-4, 1e-4                                # S/cm
+    se_cm, si_cm = 1e-4, 1e-4                                # 네트워크·BV 저항 동급化 (검증력)
     sig_e = np.array([0., se_cm, 0., 0., 0., 0., 0.])
     sig_i = np.array([0., 0., 0., 0., 0., 0., si_cm])
     sysm = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=12 * vox, z_bot_um=0.0)
-    # 1) I=0 → V=OCV(x0), η=0 (부호규약 셀프체크)
     x0 = ocp.x0
-    i0_ref = 2.0
+    kin = Kinetics(i0_ref=2.0)
     U_f = np.full(sysm.n_bv, float(ocp.U(x0)))
-    i0_f = np.full(sysm.n_bv, float(i0_of_x(i0_ref, x0)))
-    phi = np.zeros(sysm.N)                                   # 평형 초기화 (simulate()와 동일 규약)
+    i0_f = np.full(sysm.n_bv, float(kin.i0(x0)))
+    # 0) CSR 위치맵 = brute-force COO 조립과 일치 (무작위 g)
+    rng = np.random.default_rng(0)
+    g_r = rng.uniform(1e-9, 1e-7, sysm.n_bv)
+    data = sysm.data0.copy()
+    data[sysm.pos_ei] = -g_r; data[sysm.pos_ie] = -g_r
+    da = np.zeros(sysm.N)
+    np.add.at(da, sysm.f_e, g_r); np.add.at(da, sysm.f_i, g_r)
+    data[sysm.pos_diag] = sysm._diag0 + da
+    sysm.J.data[:] = data
+    # brute force 비교: (index-map으로 갱신한 J)@x  vs  L0@x + BV 기여 직접 합산
+    xr = rng.standard_normal(sysm.N)
+    lhs = sysm.J @ xr
+    rhs = sysm._L0_apply(xr).copy()
+    np.add.at(rhs, sysm.f_e, g_r * (xr[sysm.f_e] - xr[sysm.f_i]))
+    np.add.at(rhs, sysm.f_i, -g_r * (xr[sysm.f_e] - xr[sysm.f_i]))
+    e0 = float(np.max(np.abs(lhs - rhs)) / max(np.max(np.abs(rhs)), 1e-30))
+    ok &= e0 < 1e-12
+    print(f'CSR index-map ≡ brute-force: rel {e0:.2e}  {"OK" if e0 < 1e-12 else "FAIL"}')
+    # 1) I=0 → V=OCV
+    phi = np.zeros(sysm.N)
     phi[:sysm.n_e] = float(ocp.U(x0)); phi[sysm.iB] = float(ocp.U(x0))
-    phi, I_f, r, it = sysm.newton(phi, U_f, i0_f, 0.0)
+    phi, I_f, eta_s, r, it = sysm.newton(phi, U_f, i0_f, kin, 0.0)
     e1 = abs(float(phi[sysm.iB]) - float(ocp.U(x0)))
     ok &= e1 < 1e-9
     print(f'cell equilibrium: V−OCV = {e1:.2e}  {"OK" if e1 < 1e-9 else "FAIL"}')
-    # 2) 저율 직렬-R: V = OCV − I·R_series (선형화 BV g = 2·i0·A·β per face)
-    I_small = 1e-10                                         # A — βη ≈ 0.03 선형 영역
-    phi, I_f, r, it = sysm.newton(phi, U_f, i0_f, I_small)
+    # 2) 저율 직렬-R (선형화 BV g = i0·A·f·(αa+αc) per face; α=0.5/0.5 → 2·i0·A·β 구형과 동일)
+    I_small = 1e-10
+    phi, I_f, eta_s, r, it = sysm.newton(phi, U_f, i0_f, kin, I_small)
     V = float(phi[sysm.iB])
     vox_m = vox * 1e-6
     nxy = sid.shape[0]; nzh = sid.shape[2] // 2
-    se, si = se_cm * 100.0, si_cm * 100.0                   # S/m
-    g_face = 2.0 * float(i0_of_x(i0_ref, x0)) * vox_m ** 2 * BETA
-    R_col = (1.0 / (se * vox_m ** 2 / (0.5 * vox_m))                    # e-plate
-             + (nzh - 1) / (se * vox_m)                                 # e-망 내부 (5칸)
-             + (nzh - 1) / (si * vox_m)                                 # i-망 내부
-             + 1.0 / (si * vox_m ** 2 / (0.5 * vox_m)))                 # i-plate
-    R_ser = R_col / (nxy * nxy) + 1.0 / (g_face * nxy * nxy)            # 면병렬 + BV병렬
-    V_exp = float(ocp.U(x0)) - I_small * R_ser
-    e2 = abs(V - V_exp) / (I_small * R_ser)
+    se, si = se_cm * 100.0, si_cm * 100.0
+    g_face = float(kin.i0(x0)) * vox_m ** 2 * kin.f * (kin.aa + kin.ac)
+    R_col = (1.0 / (se * vox_m ** 2 / (0.5 * vox_m)) + (nzh - 1) / (se * vox_m)
+             + (nzh - 1) / (si * vox_m) + 1.0 / (si * vox_m ** 2 / (0.5 * vox_m)))
+    R_ser = R_col / (nxy * nxy) + 1.0 / (g_face * nxy * nxy)
+    e2 = abs((float(ocp.U(x0)) - V) - I_small * R_ser) / (I_small * R_ser)
     ok &= e2 < 1e-3
-    print(f'cell low-rate series-R: ΔV num {float(ocp.U(x0)) - V:.3e} '
-          f'vs ana {I_small * R_ser:.3e}  rel {e2:.2e}  {"OK" if e2 < 1e-3 else "FAIL"}')
-    # 3) KCL: Σi_am = −I_f합 = I_app (방전 리튬화 규약)
+    print(f'cell low-rate series-R: rel {e2:.2e}  {"OK" if e2 < 1e-3 else "FAIL"}')
+    # 3) KCL + 에너지 수지 (중율에서 — 비선형 영역 포함 감사)
     i_am = sysm.particle_current(I_f)
     e3 = abs(i_am.sum() - I_small) / I_small
     ok &= e3 < 1e-6
     print(f'cell KCL (galvanostatic): rel {e3:.2e}  {"OK" if e3 < 1e-6 else "FAIL"}')
-    # 4) v1 분포 일치 (선형영역, 불균일 격자): 2입자 비대칭 → i_am 비율 v1 == v2
+    I_mid = 3e-8                                             # sinh 비선형 영역
+    phi, I_f, eta_s, r, it = sysm.newton(phi, U_f, i0_f, kin, I_mid)
+    aud = sysm.energy_audit(phi, I_f, eta_s, U_f, kin, I_mid)
+    e4 = abs(aud['balance_rel'])
+    ok &= e4 < 1e-8
+    print(f'cell energy balance (nonlinear): rel {e4:.2e}  {"OK" if e4 < 1e-8 else "FAIL"}')
+    # 4) ASR 필름: ASR→0 극한 일치 + ASR>0 이면 같은 I에서 V 더 처짐
+    kin_f0 = Kinetics(2.0, asr_film=1e-30)
+    phi_a, I_a, eta_a, _, _ = sysm.newton(phi.copy(), U_f, i0_f, kin_f0, I_mid)
+    e5 = abs(float(phi_a[sysm.iB]) - float(phi[sysm.iB]))
+    kin_f = Kinetics(2.0, asr_film=1e-4)                     # 1 Ω·cm² 필름
+    phi_b, I_b, eta_b, _, _ = sysm.newton(phi.copy(), U_f, i0_f, kin_f, I_mid)
+    drop = float(phi[sysm.iB]) - float(phi_b[sysm.iB])
+    # 기대 ΔV = I_face·R_film,face = (I/36)·(ASR/A_face)  — 36면 병렬이므로
+    drop_exp = (I_mid / 36) * (1e-4 / sysm.A_face)
+    e6 = abs(drop - drop_exp) / max(drop_exp, 1e-30)
+    audb = sysm.energy_audit(phi_b, I_b, eta_b, U_f, kin_f, I_mid)
+    ok &= e5 < 1e-9 and e6 < 1e-2 and abs(audb['balance_rel']) < 1e-8
+    print(f'cell ASR film: ASR→0 match {e5:.1e} · ΔV(1Ωcm²) rel {e6:.2e} · E-bal {abs(audb["balance_rel"]):.1e}'
+          f'  {"OK" if (e5 < 1e-9 and e6 < 1e-2 and abs(audb["balance_rel"]) < 1e-8) else "FAIL"}')
+    # 5) 비대칭 α: αa=0.7/αc=0.3 저율 선형 g = i0·A·f·(αa+αc) 재현
+    kin_as = Kinetics(2.0, alpha_a=0.7, alpha_c=0.3)
+    phi_c = np.zeros(sysm.N); phi_c[:sysm.n_e] = float(ocp.U(x0)); phi_c[sysm.iB] = float(ocp.U(x0))
+    i0_as = np.full(sysm.n_bv, float(kin_as.i0(x0)))
+    I_as = 1e-11                                             # 비대칭은 2차항 (αa²−αc²)(fη)²/2 이
+    phi_c, I_c, eta_c, _, _ = sysm.newton(phi_c, U_f, i0_as, kin_as, I_as)   # 살아있어 더 저율로
+    g_face2 = float(kin_as.i0(x0)) * vox_m ** 2 * kin_as.f * (kin_as.aa + kin_as.ac)
+    R_ser2 = R_col / (nxy * nxy) + 1.0 / (g_face2 * nxy * nxy)
+    e7 = abs((float(ocp.U(x0)) - float(phi_c[sysm.iB])) - I_as * R_ser2) / (I_as * R_ser2)
+    ok &= e7 < 1e-3
+    print(f'cell asymmetric BV (0.7/0.3) low-rate: rel {e7:.2e}  {"OK" if e7 < 1e-3 else "FAIL"}')
+    # 6) CV 시컨트: V_target에서 I ≈ (OCV−V_target)/R_ser (저율 선형)
+    Vt = float(ocp.U(x0)) - I_small * R_ser * 0.7
+    phi_d = phi.copy()
+    phi_d, I_d, eta_d, rr, I_cv = sysm.solve_cv(phi_d, U_f, i0_f, kin, Vt, I_small, tol_v=1e-9)
+    I_exp = (float(ocp.U(x0)) - Vt) / R_ser
+    e8 = abs(I_cv - I_exp) / I_exp
+    ok &= e8 < 1e-2
+    print(f'cell CV secant: I {I_cv:.3e} vs (OCV−V)/R {I_exp:.3e}  rel {e8:.2e}  '
+          f'{"OK" if e8 < 1e-2 else "FAIL"}')
+    # 7) v1 분포 회귀 (선형영역, 2입자 비대칭 격자)
     from step3_sigma import solve_reaction_current
     sid2 = np.zeros((6, 6, 12), np.int8)
     sid2[:, :, 6:] = 6
-    sid2[:3, :, :6] = 1                                      # 입자 0 (절반)
-    sid2[3:, :, 2:6] = 2                                     # 입자 1 (얇게 — 비대칭)
+    sid2[:3, :, :6] = 1
+    sid2[3:, :, 2:6] = 2
     pid2 = np.full(sid2.shape, -1, np.int32)
     pid2[:3, :, :6] = 0; pid2[3:, :, 2:6] = 1
     sig_e2 = np.array([0., 1., 1., 0., 0., 0., 0.])
     sig_i2 = np.array([0., 0., 0., 0., 0., 0., 2.])
-    gct_v1 = 2.0 * float(i0_of_x(i0_ref, x0)) * (0.5e-6) ** 2 * BETA   # [S] = v2 선형 g
-    # v1은 code-units(σ[S/cm]·vox[µm])라 g 절대 스케일이 SI와 다름 — '분포' 비교는 g_ct/g_net
-    # 비만 맞으면 됨.  g_code/g_SI = (σ_Scm·vox_um)/(100·σ_Scm·vox_um·1e-6) = 1e4 (vox 무관).
-    g_v1 = gct_v1 * 1e4
+    kin1 = Kinetics(1.0)
+    gct_SI = float(kin1.i0(x0)) * (0.5e-6) ** 2 * kin1.f * (kin1.aa + kin1.ac)
+    g_v1 = gct_SI * 1e4                                      # code/SI g 스케일비 = 1e4 (vox 무관)
     rv1 = solve_reaction_current(sid2, sig_e2, sig_i2, pid2, 2, 0.5, g_v1,
                                  z_top_um=6.0, z_bot_um=0.0)
     sys2 = CellSystem(sid2, sig_e2, sig_i2, pid2, 2, 0.5, z_top_um=6.0, z_bot_um=0.0)
     U2 = np.full(sys2.n_bv, float(ocp.U(x0)))
-    i02 = np.full(sys2.n_bv, float(i0_of_x(i0_ref, x0)))
+    i02 = np.full(sys2.n_bv, float(kin1.i0(x0)))
     phi2 = np.zeros(sys2.N)
     phi2[:sys2.n_e] = float(ocp.U(x0)); phi2[sys2.iB] = float(ocp.U(x0))
-    phi2, I_f2, _, _ = sys2.newton(phi2, U2, i02, 1e-8)
+    phi2, I_f2, _, _, _ = sys2.newton(phi2, U2, i02, kin1, 1e-8)
     a2 = sys2.particle_current(I_f2)
     frac_v1 = rv1['i_am'] / rv1['i_am'].sum()
     frac_v2 = a2 / a2.sum()
-    e4 = float(np.max(np.abs(frac_v1 - frac_v2)))
-    ok &= e4 < 1e-4
-    print(f'cell v1-regression (2-particle split): v1 {frac_v1.round(6)} vs v2 {frac_v2.round(6)} '
-          f'Δmax {e4:.2e}  {"OK" if e4 < 1e-4 else "FAIL"}')
+    e9 = float(np.max(np.abs(frac_v1 - frac_v2)))
+    ok &= e9 < 1e-4
+    print(f'cell v1-regression: Δmax {e9:.2e}  {"OK" if e9 < 1e-4 else "FAIL"}')
     return ok
 
 
 def _selftest_discharge():
-    """샌드위치 풀 방전 스모크: 용량 적산 일치 + V 단조 하강(저율) + 보존."""
+    """풀 방전: 쿨롱 적산 / V 단조 / KCL / 에너지 수지 / 창-클램프 / R_int / CCCV."""
     ok = True
     ocp = OCP.synthetic_test()
     sid, pid, vox = _build_sandwich(nxy=4, nz=8)
     sig_e = np.array([0., 1., 0., 0., 0., 0., 0.])
     sig_i = np.array([0., 0., 0., 0., 0., 0., 2.])
     sysm = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
-    # r_p=10µm: 용량(=I_app)을 키워 KCL 검증이 float64 잔차 노이즈 바닥(~1e-17 A) 위에서 놀게 함
-    # (r=1µm이면 I_app~7e-13 A → 노이즈만으로 rel 1e-5가 나옴 — 솔버 한계 아님, 스케일 문제)
-    r_p = np.array([10.0e-6])
-    out = simulate(sysm, ocp, r_p, d_s=1e-13, i0_ref=5.0, c_rate=0.2, nr=15,
-                   v_min=2.0, dx_max=0.05, dt_init=5.0, dt_max=600.0, verbose=False)
-    # 용량 적산: Δx̄ = ∫I dt/(F·c_max·ΣV_p) — 시뮬 x̄ 전진과 일치해야
+    r_p = np.array([10.0e-6])                                # 용량↑ → KCL이 노이즈 바닥 위에서 검증
+    kin = Kinetics(5.0)
+    out = simulate(sysm, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8,
+                   dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
     dt_arr = np.diff(out['t'])
-    q_As = (out['I_app_A'] * dt_arr).sum()
+    q_As = (out['I'][:-1] * dt_arr).sum()
     dx_exp = q_As / (F_CONST * ocp.c_max * (4 / 3 * np.pi * r_p ** 3).sum())
     dx_got = out['x_mean'][-1] - out['x_mean'][0]
     e1 = abs(dx_got - dx_exp) / abs(dx_exp)
     ok &= e1 < 5e-3
-    print(f'discharge coulomb count: Δx̄ {dx_got:.4f} vs ∫I {dx_exp:.4f}  rel {e1:.2e}  '
-          f'{"OK" if e1 < 5e-3 else "FAIL"}')
-    dV = np.diff(out['V'])
-    mono = float((dV > 1e-6).mean())
+    print(f'discharge coulomb count: rel {e1:.2e}  {"OK" if e1 < 5e-3 else "FAIL"}')
+    mono = float((np.diff(out['V']) > 1e-6).mean())
     ok &= mono < 0.02
-    print(f'discharge V monotone↓ (linear OCP): rising steps {mono * 100:.1f}%  '
-          f'{"OK" if mono < 0.02 else "FAIL"}')
+    print(f'discharge V monotone↓: rising {mono * 100:.1f}%  {"OK" if mono < 0.02 else "FAIL"}')
     okk = float(np.max(out['kcl_rel'])) < 1e-6
     ok &= okk
     print(f'discharge KCL all steps: max {np.max(out["kcl_rel"]):.1e}  {"OK" if okk else "FAIL"}')
+    oke = float(np.max(out['energy_balance_rel'])) < 1e-7
+    ok &= oke
+    print(f'discharge energy balance all steps: max {np.max(out["energy_balance_rel"]):.1e}  '
+          f'{"OK" if oke else "FAIL"}')
+    okq = out['q_frac_at_cutoff'] <= 1.005
+    ok &= okq
+    print(f'discharge SOC-window clamp: delivered {out["q_frac_at_cutoff"] * 100:.1f}% ≤ 100.5%  '
+          f'{"OK" if okq else "FAIL"}')
+    # R_int: 터미널 V가 I·R만큼 더 낮게 (같은 스텝 0에서 비교)
+    out_r = simulate(sysm, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8,
+                     r_int_ohm_cm2=50.0, dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+    dV = float(out_r['V'][0] - out_r['V_terminal'][0])
+    dV_exp = float(out_r['I'][0]) * (50.0 * 1e-4 / sysm.area_m2)
+    e6 = abs(dV - dV_exp) / max(dV_exp, 1e-30)
+    ok &= e6 < 1e-9
+    print(f'discharge R_int terminal drop: rel {e6:.2e}  {"OK" if e6 < 1e-9 else "FAIL"}')
+    # CCCV 충전: v_max 도달 → CV 홀드 → I가 i_cut 밑으로 (전류 단조 감소 방향)
+    out_c = simulate(sysm, ocp, r_p, 1e-13, kin, c_rate=1.0, nr=15, v_min=2.8, v_max=3.9,
+                     charge=True, cv_hold=True, i_cut_frac=0.10, x_init=ocp.x100,
+                     dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+    okc = out_c['end_reason'] == 'cv_i_cut' and abs(out_c['I'][-1]) < 0.10 * out_c['I_1C_A'] * 1.5
+    ok &= okc
+    print(f'CCCV charge: end={out_c["end_reason"]}, |I_end|/I1C='
+          f'{abs(out_c["I"][-1]) / out_c["I_1C_A"]:.3f}  {"OK" if okc else "FAIL"}')
     return ok
 
 
 # ---------------------------------------------------------------- CLI
 def main():
-    ap = argparse.ArgumentParser(description='STEP4-v2 galvanostatic voxel-DFN (SSB)')
+    ap = argparse.ArgumentParser(description='STEP4-v2 galvanostatic/CV voxel-DFN (SSB)')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--grid', help='step4_grid.npz (mpm_webapp_payload --save-step4-grid)')
     ap.add_argument('--ocp-csv', help='U(x) 테이블 CSV (step4_pybamm_anchor --export-params)')
     ap.add_argument('--params-json', help='c_max/x0/x100/provenance JSON (같은 export)')
     ap.add_argument('--ocp-test', action='store_true',
                     help='합성 TEST-ONLY OCP (앵커 파일 없이 스모크; 결과에 test_only 라벨)')
+    ap.add_argument('--dudt-csv', default='', help='dU/dT(x) CSV — 있으면 Q_rev 출력 (§F1 입력)')
     ap.add_argument('--c-rate', type=float, default=0.5)
-    ap.add_argument('--charge', action='store_true', help='충전 방향 (기본 방전)')
+    ap.add_argument('--charge', action='store_true')
+    ap.add_argument('--cv-hold', action='store_true', help='V-리밋 도달 후 CV 홀드 (CCCV)')
+    ap.add_argument('--i-cut-frac', type=float, default=0.05, help='CV 종지 |I|/I_1C')
     ap.add_argument('--d-s', type=float, default=3e-14,
                     help='D_s [m²/s] 기본 3e-14 (Kang&Shin 2025 FEM; 문헌 1e-14–1e-13)')
-    ap.add_argument('--i0', type=float, default=2.0, help='i0_ref [A/m²] (v1 훅 유지, ⚠F1)')
+    ap.add_argument('--i0', type=float, default=2.0, help='i0_ref [A/m²] @x=0.5 (⚠F1 스윕)')
+    ap.add_argument('--alpha-a', type=float, default=0.5)
+    ap.add_argument('--alpha-c', type=float, default=0.5)
+    ap.add_argument('--asr-film', type=float, default=0.0, help='계면 필름 ASR [Ω·m²] (SEI/CEI 훅)')
+    ap.add_argument('--r-int-ohm-cm2', type=float, default=0.0,
+                    help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
+    ap.add_argument('--temp-k', type=float, default=298.15)
+    ap.add_argument('--x-init', type=float, default=None, help='초기 stoich (기본: 창 끝)')
     ap.add_argument('--nr', type=int, default=20)
     ap.add_argument('--v-min', type=float, default=3.0, help='방전 컷오프 [V vs Li] (운전 설정)')
     ap.add_argument('--v-max', type=float, default=4.5)
     ap.add_argument('--t-max', type=float, default=None)
+    ap.add_argument('--dx-max', type=float, default=0.02)
+    ap.add_argument('--dt-max', type=float, default=120.0)
     ap.add_argument('--gpu', action='store_true')
     ap.add_argument('--out', default='step4_dyn_out.npz')
     a = ap.parse_args()
@@ -617,13 +866,22 @@ def main():
             ap.error('--ocp-csv/--params-json required (§F1 앵커; 임시 스모크는 --ocp-test)')
         ocp = OCP.load(a.ocp_csv, a.params_json)
         print(f'  OCP: {ocp.provenance}  c_max={ocp.c_max:g}  x0={ocp.x0}  x100={ocp.x100}', flush=True)
+    dudt = _load_xy_csv(a.dudt_csv) if a.dudt_csv else None
+    kin = Kinetics(a.i0, a.alpha_a, a.alpha_c, a.asr_film, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0)
-    out = simulate(sysm, ocp, r_um * 1e-6, a.d_s, a.i0, a.c_rate, nr=a.nr,
-                   v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge)
+    out = simulate(sysm, ocp, r_um * 1e-6, a.d_s, kin, a.c_rate, nr=a.nr,
+                   v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge,
+                   cv_hold=a.cv_hold, i_cut_frac=a.i_cut_frac,
+                   r_int_ohm_cm2=a.r_int_ohm_cm2, x_init=a.x_init, dudt=dudt,
+                   dx_max=a.dx_max, dt_max=a.dt_max)
     meta = out.pop('params')
+    reason = out.pop('end_reason')
+    meta['end_reason'] = reason
     np.savez_compressed(a.out, **out, params_json=json.dumps(meta))
-    print(f'saved {a.out}  (steps {len(out["t"])}, V {out["V"][0]:.3f}→{out["V"][-1]:.3f}, '
-          f'x̄ {out["x_mean"][0]:.3f}→{out["x_mean"][-1]:.3f})')
+    print(f'saved {a.out}  (steps {len(out["t"])}, end={reason}, '
+          f'V_term {out["V_terminal"][0]:.3f}→{out["V_terminal"][-1]:.3f}, '
+          f'delivered {out["q_frac_at_cutoff"] * 100:.1f}%, '
+          f'E-bal max {np.max(out["energy_balance_rel"]):.1e})')
 
 
 if __name__ == '__main__':

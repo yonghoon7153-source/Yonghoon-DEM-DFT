@@ -56,16 +56,24 @@ def export_params(outdir):
     try:
         from pybamm.models.full_battery_models.lithium_ion.electrode_soh import (
             get_min_max_stoichiometries)
-        mm = get_min_max_stoichiometries(pv)                 # (x_0, x_100, y_100, y_0) 버전차 유의
+        mm = get_min_max_stoichiometries(pv)                 # (x_0, x_100, y_100, y_0): x=음극, y=양극
         vals = [float(v) for v in np.ravel(mm)]
-        ys = sorted(v for v in vals if 0 < v < 1)[-2:] if len(vals) >= 4 else vals
-        x100_, x0_ = min(ys), max(ys)                        # 양극: 충전끝=저리튬(min), 방전끝=고리튬(max)
-        x0, x100 = x100_, x0_                                # x0(우리 규약)=충전 시작=저리튬
-        how = 'pybamm get_min_max_stoichiometries'
+        if len(vals) != 4:
+            raise RuntimeError(f'unexpected stoich tuple len {len(vals)}')
+        # ⚠ 정렬로 고르면 음극 x_100(~0.85)과 양극 y_0(~0.89)가 섞임(물리리뷰 blocker#2) —
+        # 반드시 위치로: [2]=y_100(충전끝, 저리튬), [3]=y_0(방전끝, 고리튬)
+        y_100, y_0 = vals[2], vals[3]
+        x0, x100 = y_100, y_0                                # 우리 규약: x0=충전 시작(저리튬)
+        how = 'pybamm get_min_max_stoichiometries (positional y_100/y_0)'
     except Exception as e:
         ci = float(pv['Initial concentration in positive electrode [mol.m-3]'])
         x0, x100 = ci / c_max, 0.9                           # 폴백: 초기(≈충전상태) + 보수적 상한
         how = f'FALLBACK initial-concentration ({type(e).__name__}) — compare 전 수동확인 요망'
+    # sanity: 양극 OCP는 충전끝(저리튬)에서 높아야 함 — NMC811 기준 U(x0)≳4.0 V
+    U0v, U1v = float(np.interp(x0, x, U)), float(np.interp(x100, x, U))
+    if not (U0v > U1v and U0v > 3.9 and 0.0 < x0 < x100 < 1.0):
+        raise RuntimeError(f'stoich-window sanity FAIL: x0={x0:.3f}(U={U0v:.3f}) '
+                           f'x100={x100:.3f}(U={U1v:.3f}) via [{how}] — 수동 확인 필요')
     os.makedirs(outdir, exist_ok=True)
     csvp = os.path.join(outdir, 'ocp_nmc811_chen2020.csv')
     with open(csvp, 'w') as fh:
@@ -118,6 +126,11 @@ def compare(a):
         'Maximum concentration in positive electrode [mol.m-3]': c_max,
         'Initial concentration in positive electrode [mol.m-3]': meta['x0'] * c_max,
         'Nominal cell capacity [A.h]': 1.0,
+        # anode 분극 제거 (voxel 모델은 half-cell에 Li-counter 과전압이 없음 — 물리리뷰 #7a)
+        'Exchange-current density for lithium metal electrode [A.m-2]': 1e3,
+        # 전압창을 voxel 런과 정렬 (물리리뷰 #7c)
+        'Lower voltage cut-off [V]': a.v_min,
+        'Upper voltage cut-off [V]': a.v_max,
     }
     for k, v in upd.items():
         try:
@@ -125,8 +138,9 @@ def compare(a):
         except Exception as e:
             print(f'  ⚠ param {k}: {type(e).__name__} {e}')
     model = pybamm.lithium_ion.DFN(options={'working electrode': 'positive'})
-    # C-rate → 면적전류: 우리 npz의 I_1C를 그대로 쓰지 않고 pybamm 자체 용량 정의와 정합시키기
-    # 위해 전류밀도[A/m²]로 직접 구동: i = C·F·c_max·Δx·(1−ε)·am_frac·L/3600
+    # C-rate → 면적전류밀도로 직접 구동: i = C·F·c_max·Δx·am_frac·L/3600
+    # (am_frac = 전극-부피 기준 AM 분율 = ΣV_p/(A_bed·L) 이어야 voxel I_1C와 정확 일치 —
+    #  voxel 런 로그의 I_1C_A/실면적과 대조 확인할 것)
     i_area = (meta['c_rate'] * 96485.33212 * c_max * abs(meta['x100'] - meta['x0'])
               * a.am_frac * L / 3600.0)
     pv.update({'Current function [A]': i_area * a.area_cm2 * 1e-4}, check_already_exists=False)
@@ -142,6 +156,8 @@ def compare(a):
     print(f'pybamm twin: steps {len(t_pb)}, V {V_pb[0]:.3f}→{V_pb[-1]:.3f}')
     print(f'voxel-v2   : steps {len(t_us)}, V {V_us[0]:.3f}→{V_us[-1]:.3f}')
     print(f'ΔV RMS (공통 t-구간 보간): {rms * 1e3:.1f} mV')
+    print('⚠ 구조 편향 주의(물리리뷰 #18): voxel BV 면적은 계단(smooth 구 대비 ~1.3-1.5×),'
+          ' pybamm은 3·am_frac/R — 균일-극한 잔차 일부는 이 면적차.  미세구조 효과 귀속 전 확인.')
     np.savez_compressed(a.out, t_pb=t_pb, V_pb=V_pb, t_us=t_us, V_us=V_us, rms_V=rms)
     print(f'saved {a.out}')
 
@@ -152,7 +168,11 @@ def main():
     ap.add_argument('--compare', metavar='STEP4_OUT_NPZ')
     ap.add_argument('--sigma-e-S-cm', type=float, dest='sigma_e_s_cm')
     ap.add_argument('--sigma-ion-S-cm', type=float, dest='sigma_ion_s_cm')
-    ap.add_argument('--eps', type=float, help='porosity (0-1)')
+    ap.add_argument('--eps', type=float,
+                    help='pybamm "전해질상" 분율 = SSB에선 SE 부피분율 (void porosity 아님 — '
+                         'Bruggeman0+t⁺≈1이라 결과 영향은 미미하나 규약 명시)')
+    ap.add_argument('--v-min', type=float, default=3.0)
+    ap.add_argument('--v-max', type=float, default=4.5)
     ap.add_argument('--am-frac', type=float, default=0.5, help='AM 부피분율 (전극 기준)')
     ap.add_argument('--thickness-um', type=float)
     ap.add_argument('--r-um', type=float, default=3.0, help='대표 입경 반경 µm')
