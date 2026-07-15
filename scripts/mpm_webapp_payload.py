@@ -312,6 +312,9 @@ def main():
                          '(Newman-typical 1-5 A/m²).  Sets the linearised BV conductance g=i0·F/RT.')
     ap.add_argument('--no-step4', action='store_true',
                     help='skip the STEP4 reaction-current solve (저율 충전 반응전류 분포, slide-20 물리)')
+    ap.add_argument('--save-step4-grid', default='',
+                    help='STEP4-v2(시간전개) 입력 격자 npz 저장: sid/pid/σ_e·σ_i테이블/vox/z_top/AM반경 '
+                         '— scripts/step4_dyn.py --grid 로 로드 (payload 재실행 없이 rate 스윕)')
     a = ap.parse_args()
     vc = _vc()
     sim_m = json.load(open(a.metrics_json)) if a.metrics_json else {}
@@ -740,6 +743,13 @@ def main():
                   except Exception as _e4:
                     jrxn_am = None
                     print(f'  ⚠ STEP4 rxn failed ({type(_e4).__name__}: {_e4}) — STEP3 결과는 유지')
+                if a.save_step4_grid:                        # STEP4-v2 동역학 입력 (step4_dyn.py --grid)
+                    np.savez_compressed(a.save_step4_grid, sid=sid3.astype(np.int8),
+                                        pid=pid3.astype(np.int32), vox_um=a.step3_vox,
+                                        z_top_um=_ztop, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
+                                        am_r_um=np.asarray(r, np.float64))
+                    print(f'  STEP4-v2 grid → {a.save_step4_grid}  (sid {sid3.shape}, '
+                          f'n_am {len(r)}, vox {a.step3_vox}µm)')
         except Exception as _e:
             import traceback as _tb
             print(f'  ⚠ STEP3 skipped ({type(_e).__name__}: {_e})')
