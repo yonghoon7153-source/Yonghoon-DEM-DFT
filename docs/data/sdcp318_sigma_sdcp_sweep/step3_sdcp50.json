@@ -1,0 +1,83 @@
+{
+ "sigma_e_eff_S_cm": 2.485,
+ "vox_um": 0.4,
+ "n_dof": 1923428,
+ "k_plates": [
+  0,
+  181
+ ],
+ "n_floating_dropped": 9367,
+ "cg_resid": 1e-08,
+ "dissipation_share": {
+  "AM_P": 0.0026,
+  "VGCF": 0.8342,
+  "SDCP": 0.1631,
+  "SE": 0.0
+ },
+ "sigma_table_S_cm": {
+  "AM_S": 0.01,
+  "AM_P": 0.005,
+  "VGCF": 100.0,
+  "SuperP": 10.0,
+  "SDCP": 50.0
+ },
+ "trust": "RELATIVE_v1 (same settings between runs; pressed-to-plate beds \u2014 plate contacts abundant; carbon/SDCP \u03c3 = F1 hooks; AM_S/P = A1-locked 10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)",
+ "collector": {
+  "kind": "SCENARIO series load \u2014 measured R_int applied externally (NOT a model prediction; the model's own interface OUTPUT is collector_geometric.R_geom)",
+  "R_bulk_ohm_cm2": 0.00292,
+  "anchors": "Fig6e post-cycling R_int; S14 primer 1.3e4 S/cm 200nm",
+  "sigma_apparent_S_cm": {
+   "ideal_R0": 2.48,
+   "SBE_bare_110": 6.59e-05,
+   "DBE_bare_46": 0.000158,
+   "SBE_CSUS_30_proxy_DBE_anchored": 0.000242
+  },
+  "selected": {
+   "name": "bare_Al+DBE_electrode",
+   "R_int_ohm_cm2": 46.0,
+   "sigma_apparent_S_cm": 0.000158
+  }
+ },
+ "collector_geometric": {
+  "mode": "analytic_gap_v3 (bare gap\u22640.10\u00b5m / wetted gap\u22640.30\u00b5m \u2014 exact sphere/point z)",
+  "wetted_sigma_S_cm": 2.482,
+  "bare_sigma_S_cm": 2.473,
+  "R_geom_ohm_cm2": 1.05e-05,
+  "n_bottom_contacts": {
+   "wetted": 4181,
+   "bare": 1812,
+   "canonical_plate": 5056
+  },
+  "note": "MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); coupling conductance voxel-scale.  R_geom = L(1/\u03c3_bare \u2212 1/\u03c3_wetted); measured R_int \u2212 R_geom = chemistry/degradation share"
+ },
+ "sigma_ion_eff_S_cm": 0.0002147,
+ "ion_dissipation_share": {
+  "AM_P": 0.0,
+  "VGCF": 0.0,
+  "SDCP": 0.1383,
+  "SE": 0.8617
+ },
+ "sigma_ion_table_S_cm": {
+  "SE": 0.003,
+  "SDCP": 0.001
+ },
+ "ion_resid": 1e-08,
+ "pore": {
+  "eps_total_pct": 1.26,
+  "eps_connected_pct": 0.06,
+  "D_rel": 0.0,
+  "tau": null,
+  "n_dof": 1711,
+  "resid": 9.1e-09,
+  "trust": "STRUCTURAL pore-diffusion \u03c4 (D_eff/D0 = \u03b5/\u03c4, TauFactor \uaddc\uc57d, \u03b5_total \uae30\uc900; \ub2eb\ud78c \uae30\uacf5\uc740 \u03c4\ub97c \uc62c\ub9bc) \u2014 SE-\ub9dd \u03c3_ionic\uacfc \ubcc4\uac1c \ucd95, \uc218\uc1a1 \ud3fc \ub300\uc785 \uae08\uc9c0; PTFE solid-stamped; grid cropped to z \u2264 thickness"
+ },
+ "rxn": {
+  "i0_A_m2": 2.0,
+  "gct_S_cm2": 0.007784,
+  "n_bv_faces": 503928,
+  "active_am_pct": 100.0,
+  "kcl_err": 3e-05,
+  "resid": 1e-08,
+  "trust": "RELATIVE i/mean map \u2014 linearised BV, uniform SOC, low-rate (charge\u2194discharge = sign only); i0 \u26a0F1 hook; reaction area = rasterized AM|SE\u00b7AM|SDCP faces (coverage-native)"
+ }
+}
