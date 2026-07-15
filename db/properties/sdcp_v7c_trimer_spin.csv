@@ -1,0 +1,17 @@
+group,spin_mid,pct_mid,spin_end,pct_end
+A_SO3,0.000,0.0,0.546,54.6
+A_ring,0.140,14.0,0.139,13.9
+B_SO3,0.423,42.3,0.000,0.0
+B_ring,0.213,21.3,0.153,15.3
+C_SO3,0.000,0.0,0.000,0.0
+C_ring,0.149,14.9,0.106,10.6
+rest,0.076,7.6,0.056,5.6
+total,1.000,100.0,1.000,100.0
+"# SDCP v7c trimer (n=3) doped-state Loewdin group spins, ORCA r2SCAN-3c Opt serial (desktop WSL ext4 ~/orca_poly/trimer), builder tools/sdcp/build_v7c_trimer.py (built from the RELAXED dimer, torsion 130 deg), 2026-07-15."
+"# All three jobs bfgs-converged: trimer_neutral 101 at, E=-5026.422091006707 Eh (19 cyc); trimer_doped_mid 100 at (B-ring SO3-, acid H57 removed) E=-5025.775556463325 Eh (15 cyc, warm-start from neutral final); trimer_doped_end 100 at (A-ring SO3-, H23) E=-5025.772950332016 Eh (22 cyc). Total spin 1.000 both (doublet)."
+"# n-SERIES (SO3 radical share : backbone share): monomer 65:35 -> dimer 62.3:32.6 -> trimer-END 54.6:39.8 -> trimer-MID 42.3:50.1 — backbone share CROSSES 50% at n=3 interior doping; the polaron becomes backbone-dominant as the pi system grows. This is the delocalization headline."
+"# Mid-doping symmetric spread confirmed: A_ring 14.0 ~= C_ring 14.9 (residual ~1% = built-in end asymmetry of the constructed geometry), B_ring 21.3 largest -> polaron centered on the defect ring with symmetric wings."
+"# End-doping: NEIGHBOR B_ring 15.3 > host A_ring 13.9, remote C_ring 10.6 -> spin prefers the chain's pi hub (middle ring has two conjugated neighbors); simple monotonic distance decay holds only beyond the hub. Same hub effect explains B_ring being largest in the mid case."
+"# Site preference: E(mid) - E(end) = -2.606 mEh = -70.9 meV -> the hole prefers INTERIOR sites; chain ends sit +71 meV higher. In the polymer, polarons localize away from chain ends."
+"# H-removal energy E(neutral)-E(doped): dimer 0.65436 Eh -> trimer-end 0.64914 (-142 meV) -> trimer-mid 0.64654 (-213 meV) — self-doping gets EASIER with chain length, consistent with delocalization stabilization of the hole."
+"# Monomer reference: O3 ~65% / backbone ~35%. Dimer reference: A_SO3 62.3 / rings 17.4+15.2 (db/properties/sdcp_v7c_dimer_spin.csv)."
