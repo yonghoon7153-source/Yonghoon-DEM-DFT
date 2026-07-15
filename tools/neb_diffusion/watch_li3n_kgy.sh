@@ -1,5 +1,5 @@
 #!/bin/bash
-# watch_li3n_kgy.sh v6 — kgy(RTX 3090) Li3N round-4 (min4 마무리런) watch.
+# watch_li3n_kgy.sh v7 — kgy(RTX 3090) Li3N round-4 (min4 마무리런) watch.
 #   watch -n 60 bash ~/watch_li3n_kgy.sh
 # round-3 결산: p0_saddle3 bfgs 수렴 (확정 앵커). round-4 = p0_min4 단독 완주
 # (min3 ion-20 승계) → barrier(saddle3−min4) 확정.
@@ -7,6 +7,8 @@
 #     truncate로 생긴 NUL 구멍으로 오염 → 모든 grep에 -a(바이너리 무시),
 #     판정 순서를 "JOB DONE → 프로세스 생존(pgrep) → 에러"로 재배열.
 #     승계지문은 '첫 可視 !'(초반 유실로 ion 3-4부터)라 Δ −0.5 mRy까지 정상.
+# v7: 최근 |F|(Total force) 4개 표시 — bfgs 종료조건이 forc_conv 1e-3이라
+#     dE보다 직접적인 수렴 예고 지표.
 D=$HOME/work/li3n_dft
 now=$(date +%s)
 echo "══════ kgy Li3N DFT (3090) round-4  $(date '+%m-%d %H:%M:%S') ══════"
@@ -52,6 +54,8 @@ elif [ -n "$alive" ]; then
             al=(last<0?-last:last);
             printf "%s mRy | %s%s\n", s, v, (al<0.2 ? " ✓<0.2(닫기가능권)" : "")}'
     fi
+    fs=$(grep -a "Total force" "$O" | tail -4 | awk '{printf " %.4f", $4}')
+    [ -n "$fs" ] && echo "    최근 |F|:$fs Ry/au (bfgs 종료 forc_conv 1e-3)"
     e_now=$(grep -a '^!' "$O" | tail -1 | awk '{print $5}')
     [ -n "$e_now" ] && [ -n "$es" ] && awk -v m="$e_now" -v s="$es" \
         'BEGIN{d=(m-s)*13605.7; printf "    saddle3 대비: min4 현재 %+.1f meV %s\n", d,
