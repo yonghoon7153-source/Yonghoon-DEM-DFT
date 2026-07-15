@@ -106,4 +106,4 @@ D=1.13).  유일한 잠재 비용은 기계 축(바인더 반감, binder_cap 0.6
 
 데이터 출처: V100 런 로그(2026-07-14 22:39 SBE / 2026-07-15 00:02 DBE / 2026-07-14 21:0x base
 payload 재실행) + 각 mpm_payload.json(mpm-lab 업로드본).  메커니즘 논증·영문 초안·방어 8항은
-`docs/manuscript_sdcp_sigma_e_mechanism.md`(최종판 — a7_p00 재현 요약은 그 §2).
+`docs/manuscript_sdcp_sigma_e_mechanism.md`(최종판 — a7_p00 재현은 그 헤더·§3-② 인용).
