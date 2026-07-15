@@ -115,13 +115,24 @@ raw `/home/...` WSL path because Windows can't resolve it.
 
 ---
 
-## Current roadmap & open tasks (updated 2026-05-27)
+## Current roadmap & open tasks (updated 2026-07-15)
 
-Working branch: `claude/debug-fracture-solver-DQE6G`. Commit footer:
-`https://claude.ai/code/session_01AE6H8brQNyGYQLfq4X8Yq7`. Never put the
-model identifier in commits/PRs. sklearn is NOT installed in the cloud
-container → predictor (GPR/RF) training can only be statically checked
-here; real training verified on the user's WSL machine.
+Working branch: `claude/stoic-knuth-NObVQ`. Never put the model identifier
+in commits/PRs. sklearn is NOT installed in the cloud container →
+predictor (GPR/RF) training can only be statically checked here; real
+training verified on the user's WSL machine.
+
+### ★ 활성 트랙 (2026-07-15): SDCP manuscript + STEP 파이프라인 ★
+STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore-τ +
+분산 + collector) = production.  STEP4-v1(저율 선형 BV 반응분포) = payload 탑재.
+**STEP4-v2(갈바노/CV 시간전개: 비선형 BV+구형확산, COMSOL-패리티) = 2026-07-15 구현**
+(`scripts/step4_dyn.py`, selftest 20/20, 물리·수치 2-agent 리뷰 반영; pybamm 앵커
+`scripts/step4_pybamm_anchor.py`; V100 스모크→SBE/DBE rate 비교 진행).
+SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
+**σ_SDCP 스윕 {15/50/150/1500} 완료**(+0.8/+25.8/+45.5/+63.4% — 크기는 σ_SDCP
+강의존·최악 무손해·분담 역행=직렬 시그니처; `docs/data/sdcp318_sigma_sdcp_sweep/`),
+잔여 = E_bind DFT(gabia).  기록: `docs/manuscript_sdcp_sigma_e_mechanism.md`(최종판)
++ `docs/sdcp_318_base_sbe_dbe_comparison.md`(수치 원장) + `docs/step4_v2_design.md`.
 
 ### E_SE calibration — 2mAh_real_9 → KEEP E_SE = 1.35 GPa (2026-06-06)
 Decision DONE.  Compared E_SE = 1.35 / 1.5 (×3 seeds) / 2.0 GPa on
@@ -685,12 +696,13 @@ our MPM fills; Bazzoun=frame[4] CROSS-VALIDATION of our TRANSPORT side (DEM→Ki
     only the archive/readable copies (webapp unchanged).  Had to RE-RUN on the
     TIMESTAMP cids (the uploads/ dir names) to update the SERVED copies.
 
-### ★ Digest→model APPLICATION backlog (안 적용 추적, 2026-06-26) ★
+### ★ Digest→model APPLICATION backlog (안 적용 추적, 2026-06-26 / 현행화 2026-07-15) ★
 논문 digest는 다수 완료됐으나 **모델 적용은 별개** — `docs/digest_model_application_backlog.md`가 추적.
-A1 σ_e 방향(Trevisanello mis-attribution→σ_S/P material-input, Phase-3 전 필수) · A2 wallP 조건부
-(skeleton-spring, trust-test만 남음) · A3 E3 --coh binder · A4 E4 se_coating carbon · A5 dispersion CV
-· A6 pore-τ DiffuDict · A7 Phase-5 graded-z · B1-6 검증(σ anchor/RNM-vs-StageE/β=0.41/multi-contact)
-· C1-4 paper-build(refs.bib Minnmann/Wang/Sakuda/Cronau).  ⚠ digest 끝났다고 적용 끝 아님 — 이 표 소진까지.
+현행: **A1(σ_e 방향)·A2(wallP)·A3(--coh binder)·A4(coat-seeding)·A5(분산 CoV)·A6(pore-τ)·A9(크기-파괴
+압밀분) 전부 ✅ CLOSED** · A4′(SDCP) 🔶 잔여=E_bind DFT만 · A7(Phase-5 graded-z) ⛔ 본선 ·
+A8(NCA 재료)·A11(pristine R_int, 구 A8 중복 리넘버) ⛔ 데이터 대기 · A10 사이클 chemo-mech future ·
+B1-6 대조연구(B1은 envelope로 사실상 닫힘) · C3(GB-phonon ref)만 잔여 · D1-6 접촉모델 연구트랙 ·
+F1 잔여(SuperP/PTFE 압력-형상 크기앵커 문헌 대기).  ⚠ digest 끝났다고 적용 끝 아님 — 이 표 소진까지.
 
 ### Big goal (user's vision)
 Given input design numbers → ML predicts the full metric set → draw a 2D
@@ -698,7 +710,7 @@ microstructure matching those numbers → eventually stack different
 configs as natural LAYERS inside one composite cathode.
 
 ### 5-phase plan (agreed order: sequential 1→5)
-- **Phase 1 in progress** — transport-property triad (σ_ionic / σ_electronic /
+- **Phase 1 COMPLETE (2026-06-04)** — transport-property triad (σ_ionic / σ_electronic /
   σ_thermal):
   - σ_ionic — DONE 2026-05-28 (LOOCV 0.9752, n=88, 5 params, Bayesian PI
     well-calibrated, 3 isolated outliers documented).
