@@ -42,8 +42,20 @@ GPU = False                  # --gpu 로 켬; CuPy 실패 시 CPU 폴백 (step3_
 
 
 # ---------------------------------------------------------------- CG (warm start)
+def _amg_M(L):
+    """pyamg AMG preconditioner (그래프-라플라시안 특화) — 설치 시에만.  실패하면 None."""
+    try:
+        import pyamg
+        ml = pyamg.smoothed_aggregation_solver(sparse.csr_matrix(L), max_coarse=500)
+        return ml.aspreconditioner(cycle='V')
+    except Exception:
+        return None
+
+
 def _cg(L, b, x0=None, rtol=1e-9):
-    """Jacobi-CG, GPU(CuPy) 우선/CPU 폴백 — step3_sigma._solve_cg 패턴 + x0 warm start."""
+    """3단 솔브: GPU Jacobi-CG → (실패시) CPU AMG-CG(pyamg) → CPU Jacobi-CG.
+    실전 격자(VGCF 100 S/cm ↔ BV면 1e-11 S, ~9자릿수 대비)에서 Jacobi 단독은 정체할 수
+    있어(2026-07-15 V100 스모크: 50k iter 미수렴) AMG 폴백이 프로덕션 안전망."""
     diag = L.diagonal()
     if GPU:
         try:
@@ -55,13 +67,18 @@ def _cg(L, b, x0=None, rtol=1e-9):
             Mg = cxs.diags(1.0 / cp.asarray(diag))
             x0g = cp.asarray(x0, np.float64) if x0 is not None else None
             try:
-                xg, info = cg_gpu(Lg, bg, x0=x0g, tol=rtol, maxiter=50000, M=Mg)
+                xg, info = cg_gpu(Lg, bg, x0=x0g, tol=rtol, maxiter=20000, M=Mg)
             except TypeError:
-                xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=0.0, maxiter=50000, M=Mg)
-            return cp.asnumpy(xg), int(info)
+                xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=0.0, maxiter=20000, M=Mg)
+            if int(info) == 0:
+                return cp.asnumpy(xg), 0
+            print(f'    step4 GPU Jacobi-CG 미수렴(info={int(info)}) → CPU AMG 폴백', flush=True)
+            x0 = cp.asnumpy(xg)                              # GPU 진행분을 warm start로 재사용
         except Exception as e:
             print(f'    step4 GPU solve unavailable ({type(e).__name__}: {e}) → CPU', flush=True)
-    M = sparse.diags(1.0 / diag)
+    M = _amg_M(L)
+    if M is None:
+        M = sparse.diags(1.0 / diag)
     try:
         return cg(L, b, x0=x0, rtol=rtol, maxiter=50000, M=M)
     except TypeError:
@@ -171,7 +188,8 @@ class Kinetics:
       i0(x) = i0_ref·(x/½)^{α_c}·((1−x)/½)^{α_a}   (x=½에서 i0_ref; α=½/½ → √(4x(1−x)) 구형)
       c_e 항 없음 — 단일이온 SE(활동도 고정) = SSB 물리."""
 
-    CLIP = 40.0
+    CLIP = 20.0        # sinh(20)=2.4e8 — 물리 면전류(≪1e-4 A)보다 6자릿수 위 = 물리손실 0,
+                       # cosh 상한 2.4e8로 야코비안 g_f 폭주(κ→1e13) 차단 (수치리뷰 #9)
 
     def __init__(self, i0_ref, alpha_a=0.5, alpha_c=0.5, asr_film=0.0, temp_k=298.15):
         self.i0_ref, self.aa, self.ac = float(i0_ref), float(alpha_a), float(alpha_c)
@@ -384,16 +402,23 @@ class CellSystem:
             np.add.at(diag_add, self.f_i, g_f)
             data[self.pos_diag] = self._diag0 + diag_add
             self.J.data[:] = data
-            dphi, info = _cg(self.J, -Fv, x0=None)
+            # inexact-Newton: 보정해 CG는 느슨하게(1e-5) — 잔차는 매번 정확 재계산되므로
+            # Newton 외부 루프가 흡수.  타이트 rtol(1e-9)은 실전 κ에서 CG 정체 원인이었음.
+            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5)
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             step = 1.0
+            accepted = False
             for k in range(10):                             # 감쇠: ||F|| 감소 보장
                 Fn, I_fn, eta_n = self.residual(phi + step * dphi, U_f, i0_f, kin, I_app,
                                                 I_faces_init=I_f)
                 if (np.linalg.norm(Fn, np.inf)
-                        <= np.linalg.norm(Fv, np.inf) * (1 - 0.25 * step)) or k == 9:
-                    break                                    # k==9: 마지막 평가 스텝 그대로 적용
+                        <= np.linalg.norm(Fv, np.inf) * (1 - 0.25 * step)):
+                    accepted = True
+                    break
                 step *= 0.5
+            if not accepted:
+                break                                        # ||F|| 미감소 → 스텝 거부, phi 보존
+                                                             # (강제수용이 V100 폭주의 방아쇠였음)
             phi = phi + step * dphi
             Fv, I_f, eta_s = Fn, I_fn, eta_n
             it += 1
@@ -494,6 +519,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         i_am = sys_.particle_current(I_f)
         if resid > 1e-6:                                    # F2 규약: 침묵 실패 금지 (수치리뷰 #5)
             print(f'    ⚠ step4 Newton 잔차 {resid:.1e} > 1e-6 @t={t:.1f}s — 이 스텝 신뢰 주의', flush=True)
+        newton_failed = resid > 1e-3                        # 하드 실패: 기록만 남기고 확산 전진 전 중단
         kcl = abs(i_am.sum() - I_app) / max(abs(I_app), 1e-30)
         aud = sys_.energy_audit(phi, I_f, eta_s, U_f, kin, I_app)
         V_cell = aud['V']
@@ -523,6 +549,11 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
                   f'ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV E-bal {aud["balance_rel"]:.1e} '
                   f'KCL {kcl:.1e}', flush=True)
         # ---- 종료/전환 ----
+        if newton_failed:                                   # 가비지 상태로 확산을 전진시키지 않음
+            reason = 'newton_fail'
+            print(f'  ⚠ step4-v2 HARD-FAIL: Newton 미수렴(resid {resid:.1e}) — 솔버/전처리 점검 필요',
+                  flush=True)
+            break
         done_soc = (x_bar >= x_end - 1e-4) if not charge else (x_bar <= x_end + 1e-4)
         v_out = (V_term < v_min) if not charge else (V_term > v_max)
         if phase == 'cc' and v_out and cv_hold:
