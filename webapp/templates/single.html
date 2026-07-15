@@ -338,7 +338,8 @@ scp kgy@59.12.161.91:~/work/_verify/Yonghoon-DEM-DFT/mpm_payload.json \
   </details>
   <details style="margin-top:8px">
     <summary style="cursor:pointer;color:#94a3b8;font-size:0.9em;font-weight:600">GPU 서버(runyourai V100 대여) 실행 명령어 — ① zip 받고 복사해서 사용</summary>
-    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ⓪ 대여마다 1회 — WSL에서 새 pem 등록(v100key) 후, V100 안에서 (ssh v100):
+    <div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre># ⓪ 대여마다 1회 — WSL: cp "/mnt/c/Users/안용훈/Downloads/&lt;새pem&gt;.pem" ~/.ssh/v100.pem &amp;&amp; chmod 600 ~/.ssh/v100.pem
+#    (config의 v100 별칭이 ~/.ssh/v100.pem을 봄) — 그 다음 V100 안에서 (ssh v100):
 git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT
 cd ~/Yonghoon-DEM-DFT && git checkout claude/stoic-knuth-NObVQ
 sudo apt update && sudo apt install -y python3-pip unzip && python3 -m pip install taichi numpy scipy scikit-image cupy-cuda12x nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 nvidia-cuda-runtime-cu12 nvidia-cuda-nvrtc-cu12 nvidia-nvjitlink-cu12</pre></div>
@@ -639,9 +640,9 @@ function updateAdditiveGpuCmds() {
       setup: `cd /root/work/Yonghoon-DEM-DFT && git fetch origin ${BR} && git worktree add -B mpmwork /root/work/mpm_run origin/${BR}` },
     { name: 'kgy',   ssh: 'kgy@59.12.161.91',   wk: '~/work/_verify/Yonghoon-DEM-DFT', setup: '' },
     // runyourai 대여 V100(32GB): WSL ~/.ssh/config의 v100 별칭 사용 (HostName machine.runyour.ai —
-    // 대여마다 실기계·호스트키·pem이 바뀜 → WSL에서 v100key(최신 pem 등록) 먼저, 컨테이너엔 pip 없음).
+    // 대여마다 실기계·호스트키·pem이 바뀜 → WSL에서 ~/.ssh/v100.pem 덮어쓰기(최신 pem) 먼저, 컨테이너엔 pip 없음).
     { name: 'runyourai(V100)', ssh: 'v100', wk: '~/Yonghoon-DEM-DFT',
-      lbl0: '# ⓪ 대여마다 1회 — WSL서 v100key(새 pem 등록) 후, ssh v100 안에서:',
+      lbl0: '# ⓪ 대여마다 1회 — WSL: cp <새pem>.pem ~/.ssh/v100.pem && chmod 600 (별칭이 이 경로를 봄) 후, ssh v100 안에서:',
       setup: `git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/Yonghoon-DEM-DFT; cd ~/Yonghoon-DEM-DFT && git checkout ${BR}\nsudo apt update && sudo apt install -y python3-pip unzip && python3 -m pip install taichi numpy scipy scikit-image cupy-cuda12x nvidia-cublas-cu12 nvidia-cusparse-cu12 nvidia-cusolver-cu12 nvidia-cuda-runtime-cu12 nvidia-cuda-nvrtc-cu12 nvidia-nvjitlink-cu12` },
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
