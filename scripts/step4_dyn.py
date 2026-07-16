@@ -590,8 +590,12 @@ class CellSystem:
         반환 (phi, I_f, eta_s, resid, V_app, I_del) — 전부 마지막 평가와 일관."""
         scale = max(abs(I_target), 1e-12)
         ev, st = self._ev_maker(phi, U_f, i0_f, kin, scale)
+        # 적응형 첫 탐색폭: 직전 스텝의 실제 ΔV 기반 (고정 0.05 V는 스텝 간 ΔV~0.1 mV인
+        # 시간전개에서 매 스텝 큰 점프-회수 낭비를 만들었음 — V100 스모크 로그)
+        step0 = float(np.clip(4.0 * getattr(self, '_galv_dV', 0.0125), 1e-4, 0.05))
         self._bracket_illinois(ev, lambda I, V: I - I_target, float(V_guess),
-                               tol_rel_i * scale)
+                               tol_rel_i * scale, step0=step0)
+        self._galv_dV = max(abs(st['V'] - float(V_guess)), 2.5e-5)
         self.last_galv_miss = abs(st['I'] - I_target) / scale
         return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
 
