@@ -1,5 +1,10 @@
 # B₂O₃ 도핑 → Li 채널 확장 (BVSE, b2o3 vs LPSCl1.6)
 
+> [!warning] SUPERSEDED (2026-07-09 SEMIFINAL)
+> 본 문서의 **"σ 1.33×" 및 D₀-driven 향상 서사는 철회**됐다 — 멀티시드(3-seed×3-T) 판정: σ비율 1.08/0.82/1.15 = **동등**.
+> 유효하게 남는 것: **BVSE 채널 +45% 확장**(정적 기하)과 동일-Ea. 순효과는 "σ 보존"(O의 Li–O 트랩 ↔ 채널 개방 상쇄).
+> 정본: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md.
+
 **날짜** 2026-07-02 · **방법** BVSE(Bond-Valence Site Energy) Li 이동 맵. `tools/comp1_v3/bvse_standalone.py`(pure numpy/scipy, CIF→맵, DFT 불필요). BVS(r)=Σ exp((R0−d)/b) over S/Cl/O, BVSE=(BVS−1)². 각 맵 자체 최소값 기준 상대비교.
 **데이터** `db/properties/bvse_b2o3/`, `bvse_modelc/` · **그림** `docs/figures/cascade/bvse_channel_volume.png`, `bvse_channel_2p5d.png` · **VESTA cube** `docs/figures/bvse_cubes/*_bvse_aboveMin.cube`(min-subtract, 커밋X·gitignore)
 
