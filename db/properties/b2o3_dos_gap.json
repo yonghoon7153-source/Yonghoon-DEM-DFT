@@ -6,11 +6,42 @@
  "gap_eV": 1.9671,
  "clean_insulator": true,
  "N_EF": 0.0,
- "VBM_edge_pct": {"Li": 7.3, "P": 0.3, "S": 89.5, "Cl": 1.4, "B": 0.1, "O": 1.4},
- "mean_3p_per_site_eV": {"free-S": -1.181, "B-S": -2.234, "PS4-S": -5.373, "Cl": -5.254, "O": -3.91},
- "site_counts": {"Li": 58, "P": 8, "B": 2, "PS4-S": 29, "B-S": 6, "O": 3, "free-S": 6, "Cl": 16},
- "note": "CONFIRMED 2026-07-16 from backup: b2o3_nscf_gap.out prints 'highest occupied, lowest unoccupied level (ev): 2.4717 4.4388' and b2o3_scf_fixed.out agrees on the VBM -> the June slide gap 1.97 was eigenvalue-based all along (NOT a DOS-threshold number); every June b2o3 slide value stands. Family: modelc 2.099 -> +B2O3 1.9671 (-0.132, slight narrowing) vs +O LPSOCl 2.2309 (+0.132, widening); both edges stay host-like (VBM = S 3p). Site story: free S2- shallowest (mean 3p -1.18 eV, most oxidation-prone), B-S stabilized (-2.23), PS4-S deepest (-5.37); B 2p sparse and buried (2 atoms).",
+ "VBM_edge_pct": {
+  "Li": 7.3,
+  "P": 0.3,
+  "S": 89.5,
+  "Cl": 1.4,
+  "B": 0.1,
+  "O": 1.4
+ },
+ "mean_3p_per_site_eV": {
+  "free-S": -1.142,
+  "B-S": -2.148,
+  "PS4-S": -2.225,
+  "Cl": -2.987,
+  "O": -3.643
+ },
+ "site_counts": {
+  "Li": 58,
+  "P": 8,
+  "B": 2,
+  "PS4-S": 29,
+  "B-S": 6,
+  "O": 3,
+  "free-S": 6,
+  "Cl": 16
+ },
+ "note": "CONFIRMED 2026-07-16 from backup: b2o3_nscf_gap.out prints 'highest occupied, lowest unoccupied level (ev): 2.4717 4.4388' and b2o3_scf_fixed.out agrees on the VBM -> the June slide gap 1.97 was eigenvalue-based all along (NOT a DOS-threshold number); gap, VBM-edge % and N_EF=0 stand as-is. Family: modelc 2.099 -> +B2O3 1.9671 (-0.132, slight narrowing) vs +O LPSOCl 2.2309 (+0.132, widening); both edges stay host-like (VBM = S 3p). Site story (-8..0 eV window): free S2- shallowest (<3p> -1.14, most oxidation-prone) < B-S -2.15 ~ PS4-S -2.23 < Cl -2.99 < O -3.64; B 2p sparse and buried (2 atoms).",
  "outputs": "db/properties/b2o3_dos_smooth.csv / b2o3_pdos_element_smooth.csv / b2o3_pdos_element_PERATOM.csv / b2o3_pdos_site_smooth.csv (pre-existing); standard-style figures: tools/electronic/standard_dos/b2o3/fig_b2o3_dos.py (3 PNGs); legacy slide set: tools/electronic/b2o3_dos_pdos_slides.py",
  "data_source": "kisti_backup_2026-07-14/kgy_b2o3_eos_2026-07-14/b2o3_eos/{b2o3_nscf_gap.out, b2o3_scf_fixed.out, b2o3_dos_pdos_values.json} (desktop WSL verification 2026-07-16)",
- "date": "2026-07-16"
+ "date": "2026-07-16",
+ "_mean3p_method": "PDOS-weighted mean of the per-atom site curves over the -8..0 eV valence window (= what the figures display; recomputed 2026-07-16 from b2o3_pdos_site_smooth.csv). Ordering free-S shallowest < B-S ~ PS4-S < Cl < O is the robust result. LPSOCl same-window ladder agrees (free-S -1.0 / PS4-S -2.29 / Cl -2.80 / O -4.13, kgy full-file-range).",
+ "mean_3p_per_site_eV_legacy_june_fullrange": {
+  "free-S": -1.181,
+  "B-S": -2.234,
+  "PS4-S": -5.373,
+  "Cl": -5.254,
+  "O": -3.91,
+  "_caveat": "June 2026 values integrated the FULL projwfc range; PS4-S/Cl were dragged ~3 eV down by deep sigma/a1 band weight below -8 eV (not shown in any figure). Window-inconsistent -> superseded for figure/comparison use; kept for provenance."
+ }
 }

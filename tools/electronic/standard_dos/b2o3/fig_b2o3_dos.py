@@ -3,6 +3,9 @@
 Data: db/properties/b2o3_{dos,pdos_element,pdos_site}_smooth.csv (sigma 0.05 eV).
 Gap 1.9671 eV = VBM/CBM eigenvalues 2.4717/4.4388 from fixed-occ nscf
 (b2o3_nscf_gap.out, 25 irr k; confirmed from KISTI backup 2026-07-16).
+Site mean-3p values are computed from the csv over the displayed valence
+window (-8..0 eV) at plot time — the June 2026 full-range values for
+PS4-S/Cl (-5.37/-5.25) were inflated by deep sigma-band weight below -8 eV.
 Same figure family as lpsocl/fig_lpsocl_dos.py. Outputs 3 PNGs into cwd.
 """
 import csv
@@ -87,7 +90,6 @@ plt.close(fig)
 SITES = ["free_S", "B_S", "PS4_S", "Cl", "O"]
 SCOL = {"free_S": "#c05621", "B_S": "#0284c7", "PS4_S": "#7c3aed", "Cl": "#65a30d", "O": "#be123c"}
 SLS = {"B_S": "-", "PS4_S": "-", "Cl": "--", "O": ":"}
-MEAN3P = {"free_S": -1.181, "B_S": -2.234, "PS4_S": -5.373, "Cl": -5.254, "O": -3.910}
 CNT = {"free_S": 6, "B_S": 6, "PS4_S": 29, "Cl": 16, "O": 3}
 LBL = {"free_S": "free S$^{2-}$", "B_S": "B–S (BS$_3$)", "PS4_S": "PS$_4$–S", "Cl": "Cl", "O": "O (on P)"}
 sc = {s: [] for s in SITES}
@@ -96,6 +98,14 @@ with open(DB + "b2o3_pdos_site_smooth.csv") as f:
     for r in csv.DictReader(f):
         E3.append(float(r["E_minus_VBM"]))
         for s in SITES: sc[s].append(float(r[s]))
+# mean 3p per site computed FROM the plotted data (occupied part of the csv
+# window, E<=0) so legend numbers always match what is displayed
+MEAN3P = {}
+for s in SITES:
+    num = den = 0.0
+    for e, y in zip(E3, sc[s]):
+        if e <= 0.0 and y > 0: num += e * y; den += y
+    MEAN3P[s] = num / den
 fig, ax = plt.subplots(figsize=(8.6, 5.4))
 fig.subplots_adjust(left=0.09, right=0.97, top=0.92, bottom=0.12)
 ax.axvspan(0, GAP, color="#fef9c3", zorder=0)
@@ -107,11 +117,13 @@ for s in ("B_S", "PS4_S", "Cl", "O"):
     ax.plot(E3, sc[s], color=SCOL[s], ls=SLS[s], lw=1.9)
 for s in SITES:
     ax.axvline(MEAN3P[s], color=SCOL[s], ls=":", lw=1.0, alpha=0.55)
-ax.annotate("free S$^{2-}$ shallowest\n(mean 3p $-$1.18 eV)\n$\\rightarrow$ most oxidation-prone",
+ax.annotate("free S$^{2-}$ shallowest\n($\\langle$3p$\\rangle$ $%.2f$ eV)\n$\\rightarrow$ most oxidation-prone" % MEAN3P["free_S"],
             xy=(-0.62, 4.70), xytext=(0.35, 4.55), fontsize=9.5, color=SCOL["free_S"],
             arrowprops=dict(arrowstyle="-|>", color=SCOL["free_S"], lw=1.2))
+ax.text(-6.95, 3.45, "$\\langle$3p$\\rangle$ = PDOS-weighted mean,\n$-$8..0 eV (displayed valence window)",
+        fontsize=7.5, color=MUT, style="italic")
 ax.legend(handles=[plt.Line2D([], [], color=SCOL[s], ls=SLS.get(s, "-"), lw=2.2,
-                              label=f"{LBL[s]} $\\times${CNT[s]}  (mean 3p ${MEAN3P[s]:+.2f}$)")
+                              label=f"{LBL[s]} $\\times${CNT[s]}  ($\\langle$3p$\\rangle$ ${MEAN3P[s]:+.2f}$)")
                    for s in SITES],
           loc="upper left", frameon=False, fontsize=8.6)
 ax.set_xlim(-7, 4); ax.set_ylim(0, 6.0)

@@ -280,7 +280,7 @@
       "kpts": "25 irr (fixed-occ nscf)",
       "cell": "128-atom B2O3-doped modelc champion (Li58 P8 S41 Cl16 B2 O3)",
       "N_EF": 0.0,
-      "note": "CONFIRMED 2026-07-16 from KISTI backup b2o3_eos/b2o3_nscf_gap.out ('highest occupied, lowest unoccupied: 2.4717 4.4388'; scf_fixed agrees on VBM). The June slide gap 1.97 was ALREADY this eigenvalue value — never a DOS-threshold number — so all June b2o3 slide figures (89.5% S VBM edge, site mean-3p, N_EF=0) remain valid."
+      "note": "CONFIRMED 2026-07-16 from KISTI backup b2o3_eos/b2o3_nscf_gap.out ('highest occupied, lowest unoccupied: 2.4717 4.4388'; scf_fixed agrees on VBM). The June slide gap 1.97 was ALREADY this eigenvalue value - never a DOS-threshold number. Gap, VBM-edge %(89.5 S) and N_EF=0 stand as-is; site mean-3p values were RE-DERIVED on the -8..0 eV window (see b2o3_dos_gap.json) because the June full-range PS4-S/Cl means (-5.37/-5.25) carried deep-band weight below -8 eV."
     },
     "comp1_vs_modelc": "2.066 vs 2.099, delta +0.033 eV -> band gap INSENSITIVE to Cl/Li-vacancy disorder (eigenvalue confirms DOS-threshold trend, delta even smaller). Backup lobster_nscf cross-check: comp1 2.075 / modelc 2.098.",
     "modelc_defect_band_CORRECTION": "The earlier 'modelc defect band / EF<VBM' (EF_note above) was a DOS-THRESHOLD ARTIFACT. Fresh eigenvalue AND the DOS curve both show modelc CLEAN: N(EF)=0, no mid-gap states, EF mid-gap (2.10 eV gap). comp1 and modelc are BOTH clean insulators.",
