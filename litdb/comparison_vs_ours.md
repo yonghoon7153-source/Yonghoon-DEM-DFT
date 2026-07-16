@@ -127,6 +127,19 @@
     전이 금지.  같은 그룹이 **fab 400 / operating 200 MPa 명시 분리** = Doux/Lee2025 "제조≠작동"과 합류(단 operating
     200은 Doux 최적 5보다 높은 고압 운용).
 
+- **📌 Li(Yang) 2026 ECER 리뷰원고(심사중, `papers/li2026_sulfide_stability_review_ecer.md`) — 압밀 전제·압력 3축의 리뷰급 종합**:
+  - **냉간압밀 전제 문장**: "sulfide SEs **densify under conventional pressure conditions** → 양·음극과 양호한 고-고 접촉"
+    ↔ oxide는 >1000 °C 소결 — 우리 300 MPa cold-press DEM+MPM 파이프라인 전체의 전제를 리뷰가 명문화 (§2.3).
+  - ★ **압력의 3축 등장** (우리 fab-vs-operating 구분의 확장판): ① 압밀축 — 압력↑ → porosity↓·CAM-SE 실접촉면적↑ →
+    R_ct+R_bulk 동시↓, **단 과압 → tortuosity↑·이방 접촉구조**(가압방향 접촉↑ ↔ 측방 pore-지배 약접촉 잔존)[151 Sakka
+    JMCA 2022] = 우리 DEM 압력스윕·τ_Laplace 이방성 검증거리(신규); ② 열축 — **성형압↑ → 계면 치밀 비정질 P₂Sₓ층 in-situ
+    형성 → 총발열 −40–50 %**[106–109] (압력-열안전 커플); ③ 작동압축(음극) — void 수축/안정/성장 상도(P 0–20 MPa ×
+    i 0–40 mA/cm²)[189] + **Li 변형기구 지도 → CCD vs stack pressure 예측**[191] + "well-defined pressure window"
+    (부족→void / 과압→GB Li 압입) = Doux2020 5 MPa 최적·Lee2025 2 MPa 합류.  미래방향 ③ "**저압/무가압 설계**"가
+    리뷰의 결론 = 우리 300 MPa 압밀구조의 저압 unload 접촉/σ 유지율 시뮬이 정확히 그 요구.
+  - 기계축 물성: **E 10–30 GPa·K_IC 0.2–0.4 MPa·m^½**(§C 참조) — porosity floor의 E-의존(우리 A축 논지)과 정합.
+  - ⚠ 리뷰=2차출처·자체 데이터 0 — cite는 1차([151],[191] 등)로; porosity 절대값 없음(우리 Minnmann/Doux/Sakuda 유지).
+
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 - **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**
   (= 우리 DEM σ_ionic 0.04–0.18 상단과 일치!), **τ_ion 2.07 (=√(τ²=4.3))**, σ_el,eff 0.56 (τ_el²=7.4).
@@ -262,6 +275,22 @@
   - **LZO 코팅이 R_w를 고정**(50→100 cyc **+1.2 Ω·cm²만** vs bare +176.7) = 균열 억제 직접증거 → "코팅→계면
     안정→δ_s 유지→R_w 평탄"의 transport 입증.
 
+- **📌 Li(Yang) 2026 ECER 리뷰원고(심사중) — 조성 균형·carbon·구배·면용량의 리뷰 좌표 (B축 서사 보강)**:
+  - **조성 = 이온-전자 동적 균형**: CAM 과다 → SE 망 파편화 → 분극·용량저하 / SE 과다 → CAM 분산 → 전자망 단절
+    [143 Fig 9a: CAM 40–90 wt% × 입경 3.0/6.2/10.3 µm 채널단절 지도] = 우리 AM%-σ 트레이드오프·dead-AM 경고·σ_e f_p
+    항의 리뷰판 — 우리 결과를 문헌 프레임에 얹을 때 이 그림 인용.
+  - ★ **carbon 부피점유 [147] = 우리 랩 Kim2024(AFM 34,2409318) 그대로 인용됨**(Fig 9c) — "구형 CB가 SE 유효부피 점유·
+    Li⁺ 채널 협착·국부 전자농집→황화물 분해 가속; fiber/flake 우위" = 우리 A4/A5·CBD voxel·SuperP-vs-VGCF 형상 구분의
+    앵커 계보가 리뷰급 승인을 받은 것.
+  - **구배 전극**: 집전체측 carbon↑/분리막측 SE↑[149] + **3-layer NCM83/LPSCl σ_e/σ_ion sim+exp 실증**[152 Schlautmann
+    2025 ACS EL] = **A7 Phase-5 graded-z 직접 문헌 앵커** (Fig 10c).
+  - **면용량 목표선**: 현 1–2 → **>3 mAh/cm²** 필요[144] → 우리 SDCP 3.18 mAh 캠페인 = 목표선 위 사례로 포지셔닝.
+  - **코팅 4요건+두께 딜레마**[154]: σ_ion↑·σ_e↓·화학안정·기계유연 + "얇음=차단실패/두꺼움=이온저항" = 우리 STEP4
+    ASR_film hook·SDCP σ_SDCP {15/50/150/1500} 스윕(+0.8→+63.4 %)이 정량으로 답하는 질문 구조.
+  - **Kim YJ 2024 [150] (ESM 71,103607)**: 3D 미세구조 위 SOC·전해질 전류밀도·활성/비활성 NCM·von Mises σ 동시 시각화 =
+    우리 STEP3/STEP4 voxel 그림과 가장 유사한 문헌 그림 → **WISHLIST digest 후보**.
+  - ⚠ 리뷰 자체는 σ 수치 앵커 없음(σ_eff 실측은 Minnmann/Bazzoun/Kim2025 유지); 재료군 σ 범위(황화물 10⁻⁴–10⁻² S/cm)만.
+
 ## C. 역학 / morphology — MPM 고유 (문헌 DEM은 형상 못 바꿈)
 - 문헌: Varkey "elasto-plastic"은 **CONTACT 힘법칙만**(Thornton–Ning), 입자는 완벽 구 — "구=타협,
   현실 형상=향후 과제" 명시. Bazzoun도 구만.  **★ Duquesnoy 2023(ARTISTIC 캘린더링 DEM)도 rigid-구형**(CBD-shrink 건조=
@@ -354,6 +383,21 @@
     Li-구배 → 응력 → 균열**" 인과 = 우리가 안 다루는 *계면 화학* 축.  **LZO 6–8 nm 비정질 코팅**이 이를 패시베이션
     (XPS 부산물 억제 → 구배·damage 모두 완화, Fig 5f–h) → 우리 coverage(*기계* 접촉면적)와 **종류 다른** *화학*
     코팅(backlog A4 carbon coating과도 다름).  future "계면" 축의 실험 근거로 기록.
+
+- **📌 Li(Yang) 2026 ECER 리뷰원고(심사중) — 기계축 물성·chemo-mech 결합의 리뷰 좌표 (C축 물성 입력 + A10 시간축)**:
+  - **물성 앵커**: **E(황화물) 10–30 GPa**(우리 real 22–24 정합; E_eff 1.35/1.53=연화 프록시 서사 유지) ·
+    **K_IC 0.2–0.4 MPa·m^½**[122–124 McGrogan 계열] = SE 취성균열(backlog D6, damage/cohesive-MPM) 구현 시 물성 입력.
+  - ★ **임계입경 규칙**: 계면반응 부피팽창 하 **>~3 µm → 탄성변형에너지 축적 → 파편화** / **<1 µm → 협조변형(균열 회피)**
+    [72,74] = 우리 r_SE 크기효과·Cronau(r_SE)·A9 크기-파괴 압밀분의 독립 문헌 지지 — fracture-aware σ(f_intact)와 연결.
+  - **chemo-mechanical 결합 파괴**(§4.1.4): CAM 팽창수축 ↔ SE 산화분해 **부피수축** 역방향 → 계면 응력집중 누적 → CAM
+    균열·2차입자 파편화·SE-CAM 접촉 상실; in-situ 측정 "전해질 산화 부피변화가 응력축적 주요 원인"[141 operando pressure]
+    = 우리 MPM 응력장·void-fill이 표현할 물리의 *사이클* 구동판(A10 공백; Bucci·Alabdali 계열과 같은 칸).
+  - **음극 압밀역학 곡선**: 합금 음극 **상대밀도 vs 정규화압력 σ/σ_y**(액체 vs SE, Al/Sn/In)[210 Nat Mater 24,907] +
+    "stack pressure를 합금 σ_y에 정합"[209] = 우리 Heckel/σ_y 언어가 음극 설계에 등장한 외부 사례.
+  - **덴드라이트 wedge-opening**[177 Ning Nature 618]: 균열 후단 Li 주입 쐐기 → K_IC 초과 시 관통 — 우리 fracture 모듈
+    (양극 복합재 Auerbach)의 음극판(미보유; Li금속·분리막 SE 없음) — over-claim 금지 경계 명확.
+  - ⚠ 리뷰의 "황화물 소성 변형성"은 정성 서술 — CONTACT-소성 vs SHAPE-소성 구분 없음; frame[1]/[2] 구분을 소급 적용하지
+    말 것. 기계 수치는 재료군 대표값(LPSCl 특정은 Sakuda 24·Kang/Bazzoun 22.1이 더 정밀).
 
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
@@ -518,6 +562,26 @@
     σ_ionic 앵커로 쓸 때 *깨끗이 분리된 셀의 R_ion* 만 쓸 것 (Bazzoun/Minnmann 이 대칭셀/full-blocking 쓴 이유).
   - **도전제 형상(0D Super P vs 1D VGCF):** VGCF 가 전자저항·R_int 둘 다 낮춤(1D 전자망 + SE-카본 계면면적↓ → 산화분해↓)
     = Lee 2025 VGCF σ_e 와 같은 결 → 우리 σ_e 도전제 형상 구분 약함 보강(우리 production = Super P 0D 가정).
+
+- **📌 Li(Yang) 2026 ECER 리뷰원고(심사중) — 우리 미보유칸의 가장 체계적 카탈로그 (F축 지도; digest
+  `papers/li2026_sulfide_stability_review_ecer.md` §13c)**:
+  - **화학 축 전체 미보유 (우리 DEM/MPM/STEP4 모두 반응항 없음):** ① 공기 — H₂S/가수분해/HSAB(H₂O 흡착 E_ad LPSC −1.63
+    → O/F 치환 −1.19 eV; DFT 흡착에너지 스타일은 우리 E_bind 트랙 참고) ② 용매 — 극성/donor-number 공격(건식공정 정당화
+    문헌) ③ 열 — 고유 400–500 °C ↔ NCM O-방출 200–300 °C 계면 발열(성형압→P₂Sₓ층→발열 −40–50 % 커플) ④ 전기화학 —
+    LGPS 창 1.7–2.1 V·산화 ~2 V·분해 캐스케이드(LPSCl→Li₃PS₄→P₂S₅→P₂O₅·LiCl·SOₓ)·계면 3분류(안정/MCI/패시베이션)
+    [116] — STEP4-v2 전압경계·SDCP 부산물 해석의 화학 맥락으로만 차용.
+  - **덴드라이트·Li/SE 계면 물리 미보유:** SE 내부 핵생성(pore·GB·전자전도 시너지→CCD↓)·wedge-opening 성장[177]·
+    void 진화(탈리속도>공공확산)[186,188] — Li금속·분리막 SE가 우리 도메인 밖. 단 **작동압 창 정량(void 상도[189]·Li
+    변형지도→CCD[191])**은 우리 fab-vs-operating 구분의 음극판으로 인용 가치.
+  - **사이클 시간축(A10)**: 리뷰 미래방향 ② "in-situ + 멀티스케일 시뮬로 동적 계면 진화" = 우리 A10(사이클 chemo-mech)
+    칸의 리뷰급 수요 선언; 사이클 후 void XCT 3.95→1.19 %[161] = 그 축의 목표 데이터 스타일.
+  - **SCL(공간전하층) 뉘앙스**: "SCL은 유일 원인 아님 — 화학 부산물 축적이 더 직접적"[116,133,136] — 계면 임피던스
+    해석 시 SCL 과대해석 경계(우리 STEP4 ASR 해석에도 적용).
+  - ★ **역방향 확인(우리가 채우는 칸):** 이 리뷰가 "구조→수송 정량"을 [140 Bielefeld·150 voxel-sim·151 압력-구조·152
+    구배] 단 4편 인용으로 처리 = 239 refs 분포 자체가 **우리 DEM σ-삼중항+MPM morphology+STEP4 DFN 공백의 증명**;
+    +**우리 랩 Kim2024를 ref[147]로 인용** = 우리 앵커 계보의 리뷰급 승인. 미래방향 ①(고유안정 재료설계)·④(평가 표준화 —
+    두께·로딩·시험압력·사이클 조건 통일)은 우리 범위 밖이되 ④는 fab≠operating 압력구분(Doux 합류) 서사 지원.
+  - ⚠ **미출판 심사중 원고(ECER-D-26-00097)** — 인용은 "manuscript under review"로만, 수치는 1차문헌 cite.
 
 ---
 ## 🗨️ Q&A 로그

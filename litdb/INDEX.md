@@ -1,10 +1,20 @@
 # 📚 LITDB — DEM+MPM ASSB 압밀·전달 문헌 인덱스
 
-> 갱신: 2026-07-10 (+**★★ Duquesnoy 2023 (Franco/ARTISTIC) = 우리 5-Phase 비전의 published archetype** — 물리시뮬→Sobol DOE→SISSO→베이지안 다목적최적화→실험검증; §LIB 제조 DEM 섹션). 이전 2026-07-08 (+Kang(Jihyeon)2025 bollard-anchored binder + Han2025 ICEP 이온전도 탄성 binder digest — 전도성-바인더 자매 2편, SDCP 앵커). ★ **종합 리뷰(60편) = `docs/literature_review_dem_mpm_assb.md`** (분류표 + 섹션별 review +
+> 갱신: 2026-07-16 (+**📌 Li(Yang) 2026 ECER 심사중 원고 — 황화물 ASSB 안정성 총설, 사용자 요청 최상단 고정**). 이전 2026-07-10 (+**★★ Duquesnoy 2023 (Franco/ARTISTIC) = 우리 5-Phase 비전의 published archetype** — 물리시뮬→Sobol DOE→SISSO→베이지안 다목적최적화→실험검증; §LIB 제조 DEM 섹션). 이전 2026-07-08 (+Kang(Jihyeon)2025 bollard-anchored binder + Han2025 ICEP 이온전도 탄성 binder digest — 전도성-바인더 자매 2편, SDCP 앵커). ★ **종합 리뷰(60편) = `docs/literature_review_dem_mpm_assb.md`** (분류표 + 섹션별 review +
 > DEM/MPM 적용리스트 + MPM 수식계보 + Stage-2 닫음 + 결론).  각 논문 상세는 `papers/<slug>.md` (digest), 우리 대비는 `comparison_vs_ours.md`,
 > 기준값은 `our_dem_baseline.md`. 수치 CSV는 `docs/data/<slug>_*.csv`.
 
 Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
+
+## 📌 최상단 고정 (사용자 요청 2026-07-16) — 황화물 ASSB 안정성 총설 리뷰 (심사중 원고)
+
+> ⚠ **PROVENANCE: 미출판 심사중 원고** — Electrochemical Energy Reviews 투고 원고 **ECER-D-26-00097**
+> (Editorial Manager 4분할 PDF 113p, `docs/literature_coverage/pdfs/Li_2026_ECER-D-26-00097_*_part1..4.pdf`).
+> 인용은 "manuscript under review"로만; **수치는 대부분 2차인용** → 실제 cite는 digest §3 표의 1차문헌(ref#)으로.
+
+| 논문 (제1저자 년) | 저널 | 소재 | 핵심값 | type | status | slug |
+|---|---|---|---|---|---|---|
+| **📌 Li (Yang) 2026** (USTB Fan Li-Zhen* + Tsinghua Nan Ce-Wen) | **ECER-D-26-00097 (심사중 Review)** | 황화물 SE 전반(LPSCl·LGPS·Li₇P₃S₁₁·Li₃PS₄) vs oxide/polymer/halide + NCM/신규 CAM/음극 전군 | ★ **안정성 총설(재료물성→전극계면)**: 고유 5축 — 공기(H₂S/HSAB·E_ad LPSC −1.63→LPSOCF −1.19 eV) · 용매(극성/donor-number 공격→건식 정당화) · 열(고유 400–500 °C ↔ NCM O-방출 200–300 °C; **성형압↑→계면 P₂Sₓ층→발열 −40–50 %**) · 전기화학(**LGPS 창 1.7–2.1 V·산화 ~2 V**; SCL은 부차·부산물이 직접) · **기계(E 10–30 GPa·K_IC 0.2–0.4 MPa·m^½·임계입경 ~3 µm↔서브µm 협조변형)**; 양극계면 4겹(산화분해→O-방출 양방향→준위/SCL→**chemo-mech 균열**) + 전략(조성 이온-전자 균형[143]·**carbon 부피점유[147]=우리 랩 Kim2024 인용!**·구배[149,152=A7]·압력→porosity↓접촉↑but tortuosity↑이방[151]·코팅 t/σ 딜레마[154]·신규 CAM 할라이드/FeS₂/S-Se); 음극계면(덴드라이트 wedge-opening[177]·**stack-pressure 창 void 수축/안정/성장 상도[188–191]**·CCD·흑연 결정도·Si 300 %·합금 σ_y-정합 압력[210 상대밀도 vs σ/σ_y]·인공 SEI/LiF); 미래 4(고유안정·동적계면·**저압/무가압**·표준화); 면용량 1–2→**>3 mAh/cm²**(SDCP 3.18 위치); 239 refs·Fig 26 — 구조→수송 정량은 [140 Bielefeld,150,151,152] 4편 인용뿐 = **우리 파이프라인 공백 증명** | review (원고; 자체 sim/exp 없음) | ✅ | `li2026_sulfide_stability_review_ecer` |
 
 ## ★★★ 필독 / MUST-READ (랩 자체 논문 — 모델 trend 기준) ★★★
 
@@ -212,7 +222,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 메타만
 | **★ Kim 2025b** (Battery Energy, ≠ TLM) | **SE-coating CA(Super P 0D vs VGCF 1D)**: SE-SP σ_e **1.0e-5(3-decade 붕괴)** vs VGCF 1.4e-2; σ_ion SP 최저 → ★ **whatif_additives(W2) thinky-SuperP 붕괴 앵커 + A4** | `docs/lit_kim2025_conductive_agent_se_coating_assb.md` |
 
 ## 현황
-papers/ digest **63편** (+**Duquesnoy2023** ML 다목적최적화 archetype, 2026-07-10; +Kang(Jihyeon)2025 bollard·Han2025 ICEP 전도성-바인더 자매 2편, 2026-07-08) + docs/lit_*.md **33편** ✅ — **2026-06-30 INDEX 마무리 완료**: 4개 일괄 섹션으로 **모든 digest 파일이 slug로 findable** (검증 통과, 누락 0).  이전 "41편"/슬러그 stale 정정.  ⚠ 같은 (저자,년)에 *별개 논문*이 여럿(So2021/2022·Sangrós2020·Kim2024/2025) → slug로 구분.  **랩 자체논문 7편**(필독): Kang&Shin2025(역학/균열)·Kim·Kang·Park·Lee2025(EIS-TLM)·Kim2024(carbon점유)·Cho2024(VGCF양면성)·Kang2023(음극strain균열)·Jung2023(단결정NCM)·**Yun2023(degradation 종합 capstone)**.  **접촉모델·소성 14편**(`contact_models_layer_map.md`): Luding·EEPA·Pasha·Thornton–Ning·Kogut–Etsion·Jackson–Green·Mesarovic–Fleck·Storåkers·DMT·Stomakhin·Klár·de Vaucorbeil·Sangrós·Ngandjong.  **기존 7편**: Lee2025·Bazzoun·Varkey·So2021·Martin-Bouvard2003·Bouvard2000·McGeary1961.
+papers/ digest **64편** (+**📌 Li(Yang)2026 ECER-D-26-00097 심사중 원고** 황화물 안정성 총설 — 최상단 고정, 2026-07-16; +**Duquesnoy2023** ML 다목적최적화 archetype, 2026-07-10; +Kang(Jihyeon)2025 bollard·Han2025 ICEP 전도성-바인더 자매 2편, 2026-07-08) + docs/lit_*.md **33편** ✅ — **2026-06-30 INDEX 마무리 완료**: 4개 일괄 섹션으로 **모든 digest 파일이 slug로 findable** (검증 통과, 누락 0).  이전 "41편"/슬러그 stale 정정.  ⚠ 같은 (저자,년)에 *별개 논문*이 여럿(So2021/2022·Sangrós2020·Kim2024/2025) → slug로 구분.  **랩 자체논문 7편**(필독): Kang&Shin2025(역학/균열)·Kim·Kang·Park·Lee2025(EIS-TLM)·Kim2024(carbon점유)·Cho2024(VGCF양면성)·Kang2023(음극strain균열)·Jung2023(단결정NCM)·**Yun2023(degradation 종합 capstone)**.  **접촉모델·소성 14편**(`contact_models_layer_map.md`): Luding·EEPA·Pasha·Thornton–Ning·Kogut–Etsion·Jackson–Green·Mesarovic–Fleck·Storåkers·DMT·Stomakhin·Klár·de Vaucorbeil·Sangrós·Ngandjong.  **기존 7편**: Lee2025·Bazzoun·Varkey·So2021·Martin-Bouvard2003·Bouvard2000·McGeary1961.
 **★ #17-29 batch 13편 (2026-06-27):** DEM/ASSB — So2022(접촉+소결)·Huang2025(DEM+LBM 열); LIB제조 DEM+LIGGGHTS — Sangrós2019(Thornton-Ning+bond)·Lyu2025(건조+CBD parallel-bond)·Shenouda2020(LIGGGHTS튜토리얼)·Bosch2014(LIGGGHTS MSc); 구조모델링 — Bielefeld2019(percolation, B3 verbatim 확인, docs노트 대체); 실험앵커 — Minnmann2024(FIB-SEM)·Reisacher2023(LPSCl+C65 p_c≈4wt%); 사이클파괴 frame[5] — Bucci2017(CZM)·Bucci2018(delamination)·NMC811입계균열2023(nano-CT); 리뷰 — Deysher2022.
 + docs/ digest: **Minnmann 2021 JES**(★ porosity/σ_ion/τ 앵커 진짜 출처, EIS-TLM) · Minnmann 2022(설계 Perspective)
 · **★ Doux 2020**(작동압 vs 제조압 LPSCl 앵커, porosity 18 %@370 MPa) · **Cronau 2021**(stack pressure σ-측정 protocol)
