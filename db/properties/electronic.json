@@ -255,16 +255,58 @@
   },
   "eigenvalue_gaps_v100_2026_06_16": {
     "_method": "QE 7.4.1 GPU (V100, NVHPC 24.11 / CUDA 12.6) eigenvalue band gap = CBM(min eig > EF) - VBM(max eig <= EF), literature convention, smearing-independent. Supersedes the DOS-threshold gaps (1.76/1.82) which underestimate ~0.3 eV from MV-smearing tails leaking into the gap.",
-    "comp1":  {"gap_eV": 2.066, "VBM_eV": 2.128, "CBM_eV": 4.194, "EF_eV": 3.724, "kpts": "170 irr (k888 nscf)", "N_EF": 0.0, "note": "clean insulator, EF in gap"},
-    "modelc": {"gap_eV": 2.099, "VBM_eV": 2.445, "CBM_eV": 4.544, "EF_eV": 3.487, "kpts": "68 irr", "N_EF": 0.0, "note": "clean insulator, EF in gap"},
+    "comp1": {
+      "gap_eV": 2.066,
+      "VBM_eV": 2.128,
+      "CBM_eV": 4.194,
+      "EF_eV": 3.724,
+      "kpts": "170 irr (k888 nscf)",
+      "N_EF": 0.0,
+      "note": "clean insulator, EF in gap"
+    },
+    "modelc": {
+      "gap_eV": 2.099,
+      "VBM_eV": 2.445,
+      "CBM_eV": 4.544,
+      "EF_eV": 3.487,
+      "kpts": "68 irr",
+      "N_EF": 0.0,
+      "note": "clean insulator, EF in gap"
+    },
+    "b2o3": {
+      "gap_eV": 1.9671,
+      "VBM_eV": 2.4717,
+      "CBM_eV": 4.4388,
+      "kpts": "25 irr (fixed-occ nscf)",
+      "cell": "128-atom B2O3-doped modelc champion (Li58 P8 S41 Cl16 B2 O3)",
+      "N_EF": 0.0,
+      "note": "CONFIRMED 2026-07-16 from KISTI backup b2o3_eos/b2o3_nscf_gap.out ('highest occupied, lowest unoccupied: 2.4717 4.4388'; scf_fixed agrees on VBM). The June slide gap 1.97 was ALREADY this eigenvalue value — never a DOS-threshold number — so all June b2o3 slide figures (89.5% S VBM edge, site mean-3p, N_EF=0) remain valid."
+    },
     "comp1_vs_modelc": "2.066 vs 2.099, delta +0.033 eV -> band gap INSENSITIVE to Cl/Li-vacancy disorder (eigenvalue confirms DOS-threshold trend, delta even smaller). Backup lobster_nscf cross-check: comp1 2.075 / modelc 2.098.",
     "modelc_defect_band_CORRECTION": "The earlier 'modelc defect band / EF<VBM' (EF_note above) was a DOS-THRESHOLD ARTIFACT. Fresh eigenvalue AND the DOS curve both show modelc CLEAN: N(EF)=0, no mid-gap states, EF mid-gap (2.10 eV gap). comp1 and modelc are BOTH clean insulators.",
-    "U0_matched_undoped": {"gap_eV": 2.184, "VBM_eV": 2.401, "CBM_eV": 4.585, "EF_eV": 3.658, "cell": "120-atom", "kpts": "k661", "note": "undoped modelc in SAME cell/k as Nd-doped = matched baseline for Nd narrowing; also clean (EF mid-gap)"},
-    "Nd2O3_doped": {"gap_eV": 1.632, "VBM_eV": 3.081, "CBM_eV": 4.712, "EF_eV": 3.879, "cell": "120-atom", "kpts": "k661", "method": "DFT+U(Nd 4f, U=8 eV) + nspin2 AFM"},
+    "U0_matched_undoped": {
+      "gap_eV": 2.184,
+      "VBM_eV": 2.401,
+      "CBM_eV": 4.585,
+      "EF_eV": 3.658,
+      "cell": "120-atom",
+      "kpts": "k661",
+      "note": "undoped modelc in SAME cell/k as Nd-doped = matched baseline for Nd narrowing; also clean (EF mid-gap)"
+    },
+    "Nd2O3_doped": {
+      "gap_eV": 1.632,
+      "VBM_eV": 3.081,
+      "CBM_eV": 4.712,
+      "EF_eV": 3.879,
+      "cell": "120-atom",
+      "kpts": "k661",
+      "method": "DFT+U(Nd 4f, U=8 eV) + nspin2 AFM"
+    },
     "Nd_narrowing": "MATCHED: U0 2.184 - Nd 1.632 = 0.55 eV REAL narrowing (same 120-atom/k661, cancels cell/k/method). 62-atom modelc baseline (2.099) gives 0.47; the 0.08 difference is cell+k convergence.",
     "Nd_narrowing_mechanism": "Host-band shift, NOT a dopant level in the gap. PDOS: VBM = S 3p (host); CBM = PS4-derived S/P/Li (host). O 2p deep (~ -4 eV, not at VBM); Nd 4f out of gap (filled -7.4, empty +1.9); Nd 5d/6s just above CBM (not defining it). Driver: Nd3+/Li-vacancy DOMINATES (Nd 5d/6s + aliovalent electrostatics pull the PS4-derived CBM down). O speciation VERIFIED in relaxed 120-atom cell = 1 PS2O2 (P24: O29+O34) + 1 PS3O (P25: O40) + 8 pristine PS4; O 2p bonding deep (~-4 eV) and P-O antibonding pushed UP, so the oxidized tetrahedra move their frontier states AWAY from both gap edges -> the gap is set by pristine PS4 (VBM free/non-bonding S 3p, CBM PS4 antibonding) + Nd. Net narrowing is Nd-driven, NOT O; pure-O doping (no Nd) is expected to widen/leave gap unchanged (textbook), so the sign flip vs the O-doping literature is due to the Nd co-dopant. Both doped & undoped stay clean (N(EF)=0).",
     "electron_conductivity_implication": "RECONCILED 2026-06-17 (interpretation; not a direct GB calc). EXPERIMENT (PI): electronic conductivity by DC POLARIZATION (= TOTAL/EFFECTIVE, percolation through grain interiors + grain boundaries + interphase, NOT pure grain-interior) DECREASES with Nd2O3 doping; cycle performance IMPROVES. DFT: all clean (N(EF)=0); bulk gap NARROWS 0.55 eV (2.184->1.632, Nd 5d) -> grain-INTERIOR intrinsic e- conduction would if anything INCREASE. NO conflict: DC-polarization is PERCOLATION-limited, so the O-derived wide-gap phosphate/oxide phases (Li3PO4 5.73 / NdPO4 5.55 / Li2O 5.24 eV; grand-potential run_nd_sei.sh; form ONLY with O) at grain boundaries/interfaces interrupt the electronic network -> effective sigma_e DOWN. The measured drop is therefore an INTERPHASE/microstructure effect, NOT a bulk-gap effect (the bulk gap goes the other way -> a naive 'wider gap lowers e-conduction' reading is WRONG here). Cycle improvement follows: lower electronic leakage (dendrite/self-discharge suppression, Han 2019) + stable phosphate/oxide interphase (cathode passivation + Li2O anode SEI). CAVEATS: interphase mechanism inferred from SEI products + the bulk-goes-wrong-way logic (direct GB electronic conductivity NOT computed); bulk-gap-narrowing absolute is 4f-U sensitive (trend robust). This is the paper's central mechanistic result.",
     "work_function": "Slab WF (V100 (100)/(001) slabs) ABANDONED: asymmetric slabs -> net dipole -> vacuum potential ramps (no flat plateau) -> spurious WF 6.5-7.2 eV. For absolute band-edge alignment use literature WF (Braga 2026, argyrodite (100) = 3.40 eV) + our bulk edges (comp1~modelc edges ~identical).",
-    "figures": "docs/figures/dos_compare_3.png (comp1/modelc/Nd); docs/figures/nd_dos/nd_dos_pdos_v2.png; data: comp1_pdos_compact.csv, modelc_pdos_compact.csv, nd_dos/nd_pdos_compact.csv; tools: tools/figures/plot_3dos.py, plot_nd_dos_v2.py"
+    "figures": "docs/figures/dos_compare_3.png (comp1/modelc/Nd); docs/figures/nd_dos/nd_dos_pdos_v2.png; data: comp1_pdos_compact.csv, modelc_pdos_compact.csv, nd_dos/nd_pdos_compact.csv; tools: tools/figures/plot_3dos.py, plot_nd_dos_v2.py",
+    "doping_family_2026_07_16": "Same eigenvalue recipe across the family: comp1 2.066 | modelc 2.099 | +B2O3 1.9671 (-0.132 vs modelc, slight NARROWING; VBM still S-3p 89.5%, B 2p sparse/buried, free-S shallowest mean-3p -1.18) | +O LPSOCl 2.2309 (+0.132 vs modelc, WIDENING; O 2p buried, S-3p VBM). Both dopants keep clean insulators with host-like band edges; opposite ~0.13 eV shifts. Cells/k differ (b2o3 128at/25irr, LPSOCl 62at/68irr) but method identical; comp1 lobster cross-check puts method scatter ~0.01-0.03 eV."
   }
 }

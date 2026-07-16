@@ -1,0 +1,16 @@
+{
+ "system": "B2O3-doped LPSCl1.6 modelC champion, 128-atom cell (Li58 P8 S41 Cl16 B2 O3; 2 trigonal BS3 units, 3 O on P)",
+ "method": "standard_dos recipe (tools/electronic/standard_dos): nscf tetrahedra (DOS/PDOS, projwfc) + fixed-occ nscf 25 irr k -> gap from VBM/CBM eigenvalues, NO smearing; QE GPU, USPP 60/480 Ry; run June 2026 on KISTI (b2o3_eos dir)",
+ "VBM_eV": 2.4717,
+ "CBM_eV": 4.4388,
+ "gap_eV": 1.9671,
+ "clean_insulator": true,
+ "N_EF": 0.0,
+ "VBM_edge_pct": {"Li": 7.3, "P": 0.3, "S": 89.5, "Cl": 1.4, "B": 0.1, "O": 1.4},
+ "mean_3p_per_site_eV": {"free-S": -1.181, "B-S": -2.234, "PS4-S": -5.373, "Cl": -5.254, "O": -3.91},
+ "site_counts": {"Li": 58, "P": 8, "B": 2, "PS4-S": 29, "B-S": 6, "O": 3, "free-S": 6, "Cl": 16},
+ "note": "CONFIRMED 2026-07-16 from backup: b2o3_nscf_gap.out prints 'highest occupied, lowest unoccupied level (ev): 2.4717 4.4388' and b2o3_scf_fixed.out agrees on the VBM -> the June slide gap 1.97 was eigenvalue-based all along (NOT a DOS-threshold number); every June b2o3 slide value stands. Family: modelc 2.099 -> +B2O3 1.9671 (-0.132, slight narrowing) vs +O LPSOCl 2.2309 (+0.132, widening); both edges stay host-like (VBM = S 3p). Site story: free S2- shallowest (mean 3p -1.18 eV, most oxidation-prone), B-S stabilized (-2.23), PS4-S deepest (-5.37); B 2p sparse and buried (2 atoms).",
+ "outputs": "db/properties/b2o3_dos_smooth.csv / b2o3_pdos_element_smooth.csv / b2o3_pdos_element_PERATOM.csv / b2o3_pdos_site_smooth.csv (pre-existing); standard-style figures: tools/electronic/standard_dos/b2o3/fig_b2o3_dos.py (3 PNGs); legacy slide set: tools/electronic/b2o3_dos_pdos_slides.py",
+ "data_source": "kisti_backup_2026-07-14/kgy_b2o3_eos_2026-07-14/b2o3_eos/{b2o3_nscf_gap.out, b2o3_scf_fixed.out, b2o3_dos_pdos_values.json} (desktop WSL verification 2026-07-16)",
+ "date": "2026-07-16"
+}
