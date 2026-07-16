@@ -303,7 +303,7 @@
 ## 15. 후속 추적 참고문헌 (읽을 것 — 우선순위순)
 | 우선 | ref# | 논문 | 왜 |
 |---|---|---|---|
-| ★★★ | 109 | Wang S. et al., *InfoMat* 2022, 4, e12316 — "Improving thermal stability of sulfide SEs: an intrinsic theoretical paradigm" (**Th₀/Th′ 서술자**) | 우리 열 축 공백을 채울 서술자; 도핑 조성 열안정 스크리닝 즉시 이식 |
+| ★★★ | 109 | Wang S. et al., *InfoMat* 2022, 4, e12316 — "Improving thermal stability of sulfide SEs: an intrinsic theoretical paradigm" (**Th₀/Th′ 서술자**) — **✅ digest 완료 (2026-07-17): `wang2022_sulfide_thermal_stability_th_descriptor.md`** (⚠ 원논문 기호 Th/Th′; "Th₀"는 이 리뷰 표기. 교신 Fan Wu=IOP CAS ≠ 본 리뷰 Li-Zhen Fan/USTB. Eq 5 = {[Li]%×312.5+[P]%×346}×4+E_doped+k — Li–Cl 항 부재 주의) | 우리 열 축 공백을 채울 서술자; 도핑 조성 열안정 스크리닝 즉시 이식 |
 | ★★★ | 84 | Zhu & Mo, *Angew* 2020, 59, 17472 — 공기안정 SE 설계원리(가수분해 반응E 지도) | 우리 free-S/O-doping 공기 서사의 정량 원전(Fig 3b) |
 | ★★★ | 180 | Hao W. et al., *Angew* 2025, 64, e202500245 — "Origin of Li Dendrite Formation in Sulfide Electrolyte" (**ionization level**) | 우리 SEI-gap 지표의 형제 서술자 — 정식 벤치마크 대상 |
 | ★★ | 103 | Cao C. et al., *Cell Rep. Phys. Sci.* 2024, 5, 101909 — 황화물 산화열화 원자 기전 | 우리 축 B 메커니즘 심화(자리-분해 관점 비교) |
