@@ -108,8 +108,14 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
 
     big = L.shape[0] >= 50000
 
+    class _CGStop(Exception):
+        pass
+
     def _solve(Mp, x_init):
         cb = None
+        best = {'r': None, 'x': None, 'bad': 0}
+        r0 = None
+        tgt = 1e-300
         if big:                                              # CG 진행률 (50 iter마다 잔차 실측 —
             import time as _t                                # 수렴이 로그-선형이라 log-스케일 %)
             b_n = float(np.linalg.norm(b))
@@ -126,11 +132,24 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
                 prog = min(99.0, max(0.0, 100.0 * np.log(max(r0 / max(r, 1e-300), 1.0)) / den))
                 print(f'      CG {box["n"]:5d} it  resid {r:.2e} (목표 {tgt:.2e})  '
                       f'~{prog:.0f}%  {_t.time() - box["t0"]:.0f}s', flush=True)
+                # 자기-감지 정지: 자기 바닥(3연속 무개선/재상승)에 닿으면 best 반복해 채택 —
+                # 도달불가 목표를 쫓다 반올림으로 Krylov가 붕괴·발산하는 것 차단 (스트레스 실증)
+                if best['r'] is None or r < 0.7 * best['r']:
+                    best['r'] = r; best['x'] = xk.copy(); best['bad'] = 0
+                else:
+                    best['bad'] += 1
+                    if best['bad'] >= 3:
+                        raise _CGStop()
         mi = 1500 if big else 50000                          # CPU-AMG는 ~수백 iter가 정상 —
         try:                                                 # 1500 미달이면 더 돌려도 가망 없음
-            x_sol, info = cg(L, b, x0=x_init, rtol=rtol, atol=atol, maxiter=mi, M=Mp, callback=cb)
-        except TypeError:
-            x_sol, info = cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
+            try:
+                x_sol, info = cg(L, b, x0=x_init, rtol=rtol, atol=atol, maxiter=mi, M=Mp, callback=cb)
+            except TypeError:
+                x_sol, info = cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
+        except _CGStop:
+            x_sol = best['x']
+            info = 0 if (r0 is not None and best['r'] <= max(0.1 * r0, tgt)) else 1
+            print(f'      CG 자기-바닥 정지 → best resid {best["r"]:.2e} 채택 (info={info})', flush=True)
         if info and big and deep:
             cache['deep_weak'] = True                        # 심층-수렴권 CG 무용 기억 (런 전체)
         return x_sol, info
@@ -412,6 +431,9 @@ class CellSystem:
         iso[self.f_e] = False
         iso[self.f_i] = False
         diag0[iso] = 1.0
+        self.iso_idx = np.where(iso)[0]                     # 고립 placeholder 노드 (물리 없음)
+        self._agg_mask = np.ones(self.n_e, bool)            # 집계-잔차에서 고립 e-노드 제외
+        self._agg_mask[self.iso_idx[self.iso_idx < self.n_e]] = False
         self._diag0 = diag0
         # ---- CSR 1회 조립: 정적 + BV placeholder(0) + 대각.  이후 data만 갱신 ----
         rows_all = np.concatenate(rows + [self.f_e, self.f_i, np.arange(self.N)])
@@ -446,6 +468,15 @@ class CellSystem:
         self.J.data[:] = self.data0
         return self.J @ phi
 
+    def calibrate_floor(self, phi_eq, U_f, i0_f, kin, V_eq):
+        """집계-잔차 float64 바닥 **자가교정**: 정확한 평형(φ_e=U, φ_i=0, V=U → 진짜 잔차 0)에서
+        측정한 |Σ_e F| = 순수 반올림 노이즈.  공식 상한(ε·Σ|entries|)은 실전에서 ~10³× 후해
+        경고/하드페일선을 무력화했음(V100 smoke7).  ×4 마진."""
+        F, _, _ = self.residual(phi_eq, U_f, i0_f, kin, V_eq)
+        meas_agg = abs(float(F[:self.n_e][self._agg_mask].sum()))
+        self.agg_floor_abs = 4.0 * meas_agg + 1e-30
+        return meas_agg, float(np.linalg.norm(F, np.inf))
+
     def plate_current(self, phi, V_app):
         """방전-양(+) 전달 전류 [A]: I_del = Σ gB·(φ_c − V_app)  (전극→집전체로 나가는 전류)."""
         return float(np.sum(self.gB * (phi[self.aB] - V_app)))
@@ -468,9 +499,14 @@ class CellSystem:
         scale = max(abs(i_scale), 1e-12)
 
         def _err(F, phi_ref):
-            floor = (32.0 * np.finfo(np.float64).eps * self._abs_data_sum
-                     * (float(np.max(np.abs(phi_ref))) + 1.0))          # 집계 노이즈 바닥 [A]
-            agg = max(0.0, abs(float(F[:self.n_e].sum())) - floor)
+            # 집계 노이즈 바닥: 공식(ε·Σ|entries|)은 코히런트 상한이라 실전에서 ~10³× 후함
+            # (물리리뷰 R2#4 경고 → V100 smoke7에서 경고선 9.5e-2로 실증) → **자가교정 실측**
+            # (calibrate_floor: 정확한 평형 상태에서 잰 잔차 = 진짜 바닥)을 우선 사용.
+            floor = getattr(self, 'agg_floor_abs', None)
+            if floor is None:                                # 미교정 시 보수적 공식 폴백
+                floor = (32.0 * np.finfo(np.float64).eps * self._abs_data_sum
+                         * (float(np.max(np.abs(phi_ref))) + 1.0))
+            agg = max(0.0, abs(float(F[:self.n_e][self._agg_mask].sum())) - floor)
             self.last_err_floor_rel = floor / scale
             return max(float(np.linalg.norm(F, np.inf)), agg) / scale
 
@@ -512,19 +548,20 @@ class CellSystem:
             # Newton 외부 루프가 흡수.  타이트 rtol(1e-9)은 실전 κ에서 CG 정체 원인이었음.
             if not hasattr(self, '_pc_cache'):
                 self._pc_cache = {}                          # sticky-GPU + AMG 계층 (스텝 간 보존)
-            atol_cg = 8.0 * np.finfo(np.float64).eps * self._abs_data_sum \
-                * (float(np.max(np.abs(phi))) + 1.0)        # SpMV 노이즈 아래 목표 방지 (수치 R2#8)
+            # CG atol = 교정-바닥 기반 (코히런트 공식은 ~10³× 후해 CG 조기종료 → 부분해 →
+            # Newton 정체 r~e-3 를 유발했음: V100 smoke7 t=1-9s 거부 + 스트레스 리프로로 실증)
+            atol_cg = 0.05 * float(getattr(self, 'agg_floor_abs', 0.0))
             dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, atol=atol_cg,
                              pc_cache=self._pc_cache, deep=deep)
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             self._cg_failed = bool(info)
             step = 1.0
             accepted = False
-            for k in range(10):                             # 감쇠: ||F|| 감소 보장
+            f2_old = float(np.linalg.norm(Fv))              # ℓ2-merit (∞는 단일노드 거부로 정체 유발)
+            for k in range(10):                             # 감쇠: merit 감소 보장 (Armijo c=1e-4)
                 Fn, I_fn, eta_n = self.residual(phi + step * dphi, U_f, i0_f, kin, V_app,
                                                 I_faces_init=I_f)
-                if (np.linalg.norm(Fn, np.inf)
-                        <= np.linalg.norm(Fv, np.inf) * (1 - 0.25 * step)):
+                if float(np.linalg.norm(Fn)) <= f2_old * (1.0 - 1e-4 * step):
                     accepted = True
                     break
                 step *= 0.5
@@ -552,14 +589,19 @@ class CellSystem:
         return ev, st
 
     def _bracket_illinois(self, ev, f_of_I, V_start, tol_abs, max_eval=40, step0=0.05,
-                          f_dec=True):
+                          f_dec=True, st=None, r_ok=1e-3):
         """f(V)=f_of_I(ev(V), V) 의 근 — 단조 f 가정, bracket 확장 + Illinois false-position.
         순수 시컨트는 sinh 지수 꼬리에서 핑퐁(2026-07-16 selftest가 검출) → 괄호법이 정답.
         f_dec: f가 V에 단조 감소(True; I_del−I_t) / 증가(False; V−I·R−V_t).
         반환 (수렴여부).  최종 상태는 ev의 st에 남음."""
+        def _valid():
+            return st is None or st.get('r', 0.0) <= r_ok
+
         f0 = f_of_I(ev(V_start), V_start)
         if abs(f0) <= tol_abs:
             return True
+        if not _valid():
+            return False                                     # 비수렴 평가 → f 신뢰 불가 (V100/스트레스 폭주 방지)
         s_dir = (1.0 if f0 > 0 else -1.0) * (1.0 if f_dec else -1.0)   # f를 0쪽으로 미는 V 방향
         V_lo, f_lo = V_start, f0                             # 같은 부호 쪽 끝
         step = step0
@@ -567,6 +609,8 @@ class CellSystem:
         for _ in range(14):                                  # 0.05→…→~400 V 지수 확장 (충분)
             Vn = V_lo + s_dir * step
             fn = f_of_I(ev(Vn), Vn)
+            if not _valid():
+                return False                                 # 확장 중 비수렴 → 즉시 중단(미스 가드가 처리)
             if abs(fn) <= tol_abs:
                 return True
             if (fn > 0) != (f0 > 0):
@@ -584,6 +628,8 @@ class CellSystem:
             if not (lo < Vm < hi):
                 Vm = 0.5 * (lo + hi)
             fm = f_of_I(ev(Vm), Vm)
+            if not _valid():
+                return False
             if abs(fm) <= tol_abs or abs(hi - lo) < 1e-12:
                 return True
             if (fm > 0) == (f_lo > 0):
@@ -605,9 +651,9 @@ class CellSystem:
         ev, st = self._ev_maker(phi, U_f, i0_f, kin, scale)
         # 적응형 첫 탐색폭: 직전 스텝의 실제 ΔV 기반 (고정 0.05 V는 스텝 간 ΔV~0.1 mV인
         # 시간전개에서 매 스텝 큰 점프-회수 낭비를 만들었음 — V100 스모크 로그)
-        step0 = float(np.clip(4.0 * getattr(self, '_galv_dV', 0.0125), 1e-4, 0.05))
+        step0 = float(np.clip(4.0 * getattr(self, '_galv_dV', 2.5e-3), 1e-4, 0.05))
         self._bracket_illinois(ev, lambda I, V: I - I_target, float(V_guess),
-                               tol_rel_i * scale, step0=step0)
+                               tol_rel_i * scale, step0=step0, st=st)
         self._galv_dV = max(abs(st['V'] - float(V_guess)), 2.5e-5)
         self.last_galv_miss = abs(st['I'] - I_target) / scale
         return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
@@ -622,7 +668,7 @@ class CellSystem:
             self.last_galv_miss = 0.0
             return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
         self._bracket_illinois(ev, lambda I, V: (V - I * r_int_abs) - V_term,
-                               float(V_guess), tol_v, step0=0.01, f_dec=False)
+                               float(V_guess), tol_v, step0=0.01, f_dec=False, st=st)
         # F2: 괄호 실패가 침묵하지 않도록 터미널 방정식 미스를 실측 보고 (리뷰 R2 물리#12/수치#3)
         self.last_galv_miss = abs((st['V'] - st['I'] * r_int_abs) - V_term) / max(abs(V_term), 1.0)
         return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
@@ -682,7 +728,15 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     phi = np.zeros(sys_.N)
     U0 = float(ocp.U(x_ini))
     phi[:sys_.n_e] = U0
+    phi[sys_.iso_idx] = 0.0                                  # 고립 placeholder는 0 고정 (가짜 잔차 방지)
     V_prev = U0                                              # V_app warm start (평형 = OCV)
+    # float64 노이즈 바닥 자가교정 (초기상태 = 정확한 평형 → 측정치 = 순수 반올림)
+    _x_s0 = rad.surf_x()
+    _fp0 = np.clip(sys_.f_pid, 0, n_am - 1)
+    _agg0, _inf0 = sys_.calibrate_floor(phi, ocp.U(_x_s0)[_fp0], kin.i0(_x_s0)[_fp0], kin, U0)
+    if verbose:
+        print(f'  노이즈 바닥 교정: |ΣF|_eq={_agg0:.2e} A (floor=×4), ||F||∞_eq={_inf0:.2e} A '
+              f'→ floor_rel≈{sys_.agg_floor_abs / max(abs(I_cc), 1e-30):.1e}', flush=True)
     keys = ('t', 'V', 'V_terminal', 'I', 'x_mean', 'x_surf_p05', 'x_surf_p50', 'x_surf_p95',
             'eta_kin_mean', 'eta_diff_mean', 'newton_it', 'newton_resid', 'kcl_rel',
             'energy_balance_rel',
