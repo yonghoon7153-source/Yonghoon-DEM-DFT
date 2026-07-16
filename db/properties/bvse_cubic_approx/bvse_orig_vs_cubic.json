@@ -1,0 +1,225 @@
+{
+ "_method": "Faithful conventional-cubic approximant vs original cell, 2026-07-16. Cells are fcc-primitive stacks (a~7 A, 60 deg; c = 5x or 10x primitive), so C1=A2+p3-A1, C2=A1+p3-A2, C3=A1+A2-p3 (p3=A3/N) gives a ~9.9 A near-cubic frame built from the REAL lattice vectors. Atoms = periodic images of the REAL relaxed structure folded into the box (origin picked by composition score; NO idealized/prototype sites - fixes the June idealized-cubic critique). BVSE values on the cubic grid are a RESAMPLED CROP of the true A-periodic crystal map (distances via A-cell minimum image) -> zero seam artifacts; the box is a display/sampling window, not a period. Channel % = voxels with (BVSE - ORIGINAL-map global min) <= iso. Canonical numbers = original cell; box numbers show representation robustness (+/-1.3 pp for representative boxes). softBV Li-X R0: S 2.105 / Cl 2.249 / O 1.466, b=0.37; BVSE=(BVS-1)^2 valence^2 (empirical, NOT eV); ~0.25 A voxel (grid 28 orig / 40 box). VALIDATION: original-cell fractions reproduce June/July registered values exactly (modelc 1.23/3.32/8.36/17.85; b2o3 6.73/12.22/17.09/21.25).",
+ "_key_numbers_iso0.5_pct": {
+  "modelc_orig": 3.32,
+  "modelc_box": 4.37,
+  "lpsocl_orig": 4.74,
+  "lpsocl_box": 3.4,
+  "b2o3_orig": 6.73,
+  "b2o3_box_bulk": 6.2,
+  "b2o3_box_at_dopant": 23.83
+ },
+ "_lpsocl_first_bvse": "NEW: LPSOCl first BVSE - channel volume 4.74% at iso 0.5 (vs modelc 3.32, b2o3 6.73): O-doping also opens Li channels, halfway to the B2O3 champion (+43% vs undoped). perc onsets a/b/c = 0.55/0.35/2.05 val^2.",
+ "_b2o3_locality": "Dopant-centered box 23.8% vs bulk box 6.2% at iso 0.5 -> channel opening is CONCENTRATED around the B2O3 unit (~4x bulk) but the dopant-free bulk box (S16 Li23 P3 Cl7) still shows 6.2% ~ doped-cell average >> undoped modelc 3.3% -> lattice-wide opening on top of the local effect. Consistent with July b2o3_bvse_channel note (in-plane open, c-axis dopant bottleneck).",
+ "modelc": {
+  "natoms_orig": 62,
+  "grid_orig": [
+   28,
+   28,
+   140
+  ],
+  "iso_frac_orig": {
+   "0.25": 1.23,
+   "0.5": 3.32,
+   "1.0": 8.36,
+   "1.5": 13.44,
+   "2.0": 17.85
+  },
+  "perc_orig": {
+   "a": 0.4,
+   "b": 0.35,
+   "c": 1.4
+  },
+  "cubic_lengths_A": [
+   9.9095,
+   9.9095,
+   9.9096
+  ],
+  "cubic_angles_deg": [
+   90.0,
+   90.0,
+   90.0
+  ],
+  "cubic_composition": {
+   "Li": 21,
+   "P": 4,
+   "S": 18,
+   "Cl": 6
+  },
+  "natoms_cubic": 49,
+  "grid_cubic": [
+   40,
+   40,
+   40
+  ],
+  "iso_frac_cubic": {
+   "0.25": 1.89,
+   "0.5": 4.37,
+   "1.0": 9.18,
+   "1.5": 13.77,
+   "2.0": 17.98
+  },
+  "perc_cubic": {
+   "note": "box crop of the true map - no box-PBC percolation defined"
+  }
+ },
+ "b2o3": {
+  "natoms_orig": 128,
+  "grid_orig": [
+   28,
+   28,
+   282
+  ],
+  "iso_frac_orig": {
+   "0.25": 3.83,
+   "0.5": 6.73,
+   "1.0": 12.22,
+   "1.5": 17.09,
+   "2.0": 21.25
+  },
+  "perc_orig": {
+   "a": 0.05,
+   "b": 0.05,
+   "c": 1.8
+  },
+  "cubic_lengths_A": [
+   9.92,
+   9.9184,
+   9.9053
+  ],
+  "cubic_angles_deg": [
+   90.194,
+   90.408,
+   89.594
+  ],
+  "cubic_composition": {
+   "Cl": 6,
+   "Li": 23,
+   "P": 3,
+   "B": 1,
+   "S": 11,
+   "O": 6
+  },
+  "natoms_cubic": 50,
+  "grid_cubic": [
+   40,
+   40,
+   40
+  ],
+  "iso_frac_cubic": {
+   "0.25": 17.05,
+   "0.5": 23.83,
+   "1.0": 31.24,
+   "1.5": 35.55,
+   "2.0": 38.93
+  },
+  "perc_cubic": {
+   "note": "box crop of the true map - no box-PBC percolation defined"
+  }
+ },
+ "lpsocl": {
+  "natoms_orig": 62,
+  "grid_orig": [
+   28,
+   28,
+   142
+  ],
+  "iso_frac_orig": {
+   "0.25": 2.37,
+   "0.5": 4.74,
+   "1.0": 9.8,
+   "1.5": 14.76,
+   "2.0": 19.19
+  },
+  "perc_orig": {
+   "a": 0.55,
+   "b": 0.35,
+   "c": 2.05
+  },
+  "cubic_lengths_A": [
+   9.8968,
+   9.8779,
+   9.8589
+  ],
+  "cubic_angles_deg": [
+   90.497,
+   90.736,
+   89.308
+  ],
+  "cubic_composition": {
+   "Li": 22,
+   "P": 4,
+   "S": 17,
+   "O": 1,
+   "Cl": 7
+  },
+  "natoms_cubic": 51,
+  "grid_cubic": [
+   40,
+   40,
+   40
+  ],
+  "iso_frac_cubic": {
+   "0.25": 1.49,
+   "0.5": 3.4,
+   "1.0": 8.21,
+   "1.5": 13.06,
+   "2.0": 17.57
+  },
+  "perc_cubic": {
+   "note": "box crop of the true map - no box-PBC percolation defined"
+  }
+ },
+ "b2o3_bulk": {
+  "natoms_orig": 128,
+  "grid_orig": [
+   28,
+   28,
+   282
+  ],
+  "iso_frac_orig": {
+   "0.25": 3.83,
+   "0.5": 6.73,
+   "1.0": 12.22,
+   "1.5": 17.09,
+   "2.0": 21.25
+  },
+  "perc_orig": {
+   "a": 0.05,
+   "b": 0.05,
+   "c": 1.8
+  },
+  "cubic_lengths_A": [
+   9.92,
+   9.9184,
+   9.9053
+  ],
+  "cubic_angles_deg": [
+   90.194,
+   90.408,
+   89.594
+  ],
+  "cubic_composition": {
+   "S": 16,
+   "Li": 23,
+   "P": 3,
+   "Cl": 7
+  },
+  "natoms_cubic": 49,
+  "grid_cubic": [
+   40,
+   40,
+   40
+  ],
+  "iso_frac_cubic": {
+   "0.25": 3.46,
+   "0.5": 6.2,
+   "1.0": 11.69,
+   "1.5": 16.53,
+   "2.0": 20.86
+  },
+  "perc_cubic": {
+   "note": "box crop of the true map - no box-PBC percolation defined"
+  }
+ }
+}
