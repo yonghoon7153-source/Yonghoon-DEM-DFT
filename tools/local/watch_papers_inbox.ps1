@@ -63,7 +63,15 @@ digest는 CLAUDE.md 규율(문헌 수치는 소환값, db 절대값과 혼용 �
 "@
 
     Push-Location $Repo
-    git pull origin claude/friendly-meitner-lldvar 2>$null
+    # 무인 실행 가드: pull이 편집기(vim)를 띄우면 영원히 멈춘다 (2026-07-16 실제 사고)
+    $env:GIT_EDITOR = "true"; $env:GIT_MERGE_AUTOEDIT = "no"
+    git pull --rebase --autostash origin claude/friendly-meitner-lldvar
+    if ($LASTEXITCODE -ne 0) {   # 충돌 시 중간상태 남기지 말고 원상복구 (다음 주기에 재시도)
+        git rebase --abort 2>$null
+        Write-Host "!!! git pull 실패 — repo 정리 후 이번 편은 건너뜀" -ForegroundColor Yellow
+        Pop-Location
+        continue
+    }
     claude -p $prompt --dangerously-skip-permissions
     $ok = $LASTEXITCODE
     Pop-Location
