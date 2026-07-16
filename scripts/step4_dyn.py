@@ -9,7 +9,7 @@ rasterized 복셀 격자의 두 망(전자/이온)을 실제 AM|SE·AM|SDCP 접�
   ✓ i0(x) = i0_ref·(x/½)^αc·((1−x)/½)^αa  (c_e 항 없음 — 단일이온 SE, 활동도 고정: SSB 물리)
   ✓ 계면 필름저항 ASR_film [Ω·m²] (SEI/CEI 자리, η_s = Δφ − U − I·ASR/A, 면별 내재 Newton)
   ✓ 입자별 구형확산 (실측 입자 반경 분포 그대로 — COMSOL의 size-bin보다 정밀)
-  ✓ 갈바노스타틱(CC) + 전압 홀드(CV; CC→CV = CCCV, 방전/충전 양방향) — CV는 I에 대한 시컨트
+  ✓ 갈바노스타틱(CC) + 전압 홀드(CV; CC→CV = CCCV, 방전/충전 양방향) — V_app 괄호법(Illinois)
   ✓ 집전체 실측 R_int 직렬 부하 [Ω·cm²] (STEP3 시나리오 축과 동일 규약; 터미널 V·컷오프에 반영)
   ✓ 발열 분해 출력 [W]: Q_ohm(e/i 분리)·Q_ct(BV)·Q_film + Q_rev(엔트로피 — dU/dT CSV 있을 때만)
   ✓ 온도 파라미터 T (등온; f=F/RT 전체 일관)
@@ -20,7 +20,10 @@ rasterized 복셀 격자의 두 망(전자/이온)을 실제 AM|SE·AM|SDCP 접�
   ~5천 집전체 접점이 한 행에 몰린 허브가 CG를 정체시켜 폐기(V100 3h+ 스톨 → 재설계).
   범위 밖(정직, 근거): 전해질 농도분극(단일이온 t⁺≈1 → 물리적으로 부재), 이중층 C_dl(시간상수
   ~ms ≪ 방전 dt — COMSOL도 방전 sim에선 통상 off), D_s(c) 농도의존(Chen2020 양극도 상수),
-  열-전기 커플(등온; Q는 출력만), anode/SE열화/체적변화(A10).
+  열-전기 커플(등온; Q는 출력만), anode/SE열화/체적변화(A10), **입자 표면 유입의 각도분해**
+  (총량은 접촉면이 결정하나 유입을 전표면 균일 살포로 균질화 — 커버리지 낮은 입자의
+   표면포화/확산분극 개시가 계산상 지연됨; --ang-sectors 확장 예정).
+  프로덕션 집계-KCL 보장 수위 = ~4×노이즈바닥(2.9M dof서 ≈1e-4 rel) — tol_rel(1e-8) 아님.
 
 단위: 내부 SI.  σ 테이블 입력은 S/cm(STEP3 규약) → ×100 [S/m].
 
@@ -65,7 +68,7 @@ def _amg_M(L):
         return None
 
 
-def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None, deep=False):
+def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
     """3단 솔브: GPU Jacobi-CG → (실패시) CPU AMG-CG(pyamg) → CPU Jacobi-CG.
     실전 격자(VGCF 100 S/cm ↔ BV면 1e-11 S, ~9자릿수 대비)에서 Jacobi 단독은 정체할 수
     있어(2026-07-15 V100 스모크: 50k iter 미수렴) AMG 폴백이 프로덕션 안전망.
@@ -88,7 +91,7 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None, deep=False):
             try:
                 xg, info = cg_gpu(Lg, bg, x0=x0g, tol=rtol, maxiter=20000, M=Mg)
             except TypeError:
-                xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=0.0, maxiter=20000, M=Mg)
+                xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=atol, maxiter=20000, M=Mg)
             if int(info) == 0:
                 return cp.asnumpy(xg), 0
             if deep:                                         # 심층권 실패 = 부동소수 한계, GPU 탓 아님
@@ -111,7 +114,7 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None, deep=False):
             import time as _t                                # 수렴이 로그-선형이라 log-스케일 %)
             b_n = float(np.linalg.norm(b))
             r0 = float(np.linalg.norm(b - L @ x_init)) if x_init is not None else b_n
-            tgt = max(rtol * b_n, 1e-300)
+            tgt = max(rtol * b_n, atol, 1e-300)
             box = {'n': 0, 't0': _t.time()}
             den = max(np.log(max(r0 / tgt, 1.0 + 1e-9)), 1e-9)
 
@@ -125,7 +128,7 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None, deep=False):
                       f'~{prog:.0f}%  {_t.time() - box["t0"]:.0f}s', flush=True)
         mi = 1500 if big else 50000                          # CPU-AMG는 ~수백 iter가 정상 —
         try:                                                 # 1500 미달이면 더 돌려도 가망 없음
-            x_sol, info = cg(L, b, x0=x_init, rtol=rtol, maxiter=mi, M=Mp, callback=cb)
+            x_sol, info = cg(L, b, x0=x_init, rtol=rtol, atol=atol, maxiter=mi, M=Mp, callback=cb)
         except TypeError:
             x_sol, info = cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
         if info and big and deep:
@@ -133,16 +136,18 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None, deep=False):
         return x_sol, info
 
     M = None
+    fresh_amg = False
     if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
         M = cache.get('amg')
         if M is None:
             M = _amg_M(L)
+            fresh_amg = M is not None
             if M is not None:
                 cache['amg'] = M
     if M is None:
         M = sparse.diags(1.0 / diag)
     x, info = _solve(M, x0)
-    if info != 0 and 'amg' in cache:                         # 낡은 계층 가능성 — 1회 재구축 재시도
+    if info != 0 and 'amg' in cache and not fresh_amg:      # 낡은 계층만 재구축 (fresh 재구축=동일계층 낭비, 수치 R2#7)
         print('    AMG 캐시 계층으로 미수렴 → 재구축 후 재시도', flush=True)
         cache.pop('amg')
         M2 = _amg_M(L)
@@ -480,6 +485,7 @@ class CellSystem:
             if deep and known_weak:
                 break
             if r >= 0.5 * best:                             # 노이즈-바닥 정체 감지 (수렴 근처 한정)
+                                                            # (stall 수용 상한 1e-3 = simulate 하드페일과 의도적 페어)
                 stall += 1
                 if stall >= 2 and best < 1e-3:
                     break
@@ -502,7 +508,10 @@ class CellSystem:
             # Newton 외부 루프가 흡수.  타이트 rtol(1e-9)은 실전 κ에서 CG 정체 원인이었음.
             if not hasattr(self, '_pc_cache'):
                 self._pc_cache = {}                          # sticky-GPU + AMG 계층 (스텝 간 보존)
-            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, pc_cache=self._pc_cache, deep=deep)
+            atol_cg = 8.0 * np.finfo(np.float64).eps * self._abs_data_sum \
+                * (float(np.max(np.abs(phi))) + 1.0)        # SpMV 노이즈 아래 목표 방지 (수치 R2#8)
+            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, atol=atol_cg,
+                             pc_cache=self._pc_cache, deep=deep)
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             self._cg_failed = bool(info)
             step = 1.0
@@ -610,7 +619,8 @@ class CellSystem:
             return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
         self._bracket_illinois(ev, lambda I, V: (V - I * r_int_abs) - V_term,
                                float(V_guess), tol_v, step0=0.01, f_dec=False)
-        self.last_galv_miss = 0.0
+        # F2: 괄호 실패가 침묵하지 않도록 터미널 방정식 미스를 실측 보고 (리뷰 R2 물리#12/수치#3)
+        self.last_galv_miss = abs((st['V'] - st['I'] * r_int_abs) - V_term) / max(abs(V_term), 1.0)
         return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
 
     def particle_current(self, I_f):
@@ -781,7 +791,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         for _try in range(6):
             rad.step(dt)
             dxs_meas = float(np.max(np.abs(rad.surf_x() - x_s_pre)))
-            if dxs_meas <= 2.0 * dx_max or dt <= 0.05:
+            if dxs_meas <= 2.0 * dx_max or dt <= 0.05 or _try == 5:   # 마지막 시도는 수용 (되돌림+t전진 desync 방지)
                 break
             rad.x = x_keep.copy()
             dt *= 0.5
@@ -797,8 +807,9 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
               f'(E-bal max {max(out["energy_balance_rel"]):.1e})', flush=True)
         if getattr(sys_, 'last_cg_info', 0):
             print(f'  ⚠ CG maxiter 도달 이력 (info={sys_.last_cg_info}) — 해 품질 확인 요망', flush=True)
-    if not chk['t'] or chk['t'][-1] < t - 1e-9:              # 마지막 상태는 항상 기록
-        _rec_chk(t, x_bar, I_f)
+    if (not chk['t'] or chk['t'][-1] < t - 1e-9) and reason != 'newton_fail':
+        _x_now = float((rad.mean_x() * V_p).sum() / V_p.sum())   # soc_overrun 프레임 짝 맞춤 (물리 R2#6)
+        _rec_chk(t, _x_now, I_f)
     out = {k: np.asarray(v) for k, v in out.items()}
     out['viz_t'] = np.asarray(chk['t'])
     out['viz_x_mean'] = np.asarray(chk['x_mean'])
@@ -810,7 +821,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     Vt = out['V_terminal']
     if reason == 'V_cutoff' and len(Vt) >= 2:
         vv = v_min if not charge else v_max
-        f = (Vt[-2] - vv) / max(abs(Vt[-2] - Vt[-1]), 1e-30)
+        f = abs(Vt[-2] - vv) / max(abs(Vt[-2] - Vt[-1]), 1e-30)   # 충·방전 양방향 (수치리뷰 R2#1)
         q_arr = np.abs(out['x_mean'] - x_ini) / abs(ocp.x100 - ocp.x0)
         out['q_frac_at_cutoff'] = float(q_arr[-2] + f * (q_arr[-1] - q_arr[-2]))
     else:
@@ -952,6 +963,8 @@ def _selftest_cell():
     phi_c = np.zeros(sysm.N); phi_c[:sysm.n_e] = U0
     i0_as = np.full(sysm.n_bv, float(kin_as.i0(x0)))
     I_as = 1e-11                                             # 비대칭은 2차항 (αa²−αc²)(fη)²/2 이
+                                                             # (이론 잔차 7.05e-4 — 톨 여유 1.4×:
+                                                             #  i0/σ/기하 변경 시 I_as 재조정 필요)
     _, _, _, _, V_c, _ = sysm.solve_galv(phi_c, U_f, i0_as, kin_as, I_as, U0)   # 살아있어 더 저율로
     g_face2 = float(kin_as.i0(x0)) * vox_m ** 2 * kin_as.f * (kin_as.aa + kin_as.ac)
     R_ser2 = R_col / (nxy * nxy) + 1.0 / (g_face2 * nxy * nxy)
@@ -965,7 +978,7 @@ def _selftest_cell():
     I_exp = (U0 - Vt) / R_ser
     e8 = abs(I_cv - I_exp) / I_exp
     ok &= e8 < 1e-2
-    print(f'cell CV secant: I {I_cv:.3e} vs (OCV−V)/R {I_exp:.3e}  rel {e8:.2e}  '
+    print(f'cell CV hold (Illinois): I {I_cv:.3e} vs (OCV−V)/R {I_exp:.3e}  rel {e8:.2e}  '
           f'{"OK" if e8 < 1e-2 else "FAIL"}')
     # 7) v1 분포 회귀 (선형영역, 2입자 비대칭 격자)
     from step3_sigma import solve_reaction_current
@@ -1042,7 +1055,9 @@ def _selftest_discharge():
     out_c = simulate(sysm, ocp, r_p, 1e-13, kin, c_rate=1.0, nr=15, v_min=2.8, v_max=3.9,
                      charge=True, cv_hold=True, i_cut_frac=0.10, x_init=ocp.x100,
                      dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
-    okc = out_c['end_reason'] == 'cv_i_cut' and abs(out_c['I'][-1]) < 0.10 * out_c['I_1C_A'] * 1.5
+    okc = (out_c['end_reason'] == 'cv_i_cut' and abs(out_c['I'][-1]) < 0.10 * out_c['I_1C_A'] * 1.5
+           and float(np.max(out_c['energy_balance_rel'])) < 1e-5)   # CV 저전류선 분모(|I|·V) 축소로
+                                                                    # 상대값 부풂 — 부기오류는 O(1)라 검출력 유지
     ok &= okc
     print(f'CCCV charge: end={out_c["end_reason"]}, |I_end|/I1C='
           f'{abs(out_c["I"][-1]) / out_c["I_1C_A"]:.3f}  {"OK" if okc else "FAIL"}')
@@ -1140,6 +1155,7 @@ def main():
         viz = {
             'kind': 'step4_viz', 'c_rate': a.c_rate, 'charge': bool(a.charge),
             'x0': ocp.x0, 'x100': ocp.x100, 'nr': a.nr, 'vox_um': vox_um,
+            'c_max_mol_m3': ocp.c_max,
             'i_1c_a': float(out['I_1C_A']), 'i_mean_abs_a': [float(f'{v:.4g}') for v in m_abs],
             'end_reason': reason, 'test_only': bool(ocp.test_only), 'provenance': ocp.provenance,
             't_s': [round(float(v), 1) for v in out['viz_t']],

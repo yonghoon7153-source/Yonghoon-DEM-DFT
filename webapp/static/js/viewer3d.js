@@ -144,9 +144,9 @@ function renderSt4Soc(state) {
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
-     <input type="range" id="st4-d" min="8" max="100" value="100" style="width:100%">
+     <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>x=${lo.toFixed(2)} (탈리튬)</span><span>x=${hi.toFixed(2)} (리튬↑)</span></div>
+     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>x=${lo.toFixed(2)}${st.c_max_mol_m3 ? ' (' + (lo * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''} 탈리튬</span><span>x=${hi.toFixed(2)}${st.c_max_mol_m3 ? ' (' + (hi * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''} 리튬↑</span></div>
      <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
      겉이 먼저 차는 shrinking-core가 시간축으로 보임.  "단면 뷰" 체크와 조합 → 내부 링 단면.
      ${st.c_rate}C · ${st.charge ? '충전' : '방전'} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
@@ -1227,6 +1227,7 @@ function applyViewMode(state, mode) {
   ['st4Group', 'st4FaceGroup'].forEach(k => {               // STEP4-v2 동역학 레이어
     if (state[k] && state.scene) {
       state.scene.remove(state[k]);
+      if (state[k].dispose) state[k].dispose();              // InstancedMesh 인스턴스 GL버퍼 해제 (리뷰 R2#2 누수)
       if (state[k].geometry) state[k].geometry.dispose();
       if (state[k].material) state[k].material.dispose();
       state[k] = null;
@@ -2487,6 +2488,7 @@ function applyViewMode(state, mode) {
             inp.value = '';
             applyViewMode(state, mode);
           };
+          rd.onerror = () => alert('step4_viz 파일 읽기 실패');
           rd.readAsText(f);
         };
       }
