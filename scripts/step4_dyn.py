@@ -76,6 +76,8 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
             import cupy as cp
             import cupyx.scipy.sparse as cxs
             from cupyx.scipy.sparse.linalg import cg as cg_gpu
+            if L.shape[0] >= 50000:
+                print(f'      GPU Jacobi-CG 시도 (≤20k it, ~1분 — 실패 시 AMG 폴백)…', flush=True)
             Lg = cxs.csr_matrix(L.astype(np.float64))
             bg = cp.asarray(b, np.float64)
             Mg = cxs.diags(1.0 / cp.asarray(diag))
@@ -94,11 +96,30 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
             cache['gpu_dead'] = True
             print(f'    step4 GPU solve unavailable ({type(e).__name__}: {e}) → CPU', flush=True)
 
+    big = L.shape[0] >= 50000
+
     def _solve(Mp, x_init):
+        cb = None
+        if big:                                              # CG 진행률 (50 iter마다 잔차 실측 —
+            import time as _t                                # 수렴이 로그-선형이라 log-스케일 %)
+            b_n = float(np.linalg.norm(b))
+            r0 = float(np.linalg.norm(b - L @ x_init)) if x_init is not None else b_n
+            tgt = max(rtol * b_n, 1e-300)
+            box = {'n': 0, 't0': _t.time()}
+            den = max(np.log(max(r0 / tgt, 1.0 + 1e-9)), 1e-9)
+
+            def cb(xk):
+                box['n'] += 1
+                if box['n'] % 50:
+                    return
+                r = float(np.linalg.norm(b - L @ xk))
+                prog = min(99.0, max(0.0, 100.0 * np.log(max(r0 / max(r, 1e-300), 1.0)) / den))
+                print(f'      CG {box["n"]:5d} it  resid {r:.2e} (목표 {tgt:.2e})  '
+                      f'~{prog:.0f}%  {_t.time() - box["t0"]:.0f}s', flush=True)
         try:
-            return cg(L, b, x0=x_init, rtol=rtol, maxiter=50000, M=Mp)
+            return cg(L, b, x0=x_init, rtol=rtol, maxiter=50000, M=Mp, callback=cb)
         except TypeError:
-            return cg(L, b, x0=x_init, tol=rtol, maxiter=50000, M=Mp)
+            return cg(L, b, x0=x_init, tol=rtol, maxiter=50000, M=Mp, callback=cb)
 
     M = None
     if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
@@ -427,6 +448,8 @@ class CellSystem:
             else:
                 stall = 0
             best = min(best, r)
+            if self.N >= 50000:                             # 대형계 Newton 진행 라인 (침묵 방지)
+                print(f'    Newton it{it}: 잔차 {r:.2e} (목표 {tol_rel:.0e}) → 보정해 CG…', flush=True)
             X = phi[self.f_e] - phi[self.f_i] - U_f
             I_f, g_f, eta_s = kin.face_current(X, i0_f, self.A_face, I_init=I_f)
             data = self.data0.copy()
