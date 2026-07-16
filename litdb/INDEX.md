@@ -4,6 +4,11 @@
 
 Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 
+## 📌⭐ MUST-READ (최상위 우선 — 분야 전체 field-map)
+| slug | 논문 | 축 |
+|---|---|---|
+| `papers/fan2026_sulfide_assb_stability_review_ECERD2600097.md` | **[외부·⚠미출판 draft]** Yang Li/X.Zhao/J.Hu/…/**Hong Liu***/**Ce-Wen Nan**/**Li-Zhen Fan*** (USTB·Zhengzhou·Tsinghua — **[Li25] CuBr₂와 같은 그룹, Fig 24a/b = 우리 [Liu23]/[Li25] digest 그림**), "**Stability Issues in Sulfide-Based ASSBs: From Material Properties to Electrode Interfaces**" — **황화물 ASSB '안정성' 전 분야 리뷰**(ECER-D-26-00097, Electrochem. Energy Rev. 투고 draft·DOI 없음; 본문 56 pp·refs 239·Fig 26; 자체 계산/실험 0). 3분할: **①고유 5축**(공기 HSAB S²⁻+H₂O→H₂S/Li₂O/LiOH·ΔE_ad LPSC −1.63→LPSOCF −1.19 eV / 용매 donor-number·NMP 비가역·InF₃ E_ad −0.12 eV / 열 400–500 °C 고유 vs **200–300 °C 충전 NCM O-방출 계면발열**·P₂Sₓ 치밀층 발열 40–50%↓·**Th₀/Th′ 서술자** / 전기화학 **LGPS 창 1.71–2.14 V**·산화 ~2 V S²⁻-우선·계면 3유형(안정/MCI/passivated) / 기계 E 10–30 GPa·K_IC 0.2–0.4 MPa·m¹ᐟ²·>3 µm 파쇄·<1 µm 완화) **②양극 계면**(산화분해→MCI·O-방출 양방향 결합·HOMO/공간전하·화학-기계 결합; 전략=복합양극 최적화(>3 mAh/cm² 목표)·코팅(LiNbO₃/Li₂CO₃/LATPO/LiPON/하이브리드/PEDOT)·**신규 CAM**(Li₁.₃Fe₁.₂Cl₄ Nature·FeS₂·S-Se 균질화)) **③음극 계면**(덴드라이트 **wedge-opening**·SEI 내 dead-Li 핵생성(MD)·σ_e 내부석출·공극/압력창; 전략=흑연 고결정화·Si 3-레벨·anode-free interlayer·**SE 개질(할로겐/F/LiI→in-situ 절연 SEI = 우리 칸)**·인공 SEI(LiF-rich·gradient)·stack-pressure 지도). 미래 4방향: **passive→intrinsic stability**·정적→동적 계면·저압/무압·평가 표준화. **🔑🔑 우리 캠페인 6칸 적중**: free-S 산화(site-PDOS ⟨3p⟩ −1.1 eV)=§4.1.1 "S²⁻ 우선"의 자리분해판·B–S 안정화(−2.15)=결합강화 전략·O-doping(LPSOCl gap 2.231·O 2p 매몰)=전략①·B₂O₃ SEI json=§5.2.3 rubric 정량화·BVSE 채널 3.32/4.74/6.73 %·σ300 1.33×=σ·안정 동시개선(리뷰 미래방향① 실현). ⚠ 정성 리뷰(유지율 %/CCD 본문 부재)·draft 오타(σ 단위·refs 38=193 중복)·미출판 인용 주의 | **리뷰·field-map(안정성 축)·must-read** — 공기/용매/열/전기화학/기계 + 양극 + 음극 전 축 |
+
 ## ✅ Digest 완료 (paper-level)
 | slug | 논문 | 축 |
 |---|---|---|
