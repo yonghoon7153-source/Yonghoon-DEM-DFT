@@ -1,6 +1,9 @@
 {
   "FINAL_method": "UMA-s-1p1 (omat) Langevin NVT MD; D from Li MSD = 6 D t on window 2-50 ps (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven ratio = 1. This window/pipeline reproduces the validated deck slide for modelc EXACTLY (D 7.90/2.05/4.55e-6, Ea 0.2235, sigma300 13.94 vs slide 14).",
-  "window_ps": [2, 50],
+  "window_ps": [
+    2,
+    50
+  ],
   "n_pts_arrhenius": 3,
   "modelc_LPSCl1.6": {
     "n_Li_cm3": 2.2197e+22,
@@ -8,7 +11,7 @@
     "D_800": 2.054e-05,
     "D_1000": 4.554e-05,
     "Ea_eV": 0.2235,
-    "D0_cm2_s": 5.753e-04,
+    "D0_cm2_s": 0.0005753,
     "D_300K": 1.0135e-07,
     "sigma_300K_mS_cm": 13.94,
     "sigma_273K_mS_cm": 6.52,
@@ -20,7 +23,7 @@
     "D_800": 3.009e-05,
     "D_1000": 5.067e-05,
     "Ea_eV": 0.2234,
-    "D0_cm2_s": 7.112e-04,
+    "D0_cm2_s": 0.0007112,
     "D_300K": 1.2547e-07,
     "sigma_300K_mS_cm": 18.51,
     "sigma_273K_mS_cm": 8.65
@@ -36,8 +39,18 @@
       "note": "D0 = (1/6) z a^2 nu exp(S_m/kB). D0_ratio 1.24 split into structural geometry (from DFT-V0 CIFs) x dynamics (residual).",
       "D0_ratio": 1.236,
       "geometry_a2z": 1.09,
-      "a_hop_1stshell_A": {"b2o3": 3.40, "modelc": 3.49, "a2_ratio": 0.95, "meaning": "b2o3 hop slightly SHORTER"},
-      "z_connectivity_lt4A": {"b2o3": 4.10, "modelc": 3.56, "ratio": 1.15, "meaning": "b2o3 Li network MORE connected"},
+      "a_hop_1stshell_A": {
+        "b2o3": 3.4,
+        "modelc": 3.49,
+        "a2_ratio": 0.95,
+        "meaning": "b2o3 hop slightly SHORTER"
+      },
+      "z_connectivity_lt4A": {
+        "b2o3": 4.1,
+        "modelc": 3.56,
+        "ratio": 1.15,
+        "meaning": "b2o3 Li network MORE connected"
+      },
       "dynamics_nu_expSm": 1.13,
       "interpretation": "D0 gain ~half MORE-connected Li network (z) + ~half faster/softer hop attempts (nu*entropy), at the SAME barrier and similar hop distance. Dynamics consistent with b2o3 soft Li-libration ~130 cm-1 (phonon); nu-vs-Sm split needs LPSCl1.6 phonon (TODO). z (local connectivity, D0) is distinct from n_Li (carrier density, sigma). a,z are 1st-shell estimates -> geometry/dynamics split approximate.",
       "data": "db/properties/b2o3_vs_lpscl16_D0_decomposition.csv ; fig docs/figures/cascade/b2o3_vs_lpscl16_D0_decomposition.png"
@@ -51,7 +64,20 @@
   },
   "SUPERSEDED_5_40_window": {
     "note": "earlier (5-40 ps) extraction, retained for traceability; NOT for paper",
-    "modelc": {"D_600": 7.52e-06, "D_800": 1.711e-05, "D_1000": 4.534e-05, "Ea_eV": 0.2259, "sigma_300K": 12.17},
-    "b2o3": {"D_600": 9.973e-06, "D_800": 3.095e-05, "D_1000": 4.831e-05, "Ea_eV": 0.207, "sigma_300K": 27.82}
-  }
+    "modelc": {
+      "D_600": 7.52e-06,
+      "D_800": 1.711e-05,
+      "D_1000": 4.534e-05,
+      "Ea_eV": 0.2259,
+      "sigma_300K": 12.17
+    },
+    "b2o3": {
+      "D_600": 9.973e-06,
+      "D_800": 3.095e-05,
+      "D_1000": 4.831e-05,
+      "Ea_eV": 0.207,
+      "sigma_300K": 27.82
+    }
+  },
+  "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability."
 }

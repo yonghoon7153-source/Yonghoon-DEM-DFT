@@ -7,6 +7,13 @@ status: setup
 
 # Li Adatom Diffusion on Anode-Free SSB Interphases — NEB Track
 
+> [!warning] SUPERSEDED HEADLINE (2026-07-15)
+> 이 문서의 UMA 시대 헤드라인(**Li₃N 0.054 eV, ~10³×**)은 **thin-slab UMA 아티팩트로 철회**됐다.
+> 정본 = `db/properties/diffusion.json` 의 `li3n_001_p0_2point_constrained_dft_2026-07-15`:
+> **full-DFT 2-point 구속이완 0.1182 eV** (min4/saddle3 모두 bfgs 수렴; drag 9점 체인 KISTI 진행 중).
+> UMA는 Li₃N에 사용 금지(2026-06 판정). 인용은 항상 diffusion.json 기준.
+
+
 > [!important] Research goal
 > 무음극 전고체 전지에서 AgNO₃ additive가 형성하는 **nitrate-derived layer (Li3N, LiNO3, LiNO2)**가 lithiated carbon 표면 대비 Li adatom **diffusion barrier 낮음**을 DFT로 입증 → lateral Li redistribution 촉진 → uniform Li deposition
 

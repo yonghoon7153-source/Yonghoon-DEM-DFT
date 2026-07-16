@@ -15,7 +15,7 @@
   ~0.25 Å voxel; 채널% = above-min ≤ iso. **정량·순위는 원본 주기셀 값만** 인용(큐빅 박스는 표시용, ±1.3%p 표본 편차).
 - **MLIP-MD** (tools/modelc_v3/, tools/ionic/): UMA-s-1p1(omat), Langevin NVT, dt 2 fs, friction 0.02,
   equilib 5 ps / prod 200 ps, **MSD 창 2–50 ps 고정**, 아레니우스는 600/800/1000 K 3점(400/500 K 제외 판정),
-  σ는 Nernst–Einstein(Haven=1) — **절대값 인용 금지, 비율만**; Ea 오차막대는 600 K 3-시드.
+  σ는 Nernst–Einstein(Haven=1) — **절대값 인용 금지, 비율도 멀티시드 판정만**(단일시드 1.33× 철회 사례, SEMIFINAL 2026-07-09); Ea 오차막대는 600 K 3-시드.
 - **UMA는 Li₃N에 사용 금지** (2026-06 결정론적 편향 판정). LPSCl 계열 MD에는 UMA가 검증된 표준.
 - 평균류 지표(site mean-3p 등)는 **그림 표시 창과 동일한 창**(-8..0 eV)으로 계산·인용.
 - 슬랩 계산은 기하 승계(verified-carry: 마지막 ATOMIC_POSITIONS 스플라이스 + 검증) + local-TF/저β 믹싱.

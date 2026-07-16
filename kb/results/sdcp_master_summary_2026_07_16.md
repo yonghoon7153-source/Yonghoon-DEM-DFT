@@ -15,7 +15,7 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 > 4. **DFT 앵커링(잠정)**: LiNiO₂(104) 위 doped SDCP E_bind = **−1.52 eV** (Phase-B DFT+U; neutral 수렴 임박 → Δ VERDICT 곧 확정).
 
 ## 0. 문서 계보
-- 6월 보고서 `sdcp_linio2_binding_report.md` = Phase A–C **UMA(MLIP)** 시대. 거기의 절대값(-18.2/-6.3 eV)은 **사이트 랭킹·방향성 지표**였고, 절대 스케일은 본 문서의 DFT 값으로 대체 중.
+- 6월 보고서 `sdcp_linio2_binding_report.md` = Phase A–C **UMA(MLIP)** 시대. 거기의 절대값(-18.2/-6.3 eV, v1 분자 세대)은 이후 v7c Phase-A 재실행으로 대체(-5.20/-2.73, db/properties/sdcp_linio2_binding_phaseA.csv)됐고, 어느 쪽이든 **사이트 랭킹·방향성 지표**였으며, 절대 스케일은 본 문서의 DFT 값으로 대체 중.
 - 본 문서 = 오비탈(n-시리즈) + 도핑 부기 + 작용기 + Phase-B DFT + PTFE 벤치마크의 단일 최신 정리.
 
 ## 1. 시스템 한 장
@@ -60,8 +60,8 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 
 ## 5. LiNiO₂(104) 앵커링 — UMA(6월) → DFT(7월)
 ### Phase A–C (UMA oc20, 2026-06-01 보고서)
-- doped −18.2 eV (dz 1.26 Å) vs neutral −6.3 eV (dz 1.41 Å) → "자기도핑이 앵커링 강화" 방향성.
-- 주의: omat은 슬랩 붕괴 → oc20 + unrelaxed 슬랩 사용; **절대값은 과대**(아래 DFT와 스케일 ~10× 차이) — 랭킹용으로만 인용.
+- v7c 정본(phaseA csv): doped chelation_r90 **−5.196 eV** (CHAMPION) vs neutral chelation_r0 **−2.733 eV** → Δ 2.46 eV, "자기도핑이 앵커링 강화" 방향성. (v1 세대의 −18.2/−6.3은 구버전 — 6월 보고서 참조용.)
+- 주의: omat은 슬랩 붕괴 → oc20 + unrelaxed 슬랩 사용; **절대값은 과대**(doped −5.20 vs DFT −1.52 ≈ 3.4×) — 랭킹용으로만 인용.
 
 ### Phase B (QE PBE+U, gabia, 2026-07-13~) — 진행 4/5
 | job | E (Ry) | 상태 |
