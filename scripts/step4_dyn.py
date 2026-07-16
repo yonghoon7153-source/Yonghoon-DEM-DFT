@@ -135,6 +135,10 @@ def _cg(L, b, x0=None, rtol=1e-9, atol=0.0, pc_cache=None, deep=False):
             cache['deep_weak'] = True                        # 심층-수렴권 CG 무용 기억 (런 전체)
         return x_sol, info
 
+    if x0 is not None:                                       # 실패한 GPU 부분해가 0보다 나쁘면 폐기
+        _r0 = float(np.linalg.norm(b - L @ x0))              # (잔차 상승-표류 방지, V100 smoke6 로그)
+        if not np.isfinite(_r0) or _r0 > float(np.linalg.norm(b)):
+            x0 = None
     M = None
     fresh_amg = False
     if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
