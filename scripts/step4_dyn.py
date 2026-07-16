@@ -62,12 +62,16 @@ def _amg_M(L):
         return None
 
 
-def _cg(L, b, x0=None, rtol=1e-9):
+def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
     """3단 솔브: GPU Jacobi-CG → (실패시) CPU AMG-CG(pyamg) → CPU Jacobi-CG.
     실전 격자(VGCF 100 S/cm ↔ BV면 1e-11 S, ~9자릿수 대비)에서 Jacobi 단독은 정체할 수
-    있어(2026-07-15 V100 스모크: 50k iter 미수렴) AMG 폴백이 프로덕션 안전망."""
+    있어(2026-07-15 V100 스모크: 50k iter 미수렴) AMG 폴백이 프로덕션 안전망.
+    pc_cache(dict, 호출자 보존): 'gpu_dead'=GPU 1회 실패 후 재시도 생략(sticky — 스텝당
+    ~1분 절약), 'amg'=AMG 계층 재사용(행렬은 BV 대각만 변해 전처리기로 계속 유효; CG가
+    미수렴하면 1회 재구축-재시도 — 전처리기는 해에 영향 없음, 반복수만 좌우)."""
     diag = L.diagonal()
-    if GPU:
+    cache = pc_cache if pc_cache is not None else {}
+    if GPU and not cache.get('gpu_dead'):
         try:
             import cupy as cp
             import cupyx.scipy.sparse as cxs
@@ -82,17 +86,38 @@ def _cg(L, b, x0=None, rtol=1e-9):
                 xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=0.0, maxiter=20000, M=Mg)
             if int(info) == 0:
                 return cp.asnumpy(xg), 0
-            print(f'    step4 GPU Jacobi-CG 미수렴(info={int(info)}) → CPU AMG 폴백', flush=True)
+            cache['gpu_dead'] = True                         # sticky: 이후 GPU 시도 생략
+            print(f'    step4 GPU Jacobi-CG 미수렴(info={int(info)}) → CPU AMG 폴백 '
+                  f'(이 런에서는 이후 GPU 시도 생략)', flush=True)
             x0 = cp.asnumpy(xg)                              # GPU 진행분을 warm start로 재사용
         except Exception as e:
+            cache['gpu_dead'] = True
             print(f'    step4 GPU solve unavailable ({type(e).__name__}: {e}) → CPU', flush=True)
-    M = _amg_M(L)
+
+    def _solve(Mp, x_init):
+        try:
+            return cg(L, b, x0=x_init, rtol=rtol, maxiter=50000, M=Mp)
+        except TypeError:
+            return cg(L, b, x0=x_init, tol=rtol, maxiter=50000, M=Mp)
+
+    M = None
+    if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
+        M = cache.get('amg')
+        if M is None:
+            M = _amg_M(L)
+            if M is not None:
+                cache['amg'] = M
     if M is None:
         M = sparse.diags(1.0 / diag)
-    try:
-        return cg(L, b, x0=x0, rtol=rtol, maxiter=50000, M=M)
-    except TypeError:
-        return cg(L, b, x0=x0, tol=rtol, maxiter=50000, M=M)
+    x, info = _solve(M, x0)
+    if info != 0 and 'amg' in cache:                         # 낡은 계층 가능성 — 1회 재구축 재시도
+        print('    AMG 캐시 계층으로 미수렴 → 재구축 후 재시도', flush=True)
+        cache.pop('amg')
+        M2 = _amg_M(L)
+        if M2 is not None:
+            cache['amg'] = M2
+            x, info = _solve(M2, x)
+    return x, info
 
 
 # ---------------------------------------------------------------- 구형확산 (FV + CN)
@@ -414,7 +439,9 @@ class CellSystem:
             self.J.data[:] = data
             # inexact-Newton: 보정해 CG는 느슨하게(1e-5) — 잔차는 매번 정확 재계산되므로
             # Newton 외부 루프가 흡수.  타이트 rtol(1e-9)은 실전 κ에서 CG 정체 원인이었음.
-            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5)
+            if not hasattr(self, '_pc_cache'):
+                self._pc_cache = {}                          # sticky-GPU + AMG 계층 (스텝 간 보존)
+            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, pc_cache=self._pc_cache)
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             step = 1.0
             accepted = False
