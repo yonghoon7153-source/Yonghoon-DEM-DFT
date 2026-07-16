@@ -2396,11 +2396,18 @@ function applyViewMode(state, mode) {
       ? (s3 && s3.sigma_ion_eff_S_cm != null ? 'σ_ion_eff ' + Number(s3.sigma_ion_eff_S_cm).toExponential(2) + ' S/cm' : '')
       : (s3 && s3.sigma_e_eff_S_cm != null ? 'σ_e_eff ' + Number(s3.sigma_e_eff_S_cm).toExponential(2) + ' S/cm' : '');
     const share = ionic ? (s3 && s3.ion_dissipation_share) : (s3 && s3.dissipation_share);
+    // 정량 스케일 (payload field_scale_*): focus_top = 컬러바 상단(p99.8)의 |J|/⟨J_z⟩ 배율
+    // (바이어스 무관), j_top = A/cm² @ΔV=1V.  구 payload엔 없음 → 기존 상대 라벨 폴백.
+    const fsc = ionic ? (s3 && s3.field_scale_ion) : (s3 && s3.field_scale_e);
+    const fmtP = v => { const x = Number(v); return x >= 100 ? x.toPrecision(3) : x.toPrecision(2); };
     setLegend(state,
       `<b>${ionic ? '이온 (Li⁺)' : '전자 (e⁻)'} 전류밀도 FIELD (STEP3 · ${ionic ? 'SE+SDCP' : 'AM+carbon'})</b>`
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
-      + `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`
+      + (fsc
+         ? `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩</span><span>×${fmtP(fsc.focus_top)}</span></div>`
+           + `<div style="font-size:8.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V<br>운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도 (예: 3.18 mAh/cm² 1C → ×3.18 mA/cm²)</div>`
+         : `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
       + `<label style="display:block;margin-top:5px;font-size:10.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
            🔥 백본 <b>${nHot.toLocaleString()}</b>복셀 = 전류 <b>${bbShare}%</b>
@@ -4986,16 +4993,21 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const ghostOn = $('cmp-ghost') ? $('cmp-ghost').checked : true;
       const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn, kA2, cubeOn, ghostOn),
             rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn, kB2, cubeOn, ghostOn);
-      const cap = (r, s3x, k2) => (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
-        + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
-        + (jointOn ? ` · σ-공동스케일 ×${k2.toFixed(2)} (비례 근사 ★색 비교 유효)`
-                   : ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)');
+      const cap = (r, s3x, k2) => {
+        const fscX = ionic ? s3x.field_scale_ion : s3x.field_scale_e;   // 정량 스케일 (신 payload)
+        return (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
+          + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
+          + (fscX ? ` · p99.8 = ×${Number(fscX.focus_top).toPrecision(2)} ⟨J_z⟩ (${Number(fscX.j_top_A_cm2_per_V).toPrecision(2)} A/cm²@1V)` : '')
+          + (jointOn ? ` · σ-공동스케일 ×${k2.toFixed(2)} (비례 근사 ★색 비교 유효)`
+                     : ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)');
+      };
       $('cmp-leg-a').innerHTML = cap(rA2, sA, kA2);
       $('cmp-leg-b').innerHTML = cap(rB2, sB, kB2);
+      const fscT = (ionic ? sA.field_scale_ion : sA.field_scale_e) || (ionic ? sB.field_scale_ion : sB.field_scale_e);
       cbarSpec = { map: 'jet', gamma: 1.6,
-                   title: (ionic ? '|J_ion|' : '|J_e|') + ' relative current density (p99.8-normalized'
-                          + (jointOn ? ', σ-joint scale' : '') + ')',
-                   left: '0', right: 'high' };
+                   title: (ionic ? '|J_ion|' : '|J_e|') + (fscT ? ' / ⟨J_z⟩ current-focusing' : ' relative current density')
+                          + ' (p99.8-normalized' + (jointOn ? ', σ-joint scale' : '') + ')',
+                   left: '0', right: fscT ? '×' + Number(fscT.focus_top).toPrecision(2) + ' ⟨J⟩' : 'high' };
     } else if (mode === 'je') {
       buildJe(SA, A, 'je'); buildJe(SB, B, 'je');
       const cap = (s3x) => 'AM 입자별 |J_z| (wetted) · σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)

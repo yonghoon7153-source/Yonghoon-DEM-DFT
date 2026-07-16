@@ -525,12 +525,14 @@ def main():
             elif _res3['n_dof']:
                 je_am = np.nan_to_num(_s3.per_particle_current(_res3, sid3, pid3, _sig3, len(r)),
                                       nan=0.0, posinf=0.0, neginf=0.0)   # a bare NaN token kills JSON.parse
+                _p998e = None                               # 필드 정량 스케일용 (아래 step3에 기록)
                 if not a.no_field:                          # ELECTRONIC field (AM+carbon {1,2,3,4,5}) — the
                     _ep, _ej = _s3.field_point_cloud(       # paper Fig-4 grammar: |J_e| cloud, hot backbone
                         _res3, sid3, _sig3, a.step3_vox, (1, 2, 3, 4, 5, 7), max_points=a.field_max_points)
                     if _ep is not None:
                         _ej = np.nan_to_num(_ej, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
-                        _ejn = _ej / max(float(np.percentile(_ej, 99.8)), 1e-30)   # p99.8-norm (top 0.2%>1,
+                        _p998e = max(float(np.percentile(_ej, 99.8)), 1e-30)
+                        _ejn = _ej / _p998e                                        # p99.8-norm (top 0.2%>1,
                         elec_field = [[round(float(_ep[i, 0]), 2), round(float(_ep[i, 1]), 2),   # viewer clamps;
                                        round(float(_ep[i, 2]), 2), round(float(_ejn[i]), 4)]     # keeps dim-end
                                       for i in range(len(_ep))]                                  # range vs max-norm)
@@ -551,6 +553,19 @@ def main():
                                    'plate contacts abundant; carbon/SDCP σ = F1 hooks; AM_S/P = A1-locked '
                                    '10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)'
                                    + (' ⚠UNCONVERGED' if _res3.get('unconverged') else ''))}
+                if _p998e is not None:                      # 정량 컬러바 스케일 (뷰어 라벨용): 내부
+                    # jmag=σ_hm·Δφ_face=J·vox_cm → J[A/cm²]=jmag/vox_cm (ΔV=1V 선형해).
+                    # ⟨J_z⟩=σ_eff·ΔV/L.  focus=J/⟨J_z⟩=바이어스-무관 집중계수 (균일도체=1 검산).
+                    _voxcm = a.step3_vox * 1e-4
+                    _Lcm = max(_ztop, 1e-9) * 1e-4
+                    _jm_e = _res3['sigma_eff'] / _Lcm
+                    step3['field_scale_e'] = {
+                        'j_top_A_cm2_per_V': float(f"{_p998e / _voxcm:.4g}"),
+                        'j_mean_z_A_cm2_per_V': float(f"{_jm_e:.4g}"),
+                        'focus_top': float(f"{(_p998e / _voxcm) / max(_jm_e, 1e-30):.4g}"),
+                        'dV_V': 1.0,
+                        'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩ '
+                                 '(바이어스 무관); (|J|/⟨J⟩)×면적전류(mA/cm²)→국소 mA/cm²')}
                 # COLLECTOR-INTERFACE post-processing (C-SUS/primer axis, manuscript-anchored):
                 # the solve's bottom plate is a PERFECT contact (R_int=0) → σ_e_eff is the BULK
                 # network value.  A real collector adds an AREAL series term: σ_apparent =
@@ -670,11 +685,25 @@ def main():
                             _res3i, sid3, _sig3i, a.step3_vox, (5, 6), max_points=a.field_max_points)
                         if _ip is not None:
                             _ij = np.nan_to_num(_ij, nan=0.0, posinf=0.0, neginf=0.0)  # bare NaN kills JSON.parse
-                            _ijn = _ij / max(float(np.percentile(_ij, 99.8)), 1e-30)   # p99.8-norm (top 0.2%>1,
+                            _p998i = max(float(np.percentile(_ij, 99.8)), 1e-30)
+                            _ijn = _ij / _p998i                                        # p99.8-norm (top 0.2%>1,
                             ion_field = [[round(float(_ip[i, 0]), 2), round(float(_ip[i, 1]), 2),   # viewer clamps)
                                           round(float(_ip[i, 2]), 2), round(float(_ijn[i]), 4)]
                                          for i in range(len(_ip))]
                             print(f"  STEP3 ionic FIELD: {len(ion_field):,} pts (SE+SDCP |J| cloud)")
+                            # 정량 컬러바 스케일 (뷰어 라벨용): 내부 jmag=σ_hm·Δφ_face=J·vox_cm
+                            # → J[A/cm²]=jmag/vox_cm (ΔV=1V 선형해).  ⟨J_z⟩=σ_eff·ΔV/L.
+                            # focus=J/⟨J_z⟩=바이어스-무관 집중계수 (균일도체=1 검산).
+                            _voxcm = a.step3_vox * 1e-4
+                            _Lcm = max(_ztop, 1e-9) * 1e-4
+                            _jm_i = _res3i['sigma_eff'] / _Lcm
+                            step3['field_scale_ion'] = {
+                                'j_top_A_cm2_per_V': float(f"{_p998i / _voxcm:.4g}"),
+                                'j_mean_z_A_cm2_per_V': float(f"{_jm_i:.4g}"),
+                                'focus_top': float(f"{(_p998i / _voxcm) / max(_jm_i, 1e-30):.4g}"),
+                                'dV_V': 1.0,
+                                'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩ '
+                                         '(바이어스 무관); (|J|/⟨J⟩)×면적전류(mA/cm²)→국소 mA/cm²')}
                     step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
