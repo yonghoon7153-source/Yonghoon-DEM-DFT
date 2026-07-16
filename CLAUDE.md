@@ -115,6 +115,24 @@ raw `/home/...` WSL path because Windows can't resolve it.
 
 ---
 
+## ★ litdb 정본(단일 서랍) 규칙 (2026-07-16) ★
+
+논문 카드(litdb digest)의 정본은 **`origin/claude/friendly-meitner-lldvar` 브랜치의
+`litdb/`** 하나뿐이다 — 어느 세션(공책)에서 일하든 새 카드는 거기에만 넣는다
+(사용자 데스크탑 워처도 동일; litdb 한정 해당 브랜치 커밋/푸시 상시 승인 2026-07-16).
+- 이 브랜치(stoic-knuth)의 `litdb/`는 **2026-07-16자 동결 스냅샷** — 참조는 가능,
+  추가/수정 금지.  기존 63장은 정본으로 이관 완료.
+- 중복 사례(교훈): ECER-D-26-00097 리뷰를 두 세션이 각자 digest — 정본은
+  `fan2026_sulfide_assb_stability_review_ECERD2600097.md`, 이 브랜치의
+  `li2026_sulfide_stability_review_ecer.md`는 동결 사본.  **카드 만들기 전 정본
+  INDEX 먼저 확인.**
+- 방법: `git fetch origin claude/friendly-meitner-lldvar` → `git worktree add
+  ../litdb-canon origin/claude/friendly-meitner-lldvar -b tmp-litdb` → 카드 추가
+  → 그 브랜치로 커밋/푸시 → worktree 제거.  코드/문서 등 litdb 외 파일은 여전히
+  이 브랜치에만.
+
+---
+
 ## 랩 AI 워크플로 규약 (2026-07-16)
 
 `docs/lab_ai_workflow_conventions.md` — 랩 내부 공유 deck digest.  그림 요청 시
