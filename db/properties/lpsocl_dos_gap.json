@@ -10,5 +10,6 @@
  "outputs": "db/properties/lpsocl_dos_smooth.csv / lpsocl_pdos_element_smooth.csv / lpsocl_pdos_element_PERATOM.csv (registered 2026-07-16)",
  "date": "2026-07-16",
  "data_source": "kgy ~/work/lpsocl_v0 (01_relax_v0.out, 03b_nscf_gap.out, lpsocl_v0_gap.txt); chain: yield/E_ads/resume relay 2026-07-15 night",
- "pdos_summary": "VBM character stays S-3p (S dominates the top ~1.5 eV of the VB, Li/P/Cl minor). O-2p states are BURIED 2.3-5.5 eV below the VBM (deep O band at -5.6~-5.0 hybridized with P = the P-O bonding states; secondary O feature at -2.4~-2.3), i.e. O introduces NO states at either band edge -> why the gap is preserved and clean. CB onset ~2.05 eV mixed Li/P/S."
+ "pdos_summary": "VBM character stays S-3p (S dominates the top ~1.5 eV of the VB, Li/P/Cl minor). O-2p states are BURIED 2.3-5.5 eV below the VBM (deep O band at -5.6~-5.0 hybridized with P = the P-O bonding states; secondary O feature at -2.4~-2.3), i.e. O introduces NO states at either band edge -> why the gap is preserved and clean. CB onset ~2.05 eV mixed Li/P/S.",
+ "structure": "db/structures/lpsocl_v0.xyz + lpsocl_v0.vasp (V0-relaxed 62-atom cell, from kgy lpsocl_v0/03_nscf_dos.in, registered 2026-07-16). PS3O unit verified: P#30 - S#35/S#40/S#45 (2.05-2.08 A) + O#50 (1.559 A); free-S = atm#54/#57 (dmin(P) 4.28/4.25 A, argyrodite 4d-type sites); site counts free-S 2 / PS4-S 19 / Cl 8 / O 1."
 }
