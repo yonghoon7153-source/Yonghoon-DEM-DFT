@@ -37,9 +37,10 @@ from scipy import ndimage, sparse
 from scipy.sparse.linalg import cg
 
 # σ defaults (S/cm) — see module docstring for anchor status
-# SDCP 150 = USER-provided INTERIM material conductivity (2026-07-10, 진성호계 S-PEDOT 자릿수);
-# replaces the earlier 'AM-grade 0.010' placeholder.  Still overridable per run.
-SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 150.0}
+# SDCP 250 = USER-provided anchor UPDATE (2026-07-16; supersedes interim 150 of 2026-07-10,
+# 진성호계 S-PEDOT 자릿수).  Still overridable per run.  ⚠ pre-2026-07-16 production outputs
+# (DBE +45.4% 등) were solved at 150 — re-run needed for the 250-anchored numbers.
+SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 250.0}
 SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE'}   # voxel σ-id → name
 #   sid 7 (PTFE) = SENSITIVITY-ONLY: production은 PTFE를 전도 격자에 아예 안 넣음(절연 = void와
 #   동일 취급, bulk PTFE σ~1e-16 S/cm).  --sigma-ptfe > 0 민감도 런에서만 payload가 phase-4 점을

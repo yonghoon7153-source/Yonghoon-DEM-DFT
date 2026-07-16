@@ -157,6 +157,8 @@ STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore
 (`scripts/step4_dyn.py`, selftest 20/20, 물리·수치 2-agent 리뷰 반영; pybamm 앵커
 `scripts/step4_pybamm_anchor.py`; V100 스모크→SBE/DBE rate 비교 진행).
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
+**★σ_SDCP 앵커 250 S/cm 확정(2026-07-16, 150 인터림 폐기 — 코드 기본값 교체 완료, 250
+재실행·스윕 250점 추가·STEP4 그리드 재export 대기; 기존 +45.4%는 150 해)**
 **σ_SDCP 스윕 {15/50/150/1500} 완료**(+0.8/+25.8/+45.5/+63.4% — 크기는 σ_SDCP
 강의존·최악 무손해·분담 역행=직렬 시그니처; `docs/data/sdcp318_sigma_sdcp_sweep/`),
 잔여 = E_bind DFT(gabia).  기록: `docs/manuscript_sdcp_sigma_e_mechanism.md`(최종판)
