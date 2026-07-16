@@ -1,0 +1,4 @@
+site,E_ads_vs_Li_atom_eV
+on-N_atop_min,-2.9877
+bridge_TS,-2.8695
+# barrier = difference = 0.1182 eV (diffusion.json 2point entry); bare slab = slab_bare2 CONVERGED (v1 -3.439/-3.321 retracted, unconverged bare slab)
