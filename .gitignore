@@ -9,3 +9,4 @@ docs/figures/bvse_cubes/
 # paper-inbox watcher local state (machine-specific)
 litdb/.processed_inbox.txt
 litdb/inbox/
+litdb/.watcher_run.log

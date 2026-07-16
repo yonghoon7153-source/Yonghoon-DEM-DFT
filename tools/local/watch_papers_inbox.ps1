@@ -29,6 +29,13 @@ $MaxPerRun = 2                                           # 실행당 최대 처�
 
 $RepoInbox = Join-Path $Repo "litdb\inbox"
 $Log       = Join-Path $Repo "litdb\.processed_inbox.txt"
+$RunLog    = Join-Path $Repo "litdb\.watcher_run.log"
+
+# 중복실행 가드 (CLAUDE.md 관례) — 수동 트리거와 정규 주기가 겹치면 같은 논문 2회 처리됨
+$mutex = New-Object System.Threading.Mutex($false, "Global\litdb-paper-agent")
+if (-not $mutex.WaitOne(0)) { Write-Host "another instance running — skip."; exit 0 }
+
+Start-Transcript -Path $RunLog -Append | Out-Null
 
 if (-not (Test-Path $Inbox)) { New-Item -ItemType Directory -Path $Inbox | Out-Null }
 if (-not (Test-Path $RepoInbox)) { New-Item -ItemType Directory -Path $RepoInbox | Out-Null }
@@ -57,8 +64,7 @@ $rel 파일을 논문 에이전트(litdb-curator) 방식으로 처리해줘. 사
 — 이 분류를 digest 태그와 INDEX.md 항목에 반영해줘.
 1) 전체 페이지를 정독하고 litdb/papers/ 에 표준 digest(md)를 저장
 2) litdb/INDEX.md 와 litdb/comparison_vs_ours.md 갱신
-3) 처리 후 원본은 litdb/inbox/ 에서 삭제
-4) git add litdb && 한 줄 커밋 메시지로 commit && push (브랜치 claude/friendly-meitner-lldvar)
+git 커밋/푸시와 inbox 정리는 이 스크립트가 하니 하지 말 것.
 digest는 CLAUDE.md 규율(문헌 수치는 소환값, db 절대값과 혼용 금지)을 따를 것.
 "@
 
@@ -77,9 +83,17 @@ digest는 CLAUDE.md 규율(문헌 수치는 소환값, db 절대값과 혼용 �
     Pop-Location
 
     if ($ok -eq 0) {
+        # 커밋/푸시/정리는 스크립트가 결정론적으로 (헤드리스 에이전트가 3회 연속 누락한 전력)
+        Push-Location $Repo
+        Remove-Item (Join-Path $RepoInbox $pdf.Name) -Force -ErrorAction SilentlyContinue
+        git add litdb
+        git commit -m "litdb: digest $($pdf.BaseName)"
+        git push origin claude/friendly-meitner-lldvar
+        Pop-Location
         Add-Content $Log $pdf.Rel
         Write-Host "<<< done: $($pdf.Name)"
     } else {
         Write-Host "!!! claude exited $ok for $($pdf.Name) — 다음 주기에 재시도" -ForegroundColor Yellow
     }
 }
+Stop-Transcript | Out-Null
