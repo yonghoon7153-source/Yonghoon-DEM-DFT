@@ -53,13 +53,15 @@ def load_vasp(fn):
     scale = float(L[1])
     A = np.array([[float(x) for x in L[i].split()] for i in (2, 3, 4)]) * scale
     species = L[5].split(); counts = [int(x) for x in L[6].split()]
-    assert L[7].strip().lower().startswith("cart")
-    sym, cart = [], []
+    mode = L[7].strip().lower()
+    assert mode.startswith(("cart", "d")), f"unknown POSCAR mode: {mode}"
+    sym, xyz = [], []
     k = 8
     for s, n in zip(species, counts):
         for _ in range(n):
-            cart.append([float(x) for x in L[k].split()[:3]]); sym.append(s); k += 1
-    frac = np.array(cart) @ np.linalg.inv(A)
+            xyz.append([float(x) for x in L[k].split()[:3]]); sym.append(s); k += 1
+    xyz = np.array(xyz)
+    frac = xyz if mode.startswith("d") else xyz @ np.linalg.inv(A)
     return A, frac % 1.0, sym
 
 
