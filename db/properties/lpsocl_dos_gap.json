@@ -1,0 +1,13 @@
+{
+ "system": "LPSOCl (O-doped LPSCl1.6 modelC, 62-atom cell) at BM-EOS V0",
+ "method": "standard_dos recipe (tools/electronic/standard_dos): V0 relax (cell = v100 x 1.000953) -> scf -> nscf tetrahedra_opt k 8x8x2 (DOS) + nscf fixed-occ (gap from VBM/CBM eigenvalues, NO smearing), nbnd 210; QE 7.4.1-GPU on kgy RTX3090, USPP 60/480 Ry",
+ "E_V0_Ry": -1280.52027853,
+ "VBM_eV": 2.387,
+ "CBM_eV": 4.6179,
+ "gap_eV": 2.2309,
+ "clean_insulator": true,
+ "note": "fixed-occupations nscf printed clean VBM/CBM -> NO mid-gap defect states from direct O substitution at this composition/arrangement. Gap sits in the undoped-argyrodite PBE literature band (2.0-2.4; Rao 2025 2.19/2.32, MDPI 2.45) -> O insertion preserves the electronic gap. V0 relax converged in minutes from v100 geometry; E(V0) within fit rms of BM E0 (-1280.520622).",
+ "outputs": "lpsocl_dos_smooth.csv / lpsocl_pdos_element_smooth.csv / lpsocl_pdos_element_PERATOM.csv (kgy ~/work/lpsocl_v0, retrieval pending) — b2o3 csv conventions",
+ "date": "2026-07-16",
+ "data_source": "kgy ~/work/lpsocl_v0 (01_relax_v0.out, 03b_nscf_gap.out, lpsocl_v0_gap.txt); chain: yield/E_ads/resume relay 2026-07-15 night"
+}
