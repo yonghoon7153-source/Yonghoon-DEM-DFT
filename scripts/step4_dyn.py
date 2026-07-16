@@ -577,9 +577,10 @@ class CellSystem:
     def _ev_maker(self, phi0, U_f, i0_f, kin, i_scale):
         """potentiostatic 평가 클로저 — 마지막 평가 상태(phi/I_f/η/r/V/I)를 st에 일관 보존.
         (교훈: 시컨트 회전 뒤 '미평가 V'를 반환하면 φ↔V 불일치로 감사·기록이 오염됨)"""
-        st = {'phi': phi0}
+        st = {'phi': phi0, 'n_ev': 0}
 
         def ev(V):
+            st['n_ev'] += 1                                  # 스텝당 V-평가 횟수 (케이던스 진단용)
             st['phi'], st['I_f'], st['eta'], st['r'], _ = self.newton(
                 st['phi'], U_f, i0_f, kin, float(V), i_scale=i_scale)
             st['V'] = float(V)
@@ -644,10 +645,14 @@ class CellSystem:
                 side = +1
         return False
 
-    def solve_galv(self, phi, U_f, i0_f, kin, I_target, V_guess, tol_rel_i=1e-7):
+    def solve_galv(self, phi, U_f, i0_f, kin, I_target, V_guess, tol_rel_i=None):
         """정전류: I_del(V_app)=I_target 인 V_app (I_del은 V에 단조↓).
         반환 (phi, I_f, eta_s, resid, V_app, I_del) — 전부 마지막 평가와 일관."""
         scale = max(abs(I_target), 1e-12)
+        if tol_rel_i is None:                                # 바닥-인지 tol: 교정된 float64 집계
+            tol_rel_i = max(1e-7, 0.5 * float(getattr(self, 'agg_floor_abs', 0.0)) / scale)
+            # 노이즈 바닥(V100 1.6e-05 rel) 아래 자릿수는 물리 무의미 — Illinois가 그걸 갈면
+            # 스텝당 평가 ~13회(smoke8 실측).  0.5×바닥 = 경고선(4×바닥)의 1/8 여유.
         ev, st = self._ev_maker(phi, U_f, i0_f, kin, scale)
         # 적응형 첫 탐색폭: 직전 스텝의 실제 ΔV 기반 (고정 0.05 V는 스텝 간 ΔV~0.1 mV인
         # 시간전개에서 매 스텝 큰 점프-회수 낭비를 만들었음 — V100 스모크 로그)
@@ -656,6 +661,7 @@ class CellSystem:
                                tol_rel_i * scale, step0=step0, st=st)
         self._galv_dV = max(abs(st['V'] - float(V_guess)), 2.5e-5)
         self.last_galv_miss = abs(st['I'] - I_target) / scale
+        self.last_galv_nev = st['n_ev']
         return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
 
     def solve_vterm(self, phi, U_f, i0_f, kin, V_term, r_int_abs, V_guess, i_scale,
@@ -666,11 +672,13 @@ class CellSystem:
         if r_int_abs <= 0:
             ev(V_term)
             self.last_galv_miss = 0.0
+            self.last_galv_nev = st['n_ev']
             return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
         self._bracket_illinois(ev, lambda I, V: (V - I * r_int_abs) - V_term,
                                float(V_guess), tol_v, step0=0.01, f_dec=False, st=st)
         # F2: 괄호 실패가 침묵하지 않도록 터미널 방정식 미스를 실측 보고 (리뷰 R2 물리#12/수치#3)
         self.last_galv_miss = abs((st['V'] - st['I'] * r_int_abs) - V_term) / max(abs(V_term), 1.0)
+        self.last_galv_nev = st['n_ev']
         return st['phi'], st['I_f'], st['eta'], st['r'], st['V'], st['I']
 
     def particle_current(self, I_f):
@@ -807,10 +815,12 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         out['Q_rint_W'].append(I_del * I_del * R_int_abs)
         out['Q_rev_W'].append(float((I_f * kin.T * np.interp(x_s, dudt[0], dudt[1])[fp]).sum())
                               if dudt is not None else np.nan)
-        if verbose and (len(out['t']) % 10 == 1):
-            print(f'    t={t:9.1f}s [{phase}] V={V_term:.4f} I={I_del:.3e} x̄={x_bar:.4f} '
-                  f'ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV E-bal {aud["balance_rel"]:.1e} '
-                  f'KCL {kcl:.1e}', flush=True)
+        if verbose:                                          # 매 스텝 (스텝 수십 개 규모 — 로그 부담 無;
+            _nev = int(getattr(sys_, 'last_galv_nev', -1))   #  %10 게이팅은 진행 확인을 불가능하게 했음)
+            print(f'    step {len(out["t"]):4d} t={t:9.1f}s [{phase}] V={V_term:.4f} '
+                  f'I={I_del:.3e} x̄={x_bar:.4f} ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV '
+                  f'E-bal {aud["balance_rel"]:.1e} KCL {kcl:.1e} (ev {_nev}, dt {dt:.0f}s)',
+                  flush=True)
         # 뷰어 체크포인트: SOC-창 진행 균등 지점마다 셸-SOC + 면전류 기록
         _frac = abs(x_bar - x_ini) / max(_win, 1e-12)
         if _frac >= _next_rec - 1e-12 and not newton_failed:
