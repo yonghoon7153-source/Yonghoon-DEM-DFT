@@ -119,10 +119,11 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
                 prog = min(99.0, max(0.0, 100.0 * np.log(max(r0 / max(r, 1e-300), 1.0)) / den))
                 print(f'      CG {box["n"]:5d} it  resid {r:.2e} (목표 {tgt:.2e})  '
                       f'~{prog:.0f}%  {_t.time() - box["t0"]:.0f}s', flush=True)
-        try:
-            return cg(L, b, x0=x_init, rtol=rtol, maxiter=50000, M=Mp, callback=cb)
+        mi = 3000 if big else 50000                          # CPU-AMG는 ~수백 iter가 정상 —
+        try:                                                 # 3000 미달이면 더 돌려도 가망 없음
+            return cg(L, b, x0=x_init, rtol=rtol, maxiter=mi, M=Mp, callback=cb)
         except TypeError:
-            return cg(L, b, x0=x_init, tol=rtol, maxiter=50000, M=Mp, callback=cb)
+            return cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
 
     M = None
     if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
@@ -419,6 +420,10 @@ class CellSystem:
         self.pos_ie = perm[nnz_static + self.n_bv:nnz_static + 2 * self.n_bv]
         self.pos_diag = perm[nnz_static + 2 * self.n_bv:]               # 노드별 대각 위치
         self.J.data[:] = self.data0
+        # 집계-잔차의 float64 노이즈 바닥 스케일: matvec 반올림 ~ ε·Σ|entries|·|φ|.
+        # (실전 2.9M dof에서 이 바닥이 상대 ~1e-5 — 1e-8 고정 목표는 도달 불가능한 목표가 되어
+        #  노이즈를 상대로 CG를 돌리게 됨: 2026-07-16 V100 CG-정체의 두 번째 뿌리)
+        self._abs_data_sum = float(np.abs(self.data0).sum())
 
     # ---- 연산 ----
     def _L0_apply(self, phi):
@@ -446,14 +451,17 @@ class CellSystem:
         Fv, I_f, eta_s = self.residual(phi, U_f, i0_f, kin, V_app)
         scale = max(abs(i_scale), 1e-12)
 
-        def _err(F):
-            return max(float(np.linalg.norm(F, np.inf)),
-                       abs(float(F[:self.n_e].sum()))) / scale
+        def _err(F, phi_ref):
+            floor = (32.0 * np.finfo(np.float64).eps * self._abs_data_sum
+                     * (float(np.max(np.abs(phi_ref))) + 1.0))          # 집계 노이즈 바닥 [A]
+            agg = max(0.0, abs(float(F[:self.n_e].sum())) - floor)
+            self.last_err_floor_rel = floor / scale
+            return max(float(np.linalg.norm(F, np.inf)), agg) / scale
 
         it = 0
         best, stall = np.inf, 0
         while it < max_it:
-            r = _err(Fv)
+            r = _err(Fv, phi)
             if r < tol_rel:
                 break
             if r >= 0.5 * best:                             # 노이즈-바닥 정체 감지 (수렴 근처 한정)
@@ -498,7 +506,7 @@ class CellSystem:
             Fv, I_f, eta_s = Fn, I_fn, eta_n
             it += 1
         self.last_newton_it = it
-        return phi, I_f, eta_s, _err(Fv), it
+        return phi, I_f, eta_s, _err(Fv, phi), it
 
     def _ev_maker(self, phi0, U_f, i0_f, kin, i_scale):
         """potentiostatic 평가 클로저 — 마지막 평가 상태(phi/I_f/η/r/V/I)를 st에 일관 보존.
@@ -561,7 +569,7 @@ class CellSystem:
                 side = +1
         return False
 
-    def solve_galv(self, phi, U_f, i0_f, kin, I_target, V_guess, tol_rel_i=1e-8):
+    def solve_galv(self, phi, U_f, i0_f, kin, I_target, V_guess, tol_rel_i=1e-7):
         """정전류: I_del(V_app)=I_target 인 V_app (I_del은 V에 단조↓).
         반환 (phi, I_f, eta_s, resid, V_app, I_del) — 전부 마지막 평가와 일관."""
         scale = max(abs(I_target), 1e-12)
@@ -680,10 +688,13 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         n_it = int(getattr(sys_, 'last_newton_it', -1))
         i_am = sys_.particle_current(I_f)
         galv_miss = float(getattr(sys_, 'last_galv_miss', 0.0))
-        if resid > 1e-6 or galv_miss > 1e-6:                # F2 규약: 침묵 실패 금지 (수치리뷰 #5)
-            print(f'    ⚠ step4 잔차 {resid:.1e} / 정전류 미스 {galv_miss:.1e} @t={t:.1f}s — 신뢰 주의',
-                  flush=True)
-        newton_failed = resid > 1e-3 or galv_miss > 1e-3    # 하드 실패: 기록만 남기고 확산 전진 전 중단
+        _fl = float(getattr(sys_, 'last_err_floor_rel', 0.0))
+        warn_thr = max(1e-6, 4.0 * _fl)                     # 노이즈-바닥 위에서만 경고 (스케일 인지)
+        if resid > warn_thr or galv_miss > warn_thr:        # F2 규약: 침묵 실패 금지 (수치리뷰 #5)
+            print(f'    ⚠ step4 잔차 {resid:.1e} / 정전류 미스 {galv_miss:.1e} '
+                  f'(경고선 {warn_thr:.1e}) @t={t:.1f}s — 신뢰 주의', flush=True)
+        newton_failed = (resid > max(1e-3, 40.0 * _fl)
+                         or galv_miss > max(1e-3, 40.0 * _fl))   # 하드 실패: 확산 전진 전 중단
         kcl = abs(i_am.sum() - I_del) / max(abs(I_del), 1e-30)
         aud = sys_.energy_audit(phi, I_f, eta_s, U_f, kin, V_app)
         V_cell = V_app
