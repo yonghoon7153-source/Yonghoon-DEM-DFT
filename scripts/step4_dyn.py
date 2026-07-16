@@ -358,11 +358,11 @@ class CellSystem:
         dist = np.maximum(np.abs(z_p - zc[kk[m]]), 0.5 * vox_um) * 1e-6
         gT = sig_i[ii[m], jj[m], kk[m]] * vox_m * vox_m / dist
         np.add.at(diag0, Ai[m] + self.n_e, gT)              # 접지(φ=0): diag-only
-        # BV 면 목록
+        # BV 면 목록 (+면 중점 µm 좌표 — 뷰어 표면-반응 필드용; 격자 프레임 = payload µm 프레임)
         am_m = (sid == 1) | (sid == 2)
         ion_m = (sid == 5) | (sid == 6)
-        fe, fi, fp = [], [], []
-        for sl_a, sl_b in SL:
+        fe, fi, fp, fpos = [], [], [], []
+        for d, (sl_a, sl_b) in enumerate(SL):
             for am_first in (True, False):
                 slA, slB = (sl_a, sl_b) if am_first else (sl_b, sl_a)
                 m = am_m[slA] & ion_m[slB]
@@ -371,10 +371,14 @@ class CellSystem:
                 if not m.any():
                     continue
                 fe.append(Ae2[m]); fi.append(Bi2[m] + self.n_e); fp.append(pid[slA][m])
+                pos = np.argwhere(m).astype(np.float32) + 0.5     # 하부 셀 중심 (sliced=하부 인덱스)
+                pos[:, d] += 0.5                                  # 축 방향 면 중점
+                fpos.append(pos * vox_um)
         if not fe:
             raise RuntimeError('no BV interface')
         self.f_e = np.concatenate(fe); self.f_i = np.concatenate(fi)
         self.f_pid = np.concatenate(fp)
+        self.f_pos_um = np.concatenate(fpos)
         self.n_bv = len(self.f_e)
         self.A_face = vox_m * vox_m
         self.n_am = int(n_am)
@@ -530,7 +534,7 @@ class CellSystem:
 def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
              dx_max=0.02, dt_init=1.0, dt_max=120.0, t_max=None, charge=False,
              cv_hold=False, i_cut_frac=0.05, r_int_ohm_cm2=0.0, x_init=None,
-             dudt=None, verbose=True):
+             dudt=None, n_chk=12, verbose=True):
     """CC 방전(기본)/충전 (+cv_hold=True → V-리밋 도달 후 CV 홀드 = CCCV).
     r_int_ohm_cm2: 집전체 실측 R_int 직렬(시나리오 부하, STEP3 규약) — 터미널 V·컷오프에 반영.
     dudt: (x_tab, dUdT_tab) 있으면 Q_rev = Σ I_f·T·dU/dT(x_f) 출력 (관례: I_f = 탈리튬 +)."""
@@ -558,6 +562,16 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
             'energy_balance_rel',
             'Q_ohm_e_W', 'Q_ohm_i_W', 'Q_ct_W', 'Q_film_W', 'Q_rint_W', 'Q_rev_W')
     out = {k: [] for k in keys}
+    # 뷰어 체크포인트 (코어-셸 SOC + 면별 반응전류): SOC-진행 균등 n_chk점 + 마지막 상태
+    chk = {'t': [], 'x_mean': [], 'x_shell': [], 'I_face': []}
+    _win = abs(ocp.x100 - ocp.x0)
+    _next_rec = 0.0
+
+    def _rec_chk(t_now, x_bar_now, I_f_now):
+        chk['t'].append(float(t_now)); chk['x_mean'].append(float(x_bar_now))
+        chk['x_shell'].append(rad.x.astype(np.float16).copy())
+        chk['I_face'].append(np.asarray(I_f_now, np.float32).copy())
+
     t, dt = 0.0, dt_init
     phase = 'cc'
     I_app = I_cc
@@ -608,6 +622,11 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
             print(f'    t={t:9.1f}s [{phase}] V={V_term:.4f} I={I_app:.3e} x̄={x_bar:.4f} '
                   f'ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV E-bal {aud["balance_rel"]:.1e} '
                   f'KCL {kcl:.1e}', flush=True)
+        # 뷰어 체크포인트: SOC-창 진행 균등 지점마다 셸-SOC + 면전류 기록
+        _frac = abs(x_bar - x_ini) / max(_win, 1e-12)
+        if _frac >= _next_rec - 1e-12 and not newton_failed:
+            _rec_chk(t, x_bar, I_f)
+            _next_rec += 1.0 / max(n_chk - 1, 1)
         # ---- 종료/전환 ----
         if newton_failed:                                   # 가비지 상태로 확산을 전진시키지 않음
             reason = 'newton_fail'
@@ -657,7 +676,15 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
               f'(E-bal max {max(out["energy_balance_rel"]):.1e})', flush=True)
         if getattr(sys_, 'last_cg_info', 0):
             print(f'  ⚠ CG maxiter 도달 이력 (info={sys_.last_cg_info}) — 해 품질 확인 요망', flush=True)
+    if not chk['t'] or chk['t'][-1] < t - 1e-9:              # 마지막 상태는 항상 기록
+        _rec_chk(t, x_bar, I_f)
     out = {k: np.asarray(v) for k, v in out.items()}
+    out['viz_t'] = np.asarray(chk['t'])
+    out['viz_x_mean'] = np.asarray(chk['x_mean'])
+    out['viz_x_shell'] = (np.stack(chk['x_shell']) if chk['x_shell']
+                          else np.zeros((0, n_am, nr), np.float16))
+    out['viz_I_face'] = (np.stack(chk['I_face']) if chk['I_face']
+                         else np.zeros((0, sys_.n_bv), np.float32))
     # V-컷오프 정밀값: 마지막 두 점 보간 (오버슛 오독 방지)
     Vt = out['V_terminal']
     if reason == 'V_cutoff' and len(Vt) >= 2:
@@ -933,6 +960,12 @@ def main():
     ap.add_argument('--dt-max', type=float, default=120.0)
     ap.add_argument('--gpu', action='store_true')
     ap.add_argument('--out', default='step4_dyn_out.npz')
+    ap.add_argument('--n-chk', type=int, default=12, help='뷰어 체크포인트 수 (SOC-진행 균등)')
+    ap.add_argument('--viz-out', default='',
+                    help='뷰어용 JSON (코어-셸 SOC 체크포인트 + 면별 반응전류) — webapp 3D 뷰어의 '
+                         'STEP4-v2 모드에서 열기 (입자 SOC 그라데이션·표면 반응 필드·단면 뷰)')
+    ap.add_argument('--viz-max-faces', type=int, default=120000,
+                    help='viz JSON 면 서브샘플 상한 (seed 0 결정론)')
     a = ap.parse_args()
     global GPU
     GPU = bool(a.gpu)
@@ -964,7 +997,7 @@ def main():
                    v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge,
                    cv_hold=a.cv_hold, i_cut_frac=a.i_cut_frac,
                    r_int_ohm_cm2=a.r_int_ohm_cm2, x_init=a.x_init, dudt=dudt,
-                   dx_max=a.dx_max, dt_max=a.dt_max)
+                   dx_max=a.dx_max, dt_max=a.dt_max, n_chk=a.n_chk)
     meta = out.pop('params')
     reason = out.pop('end_reason')
     meta['end_reason'] = reason
@@ -973,6 +1006,34 @@ def main():
           f'V_term {out["V_terminal"][0]:.3f}→{out["V_terminal"][-1]:.3f}, '
           f'delivered {out["q_frac_at_cutoff"] * 100:.1f}%, '
           f'E-bal max {np.max(out["energy_balance_rel"]):.1e})')
+    if a.viz_out and len(out['viz_t']):
+        nb = sysm.n_bv
+        idx = np.arange(nb)
+        if nb > a.viz_max_faces:
+            idx = np.random.default_rng(0).choice(nb, a.viz_max_faces, replace=False)
+            idx.sort()
+        If_full = out['viz_I_face']                          # (n_chk, n_bv) [A]
+        m_abs = np.array([max(float(np.mean(np.abs(r_[np.abs(r_) > 0]))) if (np.abs(r_) > 0).any()
+                              else 0.0, 1e-30) for r_ in If_full])
+        i_rel = If_full[:, idx] / m_abs[:, None]             # i/ī (v1 jrxn 규약과 동일 RELATIVE)
+        viz = {
+            'kind': 'step4_viz', 'c_rate': a.c_rate, 'charge': bool(a.charge),
+            'x0': ocp.x0, 'x100': ocp.x100, 'nr': a.nr, 'vox_um': vox_um,
+            'i_1c_a': float(out['I_1C_A']), 'i_mean_abs_a': [float(f'{v:.4g}') for v in m_abs],
+            'end_reason': reason, 'test_only': bool(ocp.test_only), 'provenance': ocp.provenance,
+            't_s': [round(float(v), 1) for v in out['viz_t']],
+            'x_mean': [round(float(v), 4) for v in out['viz_x_mean']],
+            'x_shell': np.round(out['viz_x_shell'].astype(np.float64), 4).tolist(),
+            'faces': {'n_total': int(nb), 'n_kept': int(len(idx)),
+                      'pos_um': np.round(sysm.f_pos_um[idx].astype(np.float64), 1).tolist(),
+                      'pid': sysm.f_pid[idx].astype(int).tolist(),
+                      'i_rel': np.round(i_rel, 3).tolist()},
+        }
+        with open(a.viz_out, 'w') as fh:
+            json.dump(viz, fh, separators=(',', ':'))
+        import os as _os
+        print(f'saved {a.viz_out}  ({_os.path.getsize(a.viz_out) / 1e6:.1f} MB — '
+              f'chk {len(viz["t_s"])}, faces {len(idx):,}/{nb:,})')
 
 
 if __name__ == '__main__':

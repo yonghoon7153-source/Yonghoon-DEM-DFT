@@ -117,6 +117,118 @@ function rdylgnColor(t) {
  *   t = 0.5  →  (221, 221, 221) near-white
  *   t = 1.0  →  (180,  4,  38)  deep red
  * Linear interpolation in each half. */
+/* ── STEP4-v2 동역학 필드 렌더 (step4_dyn.py --viz-out JSON) ──
+ * st4_soc : 입자별 반경방향 SOC(코어-셸)를 시간·깊이(peel) 슬라이더로 —
+ *           구형 1D 확산이라 각도방향은 균일(동심 링), 단면 뷰와 조합하면
+ *           연차보고서식 입자 내부 그라데이션 단면이 됨.
+ * st4_face: BV 면별 반응전류 i/ī(RELATIVE, v1 jrxn 규약)를 복셀큐브 필드로 —
+ *           같은 입자 표면 안에서도 접촉 기하에 따른 비균일 얼룩이 보임. */
+function renderSt4Soc(state) {
+  const st = state.st4;
+  const parts = [];
+  ['AM_P', 'AM_S'].forEach(t => {
+    const m = state.meshes[t];
+    if (m) { m.visible = false; parts.push(...m.userData.particles); }
+  });
+  if (!parts.length) { setLegend(state, '<i>AM 입자가 없어요.</i>'); return; }
+  const geo = new THREE.SphereGeometry(1, 24, 24);
+  const mat = new THREE.MeshPhongMaterial({ color: 0xffffff });
+  const mesh = new THREE.InstancedMesh(geo, mat, parts.length);
+  state.st4Group = mesh;
+  state.scene.add(mesh);
+  const nChk = st.t_s.length, nr = st.nr;
+  const lo = Math.min(st.x0, st.x100), hi = Math.max(st.x0, st.x100);
+  const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+  setLegend(state,
+    `<b>🔋 STEP4-v2 — 입자 SOC 코어-셸</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
+     <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
+     <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
+     <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
+     <input type="range" id="st4-d" min="8" max="100" value="100" style="width:100%">
+     <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
+     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>x=${lo.toFixed(2)} (탈리튬)</span><span>x=${hi.toFixed(2)} (리튬↑)</span></div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
+     겉이 먼저 차는 shrinking-core가 시간축으로 보임.  "단면 뷰" 체크와 조합 → 내부 링 단면.
+     ${st.c_rate}C · ${st.charge ? '충전' : '방전'} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
+  const tS = document.getElementById('st4-t'), dS = document.getElementById('st4-d');
+  const upd = () => {
+    const ti = +tS.value, dp = +dS.value / 100;
+    document.getElementById('st4-tlab').textContent = `t=${st.t_s[ti]}s · x̄=${st.x_mean[ti]}`;
+    document.getElementById('st4-dlab').textContent = Math.round(dp * 100);
+    const shell = st.x_shell[ti];
+    const kSh = Math.max(0, Math.min(nr - 1, Math.ceil(dp * nr) - 1));
+    const dummy = new THREE.Object3D();
+    const col = new THREE.Color();
+    parts.forEach((p, i) => {
+      dummy.position.set(p.x, p.z, p.y);
+      dummy.scale.setScalar(p.r * dp);
+      dummy.updateMatrix();
+      mesh.setMatrixAt(i, dummy.matrix);
+      const row = shell[p.id];
+      const xs = row ? row[kSh] : lo;
+      const tt = Math.max(0, Math.min(1, (xs - lo) / Math.max(hi - lo, 1e-9)));
+      mesh.setColorAt(i, col.setHex(jetColor(tt)));
+    });
+    mesh.instanceMatrix.needsUpdate = true;
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  };
+  tS.oninput = upd;
+  dS.oninput = upd;
+  upd();
+}
+
+function renderSt4Faces(state) {
+  const st = state.st4, F = st.faces;
+  const n = F.pos_um.length;
+  if (!n) { setLegend(state, '<i>면 데이터가 없어요.</i>'); return; }
+  if (state.meshes.MESH) {                                   // SE는 얇은 맥락으로
+    state.meshes.MESH.visible = true;
+    state.meshes.MESH.material.transparent = true;
+    state.meshes.MESH.material.opacity = 0.08;
+  }
+  const s = (st.vox_um || 0.4) * 0.95;
+  const geo = new THREE.BoxGeometry(s, s, s);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffffff });   // unlit — 필드 판독용
+  const mesh = new THREE.InstancedMesh(geo, mat, n);
+  const dummy = new THREE.Object3D();
+  for (let i = 0; i < n; i++) {
+    const p = F.pos_um[i];
+    dummy.position.set(p[0], p[2], p[1]);                    // Z-up swap (payload 규약)
+    dummy.updateMatrix();
+    mesh.setMatrixAt(i, dummy.matrix);
+  }
+  mesh.instanceMatrix.needsUpdate = true;
+  state.st4FaceGroup = mesh;
+  state.scene.add(mesh);
+  const nChk = st.t_s.length;
+  const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
+  setLegend(state,
+    `<b>🔋 STEP4-v2 — 표면 반응전류 면분포</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
+     <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
+     <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
+     <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
+     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">BV 접촉면별 국소 반응전류(상대) — 같은 입자 표면에서도 SE/SDCP 접촉 기하에 따라
+     비균일.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
+     ī(면평균 |i|) 시점별 = 컬러 정규화 기준 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>`);
+  const tS = document.getElementById('st4f-t');
+  const col = new THREE.Color();
+  const upd = () => {
+    const ti = +tS.value;
+    document.getElementById('st4f-tlab').textContent = `t=${st.t_s[ti]}s · x̄=${st.x_mean[ti]}`;
+    const arr = F.i_rel[ti];
+    const abs = arr.map(Math.abs).sort((a, b) => a - b);
+    const hi = Math.max(abs[Math.floor(0.95 * (abs.length - 1))], 1e-9);
+    for (let i = 0; i < n; i++) {
+      const t = Math.max(0, Math.min(1, Math.abs(arr[i]) / hi));
+      mesh.setColorAt(i, col.setHex(jetColor(t)));
+    }
+    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  };
+  tS.oninput = upd;
+  upd();
+}
+
 /* ── control-panel HTML ────────────────────────────────────── */
 function buildControls(container, isMPM) {
   const div = document.createElement('div');
@@ -142,6 +254,8 @@ function buildControls(container, isMPM) {
         <option value="je">└ 전자 — AM 입자별 (je)</option>
         <option value="je_delta">└ Δ 재분배 — bare/wetted 비율 (접점 상실)</option>
         <option value="jrxn">🔋 반응 전류밀도 — 충전 저율 (STEP4)</option>
+        <option value="st4_soc">🔋 STEP4-v2 — 입자 SOC 코어-셸 (동역학·시간)</option>
+        <option value="st4_face">🔋 STEP4-v2 — 표면 반응전류 면분포 (동역학·시간)</option>
       </optgroup>
       <optgroup label="도전재 (carbon)">
         <option value="additives">도전재 — 전체</option>
@@ -156,6 +270,7 @@ function buildControls(container, isMPM) {
       </optgroup>
     </select>
     <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
+    <input type="file" id="st4-file" accept=".json,application/json" style="display:none">
     <hr>
     <label style="font-size:11px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
     <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
@@ -1109,6 +1224,14 @@ function applyViewMode(state, mode) {
     if (state.strainPointGroup.material) state.strainPointGroup.material.dispose();
     state.strainPointGroup = null;
   }
+  ['st4Group', 'st4FaceGroup'].forEach(k => {               // STEP4-v2 동역학 레이어
+    if (state[k] && state.scene) {
+      state.scene.remove(state[k]);
+      if (state[k].geometry) state[k].geometry.dispose();
+      if (state[k].material) state[k].material.dispose();
+      state[k] = null;
+    }
+  });
   if (state.meshes && state.meshes.MESH && state.meshes.MESH.userData._baseColor) {
     state.meshes.MESH.material.color.setHex(state.meshes.MESH.userData._baseColor);   // je-mode navy → base
     delete state.meshes.MESH.userData._baseColor;
@@ -2335,6 +2458,43 @@ function applyViewMode(state, mode) {
        <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
        <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0 (반응 소외)</span><span>i/ī (0–p99.8)</span><span>핫스팟</span></div>`
       + (rxn ? `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">BV faces ${Number(rxn.n_bv_faces).toLocaleString()} · active AM ${rxn.active_am_pct}% · i0 ${rxn.i0_A_m2} A/m² (⚠F1 hook) · 선형화 BV·균일 SOC</div>` : ''));
+    return;
+  }
+  if (mode === 'st4_soc' || mode === 'st4_face') {
+    if (state.isSeed) {
+      setLegend(state, '<i>STEP4-v2는 <b>압축 후</b> 구조 위의 동역학이에요 — "MPM (압축 후)" 뷰에서 보세요.</i>');
+      return;
+    }
+    if (!state.st4) {                                        // 클라이언트-로컬 파일 로드 (서버 배선 불요)
+      setLegend(state,
+        `<b>STEP4-v2 동역학 결과 열기</b>
+         <div style="margin-top:4px"><button id="st4-open" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 8px;cursor:pointer">📂 step4_viz.json 선택</button></div>
+         <div style="margin-top:4px;color:#9ca3af;font-size:9.5px">GPU 런에서 <code>step4_dyn.py … --viz-out step4_viz.json</code>으로 생성한 파일을 선택하세요
+         (입자별 코어-셸 SOC 체크포인트 + BV 면별 반응전류).  같은 케이스의 침대여야 입자 id가 맞습니다.</div>`);
+      const inp = document.getElementById('st4-file');
+      const btn = document.getElementById('st4-open');
+      if (btn && inp) {
+        btn.onclick = () => inp.click();
+        inp.onchange = (e) => {
+          const f = e.target.files && e.target.files[0];
+          if (!f) return;
+          const rd = new FileReader();
+          rd.onload = () => {
+            let obj;
+            try { obj = JSON.parse(rd.result); } catch (err) { alert('step4_viz JSON 파싱 실패: ' + err); return; }
+            if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind 확인)'); return; }
+            state.st4 = obj;
+            inp.value = '';
+            applyViewMode(state, mode);
+          };
+          rd.readAsText(f);
+        };
+      }
+      return;
+    }
+    if (mode === 'st4_soc') renderSt4Soc(state);
+    else renderSt4Faces(state);
+    if (state.applyClip) state.applyClip();                  // 단면 뷰를 새 레이어에도 적용
     return;
   }
   if (mode === 'je_delta') {
