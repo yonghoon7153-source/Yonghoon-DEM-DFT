@@ -119,11 +119,14 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
                 prog = min(99.0, max(0.0, 100.0 * np.log(max(r0 / max(r, 1e-300), 1.0)) / den))
                 print(f'      CG {box["n"]:5d} it  resid {r:.2e} (목표 {tgt:.2e})  '
                       f'~{prog:.0f}%  {_t.time() - box["t0"]:.0f}s', flush=True)
-        mi = 3000 if big else 50000                          # CPU-AMG는 ~수백 iter가 정상 —
-        try:                                                 # 3000 미달이면 더 돌려도 가망 없음
-            return cg(L, b, x0=x_init, rtol=rtol, maxiter=mi, M=Mp, callback=cb)
+        mi = 1500 if big else 50000                          # CPU-AMG는 ~수백 iter가 정상 —
+        try:                                                 # 1500 미달이면 더 돌려도 가망 없음
+            x_sol, info = cg(L, b, x0=x_init, rtol=rtol, maxiter=mi, M=Mp, callback=cb)
         except TypeError:
-            return cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
+            x_sol, info = cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
+        if info and big:
+            cache['cpu_weak'] = True                         # 심층-수렴권 CG 무용 기억 (런 전체)
+        return x_sol, info
 
     M = None
     if L.shape[0] >= 50000:                                  # 소형(셀프테스트급)은 Jacobi로 충분
@@ -460,9 +463,16 @@ class CellSystem:
 
         it = 0
         best, stall = np.inf, 0
+        self._cg_failed = False
         while it < max_it:
             r = _err(Fv, phi)
             if r < tol_rel:
+                break
+            # 심층-수렴권(<1e-4)에서 CG가 무용함이 확인된 상태면 수렴 취급 — 확인 = 이 call에서
+            # 이미 실패(it>0) 또는 런-전체 기억(cpu_weak).  resid 보고는 그대로 → 감사가 판단.
+            known_weak = (getattr(self, '_pc_cache', {}).get('cpu_weak', False)
+                          or (it > 0 and self._cg_failed))
+            if r < 1e-4 and known_weak:
                 break
             if r >= 0.5 * best:                             # 노이즈-바닥 정체 감지 (수렴 근처 한정)
                 stall += 1
@@ -489,6 +499,7 @@ class CellSystem:
                 self._pc_cache = {}                          # sticky-GPU + AMG 계층 (스텝 간 보존)
             dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, pc_cache=self._pc_cache)
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
+            self._cg_failed = bool(info)
             step = 1.0
             accepted = False
             for k in range(10):                             # 감쇠: ||F|| 감소 보장
