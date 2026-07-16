@@ -2,7 +2,7 @@
 title: "SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)"
 tags: [project/sdcp-linio2, results, orbitals, doping, dft, binder]
 date: 2026-07-16
-status: phaseB-4of5-done_verdict-imminent
+status: phaseB-5of5-DONE_verdict-registered-2026-07-17
 supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 ---
 
@@ -12,7 +12,8 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 > 1. **폴라론 백본화 크로스오버**: 도핑 스핀의 백본 π 지분이 n=1 35% → n=2 32.6% → n=3(내부) **50.1%** — 사슬이 자랄수록 hole이 SO₃ 라디칼에서 백본 π로 이동.
 > 2. **폴라론은 사슬 내부를 선호**: E(mid) − E(end) = **−70.9 meV** → 실제 고분자에서 polaron은 사슬 끝을 피해 앉는다.
 > 3. **자기도핑은 사슬이 길수록 쉬워진다**: H-제거 비용 dimer 대비 trimer-mid **−213 meV**.
-> 4. **DFT 앵커링(잠정)**: LiNiO₂(104) 위 doped SDCP E_bind = **−1.52 eV** (Phase-B DFT+U; neutral 수렴 임박 → Δ VERDICT 곧 확정).
+> 4. **DFT 앵커링 ★VERDICT (2026-07-17 확정)**: LiNiO₂(104) 위 E_bind = doped **−1.524** / neutral **−2.213 eV** → Δ(doped−neutral) = **+0.689 eV**.
+>    **둘 다 강하게 결합**(>1.5 eV 화학흡착급 — 앵커링 서사 유지)하지만, **"자기도핑이 앵커링을 강화한다"는 UMA 방향(Δ −2.46 eV)은 DFT에서 뒤집힘** — 중성이 0.69 eV 더 강함. 도핑의 가치는 결합이 아니라 **캐리어 생성**(헤드라인 1–3)으로 서사 재배치.
 
 ## 0. 문서 계보
 - 6월 보고서 `sdcp_linio2_binding_report.md` = Phase A–C **UMA(MLIP)** 시대. 거기의 절대값(-18.2/-6.3 eV, v1 분자 세대)은 이후 v7c Phase-A 재실행으로 대체(-5.20/-2.73, db/properties/sdcp_linio2_binding_phaseA.csv)됐고, 어느 쪽이든 **사이트 랭킹·방향성 지표**였으며, 절대 스케일은 본 문서의 DFT 값으로 대체 중.
@@ -70,10 +71,12 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 | mol_doped | −518.39271245 | 수렴 |
 | mol_neutral | −519.68310300 | 수렴 |
 | complex_doped | −11081.73293860 | DONE (PLATEAU ±0.004 Ry) |
-| complex_neutral | (iter 272, acc 7.6e-6 — 수렴 임박) | 러닝 |
+| complex_neutral | −11083.07396953 | **DONE** (PLATEAU ±0.004 Ry, 2026-07-17) |
 
-- **E_bind(doped, DFT) = complex − slab − mol = −0.11204 Ry = −1.524 eV** (잠정; favorable).
-- **★VERDICT = E_bind(doped) − E_bind(neutral)** — complex_neutral 완료 시 watch가 자동 계산. 질문 스케일(UMA Δ 기준 ~2.4 eV) 대비 슬랩 오차 ±0.10 eV → S/N 양호.
+- **E_bind(doped) = −0.11204 Ry = −1.524 eV** / **E_bind(neutral) = −0.16268 Ry = −2.213 eV** (둘 다 favorable).
+- **★VERDICT = Δ(doped−neutral) = +0.689 eV — 중성이 더 강하게 결합.** UMA Phase-A의 방향(도핑 강화, Δ −2.46 eV)이 DFT+U에서 **부호째 반전**. UMA(oc20·비이완 슬랩·전하/스핀 무지)가 doped chelation을 과대평가한 것으로 판정 — Phase-A 값은 이제 "자리/자세 스캔용"으로만 강등.
+- 오차 논거: Δ에서는 **슬랩 에너지가 항등적으로 소거**(같은 E_slab을 양쪽에서 뺌) → 슬랩 plateau ±0.10 eV 무관. complex 두 개의 ±0.004 Ry(~±0.05 eV)만 남아 Δ=0.689 eV 대비 S/N ~9:1 — **부호는 견고**.
+- 주의: doped(chelation_r90)와 neutral(chelation_r0)은 **각자의 UMA 챔피언 자세** — "최선 대 최선" 비교(설계 의도). 같은 자세 비교가 아님.
 
 ## 6. PTFE 벤치마크 (비교군 — "SDCP가 돋보여야")
 - 목적: 기존 vdW 바인더 PTFE 대비 SDCP 결합 우위의 정량.
@@ -87,6 +90,7 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 - 그림: MO scheme(스크래치), Phase-A heatmap 3종(6월)
 
 ## 8. 남은 일
-1. **complex_neutral 수렴 → ★VERDICT 등록** (phaseB csv·본 문서 헤드라인 확정)
-2. PTFE step 2 + D3 패스 (SDCP/PTFE 공정 비교)
-3. (옵션) n=4 외삽으로 백본 지분 포화 확인 / polaron 준위 도식
+1. ~~complex_neutral 수렴 → ★VERDICT 등록~~ ✅ 2026-07-17 (+0.689 eV, 중성 우세 — 헤드라인 4 반전 반영)
+2. **PTFE step 2 + D3 패스** — VERDICT 반전으로 중요도 ↑: 이제 SDCP의 결합 우위 주장은 "도핑 강화"가 아니라 **"PTFE(vdW) 대비 화학흡착급(−1.5~−2.2 eV)"** 축으로 세워야 함
+3. (옵션) doped가 왜 약해지는지 분해: SO₃⁻/SO₃H 자세 교차 재채점(같은 자세 비교), hole 비편재 vs H-결합 기여 분리
+4. (옵션) n=4 외삽으로 백본 지분 포화 확인 / polaron 준위 도식

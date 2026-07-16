@@ -1,0 +1,31 @@
+{
+  "property": "Th' composition-weighted bond-energy thermal-stability descriptor (kJ/mol)",
+  "source_method": "wang2022 (InfoMat, DOI 10.1002/inf2.12316) Eq 5: Th' = ([Li]%*E[Li-S] + [P]%*E[P-S])*4 (+E_doped); E[Li-S]=312.5, E[P-S]=346 kJ/mol (CRC gas-phase diatomic BDE)",
+  "_discipline": "RANKING/DIRECTION ONLY — never quote as an energy. Gas-phase diatomic BDEs in an ionic-covalent lattice; no Li-Cl term (Cl enters only as % diluent) so the Cl-rich family ordering rests on dilution, not Cl chemistry (wang2022's own Fig-3 Cl entry is its worst, yet its most stable measured compound is Cl-bearing Li6PS5Cl).",
+  "eq5_base": {
+    "_note": "paper-faithful Eq 5, Li/P percentages only (every Li counted as 4x Li-S, every P as 4x P-S)",
+    "comp1_Li6PS5Cl": 683.4,
+    "modelc_LPSCl1.6_Li27P5S22Cl8": 656.0,
+    "lpsocl_Li27P5S21OCl8": 656.0,
+    "b2o3_Li58P8B2S41O3Cl16": 652.9
+  },
+  "bondswap_extension": {
+    "_note": "our arithmetic in wang2022's spirit: actual relaxed bond topology (min-image counting on db/structures V0 files) with CRC diatomic energies for the dopant bonds — E[P-O]=599.1, E[B-S]=577, E[Li-O]=340.5 kJ/mol (CRC recall values; re-verify before citing). B counted as 3-coordinate BS3 (Eq-3 general polyhedron form).",
+    "comp1_Li6PS5Cl": 683.4,
+    "modelc_LPSCl1.6": 656.0,
+    "lpsocl": 661.0,
+    "b2o3": 687.2,
+    "_bond_counts": {
+      "lpsocl_62at": "Li-S 106, Li-O 2, P-S 19, P-O 1 (POS3 unit, P-O 1.559 A)",
+      "b2o3_128at": "Li-S 226, Li-O 6, P-S 29, P-O 3, B-S 6 (B2O3 fully dissociated in relaxV0: 2x trigonal BS3 (1.80-1.85 A) + 3x POS3 (P-O 1.549-1.560 A); B-O bonds = 0)"
+    }
+  },
+  "ranking": {
+    "eq5_base": "comp1 683 > modelc = lpsocl 656 > b2o3 653",
+    "bondswap": "b2o3 687 >= comp1 683 > lpsocl 661 > modelc 656",
+    "_read": "Cl-rich family < comp1 on the base axis (consistent with [Zuo] DSC/TGA and [Wu] 90C calendar direction); O-doping adds +5 (lpsocl vs modelc, same direction as wang2022's O on Li3PS4, +3.1, decomposition 400->500 C); B2O3's real bond topology (BS3 + 3x POS3) more than repays its P-dilution penalty."
+  },
+  "upgrade_path": "Th'-ICOHP: replace CRC diatomics with our LOBSTER ICOHP weights (P-S -5.94/-6.0, P-O -8.43, Li-Cl -1.86/-2.10 eV) — includes Li-Cl naturally and uses in-lattice bond strengths; planned alongside lpsocl ICOHP run.",
+  "date": "2026-07-17",
+  "provenance": "litdb/papers/wang2022_sulfide_thermal_stability_th_descriptor.md §4/§10; bond counting: this repo, min-image cutoffs P-O<1.75, P-S<2.35, B-O<1.65, B-S<2.25, Li-O<2.4 A on db/structures/{lpsocl_v0,b2o3_relaxV0}.vasp"
+}

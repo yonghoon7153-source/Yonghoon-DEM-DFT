@@ -3,7 +3,11 @@ mol_doped,-518.39271245,converged,~1e-6,34 atoms; 8A vacuum box; r2SCAN->PBE+U n
 mol_neutral,-519.68310300,converged,~1e-6,35 atoms; same recipe
 slab,-10563.22819091,MAXSTEP_PLATEAU_300it,0.0075,"96-atom clean LiNiO2(104), U-direct degauss0.05/beta0.10/ndim8; NO '!' line (plateau) -> last plain total-energy; last-6 band full-width 14.9 mRy (+-7.5 mRy = +-0.10 eV); acc_end 6.2e-3 Ry (new best); E still drifting -0.4 mRy/iter at cutoff -> true value slightly lower; drift/recipe systematics shared with complexes -> partial cancellation in E_bind"
 complex_doped,-11081.73293860,DONE_PLATEAU,0.004,"130 atoms; U-direct recipe; E_bind(doped)=Ecd-Es-Emd=-0.11204 Ry=-1.524 eV (provisional)"
-complex_neutral,,running_iter272_acc7.6e-6_2026-07-16,,"131 atoms; started 2026-07-15 00:16 KST after doped; convergence imminent -> VERDICT"
+complex_neutral,-11083.07396953,DONE_PLATEAU,0.004,"131 atoms; U-direct recipe; E_bind(neutral)=Ecn-Es-Emn=-0.16268 Ry=-2.213 eV (2026-07-17 KST)"
 "# E_bind(doped)  = E(complex_doped)  - E(slab) - E(mol_doped);  E_bind(neutral) analog; VERDICT = difference of the two."
 "# Plateau convention: E = LAST plain 'total energy' line at electron_maxstep=300; error bar = half of last-6 full band."
 "# Question scale ~2.4 eV vs slab bar +-0.10 eV -> signal/noise ~24:1 even before cancellation."
+"# ★VERDICT (2026-07-17): E_bind doped -1.524 / neutral -2.213 eV -> Delta(d-n) = +0.689 eV. DFT+U says the NEUTRAL molecule binds STRONGER."
+"# UMA Phase-A direction (doped champion -5.196 vs neutral -2.733, Delta -2.46 eV) is REFUTED at the DFT level, not just rescaled."
+"# Both states still bind favorably (>1.5 eV chemisorption scale) -> anchoring narrative survives; 'self-doping strengthens anchoring' does NOT."
+"# Slab energy cancels EXACTLY in Delta (same E_slab in both E_bind) -> Delta immune to the slab plateau bar; complex bars +-0.004 Ry x2 ~ +-0.08 eV << 0.689."
