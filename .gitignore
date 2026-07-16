@@ -6,3 +6,6 @@ __pycache__/
 .claude/settings.local.json
 docs/figures/bvse_cubes/
 *.cube
+# paper-inbox watcher local state (machine-specific)
+litdb/.processed_inbox.txt
+litdb/inbox/
