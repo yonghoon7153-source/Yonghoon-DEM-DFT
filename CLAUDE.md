@@ -115,6 +115,16 @@ raw `/home/...` WSL path because Windows can't resolve it.
 
 ---
 
+## 랩 AI 워크플로 규약 (2026-07-16)
+
+`docs/lab_ai_workflow_conventions.md` — 랩 내부 공유 deck digest.  그림 요청 시
+**기존 figure format(축·boundary·font·size) 재현 + svg/png/csv 동시 산출**(opju는
+사용자 로컬 Origin), 원고는 **figure 단위** 작성·모든 패널 논의·관찰→기전 연결,
+reference는 로컬 PDF+형식예시 기반(링크만으로 금지), 웹검색 시 참고문헌 list-up
+동봉, SEM binary-map 정량화·dQ/dV 후처리 즉시 지원.  산출 후 기호/첨자 자체 검수.
+
+---
+
 ## Current roadmap & open tasks (updated 2026-07-15)
 
 Working branch: `claude/stoic-knuth-NObVQ`. Never put the model identifier
