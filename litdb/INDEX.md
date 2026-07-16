@@ -172,3 +172,12 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | 37 | 82ea256b/**7c0de1f1** (…PPMA_low_P_si_anode_ASSB) | **[외부]** Jun/Jeong/…/**Jeonghun Kim**/**Yoon Seok Jung** (Yonsei·**SK On**; [Son]과 같은 정윤석 그룹), "Electron-conductive binder for silicon negative electrode enabling low-pressure ASSB" — **PPMA = PEDOT:P(SSₓ-co-MA_y)**(⚠ PMMA 아님) e⁻-전도성 바인더, Si 음극·5 MPa·233 mAh 파우치. **계산 0·argyrodite 물성 아님 — 우리 SDCP 문헌좌표 + 서론 스켈레톤**(digest §3) (Nat. Commun. 2026, 17:156, DOI 10.1038/s41467-025-66851-0) — `papers/jun2026_ppma_econductive_binder_si_lowpressure_assb.md` | ✅ |
 
 *(#9–22 일부는 제목 미확인 — digest 시 curator가 PDF 첫 페이지에서 확정. #19 `High_perfo…eries`는 본 논문(#31)과 동일 논문일 가능성 — upload-id 다름, 미확인.)*
+
+---
+
+## 🔀 DEM/제조 축 (stoic-knuth 브랜치에서 통합, 2026-07-16)
+
+- DEM·제조·역학 문헌 digest **63편**을 `claude/stoic-knuth-NObVQ` 브랜치에서 가져와 이 litdb를 **단일 정본**으로 통합.
+- 상세 목록·설명은 **INDEX_DEM_snapshot_2026-07-16.md** (DEM 브랜치 INDEX 스냅샷), DEM 관점 비교노트는 **comparison_vs_ours_DEM.md**.
+- 중복 주의: ECER 황화물 안정성 리뷰는 양쪽에서 각각 digest됨 — **정본 = fan2026_sulfide_assb_stability_review_ECERD2600097.md** (본 INDEX 최상단), DEM 브랜치의 li2026_... 버전은 가져오지 않음.
+- 이후 신규 digest는 어느 세션에서 만들든 이 브랜치(claude/friendly-meitner-lldvar)의 litdb에 커밋할 것 (로컬 워처도 여기로 푸시).
