@@ -7,6 +7,11 @@ status: phase-A-B-C-complete-dft-pending
 
 # SDCP Binder Anchoring on LiNiO₂ (104) — Phase A–C 결과 보고서
 
+> [!warning] 2026-07-16 업데이트
+> 최신 종합은 **sdcp_master_summary_2026_07_16.md** 를 보라. 본 문서의 UMA 절대값(-18.2/-6.3 eV)은
+> 방향성 지표였고, Phase-B DFT+U에서 E_bind(doped) = **-1.52 eV**(잠정)로 스케일이 대체됐다.
+> n-시리즈 오비탈(백본 크로스오버), PTFE 벤치마크도 마스터 문서에 정리.
+
 > [!success] Headline
 > 자기-도핑된 SDCP (−SO₃⁻)는 LiNiO₂ (104) 표면에 **−18.2 eV** 화학 흡착 (chemisorption, dz = 1.26 Å)
 > 보호된 neutral SDCP (−SO₃H)는 **−6.3 eV** (shallow chemisorption, dz = 1.41 Å)
