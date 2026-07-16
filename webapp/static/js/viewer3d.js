@@ -2406,7 +2406,10 @@ function applyViewMode(state, mode) {
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + (fsc
          ? `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩</span><span>×${fmtP(fsc.focus_top)}</span></div>`
-           + `<div style="font-size:8.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V<br>운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도 (예: 3.18 mAh/cm² 1C → ×3.18 mA/cm²)</div>`
+           + `<div style="font-size:8.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V</div>`
+           + (fsc.j_1C_mA_cm2
+              ? `<div style="font-size:9.5px;color:#cbd5e1;margin-top:3px">운전 <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:40px;font-size:9.5px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:3px;padding:0 2px">C → ⟨J⟩ <b><span id="fld-jmean-abs"></span></b> · 상단 <b><span id="fld-jtop-abs"></span></b> mA/cm² <span style="color:#6b7280;font-size:8.5px">(면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² 자동산출)</span></div>`
+              : `<div style="font-size:8.5px;color:#6b7280">운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도(mA/cm²)</div>`)
          : `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
       + `<label style="display:block;margin-top:5px;font-size:10.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
@@ -2422,6 +2425,17 @@ function applyViewMode(state, mode) {
     if (bbSl) {
       bbSl.oninput = () => { if (bbLab) bbLab.textContent = '(목표 ' + bbSl.value + '%)'; };
       bbSl.onchange = () => { state._fieldBackbonePct = +bbSl.value; applyViewMode(state, mode); };  // rebuild
+    }
+    const crIn = document.getElementById('fld-crate');       // mA/cm² 절대 라벨 (C-rate 입력 연동)
+    if (crIn && fsc && fsc.j_1C_mA_cm2) {
+      const updAbs = () => {
+        const c = Math.max(parseFloat(crIn.value) || 1, 0.001);
+        const jm = fsc.j_1C_mA_cm2 * c;
+        const e1 = document.getElementById('fld-jmean-abs'), e2 = document.getElementById('fld-jtop-abs');
+        if (e1) e1.textContent = jm.toPrecision(3);
+        if (e2) e2.textContent = (jm * fsc.focus_top).toPrecision(3);
+      };
+      crIn.oninput = updAbs; updAbs();
     }
     return;
   }

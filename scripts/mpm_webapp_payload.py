@@ -559,13 +559,24 @@ def main():
                     _voxcm = a.step3_vox * 1e-4
                     _Lcm = max(_ztop, 1e-9) * 1e-4
                     _jm_e = _res3['sigma_eff'] / _Lcm
+                    # 면적용량 자동산출 → mA/cm² 절대 라벨: Q_vol = F·c_max·|x100−x0|/3600
+                    # (Chen2020 NMC811 기계추출 창 — step4_pybamm_anchor와 동일 §F1 앵커)
+                    # ≈ 998 mAh/cm³ (교차확인 ~200 mAh/g × 4.8 g/cm³ = 960).  운전 ⟨J⟩ @1C
+                    # = 면적용량 × 1 h⁻¹ [mA/cm²]; 국소 = (|J|/⟨J⟩) × ⟨J⟩ — 선형해라 정확.
+                    _QVOL_mAh_cm3 = 96485.0 * 63104.0 * abs(0.853974674630047
+                                                            - 0.2638452245913298) / 3600.0 / 1000.0
+                    _n_amvox = int(np.count_nonzero((sid3 == 1) | (sid3 == 2)))
+                    _A_um2 = sid3.shape[0] * sid3.shape[1] * (a.step3_vox ** 2)
+                    _areal_mAh_cm2 = _QVOL_mAh_cm3 * (_n_amvox * a.step3_vox ** 3 / _A_um2) * 1e-4
                     step3['field_scale_e'] = {
                         'j_top_A_cm2_per_V': float(f"{_p998e / _voxcm:.4g}"),
                         'j_mean_z_A_cm2_per_V': float(f"{_jm_e:.4g}"),
                         'focus_top': float(f"{(_p998e / _voxcm) / max(_jm_e, 1e-30):.4g}"),
                         'dV_V': 1.0,
-                        'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩ '
-                                 '(바이어스 무관); (|J|/⟨J⟩)×면적전류(mA/cm²)→국소 mA/cm²')}
+                        'areal_capacity_mAh_cm2': float(f"{_areal_mAh_cm2:.4g}"),
+                        'j_1C_mA_cm2': float(f"{_areal_mAh_cm2:.4g}"),
+                        'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩(바이어스 무관); '
+                                 '국소 mA/cm²@C-rate = focus×j_1C×C (j_1C=면적용량, Chen2020 창)')}
                 # COLLECTOR-INTERFACE post-processing (C-SUS/primer axis, manuscript-anchored):
                 # the solve's bottom plate is a PERFECT contact (R_int=0) → σ_e_eff is the BULK
                 # network value.  A real collector adds an AREAL series term: σ_apparent =
@@ -697,13 +708,17 @@ def main():
                             _voxcm = a.step3_vox * 1e-4
                             _Lcm = max(_ztop, 1e-9) * 1e-4
                             _jm_i = _res3i['sigma_eff'] / _Lcm
+                            _fse = step3.get('field_scale_e') or {}
                             step3['field_scale_ion'] = {
                                 'j_top_A_cm2_per_V': float(f"{_p998i / _voxcm:.4g}"),
                                 'j_mean_z_A_cm2_per_V': float(f"{_jm_i:.4g}"),
                                 'focus_top': float(f"{(_p998i / _voxcm) / max(_jm_i, 1e-30):.4g}"),
                                 'dV_V': 1.0,
-                                'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩ '
-                                         '(바이어스 무관); (|J|/⟨J⟩)×면적전류(mA/cm²)→국소 mA/cm²')}
+                                # 정상상태 단일-이온 SE: 이온 관통 ⟨J⟩ = 전자 ⟨J⟩ = 면적전류 (직렬)
+                                'areal_capacity_mAh_cm2': _fse.get('areal_capacity_mAh_cm2'),
+                                'j_1C_mA_cm2': _fse.get('j_1C_mA_cm2'),
+                                'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩(바이어스 무관); '
+                                         '국소 mA/cm²@C-rate = focus×j_1C×C (j_1C=면적용량, Chen2020 창)')}
                     step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
