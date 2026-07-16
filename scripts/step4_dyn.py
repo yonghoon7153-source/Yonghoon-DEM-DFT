@@ -65,13 +65,13 @@ def _amg_M(L):
         return None
 
 
-def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
+def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None, deep=False):
     """3단 솔브: GPU Jacobi-CG → (실패시) CPU AMG-CG(pyamg) → CPU Jacobi-CG.
     실전 격자(VGCF 100 S/cm ↔ BV면 1e-11 S, ~9자릿수 대비)에서 Jacobi 단독은 정체할 수
     있어(2026-07-15 V100 스모크: 50k iter 미수렴) AMG 폴백이 프로덕션 안전망.
-    pc_cache(dict, 호출자 보존): 'gpu_dead'=GPU 1회 실패 후 재시도 생략(sticky — 스텝당
-    ~1분 절약), 'amg'=AMG 계층 재사용(행렬은 BV 대각만 변해 전처리기로 계속 유효; CG가
-    미수렴하면 1회 재구축-재시도 — 전처리기는 해에 영향 없음, 반복수만 좌우)."""
+    deep=True: 심층-수렴권 정밀 솔브(RHS가 거의 노이즈) — GPU 실패 시 CPU로 내려가지 않고
+    'deep_weak'만 기억하고 반환 (35분짜리 무용 CPU-CG 방지; newton 게이트가 수렴 취급).
+    pc_cache: 'gpu_dead'=실솔브 GPU 무능(sticky) · 'deep_weak'=심층권 무용 · 'amg'=계층 재사용."""
     diag = L.diagonal()
     cache = pc_cache if pc_cache is not None else {}
     if GPU and not cache.get('gpu_dead'):
@@ -91,7 +91,11 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
                 xg, info = cg_gpu(Lg, bg, x0=x0g, rtol=rtol, atol=0.0, maxiter=20000, M=Mg)
             if int(info) == 0:
                 return cp.asnumpy(xg), 0
-            cache['gpu_dead'] = True                         # sticky: 이후 GPU 시도 생략
+            if deep:                                         # 심층권 실패 = 부동소수 한계, GPU 탓 아님
+                cache['deep_weak'] = True                    #   → GPU 살려두고 CPU 낭비도 생략
+                print('      (심층-수렴권 CG 무용 확인 — 이후 이 구간은 수렴 취급)', flush=True)
+                return cp.asnumpy(xg), int(info)
+            cache['gpu_dead'] = True                         # 실솔브 실패만 sticky
             print(f'    step4 GPU Jacobi-CG 미수렴(info={int(info)}) → CPU AMG 폴백 '
                   f'(이 런에서는 이후 GPU 시도 생략)', flush=True)
             x0 = cp.asnumpy(xg)                              # GPU 진행분을 warm start로 재사용
@@ -124,8 +128,8 @@ def _cg(L, b, x0=None, rtol=1e-9, pc_cache=None):
             x_sol, info = cg(L, b, x0=x_init, rtol=rtol, maxiter=mi, M=Mp, callback=cb)
         except TypeError:
             x_sol, info = cg(L, b, x0=x_init, tol=rtol, maxiter=mi, M=Mp, callback=cb)
-        if info and big:
-            cache['cpu_weak'] = True                         # 심층-수렴권 CG 무용 기억 (런 전체)
+        if info and big and deep:
+            cache['deep_weak'] = True                        # 심층-수렴권 CG 무용 기억 (런 전체)
         return x_sol, info
 
     M = None
@@ -469,10 +473,11 @@ class CellSystem:
             if r < tol_rel:
                 break
             # 심층-수렴권(<1e-4)에서 CG가 무용함이 확인된 상태면 수렴 취급 — 확인 = 이 call에서
-            # 이미 실패(it>0) 또는 런-전체 기억(cpu_weak).  resid 보고는 그대로 → 감사가 판단.
-            known_weak = (getattr(self, '_pc_cache', {}).get('cpu_weak', False)
+            # 이미 실패(it>0) 또는 런-전체 기억(deep_weak).  resid 보고는 그대로 → 감사가 판단.
+            deep = r < 1e-4
+            known_weak = (getattr(self, '_pc_cache', {}).get('deep_weak', False)
                           or (it > 0 and self._cg_failed))
-            if r < 1e-4 and known_weak:
+            if deep and known_weak:
                 break
             if r >= 0.5 * best:                             # 노이즈-바닥 정체 감지 (수렴 근처 한정)
                 stall += 1
@@ -497,7 +502,7 @@ class CellSystem:
             # Newton 외부 루프가 흡수.  타이트 rtol(1e-9)은 실전 κ에서 CG 정체 원인이었음.
             if not hasattr(self, '_pc_cache'):
                 self._pc_cache = {}                          # sticky-GPU + AMG 계층 (스텝 간 보존)
-            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, pc_cache=self._pc_cache)
+            dphi, info = _cg(self.J, -Fv, x0=None, rtol=1e-5, pc_cache=self._pc_cache, deep=deep)
             self.last_cg_info = max(getattr(self, 'last_cg_info', 0), int(info))
             self._cg_failed = bool(info)
             step = 1.0
