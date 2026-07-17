@@ -2437,6 +2437,18 @@ function applyViewMode(state, mode) {
       };
       crIn.oninput = updAbs; updAbs();
     }
+    // 컬러바 PNG 버튼용 정량 스펙 (수치 눈금 + 단위 부제) — 구 payload는 상대 라벨 폴백
+    state.cbarSpec = fsc
+      ? { map: 'jet', gamma: 1.6,
+          title: (ionic ? '|J_ion|' : '|J_e|') + ' / ⟨J_z⟩ current-focusing (p99.8-normalized)',
+          ticks: _focusTicks(fsc),
+          sub: 'top(p99.8) = ' + fmtP(fsc.j_top_A_cm2_per_V) + ' A/cm² @ΔV=1V'
+             + (fsc.j_1C_mA_cm2 ? ' · @1C: ⟨J⟩ ' + fmtP(fsc.j_1C_mA_cm2) + ' · top '
+                + fmtP(fsc.j_1C_mA_cm2 * fsc.focus_top) + ' mA/cm²' : '') }
+      : { map: 'jet', gamma: 1.6,
+          title: (ionic ? '|J_ion|' : '|J_e|') + ' relative current density (p99.8-normalized)',
+          left: '0', right: 'high' };
+    state.cbarSpecMode = mode;
     return;
   }
   if (mode === 'jrxn') {
@@ -4292,10 +4304,12 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
   return { counts, median: s[Math.floor(s.length / 2)] || 0, hits };
 }
 
-/* 논문용 컬러바 PNG — 뷰어와 동일 감마·컬러맵 (⚖ 팝업 + 단독 뷰어 공용, 6× 인쇄 해상). */
+/* 논문용 컬러바 PNG — 뷰어와 동일 감마·컬러맵 (⚖ 팝업 + 단독 뷰어 공용, 6× 인쇄 해상).
+   spec.ticks = [{p:0..1, label}] 수치 눈금 (바 x축은 값에 선형 — 감마는 색에만 적용되므로
+   눈금 위치는 선형 그대로가 정확); spec.sub = 부제(단위 환산) 한 줄. */
 function exportColorbarPNG(spec, fname) {
   const sp = spec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
-  const S2 = 6, W2 = 470 * S2, H2 = 80 * S2;
+  const S2 = 6, W2 = 470 * S2, H2 = (sp.sub ? 96 : 80) * S2;
   const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;
   const cx = cv.getContext('2d');
   cx.fillStyle = '#ffffff'; cx.fillRect(0, 0, W2, H2);
@@ -4310,11 +4324,36 @@ function exportColorbarPNG(spec, fname) {
   }
   cx.strokeStyle = '#111111'; cx.lineWidth = S2 * 0.7; cx.strokeRect(bx, by, bw, bh);
   cx.fillStyle = '#111111'; cx.font = `${11.5 * S2}px Arial`;
-  cx.textAlign = 'left'; cx.fillText(sp.left != null ? String(sp.left) : '', bx, by + bh + 15 * S2);
-  if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
-  cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
+  if (sp.ticks && sp.ticks.length) {                        // 수치 눈금 모드 (left/right 대신)
+    cx.lineWidth = S2 * 0.55;
+    for (const tk of sp.ticks) {
+      const x = bx + Math.max(0, Math.min(1, tk.p)) * bw;
+      cx.beginPath(); cx.moveTo(x, by + bh); cx.lineTo(x, by + bh + 5 * S2); cx.stroke();
+      cx.textAlign = tk.p < 0.03 ? 'left' : (tk.p > 0.93 ? 'right' : 'center');
+      cx.fillText(String(tk.label), x, by + bh + 15 * S2);
+    }
+  } else {
+    cx.textAlign = 'left'; cx.fillText(sp.left != null ? String(sp.left) : '', bx, by + bh + 15 * S2);
+    if (sp.mid != null) { cx.textAlign = 'center'; cx.fillText(String(sp.mid), bx + bw / 2, by + bh + 15 * S2); }
+    cx.textAlign = 'right'; cx.fillText(sp.right != null ? String(sp.right) : '', bx + bw, by + bh + 15 * S2);
+  }
+  if (sp.sub) {
+    cx.fillStyle = '#444444'; cx.font = `${9.5 * S2}px Arial`; cx.textAlign = 'left';
+    cx.fillText(String(sp.sub), bx, by + bh + 28 * S2);
+  }
   const a2 = document.createElement('a'); a2.href = cv.toDataURL('image/png');
   a2.download = fname || 'colorbar.png'; document.body.appendChild(a2); a2.click(); a2.remove();
+}
+
+/* focus 컬러바 수치 눈금: 0 → step 간격 (1/2/5/10/20 자동) → 상단 ×top ⟨J⟩ */
+function _focusTicks(f) {
+  const top = Number(f && f.focus_top);
+  if (!(top > 0)) return null;
+  const step = top > 60 ? 20 : top > 30 ? 10 : top > 12 ? 5 : top > 6 ? 2 : 1;
+  const t = [{ p: 0, label: '0' }];
+  for (let v = step; v < top * 0.86; v += step) t.push({ p: v / top, label: '×' + v });
+  t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' ⟨J⟩' });
+  return t;
 }
 
 export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
@@ -5017,11 +5056,27 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       };
       $('cmp-leg-a').innerHTML = cap(rA2, sA, kA2);
       $('cmp-leg-b').innerHTML = cap(rB2, sB, kB2);
-      const fscT = (ionic ? sA.field_scale_ion : sA.field_scale_e) || (ionic ? sB.field_scale_ion : sB.field_scale_e);
+      const fA3 = ionic ? sA.field_scale_ion : sA.field_scale_e;
+      const fB3 = ionic ? sB.field_scale_ion : sB.field_scale_e;
+      // σ-공동 스케일의 기준은 k=1.00인 σ-max 케이스 (약한 쪽은 ×k로 눌림) — 컬러바 수치는
+      // 그 기준 케이스의 focus/절대값.  자기-정규화(비공동)에서는 케이스별 상단이 달라
+      // 수치 눈금이 성립 안 함 → 양쪽 상단을 부제에 병기.
+      const fscT = jointOn ? (((sgB || 0) >= (sgA || 0)) ? (fB3 || fA3) : (fA3 || fB3)) : (fA3 || fB3);
+      let subT;
+      if (jointOn && fscT) {
+        subT = 'joint reference = σ-max case · top(p99.8) = ' + Number(fscT.j_top_A_cm2_per_V).toPrecision(3)
+             + ' A/cm² @ΔV=1V' + (fscT.j_1C_mA_cm2 ? ' · @1C: ⟨J⟩ ' + Number(fscT.j_1C_mA_cm2).toPrecision(3)
+             + ' · top ' + Number(fscT.j_1C_mA_cm2 * fscT.focus_top).toPrecision(3) + ' mA/cm²' : '');
+      } else if (fA3 && fB3) {
+        subT = 'per-case self-normalized: A top ×' + Number(fA3.focus_top).toPrecision(3) + ' / B top ×'
+             + Number(fB3.focus_top).toPrecision(3) + ' ⟨J⟩ — 수치 눈금은 σ공동 스케일에서 유효';
+      }
       cbarSpec = { map: 'jet', gamma: 1.6,
                    title: (ionic ? '|J_ion|' : '|J_e|') + (fscT ? ' / ⟨J_z⟩ current-focusing' : ' relative current density')
                           + ' (p99.8-normalized' + (jointOn ? ', σ-joint scale' : '') + ')',
-                   left: '0', right: fscT ? '×' + Number(fscT.focus_top).toPrecision(2) + ' ⟨J⟩' : 'high' };
+                   left: '0', right: fscT ? '×' + Number(fscT.focus_top).toPrecision(3) + ' ⟨J⟩' : 'high',
+                   ...(jointOn && fscT ? { ticks: _focusTicks(fscT) } : {}),
+                   ...(subT ? { sub: subT } : {}) };
     } else if (mode === 'je') {
       buildJe(SA, A, 'je'); buildJe(SB, B, 'je');
       const cap = (s3x) => 'AM 입자별 |J_z| (wetted) · σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)
@@ -5271,7 +5326,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
           jb: { map: 'jet', gamma: 1.6, title: '|J_z| per-AM relative (bare collector, p99.8)', left: '0', right: 'high' },
           je_delta: { map: 'coolwarm', title: '\u0394 redistribution log\u2082(j_bare/j_wetted)', left: '\u00d70.71', mid: '1', right: '\u00d71.4' },
         };
-        const _sp = (_vm === 'econn' && state.cbarSpec) ? state.cbarSpec : _SPEC[_vm];
+        const _sp = (state.cbarSpec && (state.cbarSpecMode === _vm || _vm === 'econn'))
+                    ? state.cbarSpec : _SPEC[_vm];
         if (_sp) exportColorbarPNG(_sp, 'colorbar_' + (_vm || 'view') + '.png');
         else alert('이 모드는 컬러바 스케일이 없어요 — 전류밀도/반응/econn/Δ 모드에서 사용하세요.');
       } else if (action === 'screenshot') {
