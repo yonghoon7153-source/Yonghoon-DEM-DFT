@@ -2719,7 +2719,80 @@ function applyViewMode(state, mode) {
       + `<input type="range" id="fld-bb-pct" min="30" max="95" step="5" value="${bbPct}" style="accent-color:#f97316;height:12px">`
       + `<div style="margin-top:3px;color:#9ca3af;font-size:10.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'AM·SE'} 고스트(체크박스로 on/off) · 단면뷰·6×촬영</div>`
       + (share ? `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">손실분담 `
-          + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
+          + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : '')
+      + `<div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
+           <div style="display:flex;justify-content:space-between;align-items:center">
+             <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 (Fig 4e)</b>
+             <button id="fld-prof-dl" title="이 프로파일을 PNG(3×)+CSV로 저장" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>
+           </div>
+           <canvas id="fld-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
+           <div id="fld-prof-cap" style="font-size:10px;color:#6b7280;margin-top:2px"></div>
+         </div>`);
+    // ── 두께방향 프로파일 (Oh2025 Fig4e): φ(z) [신형 payload] 우선, 없으면 ⟨|J|⟩(z) 폴백 ──
+    (() => {
+      const cv = document.getElementById('fld-prof'), cap = document.getElementById('fld-prof-cap');
+      if (!cv) return;
+      const g = cv.getContext('2d'), W = cv.width, H = cv.height, mL = 5, mR = 5, mT = 5, mB = 14;
+      const pp = s3 && s3.phi_profile;
+      const netKey = ionic ? 'ionic' : 'electronic';
+      let rows = [], curves = [], yLab = '', capTxt = '';
+      const pushCurve = (zs, ys, color, dash) => curves.push({ zs, ys, color, dash });
+      if (pp && pp[netKey] && pp[netKey].z_um) {              // 정확한 φ(z) = Fig4e
+        const L = Math.max(...pp[netKey].z_um);
+        pushCurve(pp[netKey].z_um, pp[netKey].phi, ionic ? '#a78bfa' : '#f87171', false);
+        if (!ionic && pp.electronic_bare && pp.electronic_bare.z_um)
+          pushCurve(pp.electronic_bare.z_um, pp.electronic_bare.phi, '#f87171', true);
+        yLab = 'φ (V @ΔV=1V)';
+        capTxt = `φ(z) @ΔV=1V — Oh2025 Fig4e 대응${ionic ? '' : ' · 실선 정본 / 점선 bare 집전체(계면 강하)'}`;
+        const zs = pp[netKey].z_um, ys = pp[netKey].phi;
+        const bz = (!ionic && pp.electronic_bare) ? pp.electronic_bare.phi : null;
+        rows = zs.map((z, i) => [z.toFixed(2), (z / L).toFixed(4), ys[i],
+                                 bz ? bz[i] : '']);
+      } else if (fld.length) {                               // 폴백: 필드 클라우드 ⟨|J|⟩(z)
+        const NB = 24; const sum = new Float64Array(NB), cnt = new Int32Array(NB);
+        let zmx = 1e-9; for (const p of fld) if (p[2] > zmx) zmx = p[2];
+        for (const p of fld) { const b = Math.max(0, Math.min(NB - 1, Math.floor(p[2] / zmx * NB))); sum[b] += p[3]; cnt[b]++; }
+        const zs = [], ys = [];
+        for (let b = 0; b < NB; b++) if (cnt[b]) { zs.push((b + 0.5) / NB * zmx); ys.push(sum[b] / cnt[b]); }
+        pushCurve(zs, ys, ionic ? '#a78bfa' : '#f87171', false);
+        yLab = '⟨|J|⟩(z) 상대';
+        capTxt = `⟨|J|⟩(z) 상대 (필드 클라우드) — 정확한 φ(z) Fig4e는 <b>payload 재생성</b> 후`;
+        rows = zs.map((z, i) => [z.toFixed(2), (z / zmx).toFixed(4), ys[i].toFixed(5), '']);
+      } else { cap.textContent = '프로파일 데이터 없음'; return; }
+      // 그리기
+      const allY = curves.flatMap(c => c.ys), yMin = Math.min(...allY), yMax = Math.max(...allY, yMin + 1e-9);
+      const allZ = curves.flatMap(c => c.zs), zMax = Math.max(...allZ);
+      g.fillStyle = '#0d1117'; g.fillRect(0, 0, W, H);
+      g.strokeStyle = '#2a2d3e'; g.lineWidth = 1; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
+      const PX = z => mL + z / zMax * (W - mL - mR), PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * (H - mT - mB);
+      for (const c of curves) {
+        g.strokeStyle = c.color; g.lineWidth = 1.7; g.setLineDash(c.dash ? [4, 3] : []);
+        g.beginPath();
+        c.zs.forEach((z, i) => { const x = PX(z), y = PY(c.ys[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+        g.stroke();
+      }
+      g.setLineDash([]);
+      g.fillStyle = '#6b7280'; g.font = '10px Inter,sans-serif';
+      g.textAlign = 'left'; g.fillText('집전체', mL + 1, H - 3);
+      g.textAlign = 'right'; g.fillText('분리막', W - mR - 1, H - 3);
+      g.save(); g.translate(9, mT + 2); g.textAlign = 'left'; g.fillText(yLab, 0, 0); g.restore();
+      cap.innerHTML = capTxt;
+      state._fldProf = { rows, header: 'z_um,z_over_L,' + (yLab.startsWith('φ') ? 'phi_V,phi_bare_V' : 'jmag_rel,') };
+    })();
+    const pfBtn = document.getElementById('fld-prof-dl');
+    if (pfBtn) pfBtn.onclick = () => {
+      const cv = document.getElementById('fld-prof'), pr = state._fldProf;
+      if (!cv || !pr) return;
+      const big = document.createElement('canvas'); big.width = cv.width * 3; big.height = cv.height * 3;
+      const bg = big.getContext('2d'); bg.imageSmoothingEnabled = false; bg.drawImage(cv, 0, 0, big.width, big.height);
+      const tag = (ionic ? 'ion' : 'elec') + '_zprofile';
+      const a1 = document.createElement('a'); a1.href = big.toDataURL('image/png'); a1.download = tag + '.png';
+      document.body.appendChild(a1); a1.click(); a1.remove();
+      const csv = pr.header + '\n' + pr.rows.map(r => r.join(',')).join('\n');
+      const a2 = document.createElement('a'); a2.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+      a2.download = tag + '.csv'; document.body.appendChild(a2); a2.click(); a2.remove();
+      setTimeout(() => URL.revokeObjectURL(a2.href), 5000);
+    };
     const bbCb = document.getElementById('fld-backbone');
     if (bbCb) bbCb.onchange = () => { state._fieldBackboneOn = bbCb.checked; backboneGrp.visible = bbCb.checked; };
     const bbSl = document.getElementById('fld-bb-pct'), bbLab = document.getElementById('fld-bb-pct-lab');
