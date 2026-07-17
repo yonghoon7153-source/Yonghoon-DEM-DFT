@@ -4576,9 +4576,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   if (!tipCard) {
     tipCard = document.createElement('div');
     tipCard.id = 'cmp-tipcard';
-    tipCard.style.cssText = 'position:fixed;z-index:3000;max-width:440px;background:#111827;'
-      + 'border:1px solid #3b4252;border-radius:8px;padding:10px 12px;font-size:11.5px;line-height:1.6;'
-      + 'color:#d1d5db;white-space:pre-line;box-shadow:0 8px 24px rgba(0,0,0,.55);pointer-events:none;display:none';
+    tipCard.style.cssText = 'position:fixed;z-index:3000;width:max-content;max-width:min(580px,64vw);'
+      + 'background:#111827;border:1px solid #3b4252;border-radius:8px;padding:10px 13px;font-size:11.5px;'
+      + 'line-height:1.6;color:#d1d5db;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;'
+      + 'box-shadow:0 8px 24px rgba(0,0,0,.55);pointer-events:none;display:none';
     document.body.appendChild(tipCard);
     document.addEventListener('click', () => { tipCard.style.display = 'none'; }, true);  // 모달 닫힘 잔존 방지
   }
