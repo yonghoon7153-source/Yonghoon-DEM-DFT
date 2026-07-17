@@ -4519,6 +4519,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const rowsQ = [
     ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm],
     ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm],
+    // 평균·집중 (field_scale, 신 payload): ⟨J⟩=σ_eff·ΔV/L @1V — 운전 국소값 = focus×면적전류
+    ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V],
+    ['⟨J_ion⟩ 평균 (A/cm²@1V)', (sA.field_scale_ion || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_ion || {}).j_mean_z_A_cm2_per_V],
+    ['e-집중 p99.8 (×⟨J_e⟩)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top],
+    ['ion-집중 p99.8 (×⟨J_ion⟩)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top],
     ['e-분담 SDCP (%)', gsh(sA, 'dissipation_share', 'SDCP'), gsh(sB, 'dissipation_share', 'SDCP')],
     ['ion-분담 SDCP (%)', gsh(sA, 'ion_dissipation_share', 'SDCP'), gsh(sB, 'ion_dissipation_share', 'SDCP')],
     ['R_geom (Ω·cm²)', (sA.collector_geometric || {}).R_geom_ohm_cm2, (sB.collector_geometric || {}).R_geom_ohm_cm2],
