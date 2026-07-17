@@ -37,6 +37,12 @@ for tag in ("complex_doped", "complex_neutral"):
     # forces already on (tprnfor); add nstep + IONS block before &SYSTEM? no — CONTROL gets nstep
     txt = txt.replace("disk_io         = 'low'",
                       "disk_io         = 'low'\n    nstep           = 80")
+    # relax survival (2026-07-17): these complexes historically PLATEAU near 1e-5..1e-6
+    # (neutral: 272 iters -> acc 7.6e-6) and pw.x ABORTS a relax on a non-converged step.
+    # 1e-5 is plenty for BFGS forces at 1e-3 au; scf_must_converge keeps a stubborn
+    # step from killing the whole chain.
+    txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-05")
+    txt = re.sub(r"(?m)^(&ELECTRONS[^\n]*\n)", r"\1    scf_must_converge = .false.\n", txt, count=1)
     # namelist order must be CONTROL/SYSTEM/ELECTRONS/IONS -> insert IONS after ELECTRONS
     txt = re.sub(r"(?m)^ATOMIC_SPECIES",
                  "&IONS\n    ion_dynamics    = 'bfgs'\n/\n\nATOMIC_SPECIES", txt, count=1)
