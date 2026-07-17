@@ -5480,6 +5480,31 @@ def mpm_lab_data(pid):
     return jsonify(payload)
 
 
+@app.route('/mpm-lab/st4/<pid>', methods=['GET', 'POST'])
+def mpm_lab_st4(pid):
+    """STEP4-v2 viz(step4_viz*.json)를 lab 엔트리에 저장/서빙 — 뷰어가 st4 모드 진입 시
+    자동 로드(GET)하고, 피커로 처음 연 파일은 자동 저장(POST)돼 다음부터 수동 선택이
+    필요 없다.  엔트리당 1개(최근 저장본)."""
+    d = os.path.join(app.config['MPM_LAB_FOLDER'], _mpm_lab_slug(pid))
+    p = os.path.join(d, 'st4_viz.json')
+    if request.method == 'POST':
+        if not os.path.isdir(d):
+            return jsonify({'ok': False, 'error': 'entry not found'}), 404
+        try:
+            data = json.loads(request.get_data(as_text=True))
+        except Exception as e:
+            return jsonify({'ok': False, 'error': f'JSON 파싱 실패: {e}'}), 400
+        if not isinstance(data, dict) or data.get('kind') != 'step4_viz':
+            return jsonify({'ok': False, 'error': 'step4_viz 형식이 아님 (kind 확인)'}), 400
+        with open(p, 'w') as fh:
+            json.dump(data, fh)
+        return jsonify({'ok': True, 'size_mb': round(os.path.getsize(p) / 1e6, 1)})
+    if not os.path.isfile(p):
+        return jsonify({'available': False,
+                        'hint': '뷰어 st4 모드에서 📂로 한 번 열면 자동 저장됩니다'}), 404
+    return send_file(p, mimetype='application/json')
+
+
 @app.route('/mpm-lab/summary/<pid>')
 def mpm_lab_summary(pid):
     """Metrics-only fetch for the 요약 button — returns just mpm_metrics (a few KB) so the

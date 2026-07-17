@@ -2745,12 +2745,25 @@ function applyViewMode(state, mode) {
       setLegend(state, '<i>STEP4-v2는 <b>압축 후</b> 구조 위의 동역학이에요 — "MPM (압축 후)" 뷰에서 보세요.</i>');
       return;
     }
-    if (!state.st4) {                                        // 클라이언트-로컬 파일 로드 (서버 배선 불요)
+    if (!state.st4) {
+      // lab 엔트리면 서버 자동 로드 1회 시도 → 없으면 피커; 피커로 연 파일은 서버에
+      // 자동 저장돼 다음부터 무선택 로드 (경로: /mpm-lab/st4/<pid>)
+      const m2 = (state.dataUrl || '').match(/\/mpm-lab\/data\/([^/?#]+)/);
+      const st4Url = m2 ? '/mpm-lab/st4/' + m2[1] : null;
+      if (st4Url && !state._st4AutoTried) {
+        state._st4AutoTried = true;
+        setLegend(state, '<i>서버에 저장된 STEP4 결과 확인 중…</i>');
+        fetch(st4Url).then(r => (r.ok ? r.json() : null)).catch(() => null).then(obj => {
+          if (obj && obj.kind === 'step4_viz') state.st4 = obj;
+          applyViewMode(state, mode);
+        });
+        return;
+      }
       setLegend(state,
         `<b>STEP4-v2 동역학 결과 열기</b>
          <div style="margin-top:4px"><button id="st4-open" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 8px;cursor:pointer">📂 step4_viz.json 선택</button></div>
          <div style="margin-top:4px;color:#9ca3af;font-size:9.5px">GPU 런에서 <code>step4_dyn.py … --viz-out step4_viz.json</code>으로 생성한 파일을 선택하세요
-         (입자별 코어-셸 SOC 체크포인트 + BV 면별 반응전류).  같은 케이스의 침대여야 입자 id가 맞습니다.</div>`);
+         (입자별 코어-셸 SOC 체크포인트 + BV 면별 반응전류).  같은 케이스의 침대여야 입자 id가 맞습니다.${st4Url ? '<br><b>한 번 열면 이 케이스에 저장되어 다음부터 자동으로 열립니다.</b>' : ''}</div>`);
       const inp = document.getElementById('st4-file');
       const btn = document.getElementById('st4-open');
       if (btn && inp) {
@@ -2764,6 +2777,8 @@ function applyViewMode(state, mode) {
             try { obj = JSON.parse(rd.result); } catch (err) { alert('step4_viz JSON 파싱 실패: ' + err); return; }
             if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind 확인)'); return; }
             state.st4 = obj;
+            if (st4Url) fetch(st4Url, { method: 'POST',      // 다음부터 자동 로드 (fire-and-forget)
+              headers: { 'Content-Type': 'application/json' }, body: rd.result }).catch(() => {});
             inp.value = '';
             applyViewMode(state, mode);
           };
