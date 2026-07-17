@@ -144,10 +144,10 @@ function renderSt4Soc(state) {
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
-       <button id="st4-play" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">▶ 재생</button>
+       <button id="st4-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">▶</button>
        <select id="st4-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
-       <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">🎞 프레임 PNG</button>
+       <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">🎞</button>
      </div>
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
      <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
@@ -213,9 +213,9 @@ function renderSt4Soc(state) {
   const playBtn = document.getElementById('st4-play'), fpsSel = document.getElementById('st4-fps');
   if (playBtn) playBtn.onclick = () => {
     if (state._st4Timer) {
-      clearInterval(state._st4Timer); state._st4Timer = null; playBtn.textContent = '▶ 재생'; return;
+      clearInterval(state._st4Timer); state._st4Timer = null; playBtn.textContent = '▶'; return;
     }
-    playBtn.textContent = '⏸ 정지';
+    playBtn.textContent = '⏸';
     state._st4Phase = +tS.value;                             // 부드러운 재생: 30ms마다 실수 프레임
     state._st4Timer = setInterval(() => {                    // 전진 + 체크포인트 사이 선형 보간
       if (!document.body.contains(tS)) {                     // 모드 이탈 시 자기 정리
@@ -229,7 +229,7 @@ function renderSt4Soc(state) {
   };
   const frBtn = document.getElementById('st4-frames');
   if (frBtn) frBtn.onclick = async () => {
-    frBtn.disabled = true; frBtn.textContent = '저장 중…';
+    frBtn.disabled = true; frBtn.textContent = '⏳';
     const keep = +tS.value;
     for (let ti = 0; ti < nChk; ti++) {
       tS.value = ti; upd();
@@ -241,7 +241,7 @@ function renderSt4Soc(state) {
       await new Promise(res => setTimeout(res, 300));        // 브라우저 다운로드 큐 여유
     }
     tS.value = keep; upd();
-    frBtn.disabled = false; frBtn.textContent = '🎞 프레임 PNG';
+    frBtn.disabled = false; frBtn.textContent = '🎞';
   };
 }
 
@@ -375,10 +375,10 @@ function renderSt4Faces(state) {
      <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
-       <button id="st4f-play" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">▶ 재생</button>
+       <button id="st4f-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">▶</button>
        <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
-       <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">🎞 프레임 PNG</button>
+       <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">🎞</button>
        <label style="font-weight:400;cursor:pointer;font-size:10px"><input type="checkbox" id="st4f-dots"> 복셀 점 모드</label>
      </div>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
@@ -445,8 +445,8 @@ function renderSt4Faces(state) {
   if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; }
   const playBtn = document.getElementById('st4f-play'), fpsSel = document.getElementById('st4f-fps');
   if (playBtn) playBtn.onclick = () => {
-    if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; playBtn.textContent = '▶ 재생'; return; }
-    playBtn.textContent = '⏸ 정지';
+    if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; playBtn.textContent = '▶'; return; }
+    playBtn.textContent = '⏸';
     state._st4fPhase = +tS.value;                            // 부드러운 재생 (체크포인트 사이 보간)
     state._st4fTimer = setInterval(() => {
       if (!document.body.contains(tS)) { clearInterval(state._st4fTimer); state._st4fTimer = null; return; }
@@ -458,7 +458,7 @@ function renderSt4Faces(state) {
   };
   const frBtn = document.getElementById('st4f-frames');
   if (frBtn) frBtn.onclick = async () => {
-    frBtn.disabled = true; frBtn.textContent = '저장 중…';
+    frBtn.disabled = true; frBtn.textContent = '⏳';
     const keep = +tS.value;
     for (let ti = 0; ti < nChk; ti++) {
       tS.value = ti; upd();
@@ -470,7 +470,7 @@ function renderSt4Faces(state) {
       await new Promise(res => setTimeout(res, 300));
     }
     tS.value = keep; upd();
-    frBtn.disabled = false; frBtn.textContent = '🎞 프레임 PNG';
+    frBtn.disabled = false; frBtn.textContent = '🎞';
   };
 }
 
