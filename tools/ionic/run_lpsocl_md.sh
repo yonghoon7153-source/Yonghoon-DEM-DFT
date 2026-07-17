@@ -24,6 +24,23 @@ DEVICE=${DEVICE:-cuda}
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 STAGE=${1:-all}
 test -f "$V0XYZ" || { echo "MISSING $V0XYZ -- git pull first"; exit 1; }
+# structure sanity gate (2026-07-17 double-transform incident: broken xyz -> exploded MD, D~1e-2)
+python3 - "$V0XYZ" <<'PY'
+import sys, re
+import numpy as np
+lines = open(sys.argv[1]).read().splitlines()
+nat = int(lines[0])
+A = np.array([float(x) for x in re.search(r'Lattice="([^"]+)"', lines[1]).group(1).split()]).reshape(3, 3)
+pos = np.array([[float(x) for x in l.split()[1:4]] for l in lines[2:2 + nat]])
+inv = np.linalg.inv(A)
+mind = 9e9
+for i in range(nat - 1):
+    df = (pos[i + 1:] - pos[i]) @ inv
+    df -= np.round(df)
+    mind = min(mind, np.linalg.norm(df @ A, axis=1).min())
+assert mind > 1.2, f"BROKEN STRUCTURE: min interatomic distance {mind:.3f} A < 1.2 -- refusing to run"
+print(f"structure sanity OK: min-dist {mind:.3f} A")
+PY
 mkdir -p "$OUTROOT"
 
 if [ "$STAGE" = all ] || [ "$STAGE" = ladder ]; then
