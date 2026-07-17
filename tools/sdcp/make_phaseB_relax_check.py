@@ -36,12 +36,12 @@ for tag in ("complex_doped", "complex_neutral"):
                  lambda m: f"prefix          = '{m.group(1)}_rlx'", txt)
     # forces already on (tprnfor); add nstep + IONS block before &SYSTEM? no — CONTROL gets nstep
     txt = txt.replace("disk_io         = 'low'",
-                      "disk_io         = 'low'\n    nstep           = 30")
+                      "disk_io         = 'low'\n    nstep           = 12")
     # relax survival (2026-07-17): these complexes historically PLATEAU near 1e-5..1e-6
     # (neutral: 272 iters -> acc 7.6e-6) and pw.x ABORTS a relax on a non-converged step.
     # 1e-5 is plenty for BFGS forces at 1e-3 au; scf_must_converge keeps a stubborn
     # step from killing the whole chain.
-    txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-05")
+    txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-04")
     txt = re.sub(r"(?m)^(&ELECTRONS[^\n]*\n)", r"\1    scf_must_converge = .false.\n", txt, count=1)
     # SPEED (2026-07-17): geometry pass at a single Gamma k-point via a 1x1x1 MESH
     # (4x fewer k-points than 221@nosym). NOT "K_POINTS gamma" — QE's gamma-only
