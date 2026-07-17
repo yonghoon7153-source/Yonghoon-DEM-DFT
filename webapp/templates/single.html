@@ -267,10 +267,15 @@
           <option value="thinky" selected>thinky (고전단 · SuperP=dry-coat)</option>
           <option value="handmix">hand-mix (저전단)</option></select></label>
         <div title="STEP4-v2 충방전 시간전개 (복셀-DFN 방전곡선 + 뷰어 SOC/반응전류 애니메이션 데이터) — 체크한 C-rate를 압밀→σ망 뒤에 순차 자동 실행. 미선택 = step4_grid.npz export까지만 (나중에 step4_only.sh로 재개 가능). ⏱ rate당 V100 수 시간~1일. GPU 박스에 OCP 앵커(anchor_params/) 1회 필요: python3 scripts/step4_pybamm_anchor.py --export-params (없으면 STEP4는 안내 후 SKIP — 압밀/σ는 정상 완료)">STEP4 방전 (중복 선택)<br>
-          <span style="display:inline-flex;gap:10px;align-items:center;height:27px">
+          <span style="display:inline-flex;gap:8px;align-items:center;height:24px"><span style="color:#94a3b8">방전</span>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-01" onchange="updateAdditiveGpuCmds()"> 0.1C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-05" onchange="updateAdditiveGpuCmds()"> 0.5C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4-1" onchange="updateAdditiveGpuCmds()"> 1C</label>
+          </span><br>
+          <span style="display:inline-flex;gap:8px;align-items:center;height:24px" title="CC 충전 → v_max 도달 시 CV 홀드 (step4_dyn --charge --cv-hold), 방전 rate들 다음에 순차 실행"><span style="color:#94a3b8">충전<small>CCCV</small></span>
+            <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-01" onchange="updateAdditiveGpuCmds()"> 0.1C</label>
+            <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-05" onchange="updateAdditiveGpuCmds()"> 0.5C</label>
+            <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-1" onchange="updateAdditiveGpuCmds()"> 1C</label>
           </span></div>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
@@ -595,6 +600,8 @@ function _addVals() {
     vox: (document.getElementById('add-vox') || {value: '0.4'}).value,
     s4: [['0.1', 's4-01'], ['0.5', 's4-05'], ['1', 's4-1']]
       .filter(p => (document.getElementById(p[1]) || {}).checked).map(p => p[0]).join(','),
+    s4chg: [['0.1', 's4g-01'], ['0.5', 's4g-05'], ['1', 's4g-1']]
+      .filter(p => (document.getElementById(p[1]) || {}).checked).map(p => p[0]).join(','),
   };
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
@@ -610,11 +617,11 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4 } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -624,21 +631,22 @@ function _addRecipeStr(vg, sp, pt, sd = 0) {
 }
 // variant tag (_VGCF-PTFE_1-1_ballmill) + the MPM-lab variant name (caseName + tag).
 function _addTag() {
-  const { vg, sp, pt, sd, mix, vox, s4 } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg } = _addVals();
   // [A-Za-z0-9._]만 사용하는 자기서술 쌍 형식 (서버 미러) — ':'/'-' 는 다운로드 새니타이즈로
   // 삭제돼 예측명↔실제 파일명이 어긋났음 (VGCFPTFESDCP_2.970.4950.495 사건, 2026-07-17)
   const pairs = [['VGCF', vg], ['SuperP', sp], ['PTFE', pt], ['SDCP', sd]]
     .filter(p => p[1] > 0).map(p => p[0] + p[1]).join('_');
   if (!pairs) return '';
   const vt = (vox && vox !== '0.4') ? '_vox' + vox : '';   // finer STEP3 vox → carried into the name
-  const st = s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '';
+  const st = (s4 ? '_s4' + s4.split(',').map(r => r + 'C').join('_') : '')
+           + (s4chg ? '_s4chg' + s4chg.split(',').map(r => r + 'C').join('_') : '');
   return '_' + pairs + '_' + mix + vt + st;
 }
 function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t}` : ''; }
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, sd, mix, vox, s4 } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg } = _addVals();
   const vn = document.getElementById('add-variant-name');
   if (vn) vn.textContent = _addVariantName() || '…';
   if ((vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
@@ -662,14 +670,16 @@ function updateAdditiveGpuCmds() {
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
-  let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${s4 ? ' · <b style="color:#4ade80">STEP4 ' + s4.split(',').join('/') + 'C 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'}</div>`;
+  const s4txt = (s4 ? '방전 ' + s4.split(',').join('/') + 'C' : '')
+              + (s4chg ? (s4 ? ' + ' : '') + '충전CCCV ' + s4chg.split(',').join('/') + 'C' : '');
+  let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${s4txt ? ' · <b style="color:#4ade80">STEP4 ' + s4txt + ' 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'} · 산출물은 <code>run_*/</code> 런 전용 폴더(latest_run 심링크)</div>`;
   for (const s of SERVERS) {
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`
       + (s.setup ? blk(s.lbl0 || `# ⓪ ${s.name} 최초 1회`, s.setup) : '')
       + blk(`# 1) WSL → ${s.name} 업로드 (② 버튼으로 zip 받은 뒤)`, `scp "${DL}/${zip}" ${s.ssh}:${s.wk}/`)
       + blk(`# 2) ${s.name}에서 실행 (먼저: ssh ${s.ssh})`, `cd ${s.wk}\ngit pull origin ${BR}\nunzip -o ${zip}\nbash run_mpm.sh`)
-      + blk('# 3) 결과 → WSL (그다음 ③ 결과 업로드)', `scp ${s.ssh}:${s.wk}/mpm_payload.json ${s.ssh}:${s.wk}/mpm_metrics.json ${DL}/`
-            + (s4 ? `\nscp ${s.ssh}:${s.wk}/step4_c*.npz ${s.ssh}:${s.wk}/step4_viz_c*.json ${DL}/   # STEP4 방전곡선+뷰어` : ''));
+      + blk('# 3) 결과 → WSL (그다음 ③ 결과 업로드) — 산출물은 latest_run/ (런 전용 폴더)', `scp ${s.ssh}:${s.wk}/latest_run/mpm_payload.json ${s.ssh}:${s.wk}/latest_run/mpm_metrics.json ${DL}/`
+            + ((s4 || s4chg) ? `\nscp ${s.ssh}:${s.wk}/latest_run/step4_*.npz ${s.ssh}:${s.wk}/latest_run/step4_viz_*.json ${DL}/   # STEP4 곡선(방전/충전)+뷰어` : ''));
   }
   el.innerHTML = html;
 }

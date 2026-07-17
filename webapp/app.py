@@ -5296,18 +5296,24 @@ def mpm_input_package(case_id):
     cmd += ['--step3-vox', _vox]
     # STEP4 체크박스 (중복 선택 가능): &step4=0.5,1 → run_mpm.sh가 payload 후 각 rate를
     # 순차 자동 실행 (미선택 = step4_grid.npz export까지만 — 나중에 step4_only.sh로 재개).
-    _s4_clean = []
-    for _tok in request.args.get('step4', '').split(','):
-        _tok = _tok.strip()
-        if _tok:
-            try:
-                _v = float(_tok)
-                if 0.02 <= _v <= 5.0 and _v not in _s4_clean:
-                    _s4_clean.append(_v)
-            except ValueError:
-                pass
+    def _rates_of(name):
+        out = []
+        for _tok in request.args.get(name, '').split(','):
+            _tok = _tok.strip()
+            if _tok:
+                try:
+                    _v = float(_tok)
+                    if 0.02 <= _v <= 5.0 and _v not in out:
+                        out.append(_v)
+                except ValueError:
+                    pass
+        return out
+    _s4_clean = _rates_of('step4')
+    _s4chg_clean = _rates_of('step4chg')                # 충전(CCCV) 체크박스
     if _s4_clean:
         cmd += ['--step4-crates', ','.join(f'{v:g}' for v in _s4_clean)]
+    if _s4chg_clean:
+        cmd += ['--step4-charge', ','.join(f'{v:g}' for v in _s4chg_clean)]
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
@@ -5331,6 +5337,8 @@ def mpm_input_package(case_id):
         tag += '_vox' + _vox
     if _s4_clean:                                       # STEP4 선택 → zip 이름에 rate 표기
         tag += '_s4' + '_'.join(f'{v:g}C' for v in _s4_clean)
+    if _s4chg_clean:
+        tag += '_s4chg' + '_'.join(f'{v:g}C' for v in _s4chg_clean)
     return send_file(buf, mimetype='application/zip', as_attachment=True,
                      download_name=f'mpm_input_{case_id}{tag}.zip')
 

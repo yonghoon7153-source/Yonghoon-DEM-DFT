@@ -70,23 +70,31 @@ def main():
                          'AUTO-baked into run_mpm.sh (VGCF as a LOAD-BEARING rigid strut = the physical model, '
                          'Cho-2024 direction), so you never need this flag for VGCF.  See mpm3d_compaction.py.')
     ap.add_argument('--step4-crates', default='',
-                    help='STEP4-v2 충방전 C-rate 목록 (쉼표, 예 "0.5,1").  비면 그리드 export까지만 '
+                    help='STEP4-v2 방전 C-rate 목록 (쉼표, 예 "0.5,1").  비면 그리드 export까지만 '
                          '(step4_grid.npz는 항상 저장); 지정 시 run_mpm.sh가 payload 후 각 rate를 '
                          '순차로 step4_dyn.py에 태움 (한 rate 실패해도 다음 rate 계속).  '
                          'OCP 앵커(anchor_params/)는 GPU 박스에서 step4_pybamm_anchor --export-params로 '
                          '1회 생성해두면 됨 — 없으면 STEP4는 안내만 하고 SKIP.')
+    ap.add_argument('--step4-charge', default='',
+                    help='STEP4-v2 충전(CCCV) C-rate 목록 (쉼표) — CC 충전 → v_max 도달 시 CV 홀드 '
+                         '(step4_dyn --charge --cv-hold).  방전 rate들 다음에 순차 실행.')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
-    s4_rates = []                                            # STEP4 체크박스 (0.02–5C 화이트리스트)
-    for _tok in (a.step4_crates or '').split(','):
-        _tok = _tok.strip()
-        if _tok:
-            try:
-                _v = float(_tok)
-                if 0.02 <= _v <= 5.0 and _v not in s4_rates:
-                    s4_rates.append(_v)
-            except ValueError:
-                pass
+
+    def _parse_rates(s):                                     # STEP4 체크박스 (0.02–5C 화이트리스트)
+        out = []
+        for _tok in (s or '').split(','):
+            _tok = _tok.strip()
+            if _tok:
+                try:
+                    _v = float(_tok)
+                    if 0.02 <= _v <= 5.0 and _v not in out:
+                        out.append(_v)
+                except ValueError:
+                    pass
+        return out
+    s4_rates = _parse_rates(a.step4_crates)
+    s4_chg = _parse_rates(a.step4_charge)
 
     atoms = os.path.join(a.results, 'atoms.csv')
     if not os.path.exists(atoms):
@@ -230,7 +238,7 @@ def main():
             'mpm_K_se_gpa': round(K_CHAMP, 2), 'mpm_mu_se_gpa': round(mu_se_mpm, 4),
             'press_gpa': press_gpa, 'target_porosity': tgt,
             'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm, 'mpm_est_points': est_pts,
-            'step4_crates': s4_rates}
+            'step4_crates': s4_rates, 'step4_charge_crates': s4_chg}
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -352,28 +360,48 @@ def main():
     _gpu = ' --step3-gpu'                                    # GPU by default for ALL vox (CuPy cuSPARSE);
     #   auto-falls back to scipy CPU if CuPy/CUDA missing → same σ, never breaks.  Big win at fine vox,
     #   still a speedup at 0.4.  (--no-gpu isn't baked; delete this flag from run_mpm.sh to force CPU.)
+    # RUN_DIR 태그: 레시피 쌍 형식([A-Za-z0-9._]) — run_ 폴더 이름에 박혀 어떤 런인지 자명
+    run_tag = 'plain'
+    if a.add_recipe and '=' in a.add_recipe:
+        _ks, _vs = a.add_recipe.split('=', 1)
+        _kl, _vl = _ks.split(':'), _vs.split(':')
+        if len(_kl) == len(_vl):
+            run_tag = '_'.join(f'{k}{v}' for k, v in zip(_kl, _vl) if k not in ('AM', 'SE'))
+    run_tag = re.sub(r'[^A-Za-z0-9._]', '', run_tag.replace(':', '_')) or 'plain'
     # STEP4 체크박스: 미선택 = 그리드 export까지만 (step4_grid.npz 항상 저장 — 나중에 rate만
     # 골라 step4_only.sh로 재개 가능); 선택 = payload 후 각 C-rate를 순차 자동 실행.
     s4_block = ''
-    if s4_rates:
-        _loop_rates = ' '.join(f'{v:g}' for v in s4_rates)
-        s4_body = f'''# 3) STEP4-v2 충방전 시간전개 — 선택 rate 순차 ({_loop_rates} C).  그리드는 STEP 2가 export.
-AP=""
-for d in anchor_params ../anchor_params; do [ -f "$d/ocp_nmc811_chen2020.csv" ] && AP="$d" && break; done
-if [ -z "$AP" ]; then
-  echo "[run_mpm] STEP4 SKIP — OCP 앵커 없음 (anchor_params/ocp_nmc811_chen2020.csv)."
-  echo "          1회 생성: python3 scripts/step4_pybamm_anchor.py --export-params   (pybamm 필요)"
-  echo "          그 뒤 재개: bash step4_only.sh"
-else
-  for CR in {_loop_rates}; do
-    echo "[run_mpm] STEP4 ${{CR}}C start $(date)"
-    python3 scripts/step4_dyn.py --grid step4_grid.npz \\
+    if s4_rates or s4_chg:
+        _dis = ' '.join(f'{v:g}' for v in s4_rates)
+        _chg = ' '.join(f'{v:g}' for v in s4_chg)
+        _dis_loop = f'''  for CR in {_dis}; do
+    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)"
+    python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
       --c-rate ${{CR}} --gpu --out step4_c${{CR}}.npz --viz-out step4_viz_c${{CR}}.json \\
-      || echo "[run_mpm] STEP4 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
-    echo "[run_mpm] STEP4 ${{CR}}C end $(date)"
+      || echo "[run_mpm] STEP4 방전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
+    echo "[run_mpm] STEP4 방전 ${{CR}}C end $(date)"
   done
-fi
+''' if s4_rates else ''
+        _chg_loop = f'''  for CR in {_chg}; do
+    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)"
+    python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
+      --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
+      --c-rate ${{CR}} --charge --cv-hold --gpu \\
+      --out step4_chg_c${{CR}}.npz --viz-out step4_viz_chg_c${{CR}}.json \\
+      || echo "[run_mpm] STEP4 충전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
+    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"
+  done
+''' if s4_chg else ''
+        s4_body = f'''# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.  그리드는 STEP 2가 export.
+AP=""
+for d in "$KIT/anchor_params" "$KIT/../anchor_params"; do [ -f "$d/ocp_nmc811_chen2020.csv" ] && AP="$d" && break; done
+if [ -z "$AP" ]; then
+  echo "[run_mpm] STEP4 SKIP — OCP 앵커 없음 (anchor_params/ocp_nmc811_chen2020.csv)."
+  echo "          1회 생성: python3 $SCR/step4_pybamm_anchor.py --export-params   (pybamm 필요)"
+  echo "          그 뒤 재개: bash step4_only.sh"
+else
+{_dis_loop}{_chg_loop}fi
 '''
         s4_block = s4_body
     # run script: edit paths/GPU as needed, then run on a GPU box
@@ -385,28 +413,39 @@ fi
 #   — kept tractable so the run FINISHES.  More SE resolution: regenerate with a higher
 #   --max-points (heavier/slower) or edit --n-grid below.  If it OOMs, lower --n-grid / raise --gpu-mem.
 set -uo pipefail
-# ── one GPU = one run: refuse if an MPM compaction is already active.  Every run writes the SAME
-#    se_dump.npy / phase.npy / mpm_metrics.json, so two at once CLOBBER each other (mixed outputs).
-#    Checked in the foreground (before detach) so the refusal is immediate.  Override: MPM_FORCE=1 ──
-if [ -z "${{MPM_DETACHED:-}}" ] && [ -z "${{MPM_FORCE:-}}" ] && pgrep -f 'scripts/mpm3d_compaction.py' >/dev/null 2>&1; then
+# ── 경로 자립: KIT = zip 푼 폴더(입력 csv), SCR = 레포 scripts/ (킷 폴더 또는 그 부모에서 탐색) ──
+KIT="$(cd "$(dirname "$0")" && pwd)"
+SCR=""; for c in "$KIT/scripts" "$KIT/../scripts"; do [ -d "$c" ] && SCR="$(cd "$c" && pwd)" && break; done
+if [ -z "$SCR" ]; then
+  echo "[run_mpm] ABORT — scripts/ 를 못 찾음: 레포 루트(또는 scripts 심링크 있는 폴더)에 킷을 푸세요."
+  exit 1
+fi
+# ── one GPU = one run: GPU 경합 방지 (산출물 충돌은 아래 RUN_DIR 격리가 원천 차단).  MPM_FORCE=1 로 무시 ──
+if [ -z "${{MPM_DETACHED:-}}" ] && [ -z "${{MPM_FORCE:-}}" ] && pgrep -f 'mpm3d_compaction.py' >/dev/null 2>&1; then
   echo "[run_mpm] ABORT — an MPM run is already active (pgrep mpm3d_compaction).  one GPU = one run."
   echo "          wait for FINAL / 'kill <PID>' first, or 'MPM_FORCE=1 bash run_mpm.sh' to override."
   exit 1
 fi
 # ── self-detach: an SSH drop must NOT kill the run (the foreground run kept dying on disconnect). ──
+# ── RUN_DIR = 런 전용 폴더: 모든 산출물이 여기에만 쓰임 → 다른 킷/이전 런과 절대 안 섞이고
+#    (2026-07-17 SBE↔DBE 루트-덮어쓰기·mv-레이스 사고 재발 방지), 진행 중 외부 정리 작업의
+#    영향도 없음.  완료 시 $KIT/latest_run 심링크가 이 폴더를 가리킴. ──
 if [ -z "${{MPM_DETACHED:-}}" ]; then
   export MPM_DETACHED=1
-  log="mpm_run_$(date +%Y%m%d_%H%M%S).log"
-  echo "→ detached — survives SSH drop.  log: $log"
+  export RUN_DIR="$KIT/run_{run_tag}_$(date +%Y%m%d_%H%M%S)"
+  mkdir -p "$RUN_DIR"
+  log="$RUN_DIR/mpm_run.log"
+  echo "→ detached — survives SSH drop.  run dir: $RUN_DIR"
   setsid nohup bash "$0" "$@" >"$log" 2>&1 </dev/null &
   echo "   PID $!     follow: tail -f $log     stop: kill $!"
   exit 0
 fi
-# ===== actual run (detached; all output → the log above) =====
-echo "[run_mpm] $(hostname) start $(date)  n_grid={n_grid_mpm}  est_pts~{est_pts / 1e6:.0f}M"
+cd "$RUN_DIR"
+# ===== actual run (detached; all output → this run dir only) =====
+echo "[run_mpm] $(hostname) start $(date)  n_grid={n_grid_mpm}  est_pts~{est_pts / 1e6:.0f}M  dir=$RUN_DIR"
 # 1) plastic compaction of the REAL SE around the fixed AM scaffold (periodic x,y RVE = DEM 'boundary p p f')
-python3 scripts/mpm3d_compaction.py \\
-  --am-scaffold am_scaffold.csv --se-dump se_scaffold.csv --periodic \\
+python3 "$SCR/mpm3d_compaction.py" \\
+  --am-scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" --periodic \\
   --lateral-box {box_x} --n-grid {n_grid_mpm} --arch cuda --gpu-mem 28 --protocol hold --frames 150 \\
   --e-se {e_se_mpm} --nu-se {nu_se_mpm} --target-gpa {press_gpa} \\
   --save-se se_dump.npy --save-dg se_dump_dg.npy --save-eps se_dump_eps.npy --save-metrics mpm_metrics.json{add_flags} \\
@@ -416,36 +455,46 @@ python3 scripts/mpm3d_compaction.py \\
 # 2) webapp payload (AM spheres + SE surface + seed/compacted + raw metrics)
 #    + STEP3 σ_e 저항망 (전도상 voxel Kirchhoff, 풀해상도 — metrics.step3.sigma_e_eff + 입자별 je;
 #      상대비교용 σ표는 metrics에 기록됨.  끄기: --no-step3)
-python3 scripts/mpm_webapp_payload.py \\
-  --se se_dump.npy --scaffold am_scaffold.csv --se-dump se_scaffold.csv \\
+python3 "$SCR/mpm_webapp_payload.py" \\
+  --se se_dump.npy --scaffold "$KIT/am_scaffold.csv" --se-dump "$KIT/se_scaffold.csv" \\
   --n-vox 192 --tri-step 4 --smooth 1.5 --target-porosity {tgt_pay} --eps se_dump_eps.npy{pay_dilate} \\
   --void-max 180000 --step3-vox {a.step3_vox:g} --field-max-points {_fmax}{_gpu} --metrics-json mpm_metrics.json --case {case}{pay_phase}{pay_coll} --save-step4-grid step4_grid.npz --out mpm_payload.json \\
   || {{ echo "[run_mpm] STEP 2 (payload) FAILED — 압밀(se_dump.npy)은 무사하니 원인 수정 후 payload만 재실행:"; \\
-        echo "          sed -n '/^python3 scripts\\/mpm_webapp_payload/,/--out mpm_payload.json/p' run_mpm.sh > payload_only.sh && bash payload_only.sh"; \\
+        echo "          cd $RUN_DIR && bash $KIT/step4_only.sh 는 STEP4용이고, payload는:"; \\
+        echo "          sed -n '/mpm_webapp_payload/,/--out mpm_payload.json/p' $KIT/run_mpm.sh > payload_only.sh && bash payload_only.sh"; \\
         echo "          (흔한 원인: pip 모듈 누락 — python3 -m pip install scikit-image scipy)"; exit 1; }}
-{s4_block}echo "[run_mpm] DONE $(date) → upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
+{s4_block}ln -sfn "$RUN_DIR" "$KIT/latest_run"
+echo "[run_mpm] DONE $(date) → 결과 폴더: $RUN_DIR  ($KIT/latest_run 심링크 = 여기)"
+echo "          upload mpm_payload.json + mpm_metrics.json back to the case in the webapp"
 echo "          (additive run이면 mpm_metrics.json의 step3.sigma_e_eff_S_cm = STEP3 σ_e — viewer 전류밀도 모드로 색칠)"
-echo "          (step4 결과: step4_c*.npz = 방전곡선 시계열, step4_viz_c*.json = 뷰어 st4 입력)"
+echo "          (step4 결과: step4_c*.npz/step4_chg_c*.npz = 곡선 시계열, step4_viz_*.json = 뷰어 st4 입력)"
+echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — 산출물 회수 후)"
 """
     rp = os.path.join(a.out, 'run_mpm.sh')
     open(rp, 'w').write(run); os.chmod(rp, 0o755)
-    if s4_rates:                                             # 재개/단독 실행용 — 압밀 재실행 없이 STEP4만
+    if s4_rates or s4_chg:                                   # 재개/단독 실행용 — 압밀 재실행 없이 STEP4만
         s4_only = ('#!/usr/bin/env bash\nset -uo pipefail\n'
-                   '# STEP4만 재실행 (그리드 step4_grid.npz + anchor_params 필요) — run_mpm.sh와 동일 로직\n'
+                   '# STEP4만 (재개/단독) — 사용법: bash step4_only.sh [런폴더]   (기본: latest_run)\n'
+                   'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
+                   'SCR=""; for c in "$KIT/scripts" "$KIT/../scripts"; do [ -d "$c" ] && SCR="$(cd "$c" && pwd)" && break; done\n'
+                   '[ -z "$SCR" ] && { echo "scripts/ 못 찾음 — 레포 루트에 킷을 푸세요"; exit 1; }\n'
+                   'RUN="${1:-$KIT/latest_run}"\n'
+                   '[ -f "$RUN/step4_grid.npz" ] || { echo "step4_grid.npz 없음: $RUN — run_mpm.sh 먼저 (payload가 그리드 export)"; exit 1; }\n'
                    'if [ -z "${S4_DETACHED:-}" ]; then\n'
                    '  export S4_DETACHED=1\n'
-                   '  log="step4_run_$(date +%Y%m%d_%H%M%S).log"\n'
+                   '  log="$RUN/step4_run_$(date +%Y%m%d_%H%M%S).log"\n'
                    '  echo "→ detached — log: $log"\n'
                    '  setsid nohup bash "$0" "$@" >"$log" 2>&1 </dev/null &\n'
                    '  echo "   PID $!     follow: tail -f $log"\n'
-                   '  exit 0\nfi\n' + s4_body)
+                   '  exit 0\nfi\ncd "$RUN"\n' + s4_body)
         sp = os.path.join(a.out, 'step4_only.sh')
         open(sp, 'w').write(s4_only); os.chmod(sp, 0o755)
     print(f'MPM input for case "{case}" → {a.out}/')
     print(f'  am_scaffold.csv ({len(am_rows)} AM)  se_scaffold.csv ({len(se_rows)} SE)  '
           f'run_mpm.sh  mpm_input.json  (target_porosity={tgt})'
-          + (f'  step4_only.sh  [STEP4 rates: {", ".join(f"{v:g}C" for v in s4_rates)}]'
-             if s4_rates else '  [STEP4 미선택 — 그리드 export까지]'))
+          + (f'  step4_only.sh  [STEP4 방전: {", ".join(f"{v:g}C" for v in s4_rates) or "—"}'
+             f' / 충전CCCV: {", ".join(f"{v:g}C" for v in s4_chg) or "—"}]'
+             if (s4_rates or s4_chg) else '  [STEP4 미선택 — 그리드 export까지]'))
 
 
 if __name__ == '__main__':
