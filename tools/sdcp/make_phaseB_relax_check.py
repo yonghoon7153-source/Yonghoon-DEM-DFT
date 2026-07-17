@@ -42,6 +42,7 @@ for tag in ("complex_doped", "complex_neutral"):
     # 1e-5 is plenty for BFGS forces at 1e-3 au; scf_must_converge keeps a stubborn
     # step from killing the whole chain.
     txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-04")
+    txt = txt.replace("electron_maxstep = 300", "electron_maxstep = 150")
     txt = re.sub(r"(?m)^(&ELECTRONS[^\n]*\n)", r"\1    scf_must_converge = .false.\n", txt, count=1)
     # SPEED (2026-07-17): geometry pass at a single Gamma k-point via a 1x1x1 MESH
     # (4x fewer k-points than 221@nosym). NOT "K_POINTS gamma" — QE's gamma-only
