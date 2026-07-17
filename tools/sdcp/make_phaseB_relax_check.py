@@ -43,11 +43,14 @@ for tag in ("complex_doped", "complex_neutral"):
     # step from killing the whole chain.
     txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-05")
     txt = re.sub(r"(?m)^(&ELECTRONS[^\n]*\n)", r"\1    scf_must_converge = .false.\n", txt, count=1)
-    # SPEED (2026-07-17, user time budget): geometry pass at GAMMA only (~6-8x/iter:
-    # 4 kpts@nosym -> 1 + real-wfc trick). FINAL energies = 221 single-point RESCORE
-    # on the relaxed geometry (same protocol as the original Phase-B numbers ->
-    # apples-to-apples). Energies printed during this relax are Γ-approximate.
-    txt = re.sub(r"K_POINTS\s+automatic\s*\n\s*2 2 1 0 0 0", "K_POINTS gamma", txt)
+    # SPEED (2026-07-17): geometry pass at a single Gamma k-point via a 1x1x1 MESH
+    # (4x fewer k-points than 221@nosym). NOT "K_POINTS gamma" — QE's gamma-only
+    # real-wfc code path aborts with "Gamma-only calculation for this case not
+    # implemented" for this input combo (HUBBARD ortho-atomic / FSM); the 1x1x1
+    # mesh samples the same Gamma point through the standard complex-wfc path.
+    # FINAL energies = 221 single-point RESCORE on the relaxed geometry.
+    txt = re.sub(r"K_POINTS\s+automatic\s*\n\s*2 2 1 0 0 0",
+                 "K_POINTS automatic\n  1 1 1 0 0 0", txt)
     # namelist order must be CONTROL/SYSTEM/ELECTRONS/IONS -> insert IONS after ELECTRONS
     txt = re.sub(r"(?m)^ATOMIC_SPECIES",
                  "&IONS\n    ion_dynamics    = 'bfgs'\n/\n\nATOMIC_SPECIES", txt, count=1)

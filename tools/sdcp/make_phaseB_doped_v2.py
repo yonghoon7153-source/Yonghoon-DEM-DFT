@@ -62,7 +62,10 @@ txt = txt.replace("disk_io         = 'low'", "disk_io         = 'low'\n    nstep
 txt = txt.replace("tot_magnetization = 0.0", "tot_magnetization = 1.0")
 txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-05")
 txt = re.sub(r"(?m)^(&ELECTRONS[^\n]*\n)", r"\1    scf_must_converge = .false.\n", txt, count=1)
-txt = re.sub(r"K_POINTS\s+automatic\s*\n\s*2 2 1 0 0 0", "K_POINTS gamma", txt)
+# 1x1x1 mesh, NOT "K_POINTS gamma": QE gamma-only path aborts ("not implemented")
+# with this input combo (HUBBARD ortho-atomic / FSM). Same Gamma sampling, standard path.
+txt = re.sub(r"K_POINTS\s+automatic\s*\n\s*2 2 1 0 0 0",
+             "K_POINTS automatic\n  1 1 1 0 0 0", txt)
 txt = re.sub(r"(?m)^ATOMIC_SPECIES",
              "&IONS\n    ion_dynamics    = 'bfgs'\n/\n\nATOMIC_SPECIES", txt, count=1)
 
