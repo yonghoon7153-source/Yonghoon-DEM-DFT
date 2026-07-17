@@ -143,7 +143,7 @@ function renderSt4Soc(state) {
     `<b>🔋 STEP4-v2 — 입자 SOC 코어-셸</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
-     <div style="display:flex;gap:6px;align-items:center;margin:3px 0">
+     <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
        <button id="st4-play" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">▶ 재생</button>
        <select id="st4-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
@@ -374,7 +374,7 @@ function renderSt4Faces(state) {
     `<b>🔋 STEP4-v2 — 표면 반응전류 (COMSOL식 표면 필드)</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
      <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
-     <div style="display:flex;gap:6px;align-items:center;margin:3px 0">
+     <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
        <button id="st4f-play" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">▶ 재생</button>
        <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
