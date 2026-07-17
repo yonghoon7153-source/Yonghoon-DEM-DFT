@@ -187,11 +187,13 @@ if [ "$STAGE" = all ] || [ "$STAGE" = elastic ]; then
     cd "$WORK"
 fi
 
-# ---- [phaseb] VERDICT relax check (doped 먼저 = 의심 자세) ----
+# ---- [phaseb] VERDICT relax check v2 (2026-07-17: v1 doped = image-sandwich 아티팩트 철회) ----
+# doped_v2 = 중성의 건전한 자세(이미지 갭 4.7 A)에서 산성 H만 제거한 same-pose 설계.
 if [ "$STAGE" = all ] || [ "$STAGE" = phaseb ]; then
-    echo "===== [phaseb relax check] $(ts) ====="
-    PHASEB_BASE=$PB python3 "$REPO/tools/sdcp/make_phaseB_relax_check.py"
-    for t in complex_doped complex_neutral; do
+    echo "===== [phaseb relax check v2] $(ts) ====="
+    PHASEB_BASE=$PB python3 "$REPO/tools/sdcp/make_phaseB_relax_check.py"   # neutral relax.in
+    PHASEB_BASE=$PB python3 "$REPO/tools/sdcp/make_phaseB_doped_v2.py"      # same-pose doped
+    for t in complex_doped_v2 complex_neutral; do
         cd "$PB/$t"
         run_pw relax.in relax.out 30000 || { echo "$t relax FAIL"; cd "$WORK"; continue; }
         cd "$WORK"
@@ -200,7 +202,7 @@ if [ "$STAGE" = all ] || [ "$STAGE" = phaseb ]; then
     python3 - <<'PY'
 import re, os
 Ry = 13.605693
-refs = {"complex_doped": -518.39271245, "complex_neutral": -519.68310300}
+refs = {"complex_doped_v2": -518.39271245, "complex_neutral": -519.68310300}
 slab = -10563.22819091
 base = "/data/work/runs/sdcp_linio2_binding/phaseB_v7c"
 eb = {}
@@ -213,9 +215,9 @@ for t, mol in refs.items():
         print(t, "수렴 에너지 아직 없음"); continue
     e = float(es[-1])
     eb[t] = (e - slab - mol) * Ry
-    print(f"{t}: E={e:.8f} Ry ({len(es)} ionic steps) -> E_bind={eb[t]:+.4f} eV")
+    print(f"{t}: E={e:.8f} Ry ({len(es)} ionic steps) -> E_bind={eb[t]:+.4f} eV (GAMMA approx)")
 if len(eb) == 2:
-    print(f"RELAXED VERDICT Delta(d-n) = {eb['complex_doped']-eb['complex_neutral']:+.4f} eV  (single-point was +0.689)")
+    print(f"GAMMA VERDICT Delta(d2-n) = {eb['complex_doped_v2']-eb['complex_neutral']:+.4f} eV  (v1 single-point +0.689 = RETRACTED image artifact)")
 PY
 fi
 echo "===== suite done $(ts) ====="
