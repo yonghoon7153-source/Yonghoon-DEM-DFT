@@ -144,18 +144,18 @@ function renderSt4Soc(state) {
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
-       <button id="st4-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">▶</button>
-       <select id="st4-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
+       <button id="st4-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">▶</button>
+       <select id="st4-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
-       <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">🎞</button>
+       <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
      </div>
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
      <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
-     <label style="display:block;margin-top:4px;font-size:10px;color:#e5e7eb;cursor:pointer" title="색을 현재 프레임의 p5–p95로 정규화 — 입자간·코어-셸 미세 편차 증폭 (절대 비교는 끄기; 저율/초반엔 편차가 창의 몇 %라 절대 스케일에선 균일해 보이는 게 정상 물리)">
+     <label style="display:block;margin-top:4px;font-size:11px;color:#e5e7eb;cursor:pointer" title="색을 현재 프레임의 p5–p95로 정규화 — 입자간·코어-셸 미세 편차 증폭 (절대 비교는 끄기; 저율/초반엔 편차가 창의 몇 %라 절대 스케일에선 균일해 보이는 게 정상 물리)">
        <input type="checkbox" id="st4-dyn"> 동적 스케일 (프레임 p5–p95 — 편차 증폭)</label>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span id="st4-clo"></span><span id="st4-chi"></span></div>
-     <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
+     <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span id="st4-clo"></span><span id="st4-chi"></span></div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
      겉이 먼저 차는 shrinking-core가 시간축으로 보임.  "단면 뷰" 체크와 조합 → 내부 링 단면.
      ${st.c_rate}C · ${st.charge ? '충전' : '방전'} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
   const tS = document.getElementById('st4-t'), dS = document.getElementById('st4-d');
@@ -375,15 +375,15 @@ function renderSt4Faces(state) {
      <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
-       <button id="st4f-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">▶</button>
-       <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
+       <button id="st4f-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">▶</button>
+       <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
-       <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:12px">🎞</button>
-       <label style="font-weight:400;cursor:pointer;font-size:10px"><input type="checkbox" id="st4f-dots"> 복셀 점 모드</label>
+       <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
+       <label style="font-weight:400;cursor:pointer;font-size:11px"><input type="checkbox" id="st4f-dots"> 복셀 점 모드</label>
      </div>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
-     <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(복셀 점 모드/npz).
+     <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
+     <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(복셀 점 모드/npz).
      비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
      ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>`);
   const tS = document.getElementById('st4f-t'), dotsCb = document.getElementById('st4f-dots');
@@ -486,8 +486,8 @@ function buildControls(container, isMPM) {
     <label><input type="checkbox" data-layer="AM_S" checked> AM_S</label>
     <label><input type="checkbox" data-layer="MESH" checked> SE</label>
     <hr>
-    <label style="font-size:11px;font-weight:600;margin-bottom:1px">View Mode</label>
-    <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
+    <label style="font-size:12px;font-weight:600;margin-bottom:1px">View Mode</label>
+    <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:12px">
       <option value="default">Default (AM 종류)</option>
       <option value="coverage">Coverage Heat (AM)</option>
       <option value="coverage_patches">Coverage 패치 (표면 partial)</option>
@@ -514,10 +514,10 @@ function buildControls(container, isMPM) {
         <option value="pore">기공만 (pore — XCT처럼)</option>
       </optgroup>
     </select>
-    <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
+    <div id="view-mode-legend" style="font-size:11px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <input type="file" id="st4-file" accept=".json,application/json" style="display:none">
     <hr>
-    <label style="font-size:11px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
+    <label style="font-size:12px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
     <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
     <hr>
     <button data-action="analysisSummary">📊 분석 요약</button>
@@ -530,8 +530,8 @@ function buildControls(container, isMPM) {
     <label><input type="checkbox" data-layer="SE" checked> SE</label>
     <label><input type="checkbox" data-layer="MESH" checked> Mesh (plate)</label>
     <hr>
-    <label style="font-size:11px;font-weight:600;margin-bottom:1px">View Mode</label>
-    <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:11px">
+    <label style="font-size:12px;font-weight:600;margin-bottom:1px">View Mode</label>
+    <select id="view-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px 4px;font-size:12px">
       <option value="default">Default</option>
       <option value="brittle">Brittle Hotspots (AM)</option>
       <option value="brittle_surface">Brittle Hotspots (surface gradient)</option>
@@ -549,23 +549,23 @@ function buildControls(container, isMPM) {
         <option value="se_diagnostics">SE Network Diagnostics</option>
       </optgroup>
     </select>
-    <div id="view-mode-legend" style="font-size:10px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
+    <div id="view-mode-legend" style="font-size:11px;color:#9ca3af;line-height:1.4;margin-top:3px;max-height:340px;overflow-y:auto;overflow-x:hidden;padding-right:2px"></div>
     <hr>
-    <label style="font-size:11px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
+    <label style="font-size:12px"><input type="checkbox" id="clip-on"> 단면 뷰 (Y-슬라이스)</label>
     <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
     <hr>
-    <label><input type="checkbox" id="path-toggle"> <span style="font-size:11px">Percolating Path</span></label>
+    <label><input type="checkbox" id="path-toggle"> <span style="font-size:12px">Percolating Path</span></label>
     <div id="path-controls" style="display:none">
       <div style="display:flex;gap:4px;align-items:center;margin-top:3px">
-        <button id="path-prev" style="background:#555;color:#fff;border:none;border-radius:3px;padding:1px 6px;cursor:pointer;font-size:12px">&lt;</button>
-        <span id="path-current" style="font-size:11px;color:#e4e6f0;min-width:30px;text-align:center">-</span>
-        <button id="path-next" style="background:#555;color:#fff;border:none;border-radius:3px;padding:1px 6px;cursor:pointer;font-size:12px">&gt;</button>
-        <span id="path-total" style="font-size:10px;color:#7c8194">/ -</span>
+        <button id="path-prev" style="background:#555;color:#fff;border:none;border-radius:3px;padding:1px 6px;cursor:pointer;font-size:13px">&lt;</button>
+        <span id="path-current" style="font-size:12px;color:#e4e6f0;min-width:30px;text-align:center">-</span>
+        <button id="path-next" style="background:#555;color:#fff;border:none;border-radius:3px;padding:1px 6px;cursor:pointer;font-size:13px">&gt;</button>
+        <span id="path-total" style="font-size:11px;color:#7c8194">/ -</span>
       </div>
-      <div id="cluster-info" style="font-size:10px;color:#e4e6f0;margin-top:3px;line-height:1.5"></div>
+      <div id="cluster-info" style="font-size:11px;color:#e4e6f0;margin-top:3px;line-height:1.5"></div>
     </div>
     <hr>
-    <label><input type="checkbox" id="force-chain-toggle"> <span style="font-size:11px">Force Chain</span></label>
+    <label><input type="checkbox" id="force-chain-toggle"> <span style="font-size:12px">Force Chain</span></label>
     <hr>
     <button data-action="pathOnly">Path Only View</button>
     <button data-action="amCloseup">AM Close-up</button>
@@ -599,12 +599,12 @@ function injectCSS() {
 .viewer-container canvas{display:block}
 .viewer-controls{position:absolute;top:10px;right:10px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:8px 12px;display:inline-flex;flex-direction:column;gap:3px;
-  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:230px;min-width:170px;max-width:440px;resize:horizontal;
+  font:12.5px/1.45 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:230px;min-width:170px;max-width:440px;resize:horizontal;
   max-height:calc(100% - 20px);overflow-y:auto;overflow-x:hidden}
-.viewer-controls label{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px}
+.viewer-controls label{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:12px}
 .viewer-controls hr{border:none;border-top:1px solid #2a2d3e;margin:3px 0}
 .viewer-controls button{background:#555;color:#fff;border:none;border-radius:4px;padding:3px 8px;
-  cursor:pointer;font-size:10px;margin-top:1px}
+  cursor:pointer;font-size:11px;margin-top:1px}
 .viewer-controls button:hover{background:#777}
 .viewer-controls input[type=range]{width:100%;min-width:0;box-sizing:border-box;margin:2px 0;accent-color:#6c8cff}
 .viewer-info{position:absolute;bottom:50px;left:12px;background:rgba(22,25,46,.9);
@@ -622,14 +622,14 @@ function injectCSS() {
 .path-modal img{max-width:100%;max-height:75vh;border-radius:8px;border:1px solid #ddd}
 .path-modal-info{margin-top:10px;font:12px/1.5 'JetBrains Mono',monospace;color:#333}
 .path-modal-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
-.path-modal-actions button{background:#6c8cff;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:12px}
+.path-modal-actions button{background:#6c8cff;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px}
 .path-modal-actions button:hover{background:#8ba3ff}
 .path-modal-close{position:absolute;top:8px;right:12px;background:none;border:none;font-size:20px;cursor:pointer;color:#888}
 .data-modal-btn{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:7px 8px;margin:8px 0 2px 0;background:rgba(99,102,241,.16);color:#c7d2fe;border:1px solid rgba(99,102,241,.45);border-radius:6px;font:600 11px/1 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;letter-spacing:.2px;cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,color .15s,transform .05s}
 .data-modal-btn:hover{background:rgba(99,102,241,.32);border-color:#a5b4fc;color:#fff}
 .data-modal-btn:active{transform:translateY(1px)}
 .data-modal-btn .ico{font-size:13px;line-height:1}
-.data-modal-btn .sub{font-weight:500;color:#9ca3af;font-size:9.5px;margin-left:3px}`;
+.data-modal-btn .sub{font-weight:500;color:#9ca3af;font-size:10.5px;margin-left:3px}`;
   document.head.appendChild(s);
 }
 
@@ -687,7 +687,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
   const overlay = document.createElement('div');
   overlay.style.cssText =
     'position:absolute;top:8px;left:8px;z-index:50;padding:6px 12px;'
-    + 'background:rgba(0,0,0,.6);color:#e4e6f0;font-size:12px;'
+    + 'background:rgba(0,0,0,.6);color:#e4e6f0;font-size:13px;'
     + 'border-radius:6px;font-family:ui-monospace,Menlo,monospace';
   overlay.textContent = '3D viewer 데이터 로딩 중…';
   container.appendChild(overlay);
@@ -715,7 +715,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
       overlay.style.fontSize = '11px';
       overlay.innerHTML =
         `⚠ aux 데이터 누락 (서버 jsonify 오류)<br>`
-        + `<span style="color:#fde68a;font-size:10px">`
+        + `<span style="color:#fde68a;font-size:11px">`
         + `${data._aux_error}</span>`;
       setTimeout(() => overlay.remove(), 6000);
     } else {
@@ -809,9 +809,9 @@ export function initElectrodeViewer(containerId, dataUrl) {
     overlay.style.lineHeight = '1.5';
     overlay.innerHTML =
       `<b>3D viewer 로딩 실패</b>\n`
-      + `URL: <code style="font-size:11px">${dataUrl}</code>\n`
+      + `URL: <code style="font-size:12px">${dataUrl}</code>\n`
       + `Error: ${err && err.message ? err.message : String(err)}\n\n`
-      + `<span style="color:#fca5a5;font-size:11px">`
+      + `<span style="color:#fca5a5;font-size:12px">`
       + `브라우저 DevTools Console / Network 탭에서 자세한 trace 확인 가능.`
       + `</span>`;
   });
@@ -1560,7 +1560,7 @@ function applyViewMode(state, mode) {
        <span style="color:#222222">●</span> AM_P (polycrystalline, ~6 µm)
        <span style="color:#888888">●</span> AM_S (single-crystal, ~2 µm)
        <span style="color:#f5e6a3">●</span> SE (LPSCl, ~0.5 µm, translucent)${carbonLeg}
-       <span style="color:#9ca3af;font-size:10px">
+       <span style="color:#9ca3af;font-size:11px">
          · View Mode 드롭다운으로 brittle / cluster / stress / coverage 분석 모드 전환
        </span>`);
     return;
@@ -1734,7 +1734,7 @@ function applyViewMode(state, mode) {
        <span style="color:#feb24c">●</span> multicrack (${counts.multicrack})
        <span style="color:#f03b20">●</span> fragmentation (${counts.fragmentation})
        <span style="color:#800026">●</span> pulverization (${counts.pulverization})
-       <span style="color:#9ca3af;font-size:10px">
+       <span style="color:#9ca3af;font-size:11px">
          (patch radius ∝ stage severity; gradient brightens contact spot)
        </span>
        <button id="brittle-z-modal-btn" class="data-modal-btn">
@@ -1815,17 +1815,17 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>SE Cluster Status</b>
        <span style="color:#1e40af">●</span> percolating (${counts.percolating})
-         <span style="color:#9ca3af;font-size:10px">— translucent (전 부피 가로지름)</span>
+         <span style="color:#9ca3af;font-size:11px">— translucent (전 부피 가로지름)</span>
        <span style="color:#93c5fd">●</span> top-only (${counts.top_only})
-         <span style="color:#9ca3af;font-size:10px">— 윗판은 닿지만 바닥 끊김</span>
+         <span style="color:#9ca3af;font-size:11px">— 윗판은 닿지만 바닥 끊김</span>
        <span style="color:#fbbf24">●</span> bottom-only (${counts.bottom_only})
-         <span style="color:#9ca3af;font-size:10px">— 바닥은 닿지만 윗판 끊김</span>
+         <span style="color:#9ca3af;font-size:11px">— 바닥은 닿지만 윗판 끊김</span>
        <span style="color:#9ca3af">●</span> dead (${counts.dead})
-         <span style="color:#9ca3af;font-size:10px">— 어디에도 안 닿는 고립</span>
+         <span style="color:#9ca3af;font-size:11px">— 어디에도 안 닿는 고립</span>
        <span style="color:#f87171">●</span> no cluster id (${counts.no_cluster})
-         <span style="color:#9ca3af;font-size:10px">— clustering 분석에서 누락 (raw SE)</span>
+         <span style="color:#9ca3af;font-size:11px">— clustering 분석에서 누락 (raw SE)</span>
        <span style="color:#e5e7eb">●</span> AM (faint background)
-         <span style="color:#9ca3af;font-size:10px">— 공간감용 ghost, 클러스터 분석 대상 아님</span>`);
+         <span style="color:#9ca3af;font-size:11px">— 공간감용 ghost, 클러스터 분석 대상 아님</span>`);
     return;
   }
 
@@ -1874,7 +1874,7 @@ function applyViewMode(state, mode) {
       `<b>Stress Concentration (max MPa, log scale)</b>
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">
          <span>${sLo.toFixed(0)}</span>
          <span>median ≈ ${sMed.toFixed(0)}</span>
          <span>${sHi.toFixed(0)}</span>
@@ -1998,13 +1998,13 @@ function applyViewMode(state, mode) {
       .map(v => '#' + coolwarmColor(v).toString(16).padStart(6,'0'));
     setLegend(state,
       `<b>Stress field + Brittle caps</b>
-       <span style="color:#9ca3af;font-size:10px">
+       <span style="color:#9ca3af;font-size:11px">
          particles = max contact pressure (log)<br>
          surface caps = Lawn stage at damaged AM-AM contact
        </span>
        <div style="margin:6px 0 2px 0;height:8px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">
          <span>low MPa</span><span>median</span><span>high MPa</span>
        </div>
        <span style="color:#ffeda0">●</span> microcrack (${counts.microcrack})
@@ -2097,12 +2097,12 @@ function applyViewMode(state, mode) {
       `<b>AM Coverage — SE / surface area (%)</b>
        <div style="margin:6px 0 2px 0;height:10px;border-radius:3px;
          background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af">
+       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af">
          <span>${cLo.toFixed(0)}%</span>
          <span>median ${cMed.toFixed(0)}%</span>
          <span>${cHi.toFixed(0)}%</span>
        </div>
-       <span style="color:#9ca3af;font-size:10px;line-height:1.4">
+       <span style="color:#9ca3af;font-size:11px;line-height:1.4">
          · 빨강 = low coverage → SE 계면 부족, σ_ionic 손실 risk<br>
          · 초록 = high coverage → 이온 통로 안정<br>
          · mean ≈ ${mean.toFixed(1)} %${nMissing ? ` (no-data AM: ${nMissing})` : ''}
@@ -2161,7 +2161,7 @@ function applyViewMode(state, mode) {
          <span style="color:#22d3ee">●</span> Hertz/contact (≤ ${mm.cov_hertz_um != null ? mm.cov_hertz_um : 0.13} µm)<br>
          <span style="color:#f59e0b">●</span> Tabor spread (≤ ${mm.cov_tabor_um != null ? mm.cov_tabor_um : 0.26} µm)
        </div>
-       <span style="color:#9ca3af;font-size:10px">덮인 표면점만 색칠 · 총 ${pts.length.toLocaleString()}점 (contact ${nHi.toLocaleString()})</span>`);
+       <span style="color:#9ca3af;font-size:11px">덮인 표면점만 색칠 · 총 ${pts.length.toLocaleString()}점 (contact ${nHi.toLocaleString()})</span>`);
     return;
   }
 
@@ -2200,7 +2200,7 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>SE 변형 (3D) — ${kind}</b>
        <div style="margin-top:4px">밝을수록 변형 큼 (seed 구 대비). total = 탄성압축 포함(갇힌 안쪽도 보임)</div>
-       <span style="color:#9ca3af;font-size:10px">vmax ${vmax} · mean ${mm.dg_mean ?? '–'} · `
+       <span style="color:#9ca3af;font-size:11px">vmax ${vmax} · mean ${mm.dg_mean ?? '–'} · `
        + `max ${mm.dg_max ?? '–'} · ${pts.length.toLocaleString()}점</span>`);
     return;
   }
@@ -2236,7 +2236,7 @@ function applyViewMode(state, mode) {
       `<b>기공 (pore / XCT)</b>
        <div style="margin-top:4px"><span style="color:#38bdf8">●</span> void ${vp.length.toLocaleString()} voxels`
        + ` · 공극률 ${(mm.porosity_mpm_pct || 0).toFixed(1)}%</div>
-       <div style="margin-top:3px;color:#9ca3af;font-size:10px">전극 envelope에서 AM·SE가 아닌 셀 = 기공망 (solid 숨김,
+       <div style="margin-top:3px;color:#9ca3af;font-size:11px">전극 envelope에서 AM·SE가 아닌 셀 = 기공망 (solid 숨김,
        XCT/FIB-SEM 분할처럼).  도전재(~4vol%, 기공 내부)는 미차감.</div>`);
     return;
   }
@@ -2446,8 +2446,8 @@ function applyViewMode(state, mode) {
     const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     const wireBar = touch
       ? `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
-         <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
-         <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 도메인 캡=접점 28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
+         <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>약함 ${Math.round(lo5)}</span><span>환산 접점/AM</span><span>강함 ${Math.round(hi95)}</span></div>
+         <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">중앙값 <b>${Math.round(medTouch).toLocaleString()}</b> 환산접점/AM · 도메인 캡=접점 28° 클러스터(패치×1)+✨glow 깊이누적 · ⚖ 팝업과 동일 문법(거긴 공동 스케일) · 감마톤=전류밀도와 동일</div>`
       : '';
     state.cbarSpec = touch ? { map: 'jet', gamma: 1.6,
       title: 'Carbon wiring \u2014 weighted contacts per AM (p5\u2013p95)',
@@ -2460,7 +2460,7 @@ function applyViewMode(state, mode) {
          &nbsp;— 연결률 <b>${(ec && ec.connected_pct != null ? ec.connected_pct : pct).toFixed(1)}%</b>`
        + (nClFull != null ? ` · cluster ${nClFull.toLocaleString()}` : '') + `</div>`
        + wireBar
-       + `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
+       + `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">AM-AM ∪ AM-carbon 다리 → 집전체 연결 (SE·PTFE 제외)</div>`);
     return;
   }
   if (mode === 'cbd') {
@@ -2507,7 +2507,7 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>CBD 도메인</b> <span style="color:#d9c400;font-size:13px">●</span>
        carbon+binder 통합상 (${Object.entries(ac).map(([k, v]) => `${k} ${Number(v).toLocaleString()}`).join(' · ') || '—'})
-       <div style="margin-top:2px;color:#9ca3af;font-size:10px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
+       <div style="margin-top:2px;color:#9ca3af;font-size:11px">시각화 lumping — STEP3 σ 물리는 상별 유지 (PTFE=절연)</div>`);
     return;
   }
   if (mode === 'je_field' || mode === 'ji_field') {
@@ -2651,23 +2651,23 @@ function applyViewMode(state, mode) {
       + (sigTxt ? `<div style="margin-top:3px"><b style="font-size:13px">${sigTxt}</b></div>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>`
       + (fsc
-         ? `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩</span><span>×${fmtP(fsc.focus_top)}</span></div>`
-           + `<div style="font-size:8.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V</div>`
+         ? `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩</span><span>×${fmtP(fsc.focus_top)}</span></div>`
+           + `<div style="font-size:9.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V</div>`
            + (fsc.j_1C_mA_cm2
               ? `<div style="margin-top:5px;padding:6px 8px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
-                   <div style="font-size:10.5px;color:#9ca3af">운전 환산&nbsp; <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:46px;font-size:11px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:4px;padding:1px 4px"> C</div>
+                   <div style="font-size:11.5px;color:#9ca3af">운전 환산&nbsp; <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:46px;font-size:12px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:4px;padding:1px 4px"> C</div>
                    <div style="font-size:12.5px;color:#e5e7eb;margin-top:3px">⟨J⟩ <b><span id="fld-jmean-abs"></span></b> · 피크 <b><span id="fld-jtop-abs"></span></b> mA/cm²</div>
-                   <div style="font-size:9px;color:#6b7280;margin-top:2px">면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² 자동산출 · 피크 = p99.8 지점</div>
+                   <div style="font-size:10px;color:#6b7280;margin-top:2px">면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² 자동산출 · 피크 = p99.8 지점</div>
                  </div>`
-              : `<div style="font-size:8.5px;color:#6b7280">운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도(mA/cm²)</div>`)
-         : `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
-      + `<label style="display:block;margin-top:5px;font-size:10.5px;color:#e5e7eb;cursor:pointer">
+              : `<div style="font-size:9.5px;color:#6b7280">운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도(mA/cm²)</div>`)
+         : `<div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
+      + `<label style="display:block;margin-top:5px;font-size:11.5px;color:#e5e7eb;cursor:pointer">
            <input type="checkbox" id="fld-backbone" ${backboneGrp.visible ? 'checked' : ''}>
            🔥 백본 <b>${nHot.toLocaleString()}</b>복셀 = 전류 <b>${bbShare}%</b>
-           <span id="fld-bb-pct-lab" style="color:#9ca3af;font-size:9.5px">(목표 ${bbPct}%)</span></label>`
+           <span id="fld-bb-pct-lab" style="color:#9ca3af;font-size:10.5px">(목표 ${bbPct}%)</span></label>`
       + `<input type="range" id="fld-bb-pct" min="30" max="95" step="5" value="${bbPct}" style="accent-color:#f97316;height:12px">`
-      + `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'AM·SE'} 고스트(체크박스로 on/off) · 단면뷰·6×촬영</div>`
-      + (share ? `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">손실분담 `
+      + `<div style="margin-top:3px;color:#9ca3af;font-size:10.5px">${Math.round(fld.length / 1000)}k점(반투명 배경) · ${ionic ? 'AM' : 'AM·SE'} 고스트(체크박스로 on/off) · 단면뷰·6×촬영</div>`
+      + (share ? `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">손실분담 `
           + Object.entries(share).filter(([, v]) => v >= 0.001).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     const bbCb = document.getElementById('fld-backbone');
     if (bbCb) bbCb.onchange = () => { state._fieldBackboneOn = bbCb.checked; backboneGrp.visible = bbCb.checked; };
@@ -2738,10 +2738,10 @@ function applyViewMode(state, mode) {
     const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
     setLegend(state,
       `<b>🔋 반응 전류밀도 (STEP4 · 저율 충전)</b>
-       <div style="margin-top:2px;color:#9ca3af;font-size:9.5px">전자망×이온망을 AM|SE·SDCP 접촉면 BV로 결합 — 입자별 충전 반응 분담 (i/ī 상대)</div>
+       <div style="margin-top:2px;color:#9ca3af;font-size:10.5px">전자망×이온망을 AM|SE·SDCP 접촉면 BV로 결합 — 입자별 충전 반응 분담 (i/ī 상대)</div>
        <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0 (반응 소외)</span><span>i/ī (0–p99.8)</span><span>핫스팟</span></div>`
-      + (rxn ? `<div style="margin-top:3px;color:#9ca3af;font-size:9.5px">BV faces ${Number(rxn.n_bv_faces).toLocaleString()} · active AM ${rxn.active_am_pct}% · i0 ${rxn.i0_A_m2} A/m² (⚠F1 hook) · 선형화 BV·균일 SOC</div>` : ''));
+       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0 (반응 소외)</span><span>i/ī (0–p99.8)</span><span>핫스팟</span></div>`
+      + (rxn ? `<div style="margin-top:3px;color:#9ca3af;font-size:10.5px">BV faces ${Number(rxn.n_bv_faces).toLocaleString()} · active AM ${rxn.active_am_pct}% · i0 ${rxn.i0_A_m2} A/m² (⚠F1 hook) · 선형화 BV·균일 SOC</div>` : ''));
     return;
   }
   if (mode === 'st4_soc' || mode === 'st4_face') {
@@ -2766,7 +2766,7 @@ function applyViewMode(state, mode) {
       setLegend(state,
         `<b>STEP4-v2 동역학 결과 열기</b>
          <div style="margin-top:4px"><button id="st4-open" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 8px;cursor:pointer">📂 step4_viz.json 선택</button></div>
-         <div style="margin-top:4px;color:#9ca3af;font-size:9.5px">GPU 런에서 <code>step4_dyn.py … --viz-out step4_viz.json</code>으로 생성한 파일을 선택하세요
+         <div style="margin-top:4px;color:#9ca3af;font-size:10.5px">GPU 런에서 <code>step4_dyn.py … --viz-out step4_viz.json</code>으로 생성한 파일을 선택하세요
          (입자별 코어-셸 SOC 체크포인트 + BV 면별 반응전류).  같은 케이스의 침대여야 입자 id가 맞습니다.${st4Url ? '<br><b>한 번 열면 이 케이스에 저장되어 다음부터 자동으로 열립니다.</b>' : ''}</div>`);
       const inp = document.getElementById('st4-file');
       const btn = document.getElementById('st4-open');
@@ -2849,10 +2849,10 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>Δ 재분배 — bare/wetted (log₂ jb/je)</b>
        <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,#3b4cc0,#dddddd,#b40426)"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>×${Math.pow(2, -R).toFixed(2)} 냉각</span><span>변화 없음</span><span>×${Math.pow(2, R).toFixed(1)} 가열</span></div>
-       <div style="margin-top:3px;font-size:10.5px">냉각(&lt;×0.8) <b>${nCool}</b>개 · 가열(&gt;×1.2) <b>${nHot}</b>개</div>`
-      + (cg ? `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">바닥 접점 wetted ${cg.n_bottom_contacts.wetted} → bare ${cg.n_bottom_contacts.bare} · R_geom ${Number(cg.R_geom_ohm_cm2).toExponential(2)} Ω·cm²</div>` : '')
-      + `<div style="margin-top:2px;color:#9ca3af;font-size:9.5px">색 갈림은 집전체 근처에만 — 접점 상실의 국소 재분배 (그 외는 흰색이 정상)</div>`);
+       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>×${Math.pow(2, -R).toFixed(2)} 냉각</span><span>변화 없음</span><span>×${Math.pow(2, R).toFixed(1)} 가열</span></div>
+       <div style="margin-top:3px;font-size:11.5px">냉각(&lt;×0.8) <b>${nCool}</b>개 · 가열(&gt;×1.2) <b>${nHot}</b>개</div>`
+      + (cg ? `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">바닥 접점 wetted ${cg.n_bottom_contacts.wetted} → bare ${cg.n_bottom_contacts.bare} · R_geom ${Number(cg.R_geom_ohm_cm2).toExponential(2)} Ω·cm²</div>` : '')
+      + `<div style="margin-top:2px;color:#9ca3af;font-size:10.5px">색 갈림은 집전체 근처에만 — 접점 상실의 국소 재분배 (그 외는 흰색이 정상)</div>`);
     return;
   }
   if (mode === 'je') {
@@ -2918,14 +2918,14 @@ function applyViewMode(state, mode) {
           + (cg ? ` · R_geom <b>${Number(cg.R_geom_ohm_cm2).toExponential(2)}</b> Ω·cm²`
                 : ` <span style="color:#9ca3af">(상대비교용 — σ표/vox 동일 세팅끼리)</span>`)
           + `</div>` : '')
-      + (cg ? `<details style="margin-top:2px;font-size:10px;color:#cbd5e1"><summary style="cursor:pointer;color:#9ca3af">wetted/bare 상세</summary>
+      + (cg ? `<details style="margin-top:2px;font-size:11px;color:#cbd5e1"><summary style="cursor:pointer;color:#9ca3af">wetted/bare 상세</summary>
           σ wetted ${Number(cg.wetted_sigma_S_cm).toExponential(2)} (접점 ${cg.n_bottom_contacts.wetted})
           vs bare ${Number(cg.bare_sigma_S_cm).toExponential(2)} (${cg.n_bottom_contacts.bare}) S/cm<br>
           R_geom = L(1/σ_bare − 1/σ_wetted) — 바닥 기하 접촉만의 계면저항 (모델 출력; 측정 R_int와의 갭 = 화학/열화 몫)<br>
           집전체 슬래브는 모식(두께 과장) · σ_e_eff는 상대비교용(σ표/vox 동일 세팅끼리)</details>` : '')
       + `<div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-       <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J_z| (0–p99.8)</span><span>high</span></div>`
-      + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:10px">손실(발열) 분담: `
+       <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|J_z| (0–p99.8)</span><span>high</span></div>`
+      + (s3 && s3.dissipation_share ? `<div style="margin-top:3px;color:#9ca3af;font-size:11px">손실(발열) 분담: `
           + Object.entries(s3.dissipation_share).map(([k, v]) => `${k} ${(100 * v).toFixed(0)}%`).join(' · ') + `</div>` : ''));
     return;
   }
@@ -2971,7 +2971,7 @@ function applyViewMode(state, mode) {
     setLegend(state,
       `<b>도전재 (3D)${only ? ' — ' + PH[only] + '만' : ' — 전체'}</b>
        <div style="margin-top:4px">${legend || '–'}</div>
-       <div style="margin-top:3px;color:#9ca3af;font-size:10px">SE·AM 반투명, 카본은 x-ray로 위에. `
+       <div style="margin-top:3px;color:#9ca3af;font-size:11px">SE·AM 반투명, 카본은 x-ray로 위에. `
        + (nFib ? `${nFib.toLocaleString()}개 fibre를 개별 line으로 표시 (VGCF 고항복 → 막대 유지)`
               : `${pts.length.toLocaleString()}점 (fibre 데이터 없음 — point cloud)`) + `</div>`);
     return;
@@ -3067,8 +3067,8 @@ function applyViewMode(state, mode) {
     const row = (color, sym, count, label, pctStr, tip) => `
       <div title="${tip}  (${count.toLocaleString()} particles)"
            style="display:flex;align-items:baseline;gap:6px;
-                  font-size:10.5px;line-height:1.35">
-        <span style="color:${color};font-size:12px;line-height:0.9;
+                  font-size:11.5px;line-height:1.35">
+        <span style="color:${color};font-size:13px;line-height:0.9;
                      flex:0 0 10px;text-align:center">${sym}</span>
         <span style="color:#cbd5e1;flex:1 1 auto;min-width:0;
                      white-space:nowrap;overflow:hidden;
@@ -3077,7 +3077,7 @@ function applyViewMode(state, mode) {
                      font-family:ui-monospace,Menlo,monospace;
                      flex:0 0 auto;text-align:right;
                      min-width:30px">${fmtCount(count)}</span>
-        <span style="color:#9ca3af;font-size:9.5px;
+        <span style="color:#9ca3af;font-size:10.5px;
                      font-family:ui-monospace,Menlo,monospace;
                      flex:0 0 auto;text-align:right;
                      min-width:38px">${pctStr}</span>
@@ -3086,27 +3086,27 @@ function applyViewMode(state, mode) {
     const banner = auxAvailable ? '' : `
       <div style="background:rgba(180,83,9,.18);
                   border:1px solid rgba(245,158,11,.45);
-                  color:#fcd34d;font-size:10px;line-height:1.35;
+                  color:#fcd34d;font-size:11px;line-height:1.35;
                   padding:5px 7px;border-radius:4px;margin-bottom:5px">
         ⚠ aux 계산 skip된 케이스 (contacts.csv가 너무 큼 또는 cache miss).
         Engagement 분류 데이터 없음 — 모든 SE를 idle로 표시.<br>
-        <span style="color:#fde68a;font-size:9.5px">
+        <span style="color:#fde68a;font-size:10.5px">
           → Flask console 로그 / 재실행으로 cache 생성 후 다시 로드.
         </span>
       </div>`;
 
     setLegend(state,
       `${banner}
-       <div style="font-weight:600;color:#cbd5e1;font-size:11px;margin-bottom:2px">
+       <div style="font-weight:600;color:#cbd5e1;font-size:12px;margin-bottom:2px">
          SE pore-risk map
        </div>
-       <div style="color:#9ca3af;font-size:9.5px;line-height:1.35"
+       <div style="color:#9ca3af;font-size:10.5px;line-height:1.35"
             title="engagement_score = (n_plastic + 0.5·n_yield) / n_total. Lower score = SE failed to plastically fill its AM-AM void → micro-pore remains after release.">
          약한 plastic flow → SE가 AM-AM gap 못 채움 → micro-pore<br>
          빨강 = 위험, 녹색 = SE가 gap 잘 채움 (안전)
        </div>
        <div style="display:flex;align-items:center;gap:4px;
-                    margin:6px 0 4px;font-size:9.5px;color:#9ca3af">
+                    margin:6px 0 4px;font-size:10.5px;color:#9ca3af">
          <span title="risk high">위험</span>
          <div style="flex:1;height:8px;border-radius:4px;
                      background:linear-gradient(90deg,
@@ -3125,7 +3125,7 @@ function applyViewMode(state, mode) {
          ${row('#1b1f2e', '○', nIdle, 'Idle (no contact)', pct(nIdle),
                 'AM-AM void에 완전 isolated SE — 어차피 인접 AM 없어서 channel 형성 불가.')}
        </div>
-       <div style="color:#9ca3af;font-size:9px;line-height:1.4;
+       <div style="color:#9ca3af;font-size:10px;line-height:1.4;
                     margin-top:5px;padding-top:4px;
                     border-top:1px solid rgba(99,102,241,.18)">
          ★ HIGH/medium 빨강 입자가 많을수록 → cold-press 후 micro-pore 잔류 위험<br>
@@ -3233,15 +3233,15 @@ function applyViewMode(state, mode) {
          <span style="display:inline-block;width:6em;height:10px;background:linear-gradient(to right,
            #1e3a8a 0%, #06b6d4 ${50*tThreshold}%, #fef3c7 ${100*tThreshold}%,
            #f97316 ${100*(tThreshold + (1-tThreshold)/2)}%, #7f1d1d 100%)"></span>
-         <span style="font-size:9px;color:#9ca3af">${minSeen.toFixed(2)} → ${maxSeen.toFixed(2)}</span>
+         <span style="font-size:10px;color:#9ca3af">${minSeen.toFixed(2)} → ${maxSeen.toFixed(2)}</span>
        </div>
-       <table style="font-size:9px;color:#cbd5e1;border-collapse:collapse">
+       <table style="font-size:10px;color:#cbd5e1;border-collapse:collapse">
          <tr><td style="padding:0 4px 0 0">F/P_c = 1 threshold</td><td>${nOver}/${nHit} (${overPct}%)</td></tr>
          <tr><td style="padding:0 4px 0 0">median</td><td>${q(0.5).toFixed(2)}</td></tr>
          <tr><td style="padding:0 4px 0 0">95th pct</td><td>${q(0.95).toFixed(2)}</td></tr>
          <tr><td style="padding:0 4px 0 0">max</td><td>${maxSeen.toFixed(2)}</td></tr>
        </table>
-       <span style="color:#9ca3af;font-size:9px">★ Brittle Hotspots는 stage로 bin해서 보지만 이 mode는 F/P_c 실값을 연속으로 표시 — 같은 multi-crack stage 안에서도 F/P_c=3.5 와 10.5 의 차이가 그라데이션으로 보임. 흰색 부근이 임계 F/P_c=1 (fracture 시작 경계).</span>`);
+       <span style="color:#9ca3af;font-size:10px">★ Brittle Hotspots는 stage로 bin해서 보지만 이 mode는 F/P_c 실값을 연속으로 표시 — 같은 multi-crack stage 안에서도 F/P_c=3.5 와 10.5 의 차이가 그라데이션으로 보임. 흰색 부근이 임계 F/P_c=1 (fracture 시작 경계).</span>`);
     return;
   }
 
@@ -3340,7 +3340,7 @@ function applyViewMode(state, mode) {
        <span style="color:#ef4444">●</span> Cluster #1 (largest)
        <span style="color:#f97316">●</span> #2
        <span style="color:#fbbf24">●</span> #3 ...<br>
-       <span style="color:#9ca3af;font-size:9px">★ F/P_c ≥ 1 인 AM_P-AM_P 접촉으로 연결된 connected component. 이 backbone에서 fragmentation이 시작되어 cascade 가능.</span>`);
+       <span style="color:#9ca3af;font-size:10px">★ F/P_c ≥ 1 인 AM_P-AM_P 접촉으로 연결된 connected component. 이 backbone에서 fragmentation이 시작되어 cascade 가능.</span>`);
     return;
   }
 
@@ -3509,7 +3509,7 @@ function renderStressChain(state, segs) {
     const border = on ? color : '#374151';
     return `<button data-sc-filter="${key}"
        style="background:${bg};color:${fg};border:1px solid ${border};
-              border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+              border-radius:3px;padding:1px 4px;font-size:10px;cursor:pointer;
               margin:1px 1px 0 0;white-space:nowrap">${label} ${count}</button>`;
   };
   /* Stage filter button helper */
@@ -3520,18 +3520,18 @@ function renderStressChain(state, segs) {
     const border = on ? '#7c3aed' : '#374151';
     return `<button data-sc-stage="${key}"
        style="background:${bg};color:${fg};border:1px solid ${border};
-              border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+              border-radius:3px;padding:1px 4px;font-size:10px;cursor:pointer;
               margin:1px 1px 0 0;white-space:nowrap">${label} ${count}</button>`;
   };
   setLegend(state,
-    `<b style="font-size:10px">Stress Chain</b>
-     <span style="color:#9ca3af;font-size:9px">(${nDrawn.toLocaleString()} drawn${
+    `<b style="font-size:11px">Stress Chain</b>
+     <span style="color:#9ca3af;font-size:10px">(${nDrawn.toLocaleString()} drawn${
        nSkippedPeriodic ? `, ${nSkippedPeriodic} wrap` : ''
      })</span>
      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;margin-top:3px">
        <button data-sc-filter="ALL"
          style="background:#0ea5e9;color:#fff;border:1px solid #0284c7;
-                border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+                border-radius:3px;padding:1px 4px;font-size:10px;cursor:pointer;
                 margin:1px 1px 0 0;font-weight:bold;white-space:nowrap">ALL</button>
        ${btn('AM_P-AM_P', '#ef4444', 'P-P', totalCounts['AM_P-AM_P'])}
        ${btn('AM_P-AM_S', '#f97316', 'P-S', totalCounts['AM_P-AM_S'])}
@@ -3541,7 +3541,7 @@ function renderStressChain(state, segs) {
      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:0;margin-top:2px">
        <button data-sc-stage="ALL"
          style="background:#7c3aed;color:#fff;border:1px solid #6d28d9;
-                border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+                border-radius:3px;padding:1px 4px;font-size:10px;cursor:pointer;
                 margin:1px 1px 0 0;font-weight:bold;white-space:nowrap">ALL</button>
        ${stageBtn('microcrack',    'μ',    stageCounts['microcrack'])}
        ${stageBtn('multicrack',    'M',    stageCounts['multicrack'])}
@@ -3721,15 +3721,15 @@ function renderSeDiagnostics(state) {
     const border = on ? color : '#374151';
     return `<button data-sed-filter="${key}"
        style="background:${bg};color:${fg};border:1px solid ${border};
-              border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+              border-radius:3px;padding:1px 4px;font-size:10px;cursor:pointer;
               margin:1px 1px 0 0;white-space:nowrap">${label} ${count}</button>`;
   };
   setLegend(state,
-    `<b style="font-size:10px">SE Network Diagnostics</b>
+    `<b style="font-size:11px">SE Network Diagnostics</b>
      <div style="display:flex;flex-wrap:wrap;gap:0;margin-top:3px">
        <button data-sed-filter="ALL"
          style="background:#0ea5e9;color:#fff;border:1px solid #0284c7;
-                border-radius:3px;padding:1px 4px;font-size:9px;cursor:pointer;
+                border-radius:3px;padding:1px 4px;font-size:10px;cursor:pointer;
                 margin:1px 1px 0 0;font-weight:bold;white-space:nowrap">ALL</button>
        ${btn('percolating',  '#14b8a6', 'perc',     nPerc)}
        ${btn('articulation', '#facc15', 'cut',      artPts.size)}
@@ -3748,7 +3748,7 @@ function renderSeDiagnostics(state) {
        <button data-sed-open-hub
          style="background:linear-gradient(135deg,#6366f1 0%,#2563eb 55%,#1d4ed8 100%);
                 color:#fff;border:1px solid rgba(255,255,255,.12);
-                border-radius:6px;padding:7px 10px;font-size:10.5px;font-weight:600;
+                border-radius:6px;padding:7px 10px;font-size:11.5px;font-weight:600;
                 letter-spacing:.2px;cursor:pointer;width:100%;
                 box-shadow:0 1px 0 rgba(255,255,255,.18) inset,
                             0 1px 4px rgba(37,99,235,.45);
@@ -3759,7 +3759,7 @@ function renderSeDiagnostics(state) {
          title="CSV/PNG 다운로드 통합 모달 열기">
          <span style="font-size:13px;line-height:1">📥</span>
          <span>데이터 허브</span>
-         <span style="font-weight:500;opacity:.85;font-size:9.5px;
+         <span style="font-weight:500;opacity:.85;font-size:10.5px;
                        background:rgba(255,255,255,.18);
                        padding:1px 6px;border-radius:10px;line-height:1.4">5종</span>
        </button>
@@ -4630,7 +4630,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       <button class="path-modal-close" style="color:#9ca3af">&times;</button>
       <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">
         <b style="font-size:14px">⚖ 케이스 비교</b>
-        <select id="cmp-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 6px;font-size:11px">
+        <select id="cmp-mode" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 6px;font-size:12px">
           <option value="wiring">전기 배선 — 탄소 접점 패치 (공동 스케일 ★)</option>
           <option value="wiring_delta">Δ 배선 — 접점 차이 A−B (같은 골격 전용 ★)</option>
           <option value="je_field">⚡ 전자 전류밀도 필드</option>
@@ -4645,17 +4645,17 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <option value="add_sdcp">　└ SDCP만</option>
           <option value="pore">기공 (pore)</option>
         </select>
-        <label id="cmp-bb-wrap" style="display:none;font-size:10.5px;color:#e5e7eb;align-items:center;gap:4px">
+        <label id="cmp-bb-wrap" style="display:none;font-size:11.5px;color:#e5e7eb;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-bb-on" checked> 🔥백본
           <input type="range" id="cmp-bb-pct" min="30" max="95" step="5" value="80" style="width:88px;accent-color:#f97316">
           <span id="cmp-bb-lab" style="color:#9ca3af">80%</span></label>
-        <label id="cmp-patch-wrap" style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
+        <label id="cmp-patch-wrap" style="font-size:11.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           패치 <input type="range" id="cmp-patch" min="0.5" max="3" step="0.25" value="1.5" style="width:70px;accent-color:#34d399">
           <span id="cmp-patch-lab" style="color:#9ca3af">1.5×</span></label>
-        <label id="cmp-glow-wrap" style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:3px"
+        <label id="cmp-glow-wrap" style="font-size:11.5px;color:#e5e7eb;display:flex;align-items:center;gap:3px"
           title="x-ray 깊이누적 발광 (primer 논문 Fig4f 문법) — 겹칠수록 색이 짙어져 케이스 차이가 증폭됨. 필드 모드에선 고스트 없이 순수 볼륨 렌더">
           ✨<input type="checkbox" id="cmp-glow" checked>glow</label>
-        <span id="cmp-fldops-wrap" style="display:none;font-size:10.5px;color:#e5e7eb;align-items:center;gap:8px">
+        <span id="cmp-fldops-wrap" style="display:none;font-size:11.5px;color:#e5e7eb;align-items:center;gap:8px">
           <label style="display:flex;align-items:center;gap:3px"
             title="σ-공동스케일: 두 쪽 색을 σ_eff 비율로 정렬해 절대 세기 차이가 색으로 보이게 (근사 — 상위꼬리 모양 유사 가정; 끄면 자기 정규화=패턴 비교)">
             <input type="checkbox" id="cmp-joint">σ공동</label>
@@ -4665,14 +4665,14 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <label style="display:flex;align-items:center;gap:3px"
             title="AM 입자 고스트(밝은 종이-회색) — 전류가 어느 입자 사이를 지나는지 컨텍스트">
             <input type="checkbox" id="cmp-ghost" checked>AM</label></span>
-        <label style="font-size:10.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
+        <label style="font-size:11.5px;color:#e5e7eb;display:flex;align-items:center;gap:4px">
           <input type="checkbox" id="cmp-clip"> 단면
           <input type="range" id="cmp-clip-pos" min="2" max="98" value="50" style="width:88px;accent-color:#6c8cff"></label>
-        <span style="display:flex;align-items:center;gap:4px;font-size:10.5px;color:#e5e7eb">
+        <span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:#e5e7eb">
           <button id="cmp-zo" style="background:#334155;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer">−</button>
           <input type="range" id="cmp-zoom" min="30" max="350" value="200" step="5" style="width:88px;accent-color:#6c8cff">
           <button id="cmp-zi" style="background:#334155;color:#fff;border:none;border-radius:4px;width:22px;height:22px;cursor:pointer">+</button></span>
-        <span id="cmp-status" style="font-size:11px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
+        <span id="cmp-status" style="font-size:12px;color:#fbbf24">payload 2개 로딩 중… (수십 MB — 수십 초 걸릴 수 있어요)</span>
         <span style="flex:1"></span>
         <button id="cmp-cbar" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
           title="현재 모드의 컬러바를 논문용 PNG로 (흰 배경·3× 인쇄 해상·뷰어와 동일 감마)">컬러바</button>
@@ -4683,17 +4683,17 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         <button id="cmp-shot" class="data-modal-btn" style="width:auto;margin:0;padding:5px 12px"
           title="A·B 각각 별도 파일 — 투명 배경 4× 고해상 (PPT/논문 오버레이용, 메인 뷰어 Screenshot과 동일 문법)">투명샷 ×2</button>
       </div>
-      <div id="cmp-table" style="font-size:11px;margin-bottom:6px;overflow-x:auto"></div>
+      <div id="cmp-table" style="font-size:12px;margin-bottom:6px;overflow-x:auto"></div>
       <div style="display:flex;gap:8px">
         <div style="flex:1;min-width:0">
-          <div id="cmp-name-a" style="font-size:12px;font-weight:600;color:#7dd3fc;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          <div id="cmp-name-a" style="font-size:13px;font-weight:600;color:#7dd3fc;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
           <div id="cmp-view-a" style="height:56vh;background:#f4f5f8;border-radius:8px;overflow:hidden"></div>
-          <div id="cmp-leg-a" style="font-size:10px;color:#9ca3af;margin-top:3px;min-height:26px"></div>
+          <div id="cmp-leg-a" style="font-size:11px;color:#9ca3af;margin-top:3px;min-height:26px"></div>
         </div>
         <div style="flex:1;min-width:0">
-          <div id="cmp-name-b" style="font-size:12px;font-weight:600;color:#fbbf24;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
+          <div id="cmp-name-b" style="font-size:13px;font-weight:600;color:#fbbf24;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"></div>
           <div id="cmp-view-b" style="height:56vh;background:#f4f5f8;border-radius:8px;overflow:hidden"></div>
-          <div id="cmp-leg-b" style="font-size:10px;color:#9ca3af;margin-top:3px;min-height:26px"></div>
+          <div id="cmp-leg-b" style="font-size:11px;color:#9ca3af;margin-top:3px;min-height:26px"></div>
         </div>
       </div>
     </div>`;
@@ -4842,7 +4842,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     tipCard = document.createElement('div');
     tipCard.id = 'cmp-tipcard';
     tipCard.style.cssText = 'position:fixed;z-index:3000;width:max-content;max-width:min(580px,64vw);'
-      + 'background:#111827;border:1px solid #3b4252;border-radius:8px;padding:10px 13px;font-size:11.5px;'
+      + 'background:#111827;border:1px solid #3b4252;border-radius:8px;padding:10px 13px;font-size:12.5px;'
       + 'line-height:1.6;color:#d1d5db;white-space:pre-line;word-break:keep-all;overflow-wrap:anywhere;'
       + 'box-shadow:0 8px 24px rgba(0,0,0,.55);pointer-events:none;display:none';
     document.body.appendChild(tipCard);
@@ -4935,7 +4935,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   };
   const jstops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   const barHtml = (lab) => `<div style="margin:2px 0;height:8px;border-radius:3px;background:linear-gradient(90deg,${jstops.join(',')})"></div>
-    <div style="display:flex;justify-content:space-between;font-size:9px"><span>${lab[0]}</span><span>${lab[1]}</span><span>${lab[2]}</span></div>`;
+    <div style="display:flex;justify-content:space-between;font-size:10px"><span>${lab[0]}</span><span>${lab[1]}</span><span>${lab[2]}</span></div>`;
   function buildWiring(S, payload, wire, lo, hi, patchF, glowOn) {
     // 최신 econn 문법: AM은 본색 유지, 카본 접촉부만 표면 패치로 (감마-jet, 공동 스케일).
     const parts = payload.particles || [];
@@ -5762,7 +5762,7 @@ function showPathOnlyView(renderer, scene, camera, state) {
       <div class="path-modal-info" style="text-align:center;margin-top:10px">
         Cluster #${cidx} | ${cluster.size} SE | τ = ${pathData.tortuosity} | Path: ${pathData.path_length} μm | Z: ${pathData.z_distance} μm
       </div>
-      <div class="path-modal-context" style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:12px;color:#444">
+      <div class="path-modal-context" style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:#444">
         <label style="display:inline-flex;align-items:center;gap:4px;cursor:pointer">
           <input type="checkbox" id="path-se-context-toggle" checked> SE context
         </label>
@@ -5993,8 +5993,8 @@ function showAMCloseupView(state) {
         AM Close-up — central particle + neighborhood
       </div>
       <div id="amcu-container" style="width:100%;height:520px;border-radius:8px;overflow:hidden;background:#f5f5f5;position:relative"></div>
-      <div id="amcu-info" style="text-align:center;margin-top:10px;font-size:12px;color:#444"></div>
-      <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:12px;color:#444;flex-wrap:wrap">
+      <div id="amcu-info" style="text-align:center;margin-top:10px;font-size:13px;color:#444"></div>
+      <div style="display:flex;justify-content:center;align-items:center;gap:12px;margin-top:8px;font-size:13px;color:#444;flex-wrap:wrap">
         <button id="amcu-prev" style="padding:2px 8px">◀ Prev</button>
         <button id="amcu-next" style="padding:2px 8px">Next ▶</button>
         <label style="display:inline-flex;align-items:center;gap:6px">
@@ -6257,7 +6257,7 @@ async function showZProfileDataHub(state, defaultTab) {
       <div style="font-size:14px;font-weight:bold;margin-bottom:6px;text-align:center">
         Z-profile Data Hub
       </div>
-      <div id="zh-summary" class="path-modal-info" style="text-align:center;margin-bottom:8px;font-size:11px">
+      <div id="zh-summary" class="path-modal-info" style="text-align:center;margin-bottom:8px;font-size:12px">
         Loading…
       </div>
       <div style="display:flex;gap:4px;margin-bottom:8px;border-bottom:1px solid #e5e7eb">
@@ -6271,7 +6271,7 @@ async function showZProfileDataHub(state, defaultTab) {
         <div style="padding:30px;text-align:center;color:#888">Loading…</div>
       </div>
       <div class="path-modal-actions" style="justify-content:space-between">
-        <span id="zh-context" style="color:#6b7280;font-size:11px;align-self:center">—</span>
+        <span id="zh-context" style="color:#6b7280;font-size:12px;align-self:center">—</span>
         <span>
           <button id="zh-png-btn">PNG 다운로드</button>
           <button id="zh-csv-btn">CSV 다운로드</button>
@@ -6307,7 +6307,7 @@ async function showZProfileDataHub(state, defaultTab) {
   if (fetchErr) {
     document.getElementById('zh-content').innerHTML =
       `<div style="padding:30px;color:#b91c1c">Failed to load: ${fetchErr.message || fetchErr}<br>
-       <span style="color:#6b7280;font-size:11px">서버 로그(/tmp/flask.log) traceback 확인.</span></div>`;
+       <span style="color:#6b7280;font-size:12px">서버 로그(/tmp/flask.log) traceback 확인.</span></div>`;
     return;
   }
 
@@ -6387,7 +6387,7 @@ async function showZProfileDataHub(state, defaultTab) {
         `<div style="text-align:center;padding:10px">
            <img src="${urlOf('/combined-z-png')}" alt="Combined z-profile"
                 style="max-width:100%;height:auto;border-radius:4px">
-           <div style="font-size:11px;color:#6b7280;margin-top:6px">
+           <div style="font-size:12px;color:#6b7280;margin-top:6px">
              4-panel overlay — brittle stages + stress brackets +
              damage-vs-pressure correlation. PNG 다운로드로 고해상도 저장.
            </div>
@@ -6476,7 +6476,7 @@ function renderSeDiagnosticsHub(state) {
                  padding:8px 10px;display:flex;align-items:center;gap:10px">
        <span style="width:10px;height:18px;background:${sw};border-radius:2px;flex:none"></span>
        <div style="display:flex;flex-direction:column;line-height:1.2;flex:1;min-width:0">
-         <span style="color:#6b7280;font-size:10px">${label}</span>
+         <span style="color:#6b7280;font-size:11px">${label}</span>
          <span style="font-weight:600;color:#0f172a;font-size:13px">${val}</span>
        </div>
      </div>`;
@@ -6484,12 +6484,12 @@ function renderSeDiagnosticsHub(state) {
   const dlBtn = (kind, color, label, hint) =>
     `<button data-sed-export="${kind}"
        style="background:${color};color:#fff;border:none;border-radius:5px;
-              padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;
+              padding:8px 14px;font-size:13px;font-weight:600;cursor:pointer;
               display:flex;flex-direction:column;align-items:flex-start;gap:2px;
               min-width:170px"
        title="${hint}">
        <span>${label}</span>
-       <span style="font-weight:400;font-size:10px;opacity:.85">${hint}</span>
+       <span style="font-weight:400;font-size:11px;opacity:.85">${hint}</span>
      </button>`;
 
   return `
@@ -6510,7 +6510,7 @@ function renderSeDiagnosticsHub(state) {
       </div>
 
       <div style="border-top:1px solid #e5e7eb;padding-top:12px">
-        <div style="font-size:11px;color:#374151;font-weight:600;margin-bottom:8px">
+        <div style="font-size:12px;color:#374151;font-weight:600;margin-bottom:8px">
           📥 다운로드 — 파일별로 따로 (5종)
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:8px">
@@ -6520,7 +6520,7 @@ function renderSeDiagnosticsHub(state) {
           ${dlBtn('png_zprofile',  '#2563eb', 'PNG z-profile',  '깊이별 cut / bn / dead-end 분포 차트')}
           ${dlBtn('png_stats',     '#374151', 'PNG stats',      '요약 통계 카드 (corpus percentile 포함)')}
         </div>
-        <div style="margin-top:8px;font-size:10px;color:#6b7280;line-height:1.5">
+        <div style="margin-top:8px;font-size:11px;color:#6b7280;line-height:1.5">
           PNG stats는 corpus 비교 (cut_fraction / bn_below_frac percentile 막대)
           포함 — 27개 percolating case 중 이 case의 상대적 위치를 보여줍니다.<br>
           모든 파일은 클라이언트에서 실시간 생성. 서버 round-trip 없음.
