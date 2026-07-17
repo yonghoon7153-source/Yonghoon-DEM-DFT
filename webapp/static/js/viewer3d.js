@@ -233,9 +233,8 @@ function renderSt4Soc(state) {
     const keep = +tS.value;
     for (let ti = 0; ti < nChk; ti++) {
       tS.value = ti; upd();
-      state.renderer.render(state.scene, state.camera);      // 명시 렌더 후 캡처 (버퍼 보존 켜져 있음)
       const aEl = document.createElement('a');
-      aEl.href = state.renderer.domElement.toDataURL('image/png');
+      aEl.href = _captureHiRes(state, 3);                     // 3× 고해상 캡처 (SI/논문용)
       aEl.download = `st4_soc_f${String(ti).padStart(2, '0')}_t${st.t_s[ti]}s.png`;
       document.body.appendChild(aEl); aEl.click(); aEl.remove();
       await new Promise(res => setTimeout(res, 300));        // 브라우저 다운로드 큐 여유
@@ -490,9 +489,8 @@ function renderSt4Faces(state) {
     const keep = +tS.value;
     for (let ti = 0; ti < nChk; ti++) {
       tS.value = ti; upd();
-      state.renderer.render(state.scene, state.camera);
       const aEl = document.createElement('a');
-      aEl.href = state.renderer.domElement.toDataURL('image/png');
+      aEl.href = _captureHiRes(state, 3);                     // 3× 고해상 캡처
       aEl.download = `st4_faces_f${String(ti).padStart(2, '0')}_t${st.t_s[ti]}s.png`;
       document.body.appendChild(aEl); aEl.click(); aEl.remove();
       await new Promise(res => setTimeout(res, 300));
@@ -2732,59 +2730,41 @@ function applyViewMode(state, mode) {
     (() => {
       const cv = document.getElementById('fld-prof'), cap = document.getElementById('fld-prof-cap');
       if (!cv) return;
-      const g = cv.getContext('2d'), W = cv.width, H = cv.height, mL = 5, mR = 5, mT = 5, mB = 14;
       const pp = s3 && s3.phi_profile;
       const netKey = ionic ? 'ionic' : 'electronic';
-      let rows = [], curves = [], yLab = '', capTxt = '';
-      const pushCurve = (zs, ys, color, dash) => curves.push({ zs, ys, color, dash });
+      let rows = [], curves = [], yLab = '', capTxt = '', hdr = '';
       if (pp && pp[netKey] && pp[netKey].z_um) {              // 정확한 φ(z) = Fig4e
         const L = Math.max(...pp[netKey].z_um);
-        pushCurve(pp[netKey].z_um, pp[netKey].phi, ionic ? '#a78bfa' : '#f87171', false);
-        if (!ionic && pp.electronic_bare && pp.electronic_bare.z_um)
-          pushCurve(pp.electronic_bare.z_um, pp.electronic_bare.phi, '#f87171', true);
+        curves.push({ zs: pp[netKey].z_um, ys: pp[netKey].phi, color: ionic ? '#a78bfa' : '#f87171', dash: false });
+        const bz = (!ionic && pp.electronic_bare && pp.electronic_bare.z_um) ? pp.electronic_bare : null;
+        if (bz) curves.push({ zs: bz.z_um, ys: bz.phi, color: '#f87171', dash: true });
         yLab = 'φ (V @ΔV=1V)';
         capTxt = `φ(z) @ΔV=1V — Oh2025 Fig4e 대응${ionic ? '' : ' · 실선 정본 / 점선 bare 집전체(계면 강하)'}`;
-        const zs = pp[netKey].z_um, ys = pp[netKey].phi;
-        const bz = (!ionic && pp.electronic_bare) ? pp.electronic_bare.phi : null;
-        rows = zs.map((z, i) => [z.toFixed(2), (z / L).toFixed(4), ys[i],
-                                 bz ? bz[i] : '']);
+        hdr = 'z_um,z_over_L,phi_V,phi_bare_V';
+        rows = pp[netKey].z_um.map((z, i) => [z.toFixed(2), (z / L).toFixed(4),
+          pp[netKey].phi[i], bz ? bz.phi[i] : '']);
       } else if (fld.length) {                               // 폴백: 필드 클라우드 ⟨|J|⟩(z)
-        const NB = 24; const sum = new Float64Array(NB), cnt = new Int32Array(NB);
+        const NB = 24, sum = new Float64Array(NB), cnt = new Int32Array(NB);
         let zmx = 1e-9; for (const p of fld) if (p[2] > zmx) zmx = p[2];
         for (const p of fld) { const b = Math.max(0, Math.min(NB - 1, Math.floor(p[2] / zmx * NB))); sum[b] += p[3]; cnt[b]++; }
         const zs = [], ys = [];
         for (let b = 0; b < NB; b++) if (cnt[b]) { zs.push((b + 0.5) / NB * zmx); ys.push(sum[b] / cnt[b]); }
-        pushCurve(zs, ys, ionic ? '#a78bfa' : '#f87171', false);
+        curves.push({ zs, ys, color: ionic ? '#a78bfa' : '#f87171', dash: false });
         yLab = '⟨|J|⟩(z) 상대';
-        capTxt = `⟨|J|⟩(z) 상대 (필드 클라우드) — 정확한 φ(z) Fig4e는 <b>payload 재생성</b> 후`;
-        rows = zs.map((z, i) => [z.toFixed(2), (z / zmx).toFixed(4), ys[i].toFixed(5), '']);
+        capTxt = '⟨|J|⟩(z) 상대 (필드 클라우드 서브샘플 — 노이즈 있음) · 정확한 매끈한 φ(z) Fig4e는 <b>payload 재생성</b> 후';
+        hdr = 'z_um,z_over_L,jmag_rel';
+        rows = zs.map((z, i) => [z.toFixed(2), (z / zmx).toFixed(4), ys[i].toFixed(5)]);
       } else { cap.textContent = '프로파일 데이터 없음'; return; }
-      // 그리기
-      const allY = curves.flatMap(c => c.ys), yMin = Math.min(...allY), yMax = Math.max(...allY, yMin + 1e-9);
-      const allZ = curves.flatMap(c => c.zs), zMax = Math.max(...allZ);
-      g.fillStyle = '#0d1117'; g.fillRect(0, 0, W, H);
-      g.strokeStyle = '#2a2d3e'; g.lineWidth = 1; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
-      const PX = z => mL + z / zMax * (W - mL - mR), PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * (H - mT - mB);
-      for (const c of curves) {
-        g.strokeStyle = c.color; g.lineWidth = 1.7; g.setLineDash(c.dash ? [4, 3] : []);
-        g.beginPath();
-        c.zs.forEach((z, i) => { const x = PX(z), y = PY(c.ys[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); });
-        g.stroke();
-      }
-      g.setLineDash([]);
-      g.fillStyle = '#6b7280'; g.font = '10px Inter,sans-serif';
-      g.textAlign = 'left'; g.fillText('집전체', mL + 1, H - 3);
-      g.textAlign = 'right'; g.fillText('분리막', W - mR - 1, H - 3);
-      g.save(); g.translate(9, mT + 2); g.textAlign = 'left'; g.fillText(yLab, 0, 0); g.restore();
+      drawZProfileCanvas(cv, curves, yLab);                  // 인라인 미리보기
       cap.innerHTML = capTxt;
-      state._fldProf = { rows, header: 'z_um,z_over_L,' + (yLab.startsWith('φ') ? 'phi_V,phi_bare_V' : 'jmag_rel,') };
+      state._fldProf = { rows, header: hdr, curves, yLab };  // 고해상 export용 원자료 보존
     })();
     const pfBtn = document.getElementById('fld-prof-dl');
     if (pfBtn) pfBtn.onclick = () => {
-      const cv = document.getElementById('fld-prof'), pr = state._fldProf;
-      if (!cv || !pr) return;
-      const big = document.createElement('canvas'); big.width = cv.width * 3; big.height = cv.height * 3;
-      const bg = big.getContext('2d'); bg.imageSmoothingEnabled = false; bg.drawImage(cv, 0, 0, big.width, big.height);
+      const pr = state._fldProf;
+      if (!pr) return;
+      const big = document.createElement('canvas'); big.width = 1200; big.height = 660;   // 고해상 재그리기
+      drawZProfileCanvas(big, pr.curves, pr.yLab);
       const tag = (ionic ? 'ion' : 'elec') + '_zprofile';
       const a1 = document.createElement('a'); a1.href = big.toDataURL('image/png'); a1.download = tag + '.png';
       document.body.appendChild(a1); a1.click(); a1.remove();
@@ -4696,6 +4676,42 @@ function _wiringCounts(particles, addPts, addCounts, boxLx, boxLy) {
 /* 논문용 컬러바 PNG — 뷰어와 동일 감마·컬러맵 (⚖ 팝업 + 단독 뷰어 공용, 6× 인쇄 해상).
    spec.ticks = [{p:0..1, label}] 수치 눈금 (바 x축은 값에 선형 — 감마는 색에만 적용되므로
    눈금 위치는 선형 그대로가 정확); spec.sub = 부제(단위 환산) 한 줄. */
+/* z-프로파일 크리스프 렌더 (인라인 미리보기 + 고해상 export 공용) — 어떤 캔버스 크기든
+   선폭·폰트·여백을 120px 기준으로 스케일해 또렷하게 그린다 (확대-뭉갬 방지). */
+function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
+  const g = cv.getContext('2d'), W = cv.width, H = cv.height, k = H / 120;
+  const mL = 6 * k, mR = 6 * k, mT = 6 * k, mB = 16 * k;
+  const allY = curves.flatMap(c => c.ys), yMin = Math.min(...allY), yMax = Math.max(...allY, yMin + 1e-9);
+  const zMax = Math.max(...curves.flatMap(c => c.zs), 1e-9);
+  g.fillStyle = '#0d1117'; g.fillRect(0, 0, W, H);
+  g.strokeStyle = '#2a2d3e'; g.lineWidth = 1 * k; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
+  const PX = z => mL + z / zMax * (W - mL - mR), PY = y => mT + (1 - (y - yMin) / (yMax - yMin)) * (H - mT - mB);
+  for (const c of curves) {
+    g.strokeStyle = c.color; g.lineWidth = 1.8 * k; g.setLineDash(c.dash ? [4 * k, 3 * k] : []);
+    g.beginPath();
+    c.zs.forEach((z, i) => { const x = PX(z), y = PY(c.ys[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); });
+    g.stroke();
+  }
+  g.setLineDash([]);
+  g.fillStyle = '#9ca3af'; g.font = `${10.5 * k}px Inter,sans-serif`;
+  g.textAlign = 'left'; g.fillText(leftLab || '집전체', mL + 1.5 * k, H - 4.5 * k);
+  g.textAlign = 'right'; g.fillText(rightLab || '분리막', W - mR - 1.5 * k, H - 4.5 * k);
+  g.textAlign = 'left'; g.fillText(yLab, mL + 4 * k, mT + 11 * k);
+}
+
+/* 3D 뷰 고해상 캡처 — 렌더 버퍼를 일시적으로 scale배 키워 render→toDataURL 후 복원.
+   CSS 표시크기는 그대로(updateStyle=false), 종횡비 불변이라 카메라 갱신 불필요. */
+function _captureHiRes(state, scale) {
+  const r = state.renderer, cv = r.domElement;
+  const pr = r.getPixelRatio(), dw = cv.width / pr, dh = cv.height / pr;   // CSS px
+  r.setPixelRatio(1); r.setSize(dw * scale, dh * scale, false);
+  r.render(state.scene, state.camera);
+  const url = cv.toDataURL('image/png');
+  r.setSize(dw, dh, false); r.setPixelRatio(pr);
+  r.render(state.scene, state.camera);
+  return url;
+}
+
 function exportColorbarPNG(spec, fname) {
   const sp = spec || { map: 'jet', gamma: 1.6, title: '|J| (normalized)', left: '0', right: 'high' };
   const S2 = 6, W2 = 470 * S2, H2 = (sp.sub ? 96 : 80) * S2;
