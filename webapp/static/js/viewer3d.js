@@ -373,7 +373,7 @@ function injectCSS() {
 .viewer-zoom button:hover{background:#777}
 .viewer-zoom input[type=range]{width:100px;accent-color:#6c8cff}
 .path-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center}
-.path-modal{background:#fff;border-radius:12px;padding:20px;max-width:90vw;max-height:90vh;position:relative}
+.path-modal{background:#fff;border-radius:12px;padding:20px;max-width:90vw;max-height:90vh;position:relative;overflow-y:auto;overscroll-behavior:contain}
 .path-modal img{max-width:100%;max-height:75vh;border-radius:8px;border:1px solid #ddd}
 .path-modal-info{margin-top:10px;font:12px/1.5 'JetBrains Mono',monospace;color:#333}
 .path-modal-actions{display:flex;gap:8px;margin-top:12px;justify-content:flex-end}
