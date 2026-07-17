@@ -1,5 +1,8 @@
 # Digest → MODEL APPLICATION backlog (안 적용한 것 추적, LIVING)
 
+> ★ **깔끔한 해결/잔여 분류판 = `docs/backlog_solved_vs_todo.md`** (2026-07-18) — 이 파일은 상세 근거·
+> 커밋의 정본(LIVING).  "뭐 닫혔고 뭐 남았나" 한눈에 보려면 분류판을 먼저.
+
 논문 digest에서 "모델에 적용하자"로 식별했으나 **아직 코드/모델에 반영 안 한** 항목 추적.  digest는 끝나도
 **적용은 별개** — 이 표가 그 잔여작업.  (출처: stage2_model_audit_vs_literature.md E2/E3/E4 + 각 lit_*.md +
 사용자 enhancement 리스트 "σ_e 방향 + Phase5 graded-z + MPM --coh E3 + dispersion CV E2 + pore-τ DiffuDict".)
