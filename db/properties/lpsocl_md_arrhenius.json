@@ -1,0 +1,41 @@
+{
+ "system": "lpsocl (O-doped LPSCl1.6, 62at)",
+ "date": "2026-07-18",
+ "method": "UMA-s-1p1 omat, 2-50ps window, 3pt Arrhenius, NE Haven=1",
+ "D_600_seeds_cm2s": [
+  3.887e-06,
+  6.405e-06,
+  5.82e-06,
+  8.97e-06
+ ],
+ "D_600_mean": 6.2704999999999995e-06,
+ "D_600_std": 2.0967763352346385e-06,
+ "D_800_single": 2.085e-05,
+ "D_1000_single": 5.525e-05,
+ "Ea_eV_central": 0.2779,
+ "Ea_eV": "0.284 +/- 0.047",
+ "Ea_per_seed": [
+  0.3435,
+  0.275,
+  0.2882,
+  0.2288
+ ],
+ "D0_cm2_s": 0.0013029290209654785,
+ "D_300K": 2.7923256728473355e-08,
+ "vs_modelc": "Ea +60 meV (0.28 vs 0.22); DIRECTION higher, ~1sigma (800/1000 single-seed). Consistent with O POS3 electrostatic Li-trap (ICOHP Li-O modest but O charge deepest) + wang2022 O-doping sigma reduction.",
+ "discipline": "800/1000 K single-seed -> central Ea has extra unquantified uncertainty; sigma300 absolute NOT reportable (single-seed); sigma ratio needs multiseed both sides (do NOT repeat the retracted 1.33x error).",
+ "anchors_same_window": {
+  "modelc_Ea": 0.2235,
+  "b2o3_Ea": 0.2234,
+  "modelc_D": [
+   7.901e-06,
+   2.054e-05,
+   4.554e-05
+  ],
+  "b2o3_D": [
+   9.174e-06,
+   3.009e-05,
+   5.067e-05
+  ]
+ }
+}
