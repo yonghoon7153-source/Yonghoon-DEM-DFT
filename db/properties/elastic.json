@@ -1,332 +1,806 @@
 {
-  "property": "elastic_constants",
-  "description": "Elastic constants: DFT 0K clamped-ion, MLIP 300K unit cell, MLIP 300K 2x2x1 SC, MLIP 600K snapshot (paper)",
-
-  "dft_0K_clamped_ion": {
-    "_version": "v1 (legacy, ordered-Li 0K, energy-curvature C_ii + cubic-symmetry C12 from BM K)",
-    "method": "QE finite strain ±0.005, 6 patterns x pos/neg = 12 SCF, kbar->GPa, QE sign flip",
-    "notes": "Ordered Li -> cooperative shear -> C44 overestimated. Reference only, NOT for paper. For paper-quality finite-T values, see mlip_600K_snapshot (also v1 lineage) or the new dft_0K_clamped_ion_stress_strain_full_Cij (v3 lineage, annealed Li, full 6×6 Cij).",
-    "results": [
-      {"id": "comp1",   "version": "v1", "C11": 74.4, "C12": 29.4, "C44": 37.9, "K": 44.4, "G": 30.3, "E": 76.9, "nu": 0.178},
-      {"id": "comp2",   "version": "v1", "C11": 73.4, "C12": 29.2, "C44": 37.4, "K": 43.9, "G": 29.7, "E": 75.9, "nu": 0.178},
-      {"id": "comp3",   "version": "v1", "C11": 85.6, "C12": 21.0, "C44": 27.5, "K": 42.5, "G": 29.2, "E": 71.7, "nu": 0.200},
-      {"id": "comp4",   "version": "v1", "C11": 85.5, "C12": 20.9, "C44": 27.3, "K": 42.4, "G": 29.1, "E": 71.5, "nu": 0.200},
-      {"id": "comp5_A", "version": "v1", "C11": 87.4, "C12": 20.6, "C44": 39.9, "K": 42.9, "G": 37.1, "E": 86.5, "nu": 0.164},
-      {"id": "comp5_B", "version": "v1", "C11": 84.6, "C12": 20.4, "C44": 27.2, "K": 41.8, "G": 29.1, "E": 70.9, "nu": 0.196},
-      {"id": "modelc",  "version": "v1", "C11": 85.3, "C12": 25.6, "C44": 28.0, "K": 43.7, "G": 30.0, "E": 73.3, "nu": 0.221, "notes": "ordered Li 0K, supersedes_by: modelc_v3 (annealed)"}
-    ]
-  },
-
-  "dft_0K_clamped_ion_stress_strain_full_Cij": {
-    "method": "QE finite strain ±0.005, 12 SCF (6 Voigt patterns × ±h), full 6×6 Cij extracted from stress tensor σ = -(1/V) ∂E/∂ε with QE sign flip. Off-diagonal C12/C13/C23 measured directly via the column-by-column approach (one strain SCF gives one Cij column). No external bulk modulus K needed.",
-    "advantage_over_energy_method": "Energy curvature only recovers diagonal Voigt C_ii. Stress-strain gives the full 6×6 matrix in the same 12 SCFs, including the off-diagonal cross-coupling, with a built-in cross-check (Cij = Cji symmetry).",
-    "_comp1_v3_redo_note": "Original comp1_v3 entry (E_VRH=55.64 at v2 cell V≈979 Å³) was retracted 2026-06-03. Replaced 2026-06-03 with the entry below, computed at the true BM-EOS V0 (1016.62 Å³, a=10.055 Å, V0_relax converged 18 BFGS steps, fmax<1e-4) — paper-grade. Archive of v2-cell SCFs on container: /home/ubuntu/work/runs/comp1_v3/archive_v2_post/.",
-    "results": [
-      {
-        "id": "comp1_v3",
-        "composition": "Li6PS5Cl",
-        "lineage": "comp1 v2 anneal champion → V0_relax at BM-EOS V0=1016.62 Å³ → 12 strain SCFs (±0.005) at V0",
-        "C11_avg": 74.23, "C11_std": 5.33, "C11_C22_C33_individual": [66.70, 78.30, 77.70],
-        "C12_avg": 29.23, "C12_std": 0.51, "C12_C13_C23_individual": [28.95, 28.80, 29.95],
-        "C44_avg": 18.98, "C44_std": 0.90, "C44_C55_C66_individual": [20.25, 18.40, 18.30],
-        "B_Voigt": 44.23, "B_Reuss": 42.94, "B_VRH": 43.59,
-        "G_Voigt": 20.39, "G_Reuss": 19.85, "G_VRH": 20.12,
-        "E_VRH": 52.31, "nu": 0.3000, "Zener_A": 1.073,
-        "eigenvalues_GPa": [17.35, 18.84, 19.35, 42.32, 48.05, 133.74],
-        "mechanically_stable": true,
-        "strain_step": 0.005, "n_scfs": 12,
-        "qe_sign_flip_applied": true,
-        "completed_date": "2026-06-03",
-        "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/elastic_static/elastic_results_stress.json",
-        "scf_source": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/elastic_static/strain_{11,22,33,23,13,12}_{p,m}.out",
-        "vs_modelc_v3_same_method_at_true_V0": {
-          "C11_pct":  "-17.4% (89.87 → 74.23): comp1 softer in normal compression on its principal axes",
-          "C12_pct":  "+34% (21.82 → 29.23): comp1 stronger cross-coupling (no vacancy)",
-          "C44_pct":  "+31% (14.43 → 18.98): comp1 stiffer shear (no vacancy)",
-          "B_VRH_pct": "-2.0% (44.47 → 43.59): bulk modulus essentially identical between systems",
-          "G_VRH_pct": "+0.4% (20.05 → 20.12): shear essentially identical",
-          "E_VRH_pct": "0.0% (52.30 → 52.31): Young's modulus IDENTICAL at DFT 0K — VACANCY PARADOX confirmed",
-          "Zener_A_delta": "0.416 → 1.073: comp1 ISOTROPIC (Li6 fully ordered, no vacancy), modelc_v3 highly anisotropic (Li vacancy + Cl anti-site disorder breaks isotropy)",
-          "headline": "At DFT 0K, B/G/E are essentially identical (±2%) between LPSCl and LPSCl1.6 — DFT misses the experimentally observed LPSCl1.6 stiffening. Anisotropy difference is the only Cij-level fingerprint of vacancy/disorder. Finite-T effects (phonon anharmonic stiffening, Li dynamic redistribution) need to explain the experimental Young's modulus delta."
-        },
-        "vs_BM_EOS_K": {
-          "B_VRH_GPa": 43.59,
-          "B0_BM_GPa": 26.233,
-          "ratio_VRH_over_BM": 1.66,
-          "note": "K_VRH (clamped-ion, harmonic only) > B0_BM (full hydrostatic E(V)). Typical ratio 1.5-2× for soft Cl-rich argyrodites. Both methods reach physically meaningful but distinct quantities — report both."
-        }
-      },
-      {
-        "id": "modelc_v3",
-        "composition": "Li5.4PS4.4Cl1.6",
-        "C11_avg": 89.87, "C11_std": 3.16, "C11_C22_C33_individual": [85.40, 92.30, 91.90],
-        "C12_avg": 21.82, "C12_std": 2.43, "C12_C13_C23_individual": [20.30, 25.25, 19.90],
-        "C44_avg": 14.43, "C44_std": 1.25, "C44_C55_C66_individual": [13.55, 16.20, 13.55],
-        "B_Voigt": 44.50, "B_Reuss": 44.44, "B_VRH": 44.47,
-        "G_Voigt": 22.27, "G_Reuss": 17.83, "G_VRH": 20.05,
-        "E_VRH": 52.30, "nu": 0.3040, "Zener_A": 0.416,
-        "eigenvalues_GPa": [11.56, 12.67, 18.14, 63.78, 73.14, 133.61],
-        "mechanically_stable": true,
-        "strain_step": 0.005, "n_scfs": 12,
-        "qe_sign_flip_applied": true,
-        "completed_date": "2026-06-02",
-        "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_static/elastic_results_stress.json",
-        "vs_modelc_v1_DFT_clamped_ion": {
-          "C11_pct": "+5.4%",
-          "C12_pct": "-14.8%",
-          "C44_pct": "-48.6% (28.0 → 14.4 GPa)",
-          "K_pct": "+1.8% (43.7 → 44.47 GPa)  ← cross-validates stress-strain method",
-          "G_pct": "-33.2% (30.0 → 20.05 GPa)",
-          "E_pct": "-28.6% (73.3 → 52.30 GPa)",
-          "nu_delta": "+37.5% (0.221 → 0.304)",
-          "interpretation": "C11/K consistent with modelc v1 → same composition confirmed. C44/G/E reduced by ~30-50% → modelC_v3 likely captures Li-disorder basin (no longer ordered 0K minimum). C44=14.4 is very close to modelc_v2_mlip_600K C44=12.9, supporting interpretation that v3 represents the thermally-accessible Li configuration ensemble."
-        },
-        "vs_modelc_v2_mlip_600K": {
-          "C44_match_GPa": "14.4 (DFT v3) vs 12.9 (MLIP 600K) → 12% delta, within MLIP-DFT typical agreement",
-          "K_match_GPa": "44.47 (DFT v3) vs 23.4 (MLIP 600K) → 90% delta — MLIP underestimates bulk modulus; expected discrepancy at finite-T MD-quenched configurations"
-        }
-      }
-    ]
-  },
-
-  "dft_0K_relaxed_ion_stress_strain_full_Cij": {
-    "method": "Same 12 strain SCFs (±0.005, 6 Voigt) but with atoms ALLOWED TO RELAX at each fixed strained cell (calculation='relax', cell_dofree='none' implicit, BFGS conv_thr 1e-4 Ry/au). Stress measured AT the relaxed atomic positions → includes ionic Born screening. Compared to clamped-ion which freezes atoms at V0 positions.",
-    "vacancy_paradox_role": "Clamped-ion DFT systematically over-estimates argyrodite elastic moduli (E_VRH 52.31 GPa for LPSCl vs experiment ~23 GPa, ~2.3× too stiff). Allowing ion relaxation recovers experimentally consistent values. This is the physics behind why the 'clamped-ion vacancy paradox' (LPSCl ≈ LPSCl1.6 elastically at static 0K) needs finite-T or relaxed-ion to resolve.",
-    "results": [
-      {
-        "id": "comp1_v3",
-        "composition": "Li6PS5Cl",
-        "lineage": "comp1 V0_relax (k444, kxL=40) at BM-EOS V0 → 12 strain relax SCFs (BFGS atom-only, fixed strained cell, k=4x4x4)",
-        "k_mesh": "4x4x4 (k×L=40) — PAPER-GRADE, supersedes earlier k221 run (values within ~1%, geometry RMS 0.003 Å)",
-        "C11_avg": 37.67, "C11_std": 1.20, "C11_C22_C33_individual": [36.00, 38.80, 38.20],
-        "C12_avg": 20.43, "C12_std": 1.33, "C12_C13_C23_individual": [19.65, 19.35, 22.30],
-        "C44_avg": 7.98, "C44_std": 0.97, "C44_C55_C66_individual": [9.35, 7.30, 7.30],
-        "B_Voigt": 26.18, "B_Reuss": 24.84, "B_VRH": 25.51,
-        "G_Voigt": 8.24, "G_Reuss": 8.03, "G_VRH": 8.13,
-        "E_VRH": 22.06, "nu": 0.3559, "Zener_A": 1.144,
-        "eigenvalues_GPa": [6.80, 7.80, 8.73, 16.20, 18.33, 79.10],
-        "mechanically_stable": true,
-        "strain_step": 0.005, "n_scfs": 12,
-        "qe_sign_flip_applied": true,
-        "completed_date": "2026-06-05",
-        "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/elastic_relaxed_ion/elastic_results_stress.json",
-        "vs_experiment": "E_VRH = 22.06 GPa matches literature LPSCl (~23 GPa, e.g. He et al.). G_VRH = 8.13 matches ~8 GPa expt. B_VRH = 25.51 close to BM-EOS B0 = 26.23 GPa (Δ3%) — internal cross-check.",
-        "vs_k221_prior": "Earlier k221 relaxed-ion gave E_VRH 22.33 / B 25.18 / G 8.26; k444 gives 22.06 / 25.51 / 8.13 — within ~1%, confirming elastic is geometry-driven (RMS 0.003 Å) and k444-robust here.",
-        "vs_clamped_ion": {
-          "C11_ratio": "37.67 / 74.23 = 0.51 (clamped 2.0× stiffer)",
-          "C44_ratio": "7.98 / 18.98 = 0.42 (clamped 2.4× stiffer in shear)",
-          "B_VRH_ratio": "25.51 / 43.59 = 0.59 (clamped 1.7× stiffer in bulk)",
-          "E_VRH_ratio": "22.06 / 52.31 = 0.42 (clamped 2.4× over-estimate)",
-          "headline": "Clamped-ion DFT massively over-estimates elastic moduli. Ion relaxation under strain recovers experimentally consistent values. Argyrodite Li sublattice softness is the dominant ion-screening contribution."
-        }
-      },
-      {
-        "id": "modelc_v3",
-        "composition": "Li5.4PS4.4Cl1.6",
-        "lineage": "modelc V0_relax at BM-EOS V0=1216.44 Å³ → 12 strain relax SCFs (BFGS atom-only, fixed strained cell)",
-        "C11_avg": 37.03, "C11_std": 3.21, "C11_C22_C33_individual": [39.40, 32.50, 39.20],
-        "C12_avg": 16.82, "C12_std": 2.06, "C12_C13_C23_individual": [14.70, 16.15, 19.60],
-        "C44_avg": 13.68, "C44_std": 6.25, "C44_C55_C66_individual": [17.80, 18.40, 4.85],
-        "B_Voigt": 23.56, "B_Reuss": 23.24, "B_VRH": 23.40,
-        "G_Voigt": 12.25, "G_Reuss": 8.97, "G_VRH": 10.61,
-        "E_VRH": 27.66, "nu": 0.3030, "Zener_A": 1.441,
-        "eigenvalues_GPa": [4.45, 12.84, 17.41, 19.25, 27.30, 70.91],
-        "mechanically_stable": true,
-        "strain_step": 0.005, "n_scfs": 12,
-        "qe_sign_flip_applied": true,
-        "completed_date": "2026-06-04",
-        "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_relaxed_ion/elastic_results_stress.json",
-        "vs_comp1_v3_relaxed": {
-          "E_VRH_delta_pct": "+25.4% (22.06 → 27.66)",
-          "G_VRH_delta_pct": "+30.5% (8.13 → 10.61) — primary stiffening contributor",
-          "B_VRH_delta_pct": "-8.3% (25.51 → 23.40) — slight bulk softening",
-          "Zener_A_delta": "+26% (1.14 → 1.44) — anisotropy increase = disorder fingerprint",
-          "_baseline_note": "Deltas use the PAPER-GRADE k444 comp1 relaxed-ion baseline (22.06/25.51/8.13). Earlier k221 baseline (22.33/25.18/8.26) gave +23.9/+28.4/-7.1% — within ~2pp, both legitimate; slide M4 uses these k444 numbers.",
-          "headline": "★ VACANCY PARADOX RESOLVED ★ — LPSCl1.6 is +25% stiffer (E) than LPSCl at DFT 0K relaxed-ion, MATCHING experimental trend (Kim 2025). Stiffening is primarily SHEAR (G_VRH +30%) while bulk is slightly soft (-8%). The shear-dominant stiffening + anisotropy increase reflects vacancy + 4d-Cl anti-site lock-in of certain shear configurations."
-        }
-      }
-    ]
-  },
-
-  "_old_modelc_v3_running_placeholder_replaced": "completed 2026-06-04 with values above",
-
-  "mlip_300K_unit_cell": {
-    "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
-    "method": "MACE CPU, 300K Langevin 5ps -> quench -> relaxed-ion Cij",
-    "results": [
-      {"id": "comp1",  "version": "v1", "C11": 40.1, "C12": 15.7, "C44": 25.0, "K": 23.7, "G": 18.6, "E": 44.3, "nu": 0.188},
-      {"id": "comp2",  "version": "v1", "C11": 39.5, "C12": 17.0, "C44": 22.8, "K": 24.4, "G": 17.0, "E": 41.4, "nu": 0.217},
-      {"id": "comp3",  "version": "v1", "C11": 54.3, "C12": 15.0, "C44": 14.5, "K": 28.1, "G": 15.3, "E": 39.0, "nu": 0.269},
-      {"id": "comp4",  "version": "v1", "C11": 46.2, "C12": 7.7,  "C44": 13.9, "K": 20.5, "G": 15.1, "E": 36.4, "nu": 0.204},
-      {"id": "comp5_A","version": "v1", "C11": 26.1, "C12": 14.2, "C44": 12.1, "K": 18.2, "G": 8.4,  "E": 21.7, "nu": 0.289},
-      {"id": "comp5_B","version": "v1", "C11": 44.7, "C12": 11.4, "C44": 14.2, "K": 22.4, "G": 14.6, "E": 36.0, "nu": 0.233}
-    ]
-  },
-
-  "mlip_300K_supercell_2x2x1": {
-    "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
-    "method": "MACE, 2x2x1 SC (208-248 atoms), 300K MD -> quench -> Cij",
-    "results": [
-      {"id": "comp1",  "C11": 48.8, "C12": 25.2, "C44": 24.7, "K": 33.0, "G": 18.3, "E": 46.4, "nu": 0.266},
-      {"id": "comp2",  "C11": 42.1, "C12": 19.3, "C44": 24.0, "K": 26.5, "G": 17.6, "E": 43.3, "nu": 0.227},
-      {"id": "comp3",  "C11": 47.8, "C12": 9.2,  "C44": 13.4, "K": 22.0, "G": 15.0, "E": 36.6, "nu": 0.223},
-      {"id": "comp4",  "C11": 48.6, "C12": 8.1,  "C44": 14.6, "K": 21.5, "G": 16.0, "E": 38.5, "nu": 0.202},
-      {"id": "comp5_A","C11": 30.3, "C12": 15.0, "C44": 8.4,  "K": 20.1, "G": 8.7,  "E": 23.0, "nu": 0.319},
-      {"id": "comp5_B","C11": 48.1, "C12": 8.1,  "C44": 13.9, "K": 21.3, "G": 15.2, "E": 36.9, "nu": 0.212}
-    ]
-  },
-
-  "mlip_600K_snapshot": {
-    "_version": "v1 (legacy MACE, ordered-Li 0K starting structure → 600 K MD)",
-    "_lineage_note": "comp1-5, modelc rows below all START from v1 ordered-Li structures. For modelC_v3 (annealed Li + DFT-relaxed V0), see mlip_600K_snapshot_v3 section below.",
-    "method": "MACE, 600K MD 10-18ps -> 5 snapshots -> quench -> FIRE relax -> finite-strain Cij -> VRH avg +/- SD",
-    "temperature_K": 600,
-    "n_snapshots": 5,
-    "includes_Li_disorder": true,
-    "includes_thermal_vibration": false,
-    "paper_values": true,
-    "results": [
-      {"id": "comp1",  "version": "v1", "C11": 33.1, "C11_std": 1.2, "C12": 15.0, "C12_std": 0.5, "C44": 13.1, "C44_std": 0.6, "K": 21.0, "G": 11.5, "E": 29.1, "E_std": 1.1},
-      {"id": "comp2",  "version": "v1", "C11": 33.1, "C11_std": 1.0, "C12": 15.2, "C12_std": 0.4, "C44": 12.7, "C44_std": 0.5, "K": 21.2, "G": 11.2, "E": 28.6, "E_std": 1.1, "expt_E": null},
-      {"id": "comp3",  "version": "v1", "C11": 34.5, "C11_std": 0.8, "C12": 14.0, "C12_std": 0.3, "C44": 10.9, "C44_std": 0.4, "K": 20.9, "G": 10.6, "E": 27.3, "E_std": 0.4, "expt_E": null},
-      {"id": "comp4",  "version": "v1", "C11": 33.4, "C11_std": 1.1, "C12": 14.1, "C12_std": 0.5, "C44": 10.7, "C44_std": 0.6, "K": 20.5, "G": 10.3, "E": 26.4, "E_std": 1.6, "expt_E": null},
-      {"id": "comp5_A","version": "v1", "C11": 34.9, "C11_std": 1.5, "C12": 17.1, "C12_std": 0.7, "C44": 14.0, "C44_std": 0.8, "K": 23.0, "G": 11.7, "E": 30.0, "expt_E": null},
-      {"id": "comp5_B","version": "v1", "C11": 32.8, "C11_std": 1.2, "C12": 13.1, "C12_std": 0.4, "C44": 10.2, "C44_std": 0.3, "K": 19.6, "G": 10.1, "E": 25.8, "E_std": 0.8, "expt_E": null},
-      {"id": "modelc", "version": "v1", "C11": 39.3, "C11_std": 1.1, "C12": 15.4, "C12_std": 0.7, "C44": 12.9, "C44_std": 0.7, "K": 23.4, "G": 13.0, "E": 32.9, "E_std": 0.9, "expt_E": null, "notes": "Sign-corrected. Cl-only, highest E! v1 ordered-Li start; superseded by modelc_v3 once new MLIP 600K snapshot (Pipeline v2 §8e v3) finishes."}
+ "property": "elastic_constants",
+ "description": "Elastic constants: DFT 0K clamped-ion, MLIP 300K unit cell, MLIP 300K 2x2x1 SC, MLIP 600K snapshot (paper)",
+ "dft_0K_clamped_ion": {
+  "_version": "v1 (legacy, ordered-Li 0K, energy-curvature C_ii + cubic-symmetry C12 from BM K)",
+  "method": "QE finite strain ±0.005, 6 patterns x pos/neg = 12 SCF, kbar->GPa, QE sign flip",
+  "notes": "Ordered Li -> cooperative shear -> C44 overestimated. Reference only, NOT for paper. For paper-quality finite-T values, see mlip_600K_snapshot (also v1 lineage) or the new dft_0K_clamped_ion_stress_strain_full_Cij (v3 lineage, annealed Li, full 6×6 Cij).",
+  "results": [
+   {
+    "id": "comp1",
+    "version": "v1",
+    "C11": 74.4,
+    "C12": 29.4,
+    "C44": 37.9,
+    "K": 44.4,
+    "G": 30.3,
+    "E": 76.9,
+    "nu": 0.178
+   },
+   {
+    "id": "comp2",
+    "version": "v1",
+    "C11": 73.4,
+    "C12": 29.2,
+    "C44": 37.4,
+    "K": 43.9,
+    "G": 29.7,
+    "E": 75.9,
+    "nu": 0.178
+   },
+   {
+    "id": "comp3",
+    "version": "v1",
+    "C11": 85.6,
+    "C12": 21.0,
+    "C44": 27.5,
+    "K": 42.5,
+    "G": 29.2,
+    "E": 71.7,
+    "nu": 0.2
+   },
+   {
+    "id": "comp4",
+    "version": "v1",
+    "C11": 85.5,
+    "C12": 20.9,
+    "C44": 27.3,
+    "K": 42.4,
+    "G": 29.1,
+    "E": 71.5,
+    "nu": 0.2
+   },
+   {
+    "id": "comp5_A",
+    "version": "v1",
+    "C11": 87.4,
+    "C12": 20.6,
+    "C44": 39.9,
+    "K": 42.9,
+    "G": 37.1,
+    "E": 86.5,
+    "nu": 0.164
+   },
+   {
+    "id": "comp5_B",
+    "version": "v1",
+    "C11": 84.6,
+    "C12": 20.4,
+    "C44": 27.2,
+    "K": 41.8,
+    "G": 29.1,
+    "E": 70.9,
+    "nu": 0.196
+   },
+   {
+    "id": "modelc",
+    "version": "v1",
+    "C11": 85.3,
+    "C12": 25.6,
+    "C44": 28.0,
+    "K": 43.7,
+    "G": 30.0,
+    "E": 73.3,
+    "nu": 0.221,
+    "notes": "ordered Li 0K, supersedes_by: modelc_v3 (annealed)"
+   }
+  ]
+ },
+ "dft_0K_clamped_ion_stress_strain_full_Cij": {
+  "method": "QE finite strain ±0.005, 12 SCF (6 Voigt patterns × ±h), full 6×6 Cij extracted from stress tensor σ = -(1/V) ∂E/∂ε with QE sign flip. Off-diagonal C12/C13/C23 measured directly via the column-by-column approach (one strain SCF gives one Cij column). No external bulk modulus K needed.",
+  "advantage_over_energy_method": "Energy curvature only recovers diagonal Voigt C_ii. Stress-strain gives the full 6×6 matrix in the same 12 SCFs, including the off-diagonal cross-coupling, with a built-in cross-check (Cij = Cji symmetry).",
+  "_comp1_v3_redo_note": "Original comp1_v3 entry (E_VRH=55.64 at v2 cell V≈979 Å³) was retracted 2026-06-03. Replaced 2026-06-03 with the entry below, computed at the true BM-EOS V0 (1016.62 Å³, a=10.055 Å, V0_relax converged 18 BFGS steps, fmax<1e-4) — paper-grade. Archive of v2-cell SCFs on container: /home/ubuntu/work/runs/comp1_v3/archive_v2_post/.",
+  "results": [
+   {
+    "id": "comp1_v3",
+    "composition": "Li6PS5Cl",
+    "lineage": "comp1 v2 anneal champion → V0_relax at BM-EOS V0=1016.62 Å³ → 12 strain SCFs (±0.005) at V0",
+    "C11_avg": 74.23,
+    "C11_std": 5.33,
+    "C11_C22_C33_individual": [
+     66.7,
+     78.3,
+     77.7
     ],
-    "trend": "With ModelC: ModelC(32.6) > comp1(29.1) > comp2(28.6) > comp3(27.3) > comp4(26.4) > comp5(25.8). Br up E down, Cl-only = most rigid."
-  },
-
-  "mlip_600K_snapshot_v3": {
-    "_version": "v3 (comp1_v3 + modelC_v3 — BOTH annealed Li, DFT-relaxed V0 starting structures, SAME UMA + SAME script → directly comparable)",
-    "_purpose": "MLIP 600K snapshot elastic for the Paper#1 pair. comp1_v3 (LPSCl) added 2026-06-08 (v100 PID 1851258, runtime 46.7 min); modelC_v3 (LPSCl1.6) from 2026-06-02. Identical method/params → the comp1-vs-modelc 600K comparison is method-clean (UMA-vs-UMA). Do NOT cross-compare absolute magnitude with the DFT-0K rows (UMA≠QE absolute scale); only within-method comparisons are valid.",
-    "method": "UMA-s-1p1 (task=omat) Langevin 600 K, equilib 10 ps + prod 20 ps, 5 snapshots, FIRE quench (fmax 0.01), per-strain FIRE RELAXED-ION Cij (fmax 0.05) full 6×6, no QE sign flip (FAIRChem returns physical-convention stress).",
-    "script": "tools/modelc_v3/elastic_mlip_600K.py",
-    "completed_date": "2026-06-02 (modelc_v3); 2026-06-08 (comp1_v3)",
-    "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json ; container:/home/ubuntu/work/runs/comp1_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json",
-    "_USAGE_2026_06_08": "DEMOTED to SUPPORTING / SI-only — do NOT lead a talk or the paper main figure with the 600K row. Decision (user, 2026-06-08): the core mechanical story is fully carried by the DFT 0K clamped-vs-relaxed-ion pair (same QE footing, attack-proof). The 600K MLIP row adds a 'second re-flip' but requires a cross-method (UMA≠QE absolute scale) asterisk — e.g. 600K E=59.7 > 0K-clamped E=52.3 looks unphysical to a reader and the disclaimer weakens the slide. Keep the computed data here for completeness / reviewer 'what about finite-T?' rebuttal, but HEADLINE = 2-regime DFT (clamped identical → relaxed-ion inverts). The relaxed-ion inversion IS the disorder-jamming evidence on its own.",
-    "_three_regime_synthesis": {
-      "headline": "modelc's compositional disorder PRE-JAMS (already at 0K) the soft collective Li-sublattice shear mode that comp1 only loses upon heating. → the relaxed-ion 0K inversion (comp1<modelc) DISAPPEARS/RE-FLIPS at 600K (comp1>modelc). [SUPPORTING — see _USAGE_2026_06_08; lead with the 2-regime DFT story, not this.]",
-      "clamped_0K_DFT": "comp1 ≈ modelc (E≈52.3, G≈20.1, identical) — frozen-ion = pure PS4 framework bonding stiffness, which Cl-enrichment+vacancy leaves UNCHANGED.",
-      "relaxed_ion_0K_DFT": "comp1 (E=22.06, G=8.13) < modelc (E=27.66, G≈10) — INVERSION. comp1's fully ordered Li sublattice keeps a soft collective shear mode alive (Born screening collapses G); modelc's Cl-excess + Li-vacancy disorder jams that mode → stiffer.",
-      "mlip_600K_UMA": "comp1 (E=59.71, G=24.60) > modelc (E=52.72, G=21.85) — inversion GONE. Thermal motion disorders comp1's Li sublattice too, jamming its soft mode (G 8.1→24.6, ~3×); modelc was already jammed so rises less; comp1 ends slightly stiffer (no permanent vacancies as residual soft spots).",
-      "operating_T_takeaway": "At device temperature both are jammed → PS4 framework dominates → similar stiffness; modelc marginally softer due to permanent Li-vacancy soft spots. Conductivity gain (modelc 2.9–3.5× faster Li) does NOT come at a mechanical-rigidity cost at operating T.",
-      "cross_method_caveat": "UMA-600K vs DFT-0K absolute magnitudes are NOT comparable (different reference). E.g. comp1 600K E=59.7 > clamped-0K E=52.3 is a UMA-vs-QE scale artifact, not real thermal stiffening. Compare ONLY within method."
+    "C12_avg": 29.23,
+    "C12_std": 0.51,
+    "C12_C13_C23_individual": [
+     28.95,
+     28.8,
+     29.95
+    ],
+    "C44_avg": 18.98,
+    "C44_std": 0.9,
+    "C44_C55_C66_individual": [
+     20.25,
+     18.4,
+     18.3
+    ],
+    "B_Voigt": 44.23,
+    "B_Reuss": 42.94,
+    "B_VRH": 43.59,
+    "G_Voigt": 20.39,
+    "G_Reuss": 19.85,
+    "G_VRH": 20.12,
+    "E_VRH": 52.31,
+    "nu": 0.3,
+    "Zener_A": 1.073,
+    "eigenvalues_GPa": [
+     17.35,
+     18.84,
+     19.35,
+     42.32,
+     48.05,
+     133.74
+    ],
+    "mechanically_stable": true,
+    "strain_step": 0.005,
+    "n_scfs": 12,
+    "qe_sign_flip_applied": true,
+    "completed_date": "2026-06-03",
+    "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/elastic_static/elastic_results_stress.json",
+    "scf_source": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/elastic_static/strain_{11,22,33,23,13,12}_{p,m}.out",
+    "vs_modelc_v3_same_method_at_true_V0": {
+     "C11_pct": "-17.4% (89.87 → 74.23): comp1 softer in normal compression on its principal axes",
+     "C12_pct": "+34% (21.82 → 29.23): comp1 stronger cross-coupling (no vacancy)",
+     "C44_pct": "+31% (14.43 → 18.98): comp1 stiffer shear (no vacancy)",
+     "B_VRH_pct": "-2.0% (44.47 → 43.59): bulk modulus essentially identical between systems",
+     "G_VRH_pct": "+0.4% (20.05 → 20.12): shear essentially identical",
+     "E_VRH_pct": "0.0% (52.30 → 52.31): Young's modulus IDENTICAL at DFT 0K — VACANCY PARADOX confirmed",
+     "Zener_A_delta": "0.416 → 1.073: comp1 ISOTROPIC (Li6 fully ordered, no vacancy), modelc_v3 highly anisotropic (Li vacancy + Cl anti-site disorder breaks isotropy)",
+     "headline": "At DFT 0K, B/G/E are essentially identical (±2%) between LPSCl and LPSCl1.6 — DFT misses the experimentally observed LPSCl1.6 stiffening. Anisotropy difference is the only Cij-level fingerprint of vacancy/disorder. Finite-T effects (phonon anharmonic stiffening, Li dynamic redistribution) need to explain the experimental Young's modulus delta."
     },
-    "results": [
-      {
-        "id": "comp1_v3",
-        "version": "v3",
-        "C11": 64.50, "C11_std": 2.39,
-        "C12": 19.87, "C12_std": 0.42,
-        "C44": 26.27, "C44_std": 0.89,
-        "K_VRH": 34.74, "K_VRH_std": 0.44,
-        "G_VRH": 24.60, "G_VRH_std": 0.36,
-        "E_VRH": 59.71, "E_VRH_std": 0.82,
-        "nu": 0.2136, "nu_std": 0.0018,
-        "Zener_A": 1.136,
-        "n_snapshots": 5,
-        "T_K": 600,
-        "equilib_ps": 10,
-        "prod_ps": 20,
-        "strain_ion_method": "per-strain FIRE relax (fmax 0.05) — true finite-T elastic",
-        "v0_source": "db/structures/comp1_V0_k444.xyz",
-        "runtime_min": 46.7,
-        "Cij_diag_raw": "C11=[65.68,62.53,65.30] C44=[25.87,26.19,26.74] (near-isotropic, Zener 1.14)",
-        "vs_modelc_v3_600K_SAME_METHOD": {
-          "C11": "+15.8% (55.71 → 64.50) comp1 stiffer",
-          "C44": "+14.2% (23.00 → 26.27) comp1 stiffer shear",
-          "K_VRH": "+16.0% (29.94 → 34.74)",
-          "G_VRH": "+12.6% (21.85 → 24.60)",
-          "E_VRH": "+13.2% (52.72 → 59.71)",
-          "interpretation": "comp1 STIFFER than modelc at 600K — OPPOSITE of the relaxed-ion 0K DFT inversion (comp1 22.06 < modelc 27.66). Thermal disorder jams comp1's soft Li-sublattice shear mode (G 8.1→24.6) past modelc, which was already disorder-jammed at 0K. modelc's residual permanent Li vacancies keep it marginally softer."
-        }
-      },
-      {
-        "id": "modelc_v3",
-        "version": "v3",
-        "C11": 55.71, "C11_std": 1.85,
-        "C12": 15.26, "C12_std": 0.79,
-        "C44": 23.00, "C44_std": 0.55,
-        "K_VRH": 29.94, "K_VRH_std": 0.85,
-        "G_VRH": 21.85, "G_VRH_std": 0.63,
-        "E_VRH": 52.72, "E_VRH_std": 1.42,
-        "nu": 0.206, "nu_std": 0.006,
-        "Zener_A": 1.137,
-        "n_snapshots": 5,
-        "T_K": 600,
-        "equilib_ps": 10,
-        "prod_ps": 20,
-        "strain_ion_method": "per-strain FIRE relax (fmax 0.05) — true finite-T elastic",
-        "vs_v1_modelc_MACE_600K": {
-          "C11_delta_pct": "+41.8% (39.3 → 55.7) — UMA stiffer than MACE",
-          "C12_delta_pct": "-0.9% (15.4 → 15.26) — essentially identical",
-          "C44_delta_pct": "+78.3% (12.9 → 23.0) — UMA significantly stiffer in shear",
-          "K_VRH_delta_pct": "+28.0% (23.4 → 29.94)",
-          "G_VRH_delta_pct": "+68.1% (13.0 → 21.85)",
-          "E_VRH_delta_pct": "+60.2% (32.9 → 52.72)",
-          "interpretation": "UMA-s-1p1 foundation model gives systematically stiffer shear modulus than custom-trained MACE for LPSCl. Bulk modulus closer to DFT clamped-ion (44.5) than MACE (23.4)."
-        },
-        "vs_v3_DFT_0K_clamped": {
-          "K_pct": "-32.7% (DFT 44.47 → MLIP 600K 29.94) — Li disorder + thermal softening of bulk modulus",
-          "G_pct": "+9.0% (DFT 20.05 → MLIP 21.85) — UMA slightly stiffer than DFT in shear",
-          "E_pct": "+0.8% (DFT 52.30 → MLIP 52.72) — Young's modulus nearly invariant 0K-clamped vs 600K-relaxed",
-          "nu_delta": "-0.098 (DFT 0.304 → MLIP 0.206) — finite-T reduces Poisson ratio",
-          "Zener_delta": "+0.72 (DFT 0.42 → MLIP 1.14) — Li disorder + thermal averaging restores cubic isotropy"
-        }
-      }
-    ]
-  },
-
-  "comp5_basin_comparison": {
-    "dft_0K_clamped": {
-      "basin_A": {"C11": 87.4, "C12": 20.6, "C44": 39.9, "K": 42.9, "G": 37.1, "E": 86.5},
-      "basin_B": {"C11": 84.6, "C12": 20.4, "C44": 27.2, "K": 41.8, "G": 29.1, "E": 70.9},
-      "delta":   {"C11": 2.8,  "C12": 0.2,  "C44": 12.7, "K": 1.1,  "G": 8.0,  "E": 15.6},
-      "delta_pct":{"C11": 3.3, "C12": 1.0,  "C44": 46.7, "K": 2.6,  "G": 27.5, "E": 22.0},
-      "key_finding": "C44 most sensitive: 47% change from single Li hop. Shear >> compression sensitivity."
-    },
-    "mlip_600K_snap": {
-      "basin_A": {"C11": 34.9, "C12": 17.1, "C44": 14.0, "E": 30.0},
-      "basin_B": {"C11": 32.8, "C12": 13.1, "C44": 10.2, "E": 25.8},
-      "delta":   {"C11": 2.1,  "C12": 4.0,  "C44": 3.8,  "E": 4.2},
-      "delta_pct":{"C44": 37.3, "E": 16.3}
+    "vs_BM_EOS_K": {
+     "B_VRH_GPa": 43.59,
+     "B0_BM_GPa": 26.233,
+     "ratio_VRH_over_BM": 1.66,
+     "note": "K_VRH (clamped-ion, harmonic only) > B0_BM (full hydrostatic E(V)). Typical ratio 1.5-2× for soft Cl-rich argyrodites. Both methods reach physically meaningful but distinct quantities — report both."
     }
-  },
-
-  "deng2016_reference": {
-    "comp1_SQS": {"C11": 39.9, "C12": 23.1, "C44": 7.8, "E": 22.1},
-    "notes": "DFT SQS method. C44 lower than our 0K ordered but E also lower."
-  },
-
-  "intrinsic_vs_extrinsic": {
-    "intrinsic_calc": "Br up -> E down (29.1 > 28.6 > 27.3 > 26.4 > 25.8)",
-    "extrinsic_expt": "Li5.4 > Li6 REVERSED due to GB pinning by vacancy",
-    "within_family": "Br up -> E down in both calc and expt",
-    "cross_family": "Vacancy -> GB pinning -> polycrystal stiffer -> trend reversal",
-    "_UPDATE_kim2025": "Refined by Kim ACS Mater. Lett. 2025 (see literature_kim_2025_halogen_modulus): the Cl-rich stiffening is NOT only extrinsic GB pinning — it is ALSO intrinsic (Cl smaller anion -> higher ion-packing density -> higher Young's E), and our RELAXED-ION DFT already captures it (modelc E 27.66 > comp1 22.06, +24%). The clamped-ion 'identical E' (line 48) was a frozen-framework baseline that created the APPARENT paradox; the physical relaxed-ion E resolves it and agrees with Kim's Cl->E up trend."
-  },
-  "literature_kim_2025_halogen_modulus": {
-    "_paper": "Young Jung Kim, Sahn Nahm, Jong-Ho Lee, Hyoungchul Kim, 'Comprehensive Analysis of Halogen-Rich Argyrodite Sulfides from a Multi-Level Perspective: Li-Ion Conduction and Elastic Modulus', ACS Materials Lett. 2025, 7, 724-729. DOI 10.1021/acsmaterialslett.4c02029. FULL PDF read 2026-06-08. (Mechanical paper #4 in the group weekly report.)",
-    "system": "Li7-zPS6-zCl(z-x)Brx (AZBrX), 1.0<=z<=1.6, 0<=x<=1.6, 42 compositions. The x=0 (pure-Cl) edge is EXACTLY our comp1 (z=1, Li6PS5Cl) -> modelc (z=1.6, Li5.4PS4.4Cl1.6) series.",
-    "method": "sigma_Li by EIS; E by ultrasonic pulse-echo (UPE) on pellets pressed at 370 MPa (= PELLET/microstructure Young's modulus, not single-crystal). Two sets: BM-AZBrX (ball-milled, low crystallinity, partial argyrodite) and HT-AZBrX (heat-treated 500C/2h, high crystallinity).",
-    "key_trends": {
-      "Cl_up_E_up": "Increasing Cl content -> HIGHER Young's E (stiffer), pronounced in crystalline HT samples ('E increased sharply'). Cl- (167 pm) smaller than S2- -> higher ion-packing density -> stiffer.",
-      "Br_up_E_down": "Increasing Br -> LOWER E (softer); Br- (182 pm) larger -> more free volume / lower packing density -> E down to 12.59 GPa (BM). Matches OUR DFT comp-series 'Br up -> E down'.",
-      "crystallinity": "Heat treatment (crystallinity) raises E ~25% (BM 12-17 GPa -> HT 15-22 GPa) and raises sigma_Li (up to 9.9 mS/cm, 4.9x BM). The HT increase is largely microstructural (denser, better-crystallized pellet).",
-      "sigma_drivers": "High sigma_Li needs total halogen z>=1.4 AND Cl-rich (smaller radius); also anion (Cl/Br) site disorder helps. Optimized region for ASSB = low E (<=18 GPa) + high sigma (>=8 mS/cm) = mixed-halogen + specific Cl (where anion disorder AND low packing density coexist)."
+   },
+   {
+    "id": "modelc_v3",
+    "composition": "Li5.4PS4.4Cl1.6",
+    "C11_avg": 89.87,
+    "C11_std": 3.16,
+    "C11_C22_C33_individual": [
+     85.4,
+     92.3,
+     91.9
+    ],
+    "C12_avg": 21.82,
+    "C12_std": 2.43,
+    "C12_C13_C23_individual": [
+     20.3,
+     25.25,
+     19.9
+    ],
+    "C44_avg": 14.43,
+    "C44_std": 1.25,
+    "C44_C55_C66_individual": [
+     13.55,
+     16.2,
+     13.55
+    ],
+    "B_Voigt": 44.5,
+    "B_Reuss": 44.44,
+    "B_VRH": 44.47,
+    "G_Voigt": 22.27,
+    "G_Reuss": 17.83,
+    "G_VRH": 20.05,
+    "E_VRH": 52.3,
+    "nu": 0.304,
+    "Zener_A": 0.416,
+    "eigenvalues_GPa": [
+     11.56,
+     12.67,
+     18.14,
+     63.78,
+     73.14,
+     133.61
+    ],
+    "mechanically_stable": true,
+    "strain_step": 0.005,
+    "n_scfs": 12,
+    "qe_sign_flip_applied": true,
+    "completed_date": "2026-06-02",
+    "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_static/elastic_results_stress.json",
+    "vs_modelc_v1_DFT_clamped_ion": {
+     "C11_pct": "+5.4%",
+     "C12_pct": "-14.8%",
+     "C44_pct": "-48.6% (28.0 → 14.4 GPa)",
+     "K_pct": "+1.8% (43.7 → 44.47 GPa)  ← cross-validates stress-strain method",
+     "G_pct": "-33.2% (30.0 → 20.05 GPa)",
+     "E_pct": "-28.6% (73.3 → 52.30 GPa)",
+     "nu_delta": "+37.5% (0.221 → 0.304)",
+     "interpretation": "C11/K consistent with modelc v1 → same composition confirmed. C44/G/E reduced by ~30-50% → modelC_v3 likely captures Li-disorder basin (no longer ordered 0K minimum). C44=14.4 is very close to modelc_v2_mlip_600K C44=12.9, supporting interpretation that v3 represents the thermally-accessible Li configuration ensemble."
     },
-    "RESOLVES_our_vacancy_paradox": "Kim's experimental 'Cl -> E up' (Young's) CONFIRMS our DFT RELAXED-ION result (modelc E_VRH 27.66 > comp1 22.06, +24%; shear-dominant G +28%) — see dft_0K_relaxed_ion_stress_strain_full_Cij headline 'VACANCY PARADOX RESOLVED'. The apparent paradox came from the CLAMPED-ion comparison (E identical 52.31=52.30, frozen PS4 framework). Physically, when ions relax (Born screening), the Cl-rich vacancy + 4d-Cl anti-site disorder JAMS soft shear configurations -> higher G/E. So: (i) clamped-ion identical = unchanged PS4 bonding framework (consistent with our ELF/COHP/Bader); (ii) relaxed-ion modelc stiffer = the real Young's modulus, matching Kim. Modulus type matters: E and G are HIGHER for Cl-rich (shear, our relaxed-ion + Kim), while BULK B0 is LOWER for Cl-rich (our EOS 21.7 < 26.2; more Li vacancy = easier hydrostatic compression). Quote the right modulus for the right claim.",
-    "absolute_value_context": "Kim UPE E (pellet) 15-22 GPa (HT) / 12-17 (BM); our AFM (weekly report) LPSCl1.6 14.9 GPa, NdO-LPSCl1.6 15.8 GPa; our DFT relaxed-ion E 22-28 GPa (ideal single crystal, upper bound). Real pellets are softer than ideal crystal (porosity/GB), so DFT > UPE > nothing-contradictory. TREND (Cl-rich stiffer in E/G) consistent across DFT relaxed-ion, Kim UPE, and our AFM direction (NdO doping 14.9->15.8).",
-    "relevance_to_group": "Kim's chemo-mechanical map (low-E + high-sigma optimization) directly supports the Hyundai coating-layer design goal (low modulus + high oxidation stability electrolyte = NdO-LPSC) in the weekly report."
+    "vs_modelc_v2_mlip_600K": {
+     "C44_match_GPa": "14.4 (DFT v3) vs 12.9 (MLIP 600K) → 12% delta, within MLIP-DFT typical agreement",
+     "K_match_GPa": "44.47 (DFT v3) vs 23.4 (MLIP 600K) → 90% delta — MLIP underestimates bulk modulus; expected discrepancy at finite-T MD-quenched configurations"
+    }
+   }
+  ]
+ },
+ "dft_0K_relaxed_ion_stress_strain_full_Cij": {
+  "method": "Same 12 strain SCFs (±0.005, 6 Voigt) but with atoms ALLOWED TO RELAX at each fixed strained cell (calculation='relax', cell_dofree='none' implicit, BFGS conv_thr 1e-4 Ry/au). Stress measured AT the relaxed atomic positions → includes ionic Born screening. Compared to clamped-ion which freezes atoms at V0 positions.",
+  "vacancy_paradox_role": "Clamped-ion DFT systematically over-estimates argyrodite elastic moduli (E_VRH 52.31 GPa for LPSCl vs experiment ~23 GPa, ~2.3× too stiff). Allowing ion relaxation recovers experimentally consistent values. This is the physics behind why the 'clamped-ion vacancy paradox' (LPSCl ≈ LPSCl1.6 elastically at static 0K) needs finite-T or relaxed-ion to resolve.",
+  "results": [
+   {
+    "id": "comp1_v3",
+    "composition": "Li6PS5Cl",
+    "lineage": "comp1 V0_relax (k444, kxL=40) at BM-EOS V0 → 12 strain relax SCFs (BFGS atom-only, fixed strained cell, k=4x4x4)",
+    "k_mesh": "4x4x4 (k×L=40) — PAPER-GRADE, supersedes earlier k221 run (values within ~1%, geometry RMS 0.003 Å)",
+    "C11_avg": 37.67,
+    "C11_std": 1.2,
+    "C11_C22_C33_individual": [
+     36.0,
+     38.8,
+     38.2
+    ],
+    "C12_avg": 20.43,
+    "C12_std": 1.33,
+    "C12_C13_C23_individual": [
+     19.65,
+     19.35,
+     22.3
+    ],
+    "C44_avg": 7.98,
+    "C44_std": 0.97,
+    "C44_C55_C66_individual": [
+     9.35,
+     7.3,
+     7.3
+    ],
+    "B_Voigt": 26.18,
+    "B_Reuss": 24.84,
+    "B_VRH": 25.51,
+    "G_Voigt": 8.24,
+    "G_Reuss": 8.03,
+    "G_VRH": 8.13,
+    "E_VRH": 22.06,
+    "nu": 0.3559,
+    "Zener_A": 1.144,
+    "eigenvalues_GPa": [
+     6.8,
+     7.8,
+     8.73,
+     16.2,
+     18.33,
+     79.1
+    ],
+    "mechanically_stable": true,
+    "strain_step": 0.005,
+    "n_scfs": 12,
+    "qe_sign_flip_applied": true,
+    "completed_date": "2026-06-05",
+    "data_path": "container:/home/ubuntu/work/runs/comp1_v3/v3_post/k444_props/elastic_relaxed_ion/elastic_results_stress.json",
+    "vs_experiment": "E_VRH = 22.06 GPa matches literature LPSCl (~23 GPa, e.g. He et al.). G_VRH = 8.13 matches ~8 GPa expt. B_VRH = 25.51 close to BM-EOS B0 = 26.23 GPa (Δ3%) — internal cross-check.",
+    "vs_k221_prior": "Earlier k221 relaxed-ion gave E_VRH 22.33 / B 25.18 / G 8.26; k444 gives 22.06 / 25.51 / 8.13 — within ~1%, confirming elastic is geometry-driven (RMS 0.003 Å) and k444-robust here.",
+    "vs_clamped_ion": {
+     "C11_ratio": "37.67 / 74.23 = 0.51 (clamped 2.0× stiffer)",
+     "C44_ratio": "7.98 / 18.98 = 0.42 (clamped 2.4× stiffer in shear)",
+     "B_VRH_ratio": "25.51 / 43.59 = 0.59 (clamped 1.7× stiffer in bulk)",
+     "E_VRH_ratio": "22.06 / 52.31 = 0.42 (clamped 2.4× over-estimate)",
+     "headline": "Clamped-ion DFT massively over-estimates elastic moduli. Ion relaxation under strain recovers experimentally consistent values. Argyrodite Li sublattice softness is the dominant ion-screening contribution."
+    }
+   },
+   {
+    "id": "modelc_v3",
+    "composition": "Li5.4PS4.4Cl1.6",
+    "lineage": "modelc V0_relax at BM-EOS V0=1216.44 Å³ → 12 strain relax SCFs (BFGS atom-only, fixed strained cell)",
+    "C11_avg": 37.03,
+    "C11_std": 3.21,
+    "C11_C22_C33_individual": [
+     39.4,
+     32.5,
+     39.2
+    ],
+    "C12_avg": 16.82,
+    "C12_std": 2.06,
+    "C12_C13_C23_individual": [
+     14.7,
+     16.15,
+     19.6
+    ],
+    "C44_avg": 13.68,
+    "C44_std": 6.25,
+    "C44_C55_C66_individual": [
+     17.8,
+     18.4,
+     4.85
+    ],
+    "B_Voigt": 23.56,
+    "B_Reuss": 23.24,
+    "B_VRH": 23.4,
+    "G_Voigt": 12.25,
+    "G_Reuss": 8.97,
+    "G_VRH": 10.61,
+    "E_VRH": 27.66,
+    "nu": 0.303,
+    "Zener_A": 1.441,
+    "eigenvalues_GPa": [
+     4.45,
+     12.84,
+     17.41,
+     19.25,
+     27.3,
+     70.91
+    ],
+    "mechanically_stable": true,
+    "strain_step": 0.005,
+    "n_scfs": 12,
+    "qe_sign_flip_applied": true,
+    "completed_date": "2026-06-04",
+    "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_relaxed_ion/elastic_results_stress.json",
+    "vs_comp1_v3_relaxed": {
+     "E_VRH_delta_pct": "+25.4% (22.06 → 27.66)",
+     "G_VRH_delta_pct": "+30.5% (8.13 → 10.61) — primary stiffening contributor",
+     "B_VRH_delta_pct": "-8.3% (25.51 → 23.40) — slight bulk softening",
+     "Zener_A_delta": "+26% (1.14 → 1.44) — anisotropy increase = disorder fingerprint",
+     "_baseline_note": "Deltas use the PAPER-GRADE k444 comp1 relaxed-ion baseline (22.06/25.51/8.13). Earlier k221 baseline (22.33/25.18/8.26) gave +23.9/+28.4/-7.1% — within ~2pp, both legitimate; slide M4 uses these k444 numbers.",
+     "headline": "★ VACANCY PARADOX RESOLVED ★ — LPSCl1.6 is +25% stiffer (E) than LPSCl at DFT 0K relaxed-ion, MATCHING experimental trend (Kim 2025). Stiffening is primarily SHEAR (G_VRH +30%) while bulk is slightly soft (-8%). The shear-dominant stiffening + anisotropy increase reflects vacancy + 4d-Cl anti-site lock-in of certain shear configurations."
+    }
+   },
+   {
+    "id": "b2o3_champion",
+    "composition": "Li58P8S41Cl16B2O3 (128 at, 2x supercell)",
+    "date": "2026-07-03",
+    "status": "SHEAR_UNRELIABLE_bulk_only",
+    "K_GPa": 27.02,
+    "G_VRH": null,
+    "E_VRH": null,
+    "note": "Normal Cij clean (C11-33 43-45, C12-23 17-20) -> K 27.0 GPa, cross-validated by EOS B0 24.48 (+13% vs modelc 21.7; consistent with new strong B-S/P-O bonds). SHEAR BROKEN: +/-shear relaxed into DIFFERENT local minima of the disordered 128-atom cell -> C66 collapsed (5.15), forbidden off-diagonals, eigenvalue -2.87 (not positive-definite), E_VRH -107.7 = unphysical, WITHHELD. Full analysis: kb/results/b2o3_elastic_analysis_2026_07_03.md. Retry plan (gabia queue, after SDCP phaseb): strain 0.01 (2x signal) + tight forc_conv, shear-focused."
+   }
+  ]
+ },
+ "_old_modelc_v3_running_placeholder_replaced": "completed 2026-06-04 with values above",
+ "mlip_300K_unit_cell": {
+  "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
+  "method": "MACE CPU, 300K Langevin 5ps -> quench -> relaxed-ion Cij",
+  "results": [
+   {
+    "id": "comp1",
+    "version": "v1",
+    "C11": 40.1,
+    "C12": 15.7,
+    "C44": 25.0,
+    "K": 23.7,
+    "G": 18.6,
+    "E": 44.3,
+    "nu": 0.188
+   },
+   {
+    "id": "comp2",
+    "version": "v1",
+    "C11": 39.5,
+    "C12": 17.0,
+    "C44": 22.8,
+    "K": 24.4,
+    "G": 17.0,
+    "E": 41.4,
+    "nu": 0.217
+   },
+   {
+    "id": "comp3",
+    "version": "v1",
+    "C11": 54.3,
+    "C12": 15.0,
+    "C44": 14.5,
+    "K": 28.1,
+    "G": 15.3,
+    "E": 39.0,
+    "nu": 0.269
+   },
+   {
+    "id": "comp4",
+    "version": "v1",
+    "C11": 46.2,
+    "C12": 7.7,
+    "C44": 13.9,
+    "K": 20.5,
+    "G": 15.1,
+    "E": 36.4,
+    "nu": 0.204
+   },
+   {
+    "id": "comp5_A",
+    "version": "v1",
+    "C11": 26.1,
+    "C12": 14.2,
+    "C44": 12.1,
+    "K": 18.2,
+    "G": 8.4,
+    "E": 21.7,
+    "nu": 0.289
+   },
+   {
+    "id": "comp5_B",
+    "version": "v1",
+    "C11": 44.7,
+    "C12": 11.4,
+    "C44": 14.2,
+    "K": 22.4,
+    "G": 14.6,
+    "E": 36.0,
+    "nu": 0.233
+   }
+  ]
+ },
+ "mlip_300K_supercell_2x2x1": {
+  "_version": "v1 (legacy MACE, ordered-Li 0K starting structure)",
+  "method": "MACE, 2x2x1 SC (208-248 atoms), 300K MD -> quench -> Cij",
+  "results": [
+   {
+    "id": "comp1",
+    "C11": 48.8,
+    "C12": 25.2,
+    "C44": 24.7,
+    "K": 33.0,
+    "G": 18.3,
+    "E": 46.4,
+    "nu": 0.266
+   },
+   {
+    "id": "comp2",
+    "C11": 42.1,
+    "C12": 19.3,
+    "C44": 24.0,
+    "K": 26.5,
+    "G": 17.6,
+    "E": 43.3,
+    "nu": 0.227
+   },
+   {
+    "id": "comp3",
+    "C11": 47.8,
+    "C12": 9.2,
+    "C44": 13.4,
+    "K": 22.0,
+    "G": 15.0,
+    "E": 36.6,
+    "nu": 0.223
+   },
+   {
+    "id": "comp4",
+    "C11": 48.6,
+    "C12": 8.1,
+    "C44": 14.6,
+    "K": 21.5,
+    "G": 16.0,
+    "E": 38.5,
+    "nu": 0.202
+   },
+   {
+    "id": "comp5_A",
+    "C11": 30.3,
+    "C12": 15.0,
+    "C44": 8.4,
+    "K": 20.1,
+    "G": 8.7,
+    "E": 23.0,
+    "nu": 0.319
+   },
+   {
+    "id": "comp5_B",
+    "C11": 48.1,
+    "C12": 8.1,
+    "C44": 13.9,
+    "K": 21.3,
+    "G": 15.2,
+    "E": 36.9,
+    "nu": 0.212
+   }
+  ]
+ },
+ "mlip_600K_snapshot": {
+  "_version": "v1 (legacy MACE, ordered-Li 0K starting structure → 600 K MD)",
+  "_lineage_note": "comp1-5, modelc rows below all START from v1 ordered-Li structures. For modelC_v3 (annealed Li + DFT-relaxed V0), see mlip_600K_snapshot_v3 section below.",
+  "method": "MACE, 600K MD 10-18ps -> 5 snapshots -> quench -> FIRE relax -> finite-strain Cij -> VRH avg +/- SD",
+  "temperature_K": 600,
+  "n_snapshots": 5,
+  "includes_Li_disorder": true,
+  "includes_thermal_vibration": false,
+  "paper_values": true,
+  "results": [
+   {
+    "id": "comp1",
+    "version": "v1",
+    "C11": 33.1,
+    "C11_std": 1.2,
+    "C12": 15.0,
+    "C12_std": 0.5,
+    "C44": 13.1,
+    "C44_std": 0.6,
+    "K": 21.0,
+    "G": 11.5,
+    "E": 29.1,
+    "E_std": 1.1
+   },
+   {
+    "id": "comp2",
+    "version": "v1",
+    "C11": 33.1,
+    "C11_std": 1.0,
+    "C12": 15.2,
+    "C12_std": 0.4,
+    "C44": 12.7,
+    "C44_std": 0.5,
+    "K": 21.2,
+    "G": 11.2,
+    "E": 28.6,
+    "E_std": 1.1,
+    "expt_E": null
+   },
+   {
+    "id": "comp3",
+    "version": "v1",
+    "C11": 34.5,
+    "C11_std": 0.8,
+    "C12": 14.0,
+    "C12_std": 0.3,
+    "C44": 10.9,
+    "C44_std": 0.4,
+    "K": 20.9,
+    "G": 10.6,
+    "E": 27.3,
+    "E_std": 0.4,
+    "expt_E": null
+   },
+   {
+    "id": "comp4",
+    "version": "v1",
+    "C11": 33.4,
+    "C11_std": 1.1,
+    "C12": 14.1,
+    "C12_std": 0.5,
+    "C44": 10.7,
+    "C44_std": 0.6,
+    "K": 20.5,
+    "G": 10.3,
+    "E": 26.4,
+    "E_std": 1.6,
+    "expt_E": null
+   },
+   {
+    "id": "comp5_A",
+    "version": "v1",
+    "C11": 34.9,
+    "C11_std": 1.5,
+    "C12": 17.1,
+    "C12_std": 0.7,
+    "C44": 14.0,
+    "C44_std": 0.8,
+    "K": 23.0,
+    "G": 11.7,
+    "E": 30.0,
+    "expt_E": null
+   },
+   {
+    "id": "comp5_B",
+    "version": "v1",
+    "C11": 32.8,
+    "C11_std": 1.2,
+    "C12": 13.1,
+    "C12_std": 0.4,
+    "C44": 10.2,
+    "C44_std": 0.3,
+    "K": 19.6,
+    "G": 10.1,
+    "E": 25.8,
+    "E_std": 0.8,
+    "expt_E": null
+   },
+   {
+    "id": "modelc",
+    "version": "v1",
+    "C11": 39.3,
+    "C11_std": 1.1,
+    "C12": 15.4,
+    "C12_std": 0.7,
+    "C44": 12.9,
+    "C44_std": 0.7,
+    "K": 23.4,
+    "G": 13.0,
+    "E": 32.9,
+    "E_std": 0.9,
+    "expt_E": null,
+    "notes": "Sign-corrected. Cl-only, highest E! v1 ordered-Li start; superseded by modelc_v3 once new MLIP 600K snapshot (Pipeline v2 §8e v3) finishes."
+   }
+  ],
+  "trend": "With ModelC: ModelC(32.6) > comp1(29.1) > comp2(28.6) > comp3(27.3) > comp4(26.4) > comp5(25.8). Br up E down, Cl-only = most rigid."
+ },
+ "mlip_600K_snapshot_v3": {
+  "_version": "v3 (comp1_v3 + modelC_v3 — BOTH annealed Li, DFT-relaxed V0 starting structures, SAME UMA + SAME script → directly comparable)",
+  "_purpose": "MLIP 600K snapshot elastic for the Paper#1 pair. comp1_v3 (LPSCl) added 2026-06-08 (v100 PID 1851258, runtime 46.7 min); modelC_v3 (LPSCl1.6) from 2026-06-02. Identical method/params → the comp1-vs-modelc 600K comparison is method-clean (UMA-vs-UMA). Do NOT cross-compare absolute magnitude with the DFT-0K rows (UMA≠QE absolute scale); only within-method comparisons are valid.",
+  "method": "UMA-s-1p1 (task=omat) Langevin 600 K, equilib 10 ps + prod 20 ps, 5 snapshots, FIRE quench (fmax 0.01), per-strain FIRE RELAXED-ION Cij (fmax 0.05) full 6×6, no QE sign flip (FAIRChem returns physical-convention stress).",
+  "script": "tools/modelc_v3/elastic_mlip_600K.py",
+  "completed_date": "2026-06-02 (modelc_v3); 2026-06-08 (comp1_v3)",
+  "data_path": "container:/home/ubuntu/work/runs/modelC_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json ; container:/home/ubuntu/work/runs/comp1_v3/elastic_mlip_600K/elastic_600K_snapshot_results.json",
+  "_USAGE_2026_06_08": "DEMOTED to SUPPORTING / SI-only — do NOT lead a talk or the paper main figure with the 600K row. Decision (user, 2026-06-08): the core mechanical story is fully carried by the DFT 0K clamped-vs-relaxed-ion pair (same QE footing, attack-proof). The 600K MLIP row adds a 'second re-flip' but requires a cross-method (UMA≠QE absolute scale) asterisk — e.g. 600K E=59.7 > 0K-clamped E=52.3 looks unphysical to a reader and the disclaimer weakens the slide. Keep the computed data here for completeness / reviewer 'what about finite-T?' rebuttal, but HEADLINE = 2-regime DFT (clamped identical → relaxed-ion inverts). The relaxed-ion inversion IS the disorder-jamming evidence on its own.",
+  "_three_regime_synthesis": {
+   "headline": "modelc's compositional disorder PRE-JAMS (already at 0K) the soft collective Li-sublattice shear mode that comp1 only loses upon heating. → the relaxed-ion 0K inversion (comp1<modelc) DISAPPEARS/RE-FLIPS at 600K (comp1>modelc). [SUPPORTING — see _USAGE_2026_06_08; lead with the 2-regime DFT story, not this.]",
+   "clamped_0K_DFT": "comp1 ≈ modelc (E≈52.3, G≈20.1, identical) — frozen-ion = pure PS4 framework bonding stiffness, which Cl-enrichment+vacancy leaves UNCHANGED.",
+   "relaxed_ion_0K_DFT": "comp1 (E=22.06, G=8.13) < modelc (E=27.66, G≈10) — INVERSION. comp1's fully ordered Li sublattice keeps a soft collective shear mode alive (Born screening collapses G); modelc's Cl-excess + Li-vacancy disorder jams that mode → stiffer.",
+   "mlip_600K_UMA": "comp1 (E=59.71, G=24.60) > modelc (E=52.72, G=21.85) — inversion GONE. Thermal motion disorders comp1's Li sublattice too, jamming its soft mode (G 8.1→24.6, ~3×); modelc was already jammed so rises less; comp1 ends slightly stiffer (no permanent vacancies as residual soft spots).",
+   "operating_T_takeaway": "At device temperature both are jammed → PS4 framework dominates → similar stiffness; modelc marginally softer due to permanent Li-vacancy soft spots. Conductivity gain (modelc 2.9–3.5× faster Li) does NOT come at a mechanical-rigidity cost at operating T.",
+   "cross_method_caveat": "UMA-600K vs DFT-0K absolute magnitudes are NOT comparable (different reference). E.g. comp1 600K E=59.7 > clamped-0K E=52.3 is a UMA-vs-QE scale artifact, not real thermal stiffening. Compare ONLY within method."
   },
-  "literature_kim_JMCA_2026_Irich": {
-    "_paper": "Young Jung Kim, Sahn Nahm, Jae Jin Kim, Jong-Ho Lee, Hyoungchul Kim, 'Tailoring I-rich argyrodite sulfides via low-energy mechanical alloying for all-solid-state Li-metal batteries', J. Mater. Chem. A 2026, 14, 9939-9947. DOI 10.1039/d5ta10262f. FULL PDF read 2026-06-08. (Mechanical paper #5 in the group weekly report — the LAST literature paper.)",
-    "system": "Li5.4PS4.6Cl1.4-xIx (LMA-Cl1.4-xIx), 0<=x<=1.4 (Cl->I substitution). LMA = low-energy mechanical alloying (30 G) vs HMA = high-energy (49 G). Anode-side focus (Li metal + LiI SEI).",
-    "halide_size_modulus_CONFIRMS_ours": "Cl->I substitution: E DECREASES with I content, minimum 10.68 GPa. 'The lower E can be attributed to the substitution of smaller Cl- (167 pm) with larger I- (220 pm), which expands lattice free volume and reduces ion-packing density.' SAME packing-density / free-volume mechanism as Kim 2025 (Br) and our DFT comp-series (Br up -> E down). Establishes the general rule: LARGER halide -> more free volume -> LOWER E (softer); SMALLER Cl -> stiffer. Reinforces that our intrinsic DFT correctly captures the halide-size->modulus physics.",
-    "optimal_composition": "LMA-Cl0.8I0.6 (Li5.4PS4.6Cl0.8I0.6): sigma_Li 2.44 mS/cm (highest among I-rich), E 12.37 GPa (moderate/low), critical current density 1.6 mA/cm2, 99% capacity retention after 250 cycles at 1C. LMA (partial crystallization + amorphous) balances sigma & E; HMA over-crystallizes I-rich -> ordered LPSI -> LOW sigma (inter-cage jumps suppressed).",
-    "anode_interface_mechanism": "I-rich forms a LiI-based SEI -> uniform Li+/e- distribution -> suppresses dendrites, lowers interfacial resistance growth (R_i-3 +49% over 100 cyc for Cl0.8I0.6 vs +216% in 40 cyc for I1.4). Low E -> conformal Li contact. XPS/ToF-SIMS: framework P-/PS-/S- decrease, byproducts Li3P-/LiS-/LiI- increase on cycling.",
-    "relevance_to_group": "An ALTERNATIVE low-modulus route (Cl->I, larger halide) to the group's NdO-doping coating strategy. Confirms the design lever 'larger halide / more free volume -> softer E' for the Hyundai low-modulus coating layer. NOTE: I-substitution lowers E AND targets the ANODE (Li-metal/LiI SEI), whereas the group's NdO-LPSC coating targets the CATHODE side (low E + high oxidation stability). Different interface, same low-E design principle.",
-    "vs_our_modelc": "Their pure-Cl end LMA-Cl1.4 (Li5.4PS4.6Cl1.4) is close to our modelc (Li5.4PS4.4Cl1.6); both are the STIFFEST of the halide series (E ~16 GPa pellet, since E falls with I). Consistent with our Cl-rich = stiffer (E/G) finding."
+  "results": [
+   {
+    "id": "comp1_v3",
+    "version": "v3",
+    "C11": 64.5,
+    "C11_std": 2.39,
+    "C12": 19.87,
+    "C12_std": 0.42,
+    "C44": 26.27,
+    "C44_std": 0.89,
+    "K_VRH": 34.74,
+    "K_VRH_std": 0.44,
+    "G_VRH": 24.6,
+    "G_VRH_std": 0.36,
+    "E_VRH": 59.71,
+    "E_VRH_std": 0.82,
+    "nu": 0.2136,
+    "nu_std": 0.0018,
+    "Zener_A": 1.136,
+    "n_snapshots": 5,
+    "T_K": 600,
+    "equilib_ps": 10,
+    "prod_ps": 20,
+    "strain_ion_method": "per-strain FIRE relax (fmax 0.05) — true finite-T elastic",
+    "v0_source": "db/structures/comp1_V0_k444.xyz",
+    "runtime_min": 46.7,
+    "Cij_diag_raw": "C11=[65.68,62.53,65.30] C44=[25.87,26.19,26.74] (near-isotropic, Zener 1.14)",
+    "vs_modelc_v3_600K_SAME_METHOD": {
+     "C11": "+15.8% (55.71 → 64.50) comp1 stiffer",
+     "C44": "+14.2% (23.00 → 26.27) comp1 stiffer shear",
+     "K_VRH": "+16.0% (29.94 → 34.74)",
+     "G_VRH": "+12.6% (21.85 → 24.60)",
+     "E_VRH": "+13.2% (52.72 → 59.71)",
+     "interpretation": "comp1 STIFFER than modelc at 600K — OPPOSITE of the relaxed-ion 0K DFT inversion (comp1 22.06 < modelc 27.66). Thermal disorder jams comp1's soft Li-sublattice shear mode (G 8.1→24.6) past modelc, which was already disorder-jammed at 0K. modelc's residual permanent Li vacancies keep it marginally softer."
+    }
+   },
+   {
+    "id": "modelc_v3",
+    "version": "v3",
+    "C11": 55.71,
+    "C11_std": 1.85,
+    "C12": 15.26,
+    "C12_std": 0.79,
+    "C44": 23.0,
+    "C44_std": 0.55,
+    "K_VRH": 29.94,
+    "K_VRH_std": 0.85,
+    "G_VRH": 21.85,
+    "G_VRH_std": 0.63,
+    "E_VRH": 52.72,
+    "E_VRH_std": 1.42,
+    "nu": 0.206,
+    "nu_std": 0.006,
+    "Zener_A": 1.137,
+    "n_snapshots": 5,
+    "T_K": 600,
+    "equilib_ps": 10,
+    "prod_ps": 20,
+    "strain_ion_method": "per-strain FIRE relax (fmax 0.05) — true finite-T elastic",
+    "vs_v1_modelc_MACE_600K": {
+     "C11_delta_pct": "+41.8% (39.3 → 55.7) — UMA stiffer than MACE",
+     "C12_delta_pct": "-0.9% (15.4 → 15.26) — essentially identical",
+     "C44_delta_pct": "+78.3% (12.9 → 23.0) — UMA significantly stiffer in shear",
+     "K_VRH_delta_pct": "+28.0% (23.4 → 29.94)",
+     "G_VRH_delta_pct": "+68.1% (13.0 → 21.85)",
+     "E_VRH_delta_pct": "+60.2% (32.9 → 52.72)",
+     "interpretation": "UMA-s-1p1 foundation model gives systematically stiffer shear modulus than custom-trained MACE for LPSCl. Bulk modulus closer to DFT clamped-ion (44.5) than MACE (23.4)."
+    },
+    "vs_v3_DFT_0K_clamped": {
+     "K_pct": "-32.7% (DFT 44.47 → MLIP 600K 29.94) — Li disorder + thermal softening of bulk modulus",
+     "G_pct": "+9.0% (DFT 20.05 → MLIP 21.85) — UMA slightly stiffer than DFT in shear",
+     "E_pct": "+0.8% (DFT 52.30 → MLIP 52.72) — Young's modulus nearly invariant 0K-clamped vs 600K-relaxed",
+     "nu_delta": "-0.098 (DFT 0.304 → MLIP 0.206) — finite-T reduces Poisson ratio",
+     "Zener_delta": "+0.72 (DFT 0.42 → MLIP 1.14) — Li disorder + thermal averaging restores cubic isotropy"
+    }
+   }
+  ]
+ },
+ "comp5_basin_comparison": {
+  "dft_0K_clamped": {
+   "basin_A": {
+    "C11": 87.4,
+    "C12": 20.6,
+    "C44": 39.9,
+    "K": 42.9,
+    "G": 37.1,
+    "E": 86.5
+   },
+   "basin_B": {
+    "C11": 84.6,
+    "C12": 20.4,
+    "C44": 27.2,
+    "K": 41.8,
+    "G": 29.1,
+    "E": 70.9
+   },
+   "delta": {
+    "C11": 2.8,
+    "C12": 0.2,
+    "C44": 12.7,
+    "K": 1.1,
+    "G": 8.0,
+    "E": 15.6
+   },
+   "delta_pct": {
+    "C11": 3.3,
+    "C12": 1.0,
+    "C44": 46.7,
+    "K": 2.6,
+    "G": 27.5,
+    "E": 22.0
+   },
+   "key_finding": "C44 most sensitive: 47% change from single Li hop. Shear >> compression sensitivity."
+  },
+  "mlip_600K_snap": {
+   "basin_A": {
+    "C11": 34.9,
+    "C12": 17.1,
+    "C44": 14.0,
+    "E": 30.0
+   },
+   "basin_B": {
+    "C11": 32.8,
+    "C12": 13.1,
+    "C44": 10.2,
+    "E": 25.8
+   },
+   "delta": {
+    "C11": 2.1,
+    "C12": 4.0,
+    "C44": 3.8,
+    "E": 4.2
+   },
+   "delta_pct": {
+    "C44": 37.3,
+    "E": 16.3
+   }
   }
+ },
+ "deng2016_reference": {
+  "comp1_SQS": {
+   "C11": 39.9,
+   "C12": 23.1,
+   "C44": 7.8,
+   "E": 22.1
+  },
+  "notes": "DFT SQS method. C44 lower than our 0K ordered but E also lower."
+ },
+ "intrinsic_vs_extrinsic": {
+  "intrinsic_calc": "Br up -> E down (29.1 > 28.6 > 27.3 > 26.4 > 25.8)",
+  "extrinsic_expt": "Li5.4 > Li6 REVERSED due to GB pinning by vacancy",
+  "within_family": "Br up -> E down in both calc and expt",
+  "cross_family": "Vacancy -> GB pinning -> polycrystal stiffer -> trend reversal",
+  "_UPDATE_kim2025": "Refined by Kim ACS Mater. Lett. 2025 (see literature_kim_2025_halogen_modulus): the Cl-rich stiffening is NOT only extrinsic GB pinning — it is ALSO intrinsic (Cl smaller anion -> higher ion-packing density -> higher Young's E), and our RELAXED-ION DFT already captures it (modelc E 27.66 > comp1 22.06, +24%). The clamped-ion 'identical E' (line 48) was a frozen-framework baseline that created the APPARENT paradox; the physical relaxed-ion E resolves it and agrees with Kim's Cl->E up trend."
+ },
+ "literature_kim_2025_halogen_modulus": {
+  "_paper": "Young Jung Kim, Sahn Nahm, Jong-Ho Lee, Hyoungchul Kim, 'Comprehensive Analysis of Halogen-Rich Argyrodite Sulfides from a Multi-Level Perspective: Li-Ion Conduction and Elastic Modulus', ACS Materials Lett. 2025, 7, 724-729. DOI 10.1021/acsmaterialslett.4c02029. FULL PDF read 2026-06-08. (Mechanical paper #4 in the group weekly report.)",
+  "system": "Li7-zPS6-zCl(z-x)Brx (AZBrX), 1.0<=z<=1.6, 0<=x<=1.6, 42 compositions. The x=0 (pure-Cl) edge is EXACTLY our comp1 (z=1, Li6PS5Cl) -> modelc (z=1.6, Li5.4PS4.4Cl1.6) series.",
+  "method": "sigma_Li by EIS; E by ultrasonic pulse-echo (UPE) on pellets pressed at 370 MPa (= PELLET/microstructure Young's modulus, not single-crystal). Two sets: BM-AZBrX (ball-milled, low crystallinity, partial argyrodite) and HT-AZBrX (heat-treated 500C/2h, high crystallinity).",
+  "key_trends": {
+   "Cl_up_E_up": "Increasing Cl content -> HIGHER Young's E (stiffer), pronounced in crystalline HT samples ('E increased sharply'). Cl- (167 pm) smaller than S2- -> higher ion-packing density -> stiffer.",
+   "Br_up_E_down": "Increasing Br -> LOWER E (softer); Br- (182 pm) larger -> more free volume / lower packing density -> E down to 12.59 GPa (BM). Matches OUR DFT comp-series 'Br up -> E down'.",
+   "crystallinity": "Heat treatment (crystallinity) raises E ~25% (BM 12-17 GPa -> HT 15-22 GPa) and raises sigma_Li (up to 9.9 mS/cm, 4.9x BM). The HT increase is largely microstructural (denser, better-crystallized pellet).",
+   "sigma_drivers": "High sigma_Li needs total halogen z>=1.4 AND Cl-rich (smaller radius); also anion (Cl/Br) site disorder helps. Optimized region for ASSB = low E (<=18 GPa) + high sigma (>=8 mS/cm) = mixed-halogen + specific Cl (where anion disorder AND low packing density coexist)."
+  },
+  "RESOLVES_our_vacancy_paradox": "Kim's experimental 'Cl -> E up' (Young's) CONFIRMS our DFT RELAXED-ION result (modelc E_VRH 27.66 > comp1 22.06, +24%; shear-dominant G +28%) — see dft_0K_relaxed_ion_stress_strain_full_Cij headline 'VACANCY PARADOX RESOLVED'. The apparent paradox came from the CLAMPED-ion comparison (E identical 52.31=52.30, frozen PS4 framework). Physically, when ions relax (Born screening), the Cl-rich vacancy + 4d-Cl anti-site disorder JAMS soft shear configurations -> higher G/E. So: (i) clamped-ion identical = unchanged PS4 bonding framework (consistent with our ELF/COHP/Bader); (ii) relaxed-ion modelc stiffer = the real Young's modulus, matching Kim. Modulus type matters: E and G are HIGHER for Cl-rich (shear, our relaxed-ion + Kim), while BULK B0 is LOWER for Cl-rich (our EOS 21.7 < 26.2; more Li vacancy = easier hydrostatic compression). Quote the right modulus for the right claim.",
+  "absolute_value_context": "Kim UPE E (pellet) 15-22 GPa (HT) / 12-17 (BM); our AFM (weekly report) LPSCl1.6 14.9 GPa, NdO-LPSCl1.6 15.8 GPa; our DFT relaxed-ion E 22-28 GPa (ideal single crystal, upper bound). Real pellets are softer than ideal crystal (porosity/GB), so DFT > UPE > nothing-contradictory. TREND (Cl-rich stiffer in E/G) consistent across DFT relaxed-ion, Kim UPE, and our AFM direction (NdO doping 14.9->15.8).",
+  "relevance_to_group": "Kim's chemo-mechanical map (low-E + high-sigma optimization) directly supports the Hyundai coating-layer design goal (low modulus + high oxidation stability electrolyte = NdO-LPSC) in the weekly report."
+ },
+ "literature_kim_JMCA_2026_Irich": {
+  "_paper": "Young Jung Kim, Sahn Nahm, Jae Jin Kim, Jong-Ho Lee, Hyoungchul Kim, 'Tailoring I-rich argyrodite sulfides via low-energy mechanical alloying for all-solid-state Li-metal batteries', J. Mater. Chem. A 2026, 14, 9939-9947. DOI 10.1039/d5ta10262f. FULL PDF read 2026-06-08. (Mechanical paper #5 in the group weekly report — the LAST literature paper.)",
+  "system": "Li5.4PS4.6Cl1.4-xIx (LMA-Cl1.4-xIx), 0<=x<=1.4 (Cl->I substitution). LMA = low-energy mechanical alloying (30 G) vs HMA = high-energy (49 G). Anode-side focus (Li metal + LiI SEI).",
+  "halide_size_modulus_CONFIRMS_ours": "Cl->I substitution: E DECREASES with I content, minimum 10.68 GPa. 'The lower E can be attributed to the substitution of smaller Cl- (167 pm) with larger I- (220 pm), which expands lattice free volume and reduces ion-packing density.' SAME packing-density / free-volume mechanism as Kim 2025 (Br) and our DFT comp-series (Br up -> E down). Establishes the general rule: LARGER halide -> more free volume -> LOWER E (softer); SMALLER Cl -> stiffer. Reinforces that our intrinsic DFT correctly captures the halide-size->modulus physics.",
+  "optimal_composition": "LMA-Cl0.8I0.6 (Li5.4PS4.6Cl0.8I0.6): sigma_Li 2.44 mS/cm (highest among I-rich), E 12.37 GPa (moderate/low), critical current density 1.6 mA/cm2, 99% capacity retention after 250 cycles at 1C. LMA (partial crystallization + amorphous) balances sigma & E; HMA over-crystallizes I-rich -> ordered LPSI -> LOW sigma (inter-cage jumps suppressed).",
+  "anode_interface_mechanism": "I-rich forms a LiI-based SEI -> uniform Li+/e- distribution -> suppresses dendrites, lowers interfacial resistance growth (R_i-3 +49% over 100 cyc for Cl0.8I0.6 vs +216% in 40 cyc for I1.4). Low E -> conformal Li contact. XPS/ToF-SIMS: framework P-/PS-/S- decrease, byproducts Li3P-/LiS-/LiI- increase on cycling.",
+  "relevance_to_group": "An ALTERNATIVE low-modulus route (Cl->I, larger halide) to the group's NdO-doping coating strategy. Confirms the design lever 'larger halide / more free volume -> softer E' for the Hyundai low-modulus coating layer. NOTE: I-substitution lowers E AND targets the ANODE (Li-metal/LiI SEI), whereas the group's NdO-LPSC coating targets the CATHODE side (low E + high oxidation stability). Different interface, same low-E design principle.",
+  "vs_our_modelc": "Their pure-Cl end LMA-Cl1.4 (Li5.4PS4.6Cl1.4) is close to our modelc (Li5.4PS4.4Cl1.6); both are the STIFFEST of the halide series (E ~16 GPa pellet, since E falls with I). Consistent with our Cl-rich = stiffer (E/G) finding."
+ }
 }
