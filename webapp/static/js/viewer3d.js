@@ -161,17 +161,24 @@ function renderSt4Soc(state) {
   const tS = document.getElementById('st4-t'), dS = document.getElementById('st4-d');
   const dynCb = document.getElementById('st4-dyn');
   const _xlab = v => `x=${v.toFixed(3)}${st.c_max_mol_m3 ? ' (' + (v * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''}`;
-  const upd = () => {
-    const ti = +tS.value, dp = +dS.value / 100;
-    document.getElementById('st4-tlab').textContent = `t=${st.t_s[ti]}s · x̄=${st.x_mean[ti]}`;
+  // tf: 실수 프레임 (재생 시 체크포인트 사이 선형 보간 — 셸 SOC는 매끄러운 상태변수라 정직)
+  const upd = (tf) => {
+    const tfv = (typeof tf === 'number') ? Math.max(0, Math.min(nChk - 1, tf)) : +tS.value;
+    const t0 = Math.floor(tfv), t1 = Math.min(nChk - 1, t0 + 1), fr = tfv - t0;
+    const dp = +dS.value / 100;
+    document.getElementById('st4-tlab').textContent =
+      `t=${((1 - fr) * st.t_s[t0] + fr * st.t_s[t1]).toFixed(1)}s · x̄=${((1 - fr) * st.x_mean[t0] + fr * st.x_mean[t1]).toFixed(4)}`;
     document.getElementById('st4-dlab').textContent = Math.round(dp * 100);
-    const shell = st.x_shell[ti];
+    const sh0 = st.x_shell[t0], sh1 = st.x_shell[t1];
     const kSh = Math.max(0, Math.min(nr - 1, Math.ceil(dp * nr) - 1));
     // 색 스케일: 절대(전체 창 — 물리 비교) vs 동적(현재 프레임 p5–p95 — 편차 증폭)
     let cLo = lo, cHi = hi;
     if (dynCb && dynCb.checked) {
       const vals = [];
-      parts.forEach(p => { const row = shell[p.id]; if (row) vals.push(row[kSh]); });
+      parts.forEach(p => {
+        const r0 = sh0[p.id], r1 = sh1[p.id];
+        if (r0 && r1) vals.push((1 - fr) * r0[kSh] + fr * r1[kSh]);
+      });
       if (vals.length > 4) {
         vals.sort((x, y) => x - y);
         cLo = vals[Math.floor(0.05 * (vals.length - 1))];
@@ -189,8 +196,8 @@ function renderSt4Soc(state) {
       dummy.scale.setScalar(p.r * dp);
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
-      const row = shell[p.id];
-      const xs = row ? row[kSh] : cLo;
+      const r0 = sh0[p.id], r1 = sh1[p.id];
+      const xs = (r0 && r1) ? (1 - fr) * r0[kSh] + fr * r1[kSh] : cLo;
       const tt = Math.max(0, Math.min(1, (xs - cLo) / Math.max(cHi - cLo, 1e-9)));
       mesh.setColorAt(i, col.setHex(jetColor(tt)));
     });
@@ -209,13 +216,16 @@ function renderSt4Soc(state) {
       clearInterval(state._st4Timer); state._st4Timer = null; playBtn.textContent = '▶ 재생'; return;
     }
     playBtn.textContent = '⏸ 정지';
-    state._st4Timer = setInterval(() => {
+    state._st4Phase = +tS.value;                             // 부드러운 재생: 30ms마다 실수 프레임
+    state._st4Timer = setInterval(() => {                    // 전진 + 체크포인트 사이 선형 보간
       if (!document.body.contains(tS)) {                     // 모드 이탈 시 자기 정리
         clearInterval(state._st4Timer); state._st4Timer = null; return;
       }
-      tS.value = (+tS.value + 1) % nChk;
-      upd();
-    }, 1000 / (+(fpsSel && fpsSel.value) || 4));
+      const fps = +(fpsSel && fpsSel.value) || 4;            // fps = "체크포인트/초" 통과 속도
+      state._st4Phase = (state._st4Phase + fps * 0.03) % (nChk - 1e-6);
+      tS.value = Math.round(state._st4Phase);
+      upd(state._st4Phase);
+    }, 30);
   };
   const frBtn = document.getElementById('st4-frames');
   if (frBtn) frBtn.onclick = async () => {
@@ -377,12 +387,24 @@ function renderSt4Faces(state) {
      비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
      ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>`);
   const tS = document.getElementById('st4f-t'), dotsCb = document.getElementById('st4f-dots');
-  const upd = () => {
-    const ti = +tS.value;
-    document.getElementById('st4f-tlab').textContent = `t=${st.t_s[ti]}s · x̄=${st.x_mean[ti]}`;
-    const arr = F.i_rel[ti];
-    const abs = arr.map(Math.abs).sort((a, b) => a - b);
-    const hi = Math.max(abs[Math.floor(0.95 * (abs.length - 1))], 1e-9);
+  const frHi = [];                                           // 프레임별 p95 캐시 (정규화 기준)
+  const _hiOf = (k) => {
+    if (frHi[k] == null) {
+      const abs = F.i_rel[k].map(Math.abs).sort((a, b) => a - b);
+      frHi[k] = Math.max(abs[Math.floor(0.95 * (abs.length - 1))], 1e-9);
+    }
+    return frHi[k];
+  };
+  const arrBuf = new Float32Array(n);                        // 보간 프레임 버퍼
+  const upd = (tf) => {
+    const tfv = (typeof tf === 'number') ? Math.max(0, Math.min(nChk - 1, tf)) : +tS.value;
+    const t0 = Math.floor(tfv), t1 = Math.min(nChk - 1, t0 + 1), fr = tfv - t0;
+    document.getElementById('st4f-tlab').textContent =
+      `t=${((1 - fr) * st.t_s[t0] + fr * st.t_s[t1]).toFixed(1)}s · x̄=${((1 - fr) * st.x_mean[t0] + fr * st.x_mean[t1]).toFixed(4)}`;
+    const a0 = F.i_rel[t0], a1 = F.i_rel[t1];
+    for (let i = 0; i < n; i++) arrBuf[i] = (1 - fr) * a0[i] + fr * a1[i];
+    const arr = arrBuf;
+    const hi = (1 - fr) * _hiOf(t0) + fr * _hiOf(t1);
     const useDots = dotsCb && dotsCb.checked;
     if (useDots) {
       buildDots();
@@ -425,11 +447,14 @@ function renderSt4Faces(state) {
   if (playBtn) playBtn.onclick = () => {
     if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; playBtn.textContent = '▶ 재생'; return; }
     playBtn.textContent = '⏸ 정지';
+    state._st4fPhase = +tS.value;                            // 부드러운 재생 (체크포인트 사이 보간)
     state._st4fTimer = setInterval(() => {
       if (!document.body.contains(tS)) { clearInterval(state._st4fTimer); state._st4fTimer = null; return; }
-      tS.value = (+tS.value + 1) % nChk;
-      upd();
-    }, 1000 / (+(fpsSel && fpsSel.value) || 4));
+      const fps = +(fpsSel && fpsSel.value) || 4;
+      state._st4fPhase = (state._st4fPhase + fps * 0.03) % (nChk - 1e-6);
+      tS.value = Math.round(state._st4fPhase);
+      upd(state._st4fPhase);
+    }, 30);
   };
   const frBtn = document.getElementById('st4f-frames');
   if (frBtn) frBtn.onclick = async () => {
