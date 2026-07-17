@@ -4516,27 +4516,43 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const wireB = _wiringCounts(B.particles, B.additive_points, mmB.additive_counts,
                               (B.box || {}).x_max || 0, (B.box || {}).y_max || 0);
   const gsh = (s, k, ph) => 100 * (((s || {})[k] || {})[ph] || 0);
+  // 축별 설명 카드 (hover) — 정의·유도식·논문 표현 팁 (분석 요약 문법)
   const rowsQ = [
-    ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm],
-    ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm],
-    // 평균·집중 (field_scale, 신 payload): ⟨J⟩=σ_eff·ΔV/L @1V — 운전 국소값 = focus×면적전류
-    ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V],
-    ['⟨J_ion⟩ 평균 (A/cm²@1V)', (sA.field_scale_ion || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_ion || {}).j_mean_z_A_cm2_per_V],
-    ['e-집중 p99.8 (×⟨J_e⟩)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top],
-    ['ion-집중 p99.8 (×⟨J_ion⟩)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top],
-    ['e-분담 SDCP (%)', gsh(sA, 'dissipation_share', 'SDCP'), gsh(sB, 'dissipation_share', 'SDCP')],
-    ['ion-분담 SDCP (%)', gsh(sA, 'ion_dissipation_share', 'SDCP'), gsh(sB, 'ion_dissipation_share', 'SDCP')],
-    ['R_geom (Ω·cm²)', (sA.collector_geometric || {}).R_geom_ohm_cm2, (sB.collector_geometric || {}).R_geom_ohm_cm2],
+    ['σ_e_eff (S/cm)', sA.sigma_e_eff_S_cm, sB.sigma_e_eff_S_cm,
+     '유효 through-plane 전자전도도.\n복셀 Kirchhoff: ∇·(σ∇φ)=0, 플레이트 ΔV=1V, 측면 Neumann → σ_eff = I·L/(A·ΔV).\n전도상: AM + VGCF/SuperP + SDCP(250 S/cm 앵커).\n논문: "effective through-plane electronic conductivity" — Δ%가 전자 헤드라인(+52%).'],
+    ['σ_ion_eff (S/cm)', sA.sigma_ion_eff_S_cm, sB.sigma_ion_eff_S_cm,
+     '유효 through-plane 이온전도도 (같은 솔브, 전도상 = SE + SDCP).\nSE는 t⁺≈1 단일이온 전도체 → 정상상태 이온망은 순수 옴 저항망.\n논문: Bazzoun 2026 RNM/EIS 축과 직접 비교 가능 — "effective ionic conductivity".'],
+    ['⟨J_e⟩ 평균 (A/cm²@1V)', (sA.field_scale_e || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_e || {}).j_mean_z_A_cm2_per_V,
+     '평균 관통 전류밀도 ⟨J_z⟩ = σ_eff·ΔV/L (옴 항등식 — σ 행과 Δ% 동일해야 정상 = 자기검산 행).\n운전 환산: 1C에서 두 전극 모두 ⟨J⟩ = 면적전류(≈3.07 mA/cm²)로 강제(직렬) — σ 차이는 대신 전압손실 η=J·L/σ로 나타남 (DBE가 같은 전류를 1.52× 적은 손실로 나름).\n논문: "mean through-plane current density".'],
+    ['⟨J_ion⟩ 평균 (A/cm²@1V)', (sA.field_scale_ion || {}).j_mean_z_A_cm2_per_V, (sB.field_scale_ion || {}).j_mean_z_A_cm2_per_V,
+     '이온판 옴 항등식 ⟨J_z⟩ = σ_ion·ΔV/L.\n정상 작동에선 이온·전자 총 전류가 같아야 함(반응점 직렬 릴레이) → 운전 ⟨J_ion⟩=⟨J_e⟩=면적전류.\n이온은 σ가 10⁴× 작아 같은 J의 "가격"(과전위)이 훨씬 비쌈 — 분극의 주범 축.'],
+    ['e-집중 p99.8 (×⟨J_e⟩)', (sA.field_scale_e || {}).focus_top, (sB.field_scale_e || {}).focus_top,
+     '전류 집중계수 focus = |J|(p99.8) / ⟨J_z⟩ — 선형해라 바이어스 무관(구조 고유량).\n국소 운전값 = focus × 면적전류 × C-rate [mA/cm²].\n↓ = 직렬 병목 해소: "평균은 오르고(+52%) 극단 핫스팟 의존은 줄어든다(−23%)" — 원고 §3-④ "brightens as a whole"의 숫자화. 논문: "current-focusing factor" (메인-1 캡션 병기 권고).'],
+    ['ion-집중 p99.8 (×⟨J_ion⟩)', (sA.field_scale_ion || {}).focus_top, (sB.field_scale_ion || {}).focus_top,
+     '이온판 집중계수 — 최악 SE 목(constriction)의 국소 전류 / 평균.\n↓ = SDCP 이온 우회로(분담 13.8%)가 SE 병목을 분산 → 국소 SE 과부하 완화 = 수명/안정성 축의 이득.\n논문: "peak constriction current −8%; the ionic counterpart of series-constriction relief".'],
+    ['e-분담 SDCP (%)', gsh(sA, 'dissipation_share', 'SDCP'), gsh(sB, 'dissipation_share', 'SDCP'),
+     'SDCP의 전자 줄열(소산) 분담 = P_SDCP/ΣP (Kirchhoff 해의 에너지 분해).\n병렬 전도라면 이득 ≈ 분담이어야 함 — 실제는 분담 7.3%로 +52%를 만듦 = 직렬 병목 해소의 1번 증거(§3-①).\nσ_SDCP 스윕에서 분담↓·이득↑ 역행(19.6→1.7%) = 직렬 시그니처 5점 연속.'],
+    ['ion-분담 SDCP (%)', gsh(sA, 'ion_dissipation_share', 'SDCP'), gsh(sB, 'ion_dissipation_share', 'SDCP'),
+     'SDCP의 이온 소산 분담 (σ_ion_SDCP = 0.001 S/cm 훅 — SE의 1/3).\n"SDCP는 이온 절연체가 아니다" 원칙의 정량 발현 — 이온 +5.6%·집중 −13%의 미시 근거.'],
+    ['R_geom (Ω·cm²)', (sA.collector_geometric || {}).R_geom_ohm_cm2, (sB.collector_geometric || {}).R_geom_ohm_cm2,
+     '집전체 기하 접촉저항 (모델 출력): 이중 솔브 R_geom = L·(1/σ_bare − 1/σ_wetted).\nbare = 바닥 실접촉 crown만 / wetted = 전면 접촉 가정.\n측정 R_int(Fig6e: SBE 110/DBE 46 Ω·cm²)와의 갭 = 화학/열화 몫 — 기하만으로는 µΩ급임을 보이는 축.'],
     ['porosity (%)', mmA.porosity_mpm_pct != null ? mmA.porosity_mpm_pct : mmA.porosity_settled_pct,
-                     mmB.porosity_mpm_pct != null ? mmB.porosity_mpm_pct : mmB.porosity_settled_pct],
+                     mmB.porosity_mpm_pct != null ? mmB.porosity_mpm_pct : mmB.porosity_settled_pct,
+     'MPM 압밀 침대의 settled porosity (wallP 판독, 300 MPa hold).\nSBE 7.87 / DBE 7.39 = 레시피 효과(−0.5%p, PTFE 반감+SDCP 치밀화) — +52%를 설명하기엔 EMT 상한(+4%)보다도 두 자릿수 작음 → 대안 배제 논증(§7)에 사용.'],
     ['thickness (µm)', mmA.thickness_um != null ? mmA.thickness_um : mmA.thickness_mpm_um,
-                       mmB.thickness_um != null ? mmB.thickness_um : mmB.thickness_mpm_um],
-    ['econn 연결률 (%)', ecA.connected_pct, ecB.connected_pct],
-    ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters],
-    ['환산접점 중앙값 /AM', wireA.median, wireB.median],
-    ['pore-τ (구조·확산)', (sA.pore || {}).tau, (sB.pore || {}).tau],
+                       mmB.thickness_um != null ? mmB.thickness_um : mmB.thickness_mpm_um,
+     '침대 두께 — VGCF prop-open(dilate-z 1.0711)이 고정 → 두 전극 동일(72.48µm).\n비교 규약의 held-fixed 축: 두께가 같아야 σ·⟨J⟩·R 비교가 순수 미세구조 효과가 됨.'],
+    ['econn 연결률 (%)', ecA.connected_pct, ecB.connected_pct,
+     '집전체까지 전자 경로가 이어진 AM 비율 (percolation 판정).\n100% = 고립 AM 없음 — dead-AM 반론 차단 축 (두 전극 모두 완전 연결이라 이득이 "연결 회복"이 아님을 증명).'],
+    ['carbon clusters', ecA.n_carbon_clusters, ecB.n_carbon_clusters,
+     '전도상(carbon+SDCP) 연결 성분 수.\n×2.7 (3,175→8,643) = 랜덤 분산 SDCP가 만든 새 브리지 단위들 — §3-② 기하 증거.\n논문: "the number of conductive clusters increases 2.7-fold".'],
+    ['환산접점 중앙값 /AM', wireA.median, wireB.median,
+     '입자별 탄소 배선수 N_C의 중앙값 — AM 표면 0.3µm 밴드 내 전도성 탄소(서브샘플 가중 환산, PTFE 제외).\n+19% = §3-②의 "carbon contacts per AM rise by 19%" 그 숫자.\n메인-2(배선 지도)의 스칼라 요약 — Methods 정의문(N_C) 참조.'],
+    ['pore-τ (구조·확산)', (sA.pore || {}).tau, (sB.pore || {}).tau,
+     '공극상 유효확산 tortuosity (TauFactor 규약: void σ=1 Laplace → D_eff/D0, τ=ε/D_rel).\n치밀 전극(ε~7%)은 공극이 비관통이라 τ 정의 불가(—)가 정상 — 액체전해질 침투 불가 = 전고체 서사 강화 축.\n⚠ ASSB Li⁺ 수송은 SE 접촉망(σ_ion)이 담당 — 이 τ를 수송식에 대입 금지.'],
     ['첨가제→SE nn_med (µm)', ((mmA.additive_dispersion || {}).conductive_all || {}).nn_med_um,
-                              ((mmB.additive_dispersion || {}).conductive_all || {}).nn_med_um],
+                              ((mmB.additive_dispersion || {}).conductive_all || {}).nn_med_um,
+     '전도성 첨가제 점→최근접 SE 거리의 중앙값 (분산 통계).\n분산지수 D≈1(포아송)과 함께 "개별 랜덤 분산" 증빙 — 랜덤 배치가 틈 점유 확률을 최대화한다는 §3-② 기전의 정량 근거.'],
   ];
   const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
     : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
@@ -4544,11 +4560,13 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   $('cmp-table').innerHTML = '<table style="border-collapse:collapse;white-space:nowrap">'
     + '<tr style="color:#9ca3af">' + ['축', 'A', 'B', 'Δ (B−A)/A'].map((h, i) =>
         `<th style="text-align:${i ? 'right' : 'left'};padding:2px 12px 2px 0;border-bottom:1px solid #2a2d3e">${h}</th>`).join('') + '</tr>'
-    + rowsQ.map(([lab, a, b]) => {
+    + rowsQ.map(([lab, a, b, tip]) => {
         const d = (a != null && b != null && isFinite(+a) && isFinite(+b) && +a !== 0) ? (100 * (b - a) / Math.abs(+a)) : null;
         const dTxt = d == null ? '—' : (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
         const dCol = d == null ? '#6b7280' : d > 0.5 ? '#34d399' : d < -0.5 ? '#f87171' : '#9ca3af';
-        return `<tr><td style="padding:2px 12px 2px 0;color:#cbd5e1">${lab}</td>`
+        // 축 설명 카드 (hover) — 정의·유도식·논문 표현 팁.  title 멀티라인 = &#10;
+        const tipAttr = tip ? ` title="${tip.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/\n/g, '&#10;')}"` : '';
+        return `<tr><td style="padding:2px 12px 2px 0;color:#cbd5e1${tip ? ';cursor:help;text-decoration:underline dotted #4b5563;text-underline-offset:3px' : ''}"${tipAttr}>${lab}</td>`
           + `<td style="text-align:right;padding:2px 12px 2px 0;color:#7dd3fc">${fmtQ(a)}</td>`
           + `<td style="text-align:right;padding:2px 12px 2px 0;color:#fbbf24">${fmtQ(b)}</td>`
           + `<td style="text-align:right;padding:2px 0;color:${dCol}">${dTxt}</td></tr>`;
