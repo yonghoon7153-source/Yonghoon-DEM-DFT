@@ -72,6 +72,22 @@ if [ "$STAGE" = all ] || [ "$STAGE" = reseed ]; then
   done
 fi
 
+if [ "$STAGE" = reseed_hiT ]; then
+  echo "===== [+] 800/1000 K reseed x3 (Ea error bar 완성; 2026-07-18) ====="
+  for S in 2 3 4; do
+    python3 "$DRIVER" \
+      --v0_xyz "$V0XYZ" --label lpsocl \
+      --out_root "$OUTROOT/reseed_hiT/s${S}" \
+      --disorder_levels 0.0 --n_configs 1 \
+      --temperatures 800 1000 \
+      --equilib_ps 5 --prod_ps 200 \
+      --timestep_fs 2.0 --friction 0.02 \
+      --save_fs 100 --fit_window_ps 2 50 \
+      --seed ${S} \
+      --uma_model uma-s-1p1 --uma_task omat --device "$DEVICE"
+  done
+fi
+
 if [ "$STAGE" = all ] || [ "$STAGE" = licube ]; then
   echo "===== [3/3] 600 K traj rerun -> Li probability-density cube ====="
   python3 "$DRIVER" \
