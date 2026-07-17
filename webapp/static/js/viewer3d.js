@@ -265,25 +265,7 @@ function renderSt4Faces(state) {
   const nChk = st.t_s.length;
   const col = new THREE.Color();
 
-  // ── ① 복셀 점 모드 (구판 — 정량 원자료 그대로) : lazy build ──
-  let dotMesh = null;
-  const buildDots = () => {
-    if (dotMesh) return;
-    const s = (st.vox_um || 0.4) * 0.95;
-    dotMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(s, s, s),
-                                      new THREE.MeshBasicMaterial({ color: 0xffffff }), n);
-    const dummy = new THREE.Object3D();
-    for (let i = 0; i < n; i++) {
-      const p = F.pos_um[i];
-      dummy.position.set(p[0], p[2], p[1]);                  // Z-up swap (payload 규약)
-      dummy.updateMatrix();
-      dotMesh.setMatrixAt(i, dummy.matrix);
-    }
-    dotMesh.instanceMatrix.needsUpdate = true;
-    grp.add(dotMesh);
-  };
-
-  // ── ② COMSOL식 표면 필드 (기본): 면전류를 입자 표면에 각도-커널 보간 ──
+  // ── COMSOL식 표면 필드 (기본 렌더): 면전류를 입자 표면에 각도-커널 보간 ──
   // 시각화 보조 보간 (정량 원자료 = 면 값): 각 표면 정점 색 = 그 입자 BV면들의 |i/ī|를
   // 방향 코사인^24 가중 평균 (σ≈15° 각도 커널).  面이 없는 방향(비접촉 표면)은 어두운 회색.
   let surfMesh = null, vFace = null, vW = null, vDeg = null, vColAttr = null, nVertTot = 0;
@@ -379,14 +361,21 @@ function renderSt4Faces(state) {
        <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px">
          <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
        <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
-       <label style="font-weight:400;cursor:pointer;font-size:11px"><input type="checkbox" id="st4f-dots"> 복셀 점 모드</label>
      </div>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
-     <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(복셀 점 모드/npz).
+     <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(npz).
      비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
-     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>`);
-  const tS = document.getElementById('st4f-t'), dotsCb = document.getElementById('st4f-dots');
+     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>
+     <div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
+       <div style="display:flex;justify-content:space-between;align-items:center">
+         <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 — 현재 시점</b>
+         <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>
+       </div>
+       <canvas id="st4f-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
+       <div style="font-size:10px;color:#6b7280;margin-top:2px"><span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임</div>
+     </div>`);
+  const tS = document.getElementById('st4f-t');
   const frHi = [];                                           // 프레임별 p95 캐시 (정규화 기준)
   const _hiOf = (k) => {
     if (frHi[k] == null) {
@@ -396,6 +385,59 @@ function renderSt4Faces(state) {
     return frHi[k];
   };
   const arrBuf = new Float32Array(n);                        // 보간 프레임 버퍼
+  // ── 두께방향 프로파일 (동적 Fig4e): z-빈별 ⟨|i/ī|⟩(반응분포) + 표면 SOC — 시점 따라 갱신 ──
+  const NB = 24;
+  const faceZ = new Float64Array(n);
+  let zMaxF = 1e-9;
+  for (let i = 0; i < n; i++) { faceZ[i] = F.pos_um[i][2]; if (faceZ[i] > zMaxF) zMaxF = faceZ[i]; }
+  const partBin = parts.map(p => Math.max(0, Math.min(NB - 1, Math.floor(p.z / zMaxF * NB))));
+  const _pb = { i: new Float64Array(NB), c: new Int32Array(NB), s: new Float64Array(NB), sc: new Int32Array(NB) };
+  let _profRows = [];                                        // 📈 CSV용 (마지막 그린 프레임)
+  const drawProf = (fr, t0, t1, tSec) => {
+    const cv = document.getElementById('st4f-prof');
+    if (!cv) return;
+    const g = cv.getContext('2d'), Wc = cv.width, Hc = cv.height;
+    _pb.i.fill(0); _pb.c.fill(0); _pb.s.fill(0); _pb.sc.fill(0);
+    for (let i2 = 0; i2 < n; i2++) {
+      const b = Math.max(0, Math.min(NB - 1, Math.floor(faceZ[i2] / zMaxF * NB)));
+      _pb.i[b] += Math.abs(arrBuf[i2]); _pb.c[b]++;
+    }
+    const sh0 = st.x_shell[t0], sh1 = st.x_shell[t1], kS = st.nr - 1;
+    parts.forEach((p, pi) => {
+      const r0 = sh0[p.id], r1 = sh1[p.id];
+      if (!r0 || !r1) return;
+      _pb.s[partBin[pi]] += (1 - fr) * r0[kS] + fr * r1[kS]; _pb.sc[partBin[pi]]++;
+    });
+    let iMax = 1e-9;
+    for (let b = 0; b < NB; b++) if (_pb.c[b]) iMax = Math.max(iMax, _pb.i[b] / _pb.c[b]);
+    const lo2 = Math.min(st.x0, st.x100), hi2 = Math.max(st.x0, st.x100);
+    const mL = 5, mR = 5, mT = 5, mB = 14;
+    g.fillStyle = '#0d1117'; g.fillRect(0, 0, Wc, Hc);
+    g.strokeStyle = '#2a2d3e'; g.lineWidth = 1; g.strokeRect(mL, mT, Wc - mL - mR, Hc - mT - mB);
+    const X = b => mL + (b + 0.5) / NB * (Wc - mL - mR);
+    const draw = (ok, yOf, color) => {
+      g.strokeStyle = color; g.lineWidth = 1.7; g.beginPath();
+      let on = false;
+      for (let b = 0; b < NB; b++) {
+        if (!ok(b)) { on = false; continue; }
+        const y = mT + (1 - yOf(b)) * (Hc - mT - mB);
+        if (!on) { g.moveTo(X(b), y); on = true; } else g.lineTo(X(b), y);
+      }
+      g.stroke();
+    };
+    draw(b => _pb.c[b] > 0, b => (_pb.i[b] / _pb.c[b]) / iMax, '#f87171');
+    draw(b => _pb.sc[b] > 0, b => ((_pb.s[b] / _pb.sc[b]) - lo2) / Math.max(hi2 - lo2, 1e-9), '#60a5fa');
+    g.fillStyle = '#6b7280'; g.font = '10px Inter,sans-serif';
+    g.textAlign = 'left'; g.fillText('집전체', mL + 1, Hc - 3);
+    g.textAlign = 'right'; g.fillText('분리막', Wc - mR - 1, Hc - 3);
+    g.textAlign = 'left';
+    _profRows = [];
+    for (let b = 0; b < NB; b++) {
+      _profRows.push([((b + 0.5) / NB * zMaxF).toFixed(2), tSec.toFixed(1),
+                      _pb.c[b] ? (_pb.i[b] / _pb.c[b]).toFixed(5) : '',
+                      _pb.sc[b] ? (_pb.s[b] / _pb.sc[b]).toFixed(5) : '']);
+    }
+  };
   const upd = (tf) => {
     const tfv = (typeof tf === 'number') ? Math.max(0, Math.min(nChk - 1, tf)) : +tS.value;
     const t0 = Math.floor(tfv), t1 = Math.min(nChk - 1, t0 + 1), fr = tfv - t0;
@@ -405,22 +447,8 @@ function renderSt4Faces(state) {
     for (let i = 0; i < n; i++) arrBuf[i] = (1 - fr) * a0[i] + fr * a1[i];
     const arr = arrBuf;
     const hi = (1 - fr) * _hiOf(t0) + fr * _hiOf(t1);
-    const useDots = dotsCb && dotsCb.checked;
-    if (useDots) {
-      buildDots();
-      dotMesh.visible = true;
-      if (surfMesh) surfMesh.visible = false;
-      ['AM_P', 'AM_S'].forEach(t => { if (state.meshes[t]) state.meshes[t].visible = true; });
-      for (let i = 0; i < n; i++) {
-        const t2 = Math.max(0, Math.min(1, Math.abs(arr[i]) / hi));
-        dotMesh.setColorAt(i, col.setHex(jetColor(t2)));
-      }
-      if (dotMesh.instanceColor) dotMesh.instanceColor.needsUpdate = true;
-      return;
-    }
     buildSurface();
     surfMesh.visible = true;
-    if (dotMesh) dotMesh.visible = false;
     ['AM_P', 'AM_S'].forEach(t => { if (state.meshes[t]) state.meshes[t].visible = false; });
     const cArr = vColAttr.array, K = 6;
     for (let v = 0; v < nVertTot; v++) {
@@ -437,9 +465,9 @@ function renderSt4Faces(state) {
       cArr[3 * v] = col.r; cArr[3 * v + 1] = col.g; cArr[3 * v + 2] = col.b;
     }
     vColAttr.needsUpdate = true;
+    drawProf(fr, t0, t1, (1 - fr) * st.t_s[t0] + fr * st.t_s[t1]);   // 동적 Fig4e 프로파일 갱신
   };
   tS.oninput = upd;
-  if (dotsCb) dotsCb.onchange = upd;
   upd();
   // ▶ 재생 + 🎞 프레임 (SOC 모드와 동일 문법)
   if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; }
@@ -471,6 +499,29 @@ function renderSt4Faces(state) {
     }
     tS.value = keep; upd();
     frBtn.disabled = false; frBtn.textContent = '🎞';
+  };
+  // 📈 현재 시점 프로파일 PNG(3×)+CSV — 동적 Fig4e (반응분포·표면 SOC vs 두께)
+  const pfBtn = document.getElementById('st4f-prof-dl');
+  if (pfBtn) pfBtn.onclick = () => {
+    const cv = document.getElementById('st4f-prof');
+    if (!cv || !_profRows.length) return;
+    const big = document.createElement('canvas');
+    big.width = cv.width * 3; big.height = cv.height * 3;
+    const bg = big.getContext('2d');
+    bg.imageSmoothingEnabled = false;
+    bg.drawImage(cv, 0, 0, big.width, big.height);
+    const t_now = _profRows[0][1];
+    const a1 = document.createElement('a');
+    a1.href = big.toDataURL('image/png');
+    a1.download = `st4_zprofile_t${t_now}s.png`;
+    document.body.appendChild(a1); a1.click(); a1.remove();
+    const csv = 'z_um,t_s,i_over_ibar_mean,soc_surf_mean\n'
+      + _profRows.map(r => r.join(',')).join('\n');
+    const a2 = document.createElement('a');
+    a2.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+    a2.download = `st4_zprofile_t${t_now}s.csv`;
+    document.body.appendChild(a2); a2.click(); a2.remove();
+    setTimeout(() => URL.revokeObjectURL(a2.href), 5000);
   };
 }
 
