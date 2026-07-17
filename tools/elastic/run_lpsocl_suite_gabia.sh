@@ -196,7 +196,7 @@ if [ "$STAGE" = all ] || [ "$STAGE" = phaseb ]; then
         run_pw relax.in relax.out 30000 || { echo "$t relax FAIL"; cd "$WORK"; continue; }
         cd "$WORK"
     done
-    echo "==== relaxed E_bind (Ry->eV; refs: slab -10563.22819091, mol_d -518.39271245, mol_n -519.68310300) ===="
+    echo "==== relaxed E_bind — Γ-기하 패스라 근사값 (최종판정 = 이완기하 위 221 재채점) ===="
     python3 - <<'PY'
 import re, os
 Ry = 13.605693

@@ -36,13 +36,18 @@ for tag in ("complex_doped", "complex_neutral"):
                  lambda m: f"prefix          = '{m.group(1)}_rlx'", txt)
     # forces already on (tprnfor); add nstep + IONS block before &SYSTEM? no — CONTROL gets nstep
     txt = txt.replace("disk_io         = 'low'",
-                      "disk_io         = 'low'\n    nstep           = 80")
+                      "disk_io         = 'low'\n    nstep           = 30")
     # relax survival (2026-07-17): these complexes historically PLATEAU near 1e-5..1e-6
     # (neutral: 272 iters -> acc 7.6e-6) and pw.x ABORTS a relax on a non-converged step.
     # 1e-5 is plenty for BFGS forces at 1e-3 au; scf_must_converge keeps a stubborn
     # step from killing the whole chain.
     txt = txt.replace("conv_thr        = 1e-06", "conv_thr        = 1e-05")
     txt = re.sub(r"(?m)^(&ELECTRONS[^\n]*\n)", r"\1    scf_must_converge = .false.\n", txt, count=1)
+    # SPEED (2026-07-17, user time budget): geometry pass at GAMMA only (~6-8x/iter:
+    # 4 kpts@nosym -> 1 + real-wfc trick). FINAL energies = 221 single-point RESCORE
+    # on the relaxed geometry (same protocol as the original Phase-B numbers ->
+    # apples-to-apples). Energies printed during this relax are Γ-approximate.
+    txt = re.sub(r"K_POINTS\s+automatic\s*\n\s*2 2 1 0 0 0", "K_POINTS gamma", txt)
     # namelist order must be CONTROL/SYSTEM/ELECTRONS/IONS -> insert IONS after ELECTRONS
     txt = re.sub(r"(?m)^ATOMIC_SPECIES",
                  "&IONS\n    ion_dynamics    = 'bfgs'\n/\n\nATOMIC_SPECIES", txt, count=1)
