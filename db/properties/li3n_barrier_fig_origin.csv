@@ -1,7 +1,7 @@
 series,x_xi_or_site,energy_eV,status
 Eads_slab_abs,onN_min4,-2.9877,converged
 Eads_slab_abs,bridge_saddle3,-2.8695,converged
-Eads_slab_abs,onN_drag_p0,-3.0730,converged
+Eads_slab_abs,dragp0_2Nbridge_pocket,-3.0730,converged
 LiC6_dft_scf_profile,0.0000,0.0000,converged
 LiC6_dft_scf_profile,0.1667,0.1674,converged
 LiC6_dft_scf_profile,0.3333,0.2818,converged

@@ -333,5 +333,16 @@
    "paper_writeup_recommendation": "Use 'on-Li metastable site' or 'above-substrate-Li metastable site' instead of 'hollow' to be physically accurate. Cui 2023 also identifies this site but does not explicitly compute its energy (focuses on the on-N → bridge → on-N main path)."
   },
   "implication_for_UMA_failure": "The previous interpretation that 'UMA places Li adatom at hollow (3-N geometric centroid)' was misleading. The actual UMA failure is that UMA predicted the on-Li site (above substrate Li) as a minimum or even global well due to packing-only chemistry, missing the on-N stabilization from N lone pair → Li 1s charge transfer. DFT correctly identifies on-N as the well because it captures this charge transfer."
+ },
+ "li3n_drag_p0_site_identity_2026-07-17": {
+  "finding": "KISTI drag p0 (xy pinned 8.2125/1.5805, z free) is a 2N-BRIDGE POCKET, NOT on-N",
+  "coordination": "N 2.047 A x2 + Li 2.221/2.304/2.923x2/2.957x2; adatom z 13.487->12.926 (-0.56 A), only +0.302 A above top substrate atom (semi-embedded)",
+  "convergence": "clean BFGS, last-6 ionic dE ~1e-5 Ry, E=-2176.45100463 Ry",
+  "energy_vs_onN_min4_eV": -0.085,
+  "cross_agreement": "June full CI-NEB had bridge img3 at -0.102 eV below on-N (then blamed on UMA warm-start). Today's INDEPENDENT xy-pinned pure-DFT relax reproduces the same ordering (-0.085) -> bridge-pocket-below-on-N looks like a property of OUR 4-layer 3x3 slab, not (only) a UMA artifact. Cui 2023 (6-layer N-exposed) reports on-N as the well.",
+  "implication": "(1) on-N hop family numbers stand AS on-N-hop values: 2-point 0.118, NEB forward 0.12 (and the June presented-fit 102 meV; note bridge depth -0.102 is a DIFFERENT number that coincidentally matches). (2) On our slab the operative escape barrier from the pocket ~= saddle3-vs-pocket 0.2035 eV, consistent with NEB effective 0.18. (3) Which picture (our pocket-well vs Cui on-N-well) is right for the paper -> decided by the 6-layer test.",
+  "decisive_test": "2 constrained relaxes (on-N xy vs pocket xy, z free) on the 243-atom 6-layer N-exposed slab (the li3n_001_uma_v2_proper_slab geometry) -- settles thin-slab artifact vs real site ordering. Only 2 points, affordable.",
+  "figure": "docs/figures/li3n/li3n_barrier_v2.png (labels corrected 07-17: drag p0 = pocket)",
+  "data_source": "KISTI /scratch/x3430a02/kgy/li3n_drag_dft/drag_p0.out coord analysis 2026-07-17 10:2x KST"
  }
 }

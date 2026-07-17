@@ -46,7 +46,7 @@ VIOLET, TEAL, ORANGE = ELEM["P"], ELEM["Li"], "#f59e0b"
 fig, (ax, bx) = plt.subplots(1, 2, figsize=(13.2, 5.4), constrained_layout=True)
 
 # ================= (a) slab adsorption energies — level diagram =================
-labels = ["on-N (top)\nmin4 (2-pt ref)", "bridge (TS)\nsaddle3", "on-N drag p0\nNEW 07-17"]
+labels = ["on-N (top)\nmin4 (2-pt ref)", "bridge (TS)\nsaddle3", "drag p0 = 2N-bridge pocket\n(NOT on-N; coord. 07-17)"]
 vals = [EADS["onN_min4"], EADS["bridge_saddle3"], EADS["onN_dragp0"]]
 cols = [INK, VIOLET, ORANGE]
 xpos = [0, 1, 2]
@@ -70,7 +70,7 @@ xb2 = 2.44
 ax.annotate("", xy=(xb2, EADS["onN_dragp0"]), xytext=(xb2, EADS["onN_min4"]),
             arrowprops=dict(arrowstyle="<->", color=ORANGE, lw=1.5))
 ax.text(xb2 + 0.06, (EADS["onN_dragp0"] + EADS["onN_min4"]) / 2,
-        f"{EADS['onN_dragp0']-EADS['onN_min4']:+.3f} eV\ndeeper\nminimum", fontsize=10,
+        f"{EADS['onN_dragp0']-EADS['onN_min4']:+.3f} eV\ndeeper site\n(pocket, not on-N)", fontsize=10,
         color="#b45309", va="center", ha="left")
 ax.set_xticks(xpos)
 ax.set_xticklabels(labels, fontsize=10.5)
@@ -94,7 +94,7 @@ bx.plot([0.5], [BARRIER_2PT], "D", color=VIOLET, ms=8, zorder=4)
 bx.text(0.5, BARRIER_2PT + 0.016, "TS (saddle3)", ha="center", fontsize=9.5, color=VIOLET)
 # KISTI drag — converged points
 bx.plot(DRAG["xi"], DRAG["eV"], "o", color="#4c1d95", ms=9, zorder=5,
-        label="Li$_3$N(001) DFT drag, converged (2/9, 07-17)")
+        label="Li$_3$N(001) DFT drag (pocket path), 2/9")
 for x, y, t in zip(DRAG["xi"], DRAG["eV"], ["p0", "p1"]):
     bx.text(x + 0.015, y + 0.012, f"{t}  {y:+.3f}" if y else f"{t} (ref)",
             fontsize=9.5, color="#4c1d95", fontweight="bold")
@@ -115,9 +115,9 @@ bx.set_xticks([0, 0.25, 0.5, 0.75, 1.0])
 apply_axes(bx, xlabel="reaction coordinate $\\xi$ (drag point index / 8)",
            ylabel="Relative energy (eV)",
            title="(b) Li adatom migration — DFT profiles + drag points")
-bx.text(0.0, -0.048, "on-N", fontsize=9.5, color=MUT)
-bx.text(1.0, -0.048, "on-N$'$", fontsize=9.5, color=MUT, ha="right")
-bx.text(0.09, 0.015, "profiles vs their own minima;  drag ref p0 sits 0.085 eV below min4 (2-pt ref)",
+bx.text(0.0, -0.048, "p0 (pocket)", fontsize=9.5, color=MUT)
+bx.text(1.0, -0.048, "p8", fontsize=9.5, color=MUT, ha="right")
+bx.text(0.13, 0.015, "profiles vs own minima;  drag p0 = 2N-bridge pocket, 0.085 eV below on-N min4",
         transform=bx.transAxes, fontsize=8.6, color=MUT, va="bottom", ha="left")
 bx.legend(loc="upper right", fontsize=9, frameon=False)
 
@@ -133,7 +133,7 @@ csvp = REPO / "db/properties/li3n_barrier_fig_origin.csv"
 with open(csvp, "w", newline="") as f:
     w = csv.writer(f)
     w.writerow(["series", "x_xi_or_site", "energy_eV", "status"])
-    for lbl, v in zip(["onN_min4", "bridge_saddle3", "onN_drag_p0"], vals):
+    for lbl, v in zip(["onN_min4", "bridge_saddle3", "dragp0_2Nbridge_pocket"], vals):
         w.writerow(["Eads_slab_abs", lbl, f"{v:.4f}", "converged"])
     for x, y in zip(LIC6_X, LIC6_Y):
         w.writerow(["LiC6_dft_scf_profile", f"{x:.4f}", f"{y:.4f}", "converged"])
