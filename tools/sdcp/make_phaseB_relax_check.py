@@ -67,6 +67,6 @@ for tag in ("complex_doped", "complex_neutral"):
     assert n_in_pos == NSLAB, f"{tag}: froze {n_in_pos} != {NSLAB}"
     dst = os.path.join(BASE, tag, "relax.in")
     open(dst, "w").write("\n".join(out) + "\n")
-    print(f"{dst}: relax, molecule-only free (slab {NSLAB} frozen), nstep 80")
+    print(f"{dst}: relax, molecule-only free (slab {NSLAB} frozen), nstep 30, gamma")
 print("run order: doped first (the suspect pose), then neutral (fairness).")
 print("E_bind(relaxed) = E(complex relax final) - E_slab - E_mol  (refs unchanged)")
