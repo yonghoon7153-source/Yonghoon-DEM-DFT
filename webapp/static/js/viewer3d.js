@@ -599,7 +599,7 @@ function injectCSS() {
 .viewer-container canvas{display:block}
 .viewer-controls{position:absolute;top:10px;right:10px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:8px 12px;display:inline-flex;flex-direction:column;gap:3px;
-  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:210px;
+  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:230px;min-width:170px;max-width:440px;resize:horizontal;
   max-height:calc(100% - 20px);overflow-y:auto;overflow-x:hidden}
 .viewer-controls label{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px}
 .viewer-controls hr{border:none;border-top:1px solid #2a2d3e;margin:3px 0}
@@ -2654,7 +2654,11 @@ function applyViewMode(state, mode) {
          ? `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| / ⟨J_z⟩</span><span>×${fmtP(fsc.focus_top)}</span></div>`
            + `<div style="font-size:8.5px;color:#6b7280;margin-top:1px;line-height:1.35">상단(p99.8) = ${fmtP(fsc.j_top_A_cm2_per_V)} A/cm² @ΔV=1V · ⟨J_z⟩ = ${fmtP(fsc.j_mean_z_A_cm2_per_V)} A/cm²/V</div>`
            + (fsc.j_1C_mA_cm2
-              ? `<div style="font-size:9.5px;color:#cbd5e1;margin-top:3px">운전 <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:40px;font-size:9.5px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:3px;padding:0 2px">C → ⟨J⟩ <b><span id="fld-jmean-abs"></span></b> · 상단 <b><span id="fld-jtop-abs"></span></b> mA/cm² <span style="color:#6b7280;font-size:8.5px">(면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² 자동산출)</span></div>`
+              ? `<div style="margin-top:5px;padding:6px 8px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
+                   <div style="font-size:10.5px;color:#9ca3af">운전 환산&nbsp; <input id="fld-crate" type="number" value="1" min="0.05" step="0.05" style="width:46px;font-size:11px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:4px;padding:1px 4px"> C</div>
+                   <div style="font-size:12.5px;color:#e5e7eb;margin-top:3px">⟨J⟩ <b><span id="fld-jmean-abs"></span></b> · 피크 <b><span id="fld-jtop-abs"></span></b> mA/cm²</div>
+                   <div style="font-size:9px;color:#6b7280;margin-top:2px">면적용량 ${fmtP(fsc.areal_capacity_mAh_cm2)} mAh/cm² 자동산출 · 피크 = p99.8 지점</div>
+                 </div>`
               : `<div style="font-size:8.5px;color:#6b7280">운전 국소값 = (|J|/⟨J⟩) × 면적전류밀도(mA/cm²)</div>`)
          : `<div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|J| (0–p99.8)</span><span>high</span></div>`)
       + `<label style="display:block;margin-top:5px;font-size:10.5px;color:#e5e7eb;cursor:pointer">
