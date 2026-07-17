@@ -24,11 +24,17 @@ for f in relax_v0.in relax_v0.out; do
 done
 [ -d pseudo ] || { echo "ERROR: $W/pseudo 없음"; exit 1; }
 
-# ---- QE 자동 탐지 (kgy 로컬 설치 경로가 세션마다 달라서) ----
-PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*bin*" 2>/dev/null | head -1)}
+# ---- QE 자동 탐지 (kgy: pw.x는 RPATH로 lib 절대경로 참조 → env 불요) ----
+PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*qe*gpu*bin*" 2>/dev/null | head -1)}
+[ -n "$PW" ] || PW=$(find "$HOME/apps" -maxdepth 4 -name pw.x -path "*bin*" 2>/dev/null | head -1)
 [ -n "$PW" ] || { echo "ERROR: pw.x 못 찾음 — PW=/path/to/pw.x 로 지정"; exit 1; }
-echo "pw.x = $PW"
-RUN() { if command -v mpirun >/dev/null; then mpirun -np 1 "$PW" -npool 1 -in "$1"; else "$PW" -in "$1"; fi; }
+# mpirun: PATH → openmpi-4.1.6(DOS 때 사용) → hpcx. 없으면 단일랭크 직접 실행.
+MPIRUN=${MPIRUN:-$(command -v mpirun 2>/dev/null)}
+[ -n "$MPIRUN" ] || MPIRUN=$(find "$HOME/apps" -maxdepth 5 -name mpirun -path "*openmpi*bin*" 2>/dev/null | head -1)
+[ -n "$MPIRUN" ] || MPIRUN=$(find "$HOME/apps" -maxdepth 6 -name mpirun -path "*hpcx*bin*" 2>/dev/null | head -1)
+echo "pw.x   = $PW"
+echo "mpirun = ${MPIRUN:-<none, 단일랭크 직접실행>}"
+RUN() { if [ -n "$MPIRUN" ]; then "$MPIRUN" -np 1 "$PW" -npool 1 -in "$1"; else "$PW" -npool 1 -in "$1"; fi; }
 
 wait_gpu() {   # MD 뒤끝/타 프로세스 대비
     while :; do
