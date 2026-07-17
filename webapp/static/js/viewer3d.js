@@ -151,18 +151,37 @@ function renderSt4Soc(state) {
      </div>
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
      <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
+     <label style="display:block;margin-top:4px;font-size:10px;color:#e5e7eb;cursor:pointer" title="색을 현재 프레임의 p5–p95로 정규화 — 입자간·코어-셸 미세 편차 증폭 (절대 비교는 끄기; 저율/초반엔 편차가 창의 몇 %라 절대 스케일에선 균일해 보이는 게 정상 물리)">
+       <input type="checkbox" id="st4-dyn"> 동적 스케일 (프레임 p5–p95 — 편차 증폭)</label>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
-     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>x=${lo.toFixed(2)}${st.c_max_mol_m3 ? ' (' + (lo * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''} 탈리튬</span><span>x=${hi.toFixed(2)}${st.c_max_mol_m3 ? ' (' + (hi * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''} 리튬↑</span></div>
+     <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span id="st4-clo"></span><span id="st4-chi"></span></div>
      <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
      겉이 먼저 차는 shrinking-core가 시간축으로 보임.  "단면 뷰" 체크와 조합 → 내부 링 단면.
      ${st.c_rate}C · ${st.charge ? '충전' : '방전'} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
   const tS = document.getElementById('st4-t'), dS = document.getElementById('st4-d');
+  const dynCb = document.getElementById('st4-dyn');
+  const _xlab = v => `x=${v.toFixed(3)}${st.c_max_mol_m3 ? ' (' + (v * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''}`;
   const upd = () => {
     const ti = +tS.value, dp = +dS.value / 100;
     document.getElementById('st4-tlab').textContent = `t=${st.t_s[ti]}s · x̄=${st.x_mean[ti]}`;
     document.getElementById('st4-dlab').textContent = Math.round(dp * 100);
     const shell = st.x_shell[ti];
     const kSh = Math.max(0, Math.min(nr - 1, Math.ceil(dp * nr) - 1));
+    // 색 스케일: 절대(전체 창 — 물리 비교) vs 동적(현재 프레임 p5–p95 — 편차 증폭)
+    let cLo = lo, cHi = hi;
+    if (dynCb && dynCb.checked) {
+      const vals = [];
+      parts.forEach(p => { const row = shell[p.id]; if (row) vals.push(row[kSh]); });
+      if (vals.length > 4) {
+        vals.sort((x, y) => x - y);
+        cLo = vals[Math.floor(0.05 * (vals.length - 1))];
+        cHi = vals[Math.floor(0.95 * (vals.length - 1))];
+        if (cHi - cLo < 1e-6) { cLo -= 5e-7; cHi += 5e-7; }  // 완전 균일 프레임 가드
+      }
+    }
+    const eLo = document.getElementById('st4-clo'), eHi = document.getElementById('st4-chi');
+    if (eLo) eLo.textContent = _xlab(cLo) + ((dynCb && dynCb.checked) ? ' (p5)' : ' 탈리튬');
+    if (eHi) eHi.textContent = _xlab(cHi) + ((dynCb && dynCb.checked) ? ' (p95)' : ' 리튬↑');
     const dummy = new THREE.Object3D();
     const col = new THREE.Color();
     parts.forEach((p, i) => {
@@ -171,8 +190,8 @@ function renderSt4Soc(state) {
       dummy.updateMatrix();
       mesh.setMatrixAt(i, dummy.matrix);
       const row = shell[p.id];
-      const xs = row ? row[kSh] : lo;
-      const tt = Math.max(0, Math.min(1, (xs - lo) / Math.max(hi - lo, 1e-9)));
+      const xs = row ? row[kSh] : cLo;
+      const tt = Math.max(0, Math.min(1, (xs - cLo) / Math.max(cHi - cLo, 1e-9)));
       mesh.setColorAt(i, col.setHex(jetColor(tt)));
     });
     mesh.instanceMatrix.needsUpdate = true;
@@ -180,6 +199,7 @@ function renderSt4Soc(state) {
   };
   tS.oninput = upd;
   dS.oninput = upd;
+  if (dynCb) dynCb.onchange = upd;
   upd();
   // ── ▶ SOC 애니메이션 (자동 재생) + 🎞 프레임 PNG (SI 무비 조립용) ──
   if (state._st4Timer) { clearInterval(state._st4Timer); state._st4Timer = null; }
@@ -224,47 +244,209 @@ function renderSt4Faces(state) {
     state.meshes.MESH.material.transparent = true;
     state.meshes.MESH.material.opacity = 0.08;
   }
-  const s = (st.vox_um || 0.4) * 0.95;
-  const geo = new THREE.BoxGeometry(s, s, s);
-  const mat = new THREE.MeshBasicMaterial({ color: 0xffffff });   // unlit — 필드 판독용
-  const mesh = new THREE.InstancedMesh(geo, mat, n);
-  const dummy = new THREE.Object3D();
-  for (let i = 0; i < n; i++) {
-    const p = F.pos_um[i];
-    dummy.position.set(p[0], p[2], p[1]);                    // Z-up swap (payload 규약)
-    dummy.updateMatrix();
-    mesh.setMatrixAt(i, dummy.matrix);
-  }
-  mesh.instanceMatrix.needsUpdate = true;
-  state.st4FaceGroup = mesh;
-  state.scene.add(mesh);
+  const parts = [];
+  ['AM_P', 'AM_S'].forEach(t => {
+    const m = state.meshes[t];
+    if (m) { m.visible = false; parts.push(...m.userData.particles); }
+  });
+  const grp = new THREE.Group();
+  state.st4FaceGroup = grp;
+  state.scene.add(grp);
   const nChk = st.t_s.length;
+  const col = new THREE.Color();
+
+  // ── ① 복셀 점 모드 (구판 — 정량 원자료 그대로) : lazy build ──
+  let dotMesh = null;
+  const buildDots = () => {
+    if (dotMesh) return;
+    const s = (st.vox_um || 0.4) * 0.95;
+    dotMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(s, s, s),
+                                      new THREE.MeshBasicMaterial({ color: 0xffffff }), n);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < n; i++) {
+      const p = F.pos_um[i];
+      dummy.position.set(p[0], p[2], p[1]);                  // Z-up swap (payload 규약)
+      dummy.updateMatrix();
+      dotMesh.setMatrixAt(i, dummy.matrix);
+    }
+    dotMesh.instanceMatrix.needsUpdate = true;
+    grp.add(dotMesh);
+  };
+
+  // ── ② COMSOL식 표면 필드 (기본): 면전류를 입자 표면에 각도-커널 보간 ──
+  // 시각화 보조 보간 (정량 원자료 = 면 값): 각 표면 정점 색 = 그 입자 BV면들의 |i/ī|를
+  // 방향 코사인^24 가중 평균 (σ≈15° 각도 커널).  面이 없는 방향(비접촉 표면)은 어두운 회색.
+  let surfMesh = null, vFace = null, vW = null, vDeg = null, vColAttr = null, nVertTot = 0;
+  const buildSurface = () => {
+    if (surfMesh) return;
+    const tmpl = new THREE.SphereGeometry(1, 26, 19);
+    const tPos = tmpl.getAttribute('position').array, tIdx = tmpl.index.array;
+    const nV = tPos.length / 3;
+    nVertTot = nV * parts.length;
+    const K = 6;
+    // 면→입자 배정 (payload 좌표계, 해시그리드) — viz faces에 pid가 없어도 기하로 복원
+    const CELL = 8.0, hash = new Map();
+    const keyOf = (x, y, z) => (Math.floor(x / CELL)) + ',' + (Math.floor(y / CELL)) + ',' + (Math.floor(z / CELL));
+    parts.forEach((p, pi) => {
+      const k = keyOf(p.x, p.y, p.z);
+      let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(pi);
+    });
+    const pFaces = parts.map(() => []);                      // 입자별 [면 idx, 단위방향 ux,uy,uz]
+    for (let i = 0; i < n; i++) {
+      const f = F.pos_um[i];
+      let best = -1, bestScore = 1e9;
+      const cx = Math.floor(f[0] / CELL), cy = Math.floor(f[1] / CELL), cz = Math.floor(f[2] / CELL);
+      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
+        const a = hash.get((cx + dx) + ',' + (cy + dy) + ',' + (cz + dz));
+        if (!a) continue;
+        for (const pi of a) {
+          const p = parts[pi];
+          const d = Math.hypot(f[0] - p.x, f[1] - p.y, f[2] - p.z);
+          const sc = Math.abs(d - p.r);
+          if (d < p.r + 1.2 && sc < bestScore) { bestScore = sc; best = pi; }
+        }
+      }
+      if (best >= 0) {
+        const p = parts[best];
+        const dx = f[0] - p.x, dy = f[1] - p.y, dz = f[2] - p.z;
+        const L = Math.max(Math.hypot(dx, dy, dz), 1e-9);
+        pFaces[best].push([i, dx / L, dy / L, dz / L]);
+      }
+    }
+    // 정점 버퍼 + per-정점 k-최근접(각도) 면 테이블
+    const pos = new Float32Array(nVertTot * 3);
+    const idx = new Uint32Array(tIdx.length * parts.length);
+    vFace = new Int32Array(nVertTot * K).fill(-1);
+    vW = new Float32Array(nVertTot * K);
+    vDeg = new Uint8Array(nVertTot);
+    parts.forEach((p, pi) => {
+      const fl = pFaces[pi], base = pi * nV;
+      for (let v = 0; v < nV; v++) {
+        const ux = tPos[3 * v], uy = tPos[3 * v + 1], uz = tPos[3 * v + 2];
+        // payload 프레임 정점 (구는 등방이라 템플릿 방향 = payload 방향으로 써도 무방)
+        pos[3 * (base + v)] = p.x + p.r * ux;
+        pos[3 * (base + v) + 1] = p.z + p.r * uz;             // scene Y = payload z
+        pos[3 * (base + v) + 2] = p.y + p.r * uy;
+        if (!fl.length) continue;
+        // top-K by dot (삽입 정렬, K 작음)
+        const bi = new Array(K).fill(-1), bw = new Array(K).fill(-1);
+        for (let q = 0; q < fl.length; q++) {
+          const d = ux * fl[q][1] + uy * fl[q][3] + uz * fl[q][2];  // 주의: scene-swap 없는 payload 방향
+          if (d <= bw[K - 1]) continue;
+          let j = K - 1;
+          while (j > 0 && bw[j - 1] < d) { bw[j] = bw[j - 1]; bi[j] = bi[j - 1]; j--; }
+          bw[j] = d; bi[j] = fl[q][0];
+        }
+        let deg = 0;
+        for (let k2 = 0; k2 < K; k2++) {
+          if (bi[k2] < 0 || bw[k2] <= 0) break;
+          vFace[(base + v) * K + k2] = bi[k2];
+          vW[(base + v) * K + k2] = Math.pow(bw[k2], 24);     // ~15° 각도 커널
+          deg++;
+        }
+        vDeg[base + v] = deg;
+      }
+      for (let t2 = 0; t2 < tIdx.length; t2++) idx[pi * tIdx.length + t2] = base + tIdx[t2];
+    });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+    g.setIndex(new THREE.BufferAttribute(idx, 1));
+    g.computeVertexNormals();
+    vColAttr = new THREE.BufferAttribute(new Float32Array(nVertTot * 3), 3);
+    g.setAttribute('color', vColAttr);
+    surfMesh = new THREE.Mesh(g, new THREE.MeshPhongMaterial({
+      vertexColors: true, shininess: 22, specular: 0x222222 }));
+    grp.add(surfMesh);
+  };
+
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   setLegend(state,
-    `<b>🔋 STEP4-v2 — 표면 반응전류 면분포</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
+    `<b>🔋 STEP4-v2 — 표면 반응전류 (COMSOL식 표면 필드)</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
      <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
+     <div style="display:flex;gap:6px;align-items:center;margin:3px 0">
+       <button id="st4f-play" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">▶ 재생</button>
+       <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
+         <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
+       <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">🎞 프레임 PNG</button>
+       <label style="font-weight:400;cursor:pointer;font-size:10px"><input type="checkbox" id="st4f-dots"> 복셀 점 모드</label>
+     </div>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
      <div style="display:flex;justify-content:space-between;font-size:9px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
-     <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">BV 접촉면별 국소 반응전류(상대) — 같은 입자 표면에서도 SE/SDCP 접촉 기하에 따라
-     비균일.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
-     ī(면평균 |i|) 시점별 = 컬러 정규화 기준 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>`);
-  const tS = document.getElementById('st4f-t');
-  const col = new THREE.Color();
+     <div style="margin-top:3px;color:#9ca3af;font-size:9.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(복셀 점 모드/npz).
+     비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
+     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>`);
+  const tS = document.getElementById('st4f-t'), dotsCb = document.getElementById('st4f-dots');
   const upd = () => {
     const ti = +tS.value;
     document.getElementById('st4f-tlab').textContent = `t=${st.t_s[ti]}s · x̄=${st.x_mean[ti]}`;
     const arr = F.i_rel[ti];
     const abs = arr.map(Math.abs).sort((a, b) => a - b);
     const hi = Math.max(abs[Math.floor(0.95 * (abs.length - 1))], 1e-9);
-    for (let i = 0; i < n; i++) {
-      const t = Math.max(0, Math.min(1, Math.abs(arr[i]) / hi));
-      mesh.setColorAt(i, col.setHex(jetColor(t)));
+    const useDots = dotsCb && dotsCb.checked;
+    if (useDots) {
+      buildDots();
+      dotMesh.visible = true;
+      if (surfMesh) surfMesh.visible = false;
+      ['AM_P', 'AM_S'].forEach(t => { if (state.meshes[t]) state.meshes[t].visible = true; });
+      for (let i = 0; i < n; i++) {
+        const t2 = Math.max(0, Math.min(1, Math.abs(arr[i]) / hi));
+        dotMesh.setColorAt(i, col.setHex(jetColor(t2)));
+      }
+      if (dotMesh.instanceColor) dotMesh.instanceColor.needsUpdate = true;
+      return;
     }
-    if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    buildSurface();
+    surfMesh.visible = true;
+    if (dotMesh) dotMesh.visible = false;
+    ['AM_P', 'AM_S'].forEach(t => { if (state.meshes[t]) state.meshes[t].visible = false; });
+    const cArr = vColAttr.array, K = 6;
+    for (let v = 0; v < nVertTot; v++) {
+      const deg = vDeg[v];
+      if (!deg) { cArr[3 * v] = 0.16; cArr[3 * v + 1] = 0.17; cArr[3 * v + 2] = 0.19; continue; }
+      let sw = 0, sv = 0;
+      for (let k2 = 0; k2 < deg; k2++) {
+        const fi = vFace[v * K + k2];
+        sw += vW[v * K + k2];
+        sv += vW[v * K + k2] * Math.abs(arr[fi]);
+      }
+      const t2 = Math.max(0, Math.min(1, (sv / Math.max(sw, 1e-30)) / hi));
+      col.setHex(jetColor(t2));
+      cArr[3 * v] = col.r; cArr[3 * v + 1] = col.g; cArr[3 * v + 2] = col.b;
+    }
+    vColAttr.needsUpdate = true;
   };
   tS.oninput = upd;
+  if (dotsCb) dotsCb.onchange = upd;
   upd();
+  // ▶ 재생 + 🎞 프레임 (SOC 모드와 동일 문법)
+  if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; }
+  const playBtn = document.getElementById('st4f-play'), fpsSel = document.getElementById('st4f-fps');
+  if (playBtn) playBtn.onclick = () => {
+    if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; playBtn.textContent = '▶ 재생'; return; }
+    playBtn.textContent = '⏸ 정지';
+    state._st4fTimer = setInterval(() => {
+      if (!document.body.contains(tS)) { clearInterval(state._st4fTimer); state._st4fTimer = null; return; }
+      tS.value = (+tS.value + 1) % nChk;
+      upd();
+    }, 1000 / (+(fpsSel && fpsSel.value) || 4));
+  };
+  const frBtn = document.getElementById('st4f-frames');
+  if (frBtn) frBtn.onclick = async () => {
+    frBtn.disabled = true; frBtn.textContent = '저장 중…';
+    const keep = +tS.value;
+    for (let ti = 0; ti < nChk; ti++) {
+      tS.value = ti; upd();
+      state.renderer.render(state.scene, state.camera);
+      const aEl = document.createElement('a');
+      aEl.href = state.renderer.domElement.toDataURL('image/png');
+      aEl.download = `st4_faces_f${String(ti).padStart(2, '0')}_t${st.t_s[ti]}s.png`;
+      document.body.appendChild(aEl); aEl.click(); aEl.remove();
+      await new Promise(res => setTimeout(res, 300));
+    }
+    tS.value = keep; upd();
+    frBtn.disabled = false; frBtn.textContent = '🎞 프레임 PNG';
+  };
 }
 
 /* ── control-panel HTML ────────────────────────────────────── */
