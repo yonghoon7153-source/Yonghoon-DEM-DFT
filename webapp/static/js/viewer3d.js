@@ -599,7 +599,7 @@ function injectCSS() {
 .viewer-container canvas{display:block}
 .viewer-controls{position:absolute;top:10px;right:10px;background:rgba(22,25,46,.9);
   border:1px solid #2a2d3e;border-radius:8px;padding:8px 12px;display:inline-flex;flex-direction:column;gap:3px;
-  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:140px;
+  font:12px/1.4 'Inter',sans-serif;color:#e4e6f0;z-index:10;user-select:none;width:210px;
   max-height:calc(100% - 20px);overflow-y:auto;overflow-x:hidden}
 .viewer-controls label{display:flex;align-items:center;gap:5px;cursor:pointer;font-size:11px}
 .viewer-controls hr{border:none;border-top:1px solid #2a2d3e;margin:3px 0}
