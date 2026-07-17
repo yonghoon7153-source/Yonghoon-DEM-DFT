@@ -393,7 +393,9 @@ def main():
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"
   done
 ''' if s4_chg else ''
-        s4_body = f'''# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.  그리드는 STEP 2가 export.
+        s4_body = f'''# 3) STEP4-v2 시간전개 — 방전({_dis or '없음'}) → 충전 CCCV({_chg or '없음'}) 순차.
+#    각 런은 독립 초기상태 (방전 = x0 충전상태에서, 충전 = x100 방전상태에서 시작) → 순서는 결과 무관;
+#    방전이 rate-비교 주축이라 먼저.  그리드는 STEP 2가 export.
 AP=""
 for d in "$KIT/anchor_params" "$KIT/../anchor_params"; do [ -f "$d/ocp_nmc811_chen2020.csv" ] && AP="$d" && break; done
 if [ -z "$AP" ]; then
