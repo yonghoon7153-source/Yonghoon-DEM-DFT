@@ -1,0 +1,16 @@
+series,x_xi_or_site,energy_eV,status
+Eads_slab_abs,onN_min4,-2.9877,converged
+Eads_slab_abs,bridge_saddle3,-2.8695,converged
+Eads_slab_abs,onN_drag_p0,-3.0730,converged
+LiC6_dft_scf_profile,0.0000,0.0000,converged
+LiC6_dft_scf_profile,0.1667,0.1674,converged
+LiC6_dft_scf_profile,0.3333,0.2818,converged
+LiC6_dft_scf_profile,0.5000,0.2866,converged
+LiC6_dft_scf_profile,0.6667,0.2764,converged
+LiC6_dft_scf_profile,0.8333,0.1583,converged
+LiC6_dft_scf_profile,1.0000,-0.0222,converged
+Li3N_drag_dft,0.0000,0.0000,converged
+Li3N_drag_dft,0.1250,0.1847,converged
+Li3N_drag_dft,0.2500,0.5960,RUNNING_upper_bound_2026-07-17
+Li3N_drag_dft,0.3750,0.8930,RUNNING_upper_bound_2026-07-17
+Li3N_2point_guide,0.5,0.1182,TS_saddle3_vs_min4
