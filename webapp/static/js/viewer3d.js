@@ -4564,13 +4564,35 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         const d = (a != null && b != null && isFinite(+a) && isFinite(+b) && +a !== 0) ? (100 * (b - a) / Math.abs(+a)) : null;
         const dTxt = d == null ? '—' : (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
         const dCol = d == null ? '#6b7280' : d > 0.5 ? '#34d399' : d < -0.5 ? '#f87171' : '#9ca3af';
-        // 축 설명 카드 (hover) — 정의·유도식·논문 표현 팁.  title 멀티라인 = &#10;
-        const tipAttr = tip ? ` title="${tip.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/\n/g, '&#10;')}"` : '';
+        // 축 설명 카드 (hover) — 정의·유도식·논문 표현 팁.  커스텀 카드(지연 0)용 data-tip
+        const tipAttr = tip ? ` data-tip="${tip.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/\n/g, '&#10;')}"` : '';
         return `<tr><td style="padding:2px 12px 2px 0;color:#cbd5e1${tip ? ';cursor:help;text-decoration:underline dotted #4b5563;text-underline-offset:3px' : ''}"${tipAttr}>${lab}</td>`
           + `<td style="text-align:right;padding:2px 12px 2px 0;color:#7dd3fc">${fmtQ(a)}</td>`
           + `<td style="text-align:right;padding:2px 12px 2px 0;color:#fbbf24">${fmtQ(b)}</td>`
           + `<td style="text-align:right;padding:2px 0;color:${dCol}">${dTxt}</td></tr>`;
       }).join('') + '</table>';
+  // ── 축 설명 카드: 커스텀 hover (native title은 ~1s 지연 + 스타일 없음 → 즉시 뜨는 카드) ──
+  let tipCard = document.getElementById('cmp-tipcard');
+  if (!tipCard) {
+    tipCard = document.createElement('div');
+    tipCard.id = 'cmp-tipcard';
+    tipCard.style.cssText = 'position:fixed;z-index:3000;max-width:440px;background:#111827;'
+      + 'border:1px solid #3b4252;border-radius:8px;padding:10px 12px;font-size:11.5px;line-height:1.6;'
+      + 'color:#d1d5db;white-space:pre-line;box-shadow:0 8px 24px rgba(0,0,0,.55);pointer-events:none;display:none';
+    document.body.appendChild(tipCard);
+    document.addEventListener('click', () => { tipCard.style.display = 'none'; }, true);  // 모달 닫힘 잔존 방지
+  }
+  $('cmp-table').querySelectorAll('td[data-tip]').forEach(td => {
+    td.onmouseenter = () => { tipCard.textContent = td.getAttribute('data-tip'); tipCard.style.display = 'block'; };
+    td.onmousemove = e => {
+      const w = tipCard.offsetWidth, h = tipCard.offsetHeight;
+      let x = e.clientX + 14, y = e.clientY + 12;
+      if (x + w > innerWidth - 8) x = Math.max(8, e.clientX - w - 14);
+      if (y + h > innerHeight - 8) y = Math.max(8, e.clientY - h - 12);
+      tipCard.style.left = x + 'px'; tipCard.style.top = y + 'px';
+    };
+    td.onmouseleave = () => { tipCard.style.display = 'none'; };
+  });
 
   // ── 3D 두 쪽 ──
   const mkSide = (viewId, payload) => {
