@@ -143,6 +143,12 @@ function renderSt4Soc(state) {
     `<b>🔋 STEP4-v2 — 입자 SOC 코어-셸</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
+     <div style="display:flex;gap:6px;align-items:center;margin:3px 0">
+       <button id="st4-play" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">▶ 재생</button>
+       <select id="st4-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:10.5px;padding:1px 3px">
+         <option value="2">2 fps</option><option value="4" selected>4 fps</option><option value="8">8 fps</option></select>
+       <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 10px;cursor:pointer;font-size:11px">🎞 프레임 PNG</button>
+     </div>
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
      <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
@@ -175,6 +181,38 @@ function renderSt4Soc(state) {
   tS.oninput = upd;
   dS.oninput = upd;
   upd();
+  // ── ▶ SOC 애니메이션 (자동 재생) + 🎞 프레임 PNG (SI 무비 조립용) ──
+  if (state._st4Timer) { clearInterval(state._st4Timer); state._st4Timer = null; }
+  const playBtn = document.getElementById('st4-play'), fpsSel = document.getElementById('st4-fps');
+  if (playBtn) playBtn.onclick = () => {
+    if (state._st4Timer) {
+      clearInterval(state._st4Timer); state._st4Timer = null; playBtn.textContent = '▶ 재생'; return;
+    }
+    playBtn.textContent = '⏸ 정지';
+    state._st4Timer = setInterval(() => {
+      if (!document.body.contains(tS)) {                     // 모드 이탈 시 자기 정리
+        clearInterval(state._st4Timer); state._st4Timer = null; return;
+      }
+      tS.value = (+tS.value + 1) % nChk;
+      upd();
+    }, 1000 / (+(fpsSel && fpsSel.value) || 4));
+  };
+  const frBtn = document.getElementById('st4-frames');
+  if (frBtn) frBtn.onclick = async () => {
+    frBtn.disabled = true; frBtn.textContent = '저장 중…';
+    const keep = +tS.value;
+    for (let ti = 0; ti < nChk; ti++) {
+      tS.value = ti; upd();
+      state.renderer.render(state.scene, state.camera);      // 명시 렌더 후 캡처 (버퍼 보존 켜져 있음)
+      const aEl = document.createElement('a');
+      aEl.href = state.renderer.domElement.toDataURL('image/png');
+      aEl.download = `st4_soc_f${String(ti).padStart(2, '0')}_t${st.t_s[ti]}s.png`;
+      document.body.appendChild(aEl); aEl.click(); aEl.remove();
+      await new Promise(res => setTimeout(res, 300));        // 브라우저 다운로드 큐 여유
+    }
+    tS.value = keep; upd();
+    frBtn.disabled = false; frBtn.textContent = '🎞 프레임 PNG';
+  };
 }
 
 function renderSt4Faces(state) {
@@ -421,6 +459,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
   const state = {
     data: null, meshes: {}, percolationOn: false, pathGroup: null,
     selectedComponent: null, infoEl: null,
+    renderer, camera, scene: null,                           // st4 애니메이션 프레임 export용 핸들
   };
 
   /* controls panel — MPM payloads get the minimal panel.  Both the per-case route

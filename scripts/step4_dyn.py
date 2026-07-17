@@ -733,6 +733,13 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
               f'dof {sys_.N:,}, I_1C={I_1C:.3e} A, I_cc={I_cc:.3e} A ({c_rate:g}C'
               f'{", CCCV" if cv_hold else ""}), R_int={r_int_ohm_cm2:g} Ω·cm², '
               f'α={kin.aa}/{kin.ac}, ASR_film={kin.asr:g} Ω·m², T={kin.T:g} K', flush=True)
+        # 곡선-비교 정합용 per-런 앵커 (수치리뷰 F1/F2 2026-07-17): 곡선 도구가 이 라인을 파싱해
+        # 자기 면적용량·x_init로 축을 만들면 공유-앵커 오염(용량 1.3% 차 → knee 최대 ~10 mV
+        # 가짜 갭)이 사라짐.  dead-AM 부피분율도 병기 (용량/soc_end는 전체-AM 규약).
+        _a_cm2 = sys_.area_m2 * 1e4
+        print(f'  step4-v2: area={_a_cm2:.6g} cm², areal_cap={cap_As / 3600.0 / _a_cm2 * 1e3:.6g} '
+              f'mAh/cm², x_init={x_ini:.6f}, dead_AM_vol={float(V_p[~has_face].sum() / V_p.sum() * 100):.3f}%',
+              flush=True)
     phi = np.zeros(sys_.N)
     U0 = float(ocp.U(x_ini))
     phi[:sys_.n_e] = U0
