@@ -410,32 +410,22 @@ function renderSt4Faces(state) {
     let iMax = 1e-9;
     for (let b = 0; b < NB; b++) if (_pb.c[b]) iMax = Math.max(iMax, _pb.i[b] / _pb.c[b]);
     const lo2 = Math.min(st.x0, st.x100), hi2 = Math.max(st.x0, st.x100);
-    const mL = 5, mR = 5, mT = 5, mB = 14;
-    g.fillStyle = '#0d1117'; g.fillRect(0, 0, Wc, Hc);
-    g.strokeStyle = '#2a2d3e'; g.lineWidth = 1; g.strokeRect(mL, mT, Wc - mL - mR, Hc - mT - mB);
-    const X = b => mL + (b + 0.5) / NB * (Wc - mL - mR);
-    const draw = (ok, yOf, color) => {
-      g.strokeStyle = color; g.lineWidth = 1.7; g.beginPath();
-      let on = false;
-      for (let b = 0; b < NB; b++) {
-        if (!ok(b)) { on = false; continue; }
-        const y = mT + (1 - yOf(b)) * (Hc - mT - mB);
-        if (!on) { g.moveTo(X(b), y); on = true; } else g.lineTo(X(b), y);
-      }
-      g.stroke();
-    };
-    draw(b => _pb.c[b] > 0, b => (_pb.i[b] / _pb.c[b]) / iMax, '#f87171');
-    draw(b => _pb.sc[b] > 0, b => ((_pb.s[b] / _pb.sc[b]) - lo2) / Math.max(hi2 - lo2, 1e-9), '#60a5fa');
-    g.fillStyle = '#6b7280'; g.font = '10px Inter,sans-serif';
-    g.textAlign = 'left'; g.fillText('집전체', mL + 1, Hc - 3);
-    g.textAlign = 'right'; g.fillText('분리막', Wc - mR - 1, Hc - 3);
-    g.textAlign = 'left';
+    const zc = b => (b + 0.5) / NB * zMaxF;
+    const rZ = [], rY = [], bZ = [], bY = [];              // 정규화 [0,1] 두 곡선 (공유 축)
+    for (let b = 0; b < NB; b++) {
+      if (_pb.c[b]) { rZ.push(zc(b)); rY.push((_pb.i[b] / _pb.c[b]) / iMax); }
+      if (_pb.sc[b]) { bZ.push(zc(b)); bY.push(((_pb.s[b] / _pb.sc[b]) - lo2) / Math.max(hi2 - lo2, 1e-9)); }
+    }
+    const curves = [{ zs: rZ, ys: rY, color: '#f87171', dash: false },
+                    { zs: bZ, ys: bY, color: '#60a5fa', dash: false }];
+    drawZProfileCanvas(cv, curves, '');                    // 인라인 (크리스프 헬퍼)
     _profRows = [];
     for (let b = 0; b < NB; b++) {
-      _profRows.push([((b + 0.5) / NB * zMaxF).toFixed(2), tSec.toFixed(1),
+      _profRows.push([zc(b).toFixed(2), tSec.toFixed(1),
                       _pb.c[b] ? (_pb.i[b] / _pb.c[b]).toFixed(5) : '',
                       _pb.sc[b] ? (_pb.s[b] / _pb.sc[b]).toFixed(5) : '']);
     }
+    state._st4fProf = { curves, rows: _profRows };         // 고해상 export용
   };
   const upd = (tf) => {
     const tfv = (typeof tf === 'number') ? Math.max(0, Math.min(nChk - 1, tf)) : +tS.value;
@@ -501,13 +491,10 @@ function renderSt4Faces(state) {
   // 📈 현재 시점 프로파일 PNG(3×)+CSV — 동적 Fig4e (반응분포·표면 SOC vs 두께)
   const pfBtn = document.getElementById('st4f-prof-dl');
   if (pfBtn) pfBtn.onclick = () => {
-    const cv = document.getElementById('st4f-prof');
-    if (!cv || !_profRows.length) return;
+    if (!_profRows.length || !state._st4fProf) return;
     const big = document.createElement('canvas');
-    big.width = cv.width * 3; big.height = cv.height * 3;
-    const bg = big.getContext('2d');
-    bg.imageSmoothingEnabled = false;
-    bg.drawImage(cv, 0, 0, big.width, big.height);
+    big.width = 1200; big.height = 660;
+    drawZProfileCanvas(big, state._st4fProf.curves, '');   // 고해상 재그리기 (확대-뭉갬 방지)
     const t_now = _profRows[0][1];
     const a1 = document.createElement('a');
     a1.href = big.toDataURL('image/png');
