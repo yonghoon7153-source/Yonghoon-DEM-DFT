@@ -719,6 +719,25 @@ def main():
                                 'j_1C_mA_cm2': _fse.get('j_1C_mA_cm2'),
                                 'note': ('v(0..1): ×j_top→A/cm²@ΔV=1V; ×focus_top→|J|/⟨J_z⟩(바이어스 무관); '
                                          '국소 mA/cm²@C-rate = focus×j_1C×C (j_1C=면적용량, Chen2020 창)')}
+                    # ★ φ(z) 프로파일 (Oh 2025 primer 논문 Fig 4e 문법 = ΔV=1V 전도 솔브의
+                    # 두께방향 전위) — 층별 전도-복셀 평균.  전자(정본) + 전자(bare 집전체:
+                    # 계면 강하 그림) + 이온 3곡선.  solve 규약: 바닥판 φ=1, 꼭대기 φ=0.
+                    def _phi_prof(_resX):
+                        if 'phi' not in _resX:
+                            return None
+                        _P, _C = _resX['phi'], _resX['cond']
+                        _pz, _zz = [], []
+                        for _k in range(sid3.shape[2]):
+                            _m3 = _C[:, :, _k]
+                            if _m3.any():
+                                _pz.append(float(_P[:, :, _k][_m3].mean()))
+                                _zz.append(round((_k + 0.5) * a.step3_vox, 3))
+                        return {'z_um': _zz, 'phi': [float(f'{v:.5g}') for v in _pz]}
+                    step3['phi_profile'] = {k: v for k, v in {
+                        'electronic': _phi_prof(_res3), 'electronic_bare': _phi_prof(_res3b),
+                        'ionic': _phi_prof(_res3i)}.items() if v}
+                    step3['phi_profile']['note'] = ('ΔV=1V 전도 솔브 층별 전도-복셀 평균 φ '
+                                                    '(바닥판 φ=1, 꼭대기 φ=0; Oh2025 Fig4e 문법)')
                     step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
