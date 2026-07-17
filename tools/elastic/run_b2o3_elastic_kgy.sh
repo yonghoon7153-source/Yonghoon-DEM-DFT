@@ -28,12 +28,15 @@ done
 PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*qe*gpu*bin*" 2>/dev/null | head -1)}
 [ -n "$PW" ] || PW=$(find "$HOME/apps" -maxdepth 4 -name pw.x -path "*bin*" 2>/dev/null | head -1)
 [ -n "$PW" ] || { echo "ERROR: pw.x 못 찾음 — PW=/path/to/pw.x 로 지정"; exit 1; }
-# mpirun: PATH → openmpi-4.1.6(DOS 때 사용) → hpcx. 없으면 단일랭크 직접 실행.
-MPIRUN=${MPIRUN:-$(command -v mpirun 2>/dev/null)}
-[ -n "$MPIRUN" ] || MPIRUN=$(find "$HOME/apps" -maxdepth 5 -name mpirun -path "*openmpi*bin*" 2>/dev/null | head -1)
-[ -n "$MPIRUN" ] || MPIRUN=$(find "$HOME/apps" -maxdepth 6 -name mpirun -path "*hpcx*bin*" 2>/dev/null | head -1)
+# mpirun은 pw.x가 링크한 바로 그 openmpi에서만 (conda openmpi로 launcher 태우면
+# ABI 불일치 PMIx 에러). ldd로 libmpi 경로 → ../bin/mpirun. 없으면 단일랭크 직접실행
+# (OpenMPI singleton init — 단일 GPU라 mpirun 불요, `pw.x < /dev/null` 로드 확인됨).
+if [ -z "${MPIRUN:-}" ]; then
+    MPIDIR=$(ldd "$PW" 2>/dev/null | grep -oE '/[^ ]*/lib(64)?/libmpi\.so' | head -1 | sed -E 's|/lib(64)?/libmpi\.so$||')
+    if [ -n "$MPIDIR" ] && [ -x "$MPIDIR/bin/mpirun" ]; then MPIRUN="$MPIDIR/bin/mpirun"; else MPIRUN=""; fi
+fi
 echo "pw.x   = $PW"
-echo "mpirun = ${MPIRUN:-<none, 단일랭크 직접실행>}"
+echo "mpirun = ${MPIRUN:-<none → 단일랭크 직접실행 (singleton)>}"
 RUN() { if [ -n "$MPIRUN" ]; then "$MPIRUN" -np 1 "$PW" -npool 1 -in "$1"; else "$PW" -npool 1 -in "$1"; fi; }
 
 wait_gpu() {   # MD 뒤끝/타 프로세스 대비
