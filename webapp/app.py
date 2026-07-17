@@ -5294,6 +5294,20 @@ def mpm_input_package(case_id):
     if _vox not in ('0.4', '0.25', '0.2'):
         _vox = '0.4'
     cmd += ['--step3-vox', _vox]
+    # STEP4 체크박스 (중복 선택 가능): &step4=0.5,1 → run_mpm.sh가 payload 후 각 rate를
+    # 순차 자동 실행 (미선택 = step4_grid.npz export까지만 — 나중에 step4_only.sh로 재개).
+    _s4_clean = []
+    for _tok in request.args.get('step4', '').split(','):
+        _tok = _tok.strip()
+        if _tok:
+            try:
+                _v = float(_tok)
+                if 0.02 <= _v <= 5.0 and _v not in _s4_clean:
+                    _s4_clean.append(_v)
+            except ValueError:
+                pass
+    if _s4_clean:
+        cmd += ['--step4-crates', ','.join(f'{v:g}' for v in _s4_clean)]
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
@@ -5307,9 +5321,16 @@ def mpm_input_package(case_id):
     buf.seek(0)
     # filename carries BOTH the recipe and the mixing, so a thinky vs ball-mill zip
     # of the same recipe are distinct files (mixing changes the baked run_mpm.sh).
-    tag = ('_' + recipe.replace(':', '-').replace('=', '_') + '_' + mixing) if recipe else ''
+    # zip 이름 = [A-Za-z0-9._] 만 사용 (자기서술형 재료+값 쌍).  ':'/'-' 구분자는 사용자
+    # 환경(브라우저/OS 다운로드 새니타이즈)에서 삭제돼 JS 예측명과 실제 파일명이 계속
+    # 어긋났음 (예: VGCF-PTFE-SDCP_2.97-0.495-0.495 → VGCFPTFESDCP_2.970.4950.495).
+    _pairs = [('VGCF', _vg), ('SuperP', _sp), ('PTFE', _pt), ('SDCP', _sd)]
+    tag = (('_' + '_'.join(f'{k}{v:g}' for k, v in _pairs if v > 0) + '_' + mixing)
+           if recipe else '')
     if recipe and _vox != '0.4':                        # finer STEP3 vox → carried into the zip/name
         tag += '_vox' + _vox
+    if _s4_clean:                                       # STEP4 선택 → zip 이름에 rate 표기
+        tag += '_s4' + '_'.join(f'{v:g}C' for v in _s4_clean)
     return send_file(buf, mimetype='application/zip', as_attachment=True,
                      download_name=f'mpm_input_{case_id}{tag}.zip')
 
