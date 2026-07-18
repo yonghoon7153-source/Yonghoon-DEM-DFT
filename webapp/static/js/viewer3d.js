@@ -232,6 +232,7 @@ function renderSt4Soc(state) {
          <option value="2" selected>2 fps</option><option value="4">4 fps</option><option value="8">8 fps</option></select>
        <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
        <button id="st4-gif" title="전체 시간전개를 GIF 한 장으로 다운로드 (3D SOC geometry)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎬</button>
+       <select id="st4-gifsub" title="GIF 부드러움 — 체크포인트 사이 보간 프레임 배수 (높을수록 부드럽지만 용량↑)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px"><option value="1">×1</option><option value="3" selected>×3</option><option value="6">×6</option></select>
      </div>
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
      <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
@@ -329,13 +330,13 @@ function renderSt4Soc(state) {
     tS.value = keep; upd();
     frBtn.disabled = false; frBtn.textContent = '🎞';
   };
-  const gifBtn = document.getElementById('st4-gif');         // 🎬 전체 시간전개 → GIF (3D SOC)
+  const gifBtn = document.getElementById('st4-gif');         // 🎬 전체 시간전개 → GIF (3D SOC, 보간 프레임)
   if (gifBtn) gifBtn.onclick = async () => {
-    const keep = +tS.value, frames = [];
-    for (let ti = 0; ti < nChk; ti++) { tS.value = ti; upd(); frames.push(_captureHiRes(state, 2)); }
+    const keep = +tS.value, sub = +(document.getElementById('st4-gifsub') || {}).value || 3;
+    const frames = _st4GifFrames(nChk, sub, ph => upd(ph), () => _captureHiRes(state, 2));
     tS.value = keep; upd();
     const _cn = String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
-    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2,
+    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub,
       `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_cn ? '_' + _cn : ''}`, gifBtn);
   };
 }
@@ -458,6 +459,7 @@ function renderSt4Faces(state) {
          <option value="2" selected>2 fps</option><option value="4">4 fps</option><option value="8">8 fps</option></select>
        <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
        <button id="st4f-gif" title="전체 시간전개를 GIF 한 장으로 (3D 반응전류 표면 애니메이션)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎬</button>
+       <select id="st4f-gifsub" title="GIF 부드러움 — 체크포인트 사이 보간 프레임 배수 (3D·프로파일 GIF 공통; 높을수록 부드럽지만 용량↑)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px"><option value="1">×1</option><option value="3" selected>×3</option><option value="6">×6</option></select>
      </div>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
@@ -592,12 +594,13 @@ function renderSt4Faces(state) {
   };
   const _st4cn = () => String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
   const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_st4cn() ? '_' + _st4cn() : ''}`;
-  const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면)
+  const _gifSub = () => +(document.getElementById('st4f-gifsub') || {}).value || 3;
+  const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면, 보간 프레임)
   if (fGifBtn) fGifBtn.onclick = async () => {
-    const keep = +tS.value, frames = [];
-    for (let ti = 0; ti < nChk; ti++) { tS.value = ti; upd(); frames.push(_captureHiRes(state, 2)); }
+    const keep = +tS.value, sub = _gifSub();
+    const frames = _st4GifFrames(nChk, sub, ph => upd(ph), () => _captureHiRes(state, 2));
     tS.value = keep; upd();
-    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, `st4_rxn3d_${_st4tag()}`, fGifBtn);
+    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_rxn3d_${_st4tag()}`, fGifBtn);
   };
   // 📈 현재 시점 프로파일 PNG(3×)+CSV — 동적 Fig4e (반응분포·표면 SOC vs 두께)
   const pfBtn = document.getElementById('st4f-prof-dl');
@@ -619,18 +622,17 @@ function renderSt4Faces(state) {
     document.body.appendChild(a2); a2.click(); a2.remove();
     setTimeout(() => URL.revokeObjectURL(a2.href), 5000);
   };
-  const zGifBtn = document.getElementById('st4f-zgif');      // 🎬 두께 프로파일 전체 시간전개 → GIF (동적 Fig4e 무비)
+  const zGifBtn = document.getElementById('st4f-zgif');      // 🎬 두께 프로파일 전체 시간전개 → GIF (동적 Fig4e, 보간 프레임)
   if (zGifBtn) zGifBtn.onclick = async () => {
-    const keep = +tS.value, frames = [];
-    for (let ti = 0; ti < nChk; ti++) {
-      tS.value = ti; upd();                                  // upd → drawProf가 state._st4fProf 갱신
-      if (!state._st4fProf) continue;
+    const keep = +tS.value, sub = _gifSub();
+    const frames = _st4GifFrames(nChk, sub, ph => upd(ph), () => {   // upd → drawProf가 state._st4fProf 갱신
+      if (!state._st4fProf) return null;
       const big = document.createElement('canvas'); big.width = 1000; big.height = 560;
       drawZProfileCanvas(big, state._st4fProf.curves, '');
-      frames.push(big.toDataURL('image/png'));
-    }
+      return big.toDataURL('image/png');
+    });
     tS.value = keep; upd();
-    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, `st4_zprof_${_st4tag()}`, zGifBtn);
+    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_zprof_${_st4tag()}`, zGifBtn);
   };
 }
 
@@ -4858,6 +4860,14 @@ async function st4FramesToGif(frames, fps, name, btn) {
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   } catch (e) { alert('GIF 실패: ' + e.message); }
   finally { if (btn) { btn.disabled = false; btn.textContent = orig; } }
+}
+
+/* nChk 체크포인트를 sub배로 선형보간해 부드러운 프레임 시퀀스 캡처 (뷰어 재생과 동일한 보간).
+   setPhase(소수 phase) = upd(phase), capture() = 프레임 캡처(dataURL).  sub=1이면 체크포인트만. */
+function _st4GifFrames(nChk, sub, setPhase, capture) {
+  const frames = [], s = Math.max(1, sub | 0), nF = (Math.max(1, nChk) - 1) * s + 1;
+  for (let k = 0; k < nF; k++) { setPhase(k / s); const c = capture(); if (c) frames.push(c); }
+  return frames;
 }
 
 function _captureHiRes(state, scale) {
