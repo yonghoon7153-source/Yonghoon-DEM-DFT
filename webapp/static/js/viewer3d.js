@@ -2859,9 +2859,15 @@ function applyViewMode(state, mode) {
          <div style="margin-top:4px"><button id="st4-open" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:3px 8px;cursor:pointer">📂 step4_viz.json 선택</button></div>
          <div style="margin-top:4px;color:#9ca3af;font-size:10.5px">GPU 런에서 <code>step4_dyn.py … --viz-out step4_viz.json</code>으로 생성한 파일을 선택하세요
          (입자별 코어-셸 SOC 체크포인트 + BV 면별 반응전류).  같은 케이스의 침대여야 입자 id가 맞습니다.${st4Url ? '<br><b>한 번 열면 이 케이스에 저장되어 다음부터 자동으로 열립니다.</b>' : ''}</div>`);
-      const inp = document.getElementById('st4-file');
       const btn = document.getElementById('st4-open');
-      if (btn && inp) {
+      // file input을 동적 생성 (템플릿에 #st4-file 없는 뷰어=mpm-lab에서도 작동 — 이게 '안 뜨던' 원인)
+      let inp = document.getElementById('st4-file');
+      if (!inp) {
+        inp = document.createElement('input');
+        inp.type = 'file'; inp.accept = '.json,application/json'; inp.style.display = 'none';
+        document.body.appendChild(inp);
+      }
+      if (btn) {
         btn.onclick = () => inp.click();
         inp.onchange = (e) => {
           const f = e.target.files && e.target.files[0];
@@ -2870,10 +2876,11 @@ function applyViewMode(state, mode) {
           rd.onload = () => {
             let obj;
             try { obj = JSON.parse(rd.result); } catch (err) { alert('step4_viz JSON 파싱 실패: ' + err); return; }
-            if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind 확인)'); return; }
+            if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind=' + (obj && obj.kind) + ')'); return; }
             state.st4 = obj;
             if (st4Url) fetch(st4Url, { method: 'POST',      // 다음부터 자동 로드 (fire-and-forget)
-              headers: { 'Content-Type': 'application/json' }, body: rd.result }).catch(() => {});
+              headers: { 'Content-Type': 'application/json' }, body: rd.result })
+              .then(r => { if (r && r.ok) console.log('st4 viz 서버 저장됨 → 다음부터 자동 로드'); }).catch(() => {});
             inp.value = '';
             applyViewMode(state, mode);
           };
