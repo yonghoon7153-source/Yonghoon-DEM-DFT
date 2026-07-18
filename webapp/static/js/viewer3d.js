@@ -4867,74 +4867,114 @@ function _focusTicks(f) {
   t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' ⟨J⟩' });
   return t;
 }
-/* 비교 팝업 st4 모드 — A·B 두 케이스의 step4_viz(curve)를 겹쳐 방전곡선 + 조건 라벨.
-   각 케이스 viz는 lab 저장분(/mpm-lab/st4/<pid>) 자동 로드; 없으면 📂로 로드.  A=실선/B=점선. */
-function buildSt4Compare($, pidA, pidB, nameA, nameB) {
+/* 비교 팝업 st4 모드 — A·B 두 케이스의 SOC 애니메이션(3D 양쪽) 2fps + 조건.
+   viz는 lab 저장분(/mpm-lab/st4/<pid>) 자동 로드; 없으면 📂.  전압곡선은 별도 팝업(📈 버튼). */
+function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
   const X0 = 0.2638452245913298, X100 = 0.853974674630047;
-  const note = $('cmp-st4-note');
-  if (!$('cmp-st4-canvas')._st4series) $('cmp-st4-canvas')._st4series = {};
-  const store = $('cmp-st4-canvas')._st4series;   // {A:{cu,meta,name}, B:{...}}
-  const PAL = { A: '#1f6fb2', B: '#d1495b' };
-  const draw = () => {
-    const cv = $('cmp-st4-canvas'), g = cv.getContext('2d');
-    const dpr = 2; cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; g.scale(dpr, dpr);
-    const W = cv.clientWidth, H = cv.clientHeight, mL = 60, mR = 16, mT = 14, mB = 44;
-    const xmode = ($('cmp-st4-x') || {}).value || 'cap';
+  const store = overlay._st4store || (overlay._st4store = {});   // {A:{viz,mesh,parts}, B:{...}}
+  const metaOf = o => ({ c_rate: o.c_rate, charge: o.charge, v_min: o.v_min, v_max: o.v_max,
+    cv_hold: o.cv_hold, i_cut_frac: o.i_cut_frac, end_reason: o.end_reason, x0: o.x0, x100: o.x100 });
+  const buildSide = (key, S, payload, o) => {
+    const parts = payload.particles || [];
+    if (S.grp) { S.scene.remove(S.grp); S.grp = null; }
+    const grp = new THREE.Group();
+    const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
+    if (mesh) { mesh.material.shininess = 8; grp.add(mesh); }
+    S.scene.add(grp); S.grp = grp;
+    store[key] = { viz: o, meta: metaOf(o), parts, mesh, nChk: (o.x_shell || []).length };
+    if (S.meshes) ['AM_P', 'AM_S', 'MESH'].forEach(t => { if (S.meshes[t]) S.meshes[t].visible = false; });
+  };
+  const recolor = (frac) => {
+    const c = new THREE.Color();
+    ['A', 'B'].forEach(key => {
+      const s = store[key]; if (!s || !s.mesh || !s.nChk) return;
+      const lo = Math.min(s.meta.x0 ?? X0, s.meta.x100 ?? X100), hi = Math.max(s.meta.x0 ?? X0, s.meta.x100 ?? X100);
+      const ti = Math.max(0, Math.min(s.nChk - 1, Math.round(frac * (s.nChk - 1))));
+      const shell = s.viz.x_shell[ti], kSh = (s.viz.nr || 20) - 1;
+      s.parts.forEach((p, i) => { const row = shell[p.id]; const xs = row ? row[kSh] : lo;
+        const tt = Math.max(0, Math.min(1, (xs - lo) / Math.max(hi - lo, 1e-9))); s.mesh.setColorAt(i, c.setHex(jetColor(tt))); });
+      if (s.mesh.instanceColor) s.mesh.instanceColor.needsUpdate = true;
+    });
+    const s0 = store.A || store.B;
+    if (s0 && s0.nChk) { const ti = Math.max(0, Math.min(s0.nChk - 1, Math.round(frac * (s0.nChk - 1))));
+      $('cmp-st4-t').textContent = `t=${(s0.viz.t_s || [])[ti] ?? '?'}s · x̄=${(s0.viz.x_mean || [])[ti] ?? '?'}`; }
+  };
+  const note = () => { $('cmp-st4-note').innerHTML = ['A', 'B'].map(k => { const s = store[k]; if (!s) return '';
+    const m = s.meta, col = k === 'A' ? '#7dd3fc' : '#fbbf24';
+    return `<span style="color:${col}">■ ${(k === 'A' ? nameA : nameB) || k}</span>: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V`
+      + (m.charge && m.cv_hold ? ` CV종지${m.i_cut_frac}C` : '') + ` · 종료 ${m.end_reason || '?'}`; }).filter(Boolean).join('　'); };
+  const loadInto = (key, o, fname) => {
+    if (!o || o.kind !== 'step4_viz' || !o.x_shell) { alert((fname || key) + ': step4_viz(SOC) 아님'); return; }
+    buildSide(key, key === 'A' ? SA : SB, key === 'A' ? A : B, o); note(); recolor(overlay._st4frac || 0);
+  };
+  const tryFetch = (key, pid) => { if (!pid || store[key]) return;
+    fetch('/mpm-lab/st4/' + pid).then(r => r.ok ? r.json() : null).catch(() => null).then(o => { if (o) loadInto(key, o); }); };
+  tryFetch('A', pidA); tryFetch('B', pidB);
+  // 이미 로드된 게 있으면 즉시 재구성(모드 재진입)
+  ['A', 'B'].forEach(k => { if (store[k]) buildSide(k, k === 'A' ? SA : SB, k === 'A' ? A : B, store[k].viz); });
+  note();
+  const pick = (key) => { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json'; inp.style.display = 'none'; document.body.appendChild(inp);
+    inp.onchange = e => { const f = e.target.files[0]; if (!f) { inp.remove(); return; } const rd = new FileReader();
+      rd.onload = () => { let o; try { o = JSON.parse(rd.result); } catch (err) { alert('파싱 실패'); inp.remove(); return; } loadInto(key, o, f.name); inp.remove(); }; rd.readAsText(f); }; inp.click(); };
+  $('cmp-st4-la').onclick = () => pick('A'); $('cmp-st4-lb').onclick = () => pick('B');
+  // 2fps 자동재생 (모드 진입 시 기본 ON)
+  const playBtn = $('cmp-st4-play'), fpsSel = $('cmp-st4-fps');
+  const startTimer = () => { overlay._st4frac = overlay._st4frac || 0; playBtn.textContent = '⏸';
+    overlay._cmpSt4Timer = setInterval(() => { if (!overlay.isConnected) { clearInterval(overlay._cmpSt4Timer); return; }
+      const fps = +fpsSel.value || 2; overlay._st4frac = (overlay._st4frac + fps * 0.03 / Math.max(1, (store.A || store.B || {}).nChk - 1 || 11)) % 1;
+      recolor(overlay._st4frac); }, 30); };
+  playBtn.onclick = () => { if (overlay._cmpSt4Timer) { clearInterval(overlay._cmpSt4Timer); overlay._cmpSt4Timer = null; playBtn.textContent = '▶'; } else startTimer(); };
+  if (!overlay._cmpSt4Timer) startTimer();
+  $('cmp-st4-vprof').onclick = () => showVProfilePopup(store, nameA, nameB);
+  recolor(overlay._st4frac || 0);
+}
+
+/* 전압곡선 별도 팝업 — buildSt4Compare가 로드한 store{A,B}의 curve를 겹쳐 그림 + 조건 + PNG/CSV. */
+function showVProfilePopup(store, nameA, nameB) {
+  const X0 = 0.2638452245913298, X100 = 0.853974674630047;
+  const have = ['A', 'B'].map(k => store[k]).filter(s => s && s.viz && s.viz.curve && s.viz.curve.V);
+  if (!have.length) { alert('curve 데이터가 있는 viz가 없어요 (2C부터 자동; 1C는 curve-병합본 필요)'); return; }
+  const ov = document.createElement('div'); ov.className = 'path-modal-overlay';
+  ov.innerHTML = `<div class="path-modal" style="width:min(90vw,860px);background:#0d1117;color:#e5e7eb">
+    <button class="path-modal-close" style="color:#9ca3af">&times;</button>
+    <div style="display:flex;gap:10px;align-items:center;font-size:12px;margin-bottom:6px;flex-wrap:wrap">
+      <b style="font-size:14px">📈 STEP4-v2 전압곡선 (A 실선 / B 점선)</b>
+      <label>x축 <select id="vp-x" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px"><option value="cap">면적용량 mAh/cm²</option><option value="soc">SOC 창 %</option><option value="t">시간 min</option></select></label>
+      <button id="vp-png" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">PNG</button>
+      <button id="vp-csv" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">CSV</button></div>
+    <canvas id="vp-cv" style="width:100%;height:420px;background:#fff;border-radius:6px"></canvas>
+    <div id="vp-note" style="font-size:12px;margin-top:6px;line-height:1.8"></div></div>`;
+  document.body.appendChild(ov);
+  ov.querySelector('.path-modal-close').onclick = () => ov.remove();
+  ov.onclick = e => { if (e.target === ov) ov.remove(); };
+  const $$ = id => ov.querySelector('#' + id);
+  const ser = ['A', 'B'].map((k, idx) => { const s = store[k]; if (!s || !s.viz.curve || !s.viz.curve.V) return null;
+    return { key: k, name: (k === 'A' ? nameA : nameB) || k, cu: s.viz.curve, meta: s.meta, color: k === 'A' ? '#1f6fb2' : '#d1495b' }; }).filter(Boolean);
+  const draw = () => { const cv = $$('vp-cv'), g = cv.getContext('2d'), dpr = 2; cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; g.scale(dpr, dpr);
+    const W = cv.clientWidth, H = cv.clientHeight, mL = 62, mR = 16, mT = 14, mB = 46, xmode = $$('vp-x').value;
     g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
-    const ss = ['A', 'B'].map(k => store[k]).filter(Boolean);
-    if (!ss.length) { g.fillStyle = '#9ca3af'; g.font = '15px sans-serif'; g.textAlign = 'center'; g.fillText('두 케이스의 step4_viz(curve)를 📂로 로드하세요', W / 2, H / 2); return; }
     const xof = (s, i) => { const m = s.meta, win = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0));
-      if (xmode === 't') return s.cu.t_s[i] / 60;
-      if (xmode === 'cap') return (s.cu.x_mean[i] - (m.x0 ?? X0)) / win * (m.areal || 3.1);
-      return 100 * (s.cu.x_mean[i] - (m.x0 ?? X0)) / win; };
+      if (xmode === 't') return s.cu.t_s[i] / 60; if (xmode === 'cap') return (s.cu.x_mean[i] - (m.x0 ?? X0)) / win * 3.1; return 100 * (s.cu.x_mean[i] - (m.x0 ?? X0)) / win; };
     let vlo = 9, vhi = 0, xlo = 1e9, xhi = -1e9;
-    ss.forEach(s => s.cu.V.forEach((v, i) => { vlo = Math.min(vlo, v); vhi = Math.max(vhi, v); const x = xof(s, i); xlo = Math.min(xlo, x); xhi = Math.max(xhi, x); }));
+    ser.forEach(s => s.cu.V.forEach((v, i) => { vlo = Math.min(vlo, v); vhi = Math.max(vhi, v); const x = xof(s, i); xlo = Math.min(xlo, x); xhi = Math.max(xhi, x); }));
     const PX = x => mL + (x - xlo) / (xhi - xlo + 1e-9) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo + 1e-9)) * (H - mT - mB);
     g.strokeStyle = '#e5e7eb'; g.lineWidth = 1; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
     for (let k = 1; k < 5; k++) { const gy = mT + (H - mT - mB) * k / 5; g.strokeStyle = '#f3f4f6'; g.beginPath(); g.moveTo(mL, gy); g.lineTo(W - mR, gy); g.stroke(); }
-    ss.forEach(s => { g.strokeStyle = s.color; g.lineWidth = 2.2; g.setLineDash(s.meta.charge ? [6, 4] : []); g.beginPath();
+    ser.forEach(s => { g.strokeStyle = s.color; g.lineWidth = 2.4; g.setLineDash(s.meta.charge ? [6, 4] : []); g.beginPath();
       s.cu.V.forEach((v, i) => { const x = PX(xof(s, i)), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
-    g.setLineDash([]); g.fillStyle = '#111'; g.font = '12px sans-serif'; g.textAlign = 'right';
+    g.setLineDash([]); g.fillStyle = '#111'; g.font = '13px sans-serif'; g.textAlign = 'right';
     for (let k = 0; k <= 5; k++) { const v = vlo + (vhi - vlo) * k / 5; g.fillText(v.toFixed(2), mL - 6, PY(v) + 4); }
     g.textAlign = 'center';
     for (let k = 0; k <= 5; k++) { const x = xlo + (xhi - xlo) * k / 5; g.fillText(x.toFixed(xmode === 'cap' ? 2 : 0), PX(x), H - mB + 18); }
     g.fillText(xmode === 't' ? 'Time (min)' : xmode === 'cap' ? 'Delivered capacity (mAh cm⁻²)' : 'SOC window (%)', mL + (W - mL - mR) / 2, H - 6);
-    g.save(); g.translate(14, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Cell voltage (V)', 0, 0); g.restore();
-    note.innerHTML = ss.map(s => { const m = s.meta;
-      return `<span style="color:${s.color}">■</span> ${s.name}: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V`
-        + (m.charge && m.cv_hold ? ` CV종지${m.i_cut_frac}C` : '') + ` · 종료 ${m.end_reason || '?'}`; }).join('　');
-  };
-  const load = (key, o, fname) => {
-    if (!o || o.kind !== 'step4_viz' || !o.curve || !o.curve.V) { alert((fname || key) + ': step4_viz curve 없음 (2C부터 자동; 1C는 병합본 필요)'); return; }
-    store[key] = { name: (key === 'A' ? nameA : nameB) || key, cu: o.curve, color: PAL[key],
-      meta: { c_rate: o.c_rate, charge: o.charge, v_min: o.v_min, v_max: o.v_max, cv_hold: o.cv_hold,
-        i_cut_frac: o.i_cut_frac, end_reason: o.end_reason, x0: o.x0, x100: o.x100 } };
-    draw();
-  };
-  const tryFetch = (key, pid) => { if (!pid) return;
-    fetch('/mpm-lab/st4/' + pid).then(r => r.ok ? r.json() : null).catch(() => null).then(o => { if (o) load(key, o); }); };
-  // 각 케이스 lab 저장분 자동 로드 (1회)
-  if (!store._fetched) { store._fetched = true; tryFetch('A', pidA); tryFetch('B', pidB); }
-  const pick = (key) => { const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json'; inp.style.display = 'none'; document.body.appendChild(inp);
-    inp.onchange = e => { const f = e.target.files[0]; if (!f) { inp.remove(); return; } const rd = new FileReader();
-      rd.onload = () => { let o; try { o = JSON.parse(rd.result); } catch (err) { alert('파싱 실패'); inp.remove(); return; } load(key, o, f.name); inp.remove(); }; rd.readAsText(f); }; inp.click(); };
-  note.insertAdjacentHTML('afterend', '');
-  // 로드 버튼 (A/B) — note 왼쪽 영역에 즉석 배치
-  const bar = $('cmp-st4-note').parentElement;
-  if (!bar.querySelector('#cmp-st4-la')) {
-    const mk = (id, lbl, col) => { const b = document.createElement('button'); b.id = id; b.textContent = lbl;
-      b.style.cssText = `background:#1f2937;color:${col};border:1px solid #374151;border-radius:5px;padding:3px 8px;cursor:pointer;margin-right:4px`; return b; };
-    const la = mk('cmp-st4-la', '📂 A', PAL.A), lb = mk('cmp-st4-lb', '📂 B', PAL.B);
-    la.onclick = () => pick('A'); lb.onclick = () => pick('B');
-    bar.insertBefore(lb, $('cmp-st4-note')); bar.insertBefore(la, lb);
-  }
-  $('cmp-st4-x').onchange = draw;
-  $('cmp-st4-png').onclick = () => { const cv = $('cmp-st4-canvas'); const a = document.createElement('a'); a.href = cv.toDataURL('image/png'); a.download = 'step4_compare_' + ((nameA || 'A') + '_vs_' + (nameB || 'B')).replace(/[^A-Za-z0-9._-]/g, '') + '.png'; document.body.appendChild(a); a.click(); a.remove(); };
-  $('cmp-st4-csv').onclick = () => { const ss = ['A', 'B'].map(k => store[k]).filter(Boolean); if (!ss.length) return;
-    const out = ['series,condition,step,t_s,V,x_mean,soc_window_pct,eta_kin_mV'];
-    ss.forEach(s => { const m = s.meta, win = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0)); const cond = `${m.charge ? 'charge' : 'discharge'}_${m.c_rate}C_${m.v_min}-${m.v_max}V`;
-      s.cu.V.forEach((v, i) => out.push([JSON.stringify(s.name), cond, i + 1, s.cu.t_s[i], v, s.cu.x_mean[i], (100 * (s.cu.x_mean[i] - (m.x0 ?? X0)) / win).toFixed(3), s.cu.eta_kin_mV ? s.cu.eta_kin_mV[i] : ''].join(','))); });
-    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out.join('\n')], { type: 'text/csv' })); a.download = 'step4_compare.csv'; document.body.appendChild(a); a.click(); a.remove(); };
+    g.save(); g.translate(14, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Cell voltage (V vs Li/Li⁺)', 0, 0); g.restore();
+    $$('vp-note').innerHTML = ser.map(s => { const m = s.meta;
+      return `<span style="color:${s.color}">■</span> ${s.name}: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V · 종료 ${m.end_reason || '?'} · V ${s.cu.V[0].toFixed(3)}→${s.cu.V[s.cu.V.length - 1].toFixed(3)}`; }).join('<br>'); };
+  $$('vp-x').onchange = draw;
+  $$('vp-png').onclick = () => { const a = document.createElement('a'); a.href = $$('vp-cv').toDataURL('image/png'); a.download = 'step4_vprofile.png'; document.body.appendChild(a); a.click(); a.remove(); };
+  $$('vp-csv').onclick = () => { const out = ['series,condition,step,t_s,V,x_mean'];
+    ser.forEach(s => s.cu.V.forEach((v, i) => out.push([JSON.stringify(s.name), `${s.meta.charge ? 'charge' : 'discharge'}_${s.meta.c_rate}C`, i + 1, s.cu.t_s[i], v, s.cu.x_mean[i]].join(','))));
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out.join('\n')], { type: 'text/csv' })); a.download = 'step4_vprofile.csv'; document.body.appendChild(a); a.click(); a.remove(); };
   draw();
 }
 export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
@@ -5002,14 +5042,17 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       </div>
       <div id="cmp-table" style="font-size:12px;margin-bottom:6px;overflow-x:auto"></div>
       <div id="cmp-st4-wrap" style="display:none;margin-bottom:8px">
-        <div style="display:flex;gap:10px;align-items:center;font-size:12px;margin-bottom:4px">
-          <b style="color:#e5e7eb">🔋 STEP4-v2 방전곡선 (A 실선 / B 점선)</b>
-          <label>x축 <select id="cmp-st4-x" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px"><option value="cap">면적용량 mAh/cm²</option><option value="soc">SOC 창 %</option><option value="t">시간 min</option></select></label>
-          <button id="cmp-st4-png" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">📈 PNG</button>
-          <button id="cmp-st4-csv" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">CSV</button>
-          <span id="cmp-st4-note" style="color:#6b7280;font-size:11px"></span>
+        <div style="display:flex;gap:8px;align-items:center;font-size:12px;flex-wrap:wrap">
+          <b style="color:#e5e7eb">🔋 STEP4-v2 애니메이션</b>
+          <button id="cmp-st4-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 9px;cursor:pointer;font-size:13px">⏸</button>
+          <select id="cmp-st4-fps" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px"><option value="2" selected>2 fps</option><option value="4">4 fps</option><option value="8">8 fps</option></select>
+          <span id="cmp-st4-t" style="color:#9ca3af"></span>
+          <span style="flex:1"></span>
+          <button id="cmp-st4-la" style="background:#1f2937;color:#7dd3fc;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer">📂 A viz</button>
+          <button id="cmp-st4-lb" style="background:#1f2937;color:#fbbf24;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer">📂 B viz</button>
+          <button id="cmp-st4-vprof" style="background:#16324a;color:#e5e7eb;border:1px solid #2563eb;border-radius:5px;padding:2px 10px;cursor:pointer">📈 전압곡선 팝업</button>
         </div>
-        <canvas id="cmp-st4-canvas" style="width:100%;height:300px;background:#fff;border-radius:6px"></canvas>
+        <div id="cmp-st4-note" style="color:#6b7280;font-size:11px;margin-top:3px"></div>
       </div>
       <div style="display:flex;gap:8px">
         <div style="flex:1;min-width:0">
@@ -5155,20 +5198,23 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
     : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
     : (+v).toFixed(Math.abs(+v) >= 100 ? 0 : Math.abs(+v) >= 1 ? 2 : 4);
-  $('cmp-table').innerHTML = '<table style="border-collapse:collapse;white-space:nowrap">'
+  // 세로로 길어 2열로 분할 (반씩) — 각 열이 독립 테이블, 가로 배치
+  const oneTable = (rows) => '<table style="border-collapse:collapse;white-space:nowrap;flex:1;min-width:0">'
     + '<tr style="color:#9ca3af">' + ['축', 'A', 'B', 'Δ (B−A)/A'].map((h, i) =>
-        `<th style="text-align:${i ? 'right' : 'left'};padding:2px 12px 2px 0;border-bottom:1px solid #2a2d3e">${h}</th>`).join('') + '</tr>'
-    + rowsQ.map(([lab, a, b, tip]) => {
+        `<th style="text-align:${i ? 'right' : 'left'};padding:2px 10px 2px 0;border-bottom:1px solid #2a2d3e">${h}</th>`).join('') + '</tr>'
+    + rows.map(([lab, a, b, tip]) => {
         const d = (a != null && b != null && isFinite(+a) && isFinite(+b) && +a !== 0) ? (100 * (b - a) / Math.abs(+a)) : null;
         const dTxt = d == null ? '—' : (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
         const dCol = d == null ? '#6b7280' : d > 0.5 ? '#34d399' : d < -0.5 ? '#f87171' : '#9ca3af';
-        // 축 설명 카드 (hover) — 정의·유도식·논문 표현 팁.  커스텀 카드(지연 0)용 data-tip
         const tipAttr = tip ? ` data-tip="${tip.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/\n/g, '&#10;')}"` : '';
-        return `<tr><td style="padding:2px 12px 2px 0;color:#cbd5e1${tip ? ';cursor:help;text-decoration:underline dotted #4b5563;text-underline-offset:3px' : ''}"${tipAttr}>${lab}</td>`
-          + `<td style="text-align:right;padding:2px 12px 2px 0;color:#7dd3fc">${fmtQ(a)}</td>`
-          + `<td style="text-align:right;padding:2px 12px 2px 0;color:#fbbf24">${fmtQ(b)}</td>`
+        return `<tr><td style="padding:2px 10px 2px 0;color:#cbd5e1${tip ? ';cursor:help;text-decoration:underline dotted #4b5563;text-underline-offset:3px' : ''}"${tipAttr}>${lab}</td>`
+          + `<td style="text-align:right;padding:2px 10px 2px 0;color:#7dd3fc">${fmtQ(a)}</td>`
+          + `<td style="text-align:right;padding:2px 10px 2px 0;color:#fbbf24">${fmtQ(b)}</td>`
           + `<td style="text-align:right;padding:2px 0;color:${dCol}">${dTxt}</td></tr>`;
       }).join('') + '</table>';
+  const half = Math.ceil(rowsQ.length / 2);
+  $('cmp-table').innerHTML = '<div style="display:flex;gap:26px;align-items:flex-start">'
+    + oneTable(rowsQ.slice(0, half)) + oneTable(rowsQ.slice(half)) + '</div>';
   // ── 축 설명 카드: 커스텀 hover (native title은 ~1s 지연 + 스타일 없음 → 즉시 뜨는 카드) ──
   let tipCard = document.getElementById('cmp-tipcard');
   if (!tipCard) {
@@ -5635,10 +5681,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     const patchF = $('cmp-patch') ? +$('cmp-patch').value : 1.5;
     const glowOn = $('cmp-glow') ? $('cmp-glow').checked : true;
     clearSide(SA); clearSide(SB);
-    const st4Wrap = $('cmp-st4-wrap'), viewsWrap = $('cmp-view-a') && $('cmp-view-a').parentElement.parentElement;
+    const st4Wrap = $('cmp-st4-wrap');
     if (st4Wrap) st4Wrap.style.display = (mode === 'st4_v2') ? 'block' : 'none';
-    if (viewsWrap) viewsWrap.style.display = (mode === 'st4_v2') ? 'none' : 'flex';   // 곡선 모드는 3D 숨김
-    if (mode === 'st4_v2') { buildSt4Compare($, pidA, pidB, nameA, nameB); return; }
+    if (overlay._cmpSt4Timer) { clearInterval(overlay._cmpSt4Timer); overlay._cmpSt4Timer = null; }
+    if (mode === 'st4_v2') { buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB); return; }   // 3D 애니메이션 유지
     if (mode === 'wiring') {
       const joint = [...wireA.counts, ...wireB.counts].sort((a, b) => a - b);
       const lo = joint.length ? joint[Math.floor(0.05 * (joint.length - 1))] : 0;
