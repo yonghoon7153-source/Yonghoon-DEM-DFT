@@ -78,6 +78,12 @@ def main():
     ap.add_argument('--step4-charge', default='',
                     help='STEP4-v2 충전(CCCV) C-rate 목록 (쉼표) — CC 충전 → v_max 도달 시 CV 홀드 '
                          '(step4_dyn --charge --cv-hold).  방전 rate들 다음에 순차 실행.')
+    ap.add_argument('--step4-vmin', type=float, default=3.0,
+                    help='STEP4 방전 컷오프 전압 [V vs Li] (기본 3.0; 실험 2.5~4.25면 2.5).')
+    ap.add_argument('--step4-vmax', type=float, default=4.5,
+                    help='STEP4 충전 컷오프 전압 [V vs Li] (기본 4.5; 실험이면 4.25).')
+    ap.add_argument('--step4-icut', type=float, default=0.05,
+                    help='CCCV 충전의 CV-종지 전류 |I|/I_1C (기본 0.05; "1C→0.5C서 끝"이면 0.5).')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -374,20 +380,22 @@ def main():
     if s4_rates or s4_chg:
         _dis = ' '.join(f'{v:g}' for v in s4_rates)
         _chg = ' '.join(f'{v:g}' for v in s4_chg)
+        _cut = f'--v-min {a.step4_vmin:g} --v-max {a.step4_vmax:g}'    # 컷오프 스케줄 (사용자 설정)
+        _icut = f'--i-cut-frac {a.step4_icut:g}'
         _dis_loop = f'''  for CR in {_dis}; do
-    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)"
+    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V)"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} --gpu --out step4_c${{CR}}.npz --viz-out step4_viz_c${{CR}}.json \\
+      --c-rate ${{CR}} {_cut} --gpu --out step4_c${{CR}}.npz --viz-out step4_viz_c${{CR}}.json \\
       || echo "[run_mpm] STEP4 방전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 방전 ${{CR}}C end $(date)"
   done
 ''' if s4_rates else ''
         _chg_loop = f'''  for CR in {_chg}; do
-    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)"
+    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)  (CV@{a.step4_vmax:g}V → I<{a.step4_icut:g}C 종지)"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} --charge --cv-hold --gpu \\
+      --c-rate ${{CR}} --charge --cv-hold {_cut} {_icut} --gpu \\
       --out step4_chg_c${{CR}}.npz --viz-out step4_viz_chg_c${{CR}}.json \\
       || echo "[run_mpm] STEP4 충전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"

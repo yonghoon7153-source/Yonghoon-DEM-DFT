@@ -276,6 +276,12 @@
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-01" onchange="updateAdditiveGpuCmds()"> 0.1C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-05" onchange="updateAdditiveGpuCmds()"> 0.5C</label>
             <label style="font-weight:400;cursor:pointer"><input type="checkbox" id="s4g-1" onchange="updateAdditiveGpuCmds()"> 1C</label>
+          </span><br>
+          <span style="display:inline-flex;gap:10px;align-items:center;height:24px;font-size:0.82em" title="컷오프 스케줄: 방전은 v_min까지, 충전 CC는 v_max까지 → CV 홀드 후 |I|/I_1C가 I-cut 아래로 떨어지면 종지 (예: 실험 2.5~4.25V, CV 0.5C 종지).  SOC 창 끝에 먼저 닿으면 전압 컷 전에 끝날 수 있음(1C 방전이 그랬음).">
+            <span style="color:#94a3b8">컷오프</span>
+            <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
+            <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
+            <label style="font-weight:400" title="CCCV 충전에서 CV 홀드 종지 전류 |I|/I_1C. 0.05=완전충전, 0.5='1C→0.5C 도착시 끝'">CV종지 <input id="s4-icut" type="number" value="0.05" min="0.01" max="1.0" step="0.01" style="width:52px" onchange="updateAdditiveGpuCmds()"> C</label>
           </span></div>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
@@ -602,6 +608,9 @@ function _addVals() {
       .filter(p => (document.getElementById(p[1]) || {}).checked).map(p => p[0]).join(','),
     s4chg: [['0.1', 's4g-01'], ['0.5', 's4g-05'], ['1', 's4g-1']]
       .filter(p => (document.getElementById(p[1]) || {}).checked).map(p => p[0]).join(','),
+    s4vmin: (document.getElementById('s4-vmin') || {}).value || '3.0',
+    s4vmax: (document.getElementById('s4-vmax') || {}).value || '4.5',
+    s4icut: (document.getElementById('s4-icut') || {}).value || '0.05',
   };
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
@@ -617,11 +626,12 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
+  const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)
@@ -646,7 +656,7 @@ function _addVariantName() { const t = _addTag(); return t ? `{{ case.name }}${t
 // Show the GPU scp/run commands for the (dynamically-named) additive zip, mirroring the ① card.
 function updateAdditiveGpuCmds() {
   const el = document.getElementById('add-gpu-cmds'); if (!el) return;
-  const { vg, sp, pt, sd, mix, vox, s4, s4chg } = _addVals();
+  const { vg, sp, pt, sd, mix, vox, s4, s4chg, s4vmin, s4vmax, s4icut } = _addVals();
   const vn = document.getElementById('add-variant-name');
   if (vn) vn.textContent = _addVariantName() || '…';
   if ((vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) || (vg > 0 && sp > 0)) { el.innerHTML = ''; return; }
@@ -670,8 +680,9 @@ function updateAdditiveGpuCmds() {
   ];
   const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
   const blk = (lbl, body) => `<div class="cmd-block"><button class="cmd-copy" onclick="copyCmd(this)">복사</button><pre>${esc(lbl)}\n${esc(body)}</pre></div>`;
-  const s4txt = (s4 ? '방전 ' + s4.split(',').join('/') + 'C' : '')
-              + (s4chg ? (s4 ? ' + ' : '') + '충전CCCV ' + s4chg.split(',').join('/') + 'C' : '');
+  const s4txt = ((s4 ? '방전 ' + s4.split(',').join('/') + 'C' : '')
+              + (s4chg ? (s4 ? ' + ' : '') + '충전CCCV ' + s4chg.split(',').join('/') + 'C' : ''))
+              + ((s4 || s4chg) ? ` [${s4vmin}–${s4vmax}V${s4chg ? ', CV종지 ' + s4icut + 'C' : ''}]` : '');
   let html = `<div style="margin-top:4px;color:#94a3b8;font-size:0.82em;font-weight:600">② 첨가제 zip GPU 실행 명령어 — recipe <code>${esc(recipe)}</code> · mixing ${mix}${vox !== '0.4' ? ' · STEP3 vox ' + vox + 'µm' : ''}${s4txt ? ' · <b style="color:#4ade80">STEP4 ' + s4txt + ' 자동 연속</b>' : ' · STEP4 미선택(그리드 export까지)'} · 산출물은 <code>run_*/</code> 런 전용 폴더(latest_run 심링크)</div>`;
   for (const s of SERVERS) {
     html += `<div style="margin-top:8px;color:#a5b4fc;font-size:0.82em;font-weight:700">▸ ${s.name} (${esc(s.ssh)})</div>`

@@ -5314,6 +5314,18 @@ def mpm_input_package(case_id):
         cmd += ['--step4-crates', ','.join(f'{v:g}' for v in _s4_clean)]
     if _s4chg_clean:
         cmd += ['--step4-charge', ','.join(f'{v:g}' for v in _s4chg_clean)]
+
+    def _cut(name, default, lo, hi):                    # 컷오프 스케줄 (화이트리스트 클램프)
+        try:
+            v = float(request.args.get(name, default))
+            return min(max(v, lo), hi)
+        except ValueError:
+            return default
+    if _s4_clean or _s4chg_clean:                       # 컷오프는 STEP4 선택 시에만 주입
+        _vmin = _cut('s4vmin', 3.0, 1.5, 4.0)
+        _vmax = _cut('s4vmax', 4.5, 3.5, 4.8)
+        _icut = _cut('s4icut', 0.05, 0.01, 1.0)
+        cmd += ['--step4-vmin', f'{_vmin:g}', '--step4-vmax', f'{_vmax:g}', '--step4-icut', f'{_icut:g}']
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
