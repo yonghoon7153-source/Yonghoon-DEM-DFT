@@ -50,37 +50,41 @@ def main():
             os.symlink(src, dst)
 
     lines = open(os.path.expanduser(a.template)).read().splitlines()
-    # locate ATOMIC_POSITIONS block
+    # locate ATOMIC_POSITIONS block + its atom lines
     ip = next(i for i, l in enumerate(lines) if l.strip().upper().startswith("ATOMIC_POSITIONS"))
-    # adatom = the atom line whose trailing 3 flags are 0 0 1 (xy pinned, z free)
-    adatom_i = None
+    atom_lines = []
     for i in range(ip + 1, len(lines)):
         s = lines[i].split()
-        if len(s) >= 7 and s[-3:] == ["0", "0", "1"] and re.match(r"^[A-Za-z]", s[0]):
-            adatom_i = i
+        if len(s) >= 4 and re.match(r"^[A-Za-z][a-z]?$", s[0]):
+            try:
+                float(s[1]); float(s[2]); float(s[3])
+            except ValueError:
+                break
+            atom_lines.append(i)
+        elif atom_lines:
             break
-    if adatom_i is None:
-        # fallback: atom nearest (X_P0, Y_FIX)
-        best = None
-        for i in range(ip + 1, len(lines)):
-            s = lines[i].split()
-            if len(s) >= 4 and re.match(r"^[A-Za-z]", s[0]):
-                try:
-                    d = (float(s[1]) - X_P0) ** 2 + (float(s[2]) - Y_FIX) ** 2
-                except ValueError:
-                    continue
-                if best is None or d < best[0]:
-                    best = (d, i)
-        adatom_i = best[1]
-        print(f"[warn] no '0 0 1' flag found; adatom by proximity -> line: {lines[adatom_i].strip()}")
+    # ADATOM = atom nearest (X_P0, Y_FIX) in xy. The free-relax adatom sits ~0.37 A
+    # from there; the nearest substrate Li is >1 A away -> unambiguous. Cross-check
+    # with max-z (adsorbate on top).
+    def xy_d(i):
+        s = lines[i].split()
+        return (float(s[1]) - X_P0) ** 2 + (float(s[2]) - Y_FIX) ** 2
+    adatom_i = min(atom_lines, key=xy_d)
+    maxz_i = max(atom_lines, key=lambda i: float(lines[i].split()[3]))
     sp = lines[adatom_i].split()
-    print(f"adatom detected: {sp[0]} at ({sp[1]},{sp[2]},{sp[3]}) flags={sp[-3:] if len(sp)>=7 else 'none'}")
+    mz = lines[maxz_i].split()
+    print(f"nat parsed = {len(atom_lines)}")
+    print(f"adatom (nearest p0 xy) = line {adatom_i-ip}: {sp[0]} ({sp[1]},{sp[2]},{sp[3]}), xy-dist {xy_d(adatom_i)**0.5:.3f} A")
+    print(f"max-z atom (cross-check) = line {maxz_i-ip}: {mz[0]} ({mz[1]},{mz[2]},{mz[3]})")
+    if adatom_i != maxz_i:
+        print("  [note] nearest-xy != max-z; using nearest-xy (adatom relaxed from p0 xy). "
+              "If wrong, the slab's top surface atom is being picked -- verify.")
+    print("  -> pinning xy at each target, z free (if_pos 0 0 1); frozen bottom kept as-is")
 
     for p, xt in TARGETS.items():
         out = list(lines)
-        # keep species + if_pos flags; rewrite x,y,z
-        tail = " 0 0 1" if len(sp) >= 7 else ""
-        out[adatom_i] = f"  {sp[0]:3s} {xt:.8f} {Y_FIX:.8f} {Z0:.8f}{tail}"
+        # ALWAYS pin adatom xy (0 0 1) regardless of template's flags (template = free-relax min)
+        out[adatom_i] = f"  {sp[0]:3s} {xt:.8f} {Y_FIX:.8f} {Z0:.8f}   0 0 1"
         txt = "\n".join(out) + "\n"
         txt = re.sub(r"pseudo_dir\s*=\s*'?[^'\n,]+'?", f"pseudo_dir = '{pdir}'", txt)
         dst = os.path.join(a.outdir, f"drag_p{p}.in")
