@@ -28,16 +28,21 @@ done
 PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*qe*gpu*bin*" 2>/dev/null | head -1)}
 [ -n "$PW" ] || PW=$(find "$HOME/apps" -maxdepth 4 -name pw.x -path "*bin*" 2>/dev/null | head -1)
 [ -n "$PW" ] || { echo "ERROR: pw.x 못 찾음 — PW=/path/to/pw.x 로 지정"; exit 1; }
-# ★ pw.x 런타임 환경 소독 (2026-07-18, "libgomp: TODO" 크래시 수정):
-# kgy_night 체인이 uma(conda) env에서 돌면 uma의 LD_LIBRARY_PATH가 GNU libgomp를
-# 주입 → nvhpc로 빌드된 pw.x(자체 libomp 기대)와 충돌해 첫 OpenMP 영역에서 죽음
-# (VRAM OOM 아님 — Exit 1 + "libgomp: TODO"). pw.x는 RPATH로 nvhpc 라이브러리를
-# 절대경로 참조하므로 LD_LIBRARY_PATH를 비우면 제 라이브러리를 쓴다. OMP 스레드 1.
-export OMP_NUM_THREADS=1 OMP_STACKSIZE=512m
-unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true
-# 단일 GPU → mpirun 없이 직접실행(singleton). launcher가 환경을 재주입하지 않게 함.
-echo "pw.x   = $PW  (direct singleton, LD_LIBRARY_PATH 비움, OMP=1)"
-RUN() { "$PW" -npool 1 -in "$1"; }
+# ★ GPU-QE env — ~/.bashrc의 검증된 qegpu() 복제 (2026-07-18):
+# pw.x(nvhpc 빌드)는 NVHPC libgomp/CUDA/math + HPC-X OpenMPI가 LD_LIBRARY_PATH
+# 맨 앞에 있어야 함. uma env의 GNU libgomp가 앞서면 "libgomp: TODO"; 반대로
+# 통째 unset하면 "Local abort before MPI_INIT" (hpcx libs 소실). 정답 = nvhpc를
+# prepend해서 우선순위를 뺏는 것 (qegpu 함수가 하는 일 그대로).
+NV="$HOME/apps/nvhpc/Linux_x86_64/24.11"
+HPCX="$(ls -d "$NV"/comm_libs/*/hpcx/hpcx-*/ompi 2>/dev/null | sort | tail -1)"
+[ -n "$HPCX" ] || { echo "ERROR: hpcx ompi 못 찾음 ($NV/comm_libs/*/hpcx/*/ompi)"; exit 1; }
+export OPAL_PREFIX="$HPCX" OMP_NUM_THREADS=1
+export LD_LIBRARY_PATH="$NV/compilers/lib:$NV/cuda/12.6/lib64:$NV/math_libs/lib64:$HPCX/lib:${LD_LIBRARY_PATH:-}"
+export PATH="$(dirname "$PW"):$HPCX/bin:$NV/compilers/bin:$PATH"
+MPIRUN="$HPCX/bin/mpirun"
+echo "pw.x   = $PW"
+echo "mpirun = $MPIRUN  (hpcx, qegpu env 복제)"
+RUN() { "$MPIRUN" -np 1 "$PW" -npool 1 -in "$1"; }
 
 wait_gpu() {   # MD 뒤끝/타 프로세스 대비
     while :; do
