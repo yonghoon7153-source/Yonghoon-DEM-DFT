@@ -442,7 +442,7 @@ fi
 #    영향도 없음.  완료 시 $KIT/latest_run 심링크가 이 폴더를 가리킴. ──
 if [ -z "${{MPM_DETACHED:-}}" ]; then
   export MPM_DETACHED=1
-  export RUN_DIR="$KIT/run_{run_tag}_$(date +%Y%m%d_%H%M%S)"
+  export RUN_DIR="$KIT/run_{run_tag}_$(date +%Y%m%d_%H%M%S)_$$"
   mkdir -p "$RUN_DIR"
   log="$RUN_DIR/mpm_run.log"
   echo "→ detached — survives SSH drop.  run dir: $RUN_DIR"

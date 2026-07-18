@@ -25,31 +25,42 @@ X0, X100 = 0.2638452245913298, 0.853974674630047            # Chen2020 창 (§F1
 _STEP_RE = re.compile(
     r'step\s+(\d+)\s+t=\s*([\d.]+)s\s+\[(\w+)\]\s+V=([\d.]+)\s+I=([\d.eE+-]+)\s+'
     r'x̄=([\d.]+)\s+ηkin=([\d.]+)mV\s+E-bal\s+(-?[\d.eE+-]+)\s+KCL\s+([\d.eE+-]+)'
-    r'(?:\s+\(ev\s+(\d+),\s+dt\s+([\d.]+)s\))?')
+    r'(?:\s+\(ev\s+(-?\d+),\s+dt\s+([\d.]+)s\))?')       # ev -1 sentinel도 허용 (아니면 dt까지 통째로 유실)
 _CAND_RE = re.compile(r'step\s+\d+\s+t=')                    # 후보 라인 (파싱 실패 감지용)
 _ANCH_RE = re.compile(r'x0=([\d.]+)\s+x100=([\d.]+)')        # OCP 헤더의 per-런 앵커
 
 
+_NANINF_RE = re.compile(r'nan|inf', re.I)                   # 발산 스텝 감지 (V=nan 등)
+
+
 def parse_log(path):
-    rows, anch, n_cand = [], None, 0
+    rows, anch, n_cand, n_div = [], None, 0, 0
     with open(path, errors='replace') as f:
         for ln in f:
             if anch is None:
                 ma = _ANCH_RE.search(ln)
                 if ma:
                     anch = (float(ma.group(1)), float(ma.group(2)))
+            m = _STEP_RE.search(ln)
             if _CAND_RE.search(ln):
                 n_cand += 1
-            m = _STEP_RE.search(ln)
+                if m is None and _NANINF_RE.search(ln):      # 후보인데 미파싱 + nan/inf = 발산(인코딩 아님)
+                    n_div += 1
             if m:
                 st, t, ph, V, I, x, eta, eb, kcl, ev, dt = m.groups()
                 rows.append(dict(step=int(st), t_s=float(t), phase=ph, V=float(V),
                                  I_A=float(I), x=float(x), eta_kin_mV=float(eta),
                                  ebal=float(eb), kcl=float(kcl),
-                                 ev=int(ev) if ev else None, dt_s=float(dt) if dt else None))
-    if n_cand != len(rows):                                  # 침묵 드롭 금지 (F5): 인코딩/줄바꿈 손상 감지
-        print(f'⚠ {path}: step-후보 {n_cand}줄 중 {len(rows)}줄만 파싱 — '
-              f'로그 인코딩(UTF-8)/줄바꿈 손상 여부 확인', file=sys.stderr)
+                                 ev=(int(ev) if ev and int(ev) >= 0 else None),   # -1 sentinel → None
+                                 dt_s=float(dt) if dt else None))
+    n_miss = n_cand - len(rows)
+    if n_div:                                                # 발산 = 솔버 HARD-FAIL, 인코딩 문제 아님 (오진 방지)
+        print(f'⚠ {path}: 발산 스텝(nan/inf) {n_div}줄 — 런이 여기서 수렴 실패(HARD-FAIL)해 '
+              f'곡선에서 제외됨(정상).  솔버 로그의 HARD-FAIL 메시지를 확인하세요.', file=sys.stderr)
+    if n_miss - n_div > 0:                                   # nan/inf 아닌 진짜 미상만 인코딩/줄바꿈 의심
+        print(f'⚠ {path}: step-후보 {n_cand}줄 중 {len(rows)}줄만 파싱 '
+              f'(발산 {n_div} 제외 {n_miss - n_div}줄 미상) — 로그 인코딩(UTF-8)/줄바꿈 손상 여부 확인',
+              file=sys.stderr)
     return rows, anch
 
 

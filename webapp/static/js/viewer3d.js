@@ -408,7 +408,7 @@ function renderSt4Faces(state) {
         // top-K by dot (삽입 정렬, K 작음)
         const bi = new Array(K).fill(-1), bw = new Array(K).fill(-1);
         for (let q = 0; q < fl.length; q++) {
-          const d = ux * fl[q][1] + uy * fl[q][3] + uz * fl[q][2];  // 주의: scene-swap 없는 payload 방향
+          const d = ux * fl[q][1] + uy * fl[q][2] + uz * fl[q][3];  // payload 방향 직접 정렬 (템플릿 ux,uy,uz ↔ 면 dx,dy,dz)
           if (d <= bw[K - 1]) continue;
           let j = K - 1;
           while (j > 0 && bw[j - 1] < d) { bw[j] = bw[j - 1]; bi[j] = bi[j - 1]; j--; }
@@ -4902,7 +4902,7 @@ function buildComsolSurfaceMesh(parts, F) {
       if (!fl.length) continue;
       const bi = new Array(K).fill(-1), bw = new Array(K).fill(-1);
       for (let q = 0; q < fl.length; q++) {
-        const d = ux * fl[q][1] + uy * fl[q][3] + uz * fl[q][2];   // payload 방향 (scene-swap 없음)
+        const d = ux * fl[q][1] + uy * fl[q][2] + uz * fl[q][3];   // payload 방향 직접 정렬 (템플릿 ux,uy,uz ↔ 면 dx,dy,dz)
         if (d <= bw[K - 1]) continue;
         let j = K - 1; while (j > 0 && bw[j - 1] < d) { bw[j] = bw[j - 1]; bi[j] = bi[j - 1]; j--; } bw[j] = d; bi[j] = fl[q][0];
       }
@@ -4944,7 +4944,7 @@ function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
     cv_hold: o.cv_hold, i_cut_frac: o.i_cut_frac, end_reason: o.end_reason, x0: o.x0, x100: o.x100 });
   const buildSide = (key, S, payload, o) => {
     const parts = (payload.particles || []).filter(p => p.type === 'AM_P' || p.type === 'AM_S');   // 단독뷰어와 동일: AM만 (SE 제외 — SOC·면분포 오염 방지)
-    if (S.grp) { S.scene.remove(S.grp); S.grp = null; }
+    if (S.grp) { S.scene.remove(S.grp); S.grp.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material && o.material.dispose) o.material.dispose(); }); S.grp = null; }   // GPU 버퍼 해제 (📂 재로드 누수 방지)
     const grp = new THREE.Group();
     const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) { mesh.material.shininess = 8; grp.add(mesh); }

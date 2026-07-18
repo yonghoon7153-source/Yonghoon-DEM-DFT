@@ -31,7 +31,7 @@ if os.path.exists(_env_path):
 
 from flask import (
     Flask, render_template, request, jsonify, send_from_directory,
-    redirect, url_for, send_file, make_response,
+    redirect, url_for, send_file, make_response, abort,
 )
 import storage_sync
 import predictor_engine
@@ -306,13 +306,24 @@ _restore_thread.start()
 
 # ─── Helpers ────────────────────────────────────────────────────────────────
 
+def _contained_join(base, sub):
+    """Join `sub` under `base` and REJECT path-traversal escapes (defense-in-depth for
+    user-supplied case_id).  Legit ids (timestamp_uuid, 'archive:a/b') stay inside base →
+    allowed; anything resolving outside base (e.g. '../etc') → 400.  Checked BEFORE makedirs
+    so a traversal id cannot even create a stray directory tree."""
+    base_r = os.path.realpath(base)
+    d = os.path.realpath(os.path.join(base_r, str(sub)))
+    if d != base_r and not d.startswith(base_r + os.sep):
+        abort(400, 'invalid case id')
+    return d
+
 def get_case_dir(case_id):
-    d = os.path.join(app.config['UPLOAD_FOLDER'], case_id)
+    d = _contained_join(app.config['UPLOAD_FOLDER'], case_id)
     os.makedirs(d, exist_ok=True)
     return d
 
 def get_results_dir(case_id):
-    d = os.path.join(app.config['RESULTS_FOLDER'], case_id)
+    d = _contained_join(app.config['RESULTS_FOLDER'], case_id)
     os.makedirs(d, exist_ok=True)
     return d
 
@@ -5389,7 +5400,8 @@ def _mpm_lab_slug(s):
     # pid passed in is already "<name-slug>_<uuid6>".  The old [:60] truncation chopped the uuid off
     # for long names (the _vox0.2 name suffix pushed the pid past 60 chars → wrong folder → 404).
     # The length cap now lives at CREATION (upload), on the NAME part only, so the uuid always survives.
-    return re.sub(r'[^A-Za-z0-9_.-]+', '_', str(s or '')).strip('_') or 'payload'
+    # `.` 는 유지(예: VGCF2.97)하되 연속점 `..` 는 붕괴 → 경로 traversal(부모 디렉토리) 차단.
+    return re.sub(r'\.{2,}', '_', re.sub(r'[^A-Za-z0-9_.-]+', '_', str(s or ''))).strip('_') or 'payload'
 
 
 def _mpm_lab_list():
@@ -5512,8 +5524,8 @@ def mpm_lab_st4(pid):
             json.dump(data, fh)
         return jsonify({'ok': True, 'size_mb': round(os.path.getsize(p) / 1e6, 1)})
     if not os.path.isfile(p):
-        return jsonify({'available': False,
-                        'hint': '뷰어 st4 모드에서 📂로 한 번 열면 자동 저장됩니다'}), 404
+        return jsonify({'available': False,          # 200: "아직 저장 안 됨"은 정상 autoload 상태 (404면 브라우저 콘솔 노이즈)
+                        'hint': '뷰어 st4 모드에서 📂로 한 번 열면 자동 저장됩니다'}), 200
     return send_file(p, mimetype='application/json')
 
 

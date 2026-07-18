@@ -796,16 +796,20 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         if resid > warn_thr or galv_miss > warn_thr:        # F2 규약: 침묵 실패 금지 (수치리뷰 #5)
             print(f'    ⚠ step4 잔차 {resid:.1e} / 정전류 미스 {galv_miss:.1e} '
                   f'(경고선 {warn_thr:.1e}) @t={t:.1f}s — 신뢰 주의', flush=True)
-        newton_failed = (resid > max(1e-3, 40.0 * _fl)
+        newton_failed = ((not np.isfinite(resid))               # NaN/Inf = 하드실패 (NaN 비교는 False라 조용히 통과하던 걸 차단)
+                         or resid > max(1e-3, 40.0 * _fl)
                          or galv_miss > max(1e-3, 40.0 * _fl))   # 하드 실패: 확산 전진 전 중단
         kcl = abs(i_am.sum() - I_del) / max(abs(I_del), 1e-30)
         aud = sys_.energy_audit(phi, I_f, eta_s, U_f, kin, V_app)
         V_cell = V_app
         V_term = V_cell - I_del * R_int_abs
+        V_term_rec = V_term                                     # 기록/출력용 (실 V_term은 아래 상전이 판정에 그대로 사용)
+        if phase == 'cc' and cv_hold and ((V_term < v_min) if not charge else (V_term > v_max)):
+            V_term_rec = (v_min if not charge else v_max)       # CCCV 전이: CC가 v_lim 넘어선 그 스텝은 실제론 CV가 물려 전압 v_lim 고정 → 곡선 비물리 스파이크 제거
         x_mean_p = rad.mean_x()
         x_bar = float((x_mean_p * V_p).sum() / V_p.sum())
         w = np.abs(I_f) + 1e-30
-        out['t'].append(t); out['V'].append(V_cell); out['V_terminal'].append(V_term)
+        out['t'].append(t); out['V'].append(V_cell); out['V_terminal'].append(V_term_rec)
         out['I'].append(I_del)
         out['x_mean'].append(x_bar)
         out['x_surf_p05'].append(float(np.percentile(x_s[has_face], 5)))
@@ -824,7 +828,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
                               if dudt is not None else np.nan)
         if verbose:                                          # 매 스텝 (스텝 수십 개 규모 — 로그 부담 無;
             _nev = int(getattr(sys_, 'last_galv_nev', -1))   #  %10 게이팅은 진행 확인을 불가능하게 했음)
-            print(f'    step {len(out["t"]):4d} t={t:9.1f}s [{phase}] V={V_term:.4f} '
+            print(f'    step {len(out["t"]):4d} t={t:9.1f}s [{phase}] V={V_term_rec:.4f} '
                   f'I={I_del:.3e} x̄={x_bar:.4f} ηkin={out["eta_kin_mean"][-1] * 1e3:.1f}mV '
                   f'E-bal {aud["balance_rel"]:.1e} KCL {kcl:.1e} (ev {_nev}, dt {dt:.0f}s)',
                   flush=True)
