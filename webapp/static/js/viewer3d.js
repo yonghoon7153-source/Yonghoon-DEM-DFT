@@ -334,7 +334,9 @@ function renderSt4Soc(state) {
     const keep = +tS.value, frames = [];
     for (let ti = 0; ti < nChk; ti++) { tS.value = ti; upd(); frames.push(_captureHiRes(state, 2)); }
     tS.value = keep; upd();
-    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, 'st4_soc_3d', gifBtn);
+    const _cn = String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
+    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2,
+      `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_cn ? '_' + _cn : ''}`, gifBtn);
   };
 }
 
@@ -588,12 +590,14 @@ function renderSt4Faces(state) {
     tS.value = keep; upd();
     frBtn.disabled = false; frBtn.textContent = '🎞';
   };
+  const _st4cn = () => String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
+  const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_st4cn() ? '_' + _st4cn() : ''}`;
   const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면)
   if (fGifBtn) fGifBtn.onclick = async () => {
     const keep = +tS.value, frames = [];
     for (let ti = 0; ti < nChk; ti++) { tS.value = ti; upd(); frames.push(_captureHiRes(state, 2)); }
     tS.value = keep; upd();
-    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, 'st4_faces_3d', fGifBtn);
+    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, `st4_rxn3d_${_st4tag()}`, fGifBtn);
   };
   // 📈 현재 시점 프로파일 PNG(3×)+CSV — 동적 Fig4e (반응분포·표면 SOC vs 두께)
   const pfBtn = document.getElementById('st4f-prof-dl');
@@ -626,7 +630,7 @@ function renderSt4Faces(state) {
       frames.push(big.toDataURL('image/png'));
     }
     tS.value = keep; upd();
-    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, 'st4_zprofile', zGifBtn);
+    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, `st4_zprof_${_st4tag()}`, zGifBtn);
   };
 }
 
