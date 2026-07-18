@@ -13,6 +13,12 @@
 #
 # VRAM 프로브: 첫 스트레인(strain_11_p)이 OOM/실패하면 즉시 중단하고 gabia 폴백을
 # 안내한다 (128원자 @ 24 GB는 간당간당 — 실패해도 아무것도 잃지 않는 설계).
+#
+# ★판정 2026-07-18: kgy 3090(24 GB)로는 b2o3(128원자, ecutrho 480) 불가 확정.
+#   환경 3버그(libgomp:TODO → MPI_INIT abort → 다 해결)를 뚫은 뒤 진짜 벽 = cuFFT
+#   "cufftPlanMany failed"(CUFFT_ALLOC_FAILED). FFT 작업버퍼가 24 GB에 안 들어감.
+#   → b2o3 elastic은 gabia(A6000 48 GB, SDCP phaseb 뒤) 또는 KISTI(A100)에서.
+#   이 스크립트는 24 GB+α GPU(=48/80 GB)에서 그대로 재사용 가능 (env 블록 검증됨).
 # =============================================================================
 set -u; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
