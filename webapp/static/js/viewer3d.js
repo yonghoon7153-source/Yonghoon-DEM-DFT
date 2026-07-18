@@ -141,6 +141,7 @@ function wireSt4Picker(state, btnId, mode) {
         try { obj = JSON.parse(rd.result); } catch (err) { alert('step4_viz JSON 파싱 실패: ' + err); inp.remove(); return; }
         if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind=' + (obj && obj.kind) + ')'); inp.remove(); return; }
         state.st4 = obj;
+        state._st4SrcName = (f.name || '').replace(/\.json$/i, '');   // 📂로 부른 파일명 = 다운로드 이름의 정체 (payload 케이스보다 우선)
         if (state._st4Url) fetch(state._st4Url, { method: 'POST',
           headers: { 'Content-Type': 'application/json' }, body: rd.result })
           .then(r => { if (r && r.ok) console.log('st4 viz 서버 저장(교체)됨'); }).catch(() => {});
@@ -193,7 +194,7 @@ function wireVProfileDownload(state, btnId) {
     g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
     g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C  (${(state.data && state.data.case) || ''})`, mL, mT - 18);
     const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
-    const _cn = String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
+    const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
     const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${_cn ? '_' + _cn : ''}`;
     dl(cv.toDataURL('image/png'), base + '.png');
     // CSV (전 스텝 원자료)
@@ -335,7 +336,7 @@ function renderSt4Soc(state) {
     const keep = +tS.value, sub = +(document.getElementById('st4-gifsub') || {}).value || 3;
     const frames = _st4GifFrames(nChk, sub, ph => upd(ph), () => _captureHiRes(state, 2));
     tS.value = keep; upd();
-    const _cn = String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
+    const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
     await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub,
       `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_cn ? '_' + _cn : ''}`, gifBtn);
   };
@@ -592,7 +593,7 @@ function renderSt4Faces(state) {
     tS.value = keep; upd();
     frBtn.disabled = false; frBtn.textContent = '🎞';
   };
-  const _st4cn = () => String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
+  const _st4cn = () => String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
   const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_st4cn() ? '_' + _st4cn() : ''}`;
   const _gifSub = () => +(document.getElementById('st4f-gifsub') || {}).value || 3;
   const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면, 보간 프레임)
@@ -2976,7 +2977,7 @@ function applyViewMode(state, mode) {
         state._st4AutoTried = true;
         setLegend(state, '<i>서버에 저장된 STEP4 결과 확인 중…</i>');
         fetch(st4Url).then(r => (r.ok ? r.json() : null)).catch(() => null).then(obj => {
-          if (obj && obj.kind === 'step4_viz') state.st4 = obj;
+          if (obj && obj.kind === 'step4_viz') { state.st4 = obj; state._st4SrcName = null; }   // 서버 자동로드 = payload 케이스 사용
           applyViewMode(state, mode);
         });
         return;
@@ -3005,6 +3006,7 @@ function applyViewMode(state, mode) {
             try { obj = JSON.parse(rd.result); } catch (err) { alert('step4_viz JSON 파싱 실패: ' + err); return; }
             if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind=' + (obj && obj.kind) + ')'); return; }
             state.st4 = obj;
+            state._st4SrcName = (f.name || '').replace(/\.json$/i, '');   // 처음 연 파일명 = 다운로드 이름의 정체
             if (st4Url) fetch(st4Url, { method: 'POST',      // 다음부터 자동 로드 (fire-and-forget)
               headers: { 'Content-Type': 'application/json' }, body: rd.result })
               .then(r => { if (r && r.ok) console.log('st4 viz 서버 저장됨 → 다음부터 자동 로드'); }).catch(() => {});
