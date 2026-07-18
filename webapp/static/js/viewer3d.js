@@ -4881,23 +4881,50 @@ function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
     const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) { mesh.material.shininess = 8; grp.add(mesh); }
     S.scene.add(grp); S.grp = grp;
-    store[key] = { viz: o, meta: metaOf(o), parts, mesh, nChk: (o.x_shell || []).length };
+    // 반응전류(면분포)를 입자당 평균으로 사전계산: 프레임별 pmean[instanceIdx] + 프레임 p95 (정규화)
+    const nChk = (o.x_shell || []).length;
+    let rxn = null;
+    const F = o.faces;
+    if (F && F.pid && F.i_rel && F.i_rel.length) {
+      const id2i = {}; parts.forEach((p, i) => { id2i[p.id] = i; });
+      rxn = { frames: [], hi: [] };
+      for (let t = 0; t < F.i_rel.length; t++) {
+        const sum = new Float64Array(parts.length), cnt = new Int32Array(parts.length);
+        const arr = F.i_rel[t];
+        for (let j = 0; j < F.pid.length; j++) { const ii = id2i[F.pid[j]]; if (ii === undefined) continue; sum[ii] += Math.abs(arr[j]); cnt[ii]++; }
+        const pm = new Float64Array(parts.length);
+        for (let i = 0; i < parts.length; i++) pm[i] = cnt[i] ? sum[i] / cnt[i] : 0;
+        const s2 = [...pm].filter(v => v > 0).sort((a, b) => a - b);
+        rxn.frames.push(pm); rxn.hi.push(Math.max(s2[Math.floor(0.95 * (s2.length - 1))] || 1e-9, 1e-9));
+      }
+    }
+    store[key] = { viz: o, meta: metaOf(o), parts, mesh, nChk, rxn };
     if (S.meshes) ['AM_P', 'AM_S', 'MESH'].forEach(t => { if (S.meshes[t]) S.meshes[t].visible = false; });
   };
   const recolor = (frac) => {
-    const c = new THREE.Color();
+    const c = new THREE.Color(), view = ($('cmp-st4-view') || {}).value || 'soc';
     ['A', 'B'].forEach(key => {
       const s = store[key]; if (!s || !s.mesh || !s.nChk) return;
-      const lo = Math.min(s.meta.x0 ?? X0, s.meta.x100 ?? X100), hi = Math.max(s.meta.x0 ?? X0, s.meta.x100 ?? X100);
-      const ti = Math.max(0, Math.min(s.nChk - 1, Math.round(frac * (s.nChk - 1))));
-      const shell = s.viz.x_shell[ti], kSh = (s.viz.nr || 20) - 1;
-      s.parts.forEach((p, i) => { const row = shell[p.id]; const xs = row ? row[kSh] : lo;
-        const tt = Math.max(0, Math.min(1, (xs - lo) / Math.max(hi - lo, 1e-9))); s.mesh.setColorAt(i, c.setHex(jetColor(tt))); });
+      const rf = frac * (s.nChk - 1), t0 = Math.floor(rf), t1 = Math.min(s.nChk - 1, t0 + 1), fr = rf - t0;   // 프레임 보간
+      if (view === 'rxn' && s.rxn) {
+        const n1 = Math.min(s.rxn.frames.length - 1, t0), n2 = Math.min(s.rxn.frames.length - 1, t1);
+        const f0 = s.rxn.frames[n1], f1 = s.rxn.frames[n2], hi = (1 - fr) * s.rxn.hi[n1] + fr * s.rxn.hi[n2];
+        s.parts.forEach((p, i) => { const v = (1 - fr) * f0[i] + fr * f1[i];
+          s.mesh.setColorAt(i, c.setHex(jetColor(Math.max(0, Math.min(1, v / hi))))); });
+      } else {
+        const lo = Math.min(s.meta.x0 ?? X0, s.meta.x100 ?? X100), hi = Math.max(s.meta.x0 ?? X0, s.meta.x100 ?? X100);
+        const sh0 = s.viz.x_shell[t0], sh1 = s.viz.x_shell[t1], kSh = (s.viz.nr || 20) - 1;
+        s.parts.forEach((p, i) => { const r0 = sh0[p.id], r1 = sh1[p.id];
+          const xs = (r0 && r1) ? (1 - fr) * r0[kSh] + fr * r1[kSh] : lo;
+          s.mesh.setColorAt(i, c.setHex(jetColor(Math.max(0, Math.min(1, (xs - lo) / Math.max(hi - lo, 1e-9)))))); });
+      }
       if (s.mesh.instanceColor) s.mesh.instanceColor.needsUpdate = true;
     });
     const s0 = store.A || store.B;
-    if (s0 && s0.nChk) { const ti = Math.max(0, Math.min(s0.nChk - 1, Math.round(frac * (s0.nChk - 1))));
-      $('cmp-st4-t').textContent = `t=${(s0.viz.t_s || [])[ti] ?? '?'}s · x̄=${(s0.viz.x_mean || [])[ti] ?? '?'}`; }
+    if (s0 && s0.nChk) { const rf = frac * (s0.nChk - 1), t0 = Math.floor(rf), t1 = Math.min(s0.nChk - 1, t0 + 1), fr = rf - t0;
+      const tt = (1 - fr) * (s0.viz.t_s || [])[t0] + fr * (s0.viz.t_s || [])[t1];
+      const xm = (1 - fr) * (s0.viz.x_mean || [])[t0] + fr * (s0.viz.x_mean || [])[t1];
+      $('cmp-st4-t').textContent = `t=${isFinite(tt) ? tt.toFixed(0) : '?'}s · x̄=${isFinite(xm) ? xm.toFixed(4) : '?'}` + (view === 'rxn' ? ' · 반응 i/ī' : ' · SOC'); }
   };
   const note = () => { $('cmp-st4-note').innerHTML = ['A', 'B'].map(k => { const s = store[k]; if (!s) return '';
     const m = s.meta, col = k === 'A' ? '#7dd3fc' : '#fbbf24';
@@ -4926,6 +4953,7 @@ function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
   playBtn.onclick = () => { if (overlay._cmpSt4Timer) { clearInterval(overlay._cmpSt4Timer); overlay._cmpSt4Timer = null; playBtn.textContent = '▶'; } else startTimer(); };
   if (!overlay._cmpSt4Timer) startTimer();
   $('cmp-st4-vprof').onclick = () => showVProfilePopup(store, nameA, nameB);
+  if ($('cmp-st4-view')) $('cmp-st4-view').onchange = () => recolor(overlay._st4frac || 0);
   recolor(overlay._st4frac || 0);
 }
 
@@ -5044,6 +5072,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       <div id="cmp-st4-wrap" style="display:none;margin-bottom:8px">
         <div style="display:flex;gap:8px;align-items:center;font-size:12px;flex-wrap:wrap">
           <b style="color:#e5e7eb">🔋 STEP4-v2 애니메이션</b>
+          <select id="cmp-st4-view" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px"><option value="soc" selected>입자 SOC 코어-셸</option><option value="rxn">표면 반응전류(면분포)</option></select>
           <button id="cmp-st4-play" title="재생/정지" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 9px;cursor:pointer;font-size:13px">⏸</button>
           <select id="cmp-st4-fps" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px"><option value="2" selected>2 fps</option><option value="4">4 fps</option><option value="8">8 fps</option></select>
           <span id="cmp-st4-t" style="color:#9ca3af"></span>
