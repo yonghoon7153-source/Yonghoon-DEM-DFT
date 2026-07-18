@@ -17,8 +17,9 @@ import argparse
 import numpy as np
 from ase.io import read
 
-CUT = {("P", "S"): 2.6, ("B", "S"): 2.5, ("B", "O"): 1.9,
-       ("Li", "S"): 2.95, ("Li", "P"): 2.9, ("Li", "B"): 2.85, ("Li", "Cl"): 3.0}
+CUT = {("P", "S"): 2.6, ("B", "S"): 2.5, ("B", "O"): 1.9, ("P", "O"): 1.9,
+       ("Li", "S"): 2.95, ("Li", "P"): 2.9, ("Li", "B"): 2.85, ("Li", "Cl"): 3.0,
+       ("Li", "O"): 2.4}
 
 
 def coord(atoms, D, sym, a, b, cut):
@@ -41,12 +42,18 @@ def main():
     frames = read(a.traj, index=":")
     sym0 = np.array(frames[0].get_chemical_symbols())
     has_B = "B" in sym0
+    # O dopant present AND not part of B2O3 (b2o3 O is tracked via B); for LPSOCl the O
+    # is a POS3 unit -> track P-O (unit intact) and O-Li (O reduced to Li2O). 2026-07-18.
+    has_O = ("O" in sym0) and not has_B
+
     se_top0 = frames[0].positions[sym0 != "Li", 2].max()   # initial SE surface z
 
     rows = []
     hdr = ["frame", "t_ps", "P_S", "S_Li", "P_Li", "Li_penetrated"]
     if has_B:
         hdr += ["B_S", "B_Li"]
+    if has_O:
+        hdr += ["P_O", "O_Li"]
     for k, at in enumerate(frames):
         sym = np.array(at.get_chemical_symbols())
         D = at.get_all_distances(mic=True)
@@ -60,6 +67,10 @@ def main():
         if has_B:
             r.append(coord(at, D, sym, "B", "S", CUT[("B", "S")]))
             r.append(coord(at, D, sym, "B", "Li", CUT[("Li", "B")]))
+        if has_O:
+            # from O's view: O-P ~1 = POS3 intact (drop = P-O broke); O-Li rise = Li2O
+            r.append(coord(at, D, sym, "O", "P", CUT[("P", "O")]))
+            r.append(coord(at, D, sym, "O", "Li", CUT[("Li", "O")]))
         rows.append(r)
 
     rows = np.array(rows, float)
@@ -79,6 +90,9 @@ def main():
     if has_B:
         print(f"  B-S coord : {i0[6]:.2f} -> {iN[6]:.2f}   (BS3 ~3; drop = B-S breaking)")
         print(f"  B-Li coord: {i0[7]:.2f} -> {iN[7]:.2f}   <-- >0 = metallic-LiB reduction (THE worst-case flag)")
+    if has_O:
+        print(f"  P-O coord : {i0[6]:.2f} -> {iN[6]:.2f}   (O-P ~1 = POS3 intact; drop = P-O breaking)")
+        print(f"  O-Li coord: {i0[7]:.2f} -> {iN[7]:.2f}   <-- rise = O reduced to Li2O (the O-dopant flag)")
     print(f"  -> {out}")
 
 
