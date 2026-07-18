@@ -123,6 +123,37 @@ function rdylgnColor(t) {
  *           연차보고서식 입자 내부 그라데이션 단면이 됨.
  * st4_face: BV 면별 반응전류 i/ī(RELATIVE, v1 jrxn 규약)를 복셀큐브 필드로 —
  *           같은 입자 표면 안에서도 접촉 기하에 따른 비균일 얼룩이 보임. */
+/* st4 viz 파일 열기/교체 — 로드된 상태에서도 다른 파일로 바꿀 수 있게 (구버전 자동로드 덮어쓰기).
+   버튼 id `${btnId}`를 legend에 두고 이 함수로 배선.  성공 시 state.st4 교체 + 서버 저장 + 재렌더. */
+function wireSt4Picker(state, btnId, mode) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.onclick = () => {
+    const inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = '.json,application/json'; inp.style.display = 'none';
+    document.body.appendChild(inp);
+    inp.onchange = (e) => {
+      const f = e.target.files && e.target.files[0];
+      if (!f) { inp.remove(); return; }
+      const rd = new FileReader();
+      rd.onload = () => {
+        let obj;
+        try { obj = JSON.parse(rd.result); } catch (err) { alert('step4_viz JSON 파싱 실패: ' + err); inp.remove(); return; }
+        if (!obj || obj.kind !== 'step4_viz') { alert('step4_viz 형식이 아니에요 (kind=' + (obj && obj.kind) + ')'); inp.remove(); return; }
+        state.st4 = obj;
+        if (state._st4Url) fetch(state._st4Url, { method: 'POST',
+          headers: { 'Content-Type': 'application/json' }, body: rd.result })
+          .then(r => { if (r && r.ok) console.log('st4 viz 서버 저장(교체)됨'); }).catch(() => {});
+        inp.remove();
+        applyViewMode(state, mode);
+      };
+      rd.onerror = () => { alert('step4_viz 파일 읽기 실패'); inp.remove(); };
+      rd.readAsText(f);
+    };
+    inp.click();
+  };
+}
+
 function renderSt4Soc(state) {
   const st = state.st4;
   const parts = [];
@@ -141,6 +172,7 @@ function renderSt4Soc(state) {
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   setLegend(state,
     `<b>🔋 STEP4-v2 — 입자 SOC 코어-셸</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
+     <button id="st4-soc-swap" title="다른 step4_viz.json으로 교체 (구버전 자동로드 덮어쓰기)" style="float:right;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📂 교체</button>
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
@@ -207,6 +239,7 @@ function renderSt4Soc(state) {
   tS.oninput = upd;
   dS.oninput = upd;
   if (dynCb) dynCb.onchange = upd;
+  wireSt4Picker(state, 'st4-soc-swap', 'st4_soc');           // 📂 교체 버튼 배선
   upd();
   // ── ▶ SOC 애니메이션 (자동 재생) + 🎞 프레임 PNG (SI 무비 조립용) ──
   if (state._st4Timer) { clearInterval(state._st4Timer); state._st4Timer = null; }
@@ -353,6 +386,7 @@ function renderSt4Faces(state) {
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   setLegend(state,
     `<b>🔋 STEP4-v2 — 표면 반응전류 (COMSOL식 표면 필드)</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
+     <button id="st4f-swap" title="다른 step4_viz.json으로 교체 (구버전 자동로드 덮어쓰기)" style="float:right;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📂 교체</button>
      <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
@@ -457,6 +491,7 @@ function renderSt4Faces(state) {
     drawProf(fr, t0, t1, (1 - fr) * st.t_s[t0] + fr * st.t_s[t1]);   // 동적 Fig4e 프로파일 갱신
   };
   tS.oninput = upd;
+  wireSt4Picker(state, 'st4f-swap', 'st4_face');             // 📂 교체 버튼 배선
   upd();
   // ▶ 재생 + 🎞 프레임 (SOC 모드와 동일 문법)
   if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; }
@@ -2840,11 +2875,12 @@ function applyViewMode(state, mode) {
       setLegend(state, '<i>STEP4-v2는 <b>압축 후</b> 구조 위의 동역학이에요 — "MPM (압축 후)" 뷰에서 보세요.</i>');
       return;
     }
+    const m2 = (state.dataUrl || '').match(/\/mpm-lab\/data\/([^/?#]+)/);
+    const st4Url = m2 ? '/mpm-lab/st4/' + m2[1] : null;
+    state._st4Url = st4Url;                                   // 렌더 legend의 '교체' 버튼이 사용
     if (!state.st4) {
       // lab 엔트리면 서버 자동 로드 1회 시도 → 없으면 피커; 피커로 연 파일은 서버에
       // 자동 저장돼 다음부터 무선택 로드 (경로: /mpm-lab/st4/<pid>)
-      const m2 = (state.dataUrl || '').match(/\/mpm-lab\/data\/([^/?#]+)/);
-      const st4Url = m2 ? '/mpm-lab/st4/' + m2[1] : null;
       if (st4Url && !state._st4AutoTried) {
         state._st4AutoTried = true;
         setLegend(state, '<i>서버에 저장된 STEP4 결과 확인 중…</i>');
