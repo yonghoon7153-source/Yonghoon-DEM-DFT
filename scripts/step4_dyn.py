@@ -1229,6 +1229,8 @@ def main():
         i_rel = If_full[:, idx] / m_abs[:, None]             # i/ī (v1 jrxn 규약과 동일 RELATIVE)
         viz = {
             'kind': 'step4_viz', 'c_rate': a.c_rate, 'charge': bool(a.charge),
+            'v_min': a.v_min, 'v_max': a.v_max, 'cv_hold': bool(a.cv_hold),   # 컷오프 조건 (비교 라벨용)
+            'i_cut_frac': a.i_cut_frac, 'r_int_ohm_cm2': a.r_int_ohm_cm2,
             'x0': ocp.x0, 'x100': ocp.x100, 'nr': a.nr, 'vox_um': vox_um,
             'c_max_mol_m3': ocp.c_max,
             'i_1c_a': float(out['I_1C_A']), 'i_mean_abs_a': [float(f'{v:.4g}') for v in m_abs],

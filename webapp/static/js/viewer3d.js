@@ -645,6 +645,7 @@ function buildControls(container, isMPM) {
     <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
     <hr>
     <button data-action="analysisSummary">📊 분석 요약</button>
+    <button data-action="curveCompare" title="여러 step4_viz.json(방전/충전, 다른 C-rate)을 겹쳐 비교 — 조건 라벨 자동 표기">🔋 충방전 곡선 비교</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>
@@ -4866,6 +4867,121 @@ function _focusTicks(f) {
   return t;
 }
 
+/* 충방전 곡선 비교 — 여러 step4_viz.json(curve 포함)을 겹쳐 그림.  각 곡선 = C-rate·방전/충전·
+   컷오프 조건 라벨 자동.  x축 SOC창% 또는 시간(min).  PNG(고해상)+CSV 다운로드. */
+function showCurveCompareModal() {
+  injectCSS();
+  const PAL = ['#1f6fb2', '#d1495b', '#2e8b57', '#e0a100', '#7c3aed', '#0891b2', '#be185d', '#4b5563'];
+  const series = [];   // {name, cu, meta, color}
+  const overlay = document.createElement('div');
+  overlay.className = 'path-modal-overlay';
+  overlay.innerHTML = `
+    <div class="path-modal" style="width:min(92vw,900px);background:#0d1117;color:#e5e7eb">
+      <button class="path-modal-close" style="color:#9ca3af">&times;</button>
+      <b style="font-size:14px">🔋 충방전 곡선 비교</b>
+      <div style="margin:8px 0;display:flex;gap:8px;align-items:center;flex-wrap:wrap;font-size:12px">
+        <button id="cc-add" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">📂 step4_viz.json 추가</button>
+        <label>x축 <select id="cc-x" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;padding:2px"><option value="soc">SOC 창 %</option><option value="cap">면적용량 mAh/cm²</option><option value="t">시간 min</option></select></label>
+        <button id="cc-png" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">📈 PNG</button>
+        <button id="cc-csv" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:3px 10px;cursor:pointer">CSV</button>
+        <span style="color:#6b7280;font-size:11px">curve 든 viz만 (2C부터 자동; 1C는 병합본)</span>
+      </div>
+      <canvas id="cc-canvas" width="860" height="470" style="width:100%;background:#fff;border-radius:6px"></canvas>
+      <div id="cc-legend" style="margin-top:8px;font-size:12px;line-height:1.9"></div>
+    </div>`;
+  document.body.appendChild(overlay);
+  const close = () => overlay.remove();
+  overlay.querySelector('.path-modal-close').onclick = close;
+  overlay.onclick = e => { if (e.target === overlay) close(); };
+
+  const X0 = 0.2638452245913298, X100 = 0.853974674630047;
+  const draw = () => {
+    const cv = document.getElementById('cc-canvas'), g = cv.getContext('2d');
+    const W = cv.width, H = cv.height, mL = 62, mR = 16, mT = 16, mB = 46;
+    const xmode = document.getElementById('cc-x').value;
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+    if (!series.length) { g.fillStyle = '#9ca3af'; g.font = '15px sans-serif'; g.textAlign = 'center'; g.fillText('📂로 step4_viz.json을 추가하세요', W / 2, H / 2); return; }
+    const xof = (cu, meta, i) => {
+      const win = Math.abs((meta.x100 ?? X100) - (meta.x0 ?? X0));
+      if (xmode === 't') return cu.t_s[i] / 60;
+      if (xmode === 'cap') return (cu.x_mean[i] - (meta.x0 ?? X0)) / win * (meta.areal || 3.1);
+      return 100 * (cu.x_mean[i] - (meta.x0 ?? X0)) / win;
+    };
+    let vlo = 9, vhi = 0, xlo = 1e9, xhi = -1e9;
+    series.forEach(s => s.cu.V.forEach((v, i) => { vlo = Math.min(vlo, v); vhi = Math.max(vhi, v); const x = xof(s.cu, s.meta, i); xlo = Math.min(xlo, x); xhi = Math.max(xhi, x); }));
+    const PX = x => mL + (x - xlo) / (xhi - xlo + 1e-9) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo + 1e-9)) * (H - mT - mB);
+    g.strokeStyle = '#e5e7eb'; g.lineWidth = 1; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
+    for (let k = 1; k < 5; k++) { const gy = mT + (H - mT - mB) * k / 5; g.strokeStyle = '#f3f4f6'; g.beginPath(); g.moveTo(mL, gy); g.lineTo(W - mR, gy); g.stroke(); }
+    series.forEach(s => {
+      g.strokeStyle = s.color; g.lineWidth = 2.2; g.setLineDash(s.meta.charge ? [6, 4] : []); g.beginPath();
+      s.cu.V.forEach((v, i) => { const x = PX(xof(s.cu, s.meta, i)), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+    });
+    g.setLineDash([]); g.fillStyle = '#111'; g.font = '13px sans-serif'; g.textAlign = 'right';
+    for (let k = 0; k <= 5; k++) { const v = vlo + (vhi - vlo) * k / 5; g.fillText(v.toFixed(2), mL - 6, PY(v) + 4); }
+    g.textAlign = 'center';
+    for (let k = 0; k <= 5; k++) { const x = xlo + (xhi - xlo) * k / 5; g.fillText(x.toFixed(xmode === 'cap' ? 2 : (xmode === 't' ? 0 : 0)), PX(x), H - mB + 20); }
+    g.fillText(xmode === 't' ? 'Time (min)' : xmode === 'cap' ? 'Delivered capacity (mAh cm⁻²)' : 'SOC window (%)', mL + (W - mL - mR) / 2, H - 8);
+    g.save(); g.translate(16, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Cell voltage (V vs Li/Li⁺)', 0, 0); g.restore();
+  };
+  const renderLegend = () => {
+    document.getElementById('cc-legend').innerHTML = series.map((s, k) => {
+      const m = s.meta;
+      const cond = `${m.charge ? '충전' : '방전'} ${m.c_rate}C · 컷오프 ${m.v_min ?? '?'}–${m.v_max ?? '?'}V`
+        + (m.charge && m.cv_hold ? ` · CV종지 ${m.i_cut_frac}C` : '') + (m.r_int_ohm_cm2 ? ` · R_int ${m.r_int_ohm_cm2}Ω·cm²` : '')
+        + ` · 종료 ${m.end_reason || '?'} · V ${s.cu.V[0].toFixed(3)}→${s.cu.V[s.cu.V.length - 1].toFixed(3)}`;
+      return `<div style="display:flex;align-items:center;gap:6px"><span style="width:22px;height:0;border-top:3px ${m.charge ? 'dashed' : 'solid'} ${s.color};display:inline-block"></span>`
+        + `<b>${s.name}</b> <span style="color:#9ca3af">— ${cond}</span> `
+        + `<button data-rm="${k}" style="background:none;border:none;color:#f87171;cursor:pointer;font-size:14px">×</button></div>`;
+    }).join('') || '<span style="color:#6b7280">아직 곡선 없음</span>';
+    document.getElementById('cc-legend').querySelectorAll('[data-rm]').forEach(b =>
+      b.onclick = () => { series.splice(+b.getAttribute('data-rm'), 1); renderLegend(); draw(); });
+  };
+  document.getElementById('cc-add').onclick = () => {
+    const inp = document.createElement('input'); inp.type = 'file'; inp.accept = '.json,application/json'; inp.multiple = true; inp.style.display = 'none';
+    document.body.appendChild(inp);
+    inp.onchange = e => {
+      [...(e.target.files || [])].forEach(f => {
+        const rd = new FileReader();
+        rd.onload = () => {
+          let o; try { o = JSON.parse(rd.result); } catch (err) { alert('파싱 실패: ' + f.name); return; }
+          if (!o || o.kind !== 'step4_viz') { alert(f.name + ': step4_viz 아님'); return; }
+          if (!o.curve || !o.curve.V) { alert(f.name + ': curve 데이터 없음 (최신 step4_dyn 재생성 필요)'); return; }
+          series.push({ name: f.name.replace('.json', '').replace('step4_viz_', ''), cu: o.curve,
+            meta: { c_rate: o.c_rate, charge: o.charge, v_min: o.v_min, v_max: o.v_max, cv_hold: o.cv_hold,
+              i_cut_frac: o.i_cut_frac, r_int_ohm_cm2: o.r_int_ohm_cm2, end_reason: o.end_reason, x0: o.x0, x100: o.x100,
+              areal: ((((window._lastPayload || {}).mpm_metrics || {}).step3 || {}).field_scale_e || {}).areal_capacity_mAh_cm2 },
+            color: PAL[series.length % PAL.length] });
+          renderLegend(); draw();
+        };
+        rd.readAsText(f);
+      });
+      inp.remove();
+    };
+    inp.click();
+  };
+  document.getElementById('cc-x').onchange = draw;
+  document.getElementById('cc-png').onclick = () => {
+    if (!series.length) return;
+    const src = document.getElementById('cc-canvas'), big = document.createElement('canvas');
+    big.width = src.width * 2; big.height = src.height * 2;
+    const bg = big.getContext('2d'); bg.scale(2, 2);
+    const tmp = document.getElementById('cc-canvas'); bg.drawImage(tmp, 0, 0);   // 재그리기 대신 2× (충분)
+    const a = document.createElement('a'); a.href = big.toDataURL('image/png'); a.download = 'step4_curve_compare.png';
+    document.body.appendChild(a); a.click(); a.remove();
+  };
+  document.getElementById('cc-csv').onclick = () => {
+    if (!series.length) return;
+    const out = ['series,condition,step,t_s,V,x_mean,soc_window_pct,eta_kin_mV'];
+    series.forEach(s => { const m = s.meta, win = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0));
+      const cond = `${m.charge ? 'charge' : 'discharge'}_${m.c_rate}C_${m.v_min}-${m.v_max}V`;
+      s.cu.V.forEach((v, i) => out.push([JSON.stringify(s.name), cond, i + 1, s.cu.t_s[i], v, s.cu.x_mean[i],
+        (100 * (s.cu.x_mean[i] - (m.x0 ?? X0)) / win).toFixed(3), s.cu.eta_kin_mV ? s.cu.eta_kin_mV[i] : ''].join(','))); });
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out.join('\n')], { type: 'text/csv' }));
+    a.download = 'step4_curve_compare.csv'; document.body.appendChild(a); a.click(); a.remove();
+  };
+  renderLegend(); draw();
+}
+
 export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   injectCSS();
   const overlay = document.createElement('div');
@@ -5927,6 +6043,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         showAMCloseupView(state);
       } else if (action === 'analysisSummary') {
         showMPMAnalysisSummary(state);
+      } else if (action === 'curveCompare') {
+        showCurveCompareModal();
       }
     });
   });
