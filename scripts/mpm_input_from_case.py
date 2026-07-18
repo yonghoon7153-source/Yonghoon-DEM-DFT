@@ -84,6 +84,13 @@ def main():
                     help='STEP4 충전 컷오프 전압 [V vs Li] (기본 4.5; 실험이면 4.25).')
     ap.add_argument('--step4-icut', type=float, default=0.05,
                     help='CCCV 충전의 CV-종지 전류 |I|/I_1C (기본 0.05; "1C→0.5C서 끝"이면 0.5).')
+    ap.add_argument('--step4-x0', type=float, default=None,
+                    help='STEP4 방전창 시작 stoich(충전끝/저리튬) 오버라이드 — 기본 None=params_json(0.2638).')
+    ap.add_argument('--step4-x100', type=float, default=None,
+                    help='STEP4 방전창 끝 stoich(방전끝/고리튬) 오버라이드 — 기본 None=params_json(0.854, '
+                         'Chen 흑연셀-창).  ★ASSB vs-Li 전 SOC 뽑으려면 NMC811 GITT 실측 max stoich 0.9084 '
+                         '(OCV~3.0V) 권장 + --step4-vmin 2.5(단자, 2C 과전압으로 도달).  x>0.854 OCP-shape는 '
+                         'Chen 소폭 외삽(끝점 0.9084는 GITT 앵커) — 정밀 tail은 실측 GITT OCP splice 필요.')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -380,7 +387,9 @@ def main():
     if s4_rates or s4_chg:
         _dis = ' '.join(f'{v:g}' for v in s4_rates)
         _chg = ' '.join(f'{v:g}' for v in s4_chg)
-        _cut = f'--v-min {a.step4_vmin:g} --v-max {a.step4_vmax:g}'    # 컷오프 스케줄 (사용자 설정)
+        _win = (('' if a.step4_x0 is None else f' --x0 {a.step4_x0:g}')
+                + ('' if a.step4_x100 is None else f' --x100 {a.step4_x100:g}'))   # ASSB vs-Li 창 오버라이드
+        _cut = f'--v-min {a.step4_vmin:g} --v-max {a.step4_vmax:g}{_win}'    # 컷오프 + 창 (사용자 설정)
         _icut = f'--i-cut-frac {a.step4_icut:g}'
         _dis_loop = f'''  for CR in {_dis}; do
     echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V)"

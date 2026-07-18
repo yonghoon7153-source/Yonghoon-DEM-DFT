@@ -5337,6 +5337,12 @@ def mpm_input_package(case_id):
         _vmax = _cut('s4vmax', 4.5, 3.5, 4.8)
         _icut = _cut('s4icut', 0.05, 0.01, 2.0)   # 절대 C (충전 rate와 독립) — 고율 충전의 '절반 종지' 허용 위해 2.0까지
         cmd += ['--step4-vmin', f'{_vmin:g}', '--step4-vmax', f'{_vmax:g}', '--step4-icut', f'{_icut:g}']
+        _x100 = request.args.get('s4x100', '')    # ASSB vs-Li 방전끝 stoich 오버라이드 (비면 params 0.854)
+        if _x100:
+            try:
+                cmd += ['--step4-x100', f'{max(0.85, min(0.99, float(_x100))):g}']
+            except (ValueError, TypeError):
+                pass
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
