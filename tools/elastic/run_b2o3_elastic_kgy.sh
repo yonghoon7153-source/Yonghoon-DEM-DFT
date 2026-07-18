@@ -30,25 +30,39 @@ for f in relax_v0.in relax_v0.out; do
 done
 [ -d pseudo ] || { echo "ERROR: $W/pseudo 없음"; exit 1; }
 
-# ---- QE 자동 탐지 (kgy: pw.x는 RPATH로 lib 절대경로 참조 → env 불요) ----
-PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*qe*gpu*bin*" 2>/dev/null | head -1)}
-[ -n "$PW" ] || PW=$(find "$HOME/apps" -maxdepth 4 -name pw.x -path "*bin*" 2>/dev/null | head -1)
+# ---- 모드: GPU(기본) 또는 CPU(B2O3_CPU=1; 3090 24GB cuFFT 한계 회피, 느림) ----
+if [ "${B2O3_CPU:-0}" = 1 ]; then
+    PW=${PW:-$(find "$HOME/apps" -maxdepth 4 -name pw.x -path "*qe*cpu*bin*" 2>/dev/null | head -1)}
+    NP=${NP:-$(nproc)}
+    # CPU 빌드는 openmpi-4.1.6 (전역 .bashrc). nvhpc/cuda 불요.
+    MPIRUN=${MPIRUN:-$HOME/apps/openmpi-4.1.6/bin/mpirun}
+    export OMP_NUM_THREADS=1
+    export LD_LIBRARY_PATH="$HOME/apps/openmpi-4.1.6/lib:${LD_LIBRARY_PATH:-}"
+    echo "[CPU MODE] pw.x=$PW  np=$NP  mpirun=$MPIRUN"
+    RUN() { "$MPIRUN" -np "$NP" "$PW" -inp "$1"; }
+    CPU_MODE=1
+else
+    PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*qe*gpu*bin*" 2>/dev/null | head -1)}
+    CPU_MODE=0
+fi
 [ -n "$PW" ] || { echo "ERROR: pw.x 못 찾음 — PW=/path/to/pw.x 로 지정"; exit 1; }
 # ★ GPU-QE env — ~/.bashrc의 검증된 qegpu() 복제 (2026-07-18):
 # pw.x(nvhpc 빌드)는 NVHPC libgomp/CUDA/math + HPC-X OpenMPI가 LD_LIBRARY_PATH
 # 맨 앞에 있어야 함. uma env의 GNU libgomp가 앞서면 "libgomp: TODO"; 반대로
 # 통째 unset하면 "Local abort before MPI_INIT" (hpcx libs 소실). 정답 = nvhpc를
 # prepend해서 우선순위를 뺏는 것 (qegpu 함수가 하는 일 그대로).
-NV="$HOME/apps/nvhpc/Linux_x86_64/24.11"
-HPCX="$(ls -d "$NV"/comm_libs/*/hpcx/hpcx-*/ompi 2>/dev/null | sort | tail -1)"
-[ -n "$HPCX" ] || { echo "ERROR: hpcx ompi 못 찾음 ($NV/comm_libs/*/hpcx/*/ompi)"; exit 1; }
-export OPAL_PREFIX="$HPCX" OMP_NUM_THREADS=1
-export LD_LIBRARY_PATH="$NV/compilers/lib:$NV/cuda/12.6/lib64:$NV/math_libs/lib64:$HPCX/lib:${LD_LIBRARY_PATH:-}"
-export PATH="$(dirname "$PW"):$HPCX/bin:$NV/compilers/bin:$PATH"
-MPIRUN="$HPCX/bin/mpirun"
-echo "pw.x   = $PW"
-echo "mpirun = $MPIRUN  (hpcx, qegpu env 복제)"
-RUN() { "$MPIRUN" -np 1 "$PW" -npool 1 -in "$1"; }
+if [ "$CPU_MODE" = 0 ]; then
+    NV="$HOME/apps/nvhpc/Linux_x86_64/24.11"
+    HPCX="$(ls -d "$NV"/comm_libs/*/hpcx/hpcx-*/ompi 2>/dev/null | sort | tail -1)"
+    [ -n "$HPCX" ] || { echo "ERROR: hpcx ompi 못 찾음 ($NV/comm_libs/*/hpcx/*/ompi)"; exit 1; }
+    export OPAL_PREFIX="$HPCX" OMP_NUM_THREADS=1
+    export LD_LIBRARY_PATH="$NV/compilers/lib:$NV/cuda/12.6/lib64:$NV/math_libs/lib64:$HPCX/lib:${LD_LIBRARY_PATH:-}"
+    export PATH="$(dirname "$PW"):$HPCX/bin:$NV/compilers/bin:$PATH"
+    MPIRUN="$HPCX/bin/mpirun"
+    echo "pw.x   = $PW"
+    echo "mpirun = $MPIRUN  (hpcx, qegpu env 복제)"
+    RUN() { "$MPIRUN" -np 1 "$PW" -npool 1 -in "$1"; }
+fi
 
 wait_gpu() {   # MD 뒤끝/타 프로세스 대비
     while :; do
