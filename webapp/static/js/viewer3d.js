@@ -193,7 +193,8 @@ function wireVProfileDownload(state, btnId) {
     g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
     g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C  (${(state.data && state.data.case) || ''})`, mL, mT - 18);
     const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
-    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C`;
+    const _cn = String((state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
+    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${_cn ? '_' + _cn : ''}`;
     dl(cv.toDataURL('image/png'), base + '.png');
     // CSV (전 스텝 원자료)
     const hdr = 'step,t_s,V,V_terminal,x_mean,soc_window_pct,delivered_mAh_cm2,eta_kin_mV,Q_ohm_e_W,Q_ohm_i_W,Q_ct_W';
@@ -5062,6 +5063,12 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['첨가제→SE nn_med (µm)', ((mmA.additive_dispersion || {}).conductive_all || {}).nn_med_um,
                               ((mmB.additive_dispersion || {}).conductive_all || {}).nn_med_um,
      '전도성 첨가제 점→최근접 SE 거리의 중앙값 (분산 통계).\n분산지수 D≈1(포아송)과 함께 "개별 랜덤 분산" 증빙 — 랜덤 배치가 틈 점유 확률을 최대화한다는 §3-② 기전의 정량 근거.'],
+    ['반응 계면 BV faces', (sA.rxn || {}).n_bv_faces, (sB.rxn || {}).n_bv_faces,
+     'AM|SE·AM|SDCP 반응 계면 수 (Butler–Volmer, STEP4).\n+18% = SDCP가 이온-소외됐던 AM 표면을 반응 가능하게 만든 것(절연 PTFE면 안 생김) — §3-② 반응면 이득의 원자료.  active% = 반응 참여 입자 비율.'],
+    ['면적용량 (mAh/cm²)', (sA.field_scale_e || {}).areal_capacity_mAh_cm2, (sB.field_scale_e || {}).areal_capacity_mAh_cm2,
+     'F·c_max·|x100−x0|·V_AM/면적 (Chen2020 창, 자동산출) — 1C 전류밀도 = 면적용량/1h.\n두 전극 미세차(3.107 vs 3.066)는 SDCP가 AM 경계 복셀 일부 덮은 래스터화 효과 — C-rate 정규화 시 참고.'],
+    ['SE/solid (%)', mmA.SE_of_solid_pct, mmB.SE_of_solid_pct,
+     'SE 부피 / 전 고체상 비율 — 이온망 재료 총량.\n두 전극 동일(46.7%)해야 정상(레시피는 carbon/binder만 다름) = 비교 규약의 held-fixed 축.'],
   ];
   const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
     : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
