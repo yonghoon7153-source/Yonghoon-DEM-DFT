@@ -154,6 +154,56 @@ function wireSt4Picker(state, btnId, mode) {
   };
 }
 
+/* 방전곡선 다운로드 — viz json의 curve(전 스텝 V/x̄/η/Q)를 V vs 면적용량으로 그려 PNG(고해상)+CSV.
+   면적용량 = x̄→SOC창% × areal(field_scale 자동산출 or c_max 추정).  버튼 id로 배선. */
+function wireVProfileDownload(state, btnId) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.onclick = () => {
+    const st = state.st4, cu = st && st.curve;
+    if (!cu || !cu.V || !cu.V.length) { alert('이 viz엔 곡선 데이터가 없어요 — 최신 step4_dyn(--viz-out)로 재생성 필요'); return; }
+    const x0 = st.x0, x100 = st.x100, win = Math.abs(x100 - x0);
+    // 면적용량: payload field_scale 있으면 그 값, 없으면 Chen2020 c_max로 추정 (단위 정합만)
+    const mm = (state.data && state.data.mpm_metrics) || {};
+    const s3 = mm.step3 || {};
+    const ar = ((s3.field_scale_e || {}).areal_capacity_mAh_cm2)
+      || (st.c_max_mol_m3 ? 96485 * st.c_max_mol_m3 * win / 3.6e6 * 0.00307 / 0.00307 * 3.1 / 3.1 : 0);  // fallback 대략
+    const useCap = ar > 0;
+    const xs = cu.x_mean.map(x => useCap ? (x - x0) / win * ar : 100 * (x - x0) / win);
+    // 고해상 캔버스 직접 렌더
+    const W = 1200, H = 780, mL = 130, mR = 40, mT = 50, mB = 90;
+    const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+    const g = cv.getContext('2d');
+    g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+    const V = cu.V, vlo = Math.min(...V), vhi = Math.max(...V), xlo = Math.min(...xs), xhi = Math.max(...xs, xlo + 1e-9);
+    const PX = x => mL + (x - xlo) / (xhi - xlo) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo)) * (H - mT - mB);
+    g.strokeStyle = '#d1d5db'; g.lineWidth = 1.5; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
+    g.strokeStyle = '#f1f3f5'; g.lineWidth = 1;
+    for (let i = 1; i < 5; i++) { const gy = mT + (H - mT - mB) * i / 5; g.beginPath(); g.moveTo(mL, gy); g.lineTo(W - mR, gy); g.stroke(); }
+    g.strokeStyle = st.charge ? '#d97706' : '#1f6fb2'; g.lineWidth = 3; g.beginPath();
+    V.forEach((v, i) => { const x = PX(xs[i]), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
+    g.fillStyle = '#111'; g.font = '22px sans-serif'; g.textAlign = 'center';
+    g.fillText(useCap ? 'Delivered capacity (mAh cm⁻²)' : 'SOC window (%)', mL + (W - mL - mR) / 2, H - 30);
+    g.save(); g.translate(38, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2);
+    g.fillText('Cell voltage (V vs Li/Li⁺)', 0, 0); g.restore();
+    g.font = '16px sans-serif'; g.textAlign = 'right';
+    for (let i = 0; i <= 5; i++) { const v = vlo + (vhi - vlo) * i / 5; g.fillText(v.toFixed(2), mL - 8, PY(v) + 5); }
+    g.textAlign = 'center';
+    for (let i = 0; i <= 5; i++) { const x = xlo + (xhi - xlo) * i / 5; g.fillText(x.toFixed(useCap ? 2 : 0), PX(x), H - mB + 24); }
+    g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
+    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C  (${(state.data && state.data.case) || ''})`, mL, mT - 18);
+    const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
+    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C`;
+    dl(cv.toDataURL('image/png'), base + '.png');
+    // CSV (전 스텝 원자료)
+    const hdr = 'step,t_s,V,V_terminal,x_mean,soc_window_pct,delivered_mAh_cm2,eta_kin_mV,Q_ohm_e_W,Q_ohm_i_W,Q_ct_W';
+    const rows = cu.V.map((v, i) => [i + 1, cu.t_s[i], v, cu.V_terminal[i], cu.x_mean[i],
+      (100 * (cu.x_mean[i] - x0) / win).toFixed(3), useCap ? xs[i].toFixed(4) : '',
+      cu.eta_kin_mV[i], cu.Q_ohm_e_W[i], cu.Q_ohm_i_W[i], cu.Q_ct_W[i]].join(','));
+    dl(URL.createObjectURL(new Blob([hdr + '\n' + rows.join('\n')], { type: 'text/csv' })), base + '.csv');
+  };
+}
+
 function renderSt4Soc(state) {
   const st = state.st4;
   const parts = [];
@@ -172,7 +222,7 @@ function renderSt4Soc(state) {
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   setLegend(state,
     `<b>🔋 STEP4-v2 — 입자 SOC 코어-셸</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
-     <button id="st4-soc-swap" title="다른 step4_viz.json으로 교체 (구버전 자동로드 덮어쓰기)" style="float:right;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📂 교체</button>
+     <button id="st4-soc-curve" title="방전곡선 V vs 용량 PNG+CSV 저장" style="float:right;margin-left:5px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📈 곡선</button><button id="st4-soc-swap" title="다른 step4_viz.json으로 교체 (구버전 자동로드 덮어쓰기)" style="float:right;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📂 교체</button>
      <div style="margin-top:3px">시점: <span id="st4-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
@@ -240,6 +290,7 @@ function renderSt4Soc(state) {
   dS.oninput = upd;
   if (dynCb) dynCb.onchange = upd;
   wireSt4Picker(state, 'st4-soc-swap', 'st4_soc');           // 📂 교체 버튼 배선
+  wireVProfileDownload(state, 'st4-soc-curve');
   upd();
   // ── ▶ SOC 애니메이션 (자동 재생) + 🎞 프레임 PNG (SI 무비 조립용) ──
   if (state._st4Timer) { clearInterval(state._st4Timer); state._st4Timer = null; }
@@ -386,7 +437,7 @@ function renderSt4Faces(state) {
   const stops = [0, 0.25, 0.5, 0.75, 1].map(v => '#' + jetColor(v).toString(16).padStart(6, '0'));
   setLegend(state,
     `<b>🔋 STEP4-v2 — 표면 반응전류 (COMSOL식 표면 필드)</b>${st.test_only ? ' <span style="color:#f59e0b">⚠TEST-ONLY OCP</span>' : ''}
-     <button id="st4f-swap" title="다른 step4_viz.json으로 교체 (구버전 자동로드 덮어쓰기)" style="float:right;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📂 교체</button>
+     <button id="st4f-curve" title="방전곡선 V vs 용량 PNG+CSV 저장" style="float:right;margin-left:5px;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📈 곡선</button><button id="st4f-swap" title="다른 step4_viz.json으로 교체 (구버전 자동로드 덮어쓰기)" style="float:right;background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:11px">📂 교체</button>
      <div style="margin-top:3px">시점: <span id="st4f-tlab" style="color:#e4e6f0"></span></div>
      <input type="range" id="st4f-t" min="0" max="${nChk - 1}" value="${nChk - 1}" style="width:100%">
      <div style="display:flex;gap:6px;align-items:center;margin:3px 0;flex-wrap:wrap">
@@ -492,6 +543,7 @@ function renderSt4Faces(state) {
   };
   tS.oninput = upd;
   wireSt4Picker(state, 'st4f-swap', 'st4_face');             // 📂 교체 버튼 배선
+  wireVProfileDownload(state, 'st4f-curve');
   upd();
   // ▶ 재생 + 🎞 프레임 (SOC 모드와 동일 문법)
   if (state._st4fTimer) { clearInterval(state._st4fTimer); state._st4fTimer = null; }
