@@ -5362,7 +5362,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
     ['SE/solid (%)', mmA.SE_of_solid_pct, mmB.SE_of_solid_pct,
      'SE 부피 / 전 고체상 비율 — 이온망 재료 총량.\n두 전극 동일(46.7%)해야 정상(레시피는 carbon/binder만 다름) = 비교 규약의 held-fixed 축.'],
     ['SE덮임 AM_P Hertz (%)', mmA.coverage_AM_P_hertz_pct, mmB.coverage_AM_P_hertz_pct,
-     'AM_P(대형 1차입자) 표면 중 SE와 Hertz-접촉(≤0.13µm, 꽉 눌린 tight 접촉)한 비율 = Li⁺가 실제 건너는 유효 이온 접촉면 (σ_ionic 폼이 쓰는 것).\n★ coverage는 이온 축 — SDCP(전자)와 무관해야 정상.  Δ가 있다면 PTFE 반감(AM 표면 덜 가림→SE가 차지)+패킹(porosity)이 레버, σ_ion_eff와 같은 방향이어야 함.'],
+     'AM_P(대형 1차입자) 표면 중 SE와 Hertz-접촉(≤0.13µm, 꽉 눌린 tight 접촉)한 비율 = Li⁺가 실제 건너는 유효 이온 접촉면 (σ_ionic 폼이 쓰는 것).\n⚠ 이 A/B는 같은 MPM-압밀 SE-AM bed를 공유(coverage=SE-only) → Δ≈0이 정상이며 이는 물리 발견이 아니라 bed를 고정한 설정 산물.\n모델에선 PTFE가 AM에 draping(phase4)→SE와 표면 경쟁하므로, PTFE 실제 효과(0.99 vs 0.495)를 보려면 각각 MPM 재압밀 후 비교해야 함.'],
     ['SE덮임 AM_S Hertz (%)', mmA.coverage_AM_S_hertz_pct, mmB.coverage_AM_S_hertz_pct,
      'AM_S(소형 2차입자) 표면의 SE Hertz-접촉 비율.\n작은 입자는 표면적/부피비↑ → coverage가 이온망 접근성에 더 민감.'],
     ['SE덮임 AM_P Tabor (%)', mmA.coverage_AM_P_tabor_pct, mmB.coverage_AM_P_tabor_pct,
