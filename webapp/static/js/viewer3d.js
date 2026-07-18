@@ -5369,7 +5369,14 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
      'AM_P 표면의 SE Tabor-접촉(≤0.26µm, 소성으로 눌려 퍼진 넓은 자국) 비율 = 기계적 접촉면(전극 결합).\nHertz보다 넓지만 vdW 틈이라 이온 전도는 덜 됨.  Tabor−Hertz = MPM 소성 conforming 몫.'],
     ['SE덮임 AM_S Tabor (%)', mmA.coverage_AM_S_tabor_pct, mmB.coverage_AM_S_tabor_pct,
      'AM_S 표면의 SE Tabor-접촉(기계 접촉면) 비율.'],
+    ['도전재덮임 AM_P (%)', mmA.coverage_AM_P_add_mpm_pct, mmB.coverage_AM_P_add_mpm_pct,
+     'AM_P 표면 중 도전재(carbon/SDCP/PTFE)가 덮은 비율 — SE와 별개인 **전자-접촉 축**.\n★ PTFE→SDCP 교체가 드러나는 곳: SE coverage(이온 골격)는 불변이지만, 도전재 덮임은 여기서 갈림.\n(carbon-free 런은 —).'],
+    ['도전재덮임 AM_S (%)', mmA.coverage_AM_S_add_mpm_pct, mmB.coverage_AM_S_add_mpm_pct,
+     'AM_S 표면의 도전재 덮임 비율 (전자-접촉).'],
   ];
+  // mono-AM 침대(AM_S 없음)면 AM_S coverage 행 숨김 (0.0000 혼란 방지)
+  const _hasAMS = ((A.particles || []).some(p => p.type === 'AM_S')) || ((B.particles || []).some(p => p.type === 'AM_S'));
+  const rowsQ2 = _hasAMS ? rowsQ : rowsQ.filter(r => !String(r[0]).includes('AM_S'));
   const fmtQ = (v) => (v == null || !isFinite(+v)) ? '—'
     : (Math.abs(+v) >= 1e4 || (Math.abs(+v) < 1e-2 && v != 0)) ? (+v).toExponential(2)
     : (+v).toFixed(Math.abs(+v) >= 100 ? 0 : Math.abs(+v) >= 1 ? 2 : 4);
@@ -5387,9 +5394,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           + `<td style="text-align:right;padding:2px 10px 2px 0;color:#fbbf24">${fmtQ(b)}</td>`
           + `<td style="text-align:right;padding:2px 0;color:${dCol}">${dTxt}</td></tr>`;
       }).join('') + '</table>';
-  const half = Math.ceil(rowsQ.length / 2);
+  const half = Math.ceil(rowsQ2.length / 2);
   $('cmp-table').innerHTML = '<div style="display:flex;gap:26px;align-items:flex-start">'
-    + oneTable(rowsQ.slice(0, half)) + oneTable(rowsQ.slice(half)) + '</div>';
+    + oneTable(rowsQ2.slice(0, half)) + oneTable(rowsQ2.slice(half)) + '</div>';
   // ── 축 설명 카드: 커스텀 hover (native title은 ~1s 지연 + 스타일 없음 → 즉시 뜨는 카드) ──
   let tipCard = document.getElementById('cmp-tipcard');
   if (!tipCard) {
