@@ -28,16 +28,16 @@ done
 PW=${PW:-$(find "$HOME/apps" "$HOME" -maxdepth 4 -name pw.x -path "*qe*gpu*bin*" 2>/dev/null | head -1)}
 [ -n "$PW" ] || PW=$(find "$HOME/apps" -maxdepth 4 -name pw.x -path "*bin*" 2>/dev/null | head -1)
 [ -n "$PW" ] || { echo "ERROR: pw.x 못 찾음 — PW=/path/to/pw.x 로 지정"; exit 1; }
-# mpirun은 pw.x가 링크한 바로 그 openmpi에서만 (conda openmpi로 launcher 태우면
-# ABI 불일치 PMIx 에러). ldd로 libmpi 경로 → ../bin/mpirun. 없으면 단일랭크 직접실행
-# (OpenMPI singleton init — 단일 GPU라 mpirun 불요, `pw.x < /dev/null` 로드 확인됨).
-if [ -z "${MPIRUN:-}" ]; then
-    MPIDIR=$(ldd "$PW" 2>/dev/null | grep -oE '/[^ ]*/lib(64)?/libmpi\.so' | head -1 | sed -E 's|/lib(64)?/libmpi\.so$||')
-    if [ -n "$MPIDIR" ] && [ -x "$MPIDIR/bin/mpirun" ]; then MPIRUN="$MPIDIR/bin/mpirun"; else MPIRUN=""; fi
-fi
-echo "pw.x   = $PW"
-echo "mpirun = ${MPIRUN:-<none → 단일랭크 직접실행 (singleton)>}"
-RUN() { if [ -n "$MPIRUN" ]; then "$MPIRUN" -np 1 "$PW" -npool 1 -in "$1"; else "$PW" -npool 1 -in "$1"; fi; }
+# ★ pw.x 런타임 환경 소독 (2026-07-18, "libgomp: TODO" 크래시 수정):
+# kgy_night 체인이 uma(conda) env에서 돌면 uma의 LD_LIBRARY_PATH가 GNU libgomp를
+# 주입 → nvhpc로 빌드된 pw.x(자체 libomp 기대)와 충돌해 첫 OpenMP 영역에서 죽음
+# (VRAM OOM 아님 — Exit 1 + "libgomp: TODO"). pw.x는 RPATH로 nvhpc 라이브러리를
+# 절대경로 참조하므로 LD_LIBRARY_PATH를 비우면 제 라이브러리를 쓴다. OMP 스레드 1.
+export OMP_NUM_THREADS=1 OMP_STACKSIZE=512m
+unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true
+# 단일 GPU → mpirun 없이 직접실행(singleton). launcher가 환경을 재주입하지 않게 함.
+echo "pw.x   = $PW  (direct singleton, LD_LIBRARY_PATH 비움, OMP=1)"
+RUN() { "$PW" -npool 1 -in "$1"; }
 
 wait_gpu() {   # MD 뒤끝/타 프로세스 대비
     while :; do
