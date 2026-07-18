@@ -164,6 +164,13 @@ SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면
 강의존·최악 무손해·분담 역행=직렬 시그니처; `docs/data/sdcp318_sigma_sdcp_sweep/`),
 잔여 = E_bind DFT(gabia).  기록: `docs/manuscript_sdcp_sigma_e_mechanism.md`(최종판)
 + `docs/sdcp_318_base_sbe_dbe_comparison.md`(수치 원장) + `docs/step4_v2_design.md`.
+**★ PENDING (2026-07-19, DBE 2C 비교 직후 재개): STEP4 방전창 ASSB vs-Li 재산정** —
+현 x0=0.264/x100=0.854는 Chen2020(NMC811‖*흑연* 풀셀 2.5–4.2V) 양극 stoich라, 우리 **NMC-vs-Li
+반쪽셀**(=Li-금속 음극 ASSB)에선 x100서 **3.5V 조기종료**(2.5V·깊은 용량 못 뽑음).  버그 아님(창 부적합),
+**SBE↔DBE 비교엔 무영향(공유창 상쇄, 3.5V절단=보수적=DBE우위 하한)**.  인프라 준비됨: `--x0/--x100` CLI
+override 추가(기본 None, selftest PASS), OCP테이블 0.995·확산 x≤1 지원 → **파라미터 작업**.  재개 시:
+음극/offset(Li0/Li-In 0.62V) 확정 → 실측 NMC-vs-Li OCP 앵커(외삽 대신) → x100·v_min 스윕 → I_1C 규약
+문서화 → 코퍼스 재-run 범위.  전체: `docs/step4_assb_window_review.md`.
 
 ### E_SE calibration — 2mAh_real_9 → KEEP E_SE = 1.35 GPa (2026-06-06)
 Decision DONE.  Compared E_SE = 1.35 / 1.5 (×3 seeds) / 2.0 GPa on

@@ -1167,6 +1167,12 @@ def main():
                     help='집전체 실측 R_int 직렬 [Ω·cm²] (STEP3 시나리오 규약; 46=DBE)')
     ap.add_argument('--temp-k', type=float, default=298.15)
     ap.add_argument('--x-init', type=float, default=None, help='초기 stoich (기본: 창 끝)')
+    ap.add_argument('--x0', type=float, default=None,
+                    help='방전창 시작 stoich(저리튬/충전끝) 오버라이드 — 기본 None=params_json.')
+    ap.add_argument('--x100', type=float, default=None,
+                    help='방전창 끝 stoich(고리튬/방전끝) 오버라이드 — 기본 None=params_json.  '
+                         '★ASSB vs-Li 창 재산정 훅: NMC-vs-Li 2.5V까지 더 깊게(~0.95~0.98) + --v-min 2.5. '
+                         'OCP 테이블 0.995까지 유효, 확산은 x≤1 지원 → 코드변경 없이 파라미터로.  기본 미사용(DBE 비교 무영향).')
     ap.add_argument('--nr', type=int, default=20)
     ap.add_argument('--v-min', type=float, default=3.0, help='방전 컷오프 [V vs Li] (운전 설정)')
     ap.add_argument('--v-max', type=float, default=4.5)
@@ -1204,7 +1210,12 @@ def main():
         if not (a.ocp_csv and a.params_json):
             ap.error('--ocp-csv/--params-json required (§F1 앵커; 임시 스모크는 --ocp-test)')
         ocp = OCP.load(a.ocp_csv, a.params_json)
-        print(f'  OCP: {ocp.provenance}  c_max={ocp.c_max:g}  x0={ocp.x0}  x100={ocp.x100}', flush=True)
+        if a.x0 is not None:
+            ocp.x0 = float(a.x0)
+        if a.x100 is not None:                              # ASSB vs-Li 창 재산정 훅 (기본 미사용)
+            ocp.x100 = float(a.x100)
+        _ovr = '  [x0/x100 CLI override]' if (a.x0 is not None or a.x100 is not None) else ''
+        print(f'  OCP: {ocp.provenance}  c_max={ocp.c_max:g}  x0={ocp.x0}  x100={ocp.x100}{_ovr}', flush=True)
     dudt = _load_xy_csv(a.dudt_csv) if a.dudt_csv else None
     kin = Kinetics(a.i0, a.alpha_a, a.alpha_c, a.asr_film, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0)
