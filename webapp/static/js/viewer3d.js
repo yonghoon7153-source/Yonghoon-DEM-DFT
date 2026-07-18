@@ -4867,7 +4867,75 @@ function _focusTicks(f) {
   t.push({ p: 1, label: '×' + Number(top.toPrecision(3)) + ' ⟨J⟩' });
   return t;
 }
-/* 비교 팝업 st4 모드 — A·B 두 케이스의 SOC 애니메이션(3D 양쪽) 2fps + 조건.
+/* COMSOL식 표면 반응전류 필드 지오메트리 빌더 (단독뷰어 renderSt4Faces.buildSurface와 동일 문법).
+   parts + faces(pos_um) → 정점색 가능 표면 mesh + per-정점 각도커널(cos^24, ≈15°) 면 테이블.
+   면전류를 입자 표면에 방향-코사인 가중 보간 → 핫스팟이 국소 색점으로; 비접촉 표면 = 회색. */
+function buildComsolSurfaceMesh(parts, F) {
+  const n = F.pos_um.length, K = 6, CELL = 8.0;
+  const tmpl = new THREE.SphereGeometry(1, 26, 19);
+  const tPos = tmpl.getAttribute('position').array, tIdx = tmpl.index.array, nV = tPos.length / 3;
+  const nVertTot = nV * parts.length;
+  const hash = new Map();
+  const keyOf = (x, y, z) => Math.floor(x / CELL) + ',' + Math.floor(y / CELL) + ',' + Math.floor(z / CELL);
+  parts.forEach((p, pi) => { const k = keyOf(p.x, p.y, p.z); let a = hash.get(k); if (!a) { a = []; hash.set(k, a); } a.push(pi); });
+  const pFaces = parts.map(() => []);                        // 입자별 [면 idx, 단위방향 ux,uy,uz]
+  for (let i = 0; i < n; i++) {
+    const f = F.pos_um[i];
+    let best = -1, bestScore = 1e9;
+    const cx = Math.floor(f[0] / CELL), cy = Math.floor(f[1] / CELL), cz = Math.floor(f[2] / CELL);
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (let dz = -1; dz <= 1; dz++) {
+      const a = hash.get((cx + dx) + ',' + (cy + dy) + ',' + (cz + dz));
+      if (!a) continue;
+      for (const pi of a) { const p = parts[pi]; const d = Math.hypot(f[0] - p.x, f[1] - p.y, f[2] - p.z); const sc = Math.abs(d - p.r); if (d < p.r + 1.2 && sc < bestScore) { bestScore = sc; best = pi; } }
+    }
+    if (best >= 0) { const p = parts[best]; const dx = f[0] - p.x, dy = f[1] - p.y, dz = f[2] - p.z; const L = Math.max(Math.hypot(dx, dy, dz), 1e-9); pFaces[best].push([i, dx / L, dy / L, dz / L]); }
+  }
+  const pos = new Float32Array(nVertTot * 3), idx = new Uint32Array(tIdx.length * parts.length);
+  const vFace = new Int32Array(nVertTot * K).fill(-1), vW = new Float32Array(nVertTot * K), vDeg = new Uint8Array(nVertTot);
+  parts.forEach((p, pi) => {
+    const fl = pFaces[pi], base = pi * nV;
+    for (let v = 0; v < nV; v++) {
+      const ux = tPos[3 * v], uy = tPos[3 * v + 1], uz = tPos[3 * v + 2];
+      pos[3 * (base + v)] = p.x + p.r * ux;
+      pos[3 * (base + v) + 1] = p.z + p.r * uz;              // scene Y = payload z
+      pos[3 * (base + v) + 2] = p.y + p.r * uy;
+      if (!fl.length) continue;
+      const bi = new Array(K).fill(-1), bw = new Array(K).fill(-1);
+      for (let q = 0; q < fl.length; q++) {
+        const d = ux * fl[q][1] + uy * fl[q][3] + uz * fl[q][2];   // payload 방향 (scene-swap 없음)
+        if (d <= bw[K - 1]) continue;
+        let j = K - 1; while (j > 0 && bw[j - 1] < d) { bw[j] = bw[j - 1]; bi[j] = bi[j - 1]; j--; } bw[j] = d; bi[j] = fl[q][0];
+      }
+      let deg = 0;
+      for (let k2 = 0; k2 < K; k2++) { if (bi[k2] < 0 || bw[k2] <= 0) break; vFace[(base + v) * K + k2] = bi[k2]; vW[(base + v) * K + k2] = Math.pow(bw[k2], 24); deg++; }
+      vDeg[base + v] = deg;
+    }
+    for (let t2 = 0; t2 < tIdx.length; t2++) idx[pi * tIdx.length + t2] = base + tIdx[t2];
+  });
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setIndex(new THREE.BufferAttribute(idx, 1));
+  g.computeVertexNormals();
+  const vColAttr = new THREE.BufferAttribute(new Float32Array(nVertTot * 3), 3);
+  g.setAttribute('color', vColAttr);
+  const surfMesh = new THREE.Mesh(g, new THREE.MeshPhongMaterial({ vertexColors: true, shininess: 22, specular: 0x222222 }));
+  return { surfMesh, vFace, vW, vDeg, nVertTot, vColAttr, K };
+}
+/* 표면필드 정점 색칠 — 보간된 면전류 arr(|i| 절대값 전) + 시점 p95 hi(정규화 기준). */
+function paintComsolSurface(surf, arr, hi) {
+  const { vColAttr, vDeg, vFace, vW, nVertTot, K } = surf, cArr = vColAttr.array, col = new THREE.Color();
+  for (let v = 0; v < nVertTot; v++) {
+    const deg = vDeg[v];
+    if (!deg) { cArr[3 * v] = 0.16; cArr[3 * v + 1] = 0.17; cArr[3 * v + 2] = 0.19; continue; }  // 비접촉 = 회색
+    let sw = 0, sv = 0;
+    for (let k2 = 0; k2 < deg; k2++) { const fi = vFace[v * K + k2]; sw += vW[v * K + k2]; sv += vW[v * K + k2] * Math.abs(arr[fi]); }
+    col.setHex(jetColor(Math.max(0, Math.min(1, (sv / Math.max(sw, 1e-30)) / hi))));
+    cArr[3 * v] = col.r; cArr[3 * v + 1] = col.g; cArr[3 * v + 2] = col.b;
+  }
+  vColAttr.needsUpdate = true;
+}
+/* 비교 팝업 st4 모드 — A·B 두 케이스의 애니메이션(3D 양쪽) 2fps + 조건.
+   SOC 코어-셸(인스턴스 구) / 표면 반응전류(COMSOL 표면필드) 토글, 프레임 보간.
    viz는 lab 저장분(/mpm-lab/st4/<pid>) 자동 로드; 없으면 📂.  전압곡선은 별도 팝업(📈 버튼). */
 function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
   const X0 = 0.2638452245913298, X100 = 0.853974674630047;
@@ -4875,56 +4943,49 @@ function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
   const metaOf = o => ({ c_rate: o.c_rate, charge: o.charge, v_min: o.v_min, v_max: o.v_max,
     cv_hold: o.cv_hold, i_cut_frac: o.i_cut_frac, end_reason: o.end_reason, x0: o.x0, x100: o.x100 });
   const buildSide = (key, S, payload, o) => {
-    const parts = payload.particles || [];
+    const parts = (payload.particles || []).filter(p => p.type === 'AM_P' || p.type === 'AM_S');   // 단독뷰어와 동일: AM만 (SE 제외 — SOC·면분포 오염 방지)
     if (S.grp) { S.scene.remove(S.grp); S.grp = null; }
     const grp = new THREE.Group();
     const mesh = createInstancedSpheres(parts, 16, 0xffffff, 1.0, false);
     if (mesh) { mesh.material.shininess = 8; grp.add(mesh); }
     S.scene.add(grp); S.grp = grp;
-    // 반응전류(면분포)를 입자당 평균으로 사전계산: 프레임별 pmean[instanceIdx] + 프레임 p95 (정규화)
-    const nChk = (o.x_shell || []).length;
-    let rxn = null;
-    const F = o.faces;
-    if (F && F.pid && F.i_rel && F.i_rel.length) {
-      const id2i = {}; parts.forEach((p, i) => { id2i[p.id] = i; });
-      rxn = { frames: [], hi: [] };
-      for (let t = 0; t < F.i_rel.length; t++) {
-        const sum = new Float64Array(parts.length), cnt = new Int32Array(parts.length);
-        const arr = F.i_rel[t];
-        for (let j = 0; j < F.pid.length; j++) { const ii = id2i[F.pid[j]]; if (ii === undefined) continue; sum[ii] += Math.abs(arr[j]); cnt[ii]++; }
-        const pm = new Float64Array(parts.length);
-        for (let i = 0; i < parts.length; i++) pm[i] = cnt[i] ? sum[i] / cnt[i] : 0;
-        const s2 = [...pm].filter(v => v > 0).sort((a, b) => a - b);
-        rxn.frames.push(pm); rxn.hi.push(Math.max(s2[Math.floor(0.95 * (s2.length - 1))] || 1e-9, 1e-9));
-      }
-    }
-    store[key] = { viz: o, meta: metaOf(o), parts, mesh, nChk, rxn };
+    const nChk = (o.x_shell || []).length, F = o.faces;
+    const hasRxn = !!(F && F.pos_um && F.i_rel && F.i_rel.length);
+    // COMSOL 표면필드(surf)는 rxn 모드 첫 진입 때 지연 생성; frHi=프레임 p95 캐시, arrBuf=면전류 보간버퍼
+    store[key] = { viz: o, meta: metaOf(o), parts, mesh, grp, nChk, F, hasRxn,
+                   surf: null, frHi: [], arrBuf: hasRxn ? new Float32Array(F.pos_um.length) : null };
     if (S.meshes) ['AM_P', 'AM_S', 'MESH'].forEach(t => { if (S.meshes[t]) S.meshes[t].visible = false; });
   };
+  const hiOf = (s, k) => { if (s.frHi[k] == null) { const abs = s.F.i_rel[k].map(Math.abs).sort((a, b) => a - b); s.frHi[k] = Math.max(abs[Math.floor(0.95 * (abs.length - 1))], 1e-9); } return s.frHi[k]; };
   const recolor = (frac) => {
     const c = new THREE.Color(), view = ($('cmp-st4-view') || {}).value || 'soc';
     ['A', 'B'].forEach(key => {
       const s = store[key]; if (!s || !s.mesh || !s.nChk) return;
       const rf = frac * (s.nChk - 1), t0 = Math.floor(rf), t1 = Math.min(s.nChk - 1, t0 + 1), fr = rf - t0;   // 프레임 보간
-      if (view === 'rxn' && s.rxn) {
-        const n1 = Math.min(s.rxn.frames.length - 1, t0), n2 = Math.min(s.rxn.frames.length - 1, t1);
-        const f0 = s.rxn.frames[n1], f1 = s.rxn.frames[n2], hi = (1 - fr) * s.rxn.hi[n1] + fr * s.rxn.hi[n2];
-        s.parts.forEach((p, i) => { const v = (1 - fr) * f0[i] + fr * f1[i];
-          s.mesh.setColorAt(i, c.setHex(jetColor(Math.max(0, Math.min(1, v / hi))))); });
+      if (view === 'rxn' && s.hasRxn) {
+        if (!s.surf) { s.surf = buildComsolSurfaceMesh(s.parts, s.F); s.grp.add(s.surf.surfMesh); }  // 지연 생성
+        s.mesh.visible = false; s.surf.surfMesh.visible = true;
+        const nF = s.F.i_rel.length, k0 = Math.min(nF - 1, t0), k1 = Math.min(nF - 1, t1);
+        const a0 = s.F.i_rel[k0], a1 = s.F.i_rel[k1], arr = s.arrBuf;
+        for (let i = 0; i < arr.length; i++) arr[i] = (1 - fr) * a0[i] + fr * a1[i];   // 면전류 프레임 보간
+        paintComsolSurface(s.surf, arr, (1 - fr) * hiOf(s, k0) + fr * hiOf(s, k1));
       } else {
+        if (s.surf) s.surf.surfMesh.visible = false;
+        s.mesh.visible = true;
         const lo = Math.min(s.meta.x0 ?? X0, s.meta.x100 ?? X100), hi = Math.max(s.meta.x0 ?? X0, s.meta.x100 ?? X100);
         const sh0 = s.viz.x_shell[t0], sh1 = s.viz.x_shell[t1], kSh = (s.viz.nr || 20) - 1;
         s.parts.forEach((p, i) => { const r0 = sh0[p.id], r1 = sh1[p.id];
           const xs = (r0 && r1) ? (1 - fr) * r0[kSh] + fr * r1[kSh] : lo;
           s.mesh.setColorAt(i, c.setHex(jetColor(Math.max(0, Math.min(1, (xs - lo) / Math.max(hi - lo, 1e-9)))))); });
+        if (s.mesh.instanceColor) s.mesh.instanceColor.needsUpdate = true;
       }
-      if (s.mesh.instanceColor) s.mesh.instanceColor.needsUpdate = true;
     });
     const s0 = store.A || store.B;
     if (s0 && s0.nChk) { const rf = frac * (s0.nChk - 1), t0 = Math.floor(rf), t1 = Math.min(s0.nChk - 1, t0 + 1), fr = rf - t0;
       const tt = (1 - fr) * (s0.viz.t_s || [])[t0] + fr * (s0.viz.t_s || [])[t1];
       const xm = (1 - fr) * (s0.viz.x_mean || [])[t0] + fr * (s0.viz.x_mean || [])[t1];
       $('cmp-st4-t').textContent = `t=${isFinite(tt) ? tt.toFixed(0) : '?'}s · x̄=${isFinite(xm) ? xm.toFixed(4) : '?'}` + (view === 'rxn' ? ' · 반응 i/ī' : ' · SOC'); }
+    if ($('cmp-st4-barlab')) $('cmp-st4-barlab').textContent = view === 'rxn' ? '|i/ī| 반응전류 (0–p95 → 핫스팟)' : 'SOC (x₀→x₁₀₀)';
   };
   const note = () => { $('cmp-st4-note').innerHTML = ['A', 'B'].map(k => { const s = store[k]; if (!s) return '';
     const m = s.meta, col = k === 'A' ? '#7dd3fc' : '#fbbf24';
@@ -5080,6 +5141,10 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <button id="cmp-st4-la" style="background:#1f2937;color:#7dd3fc;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer">📂 A viz</button>
           <button id="cmp-st4-lb" style="background:#1f2937;color:#fbbf24;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer">📂 B viz</button>
           <button id="cmp-st4-vprof" style="background:#16324a;color:#e5e7eb;border:1px solid #2563eb;border-radius:5px;padding:2px 10px;cursor:pointer">📈 전압곡선 팝업</button>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:4px">
+          <div style="flex:1;height:9px;border-radius:3px;background:linear-gradient(90deg,#0000ff,#00ffff,#00ff00,#ffff00,#ff0000)"></div>
+          <span id="cmp-st4-barlab" style="color:#9ca3af;font-size:10px;white-space:nowrap">SOC (x₀→x₁₀₀)</span>
         </div>
         <div id="cmp-st4-note" style="color:#6b7280;font-size:11px;margin-top:3px"></div>
       </div>
