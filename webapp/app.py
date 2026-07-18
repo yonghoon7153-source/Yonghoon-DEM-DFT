@@ -5324,7 +5324,7 @@ def mpm_input_package(case_id):
     if _s4_clean or _s4chg_clean:                       # 컷오프는 STEP4 선택 시에만 주입
         _vmin = _cut('s4vmin', 3.0, 1.5, 4.0)
         _vmax = _cut('s4vmax', 4.5, 3.5, 4.8)
-        _icut = _cut('s4icut', 0.05, 0.01, 1.0)
+        _icut = _cut('s4icut', 0.05, 0.01, 2.0)   # 절대 C (충전 rate와 독립) — 고율 충전의 '절반 종지' 허용 위해 2.0까지
         cmd += ['--step4-vmin', f'{_vmin:g}', '--step4-vmax', f'{_vmax:g}', '--step4-icut', f'{_icut:g}']
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)

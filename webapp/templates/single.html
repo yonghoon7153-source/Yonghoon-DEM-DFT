@@ -285,7 +285,7 @@
             <span style="color:#94a3b8">컷오프</span>
             <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
             <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
-            <label style="font-weight:400" title="CCCV 충전에서 CV 홀드 종지 전류 |I|/I_1C. 0.05=완전충전, 0.5='1C→0.5C 도착시 끝'">CV종지 <input id="s4-icut" type="number" value="0.05" min="0.01" max="1.0" step="0.01" style="width:52px" onchange="updateAdditiveGpuCmds()"> C</label>
+            <label style="font-weight:400" title="CCCV 충전에서 CV 홀드 종지: |I|가 이 절대 C-rate(=|I|/I_1C, 충전 rate 아님)보다 작아지면 끝. 0.05=완전충전(C/20), 0.5=0.5C에서 종지. 예: 2C 충전을 '전류 절반(1C)에서 종지'하려면 1 입력.">CV종지 |I|≤ <input id="s4-icut" type="number" value="0.05" min="0.01" max="2.0" step="0.01" style="width:52px" onchange="updateAdditiveGpuCmds()"> C <span style="color:#6b7280;font-size:0.85em">(절대·1C기준)</span></label>
           </span></div>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
