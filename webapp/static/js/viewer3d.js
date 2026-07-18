@@ -231,6 +231,7 @@ function renderSt4Soc(state) {
        <select id="st4-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px">
          <option value="2" selected>2 fps</option><option value="4">4 fps</option><option value="8">8 fps</option></select>
        <button id="st4-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비(GIF/MP4) 조립용 프레임 시퀀스" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
+       <button id="st4-gif" title="전체 시간전개를 GIF 한 장으로 다운로드 (3D SOC geometry)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎬</button>
      </div>
      <div>깊이(peel) r/R = <span id="st4-dlab" style="color:#e4e6f0">100</span>% — 줄이면 껍질을 벗겨 내부 셸</div>
      <input type="range" id="st4-d" min="5" max="100" value="100" style="width:100%">
@@ -327,6 +328,13 @@ function renderSt4Soc(state) {
     }
     tS.value = keep; upd();
     frBtn.disabled = false; frBtn.textContent = '🎞';
+  };
+  const gifBtn = document.getElementById('st4-gif');         // 🎬 전체 시간전개 → GIF (3D SOC)
+  if (gifBtn) gifBtn.onclick = async () => {
+    const keep = +tS.value, frames = [];
+    for (let ti = 0; ti < nChk; ti++) { tS.value = ti; upd(); frames.push(_captureHiRes(state, 2)); }
+    tS.value = keep; upd();
+    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, 'st4_soc_3d', gifBtn);
   };
 }
 
@@ -447,6 +455,7 @@ function renderSt4Faces(state) {
        <select id="st4f-fps" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;font-size:11.5px;padding:1px 3px">
          <option value="2" selected>2 fps</option><option value="4">4 fps</option><option value="8">8 fps</option></select>
        <button id="st4f-frames" title="체크포인트별 PNG 일괄 저장 — SI 무비 조립용" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎞</button>
+       <button id="st4f-gif" title="전체 시간전개를 GIF 한 장으로 (3D 반응전류 표면 애니메이션)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:2px 8px;cursor:pointer;font-size:13px">🎬</button>
      </div>
      <div style="margin:5px 0 2px 0;height:10px;border-radius:3px;background:linear-gradient(90deg,${stops.join(',')})"></div>
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
@@ -457,6 +466,7 @@ function renderSt4Faces(state) {
        <div style="display:flex;justify-content:space-between;align-items:center">
          <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 — 현재 시점</b>
          <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>
+         <button id="st4f-zgif" title="두께방향 프로파일 전체 시간전개를 GIF로 (동적 Fig4e 무비)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬</button>
        </div>
        <canvas id="st4f-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
        <div style="font-size:10px;color:#6b7280;margin-top:2px"><span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임</div>
@@ -578,6 +588,13 @@ function renderSt4Faces(state) {
     tS.value = keep; upd();
     frBtn.disabled = false; frBtn.textContent = '🎞';
   };
+  const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면)
+  if (fGifBtn) fGifBtn.onclick = async () => {
+    const keep = +tS.value, frames = [];
+    for (let ti = 0; ti < nChk; ti++) { tS.value = ti; upd(); frames.push(_captureHiRes(state, 2)); }
+    tS.value = keep; upd();
+    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, 'st4_faces_3d', fGifBtn);
+  };
   // 📈 현재 시점 프로파일 PNG(3×)+CSV — 동적 Fig4e (반응분포·표면 SOC vs 두께)
   const pfBtn = document.getElementById('st4f-prof-dl');
   if (pfBtn) pfBtn.onclick = () => {
@@ -597,6 +614,19 @@ function renderSt4Faces(state) {
     a2.download = `st4_zprofile_t${t_now}s.csv`;
     document.body.appendChild(a2); a2.click(); a2.remove();
     setTimeout(() => URL.revokeObjectURL(a2.href), 5000);
+  };
+  const zGifBtn = document.getElementById('st4f-zgif');      // 🎬 두께 프로파일 전체 시간전개 → GIF (동적 Fig4e 무비)
+  if (zGifBtn) zGifBtn.onclick = async () => {
+    const keep = +tS.value, frames = [];
+    for (let ti = 0; ti < nChk; ti++) {
+      tS.value = ti; upd();                                  // upd → drawProf가 state._st4fProf 갱신
+      if (!state._st4fProf) continue;
+      const big = document.createElement('canvas'); big.width = 1000; big.height = 560;
+      drawZProfileCanvas(big, state._st4fProf.curves, '');
+      frames.push(big.toDataURL('image/png'));
+    }
+    tS.value = keep; upd();
+    await st4FramesToGif(frames, +(fpsSel && fpsSel.value) || 2, 'st4_zprofile', zGifBtn);
   };
 }
 
@@ -4808,6 +4838,24 @@ function drawZProfileCanvas(cv, curves, yLab, leftLab, rightLab) {
 
 /* 3D 뷰 고해상 캡처 — 렌더 버퍼를 일시적으로 scale배 키워 render→toDataURL 후 복원.
    CSS 표시크기는 그대로(updateStyle=false), 종횡비 불변이라 카메라 갱신 불필요. */
+/* PNG 프레임(data URL 배열) → 서버 Pillow로 GIF 조립 → 다운로드.  st4 시간전개(3D·두께프로파일)용.
+   btn = 진행표시용 버튼(⏳ 토글).  fps = 초당 체크포인트. */
+async function st4FramesToGif(frames, fps, name, btn) {
+  if (!frames || !frames.length) { alert('프레임이 없어요 (체크포인트 없음)'); return; }
+  const orig = btn ? btn.textContent : '';
+  if (btn) { btn.disabled = true; btn.textContent = '⏳'; }
+  try {
+    const r = await fetch('/mpm-lab/gif', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ frames, fps, name }) });
+    if (!r.ok) { let e = {}; try { e = await r.json(); } catch (x) { /* */ } alert('GIF 실패: ' + (e.error || ('HTTP ' + r.status))); return; }
+    const blob = await r.blob(), url = URL.createObjectURL(blob);
+    const a = document.createElement('a'); a.href = url; a.download = name + '.gif';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  } catch (e) { alert('GIF 실패: ' + e.message); }
+  finally { if (btn) { btn.disabled = false; btn.textContent = orig; } }
+}
+
 function _captureHiRes(state, scale) {
   const r = state.renderer, cv = r.domElement;
   const pr = r.getPixelRatio(), dw = cv.width / pr, dh = cv.height / pr;   // CSS px

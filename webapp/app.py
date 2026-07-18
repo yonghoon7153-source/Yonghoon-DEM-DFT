@@ -5529,6 +5529,40 @@ def mpm_lab_st4(pid):
     return send_file(p, mimetype='application/json')
 
 
+@app.route('/mpm-lab/gif', methods=['POST'])
+def mpm_lab_gif():
+    """PNG 프레임 시퀀스(data URL 배열) → 애니메이션 GIF (Pillow).  st4 시간전개
+    (3D geometry · 두께방향 프로파일)를 뷰어가 체크포인트별로 캡처해 보내면 여기서 묶어 반환."""
+    import base64
+    import io
+    try:
+        from PIL import Image
+    except Exception as e:                                    # webapp venv에 Pillow 없을 때
+        return jsonify({'ok': False, 'error': f'Pillow 미설치 ({e}) — 🎞 PNG 프레임으로 외부 조립하세요'}), 500
+    data = request.get_json(force=True, silent=True) or {}
+    frames_b64 = data.get('frames') or []
+    fps = float(data.get('fps') or 2) or 2.0
+    name = _mpm_lab_slug(data.get('name') or 'st4')
+    if not frames_b64:
+        return jsonify({'ok': False, 'error': '프레임 없음'}), 400
+    imgs = []
+    for fb in frames_b64:
+        if ',' in fb:
+            fb = fb.split(',', 1)[1]                          # "data:image/png;base64," 접두 제거
+        im = Image.open(io.BytesIO(base64.b64decode(fb))).convert('RGBA')
+        bg = Image.new('RGBA', im.size, (255, 255, 255, 255))    # 투명 배경 → 흰색 합성
+        imgs.append(Image.alpha_composite(bg, im).convert('RGB'))
+    sz = imgs[0].size                                        # GIF는 프레임 크기 동일 필요 → 첫 프레임에 맞춤
+    imgs = [im if im.size == sz else im.resize(sz) for im in imgs]
+    buf = io.BytesIO()
+    dur = max(20, int(round(1000.0 / max(fps, 0.1))))        # ms/frame
+    imgs[0].save(buf, format='GIF', save_all=True, append_images=imgs[1:],
+                 duration=dur, loop=0, optimize=True, disposal=2)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/gif', as_attachment=True,
+                     download_name=f'{name}.gif')
+
+
 @app.route('/mpm-lab/summary/<pid>')
 def mpm_lab_summary(pid):
     """Metrics-only fetch for the 요약 button — returns just mpm_metrics (a few KB) so the
