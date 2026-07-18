@@ -11,10 +11,11 @@
 
 ## 1. 모델 정체 = 반쪽셀(NMC vs Li)
 - STEP4는 음극 없음.  `OCP.U(x)` = NMC 양극 OCP → 셀전압 = **NMC vs Li 전위** − 과전압.  = 반쪽셀.
-- Li-금속 음극 ASSB와 동일(Li≈0V).  **음극이 offset을 준다**:
-  - Li 금속: 풀셀V = NMC vs Li.  2.5V 풀셀 = NMC 2.5V(깊음; NMC OCV 바닥 ~3.0V → 과전압 필요).
-  - Li-In(+0.62V): 풀셀V = NMC−0.62.  2.5V 풀셀 = **NMC 3.12V vs Li**(x~0.92, 덜 깊음).
-- → 실험 풀셀 컷오프로 매핑하려면 **음극 offset 필요**.  창 재산정의 핵심 변수.
+- **★ 사용자 실험 규약 (2026-07-19 확인, 정본)**: 컷오프를 **cathode vs Li (Φ_NMC)** 로 설정/사고한다
+  (4.25 ~ 2.5 V) = **우리 모델이 계산하는 값과 동일한 축**.  Li-In **셀** 프로파일로 그릴 때만
+  **−0.62** 를 뺀다 → V_cell = Φ_NMC − 0.62 = **3.63 ~ 1.88 V** (Li-In 음극 +0.62 V vs Li).
+- → 즉 **offset(−0.62)은 *출력/표시* 변환**(모델 Φ_NMC → Li-In 셀 전압)이지 **모델 창·컷오프에 쓰는 게 아니다.**
+  모델 `--v-min/--v-max` 는 **vs-Li 값 그대로** (2.5 / 4.25 V).  Li-금속 음극이면 offset 0 (V_cell = Φ_NMC).
 
 ## 2. x0/x100 출처 (step4_pybamm_anchor.py:export_params)
 - `get_min_max_stoichiometries(ParameterValues('Chen2020'))` → `(x_0,x_100,y_100,y_0)` (x=음극, y=양극).
@@ -39,8 +40,11 @@
 1. **음극 확정**: Li 금속 vs Li-In → offset(0 / 0.62V) 결정.  실험 셀 규약 확인.
 2. **OCP 앵커**: 가능하면 **실제 NMC-vs-Li 방전곡선(2.5–4.25V)** 으로 x0/x100 앵커(외삽 대신).  없으면
    Chen 꼬리 사용 + 불확실성 명시.
-3. **창 설정**: `--x100 ~0.95~0.98`(음극·offset로 결정) + `--v-min`(2.5 − offset) → 단자 컷오프로 종료.
-   soc_end가 아니라 v_cutoff로 끝나는지 검증(q_frac_at_cutoff).
+3. **창 설정 (사용자 규약 정본)**: `--v-min 2.5 --v-max 4.25` = **cathode vs Li 그대로 (offset 없음)** +
+   `--x100` 을 Φ_NMC = 2.5 V 닿게 확장 (현 0.854 = 3.5 V 로 얕음 → ~0.95~1.0).  soc_end 가 아니라
+   **v_cutoff(2.5 V vs Li)로 종료**하는지 검증(q_frac_at_cutoff).
+   **셀 프로파일(Li-In) 표시** = 모델출력 **−0.62** = **1.88 ~ 3.63 V** (실험 cycler 값 = 측정 셀전압).  Li-금속이면 −0.
+   ⚠ 유일 불확실 = Chen OCP 의 x > 0.854 **tail 신뢰성** → 실측 NMC-vs-Li 방전곡선 있으면 그걸로 앵커(외삽 대신).
 4. **I_1C / areal 정의**: `cap_As=F·c_max·|x100−x0|·V` — 창 넓히면 I_1C↑.  결정: (a) nominal 창으로 I_1C
    고정(C-rate 규약 안정) vs (b) 확장 창.  ★C-rate 비교 일관성 위해 **I_1C 규약 문서화 필수**.
 5. **코퍼스 영향**: 전 STEP4가 x100=0.854 → 재산정 시 **모든 방전 절대값·areal 재계산**.  상대비교(SBE↔DBE
