@@ -379,8 +379,16 @@ function labRenameStart(span) {
           { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name }) });
         const j = await r.json();
         span.textContent = j.ok ? j.name : cur;
-        if (j.ok && labCurId === id) {
-          const t = document.getElementById('lab-viewer-title'); if (t) t.textContent = j.name;
+        if (j.ok) {
+          // rename을 compare가 읽는 곳까지 전파: 같은 행의 ⚖ 체크박스 data-name +
+          // 이미 체크돼 있던 경우의 labCmpSel 캐시 (안 그러면 비교 팝업이 옛 이름을 씀)
+          const cb = document.querySelector(`.lab-cmp-cb[data-pid="${CSS.escape(id)}"]`);
+          if (cb) cb.dataset.name = j.name;
+          const selE = labCmpSel.find(e => e.pid === id);
+          if (selE) selE.name = j.name;
+          if (labCurId === id) {
+            const t = document.getElementById('lab-viewer-title'); if (t) t.textContent = j.name;
+          }
         }
       } catch (e) { span.textContent = cur; }
     } else { span.textContent = cur; }
