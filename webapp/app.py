@@ -6022,6 +6022,110 @@ def serve_force_chains(case_id):
     return jsonify([])
 
 
+@app.route('/porosity-corpus.csv')
+def porosity_corpus_csv():
+    """Walk EVERY uploaded case, read its JSONs, and stream one row per case
+    as CSV: MPM porosity (mpm_metrics.json) + DEM porosity (full_metrics) +
+    composition (AM:SE) + P:S + radii + the SE-rich/SE-poor/cross-validated
+    regime gate (gap = DEM - MPM, |gap|>4 splits the regime).  No form / no
+    grid extrapolation — this is the raw per-case corpus dump the списку view
+    already computes, exported flat.  Missing fields render blank."""
+    import io as _io, csv as _csv, re as _re
+    up = app.config['UPLOAD_FOLDER']
+    res = app.config['RESULTS_FOLDER']
+
+    def _j(p):
+        try:
+            with open(p) as f:
+                return json.load(f) or {}
+        except Exception:
+            return {}
+
+    def _ratio(s):
+        if not s or ':' not in str(s):
+            return (None, None)
+        try:
+            a, b = str(s).split(':')[:2]
+            return float(a), float(b)
+        except Exception:
+            return (None, None)
+
+    rows = []
+    if os.path.isdir(up):
+        for cid in sorted(os.listdir(up)):
+            cdir = os.path.join(up, cid)
+            if not os.path.isdir(cdir):
+                continue
+            meta = _j(os.path.join(cdir, 'meta.json'))
+            rdir = os.path.join(res, cid)
+            fm = _j(os.path.join(rdir, 'full_metrics.json'))
+            mm = _j(os.path.join(rdir, 'mpm_metrics.json'))
+            ip = _j(os.path.join(cdir, 'input_params.json')) \
+                or _j(os.path.join(rdir, 'input_params.json'))
+
+            dem = fm.get('porosity_spheresum')
+            if dem is None:
+                dem = fm.get('porosity')
+            mpm = mm.get('porosity_mpm_pct')
+            if dem is None and mpm is None:
+                continue  # no porosity of any kind → skip
+
+            name = meta.get('name') or cid
+            _mm = (_re.search(r'(\d+(?:\.\d+)?)\s*mAh', str(name), _re.I)
+                   or _re.search(r'(\d+(?:\.\d+)?)\s*mAh', str(cid), _re.I))
+            areal = _mm.group(1) if _mm else ''
+            am_wt, se_wt = _ratio(fm.get('am_se_ratio') or ip.get('am_se_ratio')
+                                  or meta.get('am_se_ratio'))
+            P, S = _ratio(fm.get('ps_ratio') or meta.get('ps_ratio'))
+            try:
+                scale = float(meta.get('scale') or ip.get('scale')
+                              or fm.get('scale') or 1.0)
+            except Exception:
+                scale = 1.0
+
+            def _rp(k):
+                r = fm.get(k)
+                try:
+                    return round(float(r) * 1e6 / scale, 3) if r is not None else ''
+                except Exception:
+                    return ''
+
+            gap = ''
+            regime = ''
+            if dem is not None and mpm is not None:
+                gap = round(float(dem) - float(mpm), 1)
+                regime = ('SE-poor' if gap > 4.0
+                          else 'SE-rich' if gap < -4.0 else 'cross-validated')
+            rows.append({
+                'case': name, 'case_id': cid, 'areal_mAh': areal,
+                'am_wt': am_wt if am_wt is not None else '',
+                'se_wt': se_wt if se_wt is not None else '',
+                'ps': ('%g:%g' % (P, S)) if (P is not None and S is not None)
+                      else (fm.get('ps_ratio') or meta.get('ps_ratio') or ''),
+                'r_AM_P_um': _rp('r_AM_P'), 'r_AM_S_um': _rp('r_AM_S'),
+                'r_SE_um': _rp('r_SE'),
+                'mpm_porosity_pct': round(float(mpm), 2) if mpm is not None else '',
+                'dem_porosity_pct': round(float(dem), 2) if dem is not None else '',
+                'gap_dem_minus_mpm': gap, 'regime': regime,
+                'thickness_um': mm.get('thickness_mpm_um', ''),
+                'se_fraction_pct': mm.get('se_fraction_pct', ''),
+            })
+    rows.sort(key=lambda r: str(r['case']))
+
+    buf = _io.StringIO()
+    fn = ['case', 'case_id', 'areal_mAh', 'am_wt', 'se_wt', 'ps',
+          'r_AM_P_um', 'r_AM_S_um', 'r_SE_um', 'mpm_porosity_pct',
+          'dem_porosity_pct', 'gap_dem_minus_mpm', 'regime',
+          'thickness_um', 'se_fraction_pct']
+    w = _csv.DictWriter(buf, fieldnames=fn)
+    w.writeheader()
+    w.writerows(rows)
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+    resp.headers['Content-Disposition'] = 'attachment; filename="porosity_corpus.csv"'
+    return resp
+
+
 def _brittle_z_csv_response(case_dir, case_name):
     """Compute brittle z-profile on demand and stream as CSV download.
     Shared helper for /results/<id> and /archive/results/<path> endpoints.
