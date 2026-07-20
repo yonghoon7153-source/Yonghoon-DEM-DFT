@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
-# watch_vgcf_hbn.sh — status snapshot for the h-BN@VGCF Li-adsorption QE run (kgy).
+# watch_vgcf_hbn.sh — status for the h-BN@VGCF Li-binding QE run (kgy).
+# Terminology: Li ON VGCF/h-BN surface = adsorption; Li IN the VGCF|h-BN gallery = intercalation.
 # One-shot (run directly) or under watch:
 #   watch -n 30 'bash ~/Yonghoon-DEM-DFT/tools/vgcf_hbn/watch_vgcf_hbn.sh'
 set +H
 W=${WORK:-$HOME/work/vgcf_hbn}
 F2eVA=25.71104   # Ry/Bohr -> eV/A
 
-echo "══ h-BN@VGCF · Li adsorption (QE PBE-D3BJ, 4x4)  $(date '+%m-%d %H:%M:%S') ══"
+echo "══ h-BN@VGCF · Li binding [표면=adsorption / gallery=intercalation] (PBE-D3BJ 4x4)  $(date '+%m-%d %H:%M:%S') ══"
 
 # --- current pw.x + GPU + stall detection ---
 cur=$(pgrep -af 'pw\.x .*-in' 2>/dev/null | grep -aoE '[A-Za-z_]+\.in' | head -1)
@@ -41,7 +42,7 @@ for n in $ORDER; do
 done
 
 # --- E_ads + Shi eq5 sandwich verdict (completed only) ---
-echo "── E_ads = E(Li+X) − E(X) − E(Li_atom) ──"
+echo "── E_bind = E(host+Li) − E(host) − E(Li_atom)   [VGCF·hBN=adsorption / gallery=intercalation(Li 층 사이)] ──"
 python3 - "$W" <<'PY'
 import re, sys, os
 W = sys.argv[1]; Ry = 13.605693
@@ -62,7 +63,7 @@ for lab, cx, sub in [("VGCF(1L)",         "Li_on_graphene",   "graphene"),
     ec, es = E(cx), E(sub)
     if ec and es and li:
         v[lab] = (ec - es - li) * Ry
-        print(f"    Li/{lab:16s} {v[lab]:+.3f} eV")
+        print(f"    Li/{lab:16s} {v[lab]:+.3f} eV  {'[intercal.]' if 'gallery' in lab else '[ads.]'}")
     else:
         print(f"    Li/{lab:16s} (대기)")
 g = v.get("VGCF(1L)")
@@ -83,7 +84,7 @@ ecoh = (li - lb) * Ry if (li is not None and lb is not None) else None
 shift = ecoh if ecoh is not None else 1.63
 if v:
     src = f"계산 {ecoh:.3f}" if ecoh is not None else "~1.63 근사(Li_bulk 대기)"
-    print(f"  ── lithiophobicity = E_ads + E_coh(Li {src} eV); +면 lithiophobic ──")
+    print(f"  ── lithiophobicity = E_bind + E_coh(Li {src} eV); +면 lithiophobic ──")
     for k in v:
         lp = v[k] + shift
         print(f"    {k:16s} {lp:+.3f} eV  {'lithiophobic' if lp > 0 else 'lithiophilic'}")
