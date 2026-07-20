@@ -18,6 +18,8 @@ if [ -n "$cur" ]; then
 else
   echo "  실행중: (없음 — 완료/대기/중단)  | GPU ${gpu}"
 fi
+sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L)' | tr '\n' ' ')
+echo "  세션: ${sess:-없음} (vgcfqe=1층 / vgcf2L=2층 대기·진행)"
 
 # --- per-calc table ---
 ORDER="Li_atom graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L"
@@ -69,6 +71,11 @@ for tag in ("1L", "2L"):
     print(f"  ── {tag} Shi eq5: gallery {s:+.3f} vs VGCF({g:+.3f})+hBN({h:+.3f})={g + h:+.3f} ──")
     print("     ✅ 샌드위치 최강 → VGCF가 Cu역할 (성립)" if s < min(g, h)
           else "     ⚠ 샌드위치 약함 → VGCF≠Cu (그 자체가 발견)")
+for keys, lab in [(("h-BN(1L)", "h-BN(2L)"), "h-BN"),
+                  (("gallery(1L)", "gallery(2L)"), "gallery")]:
+    a, b = v.get(keys[0]), v.get(keys[1])
+    if a is not None and b is not None:
+        print(f"  Δ층수 {lab:8s} 2L−1L = {b - a:+.3f} eV  ({'수렴(<50meV)' if abs(b - a) < 0.05 else '층수 민감'})")
 if v:
     print("  lithiophobicity: 위 값 + 1.63 eV(bulk-Li); +면 lithiophobic")
 PY
