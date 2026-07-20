@@ -43,6 +43,52 @@ def _pearson(xs, ys):
     return cov / math.sqrt(vx*vy)
 
 
+def _partial_corr(y, x, ctrl):
+    """Pearson(y, x) controlling for `ctrl` — correlation of the residuals after
+    regressing each of y and x linearly on ctrl.  Isolates a genuine x↔y link
+    from a shared dependence on ctrl (here ctrl = z, the separator distance)."""
+    trip = [(a, b, c) for a, b, c in zip(y, x, ctrl)
+            if a is not None and b is not None and c is not None]
+    n = len(trip)
+    if n < 4:
+        return None
+    ys = [t[0] for t in trip]; xs = [t[1] for t in trip]; cs = [t[2] for t in trip]
+
+    def _resid(v):
+        mc = sum(cs) / n; mv = sum(v) / n
+        vc = sum((ci - mc) ** 2 for ci in cs)
+        if vc <= 0:
+            return None
+        sl = sum((ci - mc) * (vi - mv) for ci, vi in zip(cs, v)) / vc
+        return [vi - (mv + sl * (ci - mc)) for vi, ci in zip(v, cs)]
+
+    ry = _resid(ys); rx = _resid(xs)
+    if ry is None or rx is None:
+        return None
+    return _pearson(ry, rx)
+
+
+def _within_slice_corr(y, x, z, n_bins, zmin, zmax):
+    """Mean of the per-z-bin Pearson(x, y) — correlation that survives INSIDE a
+    fixed depth, i.e. not explained by the shared z-gradient."""
+    if zmax <= zmin:
+        return None
+    bins = [[] for _ in range(n_bins)]
+    for a, b, zz in zip(y, x, z):
+        if a is None or b is None:
+            continue
+        k = int((zz - zmin) / (zmax - zmin) * n_bins)
+        k = min(max(k, 0), n_bins - 1)
+        bins[k].append((b, a))
+    rs = []
+    for bb in bins:
+        if len(bb) > 5:
+            r = _pearson([p[0] for p in bb], [p[1] for p in bb])
+            if r is not None:
+                rs.append(r)
+    return (sum(rs) / len(rs)) if rs else None
+
+
 def compute(payload, n_bins=14):
     """Return the z-profiles + correlations from a STEP4 MPM payload dict."""
     parts = payload.get('particles') or []
@@ -90,10 +136,15 @@ def compute(payload, n_bins=14):
         'case': case, 'n_bins': n_bins, 'z_um': zc,
         'jrxn_z': jr_z, 'coverage_z': cov_z, 'strain_z': st_z,
         'have_jrxn': have_jrxn, 'have_strain': bool(sz),
+        # z-profile Pearson — BOTH curves are monotonic in z so these are
+        # inflated by the shared z-gradient (z-confound); report but caveat.
         'corr_jrxn_coverage': _pearson(jr_z, cov_z),
         'corr_jrxn_strain':   _pearson(jr_z, st_z),
-        'corr_particle_jrxn_coverage': _pearson(
-            [j for j in pjr], [c for c in pcov]),
+        'corr_particle_jrxn_coverage': _pearson(list(pjr), list(pcov)),
+        # ── honesty layer: is the coverage link REAL or just the z-gradient? ──
+        'corr_jrxn_z': _pearson(list(pjr), list(pz)),            # reaction is z-driven (ion-limited)
+        'corr_jrxn_coverage_partial_z': _partial_corr(pjr, pcov, pz),   # z-controlled → genuine link
+        'corr_jrxn_coverage_within_slice': _within_slice_corr(pjr, pcov, pz, n_bins, zmin, zmax),
         '_pp': {'z': pz, 'jrxn': pjr, 'coverage': pcov},
     }
 
@@ -139,11 +190,12 @@ def render_figure(payload, n_bins=14):
     a0.set_xlabel('z (um)   [bottom = collector  ->  top = separator]')
     a0.set_ylabel('j_rxn (i / i-bar)  .  coverage/100')
     a0b.set_ylabel('SE plastic strain (sum dg)', color='#2e6fdb')
+    def _f(v):
+        return 'n/a' if v is None else f'{v:+.2f}'
     rjc = d['corr_jrxn_coverage']; rjs = d['corr_jrxn_strain']
     a0.set_title('z-profile: reaction vs mechanics (strain / contact)\n'
-                 'Pearson  j-coverage = %s   j-strain = %s'
-                 % ('n/a' if rjc is None else f'{rjc:+.2f}',
-                    'n/a' if rjs is None else f'{rjs:+.2f}'))
+                 'j-coverage %s (raw, z-confounded)   j-strain %s (co-location, no coupling)'
+                 % (_f(rjc), _f(rjs)))
     a0.legend(handles, [h.get_label() for h in handles], fontsize=8,
               loc='upper left', frameon=False)
     a0.grid(alpha=.25, lw=.5)
@@ -157,8 +209,10 @@ def render_figure(payload, n_bins=14):
         sc = ax[1].scatter(xs, ys, c=cz, cmap='viridis', s=14, alpha=.7)
         cb = fig.colorbar(sc, ax=ax[1]); cb.set_label('z (um)')
         rpc = d['corr_particle_jrxn_coverage']
-        ax[1].set_title('per-particle: reaction vs contact\nPearson = %s   (colour = z)'
-                        % ('n/a' if rpc is None else f'{rpc:+.2f}'))
+        ax[1].set_title('per-particle: reaction vs contact  (colour = z)\n'
+                        'raw %s -> z-controlled %s (within-slice %s);  reaction~z %s'
+                        % (_f(rpc), _f(d['corr_jrxn_coverage_partial_z']),
+                           _f(d['corr_jrxn_coverage_within_slice']), _f(d['corr_jrxn_z'])))
     else:
         ax[1].text(0.5, 0.5, 'no per-particle j_rxn', ha='center', va='center',
                    transform=ax[1].transAxes)

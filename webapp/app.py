@@ -5570,10 +5570,12 @@ def mpm_lab_mech_reaction_csv(pid):
         return (f'{type(e).__name__}: {e}', 500)
     buf = _io.StringIO()
     w = _csv.writer(buf)
-    w.writerow([f'# reaction<->mechanics spatial correlation (OBSERVATIONAL, no coupling)'])
-    w.writerow([f'# Pearson jrxn-coverage={d["corr_jrxn_coverage"]}',
-                f'jrxn-strain={d["corr_jrxn_strain"]}',
-                f'per-particle-jrxn-coverage={d["corr_particle_jrxn_coverage"]}'])
+    w.writerow(['# reaction<->mechanics spatial correlation (OBSERVATIONAL, no stress->reaction coupling)'])
+    w.writerow([f'# z-profile jrxn-coverage={d["corr_jrxn_coverage"]} (raw, z-confounded)',
+                f'jrxn-strain={d["corr_jrxn_strain"]} (co-location)'])
+    w.writerow([f'# reaction~z={d["corr_jrxn_z"]} (ion-limited)',
+                f'jrxn-coverage z-controlled={d["corr_jrxn_coverage_partial_z"]}',
+                f'within-slice={d["corr_jrxn_coverage_within_slice"]} (GENUINE coverage link)'])
     w.writerows(rows)
     resp = make_response(buf.getvalue())
     resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
