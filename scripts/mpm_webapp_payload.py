@@ -662,14 +662,19 @@ def main():
                 # starving vs film-wetted) — the MODEL'S OWN emergent interface number (an OUTPUT;
                 # 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom = the chemistry/
                 # degradation share the structure model does NOT contain (quantified limit).
-                _sw = max(float(_res3w['sigma_eff']), 1e-30)
-                _sb = max(float(_res3b['sigma_eff']), 1e-30)
-                _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
+                _swR = float(_res3w['sigma_eff']); _sbR = float(_res3b['sigma_eff'])
+                # 가드(#9 code-review): 축퇴/실패 solve(σ≤0 or reason)면 R_geom을 계산하지 말 것 —
+                # 1e-30 클램프가 _Lcm/σ ≈ 1e27 Ω·cm² 를 만들어 'MODEL OUTPUT'으로 뱉는 걸 막는다.
+                if _res3b.get('reason') or _res3w.get('reason') or _swR <= 0.0 or _sbR <= 0.0:
+                    _rgeom = None
+                else:
+                    _sw = max(_swR, 1e-30); _sb = max(_sbR, 1e-30)
+                    _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
                 step3['collector_geometric'] = {
                     'mode': 'analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)',
                     'wetted_sigma_S_cm': float(f'{_sw:.4g}'),
                     'bare_sigma_S_cm': float(f'{_sb:.4g}'),
-                    'R_geom_ohm_cm2': float(f'{_rgeom:.3g}'),
+                    'R_geom_ohm_cm2': (None if _rgeom is None else float(f'{_rgeom:.3g}')),
                     'n_bottom_contacts': {'wetted': (_res3w.get('n_plate_vox') or (None,))[0],
                                           'bare': (_res3b.get('n_plate_vox') or (None,))[0],
                                           'canonical_plate': (_res3.get('n_plate_vox') or (None,))[0]},
@@ -679,10 +684,11 @@ def main():
                             'coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); '
                             'measured R_int − R_geom = chemistry/degradation share'}
                 _cgm = step3['collector_geometric']
+                _rgs = 'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}"
                 print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "
                       f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
                       f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']}) → "
-                      f"R_geom {_cgm['R_geom_ohm_cm2']:.3g} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
+                      f"R_geom {_rgs} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
                 _t1 = _time.time()

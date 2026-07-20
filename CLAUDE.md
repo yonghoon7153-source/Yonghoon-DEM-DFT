@@ -71,8 +71,9 @@ MPM unique:
   • Heckel σ_y_eff at the granular-medium scale
 Both:
   • Macroscopic porosity vs (P, composition, P:S, AM%)
-  • Furnas dip presence/depth/location
   • Heckel linearity & P_y
+  (★ Furnas dip = DEM-only per CORRECTION 2, 2026-06-10 — resolved-grain plastic
+   MPM CANNOT reproduce it at any calibration; belongs to the DEM-unique list above.)
 → DEM = TRANSPORT.  MPM = MECHANICS.  Both required; neither replaces
 the other; their agreement quantifies model trust.
 
@@ -164,8 +165,8 @@ SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면
 강의존·최악 무손해·분담 역행=직렬 시그니처; `docs/data/sdcp318_sigma_sdcp_sweep/`),
 잔여 = E_bind DFT(gabia).  기록: `docs/manuscript_sdcp_sigma_e_mechanism.md`(최종판)
 + `docs/sdcp_318_base_sbe_dbe_comparison.md`(수치 원장) + `docs/step4_v2_design.md`.
-**★ PENDING (2026-07-19, DBE 2C 비교 직후 재개): STEP4 방전창 ASSB vs-Li 재산정** —
-현 x0=0.264/x100=0.854는 Chen2020(NMC811‖*흑연* 풀셀 2.5–4.2V) 양극 stoich라, 우리 **NMC-vs-Li
+**★ PENDING (2026-07-19; UPDATE 2026-07-20 — webapp+kit 기본 x100=0.9084로 변경 완료, 잔여=실측 OCP앵커·I_1C규약·코퍼스 재run): STEP4 방전창 ASSB vs-Li 재산정** —
+x0=0.264 · x100 **기본 0.9084**(NMC811 GITT 실측 max; webapp+kit 2026-07-20, &s4x100=로 override).  옛 x100=0.854는 Chen2020(NMC811‖*흑연* 풀셀 2.5–4.2V) 양극 stoich라, 우리 **NMC-vs-Li
 반쪽셀**(=Li-금속 음극 ASSB)에선 x100서 **3.5V 조기종료**(2.5V·깊은 용량 못 뽑음).  버그 아님(창 부적합),
 **SBE↔DBE 비교엔 무영향(공유창 상쇄, 3.5V절단=보수적=DBE우위 하한)**.  인프라 준비됨: `--x0/--x100` CLI
 override 추가(기본 None, selftest PASS), OCP테이블 0.995·확산 x≤1 지원 → **파라미터 작업**.  재개 시:
@@ -250,7 +251,9 @@ data + verdict: `docs/esse_calibration_2mAh_real_9.md` +
   MPM also reproduced: void-filling plastic flow (porosity drops BELOW RCP via
   volume-preserving shape change), plastic SE densifies ~14%p more than rigid
   SE, and the Furnas dip emerges only at the real 12:4:1 size ratio (bimodal).
-  Production E_SE/σ_y for MPM = 1.35 GPa / 0.3 GPa (pure-SE ≈ 8%).
+  Production E_SE/σ_y for MPM = 1.53 GPa / 0.15 GPa (2D champion; ⚠ this 2026-06-06
+  "1.35/0.3" first-cut was the DEM-effective modulus, NOT the MPM champion — see
+  frame [1] / champion §; mpm3d_compaction.py default = 1.53).
   CAVEAT: MPM is a continuum → NO explicit contact network → it validates
   mechanics/porosity but does NOT replace DEM for transport σ (which needs the
   Kirchhoff contact network).  DEM = transport, MPM = mechanics/porosity check.
@@ -437,7 +440,8 @@ each calibrated to EXPERIMENT, never to each other.)
     12.7 % (512 ≈ Minnmann 10); the 320→512 shift is genuine small-SE plastic-
     flow under-resolution that CONVERGES (768), NOT the absP artifact.  (f50
     self-normalised = 22%, TREND-only, rejected for absolute; --readout {f50,
-    wallP,absP}, default wallP for the matcher.)
+    wallP,absP}, ⚠ CODE default = f50 (trend-only, ~22%); pass --readout wallP for the
+    512 absolute porosity (~12.7%) — mpm_dem_match.py argparse default is f50, not wallP.)
   • SERVO: arm-after-compaction guard (disarm instant-stop until por≤por0−2) for
     the big-AM first-contact transient.  median/window sustained-stop REJECTED —
     it over-compresses universally and INVERTS the good rSE=1.0 band (ρ 0.35→
@@ -770,8 +774,8 @@ configs as natural LAYERS inside one composite cathode.
               · exp(-1.01·p_amp + 0.10·log r̄_AM - 0.36·log(T/d_AM))
               · exp[0.05 + 2.19·ln τ - 1.41·(ln τ)²]
         σ_AM = 50 mS/cm (NCM811 literature reference)
-        → σ_AM_eff(S-heavy poly NCM) ≈ 10 mS/cm
-        → σ_AM_eff(P-heavy single-crystal) ≈ 5 mS/cm
+        → σ_AM_eff(S-heavy single-crystal NCM) ≈ 10 mS/cm   [A1 정정: 소입자 AM_S=single, GB無 → σ_e↑]
+        → σ_AM_eff(P-heavy polycrystalline NCM) ≈ 5 mS/cm    [대입자 AM_P=poly, GB감소]
     Stack-up (Stage 0 → 4 progression):
       Stage 0 (σ_ionic-style locked) LOOCV -0.76
       Stage 2 (joint OLS, no phantom filter) +1.22 → 0.46
@@ -1239,7 +1243,7 @@ Path forward = data, not form:
     or genuine form limitation in the φ≈φc·10:0 regime
 
 ### σ_thermal Stage T1 FINALIZED — Ridge regression on Physics target (2026-06-04)
-**Final form: 16 Ridge features (α=0.1), LOOCV 0.9028, R² 0.96, n_fit=82
+**Final form: 14 Ridge features (α=0.05, refined from 16/α=0.1 — see refinement §), LOOCV 0.9028, R² 0.96, n_fit=82
 (corpus n=100, σ_e EXCL applied).**  Meets user 0.9 LOOCV adoption threshold.
 Phase 1 transport triad COMPLETE (σ_ionic 0.97 + σ_e 0.95 + σ_thermal 0.90).
 
@@ -1261,7 +1265,7 @@ KEY DESIGN CHOICES (different from σ_ionic / σ_e):
   3. **Sanity filter**: 0.05 ≤ κ ≤ 50 mScm
      - Above 50: solver pathology (input_1mAh_100_7 κ=153,986)
      - Below 0.05: broken sim
-  4. **Ridge α=0.1** (NOT OLS): 16 features on n=82 = 5.1:1 n/k, tight.
+  4. **Ridge α=0.05** (NOT OLS): 14 features on n=82 = 5.9:1 n/k, tight. (α=0.1/16-feat = pre-refinement; production is 14/0.05 — refinement §.)
      Ridge regularizes against feature collinearity (Bruggeman ratios
      correlate with porosity etc.).
 
@@ -1385,7 +1389,7 @@ after comprehensive ablation showed Stage 22 was over-fit on the expanded
 corpus.  Successor to Stage 21 (14 params) and Stage 22 (12 params).
 
 THE FINAL EQUATION (Stage 22.5):
-  σ_e = (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p     [LOCKED Trevisanello endpoints]
+  σ_e = (σ_S · NCM_S)^(1-p) · (σ_P · NCM_P)^p     [LOCKED corpus-fit endpoints; NCM(r) GB-direction per Trevisanello, NOT the σ_e magnitudes — A1]
       × φ_AM⁴ · √A_AM-AM                            [LOCKED Bruggeman + Holm]
       × (T/d_AM)^β_T                                [β_T — Pouillet thickness]
       × exp[β_bi · p(1-p) · log φ_AM]              [β_bi — bimodal coupling]
@@ -1394,7 +1398,7 @@ THE FINAL EQUATION (Stage 22.5):
       × exp[p_τ + q_τ · ln τ + r_τ · ln²τ]         [C(τ) — logpoly2 tortuosity]
 
 LIVE (8 OLS): β_T, β_bi, β_Fe, β_φth, β_covth, [p_τ, q_τ, r_τ]
-LOCKED (2): σ_S=10, σ_P=5 mS/cm (Trevisanello 2021)
+LOCKED (2): σ_S=10, σ_P=5 mS/cm (corpus-fit endpoints ~9.1/4.1 rounded — A1 CLOSED 2026-06-30; Trevisanello 2021 supports the NCM(r) GB DIRECTION only, NOT these σ_e magnitudes)
 ALSO LOCKED (literature): φ_AM^4 exponent (Stage 14 nested CV), √A_AM-AM (Holm 1967),
   NCM(r) GB correction (Trevisanello), g_thin = σ(-5·(T/d_AM − 8))
 
@@ -1462,7 +1466,7 @@ Outlier landscape (Stage 22.5, n=76, post Round 6):
   median |err| ≈ 5.6%, mean ≈ 7.5%, 90pct ≈ 15%
   cases |err|>30% (non-EXCL): 0
   cases |err|>50% (non-EXCL): 0
-  AUDIT-EXCLUDED total: 21 (Rounds 1-6 cumulative)
+  AUDIT-EXCLUDED total: 25 (Rounds 1-7 cumulative)
   Form structure: 8 LIVE OLS + 2 LOCKED endpoints = 10 total params
 
 ⚠ DO NOT re-add the 4 dropped terms.  Each was individually proven
