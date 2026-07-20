@@ -5,8 +5,14 @@ set +H
 OUT=${OUT:-/data/work/runs/sdcp_linio2_binding/phaseB_v7c_refine}
 echo "══ SDCP DFT+U refine (doped=sulfonate_down / neutral=chelation, c40)  $(date '+%m-%d %H:%M:%S') ══"
 gpu=$(nvidia-smi --query-gpu=memory.used,memory.free,utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)
-cur=$(pgrep -af "pw\.x .*scf.in" 2>/dev/null | grep -aoE "phaseB_v7c_refine/[a-z_]+/scf" | head -1 | sed 's#phaseB_v7c_refine/##;s#/scf##')
-echo "  실행중: ${cur:-(없음)}  | GPU ${gpu} (used,free,util%)"
+cur=""                                   # pw.x runs with a relative 'scf.in' -> detect by latest non-done .out
+if pgrep -f "pw\.x" >/dev/null 2>&1; then
+  cur=$(for j in complex_doped complex_neutral mol_doped mol_neutral slab; do
+          o=$OUT/$j/scf.out
+          [ -f "$o" ] && ! grep -aq "JOB DONE" "$o" && echo "$(stat -c %Y "$o" 2>/dev/null) $j"
+        done | sort -rn | head -1 | awk '{print $2}')
+fi
+echo "  실행중: ${cur:-(없음/pw.x대기)}  | GPU ${gpu} (used,free,util%)"
 
 echo "── SCF 상태 (복합체=plateau, maxstep 300) ──"
 for j in complex_doped complex_neutral mol_doped mol_neutral slab; do
