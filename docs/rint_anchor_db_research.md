@@ -46,8 +46,10 @@ Only the four **CONFIRMED** numeric anchors below were captured this session (fr
 
 | Anchor | Value | Conditions | Source |
 |--------|-------|-----------|--------|
-| **Engineered NCM811-sulfide R_ct (compact interphase)** | **R_ct 593.8 → 350.9 Ω across 300 cycles** | Aggregated in review; per-coating table has more | Feng 2025 review — https://doi.org/10.1002/cssc.202501033 (open PMC12665888) |
+| ⚠ **CORRECTED (2026-07-20)** — NOT a bare-composite growth law | R_ct **593.8 → 350.9 Ω** = **DECREASES** over 300 cyc | ★ traced to **coated In-cPAN@NCM811, high-T (≥100°C) Li-metal cell** where a good coating *matures* → R_ct falls.  Do **NOT** use as an NMC811/LPSCl bare R_int(N) growth anchor. | Nano-Micro Lett. 2025 — https://doi.org/10.1007/s40820-025-01683-7 (mis-attributed to the Feng 2025 review here previously) |
+| **Bare NCM811/LPSCl R_ct (our lab, magnitude anchor)** | 62/72/82 wt% = **453 / 290 / 382 Ω·cm²** (uncoated); **22.4/18.2/17.2** (LNO-coated, ~20× lower); T-sweep 30/45/60°C = 289.9/139.6/67.8 | 3-electrode full cell, 30°C, 250/100 MPa — post-formation snapshot (composition+T, NOT cycle-resolved) | **kim2025 (repo litdb, `pdf_verified`)** — Electrochim. Acta 542 147413, Tables S4/S6 |
 | **LPSCl-catholyte / LLZO dual-layer interface-R growth** | **~100 Ω → ~300 Ω (≈3×) on contact loss** | Secondary — separator is LLZO, not the NMC/LPSCl cathode interface | ACS AEM 2025 — https://doi.org/10.1021/acsaem.5c02435 |
+| **Collector\|Al contact growth (shape anchor)** | R_contact **≈10 (formation) → ≈30 Ω·cm² @50 cyc** (~3×), first-cycle step + ~linear k·N | liquid LNMO analog (HF passivation + coating delamination) — maps onto our SBE 18→110 / DBE 12→46 / C-SUS 10→30 @1000cyc endpoints | Pritzl 2019 JES — https://doi.org/10.1149/2.0451904jes |
 
 ### 2c. Composite-transport reference (the "bulk" R to subtract to isolate R_int)
 
