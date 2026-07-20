@@ -22,12 +22,12 @@ pristine·cycled **두 점**만 있으면 사이 곡선은 **무한히 많다**(
 ```
 R_int(config, N) = R_contact(coverage,P) + R_tort(τ,ε) + R_chem(N) + R_collector(N) [+ Δ_special]
                    └── 우리 OUTPUT ──┘   └ 우리 OUTPUT ┘  └ 문헌 shape ┘ └ 문헌+우리셀 ┘  └ 실측 ┘
-                     Holm 접촉 (∝a⁻¹)    pore-τ 병목    계면반응 R_ct    집전체 접촉    SDCP
+                   접촉(Holm −0.5 + R_ct −1) SE이온-τ 병목  계면반응 R_ct   집전체 접촉   SDCP
 ```
 
-- **R_contact(coverage,P)** = 계면 수축(constriction) 접촉 저항.  **ASR ∝ (접촉면적)⁻¹**(Holm), 압력 **∝ P⁻⁰·⁵**.
+- **R_contact(coverage,P)** = 계면 접촉 저항 = **① 옴성 수축(Holm, ASR ∝ 접촉면적^(−0.5) — 우리 σ_ionic의 cov^½와 동일 지수)** + **② 전하전달(R_ct = ρ_ct/A_active, ∝ 접촉면적^(−1))**.  ⚠ 직접-계면 측정 ASR ∝ 접촉면적^(−1) (`acsenergylett.5c00032`)은 **전하전달/스팟-카운트 지배**이지 순수 Holm 수축(−0.5)이 아님 — 두 항을 kim2025 R_ct(pdf_verified)로 fit.  압력 **∝ P^(−0.5)**.
   MAGNITUDE = **우리 DEM/MPM coverage OUTPUT** + Stage-E 접촉면적.  (전극/LPSCl 직접 측정: `acsenergylett.5c00032`)
-- **R_tort(τ,ε)** = 벌크/GB/tortuosity 병목.  MAGNITUDE = **우리 pore-τ OUTPUT**.  ★ coverage와 **반대로** 움직임
+- **R_tort(τ,ε)** = SE-상 이온 경로 tortuosity 병목.  MAGNITUDE = **σ_ionic 망의 SE-상 이온 τ(C_blend(τ)의 τ) OUTPUT**.  ⚠ **pore/void τ 아님** — `mpm_webapp_payload.py`가 pore-τ에 '수송 폼 대입 금지'(비퍼콜 void) 가드를 걸어둠; void τ는 이온상 병목이 아니다.  ★ coverage와 **반대로** 움직임
   (미세입자 → coverage↑지만 τ↑) → 총 R_int **비단조**.  (Samsung `acsami.4c01322`)
 - **R_chem(N)** = 화학 interphase 전하전달 R_ct의 사이클 성장 (§3).  SHAPE = 문헌, LEVEL = **우리 랩 kim2025**.
   형태-클래스(단결정/다결정)별로만 공유.
@@ -35,7 +35,7 @@ R_int(config, N) = R_contact(coverage,P) + R_tort(τ,ε) + R_chem(N) + R_collect
 - **Δ_special** = SDCP 등 특이재료 **실측 delta** (§5).
 
 **"bimodal 여러 config"가 정직하게 커버되는 이유**: 문헌은 *모양*(공통)만, *크기*는 우리가 config마다 이미
-뽑는 **coverage AND pore-τ 두 OUTPUT**으로 계산 → 미세입자 trade-off(비단조)까지 자체 지표가 잡음.
+뽑는 **coverage AND SE-이온-τ 두 OUTPUT**으로 계산 → 미세입자 trade-off(비단조)까지 자체 지표가 잡음.
 날조·보간 없이 새 config(bimodal)로 확장.  SDCP만 예외적 실측 delta.
 
 ## 3. Reference 성장-법칙 — 형태 + 앵커
@@ -82,10 +82,10 @@ R_chem(N) = R_ct,0 + ΔR_form·𝟙(N≥1) + g(N)
 - Al/C 화학안정(argyrodite): SS/Ni/Al/Al-C 안정, Cu/Li 부식 (Nat Commun Chem 2025).
 
 ## 4. 전이성 — 성립·한계 (정직, 에이전트 검증)
-**성립(coverage 항)**: 전극/LPSCl **ASR ∝ 접촉면적⁻¹**(지수 −1, Holm) + P⁻⁰·⁵ — 직접 측정
+**성립(coverage 항)**: 전극/LPSCl 직접-계면 **ASR ∝ 접촉면적^(−1)** + P^(−0.5) — 직접 측정 (⚠ 지수 −1 = **전하전달/스팟-카운트** 지배; 순수 Holm 옴성 수축은 −0.5 = 우리 σ_ionic cov^½)
 (`acsenergylett.5c00032`).  fine-LPSCl R_ct < coarse (Zhou 2025 `acsenergylett.4c03256`, 방향만).
 **★ break(순수 1/coverage 아님)**: Samsung `acsami.4c01322` — **CAM 입자↓ → R_ct↓지만 GB/tortuosity 저항↑
-→ 총 R_int 비단조**.  = 두 경쟁 항(계면 ∝a⁻¹ ↔ 벌크/τ 반대) → **coverage 하나로 못 잡음** → §2 R_tort 분리 근거.
+→ 총 R_int 비단조**.  = 두 경쟁 항(계면 항(전하전달 −1) ↔ 벌크/τ 반대) → **coverage 하나로 못 잡음** → §2 R_tort 분리 근거.
 (우리 σ_thermal multi-pathway 발견과 동형.)
 
 **over-generalization 경고 (무비판 이식 금지, 에이전트 7항 요지)**:
@@ -96,6 +96,9 @@ R_chem(N) = R_ct,0 + ΔR_form·𝟙(N≥1) + g(N)
 5. SC −40% R_ct는 일부 **본질 확산(6–14×)** 기여 → 전부 coverage 몫 아님.
 6. CEI √t rate는 chemistry/전압/T가 결정 → 조성·컷오프 넘어 이식 X.
 7. 압력 민감도 mid-range 약함(17×P→17%) → 저압 곡선을 접촉면적만으로 고압 재스케일 X.
+8. **R_ct는 (T·SOC·I) 의존** — kim2025가 30→60°C서 290→68 Ω·cm²(~4×/30°); BV 비선형 SOC/전류. R_int(N)을 30°C·저율서만 앵커 = **운전점 고정**, 명시 필요.
+9. **직렬-가법 독립 가정** — R_contact(계면)와 R_chem(그 계면 위 CEI 성장)은 접촉면적 손실로 **물리 커플** → 단순 합산은 이중계산 위험. 가정으로 명시.
+10. **g(N) √N-vs-선형 = assumed-form** — §3.1 이분법의 판별계수(Conforto per-cycle)는 미digitize gap(§3.1·§9) → 확정 아님, 라벨 유지.
 → **R_ref shape는 같은 chemistry·CAM결정형 클래스 안에서만 공유; magnitude는 config별 우리 coverage+τ로.**
 
 ## 5. SDCP / 특이 케이스 = 실측 delta
@@ -121,7 +124,7 @@ R_chem(N) = R_ct,0 + ΔR_form·𝟙(N≥1) + g(N)
 | 입력 | 종류 | 근거 |
 |---|---|---|
 | R_geom (기하 집전체) | **OUTPUT(모델)** | SBE 1.37e-5 / DBE 9.05e-6 Ω·cm² |
-| coverage→R_contact, pore-τ→R_tort | **OUTPUT(모델)** | DEM/MPM Stage-E 접촉면적 + pore-τ (지수 −1, P⁻⁰·⁵) |
+| coverage→R_contact, SE이온-τ→R_tort | **OUTPUT(모델)** | Stage-E 접촉면적(Holm −0.5 옴성 + R_ct −1 전하전달), σ_ionic SE-상 τ (P^(−0.5)) |
 | R_ct,0 level·조성의존·T (453/290/382, 22/18/17) | **측정(우리 랩)** | kim2025 pdf_verified |
 | R_chem(N) 첫점프+g(N) 모양 | **측정앵커(문헌)** | Koerver/Conforto/Pinson-Bazant, snippet |
 | R_collector level·성장 shape | **문헌+우리 셀** | Pritzl snippet + 우리 endpoint |
@@ -138,6 +141,6 @@ R_chem(N) = R_ct,0 + ΔR_form·𝟙(N≥1) + g(N)
 - ⏳ SDCP E_bind DFT (gabia) → Δ_special.
 
 ## 10. 상태
-- 2026-07-20: 설계 확정 (3-에이전트 조사 반영).  **다-항 모델**: R_contact(coverage⁻¹)+R_tort(pore-τ)+R_chem(N)+
+- 2026-07-20: 설계 확정 (3-에이전트 조사 반영).  **다-항 모델**: R_contact(Holm −0.5 + R_ct −1)+R_tort(SE이온-τ)+R_chem(N)+
   R_collector(N)+Δ_special.  reference=문헌 SHAPE / magnitude=우리 coverage+τ / level=kim2025(우리 랩) / SDCP=실측.
   ohmic-vs-BV split = Choi2024/DFN 문헌 정당화.  **잔여 = WSL PDF 디지타이즈(Conforto/Choi/Inorganics)로 계수 확정.**
