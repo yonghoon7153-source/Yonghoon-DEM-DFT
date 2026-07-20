@@ -2881,7 +2881,14 @@ function applyViewMode(state, mode) {
       if (!pr) return;
       const big = document.createElement('canvas'); big.width = 1200; big.height = 660;   // 고해상 재그리기
       drawZProfileCanvas(big, pr.curves, pr.yLab);
-      const tag = (ionic ? 'ion' : 'elec') + '_zprofile';
+      // 케이스별 유니크 파일명: SBE/DBE는 같은 case(예 260714)라 collector명(bare_Al+SBE/DBE_electrode)
+      // 또는 additive 레시피(VGCF-PTFE vs VGCF-PTFE-SDCP)로 구분 (안 그러면 elec_zprofile / _1 로 뭉개짐).
+      const _d = state.data || {}, _s3d = ((_d.mpm_metrics || {}).step3) || {};
+      const _sel = (((_s3d.collector || {}).selected) || {}).name || '';
+      const _rec = Object.keys((_d.mpm_metrics || {}).additive_counts || {}).join('-');
+      const _slug = String([_d.case || '', _sel || _rec].filter(Boolean).join('_'))
+        .replace(/[^\w.-]+/g, '_').replace(/_+/g, '_').replace(/^_|_$/g, '').slice(0, 60);
+      const tag = (ionic ? 'ion' : 'elec') + '_zprofile' + (_slug ? '_' + _slug : '');
       const a1 = document.createElement('a'); a1.href = big.toDataURL('image/png'); a1.download = tag + '.png';
       document.body.appendChild(a1); a1.click(); a1.remove();
       const csv = pr.header + '\n' + pr.rows.map(r => r.join(',')).join('\n');
