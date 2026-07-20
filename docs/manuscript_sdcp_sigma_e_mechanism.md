@@ -28,7 +28,7 @@
 **계면 브리지(직렬 constriction 해소)**: 도로(VGCF 3 wt%, 연결률 100%)는 두 전극이 같고,
 전도도를 깎는 것은 교차로(섬유-섬유·섬유-AM 접합부의 좁은 목)다.  랜덤-균일 분산(D = 1.13)된
 0.3 µm SDCP 입자가 확률적으로 그 목에 앉아 고전도 브리지가 되면, 브리지 자신은 저항이 낮아
-전체 줄(Joule) 저항 손실의 10%만 부담하면서도 그 목을 지나는 경로 전체의 전류를 풀어내
+전체 줄(Joule) 저항 손실의 7.3%만 부담하면서도 그 목을 지나는 경로 전체의 전류를 풀어내
 σ_e를 끌어올린다.  유일한 잠재 비용은 기계
 축(바인더 반감)이며, 이는 transport 모델 밖 — manuscript의 SDCP 계면-앵커링(SAICAS/DFT)이
 담당하는 주장.
@@ -68,7 +68,7 @@
 > ② 우리 전극은 수백만 개 복셀 저항으로 된 회로다(위 Kirchhoff 블록).  솔버를 다 풀고 나면
 > 복셀-면 하나하나에 대해 "전류가 얼마 지나갔고 전압이 얼마 떨어졌는지"를 알기 때문에,
 > 복셀마다 열 I·ΔV를 계산할 수 있다.  이것을 재료별로 모아 합치고 전체로 나눈 %가
-> 손실분담이다: "전극이 잃는 열의 90%는 VGCF 복셀 안에서, 10%는 SDCP 복셀 안에서 났다."
+> 손실분담이다: "전극이 잃는 열의 92.5%는 VGCF 복셀 안에서, 7.3%는 SDCP 복셀 안에서 났다."
 >
 > ③ 이 숫자의 의미: **그 재료가 전극 전체 저항에서 차지하는 비중**이다.  전자가 집전체에서
 > 분리막까지 가는 동안 겪는 "힘듦"의 90%가 VGCF 구간(섬유 내부 + 섬유끼리 건너는 목)에
@@ -79,12 +79,12 @@
 > 열은 I²R이라 R₁에서 90%, R₂에서 10%가 난다.  두 저항의 "전류 나르는 몫"은 완전히
 > 같은데(100%씩), 손실분담은 9:1로 갈린다 — 손실분담 = 전류 × 저항이지, 전류가 아니다.
 >
-> ⑤ SDCP에 적용하면: SDCP는 σ = 150 S/cm로 이 전극에서 가장 저항이 낮은 재료다(④의 R₂
+> ⑤ SDCP에 적용하면: SDCP는 σ = 250 S/cm로 이 전극에서 가장 저항이 낮은 재료다(④의 R₂
 > 역할).  전류가 SDCP 복셀을 아무리 많이 지나가도, 그 복셀의 저항이 작으니 전압이 거의 안
-> 떨어지고 열도 거의 안 난다.  따라서 **손실분담 10%는 "전류의 10%가 SDCP를 지난다"는 말이
+> 떨어지고 열도 거의 안 난다.  따라서 **손실분담 7.3%는 "전류의 7.3%가 SDCP를 지난다"는 말이
 > 아니라, 실제 전류 통행량보다 한참 작게 잡힌 하한**이다.
 >
-> ⑥ 이게 §3-① 논증의 핵심 산수다: SDCP가 그냥 "저항 비중 10%짜리 새 길 하나"를 병렬로 더
+> ⑥ 이게 §3-① 논증의 핵심 산수다: SDCP가 그냥 "저항 비중 7.3%짜리 새 길 하나"를 병렬로 더
 > 깔았을 뿐이라면 전체 개선도 ~10% 스케일이어야 한다.  실측은 +52.0% — SDCP가 자기 몸으로
 > 저항을 부담해서가 아니라, **VGCF망의 비싼 접합부들을 값싼 다리로 이어 다른 구간(VGCF)의
 > 저항 구조 자체를 바꿔놓았기 때문**이다.  손실분담이 작으면서 σ 이득이 큰 조합 = 브리지의
@@ -99,7 +99,7 @@
 | σ_ion_eff (S/cm) | 9.66e-4 | 2.034e-4 | 2.147e-4 | +5.6% |
 | e-손실분담 SDCP (%) | — | 0 | **7.3** | 병렬 산수 불가 |
 | ion-손실분담 SDCP (%) | — | 0 | 13.8 | |
-| BV 반응면 (AM\|이온상) | 792,503 | 425,349 | **503,922** | **+18%** |
+| BV 반응면 (AM\|이온상) | 792,503 | 425,349 | **503,915** | **+18%** |
 | R_geom (Ω·cm²) | 5.44e-2 | 1.37e-5 | 9.05e-6 | −34% |
 | carbon clusters | 0 | 3,172 | 8,644 | ×2.7 |
 | 환산접점 중앙값 /AM | — | 433 | 517 | +19.3% |
@@ -112,7 +112,7 @@
 
 **① 손실분담 산수 (병렬-기여 기각)**: SDCP의 전자 줄손실 몫은 7.3%인데 σ_e는 +52.0% —
 전도도 이득이 추가 상의 수송 몫을 따라가는 병렬-도체 그림으로는 불가능.  직렬 병목 해소는
-가능: 목 하나를 뚫으면 경로 전체 저항이 내려가고, 브리지 자신은 σ=150 S/cm 저저항이라
+가능: 목 하나를 뚫으면 경로 전체 저항이 내려가고, 브리지 자신은 σ=250 S/cm 저저항이라
 J²R-가중 손실분담에는 작게 잡힌다(손실분담은 브리지 역할을 구조적으로 과소표시).
 ★ 스윕 독립 확인(2026-07-15): σ_SDCP를 1500→150→50→15 S/cm로 낮추면 분담이
 1.7→10.0→16.3→19.6%로 **역행 증가**하면서 σ_e는 3.227→1.990으로 SBE 수준까지 수렴
@@ -141,12 +141,12 @@ a7_p00(1.14/×1.16)에서 재현된다 = 파라미터가 아니라 형상(단독
   막는 절연체다.  그러니 PTFE 제거가 주원인이라면 전자망과 이온망이 **비슷한 비율로** 좋아져야
   한다.  실제는 전자 +52.0% vs 이온 +5.6% — 이온은 거의 안 움직였다.  심지어 이온 쪽은
   SDCP가 이온 저항의 13.8%를 새로 부담하며 "도와주고 있는데도" +5.6%에 그친다.  즉 PTFE
-  제거로 얻을 수 있는 몫은 기껏 몇 % 수준이고, 전자 +45%의 주범이 될 수 없다.  → 기각
+  제거로 얻을 수 있는 몫은 기껏 몇 % 수준이고, 전자 +52%의 주범이 될 수 없다.  → 기각
   (부차 요인으로만 인정).
 - **용의자 4 — "전도체를 1.4 vol% 더 넣었으니 그만큼 좋아졌다" (부피 효과)**: "잘 섞인 전도체
   알갱이를 부피만큼 넣으면 전도도가 얼마나 오르나"에는 교과서 공식이 있다(유효매질 이론,
   Maxwell-Garnett): 알갱이들이 서로 고립돼 있다면 이득의 상한 ≈ 3 × 부피분율 = 3 × 1.3% ≈
-  **+4%**.  실측은 **+52.0% — 부피 산수의 11.6배**.  "얼마나 넣었나"로는 설명이 안 되고,
+  **+4%**.  실측은 **+52.0% — 부피 산수의 13.3배**.  "얼마나 넣었나"로는 설명이 안 되고,
   "**어디에 앉았나**"만이 남는다.  → 기각.
 
 **결정타 — 같은 입자, 두 개의 다른 답**: 동일한 SDCP 입자들(같은 위치, 같은 양)이 전자망에는
@@ -168,15 +168,15 @@ SDCP 접합부 핫스팟이 점등되며 **네트워크 전체 레벨이 상승*
 > additive loading (SBE: VGCF/PTFE = 3/1 wt% → DBE: 3/0.5/0.5) increases the through-plane
 > electronic conductivity of the voxel-resolved electrode by 52.0% (1.975 → 3.002 S/cm),
 > improves rather than sacrifices the ionic network (+5.6%), and enlarges the
-> reaction-accessible interface by 18% (425,349 → 503,922 Butler-Volmer faces) — the usual
+> reaction-accessible interface by 18% (425,349 → 503,915 Butler-Volmer faces) — the usual
 > conductive-additive trade-off (electrons gained at the cost of ions) does not appear,
 > because an insulator is being replaced by a conductor of both carriers.  The same
 > substitution on an independent scaffold and composition reproduces the effect (+33.2%),
 > and four independent readouts of the same solutions identify **interfacial bridging, not
 > bulk parallel conduction,** as the mechanism.
 >
-> First, the SDCP phase dissipates only 10% of the electronic Joule heat: a parallel-conductor
-> picture cannot yield a 45% conductivity gain from a 10% transport share, whereas relief of
+> First, the SDCP phase dissipates only 7.3% of the electronic Joule heat: a parallel-conductor
+> picture cannot yield a 52% conductivity gain from a 7.3% transport share, whereas relief of
 > series constrictions can — unblocking a junction lowers the resistance of an entire
 > percolation pathway while the highly conductive bridge itself dissipates little.  Second,
 > the microstructure moves exactly as bridging requires: carbon contact points per AM particle
@@ -197,12 +197,12 @@ SDCP 접합부 핫스팟이 점등되며 **네트워크 전체 레벨이 상승*
 
 > 총 첨가제 로딩을 고정한 채 절연 PTFE의 절반을 혼성전도 SDCP로 치환하면(SBE 3/1 → DBE
 > 3/0.5/0.5 wt%) 복셀-해상 전극의 두께방향 전자전도도가 52.0% 증가하고(1.975→3.002 S/cm),
-> 이온망은 희생이 아니라 개선되며(+5.6%), 반응-접근 계면이 18% 커진다(BV 면 425,349→503,922)
+> 이온망은 희생이 아니라 개선되며(+5.6%), 반응-접근 계면이 18% 커진다(BV 면 425,349→503,915)
 > — 절연체를 양쪽 운반자의 전도체로 바꾼 것이라 통상의 도전재 트레이드오프(전자↑이온↓)가
 > 나타나지 않는다.  독립 스캐폴드·조성에서 같은 치환이 효과를 재현하고(+33.2%), 같은 해의
 > 네 가지 독립 readout이 메커니즘을 **벌크 병렬전도가 아닌 계면 브리징**으로 지목한다.
-> (이하 ①손실분담 10% vs +45% ②접점 +19%·클러스터 ×2.7·랜덤 분산 D=1.13 ③대안 배제 +
-> EMT 상한 +4% ≪ +45% ④σ-공동스케일 필드의 전체-레벨 상승 — §3과 동일.)
+> (이하 ①손실분담 7.3% vs +52% ②접점 +19%·클러스터 ×2.7·랜덤 분산 D=1.13 ③대안 배제 +
+> EMT 상한 +4% ≪ +52% ④σ-공동스케일 필드의 전체-레벨 상승 — §3과 동일.)
 
 ## 5. Methods 최종 초안 (영문, 국문 대역은 §2-K 구판과 동일 논리)
 
@@ -236,9 +236,9 @@ SDCP 접합부 핫스팟이 점등되며 **네트워크 전체 레벨이 상승*
 ## 7. 리뷰어 방어 (작위적 값 아님 — 8항)
 
 1. **결과가 입력에 비례하지 않음**: 같은 SDCP(같은 위치·부피)가 전자 +52.0%/이온 +5.6% —
-   σ 테이블을 심어 나오는 효과라면 두 망이 각자 테이블 값을 따라야 한다.  손실분담(10%) vs
-   이득(+45%) 불일치가 병렬 가설을 자체 기각.
-2. **크기 논증**: EMT(Maxwell-Garnett) 상한 3φ ≈ +3.9% ≪ +52.0% (11.6×) — 부피가 아니라
+   σ 테이블을 심어 나오는 효과라면 두 망이 각자 테이블 값을 따라야 한다.  손실분담(7.3%) vs
+   이득(+52%) 불일치가 병렬 가설을 자체 기각.
+2. **크기 논증**: EMT(Maxwell-Garnett) 상한 3φ ≈ +3.9% ≪ +52.0% (13.3×) — 부피가 아니라
    위치(토폴로지)의 효과.
 3. **동일-세팅 상대비교**: 같은 복셀·σ표·BC, 레시피만 다름 → 이산화 편향 소거.
 4. **세 독립 readout + 공간 필드의 정합**: 스칼라(σ)·에너지 분해(분담)·기하 통계(접점/
