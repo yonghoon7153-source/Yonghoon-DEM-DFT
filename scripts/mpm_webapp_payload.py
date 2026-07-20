@@ -663,12 +663,17 @@ def main():
                 # 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom = the chemistry/
                 # degradation share the structure model does NOT contain (quantified limit).
                 _swR = float(_res3w['sigma_eff']); _sbR = float(_res3b['sigma_eff'])
+                # _sw/_sb MUST be defined on BOTH paths — the dict below (:wetted/bare_sigma)
+                # reads them unconditionally.  Hoist the clamp above the guard so the
+                # degenerate branch (_rgeom=None) does NOT raise NameError and drop the
+                # whole STEP3/STEP4 output via the broad except.  (fix: guard was crashing
+                # in exactly the corner it targets.)
+                _sw = max(_swR, 1e-30); _sb = max(_sbR, 1e-30)
                 # 가드(#9 code-review): 축퇴/실패 solve(σ≤0 or reason)면 R_geom을 계산하지 말 것 —
                 # 1e-30 클램프가 _Lcm/σ ≈ 1e27 Ω·cm² 를 만들어 'MODEL OUTPUT'으로 뱉는 걸 막는다.
                 if _res3b.get('reason') or _res3w.get('reason') or _swR <= 0.0 or _sbR <= 0.0:
                     _rgeom = None
                 else:
-                    _sw = max(_swR, 1e-30); _sb = max(_sbR, 1e-30)
                     _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
                 step3['collector_geometric'] = {
                     'mode': 'analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)',
