@@ -6077,22 +6077,21 @@ def porosity_corpus_csv():
             am_wt, se_wt = _ratio(fm.get('am_se_ratio') or ip.get('am_se_ratio')
                                   or meta.get('am_se_ratio'))
             P, S = _ratio(fm.get('ps_ratio') or meta.get('ps_ratio'))
-            try:
-                # webapp convention: sim radii × scale = physical µm, scale
-                # DEFAULTS to 1000 when unset (matches _inject_input_params).
-                # full_metrics r_* are sim-metres → r·1e6/scale = physical µm,
-                # which equals r·scale at scale=1000 (1e6/1000 = 1000).
-                scale = float(meta.get('scale') or ip.get('scale')
-                              or fm.get('scale') or 1000.0)
-            except Exception:
-                scale = 1000.0
-
             def _rp(k):
+                # full_metrics stores particle radii in PHYSICAL µm already
+                # (cf. docs/data/dem_design_points.csv: r_AM_P=6 / r_AM_S=2 /
+                # r_SE=0.5–1.5).  Use the value as-is; only collapse a stray
+                # ×1000 sim-inflated legacy value (no real radius is ≥100 µm).
                 r = fm.get(k)
                 try:
-                    return round(float(r) * 1e6 / scale, 3) if r is not None else ''
-                except Exception:
+                    r = float(r)
+                except (TypeError, ValueError):
                     return ''
+                if r == 0:
+                    return 0.0
+                while abs(r) >= 100:
+                    r /= 1000.0
+                return round(r, 3)
 
             gap = ''
             regime = ''
