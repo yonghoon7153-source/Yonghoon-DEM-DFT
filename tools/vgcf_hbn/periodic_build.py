@@ -18,12 +18,15 @@ Emits QE CELL_PARAMETERS + ATOMIC_POSITIONS blocks (+ xyz for viewing).
 """
 import numpy as np
 
-A_GR = 2.46    # graphene a (A)   -- placeholder
-A_BN = 2.50    # h-BN a (A)       -- placeholder
-D0 = 3.33      # interlayer (A)
-VAC = 20.0     # vacuum (A)
+# PINNED from digests (Shi 2017 QE/PBE-D2/PAW, k<0.05/A, vac 10-15A; Liu 2022 VASP).
+A_GR = 2.46    # graphene a (A)
+A_BN = 2.46    # h-BN strained to graphene (-1.6% vs native 2.50) -> common lattice,
+               #   so the sandwich and Shi eq5 (E_iface ~ E_bottom + E_hBN) are self-consistent.
+D0 = 3.33      # bare bilayer interlayer (A), vdW
+VAC = 18.0     # vacuum (A)  (Shi 10-15; 18 safe for sandwich+Li)
 LI_H = 1.80    # Li height above surface (A)
-N = 4          # supercell NxN    -- placeholder (min-unit pending digest)
+GAL = 3.90     # expanded interlayer to host Li in the sandwich (relaxes in QE)
+N = 4          # 4x4 supercell -> Li-Li image 9.84 A (min unit; 5x5 = conv check)
 
 
 def sheet(a, N, elemAB, z=0.0):
@@ -75,9 +78,11 @@ def main():
 
     gC, gE, gcell = sheet(A_GR, N, ("C", "C"))
     bC, bE, bcell = sheet(A_BN, N, ("B", "N"))
-    # bilayer: common lattice = graphene a (strain h-BN to match; note in report)
+    # bilayer: bare h-BN on graphene at vdW spacing D0 (interlayer-binding ref)
     b2C, b2E, _ = sheet(A_GR, N, ("B", "N"), z=D0)
     biC = np.vstack([gC, b2C]); biE = gE + b2E
+    # gallery: h-BN lifted to GAL so a Li layer fits between (relaxes in QE)
+    b3C, _, _ = sheet(A_GR, N, ("B", "N"), z=GAL)
 
     li = lambda xy, z: np.array([[xy[0], xy[1], z]])
     gh = hollow_xy(gC, gcell); bh = hollow_xy(bC, bcell)
@@ -87,7 +92,7 @@ def main():
         "bilayer": (biC, biE, gcell),
         "Li_on_graphene": (np.vstack([gC, li(gh, LI_H)]), gE + ["Li"], gcell),
         "Li_on_hbn": (np.vstack([bC, li(bh, LI_H)]), bE + ["Li"], bcell),
-        "Li_in_gallery": (np.vstack([gC, b2C, li(gh, D0 / 2)]), gE + b2E + ["Li"], gcell),
+        "Li_in_gallery": (np.vstack([gC, b3C, li(gh, GAL / 2)]), gE + b2E + ["Li"], gcell),
     }
     print(f"periodic slabs (N={N}, a_gr={A_GR}, a_bn={A_BN}, vac={VAC}A) [PLACEHOLDER params]:")
     for nm, (C, E, cell) in cases.items():

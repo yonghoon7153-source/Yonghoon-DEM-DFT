@@ -1,8 +1,45 @@
-# Li_on_hbn
+&CONTROL
+    calculation     = 'relax'
+    prefix          = 'Li_on_hbn'
+    outdir          = './tmp'
+    pseudo_dir      = '$PSEUDO_DIR'
+    tprnfor         = .true.
+    forc_conv_thr   = 1.0d-3
+    nstep           = 200
+    disk_io         = 'low'
+/
+&SYSTEM
+    ibrav           = 0
+    nat             = 33
+    ntyp            = 3
+    ecutwfc         = 60.0
+    ecutrho         = 480.0
+    occupations     = 'smearing'
+    smearing        = 'mv'
+    degauss         = 0.01
+    nspin           = 2
+    starting_magnetization(3) = 0.4
+    vdw_corr        = 'grimme-d3'
+    dftd3_version   = 4
+/
+&ELECTRONS
+    conv_thr        = 1.0d-6
+    mixing_beta     = 0.3
+    electron_maxstep = 200
+/
+&IONS
+    ion_dynamics    = 'bfgs'
+/
 CELL_PARAMETERS angstrom
       9.840000     0.000000   0.000000
       4.920000     8.521690   0.000000
    0.000000   0.000000     19.800000
+
+ATOMIC_SPECIES
+  B    10.811  B.pbe-n-kjpaw_psl.1.0.0.UPF
+  N    14.007  N.pbe-n-kjpaw_psl.1.0.0.UPF
+  Li    6.941  Li.pbe-s-kjpaw_psl.1.0.0.UPF
+
 ATOMIC_POSITIONS angstrom
   B      0.00000000     0.00000000     9.00000000
   N      1.23000000     0.71014083     9.00000000
@@ -37,3 +74,6 @@ ATOMIC_POSITIONS angstrom
   B     11.07000000     6.39126748     9.00000000
   N     12.30000000     7.10140831     9.00000000
   Li     7.38000000     4.97098582    10.80000000
+
+K_POINTS automatic
+  3 3 1  0 0 0
