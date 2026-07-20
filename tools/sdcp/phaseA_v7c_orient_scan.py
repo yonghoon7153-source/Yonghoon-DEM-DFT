@@ -72,6 +72,10 @@ def main():
     ap.add_argument("--moldir", required=True)
     ap.add_argument("--out", required=True)
     ap.add_argument("--gap", type=float, default=2.4, help="lowest mol atom above slab top (A)")
+    ap.add_argument("--cz", type=float, default=0.0,
+                    help="override slab c-axis (A) so standing poses are image-clean "
+                         "(0=keep file cell; ~40 for the tall SDCP molecule; fixes the v1 "
+                         "image-sandwich where a standing pose touched the vertical image)")
     ap.add_argument("--fmax", type=float, default=0.05)
     ap.add_argument("--steps", type=int, default=300)
     ap.add_argument("--freeze_frac", type=float, default=0.5,
@@ -86,6 +90,10 @@ def main():
 
     # ---- shared slab reference ----
     slab0 = read(a.slab)
+    if a.cz > 0:                                    # extend vacuum so standing poses are image-clean
+        cell = slab0.cell.array.copy(); cell[2, 2] = a.cz
+        slab0.set_cell(cell); slab0.pbc = True
+        print(f"c-axis -> {a.cz} A (vacuum above slab {a.cz - slab0.positions[:, 2].max():.1f} A)", flush=True)
     zs = slab0.positions[:, 2]
     if a.freeze_frac >= 1.0:
         fix = FixAtoms(indices=list(range(len(slab0))))     # freeze whole slab
@@ -119,7 +127,7 @@ def main():
             "chelation":      0.5 * (mol0.positions[sO].mean(axis=0) + mol0.positions[eth]) - com,
         }
         for oname, vec in heads.items():
-            for rot in (0, 90):
+            for rot in (0, 90, 180, 270):    # 4-fold: finer search for the true optimum
                 m = orient(mol0, vec)
                 m.rotate(rot, "z", center=m.get_center_of_mass())
                 # place above slab center
