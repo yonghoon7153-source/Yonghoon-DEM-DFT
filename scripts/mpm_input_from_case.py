@@ -440,6 +440,11 @@ if [ -z "$SCR" ]; then
   echo "[run_mpm] ABORT — scripts/ 를 못 찾음: 레포 루트(또는 scripts 심링크 있는 폴더)에 킷을 푸세요."
   exit 1
 fi
+# ── scripts 자동 최신화 (kit-gen↔runtime 버전 스큐 방지 = "--x100 unrecognized" 재발 차단; 끄기 MPM_NO_PULL=1) ──
+if [ -z "${{MPM_NO_PULL:-}}" ] && [ -d "$SCR/../.git" ]; then
+  echo "[run_mpm] git pull --ff-only (scripts 최신화)…"
+  ( cd "$SCR/.." && git pull --ff-only ) || echo "  ⚠ git pull 스킵 — 기존 스크립트로 진행 (필요시 수동 pull)"
+fi
 # ── one GPU = one run: GPU 경합 방지 (산출물 충돌은 아래 RUN_DIR 격리가 원천 차단).  MPM_FORCE=1 로 무시 ──
 if [ -z "${{MPM_DETACHED:-}}" ] && [ -z "${{MPM_FORCE:-}}" ] && pgrep -f 'mpm3d_compaction.py' >/dev/null 2>&1; then
   echo "[run_mpm] ABORT — an MPM run is already active (pgrep mpm3d_compaction).  one GPU = one run."
@@ -498,6 +503,8 @@ echo "          (오래된 run_* 폴더는 디스크 차면 지워도 됨 — �
                    'KIT="$(cd "$(dirname "$0")" && pwd)"\n'
                    'SCR=""; for c in "$KIT/scripts" "$KIT/../scripts"; do [ -d "$c" ] && SCR="$(cd "$c" && pwd)" && break; done\n'
                    '[ -z "$SCR" ] && { echo "scripts/ 못 찾음 — 레포 루트에 킷을 푸세요"; exit 1; }\n'
+                   '# scripts 자동 최신화 (버전 스큐 방지; 끄기 MPM_NO_PULL=1)\n'
+                   'if [ -z "${MPM_NO_PULL:-}" ] && [ -d "$SCR/../.git" ]; then ( cd "$SCR/.." && git pull --ff-only ) || echo "  ⚠ git pull 스킵 — 기존 스크립트로 진행"; fi\n'
                    'RUN="${1:-$KIT/latest_run}"\n'
                    '[ -f "$RUN/step4_grid.npz" ] || { echo "step4_grid.npz 없음: $RUN — run_mpm.sh 먼저 (payload가 그리드 export)"; exit 1; }\n'
                    'if [ -z "${S4_DETACHED:-}" ]; then\n'
