@@ -81,6 +81,18 @@ def hbn_stack(a, N, nlayers, z0=0.0):
     return np.vstack(coords), elems, cell
 
 
+def graphene_stack(a, N, nlayers, z0=0.0):
+    """nlayers of graphene, AB (Bernal) stacking — VGCF is multilayer graphite."""
+    a1 = np.array([a, 0.0]); a2 = np.array([a / 2, a * np.sqrt(3) / 2])
+    shift = (a1 + a2) / 3                                 # AB: one C-C bond per layer
+    coords = []; elems = []; cell = None
+    for L in range(nlayers):
+        c, e, cell = sheet(a, N, ("C", "C"), z=z0 + L * D0)
+        c[:, :2] += L * shift
+        coords.append(c); elems += e
+    return np.vstack(coords), elems, cell
+
+
 def main():
     import os
     out = os.path.dirname(os.path.abspath(__file__)) + "/periodic"
@@ -114,6 +126,16 @@ def main():
         "Li_on_hbn_2L": (np.vstack([h2C, li(h2h, D0 + LI_H)]), h2E + ["Li"], h2cell),
         "bilayer_2L": (np.vstack([gC, cg2]), gE + ce2, gcell),
         "Li_in_gallery_2L": (np.vstack([gC, gl2, li(gh, GAL / 2)]), gE + ge2 + ["Li"], gcell),
+    })
+    # --- 2-layer graphene (VGCF substrate convergence; AB/Bernal, graphite fidelity) ---
+    #     GATE: if Li_on_graphene_2L delta(2L-1L) is small, 1L VGCF is validated and the
+    #     gallery stays 1L-graphene (no 4-way graphene x h-BN blow-up); else add 2L-gr gallery.
+    g2C, g2E, g2cell = graphene_stack(A_GR, N, 2)
+    g2top = g2C[g2C[:, 2] > g2C[:, 2].max() - 0.5]          # hollow of the TOP layer (AB shift)
+    g2h = hollow_xy(g2top, g2cell)
+    cases.update({
+        "graphene_2L": (g2C, g2E, g2cell),
+        "Li_on_graphene_2L": (np.vstack([g2C, li(g2h, D0 + LI_H)]), g2E + ["Li"], g2cell),
     })
     print(f"periodic slabs (N={N}, a_gr={A_GR}, a_bn={A_BN}, vac={VAC}A) [PLACEHOLDER params]:")
     for nm, (C, E, cell) in cases.items():
