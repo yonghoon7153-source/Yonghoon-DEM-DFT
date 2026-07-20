@@ -5337,7 +5337,9 @@ def mpm_input_package(case_id):
         _vmax = _cut('s4vmax', 4.5, 3.5, 4.8)
         _icut = _cut('s4icut', 0.05, 0.01, 2.0)   # 절대 C (충전 rate와 독립) — 고율 충전의 '절반 종지' 허용 위해 2.0까지
         cmd += ['--step4-vmin', f'{_vmin:g}', '--step4-vmax', f'{_vmax:g}', '--step4-icut', f'{_icut:g}']
-        _x100 = request.args.get('s4x100', '')    # ASSB vs-Li 방전끝 stoich 오버라이드 (비면 params 0.854)
+        # 방전끝 x100: UI 필드 제거됨 → 기본은 킷 생성기(mpm_input_from_case --step4-x100)의
+        # 0.9084(NMC811 vs-Li GITT 실측 방전끝).  URL에 &s4x100= 를 주면 그때만 오버라이드(파워유저용).
+        _x100 = request.args.get('s4x100', '')
         if _x100:
             try:
                 cmd += ['--step4-x100', f'{max(0.85, min(0.99, float(_x100))):g}']

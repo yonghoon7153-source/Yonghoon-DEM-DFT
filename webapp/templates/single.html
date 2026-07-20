@@ -286,7 +286,6 @@
             <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
             <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
             <label style="font-weight:400" title="CCCV 충전에서 CV 홀드 종지: |I|가 이 절대 C-rate(=|I|/I_1C, 충전 rate 아님)보다 작아지면 끝. 0.05=완전충전(C/20), 0.5=0.5C에서 종지. 예: 2C 충전을 '전류 절반(1C)에서 종지'하려면 1 입력.">CV종지 |I|≤ <input id="s4-icut" type="number" value="0.05" min="0.01" max="2.0" step="0.01" style="width:52px" onchange="updateAdditiveGpuCmds()"> C <span style="color:#6b7280;font-size:0.85em">(절대·1C기준)</span></label>
-            <label style="font-weight:400" title="방전끝 조성 x100(고리튬).  비우면 기본 0.854=Chen 흑연셀-창 → 3.5V서 조기종료(전 SOC 못 뽑음).  ★ASSB 전 SOC(2.5V까지)면 NMC811 GITT 실측 max 0.9084 입력 + 방전≥ 2.5 → 단자 2.5V(2C 과전압)까지.  x>0.854 OCP-shape는 Chen 소폭외삽(끝점만 GITT앵커).">방전끝 x100 <input id="s4-x100" type="number" min="0.85" max="0.99" step="0.001" placeholder="0.854" style="width:60px" onchange="updateAdditiveGpuCmds()"></label>
           </span></div>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
@@ -607,7 +606,6 @@ function _addVals() {
     s4vmin: (document.getElementById('s4-vmin') || {}).value || '3.0',
     s4vmax: (document.getElementById('s4-vmax') || {}).value || '4.5',
     s4icut: (document.getElementById('s4-icut') || {}).value || '0.05',
-    s4x100: (document.getElementById('s4-x100') || {}).value || '',
   };
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
@@ -623,10 +621,10 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4x100 } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
-  const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}${s4x100 ? '&s4x100=' + s4x100 : ''}` : '';
+  const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
   window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}`;
   return false;

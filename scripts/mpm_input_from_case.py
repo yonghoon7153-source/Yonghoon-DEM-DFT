@@ -86,11 +86,12 @@ def main():
                     help='CCCV 충전의 CV-종지 전류 |I|/I_1C (기본 0.05; "1C→0.5C서 끝"이면 0.5).')
     ap.add_argument('--step4-x0', type=float, default=None,
                     help='STEP4 방전창 시작 stoich(충전끝/저리튬) 오버라이드 — 기본 None=params_json(0.2638).')
-    ap.add_argument('--step4-x100', type=float, default=None,
-                    help='STEP4 방전창 끝 stoich(방전끝/고리튬) 오버라이드 — 기본 None=params_json(0.854, '
-                         'Chen 흑연셀-창).  ★ASSB vs-Li 전 SOC 뽑으려면 NMC811 GITT 실측 max stoich 0.9084 '
-                         '(OCV~3.0V) 권장 + --step4-vmin 2.5(단자, 2C 과전압으로 도달).  x>0.854 OCP-shape는 '
-                         'Chen 소폭 외삽(끝점 0.9084는 GITT 앵커) — 정밀 tail은 실측 GITT OCP splice 필요.')
+    ap.add_argument('--step4-x100', type=float, default=0.9084,
+                    help='STEP4 방전창 끝 stoich(방전끝/고리튬) — 기본 0.9084 = NMC811 vs-Li GITT 실측 max '
+                         'stoich(ASSB 반쪽셀 실제 방전끝, --step4-vmin 2.5와 함께 전 SOC를 2.5V 단자까지).  '
+                         'params_json(Chen 흑연셀-창 0.854=vs-Li 3.5V 조기종료)를 덮어씀 — Chen 창으로 '
+                         '되돌리려면 --step4-x100 0.854.  x>0.854 OCP-shape는 Chen 소폭 외삽(끝점 0.9084는 '
+                         'GITT 앵커) — 정밀 tail은 실측 GITT OCP splice 필요.  ⚠ 창 넓힘 → I_1C 재계산(전류 ~9%↑).')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
