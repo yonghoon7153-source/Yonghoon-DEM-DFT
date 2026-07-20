@@ -71,6 +71,16 @@ def write_xyz(path, coords, elems, comment=""):
             f.write(f"{e:2s} {p[0]:14.8f} {p[1]:14.8f} {p[2]:14.8f}\n")
 
 
+def hbn_stack(a, N, nlayers, z0=0.0):
+    """nlayers of h-BN, AA' stacking (B over N). Shi: 1L adsorption, 2L DOS/tunneling."""
+    coords = []; elems = []; cell = None
+    for L in range(nlayers):
+        ab = ("B", "N") if L % 2 == 0 else ("N", "B")   # AA': B sits over N
+        c, e, cell = sheet(a, N, ab, z=z0 + L * D0)
+        coords.append(c); elems += e
+    return np.vstack(coords), elems, cell
+
+
 def main():
     import os
     out = os.path.dirname(os.path.abspath(__file__)) + "/periodic"
@@ -94,6 +104,17 @@ def main():
         "Li_on_hbn": (np.vstack([bC, li(bh, LI_H)]), bE + ["Li"], bcell),
         "Li_in_gallery": (np.vstack([gC, b3C, li(gh, GAL / 2)]), gE + b2E + ["Li"], gcell),
     }
+    # --- 2-layer h-BN variants (electron-blocking + layer convergence; Shi's 2L) ---
+    h2C, h2E, h2cell = hbn_stack(A_BN, N, 2)                     # bare 2L h-BN
+    h2h = hollow_xy(h2C, h2cell)
+    cg2, ce2, _ = hbn_stack(A_GR, N, 2, z0=D0)                   # 2L h-BN on VGCF
+    gl2, ge2, _ = hbn_stack(A_GR, N, 2, z0=GAL)                  # 2L cap over gallery Li
+    cases.update({
+        "hbn_2L": (h2C, h2E, h2cell),
+        "Li_on_hbn_2L": (np.vstack([h2C, li(h2h, D0 + LI_H)]), h2E + ["Li"], h2cell),
+        "bilayer_2L": (np.vstack([gC, cg2]), gE + ce2, gcell),
+        "Li_in_gallery_2L": (np.vstack([gC, gl2, li(gh, GAL / 2)]), gE + ge2 + ["Li"], gcell),
+    })
     print(f"periodic slabs (N={N}, a_gr={A_GR}, a_bn={A_BN}, vac={VAC}A) [PLACEHOLDER params]:")
     for nm, (C, E, cell) in cases.items():
         open(f"{out}/{nm}.qe", "w").write(qe_blocks(C, E, cell, nm))

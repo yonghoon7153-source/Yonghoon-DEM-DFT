@@ -20,7 +20,7 @@ else
 fi
 
 # --- per-calc table ---
-ORDER="Li_atom graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery"
+ORDER="Li_atom graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L"
 echo "── 계산별 상태 (relax) ──"
 for n in $ORDER; do
   o="$W/$n.out"
@@ -51,21 +51,24 @@ def E(n):
     m = re.findall(r"^!\s+total energy\s+=\s+(-\d+\.\d+)", t, re.M)
     return float(m[-1]) if m else None
 li = E("Li_atom"); v = {}
-for lab, cx, sub in [("VGCF(graphene)", "Li_on_graphene", "graphene"),
-                     ("h-BN",           "Li_on_hbn",      "hbn"),
-                     ("gallery(sandwich)", "Li_in_gallery", "bilayer")]:
+for lab, cx, sub in [("VGCF(graphene)",  "Li_on_graphene",  "graphene"),
+                     ("h-BN(1L)",        "Li_on_hbn",       "hbn"),
+                     ("gallery(1L)",     "Li_in_gallery",   "bilayer"),
+                     ("h-BN(2L)",        "Li_on_hbn_2L",    "hbn_2L"),
+                     ("gallery(2L)",     "Li_in_gallery_2L","bilayer_2L")]:
     ec, es = E(cx), E(sub)
     if ec and es and li:
         v[lab] = (ec - es - li) * Ry
-        print(f"    Li/{lab:18s} {v[lab]:+.3f} eV")
+        print(f"    Li/{lab:16s} {v[lab]:+.3f} eV")
     else:
-        print(f"    Li/{lab:18s} (대기)")
-if len(v) == 3:
-    g, h, s = v["VGCF(graphene)"], v["h-BN"], v["gallery(sandwich)"]
-    print(f"  ── Shi eq5: gallery {s:+.3f}  vs  VGCF({g:+.3f})+hBN({h:+.3f})={g + h:+.3f} ──")
-    if s < min(g, h):
-        print("  ✅ 샌드위치가 두 단일표면보다 강함 → VGCF가 Cu 역할 (샌드위치 성립)")
-    else:
-        print("  ⚠ 샌드위치가 단일표면보다 약함 → VGCF ≠ Cu (그 자체가 발견)")
-    print("    lithiophobicity 판정: 위 값 + 1.63 eV(bulk-Li 보정); +면 lithiophobic")
+        print(f"    Li/{lab:16s} (대기)")
+g = v.get("VGCF(graphene)")
+for tag in ("1L", "2L"):
+    h = v.get(f"h-BN({tag})"); s = v.get(f"gallery({tag})")
+    if None in (g, h, s): continue
+    print(f"  ── {tag} Shi eq5: gallery {s:+.3f} vs VGCF({g:+.3f})+hBN({h:+.3f})={g + h:+.3f} ──")
+    print("     ✅ 샌드위치 최강 → VGCF가 Cu역할 (성립)" if s < min(g, h)
+          else "     ⚠ 샌드위치 약함 → VGCF≠Cu (그 자체가 발견)")
+if v:
+    print("  lithiophobicity: 위 값 + 1.63 eV(bulk-Li); +면 lithiophobic")
 PY
