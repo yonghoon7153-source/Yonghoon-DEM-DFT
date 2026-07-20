@@ -72,7 +72,7 @@
               onclick="labFavToggle(this)" title="즐겨찾기 — 목록 상단 고정"
               style="cursor:pointer; margin-right:6px; color:{{ '#fbbf24' if it.fav else '#475569' }}">{{ '★' if it.fav else '☆' }}</span><span class="lab-name" data-id="{{ it.id }}"
               onclick="labRenameStart(this)" title="클릭해서 이름 수정"
-              style="cursor:pointer; border-bottom:1px dashed #475569">{{ it.name }}</span></td>
+              style="cursor:pointer; border-bottom:1px dashed #475569; display:inline-block; max-width:240px; overflow-wrap:anywhere; word-break:break-word; white-space:normal; vertical-align:top">{{ it.name }}</span></td>
         <td style="padding:6px 10px">{% if it.has_additives %}<span style="color:#fbbf24">⚡ {{ it.recipe }}</span>{% else %}<span style="color:#64748b">—</span>{% endif %}{% if it.collector %}<br><span style="color:#7dd3fc;font-size:0.85em">🔌 {{ it.collector }}</span>{% endif %}{% if it.vox_um and it.vox_um != 0.4 %}<br><span style="color:#a7f3d0;font-size:0.85em">🔲 vox {{ it.vox_um }}µm</span>{% endif %}</td>
         <td style="padding:6px 10px">{{ '%.2f'|format(it.porosity) if it.porosity is not none else '—' }}%</td>
         <td style="padding:6px 10px">{{ '%.1f'|format(it.thickness) if it.thickness is not none else '—' }}µm</td>
@@ -225,7 +225,7 @@ function labAddRow(it) {
     `<td style="padding:6px 10px 6px 0;font-weight:600"><span class="lab-fav" data-pid="${it.id}" ` +
       `onclick="labFavToggle(this)" title="즐겨찾기 — 목록 상단 고정" style="cursor:pointer;margin-right:6px;color:#475569">☆</span>` +
       `<span class="lab-name" data-id="${it.id}" ` +
-      `onclick="labRenameStart(this)" title="클릭해서 이름 수정" style="cursor:pointer;border-bottom:1px dashed #475569">${it.name}</span></td>` +
+      `onclick="labRenameStart(this)" title="클릭해서 이름 수정" style="cursor:pointer;border-bottom:1px dashed #475569;display:inline-block;max-width:240px;overflow-wrap:anywhere;word-break:break-word;white-space:normal;vertical-align:top">${it.name}</span></td>` +
     `<td style="padding:6px 10px">${it.has_additives ? `<span style="color:#fbbf24">⚡ ${it.recipe}</span>` : '<span style="color:#64748b">—</span>'}${it.collector ? `<br><span style="color:#7dd3fc;font-size:0.85em">🔌 ${it.collector}</span>` : ''}${(it.vox_um && it.vox_um != 0.4) ? `<br><span style="color:#a7f3d0;font-size:0.85em">🔲 vox ${it.vox_um}µm</span>` : ''}</td>` +
     `<td style="padding:6px 10px">${f(it.porosity, v => (+v).toFixed(2) + '%')}</td>` +
     `<td style="padding:6px 10px">${f(it.thickness, v => (+v).toFixed(1) + 'µm')}</td>` +
