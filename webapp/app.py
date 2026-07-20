@@ -6078,10 +6078,14 @@ def porosity_corpus_csv():
                                   or meta.get('am_se_ratio'))
             P, S = _ratio(fm.get('ps_ratio') or meta.get('ps_ratio'))
             try:
+                # webapp convention: sim radii × scale = physical µm, scale
+                # DEFAULTS to 1000 when unset (matches _inject_input_params).
+                # full_metrics r_* are sim-metres → r·1e6/scale = physical µm,
+                # which equals r·scale at scale=1000 (1e6/1000 = 1000).
                 scale = float(meta.get('scale') or ip.get('scale')
-                              or fm.get('scale') or 1.0)
+                              or fm.get('scale') or 1000.0)
             except Exception:
-                scale = 1.0
+                scale = 1000.0
 
             def _rp(k):
                 r = fm.get(k)
@@ -6096,6 +6100,23 @@ def porosity_corpus_csv():
                 gap = round(float(dem) - float(mpm), 1)
                 regime = ('SE-poor' if gap > 4.0
                           else 'SE-rich' if gap < -4.0 else 'cross-validated')
+            # reliability gate — WHICH porosity to trust per regime:
+            #   SE-poor  (gap>+4): MPM over-compresses the mono-large/thin corner
+            #                      (no rigid contact net to hold the bed open)
+            #                      → use DEM (rigid loose-truth).  band ±4.9
+            #   SE-rich  (gap<-4): DEM ε_sphere overlap over-compresses
+            #                      → use MPM (true plastic void-fill).  band ±1.1
+            #   cross-validated  : two independent models agree → use MPM.  ±2.4
+            use_source, use_por = '', ''
+            if dem is not None and mpm is not None:
+                if gap > 4.0:
+                    use_source, use_por = 'DEM', round(float(dem), 2)
+                else:
+                    use_source, use_por = 'MPM', round(float(mpm), 2)
+            elif mpm is not None:
+                use_source, use_por = 'MPM', round(float(mpm), 2)
+            elif dem is not None:
+                use_source, use_por = 'DEM', round(float(dem), 2)
             rows.append({
                 'case': name, 'case_id': cid, 'areal_mAh': areal,
                 'am_wt': am_wt if am_wt is not None else '',
@@ -6107,6 +6128,7 @@ def porosity_corpus_csv():
                 'mpm_porosity_pct': round(float(mpm), 2) if mpm is not None else '',
                 'dem_porosity_pct': round(float(dem), 2) if dem is not None else '',
                 'gap_dem_minus_mpm': gap, 'regime': regime,
+                'use_source': use_source, 'use_porosity_pct': use_por,
                 'thickness_um': mm.get('thickness_mpm_um', ''),
                 'se_fraction_pct': mm.get('se_fraction_pct', ''),
             })
@@ -6116,6 +6138,7 @@ def porosity_corpus_csv():
     fn = ['case', 'case_id', 'areal_mAh', 'am_wt', 'se_wt', 'ps',
           'r_AM_P_um', 'r_AM_S_um', 'r_SE_um', 'mpm_porosity_pct',
           'dem_porosity_pct', 'gap_dem_minus_mpm', 'regime',
+          'use_source', 'use_porosity_pct',
           'thickness_um', 'se_fraction_pct']
     w = _csv.DictWriter(buf, fieldnames=fn)
     w.writeheader()
