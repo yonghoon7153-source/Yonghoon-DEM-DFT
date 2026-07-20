@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""gen_drag_points_kgy.py — regenerate Li3N drag inputs p5..p8 on kgy from a
+"""gen_drag_points_kgy.py — regenerate Li3N drag inputs p4..p8 on kgy from a
 local template (no scp needed; KISTI drag_p*.in unavailable).
 
 The drag path is: adatom held at fixed (x, y=1.5805486400), z free (if_pos 0 0 1),
@@ -28,7 +28,11 @@ Y_FIX = 1.58054864
 Z0 = 13.48712429
 X_P0 = 8.2125
 DX = 0.684375
-TARGETS = {5: X_P0 - 5 * DX, 6: X_P0 - 6 * DX, 7: X_P0 - 7 * DX, 8: X_P0 - 8 * DX}
+# p4 added 2026-07-20: KISTI p4 (x=5.475) stalled unconverged at +251 meV (|F|=0.0069,
+# a straight-path UPPER bound). KISTI is being wiped, so re-run p4 FRESH on kgy where
+# the relax runs to convergence -> the true p4 profile point. Chained AFTER p8 (the
+# runner's WAIT_FOR env), so it fills in without touching the running p5-p8 chain.
+TARGETS = {4: X_P0 - 4 * DX, 5: X_P0 - 5 * DX, 6: X_P0 - 6 * DX, 7: X_P0 - 7 * DX, 8: X_P0 - 8 * DX}
 
 
 def main():

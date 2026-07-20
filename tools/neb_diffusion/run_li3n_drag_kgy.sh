@@ -14,6 +14,11 @@
 #   cd ~/Yonghoon-DEM-DFT && git pull
 #   tmux new -s li3ndrag -d 'bash tools/neb_diffusion/run_li3n_drag_kgy.sh > ~/work/li3n_drag/run.log 2>&1'
 # Points to run via POINTS env (default "5 6 7 8"). Sequential on 1 GPU.
+#
+# WAIT_FOR (optional): block until $WORK/$WAIT_FOR has "JOB DONE" before starting.
+# Used to CHAIN p4 after the running p5-p8 chain finishes, in a separate tmux, so
+# the live chain is untouched (GPU-free guard also prevents any overlap):
+#   tmux new -s li3np4 -d 'WAIT_FOR=drag_p8.out POINTS=4 bash tools/neb_diffusion/run_li3n_drag_kgy.sh > ~/work/li3n_drag/run_p4.log 2>&1'
 # =============================================================================
 set -u; set +H
 WORK=${WORK:-$HOME/work/li3n_drag}
@@ -61,6 +66,13 @@ run_one() {
         echo "[$p] FAIL — tail:"; tail -12 "$o"
     fi
 }
+
+# --- optional chain gate: wait for another point to finish (p8 끝나고 p4 이어서) ---
+if [ -n "${WAIT_FOR:-}" ]; then
+    echo "[$(date +%H:%M:%S)] WAIT_FOR=$WAIT_FOR — 완료(JOB DONE) 대기…"
+    while ! grep -aq "JOB DONE" "$WORK/$WAIT_FOR" 2>/dev/null; do sleep 120; done
+    echo "[$(date +%H:%M:%S)] $WAIT_FOR 완료 감지 — POINTS='$POINTS' 시작"
+fi
 
 for p in $POINTS; do run_one "$p"; done
 
