@@ -686,6 +686,7 @@ function buildControls(container, isMPM) {
     <input type="range" id="clip-pos" min="2" max="98" value="50" style="width:100%;margin-top:2px">
     <hr>
     <button data-action="analysisSummary">📊 분석 요약</button>
+    <button data-action="mechReaction" title="기계(SE 소성변형·접촉) ↔ 반응(j_rxn) 공간 상관 팝업 — 관찰용(모델에 응력→반응 커플링 없음)">📊 반응↔변형</button>
     <button data-action="amCloseup">AM Close-up</button>
     <button data-action="resetView">Reset</button>
     <button data-action="screenshot">Screenshot</button>
@@ -838,6 +839,7 @@ export function initElectrodeViewer(containerId, dataUrl) {
    * (/3d-mpm-data) and the standalone 도전재 viewer (/mpm-lab/data/…) serve MPM payloads. */
   const isMPM = (dataUrl || '').includes('3d-mpm-data') || (dataUrl || '').includes('/mpm-lab/');
   state.isMPM = isMPM;
+  state._dataUrl = dataUrl || '';                           // for the mech↔reaction popup URL
   state.isSeed = (dataUrl || '').includes('state=seed');   // 압축 전 (loose) view
   const ctrlDiv = buildControls(container, isMPM);
   state.infoEl = ctrlDiv._infoEl || document.getElementById('viewer-info');
@@ -4455,6 +4457,39 @@ function setLegend(state, html) {
   if (el) el.innerHTML = html;
 }
 
+/* ── 반응 ↔ 기계(SE 소성변형·접촉) 공간 상관 팝업 ────────────────
+ * Server-rendered figure (scripts/mech_reaction_correlation.py via
+ * /mpm-lab/mech-reaction/<pid>.png).  OBSERVATIONAL: the model has NO
+ * stress→reaction coupling — j_rxn–coverage is causal (contact = BV area),
+ * j_rxn–strain is co-location at the separator side. */
+function showMechReactionModal(state) {
+  const du = state._dataUrl || '';
+  if (!du.includes('/mpm-lab/data/')) {
+    alert('반응↔변형 상관은 mpm-lab 저장 payload에서만 지원돼요 (현재 뷰는 미지원).');
+    return;
+  }
+  const base = du.replace('/mpm-lab/data/', '/mpm-lab/mech-reaction/').split('?')[0];
+  const png = base + '.png', csv = base + '.csv';
+  const ov = document.createElement('div');
+  ov.className = 'path-modal-overlay';
+  ov.innerHTML =
+    `<div class="path-modal" style="max-width:95vw">
+      <div style="font-weight:bold;text-align:center;margin-bottom:6px">📊 반응 ↔ 기계(응력/변형·접촉) 공간 상관
+        <span style="font-weight:400;color:#666;font-size:12px">— 관찰용 (모델에 응력→반응 커플링 없음)</span></div>
+      <img src="${png}" alt="reaction vs mechanics correlation" style="background:#fff"
+           onerror="this.insertAdjacentHTML('afterend','<div style=color:#b91c1c;padding:10px>그림 생성 실패 — 이 payload에 j_rxn/strain 데이터가 없을 수 있어요.</div>');this.remove();">
+      <div class="path-modal-info">j_rxn–coverage = 접촉(=BV 반응면적) <b>인과</b> · j_rxn–strain = 분리막쪽 <b>공존</b>(인과 아님)</div>
+      <div class="path-modal-actions">
+        <a href="${csv}" download style="text-decoration:none;padding:5px 12px;background:#1f2937;color:#e5e7eb;border-radius:6px;font-size:13px">CSV ⬇</a>
+        <a href="${png}" download style="text-decoration:none;padding:5px 12px;background:#1f2937;color:#e5e7eb;border-radius:6px;font-size:13px">PNG ⬇</a>
+        <button style="padding:5px 14px;background:#374151;color:#e5e7eb;border:none;border-radius:6px;cursor:pointer;font-size:13px">닫기</button>
+      </div>
+    </div>`;
+  ov.addEventListener('click', (e) => { if (e.target === ov) ov.remove(); });
+  ov.querySelector('.path-modal-actions button').addEventListener('click', () => ov.remove());
+  document.body.appendChild(ov);
+}
+
 /* ── MPM 분석 요약 (Analysis Summary) ──────────────────────────
  * Client-side, payload-only (no server round-trip).  One paper-style
  * small-multiples canvas: 전체 분포 (histograms over ALL AM), z별 분포
@@ -6272,6 +6307,8 @@ function wireControls(ctrlDiv, renderer, camera, controls, scene, state) {
         showAMCloseupView(state);
       } else if (action === 'analysisSummary') {
         showMPMAnalysisSummary(state);
+      } else if (action === 'mechReaction') {
+        showMechReactionModal(state);
       }
     });
   });
