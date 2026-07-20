@@ -4501,14 +4501,25 @@ function showMPMAnalysisSummary(state) {
     ['econn 연결', ec.connected_pct != null ? Number(ec.connected_pct).toFixed(1) + ' %' : '—'],
     ['carbon clusters', ec.n_carbon_clusters != null ? String(ec.n_carbon_clusters) : '—'],
     ['Coverage (AM 표면 SE 덮임)', (() => {
-      const H = mm.coverage_AM_S_hertz_pct ?? mm.coverage_AM_P_hertz_pct;   // 이온-유효 접촉 (≤0.13µm)
-      const T = mm.coverage_AM_S_tabor_pct ?? mm.coverage_AM_P_tabor_pct;   // 기계-소성 퍼짐 (≤0.26µm)
-      const mu = covPctAll.length ? covPctAll.reduce((a, b) => a + b, 0) / covPctAll.length : null;  // 패널② ⟨µ⟩와 동일
-      if (mu == null && H == null && T == null) return '—';
-      const parts = [];
-      if (mu != null) parts.push('⟨µ⟩ ' + mu.toFixed(1) + '%');
-      if (H != null || T != null) parts.push('H' + (H != null ? Number(H).toFixed(1) : '—') + '/T' + (T != null ? Number(T).toFixed(1) : '—'));
-      return parts.join(' · ');
+      // AM_P/AM_S 중 실제 존재하는(>0) 쪽 채택.  ?? 는 0을 통과시켜 버그였음
+      // (mono-AM_P payload에선 coverage_AM_S_*=0.0 → H0.0/T0.0 로 나왔음).
+      const pick = (a, b) => {
+        const av = (typeof a === 'number' && a > 0) ? a : null;
+        const bv = (typeof b === 'number' && b > 0) ? b : null;
+        if (av != null && bv != null) return { p: av, s: bv };   // bimodal → 둘 다
+        return av != null ? av : bv;                             // mono → 스칼라
+      };
+      const H = pick(mm.coverage_AM_P_hertz_pct, mm.coverage_AM_S_hertz_pct);   // 이온-유효 (≤0.13µm)
+      const T = pick(mm.coverage_AM_P_tabor_pct, mm.coverage_AM_S_tabor_pct);   // 소성-퍼짐 (≤0.26µm)
+      const f = v => (v && typeof v === 'object') ? ('P' + v.p.toFixed(0) + '/S' + v.s.toFixed(0)) : v.toFixed(1);
+      if (H != null || T != null) {
+        const parts = [];
+        if (H != null) parts.push('Hertz ' + f(H) + '%');
+        if (T != null) parts.push('Tabor ' + f(T) + '%');
+        return parts.join(' / ');
+      }
+      const mu = covPctAll.length ? covPctAll.reduce((a, b) => a + b, 0) / covPctAll.length : null;  // fallback = 패널②
+      return mu != null ? '⟨µ⟩ ' + mu.toFixed(1) + '%' : '—';
     })()],
     ['집전체 (시나리오 부하)', selC ? selC.name + ' · R_int ' + selC.R_int_ohm_cm2 + ' Ω·cm²' : '이상 접촉 (R_int 0)'],
     ['σ_apparent (전자·계면 포함)', selC && selC.sigma_apparent_S_cm != null
