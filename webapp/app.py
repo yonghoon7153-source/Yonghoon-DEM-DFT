@@ -5512,6 +5512,76 @@ def mpm_lab_data(pid):
     return jsonify(payload)
 
 
+def _mpm_lab_payload_or_none(pid):
+    p = os.path.join(app.config['MPM_LAB_FOLDER'], _mpm_lab_slug(pid), 'payload.json')
+    if not os.path.isfile(p):
+        return None
+    with open(p) as fh:
+        return json.load(fh)
+
+
+@app.route('/mpm-lab/mech-reaction/<pid>.png')
+def mpm_lab_mech_reaction_png(pid):
+    """Server-render the mechanics(SE plastic strain / AM contact-coverage) ↔
+    reaction(j_rxn) spatial correlation figure for a saved MPM payload.
+    OBSERVATIONAL (no stress→reaction coupling); see scripts/mech_reaction_correlation.py."""
+    import sys as _sys
+    import io as _io
+    _sd = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if _sd not in _sys.path:
+        _sys.path.insert(0, _sd)
+    payload = _mpm_lab_payload_or_none(pid)
+    if payload is None:
+        return ('payload not found', 404)
+    try:
+        from mech_reaction_correlation import render_figure
+        import matplotlib.pyplot as _plt
+        fig = render_figure(payload, int(request.args.get('bins', 14)))
+        buf = _io.BytesIO()
+        fig.savefig(buf, format='png', dpi=150)
+        _plt.close(fig)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    buf.seek(0)
+    return send_file(buf, mimetype='image/png', as_attachment=False,
+                     download_name=f'mech_reaction_{_mpm_lab_slug(pid)}.png')
+
+
+@app.route('/mpm-lab/mech-reaction/<pid>.csv')
+def mpm_lab_mech_reaction_csv(pid):
+    import sys as _sys
+    import io as _io
+    import csv as _csv
+    _sd = os.path.join(os.path.dirname(__file__), '..', 'scripts')
+    if _sd not in _sys.path:
+        _sys.path.insert(0, _sd)
+    payload = _mpm_lab_payload_or_none(pid)
+    if payload is None:
+        return ('payload not found', 404)
+    try:
+        from mech_reaction_correlation import to_csv_rows, compute
+        rows = to_csv_rows(payload, int(request.args.get('bins', 14)))
+        d = compute(payload)
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return (f'{type(e).__name__}: {e}', 500)
+    buf = _io.StringIO()
+    w = _csv.writer(buf)
+    w.writerow([f'# reaction<->mechanics spatial correlation (OBSERVATIONAL, no coupling)'])
+    w.writerow([f'# Pearson jrxn-coverage={d["corr_jrxn_coverage"]}',
+                f'jrxn-strain={d["corr_jrxn_strain"]}',
+                f'per-particle-jrxn-coverage={d["corr_particle_jrxn_coverage"]}'])
+    w.writerows(rows)
+    resp = make_response(buf.getvalue())
+    resp.headers['Content-Type'] = 'text/csv; charset=utf-8'
+    resp.headers['Content-Disposition'] = (
+        f'attachment; filename="mech_reaction_{_mpm_lab_slug(pid)}.csv"')
+    return resp
+
+
 @app.route('/mpm-lab/st4/<pid>', methods=['GET', 'POST'])
 def mpm_lab_st4(pid):
     """STEP4-v2 viz(step4_viz*.json)를 lab 엔트리에 저장/서빙 — 뷰어가 st4 모드 진입 시
