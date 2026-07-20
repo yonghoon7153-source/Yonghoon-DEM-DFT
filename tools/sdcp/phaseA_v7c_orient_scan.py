@@ -94,6 +94,10 @@ def main():
         cell = slab0.cell.array.copy(); cell[2, 2] = a.cz
         slab0.set_cell(cell); slab0.pbc = True
         print(f"c-axis -> {a.cz} A (vacuum above slab {a.cz - slab0.positions[:, 2].max():.1f} A)", flush=True)
+    area = float(np.linalg.norm(np.cross(slab0.cell.array[0], slab0.cell.array[1])))
+    if area < 1.0:                                  # a bare .xyz has NO cell -> degenerate -> garbage energies
+        raise SystemExit(f"SLAB CELL DEGENERATE (in-plane area {area:.2f} A^2). Use a .vasp/.cif slab WITH a "
+                         f"cell, NOT a bare .xyz.\ncell=\n{slab0.cell.array}")
     zs = slab0.positions[:, 2]
     if a.freeze_frac >= 1.0:
         fix = FixAtoms(indices=list(range(len(slab0))))     # freeze whole slab
