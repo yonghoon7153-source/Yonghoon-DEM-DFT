@@ -48,7 +48,7 @@ MPIRUN="$HPCX/bin/mpirun"
 echo "pw.x=$PW"
 
 # ---- run: cheap refs first (Li_atom validates env/pseudo), then the 6 slabs ----
-ORDER=${ORDER:-"Li_atom graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L"}
+ORDER=${ORDER:-"Li_atom Li_bulk graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L"}
 run_one() {
     local name=$1 f="$IN/$1.in" o="$WORK/$1.out"
     [ -f "$f" ] || { echo "[$name] 입력없음 skip"; return; }

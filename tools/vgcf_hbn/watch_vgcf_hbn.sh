@@ -22,7 +22,7 @@ sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L)' | tr '\n' ' ')
 echo "  세션: ${sess:-없음} (vgcfqe=1층 / vgcf2L=2층 대기·진행)"
 
 # --- per-calc table ---
-ORDER="Li_atom graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L"
+ORDER="Li_atom Li_bulk graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L"
 echo "── 계산별 상태 (relax) ──"
 for n in $ORDER; do
   o="$W/$n.out"
@@ -78,6 +78,13 @@ for keys, lab in [(("VGCF(1L)", "VGCF(2L)"), "VGCF"),
     a, b = v.get(keys[0]), v.get(keys[1])
     if a is not None and b is not None:
         print(f"  Δ층수 {lab:8s} 2L−1L = {b - a:+.3f} eV  ({'수렴(<50meV)' if abs(b - a) < 0.05 else '★유의차→2L-gr 조합 추가'})")
+lb = E("Li_bulk")
+ecoh = (li - lb) * Ry if (li is not None and lb is not None) else None
+shift = ecoh if ecoh is not None else 1.63
 if v:
-    print("  lithiophobicity: 위 값 + 1.63 eV(bulk-Li); +면 lithiophobic")
+    src = f"계산 {ecoh:.3f}" if ecoh is not None else "~1.63 근사(Li_bulk 대기)"
+    print(f"  ── lithiophobicity = E_ads + E_coh(Li {src} eV); +면 lithiophobic ──")
+    for k in v:
+        lp = v[k] + shift
+        print(f"    {k:16s} {lp:+.3f} eV  {'lithiophobic' if lp > 0 else 'lithiophilic'}")
 PY
