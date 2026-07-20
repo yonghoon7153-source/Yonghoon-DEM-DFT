@@ -154,7 +154,7 @@ training verified on the user's WSL machine.
 ### ★ 활성 트랙 (2026-07-15): SDCP manuscript + STEP 파이프라인 ★
 STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore-τ +
 분산 + collector) = production.  STEP4-v1(저율 선형 BV 반응분포) = payload 탑재.
-**STEP4-v2(갈바노/CV 시간전개: 비선형 BV+구형확산, COMSOL-패리티) = 2026-07-15 구현**
+**STEP4-v2(갈바노/CV 시간전개: 비선형 BV+구형확산, COMSOL 방정식-수준 패리티·selftest 내부검증 — ⚠수치 패리티 런(PyBaMM/COMSOL 매치드-조건) 대기, defense_review_20260720) = 2026-07-15 구현**
 (`scripts/step4_dyn.py`, selftest 20/20, 물리·수치 2-agent 리뷰 반영; pybamm 앵커
 `scripts/step4_pybamm_anchor.py`; V100 스모크→SBE/DBE rate 비교 진행).
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),

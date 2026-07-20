@@ -4478,15 +4478,21 @@ function showMechReactionModal(state) {
         <span style="font-weight:400;color:#666;font-size:12px">— 관찰용 (모델에 응력→반응 커플링 없음)</span></div>
       <img src="${png}" alt="reaction vs mechanics correlation" style="background:#fff"
            onerror="this.insertAdjacentHTML('afterend','<div style=color:#b91c1c;padding:10px>그림 생성 실패 — 이 payload에 j_rxn/strain 데이터가 없을 수 있어요.</div>');this.remove();">
-      <div class="path-modal-info">j_rxn–coverage = 접촉(=BV 반응면적) <b>인과</b> · j_rxn–strain = 분리막쪽 <b>공존</b>(인과 아님)</div>
+      <div class="path-modal-info">j_rxn–coverage = 접촉(=BV 반응면적) 링크 <b>(z-통제·within-slice 생존)</b> · j_rxn–strain = 분리막쪽 <b>공존</b>(인과 아님)</div>
       <div class="path-modal-actions">
         <a href="${csv}" download style="text-decoration:none;padding:5px 12px;background:#1f2937;color:#e5e7eb;border-radius:6px;font-size:13px">CSV ⬇</a>
         <a href="${png}" download style="text-decoration:none;padding:5px 12px;background:#1f2937;color:#e5e7eb;border-radius:6px;font-size:13px">PNG ⬇</a>
         <button style="padding:5px 14px;background:#374151;color:#e5e7eb;border:none;border-radius:6px;cursor:pointer;font-size:13px">닫기</button>
       </div>
     </div>`;
-  ov.addEventListener('click', (e) => { if (e.target === ov) ov.remove(); });
-  ov.querySelector('.path-modal-actions button').addEventListener('click', () => ov.remove());
+  const close = () => { ov.remove(); document.removeEventListener('keydown', onEsc); };
+  const onEsc = (e) => { if (e.key === 'Escape') close(); };
+  ov.addEventListener('click', (e) => { if (e.target === ov) close(); });
+  ov.querySelector('.path-modal-actions button').addEventListener('click', close);
+  document.addEventListener('keydown', onEsc);
+  // no stacking: drop any prior mech-reaction modal before opening this one
+  document.querySelectorAll('.path-modal-overlay[data-mech="1"]').forEach((e) => e.remove());
+  ov.dataset.mech = '1';
   document.body.appendChild(ov);
 }
 

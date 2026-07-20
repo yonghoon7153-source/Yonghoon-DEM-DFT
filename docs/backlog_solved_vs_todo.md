@@ -24,7 +24,7 @@
 | **C2** | main.tex Sakuda softening | ">90%@>350 stated; ~87%@~300 digitized; glass≠argyrodite" |
 | **C4** | Cronau 라벨 정정 | 2021·Br·GB-pellet(not single-crystal), bib+main.tex 재배선 |
 | **F2** | fibre-rod emergent 좌굴 | **좌굴은 DEM 영역, MPM-scaffold 아님** 판정.  rod는 완주했으나 이 프레임이 축압축 안 줌 → prescribed curl(F1)이 MPM의 답.  `--fibre-rod` opt-in 잔존 |
-| **STEP4-v2** | 동역학 충방전 솔버 (신규 트랙) | `scripts/step4_dyn.py` COMSOL-패리티(비선형 BV+구형확산+정전류/CV), 4-agent 리뷰, selftest 20/20.  #31(interfacial-impedance kinetics 칸)을 실현, B7(전류맵 viz)의 소스.  1C 쌍 production 진행 중 |
+| **STEP4-v2** | 동역학 충방전 솔버 (신규 트랙) | `scripts/step4_dyn.py` COMSOL **방정식-수준** 패리티(비선형 BV+구형확산+정전류/CV), 4-agent 리뷰, selftest 20/20(내부 자기검증·해석극한). ⚠ **수치 패리티 런(PyBaMM/COMSOL 매치드-조건 ΔV-RMS)은 대기** — 이게 defensible→bullet-proof의 유일 조각(defense_review_20260720).  #31(interfacial-impedance kinetics 칸)을 실현, B7(전류맵 viz)의 소스.  1C 쌍 production 진행 중 |
 | (E) | Bielefeld2019 / Deysher2022 | 인용-확인(β=0.41 verbatim) / 포지셔닝(리뷰가 호명한 모델=우리 실현) |
 
 ---

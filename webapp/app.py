@@ -6186,10 +6186,12 @@ def porosity_corpus_csv():
 
             gap = ''
             regime = ''
+            _graw = None
             if dem is not None and mpm is not None:
-                gap = round(float(dem) - float(mpm), 1)
-                regime = ('SE-poor' if gap > 4.0
-                          else 'SE-rich' if gap < -4.0 else 'cross-validated')
+                _graw = float(dem) - float(mpm)   # RAW gap for the threshold (match list view)
+                gap = round(_graw, 1)             # rounded only for display
+                regime = ('SE-poor' if _graw > 4.0
+                          else 'SE-rich' if _graw < -4.0 else 'cross-validated')
             # reliability gate — WHICH porosity to trust per regime:
             #   SE-poor  (gap>+4): MPM over-compresses the mono-large/thin corner
             #                      (no rigid contact net to hold the bed open)
@@ -6199,7 +6201,7 @@ def porosity_corpus_csv():
             #   cross-validated  : two independent models agree → use MPM.  ±2.4
             use_source, use_por = '', ''
             if dem is not None and mpm is not None:
-                if gap > 4.0:
+                if _graw > 4.0:
                     use_source, use_por = 'DEM', round(float(dem), 2)
                 else:
                     use_source, use_por = 'MPM', round(float(mpm), 2)
