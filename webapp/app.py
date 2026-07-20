@@ -5520,6 +5520,16 @@ def _mpm_lab_payload_or_none(pid):
         return json.load(fh)
 
 
+def _mech_bins(raw, default=14):
+    """Sanitize the ?bins query for the mech-reaction routes — invalid / out-of-range
+    (incl. 0 → ZeroDivisionError, negative → IndexError) falls back to the default."""
+    try:
+        b = int(raw) if raw is not None else default
+    except (TypeError, ValueError):
+        return default
+    return b if 2 <= b <= 200 else default
+
+
 @app.route('/mpm-lab/mech-reaction/<pid>.png')
 def mpm_lab_mech_reaction_png(pid):
     """Server-render the mechanics(SE plastic strain / AM contact-coverage) ↔
@@ -5533,17 +5543,21 @@ def mpm_lab_mech_reaction_png(pid):
     payload = _mpm_lab_payload_or_none(pid)
     if payload is None:
         return ('payload not found', 404)
+    _bins = _mech_bins(request.args.get('bins'))
+    import matplotlib.pyplot as _plt
+    fig = None
     try:
         from mech_reaction_correlation import render_figure
-        import matplotlib.pyplot as _plt
-        fig = render_figure(payload, int(request.args.get('bins', 14)))
+        fig = render_figure(payload, _bins)
         buf = _io.BytesIO()
         fig.savefig(buf, format='png', dpi=150)
-        _plt.close(fig)
-    except Exception as e:
+    except Exception:
         import traceback
         traceback.print_exc()
-        return (f'{type(e).__name__}: {e}', 500)
+        return ('mech-reaction render failed', 500)   # no internal string in body
+    finally:
+        if fig is not None:
+            _plt.close(fig)                            # close on success AND error → no fig leak
     buf.seek(0)
     return send_file(buf, mimetype='image/png', as_attachment=False,
                      download_name=f'mech_reaction_{_mpm_lab_slug(pid)}.png')
@@ -5560,14 +5574,15 @@ def mpm_lab_mech_reaction_csv(pid):
     payload = _mpm_lab_payload_or_none(pid)
     if payload is None:
         return ('payload not found', 404)
+    _bins = _mech_bins(request.args.get('bins'))
     try:
         from mech_reaction_correlation import to_csv_rows, compute
-        rows = to_csv_rows(payload, int(request.args.get('bins', 14)))
-        d = compute(payload)
-    except Exception as e:
+        d = compute(payload, _bins)          # compute ONCE at the requested bins;
+        rows = to_csv_rows(payload, _bins)   # header stats + rows now share n_bins
+    except Exception:
         import traceback
         traceback.print_exc()
-        return (f'{type(e).__name__}: {e}', 500)
+        return ('mech-reaction compute failed', 500)
     buf = _io.StringIO()
     w = _csv.writer(buf)
     w.writerow(['# reaction<->mechanics spatial correlation (OBSERVATIONAL, no stress->reaction coupling)'])
@@ -6101,7 +6116,11 @@ def porosity_corpus_csv():
     composition (AM:SE) + P:S + radii + the SE-rich/SE-poor/cross-validated
     regime gate (gap = DEM - MPM, |gap|>4 splits the regime).  No form / no
     grid extrapolation — this is the raw per-case corpus dump the списку view
-    already computes, exported flat.  Missing fields render blank."""
+    already computes, exported flat.  Missing fields render blank.
+    NOTE: `areal_mAh` is an IDENTIFIER (cell-design target parsed from the name),
+    NOT a porosity driver — porosity is intensive, set by composition/P:S/radii/
+    pressure; it does not depend on areal capacity (except at the thin-SE-poor
+    corner where thickness enters the regime gate)."""
     import io as _io, csv as _csv, re as _re
     up = app.config['UPLOAD_FOLDER']
     res = app.config['RESULTS_FOLDER']
