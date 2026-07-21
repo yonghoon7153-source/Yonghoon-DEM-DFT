@@ -3,7 +3,8 @@
 #   watch -n 60 'bash ~/Yonghoon-DEM-DFT/tools/sdcp/watch_pbrefine.sh'
 set +H
 OUT=${OUT:-/data/work/runs/sdcp_linio2_binding/phaseB_v7c_refine}
-echo "══ SDCP DFT+U refine (doped=sulfonate_down / neutral=chelation, c40)  $(date '+%m-%d %H:%M:%S') ══"
+cs=$(awk 'NR==5{printf "%.0f", $3}' "$OUT/slab_cshrink.vasp" 2>/dev/null)
+echo "══ SDCP DFT+U refine (doped=sulfonate_down / neutral=chelation, c=${cs:-?} ladder)  $(date '+%m-%d %H:%M:%S') ══"
 gpu=$(nvidia-smi --query-gpu=memory.used,memory.free,utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)
 cur=""                                   # pw.x runs with a relative 'scf.in' -> detect by latest non-done .out
 if pgrep -f "pw\.x" >/dev/null 2>&1; then
