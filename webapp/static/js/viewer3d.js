@@ -515,13 +515,14 @@ function renderSt4Faces(state) {
      비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
      ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C</div>
      <div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
-       <div style="display:flex;justify-content:space-between;align-items:center">
-         <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 — 현재 시점</b>
-         <select id="st4f-prof-src" title="프로파일 소스 — 반응·SOC(기존) / 운전 φ(z)(전자·이온 층평균 전위, 새 viz만): φ_e는 µV급 평평·φ_i는 수십 mV = 상보 구도 직접 시각화" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:10.5px;padding:0 2px">
+       <b style="display:block;font-size:11.5px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">두께방향 프로파일 — 현재 시점</b>
+       <div style="display:flex;align-items:center;gap:4px;margin-top:3px;flex-wrap:wrap">
+         <select id="st4f-prof-src" title="프로파일 소스 — 반응·SOC(기존) / 운전 φ(z)(전자·이온 층평균 전위, 새 viz만): φ_e는 µV급 평평·φ_i는 수십 mV = 상보 구도 직접 시각화" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:10.5px;padding:0 2px;max-width:104px">
            <option value="rxn">반응·SOC</option>${st.phi_z && st.phi_z.phi_i_V ? '<option value="phi">운전 φ(z)</option>' : ''}</select>
-         <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e; CSV는 PCHIP ×8 보간 + src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>${st.phi_z && st.phi_z.phi_i_V ? '<button id="st4f-tlink" title="φ(z) 전 체크포인트를 방전곡선과 시간-연결한 CSV — [1] t↔V·용량 링크표 [2] φ_i(z,t) [3] φ_e(z,t) 매트릭스 (PCHIP ×8 조밀 z, src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">⏱</button>' : ''}
-         <button id="st4f-zgif" title="두께방향 프로파일 전체 시간전개를 GIF로 (동적 Fig4e 무비)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬</button>
-         <button id="st4f-syncgif" title="동기 합성 GIF — 왼쪽: 두께 프로파일 애니메이션, 오른쪽: 같은 t까지 자라나는 방전/충전 곡선 + 과전압 분해(η_ohm/η_kin/η_diff/η_Rint) + 현재-시점 마커·수치.  과전압이 언제·어떻게 생기는지 한눈에" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬⏱</button>
+         <span style="flex:1 1 0"></span>
+         <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e; CSV는 PCHIP ×8 보간 + src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:12px;white-space:nowrap">📈</button>${st.phi_z && st.phi_z.phi_i_V ? '<button id="st4f-tlink" title="φ(z) 전 체크포인트를 방전곡선과 시간-연결한 CSV — [1] t↔V·용량 링크표 [2] φ_i(z,t) [3] φ_e(z,t) 매트릭스 (PCHIP ×8 조밀 z, src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:12px;white-space:nowrap">⏱</button>' : ''}
+         <button id="st4f-zgif" title="두께방향 프로파일 전체 시간전개를 GIF로 (동적 Fig4e 무비)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:12px;white-space:nowrap">🎬</button>
+         <button id="st4f-syncgif" title="동기 합성 GIF — 왼쪽: 두께 프로파일 애니메이션, 오른쪽: 같은 t까지 자라나는 방전/충전 곡선 + 과전압 분해(η_ohm/η_kin/η_diff/η_Rint) + 현재-시점 마커·수치.  과전압이 언제·어떻게 생기는지 한눈에" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 6px;cursor:pointer;font-size:12px;white-space:nowrap">🎬⏱</button>
        </div>
        <canvas id="st4f-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
        <div id="st4f-prof-cap" style="font-size:10px;color:#6b7280;margin-top:2px"><span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임</div>
