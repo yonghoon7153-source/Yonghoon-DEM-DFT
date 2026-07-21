@@ -43,8 +43,16 @@ if [ "$PHASE" = configure ]; then
 elif [ "$PHASE" = build ]; then
   [ -f "$SRC/make.inc" ] || { echo "ERROR: configure 먼저 (make.inc 없음)"; exit 1; }
   cd "$SRC"
-  echo "[build] make -j8 pw neb  ($(date +%H:%M:%S))"
-  make -j8 pw neb 2>&1 | tail -30
+  # ⚠ 'make -j8 pw neb'(동시 goal)은 병렬 경합으로 externals 직후 죽음(2026-07-22).
+  # -> pw 먼저 완성(-j8) 후 neb 링크. 전체 로그 파일 보존(tail 파이프 금지).
+  echo "[build] make -j8 pw  ($(date +%H:%M:%S)) -> ~/qe_pw_build.log"
+  make -j8 pw > "$HOME/qe_pw_build.log" 2>&1; pw_rc=$?
+  echo "  pw rc=$pw_rc  (tail:)"; tail -4 "$HOME/qe_pw_build.log"
+  [ "$pw_rc" = 0 ] && [ -f "$SRC/bin/pw.x" ] || {
+    echo "!! pw 빌드 실패 — 에러:"; grep -inE "error|cannot|undefined|No rule|Stop|fatal" "$HOME/qe_pw_build.log" | tail -15; exit 1; }
+  echo "[build] make neb  ($(date +%H:%M:%S)) -> ~/qe_neb_build.log"
+  make neb > "$HOME/qe_neb_build.log" 2>&1
+  [ -f "$SRC/bin/neb.x" ] || { echo "!! neb 빌드 실패 — 에러:"; grep -inE "error|cannot|undefined|Stop" "$HOME/qe_neb_build.log" | tail -15; }
   echo "── 결과 ──"
   if [ -f "$SRC/bin/neb.x" ]; then
     cp "$SRC/bin/neb.x" "$GPUBIN/" && echo "neb.x -> $GPUBIN/ (배치완료)"
