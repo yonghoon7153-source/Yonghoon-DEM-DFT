@@ -549,11 +549,17 @@ function renderSt4Faces(state) {
     const cv = document.getElementById('st4f-prof');
     if (!cv) return;
     // ── 운전 φ(z) 모드 (새 viz의 phi_z 블록): φ_e/φ_i 층평균을 각자 [0,1] 정규화해 겹침 —
-    //    곡률 미러가 보이고, 실제 스케일(µV vs mV)은 캡션 숫자로.  체크포인트 최근접 사용.
+    //    곡률 미러가 보이고, 실제 스케일(µV vs mV)은 캡션 숫자로.  체크포인트 사이 선형보간
+    //    (리뷰 반영: 최근접-스냅이면 재생/동기 GIF의 t 커서와 반 체크포인트까지 어긋났음).
     const _src = (document.getElementById('st4f-prof-src') || {}).value || 'rxn';
     if (_src === 'phi' && st.phi_z && st.phi_z.phi_i_V) {
-      const kph = (fr < 0.5 ? t0 : t1);
-      const zs = st.phi_z.z_um, pe = st.phi_z.phi_e_V[kph] || [], pi = st.phi_z.phi_i_V[kph] || [];
+      const zs = st.phi_z.z_um;
+      const _bl = (A, B) => zs.map((_, b) => {               // 층별 보간: 양쪽 유효→블렌드, 아니면 유효쪽
+        const a2 = (A || [])[b], b2 = (B || [])[b];
+        return (a2 != null && b2 != null) ? (1 - fr) * a2 + fr * b2 : (a2 != null ? a2 : b2);
+      });
+      const pe = _bl(st.phi_z.phi_e_V[t0], st.phi_z.phi_e_V[t1]);
+      const pi = _bl(st.phi_z.phi_i_V[t0], st.phi_z.phi_i_V[t1]);
       const zE = [], yE = [], zI = [], yI = [];
       let eMin = Infinity, eMax = -Infinity, iMin2 = Infinity, iMax2 = -Infinity;
       for (let b = 0; b < zs.length; b++) {
@@ -588,7 +594,8 @@ function renderSt4Faces(state) {
       if (cap) cap.innerHTML = `<span style="color:#f87171">—</span> φ_e 스윙 ${(eSw * 1e6).toPrecision(3)} µV · `
         + `<span style="color:#a78bfa">—</span> φ_i 스윙 ${(iSw * 1e3).toPrecision(3)} mV `
         + `(<b>${(iSw / eSw).toPrecision(2)}×</b>) — 각자 [0,1] 정규화(곡률 미러용); 절대 스케일은 이 숫자`;
-      state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,phi_e_V,phi_i_V,src',
+      state._st4fProf = { curves, rows: _profRows, tSec,
+                          hdr: 'z_um,t_s,phi_e_V,phi_i_V,src',
                           note: '# PCHIP x8 monotone-cubic interpolation: src=1 rows are solver z-layers, '
                               + 'src=0 rows are display interpolation (NOT solver data)' };
       return;
@@ -634,7 +641,8 @@ function renderSt4Faces(state) {
     const curves = [{ zs: rZd, ys: rYd, color: '#f87171', dash: false },
                     { zs: bZd, ys: bYd, color: '#60a5fa', dash: false }];
     drawZProfileCanvas(cv, curves, '');                    // 인라인 (크리스프 헬퍼)
-    state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,i_over_ibar_mean,soc_surf_mean,src',
+    state._st4fProf = { curves, rows: _profRows, tSec,
+                        hdr: 'z_um,t_s,i_over_ibar_mean,soc_surf_mean,src',
                         note: '# PCHIP x8 monotone-cubic interpolation: src=1 rows are z-bin values, '
                             + 'src=0 rows are display interpolation (NOT solver data)' };  // 고해상 export용
   };
@@ -824,7 +832,8 @@ function renderSt4Faces(state) {
     const win2 = Math.max(Math.abs(st.x100 - st.x0), 1e-9);
     const qOf2 = x => (st.charge ? (st.x100 - x) : (x - st.x0));
     const xsC = cu.x_mean.map(x => ar2 > 0 ? qOf2(x) / win2 * ar2 : 100 * qOf2(x) / win2);
-    const xLab = ar2 > 0 ? 'Capacity (mAh/cm²)' : 'DoD (%)';
+    const xLab = ar2 > 0 ? 'Capacity (mAh/cm²)'
+               : (st.charge ? 'Charged SOC window (%)' : 'DoD (%)');   // 리뷰: 충전 fallback 라벨
     const hasD = !!(cu.I_A && cu.eta_diff_mV);
     let series = [];
     if (hasD) {
@@ -844,17 +853,18 @@ function renderSt4Faces(state) {
     const curveCol = st.charge ? '#d97706' : '#1f6fb2';
     const frames = _st4GifFrames(nChk, sub, ph => upd(ph), () => {   // upd → _st4fProf(프로파일)+t 갱신
       if (!state._st4fProf || !state._st4fProf.rows.length) return null;
-      const tNow = parseFloat(state._st4fProf.rows[0][1]);
+      const tNow = (state._st4fProf.tSec != null ? state._st4fProf.tSec
+                    : parseFloat(state._st4fProf.rows[0][1]));   // 숫자 t (리뷰: toFixed 왕복 지터 제거)
       const ii = idxAt(tNow);
       const cvS = document.createElement('canvas'); cvS.width = W; cvS.height = H;
       const g = cvS.getContext('2d');
       g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
-      const pc = document.createElement('canvas'); pc.width = PW; pc.height = H - 44;   // 좌: 프로파일
-      drawZProfileCanvas(pc, state._st4fProf.curves, '');
-      g.drawImage(pc, 8, 38);
+      const pc = document.createElement('canvas'); pc.width = PW; pc.height = 320;      // 좌: 프로파일
+      drawZProfileCanvas(pc, state._st4fProf.curves, '');      // 1.75:1 = 다른 export와 동일 타이포 스케일
+      g.drawImage(pc, 8, 38 + ((H - 44 - 320) / 2 | 0));
       g.fillStyle = '#111'; g.font = 'bold 21px sans-serif'; g.textAlign = 'left';      // 헤더 (동기 수치)
       g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C — t=${tNow.toFixed(1)}s · V=${cu.V[ii].toFixed(3)}V`
-        + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · DoD ${xsC[ii].toFixed(1)}%`}`
+        + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · ${st.charge ? '충전창' : 'DoD'} ${xsC[ii].toFixed(1)}%`}`
         + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : ''), 12, 26);
       g.font = '13px sans-serif'; g.fillStyle = '#6b7280';
       g.fillText('두께 프로파일 (현재 시점)', 14, H - 8);
