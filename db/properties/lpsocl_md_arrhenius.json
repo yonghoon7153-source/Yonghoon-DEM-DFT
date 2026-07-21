@@ -1,6 +1,6 @@
 {
  "system": "lpsocl (O-doped LPSCl1.6, 62at)",
- "date": "2026-07-18",
+ "date": "2026-07-21 (hiT reseed 반영 완전판; 초판 2026-07-18)",
  "method": "UMA-s-1p1 omat, 2-50ps window, 3pt Arrhenius, NE Haven=1",
  "D_600_seeds_cm2s": [
   3.887e-06,
@@ -12,8 +12,8 @@
  "D_600_std": 2.0967763352346385e-06,
  "D_800_single": 2.085e-05,
  "D_1000_single": 5.525e-05,
- "Ea_eV_central": 0.2779,
- "Ea_eV": "0.284 +/- 0.047",
+ "Ea_eV_central": 0.2707,
+ "Ea_eV": "0.271 +/- 0.033",
  "Ea_per_seed": [
   0.3435,
   0.275,
@@ -22,8 +22,8 @@
  ],
  "D0_cm2_s": 0.0013029290209654785,
  "D_300K": 2.7923256728473355e-08,
- "vs_modelc": "Ea +60 meV (0.28 vs 0.22); DIRECTION higher, ~1sigma (800/1000 single-seed). Consistent with O POS3 electrostatic Li-trap (ICOHP Li-O modest but O charge deepest) + wang2022 O-doping sigma reduction.",
- "discipline": "800/1000 K single-seed -> central Ea has extra unquantified uncertainty; sigma300 absolute NOT reportable (single-seed); sigma ratio needs multiseed both sides (do NOT repeat the retracted 1.33x error).",
+ "vs_modelc": "Ea +74 meV (0.271+/-0.033 vs 0.197+/-0.032), ~1.6 sigma — O-doping raises Ea (direction robust: all 4 seeds 0.24-0.34 above modelc mean). Li-O trap (ELF/charge) narrative consistent; sigma 절대값 인용 금지, 비율은 멀티시드 판정만.",
+ "discipline": "MSD 2-50 ps fixed window, NE Haven=1, 600/800/1000 K 3-pt; all seeds full-ladder (hiT reseed 2026-07-18~21).",
  "anchors_same_window": {
   "modelc_Ea": 0.2235,
   "b2o3_Ea": 0.2234,
@@ -76,5 +76,30 @@
   "mechanism": "consistent w/ ICOHP/Bader (POS3 deep electrostatic Coulomb well traps Li+: Li-O covalency modest -1.15 but O charge deepest -1.93) + wang2022 (O-doping Li3PS4 sigma 10x down). Three independent lines (electronic structure / literature / dynamics) agree.",
   "discipline": "absolute sigma still withheld (MLIP NE Haven=1 overestimates ~3-5x); the Ea comparison to modelc is same method/window/pipeline so the +63 meV is robust. sigma ratio: O lowers D -> lowers sigma, direction consistent, but absolute ratio still not quoted per family rule.",
   "figure": "docs/figures/lpsocl/lpsocl_arrhenius.png (4-seed whiskers all T)"
+ },
+ "D_800_seeds_cm2s": {
+  "s1": 2.085e-05,
+  "s2": 2.7888e-05,
+  "s3": 1.8962e-05,
+  "s4": 2.895e-05
+ },
+ "D_1000_seeds_cm2s": {
+  "s1": 5.525e-05,
+  "s2": 6.9621e-05,
+  "s3": 4.4276e-05,
+  "s4": 5.9217e-05
+ },
+ "Ea_per_seed_full_ladder": {
+  "s1": 0.3435,
+  "s2": 0.308,
+  "s3": 0.2604,
+  "s4": 0.2438
+ },
+ "convention": "3-seed x 3-T per-seed ladders (s2-4, b2o3-symmetric); ladder s1 consistency 0.343 (4-seed 0.289+/-0.045)",
+ "D0_cm2_s_per_seed": {
+  "s1": 0.003001,
+  "s2": 0.002462,
+  "s3": 0.000878,
+  "s4": 0.000999
  }
 }

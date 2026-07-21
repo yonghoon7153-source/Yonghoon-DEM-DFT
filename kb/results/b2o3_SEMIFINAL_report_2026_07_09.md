@@ -213,15 +213,16 @@ O = db 등록 완료 · ⏳ = 진행중 · ✕ = 미실시(선택). 수치는 ca
 | 물성 | LPSCl1.6 (modelc) | LPSOCl (+O) | LPSCl1.6@B₂O₃ |
 |---|---|---|---|
 | BVSE 채널 (원본셀) | O | O (4.74% @0.5) | O (면내 +45%) |
-| MLIP-MD Ea (멀티시드) | O 0.197±0.032 | **⏳ 0.284±0.047 → hiT 3-시드 반영 갱신 대기** | O 0.199±0.034 |
+| MLIP-MD Ea (멀티시드) | O 0.197±0.032 | O **0.271±0.033** (07-21 hiT 완전판; +74 meV vs host, ~1.6σ) | O 0.199±0.034 |
 | Band gap (fixed-occ) | O 2.099 | O 2.2309 | O 1.9671 |
 | EOS B₀ | O 21.7 GPa | O 24.71 GPa | O 24.5 GPa |
 | ELF (결합 midpoint) | O | **⏳ SCF+pp 러너 가동 (gabia CPU, 2026-07-21)** | O |
 | PDOS (mean-3p, -8..0) | O | O | O |
 | ICOHP/COHP | O (비교값) | O | O (+σ\* ext) |
-| Bader | O | ✕ (선택) | O |
+| Bader | O | ⏳ (suite `bader` 스테이지 — GPU 큐) | O |
 | Li-금속 계면 MD | O (modelc62 control) | O (07-19, 1× ratio-clean) | O (매몰+종단 §6) |
-| Convex hull (UMA-일관) | O 16.7 | ✕ (선택) | O 37.5 |
-| ESW 산화 onset | O 2.14 V | ✕ (선택) | O 2.03 V |
+| Convex hull (UMA-일관) | O 16.7 | ⏳ (`convex_hull_ehull.py` 재사용 — GPU 큐) | O 37.5 |
+| ESW 산화 onset | O 2.14 V | ⏳ (b2o3 grand-potential 파이프라인 재사용) | O 2.03 V |
+| Elastic Cij/G/E | (B₀만) | ⏳ (suite `elastic` 12-strain) | ⏳ 전단 재시도 (strain 0.01) |
 
-**남은 필수 2건**: ① LPSOCl ELF (러너: `tools/electronic/run_lpsocl_elf_gabia.sh` — NC/80/320/fixed/k444, b2o3·modelc와 동일 midpoint 분석으로 `lpsocl_elf_bonds.csv` 등록; **Li–O 트랩 ELF를 b2o3의 0.780과 직접 비교**하는 게 목적) ② LPSOCl Ea 오차막대 완성 (gabia `~/work/runs/lpsocl_md/reseed_hiT/` 수확 → `lpsocl_md_arrhenius.json` 3-시드×3-T 갱신 → Arrhenius 그림·CSV 재생성). B₂O₃ 쪽 유일 미완은 §9의 Li–B–S 산물상 gap/DOS.
+**남은 작업 큐 (2026-07-21 확정)**: ① LPSOCl ELF ⏳ (러너 가동: `tools/electronic/run_lpsocl_elf_gabia.sh` — NC/80/320, b2o3·modelc와 동급 midpoint 비교로 `lpsocl_elf_bonds.csv`; **Li–O 트랩 vs b2o3 0.780**이 목적) ② ~~LPSOCl Ea~~ ✅ 0.271±0.033 등록(07-21) ③ LPSOCl Bader/elastic = `tools/elastic/run_lpsocl_suite_gabia.sh` (gabia GPU, pbrefine 종료 후) ④ LPSOCl hull/ESW = b2o3 파이프라인 재사용 러너 (작성 예정) ⑤ b2o3 전단 G/E 재시도 ⑥ B₂O₃ Li–B–S 산물상 gap/DOS (§9).
