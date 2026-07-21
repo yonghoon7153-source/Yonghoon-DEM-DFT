@@ -1275,8 +1275,9 @@ def main():
     ap.add_argument('--cv-hold', action='store_true', help='V-리밋 도달 후 CV 홀드 (CCCV)')
     ap.add_argument('--i-cut-frac', type=float, default=0.05, help='CV 종지 |I|/I_1C')
     ap.add_argument('--d-s', type=float, default=3e-14,
-                    help='D_s [m²/s] 기본 3e-14 (Kang&Shin 2025 FEM; 문헌 1e-14–1e-13) — '
-                         '--d-s-poly/--d-s-sc 지정 시 무시')
+                    help='D_s [m²/s] 기본 3e-14 (Kang&Shin 2025 FEM = Yu2023/Amin 모델-체인 상속, '
+                         '측정 아님; GITT 스프레드는 1e-15–1e-14 — docs/ncm_sc_poly_electrochem_'
+                         'anchors.md) — --d-s-poly/--d-s-sc 지정 시 무시')
     ap.add_argument('--i0', type=float, default=2.0, help='i0_ref [A/m²] @x=0.5 (⚠F1 스윕) — '
                          '--i0-poly/--i0-sc 지정 시 값은 상쇄되나 정규화 분모라 >0 필수')
     # ── bimodal poly/SC 전기화학 분리 (기본 미사용 = 기존 공유물성과 bitwise 동일 경로) ──

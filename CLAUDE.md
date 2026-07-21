@@ -173,6 +173,18 @@ E=175 배선 차단 — Kang "assumed"+Koerver umbrella, 140 vs 175=출처-방�
 Amin-태그 배선, docs/nca_material_preset.md) · A10 시간축분업 명문화 ✅.  defense 리뷰 정본:
 docs/defense_review_20260720.md (COMSOL-대체 verdict: σ-삼중+미세구조 필드=대체 가능[Bazzoun 입증],
 잔여 1조각=STEP4 PyBaMM 패리티 런).
+**★ bimodal 준비 (2026-07-21, SDCP 후 직행 예정)**: STEP4 per-particle 전기화학 분리 구현+3각리뷰
+20건 반영+커밋 — RadialDiffusion D [n_p]·i0_p(진폭만, 모양 공유)·`--d-s-poly/--d-s-sc/--i0-poly/
+--i0-sc/--am-split-um`(반경문턱 3.5µm, 기본 미사용=bitwise 동일 경로·기본값 없음 §F1)·킷
+`--step4-ds-*` env override+`_dsP..S..` 태그+생성시점 베드-분리 거부·viz am_electro_split 병기·
+selftest +4 전체 PASS.  **SC/PC 앵커 (41건 적대검증 완료)**: `docs/ncm_sc_poly_electrochem_anchors.md`
++CSV — ★핵심: 액체-셀 "PC 1오더 빠름"(Trevisanello)은 균열-전해액 침투 기전 → **ASSB에선 역전**
+(Ruess/Jung: SE 침투불가, 5C SC74/PC42%) → poly=Chen2020 4e-15(2차입자-반경 규약)…3e-14(FEM 체인,
+현행 기본값=측정 아님 명기), SC=1.5e-15–1e-14 밴드; **i0 SC/PC 정량 부재 확인 → 값 미지정, 스윕 전용.**
+**★ A10 착수**: `docs/a10_cycle_chemomech_design.md` — 앵커(Bucci G_c 2.8±1.8·ΔV≈3% 개시·Γ<1000
+게이트; Parks poly +19% 팽창=격자 −5.1%와 부호 반대; Kang&Shin R_int(N) 4.4×/1.5× 검증타깃;
+Alabdali LIGGGHTS ±6% 반경진동 선례) + 설계 옵션 A(접촉-원장 후처리)+B(MD 보정)+C(경험 대조군)
+— **메커니즘 확정은 사용자 논의 대기 (§5 미결 5개).**
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
 **★σ_SDCP 250 재실행 완료(2026-07-17): σ_e 3.002 = SBE 대비 +52.0% = 새 헤드라인**
 (침대 byte-재현, 분담 10→7% 역행 지속, 천장의 82% 실현; 스윕 5점 완성.  같은 날 SBE

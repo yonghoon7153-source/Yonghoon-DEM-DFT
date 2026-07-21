@@ -1,7 +1,7 @@
 # NMC811 소립 단결정(SC) vs 대립 다결정(PC) 전기화학 앵커 — D_s · i0
 
-2026-07-21, 4-에이전트 리서치(wf_d6b11be7: 로컬 litdb/PDF + 웹) + 적대 검증(32/41 판정
-완료 — CONFIRMED/PLAUSIBLE만 수록, 출처불명 1건 제외).  STEP4 per-particle 분리
+2026-07-21, 4-에이전트 리서치(wf_d6b11be7: 로컬 litdb/PDF + 웹) + 적대 검증 **완료
+(41/41 판정: CONFIRMED 34·PLAUSIBLE 6·SUSPECT 1건 제외)**.  STEP4 per-particle 분리
 (`step4_dyn --d-s-poly/--d-s-sc/--i0-poly/--i0-sc`, 킷 `--step4-ds-*`)의 값 공급원.
 §F1: 출판값만, 단위 원문 그대로 병기, confidence 라벨.
 
@@ -44,6 +44,7 @@ poly-in-ASSB는 2차입자-반경 monolithic effective D (DFN-fit 계열)가 정
 | R_ct uncoated 453/290/382 → LNO-coated 22.4/18.2/17.2 Ω·cm² (62/72/82wt%) | NCM811/LPSCl 3전극, 30°C — 코팅이 ~20× 지배 | Kim 2025 EA 147413 | pdf_local |
 | facet (201) 1.50 vs (003) ~0.06 mA/cm² (25×) | SC facet-분해 — SC i0의 표면-의존 근거 | Nat.Comm. facet 연구 | web_abstract |
 | ASSB SC vs PC R_ct: **정성만** (액체 R_ct PC<SC; ASSB 역전 주장, 수치 無) | Jung 2023 (랩) Fig S7/6d | pdf_local |
+| 액체-셀 PC R_ct 70→15 Ω (첫충전 균열 후 급감 — §1 기전의 R_ct판) | Trevisanello 2021 Fig 5 (digest 보정) | pdf_local |
 
 **⚠ i0의 SC/PC 분리 정량값은 ASSB 문헌에 부재** (facet/정성뿐) — §F1에 따라 **i0 분리
 값은 미지정** (메커니즘만 배선).  R_ct 앵커에서 유효-i0 역산은 가능하나 코팅(LNO)
@@ -63,4 +64,5 @@ poly-in-ASSB는 2차입자-반경 monolithic effective D (DFN-fit 계열)가 정
 ## 5. 미결
 1. ASSB에서 SC/PC D_s 직접 비교 정량 (Jung은 정성 ΔV만) — 랩 GITT 디지타이즈 후보.
 2. i0 SC/PC 분리 정량 (부재 확인됨).
-3. 검증 마지막 청크(익명 9/41) 판정 도착 시 본 문서 갱신.
+3. (리서치 CONFIRMED 부수 발견) x100=0.9084 'NMC811 vs-Li GITT 실측 max' 라벨의
+   출전 논문이 레포에 미기재 — STEP4 방전창 PENDING 재개 시 명기할 것.
