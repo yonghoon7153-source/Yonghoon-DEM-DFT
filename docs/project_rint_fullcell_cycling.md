@@ -76,3 +76,8 @@ R_int 110/46)은 **STEP3 σ_apparent 에만** 반영되고 **STEP4 로 안 흘�
   R_int(cycle) 열화율 축(A11-②).
 - 2026-07-21: **Phase 2 첫 데이터 진행중** — DBE 2C CCCV: R_int=0 완료(89.6%) + **R_int=10(pristine
   C-SUS, panel-e 근사) V100 실행중** (같은 침대 grid 재사용, step4_only).  aged 30은 후속 스윕.
+- 2026-07-21: **A11-② 경험 R_int(N) 궤적 도구** — `scripts/rint_cycle_traj.py`: 앵커 CSV 시나리오
+  2점(pristine/cycled) + 문헌 SHAPE(첫점프 j×{0.3,0.5,0.7} + g∈{√N,선형})로 **양끝-고정 밴드** 생성
+  (양끝=측정, 사이=assumed-form 라벨 §F1) + STEP4 체크포인트 명령(`MPM_S4_RINT=R(N) step4_only.sh`)
+  자동 출력.  selftest 8종 PASS(양끝 EXACT·단조·첫점프·CSV 로드).  Conforto digitize(A11-① gap) 후
+  계수 확정 시 밴드가 곡선으로 수렴.  = 사이클별 충방전 곡선 전개(경험 열화)의 실행 인프라.
