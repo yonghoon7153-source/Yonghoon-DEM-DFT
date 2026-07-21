@@ -191,7 +191,7 @@ function wireVProfileDownload(state, btnId) {
     const cv = document.createElement('canvas'); cv.width = W; cv.height = H;
     const g = cv.getContext('2d');
     g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
-    const V = cu.V, vlo = Math.min(...V), vhi = Math.max(...V), xlo = Math.min(...xs), xhi = Math.max(...xs, xlo + 1e-9);
+    const V = cu.V_terminal || cu.V, vlo = Math.min(...V), vhi = Math.max(...V), xlo = Math.min(...xs), xhi = Math.max(...xs, xlo + 1e-9);   // 단자전압 = 실측 대응
     const PX = x => mL + (x - xlo) / (xhi - xlo) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo)) * (b1 - mT);
     g.strokeStyle = '#d1d5db'; g.lineWidth = 1.5; g.strokeRect(mL, mT, W - mL - mR, b1 - mT);
     g.strokeStyle = '#f1f3f5'; g.lineWidth = 1;
@@ -200,7 +200,7 @@ function wireVProfileDownload(state, btnId) {
     V.forEach((v, i) => { const x = PX(xs[i]), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke();
     g.fillStyle = '#111'; g.font = '22px sans-serif'; g.textAlign = 'center';
     g.save(); g.translate(38, mT + (b1 - mT) / 2); g.rotate(-Math.PI / 2);
-    g.fillText('Cell voltage (V vs Li/Li⁺)', 0, 0); g.restore();
+    g.fillText('Terminal voltage (V vs Li/Li⁺)', 0, 0); g.restore();
     g.font = '16px sans-serif'; g.textAlign = 'right';
     for (let i = 0; i <= 5; i++) { const v = vlo + (vhi - vlo) * i / 5; g.fillText(v.toFixed(2), mL - 8, PY(v) + 5); }
     if (hasD) {
@@ -762,12 +762,12 @@ function renderSt4Faces(state) {
       if (!cu || !cu.t_s || !cu.t_s.length) return { V: '', I: '' };
       let bi = 0, bd = Infinity;
       for (let i = 0; i < cu.t_s.length; i++) { const d = Math.abs(cu.t_s[i] - t); if (d < bd) { bd = d; bi = i; } }
-      return { V: cu.V[bi], I: (cu.I_A || [])[bi] ?? '' };
+      return { V: (cu.V_terminal || cu.V)[bi], I: (cu.I_A || [])[bi] ?? '' };   // 단자전압
     };
     const L = [];
     L.push(`# STEP4 time-linked thickness profiles — ${st.charge ? 'charge' : 'discharge'} ${st.c_rate}C, R_int=${st.r_int_ohm_cm2 || 0} Ohm.cm2`);
     L.push(`# [1] checkpoint <-> curve link (V,I from the full curve at nearest t; ${capCol} from x_mean, same convention as the curve download)`);
-    L.push(`k,t_s,V_V,I_A,${capCol},x_mean,phi_e_swing_uV,phi_i_swing_mV`);
+    L.push(`k,t_s,V_terminal_V,I_A,${capCol},x_mean,phi_e_swing_uV,phi_i_swing_mV`);
     for (let k = 0; k < nK; k++) {
       const pe = pz.phi_e_V[k] || [], pi = pz.phi_i_V[k] || [];
       let eMin = Infinity, eMax = -Infinity, iMin = Infinity, iMax = -Infinity;
@@ -844,7 +844,8 @@ function renderSt4Faces(state) {
       if ((cu.Q_rint_W || []).some(q => Math.abs(q) > 0))
         series.push([iAbs.map((I, i) => Math.abs(cu.Q_rint_W[i]) / I * 1e3), '#6b7280', 'η_Rint']);
     }
-    const vlo = Math.min(...cu.V), vhi = Math.max(...cu.V);
+    const VT = cu.V_terminal || cu.V;                     // 단자전압 = 실측 대응 (R_int=0이면 V_cell)
+    const vlo = Math.min(...VT), vhi = Math.max(...VT);
     const xlo = Math.min(...xsC), xhi = Math.max(...xsC, xlo + 1e-9);
     const ehi = hasD ? Math.max(...series.flatMap(s => s[0]).filter(isFinite), 1e-9) * 1.06 : 1;
     const tArr = cu.t_s || [];
@@ -864,7 +865,7 @@ function renderSt4Faces(state) {
       drawZProfileCanvas(pc, state._st4fProf.curves, '');      // 1.75:1 = 다른 export와 동일 타이포 스케일
       g.drawImage(pc, 8, 38 + ((H - 44 - 320) / 2 | 0));
       g.fillStyle = '#111'; g.font = 'bold 21px sans-serif'; g.textAlign = 'left';      // 헤더 (동기 수치)
-      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''} — t=${tNow.toFixed(1)}s · V=${cu.V[ii].toFixed(3)}V`
+      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''} — t=${tNow.toFixed(1)}s · V=${VT[ii].toFixed(3)}V`
         + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · ${st.charge ? '충전창' : 'DoD'} ${xsC[ii].toFixed(1)}%`}`
         + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : ''), 12, 26);
       g.font = '13px sans-serif'; g.fillStyle = '#6b7280';
@@ -879,10 +880,10 @@ function renderSt4Faces(state) {
         ys.forEach((v, i2) => { const x = PX(xsC[i2]), y = PY(v); i2 ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); };
       const prog = (ys, PY, col) => { if (ii < 1) return; g.strokeStyle = col; g.lineWidth = 3.2; g.beginPath();
         for (let i2 = 0; i2 <= ii; i2++) { const x = PX(xsC[i2]), y = PY(ys[i2]); i2 ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); };
-      ghost(cu.V, PYv); prog(cu.V, PYv, curveCol);
+      ghost(VT, PYv); prog(VT, PYv, curveCol);
       g.setLineDash([5, 4]); g.strokeStyle = '#9ca3af'; g.lineWidth = 1.4;               // 수직 시점선
       g.beginPath(); g.moveTo(PX(xsC[ii]), vT); g.lineTo(PX(xsC[ii]), eB); g.stroke(); g.setLineDash([]);
-      g.fillStyle = curveCol; g.beginPath(); g.arc(PX(xsC[ii]), PYv(cu.V[ii]), 6.5, 0, 6.3); g.fill();
+      g.fillStyle = curveCol; g.beginPath(); g.arc(PX(xsC[ii]), PYv(VT[ii]), 6.5, 0, 6.3); g.fill();
       if (hasD) series.forEach(([ys, col, nm], si) => {
         ghost(ys.map(v => Math.max(v, 0)), PYe); prog(ys, PYe, col);
         g.fillStyle = col; g.beginPath(); g.arc(PX(xsC[ii]), PYe(ys[ii]), 4.8, 0, 6.3); g.fill();
@@ -901,7 +902,7 @@ function renderSt4Faces(state) {
       }
       g.fillText(xLab, mL + (W - mL - mR) / 2, H - 6);
       g.save(); g.translate(PW + 26, (vT + vB) / 2); g.rotate(-Math.PI / 2);
-      g.fillText('V (vs Li/Li⁺)', 0, 0); g.restore();
+      g.fillText('V_term (vs Li/Li⁺)', 0, 0); g.restore();
       if (hasD) { g.save(); g.translate(PW + 26, (eT + eB) / 2); g.rotate(-Math.PI / 2);
         g.fillText('과전압 (mV)', 0, 0); g.restore(); }
       return cvS.toDataURL('image/png');
@@ -5496,6 +5497,7 @@ function showVProfilePopup(store, nameA, nameB) {
   const $$ = id => ov.querySelector('#' + id);
   const ser = ['A', 'B'].map((k, idx) => { const s = store[k]; if (!s || !s.viz.curve || !s.viz.curve.V) return null;
     return { key: k, name: (k === 'A' ? nameA : nameB) || k, cu: s.viz.curve, meta: s.meta, color: k === 'A' ? '#1f6fb2' : '#d1495b' }; }).filter(Boolean);
+  const vtOf = s => s.cu.V_terminal || s.cu.V;   // 실측 대응 = 단자전압 (R_int=0이면 V_cell과 동일)
   const draw = () => { const cv = $$('vp-cv'), g = cv.getContext('2d'), dpr = 2; cv.width = cv.clientWidth * dpr; cv.height = cv.clientHeight * dpr; g.scale(dpr, dpr);
     const W = cv.clientWidth, H = cv.clientHeight, mL = 62, mR = 16, mT = 14, mB = 46, xmode = $$('vp-x').value;
     g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
@@ -5503,25 +5505,25 @@ function showVProfilePopup(store, nameA, nameB) {
       const q = m.charge ? ((m.x100 ?? X100) - s.cu.x_mean[i]) : (s.cu.x_mean[i] - (m.x0 ?? X0));   // 충전 반전 방지
       if (xmode === 't') return s.cu.t_s[i] / 60; if (xmode === 'cap') return q / win * 3.1; return 100 * q / win; };
     let vlo = 9, vhi = 0, xlo = 1e9, xhi = -1e9;
-    ser.forEach(s => s.cu.V.forEach((v, i) => { vlo = Math.min(vlo, v); vhi = Math.max(vhi, v); const x = xof(s, i); xlo = Math.min(xlo, x); xhi = Math.max(xhi, x); }));
+    ser.forEach(s => vtOf(s).forEach((v, i) => { vlo = Math.min(vlo, v); vhi = Math.max(vhi, v); const x = xof(s, i); xlo = Math.min(xlo, x); xhi = Math.max(xhi, x); }));
     const PX = x => mL + (x - xlo) / (xhi - xlo + 1e-9) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo + 1e-9)) * (H - mT - mB);
     g.strokeStyle = '#e5e7eb'; g.lineWidth = 1; g.strokeRect(mL, mT, W - mL - mR, H - mT - mB);
     for (let k = 1; k < 5; k++) { const gy = mT + (H - mT - mB) * k / 5; g.strokeStyle = '#f3f4f6'; g.beginPath(); g.moveTo(mL, gy); g.lineTo(W - mR, gy); g.stroke(); }
     ser.forEach(s => { g.strokeStyle = s.color; g.lineWidth = 2.4; g.setLineDash(s.meta.charge ? [6, 4] : []); g.beginPath();
-      s.cu.V.forEach((v, i) => { const x = PX(xof(s, i)), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
+      vtOf(s).forEach((v, i) => { const x = PX(xof(s, i)), y = PY(v); i ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); });
     g.setLineDash([]); g.fillStyle = '#111'; g.font = '13px sans-serif'; g.textAlign = 'right';
     for (let k = 0; k <= 5; k++) { const v = vlo + (vhi - vlo) * k / 5; g.fillText(v.toFixed(2), mL - 6, PY(v) + 4); }
     g.textAlign = 'center';
     for (let k = 0; k <= 5; k++) { const x = xlo + (xhi - xlo) * k / 5; g.fillText(x.toFixed(xmode === 'cap' ? 2 : 0), PX(x), H - mB + 18); }
     g.fillText(xmode === 't' ? 'Time (min)' : xmode === 'cap' ? 'Delivered capacity (mAh cm⁻²)' : 'SOC window (%)', mL + (W - mL - mR) / 2, H - 6);
-    g.save(); g.translate(14, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Cell voltage (V vs Li/Li⁺)', 0, 0); g.restore();
+    g.save(); g.translate(14, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Terminal voltage (V vs Li/Li⁺)', 0, 0); g.restore();
     let note = ser.map(s => { const m = s.meta;
-      return `<span style="color:${s.color}">■</span> ${s.name}: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V${m.r_int_ohm_cm2 > 0 ? ` · R_int ${m.r_int_ohm_cm2}` : ''} · 종료 ${m.end_reason || '?'} · V ${s.cu.V[0].toFixed(3)}→${s.cu.V[s.cu.V.length - 1].toFixed(3)}`; }).join('<br>');
+      return `<span style="color:${s.color}">■</span> ${s.name}: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V${m.r_int_ohm_cm2 > 0 ? ` · R_int ${m.r_int_ohm_cm2}` : ''} · 종료 ${m.end_reason || '?'} · V_term ${vtOf(s)[0].toFixed(3)}→${vtOf(s)[vtOf(s).length - 1].toFixed(3)}`; }).join('<br>');
     // Δ(A−B) 정량 — 같은 프로토콜(충/방 동일) 두 곡선일 때 공통 SOC창 그리드에서 ΔV·Δη_kin 평균
     if (ser.length === 2 && !!ser[0].meta.charge === !!ser[1].meta.charge) {
       const socOf = s => { const m = s.meta, w = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0)) || 1;
         return s.cu.x_mean.map(x => 100 * (m.charge ? ((m.x100 ?? X100) - x) : (x - (m.x0 ?? X0))) / w); };
-      const prep = s => { let xs = socOf(s), vs = s.cu.V, ks = s.cu.eta_kin_mV || null;
+      const prep = s => { let xs = socOf(s), vs = vtOf(s), ks = s.cu.eta_kin_mV || null;
         if (xs[0] > xs[xs.length - 1]) { xs = [...xs].reverse(); vs = [...vs].reverse(); ks = ks ? [...ks].reverse() : null; }
         return { xs, vs, ks }; };
       const A2 = prep(ser[0]), B2 = prep(ser[1]);
@@ -5539,14 +5541,14 @@ function showVProfilePopup(store, nameA, nameB) {
         note += `<br><b>Δ(A−B)</b> 공통 SOC ${lo2.toFixed(0)}–${hi2.toFixed(0)}%: <b>ΔV 평균 ${mean(dV) >= 0 ? '+' : ''}${mean(dV).toFixed(1)} mV</b>`
           + ` (${Math.min(...dV).toFixed(1)}…${Math.max(...dV).toFixed(1)})`
           + (dK.length ? ` · Δη_kin 평균 ${mean(dK) >= 0 ? '+' : ''}${mean(dK).toFixed(1)} mV` : '')
-          + ' <span style="color:#9ca3af">— 낮은 쪽이 과전압 우위; 분해(옴/kin/확산)는 각 케이스 📈 곡선 PNG 2단 패널</span>';
+          + ' <span style="color:#9ca3af">— V=단자전압(V_cell+I·R_int); 낮은 쪽이 과전압 우위; 분해는 각 케이스 📈 곡선 PNG 2단 패널</span>';
       }
     }
     $$('vp-note').innerHTML = note; };
   $$('vp-x').onchange = draw;
   $$('vp-png').onclick = () => { const a = document.createElement('a'); a.href = $$('vp-cv').toDataURL('image/png'); a.download = 'step4_vprofile.png'; document.body.appendChild(a); a.click(); a.remove(); };
-  $$('vp-csv').onclick = () => { const out = ['series,condition,step,t_s,V,x_mean'];
-    ser.forEach(s => s.cu.V.forEach((v, i) => out.push([JSON.stringify(s.name), `${s.meta.charge ? 'charge' : 'discharge'}_${s.meta.c_rate}C`, i + 1, s.cu.t_s[i], v, s.cu.x_mean[i]].join(','))));
+  $$('vp-csv').onclick = () => { const out = ['series,condition,step,t_s,V_terminal,V_cell,x_mean'];
+    ser.forEach(s => s.cu.V.forEach((v, i) => out.push([JSON.stringify(s.name), `${s.meta.charge ? 'charge' : 'discharge'}_${s.meta.c_rate}C`, i + 1, s.cu.t_s[i], vtOf(s)[i], v, s.cu.x_mean[i]].join(','))));
     const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([out.join('\n')], { type: 'text/csv' })); a.download = 'step4_vprofile.csv'; document.body.appendChild(a); a.click(); a.remove(); };
   draw();
 }
