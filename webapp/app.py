@@ -5423,6 +5423,14 @@ def mpm_input_package(case_id):
             cmd += ['--step4-i0-poly', f'{_i0p:g}', '--step4-i0-sc', f'{_i0s:g}']
         if _spl is not None and (_dsp is not None or _i0p is not None):
             cmd += ['--step4-am-split-um', f'{_spl:g}']
+        # ★문헌 프리셋 (&s4pp=1, UI 체크박스): 정본 docs/data/sc_poly_preset.csv를 생성기가 해석
+        #   (D_s poly 4e-15 Chen2020 / SC 3e-15 Trevisanello 밴드 기하중앙; i0 분리 부재 확정 →
+        #   공유).  명시 s4dsp와 동시 지정은 생성기가 모호-거부 → 여기서도 앞단 400.
+        if request.args.get('s4pp', '') in ('1', 'true', 'on'):
+            if _dsp is not None or _i0p is not None:
+                shutil.rmtree(tmp, ignore_errors=True)
+                return jsonify({'error': 's4pp(프리셋)와 명시 s4dsp/s4i0p 동시 지정 불가 — 하나만'}), 400
+            cmd += ['--step4-sc-poly-preset']
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:

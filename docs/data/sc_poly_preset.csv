@@ -1,0 +1,5 @@
+key,value,units,classification,provenance,promotion_path
+d_s_poly,4e-15,m2/s,문헌,"Chen 2020 JES 167:080534 — DFN fit r=5.22µm(2차입자-반경 규약 정합; ASSB 이식 가능한 poly effective D)","랩 GITT/추가 문헌 확보 시 교체; O'Regan 2022 D(sto) 업그레이드 경로"
+d_s_sc,3e-15,m2/s,문헌 밴드+기하중앙 규약,"Trevisanello 2021 AEM 2003400 SC GITT 밴드 1e-15–1e-14 m²/s의 기하중앙(밴드=문헌; 중앙 선택=우리 규약, SDCP-150 계열 잠정); Koo 2025 SC 모델 1.5e-15가 하한 sanity","SC GITT 디지타이즈/단일 논문 특정값 확보 시 교체; ±스윕 {1.5e-15,3e-15,1e-14}"
+i0_split,none,-,부재 확정,"ASSB SC/PC i0 정량 문헌 부재 (2026-07-21 41건 적대검증 survey) — 분리하지 않고 공유 --i0 유지가 정직","랩 EIS R_ct SC/PC 분해 또는 문헌 확보 시 분리 승격"
+am_split_um,3.5,um,규약,"σ_ionic power-gate r_cut=3.5µm 정합; 12:4µm(직경) 베드=반경 6:2 분리","—"

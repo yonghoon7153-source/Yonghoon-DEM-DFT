@@ -114,7 +114,31 @@ def main():
                     help='SC AM i0_ref [A/m²] — --step4-i0-poly와 쌍; env MPM_S4_I0_SC')
     ap.add_argument('--step4-am-split-um', type=float, default=3.5,
                     help='poly/SC 분류 반경 문턱 [µm] (r≥split=poly; 12:4µm(직경) 베드=반경 6:2 분리)')
+    ap.add_argument('--step4-sc-poly-preset', action='store_true',
+                    help='★문헌 프리셋 (2026-07-21 확정): docs/data/sc_poly_preset.csv 정본에서 '
+                         'D_s poly/SC를 해석해 주입 (현행: poly 4e-15 Chen2020 / SC 3e-15 '
+                         'Trevisanello 밴드 기하중앙; i0는 분리값 문헌 부재 확정 → 공유 유지).  '
+                         'SDCP-150 계열 원장 방식 — 값이 갱신되면 CSV만 고치면 전 경로 반영.  '
+                         '--step4-ds-poly 명시값과 동시 지정은 모호 → 거부')
     a = ap.parse_args()
+    if a.step4_sc_poly_preset:
+        if a.step4_ds_poly is not None or a.step4_i0_poly is not None:
+            ap.error('--step4-sc-poly-preset과 명시 --step4-ds-poly/--step4-i0-poly 동시 지정 불가 '
+                     '(어느 값이 이겼는지 모호 — 하나만)')
+        _pre_csv = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                '..', 'docs', 'data', 'sc_poly_preset.csv')
+        try:
+            with open(_pre_csv, newline='') as _pf:
+                _pre = {row['key']: row for row in csv.DictReader(_pf)}
+            a.step4_ds_poly = float(_pre['d_s_poly']['value'])
+            a.step4_ds_sc = float(_pre['d_s_sc']['value'])
+            if float(_pre['am_split_um']['value']) > 0:
+                a.step4_am_split_um = float(_pre['am_split_um']['value'])
+            print(f"  ★ SC/poly 문헌 프리셋 (정본 {os.path.basename(_pre_csv)}): "
+                  f"D_s poly={a.step4_ds_poly:g} / SC={a.step4_ds_sc:g} m²/s, "
+                  f"split r≥{a.step4_am_split_um:g}µm; i0 분리 없음(부재 확정)")
+        except (OSError, KeyError, ValueError) as _pe:
+            ap.error(f'sc_poly_preset.csv 해석 실패 ({_pe!r}) — 정본 CSV 확인: {_pre_csv}')
     if a.step4_r_int is not None and a.step4_r_int < 0:
         # 음수는 step4_dyn이 조용히 R_int=0으로 clamp → 파일명/라벨(_rint-5)이 적용 안 된 직렬항을
         # 주장하게 됨(리뷰 CONFIRMED #2) — 생성 시점에 명시적으로 거부.
