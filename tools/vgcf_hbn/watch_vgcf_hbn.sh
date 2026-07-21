@@ -23,7 +23,7 @@ sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L)' | tr '\n' ' ')
 echo "  세션: ${sess:-없음} (vgcfqe=1층 / vgcf2L=2층 대기·진행)"
 
 # --- per-calc table ---
-ORDER="Li_atom Li_bulk graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L"
+ORDER="Li_atom Li_bulk graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L bilayer_gr2L Li_in_gallery_gr2L bilayer_2L2L Li_in_gallery_2L2L"
 echo "── 계산별 상태 (relax) ──"
 for n in $ORDER; do
   o="$W/$n.out"
@@ -59,7 +59,9 @@ for lab, cx, sub in [("VGCF(1L)",         "Li_on_graphene",   "graphene"),
                      ("h-BN(1L)",         "Li_on_hbn",        "hbn"),
                      ("gallery(1L)",      "Li_in_gallery",    "bilayer"),
                      ("h-BN(2L)",         "Li_on_hbn_2L",     "hbn_2L"),
-                     ("gallery(2L)",      "Li_in_gallery_2L", "bilayer_2L")]:
+                     ("gallery(2L)",      "Li_in_gallery_2L", "bilayer_2L"),
+                     ("gallery(gr2L)",   "Li_in_gallery_gr2L","bilayer_gr2L"),
+                     ("gallery(2L2L)",   "Li_in_gallery_2L2L","bilayer_2L2L")]:
     ec, es = E(cx), E(sub)
     if ec and es and li:
         v[lab] = (ec - es - li) * Ry
@@ -75,7 +77,8 @@ for tag in ("1L", "2L"):
           else "     ⚠ 샌드위치 약함 → VGCF≠Cu (그 자체가 발견)")
 for keys, lab in [(("VGCF(1L)", "VGCF(2L)"), "VGCF"),
                   (("h-BN(1L)", "h-BN(2L)"), "h-BN"),
-                  (("gallery(1L)", "gallery(2L)"), "gallery")]:
+                  (("gallery(1L)", "gallery(2L)"), "gallery-hBN층"),
+                  (("gallery(1L)", "gallery(gr2L)"), "gallery-VGCF층")]:
     a, b = v.get(keys[0]), v.get(keys[1])
     if a is not None and b is not None:
         print(f"  Δ층수 {lab:8s} 2L−1L = {b - a:+.3f} eV  ({'수렴(<50meV)' if abs(b - a) < 0.05 else '★유의차→2L-gr 조합 추가'})")

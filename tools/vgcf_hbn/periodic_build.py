@@ -137,6 +137,23 @@ def main():
         "graphene_2L": (g2C, g2E, g2cell),
         "Li_on_graphene_2L": (np.vstack([g2C, li(g2h, D0 + LI_H)]), g2E + ["Li"], g2cell),
     })
+    # gr2L gallery (GATE: VGCF layer-Δ significant -> is the GALLERY also VGCF-layer-sensitive?
+    #   could flip gallery lithiophobicity sign). VGCF=2-layer graphene, h-BN=1L (converged).
+    gh1b, ge1b, _ = hbn_stack(A_GR, N, 1, z0=2 * D0)             # h-BN on 2L-graphene (bare)
+    gh1c, ge1c, _ = hbn_stack(A_GR, N, 1, z0=D0 + GAL)          # h-BN cap above gallery Li
+    cases.update({
+        "bilayer_gr2L": (np.vstack([g2C, gh1b]), g2E + ge1b, g2cell),
+        "Li_in_gallery_gr2L": (np.vstack([g2C, gh1c, li(g2h, D0 + GAL / 2)]),
+                               g2E + ge1c + ["Li"], g2cell),
+    })
+    # 2L-2L (user request): both VGCF and h-BN 2-layer = full 2x2 corner.
+    gh2b, ge2b, _ = hbn_stack(A_GR, N, 2, z0=2 * D0)            # 2L h-BN on 2L graphene (bare)
+    gh2c, ge2c, _ = hbn_stack(A_GR, N, 2, z0=D0 + GAL)         # 2L h-BN cap above gallery Li
+    cases.update({
+        "bilayer_2L2L": (np.vstack([g2C, gh2b]), g2E + ge2b, g2cell),
+        "Li_in_gallery_2L2L": (np.vstack([g2C, gh2c, li(g2h, D0 + GAL / 2)]),
+                               g2E + ge2c + ["Li"], g2cell),
+    })
     print(f"periodic slabs (N={N}, a_gr={A_GR}, a_bn={A_BN}, vac={VAC}A) [PLACEHOLDER params]:")
     for nm, (C, E, cell) in cases.items():
         open(f"{out}/{nm}.qe", "w").write(qe_blocks(C, E, cell, nm))

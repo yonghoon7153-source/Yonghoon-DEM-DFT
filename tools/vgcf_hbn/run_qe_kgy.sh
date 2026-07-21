@@ -48,7 +48,7 @@ MPIRUN="$HPCX/bin/mpirun"
 echo "pw.x=$PW"
 
 # ---- run: cheap refs first (Li_atom validates env/pseudo), then the 6 slabs ----
-ORDER=${ORDER:-"Li_atom Li_bulk graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L"}
+ORDER=${ORDER:-"Li_atom Li_bulk graphene hbn Li_on_graphene Li_on_hbn bilayer Li_in_gallery hbn_2L Li_on_hbn_2L bilayer_2L Li_in_gallery_2L graphene_2L Li_on_graphene_2L bilayer_gr2L Li_in_gallery_gr2L bilayer_2L2L Li_in_gallery_2L2L"}
 run_one() {
     local name=$1 f="$IN/$1.in" o="$WORK/$1.out"
     [ -f "$f" ] || { echo "[$name] 입력없음 skip"; return; }
@@ -77,7 +77,9 @@ rows = [("Li on VGCF (1L)",      "Li_on_graphene",   "graphene"),
         ("Li on h-BN (1L)",      "Li_on_hbn",        "hbn"),
         ("Li in gallery (1L)",   "Li_in_gallery",    "bilayer"),
         ("Li on h-BN (2L)",      "Li_on_hbn_2L",     "hbn_2L"),
-        ("Li in gallery (2L)",   "Li_in_gallery_2L", "bilayer_2L")]
+        ("Li in gallery (2L)",   "Li_in_gallery_2L", "bilayer_2L"),
+        ("Li in gallery (gr2L)", "Li_in_gallery_gr2L","bilayer_gr2L"),
+        ("Li in gallery (2L2L)", "Li_in_gallery_2L2L","bilayer_2L2L")]
 vals = {}
 for lab, cx, sub in rows:
     ec, es = E(cx), E(sub)
