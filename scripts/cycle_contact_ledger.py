@@ -46,7 +46,13 @@ def load_atoms(path, type_map):
             typ.append(0 if t in am_t else 1)               # 0=AM, 1=SE
             xyz.append([float(row[cols['x']]), float(row[cols['y']]), float(row[cols['z']])])
             rad.append(float(row[cols['radius']]))
-    return np.array(typ), np.array(xyz), np.array(rad)
+    typ, xyz, rad = np.array(typ), np.array(xyz), np.array(rad)
+    # ★ 단위 자동감지 (2026-07-22 버그픽스): DEM 원 atoms.csv는 mm (r_SE 0.0005 등) —
+    #   µm 가정 시 수축량 1000× 과소 → 전-사이클 무손상 오출력.  payload와 동일하게 ×1000.
+    if np.median(rad) < 0.05:
+        xyz, rad = xyz * 1000.0, rad * 1000.0
+        print('  ⚠ 좌표단위 mm 감지 → ×1000 µm 변환 적용', flush=True)
+    return typ, xyz, rad
 
 
 def build_contacts(xyz, rad):
