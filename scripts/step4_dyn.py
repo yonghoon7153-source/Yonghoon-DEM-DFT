@@ -1291,7 +1291,9 @@ def main():
             # ★ 운전-중 φ(z) 상보 프로파일 (체크포인트별) — φ_e ≈ 평평(µV)·φ_i 수십 mV, 곡률 미러.
             #   STEP3 unit-ΔV per-network 프로파일과 다른 물리임을 명시.  NaN(dof 없는 층)→null.
             'phi_z': {'z_um': [round(float(v), 2) for v in out['viz_z_um']],
-                      'phi_e_V': [[(None if not np.isfinite(v) else round(float(v), 6)) for v in row]
+                      # φ_e 스윙은 µV급 → 1e-6 반올림이면 프로파일이 계단 양자화됨 → 1e-9 (φ_i는
+                      # mV급이라 1e-6로 충분).  구 viz(1e-6 φ_e)는 뷰어 캡션이 스윙만 정확.
+                      'phi_e_V': [[(None if not np.isfinite(v) else round(float(v), 9)) for v in row]
                                   for row in out['viz_phi_e_z']],
                       'phi_i_V': [[(None if not np.isfinite(v) else round(float(v), 6)) for v in row]
                                   for row in out['viz_phi_i_z']],
