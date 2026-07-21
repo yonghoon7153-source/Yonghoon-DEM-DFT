@@ -18,7 +18,16 @@
    "follow_dE_meV": -535.3,
    "follow_rmsd_A": 0.467,
    "imag_character": "Li 82-87%",
-   "note": "진짜 깊은 Li-부격자 안장 (10.3 meV/atom 아래 최소 존재). DFT cross-check 진행중 (c2dft). champion 교체 안건."
+   "note": "진짜 깊은 Li-부격자 안장 — DFT 확정(2026-07-22, -508.7 meV/cell). followmin = comp2 champion v3 후보; DFT-relax 정련 + gap/EOS 민감도 재검이 후속.",
+   "dft_cross_check": {
+    "date": "2026-07-22",
+    "method": "PAW kjpaw 60/480, k222, mv 0.01 single-point pair (kgy GPU)",
+    "E_V0_Ry": -2480.644186,
+    "E_followmin_Ry": -2480.681575,
+    "dE_meV_cell": -508.7,
+    "dE_meV_atom": -9.78,
+    "verdict": "DFT CONFIRMS — followmin lower; champion replacement CONFIRMED. UMA(-535.3) vs DFT(-508.7) agree within 5% = screen cross-validated."
+   }
   },
   "b2o3": {
    "structure": "b2o3_relaxV0.xyz",
