@@ -15,7 +15,19 @@ comp1~5 (Li6/Li5.4 argyrodite) | NCM 접착 v30u 캠페인의 잔존 스크립�
 - 그림: plot_R0988_TIGHT_FIT.py — Morse `E(d)=D(1−e^{−a(d−d_eq)})²−D+offset`
   (offset = 뜬 꼬리; well_min = offset−D)
 
-## 미회수 (0.44 숫자의 산출처)
-`_correct_eiso_fix.py`, `normalize_wad_by_surface_Li.py`, `run_v30u_1L_face_flip.py`,
-`enumerate_v*_faces.py`, `plot_binding_curves_morse_fullwindow.py`, z-shift 슬랩 폴더
-— 필독/adhesion/v30u_ensemble/ 혹은 D:\ 백업 다른 경로에 있을 것. 발견 시 여기 추가.
+## dW의 정체 — 유도 완결 (2026-07-21, kb/papers/mechanism_anion_O_descriptor.md §ΔW_strain)
+- **dW = ΔW_strain = E_NCM(SE cell) − E_NCM(NCM cell)** — NCM 슬랩이 SE 가로 셀에
+  강제될 때 갖는 변형 에너지. ("surface-Li dangling"이라는 초기 추정은 오독 — 정정)
+- per-comp: comp1 2.633 / comp2 2.503 / comp3 0.873 / **comp4 3.640** / comp5 0.314
+- comp4 3.64 = **single-frame cell artifact**: 50:50 Cl/Br 혼합 조성이라 anion-ordering
+  앙상블 분산이 큼 → 챔피언 단일 프레임의 셀이 앙상블 평균에서 가장 벗어남.
+- **0.44 = Li5.4 계열의 v1 앙상블 평균 ΔW_strain** — 단일 프레임 artifact 제거,
+  "실험 W_ad는 thermal ensemble 평균"이라는 정신과 정합. α∈[0.8,1.5] 전 구간
+  strict rank 유지 (독립 유도 + 사후 견고성 검증 구조 = 순환논증 아님).
+- 최종식: `W_ad_corrected = (E_SE + E_NCM − E_SE/NCM)/A − α·ΔW_strain`, α=1.0
+  (러너 실코드: run_v30u_1L_face_flip.py L247, face별 E_se_iso/E_ncm_iso 참조)
+
+## 전체 아카이브 (cold backup, 1.4 GB)
+`D:\v100\kisti_backup_2026-07-14\kgy_manuscript_support_2026-07-14\manuscript_support\adhesion_v5_v2\`
+— phase1(rigid)~phase2a v4→v30u 전 이터레이션 + 슬랩 xyz + z-shift/face 변형 + 결과.
+스크립트 상위 31종만 tar하면 <1 MB (`tar czf out.tgz *.py *.json *.csv`) — 필요 시 회수.

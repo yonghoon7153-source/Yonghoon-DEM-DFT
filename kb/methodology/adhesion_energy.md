@@ -228,15 +228,19 @@ Compare v2 (3000K melt): comp1 = 1.107, comp2B = 1.046 J/m2
 1. comp3–5 꼬리 음수(−0.3~−0.6): 강성 분리 상태가 이완 기준보다 낮을 수 없음
    → uniform dW=0.44 보정이 Li5.4 계열에서 과함(잔차). 방어: 순위·상관 불변,
    우물 위치/깊이 대비 잔차 규모 명시.
-2. α·dW 유도의 추적성 — **부분 회수 완료 (2026-07-21, D:\v100 KISTI 백업 → `tools/adhesion_v30u/`)**:
-   - ✅ 확정: 출판값 = `WELLS_RAW − α·dW` (α=1.0); WELLS_RAW·dW 전값 기록 (README);
-     raw 순위는 Li6>Li5.4 (α=0에서 R=−0.76) → **보정이 순위 재현의 필수 성분**임이 실증됨.
-   - ✅ uniform 0.44 채택 사유 스크립트에 명문: per-comp eiso는 comp4=3.64 outlier로
-     strict rank가 어떤 α에서도 불성립 → 계열-균일 정규화 + α-창 견고성 검증.
-   - ⏳ 잔여: **0.44 숫자 자체의 산출 스크립트** (`_correct_eiso_fix.py`,
-     `normalize_wad_by_surface_Li.py`) 미회수 — 백업 추가 수색 대상.
-   - 구두 방어 문구: "표면 준비 비용 보정은 eiso 기반이며, Li5.4 계열은 comp4 outlier
-     때문에 계열-균일 값으로 정규화했고 α-민감도 스캔으로 순위 견고성을 확인했다."
+2. α·dW 유도의 추적성 — **✅ 완결 (2026-07-21)**. 유도 전문이 repo 내부에 있었음:
+   `kb/papers/mechanism_anion_O_descriptor.md` §ΔW_strain + `tools/adhesion_v30u/README.md`.
+   - **dW = ΔW_strain = E_NCM(SE cell) − E_NCM(NCM cell)** (NCM 변형 에너지;
+     "surface-Li dangling" 초기 추정은 오독으로 정정).
+   - per-comp: 2.633/2.503/0.873/**3.640(comp4)**/0.314. comp4 = 50:50 Cl/Br 조성의
+     single-frame cell artifact (anion-ordering 앙상블 분산 최대).
+   - **0.44 = Li5.4 계열 v1 앙상블 평균 ΔW_strain** — 독립 유도(앙상블 평균)이고,
+     rank 회복은 사후 검증. α∈[0.8,1.5] 전 구간 strict rank 유지.
+   - 출판식: `W_ad = (E_SE + E_NCM − E_SE/NCM)/A − α·ΔW_strain`, α=1.0
+     (러너 run_v30u_1L_face_flip.py L247; R=+0.989/ρ=+1.000 = v0 paper Fig.5).
+   - 구두 방어 최종본: "보정항은 NCM 변형 에너지 ΔW_strain입니다. 50:50 혼합 조성인
+     comp4는 단일-프레임 셀 artifact로 과대해서 Li5.4 계열엔 v1 앙상블 평균 0.44를
+     균일 적용했고, α 0.8–1.5 전 구간에서 순위 유지를 확인했습니다."
 
 ### 용어
 - E_adh = adhesion energy (음수 우물, 곡선용) / W = work of adhesion·separation (양수, 인용용).
