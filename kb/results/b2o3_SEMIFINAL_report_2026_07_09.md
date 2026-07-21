@@ -1,6 +1,6 @@
 # B₂O₃-doped LPSCl1.6 챔피언 — Semi-Final 통합 보고서
 
-**날짜** 2026-07-09 (통합판 v1) · **성격** 논문 초안의 뼈대가 되는 반최종 보고서
+**날짜** 2026-07-09 (통합판 v1) · **갱신** 2026-07-21 (§9 잔여작업 정리, §11 3-시스템 진행표 신설) · **성격** 논문 초안의 뼈대가 되는 반최종 보고서
 **통합 원본 5종** ① 전자 국소화 프레임워크 ② Li|전해질 계면 MD takeaways ③ σ\* 궤도 제어
 ④ convex hull(37.5 meV/atom) ⑤ anode 계면 campaign(6× 철회 + 종단 스캔) — 전부 2026-07-09
 저녁 roll-0.71 clean-build 최종 판정까지 반영. 상태 표기: ✅확정 / 🔶잠정 / ⏳진행.
@@ -181,10 +181,14 @@
   자기제한도 100 ps 밖.
 - **MLIP 수준**: 계면 반응상(Li₃P/Li₂S/Li–B–S) DFT 단발 검증 미실시 — "동등" 결론은 저위험,
   Li–B–S 방패·Li₂O-like는 "MLIP 수준" 명시 인용.
-- **n=2/종단, cleave 1종/종단**; 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색; s3 per-atom 도장 ⏳.
+- **n=2/종단, cleave 1종/종단**; 측면 registry(`--shift_ab`)·a-면 슬랩 미탐색 (선택 확장).
 - **hull은 UMA-일관 에너지** — 절대값보다 상대 Δ와 산물 정체가 견고.
-- ⏳ 진행/예정: ~~O 표면-편석 ΔE_seg~~ ✅(+0.67 eV, §6.2) · **PS₃O P-위 종단 시험 (roll 0.13, 야간 런)** · Li–B–S 산물상 gap/DOS(설계규칙⑤) ·
-  DFT 도장(계면 스냅샷·hull winner) 선택 과제.
+- **잔여작업 정리 (2026-07-21 기준)**:
+  - ~~O 표면-편석 ΔE_seg~~ ✅ (+0.67 eV, §6.2)
+  - ~~PS₃O P-위 종단 시험 (roll 0.13)~~ ✅ (07-11 스탬프 — §5 통일 독법 + §6.2 표 반영 완료)
+  - ~~roll-0.71 s2/s3 per-atom 도장~~ ✅ (§5: s2 P–O 2→0 / s3 P–O 2→2, CSV 주석 반영)
+  - ⏳ **Li–B–S 산물상 gap/DOS** (설계규칙⑤ 마지막 조각: 희생 방패가 전자차단인지) — 유일한 실질 미완
+  - 선택: DFT 도장(계면 스냅샷·hull winner) · 전단 G/E 재시도(strain 0.01) · 측면 registry/a-면
 
 ## 10. 데이터/파일 인덱스
 
@@ -197,4 +201,27 @@
 | σ\* | `docs/figures/icohp/b2o3_COHP_ext.csv` |
 | 계면 | `interface_campaign_summary.csv`(매몰), **`interface_termination_scan.csv`(종단, per-seed+판정)**, `iface_timeseries.png`, CIF 스냅샷 6종 |
 | 도구 | `tools/oxidation/{build_li_interface,run_li_interface_md,analyze_interface_decomp,audit_cleave_bonds}.py` |
+| LPSOCl(자매) | `lpsocl_{dos_gap,eos_dft_result,icohp,interface,md_arrhenius}.json`, `lpsocl_pdos_element_PERATOM.csv`, `lpsocl_arrhenius_origin.csv`, BVSE `bvse_cubic_approx/`(orig 4.74%@0.5) |
 | 원본 kb | framework · takeaways · redox_orbital · campaign · convexhull (각 문서 최신판 = 본 보고서와 동기화) |
+
+---
+
+## 11. 3-시스템 진행표 (여경 논문 패키지, 2026-07-21)
+
+O = db 등록 완료 · ⏳ = 진행중 · ✕ = 미실시(선택). 수치는 canonical만 (gap = fixed-occ band-edge).
+
+| 물성 | LPSCl1.6 (modelc) | LPSOCl (+O) | LPSCl1.6@B₂O₃ |
+|---|---|---|---|
+| BVSE 채널 (원본셀) | O | O (4.74% @0.5) | O (면내 +45%) |
+| MLIP-MD Ea (멀티시드) | O 0.197±0.032 | **⏳ 0.284±0.047 → hiT 3-시드 반영 갱신 대기** | O 0.199±0.034 |
+| Band gap (fixed-occ) | O 2.099 | O 2.2309 | O 1.9671 |
+| EOS B₀ | O 21.7 GPa | O 24.71 GPa | O 24.5 GPa |
+| ELF (결합 midpoint) | O | **⏳ SCF+pp 러너 가동 (gabia CPU, 2026-07-21)** | O |
+| PDOS (mean-3p, -8..0) | O | O | O |
+| ICOHP/COHP | O (비교값) | O | O (+σ\* ext) |
+| Bader | O | ✕ (선택) | O |
+| Li-금속 계면 MD | O (modelc62 control) | O (07-19, 1× ratio-clean) | O (매몰+종단 §6) |
+| Convex hull (UMA-일관) | O 16.7 | ✕ (선택) | O 37.5 |
+| ESW 산화 onset | O 2.14 V | ✕ (선택) | O 2.03 V |
+
+**남은 필수 2건**: ① LPSOCl ELF (러너: `tools/electronic/run_lpsocl_elf_gabia.sh` — NC/80/320/fixed/k444, b2o3·modelc와 동일 midpoint 분석으로 `lpsocl_elf_bonds.csv` 등록; **Li–O 트랩 ELF를 b2o3의 0.780과 직접 비교**하는 게 목적) ② LPSOCl Ea 오차막대 완성 (gabia `~/work/runs/lpsocl_md/reseed_hiT/` 수확 → `lpsocl_md_arrhenius.json` 3-시드×3-T 갱신 → Arrhenius 그림·CSV 재생성). B₂O₃ 쪽 유일 미완은 §9의 Li–B–S 산물상 gap/DOS.
