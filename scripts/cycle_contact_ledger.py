@@ -192,7 +192,10 @@ def run(a):
         alive &= ~brk_now
         # ── 방전 반각 (복귀): forbid = 파단 영구 / elastic = gap≤0 복귀 접촉 부활 ──
         if a.recontact == 'elastic':
-            alive |= (gap_nm <= 0)
+            # 방전-말 반경 완전 복원 → 모든 원 접촉이 기하학적으로 재접촉 = 전량 부활 (상한).
+            # (구현버그 수정 2026-07-22: 충전-말 gap>0 조건으론 부활 0 = forbid와 동일했음.
+            #  전량-부활 상한은 정의상 무열화 — 실제 물리는 forbid~elastic 사이 부분-재습윤(§5-4))
+            alive = np.ones_like(alive)
         ov_now = np.where(alive, ov0, 0.0)                  # 방전-말 상태 (반경 원복 — 원장만 남음)
         if N in chk:
             s_e, s_i = sigma_pair()
