@@ -20,19 +20,26 @@ NP=${NP:-16}
 [ -x "$CPU/pw.x" ] && [ -x "$CPU/pp.x" ] || { echo "ERROR: CPU 빌드 pw.x/pp.x 없음 ($CPU) — ls /data/apps 붙여줘"; exit 1; }
 [ -f "$V0" ] || { echo "ERROR: $V0 없음 — git pull"; exit 1; }
 
-# ---- 0) NC(ONCV/SG15) pseudo 5종 수집 (Li P S Cl O) ----
+# ---- 0) NC(ONCV/SG15) pseudo 5종 수집 (Li P S Cl O) — 로컬 수색 -> SG15 wget 폴백 ----
 PSE=$OUT/pseudo; mkdir -p "$PSE"
+SG15="http://www.quantum-simulation.org/potentials/sg15_oncv/upf"
 for e in Li P S Cl O; do
-  ls "$PSE/${e}"_*.upf >/dev/null 2>&1 && continue
-  f=$(find /data/work /data/apps /root -maxdepth 5 -iname "${e}_*.upf" 2>/dev/null \
-        | grep -iE "oncv|sg15|_nc" | head -1)
-  [ -z "$f" ] && f=$(find /data/work /data/apps /root -maxdepth 5 -iname "${e}.*upf" 2>/dev/null \
-        | grep -iE "oncv|sg15|_nc" | head -1)
-  if [ -n "$f" ]; then cp "$f" "$PSE/"; echo "[pseudo] $e <- $f"
+  ls "$PSE/${e}"_*.upf "$PSE/${e}"_*.UPF >/dev/null 2>&1 && continue
+  f=$(find /data/work /data/apps /root -maxdepth 5 \( -iname "${e}_*.upf" -o -iname "${e}.*upf" \) 2>/dev/null \
+        | grep -iE "oncv|sg15" | head -1)
+  if [ -n "$f" ]; then cp "$f" "$PSE/"; echo "[pseudo] $e <- $f"; continue; fi
+  ok=""
+  for v in 1.2 1.1 1.0; do
+    wget -q "$SG15/${e}_ONCV_PBE-${v}.upf" -O "$PSE/${e}_ONCV_PBE-${v}.upf" 2>/dev/null \
+      && [ -s "$PSE/${e}_ONCV_PBE-${v}.upf" ] \
+      && grep -aq "UPF" "$PSE/${e}_ONCV_PBE-${v}.upf" \
+      && { ok=$v; break; }
+    rm -f "$PSE/${e}_ONCV_PBE-${v}.upf"
+  done
+  if [ -n "$ok" ]; then echo "[pseudo] $e <- SG15 wget (v$ok)"
   else
-    echo "!! $e NC pseudo 못 찾음 — gabia의 후보 목록:"
-    find /data/work /data/apps /root -maxdepth 5 -iname "*${e}*upf" 2>/dev/null | head -10
-    echo ">>> comp1/modelc CDD 때 쓴 pseudo 경로 붙여주면 이어갈게"; exit 1
+    echo "!! $e NC pseudo 확보 실패 (로컬 없음 + SG15 wget 실패) — 네트워크/URL 확인 필요"
+    exit 1
   fi
 done
 echo "[pseudo] OK: $(ls "$PSE" | tr '\n' ' ')"
