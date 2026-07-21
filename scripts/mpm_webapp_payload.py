@@ -277,8 +277,16 @@ def main():
     ap.add_argument('--step3-vox', type=float, default=0.4,
                     help='STEP3 voxel size (µm).  0.4 default: AM-carbon bridges (band 0.15µm) land in '
                          'same/adjacent voxels; smaller = finer necks but ∝1/vox³ dof.')
-    ap.add_argument('--sigma-am-s', type=float, default=0.010, help='σ_e AM_S (S/cm) — A1-locked 10 mS/cm')
-    ap.add_argument('--sigma-am-p', type=float, default=0.005, help='σ_e AM_P (S/cm) — A1-locked 5 mS/cm')
+    ap.add_argument('--cam', choices=('nmc811', 'nca'), default='nmc811',
+                    help='★A8 CAM 재료 프리셋 — σ_e(AM) 기본값 결정 (docs/nca_material_preset.md 검증표). '
+                         'nmc811: S/P = 10/5 mS/cm (A1 corpus-fit).  nca: S=P = 10 mS/cm 단일값 — '
+                         'Amin/Chiang JES 2015 소결펠릿 "충전-상태 상단"(리튬화는 1e-4 S/cm, SOC 2자리 스윙; '
+                         'NCA 단결정/다결정 분리 데이터 부재라 S=P).  ⚠ E_AM은 프리셋이 안 바꿈 — '
+                         'Kang의 175 GPa는 assumed(Koerver umbrella 인용)라 140 유지(가짜 25% 대비 차단).')
+    ap.add_argument('--sigma-am-s', type=float, default=None,
+                    help='σ_e AM_S (S/cm) — 미지정 시 --cam 프리셋 (nmc811: 0.010 / nca: 0.010)')
+    ap.add_argument('--sigma-am-p', type=float, default=None,
+                    help='σ_e AM_P (S/cm) — 미지정 시 --cam 프리셋 (nmc811: 0.005 / nca: 0.010)')
     ap.add_argument('--sigma-vgcf', type=float, default=100.0, help='σ_e VGCF (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-sdcp', type=float, default=250.0,
@@ -317,6 +325,12 @@ def main():
                     help='STEP4-v2(시간전개) 입력 격자 npz 저장: sid/pid/σ_e·σ_i테이블/vox/z_top/AM반경 '
                          '— scripts/step4_dyn.py --grid 로 로드 (payload 재실행 없이 rate 스윕)')
     a = ap.parse_args()
+    # ★A8 CAM 프리셋 → σ_e(AM) 기본값 해석 (명시 --sigma-am-s/-p가 항상 우선; nmc811 기본은
+    #   기존 10/5와 byte-동일 = 하위호환).  근거·캐비엇: docs/nca_material_preset.md
+    if a.sigma_am_s is None:
+        a.sigma_am_s = 0.010
+    if a.sigma_am_p is None:
+        a.sigma_am_p = 0.010 if a.cam == 'nca' else 0.005
     if a.save_step4_grid and not a.save_step4_grid.endswith('.npz'):
         a.save_step4_grid += '.npz'                      # savez 자동 append와 소비자(--grid) 일관화
     vc = _vc()
@@ -549,6 +563,15 @@ def main():
                                               'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,
                                               'SDCP': a.sigma_sdcp,
                                               **({'PTFE': a.sigma_ptfe} if a.sigma_ptfe > 0 else {})},
+                         # ★A8: CAM 프리셋 provenance (nca σ = Amin 2015 충전-상단 1e-2 S/cm,
+                         #   리튬화 1e-4 캐비엇; E_AM은 프리셋 불변 — nca_material_preset.md)
+                         'cam_preset': {'cam': a.cam,
+                                        **({'sigma_note': 'NCA: Amin/Chiang JES 2015 sintered-pellet '
+                                                          'charged-state upper end 1e-2 S/cm (lithiated '
+                                                          '1e-4, 2-decade SOC swing); S=P (no SC/PC split '
+                                                          'data for NCA); E_AM kept 140 GPa (Kang 175 = '
+                                                          'assumed, see docs/nca_material_preset.md)'}
+                                           if a.cam == 'nca' else {})},
                          'trust': ('RELATIVE_v1 (same settings between runs; pressed-to-plate beds — '
                                    'plate contacts abundant; carbon/SDCP σ = F1 hooks; AM_S/P = A1-locked '
                                    '10/5 mS/cm; lateral Neumann; sub-voxel constriction not modelled)'
