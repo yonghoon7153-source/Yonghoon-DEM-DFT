@@ -77,11 +77,10 @@ PYC
     grep -aq diago_david_ndim "$OUT/$j/scf.in" || \
       sed -i '/&ELECTRONS/a\    diago_david_ndim = 2' "$OUT/$j/scf.in"
   done
-  # 단일-k (2026-07-21): 221 k-mesh의 파동함수/Davidson 메모리(nks배)가 진짜 살덩이.
-  # ⚠ 'K_POINTS gamma'(감마 트릭)는 ortho-atomic Hubbard와 미구현 충돌(orthoUwfc 에러)
-  # -> 일반 k-mode의 Γ 1점(automatic 1 1 1)으로: U 프로토콜 유지 + nks 절감만 취함.
-  # verdict(차분)엔 영향 미미, refine 세트 내부 전부 동일 샘플링이라 자기일관.
-  "$UMA_PY" - "$OUT" <<'PYK'
+  # k-mode: 221(원 프로토콜) 우선, VRAM 밀리면 tier에서 111(단일 Γ, 일반 k-mode)로.
+  # ⚠ 'K_POINTS gamma'(감마 트릭)는 ortho-atomic Hubbard와 미구현 충돌(orthoUwfc) — 금지.
+  if [ "${3:-221}" = "111" ]; then
+    "$UMA_PY" - "$OUT" <<'PYK'
 import re, sys
 out = sys.argv[1]
 for j in ("slab", "complex_doped", "complex_neutral"):
@@ -91,6 +90,7 @@ for j in ("slab", "complex_doped", "complex_neutral"):
     assert "1 1 1 0 0 0" in t2, f"{j}: K_POINTS swap failed"
 print("[mem] K_POINTS 2 2 1 -> 1 1 1 (single-k, non-gamma-trick) in slab/complexes")
 PYK
+  fi
   # tier-2 VRAM 노브: Broyden mixing history 축소 (converged-E엔 물리 불변;
   # plateau(미수렴 last-E) 케이스만 관례 주석 필요 — db 등록 시 ndim 명기)
   if [ "${2:-20}" != "20" ]; then
@@ -110,18 +110,23 @@ run_one() {
     || echo "[$1] plateau/미수렴/에러 (ladder 판정 아래)"
 }
 
-# ---- C-LADDER (2-tier): tier-1 = ndim20 (프로토콜 그대로), tier-2 = mixing_ndim 8
-#      (c31/30/29 전부 OOM일 때만; c31부터 재시도 = 이미지 간격 우선 복구) ----
+# ---- C-LADDER (3-tier; CELL-FIX 이후 complex도 진짜로 사다리를 탐):
+#      tier-1 = k221+ndim20 (원 프로토콜; c31/221은 버그 때문에 사실 미시험이었음)
+#      tier-2 = k111+ndim20 (wfc 블록 절감)   tier-3 = k111+ndim8 (mixing 절감) ----
 ok=0
+T1="8.5:20:221 7.5:20:221 6.5:20:221"
+T2="8.5:20:111 7.5:20:111 6.5:20:111"
+T3="8.5:8:111 7.5:8:111 6.5:8:111"
 case "${TIER:-all}" in
-  2) ATTEMPTS="8.5:8 7.5:8 6.5:8";;          # TIER=2: ndim20 단들은 이미 실패 확인됨
-  *) ATTEMPTS="8.5:20 7.5:20 6.5:20 8.5:8 7.5:8 6.5:8";;
+  2) ATTEMPTS="$T2 $T3";;
+  3) ATTEMPTS="$T3";;
+  *) ATTEMPTS="$T1 $T2 $T3";;
 esac
 for ATT in $ATTEMPTS; do
-  GAP=${ATT%:*}; ND=${ATT#*:}
+  GAP=$(echo "$ATT" | cut -d: -f1); ND=$(echo "$ATT" | cut -d: -f2); KM=$(echo "$ATT" | cut -d: -f3)
   C=$("$UMA_PY" -c "import math; print(math.ceil($ZMAX + $GAP))")
-  echo "══ [ladder] c=${C}A, mixing_ndim=${ND} 시도 (image gap ~${GAP}A, david_ndim 2, single-k) ══"
-  gen_at_c "$C" "$ND" || { echo "입력생성 실패 (scf_u62.in / 자세 xyz 경로 확인)"; exit 1; }
+  echo "══ [ladder] c=${C}A, k=${KM}, mixing_ndim=${ND} (image gap ~${GAP}A, david_ndim 2) ══"
+  gen_at_c "$C" "$ND" "$KM" || { echo "입력생성 실패 (scf_u62.in / 자세 xyz 경로 확인)"; exit 1; }
   rm -f "$OUT/complex_doped/scf.out" "$OUT/complex_neutral/scf.out" "$OUT/slab/scf.out"
   run_one complex_doped
   if grep -aqE "cufftPlanMany|cfft3d_gpu|[Ii]nsufficient.*memory|out of memory" "$OUT/complex_doped/scf.out"; then
@@ -131,7 +136,7 @@ for ATT in $ATTEMPTS; do
   fi
   ok=1; echo "[ladder] c=$C 통과 — 이 셀로 나머지 진행"; break
 done
-[ "$ok" = 1 ] || { echo "!! 6단(tier-2 ndim8, c29)까지 전부 OOM — ecutrho 절충 논의 필요 (에스컬레이션)"; exit 1; }
+[ "$ok" = 1 ] || { echo "!! 9단(tier-3 k111+ndim8, c29)까지 전부 OOM — ecutrho 절충 논의 필요 (에스컬레이션)"; exit 1; }
 # 복합체 먼저 (verdict 핵심) -> gas(이미 done, skip) -> slab (절대값용)
 for j in complex_neutral mol_doped mol_neutral slab; do run_one "$j"; done
 

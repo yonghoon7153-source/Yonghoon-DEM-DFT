@@ -457,6 +457,19 @@ def main():
             atoms, labels = slab_atoms, slab_labels
         elif kind.startswith("complex"):
             atoms = read(src)
+            # CELL FIX (2026-07-21): pose xyz carries the SCAN cell in its Lattice
+            # header (tall-vac c40) — without override the complex ignores --slab's
+            # cell entirely (c-ladder OOM 8연속 크래시의 진범). E_bind cancellation
+            # requires complex cell == slab cell; positions are Cartesian so only
+            # the vacuum changes.
+            if not np.allclose(atoms.cell.array, slab_atoms.cell.array, atol=1e-6):
+                c_new = slab_atoms.cell.array[2][2]
+                zmax = atoms.positions[:, 2].max()
+                assert zmax < c_new - 4.0, \
+                    f"{name}: molecule zmax {zmax:.2f} A too close to slab cell c={c_new:.2f}"
+                print(f"  [cell-fix] {name}: pose cell c={atoms.cell.array[2][2]:.2f} "
+                      f"-> slab c={c_new:.2f} A (Cartesian kept, image gap {c_new - zmax:.1f} A)")
+                atoms.set_cell(slab_atoms.cell, scale_atoms=False)
             base = list(atoms.get_chemical_symbols())
             mism = sum(1 for i in range(Nslab)
                        if base[i] != slab_atoms.get_chemical_symbols()[i])
