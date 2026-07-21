@@ -16,7 +16,9 @@ REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}; [ -d "$REPO" ] || REPO=$HOME/work/Yonghoon
 OUT=/data/work/runs/lpsocl_elf; mkdir -p "$OUT"
 V0=$REPO/db/structures/lpsocl_relaxV0.xyz
 CPU=/data/apps/qe-7.4.1-cpu/bin
-NP=${NP:-16}
+CORES=$(nproc 2>/dev/null || echo 8)
+NP=${NP:-$(( CORES < 16 ? CORES : 16 ))}
+echo "[mpi] cores=$CORES -> np=$NP"
 [ -x "$CPU/pw.x" ] && [ -x "$CPU/pp.x" ] || { echo "ERROR: CPU 빌드 pw.x/pp.x 없음 ($CPU) — ls /data/apps 붙여줘"; exit 1; }
 [ -f "$V0" ] || { echo "ERROR: $V0 없음 — git pull"; exit 1; }
 
