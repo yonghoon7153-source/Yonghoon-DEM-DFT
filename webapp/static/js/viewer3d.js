@@ -170,7 +170,10 @@ function wireVProfileDownload(state, btnId) {
     const ar = ((s3.field_scale_e || {}).areal_capacity_mAh_cm2)
       || (st.c_max_mol_m3 ? 96485 * st.c_max_mol_m3 * win / 3.6e6 * 0.00307 / 0.00307 * 3.1 / 3.1 : 0);  // fallback 대략
     const useCap = ar > 0;
-    const xs = cu.x_mean.map(x => useCap ? (x - x0) / win * ar : 100 * (x - x0) / win);
+    // 충전은 x̄가 x100→x0로 감소 → '충전된 용량' = (x100−x̄); 방전은 (x̄−x0).  이걸 안 가르면
+    // 충전 곡선이 좌우 반전(4.25V 플래토가 왼쪽)으로 그려짐.
+    const qOf = x => (st.charge ? ((st.x100 ?? x100) - x) : (x - x0));
+    const xs = cu.x_mean.map(x => useCap ? qOf(x) / win * ar : 100 * qOf(x) / win);
     // 과전압 분해 (신형 viz만: I_A+eta_diff_mV 필요 — 구형 json은 V-곡선 단일 패널 유지)
     const hasD = !!(cu.I_A && cu.eta_diff_mV);
     let eo = null, ek = null, ed = null, er = null;
@@ -227,7 +230,8 @@ function wireVProfileDownload(state, btnId) {
     }
     const xAxisY = hasD ? b2 : b1;
     g.fillStyle = '#111'; g.font = '22px sans-serif'; g.textAlign = 'center';
-    g.fillText(useCap ? 'Delivered capacity (mAh cm⁻²)' : 'SOC window (%)', mL + (W - mL - mR) / 2, H - 30);
+    g.fillText(useCap ? (st.charge ? 'Charged capacity (mAh cm⁻²)' : 'Delivered capacity (mAh cm⁻²)')
+               : (st.charge ? 'Charged SOC window (%)' : 'SOC window (%)'), mL + (W - mL - mR) / 2, H - 30);
     g.font = '16px sans-serif';
     for (let i = 0; i <= 5; i++) { const x = xlo + (xhi - xlo) * i / 5; g.fillText(x.toFixed(useCap ? 2 : 0), PX(x), xAxisY + 24); }
     g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
@@ -239,7 +243,7 @@ function wireVProfileDownload(state, btnId) {
     // CSV (전 스텝 원자료 — 분해 컬럼은 신형 viz만 채워짐)
     const hdr = 'step,t_s,V,V_terminal,x_mean,soc_window_pct,delivered_mAh_cm2,eta_kin_mV,eta_diff_mV,eta_ohm_mV,I_A,Q_ohm_e_W,Q_ohm_i_W,Q_ct_W,Q_rint_W';
     const rows = cu.V.map((v, i) => [i + 1, cu.t_s[i], v, cu.V_terminal[i], cu.x_mean[i],
-      (100 * (cu.x_mean[i] - x0) / win).toFixed(3), useCap ? xs[i].toFixed(4) : '',
+      (100 * qOf(cu.x_mean[i]) / win).toFixed(3), useCap ? xs[i].toFixed(4) : '',
       cu.eta_kin_mV[i], hasD ? cu.eta_diff_mV[i] : '', hasD ? eo[i].toFixed(2) : '',
       hasD ? cu.I_A[i] : '', cu.Q_ohm_e_W[i], cu.Q_ohm_i_W[i], cu.Q_ct_W[i],
       (cu.Q_rint_W || [])[i] != null ? cu.Q_rint_W[i] : ''].join(','));
@@ -5229,7 +5233,8 @@ function showVProfilePopup(store, nameA, nameB) {
     const W = cv.clientWidth, H = cv.clientHeight, mL = 62, mR = 16, mT = 14, mB = 46, xmode = $$('vp-x').value;
     g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
     const xof = (s, i) => { const m = s.meta, win = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0));
-      if (xmode === 't') return s.cu.t_s[i] / 60; if (xmode === 'cap') return (s.cu.x_mean[i] - (m.x0 ?? X0)) / win * 3.1; return 100 * (s.cu.x_mean[i] - (m.x0 ?? X0)) / win; };
+      const q = m.charge ? ((m.x100 ?? X100) - s.cu.x_mean[i]) : (s.cu.x_mean[i] - (m.x0 ?? X0));   // 충전 반전 방지
+      if (xmode === 't') return s.cu.t_s[i] / 60; if (xmode === 'cap') return q / win * 3.1; return 100 * q / win; };
     let vlo = 9, vhi = 0, xlo = 1e9, xhi = -1e9;
     ser.forEach(s => s.cu.V.forEach((v, i) => { vlo = Math.min(vlo, v); vhi = Math.max(vhi, v); const x = xof(s, i); xlo = Math.min(xlo, x); xhi = Math.max(xhi, x); }));
     const PX = x => mL + (x - xlo) / (xhi - xlo + 1e-9) * (W - mL - mR), PY = v => mT + (1 - (v - vlo) / (vhi - vlo + 1e-9)) * (H - mT - mB);
@@ -5248,7 +5253,7 @@ function showVProfilePopup(store, nameA, nameB) {
     // Δ(A−B) 정량 — 같은 프로토콜(충/방 동일) 두 곡선일 때 공통 SOC창 그리드에서 ΔV·Δη_kin 평균
     if (ser.length === 2 && !!ser[0].meta.charge === !!ser[1].meta.charge) {
       const socOf = s => { const m = s.meta, w = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0)) || 1;
-        return s.cu.x_mean.map(x => 100 * (x - (m.x0 ?? X0)) / w); };
+        return s.cu.x_mean.map(x => 100 * (m.charge ? ((m.x100 ?? X100) - x) : (x - (m.x0 ?? X0))) / w); };
       const prep = s => { let xs = socOf(s), vs = s.cu.V, ks = s.cu.eta_kin_mV || null;
         if (xs[0] > xs[xs.length - 1]) { xs = [...xs].reverse(); vs = [...vs].reverse(); ks = ks ? [...ks].reverse() : null; }
         return { xs, vs, ks }; };
