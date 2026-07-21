@@ -360,6 +360,11 @@ class CellSystem:
         self.n_e, self.n_i = int(cond_e.sum()), int(cond_i.sum())
         idx_e = -np.ones(sid.shape, np.int64); idx_e[cond_e] = np.arange(self.n_e)
         idx_i = -np.ones(sid.shape, np.int64); idx_i[cond_i] = np.arange(self.n_i)
+        # ★ 운전-중 φ(z) 프로파일용 dof→z-층 매핑 (boolean-mask arange 부여 = C-order =
+        #   np.nonzero 순서와 동일 → phi[:n_e][k]가 k_e_layer[k] 층의 전자 dof)
+        self.k_e_layer = np.nonzero(cond_e)[2].astype(np.int32)
+        self.k_i_layer = np.nonzero(cond_i)[2].astype(np.int32)
+        self.z_um_layers = (np.arange(sid.shape[2]) + 0.5) * vox_um
         sig_e = np.where(cond_e, sig_e, 0.0); sig_i = np.where(cond_i, sig_i, 0.0)
         self.N = self.n_e + self.n_i                        # Dirichlet 구조 (supernode 없음)
         rows, cols, vals = [], [], []
@@ -688,6 +693,21 @@ class CellSystem:
         np.add.at(i_am, self.f_pid[m], -I_f[m])
         return i_am
 
+    def phi_z_profiles(self, phi):
+        """운전-중 z-층 평균 전위 (φ_e(z), φ_i(z)) — 전자·이온 전류 상보 구도의 직접 시각화.
+
+        STEP3 unit-ΔV 프로파일(각 망 따로, 같은 BC → 둘 다 1→0 준선형)과 달리, 결합 운전
+        솔브에선 φ_e ≈ 평평(µV급, 곡률 집전체쪽) / φ_i 수십 mV(곡률 분리막쪽) — 크기·곡률이
+        미러.  dof 없는 층(패딩 등)은 NaN."""
+        nz = len(self.z_um_layers)
+        ce = np.bincount(self.k_e_layer, minlength=nz)
+        ci = np.bincount(self.k_i_layer, minlength=nz)
+        pe = np.bincount(self.k_e_layer, weights=phi[:self.n_e], minlength=nz)
+        pi = np.bincount(self.k_i_layer, weights=phi[self.n_e:self.N], minlength=nz)
+        pe = np.where(ce > 0, pe / np.maximum(ce, 1), np.nan)
+        pi = np.where(ci > 0, pi / np.maximum(ci, 1), np.nan)
+        return pe.astype(np.float32), pi.astype(np.float32)
+
     def energy_audit(self, phi, I_f, eta_s, U_f, kin, V_app):
         """P_ohm(e/i, 판 포함) + Σ I·η_s + Σ I²·ASR/A + Σ I·U + V·I_del = 0 (기계정밀도 감사).
         유도: 정상성 φᵀF=0 에 판-Dirichlet b-항을 물리 항(판 소산·전달 전력)으로 재배열.
@@ -758,14 +778,16 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
             'Q_ohm_e_W', 'Q_ohm_i_W', 'Q_ct_W', 'Q_film_W', 'Q_rint_W', 'Q_rev_W')
     out = {k: [] for k in keys}
     # 뷰어 체크포인트 (코어-셸 SOC + 면별 반응전류): SOC-진행 균등 n_chk점 + 마지막 상태
-    chk = {'t': [], 'x_mean': [], 'x_shell': [], 'I_face': []}
+    chk = {'t': [], 'x_mean': [], 'x_shell': [], 'I_face': [], 'phi_e_z': [], 'phi_i_z': []}
     _win = abs(ocp.x100 - ocp.x0)
     _next_rec = 0.0
 
-    def _rec_chk(t_now, x_bar_now, I_f_now):
+    def _rec_chk(t_now, x_bar_now, I_f_now, phi_now):
         chk['t'].append(float(t_now)); chk['x_mean'].append(float(x_bar_now))
         chk['x_shell'].append(rad.x.astype(np.float16).copy())
         chk['I_face'].append(np.asarray(I_f_now, np.float32).copy())
+        _pe, _pi = sys_.phi_z_profiles(phi_now)             # 운전-중 φ(z) 상보 프로파일
+        chk['phi_e_z'].append(_pe); chk['phi_i_z'].append(_pi)
 
     t, dt = 0.0, dt_init
     phase = 'cc'
@@ -835,7 +857,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         # 뷰어 체크포인트: SOC-창 진행 균등 지점마다 셸-SOC + 면전류 기록
         _frac = abs(x_bar - x_ini) / max(_win, 1e-12)
         if _frac >= _next_rec - 1e-12 and not newton_failed:
-            _rec_chk(t, x_bar, I_f)
+            _rec_chk(t, x_bar, I_f, phi)
             _next_rec += 1.0 / max(n_chk - 1, 1)
         # ---- 종료/전환 ----
         if newton_failed:                                   # 가비지 상태로 확산을 전진시키지 않음
@@ -888,9 +910,12 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
             print(f'  ⚠ CG maxiter 도달 이력 (info={sys_.last_cg_info}) — 해 품질 확인 요망', flush=True)
     if (not chk['t'] or chk['t'][-1] < t - 1e-9) and reason != 'newton_fail':
         _x_now = float((rad.mean_x() * V_p).sum() / V_p.sum())   # soc_overrun 프레임 짝 맞춤 (물리 R2#6)
-        _rec_chk(t, _x_now, I_f)
+        _rec_chk(t, _x_now, I_f, phi)
     out = {k: np.asarray(v) for k, v in out.items()}
     out['viz_t'] = np.asarray(chk['t'])
+    out['viz_phi_e_z'] = np.asarray(chk['phi_e_z'])
+    out['viz_phi_i_z'] = np.asarray(chk['phi_i_z'])
+    out['viz_z_um'] = np.asarray(sys_.z_um_layers, np.float32)
     out['viz_x_mean'] = np.asarray(chk['x_mean'])
     out['viz_x_shell'] = (np.stack(chk['x_shell']) if chk['x_shell']
                           else np.zeros((0, n_am, nr), np.float16))
@@ -1263,6 +1288,15 @@ def main():
                       'Q_ohm_i_W': [float(f'{v:.4g}') for v in out['Q_ohm_i_W']],
                       'Q_rint_W': [float(f'{v:.4g}') for v in out['Q_rint_W']],
                       'Q_ct_W': [float(f'{v:.4g}') for v in out['Q_ct_W']]},
+            # ★ 운전-중 φ(z) 상보 프로파일 (체크포인트별) — φ_e ≈ 평평(µV)·φ_i 수십 mV, 곡률 미러.
+            #   STEP3 unit-ΔV per-network 프로파일과 다른 물리임을 명시.  NaN(dof 없는 층)→null.
+            'phi_z': {'z_um': [round(float(v), 2) for v in out['viz_z_um']],
+                      'phi_e_V': [[(None if not np.isfinite(v) else round(float(v), 6)) for v in row]
+                                  for row in out['viz_phi_e_z']],
+                      'phi_i_V': [[(None if not np.isfinite(v) else round(float(v), 6)) for v in row]
+                                  for row in out['viz_phi_i_z']],
+                      'note': 'OPERATING z-layer mean potentials per checkpoint — NOT the STEP3 '
+                              'unit-ΔV per-network profile'},
             't_s': [round(float(v), 1) for v in out['viz_t']],
             'x_mean': [round(float(v), 4) for v in out['viz_x_mean']],
             'x_shell': np.round(out['viz_x_shell'].astype(np.float64), 4).tolist(),
