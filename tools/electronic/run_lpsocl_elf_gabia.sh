@@ -16,9 +16,12 @@ REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}; [ -d "$REPO" ] || REPO=$HOME/work/Yonghoon
 OUT=/data/work/runs/lpsocl_elf; mkdir -p "$OUT"
 V0=$REPO/db/structures/lpsocl_relaxV0.xyz
 CPU=/data/apps/qe-7.4.1-cpu/bin
+# CPU 빌드는 시스템 mpirun 조합이 검증됨 (gabia_cdd_phx.md; conda mpirun은 slot/lib 충돌)
+MPIRUN=${MPIRUN:-/usr/bin/mpirun}
+[ -x "$MPIRUN" ] || MPIRUN=mpirun
 CORES=$(nproc 2>/dev/null || echo 8)
 NP=${NP:-$(( CORES < 16 ? CORES : 16 ))}
-echo "[mpi] cores=$CORES -> np=$NP"
+echo "[mpi] $MPIRUN, cores=$CORES -> np=$NP"
 [ -x "$CPU/pw.x" ] && [ -x "$CPU/pp.x" ] || { echo "ERROR: CPU 빌드 pw.x/pp.x 없음 ($CPU) — ls /data/apps 붙여줘"; exit 1; }
 [ -f "$V0" ] || { echo "ERROR: $V0 없음 — git pull"; exit 1; }
 
@@ -97,7 +100,7 @@ cd "$OUT"
 run_pw() {  # $1=in $2=out
   grep -aq "JOB DONE" "$2" 2>/dev/null && { echo "[$1] done skip"; return 0; }
   echo "[$(date +%H:%M:%S)] pw.x $1 (CPU -np $NP)"
-  mpirun -np "$NP" "$CPU/pw.x" -in "$1" > "$2" 2>&1
+  "$MPIRUN" -np "$NP" "$CPU/pw.x" -in "$1" > "$2" 2>&1
   grep -aq "JOB DONE" "$2" || { echo "[$1] FAIL — tail:"; tail -12 "$2"; return 1; }
   echo "[$1] OK  E=$(grep -a '^!' "$2" | tail -1 | awk '{print $(NF-1)}') Ry"
 }
@@ -114,7 +117,7 @@ if [ ! -s lpsocl_elf.cube ]; then
 /
 EOF
   echo "[$(date +%H:%M:%S)] pp.x ELF"
-  mpirun -np "$NP" "$CPU/pp.x" -in pp_elf.in > pp_elf.out 2>&1
+  "$MPIRUN" -np "$NP" "$CPU/pp.x" -in pp_elf.in > pp_elf.out 2>&1
 fi
 echo "ELF: $(ls -la lpsocl_elf.cube 2>/dev/null || echo FAIL)"
 
@@ -128,7 +131,7 @@ if [ ! -s lpsocl_rho_scf.cube ]; then
   iflag=3, output_format=6, fileout='lpsocl_rho_scf.cube'
 /
 EOF
-  mpirun -np "$NP" "$CPU/pp.x" -in pp_rho.in > pp_rho.out 2>&1
+  "$MPIRUN" -np "$NP" "$CPU/pp.x" -in pp_rho.in > pp_rho.out 2>&1
 fi
 run_pw scf_atomic.in scf_atomic.out || true   # maxstep=1이라 'convergence NOT achieved'로 끝나도 정상
 if [ ! -s lpsocl_rho_atomic.cube ]; then
@@ -140,7 +143,7 @@ if [ ! -s lpsocl_rho_atomic.cube ]; then
   iflag=3, output_format=6, fileout='lpsocl_rho_atomic.cube'
 /
 EOF
-  mpirun -np "$NP" "$CPU/pp.x" -in pp_rho_at.in > pp_rho_at.out 2>&1
+  "$MPIRUN" -np "$NP" "$CPU/pp.x" -in pp_rho_at.in > pp_rho_at.out 2>&1
 fi
 
 echo ""; echo "===== 산출물 ====="
