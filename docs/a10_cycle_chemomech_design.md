@@ -37,7 +37,7 @@ R_contact(N)을 **모델 출력**으로 만들고, 측정 R_int(N)과의 갭을 
 | Γ = ½k_SE(3β_AM·A_AM)²/(H·G_c) **< 1000 = SE 건전** | 케이스별 스칼라 게이트 (우리 베드에서 즉시 계산 가능) | Bucci 2017 Fig5 |
 | 박리 개시 **반경 ~2.5% (부피 ~7.5%)** ; contiguous 50% 박리 → Li 도달시간 **×2.75** | 박리→수송 페널티 정량 (FPT) | Bucci 2018 (pdf_local) |
 | bilinear TSL σ_c=100 MPa, G_c=1 J/m²; 10µm 입자 damage→1, 3µm ~0.4 | 랩 FEM 파라미터 (크기의존 입계손상) | Kang&Shin 2025 (pdf_local) |
-| ⚠ **AM-SE 계면 γ 실측 부재** (Bucci 1–10 J/m²는 스윕이지 측정 아님) | 정직 갭 — 스윕+밴드로 다룰 것 | Phase 0 조사 재확인 |
+| ⚠ **AM-SE 계면 γ 실측 부재** (Bucci 1–10 J/m²는 스윕이지 측정 아님) | 정직 갭 — 스윕+밴드로 다룰 것.  ★충전 경로(2026-07-22): DFT 프로그램 Wad 방법론(argyrodite-ml `kb/methodology/adhesion_energy.md`, UMA 검증 R=0.989)으로 NCM/SE 계면 분리에너지 **계산 앵커** 산출 가능 — ML 지도 §7 | Phase 0 조사 재확인 |
 
 ### 1.3 접촉손실/R_int(N) 실측 (검증 타깃)
 | 궤적 | 값 (Ω·cm²) | 출처 |
@@ -104,5 +104,39 @@ A10의 **대조군**으로 유지 (모델 성공 판정 = 밴드 안에 들어�
 1. 옵션 A/B/C 조합 승인 여부 (추천: A+B보정+C대조).
 2. ΔV 앵커 선택: SC −5.1%(Kondrakov) vs 5.9%(Yun/Kang 계열) — 스윕 축으로 둘 다?
 3. G_c 2.8±1.8 밴드를 스윕으로 노출할지, 중앙값 고정할지.
-4. 파단 접촉 재접촉 금지(Bucci) vs 확률적 재습윤(Schmidt 2024) — v1은 금지 추천.
+4. 파단 접촉 재접촉 금지(Bucci) vs 확률적 재습윤(Schmidt 2024) — **v1 구현됨**:
+   `--recontact forbid(하한)/partial --rewet-frac f/elastic(무열화 상한)`.  스택압↔f 매핑은 미결.
 5. 구현 파일: `scripts/cycle_contact_ledger.py` (신규, 후처리) + 기존 솔버 훅.
+6. **[리뷰 신규] ov0 층위 혼합**: DEM 겹침(18×-연화 E 규약 길이, real14 AM-SE 중앙 59nm)을
+   문헌 절대값 δcr=100nm에서 빼는 것 → δcr을 **캘리브 노브**로 스윕할지, 겹침을 real-E로
+   재스케일할지.  완전-탄성 회복(잔류 압평 δ_res 무시)은 개구 과소 방향(보수적).
+7. **[리뷰 신규] AM-AM 채널**: 기본은 재폐합(비영구) — 입자내부 전자열화(Parks 균열)는
+   frame[5] MPM/FEM 소관.  DEM 접촉-원장은 AM-SE 반응면 열화만 담당 (정정 확정).
+
+## 6. ★ 실전 결과 (2026-07-22) + 3각 리뷰 반영
+
+### 6.1 첫 실런 (WSL, 100사이클)
+| 지표 | mono (r_AM 2.5µm) | bimodal (AM_P 6+AM_S 2µm) | Kang&Shin 실측 |
+|---|---|---|---|
+| N=1 AM_P 즉시파단 | 없음(수축 42nm<δcr) | **있음**(102nm>δcr) | 첫충전 점프 |
+| f_broken(AM-SE)@100 | 8.8% | **52.1%** | — |
+| **R_ct 접촉-몫**@100 | **1.05×** | **1.51×** | U-NCA **1.5×** / B-NCA **4.4×** |
+| σ_ion_rel | 1.000 | 1.000 | R_ion +23%뿐 (Yun) |
+| Γ* 게이트 | 393 (건전) | **1,100 (damage-expected)** | — |
+→ **bimodal≫mono 방향·즉시파단·포화·Γ* 판별 = Kang&Shin/Yun/Bucci 3앵커 동시 정합.**
+헤드라인 진술: "R_int(N) 성장의 접촉-기계 몫 = mono ~1.05×/bimodal ~1.51×, 나머지 = 화학."
+⚠ 이 표의 σ_e_rel 열(구판 0.878→0.214)은 **폐기** — §6.2 범주오류.  R_ct·σ_ion은 유효.
+
+### 6.2 3각 적대 리뷰 (wf_60455c5a, 20 검증) → 6건 수정 (커밋됨)
+- **[CRITICAL] rnm_sigma 특이계**: 고립/부동 노드(σ_e 계의 SE 전원 등)로 Laplacian 특이 →
+  spsolve NaN → 퍼콜 베드를 미퍼콜 오진.  **연결성분 제한**으로 근본수정 (src/snk 담은 성분만).
+  대형베드(내 실런)는 CG 경로라 무사했으나 이젠 크기 무관 견고.  selftest 5·6 추가(위양성 차단).
+- **[MAJOR] AM-AM 범주오류**: Bucci δcr=100nm는 **SE-상 cohesive TSL**인데 AM-AM 강체접촉에
+  영구파단 적용 → 허위 σ_e 열화.  정정: 기본 CZM = AM-SE+SE-SE만, **AM-AM은 스택압 재폐합**
+  (비영구, 충전개구는 보고만).  `--aa-czm`로 상한 시나리오 opt-in.  → **σ_e_rel=1.000**,
+  열화는 AM-SE 반응면(R_ct)만 = Yun(R_int≫R_ion) 정합.  (입자내부 전자열화 = frame[5] 밖.)
+- [MAJOR] 컨덕턴스/면적 프록시 R*(감쇄반경) 누락 → √(R*δ) 수정 (bimodal 가중 정확).
+- [MAJOR] --recontact elastic no-op → forbid/partial/elastic 3-모드 + --rewet-frac(§5-4).
+- [MINOR] Γ* 라벨 정직화 · checkpoints 가드 · ov0 층위혼합 caveat.
+⚠ **재실런 필요**: 최신 코드로 mono/bimodal 재실행 시 σ_e_rel≈1.000 (재폐합).  R_ct·f_broken·
+Γ*·σ_ion은 불변 예상 (AM-SE·SE-SE 채널은 수정 무관, R* 추가로 bimodal 가중만 소폭).
