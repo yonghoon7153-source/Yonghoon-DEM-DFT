@@ -47,8 +47,11 @@ def main():
         e, xA, yA, zA = A[-1]
         for i in range(N_IMG):
             xi = xA + i * HOP / (N_IMG - 1)
-            # 기판 = 이완된 A 그대로 (모든 이미지 공통 시작점), Li만 x,y 고정
-            lines = [f"  {s:2s} {x:14.8f} {yy:14.8f} {z:14.8f}   1 1 1"
+            # 기판 = 면내 고정(0 0 1: x,y 고정 / z 자유). ⚠ 기판을 완전 자유(1 1 1)로
+            # 두면 PBC 시트가 통째로 병진(zero-mode)해 Li를 hollow에 다시 얹어 barrier를
+            # 0으로 지움 (2026-07-22 발견: img3 bridge=0.00). 면내 고정으로 미끄럼 차단 +
+            # out-of-plane 퍼커링 허용 -> frozen-in-plane drag = adiabatic barrier의 상한.
+            lines = [f"  {s:2s} {x:14.8f} {yy:14.8f} {z:14.8f}   0 0 1"
                      for s, x, yy, z in A[:-1]]
             lines.append(f"  Li {xi:14.8f} {yA:14.8f} {zA:14.8f}   0 0 1")
             pos = "\n".join(lines)
