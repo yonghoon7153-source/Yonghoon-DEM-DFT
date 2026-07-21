@@ -10,7 +10,7 @@ F2eVA=25.71104   # Ry/Bohr -> eV/A
 echo "══ h-BN@VGCF · Li binding [표면=adsorption / gallery=intercalation] (PBE-D3BJ 4x4)  $(date '+%m-%d %H:%M:%S') ══"
 
 # --- current pw.x + GPU + stall detection ---
-cur=$(pgrep -af 'pw\.x .*-in' 2>/dev/null | grep -aoE '[A-Za-z_]+\.in' | head -1)
+cur=$(pgrep -af 'pw\.x .*-in' 2>/dev/null | grep -aoE '[A-Za-z0-9_]+\.in' | head -1)
 gpu=$(nvidia-smi --query-gpu=memory.used,memory.free,utilization.gpu --format=csv,noheader,nounits 2>/dev/null | head -1)
 if [ -n "$cur" ]; then
   lg="$W/${cur%.in}.out"
