@@ -188,12 +188,16 @@ class RadialDiffusion:
       (Ṽ_k = (ρ_{k+1}³−ρ_k³)/3 = 단위구 셸부피/4π; 표면 면적항 ρ²=1; 결합계수에 Δρ는 1회 —
        스케일은 √t selftest가 고정)
     질량보존: Σ Ṽ_k Δx_k = Δt·J/(c_max·R) — CN+FV에서 기계정밀도 (selftest 1).
-    x_surf = x_{Nr−1} + (∂x/∂ρ)|₁·Δρ/2,  (∂x/∂ρ)|₁ = J·R/(D·c_max)  (flux-BC ghost 외삽)."""
+    x_surf = x_{Nr−1} + (∂x/∂ρ)|₁·Δρ/2,  (∂x/∂ρ)|₁ = J·R/(D·c_max)  (flux-BC ghost 외삽).
+    D는 스칼라(전 입자 공유) 또는 [n_p] per-particle (bimodal poly/SC 분리 — λ·surf_x 모두
+    입자축 브로드캐스트라 수치경로 동일; 균일값 배열 ≡ 스칼라 bitwise는 selftest가 고정)."""
 
     def __init__(self, n_p, nr, r_p_m, d_s, c_max, x_init):
         self.n_p, self.nr = int(n_p), int(nr)
         self.R = np.asarray(r_p_m, np.float64)              # [n_p] m
-        self.D = float(d_s)
+        self.D = np.asarray(d_s, np.float64) * np.ones(self.n_p)   # [n_p] m²/s (스칼라→공유 브로드캐스트)
+        if not np.all(self.D > 0):
+            raise ValueError('RadialDiffusion: D_s must be > 0 (per-particle 포함)')
         self.c_max = float(c_max)
         rho = np.arange(nr + 1) / nr
         self.d_rho = 1.0 / nr
@@ -733,14 +737,22 @@ class CellSystem:
 def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
              dx_max=0.02, dt_init=1.0, dt_max=120.0, t_max=None, charge=False,
              cv_hold=False, i_cut_frac=0.05, r_int_ohm_cm2=0.0, x_init=None,
-             dudt=None, n_chk=12, verbose=True):
+             dudt=None, i0_p=None, n_chk=12, verbose=True):
     """CC 방전(기본)/충전 (+cv_hold=True → V-리밋 도달 후 CV 홀드 = CCCV).
     r_int_ohm_cm2: 집전체 실측 R_int 직렬(시나리오 부하, STEP3 규약) — 터미널 V·컷오프에 반영.
-    dudt: (x_tab, dUdT_tab) 있으면 Q_rev = Σ I_f·T·dU/dT(x_f) 출력 (관례: I_f = 탈리튬 +)."""
+    dudt: (x_tab, dUdT_tab) 있으면 Q_rev = Σ I_f·T·dU/dT(x_f) 출력 (관례: I_f = 탈리튬 +).
+    d_s: 스칼라 또는 [n_am] per-particle [m²/s] (bimodal poly/SC — RadialDiffusion 브로드캐스트).
+    i0_p: None(공유 kin.i0_ref) 또는 [n_am] per-particle i0_ref [A/m²] — SOC-모양 i0(x)는 공유하고
+      진폭만 입자별 스케일 (i0_ref·shape·(i0_p/i0_ref) = i0_p·shape; 균일값이면 ×1.0 = bitwise 동일)."""
     n_am = sys_.n_am
     x_ini = float(x_init) if x_init is not None else (ocp.x0 if not charge else ocp.x100)
     x_end = ocp.x100 if not charge else ocp.x0
     rad = RadialDiffusion(n_am, nr, r_p_m, d_s, ocp.c_max, x_ini)
+    if i0_p is not None:
+        i0_p = np.asarray(i0_p, np.float64)
+        if i0_p.shape != (n_am,) or not np.all(i0_p > 0):
+            raise ValueError(f'i0_p must be [{n_am}] > 0 (got shape {i0_p.shape})')
+    _i0s = None if i0_p is None else i0_p / kin.i0_ref      # 입자별 진폭 스케일 (균일=1.0 → ×1.0 bitwise 불변)
     V_p = 4.0 / 3.0 * np.pi * np.asarray(r_p_m) ** 3        # [m³] 물리 구부피 (용량 기준)
     cap_As = F_CONST * ocp.c_max * abs(ocp.x100 - ocp.x0) * V_p.sum()
     I_1C = cap_As / 3600.0
@@ -753,6 +765,12 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
               f'dof {sys_.N:,}, I_1C={I_1C:.3e} A, I_cc={I_cc:.3e} A ({c_rate:g}C'
               f'{", CCCV" if cv_hold else ""}), R_int={r_int_ohm_cm2:g} Ω·cm², '
               f'α={kin.aa}/{kin.ac}, ASR_film={kin.asr:g} Ω·m², T={kin.T:g} K', flush=True)
+        if rad.D.max() > rad.D.min() or i0_p is not None:   # per-particle 전기화학 활성 시 정직 표기
+            _i0lo, _i0hi = ((kin.i0_ref, kin.i0_ref) if i0_p is None
+                            else (float(i0_p.min()), float(i0_p.max())))
+            print(f'  ★ per-particle 전기화학: D_s {rad.D.min():.3g}–{rad.D.max():.3g} m²/s, '
+                  f'i0_ref {_i0lo:g}–{_i0hi:g} A/m² (poly/SC 분리 — provenance는 CLI 로그/앵커 CSV)',
+                  flush=True)
         # 곡선-비교 정합용 per-런 앵커 (수치리뷰 F1/F2 2026-07-17): 곡선 도구가 이 라인을 파싱해
         # 자기 면적용량·x_init로 축을 만들면 공유-앵커 오염(용량 1.3% 차 → knee 최대 ~10 mV
         # 가짜 갭)이 사라짐.  dead-AM 부피분율도 병기 (용량/soc_end는 전체-AM 규약).
@@ -768,7 +786,8 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     # float64 노이즈 바닥 자가교정 (초기상태 = 정확한 평형 → 측정치 = 순수 반올림)
     _x_s0 = rad.surf_x()
     _fp0 = np.clip(sys_.f_pid, 0, n_am - 1)
-    _agg0, _inf0 = sys_.calibrate_floor(phi, ocp.U(_x_s0)[_fp0], kin.i0(_x_s0)[_fp0], kin, U0)
+    _i0v0 = kin.i0(_x_s0) if _i0s is None else kin.i0(_x_s0) * _i0s
+    _agg0, _inf0 = sys_.calibrate_floor(phi, ocp.U(_x_s0)[_fp0], _i0v0[_fp0], kin, U0)
     if verbose:
         print(f'  노이즈 바닥 교정: |ΣF|_eq={_agg0:.2e} A (floor=×4), ||F||∞_eq={_inf0:.2e} A '
               f'→ floor_rel≈{sys_.agg_floor_abs / max(abs(I_cc), 1e-30):.1e}', flush=True)
@@ -800,7 +819,7 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
         x_s = rad.surf_x()
         fp = np.clip(sys_.f_pid, 0, n_am - 1)
         U_f = ocp.U(x_s)[fp]
-        i0_f = kin.i0(x_s)[fp]
+        i0_f = (kin.i0(x_s) if _i0s is None else kin.i0(x_s) * _i0s)[fp]
         if phase == 'cc':
             phi, I_f, eta_s, resid, V_app, I_del = sys_.solve_galv(
                 phi, U_f, i0_f, kin, I_app, V_prev)
@@ -934,7 +953,15 @@ def simulate(sys_, ocp, r_p_m, d_s, kin, c_rate, nr=20, v_min=3.0, v_max=4.5,
     out['dead_particle'] = ~has_face
     out['I_1C_A'] = I_1C
     out['end_reason'] = reason
-    out['params'] = dict(c_rate=c_rate, d_s=d_s, i0=kin.i0_ref, alpha_a=kin.aa, alpha_c=kin.ac,
+    out['d_s_p_m2s'] = rad.D.copy()                          # per-particle 감사 기록 (균일이면 상수 배열)
+    out['i0_ref_p_Am2'] = (np.full(n_am, kin.i0_ref) if i0_p is None else i0_p.copy())
+    _ds_uni = bool(rad.D.max() == rad.D.min())               # params JSON: 균일=스칼라(하위호환), 분리=min/max 요약
+    out['params'] = dict(c_rate=c_rate,
+                         d_s=(float(rad.D[0]) if _ds_uni else
+                              dict(mode='per_particle', min=float(rad.D.min()), max=float(rad.D.max()))),
+                         i0=(kin.i0_ref if i0_p is None else
+                             dict(mode='per_particle', min=float(i0_p.min()), max=float(i0_p.max()))),
+                         alpha_a=kin.aa, alpha_c=kin.ac,
                          asr_film=kin.asr, temp_k=kin.T, nr=nr, v_min=v_min, v_max=v_max,
                          cv_hold=bool(cv_hold), r_int_ohm_cm2=r_int_ohm_cm2,
                          c_max=ocp.c_max, x0=ocp.x0, x100=ocp.x100, x_init=x_ini,
@@ -974,6 +1001,33 @@ def _selftest_radial():
     ok &= e3 < 0.05                                          # 이산화 잔차 ~3% (계수버그는 수백%로 잡힘)
     print(f'radial √t (planar limit): num {dx_num:.4e} vs ana {dx_ana:.4e} '
           f'rel {e3:.3f}  {"OK" if e3 < 0.05 else "FAIL"}')
+    # 4) per-particle D ≡ 독립 스칼라 솔버 (bitwise; Thomas 벡터화는 행-독립이라 정확 등가여야)
+    #    + 물리 방향: 표면상승비 ≈ √(D₂/D₁)=2 (절대-해석해 비교는 4×D에서 곡률오차 √(Dt)/R가
+    #    커져 부적합 — 절대 정합은 test 3(스칼라)이, 배열경로 전이는 bitwise가 각각 담당)
+    Dv = np.array([1e-14, 4e-14])
+    rad = RadialDiffusion(2, 400, np.array([R, R]), Dv, cm, 0.3)
+    rad.J = np.array([2e-6, 2e-6])
+    r_a = RadialDiffusion(1, 400, np.array([R]), Dv[0], cm, 0.3)
+    r_b = RadialDiffusion(1, 400, np.array([R]), Dv[1], cm, 0.3)
+    r_a.J = np.array([2e-6]); r_b.J = np.array([2e-6])
+    for _ in range(nstep):
+        rad.step(dt); r_a.step(dt); r_b.step(dt)
+    ok4 = (np.array_equal(rad.x[0], r_a.x[0]) and np.array_equal(rad.x[1], r_b.x[0]))
+    dx2 = rad.surf_x() - 0.3
+    ratio = float(dx2[0] / dx2[1])
+    ok4 &= abs(ratio - 2.0) < 0.1
+    ok &= ok4
+    print(f'radial per-particle D ≡ 독립 스칼라 (bitwise) + 상승비 {ratio:.3f}≈2: '
+          f'{"OK" if ok4 else "FAIL"}')
+    # 5) 균일값 배열 D ≡ 스칼라 D — bitwise (경로 등가성; per-particle 훅의 회귀 가드)
+    ra = RadialDiffusion(3, 30, np.array([2e-6, 5e-6, 1e-5]), 3e-14, cm, 0.4)
+    rb = RadialDiffusion(3, 30, np.array([2e-6, 5e-6, 1e-5]), np.full(3, 3e-14), cm, 0.4)
+    ra.J = np.array([1e-6, 2e-6, 0.5e-6]); rb.J = ra.J.copy()
+    for _ in range(30):
+        ra.step(2.0); rb.step(2.0)
+    ok5 = np.array_equal(ra.x, rb.x)
+    ok &= ok5
+    print(f'radial array-D(균일) ≡ scalar-D bitwise: {"OK" if ok5 else "FAIL"}')
     return ok
 
 
@@ -1165,6 +1219,35 @@ def _selftest_discharge():
     ok &= okc
     print(f'CCCV charge: end={out_c["end_reason"]}, |I_end|/I1C='
           f'{abs(out_c["I"][-1]) / out_c["I_1C_A"]:.3f}  {"OK" if okc else "FAIL"}')
+    # per-particle 훅 회귀 가드: 균일값 배열 d_s + i0_p ≡ 스칼라 경로 — 곡선 bitwise 동일.
+    #   같은 CellSystem 재사용 금지: 첫 런이 솔버 캐시(AMG/워밍)를 데워 둘째 런의 반복경로가
+    #   달라짐 → 진짜 비교대상(전기화학 경로)이 아닌 캐시상태를 재게 됨 → 쌍둥이 인스턴스.
+    sysm_a = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
+    sysm_b = CellSystem(sid, sig_e, sig_i, pid, 1, vox, z_top_um=8 * 0.5, z_bot_um=0.0)
+    out_pp = simulate(sysm_a, ocp, r_p, np.array([1e-13]), kin, c_rate=0.2, nr=15, v_min=2.8,
+                      i0_p=np.array([5.0]), t_max=400.0,
+                      dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+    out_sc = simulate(sysm_b, ocp, r_p, 1e-13, kin, c_rate=0.2, nr=15, v_min=2.8, t_max=400.0,
+                      dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+    okpp = (np.array_equal(out_pp['V'], out_sc['V'])
+            and np.array_equal(out_pp['x_mean'], out_sc['x_mean']))
+    ok &= okpp
+    print(f'per-particle 균일 d_s/i0_p ≡ 스칼라 (simulate bitwise): {"OK" if okpp else "FAIL"}')
+    # per-particle i0 방향성: 2입자 대칭 베드, i0 10× 차이 → 큰-i0 입자가 초기 전류 과분담
+    #   (방전=리튬화 → x̄ 더 많이 상승; kinetic 저항 1/i0 차이의 부호 검증)
+    sid2, pid2, vox2 = _build_sandwich(nxy=4, nz=8)
+    pid2 = pid2.copy()
+    pid2[2:, :, :][pid2[2:, :, :] == 0] = 1                  # x-절반씩 입자 0/1 (기하 대칭)
+    sysm2 = CellSystem(sid2, sig_e, sig_i, pid2, 2, vox2, z_top_um=8 * 0.5, z_bot_um=0.0)
+    r_p2 = np.array([10.0e-6, 10.0e-6])
+    out_i0 = simulate(sysm2, ocp, r_p2, 1e-13, kin, c_rate=0.5, nr=15, v_min=2.8,
+                      i0_p=np.array([10.0, 1.0]), t_max=200.0,
+                      dx_max=0.03, dt_init=2.0, dt_max=300.0, verbose=False)
+    xf = out_i0['x_final_per_particle']
+    oki0 = bool(xf[0] > xf[1])
+    ok &= oki0
+    print(f'per-particle i0 방향성 (i0 10× → x̄ {xf[0]:.4f} > {xf[1]:.4f}): '
+          f'{"OK" if oki0 else "FAIL"}')
     return ok
 
 
@@ -1183,8 +1266,25 @@ def main():
     ap.add_argument('--cv-hold', action='store_true', help='V-리밋 도달 후 CV 홀드 (CCCV)')
     ap.add_argument('--i-cut-frac', type=float, default=0.05, help='CV 종지 |I|/I_1C')
     ap.add_argument('--d-s', type=float, default=3e-14,
-                    help='D_s [m²/s] 기본 3e-14 (Kang&Shin 2025 FEM; 문헌 1e-14–1e-13)')
-    ap.add_argument('--i0', type=float, default=2.0, help='i0_ref [A/m²] @x=0.5 (⚠F1 스윕)')
+                    help='D_s [m²/s] 기본 3e-14 (Kang&Shin 2025 FEM; 문헌 1e-14–1e-13) — '
+                         '--d-s-poly/--d-s-sc 지정 시 무시')
+    ap.add_argument('--i0', type=float, default=2.0, help='i0_ref [A/m²] @x=0.5 (⚠F1 스윕) — '
+                                                          '--i0-poly/--i0-sc 지정 시 무시')
+    # ── bimodal poly/SC 전기화학 분리 (기본 미사용 = 기존 공유물성과 bitwise 동일 경로) ──
+    #    대립 AM_P=polycrystalline(2차입자, GB/1차결정 경로) vs 소립 AM_S=single-crystal —
+    #    σ_e의 Trevisanello NCM(r) 분리와 같은 GB-밀도 축을 확산·반응동역학에 적용.
+    #    값은 문헌앵커만 (§F1; docs/ncm_sc_poly_electrochem_anchors.md 참조) — 기본값 없음.
+    ap.add_argument('--d-s-poly', type=float, default=None,
+                    help='대립 poly AM(r≥--am-split-um) D_s [m²/s] — --d-s-sc와 쌍으로만')
+    ap.add_argument('--d-s-sc', type=float, default=None,
+                    help='소립 single-crystal AM(r<split) D_s [m²/s] — --d-s-poly와 쌍으로만')
+    ap.add_argument('--i0-poly', type=float, default=None,
+                    help='poly AM i0_ref [A/m²] @x=0.5 — --i0-sc와 쌍으로만')
+    ap.add_argument('--i0-sc', type=float, default=None,
+                    help='SC AM i0_ref [A/m²] @x=0.5 — --i0-poly와 쌍으로만')
+    ap.add_argument('--am-split-um', type=float, default=3.5,
+                    help='poly/SC 분류 반경 문턱 [µm], r≥split=poly (σ_ionic power-gate r_cut=3.5 '
+                         '규약; 12:4µm(직경) 베드 = 반경 6:2 → 2~6 사이 아무 값이나 분리)')
     ap.add_argument('--alpha-a', type=float, default=0.5)
     ap.add_argument('--alpha-c', type=float, default=0.5)
     ap.add_argument('--asr-film', type=float, default=0.0, help='계면 필름 ASR [Ω·m²] (SEI/CEI 훅)')
@@ -1228,6 +1328,35 @@ def main():
     vox_um = float(g['vox_um']); z_top = float(g['z_top_um'])
     sig_e = g['sig_e_S_cm']; sig_i = g['sig_i_S_cm']
     r_um = g['am_r_um']
+    # ── poly/SC 전기화학 분리: 반경 문턱으로 [n_am] 물성 벡터 구성 (미지정 = 기존 스칼라 경로) ──
+    if (a.d_s_poly is None) != (a.d_s_sc is None):
+        ap.error('--d-s-poly/--d-s-sc must be given together (반쪽 지정 = 침묵 기본값 혼입 금지)')
+    if (a.i0_poly is None) != (a.i0_sc is None):
+        ap.error('--i0-poly/--i0-sc must be given together')
+    for _nm, _v in (('--d-s-poly', a.d_s_poly), ('--d-s-sc', a.d_s_sc),
+                    ('--i0-poly', a.i0_poly), ('--i0-sc', a.i0_sc)):
+        if _v is not None and _v <= 0:
+            ap.error(f'{_nm} must be > 0')
+    ds_arg, i0_p, split_meta = a.d_s, None, None
+    if a.d_s_poly is not None or a.i0_poly is not None:
+        is_poly = r_um >= a.am_split_um
+        n_po, n_sc = int(is_poly.sum()), int((~is_poly).sum())
+        if n_po == 0 or n_sc == 0:
+            print(f'  ⚠ AM split 문턱 {a.am_split_um:g}µm가 반경분포 '
+                  f'{r_um.min():.2f}–{r_um.max():.2f}µm를 가르지 못함 — 전 입자 '
+                  f'{"poly" if n_sc == 0 else "SC"} 물성으로 균일 진행 (의도 확인)', flush=True)
+        if a.d_s_poly is not None:
+            ds_arg = np.where(is_poly, a.d_s_poly, a.d_s_sc)
+        if a.i0_poly is not None:
+            i0_p = np.where(is_poly, a.i0_poly, a.i0_sc)
+        split_meta = dict(am_split_um=a.am_split_um, n_poly=n_po, n_sc=n_sc,
+                          d_s_poly=a.d_s_poly, d_s_sc=a.d_s_sc,
+                          i0_poly=a.i0_poly, i0_sc=a.i0_sc)
+        print(f'  ★ AM poly/SC 전기화학 분리: r≥{a.am_split_um:g}µm → poly n={n_po}, SC n={n_sc}'
+              + (f'; D_s poly/SC={a.d_s_poly:g}/{a.d_s_sc:g} m²/s (--d-s 무시)'
+                 if a.d_s_poly is not None else '')
+              + (f'; i0 poly/SC={a.i0_poly:g}/{a.i0_sc:g} A/m² (--i0 무시)'
+                 if a.i0_poly is not None else ''), flush=True)
     if a.ocp_test:
         ocp = OCP.synthetic_test()
         print('⚠ TEST-ONLY synthetic OCP — 결과는 수치 스모크 전용 (§F1: 물리값 아님)', flush=True)
@@ -1244,14 +1373,16 @@ def main():
     dudt = _load_xy_csv(a.dudt_csv) if a.dudt_csv else None
     kin = Kinetics(a.i0, a.alpha_a, a.alpha_c, a.asr_film, a.temp_k)
     sysm = CellSystem(sid, sig_e, sig_i, pid, len(r_um), vox_um, z_top_um=z_top, z_bot_um=0.0)
-    out = simulate(sysm, ocp, r_um * 1e-6, a.d_s, kin, a.c_rate, nr=a.nr,
+    out = simulate(sysm, ocp, r_um * 1e-6, ds_arg, kin, a.c_rate, nr=a.nr,
                    v_min=a.v_min, v_max=a.v_max, t_max=a.t_max, charge=a.charge,
                    cv_hold=a.cv_hold, i_cut_frac=a.i_cut_frac,
                    r_int_ohm_cm2=a.r_int_ohm_cm2, x_init=a.x_init, dudt=dudt,
-                   dx_max=a.dx_max, dt_max=a.dt_max, n_chk=a.n_chk)
+                   i0_p=i0_p, dx_max=a.dx_max, dt_max=a.dt_max, n_chk=a.n_chk)
     meta = out.pop('params')
     reason = out.pop('end_reason')
     meta['end_reason'] = reason
+    if split_meta is not None:
+        meta['am_electro_split'] = split_meta                # poly/SC 분리 감사 기록 (값+문턱+개수)
     np.savez_compressed(a.out, **out, params_json=json.dumps(meta))
     print(f'saved {a.out}  (steps {len(out["t"])}, end={reason}, '
           f'V_term {out["V_terminal"][0]:.3f}→{out["V_terminal"][-1]:.3f}, '

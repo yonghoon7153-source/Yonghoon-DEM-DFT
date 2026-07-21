@@ -102,11 +102,31 @@ def main():
                          'DBE 12/46, SBE 18/110 (pristine=panel-e 근사, aged=1000cyc@2C).  '
                          '⚠ pristine 값=BOL 전극과 시간-일관; aged 값은 "fresh 전극+aged 접촉" 민감도 '
                          '시나리오로 라벨(§6.1).  런타임 MPM_S4_RINT env로 override; 산출물명에 _rint<값> 태그.')
+    # ── bimodal poly/SC 전기화학 분리 (STEP4 per-particle D_s/i0; 기본 미사용 = 공유물성) ──
+    #    값은 문헌앵커만 (§F1, docs/ncm_sc_poly_electrochem_anchors.md) — 기본값 제공 안 함.
+    ap.add_argument('--step4-ds-poly', type=float, default=None,
+                    help='대립 poly AM(r≥split) D_s [m²/s] — --step4-ds-sc와 쌍으로만; env MPM_S4_DS_POLY')
+    ap.add_argument('--step4-ds-sc', type=float, default=None,
+                    help='소립 single-crystal AM D_s [m²/s] — --step4-ds-poly와 쌍; env MPM_S4_DS_SC')
+    ap.add_argument('--step4-i0-poly', type=float, default=None,
+                    help='poly AM i0_ref [A/m²] — --step4-i0-sc와 쌍; env MPM_S4_I0_POLY')
+    ap.add_argument('--step4-i0-sc', type=float, default=None,
+                    help='SC AM i0_ref [A/m²] — --step4-i0-poly와 쌍; env MPM_S4_I0_SC')
+    ap.add_argument('--step4-am-split-um', type=float, default=3.5,
+                    help='poly/SC 분류 반경 문턱 [µm] (r≥split=poly; 12:4µm(직경) 베드=반경 6:2 분리)')
     a = ap.parse_args()
     if a.step4_r_int is not None and a.step4_r_int < 0:
         # 음수는 step4_dyn이 조용히 R_int=0으로 clamp → 파일명/라벨(_rint-5)이 적용 안 된 직렬항을
         # 주장하게 됨(리뷰 CONFIRMED #2) — 생성 시점에 명시적으로 거부.
         ap.error('--step4-r-int must be >= 0 (Ω·cm²)')
+    if (a.step4_ds_poly is None) != (a.step4_ds_sc is None):
+        ap.error('--step4-ds-poly/--step4-ds-sc must be given together (반쪽 지정 금지)')
+    if (a.step4_i0_poly is None) != (a.step4_i0_sc is None):
+        ap.error('--step4-i0-poly/--step4-i0-sc must be given together')
+    for _nm, _v in (('--step4-ds-poly', a.step4_ds_poly), ('--step4-ds-sc', a.step4_ds_sc),
+                    ('--step4-i0-poly', a.step4_i0_poly), ('--step4-i0-sc', a.step4_i0_sc)):
+        if _v is not None and _v <= 0:
+            ap.error(f'{_nm} must be > 0')
     os.makedirs(a.out, exist_ok=True)
 
     def _parse_rates(s):                                     # STEP4 체크박스 (0.02–5C 화이트리스트)
@@ -267,7 +287,11 @@ def main():
             'press_gpa': press_gpa, 'target_porosity': tgt,
             'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm, 'mpm_est_points': est_pts,
             'step4_crates': s4_rates, 'step4_charge_crates': s4_chg,
-            'step4_r_int_ohm_cm2': a.step4_r_int}
+            'step4_r_int_ohm_cm2': a.step4_r_int,
+            'step4_am_electro_split': (None if a.step4_ds_poly is None and a.step4_i0_poly is None
+                                       else {'ds_poly': a.step4_ds_poly, 'ds_sc': a.step4_ds_sc,
+                                             'i0_poly': a.step4_i0_poly, 'i0_sc': a.step4_i0_sc,
+                                             'am_split_um': a.step4_am_split_um})}
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -414,21 +438,35 @@ def main():
         _rint = '' if _rv is None else f' --r-int-ohm-cm2 "${{MPM_S4_RINT:-{_rv}}}"'
         _rtag = '' if _rv is None else f'_rint${{MPM_S4_RINT:-{_rv}}}'
         _rlab = '' if _rv is None else f' · ★풀셀 축: R_int=${{MPM_S4_RINT:-{_rv}}} Ωcm² 직렬'
+        # ★bimodal poly/SC 전기화학 분리: per-particle D_s/i0 주입 + env override + 산출물 태그
+        #   (태그에 값 포함 — 무태그 덮어쓰기로 baseline npz 를 잃는 rint 교훈 재적용)
+        _es, _estag, _eslab = '', '', ''
+        if a.step4_ds_poly is not None:
+            _es += (f' --d-s-poly "${{MPM_S4_DS_POLY:-{a.step4_ds_poly:g}}}"'
+                    f' --d-s-sc "${{MPM_S4_DS_SC:-{a.step4_ds_sc:g}}}"')
+            _estag += f'_dsP${{MPM_S4_DS_POLY:-{a.step4_ds_poly:g}}}S${{MPM_S4_DS_SC:-{a.step4_ds_sc:g}}}'
+        if a.step4_i0_poly is not None:
+            _es += (f' --i0-poly "${{MPM_S4_I0_POLY:-{a.step4_i0_poly:g}}}"'
+                    f' --i0-sc "${{MPM_S4_I0_SC:-{a.step4_i0_sc:g}}}"')
+            _estag += f'_i0P${{MPM_S4_I0_POLY:-{a.step4_i0_poly:g}}}S${{MPM_S4_I0_SC:-{a.step4_i0_sc:g}}}'
+        if _es:
+            _es += f' --am-split-um {a.step4_am_split_um:g}'
+            _eslab = f' · ★poly/SC 분리(split r≥{a.step4_am_split_um:g}µm)'
         _dis_loop = f'''  for CR in {_dis}; do
-    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V{_rlab})"
+    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V{_rlab}{_eslab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} {_cut}{_rint} --gpu --out step4_c${{CR}}{_rtag}.npz --viz-out step4_viz_c${{CR}}{_rtag}.json \\
+      --c-rate ${{CR}} {_cut}{_rint}{_es} --gpu --out step4_c${{CR}}{_rtag}{_estag}.npz --viz-out step4_viz_c${{CR}}{_rtag}{_estag}.json \\
       || echo "[run_mpm] STEP4 방전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 방전 ${{CR}}C end $(date)"
   done
 ''' if s4_rates else ''
         _chg_loop = f'''  for CR in {_chg}; do
-    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)  (CV@{a.step4_vmax:g}V → I<{a.step4_icut:g}C 종지{_rlab})"
+    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)  (CV@{a.step4_vmax:g}V → I<{a.step4_icut:g}C 종지{_rlab}{_eslab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} --charge --cv-hold {_cut} {_icut}{_rint} --gpu \\
-      --out step4_chg_c${{CR}}{_rtag}.npz --viz-out step4_viz_chg_c${{CR}}{_rtag}.json \\
+      --c-rate ${{CR}} --charge --cv-hold {_cut} {_icut}{_rint}{_es} --gpu \\
+      --out step4_chg_c${{CR}}{_rtag}{_estag}.npz --viz-out step4_viz_chg_c${{CR}}{_rtag}{_estag}.json \\
       || echo "[run_mpm] STEP4 충전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"
   done
