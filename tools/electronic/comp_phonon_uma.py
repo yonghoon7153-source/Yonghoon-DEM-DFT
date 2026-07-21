@@ -24,7 +24,7 @@ import os
 import time
 
 import numpy as np
-from ase.io import read
+from ase.io import read, write
 from ase.optimize import BFGS
 from ase.vibrations import Vibrations
 
@@ -116,15 +116,23 @@ def main():
         if vals[i] > -a.imag_tol_cm1:
             break
         m = vib.get_mode(i); m = m / np.linalg.norm(m)
+        best = None
         for sgn in (+1, -1):
             at2 = at.copy(); at2.positions += sgn * 0.25 * m; at2.calc = calc
             BFGS(at2, logfile=None).run(fmax=0.01, steps=150)
             dE = float(at2.get_potential_energy()) - E_min
             rm = mic_rmsd(at2, at)
+            fn = f"{a.label}_followmin_m{rank}_{'p' if sgn > 0 else 'n'}.xyz"
+            write(fn, at2)
             follow.append({"mode_cm1": round(vals[i], 1), "dir": sgn, "dE_meV": round(dE * 1e3, 2),
-                           "rmsd_A": round(rm, 4)})
+                           "rmsd_A": round(rm, 4), "file": fn})
+            if best is None or dE < best[0]:
+                best = (dE, fn)
             print(f"[6] follow {vals[i]:+.1f} cm-1 dir {sgn:+d}: ΔE = {dE*1e3:+.2f} meV, RMSD {rm:.4f} A"
-                  f"  {'→ 더 낮은 최소 존재(진짜 안장)' if dE < -1e-3 else '→ 유의미한 하강 없음(평평/노이즈)'}", flush=True)
+                  f"  → {fn}  {'(진짜 안장 — 더 낮은 최소)' if dE < -1e-3 else '(유의미한 하강 없음)'}", flush=True)
+        if best and best[0] < -1e-3:
+            write(f"{a.label}_followmin_best.xyz", read(best[1]))
+            print(f"[6] best lower minimum: {best[1]} (ΔE {best[0]*1e3:+.1f} meV) → {a.label}_followmin_best.xyz", flush=True)
 
     out = {
         "label": a.label, "structure": os.path.basename(spath), "nat": len(at0),
