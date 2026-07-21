@@ -5394,6 +5394,35 @@ def mpm_input_package(case_id):
                     cmd += ['--step4-r-int', f'{_s4rv:g}']
             except (ValueError, TypeError):
                 pass
+        # ★bimodal poly/SC 전기화학 분리 (파워유저 URL, s4x100 문법): &s4dsp=&s4dss= (D_s [m²/s])
+        #   &s4i0p=&s4i0s= (i0 [A/m²]) &s4split= (반경 문턱 µm, 기본 3.5).  반쪽 지정은 400으로
+        #   명시 거부(생성기 ap.error를 500 stderr로 흘리지 않고 앞단에서 — 침묵/불명확 실패 금지).
+        #   값 가이드: docs/ncm_sc_poly_electrochem_anchors.md (i0 분리값은 문헌 부재 — 스윕 전용).
+        def _fpos(name):
+            _t = request.args.get(name, '').strip()
+            if not _t:
+                return None, None
+            try:
+                _v = float(_t)
+            except (ValueError, TypeError):
+                return None, f'&{name}= 값이 숫자가 아님: {_t!r}'
+            return (_v, None) if _v > 0 else (None, f'&{name}= 는 > 0 이어야 함: {_t}')
+        _dsp, _e1 = _fpos('s4dsp'); _dss, _e2 = _fpos('s4dss')
+        _i0p, _e3 = _fpos('s4i0p'); _i0s, _e4 = _fpos('s4i0s')
+        _spl, _e5 = _fpos('s4split')
+        _err = next((e for e in (_e1, _e2, _e3, _e4, _e5) if e), None)
+        if _err:
+            shutil.rmtree(tmp, ignore_errors=True)
+            return jsonify({'error': _err}), 400
+        if (_dsp is None) != (_dss is None) or (_i0p is None) != (_i0s is None):
+            shutil.rmtree(tmp, ignore_errors=True)
+            return jsonify({'error': 's4dsp/s4dss (또는 s4i0p/s4i0s)는 쌍으로만 — 반쪽 지정 거부'}), 400
+        if _dsp is not None:
+            cmd += ['--step4-ds-poly', f'{_dsp:g}', '--step4-ds-sc', f'{_dss:g}']
+        if _i0p is not None:
+            cmd += ['--step4-i0-poly', f'{_i0p:g}', '--step4-i0-sc', f'{_i0s:g}']
+        if _spl is not None and (_dsp is not None or _i0p is not None):
+            cmd += ['--step4-am-split-um', f'{_spl:g}']
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:

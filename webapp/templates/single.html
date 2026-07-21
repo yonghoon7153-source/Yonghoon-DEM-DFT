@@ -653,8 +653,14 @@ function dlAdditiveZip() {
   }
   const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
   const _ri = s4rint ? `&s4rint=${s4rint}` : '';
+  // ★poly/SC 전기화학 분리 (파워유저): 케이스 페이지 URL에 &s4dsp=4e-15&s4dss=3e-15
+  //   (&s4i0p=&s4i0s=&s4split=)를 붙여 열면 킷 다운로드 URL로 관통 (s4x100 문법; 서버가
+  //   쌍/양수 검증 — 값 가이드 docs/ncm_sc_poly_electrochem_anchors.md)
+  const _pq = new URLSearchParams(location.search);
+  const _pp = ['s4dsp', 's4dss', 's4i0p', 's4i0s', 's4split']
+    .filter(k => _pq.get(k)).map(k => `&${k}=${encodeURIComponent(_pq.get(k))}`).join('');
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}${_pp}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)

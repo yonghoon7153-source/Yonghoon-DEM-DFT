@@ -155,6 +155,22 @@ function wireSt4Picker(state, btnId, mode) {
   };
 }
 
+/* ★poly/SC 전기화학 분리 (bimodal) 표기 — viz json의 am_electro_split (없으면 빈 문자열).
+   라벨은 R_int 표기와 같은 지점들(타이틀·푸터·GIF·φ헤더·CSV)에, 태그는 파일명에
+   (rint '무태그 덮어쓰기' 교훈 — split 런과 baseline 런의 산출물이 섞이면 안 됨). */
+function _ppLab(st) {
+  const s = st && st.am_electro_split; if (!s) return '';
+  const d = s.d_s_poly != null ? `D_s ${s.d_s_poly}/${s.d_s_sc}` : '';
+  const i = s.i0_poly != null ? `i0 ${s.i0_poly}/${s.i0_sc}` : '';
+  return ` · poly/SC ${[d, i].filter(Boolean).join(' ')}`;
+}
+function _ppTag(st) {
+  const s = st && st.am_electro_split; if (!s) return '';
+  const c = v => String(v).replace(/[^0-9eE.+-]/g, '');
+  return (s.d_s_poly != null ? `_dsP${c(s.d_s_poly)}S${c(s.d_s_sc)}` : '')
+       + (s.i0_poly != null ? `_i0P${c(s.i0_poly)}S${c(s.i0_sc)}` : '');
+}
+
 /* 방전곡선 다운로드 — viz json의 curve(전 스텝 V/x̄/η/Q)를 V vs 면적용량으로 그려 PNG(고해상)+CSV.
    면적용량 = x̄→SOC창% × areal(field_scale 자동산출 or c_max 추정).  버튼 id로 배선. */
 function wireVProfileDownload(state, btnId) {
@@ -235,10 +251,10 @@ function wireVProfileDownload(state, btnId) {
     g.font = '16px sans-serif';
     for (let i = 0; i <= 5; i++) { const x = xlo + (xhi - xlo) * i / 5; g.fillText(x.toFixed(useCap ? 2 : 0), PX(x), xAxisY + 24); }
     g.textAlign = 'left'; g.font = 'bold 18px sans-serif';
-    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}`, mL, mT - 18);
+    g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}`, mL, mT - 18);
     const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
     const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
-    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_cn ? '_' + _cn : ''}`;
+    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_ppTag(st)}${_cn ? '_' + _cn : ''}`;
     dl(cv.toDataURL('image/png'), base + '.png');
     // CSV (전 스텝 원자료 — 분해 컬럼은 신형 viz만 채워짐)
     const hdr = 'step,t_s,V,V_terminal,x_mean,soc_window_pct,delivered_mAh_cm2,eta_kin_mV,eta_diff_mV,eta_ohm_mV,I_A,Q_ohm_e_W,Q_ohm_i_W,Q_ct_W,Q_rint_W';
@@ -289,7 +305,7 @@ function renderSt4Soc(state) {
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span id="st4-clo"></span><span id="st4-chi"></span></div>
      <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">구형 1D 확산(입자당 ${nr}셸) — 각도방향 균일(동심 코어-셸).
      겉이 먼저 차는 shrinking-core가 시간축으로 보임.  "단면 뷰" 체크와 조합 → 내부 링 단면.
-     ${st.c_rate}C · ${st.charge ? '충전' : '방전'}${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
+     ${st.c_rate}C · ${st.charge ? '충전' : '방전'}${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} · I_1C=${Number(st.i_1c_a).toExponential(2)} A</div>`);
   const tS = document.getElementById('st4-t'), dS = document.getElementById('st4-d');
   const dynCb = document.getElementById('st4-dyn');
   const _xlab = v => `x=${v.toFixed(3)}${st.c_max_mol_m3 ? ' (' + (v * st.c_max_mol_m3 / 1000).toFixed(1) + ' mmol/cm³)' : ''}`;
@@ -384,7 +400,7 @@ function renderSt4Soc(state) {
     tS.value = keep; upd();
     const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
     await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub,
-      `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_cn ? '_' + _cn : ''}${_st4Label('st4-giflabel')}`, gifBtn);
+      `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_ppTag(st)}${_cn ? '_' + _cn : ''}${_st4Label('st4-giflabel')}`, gifBtn);
   };
 }
 
@@ -513,7 +529,7 @@ function renderSt4Faces(state) {
      <div style="display:flex;justify-content:space-between;font-size:10px;color:#9ca3af"><span>0</span><span>|i/ī| (0–p95)</span><span>핫스팟</span></div>
      <div style="margin-top:3px;color:#9ca3af;font-size:10.5px">면전류를 입자 표면에 각도-커널(≈15°) 보간한 <b>시각화 보조</b> — 정량 원자료는 면 값(npz).
      비접촉 표면 = 회색.  면 ${Number(F.n_kept).toLocaleString()}/${Number(F.n_total).toLocaleString()}${F.n_kept < F.n_total ? ' (서브샘플)' : ''} ·
-     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}</div>
+     ī(면평균 |i|) 시점별 정규화 · ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)}</div>
      <div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
        <b style="display:block;font-size:11.5px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">두께방향 프로파일 — 현재 시점</b>
        <div style="display:flex;align-items:center;gap:4px;margin-top:3px;flex-wrap:wrap">
@@ -713,7 +729,7 @@ function renderSt4Faces(state) {
     frBtn.disabled = false; frBtn.textContent = '🎞';
   };
   const _st4cn = () => String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
-  const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_st4cn() ? '_' + _st4cn() : ''}`;
+  const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_ppTag(st)}${_st4cn() ? '_' + _st4cn() : ''}`;
   const _gifSub = () => +(document.getElementById('st4f-gifsub') || {}).value || 3;
   const _profMode = () => (((document.getElementById('st4f-prof-src') || {}).value === 'phi') ? '_phi' : '_rxn');
   const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면, 보간 프레임)
@@ -765,7 +781,7 @@ function renderSt4Faces(state) {
       return { V: (cu.V_terminal || cu.V)[bi], I: (cu.I_A || [])[bi] ?? '' };   // 단자전압
     };
     const L = [];
-    L.push(`# STEP4 time-linked thickness profiles — ${st.charge ? 'charge' : 'discharge'} ${st.c_rate}C, R_int=${st.r_int_ohm_cm2 || 0} Ohm.cm2`);
+    L.push(`# STEP4 time-linked thickness profiles — ${st.charge ? 'charge' : 'discharge'} ${st.c_rate}C, R_int=${st.r_int_ohm_cm2 || 0} Ohm.cm2${_ppLab(st)}`);
     L.push(`# [1] checkpoint <-> curve link (V,I from the full curve at nearest t; ${capCol} from x_mean, same convention as the curve download)`);
     L.push(`k,t_s,V_terminal_V,I_A,${capCol},x_mean,phi_e_swing_uV,phi_i_swing_mV`);
     for (let k = 0; k < nK; k++) {
@@ -865,7 +881,7 @@ function renderSt4Faces(state) {
       drawZProfileCanvas(pc, state._st4fProf.curves, '');      // 1.75:1 = 다른 export와 동일 타이포 스케일
       g.drawImage(pc, 8, 38 + ((H - 44 - 320) / 2 | 0));
       g.fillStyle = '#111'; g.font = 'bold 21px sans-serif'; g.textAlign = 'left';      // 헤더 (동기 수치)
-      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''} — t=${tNow.toFixed(1)}s · V=${VT[ii].toFixed(3)}V`
+      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}${_ppLab(st)} — t=${tNow.toFixed(1)}s · V=${VT[ii].toFixed(3)}V`
         + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · ${st.charge ? '충전창' : 'DoD'} ${xsC[ii].toFixed(1)}%`}`
         + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : ''), 12, 26);
       g.font = '13px sans-serif'; g.fillStyle = '#6b7280';
@@ -5447,7 +5463,7 @@ function buildSt4Compare(overlay, $, SA, SB, A, B, pidA, pidB, nameA, nameB) {
   };
   const note = () => { $('cmp-st4-note').innerHTML = ['A', 'B'].map(k => { const s = store[k]; if (!s) return '';
     const m = s.meta, col = k === 'A' ? '#7dd3fc' : '#fbbf24';
-    return `<span style="color:${col}">■ ${(k === 'A' ? nameA : nameB) || k}</span>: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V${m.r_int_ohm_cm2 > 0 ? ` · R_int ${m.r_int_ohm_cm2}` : ''}`
+    return `<span style="color:${col}">■ ${(k === 'A' ? nameA : nameB) || k}</span>: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V${m.r_int_ohm_cm2 > 0 ? ` · R_int ${m.r_int_ohm_cm2}` : ''}${_ppLab(m)}`
       + (m.charge && m.cv_hold ? ` CV종지${m.i_cut_frac}C` : '') + ` · 종료 ${m.end_reason || '?'}`; }).filter(Boolean).join('　'); };
   const loadInto = (key, o, fname) => {
     if (!o || o.kind !== 'step4_viz' || !o.x_shell) { alert((fname || key) + ': step4_viz(SOC) 아님'); return; }
@@ -5518,7 +5534,7 @@ function showVProfilePopup(store, nameA, nameB) {
     g.fillText(xmode === 't' ? 'Time (min)' : xmode === 'cap' ? 'Delivered capacity (mAh cm⁻²)' : 'SOC window (%)', mL + (W - mL - mR) / 2, H - 6);
     g.save(); g.translate(14, mT + (H - mT - mB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('Terminal voltage (V vs Li/Li⁺)', 0, 0); g.restore();
     let note = ser.map(s => { const m = s.meta;
-      return `<span style="color:${s.color}">■</span> ${s.name}: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V${m.r_int_ohm_cm2 > 0 ? ` · R_int ${m.r_int_ohm_cm2}` : ''} · 종료 ${m.end_reason || '?'} · V_term ${vtOf(s)[0].toFixed(3)}→${vtOf(s)[vtOf(s).length - 1].toFixed(3)}`; }).join('<br>');
+      return `<span style="color:${s.color}">■</span> ${s.name}: ${m.charge ? '충전' : '방전'} ${m.c_rate}C · ${m.v_min ?? '?'}–${m.v_max ?? '?'}V${m.r_int_ohm_cm2 > 0 ? ` · R_int ${m.r_int_ohm_cm2}` : ''}${_ppLab(m)} · 종료 ${m.end_reason || '?'} · V_term ${vtOf(s)[0].toFixed(3)}→${vtOf(s)[vtOf(s).length - 1].toFixed(3)}`; }).join('<br>');
     // Δ(A−B) 정량 — 같은 프로토콜(충/방 동일) 두 곡선일 때 공통 SOC창 그리드에서 ΔV·Δη_kin 평균
     if (ser.length === 2 && !!ser[0].meta.charge === !!ser[1].meta.charge) {
       const socOf = s => { const m = s.meta, w = Math.abs((m.x100 ?? X100) - (m.x0 ?? X0)) || 1;
