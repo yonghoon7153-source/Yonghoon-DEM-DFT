@@ -517,11 +517,13 @@ function renderSt4Faces(state) {
      <div style="margin-top:6px;padding:6px 7px;background:#0d1117;border:1px solid #2a2d3e;border-radius:6px">
        <div style="display:flex;justify-content:space-between;align-items:center">
          <b style="font-size:11.5px;color:#cbd5e1">두께방향 프로파일 — 현재 시점</b>
+         <select id="st4f-prof-src" title="프로파일 소스 — 반응·SOC(기존) / 운전 φ(z)(전자·이온 층평균 전위, 새 viz만): φ_e는 µV급 평평·φ_i는 수십 mV = 상보 구도 직접 시각화" style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:10.5px;padding:0 2px">
+           <option value="rxn">반응·SOC</option>${st.phi_z && st.phi_z.phi_i_V ? '<option value="phi">운전 φ(z)</option>' : ''}</select>
          <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>
          <button id="st4f-zgif" title="두께방향 프로파일 전체 시간전개를 GIF로 (동적 Fig4e 무비)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬</button>
        </div>
        <canvas id="st4f-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
-       <div style="font-size:10px;color:#6b7280;margin-top:2px"><span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임</div>
+       <div id="st4f-prof-cap" style="font-size:10px;color:#6b7280;margin-top:2px"><span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임</div>
      </div>`);
   const tS = document.getElementById('st4f-t');
   const frHi = [];                                           // 프레임별 p95 캐시 (정규화 기준)
@@ -544,6 +546,40 @@ function renderSt4Faces(state) {
   const drawProf = (fr, t0, t1, tSec) => {
     const cv = document.getElementById('st4f-prof');
     if (!cv) return;
+    // ── 운전 φ(z) 모드 (새 viz의 phi_z 블록): φ_e/φ_i 층평균을 각자 [0,1] 정규화해 겹침 —
+    //    곡률 미러가 보이고, 실제 스케일(µV vs mV)은 캡션 숫자로.  체크포인트 최근접 사용.
+    const _src = (document.getElementById('st4f-prof-src') || {}).value || 'rxn';
+    if (_src === 'phi' && st.phi_z && st.phi_z.phi_i_V) {
+      const kph = (fr < 0.5 ? t0 : t1);
+      const zs = st.phi_z.z_um, pe = st.phi_z.phi_e_V[kph] || [], pi = st.phi_z.phi_i_V[kph] || [];
+      const zE = [], yE = [], zI = [], yI = [];
+      let eMin = Infinity, eMax = -Infinity, iMin2 = Infinity, iMax2 = -Infinity;
+      for (let b = 0; b < zs.length; b++) {
+        if (pe[b] != null) { if (pe[b] < eMin) eMin = pe[b]; if (pe[b] > eMax) eMax = pe[b]; }
+        if (pi[b] != null) { if (pi[b] < iMin2) iMin2 = pi[b]; if (pi[b] > iMax2) iMax2 = pi[b]; }
+      }
+      const eSw = Math.max(eMax - eMin, 1e-12), iSw = Math.max(iMax2 - iMin2, 1e-12);
+      for (let b = 0; b < zs.length; b++) {
+        if (pe[b] != null) { zE.push(zs[b]); yE.push((pe[b] - eMin) / eSw); }
+        if (pi[b] != null) { zI.push(zs[b]); yI.push((pi[b] - iMin2) / iSw); }
+      }
+      const curves = [{ zs: zE, ys: yE, color: '#f87171', dash: false },
+                      { zs: zI, ys: yI, color: '#a78bfa', dash: false }];
+      drawZProfileCanvas(cv, curves, '');
+      const cap = document.getElementById('st4f-prof-cap');
+      if (cap) cap.innerHTML = `<span style="color:#f87171">—</span> φ_e 스윙 ${(eSw * 1e6).toPrecision(3)} µV · `
+        + `<span style="color:#a78bfa">—</span> φ_i 스윙 ${(iSw * 1e3).toPrecision(3)} mV `
+        + `(<b>${(iSw / eSw).toPrecision(2)}×</b>) — 각자 [0,1] 정규화(곡률 미러용); 절대 스케일은 이 숫자`;
+      _profRows = [];
+      for (let b = 0; b < zs.length; b++) {
+        _profRows.push([zs[b], tSec.toFixed(1),
+                        pe[b] != null ? pe[b] : '', pi[b] != null ? pi[b] : '']);
+      }
+      state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,phi_e_V,phi_i_V' };
+      return;
+    }
+    const cap0 = document.getElementById('st4f-prof-cap');
+    if (cap0 && _src === 'rxn') cap0.innerHTML = '<span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임';
     const g = cv.getContext('2d'), Wc = cv.width, Hc = cv.height;
     _pb.i.fill(0); _pb.c.fill(0); _pb.s.fill(0); _pb.sc.fill(0);
     for (let i2 = 0; i2 < n; i2++) {
@@ -574,7 +610,7 @@ function renderSt4Faces(state) {
                       _pb.c[b] ? (_pb.i[b] / _pb.c[b]).toFixed(5) : '',
                       _pb.sc[b] ? (_pb.s[b] / _pb.sc[b]).toFixed(5) : '']);
     }
-    state._st4fProf = { curves, rows: _profRows };         // 고해상 export용
+    state._st4fProf = { curves, rows: _profRows, hdr: 'z_um,t_s,i_over_ibar_mean,soc_surf_mean' };  // 고해상 export용
   };
   const upd = (tf) => {
     const tfv = (typeof tf === 'number') ? Math.max(0, Math.min(nChk - 1, tf)) : +tS.value;
@@ -606,6 +642,8 @@ function renderSt4Faces(state) {
     drawProf(fr, t0, t1, (1 - fr) * st.t_s[t0] + fr * st.t_s[t1]);   // 동적 Fig4e 프로파일 갱신
   };
   tS.oninput = upd;
+  { const _ps = document.getElementById('st4f-prof-src');    // 프로파일 소스 전환 → 현재 시점 리드로
+    if (_ps) _ps.onchange = () => upd(+tS.value); }
   wireSt4Picker(state, 'st4f-swap', 'st4_face');             // 📂 교체 버튼 배선
   wireVProfileDownload(state, 'st4f-curve');
   upd();
@@ -662,7 +700,7 @@ function renderSt4Faces(state) {
     a1.href = big.toDataURL('image/png');
     a1.download = `st4_zprofile_t${t_now}s.png`;
     document.body.appendChild(a1); a1.click(); a1.remove();
-    const csv = 'z_um,t_s,i_over_ibar_mean,soc_surf_mean\n'
+    const csv = (state._st4fProf.hdr || 'z_um,t_s,i_over_ibar_mean,soc_surf_mean') + '\n'
       + _profRows.map(r => r.join(',')).join('\n');
     const a2 = document.createElement('a');
     a2.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
