@@ -1591,7 +1591,7 @@ function buildEconnClusters(state) {
 function buildCarbonOverlay(state, only, size, colorOverride) {
   // colorOverride: a single colour for all carbon (e.g. soft black in the Default overlay so it reads
   // SEM-like and doesn't drown the structure).  null → per-phase colours (cyan VGCF) for the 도전재 mode.
-  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xff3b30 };   // VGCF cyan · Super P magenta · PTFE amber ·
+  const PHCOL = { 2: 0x22d3ee, 3: 0xec4899, 4: 0xf59e0b, 5: 0xff3b30, 6: 0x22c55e };   // VGCF cyan · Super P magenta · PTFE amber · SWCNT sheath green(A14) ·
   //   SDCP RED (was lime — lime sank into the olive-brown blend thousands of x-ray fibre lines make; red is the
   //   complement of that mush so the 0.3µm particles pop.  vs SuperP magenta: red 5° vs pink 330°, still distinct)
   const colOf = (ph) => (colorOverride != null ? colorOverride : (PHCOL[ph] || 0x22d3ee));
@@ -3258,7 +3258,7 @@ function applyViewMode(state, mode) {
     /* conductive additives (payload additive_points: [x,y,z,phase]) as a coloured point cloud over a
      * dimmed SE+AM — so the carbon threading the SE/voids + bridging the AM reads clearly.  Colours are
      * BRIGHT (not SEM-black) for contrast on the dark canvas.  Sub-modes filter to one phase. */
-    const PH = { 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP' };
+    const PH = { 2: 'VGCF', 3: 'SuperP', 4: 'PTFE', 5: 'SDCP', 6: 'SWCNT' };
     const only = mode === 'add_vgcf' ? 2 : mode === 'add_superp' ? 3 : mode === 'add_ptfe' ? 4
                : mode === 'add_sdcp' ? 5 : 0;
     const mm = (state.data && state.data.mpm_metrics) || {};
@@ -3288,7 +3288,7 @@ function applyViewMode(state, mode) {
     const nFib = ((state.data && state.data.additive_fibres) || [])
       .filter(f => !only || f.phase === only).length;
     const ac = mm.additive_counts || {};
-    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b', SDCP: '#ff3b30' };
+    const swatch = { VGCF: '#22d3ee', SuperP: '#ec4899', PTFE: '#f59e0b', SDCP: '#ff3b30', SWCNT: '#22c55e' };
     const keys = only ? [PH[only]] : Object.keys(swatch).filter(k => ac[k]);
     const legend = keys.map(k =>
       `<span style="color:${swatch[k]};font-size:13px">●</span> ${k} ${Number(ac[k] || 0).toLocaleString()}개`).join(' &nbsp; ');
@@ -5435,6 +5435,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       ['NCM (AM_P)', '#3a3a3a', 'sphere'], ['NCM (AM_S)', '#888888', 'sphere'],
       ['SE (Li₆PS₅Cl)', '#e8d68a', 'blob'], ['VGCF', '#22d3ee', 'fibre'],
       ['Super P', '#ec4899', 'dots'], ['PTFE', '#f59e0b', 'wave'], ['SDCP', '#ff3b30', 'dot'],
+      ['SWCNT sheath', '#22c55e', 'fibre'],
     ];
     const S2 = 6, W2 = 830 * S2, H2 = 52 * S2;   // 논문 인쇄용 6× (~5000px)
     const cv = document.createElement('canvas'); cv.width = W2; cv.height = H2;

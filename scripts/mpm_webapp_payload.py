@@ -515,7 +515,7 @@ def main():
             _off = np.array([SW[0], SW[0], FLOOR])
             _am_c = (c - _off) * UM
             _am_r = r * UM
-            _cond_ph = (2, 3, 5, 4) if a.sigma_ptfe > 0 else (2, 3, 5)   # PTFE(4)는 민감도 런에서만 스탬프
+            _cond_ph = (2, 3, 5, 6, 4) if a.sigma_ptfe > 0 else (2, 3, 5, 6)   # PTFE(4)는 민감도 런에서만 스탬프; 6=SWCNT sheath(A14, 도체)
             _m = (np.isin(phase, _cond_ph) if phase is not None
                   else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator, default)
             _apts = (se[_m] - _off) * UM if _m.any() else None
@@ -903,7 +903,7 @@ def main():
     if phase is not None:
         rng_a = np.random.default_rng(1)
         add_tot = int((phase >= 2).sum())
-        for code, nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE'), (5, 'SDCP')):
+        for code, nm in ((2, 'VGCF'), (3, 'SuperP'), (4, 'PTFE'), (5, 'SDCP'), (6, 'SWCNT')):
             m = phase == code
             cnt = int(m.sum())
             if cnt == 0:

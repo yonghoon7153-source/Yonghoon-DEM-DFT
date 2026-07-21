@@ -359,6 +359,11 @@ def parse_args(argv):
                          '~agg_d clusters (anchored share draped on AM + bulk share in-pore).  <0 = AUTO from '
                          'the process row (handmix 3.0 = S2 anchor; ballmill/thinky 0 = milled S3 singles); '
                          '0 forces singles.  SIZE anchored (S2); survival-at-low-shear = physics direction.')
+    ap.add_argument('--swcnt-wrap', type=float, default=-1.0,
+                    help='A14 SWCNT sheath coverage fraction of each AM surface (surface_conformal).  <0 = '
+                         'AUTO from the process row (1.0 all mixings — koo2026 ζ≈−1.9 near-complete pre-'
+                         'assembled coverage, mixing-robust per Raman).  <1 seeds a contiguous partial CAP '
+                         'per AM = degraded-wrapping what-if (un-anchored §F1 knob).')
     ap.add_argument('--dilate-z', type=float, default=1.0,
                     help='STIFF-FIBRE BED DILATION: stretch the frozen scaffold (AM + SE seed) z-offsets by this '
                          'factor before compaction — the prop-open thickness response a frozen-AM MPM cannot '
@@ -771,8 +776,14 @@ def main(argv):
                 'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
                 'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
                 'SDCP':   (23.6, 0.35, 1.00, 5, 'particle', 0.0,      0.0,  0.0, 0.0, 0.0, 0.0),   # ★E=23.6 GPa MANUSCRIPT-ANCHORED (AFM S6; LPSCl급 강성) — 0.3µm particles (S3), σ_y=1.0 UN-anchored rigid-proxy §F1 (stiff conjugated polymer, no PTFE-like flow; ≫press → behaves rigid); ρ 1.3 still proxy (methods 대기)
+                'SWCNT':  (0.50, 0.30, 0.10, 6, 'sheath',  0.0,       0.0,  0.0, 0.0, 0.0, 0.0),   # ★A14 (#275 koo2026) conformal sheath — E/σ_y = SuperP-class SOFT PROXY §F1: the film-effective
+                #   transverse modulus of a 2-10nm CNT skin is UN-anchored (single-tube AXIAL ~1 TPa is the
+                #   wrong axis for a wrapped skin under radial press); ≤0.5wt% + add_pvs volume-pin → compaction
+                #   impact negligible either way.  Role is STRUCTURAL (conductive-skin morphology → STEP3/viewer).
             }
             am_box = ((am_c - off, am_r) if am_c is not None else None)   # AM in the seed-box frame (coating)
+            _se0_box = xs[phase_np == 1] - off          # ★A14: pre-additive SE cloud (seed-box frame) — the
+                                                        #   seed-time sheath↔SE ionic-contact trade-off reference
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
             dia_np = np.zeros(len(xs), np.float32)      # per-point relative fibre Ø (0 = SE/non-fibre; ∝√weight)
             carbon_seed = []                            # carbon (VGCF/SuperP) pts in seed-box frame → PTFE
@@ -851,6 +862,35 @@ def main(argv):
                                                          return_ids=True, return_info=True)
                     _w = np.ones(len(pts), np.float32)
                     _coated = True                            # metadata: coat dict records the anchored share
+                elif kind == 'sheath':
+                    # ★ A14 SURFACE_CONFORMAL (#275 koo2026): continuous vein-like SWCNT skin ON the AM
+                    # surfaces (geodesic walks — additives.seed_sheath).  Distinct from A4 coat_block
+                    # (isolated blocking-film points): chains are CONTIGUOUS → a connected conductive skin
+                    # per AM.  Coverage wrap_frac from the process row (1.0, ζ≈−1.9 anchor) or --swcnt-wrap.
+                    # Seed-time RIGID trade-off vs the pre-additive SE cloud → meta (GEOMETRIC UPPER BOUND
+                    # of ionic-contact loss — additives.sheath_ion_tradeoff trust label; deformed-cloud
+                    # version = payload-side future).
+                    _row = _ad.additive_process(nm, args.mixing)
+                    _wrap = (float(args.swcnt_wrap) if args.swcnt_wrap >= 0.0
+                             else float(_row.get('wrap_frac', 1.0)))
+                    pts, _fid = _ad.seed_sheath(nobj, bx, dx, rng, am=am_box,
+                                                in_am=lambda q: _in_am_abs(q + off),
+                                                wrap_frac=_wrap,
+                                                shell_um=_ad.SWCNT_SHELL / um_box,
+                                                seg_len_um=_ad.SWCNT_SEG_L / um_box,
+                                                return_ids=True)
+                    _w = np.ones(len(pts), np.float32)
+                    _sfrac = _wrap                       # coat-meta coverage share = the wrap fraction
+                    _coated = True
+                    _tro = None
+                    if len(pts) and am_box is not None and len(_se0_box):
+                        _sub = (_se0_box if len(_se0_box) <= 30000
+                                else _se0_box[rng.choice(len(_se0_box), 30000, replace=False)])
+                        _tro = _ad.sheath_ion_tradeoff(pts.astype(np.float64) * um_box,
+                                                       np.asarray(am_box[0], np.float64) * um_box,
+                                                       np.asarray(am_box[1], np.float64) * um_box,
+                                                       _sub.astype(np.float64) * um_box,
+                                                       wrap_frac=_wrap)
                 elif kind == 'coat' or _proc_regime == 'coat_block':   # coat_embed RETIRED (fibres don't coat)
                     # A4 COAT REGIME: points seeded in a thin shell ON the AM surfaces — SDCP anchored film
                     # (default) or SuperP thinky dry-coat (coat_block: carbon film at the AM|SE interface;
@@ -924,8 +964,17 @@ def main(argv):
                     if _cbm:                                 # CB-chain morphology it didn't seed)
                         _add_meta[nm]['cb_mix'] = {_k: _cbm[_k] for _k in ('k', 'surface_frac', 'step', 'clump') if _k in _cbm}
                 if _coated:                                  # A4 coat: record what ACTUALLY seeded
-                    _add_meta[nm]['coat'] = {'shell_um': (_ad.SDCP_D / 2 if kind == 'particle' else _ad.SDCP_SHELL),
+                    _add_meta[nm]['coat'] = {'shell_um': (_ad.SDCP_D / 2 if kind == 'particle'
+                                                          else _ad.SWCNT_SHELL if kind == 'sheath'
+                                                          else _ad.SDCP_SHELL),
                                              'surface_frac': round(float(_sfrac), 3)}   # particle: anchored shell = particle radius
+                if kind == 'sheath':                         # ★ A14 sheath meta (+ trade-off if computed)
+                    _add_meta[nm]['sheath'] = {'wrap_frac': round(float(_wrap), 3),
+                                               'shell_um': _ad.SWCNT_SHELL,
+                                               'n_chains': int(_fid.max() + 1) if len(_fid) else 0,
+                                               'morph': _row.get('morph', '')}
+                    if _tro:
+                        _add_meta[nm]['sheath_tradeoff'] = _tro
                 if code == 2:                                # VGCF: waviness (Tier-1 curl / physics buckle / rod)
                     _add_meta[nm]['curl'] = round(float(_vgcf_curl), 3)
                     if args.fibre_buckle:
