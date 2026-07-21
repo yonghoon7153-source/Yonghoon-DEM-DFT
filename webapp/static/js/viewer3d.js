@@ -5317,6 +5317,9 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
           <label style="display:flex;align-items:center;gap:3px"
             title="σ-공동스케일: 두 쪽 색을 σ_eff 비율로 정렬해 절대 세기 차이가 색으로 보이게 (근사 — 상위꼬리 모양 유사 가정; 끄면 자기 정규화=패턴 비교)">
             <input type="checkbox" id="cmp-joint">σ공동</label>
+          <select id="cmp-joint-ref" title="공동 스케일의 기준(컬러 상단 앵커) — auto=σ-max(클리핑 없음, 절대비교 기본) / A·B=그 케이스 기준(반대쪽이 넘치면 포화-클립 = baseline-대비 수사용)"
+            style="background:#16192e;color:#e4e6f0;border:1px solid #2a2d3e;border-radius:4px;font-size:11px;padding:1px 2px">
+            <option value="max">기준 auto(σ-max)</option><option value="A">기준 A</option><option value="B">기준 B</option></select>
           <label style="display:flex;align-items:center;gap:3px"
             title="백본을 점 대신 복셀 큐브로 — 인접 복셀이 붙어 연속 통로로 보임 (COMSOL 볼륨 문법)">
             <input type="checkbox" id="cmp-cube" checked>이어짐</label>
@@ -6070,7 +6073,11 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       const sgA = ionic ? sA.sigma_ion_eff_S_cm : sA.sigma_e_eff_S_cm;
       const sgB = ionic ? sB.sigma_ion_eff_S_cm : sB.sigma_e_eff_S_cm;
       const smx = Math.max(sgA || 0, sgB || 0) || 1;
-      const kA2 = jointOn && sgA ? sgA / smx : 1, kB2 = jointOn && sgB ? sgB / smx : 1;
+      // 앵커 선택: auto=σ-max(클리핑 없음) / A·B=그 케이스 기준 (반대쪽 k>1 → 상단 포화-클립
+      //   = "baseline 대비" 수사용.  클립은 정보손실이므로 legend에 명시)
+      const refSel = ($('cmp-joint-ref') || {}).value || 'max';
+      const sref = (refSel === 'A' && sgA) ? sgA : (refSel === 'B' && sgB) ? sgB : smx;
+      const kA2 = jointOn && sgA ? sgA / sref : 1, kB2 = jointOn && sgB ? sgB / sref : 1;
       const ghostOn = $('cmp-ghost') ? $('cmp-ghost').checked : true;
       const rA2 = buildField(SA, A, ionic, bbOn, bbPct, glowOn, kA2, cubeOn, ghostOn),
             rB2 = buildField(SB, B, ionic, bbOn, bbPct, glowOn, kB2, cubeOn, ghostOn);
@@ -6079,7 +6086,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
         return (r.n ? `${r.n.toLocaleString()}점` : 'FIELD 없음 (payload 재생성 필요)') + r.bbTxt
           + ' · ' + (ionic ? 'σ_ion ' + fmtQ(s3x.sigma_ion_eff_S_cm) : 'σ_e ' + fmtQ(s3x.sigma_e_eff_S_cm)) + ' S/cm'
           + (fscX ? ` · p99.8 = ×${Number(fscX.focus_top).toPrecision(2)} ⟨J_z⟩ (${Number(fscX.j_top_A_cm2_per_V).toPrecision(2)} A/cm²@1V)` : '')
-          + (jointOn ? ` · σ-공동스케일 ×${k2.toFixed(2)} (비례 근사 ★색 비교 유효)`
+          + (jointOn ? ` · σ-공동 ×${k2.toFixed(2)}${k2 > 1.001 ? ' ⚠상단 클립' : ''} (기준 ${refSel === 'max' ? 'σ-max' : refSel} · 비례 근사 ★색 비교 유효)`
                      : ' · 자기 p99.8 정규화 — 패턴 비교용(절대는 σ)');
       };
       $('cmp-leg-a').innerHTML = cap(rA2, sA, kA2);
@@ -6089,10 +6096,12 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
       // σ-공동 스케일의 기준은 k=1.00인 σ-max 케이스 (약한 쪽은 ×k로 눌림) — 컬러바 수치는
       // 그 기준 케이스의 focus/절대값.  자기-정규화(비공동)에서는 케이스별 상단이 달라
       // 수치 눈금이 성립 안 함 → 양쪽 상단을 부제에 병기.
-      const fscT = jointOn ? (((sgB || 0) >= (sgA || 0)) ? (fB3 || fA3) : (fA3 || fB3)) : (fA3 || fB3);
+      const fscT = jointOn ? (refSel === 'A' ? (fA3 || fB3) : refSel === 'B' ? (fB3 || fA3)
+                              : (((sgB || 0) >= (sgA || 0)) ? (fB3 || fA3) : (fA3 || fB3))) : (fA3 || fB3);
       let subT;
       if (jointOn && fscT) {
-        subT = 'joint reference = σ-max case · top(p99.8) = ' + Number(fscT.j_top_A_cm2_per_V).toPrecision(3)
+        subT = 'joint reference = ' + (refSel === 'max' ? 'σ-max case' : 'case ' + refSel + ' (반대쪽 상단 클립 가능)')
+             + ' · top(p99.8) = ' + Number(fscT.j_top_A_cm2_per_V).toPrecision(3)
              + ' A/cm² @ΔV=1V' + (fscT.j_1C_mA_cm2 ? ' · @1C: ⟨J⟩ ' + Number(fscT.j_1C_mA_cm2).toPrecision(3)
              + ' · top ' + Number(fscT.j_1C_mA_cm2 * fscT.focus_top).toPrecision(3) + ' mA/cm²' : '');
       } else if (fA3 && fB3) {
@@ -6168,6 +6177,7 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   }
   if ($('cmp-glow')) $('cmp-glow').onchange = rebuild;
   if ($('cmp-joint')) $('cmp-joint').onchange = rebuild;
+  if ($('cmp-joint-ref')) $('cmp-joint-ref').onchange = rebuild;
   if ($('cmp-cube')) $('cmp-cube').onchange = rebuild;
   if ($('cmp-ghost')) $('cmp-ghost').onchange = rebuild;
   rebuild();
