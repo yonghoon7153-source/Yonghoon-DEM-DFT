@@ -228,9 +228,15 @@ Compare v2 (3000K melt): comp1 = 1.107, comp2B = 1.046 J/m2
 1. comp3–5 꼬리 음수(−0.3~−0.6): 강성 분리 상태가 이완 기준보다 낮을 수 없음
    → uniform dW=0.44 보정이 Li5.4 계열에서 과함(잔차). 방어: 순위·상관 불변,
    우물 위치/깊이 대비 잔차 규모 명시.
-2. α·dW 유도의 추적성: 스크립트는 `필독/adhesion/v30u_ensemble/`
-   (gabia /data/work/v30u_ensemble 미러) — **repo 외부. 회수하여 tools/에 박제 필요**
-   (paper #2 top-3 재계산도 이 스크립트 필요).
+2. α·dW 유도의 추적성 — **부분 회수 완료 (2026-07-21, D:\v100 KISTI 백업 → `tools/adhesion_v30u/`)**:
+   - ✅ 확정: 출판값 = `WELLS_RAW − α·dW` (α=1.0); WELLS_RAW·dW 전값 기록 (README);
+     raw 순위는 Li6>Li5.4 (α=0에서 R=−0.76) → **보정이 순위 재현의 필수 성분**임이 실증됨.
+   - ✅ uniform 0.44 채택 사유 스크립트에 명문: per-comp eiso는 comp4=3.64 outlier로
+     strict rank가 어떤 α에서도 불성립 → 계열-균일 정규화 + α-창 견고성 검증.
+   - ⏳ 잔여: **0.44 숫자 자체의 산출 스크립트** (`_correct_eiso_fix.py`,
+     `normalize_wad_by_surface_Li.py`) 미회수 — 백업 추가 수색 대상.
+   - 구두 방어 문구: "표면 준비 비용 보정은 eiso 기반이며, Li5.4 계열은 comp4 outlier
+     때문에 계열-균일 값으로 정규화했고 α-민감도 스캔으로 순위 견고성을 확인했다."
 
 ### 용어
 - E_adh = adhesion energy (음수 우물, 곡선용) / W = work of adhesion·separation (양수, 인용용).
