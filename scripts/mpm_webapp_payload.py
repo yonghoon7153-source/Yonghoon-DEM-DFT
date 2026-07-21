@@ -629,11 +629,16 @@ def main():
                 #   SystemExit(BaseException) → Exception만 잡으면 payload가 죽음.
                 try:
                     from rint_cycle_traj import load_scenario as _ls_rint
-                    _scn_vals = {k: tuple(_ls_rint(k)[:2]) for k in ('sbe', 'dbe', 'csus')}
+                    # (r0, rc, ntot, prec) 전체 유지 — precision 라벨도 CSV 단일 출처 (정밀 digitize가
+                    # CSV precision 컬럼을 바꾸면 라벨까지 일괄 반영; 하드코딩 'panel_e_approx' 금지)
+                    _scn_vals = {k: tuple(_ls_rint(k)) for k in ('sbe', 'dbe', 'csus')}
                     _scn_src = 'docs/data/rint_eis_anchors.csv (정본, scenario keys)'
                 except (Exception, SystemExit) as _e_rs:
-                    _scn_vals = {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0)}
+                    _scn_vals = {'sbe': (18.0, 110.0, 1000, 'panel_e_approx'),
+                                 'dbe': (12.0, 46.0, 1000, 'panel_e_approx'),
+                                 'csus': (10.0, 30.0, 1000, 'panel_e_approx')}
                     _scn_src = f'fallback snapshot 2026-07-21 (anchors CSV unreadable: {_e_rs})'
+                _pri_prec = '/'.join(sorted({str(v[3]) for v in _scn_vals.values()}))
                 _nm_fmt = {'sbe': 'SBE_bare_{:g}', 'dbe': 'DBE_bare_{:g}',
                            'csus': 'SBE_CSUS_{:g}_proxy_DBE_anchored'}   # SBE+C-SUS 미측정 → DBE-앵커 proxy
                 _cyc_pairs = ([('ideal_R0', 0.0)]
@@ -661,8 +666,8 @@ def main():
                                       'time_axis': 'sigma_apparent_S_cm = aged R_int(1000cyc@2C) × BOL 벌크 '
                                                    '= 민감도 시나리오; sigma_apparent_pristine_S_cm = '
                                                    'pristine R_int × BOL 벌크 = 시간-일관(물리적 BOL 풀셀)',
-                                      'pristine_precision': 'panel_e_approx — Fig6e pristine 근사'
-                                                            '(정밀 디지타이즈 대기, A11); '
+                                      'pristine_precision': f'{_pri_prec} — CSV precision 컬럼에서 유도'
+                                                            '(정밀 디지타이즈 시 CSV만 갱신하면 일괄 반영); '
                                                             'docs/data/rint_eis_anchors.csv scenario keys'}
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
@@ -680,7 +685,7 @@ def main():
                                      'R_int_pristine_ohm_cm2': float(_r0s),
                                      'sigma_apparent_pristine_S_cm':
                                          float(f'{_Lcm / (_Rbulk + _r0s):.3g}'),
-                                     'pristine_precision': 'panel_e_approx'})
+                                     'pristine_precision': str(_scn_vals[a.collector_scenario][3])})
                     step3['collector']['selected'] = _sel
                 _ca = step3['collector']['sigma_apparent_S_cm']
                 # carbon-free/희박 배선 케이스는 R_bulk가 계면(30-110)과 동급까지 올라옴 — "≪" 고정

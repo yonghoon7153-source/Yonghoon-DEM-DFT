@@ -74,8 +74,15 @@ R_int 110/46)은 **STEP3 σ_apparent 에만** 반영되고 **STEP4 로 안 흘�
   "fresh+aged 민감도" 라벨) ⑤ 렌더/bash-n 검증 + 적대 리뷰(CONFIRMED 2건 즉시 수정: 진행로그
   과주장·음수 가드).  **잔여**: R_geom output 검증(리뷰 항목), pristine 정밀 디지타이즈(A11-①),
   R_int(cycle) 열화율 축(A11-②).
-- 2026-07-21: **Phase 2 첫 데이터 진행중** — DBE 2C CCCV: R_int=0 완료(89.6%) + **R_int=10(pristine
-  C-SUS, panel-e 근사) V100 실행중** (같은 침대 grid 재사용, step4_only).  aged 30은 후속 스윕.
+- 2026-07-21: **Phase 2 첫 비교쌍 완성** — DBE 2C CCCV: R_int=0 → 89.6% vs **R_int=10(pristine
+  C-SUS) → 84.6% (−5.0%p)**, V_term 시작 3.733(≈+70mV=I·R 예측 일치), cv_i_cut 정상종료 t=1600s,
+  E-bal 3.7e-05 (run_DBE_20260720_144315_249848/step4_*_rint10.*).  aged 30·bare-Al 12/18은 후속 스윕.
+- 2026-07-21: **kit-gen UI 풀셀 축 완성 (사용자: "이번에는 확실하게")** — ① 적대리뷰 CRITICAL 즉수정:
+  `--collector-scenario`를 킷 생성기가 미수용→bare/csus 킷 다운로드가 argparse 500으로 죽던 것 수용+
+  run_mpm.sh로 전달(pristine 짝 병기가 프로덕션 체인에서 실제 작동) ② single.html **STEP4 R_int
+  셀렉트**(전극-내부 기본/pristine/cycled) + `/rint-anchors` 라이브 힌트(정본 CSV 해석값 표시) +
+  이상접촉 선택 시 경고 ③ 뷰어 6곳(곡선 타이틀·SOC/st4f 푸터·동기 GIF 헤더·비교 조건 2곳)에
+  R_int>0 표기 ④ MINOR: 헬퍼 키 검증·precision 라벨 CSV-유도화 ⑤ 기존 --help %-크래시 수정.
 - 2026-07-21: **★ 단일-출처 하드닝 (사용자: "확실하게")** — 시나리오 R_int 값(18/12/10·110/46/30)이
   anchors CSV·payload·app.py **3중 하드코딩**이던 것을 정본 CSV 단일 출처로 통합: payload와 app.py가
   `rint_cycle_traj.load_scenario`로 읽음(불가 시 스냅샷 fallback + anchors_source 라벨; ⚠SystemExit

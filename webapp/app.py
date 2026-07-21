@@ -5240,6 +5240,8 @@ def _rint_anchor_pair(key):
     """R_int 시나리오 (pristine, cycled) Ω·cm² — 정본 docs/data/rint_eis_anchors.csv에서 읽음
     (scripts/rint_cycle_traj.load_scenario 재사용 = 단일 출처).  CSV/키 불가 시 2026-07-21 스냅샷
     fallback.  ⚠ load_scenario는 SystemExit를 던지므로 Exception만 잡으면 앱이 죽음."""
+    if key not in ('sbe', 'dbe', 'csus'):       # fallback dict에 없는 키가 CSV-실패 경로에서
+        raise ValueError(f'unknown R_int scenario key: {key!r}')   # KeyError 500 되던 것 조기 차단
     try:
         import sys as _s
         _sd = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'scripts')
@@ -5250,6 +5252,13 @@ def _rint_anchor_pair(key):
         return float(r0), float(rc)
     except (Exception, SystemExit):
         return {'sbe': (18.0, 110.0), 'dbe': (12.0, 46.0), 'csus': (10.0, 30.0)}[key]
+
+
+@app.route('/rint-anchors')
+def rint_anchors():
+    """kit-gen UI 힌트 — 정본 anchors CSV의 시나리오 (pristine, cycled) R_int Ω·cm² (단일 출처)."""
+    return jsonify({k: dict(zip(('pristine', 'cycled'), _rint_anchor_pair(k)))
+                    for k in ('sbe', 'dbe', 'csus')})
 
 
 @app.route('/results/<case_id>/mpm-input')

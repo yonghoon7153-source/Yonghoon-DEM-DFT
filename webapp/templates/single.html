@@ -253,8 +253,8 @@
         <label>VGCF wt%<br><input id="add-vgcf" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>Super P wt%<br><input id="add-superp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
         <label>PTFE wt%<br><input id="add-ptfe" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
-        <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 (크기=Fig S2 앵커, 저전단 생존=추론). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateAdditiveGpuCmds()"></label>
-        <label title="STEP3 집전체 축 — 두 층 구분: ① 모델 예측(출력) = bare-vs-wetted 기하 접촉 이중솔브의 R_geom (항상 계산됨) ② 이 선택 = 문헌 실측 R_int를 직렬로 거는 「시나리오 부하」 (결과값을 재생하는 what-if — 모델 예측 아님). R_int는 (전극,집전체) 페어 속성: bare-Al은 레시피에 SDCP 있으면 46/없으면 110, C-SUS 30 (Fig6e 사이클후; SBE+C-SUS 미측정=proxy). 이상 접촉 = 부하 없음 = 기존 STEP3 그대로">집전체<br><select id="add-collector" style="padding:3px" onchange="updateAdditiveGpuCmds()">
+        <label title="자가도핑 전도성 바인더 (manuscript): 전극 내 0.2-0.5µm 입자 분산 + NCM 앵커 몫 (Fig S3). mixing이 분산 상태를 결정 — ball-mill/thinky = 밀링된 singles, hand-mix = as-made ~3µm 응집 (크기=Fig S2 앵커, 저전단 생존=추론). S12: SDCP 단독은 dough 형성 불가 → 실전 비교셋은 PTFE와 함께(DBE)">SDCP wt%<br><input id="add-sdcp" type="number" min="0" max="10" step="0.1" value="0" style="width:64px" oninput="updateS4RintHint();updateAdditiveGpuCmds()"></label>
+        <label title="집전체 축 — 두 층 구분: ① 모델 예측(출력) = bare-vs-wetted 기하 접촉 이중솔브의 R_geom (항상 계산됨) ② 이 선택 = 실측 R_int를 직렬로 거는 「시나리오 부하」 (what-if — 모델 예측 아님). R_int는 (전극,집전체) 페어 속성 — 값은 정본 anchors CSV에서 해석: bare-Al은 레시피에 SDCP 있으면 DBE(cycled 46/pristine 12)/없으면 SBE(110/18), C-SUS 30/10 (cycled=Fig6e 1000cyc, pristine=panel-e≈; SBE+C-SUS 미측정=proxy). STEP3 σ_apparent엔 cycled+pristine 둘 다 병기되고, 오른쪽 'STEP4 R_int'를 고르면 충방전 곡선에도 흐릅니다. 이상 접촉 = 부하 없음 = 기존 그대로">집전체<br><select id="add-collector" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
           <option value="ideal" selected>이상 접촉 (기본 — 시나리오 부하 없음)</option>
           <option value="bare">bare-Al</option>
           <option value="csus">C-SUS primer 코팅</option></select></label>
@@ -286,6 +286,11 @@
             <label style="font-weight:400">방전≥ <input id="s4-vmin" type="number" value="3.0" min="1.5" max="4.0" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
             <label style="font-weight:400">충전≤ <input id="s4-vmax" type="number" value="4.5" min="3.5" max="4.8" step="0.05" style="width:52px" onchange="updateAdditiveGpuCmds()"> V</label>
             <label style="font-weight:400" title="CCCV 충전에서 CV 홀드 종지: |I|가 이 절대 C-rate(=|I|/I_1C, 충전 rate 아님)보다 작아지면 끝. 0.05=완전충전(C/20), 0.5=0.5C에서 종지. 예: 2C 충전을 '전류 절반(1C)에서 종지'하려면 1 입력.">CV종지 |I|≤ <input id="s4-icut" type="number" value="0.05" min="0.01" max="2.0" step="0.01" style="width:52px" onchange="updateAdditiveGpuCmds()"> C <span style="color:#6b7280;font-size:0.85em">(절대·1C기준)</span></label>
+            <label style="font-weight:400" title="STEP4 풀셀 축 — 집전체 계면저항을 충방전 곡선에 직렬로 겁니다 (V_term = V_cell − I·R_int → η_Rint 분해 항 추가). 값은 위 집전체 선택 + 전극 종류(SDCP 있으면 DBE/없으면 SBE)에 맞는 시나리오를 정본 anchors CSV에서 자동 해석: pristine(신선, panel-e≈ 18/12/10) 또는 cycled(1000cyc@2C 노화, 110/46/30). 기본 = 전극-내부(R_int=0, 기존 모든 런과 동일 축). 집전체가 '이상 접촉'이면 무시됨. 산출물엔 _rint<값> 태그가 붙어 구분됩니다.">STEP4 R_int<br><select id="s4-rint" style="padding:3px" onchange="updateS4RintHint();updateAdditiveGpuCmds()">
+              <option value="" selected>전극-내부 (R_int=0 · 기본)</option>
+              <option value="pristine">풀셀 pristine (신선)</option>
+              <option value="cycled">풀셀 cycled (노화 민감도)</option></select>
+            <span id="s4rint-hint" style="color:#7dd3fc;font-size:0.85em"></span></label>
           </span></div>
         <a class="btn btn-primary" id="add-zip-btn" href="#" onclick="return dlAdditiveZip()">② recipe zip 다운로드</a>
       </div>
@@ -606,7 +611,25 @@ function _addVals() {
     s4vmin: (document.getElementById('s4-vmin') || {}).value || '3.0',
     s4vmax: (document.getElementById('s4-vmax') || {}).value || '4.5',
     s4icut: (document.getElementById('s4-icut') || {}).value || '0.05',
+    s4rint: (document.getElementById('s4-rint') || {}).value || '',
   };
+}
+// STEP4 R_int 힌트 — 선택된 collector+전극(SDCP→DBE)의 시나리오 값을 정본 CSV(/rint-anchors)에서
+// 해석해 표시.  서버(app.py &s4rint=)와 동일 규칙: collector 미선택/이상접촉이면 키워드 무시.
+let _rintAnchors = null;
+async function updateS4RintHint() {
+  const el = document.getElementById('s4rint-hint');
+  if (!el) return;
+  const { sd, coll, s4rint } = _addVals();
+  if (!s4rint) { el.textContent = ''; return; }
+  const key = coll === 'bare' ? (sd > 0 ? 'dbe' : 'sbe') : coll === 'csus' ? 'csus' : null;
+  if (!key) { el.textContent = '⚠ 집전체를 bare-Al/C-SUS로 선택해야 적용됨 (이상 접촉 = R_int=0)'; return; }
+  if (!_rintAnchors) {
+    try { _rintAnchors = await (await fetch('/rint-anchors')).json(); }
+    catch (e) { el.textContent = ''; return; }
+  }
+  const v = (_rintAnchors[key] || {})[s4rint];
+  if (v != null) el.textContent = `→ R_int = ${v} Ω·cm² (${key.toUpperCase()} ${s4rint}${s4rint === 'pristine' ? ', panel-e≈' : ''})`;
 }
 // VGCF and Super P are BOTH conductive carbon → use one OR the other, never both.
 // Valid combos: VGCF / Super P / PTFE / VGCF+PTFE / Super P+PTFE.
@@ -621,12 +644,17 @@ function _addExclusiveOK() {
 // (recalcAdditives removed — this panel is recipe-zip-only; σ/porosity analysis lives in the MPM viewer
 //  after the GPU run. The analytic /whatif-additives route is kept server-side but no longer called here.)
 function dlAdditiveZip() {
-  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut } = _addVals();
+  const { vg, sp, pt, sd, mix, coll, vox, s4, s4chg, s4vmin, s4vmax, s4icut, s4rint } = _addVals();
   if (vg <= 0 && sp <= 0 && pt <= 0 && sd <= 0) { alert('첨가제를 하나 이상 입력하세요 (wt%).'); return false; }
   if (!_addExclusiveOK()) return false;
+  if (s4rint && (coll === 'ideal' || !coll)) {
+    alert('STEP4 R_int(풀셀 축)를 쓰려면 집전체를 bare-Al 또는 C-SUS로 선택하세요.\n(어느 시나리오 값인지 집전체+전극 종류로 정해집니다 — 침묵 기본값 없음)');
+    return false;
+  }
   const _cut = (s4 || s4chg) ? `&s4vmin=${s4vmin}&s4vmax=${s4vmax}&s4icut=${s4icut}` : '';
+  const _ri = s4rint ? `&s4rint=${s4rint}` : '';
   updateAdditiveGpuCmds();   // ★ pressing download generates the gabia upload/run/fetch command card
-  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}`;
+  window.location = `/results/${encodeURIComponent('{{ case.id }}')}/mpm-input?vgcf=${vg}&superp=${sp}&ptfe=${pt}&sdcp=${sd}&mixing=${mix}&collector=${coll}&vox=${vox}&step4=${s4}&step4chg=${s4chg}${_cut}${_ri}`;
   return false;
 }
 // recipe string (mirror of backend _add_recipe_str) → zip filename (mirror of the download_name tag)

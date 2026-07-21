@@ -56,6 +56,10 @@ def main():
                     help='selected collector R_int (Ω·cm²; manuscript Fig6e cycled: bare-Al 110 / DBE 46 / '
                          'C-SUS primer 30 / ideal 0).  <0 = none — payload still reports every preset.')
     ap.add_argument('--collector-name', default='', help='collector preset label (metrics provenance)')
+    ap.add_argument('--collector-scenario', default='', choices=('', 'sbe', 'dbe', 'csus'),
+                    help='anchors-CSV scenario key of the selected collector — run_mpm.sh의 payload 호출에 '
+                         '전달돼 selected에 pristine 짝값(시간-일관 BOL)이 병기됨.  ⚠ 리뷰 CRITICAL 재발 '
+                         '방지: webapp이 이 플래그를 보내므로 여기서 안 받으면 킷 생성이 argparse 500으로 죽음.')
     ap.add_argument('--step3-vox', type=float, default=0.4,
                     help='STEP3 σ-solve voxel size (µm) baked into run_mpm.sh.  0.4 default (σ 검증값); '
                          '0.25/0.2 = finer necks/SDCP-channels for the current-density FIELD figure '
@@ -91,7 +95,7 @@ def main():
                          'stoich(ASSB 반쪽셀 실제 방전끝, --step4-vmin 2.5와 함께 전 SOC를 2.5V 단자까지).  '
                          'params_json(Chen 흑연셀-창 0.854=vs-Li 3.5V 조기종료)를 덮어씀 — Chen 창으로 '
                          '되돌리려면 --step4-x100 0.854.  x>0.854 OCP-shape는 Chen 소폭 외삽(끝점 0.9084는 '
-                         'GITT 앵커) — 정밀 tail은 실측 GITT OCP splice 필요.  ⚠ 창 넓힘 → I_1C 재계산(전류 ~9%↑).')
+                         'GITT 앵커) — 정밀 tail은 실측 GITT OCP splice 필요.  ⚠ 창 넓힘 → I_1C 재계산(전류 ~9%%↑).')
     ap.add_argument('--step4-r-int', type=float, default=None, dest='step4_r_int',
                     help='집전체 직렬 R_int [Ω·cm²] = ★풀셀 축 (기본 None = 전극-내부 R_int=0 유지). '
                          '측정 앵커 docs/data/rint_eis_anchors.csv: C-SUS pristine≈10/aged 30, '
@@ -378,6 +382,7 @@ def main():
                  if a.add_recipe else '')
     pay_phase = ' --phase phase.npy --fibre fibre.npy --fibre-dia fibre_dia.npy' if a.add_recipe else ''
     pay_coll = (f' --collector-rint {a.collector_rint:g} --collector-name {a.collector_name}'
+                + (f' --collector-scenario {a.collector_scenario}' if a.collector_scenario else '')
                 if a.collector_rint >= 0 and a.collector_name else '')
     # STEP3 voxel + field-cloud budget: finer vox resolves necks/SDCP channels for the paper FIELD
     # figure but needs more field points to actually SEE the extra resolution (dof∝1/vox³).
