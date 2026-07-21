@@ -208,8 +208,9 @@ def run(a):
     ov_now = ov0.copy()
     rng = np.random.default_rng(a.seed)                     # 부분-재습윤 재현성 (--seed)
     s_e0, s_i0 = sigma_pair()
-    a_proxy = np.sqrt(np.maximum(Rstar * ov0, 0))           # 접촉면 프록시 Σa ∝ Σ√(R*δ) (R* 포함)
-    A0 = float(a_proxy[ase].sum())                          # AM-SE 반응면 (상대 전용)
+    a_proxy = np.sqrt(np.maximum(Rstar * ov0, 0))           # 접촉 반경 a ∝ √(R*δ) (Hertz, R* 포함)
+    A0 = float(a_proxy[ase].sum())                          # Σa (Holm 구속: R∝1/Σa = area^−0.5)
+    A0_area = float((a_proxy[ase] ** 2).sum())              # Σa² ∝ 반응면적 (전하이동 R_ct: R∝1/Σa² = area^−1)
     open_ever_aa = np.zeros(len(ci), bool)                  # AM-AM 충전-말 개구 누적 (보고용, 비영구)
     chk = sorted(set(int(x) for x in a.checkpoints.split(',') if x.strip()))
     rows = []
@@ -235,18 +236,24 @@ def run(a):
         ov_now = np.where(alive, ov0, 0.0)                  # 방전-말 상태 (반경 원복 — 원장만 남음)
         if N in chk:
             s_e, s_i = sigma_pair()
-            A_ = float((a_proxy[ase] * alive[ase]).sum())
+            A_ = float((a_proxy[ase] * alive[ase]).sum())          # Σa (구속)
+            A_area = float((a_proxy[ase] ** 2 * alive[ase]).sum())  # Σa² (반응면적)
             rows.append(dict(cycle=N,
                              f_broken_amse=float(1 - alive[ase].mean()) if ase.any() else 0.0,
                              f_broken_sese=float(1 - alive[ss].mean()) if ss.any() else 0.0,
                              f_open_amam_charge=float(open_ever_aa[aa].mean()) if aa.any() else 0.0,
                              A_rel_amse=A_ / max(A0, 1e-30),
-                             rct_proxy_rel=max(A0, 1e-30) / max(A_, 1e-30),
+                             # 리뷰 #1: 접촉저항 배율 두 규약 — Holm 구속(1/Σa=area^−0.5, 하한) vs
+                             #   전하이동 R_ct(1/Σa²=area^−1, 상한; 측정 CAM-SE는 CT 지배라 이쪽이 더 적합)
+                             rct_proxy_rel=max(A0, 1e-30) / max(A_, 1e-30),       # Holm 구속 (기존)
+                             rct_holm_rel=max(A0, 1e-30) / max(A_, 1e-30),        # =rct_proxy_rel (명시 별칭)
+                             rct_ct_area_rel=max(A0_area, 1e-30) / max(A_area, 1e-30),  # 전하이동(면적)
                              sigma_e_rel=(s_e / s_e0) if s_e0 > 0 else None,
                              sigma_i_rel=(s_i / s_i0) if s_i0 > 0 else None))
             _f = lambda v: '—(미퍼콜)' if v is None else f'{v:.3f}'
             print(f'  N={N:4d}  f_brk(AM-SE)={rows[-1]["f_broken_amse"]:.3f}  '
-                  f'A_rel={rows[-1]["A_rel_amse"]:.3f}  R_ct∝{rows[-1]["rct_proxy_rel"]:.2f}×  '
+                  f'A_rel={rows[-1]["A_rel_amse"]:.3f}  R_ct∝[Holm {rows[-1]["rct_holm_rel"]:.2f}–'
+                  f'CT {rows[-1]["rct_ct_area_rel"]:.2f}]×  '
                   f'σ_e_rel={_f(rows[-1]["sigma_e_rel"])}  σ_ion_rel={_f(rows[-1]["sigma_i_rel"])}'
                   f'  (AM-AM 충전개구 {rows[-1]["f_open_amam_charge"]:.2f}, 재폐합)', flush=True)
     out = dict(model='A10-v1 contact-ledger (option A)', atoms=a.atoms,
