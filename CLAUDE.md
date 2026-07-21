@@ -157,6 +157,9 @@ STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore
 **STEP4-v2(갈바노/CV 시간전개: 비선형 BV+구형확산, COMSOL 방정식-수준 패리티·selftest 내부검증 — ⚠수치 패리티 런(PyBaMM/COMSOL 매치드-조건) 대기, defense_review_20260720) = 2026-07-15 구현**
 (`scripts/step4_dyn.py`, selftest 20/20, 물리·수치 2-agent 리뷰 반영; pybamm 앵커
 `scripts/step4_pybamm_anchor.py`; V100 스모크→SBE/DBE rate 비교 진행).
+**★ 2C CCCV 충전 완주 (2026-07-21, run_both 직렬)**: delivered CC끝 81.5/83.0(+1.5%p) → CV후
+88.9/**89.6**(+0.7%p), CC ΔV 9.3mV=옴4.5+kin4.8 — 방전(7.9mV)과 대칭 = 수송-기원 양방향 확인.
+rate-capability 이득(열역학 용량 아님), 원장 §5.5.
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
 **★σ_SDCP 250 재실행 완료(2026-07-17): σ_e 3.002 = SBE 대비 +52.0% = 새 헤드라인**
 (침대 byte-재현, 분담 10→7% 역행 지속, 천장의 82% 실현; 스윕 5점 완성.  같은 날 SBE
