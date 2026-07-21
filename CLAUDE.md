@@ -160,6 +160,19 @@ STEP1(DEM)·STEP2(MPM 압밀/payload)·STEP3(복셀 Kirchhoff σ_e/σ_ion + pore
 **★ 2C CCCV 충전 완주 (2026-07-21, run_both 직렬)**: delivered CC끝 81.5/83.0(+1.5%p) → CV후
 88.9/**89.6**(+0.7%p), CC ΔV 9.3mV=옴4.5+kin4.8 — 방전(7.9mV)과 대칭 = 수송-기원 양방향 확인.
 rate-capability 이득(열역학 용량 아님), 원장 §5.5.
+**★ R_int 풀셀/사이클 프로젝트 (2026-07-20~21, docs/project_rint_fullcell_cycling.md 정본)**:
+Phase0 앵커조사 ✅ + R_int(N) reference 설계(다-항: R_contact[Holm−0.5+R_ct−1]+R_tort[SE이온-τ]+
+R_chem(N)+R_collector(N)+Δ_special; defense 수정 반영) ✅ + **Phase1 배선 ✅**(`rint_eis_anchors.csv`
+[kim2025 pdf_verified 최고앵커]·킷 `--step4-r-int`·webapp `&s4rint=`·σ_apparent pristine/cycled 분리
+=§6.1 MIX 해소) + **A11-② `rint_cycle_traj.py`**(양끝-고정 assumed-form 밴드 + 체크포인트 명령) ✅.
+Phase2 진행: DBE 2C R_int={0 ✅ 89.6%, 10 V100 실행중}.  **step4 운전-φ(z) export 추가**(viz phi_z:
+φ_e µV-평평 vs φ_i 수십mV 미러 — 새 런부터).  실측 분해: 2C 옴강하 전자 0.01-0.03mV vs 이온 84-90mV.
+**백로그 A5~ 일괄 진행(2026-07-21)**: A13 pore-PNM ✅(nearest-seed; watershed_ift 오분할 기각) ·
+A7 graded-z ✅(--poro-grad 총량고정 게이트 + cb K=8 설계프로파일) · **A8 NCA ✅스캐폴딩**(★검증이
+E=175 배선 차단 — Kang "assumed"+Koerver umbrella, 140 vs 175=출처-방법 artifact; --cam nca는 σ_e만
+Amin-태그 배선, docs/nca_material_preset.md) · A10 시간축분업 명문화 ✅.  defense 리뷰 정본:
+docs/defense_review_20260720.md (COMSOL-대체 verdict: σ-삼중+미세구조 필드=대체 가능[Bazzoun 입증],
+잔여 1조각=STEP4 PyBaMM 패리티 런).
 SDCP 캠페인: 3.18mAh base/SBE/DBE 완료(전자 +45.4%/이온 +5.6%/반응면 +18%),
 **★σ_SDCP 250 재실행 완료(2026-07-17): σ_e 3.002 = SBE 대비 +52.0% = 새 헤드라인**
 (침대 byte-재현, 분담 10→7% 역행 지속, 천장의 82% 실현; 스윕 5점 완성.  같은 날 SBE

@@ -25,6 +25,9 @@
 | **C4** | Cronau 라벨 정정 | 2021·Br·GB-pellet(not single-crystal), bib+main.tex 재배선 |
 | **F2** | fibre-rod emergent 좌굴 | **좌굴은 DEM 영역, MPM-scaffold 아님** 판정.  rod는 완주했으나 이 프레임이 축압축 안 줌 → prescribed curl(F1)이 MPM의 답.  `--fibre-rod` opt-in 잔존 |
 | **STEP4-v2** | 동역학 충방전 솔버 (신규 트랙) | `scripts/step4_dyn.py` COMSOL **방정식-수준** 패리티(비선형 BV+구형확산+정전류/CV), 4-agent 리뷰, selftest 20/20(내부 자기검증·해석극한). ⚠ **수치 패리티 런(PyBaMM/COMSOL 매치드-조건 ΔV-RMS)은 대기** — 이게 defensible→bullet-proof의 유일 조각(defense_review_20260720).  #31(interfacial-impedance kinetics 칸)을 실현, B7(전류맵 viz)의 소스.  1C 쌍 production 진행 중 |
+| **A7** | Phase-5 graded-z | ✅2026-07-21: `--poro-grad`(porosity(z) 게이트, 총량고정+ungated 폴백) + `--cb-ratio/--cb-grad`(K=8 설계프로파일 meta) + 밴드 실측 출력.  #286 gradient vs #20 uniform 둘 다 knob(재료의존이라 안 고름) |
+| **A13** | PNM pore 위상지표 | ✅2026-07-21: `step3_sigma.pore_pnm()` nearest-seed 분할(★watershed_ift 오분할 734/7 기각) — n_pores·r_eq·pore-CN·throat·closed_from_top% + payload 배선, selftest 5종 PASS |
+| **R_int P1** | 앵커DB+배선+σ_apparent 분리 | ✅2026-07-21: rint_eis_anchors.csv(kim2025 pdf_verified)·킷 --step4-r-int·webapp &s4rint=·pristine/cycled 병기(§6.1 해소)·적대리뷰 2건 즉수정.  + step4 운전-φ(z) export(phi_z) |
 | (E) | Bielefeld2019 / Deysher2022 | 인용-확인(β=0.41 verbatim) / 포지셔닝(리뷰가 호명한 모델=우리 실현) |
 
 ---
@@ -46,14 +49,13 @@
 ### 🎯 본선 (지금/다음 — 데이터 이미 있음)
 | ID | 항목 | 노트 |
 |---|---|---|
-| **A7** | Phase-5 graded-z | z-band별 porosity(#286)+carbon:binder(#20) 2축.  `extract_2d_microstructure` K=8 z-band 이미 보유 → target porosity(z) 구동 + through-plane 프로파일 metric 추가 |
 | **B7** | 전류밀도 localization 맵 + 민감도 히트맵/레이더 | 물리 아님(viz 기능).  **STEP4-v2 필드가 자연 소스** — 지금 STEP4 하는 중이라 근접.  일부 이미 뷰어에 구현(전류밀도 필드·프로파일) |
 
 ### 📊 데이터·문헌 대기 (앵커 확보 후)
 | ID | 항목 | 대기 대상 |
 |---|---|---|
-| **A8** | NCA(E=175) CAM 옵션 | 랩 소재 정렬(Kang&Shin) — σ_e 폼 σ_AM 재보정.  `--sigma-S/-P` override로 부분 노출됨 |
-| **A11** | collector R_int pristine↔cycled 분리 | manuscript Fig4c/6e 데이터 + 조성-연속 R_int 실측(§F1 보간금지).  STEP3 본선 후 |
+| **A8** | NCA CAM 옵션 | ✅스캐폴딩 완료(2026-07-21): `--cam nca`(σ_e Amin-태그) + docs/nca_material_preset.md — **★검증이 E=175 배선 차단**(assumed/umbrella-인용, 140 vs 175=출처 artifact).  잔여: σ_e 폼 σ_AM 재보정(WSL corpus)·K_IC(lab) |
+| **A11** | collector R_int pristine↔cycled | ✅②경험궤적 도구(rint_cycle_traj)·③σ_apparent pristine/cycled 병기 완료(2026-07-21) + Phase2 R_int={0,10} 런.  잔여: ①pristine 정밀 digitize(Fig4c/6e)·조성-연속 실측 |
 | **B2** | RNM(constriction) vs Stage-E | Bazzoun/Bielefeld2020 — Stage-E 기여 정량 |
 | **B4** | multi-contact coupling | Varkey — 18× softening의 물리적 대안 비교 |
 | **B5** | σ_grain 이중계상 재점검 | bulk spread {3.0/2.19/1.6/1.02} |
@@ -63,9 +65,8 @@
 ### ⏳ future (사이클·시간축 — frame[5] 미보유)
 | ID | 항목 | 노트 |
 |---|---|---|
-| **A10** | 사이클 chemo-mechanics | volume change+CZM 입계박리 = 우리 압밀 MPM의 사이클 짝.  "압밀=J2 / 사이클=cohesive-zone" 분업 명문화부터 |
+| **A10** | 사이클 chemo-mechanics | volume change+CZM 입계박리 = 우리 압밀 MPM의 사이클 짝.  ✅분업 명문화 완료(2026-07-21, mpm3d_calibration.md) — 본체는 β_Vegard digitize+CZM γ 앵커 후.  중간 다리 = A11-② 경험 R_int(N) 궤적(구현됨) |
 | **A12** | 점탄성 MPM binder (spring-back) | SLS/Perzyna-Ludwick, η(T)/E(T) DMA → #285 3주 두께회복이 검증앵커.  4편 수렴 최대 untracked gap |
-| **A13** | PNM pore 위상지표 | A6 확장 — watershed pore 분할(등가반경·pore-CN·closed-pore%).  저비용 |
 | **A14** | surface_conformal sheath | 연속 CNT-sheath 제3 morphology(두꺼운 전극 실제 승자).  #275 |
 
 ### 🔬 연구트랙 (접촉모델 D — 풀 digest 후 정량값 확보 시)
