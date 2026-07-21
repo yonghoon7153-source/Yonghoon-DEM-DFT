@@ -223,6 +223,7 @@ O = db 등록 완료 · ⏳ = 진행중 · ✕ = 미실시(선택). 수치는 ca
 | Li-금속 계면 MD | O (modelc62 control) | O (07-19, 1× ratio-clean) | O (매몰+종단 §6) |
 | Convex hull (UMA-일관) | O 16.7 | ⏳ (`convex_hull_ehull.py` 재사용 — GPU 큐) | O 37.5 |
 | ESW 산화 onset | O 2.14 V | ⏳ (b2o3 grand-potential 파이프라인 재사용) | O 2.03 V |
+| Phonon 안정성 (Γ, UMA) | **O STABLE** (12.6 cm⁻¹~) | **O STABLE** (25.1~) | **O STABLE** (13.8~, 6/30 재확인) |
 | Elastic Cij/G/E | (B₀만) | ⏳ (suite `elastic` 12-strain) | ⏳ 전단 재시도 (strain 0.01) |
 
 **남은 작업 큐 (2026-07-21 확정)**: ① LPSOCl ELF ⏳ (러너 가동: `tools/electronic/run_lpsocl_elf_gabia.sh` — NC/80/320, b2o3·modelc와 동급 midpoint 비교로 `lpsocl_elf_bonds.csv`; **Li–O 트랩 vs b2o3 0.780**이 목적) ② ~~LPSOCl Ea~~ ✅ 0.271±0.033 등록(07-21) ③ LPSOCl Bader/elastic = `tools/elastic/run_lpsocl_suite_gabia.sh` (gabia GPU, pbrefine 종료 후) ④ LPSOCl hull/ESW = b2o3 파이프라인 재사용 러너 (작성 예정) ⑤ b2o3 전단 G/E 재시도 ⑥ B₂O₃ Li–B–S 산물상 gap/DOS (§9).

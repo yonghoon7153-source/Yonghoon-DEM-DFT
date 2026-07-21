@@ -1,0 +1,109 @@
+{
+ "property": "dynamical stability screen (UMA FD Gamma vibrations)",
+ "date": "2026-07-21",
+ "method": "comp_phonon_uma.py v2: cell-fixed pre-relax fmax 0.005 -> 6N central FD (delta 0.01 A) -> imag tol 20i cm-1 -> mode character + displace-and-relax follow (+/-0.25 A, deepest mode). UMA-s-1p1 omat.",
+ "systems": {
+  "comp2": {
+   "structure": "comp2_V0.cif",
+   "fmax_V0": 0.0772,
+   "rmsd_relax_A": 0.005,
+   "lowest_cm1": [
+    -45.8,
+    -32.9,
+    -25.2,
+    -19.1,
+    -17.0
+   ],
+   "verdict": "SADDLE",
+   "follow_dE_meV": -535.3,
+   "follow_rmsd_A": 0.467,
+   "imag_character": "Li 82-87%",
+   "note": "진짜 깊은 Li-부격자 안장 (10.3 meV/atom 아래 최소 존재). DFT cross-check 진행중 (c2dft). champion 교체 안건."
+  },
+  "b2o3": {
+   "structure": "b2o3_relaxV0.xyz",
+   "fmax_V0": 0.1858,
+   "rmsd_relax_A": 0.1218,
+   "lowest_cm1": [
+    13.8,
+    14.8,
+    15.3
+   ],
+   "verdict": "STABLE",
+   "note": "2026-06-30 결과 재확인 (13.8 vs 13.7 cm-1, delta 0.01 vs 0.02 무관). soft-but-stable Li 부격자."
+  },
+  "lpsocl": {
+   "structure": "lpsocl_relaxV0.xyz",
+   "fmax_V0": 0.1331,
+   "rmsd_relax_A": 0.0213,
+   "lowest_cm1": [
+    25.1,
+    28.1,
+    28.7
+   ],
+   "verdict": "STABLE"
+  },
+  "modelc": {
+   "structure": "modelc_v3_62atom_V0.cif",
+   "fmax_V0": 0.1452,
+   "rmsd_relax_A": 0.0114,
+   "lowest_cm1": [
+    12.6,
+    21.7,
+    27.6
+   ],
+   "verdict": "STABLE"
+  },
+  "comp1": {
+   "structure": "comp1_V0_k444.xyz",
+   "fmax_V0": 0.0746,
+   "rmsd_relax_A": 0.006,
+   "lowest_cm1": [
+    -63.0,
+    33.9,
+    58.8
+   ],
+   "verdict": "QUASI-STABLE (benign)",
+   "follow_dE_meV": -3.5,
+   "follow_rmsd_A": 0.035,
+   "note": "허수 1개(-63i)지만 follow가 -3.5 meV/cell(0.07 meV/atom)·RMSD 0.035 A — 평평한 이중우물 가장자리, kT(300K)=26 meV의 1/7. 실질 무해."
+  },
+  "comp3": {
+   "structure": "comp3_v2_V0_UMA.xyz",
+   "fmax_V0": 0.003,
+   "rmsd_relax_A": 0.0,
+   "lowest_cm1": [
+    21.1,
+    25.2,
+    27.1
+   ],
+   "verdict": "STABLE"
+  },
+  "comp4": {
+   "structure": "comp4_v2_V0_UMA.xyz",
+   "fmax_V0": 0.0035,
+   "rmsd_relax_A": 0.0,
+   "lowest_cm1": [
+    21.4,
+    22.7,
+    27.1
+   ],
+   "verdict": "STABLE",
+   "note": "셀-압축 artifact 프레임이지만 동적으로는 안정 — artifact는 '비대표 분지' 문제이지 안장 아님 (adhesion dW 논의와 정합)."
+  },
+  "comp5": {
+   "structure": "comp5_v2_V0_UMA.xyz",
+   "fmax_V0": 0.0044,
+   "rmsd_relax_A": 0.0,
+   "lowest_cm1": [
+    20.0,
+    22.2,
+    25.5
+   ],
+   "verdict": "STABLE"
+  }
+ },
+ "headline": "현역 논문 앵커 3종(modelc/lpsocl/b2o3) 전원 STABLE = 동적 안정성 검증 도장. 유일한 심각 케이스는 comp2 (Li-부격자 깊은 안장, -535 meV). comp1은 기술적 허수 1개지만 follow -3.5 meV로 무해.",
+ "methodology_lesson": "허수 '크기'는 심각도가 아니다: comp1 63i -> -3.5 meV vs comp2 46i -> -535 meV (150x). 판정은 반드시 displace-and-relax follow ΔE로. 이후 champion 게이트 표준: FD Γ 스크린 + (허수 시) follow.",
+ "limits": "Γ-only, UMA level, 단일 배열. comp3/4/5는 UMA-relax V0라 fmax~0 자명(그 분지의 최소 확인일 뿐)."
+}
