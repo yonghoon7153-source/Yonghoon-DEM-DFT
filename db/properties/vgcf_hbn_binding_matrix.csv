@@ -1,0 +1,11 @@
+"# h-BN@VGCF Li binding matrix — QE PBE-D3BJ PAW 60/480, 4x4, k331, relax forc 1e-3. E_bind vs isolated Li atom; lithiophobicity = E_bind + E_coh(Li)."
+site,E_bind_eV,lithiophobicity_eV,type
+VGCF_1L_ads,-1.1,0.624,adsorption
+VGCF_2L_ads,-1.252,0.472,adsorption
+hBN_1L_ads,-0.264,1.46,adsorption
+hBN_2L_ads,-0.273,1.451,adsorption
+gallery_1L1L,-1.574,0.15,intercalation
+gallery_1L2L,-1.592,0.132,intercalation
+gallery_2L1L,-1.58,0.144,intercalation
+gallery_2L2L,-1.626,0.098,intercalation
+E_coh_Li_computed,1.724,,reference

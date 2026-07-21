@@ -1,0 +1,46 @@
+{
+ "project": "hBN coating on VGCF (Li-metal anode host)",
+ "date": "2026-07-22",
+ "method": "QE 7.4.1-GPU (kgy), PBE-D3BJ, PAW kjpaw 60/480 Ry, 4x4 supercell (Li-Li 9.84 A), k 3x3x1, mv 0.01, relax 1e-3 Ry/Bohr. E_bind = E(host+Li) - E(host) - E(Li_atom). Shi2017-matched.",
+ "raw_energies_Ry": {
+  "Li_atom": -14.92743731,
+  "Li_bulk": -15.05412092,
+  "graphene": -590.40381383,
+  "hbn": -637.95603297,
+  "Li_on_graphene": -605.41212016,
+  "Li_on_hbn": -652.90288221,
+  "bilayer": -1228.44437413,
+  "Li_in_gallery": -1243.48746511,
+  "hbn_2L": -1276.01137269,
+  "Li_on_hbn_2L": -1290.95887202,
+  "bilayer_2L": -1866.5015581,
+  "Li_in_gallery_2L": -1881.54600122,
+  "graphene_2L": -1180.91217836,
+  "Li_on_graphene_2L": -1195.93160229,
+  "bilayer_gr2L": -1818.95820898,
+  "Li_in_gallery_gr2L": -1834.00175368,
+  "bilayer_2L2L": -2457.01348532,
+  "Li_in_gallery_2L2L": -2472.06039659
+ },
+ "E_coh_Li_eV": 1.724,
+ "E_bind_eV": {
+  "VGCF_1L_ads": -1.1,
+  "VGCF_2L_ads": -1.252,
+  "hBN_1L_ads": -0.264,
+  "hBN_2L_ads": -0.273,
+  "gallery_1L1L": -1.574,
+  "gallery_1L2L": -1.592,
+  "gallery_2L1L": -1.58,
+  "gallery_2L2L": -1.626
+ },
+ "layer_convergence": {
+  "hBN_ads_2L-1L": -0.009,
+  "VGCF_ads_2L-1L": -0.152,
+  "gallery_hBN_2L-1L": -0.018,
+  "gallery_VGCF_2L-1L": -0.006,
+  "gallery_2L2L-1L1L": -0.052,
+  "note": "gallery 4칸 스프레드 52 meV (-1.574~-1.626): 단조 심화, 협동항 ~28 meV. 표면 VGCF만 층수 민감(-151 meV)."
+ },
+ "shi_eq5": "gallery < min(VGCF, hBN) all combos — sandwich strongest, VGCF plays the Cu role",
+ "headline": "gallery = 최안정이면서 전부 lithiophobic(+0.10~+0.15 eV): VGCF는 Cu의 구조 역할(샌드위치 안정화)을 과도한 lithiophilic 앵커링 없이 수행. 층수 수렴 입증(gallery<=52 meV) — 1L 모델로 NEB 정당."
+}
