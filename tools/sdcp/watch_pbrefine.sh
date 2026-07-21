@@ -23,7 +23,7 @@ for j in complex_doped complex_neutral mol_doped mol_neutral slab; do
   elif grep -aqE "Error in routine|MPI_ABORT" "$o"; then st="💥crash"
   else st="↻run "; fi
   e=$(grep -a '^!' "$o" | tail -1 | awk '{print $(NF-1)}')
-  it=$(grep -a "iteration #" "$o" | tail -1 | grep -ao "[0-9]*" | tail -1)
+  it=$(grep -a "iteration #" "$o" | tail -1 | grep -aoE "# *[0-9]+" | grep -aoE "[0-9]+")
   acc=$(grep -a "estimated scf accuracy" "$o" | tail -1 | awk '{print $(NF-1)}')
   [ "$st" = "💥crash" ] && acc="$(grep -a 'Error in routine' "$o" | head -1 | tr -s ' ')"
   printf "  %-16s %s scf#%-3s E=%s acc=%s\n" "$j" "$st" "${it:-?}" "${e:-?}" "${acc:-?}"
