@@ -95,3 +95,11 @@ R_int 110/46)은 **STEP3 σ_apparent 에만** 반영되고 **STEP4 로 안 흘�
   (양끝=측정, 사이=assumed-form 라벨 §F1) + STEP4 체크포인트 명령(`MPM_S4_RINT=R(N) step4_only.sh`)
   자동 출력.  selftest 8종 PASS(양끝 EXACT·단조·첫점프·CSV 로드).  Conforto digitize(A11-① gap) 후
   계수 확정 시 밴드가 곡선으로 수렴.  = 사이클별 충방전 곡선 전개(경험 열화)의 실행 인프라.
+- 2026-07-22: **A10 CYCLE-STEP 스텝화 + STEP1~3 진행**.  STEP1(`cycle_contact_ledger.py`) 구현+
+  실런 완료(mono R_ct 1.05×/bimodal 1.51×, Kang&Shin 1.5×/4.4× 방향·Γ* 393/1100 판별·σ_ion=1
+  = 3앵커 정합) + STEP2 3각리뷰 6건 수정(rnm_sigma 연결성분·AM-AM 범주오류→재폐합·R*·재습윤
+  3모드·selftest 6/6).  **STEP3(`cycle_rint_synthesis.py`)**: 접촉-몫(모델 rct_rel)+화학-몫(측정
+  총 R_int) 분해 = R_geom 스플릿 사이클판.  Yun(NCM+LPSCl 동일재료 2.87×) 대조 = mono 기계
+  ~1%/화학~99%, bimodal 기계~14%[3-28%f0]/화학~86% — **R_int 성장 화학지배, 기계는 소수지만
+  bimodal이 mono의 ~10× (대립입자 접촉손실 시그니처)**.  ⚠ 물리식(R_ct∝1/A vs Holm 1/√A,
+  Yun 아키텍처-미상)은 적대리뷰 wf_c67ebb2b 결과 반영 대기.  다음 STEP4(N체크포인트 STEP4 곡선).
