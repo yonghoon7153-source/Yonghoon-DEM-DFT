@@ -18,10 +18,13 @@ echo "── SCF 상태 (복합체=plateau, maxstep 300) ──"
 for j in complex_doped complex_neutral mol_doped mol_neutral slab; do
   o=$OUT/$j/scf.out
   [ -f "$o" ] || { printf "  %-16s · 대기\n" "$j"; continue; }
-  st=$(grep -aq "JOB DONE" "$o" && echo "✅done" || echo "↻run ")
-  e=$(grep -aE "^!|total energy" "$o" | tail -1 | awk '{print $(NF-1)}')
+  if grep -aq "JOB DONE" "$o"; then st="✅done"
+  elif grep -aqE "Error in routine|MPI_ABORT" "$o"; then st="💥crash"
+  else st="↻run "; fi
+  e=$(grep -a '^!' "$o" | tail -1 | awk '{print $(NF-1)}')
   it=$(grep -a "iteration #" "$o" | tail -1 | grep -ao "[0-9]*" | tail -1)
   acc=$(grep -a "estimated scf accuracy" "$o" | tail -1 | awk '{print $(NF-1)}')
+  [ "$st" = "💥crash" ] && acc="$(grep -a 'Error in routine' "$o" | head -1 | tr -s ' ')"
   printf "  %-16s %s scf#%-3s E=%s acc=%s\n" "$j" "$st" "${it:-?}" "${e:-?}" "${acc:-?}"
 done
 

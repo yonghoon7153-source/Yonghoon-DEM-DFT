@@ -14,6 +14,10 @@
 #   tmux new -s pbrefine -d 'bash tools/sdcp/run_phaseB_refine_gabia.sh > \
 #       /data/work/runs/sdcp_linio2_binding/pbrefine.log 2>&1'
 # ⚠ pw.x -- run only when NO UMA/pw.x is on the GPU (VRAM). ~하루(복합체 2개가 heavy).
+#
+# OOM FIX (2026-07-21): c40 dense-FFT grid > 48GB VRAM -> "cufftPlanMany failed"
+# killed slab+both complexes at scf#3 (mol boxes fine). DFT only needs the poses,
+# not the UMA tall vacuum -> shrink c to zmax(molecule)+10A (~31) + david_ndim 2.
 # =============================================================================
 set -u; set +H
 BASE=/data/work/runs/sdcp_linio2_binding
@@ -23,9 +27,27 @@ SCAN=$BASE/phaseA_v7c_tallvac
 UMA_PY=$(ls /data/apps/miniforge3/envs/uma/bin/python3 2>/dev/null || which python3)
 echo "REPO=$REPO  UMA_PY=$UMA_PY"
 
-# ---- 1) generate 5 SCF inputs (uma python = ASE) at the new poses + c40 slab ----
+# ---- 0) shrink cell: c40 -> zmax(pose)+10A (VRAM fits; image gap still >=10A) ----
+mkdir -p "$OUT"
+"$UMA_PY" - "$REPO/db/structures/sdcp_phaseB_slab_c40.vasp" "$SCAN" "$OUT" <<'PYC' || exit 1
+import sys, math
+vasp, scan, out = sys.argv[1:4]
+zmax = 0.0
+for tag in ("complex_doped_sulfonate_down_r90", "complex_neutral_chelation_r0"):
+    ls = open(f"{scan}/{tag}.xyz").read().split("\n")
+    zs = [float(l.split()[3]) for l in ls[2:2 + int(ls[0])]]
+    zmax = max(zmax, max(zs))
+c_new = max(math.ceil(zmax + 10.0), 29)          # >=10A molecule-top -> image-slab gap
+lines = open(vasp).read().splitlines()
+assert "Cartesian" in lines[7], "expect Cartesian POSCAR"
+lines[4] = f"      0.000000000000     0.000000000000    {c_new:.9f}"
+open(f"{out}/slab_cshrink.vasp", "w").write("\n".join(lines) + "\n")
+print(f"[cell] pose zmax={zmax:.2f} A -> c={c_new} A (was 40; grid -{(1-c_new/40)*100:.0f}%)  -> slab_cshrink.vasp")
+PYC
+
+# ---- 1) generate 5 SCF inputs (uma python = ASE) at the new poses + shrunk slab ----
 "$UMA_PY" "$REPO/tools/sdcp/phaseB_v7c_dft_binding.py" \
-  --slab "$REPO/db/structures/sdcp_phaseB_slab_c40.vasp" \
+  --slab "$OUT/slab_cshrink.vasp" \
   --complex_doped   "$SCAN/complex_doped_sulfonate_down_r90.xyz" \
   --complex_neutral "$SCAN/complex_neutral_chelation_r0.xyz" \
   --mol_doped   "$BASE/inputs/sdcp_v7c/sdcp_v7c_doped.xyz" \
@@ -33,6 +55,13 @@ echo "REPO=$REPO  UMA_PY=$UMA_PY"
   --ref_scf     "$BASE/reference_dft_v2/scf_u62.in" \
   --afm_mode inplane --mol_vacuum 8 --pseudo_dir /data/work/pseudo \
   --out "$OUT" || { echo "입력생성 실패 (scf_u62.in / 자세 xyz 경로 확인)"; exit 1; }
+
+# big cells: halve Davidson workspace (memory knob, physics-invariant; mol boxes fine as-is)
+for j in slab complex_doped complex_neutral; do
+  grep -aq diago_david_ndim "$OUT/$j/scf.in" || \
+    sed -i '/&ELECTRONS/a\    diago_david_ndim = 2' "$OUT/$j/scf.in"
+done
+echo "[mem] diago_david_ndim=2 in slab/complex_doped/complex_neutral"
 
 # ---- 2) qegpu env (vertical 러너와 동일) ----
 HPCX=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi
