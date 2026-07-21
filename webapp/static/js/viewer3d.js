@@ -238,7 +238,7 @@ function wireVProfileDownload(state, btnId) {
     g.fillText(`STEP4-v2 ${st.charge ? '충전' : '방전'} ${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? ` · R_int ${st.r_int_ohm_cm2}Ω·cm²` : ''}  (${(state.data && state.data.case) || ''})${hasD ? '  ·  과전압 분해' : ''}`, mL, mT - 18);
     const dl = (url, fn) => { const a = document.createElement('a'); a.href = url; a.download = fn; document.body.appendChild(a); a.click(); a.remove(); };
     const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
-    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${_cn ? '_' + _cn : ''}`;
+    const base = `step4_${st.charge ? 'charge' : 'discharge'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_cn ? '_' + _cn : ''}`;
     dl(cv.toDataURL('image/png'), base + '.png');
     // CSV (전 스텝 원자료 — 분해 컬럼은 신형 viz만 채워짐)
     const hdr = 'step,t_s,V,V_terminal,x_mean,soc_window_pct,delivered_mAh_cm2,eta_kin_mV,eta_diff_mV,eta_ohm_mV,I_A,Q_ohm_e_W,Q_ohm_i_W,Q_ct_W,Q_rint_W';
@@ -384,7 +384,7 @@ function renderSt4Soc(state) {
     tS.value = keep; upd();
     const _cn = String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
     await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub,
-      `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_cn ? '_' + _cn : ''}${_st4Label('st4-giflabel')}`, gifBtn);
+      `st4_soc3d_${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_cn ? '_' + _cn : ''}${_st4Label('st4-giflabel')}`, gifBtn);
   };
 }
 
@@ -713,8 +713,9 @@ function renderSt4Faces(state) {
     frBtn.disabled = false; frBtn.textContent = '🎞';
   };
   const _st4cn = () => String(state._st4SrcName || (state.data && state.data.case) || '').replace(/[^A-Za-z0-9._-]/g, '').slice(0, 48);
-  const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${_st4cn() ? '_' + _st4cn() : ''}`;
+  const _st4tag = () => `${st.charge ? 'chg' : 'dis'}_${st.c_rate}C${st.r_int_ohm_cm2 > 0 ? '_rint' + st.r_int_ohm_cm2 : ''}${_st4cn() ? '_' + _st4cn() : ''}`;
   const _gifSub = () => +(document.getElementById('st4f-gifsub') || {}).value || 3;
+  const _profMode = () => (((document.getElementById('st4f-prof-src') || {}).value === 'phi') ? '_phi' : '_rxn');
   const fGifBtn = document.getElementById('st4f-gif');       // 🎬 전체 시간전개 → GIF (3D 반응전류 표면, 보간 프레임)
   if (fGifBtn) fGifBtn.onclick = async () => {
     const keep = +tS.value, sub = _gifSub();
@@ -732,14 +733,14 @@ function renderSt4Faces(state) {
     const t_now = _profRows[0][1];
     const a1 = document.createElement('a');
     a1.href = big.toDataURL('image/png');
-    a1.download = `st4_zprofile_t${t_now}s.png`;
+    a1.download = `st4_zprof_${_st4tag()}${_profMode()}_t${t_now}s.png`;
     document.body.appendChild(a1); a1.click(); a1.remove();
     const csv = (state._st4fProf.note ? state._st4fProf.note + '\n' : '')
       + (state._st4fProf.hdr || 'z_um,t_s,i_over_ibar_mean,soc_surf_mean') + '\n'
       + _profRows.map(r => r.join(',')).join('\n');
     const a2 = document.createElement('a');
     a2.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
-    a2.download = `st4_zprofile_t${t_now}s.csv`;
+    a2.download = `st4_zprof_${_st4tag()}${_profMode()}_t${t_now}s.csv`;
     document.body.appendChild(a2); a2.click(); a2.remove();
     setTimeout(() => URL.revokeObjectURL(a2.href), 5000);
   };
@@ -816,7 +817,7 @@ function renderSt4Faces(state) {
       return big.toDataURL('image/png');
     });
     tS.value = keep; upd();
-    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_zprof_${_st4tag()}${_st4Label('st4f-giflabel')}`, zGifBtn);
+    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_zprof_${_st4tag()}${_profMode()}${_st4Label('st4f-giflabel')}`, zGifBtn);
   };
   // 🎬⏱ 동기 합성 GIF — 좌: 두께 프로파일(현재 소스 모드), 우: 같은 t까지 자라나는 곡선 2단
   // (V vs 용량 + 과전압 분해) + 수직 시점선·마커·실시간 η 수치.  t축은 프로파일 체크포인트
@@ -906,7 +907,7 @@ function renderSt4Faces(state) {
       return cvS.toDataURL('image/png');
     });
     tS.value = keep; upd();
-    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_sync_${_st4tag()}${_st4Label('st4f-giflabel')}`, syGifBtn);
+    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_sync_${_st4tag()}${_profMode()}${_st4Label('st4f-giflabel')}`, syGifBtn);
   };
 }
 
