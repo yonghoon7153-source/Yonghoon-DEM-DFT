@@ -99,3 +99,18 @@ README에 "향후 DEM/DFT + ML 관련 내용 추가 예정" 명시 — 이 지�
 가능. ② 새 아이디어 1건: L15–17의 CNN(공간 inductive bias)을 우리 복셀 그리드(sid/필드)에
 적용하는 **필드-레벨 서로게이트**는 표형 predictor와 별개 축 — 데이터(필드 스냅샷 수십 개)
 부족으로 지금은 future, Phase 4(2D synth)와 합류 지점만 기록.
+
+## 7. argyrodite-ml(DFT/MLIP) 브랜치 자산 이식 (2026-07-22 확인)
+브랜치 `claude/argyrodite-ml-{prediction-ozuoX,migration-kDtHW}` = DFT/MLIP 프로그램
+(db/ 조성·물성 JSON + QE/MLIP 템플릿 + kb/ 방법론·논문 digest — "PDF 먹인" 산출물).
+정본은 friendly-meitner로 이관됨 (kb/platforms, choi2025_mlip 카드 확인).  **DEM 쪽에
+직접 이식 가능한 자산 3건**:
+1. ★★ **Wad(계면 접착에너지) 방법론** (`kb/methodology/adhesion_energy.md`: isolated-slab
+   Wad=(E_SE+E_NCM−E_interface)/A, v5 crystalline+surface-MQA, cell-matching 규약, UMA
+   MLIP 검증 R=+0.989) → **A10의 정직 갭 "AM-SE 계면 G_c 실측 부재"를 계산 앵커로 충전**
+   (Wad = 정확히 그 계면 분리에너지; Bucci 1–10 J/m² 스윕을 계산값으로 대체 가능) +
+   LPSCl 표면에너지 2γ_s → Griffith G_c로 2.8±1.8 밴드 교차검증.
+2. ★ **SDCP E_bind DFT (A4′ 유일 잔여)**: 같은 Wad 템플릿/워크플로를 SDCP(전도고분자)–
+   NCM/SE 계면에 이식 → σ_SDCP 원장의 "Li⁺ DFT/펠릿 정량 앵커 예정" 칸 실행 경로 확보 (gabia).
+3. **BO/자동화 스택 참조**: atomate2·BoTorch·dscribe (kb/platforms) — Phase 3 BO 도구
+   선정 시 DFT 프로그램과 공용 스택으로 통일 (skopt=Duquesnoy GP-Hedge 계열).

@@ -37,7 +37,7 @@ R_contact(N)을 **모델 출력**으로 만들고, 측정 R_int(N)과의 갭을 
 | Γ = ½k_SE(3β_AM·A_AM)²/(H·G_c) **< 1000 = SE 건전** | 케이스별 스칼라 게이트 (우리 베드에서 즉시 계산 가능) | Bucci 2017 Fig5 |
 | 박리 개시 **반경 ~2.5% (부피 ~7.5%)** ; contiguous 50% 박리 → Li 도달시간 **×2.75** | 박리→수송 페널티 정량 (FPT) | Bucci 2018 (pdf_local) |
 | bilinear TSL σ_c=100 MPa, G_c=1 J/m²; 10µm 입자 damage→1, 3µm ~0.4 | 랩 FEM 파라미터 (크기의존 입계손상) | Kang&Shin 2025 (pdf_local) |
-| ⚠ **AM-SE 계면 γ 실측 부재** (Bucci 1–10 J/m²는 스윕이지 측정 아님) | 정직 갭 — 스윕+밴드로 다룰 것 | Phase 0 조사 재확인 |
+| ⚠ **AM-SE 계면 γ 실측 부재** (Bucci 1–10 J/m²는 스윕이지 측정 아님) | 정직 갭 — 스윕+밴드로 다룰 것.  ★충전 경로(2026-07-22): DFT 프로그램 Wad 방법론(argyrodite-ml `kb/methodology/adhesion_energy.md`, UMA 검증 R=0.989)으로 NCM/SE 계면 분리에너지 **계산 앵커** 산출 가능 — ML 지도 §7 | Phase 0 조사 재확인 |
 
 ### 1.3 접촉손실/R_int(N) 실측 (검증 타깃)
 | 궤적 | 값 (Ω·cm²) | 출처 |
