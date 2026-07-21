@@ -65,9 +65,14 @@ R_int 110/46)은 **STEP3 σ_apparent 에만** 반영되고 **STEP4 로 안 흘�
 ## 7. 진행 로그
 - 2026-07-20: 프로젝트 정의.  Phase 0 (앵커 조사) 착수 → 완료(`rint_anchor_db_research.md`).
 - 2026-07-20: R_int(N) reference 설계(`rint_reference_growthlaw_design.md`, 3-에이전트 + defense 수정).
-- 2026-07-21: **Phase 1 배선 완료** — ① `docs/data/rint_eis_anchors.csv` (kim2025 pdf_verified + snippet
-  앵커 + user-lab 시나리오 키 sbe/dbe/csus × pristine/cycled) ② `mpm_input_from_case.py --step4-r-int`
-  (기본 None=전극-내부 R_int=0 유지; 설정 시 방전·충전 양쪽에 `--r-int-ohm-cm2` 주입 + 산출물 `_rint<값>`
-  태그 + `MPM_S4_RINT` env override; meta json에 기록) ③ 렌더/bash-n 검증.
+- 2026-07-21: **Phase 1 배선 (킷+webapp+σ_apparent 분리) 완료** — ① `docs/data/rint_eis_anchors.csv`
+  (kim2025 pdf_verified + snippet 앵커 + user-lab 시나리오 키 sbe/dbe/csus × pristine/cycled)
+  ② `mpm_input_from_case.py --step4-r-int` (기본 None=전극-내부 R_int=0 유지; 설정 시 방전·충전 양쪽에
+  `--r-int-ohm-cm2` 주입 + 산출물 `_rint<값>` 태그 + `MPM_S4_RINT` env override + 음수 거부 가드)
+  ③ webapp `&s4rint=` URL 파라미터(파워유저, s4x100 문법) ④ **A11-③**: payload collector에
+  `sigma_apparent_pristine_S_cm`(18/12/10, panel_e_approx) 병기 = §6.1 시간축 분리(cycled 세트는
+  "fresh+aged 민감도" 라벨) ⑤ 렌더/bash-n 검증 + 적대 리뷰(CONFIRMED 2건 즉시 수정: 진행로그
+  과주장·음수 가드).  **잔여**: R_geom output 검증(리뷰 항목), pristine 정밀 디지타이즈(A11-①),
+  R_int(cycle) 열화율 축(A11-②).
 - 2026-07-21: **Phase 2 첫 데이터 진행중** — DBE 2C CCCV: R_int=0 완료(89.6%) + **R_int=10(pristine
   C-SUS, panel-e 근사) V100 실행중** (같은 침대 grid 재사용, step4_only).  aged 30은 후속 스윕.

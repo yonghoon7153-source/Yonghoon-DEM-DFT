@@ -99,6 +99,10 @@ def main():
                          '⚠ pristine 값=BOL 전극과 시간-일관; aged 값은 "fresh 전극+aged 접촉" 민감도 '
                          '시나리오로 라벨(§6.1).  런타임 MPM_S4_RINT env로 override; 산출물명에 _rint<값> 태그.')
     a = ap.parse_args()
+    if a.step4_r_int is not None and a.step4_r_int < 0:
+        # 음수는 step4_dyn이 조용히 R_int=0으로 clamp → 파일명/라벨(_rint-5)이 적용 안 된 직렬항을
+        # 주장하게 됨(리뷰 CONFIRMED #2) — 생성 시점에 명시적으로 거부.
+        ap.error('--step4-r-int must be >= 0 (Ω·cm²)')
     os.makedirs(a.out, exist_ok=True)
 
     def _parse_rates(s):                                     # STEP4 체크박스 (0.02–5C 화이트리스트)

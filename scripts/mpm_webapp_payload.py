@@ -598,7 +598,21 @@ def main():
                                           #   SBE+C-SUS는 manuscript 미측정 → DBE-앵커(30) proxy 라벨.
                                           for nm2, _R in (('ideal_R0', 0.0), ('SBE_bare_110', 110.0),
                                                           ('DBE_bare_46', 46.0),
-                                                          ('SBE_CSUS_30_proxy_DBE_anchored', 30.0))}}
+                                                          ('SBE_CSUS_30_proxy_DBE_anchored', 30.0))},
+                                      # ★ A11-③ (§6.1 시간축 분리): pristine 세트 병기 — BOL(fresh) 벌크와
+                                      #   시간-일관인 fresh+fresh 조합.  위 cycled(110/46/30) 세트는
+                                      #   "fresh 전극 + aged 접촉" 민감도 시나리오로 라벨 (혼합 금지·병기).
+                                      'sigma_apparent_pristine_S_cm': {
+                                          nm2: float(f'{_Lcm / (_Rbulk + _R):.3g}')
+                                          for nm2, _R in (('ideal_R0', 0.0), ('SBE_bare_18', 18.0),
+                                                          ('DBE_bare_12', 12.0),
+                                                          ('SBE_CSUS_10_proxy_DBE_anchored', 10.0))},
+                                      'time_axis': 'sigma_apparent_S_cm = aged R_int(1000cyc@2C) × BOL 벌크 '
+                                                   '= 민감도 시나리오; sigma_apparent_pristine_S_cm = '
+                                                   'pristine R_int × BOL 벌크 = 시간-일관(물리적 BOL 풀셀)',
+                                      'pristine_precision': 'panel_e_approx — Fig6e pristine ~18/12/10 근사'
+                                                            '(정밀 디지타이즈 대기, A11); '
+                                                            'docs/data/rint_eis_anchors.csv scenario keys'}
                 print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
                       f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
                       f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
@@ -615,6 +629,10 @@ def main():
                 print(f"  STEP3 collector scenarios: bulk {_ca['ideal_R0']:.3g} → SBE(110Ωcm²) "
                       f"{_ca['SBE_bare_110']:.3g} / DBE(46) {_ca['DBE_bare_46']:.3g} / SBE+C-SUS(30 proxy) "
                       f"{_ca['SBE_CSUS_30_proxy_DBE_anchored']:.3g} S/cm  (R_bulk {_Rbulk:.2g} Ωcm² {_rel})")
+                _cp = step3['collector']['sigma_apparent_pristine_S_cm']
+                print(f"  STEP3 collector PRISTINE(시간-일관, panel-e≈): SBE(18) {_cp['SBE_bare_18']:.3g} / "
+                      f"DBE(12) {_cp['DBE_bare_12']:.3g} / C-SUS(10 proxy) "
+                      f"{_cp['SBE_CSUS_10_proxy_DBE_anchored']:.3g} S/cm  (위 cycled 세트=aged-접촉 민감도)")
                 # ★ ANALYTIC-GAP GEOMETRIC pair (v3, user: "지금 하자"): the contact SELECTION now
                 # comes from EXACT sphere/point z (no voxel blur — the DEM positions are known
                 # exactly): bare = surface within 0.10µm of the collector (econn contact tol),

@@ -5345,6 +5345,17 @@ def mpm_input_package(case_id):
                 cmd += ['--step4-x100', f'{max(0.85, min(0.99, float(_x100))):g}']
             except (ValueError, TypeError):
                 pass
+        # ★풀셀 축 (A11/R_int Phase 1): &s4rint=<Ω·cm²> → STEP4 직렬 R_int (파워유저 URL 파라미터.
+        #   기본 없음 = 전극-내부 R_int=0.  앵커 docs/data/rint_eis_anchors.csv: C-SUS pristine≈10/
+        #   aged 30, DBE 12/46, SBE 18/110.  음수/비수치는 무시)
+        _s4r = request.args.get('s4rint', '')
+        if _s4r:
+            try:
+                _s4rv = float(_s4r)
+                if _s4rv >= 0.0:
+                    cmd += ['--step4-r-int', f'{_s4rv:g}']
+            except (ValueError, TypeError):
+                pass
     try:
         subprocess.run(cmd, check=True, cwd=repo, capture_output=True, text=True)
     except subprocess.CalledProcessError as e:
