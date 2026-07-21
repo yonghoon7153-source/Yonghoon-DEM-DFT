@@ -521,6 +521,7 @@ function renderSt4Faces(state) {
            <option value="rxn">반응·SOC</option>${st.phi_z && st.phi_z.phi_i_V ? '<option value="phi">운전 φ(z)</option>' : ''}</select>
          <button id="st4f-prof-dl" title="이 시점의 프로파일을 PNG(3×)+CSV로 저장 (동적 Fig4e; CSV는 PCHIP ×8 보간 + src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">📈</button>${st.phi_z && st.phi_z.phi_i_V ? '<button id="st4f-tlink" title="φ(z) 전 체크포인트를 방전곡선과 시간-연결한 CSV — [1] t↔V·용량 링크표 [2] φ_i(z,t) [3] φ_e(z,t) 매트릭스 (PCHIP ×8 조밀 z, src 플래그)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">⏱</button>' : ''}
          <button id="st4f-zgif" title="두께방향 프로파일 전체 시간전개를 GIF로 (동적 Fig4e 무비)" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬</button>
+         <button id="st4f-syncgif" title="동기 합성 GIF — 왼쪽: 두께 프로파일 애니메이션, 오른쪽: 같은 t까지 자라나는 방전/충전 곡선 + 과전압 분해(η_ohm/η_kin/η_diff/η_Rint) + 현재-시점 마커·수치.  과전압이 언제·어떻게 생기는지 한눈에" style="background:#1f2937;color:#e5e7eb;border:1px solid #374151;border-radius:5px;padding:1px 7px;cursor:pointer;font-size:12px">🎬⏱</button>
        </div>
        <canvas id="st4f-prof" width="220" height="120" style="width:100%;margin-top:4px;border-radius:4px"></canvas>
        <div id="st4f-prof-cap" style="font-size:10px;color:#6b7280;margin-top:2px"><span style="color:#f87171">—</span> 반응분포 ⟨|i/ī|⟩(z) · <span style="color:#60a5fa">—</span> 표면 SOC(z) — 재생하면 전선의 행진이 곡선으로 움직임</div>
@@ -807,6 +808,94 @@ function renderSt4Faces(state) {
     });
     tS.value = keep; upd();
     await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_zprof_${_st4tag()}${_st4Label('st4f-giflabel')}`, zGifBtn);
+  };
+  // 🎬⏱ 동기 합성 GIF — 좌: 두께 프로파일(현재 소스 모드), 우: 같은 t까지 자라나는 곡선 2단
+  // (V vs 용량 + 과전압 분해) + 수직 시점선·마커·실시간 η 수치.  t축은 프로파일 체크포인트
+  // 보간과 동일(upd) → 두 패널이 프레임 단위로 정확히 동기.
+  const syGifBtn = document.getElementById('st4f-syncgif');
+  if (syGifBtn) syGifBtn.onclick = async () => {
+    const cu = st.curve;
+    if (!cu || !cu.V || !cu.V.length) { alert('이 viz엔 곡선 데이터가 없어요 — 최신 step4_dyn(--viz-out)로 재생성 필요'); return; }
+    const keep = +tS.value, sub = _gifSub();
+    // ── 프레임-불변 전처리 (1회) — 📈 곡선 다운로드와 동일 규약 ──
+    const mm2 = (state.data && state.data.mpm_metrics) || {};
+    const ar2 = (((mm2.step3 || {}).field_scale_e || {}).areal_capacity_mAh_cm2) || 0;
+    const win2 = Math.max(Math.abs(st.x100 - st.x0), 1e-9);
+    const qOf2 = x => (st.charge ? (st.x100 - x) : (x - st.x0));
+    const xsC = cu.x_mean.map(x => ar2 > 0 ? qOf2(x) / win2 * ar2 : 100 * qOf2(x) / win2);
+    const xLab = ar2 > 0 ? 'Capacity (mAh/cm²)' : 'DoD (%)';
+    const hasD = !!(cu.I_A && cu.eta_diff_mV);
+    let series = [];
+    if (hasD) {
+      const iAbs = cu.I_A.map(v => Math.max(Math.abs(v), 1e-30));
+      const eo = iAbs.map((I, i) => (Math.abs(cu.Q_ohm_e_W[i]) + Math.abs(cu.Q_ohm_i_W[i])) / I * 1e3);
+      series = [[eo, '#8a5cf6', 'η_ohm'], [cu.eta_kin_mV, '#e8871e', 'η_kin'], [cu.eta_diff_mV, '#2a9d8f', 'η_diff']];
+      if ((cu.Q_rint_W || []).some(q => Math.abs(q) > 0))
+        series.push([iAbs.map((I, i) => Math.abs(cu.Q_rint_W[i]) / I * 1e3), '#6b7280', 'η_Rint']);
+    }
+    const vlo = Math.min(...cu.V), vhi = Math.max(...cu.V);
+    const xlo = Math.min(...xsC), xhi = Math.max(...xsC, xlo + 1e-9);
+    const ehi = hasD ? Math.max(...series.flatMap(s => s[0]).filter(isFinite), 1e-9) * 1.06 : 1;
+    const tArr = cu.t_s || [];
+    const idxAt = tNow => { let i = 0; while (i < tArr.length - 1 && tArr[i + 1] <= tNow) i++; return i; };
+    const W = 1680, H = 620, PW = 560;
+    const mL = PW + 100, mR = 34, vT = 46, vB = hasD ? 316 : H - 52, eT = 356, eB = H - 52;
+    const curveCol = st.charge ? '#d97706' : '#1f6fb2';
+    const frames = _st4GifFrames(nChk, sub, ph => upd(ph), () => {   // upd → _st4fProf(프로파일)+t 갱신
+      if (!state._st4fProf || !state._st4fProf.rows.length) return null;
+      const tNow = parseFloat(state._st4fProf.rows[0][1]);
+      const ii = idxAt(tNow);
+      const cvS = document.createElement('canvas'); cvS.width = W; cvS.height = H;
+      const g = cvS.getContext('2d');
+      g.fillStyle = '#fff'; g.fillRect(0, 0, W, H);
+      const pc = document.createElement('canvas'); pc.width = PW; pc.height = H - 44;   // 좌: 프로파일
+      drawZProfileCanvas(pc, state._st4fProf.curves, '');
+      g.drawImage(pc, 8, 38);
+      g.fillStyle = '#111'; g.font = 'bold 21px sans-serif'; g.textAlign = 'left';      // 헤더 (동기 수치)
+      g.fillText(`${st.charge ? '충전' : '방전'} ${st.c_rate}C — t=${tNow.toFixed(1)}s · V=${cu.V[ii].toFixed(3)}V`
+        + `${ar2 > 0 ? ` · ${xsC[ii].toFixed(2)}mAh/cm²` : ` · DoD ${xsC[ii].toFixed(1)}%`}`
+        + (hasD ? '    ' + series.map(s => `${s[2]} ${Math.max(s[0][ii], 0).toFixed(1)}mV`).join(' · ') : ''), 12, 26);
+      g.font = '13px sans-serif'; g.fillStyle = '#6b7280';
+      g.fillText('두께 프로파일 (현재 시점)', 14, H - 8);
+      const PX = x => mL + (x - xlo) / (xhi - xlo) * (W - mL - mR);
+      const PYv = v => vT + (1 - (v - vlo) / Math.max(vhi - vlo, 1e-9)) * (vB - vT);
+      const PYe = v => eT + (1 - Math.max(v, 0) / ehi) * (eB - eT);
+      g.strokeStyle = '#d1d5db'; g.lineWidth = 1.2;
+      g.strokeRect(mL, vT, W - mL - mR, vB - vT);
+      if (hasD) g.strokeRect(mL, eT, W - mL - mR, eB - eT);
+      const ghost = (ys, PY) => { g.strokeStyle = '#e5e7eb'; g.lineWidth = 2; g.beginPath();
+        ys.forEach((v, i2) => { const x = PX(xsC[i2]), y = PY(v); i2 ? g.lineTo(x, y) : g.moveTo(x, y); }); g.stroke(); };
+      const prog = (ys, PY, col) => { if (ii < 1) return; g.strokeStyle = col; g.lineWidth = 3.2; g.beginPath();
+        for (let i2 = 0; i2 <= ii; i2++) { const x = PX(xsC[i2]), y = PY(ys[i2]); i2 ? g.lineTo(x, y) : g.moveTo(x, y); } g.stroke(); };
+      ghost(cu.V, PYv); prog(cu.V, PYv, curveCol);
+      g.setLineDash([5, 4]); g.strokeStyle = '#9ca3af'; g.lineWidth = 1.4;               // 수직 시점선
+      g.beginPath(); g.moveTo(PX(xsC[ii]), vT); g.lineTo(PX(xsC[ii]), eB); g.stroke(); g.setLineDash([]);
+      g.fillStyle = curveCol; g.beginPath(); g.arc(PX(xsC[ii]), PYv(cu.V[ii]), 6.5, 0, 6.3); g.fill();
+      if (hasD) series.forEach(([ys, col, nm], si) => {
+        ghost(ys.map(v => Math.max(v, 0)), PYe); prog(ys, PYe, col);
+        g.fillStyle = col; g.beginPath(); g.arc(PX(xsC[ii]), PYe(ys[ii]), 4.8, 0, 6.3); g.fill();
+        g.font = 'bold 14px sans-serif'; g.fillText(nm, mL + 10 + si * 92, eT + 20);     // η 범례
+      });
+      g.fillStyle = '#111'; g.font = '14px sans-serif'; g.textAlign = 'right';           // 축 라벨/틱
+      for (let k2 = 0; k2 <= 3; k2++) {
+        const v = vlo + (vhi - vlo) * k2 / 3;
+        g.fillText(v.toFixed(2), mL - 8, PYv(v) + 5);
+        if (hasD) g.fillText((ehi * (1 - k2 / 3)).toFixed(1), mL - 8, eT + (eB - eT) * k2 / 3 + 5);
+      }
+      g.textAlign = 'center';
+      for (let k2 = 0; k2 <= 4; k2++) {
+        const x = xlo + (xhi - xlo) * k2 / 4;
+        g.fillText(ar2 > 0 ? x.toFixed(1) : x.toFixed(0), PX(x), eB + 22);
+      }
+      g.fillText(xLab, mL + (W - mL - mR) / 2, H - 6);
+      g.save(); g.translate(PW + 26, (vT + vB) / 2); g.rotate(-Math.PI / 2);
+      g.fillText('V (vs Li/Li⁺)', 0, 0); g.restore();
+      if (hasD) { g.save(); g.translate(PW + 26, (eT + eB) / 2); g.rotate(-Math.PI / 2);
+        g.fillText('과전압 (mV)', 0, 0); g.restore(); }
+      return cvS.toDataURL('image/png');
+    });
+    tS.value = keep; upd();
+    await st4FramesToGif(frames, (+(fpsSel && fpsSel.value) || 2) * sub, `st4_sync_${_st4tag()}${_st4Label('st4f-giflabel')}`, syGifBtn);
   };
 }
 
