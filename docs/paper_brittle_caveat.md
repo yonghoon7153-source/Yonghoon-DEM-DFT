@@ -1320,67 +1320,81 @@ pass the σ_e numerical-anomaly filter (out of 78 raw):
 ```
 σ_e channel results
 ─────────────────────────────────────────────────────────────────
-σ_e baseline           median 6.47 mS/cm  mean 5.93   max 13.74
-Stage C (binary)       median 2.26        mean 2.28   max 10.88
-                       loss median 65%, Q1/Q3 55/80%
-Stage D (stagewise)    median 2.20  (n=18 partial run)
-                       loss median 66% — essentially same as Stage C
-Stage E (full)         median 2.42  mean 3.36   max 10.75   (n=53)
-                       loss median 47%, mean 42%
-                       fa(E)/full ratio median 0.53
+σ_e baseline           median 6.48 mS/cm  mean 6.01   max 13.74
+Stage C (binary)       median 2.86        mean 3.63   max 10.88
+                       loss median 29%, Q1/Q3 15/77%
+Stage D (stagewise)    median 4.92        mean 4.94   max 10.75  (n=54)
+                       loss median 7%, Q1/Q3 2/22%
+Stage E (full)         median 4.71        mean 4.72   max 10.75   (n=54)
+                       loss median 11%, mean 18%
+                       fa(E)/full ratio median 0.89
 
 κ_thermal channel results (Stage E only)
 ─────────────────────────────────────────────────────────────────
-κ baseline             median 4.30
-κ Stage E              median 3.46  mean 3.50
-                       loss median 11%, MEAN 30%      ← bimodal!
-                       Q1/Q3 4/66%
-                       AM_S-rich cases: minimal loss (~5%)
-                       AM_P-rich cases: severe loss (~66%)
+κ baseline             median 4.29
+κ Stage E              median 4.15  mean 4.60
+                       loss median 2%, MEAN 3%       ← nearly full preservation
+                       Q1/Q3 -0.1/4.8%
+                       AM_S-rich cases: minimal loss (~1%)
+                       AM_P-rich cases: modest loss (~5%)
 ```
 
 Three findings stand out:
 
-(1) Stages C and D give *essentially identical* median loss (65 % vs 66 %).
-The literature-informed stagewise σ_factor does not significantly
-reduce the binary estimate because the 78-case ensemble's fracture
-distribution is dominated by *fragmentation/pulverization* contacts
-(force multiplier band 11–32+, σ_factor 0.10–0.02 ≈ 0). The microcrack
-band (factor 0.85) is too sparsely populated to alter the median. This
-is itself an empirical statement: for sulfide ASSB cathodes at 300 MPa
-target pressure, AM-AM fracture is typically *catastrophic*, not
-*moderate* — making the binary R = ∞ assumption a realistic
-description rather than a pessimistic upper bound.
+(1) The literature-informed stagewise σ_factor (Stage D) *substantially
+reduces* the binary Stage C upper bound: from 29 % to 7 % median loss —
+a factor-of-four rescue. This is because a large share of the AM-AM
+contacts that Stage C zeroes out actually sit in the multicrack band
+(factor 0.40 in Stage D) or microcrack band (0.85), not in the
+catastrophic fragmentation/pulverization tail. The literature
+consensus — fractured cathode particles retain partial conductance
+via rock-salt phase and grain-adjacency (Trevisanello 2021, Min 2024,
+Jiang 2021) — is empirically validated across the 78-case ensemble.
+Stage C is therefore correctly interpreted as a *strict upper bound*
+on σ_e_loss (not a realistic description), while Stage D at 7 % loss
+is the literature-realistic central estimate.
 
-(2) Stage E (with AM crystallinity factor) recovers the σ_e to a less
-catastrophic 47 % median loss because the stagewise σ_factor preserves
-some multicrack-band conductance which is then attenuated only by the
-AM_P × 0.65 grain factor (rather than zeroed). The 18-percentage-point
-improvement (65 → 47 %) is the literature-realistic correction the
-binary upper bound does not capture.
+(2) Stage E (Stage D + AM crystallinity factor) sits at 11 % median
+loss — slightly above Stage D because the AM_P × 0.65 grain factor
+further attenuates the AM_P-mediated σ_e paths. The C → E interval
+(29 % → 11 %) brackets the physically realistic loss: the binary R = ∞
+overstates loss by ~3×, and the AM-crystallinity refinement adds a
+small additional attenuation on top of the stagewise scaling.
 
-(3) The κ_thermal channel shows a *bimodal* loss distribution
-(median 11 %, mean 30 %, Q3 66 %): AM_S-rich designs lose only ~5 % κ
-because the AM_S × 1.00 grain factor preserves transport, while
-AM_P-rich designs lose ~66 % κ via the AM_P × 0.50 phonon-GB factor.
+(3) The κ_thermal channel shows *nearly full preservation* (median
+loss 2 %, mean 3 %): AM_S-rich designs lose ~1 %, AM_P-rich ~5 %.
+Both are order-of-magnitude smaller than the σ_e losses because
+κ_thermal has no fracture filtering (Stage E applies only the AM
+crystallinity factor to κ) and because the AM_P × 0.50 phonon-GB
+factor is applied only to the AM-AM fraction of the total thermal
+network, which is diluted by the AM-SE and SE-SE contact contributions.
 This is the quantitative thermal counterpart of the cathode-side σ_e
-asymmetry — single-crystal AM_S delivers dual benefits in both
-electrical and thermal channels.
+asymmetry — single-crystal AM_S delivers benefits in both channels,
+but the *thermal channel is inherently more robust* to fracture than
+the electronic channel.
 
 **Stratification by r_SE.** The Stage E σ_e loss is also size-stratified
 (Section 7.5 will quantify this fully):
 
 ```
 Stage E σ_e_loss by r_SE band:
-  fine    (< 0.7 μm) :  n=31  median 31 %  max 66 %
-  medium  (0.7–1.2)  :  n= 5  median 66 %  max 67 %
-  coarse  (> 1.2)    :  n=17  median 66 %  max 71 %
+  fine    (< 0.7 μm) :  n=32  median 20 %  max 61 %
+  medium  (0.7–1.2)  :  n= 5  median  3 %  max  3 %
+  coarse  (> 1.2)    :  n=17  median  4 %  max 71 %
 ```
 
-Fine SE designs preserve roughly twice as much σ_e under the
-literature-realistic correction (31 % loss) as coarse SE (66 % loss),
-reinforcing the cathode-side small-SE preference established in
-Section 5-1.
+The pattern reveals a *fracture-sensitivity vs σ_e-magnitude trade-off*
+that complements Section 5-1's cathode-side small-SE preference. Fine
+SE designs achieve high σ_e_baseline (via η_topology_void, Section 5-1)
+but are more fracture-sensitive: their few AM-AM contacts are each
+critical for σ_e percolation, so losing any triggers a larger relative
+drop (median 20 %). Coarse SE designs have lower σ_e_baseline but
+richer AM-AM contact redundancy; fracturing individual contacts leaves
+the network largely intact (median 4 % loss). The Pareto-optimal design
+therefore selects fine SE and simply *accepts* the higher fractional
+loss — the fine-SE σ_e_baseline is high enough that even after the
+20 % literature-realistic correction, the absolute σ_e_post remains
+above the coarse-SE alternatives.
 
 **Implication.** Combining the Section 4 σ_ionic invariance, the
 Section 5-1 cathode/separator inversion, and the Section 6 σ_e + κ
@@ -1471,65 +1485,76 @@ estimate 를 형성:
 ```
 σ_e 채널 결과
 ─────────────────────────────────────────────────────────────────
-σ_e baseline           median 6.47 mS/cm  mean 5.93   max 13.74
-Stage C (binary)       median 2.26        mean 2.28   max 10.88
-                       loss median 65%, Q1/Q3 55/80%
-Stage D (stagewise)    median 2.20  (n=18 partial run)
-                       loss median 66% — Stage C 와 본질적으로 동일
-Stage E (full)         median 2.42  mean 3.36   max 10.75   (n=53)
-                       loss median 47%, mean 42%
-                       fa(E)/full ratio median 0.53
+σ_e baseline           median 6.48 mS/cm  mean 6.01   max 13.74
+Stage C (binary)       median 2.86        mean 3.63   max 10.88
+                       loss median 29%, Q1/Q3 15/77%
+Stage D (stagewise)    median 4.92        mean 4.94   max 10.75  (n=54)
+                       loss median 7%, Q1/Q3 2/22%
+Stage E (full)         median 4.71        mean 4.72   max 10.75   (n=54)
+                       loss median 11%, mean 18%
+                       fa(E)/full ratio median 0.89
 
 κ_thermal 채널 결과 (Stage E only)
 ─────────────────────────────────────────────────────────────────
-κ baseline             median 4.30
-κ Stage E              median 3.46  mean 3.50
-                       loss median 11%, MEAN 30%      ← bimodal!
-                       Q1/Q3 4/66%
-                       AM_S-rich cases: 최소 손실 (~5%)
-                       AM_P-rich cases: severe 손실 (~66%)
+κ baseline             median 4.29
+κ Stage E              median 4.15  mean 4.60
+                       loss median 2%, MEAN 3%       ← 거의 완전 보존
+                       Q1/Q3 -0.1/4.8%
+                       AM_S-rich cases: 최소 손실 (~1%)
+                       AM_P-rich cases: 적정 손실 (~5%)
 ```
 
 세 가지 발견:
 
-(1) Stage C 와 D 가 *본질적으로 동일* 한 median loss (65 % vs 66 %)
-를 산출한다. Literature-informed stagewise σ_factor 가 binary estimate
-를 의미있게 감소시키지 못한다 — 78-case 앙상블의 fracture 분포가
-*fragmentation/pulverization* contact 에 dominated 되어 있기 때문
-(force multiplier band 11–32+, σ_factor 0.10–0.02 ≈ 0). Microcrack
-band (factor 0.85) 는 분포가 너무 sparse 하여 median 을 변경하지
-못한다. 이 자체가 empirical statement 이다: 300 MPa target 압력의
-sulfide ASSB cathode 에서 AM-AM fracture 는 통상 *catastrophic* 이지
-*moderate* 가 아니며 — binary R = ∞ 가정을 보수적 upper bound 가
-아닌 *realistic description* 으로 만든다.
+(1) Literature-informed stagewise σ_factor (Stage D) 가 binary Stage C
+upper bound 를 *substantially 감소* 시킨다: 29 % 에서 7 % median loss
+로 — factor-of-four rescue. 이는 Stage C 가 zero 처리하는 AM-AM contact
+의 상당수가 실제로는 multicrack band (Stage D factor 0.40) 또는
+microcrack band (0.85) 에 위치하지 catastrophic fragmentation/
+pulverization tail 이 아니기 때문이다. Fractured cathode 입자가 rock-
+salt phase 와 grain-adjacency 를 통해 partial conductance 를 유지한다는
+literature consensus (Trevisanello 2021, Min 2024, Jiang 2021) 가 78-
+case 앙상블에서 empirical 검증. Stage C 는 따라서 σ_e_loss 의 *strict
+upper bound* (realistic description 아님), Stage D 의 7 % loss 가
+literature-realistic central estimate 이다.
 
-(2) Stage E (AM 결정성 factor 포함) 가 σ_e 를 less catastrophic 한
-47 % median loss 로 회복시킨다. Stagewise σ_factor 가 multicrack-band
-전도도 일부를 보존하고 이것이 AM_P × 0.65 grain factor 로만 약화되기
-때문 (zero 처리되지 않음). 18-percentage-point 개선 (65 → 47 %) 이
-binary upper bound 가 capture 못 하는 literature-realistic correction
-이다.
+(2) Stage E (Stage D + AM crystallinity factor) 가 11 % median loss
+에 위치 — Stage D 위에 AM_P × 0.65 grain factor 가 AM_P-mediated σ_e
+경로를 추가로 약화. C → E 구간 (29 % → 11 %) 이 physically realistic
+loss 를 bracket 한다: binary R = ∞ 가 loss 를 ~3× 과대평가, AM-
+crystallinity refinement 가 stagewise scaling 위에 작은 추가 약화 부여.
 
-(3) κ_thermal 채널이 *bimodal* loss 분포 (median 11 %, mean 30 %,
-Q3 66 %) 를 보인다: AM_S-rich design 은 ~5 % κ 만 손실 (AM_S × 1.00
-grain factor 가 transport 보존), AM_P-rich design 은 ~66 % κ 손실
-(AM_P × 0.50 phonon-GB factor 경유). Cathode 측 σ_e 비대칭의 정량적
-thermal 대응 — single-crystal AM_S 가 전기 + 열 채널 양쪽에서 dual
-benefit 을 제공한다.
+(3) κ_thermal 채널이 *거의 완전 보존* (median loss 2 %, mean 3 %)
+을 보인다: AM_S-rich ~1 %, AM_P-rich ~5 % 손실. σ_e 손실보다 order-
+of-magnitude 작으며 이유는 두 가지 — κ_thermal 에는 fracture filter
+가 적용되지 않으며 (Stage E 는 κ 에 AM crystallinity factor 만 적용),
+AM_P × 0.50 phonon-GB factor 가 전체 thermal network 중 AM-AM 부분에만
+적용되어 AM-SE 와 SE-SE contact contribution 으로 dilute 되기 때문.
+Cathode 측 σ_e 비대칭의 정량적 thermal 대응 — single-crystal AM_S 가
+전기 + 열 채널 양쪽에서 benefit 을 제공하지만, *thermal 채널이 fracture
+에 대해 본질적으로 electronic 채널보다 robust*.
 
 **r_SE 별 stratification.** Stage E σ_e loss 의 크기-별 stratification
 (Section 7.5 에서 fully 정량화):
 
 ```
 Stage E σ_e_loss by r_SE band:
-  fine    (< 0.7 μm) :  n=31  median 31 %  max 66 %
-  medium  (0.7–1.2)  :  n= 5  median 66 %  max 67 %
-  coarse  (> 1.2)    :  n=17  median 66 %  max 71 %
+  fine    (< 0.7 μm) :  n=32  median 20 %  max 61 %
+  medium  (0.7–1.2)  :  n= 5  median  3 %  max  3 %
+  coarse  (> 1.2)    :  n=17  median  4 %  max 71 %
 ```
 
-Fine SE design 이 literature-realistic correction 하에서 약 *2 배*
-σ_e 를 보존 (31 % loss vs coarse 66 % loss) — Section 5-1 에서 확립한
-cathode 측 small-SE preference 를 강화한다.
+이 pattern 은 Section 5-1 의 cathode 측 small-SE preference 를 보완하는
+*fracture-sensitivity vs σ_e-magnitude trade-off* 를 드러낸다. Fine SE
+design 은 η_topology_void 를 통해 high σ_e_baseline 을 달성 (Section
+5-1) 하지만 fracture 에 더 민감하다: 소수의 AM-AM contact 각각이 σ_e
+percolation 에 critical 하므로, 어느 하나라도 잃으면 상대적으로 큰
+drop 을 일으킨다 (median 20 %). Coarse SE design 은 σ_e_baseline 이
+낮지만 AM-AM contact redundancy 가 풍부; 개별 contact fracture 가
+network 에 미치는 영향이 작다 (median 4 % loss). Pareto-optimal design
+은 따라서 fine SE 를 선택하고 더 높은 fractional loss 를 *수용*한다 —
+fine SE 의 σ_e_baseline 이 높아서 20 % literature-realistic correction
+후에도 절대 σ_e_post 가 coarse SE alternative 위에 남는다.
 
 **함의.** Section 4 의 σ_ionic 불변성, Section 5-1 의 cathode/separator
 역전, Section 6 의 σ_e + κ fracture-aware 정량화를 종합하면, 본 논문
