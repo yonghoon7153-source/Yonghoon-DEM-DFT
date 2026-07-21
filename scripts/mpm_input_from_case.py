@@ -92,6 +92,12 @@ def main():
                          'params_json(Chen 흑연셀-창 0.854=vs-Li 3.5V 조기종료)를 덮어씀 — Chen 창으로 '
                          '되돌리려면 --step4-x100 0.854.  x>0.854 OCP-shape는 Chen 소폭 외삽(끝점 0.9084는 '
                          'GITT 앵커) — 정밀 tail은 실측 GITT OCP splice 필요.  ⚠ 창 넓힘 → I_1C 재계산(전류 ~9%↑).')
+    ap.add_argument('--step4-r-int', type=float, default=None, dest='step4_r_int',
+                    help='집전체 직렬 R_int [Ω·cm²] = ★풀셀 축 (기본 None = 전극-내부 R_int=0 유지). '
+                         '측정 앵커 docs/data/rint_eis_anchors.csv: C-SUS pristine≈10/aged 30, '
+                         'DBE 12/46, SBE 18/110 (pristine=panel-e 근사, aged=1000cyc@2C).  '
+                         '⚠ pristine 값=BOL 전극과 시간-일관; aged 값은 "fresh 전극+aged 접촉" 민감도 '
+                         '시나리오로 라벨(§6.1).  런타임 MPM_S4_RINT env로 override; 산출물명에 _rint<값> 태그.')
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
 
@@ -252,7 +258,8 @@ def main():
             'mpm_K_se_gpa': round(K_CHAMP, 2), 'mpm_mu_se_gpa': round(mu_se_mpm, 4),
             'press_gpa': press_gpa, 'target_porosity': tgt,
             'lateral_box': box_x, 'mpm_n_grid': n_grid_mpm, 'mpm_est_points': est_pts,
-            'step4_crates': s4_rates, 'step4_charge_crates': s4_chg}
+            'step4_crates': s4_rates, 'step4_charge_crates': s4_chg,
+            'step4_r_int_ohm_cm2': a.step4_r_int}
     json.dump(prov, open(os.path.join(a.out, 'mpm_input.json'), 'w'), indent=2)
 
     # Stage-1 carbon: append the additive flags to the compaction step if a recipe was given,
@@ -392,21 +399,27 @@ def main():
                 + ('' if a.step4_x100 is None else f' --x100 {a.step4_x100:g}'))   # ASSB vs-Li 창 오버라이드
         _cut = f'--v-min {a.step4_vmin:g} --v-max {a.step4_vmax:g}{_win}'    # 컷오프 + 창 (사용자 설정)
         _icut = f'--i-cut-frac {a.step4_icut:g}'
+        # ★풀셀 축 (--step4-r-int): 직렬 R_int 주입 + 산출물 _rint 태그 (전극-내부 기본은 무주입 = R_int=0).
+        #   런타임 MPM_S4_RINT env가 킷 생성값을 override (pristine↔aged 스윕을 재생성 없이).
+        _rv = None if a.step4_r_int is None else f'{a.step4_r_int:g}'
+        _rint = '' if _rv is None else f' --r-int-ohm-cm2 "${{MPM_S4_RINT:-{_rv}}}"'
+        _rtag = '' if _rv is None else f'_rint${{MPM_S4_RINT:-{_rv}}}'
+        _rlab = '' if _rv is None else f' · ★풀셀 축: R_int=${{MPM_S4_RINT:-{_rv}}} Ωcm² 직렬'
         _dis_loop = f'''  for CR in {_dis}; do
-    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V)"
+    echo "[run_mpm] STEP4 방전 ${{CR}}C start $(date)  (컷오프 {a.step4_vmin:g}–{a.step4_vmax:g} V{_rlab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} {_cut} --gpu --out step4_c${{CR}}.npz --viz-out step4_viz_c${{CR}}.json \\
+      --c-rate ${{CR}} {_cut}{_rint} --gpu --out step4_c${{CR}}{_rtag}.npz --viz-out step4_viz_c${{CR}}{_rtag}.json \\
       || echo "[run_mpm] STEP4 방전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 방전 ${{CR}}C end $(date)"
   done
 ''' if s4_rates else ''
         _chg_loop = f'''  for CR in {_chg}; do
-    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)  (CV@{a.step4_vmax:g}V → I<{a.step4_icut:g}C 종지)"
+    echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C start $(date)  (CV@{a.step4_vmax:g}V → I<{a.step4_icut:g}C 종지{_rlab})"
     python3 "$SCR/step4_dyn.py" --grid step4_grid.npz \\
       --ocp-csv "$AP/ocp_nmc811_chen2020.csv" --params-json "$AP/params_nmc811_chen2020.json" \\
-      --c-rate ${{CR}} --charge --cv-hold {_cut} {_icut} --gpu \\
-      --out step4_chg_c${{CR}}.npz --viz-out step4_viz_chg_c${{CR}}.json \\
+      --c-rate ${{CR}} --charge --cv-hold {_cut} {_icut}{_rint} --gpu \\
+      --out step4_chg_c${{CR}}{_rtag}.npz --viz-out step4_viz_chg_c${{CR}}{_rtag}.json \\
       || echo "[run_mpm] STEP4 충전 ${{CR}}C FAILED — 다음 rate 계속 (위 트레이스 참조)"
     echo "[run_mpm] STEP4 충전(CCCV) ${{CR}}C end $(date)"
   done

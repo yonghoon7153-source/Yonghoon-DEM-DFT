@@ -1,0 +1,23 @@
+anchor_id,scenario_key,quantity,value,unit,cathode,SE,cell,collector,cycle_n,temp_C,precision,source,note
+kim2025_bare_rct_62,,R_ct,453.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 Electrochim.Acta 542 147413 TableS6,bare 62wt% CAM
+kim2025_bare_rct_72,,R_ct,289.9,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS6,bare 72wt%
+kim2025_bare_rct_82,,R_ct,382.4,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS6,bare 82wt% (비단조=화학분해항 지배)
+kim2025_lno_rct_62,,R_ct,22.4,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS4,LNO-coated 62wt% (~20x lower)
+kim2025_lno_rct_72,,R_ct,18.2,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS4,LNO 72wt%
+kim2025_lno_rct_82,,R_ct,17.2,Ohm_cm2,NCM811_LNO,LPSCl,3electrode_full,,post-formation,30,pdf_verified,kim2025 TableS4,LNO 82wt% (CAM면적↑→최저 = R_ct∝1/반응면적 지지)
+kim2025_bare_rct_T45,,R_ct,139.6,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,45,pdf_verified,kim2025 TableS6,T-sweep 72wt% (Arrhenius 큰 E_a)
+kim2025_bare_rct_T60,,R_ct,67.8,Ohm_cm2,NCM811_uncoated,LPSCl,3electrode_full,,post-formation,60,pdf_verified,kim2025 TableS6,T-sweep 72wt%
+scnmc_pristine_floor,,R_int,40,Ohm_cm2,NMC83_SC,LPSCl,full,,pristine,30,confirmed_snippet,acsami.1c07952,비대칭압 2.5/0.2MPa; SC 좋은-계면 바닥
+lipon_benchmark,,R_int,7.6,Ohm_cm2,,LiPON,model_interface,,pristine,,confirmed_snippet,review EnergyMaterAdv 0163,모델계면 하한 참조(비교용 only)
+llzo_contact_loss,,R_growth,100to300,Ohm,,LPSCl+LLZO,dual_layer,,contact-loss,,confirmed_snippet,acsaem.5c02435,⚠분리막 계면(양극 아님) 2차 참조
+pritzl_collector_growth,,R_contact,10to30,Ohm_cm2,LNMO,liquid,full,carbon_coated_Al,0to50,,confirmed_snippet,10.1149/2.0451904jes,액체 아날로그; 첫사이클 step+~선형 shape 앵커
+collector_bare_pristine,,R_contact,10to18.5,Ohm_cm2,,,,bare_Al,pristine,,confirmed_snippet,mixed(3agent survey 2026-07-20),황화물-native 단독값 없음(§4C gap)
+collector_coated_pristine,,R_contact,3.5to10,Ohm_cm2,,,,carbon_coated,pristine,,confirmed_snippet,mixed(~5x bare; sulfide 5-10x),
+lab_sbe_pristine,sbe_pristine,R_int,18,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,panel_e_approx,user-lab Fig6e,⚠근사(정밀 digitize 대기) — BOL과 시간-일관
+lab_sbe_cycled,sbe_cycled,R_int,110,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,user_lab,user-lab Fig6e,aged; fresh 전극과 짝지으면 민감도 시나리오 라벨
+lab_dbe_pristine,dbe_pristine,R_int,12,Ohm_cm2,NCM811,LPSCl,full,bare_Al,0,,panel_e_approx,user-lab Fig6e,⚠근사
+lab_dbe_cycled,dbe_cycled,R_int,46,Ohm_cm2,NCM811,LPSCl,full,bare_Al,1000@2C,,user_lab,user-lab Fig6e,
+lab_csus_pristine,csus_pristine,R_int,10,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,0,,panel_e_approx,user-lab Fig6e,⚠근사 — 2026-07-21 rint10 런의 값
+lab_csus_cycled,csus_cycled,R_int,30,Ohm_cm2,NCM811,LPSCl,full,C-SUS_primer,1000@2C,,user_lab,user-lab Fig6e,
+bielefeld_sigma_ion,,sigma_ion,1.6,mS_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,수송 참조(계면 아님)
+bielefeld_sigma_e,,sigma_e,<1e-6,S_cm,,LPSCl,pellet,,,25,confirmed_snippet,Bielefeld JES abf8d7,
