@@ -5626,6 +5626,19 @@ export async function showLabCompareModal(pidA, pidB, nameA, nameB) {
   SA.ctrl.addEventListener('change', () => {                 // 휠 줌도 게이지에 반영
     if ($('cmp-zoom')) $('cmp-zoom').value = Math.max(30, Math.min(350, Math.round(380 - SA.cam.position.distanceTo(SA.ctrl.target))));
   });
+  // ── 패널 위 떠있는 ± 줌 (헤더 슬라이더가 스크롤로 안 보여도 항상 접근 — 양쪽 동기, 휠 줌과 병행) ──
+  ['cmp-view-a', 'cmp-view-b'].forEach(id => {
+    const cont = $(id); if (!cont) return;
+    if (!cont.style.position) cont.style.position = 'relative';
+    const z = document.createElement('div');
+    z.style.cssText = 'position:absolute;left:8px;bottom:8px;display:flex;gap:4px;z-index:5';
+    const mk = (t, d) => { const b = document.createElement('button'); b.textContent = t;
+      b.title = '줌 (양쪽 동기 · 휠 줌도 가능)';
+      b.style.cssText = 'background:rgba(31,41,55,.85);color:#e5e7eb;border:1px solid #374151;border-radius:5px;width:26px;height:26px;cursor:pointer;font-size:15px;line-height:1';
+      b.onclick = () => setCmpZoom(+(($('cmp-zoom') || { value: 200 }).value) + d); return b; };
+    z.appendChild(mk('−', -25)); z.appendChild(mk('+', 25));
+    cont.appendChild(z);
+  });
 
   const clearSide = (S) => {
     if (!S.grp) return;
