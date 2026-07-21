@@ -29,6 +29,17 @@ for j in complex_doped complex_neutral mol_doped mol_neutral slab; do
   printf "  %-16s %s scf#%-3s E=%s acc=%s\n" "$j" "$st" "${it:-?}" "${e:-?}" "${acc:-?}"
 done
 
+LOG=$(dirname "$OUT")/pbrefine.log
+if [ -n "$cur" ]; then
+  o=$OUT/$cur/scf.out; i=$OUT/$cur/scf.in
+  age=$(( $(date +%s) - $(stat -c %Y "$o" 2>/dev/null || date +%s) ))
+  nd=$(grep -ao "mixing_ndim *= *[0-9]*" "$i" | grep -o "[0-9]*$")
+  kp=$(grep -aA1 "K_POINTS" "$i" | tail -1 | tr -s ' ')
+  echo "── $cur 상세 (로그 ${age}s 전 갱신 | mixing_ndim=${nd:-?} | k=${kp:-?}) ──"
+  grep -aE "iteration #|total cpu time|estimated scf accuracy" "$o" 2>/dev/null | tail -9 | sed 's/^ */    /'
+fi
+echo "── ladder 이력 ──"
+grep -a "\[ladder\]" "$LOG" 2>/dev/null | tail -4 | sed 's/^/  /'
 echo "── VERDICT (slab 상쇄, 복합체2+가스2면 나옴) ──"
 python3 - <<PY
 import re
