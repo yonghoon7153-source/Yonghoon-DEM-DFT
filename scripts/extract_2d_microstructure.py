@@ -545,7 +545,9 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
                               seed: int = 0,
                               cov_off_p: float = 0.022, cov_off_s: float = 0.030,
                               bridge_dmax_um: float = 3.0, gap_um: float = 0.4,
-                              tortuosity_influence: float = 1.0):
+                              tortuosity_influence: float = 1.0,
+                              poro_grad: float = 0.0, cb_ratio: float = None,
+                              cb_grad: float = 0.0):
     """Build a REPRESENTATIVE 2D microstructure from the 3D statistics
     (not a literal slice).
 
@@ -835,6 +837,15 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
         if z_skin > 0 and len(cy_):                   # no pores in the top/bottom dense-SE skin
             km = (cy_ >= z_skin) & (cy_ < ny - z_skin)
             cy_, cx_ = cy_[km], cx_[km]
+        # ★ A7 graded-z: porosity(z) 선형 경사 — 후보를 z-가중 확률로 솎아 프로파일 부여 (#286 Yoo).
+        #   부호 규약: poro_grad>0 → 상단(y=ny, 분리막쪽)이 더 다공; y=0 = 집전체(z0).  총 porosity는
+        #   need_void가 고정하고, 마지막 pass는 UNGATED 폴백 → 극단 grad에도 총량이 프로파일보다 우선.
+        if poro_grad and len(cy_) and _pass < 4:
+            _zn = cy_.astype(float) / max(ny - 1, 1)
+            _mg = np.clip(1.0 + float(poro_grad) * (_zn - 0.5), 0.0, None)
+            _kg = rng.random(len(cy_)) < (_mg / max(float(_mg.max()), 1e-9))
+            if _kg.any():
+                cy_, cx_ = cy_[_kg], cx_[_kg]
         if not len(cy_):
             break
         for ci in np.argsort(-dist_edge[cy_, cx_]):
@@ -947,9 +958,28 @@ def synthesize_microstructure(case_dir: Path, n_pixels: int = 600,
     interface[am_covered] = 1
     interface[am_uncov] = 2
 
+    # ★ A7 graded-z 메타: K=8 z-밴드별 실측 porosity 프로파일 (+ carbon:binder 설계-프로파일).
+    #   cb는 2D synth에 carbon/binder 픽셀이 없으므로 DESIGN PROFILE(설계 스펙)로만 출력 — Phase-5
+    #   layered synth / additives seeding(#20 Bak)이 소비.  grad=0(uniform, #20) vs 경사(#286 Yoo)
+    #   중 optimum은 재료-의존 → 둘 다 knob으로 노출, 여기서 안 고름 (backlog A7 규약).
+    _K8 = 8
+    _be = np.linspace(0, ny, _K8 + 1).astype(int)
+    _poro_band = [round(100.0 * float((labels[_be[_i]:_be[_i + 1]] == VOID).mean()), 2)
+                  for _i in range(_K8)]
+    graded_z = {'poro_grad': float(poro_grad),
+                'poro_band_pct': _poro_band,          # index 0 = z0(집전체) → 7 = 상단(분리막)
+                'band_order': 'z0(collector) → top(separator)'}
+    if cb_ratio is not None:
+        _zc = (np.arange(_K8) + 0.5) / _K8
+        graded_z['cb_ratio_band'] = [float(round(float(cb_ratio) * (1.0 + float(cb_grad) * (float(z) - 0.5)), 3))
+                                     for z in _zc]
+        graded_z['cb_grad'] = float(cb_grad)
+        graded_z['cb_note'] = ('DESIGN PROFILE only — 2D synth엔 carbon/binder 픽셀 없음; '
+                               'Phase-5 layered/additives seeding 소비용 스펙')
     return {
         'case_id': case_id, 'case_name': meta.get('name', case_id),
         'mode': meta.get('mode', ''),
+        'graded_z': graded_z,
         'ps_ratio': (meta.get('ps_ratio') or f"{round(f_p*10)}:{round((1-f_p)*10)}"),
         'labels': labels, 'interface': interface,
         'grain_boundary': grain_boundary, 'grain_size_um': grain_size_um,
@@ -1248,6 +1278,15 @@ def main():
                          'stats (AM D50-matched, area/porosity/coverage pinned) '
                          'instead of slicing')
     ap.add_argument('--seed', type=int, default=0, help='procedural RNG seed')
+    ap.add_argument('--poro-grad', type=float, default=0.0,
+                    help='★A7 graded-z: porosity(z) 선형 경사 [−1..1].  >0 = 상단(분리막)쪽 더 다공, '
+                         '0 = uniform(기본).  총 porosity는 고정(프로파일만 이동, #286 Yoo)')
+    ap.add_argument('--cb-ratio', type=float, default=None,
+                    help='★A7: carbon:binder 기준비 — K=8 밴드 설계-프로파일을 meta로 출력 '
+                         '(2D 픽셀 아님; Phase-5 layered/additives 소비용)')
+    ap.add_argument('--cb-grad', type=float, default=0.0,
+                    help='★A7: carbon:binder z-경사 [−1..1] (#20 Bak 방향; 0=uniform — optimum은 '
+                         '재료의존이라 둘 다 노출)')
     ap.add_argument('--out-png', default='docs/figures/microstructure_2d')
     ap.add_argument('--out-npy', default='docs/data/microstructure_2d')
     args = ap.parse_args()
@@ -1297,7 +1336,9 @@ def main():
                 if args.procedural:
                     data = synthesize_microstructure(
                         d, n_pixels=args.n_pixels, grain_size_um=args.grain_size,
-                        single_crystal_facets=not args.no_facets, seed=args.seed)
+                        single_crystal_facets=not args.no_facets, seed=args.seed,
+                        poro_grad=args.poro_grad, cb_ratio=args.cb_ratio,
+                        cb_grad=args.cb_grad)
                 else:
                     data = slice_microstructure(d, slice_frac=zf,
                                             n_pixels=args.n_pixels,
