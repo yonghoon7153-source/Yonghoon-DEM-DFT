@@ -15,8 +15,15 @@
 
 ## ⏳ 진행중 (서버)
 
-- **kgy GPU** — drag barrier (`vgcfdrag`): Li_on_hbn→graphene→gallery→2L2L. **hBN 표면 ~0.10(Shi) 검증이 첫 관문**. harvest: `tail ~/work/vgcf_hbn/drag_run.log`
-- **kgy CPU(옵션)** — QE 7.4.1 GPU 재빌드(`tools/vgcf_hbn/build_qe_neb_gpu_kgy.sh`): 빌드트리 소멸 → 정식 NEB용. configure `-D__CUDA` 확인 → build. drag×NEB 교차검증
+- **kgy GPU** — drag barrier (`vgcfdrag`, frozen-in-plane 수정판):
+  - ✅ **Li_on_graphene 0.281 eV** — 대칭 barrier, img3(bridge) 피크, 문헌 ~0.3 일치 = **drag 방법 검증**
+  - ⚠ **Li_on_hbn 0.010 eV** — 프로파일 비대칭/무피크 = Li가 hBN ring-hollow에 안 앉음(Shi: hollow−0.56 vs N-top−0.46). **낮 작업: Li의 진짜 hBN 사이트 찾아 홉 재정의**
+  - ⏳ Li_in_gallery / 2L2L (핵심 값) 진행중
+  - ⚠ **drag 미끄럼 버그 교훈**: 기판 완전자유(1 1 1)면 PBC 시트 병진→barrier=0. 반드시 면내 고정(0 0 1).
+- **kgy CPU — NEB 빌드 실패·연기**: QE 7.4.1 from-source GPU 빌드에서 nvfortran(NVHPC 24.11)이
+  XClib/UtilXlib/FFTXlib 일부 소스(eval_infix/pbecor/fftw)에서 `-tp` help 토하며 Error 1.
+  configure는 성공(-D__CUDA/cc86). 컴파일러-소스 궁합 이슈 → 소스별 디버깅 = **낮 작업**.
+  drag(graphene 검증)로 barrier 방어 가능하므로 비크리티컬.
 - **gabia GPU** — pbrefine complex_doped(SDCP DFT+U): iter ~100, acc 하강(5 Ry 아래면 순항). iter 100서 정체면 Γ-선수렴/β0.01 카드
 - **gabia CPU** — LPSOCl ELF+CDD(`lpsoclelf`): SCF 도는 중(SG15 NC, np10). cube 3종 → §11 마지막 칸
 
