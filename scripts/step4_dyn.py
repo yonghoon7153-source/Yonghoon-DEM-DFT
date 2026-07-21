@@ -1256,8 +1256,12 @@ def main():
                       'V_terminal': [round(float(v), 4) for v in out['V_terminal']],
                       'x_mean': [round(float(v), 5) for v in out['x_mean']],
                       'eta_kin_mV': [round(float(v) * 1e3, 2) for v in out['eta_kin_mean']],
+                      # 과전압 분해용 (뷰어 곡선 패널): η_ohm = (|Q_ohm_e|+|Q_ohm_i|)/|I|
+                      'eta_diff_mV': [round(float(v) * 1e3, 2) for v in out['eta_diff_mean']],
+                      'I_A': [float(f'{v:.4g}') for v in out['I']],
                       'Q_ohm_e_W': [float(f'{v:.4g}') for v in out['Q_ohm_e_W']],
                       'Q_ohm_i_W': [float(f'{v:.4g}') for v in out['Q_ohm_i_W']],
+                      'Q_rint_W': [float(f'{v:.4g}') for v in out['Q_rint_W']],
                       'Q_ct_W': [float(f'{v:.4g}') for v in out['Q_ct_W']]},
             't_s': [round(float(v), 1) for v in out['viz_t']],
             'x_mean': [round(float(v), 4) for v in out['viz_x_mean']],
