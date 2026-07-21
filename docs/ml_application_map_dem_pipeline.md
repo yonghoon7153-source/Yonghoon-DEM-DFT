@@ -74,3 +74,28 @@ loop) ⑤ 정본(DFT) 브랜치 `kb/platforms/ml_automation_platforms.md` (BO �
    σ 삼중 + porosity 4타깃 벤치: TabPFN vs 물리식 vs GPR (LOOCV 동일 프로토콜).
    3. 이기는 조합으로 Phase 3 predictor 확장 + 스크리닝 UI (webapp what-if).
    ⚠ 클라우드 컨테이너는 sklearn/torch 없음 — 정적 배선만, 실학습 = WSL (기존 규약).
+
+## 6. 수업 노트 브랜치 정독 (claude/linear-regression-lecture-DaaRi, 2026-07-22)
+한양대 데이터사이언스 ML 수업 시험노트 15편 (중간 L2–5: 선형대수/확률·선형회귀·분류·SVM /
+기말 L8–17: softmax·최적화(SGD/momentum/Adam)·MLP·역전파·훈련/튜닝·정규화·CNN·BN·아키텍처).
+README에 "향후 DEM/DFT + ML 관련 내용 추가 예정" 명시 — 이 지도가 그 연결의 초안.
+
+**수업 ↔ 프로젝트 로제타 표** (이미 하고 있던 것의 교과서 이름):
+| 수업 개념 | 우리 프로젝트에서의 실체 |
+|---|---|
+| L3 정규방정식 w*=(XᵀX)⁻¹Xᵀy | σ 스케일링 법칙의 OLS fit (log-공간 선형회귀) |
+| L5 "features as part of model" (수제 φ) | 물리-잠금 descriptor (√φ_eff·CN²·cov^½ = 손설계 φ) |
+| L5→L11 "φ도 학습" (DL) | TabPFN/SISSO = φ 자동화의 표형 버전 |
+| L14 L2(Ridge/weight decay) | σ_thermal Ridge-14 (α=0.05) 그 자체 |
+| L14 L1 sparse selection | Stage 22.5의 약항 4개 제거 = 수동 L0/ablation |
+| L4 bias-variance·CV | LOOCV 규약, n/k 비율 관리, over-fit 판정 (16→14 feat) |
+| L13 random>grid·log-uniform 샘플링 | 하이퍼파라미터/스윕 설계 규약 (+Duquesnoy Sobol이 상위호환) |
+| L9–10 SGD/momentum/Adam | (우리는 closed-form OLS라 불사용) BO 내부·NN 훈련 시 필요 지식 |
+| L15 CNN inductive bias (local+공유) | ★미래: 복셀 sid 그리드 → 필드/σ 예측 3D-CNN 서로게이트 (STEP3 대체 후보 — 필드 샘플 수 부족이 관문, long-term) |
+| L14 Ensemble/Bagging | TabPFN(PHE)·RF의 원리; 다중-시드 케이스 평균과 동형 |
+
+시사점: ① 수업 범위(선형→NN→CNN)가 우리 스택의 이론 기반을 정확히 커버 — 논문/발표에서
+"우리 폼 = physics-prior 선형회귀 + Ridge, ML 확장 = TabPFN/SISSO/BO"를 수업 용어로 설명
+가능. ② 새 아이디어 1건: L15–17의 CNN(공간 inductive bias)을 우리 복셀 그리드(sid/필드)에
+적용하는 **필드-레벨 서로게이트**는 표형 predictor와 별개 축 — 데이터(필드 스냅샷 수십 개)
+부족으로 지금은 future, Phase 4(2D synth)와 합류 지점만 기록.
