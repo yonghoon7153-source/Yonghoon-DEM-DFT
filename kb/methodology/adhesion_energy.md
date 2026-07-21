@@ -200,3 +200,38 @@ Compare v2 (3000K melt): comp1 = 1.107, comp2B = 1.046 J/m2
 ## References
 - [j_nucl_mater2020] Au/a-Si crystalline/amorphous interface statistics
 - [pnas2018] GAP MLIP melt-quench amorphous Si validation
+
+---
+
+## ★ PUBLISHED CONVENTION — paper #1 (v30u binding curves) [2026-07-21 박제]
+
+**이 관례로 논문이 이미 출판/제출됨. paper #2 등 후속 인용은 반드시 동일 관례를 따를 것.**
+
+### 정의 (출판본)
+- 곡선: `E_adh(d) = [E_int(d) − E_ref] / A` — UMA 단일점(rigid, 무이완) registry 앙상블
+  (face enum + flip + 36 lateral reg + z-shift) + Morse fit.
+- **E_ref = 보정된 분리 종점** (face-pair eiso + α 변형보정(α=1.0) + uniform Li5.4 dW=0.44)
+  — self-reference(꼬리=0) 아님. 그래서 꼬리가 0에 안 감 (comp1/2 ≈ +2.2, comp3–5 ≈ −0.3~−0.6).
+- **인용값 W = |E_adh(d_min)| (0-기준 우물 깊이)**. E_ref가 열역학 종점이므로 0-기준 깊이
+  = "결합 최소점 → 이완된 분리 상태"의 일 = 열역학적 W_ad. 자기일관적 선택.
+- 순위 검증: R(Wad_well, paper) = +0.989, ρ = +1.000 (paper AFM aJ 값 194–316,
+  r≈10nm 접촉 πr² 환산 1 J/m² ↔ ~314 aJ; 절대 스케일은 순위·상관으로만 비교).
+
+### 리더 오독 방지 (Q&A용)
+- "comp1/2가 d>1.6에서 양수 = 불안정?" → 아니오. 기울기(힘)는 d>2.5에서 0.
+  +2.2 꼬리는 강성 표면 준비 비용+보정 잔차의 **오프셋**이지 장거리 반발이 아님.
+- 꼬리-기준(순수 상호작용) 깊이로 재면 Li6(~3.0) > Li5.4(~1.65)로 순위 역전
+  — adhesion.json의 Tier-1 rigid 역전 기록과 일치. **출판 순위는 상호작용 + 표면준비
+  보정의 합**이며, 이것이 vacancy-anchor 서사의 정량 형태임 (paper #2 후보 서사).
+
+### 알려진 soft spot (리뷰어 대응 대비)
+1. comp3–5 꼬리 음수(−0.3~−0.6): 강성 분리 상태가 이완 기준보다 낮을 수 없음
+   → uniform dW=0.44 보정이 Li5.4 계열에서 과함(잔차). 방어: 순위·상관 불변,
+   우물 위치/깊이 대비 잔차 규모 명시.
+2. α·dW 유도의 추적성: 스크립트는 `필독/adhesion/v30u_ensemble/`
+   (gabia /data/work/v30u_ensemble 미러) — **repo 외부. 회수하여 tools/에 박제 필요**
+   (paper #2 top-3 재계산도 이 스크립트 필요).
+
+### 용어
+- E_adh = adhesion energy (음수 우물, 곡선용) / W = work of adhesion·separation (양수, 인용용).
+- 엄밀히는 무이완 분리라 work of separation 계열 (W_ad의 상계).
