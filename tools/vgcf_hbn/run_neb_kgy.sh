@@ -35,7 +35,7 @@ export PATH="$(dirname "$PW"):$HPCX/bin:$PATH"
 MPIRUN="$HPCX/bin/mpirun"
 echo "pw.x=$PW"; echo "neb.x=$NEBX"
 
-CASES="Li_on_hbn Li_on_graphene Li_in_gallery"
+CASES="Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L"
 
 # ---- pass 1: endpoint-B 입력 생성 + relax (Li +2.46A, 기판 dimple 재형성) ----
 python3 "$REPO/tools/vgcf_hbn/neb_build_kgy.py"

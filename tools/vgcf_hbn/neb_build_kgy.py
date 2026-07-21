@@ -7,6 +7,7 @@ further; graphene-surface 1L is also the literature-standard model):
   Li_on_hbn       surface diffusion on the h-BN coating   (Shi 2017 ref: 0.10 eV)
   Li_on_graphene  surface diffusion on bare VGCF          (lit baseline ~0.3 eV)
   Li_in_gallery   in-gallery diffusion hBN|Li|VGCF        (THE new number)
+  Li_in_gallery_2L2L  스팟체크(마지막): 최심 우물(-1.626)에서 barrier 층수-무의존 도장 (129at, heavy)
 
 Path = one hop between adjacent hollows (+a1 = +2.46 A, x). TS (bridge/atop —
 and in the gallery, whatever the cap registry makes of it) is found by CI-NEB,
@@ -21,7 +22,7 @@ import re
 
 WORK = os.environ.get("WORK", os.path.expanduser("~/work/vgcf_hbn"))
 NEB = f"{WORK}/neb"
-CASES = ["Li_on_hbn", "Li_on_graphene", "Li_in_gallery"]
+CASES = ["Li_on_hbn", "Li_on_graphene", "Li_in_gallery", "Li_in_gallery_2L2L"]
 HOP = 2.46  # A, one hollow-lattice vector (+x)
 
 

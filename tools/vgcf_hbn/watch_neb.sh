@@ -9,7 +9,7 @@ run=$(pgrep -af 'neb\.x|pw\.x' 2>/dev/null | grep -aoE '[A-Za-z0-9_]+\.in' | hea
 echo "  실행중: ${run:-없음}  | GPU ${gpu} (used,free,util%)"
 sess=$(tmux ls 2>/dev/null | grep -oE 'vgcf(qe|2L|neb)' | tr '\n' ' ')
 echo "  세션: ${sess:-없음}"
-for c in Li_on_hbn Li_on_graphene Li_in_gallery; do
+for c in Li_on_hbn Li_on_graphene Li_in_gallery Li_in_gallery_2L2L; do
   bo=$N/${c}_nebB.out; no=$N/$c/neb.out
   if [ ! -f "$bo" ]; then printf "  %-15s · endpoint-B 대기\n" "$c"; continue; fi
   if ! grep -aq "JOB DONE" "$bo" 2>/dev/null; then
