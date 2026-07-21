@@ -91,6 +91,14 @@ for j in ("slab", "complex_doped", "complex_neutral"):
     assert "1 1 1 0 0 0" in t2, f"{j}: K_POINTS swap failed"
 print("[mem] K_POINTS 2 2 1 -> 1 1 1 (single-k, non-gamma-trick) in slab/complexes")
 PYK
+  # tier-2 VRAM 노브: Broyden mixing history 축소 (converged-E엔 물리 불변;
+  # plateau(미수렴 last-E) 케이스만 관례 주석 필요 — db 등록 시 ndim 명기)
+  if [ "${2:-20}" != "20" ]; then
+    for j in slab complex_doped complex_neutral; do
+      sed -i "s/mixing_ndim     = [0-9]*/mixing_ndim     = $2/" "$OUT/$j/scf.in"
+    done
+    echo "[mem] mixing_ndim=$2 (tier-2) in slab/complexes"
+  fi
 }
 
 run_one() {
@@ -102,12 +110,18 @@ run_one() {
     || echo "[$1] plateau/미수렴/에러 (ladder 판정 아래)"
 }
 
-# ---- C-LADDER: complex_doped가 살아남는 최대 c를 찾고 그 c로 전체 진행 ----
+# ---- C-LADDER (2-tier): tier-1 = ndim20 (프로토콜 그대로), tier-2 = mixing_ndim 8
+#      (c31/30/29 전부 OOM일 때만; c31부터 재시도 = 이미지 간격 우선 복구) ----
 ok=0
-for GAP in 8.5 7.5 6.5; do
+case "${TIER:-all}" in
+  2) ATTEMPTS="8.5:8 7.5:8 6.5:8";;          # TIER=2: ndim20 단들은 이미 실패 확인됨
+  *) ATTEMPTS="8.5:20 7.5:20 6.5:20 8.5:8 7.5:8 6.5:8";;
+esac
+for ATT in $ATTEMPTS; do
+  GAP=${ATT%:*}; ND=${ATT#*:}
   C=$("$UMA_PY" -c "import math; print(math.ceil($ZMAX + $GAP))")
-  echo "══ [ladder] c=${C}A 시도 (image gap ~${GAP}A, david_ndim 2) ══"
-  gen_at_c "$C" || { echo "입력생성 실패 (scf_u62.in / 자세 xyz 경로 확인)"; exit 1; }
+  echo "══ [ladder] c=${C}A, mixing_ndim=${ND} 시도 (image gap ~${GAP}A, david_ndim 2, single-k) ══"
+  gen_at_c "$C" "$ND" || { echo "입력생성 실패 (scf_u62.in / 자세 xyz 경로 확인)"; exit 1; }
   rm -f "$OUT/complex_doped/scf.out" "$OUT/complex_neutral/scf.out" "$OUT/slab/scf.out"
   run_one complex_doped
   if grep -aqE "cufftPlanMany|cfft3d_gpu|[Ii]nsufficient.*memory|out of memory" "$OUT/complex_doped/scf.out"; then
@@ -117,7 +131,7 @@ for GAP in 8.5 7.5 6.5; do
   fi
   ok=1; echo "[ladder] c=$C 통과 — 이 셀로 나머지 진행"; break
 done
-[ "$ok" = 1 ] || { echo "!! 단일-k로도 gap 6.5A(c≈29)까지 전부 OOM — mixing_ndim/ecutrho 절충 논의 필요 (에스컬레이션)"; exit 1; }
+[ "$ok" = 1 ] || { echo "!! 6단(tier-2 ndim8, c29)까지 전부 OOM — ecutrho 절충 논의 필요 (에스컬레이션)"; exit 1; }
 # 복합체 먼저 (verdict 핵심) -> gas(이미 done, skip) -> slab (절대값용)
 for j in complex_neutral mol_doped mol_neutral slab; do run_one "$j"; done
 
