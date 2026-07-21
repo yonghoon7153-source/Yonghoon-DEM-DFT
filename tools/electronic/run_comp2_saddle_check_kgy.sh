@@ -14,7 +14,10 @@ set -u; set +H
 REPO=${REPO:-$HOME/Yonghoon-DEM-DFT}
 WORK=${WORK:-$HOME/work/comp2_saddle_check}; mkdir -p "$WORK"
 FMIN=${FMIN:-$HOME/work/comp2_phonon/comp2_followmin_best.xyz}
-[ -f "$FMIN" ] || { echo "ERROR: $FMIN 없음 — phonon 재실행(followmin 저장)부터"; exit 1; }
+# phonon 체인이 아직 쓰는 중일 수 있음 — 즉사 대신 대기 (2026-07-22 race 수정)
+until [ -f "$FMIN" ]; do
+  echo "[$(date +%H:%M:%S)] $FMIN 대기중 (phonon 체인 미완?) — 5분 뒤 재확인"; sleep 300
+done
 
 # ---- pseudos (vgcf 러너와 같은 PSlibrary kjpaw 계열 + Br) ----
 PSE=$WORK/pseudo; mkdir -p "$PSE"
