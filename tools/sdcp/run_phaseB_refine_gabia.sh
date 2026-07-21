@@ -17,10 +17,11 @@
 #
 # OOM (2026-07-21): 48GB A6000에서 c40/c33/c31/c30/c29 전부 "cufftPlanMany failed"
 # (scf#3에서 일회성 대형 할당이 천장 초과; vertical c25.334 자체가 47/48GB급이었음).
-# c 축소만으론 부족 -> 큰 셀 3개를 Γ-only로 전환(gamma 트릭: real wfc, 1 k-point;
-# wfc/Davidson 블록 ~4x 절감) + david_ndim 2 + C-LADDER(zmax+{8.5,7.5,6.5}A).
-# 이미지 간격 6.5A 미만은 불허(UMA 아티팩트 영역) — 전부 실패 시 ecutrho 절충 논의.
-# k 221->Γ: 절대값은 v2 vertical(221/c25.334)과 직접 비교 불가로 표기; verdict(차분)
+# c 축소만으론 부족 -> 큰 셀 3개를 단일-k(Γ, automatic 1 1 1)로 전환 + david_ndim 2
+# + C-LADDER(zmax+{8.5,7.5,6.5}A). 'K_POINTS gamma'(감마 트릭)는 ortho-atomic
+# Hubbard와 미구현 충돌(orthoUwfc)이라 못 씀 — 일반 k-mode 1점이 정답.
+# 이미지 간격 6.5A 미만은 불허(UMA 아티팩트 영역) — 전부 실패 시 mixing_ndim/ecutrho.
+# k 221->111: 절대값은 v2 vertical(221/c25.334)과 직접 비교 불가로 표기; verdict(차분)
 # 는 4항 전부 동일 조건이라 견고.
 # =============================================================================
 set -u; set +H
@@ -76,18 +77,19 @@ PYC
     grep -aq diago_david_ndim "$OUT/$j/scf.in" || \
       sed -i '/&ELECTRONS/a\    diago_david_ndim = 2' "$OUT/$j/scf.in"
   done
-  # Γ-트릭 (2026-07-21): 221 k-mesh의 파동함수/Davidson 메모리(nks배 + complex계수)가
-  # 진짜 살덩이 — Γ-only는 real-wfc라 그 블록을 ~4x 절감. verdict(차분)엔 영향 미미,
-  # refine 세트 내부(복합체2+slab+mol) 전부 동일 샘플링이라 자기일관.
+  # 단일-k (2026-07-21): 221 k-mesh의 파동함수/Davidson 메모리(nks배)가 진짜 살덩이.
+  # ⚠ 'K_POINTS gamma'(감마 트릭)는 ortho-atomic Hubbard와 미구현 충돌(orthoUwfc 에러)
+  # -> 일반 k-mode의 Γ 1점(automatic 1 1 1)으로: U 프로토콜 유지 + nks 절감만 취함.
+  # verdict(차분)엔 영향 미미, refine 세트 내부 전부 동일 샘플링이라 자기일관.
   "$UMA_PY" - "$OUT" <<'PYK'
 import re, sys
 out = sys.argv[1]
 for j in ("slab", "complex_doped", "complex_neutral"):
     p = f"{out}/{j}/scf.in"; t = open(p).read()
-    t2 = re.sub(r"K_POINTS automatic\n\s*[\d ]+\n", "K_POINTS gamma\n", t)
+    t2 = re.sub(r"K_POINTS automatic\n\s*[\d ]+\n", "K_POINTS automatic\n  1 1 1 0 0 0\n", t)
     open(p, "w").write(t2)
-    assert "K_POINTS gamma" in t2, f"{j}: K_POINTS swap failed"
-print("[mem] K_POINTS 221 -> gamma in slab/complex_doped/complex_neutral")
+    assert "1 1 1 0 0 0" in t2, f"{j}: K_POINTS swap failed"
+print("[mem] K_POINTS 2 2 1 -> 1 1 1 (single-k, non-gamma-trick) in slab/complexes")
 PYK
 }
 
@@ -115,7 +117,7 @@ for GAP in 8.5 7.5 6.5; do
   fi
   ok=1; echo "[ladder] c=$C 통과 — 이 셀로 나머지 진행"; break
 done
-[ "$ok" = 1 ] || { echo "!! Γ-only로도 gap 6.5A(c≈29)까지 전부 OOM — ecutrho 절충 논의 필요 (에스컬레이션)"; exit 1; }
+[ "$ok" = 1 ] || { echo "!! 단일-k로도 gap 6.5A(c≈29)까지 전부 OOM — mixing_ndim/ecutrho 절충 논의 필요 (에스컬레이션)"; exit 1; }
 # 복합체 먼저 (verdict 핵심) -> gas(이미 done, skip) -> slab (절대값용)
 for j in complex_neutral mol_doped mol_neutral slab; do run_one "$j"; done
 
