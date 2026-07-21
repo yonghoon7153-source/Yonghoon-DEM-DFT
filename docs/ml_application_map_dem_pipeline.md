@@ -3,7 +3,20 @@
 입력 자료: ① Hollmann 2025 TabPFN (Nature; litdb 정본 카드
 `hollmann2025_tabpfn_tabular_foundation_model.md`) ② BML 랩 덱 "머신러닝 모델의 이해"
 (아래 §4 digest) ③ 기존 ML 트랙 정독 (5-phase 로드맵 Phase 1 완료: σ_ionic 5-param
-LOOCV 0.975 / σ_e 8+2 0.953 / κ Ridge-14 0.90; predictor_engine GPR/RF; Phase 2–5 대기).
+LOOCV 0.975 / σ_e 8+2 0.953 / κ Ridge-14 0.90; predictor_engine GPR/RF; Phase 2–5 대기)
+④ **Duquesnoy 2023 digest 정독** (litdb `duquesnoy2023_ml_*` — 우리 비전의 published
+archetype: Sobol DOE → SISSO 해석식 → GP-Hedge 베이지안 다목적최적화 → 실험검증 닫힌
+loop) ⑤ 정본(DFT) 브랜치 `kb/platforms/ml_automation_platforms.md` (BO 도구 skopt/BoTorch).
+
+## 0. 세 조각의 자리 (Duquesnoy §8과 통합)
+| 조각 | 역할 | 출처 |
+|---|---|---|
+| **물리 스케일링 법칙** (σ 삼중, LOCKED prior) | 해석·외삽·인과 — 우리 소유 | Phase 1 완료 |
+| **SISSO** (해석식 자동발견) | 손유도 폼의 교차검증 + per-metric 해석식 엔진 | Duquesnoy §8.A-2 |
+| **TabPFN** (분포-출력 소데이터 서로게이트) | 스크리닝·잔차사냥·BO 내부 surrogate — 튜닝 0 | 본 문서 §3 |
+루프 기계장치는 Duquesnoy 것: **Sobol DOE**(코퍼스 갭 CN≥7·중간두께 채우기) +
+**스칼라화 C_f + GP-Hedge BO** (surrogate 자리에 GP 대신 TabPFN 분포를 꽂는 변형 가능).
+= "설계수치 → 최적 미세구조" 역설계 loop 를 우리 기계론 predictor 위에서 닫는 청사진.
 
 ## 1. 어디가 느린가 (wall-clock 병목)
 | 단계 | 시간 | ML 대체 가능성 |
